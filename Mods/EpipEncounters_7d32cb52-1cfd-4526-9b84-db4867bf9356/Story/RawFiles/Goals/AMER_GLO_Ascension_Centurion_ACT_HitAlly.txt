@@ -1,0 +1,219 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+
+KBSECTION
+// PIP EDIT - can be performed >5m away from target once per round.
+
+//Centurion attacks caster when cast on ally occurs.
+
+//Old logic, considered only directly targeted assaults.
+/*
+PROC PROC_AMER_Spells_SkillCast_PerTarget((CHARACTERGUID)_Char, (STRING)_Spell, (CHARACTERGUID)_Target, (REAL)_X, (REAL)_Y, (REAL)_Z, (INTEGER)_InfusCount, (STRING)_Type, (STRING)_Element)
+AND
+DB_AMER_Ascension_SpecialLogic(_Reactor, "Ascension_Centurion_ACT_HitAlly", _)
+AND
+_Target != NULL_00000000-0000-0000-0000-000000000000
+AND
+_Reactor != _Target
+AND
+CharacterIsAlly(_Reactor, _Target, 1)
+AND
+CharacterIsEnemy(_Reactor, _Char, 1)
+AND
+QRY_AMER_GEN_GetDistanceToPosition_2D_BoundsSubtracted(_Char, _Reactor)
+AND
+DB_AMER_GEN_OUTPUT_Real(_Distance)
+THEN
+PROC_AMER_Reaction_Request(_Reactor, _Char, "AMER_Centurion", "Ascension_Centurion_ACT_HitAlly", "", 1);
+
+//Centurion attacks attacker when attack on ally occurs.
+PROC PROC_AMER_GEN_BasicAttackObjectStarted((CHARACTERGUID)_Defender, (CHARACTERGUID)_Owner, (CHARACTERGUID)_Attacker, "Attack")
+AND
+DB_AMER_Ascension_SpecialLogic(_Reactor, "Ascension_Centurion_ACT_HitAlly", _)
+AND
+_Defender != _Reactor
+AND
+CharacterIsAlly(_Reactor, _Defender, 1)
+AND
+CharacterIsEnemy(_Reactor, _Attacker, 1)
+AND
+QRY_AMER_GEN_GetDistanceToPosition_2D_BoundsSubtracted(_Attacker, _Reactor)
+AND
+DB_AMER_GEN_OUTPUT_Real(_Distance)
+AND
+_Distance <= 5.0
+THEN
+PROC_AMER_Reaction_Request(_Reactor, _Attacker, "AMER_Centurion", "Ascension_Centurion_ACT_HitAlly", "", 1);
+*/
+
+PROC PROC_AMER_HitStatus_Event((CHARACTERGUID)_Defender, (CHARACTERGUID)_Attacker, "HitStatus_HitDuringAttack")
+AND
+DB_AMER_Ascension_SpecialLogic(_Reactor, "Ascension_Centurion_ACT_HitAlly", _)
+AND
+_Defender != _Reactor
+AND
+CharacterIsAlly(_Reactor, _Defender, 1)
+AND
+CharacterIsEnemy(_Reactor, _Attacker, 1)
+AND
+QRY_AMER_GEN_GetDistanceToPosition_2D_BoundsSubtracted(_Attacker, _Reactor)
+AND
+DB_AMER_GEN_OUTPUT_Real(_Distance)
+AND
+QRY_PIP_CanActivateCenturionOnAllyHit(_Reactor, _Attacker, _Distance)
+THEN
+PROC_AMER_Reaction_Request(_Reactor, _Attacker, "AMER_Centurion", "Ascension_Centurion_ACT_HitAlly", "", 1);
+
+PROC PROC_AMER_HitStatus_Event((CHARACTERGUID)_Defender, (CHARACTERGUID)_Attacker, "HitStatus_HitDuringCast")
+AND
+DB_AMER_Ascension_SpecialLogic(_Reactor, "Ascension_Centurion_ACT_HitAlly", _)
+AND
+_Defender != _Reactor
+AND
+CharacterIsAlly(_Reactor, _Defender, 1)
+AND
+CharacterIsEnemy(_Reactor, _Attacker, 1)
+AND
+QRY_AMER_GEN_GetDistanceToPosition_2D_BoundsSubtracted(_Attacker, _Reactor)
+AND
+DB_AMER_GEN_OUTPUT_Real(_Distance)
+AND
+QRY_PIP_CanActivateCenturionOnAllyHit(_Reactor, _Attacker, _Distance)
+THEN
+PROC_AMER_Reaction_Request(_Reactor, _Attacker, "AMER_Centurion", "Ascension_Centurion_ACT_HitAlly", "", 1);
+
+// ------------------------------------
+// Range conditions for this Activator.
+// ------------------------------------
+
+// Condition 1: any hit below 5m. Does not consume the ranged charge
+QRY QRY_PIP_CanActivateCenturionOnAllyHit((CHARACTERGUID)_Reactor, (CHARACTERGUID)_Attacker, (REAL)_Distance)
+AND
+_Distance <= 5.0
+THEN
+DB_NOOP();
+
+// Condition 2: above 5m, consumes the ranged charge if the reaction is successful
+QRY QRY_PIP_CanActivateCenturionOnAllyHit((CHARACTERGUID)_Reactor, (CHARACTERGUID)_Attacker, (REAL)_Distance)
+AND
+_Distance > 5.0
+AND
+QRY_AMER_GEN_OncePerRound(_Reactor, "PIP_Centurion_AllyHitActivator")
+AND
+QRY_PIP_CenturionAllyHit_ShouldConsumeCharge(_Reactor, _Distance)
+THEN
+DB_NOOP();
+
+// do not consume charge if battlestomp would be used
+QRY QRY_PIP_CenturionAllyHit_ShouldConsumeCharge((CHARACTERGUID)_Reactor, (REAL)_Distance)
+AND
+_Distance <= 10.0
+AND
+DB_AMER_Ascension_SpecialLogic(_Reactor, "Ascension_Centurion_MUTA_EmulateBattleStomp", _)
+AND
+QRY_AMER_GEN_OncePerRound(_Reactor, "Ascension_Centurion_MUTA_EmulateBattleStomp")
+THEN
+DB_NOOP();
+
+// Should consume charge at >10m (cannot do battlestomp)
+QRY QRY_PIP_CenturionAllyHit_ShouldConsumeCharge((CHARACTERGUID)_Reactor, (REAL)_Distance)
+AND
+_Distance > 10.0
+THEN
+DB_PIP_AttemptingRangedCenturion(_Reactor); // track if this centurion proc is being *attempted* from >5m range.
+
+// Should consume charge if battlestomp MUTA is not learnt
+QRY QRY_PIP_CenturionAllyHit_ShouldConsumeCharge((CHARACTERGUID)_Reactor, (REAL)_Distance)
+AND
+NOT DB_AMER_Ascension_SpecialLogic(_Reactor, "Ascension_Centurion_MUTA_EmulateBattleStomp", _)
+THEN
+DB_PIP_AttemptingRangedCenturion(_Reactor); // track if this centurion proc is being *attempted* from >5m range.
+
+// Should consume charge is battlestomp is spent
+QRY QRY_PIP_CenturionAllyHit_ShouldConsumeCharge((CHARACTERGUID)_Reactor, (REAL)_Distance)
+AND
+NOT QRY_AMER_GEN_OncePerRound(_Reactor, "Ascension_Centurion_MUTA_EmulateBattleStomp")
+THEN
+DB_PIP_AttemptingRangedCenturion(_Reactor); // track if this centurion proc is being *attempted* from >5m range.
+
+// QRY QRY_PIP_BattleStompUnavailable((CHARACTERGUID)_Char)
+// AND
+// NOT DB_AMER_Ascension_SpecialLogic(_Char, "Ascension_Centurion_MUTA_EmulateBattleStomp", _)
+// THEN
+// DB_NOOP();
+
+// QRY QRY_PIP_BattleStompUnavailable((CHARACTERGUID)_Char)
+// AND
+// DB_AMER_Ascension_SpecialLogic(_Char, "Ascension_Centurion_MUTA_EmulateBattleStomp", _)
+// AND
+// NOT QRY_AMER_GEN_OncePerRound(_Char, "Ascension_Centurion_MUTA_EmulateBattleStomp")
+// THEN
+// DB_NOOP();
+
+// Condition 3: has the battlestomp mutator, and has not used it yet. Does not consume a charge
+// QRY QRY_PIP_CanActivateCenturionOnAllyHit((CHARACTERGUID)_Reactor, (CHARACTERGUID)_Attacker, (REAL)_Distance)
+// AND
+// QRY_AMER_GEN_OncePerRound(_Reactor, "Ascension_Centurion_MUTA_EmulateBattleStomp")
+// AND
+// _Distance <= 10.0
+// THEN
+// DB_NOOP();
+
+// QRY QRY_PIP_CanActivateCenturionOnAllyHit((CHARACTERGUID)_Reactor, (CHARACTERGUID)_Attacker, (REAL)_Distance)
+// AND
+// _Distance > 5.0
+// AND
+// QRY_AMER_GEN_OncePerRound(_Reactor, "PIP_Centurion_AllyHitActivator")
+// AND
+// QRY_PIP_InWeaponRange(_Reactor, _Attacker, _Distance)
+// THEN
+// DB_AMER_GEN_OncePerRound(_Reactor, "PIP_Centurion_AllyHitActivator");
+
+// QRY QRY_PIP_InWeaponRange((CHARACTERGUID)_Reactor, (CHARACTERGUID)_Attacker, (REAL)_Distance)
+// AND
+// DB_AMER_GEN_PlayerWeaponData(_Reactor, _MinRange, _MaxRange, _Type1, _Type2)
+// AND
+// _Distance < _MaxRange
+// THEN
+// DB_NOOP();
+
+// QRY QRY_PIP_InWeaponRange((CHARACTERGUID)_Reactor, (CHARACTERGUID)_Attacker, (REAL)_Distance)
+// AND
+// GetPosition(_Reactor, _, _ReactorY, _)
+// AND
+// GetPosition(_Attacker, _, _AttackerY, _)
+// AND
+// RealSubtract(_ReactorY, _AttackerY, _YDiff)
+// AND
+// _YDiff > 0.0
+// AND
+// RealProduct(_YDiff, 1.5, _HeightBonus) //Constant here must be as is defined in Stats -> ExtraData -> Data -> HighGroundRangeMultiplier.
+// AND
+// DB_AMER_GEN_PlayerWeaponData(_Reactor, _MinRange, _MaxRange, _Type1, _Type2)
+// AND
+// RealSum(_MaxRange, _HeightBonus, _RealRange)
+// AND
+// _Distance < _RealRange
+// THEN
+// DB_NOOP();
+
+// if the centurion request failed - clear this db.
+PROC PROC_AMER_Reaction_ClearHeldReactions((CHARACTERGUID)_Char, (STRING)_ReactionID)
+AND
+DB_PIP_AttemptingRangedCenturion(_Char)
+THEN
+NOT DB_PIP_AttemptingRangedCenturion(_Char);
+
+// if reaction succeeds and was made from >5m range, clear that db and set the once-per-round one.
+PROC PROC_AMER_KeywordStat_Centurion_Fire((CHARACTERGUID)_Char, (CHARACTERGUID)_Target)
+AND
+DB_PIP_AttemptingRangedCenturion(_Char)
+THEN
+NOT DB_PIP_AttemptingRangedCenturion(_Char);
+DB_AMER_GEN_OncePerRound(_Char, "PIP_Centurion_AllyHitActivator");
+
+EXITSECTION
+
+ENDEXITSECTION
+ParentTargetEdge "AMER_GLO_UI_Ascension_NodeRewards"

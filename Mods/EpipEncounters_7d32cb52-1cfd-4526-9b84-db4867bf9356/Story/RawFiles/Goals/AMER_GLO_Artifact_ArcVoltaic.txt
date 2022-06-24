@@ -1,0 +1,33 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+DB_PIP_ArcVoltaic_CompatibleTotemTemplate("Summons_Ward_Air_dd564396-1c61-44b9-b20a-2e35de986a2c");
+
+KBSECTION
+
+PROC PROC_AMER_Status_Charged_DetonateLinked((CHARACTERGUID)_Char)
+AND
+DB_AMER_Artifacts_EquippedEffects(_Wielder, "Artifact_ArcVoltaic", _)
+AND
+DB_AMER_Status_Charged_Link(_Char, _LinkedChar)
+AND
+DB_AMER_Summoning_ActiveSummon_Autonomous(_Wielder, _Summon)
+AND
+GetTemplate(_Summon, _SummonTemplate)
+AND
+QRY_PIP_IsVoltaicArcSummon(_SummonTemplate)
+AND
+CharacterCanSee(_Summon, _Char, 1)
+THEN
+PROC_AMER_GEN_AttackWithoutMove(_Summon, _Char);
+
+QRY QRY_PIP_IsVoltaicArcSummon((STRING)_SummonTemplate)
+AND
+DB_PIP_ArcVoltaic_CompatibleTotemTemplate(_SummonTemplate)
+THEN
+DB_NOOP();
+
+EXITSECTION
+
+ENDEXITSECTION
+ParentTargetEdge "AMER_GLO_Artifacts"

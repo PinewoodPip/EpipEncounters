@@ -1,0 +1,83 @@
+package
+{
+    import LS_Classes.LSButton;
+    import flash.events.MouseEvent;
+    import flash.events.FocusEvent;
+    import flash.display.MovieClip;
+    import flash.text.TextField;
+    import flash.text.TextFormat;
+    import flash.text.TextFormatAlign;
+    import flash.external.ExternalInterface;
+   
+    public dynamic class DrawerButton extends LSButton
+    {
+        public var text_mc:TextField;
+
+        public var icon_mc:MovieClip;
+
+        public var index:int;
+
+        public var action:String;
+
+        public var tooltipString:String;
+
+        public var panel:MovieClip;
+
+        public function DrawerButton(index:Number)
+        {
+            super();
+            this.index = index;
+
+            var iggy:MovieClip = null;
+
+            iggy = new iggyIcon();
+            this.addChild(iggy);
+
+            this.icon_mc = iggy;
+            this.icon_mc.name = "iggy_pip_drawerButton_" + this.index.toString();
+
+            this.onUpFunc = this.onButtonUp;
+            this.addEventListener(MouseEvent.MOUSE_OVER, this.onOver);
+            this.addEventListener(MouseEvent.MOUSE_OUT, this.onOut);
+            // this.onOverFunc = this.onOver;
+            // this.onOutFunc = this.onOut;
+
+            this.text_mc.align = TextFormatAlign.LEFT;
+
+            addFrameScript(0, this.frame1);
+        }
+
+        // public function onPress() : *
+        // {
+
+        // }
+
+        public function onButtonUp() : *
+        {
+            if (!this.panel.rearranging && !this.m_Disabled)
+            {
+                ExternalInterface.call("pipHotbarHotkeyPressed", this.action);
+
+                this.panel.toggleDrawer(false);
+            }
+        }
+
+        public function onOver() : *
+        {
+            this.panel.currentDrawerButton = this;
+            ExternalInterface.call("showTooltip", this.tooltipString, this.x, this.y, this.width, this.height,"top");
+        }
+
+        public function onOut() : *
+        {
+            ExternalInterface.call("hideTooltip");
+            this.panel.currentDrawerButton = null;
+        }
+
+        private function frame1() : *
+        {
+            this.disabled_mc = this.internal_disabled_mc as MovieClip;
+            this.setEnabled(!this.m_Disabled);
+        }
+    }
+}

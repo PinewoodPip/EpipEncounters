@@ -1,0 +1,639 @@
+package optionsSettings_fla
+{
+    import LS_Classes.larTween;
+    import LS_Classes.listDisplay;
+    import LS_Classes.scrollList;
+    import LS_Classes.textEffect;
+    import fl.motion.easing.Sine;
+    import flash.display.MovieClip;
+    import flash.events.Event;
+    import flash.events.MouseEvent;
+    import flash.external.ExternalInterface;
+    import flash.geom.Point;
+    import flash.text.TextField;
+    import flash.text.TextFieldAutoSize;
+    
+    public dynamic class overview_mc_1 extends MovieClip
+    {
+        
+        
+        public var Xclose_mc:MovieClip;
+        
+        public var apply_mc:MovieClip;
+        
+        public var cancel_mc:MovieClip;
+        
+        public var listHolder_mc:emptyBG;
+        
+        public var menuButtonContainer_mc:emptyBG;
+        
+        public var ok_mc:MovieClip;
+        
+        public var title_txt:TextField;
+        
+        public var toptitle_txt:TextField;
+        
+        public const hlColour:uint = 0;
+        
+        public const defaultColour:uint = 14077127;
+        
+        public const menuButtonContainerCenterPos:Point = new Point(176,156);
+        
+        public var closeTimeLine:larTween;
+        
+        public var opened:Boolean;
+        
+        public var Root;
+        
+        public var selectedID:Number;
+        
+        public var totalHeight:Number;
+        
+        public var maxWidth:Number;
+        
+        public var factor:Number;
+        
+        public var elementHeight:Number;
+        
+        public var topDist:Number;
+        
+        public var list:scrollList;
+        
+        public var menuBtnList:listDisplay;
+        
+        public var base:MovieClip;
+        
+        public var HLCounter:Number;
+        
+        public const elementX:Number = 0;
+        
+        public const WidthSpacing:Number = 80;
+        
+        public const HeightSpacing:Number = 40;
+        
+        public var elementHSpacing:Number;
+        
+        public var minWidth:Number;
+        
+        public function overview_mc_1()
+        {
+            super();
+            addFrameScript(0,this.frame1);
+        }
+        
+        public function setMainScrolling(param1:Boolean) : *
+        {
+            this.list.mouseWheelEnabled = param1;
+        }
+        
+        public function addOptionButton(param1:String, param2:String, param3:Number, param4:Boolean) : *
+        {
+            var text:String = param1;
+            var callBack:String = param2;
+            var buttonID:Number = param3;
+            var isCurrent:Boolean = param4;
+            var btn:MovieClip = new menuButton();
+            btn.interactiveTextOnClick = true;
+            btn.SND_Click = "UI_Gen_BigButton_Click";
+            btn.initialize(text.toUpperCase(),function(param1:Array):*
+            {
+                ExternalInterface.call(callBack,buttonID);
+            },null,isCurrent,-1,isCurrent);
+            btn.buttonID = buttonID;
+            this.menuBtnList.addElement(btn,true);
+            this.menuButtonContainer_mc.x = this.menuButtonContainerCenterPos.x - this.menuBtnList.width * 0.5;
+            this.menuButtonContainer_mc.y = this.menuButtonContainerCenterPos.y;
+        }
+        
+        public function cancelPressed() : *
+        {
+            ExternalInterface.call("requestCloseUI");
+        }
+        
+        public function applyPressed() : *
+        {
+            ExternalInterface.call("applyPressed");
+            ExternalInterface.call("PlaySound","UI_Gen_Apply");
+            this.apply_mc.onOut();
+        }
+        
+        public function okPressed() : *
+        {
+            ExternalInterface.call("acceptPressed");
+            ExternalInterface.call("PlaySound","UI_Gen_Accept");
+        }
+        
+        public function openMenu() : *
+        {
+            ExternalInterface.call("soundEvent","UI_Generic_Open");
+            this.closeTimeLine = new larTween(this,"alpha",Sine.easeOut,NaN,1,0.3);
+        }
+        
+        public function closeMenu() : *
+        {
+            ExternalInterface.call("PlaySound","UI_Gen_Back");
+            this.closeTimeLine = new larTween(this,"alpha",Sine.easeIn,NaN,0,0.2,this.destroyMenu);
+        }
+        
+        public function destroyMenu() : *
+        {
+            ExternalInterface.call("requestCloseUI");
+        }
+        
+        public function setTitle(param1:String) : *
+        {
+            this.title_txt.htmlText = param1.toUpperCase();
+        }
+        
+        public function addMenuCheckbox(param1:Number, param2:String, param3:Boolean, param4:Number, param5:Boolean, param6:String) : *
+        {
+            var _loc7_:MovieClip = new Checkbox();
+            _loc7_.x = this.elementX;
+            _loc7_.label_txt.htmlText = param2;
+            _loc7_.id = param1;
+            _loc7_.name = "item" + this.list.length + "_mc";
+            _loc7_.mHeight = 30;
+            _loc7_.filterBool = param5;
+            _loc7_.stateID = param4;
+            _loc7_.tooltip = param6;
+            _loc7_.bg_mc.gotoAndStop(param4 * 3 + 1);
+            this.totalHeight = this.totalHeight + (_loc7_.mHeight + this.elementHSpacing);
+            if(_loc7_.label_txt.textWidth > this.minWidth)
+            {
+                if(this.maxWidth < _loc7_.label_txt.textWidth)
+                {
+                this.maxWidth = _loc7_.label_txt.textWidth;
+                }
+            }
+            else
+            {
+                this.maxWidth = this.minWidth;
+            }
+            _loc7_.enable = param3;
+            if(param3 == false)
+            {
+                _loc7_.alpha = 0.3;
+            }
+            this.list.addElement(_loc7_);
+            _loc7_.formHL_mc.alpha = 0;
+            this.HLCounter = this.HLCounter + 1;
+        }
+        
+        public function setMenuCheckbox(param1:Number, param2:Boolean, param3:Number) : *
+        {
+            var _loc4_:MovieClip = this.getElementByID(param1);
+            if(_loc4_)
+            {
+                _loc4_.enable = param2;
+                if(param2 == false)
+                {
+                _loc4_.alpha = 0.3;
+                }
+                else
+                {
+                _loc4_.alpha = 1;
+                }
+                _loc4_.setState(param3);
+            }
+        }
+        
+        public function addMenuInfoLabel(param1:Number, param2:String, param3:String) : *
+        {
+            var _loc4_:MovieClip = this.getElementByID(param1);
+            if(!_loc4_)
+            {
+                _loc4_ = new LabelInfo();
+                _loc4_.id = param1;
+                _loc4_.info_txt.autoSize = TextFieldAutoSize.LEFT;
+            }
+            if(_loc4_)
+            {
+                _loc4_.x = this.elementX;
+                _loc4_.label_txt.htmlText = param2;
+                _loc4_.info_txt.htmlText = param3;
+                _loc4_.name = "item" + this.list.length + "_mc";
+                this.totalHeight = this.totalHeight + (_loc4_.mHeight + this.elementHSpacing);
+                if(_loc4_.label_txt.textWidth > this.minWidth)
+                {
+                if(this.maxWidth < _loc4_.label_txt.textWidth)
+                {
+                    this.maxWidth = _loc4_.label_txt.textWidth;
+                }
+                }
+                else
+                {
+                this.maxWidth = this.minWidth;
+                }
+                this.list.addElement(_loc4_);
+                this.HLCounter = 0;
+            }
+        }
+        
+        public function addMenuLabel(param1:String) : *
+        {
+            var _loc2_:MovieClip = new Label();
+            _loc2_.x = this.elementX;
+            _loc2_.label_txt.htmlText = param1;
+            _loc2_.name = "item" + this.list.length + "_mc";
+            _loc2_.mHeight = 40;
+            this.totalHeight = this.totalHeight + (_loc2_.mHeight + this.elementHSpacing);
+            if(_loc2_.label_txt.textWidth > this.minWidth)
+            {
+                if(this.maxWidth < _loc2_.label_txt.textWidth)
+                {
+                this.maxWidth = _loc2_.label_txt.textWidth;
+                }
+            }
+            else
+            {
+                this.maxWidth = this.minWidth;
+            }
+            this.list.addElement(_loc2_);
+            this.HLCounter = 0;
+        }
+        
+        public function addMenuSelector(param1:Number, param2:String) : *
+        {
+        }
+        
+        public function addMenuSelectorEntry(param1:Number, param2:String) : *
+        {
+            var _loc4_:MovieClip = null;
+            var _loc3_:MovieClip = this.getElementByID(param1);
+            if(_loc3_)
+            {
+                _loc4_ = new SelectElement();
+                _loc4_.label_txt.htmlText = param2;
+                _loc3_.selList.addElement(_loc4_);
+            }
+        }
+        
+        public function onComboClose(param1:Event) : *
+        {
+            (root as MovieClip).selectedInfo_txt.visible = false;
+            this.setMainScrolling(true);
+        }
+        
+        public function onComboOpen(param1:Event) : *
+        {
+            this.setMainScrolling(false);
+        }
+        
+        public function onComboScrolled(param1:Event) : *
+        {
+            (root as MovieClip).selectedInfo_txt.visible = false;
+        }
+        
+        public function clearMenuDropDownEntries(param1:Number) : *
+        {
+            var _loc2_:MovieClip = this.getElementByID(param1);
+            if(_loc2_ && _loc2_.combo_mc)
+            {
+                _loc2_.combo_mc.removeAll();
+            }
+        }
+        
+        public function setMenuDropDownEnabled(param1:Number, param2:Boolean) : *
+        {
+            var _loc3_:MovieClip = this.getElementByID(param1);
+            if(_loc3_ && _loc3_.combo_mc)
+            {
+                _loc3_.combo_mc.enabled = param2;
+                if(param2)
+                {
+                _loc3_.combo_mc.alpha = 1;
+                }
+                else
+                {
+                _loc3_.combo_mc.alpha = 0.3;
+                }
+            }
+        }
+        
+        public function setMenuDropDownDisabledTooltip(param1:Number, param2:String) : *
+        {
+            var _loc3_:MovieClip = this.getElementByID(param1);
+            if(_loc3_ && _loc3_.combo_mc)
+            {
+                _loc3_.combo_mc.tooltip = param2;
+                if(param2 != "")
+                {
+                _loc3_.combo_mc.onOver = this.ddShowTooltip;
+                _loc3_.combo_mc.onOut = this.ddHideTooltip;
+                }
+                else
+                {
+                _loc3_.combo_mc.onOver = null;
+                _loc3_.combo_mc.onOut = null;
+                }
+            }
+        }
+        
+        public function ddShowTooltip(param1:MouseEvent) : *
+        {
+            var _loc2_:MovieClip = param1.currentTarget.parent as MovieClip;
+            if(_loc2_ && !_loc2_.enabled)
+            {
+                if(_loc2_.tooltip != null && _loc2_.tooltip != "")
+                {
+                this.base.curTooltip = _loc2_.tooltip;
+                ExternalInterface.call("showTooltip",_loc2_.tooltip);
+                this.base.hasTooltip = true;
+                }
+            }
+        }
+        
+        public function ddHideTooltip(param1:MouseEvent) : *
+        {
+            var _loc2_:MovieClip = param1.currentTarget.parent as MovieClip;
+            if(_loc2_ && !_loc2_.enabled && _loc2_.tooltip && _loc2_.tooltip != "")
+            {
+                if(this.base.hasTooltip)
+                {
+                ExternalInterface.call("hideTooltip");
+                this.base.hasTooltip = false;
+                this.base.curTooltip = "";
+                }
+            }
+        }
+        
+        public function addMenuDropDown(param1:Number, param2:String, param3:String) : *
+        {
+            var _loc4_:MovieClip = new DropDown();
+            _loc4_.combo_mc.bgTopSizeDiff = -20;
+            _loc4_.customElHeight = this.elementHeight;
+            _loc4_.x = this.elementX;
+            _loc4_.label_txt.htmlText = param2;
+            _loc4_.id = param1;
+            _loc4_.name = "item" + this.list.length + "_mc";
+            _loc4_.mHeight = 30;
+            _loc4_.tooltip = param3;
+            this.totalHeight = this.totalHeight + (_loc4_.mHeight + this.elementHSpacing);
+            _loc4_.combo_mc.addEventListener(Event.CLOSE,this.onComboClose);
+            _loc4_.combo_mc.addEventListener(Event.OPEN,this.onComboOpen);
+            _loc4_.combo_mc.addEventListener("Scrolled",this.onComboScrolled);
+            if(_loc4_.label_txt.textWidth > this.minWidth)
+            {
+                if(this.maxWidth < _loc4_.label_txt.textWidth)
+                {
+                this.maxWidth = _loc4_.label_txt.textWidth;
+                }
+            }
+            else
+            {
+                this.maxWidth = this.minWidth;
+            }
+            this.list.addElement(_loc4_);
+            _loc4_.formHL_mc.alpha = 0;
+            this.HLCounter = this.HLCounter + 1;
+        }
+        
+        public function addMenuDropDownEntry(param1:Number, param2:String) : *
+        {
+            var _loc3_:MovieClip = this.getElementByID(param1);
+            if(_loc3_ && _loc3_.combo_mc)
+            {
+                _loc3_.combo_mc.addItem({"label":param2});
+            }
+        }
+        
+        public function selectMenuDropDownEntry(param1:Number, param2:Number) : *
+        {
+            var _loc3_:MovieClip = this.getElementByID(param1);
+            if(_loc3_ && _loc3_.combo_mc)
+            {
+                _loc3_.combo_mc.selectedIndex = param2;
+            }
+        }
+        
+        public function roundFloat(param1:Number) : Number
+        {
+            return Math.round(param1 * 100) / 100;
+        }
+        
+        public function addMenuSlider(param1:Number, param2:String, param3:Number, param4:Number, param5:Number, param6:Number, param7:Boolean, param8:String) : *
+        {
+            var _loc10_:Number = NaN;
+            var _loc9_:MovieClip = new SliderComp();
+            _loc9_.x = this.elementX;
+            _loc9_.label_txt.htmlText = param2;
+            _loc9_.id = param1;
+            _loc9_.name = "item" + this.list.length + "_mc";
+            _loc9_.mHeight = 30;
+            _loc9_.tooltip = param8;
+            _loc9_.slider_mc.maximum = this.roundFloat(param5);
+            _loc9_.slider_mc.minimum = this.roundFloat(param4);
+            _loc9_.min_txt.htmlText = String(this.roundFloat(param4));
+            _loc9_.max_txt.htmlText = String(this.roundFloat(param5));
+            _loc9_.slider_mc.snapInterval = this.roundFloat(param6);
+            _loc9_.amount_txt.visible = !param7;
+            _loc9_.min_txt.visible = !param7;
+            _loc9_.max_txt.visible = !param7;
+            if(param6 != 0)
+            {
+                _loc10_ = (param5 - param4) / param6;
+                if(_loc10_ <= 10)
+                {
+                _loc9_.slider_mc.useNotches = true;
+                }
+                else
+                {
+                _loc9_.slider_mc.useNotches = false;
+                }
+            }
+            _loc9_.slider_mc.liveDragging = true;
+            _loc9_.amount_txt.htmlText = this.roundFloat(param3);
+            if(param5 > 50)
+            {
+                _loc9_.slider_mc.tickInterval = 10;
+            }
+            else if(param5 > 20)
+            {
+                _loc9_.slider_mc.tickInterval = 5;
+            }
+            else
+            {
+                _loc9_.slider_mc.tickInterval = 1;
+            }
+            _loc9_.amount_txt.mouseEnabled = false;
+            _loc9_.min_txt.mouseEnabled = false;
+            _loc9_.max_txt.mouseEnabled = false;
+            _loc9_.slider_mc.bgToWidthDiff = -6;
+            this.totalHeight = this.totalHeight + (_loc9_.mHeight + this.elementHSpacing);
+            if(_loc9_.label_txt.textWidth > this.minWidth)
+            {
+                if(this.maxWidth < _loc9_.label_txt.textWidth)
+                {
+                this.maxWidth = _loc9_.label_txt.textWidth;
+                }
+            }
+            else
+            {
+                this.maxWidth = this.minWidth;
+            }
+            _loc9_.label_txt.y = 26 - Math.round(_loc9_.label_txt.textHeight * 0.5);
+            this.list.addElement(_loc9_);
+            _loc9_.formHL_mc.alpha = 0;
+            this.HLCounter = this.HLCounter + 1;
+            _loc9_.slider_mc.value = param3;
+            _loc9_.resetAmountPos();
+        }
+        
+        public function setMenuSlider(param1:Number, param2:Number) : *
+        {
+            var _loc3_:MovieClip = this.getElementByID(param1);
+            if(_loc3_ && _loc3_.slider_mc)
+            {
+                _loc3_.slider_mc.value = param2;
+                _loc3_.amount_txt.htmlText = this.roundFloat(param2);
+                _loc3_.resetAmountPos();
+            }
+        }
+        
+        public function getElementByID(param1:Number) : MovieClip
+        {
+            return this.list.getElementByNumber("id",param1);
+        }
+        
+        public function addMenuButton(param1:Number, param2:String, param3:String, param4:Boolean, param5:String) : *
+        {
+            var _loc6_:MovieClip = new Menu_button();
+            _loc6_.x = this.elementX;
+            _loc6_.label_txt.htmlText = param2;
+            _loc6_.id = param1;
+            _loc6_.name = "item" + this.list.length + "_mc";
+            _loc6_.mHeight = 70;
+            _loc6_.tooltip = param5;
+            this.totalHeight = this.totalHeight + (_loc6_.mHeight + this.elementHSpacing);
+            if(_loc6_.label_txt.textWidth > this.minWidth)
+            {
+                if(this.maxWidth < _loc6_.label_txt.textWidth)
+                {
+                this.maxWidth = _loc6_.label_txt.textWidth;
+                }
+            }
+            else
+            {
+                this.maxWidth = this.minWidth;
+            }
+            _loc6_.disable_mc.visible = !param4;
+            _loc6_.bg_mc.visible = param4;
+            this.list.addElement(_loc6_);
+            _loc6_.formHL_mc.alpha = 0;
+            if(param3.length > 0)
+            {
+                _loc6_.snd_onUp = param3;
+            }
+            else
+            {
+                _loc6_.snd_onUp = "UI_Gen_XButton_Click";
+            }
+            this.HLCounter = this.HLCounter + 1;
+        }
+        
+        public function setButtonEnabled(param1:Number, param2:Boolean) : *
+        {
+            var _loc3_:MovieClip = this.getElementByID(param1);
+            if(_loc3_)
+            {
+                _loc3_.disable_mc.visible = !param2;
+                _loc3_.bg_mc.visible = param2;
+            }
+        }
+        
+        public function moveCursor(param1:Boolean) : *
+        {
+            if(param1)
+            {
+                this.list.previous();
+            }
+            else
+            {
+                this.list.next();
+            }
+        }
+        
+        public function setCursorPosition(param1:Number) : *
+        {
+            var _loc2_:MovieClip = this.getElementByID(param1);
+            if(_loc2_)
+            {
+                this.list.selectMC(_loc2_);
+            }
+        }
+        
+        public function executeSelected() : *
+        {
+            var _loc1_:MovieClip = this.list.getCurrentMovieClip();
+            if(_loc1_)
+            {
+                _loc1_.buttonPressed(null);
+            }
+        }
+        
+        public function removeItems() : *
+        {
+            this.list.clearElements();
+            this.totalHeight = 0;
+            this.maxWidth = 0;
+        }
+        
+        public function resetMenuButtons(param1:Number) : *
+        {
+            var _loc3_:uint = 0;
+            var _loc4_:MovieClip = null;
+            var _loc2_:Number = this.menuBtnList.length;
+            if(_loc2_ > 0)
+            {
+                _loc3_ = 0;
+                while(_loc3_ < _loc2_)
+                {
+                _loc4_ = this.menuBtnList.getAt(_loc3_);
+                if(_loc4_ && _loc4_.buttonID != param1)
+                {
+                    _loc4_.setActive(false);
+                }
+                _loc3_++;
+                }
+            }
+        }
+        
+        function frame1() : *
+        {
+            this.title_txt.filters = textEffect.createStrokeFilter(0,2,0.75,1.4,3);
+            this.cancel_mc.text_txt.filters = textEffect.createStrokeFilter(0,2,0.75,1.4,3);
+            this.ok_mc.text_txt.filters = textEffect.createStrokeFilter(0,2,0.75,1.4,3);
+            this.apply_mc.text_txt.filters = textEffect.createStrokeFilter(0,2,0.75,1.4,3);
+            this.toptitle_txt.filters = textEffect.createStrokeFilter(0,2,0.75,1.4,3);
+            this.opened = false;
+            this.Root = this;
+            this.selectedID = 0;
+            this.totalHeight = 0;
+            this.maxWidth = 0;
+            this.factor = 30;
+            this.elementHeight = 50;
+            this.topDist = 20;
+            this.list = new scrollList("down_id","up_id","handle_id","scrollBg_id");
+            this.list.m_forceDepthReorder = true;
+            this.list.TOP_SPACING = 20;
+            this.list.EL_SPACING = 2;
+            this.list.setFrame(900,791);
+            this.list.m_scrollbar_mc.m_SCROLLSPEED = 40;
+            this.list.m_scrollbar_mc.m_hideWhenDisabled = false;
+            this.list.m_scrollbar_mc.y = 16;
+            this.list.SB_SPACING = -3;
+            this.list.m_scrollbar_mc.setLength(682);
+            this.menuBtnList = new listDisplay();
+            this.menuBtnList.EL_SPACING = 2;
+            this.menuButtonContainer_mc.addChild(this.menuBtnList);
+            this.base = root as MovieClip;
+            this.HLCounter = 0;
+            this.listHolder_mc.addChild(this.list);
+            this.cancel_mc.pressedFunc = this.cancelPressed;
+            this.ok_mc.pressedFunc = this.okPressed;
+            this.apply_mc.pressedFunc = this.applyPressed;
+            this.elementHSpacing = 10;
+            this.minWidth = 400;
+        }
+    }
+}

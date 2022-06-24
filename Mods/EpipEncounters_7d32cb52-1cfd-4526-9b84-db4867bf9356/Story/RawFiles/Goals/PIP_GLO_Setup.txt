@@ -1,0 +1,17 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+
+// namespacing and other calls for EE mods.
+
+DB_AMER_Artifacts_ScriptPrefix("PIP_GLO_");
+DB_AMER_Spells_ScriptPrefix("PIP_GLO_");
+
+DB_AMER_Artifacts("PIP_UNI_IdolaDeus_Wand_426e5f7b-6e10-4864-9181-2f9ba6b0c27f", "PIP_UNI_IdolaDeus_Rune_13a88218-e9e7-492f-bad1-824c2da58e7e", "Weapon", "Artifact_IdolaDeus");
+
+KBSECTION
+
+EXITSECTION
+
+ENDEXITSECTION
+ParentTargetEdge "Start_AMER"

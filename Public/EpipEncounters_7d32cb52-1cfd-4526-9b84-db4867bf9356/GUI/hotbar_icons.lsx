@@ -1,0 +1,400 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<save>
+    <header version="2" />
+    <version major="3" minor="6" revision="6" build="0" />
+    <region id="IconUVList">
+        <node id="root">
+            <children>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_icon_announcement" type="22" />
+                    <attribute id="U1" value="0.376953" type="6" />
+                    <attribute id="U2" value="0.498047" type="6" />
+                    <attribute id="V1" value="0.126953" type="6" />
+                    <attribute id="V2" value="0.248047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_icon_ap" type="22" />
+                    <attribute id="U1" value="0.501953" type="6" />
+                    <attribute id="U2" value="0.623047" type="6" />
+                    <attribute id="V1" value="0.126953" type="6" />
+                    <attribute id="V2" value="0.248047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_icon_bag" type="22" />
+                    <attribute id="U1" value="0.626953" type="6" />
+                    <attribute id="U2" value="0.748047" type="6" />
+                    <attribute id="V1" value="0.126953" type="6" />
+                    <attribute id="V2" value="0.248047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_icon_book" type="22" />
+                    <attribute id="U1" value="0.751953" type="6" />
+                    <attribute id="U2" value="0.873047" type="6" />
+                    <attribute id="V1" value="0.126953" type="6" />
+                    <attribute id="V2" value="0.248047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_icon_brewing" type="22" />
+                    <attribute id="U1" value="0.376953" type="6" />
+                    <attribute id="U2" value="0.498047" type="6" />
+                    <attribute id="V1" value="0.501953" type="6" />
+                    <attribute id="V2" value="0.623047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_icon_charsheet" type="22" />
+                    <attribute id="U1" value="0.00195313" type="6" />
+                    <attribute id="U2" value="0.123047" type="6" />
+                    <attribute id="V1" value="0.00195313" type="6" />
+                    <attribute id="V2" value="0.123047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_icon_chat" type="22" />
+                    <attribute id="U1" value="0.126953" type="6" />
+                    <attribute id="U2" value="0.248047" type="6" />
+                    <attribute id="V1" value="0.00195313" type="6" />
+                    <attribute id="V2" value="0.123047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_icon_clover" type="22" />
+                    <attribute id="U1" value="0.876953" type="6" />
+                    <attribute id="U2" value="0.998047" type="6" />
+                    <attribute id="V1" value="0.126953" type="6" />
+                    <attribute id="V2" value="0.248047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_icon_combatlog" type="22" />
+                    <attribute id="U1" value="0.251953" type="6" />
+                    <attribute id="U2" value="0.373047" type="6" />
+                    <attribute id="V1" value="0.00195313" type="6" />
+                    <attribute id="V2" value="0.123047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_icon_crafting" type="22" />
+                    <attribute id="U1" value="0.376953" type="6" />
+                    <attribute id="U2" value="0.498047" type="6" />
+                    <attribute id="V1" value="0.00195313" type="6" />
+                    <attribute id="V2" value="0.123047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_icon_die" type="22" />
+                    <attribute id="U1" value="0.00195313" type="6" />
+                    <attribute id="U2" value="0.123047" type="6" />
+                    <attribute id="V1" value="0.251953" type="6" />
+                    <attribute id="V2" value="0.373047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_icon_dumbell" type="22" />
+                    <attribute id="U1" value="0.126953" type="6" />
+                    <attribute id="U2" value="0.248047" type="6" />
+                    <attribute id="V1" value="0.251953" type="6" />
+                    <attribute id="V2" value="0.373047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_icon_dye" type="22" />
+                    <attribute id="U1" value="0.501953" type="6" />
+                    <attribute id="U2" value="0.623047" type="6" />
+                    <attribute id="V1" value="0.751953" type="6" />
+                    <attribute id="V2" value="0.873047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_icon_email" type="22" />
+                    <attribute id="U1" value="0.251953" type="6" />
+                    <attribute id="U2" value="0.373047" type="6" />
+                    <attribute id="V1" value="0.251953" type="6" />
+                    <attribute id="V2" value="0.373047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_icon_fist" type="22" />
+                    <attribute id="U1" value="0.376953" type="6" />
+                    <attribute id="U2" value="0.498047" type="6" />
+                    <attribute id="V1" value="0.251953" type="6" />
+                    <attribute id="V2" value="0.373047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_icon_hand" type="22" />
+                    <attribute id="U1" value="0.501953" type="6" />
+                    <attribute id="U2" value="0.623047" type="6" />
+                    <attribute id="V1" value="0.251953" type="6" />
+                    <attribute id="V2" value="0.373047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_icon_hat" type="22" />
+                    <attribute id="U1" value="0.626953" type="6" />
+                    <attribute id="U2" value="0.748047" type="6" />
+                    <attribute id="V1" value="0.251953" type="6" />
+                    <attribute id="V2" value="0.373047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_icon_helm" type="22" />
+                    <attribute id="U1" value="0.501953" type="6" />
+                    <attribute id="U2" value="0.623047" type="6" />
+                    <attribute id="V1" value="0.501953" type="6" />
+                    <attribute id="V2" value="0.623047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_icon_infinity" type="22" />
+                    <attribute id="U1" value="0.751953" type="6" />
+                    <attribute id="U2" value="0.873047" type="6" />
+                    <attribute id="V1" value="0.251953" type="6" />
+                    <attribute id="V2" value="0.373047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_icon_internet" type="22" />
+                    <attribute id="U1" value="0.876953" type="6" />
+                    <attribute id="U2" value="0.998047" type="6" />
+                    <attribute id="V1" value="0.251953" type="6" />
+                    <attribute id="V2" value="0.373047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_icon_inventory" type="22" />
+                    <attribute id="U1" value="0.501953" type="6" />
+                    <attribute id="U2" value="0.623047" type="6" />
+                    <attribute id="V1" value="0.00195313" type="6" />
+                    <attribute id="V2" value="0.123047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_icon_journal" type="22" />
+                    <attribute id="U1" value="0.626953" type="6" />
+                    <attribute id="U2" value="0.748047" type="6" />
+                    <attribute id="V1" value="0.00195313" type="6" />
+                    <attribute id="V2" value="0.123047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_icon_kick" type="22" />
+                    <attribute id="U1" value="0.00195313" type="6" />
+                    <attribute id="U2" value="0.123047" type="6" />
+                    <attribute id="V1" value="0.376953" type="6" />
+                    <attribute id="V2" value="0.498047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_icon_laureate" type="22" />
+                    <attribute id="U1" value="0.126953" type="6" />
+                    <attribute id="U2" value="0.248047" type="6" />
+                    <attribute id="V1" value="0.376953" type="6" />
+                    <attribute id="V2" value="0.498047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_icon_lock" type="22" />
+                    <attribute id="U1" value="0.251953" type="6" />
+                    <attribute id="U2" value="0.373047" type="6" />
+                    <attribute id="V1" value="0.376953" type="6" />
+                    <attribute id="V2" value="0.498047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_icon_magic" type="22" />
+                    <attribute id="U1" value="0.376953" type="6" />
+                    <attribute id="U2" value="0.498047" type="6" />
+                    <attribute id="V1" value="0.376953" type="6" />
+                    <attribute id="V2" value="0.498047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_icon_map" type="22" />
+                    <attribute id="U1" value="0.751953" type="6" />
+                    <attribute id="U2" value="0.873047" type="6" />
+                    <attribute id="V1" value="0.00195313" type="6" />
+                    <attribute id="V2" value="0.123047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_icon_memory" type="22" />
+                    <attribute id="U1" value="0.501953" type="6" />
+                    <attribute id="U2" value="0.623047" type="6" />
+                    <attribute id="V1" value="0.376953" type="6" />
+                    <attribute id="V2" value="0.498047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_icon_mixers" type="22" />
+                    <attribute id="U1" value="0.626953" type="6" />
+                    <attribute id="U2" value="0.748047" type="6" />
+                    <attribute id="V1" value="0.376953" type="6" />
+                    <attribute id="V2" value="0.498047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_icon_nongachatransmute" type="22" />
+                    <attribute id="U1" value="0.751953" type="6" />
+                    <attribute id="U2" value="0.873047" type="6" />
+                    <attribute id="V1" value="0.376953" type="6" />
+                    <attribute id="V2" value="0.498047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_icon_pause" type="22" />
+                    <attribute id="U1" value="0.876953" type="6" />
+                    <attribute id="U2" value="0.998047" type="6" />
+                    <attribute id="V1" value="0.00195313" type="6" />
+                    <attribute id="V2" value="0.123047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_icon_ping" type="22" />
+                    <attribute id="U1" value="0.00195313" type="6" />
+                    <attribute id="U2" value="0.123047" type="6" />
+                    <attribute id="V1" value="0.126953" type="6" />
+                    <attribute id="V2" value="0.248047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_icon_refresh" type="22" />
+                    <attribute id="U1" value="0.626953" type="6" />
+                    <attribute id="U2" value="0.748047" type="6" />
+                    <attribute id="V1" value="0.501953" type="6" />
+                    <attribute id="V2" value="0.623047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_icon_rot" type="22" />
+                    <attribute id="U1" value="0.751953" type="6" />
+                    <attribute id="U2" value="0.873047" type="6" />
+                    <attribute id="V1" value="0.501953" type="6" />
+                    <attribute id="V2" value="0.623047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_icon_rune" type="22" />
+                    <attribute id="U1" value="0.876953" type="6" />
+                    <attribute id="U2" value="0.998047" type="6" />
+                    <attribute id="V1" value="0.376953" type="6" />
+                    <attribute id="V2" value="0.498047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_icon_shock" type="22" />
+                    <attribute id="U1" value="0.00195313" type="6" />
+                    <attribute id="U2" value="0.123047" type="6" />
+                    <attribute id="V1" value="0.501953" type="6" />
+                    <attribute id="V2" value="0.623047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_icon_skills" type="22" />
+                    <attribute id="U1" value="0.126953" type="6" />
+                    <attribute id="U2" value="0.248047" type="6" />
+                    <attribute id="V1" value="0.126953" type="6" />
+                    <attribute id="V2" value="0.248047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_icon_skull" type="22" />
+                    <attribute id="U1" value="0.126953" type="6" />
+                    <attribute id="U2" value="0.248047" type="6" />
+                    <attribute id="V1" value="0.501953" type="6" />
+                    <attribute id="V2" value="0.623047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_icon_sp" type="22" />
+                    <attribute id="U1" value="0.251953" type="6" />
+                    <attribute id="U2" value="0.373047" type="6" />
+                    <attribute id="V1" value="0.501953" type="6" />
+                    <attribute id="V2" value="0.623047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_icon_waypoints" type="22" />
+                    <attribute id="U1" value="0.251953" type="6" />
+                    <attribute id="U2" value="0.373047" type="6" />
+                    <attribute id="V1" value="0.126953" type="6" />
+                    <attribute id="V2" value="0.248047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_icon_weaponex" type="22" />
+                    <attribute id="U1" value="0.376953" type="6" />
+                    <attribute id="U2" value="0.498047" type="6" />
+                    <attribute id="V1" value="0.751953" type="6" />
+                    <attribute id="V2" value="0.873047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_school_aerotheurge" type="22" />
+                    <attribute id="U1" value="0.876953" type="6" />
+                    <attribute id="U2" value="0.998047" type="6" />
+                    <attribute id="V1" value="0.501953" type="6" />
+                    <attribute id="V2" value="0.623047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_school_geomancer" type="22" />
+                    <attribute id="U1" value="0.00195313" type="6" />
+                    <attribute id="U2" value="0.123047" type="6" />
+                    <attribute id="V1" value="0.626953" type="6" />
+                    <attribute id="V2" value="0.748047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_school_huntsman" type="22" />
+                    <attribute id="U1" value="0.126953" type="6" />
+                    <attribute id="U2" value="0.248047" type="6" />
+                    <attribute id="V1" value="0.626953" type="6" />
+                    <attribute id="V2" value="0.748047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_school_hydrosophist" type="22" />
+                    <attribute id="U1" value="0.251953" type="6" />
+                    <attribute id="U2" value="0.373047" type="6" />
+                    <attribute id="V1" value="0.626953" type="6" />
+                    <attribute id="V2" value="0.748047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_school_necromancy" type="22" />
+                    <attribute id="U1" value="0.376953" type="6" />
+                    <attribute id="U2" value="0.498047" type="6" />
+                    <attribute id="V1" value="0.626953" type="6" />
+                    <attribute id="V2" value="0.748047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_school_polymorph" type="22" />
+                    <attribute id="U1" value="0.501953" type="6" />
+                    <attribute id="U2" value="0.623047" type="6" />
+                    <attribute id="V1" value="0.626953" type="6" />
+                    <attribute id="V2" value="0.748047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_school_pyrokinetic" type="22" />
+                    <attribute id="U1" value="0.626953" type="6" />
+                    <attribute id="U2" value="0.748047" type="6" />
+                    <attribute id="V1" value="0.626953" type="6" />
+                    <attribute id="V2" value="0.748047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_school_scoundrel" type="22" />
+                    <attribute id="U1" value="0.751953" type="6" />
+                    <attribute id="U2" value="0.873047" type="6" />
+                    <attribute id="V1" value="0.626953" type="6" />
+                    <attribute id="V2" value="0.748047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_school_sourcery" type="22" />
+                    <attribute id="U1" value="0.876953" type="6" />
+                    <attribute id="U2" value="0.998047" type="6" />
+                    <attribute id="V1" value="0.626953" type="6" />
+                    <attribute id="V2" value="0.748047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_school_special" type="22" />
+                    <attribute id="U1" value="0.00195313" type="6" />
+                    <attribute id="U2" value="0.123047" type="6" />
+                    <attribute id="V1" value="0.751953" type="6" />
+                    <attribute id="V2" value="0.873047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_school_summoning" type="22" />
+                    <attribute id="U1" value="0.126953" type="6" />
+                    <attribute id="U2" value="0.248047" type="6" />
+                    <attribute id="V1" value="0.751953" type="6" />
+                    <attribute id="V2" value="0.873047" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="hotbar_school_warfare" type="22" />
+                    <attribute id="U1" value="0.251953" type="6" />
+                    <attribute id="U2" value="0.373047" type="6" />
+                    <attribute id="V1" value="0.751953" type="6" />
+                    <attribute id="V2" value="0.873047" type="6" />
+                </node>
+            </children>
+        </node>
+    </region>
+    <region id="TextureAtlasInfo">
+        <node id="root">
+            <children>
+                <node id="TextureAtlasIconSize">
+                    <attribute id="Height" value="32" type="4" />
+                    <attribute id="Width" value="32" type="4" />
+                </node>
+                <node id="TextureAtlasPath">
+                    <attribute id="Path" value="Assets/Textures/Icons/hotbar_icons.dds" type="20" />
+                    <attribute id="UUID" value="0b8f4be9-a7ba-424f-924f-cad315c86b55" type="22" />
+                </node>
+                <node id="TextureAtlasTextureSize">
+                    <attribute id="Height" value="256" type="4" />
+                    <attribute id="Width" value="256" type="4" />
+                </node>
+            </children>
+        </node>
+    </region>
+</save>

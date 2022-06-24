@@ -1,0 +1,438 @@
+package contextMenu_fla
+{
+    import LS_Classes.listDisplay;
+    import LS_Classes.horizontalList;
+    import flash.display.MovieClip;
+    import flash.events.MouseEvent;
+    import flash.external.ExternalInterface;
+    import flash.utils.Dictionary;
+    
+    // TODO move this to its own UI
+    import flash.events.TimerEvent;
+    import flash.utils.Timer;
+    
+    public dynamic class MainTimeline extends MovieClip
+    {
+        
+        
+        public var windowsMenu_mc:MovieClip;
+        
+        public var events:Array;
+        
+        public var layout:String;
+        
+        public var curTooltip:int;
+        
+        public var hasTooltip:Boolean;
+        
+        public var closing:Boolean;
+        
+        public const offsetX:Number = 0;
+        
+        public const offsetY:Number = 0;
+        
+        public var tweenTime:Number;
+        
+        public var text_array:Array;
+        
+        public var buttonArr:Array;
+
+        public var contextMenusList:horizontalList;
+
+        public var elementDict:Dictionary;
+
+        public var timers:Array;
+
+        public var isCustomInstance:Boolean = false;
+
+        public var maxWidth:Number = 0;
+        public var maxHeight:Number = 0;
+
+        public var MAX_HEIGHT:Number = 500;
+
+        public var currentMenu:MovieClip;
+        
+        public function MainTimeline()
+        {
+            super();
+            addFrameScript(0,this.frame1);
+        }
+        
+        public function setTitle(param1:String, param2:Boolean = false) : *
+        {
+            this.windowsMenu_mc.setTitle(param1);
+        }
+        
+        public function onEventInit() : *
+        {
+        }
+        
+        public function onEventResize() : *
+        {
+        }
+        
+        public function getList() : listDisplay
+        {
+            return this.currentMenu.list;
+        }
+        
+        public function onEventUp(param1:Number) : Boolean
+        {
+            var _loc3_:MovieClip = null;
+            var _loc2_:Boolean = false;
+            switch(this.events[param1])
+            {
+                case "IE UIAccept":
+                _loc3_ = this.getList().getCurrentMovieClip();
+                if(_loc3_)
+                {
+                    _loc3_.pressedButton();
+                }
+                _loc2_ = true;
+                break;
+                case "IE UIUp":
+                this.previous();
+                // this.scrollMenu(-1);
+                _loc2_ = true;
+                break;
+                case "IE UIDown":
+                this.next();
+                // this.scrollMenu(1);
+                _loc2_ = true;
+                break;
+                case "IE UILeft":
+                ExternalInterface.call("PreviousContext");
+                _loc2_ = true;
+                break;
+                case "IE UIRight":
+                ExternalInterface.call("NextContext");
+                _loc2_ = true;
+                break;
+                case "IE UIBack":
+                case "IE UICancel":
+                this.close();
+                _loc2_ = true;
+            }
+            return _loc2_;
+        }
+        
+        public function onEventDown(param1:Number) : Boolean
+        {
+            return false;
+        }
+        
+        public function resetSelection() : *
+        {
+        }
+
+        public function updateButtons() : *
+        {
+            var _loc2_:Number = NaN;
+            var _loc3_:Number = NaN;
+            var _loc4_:Boolean = false;
+            var _loc5_:String = null;
+            var _loc6_:String = null;
+            var _loc7_:Boolean = false;
+            var _loc8_:Boolean = false;
+            this.windowsMenu_mc.list.clearElements();
+            var _loc1_:* = 0;
+            while(_loc1_ < this.buttonArr.length)
+            {
+                if(this.buttonArr[_loc1_] != undefined)
+                {
+                _loc2_ = Number(this.buttonArr[_loc1_]);
+                _loc3_ = Number(this.buttonArr[_loc1_ + 1]);
+                _loc4_ = Boolean(this.buttonArr[_loc1_ + 2]);
+                _loc5_ = String(this.buttonArr[_loc1_ + 3]);
+                _loc6_ = String(this.buttonArr[_loc1_ + 4]);
+                _loc7_ = Boolean(this.buttonArr[_loc1_ + 5]);
+                _loc8_ = Boolean(this.buttonArr[_loc1_ + 6]);
+                this.addButton("main",_loc2_,_loc3_.toString(),_loc4_,_loc6_,_loc7_,_loc8_);
+                }
+                _loc1_ += 7;
+            }
+
+            ExternalInterface.call("pipVanillaContextMenuOpened");
+
+            this.addButtonsDone();
+            this.buttonArr = new Array();
+        }
+
+        public function addButton(menuID:String, id:Number, actionID:String, clickSound:Boolean, text:String, greyedOut:Boolean = false, legal:Boolean = false) : *
+        {
+            var menu:MovieClip = this.contextMenusList.getElementByString("list_string_id", menuID);
+            // if(this.windowsMenu_mc.visible)
+            if (menu)
+            {
+                menu.addEntry(id, actionID, clickSound, text, greyedOut, legal);
+            }
+        }
+
+        public function addCheckbox(menuID:String, id:Number, actionID:String, clickSound:Boolean, text:String, state:Boolean, greyedOut:Boolean = false, legal:Boolean = true) : *
+        {
+            var menu:MovieClip = this.contextMenusList.getElementByString("list_string_id", menuID);
+            // if(this.windowsMenu_mc.visible)
+            if (menu)
+            {
+                menu.addCheckbox(id, actionID, clickSound, text, state, greyedOut, legal);
+            }
+        }
+
+        public function addStatEntry(menuID:String, id:Number, actionID:String, clickSound:Boolean, text:String, state:Boolean, greyedOut:Boolean = false, legal:Boolean = true) : *
+        {
+            var menu:MovieClip = this.contextMenusList.getElementByString("list_string_id", menuID);
+            // if(this.windowsMenu_mc.visible)
+            if (menu)
+            {
+                menu.addStatEntry(id, actionID, clickSound, text, state, greyedOut, legal);
+            }
+        }
+        
+        public function addButtonsDone() : *
+        {
+            if(this.windowsMenu_mc.visible)
+            {
+                this.windowsMenu_mc.updateDone();
+            }
+        }
+        
+        public function setIggyImage(param1:MovieClip, param2:String) : *
+        {
+            var _loc3_:MovieClip = null;
+            if(param1 && (!param1.texture || param1.texture != param2))
+            {
+                this.removeChildrenOf(param1.img_mc);
+                if(param2 == "")
+                {
+                param1.img_mc.visible = false;
+                }
+                else
+                {
+                param1.img_mc.visible = true;
+                _loc3_ = new IggyIcon();
+                _loc3_.name = "iggy_" + param2;
+                param1.img_mc.addChild(_loc3_);
+                }
+                param1.texture = param2;
+            }
+        }
+        
+        public function removeChildrenOf(param1:MovieClip) : void
+        {
+            var _loc2_:int = 0;
+            if(param1 && param1.numChildren != 0)
+            {
+                _loc2_ = param1.numChildren;
+                while(_loc2_ > 0)
+                {
+                _loc2_--;
+                param1.removeChildAt(_loc2_);
+                }
+            }
+        }
+        
+        public function clearButtons() : *
+        {
+            this.windowsMenu_mc.list.clearElements();
+        }
+        
+        public function selectButton(param1:MovieClip) : *
+        {
+            // set current active menu to the element's
+            if (param1)
+            {
+                this.setCurrentMenu(param1.menu);
+            }
+            
+            this.getList().selectMC(param1);
+
+            // if (param1 && this.isCustomInstance)
+            if (param1)
+            {
+                ExternalInterface.call("buttonSelected", param1.actionID);
+            }
+        }
+        
+        public function open() : *
+        {
+            if(this.windowsMenu_mc.visible)
+            {
+                ExternalInterface.call("PlaySound","UI_GM_Generic_Slide_Open");
+                this.windowsMenu_mc.alpha = 1;
+            }
+
+            if (this.isCustomInstance)
+            {
+                stage.addEventListener("rightMouseDown",this.close);
+            }
+
+            stage.addEventListener(MouseEvent.CLICK,this.onCloseUI)
+            // else
+            // {
+            //     // ExternalInterface.call("pipVanillaContextMenuOpened");
+            // }
+            
+            // ;
+        }
+        
+        public function onCloseUI(param1:MouseEvent) : *
+        {
+            // if(!param1.target.isButton param1.target == null)
+            if (param1.target == stage)
+            {
+                this.close();
+            }
+        }
+        
+        public function onWheel(param1:MouseEvent) : *
+        {
+            if(param1.delta > 0)
+            {
+                ExternalInterface.call("PreviousContext");
+            }
+            else
+            {
+                ExternalInterface.call("NextContext");
+            }
+        }
+
+        public function updateMaxHeight(height:Number) : *
+        {
+            this.maxHeight = Math.max(height, this.maxHeight);
+        }
+
+        public function updateMaxWidth(width:Number) : *
+        {
+            this.maxWidth = Math.max(width, this.maxWidth);
+        }
+        
+        public function close() : *
+        {
+            this.maxWidth = 0;
+            this.maxHeight = 0;
+
+            stage.removeEventListener(MouseEvent.MOUSE_WHEEL,this.currentMenu.scroll);
+            stage.removeEventListener("rightMouseDown",this.close);
+            stage.removeEventListener(MouseEvent.CLICK,this.onCloseUI);
+            if(this.windowsMenu_mc.visible)
+            {
+                this.windowsMenu_mc.alpha = 0;
+                ExternalInterface.call("PlaySound","UI_GM_Generic_Slide_Close");
+                ExternalInterface.call("menuClosed");
+            }
+
+            // reset list
+            this.contextMenusList.clearElements();
+            this.contextMenusList.addElement(this.windowsMenu_mc);
+            this.elementDict = new Dictionary();
+
+            if (this.isCustomInstance)
+            {
+                this.contextMenusList.y = -9999;
+            }
+
+            ExternalInterface.call("pipContextMenuClosed");
+        }
+        
+        public function next() : *
+        {
+            this.getList().next();
+        }
+        
+        public function previous() : *
+        {
+            this.getList().previous();
+        }
+        
+        public function setPos(param1:Number, param2:Number) : *
+        {
+        }
+        
+        public function setText(param1:Number, param2:String) : *
+        {
+            if(param1 >= 0 && param1 < this.text_array.length)
+            {
+                this.text_array[param1].htmlText = param2;
+            }
+        }
+
+        // public function scrollMenu(direction:Number) : *
+        // {
+        //     this.currentMenu.scroll(direction);
+        // }
+
+        public function spawnContextMenu(stringID:String) : *
+        {
+            var menu:MovieClip = new windowsMenu_1();
+            menu.frame1();
+            menu.visible = false;
+            menu.list_string_id = stringID;
+            this.contextMenusList.addElement(menu, false);
+        }
+
+        public function removeSubMenu(menuID:String) : *
+        {
+            var menu:MovieClip = this.contextMenusList.getElementByString("list_string_id", menuID);
+
+            this.contextMenusList.removeElementByListId(menu.list_id);
+        }
+
+        public function setStatAmount(actionID:String, amount:String) : *
+        {
+            var mc:MovieClip = this.elementDict[actionID];
+
+            if (mc)
+            {
+                mc.amount_txt.htmlText = amount;
+            }
+        }
+
+        // TODO move to its own UI
+        public function startTimer(id:String, seconds:Number) : *
+        {
+            var timer:Timer = new Timer(seconds * 1000);
+            timer.addEventListener(TimerEvent.TIMER_COMPLETE, function() : *
+            {
+                ExternalInterface.call("pipTimerComplete", id);
+            });
+            this.timers.push(timer);
+            timer.start();
+        }
+
+        public function setCurrentMenu(menu:MovieClip) : *
+        {
+            if (this.currentMenu)
+            {
+                this.stage.removeEventListener(MouseEvent.MOUSE_WHEEL,this.currentMenu.scroll);
+            }
+
+            this.currentMenu = menu;
+
+            this.stage.addEventListener(MouseEvent.MOUSE_WHEEL,this.currentMenu.scroll);
+        }
+        
+        function frame1() : *
+        {
+            this.events = new Array("IE UILeft","IE UIRight","IE UIUp","IE UIDown","IE UIAccept","IE UIBack","IE UICancel");
+            this.layout = "fixed";
+            this.curTooltip = -1;
+            this.hasTooltip = false;
+            this.closing = false;
+            this.tweenTime = 0.3;
+            this.text_array = new Array();
+            this.buttonArr = new Array();
+
+            this.contextMenusList = new horizontalList();
+            this.contextMenusList.EL_SPACING = 0;
+            this.windowsMenu_mc.list_string_id = "main";
+            this.contextMenusList.addElement(this.windowsMenu_mc);
+            this.addChild(this.contextMenusList);
+
+            this.setCurrentMenu(this.windowsMenu_mc);
+
+            this.elementDict = new Dictionary();
+
+            this.timers = new Array();
+        }
+    }
+}

@@ -1,0 +1,23 @@
+- Added a warning upon loading a save with mods known to be problematic
+- Added a dyes tab to the vanity menu, replacing the previous context menu
+	- RGB sliders are not finished yet (you can use them in developer mode, but they will not be saved)
+- Graying out hotbar slots while casting skills should now work similarly to before
+- Added Derpy's scripted encounters to the Treasure Table Display
+- Added an option to disable area transition labels or change their duration. It now also hides immediately if you hover over a character/item to bring up its healthbar
+- Possibly fixed a significant stuttering issue with the hotbar
+- Added a button to revert a transmog'd item's appearance (not retroactive; will only work on newly transmogged items)
+- Changing tabs in the Vanity UI now plays a sound
+- Rounded the numbers in the Treasure Table Display
+
+On the technical side:
+
+- Fixed a net error message upon loading into the main menu
+- Fixed a startup error related to the Osiris table
+- Added UIObject flag helper methods to the UI table (though Norbyte confirmed these will be usable like other enums in the future)
+- Added ways to set and delete tuples to the Osiris table with :Set() and :Delete(); :Get() queries the DB (previous usage still works).
+- Osiris table's DB queries now return the list of tuples as the last return value, always
+- Added a separate UI for querying time from flash
+- Fixed time functions not accounting for daylight savings (iggy oversight)
+- Added annotations for the _Feature table/class
+- Added a `Text` library with a handy format function
+- Improvements to events and hooks: libraries can now hold their events and hooks as tables in `Event` and `Hooks` fields respectively, from which you can easily see all listener types available and register listeners. Doing it this way enables auto-completion and intellisense/EmmyLua annotations for listener parameters, which was not possible before. Old libraries will slowly be updated to use this, and the old method of registering listeners will stay.

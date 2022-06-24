@@ -1,0 +1,4 @@
+- Added hotbar hotkeys for Toggle Party Link and bedroll rest. The rest hotkey still requires a bedroll.
+- Fixed hotbar for people who did not have it enabled before this patch, or deleted their config
+- Hotbar custom keyboard hotkeys are now locked behind a setting in the config file; off by default.
+- Fixed custom hotbar hotkeys working even when the multihotbar was disabled

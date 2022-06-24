@@ -1,0 +1,52 @@
+package ui_fla
+{
+    import flash.display.MovieClip;
+    import flash.text.TextField;
+    import flash.text.TextFieldAutoSize;
+    import flash.utils.Timer;
+    import flash.events.MouseEvent;
+    
+    public dynamic class MainTimeline extends MovieClip
+    {
+        
+        public function MainTimeline()
+        {
+            super();
+            this.addFrameScript(0, this.frame1);
+        }
+        
+        public function onEventInit() : *
+        {
+
+        }
+
+        public function getDate() : String
+        {
+            var date:Date = new Date();
+
+            return date.toString();
+        }
+
+        public function getUTCDate() : String
+        {
+            var date:Date = new Date();
+
+            return date.toUTCString();
+        }
+
+        public function getTime() : Number
+        {
+            var date:Date = new Date();
+
+            return date.getTime();
+        }
+        
+        function frame1() : *
+        {
+            this.uiScaling = 1;
+            this.events = new Array();
+            this.layout = "fixed";
+            this.leftUI = false;
+        }
+    }
+}

@@ -1,0 +1,35 @@
+package
+{
+    import flash.display.MovieClip;
+    import flash.external.ExternalInterface;
+    import flash.text.TextField;
+    import flash.events.MouseEvent;
+
+    public dynamic class TextElement extends Element
+    {
+        public var text_txt:TextField;
+
+        public var size:Number = 17;
+        
+        public function TextElement()
+        {
+            super();
+
+            // Mouse Events
+            this.text_txt.addEventListener(MouseEvent.MOUSE_UP, this.onHitUp);
+            this.text_txt.addEventListener(MouseEvent.MOUSE_DOWN, this.onHitDown);
+            this.text_txt.addEventListener(MouseEvent.MOUSE_OVER, this.onHitOver);
+            this.text_txt.addEventListener(MouseEvent.MOUSE_OUT, this.onHitOut);
+        }
+
+        public function SetFontSize(newSize:Number) : *
+        {
+            this.size = newSize;
+        }
+
+        public function SetText(text:String, align:String = "center", color:String = "") : *
+        {
+            ElementBuilder.SetTextField(this.text_txt, text, align, color, this.size);
+        }
+    }
+}

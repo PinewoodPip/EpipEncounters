@@ -1,0 +1,6 @@
+new itemgroup "PIP_UNI_IdolaDeus"
+
+add levelgroup 1,0,"All"
+add rootgroup "426e5f7b-6e10-4864-9181-2f9ba6b0c27f",""
+add namegroup "PIP_UNI_IdolaDeus","",""
+

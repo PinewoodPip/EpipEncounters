@@ -1,0 +1,152 @@
+package
+{
+    import LS_Classes.larTween;
+    import LS_Classes.textEffect;
+    import fl.motion.easing.Quadratic;
+    import fl.motion.easing.Sine;
+    import flash.display.MovieClip;
+    import flash.events.TimerEvent;
+    import flash.geom.Point;
+    import flash.utils.Timer;
+    
+    public dynamic class OverheadDamage extends MovieClip
+    {
+        
+        
+        public var textHolder_mc:MovieClip;
+        
+        public var base:MovieClip;
+        
+        public var myColour:uint;
+        
+        public var timeline:larTween;
+        
+        public var timeline2:larTween;
+        
+        public var timeline3:larTween;
+        
+        public var timeline4:larTween;
+        
+        public var t:Timer;
+        
+        public function OverheadDamage()
+        {
+            super();
+            addFrameScript(0,this.frame1);
+        }
+        
+        public function startAnimation(param1:Number) : *
+        {
+            this.stopTweens();
+            var _loc2_:Number = 1.7;
+            var _loc3_:Point = new Point(0,0);
+            switch(param1)
+            {
+                case 0:
+                _loc3_ = new Point(-1,-1);
+                break;
+                case 1:
+                _loc3_ = new Point(1,-1);
+                break;
+                case 2:
+                _loc3_ = new Point(-1,1);
+                break;
+                case 3:
+                _loc3_ = new Point(1,1);
+                break;
+                case 4:
+                _loc3_ = new Point(0,-1);
+                break;
+                case 5:
+                _loc3_ = new Point(1,0);
+                break;
+                case 6:
+                _loc3_ = new Point(0,1);
+                break;
+                case 7:
+                _loc3_ = new Point(1,0);
+                break;
+                default:
+                _loc3_ = new Point(0,0);
+            }
+            var _loc4_:Point = new Point(0,-120);
+            _loc4_.x += _loc3_.x * 25;
+            _loc4_.y += _loc3_.y * 25;
+            _loc4_.x += _loc3_.x * Math.random() * 30;
+            _loc4_.y += _loc3_.y * Math.random() * 30;
+            this.timeline = new larTween(this.textHolder_mc,"y",Quadratic.easeOut,this.textHolder_mc.y,_loc4_.y,_loc2_);
+            this.timeline2 = new larTween(this.textHolder_mc,"scaleX",Quadratic.easeOut,this.textHolder_mc.scaleX,1,_loc2_);
+            this.timeline3 = new larTween(this.textHolder_mc,"scaleY",Quadratic.easeOut,this.textHolder_mc.scaleY,1,_loc2_);
+            this.timeline4 = new larTween(this.textHolder_mc,"x",Quadratic.easeOut,0,_loc4_.x,_loc2_);
+            this.t = new Timer(1500,1);
+            this.t.addEventListener(TimerEvent.TIMER_COMPLETE,this.fadeAway);
+            this.t.start();
+        }
+        
+        public function stopTweens() : *
+        {
+            if(this.timeline)
+            {
+                this.timeline.stop();
+                this.timeline = null;
+            }
+            if(this.timeline2)
+            {
+                this.timeline2.stop();
+                this.timeline2 = null;
+            }
+            if(this.timeline3)
+            {
+                this.timeline3.stop();
+                this.timeline3 = null;
+            }
+            if(this.timeline4)
+            {
+                this.timeline4.stop();
+                this.timeline4 = null;
+            }
+        }
+        
+        public function fadeAway() : *
+        {
+            var _loc1_:Number = 0.2;
+            this.stopTweens();
+            this.timeline2 = new larTween(this.textHolder_mc,"alpha",Sine.easeOut,this.textHolder_mc.alpha,0,_loc1_,this.destroy);
+            this.timeline2.onUpdate = this.updateTextEffect;
+        }
+        
+        public function updateTextEffect() : *
+        {
+            this.textHolder_mc.filters = textEffect.createStrokeFilter(this.myColour,this.base.tEffStrWDam,this.textHolder_mc.alpha,this.base.tEffStr,this.base.tEffQualityDam);
+        }
+        
+        public function destroy() : *
+        {
+            this.stopTweens();
+            this.visible = false;
+            if(this.Holder_mc)
+            {
+                this.Holder_mc.removeOHD(this);
+            }
+            // this.y = 9000; // PIP - workaround for lingering overheads blocking clicks
+        }
+        
+        public function onDestroy() : *
+        {
+            this.stopTweens();
+            if(this.t)
+            {
+                this.t.stop();
+                this.t = null;
+            }
+        }
+        
+        private function frame1() : *
+        {
+            // PIP
+            // this.textHolder_mc.mouseEnabled = false;
+            // this.mouseEnabled = false;
+            // this.base.mouseEnabled = false;
+        }
+    }
+}

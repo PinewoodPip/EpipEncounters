@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<save>
+    <header version="2" />
+    <version major="3" minor="6" revision="6" build="0" />
+    <region id="IconUVList">
+        <node id="root">
+            <children>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="ui_button_green_hightlighted" type="22" />
+                    <attribute id="U1" value="0.375244" type="6" />
+                    <attribute id="U2" value="0.499756" type="6" />
+                    <attribute id="V1" value="0.000244141" type="6" />
+                    <attribute id="V2" value="0.124756" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="ui_button_green_idle" type="22" />
+                    <attribute id="U1" value="0.500244" type="6" />
+                    <attribute id="U2" value="0.624756" type="6" />
+                    <attribute id="V1" value="0.000244141" type="6" />
+                    <attribute id="V2" value="0.124756" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="ui_button_green_pressed" type="22" />
+                    <attribute id="U1" value="0.625244" type="6" />
+                    <attribute id="U2" value="0.749756" type="6" />
+                    <attribute id="V1" value="0.000244141" type="6" />
+                    <attribute id="V2" value="0.124756" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="ui_button_red_highlighted" type="22" />
+                    <attribute id="U1" value="0.000244141" type="6" />
+                    <attribute id="U2" value="0.124756" type="6" />
+                    <attribute id="V1" value="0.000244141" type="6" />
+                    <attribute id="V2" value="0.124756" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="ui_button_red_idle" type="22" />
+                    <attribute id="U1" value="0.125244" type="6" />
+                    <attribute id="U2" value="0.249756" type="6" />
+                    <attribute id="V1" value="0.000244141" type="6" />
+                    <attribute id="V2" value="0.124756" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="ui_button_red_pressed" type="22" />
+                    <attribute id="U1" value="0.250244" type="6" />
+                    <attribute id="U2" value="0.374756" type="6" />
+                    <attribute id="V1" value="0.000244141" type="6" />
+                    <attribute id="V2" value="0.124756" type="6" />
+                </node>
+            </children>
+        </node>
+    </region>
+    <region id="TextureAtlasInfo">
+        <node id="root">
+            <children>
+                <node id="TextureAtlasIconSize">
+                    <attribute id="Height" value="256" type="4" />
+                    <attribute id="Width" value="256" type="4" />
+                </node>
+                <node id="TextureAtlasPath">
+                    <attribute id="Path" value="Assets/Textures/Icons/pip_ui_generic_medium.dds" type="20" />
+                    <attribute id="UUID" value="369bf43a-e991-44ad-ad54-7e418032eb15" type="22" />
+                </node>
+                <node id="TextureAtlasTextureSize">
+                    <attribute id="Height" value="2048" type="4" />
+                    <attribute id="Width" value="2048" type="4" />
+                </node>
+            </children>
+        </node>
+    </region>
+</save>

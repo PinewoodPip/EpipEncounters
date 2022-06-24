@@ -1,0 +1,122 @@
+package characterCreation_fla
+{
+    import LS_Classes.scrollList;
+    import flash.display.MovieClip;
+    import flash.external.ExternalInterface;
+    import flash.text.TextField;
+    import flash.text.TextFieldAutoSize;
+    
+    public dynamic class talentsMC_51 extends MovieClip
+    {
+        
+        
+        public var availablePoints_txt:TextField;
+        
+        public var backBtn_mc:brownBtn;
+        
+        public var nextBtn_mc:greenBtn;
+        
+        public var talentHolder_mc:MovieClip;
+        
+        public var title_txt:TextField;
+        
+        public var root_mc:MovieClip;
+        
+        public var talentList:scrollList;
+        
+        public function talentsMC_51()
+        {
+            super();
+            addFrameScript(0,this.frame1);
+        }
+        
+        public function onInit(param1:MovieClip) : *
+        {
+            this.root_mc = param1;
+            this.backBtn_mc.init(this.root_mc.CCPanel_mc.prevPanel);
+            this.nextBtn_mc.init(this.root_mc.CCPanel_mc.nextPanel);
+            this.title_txt.wordWrap = this.title_txt.multiline = false;
+            this.title_txt.autoSize = TextFieldAutoSize.CENTER;
+            this.availablePoints_txt.wordWrap = this.availablePoints_txt.multiline = false;
+            this.availablePoints_txt.autoSize = TextFieldAutoSize.CENTER;
+            this.talentList = new scrollList();
+            this.talentList.setFrame(354,612);
+            this.talentList.m_scrollbar_mc.m_hideWhenDisabled = false;
+            this.talentList.m_scrollbar_mc.setLength(563);
+            this.talentList.m_scrollbar_mc.y = -14;
+            this.talentList.mouseWheelWhenOverEnabled = true;
+            this.talentList.sortOn(["isRacial","isActive","choosable","talName"],[Array.NUMERIC | Array.DESCENDING,Array.NUMERIC | Array.DESCENDING,Array.NUMERIC | Array.DESCENDING,null]);
+            this.talentHolder_mc.addChild(this.talentList);
+        }
+        
+        public function toggleTalent(param1:MovieClip) : *
+        {
+            if(param1.choosable)
+            {
+                // pip edit
+                ExternalInterface.call("pipToggleTalent", param1.talentID, param1.customTalentId, param1.isActive);
+            }
+        }
+        
+        public function updateTalents(param1:Array, param2:Array) : *
+        {
+            var _loc3_:uint = 0;
+            var _loc4_:uint = 0;
+            var _loc5_:String = null;
+            var _loc6_:Boolean = false;
+            var _loc7_:Boolean = false;
+            if(param1.length > 0)
+            {
+                this.root_mc.availableTalentPoints = param1[0];
+                this.availablePoints_txt.htmlText = this.root_mc.textArray[15] + " " + this.root_mc.availableTalentPoints;
+                _loc3_ = 1;
+                while(_loc3_ < param1.length)
+                {
+                _loc4_ = param1[_loc3_++];
+                _loc5_ = param1[_loc3_++];
+                _loc6_ = param1[_loc3_++];
+                _loc7_ = param1[_loc3_++];
+                this.addTalentElement(_loc4_,_loc5_,_loc6_,_loc7_,false);
+                }
+            }
+            if(param2.length > 0)
+            {
+                _loc3_ = 0;
+                while(_loc3_ < param2.length)
+                {
+                _loc4_ = param2[_loc3_++];
+                _loc5_ = param2[_loc3_++];
+                this.addTalentElement(_loc4_,_loc5_,true,false,true);
+                }
+            }
+            this.positionLists();
+        }
+        
+        public function addTalentElement(param1:uint, param2:String, param3:Boolean, param4:Boolean, param5:Boolean, param6:String) : *
+        {
+            var _loc7_:MovieClip;
+            if(!(_loc7_ = this.talentList.getElementByNumber("talentID",param1)))
+            {
+                (_loc7_ = new talentEl()).onInit(this.root_mc,param5);
+                _loc7_.setText(param2);
+                _loc7_.talName = param2;
+                _loc7_.talentID = param1;
+                _loc7_.customTalentId = param6; // pip
+                this.talentList.addElement(_loc7_,false);
+            }
+            _loc7_.dColour = !!param4 ? 0 : 12910617;
+            _loc7_.choosable = param4;
+            _loc7_.setState(param3);
+            _loc7_.isUpdated = true;
+        }
+        
+        public function positionLists() : *
+        {
+            this.talentList.cleanUpElements();
+        }
+        
+        function frame1() : *
+        {
+        }
+    }
+}

@@ -1,0 +1,1965 @@
+package playerInfo_fla
+{
+    import LS_Classes.horizontalList;
+    import LS_Classes.larTween;
+    import LS_Classes.tooltipHelper;
+    import fl.motion.easing.Quartic;
+    import fl.motion.easing.Sine;
+    import flash.display.Bitmap;
+    import flash.display.DisplayObject;
+    import flash.display.MovieClip;
+    import flash.events.MouseEvent;
+    import flash.events.TimerEvent;
+    import flash.external.ExternalInterface;
+    import flash.geom.Point;
+    import flash.geom.Rectangle;
+    import flash.text.TextFieldAutoSize;
+    import flash.utils.Timer;
+    
+    public dynamic class MainTimeline extends MovieClip
+    {
+        
+        
+        public var container_mc:MovieClip;
+        
+        public const deselectedAlpha:Number = 1;
+        
+        public var statusSize:int;
+        
+        public var statusSpacing:int;
+        
+        public var selectedCharacterHandle:Number;
+        
+        public var events:Array;
+        
+        public var animationArray:Array;
+        
+        public var layout:String;
+        
+        public var curTooltip:Number;
+        
+        public var hasTooltip:Boolean;
+        
+        public var isDragging:Boolean;
+        
+        public var allowDragging:Boolean;
+        
+        public var toggleButtonTooltips:Array;
+        
+        public var listNeedsReordering:Boolean;
+        
+        public var uiScaling:Number;
+        
+        public var defaultHPColour:Number;
+        
+        public var releaseDistY:Number;
+        
+        public var curTooltipOwner:Number;
+        
+        public var playerXpos:Number;
+        
+        public var inventorySkillButtonX:Number;
+        
+        public var inventorySkillButtonY:Number;
+        
+        public var infoUpdate:Array;
+        
+        public var linkPieces:Array;
+        
+        public var statusIconSize:int;
+        
+        public var statusIconOffsetX:int;
+        
+        public var statusIconOffsetY:int;
+        
+        public var iconHeight:uint;
+        
+        public var iconWidth:uint;
+        
+        public var isLeft:Boolean;
+        
+        public var wideSpacingMultiplier:Number;
+        
+        public var guiStatusValues:Array;
+        
+        public var successString:String;
+        
+        public var failureString:String;
+        
+        public var _isGMState:Boolean;
+        
+        public var doubleClickTimer:Timer;
+        
+        public var dcTStr:String;
+        
+        public var piSpacing:Number;
+        
+        public var piMode:Number;
+        
+        public var selectedPlayer:MovieClip;
+        
+        public var player_array:Array;
+        
+        public var disabledBtnAlpha:Number;
+        
+        public var status_array:Array;
+        
+        public var allowDragUpdate:Boolean;
+        
+        public var boundaryRect:Rectangle;
+        
+        public var currentDraggedPI:MovieClip;
+        
+        public var maxGroupId:Number;
+        
+        public var pullLooseX:Number;
+        
+        public var oldClosestMC:MovieClip;
+        
+        public var playerIsBeingDragged:Boolean;
+        
+        public var oldAbovePlayer:Number;
+        
+        public var playerDragPosX:Number;
+        
+        public var playerDragPosY:Number;
+        
+        public var startDragDist:Number;
+        
+        public var isController:Boolean;
+        
+        public var summonIconHeight:Number;
+        
+        public var summonIconWidth:Number;
+        
+        public var summonIconScrollRectOffset:Number;
+        
+        public var summonDurationOffset:Number;
+        
+        public var summonDurationNormalOffset:Number;
+        
+        public var summonNormalScrollRect:Number;
+        
+        public var summonNormalScale:Number;
+        
+        public function MainTimeline()
+        {
+            super();
+            addFrameScript(0,this.frame1);
+        }
+        
+        public function onEventResize() : *
+        {
+        }
+        
+        public function updateInfos() : *
+        {
+            var _loc3_:Number = NaN;
+            var _loc4_:Number = NaN;
+            var _loc5_:String = null;
+            var _loc1_:MovieClip = null;
+            var _loc2_:uint = 0;
+            while(_loc2_ < this.infoUpdate.length)
+            {
+                _loc3_ = this.infoUpdate[_loc2_++];
+                _loc4_ = this.infoUpdate[_loc2_++];
+                if(_loc1_ == null || _loc1_.characterHandle != _loc4_)
+                {
+                _loc1_ = this.getPlayerOrSummonByHandle(_loc4_);
+                }
+                switch(_loc3_)
+                {
+                case 0:
+                    _loc5_ = this.infoUpdate[_loc2_++];
+                    this.setSummonTurnTextMC(_loc1_,_loc5_);
+                    break;
+                case 1:
+                    this.setMCEquipState(_loc1_,this.infoUpdate[_loc2_++]);
+                    break;
+                case 2:
+                    _loc1_.setHPBar(this.infoUpdate[_loc2_++],true);
+                    break;
+                case 3:
+                    _loc1_.setSourcePoints(this.infoUpdate[_loc2_++],this.infoUpdate[_loc2_++]);
+                    break;
+                case 4:
+                    _loc1_.armor_mc.setBar(this.infoUpdate[_loc2_++],true);
+                    break;
+                case 5:
+                    _loc1_.armor_mc.setBarColour(this.infoUpdate[_loc2_++]);
+                    break;
+                case 6:
+                    _loc1_.magicArmor_mc.setBar(this.infoUpdate[_loc2_++],true);
+                    break;
+                case 7:
+                    _loc1_.magicArmor_mc.setBarColour(this.infoUpdate[_loc2_++]);
+                    break;
+                case 8:
+                    _loc1_.dis_mc.visible = Boolean(this.infoUpdate[_loc2_++]);
+                    break;
+                case 9:
+                    _loc1_.setHPColour(this.infoUpdate[_loc2_++]);
+                    break;
+                case 10:
+                    _loc1_.controlled = this.infoUpdate[_loc2_++];
+                    break;
+                case 11:
+                    this.setMCCurrentActionState(_loc1_,this.infoUpdate[_loc2_++]);
+                    break;
+                case 12:
+                    this.setMCLevelUp(_loc1_,this.infoUpdate[_loc2_++],this.infoUpdate[_loc2_++],this.infoUpdate[_loc2_++],this.infoUpdate[_loc2_++]);
+                    break;
+                case 13:
+                    this.setMCGUIStatus(_loc1_,this.infoUpdate[_loc2_++]);
+                    break;
+                }
+            }
+            this.infoUpdate = new Array();
+        }
+        
+        public function onEventUp(param1:Number) : *
+        {
+            return false;
+        }
+        
+        public function setGUIStatusLabel(param1:Number, param2:String) : *
+        {
+            if(param1 >= 0 && param1 < this.guiStatusValues.length)
+            {
+                this.guiStatusValues[param1] = param2;
+            }
+        }
+        
+        public function setTooltips(param1:Number, param2:String) : *
+        {
+            if(param1 >= 0 && param1 < this.toggleButtonTooltips.length)
+            {
+                this.toggleButtonTooltips[param1] = param2;
+            }
+        }
+        
+        public function setDefaultHPColour(param1:uint) : *
+        {
+            this.defaultHPColour = Number(param1);
+        }
+        
+        public function onEventInit() : *
+        {
+        }
+        
+        public function get isGMState() : Boolean
+        {
+            return this._isGMState;
+        }
+        
+        public function set isGMState(param1:Boolean) : *
+        {
+            this._isGMState = param1;
+            ExternalInterface.call("registerAnchorId",!!this._isGMState ? "dmPlayerInfo" : "playerInfo");
+            ExternalInterface.call("setAnchor","topleft","screen","topleft");
+            this.allowDragging = !this._isGMState;
+        }
+        
+        public function setAnchor(param1:Number, param2:* = true) : *
+        {
+            ExternalInterface.call("registerAnchorId","playerInfo_c" + param1);
+            if(param2)
+            {
+                ExternalInterface.call("setAnchor","topleft","splitscreen","topleft");
+            }
+            else
+            {
+                ExternalInterface.call("setAnchor","topright","splitscreen","topright");
+            }
+            this.setLeft(param2);
+            ExternalInterface.call("anchorSet",param1);
+        }
+        
+        public function setLeft(param1:Boolean) : *
+        {
+            this.isLeft = param1;
+            var _loc2_:uint = 0;
+            while(_loc2_ < this.player_array.length)
+            {
+                this.player_array[_loc2_].setLeft(param1);
+                _loc2_++;
+            }
+            if(this.isLeft)
+            {
+                this.container_mc.x = 60;
+            }
+            else
+            {
+                this.container_mc.x = 1750;
+            }
+        }
+        
+        public function dcTEnded(param1:TimerEvent) : *
+        {
+            this.dcTStr = "";
+        }
+        
+        public function onEventDown(param1:Number) : *
+        {
+            var _loc4_:Number = NaN;
+            var _loc2_:String = "";
+            var _loc3_:Boolean = false;
+            if(param1 < this.events.length && param1 >= 0 && this.startsWith(this.events[param1],"IE UISelectChar") && !this.isGMState)
+            {
+                _loc2_ = this.events[param1].substr(15,this.events[param1].length - 15);
+                if(_loc2_ != "" && _loc2_ != null)
+                {
+                _loc4_ = Number(_loc2_) - 1;
+                if(this.dcTStr == "" || this.events[param1] != this.dcTStr)
+                {
+                    if(_loc4_ < this.player_array.length)
+                    {
+                        ExternalInterface.call("PlaySound","UI_Game_Sel");
+                        ExternalInterface.call("charSel",this.player_array[_loc4_].characterHandle);
+                        _loc3_ = true;
+                        this.dcTStr = this.events[param1];
+                        this.doubleClickTimer.start();
+                    }
+                }
+                else
+                {
+                    this.dcTStr = "";
+                    if(_loc4_ < this.player_array.length)
+                    {
+                        ExternalInterface.call("centerCamOnCharacter",this.player_array[_loc4_].characterHandle);
+                        _loc3_ = true;
+                    }
+                }
+                }
+            }
+            return _loc3_;
+        }
+        
+        public function startsWith(param1:String, param2:String) : Boolean
+        {
+            param1 = param1.toLowerCase();
+            param2 = param2.toLowerCase();
+            return param2 == param1.substr(0,param2.length);
+        }
+        
+        public function removeAllInfos() : *
+        {
+            var _loc2_:MovieClip = null;
+            var _loc1_:uint = 0;
+            while(_loc1_ < this.player_array.length)
+            {
+                _loc2_ = this.player_array[_loc1_];
+                if(_loc2_)
+                {
+                this.removeChildrenOf(_loc2_.icon_mc);
+                this.container_mc.removeChild(_loc2_);
+                }
+                _loc1_++;
+            }
+            this.removeChildrenOf(this.container_mc);
+            this.player_array = new Array();
+            this.repositionPI();
+        }
+        
+        public function removeInfo(param1:Number) : *
+        {
+            var _loc2_:MovieClip = this.getPlayerInfo(param1);
+            if(_loc2_ != null)
+            {
+                this.removeChildrenOf(_loc2_.icon_mc);
+                this.container_mc.removeChild(_loc2_);
+                this.player_array.splice(_loc2_.loc,1);
+                this.repositionPI();
+            }
+        }
+        
+        public function removeChildrenOf(param1:MovieClip) : void
+        {
+            var _loc2_:int = 0;
+            if(param1.numChildren != 0)
+            {
+                _loc2_ = param1.numChildren;
+                while(_loc2_ > 0)
+                {
+                _loc2_--;
+                param1.removeChildAt(_loc2_);
+                }
+            }
+        }
+        
+        public function setArmourBar(param1:Number, param2:Number) : *
+        {
+            var _loc3_:MovieClip = this.getPlayerOrSummonByHandle(param1);
+            if(_loc3_)
+            {
+                _loc3_.armor_mc.setBar(param2,true);
+            }
+        }
+        
+        public function setArmourBarColour(param1:Number, param2:uint) : *
+        {
+            var _loc3_:MovieClip = this.getPlayerOrSummonByHandle(param1);
+            if(_loc3_)
+            {
+                _loc3_.armor_mc.setBarColour(param2);
+            }
+        }
+        
+        public function setMagicArmourBarColour(param1:Number, param2:uint) : *
+        {
+            var _loc3_:MovieClip = this.getPlayerOrSummonByHandle(param1);
+            if(_loc3_)
+            {
+                _loc3_.magicArmor_mc.setBarColour(param2);
+            }
+        }
+        
+        public function setMagicArmourBar(param1:Number, param2:Number) : *
+        {
+            var _loc3_:MovieClip = this.getPlayerOrSummonByHandle(param1);
+            if(_loc3_)
+            {
+                _loc3_.magicArmor_mc.setBar(param2,true);
+            }
+        }
+        
+        public function setGUIStatus(param1:Number, param2:Number) : *
+        {
+            var _loc3_:MovieClip = this.getPlayerOrSummonByHandle(param1);
+            if(_loc3_)
+            {
+                this.setMCGUIStatus(_loc3_,param2);
+            }
+        }
+        
+        public function setMCGUIStatus(param1:MovieClip, param2:Number) : *
+        {
+            if(param1 && param1.guiStatus_txt)
+            {
+                param1.guiStatus_txt.visible = param2 != 0;
+                param1.guiStatus_txt.htmlText = this.guiStatusValues[param2];
+            }
+        }
+        
+        public function setMCEquipState(param1:MovieClip, param2:Number) : *
+        {
+            if(param1 && param1.eqState_mc)
+            {
+                param1.eqState_mc.eqState = param2;
+                if(param2 <= 0)
+                {
+                param1.eqState_mc.visible = false;
+                param1.eqState_mc.bg_mc.gotoAndStop(1);
+                }
+                else
+                {
+                param1.eqState_mc.visible = true;
+                param1.eqState_mc.bg_mc.gotoAndStop(param2);
+                }
+            }
+        }
+        
+        public function setEquipState(param1:Number, param2:Number) : *
+        {
+            var _loc3_:MovieClip = this.getPlayerOrSummonByHandle(param1);
+            if(_loc3_)
+            {
+                this.setMCEquipState(_loc3_,param2);
+            }
+        }
+        
+        public function fadeOutStatusComplete(param1:Number, param2:Number) : *
+        {
+            var _loc4_:uint = 0;
+            var _loc5_:MovieClip = null;
+            var _loc3_:MovieClip = this.getPlayerOrSummonByHandle(param2);
+            if(_loc3_)
+            {
+                _loc4_ = 0;
+                while(_loc4_ < _loc3_.status_array.length)
+                {
+                _loc5_ = _loc3_.status_array[_loc4_];
+                if(_loc5_.id == param1)
+                {
+                    _loc3_.statusHolder_mc.removeChild(_loc5_);
+                    _loc3_.status_array.splice(_loc4_,1);
+                    return;
+                }
+                _loc4_++;
+                }
+            }
+        }
+        
+        public function updateStatuses(param1:Boolean, param2:Boolean) : *
+        {
+            var _loc3_:uint = 0;
+            var _loc4_:Number = NaN;
+            var _loc5_:Number = NaN;
+            var _loc6_:Number = NaN;
+            var _loc7_:Number = NaN;
+            var _loc8_:Number = NaN;
+            var _loc9_:String = null;
+            this.statusSize = 40;
+            if(!param2)
+            {
+                _loc3_ = 0;
+                while(_loc3_ < this.status_array.length)
+                {
+                if(this.status_array[_loc3_] != undefined)
+                {
+                    _loc4_ = Number(this.status_array[_loc3_]);
+                    _loc5_ = Number(this.status_array[_loc3_ + 1]);
+                    _loc6_ = Number(this.status_array[_loc3_ + 2]);
+                    _loc7_ = Number(this.status_array[_loc3_ + 3]);
+                    _loc8_ = Number(this.status_array[_loc3_ + 4]);
+                    _loc9_ = String(this.status_array[_loc3_ + 5]);
+                    this.setStatus(param1,_loc4_,_loc5_,_loc6_,_loc7_,_loc8_,_loc9_);
+                }
+                _loc3_ += 6;
+                }
+                this.status_array = new Array();
+            }
+            this.cleanupAllStatuses(param2);
+        }
+        
+        public function cleanupAllStatuses(param1:Boolean) : *
+        {
+            var player:MovieClip = null;
+            var _loc3_:uint = 0;
+            var _loc4_:MovieClip = null;
+            var _loc2_:uint = 0;
+            while(_loc2_ < this.player_array.length)
+            {
+                this.player_array[_loc2_].setChildIndex(this.player_array[_loc2_].statusHolder_mc,0);
+                this.cleanupStatusesMC(this.player_array[_loc2_],param1);
+                if(this.player_array[_loc2_] && this.player_array[_loc2_].summonList.length > 0)
+                {
+                _loc3_ = 0;
+                player = this.player_array[_loc2_];
+                while(_loc3_ < player.summonList.length)
+                {
+                    _loc4_ = player.summonList.content_array[_loc3_];
+                    if(_loc4_)
+                    {
+                        _loc4_.statusHolder_mc.visible = false;
+                        if(player.statusHolder_mc.numChildren > 6 && player.statusHolder_mc.visible)
+                        {
+                            _loc4_.scaleY = 0.6;
+                            _loc4_.icon_mc.scaleY = 1 / 0.6;
+                            _loc4_.icon_mc.scrollRect = new Rectangle(0,this.summonIconScrollRectOffset,this.summonIconWidth,this.summonIconHeight);
+                            _loc4_.y = 42;
+                            _loc4_.turns_mc.scaleY = 1 / 0.6;
+                            _loc4_.turns_mc.y = this.summonDurationOffset;
+                        }
+                        else
+                        {
+                            _loc4_.scaleY = 1;
+                            _loc4_.y = 0;
+                            _loc4_.icon_mc.scaleY = this.summonNormalScale;
+                            _loc4_.icon_mc.scrollRect = new Rectangle(0,0,this.summonIconWidth,this.summonNormalScrollRect);
+                            _loc4_.turns_mc.scaleY = 1;
+                            _loc4_.turns_mc.y = this.summonDurationNormalOffset;
+                        }
+                        this.cleanupStatusesMC(_loc4_,param1);
+                    }
+                    _loc3_++;
+                }
+                }
+                _loc2_++;
+            }
+        }
+        
+        public function cleanupStatusesMC(param1:MovieClip, param2:Boolean) : *
+        {
+            var _loc4_:uint = 0;
+            var _loc5_:MovieClip = null;
+            var _loc3_:Number = 0;
+            var _loc6_:Number = 0;
+            if(param1)
+            {
+                _loc4_ = 0;
+                _loc6_ = Math.max(Math.ceil(param1.status_array.length / 2),6);
+                while(_loc4_ < param1.status_array.length)
+                {
+                _loc5_ = param1.status_array[_loc4_];
+                if(!param2)
+                {
+                    if(_loc5_.alive)
+                    {
+                        _loc5_.alive = false;
+                    }
+                    else if(!_loc5_.fadingOut)
+                    {
+                        if(this.curTooltip == _loc5_.id)
+                        {
+                            ExternalInterface.call("hideTooltip");
+                            this.curTooltip = Number(-1);
+                            this.hasTooltip = false;
+                        }
+                        _loc5_.fadeOut();
+                    }
+                }
+                _loc5_.x = !!this.isLeft ? Number(_loc3_) : Number(0 - _loc3_);
+                _loc5_.y = 0;
+                _loc3_ += _loc5_.widthOverride;
+                _loc4_++;
+                if(_loc4_ > _loc6_ && !param1.isSummon)
+                {
+                    _loc5_.y = this.statusSize;
+                    _loc5_.x -= _loc6_ * this.statusSize;
+                }
+                }
+                if(!param1.list)
+                {
+                }
+            }
+        }
+        
+        public function cleanupStatuses(param1:Number) : *
+        {
+            var _loc3_:uint = 0;
+            var _loc4_:MovieClip = null;
+            var _loc2_:MovieClip = this.getPlayerOrSummonByHandle(param1);
+            if(_loc2_)
+            {
+                _loc3_ = 0;
+                while(_loc3_ < _loc2_.status_array.length)
+                {
+                _loc4_ = _loc2_.status_array[_loc3_];
+                if(_loc4_.alive)
+                {
+                    _loc4_.alive = false;
+                    _loc4_.x = this.statusSize * _loc3_;
+                    if(!this.isLeft)
+                    {
+                        _loc4_.x = 0 - _loc4_.x;
+                    }
+                    _loc4_.y = 0;
+                }
+                else
+                {
+                    if(this.curTooltip == _loc4_.id)
+                    {
+                        ExternalInterface.call("hideTooltip");
+                        this.curTooltip = Number(-1);
+                        this.hasTooltip = false;
+                    }
+                    _loc2_.statusHolder_mc.removeChild(_loc4_);
+                    _loc2_.status_array.splice(_loc3_,1);
+                    _loc3_--;
+                }
+                _loc3_++;
+                }
+                if(_loc2_.list)
+                {
+                _loc2_.list.positionElements();
+                }
+            }
+        }
+        
+        public function setStatus(param1:Boolean, param2:Number, param3:Number, param4:Number, param5:Number, param6:Number, param7:String = "") : *
+        {
+            var _loc9_:MovieClip = null;
+            var _loc10_:uint = 0;
+            var _loc11_:uint = 0;
+            var _loc12_:String = null;
+            var _loc8_:MovieClip = this.getPlayerOrSummonByHandle(param2);
+            if(_loc8_)
+            {
+                _loc9_ = null;
+                _loc11_ = 0;
+                while(_loc11_ < _loc8_.status_array.length)
+                {
+                if(_loc8_.status_array[_loc11_].id == param3)
+                {
+                    _loc10_ = _loc11_;
+                    _loc9_ = _loc8_.status_array[_loc11_];
+                    break;
+                }
+                _loc11_++;
+                }
+                if(_loc9_ == null && param1)
+                {
+                _loc9_ = new Status();
+                _loc9_.init();
+                _loc9_.tooltipAlign = "leftbottom";
+                _loc9_.id = param3;
+                _loc9_.isStatus = true;
+                _loc9_.tooltipOverrideH = 40;
+                _loc9_.tooltipOverrideW = 40;
+                _loc9_.name = "status" + _loc8_.id + "::" + param4;
+                _loc9_.owner = param2;
+                _loc9_.iconId = -1;
+                _loc9_.text_mc.textCtrl_txt.autoSize = TextFieldAutoSize.RIGHT;
+                _loc9_.text_mc.textCtrl_txt.visible = this.isController;
+                _loc9_.text_mc.text_txt.visible = !this.isController;
+                _loc10_ = _loc8_.status_array.length;
+                _loc8_.statusHolder_mc.addChild(_loc9_);
+                _loc8_.status_array.push(_loc9_);
+                _loc9_.addEventListener(MouseEvent.ROLL_OVER,_loc9_.onOver);
+                _loc9_.addEventListener(MouseEvent.ROLL_OUT,_loc9_.onOut);
+                }
+                if(_loc9_)
+                {
+                if(param4 != -1 && _loc9_.iconId != param4)
+                {
+                    _loc9_.iconId = param4;
+                    _loc12_ = "s" + String(param4);
+                    this.setIggyImage(_loc9_,_loc12_);
+                    _loc9_.icon_mc.height = _loc9_.icon_mc.width = this.statusIconSize;
+                    _loc9_.icon_mc.x = this.statusIconOffsetX;
+                    _loc9_.icon_mc.y = this.statusIconOffsetY;
+                }
+                _loc9_.setCoolDown(param6);
+                if(param5 <= 0)
+                {
+                    _loc9_.setTurns("");
+                }
+                else
+                {
+                    _loc9_.setTurns(Math.ceil(param5));
+                }
+                if(this.curTooltip == param3 && this.curTooltipOwner == param2)
+                {
+                    this.showStatusTooltipForMC(_loc9_);
+                }
+                _loc9_.tooltip = param7;
+                _loc9_.widthOverride = this.statusSize + this.statusSpacing;
+                _loc9_.alive = true;
+                }
+            }
+        }
+        
+        public function showStatusTooltipForMC(param1:MovieClip) : *
+        {
+            if(param1.owner && param1.id)
+            {
+                this.curTooltipOwner = Number(param1.owner);
+                this.curTooltip = Number(param1.id);
+                this.hasTooltip = true;
+                tooltipHelper.ShowStatusTooltipForMC(param1,root,param1.tooltipAlign);
+            }
+        }
+        
+        public function showTooltipForMC(param1:MovieClip) : *
+        {
+            if(param1.tooltip != null && param1.tooltip != "")
+            {
+                this.curTooltipOwner = Number(param1.owner);
+                this.curTooltip = Number(param1.id);
+                this.hasTooltip = true;
+                tooltipHelper.ShowTooltipForMC(param1,root,param1.tooltipAlign);
+            }
+        }
+        
+        public function getGlobalPositionOfMC(param1:MovieClip) : Point
+        {
+            var _loc2_:Point = new Point(param1.x,param1.y);
+            var _loc3_:DisplayObject = param1.parent;
+            while(_loc3_ && (_loc3_ != root || _loc3_ != stage))
+            {
+                _loc2_.x += _loc3_.x;
+                _loc2_.y += _loc3_.y;
+                _loc3_ = _loc3_.parent;
+            }
+            return _loc2_;
+        }
+        
+        public function startDragging(param1:Number) : *
+        {
+            var _loc2_:MovieClip = this.getPlayerInfo(param1);
+            if(this.allowDragUpdate && _loc2_ != null)
+            {
+                this.repositionPIWider(true);
+                _loc2_.draggingPlayer = true;
+                _loc2_.startDrag(false,this.boundaryRect);
+                this.currentDraggedPI = _loc2_;
+                this.playerDragPosX = Number(this.currentDraggedPI.x);
+                this.playerDragPosY = Number(this.currentDraggedPI.y);
+                stage.addEventListener(MouseEvent.MOUSE_UP,this.stopDragging);
+                stage.addEventListener(MouseEvent.MOUSE_MOVE,this.onPIDragging);
+            }
+        }
+        
+        public function stopDragging(param1:MouseEvent) : *
+        {
+            var _loc3_:Number = NaN;
+            var _loc4_:MovieClip = null;
+            var _loc5_:MovieClip = null;
+            var _loc6_:MovieClip = null;
+            var _loc7_:MovieClip = null;
+            stage.removeEventListener(MouseEvent.MOUSE_UP,this.stopDragging);
+            stage.removeEventListener(MouseEvent.MOUSE_MOVE,this.onPIDragging);
+            this.playerIsBeingDragged = false;
+            var _loc2_:Boolean = true;
+            if(this.currentDraggedPI != null)
+            {
+                this.currentDraggedPI.isBeingDragged = false;
+                this.currentDraggedPI.stopDrag();
+                this.currentDraggedPI.draggingPlayer = false;
+                this.currentDraggedPI.resetAddSpaceAnim();
+                this.repositionPIWider(false);
+                if(this.currentDraggedPI.x > this.pullLooseX)
+                {
+                _loc3_ = this.getPlayerAbove();
+                _loc4_ = this.player_array[0];
+                if(_loc3_ > -1)
+                {
+                    _loc4_ = this.player_array[_loc3_];
+                }
+                if(_loc4_)
+                {
+                    if(_loc3_ == -1)
+                    {
+                        ExternalInterface.call("piDetachOnTop",this.currentDraggedPI.characterHandle);
+                        _loc2_ = false;
+                    }
+                    else
+                    {
+                        ExternalInterface.call("piDetachUnder",this.currentDraggedPI.characterHandle,_loc4_.groupId);
+                        _loc2_ = false;
+                    }
+                }
+                }
+                else if(this.oldAbovePlayer == -1)
+                {
+                _loc5_ = this.player_array[0];
+                if(_loc5_ == this.currentDraggedPI && this.player_array.length > 1)
+                {
+                    _loc5_ = this.player_array[1];
+                }
+                if(_loc5_)
+                {
+                    ExternalInterface.call("piAddFrontOfGroup",this.currentDraggedPI.characterHandle,_loc5_.groupId);
+                    _loc2_ = false;
+                }
+                }
+                else if(this.oldAbovePlayer >= 0)
+                {
+                _loc6_ = this.player_array[this.oldAbovePlayer];
+                if(_loc6_)
+                {
+                    if(_loc6_.y > this.currentDraggedPI.y - this.releaseDistY)
+                    {
+                        ExternalInterface.call("piAddToGroupUnder",this.currentDraggedPI.characterHandle,_loc6_.groupId,_loc6_.characterHandle);
+                    }
+                    else
+                    {
+                        ExternalInterface.call("piDetachUnder",this.currentDraggedPI.characterHandle,_loc6_.groupId);
+                    }
+                    _loc2_ = false;
+                }
+                }
+                if(this.oldAbovePlayer >= 0)
+                {
+                _loc7_ = this.player_array[this.oldAbovePlayer];
+                if(_loc7_)
+                {
+                    _loc7_.resetAddSpaceAnim();
+                }
+                }
+                this.oldAbovePlayer = Number(-2);
+                this.currentDraggedPI = null;
+                if(_loc2_)
+                {
+                this.reorderlist();
+                this.repositionPI();
+                this.addLinkers();
+                }
+                else
+                {
+                this.allowDragUpdate = false;
+                }
+            }
+        }
+        
+        public function onPIDragging(param1:MouseEvent) : *
+        {
+            var _loc2_:MovieClip = null;
+            var _loc3_:MovieClip = null;
+            var _loc4_:Number = NaN;
+            var _loc5_:MovieClip = null;
+            var _loc6_:MovieClip = null;
+            var _loc7_:MovieClip = null;
+            if(!this.playerIsBeingDragged && this.currentDraggedPI)
+            {
+                if(Math.abs(this.playerDragPosX - this.currentDraggedPI.x) > this.startDragDist || Math.abs(this.playerDragPosY - this.currentDraggedPI.y) > this.startDragDist)
+                {
+                this.clearAllLinkers();
+                this.addLinkers(true);
+                this.playerIsBeingDragged = true;
+                this.currentDraggedPI.isBeingDragged = true;
+                this.currentDraggedPI.rollUpChain();
+                this.container_mc.addChild(this.currentDraggedPI);
+                if(this.currentDraggedPI.loc > 0)
+                {
+                    _loc2_ = this.player_array[this.currentDraggedPI.loc - 1];
+                    if(_loc2_ && _loc2_.groupId == this.currentDraggedPI.groupId)
+                    {
+                        _loc2_.rollUpChain();
+                    }
+                }
+                }
+            }
+            else if(this.currentDraggedPI == null)
+            {
+                this.stopDragging(null);
+            }
+            else if(this.currentDraggedPI.x > this.pullLooseX)
+            {
+                this.currentDraggedPI.stopDangleChain();
+                if(this.oldAbovePlayer >= 0)
+                {
+                _loc3_ = this.player_array[this.oldAbovePlayer];
+                if(_loc3_)
+                {
+                    _loc3_.resetAddSpaceAnim();
+                    _loc3_.alterSpacing(this.wideSpacingMultiplier);
+                }
+                }
+                this.oldAbovePlayer = Number(-2);
+            }
+            else
+            {
+                _loc4_ = this.getPlayerAbove();
+                if(this.oldAbovePlayer != _loc4_)
+                {
+                this.currentDraggedPI.resetAddSpaceAnim();
+                if(this.oldAbovePlayer >= 0 && this.oldAbovePlayer < this.player_array.length)
+                {
+                    _loc5_ = this.player_array[this.oldAbovePlayer];
+                    if(_loc5_)
+                    {
+                        _loc5_.resetAddSpaceAnim();
+                        _loc5_.alterSpacing(this.wideSpacingMultiplier);
+                    }
+                }
+                if(_loc4_ >= 0 && _loc4_ < this.player_array.length)
+                {
+                    _loc6_ = this.player_array[_loc4_];
+                    _loc7_ = null;
+                    if(this.currentDraggedPI.loc != _loc4_ + 1 && _loc4_ + 1 < this.player_array.length)
+                    {
+                        _loc7_ = this.player_array[_loc4_ + 1];
+                    }
+                    if(_loc6_)
+                    {
+                        if(_loc6_.y < this.currentDraggedPI.y - this.releaseDistY)
+                        {
+                            _loc6_.rollUpChain();
+                        }
+                        else if(_loc7_ && _loc7_.groupId == _loc6_.groupId)
+                        {
+                            _loc6_.showLongChain();
+                        }
+                        else
+                        {
+                            _loc6_.showSpace();
+                            _loc6_.startDangleChain();
+                        }
+                    }
+                }
+                else if(_loc4_ == -1)
+                {
+                    this.currentDraggedPI.startDangleChain();
+                }
+                }
+                this.oldAbovePlayer = _loc4_;
+            }
+            this.repositionPI();
+        }
+        
+        public function alphaResetPIs() : *
+        {
+        }
+        
+        public function getClosestPlayer() : MovieClip
+        {
+            var _loc4_:Number = NaN;
+            var _loc1_:* = 1000;
+            var _loc2_:MovieClip = null;
+            var _loc3_:uint = 0;
+            while(_loc3_ < this.player_array.length)
+            {
+                if(this.currentDraggedPI.id != this.player_array[_loc3_].id)
+                {
+                _loc4_ = Math.abs(this.currentDraggedPI.y - this.player_array[_loc3_].y);
+                if(_loc4_ < _loc1_)
+                {
+                    _loc1_ = _loc4_;
+                    _loc2_ = this.player_array[_loc3_];
+                }
+                }
+                _loc3_++;
+            }
+            return _loc2_;
+        }
+        
+        public function getPlayerAbove() : Number
+        {
+            var _loc1_:Number = -2;
+            var _loc2_:uint = 0;
+            while(_loc2_ < this.player_array.length)
+            {
+                if(this.currentDraggedPI.id != this.player_array[_loc2_].id)
+                {
+                if(_loc2_ == 0 && this.currentDraggedPI.y < this.player_array[0].y || this.currentDraggedPI.loc == 0 && (_loc2_ == 1 && this.currentDraggedPI.y < this.player_array[1].y))
+                {
+                    _loc1_ = -1;
+                    break;
+                }
+                _loc1_ = _loc2_;
+                if(this.currentDraggedPI.y > this.player_array[_loc2_].y - this.player_array[_loc2_].spacing_mc.height * 0.1 && this.currentDraggedPI.y < this.player_array[_loc2_].y + this.player_array[_loc2_].spacing_mc.height * 0.9)
+                {
+                    break;
+                }
+                }
+                _loc2_++;
+            }
+            return _loc1_;
+        }
+        
+        public function addInfo(param1:Number, param2:Number, param3:String, param4:Number, param5:Boolean = true, param6:Number = 1, param7:Number = 1, param8:Number = 0, param9:* = true, param10:Number = 0, param11:Number = -1, param12:Number = -1, param13:Boolean = false, param14:Number = 0) : *
+        {
+            var _loc15_:MovieClip = this.getPlayerInfo(param1);
+            if(_loc15_ == null)
+            {
+                _loc15_ = new playerInfo();
+                _loc15_.base = root as MovieClip;
+                _loc15_.isSummon = false;
+                _loc15_.chainIsOut = false;
+                _loc15_.chainTweenTime = 0.4;
+                _loc15_.chainYOut = 120;
+                _loc15_.chainYIn = 68;
+                _loc15_.dis_mc.visible = false;
+                _loc15_.dead_mc.visible = false;
+                _loc15_.id = param1;
+                _loc15_.lvlUp_mc.visible = false;
+                _loc15_.lvlUp_mc.stop();
+                this.player_array.push(_loc15_);
+                _loc15_.summonList = new horizontalList();
+                _loc15_.summonContainer_mc.addChild(_loc15_.summonList);
+                _loc15_.status_array = new Array();
+                _loc15_.summonContainer_mc.y = 38;
+                _loc15_.chain1_mc.scrollRect = new Rectangle(0,0,18,60);
+                _loc15_.chain2_mc.scrollRect = new Rectangle(0,0,18,60);
+                _loc15_.talentPoints_mc.stop();
+                _loc15_.attrPoints_mc.stop();
+                _loc15_.abilityPoints_mc.stop();
+                _loc15_.talentPoints_mc.visible = false;
+                _loc15_.attrPoints_mc.visible = false;
+                _loc15_.abilityPoints_mc.visible = false;
+                _loc15_.arrow_mc.visible = false;
+                _loc15_.oldAttrPoints = 0;
+                _loc15_.oldAbilPoints = 0;
+                _loc15_.oldTalentPoints = 0;
+                _loc15_.setHPColour(this.defaultHPColour);
+                _loc15_.sourceHolder_mc.onInit();
+                _loc15_.icon_mc.alpha = this.deselectedAlpha;
+                _loc15_.setLeft(this.isLeft);
+                _loc15_.hasTooltip = false;
+                _loc15_.magicArmor_mc.setBar(0,false);
+                _loc15_.armor_mc.setBar(0,false);
+                _loc15_.roll_mc.init(this.successString,this.failureString);
+                _loc15_.avatarCrown_mc.mouseEnabled = false;
+            }
+            else
+            {
+                _loc15_.visible = true;
+                _loc15_.alpha = 1;
+            }
+            _loc15_.controlled = param5;
+            _loc15_.isAvatar = param13;
+            _loc15_.frame_mc.isAvatar = param13;
+            _loc15_.avatarCrown_mc.visible = param13;
+            if(param10 > 0)
+            {
+                _loc15_.currentActionState_mc.visible = true;
+                _loc15_.currentActionState_mc.gotoAndStop(param10);
+            }
+            else
+            {
+                _loc15_.currentActionState_mc.visible = false;
+                _loc15_.currentActionState_mc.gotoAndStop(1);
+            }
+            this.setMCEquipState(_loc15_,param8);
+            this.setMCGUIStatus(_loc15_,param14);
+            _loc15_.pos = param7;
+            _loc15_.isBeingDragged = false;
+            if(this.maxGroupId < param6)
+            {
+                this.maxGroupId = param6;
+            }
+            _loc15_.groupId = param6;
+            _loc15_.alive = true;
+            if(_loc15_.characterHandle && _loc15_.characterHandle != param2)
+            {
+                _loc15_.y = 0;
+            }
+            _loc15_.characterHandle = param2;
+            _loc15_.dis_mc.visible = false;
+            this.setIggyImage(_loc15_,param3);
+            _loc15_.setHPBar(param4,false);
+            _loc15_.setSourcePoints(param11,param12);
+            if(this.selectedCharacterHandle == param2)
+            {
+                _loc15_.frame_mc.bg_mc.gotoAndStop(!!param13 ? 4 : 2);
+                _loc15_.sourceHolder_mc.setSourceHolderActive(true);
+            }
+            else
+            {
+                _loc15_.frame_mc.bg_mc.gotoAndStop(!!param13 ? 3 : 1);
+                _loc15_.sourceHolder_mc.setSourceHolderActive(false);
+            }
+            _loc15_.frame_mc.bg_mc.visible = true;
+            _loc15_.frame_mc.hl_mc.visible = false;
+            _loc15_.frame_mc.hl_mc.gotoAndStop(_loc15_.frame_mc.bg_mc.currentFrame);
+            _loc15_.select = false;
+            _loc15_.x = this.playerXpos;
+            this.listNeedsReordering = true;
+        }
+        
+        public function setIggyImage(param1:MovieClip, param2:String) : *
+        {
+            var _loc3_:MovieClip = null;
+            if(!param1.texture || param1.texture != param2)
+            {
+                this.removeChildrenOf(param1.icon_mc);
+                _loc3_ = new IggyIcon();
+                _loc3_.name = "iggy_" + param2;
+                param1.icon_mc.addChild(_loc3_);
+                param1.texture = param2;
+            }
+        }
+        
+        public function setSummonTurnText(param1:Number, param2:String) : *
+        {
+            var _loc3_:MovieClip = this.getPlayerOrSummonByHandle(param1);
+            if(!this.setSummonTurnTextMC(_loc3_,param2))
+            {
+                ExternalInterface.call("UIAssert","\nplayerInfo::setSummonTurnText: " + param1 + " isn\'t a handle identifying a summon.");
+            }
+        }
+        
+        public function setSummonTurnTextMC(param1:MovieClip, param2:String) : Boolean
+        {
+            if(param1 && param1.turns_mc && param1.turns_mc.turn_txt)
+            {
+                param1.turns_mc.turn_txt.htmlText = param2;
+                return true;
+            }
+            return false;
+        }
+        
+        public function setControllerMode(param1:Boolean) : *
+        {
+            this.isController = param1;
+        }
+        
+        public function setAmountOfPlayers(param1:Number) : *
+        {
+            if(param1 == 1)
+            {
+                this.container_mc.y = 30;
+            }
+            else
+            {
+                this.container_mc.y = 320;
+            }
+        }
+        
+        public function addSummonInfo(param1:Number, param2:Number, param3:Number, param4:String, param5:String, param6:Number, param7:int = -1, param8:int = -1) : *
+        {
+            var _loc10_:MovieClip = null;
+            var _loc9_:MovieClip = this.getPlayerInfoByHandle(param3);
+            if(_loc9_)
+            {
+                _loc10_ = _loc9_.summonList.getElementByNumber("id",param1);
+                if(!_loc10_)
+                {
+                _loc10_ = new summonInfo();
+                _loc10_.isSummon = true;
+                _loc10_.init();
+                _loc10_.id = param1;
+                _loc9_.summonList.addElement(_loc10_);
+                _loc10_.list = _loc9_.summonList;
+                _loc10_.characterHandle = param2;
+                _loc10_.status_array = new Array();
+                _loc10_.setHPColour(this.defaultHPColour);
+                _loc10_.frame_mc.hl_mc.visible = false;
+                _loc10_.icon_mc.alpha = this.deselectedAlpha;
+                _loc10_.setLeft(this.isLeft);
+                _loc10_.magicArmor_mc.setBar(0,false);
+                _loc10_.armor_mc.setBar(0,false);
+                _loc10_.hasTooltip = false;
+                }
+                _loc10_.setSourcePoints(param7,param8);
+                _loc10_.turns_mc.turn_txt.htmlText = param4;
+                _loc10_.alive = true;
+                _loc10_.dis_mc.visible = false;
+                _loc10_.setHPBar(param6,false);
+                if(this.selectedCharacterHandle == param2)
+                {
+                _loc10_.frame_mc.bg_mc.gotoAndStop(2);
+                }
+                else
+                {
+                _loc10_.frame_mc.bg_mc.gotoAndStop(1);
+                }
+                _loc10_.select = false;
+                this.setIggyImage(_loc10_,param5);
+            }
+        }
+        
+        public function reorderlist() : *
+        {
+            this.player_array.sortOn(["groupId","pos","id"]);
+            this.listNeedsReordering = false;
+        }
+        
+        public function updateDone() : *
+        {
+            var _loc2_:MovieClip = null;
+            var _loc3_:uint = 0;
+            var _loc4_:MovieClip = null;
+            this.infoUpdate = new Array();
+            if(this.listNeedsReordering)
+            {
+                this.reorderlist();
+            }
+            var _loc1_:uint = 0;
+            while(_loc1_ < this.player_array.length)
+            {
+                _loc2_ = this.player_array[_loc1_];
+                if(_loc2_)
+                {
+                if(_loc2_.alive)
+                {
+                    _loc2_.alive = false;
+                    if(_loc2_.summonList)
+                    {
+                        _loc3_ = 0;
+                        while(_loc3_ < _loc2_.summonList.length)
+                        {
+                            _loc4_ = _loc2_.summonList.getElement(_loc3_);
+                            if(_loc4_ && !_loc4_.alive)
+                            {
+                            if(_loc4_.hasTooltip)
+                            {
+                                ExternalInterface.call("hideTooltip");
+                            }
+                            _loc2_.summonList.removeElement(_loc3_,false);
+                            _loc3_--;
+                            }
+                            else if(_loc4_)
+                            {
+                            _loc4_.alive = false;
+                            }
+                            _loc3_++;
+                        }
+                        _loc2_.summonList.positionElements();
+                    }
+                }
+                else
+                {
+                    if(this.currentDraggedPI == _loc2_)
+                    {
+                        this.currentDraggedPI = null;
+                    }
+                    if(_loc2_.hasTooltip)
+                    {
+                        ExternalInterface.call("hideTooltip");
+                    }
+                    this.removeChildrenOf(_loc2_.icon_mc);
+                    this.container_mc.removeChild(_loc2_);
+                    this.player_array.splice(_loc1_,1);
+                    _loc1_--;
+                }
+                }
+                _loc1_++;
+            }
+            this.repositionPI();
+            this.allowDragUpdate = true;
+            this.addLinkers();
+        }
+        
+        public function removeSummonInfo(param1:Number, param2:Number) : *
+        {
+            var _loc4_:MovieClip = null;
+            var _loc3_:MovieClip = this.getPlayerInfo(param1);
+            if(_loc3_ != null)
+            {
+                _loc4_ = _loc3_.summonList.getElementByNumber("id",param2);
+                if(_loc4_)
+                {
+                _loc3_.summonList.removeElement(_loc4_.list_pos);
+                }
+            }
+        }
+        
+        public function setControlledCharacter(param1:Number, param2:Boolean) : *
+        {
+            var _loc3_:MovieClip = this.getPlayerInfo(param1);
+            if(_loc3_)
+            {
+                _loc3_.controlled = param2;
+            }
+        }
+        
+        public function setAllowMouseClicking(param1:Boolean) : *
+        {
+            var _loc3_:MovieClip = null;
+            var _loc2_:uint = 0;
+            while(_loc2_ < this.player_array.length)
+            {
+                this.player_array[_loc2_].enableMouseClicking = param1;
+                if(!param1)
+                {
+                this.player_array[_loc2_].disableMouseClicking();
+                }
+                for each(_loc3_ in this.player_array[_loc2_].summonList.content_array)
+                {
+                _loc3_.enableMouseClicking = param1;
+                if(!param1)
+                {
+                    _loc3_.disableMouseClicking();
+                }
+                }
+                _loc2_++;
+            }
+        }
+        
+        public function setDisabled(param1:Number, param2:Boolean) : *
+        {
+            var _loc3_:MovieClip = this.getPlayerInfo(param1);
+            if(_loc3_ != null)
+            {
+                _loc3_.dis_mc.visible = param2;
+            }
+        }
+        
+        public function setIsDead(param1:Number, param2:Boolean) : *
+        {
+            var _loc3_:MovieClip = this.getPlayerInfo(param1);
+            if(_loc3_ != null)
+            {
+                _loc3_.dead_mc.visible = param2;
+            }
+        }
+        
+        public function setLevelUp(param1:Number, param2:Boolean, param3:Number, param4:Number, param5:Number) : *
+        {
+            var _loc6_:MovieClip = this.getPlayerInfo(param1);
+            this.setMCLevelUp(_loc6_,param2,param3,param4,param5);
+        }
+        
+        public function setMCLevelUp(param1:MovieClip, param2:Boolean, param3:Number, param4:Number, param5:Number) : *
+        {
+            var _loc6_:Boolean = false;
+            if(param1 != null)
+            {
+                _loc6_ = param1.lvlUp_mc.visible;
+                param1.lvlUp_mc.visible = param2;
+                if(param1.lvlUp_mc.visible)
+                {
+                if(!_loc6_)
+                {
+                    param1.lvlUp_mc.gotoAndPlay(1);
+                }
+                else if(param3 > param1.oldAttrPoints || param4 > param1.oldAbilPoints || param5 > param1.oldTalentPoints)
+                {
+                    param1.lvlUp_mc.gotoAndPlay(1);
+                }
+                }
+                else
+                {
+                param1.lvlUp_mc.stop();
+                }
+                param1.oldTalentPoints = param5;
+                if(param5 > 0)
+                {
+                param1.talentPoints_mc.gotoAndPlay(1);
+                param1.talentPoints_mc.visible = true;
+                }
+                else
+                {
+                param1.talentPoints_mc.stop();
+                param1.talentPoints_mc.visible = false;
+                }
+                param1.oldAttrPoints = param3;
+                if(param3 > 0)
+                {
+                param1.attrPoints_mc.gotoAndPlay(1);
+                param1.attrPoints_mc.visible = true;
+                }
+                else
+                {
+                param1.attrPoints_mc.stop();
+                param1.attrPoints_mc.visible = false;
+                }
+                param1.oldAbilPoints = param4;
+                if(param4 > 0)
+                {
+                param1.abilityPoints_mc.gotoAndPlay(1);
+                param1.abilityPoints_mc.visible = true;
+                }
+                else
+                {
+                param1.abilityPoints_mc.stop();
+                param1.abilityPoints_mc.visible = false;
+                }
+            }
+        }
+        
+        public function setCurrentActionState(param1:Number, param2:Number) : *
+        {
+            var _loc3_:MovieClip = this.getPlayerInfo(param1);
+            this.setMCCurrentActionState(_loc3_,param2);
+        }
+        
+        public function setMCCurrentActionState(param1:MovieClip, param2:Number) : *
+        {
+            if(param1 != null && !param1.isSummon)
+            {
+                if(param2 > 0)
+                {
+                param1.currentActionState_mc.visible = true;
+                param1.currentActionState_mc.gotoAndStop(param2);
+                }
+                else
+                {
+                param1.currentActionState_mc.visible = false;
+                }
+            }
+        }
+        
+        public function selectPlayer(param1:Number) : *
+        {
+            if(this.selectedPlayer != null)
+            {
+                if(this.selectedPlayer.setLinkEndersActive != null)
+                {
+                this.selectedPlayer.setLinkEndersActive(false);
+                }
+                this.selectedPlayer.setSourceHolderActive(false);
+                this.selectedPlayer.icon_mc.alpha = this.deselectedAlpha;
+                this.selectedPlayer.frame_mc.bg_mc.gotoAndStop(!!this.selectedPlayer.isAvatar ? 3 : 1);
+                if(this.selectedPlayer.frame_mc.hl_mc)
+                {
+                this.selectedPlayer.frame_mc.hl_mc.gotoAndStop(this.selectedPlayer.frame_mc.bg_mc.currentFrame);
+                }
+                this.selectedPlayer.select = false;
+                if(this.selectedPlayer.setLinkEndersActive != null)
+                {
+                this.selectedPlayer.setLinkEndersActive(false);
+                }
+                this.selectedPlayer.setSourceHolderActive(false);
+            }
+            this.selectedPlayer = this.getPlayerOrSummonByHandle(param1);
+            if(this.selectedPlayer != null)
+            {
+                this.selectedCharacterHandle = Number(this.selectedPlayer.characterHandle);
+                if(this.selectedPlayer.setLinkEndersActive != null)
+                {
+                this.selectedPlayer.setLinkEndersActive(true);
+                }
+                this.selectedPlayer.setSourceHolderActive(true);
+                this.selectedPlayer.frame_mc.bg_mc.gotoAndStop(!!this.selectedPlayer.isAvatar ? 4 : 2);
+                if(this.selectedPlayer.frame_mc.hl_mc)
+                {
+                this.selectedPlayer.frame_mc.hl_mc.gotoAndStop(this.selectedPlayer.frame_mc.bg_mc.currentFrame);
+                }
+                this.selectedPlayer.select = true;
+                this.selectedPlayer.icon_mc.alpha = 1;
+                if(this.selectedPlayer.setLinkEndersActive != null)
+                {
+                this.selectedPlayer.setLinkEndersActive(true);
+                }
+                this.selectedPlayer.setSourceHolderActive(true);
+            }
+            else
+            {
+                this.selectedCharacterHandle = Number(0);
+            }
+        }
+        
+        public function setHPBar(param1:Number, param2:Number, param3:Boolean = true) : *
+        {
+            var _loc4_:MovieClip = this.getPlayerOrSummonByHandle(param1);
+            if(_loc4_ != null)
+            {
+                _loc4_.setHPBar(param2,param3);
+            }
+        }
+        
+        public function setSourcePoints(param1:Number, param2:Number, param3:Number = -1) : *
+        {
+            var _loc4_:MovieClip = this.getPlayerOrSummonByHandle(param1);
+            if(_loc4_ != null)
+            {
+                if(_loc4_.isSummon)
+                {
+                _loc4_.setSourcePoints(param2,param3);
+                }
+                else
+                {
+                _loc4_.setSourcePoints(param2,param3);
+                }
+            }
+        }
+        
+        public function resetHPColour(param1:Number) : *
+        {
+            var _loc2_:MovieClip = this.getPlayerOrSummonByHandle(param1);
+            if(_loc2_ != null)
+            {
+                _loc2_.setHPColour(this.defaultHPColour);
+            }
+        }
+        
+        public function setHPColour(param1:Number, param2:uint) : *
+        {
+            var _loc3_:MovieClip = this.getPlayerOrSummonByHandle(param1);
+            if(_loc3_ != null)
+            {
+                _loc3_.setHPColour(param2);
+            }
+        }
+        
+        public function setVisible(param1:Number, param2:Boolean) : *
+        {
+            var _loc3_:MovieClip = this.getPlayerInfo(param1);
+            if(_loc3_ != null)
+            {
+                _loc3_.visible = param2;
+            }
+        }
+        
+        public function clearAllLinkers() : *
+        {
+            var _loc1_:MovieClip = null;
+            var _loc2_:uint = 0;
+            while(_loc2_ < this.player_array.length)
+            {
+                _loc1_ = this.player_array[_loc2_];
+                if(_loc1_ != null)
+                {
+                _loc1_.clearLinkContainer();
+                }
+                _loc2_++;
+            }
+        }
+        
+        public function clearAllLinkPieces() : *
+        {
+            var _loc1_:MovieClip = null;
+            var _loc2_:uint = 0;
+            while(_loc2_ < this.player_array.length)
+            {
+                _loc1_ = this.player_array[_loc2_];
+                if(_loc1_ != null)
+                {
+                _loc1_.clearLinkPieces();
+                }
+                _loc2_++;
+            }
+        }
+        
+        public function addLinkers(param1:Boolean = false) : *
+        {
+            var _loc2_:Bitmap = null;
+            var _loc3_:MovieClip = null;
+            var _loc4_:MovieClip = null;
+            var _loc5_:Boolean = false;
+            var _loc6_:uint = 0;
+            while(_loc6_ < this.player_array.length)
+            {
+                _loc4_ = this.player_array[_loc6_];
+                if(_loc4_ != null)
+                {
+                _loc4_.clearLinkContainer();
+                if(_loc4_.chainIsOut && !param1)
+                {
+                    _loc2_ = new Bitmap(new link_linkpiece());
+                    _loc4_.linkContainer_mc.addChild(_loc2_);
+                }
+                if(_loc4_ == this.selectedPlayer)
+                {
+                    _loc4_.setLinkEndersActive(true);
+                    _loc4_.setSourceHolderActive(true);
+                }
+                else
+                {
+                    _loc4_.setLinkEndersActive(false);
+                    _loc4_.setSourceHolderActive(false);
+                }
+                _loc5_ = _loc4_.chainIsOut;
+                }
+                _loc6_++;
+            }
+        }
+        
+        public function setHighlight(param1:Number, param2:Boolean) : *
+        {
+            var _loc3_:MovieClip = this.getPlayerInfo(param1);
+            if(_loc3_ != null)
+            {
+                if(param2)
+                {
+                _loc3_.img_mc.bg_mc.gotoAndStop(2);
+                }
+                else
+                {
+                _loc3_.img_mc.bg_mc.gotoAndStop(1);
+                }
+            }
+        }
+        
+        public function getPlayerInfo(param1:Number) : MovieClip
+        {
+            var _loc2_:uint = 0;
+            while(_loc2_ < this.player_array.length)
+            {
+                if(this.player_array[_loc2_].id == param1)
+                {
+                this.player_array[_loc2_].loc = _loc2_;
+                return this.player_array[_loc2_];
+                }
+                _loc2_++;
+            }
+            return null;
+        }
+        
+        public function getPlayerOrSummonByHandle(param1:Number) : MovieClip
+        {
+            var _loc3_:MovieClip = null;
+            var _loc2_:uint = 0;
+            while(_loc2_ < this.player_array.length)
+            {
+                if(this.player_array[_loc2_].characterHandle == param1)
+                {
+                this.player_array[_loc2_].loc = _loc2_;
+                return this.player_array[_loc2_];
+                }
+                if(this.player_array[_loc2_] && this.player_array[_loc2_].summonList)
+                {
+                _loc3_ = this.player_array[_loc2_].summonList.getElementByNumber("characterHandle",param1);
+                if(_loc3_)
+                {
+                    return _loc3_;
+                }
+                }
+                _loc2_++;
+            }
+            return null;
+        }
+        
+        public function getPlayerInfoByHandle(param1:Number) : MovieClip
+        {
+            var _loc2_:* = 0;
+            while(_loc2_ < this.player_array.length)
+            {
+                if(this.player_array[_loc2_].characterHandle == param1)
+                {
+                this.player_array[_loc2_].loc = _loc2_;
+                return this.player_array[_loc2_];
+                }
+                _loc2_++;
+            }
+            return null;
+        }
+        
+        public function repositionPIWider(param1:Boolean) : *
+        {
+            var _loc2_:* = undefined;
+            if(param1)
+            {
+                for each(_loc2_ in this.player_array)
+                {
+                _loc2_.alterSpacing(this.wideSpacingMultiplier);
+                }
+            }
+            else
+            {
+                for each(_loc2_ in this.player_array)
+                {
+                _loc2_.alterSpacing();
+                }
+            }
+        }
+        
+        public function repositionPI() : *
+        {
+            var _loc4_:Number = NaN;
+            var _loc5_:MovieClip = null;
+            var _loc1_:Number = 20;
+            if(this.oldAbovePlayer == -1)
+            {
+                _loc1_ = 200;
+            }
+            var _loc2_:Number = 0;
+            var _loc3_:uint = 0;
+            while(_loc3_ < this.player_array.length)
+            {
+                if(!(this.currentDraggedPI && this.currentDraggedPI.id == this.player_array[_loc3_].id))
+                {
+                _loc4_ = 0.2;
+                if(this.player_array[_loc3_].isAvatar)
+                {
+                    _loc1_ -= 2;
+                }
+                this.container_mc.addChild(this.player_array[_loc3_]);
+                if(this.player_array[_loc3_].tweenX)
+                {
+                    this.player_array[_loc3_].tweenX.stop();
+                }
+                if(this.player_array[_loc3_].tweenY)
+                {
+                    this.player_array[_loc3_].tweenY.stop();
+                }
+                this.player_array[_loc3_].tweenX = new larTween(this.player_array[_loc3_],"x",Sine.easeOut,this.player_array[_loc3_].x,this.playerXpos,_loc4_);
+                this.player_array[_loc3_].tweenY = new larTween(this.player_array[_loc3_],"y",Sine.easeOut,this.player_array[_loc3_].y,_loc1_,_loc4_);
+                _loc1_ += Math.round(this.player_array[_loc3_].spacing_mc.height);
+                _loc5_ = null;
+                if(this.player_array.length > 1)
+                {
+                    if(this.currentDraggedPI && this.currentDraggedPI.loc == _loc3_ + 1)
+                    {
+                        if(_loc3_ + 2 < this.player_array.length)
+                        {
+                            _loc5_ = this.player_array[_loc3_ + 2];
+                        }
+                    }
+                    else if(_loc3_ + 1 < this.player_array.length)
+                    {
+                        _loc5_ = this.player_array[_loc3_ + 1];
+                    }
+                }
+                if(_loc5_ && _loc5_.groupId == this.player_array[_loc3_].groupId)
+                {
+                    this.player_array[_loc3_].rollOutChain();
+                }
+                else
+                {
+                    this.player_array[_loc3_].rollUpChain();
+                    _loc1_ += 20;
+                }
+                }
+                _loc3_++;
+            }
+            if(this.currentDraggedPI)
+            {
+                this.container_mc.addChild(this.currentDraggedPI);
+            }
+        }
+        
+        public function handleItemTransferAnims() : *
+        {
+            var _loc1_:Number = NaN;
+            var _loc2_:uint = 0;
+            var _loc3_:Array = null;
+            var _loc4_:uint = 0;
+            var _loc5_:Number = NaN;
+            var _loc6_:Number = NaN;
+            var _loc7_:Boolean = false;
+            var _loc8_:Number = NaN;
+            var _loc9_:Object = null;
+            if(this.animationArray.length > 0)
+            {
+                _loc1_ = 0.3;
+                _loc2_ = 0;
+                _loc3_ = new Array();
+                _loc4_ = 0;
+                while(_loc4_ < this.animationArray.length)
+                {
+                _loc5_ = this.animationArray[_loc4_++];
+                _loc6_ = this.animationArray[_loc4_++];
+                _loc7_ = this.animationArray[_loc4_++];
+                _loc8_ = _loc2_++ * _loc1_;
+                if(_loc7_)
+                {
+                    _loc9_ = this.getObjectbyPlayerId(_loc3_,_loc6_);
+                    if(_loc9_)
+                    {
+                        _loc9_.delayTime = _loc8_;
+                    }
+                    else
+                    {
+                        _loc9_ = new Object();
+                        _loc9_.playerId = _loc6_;
+                        _loc9_.delayTime = _loc8_;
+                        _loc3_.push(_loc9_);
+                    }
+                }
+                this.showItemTransferAnim(_loc6_,_loc5_,_loc8_,_loc7_);
+                }
+                this.animationArray = new Array();
+                _loc4_ = 0;
+                while(_loc4_ < _loc3_.length)
+                {
+                _loc9_ = _loc3_[_loc4_];
+                if(_loc9_)
+                {
+                    this.playerInfoJumpBack(_loc9_.playerId,_loc9_.delayTime);
+                }
+                _loc4_++;
+                }
+            }
+        }
+        
+        public function getObjectbyPlayerId(param1:Array, param2:Number) : Object
+        {
+            var _loc3_:uint = 0;
+            var _loc4_:Object = null;
+            while(_loc3_ < param1.length)
+            {
+                _loc4_ = param1[_loc3_];
+                if(_loc4_ && _loc4_.playerId == param2)
+                {
+                return _loc4_;
+                }
+                _loc3_++;
+            }
+            return null;
+        }
+        
+        public function playerInfoJumpBack(param1:Number, param2:Number) : *
+        {
+            var _loc3_:MovieClip = this.getPlayerInfo(param1);
+            if(_loc3_)
+            {
+                _loc3_.delayTime = param2;
+                if(_loc3_.tweenX)
+                {
+                _loc3_.tweenX.stop();
+                }
+                _loc3_.tweenX = new larTween(_loc3_,"x",Quartic.easeOut,0,-10,0.5,this.playerInfoJumpBack2,_loc3_);
+            }
+        }
+        
+        public function playerInfoJumpBack2(param1:MovieClip) : *
+        {
+            if(param1.tweenX)
+            {
+                param1.tweenX.stop();
+            }
+            param1.tweenX = new larTween(param1,"x",Quartic.easeOut,param1.x,0,0.2,null,null,param1.delayTime);
+        }
+        
+        public function showItemTransferAnim(param1:Number, param2:Number, param3:Number, param4:Boolean) : *
+        {
+            var _loc6_:MovieClip = null;
+            var _loc7_:String = null;
+            var _loc5_:MovieClip = this.getPlayerInfo(param1);
+            if(_loc5_)
+            {
+                _loc6_ = new transferItem();
+                _loc5_.addChild(_loc6_);
+                _loc6_.y = 64 / 2 + 5;
+                if(param4)
+                {
+                _loc6_.x = 64 * 2.5;
+                }
+                else
+                {
+                _loc6_.x = this.iconWidth + this.container_mc.x;
+                }
+                _loc7_ = !!param4 ? "uiIcon_" : "removeItem_";
+                _loc6_.startAnim(_loc7_ + param2,param3,!!param4 ? 2 : 3);
+            }
+        }
+        
+        public function addRoll(param1:Number, param2:int, param3:int) : *
+        {
+            var _loc4_:MovieClip = this.getPlayerInfo(param1);
+            if(_loc4_)
+            {
+                _loc4_.roll_mc.showRoll(param2,param3);
+            }
+        }
+        
+        public function addRollResult(param1:Number, param2:Boolean) : *
+        {
+            var _loc3_:MovieClip = this.getPlayerInfo(param1);
+            if(_loc3_)
+            {
+                _loc3_.roll_mc.showResult(param2);
+            }
+        }
+        
+        public function clearRolls() : *
+        {
+            var _loc2_:MovieClip = null;
+            var _loc1_:uint = 0;
+            while(_loc1_ < this.player_array.length)
+            {
+                _loc2_ = this.player_array[_loc1_] as MovieClip;
+                if(_loc2_)
+                {
+                _loc2_.roll_mc.hide();
+                }
+                _loc1_++;
+            }
+        }
+        
+        function frame1() : *
+        {
+            this.statusSize = 40;
+            this.statusSpacing = 0;
+            this.selectedCharacterHandle = Number(0);
+            this.events = new Array("IE UISelectChar1","IE UISelectChar2","IE UISelectChar3","IE UISelectChar4");
+            this.animationArray = new Array();
+            this.layout = "fixed";
+            this.curTooltip = Number(-1);
+            this.hasTooltip = false;
+            this.isDragging = false;
+            this.allowDragging = true;
+            this.toggleButtonTooltips = new Array("Inventory Tooltip","Skills Tooltip","","");
+            this.listNeedsReordering = false;
+            this.uiScaling = Number(1);
+            this.defaultHPColour = Number(16711680);
+            this.releaseDistY = Number(400);
+            this.curTooltipOwner = Number(0);
+            this.playerXpos = Number(0);
+            this.inventorySkillButtonX = Number(140);
+            this.inventorySkillButtonY = Number(190);
+            this.infoUpdate = new Array();
+            this.linkPieces = new Array();
+            this.statusIconSize = 28;
+            this.statusIconOffsetX = 6;
+            this.statusIconOffsetY = 6;
+            this.iconHeight = uint(100);
+            this.iconWidth = uint(80);
+            this.isLeft = true;
+            this.wideSpacingMultiplier = Number(1.1);
+            this.guiStatusValues = new Array("!Game Active","!Paused","!In Vignette","!In Overview Map","! Making Roll","!Observing the Roll");
+            this.doubleClickTimer = new Timer(550,1);
+            this.doubleClickTimer.addEventListener(TimerEvent.TIMER_COMPLETE,this.dcTEnded);
+            this.dcTStr = "";
+            this.piSpacing = Number(150);
+            this.piMode = Number(0);
+            this.selectedPlayer = null;
+            this.player_array = new Array();
+            this.disabledBtnAlpha = Number(0.8);
+            this.status_array = new Array();
+            this.allowDragUpdate = true;
+            this.boundaryRect = new Rectangle(0,0,300,880);
+            this.currentDraggedPI = null;
+            this.maxGroupId = Number(0);
+            this.pullLooseX = Number(110);
+            this.oldClosestMC = null;
+            this.playerIsBeingDragged = false;
+            this.oldAbovePlayer = Number(-2);
+            this.playerDragPosX = Number(-1);
+            this.playerDragPosY = Number(-1);
+            this.startDragDist = Number(10);
+            this.summonIconHeight = 40;
+            this.summonIconWidth = 60;
+            this.summonIconScrollRectOffset = 20;
+            this.summonDurationOffset = -10;
+            this.summonDurationNormalOffset = 0;
+            this.summonNormalScrollRect = 120;
+            this.summonNormalScale = 0.8;
+        }
+    }
+}

@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<save>
+  <region  id="Hints">
+      <node  id="root">
+      <attribute id="HintDuration" value="5" type="6"/>
+          <children>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_CAM_HOME" type="22"/>
+                <attribute id="Description" value="test1" handle="h809b87b4g868ag4e87gbe4bgb895f7efc47b" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="0" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_CAM_ZOOM" type="22"/>
+                <attribute id="Description" value="test2." handle="h08d17d54gf579g43ebga0a6gbf74ad1fc133" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="0" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_CAM_ROTATE" type="22"/>
+                <attribute id="Description" value="Use [IE_CameraToggleMouseRotate] + [IE_CameraRotateMouseLeft] or [IE_CameraRotateMouseRight] to rotate the camera." handle="h828f1b29ge3c9g4606gb942gf00216f796e2" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="0" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_CAM_ROTATE_CONT" type="22"/>
+                <attribute id="Description" value="Use [RightStickX] to rotate the camera." handle="h87355969gfcbbg424fg92c1g351a1b9e6ce5" type="28"/>
+                <attribute id="Keyboard" value="0" type="19"/>
+                <attribute id="Controller" value="1" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_ENVIRONMENT" type="22"/>
+                <attribute id="Description" value="Your spells will react with the environment, so use your surroundings to your advantage." handle="h54ccef5cg601bg4333g8473g1eb69aed0436" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="1" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_FLEE" type="22"/>
+                <attribute id="Description" value="If a fight is getting the better of you, you can always flee and come back when you're more prepared." handle="hd2d18f3fg37d4g49d3ga9eagdfbea2eacd0c" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="1" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_GUARD" type="22"/>
+                <attribute id="Description" value="Attacking guards in a city is one of the fastest ways to end your journey." handle="h34f27a9bg5a6eg4421g9d15g8b83d498124d" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="1" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_ASSAULT" type="22"/>
+                <attribute id="Description" value="Even if someone really deserves it, murder in broad daylight is sure to bring guards to your doorstep." handle="he1a8eb0eg277fg4278gaa18g1dc22e1cc830" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="1" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_PARTY" type="22"/>
+                <attribute id="Description" value="You can fight alone, but you don't have to; all kinds of allies might be eager to join your party." handle="hb0963f67g8432g4573g9a53g54fe33262c80" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="1" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_SEARCH" type="22"/>
+                <attribute id="Description" value="Many items and adventures are hidden off the beaten path." handle="h17e1f9fbg49d0g405agb733ga396708e6e72" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="1" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_PEOPLE" type="22"/>
+                <attribute id="Description" value="Don't be shy; citizens and enemies alike may be eager to share their stories." handle="hb98b72a6gff93g4a81ga8edgead58f6722ac" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="1" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_CLASSLESS" type="22"/>
+                <attribute id="Description" value="Today a Wizard, tomorrow a Battlemage: Your starting stats don't have to determine the rest of your game." handle="h9148ba3egc37cg4027gb92age3d08b69e419" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="1" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_STACKS" type="22"/>
+                <attribute id="Description" value="You can separate stacked items by holding [IE_SplitItemToggle] and then dragging and dropping to another inventory slot." handle="h402b1bfeg3f47g43c5ga481g2fddcd3e6972" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="0" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_COMBINE" type="22"/>
+                <attribute id="Description" value="Drag and drop items in your inventory panel on top of one another to craft new items." handle="h3feab349ge27ag40a8gb043gc7a4f45aac39" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="0" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_TRADE" type="22"/>
+                <attribute id="Description" value="Most people you encounter will be interested in trading with you. Even a mere peasant might have something interesting to sell." handle="h5e550837g8575g4196ga376g55ea38a18e45" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="1" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_TRAPS" type="22"/>
+                <attribute id="Description" value="To cut a delicate path through a dangerous area, toggle into sneak mode and zoom in using [IE_CameraZoomIn]." handle="hf1cbbfacg4f75g4e8cg93c1ga7072fc4aa07" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="0" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_TRAPS_CONT" type="22"/>
+                <attribute id="Description" value="To cut a delicate path through a dangerous area, toggle into sneak mode and zoom in using [RightStickY]." handle="h59ad7cccg3af7g4adfg8ad0g516a6030a490" type="28"/>
+                <attribute id="Keyboard" value="0" type="19"/>
+                <attribute id="Controller" value="1" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_THEFT" type="22"/>
+                <attribute id="Description" value="If your cursor turns orange when you hover over an item, the item belongs to someone else." handle="hea0be49bg4758g42e0gab48gef901ee00fda" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="1" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_HIDINGSTUFF" type="22"/>
+                <attribute id="Description" value="Don't like the looks of that new helmet? Hide it by un-ticking its display box in your inventory panel." handle="h97aff6e5g1457g4125gb7e7gfba814e82dc8" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="0" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_PETPAL" type="22"/>
+                <attribute id="Description" value="The talent Pet Pal allows you to speak to animals. Bark, bark. Moo." handle="h49692c5cg5a16g4d32gbc79g7e5a30f7c42f" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="1" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_CTRL" type="22"/>
+                <attribute id="Description" value="Holding [IE_DestructionToggle] will allow you to destroy lifeless items, such as barrels and chairs - or to attack unsuspecting friendlies." handle="h470412aegd5d4g4429g96dfg888f6a0d184b" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="0" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_CTRL_CONT" type="22"/>
+                <attribute id="Description" value="Use [IE_DestructionToggle] to destroy lifeless items, such as barrels and chairs - or to attack unsuspecting friendlies." handle="h975207b5gb68cg4f9dgae15g5dc7eefd3334" type="28"/>
+                <attribute id="Keyboard" value="0" type="19"/>
+                <attribute id="Controller" value="1" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_EDGEPANNING" type="22"/>
+                <attribute id="Description" value="You can set the edge panning speed in the Game section of the Options Menu; you can also disable it entirely." handle="hd2e816a0g9ec7g4a4cg8210g32dcd3f2bc81" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="0" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_FRIENDLYFIRE" type="22"/>
+                <attribute id="Description" value="Arrow and magic projectiles will fly through your companions without harming them, but explosions and area effects will affect everyone." handle="hd1502ce7g66a0g4e3cgb3b0ga56745fee96d" type="28"/>
+                <attribute id="Keyboard" value="0" type="19"/>
+                <attribute id="Controller" value="0" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_ELECTRIFY" type="22"/>
+                <attribute id="Description" value="Tame the elements! Creating electricity on a water surface will electrify it and everyone on it." handle="h06fb65d7g2646g45e9g8ee2gf4c1c1028666" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="1" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_OOZESURF" type="22"/>
+                <attribute id="Description" value="Ooze surfaces not only poison whoever steps into them but are also highly flammable. Tread with care." handle="h74c5434bgab1cg4d39g9137g858d71594e8b" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="1" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_WATERSURF" type="22"/>
+                <attribute id="Description" value="Water can be turned into ice via freezing spells or into a steam cloud via fire." handle="h5542b809g8479g405ag90e9g382e7b7e5e41" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="1" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_STATICCLOUDS" type="22"/>
+                <attribute id="Description" value="A steam cloud can be turned into a static cloud by using electricity on it. Static clouds can electrify your enemies!" handle="h9ee68e15gd7ddg4983ga61fgc5d0b12fbfec" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="1" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_LAVA" type="22"/>
+                <attribute id="Description" value="Lava is lethal. A lava surface cannot be destroyed or transformed. If you see lava, it's time relocate to... somewhere else." handle="he3d1d1bagd74dg4df3gbf35g1743d016e5d6" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="1" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_SCROLLS" type="22"/>
+                <attribute id="Description" value="Don't underestimate Scrolls: one of those tiny pieces of parchment used at the right moment can turn the tide of battle!" handle="hcd9123c9g1d9dg4676g804cgac05d50e1d26" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="1" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_TELEPORT" type="22"/>
+                <attribute id="Description" value="Teleport things! Relocate enemies into harmful surfaces, place explosive barrels closer to your foes, or move allies out of harm's way." handle="h7297aaf4ga71dg4238g9339gf1983a772594" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="1" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_BREAKING" type="22"/>
+                <attribute id="Description" value="Breaking doors and chests, rather than picking their locks or looking for an appropriate key, will damage your weapon's durability." handle="h6ed0966ege014g42d4gb1e5g733c36f8b044" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="1" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_QUEUE" type="22"/>
+                <attribute id="Description" value="Holding [IE_QueueCommand] allows you to queue your orders. They will then be executed one after the other." handle="haadb38b0g0419g4247g8a3fgf5c86db8501a" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="0" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_FOG" type="22"/>
+                <attribute id="Description" value="You cannot target enemies in clouds unless they are very close to you." handle="haeacd961g8366g4afbga52agdc51c03b4570" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="1" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_ALLIANCE" type="22"/>
+                <attribute id="Description" value="Remember that townsfolk, guards, and enemies have their own alliances; attacking one may mean dealing with them all." handle="hf66531fcg8dc0g42b7gbbe8g9c0ef90959cb" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="1" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_SKILLBOOKS" type="22"/>
+                <attribute id="Description" value="You can learn new skills by finding or buying skillbooks. " handle="hc79c588bg8c5cg4e29g9c7fgb0d4d2c3108c" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="1" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_AP" type="22"/>
+                <attribute id="Description" value="If an action costs too many Action Points, skip your turn. Your Action Points will transfer to your next turn." handle="hc24c3753gdbe4g4bdfg8199g70c4ea0bc091" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="1" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_ELEMWEAPON" type="22"/>
+                <attribute id="Description" value="You can hit the ground or surfaces with your weapon by holding [IE_DestructionToggle] + [IE_Action1] and then clicking terrain." handle="h6f60073cg4d04g412fg8d91g96ad6f538459" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="0" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_ELEMWEAPON_CONSOLE" type="22"/>
+                <attribute id="Description" value="[You can hit the ground or surfaces with your weapon by pressing [IE_DestructionToggle] and selecting the spot you wish to attack.]" handle="h9cd84cafg7edfg4f92g9ef1g07d329e56900" type="28"/>
+                <attribute id="Keyboard" value="0" type="19"/>
+                <attribute id="Controller" value="1" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_PRIMSTATS" type="22"/>
+                <attribute id="Description" value="Skills get penalties or bonuses based on your primary stats." handle="h72a287aag3069g4285g96cbgabe304e642c3" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="1" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_GEAR" type="22"/>
+                <attribute id="Description" value="Always keep an eye out for new and interesting gear. A demon will make short work of an old, rusty sword." handle="h4899733eg21edg4bebg9e5ag2e04e1d6b104" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="1" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_RANGE" type="22"/>
+                <attribute id="Description" value="The range of bows and crossbows is limited, but look for high ground to significantly increase their range!" handle="h41176d48g2e53g42dfgbf07gf913b2ec67ba" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="1" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_MAPMARKER" type="22"/>
+                <attribute id="Description" value="You can add markers to your map to keep track of fights you want to face, hints you want to remember, or quests you want to finish." handle="hd30ded14g5ad5g4712gbf66g32736faa955f" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="1" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_TACTICALVIEW" type="22"/>
+                <attribute id="Description" value="In combat, hit [IE_ToggleTacticalCamera] to enter Tactical View." handle="h27457824g3787g4dd3gb730g5df2c91d92df" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="1" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_TRADERS" type="22"/>
+                <attribute id="Description" value="Traders restock every hour or when any character in your party levels up." handle="hcfee1aeag363eg421fgb230g54c60be6d596" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="1" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_BARTER" type="22"/>
+                <attribute id="Description" value="If you run out of money, barter! Exchange items from your inventory to make up for the value of an item that's too expensive." handle="ha927c7cbg6f76g4f49ga9dcg46c93dac8082" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="1" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_OUTLINE" type="22"/>
+                <attribute id="Description" value="If you tend to lose sight of characters in combat, activate the character outlines by hitting [IE_HighlightCharacters]." handle="h509221cag2369g4e91g928egdd4dfaf65484" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="0" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_OUTLINE_CONSOLE" type="22"/>
+                <attribute id="Description" value="If you tend to lose sight of characters in combat, visit the Options menu and activate the character outlines." handle="h66621a17gbc76g4ba1gb03ag015e7477e881" type="28"/>
+                <attribute id="Keyboard" value="0" type="19"/>
+                <attribute id="Controller" value="1" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_PERCEPTION" type="22"/>
+                <attribute id="Description" value="To examine a character, hover over them and hit [IE_ToggleInfo]. The higher your Loremaster skill, the more detailed the info you get." handle="h51f73b3dg4796g45c5gad16gf22583c42e7e" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="0" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_PERCEPTION_CONSOLE" type="22"/>
+                <attribute id="Description" value="To examine a character, open the Action menu and use Examine. The higher your Loremaster skill, the more detailed the info you get." handle="h0f084e60g8d2fg40e5g998dg5fba94c785fa" type="28"/>
+                <attribute id="Keyboard" value="0" type="19"/>
+                <attribute id="Controller" value="1" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_HEAVYSTUFF" type="22"/>
+                <attribute id="Description" value="You can move heavy items by increasing your Strength or investing points in Telekinesis." handle="he62f6b57g6b2cg4d84gb473g349491be8224" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="1" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_PICKPOCKET" type="22"/>
+                <attribute id="Description" value="Click on townsfolk while in sneak mode to rifle through their pockets." handle="hc10e13b6gcb52g413bgaf14g6d725654e3e7" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="0" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_PICKPOCKET_CONSOLE" type="22"/>
+                <attribute id="Description" value="[Interact with townsfolk while sneaking behind them to rifle through their pockets.]" handle="h6e653b23g6d43g49acg8160g876c46bae16f" type="28"/>
+                <attribute id="Keyboard" value="0" type="19"/>
+                <attribute id="Controller" value="1" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_DISARMTRAPS" type="22"/>
+                <attribute id="Description" value="Trap Disarm Toolkits work on mines and gas pits, too." handle="h0d26623bg41deg477cgb26dg1a1354e16864" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="1" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_FORMATION" type="22"/>
+                <attribute id="Description" value="Change your party's formation by clicking above the topmost player portrait." handle="hf0e4bfb0gb6d6g4700g9801gb21d26cc8ffc" type="28"/>
+                <attribute id="Keyboard" value="0" type="19"/>
+                <attribute id="Controller" value="0" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_VOLUME" type="22"/>
+                <attribute id="Description" value="Lower or raise the volume of music, voices, and other audio under the Options Menu." handle="he9f0d816gf61ag4313ga49dg1cfbc58a62c3" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="1" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_HEARCONVOS" type="22"/>
+                <attribute id="Description" value="Sneak up on unsuspecting parties to hear conversations that might not be meant for you." handle="h0ead99b2gdd90g4b9fg8d02g1d1aeff59f7b" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="1" type="19"/>
+            </node>
+            <node id ="Hint">
+                <attribute id="HintKey" value="HINT_ELEMREGEN" type="22"/>
+                <attribute id="Description" value="A creature with an elemental resistance higher than 100 will regenerate from that element." handle="h5cde03d8g5cc7g4558g9746gdf89a3210a77" type="28"/>
+                <attribute id="Keyboard" value="1" type="19"/>
+                <attribute id="Controller" value="1" type="19"/>
+            </node>
+          </children>
+      </node>
+  </region>
+</save>

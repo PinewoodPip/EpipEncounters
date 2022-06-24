@@ -1,0 +1,15 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+
+KBSECTION
+
+PROC PROC_AMER_Spells_SkillPreCast_PerTarget((CHARACTERGUID)_Char, "Target_DualWieldingAttack", (GUIDSTRING)_Target, (REAL)_X, (REAL)_Y, (REAL)_Z, (INTEGER)_InfusCount, (STRING)_Type, (STRING)_Element)
+THEN
+PROC_AMER_GEN_BasicAttackObjectStarted(_Target, _Char, _Char, "Flurry");
+// PROC_AMER_ActionPoints_BasicAttackCost_Wrapper(_Char, 4);
+
+EXITSECTION
+
+ENDEXITSECTION
+ParentTargetEdge "AMER_GLO_Spells_Special"

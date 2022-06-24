@@ -1,0 +1,9 @@
+{
+    "RequiredExtensionVersion": 56,
+    "ModTable": "EpipEncounters",
+    "FeatureFlags": [
+        "OsirisExtensions",
+        "Lua",
+        "Preprocessor"
+    ]
+}

@@ -1,0 +1,12 @@
+new entry "PROTECTION_CIRCLE_INITIAL"
+type "StatusData"
+data "StatusType" "HEAL"
+data "ForGameMaster" "No"
+data "InitiateCombat" "No"
+data "BringIntoCombat" "No"
+data "DisplayName" "PROTECTION_CIRCLE_INITIAL_DisplayName"
+data "DisplayNameRef" "|Circle of Protection|"
+data "HealStat" "AllArmor"
+data "HealType" "Qualifier"
+data "HealValue" "50"
+

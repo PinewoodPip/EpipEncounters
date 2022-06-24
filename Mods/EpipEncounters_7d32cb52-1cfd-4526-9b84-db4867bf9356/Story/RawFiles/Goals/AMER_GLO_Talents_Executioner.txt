@@ -1,0 +1,28 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+
+KBSECTION
+//Executioner causes you to recover 1 AP when an ally slays an enemy.
+
+IF
+CharacterKilledBy(_Dying, _, _Attacker)
+AND
+DB_AMER_Talents(_Ally, "Executioner")
+AND
+NOT QRY_AMER_GEN_IsDeadOrDying(_Ally)
+AND
+CharacterIsAlly(_Attacker, _Ally, 1)
+AND
+_Attacker != _Ally
+//AND
+//GetDistanceTo(_Ally, _Dying, _Dist)
+//AND
+//_Dist <= 3.0
+THEN
+PROC_AMER_ActionPoints_Add(_Ally, 2); // PIP - Changed to 2 AP, from 1.
+
+EXITSECTION
+
+ENDEXITSECTION
+ParentTargetEdge "AMER_GLO_Talents"

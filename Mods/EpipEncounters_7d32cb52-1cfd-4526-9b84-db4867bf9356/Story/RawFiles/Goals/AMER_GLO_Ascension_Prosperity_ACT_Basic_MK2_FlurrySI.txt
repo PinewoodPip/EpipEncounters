@@ -1,0 +1,22 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+
+KBSECTION
+//If you already have this activator, Source Infusion 1: When you perform Flurry, activate Prosperity for 2 turns.
+
+QRY QRY_AMER_Source_Infusion_SkillCast((CHARACTERGUID)_Char, "Target_DualWieldingAttack", 1)
+AND
+DB_AMER_Ascension_SpecialLogic(_Char, "Ascension_Prosperity_ACT_Basic_MK2_FlurrySI", _)
+//AND
+//DB_AMER_KeywordStat_Added(_Char, "Prosperity", _MK1Amount)
+//AND
+//_MK1Amount > 1
+THEN
+PROC_AMER_CharacterAddSourcePoints(_Char, 1); // PIP
+PROC_AMER_KeywordStat_Prosperity_Activate(_Char, 12.0);
+
+EXITSECTION
+
+ENDEXITSECTION
+ParentTargetEdge "AMER_GLO_UI_Ascension_NodeRewards"

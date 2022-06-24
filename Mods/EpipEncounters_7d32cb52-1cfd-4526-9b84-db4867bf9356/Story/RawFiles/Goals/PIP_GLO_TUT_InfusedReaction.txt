@@ -1,0 +1,46 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+
+DB_AMER_TutorialInfo("PIP_TUT_InfusedReactions", "AMER_TUT_GEN_Ok", "AMER_TUT_GEN_DisableTutorials");
+
+// infused reaction speciallogic.
+DB_PIP_InfusedReactionSpecialLogic("Ascension_Elementalist_MUTA_EmulateSkillSI");
+DB_PIP_InfusedReactionSpecialLogic("Ascension_Predator_MUTA_EmulateWiltingSI");
+DB_PIP_InfusedReactionSpecialLogic("Ascension_Predator_MUTA_EmulateFoKSI");
+DB_PIP_InfusedReactionSpecialLogic("Ascension_Celestial_ACT_SIResurrect");
+DB_PIP_InfusedReactionSpecialLogic("Ascension_Centurion_MUTA_EmulateSupernova");
+DB_PIP_InfusedReactionSpecialLogic("Ascension_Prosperity_ACT_Basic_MK2_FlurrySI");
+DB_PIP_InfusedReactionSpecialLogic("Ascension_Celestial_MUTA_GiveSourceSI");
+DB_PIP_InfusedReactionSpecialLogic("Ascension_Wither_ACT_TheRitual");
+DB_PIP_InfusedReactionSpecialLogic("Ascension_Purity_MUTA_EmulateSpontCombSI");
+DB_PIP_InfusedReactionSpecialLogic("Ascension_Occultist_MUTA_EmulatePetrifyingVisage");
+DB_PIP_InfusedReactionSpecialLogic("Ascension_Centurion_MUTA_SIRupturedTendons");
+DB_PIP_InfusedReactionSpecialLogic("Ascension_Wither_MUTA_BasicAttackSIGotS");
+
+KBSECTION
+
+PROC PROC_AMER_TUT_DisableTutorials()
+THEN
+GoalCompleted;
+
+// show tutorial when a player character gains an infusion reaction reward in any way.
+PROC PROC_AMER_UI_Ascension_SpecialLogic_Added((CHARACTERGUID)_Char, (STRING)_Logic, (REAL)_Add)
+AND
+_Add > 0
+AND
+DB_PIP_InfusedReactionSpecialLogic(_Logic)
+AND
+NOT DB_PIP_TUT_InfusedReactions(1)
+THEN
+DB_PIP_TUT_InfusedReactions(1);
+PROC_AMER_TUT_ShowForPlayers("PIP_TUT_InfusedReactions");
+
+PROC PROC_AMER_TUT_TutorialFinished("PIP_TUT_InfusedReactions")
+THEN
+GoalCompleted;
+
+EXITSECTION
+
+ENDEXITSECTION
+ParentTargetEdge "AMER_GLO_TUT_Wrapper"

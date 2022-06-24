@@ -1,0 +1,398 @@
+package LS_Classes
+{
+    import flash.display.MovieClip;
+    import flash.display.Sprite;
+    import flash.events.FocusEvent;
+    import flash.events.KeyboardEvent;
+    import flash.events.MouseEvent;
+    import flash.external.ExternalInterface;
+    
+    public dynamic class LSCombo extends MovieClip
+    {
+        
+        
+        public var SND_Over:String = "UI_Generic_Over";
+        
+        public var SND_Open:String = "UI_GM_Generic_Slide_Open";
+        
+        public var SND_Close:String = "UI_GM_Generic_Slide_Close";
+        
+        public var SND_Click:String = "UI_Gen_XButton_Click";
+        
+        // public var topBtn_mc:LSStateButton;
+        
+        // public var listBg_mc:MovieClip;
+        
+        private var m_Opened:Boolean;
+        
+        private var m_ScrollList:scrollList;
+        
+        private var m_BGHeightMax:Number;
+        
+        private var m_ScrollBG:MovieClip;
+        
+        private var m_OnSelectFunc:Function;
+        
+        private var m_OnOpenFunc:Function;
+        
+        private var m_DefaultText:String;
+        
+        private var m_ScrollDownClassName:String = "down_id";
+        
+        private var m_ScrollUpClassName:String = "up_id";
+        
+        private var m_ScrollHandleClassName:String = "handle_id";
+        
+        private var m_ScrollBgClassName:String = "scrollBg_id";
+        
+        public function LSCombo()
+        {
+            super();
+            this.m_Opened = false;
+            this.m_ScrollList = null;
+            this.m_ScrollBG = null;
+            this.m_OnSelectFunc = null;
+            this.m_BGHeightMax = 0;
+            this.m_DefaultText = "";
+        }
+        
+        public function init(param1:Function = null, param2:String = "") : void
+        {
+            this.m_OnSelectFunc = param1;
+            this.m_DefaultText = param2;
+            if(this.topBtn_mc != null)
+            {
+                this.topBtn_mc.initialize("",this.onTopBtn);
+                this.topBtn_mc.setEnabled(true);
+            }
+            var _loc3_:Sprite = new Sprite();
+            _loc3_.graphics.beginFill(16777215);
+            _loc3_.graphics.drawRect(0,0,1,1);
+            _loc3_.graphics.endFill();
+            this.m_ScrollBG = new MovieClip();
+            this.m_ScrollBG.alpha = 0;
+            this.m_ScrollBG.addChild(_loc3_);
+            this.m_ScrollList = new scrollList(this.m_ScrollDownClassName,this.m_ScrollUpClassName,this.m_ScrollHandleClassName,this.m_ScrollBgClassName);
+            this.addChild(this.m_ScrollList);
+            
+            if(this.listBg_mc != null)
+            {
+                this.m_ScrollList.x = this.listBg_mc.x;
+                this.m_ScrollList.y = this.listBg_mc.y;
+                this.m_ScrollList.containerBG_mc.addChild(this.m_ScrollBG);
+                this.m_ScrollBG.width = this.listBg_mc.width;
+            }
+            this.m_ScrollList.dragAutoScroll = true;
+            this.m_ScrollList.EL_SPACING = 0;
+            this.m_ScrollList.m_scrollbar_mc.y = 1;
+            this.m_ScrollList.scrollbarSpacing = 0;
+            this.m_ScrollList.m_scrollbar_mc.ScaleBG = true;
+            this.m_ScrollList.m_scrollbar_mc.m_hideWhenDisabled = true;
+            this.m_ScrollList.mouseWheelWhenOverEnabled = true;
+            this.m_ScrollList.m_scrollbar_mc.SND_Click = "UI_GM_Generic_Click_Press";
+            this.m_ScrollList.m_scrollbar_mc.SND_Over = "";
+            this.m_ScrollList.m_scrollbar_mc.SND_Release = "UI_GM_Generic_Click_Release";
+            // this.opened = false;
+            addFrameScript(0, this.frame1);
+        }
+        
+        public function setEnabled(param1:Boolean) : void
+        {
+            if(this.topBtn_mc != null)
+            {
+                this.topBtn_mc.setEnabled(param1);
+            }
+        }
+        
+        public function setDefaultText(param1:String) : void
+        {
+            this.m_DefaultText = param1;
+            this.setText(this.m_DefaultText);
+        }
+        
+        public function setOnOpenFunction(param1:Function) : void
+        {
+            this.m_OnOpenFunc = param1;
+        }
+        
+        public function setText(param1:String) : void
+        {
+            if(this.topBtn_mc != null)
+            {
+                this.topBtn_mc.setText(param1);
+            }
+        }
+        
+        public function setScrollClass(param1:String = "down_id", param2:String = "up_id", param3:String = "handle_id", param4:String = "scrollBg_id") : void
+        {
+            this.m_ScrollDownClassName = param1;
+            this.m_ScrollUpClassName = param2;
+            this.m_ScrollHandleClassName = param3;
+            this.m_ScrollBgClassName = param4;
+        }
+        
+        public function set opened(param1:Boolean) : void
+        {
+            if(param1 != this.m_Opened)
+            {
+                if(param1)
+                {
+                if(this.SND_Open != null)
+                {
+                    ExternalInterface.call("PlaySound",this.SND_Open);
+                }
+                }
+                else if(this.SND_Close != null)
+                {
+                ExternalInterface.call("PlaySound",this.SND_Close);
+                }
+            }
+            this.m_Opened = param1;
+            if(this.topBtn_mc != null)
+            {
+                this.topBtn_mc.setActive(param1);
+            }
+            if(this.listBg_mc != null)
+            {
+                this.listBg_mc.visible = param1;
+            }
+            if(this.m_ScrollList != null)
+            {
+                this.m_ScrollList.visible = param1;
+            }
+            if(this.m_Opened)
+            {
+                if(this.m_OnOpenFunc != null)
+                {
+                this.m_OnOpenFunc(this);
+                }
+                ExternalInterface.call("pipComboOpened", this.id);
+                stage.focus = this;
+                stage.addEventListener(KeyboardEvent.KEY_DOWN,this.onKeyPress);
+                this.addEventListener(FocusEvent.FOCUS_OUT,this.onFocusLost);
+            }
+            else
+            {
+                stage.removeEventListener(KeyboardEvent.KEY_DOWN,this.onKeyPress);
+                this.removeEventListener(FocusEvent.FOCUS_OUT,this.onFocusLost);
+                stage.focus = null;
+            }
+        }
+        
+        public function set bgHeightMax(param1:Number) : void
+        {
+            this.m_BGHeightMax = param1;
+            if(this.m_ScrollList != null && this.listBg_mc != null)
+            {
+                this.m_ScrollList.setFrame(this.listBg_mc.width,param1);
+                this.m_ScrollList.positionElements();
+                this.fitBackground();
+            }
+        }
+        
+        public function set scrollbarOffsetX(param1:Number) : void
+        {
+            if(this.m_ScrollList != null)
+            {
+                this.m_ScrollList.SB_SPACING = param1;
+            }
+        }
+        
+        public function set scrollbarOffsetY(param1:Number) : void
+        {
+            if(this.m_ScrollList != null)
+            {
+                this.m_ScrollList.m_scrollbar_mc.y = param1;
+            }
+        }
+        
+        public function set scrollbarLength(param1:Number) : void
+        {
+            if(this.m_ScrollList != null)
+            {
+                this.m_ScrollList.m_scrollbar_mc.setLength(param1);
+            }
+        }
+        
+        public function get elScrollList() : scrollList
+        {
+            return this.m_ScrollList;
+        }
+        
+        public function addElement(param1:MovieClip, param2:Boolean = true) : void
+        {
+            if(this.m_ScrollList != null)
+            {
+                this.m_ScrollList.addElement(param1,param2);
+                param1.addEventListener(MouseEvent.MOUSE_DOWN,this.onElementPress);
+            }
+            this.fitBackground();
+        }
+        
+        public function clearElements() : void
+        {
+            if(this.m_ScrollList != null)
+            {
+                this.m_ScrollList.clearElements();
+            }
+            this.fitBackground();
+            this.setText(this.m_DefaultText);
+        }
+        
+        public function positionElements() : void
+        {
+            if(this.m_ScrollList != null)
+            {
+                this.m_ScrollList.positionElements();
+            }
+        }
+        
+        public function sort() : void
+        {
+            if(this.m_ScrollList != null)
+            {
+                this.m_ScrollList.sortOn("text");
+            }
+        }
+        
+        public function get opened() : Boolean
+        {
+            return this.m_Opened;
+        }
+        
+        private function onTopBtn() : void
+        {
+            this.opened = !this.opened;
+        }
+        
+        private function fitBackground() : void
+        {
+            var _loc1_:MovieClip = null;
+            if(this.listBg_mc != null && this.m_ScrollList != null)
+            {
+                this.listBg_mc.height = Math.min(this.m_ScrollList.height,this.m_BGHeightMax);
+                _loc1_ = this.m_ScrollList.getLastElement(false,false);
+                if(_loc1_ != null)
+                {
+                    this.m_ScrollBG.height = _loc1_.y + _loc1_.height;
+                }
+            }
+        }
+        
+        public function getElement(param1:int) : MovieClip
+        {
+            if(this.m_ScrollList != null)
+            {
+                return this.m_ScrollList.getElement(param1);
+            }
+            return null;
+        }
+        
+        public function clearSelection() : void
+        {
+            if(this.m_ScrollList != null)
+            {
+                this.m_ScrollList.clearSelection();
+            }
+            if(this.topBtn_mc != null)
+            {
+                this.topBtn_mc.setText(this.m_DefaultText);
+            }
+        }
+        
+        public function select(param1:int, param2:Boolean = true) : void
+        {
+            var _loc3_:MovieClip = null;
+            if(this.m_ScrollList != null)
+            {
+                this.m_ScrollList.clearSelection();
+                _loc3_ = this.m_ScrollList.getAt(param1);
+                if(_loc3_ != null)
+                {
+                this.m_ScrollList.select(param1);
+                if(_loc3_.text != null)
+                {
+                    this.setText(_loc3_.text);
+                }
+                }
+                if(param2 && this.m_OnSelectFunc != null)
+                {
+                this.m_OnSelectFunc(param1);
+                }
+                ExternalInterface.call("pipComboSelect", this.id, param1);
+            }
+        }
+        
+        public function prev() : void
+        {
+            var _loc1_:int = 0;
+            var _loc2_:MovieClip = null;
+            if(this.m_ScrollList != null)
+            {
+                _loc1_ = this.m_ScrollList.currentSelection;
+                if(_loc1_ > 0)
+                {
+                this.select(_loc1_ - 1);
+                _loc2_ = this.m_ScrollList.getAt(_loc1_ - 1);
+                if(_loc2_ != null && this.m_OnSelectFunc != null)
+                {
+                    this.m_OnSelectFunc(_loc2_.list_pos);
+                }
+                
+                ExternalInterface.call("pipComboSelect", this.id, _loc2_.list_pos);
+                }
+            }
+        }
+        
+        public function next() : void
+        {
+            var _loc2_:MovieClip = null;
+            var _loc1_:int = this.m_ScrollList.currentSelection;
+            if(_loc1_ < this.m_ScrollList.size - 1)
+            {
+                this.select(_loc1_ + 1);
+                _loc2_ = this.m_ScrollList.getAt(_loc1_ + 1);
+                if(_loc2_ != null && this.m_OnSelectFunc != null)
+                {
+                this.m_OnSelectFunc(_loc2_.list_pos);
+                }
+                ExternalInterface.call("pipComboSelect", this.id, _loc2_.list_pos);
+            }
+        }
+        
+        private function onElementPress(param1:MouseEvent) : void
+        {
+            var _loc2_:MovieClip = param1.currentTarget as MovieClip;
+            if(_loc2_ != null)
+            {
+                this.select(_loc2_.list_pos);
+                this.opened = false;
+            }
+        }
+        
+        private function onKeyPress(param1:KeyboardEvent) : void
+        {
+            if(param1.keyCode == 38)
+            {
+                this.prev();
+            }
+            else if(param1.keyCode == 40)
+            {
+                this.next();
+            }
+        }
+        
+        private function onFocusLost(param1:FocusEvent) : void
+        {
+            if(this.opened)
+            {
+                this.opened = false;
+            }
+        }
+
+        private function frame1() : *
+        {
+            this.opened = false;
+        }
+    }
+}

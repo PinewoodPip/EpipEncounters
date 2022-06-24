@@ -1,0 +1,178 @@
+package
+{
+    import LS_Classes.textEffect;
+    import flash.display.MovieClip;
+    import flash.events.MouseEvent;
+    import flash.external.ExternalInterface;
+    import flash.geom.Point;
+    import flash.geom.Rectangle;
+    
+    public dynamic class summonInfo extends MovieClip
+    {
+        
+        
+        public var armor_mc:summonArmorBar;
+        
+        public var dis_mc:MovieClip;
+        
+        public var frame_mc:MovieClip;
+        
+        public var hp_mc:HPBarSummon;
+        
+        public var icon_mc:MovieClip;
+        
+        public var magicArmor_mc:summonArmorBar;
+        
+        public var sourceHolder_mc:MovieClip;
+        
+        public var statusHolder_mc:MovieClip;
+        
+        public var turns_mc:MovieClip;
+        
+        public var sourcepoints:Array;
+        
+        public var enableMouseClicking:Boolean;
+        
+        public function summonInfo()
+        {
+            super();
+            addFrameScript(0,this.frame1);
+        }
+        
+        public function init() : *
+        {
+            this.turns_mc.filters = textEffect.createStrokeFilter(1050888,1.4,1,1.8,3);
+            this.sourcepoints = new Array(this.sourceHolder_mc.source1_mc,this.sourceHolder_mc.source2_mc,this.sourceHolder_mc.source3_mc);
+            var _loc1_:uint = 0;
+            while(_loc1_ < this.sourcepoints.length)
+            {
+                this.sourcepoints[_loc1_].mouseChildren = false;
+                this.sourcepoints[_loc1_].mouseEnabled = false;
+                _loc1_++;
+            }
+        }
+        
+        public function setHPBar(param1:Number, param2:Boolean) : *
+        {
+            this.hp_mc.setBar(param1,param2);
+        }
+        
+        public function setSourceHolderActive(param1:Boolean) : *
+        {
+        }
+        
+        public function setHPColour(param1:uint) : *
+        {
+            this.hp_mc.setBarColour(param1);
+        }
+        
+        public function setSourcePoints(param1:Number, param2:Number) : *
+        {
+            if(param2 == -1)
+            {
+                param2 = 3;
+            }
+            if(param1 < 0)
+            {
+                param1 = 0;
+            }
+            else if(param1 > 3)
+            {
+                param1 = 3;
+            }
+            var _loc3_:uint = 0;
+            while(_loc3_ < this.sourcepoints.length)
+            {
+                this.sourcepoints[_loc3_].visible = Boolean(_loc3_ < param2);
+                this.sourcepoints[_loc3_].gotoAndStop(!!Boolean(_loc3_ < param1) ? 2 : 1);
+                _loc3_++;
+            }
+        }
+        
+        public function onOut(param1:MouseEvent) : *
+        {
+            this.showHL(false);
+            ExternalInterface.call("onCharOut",this.characterHandle);
+            ExternalInterface.call("hidetooltip");
+            this.hasTooltip = false;
+            this.frame_mc.removeEventListener(MouseEvent.MOUSE_UP,this.onClick);
+            this.frame_mc.removeEventListener("rightClick",this.onRightClick);
+        }
+        
+        public function onOver(param1:MouseEvent) : *
+        {
+            this.showHL(true);
+            var _loc2_:Point = new Point(0,0);
+            _loc2_ = this.frame_mc.localToGlobal(_loc2_);
+            var _loc3_:Number = 48;
+            ExternalInterface.call("showCharTooltip",this.characterHandle,_loc2_.x,_loc2_.y + _loc3_,this.frame_mc.width,this.frame_mc.height,"rightTop");
+            this.hasTooltip = true;
+            if(this.enableMouseClicking)
+            {
+                this.frame_mc.addEventListener(MouseEvent.MOUSE_DOWN,this.onDown);
+                this.frame_mc.addEventListener("rightClick",this.onRightClick);
+            }
+            ExternalInterface.call("onCharOver",this.characterHandle);
+        }
+        
+        public function onDown(param1:MouseEvent) : *
+        {
+            this.frame_mc.removeEventListener(MouseEvent.MOUSE_DOWN,this.onDown);
+            this.frame_mc.addEventListener(MouseEvent.MOUSE_UP,this.onClick,false,0,true);
+        }
+
+        public function onRightClick(param1:MouseEvent) : *
+        {
+            ExternalInterface.call("pipRequestContextMenu", "playerInfoSummonPortrait", stage.mouseX, stage.mouseY, this.characterHandle);
+        }
+        
+        public function showHL(param1:Boolean) : *
+        {
+            this.frame_mc.hl_mc.visible = param1;
+            this.frame_mc.bg_mc.visible = !param1;
+        }
+        
+        public function onClick(param1:MouseEvent) : *
+        {
+            this.frame_mc.removeEventListener(MouseEvent.MOUSE_UP,this.onClick);
+            if(!this.select)
+            {
+                ExternalInterface.call("charSel",this.characterHandle);
+            }
+        }
+        
+        public function disableMouseClicking() : *
+        {
+            this.frame_mc.removeEventListener(MouseEvent.MOUSE_UP,this.onClick,false);
+            this.frame_mc.removeEventListener(MouseEvent.MOUSE_DOWN,this.onDown);
+        }
+        
+        public function onDoubleClick(param1:MouseEvent) : *
+        {
+            ExternalInterface.call("centerCamOnCharacter",this.characterHandle);
+        }
+        
+        public function setLeft(param1:Boolean) : *
+        {
+            if(param1)
+            {
+                this.statusHolder_mc.x = 65;
+            }
+            else
+            {
+                this.statusHolder_mc.x = -38;
+            }
+        }
+        
+        function frame1() : *
+        {
+            this.frame_mc.mouseChildren = false;
+            this.frame_mc.doubleClickEnabled = true;
+            this.frame_mc.addEventListener(MouseEvent.DOUBLE_CLICK,this.onDoubleClick,false,0,true);
+            this.frame_mc.addEventListener(MouseEvent.ROLL_OVER,this.onOver);
+            this.frame_mc.addEventListener(MouseEvent.ROLL_OUT,this.onOut);
+            this.enableMouseClicking = true;
+            this.statusHolder_mc.scrollRect = new Rectangle(0,0,1920,500);
+        }
+    }
+}

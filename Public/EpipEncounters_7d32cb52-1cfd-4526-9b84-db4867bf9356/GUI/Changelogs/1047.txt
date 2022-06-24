@@ -1,0 +1,9 @@
+- Added an option to show artifact/protean chances on enemy health bars when the "Show Sneak Cones" (shift by default) key is held. Also works on containers, without needing the key to be held. 
+- Fixed an issue with some setup event being unreliable (likely the source of many hotbar problems)
+- Fixed some events being fired once per user
+- Fixed equip animations in the character sheet
+- Client timers are now truly client-side
+    - As a result hotkey'd skills on the hotbar should now have a lot less delay
+- Fixed hotbar not being greyed out for dead characters
+- Fixed "None"-type weapons not being considered melee, causing incarnate bull rush to appear grayed out in the hotbar
+- Fixed another large performance issue with the stats tab

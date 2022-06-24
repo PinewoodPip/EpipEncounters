@@ -1,0 +1,1050 @@
+package characterSheet_fla
+{
+    import LS_Classes.textHelpers;
+    import flash.display.DisplayObject;
+    import flash.display.MovieClip;
+    import flash.external.ExternalInterface;
+    import flash.geom.Point;
+    import flash.text.TextField;
+    import flash.utils.getTimer;
+    
+    public dynamic class MainTimeline extends MovieClip
+    {
+        
+        
+        public var stats_mc:MovieClip;
+        
+        public var charHandle:Number;
+        
+        public var initDone:Boolean;
+        
+        public var events:Array;
+        
+        public var layout:String;
+        
+        public var alignment:String;
+        
+        public var curTooltip:int;
+        
+        public var hasTooltip:Boolean;
+        
+        public var availableStr:String;
+        
+        public var keepCustomInScreen;
+        
+        public var uiLeft:uint;
+        
+        public var uiRight:uint;
+        
+        public var uiTop:uint;
+        
+        public var uiMinHeight:uint;
+        
+        public var uiMinWidth:uint;
+        
+        public var charList_array:Array;
+        
+        public const charListPartyPosX:int = 156;
+        
+        public const charListOnePlayerPosX:int = 292;
+        
+        public const playerIconW:int = 80;
+        
+        public const playerIconH:int = 100;
+        
+        public var invRows:uint;
+        
+        public var invCols:uint;
+        
+        public var invCellSize:uint;
+        
+        public var invCellSpacing:uint;
+        
+        public var skillList:Array;
+        
+        public const skillIconSize:uint = 50;
+        
+        public const skillCols:uint = 3;
+        
+        public const spacingV:int = 15;
+        
+        public const spacingH:int = 15;
+        
+        public const listSpacing:int = 40;
+        
+        public const sysPanelX:int = 2;
+        
+        public const sysPanelY:int = 40;
+        
+        public const sysPanelW:int = 675;
+        
+        public const sysPanelH:int = 1020;
+        
+        public const leftPanelW:uint = 330;
+        
+        public var tabsTexts:Array;
+        
+        public var primStat_array:Array;
+        
+        public var secStat_array:Array;
+        
+        public var ability_array:Array;
+        
+        public var tags_array:Array;
+        
+        public var talent_array:Array;
+        
+        public var visual_array:Array;
+        
+        public var visualValues_array:Array;
+        
+        public var customStats_array:Array;
+        
+        public var lvlBtnAbility_array:Array;
+        
+        public var lvlBtnStat_array:Array;
+        
+        public var lvlBtnSecStat_array:Array;
+        
+        public var lvlBtnTalent_array:Array;
+        
+        public var allignmentArray:Array;
+        
+        public var aiArray:Array;
+        
+        public var inventoryUpdateList:Array;
+        
+        public var isGameMasterChar:Boolean;
+        
+        public var EQContainer:MovieClip;
+        
+        public var slotAmount:Number;
+        
+        public var cellSize:Number;
+        
+        public var slot_array:Array;
+        
+        public var itemsUpdateList:Array;
+        
+        public var renameBtnTooltip:String;
+        
+        public var alignmentTooltip:String;
+        
+        public var aiTooltip:String;
+        
+        public var createNewStatBtnLabel:String;
+        
+        public var isDragging:Boolean;
+        
+        public var draggingSkill:Boolean;
+        
+        public var tabState:Number;
+        
+        public var screenWidth:Number;
+        
+        public var screenHeight:Number;
+        
+        public var text_array:Array;
+        
+        public const maxIndexInView:uint = 3;
+        
+        public const strUndefined:String = "[UNDEFINED]";
+        
+        public var strSelectTreasure:String;
+        
+        public var strGenerate:String;
+        
+        public var strClear:String;
+        
+        public var strLevel:String;
+        
+        public var listRarity:Array;
+        
+        public var listTreasures:Array;
+        
+        public var generateTreasureRarityId:int;
+        
+        public var generateTreasureId:int;
+        
+        public var generateTreasureLevel:int;
+        
+        public function MainTimeline()
+        {
+            super();
+            addFrameScript(0,this.frame1);
+        }
+        
+        public function onEventResize() : *
+        {
+        }
+        
+        public function updateVisuals() : *
+        {
+            var _loc1_:Number = 0;
+            while(_loc1_ < this.visual_array.length)
+            {
+                this.addVisual(this.visual_array[_loc1_++],this.visual_array[_loc1_++]);
+            }
+            this.visual_array = new Array();
+        }
+        
+        public function updateSkills() : *
+        {
+            this.stats_mc.skillTabHolder_mc.updateSkillList(this.skillList);
+            this.skillList = new Array();
+        }
+        
+        public function GMShowTargetSkills() : *
+        {
+            this.stats_mc.ClickTab(6);
+        }
+        
+        public function resetSkillDragging() : *
+        {
+            this.draggingSkill = false;
+        }
+        
+        public function updateInventory() : *
+        {
+            this.stats_mc.updateInventorySlots(this.inventoryUpdateList);
+            this.inventoryUpdateList = new Array();
+        }
+        
+        public function updateAllignmentList() : *
+        {
+            if(this.allignmentArray.length > 0)
+            {
+                this.stats_mc.upDateAllignments(this.allignmentArray);
+            }
+            this.allignmentArray = new Array();
+        }
+        
+        public function selectAllignment(param1:uint) : *
+        {
+            this.stats_mc.alignments_mc.selectItemByID(param1);
+        }
+        
+        public function updateAIList() : *
+        {
+            if(this.aiArray.length > 0)
+            {
+                this.stats_mc.updateAIs(this.aiArray);
+            }
+            this.aiArray = new Array();
+        }
+        
+        public function selectAI(param1:uint) : *
+        {
+            this.stats_mc.aiSel_mc.selectItemByID(param1);
+        }
+        
+        public function setGameMasterMode(param1:Boolean, param2:Boolean, param3:Boolean) : *
+        {
+            this.isGameMasterChar = param2;
+            var _loc4_:Number = !!param2 ? Number(2) : (!!param1 ? Number(1) : Number(0));
+            if(this.tabState != _loc4_)
+            {
+                this.stats_mc.buildTabs(_loc4_);
+                this.tabState = _loc4_;
+            }
+            var _loc5_:uint = this.stats_mc.tabsArray.length;
+            var _loc6_:uint = 4;
+            var _loc7_:uint = this.leftPanelW / _loc5_ - _loc6_;
+            this.stats_mc.charInfo_mc.min_mc.visible = param2;
+            this.stats_mc.charInfo_mc.plus_mc.visible = param2;
+            this.stats_mc.charInfo_mc.renameBtn_mc.visible = param2 && !param3;
+            this.stats_mc.charInfo_mc.hit_mc.visible = param2 && !param3;
+            this.stats_mc.alignments_mc.visible = param2 && !param3;
+            this.stats_mc.aiSel_mc.visible = param2 && !param3;
+            this.stats_mc.customStats_mc.setGameMasterMode(param2);
+        }
+        
+        public function onEventUp(param1:Number) : *
+        {
+            var _loc2_:Boolean = false;
+            switch(this.events[param1])
+            {
+                case "IE ContextMenu":
+                _loc2_ = this.stats_mc.equip_mc.onContainerContextEvent();
+                if(!_loc2_)
+                {
+                    _loc2_ = this.stats_mc.invTabHolder_mc.onContextMenuInputUp(this.charHandle);
+                }
+                break;
+                case "IE UIAccept":
+                stage.focus = null;
+                break;
+                case "IE ToggleInGameMenu":
+                ExternalInterface.call("PlaySound","UI_Game_Inventory_Close");
+                ExternalInterface.call("hideUI");
+                _loc2_ = true;
+            }
+            return _loc2_;
+        }
+        
+        public function onEventDown(param1:Number) : *
+        {
+            var _loc2_:Boolean = false;
+            switch(this.events[param1])
+            {
+                case "IE ContextMenu":
+                _loc2_ = true;
+                break;
+                case "IE ToggleInGameMenu":
+                _loc2_ = true;
+            }
+            return _loc2_;
+        }
+        
+        public function onEventResolution(param1:Number, param2:Number) : *
+        {
+            if(this.screenWidth != param1 || this.screenHeight != param2)
+            {
+                ExternalInterface.call("setPosition","topleft","screen","topleft");
+                this.screenWidth = param1;
+                this.screenHeight = param2;
+            }
+        }
+        
+        public function onEventInit() : *
+        {
+            this.availableStr = "";
+            this.stats_mc.init();
+            this.setGameMasterMode(false,false,true);
+            ExternalInterface.call("setPosition","topleft","screen","topleft");
+        }
+        
+        public function setPossessedState(param1:Boolean) : *
+        {
+        }
+        
+        public function getGlobalPositionOfMC(param1:MovieClip) : Point
+        {
+            var _loc2_:Point = new Point(param1.x - root.x,param1.y - root.y);
+            var _loc3_:DisplayObject = param1.parent;
+            while(_loc3_ && (_loc3_ != root || _loc3_ != stage))
+            {
+                _loc2_.x += _loc3_.x;
+                _loc2_.y += _loc3_.y;
+                _loc3_ = _loc3_.parent;
+            }
+            return _loc2_;
+        }
+        
+        public function showTooltipForMC(param1:MovieClip, param2:String) : *
+        {
+            var _loc6_:Number = NaN;
+            var _loc3_:Point = this.getGlobalPositionOfMC(param1);
+            this.hasTooltip = true;
+            var _loc4_:Number = 0;
+            var _loc5_:Number = 0;
+            if(param1)
+            {
+                _loc6_ = param1.width;
+                if(param1.widthOverride)
+                {
+                _loc6_ = param1.widthOverride;
+                }
+                if(param1.mOffsetY)
+                {
+                _loc4_ = param1.mOffsetY;
+                }
+                if(param1.mOffsetX)
+                {
+                _loc5_ = param1.mOffsetX;
+                }
+                if(param2 == "showCustomStatTooltip")
+                {
+                ExternalInterface.call(param2,param1.stringID,_loc3_.x + _loc5_,_loc3_.y + _loc4_,_loc6_,param1.height,param1.tooltipAlign);
+                }
+                else
+                {
+                ExternalInterface.call(param2,param1.tooltip,_loc3_.x + _loc5_,_loc3_.y + _loc4_,_loc6_,param1.height,param1.tooltipAlign);
+                }
+            }
+        }
+        
+        public function setActionsDisabled(param1:Boolean) : *
+        {
+            this.stats_mc.equip_mc.disableActions = param1;
+            this.stats_mc.equip_mc.iggy_Icons.alpha = !!param1 ? 0.6 : 1;
+        }
+        
+        public function updateItems() : *
+        {
+            this.stats_mc.equip_mc.updateItems();
+        }
+        
+        public function setHelmetOptionState(param1:Number) : *
+        {
+            this.stats_mc.equip_mc.helmet_mc.setState(param1);
+        }
+        
+        public function setHelmetOptionTooltip(param1:String) : *
+        {
+            this.stats_mc.equip_mc.helmet_mc.setTooltip(param1);
+        }
+        
+        public function setPlayerInfo(param1:String) : *
+        {
+            var _loc2_:uint = 10;
+            this.stats_mc.charInfo_mc.selCharInfo_txt.htmlText = param1.toUpperCase();
+            this.stats_mc.charInfo_mc.min_mc.x = this.stats_mc.charInfo_mc.selCharInfo_txt.x + this.stats_mc.charInfo_mc.selCharInfo_txt.width / 2 + this.stats_mc.charInfo_mc.selCharInfo_txt.textWidth / 2 + _loc2_;
+            this.stats_mc.charInfo_mc.plus_mc.x = this.stats_mc.charInfo_mc.min_mc.x + this.stats_mc.charInfo_mc.min_mc.width;
+            this.stats_mc.charInfo_mc.renameBtn_mc.x = this.stats_mc.charInfo_mc.selCharInfo_txt.x + (this.stats_mc.charInfo_mc.selCharInfo_txt.width / 2 - this.stats_mc.charInfo_mc.selCharInfo_txt.textWidth / 2 - this.stats_mc.charInfo_mc.renameBtn_mc.width - _loc2_);
+            this.stats_mc.charInfo_mc.hit_mc.width = this.stats_mc.charInfo_mc.selCharInfo_txt.textWidth;
+            this.stats_mc.charInfo_mc.hit_mc.height = this.stats_mc.charInfo_mc.selCharInfo_txt.height;
+            this.stats_mc.charInfo_mc.hit_mc.x = 0 - this.stats_mc.charInfo_mc.hit_mc.width / 2;
+        }
+        
+        public function setAvailableLabels(param1:String) : *
+        {
+            this.availableStr = param1;
+            this.stats_mc.pointsFrame_mc.label_txt.htmlText = this.availableStr;
+            this.setAvailableStatPoints(0);
+            this.setAvailableCombatAbilityPoints(0);
+            this.setAvailableCivilAbilityPoints(0);
+            this.setAvailableTalentPoints(0);
+            this.pointsTextfieldChanged(this.stats_mc.pointsFrame_mc.label_txt);
+        }
+        
+        public function pointsTextfieldChanged(param1:TextField) : *
+        {
+            textHelpers.smallCaps(param1);
+        }
+        
+        public function selectCharacter(param1:Number) : *
+        {
+            this.stats_mc.selectCharacter(param1);
+        }
+        
+        public function setText(param1:Number, param2:String) : *
+        {
+            switch(param1)
+            {
+                case 0:
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                case 6:
+                case 7:
+                case 8:
+                this.stats_mc.panelArray[param1].labelStr = param2;
+                if(this.stats_mc.currentOpenPanel == param1)
+                {
+                    this.stats_mc.tabTitle_txt.htmlText = param2;
+                    textHelpers.smallCaps(this.stats_mc.tabTitle_txt);
+                }
+                this.tabsTexts[param1] = param2;
+                this.stats_mc.pushTabTooltip(param1,param2);
+                break;
+                case 9:
+                this.stats_mc.equipment_txt.htmlText = param2;
+                textHelpers.smallCaps(this.stats_mc.equipment_txt,7,true);
+            }
+        }
+        
+        public function setTitle(param1:String) : *
+        {
+            this.stats_mc.title_txt.htmlText = param1.toUpperCase();
+        }
+        
+        public function addText(param1:String, param2:String, param3:Boolean = false) : *
+        {
+            this.stats_mc.addText(param1,param2,param3);
+        }
+        
+        public function addPrimaryStat(param1:Number, param2:String, param3:String, param4:Number) : *
+        {
+            this.stats_mc.addPrimaryStat(param1,param2,param3,param4);
+        }
+        
+        public function addSecondaryStat(param1:Number, param2:String, param3:String, param4:Number, param5:Number, param6:Number) : *
+        {
+            this.stats_mc.addSecondaryStat(param1,param2,param3,param4,param5,param6);
+        }
+        
+        public function clearSecondaryStats() : *
+        {
+            this.stats_mc.clearSecondaryStats();
+        }
+        
+        public function addAbilityGroup(param1:Boolean, param2:Number, param3:String) : *
+        {
+            this.stats_mc.addAbilityGroup(param1,param2,param3);
+        }
+        
+        public function addAbility(param1:Boolean, param2:Number, param3:Number, param4:String, param5:String, param6:String = "", param7:String = "") : *
+        {
+            this.stats_mc.addAbility(param1,param2,param3,param4,param5,param6,param7);
+        }
+        
+        public function addTalent(param1:String, param2:Number, param3:Number) : *
+        {
+            this.stats_mc.addTalent(param1,param2,param3);
+        }
+        
+        public function addTag(param1:String, param2:String, param3:String, param4:Number) : *
+        {
+            this.stats_mc.addTag(param2,param4,param1,param3);
+        }
+        
+        public function addVisual(param1:String, param2:Number) : *
+        {
+            this.stats_mc.addVisual(param1,param2);
+        }
+        
+        public function addVisualOption(param1:Number, param2:Number, param3:Boolean) : *
+        {
+            this.stats_mc.addVisualOption(param1,param2,param3);
+        }
+        
+        public function updateCharList() : *
+        {
+            var _loc1_:uint = 2;
+            if(this.charList_array.length == _loc1_)
+            {
+                this.stats_mc.onePlayerOverlay_mc.visible = true;
+                this.stats_mc.charList_mc.x = this.charListOnePlayerPosX;
+            }
+            else
+            {
+                this.stats_mc.onePlayerOverlay_mc.visible = false;
+                this.stats_mc.charList_mc.x = this.charListPartyPosX;
+            }
+            var _loc2_:uint = 0;
+            var _loc3_:uint = 0;
+            while(_loc3_ < this.charList_array.length)
+            {
+                this.stats_mc.addCharPortrait(this.charList_array[_loc3_],this.charList_array[_loc3_ + 1],_loc2_++);
+                _loc3_ += _loc1_;
+            }
+            this.stats_mc.cleanupCharListObsoletes();
+            this.stats_mc.charList.positionElements();
+            if(this.stats_mc.charList.length > 4)
+            {
+                this.stats_mc.leftCycleBtn_mc.visible = true;
+                this.stats_mc.rightCycleBtn_mc.visible = true;
+            }
+            else
+            {
+                this.stats_mc.leftCycleBtn_mc.visible = false;
+                this.stats_mc.rightCycleBtn_mc.visible = false;
+            }
+            this.charList_array = new Array();
+        }
+        
+        public function cycleCharList(param1:Boolean) : *
+        {
+            if(param1)
+            {
+                this.stats_mc.charList.previous();
+            }
+            else
+            {
+                this.stats_mc.charList.next();
+            }
+            var _loc2_:MovieClip = this.stats_mc.charList.getCurrentMovieClip();
+            if(_loc2_)
+            {
+                ExternalInterface.call("selectCharacter",_loc2_.id);
+            }
+        }
+        
+        public function updateArraySystem() : *
+        {
+            var _loc3_:Boolean = false;
+            var _loc6_:Boolean = false;
+            var _loc7_:Boolean = false;
+            var _loc8_:int = 0;
+            var _loc9_:Boolean = false;
+            var _loc10_:Boolean = false;
+            var _loc11_:Boolean = false;
+            var _loc12_:Number = NaN;
+            var _loc1_:Boolean = false;
+            var _loc2_:Boolean = false;
+            var _loc4_:Number = getTimer();
+            var _loc5_:uint = 0;
+            while(_loc5_ < this.primStat_array.length)
+            {
+                this.addPrimaryStat(this.primStat_array[_loc5_],this.primStat_array[_loc5_ + 1],this.primStat_array[_loc5_ + 2],this.primStat_array[_loc5_ + 3]);
+                _loc5_ += 4;
+            }
+            _loc5_ = 0;
+            while(_loc5_ < this.ability_array.length)
+            {
+                _loc6_ = Boolean(this.ability_array[_loc5_]);
+                if(_loc6_)
+                {
+                _loc1_ = true;
+                }
+                else
+                {
+                _loc2_ = true;
+                }
+                this.addAbility(_loc6_,this.ability_array[_loc5_ + 1],this.ability_array[_loc5_ + 2],this.ability_array[_loc5_ + 3],this.ability_array[_loc5_ + 4],this.ability_array[_loc5_ + 5],this.ability_array[_loc5_ + 6]);
+                _loc5_ += 7;
+            }
+            _loc5_ = 0;
+            while(_loc5_ < this.secStat_array.length)
+            {
+                if(this.secStat_array[_loc5_])
+                {
+                this.addSpacing(this.secStat_array[_loc5_ + 1],this.secStat_array[_loc5_ + 2]);
+                }
+                else
+                {
+                this.addSecondaryStat(this.secStat_array[_loc5_ + 1],this.secStat_array[_loc5_ + 2],this.secStat_array[_loc5_ + 3],this.secStat_array[_loc5_ + 4],this.secStat_array[_loc5_ + 5],this.secStat_array[_loc5_ + 6]);
+                }
+                _loc5_ += 7;
+            }
+            _loc5_ = 0;
+            while(_loc5_ < this.talent_array.length)
+            {
+                // Sentinel
+                if (this.talent_array[_loc5_] == -99)
+                {
+                    break;
+                }
+                this.addTalent(this.talent_array[_loc5_++],this.talent_array[_loc5_++],this.talent_array[_loc5_++]);
+            }
+            _loc5_ = 0;
+            while(_loc5_ < this.tags_array.length)
+            {
+                this.addTag(this.tags_array[_loc5_++],this.tags_array[_loc5_++],this.tags_array[_loc5_++],this.tags_array[_loc5_++]);
+            }
+            this.stats_mc.clearVisualOptions();
+            _loc5_ = 0;
+            while(_loc5_ < this.visualValues_array.length)
+            {
+                this.addVisualOption(this.visualValues_array[_loc5_++],this.visualValues_array[_loc5_++],this.visualValues_array[_loc5_++]);
+            }
+            // Now done in Lua.
+            ExternalInterface.call("pipRenderCustomStats");
+            // this.stats_mc.clearCustomStatsOptions();
+            // _loc5_ = 0;
+            // while(_loc5_ < this.customStats_array.length)
+            // {
+            //     if(this.customStats_array[_loc5_] < 0)
+            //     {
+            //     break;
+            //     }
+            //     this.stats_mc.addCustomStat(this.customStats_array[_loc5_],this.customStats_array[_loc5_ + 1],this.customStats_array[_loc5_ + 2]);
+            //     _loc5_ += 3;
+            // }
+            _loc5_ = 0;
+            while(_loc5_ < this.lvlBtnStat_array.length)
+            {
+                _loc3_ = Boolean(this.lvlBtnStat_array[_loc5_]);
+                if(_loc3_)
+                {
+                this.setStatPlusVisible(this.lvlBtnStat_array[_loc5_ + 1],this.lvlBtnStat_array[_loc5_ + 2]);
+                }
+                else
+                {
+                this.setStatMinusVisible(this.lvlBtnStat_array[_loc5_ + 1],this.lvlBtnStat_array[_loc5_ + 2]);
+                }
+                _loc5_ += 3;
+            }
+            if(this.lvlBtnSecStat_array.length > 0)
+            {
+                _loc7_ = this.lvlBtnSecStat_array[0];
+                _loc5_ = 1;
+                while(_loc5_ < this.lvlBtnSecStat_array.length)
+                {
+                _loc8_ = this.lvlBtnSecStat_array[_loc5_];
+                if(_loc7_)
+                {
+                    _loc9_ = this.lvlBtnSecStat_array[_loc5_ + 1];
+                    _loc10_ = this.lvlBtnSecStat_array[_loc5_ + 2];
+                    _loc11_ = this.lvlBtnSecStat_array[_loc5_ + 3];
+                    _loc12_ = 5;
+                    if(_loc8_ == 44)
+                    {
+                        _loc12_ = 9;
+                    }
+                    this.setupSecondaryStatsButtons(_loc8_,_loc9_,_loc10_,_loc11_,_loc12_);
+                }
+                else
+                {
+                    this.setupSecondaryStatsButtons(_loc8_,false,false,false);
+                }
+                _loc5_ += 4;
+                }
+            }
+            _loc5_ = 0;
+            while(_loc5_ < this.lvlBtnAbility_array.length)
+            {
+                _loc3_ = Boolean(this.lvlBtnAbility_array[_loc5_]);
+                if(_loc3_)
+                {
+                this.setAbilityPlusVisible(this.lvlBtnAbility_array[_loc5_ + 1],this.lvlBtnAbility_array[_loc5_ + 2],this.lvlBtnAbility_array[_loc5_ + 3],this.lvlBtnAbility_array[_loc5_ + 4]);
+                }
+                else
+                {
+                this.setAbilityMinusVisible(this.lvlBtnAbility_array[_loc5_ + 1],this.lvlBtnAbility_array[_loc5_ + 2],this.lvlBtnAbility_array[_loc5_ + 3],this.lvlBtnAbility_array[_loc5_ + 4]);
+                }
+                _loc5_ += 5;
+            }
+            _loc5_ = 0;
+            while(_loc5_ < this.lvlBtnTalent_array.length)
+            {
+                _loc3_ = Boolean(this.lvlBtnTalent_array[_loc5_]);
+                if(_loc3_)
+                {
+                this.setTalentPlusVisible(this.lvlBtnTalent_array[_loc5_ + 1],this.lvlBtnTalent_array[_loc5_ + 2]);
+                }
+                else
+                {
+                this.setTalentMinusVisible(this.lvlBtnTalent_array[_loc5_ + 1],this.lvlBtnTalent_array[_loc5_ + 2]);
+                }
+                _loc5_ += 3;
+            }
+            if(_loc1_)
+            {
+                this.stats_mc.civicAbilityHolder_mc.list.positionElements();
+                this.stats_mc.recountAbilityPoints(true);
+            }
+            if(_loc2_)
+            {
+                this.stats_mc.combatAbilityHolder_mc.list.positionElements();
+                this.stats_mc.recountAbilityPoints(false);
+            }
+            if(this.tags_array.length > 0)
+            {
+                this.stats_mc.tagsHolder_mc.list.positionElements();
+            }
+            if(this.talent_array.length > 0)
+            {
+                this.stats_mc.talentHolder_mc.list.positionElements();
+            }
+            if(this.customStats_array.length > 0)
+            {
+                this.stats_mc.customStats_mc.positionElements();
+            }
+            this.primStat_array = new Array();
+            this.ability_array = new Array();
+            this.tags_array = new Array();
+            this.talent_array = new Array();
+            this.visualValues_array = new Array();
+            this.customStats_array = new Array();
+            this.secStat_array = new Array();
+            this.lvlBtnAbility_array = new Array();
+            this.lvlBtnStat_array = new Array();
+            this.lvlBtnTalent_array = new Array();
+            this.lvlBtnSecStat_array = new Array();
+            this.stats_mc.resetScrollBarsPositions();
+            this.stats_mc.resetListPositions();
+            this.stats_mc.recheckScrollbarVisibility();
+            this.initDone = true;
+            ExternalInterface.call("pipSheetUpdated");
+        }
+        
+        public function setStatPlusVisible(param1:Number, param2:Boolean) : *
+        {
+            this.stats_mc.setStatPlusVisible(param1,param2);
+        }
+        
+        public function setStatMinusVisible(param1:Number, param2:Boolean) : *
+        {
+            this.stats_mc.setStatMinusVisible(param1,param2);
+        }
+        
+        public function setupSecondaryStatsButtons(param1:int, param2:Boolean, param3:Boolean, param4:Boolean, param5:Number = 5) : void
+        {
+            this.stats_mc.setupSecondaryStatsButtons(param1,param2,param3,param4,param5);
+        }
+        
+        public function setAbilityPlusVisible(param1:Boolean, param2:Number, param3:Number, param4:Boolean) : *
+        {
+            this.stats_mc.setAbilityPlusVisible(param1,param2,param3,param4);
+        }
+        
+        public function setAbilityMinusVisible(param1:Boolean, param2:Number, param3:Number, param4:Boolean) : *
+        {
+            this.stats_mc.setAbilityMinusVisible(param1,param2,param3,param4);
+        }
+        
+        public function setTalentPlusVisible(param1:Number, param2:Boolean) : *
+        {
+            this.stats_mc.setTalentPlusVisible(param1,param2);
+        }
+        
+        public function setTalentMinusVisible(param1:Number, param2:Boolean) : *
+        {
+            this.stats_mc.setTalentMinusVisible(param1,param2);
+        }
+        
+        public function addTitle(param1:String) : *
+        {
+            this.stats_mc.addTitle(param1);
+        }
+        
+        public function hideLevelUpStatButtons() : *
+        {
+            this.stats_mc.setVisibilityStatButtons(false);
+            this.setAvailableStatPoints(0);
+        }
+        
+        public function hideLevelUpAbilityButtons() : *
+        {
+            this.stats_mc.setVisibilityAbilityButtons(false,false);
+            this.stats_mc.setVisibilityAbilityButtons(true,false);
+            this.setAvailableCombatAbilityPoints(0);
+            this.setAvailableCivilAbilityPoints(0);
+        }
+        
+        public function hideLevelUpTalentButtons() : *
+        {
+            this.stats_mc.setVisibilityTalentButtons(false);
+            this.setAvailableTalentPoints(0);
+        }
+        
+        public function clearStats() : *
+        {
+            this.stats_mc.clearStats();
+        }
+        
+        public function clearTags() : *
+        {
+            this.stats_mc.tagsHolder_mc.list.clearElements();
+        }
+        
+        public function clearTalents() : *
+        {
+            // this.stats_mc.talentHolder_mc.list.clearElements();
+        }
+
+        // PIP
+        public function clearTalentsForReal() : *
+        {
+            this.stats_mc.talentHolder_mc.list.clearElements();
+        }
+        
+        public function clearAbilities() : *
+        {
+            this.stats_mc.clearAbilities();
+        }
+        
+        public function setPanelTitle(param1:Number, param2:String) : *
+        {
+            this.stats_mc.setPanelTitle(param1,param2);
+        }
+        
+        public function showAcceptStatsAcceptButton(param1:Boolean) : *
+        {
+        }
+        
+        public function showAcceptAbilitiesAcceptButton(param1:Boolean) : *
+        {
+        }
+        
+        public function showAcceptTalentAcceptButton(param1:Boolean) : *
+        {
+        }
+        
+        public function setAvailableStatPoints(param1:Number) : *
+        {
+            this.stats_mc.setAvailableStatPoints(param1);
+        }
+        
+        public function setAvailableCombatAbilityPoints(param1:Number) : *
+        {
+            this.stats_mc.setAvailableCombatAbilityPoints(param1);
+        }
+        
+        public function setAvailableCivilAbilityPoints(param1:Number) : *
+        {
+            this.stats_mc.setAvailableCivilAbilityPoints(param1);
+        }
+        
+        public function setAvailableTalentPoints(param1:Number) : *
+        {
+            this.stats_mc.setAvailableTalentPoints(param1);
+        }
+        
+        public function addSpacing(param1:Number, param2:Number) : *
+        {
+            this.stats_mc.addSpacing(param1,param2);
+        }
+        
+        public function addGoldWeight(param1:String, param2:String) : *
+        {
+        }
+        
+        public function startsWith(param1:String, param2:String) : Boolean
+        {
+            param1 = param1.toLowerCase();
+            param2 = param2.toLowerCase();
+            return param2 == param1.substr(0,param2.length);
+        }
+        
+        public function ShowItemUnEquipAnim(param1:uint, param2:uint) : *
+        {
+            this.stats_mc.equip_mc.ShowItemUnEquipAnim(param1,param2);
+        }
+        
+        public function ShowItemEquipAnim(param1:uint, param2:uint) : *
+        {
+            this.stats_mc.equip_mc.ShowItemEquipAnim(param1,param2);
+        }
+        
+        public function setupStrings() : void
+        {
+            this.stats_mc.invTabHolder_mc.cbTreasures_mc.setDefaultText(String(this.strSelectTreasure).toUpperCase());
+            this.stats_mc.invTabHolder_mc.btnGenerate_mc.setText(String(this.strGenerate).toUpperCase());
+            this.stats_mc.invTabHolder_mc.btnClear_mc.setText(String(this.strClear).toUpperCase());
+            this.stats_mc.invTabHolder_mc.lblLevel_txt.htmlText = String(this.strLevel).toUpperCase();
+            this.stats_mc.customStats_mc.create_mc.setText(String(this.createNewStatBtnLabel).toUpperCase());
+        }
+        
+        public function setupRarity() : void
+        {
+            var _loc1_:Number = NaN;
+            var _loc2_:Number = NaN;
+            var _loc3_:GenStockCombo_Element = null;
+            _loc1_ = this.listRarity.length;
+            _loc2_ = 0;
+            while(_loc2_ < _loc1_)
+            {
+                _loc3_ = new GenStockCombo_Element();
+                _loc3_.init();
+                _loc3_.text = String(this.listRarity[_loc2_]);
+                this.stats_mc.invTabHolder_mc.cbRarity_mc.addElement(_loc3_);
+                _loc2_ += 2;
+            }
+            this.stats_mc.invTabHolder_mc.cbRarity_mc.positionElements();
+            this.setGenerationRarity(0);
+        }
+        
+        public function setupTreasures() : void
+        {
+            var _loc1_:Number = NaN;
+            var _loc2_:Number = NaN;
+            var _loc3_:GenStockCombo_Element = null;
+            _loc1_ = this.listTreasures.length;
+            _loc2_ = 0;
+            while(_loc2_ < _loc1_)
+            {
+                _loc3_ = new GenStockCombo_Element();
+                _loc3_.init();
+                _loc3_.treasureId = int(this.listTreasures[_loc2_ + 0]);
+                _loc3_.text = String(this.listTreasures[_loc2_ + 1]);
+                this.stats_mc.invTabHolder_mc.cbTreasures_mc.addElement(_loc3_);
+                _loc2_ += 2;
+            }
+            this.stats_mc.invTabHolder_mc.cbTreasures_mc.positionElements();
+        }
+        
+        public function onOpenDropList(param1:MovieClip) : void
+        {
+            if(this.stats_mc.invTabHolder_mc.cbTreasures_mc != param1)
+            {
+                this.stats_mc.invTabHolder_mc.cbTreasures_mc.opened = false;
+            }
+            if(this.stats_mc.invTabHolder_mc.cbRarity_mc != param1)
+            {
+                this.stats_mc.invTabHolder_mc.cbRarity_mc.opened = false;
+            }
+        }
+        
+        public function closeDropLists() : void
+        {
+            this.stats_mc.invTabHolder_mc.cbTreasures_mc.opened = false;
+            this.stats_mc.invTabHolder_mc.cbRarity_mc.opened = false;
+        }
+        
+        public function setGenerationRarity(param1:int) : void
+        {
+            this.generateTreasureRarityId = param1;
+            this.stats_mc.invTabHolder_mc.cbRarity_mc.select(param1,false);
+        }
+        
+        public function onSelectGenerationRarity(param1:int) : void
+        {
+            this.generateTreasureRarityId = param1;
+        }
+        
+        public function onChangeGenerationLevel(param1:Number) : void
+        {
+            this.generateTreasureLevel = int(int(int(param1)));
+        }
+        
+        public function onSelectTreasure(param1:int) : void
+        {
+            var _loc2_:MovieClip = this.stats_mc.invTabHolder_mc.cbTreasures_mc.getElement(param1);
+            if(_loc2_ != null)
+            {
+                this.generateTreasureId = int(int(int(_loc2_.treasureId)));
+                this.stats_mc.invTabHolder_mc.btnGenerate_mc.setEnabled(true);
+            }
+        }
+        
+        public function onBtnGenerateStock() : void
+        {
+            ExternalInterface.call("onGenerateTreasure",this.generateTreasureId,this.generateTreasureRarityId,this.generateTreasureLevel);
+        }
+        
+        public function onBtnClearInventory() : void
+        {
+            ExternalInterface.call("onClearInventory");
+        }
+        
+        function frame1() : *
+        {
+            this.initDone = false;
+            this.events = new Array("IE ContextMenu","IE UIAccept","IE ToggleInGameMenu");
+            this.layout = "fixed";
+            this.alignment = "none";
+            this.curTooltip = -1;
+            this.hasTooltip = false;
+            this.keepCustomInScreen = true;
+            this.uiLeft = uint(uint(uint(0)));
+            this.uiRight = uint(uint(uint(680)));
+            this.uiTop = uint(uint(uint(45)));
+            this.uiMinHeight = uint(uint(uint(190)));
+            this.uiMinWidth = uint(uint(uint(150)));
+            this.charList_array = new Array();
+            this.invRows = uint(uint(uint(8)));
+            this.invCols = uint(uint(uint(5)));
+            this.invCellSize = uint(uint(uint(50)));
+            this.invCellSpacing = uint(uint(uint(12)));
+            this.skillList = new Array();
+            this.tabsTexts = new Array();
+            this.primStat_array = new Array();
+            this.secStat_array = new Array();
+            this.ability_array = new Array();
+            this.tags_array = new Array();
+            this.talent_array = new Array();
+            this.visual_array = new Array();
+            this.visualValues_array = new Array();
+            this.customStats_array = new Array();
+            this.lvlBtnAbility_array = new Array();
+            this.lvlBtnStat_array = new Array();
+            this.lvlBtnSecStat_array = new Array();
+            this.lvlBtnTalent_array = new Array();
+            this.allignmentArray = new Array();
+            this.aiArray = new Array();
+            this.inventoryUpdateList = new Array();
+            this.isGameMasterChar = false;
+            this.EQContainer = this.stats_mc.equip_mc.container_mc;
+            this.slotAmount = Number(Number(Number(11)));
+            this.cellSize = Number(Number(Number(64)));
+            this.slot_array = new Array(this.EQContainer.s0_mc,this.EQContainer.s1_mc,this.EQContainer.s2_mc,this.EQContainer.s3_mc,this.EQContainer.s4_mc,this.EQContainer.s5_mc,this.EQContainer.s6_mc,this.EQContainer.s7_mc,this.EQContainer.s8_mc,this.EQContainer.s9_mc,this.EQContainer.s10_mc);
+            this.itemsUpdateList = new Array();
+            this.tabState = Number(Number(Number(0)));
+            this.text_array = new Array(this.stats_mc.mainStats_mc.labelStr,this.stats_mc.combatAbilityHolder_mc.labelStr,this.stats_mc.civicAbilityHolder_mc.labelStr,this.stats_mc.tagsHolder_mc.labelStr,this.stats_mc.equipment_txt);
+            this.strSelectTreasure = this.strUndefined;
+            this.strGenerate = this.strUndefined;
+            this.strClear = this.strUndefined;
+            this.strLevel = this.strUndefined;
+            this.listRarity = new Array();
+            this.listTreasures = new Array();
+            this.generateTreasureRarityId = 0;
+            this.generateTreasureId = 0;
+            this.generateTreasureLevel = 1;
+        }
+    }
+}

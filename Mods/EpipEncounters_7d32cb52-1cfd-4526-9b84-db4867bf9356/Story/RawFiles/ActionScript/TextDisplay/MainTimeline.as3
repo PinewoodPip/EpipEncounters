@@ -1,0 +1,331 @@
+package textDisplay_fla
+{
+    import LS_Classes.larTween;
+    import LS_Classes.textEffect;
+    import fl.motion.easing.Sine;
+    import flash.display.MovieClip;
+    import flash.events.MouseEvent;
+    import flash.external.ExternalInterface;
+    import flash.text.TextFieldAutoSize;
+    import flash.text.TextFormat;
+    
+    public dynamic class MainTimeline extends MovieClip
+    {
+        
+        
+        public var tooltip_mc:MovieClip;
+        
+        public var events:Array;
+        
+        public var layout:String;
+        
+        public var timeline:larTween;
+        
+        public var frameSpacing:Number;
+        
+        public var tf:MovieClip;
+        
+        public var glMaxTextWidth:Number;
+        
+        public var textOffsetX:Number;
+        
+        public var textOffsetY:Number;
+        
+        public var maxTextWidth:Number;
+        
+        public var shared:Boolean;
+        
+        public var isController:Boolean;
+        
+        public var label_array:Array;
+        
+        public var tooltipArray:Array;
+        
+        public const padding:uint = 20;
+        
+        public const offsetYBottom:int = 55;
+        
+        public function MainTimeline()
+        {
+            super();
+            addFrameScript(0,this.frame1);
+        }
+        
+        public function setWindow(param1:Number, param2:Number) : *
+        {
+            this.checkTextBoundaries(this.tf,stage.mouseX,stage.mouseY);
+        }
+        
+        public function onEventInit() : *
+        {
+        }
+        
+        public function setAnchor(param1:Number, param2:* = true) : *
+        {
+            ExternalInterface.call("registerAnchorId","textDisplay_" + param1);
+            ExternalInterface.call("setAnchor","topleft","screen","topleft");
+        }
+        
+        public function setFullScreen(param1:Boolean) : *
+        {
+            if(param1)
+            {
+                ExternalInterface.call("setAnchor","topleft","screen","topleft");
+            }
+            else
+            {
+                ExternalInterface.call("setAnchor","topleft","splitscreen","topleft");
+            }
+        }
+        
+        public function onEventResize() : *
+        {
+        }
+        
+        public function getLabel(param1:Number) : MovieClip
+        {
+            var _loc2_:uint = 0;
+            while(_loc2_ < this.label_array.length)
+            {
+                if(this.label_array[_loc2_].id == param1)
+                {
+                this.label_array[_loc2_].pos = _loc2_;
+                return this.label_array[_loc2_];
+                }
+                _loc2_++;
+            }
+            return null;
+        }
+        
+        public function removeLabel(param1:Number) : *
+        {
+            var _loc2_:MovieClip = this.getLabel(param1);
+            if(_loc2_)
+            {
+                this.label_array.splice(_loc2_.pos,1);
+                removeChild(_loc2_);
+            }
+        }
+        
+        public function clearLabels() : *
+        {
+            var _loc1_:uint = 0;
+            while(_loc1_ < this.label_array.length)
+            {
+                removeChild(this.label_array[_loc1_]);
+                _loc1_++;
+            }
+            this.label_array = new Array();
+        }
+        
+        public function addLabel(param1:Number, param2:String, param3:Number, param4:Number) : *
+        {
+            var _loc9_:MovieClip = null;
+            var _loc10_:TextFormat = null;
+            var _loc5_:Boolean = true;
+            var _loc6_:Number = 1;
+            var _loc7_:uint = 16777215;
+            var _loc8_:uint = 0;
+            if((_loc9_ = this.getLabel(param1)) == null)
+            {
+                (_loc9_ = new textFieldMC()).Init();
+                _loc9_.tooltip_txt.visible = _loc9_.bg_mc.visible = false;
+                _loc9_.id = param1;
+                addChild(_loc9_);
+                this.setChildIndex(_loc9_,0);
+                this.label_array.push(_loc9_);
+            }
+            _loc9_.mouseChildren = false;
+            _loc9_.mouseEnabled = false;
+            _loc9_.text_txt.filters = textEffect.createStrokeFilter(1050888,2,0.8,1.2,9);
+            _loc9_.maxTooltipWidth = this.glMaxTextWidth;
+            _loc9_.text_txt.autoSize = TextFieldAutoSize.LEFT;
+            _loc9_.text_txt.htmlText = param2;
+            (_loc10_ = _loc9_.text_txt.getTextFormat()).leftMargin = 10;
+            _loc10_.size = !!this.isController ? 24 : 20;
+            var _loc11_:Number = _loc9_.text_txt.textWidth + 20;
+            _loc9_.text_txt.autoSize = TextFieldAutoSize.NONE;
+            _loc9_.text_txt.width = _loc11_;
+            this.checkTextBoundaries(_loc9_,param3,param4);
+        }
+        
+        public function initTFMC() : *
+        {
+            var _loc1_:TextFormat = null;
+            if(!this.tf)
+            {
+                this.tf = new textFieldMC();
+                this.tooltip_mc.addChild(this.tf);
+                this.tf.Init();
+                this.tf.maxTooltipWidth = this.glMaxTextWidth;
+                this.tf.ttip_mc.tooltipW = this.glMaxTextWidth;
+                this.tf.mouseChildren = false;
+                this.tf.mouseEnabled = false;
+                if(this.tf.ttip_mc.list)
+                {
+                this.tf.ttip_mc.list.EL_SPACING = !!this.isController ? -6 : -2;
+                }
+                this.tf.text_txt.x = this.padding;
+                this.tf.ttip_mc.x = this.padding;
+                this.tf.bg_mc.x = 0;
+                _loc1_ = this.tf.text_txt.getTextFormat();
+                _loc1_.size = !!this.isController ? 24 : 20;
+                this.tf.text_txt.defaultTextFormat = _loc1_;
+                this.tf.text_txt.filters = this.tf.tooltip_txt.filters = textEffect.createStrokeFilter(1050888,2,0.8,1.2,9);
+                this.tf.text_txt.autoSize = this.tf.tooltip_txt.autoSize = TextFieldAutoSize.LEFT;
+                this.tf.text_txt.text = "";
+                this.tf.bg_mc.visible = false;
+            }
+            else
+            {
+                if(this.timeline)
+                {
+                this.timeline.stop();
+                }
+                this.tf.alpha = 1;
+            }
+        }
+        
+        public function addText(param1:String, param2:Number, param3:Number, param4:Boolean=true) : *
+        {
+            this.initTFMC();
+            this.tf.text_txt.width = this.glMaxTextWidth;
+            this.tf.text_txt.htmlText = this.tf.textDisplay = param1;
+            this.tf.text_txt.width = this.tf.text_txt.textWidth + 50;
+            if(this.tf.text_txt.width < 200)
+            {
+                this.tf.text_txt.width = 200;
+            }
+            else if(this.tf.text_txt.width >= this.glMaxTextWidth)
+            {
+                this.tf.text_txt.width = this.glMaxTextWidth;
+            }
+            this.tf.text_txt.visible = this.tf.text_txt.text.length > 0;
+            if(this.tf.text_txt.visible)
+            {
+                this.tf.bg_mc.y = this.tf.ttip_mc.y = this.tf.text_txt.y + this.tf.text_txt.textHeight + 20;
+            }
+            else if(this.tf.tooltip_txt.visible)
+            {
+                this.tf.tooltip_txt.y = this.padding;
+            }
+            this.checkTextBoundaries(this.tooltip_mc,param2,param3);
+
+            if (param4)
+            {
+                ExternalInterface.call("pipAddText",param1,param2,param3);
+            }
+        }
+        
+        public function displaySurfaceText(param1:Number = 0, param2:Number = 0) : *
+        {
+            this.initTFMC();
+            if(this.tooltipArray.length > 0)
+            {
+                this.tf.ttip_mc.setupTooltip(this.tooltipArray);
+                this.tf.bg_mc.visible = true;
+                this.tf.bg_mc.y = this.tf.ttip_mc.y = this.tf.text_txt.text.length > 0 ? this.tf.text_txt.y + this.tf.text_txt.textHeight + 20 : 0;
+                this.tf.bg_mc.setSize(this.tf.ttip_mc.container_mc.width,this.tf.ttip_mc.container_mc.height,this.padding * 2);
+            }
+            else
+            {
+                this.tf.ttip_mc.clear();
+                this.tf.bg_mc.visible = false;
+                this.tf.bg_mc.setSize(0,0,0);
+            }
+            this.tooltipArray = new Array();
+            this.checkTextBoundaries(this.tooltip_mc,param1,param2);
+        }
+        
+        public function moveText(param1:Number, param2:Number) : *
+        {
+            if(this.tf)
+            {
+                this.checkTextBoundaries(this.tooltip_mc,param1,param2);
+            }
+        }
+        
+        public function clearTooltipText() : *
+        {
+            if(this.tf)
+            {
+                this.tf.ttip_mc.clear();
+                this.tf.bg_mc.visible = false;
+                this.tf.bg_mc.setSize(0,0,0);
+            }
+            this.tooltipArray = new Array();
+        }
+        
+        public function onMove(param1:MouseEvent) : *
+        {
+            this.checkTextBoundaries(this.tf,stage.mouseX,stage.mouseY);
+        }
+        
+        public function removeText() : *
+        {
+            if(this.tf != null)
+            {
+                this.addText("",this.tooltip_mc.x,this.tooltip_mc.y);
+            }
+        }
+        
+        public function fadeOutText(param1:Number, param2:Number) : *
+        {
+            if(this.timeline)
+            {
+                this.timeline.stop();
+            }
+            this.timeline = new larTween(this.tf,"alpha",Sine.easeOut,NaN,0,param2,this.removeText,null,0);
+        }
+        
+        public function checkTextBoundaries(param1:MovieClip, param2:Number, param3:Number) : *
+        {
+            var _loc4_:* = NaN;
+            param2 += this.textOffsetX;
+            param3 += this.textOffsetY;
+            if(param1)
+            {
+                _loc4_ = param3;
+                if(param2 < this.frameSpacing)
+                {
+                param2 = this.frameSpacing;
+                }
+                else if(param2 + param1.width + this.frameSpacing > stage.stageWidth)
+                {
+                param2 = stage.stageWidth - param1.width - this.frameSpacing;
+                }
+                if(param3 < this.frameSpacing)
+                {
+                param3 = this.frameSpacing;
+                }
+                else if(param3 + param1.height + this.frameSpacing > stage.stageHeight - this.offsetYBottom)
+                {
+                param3 = stage.stageHeight - param1.height - this.frameSpacing - this.offsetYBottom;
+                }
+                param1.x = param2;
+                param1.y = param3;
+            }
+        }
+        
+        public function setUIType(param1:Boolean) : *
+        {
+            this.isController = param1;
+        }
+        
+        function frame1() : *
+        {
+            this.events = new Array();
+            this.layout = "fillVFit";
+            this.frameSpacing = 10;
+            this.tf = null;
+            this.glMaxTextWidth = 500;
+            this.textOffsetX = 30;
+            this.textOffsetY = 0;
+            this.maxTextWidth = 0;
+            this.shared = false;
+            this.isController = false;
+            this.label_array = new Array();
+            this.tooltipArray = new Array();
+        }
+    }
+}

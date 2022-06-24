@@ -1,0 +1,129 @@
+
+Text = {
+    FONTS = {
+        BOLD = "Ubuntu Mono",
+        ITALIC = "Averia Serif",
+        NORMAL = "Nueva Std Cond",
+        BIG_NUMBERS = "CollegiateBlackFLF",
+        FALLBACK = "fb",
+    }
+}
+
+---@alias Font "Bold" | "Italic" | "Normal"
+
+---@class TextFormatData
+---@field FontType Font
+---@field Size number
+---@field Color string
+---@field FormatArgs any[]
+---@field Text? string Used for formatting strings with recursive Text.Format calls.
+
+local _TextFormatData = {
+    FormatArgs = {},
+}
+
+---Returns a string representation of a number, rounded.
+---@param value number
+---@param decimals? integer Defaults to 0.
+---@return string
+function Text.Round(value, decimals)
+    value = tostring(value)
+    decimals = decimals or 0
+    
+    local pattern = "^(%d*)%.?(%d*)$"
+    local wholeText, decimalsText = value:match(pattern)
+    local output = wholeText
+
+    if decimals > 0 and decimalsText and decimalsText:len() > 0 then
+        decimalsText = string.sub(decimalsText, 1, decimals)
+        output = output .. "." .. decimalsText
+
+        output = RemoveTrailingZeros(output)
+    end
+
+    return output
+end
+
+---Split a string by delimiter. Source: https://stackoverflow.com/questions/1426954/split-string-in-lua
+---@param inputstr string
+---@param sep string
+---@return string[]
+function Text.Split(inputstr, sep) 
+    sep=sep or '%s'
+    local t={} 
+
+    local pattern = "([^"..sep.."]*)("..sep.."?)"
+
+    -- TODO fix
+    if string.len(sep) > 1 then
+        pattern = ""
+        for i=1,#sep,1 do
+            local char = string.sub(sep, i, i)
+
+            pattern = pattern .. "([^"..char.."]*)("..char.."?)"
+        end
+    end
+
+    for field,s in string.gmatch(inputstr, "([^"..sep.."]*)("..sep.."?)") do 
+        table.insert(t,field) 
+    
+        if s=="" then 
+            return t 
+        end 
+    end 
+end
+
+-- function Text.Split(s, sep)
+--     local fields = {}
+    
+--     local sep = sep or " "
+--     local pattern = string.format("([^%s]+)", sep)
+--     string.gsub(s, pattern, function(c) fields[#fields + 1] = c end)
+    
+--     return fields
+-- end
+
+---Format a string.
+---@param str string | TextFormatData
+---@param formatData TextFormatData
+---@return string 
+function Text.Format(str, formatData)
+    setmetatable(formatData, {__index = _TextFormatData})
+
+    -- Parse args, which can be a TextFormatData as well.
+    local finalArgs = {}
+
+    if formatData.FormatArgs then
+        for i,arg in ipairs(formatData.FormatArgs) do
+            if type(arg) == "table" then
+                table.insert(finalArgs, Text.Format(arg.Text, arg))
+            else
+                table.insert(finalArgs, arg)
+            end
+        end
+    end
+
+    if #finalArgs > 0 then
+        str = string.format(str, table.unpack(finalArgs))
+    end
+
+    -- Font, color, size
+    local fontType = ""
+    if formatData.FontType then
+        fontType = string.format(" face='%s'", formatData.FontType)
+    end
+    
+    local color = ""
+    if formatData.Color then
+        color = string.format(" color='%s'", formatData.Color)
+    end
+
+    local size = ""
+    if formatData.Size then
+        size = string.format(" size='%d'", formatData.Size)
+    end
+
+    str = string.format("<font%s%s%s>%s</font>", fontType, color, size, str)
+
+    return str
+end

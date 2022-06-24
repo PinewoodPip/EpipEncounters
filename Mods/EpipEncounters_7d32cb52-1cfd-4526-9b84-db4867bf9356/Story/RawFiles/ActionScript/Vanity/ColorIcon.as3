@@ -1,0 +1,32 @@
+package
+{
+    import flash.display.MovieClip;
+    import flash.geom.ColorTransform;
+    
+    public dynamic class ColorIcon extends MovieClip
+    {
+        // public var icon_mc:MovieClip;
+        // public var frame_mc:MovieClip;
+        
+        public function ColorIcon()
+        {
+            super();
+            this.setColor(0);
+            addFrameScript(0,this.frame1);
+        }
+
+        public function setColor(color:Number) : *
+        {
+            var colorTransform:ColorTransform = new ColorTransform();
+
+            colorTransform.color = color;
+
+            this.icon_mc.transform.colorTransform = colorTransform;
+        }
+        
+        function frame1() : *
+        {
+            stop();
+        }
+    }
+}

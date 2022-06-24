@@ -1,0 +1,19 @@
+- Added a hotkey to use the skill/item on the very last slot of your hotbar (right-most in 5th row)
+	- Can use this to make a Source Vamp hotkey, for example
+- Weapon range deltamods now show up like regular deltamods on the tooltip, and the weapon range display is split up to show both base and extra range
+- Holding the show cones button (shift by default) will display skill damage as their multipliers
+- When infusing or when the shift key is held, unmet SI requirements will be displayed in red text
+- Possibly fixed the "auto-unlock inventories" feature
+- Artifact items now show quality
+- Added an option to log all UI ExternalInterface calls and invokes to the console, visible in the settings menu if the extender developer mode is enabled
+- Started slowly organizing code into sensical libraries; anything in the extended `Game` table should be reliable and will likely not change names
+- Fixed an error in the console when hovering over armor whose subtype could not be determined (ex. the starting tattered equipment)
+- Character Creation UI now implements machine learning and blockchain technology to notify you of possible typos in your character names
+- Added a WIP custom talents feature. See `EpipTalents.lua` for usage example.
+	- Shortcomings:
+	- They will only display on kb+m. No controller UI support yet.
+	- They do not show up in the examine UI yet.
+	- Requirements are not rechecked while moving ability/attribute points around in the mirror; upon exiting, you will lose any talents you cannot sustain
+	- Can't bind them to deltamods
+	- Rarely, the mirror UI might show you having fewer talent points than you do - this should fix itself if you exit the mirror and go back in (if someone has a save where this happens consistently, let me know)
+- As a result of the talent UI changes, the bug with unequipping walk-it-off should be fixed

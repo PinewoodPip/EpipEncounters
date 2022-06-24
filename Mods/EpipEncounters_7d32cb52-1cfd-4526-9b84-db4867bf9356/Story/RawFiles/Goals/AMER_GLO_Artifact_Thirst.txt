@@ -1,0 +1,75 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+
+KBSECTION
+
+IF
+CharacterCriticalHitBy(_Defender, _, _Attacker)
+AND
+DB_AMER_Artifacts_EquippedEffects(_Attacker, "Artifact_Thirst", _)
+AND
+NOT DB_AMER_ExtendedStat_AddedStat(_Attacker, "Artifact_Thirst_Choke", "", "", "", _)
+AND
+HasActiveStatus(_Defender, "BLEEDING", 1)
+THEN
+PROC_AMER_TempStat_ExtendedStat_Add(_Attacker, "Artifact_Thirst_Choke", "", "", "", 1.0, 2000, "");
+PROC_PIP_ThirstBufferActionPoints(_Attacker);
+CharacterStatusText(_Attacker, "PIP_Artifact_Thirst_Buffered");
+PlayEffect(_Attacker, "PIP_FX_Artifact_Thirst");
+// PROC_AMER_ActionPoints_Add(_Attacker, 1);
+// PROC_AMER_Artifacts_Thirst_StackPenalty(_Attacker);
+
+PROC PROC_AMER_Combat_TurnStarted((CHARACTERGUID)_Char, _)
+AND
+DB_PIP_ThirstBufferedActionPoints(_Char, _Amount)
+AND
+IntegertoString(_Amount, _AmountStr)
+AND
+StringConcatenate("PIP_Artifact_Thirst_Retrieved_", _AmountStr, _String)
+THEN
+NOT DB_PIP_ThirstBufferedActionPoints(_Char, _Amount);
+PROC_AMER_ActionPoints_Add(_Char, _Amount);
+CharacterStatusText(_Char, _String);
+PlayEffect(_Char, "PIP_FX_Artifact_Thirst");
+
+PROC PROC_PIP_ThirstBufferActionPoints((CHARACTERGUID)_Char)
+AND
+DB_PIP_ThirstBufferedActionPoints(_Char, _Value)
+AND
+IntegerSum(_Value, 1, _New)
+THEN
+NOT DB_PIP_ThirstBufferedActionPoints(_Char, _Value);
+DB_PIP_ThirstBufferedActionPoints(_Char, _New);
+
+PROC PROC_PIP_ThirstBufferActionPoints((CHARACTERGUID)_Char)
+AND
+NOT DB_PIP_ThirstBufferedActionPoints(_Char, _)
+THEN
+DB_PIP_ThirstBufferedActionPoints(_Char, 1);
+
+// lose accumulated AP on combat leave or death
+PROC PROC_AMER_Combat_CharacterDiedInCombat(_Char, _, _)
+AND
+DB_PIP_ThirstBufferedActionPoints(_Char, _Amount)
+THEN
+NOT DB_PIP_ThirstBufferedActionPoints(_Char, _Amount);
+
+IF ObjectLeftCombat(_Obj, _)
+AND
+ObjectIsCharacter(_Obj, 1)
+AND
+DB_PIP_ThirstBufferedActionPoints((CHARACTERGUID)_Obj, _Amount)
+THEN
+NOT DB_PIP_ThirstBufferedActionPoints(_Obj, _Amount);
+
+// PROC PROC_AMER_Artifacts_Thirst_StackPenalty((CHARACTERGUID)_Char)
+// THEN
+// DB_AMER_StatusMod_BindToStatus("AMER_THIRST");
+// PROC_AMER_StatusMod_Add_FlexStat(_Char, "AMER_THIRST", "Attribute", "Constitution", -1.0, "Artifacts_Thirst_ConPenalty", 1);
+// ApplyStatus(_Char, "AMER_THIRST", 6.0, 0, _Char);
+
+EXITSECTION
+
+ENDEXITSECTION
+ParentTargetEdge "AMER_GLO_Artifacts"

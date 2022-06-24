@@ -1,0 +1,245 @@
+
+package
+{
+    import flash.display.MovieClip;
+    import flash.events.MouseEvent;
+    import flash.geom.Point;
+    import flash.external.ExternalInterface;
+    import LS_Classes.listDisplay;
+    import LS_Classes.scrollList;
+   
+    public dynamic class HotkeysPanel extends MovieClip
+    {
+        public var hotkeyButtons:Array;
+
+        public var hotkeyButtonsAmount:uint;
+
+        public var currentButton:HotkeyButton;
+
+        public var currentDrawerButton:DrawerButton;
+
+        public var draggingPreview:HotkeyButton;
+
+        public var rearranging:Boolean;
+
+        public var actionBeingRearranged:String; // checked for in lua. todo just put it in the external call
+
+        public var dragStartingPointX:Number;
+
+        public var dragStartingPointY:Number;
+
+        public var dragThreshold:Number;
+
+        public var drawer_mc:MovieClip;
+
+        public var beingHovered:Boolean = false;
+
+        public var nextDrawerButtonIndex:Number = 0;
+
+        public function HotkeysPanel()
+        {
+            super();
+            addFrameScript(0, this.frame1);
+        }
+
+        public function whileRearranging(param1:MouseEvent) : *
+        {
+            var point:Point = this.globalToLocal(new Point(stage.mouseX, stage.mouseY));
+            this.draggingPreview.x = point.x + 10;
+            this.draggingPreview.y = point.y + 10;
+        }
+
+        public function startRearranging() : *
+        {
+            var action:String = null;
+            var index:Number = -1;
+
+            if (this.currentButton)
+            {
+                action = this.currentButton.action;
+                index = this.currentButton.index;
+            }
+            else if (this.currentDrawerButton)
+            {
+                action = this.currentDrawerButton.action;
+            }
+
+            if (action == "")
+            {
+                return;
+            }
+
+            ExternalInterface.call("pipHotbarStartRearrange", index, action);
+            stage.addEventListener(MouseEvent.MOUSE_MOVE,this.whileRearranging);
+            this.rearranging = true;
+            this.actionBeingRearranged = action;
+        }
+
+        public function stopRearranging() : *
+        {
+            var index:int = -1;
+
+            if (this.currentButton != null)
+            {
+                index = this.currentButton.index;
+            }
+
+            this.rearranging = false;
+            
+            stage.removeEventListener(MouseEvent.MOUSE_MOVE,this.whileRearranging);
+
+            ExternalInterface.call("pipHotbarStopRearrange", index);
+        }
+
+        public function startListeningForDrag() : *
+        {
+            this.dragStartingPointX = stage.mouseX;
+            this.dragStartingPointY = stage.mouseY;
+            stage.addEventListener(MouseEvent.MOUSE_MOVE,this.checkDragging)
+        }
+
+        public function checkDragging() : *
+        {
+            if (Math.abs(this.dragStartingPointX - stage.mouseX) > this.dragThreshold || Math.abs(this.dragStartingPointY - stage.mouseY) > this.dragThreshold)
+            {
+                this.startRearranging();
+
+                stage.removeEventListener(MouseEvent.MOUSE_MOVE,this.checkDragging);
+            }
+        }
+
+        public function onMouseUp() : *
+        {
+            stage.removeEventListener(MouseEvent.MOUSE_MOVE,this.checkDragging); // need to remove the drag check even if we were not rearranging
+            if (this.rearranging)
+            {
+                this.stopRearranging();
+            }
+
+            // only remove this listener if the mouse is outside the panel
+            if (!this.beingHovered)
+            {
+                stage.removeEventListener(MouseEvent.MOUSE_UP, this.onMouseUp);
+            }
+        }
+
+        public function onMouseDown() : *
+        {
+            if (this.currentButton != null || this.currentDrawerButton != null)
+            {
+                this.startListeningForDrag();
+            }
+        }
+
+        public function addDrawerButton() : *
+        {
+            var drawerButton:DrawerButton = null;
+            drawerButton = new DrawerButton(this.nextDrawerButtonIndex);
+            drawerButton.x = 0;
+            drawerButton.y = 0;
+            drawerButton.panel = this;
+            this.drawer_mc.addElement(drawerButton);
+            this.nextDrawerButtonIndex++;
+        }
+
+        public function toggleDrawer(param1:Boolean) : *
+        {
+            this.drawer_mc.visible = param1;
+            ExternalInterface.call("pipDrawerToggled", param1);
+        }
+
+        public function onRollOver(param1:MouseEvent) : *
+        {
+            this.beingHovered = true;
+            stage.addEventListener(MouseEvent.MOUSE_UP, this.onMouseUp);
+        }
+
+        public function onRollOut(param1:MouseEvent) : *
+        {
+            this.beingHovered = false;
+            // if we're rearranging, drop this listener on MOUSE_UP instead
+            if (!this.rearranging)
+            {
+                stage.removeEventListener(MouseEvent.MOUSE_UP, this.onMouseUp);
+            }
+        }
+
+        public function onDrawerRollOver(ev:MouseEvent) : *
+        {
+            this.drawer_mc.mouseWheelEnabled = true;
+        }
+
+        public function onDrawerRollOut(ev:MouseEvent) : *
+        {
+            this.drawer_mc.mouseWheelEnabled = false;
+        }
+
+        private function frame1() : *
+        {
+            var i:uint = 0;
+            var x:uint = 0;
+            var button:HotkeyButton = null;
+            var previewButton:HotkeyButton = null;
+            var drawer:MovieClip = null;
+
+            this.hotkeyButtons = new Array();
+            this.hotkeyButtonsAmount = 12;
+            this.rearranging = false;
+            this.dragStartingPointX = 0;
+            this.dragStartingPointY = 0;
+            this.dragThreshold = 4;
+
+            // add hotkey buttons
+            while (i < this.hotkeyButtonsAmount)
+            {
+                button = new HotkeyButton(i);
+                button.index = i;
+                button.icon_mc.name = "iggy_pip_hotkey_" + i;
+                button.x = 0;
+                button.y = 0;
+                button.panel = this;
+                this.addChild(button);
+                this.hotkeyButtons.push(button);
+                i++;
+            }
+
+            // add drawer buttons
+            drawer = new scrollList();
+            drawer.x = 0;
+            drawer.y = 0;
+            drawer.setFrame(400,200);
+            this.addChild(drawer);
+            this.drawer_mc = drawer;
+            this.drawer_mc.elementSpacing = 0;
+            this.drawer_mc.visible = false;
+
+            this.drawer_mc.addEventListener(MouseEvent.ROLL_OVER, this.onDrawerRollOver);
+            this.drawer_mc.addEventListener(MouseEvent.ROLL_OUT, this.onDrawerRollOut);
+
+            // button used for the dragging preview
+            previewButton = new HotkeyButton();
+            previewButton.x = 0;
+            previewButton.y = 0;
+            previewButton.panel = this;
+            this.addChild(previewButton);
+
+            // make the dragging preview completely non-interactable (admittedly I should not have relied on LSButton)
+            this.draggingPreview = previewButton;
+            this.draggingPreview.visible = false;
+            this.draggingPreview.mouseEnabled = false;
+            this.draggingPreview.onDownFunc = null;
+            this.draggingPreview.removeEventListener(MouseEvent.MOUSE_DOWN,this.draggingPreview.onDown);
+            this.draggingPreview.removeEventListener(MouseEvent.ROLL_OUT,this.draggingPreview.onMouseOut);
+            this.draggingPreview.removeEventListener(MouseEvent.ROLL_OVER,this.draggingPreview.onMouseOver);
+            this.draggingPreview.bg_mc.mouseEnabled = false;
+
+            this.currentButton = null;
+
+            // removed because was causing issues with dragging items onto the world.
+            // stage.addEventListener(MouseEvent.MOUSE_UP, this.onMouseUp);
+            addEventListener(MouseEvent.ROLL_OVER, this.onRollOver);
+            addEventListener(MouseEvent.ROLL_OUT, this.onRollOut);
+            addEventListener(MouseEvent.MOUSE_DOWN, this.onMouseDown);
+        }
+    }
+}

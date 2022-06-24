@@ -1,0 +1,328 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+
+// Scripting for the Greatforge options in context menus. See the lua scripts.
+
+KBSECTION
+
+// Necessary copy-paste as GF script relies on BenchedItem.
+QRY QRY_AMER_UI_Greatforge_GenerateCost_GetCustomMult((INTEGER)_Instance, "ExtractRunes", (STRING)_Material, (REAL)_Level, (STRING)_ItemType, (STRING)_Slot, (STRING)_SubType, (INTEGER)_Handedness)
+AND
+DB_PIP_Greatforge_QuickExtractRunes_Item(_, _Item)
+AND
+QRY_AMER_GEN_ItemGetSocketedRunes(_Item, 4)
+AND
+SysCount("DB_AMER_GEN_OUTPUT_ItemGetSocketedRunes", 2, _Count)
+AND
+Real(_Count, _CountReal)
+AND
+RealProduct(_CountReal, 5.0, _Mult)
+THEN
+DB_AMER_GEN_OUTPUT_Real(_Mult);
+
+PROC PROC_PIP_QuickExtractRunes((CHARACTERGUID)_Char, (ITEMGUID)_Item)
+AND
+NOT DB_PIP_Greatforge_QuickExtractRunes_Item(_, _Item) // TODO what's the best way to avoid fucking this up?
+THEN
+PROC_AMER_GEN_Goal_Activate("AMER_GLO_UI_Greatforge_Internal");
+DB_PIP_Greatforge_QuickExtractRunes_Item(_Char, _Item);
+
+PROC PROC_PIP_QuickExtractRunes((CHARACTERGUID)_Char, (ITEMGUID)_Item)
+AND
+String(_Char, _CharStr)
+AND
+String(_Item, _ItemStr)
+AND
+NRD_ModQuery2("EpipEncounters", "GreatforgeGetItemData", _CharStr, _ItemStr, _LevelReal, _ItemType, _Slot)
+AND
+QRY_AMER_Deltamods_GenerateOnItem_GetItemSpecs_GetSubType(_Item, _Slot)
+AND
+DB_AMER_GEN_OUTPUT_String(_SubType)
+AND
+DB_AMER_GEN_OUTPUT_Integer(_Handedness)
+AND
+NRD_StringToReal(_LevelReal, _LevelRealReal)
+AND
+QRY_PIP_Greatforge_GetCost((ITEMGUID)_Item, "ExtractRunes", "GreatforgeFrags", _LevelRealReal, _ItemType, _Slot, _SubType, _Handedness)
+AND
+DB_AMER_GEN_OUTPUT_Integer(_Cost)
+AND
+IntegertoString(_Cost, _CostStr)
+AND
+QRY_PIP_Greatforge_Pay(_Char, "Extracted runes", "Splinters", _Cost)
+THEN
+PROC_AMER_GEN_ItemRemoveRunes(_Char, _Item, 0, 2, 1);
+// PROC_AMER_GEN_CharacterCombatLogText(_Char, _CostStr);
+// PROC_AMER_GEN_CharacterCombatLogText(_Char, _ItemType);
+// PROC_AMER_GEN_CharacterCombatLogText(_Char, _Slot);
+// PROC_AMER_GEN_CharacterCombatLogText(_Char, _SubType);
+// PROC_AMER_GEN_CharacterCombatLogText(_Char, _LevelReal);
+
+PROC PROC_PIP_QuickExtractRunes((CHARACTERGUID)_Char, (ITEMGUID)_Item)
+AND
+NOT DB_AMER_UI_UsersInUI(_, _, _) // Only complete Greatforge scripts if no players are in the UI.
+THEN
+PROC_AMER_GEN_Goal_Complete("AMER_GLO_UI_Greatforge_Internal");
+NOT DB_PIP_Greatforge_QuickExtractRunes_Item(_Char, _Item);
+
+//REGION Getting cost
+
+QRY QRY_PIP_Greatforge_GetCost((ITEMGUID)_Item, (STRING)_Operation, (STRING)_MatType, (REAL)_LevelReal, (STRING)_ItemType, (STRING)_Slot, (STRING)_SubType, (INTEGER)_Handedness)
+AND
+DB_AMER_GEN_OUTPUT_Integer(_Old)
+THEN
+NOT DB_AMER_GEN_OUTPUT_Integer(_Old);
+
+QRY QRY_PIP_Greatforge_GetCost((ITEMGUID)_Item, (STRING)_Operation, (STRING)_MatType, (REAL)_LevelReal, (STRING)_ItemType, (STRING)_Slot, (STRING)_SubType, (INTEGER)_Handedness)
+AND
+ItemGetGoldValue(_Item, _ItemGoldValue)
+AND
+Real(_ItemGoldValue, _ItemGoldValueReal)
+AND
+DB_AMER_UI_Greatforge_Option_Cost(_Operation, _MatType, _Root, _MatValue)
+AND
+QRY_AMER_UI_Greatforge_GenerateCost(0, _Operation, _MatType, _LevelReal, _ItemType, _Slot, _SubType, _Handedness, _ItemGoldValueReal, _MatValue)
+AND
+DB_AMER_UI_Greatforge_OUTPUT_Cost(_CostBounded)
+AND
+Integer(_CostBounded, _CostInt)
+THEN
+DB_AMER_GEN_OUTPUT_Integer(_CostInt);
+
+//END_REGION
+
+// Helper for displaying overhead text
+QRY QRY_PIP_Greatforge_Pay((CHARACTERGUID)_Char, (STRING)_Operation, (STRING)_CurrencyName, (INTEGER)_Cost)
+AND
+QRY_PIP_Greatforge_CanAfford(_Char, _Operation, _CurrencyName, _Cost)
+AND
+IntegertoString(_Cost, _CostStr)
+AND
+StringConcatenate(_Operation, " for ", _Str0)
+AND
+StringConcatenate(_Str0, _CostStr, _Str1)
+AND
+StringConcatenate(_Str1, " ", _Str2)
+AND
+StringConcatenate(_Str2, _CurrencyName, _Str3)
+AND
+StringConcatenate(_Str3, ".", _FinalStr)
+THEN
+PROC_PIP_Greatforge_Pay_Internal(_Char, _CurrencyName, _Cost);
+CharacterStatusText(_Char, _FinalStr);
+
+//REGION Paying the costs with various currencies.
+
+// Gold check.
+QRY QRY_PIP_Greatforge_CanAfford((CHARACTERGUID)_Char, (STRING)_Operation, "Gold", (INTEGER)_Cost)
+AND
+PartyGetGold(_Char, _Gold)
+AND
+_Gold >= _Cost
+THEN
+DB_NOOP();
+
+// Splinters check.
+QRY QRY_PIP_Greatforge_CanAfford((CHARACTERGUID)_Char, (STRING)_Operation, "Splinters", (INTEGER)_Cost)
+AND
+ItemTemplateIsInPartyInventory(_Char, "AMER_LOOT_GreatforgeFragment_A_a41f2a71-6ff1-4c60-a74a-20c96fb9c487", 0, _Count)
+AND
+_Count >= _Cost
+THEN
+DB_NOOP();
+
+PROC PROC_PIP_Greatforge_Pay_Internal((CHARACTERGUID)_Char, "Gold", (INTEGER)_Cost)
+AND
+IntegerSubtract(0, _Cost, _GoldToRemove) // Add negative gold.
+THEN
+PartyAddGold(_Char, _GoldToRemove);
+
+PROC PROC_PIP_Greatforge_Pay_Internal((CHARACTERGUID)_Char, "Splinters", (INTEGER)_Cost)
+THEN
+ItemTemplateRemoveFromParty("AMER_LOOT_GreatforgeFragment_A_a41f2a71-6ff1-4c60-a74a-20c96fb9c487", _Char, _Cost);
+
+//END_REGION
+
+// called from Lua.
+PROC PROC_PIP_QuickReduce((CHARACTERGUID)_Char, (ITEMGUID)_Item)
+// AND
+// QRY_PIP_StatusText(_Char, "here")
+AND
+NOT DB_PIP_QuickDismantling(_, _Item, _) // halt execution if the item is already being dismantled (by some other multiplayer user, possibly) - could happen between the behaviour hooks finishing
+// AND
+// QRY_PIP_StatusText(_Char, "here2")
+THEN
+DB_PIP_QuickDismantling(_Char, _Item, 1);
+PROC_AMER_GEN_ItemGetItemLevel(_Item, "PIP_QuickReduce");
+
+PROC PROC_AMER_GEN_ItemGetItemLevel_Returned(_, _Item, _ItemLevel, "PIP_QuickReduce")
+AND
+DB_AMER_GEN_ItemGetItemLevel_Found(_Level)
+AND
+DB_PIP_QuickDismantling(_Char, _Item, _PlaceHolderLevel)
+THEN
+NOT DB_PIP_QuickDismantling(_Char, _Item, _PlaceHolderLevel);
+DB_PIP_QuickDismantling(_Char, _Item, _Level);
+PROC_PIP_QuickReduce2();
+
+PROC PROC_PIP_QuickReduce2()
+AND
+DB_PIP_QuickDismantling(_Char, _Item, _)
+AND
+String(_Item, _ItemStr)
+THEN
+PROC_AMER_GEN_ItemGetItemType(_Item, "PIP_QuickReduceType");
+// NRD_ModCall("EpipEncounters", "TestPrint", _ItemStr);
+
+PROC PROC_AMER_GEN_ItemGetItemType_Returned(_, _Item, _ItemType, "PIP_QuickReduceType")
+THEN
+PROC_AMER_GEN_Goal_Activate("AMER_GLO_UI_Greatforge_Internal");
+
+PROC PROC_AMER_GEN_ItemGetItemType_Returned(_, _Item, _ItemType, "PIP_QuickReduceType")
+AND
+DB_PIP_QuickDismantling(_Char, _Item, _Level)
+AND
+QRY_AMER_GEN_GetItemSlot(_Item)
+AND
+DB_AMER_GEN_OUTPUT_String(_Slot)
+AND
+QRY_AMER_UI_Greatforge_Reduce_GetTableRarity_Pip(_Item, _ItemType)
+AND
+DB_AMER_GEN_OUTPUT_String(_TableRarity)
+AND
+DB_AMER_GEN_ItemRarity(_ItemRarityInt, _ItemType)
+AND
+DB_AMER_UI_Greatforge_ReduceTable(_TableRarity, _, _Frags, _IngredChance, _RareIngredChance)
+AND
+QRY_AMER_GEN_GetHelperObjectAtPosition(1.0, 1.0, 1.0, 1)
+AND
+DB_AMER_GEN_OUTPUT_Item(_Cont)
+AND
+Real(_Level, _LevelReal)
+AND // get subtype and handedness
+QRY_AMER_Deltamods_GenerateOnItem_GetItemSpecs_GetSubType(_Item, _Slot)
+AND
+DB_AMER_GEN_OUTPUT_String(_SubType)
+AND
+DB_AMER_GEN_OUTPUT_Integer(_Handedness)
+AND
+QRY_AMER_UI_Greatforge_Reduce_GetFragmentsAwarded(_Item, _LevelReal, _ItemRarityInt, _Slot, _SubType, _Handedness)
+AND
+DB_AMER_GEN_OUTPUT_Integer(_FragsAwardedNew)
+AND // get cost
+ItemGetGoldValue(_Item, _ItemGoldValue)
+AND
+Real(_ItemGoldValue, _ItemGoldValueReal)
+AND
+DB_AMER_UI_Greatforge_Option_Cost("Reduce", _MatType, _Root, _MatValue)
+AND
+QRY_AMER_UI_Greatforge_GenerateCost(0, "Reduce", _MatType, _LevelReal, _ItemType, _Slot, _SubType, _Handedness, _ItemGoldValueReal, _MatValue)
+AND
+DB_AMER_UI_Greatforge_OUTPUT_Cost(_CostBounded)
+AND
+Integer(_CostBounded, _CostInt)
+AND
+QRY_PIP_CanAffordQuickReduce(_Char, _CostInt)
+AND
+QRY_AMER_GEN_RealToString(_CostBounded, 0)
+AND
+DB_AMER_GEN_OUTPUT_String(_CostStr)
+AND
+StringConcatenate("Dismantled for ", _CostStr, _Str1)
+AND
+StringConcatenate(_Str1, " Gold.", _FinalStr)
+AND
+IntegerSubtract(0, _CostInt, _GoldToRemove)
+THEN
+ItemTemplateAddTo("AMER_LOOT_GreatforgeFragment_A_a41f2a71-6ff1-4c60-a74a-20c96fb9c487", _Char, _FragsAwardedNew);
+PROC_AMER_UI_Greatforge_Reduce_GrantTreasureTable(_Char, _Cont, _Level, _IngredChance, "ST_Ingredients");
+PROC_AMER_UI_Greatforge_Reduce_GrantTreasureTable(_Char, _Cont, _Level, _RareIngredChance, "ST_RareIngredient");
+PROC_AMER_GEN_ItemRemoveRunes(_Char, _Item, 0, 5);	//Indecies zero to five--should be more than we'll ever need to consider.
+PROC_AMER_GEN_UnequipAndRemoveItem(_Char, _Item);
+TimerLaunch("PIP_UnreserveReduceContainer", 200);
+DB_PIP_QuickReduce_ReservedContainer(_Char, _Cont);
+CharacterStatusText(_Char, _FinalStr);
+PartyAddGold(_Char, _GoldToRemove);
+NOT DB_PIP_QuickDismantling(_Char, _Item, _Level);
+// PROC_AMER_GEN_CharacterCombatLogText(_Char, _CostStr);
+// PROC_AMER_GEN_CharacterCombatLogText(_Char, _ItemType);
+// PROC_AMER_GEN_CharacterCombatLogText(_Char, _Slot);
+// PROC_AMER_GEN_CharacterCombatLogText(_Char, _SubType);
+
+QRY QRY_PIP_CanAffordQuickReduce((CHARACTERGUID)_Char, (INTEGER)_Cost)
+AND
+UserGetGold(_Char, _Gold)
+AND
+_Gold >= _Cost
+THEN
+DB_NOOP();
+
+// cleanup db even on failure
+PROC PROC_AMER_GEN_ItemGetItemLevel_Returned(_, _Item, _, "PIP_QuickReduceType")
+AND
+DB_PIP_QuickDismantling(_Char, _Item, _Level)
+THEN
+NOT DB_PIP_QuickDismantling(_Char, _Item, _Level);
+
+IF TimerFinished("PIP_UnreserveReduceContainer")
+AND
+DB_PIP_QuickReduce_ReservedContainer(_Char, _Cont)
+THEN
+MoveAllItemsTo(_Cont, _Char);
+PROC_AMER_GEN_UnreserveHelperObject(_Cont);
+NOT DB_PIP_QuickReduce_ReservedContainer(_Char, _Cont);
+PROC_PIP_QuickReduce_TryCompleteGoal();
+
+// Needed because the original query is only active within Ascension
+QRY QRY_AMER_UI_Greatforge_Reduce_GetTableRarity_Pip((ITEMGUID)_Item, (STRING)_Rarity)
+AND
+DB_AMER_GEN_OUTPUT_String(_OldOutput)
+THEN
+NOT DB_AMER_GEN_OUTPUT_String(_OldOutput);
+
+QRY QRY_AMER_UI_Greatforge_Reduce_GetTableRarity_Pip((ITEMGUID)_Item, "Unique")
+AND
+QRY_AMER_Artifact_ItemIsArtifact(_Item)
+THEN
+DB_AMER_GEN_OUTPUT_String("Artifact");    //Reroute artifacts as artifact.
+
+QRY QRY_AMER_UI_Greatforge_Reduce_GetTableRarity_Pip((ITEMGUID)_Item, (STRING)_Rarity)
+AND
+NOT DB_AMER_GEN_OUTPUT_String(_)
+THEN
+DB_AMER_GEN_OUTPUT_String(_Rarity);
+
+// only disable Greatforge scripting if no users are in the UI
+PROC PROC_PIP_QuickReduce_TryCompleteGoal()
+AND
+NOT DB_AMER_UI_UsersInUI(_, _, _)
+THEN
+PROC_AMER_GEN_Goal_Complete("AMER_GLO_UI_Greatforge_Internal");
+
+//REGION Cleanup in case of any hook failure
+
+PROC PROC_AMER_Hook_EventFailed(_Index, _Object1, _Object3, "PIP_QuickReduce")
+THEN
+PROC_PIP_QuickReduce_Cleanup();
+
+PROC PROC_AMER_Hook_EventFailed(_Index, _Object1, _Object3, "PIP_QuickReduceType")
+THEN
+PROC_PIP_QuickReduce_Cleanup();
+
+PROC PROC_PIP_QuickReduce_Cleanup()
+AND
+DB_PIP_QuickDismantling(_Char, _Item, _Level)
+THEN
+NOT DB_PIP_QuickDismantling(_Char, _Item, _Level);
+
+IF SavegameLoaded(_, _, _, _)
+THEN
+PROC_PIP_QuickReduce_Cleanup();
+
+//END_REGION
+
+EXITSECTION
+
+ENDEXITSECTION
+ParentTargetEdge "Start_AMER"

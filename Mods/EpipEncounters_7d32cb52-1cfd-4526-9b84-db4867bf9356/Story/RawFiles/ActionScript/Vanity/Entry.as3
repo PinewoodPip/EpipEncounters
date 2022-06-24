@@ -1,0 +1,180 @@
+ 
+package
+{
+    import flash.display.MovieClip;
+    import flash.external.ExternalInterface;
+    import flash.text.TextField;
+    import flash.events.MouseEvent;
+    import flash.geom.ColorTransform;
+    import LS_Classes.horizontalList;
+    
+    public dynamic class Entry extends MovieClip
+    {
+        // public var hl_mc:MovieClip;
+
+        // public var text_txt:TextField;
+
+        // public var hit_mc:MovieClip;
+
+        // public var collapse_mc:MovieClip;
+
+        // public var border_mc:MovieClip; 
+
+        // public var favoriteButtonOn_mc:MovieClip;
+        // public var favoriteButtonOff_mc:MovieClip;
+
+        public var id:String;
+
+        public var canCollapse:Boolean = false;
+
+        public var minusBtn_mc:MovieClip;
+
+        public var colorList:horizontalList;
+
+        public function Entry(id:String, text:String, canCollapse:Boolean, active:Boolean, canFavorite:Boolean, favorited:Boolean=false)
+        {
+            super();
+
+            this.id = id;
+            this.setText(text);
+
+            this.canCollapse = canCollapse;
+            if (!canCollapse)
+            {
+                this.collapse_mc.visible = false;
+                this.border_mc.visible = false;
+            }
+
+            if (active)
+            {
+                this.collapse_mc.rotation = 90;
+            }
+
+            if (!canFavorite)
+            {
+                this.favoriteButton_mc.visible = false;
+            }
+            else
+            {
+                this.favoriteButton_mc.gotoAndStop(favorited ? 2 : 1);
+            }
+
+            
+            this.colorList = new horizontalList();
+            var color1:ColorIcon = new ColorIcon();
+            var color2:ColorIcon = new ColorIcon();
+            var color3:ColorIcon = new ColorIcon();
+            this.colorList.addElement(color1);
+            this.colorList.addElement(color2);
+            this.colorList.addElement(color3);
+
+            this.addChild(this.colorList);
+            
+            addFrameScript(0,this.frame1);
+        }
+
+        public function setText(txt:String) : *
+        {
+            this.text_txt.htmlText = txt;
+        }
+
+        public function onClick(ev:MouseEvent) : *
+        {
+            ExternalInterface.call("entryClicked", this.id, this.canCollapse);
+        }
+
+        public function setMinusButtonVisible(state:Boolean) : *
+        {
+            this.minusBtn_mc.visible = state;
+        }
+
+        public function onMouseOver(ev:MouseEvent) : *
+        {
+            this.hl_mc.visible = true;
+        }
+
+        public function onFavoriteClick(ev:MouseEvent) : *
+        {
+            ExternalInterface.call("pipEntryFavoriteClicked", this.id, this.favoriteButton_mc.currentFrame == 1);
+
+            this.favoriteButton_mc.gotoAndStop(this.favoriteButton_mc.currentFrame == 2 ? 1 : 2);
+
+            ExternalInterface.call("PlaySound",this.favoriteButton_mc.currentFrame == 2 ? "UI_Game_CharacterSheet_Attribute_Plus_Click_Release" : "UI_GM_Generic_Click_Press");
+        }
+
+        public function addIggyIcon(id:String, color:Number) : *
+        {
+            var mc:MovieClip = new heroImg();
+            mc.name = "iggy_" + id;
+            mc.mouseEnabled = false;
+            this.addChild(mc);
+            this["iggy_" + id] = mc;
+
+            var colorTransform:ColorTransform = new ColorTransform();
+            colorTransform.color = color;
+
+            mc.transform.colorTransform = colorTransform;
+        }
+
+        public function addDyeIcon(color:Number) : *
+        {
+            var mc:MovieClip = new DyeIcon(color);
+            this.addChild(mc);
+            mc.mouseEnabled = false;
+            this.dyeIcon = mc;
+        }
+
+        public function onMouseOut(ev:MouseEvent) : *
+        {
+            this.hl_mc.visible = false;
+        }
+
+        public function setColor(index:int, color:Number) : *
+        {
+            var mc:MovieClip = this.colorList.content_array[index];
+
+            mc.setColor(color);
+        }
+
+        public function onFavoriteMouseOver(ev:MouseEvent) : *
+        {
+            this.favoriteButton_mc.alpha = 1;
+            ExternalInterface.call("PlaySound","UI_Gen_CursorMove");
+        }
+
+        public function onFavoriteMouseOut(ev:MouseEvent) : *
+        {
+            this.favoriteButton_mc.alpha = 0.6;
+        }
+
+        public function setColorsVisible(visible:Boolean) : *
+        {
+            this.colorList.visible = visible;
+        }
+
+        private function minusBtnPressed() : *
+        {
+            ExternalInterface.call("pipMinusPressed", this.id);
+        }
+
+        function frame1() : *
+        {
+            this.hit_mc.addEventListener(MouseEvent.CLICK, this.onClick);
+            this.hit_mc.addEventListener(MouseEvent.MOUSE_OVER, this.onMouseOver);
+            this.hit_mc.addEventListener(MouseEvent.MOUSE_OUT, this.onMouseOut);
+
+            this.hl_mc.mouseEnabled = false;
+            this.border_mc.mouseEnabled = false;
+            this.text_txt.mouseEnabled = false;
+            this.collapse_mc.mouseEnabled = false;
+
+            this.favoriteButton_mc.addEventListener(MouseEvent.CLICK, this.onFavoriteClick);
+            this.favoriteButton_mc.addEventListener(MouseEvent.MOUSE_OVER, this.onFavoriteMouseOver);
+            this.favoriteButton_mc.addEventListener(MouseEvent.MOUSE_OUT, this.onFavoriteMouseOut);
+
+            this.minusBtn_mc.init(this.minusBtnPressed, null, false);
+
+            this.favoriteButton_mc.alpha = 0.6;
+        }
+    }
+}

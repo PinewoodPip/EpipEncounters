@@ -1,0 +1,1514 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+
+DB_AMER_TEST_StatusTest_Status(0, "AMER_BLIND_1");
+DB_AMER_TEST_StatusTest_Status(1, "AMER_BLIND_2");
+DB_AMER_TEST_StatusTest_Status(2, "AMER_BLIND_3");
+DB_AMER_TEST_StatusTest_Status(3, "AMER_DECAYING_1");
+DB_AMER_TEST_StatusTest_Status(4, "AMER_DECAYING_2");
+DB_AMER_TEST_StatusTest_Status(5, "AMER_DECAYING_3");
+DB_AMER_TEST_StatusTest_Status(6, "AMER_ENTHRALLED_1");
+DB_AMER_TEST_StatusTest_Status(7, "AMER_ENTHRALLED_2");
+DB_AMER_TEST_StatusTest_Status(8, "AMER_ENTHRALLED_3");
+DB_AMER_TEST_StatusTest_Status(9, "AMER_ATAXIA_1");
+DB_AMER_TEST_StatusTest_Status(10, "AMER_ATAXIA_2");
+DB_AMER_TEST_StatusTest_Status(11, "AMER_ATAXIA_3");
+DB_AMER_TEST_StatusTest_Status(12, "AMER_SLOWED_1");
+DB_AMER_TEST_StatusTest_Status(13, "AMER_SLOWED_2");
+DB_AMER_TEST_StatusTest_Status(14, "AMER_SLOWED_3");
+DB_AMER_TEST_StatusTest_Status(15, "AMER_SQUELCHED_1");
+DB_AMER_TEST_StatusTest_Status(16, "AMER_SQUELCHED_2");
+DB_AMER_TEST_StatusTest_Status(17, "AMER_SQUELCHED_3");
+DB_AMER_TEST_StatusTest_Status(18, "AMER_TERRIFIED_1");
+DB_AMER_TEST_StatusTest_Status(19, "AMER_TERRIFIED_2");
+DB_AMER_TEST_StatusTest_Status(20, "AMER_TERRIFIED_3");
+DB_AMER_TEST_StatusTest_Status(21, "AMER_WEAKENED_1");
+DB_AMER_TEST_StatusTest_Status(22, "AMER_WEAKENED_2");
+DB_AMER_TEST_StatusTest_Status(23, "AMER_WEAKENED_3");
+
+PROC_AMER_TEST_CheckInitPlayers();
+
+PROC_AMER_GEN_Goal_Activate("AMER_GLO_NPCScaling_Internal");
+PROC_AMER_GEN_Goal_Activate("AMER_GLO_NPCScaling_Skills");
+PROC_AMER_GEN_Goal_Activate("AMER_GLO_NPCScaling_Resistance");
+PROC_AMER_GEN_Goal_Activate("AMER_GLO_NPCScaling_DiffPresets");
+
+KBSECTION
+//If game was started in editor, InitPlayer will not have
+//been called from the test avatar's CharacterMakePlayer()
+//call--because the Start goal will not have been completed
+//by the time it is called, and our CharacterMakePlayer()
+//hook is within AMER_GEN_Events (a subgoal of Start).
+//Therefore, we init the test avatar here, during editor mode.
+PROC PROC_AMER_TEST_CheckInitPlayers()
+AND
+DB_AMER_IsEditorMode(1)
+AND
+DB_IsPlayer(_Char)
+THEN
+PROC_AMER_GEN_InitPlayer(_Char);
+PROC_AMER_TEST_InitPlayer(_Char);
+
+
+PROC PROC_AMER_TEST_InitPlayer((CHARACTERGUID)_Char)
+AND
+CharacterHasTalent(_Char, "AnimalEmpathy", 1)
+THEN
+CharacterAddTalentPoint(_Char, 1);
+
+PROC PROC_AMER_TEST_InitPlayer((CHARACTERGUID)_Char)
+THEN
+CharacterAddTalent(_Char, "LoneWolf");
+CharacterAddTalent(_Char, "AnimalEmpathy");
+
+
+PROC PROC_AMER_TEST_CheckInitPlayers()
+AND
+DB_AMER_IsEditorMode(1)
+AND
+DB_AMER_DeveloperMode(_Bool)
+THEN
+NOT DB_AMER_DeveloperMode(_Bool);	//Always developer mode within editor.
+
+PROC PROC_AMER_TEST_CheckInitPlayers()
+AND
+DB_AMER_IsEditorMode(1)
+THEN
+DB_AMER_DeveloperMode(1);	//Always developer mode within editor.
+TimerLaunch("AMER_TEST_InitPlayers_Delayed", 1000);
+DB_AMER_UI_Greatforge_Option_Cost("AMER_TESTCRAFT", "Gold", "Gold", 0.0);
+DB_AMER_UI_Greatforge_Option("AMER_TESTCRAFT", "AMER_UI_Greatforge_Option_ExtractRunes");
+
+PROC PROC_AMER_GEN_InitPlayer((CHARACTERGUID)_Char)
+AND
+DB_AMER_DeveloperMode(1)
+THEN
+CharacterAddSkill(_Char, "Shout_TESTDayNight", 0);
+CharacterAddSkill(_Char, "Shout_AMER_TEST_DebugBreak", 0);
+CharacterAddSkill(_Char, "Shout_AMER_TEST_LevelUp", 0);
+CharacterAddSkill(_Char, "Target_AMER_TEST_Teleport", 0);
+CharacterAddSkill(_Char, "Target_Debug_KillCommand", 0);
+CharacterAddSkill(_Char, "Target_AMER_TEST_Pain", 0);
+CharacterAddSkill(_Char, "Target_AMER_TEST_Pain_Phys", 0);
+CharacterAddSkill(_Char, "Target_AMER_TEST_Pain_Air", 0);
+CharacterAddSkill(_Char, "Target_AMER_TEST_BatteriedHarried", 0);
+CharacterAddSkill(_Char, "Target_AMER_TEST_GenTargetTest", 0);
+CharacterAddSkill(_Char, "Target_Bless", 0);
+CharacterAddSkill(_Char, "Target_Curse", 0);
+CharacterAddSkill(_Char, "Target_TimeWarp", 0);
+CharacterAddSkill(_Char, "Shout_FleshSacrifice", 0);
+
+IF
+TimerFinished("AMER_TEST_InitPlayers_Delayed")
+AND
+DB_IsPlayer(_Char)
+THEN
+PROC_AMER_Source_DeriveMaxSPFromLevel(_Char);
+CharacterAddSkill(_Char, "Shout_NexusMeditate", 0);
+CharacterAddSkill(_Char, "Shout_SourceInfusion", 0);
+CharacterAddSkill(_Char, "Teleportation_Resuscitate", 0);
+CharacterAddSkill(_Char, "Target_SourceVampirism", 0);
+PROC_AMER_Source_TryUnlockSourceGen(_Char, 0);
+
+
+IF
+TimerFinished("AMER_TEST_InitPlayers_Delayed")
+AND
+DB_AMER_Talents_AllTalents(_Talent)
+AND
+DB_IsPlayer(_Char)
+AND
+CharacterHasTalent(_Char, _Talent, 1)
+THEN
+PROC_AMER_Talents_TryToggle(_Char, _Talent, 1.0);
+
+
+IF
+TimerFinished("AMER_TEST_InitPlayers_Delayed")
+AND
+NOT DB_AMER_GEN_GameDiff(_)
+THEN
+DB_AMER_GEN_GameDiff(3);
+
+
+
+PROC PROC_AMER_Combat_TurnStarted(_Char, _Bool)
+AND
+DB_AMER_DeveloperMode(1)
+AND
+DB_IsPlayer(_Char)
+THEN
+// PROC_AMER_CharacterSetSourcePoints(_Char, 3);
+DB_NOOP(1);
+
+
+/*
+PROC PROC_AMER_MovementDetection_ActiveCharMoved(_Char)
+AND
+DB_IsPlayer(_Reactor)
+AND
+CharacterIsInCombat(_Reactor, 1)
+AND
+NOT DB_AMER_Combat_ActiveChar(_, _, _, _Reactor)
+AND
+CharacterIsEnemy(_Char, _Reactor, 1)
+THEN
+PROC_AMER_Reaction_Request(_Reactor, _Char, "AMER_Predator", "TESTPRED", "", 0);
+*/
+
+
+//REGION Debug skills.
+
+IF
+CharacterUsedSkillAtPosition(_Char, _X, _Y, _Z, "Shout_AMER_TEST_DebugBreak", _, _)
+THEN
+CharacterStatusText(_Char, "Debug Break Logged.");
+DebugBreak("!!!----ManualBreak----!!!");
+
+IF
+CharacterUsedSkillAtPosition(_Char, _X, _Y, _Z, "Shout_AMER_TEST_LevelUp", _, _)
+AND
+DB_IsPlayer(_Player)
+THEN
+CharacterLevelUp(_Player);
+
+
+IF
+CharacterUsedSkillAtPosition(_Char, _X, _Y, _Z, "Target_AMER_TEST_Teleport", _, _)
+THEN
+TeleportToPosition(_Char, _X, _Y, _Z, "AMER_DebugTeleport", 0, 1);
+
+
+IF
+CharacterUsedSkillOnTarget(_Char, (CHARACTERGUID)_Target, "Target_AMER_TEST_BatteriedHarried", _, _)
+AND
+ObjectIsCharacter(_Target, 1)
+THEN
+PROC_AMER_BatteredHarried_DirectManip(_Target, 2, 15, _Char);
+
+
+
+PROC PROC_AMER_Spells_SkillCast_PerTarget(_Char, "Target_AMER_TEST_GenTargetTest", _Target, _X, _Y, _Z, _Infus, _Type, _Element)
+AND
+_Target != NULL_00000000-0000-0000-0000-000000000000
+THEN
+PROC_AMER_KeywordStat_ViolentStrikes_Activate_NoChoke(_Char);
+
+
+
+IF
+CharacterUsedSkillOnTarget(_Char, (CHARACTERGUID)_Target, "Target_AMER_TEST_Pain", _, _)
+AND
+ObjectIsCharacter(_Target, 1)
+AND
+GetVarFloat(_Target, "AMER_GEN_MaximumVitality", _Vit)
+AND
+GetVarFloat(_Target, "AMER_GEN_MaximumPhysicalArmor", _Phys)
+AND
+GetVarFloat(_Target, "AMER_GEN_MaximumMagicArmor", _Mag)
+AND
+RealProduct(_Vit, 0.2, _VitDam)
+AND
+RealProduct(_Phys, 0.2, _PhysDam)
+AND
+RealProduct(_Mag, 0.2, _MagDam)
+AND
+Integer(_VitDam, _VitDamInt)
+AND
+Integer(_PhysDam, _PhysDamInt)
+AND
+Integer(_MagDam, _MagDamInt)
+THEN
+PROC_AMER_GEN_ApplyDamage(_Target, _VitDamInt, "Piercing", _Char, 1);
+PROC_AMER_GEN_ApplyDamage(_Target, _PhysDamInt, "Corrosive", _Char, 1);
+PROC_AMER_GEN_ApplyDamage(_Target, _MagDamInt, "Magic", _Char, 1);
+
+IF
+CharacterUsedSkillOnTarget(_Char, (CHARACTERGUID)_Target, "Target_AMER_TEST_Pain_Phys", _, _)
+AND
+ObjectIsCharacter(_Target, 1)
+AND
+GetVarFloat(_Target, "AMER_GEN_MaximumVitality", _Vit)
+AND
+RealProduct(_Vit, 0.2, _VitDam)
+AND
+Integer(_VitDam, _VitDamInt)
+THEN
+PROC_AMER_GEN_ApplyDamage(_Target, _VitDamInt, "Physical", _Char, 1);
+
+IF
+CharacterUsedSkillOnTarget(_Char, (CHARACTERGUID)_Target, "Target_AMER_TEST_Pain_Air", _, _)
+AND
+ObjectIsCharacter(_Target, 1)
+AND
+GetVarFloat(_Target, "AMER_GEN_MaximumVitality", _Vit)
+AND
+RealProduct(_Vit, 0.2, _VitDam)
+AND
+Integer(_VitDam, _VitDamInt)
+THEN
+PROC_AMER_GEN_ApplyDamage(_Target, _VitDamInt, "Air", _Char, 1);
+
+
+//Give Gen Test skills.
+IF
+CharacterItemEvent(_Char, _Item, "AMER_TEST_GiveTestSpells")
+THEN
+CharacterAddSkill(_Char, "Target_AMER_TEST_UI_Ascension_SelectedElement", 0);
+CharacterAddSkill(_Char, "Shout_AMER_TEST_UI_ReportSelectedPos", 0);
+CharacterAddSkill(_Char, "Shout_AMER_TEST_LevelUp", 0);
+CharacterAddSkill(_Char, "Shout_SpiritVision", 0);
+CharacterAddSkill(_Char, "Shout_TESTDayNight", 0);
+CharacterAddSkill(_Char, "Shout_AMER_TEST_DebugBreak", 0);
+CharacterAddSkill(_Char, "Target_AMER_TEST_Teleport", 0);
+CharacterAddSkill(_Char, "Target_Debug_KillCommand", 0);
+CharacterAddSkill(_Char, "Target_AMER_TEST_Pain", 0);
+CharacterAddSkill(_Char, "Target_AMER_TEST_BatteriedHarried", 0);
+CharacterAddSkill(_Char, "Target_AMER_TEST_GenTargetTest", 0);
+CharacterAddSkill(_Char, "Target_Bless", 0);
+CharacterAddSkill(_Char, "Target_Curse", 0);
+CharacterAddSkill(_Char, "Target_PetrifyingTouch", 0);
+CharacterAddSkill(_Char, "Projectile_BouncingShield_TheArena", 0);
+
+
+
+IF
+CharacterUsedSkillAtPosition(_Char, _X, _Y, _Z, "Shout_AMER_TEST_UI_ReportSelectedPos", _, _)
+AND
+DB_AMER_UI_UsersInUI(_Instance, "AMER_UI_Ascension", _Char)
+AND
+DB_AMER_UI_GridAnchor(_Instance, _XAnchor, _YAnchor, _ZAnchor)
+AND
+DB_AMER_ElementChain_Node_State(_Instance, "AMER_UI_Ascension", _Cluster, _Node, _State)
+AND
+DB_AMER_UI_ElementsOfInstance(_Instance, "AMER_UI_Ascension", _Cluster, _Node, _Element)
+AND
+GetPosition(_Element, _XNode, _YNode, _ZNode)
+AND
+RealSubtract(_XNode, _XAnchor, _XDiff)
+AND
+RealSubtract(_ZNode, _ZAnchor, _ZDiff)
+AND
+QRY_AMER_GEN_RealToString(_XDiff)
+AND
+DB_AMER_GEN_OUTPUT_String(_XStr)
+AND
+QRY_AMER_GEN_RealToString(_ZDiff)
+AND
+DB_AMER_GEN_OUTPUT_String(_ZStr)
+AND
+StringConcatenate(_XStr, ",  ", _Xstr2)
+AND
+StringConcatenate(_Xstr2, _ZStr, _Text)
+THEN
+DisplayText(_Element, _Text);
+
+IF
+CharacterUsedSkillAtPosition(_Char, _X, _Y, _Z, "Shout_AMER_TEST_UI_ReportSelectedPos", _, _)
+AND
+DB_AMER_UI_UsersInUI(_Instance, "AMER_UI_Ascension", _Char)
+AND
+DB_AMER_UI_GridAnchor(_Instance, _XAnchor, _YAnchor, _ZAnchor)
+AND
+DB_AMER_UI_Ascension_SelectedElement(_Instance, _, _Collection, _Name, _)
+AND
+DB_AMER_UI_ElementsOfInstance(_Instance, "AMER_UI_Ascension", _Collection, _Name, _Element)
+AND
+GetPosition(_Element, _XNode, _YNode, _ZNode)
+AND
+RealSubtract(_XNode, _XAnchor, _XDiff)
+AND
+RealSubtract(_ZNode, _ZAnchor, _ZDiff)
+AND
+QRY_AMER_GEN_RealToString(_XDiff)
+AND
+DB_AMER_GEN_OUTPUT_String(_XStr)
+AND
+QRY_AMER_GEN_RealToString(_ZDiff)
+AND
+DB_AMER_GEN_OUTPUT_String(_ZStr)
+AND
+StringConcatenate(_XStr, ",  ", _Xstr2)
+AND
+StringConcatenate(_Xstr2, _ZStr, _Text)
+THEN
+DisplayText(_Element, _Text);
+
+
+IF
+CharacterUsedSkillOnTarget(_Char, (ITEMGUID)_Element, "Target_AMER_TEST_UI_Ascension_SelectedElement", _, _)
+AND
+ObjectIsItem(_Element, 1)
+AND
+NOT DB_AMER_UI_ElementsOfInstance(_, "AMER_UI_Ascension", _, _, _Element)
+AND
+GetVarString(_Element, "AMER_Button_Event", "AMER_UI_GEN_BackgroundClicked")
+THEN
+SetOnStage(_Element, 0);
+
+IF
+CharacterUsedSkillAtPosition(_Char, _X, _Y, _Z, "Target_AMER_TEST_UI_Ascension_SelectedElement", _, _)
+AND
+DB_AMER_UI_UsersInUI(_Instance, "AMER_UI_Ascension", _Char)
+AND
+DB_AMER_UI_GridAnchor(_Instance, _XAnchor, _YAnchor, _ZAnchor)
+AND
+DB_AMER_UI_Ascension_SelectedElement(_Instance, _Path, _Cluster, _Node, _Type)
+AND
+DB_AMER_UI_ElementsOfInstance(_Instance, "AMER_UI_Ascension", _Cluster, _Node, _Element)
+AND
+RealSubtract(_X, _XAnchor, _XDiff)
+AND
+RealSubtract(_Z, _ZAnchor, _ZDiff)
+AND
+QRY_AMER_GEN_RealToString(_XDiff)
+AND
+DB_AMER_GEN_OUTPUT_String(_XStr)
+AND
+QRY_AMER_GEN_RealToString(_ZDiff)
+AND
+DB_AMER_GEN_OUTPUT_String(_ZStr)
+AND
+StringConcatenate(_XStr, ",  ", _Xstr2)
+AND
+StringConcatenate(_Xstr2, _ZStr, _Text)
+THEN
+TeleportToPosition(_Element, _X, _YAnchor, _Z, "", 0, 0);
+DisplayText(_Element, _Text);
+PROC_AMER_TEST_MoveNode_RefreshFX(_Instance, _Cluster, _Node, _Element);
+
+PROC PROC_AMER_TEST_MoveNode_RefreshFX((INTEGER)_Instance, (STRING)_Collection, (STRING)_Node, (ITEMGUID)_Element)
+AND
+DB_AMER_UI_Element_FX_Handle(_Element, _FX, _FXHandle)
+THEN
+StopLoopEffect(_FXHandle);
+NOT DB_AMER_UI_Element_FX_Handle(_Element, _FX, _FXHandle);
+
+PROC PROC_AMER_TEST_MoveNode_RefreshFX((INTEGER)_Instance, (STRING)_Collection, (STRING)_Node, (ITEMGUID)_Element)
+AND
+GetPosition(_Element, _X, _Y, _Z)
+AND
+QRY_AMER_UI_CheckPlayElementFX(_Instance, "AMER_UI_Ascension", _Collection, _Node, _Element, _X, _Y, _Z, 1.0)
+THEN
+DB_NOOP(1);
+
+PROC PROC_AMER_TEST_MoveNode_RefreshFX((INTEGER)_Instance, (STRING)_Collection, (STRING)_Node, (ITEMGUID)_Element)
+AND
+DB_AMER_ElementChain_NodeFXHandle(_Element, _Handle)
+THEN
+NOT DB_AMER_ElementChain_NodeFXHandle(_Element, _Handle);
+StopLoopEffect(_Handle);
+
+PROC PROC_AMER_TEST_MoveNode_RefreshFX((INTEGER)_Instance, (STRING)_Collection, (STRING)_Node, (ITEMGUID)_Element)
+AND
+DB_AMER_ElementChain_Node_State(_Instance, "AMER_UI_Ascension", _Collection, _Node, _State)
+THEN
+PROC_AMER_ElementChain_Node_PlayLoopFX(_Instance, "AMER_UI_Ascension", _Collection, _Node, _State, _Element);
+
+
+//END_REGION
+
+
+//REGION Day/Night Test
+
+IF
+CharacterUsedSkill(_Char, "Shout_TESTDayNight", _, _)
+AND
+DB_CurrentLevel(_Map)
+AND
+DB_AMER_DayNight_CycleSpeed(_Map, _CycleSpeed)
+THEN
+PROC_AMER_UI_RequestInstance(_Char, "AMER_UI_LoadScreen");
+PROC_AMER_DayNight_TimeOfDay_Increment();
+PROC_AMER_DayNight_ATM_ProgressAtmospheres();
+PROC_AMER_DayNight_VOL_ProgressAmb();
+PROC_AMER_DayNight_SND_TogglePointSounds();
+PROC_AMER_DayNight_FireEvent(_Map);
+PROC_AMER_DayNight_ProgressObjects(_Map);
+TimerCancel("AMER_MAIN_TimeOfDay");
+TimerLaunch("AMER_MAIN_TimeOfDay", _CycleSpeed);
+ProcObjectTimer(_Char, "AMER_TEST_AtmProgress", 1000);
+
+
+PROC ProcObjectTimerFinished((CHARACTERGUID)_Char, "AMER_TEST_AtmProgress")
+THEN
+PROC_AMER_UI_ExitUI(_Char);
+
+PROC ProcObjectTimerFinished((CHARACTERGUID)_Char, "AMER_TEST_AtmProgress")
+AND
+DB_AMER_DayNight_TimeOfDay(_Time)
+AND
+QRY_AMER_DEBUG_Text("Switching time to: ", _Time)
+THEN
+DB_NOOP(1);
+//END_REGION
+
+
+//REGION Test buttons.
+
+IF
+CharacterItemEvent(_Char, _Item, "AMER_TEST_GenTest_Respec")
+AND
+CharacterAddToCharacterCreation(_Char, 1, _)
+THEN
+DB_NOOP(1);
+
+
+IF
+CharacterItemEvent(_Char, _Item, "AMER_TEST_GenTest_RestockVendors")
+AND
+DB_AMER_DeveloperMode(1)
+AND
+DB_TraderGeneratedTreasureForLevel(_Trader,_NewLevel)
+THEN
+NOT DB_TraderGeneratedTreasureForLevel(_Trader,_NewLevel);
+
+IF
+CharacterItemEvent(_Char, _Item, "AMER_TEST_ResetCooldowns")
+AND
+DB_AMER_DeveloperMode(1)
+THEN
+CharacterResetCooldowns(_Char);
+ 
+
+IF
+CharacterItemEvent(_Char, _Item, "AMER_TEST_GenTest_Core")
+THEN
+PROC_AMER_TempStat_StatusMod_AddExtendedStat_Scaling(_Char, "MARKED", "ResBreach_Amplifier", "", "", "", "Glitterdust_Infus", 0, "Ability", "RangerLore", -20.0, -1.0, 1000, "");
+ApplyStatus(_Char, "MARKED", 12.0, 0, _Char);
+
+
+
+
+PROC PROC_AMER_GEN_TEST_RandBuff_Add((CHARACTERGUID)_Char, (INTEGER)_Rand)
+AND
+NOT DB_AMER_GEN_TEST_RandBuff_Count(_)
+THEN
+DB_AMER_GEN_TEST_RandBuff_Count(1);
+
+PROC PROC_AMER_GEN_TEST_RandBuff_Add((CHARACTERGUID)_Char, (INTEGER)_Rand)
+AND
+DB_AMER_GEN_TEST_RandBuff_Count(_OldCount)
+AND
+IntegerSum(_OldCount, 1, _NewCount)
+THEN
+NOT DB_AMER_GEN_TEST_RandBuff_Count(_OldCount);
+DB_AMER_GEN_TEST_RandBuff_Count(_NewCount);
+
+PROC PROC_AMER_GEN_TEST_RandBuff_Add((CHARACTERGUID)_Char, (INTEGER)_Rand)
+AND
+DB_AMER_GEN_TEST_RandBuff(_Rand, _Times)
+AND
+DB_AMER_GEN_TEST_RandBuff_Count(_TotalTries)
+AND
+IntegerSum(_Times, 1, _NewTimes)
+AND
+IntegertoString(_NewTimes, _TimesStr)
+AND
+IntegertoString(_Rand, _RandStr)
+AND
+IntegertoString(_TotalTries, _TotalTriesStr)
+AND
+StringConcatenate("Found [", _RandStr, _Str)
+AND
+StringConcatenate(_Str, "] ", _Str2)
+AND
+StringConcatenate(_Str2, _TimesStr, _Str3)
+AND
+StringConcatenate(_Str3, " times after [", _Str4)
+AND
+StringConcatenate(_Str4, _TotalTriesStr, _Str5)
+AND
+StringConcatenate(_Str5, "] total tries.", _Text)
+THEN
+NOT DB_AMER_GEN_TEST_RandBuff(_Rand, _Times);
+DB_AMER_GEN_TEST_RandBuff(_Rand, _NewTimes);
+CharacterStatusText(_Char, _Text);
+
+PROC PROC_AMER_GEN_TEST_RandBuff_Add((CHARACTERGUID)_Char, (INTEGER)_Rand)
+AND
+NOT DB_AMER_GEN_TEST_RandBuff(_Rand, _)
+THEN
+DB_AMER_GEN_TEST_RandBuff(_Rand, 1);
+
+
+IF
+CharacterItemEvent(_Char, _Item, "AMER_TEST_GenTest_2_Core")
+THEN
+PROC_AMER_ExtendedStat_CharacterAddStat(_Char, "ResistanceRating", "Stat_SpecialCase", "AllResistance", "", -20.0);
+
+
+IF
+CharacterItemEvent(_Char, _Item, "AMER_TEST_GenTest_3_Core")
+THEN
+PROC_AMER_TEST_StatusTest(_Char);
+
+PROC PROC_AMER_TEST_StatusTest((CHARACTERGUID)_Char)
+AND
+NOT DB_AMER_TEST_StatusTest(_)
+THEN
+DB_AMER_TEST_StatusTest(0);
+
+PROC PROC_AMER_TEST_StatusTest((CHARACTERGUID)_Char)
+AND
+DB_AMER_TEST_StatusTest(_Count)
+AND
+SysCount("DB_AMER_TEST_StatusTest_Status", 2, _FactCount)
+AND
+IntegerSubtract(_FactCount, 1, _MaxIndex)
+AND
+QRY_AMER_GEN_IntegerSum_Looping(_Count, 1, 0, _MaxIndex)
+AND
+DB_AMER_GEN_OUTPUT_Integer(_NewCount)
+AND
+DB_AMER_TEST_StatusTest_Status(_Count, _Status)
+THEN
+NOT DB_AMER_TEST_StatusTest(_Count);
+DB_AMER_TEST_StatusTest(_NewCount);
+ApplyStatus(_Char, _Status, 12.0, 1, _Char);
+
+/*
+IF
+CharacterItemEvent(_Char, _Item, "AMER_TEST_GenTest_3_Core")
+THEN
+PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_ForceCluster("Force", "Force_TheScorpion");
+PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_ForceCluster("Force", "Force_TheArcanist");
+PROC_AMER_UI_Ascension_Cluster_CalcBestRoute(_Char, "Force", "Force_TheKraken");
+*/
+
+/*
+IF
+CharacterItemEvent(_Char, _Item, "AMER_TEST_GenTest_3_Core")
+AND
+DB_AMER_DeveloperMode(1)
+AND
+DB_AMER_UI_Ascension_NodeCluster(_Path, _Cluster, _, _, _, _)
+AND
+DB_AMER_UI_Ascension_ClusterMetaData(_Path, _Cluster, _, _Tier)
+AND
+_Tier == 3
+THEN
+PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_LimitTier(2, -1, -1);
+PROC_AMER_UI_Ascension_Cluster_CalcBestRoute(_Char, _Path, _Cluster);
+
+IF
+CharacterItemEvent(_Char, _Item, "AMER_TEST_GenTest_3_Core")
+AND
+DB_AMER_DeveloperMode(1)
+THEN
+//PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_ForceCluster("Force", "Force_TheArcher");
+//PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_ForceCluster("Entropy", "Entropy_BloodApe");
+PROC_AMER_UI_Ascension_Cluster_CalcBestRoute(_Char, "Force", "Force_TheConqueror");
+*/
+
+
+
+//REGION Calc Best Route.
+
+//REGION Build Cluster metadata.
+
+PROC PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_MetaData_Build()
+AND
+DB_AMER_UI_Ascension_ClusterMetaData(_OldPath, _OldCluster, _OldPointsToComplete, _OldTier)
+THEN
+NOT DB_AMER_UI_Ascension_ClusterMetaData(_OldPath, _OldCluster, _OldPointsToComplete, _OldTier);
+
+PROC PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_MetaData_Build()
+AND
+DB_AMER_UI_Ascension_NodeCluster(_Path, _Cluster, _, _, _, _)
+AND
+QRY_AMER_UI_Ascension_GetCompletetionCount(_Cluster)
+AND
+DB_AMER_GEN_OUTPUT_Integer(_RequiredToComplete)
+AND
+QRY_AMER_UI_Ascension_GetTier(_Cluster)
+AND
+DB_AMER_GEN_OUTPUT_Integer(_Tier)
+THEN
+DB_AMER_UI_Ascension_ClusterMetaData(_Path, _Cluster, _RequiredToComplete, _Tier);
+
+
+//"Tier" as defined by requirements. Req total of 1 is tier 1, reward total of zero is tier 3, anything else is tier 2.
+QRY QRY_AMER_UI_Ascension_GetTier((STRING)_Cluster)
+AND
+DB_AMER_GEN_OUTPUT_Integer(_OldOutput)
+THEN
+NOT DB_AMER_GEN_OUTPUT_Integer(_OldOutput);
+
+QRY QRY_AMER_UI_Ascension_GetTier((STRING)_Cluster)
+AND
+NOT DB_AMER_UI_Ascension_EmbodimentReward(_Cluster, "CompletionReward", _, _)
+THEN
+DB_AMER_GEN_OUTPUT_Integer(3);
+
+QRY QRY_AMER_UI_Ascension_GetTier((STRING)_Cluster)
+AND
+NOT DB_AMER_GEN_OUTPUT_Integer(_)
+AND
+QRY_AMER_UI_Ascension_GetReqCount(_Cluster)
+AND
+DB_AMER_GEN_OUTPUT_Integer(_ReqCount)
+AND
+_ReqCount > 1
+THEN
+NOT DB_AMER_GEN_OUTPUT_Integer(_ReqCount);
+DB_AMER_GEN_OUTPUT_Integer(2);
+
+QRY QRY_AMER_UI_Ascension_GetTier((STRING)_Cluster)
+AND
+NOT DB_AMER_GEN_OUTPUT_Integer(_)
+THEN
+DB_AMER_GEN_OUTPUT_Integer(1);
+
+
+QRY QRY_AMER_UI_Ascension_GetReqCount((STRING)_Cluster)
+AND
+DB_AMER_GEN_OUTPUT_Integer(_OldOutput)
+THEN
+NOT DB_AMER_GEN_OUTPUT_Integer(_OldOutput);
+
+QRY QRY_AMER_UI_Ascension_GetReqCount((STRING)_Cluster)
+THEN
+DB_AMER_GEN_OUTPUT_Integer(0);
+
+QRY QRY_AMER_UI_Ascension_GetReqCount((STRING)_Cluster)
+AND
+DB_AMER_UI_Ascension_NodeCluster_Requirement(_Cluster, _Req, _Amount)
+AND
+DB_AMER_GEN_OUTPUT_Integer(_OldOutput)
+AND
+IntegerSum(_OldOutput, _Amount, _NewOutput)
+THEN
+NOT DB_AMER_GEN_OUTPUT_Integer(_OldOutput);
+DB_AMER_GEN_OUTPUT_Integer(_NewOutput);
+
+//END_REGION
+
+
+//REGION Limit clusters of a tier.
+
+PROC PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_LimitTier((INTEGER)_Tier1, (INTEGER)_Tier2, (INTEGER)_Tier3)
+AND
+DB_AMER_Ascension_Cluster_CalcBestRoute_TierAllocated(_OldTier, _OldMaxCount, _OldCount)
+THEN
+NOT DB_AMER_Ascension_Cluster_CalcBestRoute_TierAllocated(_OldTier, _OldMaxCount, _OldCount);
+
+PROC PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_LimitTier((INTEGER)_Tier1, (INTEGER)_Tier2, (INTEGER)_Tier3)
+AND
+_Tier1 >= 0
+THEN
+DB_AMER_Ascension_Cluster_CalcBestRoute_TierAllocated(1, _Tier1, 0);
+
+PROC PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_LimitTier((INTEGER)_Tier1, (INTEGER)_Tier2, (INTEGER)_Tier3)
+AND
+_Tier2 >= 0
+THEN
+DB_AMER_Ascension_Cluster_CalcBestRoute_TierAllocated(1, _Tier2, 0);
+
+PROC PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_LimitTier((INTEGER)_Tier1, (INTEGER)_Tier2, (INTEGER)_Tier3)
+AND
+_Tier3 >= 0
+THEN
+DB_AMER_Ascension_Cluster_CalcBestRoute_TierAllocated(1, _Tier3, 0);
+
+//END_REGION
+
+
+//REGION Enforce an addition cluster.
+
+PROC PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_ForceCluster((STRING)_Path, (STRING)_Cluster)
+THEN
+DB_AMER_Ascension_Cluster_CalcBestRoute_ForcedCluster(_Path, _Cluster);
+
+//END_REGION
+
+
+//REGION Clear old data.
+//Remove old best route data.
+
+PROC PROC_AMER_UI_Ascension_Cluster_CalcBestRoute((CHARACTERGUID)_Char, (STRING)_Path, (STRING)_Cluster)
+AND
+DB_AMER_Ascension_Cluster_CalcBestRoute_Reqs(_Req, _Amount, _Needed)
+THEN
+NOT DB_AMER_Ascension_Cluster_CalcBestRoute_Reqs(_Req, _Amount, _Needed);
+
+PROC PROC_AMER_UI_Ascension_Cluster_CalcBestRoute((CHARACTERGUID)_Char, (STRING)_Path, (STRING)_Cluster)
+AND
+DB_AMER_Ascension_Cluster_CalcBestRoute_PointsSpent(_OldTotal)
+THEN
+NOT DB_AMER_Ascension_Cluster_CalcBestRoute_PointsSpent(_OldTotal);
+
+PROC PROC_AMER_UI_Ascension_Cluster_CalcBestRoute((CHARACTERGUID)_Char, (STRING)_Path, (STRING)_Cluster)
+THEN
+DB_AMER_Ascension_Cluster_CalcBestRoute_PointsSpent(0);
+
+PROC PROC_AMER_UI_Ascension_Cluster_CalcBestRoute((CHARACTERGUID)_Char, (STRING)_Path, (STRING)_Cluster)
+AND
+DB_AMER_Ascension_Cluster_CalcBestRoute_ClusterAllocated(_OldPath, _OldCluster)
+THEN
+NOT DB_AMER_Ascension_Cluster_CalcBestRoute_ClusterAllocated(_OldPath, _OldCluster);
+
+//END_REGION
+
+
+//Init our reqs with the goal cluster, because we know we will be acquiring it.
+PROC PROC_AMER_UI_Ascension_Cluster_CalcBestRoute((CHARACTERGUID)_Char, (STRING)_Path, (STRING)_Cluster)
+THEN
+PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_AllocateCluster(_Char, _Path, _Cluster);
+
+//Add any additional required clusters
+PROC PROC_AMER_UI_Ascension_Cluster_CalcBestRoute((CHARACTERGUID)_Char, (STRING)_Path, (STRING)_Cluster)
+AND
+DB_AMER_Ascension_Cluster_CalcBestRoute_ForcedCluster(_ForcedPath, _ForcedCluster)
+THEN
+PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_AllocateCluster(_Char, _ForcedPath, _ForcedCluster);
+
+//REGION PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_AllocateCluster((CHARACTERGUID)_Char, (STRING)_Path, (STRING)_Cluster)
+
+//Update requirements to support the allocated cluster.
+PROC PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_AllocateCluster((CHARACTERGUID)_Char, (STRING)_Path, (STRING)_Cluster)
+AND
+DB_AMER_UI_Ascension_NodeCluster_Requirement(_Cluster, _ReqPath, _Amount)
+THEN
+PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_Requirement_TrySet(_ReqPath, _Amount);
+
+PROC PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_Requirement_TrySet((STRING)_Path, (INTEGER)_Amount)
+AND
+DB_AMER_Ascension_Cluster_CalcBestRoute_Reqs(_Path, _TotalReq, _Needed)
+AND
+_TotalReq < _Amount
+AND
+IntegerSubtract(_Amount, _TotalReq, _Diff)
+AND
+IntegerSum(_Needed, _Diff, _NewNeeded)
+THEN
+NOT DB_AMER_Ascension_Cluster_CalcBestRoute_Reqs(_Path, _TotalReq, _Needed);
+DB_AMER_Ascension_Cluster_CalcBestRoute_Reqs(_Path, _Amount, _NewNeeded);
+
+PROC PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_Requirement_TrySet((STRING)_Path, (INTEGER)_Amount)
+AND
+NOT DB_AMER_Ascension_Cluster_CalcBestRoute_Reqs(_Path, _, _)
+THEN
+DB_AMER_Ascension_Cluster_CalcBestRoute_Reqs(_Path, _Amount, _Amount);
+
+
+//Update our satisfied reqs.
+PROC PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_AllocateCluster((CHARACTERGUID)_Char, (STRING)_Path, (STRING)_Cluster)
+AND
+DB_AMER_UI_Ascension_EmbodimentReward(_Cluster, "CompletionReward", _RewardPath, _Amount)
+THEN
+PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_AddReward(_RewardPath, _Amount);
+
+PROC PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_AddReward((STRING)_RewardPath, (INTEGER)_Amount)
+AND
+DB_AMER_Ascension_Cluster_CalcBestRoute_Reqs(_RewardPath, _TotalReq, _Needed)
+AND
+IntegerSubtract(_Needed, _Amount, _NewNeeded)
+THEN
+NOT DB_AMER_Ascension_Cluster_CalcBestRoute_Reqs(_RewardPath, _TotalReq, _Needed);
+DB_AMER_Ascension_Cluster_CalcBestRoute_Reqs(_RewardPath, _TotalReq, _NewNeeded);
+
+PROC PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_AddReward((STRING)_RewardPath, (INTEGER)_Amount)
+AND
+NOT DB_AMER_Ascension_Cluster_CalcBestRoute_Reqs(_RewardPath, _, _)
+AND
+IntegerProduct(_Amount, -1, _NewNeeded)
+THEN
+DB_AMER_Ascension_Cluster_CalcBestRoute_Reqs(_RewardPath, 0, _NewNeeded);
+
+
+//Update points spent to support the allocated cluster.
+PROC PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_AllocateCluster((CHARACTERGUID)_Char, (STRING)_Path, (STRING)_Cluster)
+AND
+DB_AMER_UI_Ascension_ClusterMetaData(_Path, _Cluster, _RequiredToComplete, _Tier)
+THEN
+PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_PointsSpent_Add(_RequiredToComplete);
+
+PROC PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_PointsSpent_Add((INTEGER)_RequiredToComplete)
+AND
+DB_AMER_Ascension_Cluster_CalcBestRoute_PointsSpent(_OldTotal)
+AND
+IntegerSum(_OldTotal, _RequiredToComplete, _NewTotal)
+THEN
+NOT DB_AMER_Ascension_Cluster_CalcBestRoute_PointsSpent(_OldTotal);
+DB_AMER_Ascension_Cluster_CalcBestRoute_PointsSpent(_NewTotal);
+
+
+//Update amount of allocated tier, if we're tracking it for limiting a specific tier.
+PROC PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_AllocateCluster((CHARACTERGUID)_Char, (STRING)_Path, (STRING)_Cluster)
+AND
+DB_AMER_UI_Ascension_ClusterMetaData(_Path, _Cluster, _, _Tier)
+AND
+DB_AMER_Ascension_Cluster_CalcBestRoute_TierAllocated(_Tier, _MaxCount, _OldCount)
+AND
+IntegerSum(_OldCount, 1, _NewCount)
+THEN
+NOT DB_AMER_Ascension_Cluster_CalcBestRoute_TierAllocated(_Tier, _MaxCount, _OldCount);
+DB_AMER_Ascension_Cluster_CalcBestRoute_TierAllocated(_Tier, _MaxCount, _NewCount);
+
+//Store this cluster as allocated, so we don't consider it as an option anymore.
+PROC PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_AllocateCluster((CHARACTERGUID)_Char, (STRING)_Path, (STRING)_Cluster)
+THEN
+DB_AMER_Ascension_Cluster_CalcBestRoute_ClusterAllocated(_Path, _Cluster);
+
+
+//Special case for solving from core.
+PROC PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_AllocateCluster((CHARACTERGUID)_Char, (STRING)_Path, "Core")
+THEN
+PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_AddReward(_Path, 1);
+PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_PointsSpent_Add(1);
+
+//END_REGION
+
+
+PROC PROC_AMER_UI_Ascension_Cluster_CalcBestRoute((CHARACTERGUID)_Char, (STRING)_Path, (STRING)_Cluster)
+THEN
+PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_FindEfficientRewards(_Char);
+
+
+//REGION PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_FindEfficientRewards((CHARACTERGUID)_Char)
+
+PROC PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_FindEfficientRewards((CHARACTERGUID)_Char)
+AND
+DB_AMER_CalcBestRoute_ReqsPerPoint_OUTPUT(_OldPath, _OldCluster, _OldOutput)
+THEN
+NOT DB_AMER_CalcBestRoute_ReqsPerPoint_OUTPUT(_OldPath, _OldCluster, _OldOutput);
+
+PROC PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_FindEfficientRewards((CHARACTERGUID)_Char)
+THEN
+DB_AMER_CalcBestRoute_ReqsPerPoint_OUTPUT("", "", -99.0);
+
+PROC PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_FindEfficientRewards((CHARACTERGUID)_Char)
+AND
+DB_AMER_UI_Ascension_NodeCluster(_Path, _Cluster, _, _, _, _)   //Consider each existing cluster we haven't allocated.
+AND
+DB_AMER_UI_Ascension_ClusterMetaData(_Path, _Cluster, _, _Tier)
+AND
+NOT QRY_AMER_Ascension_Cluster_CalcBestRoute_TierInvalid(_Tier) //Ignore this cluster if we've already allocated as many of this tier as is allowed by our params.
+AND
+NOT DB_AMER_Ascension_Cluster_CalcBestRoute_ClusterAllocated(_Path, _Cluster)
+THEN
+PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_FindEfficientRewards(_Char, _Path, _Cluster);
+
+QRY QRY_AMER_Ascension_Cluster_CalcBestRoute_TierInvalid((INTEGER)_Tier)
+AND
+DB_AMER_Ascension_Cluster_CalcBestRoute_TierAllocated(_Tier, _MaxCount, _Count)
+AND
+_Count == _MaxCount
+THEN
+DB_NOOP(1);
+
+
+
+
+PROC PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_FindEfficientRewards((CHARACTERGUID)_Char)
+AND
+DB_AMER_CalcBestRoute_ReqsPerPoint_OUTPUT(_BestPath, _BestCluster, _ReqsPerPoint)
+THEN
+PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_AllocateCluster(_Char, _BestPath, _BestCluster);
+
+PROC PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_FindEfficientRewards((CHARACTERGUID)_Char)
+AND
+QRY_AMER_UI_Ascension_Cluster_CalcBestRoute_FindEfficientRewards_RecurseNeeded(_Char)
+AND
+NOT QRY_AMER_UI_Ascension_Cluster_CalcBestRoute_FindEfficientRewards_SolveFromCore(_Char)
+THEN
+PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_FindEfficientRewards(_Char);
+
+QRY QRY_AMER_UI_Ascension_Cluster_CalcBestRoute_FindEfficientRewards_RecurseNeeded((CHARACTERGUID)_Char)
+AND
+DB_AMER_Ascension_Cluster_CalcBestRoute_Reqs(_RewardPath, _, _Needed)
+AND
+_Needed > 0
+THEN
+DB_NOOP(1);
+
+
+//If all needed reqs are only 1 or less, solve the remaining reqs from Core.
+QRY QRY_AMER_UI_Ascension_Cluster_CalcBestRoute_FindEfficientRewards_SolveFromCore((CHARACTERGUID)_Char)
+AND
+NOT QRY_AMER_UI_Ascension_Cluster_CalcBestRoute_FindEfficientRewards_SolveFromCore_Invalid()
+AND
+DB_AMER_Ascension_Cluster_CalcBestRoute_Reqs(_RewardPath, _, 1)
+THEN
+PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_AllocateCluster(_Char, _RewardPath, "Core");
+
+QRY QRY_AMER_UI_Ascension_Cluster_CalcBestRoute_FindEfficientRewards_SolveFromCore_Invalid()
+AND
+DB_AMER_Ascension_Cluster_CalcBestRoute_Reqs(_, _, _Needed)
+AND
+_Needed > 1
+THEN
+DB_NOOP(1);
+
+
+PROC PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_FindEfficientRewards((CHARACTERGUID)_Char, (STRING)_Path, (STRING)_Cluster)
+AND
+DB_AMER_CalcBestRoute_ReqsPerPoint_OUTPUT_Internal(_OldOutput)
+THEN
+NOT DB_AMER_CalcBestRoute_ReqsPerPoint_OUTPUT_Internal(_OldOutput);
+
+PROC PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_FindEfficientRewards((CHARACTERGUID)_Char, (STRING)_Path, (STRING)_Cluster)
+THEN
+DB_AMER_CalcBestRoute_ReqsPerPoint_OUTPUT_Internal(0);
+
+PROC PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_FindEfficientRewards((CHARACTERGUID)_Char, (STRING)_Path, (STRING)_Cluster)
+AND
+DB_AMER_Ascension_Cluster_CalcBestRoute_Reqs(_RewardPath, _, _Needed)   //For each existing cluster we haven't allocated, calculate the requirements-per-point that it can satisfy--only considering the requirements that we need to satisfy.
+AND
+_Needed > 0
+AND
+DB_AMER_UI_Ascension_EmbodimentReward(_Cluster, "CompletionReward", _RewardPath, _Amount)
+AND
+IntegerMin(_Amount, _Needed, _AmountBounded)    //Don't consider over-satisfying as worthwhile.
+AND
+DB_AMER_CalcBestRoute_ReqsPerPoint_OUTPUT_Internal(_OldAmount)
+AND
+IntegerSum(_OldAmount, _AmountBounded, _NewAmount)
+THEN
+NOT DB_AMER_CalcBestRoute_ReqsPerPoint_OUTPUT_Internal(_OldAmount);
+DB_AMER_CalcBestRoute_ReqsPerPoint_OUTPUT_Internal(_NewAmount);
+
+PROC PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_FindEfficientRewards((CHARACTERGUID)_Char, (STRING)_Path, (STRING)_Cluster)
+AND
+DB_AMER_UI_Ascension_ClusterMetaData(_Path, _Cluster, _RequiredToComplete, _Tier)
+AND
+DB_AMER_CalcBestRoute_ReqsPerPoint_OUTPUT_Internal(_Amount)
+AND
+QRY_AMER_UI_Ascension_Cluster_CalcBestRoute_FindEfficientRewards_ManipFromCore_LookAhead(_Cluster, _RequiredToComplete, _Amount)
+AND
+DB_AMER_UI_Ascension_Cluster_CalcBestRoute_ManipFromCore_OUTPUT(_RequiredToCompleteLookahead, _AmountLookahead)
+AND
+Real(_AmountLookahead, _AmountReal)
+AND
+Real(_RequiredToCompleteLookahead, _RequiredToCompleteReal)
+AND
+RealDivide(_AmountReal, _RequiredToCompleteReal, _ReqsPerPoint)
+AND
+DB_AMER_CalcBestRoute_ReqsPerPoint_OUTPUT(_OldBestPath, _OldBestCluster, _BestPerPoint)
+AND
+_ReqsPerPoint > _BestPerPoint
+THEN
+NOT DB_AMER_CalcBestRoute_ReqsPerPoint_OUTPUT(_OldBestPath, _OldBestCluster, _BestPerPoint);
+DB_AMER_CalcBestRoute_ReqsPerPoint_OUTPUT(_Path, _Cluster, _ReqsPerPoint);
+
+
+QRY QRY_AMER_UI_Ascension_Cluster_CalcBestRoute_FindEfficientRewards_ManipFromCore_LookAhead((STRING)_Cluster, (INTEGER)_RequiredToComplete, (INTEGER)_Amount)
+AND
+DB_AMER_UI_Ascension_Cluster_CalcBestRoute_ManipFromCore_OUTPUT(_OldCount, _OldAmount)
+THEN
+NOT DB_AMER_UI_Ascension_Cluster_CalcBestRoute_ManipFromCore_OUTPUT(_OldCount, _OldAmount);
+
+QRY QRY_AMER_UI_Ascension_Cluster_CalcBestRoute_FindEfficientRewards_ManipFromCore_LookAhead((STRING)_Cluster, (INTEGER)_RequiredToComplete, (INTEGER)_Amount)
+AND
+DB_AMER_UI_Ascension_Cluster_CalcBestRoute_ManipFromCore_LookAheadBonus(_OldBonus)
+THEN
+NOT DB_AMER_UI_Ascension_Cluster_CalcBestRoute_ManipFromCore_LookAheadBonus(_OldBonus);
+
+QRY QRY_AMER_UI_Ascension_Cluster_CalcBestRoute_FindEfficientRewards_ManipFromCore_LookAhead((STRING)_Cluster, (INTEGER)_RequiredToComplete, (INTEGER)_Amount)
+THEN
+DB_AMER_UI_Ascension_Cluster_CalcBestRoute_ManipFromCore_OUTPUT(_RequiredToComplete, _Amount);
+
+//If we are able to solve from core after this cluster, add 1 to both point required and to reqs granted for each req solved in this way.
+QRY QRY_AMER_UI_Ascension_Cluster_CalcBestRoute_FindEfficientRewards_ManipFromCore_LookAhead((STRING)_Cluster, (INTEGER)_RequiredToComplete, (INTEGER)_Amount)
+AND
+NOT QRY_AMER_UI_Ascension_Cluster_CalcBestRoute_FindEfficientRewards_ManipFromCore_LookAhead_Invalid(_Cluster)
+AND
+DB_AMER_UI_Ascension_Cluster_CalcBestRoute_ManipFromCore_LookAheadBonus(_Bonus)
+AND
+DB_AMER_UI_Ascension_Cluster_CalcBestRoute_ManipFromCore_OUTPUT(_OldCount, _OldAmount)
+AND
+IntegerSum(_OldCount, _Bonus, _NewCount)
+AND
+IntegerSum(_OldAmount, _Bonus, _NewAmount)
+THEN
+NOT DB_AMER_UI_Ascension_Cluster_CalcBestRoute_ManipFromCore_OUTPUT(_OldCount, _OldAmount);
+DB_AMER_UI_Ascension_Cluster_CalcBestRoute_ManipFromCore_OUTPUT(_NewCount, _NewAmount);
+
+//If any requirements would remain >1 after this cluster, we cannot solve with core after this cluster.
+QRY QRY_AMER_UI_Ascension_Cluster_CalcBestRoute_FindEfficientRewards_ManipFromCore_LookAhead_Invalid((STRING)_Cluster)
+AND
+DB_AMER_Ascension_Cluster_CalcBestRoute_Reqs(_RewardPath, _, _Needed)
+AND
+QRY_AMER_UI_Ascension_NodeCluster_GetReward(_Cluster, _RewardPath)
+AND
+DB_AMER_GEN_OUTPUT_Integer(_Amount)
+AND
+IntegerSubtract(_Needed, _Amount, _Diff)
+AND
+NOT QRY_AMER_UI_Ascension_Cluster_CalcBestRoute_FindEfficientRewards_ManipFromCore_LookAhead_AddSolved(_RewardPath, _Diff)
+AND
+_Diff > 1
+THEN
+DB_NOOP(1);
+
+
+//Commit the lookahead bonus if the difference was exactly 1.
+QRY QRY_AMER_UI_Ascension_Cluster_CalcBestRoute_FindEfficientRewards_ManipFromCore_LookAhead_AddSolved((STRING)_RewardPath, 1)
+AND
+DB_AMER_UI_Ascension_Cluster_CalcBestRoute_ManipFromCore_LookAheadBonus(_OldBonus)
+AND
+IntegerSum(_OldBonus, 1, _NewBonus)
+THEN
+NOT DB_AMER_UI_Ascension_Cluster_CalcBestRoute_ManipFromCore_LookAheadBonus(_OldBonus);
+DB_AMER_UI_Ascension_Cluster_CalcBestRoute_ManipFromCore_LookAheadBonus(_NewBonus);
+
+QRY QRY_AMER_UI_Ascension_Cluster_CalcBestRoute_FindEfficientRewards_ManipFromCore_LookAhead_AddSolved((STRING)_RewardPath, 1)
+AND
+NOT DB_AMER_UI_Ascension_Cluster_CalcBestRoute_ManipFromCore_LookAheadBonus(_)
+THEN
+DB_AMER_UI_Ascension_Cluster_CalcBestRoute_ManipFromCore_LookAheadBonus(1);
+
+//END_REGION
+
+
+
+PROC PROC_AMER_UI_Ascension_Cluster_CalcBestRoute((CHARACTERGUID)_Char, (STRING)_Path, (STRING)_Cluster)
+THEN
+PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_Finish(_Char, _Path, _Cluster);
+
+
+PROC PROC_AMER_UI_Ascension_Cluster_CalcBestRoute((CHARACTERGUID)_Char, (STRING)_Path, (STRING)_Cluster)
+AND
+DB_AMER_Ascension_Cluster_CalcBestRoute_ForcedCluster(_ForcedPath, _ForcedCluster)
+THEN
+NOT DB_AMER_Ascension_Cluster_CalcBestRoute_ForcedCluster(_ForcedPath, _ForcedCluster);
+
+PROC PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_Finish((CHARACTERGUID)_Char, (STRING)_Path, (STRING)_Cluster)
+AND
+DB_AMER_Ascension_Cluster_CalcBestRoute_PointsSpent(_Spent)
+AND
+IntegertoString(_Spent, _SpentStr)
+THEN
+DebugBreak("!=========================!");
+DebugBreak(_SpentStr);
+DebugBreak("Best Route for: ");
+DebugBreak(_Cluster);
+DebugBreak("_________");
+
+PROC PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_Finish((CHARACTERGUID)_Char, (STRING)_Path, (STRING)_Cluster)
+AND
+DB_AMER_Ascension_Cluster_CalcBestRoute_ClusterAllocated(_AllocPath, _AllocCluster)
+AND
+0 != 0
+THEN
+DebugBreak(_AllocCluster);
+
+PROC PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_Finish((CHARACTERGUID)_Char, (STRING)_Path, (STRING)_Cluster)
+AND
+DB_AMER_Ascension_Cluster_CalcBestRoute_Reqs(_RewardPath, _Total, _Needed)
+AND
+0 != 0
+THEN
+DB_NOOP(1);
+
+PROC PROC_AMER_UI_Ascension_Cluster_CalcBestRoute_Finish((CHARACTERGUID)_Char, (STRING)_Path, (STRING)_Cluster)
+THEN
+DebugBreak("!=========================!");
+
+//END_REGION
+
+
+
+/*
+ProcObjectTimer(_Char, "AMER_TEST_GenTest_Delayed", 2000);
+
+PROC ProcObjectTimerFinished((CHARACTERGUID)_Char, "AMER_TEST_GenTest_Delayed")
+THEN
+SetOnStage(_Char, 0);
+SetOnStage(_Char, 1);
+MakePlayerActive(_Char);
+*/
+
+IF
+CharacterItemEvent(_Char, _Item, "AMER_TEST_GiveGold")
+THEN
+CharacterAddGold(_Char, 99999);
+ItemTemplateAddTo("AMER_LOOT_VoidFragment_3bc9f02e-42c9-4d79-929c-459e92970a52", _Char, 500, 0);
+ItemTemplateAddTo("AMER_LOOT_GreatforgeFragment_A_a41f2a71-6ff1-4c60-a74a-20c96fb9c487", _Char, 500, 0);
+
+
+//Add Ascension UI points.
+IF
+CharacterItemEvent(_Char, _Item, "AMER_TEST_AddVoidAffinity")
+THEN
+PROC_AMER_UI_TEST_AddAscensionPoints(1);
+
+//Remove Ascension UI points.
+IF
+CharacterItemEvent(_Char, _Item, "AMER_TEST_RemoveVoidAffinity")
+THEN
+PROC_AMER_UI_TEST_AddAscensionPoints(-1);
+
+
+PROC PROC_AMER_UI_TEST_AddAscensionPoints((INTEGER)_Add)
+AND
+DB_IsPlayer(_Player)
+THEN
+PROC_AMER_UI_Ascension_PointsRemaining_Add(_Player, _Add);
+
+PROC PROC_AMER_UI_TEST_AddAscensionPoints((INTEGER)_Add)
+THEN
+PROC_AMER_UI_Ascension_TotalPointsFound_Add(_Add);
+
+
+IF
+CharacterItemEvent(_Char, _Item, "AMER_TEST_Pain")
+AND
+GetVarFloat(_Char, "AMER_GEN_MaximumVitality", _Vit)
+AND
+GetVarFloat(_Char, "AMER_GEN_MaximumPhysicalArmor", _Phys)
+AND
+GetVarFloat(_Char, "AMER_GEN_MaximumMagicArmor", _Mag)
+AND
+RealProduct(_Vit, 0.2, _VitDam)
+AND
+RealProduct(_Phys, 0.2, _PhysDam)
+AND
+RealProduct(_Mag, 0.2, _MagDam)
+AND
+Integer(_VitDam, _VitDamInt)
+AND
+Integer(_PhysDam, _PhysDamInt)
+AND
+Integer(_MagDam, _MagDamInt)
+THEN
+PROC_AMER_GEN_ApplyDamage(_Char, _VitDamInt, "Piercing", _Char, 0);
+PROC_AMER_GEN_ApplyDamage(_Char, _PhysDamInt, "Corrosive", _Char, 0);
+PROC_AMER_GEN_ApplyDamage(_Char, _MagDamInt, "Magic", _Char, 0);
+
+
+IF
+CharacterItemEvent(_Char, _Item, "AMER_TEST_Heal")
+THEN
+CharacterSetHitpointsPercentage(_Char, 100.0);
+
+
+IF
+CharacterItemEvent(_Char, _Item, "AMER_TEST_BookChest")
+THEN
+GenerateTreasure(ITEMGUID_CONT_Humans_Citz_Chest_Rich_A_001_3bbfa028-1781-483b-abd5-f23bb3d90ed5, "CheatBooksFire", 1, _Char);
+GenerateTreasure(ITEMGUID_CONT_Humans_Citz_Chest_Rich_A_001_3bbfa028-1781-483b-abd5-f23bb3d90ed5, "CheatBooksWater", 1, _Char);
+GenerateTreasure(ITEMGUID_CONT_Humans_Citz_Chest_Rich_A_001_3bbfa028-1781-483b-abd5-f23bb3d90ed5, "CheatBooksAir", 1, _Char);
+GenerateTreasure(ITEMGUID_CONT_Humans_Citz_Chest_Rich_A_001_3bbfa028-1781-483b-abd5-f23bb3d90ed5, "CheatBooksEarth", 1, _Char);
+GenerateTreasure(ITEMGUID_CONT_Humans_Citz_Chest_Rich_A_001_3bbfa028-1781-483b-abd5-f23bb3d90ed5, "CheatBooksNecromancy", 1, _Char);
+GenerateTreasure(ITEMGUID_CONT_Humans_Citz_Chest_Rich_A_001_3bbfa028-1781-483b-abd5-f23bb3d90ed5, "CheatBooksRogue", 1, _Char);
+GenerateTreasure(ITEMGUID_CONT_Humans_Citz_Chest_Rich_A_001_3bbfa028-1781-483b-abd5-f23bb3d90ed5, "CheatBooksRanger", 1, _Char);
+GenerateTreasure(ITEMGUID_CONT_Humans_Citz_Chest_Rich_A_001_3bbfa028-1781-483b-abd5-f23bb3d90ed5, "CheatBooksWarrior", 1, _Char);
+GenerateTreasure(ITEMGUID_CONT_Humans_Citz_Chest_Rich_A_001_3bbfa028-1781-483b-abd5-f23bb3d90ed5, "CheatBooksSummoning", 1, _Char);
+GenerateTreasure(ITEMGUID_CONT_Humans_Citz_Chest_Rich_A_001_3bbfa028-1781-483b-abd5-f23bb3d90ed5, "CheatBooksPolymorph", 1, _Char);
+GenerateTreasure(ITEMGUID_CONT_Humans_Citz_Chest_Rich_A_001_3bbfa028-1781-483b-abd5-f23bb3d90ed5, "CheatBooksSkillcrafting", 1, _Char);
+GenerateTreasure(ITEMGUID_CONT_Humans_Citz_Chest_Rich_A_001_3bbfa028-1781-483b-abd5-f23bb3d90ed5, "CheatQASkillbooksCrafting", 1, _Char);
+
+
+IF
+CharacterItemEvent(_Char, _Item, "AMER_TEST_GiveFriend")
+AND
+QRY_AMER_TEST_GiveFriend(_Char)
+THEN
+//PROC_GLO_PartyMembers_Add(CHARACTERGUID_Humans_Hero_Female_000_7604bd00-36df-4e02-b12e-dadb028b6cab,_Char);
+DB_IsPlayer(CHARACTERGUID_Humans_Hero_Female_000_7604bd00-36df-4e02-b12e-dadb028b6cab);
+CharacterMakePlayer(CHARACTERGUID_Humans_Hero_Female_000_7604bd00-36df-4e02-b12e-dadb028b6cab, _Char);
+CharacterAddToParty(CHARACTERGUID_Humans_Hero_Female_000_7604bd00-36df-4e02-b12e-dadb028b6cab, _Char);
+PROC_GLO_PartyMembers_AddHook(CHARACTERGUID_Humans_Hero_Female_000_7604bd00-36df-4e02-b12e-dadb028b6cab, _Char);
+
+QRY QRY_AMER_TEST_GiveFriend((CHARACTERGUID)_Char)
+AND
+CharacterIsInPartyWith(CHARACTERGUID_Humans_Hero_Female_000_7604bd00-36df-4e02-b12e-dadb028b6cab, _Char, 0)
+THEN
+DB_NOOP(1);
+
+QRY QRY_AMER_TEST_GiveFriend((CHARACTERGUID)_Char)
+AND
+NOT DB_IsPlayer(CHARACTERGUID_Humans_Hero_Female_000_7604bd00-36df-4e02-b12e-dadb028b6cab)
+THEN
+DB_NOOP(1);
+
+
+IF
+CharacterItemEvent(_Char, _Item, "AMER_TEST_MakeArtifacts")
+THEN
+DB_AMER_TEST_MakeArtifacts_User(_Char);
+InventoryLaunchIterator(ITEMGUID_CONT_Humans_Citz_Chest_Rich_A_002_22e2e49c-2f59-4c1f-a5ef-efecf3efe2ee, "AMER_TEST_MakeLoot_Cleanup", "AMER_TEST_MakeLoot_Cleanup_Done");
+
+IF
+GlobalFlagSet("AMER_TEST_MakeLoot_Cleanup_Done")
+AND
+DB_AMER_TEST_MakeArtifacts_User(_Char)
+AND
+CharacterGetLevel(_Char, _Level)
+THEN
+NOT DB_AMER_TEST_MakeArtifacts_User(_Char);
+GlobalClearFlag("AMER_TEST_MakeLoot_Cleanup_Done");
+GenerateTreasure(ITEMGUID_CONT_Humans_Citz_Chest_Rich_A_002_22e2e49c-2f59-4c1f-a5ef-efecf3efe2ee, "ST_AMER_UNI_Cheat", _Level, (CHARACTERGUID)NULL_00000000-0000-0000-0000-000000000000);
+ContainerIdentifyAll(ITEMGUID_CONT_Humans_Citz_Chest_Rich_A_002_22e2e49c-2f59-4c1f-a5ef-efecf3efe2ee);
+
+
+
+IF
+CharacterItemEvent(_Char, _Item, "AMER_TEST_MakeLoot")
+THEN
+DB_AMER_TEST_MakeLoot_User(_Char);
+InventoryLaunchIterator(ITEMGUID_CONT_Humans_Citz_Chest_Rich_A_002_22e2e49c-2f59-4c1f-a5ef-efecf3efe2ee, "AMER_TEST_MakeLoot_Cleanup", "AMER_TEST_MakeLoot_Cleanup_Done");
+
+IF
+StoryEvent((ITEMGUID)_Item, "AMER_TEST_MakeLoot_Cleanup")
+THEN
+ItemRemove(_Item);
+
+
+IF
+GlobalFlagSet("AMER_TEST_MakeLoot_Cleanup_Done")
+AND
+DB_AMER_TEST_MakeLoot_User(_Char)
+AND
+CharacterGetLevel(_Char, _Level)
+THEN
+NOT DB_AMER_TEST_MakeLoot_User(_Char);
+GlobalClearFlag("AMER_TEST_MakeLoot_Cleanup_Done");
+//GenerateTreasure(ITEMGUID_CONT_Humans_Citz_Chest_Rich_A_002_22e2e49c-2f59-4c1f-a5ef-efecf3efe2ee, "ST_AMER_UNI", _Level, (CHARACTERGUID)NULL_00000000-0000-0000-0000-000000000000);
+GenerateTreasure(ITEMGUID_CONT_Humans_Citz_Chest_Rich_A_002_22e2e49c-2f59-4c1f-a5ef-efecf3efe2ee, "ST_AMER_TEST", _Level, (CHARACTERGUID)NULL_00000000-0000-0000-0000-000000000000);
+//GenerateTreasure(ITEMGUID_CONT_Humans_Citz_Chest_Rich_A_002_22e2e49c-2f59-4c1f-a5ef-efecf3efe2ee, "Specific_Rune", _Level, (CHARACTERGUID)NULL_00000000-0000-0000-0000-000000000000);
+//GenerateTreasure(ITEMGUID_CONT_Humans_Citz_Chest_Rich_A_002_22e2e49c-2f59-4c1f-a5ef-efecf3efe2ee, "Specific_Rune", _Level, (CHARACTERGUID)NULL_00000000-0000-0000-0000-000000000000);
+//GenerateTreasure(ITEMGUID_CONT_Humans_Citz_Chest_Rich_A_002_22e2e49c-2f59-4c1f-a5ef-efecf3efe2ee, "Specific_Rune", _Level, (CHARACTERGUID)NULL_00000000-0000-0000-0000-000000000000);
+//GenerateTreasure(ITEMGUID_CONT_Humans_Citz_Chest_Rich_A_002_22e2e49c-2f59-4c1f-a5ef-efecf3efe2ee, "Specific_Rune", _Level, (CHARACTERGUID)NULL_00000000-0000-0000-0000-000000000000);
+//GenerateTreasure(ITEMGUID_CONT_Humans_Citz_Chest_Rich_A_002_22e2e49c-2f59-4c1f-a5ef-efecf3efe2ee, "Specific_Rune", _Level, (CHARACTERGUID)NULL_00000000-0000-0000-0000-000000000000);
+//GenerateTreasure(ITEMGUID_CONT_Humans_Citz_Chest_Rich_A_002_22e2e49c-2f59-4c1f-a5ef-efecf3efe2ee, "Specific_Rune", _Level, (CHARACTERGUID)NULL_00000000-0000-0000-0000-000000000000);
+//GenerateTreasure(ITEMGUID_CONT_Humans_Citz_Chest_Rich_A_002_22e2e49c-2f59-4c1f-a5ef-efecf3efe2ee, "Specific_Rune", _Level, (CHARACTERGUID)NULL_00000000-0000-0000-0000-000000000000);
+ContainerIdentifyAll(ITEMGUID_CONT_Humans_Citz_Chest_Rich_A_002_22e2e49c-2f59-4c1f-a5ef-efecf3efe2ee);
+
+//END_REGION
+
+
+//REGION PROC_AMER_TEST_StatusText((CHARACTERGUID)_Char, (STRING)_Str, (STRING)_Str2)
+
+PROC PROC_AMER_TEST_StatusText((CHARACTERGUID)_Char, (STRING)_Str, (STRING)_Str2)
+AND
+DB_AMER_DeveloperMode(1)
+AND
+StringConcatenate(_Str, _Str2, _Text)
+THEN
+CharacterStatusText(_Char, _Text);
+
+PROC PROC_AMER_TEST_StatusText((CHARACTERGUID)_Char, (STRING)_Str, (STRING)_Str2, (STRING)_Str3)
+AND
+DB_AMER_DeveloperMode(1)
+AND
+StringConcatenate(_Str, _Str2, _T1)
+AND
+StringConcatenate(_T1, _Str3, _Text)
+THEN
+CharacterStatusText(_Char, _Text);
+
+//END_REGION
+
+
+//REGION Test Queries.
+
+QRY QRY_AMER_DEBUG_TEXT((STRING)_Str, (INTEGER)_Int)
+AND
+DB_AMER_DeveloperMode(1)
+AND
+QRY_AMER_GEN_IntegertoString(_Int)
+AND
+DB_AMER_GEN_OUTPUT_String(_Str2)
+AND
+StringConcatenate(_Str, _Str2, _Text)
+AND
+DB_IsPlayer(_Char)
+THEN
+CharacterStatusText(_Char, _Text);
+
+QRY QRY_AMER_DEBUG_TEXT((STRING)_Str, (INTEGER)_Int)
+THEN
+DB_NOOP(1);
+
+
+QRY QRY_AMER_DEBUG_TEXT_Specific((CHARACTERGUID)_Char, (STRING)_Str, (INTEGER)_Int)
+AND
+DB_AMER_DeveloperMode(1)
+AND
+QRY_AMER_GEN_IntegertoString(_Int)
+AND
+DB_AMER_GEN_OUTPUT_String(_Str2)
+AND
+StringConcatenate(_Str, _Str2, _Text)
+THEN
+CharacterStatusText(_Char, _Text);
+
+QRY QRY_AMER_DEBUG_TEXT_Specific((CHARACTERGUID)_Char, (STRING)_Str, (INTEGER)_Int)
+THEN
+DB_NOOP(1);
+
+
+
+QRY QRY_AMER_DEBUG_STRGUID((STRING)_Str, (GUIDSTRING)_GUID)
+AND
+DB_AMER_DeveloperMode(1)
+AND
+String(_GUID, _Str2)
+AND
+QRY_AMER_DEBUG_STRSTR(_Str, _Str2)
+THEN
+DB_NOOP(1);
+
+QRY QRY_AMER_DEBUG_STRGUID((STRING)_Str, (GUIDSTRING)_GUID)
+THEN
+DB_NOOP(1);
+
+
+
+QRY QRY_AMER_DEBUG_STRSTR((STRING)_Str, (STRING)_Str2)
+AND
+DB_AMER_DeveloperMode(1)
+AND
+StringConcatenate(_Str, _Str2, _Text)
+AND
+DB_IsPlayer(_Char)
+THEN
+CharacterStatusText(_Char, _Text);
+
+QRY QRY_AMER_DEBUG_STRSTR((STRING)_Str, (STRING)_Str2)
+THEN
+DB_NOOP(1);
+
+
+QRY QRY_AMER_DEBUG_STRSTR_Specific((CHARACTERGUID)_Char, (STRING)_Str, (STRING)_Str2)
+AND
+DB_AMER_DeveloperMode(1)
+AND
+StringConcatenate(_Str, _Str2, _Text)
+THEN
+CharacterStatusText(_Char, _Text);
+
+QRY QRY_AMER_DEBUG_STRSTR_Specific((CHARACTERGUID)_Char, (STRING)_Str, (STRING)_Str2)
+THEN
+DB_NOOP(1);
+
+
+
+QRY QRY_AMER_DEBUG_STRSTRSTR((STRING)_Str, (STRING)_Str2, (STRING)_Str3)
+AND
+DB_AMER_DeveloperMode(1)
+AND
+StringConcatenate(_Str, _Str2, _Str4)
+AND
+StringConcatenate(_Str4, _Str3, _Text)
+AND
+DB_IsPlayer(_Char)
+THEN
+CharacterStatusText(_Char, _Text);
+
+QRY QRY_AMER_DEBUG_STRSTRSTR((STRING)_Str, (STRING)_Str2, (STRING)_Str3)
+THEN
+DB_NOOP(1);
+
+
+
+QRY QRY_AMER_DEBUG_STRSTRSTRINT((STRING)_Str, (STRING)_Str2, (STRING)_Str3, (INTEGER)_Int)
+AND
+DB_AMER_DeveloperMode(1)
+AND
+DB_IsPlayer(_Char)
+AND
+QRY_AMER_DEBUG_STRSTRSTRINT_Specific(_Char, _Str, _Str2, _Str3, _Int)
+THEN
+DB_NOOP(1);
+
+QRY QRY_AMER_DEBUG_STRSTRSTRINT((STRING)_Str, (STRING)_Str2, (STRING)_Str3, (INTEGER)_Int)
+THEN
+DB_NOOP(1);
+
+
+QRY QRY_AMER_DEBUG_STRSTRSTRINT_Specific((CHARACTERGUID)_Char, (STRING)_Str, (STRING)_Str2, (STRING)_Str3, (INTEGER)_Int)
+AND
+DB_AMER_DeveloperMode(1)
+AND
+StringConcatenate(_Str, _Str2, _Str4)
+AND
+StringConcatenate(_Str4, _Str3, _Str5)
+AND
+QRY_AMER_GEN_IntegertoString(_Int)
+AND
+DB_AMER_GEN_OUTPUT_String(_Str6)
+AND
+StringConcatenate(_Str5, _Str6, _Text)
+THEN
+CharacterStatusText(_Char, _Text);
+
+QRY QRY_AMER_DEBUG_STRSTRSTRINT_Specific((CHARACTERGUID)_Char, (STRING)_Str, (STRING)_Str2, (STRING)_Str3, (INTEGER)_Int)
+THEN
+DB_NOOP(1);
+
+
+
+QRY QRY_AMER_DEBUG_TEXTREAL((STRING)_Str, (REAL)_Real)
+AND
+DB_AMER_DeveloperMode(1)
+AND
+DB_IsPlayer(_Char)
+AND
+QRY_AMER_DEBUG_TEXTREAL_Specific(_Char, _Str, _Real)
+THEN
+DB_NOOP(1);
+
+QRY QRY_AMER_DEBUG_TEXTREAL((STRING)_Str, (REAL)_Real)
+THEN
+DB_NOOP(1);
+
+
+QRY QRY_AMER_DEBUG_TEXTREAL_Specific((CHARACTERGUID)_Char, (STRING)_Str, (REAL)_Real)
+AND
+DB_AMER_DeveloperMode(1)
+AND
+Integer(_Real, _Int)
+AND
+QRY_AMER_GEN_IntegertoString(_Int)
+AND
+DB_AMER_GEN_OUTPUT_String(_LeadingIntStr)
+AND
+StringConcatenate(_LeadingIntStr, ".", _Str2) 
+AND
+Real(_Int, _LeadingIntReal)
+AND
+RealSubtract(_Real, _LeadingIntReal, _TrailingReal)
+AND
+RealProduct(_TrailingReal, 10.0, _TrailingRealx10)
+AND
+Integer(_TrailingRealx10, _TenthInt)
+AND
+QRY_AMER_GEN_IntegertoString(_TenthInt)
+AND
+DB_AMER_GEN_OUTPUT_String(_StrTenth)
+AND
+StringConcatenate(_Str2, _StrTenth, _Str3)
+AND
+Real(_TenthInt, _TrimHundredth)
+AND
+RealSubtract(_TrailingRealx10, _TrimHundredth, _HundredthReal)
+AND
+RealProduct(_HundredthReal, 10.0, _TrailingRealx100)
+AND
+Integer(_TrailingRealx100, _HundredthInt)
+AND
+QRY_AMER_GEN_IntegertoString(_HundredthInt)
+AND
+DB_AMER_GEN_OUTPUT_String(_StrHundredth)
+AND
+StringConcatenate(_Str3, _StrHundredth, _Str4)
+AND
+StringConcatenate(_Str, _Str4, _Text)
+THEN
+CharacterStatusText(_Char, _Text);
+
+QRY QRY_AMER_DEBUG_TEXTREAL_Specific((CHARACTERGUID)_Char, (STRING)_Str, (REAL)_Real)
+THEN
+DB_NOOP(1);
+
+//END_REGION
+
+EXITSECTION
+
+ENDEXITSECTION
+ParentTargetEdge "AMER_TEST_Wrapper"

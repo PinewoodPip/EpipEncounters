@@ -1,0 +1,326 @@
+package
+{
+    import LS_Classes.larTween;
+    import LS_Classes.textEffect;
+    import fl.motion.easing.Linear;
+    import fl.motion.easing.Sine;
+    import flash.display.MovieClip;
+    import flash.events.Event;
+    
+    public dynamic class CharHolder extends MovieClip
+    {
+        
+        
+        public var ohDHolder_mc:MovieClip;
+        
+        public var ohH_mc:MovieClip;
+        
+        public var ohSHolder_mc:MovieClip;
+        
+        public var text_mc:MovieClip;
+        
+        public var timeline:larTween;
+        
+        public var oh_array:Array;
+        
+        public var ohD_array:Array;
+        
+        public var sInfo:MovieClip;
+        
+        public var base:MovieClip;
+        
+        public var playerOwner_array:Array;
+        
+        public var myColour:uint;
+        
+        public var removeCheck:Boolean;
+        
+        public var dialogFading:Boolean;
+        
+        public var selInfoTimeLine:larTween;
+        
+        public var isSelectionInfoFading:Boolean;
+        
+        public function CharHolder()
+        {
+            super();
+            addFrameScript(0,this.frame1);
+        }
+        
+        public function stopTween() : *
+        {
+            if(this.timeline)
+            {
+                this.timeline.stop();
+            }
+        }
+        
+        public function onDestroy() : *
+        {
+            this.stopTween();
+            this.timeline = null;
+            if(this.tween)
+            {
+                this.tween.stop();
+                this.tween = null;
+            }
+            if(this.sInfo)
+            {
+                this.sInfo.stopTweens();
+            }
+            if(this.selInfoTimeLine)
+            {
+                this.selInfoTimeLine.stop();
+                this.selInfoTimeLine.onComplete = null;
+                this.selInfoTimeLine = null;
+            }
+            var _loc1_:uint = 0;
+            while(_loc1_ < this.oh_array.length)
+            {
+                this.oh_array[_loc1_].onDestroy();
+                _loc1_++;
+            }
+            _loc1_ = 0;
+            while(_loc1_ < this.ohD_array.length)
+            {
+                this.ohD_array[_loc1_].onDestroy();
+                _loc1_++;
+            }
+        }
+        
+        public function startDialogTimer(param1:Number) : *
+        {
+            this.removeDialog(param1);
+        }
+        
+        public function checkCharHolder() : *
+        {
+            this.addEventListener(Event.ENTER_FRAME,this.delayedCharHolderCheck);
+        }
+        
+        public function delayedCharHolderCheck(param1:Event) : *
+        {
+            this.removeEventListener(Event.ENTER_FRAME,this.delayedCharHolderCheck);
+            if(this.base)
+            {
+                this.base.checkCharHolderMC(this);
+            }
+        }
+        
+        public function checkCharHolderAndHide() : *
+        {
+            this.INTClearAD();
+            this.checkCharHolder();
+        }
+        
+        public function INTClearAD() : *
+        {
+            this.AD = "";
+            this.dialogFading = false;
+            this.text_mc.text_txt.htmlText = "";
+            this.text_mc.text_txt.visible = false;
+            this.text_mc.alpha = 1;
+            this.text_mc.filters = new Array();
+            if(this.timeline)
+            {
+                this.timeline.stop();
+                this.timeline = null;
+            }
+        }
+        
+        public function removeDialog(param1:Number = 0) : *
+        {
+            var _loc2_:Boolean = false;
+            if(!this.dialogFading)
+            {
+                _loc2_ = true;
+            }
+            else if(this.AD != "" && this.timeline != null)
+            {
+                if(this.timeline)
+                {
+                this.timeline.onComplete = null;
+                this.timeline.stop();
+                }
+                _loc2_ = true;
+            }
+            if(_loc2_)
+            {
+                this.dialogFading = true;
+                if(this.timeline)
+                {
+                this.timeline.stop();
+                }
+                this.timeline = new larTween(this.text_mc,"alpha",Linear.easeNone,this.text_mc.alpha,0.2,0.3,this.checkCharHolderAndHide,null,param1);
+                this.timeline.onUpdate = this.updateTextEffect;
+            }
+        }
+        
+        public function updateTextEffect() : *
+        {
+            this.text_mc.filters = textEffect.createStrokeFilter(this.myColour,this.base.tEffStrW,this.text_mc.alpha,this.base.tEffStr,this.base.tEffQuality);
+        }
+        
+        public function removeOH(param1:MovieClip) : *
+        {
+            if(param1)
+            {
+                param1.killMe = true;
+                this.cleanUpArray();
+                this.checkCharHolder();
+            }
+        }
+        
+        public function removeOHD(param1:MovieClip) : *
+        {
+            if(param1)
+            {
+                param1.killMe = true;
+                this.cleanUpDamageArray();
+                this.checkCharHolder();
+            }
+        }
+        
+        public function removeOverheadSelectionInfo(param1:Number) : *
+        {
+            var _loc2_:uint = 0;
+            while(_loc2_ < this.playerOwner_array.length)
+            {
+                if(this.playerOwner_array[_loc2_] == param1)
+                {
+                this.playerOwner_array.splice(_loc2_,1);
+                }
+                else
+                {
+                _loc2_++;
+                }
+            }
+            if(this.playerOwner_array.length == 0)
+            {
+                this.removeInfo();
+            }
+            this.checkCharHolder();
+        }
+        
+        public function removeInfo() : *
+        {
+            if(this.sInfo)
+            {
+                this.sInfo.stopTweens();
+                this.ohSHolder_mc.removeChild(this.sInfo);
+                this.sInfo = null;
+            }
+        }
+        
+        public function fadeOutOverheadSelectionInfo(param1:Number) : *
+        {
+            if(this.selInfoTimeLine)
+            {
+                this.selInfoTimeLine.stop();
+            }
+            this.selInfoTimeLine = new larTween(this.sInfo,"alpha",Sine.easeIn,this.sInfo.alpha,0,0.3,this.stopSelectionInfoTimeStop,null,param1);
+            this.isSelectionInfoFading = true;
+        }
+        
+        public function stopSelectionInfoTimeStop() : *
+        {
+            this.cancelSelectionInfoTimer();
+            if(this.playerOwner_array.length == 0)
+            {
+                this.removeInfo();
+            }
+            this.checkCharHolder();
+        }
+        
+        public function cancelSelectionInfoTimer() : *
+        {
+            if(this.selInfoTimeLine && this.selInfoTimeLine.onComplete != null)
+            {
+                this.selInfoTimeLine.stop();
+                this.selInfoTimeLine.onComplete = null;
+                this.selInfoTimeLine = null;
+            }
+            this.isSelectionInfoFading = false;
+        }
+        
+        public function cleanUpDamageArray() : *
+        {
+            var _loc1_:uint = 0;
+            if(this.ohD_array)
+            {
+                _loc1_ = 0;
+                while(_loc1_ < this.ohD_array.length)
+                {
+                if(this.ohD_array[_loc1_].killMe)
+                {
+                    this.ohDHolder_mc.removeChild(this.ohD_array[_loc1_]);
+                    this.ohD_array.splice(_loc1_,1);
+                }
+                else
+                {
+                    _loc1_++;
+                }
+                }
+            }
+        }
+        
+        public function cleanUpArray() : *
+        {
+            var _loc1_:uint = 0;
+            if(this.oh_array)
+            {
+                _loc1_ = 0;
+                while(_loc1_ < this.oh_array.length)
+                {
+                if(this.oh_array[_loc1_].killMe)
+                {
+                    this.ohH_mc.removeChild(this.oh_array[_loc1_]);
+                    this.oh_array.splice(_loc1_,1);
+                }
+                else
+                {
+                    _loc1_++;
+                }
+                }
+            }
+        }
+        
+        public function hasOwners() : Boolean
+        {
+            if(this.playerOwner_array.length > 0)
+            {
+                return true;
+            }
+            return false;
+        }
+        
+        public function addPlayerOwnerID(param1:Number) : *
+        {
+            var _loc2_:Boolean = false;
+            var _loc3_:uint = 0;
+            while(_loc3_ < this.playerOwner_array.length)
+            {
+                if(this.playerOwner_array[_loc3_] == param1)
+                {
+                _loc2_ = true;
+                break;
+                }
+                _loc3_++;
+            }
+            if(!_loc2_)
+            {
+                this.playerOwner_array.push(param1);
+            }
+        }
+        
+        private function frame1() : *
+        {
+            this.removeCheck = false;
+            this.dialogFading = false;
+            this.isSelectionInfoFading = false;
+            
+            this.mouseChildren = false;
+            this.mouseEnabled = false;
+        }
+    }
+}

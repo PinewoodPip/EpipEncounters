@@ -1,0 +1,569 @@
+package characterCreation_fla
+{
+    import flash.display.MovieClip;
+    import flash.events.MouseEvent;
+    import flash.external.ExternalInterface;
+    import flash.geom.Point;
+    
+    public dynamic class MainTimeline extends MovieClip
+    {
+        
+        
+        public var CCPanel_mc:MovieClip;
+        
+        public var back_mc:RedBtn;
+        
+        public var dragHit_mc:hit;
+        
+        public var header_mc:MovieClip;
+        
+        public var letterB_mc:MovieClip;
+        
+        public var letterT_mc:MovieClip;
+        
+        public var portraits_mc:MovieClip;
+        
+        public var start_mc:MovieClip;
+        
+        public var events:Array;
+        
+        public const userIconHeight:uint = 38;
+        
+        public const userIconWidth:uint = 38;
+        
+        public const charIconHeight:uint = 100;
+        
+        public const charIconWidth:uint = 80;
+        
+        public const designResolution:Point = new Point(2120,1080);
+        
+        public const fixedContentSize:Point = new Point(300,150);
+        
+        public const iconSize:uint = 55;
+        
+        public const iconSpacing:uint = 25;
+        
+        public const maxNameChars:uint = 20;
+        
+        public const numberOfClassEdits:uint = 3;
+        
+        public const skillIconSize:uint = 50;
+        
+        public const chosenListSpacing:uint = 24;
+        
+        public const listSpacing:uint = 70;
+        
+        public const iconSpacingH:uint = 10;
+        
+        public const iconSpacingV:uint = 10;
+        
+        public const numberOfCols:uint = 4;
+        
+        public const chosenListCols:uint = 3;
+        
+        public const chosenListIconSize:uint = 55;
+        
+        public const chosenListSpacingH:uint = 25;
+        
+        public const chosenListSpacingV:uint = 25;
+        
+        public const PositionForTutorialX:uint = 1375;
+        
+        public const PositionForTutorialY:uint = 352;
+        
+        public var numberOfSlots:uint;
+        
+        public var availableAttributePoints:uint;
+        
+        public var availableTalentPoints:uint;
+        
+        public var availableTagPoints:uint;
+        
+        public var availableAbilityPoints:uint;
+        
+        public var availableCivilPoints:uint;
+        
+        public var availableSkillPoints:uint;
+        
+        public var attributeCap:int;
+        
+        public var combatAbilityCap:int;
+        
+        public var cibilAbilityCap:int;
+        
+        public var layout:String;
+        
+        public var alignment:String;
+        
+        public var isDragging:Boolean;
+        
+        public var characterHandle:Number;
+        
+        public var isGM:Boolean;
+        
+        public var isMaster:Boolean;
+        
+        public var screenWidth:uint;
+        
+        public var screenHeight:uint;
+        
+        public var contentArray:Array;
+        
+        public var stepArray:Array;
+        
+        public var attributeArray:Array;
+        
+        public var abilityArray:Array;
+        
+        public var skillArray:Array;
+        
+        public var skillSchoolString:Array;
+        
+        public var talentArray:Array;
+        
+        public var racialTalentArray:Array;
+        
+        public var tagArray:Array;
+        
+        public var racialTagArray:Array;
+        
+        public var chosenSkills:Array;
+        
+        public var racialSkills:Array;
+        
+        public var panelTitles:Array;
+        
+        public var playerArray:Array;
+        
+        public var currentPanel:int;
+        
+        public var createOrigin:Boolean;
+        
+        public var isFinished:Boolean;
+        
+        public var creationType:int;
+        
+        public const portraitsXposDesigned:uint = 50;
+        
+        public const panelWidth:uint = 484;
+        
+        public const maxPanelPosX:uint = 1636.0;
+        
+        public var textArray:Array;
+        
+        public var enableOrigin:Boolean;
+        
+        public function MainTimeline()
+        {
+            super();
+            addFrameScript(0,this.frame1);
+        }
+        
+        public function onOverScrollEat(param1:MouseEvent) : *
+        {
+            ExternalInterface.call("blockMouseWheelInput",true);
+        }
+        
+        public function onOutScrollEat(param1:MouseEvent) : *
+        {
+            ExternalInterface.call("blockMouseWheelInput",false);
+        }
+        
+        public function onEventInit() : *
+        {
+            this.dragHit_mc.addEventListener(MouseEvent.MOUSE_DOWN,this.onDragDown);
+            this.CCPanel_mc.onInit(this);
+            this.header_mc.onInit(this);
+            this.back_mc.init(function():*
+            {
+                ExternalInterface.call("mainMenu");
+            });
+            this.start_mc.btn_mc.init(this.onStartButton);
+            ExternalInterface.call("registerAnchorId","creation");
+            ExternalInterface.call("setAnchor","center","screen","center");
+            this.isGM = false;
+            this.isFinished = false;
+            this.back_mc.visible = false;
+            this.setLetterBoxVisibility(false);
+            this.letterB_mc.close_mc.init(this.closeOriginPreview);
+            this.portraits_mc.onInit();
+        }
+        
+        public function closeOriginPreview() : *
+        {
+            ExternalInterface.call("stopOriginStory");
+        }
+        
+        public function onStartButton() : *
+        {
+            ExternalInterface.call("startGame");
+        }
+        
+        public function onEventResolution(param1:int, param2:int) : *
+        {
+            var _loc3_:Number = param1 / param2 * 1080;
+            var _loc4_:int = (2120 - _loc3_) / 2;
+            var _loc5_:*;
+            if((_loc5_ = this.portraitsXposDesigned + _loc4_) < this.portraitsXposDesigned)
+            {
+                _loc5_ = this.portraitsXposDesigned;
+            }
+            this.portraits_mc.x = _loc5_;
+            if((_loc5_ = _loc3_ - this.panelWidth + _loc4_) > this.maxPanelPosX)
+            {
+                _loc5_ = this.maxPanelPosX;
+            }
+            this.CCPanel_mc.x = _loc5_;
+        }
+        
+        public function setLetterBoxText(param1:String) : *
+        {
+            this.letterB_mc.text_txt.htmlText = param1;
+        }
+        
+        public function setLetterBoxVisibility(param1:Boolean = false) : *
+        {
+            this.letterT_mc.visible = this.letterB_mc.visible = param1;
+            this.CCPanel_mc.visible = this.header_mc.visible = this.portraits_mc.visible = !param1;
+        }
+        
+        public function onEventUp(param1:Number, param2:Number) : *
+        {
+            if(this.events[param1] == "IE ToggleInGameMenu")
+            {
+                this.header_mc.textFieldName_mc.escapePressed();
+                return true;
+            }
+            return false;
+        }
+        
+        public function onEventDown(param1:Number, param2:Number) : *
+        {
+            return false;
+        }
+        
+        public function setPanel(param1:uint, param2:uint) : *
+        {
+            if(!this.isFinished)
+            {
+                this.CCPanel_mc.setPanel(param1,param2);
+            }
+        }
+        
+        public function selectOption(param1:uint, param2:uint, param3:Boolean = true) : *
+        {
+            var _loc4_:MovieClip;
+            if(_loc4_ = this.CCPanel_mc.findContentByID(param1))
+            {
+                _loc4_.selectOption(param2,false);
+                _loc4_.setEnabled(param3);
+            }
+        }
+        
+        public function setText(param1:uint, param2:String, param3:Boolean = false) : *
+        {
+            if(param1 < this.textArray.length)
+            {
+                if(param1 == 0 || param1 == 23 || param1 == 24 || param1 == 25 || this.textArray[param1] == this.letterB_mc.stopOriginText_txt || this.textArray[param1] == this.CCPanel_mc.skills_mc.noSkill_txt || param1 == 36)
+                {
+                this.textArray[param1].htmlText = !!param3 ? param2.toUpperCase() : param2;
+                }
+                else if(param1 == 4)
+                {
+                this.CCPanel_mc.class_mc.attributeTab_mc.editBtn_mc.setText(!!param3 ? param2.toUpperCase() : param2);
+                this.CCPanel_mc.class_mc.abilityTab_mc.editBtn_mc.setText(!!param3 ? param2.toUpperCase() : param2);
+                this.CCPanel_mc.class_mc.skillsTab_mc.editBtn_mc.setText(!!param3 ? param2.toUpperCase() : param2);
+                }
+                else if(param1 == 9)
+                {
+                this.CCPanel_mc.talents_mc.title_txt.htmlText = param2.toUpperCase();
+                }
+                else if(param1 == 10)
+                {
+                this.CCPanel_mc.tags_mc.title_txt.htmlText = param2.toUpperCase();
+                }
+                else if(param1 == 17)
+                {
+                this.start_mc.btn_mc.setText(!!param3 ? param2.toUpperCase() : param2);
+                }
+                else if(param1 == 18)
+                {
+                this.CCPanel_mc.appearance_mc.backBtn_mc.setText(!!param3 ? param2.toUpperCase() : param2);
+                this.CCPanel_mc.class_mc.backBtn_mc.setText(!!param3 ? param2.toUpperCase() : param2);
+                this.CCPanel_mc.attributes_mc.backBtn_mc.setText(!!param3 ? param2.toUpperCase() : param2);
+                this.CCPanel_mc.abilities_mc.backBtn_mc.setText(!!param3 ? param2.toUpperCase() : param2);
+                this.CCPanel_mc.talents_mc.backBtn_mc.setText(!!param3 ? param2.toUpperCase() : param2);
+                this.CCPanel_mc.tags_mc.backBtn_mc.setText(!!param3 ? param2.toUpperCase() : param2);
+                this.CCPanel_mc.instruments_mc.backBtn_mc.setText(!!param3 ? param2.toUpperCase() : param2);
+                }
+                else if(param1 == 19)
+                {
+                this.CCPanel_mc.origins_mc.nextBtn_mc.setText(!!param3 ? param2.toUpperCase() : param2);
+                this.CCPanel_mc.appearance_mc.nextBtn_mc.setText(!!param3 ? param2.toUpperCase() : param2);
+                this.CCPanel_mc.class_mc.nextBtn_mc.setText(!!param3 ? param2.toUpperCase() : param2);
+                this.CCPanel_mc.attributes_mc.nextBtn_mc.setText(!!param3 ? param2.toUpperCase() : param2);
+                this.CCPanel_mc.abilities_mc.nextBtn_mc.setText(!!param3 ? param2.toUpperCase() : param2);
+                this.CCPanel_mc.talents_mc.nextBtn_mc.setText(!!param3 ? param2.toUpperCase() : param2);
+                this.CCPanel_mc.tags_mc.nextBtn_mc.setText(!!param3 ? param2.toUpperCase() : param2);
+                }
+                else if(param1 == 20)
+                {
+                this.CCPanel_mc.attributes_mc.button_mc.setText(!!param3 ? param2.toUpperCase() : param2);
+                this.CCPanel_mc.abilities_mc.button_mc.setText(!!param3 ? param2.toUpperCase() : param2);
+                this.CCPanel_mc.skills_mc.confirm_mc.setText(!!param3 ? param2.toUpperCase() : param2);
+                }
+                else if(param1 == 21)
+                {
+                this.CCPanel_mc.skills_mc.topTitle_txt.htmlText = !!param3 ? param2.toUpperCase() : param2;
+                }
+                else if(param1 == 22)
+                {
+                this.CCPanel_mc.skills_mc.bottomTitle_txt.htmlText = !!param3 ? param2.toUpperCase() : param2;
+                }
+                else if(param1 == 26)
+                {
+                this.CCPanel_mc.origins_mc.maleBtn_mc.tooltip = param2;
+                }
+                else if(param1 == 27)
+                {
+                this.CCPanel_mc.origins_mc.femaleBtn_mc.tooltip = param2;
+                }
+                else if(param1 == 28)
+                {
+                this.CCPanel_mc.armourBtnHolder_mc.armourBtn_mc.tooltip = param2;
+                }
+                else if(param1 == 29)
+                {
+                this.CCPanel_mc.armourBtnHolder_mc.helmetBtn_mc.tooltip = param2;
+                }
+                else if(param1 == 32)
+                {
+                this.header_mc.voiceOriginBtn_mc.text_txt.htmlText = param2;
+                }
+                else
+                {
+                this.textArray[param1] = !!param3 ? param2.toUpperCase() : param2;
+                }
+            }
+        }
+        
+        public function setArmourState(param1:Number) : *
+        {
+            this.CCPanel_mc.armourBtnHolder_mc.setArmourState(param1);
+        }
+        
+        public function setInstrumentName(param1:uint, param2:String, param3:String) : *
+        {
+            this.CCPanel_mc.instruments_mc.setInstrumentName(param1,param2,param3);
+        }
+        
+        public function setDetails(param1:uint, param2:Boolean) : *
+        {
+            this.CCPanel_mc.origins_mc.setGender(param1,param2);
+            this.header_mc.voiceOriginBtn_mc.visible = this.enableOrigin && !param2 && this.creationType == 0;
+            this.header_mc.voiceOriginBtn_mc.isEnabled = param2;
+        }
+        
+        public function enableStoryPlayback(param1:Boolean) : *
+        {
+            this.enableOrigin = param1;
+            this.header_mc.voiceOriginBtn_mc.visible = param1 && !this.header_mc.voiceOriginBtn_mc.isEnabled && this.creationType == 0;
+        }
+        
+        public function updateSteps() : *
+        {
+            this.header_mc.updateSteps(this.stepArray);
+            this.stepArray = new Array();
+        }
+        
+        public function setStepLabel(param1:uint, param2:String) : *
+        {
+            this.header_mc.setTabLabel(param1,param2);
+        }
+        
+        public function updateContent() : *
+        {
+            this.CCPanel_mc.updateContent(this.contentArray);
+            this.contentArray = new Array();
+        }
+        
+        public function updateSkills() : *
+        {
+            this.CCPanel_mc.skills_mc.updateSkills(this.skillArray);
+            this.skillArray = new Array();
+        }
+        
+        public function updateAttributes() : *
+        {
+            this.CCPanel_mc.attributes_mc.updateAttributes(this.attributeArray);
+            this.attributeArray = new Array();
+        }
+        
+        public function updateAbilities() : *
+        {
+            this.CCPanel_mc.abilities_mc.updateAbilities(this.abilityArray);
+            this.abilityArray = new Array();
+        }
+        
+        public function updateTalents() : *
+        {
+            // PIP - done in lua instead.
+            // this.CCPanel_mc.talents_mc.updateTalents(new Array(),this.racialTalentArray);
+            this.CCPanel_mc.talents_mc.updateTalents(this.talentArray,this.racialTalentArray);
+            this.talentArray = new Array();
+            this.racialTalentArray = new Array();
+            ExternalInterface.call("pipTalentsUpdated");
+        }
+        
+        public function updateTags() : *
+        {
+            this.CCPanel_mc.tags_mc.updateTags(this.tagArray,this.racialTagArray);
+            this.tagArray = new Array();
+            this.racialTagArray = new Array();
+        }
+        
+        public function setTextField(param1:uint, param2:String, param3:Boolean) : *
+        {
+            this.CCPanel_mc.setTextField(param1,param2,param3);
+        }
+        
+        public function setClassEditTabLabel(param1:uint, param2:String) : *
+        {
+            switch(param1)
+            {
+                case 0:
+                this.CCPanel_mc.class_mc.attributeTab_mc.setLabel(param2.toUpperCase());
+                this.CCPanel_mc.attributes_mc.title_txt.htmlText = param2;
+                break;
+                case 1:
+                this.CCPanel_mc.abilities_mc.title_txt.htmlText = param2;
+                case 2:
+                this.CCPanel_mc.abilities_mc.title2_txt.htmlText = param2;
+                break;
+                case 3:
+                this.CCPanel_mc.class_mc.skillsTab_mc.setLabel(param2.toUpperCase());
+                break;
+                case 6:
+                this.CCPanel_mc.class_mc.abilityTab_mc.setLabel(param2.toUpperCase());
+            }
+        }
+        
+        public function setGM(param1:String) : *
+        {
+            this.back_mc.visible = false;
+            this.CCPanel_mc.setPanel(9,0);
+            this.header_mc.setGM(param1);
+        }
+        
+        public function setBackButtonVisible(param1:Boolean, param2:String) : *
+        {
+            this.back_mc.visible = param1;
+            this.back_mc.setText(param2);
+        }
+        
+        public function creationDone(param1:String, param2:String, param3:Boolean = true) : *
+        {
+            if(!this.isGM)
+            {
+                this.CCPanel_mc.visible = false;
+                this.header_mc.visible = false;
+            }
+            this.start_mc.btn_mc.setText(param1.toUpperCase());
+            this.start_mc.btn_mc.setEnabled(false);
+            this.isFinished = true;
+            this.back_mc.visible = param3;
+            this.back_mc.setText(param2.toUpperCase());
+        }
+        
+        public function setInstrument(param1:uint) : *
+        {
+            this.CCPanel_mc.instruments_mc.setInstrument(param1);
+        }
+        
+        public function clearPanelSelectors(param1:uint) : *
+        {
+            this.CCPanel_mc.clearPanelSelectors(param1);
+        }
+        
+        public function setFreeClassPoints(param1:uint, param2:int) : *
+        {
+            switch(param1)
+            {
+                case 0:
+                this.availableAttributePoints = param2;
+                break;
+                case 1:
+                this.availableAbilityPoints = param2;
+                break;
+                case 2:
+                this.availableCivilPoints = param2;
+                break;
+                case 3:
+                this.availableSkillPoints = param2;
+                break;
+                case 4:
+                this.availableTalentPoints = param2;
+            }
+            ExternalInterface.call("pipAvailablePointsSet", param1, param2);
+        }
+        
+        public function onDragDown(param1:MouseEvent) : *
+        {
+            ExternalInterface.call("rotateCharacter");
+        }
+        
+        public function setAvailableSkillSlots(param1:uint) : *
+        {
+            var _loc3_:MovieClip = null;
+            this.numberOfSlots = param1;
+            this.CCPanel_mc.skills_mc.chosenSkillList.clearElements();
+            var _loc2_:int = 0;
+            while(_loc2_ < param1)
+            {
+                _loc3_ = new Skill();
+                _loc3_.Init();
+                _loc3_.slotPos = _loc2_;
+                this.CCPanel_mc.skills_mc.chosenSkillList.addElement(_loc3_,true);
+                _loc2_++;
+            }
+            this.CCPanel_mc.skills_mc.chosenSkillList.positionElements();
+        }
+        
+        public function updatePortraits() : *
+        {
+            this.portraits_mc.updatePortraits(this.playerArray);
+            this.playerArray = new Array();
+        }
+        
+        function frame1() : *
+        {
+            this.events = new Array("IE ToggleInGameMenu");
+            this.numberOfSlots = 3;
+            this.layout = "fitVertical";
+            this.alignment = "none";
+            this.contentArray = new Array();
+            this.stepArray = new Array();
+            this.attributeArray = new Array();
+            this.abilityArray = new Array();
+            this.skillArray = new Array();
+            this.skillSchoolString = new Array();
+            this.talentArray = new Array();
+            this.racialTalentArray = new Array();
+            this.tagArray = new Array();
+            this.racialTagArray = new Array();
+            this.chosenSkills = new Array();
+            this.racialSkills = new Array();
+            this.panelTitles = new Array();
+            this.playerArray = new Array();
+            this.createOrigin = false;
+            this.start_mc.addEventListener(MouseEvent.ROLL_OVER,this.onOverScrollEat,false);
+            this.start_mc.addEventListener(MouseEvent.ROLL_OUT,this.onOutScrollEat,false);
+            this.header_mc.addEventListener(MouseEvent.ROLL_OVER,this.onOverScrollEat,false);
+            this.header_mc.addEventListener(MouseEvent.ROLL_OUT,this.onOutScrollEat,false);
+            this.CCPanel_mc.addEventListener(MouseEvent.ROLL_OVER,this.onOverScrollEat,false);
+            this.CCPanel_mc.addEventListener(MouseEvent.ROLL_OUT,this.onOutScrollEat,false);
+            this.textArray = new Array(this.header_mc.title_txt,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,this.CCPanel_mc.tags_mc.tagTitle_txt,this.CCPanel_mc.tags_mc.summaryTitle_txt,this.CCPanel_mc.instruments_mc.title_txt,null,null,null,null,null,null,null,null,this.letterB_mc.stopOriginText_txt,this.CCPanel_mc.skills_mc.noSkill_txt,this.CCPanel_mc.class_mc.presetCaption_mc,null);
+            this.enableOrigin = true;
+        }
+    }
+}

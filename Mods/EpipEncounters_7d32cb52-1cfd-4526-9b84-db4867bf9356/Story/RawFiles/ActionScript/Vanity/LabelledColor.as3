@@ -1,0 +1,30 @@
+package
+{
+    import flash.display.MovieClip;
+    import flash.geom.ColorTransform;
+    
+    public dynamic class LabelledColor extends MovieClip
+    {
+        public var color_mc:MovieClip;
+        public var text_mc:MovieClip;
+        
+        public function LabelledColor(color:Number, label:String)
+        {
+            super();
+            this.setColor(color, label);
+            this.text_mc.setWidth(200);
+            addFrameScript(0,this.frame1);
+        }
+
+        public function setColor(color:Number, label:String) : *
+        {
+            this.color_mc.setColor(color);
+            this.text_mc.text_txt.htmlText = label;
+        }
+        
+        function frame1() : *
+        {
+            stop();
+        }
+    }
+}

@@ -1,0 +1,81 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+//You can more-or-less copy/paste this script to use EE's versioning system for your own mod dependent on EE: Core.
+//Simply replace "AMER_EECore" with whatever you want your mod prefix to be, then you can start using patch files
+//namespaced as _Mod+"_Patch_"+Version.
+//Ex. for "AMER_EECore" version 1282, the patch file is called "AMER_EECore_Patch_1282".
+//These patch files are automatically activated (make them a child goal, even a child of AMER_GLO_Versioning_PatchWrapper if you want)
+//and should catch PROC_AMER_Versioning_Patch(_Mod, _Version) to perform patching actions. They should complete themselves when finished.
+//See any of the AMER_EECore_Patch_xxx goals for patch file examples.
+
+
+DB_AMER_Versioning_ModVersion("EpipEncounters", 1049);    //Should always be updated to your mod's current version, along with below.
+// PROC_AMER_Versioning_FirstPatch("EpipEncounters");    //Must be ordered after above.
+
+PROC_AMER_GEN_TSK_Add("EN", "EpipEncounters_Patch_A", "Epip Encounters has been updated from version ");
+PROC_AMER_GEN_TSK_Add("EN", "EpipEncounters_Patch_B", " to ");
+PROC_AMER_GEN_TSK_Add("EN", "EpipEncounters_Patch_C", ". Thanks for playing!");
+
+KBSECTION
+
+//This is required. It tells the patcher what version to update your mod to.
+PROC PROC_AMER_Versioning_CheckVersion()
+THEN
+PROC_AMER_Versioning_CheckVersion("EpipEncounters", 1049);	//Should always be updated to your mod's current version, along with above.
+
+//This is not necessary; it shows a warning if the user is trying to downgrade their mod version.
+//If you want to do something like this you'll want to define your own downgrade message so that
+//makes sense for your mod.
+// PROC PROC_AMER_Versioning_ExecPatch("EpipEncounters", (INTEGER)_OldVer, (INTEGER)_NewVer)
+// AND
+// _OldVer > _NewVer
+// THEN
+// PROC_AMER_GEN_OpenMessageBoxForPlayers_Queued("AMER_Versioning_Downgrade");
+
+
+//This is not necessary; it shows a message that the game was patched from an old version to the new version.
+//If you want to do something like this you'll want to define your own TSKs so that the message makes sense
+//for your mod.
+PROC PROC_AMER_Versioning_ShowPatchSuccess("EpipEncounters", (INTEGER)_OldVer, (INTEGER)_NewVer)
+AND
+IntegertoString(_NewVer, _NewVerStr)
+AND
+IntegertoString(_OldVer, _OldVerStr)
+AND
+QRY_AMER_GEN_TSK_Get("EpipEncounters_Patch_A")
+AND
+DB_AMER_GEN_OUTPUT_String(_StrA)
+AND
+QRY_AMER_GEN_TSK_Get("EpipEncounters_Patch_B")
+AND
+DB_AMER_GEN_OUTPUT_String(_StrB)
+AND
+QRY_AMER_GEN_TSK_Get("EpipEncounters_Patch_C")
+AND
+DB_AMER_GEN_OUTPUT_String(_StrC)
+AND
+StringConcatenate(_StrA, _OldVerStr, _Str)
+AND
+StringConcatenate(_Str, _StrB, _Str2)
+AND
+StringConcatenate(_Str2, _NewVerStr, _Str3)
+AND
+StringConcatenate(_Str3, _StrC, _Text)
+THEN
+// PROC_AMER_GEN_OpenMessageBoxForPlayers_Queued(_Text);
+PROC_PIP_OpenChangelogPromptForPlayers(_Text);
+
+PROC PROC_PIP_OpenChangelogPromptForPlayers((STRING)_Text)
+AND
+DB_IsPlayer(_Player)
+AND
+QRY_AMER_GEN_OnePerUser(_Player)
+THEN
+// OpenMessageBoxChoice(_Player, _Text, "Open Changelog", "Close");
+PROC_AMER_GEN_OpenQueuedMessageBox(_Player, "Choice", _Text, "Open Patch Notes", "Close");
+
+EXITSECTION
+
+ENDEXITSECTION
+ParentTargetEdge "Start_AMER"

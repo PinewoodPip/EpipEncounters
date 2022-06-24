@@ -1,0 +1,95 @@
+Rewrote the hotbar UI. This involves mostly technical changes, in preparations for a standalone release.
+
+**Your hotkey keybindings will be reset with this update! Please bind them again.**
+
+Visible changes:
+
+- Fixed the top of the buttons area blocking clicks onto the world and other UIs
+- Any skill or item can now be dragged from the hotbar to the customizable buttons to bind it there (useful for old mods that use skills/items to bring up menus)
+	- The "use last slot" action has been removed due to this.
+- Removed the "view changelog" action
+- The slot rendering is now entirely scripted (no help from the engine) which works around a crash and removes the need for an initialization procedure (that annoying "switch to the first row" message)
+- Saving your current amount of bars and order should be a lot more reliable (now happens upon pausing the game, instead of a timer)
+- Action buttons can now be highlighted or disabled; ex. the pyramids one is disabled if the party has no pyramids
+- Added an action to open the pyramids UI
+- Fixed the source skill border clipping into other rows
+- Added compatibility for Weapon Expansion: adds an action for toggling the menu, and repositions the original button when you have 2 rows of action buttons
+- Actions in the drawer are now ordered in a consistent manner
+- Added a context menu when you right click a row; from there, you can:
+	- "Push" groups of slots to the left/right (useful for inserting skills inbetween slots)
+	- Clear rows, or unmemorized skills
+	- Save and load "loadouts" of rows. Loadouts can be applied even if your character doesn't currently know all the skills from it.
+
+Other changes:
+
+- Simple tooltips (the ones that go in that very small black box) now appear much faster, rather than being delayed
+- Added numerous calls to `Game.Character` and `Game.Item`, mostly related to functionality needed for the hotbar.
+
+
+### 5/2/22 Docs inauguration patch :flashed:
+
+- Added new stats to the stats tab (more coming later):
+	- Party gold, splinters
+	- Celestial restoration
+	- Vitality Void damage, radius
+	- Prosperity threshold
+- Rewrote the ingame options menu; the mod's settings now gets its own tab instead of being stuffed into Gameplay
+- You can now switch to and from Tactician difficulty at any time from settings
+- Improved context menu scrolling
+- Touchups to MessageBox, Examine
+- Cleaned up Utilities.lua, removed old unused methods
+- Removed support for the archaic config file structure (from before the ingame settings menu; very old)
+- Created documentation for `Game`, OptionsSettings, MessageBox, StatsTab, Examine, and CharacterSheet
+
+### 26/1/22: birthday patch :flashed:
+
+- Fixed “Teleport to” not working on anything other than characters; it now works with items and triggers as well
+- Fixed shields not showing all transmog options
+- Fixed more inconsistency issues with context menus on world characters
+- Transmog menu now works properly for characters that have had their race/gender changed
+- Added an option to show B/H next to player portraits while unsheathed
+- Fixed tooltips of damaging statuses for real
+- Added an option to force story patching on every load
+- Physical/pierce resistances in character sheet now get colored blue/red like how the normal resistances would
+- Holding shift now fades out statuses on the enemy health bar
+- Temporary solution for scrolling context menus that would leave the screen, with the mouse wheel
+- Added something awesome to Fort Joy
+
+
+#### Technical stuff so it doesn’t look like I’m doing nothing:
+- Added utility methods for initializing “Features”
+- You can now specify required filesystem overrides and mods for features, with them automatically disabling themselves if these are missing
+- Removed GetCharacterDodge function
+- Rewrote character sheet resistances script
+- Rewrote script for enemy health bar
+- Moved Majora’s compatibility to its own script
+- Added Game.Character library for character-related stuff
+- Moved a lot of old calls to Client
+- Started work on a library that allows the creation of UIs purely in lua (no swf/actionscript editing)
+
+### 14/1/22:
+- Re-enabled custom icons on the UIs that previously used them, as the extender issues with them have been fixed.
+- Added a transmog context menu, can be enabled in settings.
+    - Appears on equipment with visuals, including weapons.
+    - Submenus display categorized root templates, filtered down to only the ones compatible with your current race/gender/alive/undead.
+    - Supports Majora’s Fashion Sins.
+    - Can save/load outfits, along with their dyes. Saved outfits are in EPIP_VanityOutfits.json
+    - Warning: artifacts and armor set items will not currently work properly when transmogrified. Also, Majora’s tabs tend to overflow the screen.
+- Fixed status tooltips in v56
+- Fixed extract runes context menu option consuming gold instead of splinters
+- Numerous miscellaneous internal changes
+
+### 27/12/21:
+
+- Updated to v56 of the extender. Current issues (with the extender):
+    - Anything related to status tooltip editing does not work as Game.Tooltip is borked
+    - UIs with custom icons (hotbar, toolip) stop displaying vanilla icons after the first session. Custom icons are disabled for now so as to keep both the hotbar and console usable
+- Removed the old console cheats
+- Full rewrite of the stats tab; it should be a lot more reliable now (especially in multiplayer) and survives lua resets
+- Stats and categories are now defined in Epip.Features.StatsTab.
+- Fixed context menu not working on chained characters, and added it to summon portraits
+- (maybe) fixed summon portrait display issues
+- Custom talents now display in the examine menu
+- Organizational changes to tooltip adjustments script
+- torturerSkillOverrides was moved to Data.Game.TORTURER_SKILL_OVERRIDES
+- statusToSkill was moved to Data.Game.DAMAGING_STATUS_SKILLS

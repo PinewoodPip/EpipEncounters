@@ -1,0 +1,93 @@
+package characterSheet_fla
+{
+    import flash.display.MovieClip;
+    import flash.events.MouseEvent;
+    import flash.external.ExternalInterface;
+    
+    public dynamic class plusButton_62 extends MovieClip
+    {
+        
+        
+        public var bg_mc:MovieClip;
+        
+        public var hit_mc:MovieClip;
+        
+        public var base:MovieClip;
+        
+        public var stat:MovieClip;
+        
+        public var callbackStr:String;
+        
+        public var currentTooltip:String;
+        
+        public function plusButton_62()
+        {
+            super();
+            addFrameScript(0,this.frame1);
+        }
+        
+        public function onMouseOver(param1:MouseEvent) : *
+        {
+            if(this.tooltip != "")
+            {
+                this.base.hasTooltip = true;
+                this.currentTooltip = this.tooltip;
+                ExternalInterface.call("showTooltip",this.tooltip);
+            }
+            this.bg_mc.gotoAndStop(2);
+            ExternalInterface.call("PlaySound","UI_Game_Inventory_Over");
+        }
+        
+        public function onMouseOut(param1:MouseEvent) : *
+        {
+            if(this.base.hasTooltip)
+            {
+                this.base.hasTooltip = false;
+                this.currentTooltip = "";
+                ExternalInterface.call("hideTooltip");
+            }
+            this.bg_mc.gotoAndStop(1);
+            removeEventListener(MouseEvent.MOUSE_UP,this.onUp);
+        }
+        
+        public function onDown(param1:MouseEvent) : *
+        {
+            ExternalInterface.call("PlaySound","UI_Game_CharacterSheet_Attribute_Plus_Click_Press");
+            stage.focus = null;
+            this.bg_mc.gotoAndStop(3);
+            addEventListener(MouseEvent.MOUSE_UP,this.onUp);
+        }
+        
+        public function onUp(param1:MouseEvent) : *
+        {
+            this.bg_mc.gotoAndStop(2);
+            ExternalInterface.call("PlaySound","UI_Game_CharacterSheet_Attribute_Plus_Click_Release");
+
+            // PIP
+            if (this.onUpFunc)
+            {
+                this.onUpFunc();
+            }
+            
+            if(this.stat)
+            {
+                ExternalInterface.call(this.callbackStr,(this.stat as MovieClip).statId);
+            }
+            else
+            {
+                ExternalInterface.call(this.callbackStr);
+            }
+            removeEventListener(MouseEvent.MOUSE_UP,this.onUp);
+        }
+        
+        function frame1() : *
+        {
+            this.base = root as MovieClip;
+            this.stat = parent as MovieClip;
+            this.currentTooltip = "";
+            this.hit_mc.addEventListener(MouseEvent.MOUSE_DOWN,this.onDown);
+            this.hit_mc.addEventListener(MouseEvent.ROLL_OUT,this.onMouseOut);
+            this.hit_mc.addEventListener(MouseEvent.ROLL_OVER,this.onMouseOver);
+        }
+    }
+}

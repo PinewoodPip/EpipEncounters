@@ -1,0 +1,53 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+
+KBSECTION
+
+// PIP - grant prosperity itself.
+PROC PROC_AMER_Talents_Toggle((CHARACTERGUID)_Char, "Perfectionist", (REAL)_Toggle)
+AND
+Integer(_Toggle, _Amount)
+THEN
+PROC_AMER_KeywordStat_Add(_Char, "Prosperity", _Amount);
+
+IF
+CharacterVitalityChanged(_Char, _Vit)
+AND
+DB_AMER_Talents(_Char, "Perfectionist")
+AND
+NOT QRY_AMER_Talents_Perfectionist_100Vit(_Char, _Vit)  //If we have 100% vit, disable the status because the hardcoded talent effects are active.
+AND
+NOT QRY_AMER_Talents_Perfectionist_Prosperous(_Char)    //If we are prosperous, but below 100% vitality, enable the status if it isn't already.
+AND
+NOT DB_AMER_KeywordStat_Prosperity_IsActive(_Char, 1)   //Finally, if we are not prosperous, disable the status if it was active.
+AND
+DB_AMER_Talents_Perfectionist_Active(_Char)
+THEN
+NOT DB_AMER_Talents_Perfectionist_Active(_Char);
+RemoveStatus(_Char, "AMER_HOTHEAD");
+
+
+
+QRY QRY_AMER_Talents_Perfectionist_100Vit((CHARACTERGUID)_Char, 100)
+AND
+DB_AMER_Talents_Perfectionist_Active(_Char)
+THEN
+NOT DB_AMER_Talents_Perfectionist_Active(_Char);
+RemoveStatus(_Char, "AMER_HOTHEAD");
+
+
+
+QRY QRY_AMER_Talents_Perfectionist_Prosperous((CHARACTERGUID)_Char)
+AND
+DB_AMER_KeywordStat_Prosperity_IsActive(_Char, 1)
+AND
+NOT DB_AMER_Talents_Perfectionist_Active(_Char)
+THEN
+DB_AMER_Talents_Perfectionist_Active(_Char);
+ApplyStatus(_Char, "AMER_HOTHEAD", -1.0, 1, _Char);
+
+EXITSECTION
+
+ENDEXITSECTION
+ParentTargetEdge "AMER_GLO_Talents"

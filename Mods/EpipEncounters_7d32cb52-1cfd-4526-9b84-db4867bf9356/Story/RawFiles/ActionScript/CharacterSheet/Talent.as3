@@ -1,0 +1,132 @@
+package
+{
+    import LS_Classes.larTween;
+    import fl.motion.easing.Quartic;
+    import flash.display.MovieClip;
+    import flash.display.DisplayObject;
+    import flash.events.MouseEvent;
+    import flash.external.ExternalInterface;
+    import flash.text.TextField;
+    import flash.geom.Point;
+    
+    public dynamic class Talent extends MovieClip
+    {
+        
+        
+        public var bullet_mc:MovieClip;
+        
+        public var hl_mc:MovieClip;
+        
+        public var label_txt:TextField;
+        
+        public var minus_mc:MovieClip;
+        
+        public var plus_mc:MovieClip;
+        
+        public var timeline:larTween;
+        
+        public var base:MovieClip;
+
+        public var customTalentId:String = "";
+
+        public var statId:Number = 0;
+        
+        public function Talent()
+        {
+            super();
+            addFrameScript(0,this.frame1);
+        }
+
+        // todo cleanup and figure out wtf is happening
+        public function showTooltipForMC(param1:MovieClip, param2:String) : *
+        {
+            var _loc6_:Number = NaN;
+            var _loc3_:Point = this.getGlobalPositionOfMC(param1);
+            this.hasTooltip = true;
+            var _loc4_:Number = 0;
+            var _loc5_:Number = 0;
+            if(param1)
+            {
+                _loc6_ = param1.width;
+                if(param1.widthOverride)
+                {
+                _loc6_ = param1.widthOverride;
+                }
+                if(param1.mOffsetY)
+                {
+                _loc4_ = param1.mOffsetY;
+                }
+                if(param1.mOffsetX)
+                {
+                _loc5_ = param1.mOffsetX;
+                }
+                else
+                {
+                ExternalInterface.call(param2,param1.tooltip,_loc3_.x + _loc5_,_loc3_.y + _loc4_,_loc6_,param1.height,param1.tooltipAlign, param1.statId, param1.customTalentId);
+                }
+            }
+        }
+
+        public function getGlobalPositionOfMC(param1:MovieClip) : Point
+        {
+            var _loc2_:Point = new Point(param1.x - root.x,param1.y - root.y);
+            var _loc3_:DisplayObject = param1.parent;
+            while(_loc3_ && (_loc3_ != root || _loc3_ != stage))
+            {
+                _loc2_.x = _loc2_.x + _loc3_.x;
+                _loc2_.y = _loc2_.y + _loc3_.y;
+                _loc3_ = _loc3_.parent;
+            }
+            return _loc2_;
+        }
+        
+        public function onOver(param1:MouseEvent) : *
+        {
+            this.widthOverride = 269 + 44;
+            this.mOffsetY = -this.base.stats_mc.talentHolder_mc.list.m_scrollbar_mc.scrolledY - 26;
+            this.tooltip = this.customTalentId;
+            this.showTooltipForMC(this,"pipShowTalentTooltip");
+            this.hl_mc.visible = true;
+            if(this.timeline && this.timeline.isPlaying)
+            {
+                this.timeline.stop();
+            }
+            this.timeline = new larTween(this.hl_mc,"alpha",Quartic.easeIn,this.hl_mc.alpha,1,0.01);
+        }
+        
+        public function onOut(param1:MouseEvent) : *
+        {
+            this.timeline = new larTween(this.hl_mc,"alpha",Quartic.easeOut,this.hl_mc.alpha,0,0.01);
+            this.base.hasTooltip = false;
+            ExternalInterface.call("hideTooltip");
+        }
+
+        public function onMinusButtonUp() : *
+        {
+            ExternalInterface.call("pipMinusTalent", this.statId, this.customTalentId);
+        }
+
+        public function onPlusButtonUp() : *
+        {
+            // trace(this.statId);
+            // trace(this.customTalentId);
+            ExternalInterface.call("pipPlusTalent", this.statId, this.customTalentId);
+        }
+        
+        function frame1() : *
+        {
+            this.base = root as MovieClip;
+            this.hl_mc.addEventListener(MouseEvent.ROLL_OVER,this.onOver);
+            this.hl_mc.addEventListener(MouseEvent.ROLL_OUT,this.onOut);
+            this.hl_mc.alpha = 0;
+            this.hl_mc.height = 24;
+            this.label_txt.mouseEnabled = false;
+
+            // PIP - changed callbacks to support custom talents.
+            this.minus_mc.callbackStr = "";
+            this.plus_mc.callbackStr = "";
+            this.minus_mc.onUpFunc = this.onMinusButtonUp;
+            this.plus_mc.onUpFunc = this.onPlusButtonUp;
+        }
+    }
+}

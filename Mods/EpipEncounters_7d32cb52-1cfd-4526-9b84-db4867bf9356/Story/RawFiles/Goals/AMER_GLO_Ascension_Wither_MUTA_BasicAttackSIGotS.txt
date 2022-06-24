@@ -1,0 +1,52 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+
+KBSECTION
+//Allows Source Infusion 1 of basic attack on a Withered enemy to emulate effects of Grasp of the Starved on that target.
+
+PROC PROC_AMER_GEN_BasicAttackObjectStarted(_Target, (REAL)_X, (REAL)_Y, (REAL)_Z, _Owner, _Attacker, _AttackID)
+AND
+DB_AMER_Ascension_SpecialLogic(_Attacker, "Ascension_Wither_MUTA_BasicAttackSIGotS", _)
+AND
+QRY_AMER_Source_Infusion_GetCount(_Attacker, "Ascension_Wither_MUTA_BasicAttackSIGotS")
+AND
+DB_AMER_GEN_OUTPUT_Integer(_InfusCount)
+AND
+_InfusCount > 0
+AND
+ObjectExists(_Target, 1)
+AND
+ObjectIsCharacter(_Target, 1)
+AND
+HasActiveStatus(_Target, "AMER_WITHER", 1)
+AND
+CharacterGetHitpointsPercentage(_Attacker, _VitPerc)
+AND
+_VitPerc > 20.0
+AND
+ObjectIsCharacter((CHARACTERGUID)_Target, 1)
+AND
+CharacterIsEnemy(_Target, _Attacker, 1)
+AND
+GetPosition(_Target, _X, _Y, _Z)
+AND
+QRY_AMER_GEN_CharacterGetDisplayName(_Target)
+AND
+DB_AMER_GEN_OUTPUT_String(_TargetName)
+AND
+QRY_AMER_GEN_TSK_Get("AMER_Ascension_Wither_MUTA_BasicAttackSIGotS")
+AND
+DB_AMER_GEN_OUTPUT_String(_LogText)
+THEN
+DB_AMER_Source_Infusion_RefundPoints(_Attacker, 0, 1); // PIP
+PROC_AMER_GEN_AddHitPointPercentage(_Attacker, -20.0);
+PROC_AMER_GEN_CharacterCauseExplosionAtPos(_Attacker, _X, _Y, _Z, "Projectile_AMER_SCRIPT_GraspOfTheStarved");
+PlayEffectAtPosition("RS3_FX_Skills_Voodoo_Decaying_GraspStarved_Impact_01", _X, _Y, _Z);
+PROC_AMER_Source_Infusion_ExpendInfusion(_Attacker, "Ascension_Wither_MUTA_BasicAttackSIGotS", 1, 1, 1);
+PROC_AMER_GEN_CharacterCombatLogText_Param_Str(_Attacker, _LogText, _TargetName);
+
+EXITSECTION
+
+ENDEXITSECTION
+ParentTargetEdge "AMER_GLO_UI_Ascension_NodeRewards"

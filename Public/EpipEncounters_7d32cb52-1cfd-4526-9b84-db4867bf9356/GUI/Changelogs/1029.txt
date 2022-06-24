@@ -1,0 +1,10 @@
+- Moved the casting notifications to where your health bar is, and added a toggle for them in the settings (defaults to enabled)
+- Toggle party link hotbar hotkey is now instant (no casting animation)
+- Added a one-row layout to the hotbar actions bar, which is automatically used when you only have one row of skill slots active
+	- You can control the behaviour with the new hotbarHotkeysLayout setting: "auto" is the behaviour described above, "single" makes it always use the 1-row layout, "dual" forces it to always be two rows (like how it was before)
+	- Keyboard hotkeys remain functional at all times, even if the buttons are hidden
+- Fixed "c" displaying on the hotbar button you're dragging
+- DoT statuses now show their calculated damage
+	- The display fluctuates for a bit after a skill cast, might redo this entirely later to not rely on the engine damage formula
+- Centurion Battlestomp can now only be cast if the target is at &lt;10m, and does not consume the ranged charge
+- Tried banishing the "Enemy Turn" message again

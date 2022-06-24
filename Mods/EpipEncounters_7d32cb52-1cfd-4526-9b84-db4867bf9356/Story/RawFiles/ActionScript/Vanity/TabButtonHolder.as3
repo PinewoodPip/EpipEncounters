@@ -1,0 +1,40 @@
+ 
+package arenaResult_fla
+{
+    import LS_Classes.scrollList;
+    import LS_Classes.horizontalList;
+    // import LS_Classes.tooltipHelper;
+    import flash.display.MovieClip;
+    import flash.external.ExternalInterface;
+    import flash.text.TextField;
+    import LS_Classes.textHelpers;
+    
+    public dynamic class TabButtonHolder extends MovieClip
+    {
+        public var list:horizontalList;
+
+        public function TabButtonHolder()
+        {
+            super();
+            addFrameScript(0,this.frame1);
+        }
+
+        public function addButton(id:String) : *
+        {
+            var entry:StatsTabButton = new StatsTabButton(id);
+
+            this.list.addElement(entry);
+        }
+
+        public function clearButtons() : *
+        {
+            this.list.clearElements();
+        }
+        
+        function frame1() : *
+        {
+            this.list = new horizontalList();
+            this.addChild(list);
+        }
+    }
+}

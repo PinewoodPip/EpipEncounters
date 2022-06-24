@@ -1,0 +1,40 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+
+KBSECTION
+
+QRY QRY_AMER_Source_Infusion_SkillPreCast((CHARACTERGUID)_Char, "Cone_GroundSmash", (INTEGER)_InfusCount)
+AND
+_InfusCount > 0
+THEN
+PROC_AMER_TempStat_FlexStat_Add_StatScaling(_Char, "Stat", "ACCURACYBOOST", "Ability", "WarriorLore", 5.0, 1.0, 2000, "SkillCast");
+PROC_AMER_TempStat_FlexStat_Add_StatScaling(_Char, "Stat", "DAMAGEBOOST", "Ability", "WarriorLore", 20.0, 4.0);
+//PROC_AMER_TempStat_ExtendedStat_Add_StatScaling(_Char, "AttributeIntelligenceEffect_Multiplier", "", "", "", "Ability", "WarriorLore", 0.15, 0.03);
+
+
+QRY QRY_AMER_Source_Infusion_SkillPreCast((CHARACTERGUID)_Char, "Cone_GroundSmash", (INTEGER)_InfusCount)
+AND
+_InfusCount > 1
+THEN
+PROC_AMER_TempStat_FlexStat_Add_StatScaling(_Char, "Stat", "DAMAGEBOOST", "Ability", "WarriorLore", 40.0, 8.0);
+//PROC_AMER_TempStat_ExtendedStat_Add_StatScaling(_Char, "AttributeIntelligenceEffect_Multiplier", "", "", "", "Ability", "WarriorLore", 0.30, 0.06);
+
+
+QRY QRY_AMER_Source_Infusion_SkillCast((CHARACTERGUID)_Char, "Cone_GroundSmash", (INTEGER)_InfusCount)
+AND
+_InfusCount > 2
+// PIP - no more ap cost.
+// AND
+// QRY_AMER_Source_Infusion_KickerCost(_Char, 3)
+THEN
+PROC_AMER_GEN_IterateCharsAroundObject(_Char, 13.0, _Char, 42, "AMER_SourceInfusion_GroundSmash_3");	//Visible living enemies.
+
+PROC PROC_AMER_GEN_IterateCharsAroundObject_Iterated((INTEGER)_RequestID, "AMER_SourceInfusion_GroundSmash_3", (CHARACTERGUID)_SourceChar, (CHARACTERGUID)_Char)
+THEN
+PROC_AMER_GEN_ShootConeAt(_SourceChar, _Char, "Cone_GroundSmash", "RS3_FX_Skills_Warrior_GroundSmash_Cast_01");
+
+EXITSECTION
+
+ENDEXITSECTION
+ParentTargetEdge "AMER_GLO_Spells_Warfare"

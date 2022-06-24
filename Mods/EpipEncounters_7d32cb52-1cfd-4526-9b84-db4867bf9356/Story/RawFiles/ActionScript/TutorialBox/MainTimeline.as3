@@ -1,0 +1,729 @@
+package tutorialBox_fla
+{
+    import LS_Classes.buttonHintTextHelper;
+    import LS_Classes.larTween;
+    import LS_Classes.listDisplay;
+    import LS_Classes.textEffect;
+    import LS_Classes.textHelpers;
+    import com.flashdynamix.motion.TweensyTimelineZero;
+    import com.flashdynamix.motion.TweensyZero;
+    import fl.motion.easing.Quartic;
+    import flash.display.MovieClip;
+    import flash.events.Event;
+    import flash.external.ExternalInterface;
+    import flash.text.TextFieldAutoSize;
+    
+    public dynamic class MainTimeline extends MovieClip
+    {
+        
+        
+        public var arrowModal_mc:MovieClip;
+        
+        public var arrow_mc:MovieClip;
+        
+        public var modalPointer_mc:MovieClip;
+        
+        public var nonModalHolder_mc:empty;
+        
+        public var nonModalPointer_mc:MovieClip;
+        
+        public var tutorialBox_mc:MovieClip;
+        
+        public var pointerNonModalTimeline:TweensyTimelineZero;
+        
+        public var modalTimeline:TweensyTimelineZero;
+        
+        public var pointerModalTimeline:TweensyTimelineZero;
+        
+        public var events:Array;
+        
+        public var layout:String;
+        
+        public var alignment:String;
+        
+        public var isOkCancel:Boolean;
+        
+        public var buttonText:String;
+        
+        public var allowCancel:Boolean;
+        
+        public const modalPopupWidth:Number = 531;
+        
+        public const modalPopupHeight:int = 265;
+        
+        public var beginPosX:Number;
+        
+        public var beginPosY:Number;
+        
+        public var endPosX:Number;
+        
+        public var endPosY:Number;
+        
+        public var modalBoxVisible:Boolean;
+        
+        public var modalPointerVisible:Boolean;
+        
+        public var nonModalHolderStartX;
+        
+        public var nonModalHolderCharacterCreationStartY;
+        
+        public var nonModalHolderDefaultY;
+        
+        public var nonModalHolderStartY;
+        
+        public var m_isCharacterCreation:Boolean;
+        
+        public var nonModalList:listDisplay;
+        
+        public var nonModalPopupDuration:Number;
+        
+        public var nonModalPointerStartHeight:Number;
+        
+        public var m_NonModalPointerActive:Boolean;
+        
+        public var frame_width:Number;
+        
+        public var frame_height:Number;
+        
+        public var xRoot:Number;
+        
+        public var tutorialBoxBgWidth:Number;
+        
+        public const pointerBGW:Number = 532;
+        
+        public var fadeOutY:Number;
+
+        public var stageWidth:Number;
+
+        public var stageHeight:Number;
+        
+        public function MainTimeline()
+        {
+            super();
+            addFrameScript(0,this.frame1);
+        }
+        
+        public function onEventResize() : *
+        {
+            // PIP - added resolution tracking
+            this.stageWidth = stage.stageWidth;
+            this.stageHeight = stage.stageHeight;
+
+            ExternalInterface.call("pipResolutionChanged", this.stageWidth, this.stageHeight);
+        }
+        
+        public function setWindow(param1:Number, param2:Number) : *
+        {
+            var _loc3_:Number = param1 / param2;
+            var _loc4_:Number = 1920;
+            var _loc5_:Number = 1080;
+            if(_loc3_ > 1.7)
+            {
+                _loc5_ = 1920 / param1 * param2;
+            }
+            else
+            {
+                _loc4_ = 1080 / param2 * param1;
+            }
+            this.frame_width = _loc4_;
+            this.frame_height = _loc5_;
+            this.xRoot = Math.round((1920 - this.frame_width) * 0.5);
+            this.nonModalHolder_mc.x = this.nonModalHolderStartX + this.xRoot;
+            this.beginPosX = Math.round((stage.stageWidth - this.modalPopupWidth) * 0.5);
+            this.beginPosY = Math.round((stage.stageHeight - this.modalPopupHeight) * 0.5);
+            this.tutorialBox_mc.x = this.beginPosX;
+            this.tutorialBox_mc.y = this.beginPosY;
+        }
+        
+        public function onEventUp(param1:Number) : Boolean
+        {
+            var _loc2_:Boolean = false;
+            switch(this.events[param1])
+            {
+                case "IE UIBack":
+                case "IE UICancel":
+                // case "IE UIAccept": // PIP
+                case "IE UITakeAll":
+                if(this.modalBoxVisible)
+                {
+                    this.fadeOutModal();
+                    _loc2_ = true;
+                }
+                else if(this.modalPointerVisible)
+                {
+                    this.fadeOutModalPointer();
+                    _loc2_ = true;
+                }
+            }
+            return _loc2_;
+        }
+        
+        public function onEventInit() : *
+        {
+            this.tutorialBox_mc.checkbox_mc.enable = true;
+            this.tutorialBox_mc.visible = false;
+            this.tutorialBox_mc.alpha = 0;
+            this.tutorialBox_mc.checkbox_mc.setState(0);
+            this.tutorialBox_mc.btnHelper = new buttonHintTextHelper(this.tutorialBox_mc.text_txt);
+            this.tutorialBox_mc.checkbox_mc.visible = false;
+            this.tutorialBox_mc.title_txt.autoSize = TextFieldAutoSize.CENTER;
+            this.modalBoxVisible = false;
+            this.nonModalPointer_mc.visible = false;
+            this.nonModalPointer_mc.alpha = 0;
+            this.nonModalPointer_mc.btnHelper = new buttonHintTextHelper(this.nonModalPointer_mc.text_txt);
+            this.nonModalHolder_mc.x = this.nonModalHolderStartX + this.xRoot;
+            this.nonModalHolder_mc.y = this.nonModalHolderStartY;
+            this.nonModalPointerStartHeight = this.nonModalPointer_mc.height;
+            this.arrow_mc.visible = false;
+            this.modalPointer_mc.visible = false;
+            this.modalPointer_mc.alpha = 0;
+            this.modalPointer_mc.btnHelper = new buttonHintTextHelper(this.modalPointer_mc.text_txt);
+            this.arrowModal_mc.visible = false;
+            this.modalPointer_mc.ok_mc.myFunc = this.fadeOutModalPointer;
+            this.tutorialBox_mc.ok_mc.myFunc = this.fadeOutModal;
+            this.modalPointer_mc.ok_mc.text_txt.htmlText = this.buttonText.toUpperCase();
+            this.tutorialBox_mc.ok_mc.text_txt.htmlText = this.buttonText.toUpperCase();
+            ExternalInterface.call("registerAnchorId","tutorialBox");
+            ExternalInterface.call("setAnchor","center","screen","center");
+            this.nonModalPointer_mc.close_mc.m_Disabled = true;
+            this.tutorialBoxBgWidth = 537;
+            this.tutorialBox_mc.bg_mc.setBG(this.tutorialBoxBgWidth,240);
+            this.tutorialBox_mc.text_txt.autoSize = TextFieldAutoSize.CENTER;
+            this.tutorialBox_mc.title_txt.autoSize = TextFieldAutoSize.CENTER;
+            this.tutorialBox_mc.checkbox_mc.label_txt.autoSize = TextFieldAutoSize.LEFT;
+            this.modalPointer_mc.ok_mc.text_txt.filters = this.tutorialBox_mc.ok_mc.text_txt.filters = textEffect.createStrokeFilter(0,1.5);
+        }
+        
+        public function xcloseBtnFunc() : *
+        {
+            ExternalInterface.call("cancelNonModal");
+            this.fadeOutNonModalPointer();
+            this.nonModalPointer_mc.close_mc.m_Disabled = true;
+        }
+        
+        public function onEventDown(param1:Number) : Boolean
+        {
+            return false;
+        }
+        
+        public function setCheckboxVisible(param1:Boolean) : *
+        {
+            this.tutorialBox_mc.checkbox_mc.visible = param1;
+        }
+        
+        public function setCheckboxLabel(param1:String) : *
+        {
+            this.tutorialBox_mc.checkbox_mc.label_txt.multiline = false;
+            this.tutorialBox_mc.checkbox_mc.label_txt.wordWrap = false;
+            this.tutorialBox_mc.checkbox_mc.label_txt.htmlText = param1;
+            var _loc2_:Number = 460 - this.tutorialBox_mc.checkbox_mc.label_txt.x;
+            if(param1 != "" && this.tutorialBox_mc.checkbox_mc.label_txt.textWidth > _loc2_)
+            {
+                this.tutorialBox_mc.checkbox_mc.label_txt.multiline = true;
+                this.tutorialBox_mc.checkbox_mc.label_txt.wordWrap = true;
+                this.tutorialBox_mc.checkbox_mc.label_txt.width = _loc2_;
+            }
+            this.tutorialBox_mc.checkbox_mc.visible = true;
+            this.tutorialBox_mc.checkbox_mc.x = Math.round((460 + this.tutorialBox_mc.text_txt.x - (this.tutorialBox_mc.checkbox_mc.label_txt.x + this.tutorialBox_mc.checkbox_mc.label_txt.textWidth)) * 0.5);
+        }
+        
+        public function setCheckboxState(param1:Number) : *
+        {
+            this.tutorialBox_mc.checkbox_mc.setState(param1);
+        }
+        
+        public function getHeight() : Number
+        {
+            return this.tutorialBox_mc.height;
+        }
+        
+        public function getWidth() : Number
+        {
+            return this.tutorialBox_mc.width;
+        }
+        
+        public function setX(param1:Number) : void
+        {
+            this.tutorialBox_mc.x = param1;
+        }
+        
+        public function setY(param1:Number) : void
+        {
+            this.tutorialBox_mc.y = param1;
+        }
+        
+        public function setPos(param1:Number, param2:Number) : void
+        {
+            this.tutorialBox_mc.x = param1;
+            this.tutorialBox_mc.y = param2;
+        }
+        
+        public function getX() : Number
+        {
+            return this.tutorialBox_mc.x;
+        }
+        
+        public function getY() : Number
+        {
+            return this.tutorialBox_mc.y;
+        }
+        
+        public function fadeInNonModalPointer(param1:String, param2:Number, param3:Number, param4:Number) : *
+        {
+            this.nonModalHolder_mc.visible = false;
+            this.nonModalPointer_mc.visible = true;
+            this.arrow_mc.visible = true;
+            var _loc5_:Number = 33;
+            this.nonModalPointer_mc.close_mc.m_Disabled = false;
+            this.nonModalPointer_mc.alpha = 0;
+            this.nonModalPointer_mc.text_txt.autoSize = TextFieldAutoSize.LEFT;
+            this.nonModalPointer_mc.btnHelper.setText(param1,true);
+            this.nonModalPointer_mc.btnHelper.setYPos(_loc5_);
+            ExternalInterface.call("PlaySound","UI_Game_Notification_Open");
+            var _loc6_:Number = Math.round(this.nonModalPointer_mc.text_txt.textHeight) + _loc5_ * 2 + 2;
+            this.nonModalPointer_mc.bg_mc.setBG(this.pointerBGW,_loc6_);
+            this.arrow_mc.x = Math.round(param2);
+            this.arrow_mc.y = Math.round(param3);
+            switch(param4)
+            {
+                case 0:
+                this.arrow_mc.rotation = 0;
+                this.nonModalPointer_mc.x = param2;
+                this.nonModalPointer_mc.y = this.arrow_mc.y + this.arrow_mc.height * 0.5;
+                break;
+                case 1:
+                this.arrow_mc.rotation = 90;
+                this.nonModalPointer_mc.x = this.arrow_mc.x - this.arrow_mc.width * 0.5 - Math.round(this.nonModalPointer_mc.width * 0.5);
+                this.nonModalPointer_mc.y = this.arrow_mc.y - Math.round(this.nonModalPointer_mc.height * 0.5);
+                break;
+                case 2:
+                this.arrow_mc.rotation = 180;
+                this.nonModalPointer_mc.x = param2;
+                this.nonModalPointer_mc.y = this.arrow_mc.y - this.arrow_mc.height * 0.5 - this.nonModalPointer_mc.height;
+                break;
+                case 3:
+                this.arrow_mc.rotation = 270;
+                this.nonModalPointer_mc.x = this.arrow_mc.x + this.arrow_mc.width * 0.5 + Math.round(this.nonModalPointer_mc.width * 0.5);
+                this.nonModalPointer_mc.y = this.arrow_mc.y - Math.round(this.nonModalPointer_mc.height * 0.5);
+            }
+            this.nonModalPointer_mc.scaleX = 0.95;
+            this.nonModalPointer_mc.scaleY = 0.95;
+            var _loc7_:Number = Math.ceil(this.nonModalPointer_mc.width * 0.5);
+            this.nonModalPointer_mc.x = Math.round(Math.min(Math.max(5 + _loc7_,this.nonModalPointer_mc.x),stage.stageWidth - _loc7_ - 5));
+            this.nonModalPointer_mc.y = Math.round(Math.min(Math.max(5,this.nonModalPointer_mc.y),stage.stageHeight - this.nonModalPointer_mc.height - 5));
+            this.stopNonModalPointerTween();
+            this.pointerNonModalTimeline = TweensyZero.to(this.nonModalPointer_mc,{
+                "alpha":1,
+                "scaleX":1,
+                "scaleY":1
+            },0.4,Quartic.easeOut);
+            this.m_NonModalPointerActive = true;
+        }
+        
+        public function fadeOutNonModalPointer() : *
+        {
+            this.stopNonModalPointerTween();
+            this.pointerNonModalTimeline = TweensyZero.to(this.nonModalPointer_mc,{
+                "alpha":0,
+                "scaleX":0.95,
+                "scaleY":0.95
+            },0.5,Quartic.easeOut);
+            this.pointerNonModalTimeline.onComplete = this.fadeOutNonModalPointerDone;
+            this.arrow_mc.visible = false;
+            ExternalInterface.call("PlaySound","UI_Game_Notification_Close");
+        }
+        
+        public function fadeOutNonModalPointerDone() : *
+        {
+            this.m_NonModalPointerActive = false;
+            this.nonModalPointer_mc.visible = false;
+            ExternalInterface.call("fadeOutNonModalPointerDone");
+        }
+        
+        public function showNonModals(param1:Boolean) : *
+        {
+            if(this.m_NonModalPointerActive)
+            {
+                this.nonModalPointer_mc.visible = param1;
+                this.arrow_mc.visible = param1;
+            }
+            this.nonModalHolder_mc.visible = param1;
+            if(!this.nonModalHolder_mc.visible)
+            {
+                this.nonModalList.clearElements();
+            }
+        }
+        
+        public function stopNonModalPointerTween() : *
+        {
+            if(this.pointerNonModalTimeline)
+            {
+                if(this.pointerNonModalTimeline.onComplete != null)
+                {
+                this.pointerNonModalTimeline.onComplete = null;
+                }
+                TweensyZero.stop(this.nonModalPointer_mc);
+            }
+        }
+        
+        public function stopModalPointerTween() : *
+        {
+            if(this.pointerModalTimeline)
+            {
+                if(this.pointerModalTimeline.onComplete != null)
+                {
+                this.pointerModalTimeline.onComplete = null;
+                }
+                TweensyZero.stop(this.modalPointer_mc);
+            }
+        }
+        
+        public function stopModalTween() : *
+        {
+            if(this.modalTimeline)
+            {
+                if(this.modalTimeline.onComplete != null)
+                {
+                this.modalTimeline.onComplete = null;
+                }
+                TweensyZero.stop(this.tutorialBox_mc);
+            }
+        }
+        
+        public function setIsCharacterCreation(param1:Boolean) : *
+        {
+            this.m_isCharacterCreation = param1;
+            if(this.m_isCharacterCreation)
+            {
+                this.nonModalHolderStartY = this.nonModalHolderCharacterCreationStartY;
+            }
+            else
+            {
+                this.nonModalHolderStartY = this.nonModalHolderDefaultY;
+            }
+            this.repositionModalHolder(false);
+        }
+        
+        public function addNonModalBox(param1:String, param2:String, param3:String, param4:String) : *
+        {
+            this.nonModalHolder_mc.visible = true;
+            var _loc5_:MovieClip;
+            if(!(_loc5_ = this.nonModalList.getElementByString("idStr",param1)))
+            {
+                this.nonModalList.clearElements();
+                _loc5_ = new nonModalPopup();
+                this.nonModalList.addElement(_loc5_);
+                _loc5_.close_mc.init(this.xcloseBtnFunc);
+                _loc5_.idStr = param1;
+            }
+            else
+            {
+                this.nonModalList.moveElementToPosition(_loc5_.list_pos,0);
+            }
+            _loc5_.title_txt.autoSize = TextFieldAutoSize.CENTER;
+            _loc5_.title_txt.htmlText = param3;
+            _loc5_.scrolly_mc.x = Math.round(167 - _loc5_.title_txt.textWidth * 0.5);
+            _loc5_.nonModalTitleBar_mc.y = Math.round(_loc5_.title_txt.y + _loc5_.title_txt.textHeight + 5);
+            _loc5_.alpha = 0;
+            _loc5_.text_txt.autoSize = TextFieldAutoSize.LEFT;
+            _loc5_.btnHelper = new buttonHintTextHelper(_loc5_.text_txt);
+            _loc5_.btnHelper.setText(param4,true);
+            _loc5_.btnHelper.setYPos(Math.round(_loc5_.title_txt.y + _loc5_.title_txt.textHeight + 28));
+            var _loc6_:Number = Math.round(_loc5_.text_txt.y + _loc5_.text_txt.textHeight + 45);
+            _loc5_.bg_mc.setBG(392,_loc6_);
+            var _loc7_:Number = this.calcTutBoxAlpha(this.nonModalList.length);
+            TweensyZero.to(_loc5_,{
+                "alpha":_loc7_,
+                "scaleX":1,
+                "scaleY":1
+            },1.2,Quartic.easeOut);
+            this.nonModalList.positionElements();
+            this.repositionModalHolder(false);
+        }
+        
+        public function calcTutBoxAlpha(param1:Number) : *
+        {
+            var _loc2_:Number = 1;
+            if(param1 < 3)
+            {
+                _loc2_ = 1;
+            }
+            else
+            {
+                _loc2_ = 1 - (param1 - 2) * 0.1;
+                _loc2_ = this.clamp(_loc2_,0.5,1);
+            }
+            return _loc2_;
+        }
+        
+        public function clamp(param1:Number, param2:Number, param3:Number) : Number
+        {
+            return Math.max(Math.min(param1,param3),param2);
+        }
+        
+        public function removeNonModalBox(param1:String = "") : *
+        {
+            if(this.nonModalList.length <= 0)
+            {
+                return;
+            }
+            var _loc2_:* = 1;
+            var _loc3_:MovieClip = this.nonModalList.getAt(0);
+            if(param1 != "")
+            {
+                _loc3_ = this.nonModalList.getElementByString("idStr",param1);
+            }
+            if(_loc3_)
+            {
+                _loc3_.tw = new larTween(_loc3_,"alpha",Quartic.easeInOut,NaN,0,_loc2_,this.doRemoveElement,_loc3_);
+            }
+        }
+        
+        public function doRemoveElement(param1:MovieClip) : *
+        {
+            this.nonModalList.removeElement(param1.list_pos,true);
+        }
+        
+        public function onNonModalBoxRemoved(param1:Event) : *
+        {
+            var _loc3_:Number = NaN;
+            this.repositionModalHolder(true);
+            var _loc2_:* = 0;
+            while(_loc2_ < this.nonModalList.length)
+            {
+                _loc3_ = this.calcTutBoxAlpha(this.nonModalList.length - 1 - _loc2_);
+                TweensyZero.to(this.nonModalList.getAt(_loc2_),{
+                "alpha":_loc3_,
+                "scaleX":1,
+                "scaleY":1
+                },0.4,Quartic.easeInOut);
+                _loc2_++;
+            }
+        }
+        
+        public function repositionModalHolder(param1:Boolean) : *
+        {
+            var _loc2_:Number = NaN;
+            if(this.nonModalList.length <= 0)
+            {
+                return;
+            }
+            if(param1)
+            {
+                _loc2_ = !!this.m_isCharacterCreation ? Number(this.nonModalHolderCharacterCreationStartY) : Number(this.nonModalHolderStartY - this.nonModalList.getAt(this.nonModalList.length - 1).height - (this.nonModalList.length - 1) * this.nonModalList.m_customElementHeight);
+                TweensyZero.to(this.nonModalHolder_mc,{"y":_loc2_},0.4,Quartic.easeInOut);
+            }
+            else
+            {
+                this.nonModalHolder_mc.y = !!this.m_isCharacterCreation ? Number(this.nonModalHolderCharacterCreationStartY) : Number(this.nonModalHolderStartY - this.nonModalList.getAt(this.nonModalList.length - 1).height - (this.nonModalList.length - 1) * this.nonModalList.m_customElementHeight);
+            }
+        }
+        
+        public function fadeInModalPointer(param1:String, param2:Number, param3:Number, param4:Number) : *
+        {
+            var _loc5_:Number = 5;
+            var _loc6_:Number = 33;
+            this.modalPointer_mc.alpha = 0;
+            this.modalPointer_mc.text_txt.autoSize = TextFieldAutoSize.LEFT;
+            this.modalPointer_mc.btnHelper.setText(param1,true);
+            this.modalPointer_mc.btnHelper.setYPos(_loc6_);
+            this.modalPointerVisible = true;
+            this.modalPointer_mc.visible = true;
+            ExternalInterface.call("PlaySound","UI_Game_Notification_Open");
+            var _loc7_:Number = this.modalPointer_mc.text_txt.textHeight + _loc6_ * 2 + this.modalPointer_mc.ok_mc.height + 29;
+            this.modalPointer_mc.bg_mc.setBG(this.pointerBGW,_loc7_);
+            this.modalPointer_mc.ok_mc.y = _loc7_ - 70;
+            this.arrowModal_mc.visible = true;
+            this.arrowModal_mc.x = Math.round(param2);
+            this.arrowModal_mc.y = Math.round(param3);
+            switch(param4)
+            {
+                case 0:
+                this.arrowModal_mc.rotation = 0;
+                this.modalPointer_mc.x = param2;
+                this.modalPointer_mc.y = this.arrowModal_mc.y + this.arrowModal_mc.height * 0.5;
+                break;
+                case 1:
+                this.arrowModal_mc.rotation = 90;
+                this.modalPointer_mc.x = this.arrowModal_mc.x - this.arrowModal_mc.width * 0.5 - Math.round(this.modalPointer_mc.width * 0.5);
+                this.modalPointer_mc.y = this.arrowModal_mc.y - Math.round(this.modalPointer_mc.height * 0.5);
+                break;
+                case 2:
+                this.arrowModal_mc.rotation = 180;
+                this.modalPointer_mc.x = param2;
+                this.modalPointer_mc.y = this.arrowModal_mc.y - this.arrowModal_mc.height * 0.5 - this.modalPointer_mc.height;
+                break;
+                case 3:
+                this.arrowModal_mc.rotation = 270;
+                this.modalPointer_mc.x = this.arrowModal_mc.x + this.arrowModal_mc.width * 0.5 + Math.round(this.modalPointer_mc.width * 0.5);
+                this.modalPointer_mc.y = this.arrowModal_mc.y - Math.round(this.modalPointer_mc.height * 0.5);
+            }
+            this.modalPointer_mc.scaleX = 0.95;
+            this.modalPointer_mc.scaleY = 0.95;
+            var _loc8_:Number = Math.ceil(this.modalPointer_mc.width * 0.5);
+            this.modalPointer_mc.x = Math.round(Math.min(Math.max(_loc5_ + _loc8_,this.modalPointer_mc.x),stage.stageWidth - _loc8_ - _loc5_));
+            this.modalPointer_mc.y = Math.round(Math.min(Math.max(_loc5_,this.modalPointer_mc.y),stage.stageHeight - this.modalPointer_mc.height - _loc5_));
+            this.stopModalPointerTween();
+            this.pointerModalTimeline = TweensyZero.to(this.modalPointer_mc,{
+                "alpha":1,
+                "scaleX":1,
+                "scaleY":1
+            },0.4,Quartic.easeOut);
+        }
+        
+        public function fadeOutModalPointer() : *
+        {
+            this.pointerModalTimeline = TweensyZero.to(this.modalPointer_mc,{
+                "alpha":0,
+                "scaleX":0.95,
+                "scaleY":0.95
+            },0.5,Quartic.easeOut);
+            this.pointerModalTimeline.onComplete = this.fadeOutModalPointerDone;
+            this.arrowModal_mc.visible = false;
+            ExternalInterface.call("PlaySound","UI_Game_Notification_Close");
+            ExternalInterface.call("startFadeOut");
+        }
+        
+        public function fadeOutModalPointerDone() : *
+        {
+            this.modalPointerVisible = false;
+            this.modalPointer_mc.visible = false;
+            ExternalInterface.call("OkPressed");
+        }
+        
+        public function fadeInModal(param1:String, param2:String, param3:String, param4:int = -1, param5:int = -1) : *
+        {
+            var posX:int = 0;
+            var posY:int = 0;
+            var category:String = param1;
+            var title:String = param2;
+            var t:String = param3;
+            var customPosX:int = param4;
+            var customPosY:int = param5;
+            this.tutorialBox_mc.title_txt.y = 66;
+            this.tutorialBox_mc.title_txt.htmlText = title;
+            textHelpers.smallCaps(this.tutorialBox_mc.title_txt);
+            this.tutorialBox_mc.btnHelper.setText(t,true);
+            var tY:Number = this.tutorialBox_mc.title_txt.y;
+            var bY:Number = 0;
+            if(this.tutorialBox_mc.title_txt.visible && this.tutorialBox_mc.title_txt.text != "")
+            {
+                tY = this.tutorialBox_mc.title_txt.y + this.tutorialBox_mc.title_txt.textHeight;
+            }
+            this.tutorialBox_mc.btnHelper.setYPos(Math.ceil(tY) + 13);
+            bY = this.tutorialBox_mc.text_txt.y + this.tutorialBox_mc.text_txt.textHeight + 10;
+            if(this.tutorialBox_mc.checkbox_mc.visible)
+            {
+                this.tutorialBox_mc.checkbox_mc.y = bY;
+                bY = this.tutorialBox_mc.checkbox_mc.y + this.tutorialBox_mc.checkbox_mc.height + 10;
+            }
+            else
+            {
+                this.tutorialBox_mc.checkbox_mc.y = 0;
+            }
+            this.tutorialBox_mc.ok_mc.y = bY;
+            this.tutorialBox_mc.visible = true;
+            this.modalBoxVisible = true;
+            ExternalInterface.call("PlaySound","UI_Game_Notification_Open");
+            this.stopModalTween();
+            this.tutorialBox_mc.scaleX = this.tutorialBox_mc.scaleY = 1;
+            if(customPosX == -1)
+            {
+                posX = this.beginPosX;
+            }
+            else
+            {
+                posX = customPosX;
+            }
+            if(customPosY == -1)
+            {
+                posY = this.beginPosY;
+            }
+            else
+            {
+                posY = customPosY;
+            }
+            this.tutorialBox_mc.x = Math.round(posX);
+            this.tutorialBox_mc.y = Math.round(posY - 50);
+            this.fadeOutY = posY + 25;
+            this.tutorialBox_mc.bg_mc.setBG(this.tutorialBoxBgWidth,this.tutorialBox_mc.ok_mc.y + 5 + this.tutorialBox_mc.ok_mc.height);
+            this.tutorialBox_mc.ok_mc.x = this.tutorialBox_mc.bDeco_mc.x = this.tutorialBox_mc.tDeco_mc.x = Math.round(this.tutorialBox_mc.bg_mc.width * 0.5);
+            this.tutorialBox_mc.bDeco_mc.y = this.tutorialBox_mc.bg_mc.y + this.tutorialBox_mc.bg_mc.height - 3;
+            this.modalTimeline = TweensyZero.to(this.tutorialBox_mc,{
+                "alpha":1,
+                "scaleX":1,
+                "scaleY":1,
+                "y":posY
+            },0.6,Quartic.easeOut);
+            this.modalTimeline.onUpdate = function():*
+            {
+            };
+        }
+        
+        public function fadeOutModal() : *
+        {
+            this.modalTimeline = TweensyZero.to(this.tutorialBox_mc,{
+                "alpha":0,
+                "y":this.fadeOutY
+            },0.35,Quartic.easeOut);
+            this.modalTimeline.onComplete = this.fadeOutModalDone;
+            ExternalInterface.call("PlaySound","UI_Game_Notification_Close");
+            ExternalInterface.call("startFadeOut");
+        }
+        
+        public function fadeOutModalDone() : *
+        {
+            this.modalBoxVisible = false;
+            this.tutorialBox_mc.visible = false;
+            ExternalInterface.call("OkPressed");
+        }
+        
+        public function getAngle(param1:Number, param2:Number) : Number
+        {
+            var _loc3_:Number = 180 / Math.PI * Math.atan2(stage.stageHeight * 0.5 - param2,stage.stageWidth * 0.5 - param1) - 90;
+            if(_loc3_ < 0)
+            {
+                _loc3_ += 360;
+            }
+            return _loc3_;
+        }
+        
+        public function addBtnHint(param1:Number, param2:String, param3:Number) : *
+        {
+            this.tutorialBox_mc.buttonHintContainer_mc.addBtnHint(param1,param2,param3);
+        }
+        
+        public function clearBtnHints() : *
+        {
+            this.tutorialBox_mc.buttonHintContainer_mc.clearBtnHints();
+        }
+        
+        function frame1() : *
+        {
+            this.events = new Array("IE UIAccept","IE UIBack","IE UICancel","IE UITakeAll");
+            this.layout = "fillVFit";
+            this.alignment = "center";
+            this.isOkCancel = true;
+            this.allowCancel = false;
+            this.beginPosX = 694;
+            this.beginPosY = 634;
+            this.endPosX = 1660;
+            this.endPosY = 180;
+            this.nonModalHolderStartX = 40;
+            this.nonModalHolderCharacterCreationStartY = 214;
+            this.nonModalHolderDefaultY = 960;
+            this.nonModalHolderStartY = this.nonModalHolderDefaultY;
+            this.nonModalList = new listDisplay();
+            this.nonModalList.m_customElementHeight = 40;
+            this.nonModalList.EL_SPACING = 0;
+            this.nonModalList.addEventListener("elementRemoved",this.onNonModalBoxRemoved);
+            this.nonModalHolder_mc.addChild(this.nonModalList);
+            this.nonModalPopupDuration = 10;
+            this.m_NonModalPointerActive = false;
+            this.frame_width = 1920;
+            this.frame_height = 1080;
+            this.xRoot = 0;
+            this.tutorialBoxBgWidth = 502;
+        }
+    }
+}

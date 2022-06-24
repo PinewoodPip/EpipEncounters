@@ -1,0 +1,159 @@
+ 
+package
+{
+    import flash.display.MovieClip;
+    import flash.events.MouseEvent;
+    import flash.external.ExternalInterface;
+    
+    public dynamic class Slot extends MovieClip
+    {
+        // public var bg_mc:MovieClip;
+        // public var frame_mc:MovieClip;
+        // public var source_frame_mc:MovieClip;
+
+        public var icon_mc:MovieClip;
+        
+        public var amount_mc:MovieClip;
+        
+        public var cd_mc:MovieClip;
+        
+        public var disable_mc:MovieClip;
+        
+        public var refreshSlot_mc:MovieClip;
+        
+        public var unavailable_mc:MovieClip;
+        
+        public var id:Number;
+        
+        public var oldCD:Number;
+
+        public var base:MovieClip;
+        
+        public function Slot(index:Number)
+        {
+            super();
+            this.id = index;
+
+            // Setup icon
+            var iggy:MovieClip = new MovieClip();
+            iggy.x = 0;
+            iggy.y = 0;
+            iggy.name = "iggy_pip_hotbar_slot_" + index;
+            this.addChild(iggy);
+            this.icon_mc = iggy;
+
+            this.setChildIndex(this.icon_mc, 0);
+            this.setChildIndex(this.bg_mc, 0);
+
+            addFrameScript(0,this.frame1);
+        }
+        
+        public function setCoolDown(param1:Number, param2:Boolean = true) : *
+        {
+            if(param1 == -1)
+            {
+                this.oldCD = 0;
+                param1 = 0;
+            }
+            if(param1 == 0)
+            {
+
+                this.cd_mc.visible = false;
+
+                if(this.oldCD != 0)
+                {
+                    this.refreshSlot_mc.visible = true;
+                    this.refreshSlot_mc.alpha = 1;
+                    this.refreshSlot_mc.gotoAndPlay(2);
+                    ExternalInterface.call("PlaySound","UI_Game_Skill_Cooldown_End");
+
+                    // PIP - set enabled as well
+                    if (param2)
+                    {
+                        this.disable_mc.alpha = 0;
+                        this.isEnabled = true;
+                    }
+                }
+            }
+            else
+            {
+                this.cd_mc.visible = true;
+
+                if (param2)
+                {
+                    this.isEnabled = false;
+                    this.disable_mc.alpha = 0; // intentional, so the overlays dont stack
+                }
+            }
+            this.oldCD = param1;
+            this.cd_mc.setCoolDown(param1);
+        }
+        
+        public function onOver(param1:MouseEvent) : *
+        {
+            ExternalInterface.call("PlaySound","UI_Generic_Over");
+            ExternalInterface.call("SlotHover",this.id);
+            // if((root as MovieClip).isDragging || this.inUse && this.isEnabled)
+            // {
+            //     ExternalInterface.call("PlaySound","UI_Generic_Over");
+            //     ExternalInterface.call("SlotHover",this.id);
+            // }
+
+            this.onMouseOver();
+        }
+        
+        public function onOut(param1:MouseEvent) : *
+        {
+            this.onMouseOut();
+        }
+        
+        public function onClick(param1:MouseEvent) : *
+        {
+            // overwritten to distinguish between calls from clicking and from hotkeys. The original UI call is now fired from lua
+            // ExternalInterface.call("SlotPressed",this.id,this.isEnabled);
+            ExternalInterface.call("pipSlotPressed",this.id,this.isEnabled, false);
+            if(this.isEnabled)
+            {
+                ExternalInterface.call("PlaySound","UI_Generic_Click");
+            }
+            else if(this.cd_mc.visible)
+            {
+                ExternalInterface.call("PlaySound","UI_Game_Skill_Cooldown_Neg");
+            }
+        }
+
+        public function onSlotKeyEvent() : *
+        {
+            // used for using slots from keyboard keys
+            ExternalInterface.call("pipSlotPressed",this.id,this.isEnabled, true);
+            if(this.isEnabled)
+            {
+                ExternalInterface.call("PlaySound","UI_Generic_Click");
+            }
+            else if(this.cd_mc.visible)
+            {
+                ExternalInterface.call("PlaySound","UI_Game_Skill_Cooldown_Neg");
+            }
+        }
+        
+        public function onMouseOver() : *
+        {
+            
+        }
+        
+        public function onMouseOut() : *
+        {
+            ExternalInterface.call("SlotHoverOut",this.id);
+        }
+        
+        function frame1() : *
+        {
+            this.amount_mc.mouseEnabled = false;
+            this.amount_mc.mouseChildren = false;
+            this.refreshSlot_mc.visible = false;
+            this.frame_mc.mouseEnabled = false;
+
+            this.addEventListener(MouseEvent.MOUSE_OVER, this.onOver);
+        }
+    }
+}

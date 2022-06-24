@@ -1,0 +1,326 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+DB_PIP_ModSettings_EpicBosses(1);
+
+// ELEMENTALIST
+// params: special logic, keyword association, Activator | Mutator, index in list
+DB_PIP_EpicBosses_SpecialLogic("Ascension_Elementalist_ACT_FireEarth_AllySkills", "Elementalist", "Activator", 0);
+DB_PIP_EpicBosses_SpecialLogic("Ascension_Elementalist_ACT_PredatorOrVuln3", "Elementalist", "Activator", 1);
+DB_PIP_EpicBosses_SpecialLogic("Ascension_Elementalist_ACT_AirWater_AllySkills", "Elementalist", "Activator", 2);
+DB_PIP_EpicBosses_SpecialLogic("Ascension_Elementalist_ACT_AirWater_AllySkills_MK2_HuntsWar", "Elementalist", "Activator", 3);
+
+DB_PIP_EpicBosses_SpecialLogic("Ascension_Elementalist_MUTA_FireEarth_NonTieredStatuses", "Elementalist", "Mutator", 0);
+DB_PIP_EpicBosses_SpecialLogic("Ascension_ViolentStrike_ACT_ElemStacks", "Elementalist", "Mutator", 1);
+DB_PIP_EpicBosses_SpecialLogic("Ascension_Elementalist_MUTA_FeedbackPowerEffect", "Elementalist", "Mutator", 2);
+DB_PIP_EpicBosses_SpecialLogic("Ascension_Elementalist_MUTA_FeedbackCrit", "Elementalist", "Mutator", 3);
+
+// PREDATOR
+DB_PIP_EpicBosses_SpecialLogic("Ascension_Predator_ACT_Terrified", "Predator", "Activator", 0);
+DB_PIP_EpicBosses_SpecialLogic("Ascension_Predator_ACT_BHStacks", "Predator", "Activator", 1);
+DB_PIP_EpicBosses_SpecialLogic("Ascension_Predator_ACT_Dazzled", "Predator", "Activator", 2);
+
+DB_PIP_EpicBosses_SpecialLogic("Ascension_Predator_MUTA_Hemorrhage", "Predator", "Mutator", 0);
+DB_PIP_EpicBosses_SpecialLogic("Ascension_Predator_MUTA_Slowed2", "Predator", "Mutator", 1);
+
+// VIOLENT STRIKES
+DB_PIP_EpicBosses_SpecialLogic("Ascension_ViolentStrike_ACT_BasicOnHit", "ViolentStrikes", "Activator", 0);
+DB_PIP_EpicBosses_SpecialLogic("Ascension_ViolentStrike_ACT_DamageAtOnce", "ViolentStrikes", "Activator", 1);
+DB_PIP_EpicBosses_SpecialLogic("Ascension_ViolentStrike_ACT_0AP", "ViolentStrikes", "Activator", 2);
+
+DB_PIP_EpicBosses_SpecialLogic("Ascension_ViolentStrike_MUTA_VitalityVoidACT", "ViolentStrikes", "Mutator", 0);
+DB_PIP_EpicBosses_SpecialLogic("Ascension_ViolentStrike_MUTA_Terrified2", "ViolentStrikes", "Mutator", 1);
+
+// CENTURION
+DB_PIP_EpicBosses_SpecialLogic("Ascension_Centurion_ACT_MissedByAttack", "Centurion", "Activator", 0);
+DB_PIP_EpicBosses_SpecialLogic("Ascension_Centurion_ACT_HitAlly", "Centurion", "Activator", 1);
+
+// CELESTIAL
+DB_PIP_EpicBosses_SpecialLogic("Ascension_Celestial_ACT_Offensive", "Celestial", "Activator", 0);
+DB_PIP_EpicBosses_SpecialLogic("Ascension_Celestial_ACT_AllySource", "Celestial", "Activator", 1);
+
+// VITALITY VOID
+DB_PIP_EpicBosses_SpecialLogic("Ascension_VitalityVoid_ACT_CombatDeath", "VitalityVoid", "Activator", 0);
+DB_PIP_EpicBosses_SpecialLogic("Ascension_VitalityVoid_ACT_SourceSpent", "VitalityVoid", "Activator", 1);
+
+// WARD
+DB_PIP_EpicBosses_SpecialLogic("Ascension_Ward_ACT_MK2_CritByEnemy", "Ward", "Activator", 0);
+
+// OTHER FUNSIES
+DB_PIP_EpicBosses_SpecialLogic("Ascension_MageFin", "Other", "Activator", 0);
+DB_PIP_EpicBosses_SpecialLogic("Ascension_Presence_MUTA_MK2_VitRegen", "Other", "Activator", 1); // Also grants +10 leadership.
+DB_PIP_EpicBosses_SpecialLogic("Ascension_Wither_ACT_Calcifying", "Other", "Activator", 2);
+DB_PIP_EpicBosses_SpecialLogic("Ascension_Skill_BoneshapedCrusher", "Other", "Activator", 3);
+
+// params: index, artifact id, display status
+DB_PIP_EpicBosses_Artifacts(0, "Artifact_Chthonian", "AMER_ARTIFACTPOWER_THECHTHONIAN_DISPLAY");
+DB_PIP_EpicBosses_Artifacts(1, "Artifact_Vertigo", "AMER_ARTIFACTPOWER_VERTIGO_DISPLAY");
+DB_PIP_EpicBosses_Artifacts(2, "Artifact_Convergence", "AMER_ARTIFACTPOWER_CONVERGENCE_DISPLAY");
+DB_PIP_EpicBosses_Artifacts(3, "Artifact_Zenith", "AMER_ARTIFACTPOWER_ZENITH_DISPLAY");
+DB_PIP_EpicBosses_Artifacts(4, "Artifact_Thirst", "AMER_ARTIFACTPOWER_THIRST_DISPLAY");
+DB_PIP_EpicBosses_Artifacts(5, "Artifact_MalleusMaleficarum", "AMER_ARTIFACTPOWER_MALLEUSMALEFICARUM_DISPLAY");
+DB_PIP_EpicBosses_Artifacts(6, "Artifact_Impetus", "AMER_ARTIFACTPOWER_IMPETUS_DISPLAY");
+DB_PIP_EpicBosses_Artifacts(7, "Artifact_Nightmare", "AMER_ARTIFACTPOWER_NIGHTMARE_DISPLAY");
+DB_PIP_EpicBosses_Artifacts(8, "Artifact_BlackglassBrand", "AMER_ARTIFACTPOWER_BLACKGLASSBRAND_DISPLAY");
+DB_PIP_EpicBosses_Artifacts(9, "Artifact_SanguineHarvest", "AMER_ARTIFACTPOWER_SANGUINEHARVEST_DISPLAY");
+DB_PIP_EpicBosses_Artifacts(10, "Artifact_Salamander", "AMER_ARTIFACTPOWER_SALAMANDER_DISPLAY");
+DB_PIP_EpicBosses_Artifacts(11, "Artifact_CorruscatingSilks", "AMER_ARTIFACTPOWER_CORUSCATINGSILKS_DIPLAY");
+DB_PIP_EpicBosses_Artifacts(12, "Artifact_Nihility", "AMER_ARTIFACTPOWER_NIHILITY_DISPLAY");
+DB_PIP_EpicBosses_Artifacts(13, "Artifact_Misery", "AMER_ARTIFACTPOWER_MISERY_DISPLAY");
+DB_PIP_EpicBosses_Artifacts(14, "Artifact_DrogsLuck", "AMER_ARTIFACTPOWER_DROGSLUCK_DISPLAY");
+DB_PIP_EpicBosses_Artifacts(15, "Artifact_Fecundity", "AMER_ARTIFACTPOWER_FECUNDITY_DISPLAY");
+DB_PIP_EpicBosses_ArtifactCount(16);
+
+// params: chance to be picked, category string, count of items in category (for rng call)
+DB_PIP_SpecialLogicPool(0.25, "Activator", "Elementalist", 4);
+DB_PIP_SpecialLogicPool(0.25, "Activator", "Predator", 3);
+DB_PIP_SpecialLogicPool(0.25, "Activator", "ViolentStrikes", 3);
+DB_PIP_SpecialLogicPool(0.25, "Activator", "Centurion", 2);
+DB_PIP_SpecialLogicPool(0.15, "Activator", "Celestial", 2);
+DB_PIP_SpecialLogicPool(0.15, "Activator", "VitalityVoid", 2);
+DB_PIP_SpecialLogicPool(0.15, "Activator", "Ward", 1);
+DB_PIP_SpecialLogicPool(0.15, "Activator", "Other", 4);
+
+DB_PIP_SpecialLogicPool(0.25, "Mutator", "Predator", 2);
+DB_PIP_SpecialLogicPool(0.25, "Mutator", "Elementalist", 4);
+DB_PIP_SpecialLogicPool(0.25, "Mutator", "ViolentStrikes", 2);
+
+KBSECTION
+
+// PROC PROC_AMER_CharAddedToCombat((CHARACTERGUID)_Char, (INTEGER)_Instance) // when character enters combat
+// THEN
+// DB_CombatChars(_Char, _Instance); // write _Char's id and combat id to database DB_CombatChars
+
+// PROC PROC_AMER_Combat_TurnStarted((CHARACTERGUID)_Char, (INTEGER)_HasActed) // when turn starts
+// AND
+// DB_CombatChars(_Char, _Instance) // get the combat instance of the character as _Instance
+// AND
+// DB_CombatChars(_OtherChar, _Instance) // proceed execution for each character in combat instance _Instance
+// AND
+// CharacterIsEnemy(_Char, _OtherChar, 1) // proceed if chars are enemies
+// THEN
+// CharacterStatusText(_OtherChar, "Is enemy"); // show overhead text
+
+PROC PROC_AMER_CharAddedToCombat((CHARACTERGUID)_Char, (INTEGER)_Init)
+AND
+QRY_PIP_EpicBosses_IsValidCharacter(_Char)
+THEN
+PROC_PIP_EpicBosses_Handle(_Char);
+
+QRY QRY_PIP_EpicBosses_IsValidCharacter((CHARACTERGUID)_Char)
+AND
+IsBoss(_Char, 1)
+AND
+NOT DB_IsPlayer(_Char)
+AND
+NOT DB_Origins(_Char)
+AND
+NOT QRY_IsSummonOrPartyFollower(_Char)
+AND
+QRY_PIP_EpicBosses_IsUninitialized((CHARACTERGUID)_Char)
+THEN
+DB_NOOP();
+
+QRY QRY_PIP_EpicBosses_IsValidCharacter((CHARACTERGUID)_Char)
+AND
+DB_AMER_ModSettings_Value("EpicEnemies", "EpicBossesChanceMultiplierNormies", _Multiplier)
+AND
+_Multiplier > 0.0
+AND
+NOT DB_IsPlayer(_Char)
+AND
+NOT DB_Origins(_Char)
+AND
+NOT QRY_IsSummonOrPartyFollower(_Char)
+AND
+QRY_PIP_EpicBosses_IsUninitialized((CHARACTERGUID)_Char)
+THEN
+DB_NOOP();
+
+PROC PROC_PIP_EpicBosses_Handle((CHARACTERGUID)_Char)
+THEN
+PROC_PIP_EpicBosses_RollSpecialLogic(_Char);
+PROC_PIP_EpicBosses_AddArtifacts(_Char);
+PROC_PIP_EpicBosses_AddArtifacts(_Char); // 2 per boss
+PROC_PIP_EpicBosses_Finalize(_Char);
+PROC_PIP_EpicBosses_AddExtraBoons(_Char);
+SetTag(_Char, "PIP_EpicBosses_Handled");
+
+PROC PROC_PIP_EpicBosses_AddArtifacts((CHARACTERGUID)_Char)
+AND
+IsBoss(_Char, 1) // only bosses gain artifacts.
+AND
+DB_PIP_EpicBosses_ArtifactCount(_Count)
+AND
+Random(_Count, _ChosenIndex)
+AND
+DB_PIP_EpicBosses_Artifacts(_ChosenIndex, _Artifact, _DisplayStatus)
+AND
+NOT DB_AMER_Artifacts_EquippedEffects(_Char, _Artifact, _) // don't roll an artifact twice. this means the boss will end up with just one artifact. When I initially wrote this script I didn't know a good way of implementing "pick X facts with no repeats" logic.
+THEN
+PROC_PIP_EpicBosses_EquipArtifact(_Char, _Artifact, _DisplayStatus);
+
+PROC PROC_PIP_EpicBosses_EquipArtifact((CHARACTERGUID)_Char, (STRING)_Artifact)
+AND
+DB_PIP_EpicBosses_Artifacts(_, _Artifact, _DisplayStatus)
+THEN
+PROC_PIP_EpicBosses_EquipArtifact(_Char, _Artifact, _DisplayStatus);
+
+PROC PROC_PIP_EpicBosses_EquipArtifact((CHARACTERGUID)_Char, (STRING)_Artifact, (STRING)_DisplayStatus)
+THEN
+PROC_AMER_Artifacts_EquipEffects(_Char, _Artifact, "Rune");PROC_PIP_EpicBosses_AddArtifactStatusDisplay(_Char, _DisplayStatus);
+// PROC_PIP_LogLogicAddition(_Char, _Artifact);
+
+// Add 10m predator range and 2 generic reaction charges.
+PROC PROC_PIP_EpicBosses_AddExtraBoons((CHARACTERGUID)_Char)
+THEN
+PROC_AMER_UI_Ascension_SpecialLogic_Add(_Char, "Ascension_Predator_MUTA_EpicBossRange", 1.0);
+PROC_AMER_ExtendedStat_CharacterAddStat(_Char, "FreeReactionCharge", "AnyReaction", "", "", 2.0);
+
+// go through each category, add 1 boon from it if random roll succeeds - then try to add a mutator if there are any available
+PROC PROC_PIP_EpicBosses_RollSpecialLogic((CHARACTERGUID)_Char)
+AND
+DB_PIP_SpecialLogicPool(_Chance, "Activator", _Category, _)
+AND
+QRY_PIP_EpicBosses_ChanceCheck(_Char, _Category)
+THEN
+PROC_PIP_EpicBosses_AddSpecialLogic(_Char, _Category);
+PROC_PIP_EpicBosses_AddMutators(_Char, _Category);
+
+// for bosses
+QRY QRY_PIP_EpicBosses_ChanceCheck((CHARACTERGUID)_Char, (STRING)_Category)
+AND
+IsBoss(_Char, 1)
+AND
+StringConcatenate("Chances_", _Category, _Setting)
+AND
+DB_AMER_ModSettings_Value("EpicEnemies", _Setting, _Chance)
+AND
+Integer(_Chance, _ChanceInt)
+AND
+QRY_AMER_GEN_RandomSuccess(_ChanceInt)
+THEN
+DB_NOOP();
+
+// for normal enemies
+QRY QRY_PIP_EpicBosses_ChanceCheck((CHARACTERGUID)_Char, (STRING)_Category)
+AND
+NOT IsBoss(_Char, 1)
+AND
+DB_AMER_ModSettings_Value("EpicEnemies", "EpicBossesChanceMultiplierNormies", _Multiplier)
+AND
+StringConcatenate("Chances_", _Category, _Setting)
+AND
+DB_AMER_ModSettings_Value("EpicEnemies", _Setting, _Chance)
+AND
+RealProduct(_Chance, _Multiplier, _ChanceForNormies)
+AND
+Integer(_ChanceForNormies, _ChanceInt)
+AND
+QRY_AMER_GEN_RandomSuccess(_ChanceInt)
+THEN
+DB_NOOP();
+
+PROC PROC_PIP_EpicBosses_AddMutators((CHARACTERGUID)_Char, (STRING)_Category)
+AND
+DB_PIP_SpecialLogicPool(_Chance, "Mutator", _Category, _TotalItems)
+AND
+Random(_TotalItems, _Index)
+AND
+DB_PIP_EpicBosses_SpecialLogic(_Logic, _Category, "Mutator", _Index)
+THEN
+DB_PIP_EpicBosses_QueuedLogic(_Char, _Category, "Mutator", _Logic);
+
+PROC PROC_PIP_EpicBosses_AddSpecialLogic((CHARACTERGUID)_Char, (STRING)_Category)
+AND
+DB_PIP_SpecialLogicPool(_Chance, _BoonType, _Category, _TotalItems)
+AND
+Random(_TotalItems, _Index)
+AND
+DB_PIP_EpicBosses_SpecialLogic(_Logic, _Category, _BoonType, _Index)
+THEN
+DB_PIP_EpicBosses_QueuedLogic(_Char, _Category, _BoonType, _Logic);
+
+PROC PROC_PIP_EpicBosses_Finalize((CHARACTERGUID)_Char)
+AND
+DB_PIP_EpicBosses_QueuedLogic(_Char, _Category, _BoonType, _Logic)
+THEN
+PROC_PIP_EpicBosses_FinalAddLogic(_Char, _Category, _BoonType, _Logic);
+NOT DB_PIP_EpicBosses_QueuedLogic(_Char, _Category, _BoonType, _Logic);
+
+PROC PROC_PIP_EpicBosses_FinalAddLogic((CHARACTERGUID)_Char, (STRING)_Category, (STRING)_BoonType, (STRING)_Logic)
+THEN
+PROC_AMER_UI_Ascension_SpecialLogic_Add(_Char, _Logic, 1.0);
+PROC_PIP_EpicBosses_AddStatusDisplay(_Char, _Logic);
+// PROC_PIP_LogLogicAddition(_Char, _Logic);
+
+PROC PROC_PIP_EpicBosses_AddStatusDisplay((CHARACTERGUID)_Char, (STRING)_Logic)
+AND
+StringConcatenate("PIP_EpicBosses_", _Logic, _Status)
+THEN
+ApplyStatus(_Char, _Status, -1.0, 1);
+
+// extender-only: add special buff with condensed tooltip.
+/* [OSITOOLS_ONLY]
+PROC PROC_PIP_EpicBosses_AddStatusDisplay((CHARACTERGUID)_Char, (STRING)_Logic)
+THEN
+ApplyStatus(_Char, "PIP_OSITOOLS_EpicBossesDisplay", -1.0, 1);
+*/
+
+PROC PROC_PIP_EpicBosses_AddArtifactStatusDisplay((CHARACTERGUID)_Char, (STRING)_DisplayStatus)
+THEN
+ApplyStatus(_Char, _DisplayStatus, -1.0, 1);
+
+// Also grants +10 leadership.
+PROC PROC_PIP_EpicBosses_FinalAddLogic((CHARACTERGUID)_Char, (STRING)_Category, (STRING)_BoonType, "Ascension_Presence_MUTA_MK2_VitRegen")
+THEN
+CharacterAddAbility(_Char, "Leadership", 10); // also add the other Presence bonuses
+PROC_AMER_UI_Ascension_SpecialLogic_Add(_Char, "Ascension_Presence_MUTA_BaseEleRes", 1.0);
+PROC_AMER_UI_Ascension_SpecialLogic_Add(_Char, "Ascension_Presence_MUTA_PhysRes", 1.0);
+PROC_AMER_UI_Ascension_SpecialLogic_Add(_Char, "Ascension_Presence_MUTA_MK2_Damage", 1.0);
+
+// chance to add Judgement to enemies with VS.
+PROC PROC_PIP_EpicBosses_FinalAddLogic((CHARACTERGUID)_Char, "ViolentStrikes", "Activator", (STRING)_Logic)
+AND
+QRY_AMER_GEN_RandomSuccess(20)
+THEN
+PROC_PIP_EpicBosses_EquipArtifact(_Char, "Artifact_Judgement");
+
+// chance to add Rapture to enemies with Celestial.
+PROC PROC_PIP_EpicBosses_FinalAddLogic((CHARACTERGUID)_Char, "Celestial", "Activator", (STRING)_Logic)
+AND
+QRY_AMER_GEN_RandomSuccess(20)
+THEN
+PROC_PIP_EpicBosses_EquipArtifact(_Char, "Artifact_Rapture");
+
+// chance to add Wendigo to enemies with Predator.
+PROC PROC_PIP_EpicBosses_FinalAddLogic((CHARACTERGUID)_Char, "Predator", "Activator", (STRING)_Logic)
+AND
+QRY_AMER_GEN_RandomSuccess(20)
+THEN
+PROC_PIP_EpicBosses_EquipArtifact(_Char, "Artifact_Wendigo");
+
+QRY QRY_PIP_EpicBosses_IsUninitialized((CHARACTERGUID)_Char)
+AND
+IsTagged(_Char, "PIP_EpicBosses_Handled", 0)
+THEN
+DB_NOOP();
+
+// always succeed in editor - for testing convenience, as reloading the story does not unset the handled tag.
+QRY QRY_PIP_EpicBosses_IsUninitialized((CHARACTERGUID)_Char)
+AND
+DB_AMER_IsEditorMode(1)
+THEN
+DB_NOOP();
+
+PROC PROC_PIP_LogLogicAddition((CHARACTERGUID)_Char, (STRING)_Logic)
+AND
+StringConcatenate("Gained ", _Logic, _Text)
+THEN
+PROC_AMER_GEN_CharacterCombatLogText(_Char, _Text);
+
+EXITSECTION
+NOT DB_PIP_ModSettings_EpicBosses(1);
+
+ENDEXITSECTION
+ParentTargetEdge "AMER_GLO_ModSettings_Wrapper"

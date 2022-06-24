@@ -1,0 +1,39 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+
+DB_PIP_Setting_Integer("", "", 0);
+NOT DB_PIP_Setting_Integer("", "", 0);
+
+DB_PIP_Setting_Real("", "", 0.0);
+NOT DB_PIP_Setting_Real("", "", 0.0);
+
+DB_PIP_EpicEnemies_AppliedEffect(NULL_00000000-0000-0000-0000-000000000000, "");
+NOT DB_PIP_EpicEnemies_AppliedEffect(NULL_00000000-0000-0000-0000-000000000000, "");
+
+DB_AMER_FlexStat_Master("Sight");
+DB_AMER_FlexStat_Master("Hearing");
+
+DB_PIP_Vanity_CustomDyes_DyedItem(NULL_00000000-0000-0000-0000-000000000000, "");
+NOT DB_PIP_Vanity_CustomDyes_DyedItem(NULL_00000000-0000-0000-0000-000000000000, "");
+
+DB_PIP_Vanity_AppliedAura(NULL_00000000-0000-0000-0000-000000000000, "", -1);
+NOT DB_PIP_Vanity_AppliedAura(NULL_00000000-0000-0000-0000-000000000000, "", -1);
+
+KBSECTION
+
+// PROC PIP_INT64DB_TEST()
+// AND
+// CharacterGetHostCharacter(_Host)
+// AND
+// DB_LoopEffect(_Host, _Handle, _, _, _, _)
+// AND
+// IntegertoString(_Handle, _Out)
+// THEN
+// CharacterStatusText(_Host, _Out);
+// NRD_ModCall("EpipEncounters", "TestPrint", )
+
+EXITSECTION
+
+ENDEXITSECTION
+ParentTargetEdge "Start_AMER"

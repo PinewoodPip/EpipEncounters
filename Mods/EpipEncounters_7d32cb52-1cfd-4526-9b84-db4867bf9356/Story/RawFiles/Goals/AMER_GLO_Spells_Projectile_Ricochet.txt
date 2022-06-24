@@ -1,0 +1,68 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+
+KBSECTION
+
+// PIP - Changed SI forking radius to 5m from 3m.
+
+QRY QRY_AMER_Source_Infusion_SkillPreCast((CHARACTERGUID)_Char, "Projectile_Ricochet", (INTEGER)_InfusCount)
+AND
+_InfusCount > 0
+THEN
+PROC_AMER_TempStat_FlexStat_Add_StatScaling(_Char, "Stat", "ACCURACYBOOST", "Ability", "RangerLore", 5.0, 1.0, 2000, "SkillCast");
+PROC_AMER_TempStat_FlexStat_Add_StatScaling(_Char, "Stat", "DAMAGEBOOST", "Ability", "RangerLore", 20.0, 4.0);
+//PROC_AMER_TempStat_ExtendedStat_Add_StatScaling(_Char, "AttributeIntelligenceEffect_Multiplier", "", "", "", "Ability", "RangerLore", 0.15, 0.03);
+
+QRY QRY_AMER_Source_Infusion_SkillCast_PerTarget((CHARACTERGUID)_Char, "Projectile_Ricochet", (GUIDSTRING)_Target, (REAL)_X, (REAL)_Y, (REAL)_Z, (INTEGER)_InfusCount)
+AND
+_InfusCount > 1
+THEN
+DB_AMER_IterateCharsAroundObject_Exclusion((CHARACTERGUID)_Target);    //Don't fire twice on primary target.
+PROC_AMER_GEN_IterateCharsAroundObject(_Target, 5.0, _Char, 10, "AMER_SourceInfusion_Ricochet_2");	//Enemies, not dead.
+
+
+QRY QRY_AMER_Source_Infusion_SkillCast_PerTarget((CHARACTERGUID)_Char, "Projectile_Ricochet", (GUIDSTRING)_Target, (REAL)_X, (REAL)_Y, (REAL)_Z, (INTEGER)_InfusCount)
+AND
+_InfusCount > 2
+THEN
+DB_AMER_IterateCharsAroundObject_Exclusion((CHARACTERGUID)_Target);    //Don't fire twice on primary target.
+PROC_AMER_GEN_IterateCharsAroundObject(_Target, 5.0, _Char, 10, "AMER_SourceInfusion_Ricochet_2");	//Enemies, not dead.
+DB_AMER_IterateCharsAroundObject_Exclusion((CHARACTERGUID)_Target);    //Don't fire twice on primary target.
+PROC_AMER_GEN_IterateCharsAroundObject(_Target, 5.0, _Char, 10, "AMER_SourceInfusion_Ricochet_2");	//Enemies, not dead.
+
+
+PROC PROC_AMER_GEN_IterateCharsAroundObject_Iterated((INTEGER)_RequestID, "AMER_SourceInfusion_Ricochet_2", (CHARACTERGUID)_SourceChar, (CHARACTERGUID)_Char)
+THEN
+PROC_AMER_Source_Infusion_RicochetRandTarget(_SourceChar, _Char);
+
+PROC PROC_AMER_GEN_IterateCharsAroundObject_Finished((INTEGER)_RequestID, "AMER_SourceInfusion_Ricochet_2", (CHARACTERGUID)_SourceChar)
+AND
+DB_AMER_Source_Infusion_RicochetRandTarget(_SourceChar, _Target)
+AND
+GetPosition(_Target, _X, _Y, _Z)
+THEN
+NOT DB_AMER_Source_Infusion_RicochetRandTarget(_SourceChar, _Target);
+PROC_AMER_GEN_ShootProjectileAtPos(_SourceChar, _X, _Y, _Z, "Projectile_Ricochet");
+
+
+
+PROC PROC_AMER_Source_Infusion_RicochetRandTarget((CHARACTERGUID)_SourceChar, (CHARACTERGUID)_Char)
+AND
+DB_AMER_Source_Infusion_RicochetRandTarget(_SourceChar, _Target)
+AND
+QRY_AMER_GEN_RandomSuccess(50)
+THEN
+NOT DB_AMER_Source_Infusion_RicochetRandTarget(_SourceChar, _Target);
+DB_AMER_Source_Infusion_RicochetRandTarget(_SourceChar, _Char);
+
+PROC PROC_AMER_Source_Infusion_RicochetRandTarget((CHARACTERGUID)_SourceChar, (CHARACTERGUID)_Char)
+AND
+NOT DB_AMER_Source_Infusion_RicochetRandTarget(_SourceChar, _)
+THEN
+DB_AMER_Source_Infusion_RicochetRandTarget(_SourceChar, _Char);
+
+EXITSECTION
+
+ENDEXITSECTION
+ParentTargetEdge "AMER_GLO_Spells_Huntsman"

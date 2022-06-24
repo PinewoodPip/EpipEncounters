@@ -1,0 +1,5 @@
+- Replaced the config json file with an ingame settings menu, available from the game's normal "Gameplay settings" tab
+- Unidentified artifacts now show their rarity as artifact, and use the custom color
+- Proteans and Artifact runes now also use the Artifact color, and slots that they cannot be put on have a warning message
+- Fixed Trickster's Repertoire breaking sneaking from other effects that cause you to sneak
+- Fixed hotbar initialization message (again)

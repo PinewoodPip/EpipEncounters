@@ -1,0 +1,17 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+
+KBSECTION
+
+// New flexstats.
+PROC PROC_AMER_Versioning_Patch("EpipEncounters", 1049)
+THEN
+DB_AMER_FlexStat_Master("Sight");
+DB_AMER_FlexStat_Master("Hearing");
+GoalCompleted;
+
+EXITSECTION
+
+ENDEXITSECTION
+ParentTargetEdge "AMER_GLO_Versioning_PatchWrapper"

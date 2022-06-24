@@ -1,0 +1,284 @@
+package contextMenu_fla
+{
+    import LS_Classes.listDisplay;
+    import flash.display.MovieClip;
+    import flash.external.ExternalInterface;
+    import flash.geom.Rectangle;
+    import flash.text.TextFieldAutoSize;
+    import flash.events.MouseEvent;
+    
+    public dynamic class windowsMenu_1 extends MovieClip
+    {
+        
+        
+        public var bg_mc:MovieClip;
+        
+        public var list:listDisplay;
+
+        public var base:MovieClip;
+
+        public var scrollAmount:Number = 0;
+        
+        public function windowsMenu_1()
+        {
+            super();
+            addFrameScript(0,this.frame1);
+        }
+        
+        public function setTitle(param1:String) : *
+        {
+            this.bg_mc.title_txt.htmlText = param1;
+        }
+
+        public function scroll(ev:MouseEvent) : *
+        {
+            // this.bg_mc.contextContent.y += ev.delta * this.bg_mc.contextContent.content_array[0].height;
+            var element:MovieClip = this.bg_mc.contextContent;
+
+            // if (this.list_string_id == "main")
+            // {
+            //     element = this.list;
+            // }
+
+            var entryHeight:Number = element.content_array[0].height;
+            // var containerHeight:Number = this.bg_mc.container_mc.height;
+            var containerHeight = Math.min(this.bg_mc.container_mc.y + this.bg_mc.container_mc.height, this.base.MAX_HEIGHT);
+            var newY:Number = element.scrollRect.y - (ev.delta * entryHeight);
+
+            // element.scrollRect = new Rectangle(0, newY, this.bg_mc.width, containerHeight);
+
+            // Restrain from completely leaving the container
+            // if (element.scrollRect.y > (containerHeight + entryHeight))
+            // {
+            //     element.scrollRect = new Rectangle(0, (containerHeight + entryHeight), this.bg_mc.width, containerHeight);
+            // }
+            // else if (element.scrollRect.y < -(containerHeight - entryHeight)) // Works
+            // {
+            //     element.scrollRect = new Rectangle(0, -(containerHeight - entryHeight), this.bg_mc.width, containerHeight);
+            // }
+
+            // if (containerHeight >= this.base.MAX_HEIGHT)
+            // {
+            //     element.scrollRect = new Rectangle(0, 0, this.bg_mc.width, containerHeight);
+            //     element.container_mc.y += ev.delta * entryHeight;
+            //     this.scrollAmount += ev.delta;
+
+            //     while (this.scrollAmount > (containerHeight / entryHeight) - 1)
+            //     {
+            //         element.container_mc.y -= entryHeight;
+            //         this.scrollAmount--;
+            //     }
+            //     while (this.scrollAmount < -element.content_array.length + 1) // Correct
+            //     {
+            //         element.container_mc.y += entryHeight;
+            //         this.scrollAmount++;
+            //     }
+            // }
+
+            if (containerHeight >= this.base.MAX_HEIGHT)
+            {
+                element.scrollRect = new Rectangle(0, 0, this.bg_mc.width, containerHeight);
+                element.container_mc.y += ev.delta * entryHeight;
+                this.scrollAmount += ev.delta;
+                var maxVisibleEntries:Number = containerHeight / entryHeight
+
+                while (this.scrollAmount > 0)
+                {
+                    element.container_mc.y -= entryHeight;
+                    this.scrollAmount--;
+                }
+                while (this.scrollAmount < -element.content_array.length + maxVisibleEntries) // Correct
+                {
+                    element.container_mc.y += entryHeight;
+                    this.scrollAmount++;
+                }
+            }
+        }
+        
+        public function addEntry(id:Number, actionID:String, clickSound:Boolean, text:String, greyedOut:Boolean, legal:Boolean) : *
+        {
+            var _loc7_:MovieClip;
+            if((_loc7_ = this.list.getElementByNumber("id",id)) == null)
+            {
+                _loc7_ = new WEntry();
+                this.list.addElement(_loc7_,false);
+                _loc7_.mouseChildren = false;
+                _loc7_.id = id;
+                _loc7_.actionID = actionID;
+                _loc7_.handle = 0;
+                _loc7_.arrow_mc.visible = false;
+                _loc7_.hl_mc.alpha = 0;
+                _loc7_.isButton = true;
+                _loc7_.legal = legal;
+                _loc7_.text_txt.autoSize = TextFieldAutoSize.LEFT;
+                _loc7_.menu = this;
+            }
+            _loc7_.text_txt.alpha = !!greyedOut ? 0.5 : 1;
+            _loc7_.arrow_mc.alpha = !!greyedOut ? 0.5 : 1;
+            _loc7_.clickSound = clickSound;
+            if(!legal)
+            {
+                _loc7_.text_txt.textColor = 10354688;
+                _loc7_.selectedColor = 10354688;
+                _loc7_.deSelectedColor = 10354688;
+            }
+            else
+            {
+                _loc7_.text_txt.textColor = 12103073;
+                _loc7_.selectedColor = 16777215;
+                _loc7_.deSelectedColor = 12103073;
+            }
+            _loc7_.text = text;
+            _loc7_.disabled = greyedOut;
+            _loc7_.text_txt.htmlText = text;
+            _loc7_.hl_mc.height = Math.floor(_loc7_.text_txt.textHeight) + 2;
+        }
+
+        public function addCheckbox(id:Number, actionID:String, clickSound:Boolean, text:String, checked:Boolean, greyedOut:Boolean, legal:Boolean) : *
+        {
+            var checkboxEntry:MovieClip;
+            if((checkboxEntry = this.list.getElementByNumber("id",id)) == null)
+            {
+                checkboxEntry = new CheckboxEntry();
+                this.list.addElement(checkboxEntry,false);
+                checkboxEntry.mouseChildren = false;
+                checkboxEntry.id = id;
+                checkboxEntry.actionID = actionID;
+                checkboxEntry.handle = 0;
+                checkboxEntry.arrow_mc.visible = false;
+                checkboxEntry.hl_mc.alpha = 0;
+                checkboxEntry.isButton = true;
+                checkboxEntry.legal = legal;
+                checkboxEntry.text_txt.autoSize = TextFieldAutoSize.LEFT;
+                checkboxEntry.menu = this;
+            }
+            checkboxEntry.text_txt.alpha = !!greyedOut ? 0.5 : 1;
+            checkboxEntry.arrow_mc.alpha = !!greyedOut ? 0.5 : 1;
+            checkboxEntry.clickSound = clickSound;
+            if(!legal)
+            {
+                checkboxEntry.text_txt.textColor = 10354688;
+                checkboxEntry.selectedColor = 10354688;
+                checkboxEntry.deSelectedColor = 10354688;
+            }
+            else
+            {
+                checkboxEntry.text_txt.textColor = 12103073;
+                checkboxEntry.selectedColor = 16777215;
+                checkboxEntry.deSelectedColor = 12103073;
+            }
+            checkboxEntry.text = text;
+            checkboxEntry.disabled = greyedOut;
+            checkboxEntry.text_txt.htmlText = text;
+            checkboxEntry.hl_mc.height = Math.floor(checkboxEntry.text_txt.textHeight) + 2;
+
+            checkboxEntry.setCheckbox(checked);
+
+            // checkboxEntry.checkbox_mc.name = "iggy_pipContextMenuCheckbox_" + id;
+        }
+
+        public function addStatEntry(id:Number, actionID:String, clickSound:Boolean, text:String, checked:Boolean, greyedOut:Boolean, legal:Boolean) : *
+        {
+            var statEntry:MovieClip;
+            if((statEntry = this.list.getElementByNumber("id",id)) == null)
+            {
+                statEntry = new StatEntry();
+                this.list.addElement(statEntry,false);
+                statEntry.mouseChildren = true; // lol
+                statEntry.id = id;
+                statEntry.actionID = actionID;
+                statEntry.handle = 0;
+                statEntry.arrow_mc.visible = false;
+                statEntry.hl_mc.alpha = 0;
+                statEntry.isButton = true;
+                statEntry.legal = legal;
+                statEntry.text_txt.autoSize = TextFieldAutoSize.LEFT;
+                statEntry.menu = this;
+            }
+            statEntry.text_txt.alpha = !!greyedOut ? 0.5 : 1;
+            statEntry.arrow_mc.alpha = !!greyedOut ? 0.5 : 1;
+            statEntry.clickSound = clickSound;
+            if(!legal)
+            {
+                statEntry.text_txt.textColor = 10354688;
+                statEntry.selectedColor = 10354688;
+                statEntry.deSelectedColor = 10354688;
+            }
+            else
+            {
+                statEntry.text_txt.textColor = 12103073;
+                statEntry.selectedColor = 16777215;
+                statEntry.deSelectedColor = 12103073;
+            }
+            statEntry.text = text;
+            statEntry.disabled = greyedOut;
+            statEntry.text_txt.htmlText = text;
+            statEntry.text_txt.mouseEnabled = false;
+            statEntry.hl_mc.height = Math.floor(statEntry.text_txt.textHeight) + 2;
+
+            (root as MovieClip).elementDict[actionID] = statEntry;
+        }
+        
+        // param to avoid infinite loop with builtin UI updating
+        // or not???? suddenly it works fine with true
+        public function updateDone(updateSize:Boolean = true) : *
+        {
+            this.base = (root as MovieClip);
+            
+            this.list.positionElements();
+
+            if (Math.min(this.bg_mc.container_mc.y + this.bg_mc.container_mc.height, this.base.MAX_HEIGHT) >= this.base.MAX_HEIGHT)
+            {
+                this.list.scrollRect = new Rectangle(0,0,this.bg_mc.width, this.base.MAX_HEIGHT);
+            }
+            else
+            {
+                this.list.scrollRect = null;
+            }
+
+            this.bg_mc.setHeight(this.bg_mc.container_mc.height,this.list);
+
+            this.bg_mc.bottom_mc.y = this.bg_mc.mid_mc.y + this.bg_mc.mid_mc.height - this.bg_mc.bottomOffset;
+            this.list.alpha = 1;
+
+            this.base.updateMaxHeight(Math.min(this.base.height, this.base.MAX_HEIGHT));
+
+            if ((root as MovieClip).isCustomInstance)
+            {
+                ExternalInterface.call("setMcSize",2000,2000);
+            }
+            else if (this.list_string_id != "main")
+            {
+                // tried base, x + bg_mc.width
+                this.base.updateMaxWidth(this.base.width + this.bg_mc.width);
+                // ExternalInterface.call("setMcSize",1000,500);
+                ExternalInterface.call("setMcSize", this.base.maxWidth, this.base.maxHeight + 15);
+            }
+            else if (updateSize)
+            {
+                this.base.updateMaxWidth(this.base.width);
+                ExternalInterface.call("setMcSize", this.base.maxWidth, this.base.maxHeight + 15);
+                // ExternalInterface.call("setMcSize",this.x + this.bg_mc.x + this.bg_mc.width,this.y + this.bg_mc.y + this.bg_mc.container_mc.y + this.bg_mc.container_mc.height + this.bg_mc.bottom_mc.height);
+            }
+        }
+
+        public function onOver(ev:MouseEvent) : *
+        {
+            this.base.setCurrentMenu(this);
+        }
+        
+        public function frame1() : *
+        {
+            this.list = new listDisplay();
+            this.list.EL_SPACING = 0;
+            this.list.m_cyclic = true;
+            this.bg_mc.container_mc.addChild(this.list);
+            this.bg_mc.container_mc.y = 15;
+            this.bg_mc.title_txt.visible = this.bg_mc.firstLine_mc.visible = false;
+
+            this.base = (root as MovieClip);
+
+            this.addEventListener(MouseEvent.MOUSE_OVER, this.onOver);
+        }
+    }
+}

@@ -1,0 +1,134 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+
+KBSECTION
+
+// -------------------------------------------------------
+
+// SI1: +12% damage (+1% per enemy in ExplodeRadius) while casting
+QRY QRY_AMER_Source_Infusion_SkillPreCast_PerTarget((CHARACTERGUID)_Char, "Projectile_PIP_SplinteredArrow", (GUIDSTRING)_Target, (REAL)_X, (REAL)_Y, (REAL)_Z, (INTEGER)_InfusCount)
+AND
+_InfusCount > 0
+AND
+QRY_AMER_GEN_IterateCharsAroundObject_GetRequestIndex()
+AND
+DB_AMER_GEN_OUTPUT_Integer(_RequestIndex)
+THEN
+DB_PIP_Source_Infusion_SplinteredArrow_Data(_RequestIndex, _Char, _InfusCount); // not needed unless we use this data for other infus effect
+PROC_AMER_GEN_CountCharsAroundPoint(_X, _Y, _Z, 4.0, _Char, 2, "PIP_SourceInfusion_SplinteredArrow_1");	// Count enemies within ExplodeRadius
+
+PROC PROC_AMER_GEN_CountCharsAroundObject_Returned((INTEGER)_RequestIndex, "PIP_SourceInfusion_SplinteredArrow_1", (CHARACTERGUID)_Caster, (INTEGER)_Enemies)
+AND
+Real(_Enemies, _EnemiesReal)
+AND
+QRY_AMER_GEN_Scaling_GetScaledValue(_Caster, 13.0, 2.0, 0.0, "Ability", "RangerLore")
+AND
+DB_AMER_GEN_OUTPUT_Real(_BonusDamagePreMult)
+AND
+RealProduct(_BonusDamagePreMult, _EnemiesReal, _BonusDamage)
+AND
+DB_PIP_Source_Infusion_SplinteredArrow_Data(_RequestIndex, _Char, _InfusCount)
+THEN
+NOT DB_PIP_Source_Infusion_SplinteredArrow_Data(_RequestIndex, _Char, _InfusCount);
+PROC_AMER_TempStat_FlexStat_Add(_Caster, "Stat", "DAMAGEBOOST", _BonusDamage);
+
+// -------------------------------------------------------
+
+// SI2: repeat base effects on 2 random enemies not in ExplodeRadius.
+QRY QRY_AMER_Source_Infusion_SkillPreCast_PerTarget((CHARACTERGUID)_Char, "Projectile_PIP_SplinteredArrow", (GUIDSTRING)_Target, (REAL)_X, (REAL)_Y, (REAL)_Z, (INTEGER)_InfusCount)
+AND
+_InfusCount > 1
+THEN
+PROC_AMER_GEN_IterateCharsAroundPoint(_X, _Y, _Z, 4.0, _Char, 2, "PIP_SourceInfusion_SplinteredArrow_2_Exclude");
+
+// exlude enemies within ExplodeRadius
+PROC PROC_AMER_GEN_IterateCharsAroundObject_Iterated((INTEGER)_RequestIndex, "PIP_SourceInfusion_SplinteredArrow_2_Exclude", (CHARACTERGUID)_SourceChar, (CHARACTERGUID)_Char)
+THEN
+DB_PIP_SourceInfusion_SplinteredArrow_Exclusion(_Char);
+
+PROC PROC_AMER_GEN_IterateCharsAroundObject_Finished((INTEGER)_RequestID, "PIP_SourceInfusion_SplinteredArrow_2_Exclude", (CHARACTERGUID)_SourceChar)
+THEN
+PROC_PIP_SplinteredArrowAddExclusions();
+PROC_AMER_GEN_IterateCharsAroundObject(_SourceChar, 13.0, _SourceChar, 2, "PIP_SourceInfusion_SplinteredArrow_2_Execute");
+
+// Add our exclusions to Amer's handy helper
+PROC PROC_PIP_SplinteredArrowAddExclusions()
+AND
+DB_PIP_SourceInfusion_SplinteredArrow_Exclusion(_Char)
+THEN
+DB_AMER_IterateCharsAroundObject_Exclusion(_Char);
+NOT DB_PIP_SourceInfusion_SplinteredArrow_Exclusion(_Char);
+
+PROC PROC_AMER_GEN_IterateCharsAroundObject_Iterated((INTEGER)_ReturnID, "PIP_SourceInfusion_SplinteredArrow_2_Execute", (CHARACTERGUID)_SourceChar, (CHARACTERGUID)_Char)
+THEN
+PROC_PIP_AttemptToAddSplinteredArrowBonusTarget(_SourceChar, _Char);
+
+PROC PROC_AMER_GEN_IterateCharsAroundObject_Finished((INTEGER)_RequestIndex, "PIP_SourceInfusion_SplinteredArrow_2_Execute", (CHARACTERGUID)_SourceChar)
+THEN
+PROC_PIP_SplinteredArrow_SI2_Fire(_SourceChar);
+
+PROC PROC_PIP_SplinteredArrow_SI2_Fire((CHARACTERGUID)_SourceChar)
+AND
+DB_PIP_SplinteredArrowBonusTarget_1(_SourceChar, _Target)
+THEN
+PROC_AMER_GEN_Shoot_Delayed("Projectile", _SourceChar, _Target, "Projectile_PIP_SplinteredArrow", 400);
+
+PROC PROC_PIP_SplinteredArrow_SI2_Fire((CHARACTERGUID)_SourceChar)
+AND
+DB_PIP_SplinteredArrowBonusTarget_2(_SourceChar, _Target)
+THEN
+PROC_AMER_GEN_Shoot_Delayed("Projectile", _SourceChar, _Target, "Projectile_PIP_SplinteredArrow", 400);
+
+// If db doesn't exist - add char
+PROC PROC_PIP_AttemptToAddSplinteredArrowBonusTarget((CHARACTERGUID)_SourceChar, (CHARACTERGUID)_Char)
+AND
+NOT DB_PIP_SplinteredArrowBonusTarget_1(_SourceChar, _Char)
+THEN
+DB_PIP_SplinteredArrowBonusTarget_1(_SourceChar, _Char);
+
+// if db exists - 50% chance to replace with this new char
+PROC PROC_PIP_AttemptToAddSplinteredArrowBonusTarget((CHARACTERGUID)_SourceChar, (CHARACTERGUID)_Char)
+AND
+DB_PIP_SplinteredArrowBonusTarget_1(_SourceChar, _ExistingTarget)
+AND
+QRY_AMER_GEN_RandomSuccess(50)
+THEN
+NOT DB_PIP_SplinteredArrowBonusTarget_1(_SourceChar, _ExistingTarget);
+DB_PIP_SplinteredArrowBonusTarget_1(_SourceChar, _Char);
+
+// same code but for second target.
+PROC PROC_PIP_AttemptToAddSplinteredArrowBonusTarget((CHARACTERGUID)_SourceChar, (CHARACTERGUID)_Char)
+AND
+NOT DB_PIP_SplinteredArrowBonusTarget_2(_SourceChar, _Char)
+THEN
+DB_PIP_SplinteredArrowBonusTarget_2(_SourceChar, _Char);
+
+PROC PROC_PIP_AttemptToAddSplinteredArrowBonusTarget((CHARACTERGUID)_SourceChar, (CHARACTERGUID)_Char)
+AND
+DB_PIP_SplinteredArrowBonusTarget_2(_SourceChar, _ExistingTarget)
+AND
+QRY_AMER_GEN_RandomSuccess(50)
+THEN
+NOT DB_PIP_SplinteredArrowBonusTarget_2(_SourceChar, _ExistingTarget);
+DB_PIP_SplinteredArrowBonusTarget_2(_SourceChar, _Char);
+
+// -------------------------------------------------------
+
+// SI3: Allies within 13m that have at least 1 Geomancer attempt to cast Impalement at your target point as a free Ritual Reaction.
+QRY QRY_AMER_Source_Infusion_SkillPreCast_PerTarget((CHARACTERGUID)_Char, "Projectile_PIP_SplinteredArrow", (GUIDSTRING)_Target, (REAL)_X, (REAL)_Y, (REAL)_Z, (INTEGER)_InfusCount)
+AND
+_InfusCount > 2
+THEN
+PROC_AMER_Source_Infusion_RitualRequest(_Char, _X, _Y, _Z, _Char, 13.0, "InfusionRitual_SplinteredArrow_3", "", "EarthSpecialist", 1, "skill_cast_target_earth_01_cast", 0, 0);
+
+PROC PROC_AMER_Reaction_Fire((CHARACTERGUID)_Char, (CHARACTERGUID)_Target, (REAL)_X, (REAL)_Y, (REAL)_Z, "InfusionRitual_SplinteredArrow_3", (STRING)_RequestID, (INTEGER)_RitualBool)
+THEN
+PlayEffect(_Char, "RS3_FX_Skills_Earth_Cast_Target_Earth_Root_01", "");
+PROC_AMER_GEN_Shoot_Delayed("Explosion", _Char, NULL_00000000-0000-0000-0000-000000000000, _X, _Y, _Z, "Projectile_AMER_SCRIPT_RockSpikes_Infusion_2", 2.0, 2, 200);
+
+
+EXITSECTION
+
+ENDEXITSECTION
+ParentTargetEdge "Start_AMER"

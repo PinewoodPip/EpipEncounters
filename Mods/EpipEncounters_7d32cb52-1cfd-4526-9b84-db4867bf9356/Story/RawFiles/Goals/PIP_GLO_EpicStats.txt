@@ -1,0 +1,137 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+
+DB_PIP_EpicStats_UpdateOnTemplateCountChange("LOOT_Gold_A_1c3c9c74-34a1-4685-989e-410dc080be6f");
+DB_PIP_EpicStats_UpdateOnTemplateCountChange("AMER_LOOT_GreatforgeFragment_A_a41f2a71-6ff1-4c60-a74a-20c96fb9c487");
+DB_PIP_EpicStats_DamageReceived(NULL_00000000-0000-0000-0000-000000000000, 0);
+DB_PIP_EpicStats_DamageDealt(NULL_00000000-0000-0000-0000-000000000000, 0);
+DB_PIP_EpicStats_HealingDone(NULL_00000000-0000-0000-0000-000000000000, 0);
+
+KBSECTION
+
+// Script to update the custom stats implemented in Epip.
+
+// call PROC_PIP_EpicStats_Update(_Char) to update the stats of a character (must be a player). This will update all non-ascension stats.
+
+// perform a full stats update the first time a save is loaded. This includes going through all relevant Ascension nodes (lots of db lookups)
+IF SavegameLoaded(_, _, _, _)
+AND
+NOT DB_PIP_CustomStatsFirstRun(1)
+THEN
+NRD_ModCall("EpipEncounters", "PerformFullStatsUpdate");
+DB_PIP_CustomStatsFirstRun(1);
+
+//REGION Current combat stats
+
+// Reset damage received
+PROC PROC_PIP_ResetCombatStats((CHARACTERGUID)_Char)
+AND
+DB_PIP_EpicStats_DamageReceived(_Char, _Amount)
+THEN
+NOT DB_PIP_EpicStats_DamageReceived(_Char, _Amount);
+
+// Reset damage dealt
+PROC PROC_PIP_ResetCombatStats((CHARACTERGUID)_Char)
+AND
+DB_PIP_EpicStats_DamageDealt(_Char, _Amount)
+THEN
+NOT DB_PIP_EpicStats_DamageDealt(_Char, _Amount);
+
+PROC PROC_PIP_ResetCombatStats((CHARACTERGUID)_Char)
+AND
+DB_PIP_EpicStats_HealingDone(_Char, _Amount)
+THEN
+NOT DB_PIP_EpicStats_HealingDone(_Char, _Amount);
+
+//END_REGION
+
+// Call this to update the stats for a specific char. This updates all non-Ascension stats.
+PROC PROC_PIP_EpicStats_Update((CHARACTERGUID)_Char)
+AND
+DB_IsPlayer(_Char)
+AND
+String(_Char, _CharGUID)
+THEN
+NRD_ModCall("EpipEncounters", "UpdateCustomStatsForCharacter", _CharGUID);
+
+PROC PROC_PIP_EpicStats_Update()
+AND
+DB_IsPlayer(_Player)
+AND
+String(_Player, _PlayerStr)
+THEN
+NRD_ModCall("EpipEncounters", "UpdateCustomStatsForCharacter", _PlayerStr);
+
+// TEMP
+IF SavegameLoaded(_, _, _, _)
+AND
+SysCount("DB_PIP_EpicStats_UpdateOnTemplateCountChange", 1, 0)
+THEN
+DB_PIP_EpicStats_UpdateOnTemplateCountChange("LOOT_Gold_A_1c3c9c74-34a1-4685-989e-410dc080be6f");
+DB_PIP_EpicStats_UpdateOnTemplateCountChange("AMER_LOOT_GreatforgeFragment_A_a41f2a71-6ff1-4c60-a74a-20c96fb9c487");
+
+//REGION Update triggers
+
+// regular triggers for updates: on reaction, turn start, item equipped, on combat leave/enter (to synch reaction charges), on UI exit, on ability change. The server lua script handles allocating nodes.
+// PROC PROC_AMER_Reaction_Completed(_Char, _, _)
+// THEN
+// PROC_PIP_EpicStats_Update(_Char);
+
+// PROC PROC_AMER_Combat_TurnStarted(_Char, _)
+// THEN
+// PROC_PIP_EpicStats_Update(_Char);
+
+PROC PROC_AMER_GEN_PlayerItemEquipped(_, _Char, _)
+THEN
+PROC_PIP_EpicStats_Update(_Char);
+
+PROC PROC_AMER_GEN_PlayerItemUnequipped(_, _Char, _)
+THEN
+PROC_PIP_EpicStats_Update(_Char);
+
+PROC PROC_AMER_Runes_RuneEquipped(_Char, _, _, _, _, _)
+THEN
+PROC_PIP_EpicStats_Update(_Char);
+
+PROC PROC_AMER_Runes_RuneRemoved(_Char, _, _, _)
+THEN
+PROC_PIP_EpicStats_Update(_Char);
+
+IF ObjectEnteredCombat(_Obj, _)
+THEN
+PROC_PIP_EpicStats_Update((CHARACTERGUID)_Obj);
+
+IF ObjectLeftCombat(_Obj, _)
+THEN
+PROC_PIP_EpicStats_Update((CHARACTERGUID)_Obj);
+
+PROC PROC_AMER_UI_Ascension_ExitUI(_Instance, _Char)
+THEN
+PROC_PIP_EpicStats_Update(_Char);
+
+// MISC
+// These fire for all players, not just the one picking up the item,
+// as party inventories are shared.
+IF ItemTemplateAddedToCharacter(_Template, _, _Char)
+AND
+DB_IsPlayer(_Char)
+AND
+DB_PIP_EpicStats_UpdateOnTemplateCountChange((STRING)_Template)
+THEN
+PROC_PIP_EpicStats_Update();
+
+IF ItemTemplateRemovedFromCharacter(_Template, _, _Char)
+AND
+DB_IsPlayer(_Char)
+AND
+DB_PIP_EpicStats_UpdateOnTemplateCountChange(_Template)
+THEN
+PROC_PIP_EpicStats_Update();
+
+//END_REGION
+
+EXITSECTION
+
+ENDEXITSECTION
+ParentTargetEdge "Start_AMER"

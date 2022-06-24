@@ -1,0 +1,23 @@
+package
+{
+    import flash.display.MovieClip;
+    import flash.text.TextField;
+    
+    public class SimpleText extends MovieClip
+    {
+        
+        
+        public var text_txt:TextField;
+        
+        public function SimpleText(text:String)
+        {
+            super();
+            this.text_txt.htmlText = text;
+        }
+
+        public function setWidth(width:Number) : *
+        {
+            this.text_txt.width = width;
+        }
+    }
+}

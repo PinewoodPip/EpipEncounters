@@ -1,0 +1,28 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+DB_PIP_Vanity_OriginalTemplate(NULL_00000000-0000-0000-0000-000000000000, NULL_00000000-0000-0000-0000-000000000000);
+NOT DB_PIP_Vanity_OriginalTemplate(NULL_00000000-0000-0000-0000-000000000000, NULL_00000000-0000-0000-0000-000000000000);
+
+KBSECTION
+
+// Dummy proc for appeasing the compiler.
+PROC COMPILER_DUMMY_PIP_Vanity_Outfit((CHARACTERGUID)_Char)
+AND
+DB_PIP_Vanity_PersistentOutfit(_Char, "Helmet", "Breast", "Gloves", "Leggings", "Boots", "Weapon1", "Weapon2")
+THEN
+DB_PIP_Vanity_PersistentOutfit(_Char, "Helmet", "Breast", "Gloves", "Leggings", "Boots", "Weapon1", "Weapon2");
+
+// PROC PROC_PIP_ReEquipItem(_Char, _Item)
+// THEN
+// NRD_ModCall("EpipEncounters", "IgnoreVanity");
+
+// PROC ProcObjectTimerFinished((CHARACTERGUID)_Char, "PIP_ReEquipItem")
+// THEN
+// NRD_ModCall("EpipEncounters", "StopIgnoreVanity");
+
+EXITSECTION
+
+ENDEXITSECTION
+
+ParentTargetEdge "Start_AMER"

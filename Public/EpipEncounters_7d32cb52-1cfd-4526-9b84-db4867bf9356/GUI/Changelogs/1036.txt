@@ -1,0 +1,11 @@
+- Changed the Damage tooltip in character sheet to be less confusing
+- Removed the obsolete "From LW: -0%" tooltip text from character sheet
+- Removed the word "Set:" from deltamods
+- Added an option to auto-unlock inventories in multiplayer upon loading a save. This setting is per player.
+- Fixed negative stat adjustments not being grouped together in tooltips
+- Equipment now shows a "Quality" rating in tooltips, which denotes how good its damage/armor roll was. An item with 100% Quality has the best roll (only possible for Divines)
+- Trickster's Repertoire now grants invisibility+sneaking until the start of your first turn, and only causes you to sneak starting from your second round. Additionally, at the start of your turns, you always unsneak.
+- Changed wording for the Hothead tooltip
+- Fixed error spam in console upon reload, and reorganized some code
+- Added a lifesteal stat to the stats tab (will update upon changing Necromancy points, or in combat)
+- Finished support for preset descriptions in character creation, override CharacterCreation.characterCreationPresetDescriptions in CharacterCreationUI.lua to set them

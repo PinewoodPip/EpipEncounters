@@ -1,0 +1,14 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+
+KBSECTION
+
+// PROC PROC_PIP_ChangeTreasureTable((STRING)_Table, (STRING)_NewTable)
+// THEN
+// NRD_ModCall("EpipEncounters", "_ChangeTreasureTables", _Table, _NewTable);
+
+EXITSECTION
+
+ENDEXITSECTION
+ParentTargetEdge "Start_AMER"

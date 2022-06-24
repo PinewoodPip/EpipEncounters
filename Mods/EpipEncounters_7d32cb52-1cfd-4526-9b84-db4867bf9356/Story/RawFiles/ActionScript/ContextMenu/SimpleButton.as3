@@ -1,0 +1,91 @@
+package contextMenu_fla
+{
+    import flash.display.MovieClip;
+    import flash.events.MouseEvent;
+    import flash.external.ExternalInterface;
+    
+    public dynamic class SimpleButton extends MovieClip
+    {
+        public var bg_mc:MovieClip;
+        public var hit_mc:MovieClip;
+        
+        public var currentTooltip:String = "";
+        public var onUpFunc:Function;
+        public var onOverFunc:Function;
+        public var onOutFunc:Function;
+        
+        public function SimpleButton()
+        {
+            super();
+            addFrameScript(0,this.frame1);
+        }
+        
+        public function onMouseOver(param1:MouseEvent) : *
+        {
+            // if(this.tooltip != "")
+            // {
+            //     this.base.hasTooltip = true;
+            //     this.currentTooltip = this.tooltip;
+            //     ExternalInterface.call("showTooltip",this.tooltip);
+            // }
+            this.bg_mc.gotoAndStop(2);
+            ExternalInterface.call("PlaySound","UI_Game_Inventory_Over");
+
+            if (this.onOverFunc)
+            {
+                this.onOverFunc();
+            }
+        }
+        
+        public function onMouseOut(param1:MouseEvent) : *
+        {
+            // if(this.base.hasTooltip)
+            // {
+            //     this.base.hasTooltip = false;
+            //     this.currentTooltip = "";
+            //     ExternalInterface.call("hideTooltip");
+            // }
+            this.bg_mc.gotoAndStop(1);
+            removeEventListener(MouseEvent.MOUSE_UP,this.onUp);
+
+            if (this.onOutFunc)
+            {
+                this.onOutFunc();
+            }
+        }
+        
+        public function onDown(param1:MouseEvent) : *
+        {
+            ExternalInterface.call("PlaySound","UI_Game_CharacterSheet_Attribute_Plus_Click_Press");
+            stage.focus = null;
+            this.bg_mc.gotoAndStop(3);
+            addEventListener(MouseEvent.MOUSE_UP,this.onUp);
+        }
+        
+        public function onUp(param1:MouseEvent) : *
+        {
+            this.bg_mc.gotoAndStop(2);
+            ExternalInterface.call("PlaySound","UI_Game_CharacterSheet_Attribute_Plus_Click_Release");
+
+            if(this.onUpFunc)
+            {
+                this.onUpFunc();
+            }
+
+            removeEventListener(MouseEvent.MOUSE_UP,this.onUp);
+        }
+        
+        function frame1() : *
+        {
+            // this.hit_mc.addEventListener(MouseEvent.MOUSE_DOWN,this.onDown);
+            // this.hit_mc.addEventListener(MouseEvent.MOUSE_OUT,this.onMouseOut);
+            // this.hit_mc.addEventListener(MouseEvent.MOUSE_OVER,this.onMouseOver);
+
+            this.addEventListener(MouseEvent.MOUSE_DOWN,this.onDown);
+            this.addEventListener(MouseEvent.MOUSE_OUT,this.onMouseOut);
+            this.addEventListener(MouseEvent.MOUSE_OVER,this.onMouseOver);
+
+            this.bg_mc.gotoAndStop(0);
+        }
+    }
+}

@@ -1,0 +1,25 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+
+KBSECTION
+
+// Additional script for Apotheosis SI3 to handle removing the status.
+
+PROC PROC_AMER_Source_SourceGen_Ended(_Char)
+AND
+HasActiveStatus(_Char, "APOTHEOSIS_PIP", 1)
+THEN
+RemoveStatus(_Char, "APOTHEOSIS_PIP");
+
+PROC PROC_AMER_Source_SourceGen_Cleanup(_Char)
+AND
+HasActiveStatus(_Char, "APOTHEOSIS_PIP", 1)
+THEN
+RemoveStatus(_Char, "APOTHEOSIS_PIP");
+
+
+EXITSECTION
+
+ENDEXITSECTION
+ParentTargetEdge "Start_AMER"

@@ -1,0 +1,324 @@
+ 
+package enemyHealthBar_fla
+{
+    import LS_Classes.horizontalList;
+    import LS_Classes.textEffect;
+    import flash.display.MovieClip;
+    import flash.external.ExternalInterface;
+    import flash.text.TextFieldAutoSize;
+    import flash.text.TextFormat;
+    
+    public dynamic class MainTimeline extends MovieClip
+    {
+        
+        
+        public var hp_mc:MovieClip;
+        
+        public var events:Array;
+        
+        public var layout:String;
+        
+        public var curTooltip:Number;
+        
+        public var hasTooltip:Boolean;
+        
+        public var statusList:horizontalList;
+        
+        public var fadeTime:Number;
+        
+        public var status_array:Array;
+        
+        public function MainTimeline()
+        {
+            super();
+            addFrameScript(0,this.frame1);
+        }
+        
+        public function onEventResize() : *
+        {
+        }
+        
+        public function onEventUp(param1:Number) : *
+        {
+            return false;
+        }
+        
+        public function onEventDown(param1:Number) : *
+        {
+            return false;
+        }
+        
+        public function onEventInit() : *
+        {
+            this.hp_mc.init();
+            this.hp_mc.barTextsHolder_mc.filters = this.hp_mc.textHolder_mc.filters = this.hp_mc.nameHolder_mc.filters = textEffect.createStrokeFilter(0,1.2,0.8,1,3);
+            var _loc1_:uint = 0;
+            while(_loc1_ < 3)
+            {
+                this.hp_mc.setBar(0,false,"",_loc1_,false);
+                _loc1_++;
+            }
+            this.hp_mc.visible = false;
+            ExternalInterface.call("registerAnchorId","enemyHealthBar");
+            ExternalInterface.call("setAnchor","top","screen","top");
+            this.hp_mc.textHolder_mc.label_txt.autoSize = TextFieldAutoSize.CENTER;
+            this.requestAnchorScreen();
+            this.hp_mc.nameHolder_mc.text_txt.autoSize = TextFieldAutoSize.CENTER;
+        }
+        
+        public function clearTweens() : *
+        {
+            this.hp_mc.clearTweens();
+        }
+        
+        public function setHPBars(param1:Number, param2:String, param3:Boolean = false) : *
+        {
+            this.hp_mc.setBar(param1,param3,param2,0,false);
+        }
+        
+        public function setHPColour(param1:uint) : *
+        {
+            this.hp_mc.setBarColour(param1,0);
+        }
+        
+        public function setArmourBar(param1:Number, param2:Boolean, param3:String, param4:Boolean = false) : *
+        {
+            this.hp_mc.setBar(param1,param4,param3,1,param2);
+        }
+        
+        public function setArmourBarColour(param1:uint) : *
+        {
+            this.hp_mc.setBarColour(param1,1);
+        }
+        
+        public function setMagicArmourBar(param1:Number, param2:Boolean, param3:String, param4:Boolean = false) : *
+        {
+            this.hp_mc.setBar(param1,param4,param3,2,param2);
+        }
+        
+        public function setMagicArmourBarColour(param1:uint) : *
+        {
+            this.hp_mc.setBarColour(param1,2);
+        }
+        
+        public function setText(param1:String, param2:String, param3:Boolean = false) : *
+        {
+            var _loc6_:TextFormat = null;
+            this.hp_mc.frame_mc.gotoAndStop(!!param3 ? 2 : 1);
+            this.hp_mc.textbg_mc.y = !!param3 ? -1 : 1;
+            if(param3)
+            {
+                this.hp_mc.nameHolder_mc.text_txt.width = 260;
+            }
+            else
+            {
+                this.hp_mc.nameHolder_mc.text_txt.width = 400;
+            }
+            this.hp_mc.nameHolder_mc.text_txt.x = -Math.round(this.hp_mc.nameHolder_mc.text_txt.width * 0.5);
+            var _loc4_:Number = 22;
+            var _loc5_:Number = !!param3 ? Number(-20) : Number(-14);
+            (_loc6_ = this.hp_mc.nameHolder_mc.text_txt.getTextFormat()).size = _loc4_;
+            _loc6_.color = this.hp_mc.nameHolder_mc.text_txt.textColor;
+            this.hp_mc.nameHolder_mc.text_txt.setTextFormat(_loc6_);
+            this.hp_mc.nameHolder_mc.text_txt.htmlText = param1.toUpperCase();
+            if(param1 != "")
+            {
+                while(this.hp_mc.nameHolder_mc.text_txt.textWidth > this.hp_mc.nameHolder_mc.text_txt.width)
+                {
+                _loc6_.size = --_loc4_;
+                this.hp_mc.nameHolder_mc.text_txt.setTextFormat(_loc6_);
+                _loc5_++;
+                }
+                this.hp_mc.nameHolder_mc.text_txt.y = -Math.round(this.hp_mc.nameHolder_mc.text_txt.textHeight);
+                this.hp_mc.textHolder_mc.label_txt.htmlText = param2;
+
+                ExternalInterface.call("pipEnemyHealthBarTextSet", param1, param2, param3);
+            }
+        }
+        
+        public function requestAnchorCombatTurn() : *
+        {
+            this.hp_mc.y = 130;
+        }
+        
+        public function requestAnchorScreen() : *
+        {
+            this.hp_mc.y = 20;
+        }
+        
+        public function show(param1:Boolean = false) : *
+        {
+            this.hp_mc.visible = true;
+            this.hp_mc.setOnlyNameState(param1);
+        }
+        
+        public function hide() : *
+        {
+            this.hideHPMC();
+        }
+        
+        public function hideHPMC() : *
+        {
+            this.hp_mc.visible = false;
+        }
+        
+        public function updateStatuses(param1:Boolean) : *
+        {
+            var _loc3_:Number = NaN;
+            var _loc4_:Number = NaN;
+            var _loc5_:Number = NaN;
+            var _loc6_:Number = NaN;
+            var _loc7_:Number = NaN;
+            var _loc8_:String = null;
+            var _loc2_:uint = 0;
+            while(_loc2_ < this.status_array.length)
+            {
+                if(this.status_array[_loc2_] != undefined)
+                {
+                _loc3_ = Number(this.status_array[_loc2_]);
+                _loc4_ = Number(this.status_array[_loc2_ + 1]);
+                _loc5_ = Number(this.status_array[_loc2_ + 2]);
+                _loc6_ = Number(this.status_array[_loc2_ + 3]);
+                _loc7_ = Number(this.status_array[_loc2_ + 4]);
+                _loc8_ = String(this.status_array[_loc2_ + 5]);
+                this.setStatus(param1,_loc3_,_loc4_,_loc5_,_loc6_,_loc7_,_loc8_);
+                }
+                _loc2_ += 6;
+            }
+            this.status_array = new Array();
+            this.cleanupStatuses();
+        }
+        
+        public function setStatus(param1:Boolean, param2:Number, param3:Number, param4:Number, param5:Number, param6:Number, param7:String = "") : *
+        {
+            var _loc9_:String = null;
+            var _loc8_:MovieClip = null;
+            if(param7.indexOf("<font color=\"c80000\">Battered") >= 0 || param7.indexOf("<font color=\"c80000\">Harried") >= 0)
+            {
+                return;
+            }
+            if((_loc8_ = this.statusList.getElementByNumber("id",param3)) == null)
+            {
+                if(!param1)
+                {
+                return;
+                }
+                (_loc8_ = new Status()).id = param3;
+                _loc8_.iconId = -1;
+                _loc8_.textHolder_mc.filters = textEffect.createStrokeFilter(0,1.1,1,1,3);
+                _loc8_.textHolder_mc.name_txt.autoSize = TextFieldAutoSize.LEFT;
+                this.statusList.addElement(_loc8_,false);
+            }
+            if(param4 != -1 && _loc8_.iconId != param4)
+            {
+                _loc8_.iconId = param4;
+                _loc9_ = "s" + String(param4);
+                this.setIggyImage(_loc8_,_loc9_);
+                _loc8_.icon_mc.height = _loc8_.icon_mc.width = 32;
+            }
+            _loc8_.setCoolDown(param6);
+            if(_loc8_.tooltip != param7)
+            {
+                _loc8_.tooltip = param7;
+                _loc8_.textHolder_mc.name_txt.htmlText = param7;
+                if(_loc8_.textHolder_mc.name_txt.text == "")
+                {
+                _loc8_.textHolder_mc.name_txt.htmlText = " ";
+                }
+                _loc8_.widthOverride = _loc8_.textHolder_mc.name_txt.x + _loc8_.textHolder_mc.name_txt.width + _loc8_.textHolder_mc.x;
+            }
+            if(param5 <= 0)
+            {
+                _loc8_.textHolder_mc.text_txt.htmlText = " ";
+            }
+            else
+            {
+                _loc8_.textHolder_mc.text_txt.htmlText = Math.ceil(param5);
+            }
+            _loc8_.alive = true;
+        }
+        
+        public function cleanupStatuses() : *
+        {
+            var _loc3_:MovieClip = null;
+            var _loc4_:Number = NaN;
+            var _loc1_:* = 0;
+            var _loc2_:uint = 0;
+            while(_loc2_ < this.statusList.length)
+            {
+                _loc3_ = this.statusList.content_array[_loc2_];
+                if(_loc3_.alive)
+                {
+                _loc3_.alive = false;
+                _loc4_ = _loc3_.textHolder_mc.name_txt.width + _loc3_.textHolder_mc.name_txt.x;
+                if(_loc1_ < _loc4_)
+                {
+                    _loc1_ = _loc4_;
+                }
+                }
+                else
+                {
+                this.statusList.removeElement(_loc2_,false);
+                _loc2_--;
+                }
+                _loc2_++;
+            }
+            if(this.statusList.length > 0)
+            {
+                this.statusList.positionElements();
+            }
+            ExternalInterface.call("pipEnemyHealthBarHook");
+        }
+        
+        public function clearStatusses() : *
+        {
+            this.statusList.clearElements();
+            this.hp_mc.textHolder_mc.label_txt.y = this.hp_mc.statusHolder_mc.y + this.hp_mc.statusHolder_mc.height;
+        }
+        
+        public function setIggyImage(param1:MovieClip, param2:String) : *
+        {
+            var _loc3_:MovieClip = null;
+            if(!param1.texture || param1.texture != param2)
+            {
+                this.removeChildrenOf(param1.icon_mc);
+                _loc3_ = new IggyIcon();
+                _loc3_.name = "iggy_" + param2;
+                param1.icon_mc.addChild(_loc3_);
+                param1.texture = param2;
+            }
+        }
+        
+        public function removeChildrenOf(param1:MovieClip) : void
+        {
+            var _loc2_:int = 0;
+            if(param1.numChildren != 0)
+            {
+                _loc2_ = param1.numChildren;
+                while(_loc2_ > 0)
+                {
+                _loc2_--;
+                param1.removeChildAt(_loc2_);
+                }
+            }
+        }
+        
+        function frame1() : *
+        {
+            this.events = new Array();
+            this.layout = "fixed";
+            this.curTooltip = -1;
+            this.hasTooltip = false;
+            this.statusList = new horizontalList();
+            this.statusList.EL_SPACING = 2;
+            this.statusList.m_customElementHeight = 40;
+            this.statusList.m_CenterHolders = true;
+            this.statusList.m_RowSpacing = 8;
+            this.statusList.m_MaxRowElements = 2;
+            this.statusList.m_RowHeight = 40;
+            this.hp_mc.statusHolder_mc.addChild(this.statusList);
+            this.fadeTime = 0.1;
+            this.status_array = new Array();
+        }
+    }
+}

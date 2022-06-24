@@ -1,0 +1,29 @@
+Monthly patch to appease our ever-so-hungry Derpy overlord.
+
+- Hotbar slot keys now work as expected - ex. pressing "4" will use the fourth skill on the bottom bar, regardless of the row it's set to
+- Hotbar actions now show their keybinding, if they have one
+	- Vanilla actions (ex. open journal) will always show the vanilla keybind instead of the custom one (it will still work, though)
+- Re-enabled the keyboard hotkeys for hotbar actions by default. If you had these disabled previously (or if you're using the mod for the first time), its keys will be unbound upon loading in
+- Changed the default hotbar bindings to swap ping with combat log
+- Added a hotbar action for Portable Respec Mirror, if its mod is loaded
+- Resting from the hotbar now uses the item rather than resting directly (should work with other bedroll mods now)
+- Added a toggle for the minimap onto the hotbar
+- You can no longer rearrange hotbar actions while the hotbar is locked (except within the skills panel)
+- Added a faint blinking animation to the health bar when B/H have 1 turn or less remaining
+- Added an option to show level next to character name in the top healthbar (on by default)
+- You can now unbind hotbar action buttons with middle-click
+- Added handling for when hotbar actions are removed from a save (ex. disabling a mod that adds them)
+- Brittle status now shows its calculated damage like DoTs
+- Masterworked items now show a warning in the tooltip
+- Changed Splintered Arrow icon
+- Fixed Escapist being a huntsman skill
+- Fix protruding hotbar texture on the bottom bar
+- Fixed Trickster's Repertoire removing AP in consecutive turns
+- Trickster's Repertoire no longer activates while playing dead
+- Fixed artifact names not using the new color (oops)
+- Moved the casting notification slightly up so multiline ones don't overlap the health bar
+- Fixed dragging items onto the world not working if the hotbar was enabled
+- Fixed the add/remove rows button being available on summons after opening the pause menu
+- You can no longer use hotbar action hotkeys in dialogues (or other occasions where the UI is entirely hidden), when there is a UI element focused, or when the game is paused
+- Fixed name of hotbar slot 6 binding in the input menu
+- Fixed Slowed 3 AP penalty stacking

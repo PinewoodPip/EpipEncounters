@@ -1,0 +1,20 @@
+package
+{
+    import flash.display.MovieClip;
+    
+    public dynamic class StopPlayback extends MovieClip
+    {
+        
+        
+        public function StopPlayback()
+        {
+            super();
+            addFrameScript(0,this.frame1);
+        }
+        
+        function frame1() : *
+        {
+            stop();
+        }
+    }
+}

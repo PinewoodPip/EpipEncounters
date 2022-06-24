@@ -1,0 +1,23 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+
+DB_AMER_UI_Greatforge_Option("AddSockets", "AMER_UI_Greatforge_Option_DrillSocket");
+DB_AMER_UI_Greatforge_Option_Cost("AddSockets", "GreatforgeFrags", "AMER_LOOT_GreatforgeFragment_A_a41f2a71-6ff1-4c60-a74a-20c96fb9c487", 8.0);
+
+KBSECTION
+
+// actual logic done in Lua.
+
+QRY QRY_AMER_UI_Greatforge_InvalidSelection(_Char, "AddSockets")
+AND
+String(_Char, _CharStr)
+AND
+NRD_ModQuery2("EpipEncounters", "ItemHasMaxSockets", _CharStr, "AddSockets")
+THEN
+DB_NOOP();
+
+EXITSECTION
+
+ENDEXITSECTION
+ParentTargetEdge "Start_AMER"

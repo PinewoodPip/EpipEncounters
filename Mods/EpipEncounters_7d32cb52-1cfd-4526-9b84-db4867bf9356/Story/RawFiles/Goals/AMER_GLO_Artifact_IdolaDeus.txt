@@ -1,0 +1,79 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+
+// Surface element type, Status effect
+DB_PIP_Artifacts_IdolaDeus_Surface("Water", "PIP_Artifact_IdolaDeus_Water");
+DB_PIP_Artifacts_IdolaDeus_Surface("Fire", "PIP_Artifact_IdolaDeus_Fire");
+DB_PIP_Artifacts_IdolaDeus_Surface("Earth", "PIP_Artifact_IdolaDeus_Earth");
+DB_PIP_Artifacts_IdolaDeus_Surface("Poison", "PIP_Artifact_IdolaDeus_Poison");
+DB_PIP_Artifacts_IdolaDeus_Surface("Air", "PIP_Artifact_IdolaDeus_Air");
+
+KBSECTION
+
+PROC PROC_AMER_Combat_TurnStarted(_Char, 0)
+AND
+DB_AMER_Artifacts_EquippedEffects(_Char, "Artifact_IdolaDeus", _)
+AND
+GetPosition(_Char, _X, _Y, _Z)
+AND
+QRY_AMER_GEN_GetSurfaceAtPos(_X, _Y, _Z)
+AND
+DB_AMER_GEN_OUTPUT_String(_Surface)
+AND
+StringContains(_Surface, "Blessed", _IsBlessed)
+AND
+QRY_AMER_GEN_GetSurfaceKeyword(_Surface, "", "", "Fire", "Water", "Earth", "Poison", "Air", "Water", "", "", "Fire")
+AND
+DB_AMER_GEN_OUTPUT_String(_SurfaceType)
+THEN
+PROC_PIP_Artifacts_IdolaDeus_Activate(_Char, _SurfaceType, _IsBlessed);
+
+//REGION Applying effects.
+
+// Clear all related status effects if we started in a none surface.
+PROC PROC_PIP_Artifacts_IdolaDeus_Activate((CHARACTERGUID)_Char, (STRING)_SurfaceType, (INTEGER)_IsBlessed)
+AND
+_SurfaceType == ""
+THEN
+PROC_PIP_Artifacts_IdolaDeus_ClearEffects(_Char);
+
+// Clear effects if surface was not blessed.
+PROC PROC_PIP_Artifacts_IdolaDeus_Activate((CHARACTERGUID)_Char, (STRING)_SurfaceType, (INTEGER)_IsBlessed)
+AND
+_IsBlessed == 0
+THEN
+PROC_PIP_Artifacts_IdolaDeus_ClearEffects(_Char);
+
+// Refresh existing statuses.
+PROC PROC_PIP_Artifacts_IdolaDeus_Activate((CHARACTERGUID)_Char, (STRING)_SurfaceType, (INTEGER)_IsBlessed)
+AND
+_IsBlessed == 1
+AND
+DB_PIP_Artifacts_IdolaDeus_Surface(_SurfaceType, _Status)
+AND
+HasActiveStatus(_Char, _Status, 1)
+THEN
+ApplyStatus(_Char, _Status, 12.0);
+
+// Apply new effect.
+PROC PROC_PIP_Artifacts_IdolaDeus_Activate((CHARACTERGUID)_Char, (STRING)_SurfaceType, (INTEGER)_IsBlessed)
+AND
+_IsBlessed == 1
+AND
+DB_PIP_Artifacts_IdolaDeus_Surface(_SurfaceType, _Status)
+THEN
+ApplyStatus(_Char, _Status, 12.0);
+
+//END_REGION
+
+PROC PROC_PIP_Artifacts_IdolaDeus_ClearEffects((CHARACTERGUID)_Char)
+AND
+DB_PIP_Artifacts_IdolaDeus_Surface(_, _Effect)
+THEN
+RemoveStatus(_Char, _Effect);
+
+EXITSECTION
+
+ENDEXITSECTION
+ParentTargetEdge "AMER_GLO_Artifacts"

@@ -1,0 +1,27 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+
+KBSECTION
+//Occultist reaction SI1 emulates effects of Petrifying Visage.
+
+PROC PROC_AMER_Reaction_Fire((CHARACTERGUID)_Char, (CHARACTERGUID)_Target, (REAL)_X, (REAL)_Y, (REAL)_Z, "AMER_Occultist", (STRING)_RequestID, (INTEGER)_RitualBool)
+AND
+DB_AMER_Ascension_SpecialLogic(_Char, "Ascension_Occultist_MUTA_EmulatePetrifyingVisage", _)
+AND
+QRY_AMER_Source_Infusion_GetCount(_Char, "Ascension_Occultist_MUTA_EmulatePetrifyingVisage")
+AND
+DB_AMER_GEN_OUTPUT_Integer(_InfusCount)
+AND
+_InfusCount > 0
+THEN
+DB_AMER_Source_Infusion_RefundPoints(_Char, 0, 1); // PIP
+PROC_AMER_Source_Infusion_ExpendInfusion(_Char, "Ascension_Occultist_MUTA_EmulatePetrifyingVisage", 1, 1, 1);
+PROC_AMER_GEN_CharacterCombatLogText(_Char, "AMER_Ascension_Occultist_MUTA_EmulatePetrifyingVisage");
+PROC_AMER_GEN_CharacterCauseExplosion(_Char, _Char, "Projectile_AMER_SCRIPT_PetrifyingVisage");
+PlayEffect(_Char, "RS3_FX_Skills_Totem_Cast_Shout_Root_01");
+
+EXITSECTION
+
+ENDEXITSECTION
+ParentTargetEdge "AMER_GLO_UI_Ascension_NodeRewards"

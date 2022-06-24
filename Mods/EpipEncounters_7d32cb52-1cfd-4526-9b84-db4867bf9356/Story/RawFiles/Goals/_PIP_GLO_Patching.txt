@@ -1,0 +1,229 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+
+// Fires after Start_AMER exits.
+DB_PIP_HasFirstPatch(1);
+
+PROC_PIP_PatchLeper();
+
+KBSECTION
+
+PROC PROC_PIP_PatchLeper()
+THEN
+NOT DB_AMER_Runes_EffectOnEquip_Special("AMER_UNI_Leper_Rune_d3913dfe-85ff-436f-8880-61e739c02412", "Weapon", "TalentRune", "Stench");
+DB_AMER_Runes_EffectOnEquip_Special("AMER_UNI_Leper_Rune_d3913dfe-85ff-436f-8880-61e739c02412", "Weapon", "TalentRune", "RangerLoreArrowRecover");
+
+PROC PROC_AMER_GEN_CCFinished_GameStarted()
+THEN
+DB_PIP_EpipEncountersVersion(1, 0, 2, 1);
+
+// installed on existing save
+IF SavegameLoaded(_, _, _, _)
+AND
+NOT DB_PIP_EpipEncountersVersion(_, _, _, _)
+THEN
+PROC_PIP_Patching_Perfectionist();
+DB_PIP_EpipEncountersVersion(1, 0, 0, 1);
+// PROC_AMER_GEN_OpenMessageBoxForPlayers("Save initialized.");
+
+PROC PROC_PIP_Init()
+THEN
+PROC_PIP_Patching_Perfectionist();
+DB_PIP_EpipEncountersVersion(1, 0, 0, 1);
+
+// v0.9 -> v1.0
+IF SavegameLoaded(_, _, _, _)
+AND
+DB_PIP_EpipEncountersVersion(0, 9, 0, 0)
+THEN
+NOT DB_PIP_EpipEncountersVersion(0, 9, 0, 0);
+DB_PIP_EpipEncountersVersion(1, 0, 0, 0);
+PROC_PIP_Patching_AddNewEpicBossesSettings();
+PROC_AMER_GEN_OpenMessageBoxForPlayers("Epip Encounters has been updated to v1.0.0.0. Thanks for beta testing!");
+
+// v1.0 -> v1.0.0.1
+IF SavegameLoaded(_, _, _, _)
+AND
+DB_PIP_EpipEncountersVersion(1, 0, 0, 0)
+THEN
+NOT DB_PIP_EpipEncountersVersion(1, 0, 0, 0);
+DB_PIP_EpipEncountersVersion(1, 0, 0, 1);
+PROC_PIP_FirstPatch();
+
+// v1.0.0.1 -> v1.0.1
+IF SavegameLoaded(_, _, _, _)
+AND
+DB_PIP_EpipEncountersVersion(1, 0, 0, 1)
+THEN
+NOT DB_PIP_EpipEncountersVersion(1, 0, 0, 1);
+DB_PIP_EpipEncountersVersion(1, 0, 1, 0);
+PROC_PIP_TalentsPatch();
+
+// for my own messed-up save with v1.0.0.1 DB but no patch procs ran
+IF SavegameLoaded(_, _, _, _)
+AND
+NOT DB_PIP_ProsperitySources(_, _)
+AND
+NOT DB_PIP_HasFirstPatch(1)
+THEN
+PROC_PIP_FirstPatch();
+NOT DB_PIP_EpipEncountersVersion(1, 0, 1, 0);
+DB_PIP_EpipEncountersVersion(1, 0, 0, 1);
+
+// REGION PATCHING -----------------------------------------
+
+// grant +1 free generic reaction to opportunist.
+PROC PROC_PIP_TalentsPatch()
+AND
+DB_IsPlayer(_Player)
+AND
+CharacterHasTalent(_Player, "AttackOfOpportunity", 1)
+THEN
+PROC_AMER_ExtendedStat_CharacterAddStat(_Player, "FreeReactionCharge", "AnyReaction", "", "", 1.0);
+
+// activate incons goal
+PROC PROC_PIP_TalentsPatch()
+AND
+DB_IsPlayer(_Player)
+AND
+CharacterHasTalent(_Player, "RangerLoreArrowRecover", 1)
+THEN
+PROC_AMER_GEN_Goal_Activate("AMER_GLO_Talents_RangerLoreArrowRecover");
+
+// add SI reaction tutorial for real
+PROC PROC_PIP_TalentsPatch()
+AND
+NOT DB_AMER_TutorialInfo("PIP_TUT_InfusedReactions", "AMER_TUT_GEN_Ok", "AMER_TUT_GEN_DisableTutorials")
+THEN
+DB_AMER_TutorialInfo("PIP_TUT_InfusedReactions", "AMER_TUT_GEN_Ok", "AMER_TUT_GEN_DisableTutorials");
+
+// add new meta skills
+PROC PROC_PIP_TalentsPatch()
+AND
+DB_IsPlayer(_Player)
+AND
+CharacterHasSkill(_Player, "Shout_AMER_META_TogglePartyLink", 1) // just check if player has one. I still don't know how to check for modsettings toggles.
+THEN
+CharacterAddSkill(_Player, "Target_PIP_META_SP", 1);
+CharacterAddSkill(_Player, "Target_PIP_META_Resistances", 1);
+
+PROC PROC_PIP_FirstPatch()
+THEN
+DB_PIP_ProsperitySources("Life_TheRabbit", "Node_3.0");
+DB_PIP_ProsperitySources("Life_TheHuntress", "Node_3.0");
+DB_PIP_ProsperitySources("Inertia_TheHippopotamus", "Node_2.1");
+PROC_PIP_Patching_RecalculateProsperityCount();
+PROC_AMER_GEN_OpenMessageBoxForPlayers("Epip Encounters has been updated to v1.0.0.1. Thanks for playing! And sorry for the Prosperity fix >:)");
+DB_PIP_HasFirstPatch(1);
+
+// add 1 prosperity to players with perfectionist
+PROC PROC_PIP_Patching_Perfectionist()
+AND
+DB_IsPlayer(_Player)
+AND
+CharacterHasTalent(_Player, "Perfectionist", 1)
+THEN
+PROC_AMER_KeywordStat_Add(_Player, "Prosperity", 1);
+
+// from v0.9 to v1.0
+PROC PROC_PIP_Patching_AddNewEpicBossesSettings()
+THEN
+DB_AMER_ModSettings_ToggledLogic("Toggle", "EpicEnemies", "EpicEnemies", "PIP_GLO_ModSettings_EpicBosses");
+PROC_AMER_UI_ModSettings_AddOption_Toggle("EpicEnemies", "EpicEnemies", 1.0); // gonna assume Derpy had it on while updating.
+
+PROC_AMER_GEN_TSK_Add("EN", "AMER_UI_ModSettings_EpicEnemies_PageTitle", "Epic Enemies");
+
+PROC_AMER_UI_ModSettings_AddOption_Value("EpicEnemies", "EpicBossesChanceMultiplierNormies", 0.0, 0.01, 0.1, -0.01, -0.1, 0.0, 5.0);
+PROC_AMER_UI_ModSettings_ValueDisplay_SetOverride_SigFigs("EpicEnemies", "EpicBossesChanceMultiplierNormies", 2);
+
+PROC_AMER_UI_ModSettings_AddOption_Value("EpicEnemies", "Chances_Elementalist", 25.0, 1.0, 10.0, -1.0, -10.0, 0.0, 100.0);
+PROC_AMER_UI_ModSettings_ValueDisplay_SetOverride_Suffix("EpicEnemies", "Chances_Elementalist", "%");
+
+PROC_AMER_UI_ModSettings_AddOption_Value("EpicEnemies", "Chances_Predator", 25.0, 1.0, 10.0, -1.0, -10.0, 0.0, 100.0);
+PROC_AMER_UI_ModSettings_ValueDisplay_SetOverride_Suffix("EpicEnemies", "Chances_Predator", "%");
+
+PROC_AMER_UI_ModSettings_AddOption_Value("EpicEnemies", "Chances_ViolentStrikes", 25.0, 1.0, 10.0, -1.0, -10.0, 0.0, 100.0);
+PROC_AMER_UI_ModSettings_ValueDisplay_SetOverride_Suffix("EpicEnemies", "Chances_ViolentStrikes", "%");
+
+PROC_AMER_UI_ModSettings_AddOption_Value("EpicEnemies", "Chances_Centurion", 25.0, 1.0, 10.0, -1.0, -10.0, 0.0, 100.0);
+PROC_AMER_UI_ModSettings_ValueDisplay_SetOverride_Suffix("EpicEnemies", "Chances_Centurion", "%");
+
+PROC_AMER_UI_ModSettings_AddOption_Value("EpicEnemies", "Chances_Celestial", 25.0, 1.0, 10.0, -1.0, -10.0, 0.0, 100.0);
+PROC_AMER_UI_ModSettings_ValueDisplay_SetOverride_Suffix("EpicEnemies", "Chances_Celestial", "%");
+
+PROC_AMER_UI_ModSettings_AddOption_Value("EpicEnemies", "Chances_VitalityVoid", 25.0, 1.0, 10.0, -1.0, -10.0, 0.0, 100.0);
+PROC_AMER_UI_ModSettings_ValueDisplay_SetOverride_Suffix("EpicEnemies", "Chances_VitalityVoid", "%");
+
+PROC_AMER_UI_ModSettings_AddOption_Value("EpicEnemies", "Chances_Ward", 25.0, 1.0, 10.0, -1.0, -10.0, 0.0, 100.0);
+PROC_AMER_UI_ModSettings_ValueDisplay_SetOverride_Suffix("EpicEnemies", "Chances_Ward", "%");
+
+PROC_AMER_UI_ModSettings_AddOption_Value("EpicEnemies", "Chances_Purity", 25.0, 1.0, 10.0, -1.0, -10.0, 0.0, 100.0);
+PROC_AMER_UI_ModSettings_ValueDisplay_SetOverride_Suffix("EpicEnemies", "Chances_Purity", "%");
+
+PROC_AMER_UI_ModSettings_AddOption_Value("EpicEnemies", "Chances_Other", 25.0, 1.0, 10.0, -1.0, -10.0, 0.0, 100.0);
+PROC_AMER_UI_ModSettings_ValueDisplay_SetOverride_Suffix("EpicEnemies", "Chances_Other", "%");
+
+PROC_AMER_UI_ModSettings_MoveCategoryAfterCategory("EpicEnemies", "Global");
+
+// fix permanent Prosperity from stacking issue with Hothead in 0.9 and 1.0
+PROC PROC_PIP_Patching_RecalculateProsperityCount()
+AND
+DB_IsPlayer(_Player)
+AND
+DB_AMER_KeywordStat_Added(_Player, "Prosperity", _Count)
+AND
+_Count > 0
+AND
+QRY_PIP_CountProsperity((GUIDSTRING)_Player)
+AND
+DB_PIP_GEN_OUTPUT_Integer(_LegitimateCount)
+AND
+IntegerSubtract(0, _Count, _Remove)
+AND
+IntegertoString(_LegitimateCount, _LegitimateCountStr)
+THEN
+PROC_AMER_KeywordStat_Add((CHARACTERGUID)_Player, "Prosperity", _Remove);
+PROC_AMER_KeywordStat_Add((CHARACTERGUID)_Player, "Prosperity", _LegitimateCount);
+NOT DB_PIP_GEN_OUTPUT_Integer(_LegitimateCount);
+// PROC_AMER_GEN_CharacterCombatLogText((CHARACTERGUID)_Player, _LegitimateCountStr);
+
+// init db
+QRY QRY_PIP_CountProsperity((GUIDSTRING)_Char)
+AND
+NOT DB_PIP_GEN_OUTPUT_Integer(_)
+THEN
+DB_PIP_GEN_OUTPUT_Integer(0);
+// PROC_AMER_GEN_CharacterCombatLogText((CHARACTERGUID)_Char, "1");
+
+// has talent
+QRY QRY_PIP_CountProsperity((GUIDSTRING)_Char)
+AND
+CharacterHasTalent((CHARACTERGUID)_Char, "Perfectionist", 1)
+AND
+DB_PIP_GEN_OUTPUT_Integer(_Count)
+AND
+IntegerSum(_Count, 1, _NewCount)
+THEN
+NOT DB_PIP_GEN_OUTPUT_Integer(_Count);
+DB_PIP_GEN_OUTPUT_Integer(_NewCount);
+// PROC_AMER_GEN_CharacterCombatLogText((CHARACTERGUID)_Char, "2");
+
+QRY QRY_PIP_CountProsperity((GUIDSTRING)_Char)
+AND
+DB_PIP_ProsperitySources(_Aspect, _Node)
+AND
+DB_AMER_ElementChain_StateData(_Char, "AMER_UI_Ascension", _Aspect, _Node, 2)
+AND
+DB_PIP_GEN_OUTPUT_Integer(_Count)
+AND
+IntegerSum(_Count, 1, _NewCount)
+THEN
+NOT DB_PIP_GEN_OUTPUT_Integer(_Count);
+DB_PIP_GEN_OUTPUT_Integer(_NewCount);
+// PROC_AMER_GEN_CharacterCombatLogText((CHARACTERGUID)_Char, "3");
+
+EXITSECTION
+
+ENDEXITSECTION
+ParentTargetEdge "Start_AMER"

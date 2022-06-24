@@ -1,0 +1,2 @@
+- Fixed SI tooltip highlighting not working for a few schools
+- Fixed wrong earth damage color in shift-tooltips

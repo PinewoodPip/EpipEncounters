@@ -1,0 +1,19 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+
+KBSECTION
+
+// fix Leper when being slotted onto an equipped item
+PROC PROC_AMER_Versioning_Patch("EpipEncounters", 1026)
+AND
+DB_AMER_Runes_EffectOnEquip_Special("AMER_UNI_Leper_Rune_d3913dfe-85ff-436f-8880-61e739c02412", "Weapon", "TalentRune", "Stench")
+THEN
+PROC_PIP_PatchLeper();
+DB_NOOP();
+GoalCompleted;
+
+EXITSECTION
+
+ENDEXITSECTION
+ParentTargetEdge "AMER_GLO_Versioning_PatchWrapper"

@@ -1,0 +1,708 @@
+package combatLog_fla
+{
+    import LS_Classes.horizontalList;
+    import LS_Classes.scrollList;
+    import LS_Classes.textEffect;
+    import com.flashdynamix.motion.TweensyZero;
+    import fl.motion.easing.Cubic;
+    import flash.display.MovieClip;
+    import flash.events.Event;
+    import flash.events.MouseEvent;
+    import flash.external.ExternalInterface;
+    import flash.geom.Point;
+    import flash.geom.Rectangle;
+    import flash.text.TextFieldAutoSize;
+    import flash.utils.Dictionary;
+    
+    public dynamic class Log_1 extends MovieClip
+    {
+        
+        
+        public var bg_mc:MovieClip;
+        
+        public var filterHolder_mc:MovieClip;
+        
+        public var hide_mc:MovieClip;
+        
+        public var lock_mc:MovieClip;
+        
+        public var resize_mc:MovieClip;
+        
+        public var visibility_mc:MovieClip;
+        
+        public var filterList:horizontalList;
+        
+        public var filterAmount:Number;
+        
+        public var filterDist:Number;
+        
+        public var resized:Boolean;
+        
+        public var textList:scrollList;
+        
+        public var textOrder:Number;
+        
+        public var currentText:String;
+        
+        public var isMouseOver:Boolean;
+        
+        public const startDragDiff:uint = 20;
+        
+        public var dragStartMP:Point;
+        
+        public var windowDragStarted:Boolean;
+        
+        public var acceptInput:Boolean;
+        
+        public var constrBoxX:Number;
+        
+        public var constrBoxWidth:Number;
+        
+        public var constrBoxHeight:Number;
+        
+        public var constrBoxY:Number;
+        
+        public var base:MovieClip;
+        
+        public var fadeBG:Boolean;
+        
+        public var lockInput:Boolean;
+        
+        public var bgVisible:Boolean;
+        
+        public var maxLinesCap:Number;
+        
+        public var previousMax:Number;
+        
+        public var frameW:Number;
+        
+        public var sizeDispl:Number;
+        
+        public var resizeDragging:Boolean;
+
+        public var enabledFilters:Dictionary;
+        
+        public function Log_1()
+        {
+            super();
+            this.enabledFilters = new Dictionary();
+            addFrameScript(0,this.frame1);
+        }
+
+        public function toggleFilter(filter:String, state:Boolean) : *
+        {
+            if (state)
+            {
+                this.enabledFilters[filter] = true;
+            }
+            else
+            {
+                this.enabledFilters[filter] = false;
+            }
+        }
+
+        public function isFilterEnabled(filter:String) : Boolean
+        {
+            return this.enabledFilters[filter] == true;
+        }
+        
+        public function dragInv(param1:MouseEvent) : *
+        {
+            this.windowDragStarted = false;
+            stage.addEventListener(MouseEvent.MOUSE_MOVE,this.dragInvMove);
+            this.dragStartMP.y = stage.mouseY;
+            this.dragStartMP.x = stage.mouseX;
+            stage.addEventListener(MouseEvent.MOUSE_UP,this.stopDragInv);
+        }
+        
+        public function dragInvMove(param1:MouseEvent) : *
+        {
+            if(this.dragStartMP.x + this.startDragDiff > stage.mouseX || this.dragStartMP.y + this.startDragDiff > stage.mouseY || this.dragStartMP.x - this.startDragDiff < stage.mouseX || this.dragStartMP.y - this.startDragDiff < stage.mouseY)
+            {
+                ExternalInterface.call("hideTooltip");
+                ExternalInterface.call("startMoveWindow");
+                stage.removeEventListener(MouseEvent.MOUSE_MOVE,this.dragInvMove);
+                this.windowDragStarted = true;
+            }
+        }
+        
+        public function stopDragInv(param1:MouseEvent) : *
+        {
+            if(this.windowDragStarted)
+            {
+                ExternalInterface.call("cancelMoveWindow");
+            }
+            else
+            {
+                stage.removeEventListener(MouseEvent.MOUSE_MOVE,this.dragInvMove);
+            }
+            stage.removeEventListener(MouseEvent.MOUSE_UP,this.stopDragInv);
+            this.windowDragStarted = false;
+        }
+        
+        public function onSBOut(param1:MouseEvent) : *
+        {
+            ExternalInterface.call("InputOut");
+        }
+        
+        public function onSBOver(param1:MouseEvent) : *
+        {
+            ExternalInterface.call("InputOver");
+        }
+        
+        public function setBGVisibility(param1:Boolean) : *
+        {
+            this.fadeBG = param1;
+            if(this.fadeBG)
+            {
+                addEventListener(MouseEvent.ROLL_OUT,this.onBgHide);
+                addEventListener(MouseEvent.ROLL_OVER,this.onBgShow);
+                removeEventListener(MouseEvent.ROLL_OUT,this.onBgMouseOut);
+                removeEventListener(MouseEvent.ROLL_OVER,this.onBgMouseOver);
+                this.visibility_mc.bg_mc.alpha = 0.5;
+            }
+            else
+            {
+                removeEventListener(MouseEvent.ROLL_OUT,this.onBgHide);
+                removeEventListener(MouseEvent.ROLL_OVER,this.onBgShow);
+                addEventListener(MouseEvent.ROLL_OUT,this.onBgMouseOut);
+                addEventListener(MouseEvent.ROLL_OVER,this.onBgMouseOver);
+                this.visibility_mc.bg_mc.alpha = 1;
+                this.onBgShow(null);
+            }
+        }
+        
+        public function toggleFadeVisibility() : *
+        {
+            this.setBGVisibility(!this.fadeBG);
+            ExternalInterface.call("fadeBGVisibility",this.fadeBG);
+        }
+        
+        public function toggleLock() : *
+        {
+            this.setLockInput(!this.lockInput);
+            if(!this.lockInput)
+            {
+                this.setScrollWheelEnabled(true);
+            }
+            ExternalInterface.call("lockMouse",this.lockInput);
+        }
+        
+        public function setLockInput(param1:Boolean) : *
+        {
+            var _loc2_:Number = NaN;
+            this.lockInput = param1;
+            if(!this.lockInput)
+            {
+                this.bg_mc.addEventListener(MouseEvent.MOUSE_DOWN,this.dragInv);
+                this.textList.containerContent_mc.addEventListener(MouseEvent.MOUSE_DOWN,this.dragInv);
+                this.resize_mc.addEventListener(MouseEvent.ROLL_OVER,this.onResizeOver);
+                this.resize_mc.addEventListener(MouseEvent.ROLL_OUT,this.onResizeOut);
+                this.resize_mc.addEventListener(MouseEvent.MOUSE_DOWN,this.onResizeStartDrag);
+                this.lock_mc.bg_mc.gotoAndStop(2);
+                this.lock_mc.bg_mc.alpha = 1;
+                this.filterHolder_mc.mouseEnabled = true;
+                this.filterHolder_mc.mouseChildren = true;
+                this.bg_mc.mouseChildren = true;
+                this.bg_mc.mouseEnabled = true;
+                this.resize_mc.mouseChildren = true;
+                this.resize_mc.mouseEnabled = true;
+                this.resize_mc.alpha = 1;
+                this.hide_mc.mouseEnabled = true;
+                this.hide_mc.alpha = 1;
+                this.filterHolder_mc.alpha = 1;
+            }
+            else
+            {
+                _loc2_ = 0.5;
+                this.bg_mc.removeEventListener(MouseEvent.MOUSE_DOWN,this.dragInv);
+                this.textList.containerContent_mc.removeEventListener(MouseEvent.MOUSE_DOWN,this.dragInv);
+                this.resize_mc.removeEventListener(MouseEvent.ROLL_OVER,this.onResizeOver);
+                this.resize_mc.removeEventListener(MouseEvent.ROLL_OUT,this.onResizeOut);
+                this.resize_mc.removeEventListener(MouseEvent.MOUSE_DOWN,this.onResizeStartDrag);
+                this.filterHolder_mc.mouseEnabled = false;
+                this.filterHolder_mc.mouseChildren = false;
+                this.bg_mc.mouseChildren = false;
+                this.bg_mc.mouseEnabled = false;
+                this.resize_mc.mouseChildren = false;
+                this.resize_mc.mouseEnabled = false;
+                this.resize_mc.alpha = _loc2_;
+                this.hide_mc.mouseEnabled = false;
+                this.hide_mc.alpha = _loc2_;
+                this.filterHolder_mc.alpha = _loc2_;
+                this.lock_mc.bg_mc.gotoAndStop(1);
+                this.lock_mc.bg_mc.alpha = _loc2_;
+                this.setScrollWheelEnabled(false);
+            }
+        }
+        
+        public function onBgHide(param1:MouseEvent) : *
+        {
+            var _loc2_:Number = NaN;
+            if(!this.base.isUIMoving && !this.resizeDragging)
+            {
+                _loc2_ = 0.2;
+                TweensyZero.to(this.bg_mc,{"alpha":0},_loc2_,Cubic.easeOut);
+                TweensyZero.to(this.filterHolder_mc,{"alpha":0},_loc2_,Cubic.easeOut);
+                TweensyZero.to(this.resize_mc,{"alpha":0},_loc2_,Cubic.easeOut);
+                TweensyZero.to(this.hide_mc,{"alpha":0},_loc2_,Cubic.easeOut);
+                this.setScrollWheelEnabled(false);
+                this.textList.m_scrollbar_mc.disabled = true;
+                this.bgVisible = false;
+            }
+            this.isMouseOver = false;
+        }
+        
+        public function onBgShow(param1:MouseEvent) : *
+        {
+            var _loc2_:Number = NaN;
+            var _loc3_:Number = NaN;
+            if(!this.base.isUIMoving)
+            {
+                _loc2_ = !!this.lockInput ? Number(0.5) : Number(1);
+                _loc3_ = 0.2;
+                TweensyZero.to(this.bg_mc,{"alpha":0.8},_loc3_,Cubic.easeOut);
+                TweensyZero.to(this.hide_mc,{"alpha":_loc2_},_loc3_,Cubic.easeOut);
+                TweensyZero.to(this.filterHolder_mc,{"alpha":_loc2_},_loc3_,Cubic.easeOut);
+                TweensyZero.to(this.resize_mc,{"alpha":_loc2_},_loc3_,Cubic.easeOut);
+                this.textList.m_scrollbar_mc.disabled = false;
+                this.bgVisible = true;
+                if(!this.lockInput && param1 != null)
+                {
+                this.setScrollWheelEnabled(true);
+                }
+            }
+            if(param1 != null)
+            {
+                this.isMouseOver = true;
+            }
+        }
+        
+        public function setScrollWheelEnabled(param1:Boolean) : *
+        {
+            this.textList.mouseWheelWhenOverEnabled = param1;
+            this.textList.m_scrollbar_mc.mouseWheelEnabled = param1;
+        }
+        
+        public function onBgMouseOut(param1:MouseEvent) : *
+        {
+            this.isMouseOver = false;
+            this.setScrollWheelEnabled(false);
+        }
+        
+        public function onBgMouseOver(param1:MouseEvent) : *
+        {
+            this.isMouseOver = true;
+            if(!this.lockInput)
+            {
+                this.setScrollWheelEnabled(true);
+            }
+        }
+        
+        public function addFilter(param1:Number, param2:String, param3:Number) : *
+        {
+            var _loc4_:MovieClip;
+            if(!(_loc4_ = this.getFilter(param1)))
+            {
+                _loc4_ = new Filter();
+                this.filterList.addElement(_loc4_);
+                _loc4_.selectedB = false;
+                _loc4_.id = param1;
+                _loc4_.text_Array = new Array();
+            }
+            _loc4_.tooltip = param2;
+            _loc4_.icon_mc.gotoAndStop(param3);
+        }
+        
+        public function addTextToFilter(filter:Number, text:String, messageType:String) : *
+        {
+            var entry:MovieClip = null;
+            var added:Boolean = false;
+            var filter:MovieClip = this.getFilter(filter);
+
+            if (this.enabledFilters[messageType] == null)
+            {
+                this.toggleFilter(messageType, true);
+            }
+
+            if(filter)
+            {
+                if(entry = new textEntry())
+                {
+                    added = true;
+                    if(this.textList.m_scrollbar_mc)
+                    {
+                        added = this.textList.m_scrollbar_mc.isContentAtBottom();
+                    }
+                    entry.text_txt.autoSize = TextFieldAutoSize.LEFT;
+                    entry.text_txt.htmlText = text;
+                    entry.text_txt.width = this.frameW;
+                    entry.heightOverride = Math.round(entry.text_txt.y + entry.text_txt.textHeight);
+                    entry.text = text;
+                    entry.order = ++this.textOrder;
+                    entry.filterId = filter;
+                    entry.messageType = messageType; // PIP
+                    filter.text_Array.push(entry.order);
+
+                    if(!this.isFilterEnabled(messageType))
+                    {
+                        entry.visible = false;
+                    }
+
+                    entry.mouseChildren = false;
+                    entry.mouseEnabled = false;
+
+                    this.textList.addElement(entry);
+
+                    if(this.textOrder > this.previousMax + this.maxLinesCap)
+                    {
+                        this.removeOldLines();
+                        this.previousMax += this.maxLinesCap;
+                    }
+
+                    if(this.textList.m_scrollbar_mc)
+                    {
+                        this.textList.m_scrollbar_mc.scrollbarVisible();
+                        if(added)
+                        {
+                            this.textList.m_scrollbar_mc.resetHandleToBottom();
+                        }
+                    }
+                }
+            }
+        }
+        
+        public function removeOldLines() : *
+        {
+            var _loc2_:* = undefined;
+            var _loc3_:MovieClip = null;
+            var _loc1_:* = 0;
+            while(_loc1_ < this.filterList.length)
+            {
+                _loc2_ = 0;
+                while(_loc2_ < this.filterList.content_array[_loc1_].text_Array.length)
+                {
+                if(this.filterList.content_array[_loc1_].text_Array[_loc2_] <= this.previousMax)
+                {
+                    _loc3_ = this.textList.getElementByNumber("order",this.filterList.content_array[_loc1_].text_Array[_loc2_]);
+                    if(_loc3_)
+                    {
+                        this.textList.removeElement(_loc3_.list_pos);
+                    }
+                    this.filterList.content_array[_loc1_].text_Array.splice(_loc2_,1);
+                    _loc2_--;
+                }
+                _loc2_++;
+                }
+                _loc1_++;
+            }
+        }
+        
+        public function clearAll() : *
+        {
+            this.previousMax = 0;
+            this.textOrder = 0;
+            this.textList.clearElements();
+            this.filterList.clearElements();
+        }
+        
+        public function clearAllTexts() : *
+        {
+            this.textOrder = 0;
+            this.previousMax = 0;
+            var _loc1_:* = 0;
+            while(_loc1_ < this.filterList.length)
+            {
+                this.filterList.content_array[_loc1_].text_Array = new Array();
+                _loc1_++;
+            }
+            this.textList.clearElements();
+        }
+        
+        public function setListWidths(param1:Number) : *
+        {
+            var _loc3_:Boolean = false;
+            var _loc2_:* = 0;
+            while(_loc2_ < this.textList.length)
+            {
+                _loc3_ = false;
+                if(this.textList.content_array[_loc2_].text_txt.text.length == 0 && this.textList.content_array[_loc2_].text.length != 0)
+                {
+                _loc3_ = true;
+                this.textList.content_array[_loc2_].text_txt.htmlText = this.textList.content_array[_loc2_].text;
+                }
+                this.textList.content_array[_loc2_].text_txt.width = param1;
+                if(this.textList.content_array[_loc2_].text_txt.text.length > 0)
+                {
+                this.textList.content_array[_loc2_].heightOverride = Math.round(this.textList.content_array[_loc2_].text_txt.y + this.textList.content_array[_loc2_].text_txt.textHeight);
+                }
+                if(_loc3_)
+                {
+                this.textList.content_array[_loc2_].text_txt.htmlText = "";
+                }
+                _loc2_++;
+            }
+            this.textList.positionElements();
+        }
+        
+        public function clearFilter(param1:Number) : *
+        {
+            var _loc2_:MovieClip = this.getFilter(param1);
+            if(_loc2_)
+            {
+                _loc2_.text_Array = new Array();
+                this.removeFilterEntriesFromList(param1);
+            }
+        }
+        
+        public function removeFilterEntriesFromList(param1:Number) : *
+        {
+            var _loc2_:* = 0;
+            while(_loc2_ < this.textList.length)
+            {
+                if(this.textList.content_array[_loc2_].filterId == param1)
+                {
+                this.textList.removeElement(_loc2_,false);
+                }
+                else
+                {
+                _loc2_++;
+                }
+            }
+        }
+        
+        public function selectFilter(param1:Number) : *
+        {
+            var _loc2_:MovieClip = this.getFilter(param1);
+            if(_loc2_)
+            {
+                ExternalInterface.call("selectFilter",_loc2_.id);
+                _loc2_.selectedB = !_loc2_.selectedB;
+                if(!_loc2_.selectedB)
+                {
+                _loc2_.bg_mc.gotoAndStop(1);
+                }
+                else
+                {
+                _loc2_.bg_mc.gotoAndStop(3);
+                }
+                this.refreshText();
+                this.textList.m_scrollbar_mc.resetHandleToBottom();
+            }
+        }
+        
+        public function setFilterSelection(param1:Number, param2:Boolean) : *
+        {
+            var _loc3_:MovieClip = this.getFilter(param1);
+            if(_loc3_ && _loc3_.selectedB != param2)
+            {
+                _loc3_.selectedB = param2;
+                if(!_loc3_.selectedB)
+                {
+                _loc3_.bg_mc.gotoAndStop(1);
+                }
+                else
+                {
+                _loc3_.bg_mc.gotoAndStop(3);
+                }
+                this.refreshText();
+                this.textList.m_scrollbar_mc.resetHandleToBottom();
+            }
+        }
+        
+        public function refreshText() : *
+        {
+            this.currentText = "";
+            var _loc1_:Number = 0;
+            var _loc2_:Array = new Array();
+            var _loc3_:* = 0;
+            while(_loc3_ < this.filterList.length)
+            {
+                for (var key:Object in this.enabledFilters)
+                {
+                    var enabled:Boolean = this.enabledFilters[key];
+
+                    //if (enabled && this.filterList.content_array[_loc3_].selectedB)
+                    if (enabled)
+                    {
+                        this.textList.filterShowType("messageType", key, false);
+                    }
+                    else
+                    {
+                        this.textList.filterHideType("messageType", key);
+                    }
+                }
+                // if(this.filterList.content_array[_loc3_].selectedB)
+                // {
+                // this.textList.filterShowType("filterId",this.filterList.content_array[_loc3_].id,false);
+                // }
+                // else
+                // {
+                // this.textList.filterHideType("filterId",this.filterList.content_array[_loc3_].id);
+                // }
+                _loc3_++;
+            }
+            this.textList.sortOn("order",Array.NUMERIC);
+        }
+        
+        public function filterInput(param1:Number, param2:Boolean) : *
+        {
+            var _loc3_:MovieClip = this.getFilter(param1);
+            if(_loc3_)
+            {
+                _loc3_.isEnabled = param2;
+            }
+        }
+        
+        public function getFilter(param1:Number) : MovieClip
+        {
+            return this.filterList.getElementByNumber("id",param1);
+        }
+        
+        public function onResizeOut(param1:MouseEvent) : *
+        {
+            ExternalInterface.call("InputOut");
+            if(!this.resizeDragging)
+            {
+                this.resize_mc.bg_mc.gotoAndStop(1);
+            }
+        }
+        
+        public function onResizeOver(param1:MouseEvent) : *
+        {
+            ExternalInterface.call("InputOver");
+            if(!this.resizeDragging)
+            {
+                this.resize_mc.bg_mc.gotoAndStop(2);
+            }
+        }
+        
+        public function onResizeStartDrag(param1:MouseEvent) : *
+        {
+            stage.addEventListener(Event.MOUSE_LEAVE,this.mouseLeave);
+            stage.addEventListener(MouseEvent.MOUSE_MOVE,this.onMoveResize);
+            this.resized = true;
+            stage.addEventListener(MouseEvent.MOUSE_UP,this.onResizeStopDrag);
+            this.resize_mc.bg_mc.gotoAndStop(3);
+            this.resizeDragging = true;
+            this.resize_mc.startDrag(false,new Rectangle(this.constrBoxX,this.constrBoxY,this.constrBoxWidth,this.constrBoxHeight));
+        }
+        
+        public function onMoveResize(param1:MouseEvent) : *
+        {
+            if(this.resizeDragging)
+            {
+                this.resizing();
+            }
+        }
+        
+        public function mouseLeave(param1:Event) : void
+        {
+            this.stopDragging();
+        }
+        
+        public function setLogSize(param1:Number, param2:Number) : *
+        {
+            if(param2 < 200)
+            {
+                param2 = 200;
+            }
+            if(param1 < 200)
+            {
+                param1 = 200;
+            }
+            this.resize_mc.x = 400 - param1;
+            this.resize_mc.y = 51 - param2;
+            this.resizing();
+        }
+        
+        public function resizing() : *
+        {
+            this.bg_mc.y = this.resize_mc.y - this.sizeDispl + 1;
+            this.bg_mc.x = this.resize_mc.x - this.sizeDispl - 1;
+            this.hide_mc.y = this.resize_mc.y + 10;
+            this.hide_mc.x = this.resize_mc.x + 10;
+            var _loc1_:Number = -this.resize_mc.x + 400;
+            var _loc2_:Number = 200;
+            var _loc3_:Number = 30;
+            if(_loc1_ < _loc2_)
+            {
+                _loc1_ = _loc2_;
+            }
+            this.bg_mc.setBG(_loc1_,-this.bg_mc.y);
+            var _loc4_:Number = 30;
+            this.lock_mc.y = this.filterHolder_mc.y = this.resize_mc.y + 2;
+            this.visibility_mc.y = this.lock_mc.y + this.lock_mc.height;
+            this.filterHolder_mc.x = this.resize_mc.x + Math.round((this.bg_mc.width - this.filterHolder_mc.width) * 0.5);
+            var _loc5_:Number = this.bg_mc.width - _loc3_ * 2 - 22;
+            var _loc6_:Number = -this.bg_mc.y + this.sizeDispl - 70;
+            this.setListWidths(_loc5_);
+            this.frameW = _loc5_;
+            this.textList.setFrame(_loc5_,_loc6_);
+            this.textList.x = this.resize_mc.x + _loc3_;
+            this.textList.y = this.resize_mc.y + this.resize_mc.height + _loc4_;
+            this.lock_mc.x = this.visibility_mc.x = _loc5_ + this.textList.x;
+            this.textList.m_scrollbar_mc.resetHandleToBottom();
+        }
+        
+        public function onResizeStopDrag(param1:MouseEvent) : *
+        {
+            this.resize_mc.bg_mc.gotoAndStop(2);
+            this.stopDragging();
+        }
+        
+        public function stopDragging() : *
+        {
+            stage.removeEventListener(MouseEvent.MOUSE_UP,this.onResizeStopDrag);
+            this.resize_mc.bg_mc.gotoAndStop(1);
+            this.resizeDragging = false;
+            stage.removeEventListener(MouseEvent.MOUSE_MOVE,this.onMoveResize);
+            this.resize_mc.stopDrag();
+            this.resizing();
+            ExternalInterface.call("resized",this.bg_mc.width,this.bg_mc.height);
+        }
+
+        private function onRightClick(ev:MouseEvent) : *
+        {
+            ExternalInterface.call("pipRequestContextMenu", "combatLog", stage.mouseX, stage.mouseY);
+        }
+        
+        function frame1() : *
+        {
+            this.filterList = new horizontalList();
+            this.filterList.EL_SPACING = 10;
+            this.filterAmount = 0;
+            this.filterDist = 45;
+            this.resized = false;
+            this.textList = new scrollList("down_id","up_id","handle_id","scrollBg_id","bottom_id","top_id");
+            this.textList.setFrame(340,142);
+            this.textList.EL_SPACING = 0;
+            this.textList.containerContent_mc.filters = textEffect.createStrokeFilter(0,1.1,0.65,2,3);
+            addChild(this.textList);
+            this.textOrder = 0;
+            this.currentText = "";
+            this.isMouseOver = false;
+            this.dragStartMP = new Point();
+            this.windowDragStarted = false;
+            this.filterHolder_mc.addChild(this.filterList);
+            this.textList.m_scrollbar_mc.addEventListener(MouseEvent.ROLL_OUT,this.onSBOut);
+            this.textList.m_scrollbar_mc.addEventListener(MouseEvent.ROLL_OVER,this.onSBOver);
+            this.acceptInput = true;
+            this.constrBoxX = -500;
+            this.constrBoxWidth = 480;
+            this.constrBoxHeight = 600;
+            this.constrBoxY = -800;
+            this.base = root as MovieClip;
+            this.fadeBG = false;
+            this.lockInput = false;
+            this.bgVisible = false;
+            this.maxLinesCap = 100;
+            this.previousMax = 0;
+            this.frameW = 340;
+            this.sizeDispl = 2;
+            this.resizeDragging = false;
+
+            this.addEventListener(MouseEvent.RIGHT_CLICK, this.onRightClick);
+        }
+    }
+}

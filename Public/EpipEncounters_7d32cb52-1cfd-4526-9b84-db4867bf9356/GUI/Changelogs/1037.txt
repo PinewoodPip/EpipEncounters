@@ -1,0 +1,3 @@
+- Fixed right-most zeros getting culled in stat adjustment tooltips
+- Added a new setting to disable fog of war (server-wide, host-only, non-destructive; can be reverted)
+- One-handed weapons now show up as "1Handed" in tooltips to fix the world's smallest cropping issue with the quality tooltips

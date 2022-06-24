@@ -1,0 +1,195 @@
+package combatLog_fla
+{
+    import flash.display.MovieClip;
+    import flash.external.ExternalInterface;
+    
+    public dynamic class MainTimeline extends MovieClip
+    {
+        
+        
+        public var log_mc:MovieClip;
+        
+        public var events:Array;
+        
+        public var layout:String;
+        
+        public var isUIMoving:Boolean;
+        
+        public var tooltip_array:Array;
+        
+        public function MainTimeline()
+        {
+            super();
+            addFrameScript(0,this.frame1);
+        }
+        
+        public function onEventResize() : *
+        {
+            if(!this.log_mc.moved)
+            {
+                ExternalInterface.call("setPosition","bottomright","screen","bottomright");
+            }
+        }
+        
+        public function onEventResolution(param1:Number, param2:Number) : *
+        {
+            var _loc3_:Number = NaN;
+            var _loc4_:Number = NaN;
+            var _loc5_:Number = NaN;
+            if(!this.log_mc.resized)
+            {
+                _loc3_ = param1 / param2;
+                _loc4_ = 1920;
+                _loc5_ = 1080;
+                if(_loc3_ > 1.7)
+                {
+                this.log_mc.resize_mc.x = -270;
+                this.log_mc.resizing();
+                }
+                else if(_loc3_ <= 1.25)
+                {
+                this.log_mc.resize_mc.x = 0;
+                this.log_mc.resizing();
+                }
+                else
+                {
+                this.log_mc.resize_mc.x = -30;
+                this.log_mc.resizing();
+                }
+                ExternalInterface.call("resized",this.log_mc.bg_mc.width,this.log_mc.bg_mc.height);
+            }
+        }
+        
+        public function onEventUp(param1:Number) : *
+        {
+            return false;
+        }
+        
+        public function onEventInit() : *
+        {
+            this.isUIMoving = false;
+            this.log_mc.base = root as MovieClip;
+            this.log_mc.onBgHide(null);
+            this.log_mc.resizing();
+            ExternalInterface.call("registerAnchorId","combatLog");
+            ExternalInterface.call("setPosition","bottomright","screen","bottomright");
+            ExternalInterface.call("resized",this.log_mc.bg_mc.width,this.log_mc.bg_mc.height);
+        }
+        
+        public function onEventDown(param1:Number) : *
+        {
+            return false;
+        }
+        
+        public function startsWith(param1:String, param2:String) : Boolean
+        {
+            param1 = param1.toLowerCase();
+            param2 = param2.toLowerCase();
+            return param2 == param1.substr(0,param2.length);
+        }
+        
+        public function clearAll() : *
+        {
+            this.log_mc.clearAll();
+        }
+        
+        public function clearAllTexts() : *
+        {
+            this.log_mc.clearAllTexts();
+        }
+        
+        public function clearTab(param1:Number) : *
+        {
+        }
+        
+        public function clearFilter(param1:Number) : *
+        {
+            this.log_mc.clearFilter(param1);
+        }
+        
+        public function selectFilter(param1:Number) : *
+        {
+            this.log_mc.selectFilter(param1);
+        }
+        
+        public function setFilterSelection(param1:Number, param2:Boolean) : *
+        {
+            this.log_mc.setFilterSelection(param1,param2);
+        }
+        
+        public function addTab(param1:String) : *
+        {
+            this.log_mc.addFilter(this.log_mc.filterList.length,param1,this.log_mc.filterList.length + 1);
+        }
+        
+        public function addFilter(param1:Number, param2:String, param3:Number) : *
+        {
+            this.log_mc.addFilter(param1,param2,param3);
+        }
+        
+        public function addTextToTab(param1:Number, param2:String) : *
+        {
+            this.log_mc.addTextToFilter(param1, param2, "Unsupported");
+        }
+        
+        public function addTextToFilter(param1:Number, param2:String, param3:String = "Unsupported") : *
+        {
+            this.log_mc.addTextToFilter(param1, param2, param3);
+        }
+        
+        public function reOpen() : *
+        {
+            this.log_mc.visible = true;
+        }
+        
+        public function setLogVisible(param1:Boolean) : *
+        {
+            if(param1 && this.log_mc.bgVisible && !this.log_mc.lockInput && this.log_mc.isMouseOver)
+            {
+                this.log_mc.textList.mouseWheelWhenOverEnabled = true;
+            }
+            if(!param1)
+            {
+                this.log_mc.textList.mouseWheelWhenOverEnabled = false;
+            }
+            this.log_mc.visible = param1;
+        }
+        
+        public function setLogSize(param1:Number, param2:Number) : *
+        {
+            this.log_mc.setLogSize(param1,param2);
+            this.log_mc.resized = true;
+        }
+        
+        public function requestSize() : *
+        {
+            ExternalInterface.call("resized",this.log_mc.bg_mc.width,this.log_mc.bg_mc.height);
+        }
+        
+        public function setLockInput(param1:Boolean) : *
+        {
+            this.log_mc.setLockInput(param1);
+        }
+        
+        public function setBGVisibility(param1:Boolean) : *
+        {
+            this.log_mc.setBGVisibility(param1);
+        }
+        
+        public function setTooltip(param1:Number, param2:String) : *
+        {
+            if(param1 >= 0 && param1 < this.tooltip_array.length)
+            {
+                this.tooltip_array[param1].tooltip = param2;
+            }
+        }
+        
+        function frame1() : *
+        {
+            this.events = new Array();
+            this.layout = "fixed";
+            this.isUIMoving = false;
+            this.tooltip_array = new Array(this.log_mc.lock_mc,this.log_mc.visibility_mc);
+        }
+    }
+}

@@ -1,0 +1,7 @@
+- Added critical chance to the examine menu, below damage
+- Added an option to set the default position of the Examine menu (middle, left, or right of the screen)
+- Fixed health bar appearing in character creation
+- Added a new context menu option to dismantle all equipment within a container. Only shows up when there's equipment within a container.
+- Dismantling through the context menu now requires shift-clicking for any equipped item
+- Fixed right-clicking containers bringing up debugging cheats for the character you previously had selected
+- Organizational changes for various UI scripts and older features, as preparations for the grand debut of the Epip modding docs

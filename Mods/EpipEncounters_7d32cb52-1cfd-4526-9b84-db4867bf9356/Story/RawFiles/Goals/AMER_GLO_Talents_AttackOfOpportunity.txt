@@ -1,0 +1,17 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+
+KBSECTION
+
+// opportunist grants *an additional* reaction charge.
+PROC PROC_AMER_Talents_Toggle((CHARACTERGUID)_Char, "AttackOfOpportunity", (REAL)_Toggle)
+AND
+RealProduct(_Toggle, 2.0, _Amount)
+THEN
+PROC_AMER_ExtendedStat_CharacterAddStat(_Char, "FreeReactionCharge", "AnyReaction", "", "", _Amount);
+
+EXITSECTION
+
+ENDEXITSECTION
+ParentTargetEdge "AMER_GLO_Talents"

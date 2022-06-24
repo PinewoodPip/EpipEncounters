@@ -1,0 +1,28 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "divinity.task.compiler",
+			"gameDataPath": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Divinity Original Sin 2\\DefEd\\Data",
+			"output": "c:\\Program Files (x86)\\Steam\\steamapps\\common\\Divinity Original Sin 2\\DefEd\\Data\\Mods\\EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356\\Story\\story.div.osi",
+			"mod": [
+				"Shared",
+				"Character_Creation_Pack",
+				"Shared_DOS",
+				"DivinityOrigins_1301db3d-1f54-4e98-9be5-5094030916e4",
+				"Epic_Encounters_Core_63bb9b65-2964-4c10-be5b-55a63ec02fa0",
+				"EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356"
+			],
+			"game": "dos2de",
+			"debugInfo": "C:\\Program Files (x86)\\Steam\\steamapps\\common\\Divinity Original Sin 2\\DefEd\\Data\\Mods\\EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356\\Story\\story.debugInfo",
+			"problemMatcher": [
+				"$divinity.problemMatcher"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"label": "Epip Encounters: Compile"
+		}
+	]
+}

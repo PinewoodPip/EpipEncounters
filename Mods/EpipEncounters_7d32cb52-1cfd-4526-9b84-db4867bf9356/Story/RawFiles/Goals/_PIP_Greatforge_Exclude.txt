@@ -1,0 +1,176 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+
+DB_PIP_UI_Greatforge_Exclude_OptionPosOnPage(0, -1.42, -1.80);
+DB_PIP_UI_Greatforge_Exclude_OptionPosOnPage(1, 1.42, -1.80);
+DB_PIP_UI_Greatforge_Exclude_OptionPosOnPage(2, -1.42, -3.35);
+DB_PIP_UI_Greatforge_Exclude_OptionPosOnPage(3, 1.42, -3.35);
+DB_PIP_UI_Greatforge_Exclude_OptionPosOnPage(4, -1.42, -4.90);
+DB_PIP_UI_Greatforge_Exclude_OptionPosOnPage(5, 1.42, -4.90);
+PROC_AMER_UI_ElementCollection_Add("AMER_UI_Greatforge", "Exclude_ModFrame", "Title", "AMER_UI_AnchorObject_3efcd69e-8932-4d59-bddb-bef2d3331ce7", "", "", 1.00, 0.0, -0.65);
+PROC_AMER_UI_ElementText_Set("AMER_UI_Greatforge", "Exclude_ModFrame", "Title", "AMER_UI_Greatforge_Exclude_SelectModsHeader");
+PROC_AMER_UI_Page_AddCollection("AMER_UI_Greatforge", "Page_ConfirmSelection_Exclude", "Back", 0, 1, 0.0, 0.0);
+PROC_AMER_UI_Page_AddCollection("AMER_UI_Greatforge", "Page_ConfirmSelection_Exclude", "Exclude_ModFrame", 0, 1, 3.12, 0.40);     //Collection type is 0, because this is an element collection.
+PROC_AMER_UI_Page_AddCollection("AMER_UI_Greatforge", "Page_ConfirmSelection_Exclude", "CenterBackdrop_Opaque", 0, 1, 0.0, 0.0);     //Collection type is 0, because this is an element collection.
+PROC_AMER_UI_Page_AddCollection("AMER_UI_Greatforge", "Page_ConfirmSelection_Exclude", "CostList", 1, 1, 8.7, -3.89);
+
+// DB_AMER_UI_Greatforge_Option("PIP_Exclude", "AMER_UI_Greatforge_Option_DrillSocket");
+// // DB_AMER_UI_Greatforge_Option_Cost("PIP_Exclude", "GreatforgeFrags", "AMER_LOOT_GreatforgeFragment_A_a41f2a71-6ff1-4c60-a74a-20c96fb9c487", 4.0);
+// DB_AMER_UI_Greatforge_Option_Cost("PIP_Exclude", "Gold", "Gold", 0.10);
+
+KBSECTION
+
+QRY QRY_AMER_UI_Greatforge_InvalidSelection((CHARACTERGUID)_Char, "PIP_Exclude")
+AND
+DB_AMER_UI_Greatforge_BenchedItem(_, _Char, _Item, _, _Rarity, _Slot, _SubType, _Handedness, _)
+AND
+QRY_AMER_UI_Greatforge_RemoveMods_InvalidSelection(_Char, _Item, _Rarity, _Slot, _SubType, _Handedness)
+THEN
+DB_NOOP(1);
+
+// QRY QRY_AMER_UI_Greatforge_RemoveMods_InvalidSelection((CHARACTERGUID)_Char, (ITEMGUID)_Item, (STRING)_Rarity, (STRING)_Slot, (STRING)_SubType, (INTEGER)_Handedness)
+// AND
+// QRY_AMER_Deltamods_IterateMods_NotImplicit(_Item, _Slot, _SubType, _Handedness)
+// AND
+// SysCount("DB_AMER_Detamods_OUTPUT_CountedMods", 5, _Count)
+// AND
+// _Count <= 1
+// THEN
+// OpenMessageBox(_Char, "AMER_UI_Greatforge_RemoveMods_NeedMoreMods");	//Does not work if <= one moveable mod exists (there's no point in that case).
+
+// QRY QRY_AMER_UI_Greatforge_RemoveMods_InvalidSelection((CHARACTERGUID)_Char, (ITEMGUID)_Item, "Unique", (STRING)_Slot, (STRING)_SubType, (INTEGER)_Handedness)
+// THEN
+// OpenMessageBox(_Char, "AMER_UI_Greatforge_RemoveMods_UniqueItem");	//Cannot do this with unique items (pretty much because of treasure table generation).
+
+// QRY QRY_AMER_UI_Greatforge_RemoveMods_InvalidSelection((CHARACTERGUID)_Char, (ITEMGUID)_Item, (STRING)_Rarity, (STRING)_Slot, (STRING)_SubType, (INTEGER)_Handedness)
+// AND
+// IsTagged(_Item, "AMER_GREATFORGEBLOCKED", 1)
+// THEN
+// OpenMessageBox(_Char, "AMER_UI_Greatforge_IncompatibleItem");
+
+
+//Custom confirm page for RemoveMods.
+QRY QRY_AMER_UI_Greatforge_CustomOptionConfirm((INTEGER)_Instance, (CHARACTERGUID)_Char, "PIP_Exclude")
+AND
+DB_AMER_UI_Greatforge_BenchedItem(_, _Char, _Item, _, _, _, _, _, _)
+THEN
+CharacterPlayHUDSound(_Char, "Skill_Air_Cast_AoE_Divine_Void");
+PROC_PIP_UI_Greatforge_Exclude_InitConfirmPage(_Instance, _Char, _Item);
+PROC_AMER_UI_Page_SetCurrentPage(_Instance, "AMER_UI_Greatforge", "Page_ConfirmSelection_Exclude");
+
+// Add UI elements for each mod
+PROC PROC_PIP_UI_Greatforge_Exclude_InitConfirmPage((INTEGER)_Instance, (CHARACTERGUID)_Char, (ITEMGUID)_Item)
+AND
+DB_AMER_Detamods_OUTPUT_CountedMods(_Index, _ModIndex, _Prefix, _DeltaMod, _Value)  //Populated by QRY_AMER_UI_Greatforge_InvalidSelection() logic for this craft option (QRY_AMER_Deltamods_CountMods_NotImplicit()).
+AND
+DB_PIP_UI_Greatforge_Exclude_OptionPosOnPage(_Index, _X, _Z)
+AND
+IntegertoString(_Index, _IndexStr)
+AND
+StringConcatenate("SelectMod_", _IndexStr, _NodeName)
+AND
+StringConcatenate("SelectMod_Title_", _IndexStr, _TitleName)
+AND
+StringConcatenate("AMER_Deltamod_", _Prefix, _DisplayName)
+AND
+RealSum(_Z, 0.2, _TitleZ)
+THEN
+DB_PIP_UI_Greatforge_Exclude_ModsOfItem(_Instance, _Index, _DeltaMod);
+PROC_AMER_UI_ElementCollection_Add(_Instance, "AMER_UI_Greatforge", "Exclude_ModFrame", _NodeName, "AMER_UI_GEN_ButtonPhys_Rect_0-6_d7217924-8279-4187-bbec-2a309b5a8e9c", "AMER_UI_Greatforge_Exclude_SelectMod", "AMER_UI_Button_Node_A_State_2", 0.65, _X, _Z);
+PROC_AMER_UI_ElementCollection_Add(_Instance, "AMER_UI_Greatforge", "Exclude_ModFrame", _TitleName, "AMER_UI_AnchorObject_3efcd69e-8932-4d59-bddb-bef2d3331ce7", "", "", 1.0, _X, _TitleZ);
+PROC_AMER_UI_ElementText_Set(_Instance, "AMER_UI_Greatforge", "Exclude_ModFrame", _TitleName, _DisplayName);
+
+IF
+CharacterItemEvent(_Char, _Element, "AMER_UI_Greatforge_Exclude_SelectMod")
+AND
+DB_AMER_UI_ElementsOfInstance(_Instance, "AMER_UI_Greatforge", "Exclude_ModFrame", _ElementName, _Element)
+AND
+DB_AMER_UI_UsersInUI(_Instance, _UI, _Char)
+AND
+StringSub(_ElementName, 10, 1, _IndexStr)
+AND
+QRY_AMER_GEN_StringtoInteger(_IndexStr)
+AND
+DB_AMER_GEN_OUTPUT_Integer(_Index)
+THEN
+DB_AMER_UI_Greatforge_Exclude_SelectedMod(_Instance, _Index);
+CharacterPlayHUDSound(_Char, "Skill_Air_Cast_AoE_Divine_Void");
+PROC_AMER_GEN_OpenQueuedMessageBox(_Char, "Choice", "AMER_UI_Greatforge_Exclude_Confirm", "AMER_UI_Greatforge_Exclude_Yes", "AMER_UI_Greatforge_Exclude_No");
+
+IF
+MessageBoxChoiceClosed(_Char, "AMER_UI_Greatforge_Exclude_Confirm", "AMER_UI_Greatforge_Exclude_Yes")
+THEN
+CharacterItemSetEvent(_Char, NULL_00000000-0000-0000-0000-000000000000, "AMER_UI_Greatforge_Confirm");
+
+PROC PROC_AMER_UI_Greatforge_DoCraft((INTEGER)_Instance, (CHARACTERGUID)_Char, (ITEMGUID)_Cont, (ITEMGUID)_Item, (REAL)_Level, (STRING)_ItemType, (STRING)_Slot, (STRING)_SubType, (INTEGER)_Handedness, (REAL)_Value, "PIP_Exclude")
+AND
+DB_AMER_UI_Greatforge_Exclude_SelectedMod(_Instance, _Index)
+AND
+QRY_PIP_CombatLogText(_Char, "1")
+AND
+DB_PIP_UI_Greatforge_Exclude_ModsOfItem(_Instance, _Index, _DeltaMod)
+AND
+QRY_PIP_CombatLogText(_Char, "2")
+AND
+IntegertoString(_Instance, _InstanceStr)
+THEN
+
+// DB_AMER_UI_Greatforge_RemoveMods_NewItemRequest(_RequestCount, _Instance, _Char, _DeltaMod, _ItemType, _Level, _Slot, _SubType, _Handedness);
+PROC_AMER_GEN_CharacterCombatLogText(_Char, "Testing!");
+NRD_ModCall("EpipEncounters", "GreatforgeExclude", _InstanceStr);
+NOT DB_AMER_UI_Greatforge_Exclude_SelectedMod(_Instance, _Index);
+PROC_AMER_UI_Greatforge_Exclude_Cleanup(_Instance);
+
+IF
+MessageBoxChoiceClosed(_Char, "AMER_UI_Greatforge_Exclude_Confirm", "AMER_UI_Greatforge_Exclude_No")
+AND
+DB_AMER_UI_UsersInUI(_Instance, "AMER_UI_Greatforge", _Char)
+AND
+DB_AMER_UI_Greatforge_Exclude_SelectedMod(_Instance, _Index)
+THEN
+NOT DB_AMER_UI_Greatforge_Exclude_SelectedMod(_Instance, _Index);
+PROC_AMER_GEN_CharacterCombatLogText(_Char, "closed");
+
+QRY QRY_PIP_CombatLogText((CHARACTERGUID)_Char, (STRING)_Str)
+THEN
+PROC_AMER_GEN_CharacterCombatLogText(_Char, _Str);
+
+PROC PROC_AMER_UI_Greatforge_DoCraft((INTEGER)_Instance, (CHARACTERGUID)_Char, (ITEMGUID)_Cont, (ITEMGUID)_Item, (REAL)_Level, (STRING)_ItemType, (STRING)_Slot, (STRING)_SubType, (INTEGER)_Handedness, (REAL)_Value, "PIP_Exclude")
+THEN
+PROC_AMER_GEN_CharacterCombatLogText(_Char, "testing2");
+
+
+PROC PROC_AMER_UI_Page_PageLeft((INTEGER)_Instance, "AMER_UI_Greatforge", "Page_ConfirmSelection_Exclude")
+THEN
+PROC_AMER_UI_Greatforge_Exclude_Cleanup(_Instance);
+
+PROC PROC_AMER_UI_Greatforge_Exclude_Cleanup((INTEGER)_Instance)
+AND
+DB_AMER_UI_ElementCollection(_Instance, "AMER_UI_Greatforge", "Exclude_ModFrame", _Name, _Root, _, _)
+THEN
+PROC_AMER_UI_ElementCollection_Remove(_Instance, "AMER_UI_Greatforge", "Exclude_ModFrame", _Name);
+
+PROC PROC_AMER_UI_Greatforge_Exclude_Cleanup((INTEGER)_Instance)
+AND
+DB_PIP_UI_Greatforge_Exclude_ModsOfItem(_Instance, _Index, _Mod)
+THEN
+NOT DB_PIP_UI_Greatforge_Exclude_ModsOfItem(_Instance, _Index, _Mod);
+
+PROC PROC_AMER_UI_Greatforge_Exclude_Cleanup((INTEGER)_Instance)
+AND
+DB_AMER_UI_Greatforge_Exclude_SelectedMod(_Instance, _Index)
+THEN
+NOT DB_AMER_UI_Greatforge_Exclude_SelectedMod(_Instance, _Index);
+
+//Done on Greatforge cleanup instead of RemoveMods cleanup because we need this DB even after we leave the RemoveMods page.
+// PROC PROC_AMER_UI_Greatforge_Cleanup((INTEGER)_Instance, (CHARACTERGUID)_Char)
+// AND
+// DB_AMER_UI_Greatforge_RemoveMods_NewItemRequest(_RequestCount, _Instance, _Char, _DeltaMod, _Rarity, _Level, _Slot, _SubType, _Handedness) //Should not be necessary, but failsafe.
+// THEN
+// NOT DB_AMER_UI_Greatforge_RemoveMods_NewItemRequest(_RequestCount, _Instance, _Char, _DeltaMod, _Rarity, _Level, _Slot, _SubType, _Handedness);
+
+EXITSECTION
+
+ENDEXITSECTION
+ParentTargetEdge "Start_AMER"

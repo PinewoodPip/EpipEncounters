@@ -1,0 +1,29 @@
+package ui_fla
+{
+    import flash.display.MovieClip;
+    import flash.text.TextField;
+    import flash.text.TextFieldAutoSize;
+    
+    public dynamic class MainTimeline extends MovieClip
+    {
+        
+        public function MainTimeline()
+        {
+            super();
+            this.addFrameScript(0, this.frame1);
+        }
+        
+        public function onEventInit() : *
+        {
+
+        }
+        
+        function frame1() : *
+        {
+            this.uiScaling = 1;
+            this.events = new Array();
+            this.layout = "fixed";
+            this.leftUI = false;
+        }
+    }
+}

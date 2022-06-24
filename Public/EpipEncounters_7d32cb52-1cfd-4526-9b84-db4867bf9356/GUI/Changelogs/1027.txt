@@ -1,0 +1,37 @@
+This patch contains numerous fixes and the first part of the rework of hotbar hotkeys. <font color="#b8511d">Happy birthday Derpy!</font>
+
+- Replaced the tutorials tab in the journal with a patch notes tab (the one you're reading right now!)
+    - See EpipPatchNotes.lua for an example on how to use this in your own mod.
+- Artifact tooltips now show "Artifact" as rarity rather than Unique
+
+-------------------------------------------------------------
+
+<font size="23">Hotbar Updates</font>
+- Added customizable hotbar action hotkeys/buttons. Drag and drop to rearrange/assign them, right click to bring up a list of all actions. Mods can add their own actions very easily; see <b>HotbarActions.lua</b> for an example.
+- To use them with keyboard keys, assign the "Hotbar Hotkey #" keys from the game's controls menu. Rebinding them will be easier in the future.
+- This rework is a work-in-progress, both in terms of functionality and art; in the future there will also be a 1-row layout.
+- The multihotbar is now enabled by default. Set "disableHotbar" to true in the config file to disable it.
+- Deprecated the Infusion and Meditate hotkeys; please use the hotbar version of them from now on.
+- Summons can no longer add hotbar rows
+- All the custom elements should now hide during dialogues
+- Fixed jankiness when using low resolutions
+
+-------------------------------------------------------------
+
+<font size="23">Fixes</font>
+- Fixed player status bar sometimes clipping through portraits and appearing to the left of them
+- Fixed stat adjustments tooltip not working properly on resists
+- Fixed stat adjustments tooltip eating up all other boosts
+- Fixed boss frame in the enemy health bar UI. It should work consistently now
+- Leper rune now should properly grant the talent when it's socketed into an equipped item
+- Fixed being able to infuse out-of-turn with the hotkey (rest in peace gigabrain infused reaction builds)
+- Possibly disabled turn notifications on the hotbar health bar
+
+-------------------------------------------------------------
+
+<font size="23">Known issues</font>
+- "Actions" drawer (attack/sneak/sheathe) does not work well along with the default keyboard hotkey, and the menu is not repositioned
+- Buttons on the hotbar don't yet light up like they do in vanilla
+- Order of actions in drawer is random
+- Some hotbar buttons do not have state animations yet
+- The title in the patch notes menu will not be the right color the first time after a reload (OH MY GOD)

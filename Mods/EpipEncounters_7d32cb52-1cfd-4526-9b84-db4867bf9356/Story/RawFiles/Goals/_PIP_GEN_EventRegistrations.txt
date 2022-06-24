@@ -1,0 +1,63 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+
+GoalCompleted;
+
+KBSECTION
+
+// This script contains dummy listeners for all extender events.
+// Events do not fire if they are not used in the compiled story.
+// The purpose of this script is to enable them to be used in extender lua.
+
+/* [OSITOOLS_ONLY]
+IF NRD_Loop(_, _)
+THEN
+DB_NOOP();
+
+IF NRD_Loop(_, _, _)
+THEN
+DB_NOOP();
+
+IF NRD_StatusIteratorEvent(_, _, _, _)
+THEN
+DB_NOOP();
+
+IF NRD_OnStatusAttempt(_, _, _, _)
+THEN
+DB_NOOP();
+
+IF NRD_OnPrepareHit(_, _, _, _)
+THEN
+DB_NOOP();
+
+IF NRD_OnHit(_, _, _, _)
+THEN
+DB_NOOP();
+
+IF NRD_OnHeal(_, _, _, _)
+THEN
+DB_NOOP();
+
+IF NRD_OnActionStateEnter(_, _)
+THEN
+DB_NOOP();
+
+IF NRD_OnActionStateExit(_, _)
+THEN
+DB_NOOP();
+
+IF NRD_ItemDeltaModIteratorEvent(_, _, _, _)
+THEN
+DB_NOOP();
+
+IF NRD_SkillIteratorEvent(_, _, _, _, _)
+THEN
+DB_NOOP();
+*/
+
+EXITSECTION
+
+ENDEXITSECTION
+
+ParentTargetEdge "_AMER_GEN_Events"

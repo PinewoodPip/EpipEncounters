@@ -1,0 +1,53 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+KBSECTION
+
+// For whiny compiler. TODO move out
+IF ItemSendToHomesteadEvent(_, _)
+AND
+DB_PIP_IncompatibleModWarningSeen("", "")
+THEN
+DB_PIP_IncompatibleModWarningSeen("", "");
+
+// Compiler dummy.
+IF ItemSendToHomesteadEvent(_Char, _)
+AND
+DB_PIP_Hotbar_Enabled(2)
+AND
+DB_PIP_Hotbar_State(_Char, 0, 0, 0)
+THEN
+DB_PIP_Hotbar_Enabled(2);
+NOT DB_PIP_Hotbar_Enabled(2);
+DB_PIP_Hotbar_State(_Char, 0, 0, 0); // Char, bar, row, visible
+
+IF NRD_OnActionStateEnter(_Char, _State)
+THEN
+DB_NOOP();
+
+IF NRD_OnActionStateExit(_Char, _State)
+THEN
+DB_NOOP();
+
+PROC PROC_PIP_Hotbar_UseTemplate((CHARACTERGUID)_Char, (STRING)_Template)
+AND
+GetItemForItemTemplateInPartyInventory(_Char, _Template, _Item)
+THEN
+CharacterUseItem(_Char, _Item, "");
+
+PROC PROC_PIP_UseTeleporterPyramid((CHARACTERGUID)_Char)
+AND
+QRY_AMER_GEN_Mutex_Clear() // We only want to interact with one pyramid.
+AND
+DB_TeleporterPyramid(_Item)
+AND
+ItemIsInPartyInventory(_Item, _Char, 0, 1)
+AND
+QRY_AMER_GEN_Mutex()
+THEN
+CharacterUseItem(_Char, _Item, "");
+
+EXITSECTION
+
+ENDEXITSECTION
+ParentTargetEdge "Start_AMER"

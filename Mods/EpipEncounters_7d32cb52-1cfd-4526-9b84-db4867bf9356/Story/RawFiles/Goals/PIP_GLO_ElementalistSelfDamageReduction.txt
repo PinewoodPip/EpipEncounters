@@ -1,0 +1,38 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+
+KBSECTION
+
+// reduce Elementalist feedback to 50% of what it was for players; 0% for enemies in Epic Bosses modsetting.
+
+PROC PROC_AMER_KeywordStat_Elementalist_Feedback_GetMultiplier_Manip((CHARACTERGUID)_Char)
+AND
+QRY_PIP_AdjustElementalistFeedback(_Char)
+THEN
+DB_NOOP();
+
+QRY QRY_PIP_AdjustElementalistFeedback((CHARACTERGUID)_Char)
+AND
+DB_AMER_GEN_OUTPUT_Real(_Value)
+AND
+DB_IsPlayer(_Char)
+THEN
+NOT DB_AMER_GEN_OUTPUT_Real(_Value);
+DB_AMER_GEN_OUTPUT_Real(0.5);
+
+QRY QRY_PIP_AdjustElementalistFeedback((CHARACTERGUID)_Char)
+AND
+DB_AMER_GEN_OUTPUT_Real(_Value)
+AND
+DB_PIP_ModSettings_EpicBosses(1)
+AND
+NOT DB_IsPlayer(_Char)
+THEN
+NOT DB_AMER_GEN_OUTPUT_Real(_Value);
+DB_AMER_GEN_OUTPUT_Real(0.0);
+
+EXITSECTION
+
+ENDEXITSECTION
+ParentTargetEdge "Start_AMER"

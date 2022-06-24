@@ -1,0 +1,270 @@
+ 
+package enemyHealthBar_fla
+{
+    import flash.display.MovieClip;
+    import flash.text.TextField;
+    import LS_Classes.larTween;
+    import fl.motion.easing.Sine;
+    
+    public dynamic class HPBarCenterElement_1 extends MovieClip
+    {
+        
+        
+        public var armourBar_mc:armorBar_mc;
+        
+        public var barTextsHolder_mc:MovieClip;
+        
+        public var bg_mc:MovieClip;
+        
+        public var frame_mc:MovieClip;
+        
+        public var healthBar_mc:healthBarHolder;
+        
+        public var magicArmourBar_mc:armorBar_mc;
+        
+        public var nameHolder_mc:MovieClip;
+        
+        public var statusHolder_mc:MovieClip;
+        
+        public var textHolder_mc:MovieClip;
+        
+        public var textbg_mc:MovieClip;
+        
+        public var leftBarPosX:Number;
+        
+        public var rightBarPosX:Number;
+        
+        public var cancelTweens:Boolean;
+
+        // PIP
+        public var BHFlashAlpha:Number = 0.4;
+
+        public var BHFlashInDuration:Number = 0.2;
+        public var BHFlashOutDuration:Number = 0.8;
+
+        public var bTweenRunning:Boolean = false;
+        public var hTweenRunning:Boolean = false;
+        
+        public function HPBarCenterElement_1()
+        {
+            super();
+            addFrameScript(0,this.frame1);
+        }
+        
+        public function init() : *
+        {
+            this.leftBarPosX = this.armourBar_mc.x;
+            this.rightBarPosX = this.magicArmourBar_mc.x;
+        }
+        
+        public function setOnlyNameState(param1:Boolean = false) : *
+        {
+            this.textHolder_mc.visible = !param1;
+            this.statusHolder_mc.visible = !param1;
+            this.barTextsHolder_mc.health_txt.visible = !param1;
+            this.barTextsHolder_mc.magicArmor_txt.visible = !param1;
+            this.barTextsHolder_mc.armor_txt.visible = !param1;
+            this.magicArmourBar_mc.visible = !param1;
+            this.armourBar_mc.visible = !param1;
+            this.healthBar_mc.visible = !param1;
+            this.magicArmourBar_mc.visible = !param1;
+            this.armourBar_mc.visible = !param1;
+            this.healthBar_mc.visible = !param1;
+            this.bg_mc.visible = !param1;
+            if(param1)
+            {
+                this.nameHolder_mc.visible = true;
+                this.textbg_mc.visible = true;
+            }
+        }
+        
+        public function setBar(param1:Number, param2:Boolean, param3:String, param4:uint, param5:Boolean) : *
+        {
+            var _loc7_:TextField = null;
+            var _loc8_:MovieClip = null;
+            var _loc9_:MovieClip = null;
+            var _loc10_:TextField = null;
+            var _loc11_:TextField = null;
+            var _loc6_:MovieClip = this.selectBar(param4);
+            (_loc7_ = this.selectTextField(param4)).htmlText = param3;
+            if(param4 > 0)
+            {
+                if(param5)
+                {
+                    _loc8_ = this.selectBar(1);
+                    _loc9_ = this.selectBar(2);
+                    _loc10_ = this.selectTextField(1);
+                    _loc11_ = this.selectTextField(2);
+                    _loc8_.x = this.leftBarPosX;
+                    _loc10_.x = this.leftBarPosX - this.barTextsHolder_mc.x;
+                    _loc9_.x = this.rightBarPosX;
+                    _loc11_.x = this.rightBarPosX - this.barTextsHolder_mc.x;
+                    _loc8_.scaleX = 1;
+                    _loc9_.scaleX = 1;
+                }
+                else
+                {
+                    _loc6_.scaleX = 2.03;
+                    _loc6_.x = this.leftBarPosX;
+                    _loc7_.x = -this.barTextsHolder_mc.x - _loc7_.width * 0.5;
+                }
+                if(param1 > 1)
+                {
+                    param1 = 1;
+                }
+                if(param1 < 0)
+                {
+                    param1 = 0;
+                }
+                if(this.cancelTweens)
+                {
+                    _loc6_.stopHPTweens();
+                    this.cancelTweens = false;
+                }
+                _loc6_.setBar(param1,param2);
+            }
+            else if(_loc6_)
+            {
+                _loc6_.setBar(param1,param2);
+            }
+        }
+        
+        public function setBarColour(param1:uint, param2:uint) : *
+        {
+            var _loc3_:MovieClip = this.selectBar(param2);
+            if(_loc3_)
+            {
+                _loc3_.setBarColour(param1);
+            }
+        }
+        
+        public function selectBar(param1:uint) : MovieClip
+        {
+            var _loc2_:MovieClip = null;
+            switch(param1)
+            {
+                case 0:
+                _loc2_ = this.healthBar_mc;
+                break;
+                case 1:
+                _loc2_ = this.armourBar_mc;
+                break;
+                case 2:
+                _loc2_ = this.magicArmourBar_mc;
+            }
+            return _loc2_;
+        }
+        
+        public function selectTextField(param1:uint) : TextField
+        {
+            var _loc2_:TextField = null;
+            switch(param1)
+            {
+                case 0:
+                _loc2_ = this.barTextsHolder_mc.health_txt;
+                break;
+                case 1:
+                _loc2_ = this.barTextsHolder_mc.armor_txt;
+                break;
+                case 2:
+                _loc2_ = this.barTextsHolder_mc.magicArmor_txt;
+            }
+            return _loc2_;
+        }
+        
+        public function clearTweens() : *
+        {
+            this.cancelTweens = true;
+        }
+
+        // -----------------
+        // REGION B/H Tweens
+        // -----------------
+
+        // Battered
+        public function startBTween() : *
+        {
+            if (!this.bTweenRunning)
+            {
+                this.playBTween();
+
+                this.bTweenRunning = true;
+            }
+        }
+
+        private function playBTween() : *
+        {
+            this.b_0_mc.timeline = new larTween(this.b_0_mc, "alpha", Sine.easeOut, NaN, 1, this.BHFlashInDuration, this.rewindBTween); // number params: target value, duration
+        }
+
+        private function rewindBTween() : *
+        {
+            this.b_0_mc.timeline = new larTween(this.b_0_mc, "alpha", Sine.easeOut, NaN, this.BHFlashAlpha, this.BHFlashOutDuration, this.playBTween);
+        }
+
+        // Harried
+        public function startHTween() : *
+        {
+            if (!this.hTweenRunning)
+            {
+                this.playHTween();
+
+                this.hTweenRunning = true;
+            }
+        }
+
+        private function playHTween() : *
+        {
+            this.h_0_mc.timeline = new larTween(this.h_0_mc, "alpha", Sine.easeOut, NaN, 1, this.BHFlashInDuration, this.rewindHTween);
+        }
+
+        private function rewindHTween() : *
+        {
+            this.h_0_mc.timeline = new larTween(this.h_0_mc, "alpha", Sine.easeOut, NaN, this.BHFlashAlpha, this.BHFlashOutDuration, this.playHTween);
+        }
+
+        public function startStackTween(param1:String) : *
+        {
+            if (param1 == "Harried")
+            {
+                this.startHTween();
+            }
+            else if (param1 == "Battered")
+            {
+                this.startBTween();
+            }
+            else
+            {
+                trace("[ENEMYHEALTHBAR.HPBarCenterElement] Invalid stack type for tween!");
+            }
+        }
+
+        public function stopStackTween(param1:String) : *
+        {
+            if (param1 == "Harried" && this.hTweenRunning)
+            {
+                this.h_0_mc.timeline.stop();
+                this.hTweenRunning = false;
+            }
+            else if (param1 == "Battered" && this.bTweenRunning)
+            {
+                this.b_0_mc.timeline.stop();
+                this.bTweenRunning = false;
+            }
+            // else
+            // {
+            //     trace("[ENEMYHEALTHBAR.HPBarCenterElement] Invalid stack type for tween!");
+            // }
+        }
+        // -----------------
+        // ENDREGION B/H Tweens
+        // -----------------
+        
+        function frame1() : *
+        {
+            this.leftBarPosX = 0;
+            this.rightBarPosX = 0;
+            this.cancelTweens = false;
+        }
+    }
+}

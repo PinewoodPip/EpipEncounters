@@ -1,0 +1,78 @@
+package
+{
+    import flash.display.MovieClip;
+    import flash.events.MouseEvent;
+    import flash.external.ExternalInterface;
+    import flash.text.TextField;
+    
+    public dynamic class StatEntry extends WEntry
+    {
+        public var plusBtn_mc:MovieClip;
+        public var minusBtn_mc:MovieClip;
+        public var amount_txt:TextField;
+
+        public var btnParam1:String = "";
+        
+        public function StatEntry()
+        {
+            super();
+            addFrameScript(0,this.frame1);
+        }
+        
+        public function onPlusBtn() : *
+        {
+            ExternalInterface.call("pipStatButtonUp", this.amount_txt.htmlText, true, this.btnParam1);
+        }
+
+        public function onMinusBtn() : *
+        {
+            ExternalInterface.call("pipStatButtonUp", this.amount_txt.htmlText, false, this.btnParam1);
+        }
+
+        public override function pressedButton() : *
+        {
+            if(!this.disabled && this.selectable)
+            {
+                ExternalInterface.call("PlaySound","UI_GM_Generic_Click");
+                ExternalInterface.call("buttonPressed",this.id,this.actionID,this.handle,this.amount_txt.htmlText);
+            }
+        }
+
+        // Disable button events when hovering over the subbuttons.
+        public function onStatOver() : *
+        {
+            removeEventListener(MouseEvent.MOUSE_DOWN,this.buttonDown);
+        }
+
+        public function onStatOut() : *
+        {
+            addEventListener(MouseEvent.MOUSE_DOWN,this.buttonDown);
+        }
+        
+        function frame1() : *
+        {
+            // this.disabled = true;
+            // this.iggy_icon = new MovieClip();
+            // this.iggy_icon.name = "iggy_pip_entry";
+            // this.iggy_icon.x = 0;
+            // this.iggy_icon.y = 0;
+            // this.iggy_icon.visible = false;
+            // this.addChild(this.iggy_icon);
+
+            this.base = root as MovieClip;
+            addEventListener(MouseEvent.MOUSE_DOWN,this.buttonDown);
+            addEventListener(MouseEvent.ROLL_OVER,this.buttonOver);
+            addEventListener(MouseEvent.ROLL_OUT,this.buttonOut);
+
+            this.plusBtn_mc.onUpFunc = this.onPlusBtn;
+            this.plusBtn_mc.onOverFunc = this.onStatOver;
+            this.plusBtn_mc.onOutFunc = this.onStatOut;
+
+            this.minusBtn_mc.onUpFunc = this.onMinusBtn;
+            this.minusBtn_mc.onOverFunc = this.onStatOver;
+            this.minusBtn_mc.onOutFunc = this.onStatOut;
+
+            this.amount_txt.mouseEnabled = false;
+        }
+    }
+}

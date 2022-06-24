@@ -1,0 +1,23 @@
+ 
+package
+{
+    import flash.display.MovieClip;
+    import flash.external.ExternalInterface;
+    import flash.text.TextField;
+    import flash.events.MouseEvent;
+    import flash.geom.ColorTransform;
+    
+    public dynamic class DyeIcon extends MovieClip
+    {
+        public function DyeIcon(color:Number)
+        {
+            super();
+
+            var colorTransform:ColorTransform = new ColorTransform();
+
+            colorTransform.color = color;
+
+            this.icon_mc.transform.colorTransform = colorTransform;
+        }
+    }
+}

@@ -1,0 +1,128 @@
+package
+{
+    import LS_Classes.larTween;
+    import LS_Classes.textEffect;
+    import fl.motion.easing.Elastic;
+    import fl.motion.easing.Linear;
+    import fl.motion.easing.Quadratic;
+    import flash.display.MovieClip;
+    import flash.events.TimerEvent;
+    import flash.utils.Timer;
+    
+    public dynamic class Overhead extends MovieClip
+    {
+        
+        
+        public var textHolder_mc:MovieClip;
+        
+        public var base:MovieClip;
+        
+        public var myTim:Timer;
+        
+        public var timeline:larTween;
+        
+        public var timeline2:larTween;
+        
+        public var myColour:uint;
+        
+        public function Overhead()
+        {
+            super();
+            addFrameScript(0,this.frame1);
+        }
+        
+        public function stopTweens() : *
+        {
+            if(this.timeline)
+            {
+                this.timeline.stop();
+            }
+            if(this.timeline2)
+            {
+                this.timeline2.stop();
+            }
+            this.timeline = null;
+            this.timeline2 = null;
+        }
+        
+        public function startAnim() : *
+        {
+            this.stopTweens();
+            this.timeline = new larTween(this.textHolder_mc,"y",Linear.easeNone,this.textHolder_mc.y,-10,this.base.ohTweenMoveUpTime,this.bubble);
+        }
+        
+        public function bubble() : *
+        {
+            this.stopTweens();
+            this.timeline = new larTween(this.textHolder_mc,"scaleX",Elastic.easeOut,this.textHolder_mc.scaleX,1,this.base.ohTweenBubbleTime,this.startTimer);
+            this.timeline2 = new larTween(this.textHolder_mc,"scaleY",Elastic.easeOut,this.textHolder_mc.scaleY,1,this.base.ohTweenBubbleTime);
+        }
+        
+        public function startTimer() : *
+        {
+            if(this.timer)
+            {
+                // if (this.timer < 0.1)
+                // {
+                //     trace("here");
+                //     this.destroy();
+                //     return;
+                // }
+                // WTF?
+                // if(this.timer < 0.1)
+                // {
+                // this.timer = 3;
+                // }
+                this.myTim = new Timer(this.timer * 1000,1);
+                this.myTim.addEventListener(TimerEvent.TIMER_COMPLETE,this.completeTimer);
+                this.myTim.start();
+            }
+        }
+        
+        public function completeTimer(param1:TimerEvent) : *
+        {
+            this.fadeAway();
+        }
+        
+        public function fadeAway() : *
+        {
+            this.stopTweens();
+            var _loc1_:Number = 0.1;
+            this.timeline = new larTween(this.textHolder_mc,"alpha",Quadratic.easeOut,this.textHolder_mc.alpha,0.2,_loc1_,this.destroy);
+            this.timeline.onUpdate = this.updateTextEffect;
+            this.timeline2 = new larTween(this.textHolder_mc,"y",Quadratic.easeOut,this.textHolder_mc.y,-60,_loc1_);
+        }
+        
+        public function updateTextEffect() : *
+        {
+            this.textHolder_mc.filters = textEffect.createStrokeFilter(this.myColour,this.base.tEffStrW,this.textHolder_mc.alpha,this.base.tEffStr,this.base.tEffQuality);
+        }
+        
+        public function destroy() : *
+        {
+            this.stopTweens();
+            this.visible = false;
+            if(this.Holder_mc)
+            {
+                this.Holder_mc.removeOH(this);
+            }
+        }
+        
+        public function onDestroy() : *
+        {
+            if(this.myTim)
+            {
+                this.myTim.stop();
+                this.myTim = null;
+            }
+            this.stopTweens();
+        }
+        
+        private function frame1() : *
+        {
+            // PIP
+            this.textHolder_mc.mouseEnabled = false;
+            this.mouseEnabled = false;
+        }
+    }
+}

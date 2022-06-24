@@ -1,0 +1,72 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+
+KBSECTION
+
+PROC PROC_PIP_QuickGreatforge_RemoveMods((CHARACTERGUID)_Char, (ITEMGUID)_Item, (STRING)_KeptModifier)
+AND
+NOT DB_PIP_QuickGreatforge_CurrentItem("RemoveMods", _)
+THEN
+PROC_AMER_GEN_Goal_Activate("AMER_GLO_UI_Greatforge_Internal");
+DB_PIP_QuickGreatforge_CurrentItem("RemoveMods", _Item);
+
+PROC PROC_PIP_QuickGreatforge_RemoveMods((CHARACTERGUID)_Char, (ITEMGUID)_Item, (STRING)_KeptModifier)
+AND
+String(_Char, _CharStr)
+AND
+String(_Item, _ItemStr)
+AND
+NRD_ModQuery2("EpipEncounters", "GreatforgeGetItemData", _CharStr, _ItemStr, _LevelReal, _ItemType, _Slot)
+AND
+NRD_StringToInt(_LevelReal, _LevelInt)
+AND
+QRY_AMER_Deltamods_GenerateOnItem_GetItemSpecs_GetSubType(_Item, _Slot)
+AND
+DB_AMER_GEN_OUTPUT_String(_SubType)
+AND
+DB_AMER_GEN_OUTPUT_Integer(_Handedness)
+AND
+NRD_StringToReal(_LevelReal, _LevelRealReal)
+AND
+QRY_PIP_Greatforge_GetCost((ITEMGUID)_Item, "RemoveMods", "GreatforgeFrags", _LevelRealReal, _ItemType, _Slot, _SubType, _Handedness)
+AND
+DB_AMER_GEN_OUTPUT_Integer(_Cost)
+AND
+IntegertoString(_Cost, _CostStr)
+AND
+QRY_PIP_Greatforge_Pay(_Char, "Culled item", "Splinters", _Cost)
+AND // Logic Part
+QRY_AMER_UI_Greatforge_RemoveMods_BuildTreasureTable(_Item, _Slot, _ItemType)
+AND
+DB_AMER_GEN_OUTPUT_String(_TreasureTable)
+AND
+SysCount("DB_AMER_GEN_GenerateTreasure_Expected", 3, _RequestCount)
+AND
+DB_AMER_GEN_ItemRarity(_RarityInt, _ItemType)
+AND
+Real(_RarityInt, _RarityReal)
+THEN
+DB_PIP_QuickGreatforge_RemoveMods_KeptMod(_Char, _KeptModifier, _RarityReal, _LevelRealReal, _Slot, _SubType, _Handedness);
+PROC_AMER_GEN_GenerateTreasure(_TreasureTable, _LevelInt, "AMER_UI_Greatforge_RemoveMods_NewItemMade");
+PROC_AMER_GEN_ItemRemoveRunes(_Char, _Item, 0, 5);	//Indecies zero to five--should be more than we'll ever need to consider.
+PROC_AMER_GEN_UnequipAndRemoveItem(_Char, _Item);
+
+PROC PROC_AMER_GEN_GenerateTreasure_Returned((INTEGER)_RequestCount, (ITEMGUID)_Cont, "AMER_UI_Greatforge_RemoveMods_NewItemMade", (ITEMGUID)_Item)
+AND
+DB_PIP_QuickGreatforge_RemoveMods_KeptMod(_Char, _KeptModifier, _RarityReal, _Level, _Slot, _SubType, _Handedness)
+AND
+DB_PIP_QuickGreatforge_CurrentItem("RemoveMods", _StoredItem)
+THEN
+NOT DB_PIP_QuickGreatforge_RemoveMods_KeptMod(_Char, _KeptModifier, _RarityReal, _Level, _Slot, _SubType, _Handedness);
+ContainerIdentifyAll(_Cont);
+PROC_AMER_Deltamods_GenerateOnItem_Forced_External(_Item, _RarityReal, _Level, _Slot, _SubType, _Handedness);
+ItemAddDeltaModifier(_Item, _KeptModifier);
+ItemToInventory(_Item, _Char, -1, 0, 1);
+NOT DB_PIP_QuickGreatforge_CurrentItem("RemoveMods", _StoredItem);
+PROC_PIP_QuickReduce_TryCompleteGoal();
+
+EXITSECTION
+
+ENDEXITSECTION
+ParentTargetEdge "Start_AMER"

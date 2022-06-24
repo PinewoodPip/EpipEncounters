@@ -1,0 +1,104 @@
+package
+{
+    import LS_Classes.LSPanelHelpers;
+    import flash.display.MovieClip;
+    import flash.external.ExternalInterface;
+    import LS_Classes.listDisplay;
+    import flash.text.TextField;
+
+    public dynamic class ElementBuilder extends MovieClip
+    {
+        
+        
+        public function ElementBuilder()
+        {
+            super();
+        }
+
+        public static function SetTextField(field:TextField, text:String, align:String = "center", color:String = "", fontSize:Number = 13) : *
+        {
+            if (field)
+            {
+                var str:String = "<p align='" + align + "'><font size='" + fontSize + "' "
+
+                // font
+                if (color != "")
+                {
+                    str += "color='" + color + "'";
+                }
+                str += ">"
+
+                str += text;
+
+                str += "</font></p>";
+
+                field.scaleX = 1;
+                field.scaleY = 1;
+                field.htmlText = str;
+            }
+            else
+            {
+                trace("SetTextField: no field passed");
+            }
+        }
+
+        public static function CreateElement(interfaceId:String, elementType:String, elementId:String) : MovieClip
+        {
+            var id:Number = Element.nextId;
+            var mc:MovieClip = null;
+
+            switch (elementType)
+            {
+                case "Text":
+                {
+                    mc = new TextElement();
+
+                    mc.SetText("New Text");
+
+                    break;
+                }
+                case "Button":
+                {
+                    mc = new ButtonElement();
+
+                    break;
+                }
+                case "IggyIcon":
+                {
+                    mc = new Element();
+
+                    mc.name = "iggy_" + elementId;
+
+                    break;
+                }
+                case "Panel":
+                case "Base":
+                {
+                    mc = new Element();
+
+                    break;
+                }
+            }
+
+            // initialize shared vars
+            if (mc)
+            {
+                mc.interfaceId = interfaceId;
+                mc.type = elementType;
+                mc.stringId = elementId;
+                mc.id = id;
+
+                // resize clickbox
+                if (mc.hit_mc)
+                {
+                    mc.hit_mc.width = mc.width;
+                    mc.hit_mc.height = mc.height;
+                }
+                
+                Element.nextId++;
+            }
+
+            return mc;
+        }
+    }
+}

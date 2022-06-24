@@ -1,0 +1,1 @@
+- Fixed Trickster's Repertoire not working

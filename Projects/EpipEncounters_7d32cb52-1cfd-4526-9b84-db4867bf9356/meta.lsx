@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<save>
+    <header version="2" />
+    <version major="3" minor="6" revision="6" build="0" />
+    <region id="MetaData">
+        <node id="root">
+            <attribute id="Module" value="7d32cb52-1cfd-4526-9b84-db4867bf9356" type="23" />
+            <attribute id="Name" value="EpipEncounters" type="23" />
+            <attribute id="Type" value="Add-on" type="23" />
+            <attribute id="UUID" value="b837a46a-dd93-4198-a83c-75c030800861" type="23" />
+        </node>
+    </region>
+</save>

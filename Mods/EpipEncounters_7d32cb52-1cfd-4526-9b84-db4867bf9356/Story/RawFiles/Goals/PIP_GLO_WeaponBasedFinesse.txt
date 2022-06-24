@@ -1,0 +1,36 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+
+DB_PIP_WeaponBasedFinesse_Whitelist("Target_SingleHandedAttack");
+
+KBSECTION
+
+// making weapon skills use finesse recovery. this does not make a basic attack event.
+// to add exceptions (ex. unarmed offhand attack), add skills to DB_PIP_WeaponBasedFinesse_Whitelist((STRING)_Skill)
+
+PROC PROC_AMER_Spells_SkillPreCast(_Char, _Skill, _, _, _)
+AND
+QRY_PIP_WeaponBasedFinesse_Eligible(_Skill)
+AND
+// NRD_StatGetInt(_Skill, "ActionPoints", _Cost)
+DB_AMER_Spells_CastBuffer_APCost(_Cost)
+THEN
+PROC_AMER_ActionPoints_BasicAttackCost_Wrapper(_Char, _Cost);
+
+QRY QRY_PIP_WeaponBasedFinesse_Eligible((STRING)_Skill)
+AND
+NRD_StatGetString(_Skill, "UseWeaponDamage", "Yes")
+THEN
+DB_NOOP();
+
+QRY QRY_PIP_WeaponBasedFinesse_Eligible((STRING)_Skill)
+AND
+DB_PIP_WeaponBasedFinesse_Whitelist(_Skill)
+THEN
+DB_NOOP();
+
+EXITSECTION
+
+ENDEXITSECTION
+ParentTargetEdge "Start_AMER"

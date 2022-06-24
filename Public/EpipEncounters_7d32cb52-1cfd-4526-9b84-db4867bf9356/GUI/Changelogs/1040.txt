@@ -1,0 +1,6 @@
+- Added some client APIs for the message box UI and overhead texts (Client.UI.MessageBox and Client.UI.Overheads)
+- Added settings for overhead sizes
+- Added a setting to bring back the vanilla combat log button (on by default)
+- Fixed talents not being hidden properly in the character creation UI (which includes the mirror, it's the same UI)
+- Fixed EE stats tab not working for new companions until a reload
+- Fixed sliders in the options menu being saved with +1 step than what you've set them to

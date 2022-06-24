@@ -1,0 +1,18 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+
+KBSECTION
+
+// Custom Talent testing.
+
+IF CharacterMovedItem(_Char, _Item)
+AND
+DB_AMER_Ascension_SpecialLogic(_Char, "EpipEncounters_Talent_Test", _)
+THEN
+CharacterStatusText(_Char, "vibing");
+
+EXITSECTION
+
+ENDEXITSECTION
+ParentTargetEdge "AMER_GLO_UI_Ascension_NodeRewards"

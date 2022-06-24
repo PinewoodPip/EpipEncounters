@@ -1,0 +1,62 @@
+<?xml version="1.0" ?>
+<save>
+    <header version="1" time="1361203024" />
+    <region id="FontList">
+        <node id="root">
+            <children>
+				<node id="FontSystem">
+					<attribute id="FontFolder" value="Public/Game/GUI/fonts/" type="21" />
+					<attribute id="FontFallback" value="fb" type="23" />
+				</node>
+                <node id="font">
+					<attribute id="FontLibraryID" value="$Default" type="22" />
+                    <attribute id="FontLibraryName" value="Copperplate Gothic Light" type="22" />
+					<attribute id="FontFileName" value="QuadraatOffcPro.ttf" type="22" />
+                    <attribute id="FontFlag" value="0" type="1" />
+                </node>
+                <node id="font">
+					<attribute id="FontLibraryID" value="$Default_Bold" type="22" />
+                    <attribute id="FontLibraryName" value="Copperplate Gothic Bold" type="22" />
+					<attribute id="FontFileName" value="QuadraatOffcPro-Bold.ttf" type="22" />
+                    <attribute id="FontFlag" value="1" type="1" />
+                </node>
+                <node id="font">
+					<attribute id="FontLibraryID" value="$BigNumbers" type="22" />
+                    <attribute id="FontLibraryName" value="CollegiateBlackFLF" type="22" />
+					<attribute id="FontFileName" value="COLLEGIATEBLACKFLF.TTF" type="22" />
+                    <attribute id="FontFlag" value="0" type="1" />
+                </node>
+				<node id="font">
+					<attribute id="FontLibraryID" value="$DialogText" type="22" />
+                    <attribute id="FontLibraryName" value="Arno Pro" type="22" />
+					<attribute id="FontFileName" value="QuadraatOffcPro.ttf" type="22" />
+                    <attribute id="FontFlag" value="0" type="1" />
+                </node>
+				<node id="font">
+					<attribute id="FontLibraryID" value="$Title" type="22" />
+                    <attribute id="FontLibraryName" value="Nueva Std Cond" type="22" />
+					<attribute id="FontFileName" value="QuadraatOffcPro.ttf" type="22" />
+                    <attribute id="FontFlag" value="0" type="1" />
+                </node>
+				<node id="font">
+					<attribute id="FontLibraryID" value="$Title_Bold" type="22" />
+                    <attribute id="FontLibraryName" value="Ubuntu Mono" type="22" />
+					<attribute id="FontFileName" value="QuadraatOffcPro-Bold.ttf" type="22" />
+                    <attribute id="FontFlag" value="1" type="1" />
+                </node>
+				<node id="font">
+					<attribute id="FontLibraryID" value="$Title_Italic" type="22" />
+                    <attribute id="FontLibraryName" value="Averia Serif" type="22" />
+					<attribute id="FontFileName" value="QuadraatOffcPro-Italic.ttf" type="22" />
+                    <attribute id="FontFlag" value="2" type="1" />
+                </node>	
+				<node id="font">
+					<attribute id="FontLibraryID" value="$Fallback" type="22" />
+                    <attribute id="FontLibraryName" value="fb" type="22" />
+					<attribute id="FontFileName" value="wts11.ttf" type="22" />
+                    <attribute id="FontFlag" value="0" type="1" />
+                </node>					
+            </children>
+        </node>
+    </region>
+</save>

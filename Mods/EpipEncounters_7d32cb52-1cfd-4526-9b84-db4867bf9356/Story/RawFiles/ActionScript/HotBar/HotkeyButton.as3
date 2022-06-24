@@ -1,0 +1,147 @@
+package
+{
+    import LS_Classes.LSButton;
+    import flash.display.MovieClip;
+    import flash.events.MouseEvent;
+    import flash.external.ExternalInterface;
+    import flash.text.TextField;
+    import flash.geom.Point;
+    import LS_Classes.tooltipHelper;
+    
+    public dynamic class HotkeyButton extends LSButton
+    {
+        
+        public var text_mc:TextField;
+        
+        public var icon_mc:MovieClip;
+        
+        public var index:int;
+        
+        public var action:String = "";
+        
+        public var tooltipString:String;
+        
+        public var hasAction:Boolean = false;
+
+        public var panel:MovieClip;
+
+        public var highlighted:Boolean = false;
+        
+        public function HotkeyButton(index:Number)
+        {
+            super();
+
+            var iggy:MovieClip = null;
+            iggy = new MovieClip();
+            iggy.x = 0;
+            iggy.y = 0;
+            this.addChild(iggy);
+            this.icon_mc = iggy;
+
+            this.initialize("",null);
+
+            this.index = index;
+
+            addFrameScript(0,this.frame1);
+        }
+        
+        // public function onPress() : *
+        // {
+        // }
+        
+        public function onMouseRightClick() : *
+        {
+            ExternalInterface.call("pipHotbarOpenContextMenu",this.action);
+        }
+        
+        public function onMouseMiddleClick() : *
+        {
+            if (this.action != "")
+            {
+                ExternalInterface.call("pipUnbindHotbarButton",this.index);
+            }
+        }
+        
+        public function onMouseButtonUp() : *
+        {
+            if(!this.panel.rearranging && this.action != "")
+            {
+                ExternalInterface.call("pipHotbarHotkeyPressed",this.action,this.index);
+            }
+            ExternalInterface.call("pipHotkeyButtonUp", this.index);
+        }
+
+        public function onMouseStageUp(e:MouseEvent) : *
+        {
+            ExternalInterface.call("pipStoppedDragOnButton", this.index);
+        }
+        
+        public function onOver() : *
+        {
+            this.panel.currentButton = this;
+            stage.addEventListener(MouseEvent.MOUSE_UP, this.onMouseStageUp);
+
+            this.showTooltip();
+        }
+
+        public function showTooltip() : *
+        {
+            var pos:Point = tooltipHelper.getGlobalPositionOfMC(this, root);
+
+            ExternalInterface.call("showTooltip",this.tooltipString,pos.x,pos.y + 5,this.width,this.height,"top");
+        }
+        
+        public function onOut() : *
+        {
+            ExternalInterface.call("hideTooltip");
+            this.panel.currentButton = null;
+            stage.removeEventListener(MouseEvent.MOUSE_UP, this.onMouseStageUp);
+        }
+
+        public function setActionEnabled(enabled:Boolean) : *
+        {
+            this.setEnabled(enabled);
+        }
+
+        public function setHighlighted(enabled:Boolean) : *
+        {
+            this.highlighted = enabled;
+            this.hl_mc.visible = enabled;
+        }
+
+        public function setAction(action:String) : *
+        {
+            var hasActionNow:Boolean = action != "";
+
+            this.action = action;
+            this.icon_mc.visible = hasActionNow;
+            this.text_mc.visible = hasActionNow;
+
+            this.setEnabled(hasActionNow);
+
+            // Update listeners
+            // if(hasActionNow != this.hasAction)
+            // {
+            //     this.hasAction = hasActionNow;
+
+            //     if(hasActionNow)
+            //     {
+            //         this.onUpFunc = this.onMouseButtonUp;
+            //     }
+            //     else
+            //     {
+            //         this.onUpFunc = null;
+            //     }   
+            // }
+        }
+        
+        private function frame1() : *
+        {
+            this.addEventListener(MouseEvent.ROLL_OVER,this.onOver);
+            this.addEventListener(MouseEvent.ROLL_OUT,this.onOut);
+            this.addEventListener(MouseEvent.RIGHT_CLICK,this.onMouseRightClick);
+            this.addEventListener(MouseEvent.CLICK,this.onMouseButtonUp);
+            this.addEventListener("middleClick", this.onMouseMiddleClick);
+        }
+    }
+}

@@ -1,0 +1,57 @@
+new entry "_Boost_Weapon_Artifact_IdolaDeus"
+type "Weapon"
+using "_Boost_Weapon_ArtifactPower"
+data "ExtraProperties" "SELF:ONEQUIP:PIP_ARTIFACTPOWER_IDOLADEUS"
+
+new entry "PIP_UNI_IdolaDeus"
+type "Weapon"
+using "_AMER_UNI_Wands"
+data "ItemGroup" "PIP_UNI_IdolaDeus"
+data "Damage Type" "Chaos"
+data "Projectile" "31140c9e-509d-4d97-b87d-a73e330345e1"
+data "Boosts" "_Boost_Weapon_Artifact_IdolaDeus"
+data "ItemColor" "PIP_UNI_IdolaDeus"
+
+new entry "_Boost_Weapon_Artifact_Leper"
+type "Weapon"
+using "_Boost_Weapon_ArtifactPower"
+data "Talents" "RangerLoreArrowRecover"
+data "ExtraProperties" "SELF:ONEQUIP:AMER_ARTIFACTPOWER_LEPER"
+
+new entry "PIP_Artifact_IdolaDeus_Base"
+type "Weapon"
+data "ModifierType" "Item"
+data "Damage" "1"
+data "Damage Range" "3"
+data "DamageFromBase" "12"
+
+new entry "PIP_Artifact_IdolaDeus_Water"
+type "Weapon"
+using "PIP_Artifact_IdolaDeus_Base"
+data "Damage Type" "Water"
+
+new entry "PIP_Artifact_IdolaDeus_Air"
+type "Weapon"
+using "IdolaDeus_Base"
+data "Damage Type" "Fire"
+
+new entry "PIP_Artifact_IdolaDeus_Fire"
+type "Weapon"
+using "IdolaDeus_Base"
+data "Damage Type" "Fire"
+
+new entry "PIP_Artifact_IdolaDeus_Earth"
+type "Weapon"
+using "IdolaDeus_Base"
+data "Damage Type" "Earth"
+
+new entry "PIP_Artifact_IdolaDeus_Poison"
+type "Weapon"
+using "IdolaDeus_Base"
+
+new entry "_Boost_Weapon_ArtifactRune_Leper"
+type "Weapon"
+using "_Boost_Weapon_ArtifactPower"
+data "Talents" "RangerLoreArrowRecover"
+data "ExtraProperties" "SELF:ONEQUIP:AMER_ARTIFACTPOWER_LEPER_RUNE"
+

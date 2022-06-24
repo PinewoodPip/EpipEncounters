@@ -1,0 +1,16 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+
+KBSECTION
+
+PROC PROC_AMER_Versioning_Patch("EpipEncounters", 1023)
+THEN
+// PROC_AMER_GEN_OpenMessageBoxForPlayers_Queued("This Epip Encounters patch requires the verion 55 of Norbyte's Extender or higher. As of 13/06/21 this version is NOT yet downloaded automatically; please follow the instructions of the google doc to install it.");
+NOT DB_PIP_CustomStatsFirstRun(1);
+GoalCompleted;
+
+EXITSECTION
+
+ENDEXITSECTION
+ParentTargetEdge "AMER_GLO_Versioning_PatchWrapper"

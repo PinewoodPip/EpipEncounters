@@ -1,0 +1,5 @@
+Small patch with some QoL for dyes and a fix for a Finesse issue.
+
+- Dyeing equipped items will now re-quip them automatically
+- Changed the finesse recovery for weapon-based skills to fix an issue with delayed procs if multiple things used its logic
+- Removed the option to show enemy lvl in healthbar (still buggy!)

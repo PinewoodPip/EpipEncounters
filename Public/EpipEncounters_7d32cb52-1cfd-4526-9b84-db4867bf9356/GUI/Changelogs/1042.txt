@@ -1,0 +1,26 @@
+- Added an option to hide hotbar hotkeys text
+- Added an "Immersive Meditation" setting which disables hotbar and minimap UIs while in Amer UIs
+- Added shortened names for the remaining numpad keys (multiply, add, minus, etc.)
+- Added an auto-identify setting, with 2 modes: always, and only with enough Loremaster. This will instantly identify items when they are generated
+- Item tooltips no longer overflow through the top of the screen, making it easier to see the damage stats on items with 3 filled sockets
+- Dismantling from the context menu now requires shift-clicking for items with runes inside (as a way to mark them as 'important' and avoid misclicks related to a certain new feature)
+- Added a context menu option to items to dye them (requires the dyes to be in the party's inventory)
+- Added a context menu to player portraits to hide statuses and summons (not saved between reloads for now)
+- Added a context menu option to extract runes from items
+- Added a debug menu with cheats for characters, available in the extender's developer mode
+	- Accessed by right-clicking a character in the world, or a player portrait in the left portraits UI
+	- Allows you to add all sorts of stats, spells, SpecialLogic, spawn items, treasure tables, toggle godmode, and more
+- The new context menu tech is quite extensive, and can be toggled off in the settings in case any serious issues arise
+- Finesse recovery now works for pay X skills, and sucker punch
+	- You can add more exceptions to `DB_PIP_WeaponBasedFinesse_Whitelist((STRING)_Skill)`
+- Fixed overhead dialogue durations being wrong when they were changed away from the default value
+- Overhead sizes are now always default in Amer UIs
+- Fixed origins gaining epic enemies perks for real this time
+- Fixed description of Clouded Memory
+- Fixed map visibility setting not working after exiting respec
+- Fixed being able to toggle minimap within character creation
+- Fixed weapon range deltamod tooltip showing up on unidentified items
+- Fixed wrong health bar B/H display on dead characters
+- The dismantle context menu option should no longer get permanently stuck in case of unidentified shenanigans
+- Added a 20% tax to dismantling items from context menus, used to amortize the development costs of the new menus as well as to fund future development of the mod
+	- just kidding

@@ -1,0 +1,65 @@
+
+- Added an option to enable improvements to the combat log. Messages can be filtered by type, and certain messages will be merged into one line if they occur one after another, such as surface damage and healing. **This option will only work when playing in english**, unless someone is willing to help me make string patterns for other languages.
+	- Right-click the combat log to set your filters. You can also clear the log from that menu.
+	- When damage messages are merged into one line, they will display the amount of hits that were merged at the end. The exception to this is damage that occurs within 25ms of eachother, such as weapon attacks with coatings. These are counted as a single hit.
+	- Messages parsed by the new combat log system will now have a consistent base color, gray, instead of randomly using white.
+	- Some messages have been slightly reworded for consistency
+- Added options in the cheat menu to add/remove tags. You can use this to clear a character's main character status by removing the `AVATAR` tag.
+- Added a button in the debug sections of the options menu to warp to AMER_Test
+- AMER_Test got Pinewood'd a bit
+- Weapon tooltips now show +elemental damage modifiers
+- Updated Derpy's treasure table displays
+- Removed the option to disable custom context menus
+- Fixed keyword source tooltips being off-by-one
+- Hotbar action button tooltips now show their keybind (without shortening)
+- Removed the automatic unbinding for GM keybinds, since they are no longer used for the hotbar
+- Added chat commands:
+	- /rp displays a message over your character's head
+	- /emote performs an animation
+	- /help lists help for all commands
+- Added a new tab in the controls menu where you can bind hotbar action hotkeys as well as standalone hotkeys for Meditate and Source Infuse. **You must rebind your hotbar hotkeys**
+- Two keybinds previously used by the hotbar are now reserved as special keys that can be bound in the new custom keybinds UI. The purpose of them is to allow extra mouse buttons and other special bindings to be used with the new system until it is improved.
+- Fixed numerous problems while playing with controllers
+- Added a setting to make the Escape key close the Amer UIs entirely rather than popping page
+- Fixed a hotbar refresh issue when pushing slots around
+- Fixed hotbar action buttons no longer properly showing active/inactive state
+- Removed the option to disable wrapping statuses (it has not actually worked for a long time) as well as the vanity menu
+
+Vanity:
+- Added custom RGB dyes to the dyes tab
+- Added all built-in ItemColor entries as selectable dyes
+- Saving now also happens when you add/delete an outfit or a dye
+- You can no longer transmog GB5 items
+- Fixed spears not being available in the transmog menu
+- Fixed the vanity option not appearing for non-shield offhands
+- Added a button to delete outfits
+- Fixed positioning of the vanity UI while playing on resolutions other than 1080p, or when dragging the character sheet
+- Fixed saving outfits with weapons not working
+- Removed the dye context menu for real
+- The UI now shows a message if you select an empty slot, instead of opening a message box
+- Slight changes to positioning of elements
+- Improved performance
+- The character sheet unallocated points notifications are now hidden while in the UI
+
+Other:
+
+- Fixed a bug with hotbar action buttons resetting
+- Added a "Healing done" stat to the stats tab
+- The "Damage dealt" stat now also considers your owned summons
+
+On the technical side of things:
+- Reworked how the selected item is tracked in the Vanity UI
+- Reworked all tabs of Vanity to be separate, independent features
+- Added initial groundwork for supporting controllers in Amer's UIs
+- Added APIs for `chatLog`, `optionsInput`
+- `_Feature:DebugLog()` is now polymorphic like the regular print function
+- Added the `Input` UI, with possibilities for tracking text keys from the keyboard, and intercepting interface events
+- Added FlexStats for sight and hearing, ranging from -128 to +128 (except for sight which goes to +2048)
+- Added support for saving settings on the server
+- Removed unused ItemColor stats
+- Removed unused PersistentVars table
+- Hooks can now be set to only return the first non-nil value (and stop propagation after that)
+- Cleaned up the client bootstrap script
+- Added an !animtest command on server, auto-playing all female human animations on the host character. There's no stopping it once started, so be careful!
+- Added a !soundtest command on the client, which tests all UI sounds. Might've been added before this version, I don't recall exactly when it was implemented.
+- Added some sick ASCII signatures to the bootstrap scripts, as well as a readme

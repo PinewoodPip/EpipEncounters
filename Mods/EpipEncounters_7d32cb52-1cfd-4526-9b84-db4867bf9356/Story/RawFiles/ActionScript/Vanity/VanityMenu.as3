@@ -1,0 +1,211 @@
+ 
+package arenaResult_fla
+{
+    // import LS_Classes.scrollList;
+    import LS_Classes.horizontalList;
+    import LS_Classes.larCombo;
+    // import LS_Classes.tooltipHelper;
+    import flash.display.MovieClip;
+    import flash.external.ExternalInterface;
+    import flash.text.TextField;
+    import flash.events.MouseEvent;
+    import LS_Classes.textHelpers;
+    import LS_Classes.textEffect;
+    
+    public dynamic class VanityMenu extends MovieClip
+    {
+        public var list:pipScrollList;
+
+        public var buttonList:horizontalList;
+
+        // public var bg_mc:MovieClip;
+
+        // public var frame_mc:MovieClip;
+
+        // public var outfitsButton_mc:MovieClip;
+
+        // public var transmogButton_mc:MovieClip;
+
+        // public var header_txt:TextField;
+
+        public function VanityMenu()
+        {
+            super();
+            addFrameScript(0,this.frame1);
+        }
+
+        public function addEntry(id:String, text:String, canCollapse:Boolean, active:Boolean, canFavorite:Boolean, favorited:Boolean=false) : *
+        {
+            var entry:Entry = new Entry(id, text, canCollapse, active, canFavorite, favorited); // TODO update info
+
+            this.list.addElement(entry, false);
+        }
+
+        public function setSlider(id:String, value:Number) : *
+        {
+            var mc:MovieClip = this.list.getElementByString("id", id);
+
+            mc.slider_mc.value = value;
+        }
+
+        public function addButton(id:String, text:String, enabled:Boolean = true) : *
+        {
+            var button:smallBrownButton_27 = new smallBrownButton_27();
+
+            button.setDisabled(!enabled);
+            button.id = id;
+            // button.CENTER_IN_LIST = true;
+            button.text_mc.text_txt.htmlText = text;
+
+            this.list.addElement(button, false);
+        }
+
+        public function addCheckbox(id:String, text:String, active:Boolean, enabled:Boolean) : *
+        {
+            var checkbox:Checkbox = new Checkbox();
+
+            checkbox.setState(active ? 1 : 0);
+            checkbox.CENTER_IN_LIST = true;
+            checkbox.label_txt.htmlText = text;
+            checkbox.id = id;
+            
+            this.list.addElement(checkbox, false);
+        }
+
+        // public function addText(id:String, text:String) : *
+        // {
+        //     var mc:SimpleText = new SimpleText(text);
+
+        //     mc.id = id;
+
+        //     this.list.addElement(mc);
+        // }
+
+        private function onSelectCombo(id:int) : *
+        {
+
+        }
+
+        public function addComboOption(comboID:String, text:String)
+        {
+            for (var x:int = 0; x < this.list.content_array.length; x++)
+            {
+                var mc:MovieClip = this.list.content_array[x];
+
+                if (mc.id == comboID)
+                {
+                    // var entry:GenStockCombo_Element = new GenStockCombo_Element();
+                    // entry.text = text;
+
+                    mc.addItem({"label": text});
+                    // entry.init();
+                    return;
+                }
+            }
+        }
+
+        public function setColorLabel(id:String, color:Number, label:String) : *
+        {
+            this.list.getElementByString("id", id).setColor(color, label);
+        }
+
+        public function addLabelledColor(id:String, color:Number, label:String) : *
+        {
+            var mc:LabelledColor = new LabelledColor(color, label);
+
+            mc.CENTER_IN_LIST = true;
+            mc.id = id;
+
+            this.list.addElement(mc, false);
+        }
+    
+        public function addCombo(id:String) : *
+        {
+            var combo:comboBox = new comboBox();
+
+            combo.id = id;
+            combo.CENTER_IN_LIST = true;
+
+            combo.init(this.onSelectCombo);
+            // combo.bgHeightMax = 128;
+            // combo.scrollbarOffsetX = -30;
+            // combo.scrollbarOffsetY = -2;
+
+            this.list.addElement(combo, false);
+        }
+
+        public function addText(id:String, text:String) : *
+        {
+            var mc:MovieClip = new MovieClip();
+            var textField:SimpleText = new SimpleText(text);
+            mc.addChild(textField);
+            mc.text_txt = textField.text_txt;
+
+            this.list.addElement(mc, false);
+        }
+
+        public function addSlider(id:String, min:Number, max:Number, value:Number, step:Number, label:String, tooltip:String) : *
+        {
+            var slider:Slider = new Slider();
+            slider.label_txt.htmlText = label;
+            slider.id = id;
+            slider.tooltip = tooltip;
+            slider.slider_mc.maximum = max;
+            slider.slider_mc.minimum = min;
+            slider.slider_mc.snapInterval = step;
+            slider.slider_mc.useNotches = false;
+            slider.slider_mc.liveDragging = true
+
+            slider.amount_txt.mouseEnabled = false
+            slider.min_txt.mouseEnabled = false
+            slider.max_txt.mouseEnabled = false
+            slider.slider_mc.bgToWidthDiff = -6;
+
+            slider.amount_txt.htmlText = value;
+
+            // slider.slider_mc.useNotches = (max - min) / step <= 10;
+            slider.slider_mc.value = value;
+            slider.resetAmountPos();
+
+            this.list.addElement(slider);
+        }
+
+        public function clearEntries() : *
+        {
+            this.list.clearElements();
+        }
+
+        public function setHeader(text:String) : *
+        {
+            this.header_txt.htmlText = text;
+            textHelpers.smallCaps(this.header_txt);
+        }
+
+        public function onOutfitsButtonPress() : *
+        {
+            ExternalInterface.call("outfitsButtonPressed");
+        }
+
+        public function onTransmogButtonPress() : *
+        {
+            ExternalInterface.call("transmogButtonPressed");
+        }
+        
+        function frame1() : *
+        {
+            this.list = new pipScrollList();
+            this.addChild(list);
+
+            this.buttonList = new horizontalList();
+            this.addChild(this.buttonList);
+
+            this.buttonList.addElement(this.outfitsButton_mc);
+            this.buttonList.addElement(this.transmogButton_mc);
+
+            this.outfitsButton_mc.pressedFunc = this.onOutfitsButtonPress;
+            this.transmogButton_mc.pressedFunc = this.onTransmogButtonPress;
+            
+            this.header_txt.filters = textEffect.createStrokeFilter(0,1.4,2,1.8,3);
+        }
+    }
+}

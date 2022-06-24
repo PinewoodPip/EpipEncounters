@@ -1,0 +1,11 @@
+- Added a slider for status overhead duration
+- Fixed damage overheads for items not working with the new size settings
+- Fixed the talents tab being selected after exiting mirror
+- Fixed character sheet not updating the first time it is opened after a respec
+- Fixed decimal stat adjustments being lost while merging them into one tooltip
+- Fixed character creation talent points display when changing presets
+- Fixed 1st hotbar not being clickable after a lua reset
+- Fixed hotbar cooldown/active overlays when joining mid-session
+	- This should also have fixed the issue with loading a save during a summon turn
+- Origins should no longer get Epic Enemies buffs
+- Possibly fixed unidentified items showing the weapon range deltamods in the tooltip
