@@ -1,0 +1,73 @@
+# Compiled Lua sources
+luac.out
+
+# luarocks build files
+*.src.rock
+*.zip
+*.tar.gz
+
+# Object files
+*.o
+*.os
+*.ko
+*.obj
+*.elf
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Libraries
+*.lib
+*.a
+*.la
+*.lo
+*.def
+*.exp
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+
+# DIV
+*.pak
+Localization/
+Editor/
+Mods/Shared
+Public/Shared
+Mods/PipEffects_a3eb2175-29b8-4e79-99a8-071beda29975
+Public/PipEffects_a3eb2175-29b8-4e79-99a8-071beda29975
+Mods/ImprovedHotbar_53cdc613-9d32-4b1d-adaa-fd97c4cef22c
+Public/ImprovedHotbar_53cdc613-9d32-4b1d-adaa-fd97c4cef22c
+Mods/Epic_Encounters_d2d724e6-13c2-47c3-b356-19c3ff8bc622
+Public/Epic_Encounters_d2d724e6-13c2-47c3-b356-19c3ff8bc622
+Mods/Epic_Encounters_Core_63bb9b65-2964-4c10-be5b-55a63ec02fa0
+Public/Epic_Encounters_Core_63bb9b65-2964-4c10-be5b-55a63ec02fa0
+Mods/DOS2_Arena
+Public/DOS2_Arena
+Mods/DivinityOrigins_1301db3d-1f54-4e98-9be5-5094030916e4
+Public/DivinityOrigins_1301db3d-1f54-4e98-9be5-5094030916e4
+Mods/CheatCommander_ccb5167c-6c69-4132-8aa9-1ab6618af35b
+Public/CheatCommander_ccb5167c-6c69-4132-8aa9-1ab6618af35b
+
+Public/Game
+Projects/Origins
+Projects/Shared
+Projects/Game_Master
+Projects/Cheatcommander
+Projects/EECore
+Projects/EEOrigins
+Projects/Arena
+Projects/ImprovedHotbar_53cdc613-9d32-4b1d-adaa-fd97c4cef22c
+Projects/PipEffects_a3eb2175-29b8-4e79-99a8-071beda29975
+Public/RunePatch_d46cb4bc-f7fa-4adb-850a-19122c8b2e71
