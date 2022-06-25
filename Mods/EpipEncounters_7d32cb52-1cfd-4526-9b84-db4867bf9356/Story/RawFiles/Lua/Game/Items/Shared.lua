@@ -1,12 +1,12 @@
 
----@meta GameItem, ContextShared
+---@meta Library: GameItem, ContextShared, Game.Items
 
 local Items = Game.Items
 
---- Returns true if the item is an Artifact by checking the AMER_UNI tag.
+---Returns true if the item is an Artifact by checking the AMER_UNI tag.
 ---@param item Item
 ---@return boolean
-function Game.Items.IsArtifact(item)
+function Items.IsArtifact(item)
     return item:HasTag("AMER_UNI")
 end
 

@@ -1,4 +1,6 @@
 
+---@meta Library: Feature, ContextShared, _Feature
+
 ---------------------------------------------
 -- Base table for features and libraries.
 ---------------------------------------------
@@ -34,7 +36,7 @@ _Feature = {
     FILEPATH_OVERRIDES = {},
 }
 
--- CONTEXT is... context-dependent.
+-- .CONTEXT is... context-dependent.
 if Ext.IsClient() then
     _Feature.CONTEXT = "Client"
 else

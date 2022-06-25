@@ -1,5 +1,5 @@
 
----@meta Library: GameCharacter, ContextShared
+---@meta Library: GameCharacter, ContextShared, Game.Character
  
 Game.Character = {}
 

@@ -1,5 +1,5 @@
 
----@meta GameItem, ContextClient
+---@meta Library: GameItem, ContextClient, Game.Items
 
 ---------------------------------------------
 -- REGION Querying items in inventories.

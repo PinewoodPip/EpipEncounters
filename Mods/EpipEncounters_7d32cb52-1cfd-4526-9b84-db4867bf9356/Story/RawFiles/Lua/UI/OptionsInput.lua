@@ -1,4 +1,6 @@
 
+---@meta Library: OptionsInputUI, ContextClient, Client.UI.OptionsInput
+
 ---@class OptionsInputUI : Feature
 ---@field CUSTOM_TABS table<string, OptionsInputTab>
 ---@field TAB_ORDER string[]

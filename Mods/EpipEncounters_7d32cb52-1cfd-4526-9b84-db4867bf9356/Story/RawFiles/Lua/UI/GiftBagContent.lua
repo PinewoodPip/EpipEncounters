@@ -1,5 +1,5 @@
 
----@meta Library: GiftBagContentUI, ContextClient
+---@meta Library: GiftBagContentUI, ContextClient, Client.UI.GiftBagContent
 
 local MODS = Data.Mods
 
@@ -51,6 +51,7 @@ Client.UI.GiftBagContent = GB
 Epip.InitializeUI(Client.UI.Data.UITypes.giftBagContent, "GiftBagContent", GB)
 GB:Debug()
 
+---Represents a mod entry in the UI.
 ---@class GiftBagContentUIEntry
 ---@field ID number ID in UI.
 ---@field Name string
@@ -66,6 +67,7 @@ function GB.GetModGUID(id)
     return GB.ID_TO_MOD[id]
 end
 
+---Renders the contents of the UI, based on the data arrays in flash.
 function GB.RenderContent()
     local root = GB:GetRoot()
     local arr = root.items_array

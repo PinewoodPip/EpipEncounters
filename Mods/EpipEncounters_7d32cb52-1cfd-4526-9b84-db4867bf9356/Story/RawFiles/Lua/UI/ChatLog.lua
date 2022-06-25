@@ -1,4 +1,9 @@
 
+---@meta Library: ChatLogUI, ContextClient, Client.UI.ChatLog
+
+---@class ChatLogUI : UI
+
+---@type ChatLogUI
 local Chat = {
     Events = {
         ---@type ChatLogUI_Event_MessageSent

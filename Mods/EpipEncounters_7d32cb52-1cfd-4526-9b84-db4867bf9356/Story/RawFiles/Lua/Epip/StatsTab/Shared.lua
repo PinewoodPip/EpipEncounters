@@ -12,7 +12,7 @@
 -- We only keep track of equipped nodes that have a stat defined.
 ---------------------------------------------
 
----@meta EpipStatsTab, ContextShared
+---@meta Library: EpipStatsTab, ContextShared, Epip.Features.EpipStats
 
 ---@class EpipStats
 ---@field CATEGORIES table<string, EpipStatCategory> Category definitions.

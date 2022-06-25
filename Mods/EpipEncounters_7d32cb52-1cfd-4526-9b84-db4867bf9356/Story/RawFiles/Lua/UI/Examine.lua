@@ -3,7 +3,7 @@
 -- Hooks for the Examine UI.
 ---------------------------------------------
 
----@meta ExamineUI, ContextClient
+---@meta Library: ExamineUI, ContextClient
 
 ---@class ExamineUI
 ---@field CATEGORIES table<string, number>
