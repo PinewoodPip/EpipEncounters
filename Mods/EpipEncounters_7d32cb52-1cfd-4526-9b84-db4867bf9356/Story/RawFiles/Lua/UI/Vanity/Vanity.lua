@@ -1128,11 +1128,9 @@ Server.RegisterOsirisListener("ItemUnEquipped", 2, function(item, char)
     end
 end)
 
--- Close the UI when the character is switched.
+-- Refresh the UI when the character is switched.
 Utilities.Hooks.RegisterListener("Client", "ActiveCharacterChanged", function()
-    if Vanity:IsVisible() then
-        Vanity.Cleanup()
-    end
+    Vanity.Refresh()
 end)
 
 -- Close when the character sheet tab is changed.

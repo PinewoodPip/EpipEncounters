@@ -317,7 +317,7 @@ end)
 
 Client.UI.ContextMenu.RegisterElementListener("epip_OpenVanity", "buttonPressed", function(item, params)
     Vanity.SetSlot(item)
-    Vanity.Setup(Tab)
+    Vanity.Setup(Vanity.currentTab or Tab)
 end)
 
 Tab:RegisterListener(Vanity.Events.EntryClicked, function(id)
