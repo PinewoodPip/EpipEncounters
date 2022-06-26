@@ -479,7 +479,7 @@ end
 
 ---@param slot StatsItemSlot|EclItem
 function Vanity.SetSlot(slot)
-    if type(slot) ~= "string" then slot = Game.Items.GetEquippedSlot(slot) print(slot) end
+    if type(slot) ~= "string" then slot = Game.Items.GetEquippedSlot(slot) or Game.Items.GetItemSlot(slot) end
 
     Vanity.currentSlot = slot
     Vanity.Refresh()

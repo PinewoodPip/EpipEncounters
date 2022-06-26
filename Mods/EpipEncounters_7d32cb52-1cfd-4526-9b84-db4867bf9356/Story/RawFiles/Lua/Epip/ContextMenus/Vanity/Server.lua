@@ -161,6 +161,17 @@ Ext.Osiris.RegisterListener("ItemEquipped", 2, "after", function(item, char)
     end
 end)
 
+Osiris.RegisterSymbolListener("ItemEquipped", 2, "after", function(item, char)
+    if Osiris.DB_IsPlayer:Get(char) then
+        char = Ext.GetCharacter(char)
+    
+        Game.Net.PostToCharacter(char.MyGuid, "EPIPENCOUNTERS_ItemEquipped", {
+            NetID = char.NetID,
+            ItemNetID = Ext.GetItem(item).NetID,
+        })
+    end
+end)
+
 Game.Net.RegisterListener("EPIPENCOUNTERS_Vanity_Transmog_KeepAppearance", function(cmd, payload)
     local char = Ext.GetCharacter(payload.NetID)
     local tag = "PIP_Vanity_Transmog_KeepAppearance_" .. payload.Slot

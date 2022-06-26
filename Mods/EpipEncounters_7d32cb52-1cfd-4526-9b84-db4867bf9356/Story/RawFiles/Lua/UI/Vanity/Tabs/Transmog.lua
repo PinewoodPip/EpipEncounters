@@ -272,7 +272,7 @@ function Tab:Render()
             -- end
 
             Vanity.RenderCheckbox("Vanity_KeepAppearance", Text.Format("Lock Appearance", {Color = "000000"}), Transmog.ShouldKeepAppearance(item), true)
-            
+
             Vanity.RenderButton("RevertTemplate", "Revert Appearance", true)
 
             for i,data in ipairs(categories) do
@@ -336,12 +336,15 @@ end)
 -- EVENT LISTENERS
 ---------------------------------------------
 
-Server.RegisterOsirisListener("ItemEquipped", 2, function(item, char)
-    if Ext.GetCharacter(char) == Client.GetCharacter() then
-        if not Vanity.IsOpen() and not Transmog.ignoreNextEquip and Transmog.ShouldKeepAppearance(Ext.GetItem(item)) then
+Game.Net.RegisterListener("EPIPENCOUNTERS_ItemEquipped", function(cmd, payload)
+    local char = Ext.GetCharacter(payload.NetID)
+    local item = Ext.GetItem(payload.ItemNetID)
+
+    if char == Client.GetCharacter() then
+        if not Vanity.IsOpen() and not Transmog.ignoreNextEquip and Transmog.ShouldKeepAppearance(item) then
             Transmog:DebugLog("Reapplying appearance.")
 
-            Transmog.ReapplyAppearance(Ext.GetItem(item))
+            Transmog.ReapplyAppearance(item)
             Transmog.ignoreNextEquip = true
 
             Client.Timer.Start("", 0.5, function()

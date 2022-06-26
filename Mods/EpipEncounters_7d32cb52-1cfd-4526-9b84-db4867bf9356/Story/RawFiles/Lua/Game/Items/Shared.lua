@@ -212,7 +212,7 @@ function Game.Items.GetEquippedSlot(item)
         if isEquipped then slot = "Shield" end
     end
 
-    -- if not isEquipped then slot = nil end
+    if not isEquipped then slot = nil end
 
     return slot
 end
