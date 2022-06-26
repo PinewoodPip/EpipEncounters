@@ -825,6 +825,11 @@ function Vanity.RenderEntry(id, text, canCollapse, active, canFavorite, favorite
     element.heightOverride = element.hit_mc.height
     element.hl_mc.visible = false
 
+    local minusBtn = element.minusBtn_mc
+    minusBtn.x = 250
+    minusBtn.y = 3
+    element.setMinusButtonVisible(canRemove)
+
     if colors then
         element.setColorsVisible(true)
 
@@ -843,14 +848,14 @@ function Vanity.RenderEntry(id, text, canCollapse, active, canFavorite, favorite
         element.setColor(0, colors[1]:ToDecimal())
         element.setColor(1, colors[2]:ToDecimal())
         element.setColor(2, colors[3]:ToDecimal())
+
+        if canRemove then
+            element.minusBtn_mc.x = colorList.x + colorList.width - element.minusBtn_mc.width
+            colorList.x = colorList.x - 5 - element.minusBtn_mc.width
+        end
     else
         element.setColorsVisible(false)
     end
-
-    local minusBtn = element.minusBtn_mc
-    minusBtn.x = 250
-    minusBtn.y = 3
-    element.setMinusButtonVisible(canRemove)
 
     if canCollapse then
         element.hl_mc.width = Vanity.HEADER_ENTRY_WIDTH

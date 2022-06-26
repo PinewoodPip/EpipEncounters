@@ -48,11 +48,6 @@ Dyes.Tab = Tab
 ---@field Color3 RGBColor
 
 ---@class VanityDyeCategory
----@field Name string
----@field ID string
----@field Dyes VanityDye[]
-
----@class VanityDyeCategory
 ---@field ID string
 ---@field Name string
 ---@field Dyes VanityDye[]
@@ -174,6 +169,14 @@ function Dyes.ApplyDye(item, dyeStatData)
     end)
 end
 
+---Deletes a saved custom dye.
+---@param dyeID string
+function Dyes.DeleteCustomDye(dyeID)
+    Dyes.CustomDyes[dyeID] = nil
+    Vanity.SaveData()
+    Vanity.Refresh()
+end
+
 ---@param item EclItem|string
 ---@param dyeStat StatsItemColorDefinition
 function Dyes.CreateDyeStats(item, dyeStat)
@@ -254,7 +257,7 @@ function Dyes.GetCurrentCustomDye(item, useSliders)
     end
 
     -- Try to get the base color of the item
-    if not colorData then
+    if not colorData and item then
         local boosts = Game.Items.GetNamedBoosts(item)
 
         for i=#boosts,1,-1 do
@@ -298,7 +301,7 @@ function Tab:RenderCategories(categories)
             local dyes = category.Dyes
 
             for i,dye in ipairs(dyes) do
-                Vanity.RenderEntry(dye.ID, dye.Name or dye.ID, false, false, false, false, nil, false, {
+                Vanity.RenderEntry(dye.ID, dye.Name or dye.ID, false, false, false, false, nil, dye.Type == "Custom", {
                     dye.Color1,
                     dye.Color2,
                     dye.Color3,
@@ -456,6 +459,28 @@ Tab:RegisterListener(Vanity.Events.InputChanged, function(id, text)
 
         -- Tab:UpdateColorSliderLabel(tonumber(colorIndex))
         Tab:SetSliderColor(colorIndex, color)
+    end
+end)
+
+-- Listen for dyes being removed.
+Tab:RegisterListener(Vanity.Events.EntryRemoved, function(id)
+    Client.UI.MessageBox.ShowMessageBox({
+        ID = "PIP_Vanity_RemoveDye",
+        Header = "Remove Dye",
+        Message = Text.Format("Are you sure you want to remove this dye (%s)?", {
+            FormatArgs = {id},
+        }),
+        Buttons = {
+            {Type = 1, Text = "Remove", ID = 0},
+            {Type = 1, Text = "Cancel", ID = 1},
+        },
+        DyeID = id,
+    })
+end)
+
+Client.UI.MessageBox:RegisterMessageListener("PIP_Vanity_RemoveDye", "ButtonClicked", function(buttonID, data)
+    if buttonID == 0 then
+        Dyes.DeleteCustomDye(data.DyeID)
     end
 end)
 
