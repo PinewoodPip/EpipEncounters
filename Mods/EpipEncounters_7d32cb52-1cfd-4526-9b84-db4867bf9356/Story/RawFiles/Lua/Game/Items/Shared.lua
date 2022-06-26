@@ -162,6 +162,24 @@ function Game.Items.GetCurrentDye(item)
     return dyeID,dyeData
 end
 
+---Returns a list of the named boosts on the item.
+---@param item Item
+---@return string[]
+function Game.Items.GetNamedBoosts(item)
+    local boosts = {}
+
+    for i,v in pairs(item.Stats.DynamicStats) do
+
+        local boostName = v.ObjectInstanceName
+
+        if boostName ~= "" then
+            table.insert(boosts, boostName)
+        end
+    end
+
+    return boosts
+end
+
 --- Returns true if item is equipped by char. Assumes the item cannot be equipped into an unintended slot. Rings and weapons are checked for both slots.
 ---@param char Character
 ---@param item Item

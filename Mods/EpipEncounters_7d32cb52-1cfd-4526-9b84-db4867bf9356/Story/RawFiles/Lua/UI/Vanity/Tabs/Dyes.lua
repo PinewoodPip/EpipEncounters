@@ -252,6 +252,27 @@ function Dyes.GetCurrentCustomDye(item, useSliders)
             end
         end
     end
+
+    -- Try to get the base color of the item
+    if not colorData then
+        local boosts = Game.Items.GetNamedBoosts(item)
+
+        for i=#boosts,1,-1 do
+            local stat = Ext.Stats.Get(boosts[i])
+
+            if stat and stat.ItemColor ~= "" then
+                local itemColor = Ext.Stats.ItemColor.Get(stat.ItemColor)
+
+                colorData = {
+                    Color1 = Color.CreateFromDecimal(itemColor.Color1),
+                    Color2 = Color.CreateFromDecimal(itemColor.Color2),
+                    Color3 = Color.CreateFromDecimal(itemColor.Color3),
+                }
+                break
+            end
+        end
+    end
+
     if not colorData and useSliders then
         colorData = {
             Color1 = Dyes.GetCurrentSliderColor(1),
@@ -495,9 +516,9 @@ Vanity.Events.SaveDataLoaded:RegisterListener(function (data)
         Dyes.CustomDyes = data.Dyes or {}
 
         for id,dye in pairs(Dyes.CustomDyes) do
-            Inherit(dye.Color1, RGBColor)
-            Inherit(dye.Color2, RGBColor)
-            Inherit(dye.Color3, RGBColor)
+            Inherit(dye.Color1, Color.RGBColor)
+            Inherit(dye.Color2, Color.RGBColor)
+            Inherit(dye.Color3, Color.RGBColor)
             dye.Type = "Custom"
         end
     end

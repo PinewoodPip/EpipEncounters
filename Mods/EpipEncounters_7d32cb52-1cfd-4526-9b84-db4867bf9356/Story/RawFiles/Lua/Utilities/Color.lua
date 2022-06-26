@@ -6,7 +6,7 @@
 ---------------------------------------------
 
 Color = {
-
+    RGBColor = nil,
 }
 
 ---------------------------------------------
@@ -22,6 +22,7 @@ Color = {
 local RGBColor = {
     Red = 0, Green = 0, Blue = 0
 }
+Color.RGBColor = RGBColor
 
 ---@return integer
 function RGBColor:ToDecimal()
