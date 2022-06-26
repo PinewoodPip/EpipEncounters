@@ -38,6 +38,7 @@ LOAD_ORDER = {
     "Utilities/Text.lua",
     "Utilities/Flash.lua",
     "Utilities/Hooks.lua",
+    "Utilities/Color.lua",
     "Utilities.lua",
 
     "Data/Game.lua", -- TODO move stuff out of it into appropriate scripts

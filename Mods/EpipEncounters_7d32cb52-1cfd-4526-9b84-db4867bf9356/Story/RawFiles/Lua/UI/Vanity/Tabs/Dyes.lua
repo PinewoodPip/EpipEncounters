@@ -7,9 +7,9 @@ local Dyes = {
     lockColorSlider = false,
 
     currentSliderColor = {
-        Color1 = RGBColor.Create(),
-        Color2 = RGBColor.Create(),
-        Color3 = RGBColor.Create(),
+        Color1 = Color.Create(),
+        Color2 = Color.Create(),
+        Color3 = Color.Create(),
     },
 
     DYE_CATEGORIES = {},
@@ -228,7 +228,7 @@ end
 ---@return RGBColor
 function Dyes.GetCurrentSliderColor(index)
     local sliderColor = Dyes.currentSliderColor["Color" .. index]
-    return RGBColor.Create(sliderColor.Red, sliderColor.Green, sliderColor.Blue)
+    return Color.Create(sliderColor.Red, sliderColor.Green, sliderColor.Blue)
 end
 
 ---Gets the custom dye of the item. If item is nil, returns the values from the sliders instead.
@@ -245,9 +245,9 @@ function Dyes.GetCurrentCustomDye(item, useSliders)
 
             if c1 then
                 colorData = {
-                    Color1 = RGBColor.CreateFromHex(c1),
-                    Color2 = RGBColor.CreateFromHex(c2),
-                    Color3 = RGBColor.CreateFromHex(c3),
+                    Color1 = Color.CreateFromHex(c1),
+                    Color2 = Color.CreateFromHex(c2),
+                    Color3 = Color.CreateFromHex(c3),
                 }
             end
         end
@@ -290,9 +290,9 @@ end
 ---@param dye VanityDye
 function Tab:SetSliderColors(dye)
     Dyes.currentSliderColor = {
-        Color1 = RGBColor.Clone(dye.Color1),
-        Color2 = RGBColor.Clone(dye.Color2),
-        Color3 = RGBColor.Clone(dye.Color3),
+        Color1 = Color.Clone(dye.Color1),
+        Color2 = Color.Clone(dye.Color2),
+        Color3 = Color.Clone(dye.Color3),
     }
     
     for i=1,3,1 do
@@ -328,9 +328,9 @@ function Tab:Render()
         local visuals = {}
 
         currentSliderColor = {
-            Color1 = RGBColor.Create(),
-            Color2 = RGBColor.Create(),
-            Color3 = RGBColor.Create(),
+            Color1 = Color.Create(),
+            Color2 = Color.Create(),
+            Color3 = Color.Create(),
         }
 
         local currentCustomDye = Dyes.GetCurrentCustomDye(item)
@@ -413,7 +413,7 @@ Tab:RegisterListener(Vanity.Events.PastePressed, function(id)
 
     Client.Timer.Start("PIP_VanityPaste", 0.1, function()
         local text = Client.UI.MessageBox:GetRoot().popup_mc.input_mc.input_txt.text
-        local color = RGBColor.CreateFromHex(text)
+        local color = Color.CreateFromHex(text)
 
         if color then
             Dyes.currentSliderColor["Color" .. colorIndex] = color
@@ -429,7 +429,7 @@ Tab:RegisterListener(Vanity.Events.InputChanged, function(id, text)
     local colorIndex = string.gsub(id, "Color_Label_", "")
 
     if string.len(text) == 6 then
-        local color = RGBColor.CreateFromHex(text)
+        local color = Color.CreateFromHex(text)
         
         Dyes.currentSliderColor["Color" .. colorIndex] = color
 
@@ -492,7 +492,7 @@ end)
 
 Vanity.Events.SaveDataLoaded:RegisterListener(function (data)
     if data.Version >= 4 then
-        Dyes.CustomDyes = data.Dyes
+        Dyes.CustomDyes = data.Dyes or {}
 
         for id,dye in pairs(Dyes.CustomDyes) do
             Inherit(dye.Color1, RGBColor)
@@ -597,9 +597,9 @@ function Dyes:__Setup()
                 local dye = {
                     Name = stat.ItemColor,
                     ID = stat.ItemColor,
-                    Color1 = RGBColor.CreateFromDecimal(colorStat.Color1),
-                    Color2 = RGBColor.CreateFromDecimal(colorStat.Color2),
-                    Color3 = RGBColor.CreateFromDecimal(colorStat.Color3),
+                    Color1 = Color.CreateFromDecimal(colorStat.Color1),
+                    Color2 = Color.CreateFromDecimal(colorStat.Color2),
+                    Color3 = Color.CreateFromDecimal(colorStat.Color3),
                     Type = "Custom",
                 }
     

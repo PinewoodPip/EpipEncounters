@@ -14,9 +14,9 @@ local _DyeItem = {}
 function _DyeItem:Init()
     local stat = Ext.Stats.ItemColor.Get(self.ItemColor)
 
-    self.Color1 = RGBColor.CreateFromDecimal(stat.Color1)
-    self.Color2 = RGBColor.CreateFromDecimal(stat.Color2)
-    self.Color3 = RGBColor.CreateFromDecimal(stat.Color3)
+    self.Color1 = Color.CreateFromDecimal(stat.Color1)
+    self.Color2 = Color.CreateFromDecimal(stat.Color2)
+    self.Color3 = Color.CreateFromDecimal(stat.Color3)
 end
 
 local DyeData = Data.Game.DYES

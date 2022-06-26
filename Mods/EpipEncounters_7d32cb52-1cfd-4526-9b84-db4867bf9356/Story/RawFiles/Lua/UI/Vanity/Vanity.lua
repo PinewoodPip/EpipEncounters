@@ -14,74 +14,6 @@
 -- You cannot have mouse listeners on shapes, need to use sprites
 -- Depth 0 elements have 0 width/height
 
----@type RGBColor
-RGBColor = {
-    Red = 0, Green = 0, Blue = 0
-}
-
----@return integer
-function RGBColor:ToDecimal()
-    return self.Blue + self.Green * 256 + self.Red * 256 ^ 2
-end
-
----@param prefix boolean? Prefix the string with #. Defaults to false.
----@return string
-function RGBColor:ToHex(prefix)
-    local valStr = string.format("%x", self:ToDecimal())
-    
-    while string.len(valStr) < 6 do
-        valStr = "0" .. valStr
-    end
-
-    if prefix then
-        valStr = "#" .. valStr
-    end
-
-    return valStr:upper()
-end
-
----@param color RGBColor
----@return RGBColor
-function RGBColor.Clone(color)
-    return RGBColor.Create(color.Red, color.Green, color.Blue)
-end
-
----@param num integer
----@return RGBColor
-function RGBColor.CreateFromDecimal(num)
-    -- local red = num // (256 ^ 2)
-    -- num = num % (256 ^ 2)
-
-    -- local green = num // 256
-    -- num = num % 256
-
-    -- local blue = num
-
-    -- TODO alpha field
-    if num >= 256 ^ 3 then
-        num = num % (256 ^ 3)
-    end
-
-    local red = num // (256 ^ 2)
-    local green = (num // 256) % 256
-    local blue = num % 256
-
-    return RGBColor.Create(red, green, blue)
-end
-
----@return RGBColor
-function RGBColor.Create(r, g, b)
-    local color = {Red = r or 0, Green = g or 0, Blue = b or 0}
-    Inherit(color, RGBColor)
-    
-    return color
-end
-
----@return RGBColor
-function RGBColor.CreateFromHex(hex)
-    return RGBColor.Create(tonumber(string.sub(hex, 1, 2), 16), tonumber(string.sub(hex, 3, 4), 16), tonumber(string.sub(hex, 5, 6), 16))
-end
-
 ---@type VanityUI
 local Vanity = {
     Position = {0, 0},
@@ -1122,11 +1054,6 @@ function hex(val, minLength)
 
     return valStr:upper()
 end
-
----@class RGBColor
----@field Red integer
----@field Green integer
----@field Blue integer
 
 function Vanity.TogglePointsWarning(state)
     local alpha = 0

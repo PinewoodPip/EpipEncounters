@@ -40,6 +40,7 @@ Ext.Require(prefixedGUID, "Utilities/Text.lua");
 Ext.Require(prefixedGUID, "Epip/Settings.lua");
 Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Utilities/Text.lua");
 Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Utilities/Hooks.lua");
+Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Utilities/Color.lua");
 Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Utilities.lua");
 Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Utilities/Server.lua");
 Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Server/Osiris.lua");
