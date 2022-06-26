@@ -1,0 +1,93 @@
+package 
+{
+    import flash.display.MovieClip;
+    import flash.events.Event;
+    import flash.events.FocusEvent;
+    import flash.events.KeyboardEvent;
+    import flash.external.ExternalInterface;
+    import flash.text.TextField;
+    
+    public dynamic class InputField extends MovieClip
+    {
+        
+        public var bg_mc:MovieClip;
+        public var copy_mc:MovieClip;
+        public var input_txt:TextField;
+        public var paste_mc:MovieClip;
+        public var id:String = "";
+        
+        public function InputField()
+        {
+            super();
+            addFrameScript(0,this.frame1);
+        }
+        
+        public function acceptSave() : *
+        {
+            var _loc1_:String = this.input_txt.text;
+            _loc1_ = this.strReplace(_loc1_,"\n","");
+            _loc1_ = this.strReplace(_loc1_,"\r","");
+            _loc1_ = this.strReplace(_loc1_,"\t","");
+            ExternalInterface.call("acceptInput", this.id, _loc1_);
+        }
+        
+        public function onChange(param1:Event) : *
+        {
+            this.acceptSave();
+        }
+        
+        public function onFocus(param1:FocusEvent) : *
+        {
+            this.input_txt.addEventListener(KeyboardEvent.KEY_DOWN,this.inputHandler);
+            ExternalInterface.call("inputFocus");
+        }
+        
+        public function onFocusLost(param1:FocusEvent) : *
+        {
+            this.input_txt.removeEventListener(KeyboardEvent.KEY_DOWN,this.inputHandler);
+            ExternalInterface.call("inputFocusLost");
+        }
+        
+        public function strReplace(param1:String, param2:String, param3:String) : String
+        {
+            return param1.split(param2).join(param3);
+        }
+        
+        public function inputHandler(param1:KeyboardEvent) : *
+        {
+            this.acceptSave();
+            
+            if(param1.charCode == 13)
+            {
+                ExternalInterface.call("inputFocusLost");
+                stage.focus = null;
+            }
+        }
+
+        public function setText(text:String) : *
+        {
+            this.input_txt.htmlText = text;
+        }
+
+        private function onCopyPressed() : *
+        {
+            ExternalInterface.call("copyPressed", this.id, this.input_txt.text);
+        }
+
+        private function onPastePressed() : *
+        {
+            ExternalInterface.call("pastePressed", this.id, this.input_txt.text);
+        }
+        
+        function frame1() : *
+        {
+            this.copy_mc.init(this.onCopyPressed);
+            this.paste_mc.init(this.onPastePressed);
+
+            // this.input_txt.restrict = "a-zA-Z0-9_ \\-";
+            this.input_txt.addEventListener(Event.CHANGE,this.onChange);
+            this.input_txt.addEventListener(FocusEvent.FOCUS_IN,this.onFocus,false,0,true);
+            addEventListener(FocusEvent.FOCUS_OUT,this.onFocusLost,false,0,true);
+        }
+    }
+}

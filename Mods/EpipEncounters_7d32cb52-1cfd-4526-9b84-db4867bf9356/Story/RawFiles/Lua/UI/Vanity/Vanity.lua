@@ -24,6 +24,22 @@ function RGBColor:ToDecimal()
     return self.Blue + self.Green * 256 + self.Red * 256 ^ 2
 end
 
+---@param prefix boolean? Prefix the string with #. Defaults to false.
+---@return string
+function RGBColor:ToHex(prefix)
+    local valStr = string.format("%x", self:ToDecimal())
+    
+    while string.len(valStr) < 6 do
+        valStr = "0" .. valStr
+    end
+
+    if prefix then
+        valStr = "#" .. valStr
+    end
+
+    return valStr:upper()
+end
+
 ---@param color RGBColor
 ---@return RGBColor
 function RGBColor.Clone(color)
@@ -383,6 +399,12 @@ local Vanity = {
         TabButtonPressed = {},
         ---@type VanityUI_Event_SliderHandleReleased
         SliderHandleReleased = {},
+        ---@type VanityUI_Event_CopyPressed
+        CopyPressed = {},
+        ---@type VanityUI_Event_PastePressed
+        PastePressed = {},
+        ---@type VanityUI_Event_InputChanged
+        InputChanged = {},
     },
     Hooks = {
         ---@type VanityUI_Hook_GetEntryLabel
@@ -424,6 +446,18 @@ Vanity:Debug()
 ---@class VanityUI_Event_TabButtonPressed : Event
 ---@field RegisterListener fun(self, listener:fun(id:string))
 ---@field Fire fun(self, id:string)
+
+---@class VanityUI_Event_CopyPressed : Event
+---@field RegisterListener fun(self, listener:fun(tab:CharacterSheetCustomTab, id:string, text:string))
+---@field Fire fun(self, tab:CharacterSheetCustomTab, id:string, text:string)
+
+---@class VanityUI_Event_PastePressed : Event
+---@field RegisterListener fun(self, listener:fun(tab:CharacterSheetCustomTab, id:string))
+---@field Fire fun(self, tab:CharacterSheetCustomTab, id:string)
+
+---@class VanityUI_Event_InputChanged : Event
+---@field RegisterListener fun(self, listener:fun(tab:CharacterSheetCustomTab, id:string, text:string))
+---@field Fire fun(self, tab:CharacterSheetCustomTab, id:string, text:string)
 
 ---@class VanityUI_Event_ButtonPressed : Event
 ---@field RegisterListener fun(self, listener:fun(tab:CharacterSheetCustomTab, id:string))
@@ -751,25 +785,43 @@ function Vanity.SetupColorIcon(element)
 
 end
 
-function Vanity.RenderLabelledColor(id, color, label)
+function Vanity.RenderLabelledColor(id, color, label, showInputField)
     local menu = Vanity.GetMenu()
+    if showInputField == nil then showInputField = false end
     
-    menu.addLabelledColor(id, color, label)
+    menu.addLabelledColor(id, color, label, showInputField)
 
     local list = menu.list.content_array
     local element = list[#list-1]
+    local input = element.inputField_mc
 
     element.text_mc.text_txt.autoSize = "left"
     -- element.text_mc.text_txt.width = element.text_mc.text_txt.width - 80
     Vanity.SetupColorIcon(element.color_mc)
-    element.text_mc.x = 50
-    element.text_mc.y = 3
+    element.text_mc.x = 31
+    element.text_mc.y = 13
+    element.color_mc.y = 11
+    element.text_mc.mouseEnabled = false
     element.heightOverride = element.height + 3
+
+    input.copy_mc.x = 210
+    input.paste_mc.x = input.copy_mc.x + 32
+    input.paste_mc.visible = true
+
+    input.input_txt.width = 90
+    input.input_txt.x = input.copy_mc.x - input.input_txt.width
+    input.bg_mc.width = input.input_txt.width
+    input.bg_mc.height = input.input_txt.height
+    input.bg_mc.x = input.input_txt.x
+    input.bg_mc.y = input.input_txt.y
+
+    input.input_txt.maxChars = 7
+    input.input_txt.restrict = "a-fA-F0-9#"
 end
 
-function Vanity.SetColorLabel(id, color, label)
+function Vanity.SetColorLabel(id, color, label, input)
     local menu = Vanity.GetMenu()
-    menu.setColorLabel(id, color, label)
+    menu.setColorLabel(id, color, label, input)
 end
 
 function Vanity.RenderDropdown(id, options, selectedIndex)
@@ -1072,6 +1124,18 @@ end
 
 Vanity:RegisterCallListener("pipMinusPressed", function(ev, id)
     Vanity.Events.EntryRemoved:Fire(Vanity.currentTab, id)
+end)
+
+Vanity:RegisterCallListener("copyPressed", function(ev, id, text)
+    Vanity.Events.CopyPressed:Fire(Vanity.currentTab, id, text)
+end)
+
+Vanity:RegisterCallListener("pastePressed", function(ev, id)
+    Vanity.Events.PastePressed:Fire(Vanity.currentTab, id)
+end)
+
+Vanity:RegisterCallListener("acceptInput", function(ev, id, text)
+    Vanity.Events.InputChanged:Fire(Vanity.currentTab, id, text)
 end)
 
 -- Hide level up blips while the UI is open.

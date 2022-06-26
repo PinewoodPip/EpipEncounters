@@ -7,6 +7,7 @@ package
     {
         public var color_mc:MovieClip;
         public var text_mc:MovieClip;
+        public var inputField_mc:MovieClip;
         
         public function LabelledColor(color:Number, label:String)
         {
@@ -16,10 +17,20 @@ package
             addFrameScript(0,this.frame1);
         }
 
+        public function setInputFieldVisible(state:Boolean) : *
+        {
+            this.inputField_mc.visible = state;
+        }
+
         public function setColor(color:Number, label:String) : *
         {
             this.color_mc.setColor(color);
             this.text_mc.text_txt.htmlText = label;
+        }
+
+        public function setInput(text:String) : *
+        {
+            this.inputField_mc.setText(text);
         }
         
         function frame1() : *

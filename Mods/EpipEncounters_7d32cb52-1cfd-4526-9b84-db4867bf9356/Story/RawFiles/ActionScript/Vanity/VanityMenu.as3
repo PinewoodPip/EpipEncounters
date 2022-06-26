@@ -104,17 +104,28 @@ package arenaResult_fla
             }
         }
 
-        public function setColorLabel(id:String, color:Number, label:String) : *
+        public function setColorLabel(id:String, color:Number, label:String, input:String = "") : *
         {
-            this.list.getElementByString("id", id).setColor(color, label);
+            var mc:MovieClip = this.list.getElementByString("id", id);
+
+            mc.setColor(color, label);
+
+            // Only update focus if we're unfocused
+            if (stage.focus != mc.inputField_mc.input_txt)
+            {
+                mc.setInput(input);
+            }
         }
 
-        public function addLabelledColor(id:String, color:Number, label:String) : *
+        public function addLabelledColor(id:String, color:Number, label:String, inputFieldVisible:Boolean = false) : *
         {
             var mc:LabelledColor = new LabelledColor(color, label);
 
+            mc.setInputFieldVisible(inputFieldVisible);
+
             mc.CENTER_IN_LIST = true;
             mc.id = id;
+            mc.inputField_mc.id = id;
 
             this.list.addElement(mc, false);
         }

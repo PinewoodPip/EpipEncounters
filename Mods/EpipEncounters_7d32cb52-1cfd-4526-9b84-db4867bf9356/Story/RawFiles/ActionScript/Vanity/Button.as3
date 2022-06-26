@@ -65,6 +65,8 @@ package
         public var SND_Over:String = "UI_Generic_Over";
         
         public var SND_Click:String = "UI_Gen_XButton_Click";
+
+        public var uiCall:String = "";
         
         public function Button()
         {
@@ -313,6 +315,10 @@ package
             if(this.onUpFunc != null)
             {
                 this.onUpFunc();
+            }
+            if (this.uiCall != "")
+            {
+                ExternalInterface.call(this.uiCall);
             }
             if(this.text_txt)
             {
