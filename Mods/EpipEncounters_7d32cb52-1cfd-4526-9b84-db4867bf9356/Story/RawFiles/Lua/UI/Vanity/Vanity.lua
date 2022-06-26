@@ -637,6 +637,11 @@ function Vanity.RenderItemDropdown()
     Vanity.RenderDropdown("TransmogItemSlot", slotOptions, dropdownIndex)
 end
 
+---@return boolean
+function Vanity.IsOpen()
+    return Vanity.visible
+end
+
 function Vanity.GetMenu()
     return Vanity:GetRoot().menu_mc
 end

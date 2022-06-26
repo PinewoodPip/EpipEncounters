@@ -22,6 +22,8 @@ local Dyes = {
     CACHE = {},
     DYE_HISTORY_LIMIT = 10,
 
+    activeCharacterDyes = {},
+
     Events = {
         ---@type VanityDyes_Event_DyeUsed
         DyeUsed = {},
@@ -32,6 +34,7 @@ local Dyes = {
     },
 }
 Epip.AddFeature("VanityDyes", "VanityDyes", Dyes)
+Dyes:Debug()
 
 ---@type CharacterSheetCustomTab
 local Tab = Vanity.CreateTab({
@@ -109,6 +112,16 @@ function Dyes.AddDye(categoryID, data)
 
     table.insert(category.Dyes, data)
     Dyes.DYE_DATA[data.ID] = data
+end
+
+---@param item EclItem
+function Dyes.ReapplyAppearance(item)
+    local slot = Game.Items.GetItemSlot(item)
+    local dye = Dyes.activeCharacterDyes[slot]
+
+    if dye then
+        Dyes.ApplyCustomDye(dye, item)
+    end
 end
 
 ---Use a dye.
@@ -240,9 +253,11 @@ end
 ---Gets the custom dye of the item. If item is nil, returns the values from the sliders instead.
 ---@param item EclItem?
 ---@param useSliders boolean? Defaults to true.
+---@param useDefaultColors boolean? Defaults to true.
 ---@return VanityDye
-function Dyes.GetCurrentCustomDye(item, useSliders)
+function Dyes.GetCurrentCustomDye(item, useSliders, useDefaultColors)
     if useSliders == nil then useSliders = true end
+    if useDefaultColors == nil then useDefaultColors = true end
     local colorData
 
     if item then
@@ -260,7 +275,7 @@ function Dyes.GetCurrentCustomDye(item, useSliders)
     end
 
     -- Try to get the base color of the item
-    if not colorData and item then
+    if (not colorData) and item and useDefaultColors then
         local boosts = Game.Items.GetNamedBoosts(item)
 
         for i=#boosts,1,-1 do
@@ -296,6 +311,26 @@ end
 ---@return boolean
 function Dyes.DyesAreEqual(dye1, dye2)
     return dye1.Color1:Equals(dye2.Color1) and dye1.Color2:Equals(dye2.Color2) and dye1.Color3:Equals(dye2.Color3)
+end
+
+function Dyes.UpdateActiveCharacterDyes()
+    local char = Client.GetCharacter()
+
+    for i,slot in ipairs(Data.Game.SLOTS_WITH_VISUALS) do
+        local item = char:GetItemBySlot(slot)
+
+        if item then
+            item = Ext.GetItem(item)
+            local dye = Dyes.GetCurrentCustomDye(item, false, false)
+
+            Dyes.activeCharacterDyes[slot] = dye
+        else
+            Dyes.activeCharacterDyes[slot] = nil
+        end
+    end
+
+    Dyes:DebugLog("Active character's dyes:")
+    Dyes:Dump(Dyes.activeCharacterDyes)
 end
 
 ---------------------------------------------
@@ -543,6 +578,23 @@ end)
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
+
+Epip.Features.VanityTransmog.Events.AppearanceReapplied:RegisterListener(function (item, template)
+    Dyes.ReapplyAppearance(item)
+end)
+
+Ext.Events.GameStateChanged:Subscribe(function(event)
+    local from = event.FromState
+    local to = event.ToState
+    
+    if from == "PrepareRunning" and to == "Running" then
+        Dyes.UpdateActiveCharacterDyes()
+    end
+end)
+
+Utilities.Hooks.RegisterListener("Client", "ActiveCharacterChanged", function()
+    Dyes.UpdateActiveCharacterDyes()
+end)
 
 Ext.Events.SessionLoading:Subscribe(function()
     local file = Utilities.LoadJson("pip_useddyes.json")

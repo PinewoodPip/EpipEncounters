@@ -3,6 +3,9 @@ local Vanity = Client.UI.Vanity
 
 local Transmog = {
     favoritedTemplates = {},
+    activeCharacterTemplates = {},
+    KEEP_APPEARANCE_TAG_PREFIX = "PIP_Vanity_Transmog_KeepAppearance_",
+    ignoreNextEquip = false,
 
     BLOCKED_TEMPLATES = {
         -- Captain
@@ -43,7 +46,10 @@ local Transmog = {
         ["a18a346d-30eb-45b7-852b-37cbe7d20f68"] = true,
     },
 
-    Events = {},
+    Events = {
+        ---@type VanityTransmog_Event_AppearanceReapplied
+        AppearanceReapplied = {},
+    },
     Hooks = {
         ---@type VanityTransmog_Hook_TemplateBelongsToCategory
         TemplateBelongsToCategory = {},
@@ -54,6 +60,8 @@ local Transmog = {
     },
 }
 Epip.AddFeature("VanityTransmog", "VanityTransmog", Transmog)
+Epip.Features.VanityTransmog = Transmog
+Transmog:Debug()
 
 ---@type CharacterSheetCustomTab
 local Tab = Vanity.CreateTab({
@@ -65,6 +73,10 @@ local Tab = Vanity.CreateTab({
 ---------------------------------------------
 -- EVENTS / HOOKS
 ---------------------------------------------
+
+---@class VanityTransmog_Event_AppearanceReapplied : Event
+---@field RegisterListener fun(self, listener:fun(item:EclItem, template:ItemTemplate))
+---@field Fire fun(self, item:EclItem, template:ItemTemplate)
 
 ---@class VanityTransmog_Hook_TemplateBelongsToCategory : Hook
 ---@field RegisterHook fun(self, handler:fun(belongs:boolean, templateData:VanityTemplate, category:VanityCategory))
@@ -102,6 +114,41 @@ function Transmog.ShouldRenderEntry(templateGUID, category, item)
     end
 
     return false
+end
+
+---@param item EclItem
+---@return boolean
+function Transmog.ShouldKeepAppearance(item)
+    local tag = Transmog.KEEP_APPEARANCE_TAG_PREFIX .. Game.Items.GetItemSlot(item)
+
+    return Client.GetCharacter():HasTag(tag)
+end
+
+function Transmog.ReapplyAppearance(item)
+    local slot = Game.Items.GetItemSlot(item)
+    local newTemplate = Transmog.activeCharacterTemplates[slot]
+    _D(Transmog.activeCharacterTemplates)
+    if not newTemplate then return nil end
+
+    Transmog.TransmogItem(item, newTemplate)
+
+    Transmog.Events.AppearanceReapplied:Fire(item, newTemplate)
+end
+
+function Transmog.UpdateActiveCharacterTemplates()
+    local char = Client.GetCharacter()
+
+    for i,slot in ipairs(Data.Game.SLOTS_WITH_VISUALS) do
+        local item = char:GetItemBySlot(slot)
+
+        if item then
+            item = Ext.GetItem(item)
+
+            Transmog.activeCharacterTemplates[slot] = item.RootTemplate.Id
+        else
+            Transmog.activeCharacterTemplates[slot] = nil
+        end
+    end
 end
 
 function Transmog.CanTransmogItem(item)
@@ -222,8 +269,11 @@ function Tab:Render()
 
             -- TODO fix disabled button item:HasTag("PIP_Vanity_Transmogged")
             -- if item:HasTag("PIP_Vanity_Transmogged") or (Vanity.currentItemTemplateOverride and item.RootTemplate.Id ~= Vanity.currentItemTemplateOverride) then
-            Vanity.RenderButton("RevertTemplate", "Revert Appearance", true)
             -- end
+
+            Vanity.RenderCheckbox("Vanity_KeepAppearance", Text.Format("Lock Appearance", {Color = "000000"}), Transmog.ShouldKeepAppearance(item), true)
+            
+            Vanity.RenderButton("RevertTemplate", "Revert Appearance", true)
 
             for i,data in ipairs(categories) do
                 -- Render category collapse button
@@ -272,9 +322,55 @@ Tab:RegisterListener(Vanity.Events.ButtonPressed, function(id)
     end
 end)
 
+Tab:RegisterListener(Vanity.Events.CheckboxPressed, function(id, state)
+    if id == "Vanity_KeepAppearance" then
+        Game.Net.PostToServer("EPIPENCOUNTERS_Vanity_Transmog_KeepAppearance", {
+            NetID = Client.GetCharacter().NetID,
+            Slot = Vanity.currentSlot,
+            State = state,
+        })
+    end
+end)
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
+
+Server.RegisterOsirisListener("ItemEquipped", 2, function(item, char)
+    if Ext.GetCharacter(char) == Client.GetCharacter() then
+        if not Vanity.IsOpen() and not Transmog.ignoreNextEquip and Transmog.ShouldKeepAppearance(Ext.GetItem(item)) then
+            Transmog:DebugLog("Reapplying appearance.")
+
+            Transmog.ReapplyAppearance(Ext.GetItem(item))
+            Transmog.ignoreNextEquip = true
+
+            Client.Timer.Start("", 0.5, function()
+                Transmog.ignoreNextEquip = false
+                Transmog.UpdateActiveCharacterTemplates()
+            end)
+        elseif Vanity.IsOpen() then
+            Client.Timer.Start("", 0.5, function()
+                Transmog.UpdateActiveCharacterTemplates()
+
+                -- TODO implement this better...
+                Epip.Features.VanityDyes.UpdateActiveCharacterDyes()
+            end)
+        end
+    end
+end)
+
+Ext.Events.GameStateChanged:Subscribe(function(event)
+    local from = event.FromState
+    local to = event.ToState
+    
+    if from == "PrepareRunning" and to == "Running" then
+        Transmog.UpdateActiveCharacterTemplates()
+    end
+end)
+
+Utilities.Hooks.RegisterListener("Client", "ActiveCharacterChanged", function()
+    Transmog.UpdateActiveCharacterTemplates()
+end)
 
 Transmog.Hooks.CanTransmog:RegisterHook(function (canTransmog, item)
     if Transmog.BLOCKED_TEMPLATES[item.RootTemplate.Id] then

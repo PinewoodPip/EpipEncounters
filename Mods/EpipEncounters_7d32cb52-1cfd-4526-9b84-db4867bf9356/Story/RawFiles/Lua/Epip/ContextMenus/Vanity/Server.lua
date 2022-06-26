@@ -161,6 +161,17 @@ Ext.Osiris.RegisterListener("ItemEquipped", 2, "after", function(item, char)
     end
 end)
 
+Game.Net.RegisterListener("EPIPENCOUNTERS_Vanity_Transmog_KeepAppearance", function(cmd, payload)
+    local char = Ext.GetCharacter(payload.NetID)
+    local tag = "PIP_Vanity_Transmog_KeepAppearance_" .. payload.Slot
+
+    if payload.State then
+        Osi.SetTag(char.MyGuid, tag)
+    else
+        Osi.ClearTag(char.MyGuid, tag)
+    end
+end)
+
 -- TODO finish persistent outfit - there is an infinite loop issue with re-equipping.
 function StopIgnoreVanity()
     Ext.Print("here")
