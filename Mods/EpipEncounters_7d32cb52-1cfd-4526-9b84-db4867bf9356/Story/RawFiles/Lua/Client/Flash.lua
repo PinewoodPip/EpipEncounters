@@ -1,5 +1,7 @@
 
-Flash = {}
+local Flash = {}
+Epip.InitializeLibrary("Flash", Flash)
+Client.Flash = Flash
 
 ---Returns the last element of an array.
 ---@param array FlashArray

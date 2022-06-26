@@ -36,7 +36,6 @@ LOAD_ORDER = {
     -- Utilities
     "Utils.lua",
     "Utilities/Text.lua",
-    "Utilities/Flash.lua",
     "Utilities/Hooks.lua",
     "Utilities/Color.lua",
     "Utilities.lua",
@@ -62,6 +61,7 @@ LOAD_ORDER = {
 
     "Client/Client.lua",
     "Client/Server.lua",
+    "Client/Flash.lua",
     "Client/Sound.lua",
     "UI/Data.lua",
     "Client/Input.lua",
