@@ -4,6 +4,8 @@ local Vanity = Client.UI.Vanity
 local Dyes = {
     Tab = nil,
     CustomDyes = {},
+    lockColorSlider = false,
+
     currentSliderColor = {
         Color1 = RGBColor.Create(),
         Color2 = RGBColor.Create(),
@@ -333,11 +335,10 @@ function Tab:Render()
 
         local currentCustomDye = Dyes.GetCurrentCustomDye(item)
 
-        if currentCustomDye then
+        if currentCustomDye and not Dyes.lockColorSlider then
             currentSliderColor = currentCustomDye
+            Dyes.currentSliderColor = currentSliderColor
         end
-
-        Dyes.currentSliderColor = currentSliderColor
 
         Vanity.RenderText("Color1_Hint", "Custom Color (RGB)")
         -- RGB sliders
@@ -355,8 +356,9 @@ function Tab:Render()
             Vanity.RenderSlider("Dye_" .. i .. "_Blue", color.Blue, 0, 255, Dyes.DYE_PALETTE_BITS, "Blue", "Blue")
         end
 
-        Vanity.RenderButton("Dye_Apply", "Apply Dye")
-        Vanity.RenderButton("Dye_Save", "Save Dye")
+        Vanity.RenderButtonPair("Dye_Apply", "Apply Dye", true, "Dye_Save", "Save Dye", true)
+
+        Vanity.RenderCheckbox("Dye_DefaultToItemColor", Text.Format("Lock Color Sliders", {Color = "000000"}), Dyes.lockColorSlider, true)
 
         self:RenderCategories(categories)
     else
@@ -380,6 +382,12 @@ Tab:RegisterListener(Vanity.Events.ButtonPressed, function(id)
             Message = "Enter a name for this dye!",
             Buttons = {{Text = "Accept", Type = 1, ID = 0}},
         })
+    end
+end)
+
+Tab:RegisterListener(Vanity.Events.CheckboxPressed, function(id, state)
+    if id == "Dye_DefaultToItemColor" then
+        Dyes.lockColorSlider = state
     end
 end)
 

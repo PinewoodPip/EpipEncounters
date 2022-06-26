@@ -48,7 +48,17 @@ package arenaResult_fla
             mc.slider_mc.value = value;
         }
 
-        public function addButton(id:String, text:String, enabled:Boolean = true) : *
+        public function addDualButtons(id1:String, text1:String, enabled1:Boolean, id2:String, text2:String, enabled2:Boolean) : *
+        {
+            var buttonList:horizontalList = new horizontalList();
+
+            buttonList.addElement(this.createButton(id1, text1, enabled1), false);
+            buttonList.addElement(this.createButton(id2, text2, enabled2), true);
+
+            this.list.addElement(buttonList);
+        }
+
+        private function createButton(id:String, text:String, enabled:Boolean = true) : MovieClip
         {
             var button:smallBrownButton_27 = new smallBrownButton_27();
 
@@ -57,7 +67,12 @@ package arenaResult_fla
             // button.CENTER_IN_LIST = true;
             button.text_mc.text_txt.htmlText = text;
 
-            this.list.addElement(button, false);
+            return button;
+        }
+
+        public function addButton(id:String, text:String, enabled:Boolean = true) : *
+        {
+            this.list.addElement(this.createButton(id, text, enabled), false);
         }
 
         public function addCheckbox(id:String, text:String, active:Boolean, enabled:Boolean) : *

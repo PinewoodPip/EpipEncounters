@@ -68,7 +68,7 @@ package
         {
             if(this.enable)
             {
-                this.base.mainMenu_mc.setCursorPosition(this.id);
+                // this.base.mainMenu_mc.setCursorPosition(this.id);
                 if(this.tooltip != null && this.tooltip != "")
                 {
                 this.base.curTooltip = this.pos;

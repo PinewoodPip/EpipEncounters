@@ -405,6 +405,8 @@ local Vanity = {
         PastePressed = {},
         ---@type VanityUI_Event_InputChanged
         InputChanged = {},
+        ---@type VanityUI_Event_CheckboxPressed
+        CheckboxPressed = {},
     },
     Hooks = {
         ---@type VanityUI_Hook_GetEntryLabel
@@ -450,6 +452,10 @@ Vanity:Debug()
 ---@class VanityUI_Event_CopyPressed : Event
 ---@field RegisterListener fun(self, listener:fun(tab:CharacterSheetCustomTab, id:string, text:string))
 ---@field Fire fun(self, tab:CharacterSheetCustomTab, id:string, text:string)
+
+---@class VanityUI_Event_CheckboxPressed : Event
+---@field RegisterListener fun(self, listener:fun(tab:CharacterSheetCustomTab, id:string, state:boolean))
+---@field Fire fun(self, tab:CharacterSheetCustomTab, id:string, state:boolean)
 
 ---@class VanityUI_Event_PastePressed : Event
 ---@field RegisterListener fun(self, listener:fun(tab:CharacterSheetCustomTab, id:string))
@@ -703,17 +709,34 @@ function Vanity.GetMenu()
     return Vanity:GetRoot().menu_mc
 end
 
+local function setupButton(button)
+    button.CENTER_IN_LIST = true
+
+    button.heightOverride = 40
+end
+
+function Vanity.RenderButtonPair(id1, text1, enabled1, id2, text2, enabled2)
+    local menu = Vanity.GetMenu()
+    local list = menu.list.content_array
+
+    menu.addDualButtons(id1, text1, enabled1, id2, text2, enabled2)
+    
+    local buttonList = list[#list - 1]
+    buttonList.EL_SPACING = -2
+    buttonList.CENTER_IN_LIST = true
+    buttonList.scaleX = 0.9 -- TODO
+    buttonList.positionElements()
+end
+
 function Vanity.RenderButton(id, text, enabled)
     local menu = Vanity.GetMenu()
-    enabled = enabled or true
+    enabled = enabled or true -- TODO
 
     menu.addButton(id, text, enabled)
 
     local list = menu.list.content_array
     local button = list[#list-1]
-    button.CENTER_IN_LIST = true
-
-    button.heightOverride = 40
+    setupButton(button)
 end
 
 function Vanity.RenderSlider(id, value, min, max, step, label, tooltip)
@@ -1128,6 +1151,10 @@ end)
 
 Vanity:RegisterCallListener("copyPressed", function(ev, id, text)
     Vanity.Events.CopyPressed:Fire(Vanity.currentTab, id, text)
+end)
+
+Vanity:RegisterCallListener("checkBoxID", function(ev, id, state)
+    Vanity.Events.CheckboxPressed:Fire(Vanity.currentTab, id, state == 1)
 end)
 
 Vanity:RegisterCallListener("pastePressed", function(ev, id)
