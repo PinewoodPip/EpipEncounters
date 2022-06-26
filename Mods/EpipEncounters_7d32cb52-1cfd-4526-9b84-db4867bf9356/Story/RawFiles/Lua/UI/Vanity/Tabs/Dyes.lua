@@ -4,7 +4,9 @@ local Vanity = Client.UI.Vanity
 local Dyes = {
     Tab = nil,
     CustomDyes = {},
+    DyeHistory = {}, ---@type VanityDye[]
     lockColorSlider = false,
+    colorPasteIndex = nil,
 
     currentSliderColor = {
         Color1 = Color.Create(),
@@ -18,6 +20,7 @@ local Dyes = {
     DYE_PALETTE_BITS = 1,
     COLOR_NAMES = {"Primary", "Secondary", "Tertiary"},
     CACHE = {},
+    DYE_HISTORY_LIMIT = 10,
 
     Events = {
         ---@type VanityDyes_Event_DyeUsed
@@ -287,6 +290,14 @@ function Dyes.GetCurrentCustomDye(item, useSliders)
     return colorData
 end
 
+---Returns true if the colors of both dyes are the same.
+---@param dye1 VanityDye
+---@param dye2 VanityDye
+---@return boolean
+function Dyes.DyesAreEqual(dye1, dye2)
+    return dye1.Color1:Equals(dye2.Color1) and dye1.Color2:Equals(dye2.Color2) and dye1.Color3:Equals(dye2.Color3)
+end
+
 ---------------------------------------------
 -- TAB RENDERING
 ---------------------------------------------
@@ -301,7 +312,7 @@ function Tab:RenderCategories(categories)
             local dyes = category.Dyes
 
             for i,dye in ipairs(dyes) do
-                Vanity.RenderEntry(dye.ID, dye.Name or dye.ID, false, false, false, false, nil, dye.Type == "Custom", {
+                Vanity.RenderEntry(dye.ID, dye.Name or dye.ID, false, false, false, false, nil, category.ID == "CustomDyes", {
                     dye.Color1,
                     dye.Color2,
                     dye.Color3,
@@ -381,6 +392,7 @@ function Tab:Render()
         end
 
         Vanity.RenderButtonPair("Dye_Apply", "Apply Dye", true, "Dye_Save", "Save Dye", true)
+        Vanity.RenderButtonPair("Dye_Import", "Import Dye", true, "Dye_Export", "Export Dye", true)
 
         Vanity.RenderCheckbox("Dye_DefaultToItemColor", Text.Format("Lock Color Sliders", {Color = "000000"}), Dyes.lockColorSlider, true)
 
@@ -406,6 +418,28 @@ Tab:RegisterListener(Vanity.Events.ButtonPressed, function(id)
             Message = "Enter a name for this dye!",
             Buttons = {{Text = "Accept", Type = 1, ID = 0}},
         })
+    elseif id == "Dye_Export" then
+        local export = Text.Format("%s-%s-%s", {
+            FormatArgs = {
+                "#" .. Dyes.currentSliderColor.Color1:ToHex(),
+                "#" .. Dyes.currentSliderColor.Color2:ToHex(),
+                "#" .. Dyes.currentSliderColor.Color3:ToHex(),
+            }
+        })
+        
+        export = string.gsub(export, "<font>", "")
+        export = string.gsub(export, "</font>", "")
+
+        Client.UI.MessageBox.CopyToClipboard(export)
+
+        Client.Timer.Start("", 0.2, function()
+            Client.UI.MessageBox.ShowMessageBox({
+                Header = "Dye Exported",
+                Message = "Copied dye colors to clipboard."
+            })
+        end)
+    elseif id == "Dye_Import" then
+        Client.UI.MessageBox.RequestClipboardText("PIP_Vanity_Dyes_Import")
     end
 end)
 
@@ -433,10 +467,13 @@ end)
 Tab:RegisterListener(Vanity.Events.PastePressed, function(id)
     local colorIndex = string.gsub(id, "Color_Label_", "")
 
-    Client.UI.MessageBox:GetUI():ExternalInterfaceCall("pastePressed")
+    Dyes.colorPasteIndex = colorIndex
+    Client.UI.MessageBox.RequestClipboardText("PIP_DyePaste")
+end)
 
-    Client.Timer.Start("PIP_VanityPaste", 0.1, function()
-        local text = Client.UI.MessageBox:GetRoot().popup_mc.input_mc.input_txt.text
+Client.UI.MessageBox.Events.ClipboardTextRequestComplete:RegisterListener(function (id, text)
+    if id == "PIP_DyePaste" then
+        local colorIndex = Dyes.colorPasteIndex
         local color = Color.CreateFromHex(text)
 
         if color then
@@ -444,7 +481,26 @@ Tab:RegisterListener(Vanity.Events.PastePressed, function(id)
 
             Tab:SetSliderColor(colorIndex, color)
         end
-    end)
+
+        Dyes.colorPasteIndex = nil
+    elseif id == "PIP_Vanity_Dyes_Import" then
+        text = text:gsub("#", "")
+
+        -- Goddamnnit the UI restricts characters way too much, wanted to use commas instead
+        local values = Text.Split(text, "-")
+
+        if #values == 3 then
+            Dyes.currentSliderColor.Color1 = Color.CreateFromHex(values[1])
+            Dyes.currentSliderColor.Color2 = Color.CreateFromHex(values[2])
+            Dyes.currentSliderColor.Color3 = Color.CreateFromHex(values[3])
+
+            Tab:SetSliderColors(Dyes.currentSliderColor)
+        end
+    end
+end)
+
+Tab:RegisterListener(Vanity.Events.EntryClicked, function(id)
+    Dyes.UseDye(id)
 end)
 
 -- Listen for color codes being entered.
@@ -498,6 +554,24 @@ Ext.Events.SessionLoading:Subscribe(function()
         for id,dye in pairs(file) do
             Dyes.CreateDyeStats("Armor", dye)
             Dyes.CreateDyeStats("Weapon", dye)
+        end
+    end
+end)
+
+-- Keep a history of recently-used dyes. TODO finish
+Dyes.Events.DyeUsed:RegisterListener(function (dye, item, character)
+
+    if #Dyes.DyeHistory == 0 or not Dyes.DyesAreEqual(Dyes.DyeHistory[#Dyes.DyeHistory], dye) then
+        dye.Name = dye.Name or "Unnamed"
+
+        table.insert(Dyes.DyeHistory, dye)
+
+        if #Dyes.DyeHistory > Dyes.DYE_HISTORY_LIMIT then
+            table.remove(Dyes.DyeHistory, 1)
+        end
+
+        if Vanity.IsCategoryOpen("CustomDyes") or #Dyes.DyeHistory == 1 then
+            Vanity.Refresh()
         end
     end
 end)
@@ -611,6 +685,26 @@ Dyes.Hooks.GetCategories:RegisterHook(function (categories)
     return categories
 end)
 
+-- Dye history tab.
+-- Dyes.Hooks.GetCategories:RegisterHook(function (categories)
+--     if #Dyes.DyeHistory > 0 then
+--         ---@type VanityDyeCategory
+--         local category = {
+--             ID = "DyeHistory",
+--             Name = "Recent Dyes",
+--             Dyes = {},
+--         }
+
+--         for i=#Dyes.DyeHistory,1,-1 do
+--             table.insert(category.Dyes, Dyes.DyeHistory[i])
+--         end
+
+--         table.insert(categories, category)
+--     end
+
+--     return categories
+-- end)
+
 -- Registered categories of premade dyes.
 Dyes.Hooks.GetCategories:RegisterHook(function (categories)
     for i,categoryID in ipairs(Dyes.DYE_CATEGORY_ORDER) do
@@ -657,7 +751,3 @@ function Dyes:__Setup()
     end
 
 end
-
-Tab:RegisterListener(Vanity.Events.EntryClicked, function(id)
-    Dyes.UseDye(id)
-end)

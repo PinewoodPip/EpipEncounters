@@ -17,13 +17,21 @@ local MessageBox = {
         INPUT = 3,
     },
 
+    Events = {
+        ---@type MessageBoxUI_Event_ClipboardTextRequestComplete
+        ClipboardTextRequestComplete = {},
+    },
+    Hooks = {
+
+    },
+
     ---------------------------------------------
     -- Internal variables - do not set/read
     ---------------------------------------------
     currentCustomMessageBox = nil,
 }
-Client.UI.MessageBox = MessageBox
 Epip.InitializeUI(Client.UI.Data.UITypes.msgBox, "MessageBox", MessageBox)
+Client.UI.MessageBox = MessageBox
 
 ---@class MessageBoxButton
 ---@field ID number Used for events.
@@ -72,6 +80,10 @@ local MessageBoxData = {
 ---@field input string
 ---@field id number Button ID.
 ---@field data MessageBoxData
+
+---@class MessageBoxUI_Event_ClipboardTextRequestComplete : Event
+---@field RegisterListener fun(self, listener:fun(id:string, text:string))
+---@field Fire fun(self, id:string, text:string)
 
 ---------------------------------------------
 -- METHODS
@@ -130,6 +142,24 @@ end
 ---@param handler function
 function MessageBox:RegisterMessageListener(id, event, handler)
     Utilities.Hooks.RegisterListener(MessageBox.MODULE_ID, id .. "_" .. event, handler)
+end
+
+---@return string
+function MessageBox.GetCurrentInput() -- TODO consider currentInput var?
+    return MessageBox:GetRoot().popup_mc.input_mc.input_txt.text
+end
+
+---Requests the contents of the user's clipboard.
+---It will be returned via the ClipboardTextRequestComplete event, **asynchronously**.
+---@param requestID string
+function MessageBox.RequestClipboardText(requestID)
+    Client.UI.MessageBox:GetUI():ExternalInterfaceCall("pastePressed")
+
+    Client.Timer.Start("PIP_MessageBoxPaste", 0.1, function()
+        local text = MessageBox.GetCurrentInput()
+
+        MessageBox.Events.ClipboardTextRequestComplete:Fire(requestID, text)
+    end)
 end
 
 ---------------------------------------------

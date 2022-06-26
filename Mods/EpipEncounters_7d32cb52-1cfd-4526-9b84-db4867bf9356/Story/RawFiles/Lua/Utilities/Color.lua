@@ -80,6 +80,12 @@ function RGBColor.CreateFromHex(hex)
     return Color.Create(tonumber(string.sub(hex, 1, 2), 16), tonumber(string.sub(hex, 3, 4), 16), tonumber(string.sub(hex, 5, 6), 16))
 end
 
+---@param color RGBColor
+---@return boolean
+function RGBColor:Equals(color)
+    return self.Red == color.Red and self.Green == color.Green and self.Blue == color.Blue
+end
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
