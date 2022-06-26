@@ -354,10 +354,16 @@ Client.UI.Input.Events.KeyPressed:RegisterListener(function (key)
 end)
 
 -- Developer-only actions cannot be executed outside of developer mode.
+-- Actions cannot be executed in dialogue.
 Options.Hooks.CanExecuteAction:RegisterHook(function (execute, action, data)
     if data.DeveloperOnly and not Ext.IsDeveloperMode() then
         execute = false
     end
+
+    if execute then
+        execute = not Client.IsInDialogue()
+    end
+
     return execute
 end)
 

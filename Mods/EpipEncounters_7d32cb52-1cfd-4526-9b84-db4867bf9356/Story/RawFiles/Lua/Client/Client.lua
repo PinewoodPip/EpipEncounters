@@ -92,6 +92,12 @@ function Client.GetDate(utc)
     return Client.UI.Time.GetDate(utc)
 end
 
+---Returns true if the client character is currently in dialogue.
+---@return boolean
+function Client.IsInDialogue()
+    return Ext.UI.GetByPath("Public/Game/GUI/dialog.swf") ~= nil
+end
+
 ---Returns the currently-controlled character on the client.  
 ---Checks StatusConsole (or bottomBar for controllers), then CharacterCreation and Hotbar as a fallback.
 ---@return EclCharacter
