@@ -397,16 +397,15 @@ Client.UI.MessageBox:RegisterMessageListener("epip_Cheats_Items_SpawnTemplate", 
 end)
 
 -- Teleport to cursor.
-Ext.Events.InputEvent:Subscribe(function(ev)
-    local eventId = ev.Event.EventId
-    if eventId == 377 and Ext.IsDeveloperMode() then
+Client.UI.OptionsInput.Events.ActionExecuted:RegisterListener(function (action, binding)
+    if action == "EpipEncounters_DebugTeleport" or action == "EpipEncounters_DebugTeleport_Party" then
         local pos = Ext.GetPickingState().WalkablePosition
         
         if pos then
             Game.Net.PostToServer("EPIPENCOUNTERS_CHEATS_TeleportChar", {
                 NetID = Client.GetCharacter().NetID,
                 Position = pos,
-                TeleportParty = Client.Input.IsHoldingModifierKey(),
+                TeleportParty = action == "EpipEncounters_DebugTeleport_Party",
             })
         end
     end

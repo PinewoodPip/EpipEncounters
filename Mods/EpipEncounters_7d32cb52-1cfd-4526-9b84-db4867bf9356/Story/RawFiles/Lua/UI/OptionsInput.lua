@@ -48,6 +48,12 @@ local Options = {
         ---@type OptionsInput_Event_ActionExecuted
         ActionExecuted = {},
     },
+    Hooks = {
+        ---@type OptionsInput_Hook_ShouldRenderEntry
+        ShouldRenderEntry = {},
+        ---@type OptionsInput_Hook_CanExecuteAction
+        CanExecuteAction = {},
+    },
 }
 Epip.InitializeUI(13, "OptionsInput", Options)
 Client.UI.OptionsInput = Options
@@ -65,8 +71,9 @@ local _Tab = {Keybinds = {}, Name = "NO NAME"}
 ---@class OptionsInputKeybind
 ---@field Name string
 ---@field ID string
----@field DefaultInput1 string TODO
----@field DefaultInput2 string TODO
+---@field DefaultInput1 string?
+---@field DefaultInput2 string?
+---@field DeveloperOnly boolean? If true, the binding will not be visible in the UI outside of developer mode (and won't function either)
 
 ---@class OptionsInputSavedKeybind
 ---@field ID string
@@ -81,6 +88,14 @@ local _Tab = {Keybinds = {}, Name = "NO NAME"}
 ---@field RegisterListener fun(self, listener:fun(action:string, binding:string))
 ---@field Fire fun(self, action:string, binding:string)
 
+---@class OptionsInput_Hook_ShouldRenderEntry : Hook
+---@field RegisterHook fun(self, handler:fun(render:boolean, entry:OptionsInputKeybind))
+---@field Return fun(self, render:boolean, entry:OptionsInputKeybind)
+
+---@class OptionsInput_Hook_CanExecuteAction : Hook
+---@field RegisterHook fun(self, handler:fun(execute:boolean, action:string, data:OptionsInputKeybind))
+---@field Return fun(self, execute:boolean, action:string, data:OptionsInputKeybind)
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
@@ -93,6 +108,27 @@ function Options.SaveBindings()
     }
 
     Utilities.SaveJson(Options.SAVE_FILENAME, save)
+end
+
+---Returns whether a keybind should show up in the UI.
+---@param entry OptionsInputKeybind
+---@return boolean
+function Options.ShouldRenderEntry(entry)
+    return Options.Hooks.ShouldRenderEntry:Return(true, entry)
+end
+
+---Returns whether an action can be currently executed.
+---@param actionID string
+---@return boolean
+function Options.CanExecuteAction(actionID)
+    local data = Options.GetActionData(actionID)
+    local canExecute = false
+
+    if data then
+        canExecute = Options.Hooks.CanExecuteAction:Return(true, actionID, data)
+    end
+
+    return canExecute
 end
 
 ---Loads the user's bindings from the disk.
@@ -294,6 +330,13 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
+Options.Hooks.ShouldRenderEntry:RegisterHook(function (render, entry)
+    if entry.DeveloperOnly and not Ext.IsDeveloperMode() then
+        render = false
+    end
+    return render
+end)
+
 Client.UI.Input.Events.KeyPressed:RegisterListener(function (key)
     key = PreppendModifiers(key)
     key = string.upper(key)
@@ -301,9 +344,21 @@ Client.UI.Input.Events.KeyPressed:RegisterListener(function (key)
     local actions = Options.INPUT_MAP[key]
     if actions and not Utilities.isPaused then
         for i,actionID in ipairs(actions) do
-            Options.Events.ActionExecuted:Fire(actionID, key)
+            local data = Options.GetActionData(actionID)
+
+            if Options.CanExecuteAction(actionID) then
+                Options.Events.ActionExecuted:Fire(actionID, key)
+            end
         end
     end
+end)
+
+-- Developer-only actions cannot be executed outside of developer mode.
+Options.Hooks.CanExecuteAction:RegisterHook(function (execute, action, data)
+    if data.DeveloperOnly and not Ext.IsDeveloperMode() then
+        execute = false
+    end
+    return execute
 end)
 
 -- Save data when the game is paused.
@@ -448,7 +503,10 @@ Options:RegisterInvokeListener("initDone", function(ev)
 
             -- Render keybinds
             for z,keybind in ipairs(tab.Keybinds) do
-                Options.AddEntry(tabID, keybind)
+
+                if Options.ShouldRenderEntry(keybind) then
+                    Options.AddEntry(tabID, keybind)
+                end
             end
         end)
 
