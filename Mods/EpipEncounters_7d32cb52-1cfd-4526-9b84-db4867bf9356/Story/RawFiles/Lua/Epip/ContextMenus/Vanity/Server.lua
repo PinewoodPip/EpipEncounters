@@ -2,12 +2,6 @@
 local Vanity = Epip.Features.Vanity
 Vanity:Debug()
 
-function Vanity.ApplyOutfit(char, outfit)
-    for slot,template in pairs(outfit.Templates) do
-        Vanity.TransmogItem(char, Ext.GetItem(Osi.CharacterGetEquippedItem(char.MyGuid, slot)), template)
-    end
-end
-
 function Vanity.RevertAppearace(char, item)
     local _,originalTemplate = Osiris.DB_PIP_Vanity_OriginalTemplate:Get(item.MyGuid, nil)
 
@@ -242,11 +236,6 @@ Game.Net.RegisterListener("EPIPENCOUNTERS_Vanity_RevertTemplate", function(cmd, 
     local item = Ext.GetItem(payload.ItemNetID)
 
     Vanity.RevertAppearace(char, item)
-end)
-
--- Outfit equip request.
-Game.Net.RegisterListener("EPIPENCOUNTERS_Vanity_ApplyOutfit", function(cmd, payload)
-    Vanity.ApplyOutfit(Ext.GetCharacter(payload.NetID), payload.Outfit)
 end)
 
 -- Toggling persistent outfit feature.

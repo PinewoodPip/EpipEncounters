@@ -58,14 +58,19 @@ end
 ---@param char? EclCharacter
 ---@param outfitID string
 function Outfits.ApplyOutfit(char, outfitID)
+    ---@type VanityOutfit
     local outfit = Outfits.SavedOutfits[outfitID]
     char = char or Client.GetCharacter()
 
     if outfit then
-        Game.Net.PostToServer("EPIPENCOUNTERS_Vanity_ApplyOutfit", {
-            NetID = char.NetID,
-            Outfit = outfit,
-        })
+        for slot,template in pairs(outfit.Templates) do
+            local item = char:GetItemBySlot(slot)
+
+            if item then
+                item = Ext.GetItem(item)
+                Epip.Features.VanityTransmog.TransmogItem(item, template)
+            end
+        end
         Outfits.Events.OutfitApplied:Fire(outfit, char)
     else
         Vanity:LogError("Outfit does not exist: " .. outfitID)
