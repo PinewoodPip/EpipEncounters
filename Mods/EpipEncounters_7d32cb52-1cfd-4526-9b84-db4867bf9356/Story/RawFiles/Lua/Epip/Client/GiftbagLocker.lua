@@ -43,7 +43,7 @@ GBUI:RegisterCallListener("buttonPressed", function(ev)
             ev:PreventAction()
         elseif isUnwanted and not GBL.warnedGiftbags[id] then
             GBL.warnedGiftbags[id] = true
-            Client.UI.MessageBox.ShowMessageBox({
+            Client.UI.MessageBox.Open({
                 Header = "EPIC ENCOUNTERS WARNING",
                 Message = "This giftbag has been marked as unnecessary or potentially undesirable and may negatively affect the EE experience. See the Discord FAQ channel for more information."
             })

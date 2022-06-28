@@ -323,7 +323,7 @@ Client.UI.ContextMenu.RegisterMenuHandler("combatLog", function()
     local filters = {}
 
     if not Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "CombatLogImprovements") then
-        Client.UI.MessageBox.ShowMessageBox({
+        Client.UI.MessageBox.Open({
             ID = "CombatLog_Disabled",
             Header = "Feature Not Enabled",
             Message = "You must enable 'Combat Log Improvements' in the options menu and reload the savefile to use custom filters.",

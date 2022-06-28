@@ -161,7 +161,7 @@ end
 function Transmog.TransmogItem(item, template)
     item = item or Vanity.GetCurrentItem()
 
-    if Transmog.CanTransmogItem(item) then
+    if Transmog.CanTransmogItem(item) and not Transmog.BLOCKED_TEMPLATES[template] then
         Game.Net.PostToServer("EPIPENCOUNTERS_VanityTransmog", {
             Char = Client.GetCharacter().NetID,
             Item = item.NetID,

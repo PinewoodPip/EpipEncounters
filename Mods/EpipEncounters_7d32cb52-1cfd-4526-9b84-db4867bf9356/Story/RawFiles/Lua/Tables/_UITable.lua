@@ -6,7 +6,8 @@
 ---@meta Library: BaseUI, ContextClient
 
 ---@class UI : Feature
----@field UITypeID integer
+---@field UITypeID integer?
+---@field PATH string?
 ---@field INPUT_DEVICE InputDevice
 ---@field UI_FLAGS table<string, string> Flags for UIObject.
 
@@ -17,6 +18,7 @@ Client.UI._BaseUITable = {
     Root = nil, -- Deprecated
 
     UITypeID = nil,
+    PATH = nil,
     INPUT_DEVICE = "Any",
     UI_FLAGS = {
         LOAD = "OF_Load",
@@ -55,7 +57,9 @@ setmetatable(BaseUI, {__index = _Feature})
 ---and therefore do not always exist.
 ---@return UIObject?
 function BaseUI:GetUI()
-    if self.UITypeID then
+    if self.PATH then
+        return Ext.UI.GetByPath(self.PATH)
+    elseif self.UITypeID then
         return Ext.UI.GetByType(self.UITypeID)
     elseif self.ID then
         return Ext.UI.GetByName(self.ID)

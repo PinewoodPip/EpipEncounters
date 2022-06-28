@@ -62,7 +62,7 @@ end)
 -- ...and it's "functionality"
 Client.UI.OptionsSettings:RegisterListener("ButtonClicked", function(element)
     if element.ID == "AprilFoolsLicenseRegistration" then
-        Client.UI.MessageBox.ShowMessageBox({
+        Client.UI.MessageBox.Open({
             ID = "AprilFoolsLicenseRegistration",
             Header = "",
             Message = "TPW_PIP_GEN_NET_Character_CharacterGetCharacterNetIDForCharacterPlayerCharacter() failed to return, please let Piperanth know about this (your game should be fine)",

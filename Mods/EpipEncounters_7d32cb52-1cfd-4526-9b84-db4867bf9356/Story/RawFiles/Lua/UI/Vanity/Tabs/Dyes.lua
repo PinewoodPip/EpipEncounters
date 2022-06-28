@@ -446,7 +446,7 @@ Tab:RegisterListener(Vanity.Events.ButtonPressed, function(id)
     if id == "Dye_Apply" then
         Dyes.ApplyGenericDyeFromSliders()
     elseif id == "Dye_Save" then
-        Client.UI.MessageBox.ShowMessageBox({
+        Client.UI.MessageBox.Open({
             ID = "PIP_Vanity_SaveDye",
             Header = "Save Dye",
             Type = "Input",
@@ -468,7 +468,7 @@ Tab:RegisterListener(Vanity.Events.ButtonPressed, function(id)
         Client.UI.MessageBox.CopyToClipboard(export)
 
         Client.Timer.Start("", 0.2, function()
-            Client.UI.MessageBox.ShowMessageBox({
+            Client.UI.MessageBox.Open({
                 Header = "Dye Exported",
                 Message = "Copied dye colors to clipboard."
             })
@@ -555,7 +555,7 @@ end)
 
 -- Listen for dyes being removed.
 Tab:RegisterListener(Vanity.Events.EntryRemoved, function(id)
-    Client.UI.MessageBox.ShowMessageBox({
+    Client.UI.MessageBox.Open({
         ID = "PIP_Vanity_RemoveDye",
         Header = "Remove Dye",
         Message = Text.Format("Are you sure you want to remove this dye (%s)?", {
@@ -569,7 +569,7 @@ Tab:RegisterListener(Vanity.Events.EntryRemoved, function(id)
     })
 end)
 
-Client.UI.MessageBox:RegisterMessageListener("PIP_Vanity_RemoveDye", "ButtonClicked", function(buttonID, data)
+Client.UI.MessageBox.RegisterMessageListener("PIP_Vanity_RemoveDye", Client.UI.MessageBox.Events.ButtonPressed, function(buttonID, data)
     if buttonID == 0 then
         Dyes.DeleteCustomDye(data.DyeID)
     end
@@ -675,7 +675,7 @@ Vanity.Events.SaveDataLoaded:RegisterListener(function (data)
     end
 end)
 
-Client.UI.MessageBox:RegisterMessageListener("PIP_Vanity_SaveDye", "InputSubmitted", function(input, id, data)
+Client.UI.MessageBox.RegisterMessageListener("PIP_Vanity_SaveDye", Client.UI.MessageBox.Events.InputSubmitted, function(input, id, data)
     Dyes.SaveCustomDye(input, Dyes.GetCurrentCustomDye())
 end)
 

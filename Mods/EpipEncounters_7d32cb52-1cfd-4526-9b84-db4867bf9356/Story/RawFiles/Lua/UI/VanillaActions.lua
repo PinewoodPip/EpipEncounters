@@ -366,7 +366,7 @@ Hotbar:RegisterListener("SlotDraggedToHotkeyButton", function(index, data)
         boundItems[index] = Ext.GetItem(data.ItemHandle).RootTemplate.Id
         Hotbar.SetHotkeyAction(index, "UseArbitraryTemplate")
     else
-        Client.UI.MessageBox.ShowMessageBox({
+        Client.UI.MessageBox.Open({
             ID = "Hotbar_ArbitraryButtonError",
             Header = "Error",
             Message = "Only skills and items can be dragged to these buttons at the moment.",

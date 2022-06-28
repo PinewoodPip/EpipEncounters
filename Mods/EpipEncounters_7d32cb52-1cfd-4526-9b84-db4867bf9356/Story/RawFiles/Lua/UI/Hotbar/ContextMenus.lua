@@ -113,7 +113,7 @@ Client.UI.ContextMenu.RegisterElementListener("hotBarLoadLoadout", "buttonPresse
     if Hotbar.IsRowEmpty(Hotbar.currentLoadoutRow) then
         Hotbar.ApplyLoadout(char, params.ID, Hotbar.currentLoadoutRow)
     else
-        Client.UI.MessageBox.ShowMessageBox({
+        Client.UI.MessageBox.Open({
             ID = "epip_Hotbar_LoadLoadout",
             Header = "Apply Loadout",
             Message = "Are you sure? This will replace all of this row's spells/items!",
@@ -127,8 +127,8 @@ Client.UI.ContextMenu.RegisterElementListener("hotBarLoadLoadout", "buttonPresse
     end
 end)
 
-Client.UI.MessageBox:RegisterMessageListener("epip_Hotbar_LoadLoadout", "ButtonClicked", function(buttonId, data)
-    if buttonId == 1 then
+Client.UI.MessageBox.RegisterMessageListener("epip_Hotbar_LoadLoadout", Client.UI.MessageBox.Events.ButtonPressed, function(buttonId, data)
+    if buttonId == 0 then
         Hotbar.ApplyLoadout(Client.GetCharacter(), data.LoadoutID,Hotbar.currentLoadoutRow, true)
     end
     Hotbar.currentLoadoutRow = nil
@@ -136,7 +136,7 @@ end)
 
 -- Save loadout.
 Client.UI.ContextMenu.RegisterElementListener("hotBarRow_SaveLoadout", "buttonPressed", function()
-    Client.UI.MessageBox.ShowMessageBox({
+    Client.UI.MessageBox.Open({
         ID = "epip_Hotbar_SaveLoadout",
         Header = "Save Loadout",
         Message = "Name this row loadout!",
@@ -148,7 +148,7 @@ Client.UI.ContextMenu.RegisterElementListener("hotBarRow_SaveLoadout", "buttonPr
     })
 end)
 
-Client.UI.MessageBox:RegisterMessageListener("epip_Hotbar_SaveLoadout", "InputSubmitted", function(text, buttonId, data)
+Client.UI.MessageBox.RegisterMessageListener("epip_Hotbar_SaveLoadout", Client.UI.MessageBox.Events.ButtonPressed, function(text, buttonId, data)
     local saveAllRows = buttonId == 2
 
     Hotbar.SaveLoadout(Hotbar.currentLoadoutRow, text, saveAllRows)

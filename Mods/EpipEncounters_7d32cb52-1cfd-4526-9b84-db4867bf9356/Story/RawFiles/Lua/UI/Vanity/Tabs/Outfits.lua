@@ -148,7 +148,7 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
-Client.UI.MessageBox:RegisterMessageListener("epip_Vanity_Outfit_Save", "InputSubmitted", function(text, buttonId, data)
+Client.UI.MessageBox.RegisterMessageListener("epip_Vanity_Outfit_Save", Client.UI.MessageBox.Events.InputSubmitted, function(text, buttonId, data)
     local slots = {
         Helmet = true,
         Breast = true,
@@ -172,7 +172,7 @@ end)
 
 Tab:RegisterListener(Vanity.Events.ButtonPressed, function(id)
     if id == "SaveOutfit" then
-        Client.UI.MessageBox.ShowMessageBox({
+        Client.UI.MessageBox.Open({
             ID = "epip_Vanity_Outfit_Save",
             Header = "Save Outfit",
             Message = "Name your outfit!",
@@ -198,7 +198,7 @@ Vanity.Events.SaveDataLoaded:RegisterListener(function (data)
 end)
 
 Tab:RegisterListener(Vanity.Events.EntryRemoved, function(id)
-    Client.UI.MessageBox.ShowMessageBox({
+    Client.UI.MessageBox.Open({
         ID = "PIP_Vanity_RemoveOutfit",
         Header = "Remove Outfit",
         Message = Text.Format("Are you sure you want to remove this outfit (%s)?", {
@@ -212,7 +212,7 @@ Tab:RegisterListener(Vanity.Events.EntryRemoved, function(id)
     })
 end)
 
-Client.UI.MessageBox:RegisterMessageListener("PIP_Vanity_RemoveOutfit", "ButtonClicked", function(buttonID, data)
+Client.UI.MessageBox.RegisterMessageListener("PIP_Vanity_RemoveOutfit", Client.UI.MessageBox.Events.ButtonPressed, function(buttonID, data)
     if buttonID == 0 then
         Outfits.DeleteOutfit(data.OutfitID)
     end

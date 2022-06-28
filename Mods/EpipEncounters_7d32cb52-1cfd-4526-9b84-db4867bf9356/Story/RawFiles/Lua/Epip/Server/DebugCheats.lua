@@ -103,7 +103,9 @@ Game.Net.RegisterListener("EPIP_CHEATS_TELEPORTTO", function(cmd, payload)
         target = Ext.GetTrigger(payload.TargetGUID)
     end
 
-    Osi.PROC_AMER_TeleportTo(char.MyGuid, target.MyGuid)
+    if target then
+        Osi.PROC_AMER_TeleportTo(char.MyGuid, target.MyGuid)
+    end
 end)
 
 -- Grant treasure.

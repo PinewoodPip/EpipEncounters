@@ -30,6 +30,7 @@ Epip.Features.DebugCheats = {
 Debug.CheatsContextMenu = {id = "playerInfo_Cheats", type = "subMenu", text = "Debugging Cheats...", subMenu = "epip_Cheats"}
 
 local ContextMenu = Client.UI.ContextMenu
+local MessageBox = Client.UI.MessageBox
 
 local FLEXSTAT_CHEATS = {}
 
@@ -253,7 +254,7 @@ end)
 
 -- Add tag.
 ContextMenu.RegisterElementListener("epip_Cheats_AddTag", "buttonPressed", function(character, params)
-    Client.UI.MessageBox.ShowMessageBox({
+    MessageBox.Open({
         ID = "epip_Cheats_AddTag",
         NetID = character.NetID,
         Header = "Add Tag",
@@ -265,13 +266,13 @@ ContextMenu.RegisterElementListener("epip_Cheats_AddTag", "buttonPressed", funct
     })
 end)
 
-Client.UI.MessageBox:RegisterMessageListener("epip_Cheats_AddTag", "InputSubmitted", function(text, id, data)
+MessageBox.RegisterMessageListener("epip_Cheats_AddTag", MessageBox.Events.InputSubmitted, function(text, id, data)
     Game.Net.PostToServer("EPIP_CHEATS_ADDTAG", {NetID = data.NetID, Tag = text})
 end)
 
 -- Clear tag.
 ContextMenu.RegisterElementListener("epip_Cheats_RemoveTag", "buttonPressed", function(character, params)
-    Client.UI.MessageBox.ShowMessageBox({
+    MessageBox.Open({
         ID = "epip_Cheats_RemoveTag",
         NetID = character.NetID,
         Header = "Remove Tag",
@@ -283,13 +284,13 @@ ContextMenu.RegisterElementListener("epip_Cheats_RemoveTag", "buttonPressed", fu
     })
 end)
 
-Client.UI.MessageBox:RegisterMessageListener("epip_Cheats_RemoveTag", "InputSubmitted", function(text, id, data)
+MessageBox.RegisterMessageListener("epip_Cheats_RemoveTag", MessageBox.Events.InputSubmitted, function(text, id, data)
     Game.Net.PostToServer("EPIP_CHEATS_REMOVETAG", {NetID = data.NetID, Tag = text})
 end)
 
 -- Flexstat spell.
 ContextMenu.RegisterElementListener("epip_Cheats_Stats_FlexStats_Spell", "buttonPressed", function(character, params)
-    Client.UI.MessageBox.ShowMessageBox({
+    MessageBox.Open({
         ID = "epip_Cheats_FlexStats_Spell",
         NetID = character.NetID,
         Header = "Add Spell",
@@ -301,13 +302,13 @@ ContextMenu.RegisterElementListener("epip_Cheats_Stats_FlexStats_Spell", "button
     })
 end)
 
-Client.UI.MessageBox:RegisterMessageListener("epip_Cheats_FlexStats_Spell", "InputSubmitted", function(text, id, data)
+MessageBox.RegisterMessageListener("epip_Cheats_FlexStats_Spell", MessageBox.Events.InputSubmitted, function(text, id, data)
     Game.Net.PostToServer("EPIP_CHEATS_SPELL", {NetID = data.NetID, StatsID = text})
 end)
 
 -- Teleport to object.
 ContextMenu.RegisterElementListener("epip_Cheats_Teleport", "buttonPressed", function(character, params)
-    Client.UI.MessageBox.ShowMessageBox({
+    MessageBox.Open({
         ID = "epip_Cheats_Teleport",
         NetID = character.NetID,
         Header = "Teleport to",
@@ -319,7 +320,7 @@ ContextMenu.RegisterElementListener("epip_Cheats_Teleport", "buttonPressed", fun
     })
 end)
 
-Client.UI.MessageBox:RegisterMessageListener("epip_Cheats_Teleport", "InputSubmitted", function(text, id, data)
+MessageBox.RegisterMessageListener("epip_Cheats_Teleport", MessageBox.Events.InputSubmitted, function(text, id, data)
     Game.Net.PostToServer("EPIP_CHEATS_TELEPORTTO", {NetID = data.NetID, TargetGUID = text})
 end)
 
@@ -327,7 +328,7 @@ end)
 ContextMenu.RegisterElementListener("epip_Cheats_Items_SpawnTreasure", "buttonPressed", function(character, params)
     templateAmount = params._statAmount
 
-    Client.UI.MessageBox.ShowMessageBox({
+    MessageBox.Open({
         ID = "epip_Cheats_Items_SpawnTreasure",
         NetID = character.NetID,
         Header = string.format("Grant Treasure (%sx)", RemoveTrailingZeros(templateAmount)),
@@ -339,7 +340,7 @@ ContextMenu.RegisterElementListener("epip_Cheats_Items_SpawnTreasure", "buttonPr
     })
 end)
 
-Client.UI.MessageBox:RegisterMessageListener("epip_Cheats_Items_SpawnTreasure", "InputSubmitted", function(text, id, data)
+MessageBox.RegisterMessageListener("epip_Cheats_Items_SpawnTreasure", MessageBox.Events.InputSubmitted, function(text, id, data)
     Game.Net.PostToServer("EPIP_CHEATS_GRANTTREASURE", {NetID = data.NetID, Treasure = text, Amount = templateAmount})
 end)
 
@@ -352,7 +353,7 @@ end)
 
 -- Add SpecialLogic.
 ContextMenu.RegisterElementListener("epip_Cheats_SpecialLogic", "buttonPressed", function(character, params)
-    Client.UI.MessageBox.ShowMessageBox({
+    MessageBox.Open({
         ID = "epip_Cheats_SpecialLogic",
         NetID = character.NetID,
         Header = "Add SpecialLogic",
@@ -365,10 +366,10 @@ ContextMenu.RegisterElementListener("epip_Cheats_SpecialLogic", "buttonPressed",
     })
 end)
 
-Client.UI.MessageBox:RegisterMessageListener("epip_Cheats_SpecialLogic", "InputSubmitted", function(text, buttonId, data)
+MessageBox.RegisterMessageListener("epip_Cheats_SpecialLogic", MessageBox.Events.InputSubmitted, function(text, buttonId, data)
     local amount = 1.0
 
-    if buttonId == 2 then -- TODO check if works
+    if buttonId == 1 then -- TODO check if works
         amount = -1.0
     end
 
@@ -380,7 +381,7 @@ local templateAmount = 1
 ContextMenu.RegisterElementListener("epip_Cheats_Items_SpawnTemplate", "buttonPressed", function(character, params)
     templateAmount = params._statAmount
 
-    Client.UI.MessageBox.ShowMessageBox({
+    MessageBox.Open({
         ID = "epip_Cheats_Items_SpawnTemplate",
         NetID = character.NetID,
         Header = string.format("Add Item Template (%sx)", RemoveTrailingZeros(params._statAmount)),
@@ -392,7 +393,7 @@ ContextMenu.RegisterElementListener("epip_Cheats_Items_SpawnTemplate", "buttonPr
     })
 end)
 
-Client.UI.MessageBox:RegisterMessageListener("epip_Cheats_Items_SpawnTemplate", "InputSubmitted", function(text, id, data)
+MessageBox.RegisterMessageListener("epip_Cheats_Items_SpawnTemplate", MessageBox.Events.InputSubmitted, function(text, id, data)
     Game.Net.PostToServer("EPIP_CHEATS_ITEMTEMPLATE", {NetID = data.NetID, TemplateGUID = text, Amount = templateAmount})
 end)
 

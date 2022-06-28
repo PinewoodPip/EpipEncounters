@@ -23,7 +23,6 @@
 ---------------------------------------------
 
 ---@alias InputDevice "Any" | "Controller" | "KeyboardMouse"
----@alias MessageBoxType "Message" | "Input"
 
 ---------------------------------------------
 -- GAME.TOOLTIP
