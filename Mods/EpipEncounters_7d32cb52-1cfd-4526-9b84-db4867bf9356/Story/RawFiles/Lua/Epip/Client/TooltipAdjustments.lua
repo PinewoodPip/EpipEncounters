@@ -123,6 +123,9 @@ function TooltipAdjustments.ChangeArtifactRarityDisplay(item, tooltip, a, b)
             isArtifact = true
         elseif v == "AMER_UNI_RUNE" then
             isArtifactRune = true
+        elseif v == "PIP_FAKE_ARTIFACT" then -- Normal items transmogged into artifacts. 
+            isArtifact = false
+            break
         end
     end
 

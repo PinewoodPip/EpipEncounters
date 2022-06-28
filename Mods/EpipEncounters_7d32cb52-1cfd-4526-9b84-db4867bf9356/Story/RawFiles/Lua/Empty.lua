@@ -1,0 +1,1 @@
+-- This script is/will be used to yeet other people's scripts with a path override if needed.

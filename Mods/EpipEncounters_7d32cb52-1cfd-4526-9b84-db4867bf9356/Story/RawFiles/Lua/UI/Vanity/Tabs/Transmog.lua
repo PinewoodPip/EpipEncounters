@@ -127,7 +127,6 @@ end
 function Transmog.ReapplyAppearance(item)
     local slot = Game.Items.GetItemSlot(item)
     local newTemplate = Transmog.activeCharacterTemplates[slot]
-    _D(Transmog.activeCharacterTemplates)
     if not newTemplate then return nil end
 
     Transmog.TransmogItem(item, newTemplate)

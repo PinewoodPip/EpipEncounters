@@ -329,8 +329,8 @@ function Dyes.UpdateActiveCharacterDyes()
         end
     end
 
-    Dyes:DebugLog("Active character's dyes:")
-    Dyes:Dump(Dyes.activeCharacterDyes)
+    -- Dyes:DebugLog("Active character's dyes:")
+    -- Dyes:Dump(Dyes.activeCharacterDyes)
 end
 
 ---------------------------------------------

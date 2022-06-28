@@ -4,7 +4,7 @@ Epip = {
     _FeatureRegistrationOrder = {},
 
     PREFIXED_GUID = "EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356",
-    VERSION = 1050, -- Also the story version.
+    VERSION = 1051, -- Also the story version.
     IS_IMPROVED_HOTBAR = false,
     cachedAprilFoolsState = nil,
 

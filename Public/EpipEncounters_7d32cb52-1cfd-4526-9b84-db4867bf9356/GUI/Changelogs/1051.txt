@@ -1,0 +1,10 @@
+
+- Added Ctrl+C/V support to the dye tab text fields
+- Fixed Epic Enemies tooltip (thanks Pancarte)
+- Fixed outfits ignoring transmog restrictions
+- Fixed vanity dye slider text values sometimes not moving around
+- Fixed items transmogged into artifacts gaining the special tooltip color (this will require an EE Core update to fully work)
+
+On the technical side of things:
+
+- Cleaned up `MessageBox`

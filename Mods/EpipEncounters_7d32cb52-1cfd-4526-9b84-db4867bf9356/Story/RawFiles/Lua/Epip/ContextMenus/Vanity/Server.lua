@@ -30,7 +30,13 @@ function Vanity.TransmogItem(char, item, newTemplate, dye)
     end
 
     Vanity:Log("Transforming item " .. item.DisplayName .. " to " .. newTemplate)
+
     local template = Ext.Template.GetTemplate(newTemplate)
+    local _, _, _, artifactName = Osiris.DB_AMER_Artifacts:Get(template.Name .. "_" .. template.Id, nil, nil, nil)
+    local oldTemplate = item.RootTemplate
+    if originalTemplate then oldTemplate = Ext.Template.GetTemplate(originalTemplate) end
+
+    local _, _, _, oldArtifactName = Osiris.DB_AMER_Artifacts:Get(oldTemplate.Name .. "_" .. oldTemplate.Id, nil, nil, nil)
 
     Osi.PROC_AMER_GEN_ObjectTransforming(item.RootTemplate.Name .. "_" .. item.MyGuid, template.Name .. "_" .. template.Id)
     Osi.Transform(item.MyGuid, newTemplate, 0, 1, 0)
@@ -41,6 +47,12 @@ function Vanity.TransmogItem(char, item, newTemplate, dye)
     -- Apply new dye if specified.
     if dye then
         Game.Items.ApplyDye(item, dye)
+    end
+
+    -- Remove tag when going from normal item to artifact (not if going from artifact to artifact)
+    if artifactName and not oldArtifactName then
+        -- Osi.ClearTag(item.MyGuid, "AMER_UNI") -- Does not work.
+        Osi.SetTag(item.MyGuid, "PIP_FAKE_ARTIFACT")
     end
     
     -- TODO add this check to the proc instead
