@@ -296,5 +296,3 @@ MessageBox:RegisterCallListener("ButtonPressed", function(ev, id, device)
         end
     end
 end)
-
--- Ext.UI.Create("PIP_MsgBox", MessageBox.PATH, 2000)

@@ -36,10 +36,15 @@ package
         
         public function onChange(param1:Event) : *
         {
-            var _loc2_:* = this.slider_mc.value;
-            this.amount_txt.htmlText = String(this.roundFloat(_loc2_));
+            this.refresh();
             ExternalInterface.call("menuSliderID",this.id,this.slider_mc.value);
             ExternalInterface.call("sliderHandleUp",this.id,this.slider_mc.value);
+        }
+
+        public function refresh() : *
+        {
+            var _loc2_:* = this.slider_mc.value;
+            this.amount_txt.htmlText = String(this.roundFloat(_loc2_));
             this.resetAmountPos();
         }
         
@@ -93,7 +98,7 @@ package
         function frame1() : *
         {
             this.slider_mc.addEventListener(Event.CHANGE,this.onChange);
-            this.slider_mc.addEventListener("handleReleased",this.onhandleUp);
+            // this.slider_mc.addEventListener("handleReleased",this.onhandleUp);
             this.mHeight = 30;
             this.base = root as MovieClip;
             addEventListener(MouseEvent.MOUSE_OVER,this.onMouseOver);

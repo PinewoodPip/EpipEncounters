@@ -779,9 +779,10 @@ function Vanity.RenderLabelledColor(id, color, label, showInputField)
     input.input_txt.restrict = "a-fA-F0-9#"
 end
 
-function Vanity.SetColorLabel(id, color, label, input)
+function Vanity.SetColorLabel(id, color, label, input, forceUpdate)
     local menu = Vanity.GetMenu()
-    menu.setColorLabel(id, color, label, input)
+
+    menu.setColorLabel(id, color, label, input, forceUpdate)
 end
 
 function Vanity.RenderDropdown(id, options, selectedIndex)
@@ -1081,6 +1082,22 @@ end
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
+
+Vanity:RegisterCallListener("copyFromElement", function(ev, id)
+    local element = ev.UI:GetRoot().focusedElement
+
+    Vanity:DebugLog("Copying text", element.input_txt.htmlText, "from", id)
+
+    Vanity.Events.CopyPressed:Fire(Vanity.currentTab, id, element.input_txt.htmlText)
+end)
+
+Vanity:RegisterCallListener("pasteIntoElement", function(ev, id)
+    local element = ev.UI:GetRoot().focusedElement
+
+    Vanity:DebugLog("Pasting into ", id)
+
+    Vanity.Events.PastePressed:Fire(Vanity.currentTab, id)
+end)
 
 Vanity:RegisterCallListener("pipMinusPressed", function(ev, id)
     Vanity.Events.EntryRemoved:Fire(Vanity.currentTab, id)

@@ -270,7 +270,7 @@ package LS_Classes
             this.m_scrolledX = (this.m_value - this.m_min) / (this.m_max - this.m_min) * this.m_scrollerDiff;
             this.m_handle_mc.x = this.m_scrolledX + (this.m_left_mc.x + this.m_left_mc.width);
 
-            dispatchEvent(new Event(Event.CHANGE));
+            // dispatchEvent(new Event(Event.CHANGE));
         }
         
         public function get liveDragging() : Boolean

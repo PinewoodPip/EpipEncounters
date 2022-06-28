@@ -4,6 +4,7 @@ package
     import flash.events.Event;
     import flash.events.FocusEvent;
     import flash.events.KeyboardEvent;
+    import flash.events.MouseEvent;
     import flash.external.ExternalInterface;
     import flash.text.TextField;
     
@@ -38,13 +39,17 @@ package
         
         public function onFocus(param1:FocusEvent) : *
         {
-            this.input_txt.addEventListener(KeyboardEvent.KEY_DOWN,this.inputHandler);
+            var base:MovieClip = root as MovieClip;
+
+            this.input_txt.addEventListener(KeyboardEvent.KEY_DOWN, this.inputHandler);
             ExternalInterface.call("inputFocus");
+
+            base.focusedElement = this;
         }
         
         public function onFocusLost(param1:FocusEvent) : *
         {
-            this.input_txt.removeEventListener(KeyboardEvent.KEY_DOWN,this.inputHandler);
+            this.input_txt.removeEventListener(KeyboardEvent.KEY_DOWN, this.inputHandler);
             ExternalInterface.call("inputFocusLost");
         }
         
@@ -66,7 +71,14 @@ package
 
         public function setText(text:String) : *
         {
+            var index:Number = this.input_txt.caretIndex;
+
             this.input_txt.htmlText = text;
+
+            if (stage.focus == this.input_txt)
+            {
+                this.input_txt.setSelection(index, 0);
+            }
         }
 
         private function onCopyPressed() : *

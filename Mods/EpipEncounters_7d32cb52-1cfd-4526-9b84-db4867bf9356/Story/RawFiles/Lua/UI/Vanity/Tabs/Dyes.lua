@@ -370,20 +370,20 @@ function Tab:SetSliderColors(dye)
         local color = "Color" .. i
         color = Dyes.currentSliderColor[color]
 
-        Tab:SetSliderColor(i, color)
+        Tab:SetSliderColor(i, color, true)
     end
 end
 
 ---@param sliderIndex integer
 ---@param color RGBColor
-function Tab:SetSliderColor(sliderIndex, color)
+function Tab:SetSliderColor(sliderIndex, color, forceTextUpdate)
     local menu = Vanity.GetMenu()
 
     menu.setSlider("Dye_" .. sliderIndex .. "_Red", color.Red)
     menu.setSlider("Dye_" .. sliderIndex .. "_Green", color.Green)
     menu.setSlider("Dye_" .. sliderIndex .. "_Blue", color.Blue)
 
-    self:UpdateColorSliderLabel(sliderIndex)
+    self:UpdateColorSliderLabel(sliderIndex, forceTextUpdate)
 end
 
 function Tab:Render()
@@ -419,7 +419,7 @@ function Tab:Render()
 
             -- TODO render color labels
             Vanity.RenderLabelledColor("Color_Label_" .. i, color:ToDecimal(), "", true)
-            self:UpdateColorSliderLabel(i)
+            self:UpdateColorSliderLabel(i, true)
 
             Vanity.RenderSlider("Dye_" .. i .. "_Red", color.Red, 0, 255, Dyes.DYE_PALETTE_BITS, "Red", "Red")
             Vanity.RenderSlider("Dye_" .. i .. "_Green", color.Green, 0, 255, Dyes.DYE_PALETTE_BITS, "Green", "Green")
@@ -437,9 +437,9 @@ function Tab:Render()
     end
 end
 
-function Tab:UpdateColorSliderLabel(index)
+function Tab:UpdateColorSliderLabel(index, forceTextUpdate)
     local color = Dyes.currentSliderColor["Color" .. index]
-    Vanity.SetColorLabel("Color_Label_" .. index, color:ToDecimal(), Text.Format(Dyes.COLOR_NAMES[tonumber(index)], {Color = "000000"}), color:ToHex(true))
+    Vanity.SetColorLabel("Color_Label_" .. index, color:ToDecimal(), Text.Format(Dyes.COLOR_NAMES[tonumber(index)], {Color = "000000"}), color:ToHex(true), forceTextUpdate)
 end
 
 Tab:RegisterListener(Vanity.Events.ButtonPressed, function(id)
@@ -491,7 +491,7 @@ Tab:RegisterListener(Vanity.Events.SliderHandleReleased, function (id, value)
 
     color[channel] = value
 
-    Tab:UpdateColorSliderLabel(colorIndex)
+    Tab:UpdateColorSliderLabel(colorIndex, true)
 end)
 
 -- Listen for copy buttons.
@@ -514,7 +514,7 @@ Client.UI.MessageBox.Events.ClipboardTextRequestComplete:RegisterListener(functi
         if color then
             Dyes.currentSliderColor["Color" .. colorIndex] = color
 
-            Tab:SetSliderColor(colorIndex, color)
+            Tab:SetSliderColor(colorIndex, color, true)
         end
 
         Dyes.colorPasteIndex = nil
@@ -548,8 +548,7 @@ Tab:RegisterListener(Vanity.Events.InputChanged, function(id, text)
         
         Dyes.currentSliderColor["Color" .. colorIndex] = color
 
-        -- Tab:UpdateColorSliderLabel(tonumber(colorIndex))
-        Tab:SetSliderColor(colorIndex, color)
+        Tab:SetSliderColor(colorIndex, color, false)
     end
 end)
 
@@ -716,7 +715,7 @@ Dyes.Events.DyeUsed:RegisterListener(function (dye, item, character)
     if dye.Type == "Custom" then
         Dyes.ApplyCustomDye(dye)
 
-        Tab:SetSliderColors(dye)
+        Tab:SetSliderColors(dye, true)
     end
 end)
 

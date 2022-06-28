@@ -46,6 +46,7 @@ package arenaResult_fla
             var mc:MovieClip = this.list.getElementByString("id", id);
 
             mc.slider_mc.value = value;
+            mc.refresh();
         }
 
         public function addDualButtons(id1:String, text1:String, enabled1:Boolean, id2:String, text2:String, enabled2:Boolean) : *
@@ -119,14 +120,14 @@ package arenaResult_fla
             }
         }
 
-        public function setColorLabel(id:String, color:Number, label:String, input:String = "") : *
+        public function setColorLabel(id:String, color:Number, label:String, input:String = "", forceUpdate:Boolean=false) : *
         {
             var mc:MovieClip = this.list.getElementByString("id", id);
 
             mc.setColor(color, label);
 
             // Only update focus if we're unfocused
-            if (stage.focus != mc.inputField_mc.input_txt)
+            if (stage.focus != mc.inputField_mc.input_txt || forceUpdate)
             {
                 mc.setInput(input);
             }
