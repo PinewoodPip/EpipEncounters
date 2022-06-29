@@ -53,6 +53,18 @@ ServerSettings.AddModule("EpicEnemies", settings)
 ---@field RegisterHook fun(self, handler:fun(applicable:boolean, effect:EpicEnemiesEffect, char:EsvCharacter, activeEffects:EpicEnemiesEffect[]))
 ---@field Return fun(self, applicable:boolean, effect:EpicEnemiesEffect, char:EsvCharacter, activeEffects:EpicEnemiesEffect[])
 
+---@class EpicEnemies_Event_EffectActivated : Event
+---@field RegisterListener fun(self, listener:fun(char:EsvCharacter, effect:EpicEnemiesEffect))
+---@field Fire fun(self, char:EsvCharacter, effect:EpicEnemiesEffect)
+
+---@class EpicEnemies_Event_EffectDeactivated : Event
+---@field RegisterListener fun(self, listener:fun(char:EsvCharacter, effect:EpicEnemiesEffect))
+---@field Fire fun(self, char:EsvCharacter, effect:EpicEnemiesEffect)
+
+---@class EpicEnemies_Hook_CanActivateEffect : Hook
+---@field RegisterHook fun(self, handler:fun(activate:boolean, char:EsvCharacter, effect:EpicEnemiesEffect, params:any))
+---@field Return fun(self, activate:boolean, char:EsvCharacter, effect:EpicEnemiesEffect, params:any)
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
@@ -123,6 +135,8 @@ function EpicEnemies.CleanupCharacter(char)
         })
 
         EpicEnemies:DebugLog("Removed effects from " .. char.DisplayName)
+
+        Osi.RemoveStatus(char.MyGuid, "PIP_OSITOOLS_EpicBossesDisplay")
     end
 end
 
@@ -139,7 +153,97 @@ function EpicEnemies.ApplyEffect(char, effect)
 
     Osiris.DB_PIP_EpicEnemies_AppliedEffect:Set(char.MyGuid, effect.ID)
 
-    EpicEnemies.Events.EffectApplied:Fire(char, effect)
+    EpicEnemies.ActivateEffects(char, "EffectApplied")
+end
+
+---@param char EsvCharacter
+---@param effect EpicEnemiesEffect
+function EpicEnemies.ActivateEffect(char, effect)
+    local _, _, activationCount = Osiris.DB_PIP_EpicEnemies_ActivatedEffect:Get(char.MyGuid, effect.ID, nil)
+
+    if activationCount == nil then activationCount = 0 end
+
+    -- TODO move to hook
+    if activationCount < effect.ActivationCondition.MaxActivations then
+        EpicEnemies:DebugLog("Activating effect: " .. effect.Name .. " of " .. char.DisplayName .. " to " .. tostring(activationCount + 1) .. " activations")
+
+        activationCount = activationCount + 1
+
+        Osiris.DB_PIP_EpicEnemies_ActivatedEffect:Delete(char.MyGuid, effect.ID, nil)
+        Osiris.DB_PIP_EpicEnemies_ActivatedEffect:Set(char.MyGuid, effect.ID, activationCount)
+
+        -- TODO event
+        if activationCount == 1 then
+            EpicEnemies.Events.EffectActivated:Fire(char, effect)
+        end
+    end
+end
+
+---@param char EsvCharacter
+---@param predicate fun(char:EsvCharacter, effect:EpicEnemiesEffect)?
+---@return table<string, EpicEnemiesEffect>
+function EpicEnemies.GetAppliedEffects(char, predicate)
+    local _, _, tuples = Osiris.DB_PIP_EpicEnemies_AppliedEffect:Get(char.MyGuid, nil)
+    local effects = {}
+
+    if tuples then
+        for i,tuple in ipairs(tuples) do
+            local effect = EpicEnemies.GetEffectData(tuple[2])
+    
+            if not predicate or predicate(char, effect) then
+                effects[effect.ID] = effect
+            end
+        end
+    end
+
+    return effects
+end
+
+---@param char EsvCharacter
+---@param effect EpicEnemiesCharacter
+---@return boolean
+function EpicEnemies.EffectIsActive(char, effect)
+    return EpicEnemies.GetEffectActivationCount(char, effect) > 0
+end
+
+---@param char EsvCharacter
+---@param effect EpicEnemiesCharacter
+---@return integer
+function EpicEnemies.GetEffectActivationCount(char, effect)
+    local _, _, activationCount = Osiris.DB_PIP_EpicEnemies_ActivatedEffect:Get(char.MyGuid, effect.ID, nil)
+
+    return activationCount or 0
+end
+
+---@param char EsvCharacter
+---@param effectType string
+---@param params table?
+function EpicEnemies.ActivateEffects(char, effectType, params)
+    for id,effect in pairs(EpicEnemies.GetAppliedEffects(char, function(char, eff) return eff.ActivationCondition.Type == effectType end)) do
+        if EpicEnemies.Hooks.CanActivateEffect:Return(false, char, effect, effect.ActivationCondition, params) then
+            EpicEnemies.Events.EffectActivated:Fire(char, effect)
+        end
+    end
+end
+
+---@param char EsvCharacter
+---@param effect EpicEnemiesEffect
+---@param charges integer? Defaults to 1.
+function EpicEnemies.DeactivateEffect(char, effect, charges)
+    local _, _, activationCount = Osiris.DB_PIP_EpicEnemies_ActivatedEffect:Get(char.MyGuid, effect.ID, nil)
+    if charges == nil then charges = 1 end
+    if activationCount == nil then return nil end
+
+    activationCount = activationCount - 1
+
+    Osiris.DB_PIP_EpicEnemies_ActivatedEffect:Delete(char.MyGuid, effect.ID, nil)
+
+    if activationCount > 1 then
+        Osiris.DB_PIP_EpicEnemies_ActivatedEffect:Set(char.MyGuid, effect.ID, activationCount)
+        -- TODO event
+    else
+        EpicEnemies.Events.EffectDeactivated:Fire(char, effect)
+    end
 end
 
 ---Remove an effect from a character.
@@ -147,6 +251,9 @@ end
 ---@param effectID string
 function EpicEnemies.RemoveEffect(char, effectID)
     local effect = EpicEnemies.GetEffectData(effectID)
+
+    -- Lose all activations first
+    EpicEnemies.DeactivateEffect(char, effect, EpicEnemies.GetEffectActivationCount(char, effect))
 
     Osiris.DB_PIP_EpicEnemies_AppliedEffect:Delete(char.MyGuid, effectID)
 
@@ -201,6 +308,14 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
+-- Reset state upon lua reset
+Ext.Events.ResetCompleted:Subscribe(function()
+    if Ext.Osiris.IsCallable() then
+        Osiris.DB_PIP_EpicEnemies_ActivatedEffect:Delete(nil, nil, nil)
+        Osiris.DB_PIP_EpicEnemies_AppliedEffect:Delete(nil, nil)
+    end
+end)
+
 -- TODO better workaround for context-specific events
 if false then
     ---@type EpicEnemies_Event_EffectApplied
@@ -254,7 +369,7 @@ end)
 -- PREMADE EFFECTS
 ---------------------------------------------
 
-EpicEnemies.Events.EffectApplied:RegisterListener(function(char, effect)
+EpicEnemies.Events.EffectActivated:RegisterListener(function(char, effect)
     -- Special logic effects.
     if effect.SpecialLogic then
         Osi.PROC_AMER_UI_Ascension_SpecialLogic_Add(char.MyGuid, effect.SpecialLogic, 1)
@@ -281,7 +396,7 @@ EpicEnemies.Events.EffectRemoved:RegisterListener(function (char, effect)
     end
 end)
 
-EpicEnemies.Events.EffectApplied:RegisterListener(function (char, effect)
+EpicEnemies.Events.EffectActivated:RegisterListener(function (char, effect)
     if effect.Status then
         local statusData = effect.Status
 
@@ -334,4 +449,30 @@ EpicEnemies.Hooks.IsEffectApplicable:RegisterHook(function (applicable, effect, 
     end
 
     return applicable
+end)
+
+---------------------------------------------
+-- ACTIVATION CONDITIONS
+---------------------------------------------
+
+Osiris.RegisterSymbolListener("PROC_AMER_Combat_TurnStarted", 2, "after", function(char, hasActed)
+    if Osi.IsTagged(char, EpicEnemies.INITIALIZED_TAG) then
+        local _, round = Osiris.DB_PIP_CharacterCombatRound:Get(char, nil)
+        if round == nil then round = 1 end
+        char = Ext.GetCharacter(char)
+
+        EpicEnemies.ActivateEffects(char, "TurnStart", {Round = round})
+    end
+end)
+
+EpicEnemies.Hooks.CanActivateEffect:RegisterHook(function(activate, char, effect, activationCondition, params)
+    local condition = activationCondition.Type
+
+    if not activate then
+        if condition == "TurnStart" then
+            return params.Round == activationCondition.Round or (params.Round >= activationCondition.Round and activationCondition.Repeat)
+        end
+    end
+
+    return activate
 end)

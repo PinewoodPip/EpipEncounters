@@ -201,8 +201,8 @@ LOAD_ORDER = {
     "Epip/Client/EE_Dyes.lua",
 
     -- Epic Enemies
-    -- "Epip/EpicEnemies/Shared.lua",
-    -- "Epip/EpicEnemies/Client.lua",
+    "Epip/EpicEnemies/Shared.lua",
+    "Epip/EpicEnemies/Client.lua",
 
     -- AMER UI controller support
     -- "Epip/Client/AMERUI_Controller/AMERUI_Controller.lua",

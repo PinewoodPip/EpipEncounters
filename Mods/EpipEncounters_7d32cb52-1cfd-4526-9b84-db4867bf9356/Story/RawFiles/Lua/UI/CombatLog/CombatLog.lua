@@ -53,7 +53,7 @@ local Log = {
 }
 Epip.InitializeUI(Client.UI.Data.UITypes.combatLog, "CombatLog", Log)
 Client.UI.CombatLog = Log
-Log:Debug()
+-- Log:Debug()
 
 ---@class CombatLogSentMessage
 ---@field Filter integer

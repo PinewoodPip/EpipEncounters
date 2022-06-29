@@ -100,8 +100,8 @@ Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Epip/EmoteCo
 Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Debug/Commands/Server.lua");
 
 -- Epic Enemies
--- Ext.Require(prefixedGUID, "Epip/EpicEnemies/Shared.lua");
--- Ext.Require(prefixedGUID, "Epip/EpicEnemies/Server.lua");
+Ext.Require(prefixedGUID, "Epip/EpicEnemies/Shared.lua");
+Ext.Require(prefixedGUID, "Epip/EpicEnemies/Server.lua");
 
 -- Stats Tab
 Ext.Require(prefixedGUID, "Epip/StatsTab/Shared.lua");

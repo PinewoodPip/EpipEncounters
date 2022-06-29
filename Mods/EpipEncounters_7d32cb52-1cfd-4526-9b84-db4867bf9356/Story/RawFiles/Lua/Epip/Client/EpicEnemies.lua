@@ -55,29 +55,29 @@ local EpicEnemies = Epip.Features.EpicEnemies
 -- LISTENERS
 ---------------------------------------------
 
-Ext.Events.StatusGetDescriptionParam:Subscribe(function(event)
-    local status = event.Status
-    local char = event.Owner
-    local source = event.StatusSource
-    local params = event.Params
-    local mainParam = params["1"]
+-- Ext.Events.StatusGetDescriptionParam:Subscribe(function(event)
+--     local status = event.Status
+--     local char = event.Owner
+--     local source = event.StatusSource
+--     local params = event.Params
+--     local mainParam = params["1"]
 
-    if status.Name == EpicEnemies.INFO_STATUS and mainParam == EpicEnemies.DESCRIPTION_PARAM then
-        local tooltip = {}
-        local finalString = ""
+--     if status.Name == EpicEnemies.INFO_STATUS and mainParam == EpicEnemies.DESCRIPTION_PARAM then
+--         local tooltip = {}
+--         local finalString = ""
 
-        for specialLogic, desc in pairs(EpicEnemies.BOONS) do
-            local status = EpicEnemies.STATUS_PREFIX .. specialLogic
+--         for specialLogic, desc in pairs(EpicEnemies.BOONS) do
+--             local status = EpicEnemies.STATUS_PREFIX .. specialLogic
 
-            if (char.Character:GetStatus(status) ~= nil) then
-                finalString = finalString .. desc .. "<br>"
-            end
-        end
+--             if (char.Character:GetStatus(status) ~= nil) then
+--                 finalString = finalString .. desc .. "<br>"
+--             end
+--         end
 
-        event.Description = finalString
-        return finalString
-   end
-end)
+--         event.Description = finalString
+--         return finalString
+--    end
+-- end)
 
 ---------------------------------------------
 -- SETUP

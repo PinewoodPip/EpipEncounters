@@ -64,6 +64,30 @@ local Data = {
         },
     },
 
+    TestStatus2 = {
+        Name = "TurnStart Activation Test",
+        Description = "Hasted on turn 2.",
+        Status = {
+            StatusID = "HASTED",
+            Duration = 2,
+        },
+        ActivationCondition = {
+            Type = "TurnStart",
+            Round = 2,
+            Repeat = false,
+        },
+    },
+    Test_TurnStart_2 = {
+        Name = "TurnStart Activation Test (Repeat)",
+        Description = "Clockwork bomb summon on turn 2+ (repeats)",
+        Summon = "6f8db517-f1af-4b47-b095-f239fd2293d0",
+        ActivationCondition = {
+            Type = "TurnStart",
+            Round = 2,
+            Repeat = true,
+        },
+    },
+
     -- TODO vitality condition template
 
     SummonEffect = {
@@ -123,10 +147,25 @@ if Ext.IsServer() then
     EpicEnemies.Events.EffectRemoved = {}
     ---@type EpicEnemies_Hook_IsEffectApplicable
     EpicEnemies.Hooks.IsEffectApplicable = {}
+    ---@type EpicEnemies_Event_EffectActivated
+    EpicEnemies.Events.EffectActivated = {}
+    ---@type EpicEnemies_Event_EffectDeactivated
+    EpicEnemies.Events.EffectDeactivated = {}
+    ---@type EpicEnemies_Hook_CanActivateEffect
+    EpicEnemies.Hooks.CanActivateEffect = {}
 end
 
 Epip.AddFeature("EpicEnemies", "EpicEnemies", EpicEnemies)
 Epip.Features.EpicEnemies = EpicEnemies
+
+---@class EpicEnemiesActivationCondition
+---@field Type string
+---@field MaxActivations integer
+
+local _EpicEnemiesActivationCondition = {
+    Type = "EffectApplied",
+    MaxActivations = 1,
+}
 
 ---@class EpicEnemiesEffect
 ---@field ID string
@@ -139,6 +178,8 @@ Epip.Features.EpicEnemies = EpicEnemies
 ---@field SpecialLogic? string Special logic to grant when the effect is rolled.
 ---@field Artifact? string Artifact power to grant when the effect is rolled.
 ---@field Keyword? EpicEnemiesKeywordData
+---@field Summon? GUID
+---@field ActivationCondition EpicEnemiesActivationCondition
 
 ---@class EpicEnemiesKeywordData
 ---@field Keyword Keyword
@@ -196,9 +237,12 @@ function EpicEnemies.RegisterEffect(id, effect)
     if effect.Cost then effect.DefaultCost = effect.Cost end
     if effect.Weight then effect.DefaultWeight = effect.Weight end
 
-    effect.Cost = nil
+    effect.Cost = nil -- TODO remove - wtf?
     effect.Weight = nil
     effect.ID = id
+    
+    if not effect.ActivationCondition then effect.ActivationCondition = {} end
+    Inherit(effect.ActivationCondition, _EpicEnemiesActivationCondition)
 
     if not effect.DefaultCost then effect.DefaultCost = 10 end
     if not effect.DefaultWeight then effect.DefaultWeight = 10 end
