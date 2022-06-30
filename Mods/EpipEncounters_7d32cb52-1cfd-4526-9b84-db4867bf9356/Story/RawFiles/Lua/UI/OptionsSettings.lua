@@ -32,13 +32,14 @@ local OptionsSettings = {
 }
 Client.UI.OptionsSettings = OptionsSettings
 Epip.InitializeUI(Client.UI.Data.UITypes.optionsSettings, "OptionsSettings", OptionsSettings)
+OptionsSettings:Debug()
 
 -- Strange, Type does not seem to work.
 function OptionsSettings:GetUI()
     return Ext.UI.GetByPath("Public/Game/GUI/optionsSettings.swf")
 end
 
----@alias OptionsSettingsOptionType "Checkbox" | "Dropdown" | "Slider" | "Button" | "Header"
+---@alias OptionsSettingsOptionType "Checkbox" | "Dropdown" | "Slider" | "Button" | "Header" | "Selector"
 
 ---@class OptionsSettingsOption
 ---@field Type string TODO alias
@@ -70,6 +71,13 @@ end
 
 ---@class OptionsSettingsTabHeader
 ---@field Label string
+
+---@class OptionsSettingsSelectorOption
+---@field Label string
+---@field SubSettings string[]
+
+---@class OptionsSettingsSelector : OptionsSettingsOption
+---@field Options OptionsSettingsSelectorOption[]
 
 ---@class OptionsSettingsOptionSet
 ---@field Mod string
@@ -236,6 +244,9 @@ function OptionsSettings.SetElementState(id, state, elementType)
         end
 
         root.mainMenu_mc.setMenuCheckbox(numID, OptionsSettings.IsElementEnabled(id), checkboxState)
+    elseif elementType == "Selector" then
+        print("numid", numID)
+        root.mainMenu_mc.setSelector(numID, state - 1, true)
     end
 end
 
@@ -368,6 +379,35 @@ function OptionsSettings.RenderCheckbox(data, numID)
     OptionsSettings:GetRoot().mainMenu_mc.addMenuCheckbox(numID, data.Label, enabled, stateId, 0, data.Tooltip) -- TODO filteredBool
 end
 
+---Render a selector onto the UI.
+---@param selector OptionsSettingsSelector
+---@param numID number
+function OptionsSettings.RenderSelector(selector, numID)
+    local root = OptionsSettings:GetRoot()
+
+    root.mainMenu_mc.addMenuSelector(numID, "")
+    local element = Client.Flash.GetLastElement(root.mainMenu_mc.list.content_array)
+    element.formHL_mc.alpha = 0
+    element.selectorData_mc.alpha = 0
+    element.title_txt.mouseEnabled = false
+    element = element.selection_mc
+    element.hit_mc.alpha = 0
+
+    element.x = 180
+    element.hit_mc.mouseEnabled = false -- TODO
+
+    element.LB_mc.x = 0
+    element.text_txt.x = 0
+    element.text_txt.mouseEnabled = false
+    element.RB_mc.x = 550
+
+    for i,option in ipairs(selector.Options) do
+        root.mainMenu_mc.addSelectorOption(numID, i - 1, option.Label)
+    end
+    
+    OptionsSettings.SetElementState(selector.ID, OptionsSettings.GetOptionValue(selector.Mod, selector.ID))
+end
+
 ---Render a dropdown option.
 ---@param data OptionsSettingsDropdown
 ---@param numID number
@@ -420,6 +460,7 @@ end
 ---Render an option directly.
 ---@param elementData OptionsSettingsOption
 ---@param numID? integer
+---@return number Numeric ID.
 function OptionsSettings.RenderOption(elementData, numID)
     numID = numID or OptionsSettings.nextNumID
 
@@ -430,6 +471,8 @@ function OptionsSettings.RenderOption(elementData, numID)
         OptionsSettings:FireEvent("ElementRenderRequest", elementData.Type, elementData, numID)
 
         OptionsSettings.nextNumID = OptionsSettings.nextNumID + 1
+
+        return numID
     end
 end
 
@@ -441,6 +484,7 @@ function OptionsSettings.RenderOptions(tabID)
     local modID = OptionsSettings.currentCustomTabs[tabID]
     local modData = OptionsSettings.Options[modID]
     local root = OptionsSettings:GetRoot()
+    root.removeItems()
 
     OptionsSettings.currentElements = {}
 
@@ -448,6 +492,23 @@ function OptionsSettings.RenderOptions(tabID)
 
     for i,elementData in pairs(modData.Options) do
         OptionsSettings.RenderOption(elementData)
+
+        if elementData.Type == "Selector" then
+            for z,subSettingID in ipairs(elementData.Options[OptionsSettings.GetOptionValue(elementData.Mod, elementData.ID)].SubSettings) do
+                local settingData = OptionsSettings.GetOptionData(subSettingID)
+
+                local elementID = OptionsSettings.RenderOption(settingData)
+    
+                -- TODO finish
+                -- OptionsSettings:DebugLog("Adding subsetting with id", elementID)
+                -- OptionsSettings:Dump(settingData)
+    
+                -- if elementID then
+                --     OptionsSettings.GetOptionElement(elementID).visible = false
+                --     root.mainMenu_mc.addSelectorSubSetting(numID, i - 1, elementID)
+                -- end
+            end
+        end
     end
 
     OptionsSettings.currentTab = tabID
@@ -506,6 +567,8 @@ OptionsSettings:RegisterListener("ElementRenderRequest", function(elementType, d
         OptionsSettings.RenderButton(data, numID)
     elseif elementType == "Header" then
         OptionsSettings.RenderHeader(data, numID)
+    elseif elementType == "Selector" then
+        OptionsSettings.RenderSelector(data, numID)
     end
 end)
 
@@ -727,6 +790,20 @@ local function OnDropdownChange(ui, method, id, optionIndex)
         OptionsSettings:FireEvent("DropdownChanged", element, optionIndex + 1)
     end
 end
+
+-- OptionsSettings:RegisterCallListener("selectOption", function(ev, id, optionIndex, toRight)
+Ext.RegisterUINameCall("selectOption", function(ui, method, id, optionIndex, toRight)
+    OptionsSettings:DebugLog("Selector changed: ", id)
+    local element = OptionsSettings.currentElements[id]
+
+    -- Selectors are immediately set, no need to confirm.
+    if element then
+        OptionsSettings:DebugLog("Re-rendering from selector change.")
+        OptionsSettings.SetOptionValue(element.Mod, element.ID, optionIndex + 1, true)
+
+        OptionsSettings.RenderOptions(OptionsSettings.currentTab)
+    end
+end)
 
 OptionsSettings:RegisterListener("CheckboxClicked", function(element, stateId)
     OptionsSettings.PendingValueChanges[element.ID] = stateId

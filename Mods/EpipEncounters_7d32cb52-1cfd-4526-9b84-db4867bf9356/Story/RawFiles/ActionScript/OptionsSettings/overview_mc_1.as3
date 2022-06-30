@@ -144,6 +144,62 @@ package optionsSettings_fla
         {
             this.title_txt.htmlText = param1.toUpperCase();
         }
+
+        public function addMenuSelector(id:Number, text:String) : *
+        {
+            var mc:selector = new selector();
+            mc.id = id;
+            mc.onInit(this);
+
+            this.list.addElement(mc);
+        }
+
+        public function setSelector(id:Number, index:Number, enabled:Boolean = true) : *
+        {
+            var mc:MovieClip = this.getElementByID(id);
+
+            if (mc)
+            {
+                mc.selection_mc.selectEl(index);
+            }
+            else
+            {
+                trace("setSelector: MC not found");
+            }
+        }
+
+        public function addSelectorOption(selectorID:Number, optionID:Number, text:String) : *
+        {
+            var mc:MovieClip = this.getElementByID(selectorID);
+
+            if (mc)
+            {
+                mc.addOption(optionID, text)
+            }
+            else
+            {
+                trace("addSelectorOption: Not found with ID " + selectorID);
+            }
+        }
+
+        public function addSelectorSubSetting(selectorID:Number, optionID:Number, elementID:Number) : *
+        {
+            var selector:MovieClip = this.getElementByID(selectorID);
+            var mc:MovieClip = this.getElementByID(elementID);
+
+            if (selector && mc)
+            {
+                // trace("Adding subsetting");
+                // trace(optionID);
+                // trace(mc);
+                this.list.removeElementByListId(mc.list_id);
+                selector.addContent(optionID, mc);
+            }
+            else
+            {
+                trace("addSelectorSubSetting: One of the param MCs was not found.");
+            }
+        }
         
         public function addMenuCheckbox(param1:Number, param2:String, param3:Boolean, param4:Number, param5:Boolean, param6:String) : *
         {
@@ -252,21 +308,21 @@ package optionsSettings_fla
             this.HLCounter = 0;
         }
         
-        public function addMenuSelector(param1:Number, param2:String) : *
-        {
-        }
+        // public function addMenuSelector(param1:Number, param2:String) : *
+        // {
+        // }
         
-        public function addMenuSelectorEntry(param1:Number, param2:String) : *
-        {
-            var _loc4_:MovieClip = null;
-            var _loc3_:MovieClip = this.getElementByID(param1);
-            if(_loc3_)
-            {
-                _loc4_ = new SelectElement();
-                _loc4_.label_txt.htmlText = param2;
-                _loc3_.selList.addElement(_loc4_);
-            }
-        }
+        // public function addMenuSelectorEntry(param1:Number, param2:String) : *
+        // {
+        //     var _loc4_:MovieClip = null;
+        //     var _loc3_:MovieClip = this.getElementByID(param1);
+        //     if(_loc3_)
+        //     {
+        //         _loc4_ = new SelectElement();
+        //         _loc4_.label_txt.htmlText = param2;
+        //         _loc3_.selList.addElement(_loc4_);
+        //     }
+        // }
         
         public function onComboClose(param1:Event) : *
         {

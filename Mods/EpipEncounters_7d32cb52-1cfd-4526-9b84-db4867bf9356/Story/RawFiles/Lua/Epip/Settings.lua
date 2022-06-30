@@ -194,6 +194,23 @@ local Developer = {
         Type = "Header",
         Label = "<font color='7e72d6' size='23'>Normie settings</font>",
     },
+    {
+        ID = "TestSelector",
+        Type = "Selector",
+        Label = "",
+        Tooltip = "Test",
+        DefaultValue = 1,
+        Options = {
+            {
+                Label = "TestOption 1 asdasd",
+                SubSettings = {"OverheadsSize", "DEBUG_AprilFools"},
+            },
+            {
+                Label = "TestOption 2",
+                SubSettings = {"AutoIdentify", "DBUG_TestServerSetting"},
+            },
+        },
+    }
 }
 
 ---@type OptionsSettingsOption[]
