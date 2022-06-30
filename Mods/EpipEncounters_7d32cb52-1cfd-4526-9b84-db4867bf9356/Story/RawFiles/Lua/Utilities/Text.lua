@@ -10,11 +10,13 @@ Text = {
 }
 
 ---@alias Font "Bold" | "Italic" | "Normal"
+---@alias FontAlign "center" | "right" | "left"
 
 ---@class TextFormatData
 ---@field FontType Font
 ---@field Size number
 ---@field Color string
+---@field Align FontAlign
 ---@field FormatArgs any[]
 ---@field Text? string Used for formatting strings with recursive Text.Format calls.
 
@@ -112,6 +114,11 @@ function Text.Format(str, formatData)
     if formatData.FontType then
         fontType = string.format(" face='%s'", formatData.FontType)
     end
+
+    local align = ""
+    if formatData.Align then
+        align = string.format(" align='%s'", formatData.Align)
+    end
     
     local color = ""
     if formatData.Color then
@@ -123,7 +130,7 @@ function Text.Format(str, formatData)
         size = string.format(" size='%d'", formatData.Size)
     end
 
-    str = string.format("<font%s%s%s>%s</font>", fontType, color, size, str)
+    str = string.format("<font%s%s%s%s>%s</font>", fontType, color, size, align, str)
 
     return str
 end

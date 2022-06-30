@@ -50,6 +50,7 @@ end
 ---@field ServerOnly boolean If true, the setting will only be visible for the host, and will be synchronized to the server context.
 ---@field SaveOnServer boolean If true, the setting will not be saved to the file.
 ---@field DefaultValue any Should be boolean for Checkbox, number for other vanilla elements. Buttons have no value. For Dropdown, use 1-based index.
+---@field VisibleAtTopLevel boolean Defaults to true.
 
 ---@class OptionsSettingsCheckbox : OptionsSettingsOption
 ---@field FilteredBool boolean TODO
@@ -245,7 +246,6 @@ function OptionsSettings.SetElementState(id, state, elementType)
 
         root.mainMenu_mc.setMenuCheckbox(numID, OptionsSettings.IsElementEnabled(id), checkboxState)
     elseif elementType == "Selector" then
-        print("numid", numID)
         root.mainMenu_mc.setSelector(numID, state - 1, true)
     end
 end
@@ -345,6 +345,9 @@ function OptionsSettings.RenderSlider(data, numID)
     local value = OptionsSettings.GetOptionValue(data.Mod, data.ID)
 
     root.mainMenu_mc.addMenuSlider(numID, data.Label, value, data.MinAmount, data.MaxAmount, data.Interval, data.HideNumbers, data.Tooltip)
+    local element = Client.Flash.GetLastElement(root.mainMenu_mc.list.content_array)
+    print(element.label_txt.align, element.label_txt.autoSize, element.label_txt.htmlText)
+    element.label_txt.autoSize = "center"
 end
 
 ---Render a button.
@@ -460,19 +463,22 @@ end
 ---Render an option directly.
 ---@param elementData OptionsSettingsOption
 ---@param numID? integer
+---@param requestID string
 ---@return number Numeric ID.
-function OptionsSettings.RenderOption(elementData, numID)
+function OptionsSettings.RenderOption(elementData, numID, requestID)
     numID = numID or OptionsSettings.nextNumID
 
     -- Server-only settings are only shown for host
     if not elementData.ServerOnly or Client.IsHost() then
-        OptionsSettings.currentElements[numID] = elementData
+        if requestID == "Selector" or (elementData.VisibleAtTopLevel == nil or elementData.VisibleAtTopLevel) then -- TODO hook
+            OptionsSettings.currentElements[numID] = elementData
 
-        OptionsSettings:FireEvent("ElementRenderRequest", elementData.Type, elementData, numID)
+            OptionsSettings:FireEvent("ElementRenderRequest", elementData.Type, elementData, numID)
 
-        OptionsSettings.nextNumID = OptionsSettings.nextNumID + 1
+            OptionsSettings.nextNumID = OptionsSettings.nextNumID + 1
 
-        return numID
+            return numID
+        end
     end
 end
 
@@ -497,7 +503,7 @@ function OptionsSettings.RenderOptions(tabID)
             for z,subSettingID in ipairs(elementData.Options[OptionsSettings.GetOptionValue(elementData.Mod, elementData.ID)].SubSettings) do
                 local settingData = OptionsSettings.GetOptionData(subSettingID)
 
-                local elementID = OptionsSettings.RenderOption(settingData)
+                local elementID = OptionsSettings.RenderOption(settingData, nil, "Selector")
     
                 -- TODO finish
                 -- OptionsSettings:DebugLog("Adding subsetting with id", elementID)

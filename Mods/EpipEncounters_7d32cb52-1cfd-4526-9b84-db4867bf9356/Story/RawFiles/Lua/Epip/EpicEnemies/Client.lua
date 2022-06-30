@@ -54,6 +54,28 @@ for id,effect in pairs(EpicEnemies.EFFECTS) do
 
     Client.UI.OptionsSettings.RegisterOption("EpicEnemies", option)
 end
+-- TODO do this later
+---@type OptionsSettingsSelector
+local option = {
+    ID = "EpicEnemies_CategorySelector",
+    Label = "Epic Enemies Categories",
+    DefaultValue = 1,
+    Type = "Selector",
+    Options = {},
+}
+for i,category in ipairs(EpicEnemies.CATEGORIES) do
+    local tab = {
+        Label = category.Name,
+        SubSettings = {},
+    }
+
+    for z,effectID in ipairs(category.Effects) do
+        table.insert(tab.SubSettings, effectID)
+    end
+
+    table.insert(option.Options, tab)
+end
+Client.UI.OptionsSettings.RegisterOption("EpicEnemies", option)
 
 ---------------------------------------------
 -- EVENT LISTENERS

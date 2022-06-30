@@ -79,11 +79,6 @@ Controller.Events.CommandReceived:RegisterListener(function (command, char)
     end
 end)
 
----@class AMERUI_ElementWheel
----@field UI string
----@field Wheel string
----@field 
-
 ---------------------------------------------
 -- ASCENSION GATEWAY
 ---------------------------------------------
@@ -115,8 +110,4 @@ Controller.RegisterCommandHandler("AMER_UI_Ascension", "Page_Gateway", "ScrollLe
     local item = Controller.GetItemGUID(char, nil, "PathWheel")
 
     Osi.PROC_AMER_UI_ElementWheel_Scroll_Up(Utilities.GetPrefixedGUID(char), item)
-end)
-
-Ext.Osiris.RegisterListener("CharacterItemEvent", 3, "after", function(char, item, ev)
-    print(char, item, ev)
 end)
