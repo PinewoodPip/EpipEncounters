@@ -58,7 +58,7 @@ end
 ---@type OptionsSettingsSelector
 local option = {
     ID = "EpicEnemies_CategorySelector",
-    Label = "Epic Enemies Categories",
+    Label = Text.Format("Epic Enemies Categories", {FontType = Text.FONTS.BOLD}),
     DefaultValue = 1,
     Type = "Selector",
     Options = {},
@@ -99,8 +99,6 @@ Game.Tooltip.RegisterListener("Status", nil, function(char, status, tooltip)
                 })
                 str = str .. "<br>"
             end
-
-            print(str)
 
             table.insert(tooltip.Data, {
                 Label = str,

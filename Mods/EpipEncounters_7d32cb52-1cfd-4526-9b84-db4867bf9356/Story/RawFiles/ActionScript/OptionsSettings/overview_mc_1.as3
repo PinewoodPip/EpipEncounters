@@ -150,6 +150,7 @@ package optionsSettings_fla
             var mc:selector = new selector();
             mc.id = id;
             mc.onInit(this);
+            mc.setTitle(text);
 
             this.list.addElement(mc);
         }

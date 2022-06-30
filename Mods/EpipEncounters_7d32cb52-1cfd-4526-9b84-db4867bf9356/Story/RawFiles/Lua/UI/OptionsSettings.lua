@@ -388,14 +388,17 @@ end
 function OptionsSettings.RenderSelector(selector, numID)
     local root = OptionsSettings:GetRoot()
 
-    root.mainMenu_mc.addMenuSelector(numID, "")
+    root.mainMenu_mc.addMenuSelector(numID, selector.Label)
     local element = Client.Flash.GetLastElement(root.mainMenu_mc.list.content_array)
+    element.title_txt.y = element.title_txt.y + 20
+    element.heightOverride = element.height + 40
     element.formHL_mc.alpha = 0
     element.selectorData_mc.alpha = 0
     element.title_txt.mouseEnabled = false
     element = element.selection_mc
     element.hit_mc.alpha = 0
 
+    element.y = element.y + 50
     element.x = 180
     element.hit_mc.mouseEnabled = false -- TODO
 

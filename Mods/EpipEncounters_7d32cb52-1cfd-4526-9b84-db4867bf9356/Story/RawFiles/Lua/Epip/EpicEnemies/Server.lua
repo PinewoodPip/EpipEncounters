@@ -471,6 +471,8 @@ EpicEnemies.Hooks.CanActivateEffect:RegisterHook(function(activate, char, effect
     if not activate then
         if condition == "TurnStart" then
             return params.Round == activationCondition.Round or (params.Round >= activationCondition.Round and activationCondition.Repeat)
+        elseif condition == "EffectApplied" then
+            return true
         end
     end
 
