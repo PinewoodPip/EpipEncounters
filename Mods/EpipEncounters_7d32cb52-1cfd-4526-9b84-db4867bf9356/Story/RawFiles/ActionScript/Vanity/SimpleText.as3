@@ -3,7 +3,7 @@ package
     import flash.display.MovieClip;
     import flash.text.TextField;
     
-    public class SimpleText extends MovieClip
+    public dynamic class SimpleText extends MovieClip
     {
         
         

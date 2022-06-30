@@ -46,6 +46,12 @@ function Text.Round(value, decimals)
     return output
 end
 
+---@param str string
+---@param pattern pattern
+function Text.Contains(str, pattern)
+    return str:find(pattern) ~= nil
+end
+
 ---Split a string by delimiter. Source: https://stackoverflow.com/questions/1426954/split-string-in-lua
 ---@param inputstr string
 ---@param sep string

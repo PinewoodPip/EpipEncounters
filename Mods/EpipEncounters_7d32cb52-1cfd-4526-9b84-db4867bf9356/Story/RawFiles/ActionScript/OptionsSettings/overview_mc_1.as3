@@ -201,6 +201,14 @@ package optionsSettings_fla
                 trace("addSelectorSubSetting: One of the param MCs was not found.");
             }
         }
+
+        public function addMenuMultilineLabel(id:Number, text:String) : *
+        {
+            var mc:SimpleText = new SimpleText(text);
+            mc.id = id;
+
+            this.list.addElement(mc);
+        }
         
         public function addMenuCheckbox(param1:Number, param2:String, param3:Boolean, param4:Number, param5:Boolean, param6:String) : *
         {

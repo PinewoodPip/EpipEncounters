@@ -9,12 +9,7 @@ local Settings = {
     {
         ID = "EpicEnemies_Header",
         Type = "Header",
-        Label = "Epic Enemies is a randomizer feature that gives enemies in combat<br>random keyword effects, artifacts and other boons.",
-    },
-    {
-        ID = "EpicEnemies_Header2",
-        Type = "Header",
-        Label = "random keyword effects, artifacts and other boons.",
+        Label = "Epic Enemies is a randomizer feature that gives enemies in combat<br>random keyword effects, artifacts and other boons.", 
     },
     {
         ID = "EpicEnemies_Toggle",

@@ -346,7 +346,6 @@ function OptionsSettings.RenderSlider(data, numID)
 
     root.mainMenu_mc.addMenuSlider(numID, data.Label, value, data.MinAmount, data.MaxAmount, data.Interval, data.HideNumbers, data.Tooltip)
     local element = Client.Flash.GetLastElement(root.mainMenu_mc.list.content_array)
-    print(element.label_txt.align, element.label_txt.autoSize, element.label_txt.htmlText)
     element.label_txt.autoSize = "center"
 end
 
@@ -364,7 +363,16 @@ end
 ---@param data OptionsSettingsHeader
 ---@param numID number
 function OptionsSettings.RenderHeader(data, numID)
-    OptionsSettings:GetRoot().mainMenu_mc.addMenuLabel(data.Label)
+    -- TODO figure out why raw strings do not work
+    if not Text.Contains(data.Label, "<font") then data.Label = Text.Format(data.Label, {Size = 19}) end
+
+    local root = OptionsSettings:GetRoot()
+    root.mainMenu_mc.addMenuMultilineLabel(numID, data.Label)
+    local element = Client.Flash.GetLastElement(root.mainMenu_mc.list.content_array)
+
+    element.text_txt.x = 160
+    element.autoSize = "center"
+    element.text_txt.height = element.text_txt.textHeight
 end
 
 ---Render a checkbox option.
@@ -633,6 +641,7 @@ local function onupdate(ui, method)
     -- if OptionsSettings.IS_DEBUG then
     --     Ext.Dump(content)
     -- end
+    root.mainMenu_mc.list.EL_SPACING = 10
 end
 
 local function onbasearray(ui, method)
