@@ -148,7 +148,7 @@ Client.UI.ContextMenu.RegisterElementListener("hotBarRow_SaveLoadout", "buttonPr
     })
 end)
 
-Client.UI.MessageBox.RegisterMessageListener("epip_Hotbar_SaveLoadout", Client.UI.MessageBox.Events.ButtonPressed, function(text, buttonId, data)
+Client.UI.MessageBox.RegisterMessageListener("epip_Hotbar_SaveLoadout", Client.UI.MessageBox.Events.InputSubmitted, function(text, buttonId, data)
     local saveAllRows = buttonId == 2
 
     Hotbar.SaveLoadout(Hotbar.currentLoadoutRow, text, saveAllRows)
