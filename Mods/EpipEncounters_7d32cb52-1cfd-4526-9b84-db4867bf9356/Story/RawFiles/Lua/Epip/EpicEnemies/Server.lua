@@ -378,9 +378,6 @@ EpicEnemies.Events.EffectActivated:RegisterListener(function(char, effect)
     -- Artifact.
     if effect.Artifact then
         Osi.PROC_AMER_Artifacts_EquipEffects(char.MyGuid, effect.Artifact, "Rune")
-
-        -- TODO
-        -- Osi.ApplyStatus(char.MyGuid, string.format("AMER_ARTIFACTPOWER_%s_DISPLAY", string.upper(effect.Artifact)), -1, 1)
     end
 end)
 

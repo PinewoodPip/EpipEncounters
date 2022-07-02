@@ -163,8 +163,6 @@ LOAD_ORDER = {
 
     "EpipTalents.lua",
 
-    "Epip/Client/EpicEnemies.lua",
-
     "Epip/Client/ImmersiveMeditation.lua",
     "Epip/Client/NameTypoFixes.lua",
     "Epip/Client/ExamineImprovements.lua",
