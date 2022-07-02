@@ -283,6 +283,20 @@ local Data = {
         ID = "TestEffects",
         Effects = {
             {
+                Name = "HealthThreshold Test",
+                ID = "HealthThreshold",
+                Description = "Below 50% phys armor",
+                ---@type EpicEnemiesCondition_HealthThreshold
+                ActivationCondition = {
+                    Type = "HealthThreshold",
+                    Vitality = 0.5,
+                },
+                Status = {
+                    StatusID = "BLESSED",
+                    Duration = 2,
+                },
+            },
+            {
                 Name = "TurnStart Activation Test",
                 ID = "TestStatus2",
                 Description = "Hasted on turn 2.",

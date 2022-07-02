@@ -200,8 +200,6 @@ LOAD_ORDER = {
 
     -- Epic Enemies
     "Epip/EpicEnemies/Shared.lua",
-    "Epip/EpicEnemies/EffectTemplates.lua",
-    "Epip/EpicEnemies/ActivationConditions.lua",
     "Epip/EpicEnemies/Client.lua",
 
     -- AMER UI controller support
