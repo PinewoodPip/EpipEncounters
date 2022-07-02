@@ -101,6 +101,8 @@ Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Debug/Comman
 
 -- Epic Enemies
 Ext.Require(prefixedGUID, "Epip/EpicEnemies/Shared.lua");
+Ext.Require(prefixedGUID, "Epip/EpicEnemies/EffectTemplates.lua");
+Ext.Require(prefixedGUID, "Epip/EpicEnemies/ActivationConditions.lua");
 Ext.Require(prefixedGUID, "Epip/EpicEnemies/Server.lua");
 
 -- Stats Tab

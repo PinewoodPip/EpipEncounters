@@ -366,109 +366,14 @@ EpicEnemies.Hooks.IsEligible:RegisterHook(function (eligible, char)
 end)
 
 ---------------------------------------------
--- PREMADE EFFECTS
----------------------------------------------
-
-EpicEnemies.Events.EffectActivated:RegisterListener(function(char, effect)
-    -- Special logic effects.
-    if effect.SpecialLogic then
-        Osi.PROC_AMER_UI_Ascension_SpecialLogic_Add(char.MyGuid, effect.SpecialLogic, 1)
-    end
-
-    -- Artifact.
-    if effect.Artifact then
-        Osi.PROC_AMER_Artifacts_EquipEffects(char.MyGuid, effect.Artifact, "Rune")
-    end
-end)
-
-EpicEnemies.Events.EffectRemoved:RegisterListener(function (char, effect)
-    -- SpecialLogic
-    if effect.SpecialLogic then
-        Osi.PROC_AMER_UI_Ascension_SpecialLogic_Add(char.MyGuid, effect.SpecialLogic, -1)
-    end
-
-    -- Artifacts
-    if effect.Artifact then
-        Osi.PROC_AMER_Artifacts_UnequipEffects(char.MyGuid, effect.Artifact, "Rune")
-    end
-end)
-
-EpicEnemies.Events.EffectActivated:RegisterListener(function (char, effect)
-    if effect.Status then
-        local statusData = effect.Status
-
-        Osi.ApplyStatus(char.MyGuid, statusData.StatusID, statusData.Duration, 1)
-    end
-
-    if effect.Summon then
-        local pos = char.WorldPos
-
-        local guid = Osi.CharacterCreateAtPosition(pos[1], pos[2], pos[3], effect.Summon, 1)
-        Osi.CharacterLevelUpTo(guid, char.Stats.Level)
-        Osi.CharacterChangeToSummon(guid, char.MyGuid)
-        Osi.EnterCombat(guid, char.MyGuid)
-    end
-
-    if effect.ExtendedStats then
-        for i,extendedStat in ipairs(effect.ExtendedStats) do
-            Osi.PROC_AMER_ExtendedStat_CharacterAddStat(char.MyGuid, extendedStat.StatID, extendedStat.Property1, extendedStat.Property2, extendedStat.Property3, extendedStat.Amount)
-        end
-    end
-end)
-
-EpicEnemies.Events.EffectRemoved:RegisterListener(function (char, effect)
-    if effect.Status then
-        local statusData = effect.Status
-        
-        Osi.RemoveStatus(char.MyGuid, statusData.StatusID)
-    end
-end)
-
--- Make mutator effects only available if character already has an activator
-EpicEnemies.Hooks.IsEffectApplicable:RegisterHook(function (applicable, effect, char, activeEffects)
-    if effect.Keyword then
-        if effect.Keyword.BoonType == "Mutator" then
-            local hasActivator = false
-            local keywordID = effect.Keyword.Keyword
-
-            -- Search for an activator for this keyword
-            for i,appliedEffect in ipairs(activeEffects) do
-                if appliedEffect.Keyword and appliedEffect.Keyword.Keyword == keywordID then
-                    hasActivator = true
-                    break
-                end
-            end
-
-            if not hasActivator then
-                applicable = false
-            end
-        end
-    end
-
-    return applicable
-end)
-
----------------------------------------------
 -- ACTIVATION CONDITIONS
 ---------------------------------------------
-
-Osiris.RegisterSymbolListener("PROC_AMER_Combat_TurnStarted", 2, "after", function(char, hasActed)
-    if Osi.IsTagged(char, EpicEnemies.INITIALIZED_TAG) then
-        local _, round = Osiris.DB_PIP_CharacterCombatRound:Get(char, nil)
-        if round == nil then round = 1 end
-        char = Ext.GetCharacter(char)
-
-        EpicEnemies.ActivateEffects(char, "TurnStart", {Round = round})
-    end
-end)
 
 EpicEnemies.Hooks.CanActivateEffect:RegisterHook(function(activate, char, effect, activationCondition, params)
     local condition = activationCondition.Type
 
     if not activate then
-        if condition == "TurnStart" then
-            return params.Round == activationCondition.Round or (params.Round >= activationCondition.Round and activationCondition.Repeat)
-        elseif condition == "EffectApplied" then
+        if condition == "EffectApplied" then
             return true
         end
     end

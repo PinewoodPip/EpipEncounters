@@ -332,7 +332,6 @@ local Data = {
                 Name = "Extended stat test",
                 ID = "ExtendedStatTest",
                 Description = "",
-                ---@type EpicEnemiesExtendedStat[]
                 ExtendedStats = {
                     {
                         StatID = "Shoot_OnStatus",
@@ -346,13 +345,6 @@ local Data = {
         },
     }
 }
-
----@class EpicEnemiesExtendedStat
----@field StatID string The ID of the ExtendedStat.
----@field Amount number
----@field Property1 string
----@field Property2 string
----@field Property3 string
 
 local EpicEnemies = {
     ---@type table<string, EpicEnemiesEffect>
@@ -403,10 +395,6 @@ local _EpicEnemiesActivationCondition = {
 ---@field Weight integer
 ---@field DefaultWeight integer
 ---@field DefaultCost integer
----@field SpecialLogic? string Special logic to grant when the effect is rolled.
----@field Artifact? string Artifact power to grant when the effect is rolled.
----@field Keyword? EpicEnemiesKeywordData
----@field Summon? GUID
 ---@field ActivationCondition EpicEnemiesActivationCondition
 
 ---@class EpicEnemiesKeywordData
