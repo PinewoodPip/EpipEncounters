@@ -4,6 +4,9 @@ local EpicEnemies = Epip.Features.EpicEnemies
 ---@type table<NetId, EpicEnemiesEffect[]>
 EpicEnemies.APPLIED_EFFECTS = {}
 
+---@type EpicEnemies_Hook_GetActivationConditionDescription
+EpicEnemies.Hooks.GetActivationConditionDescription = EpicEnemies:AddHook("GetActivationConditionDescription")
+
 ---@type OptionsSettingsOption[]
 local Settings = {
     {
@@ -73,6 +76,14 @@ end
 Client.UI.OptionsSettings.RegisterOption("EpicEnemies", option)
 
 ---------------------------------------------
+-- EVENTS/HOOKS
+---------------------------------------------
+
+---@class EpicEnemies_Hook_GetActivationConditionDescription : Hook
+---@field RegisterHook fun(self, handler:fun(text:string, condition:EpicEnemiesActivationCondition, char:EclCharacter))
+---@field Return fun(self, text:string, condition:EpicEnemiesActivationCondition, char:EclCharacter)
+
+---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
 
@@ -85,11 +96,13 @@ Game.Tooltip.RegisterListener("Status", nil, function(char, status, tooltip)
             local str = ""
 
             for i,effect in ipairs(effects) do
-                -- str = str .. Text.Format("<img src=\'Icon_BulletPoint\'> %s<br>%s", {
-                str = str .. Text.Format("%s<br>%s", {
+                local activationConditionText = EpicEnemies.Hooks.GetActivationConditionDescription:Return("", effect.ActivationCondition, char)
+
+                str = str .. Text.Format("%s<br>%s<br>%s", {
                     FormatArgs = {
                         Text.Format(Text.Format("• ", {Size = 28}) .. effect.Name, {FontType = Text.FONTS.BOLD, Color = "088cc4"}),
                         Text.Format("      " .. effect.Description, {Size = 17}),
+                        Text.Format("      " .. activationConditionText, {Size = 16}),
                     }
                 })
                 str = str .. "<br>"

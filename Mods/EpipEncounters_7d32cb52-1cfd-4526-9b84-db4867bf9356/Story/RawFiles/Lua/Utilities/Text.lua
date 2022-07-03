@@ -105,6 +105,8 @@ function Text.Format(str, formatData)
         for i,arg in ipairs(formatData.FormatArgs) do
             if type(arg) == "table" then
                 table.insert(finalArgs, Text.Format(arg.Text, arg))
+            elseif type(arg) == "number" then
+                table.insert(finalArgs, RemoveTrailingZeros(arg))
             else
                 table.insert(finalArgs, arg)
             end

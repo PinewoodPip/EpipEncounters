@@ -287,11 +287,14 @@ local TestEffects = {
         {
             Name = "HealthThreshold Test",
             ID = "HealthThreshold",
-            Description = "Below 50% phys armor",
+            Description = "Below 50% all healths",
             ---@type EpicEnemiesCondition_HealthThreshold
             ActivationCondition = {
                 Type = "HealthThreshold",
                 Vitality = 0.5,
+                -- PhysicalArmor = 0.4,
+                MagicArmor = 0.3,
+                -- RequireAll = true,
             },
             Status = {
                 StatusID = "BLESSED",

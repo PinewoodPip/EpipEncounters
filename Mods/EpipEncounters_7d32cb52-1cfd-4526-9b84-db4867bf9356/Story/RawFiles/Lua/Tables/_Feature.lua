@@ -50,6 +50,7 @@ end
 ---Add an event to the Events field.
 ---@param name string
 ---@param data? Event
+---@return Event
 function _Feature:AddEvent(name, data)
     local event = data or {Module = self.Name, Event = name}
     data.Module = self.Name
@@ -58,11 +59,14 @@ function _Feature:AddEvent(name, data)
     setmetatable(event, {__index = _Event})
 
     self.Events[name] = event
+
+    return event
 end
 
 ---Add a hook to the Hooks field.
 ---@param name string
 ---@param data? Hook
+---@return Hook
 function _Feature:AddHook(name, data)
     local hook = data or {Module = self.Name, Event = name}
     hook.Module = self.Name
@@ -71,6 +75,8 @@ function _Feature:AddHook(name, data)
     setmetatable(hook, {__index = _Hook})
 
     self.Hooks[name] = hook
+
+    return hook
 end
 
 ---------------------------------------------
