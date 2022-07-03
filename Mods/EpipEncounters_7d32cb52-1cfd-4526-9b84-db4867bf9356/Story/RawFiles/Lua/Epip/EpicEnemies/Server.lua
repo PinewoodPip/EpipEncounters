@@ -25,6 +25,32 @@ local settings = {
         HideNumbers = false,
         Tooltip = "Controls how many effects enemies affected by Epic Enemies can receive. Effects cost a variable amount of points based on how powerful they are.",
     },
+    EpicEnemies_PointsMultiplier_Bosses = {
+        ID = "EpicEnemies_PointsMultiplier_Bosses",
+        Type = "Slider",
+        Label = "Boss Enemy Points Multiplier",
+        SaveOnServer = true,
+        ServerOnly = true,
+        MinAmount = 0,
+        MaxAmount = 5,
+        Interval = 0.01,
+        DefaultValue = 1,
+        HideNumbers = false,
+        Tooltip = "A multiplier for the amount of points boss enemies receive.",
+    },
+    EpicEnemies_PointsMultiplier_Normies = {
+        ID = "EpicEnemies_PointsMultiplier_Normies",
+        Type = "Slider",
+        Label = "Normal Enemy Points Multiplier",
+        SaveOnServer = true,
+        ServerOnly = true,
+        MinAmount = 0,
+        MaxAmount = 5,
+        Interval = 0.01,
+        DefaultValue = 0,
+        HideNumbers = false,
+        Tooltip = "A multiplier for the amount of points normal enemies receive.",
+    },
 }
 for id,effect in pairs(EpicEnemies.EFFECTS) do
     settings[id] = EpicEnemies.GenerateOptionData(effect)
@@ -64,6 +90,13 @@ ServerSettings.AddModule("EpicEnemies", settings)
 ---@class EpicEnemies_Hook_CanActivateEffect : Hook
 ---@field RegisterHook fun(self, handler:fun(activate:boolean, char:EsvCharacter, effect:EpicEnemiesEffect, params:any))
 ---@field Return fun(self, activate:boolean, char:EsvCharacter, effect:EpicEnemiesEffect, params:any)
+
+---@class EpicEnemies_Hook_GetPointsForCharacter : Hook
+---@field RegisterHook fun(self, handler:fun(points:integer, char:EsvCharacter))
+---@field Return fun(self, points:integer, char:EsvCharacter)
+
+---@type EpicEnemies_Hook_GetPointsForCharacter
+EpicEnemies.Hooks.GetPointsForCharacter = EpicEnemies:AddHook("GetPointsForCharacter")
 
 ---------------------------------------------
 -- METHODS
@@ -300,13 +333,25 @@ end
 
 ---@param char EsvCharacter
 function EpicEnemies.GetPointsForCharacter(char)
-    -- TODO!
-    return ServerSettings.GetValue("EpicEnemies", "EpicEnemies_PointsBudget")
+    return EpicEnemies.Hooks.GetPointsForCharacter:Return(ServerSettings.GetValue("EpicEnemies", "EpicEnemies_PointsBudget"), char)
 end
 
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
+
+-- Multiply points by slider settings.
+EpicEnemies.Hooks.GetPointsForCharacter:RegisterHook(function(points, char)
+    local isBoss = Osi.IsBoss(char.MyGuid) == 1
+
+    if isBoss then
+        points = points * ServerSettings.GetValue("EpicEnemies", "EpicEnemies_PointsMultiplier_Bosses")
+    else
+        points = points * ServerSettings.GetValue("EpicEnemies", "EpicEnemies_PointsMultiplier_Normies")
+    end
+
+    return points
+end)
 
 -- Reset state upon lua reset
 Ext.Events.ResetCompleted:Subscribe(function()
@@ -342,9 +387,11 @@ end)
 
 -- TODO register this later so it runs last.
 EpicEnemies.Hooks.IsEligible:RegisterHook(function (eligible, char)
-    -- Bosses
+    -- Eligibility based on slider settings
     if Osi.IsBoss(char.MyGuid) == 1 then
-        eligible = true
+        eligible = ServerSettings.GetValue("EpicEnemies", "EpicEnemies_PointsMultiplier_Bosses") > 0
+    else
+        eligible = ServerSettings.GetValue("EpicEnemies", "EpicEnemies_PointsMultiplier_Normies") > 0
     end
 
     -- Players cannot be affected.
@@ -357,9 +404,9 @@ EpicEnemies.Hooks.IsEligible:RegisterHook(function (eligible, char)
         eligible = false
     end
 
-    -- Cannot initialize the same character multiple times
+    -- Cannot initialize the same character multiple times, nor initialize characters specifically excluded from this feature
     if eligible then
-        eligible = not char:IsTagged(EpicEnemies.INITIALIZED_TAG)
+        eligible = not char:IsTagged(EpicEnemies.INITIALIZED_TAG) and not char:IsTagged(EpicEnemies.INELIGIBLE_TAG)
     end
 
     return eligible

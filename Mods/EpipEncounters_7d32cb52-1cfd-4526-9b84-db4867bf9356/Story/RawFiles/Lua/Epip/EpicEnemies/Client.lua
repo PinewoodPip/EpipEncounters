@@ -36,6 +36,32 @@ local Settings = {
         HideNumbers = false,
         Tooltip = "Controls how many effects enemies affected by Epic Enemies can receive. Effects cost a variable amount of points based on how powerful they are.",
     },
+    {
+        ID = "EpicEnemies_PointsMultiplier_Bosses",
+        Type = "Slider",
+        Label = "Boss Enemy Points Multiplier",
+        SaveOnServer = true,
+        ServerOnly = true,
+        MinAmount = 0,
+        MaxAmount = 5,
+        Interval = 0.01,
+        DefaultValue = 1,
+        HideNumbers = false,
+        Tooltip = "A multiplier for the amount of points boss enemies receive.",
+    },
+    {
+        ID = "EpicEnemies_PointsMultiplier_Normies",
+        Type = "Slider",
+        Label = "Normal Enemy Points Multiplier",
+        SaveOnServer = true,
+        ServerOnly = true,
+        MinAmount = 0,
+        MaxAmount = 5,
+        Interval = 0.01,
+        DefaultValue = 0,
+        HideNumbers = false,
+        Tooltip = "A multiplier for the amount of points normal enemies receive.",
+    },
 }
 
 Client.UI.OptionsSettings.RegisterMod("EpicEnemies", {

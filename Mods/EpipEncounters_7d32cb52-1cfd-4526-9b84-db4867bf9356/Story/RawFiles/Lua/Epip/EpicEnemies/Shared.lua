@@ -370,6 +370,7 @@ local EpicEnemies = {
     ---@type EpicEnemiesEffectsCategory[]
     CATEGORIES = {},
     INITIALIZED_TAG = "PIP_EpicEnemy",
+    INELIGIBLE_TAG = "PIP_EpicEnemies_Ineligible",
     Events = {
         
     },
