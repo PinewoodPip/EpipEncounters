@@ -278,86 +278,87 @@ local Data = {
             },
         },
     },
-    {
-        Name = "TEST",
-        ID = "TestEffects",
-        Effects = {
-            {
-                Name = "HealthThreshold Test",
-                ID = "HealthThreshold",
-                Description = "Below 50% phys armor",
-                ---@type EpicEnemiesCondition_HealthThreshold
-                ActivationCondition = {
-                    Type = "HealthThreshold",
-                    Vitality = 0.5,
-                },
-                Status = {
-                    StatusID = "BLESSED",
-                    Duration = 2,
-                },
+}
+
+local TestEffects = {
+    Name = "TEST",
+    ID = "TestEffects",
+    Effects = {
+        {
+            Name = "HealthThreshold Test",
+            ID = "HealthThreshold",
+            Description = "Below 50% phys armor",
+            ---@type EpicEnemiesCondition_HealthThreshold
+            ActivationCondition = {
+                Type = "HealthThreshold",
+                Vitality = 0.5,
             },
-            {
-                Name = "TurnStart Activation Test",
-                ID = "TestStatus2",
-                Description = "Hasted on turn 2.",
-                Status = {
-                    StatusID = "HASTED",
-                    Duration = 2,
-                },
-                ActivationCondition = {
-                    Type = "TurnStart",
-                    Round = 2,
-                    Repeat = false,
-                },
+            Status = {
+                StatusID = "BLESSED",
+                Duration = 2,
             },
-            {
-                Name = "SUICIDE BOMB",
-                ID = "TestStatus",
-                Description = "asdasd",
-                Status = {
-                    StatusID = "AMER_FLAMING_CRESCENDO",
-                    Duration = 1,
-                },
-            },
-            {
-                Name = "TurnStart Activation Test (Repeat)",
-                ID = "Test_TurnStart_2",
-                Description = "Clockwork bomb summon on turn 2+ (repeats)",
-                Summon = "6f8db517-f1af-4b47-b095-f239fd2293d0",
-                ActivationCondition = {
-                    Type = "TurnStart",
-                    Round = 2,
-                    Repeat = true,
-                },
-            },
-            {
-                Name = "Clockwork Bomb",
-                ID = "SummonEffect",
-                Description = "",
-                Summon = "6f8db517-f1af-4b47-b095-f239fd2293d0",
-            },
-            {
-                Name = "Boneshaped Crusher Summon",
-                ID = "Summon_BoneshapedCrusher",
-                Description = "Grants the character a Boneshaped Crusher summon.",
-                Summon = "02a84627-6b66-46ad-85f0-769a0c210539",
-            },
-            {
-                Name = "Extended stat test",
-                ID = "ExtendedStatTest",
-                Description = "",
-                ExtendedStats = {
-                    {
-                        StatID = "Shoot_OnStatus",
-                        Amount = 1,
-                        Property1 = "HASTED",
-                        Property2 = "Projectile_ChainHeal",
-                        Property3 = "RemoteImpact",
-                    }
-                },
-            }
         },
-    }
+        {
+            Name = "TurnStart Activation Test",
+            ID = "TestStatus2",
+            Description = "Hasted on turn 2.",
+            Status = {
+                StatusID = "HASTED",
+                Duration = 2,
+            },
+            ActivationCondition = {
+                Type = "TurnStart",
+                Round = 2,
+                Repeat = false,
+            },
+        },
+        {
+            Name = "SUICIDE BOMB",
+            ID = "TestStatus",
+            Description = "asdasd",
+            Status = {
+                StatusID = "AMER_FLAMING_CRESCENDO",
+                Duration = 1,
+            },
+        },
+        {
+            Name = "TurnStart Activation Test (Repeat)",
+            ID = "Test_TurnStart_2",
+            Description = "Clockwork bomb summon on turn 2+ (repeats)",
+            Summon = "6f8db517-f1af-4b47-b095-f239fd2293d0",
+            ActivationCondition = {
+                Type = "TurnStart",
+                Round = 2,
+                Repeat = true,
+            },
+        },
+        {
+            Name = "Clockwork Bomb",
+            ID = "SummonEffect",
+            Description = "",
+            Summon = "6f8db517-f1af-4b47-b095-f239fd2293d0",
+        },
+        {
+            Name = "Boneshaped Crusher Summon",
+            ID = "Summon_BoneshapedCrusher",
+            Description = "Grants the character a Boneshaped Crusher summon.",
+            Summon = "02a84627-6b66-46ad-85f0-769a0c210539",
+        },
+        {
+            Name = "Extended stat test",
+            ID = "ExtendedStatTest",
+            Description = "",
+            ExtendedStats = {
+                {
+                    StatID = "Shoot_OnStatus",
+                    Amount = 1,
+                    Property1 = "HASTED",
+                    Property2 = "Projectile_ChainHeal",
+                    Property3 = "RemoteImpact",
+                }
+            },
+        }
+    },
 }
 
 local EpicEnemies = {
@@ -527,4 +528,8 @@ end
 -- Initialize effects
 for i,category in pairs(Data) do
     EpicEnemies.RegisterEffectCategory(category)
+end
+
+if Ext.IsDeveloperMode() then
+    EpicEnemies.RegisterEffectCategory(TestEffects)
 end
