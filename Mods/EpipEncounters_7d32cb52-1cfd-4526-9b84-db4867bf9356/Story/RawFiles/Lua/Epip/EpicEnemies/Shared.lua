@@ -518,7 +518,10 @@ function EpicEnemies.GenerateOptionData(effect)
         HideNumbers = false,
         DefaultValue = effect.DefaultWeight,
         Label = effect.Name,
-        Tooltip = effect.Description,
+        Tooltip = Text.Format("%s<br><br>Costs %s points.", {FormatArgs = {
+            effect.Description,
+            effect:GetCost(),
+        }}),
     }
 
     return option
