@@ -73,9 +73,16 @@ EpicEnemies.Hooks.CanActivateEffect:RegisterHook(function(activate, char, effect
         ---@type EpicEnemiesCondition_HealthThreshold
         condition = condition
 
-        local vitality = params.Vitality <= (condition.Vitality or 0)
-        local physArmor = params.PhysicalArmor <= (condition.PhysicalArmor or 0)
-        local magicArmor = params.MagicArmor <= (condition.MagicArmor or 0)
+        local vit = condition.Vitality
+        if vit == nil then vit = 0 end
+        local phys = condition.PhysicalArmor
+        if phys == nil then phys = 0 end
+        local mag = condition.MagicArmor
+        if mag == nil then mag = 0 end
+
+        local vitality = params.Vitality <= vit
+        local physArmor = params.PhysicalArmor <= phys
+        local magicArmor = params.MagicArmor <= mag
 
         if condition.RequireAll then
             return vitality and physArmor and magicArmor

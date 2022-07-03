@@ -232,20 +232,3 @@ if Ext.Utils.GameVersion() ~= "v3.6.51.9303" then
 end
 
 Ext.Require(prefixedGUID, "_LastScript.lua")
-
--- Ext.Events.Tick:Subscribe(function()
---     if not Ext.GetPickingState() then return nil end
---     local pointerChar = Ext.GetPickingState().HoverEntity
-
---     if pointerChar then
---         pointerChar = Ext.GetCharacter(pointerChar)
-
---         local count = 0
-
---         for k,v in ipairs(pointerChar.Stats.DynamicStats) do
---             count = count + v.Sight
---         end
-
---         print(count)
---     end
--- end)

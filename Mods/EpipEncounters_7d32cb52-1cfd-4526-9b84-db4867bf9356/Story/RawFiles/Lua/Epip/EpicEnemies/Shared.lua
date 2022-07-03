@@ -287,7 +287,7 @@ local TestEffects = {
         {
             Name = "HealthThreshold Test",
             ID = "HealthThreshold",
-            Description = "Below 50% all healths",
+            Description = "...",
             ---@type EpicEnemiesCondition_HealthThreshold
             ActivationCondition = {
                 Type = "HealthThreshold",

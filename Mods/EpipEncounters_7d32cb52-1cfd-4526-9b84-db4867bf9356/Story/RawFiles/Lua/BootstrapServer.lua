@@ -30,99 +30,95 @@ Utilities = {}
 
 local prefixedGUID = "EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356"
 
-Ext.Require(prefixedGUID, "Tables/Epip.lua");
-Ext.Require(prefixedGUID, "Tables/_Events.lua");
-Ext.Require(prefixedGUID, "Tables/_Feature.lua");
-Ext.Require(prefixedGUID, "Data/Game.lua");
+LOAD_ORDER = {
+    "Tables/Epip.lua",
+    "Tables/_Events.lua",
+    "Tables/_Feature.lua",
 
-Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Utils.lua");
-Ext.Require(prefixedGUID, "Utilities/Text.lua");
-Ext.Require(prefixedGUID, "Epip/Settings.lua");
-Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Utilities/Text.lua");
-Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Utilities/Hooks.lua");
-Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Utilities/Color.lua");
-Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Utilities.lua");
-Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Utilities/Server.lua");
-Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Server/Osiris.lua");
+    "Data/Game.lua",
 
-Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Data/Game.lua");
+    "Utils.lua",
+    "Utilities/Text.lua",
+    "Epip/Settings.lua",
+    "Utilities/Hooks.lua",
+    "Utilities/Color.lua",
+    "Utilities.lua",
+    "Utilities/Server.lua",
+    "Server/Osiris.lua",
 
-Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Game.lua");
-Ext.Require(prefixedGUID, "Game/Characters/Shared.lua");
-Ext.Require(prefixedGUID, "Game/Characters/Server.lua");
-Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Game/Items/Shared.lua");
-Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Game/Items/Server.lua");
-Ext.Require(prefixedGUID, "Game/Stats/Shared.lua");
-Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Game/Net/Shared.lua");
-Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Game/Net/Server.lua");
-Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Game/Talents/Shared.lua");
-Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Game/Talents/Server.lua");
+    -- "Data/Game.lua",
 
-Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Game/AMERUI/Shared.lua");
-Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Game/AMERUI/Server.lua");
+    "Game.lua",
 
-Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Game/Ascension/Shared.lua");
-Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Game/Ascension/Server.lua");
+    "Game/Characters/Shared.lua",
+    "Game/Characters/Server.lua",
+    "Game/Items/Shared.lua",
+    "Game/Items/Server.lua",
+    "Game/Stats/Shared.lua",
+    "Game/Net/Shared.lua",
+    "Game/Talents/Shared.lua",
+    "Game/Talents/Server.lua",
 
-Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Config.lua");
+    "Game/AMERUI/Shared.lua",
+    "Game/AMERUI/Server.lua",
+    "Game/Ascension/Shared.lua",
+    "Game/Ascension/Server.lua",
 
-Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "EpicStatsKeywords.lua");
-Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "EpicStatsDefinitions.lua");
+    "Config.lua",
+    "EpicStatsKeywords.lua",
+    "EpicStatsDefinitions.lua",
+    "EpipEncountersServer.lua",
+    "HotkeysServer.lua",
 
-Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "EpipEncountersServer.lua");
+    "EpipTalents.lua",
 
-Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "HotkeysServer.lua");
+    -- "GreatforgeExclude.lua",
 
-Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "EpipTalents.lua");
+    "Epip/Server/Shroud.lua",
+    "Epip/Server/AMERUI_Controller.lua",
 
--- Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "GreatforgeExclude.lua");
+    "JournalServer.lua",
+    "Epip/Server/PartyInventoryServer.lua",
+    "Epip/Server/AutoIdentify.lua",
+    "Epip/Server/DebugCheats.lua",
+    "Epip/Server/AI.lua",
+    "Epip/Server/ForceStoryPatching.lua",
+    "Epip/Server/DefaultHotbarActions.lua",
+    "Epip/Server/HotbarServer.lua",
+    "Epip/Server/IncompatibleModsWarning.lua",
+    "Epip/Server/ServerSettings.lua",
+    -- "Epip/Server/FastCasting.lua",
 
-Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Epip/Server/Shroud.lua");
-Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Epip/Server/AMERUI_Controller.lua");
+    "Epip/ChatCommands/Shared.lua",
+    "Epip/ChatCommands/Server.lua",
+    "Epip/EmoteCommands.lua",
+    "Debug/Commands/Server.lua",
 
-Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "JournalServer.lua");
-Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Epip/Server/PartyInventoryServer.lua");
-Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Epip/Server/AutoIdentify.lua");
-Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Epip/Server/DebugCheats.lua");
-Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Epip/Server/AI.lua");
-Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Epip/Server/ForceStoryPatching.lua");
-Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Epip/Server/DefaultHotbarActions.lua");
-Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Epip/Server/HotbarServer.lua");
-Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Epip/Server/IncompatibleModsWarning.lua");
-Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Epip/Server/ServerSettings.lua");
--- Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Epip/Server/FastCasting.lua");
+    "Epip/EpicEnemies/Shared.lua",
+    "Epip/EpicEnemies/EffectTemplates.lua",
+    "Epip/EpicEnemies/ActivationConditions.lua",
+    "Epip/EpicEnemies/Server.lua",
 
-Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Epip/ChatCommands/Shared.lua");
-Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Epip/ChatCommands/Server.lua");
+    "Epip/StatsTab/Shared.lua",
+    "Epip/StatsTab/Server/Server.lua",
+    "Epip/StatsTab/Server/StatGetters.lua",
 
-Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Epip/EmoteCommands.lua");
+    "Epip/ContextMenus/Greatforge/Server.lua",
+    "Epip/ContextMenus/Dyes/Server.lua",
+    "Epip/ContextMenus/Vanity/Shared.lua",
+    "Epip/ContextMenus/Vanity/Server.lua",
 
-Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Debug/Commands/Server.lua");
+    "Epip/AwesomeSoccer/Server.lua",
 
--- Epic Enemies
-Ext.Require(prefixedGUID, "Epip/EpicEnemies/Shared.lua");
-Ext.Require(prefixedGUID, "Epip/EpicEnemies/EffectTemplates.lua");
-Ext.Require(prefixedGUID, "Epip/EpicEnemies/ActivationConditions.lua");
-Ext.Require(prefixedGUID, "Epip/EpicEnemies/Server.lua");
+    "Debug/Shared.lua",
+    "Debug/Server.lua",
+}
 
--- Stats Tab
-Ext.Require(prefixedGUID, "Epip/StatsTab/Shared.lua");
-Ext.Require(prefixedGUID, "Epip/StatsTab/Server/Server.lua");
-Ext.Require(prefixedGUID, "Epip/StatsTab/Server/StatGetters.lua");
-
-Ext.Require(prefixedGUID, "Epip/ContextMenus/Greatforge/Server.lua");
-Ext.Require(prefixedGUID, "Epip/ContextMenus/Dyes/Server.lua");
-Ext.Require(prefixedGUID, "Epip/ContextMenus/Vanity/Shared.lua");
-Ext.Require(prefixedGUID, "Epip/ContextMenus/Vanity/Server.lua");
-
-Ext.Require(prefixedGUID, "Epip/AwesomeSoccer/Server.lua");
-
-Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Debug/Shared.lua");
-Ext.Require("EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356", "Debug/Server.lua");
-
--- intended to be used with NRD_ModCall from Osi.
-function TestPrint(value)
-    Ext.Print(value)
+-- Epip does not work in-editor.
+if Ext.Utils.GameVersion() ~= "v3.6.51.9303" then
+    for i,script in ipairs(LOAD_ORDER) do
+        Ext.Require(prefixedGUID, script)
+    end
 end
 
 local function sendDyes(user)
@@ -220,46 +216,6 @@ Ext.Osiris.RegisterListener("CharacterStatusApplied", 3, "after", function(targe
     end
 end)
 
--- Ext.RegisterListener("TreasureItemGenerated", function(item)
---     if not item:HasTag("AMER_DELTAMODS_HANDLED") and Osi.ItemIsEquipable(item.MyGuid) == 1 then
---         Ext.Print(item.MyGuid)
---         Osi.SetTag(item.MyGuid, "asdasd")
-
---         Osi.ItemToInventory(item.MyGuid, Osi.CharacterGetHostCharacter(), 1, 1 ,0)
-
---         -- crash
---         -- Osi.PROC_AMER_Deltamods_GenerateOnItem(item.MyGuid)
---     end
--- end)
-
--- function _ChangeTreasureTables(table1, table2)
---     Game.Stats.Treasure:SetOverride(table1, Ext.GetTreasureTable(table2))
--- end
-
-local timers = {}
-
-Game.Net.RegisterListener("EPIPENCOUNTERS_Timer", function(cmd, payload)
-    local char = Ext.GetCharacter(payload.NetID).MyGuid
-    local owner = Osi.CharacterGetReservedUserID(char)
-
-    if not timers[owner] then timers[owner] = {} end
-
-    timers[owner][payload.Event] = true
-
-    Osi.ProcObjectTimer(char, payload.Event, payload.Seconds * 1000)
-end)
-
-
--- TODO better name
-Ext.Osiris.RegisterListener("ProcObjectTimerFinished", 2, "after", function(char, event)
-    local user = Osi.CharacterGetReservedUserID(char)
-    if timers[user] and timers[user][event] then
-        timers[user][event] = nil
-
-        Game.Net.PostToUser(user, "EPIPENCOUNTERS_Timer", {Event = event})
-    end
-end)
-
 function GreatforgeGetItemData(char, item)
     char = Ext.GetCharacter(char)
     item = Ext.GetItem(item)
@@ -285,11 +241,6 @@ Ext.Osiris.RegisterListener("CharacterStatusRemoved", 3, "after", function(char,
         Game.Net.Broadcast("EPIP_StatusRemoved", {NetID = Ext.GetCharacter(char).NetID, Status = status})
     end
 end)
-
--- TODO move
-local function OnGenericOsirisSymbol(...)
-    
-end
 
 NULLGUID = "NULL_00000000-0000-0000-0000-000000000000"
 
@@ -331,10 +282,6 @@ Game.Net.RegisterListener("EPIP_RegisterGenericOsiSymbolEvent", function(cmd, pa
 end)
 
 Ext.Require(prefixedGUID, "_LastScript.lua");
-
--- Osiris.RegisterSymbolListener("NRD_OnActionStateExit", 2, "after", function(char, state)
---     print("exit", char, state)
--- end)
 
 local casters = {}
 Osiris.RegisterSymbolListener("NRD_OnActionStateEnter", 2, "after", function(char, state)

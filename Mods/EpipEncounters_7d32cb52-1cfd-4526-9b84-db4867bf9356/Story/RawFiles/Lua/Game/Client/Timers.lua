@@ -26,11 +26,6 @@ local Timer = Client.Timer
 function Timer.Start(event, seconds, handler)
     seconds = seconds or 0.001
 
-    -- Timer.eventHandlers[event] = handler
-    -- Game.Net.PostToServer("EPIPENCOUNTERS_Timer", {Event = event, Seconds = seconds, NetID = Client.GetCharacter().NetID})
-
-    -- Timer.Root.startTimer(event, seconds)
-
     table.insert(Timer.activeTimers, {
         Event = event,
         InitialDuration = seconds,
@@ -71,27 +66,3 @@ end)
 function Timer.RegisterListener(event, handler)
     Utilities.Hooks.RegisterListener("Timer", "TimerComplete_" .. event, handler)
 end
-
----------------------------------------------
--- LISTENERS
----------------------------------------------
-local function OnTimerComplete(ui, method, event)
-    if Timer.eventHandlers[event] then
-        Timer.eventHandlers[event]()
-    end
-
-    Utilities.Hooks.FireEvent("Timer", "TimerComplete_" .. event)
-end
-
--- TEMP
-Game.Net.RegisterListener("EPIPENCOUNTERS_Timer", function(cmd, payload)
-    OnTimerComplete(nil, nil, payload.Event)
-end)
-
-Ext.Events.SessionLoaded:Subscribe(function()
-    -- TODO separate UI
-    -- Timer.UI = Client.UI.ContextMenu.UI
-    -- Timer.Root = Client.UI.ContextMenu.Root
-
-    -- Ext.RegisterUICall(Timer.UI, "pipTimerComplete", OnTimerComplete)
-end)
