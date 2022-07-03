@@ -73,6 +73,25 @@ Client.UI.OptionsSettings.RegisterMod("EpicEnemies", {
 
 Client.UI.OptionsSettings.RegisterOptions("EpicEnemies", Settings)
 
+for id,category in pairs(EpicEnemies.CATEGORIES) do
+    local settingID = "EpicEnemies_CategoryWeight_" .. category.ID
+    local setting = {
+        ID = settingID,
+        Type = "Slider",
+        Label = "Category Weight Multiplier",
+        SaveOnServer = true,
+        ServerOnly = true,
+        MinAmount = 0,
+        MaxAmount = 5,
+        Interval = 0.01,
+        DefaultValue = 1,
+        HideNumbers = false,
+        VisibleAtTopLevel = false,
+        Tooltip = Text.Format("A multiplier for the weights of the effects of this category (%s).", {FormatArgs = {category.Name}}),
+    }
+
+    Client.UI.OptionsSettings.RegisterOption("EpicEnemies", setting)
+end
 for id,effect in pairs(EpicEnemies.EFFECTS) do
     local option = EpicEnemies.GenerateOptionData(effect)
 
@@ -90,7 +109,9 @@ local option = {
 for i,category in ipairs(EpicEnemies.CATEGORIES) do
     local tab = {
         Label = category.Name,
-        SubSettings = {},
+        SubSettings = {
+            "EpicEnemies_CategoryWeight_" .. category.ID,
+        },
     }
 
     for z,effectID in ipairs(category.Effects) do

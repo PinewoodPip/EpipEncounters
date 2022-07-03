@@ -52,6 +52,22 @@ local settings = {
         Tooltip = "A multiplier for the amount of points normal enemies receive.",
     },
 }
+for id,category in pairs(EpicEnemies.CATEGORIES) do
+    local settingID = "EpicEnemies_CategoryWeight_" .. category.ID
+    settings[settingID] = {
+        ID = settingID,
+        Type = "Slider",
+        Label = "Category Weight Multiplier",
+        SaveOnServer = true,
+        ServerOnly = true,
+        MinAmount = 0,
+        MaxAmount = 5,
+        Interval = 0.01,
+        DefaultValue = 1,
+        HideNumbers = false,
+        Tooltip = "A multiplier for the weights of the effects of this category.",
+    }
+end
 for id,effect in pairs(EpicEnemies.EFFECTS) do
     settings[id] = EpicEnemies.GenerateOptionData(effect)
 end

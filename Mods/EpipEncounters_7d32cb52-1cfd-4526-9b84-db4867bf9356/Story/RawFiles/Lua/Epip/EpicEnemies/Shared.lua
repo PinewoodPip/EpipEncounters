@@ -444,6 +444,7 @@ local _EpicEnemiesActivationCondition = {
 ---@field DefaultWeight integer
 ---@field DefaultCost integer
 ---@field ActivationCondition EpicEnemiesActivationCondition
+---@field Category string?
 
 ---@class EpicEnemiesKeywordData
 ---@field Keyword Keyword
@@ -482,8 +483,18 @@ function _EpicEnemiesEffect:GetWeight()
 
     if Ext.IsClient() then
         weight = Client.UI.OptionsSettings.GetOptionValue("EpicEnemies", self.ID)
+
+        if self.Category then
+            weight = weight * Client.UI.OptionsSettings.GetOptionValue("EpicEnemies", "EpicEnemies_CategoryWeight_" .. self.Category)
+        end
     else
         weight = Epip.Features.ServerSettings.GetValue("EpicEnemies", self.ID)
+
+        -- Multiply by category multiplier
+        if self.Category then
+            weight = weight * Epip.Features.ServerSettings.GetValue("EpicEnemies", "EpicEnemies_CategoryWeight_" .. self.Category)
+            print("final weight", weight)
+        end
     end
 
     return weight
@@ -511,6 +522,7 @@ function EpicEnemies.RegisterEffectCategory(category)
     for i,effect in ipairs(category.Effects) do
         if type(effect) == "table" then
             EpicEnemies.RegisterEffect(effect.ID, effect)
+            effect.Category = category.ID
             category.Effects[i] = effect.ID
         end
     end
