@@ -21,6 +21,13 @@ local EpicEnemies = Epip.Features.EpicEnemies
 ---@field MagicArmor number From 0-1. Use 0 to ignore this health metric.
 ---@field RequireAll boolean If true, all thresholds must be met for the activation.
 
+---@class EpicEnemiesCondition_BatteredHarried : EpicEnemiesActivationCondition
+---@field StackType StackType
+---@field Amount integer
+
+---@class EpicEnemiesCondition_StatusGained : EpicEnemiesActivationCondition
+---@field StatusID string
+
 ---------------------------------------------
 -- CONDITIONS
 ---------------------------------------------
@@ -43,10 +50,32 @@ Osiris.RegisterSymbolListener("PROC_AMER_CharacterReceivedDamage_PhysMagicDefine
         local physArmorFraction = Osi.CharacterGetArmorPercentage(char) / 100
         local magicArmorFraction = Osi.CharacterGetMagicArmorPercentage(char) / 100
 
-        EpicEnemies.ActivateEffects(Ext.GetCharacter(char), "HealthThreshold", {
+        EpicEnemies.ActivateEffects(char, "HealthThreshold", {
             Vitality = hpFraction,
             PhysicalArmor = physArmorFraction,
             MagicArmor = magicArmorFraction,
+        })
+    end
+end)
+
+-- BatteredHarried
+Osiris.RegisterSymbolListener("PROC_AMER_BatteredHarried_StacksChanged", 5, "after", function(char, source, stackType, addedStacks, newStacks)
+    if addedStacks > 0 and EpicEnemies.IsInitialized(char) then
+        local battered, harried, total = Osiris.QRY_AMER_BatteredHarried_GetCurrentStacks(char)
+
+        EpicEnemies.ActivateEffects(char, "BatteredHarried", {
+            Battered = battered,
+            Harried = harried,
+            Total = total,
+        })
+    end
+end)
+
+-- StatusGained
+Osiris.RegisterSymbolListener("PROC_AMER_GEN_FilteredStatus_Applied", 4, "after", function(char, source, status, turns)
+    if EpicEnemies.IsInitialized(char) then
+        EpicEnemies.ActivateEffects(char, "StatusGained", {
+            StatusID = status,
         })
     end
 end)
@@ -89,6 +118,34 @@ EpicEnemies.Hooks.CanActivateEffect:RegisterHook(function(activate, char, effect
         else
             return vitality or physArmor or magicArmor
         end
+    end
+
+    return activate
+end)
+
+EpicEnemies.Hooks.CanActivateEffect:RegisterHook(function(activate, char, effect, condition, params)
+    ---@type EpicEnemiesCondition_BatteredHarried
+    condition = condition
+
+    if condition.Type == "BatteredHarried" then
+        if condition.StackType == "Both" then
+            return params.Total >= condition.Amount
+        elseif condition.StackType == "Battered" or condition.StackType == "B" then
+            return params.Battered >= condition.Amount
+        elseif condition.StackType == "Harried" or condition.StackType == "H" then
+            return params.Harried >= condition.Amount
+        end
+    end
+
+    return activate
+end)
+
+EpicEnemies.Hooks.CanActivateEffect:RegisterHook(function(activate, char, effect, condition, params)
+    ---@type EpicEnemiesCondition_StatusGained
+    condition = condition
+
+    if condition.Type == "StatusGained" then
+        return params.StatusID == condition.StatusID
     end
 
     return activate

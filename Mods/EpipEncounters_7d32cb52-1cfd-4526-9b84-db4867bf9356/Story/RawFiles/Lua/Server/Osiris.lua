@@ -213,6 +213,7 @@ local AMER_DATABASES = {
 
     ["DB_AMER_Reaction_FreeCount_Remaining"] = {"CHARACTERGUID", "STRING", "INTEGER"},
     ["DB_AMER_ExtendedStat_AddedStat"] = {"CHARACTERGUID", "STRING", "STRING", "STRING", "STRING", "REAL"},
+    ["DB_AMER_BatteredHarried_OUTPUT_CurrentStacks"] = {"INTEGER", "INTEGER", "INTEGER"},
 }
 
 local AMER_QUERIES = {
@@ -226,6 +227,8 @@ local AMER_QUERIES = {
     ["QRY_AMER_KeywordStat_VitalityVoid_GetRadius"] = {Real},
     ["QRY_AMER_KeywordStat_VitalityVoid_GetPower"] = {Real},
     ["QRY_AMER_KeywordStat_Prosperity_GetThreshold"] = {Real},
+
+    ["QRY_AMER_BatteredHarried_GetCurrentStacks"] = {"DB_AMER_BatteredHarried_OUTPUT_CurrentStacks"},
 }
 
 for name,params in pairs(AMER_DATABASES) do

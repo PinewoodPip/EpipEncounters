@@ -102,6 +102,16 @@ EpicEnemies.Hooks.GetPointsForCharacter = EpicEnemies:AddHook("GetPointsForChara
 -- METHODS
 ---------------------------------------------
 
+---@param char EsvCharacter|GUID
+---@return bool
+function EpicEnemies.IsInitialized(char)
+    if type(char) == "userdata" then
+        return char:HasTag(EpicEnemies.INITIALIZED_TAG)
+    else
+        return Osi.IsTagged(char, EpicEnemies.INITIALIZED_TAG)
+    end
+end
+
 ---@param char EsvCharacter
 function EpicEnemies.InitializeCharacter(char)
     if not ServerSettings.GetValue("EpicEnemies", "EpicEnemies_Toggle") then return nil end
@@ -252,6 +262,8 @@ end
 ---@param effectType string
 ---@param params table?
 function EpicEnemies.ActivateEffects(char, effectType, params)
+    if type(char) ~= "userdata" then char = Ext.GetCharacter(char) end
+
     for id,effect in pairs(EpicEnemies.GetAppliedEffects(char, function(char, eff) return eff.ActivationCondition.Type == effectType end)) do
         if EpicEnemies.Hooks.CanActivateEffect:Return(false, char, effect, effect.ActivationCondition, params) then
             EpicEnemies.Events.EffectActivated:Fire(char, effect)

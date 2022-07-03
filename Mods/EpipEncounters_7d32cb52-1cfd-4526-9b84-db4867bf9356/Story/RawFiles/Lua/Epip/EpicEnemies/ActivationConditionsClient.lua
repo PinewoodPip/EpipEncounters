@@ -3,6 +3,8 @@ local Conditions = {
     TEMPLATES = {
         TurnStart = "Activates on turn %s%s",
         HealthThreshold = "Activates below %s",
+        BatteredHarried = "Activates upon reaching %s %s Stacks",
+        StatusGained = "Activates upon gaining the %s status.",
     }
 }
 Epip.AddFeature("EpicEnemiesEffectConditions", "EpicEnemiesEffectConditions", Conditions)
@@ -61,6 +63,30 @@ EpicEnemies.Hooks.GetActivationConditionDescription:RegisterHook(function(text, 
             FormatArgs = {
                 str,
             }
+        })
+    elseif type == "BatteredHarried" then
+        local stackNames = {
+            B = "Battered",
+            H = "Harried",
+        }
+        local stackType = stackNames[condition.StackType] or condition.StackType
+
+        text = Text.Format(Conditions.TEMPLATES.BatteredHarried, {
+            FormatArgs = {
+                condition.Amount,
+                stackType,
+            }
+        })
+    elseif type == "StatusGained" then
+        local statusName = condition.StatusID
+        local stat = Ext.Stats.Get(statusName)
+
+        if stat then
+            statusName = Ext.L10N.GetTranslatedStringFromKey(stat.DisplayName)
+        end
+
+        text = Text.Format(Conditions.TEMPLATES.StatusGained, {
+            FormatArgs = {statusName},
         })
     end
 

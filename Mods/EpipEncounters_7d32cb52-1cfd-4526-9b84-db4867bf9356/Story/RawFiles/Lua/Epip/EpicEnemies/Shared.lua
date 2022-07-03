@@ -302,6 +302,35 @@ local TestEffects = {
             },
         },
         {
+            Name = "BatteredHarried Test",
+            ID = "BatteredHarriedTest",
+            Description = "...",
+            ---@type EpicEnemiesCondition_BatteredHarried
+            ActivationCondition = {
+                Type = "BatteredHarried",
+                StackType = "H",
+                Amount = 2,
+            },
+            Status = {
+                StatusID = "HASTED",
+                Duration = 1,
+            },
+        },
+        {
+            Name = "StatusGained Test",
+            ID = "StatusGainedTest",
+            Description = "...",
+            ---@type EpicEnemiesCondition_StatusGained
+            ActivationCondition = {
+                Type = "StatusGained",
+                StatusID = "HASTED",
+            },
+            Status = {
+                StatusID = "BLESSED",
+                Duration = 1,
+            },
+        },
+        {
             Name = "TurnStart Activation Test",
             ID = "TestStatus2",
             Description = "Hasted on turn 2.",
@@ -426,7 +455,12 @@ local _EpicEnemiesActivationCondition = {
 ---@field Effects string[]|EpicEnemiesEffect[] Can be an array of EpicEnemiesEffect while calling the register method. Will be turned into an ID array afterwards.
 
 ---@type EpicEnemiesEffect
-_EpicEnemiesEffect = {}
+_EpicEnemiesEffect = {
+    Description = "NO DESCRIPTION",
+    Name = "NO NAME",
+    DefaultCost = 10,
+    DefaultWeight = 10,
+}
 
 ---Get the cost of an effect.
 function _EpicEnemiesEffect:GetCost()

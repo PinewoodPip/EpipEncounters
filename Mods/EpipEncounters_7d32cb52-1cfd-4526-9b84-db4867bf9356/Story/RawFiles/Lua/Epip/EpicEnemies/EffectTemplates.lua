@@ -63,7 +63,7 @@ EpicEnemies.Events.EffectActivated:RegisterListener(function(char, effect)
     if effect.Status then
         local statusData = effect.Status
 
-        Osi.ApplyStatus(char.MyGuid, statusData.StatusID, statusData.Duration, 1)
+        Osi.ApplyStatus(char.MyGuid, statusData.StatusID, statusData.Duration or -1, 1)
     end
 
     -- Summons.
