@@ -101,7 +101,7 @@ end
 ---@type OptionsSettingsSelector
 local option = {
     ID = "EpicEnemies_CategorySelector",
-    Label = Text.Format("Epic Enemies Categories", {FontType = Text.FONTS.BOLD}),
+    Label = Text.Format("Effect Categories", {FontType = Text.FONTS.BOLD}),
     DefaultValue = 1,
     Type = "Selector",
     Options = {},

@@ -1,4 +1,11 @@
 
+---@type EpicEnemiesEffectsCategory
+local ArtifactsCategory = {
+    Name = "Artifacts",
+    ID = "Artifacts",
+    Effects = {}, -- Filled in automatically
+}
+
 ---@type EpicEnemiesEffectsCategory[]
 local Data = {
     {
@@ -248,18 +255,7 @@ local Data = {
             },
         },
     },
-    {
-        Name = "Artifacts",
-        ID = "Artifacts",
-        Effects = {
-            {
-                Name = "Artifact: Impetus",
-                ID = "Artifact_Impetus",
-                Description = "When you Haste an enemy, apply Impetus to them for X turns, where X is the duration of Hasted; when an enemy you can see becomes Hasted, do the same as a 1 AP reaction. Impetus deals Air damage, similar to Ruptured Tendons, when the afflicted character moves",
-                Artifact = "Artifact_Impetus",
-            },
-        },
-    },
+    ArtifactsCategory,
     {
         Name = "Miscellaneous",
         ID = "Miscellaneous",
@@ -392,6 +388,37 @@ local TestEffects = {
         }
     },
 }
+
+-- Generate Artifact options
+for id,artifact in pairs(Game.Items.ARTIFACTS) do
+    local displayStatus = Ext.Stats.Get("AMER_ARTIFACTPOWER_" .. id:gsub("Artifact_", ""):upper())
+
+    if not displayStatus then
+        displayStatus = Ext.Stats.Get("AMER_ARTIFACTPOWER_THE" .. id:gsub("Artifact_", ""):upper())
+    end
+
+    if id == "Artifact_CorruscatingSilks" then
+        displayStatus = Ext.Stats.Get("AMER_ARTIFACTPOWER_CORUSCATINGSILKS")
+    end
+
+    if displayStatus then
+        ---@type EpicEnemiesEffect
+        local effect = {
+            ID = id,
+            Name = Text.Format("Artifact: %s", {FormatArgs = {
+                Text.SeparatePascalCase(id:gsub("^Artifact_", ""))
+            }}),
+            DefaultCost = 15,
+            DefaultWeight = 8,
+            Description = Ext.L10N.GetTranslatedStringFromKey(displayStatus.DisplayName),
+            Artifact = artifact.ID,
+        }
+        table.insert(ArtifactsCategory.Effects, effect)
+    else
+        Ext.PrintError("Cannot find DisplayStatus for artifact: " .. id)
+    end
+end
+table.sort(ArtifactsCategory.Effects, function(a, b) return a.Name < b.Name end)
 
 local EpicEnemies = {
     ---@type table<string, EpicEnemiesEffect>

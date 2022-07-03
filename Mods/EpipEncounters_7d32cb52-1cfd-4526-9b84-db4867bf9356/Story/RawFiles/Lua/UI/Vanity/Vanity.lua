@@ -980,6 +980,7 @@ Vanity:RegisterHook("GenerateTemplateName", function(name, template, data)
 
     -- PascalCase handling!!! insane
     name = name:gsub("(%l)(%u%a*)", "%1 %2")
+    -- Failed attempts!!! hilarious
     -- name = name:gsub(" ?(%u%l+)(%u%l+) ?", "%1 %2")
     -- name = name:gsub(" ?(a*)(%ua*) ?", "%1 %2")
     -- name = name:gsub("( ?)(%u%l+)(%u%l+)( ?)", "%1%2%3%4")

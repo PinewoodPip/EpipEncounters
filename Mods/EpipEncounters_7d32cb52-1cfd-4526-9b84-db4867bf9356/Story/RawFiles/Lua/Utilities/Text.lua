@@ -46,6 +46,19 @@ function Text.Round(value, decimals)
     return output
 end
 
+---Returns a string with spaces inserted inbetween PascalCase words.
+---@param str string
+---@return string
+function Text.SeparatePascalCase(str)
+    str = str:gsub("(%l)(%u%a*)", "%1 %2") 
+
+    if str:find("(%l)(%u%a*)") then
+        str = Text.SeparatePascalCase(str)
+    end
+
+    return str
+end
+
 ---@param str string
 ---@param pattern pattern
 function Text.Contains(str, pattern)
