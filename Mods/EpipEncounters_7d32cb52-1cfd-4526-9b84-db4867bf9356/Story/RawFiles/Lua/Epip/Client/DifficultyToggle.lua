@@ -6,8 +6,9 @@
 
 local Options = Client.UI.OptionsSettings
 
-Options:RegisterListener("TabRendered", function(tab)
-    if tab == Options.TABS.GAMEPLAY then
+Options.Events.TabRendered:RegisterListener(function (customTab, index)
+    -- TODO consider honor?
+    if index == Options.TABS.GAMEPLAY then
         local element = Options.GetOptionElement(12)
         local index = element.combo_mc.m_selIndex
         local entries = {

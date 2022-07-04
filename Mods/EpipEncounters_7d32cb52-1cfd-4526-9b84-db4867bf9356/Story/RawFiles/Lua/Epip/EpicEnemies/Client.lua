@@ -73,55 +73,6 @@ Client.UI.OptionsSettings.RegisterMod("EpicEnemies", {
 
 Client.UI.OptionsSettings.RegisterOptions("EpicEnemies", Settings)
 
-for id,category in pairs(EpicEnemies.CATEGORIES) do
-    local settingID = "EpicEnemies_CategoryWeight_" .. category.ID
-    local setting = {
-        ID = settingID,
-        Type = "Slider",
-        Label = "Category Weight Multiplier",
-        SaveOnServer = true,
-        ServerOnly = true,
-        MinAmount = 0,
-        MaxAmount = 5,
-        Interval = 0.01,
-        DefaultValue = 1,
-        HideNumbers = false,
-        VisibleAtTopLevel = false,
-        Tooltip = Text.Format("A multiplier for the weights of the effects of this category (%s).", {FormatArgs = {category.Name}}),
-    }
-
-    Client.UI.OptionsSettings.RegisterOption("EpicEnemies", setting)
-end
-for id,effect in pairs(EpicEnemies.EFFECTS) do
-    local option = EpicEnemies.GenerateOptionData(effect)
-
-    Client.UI.OptionsSettings.RegisterOption("EpicEnemies", option)
-end
--- TODO do this later
----@type OptionsSettingsSelector
-local option = {
-    ID = "EpicEnemies_CategorySelector",
-    Label = Text.Format("Effect Categories", {FontType = Text.FONTS.BOLD}),
-    DefaultValue = 1,
-    Type = "Selector",
-    Options = {},
-}
-for i,category in ipairs(EpicEnemies.CATEGORIES) do
-    local tab = {
-        Label = category.Name,
-        SubSettings = {
-            "EpicEnemies_CategoryWeight_" .. category.ID,
-        },
-    }
-
-    for z,effectID in ipairs(category.Effects) do
-        table.insert(tab.SubSettings, effectID)
-    end
-
-    table.insert(option.Options, tab)
-end
-Client.UI.OptionsSettings.RegisterOption("EpicEnemies", option)
-
 ---------------------------------------------
 -- EVENTS/HOOKS
 ---------------------------------------------
@@ -175,4 +126,36 @@ Game.Net.RegisterListener("EPIPENCOUNTERS_EpicEnemies_EffectsRemoved", function(
     local char = Ext.GetCharacter(payload.CharacterNetID)
 
     EpicEnemies.APPLIED_EFFECTS[char.NetID] = nil
+end)
+
+-- Render category selector.
+Client.UI.OptionsSettings.Events.TabRendered:RegisterListener(function (customTab, index)
+    if customTab and customTab.Mod == "EpicEnemies" then
+        local option = {
+            ID = "EpicEnemies_CategorySelector",
+            Mod = "EpicEnemies",
+            Label = Text.Format("Effect Categories", {FontType = Text.FONTS.BOLD}),
+            DefaultValue = 1,
+            Type = "Selector",
+            Options = {},
+            VisibleAtTopLevel = false,
+        }
+
+        for i,category in ipairs(EpicEnemies.CATEGORIES) do
+            local tab = {
+                Label = category.Name,
+                SubSettings = {
+                    "EpicEnemies_CategoryWeight_" .. category.ID,
+                },
+            }
+        
+            for z,effectID in ipairs(category.Effects) do
+                table.insert(tab.SubSettings, effectID)
+            end
+        
+            table.insert(option.Options, tab)
+        end
+
+        Client.UI.OptionsSettings.RenderOption(option, nil, nil)
+    end
 end)

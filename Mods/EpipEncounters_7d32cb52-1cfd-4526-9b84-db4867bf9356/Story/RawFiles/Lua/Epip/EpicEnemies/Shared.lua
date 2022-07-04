@@ -94,11 +94,11 @@ function _EpicEnemiesEffect:GetWeight()
             weight = weight * Client.UI.OptionsSettings.GetOptionValue("EpicEnemies", "EpicEnemies_CategoryWeight_" .. self.Category)
         end
     else
-        weight = Epip.Features.ServerSettings.GetValue("EpicEnemies", self.ID)
+        weight = Epip.Features.ServerSettings.GetValue("EpicEnemies", self.ID) or 0
 
         -- Multiply by category multiplier
         if self.Category then
-            weight = weight * Epip.Features.ServerSettings.GetValue("EpicEnemies", "EpicEnemies_CategoryWeight_" .. self.Category)
+            weight = weight * (Epip.Features.ServerSettings.GetValue("EpicEnemies", "EpicEnemies_CategoryWeight_" .. self.Category) or 1)
         end
     end
 
@@ -124,6 +124,27 @@ end
 ---@param category EpicEnemiesEffectsCategory
 function EpicEnemies.RegisterEffectCategory(category)
     table.insert(EpicEnemies.CATEGORIES, category)
+
+    -- Register slider
+    if Ext.IsClient() then
+        local settingID = "EpicEnemies_CategoryWeight_" .. category.ID
+        local setting = {
+            ID = settingID,
+            Type = "Slider",
+            Label = "Category Weight Multiplier",
+            SaveOnServer = true,
+            ServerOnly = true,
+            MinAmount = 0,
+            MaxAmount = 5,
+            Interval = 0.01,
+            DefaultValue = 1,
+            HideNumbers = false,
+            VisibleAtTopLevel = false,
+            Tooltip = Text.Format("A multiplier for the weights of the effects of this category (%s).", {FormatArgs = {category.Name}}),
+        }
+
+        Client.UI.OptionsSettings.RegisterOption("EpicEnemies", setting)
+    end
 
     for i,effect in ipairs(category.Effects) do
         if type(effect) == "table" then
@@ -154,6 +175,14 @@ function EpicEnemies.RegisterEffect(id, effect)
     setmetatable(effect, {__index = _EpicEnemiesEffect})
 
     EpicEnemies.EFFECTS[id] = effect
+
+    -- Register customizable option
+    local option = EpicEnemies.GenerateOptionData(effect)
+    if Ext.IsClient() then
+        Client.UI.OptionsSettings.RegisterOption("EpicEnemies", option)
+    else
+        Epip.Features.ServerSettings.AddOption("EpicEnemies", option)
+    end
 end
 
 ---@param effect EpicEnemiesEffect

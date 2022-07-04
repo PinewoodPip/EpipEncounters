@@ -68,9 +68,9 @@ for id,category in pairs(EpicEnemies.CATEGORIES) do
         Tooltip = "A multiplier for the weights of the effects of this category.",
     }
 end
-for id,effect in pairs(EpicEnemies.EFFECTS) do
-    settings[id] = EpicEnemies.GenerateOptionData(effect)
-end
+-- for id,effect in pairs(EpicEnemies.EFFECTS) do
+--     settings[id] = EpicEnemies.GenerateOptionData(effect)
+-- end
 EpicEnemies:Debug()
 
 ServerSettings.AddModule("EpicEnemies", settings)
@@ -452,9 +452,9 @@ EpicEnemies.Hooks.IsEligible:RegisterHook(function (eligible, char)
         eligible = false
     end
 
-    -- Cannot initialize the same character multiple times, nor initialize characters specifically excluded from this feature
+    -- Cannot initialize the same character multiple times, nor initialize characters specifically excluded from this feature, nor initialize summons
     if eligible then
-        eligible = not char:IsTagged(EpicEnemies.INITIALIZED_TAG) and not char:IsTagged(EpicEnemies.INELIGIBLE_TAG)
+        eligible = not char:IsTagged(EpicEnemies.INITIALIZED_TAG) and not char:IsTagged(EpicEnemies.INELIGIBLE_TAG) and not char:IsTagged("SUMMON")
     end
 
     return eligible

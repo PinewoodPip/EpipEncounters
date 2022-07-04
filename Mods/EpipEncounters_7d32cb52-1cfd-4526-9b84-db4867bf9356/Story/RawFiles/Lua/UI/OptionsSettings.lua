@@ -1,7 +1,7 @@
 
 ---@meta OptionsSettingsUI, ContextClient
 
----@class OptionsSettingsUI
+---@class OptionsSettingsUI : UI
 ---@field Options table<string, OptionsSettingsOptionSet>
 ---@field OptionValues table<string, table>
 ---@field PendingValueChanges table<string, table>
@@ -11,7 +11,7 @@
 ---@field currentElements table<number, OptionsSettingsOption>
 ---@field currentCustomTabs table<number, string> Binds a side button's numerical ID to the mod it's for.
 
----@type OptionsSettingsUI
+-- -@type OptionsSettingsUI
 local OptionsSettings = {
     Options = {},
     OptionValues = {},
@@ -29,6 +29,11 @@ local OptionsSettings = {
     currentElements = {},
     nextNumID = 1337,
     currentCustomTabs = {},
+
+    Events = {
+        ---@type OptionsSettingsUI_Event_TabRendered
+        TabRendered = {},
+    },
 }
 Client.UI.OptionsSettings = OptionsSettings
 Epip.InitializeUI(Client.UI.Data.UITypes.optionsSettings, "OptionsSettings", OptionsSettings)
@@ -91,6 +96,11 @@ end
 -- EVENTS
 ---------------------------------------------
 
+---Fired when a settings tab is rendered. Values > 3 are custom tabs; their info should be queried from OptionsSettings.currentCustomTabs
+---@class OptionsSettingsUI_Event_TabRendered : Event
+---@field RegisterListener fun(self, listener:fun(customTab:OptionsSettingsOptionSet, index:number))
+---@field Fire fun(self, customTab:OptionsSettingsOptionSet, index:number)
+
 ---Fired when a custom option's value is set, either from loading or applying changes through the menu/SetOptionValue.
 ---@class OptionsSettingsUI_OptionSet : Event
 ---@field data OptionsSettingsOption
@@ -106,10 +116,6 @@ end
 ---@field type string
 ---@field data OptionsSettingsOption
 ---@field numID number The numeric ID this element should use.
-
----Fired when a settings tab is rendered. Values > 3 are custom tabs; their info should be queried from OptionsSettings.currentCustomTabs
----@class OptionsSettingsUI_TabRendered : Event
----@field tab number
 
 ---Fired when a custom checkbox is clicked while enabled.
 ---@class OptionsSettingsUI_CheckboxClicked : Event
@@ -471,6 +477,12 @@ function OptionsSettings.RenderDropdownEntry(id, option)
     OptionsSettings:GetRoot().mainMenu_mc.addMenuDropDownEntry(id, option)
 end
 
+---@param moduleID string
+---@return OptionsSettingsOptionSet
+function OptionsSettings.GetModData(moduleID)
+    return OptionsSettings.Options[moduleID]
+end
+
 ---Render an option directly.
 ---@param elementData OptionsSettingsOption
 ---@param numID? integer
@@ -478,15 +490,45 @@ end
 ---@return number Numeric ID.
 function OptionsSettings.RenderOption(elementData, numID, requestID)
     numID = numID or OptionsSettings.nextNumID
+    
+    -- Register dynamically-created settings
+    if not OptionsSettings.GetOptionData(elementData.ID) then
+        if not elementData.Mod then
+            OptionsSettings:LogError("Tried to render setting with no bound mod: " .. elementData.ID)
+            return nil
+        else
+            elementData.Mod = OptionsSettings.currentCustomTabs[OptionsSettings.currentTab]
+            elementData.VisibleAtTopLevel = elementData.VisibleAtTopLevel or false
+
+            OptionsSettings.RegisterOption(elementData.Mod, elementData)
+        end
+    end
 
     -- Server-only settings are only shown for host
     if not elementData.ServerOnly or Client.IsHost() then
-        if requestID == "Selector" or (elementData.VisibleAtTopLevel == nil or elementData.VisibleAtTopLevel) then -- TODO hook
+        if true then -- TODO hook
             OptionsSettings.currentElements[numID] = elementData
 
             OptionsSettings:FireEvent("ElementRenderRequest", elementData.Type, elementData, numID)
 
             OptionsSettings.nextNumID = OptionsSettings.nextNumID + 1
+
+            if elementData.Type == "Selector" then
+                for z,subSettingID in ipairs(elementData.Options[OptionsSettings.GetOptionValue(elementData.Mod, elementData.ID)].SubSettings) do
+                    local settingData = OptionsSettings.GetOptionData(subSettingID)
+    
+                    local elementID = OptionsSettings.RenderOption(settingData, nil, "Selector")
+        
+                    -- TODO finish
+                    -- OptionsSettings:DebugLog("Adding subsetting with id", elementID)
+                    -- OptionsSettings:Dump(settingData)
+        
+                    -- if elementID then
+                    --     OptionsSettings.GetOptionElement(elementID).visible = false
+                    --     root.mainMenu_mc.addSelectorSubSetting(numID, i - 1, elementID)
+                    -- end
+                end
+            end
 
             return numID
         end
@@ -508,30 +550,15 @@ function OptionsSettings.RenderOptions(tabID)
     OptionsSettings:FireEvent("CustomTabRenderStarted", modID, modData)
 
     for i,elementData in pairs(modData.Options) do
-        OptionsSettings.RenderOption(elementData)
-
-        if elementData.Type == "Selector" then
-            for z,subSettingID in ipairs(elementData.Options[OptionsSettings.GetOptionValue(elementData.Mod, elementData.ID)].SubSettings) do
-                local settingData = OptionsSettings.GetOptionData(subSettingID)
-
-                local elementID = OptionsSettings.RenderOption(settingData, nil, "Selector")
-    
-                -- TODO finish
-                -- OptionsSettings:DebugLog("Adding subsetting with id", elementID)
-                -- OptionsSettings:Dump(settingData)
-    
-                -- if elementID then
-                --     OptionsSettings.GetOptionElement(elementID).visible = false
-                --     root.mainMenu_mc.addSelectorSubSetting(numID, i - 1, elementID)
-                -- end
-            end
+        if elementData.VisibleAtTopLevel or elementData.VisibleAtTopLevel == nil then
+            OptionsSettings.RenderOption(elementData)
         end
     end
 
     OptionsSettings.currentTab = tabID
 
     Ext.OnNextTick(function()
-        OptionsSettings:FireEvent("TabRendered", OptionsSettings.currentTab)
+        OptionsSettings.Events.TabRendered:Fire(modData, OptionsSettings.currentTab)
     end)
 end
 
@@ -695,7 +722,7 @@ local function onbasearray(ui, method)
     OptionsSettings.EncodeBaseUpdate(ui, elements)
 
     Ext.OnNextTick(function()
-        OptionsSettings:FireEvent("TabRendered", OptionsSettings.currentTab)
+        OptionsSettings.Events.TabRendered:Fire(nil, OptionsSettings.currentTab)
     end)
 end
 

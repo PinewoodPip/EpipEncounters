@@ -479,11 +479,11 @@ for id,artifact in pairs(Game.Items.ARTIFACTS) do
     local displayStatus = Ext.Stats.Get("AMER_ARTIFACTPOWER_" .. id:gsub("Artifact_", ""):upper())
 
     if not displayStatus then
-        displayStatus = Ext.Stats.Get("AMER_ARTIFACTPOWER_THE" .. id:gsub("Artifact_", ""):upper())
+        displayStatus = Ext.Stats.Get("AMER_ARTIFACTPOWER_THE" .. id:gsub("Artifact_", ""):upper(), nil, false)
     end
 
     if id == "Artifact_CorruscatingSilks" then
-        displayStatus = Ext.Stats.Get("AMER_ARTIFACTPOWER_CORUSCATINGSILKS")
+        displayStatus = Ext.Stats.Get("AMER_ARTIFACTPOWER_CORUSCATINGSILKS", nil, false)
     end
 
     if displayStatus and id ~= "Artifact_Deck" then
@@ -534,4 +534,29 @@ end
 
 if Ext.IsDeveloperMode() then
     EpicEnemies.RegisterEffectCategory(TestEffects)
+end
+
+---@type EpicEnemiesExtendedEffect
+local forcedEffect = {
+    Name = "ForcedEffect",
+    ID = "PIP_ForcedEffect",
+    Description = "Character has increased Predator range and gains 2 free Generic reaction charges.",
+    SpecialLogic = "Ascension_Predator_MUTA_EpicBossRange",
+    Keyword = {Keyword = "Predator", BoonType = "Mutator"},
+    Cost = 0,
+    Weight = 0,
+    ExtendedStats = {
+        {
+            StatID = "FreeReactionCharge",
+            Property1 = "AnyReaction",
+            Amount = 2,
+        }
+    },
+}
+EpicEnemies.RegisterEffect(forcedEffect.ID, forcedEffect)
+
+if Ext.IsServer() then
+    EpicEnemies.Events.CharacterInitialized:RegisterListener(function(char, effects)
+        EpicEnemies.ApplyEffect(char, forcedEffect)
+    end)
 end

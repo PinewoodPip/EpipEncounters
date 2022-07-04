@@ -32,6 +32,19 @@ function Settings.AddModule(module, data)
     Settings.MODULES[module] = data
 end
 
+---Register an option to an existing module. Must be called before GameStarted.
+---@param modID string
+---@param data OptionsSettingsOption
+function Settings.AddOption(modID, data)
+    local mod = Settings.MODULES[modID]
+
+    if not mod then
+        Settings.AddModule(modID, {})
+    end
+
+    Settings.MODULES[modID][data.ID] = data
+end
+
 ---Sets an option's value and saves it to the savefile.
 ---@param module string
 ---@param setting string
@@ -65,12 +78,16 @@ function Settings.GetValue(module, setting)
     local _, _, value = Osiris.DB_PIP_Setting_Real:Get(module, setting, nil)
     local settingData = Settings.GetSettingData(module, setting)
 
-    -- Use default setting value.
-    if not value then
-        value = settingData.DefaultValue
-    end
+    if settingData then
+        -- Use default setting value.
+        if not value then
+            value = settingData.DefaultValue
+        end
 
-    value = Settings.ConvertFromReal(settingData, value)
+        value = Settings.ConvertFromReal(settingData, value)
+    else
+        value = nil
+    end
 
     return value
 end

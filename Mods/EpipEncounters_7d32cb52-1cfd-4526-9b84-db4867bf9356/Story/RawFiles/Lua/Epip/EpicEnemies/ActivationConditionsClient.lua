@@ -22,7 +22,7 @@ EpicEnemies.Hooks.GetActivationConditionDescription:RegisterHook(function(text, 
         local addendum = ""
 
         if condition.Repeat then
-            addendum = Text.Format(" and every %s turns thereafter", {FormatArgs = condition.RepeatFrequency or 1})
+            addendum = Text.Format(" and every %s turns thereafter", {FormatArgs = {condition.RepeatFrequency or 1}})
         end
 
         text = Text.Format(Conditions.TEMPLATES.TurnStart, {FormatArgs = {condition.Round, addendum}})

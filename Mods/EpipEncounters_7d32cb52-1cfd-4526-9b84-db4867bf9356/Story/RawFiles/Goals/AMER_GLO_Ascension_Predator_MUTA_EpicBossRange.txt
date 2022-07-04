@@ -26,11 +26,11 @@ PROC_AMER_GEN_BasicAttackObjectStarted(_Target, _Char, _Char, "Ascension_Predato
 PROC PROC_AMER_Reaction_Conditions_Additional_WithinWeaponRange_GetRange_Manip((CHARACTERGUID)_Char, (CHARACTERGUID)_Target, "AMER_Predator", (STRING)_RequestID)
 AND
 DB_AMER_Ascension_SpecialLogic(_Char, "Ascension_Predator_MUTA_EpicBossRange", _)
-// AND
+AND
 // QRY_AMER_GEN_PlayerGetWeaponStyle(_Char)
 // AND
 // DB_AMER_GEN_OUTPUT_String("DualWielding")
-AND
+// AND
 DB_AMER_GEN_OUTPUT_Real(_OldRange)
 AND
 _OldRange < 10.0

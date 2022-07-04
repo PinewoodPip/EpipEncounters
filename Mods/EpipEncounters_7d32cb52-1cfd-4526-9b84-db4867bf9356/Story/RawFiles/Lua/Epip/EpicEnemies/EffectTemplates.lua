@@ -45,9 +45,9 @@ local EpicEnemies = Epip.Features.EpicEnemies
 ---@class EpicEnemiesExtendedStat
 ---@field StatID string The ID of the ExtendedStat.
 ---@field Amount number
----@field Property1 string
----@field Property2 string
----@field Property3 string
+---@field Property1 string?
+---@field Property2 string?
+---@field Property3 string?
 
 ---------------------------------------------
 -- EFFECTS
@@ -94,7 +94,7 @@ EpicEnemies.Events.EffectActivated:RegisterListener(function(char, effect)
     -- Extended Stats.
     if effect.ExtendedStats then
         for i,extendedStat in ipairs(effect.ExtendedStats) do
-            Osi.PROC_AMER_ExtendedStat_CharacterAddStat(char.MyGuid, extendedStat.StatID, extendedStat.Property1, extendedStat.Property2, extendedStat.Property3, extendedStat.Amount)
+            Osi.PROC_AMER_ExtendedStat_CharacterAddStat(char.MyGuid, extendedStat.StatID, extendedStat.Property1 or "", extendedStat.Property2 or "", extendedStat.Property3 or "", extendedStat.Amount)
         end
     end
 end)
@@ -127,7 +127,7 @@ EpicEnemies.Events.EffectRemoved:RegisterListener(function (char, effect)
     -- Extended Stats.
     if effect.ExtendedStats then
         for i,extendedStat in ipairs(effect.ExtendedStats) do
-            Osi.PROC_AMER_ExtendedStat_CharacterAddStat(char.MyGuid, extendedStat.StatID, extendedStat.Property1, extendedStat.Property2, extendedStat.Property3, -extendedStat.Amount)
+            Osi.PROC_AMER_ExtendedStat_CharacterAddStat(char.MyGuid, extendedStat.StatID, extendedStat.Property1 or "", extendedStat.Property2 or "", extendedStat.Property3 or "", -extendedStat.Amount)
         end
     end
 end)
@@ -173,7 +173,7 @@ EpicEnemies.Hooks.IsEffectApplicable:RegisterHook(function (applicable, effect, 
             end
         end
 
-        Templates:DebugLog("RequiredSkills availability for", char.DisplayName, applicable)
+        -- Templates:DebugLog("RequiredSkills availability for", char.DisplayName, applicable)
     end
 
     return applicable
