@@ -21,6 +21,38 @@ local function AnimTest()
     PlayNext()
 end
 
+local function TagFetchPerformance()
+    local guid = CharacterGetHostCharacter()
+    local now = Ext.MonotonicTime()
+    local tests = 10000000
+
+    print(tests .. " calls:")
+
+    for i=1,tests,1 do
+        Osi.IsTagged(guid, "TEST_TAG")
+    end
+
+    local time = Ext.MonotonicTime()  - now
+    print("Osi.IsTagged(): " .. time .. "ms")
+
+    now = Ext.MonotonicTime()
+    for i=1,tests,1 do
+        Ext.GetCharacter(guid):HasTag("TEST_TAG")
+    end
+
+    local time = Ext.MonotonicTime()  - now
+    print("EsvCharacter:HasTag(): " .. time .. "ms")
+
+    now = Ext.MonotonicTime()
+    local char = Ext.GetCharacter(guid)
+    for i=1,tests,1 do
+        char:HasTag("TEST_TAG")
+    end
+
+    local time = Ext.MonotonicTime()  - now
+    print("EsvCharacter:HasTag() without refetching the character: " .. time .. "ms")
+end
+
 Osiris.RegisterSymbolListener("StoryEvent", 2, "after", function(obj, event)
     if event == "PIP_AnimTest_Finished" then
         PlayNext()
@@ -29,6 +61,7 @@ end)
 
 local commands = {
     ["animtest"] = AnimTest,
+    ["worryaboutsuchsmallthings"] = TagFetchPerformance,
 }
 
 for name,command in pairs(commands) do

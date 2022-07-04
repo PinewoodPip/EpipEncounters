@@ -16,8 +16,6 @@ local Data = {
                 Name = "Violent Strikes Activator: Conqueror",
                 ID = "Ascension_ViolentStrike_ACT_BasicOnHit",
                 Description = "15% chance per hit",
-                Cost = 10,
-                Weight = 10,
                 SpecialLogic = "Ascension_ViolentStrike_ACT_BasicOnHit",
                 Keyword = {Keyword = "ViolentStrike", BoonType = "Activator",},
             },
@@ -25,6 +23,7 @@ local Data = {
                 Name = "Violent Strikes Activator: Archer",
                 ID = "Ascension_ViolentStrike_ACT_DamageAtOnce",
                 Description = "After dealing damage exceeding 20% of total Vitality",
+                Cost = 5,
                 SpecialLogic = "Ascension_ViolentStrike_ACT_DamageAtOnce",
                 Keyword = {Keyword = "ViolentStrike", BoonType = "Activator",},
             },
@@ -32,6 +31,7 @@ local Data = {
                 Name = "Violent Strikes Activator: Hatchet",
                 ID = "Ascension_ViolentStrike_ACT_0AP",
                 Description = "After reaching 0 AP",
+                Cost = 5,
                 SpecialLogic = "Ascension_ViolentStrike_ACT_0AP",
                 Keyword = {Keyword = "ViolentStrike", BoonType = "Activator",},
             },
@@ -39,6 +39,8 @@ local Data = {
                 Name = "Violent Strikes Mutator: Conqueror",
                 ID = "Ascension_ViolentStrike_MUTA_VitalityVoidACT",
                 Description = "Vitality Void when performing Violent Strike",
+                Weight = 0,
+                Cost = 20,
                 SpecialLogic = "Ascension_ViolentStrike_MUTA_VitalityVoidACT",
                 Keyword = {Keyword = "ViolentStrike", BoonType = "Mutator",},
             },
@@ -46,6 +48,7 @@ local Data = {
                 Name = "Violent Strikes Mutator: Hatchet",
                 ID = "Ascension_ViolentStrike_MUTA_Terrified2",
                 Description = "Apply up to Terrified II",
+                Cost = 7,
                 SpecialLogic = "Ascension_ViolentStrike_MUTA_Terrified2",
                 Keyword = {Keyword = "ViolentStrike", BoonType = "Mutator",},
             },
@@ -59,6 +62,7 @@ local Data = {
                 Name = "Elementalist Activator: Falcon",
                 ID = "Ascension_Elementalist_ACT_FireEarth_AllySkills",
                 Description = "On Geomancer/Pyromancer",
+                Cost = 12,
                 SpecialLogic = "Ascension_Elementalist_ACT_FireEarth_AllySkills",
                 Keyword = {Keyword = "Elementalist", BoonType = "Activator"},
             },
@@ -66,6 +70,7 @@ local Data = {
                 Name = "Elementalist Activator: Arcanist",
                 ID = "Ascension_Elementalist_ACT_PredatorOrVuln3",
                 Description = "On Predator/Vulnerable III",
+                Cost = 5,
                 SpecialLogic = "Ascension_Elementalist_ACT_PredatorOrVuln3",
                 Keyword = {Keyword = "Elementalist", BoonType = "Activator"},
             },
@@ -73,6 +78,7 @@ local Data = {
                 Name = "Elementalist Activator: Hind",
                 ID = "Ascension_Elementalist_ACT_AirWater_AllySkills",
                 Description = "On Aerotheurge/Hydrosophist Skill",
+                Cost = 12,
                 SpecialLogic = "Ascension_Elementalist_ACT_AirWater_AllySkills",
                 Keyword = {Keyword = "Elementalist", BoonType = "Activator"},
             },
@@ -80,6 +86,7 @@ local Data = {
                 Name = "Elementalist Activator: Pegasus",
                 ID = "Ascension_Elementalist_ACT_AirWater_AllySkills_MK2_HuntsWar",
                 Description = "On Huntsman/Warfare Skill",
+                Cost = 12,
                 SpecialLogic = "Ascension_Elementalist_ACT_AirWater_AllySkills_MK2_HuntsWar",
                 Keyword = {Keyword = "Elementalist", BoonType = "Activator"},
             },
@@ -101,6 +108,7 @@ local Data = {
                 Name = "Elementalist Mutator: Kraken",
                 ID = "Ascension_Elementalist_MUTA_FeedbackPowerEffect",
                 Description = "+10% Damage from Power per stack",
+                Cost = 15,
                 SpecialLogic = "Ascension_Elementalist_MUTA_FeedbackPowerEffect",
                 Keyword = {Keyword = "Elementalist", BoonType = "Mutator"},
             },
@@ -108,6 +116,7 @@ local Data = {
                 Name = "Elementalist Mutator: Scorpion",
                 ID = "Ascension_Elementalist_MUTA_FeedbackCrit",
                 Description = "+5% Crit Chance per stack",
+                Cost = 15,
                 SpecialLogic = "Ascension_Elementalist_MUTA_FeedbackCrit",
                 Keyword = {Keyword = "Elementalist", BoonType = "Mutator"},
             },
@@ -151,6 +160,7 @@ local Data = {
                 Name = "Predator Mutator: Falcon",
                 ID = "Ascension_Predator_MUTA_Slowed2",
                 Description = "Apply up to Slowed II",
+                Cost = 5,
                 SpecialLogic = "Ascension_Predator_MUTA_Slowed2",
                 Keyword = {Keyword = "Predator", BoonType = "Mutator"},
             },
@@ -191,6 +201,7 @@ local Data = {
                 Name = "Celestial Activator: Hind",
                 ID = "Ascension_Celestial_ACT_AllySource",
                 Description = "When an ally with less than 50% Vitality spends Source",
+                Cost = 12,
                 SpecialLogic = "Ascension_Celestial_ACT_AllySource",
                 Keyword = {Keyword = "Celestial", BoonType = "Activator"},
             },
@@ -211,6 +222,8 @@ local Data = {
                 Name = "Vitality Void Activator: Fly",
                 ID = "Ascension_VitalityVoid_ACT_SourceSpent",
                 Description = "For each Source Point spent",
+                Weight = 8,
+                Cost = 20,
                 SpecialLogic = "Ascension_VitalityVoid_ACT_SourceSpent",
                 Keyword = {Keyword = "VitalityVoid", BoonType = "Activator"},
             },
@@ -264,6 +277,8 @@ local Data = {
                 Name = "Boneshaped Crusher",
                 ID = "Ascension_Skill_BoneshapedCrusher",
                 Description = "Character gains the Summon Boneshaped Crusher spell.",
+                Weight = 0,
+                Cost = 25,
                 SpecialLogic = "Ascension_Skill_BoneshapedCrusher",
             },
             {
@@ -389,6 +404,51 @@ local TestEffects = {
     },
 }
 
+local artifactWeights = {
+    Artifact_Adamant = 5,
+    Artifact_AngelsEgg = 8,
+    Artifact_Austerity = 10,
+    Artifact_BlackglassBrand = 10,
+    Artifact_Cataclysm = 10,
+    Artifact_Chthonian = 10,
+    Artifact_Consecration = 5,
+    Artifact_Convergence = 5,
+    Artifact_Crucible = 5, -- TODO special condition
+    Artifact_Desperation = 5,
+    Artifact_Dread = 3,
+    Artifact_DrogsLuck = 8,
+    Artifact_Dominion = 8,
+    Artifact_EyeOfTheStorm = 5,
+    Artifact_Famine = 5,
+    Artifact_Fecundity = 5,
+    Artifact_Gluttony = 5,
+    Artifact_Goldforge = 3,
+    Artifact_GramSwordOfGrief = 3,
+    Artifact_Hibernaculum = 5,
+    Artifact_Impetus = 8,
+    Artifact_InfernalContract = 5,
+    Artifact_Jaguar = 5,
+    Artifact_Judgement = 5,
+    Artifact_LambentBlade = 3,
+    Artifact_Lightspire = 3,
+    Artifact_MalleusMaleficarum = 5,
+    Artifact_Mirage = 1,
+    Artifact_Misery = 3,
+    Artifact_Nightmare = 5,
+    Artifact_Pestilence = 3,
+    Artifact_Rapture = 5,
+    Artifact_Savage = 3,
+    Artifact_Seraph = 3,
+    Artifact_Silkclimb = 3,
+    Artifact_Thirst = 3,
+    Artifact_Urgency = 3,
+    Artifact_Vertigo = 3,
+    Artifact_WintersGrasp = 3,
+    Artifact_Wraith = 1,
+    Artifact_Zenith = 5,
+    Artifact_Zodiac = 3,
+}
+
 -- Generate Artifact options
 for id,artifact in pairs(Game.Items.ARTIFACTS) do
     local displayStatus = Ext.Stats.Get("AMER_ARTIFACTPOWER_" .. id:gsub("Artifact_", ""):upper())
@@ -401,7 +461,14 @@ for id,artifact in pairs(Game.Items.ARTIFACTS) do
         displayStatus = Ext.Stats.Get("AMER_ARTIFACTPOWER_CORUSCATINGSILKS")
     end
 
-    if displayStatus then
+    if displayStatus and id ~= "Artifact_Deck" then
+        -- TODO figure out why this fails
+        local description = Ext.L10N.GetTranslatedStringFromKey(displayStatus.DisplayName)
+
+        if not description or description == "" then
+            description = displayStatus.DisplayNameRef
+        end
+
         ---@type EpicEnemiesEffect
         local effect = {
             ID = id,
@@ -409,8 +476,8 @@ for id,artifact in pairs(Game.Items.ARTIFACTS) do
                 Text.SeparatePascalCase(id:gsub("^Artifact_", ""))
             }}),
             DefaultCost = 15,
-            DefaultWeight = 8,
-            Description = Ext.L10N.GetTranslatedStringFromKey(displayStatus.DisplayName),
+            DefaultWeight = artifactWeights[id] or 0,
+            Description = description,
             Artifact = artifact.ID,
         }
         table.insert(ArtifactsCategory.Effects, effect)
