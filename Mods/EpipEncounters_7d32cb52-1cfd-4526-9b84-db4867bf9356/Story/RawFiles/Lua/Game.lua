@@ -76,6 +76,8 @@ Game.Items = {
             Slot = "Amulet",
             ItemTemplate = "AMER_UNI_Arcturus_129a3b30-c934-49fb-ba9f-76d8d9bf815e",
             RuneTemplate = "AMER_UNI_Arcturus_Rune_0fdf74c2-d66a-4940-b58c-ca740f30af0c",
+            KeywordActivators = {},
+            KeywordMutators = {},
         },
         Artifact_Austerity = {
             ID = "Artifact_Austerity",

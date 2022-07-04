@@ -15,6 +15,7 @@ local Templates = {
 }
 Epip.AddFeature("EpicEnemiesEffectTemplates", "EpicEnemiesEffectTemplates", Templates)
 Epip.Features.EpicEnemiesEffectTemplates = Templates
+Templates:Debug()
 
 local EpicEnemies = Epip.Features.EpicEnemies
 
@@ -29,10 +30,17 @@ local EpicEnemies = Epip.Features.EpicEnemies
 ---@field Summon? GUID Template to summon.
 ---@field Status? EpicEnemiesStatus[]
 ---@field ExtendedStats? EpicEnemiesExtendedStat[]
+---@field FlexStats? EpicEnemiesFlexStat[]
+---@field RequiredSkills? string[] The effect is ineligible if the character does not have any of the required skills.
 
 ---@class EpicEnemiesStatus
 ---@field StatusID string
 ---@field Duration integer
+
+---@class EpicEnemiesFlexStat
+---@field Type string
+---@field Stat string
+---@field Amount number
 
 ---@class EpicEnemiesExtendedStat
 ---@field StatID string The ID of the ExtendedStat.
@@ -76,6 +84,13 @@ EpicEnemies.Events.EffectActivated:RegisterListener(function(char, effect)
         Osi.EnterCombat(guid, char.MyGuid)
     end
 
+    -- Flex Stats.
+    if effect.FlexStats then
+        for i,flexStat in ipairs(effect.FlexStats) do
+            Osi.PROC_AMER_FlexStat_CharacterAddStat(char.MyGuid, flexStat.Type, flexStat.Stat, flexStat.Amount)
+        end
+    end
+
     -- Extended Stats.
     if effect.ExtendedStats then
         for i,extendedStat in ipairs(effect.ExtendedStats) do
@@ -100,6 +115,13 @@ EpicEnemies.Events.EffectRemoved:RegisterListener(function (char, effect)
         local statusData = effect.Status
         
         Osi.RemoveStatus(char.MyGuid, statusData.StatusID)
+    end
+
+    -- Flex Stats.
+    if effect.FlexStats then
+        for i,flexStat in ipairs(effect.FlexStats) do
+            Osi.PROC_AMER_FlexStat_CharacterAddStat(char.MyGuid, flexStat.Type, flexStat.Stat, -flexStat.Amount)
+        end
     end
 
     -- Extended Stats.
@@ -131,6 +153,27 @@ EpicEnemies.Hooks.IsEffectApplicable:RegisterHook(function (applicable, effect, 
                 applicable = false
             end
         end
+    end
+
+    return applicable
+end)
+
+-- RequiredSkills condition.
+EpicEnemies.Hooks.IsEffectApplicable:RegisterHook(function (applicable, effect, char, activeEffects)
+    ---@type EpicEnemiesExtendedEffect
+    effect = effect
+
+    if effect.RequiredSkills and applicable then
+        applicable = false
+
+        for i,skillID in ipairs(effect.RequiredSkills) do
+            if Osi.CharacterHasSkill(char.MyGuid, skillID) == 1 then
+                applicable = true
+                break
+            end
+        end
+
+        Templates:DebugLog("RequiredSkills availability for", char.DisplayName, applicable)
     end
 
     return applicable

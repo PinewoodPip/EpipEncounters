@@ -251,6 +251,13 @@ local Data = {
                 ID = "Ascension_Presence_MUTA_MK2_VitRegen",
                 Description = "Grants missing Vitality regeneration, damage and resistances",
                 SpecialLogic = "Ascension_Presence_MUTA_MK2_VitRegen",
+                FlexStats = {
+                    {
+                        Type = "Ability",
+                        Stat = "Leadership",
+                        Amount = 10,
+                    },
+                },
                 Keyword = {Keyword = "Presence", BoonType = "Mutator"},
             },
         },
@@ -336,6 +343,16 @@ local TestEffects = {
                 Type = "StatusGained",
                 StatusID = "HASTED",
             },
+            Status = {
+                StatusID = "BLESSED",
+                Duration = 1,
+            },
+        },
+        {
+            Name = "RequiredSkill Test",
+            ID = "StatusGainedTest",
+            Description = "...",
+            RequiredSkills = {"Target_Haste"},
             Status = {
                 StatusID = "BLESSED",
                 Duration = 1,
@@ -602,7 +619,6 @@ function _EpicEnemiesEffect:GetWeight()
         -- Multiply by category multiplier
         if self.Category then
             weight = weight * Epip.Features.ServerSettings.GetValue("EpicEnemies", "EpicEnemies_CategoryWeight_" .. self.Category)
-            print("final weight", weight)
         end
     end
 
