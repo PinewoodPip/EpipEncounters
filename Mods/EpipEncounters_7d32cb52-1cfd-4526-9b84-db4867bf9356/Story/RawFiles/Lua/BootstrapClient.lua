@@ -200,6 +200,7 @@ LOAD_ORDER = {
 
     -- Epic Enemies
     "Epip/EpicEnemies/Shared.lua",
+    "Epip/EpicEnemies/Effects.lua",
     "Epip/EpicEnemies/Client.lua",
     "Epip/EpicEnemies/ActivationConditionsClient.lua",
 

@@ -111,6 +111,19 @@ ServerSettings.AddModule("EpicEnemies", settings)
 ---@field RegisterHook fun(self, handler:fun(points:integer, char:EsvCharacter))
 ---@field Return fun(self, points:integer, char:EsvCharacter)
 
+---@class EpicEnemies_Event_CharacterInitialized : Event
+---@field RegisterListener fun(self, listener:fun(char:EsvCharacter, effects:EpicEnemiesEffect[]))
+---@field Fire fun(self, char:EsvCharacter, effects:EpicEnemiesEffect[])
+
+---@class EpicEnemies_Event_CharacterCleanedUp : Event
+---@field RegisterListener fun(self, listener:fun(char:EsvCharacter))
+---@field Fire fun(self, char:EsvCharacter)
+
+---@type EpicEnemies_Event_CharacterInitialized
+EpicEnemies.Events.CharacterInitialized = EpicEnemies:AddEvent("CharacterInitialized")
+---@type EpicEnemies_Event_CharacterCleanedUp
+EpicEnemies.Events.CharacterCleanedUp = EpicEnemies:AddEvent("CharacterCleanedUp")
+
 ---@type EpicEnemies_Hook_GetPointsForCharacter
 EpicEnemies.Hooks.GetPointsForCharacter = EpicEnemies:AddHook("GetPointsForCharacter")
 
@@ -172,6 +185,8 @@ function EpicEnemies.InitializeCharacter(char)
         })
 
         EpicEnemies:DebugLog("Initialized effects on " .. char.DisplayName)
+
+        EpicEnemies.Events.CharacterInitialized:Fire(char, addedEffects)
     end
 end
 
@@ -196,6 +211,8 @@ function EpicEnemies.CleanupCharacter(char)
         EpicEnemies:DebugLog("Removed effects from " .. char.DisplayName)
 
         Osi.RemoveStatus(char.MyGuid, "PIP_OSITOOLS_EpicBossesDisplay")
+
+        EpicEnemies.Events.CharacterCleanedUp:Fire(char)
     end
 end
 
@@ -282,7 +299,7 @@ function EpicEnemies.ActivateEffects(char, effectType, params)
 
     for id,effect in pairs(EpicEnemies.GetAppliedEffects(char, function(char, eff) return eff.ActivationCondition.Type == effectType end)) do
         if EpicEnemies.Hooks.CanActivateEffect:Return(false, char, effect, effect.ActivationCondition, params) then
-            EpicEnemies.Events.EffectActivated:Fire(char, effect)
+            EpicEnemies.ActivateEffect(char, effect)
         end
     end
 end
@@ -334,7 +351,7 @@ function EpicEnemies.GetRandomEffect(char, effectPool, activeEffects)
     local filteredPool = {}
 
     for id,effect in pairs(effectPool) do
-        local included = EpicEnemies.Hooks.IsEffectApplicable:Return(true, effect, char, activeEffects)
+        local included = EpicEnemies.Hooks.IsEffectApplicable:Return(true, effect, char, activeEffects) and effect:GetWeight() > 0
 
         if included then
             filteredPool[id] = effect
@@ -345,7 +362,7 @@ function EpicEnemies.GetRandomEffect(char, effectPool, activeEffects)
         totalWeight = totalWeight + effect:GetWeight()
     end
 
-    local seed = Ext.Random(1, totalWeight)
+    local seed = Ext.Random(0, math.floor(totalWeight))
 
     for id,effect in pairs(filteredPool) do
         seed = seed - effect:GetWeight()

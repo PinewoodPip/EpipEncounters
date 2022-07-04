@@ -95,6 +95,7 @@ LOAD_ORDER = {
     "Debug/Commands/Server.lua",
 
     "Epip/EpicEnemies/Shared.lua",
+    "Epip/EpicEnemies/Effects.lua",
     "Epip/EpicEnemies/EffectTemplates.lua",
     "Epip/EpicEnemies/ActivationConditions.lua",
     "Epip/EpicEnemies/Server.lua",

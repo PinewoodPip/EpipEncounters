@@ -135,7 +135,7 @@ end)
 -- Make mutator effects only available if character already has an activator
 EpicEnemies.Hooks.IsEffectApplicable:RegisterHook(function (applicable, effect, char, activeEffects)
     if effect.Keyword then
-        local excluded = Templates.KEYWORD_ACTIVATOR_REQUIREMENT_EXCLUSIONS[effect.Keyword]
+        local excluded = Templates.KEYWORD_ACTIVATOR_REQUIREMENT_EXCLUSIONS[effect.Keyword.Keyword]
         
         if effect.Keyword.BoonType == "Mutator" and not excluded then
             local hasActivator = false

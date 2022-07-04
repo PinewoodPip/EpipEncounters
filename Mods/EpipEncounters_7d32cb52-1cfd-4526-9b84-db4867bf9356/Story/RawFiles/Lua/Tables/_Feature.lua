@@ -53,8 +53,8 @@ end
 ---@return Event
 function _Feature:AddEvent(name, data)
     local event = data or {Module = self.Name, Event = name}
-    data.Module = self.Name
-    data.Event = name
+    event.Module = self.Name
+    event.Event = name
 
     setmetatable(event, {__index = _Event})
 
