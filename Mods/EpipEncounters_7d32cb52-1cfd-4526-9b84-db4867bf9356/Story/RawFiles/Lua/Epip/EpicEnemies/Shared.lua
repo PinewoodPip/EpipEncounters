@@ -6,6 +6,7 @@ local EpicEnemies = {
     CATEGORIES = {},
     INITIALIZED_TAG = "PIP_EpicEnemy",
     INELIGIBLE_TAG = "PIP_EpicEnemies_Ineligible",
+    EFFECT_TAG_PREFIX = "PIP_EpicEnemies_Effect_",
     Events = {
         
     },
@@ -51,6 +52,7 @@ local _EpicEnemiesActivationCondition = {
 ---@field DefaultCost integer
 ---@field ActivationCondition EpicEnemiesActivationCondition
 ---@field Category string?
+---@field Visible boolean? Whether this effect appears in tooltips. Defaults to true.
 
 ---@class EpicEnemiesKeywordData
 ---@field Keyword Keyword

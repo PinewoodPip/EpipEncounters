@@ -545,6 +545,7 @@ local forcedEffect = {
     Keyword = {Keyword = "Predator", BoonType = "Mutator"},
     Cost = 0,
     Weight = 0,
+    Visible = false,
     ExtendedStats = {
         {
             StatID = "FreeReactionCharge",

@@ -1,9 +1,6 @@
 
 local EpicEnemies = Epip.Features.EpicEnemies
 
----@type table<NetId, EpicEnemiesEffect[]>
-EpicEnemies.APPLIED_EFFECTS = {}
-
 ---@type EpicEnemies_Hook_GetActivationConditionDescription
 EpicEnemies.Hooks.GetActivationConditionDescription = EpicEnemies:AddHook("GetActivationConditionDescription")
 
@@ -88,12 +85,21 @@ Client.UI.OptionsSettings.RegisterOptions("EpicEnemies", Settings)
 -- Render effect info into the status tooltip.
 Game.Tooltip.RegisterListener("Status", nil, function(char, status, tooltip)
     if status.StatusId == "PIP_OSITOOLS_EpicBossesDisplay" then
+        local effects = {}
 
-        local effects = EpicEnemies.APPLIED_EFFECTS[char.NetID]
-        if effects then
-            local str = ""
+        -- Grab effects from tags
+        for i,tag in ipairs(char:GetTags()) do
+            local effectID = tag:match(EpicEnemies.EFFECT_TAG_PREFIX .. "(.+)$")
 
-            for i,effect in ipairs(effects) do
+            if effectID then
+                table.insert(effects, EpicEnemies.GetEffectData(effectID))
+            end
+        end
+
+        local str = ""
+
+        for i,effect in ipairs(effects) do
+            if effect.Visible or effect.Visible == nil then
                 local activationConditionText = EpicEnemies.Hooks.GetActivationConditionDescription:Return("", effect.ActivationCondition, char)
 
                 str = str .. Text.Format("%s<br>%s<br>%s", {
@@ -105,27 +111,14 @@ Game.Tooltip.RegisterListener("Status", nil, function(char, status, tooltip)
                 })
                 str = str .. "<br>"
             end
-
-            table.insert(tooltip.Data, {
-                Label = str,
-                Type = "StatusDescription",
-                Value = 1,
-            })
         end
+
+        table.insert(tooltip.Data, {
+            Label = str,
+            Type = "StatusDescription",
+            Value = 1,
+        })
     end
-end)
-
-Game.Net.RegisterListener("EPIPENCOUNTERS_EpicEnemies_EffectsApplied", function(cmd, payload)
-    local char = Ext.GetCharacter(payload.CharacterNetID)
-    local effects = payload.Effects
-
-    EpicEnemies.APPLIED_EFFECTS[char.NetID] = effects
-end)
-
-Game.Net.RegisterListener("EPIPENCOUNTERS_EpicEnemies_EffectsRemoved", function(cmd, payload)
-    local char = Ext.GetCharacter(payload.CharacterNetID)
-
-    EpicEnemies.APPLIED_EFFECTS[char.NetID] = nil
 end)
 
 -- Render category selector.

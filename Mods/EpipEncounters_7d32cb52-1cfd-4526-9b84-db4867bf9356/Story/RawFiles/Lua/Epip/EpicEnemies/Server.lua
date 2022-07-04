@@ -228,6 +228,7 @@ function EpicEnemies.ApplyEffect(char, effect)
     EpicEnemies:DebugLog("Applying effect: " .. effect.Name .. " to " .. char.DisplayName)
 
     Osiris.DB_PIP_EpicEnemies_AppliedEffect:Set(char.MyGuid, effect.ID)
+    Osi.SetTag(char.MyGuid, EpicEnemies.EFFECT_TAG_PREFIX .. effect.ID)
 
     EpicEnemies.ActivateEffects(char, "EffectApplied")
 end
@@ -334,6 +335,7 @@ function EpicEnemies.RemoveEffect(char, effectID)
     EpicEnemies.DeactivateEffect(char, effect, EpicEnemies.GetEffectActivationCount(char, effect))
 
     Osiris.DB_PIP_EpicEnemies_AppliedEffect:Delete(char.MyGuid, effectID)
+    Osi.ClearTag(char.MyGuid, EpicEnemies.EFFECT_TAG_PREFIX .. effectID)
 
     EpicEnemies:DebugLog("Removing effect: " .. effect.Name .. " from " .. char.DisplayName)
 
