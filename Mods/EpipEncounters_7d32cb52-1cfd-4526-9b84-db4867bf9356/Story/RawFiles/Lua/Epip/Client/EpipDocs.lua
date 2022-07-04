@@ -107,10 +107,13 @@ local VERSIONS = {
         Version = 1051,
         Date = "28/06/22",
     },
+    {
+        Version = 1052,
+        Date = "4/07/22",
+    },
 }
 
 for i=#VERSIONS,1,-1 do
--- for i,version in pairs(VERSIONS) do
     local version = VERSIONS[i]
     Changelogs.AddChangelog("EpipEncounters", {
         VersionName = string.format("v%s", tostring(version.Version)),

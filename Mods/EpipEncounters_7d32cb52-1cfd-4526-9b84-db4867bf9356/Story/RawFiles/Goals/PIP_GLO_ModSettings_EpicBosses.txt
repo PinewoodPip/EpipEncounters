@@ -104,6 +104,8 @@ KBSECTION
 PROC PROC_AMER_CharAddedToCombat((CHARACTERGUID)_Char, (INTEGER)_Init)
 AND
 QRY_PIP_EpicBosses_IsValidCharacter(_Char)
+AND
+0 != 0 // Disabled.
 THEN
 PROC_PIP_EpicBosses_Handle(_Char);
 
