@@ -1,9 +1,9 @@
 
 ---@meta Library: GameCharacter, ContextShared, Game.Character
  
-Game.Character = {}
 
-local Character = Game.Character
+local Character = {}
+Game.Character = Character
 Epip.InitializeFeature("Character", "Game.Character", Character)
 
 ---Returns the current stacks on char, as well as lifetime. Queries the related status effects.

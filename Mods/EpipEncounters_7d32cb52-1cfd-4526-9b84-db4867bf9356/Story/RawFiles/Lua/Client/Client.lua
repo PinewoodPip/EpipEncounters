@@ -1,13 +1,6 @@
 
 ---@meta Client, ContextClient
 
----@class Client
----@field UI ClientUI
----@field Input ClientInput
----@field IS_HOST boolean Internal; do not set!
----@field GAME_STATES table<string, string>
-
----@type Client
 Client = {
     UI = {},
     Input = {}, -- See Input.lua

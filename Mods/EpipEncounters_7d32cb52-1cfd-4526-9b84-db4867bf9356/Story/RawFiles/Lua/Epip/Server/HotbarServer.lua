@@ -1,4 +1,7 @@
-local Hotbar = {}
+local Hotbar = {
+    ---@type table<PrefixedGUID, string>
+    preparedSkills = {},
+}
 Epip.AddFeature("HotbarManager", "HotbarManager", Hotbar)
 Hotbar:Debug()
 
@@ -13,11 +16,6 @@ function Hotbar.SaveLayout(char, layout)
 
         if bar.Visible then
             visible = 1
-        end
-
-        -- Do not save extra bars from April Fools mode
-        if i > 5 then
-            break
         end
 
         Osi.DB_PIP_Hotbar_State(
@@ -81,6 +79,73 @@ Ext.Osiris.RegisterListener("SavegameLoaded", 4, "before", function(major, minor
                 Layout = layout,
                 NetID = char.NetID,
             })
+        end
+    end
+end)
+
+local casters = {}
+Osiris.RegisterSymbolListener("NRD_OnActionStateEnter", 2, "after", function(char, state)
+    -- print("enter", char, state)
+    local player = Osiris.DB_IsPlayer:Get(char)
+
+    if state == "UseSkill" and player then
+        char = Ext.Entity.GetCharacter(char)
+        local skillID = NRD_ActionStateGetString(char.MyGuid, "SkillId")
+
+        casters[char.MyGuid] = true
+
+        Game.Net.PostToUser(char.ReservedUserID, "EPIPENCOUNTERS_Hotbar_SkillUseChanged", {
+            NetID = char.NetID,
+            SkillID = skillID,
+            Casting = true,
+        })
+    elseif state == "PrepareSkill" then
+        char = Ext.Entity.GetCharacter(char)
+        local skillID = NRD_ActionStateGetString(char.MyGuid, "SkillId")
+
+        Hotbar.preparedSkills[char.MyGuid] = skillID
+
+        Game.Net.PostToUser(char.ReservedUserID, "EPIPENCOUNTERS_Hotbar_SkillUseChanged", {
+            NetID = char.NetID,
+            SkillID = skillID,
+            Casting = false,
+        })
+    end
+end)
+
+Ext.Events.Tick:Subscribe(function()
+    for caster,_ in pairs(casters) do
+        local state = NRD_CharacterGetCurrentAction(caster)
+        local char = Ext.Entity.GetCharacter(caster)
+
+        if state ~= "UseSkill" then
+            Game.Net.PostToUser(char.ReservedUserID, "EPIPENCOUNTERS_Hotbar_SkillUseChanged", {
+                NetID = char.NetID,
+                SkillID = nil,
+                Casting = false,
+            })
+
+            casters[caster] = nil
+        end
+    end
+
+    for charGUID,skill in pairs(Hotbar.preparedSkills) do
+        local state = NRD_CharacterGetCurrentAction(charGUID)
+
+        if state ~= "PrepareSkill" then
+            Ext.OnNextTick(function()
+                if NRD_CharacterGetCurrentAction(charGUID) ~= "UseSkill" then
+                    local char = Ext.Entity.GetCharacter(charGUID)
+
+                    Hotbar.preparedSkills[charGUID] = nil
+                    
+                    Game.Net.PostToUser(char.ReservedUserID, "EPIPENCOUNTERS_Hotbar_SkillUseChanged", {
+                        NetID = char.NetID,
+                        SkillID = nil,
+                        Casting = false,
+                    })
+                end
+            end)
         end
     end
 end)

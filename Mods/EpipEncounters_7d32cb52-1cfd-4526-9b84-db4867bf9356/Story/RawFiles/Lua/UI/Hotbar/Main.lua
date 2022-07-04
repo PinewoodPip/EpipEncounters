@@ -21,7 +21,6 @@
 ---@field modulesRequestingHide table<string,boolean> Modules that are currently requesting the hotbar to stay hidden.
 ---@field ACTION_BUTTONS_COUNT integer Amount of action buttons available in total.
 
----@type HotbarUI
 local Hotbar = {
     Actions = {},
     State = {
@@ -330,7 +329,7 @@ end
 
 ---Returns the SkillBarItems array of char, optionally filtered by predicate.
 ---@param char? EclCharacter
----@param predicate? fun(char: EclCharacter, slot: SkillBarItem)
+---@param predicate? fun(char: EclCharacter, slot: SkillBarItem, index:integer)
 ---@return table<integer, SkillBarItem>
 function Hotbar.GetSkillBarItems(char, predicate)
     local slots = {}
@@ -346,7 +345,7 @@ function Hotbar.GetSkillBarItems(char, predicate)
         slots = skillBar
     else
         for i=1,145,1 do
-            if predicate(char, skillBar[i]) then
+            if predicate(char, skillBar[i], i) then
                 slots[i] = skillBar[i]
             end
         end
@@ -814,14 +813,33 @@ function Hotbar.UseSlot(index, isEnabled)
 
     Hotbar:GetUI():ExternalInterfaceCall("slotPressed", index - 1, isEnabled or true)
 
-    if slot.isEnabled and slot.inUse then
-        local slotHolder = Hotbar.GetSlotHolder()
-        if Hotbar.GetSkillBarItems()[index].Type == "Skill" then
-            slotHolder.showActiveSkill(index - 1)
-        else
-            slotHolder.showActiveSkill(-1)
-        end
+    -- if slot.isEnabled and slot.inUse then
+    --     local slotHolder = Hotbar.GetSlotHolder()
+    --     if Hotbar.GetSkillBarItems()[index].Type == "Skill" then
+    --         slotHolder.showActiveSkill(index - 1)
+    --     else
+    --         slotHolder.showActiveSkill(-1)
+    --     end
+    -- end
+end
+
+function Hotbar.UpdateActiveSkill()
+    local char = Client.GetCharacter()
+    local preparedSkill = Hotbar.GetPreparedSkill(char)
+    local slotHolder = Hotbar.GetSlotHolder()
+    local index = -1
+
+    print(preparedSkill)
+    if preparedSkill and not preparedSkill.Casting then
+        local items = Hotbar.GetSkillBarItems(char, function (char, slot, slotIndex)
+            if slot.SkillOrStatId == preparedSkill.SkillID then
+                index = slotIndex - 1 -- Subtract one because we're sending to flash.
+                return true
+            end
+        end)
+        print(index)
     end
+    slotHolder.showActiveSkill(index)
 end
 
 ---Sets the action for a hotkey button.
@@ -1004,6 +1022,8 @@ end)
 ---@param skillID string
 ---@param casting boolean
 function Hotbar.SetPreparedSkill(char, skillID, casting)
+    if not char then char = Client.GetCharacter() end
+
     if skillID then
         skillID = string.match(skillID, "^(.*)%_%-1$") -- remove the level suffix
     end
@@ -1012,13 +1032,13 @@ function Hotbar.SetPreparedSkill(char, skillID, casting)
         Hotbar.PreparedSkills[char.NetID] = {
             SkillID = skillID,
             StartTime = Ext.Utils.MonotonicTime(),
-            Casting = true,
+            Casting = casting,
         }
 
         Hotbar:FireEvent("SkillUseEntered", skillID)
         Hotbar:DebugLog("Using skill " .. skillID)
 
-        Hotbar:GetRoot().showActiveSkill(-1)
+        -- Hotbar:GetRoot().showActiveSkill(-1)
     else
         Hotbar.PreparedSkills[char.NetID] = nil
 
@@ -1307,7 +1327,7 @@ Ext.Events.Tick:Subscribe(function()
 
     -- Failsafe for skill use greyout
     local preparedSkill = Hotbar.GetPreparedSkill()
-    if preparedSkill then
+    if preparedSkill and preparedSkill.Casting then
         if Ext.MonotonicTime() - preparedSkill.StartTime > Hotbar.SKILL_USE_TIME then
             Hotbar.SetPreparedSkill(nil, nil, false)
         end
@@ -1629,6 +1649,8 @@ function Hotbar.RenderSlots()
     local startingBar = 2
     local canUseHotbar = Hotbar.CanUseHotbar()
 
+    Hotbar.UpdateActiveSkill()
+
     if not canUseHotbar or not Hotbar:GetRoot().useArrays then
         startingBar = 1
     end
@@ -1916,8 +1938,6 @@ end
 
 -----------
 
-local ignoreSlotUpdate = false
-
 function Hotbar.Refresh()
     if Ext.Client.GetGameState() ~= "Running" then
         return nil
@@ -1928,7 +1948,7 @@ function Hotbar.Refresh()
 
     if not char then return nil end
 
-    -- hide the +/- buttons on summons. They're unsupported due to savefile bloat. TODO
+    -- Hide the +/- buttons on summons. They're unsupported due to savefile bloat.
     local isPlayer = not Game.Character.IsSummon(char)
 
     Hotbar:GetRoot().hotbar_mc.minusBtn_mc.visible = isPlayer and Hotbar.elementsToggled
@@ -2028,15 +2048,6 @@ end
 function handleUpdateSlots(uiObj, methodName, param3, slotsAmount)
     local root = uiObj:GetRoot()
     Hotbar.Refresh()
-end
-
--- TODO remove?
-function OnRefreshSlots(ui, method, param3)
-    if not ignoreSlotUpdate then
-        ignoreSlotUpdate = true
-        -- UpdateSlotTextures()
-        ignoreSlotUpdate = false
-    end
 end
 
 Ext.Events.SessionLoaded:Subscribe(function()
