@@ -401,8 +401,11 @@ end)
 -- Reset state upon lua reset
 Ext.Events.ResetCompleted:Subscribe(function()
     if Ext.Osiris.IsCallable() then
-        Osiris.DB_PIP_EpicEnemies_ActivatedEffect:Delete(nil, nil, nil)
-        Osiris.DB_PIP_EpicEnemies_AppliedEffect:Delete(nil, nil)
+        local _, _, tuples = Osiris.DB_PIP_EpicEnemies_AppliedEffect:Get(nil, nil)
+
+        for i,tuple in ipairs(tuples) do
+            EpicEnemies.CleanupCharacter(Ext.GetCharacter(tuple[1]))
+        end
     end
 end)
 
