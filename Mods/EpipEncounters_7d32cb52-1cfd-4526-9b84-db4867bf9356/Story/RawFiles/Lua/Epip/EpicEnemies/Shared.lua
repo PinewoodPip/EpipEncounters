@@ -469,6 +469,20 @@ for id,artifact in pairs(Game.Items.ARTIFACTS) do
             description = displayStatus.DisplayNameRef
         end
 
+        ---@type EpicEnemiesKeywordData
+        local keyword = nil
+        if #artifact.KeywordActivators > 0 then
+            keyword = {
+                Keyword = artifact.KeywordActivators[1],
+                BoonType = "Activator",
+            }
+        elseif #artifact.KeywordMutators > 0 then
+            keyword = {
+                Keyword = artifact.KeywordMutators[1],
+                BoonType = "Mutator",
+            }
+        end
+
         ---@type EpicEnemiesEffect
         local effect = {
             ID = id,
@@ -479,6 +493,7 @@ for id,artifact in pairs(Game.Items.ARTIFACTS) do
             DefaultWeight = artifactWeights[id] or 0,
             Description = description,
             Artifact = artifact.ID,
+            Keyword = keyword,
         }
         table.insert(ArtifactsCategory.Effects, effect)
     else
