@@ -11,13 +11,9 @@ function Game.Net.PostToCharacter(char, channel, message)
 end
 
 function Game.Net.PostToUser(user, channel, message, excludedChar)
+    if type(user) == "userdata" then user = user.ReservedUserID end
+    
     Ext.Net.PostMessageToUser(user, channel, Utilities.Stringify(message), excludedChar)
-end
-
-function Game.Net.PostToOwner(char, channel, message)
-    if char.UserID ~= INVALID_USER_ID then
-        Game.Net.PostToUser(char.UserID, channel, message)
-    end
 end
 
 -- Wrapper for Ext.RegisterNetListener that parses json payload and fires a hookable event afterwards.

@@ -59,27 +59,8 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
-local cachedState = {}
--- Ext.RegisterOsirisListener("NRD_OnActionStateEnter", 2, "after", function(char, state)
---     if #Osi.DB_IsPlayer:Get(char) > 0 and state == "UseSkill" then
---         local skill = Osi.NRD_ActionStateGetString(char, "SkillId")
---         char = Ext.GetCharacter(char)
-
---         cachedState[char.NetID] = skill
---         Game.Net.PostToUser(char.UserID, "EPIPENCOUNTERS_Hotbar_SkillBeingUsed", {Skill = skill})
---     end
--- end)
-
 Game.Net.RegisterListener("EPIPENCOUNTERS_Hotbar_UseTemplate", function(cmd, payload)
     Osi.PROC_PIP_Hotbar_UseTemplate(Ext.GetCharacter(payload.NetID).MyGuid, payload.Template)
-end)
-
-Ext.RegisterOsirisListener("NRD_OnActionStateExit", 2, "after", function(char, state)
-    if #Osi.DB_IsPlayer:Get(char) > 0 and state == "UseSkill" then
-        char = Ext.GetCharacter(char)
-        Game.Net.PostToUser(char.UserID, "EPIPENCOUNTERS_Hotbar_SkillBeingUsed", {})
-        cachedState[char.NetID] = nil
-    end
 end)
 
 Game.Net.RegisterListener("EPIPENCOUNTERS_Hotbar_SaveLayout", function(cmd, payload)

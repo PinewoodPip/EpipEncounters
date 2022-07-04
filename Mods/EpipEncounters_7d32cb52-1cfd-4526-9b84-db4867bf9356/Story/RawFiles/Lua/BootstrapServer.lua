@@ -288,18 +288,31 @@ local casters = {}
 Osiris.RegisterSymbolListener("NRD_OnActionStateEnter", 2, "after", function(char, state)
     -- print("enter", char, state)
     local player = Osiris.DB_IsPlayer:Get(char)
+
     if state == "UseSkill" and player then
-        casters[char] = true
-        Game.Net.PostToOwner(Ext.GetCharacter(char), "EPIPENCOUNTERS_Hotbar_SkillUsed")
+        char = Ext.Entity.GetCharacter(char)
+        local skillID = NRD_ActionStateGetString(char.MyGuid, "SkillId")
+
+        casters[char.MyGuid] = true
+        Game.Net.PostToUser(char.ReservedUserID, "EPIPENCOUNTERS_Hotbar_SkillUseChanged", {
+            NetID = char.NetID,
+            SkillID = skillID,
+            Casting = true,
+        })
     end
 end)
 
 Ext.Events.Tick:Subscribe(function()
     for caster,_ in pairs(casters) do
         local state = NRD_CharacterGetCurrentAction(caster)
+        local char = Ext.Entity.GetCharacter(caster)
 
         if state ~= "UseSkill" then
-            Game.Net.PostToOwner(Ext.GetCharacter(caster), "EPIPENCOUNTERS_Hotbar_SkillUseFinished")
+            Game.Net.PostToUser(char.ReservedUserID, "EPIPENCOUNTERS_Hotbar_SkillUseChanged", {
+                NetID = char.NetID,
+                SkillID = nil,
+                Casting = false,
+            })
             casters[caster] = nil
         end
     end

@@ -12,7 +12,7 @@ function Vanity.RevertAppearace(char, item)
 
         Ext.OnNextTick(function()
             Ext.OnNextTick(function()
-                Game.Net.PostToOwner(char, "EPIPENCOUNTERS_Vanity_SetTemplateOverride", {TemplateOverride = originalTemplate})
+                Game.Net.PostToUser(char.ReservedUserID, "EPIPENCOUNTERS_Vanity_SetTemplateOverride", {TemplateOverride = originalTemplate})
             end)
         end)
     end

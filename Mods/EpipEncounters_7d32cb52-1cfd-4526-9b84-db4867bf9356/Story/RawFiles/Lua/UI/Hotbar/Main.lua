@@ -10,6 +10,7 @@
 ---@field SAVE_FILENAME string
 ---@field currentLoadoutRow number?
 ---@field Loadouts table<string, HotbarLoadout>
+---@field PreparedSkills table<NetId, HotbarPreparedSkill> Tracks the prepared skill, as well as the skill being used.
 ---@field RegisteredActionOrder string[]
 ---@field UPDATE_DELAY integer Ticks to wait inbetween each hotbar update.
 ---@field COOLDOWN_UPDATE_DELAY integer Ticks to wait inbetween each cooldown animation update
@@ -35,12 +36,12 @@ local Hotbar = {
 
     },
 
+    PreparedSkills = {},
     modulesRequestingHide = {},
     elementsToggled = true,
     initialized = false,
     currentLoadoutRow = nil,
     tickCounter = 0,
-    skillUseTimerStart = 0,
 
     ACTION_BUTTONS_COUNT = 12,
     SKILL_USE_TIME = 3000, -- Kept as a fallback.
@@ -76,6 +77,11 @@ for i=1,Hotbar.ACTION_BUTTONS_COUNT,1 do
         ActionID = "",
     })
 end
+
+---@class HotbarPreparedSkill
+---@field SkillID string
+---@field StartTime integer
+---@field Casting boolean True if the spell is being cast.
 
 ---@class SkillBarItem
 ---@field Type string
@@ -140,6 +146,21 @@ end
 function Hotbar.GetSlotData(char, index)
     if not char then char = Client.GetCharacter() end
     return char.PlayerData.SkillBarItems[index]
+end
+
+---Returns the skill currently being prepared by char.
+---@param char EclCharacter?
+---@return HotbarPreparedSkill?
+function Hotbar.GetPreparedSkill(char)
+    char = char or Client.GetCharacter()
+
+    return Hotbar.PreparedSkills[char.NetID]
+end
+
+function Hotbar.IsCasting(char)
+    local skill = Hotbar.GetPreparedSkill(char)
+
+    return skill and skill.Casting
 end
 
 ---Unbinds a hotkey button by index.
@@ -252,7 +273,7 @@ end
 ---The hotbar is unusable in combat if it is not the client char's turn, or while they are casting a skill.
 ---@return boolean
 function Hotbar.CanUseHotbar()
-    return (((not Client.IsInCombat() or (Client.IsActiveCombatant() and Client.GetCharacter().Stats.CurrentAP)))) and not Hotbar.skillBeingPrepared
+    return (((not Client.IsInCombat() or (Client.IsActiveCombatant() and Client.GetCharacter().Stats.CurrentAP)))) and not Hotbar.IsCasting()
 end
 
 ---Save a row loadout.
@@ -979,36 +1000,39 @@ Game.Net.RegisterListener("EPIPENCOUNTERS_Hotbar_SetLayout", function(cmd, paylo
     Hotbar.SetState(Ext.GetCharacter(payload.NetID), payload.Layout)
 end)
 
--- Track skill being prepared - requires server atm :/
-Game.Net.RegisterListener("EPIPENCOUNTERS_Hotbar_SkillBeingUsed", function(cmd, payload)
-    Hotbar.skillBeingPrepared = payload.Skill
+---@param char EclCharacter
+---@param skillID string
+---@param casting boolean
+function Hotbar.SetPreparedSkill(char, skillID, casting)
+    if skillID then
+        skillID = string.match(skillID, "^(.*)%_%-1$") -- remove the level suffix
+    end
 
-    if Hotbar.skillBeingPrepared then
-        Hotbar.skillBeingPrepared = string.match(Hotbar.skillBeingPrepared, "^(.*)%_%-1$")
-        Hotbar:DebugLog("Useing skill " .. Hotbar.skillBeingPrepared)
-        Hotbar:FireEvent("SkillUseEntered", Hotbar.skillBeingPrepared)
+    if skillID then
+        Hotbar.PreparedSkills[char.NetID] = {
+            SkillID = skillID,
+            StartTime = Ext.Utils.MonotonicTime(),
+            Casting = true,
+        }
 
-        Hotbar.skillUseTimerStart = Ext.MonotonicTime()
+        Hotbar:FireEvent("SkillUseEntered", skillID)
+        Hotbar:DebugLog("Using skill " .. skillID)
+
         Hotbar:GetRoot().showActiveSkill(-1)
     else
-        Hotbar:DebugLog("Exiting prepare skill.")
+        Hotbar.PreparedSkills[char.NetID] = nil
+
+        Hotbar:DebugLog("Exiting skill.")
         Hotbar:FireEvent("SkillUseExited")
     end
 
-    Hotbar:FireEvent("SkillUseChanged", Hotbar.skillBeingPrepared)
-end)
+    Hotbar:FireEvent("SkillUseChanged", skillID)
 
-Game.Net.RegisterListener("EPIPENCOUNTERS_Hotbar_SkillUsed", function(cmd, payload)
-    Hotbar:DebugLog("Using Skill")
-    Hotbar.skillBeingPrepared = "test"
-    Hotbar.skillUseTimerStart = Ext.MonotonicTime()
     Hotbar.RenderSlots()
-end)
+end
 
-Game.Net.RegisterListener("EPIPENCOUNTERS_Hotbar_SkillUseFinished", function(cmd, payload)
-    Hotbar:DebugLog("Exiting Skill")
-    Hotbar.skillBeingPrepared = nil
-    Hotbar.RenderSlots()
+Game.Net.RegisterListener("EPIPENCOUNTERS_Hotbar_SkillUseChanged", function(cmd, payload)
+    Hotbar.SetPreparedSkill(Ext.Entity.GetCharacter(payload.NetID), payload.SkillID, payload.Casting)
 end)
 
 -- TODO figure something out for items? Listen for item use?
@@ -1281,11 +1305,11 @@ Ext.Events.Tick:Subscribe(function()
         end
     end
 
-    if Hotbar.skillBeingPrepared then
-        -- Failsafe
-        if Ext.MonotonicTime() - Hotbar.skillUseTimerStart > Hotbar.SKILL_USE_TIME then
-            Hotbar.skillBeingPrepared = nil
-            Hotbar.RenderSlots()
+    -- Failsafe for skill use greyout
+    local preparedSkill = Hotbar.GetPreparedSkill()
+    if preparedSkill then
+        if Ext.MonotonicTime() - preparedSkill.StartTime > Hotbar.SKILL_USE_TIME then
+            Hotbar.SetPreparedSkill(nil, nil, false)
         end
     end
 end)
@@ -1880,17 +1904,11 @@ function Hotbar.PositionElements()
     bottombar.chatBtn_mc.visible = false
 
     -- base frame
-    -- if Hotbar.HasSecondHotkeysRow() then
-        bottombar.pip_baseframe.x = hotbar.POSITIONING.HOTKEYS.BASEFRAME_POS.X
-        bottombar.pip_baseframe.y = hotbar.POSITIONING.HOTKEYS.BASEFRAME_POS.Y
+    bottombar.pip_baseframe.x = hotbar.POSITIONING.HOTKEYS.BASEFRAME_POS.X
+    bottombar.pip_baseframe.y = hotbar.POSITIONING.HOTKEYS.BASEFRAME_POS.Y
 
-        bottombar.pip_baseframe2.x = 0
-        bottombar.pip_baseframe2.y = 53
-    -- else
-    --     bottombar.pip_baseframe.x = -5000
-    -- end
-
-    
+    bottombar.pip_baseframe2.x = 0
+    bottombar.pip_baseframe2.y = 53
 
     -- apparently this is just a black overlay ???
     bottombar.iconBg_mc.visible = false

@@ -60,7 +60,7 @@ function UpdateCustomStatsForCharacter(char)
         Utilities.Hooks.FireEvent("Epip_StatsTab", "UpdateStat_" .. id, char, data)
     end
 
-    Game.Net.PostToOwner(char, "EPIPENCOUNTERS_RefreshStatsTab")
+    Game.Net.PostToUser(char, "EPIPENCOUNTERS_RefreshStatsTab")
 end
 
 -- Update the tag storing a stat's value for a char.
@@ -85,8 +85,6 @@ function EpipStats.UpdateTaggedStat(char, stat, newValue)
     if newValue ~= 0 then
         Osi.SetTag(char.MyGuid, EpipStats.STAT_VALUE_TAG_PREFIX .. stat .. "_" .. RemoveTrailingZeros(newValue))
     end
-
-    -- Game.Net.PostToOwner(char, "EPIPENCOUNTERS_RefreshStatsTab")
 end
 
 ---------------------------------------------
