@@ -41,6 +41,7 @@ local Hotbar = {
     initialized = false,
     currentLoadoutRow = nil,
     tickCounter = 0,
+    lastClickedSlot = -1,
 
     ACTION_BUTTONS_COUNT = 12,
     SKILL_USE_TIME = 3000, -- Kept as a fallback.
@@ -813,14 +814,7 @@ function Hotbar.UseSlot(index, isEnabled)
 
     Hotbar:GetUI():ExternalInterfaceCall("slotPressed", index - 1, isEnabled or true)
 
-    -- if slot.isEnabled and slot.inUse then
-    --     local slotHolder = Hotbar.GetSlotHolder()
-    --     if Hotbar.GetSkillBarItems()[index].Type == "Skill" then
-    --         slotHolder.showActiveSkill(index - 1)
-    --     else
-    --         slotHolder.showActiveSkill(-1)
-    --     end
-    -- end
+    Hotbar.lastClickedSlot = index
 end
 
 function Hotbar.UpdateActiveSkill()
@@ -829,15 +823,13 @@ function Hotbar.UpdateActiveSkill()
     local slotHolder = Hotbar.GetSlotHolder()
     local index = -1
 
-    print(preparedSkill)
     if preparedSkill and not preparedSkill.Casting then
         local items = Hotbar.GetSkillBarItems(char, function (char, slot, slotIndex)
-            if slot.SkillOrStatId == preparedSkill.SkillID then
+            if slot.SkillOrStatId == preparedSkill.SkillID and (index == -1 or slotIndex == Hotbar.lastClickedSlot) then
                 index = slotIndex - 1 -- Subtract one because we're sending to flash.
                 return true
             end
         end)
-        print(index)
     end
     slotHolder.showActiveSkill(index)
 end
