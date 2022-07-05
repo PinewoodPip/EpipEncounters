@@ -43,7 +43,7 @@ function Stats.MeetsRequirements(char, statID, isItem)
     end
 
     -- Disarmed
-    if not isItem and data.UseWeaponDamage == "Yes" then
+    if not isItem and data.Requirement ~= "None" then
         if Game.Character.IsDisarmed(char) then
             return false
         end
