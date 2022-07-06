@@ -1,9 +1,20 @@
 
 ---@meta GameStats, ContextShared
 
-Game.Stats = {
+Stats = {
+    STATS_OBJECT_TYPES = {
+        Boost = true,
+        Armor = true,
+        Weapon = true,
+        Skill = true,
+        Object = true,
+        Character = true,
+        Shield = true,
+        Status = true,
+        Potion = true,
+    },
 }
-local Stats = Game.Stats
+Game.Stats = Stats
 Epip.InitializeLibrary("Stats", Stats)
 
 ---Returns whether char meets the requirements for a stat object to be used.
@@ -92,7 +103,7 @@ function Stats.MeetsRequirements(char, statID, isItem)
     -- Only check other requirements if this spell is natural to the character
     if not grantedByExternalSource then
         -- Requirements
-        for i,req in ipairs(data.Requirements) do
+        for _,req in ipairs(data.Requirements) do
             local reqMet = false
 
             if req.Requirement == "Combat" then
@@ -129,6 +140,52 @@ function Stats.MeetsRequirements(char, statID, isItem)
     end
 
     return true
+end
+
+---@alias StatsObjectType "ItemColor"|"Boost"|"Armor"|"Weapon"|"Skill"|"Object"|"Character"|"Data"|"ItemProgressionNames"|"ItemProgressionVisuals"|"Potion"|"Requirements"|"Shield"|"Status"|"CraftingStationsItemComboPreviewData"|"DeltaModifier"|"Equipment"|"ItemCombos"|"ItemTypes"|"ObjectCategoriesItemComboPreviewData"|"SkillSet"|"TreasureGroups"|"TreasureTable"|"DeltaMod"
+
+---@param statType StatsObjectType
+---@param id string
+---@return any
+function Stats.Get(statType, id)
+    local object
+
+    if Stats.STATS_OBJECT_TYPES[statType] then
+        object = Ext.Stats.Get(id, nil, false, false)  
+    elseif statType == "ItemColor" then
+        object = Ext.Stats.ItemColor.Get(id)
+    elseif statType == "DeltaModifier" or statType == "DeltaMod" then
+        object = Ext.Stats.DeltaMod.GetLegacy(id, "Armor") or Ext.Stats.DeltaMod.GetLegacy(id, "Weapon") or Ext.Stats.DeltaMod.GetLegacy(id, "Shield")
+    elseif statType == "TreasureTable" then
+        object = Ext.Stats.TreasureTable.GetLegacy(id)
+    elseif statType == "TreasureGroups" then
+        object = Ext.Stats.TreasureCategory.GetLegacy(id)
+    elseif statType == "Data" then
+        object = Ext.ExtraData[id]
+    else
+        Stats:LogError("Attempted to fetch unsupported stat type: " .. statType)
+    end
+
+    return object
+end
+
+---@param statType StatsObjectType
+---@param data any
+function Stats.Update(statType, data, ...)
+
+    if statType == "ItemColor" then
+        Ext.Stats.ItemColor.Update(data)
+    elseif statType == "DeltaModifier" or statType == "DeltaMod" then
+        Ext.Stats.DeltaMod.Update(data)
+    elseif statType == "TreasureTable" then
+        Ext.Stats.TreasureTable.Update(data)
+    -- elseif statType == "TreasureGroups" then
+    --     TODO
+    elseif statType == "Data" then
+        Ext.ExtraData[data] = ...
+    else
+        Stats:LogError("Attempted to update unsupported stat type: " .. statType)
+    end
 end
 
 function Stats.CountStat(stats, stat)

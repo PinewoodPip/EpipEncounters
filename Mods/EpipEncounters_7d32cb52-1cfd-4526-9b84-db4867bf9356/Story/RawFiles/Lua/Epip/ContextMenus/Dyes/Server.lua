@@ -16,7 +16,7 @@ Game.Net.RegisterListener("EPIPENCOUNTERS_DyeItem", function(cmd, payload)
 
     -- Osiris.DB_PIP_Vanity_CustomDyes_DyedItem:Set(item.MyGuid, dyeStat.Name)
 
-    Ext.Stats.ItemColor.Update(dyeStat, true)
+    Stats.Update("ItemColor", dyeStat)
 
     PersistentVars = PersistentVars or {}
     if not PersistentVars.Dyes then PersistentVars.Dyes = {} end
@@ -36,7 +36,7 @@ Game.Net.RegisterListener("EPIPENCOUNTERS_DyeItem", function(cmd, payload)
         stat.ItemColor = dyeStat.Name
     end
 
-    Ext.Stats.DeltaMod.Update({
+    Stats.Update("DeltaModifier", {
         Name = deltaModName,
         MinLevel = 1,
         Frequency = 1,
@@ -52,15 +52,6 @@ Game.Net.RegisterListener("EPIPENCOUNTERS_DyeItem", function(cmd, payload)
             }
         }
     })
-    -- Ext.Stats.SetPersistence(deltaModName, true)
-
-    -- All good
-    -- _D(Ext.Stats.DeltaMod.GetLegacy(deltaModName, statType))
-    -- _D(Ext.Stats.Get(boostStatName))
-    
-    -- TODO
-    -- Ext.Stats.Sync(deltaModName, true) -- dse::lua::stats::Sync(): Cannot sync nonexistent stat
-    -- Ext.Stats.Sync(boostStatName, true)
 
     Osi.ItemAddDeltaModifier(item.MyGuid, deltaModName)
 

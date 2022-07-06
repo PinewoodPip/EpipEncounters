@@ -165,8 +165,8 @@ function Dyes.ApplyCustomDye(dye, item)
         Color3 = (256 ^ 4) + (color3.Red * 256 ^ 2) + (color3.Green * 256) + (color3.Blue),
     }
 
-    Ext.Stats.ItemColor.Update(statData)
-    Dyes:Dump(Ext.Stats.ItemColor.Get(itemColorStat))
+    Stats.Update("ItemColor", statData)
+    Dyes:Dump(Stats.Get("ItemColor", itemColorStat))
 
     Dyes.ApplyDye(item, statData)
 end
@@ -201,15 +201,17 @@ function Dyes.CreateDyeStats(item, dyeStat)
 
     local deltaModName = string.format("Boost_%s_%s", statType, dyeStat.Name)
     local boostStatName = "_" .. deltaModName
-    local stat = Ext.Stats.Create(boostStatName, statType)
+    local stat = Stats.Get(statType, boostStatName)
 
-    Ext.Stats.ItemColor.Update(dyeStat, true)
+    Stats.Update("ItemColor", dyeStat)
 
-    if stat then
-        stat.ItemColor = dyeStat.Name
+    if not stat then
+        stat = Ext.Stats.Create(boostStatName, statType)
     end
 
-    Ext.Stats.DeltaMod.Update({
+    stat.ItemColor = dyeStat.Name
+
+    Stats.Update("DeltaModifier", {
         Name = deltaModName,
         MinLevel = 1,
         Frequency = 1,
