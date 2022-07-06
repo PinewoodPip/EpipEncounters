@@ -108,6 +108,7 @@ ContextMenu.RegisterMenuHandler("epip_Cheats", function(char)
 
                 {id = "epip_Cheats_SpecialLogic", type = "button", text = "Add SpecialLogic"},
                 {id = "epip_Cheats_Stats_FlexStats_Spell", type = "button", text = "Add Spell"},
+                {id = "epip_Cheats_AddStatus", type = "button", text = "Add Status"},
                 {id = "epip_Cheats_AddTag", type = "button", text = "Add Tag"},
                 {id = "epip_Cheats_RemoveTag", type = "button", text = "Remove Tag"},
 
@@ -302,8 +303,31 @@ ContextMenu.RegisterElementListener("epip_Cheats_Stats_FlexStats_Spell", "button
     })
 end)
 
-MessageBox.RegisterMessageListener("epip_Cheats_FlexStats_Spell", MessageBox.Events.InputSubmitted, function(text, id, data)
+MessageBox.RegisterMessageListener("epip_Cheats_FlexStats_Spell", MessageBox.Events.InputSubmitted, function(text, _, data)
     Game.Net.PostToServer("EPIP_CHEATS_SPELL", {NetID = data.NetID, StatsID = text})
+end)
+
+-- Add status.
+ContextMenu.RegisterElementListener("epip_Cheats_AddStatus", "buttonPressed", function(character, _)
+    MessageBox.Open({
+        ID = "epip_Cheats_AddStatus",
+        NetID = character.NetID,
+        Header = "Add Status",
+        Message = "Enter the StatusID. Put a space and number afterwards to define duration (default 1 turn).",
+        Type = "Input",
+        Buttons = {
+            {Type = 1, Text = "Accept"},
+        }
+    })
+end)
+
+MessageBox.RegisterMessageListener("epip_Cheats_AddStatus", MessageBox.Events.InputSubmitted, function(text, id, data)
+    local status, duration = table.unpack(Text.Split(text, " "))
+    if duration then duration = duration * 6 else duration = 6 end
+
+    Game.Net.PostToServer("EPIP_CHEATS_ADDSTATUS", {
+        NetID = data.NetID, StatusID = status, Duration = duration,
+    })
 end)
 
 -- Teleport to object.

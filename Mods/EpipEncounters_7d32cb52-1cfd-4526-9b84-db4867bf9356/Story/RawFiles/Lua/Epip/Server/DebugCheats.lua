@@ -63,6 +63,13 @@ Game.Net.RegisterListener("EPIP_CHEATS_SPELL", function(cmd, payload)
     Osi.PROC_AMER_FlexStat_CharacterAddStat(char.MyGuid, "Spell", payload.StatsID)
 end)
 
+-- Apply status.
+Game.Net.RegisterListener("EPIP_CHEATS_ADDSTATUS", function(cmd, payload)
+    local char = Ext.GetCharacter(payload.NetID)
+
+    Osi.ApplyStatus(char.MyGuid, payload.StatusID, payload.Duration, 1)
+end)
+
 -- Give numeric Flexstats
 Game.Net.RegisterListener("EPIP_CHEATS_FLEXSTAT", function(cmd, payload)
     local char = Ext.GetCharacter(payload.NetID)

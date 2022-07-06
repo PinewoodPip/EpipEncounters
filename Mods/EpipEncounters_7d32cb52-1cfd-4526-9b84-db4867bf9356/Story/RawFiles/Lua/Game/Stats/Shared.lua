@@ -47,7 +47,7 @@ function Stats.MeetsRequirements(char, statID, isItem)
     end
 
     -- Muted
-    if not isItem and data.IgnoreSilence ~= "Yes" and (data.UseWeaponDamage ~= "Yes" and data.Requirement == "None") then
+    if not isItem and data.IgnoreSilence ~= "Yes" and (data.UseWeaponDamage ~= "Yes" and (data.Requirement == "None" or data.Requirement == "ShieldWeapon")) then
         if Game.Character.IsMuted(char) then
             return false
         end

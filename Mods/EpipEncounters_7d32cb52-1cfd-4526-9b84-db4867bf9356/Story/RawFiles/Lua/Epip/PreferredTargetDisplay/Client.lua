@@ -58,7 +58,7 @@ end
 Client.UI.EnemyHealthBar:RegisterHook("GetBottomText", function(text, char, _)
     local settingValue = Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "PreferredTargetDisplay")
 
-    if settingValue > 1 then
+    if char and settingValue > 1 then
         local holdingShift = Client.Input.IsHoldingModifierKey()
         local enabled = holdingShift
         if settingValue == 3 then enabled = not holdingShift end
