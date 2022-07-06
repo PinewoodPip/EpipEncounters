@@ -600,7 +600,7 @@ function Hotbar.GetKeyString(index, shortName)
             inputEvent = actionData.InputEventID
             key = OptionsMenu:GetKey(inputEvent, true)
         else -- Use the hotbar keybinds
-            local bindableAction = Client.UI.OptionsInput.GetKeybinds("EpipEncounters_Hotbar_" .. RemoveTrailingZeros(index))
+            local bindableAction = Client.UI.OptionsInput.GetKeybinds("EpipEncounters_Hotbar_" .. Text.RemoveTrailingZeros(index))
 
             if bindableAction then
                 if bindableAction.Input1 then
@@ -1459,7 +1459,7 @@ function Hotbar.RenderDrawerButtons()
             button.icon_mc.width = 32
             button.icon_mc.height = 32
 
-            Hotbar:GetUI():SetCustomIcon("pip_drawerButton_" .. RemoveTrailingZeros(button.index), Hotbar.GetActionIcon(id), 32, 32)
+            Hotbar:GetUI():SetCustomIcon("pip_drawerButton_" .. Text.RemoveTrailingZeros(button.index), Hotbar.GetActionIcon(id), 32, 32)
         end
     end
 end

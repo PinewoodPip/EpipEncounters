@@ -28,7 +28,7 @@ function _LifestealMessage:ToString()
         Color = Log.COLORS.TEXT,
         FormatArgs = {
             {Text = self.CharacterName, Color = self.CharacterColor},
-            {Text = "%s %s", Color = self.Damage[1].Color, FormatArgs = {RemoveTrailingZeros(self.Damage[1].Amount), self.Damage[1].Type}}
+            {Text = "%s %s", Color = self.Damage[1].Color, FormatArgs = {Text.RemoveTrailingZeros(self.Damage[1].Amount), self.Damage[1].Type}}
         },
     })
 

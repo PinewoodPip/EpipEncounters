@@ -227,7 +227,7 @@ function GreatforgeGetItemData(char, item)
     -- local subType = item.Stats.ItemType
 
     -- returns ilevel, itemtype, slot,
-    return RemoveTrailingZeros(level), itemType, slot
+    return Text.RemoveTrailingZeros(level), itemType, slot
 end
 
 -- TODO move elsewhere. Some generic script for events that would be nice to have on client as well.

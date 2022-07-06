@@ -296,7 +296,7 @@ local function OnSheetTalentTooltipRender(char, stat, tooltip)
 
     -- set icon
     local tooltipUI = Ext.UI.GetByType(Client.UI.Data.UITypes.tooltip)
-    tooltipUI:SetCustomIcon("tt_talent_" .. RemoveTrailingZeros(descElement.TalentId), data.icon, 128, 128)
+    tooltipUI:SetCustomIcon("tt_talent_" .. Text.RemoveTrailingZeros(descElement.TalentId), data.icon, 128, 128)
 
     Talents.talentToRender = ""
 end
@@ -312,7 +312,7 @@ function Talents.UpdateTalentPointsCounter()
     if root.textArray == nil or root.textArray[15] == nil then return nil end
 
     root.availableTalentPoints = points
-    root.CCPanel_mc.talents_mc.availablePoints_txt.htmlText = root.textArray[15] .. " " .. RemoveTrailingZeros(points);
+    root.CCPanel_mc.talents_mc.availablePoints_txt.htmlText = root.textArray[15] .. " " .. Text.RemoveTrailingZeros(points);
 end
 
 function Talents.GetAvailablePoints() -- todo figure out what bugs this... happens when you add a normal and custom talent before entering mirror, fixed on uses afterwards

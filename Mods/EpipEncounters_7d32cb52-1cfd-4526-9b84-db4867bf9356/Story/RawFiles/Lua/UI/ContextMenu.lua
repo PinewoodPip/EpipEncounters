@@ -426,7 +426,7 @@ function ContextMenu.AddStatEntry(ui, menuID, data)
     element.minusBtn_mc.x = element.plusBtn_mc.x + 45
 
     element.amount_txt.autoSize = "center"
-    element.amount_txt.htmlText = RemoveTrailingZeros(Utilities.Hooks.ReturnFromHooks("PIP_ContextMenu", "statDisplay_" .. ContextMenu.GetEventID(data), data.min or 0, ContextMenu.GetCurrentEntity(), data.params))
+    element.amount_txt.htmlText = Text.RemoveTrailingZeros(Utilities.Hooks.ReturnFromHooks("PIP_ContextMenu", "statDisplay_" .. ContextMenu.GetEventID(data), data.min or 0, ContextMenu.GetCurrentEntity(), data.params))
     element.amount_txt.x = 205 - element.amount_txt.textWidth / 2
 end
 
@@ -684,7 +684,7 @@ local function OnStatButtonPressed(ui, method, currentAmount, addition, elementI
         Utilities.Hooks.FireEvent("PIP_ContextMenu", "statButtonPressed" .. "_" .. elementID, ContextMenu.GetCurrentEntity(), elementData.params, change)
 
         -- update visual
-        root.setStatAmount(elementData.id,  RemoveTrailingZeros(newAmount))
+        root.setStatAmount(elementData.id,  Text.RemoveTrailingZeros(newAmount))
     end
 end
 

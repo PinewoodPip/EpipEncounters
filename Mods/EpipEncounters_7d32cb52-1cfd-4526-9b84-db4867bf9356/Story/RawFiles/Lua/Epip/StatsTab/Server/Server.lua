@@ -83,7 +83,7 @@ function EpipStats.UpdateTaggedStat(char, stat, newValue)
 
     -- Tags are not added for values of 0.
     if newValue ~= 0 then
-        Osi.SetTag(char.MyGuid, EpipStats.STAT_VALUE_TAG_PREFIX .. stat .. "_" .. RemoveTrailingZeros(newValue))
+        Osi.SetTag(char.MyGuid, EpipStats.STAT_VALUE_TAG_PREFIX .. stat .. "_" .. Text.RemoveTrailingZeros(newValue))
     end
 end
 

@@ -77,7 +77,7 @@ function _DamageMessage:GetDamageString()
     for i=1,#self.Damage,1 do
         local dmg = self.Damage[i]
         local str = Text.Format("%s %s ", {
-            FormatArgs = {RemoveTrailingZeros(dmg.Amount), dmg.Type},
+            FormatArgs = {Text.RemoveTrailingZeros(dmg.Amount), dmg.Type},
             Color = dmg.Color,
         })
 

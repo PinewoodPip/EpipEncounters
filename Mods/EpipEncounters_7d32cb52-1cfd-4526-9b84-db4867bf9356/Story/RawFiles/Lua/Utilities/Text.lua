@@ -40,7 +40,7 @@ function Text.Round(value, decimals)
         decimalsText = string.sub(decimalsText, 1, decimals)
         output = output .. "." .. decimalsText
 
-        output = RemoveTrailingZeros(output)
+        output = Text.RemoveTrailingZeros(output)
     end
 
     return output
@@ -55,6 +55,17 @@ function Text.SeparatePascalCase(str)
     if str:find("(%l)(%u%a*)") then
         str = Text.SeparatePascalCase(str)
     end
+
+    return str
+end
+
+---Removes trailing zeros from a number and returns it as string.
+---@param num number
+---@return string
+function Text.RemoveTrailingZeros(num)
+    local str = tostring(num):gsub("%.[1-9]*(0+)$", "")
+
+    str = str:gsub("%.$", "")
 
     return str
 end
@@ -119,7 +130,7 @@ function Text.Format(str, formatData)
             if type(arg) == "table" then
                 table.insert(finalArgs, Text.Format(arg.Text, arg))
             elseif type(arg) == "number" then
-                table.insert(finalArgs, RemoveTrailingZeros(arg))
+                table.insert(finalArgs, Text.RemoveTrailingZeros(arg))
             else
                 table.insert(finalArgs, arg)
             end

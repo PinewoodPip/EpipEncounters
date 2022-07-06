@@ -331,7 +331,7 @@ ContextMenu.RegisterElementListener("epip_Cheats_Items_SpawnTreasure", "buttonPr
     MessageBox.Open({
         ID = "epip_Cheats_Items_SpawnTreasure",
         NetID = character.NetID,
-        Header = string.format("Grant Treasure (%sx)", RemoveTrailingZeros(templateAmount)),
+        Header = string.format("Grant Treasure (%sx)", Text.RemoveTrailingZeros(templateAmount)),
         Message = "Enter a Treasure Table.<br>Might cause a lot of lag if gear generation is involved.",
         Type = "Input",
         Buttons = {
@@ -384,7 +384,7 @@ ContextMenu.RegisterElementListener("epip_Cheats_Items_SpawnTemplate", "buttonPr
     MessageBox.Open({
         ID = "epip_Cheats_Items_SpawnTemplate",
         NetID = character.NetID,
-        Header = string.format("Add Item Template (%sx)", RemoveTrailingZeros(params._statAmount)),
+        Header = string.format("Add Item Template (%sx)", Text.RemoveTrailingZeros(params._statAmount)),
         Message = "Enter the Template GUID.",
         Type = "Input",
         Buttons = {

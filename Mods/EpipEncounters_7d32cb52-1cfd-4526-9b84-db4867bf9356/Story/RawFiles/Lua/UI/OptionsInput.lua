@@ -147,9 +147,9 @@ function Options.SetKeybind(actionID, bindingIndex, keybind)
     local savedBind = Options.GetKeybinds(actionID)
 
     if keybind then
-        savedBind["Input" .. RemoveTrailingZeros(bindingIndex)] = string.upper(keybind)
+        savedBind["Input" .. Text.RemoveTrailingZeros(bindingIndex)] = string.upper(keybind)
     else
-        savedBind["Input" .. RemoveTrailingZeros(bindingIndex)] = nil
+        savedBind["Input" .. Text.RemoveTrailingZeros(bindingIndex)] = nil
     end
 
     Options.BINDINGS[actionID] = savedBind
@@ -191,7 +191,7 @@ local _SavedKeybind = {}
 
 ---@param index integer
 function _SavedKeybind:GetShortInputString(index)
-    local field = "Input" .. RemoveTrailingZeros(index)
+    local field = "Input" .. Text.RemoveTrailingZeros(index)
     local input = self[field]
     local str = ""
 

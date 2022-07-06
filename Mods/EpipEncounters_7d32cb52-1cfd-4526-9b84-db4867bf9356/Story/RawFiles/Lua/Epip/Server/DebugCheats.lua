@@ -85,7 +85,7 @@ Game.Net.RegisterListener("EPIP_CHEATS_FLEXSTAT", function(cmd, payload)
     end
 
     Osi.PROC_AMER_FlexStat_CharacterAddStat(char.MyGuid, type, stat, amount)
-    Osi.SetTag(char.MyGuid, "PIP_CHEATEDSTATS_" .. stat .. "_" .. RemoveTrailingZeros(tagAmount))
+    Osi.SetTag(char.MyGuid, "PIP_CHEATEDSTATS_" .. stat .. "_" .. Text.RemoveTrailingZeros(tagAmount))
 end)
 
 -- Teleport to object.

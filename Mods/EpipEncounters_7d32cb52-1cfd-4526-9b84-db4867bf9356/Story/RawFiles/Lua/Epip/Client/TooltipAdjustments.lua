@@ -466,7 +466,7 @@ function TooltipAdjustments.ShowDamageBoost(item, tooltip)
             Type = "ExtraProperties",
             -- Label = Text.Format("%s Damage (Tier %s/%s)", {
             --     FormatArgs = {
-            --         dmgType, RemoveTrailingZeros(tonumber(amount) / 5), RemoveTrailingZeros(35 / 5),
+            --         dmgType, Text.RemoveTrailingZeros(tonumber(amount) / 5), Text.RemoveTrailingZeros(35 / 5),
             --     },
             -- })
             Label = Text.Format("+%s%% %s Damage", {
@@ -497,7 +497,7 @@ function TooltipAdjustments.AddRangeDeltamodDisplay(item, tooltip)
     if not weaponRangeBoost then return nil end
 
     -- weapon range is in centimeters within stats
-    local weaponBoostString = RemoveTrailingZeros(weaponRangeBoost / 100)
+    local weaponBoostString = Text.RemoveTrailingZeros(weaponRangeBoost / 100)
 
     tooltip:AppendElement({
         Type = "ExtraProperties",
@@ -511,7 +511,7 @@ function TooltipAdjustments.AddRangeDeltamodDisplay(item, tooltip)
     amount = tonumber(amount)
     amount = amount - (weaponRangeBoost / 100)
 
-    element.Value = string.format("%sm + %sm", RemoveTrailingZeros(amount), weaponBoostString)
+    element.Value = string.format("%sm + %sm", Text.RemoveTrailingZeros(amount), weaponBoostString)
 end
 
 -- Replace damage paramater with the damage multiplier if the modifier key is being held.

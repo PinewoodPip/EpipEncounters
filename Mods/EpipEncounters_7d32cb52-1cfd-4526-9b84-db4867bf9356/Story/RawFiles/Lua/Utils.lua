@@ -109,12 +109,6 @@ function GetCharacterFromPayload(payload)
     return (Ext.GetCharacter(tonumber(Ext.Json.Parse(payload).NetID)))
 end
 
-function RemoveTrailingZeros(num)
-    local str = tostring(num):gsub("%.[1-9]*(0+)$", "")
-    str = str:gsub("%.$", "")
-    return str
-end
-
 -- https://github.com/lua-nucleo/lua-nucleo/blob/v0.1.0/lua-nucleo/string.lua#L245-L267
 local matches = {
     ["^"] = "%^",

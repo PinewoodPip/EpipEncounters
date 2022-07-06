@@ -27,7 +27,7 @@ function _HealingMessage:ToString()
     local healStr = ""
     for i=1,#self.Damage,1 do
         healStr = healStr .. Text.Format("%s %s", {
-            FormatArgs = {RemoveTrailingZeros(self.Damage[i].Amount), self.Damage[i].Type,},
+            FormatArgs = {Text.RemoveTrailingZeros(self.Damage[i].Amount), self.Damage[i].Type,},
             Color = self.Damage[i].Color,
         })
 
