@@ -123,6 +123,8 @@ LOAD_ORDER = {
 
     "UI/Hotbar/Main.lua",
     "UI/Hotbar/ContextMenus.lua",
+    "UI/Hotbar/Actions.lua",
+    "UI/Hotbar/Loadouts.lua",
     "UI/Notification.lua",
     "UI/Minimap.lua",
     "UI/VanillaActions.lua",

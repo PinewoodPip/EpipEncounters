@@ -29,12 +29,14 @@ Game.Net.RegisterListener("EPIPENCOUNTERS_DyeItem", function(cmd, payload)
     local statType = item.Stats.ItemType
     local deltaModName = string.format("Boost_%s_%s", statType, dyeStat.Name)
     local boostStatName = "_" .. deltaModName
-    local stat = Ext.Stats.Create(boostStatName, statType)
+    local stat = Stats.Get(statType, boostStatName)
     Ext.Stats.SetPersistence(boostStatName, true)
 
-    if stat then
-        stat.ItemColor = dyeStat.Name
+    if not stat then
+        stat = Ext.Stats.Create(boostStatName, statType)
     end
+
+    stat.ItemColor = dyeStat.Name
 
     Stats.Update("DeltaModifier", {
         Name = deltaModName,
