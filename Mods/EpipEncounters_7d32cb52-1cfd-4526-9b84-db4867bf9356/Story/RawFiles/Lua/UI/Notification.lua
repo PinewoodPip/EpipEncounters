@@ -1,5 +1,9 @@
 
-local Notification = {}
+local Notification = {
+    FILEPATH_OVERRIDES = {
+        ["Public/Game/GUI/notification.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/notification.swf",
+    },
+}
 Client.UI.Notification = Notification
 Epip.InitializeUI(Client.UI.Data.UITypes.notification, "Notification", Notification)
 

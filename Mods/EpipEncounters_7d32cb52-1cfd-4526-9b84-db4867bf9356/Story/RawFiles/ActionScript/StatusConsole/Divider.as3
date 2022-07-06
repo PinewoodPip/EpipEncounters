@@ -1,0 +1,18 @@
+package
+{
+    import flash.display.MovieClip;
+    
+    public dynamic class Divider extends MovieClip
+    {
+        public function Divider()
+        {
+            super();
+            this.stop();
+        }
+
+        public function setSpecialSprite(enabled:Boolean) : *
+        {
+            this.gotoAndStop(enabled ? 2 : 1);
+        }
+    }
+}

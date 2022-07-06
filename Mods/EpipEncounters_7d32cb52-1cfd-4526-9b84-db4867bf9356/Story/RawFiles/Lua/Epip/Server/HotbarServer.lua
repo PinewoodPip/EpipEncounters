@@ -99,7 +99,7 @@ Osiris.RegisterSymbolListener("NRD_OnActionStateEnter", 2, "after", function(cha
             SkillID = skillID,
             Casting = true,
         })
-    elseif state == "PrepareSkill" then
+    elseif state == "PrepareSkill" and player then
         char = Ext.Entity.GetCharacter(char)
         local skillID = NRD_ActionStateGetString(char.MyGuid, "SkillId")
 

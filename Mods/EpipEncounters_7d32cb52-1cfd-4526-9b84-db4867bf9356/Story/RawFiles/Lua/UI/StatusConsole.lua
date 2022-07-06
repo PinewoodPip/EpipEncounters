@@ -66,6 +66,21 @@ end
 -- LISTENERS
 ---------------------------------------------
 
+StatusConsole:RegisterCallListener("pipMaxAPUpdated", function(ev, amount)
+    local root = ev.UI:GetRoot()
+    local apHolder = root.console_mc.ap_mc
+    local list = apHolder.dividerList
+    local listWidth = amount * 22
+
+    list.EL_SPACING = -10
+    list.x = -14.5
+    list.y = -2
+    list.positionElements()
+
+    apHolder.x = (-7) - (listWidth / 2)
+    apHolder.y = -92 + 6
+end)
+
 local function OnHealthBarUpdate(uiObj, method, param3, num1, str1, bool1)
     local root = uiObj:GetRoot()
     local char = Ext.GetCharacter(uiObj:GetPlayerHandle())
