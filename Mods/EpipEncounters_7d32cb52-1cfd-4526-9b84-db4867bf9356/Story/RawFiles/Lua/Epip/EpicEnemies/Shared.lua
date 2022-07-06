@@ -1,4 +1,6 @@
 
+---@meta Library: EpicEnemies, ContextShared, Epip.Features.EpicEnemies, EpicEnemies
+
 local EpicEnemies = {
     ---@type table<string, EpicEnemiesEffect>
     EFFECTS = {},

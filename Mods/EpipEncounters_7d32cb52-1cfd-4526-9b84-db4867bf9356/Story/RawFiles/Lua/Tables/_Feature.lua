@@ -1,5 +1,5 @@
 
----@meta Library: Feature, ContextShared, _Feature
+---@meta Library: Feature, ContextShared, Feature
 
 ---------------------------------------------
 -- Base table for features and libraries.
@@ -15,9 +15,30 @@
 ---@field LOGGING_LEVEL table<string, integer> Valid logging levels.
 ---@field REQUIRED_MODS table<GUID, string> The feature will be automatically disabled if any required mods are missing.
 ---@field FILEPATH_OVERRIDES table<string, string>
+---@field AddEvent fun(self, name:string, data:Event?)
+---@field AddHook fun(self, name:string, data:Hook?):Hook
+---@field IsEnabled fun(self):boolean
+---@field __Setup fun(self)
+---@field Disable fun(self)
+---@field OnFeatureInit fun(self)
+---@field RegisterListener fun(self, event:string, handler:function)
+---@field FireEvent fun(self, event:string, ...:any)
+---@field RegisterHook fun(self, event:string, handler:function)
+---@field ReturnFromHooks fun(self, event:string, defaultValue:any, ...:any)
+---@field FireGlobalEvent fun(self, event:string, ...:any)
+---@field Debug fun(self)
+---@field IsDebug fun(self):boolean
+---@field Mute fun(self)
+---@field ShutUp fun(self)
+---@field DebugLog fun(self, ...:any)
+---@field Dump fun(self, msg:string)
+---@field Log fun(self, msg:string)
+---@field RawLog fun(self, ...:any)
+---@field LogWarning fun(self, msg)
+---@field LogError fun(self, msg)
 
 ---@type Feature
-_Feature = {
+local Feature = {
     Name = "",
     Disabled = false,
     Logging = 0,
@@ -35,12 +56,13 @@ _Feature = {
     REQUIRED_MODS = {},
     FILEPATH_OVERRIDES = {},
 }
+_Feature = Feature
 
 -- .CONTEXT is... context-dependent.
 if Ext.IsClient() then
-    _Feature.CONTEXT = "Client"
+    Feature.CONTEXT = "Client"
 else
-    _Feature.CONTEXT = "Server"
+    Feature.CONTEXT = "Server"
 end
 
 ---------------------------------------------
@@ -51,7 +73,7 @@ end
 ---@param name string
 ---@param data? Event
 ---@return Event
-function _Feature:AddEvent(name, data)
+function Feature:AddEvent(name, data)
     local event = data or {Module = self.Name, Event = name}
     event.Module = self.Name
     event.Event = name
@@ -67,7 +89,7 @@ end
 ---@param name string
 ---@param data? Hook
 ---@return Hook
-function _Feature:AddHook(name, data)
+function Feature:AddHook(name, data)
     local hook = data or {Module = self.Name, Event = name}
     hook.Module = self.Name
     hook.Event = name
@@ -85,16 +107,16 @@ end
 
 ---Returns whether the feature has *not* been disabled. Use to condition your feature's logic.
 ---@return boolean
-function _Feature:IsEnabled()
+function Feature:IsEnabled()
     return not self.Disabled
 end
 
 ---Invoked on SessionLoaded if the feature is not disabled.
 ---Override to run initialization routines.
-function _Feature:__Setup() end
+function Feature:__Setup() end
 
 ---Sets the Disabled flag.
-function _Feature:Disable()
+function Feature:Disable()
     -- TODO fix
     self.Disabled = true
     if self._initialized then
@@ -110,7 +132,7 @@ end
 ---Called after a feature is initialized with Epip.AddFeature(),
 ---if it is not disabled.
 ---Override to run initialization routines.
-function _Feature:OnFeatureInit() end
+function Feature:OnFeatureInit() end
 
 ---------------------------------------------
 -- LISTENER/HOOK FUNCTIONS
@@ -121,21 +143,21 @@ function _Feature:OnFeatureInit() end
 ---that registers an event listener with a prefix(es).
 ---@param event string
 ---@param handler function
-function _Feature:RegisterListener(event, handler)
+function Feature:RegisterListener(event, handler)
     Utilities.Hooks.RegisterListener(self.Name, event, handler)
 end
 
 ---Fire an event.
 ---@param event string
 ---@vararg any Event parameters, passed to listeners.
-function _Feature:FireEvent(event, ...)
+function Feature:FireEvent(event, ...)
     Utilities.Hooks.FireEvent(self.Name, event, ...)
 end
 
 ---Register a hook.
 ---@param event string
 ---@param handler function
-function _Feature:RegisterHook(event, handler)
+function Feature:RegisterHook(event, handler)
     Utilities.Hooks.RegisterHook(self.Name, event, handler)
 end
 
@@ -143,25 +165,25 @@ end
 ---@param event string
 ---@param defaultValue any Default value, will be passed to the first listener.
 ---@vararg any Additional parameters (non-modifiable)
-function _Feature:ReturnFromHooks(event, defaultValue, ...)
+function Feature:ReturnFromHooks(event, defaultValue, ...)
     return Utilities.Hooks.ReturnFromHooks(self.Name, event, defaultValue, ...)
 end
 
 ---Fire an event to all contexts and peers.
 ---@param event string
 ---@vararg any Event parameters.
-function _Feature:FireGlobalEvent(event, ...)
+function Feature:FireGlobalEvent(event, ...)
     self:FireEvent(event, ...)
 
     -- Fire event 
-    Ext.Net.BroadcastMessage("EPIP_Feature_GlobalEvent", Ext.Json.Stringify({
+    Ext.Net.BroadcastMessage("EPIPFeature_GlobalEvent", Ext.Json.Stringify({
         Module = self.MODULE_ID,
         Event = event,
         Args = {...},
     }))
 end
 
-Ext.RegisterNetListener("EPIP_Feature_GlobalEvent", function(cmd, payload)
+Ext.RegisterNetListener("EPIPFeature_GlobalEvent", function(_, payload)
     payload = Ext.Json.Parse(payload)
 
     Utilities.Hooks.FireEvent(payload.Module, payload.Event, table.unpack(payload.Args))
@@ -173,7 +195,7 @@ end)
 
 ---Show debug-level logging from this feature.
 ---Only work in Developer mode.
-function _Feature:Debug()
+function Feature:Debug()
     if Ext.IsDeveloperMode() then
         self.IS_DEBUG = true
         self.Logging = self.LOGGING_LEVEL.DEBUG
@@ -181,23 +203,24 @@ function _Feature:Debug()
 end
 
 ---Returns whether :Debug() has been ran successfully.
-function _Feature:IsDebug()
+---@return boolean
+function Feature:IsDebug()
     return self.IS_DEBUG
 end
 
 ---Stop all non-error, non-warning logging from this feature.
-function _Feature:Mute()
+function Feature:Mute()
     self.Logging = self.LOGGING_LEVEL.WARN
 end
 
 ---Stop all non-error logging.
-function _Feature:ShutUp()
+function Feature:ShutUp()
     self.Logging = self.LOGGING_LEVEL.MUTED
 end
 
 ---Log a value in Debug mode.
 ---@vararg any
-function _Feature:DebugLog(...)
+function Feature:DebugLog(...)
     if self.Logging == self.LOGGING_LEVEL.DEBUG then
         Utilities._Log(self.Name, "", ...)
     end
@@ -205,7 +228,7 @@ end
 
 ---Dump a value to the console, in Debug mode.
 ---@param msg any
-function _Feature:Dump(msg)
+function Feature:Dump(msg)
     if self.Logging == self.LOGGING_LEVEL.DEBUG then
         _D(msg)
     end
@@ -213,7 +236,7 @@ end
 
 ---Log a value.
 ---@param msg any
-function _Feature:Log(msg)
+function Feature:Log(msg)
     if self.Logging <= self.LOGGING_LEVEL.ALL then
         Utilities.Log(self.Name, msg)
     end
@@ -221,7 +244,7 @@ end
 
 ---Log values without any prefixing.
 ---@vararg any
-function _Feature:RawLog(...)
+function Feature:RawLog(...)
     if self.Logging <= self.LOGGING_LEVEL.ALL then
         print(...)
     end
@@ -229,7 +252,7 @@ end
 
 ---Log a warning.
 ---@param msg any
-function _Feature:LogWarning(msg)
+function Feature:LogWarning(msg)
     if self.Logging <= self.LOGGING_LEVEL.WARN then
         Utilities.LogWarning(self.Name, msg)
     end
@@ -237,6 +260,6 @@ end
 
 ---Log an error.
 ---@param msg any
-function _Feature:LogError(msg)
+function Feature:LogError(msg)
     Utilities.LogError(self.Name, msg)
 end

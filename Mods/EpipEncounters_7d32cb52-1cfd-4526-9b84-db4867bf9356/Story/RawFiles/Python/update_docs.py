@@ -42,7 +42,7 @@ CONTEXT_SUFFIXES = {
 }
 
 COMMENT_REGEX = re.compile("(^---.*)$")
-FUNCTION_REGEX = re.compile("^function [^ .:]+(?P<SyntacticSugar>\.|:)(?P<Signature>\S+\(.*\))$")
+FUNCTION_REGEX = re.compile("^function (?P<Namespace>[^ .:]+)(?P<SyntacticSugar>\.|:)(?P<Signature>\S+\(.*\))$")
 TAGS_REGEX = re.compile("^---@meta (.*)$")
 ALIAS_REGEX = re.compile("^---@alias (\S*) (.*)$")
 EVENT_REGEX = re.compile("^---@class .*_(.*) : (.*)?$")
@@ -50,8 +50,6 @@ CLASS_REGEX = re.compile("^---@class (.*)$")
 FIELD_REGEX = re.compile("^---@field (\S*) (.*)$")
 
 DOC_TEMPLATE_REGEX2 = re.compile('^<doc (\w*)="(.*)">')
-# DOC_TEMPLATE_REGEX = re.compile('^<doc lib="(.*)">')
-# DOC_TEMPLATE_END_REGEX = re.compile('<\/doc>')
 DOC_FIELDS_REGEX = re.compile('^<doc fields="(.*)">')
 EMPTY_LINE_REGEX = re.compile("^ *$")
 
@@ -226,6 +224,7 @@ class Function(Symbol):
         self.parameters = []
         self.returnType = None
         self.signature = groups["Signature"]
+        self.nameSpace = groups["Namespace"]
         self.syntacticSugar = groups["SyntacticSugar"]
         self.metaTags = []
 
@@ -257,14 +256,15 @@ class Function(Symbol):
         if self.returnType:
             output += str(self.returnType) + "\n"
 
-        if self.library:
-            namespace = self.library.name
-            if self.library.absolutePath:
-                namespace = self.library.absolutePath
+        # if self.library:
+        #     namespace = self.library.name
 
-            output += f"function {namespace}{self.syntacticSugar}{self.signature}"
-        else:
-            output += "WRONG LIB DEF TODO"
+            # if self.library.absolutePath:
+            #     namespace = self.library.absolutePath
+
+        output += f"function {self.nameSpace}{self.syntacticSugar}{self.signature}"
+        # else:
+        #     output += "WRONG LIB DEF TODO"
 
         # append tags to signature
         if len(self.metaTags) > 0:
@@ -283,6 +283,11 @@ class LibraryDefinition(Symbol):
         self.name = groups["Library"]
         self.context = groups["Context"]
         self.absolutePath = groups["AbsolutePath"]
+
+        if "LocalName" in groups:
+            self.localName = groups["LocalName"]
+        else:
+            self.localName = None
 
         super().__init__(library, data, groups, lib)
 
@@ -382,7 +387,7 @@ DATA_MATCHERS = [
 
 SYMBOL_MATCHERS = [
     Matcher(FUNCTION_REGEX, Function),
-    Matcher(re.compile("^---@meta Library: (?P<Library>\S*), (?P<Context>\S*),? ?(?P<AbsolutePath>\S+)$"), LibraryDefinition),
+    Matcher(re.compile("^---@meta Library: (?P<Library>\S*), (?P<Context>[^,]+)(, )?(?P<AbsolutePath>\S+)?(, )?(?P<LocalName>\S+)?$"), LibraryDefinition),
     Matcher(re.compile("^---@class (?P<Class>\S*)_Hook_(?P<Event>\S*) : Hook$"), Hook),
     Matcher(re.compile("^---@class (?P<Class>\S*)_Event_(?P<Event>\S*) : Event$"), Event),
     Matcher(re.compile("^---@class (?P<Class>.+)$"), Class),

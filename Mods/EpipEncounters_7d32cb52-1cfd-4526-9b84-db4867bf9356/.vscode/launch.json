@@ -8,6 +8,19 @@
             "type": "osiris",
             "request": "launch",
             "name": "Attach to Story Server"
+        },
+        {
+            "type": "dos2lua",
+            "request": "launch",
+            "name": "Attach to Script Extender Lua",
+            "program": "C:\\Users\\Usuario\\Downloads\\DbgAdapter-1.1\\LuaDebugger.exe",
+            "backendHost": "127.0.0.1",
+            "backendPort": 9998,
+            "dbgOptions": {
+                // "breakOnError": true,
+                // "breakOnGenericError": true,
+                "omitCppFrames": true
+            }
         }
     ]
 }

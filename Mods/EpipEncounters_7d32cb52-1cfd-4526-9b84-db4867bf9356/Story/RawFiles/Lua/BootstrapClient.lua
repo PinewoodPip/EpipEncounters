@@ -57,7 +57,7 @@ LOAD_ORDER = {
     "Client/Sound.lua",
     "UI/Data.lua",
     "Client/Input.lua",
-    "Tables/_UITable.lua",
+    "Tables/_UI.lua",
 
     "Client/Client.lua",
     "Client/Server.lua",
@@ -65,7 +65,6 @@ LOAD_ORDER = {
     "Client/Sound.lua",
     "UI/Data.lua",
     "Client/Input.lua",
-    "Tables/_UITable.lua",
 
     "Game/Client/Tooltip.lua",
     "Game/Tooltip.lua",

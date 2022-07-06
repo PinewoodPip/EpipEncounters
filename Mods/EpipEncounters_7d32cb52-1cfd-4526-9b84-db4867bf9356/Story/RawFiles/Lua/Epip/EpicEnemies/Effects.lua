@@ -476,24 +476,36 @@ local EpicEnemies = Epip.Features.EpicEnemies
 
 -- Generate Artifact options
 for id,artifact in pairs(Game.Items.ARTIFACTS) do
-    local displayStatus = Ext.Stats.Get("AMER_ARTIFACTPOWER_" .. id:gsub("Artifact_", ""):upper())
+    -- local displayStatus = Ext.Stats.Get("AMER_ARTIFACTPOWER_" .. id:gsub("Artifact_", ""):upper())
 
-    if not displayStatus then
-        displayStatus = Ext.Stats.Get("AMER_ARTIFACTPOWER_THE" .. id:gsub("Artifact_", ""):upper(), nil, false)
-    end
+    -- if not displayStatus then
+    --     displayStatus = Ext.Stats.Get("AMER_ARTIFACTPOWER_THE" .. id:gsub("Artifact_", ""):upper(), nil, false)
 
-    if id == "Artifact_CorruscatingSilks" then
-        displayStatus = Ext.Stats.Get("AMER_ARTIFACTPOWER_CORUSCATINGSILKS", nil, false)
-    end
+    --     if displayStatus then
+    --         Ext.Stats.SetPersistence("AMER_ARTIFACTPOWER_THE" .. id:gsub("Artifact_", ""):upper(), false)
+    --     end
+    -- else
+    --     Ext.Stats.SetPersistence("AMER_ARTIFACTPOWER_" .. id:gsub("Artifact_", ""):upper(), false)
+    -- end
 
-    if displayStatus and id ~= "Artifact_Deck" then
+    -- if id == "Artifact_CorruscatingSilks" then
+    --     displayStatus = Ext.Stats.Get("AMER_ARTIFACTPOWER_CORUSCATINGSILKS", nil, false)
+
+    --     if displayStatus then
+    --         Ext.Stats.SetPersistence("AMER_ARTIFACTPOWER_CORUSCATINGSILKS", false)
+    --     end
+    -- end
+
+    if id ~= "Artifact_Deck" then
+    -- if displayStatus and id ~= "Artifact_Deck" then
         -- TODO figure out why this fails
-        local description = Ext.L10N.GetTranslatedStringFromKey(displayStatus.DisplayName)
+        -- local description = Ext.L10N.GetTranslatedStringFromKey(displayStatus.DisplayName)
 
-        if not description or description == "" then
-            description = displayStatus.DisplayNameRef
-        end
+        -- if not description or description == "" then
+        --     description = displayStatus.DisplayNameRef
+        -- end
 
+        local description = ""
         ---@type EpicEnemiesKeywordData
         local keyword = nil
         if #artifact.KeywordActivators > 0 then

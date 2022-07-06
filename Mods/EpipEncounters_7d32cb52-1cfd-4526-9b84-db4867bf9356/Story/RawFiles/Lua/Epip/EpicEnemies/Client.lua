@@ -1,4 +1,6 @@
 
+---@meta Library: EpicEnemies, ContextClient, Epip.Features.EpicEnemies
+
 local EpicEnemies = Epip.Features.EpicEnemies
 
 ---@type EpicEnemies_Hook_GetActivationConditionDescription

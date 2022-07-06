@@ -3,6 +3,8 @@
 -- Pre-made activation conditions for Epic Enemies effects.
 ---------------------------------------------
 
+---@meta Library: EpicEnemiesEffectConditions, ContextServer, Epip.Features.EpicEnemiesEffectConditions
+
 local Conditions = {
 
 }

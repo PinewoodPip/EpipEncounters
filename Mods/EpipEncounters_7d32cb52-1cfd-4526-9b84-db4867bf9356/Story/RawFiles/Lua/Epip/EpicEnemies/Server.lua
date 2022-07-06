@@ -1,4 +1,6 @@
 
+---@meta Library: EpicEnemies, ContextServer, Epip.Features.EpicEnemies
+
 local EpicEnemies = Epip.Features.EpicEnemies
 local ServerSettings = Epip.Features.ServerSettings
 

@@ -1,4 +1,6 @@
 
+---@meta Library: EpicEnemiesEffectTemplates, ContextServer, Epip.Features.EpicEnemiesEffectTemplates
+
 ---------------------------------------------
 -- Pre-made effects for Epic Enemies that achieve generic functionality like applying specific statuses, Special Logic, etc.
 ---------------------------------------------

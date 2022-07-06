@@ -5,15 +5,28 @@
 
 ---@meta Library: BaseUI, ContextClient
 
+---@alias LuaFlashCompatibleType string|number|integer
+
 ---@class UI : Feature
----@field UITypeID integer?
----@field PATH string?
+---@field UITypeID integer? Use only for built-in UIs.
+---@field PATH string? Path to the SWF. Use only for custom UIs.
 ---@field INPUT_DEVICE InputDevice
----@field UI_FLAGS table<string, string> Flags for UIObject.
+---@field UI_FLAGS table<string, UIObjectFlag> Flags for UIObject.
+---@field GetUI fun(self):UIObject?
+---@field RegisterInvokeListener fun(self, method:string, handler:fun(event:UIEvent), when:"Before"|"After"?)
+---@field GetRoot fun(self):FlashMainTimeline?
+---@field Exists fun(self):boolean
+---@field PlaySound fun(self, id:string)
+---@field ExternalInterfaceCall fun(self, event:string, ...:LuaFlashCompatibleType)
+---@field TogglePlayerInput fun(self, enabled:boolean?, player:integer?)
+---@field IsVisible fun(self):boolean
+---@field IsFlagged fun(self, flag:UIObjectFlag):boolean
+---@field SetFlag fun(self, flag:UIObjectFlag, enabled:boolean):boolean
 
 ---@alias UIObjectFlag "OF_Load" | "OF_Loaded" | "OF_RequestDelete" | "OF_Visible" | "OF_PlayerInput1" | "OF_PlayerInput2" | "OF_PlayerInput3" | "OF_PlayerInput4" | "OF_PlayerModal1" | "OF_PlayerModal2" | "OF_PlayerModal3" | "OF_PlayerModal4" | "OF_KeepInScreen" | "OF_KeepCustomInScreen" | "OF_DeleteOnChildDestroy" | "OF_PauseRequest" | "OF_SortOnAdd" | "OF_FullScreen" | "OF_PlayerTextInput1" | "OF_PlayerTextInput2" | "OF_PlayerTextInput3" | "OF_PlayerTextInput4" | "OF_DontHideOnDelete" | "OF_PrecacheUIData" | "OF_PreventCameraMove"
 
-Client.UI._BaseUITable = {
+---@type UI
+local BaseUI = {
     UI = nil, -- Deprecated
     Root = nil, -- Deprecated
 
@@ -48,9 +61,9 @@ Client.UI._BaseUITable = {
         PRECACHE_UI_DATA = "OF_PrecacheUIData",
         PREVENT_CAMERA_MOVE = "OF_PreventCameraMove",
     },
-}
-local BaseUI = Client.UI._BaseUITable
-setmetatable(BaseUI, {__index = _Feature})
+} 
+Client.UI._BaseUITable = BaseUI
+Inherit(BaseUI, _Feature)
 
 ---Returns the UIObject for this UI.
 ---Note that some UIs are destroyed after use (ex. OptionsSettings)
@@ -197,7 +210,6 @@ end
 ---------------------------------------------
 
 -- Forward events
--- TODO distinguish before/after
 Ext.Events.UICall:Subscribe(function(ev)
     local ui = ev.UI
     local identifier = ui:GetTypeId()
