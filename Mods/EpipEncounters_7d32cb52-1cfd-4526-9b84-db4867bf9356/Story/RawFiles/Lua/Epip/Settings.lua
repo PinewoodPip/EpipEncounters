@@ -190,11 +190,6 @@ local Developer = {
         DefaultValue = false,
     },
     {
-        ID = "Epip_Developer_Footer",
-        Type = "Header",
-        Label = "<font color='7e72d6' size='23'>Normie settings</font>",
-    },
-    {
         ID = "TestSelector",
         Type = "Selector",
         Label = "",
@@ -210,7 +205,12 @@ local Developer = {
                 SubSettings = {"AutoIdentify", "DBUG_TestServerSetting"},
             },
         },
-    }
+    },
+    {
+        ID = "Epip_Developer_Footer",
+        Type = "Header",
+        Label = "<font color='7e72d6' size='23'>Normie settings</font>",
+    },
 }
 
 ---@type OptionsSettingsOption[]
@@ -250,6 +250,18 @@ local OtherOptions = {
         Label = "Improved Combat Log",
         Tooltip = "Adds improvements to the combat log: custom filters (accessible through right-click), merging messages, and slight rewording to improve consistency.<br>You must reload the save after making changes to this setting.",
         DefaultValue = false,
+    },
+    {
+        ID = "PreferredTargetDisplay",
+        Type = "Dropdown",
+        Label = "Show Aggro Information",
+        Tooltip = "Adds aggro information to the health bar when hovering over enemies: AI preferred/unpreferred/ignored tag, as well as taunt source/target(s).",
+        DefaultValue = 1,
+        Options = {
+            "Disabled",
+            "Show when holding shift",
+            "Show by default",
+        }
     },
     {
         ID = "LoadingScreen",

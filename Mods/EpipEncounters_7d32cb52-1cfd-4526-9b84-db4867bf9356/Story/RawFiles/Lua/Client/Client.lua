@@ -138,12 +138,26 @@ function Client.GetCharacter()
 end
 
 ---Returns true if the game is in a gameplay state, or late into loading.
----@return string
+---@return boolean
 function Client.IsInGameplayState()
     local state = Ext.Client.GetGameState()
     local STATES = Client.GAME_STATES
 
     return state == STATES.LOAD_SESSION or state == STATES.RUNNING or state == STATES.PREPARE_RUNNING
+end
+
+---Returns the primary character on the pointer.
+---@param playerIndex integer
+---@return EclCharacter?
+function Client.GetPointerCharacter(playerIndex)
+    local pickingState = Ext.UI.GetPickingState(playerIndex)
+    local char
+
+    if pickingState and pickingState.HoverEntity then
+        char = Ext.Entity.GetCharacter(pickingState.HoverEntity)
+    end
+
+    return char
 end
 
 --- Copies text to the clipboard.  

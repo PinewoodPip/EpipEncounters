@@ -100,6 +100,9 @@ LOAD_ORDER = {
     "Epip/EpicEnemies/Server.lua",
     "Epip/EpicEnemies/Effects.lua",
 
+    "Epip/PreferredTargetDisplay/Shared.lua",
+    "Epip/PreferredTargetDisplay/Server.lua",
+
     "Epip/StatsTab/Shared.lua",
     "Epip/StatsTab/Server/Server.lua",
     "Epip/StatsTab/Server/StatGetters.lua",

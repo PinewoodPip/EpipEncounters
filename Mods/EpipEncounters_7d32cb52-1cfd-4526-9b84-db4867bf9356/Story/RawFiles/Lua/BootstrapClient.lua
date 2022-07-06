@@ -205,6 +205,9 @@ LOAD_ORDER = {
     "Epip/EpicEnemies/Effects.lua",
     "Epip/EpicEnemies/ActivationConditionsClient.lua",
 
+    "Epip/PreferredTargetDisplay/Shared.lua",
+    "Epip/PreferredTargetDisplay/Client.lua",
+
     -- AMER UI controller support
     -- "Epip/Client/AMERUI_Controller/AMERUI_Controller.lua",
     -- "Epip/Client/AMERUI_Controller/Handlers/Ascension/MainHub.lua",

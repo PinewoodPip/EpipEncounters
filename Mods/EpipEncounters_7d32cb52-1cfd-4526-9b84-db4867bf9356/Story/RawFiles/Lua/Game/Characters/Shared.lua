@@ -2,8 +2,12 @@
 ---@meta Library: GameCharacter, ContextShared, Game.Character
  
 
-local Character = {}
-Game.Character = Character
+Game.Character = {
+    AI_PREFERRED_TAG = "AI_PREFERRED_TARGET",
+    AI_UNPREFERRED_TAG = "AI_UNPREFERRED_TARGET",
+    AI_IGNORED_TAG = "AI_IGNORED_TARGET",
+}
+Character = Game.Character
 Epip.InitializeFeature("Character", "Game.Character", Character)
 
 ---Returns the current stacks on char, as well as lifetime. Queries the related status effects.
@@ -32,6 +36,32 @@ function Character.GetStacks(char, type)
     end
 
     return stacks,lifetime
+end
+
+---@param identifier GUID|PrefixedGUID|NetId|EntityHandle
+---@return Character
+function Character.Get(identifier)
+    return Ext.Entity.GetCharacter(identifier)
+end
+
+---@param char Character
+---@return boolean
+function Character.IsPreferredByAI(char)
+    return char:HasTag(Character.AI_PREFERRED_TAG)
+end
+
+---Returns whether char is unpreferred by AI.
+---@param char Character
+---@return boolean
+function Character.IsUnpreferredByAI(char)
+    return char:HasTag(Character.AI_UNPREFERRED_TAG)
+end
+
+---Returns whether char is ignroed by AI.
+---@param char Character
+---@return boolean
+function Character.IsIgnoredByAI(char)
+    return char:HasTag(Character.AI_IGNORED_TAG)
 end
 
 ---Get the infusion level that char is currently preparing (how many times they've cast Source Infuse).
