@@ -53,6 +53,13 @@ local Hotbar = {
             "Always Two Rows",
         }
     },
+    {
+        ID = "HotbarCastingGreyOut",
+        Type = "Checkbox",
+        Label = "Disable Slots while Casting",
+        Tooltip = "Disables the hotbar slots while a spell is being cast.",
+        DefaultValue = true,
+    },
     -- {
     --     ID = "HotbarRowsQuickToggle",
     --     Type = "Slider",

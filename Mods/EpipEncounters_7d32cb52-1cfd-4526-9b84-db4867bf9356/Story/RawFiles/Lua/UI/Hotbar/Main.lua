@@ -240,7 +240,22 @@ end
 ---The hotbar is unusable in combat if it is not the client char's turn, or while they are casting a skill.
 ---@return boolean
 function Hotbar.CanUseHotbar()
-    return (((not Client.IsInCombat() or (Client.IsActiveCombatant() and Client.GetCharacter().Stats.CurrentAP)))) and not Hotbar.IsCasting()
+    local isCasting = Hotbar.IsCasting()
+    local canUse = true
+
+    if Client.IsInCombat() then
+        if Client.IsActiveCombatant() then
+            canUse = Client.GetCharacter().Stats.CurrentAP > 0
+        else
+            canUse = false
+        end
+    end
+
+    if isCasting and Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "HotbarCastingGreyOut") then
+        canUse = false
+    end
+
+    return canUse
 end
 
 -- Returns a list of slots of a character's skillbar from a specific row.
