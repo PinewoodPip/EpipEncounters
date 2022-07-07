@@ -68,14 +68,21 @@ Client.UI.ContextMenu.RegisterMenuHandler("hotBarLoadoutsMenu", function()
     }
     local loadoutEntries = {}
 
-    for name,data in pairs(Hotbar.Loadouts) do
+    local loadouts = {}
+    for id,loadout in pairs(Hotbar.Loadouts) do
+        loadout.Name = id
+        table.insert(loadouts, loadout)
+    end
+    table.sort(loadouts, function(a ,b) return a.Name < b.Name end)
+
+    for _,data in pairs(loadouts) do
         -- Insert footer/divider only if we had at least one loadout saved
         if #loadoutEntries == 0 then
             table.insert(entries, #entries, {id = "hotBarRow_Footer", type = "header", text = "———————————"})
         end
 
         table.insert(loadoutEntries, {
-            id = "hotBarRow_LoadLoadout_" .. name, type = "removable", text = name, eventIDOverride = "hotBarLoadLoadout", params = {ID = name},
+            id = "hotBarRow_LoadLoadout_" .. data.Name, type = "removable", text = data.Name, eventIDOverride = "hotBarLoadLoadout", params = {ID = data.Name},
         })
     end
 
@@ -148,8 +155,8 @@ Client.UI.ContextMenu.RegisterElementListener("hotBarRow_SaveLoadout", "buttonPr
     })
 end)
 
-Client.UI.MessageBox.RegisterMessageListener("epip_Hotbar_SaveLoadout", Client.UI.MessageBox.Events.InputSubmitted, function(text, buttonId, data)
-    local saveAllRows = buttonId == 2
+Client.UI.MessageBox.RegisterMessageListener("epip_Hotbar_SaveLoadout", Client.UI.MessageBox.Events.InputSubmitted, function(text, _, _)
+    -- local saveAllRows = buttonId == 2
 
-    Hotbar.SaveLoadout(Hotbar.currentLoadoutRow, text, saveAllRows)
+    Hotbar.SaveLoadout(Hotbar.currentLoadoutRow, text)
 end)

@@ -2,6 +2,7 @@
 local Hotbar = Client.UI.Hotbar
 
 ---@class HotbarLoadout
+---@field Name string
 ---@field Slots HotbarLoadoutSlot[]
 
 ---@class HotbarLoadoutSlot
@@ -16,7 +17,7 @@ local Hotbar = Client.UI.Hotbar
 ---@param char EclCharacter
 ---@param loadout string Loadout ID.
 ---@param row integer
----@param replaceUsedSlots boolean If false, only empty slots will be filled.
+---@param replaceUsedSlots boolean? If false, only empty slots will be filled. Defaults to false.
 function Client.UI.Hotbar.ApplyLoadout(char, loadout, row, replaceUsedSlots)
     local data = Hotbar.Loadouts[loadout]
 
@@ -50,7 +51,8 @@ function Client.UI.Hotbar.SaveLoadout(row, name)
     local skillBar = Client.GetCharacter().PlayerData.SkillBarItems
     ---@type HotbarLoadout
     local loadout = {
-        Slots = {}
+        Slots = {},
+        Name = name,
     }
 
     local startingIndex = (row - 1) * Hotbar.GetSlotsPerRow()
