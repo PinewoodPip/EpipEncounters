@@ -119,9 +119,16 @@ end
 ---@param item EclItem
 ---@return boolean
 function Transmog.ShouldKeepAppearance(item)
-    local tag = Transmog.KEEP_APPEARANCE_TAG_PREFIX .. Game.Items.GetItemSlot(item)
+    local keepAppearance = false
+    local char = Client.GetCharacter()
 
-    return Client.GetCharacter():HasTag(tag)
+    if item and Game.Items.IsEquipped(char, item) then
+        local tag = Transmog.KEEP_APPEARANCE_TAG_PREFIX .. Game.Items.GetEquippedSlot(item)
+
+        keepAppearance = Client.GetCharacter():HasTag(tag)
+    end
+
+    return keepAppearance
 end
 
 function Transmog.ReapplyAppearance(item)
@@ -148,6 +155,8 @@ function Transmog.UpdateActiveCharacterTemplates()
             Transmog.activeCharacterTemplates[slot] = nil
         end
     end
+
+    Transmog:DebugLog("Updated active character templates.")
 end
 
 function Transmog.CanTransmogItem(item)
@@ -328,6 +337,8 @@ Tab:RegisterListener(Vanity.Events.CheckboxPressed, function(id, state)
             Slot = Vanity.currentSlot,
             State = state,
         })
+        
+        Transmog.UpdateActiveCharacterTemplates()
     end
 end)
 
@@ -357,6 +368,8 @@ Game.Net.RegisterListener("EPIPENCOUNTERS_ItemEquipped", function(cmd, payload)
                 -- TODO implement this better...
                 Epip.Features.VanityDyes.UpdateActiveCharacterDyes()
             end)
+        else
+            Transmog.UpdateActiveCharacterTemplates()
         end
     end
 end)
