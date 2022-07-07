@@ -469,7 +469,7 @@ function TooltipAdjustments.ShowDamageBoost(item, tooltip)
             --         dmgType, Text.RemoveTrailingZeros(tonumber(amount) / 5), Text.RemoveTrailingZeros(35 / 5),
             --     },
             -- })
-            Label = Text.Format("+%s%% %s Damage", {
+            Label = Text.Format("+%s%% Weapon %s Damage", {
                 FormatArgs = {
                     amount, dmgType
                 }
