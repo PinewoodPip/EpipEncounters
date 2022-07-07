@@ -185,8 +185,7 @@ Game.Net.RegisterListener("EPIP_CHEATS_INFINITEAP", function(cmd, payload)
 end)
 
 Ext.Osiris.RegisterListener("PROC_AMER_ActionPoints_Changed", 3, "after", function(char, old, new)
-
-    if Osi.IsTagged(char, "PIP_DEBUGCHEATS_INFINITEAP") == 1 then
+    if Osi.IsTagged(char, "PIP_DEBUGCHEATS_INFINITEAP") == 1 and Osi.CharacterIsPlayer(char) == 1 then
         -- Avoids an infinite loop
         if new < old then
             Osi.PROC_AMER_ActionPoints_Add(char, 99)
