@@ -91,11 +91,13 @@ function Client.IsInDialogue()
     local dialogUI = Ext.UI.GetByPath("Public/Game/GUI/dialog.swf")
     local visible = false
 
-    -- When a controlled char is in dialogue, this UI exists but can be not visible if that char is not currently active.
-    for _,flag in ipairs(dialogUI.Flags) do
-        if flag == Client.UI._BaseUITable.UI_FLAGS.VISIBLE then
-            visible = true
-            break
+    if dialogUI then
+        -- When a controlled char is in dialogue, this UI exists but can be not visible if that char is not currently active.
+        for _,flag in ipairs(dialogUI.Flags) do
+            if flag == Client.UI._BaseUITable.UI_FLAGS.VISIBLE then
+                visible = true
+                break
+            end
         end
     end
 
