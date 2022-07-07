@@ -88,7 +88,18 @@ end
 ---Returns true if the client character is currently in dialogue.
 ---@return boolean
 function Client.IsInDialogue()
-    return Ext.UI.GetByPath("Public/Game/GUI/dialog.swf") ~= nil
+    local dialogUI = Ext.UI.GetByPath("Public/Game/GUI/dialog.swf")
+    local visible = false
+
+    -- When a controlled char is in dialogue, this UI exists but can be not visible if that char is not currently active.
+    for _,flag in ipairs(dialogUI.Flags) do
+        if flag == Client.UI._BaseUITable.UI_FLAGS.VISIBLE then
+            visible = true
+            break
+        end
+    end
+
+    return visible
 end
 
 ---Returns the currently-controlled character on the client.  
