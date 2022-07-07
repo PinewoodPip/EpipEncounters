@@ -444,6 +444,13 @@ function Hotbar.LoadData()
 
         if save.Loadouts then
             Hotbar.Loadouts = save.Loadouts -- TODO validation
+
+            -- Ensure a name field is present (v1053+)
+            for id,loadout in pairs(Hotbar.Loadouts) do
+                if not loadout.Name then
+                    loadout.Name = id
+                end
+            end
         end
 
         

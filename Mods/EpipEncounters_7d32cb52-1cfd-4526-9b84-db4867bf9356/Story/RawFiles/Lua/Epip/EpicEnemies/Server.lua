@@ -458,7 +458,12 @@ EpicEnemies.Hooks.IsEligible:RegisterHook(function (eligible, char)
 
     -- Cannot initialize the same character multiple times, nor initialize characters specifically excluded from this feature, nor initialize summons
     if eligible then
-        eligible = not char:IsTagged(EpicEnemies.INITIALIZED_TAG) and not char:IsTagged(EpicEnemies.INELIGIBLE_TAG) and not char:IsTagged("SUMMON")
+        eligible = not char:IsTagged(EpicEnemies.INITIALIZED_TAG) and not char:IsTagged(EpicEnemies.INELIGIBLE_TAG)
+    end
+
+    -- Summons and party followers are ineligible.
+    if eligible then
+        eligible = not Osi.QRY_IsSummonOrPartyFollower(char.MyGuid)
     end
 
     return eligible
