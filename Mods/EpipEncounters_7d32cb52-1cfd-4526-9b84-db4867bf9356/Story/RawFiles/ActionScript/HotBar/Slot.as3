@@ -48,14 +48,14 @@ package
             addFrameScript(0,this.frame1);
         }
         
-        public function setCoolDown(param1:Number, param2:Boolean = true) : *
+        public function setCoolDown(cooldown:Number, param2:Boolean = true) : *
         {
-            if(param1 == -1)
+            if(cooldown == -1)
             {
                 this.oldCD = 0;
-                param1 = 0;
+                cooldown = 0;
             }
-            if(param1 == 0)
+            if(cooldown == 0)
             {
 
                 this.cd_mc.visible = false;
@@ -85,8 +85,8 @@ package
                     this.disable_mc.alpha = 0; // intentional, so the overlays dont stack
                 }
             }
-            this.oldCD = param1;
-            this.cd_mc.setCoolDown(param1);
+            this.oldCD = cooldown;
+            this.cd_mc.setCoolDown(cooldown);
         }
         
         public function onOver(param1:MouseEvent) : *

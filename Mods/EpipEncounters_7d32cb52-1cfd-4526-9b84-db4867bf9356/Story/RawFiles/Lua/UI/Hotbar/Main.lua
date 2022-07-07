@@ -1101,6 +1101,10 @@ function Hotbar.RenderCooldowns()
                 end
                 
                 slot.setCoolDown(cooldown, true) -- Used to be true
+
+                if not canUseHotbar then -- TODO figure out what is fucking with this - it must be the setCooldown function somehow. Slots get enabled when they shouldn't be
+                    slot.disable_mc.alpha = 1
+                end
             end
         end
     end
@@ -1149,7 +1153,7 @@ function Hotbar.RenderSlots()
 
                         handle = Ext.HandleToDouble(skill.OwnerHandle)
         
-                        isEnabled = Game.Character.CanUseSkill(char, data.SkillOrStatId)
+                        isEnabled = Character.CanUseSkill(char, data.SkillOrStatId)
                     else 
                         -- Hotbar:LogError("Trying to update skill not in skillmanager! " .. data.SkillOrStatId)
                         cooldown = 0
@@ -1186,9 +1190,6 @@ function Hotbar.RenderSlots()
                 slotHolder.pipSetSlot(slotIndex, tooltip, isEnabled and cooldown <= 0, inUse, handle, slotType, amount)
                 slot.isUpdated = true
                 
-                if not isEnabled and slot.disable_mc.alpha == 0 then -- TODO figure out what is fucking with this - it must be the setCooldown function somehow. Slots get enabled when they shouldn't be
-                    slot.disable_mc.alpha = 1
-                end
                 -- print(slotIndex, tooltip, isEnabled, inUse, handle, slotType, amount)
 
                 -- slot.unavailable_mc.visible = false -- Leftover from DOS1. (SetSlotPreviewEnabledMC)

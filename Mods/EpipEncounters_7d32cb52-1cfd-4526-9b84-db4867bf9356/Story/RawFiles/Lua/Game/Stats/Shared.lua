@@ -37,7 +37,7 @@ function Stats.MeetsRequirements(char, statID, isItem)
 
     --- AP cost
     if not isItem then
-        local apCost,EA = Game.Math.GetSkillAPCost(data, char.Stats, Ext.Entity.GetAiGrid(), char.Translate, 1)
+        local apCost,_ = Game.Math.GetSkillAPCost(data, char.Stats, Ext.Entity.GetAiGrid(), char.Translate, 1)
 
         -- Consider APCostBoost
         local extraApCost = Stats.CountStat(char.Stats, "APCostBoost")
