@@ -1189,6 +1189,10 @@ function Hotbar.RenderSlots()
                 -- print(inUse, slot.tooltip, slot.isEnabled, "isUpdate", slot.isUpdated, "type", slot.type, "handle", slot.handle, slot.oldCD, slot.setCoolDown)
                 slotHolder.pipSetSlot(slotIndex, tooltip, isEnabled and cooldown <= 0, inUse, handle, slotType, amount)
                 slot.isUpdated = true
+
+                if not isEnabled and cooldown <= 0 then
+                    slot.disable_mc.alpha = 1
+                end
                 
                 -- print(slotIndex, tooltip, isEnabled, inUse, handle, slotType, amount)
 
@@ -1508,7 +1512,6 @@ function OnVanillaUpdateSlots(ui, method, slots)
 end
 
 function handleUpdateSlots(uiObj, methodName, param3, slotsAmount)
-    local root = uiObj:GetRoot()
     Hotbar.Refresh()
 end
 
