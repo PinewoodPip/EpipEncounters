@@ -6,12 +6,14 @@ Client.UI.Generic = {
     ELEMENTS = {}, ---@type table<GenericUI_ElementType, GenericUI_Element>
 }
 local Generic = Client.UI.Generic
+Epip.InitializeLibrary("Generic", Generic)
+Generic:Debug()
 
 ---------------------------------------------
 -- ELEMENT
 ---------------------------------------------
 
----@alias GenericUI_ElementType "Empty"|"TiledBackground"|"Text"
+---@alias GenericUI_ElementType "Empty"|"TiledBackground"|"Text"|"IggyIcon"
 ---@alias FlashMovieClip userdata TODO remove
 
 ---@type GenericUI_Element
@@ -23,11 +25,16 @@ local _Element = Generic._Element
 ---@field ParentID string Empty string for elements in the root.
 ---@field Type string
 ---@field GetMovieClip fun(self):FlashMovieClip
+---@field SetAsDraggableArea fun(self) Sets this element as the area for dragging the *entire* UI.
 
 ---Get the movie clip of this element.
 ---@return FlashMovieClip
 function _Element:GetMovieClip()
     return self.UI:GetMovieClipByID(self.ID)
+end
+
+function _Element:SetAsDraggableArea()
+    self:GetMovieClip().SetAsUIDraggableArea()
 end
 
 ---------------------------------------------
@@ -102,6 +109,11 @@ function Client.UI.Generic.Create(id)
     local uiOBject = Ext.UI.Create(id, Generic.SWF_PATH, Generic.DEFAULT_LAYER)
     Epip.InitializeUI(uiOBject:GetTypeId(), id, ui)
     Inherit(ui, _Instance)
+
+    ui:RegisterCallListener("elementMouseUp", Generic.OnElementMouseUp)
+    ui:RegisterCallListener("elementMouseDown", Generic.OnElementMouseDown)
+    ui:RegisterCallListener("elementMouseOver", Generic.OnElementMouseOver)
+    ui:RegisterCallListener("elementMouseOut", Generic.OnElementMouseOut)
     
     return ui
 end
@@ -128,3 +140,19 @@ end
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
+
+Generic.OnElementMouseUp = function(ev, id)
+    Generic:DebugLog("CALL onElementMouseUp: ", id)
+end
+
+Generic.OnElementMouseDown = function(ev, id)
+    Generic:DebugLog("CALL onElementMouseDown: ", id)
+end
+
+Generic.OnElementMouseOver = function(ev, id)
+    Generic:DebugLog("CALL onElementMouseOver: ", id)
+end
+
+Generic.OnElementMouseOut = function(ev, id)
+    Generic:DebugLog("CALL onElementMouseOut: ", id)
+end

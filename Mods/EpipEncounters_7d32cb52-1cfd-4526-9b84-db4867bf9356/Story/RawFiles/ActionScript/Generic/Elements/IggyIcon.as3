@@ -1,0 +1,37 @@
+package Elements
+{
+    import LS_Classes.LSPanelHelpers;
+    import flash.display.MovieClip;
+    import flash.external.ExternalInterface;
+    import LS_Classes.listDisplay;
+    import flash.text.TextField;
+    import flash.events.MouseEvent;
+
+    public dynamic class IggyIcon extends Element
+    {
+        public var hit_mc:MovieClip;
+        public var iggy_mc:MovieClip;
+
+        public function IggyIcon()
+        {
+            super();
+            this.elementType = "IggyIcon";
+
+            this.hit_mc.alpha = 0;
+
+            this.addFrameScript(0, this.frame1);
+        }
+
+        public function SetIconSize(width:Number, height:Number) : *
+        {
+            this.hit_mc.width = width;
+            this.hit_mc.height = height;
+        }
+
+        private function frame1() : *
+        {
+            // Setup iggy icon
+            this.iggy_mc.name = "iggy_" + this.stringID;
+        }
+    }
+}

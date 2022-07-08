@@ -25,6 +25,12 @@ function Test.SetupTests()
     bg:SetBackground(Generic.ELEMENTS.TiledBackground.BACKGROUND_TYPES.BOX, 100, 100)
     text:SetText("Testing!")
 
+    bg:SetAsDraggableArea()
+
+    ---@type GenericUI_Element_IggyIcon
+    local icon = Test:CreateElement("iggyTest", "IggyIcon", "tiledbgTest")
+    icon:SetIcon("Skill_Warrior_DeflectiveBarrier", 64, 64)
+
     -- root.tiledbgTest.textTest.SetText("Asd")
 end
 

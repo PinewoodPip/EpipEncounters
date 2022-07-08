@@ -116,6 +116,7 @@ LOAD_ORDER = {
     "UI/Generic/Elements/Empty.lua",
     "UI/Generic/Elements/TiledBackground.lua",
     "UI/Generic/Elements/Text.lua",
+    "UI/Generic/Elements/IggyIcon.lua",
     "UI/Generic/Test.lua", -- TEST!
 
     "UI/Vanity/Vanity.lua",

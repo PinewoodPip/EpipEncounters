@@ -216,7 +216,7 @@ Ext.Events.UICall:Subscribe(function(ev)
 
     -- TODO improve
     local relativePath = string.match(ev.UI.Path, "(Public/EpipEncounters_7d32cb52%-1cfd%-4526%-9b84%-db4867bf9356/GUI/.*%.swf)$")
-    if relativePath then
+    if relativePath and not string.match(ev.UI.Path, "(Public/EpipEncounters_7d32cb52%-1cfd%-4526%-9b84%-db4867bf9356/GUI/generic%.swf)$") then
         identifier = relativePath
     end
 
@@ -229,7 +229,7 @@ Ext.Events.UIInvoke:Subscribe(function(ev)
 
     -- TODO improve
     local relativePath = string.match(ev.UI.Path, "Public/EpipEncounters_7d32cb52%-1cfd%-4526%-9b84%-db4867bf9356/GUI/(.*)%.swf$")
-    if relativePath then
+    if relativePath and not string.match(ev.UI.Path, "(Public/EpipEncounters_7d32cb52%-1cfd%-4526%-9b84%-db4867bf9356/GUI/generic%.swf)$") then
         identifier = relativePath
     end
 

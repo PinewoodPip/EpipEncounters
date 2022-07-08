@@ -12,6 +12,8 @@ package Elements
         public var stringID:String = "Uninitialized!";
         public var elementType:String = "Element";
         public var childElements:Array;
+
+        private var _ignoreUp = false;
         
         public function Element()
         {
@@ -35,9 +37,9 @@ package Elements
 
         // UTILITY
 
-        public function SetDraggable(enabled:Boolean) : *
+        public function SetAsUIDraggableArea() : *
         {
-            trace("TODO: SetDraggable()");
+            LSPanelHelpers.makeDraggable(this);
         }
 
         public function SetScale(scale:Number) : *
@@ -50,7 +52,16 @@ package Elements
 
         public function onElementMouseUp(e:MouseEvent) : *
         {
-            ExternalInterface.call("elementMouseUp", this.stringID);
+            // trace("Click: " + this.stringID);
+            if (this._ignoreUp)
+            {
+                this._ignoreUp = false;
+            }
+            else
+            {
+                ExternalInterface.call("elementMouseUp", this.stringID);
+                this._ignoreUp = true;
+            }
         }
 
         public function onElementMouseDown(e:MouseEvent) : *
