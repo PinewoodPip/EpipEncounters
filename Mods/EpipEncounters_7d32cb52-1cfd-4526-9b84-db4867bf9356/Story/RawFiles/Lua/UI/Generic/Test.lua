@@ -1,5 +1,6 @@
 
 local Generic = Client.UI.Generic
+local G = Generic
 
 ---@type GenericUI_Instance
 local Test = Generic.Create("PIP_Test")
@@ -30,6 +31,12 @@ function Test.SetupTests()
     ---@type GenericUI_Element_IggyIcon
     local icon = Test:CreateElement("iggyTest", "IggyIcon", "tiledbgTest")
     icon:SetIcon("Skill_Warrior_DeflectiveBarrier", 64, 64)
+
+    ---@type GenericUI_Element_Button
+    local button = Test:CreateElement("buttonTest", "Button", "tiledbgTest")
+    button:SetType(G.ELEMENTS.Button.TYPES.RED)
+
+    button:SetText("Button!")
 
     -- root.tiledbgTest.textTest.SetText("Asd")
 end

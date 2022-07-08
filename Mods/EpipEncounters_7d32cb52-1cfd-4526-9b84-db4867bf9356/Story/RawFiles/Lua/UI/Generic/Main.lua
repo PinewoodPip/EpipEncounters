@@ -13,7 +13,7 @@ Generic:Debug()
 -- ELEMENT
 ---------------------------------------------
 
----@alias GenericUI_ElementType "Empty"|"TiledBackground"|"Text"|"IggyIcon"
+---@alias GenericUI_ElementType "Empty"|"TiledBackground"|"Text"|"IggyIcon"|"Button"
 ---@alias FlashMovieClip userdata TODO remove
 
 ---@type GenericUI_Element

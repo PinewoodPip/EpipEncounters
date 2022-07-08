@@ -1,4 +1,4 @@
-package 
+package Elements
 {
     import flash.display.MovieClip;
     import flash.events.FocusEvent;
@@ -7,8 +7,10 @@ package
     import flash.text.TextField;
     import flash.text.TextFormat;
     import LS_Classes.tooltipHelper;
+    import flash.events.Event;
     
-    public class Button extends MovieClip
+    // Based on LS_CLasses.LSButton
+    public class Button extends Element
     {
         private var pressedFunc:Function = null;
         
@@ -65,10 +67,24 @@ package
         public var SND_Click:String = "UI_Gen_XButton_Click";
 
         public var uiCall:String = "";
+
+        // ---------
+
+        public var text_mc:MovieClip = null;
+
+        private var _disableCounter = 0;
         
         public function Button()
         {
             super();
+
+            this.elementType = "Button";
+
+            this.bg_mc.stop();
+            this.SetType(0);
+
+            // ------- Larian stuff follows:
+
             if(this.text_txt)
             {
                 this.text_txt.mouseEnabled = false;
@@ -93,6 +109,33 @@ package
             }
             addEventListener(FocusEvent.FOCUS_OUT,this.onFocusLost);
         }
+
+        public function SetType(buttonType:int) : *
+        {
+            this.gotoAndStop(buttonType + 1);
+
+            // No idea why we cannot just do this instantly.
+            this._disableCounter = 5;
+            this.addEventListener(Event.ENTER_FRAME, this.onFrameEnter);
+        }
+
+        public function SetText(text:String) : *
+        {
+            this.text_mc.SetText(text);
+        }
+
+        private function onFrameEnter() : *
+        {
+            this._disableCounter--;
+
+            if (this._disableCounter <= 0)
+            {
+                this.bg_mc.gotoAndStop(1);
+                this.removeEventListener(Event.ENTER_FRAME, this.onFrameEnter);
+            }
+        }
+
+        // --------------
         
         public function init(param1:Function, param2:Object = null, param3:Boolean = false) : *
         {
