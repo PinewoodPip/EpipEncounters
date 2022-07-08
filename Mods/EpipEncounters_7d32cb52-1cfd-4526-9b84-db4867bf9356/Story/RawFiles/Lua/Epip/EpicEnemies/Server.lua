@@ -73,7 +73,7 @@ end
 -- for id,effect in pairs(EpicEnemies.EFFECTS) do
 --     settings[id] = EpicEnemies.GenerateOptionData(effect)
 -- end
-EpicEnemies:Debug()
+-- EpicEnemies:Debug()
 
 ServerSettings.AddModule("EpicEnemies", settings)
 

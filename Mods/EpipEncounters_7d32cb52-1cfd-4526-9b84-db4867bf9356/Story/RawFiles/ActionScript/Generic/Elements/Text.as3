@@ -1,0 +1,30 @@
+package Elements
+{
+    import LS_Classes.LSPanelHelpers;
+    import flash.display.MovieClip;
+    import flash.external.ExternalInterface;
+    import LS_Classes.listDisplay;
+    import flash.text.TextField;
+    import flash.events.MouseEvent;
+
+    public dynamic class Text extends Element
+    {
+        public var text_txt:TextField;
+
+        public function Text()
+        {
+            super();
+            this.elementType = "Text";
+
+            this.text_txt.autoSize = "center";
+            this.text_txt.align = "center";
+        }
+
+        public function SetText(text:String) : *
+        {
+            this.text_txt.htmlText = text;
+        }
+
+        // TODO setfont
+    }
+}

@@ -1,0 +1,71 @@
+package Elements
+{
+    import LS_Classes.LSPanelHelpers;
+    import flash.display.MovieClip;
+    import flash.external.ExternalInterface;
+    import LS_Classes.listDisplay;
+    import flash.text.TextField;
+    import flash.events.MouseEvent;
+
+    public dynamic class Element extends MovieClip
+    {
+        public var stringID:String = "Uninitialized!";
+        public var elementType:String = "Element";
+        public var childElements:Array;
+        
+        public function Element()
+        {
+            super();
+            this.elementType = "Empty";
+
+            this.childElements = new Array();
+
+            this.addEventListener(MouseEvent.MOUSE_DOWN, this.onElementMouseDown);
+            this.addEventListener(MouseEvent.MOUSE_UP, this.onElementMouseUp);
+            this.addEventListener(MouseEvent.MOUSE_OVER, this.onElementMouseOver);
+            this.addEventListener(MouseEvent.MOUSE_OUT, this.onElementMouseOut);
+        }
+
+        public function AddChildElement(mc:MovieClip) : *
+        {
+            this.childElements[mc.stringID] = mc;
+            this[mc.stringID] = mc;
+            this.addChild(mc);
+        }
+
+        // UTILITY
+
+        public function SetDraggable(enabled:Boolean) : *
+        {
+            trace("TODO: SetDraggable()");
+        }
+
+        public function SetScale(scale:Number) : *
+        {
+            this.scaleX = scale;
+            this.scaleY = scale;
+        }
+
+        // EVENT LISTENERS
+
+        public function onElementMouseUp(e:MouseEvent) : *
+        {
+            ExternalInterface.call("elementMouseUp", this.stringID);
+        }
+
+        public function onElementMouseDown(e:MouseEvent) : *
+        {
+            ExternalInterface.call("elementMouseDown", this.stringID);
+        }
+
+        public function onElementMouseOver(e:MouseEvent) : *
+        {
+            ExternalInterface.call("elementMouseOver", this.stringID);
+        }
+
+        public function onElementMouseOut(e:MouseEvent) : *
+        {
+            ExternalInterface.call("elementMouseOut", this.stringID);
+        }
+    }
+}

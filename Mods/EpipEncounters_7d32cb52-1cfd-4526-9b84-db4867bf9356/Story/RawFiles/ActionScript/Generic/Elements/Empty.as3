@@ -1,0 +1,17 @@
+package Elements
+{
+    import LS_Classes.LSPanelHelpers;
+    import flash.display.MovieClip;
+    import flash.external.ExternalInterface;
+    import LS_Classes.listDisplay;
+    import flash.text.TextField;
+    import flash.events.MouseEvent;
+
+    public dynamic class Empty extends Element
+    {
+        public function Empty()
+        {
+            super();
+        }
+    }
+}

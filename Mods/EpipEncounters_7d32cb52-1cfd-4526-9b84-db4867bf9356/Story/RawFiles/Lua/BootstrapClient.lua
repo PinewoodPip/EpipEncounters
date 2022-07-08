@@ -111,8 +111,10 @@ LOAD_ORDER = {
     "UI/GameMenu.lua",
     "UI/TutorialBox.lua",
     "UI/Examine.lua",
+
     "UI/Generic/Main.lua",
-    "UI/Generic/Templates.lua",
+    "UI/Generic/Elements/Empty.lua",
+    "UI/Generic/Test.lua",
 
     "UI/Vanity/Vanity.lua",
     "UI/Vanity/Tabs/_Tab.lua",
@@ -195,7 +197,7 @@ LOAD_ORDER = {
 
     "Epip/Client/CharacterSheetResistances.lua",
     "Epip/Client/DifficultyToggle.lua",
-    "Epip/AwesomeSoccer/Client.lua",
+    -- "Epip/AwesomeSoccer/Client.lua",
     "Epip/Client/GiftbagLocker.lua",
     "Epip/Client/EE_Dyes.lua",
 
