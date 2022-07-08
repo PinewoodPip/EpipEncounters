@@ -1,6 +1,7 @@
 
 local Generic = Client.UI.Generic
 
+---@type GenericUI_Instance
 local Test = Generic.Create("PIP_Test")
 
 ---------------------------------------------
@@ -12,13 +13,19 @@ function Test.SetupTests()
     local root = ui:GetRoot()
     ui:Show()
 
-    print(ui)
+    print(Test.ID, Test.GetMovieClipByID)
     print(root.Root.stringID)
 
-    root.AddElement("tiledbgTest", "TiledBackground", "")
-    root.AddElement("textTest", "Text", "tiledbgTest")
+    ---@type GenericUI_Element_TiledBackground
+    local bg = Test:CreateElement("tiledbgTest", "TiledBackground", "")
 
-    root.tiledbgTest.textTest.SetText("Asd")
+    ---@type GenericUI_Element_Text
+    local text = Test:CreateElement("textTest", "Text", "tiledbgTest")
+
+    bg:SetBackground(Generic.ELEMENTS.TiledBackground.BACKGROUND_TYPES.BOX, 100, 100)
+    text:SetText("Testing!")
+
+    -- root.tiledbgTest.textTest.SetText("Asd")
 end
 
 ---------------------------------------------

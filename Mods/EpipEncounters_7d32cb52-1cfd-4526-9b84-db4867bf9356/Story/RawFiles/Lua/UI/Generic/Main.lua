@@ -3,8 +3,32 @@ Client.UI.Generic = {
     SWF_PATH = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/generic.swf",
     DEFAULT_LAYER = 15,
     _Element = {},
+    ELEMENTS = {}, ---@type table<GenericUI_ElementType, GenericUI_Element>
 }
 local Generic = Client.UI.Generic
+
+---------------------------------------------
+-- ELEMENT
+---------------------------------------------
+
+---@alias GenericUI_ElementType "Empty"|"TiledBackground"|"Text"
+---@alias FlashMovieClip userdata TODO remove
+
+---@type GenericUI_Element
+local _Element = Generic._Element
+
+---@class GenericUI_Element
+---@field UI GenericUI_Instance
+---@field ID string
+---@field ParentID string Empty string for elements in the root.
+---@field Type string
+---@field GetMovieClip fun(self):FlashMovieClip
+
+---Get the movie clip of this element.
+---@return FlashMovieClip
+function _Element:GetMovieClip()
+    return self.UI:GetMovieClipByID(self.ID)
+end
 
 ---------------------------------------------
 -- INSTANCE
@@ -14,12 +38,16 @@ local Generic = Client.UI.Generic
 ---@field ID string
 ---@field Root GenericUI_Element
 ---@field Elements table<string, GenericUI_Element>
+---@field GetElementByID fun(self, id:string):GenericUI_Element?
+---@field GetMovieClipByID fun(self, id:string):FlashMovieClip
+---@field CreateElement fun(self, id:string, elementType:GenericUI_ElementType, parentID:string?):GenericUI_Element?
 
 ---@type GenericUI_Instance
 local _Instance = {
     ID = "UNKNOWN",
     Elements = {},
 }
+Inherit(_Instance, Client.UI._BaseUITable)
 
 ---@param id string
 ---@return GenericUI_Element?
@@ -36,35 +64,27 @@ end
 ---@param id string
 ---@param elementType GenericUI_ElementType
 ---@param parentID string? Defaults to root of the MainTimeline.
----@return GenericUI_Element?
+---@return GenericUI_Element? Nil in case of failure (ex. invalid type).
 function _Instance:CreateElement(id, elementType, parentID)
-    local element = nil
+    local element = nil ---@type GenericUI_Element
+    local elementTable = Generic.ELEMENTS[elementType]
     local root = self:GetRoot()
 
+    -- Create element in flash
     root.AddElement(id, elementType, parentID or "")
 
-    -- element = Client.Flash.GetLastElement(root.elements)
-    -- TODO
+    element = {
+        UI = self,
+        ID = id,
+        Type = elementType,
+        ParentID = parentID or "",
+    }
+    Inherit(element, elementTable)
+
+    -- Map ID to lua element
+    self.Elements[id] = element
 
     return element
-end
-
----------------------------------------------
--- ELEMENT
----------------------------------------------
-
----@type GenericUI_Element
-local _Element = Generic._Element
-
----@class GenericUI_Element
----@field UI GenericUI_Instance
----@field ID string
----@field Type string
-
----Get the movie clip of this element.
----@return FlashMovieClip
-function _Element:GetMovieClip()
-    return self.UI:GetMovieClipByID(self.ID)
 end
 
 ---------------------------------------------
@@ -73,18 +93,36 @@ end
 
 ---@param id string
 ---@return GenericUI_Instance
-function Generic.Create(id)
+function Client.UI.Generic.Create(id)
     ---@type GenericUI_Instance
     local ui = {
         ID = id,
         Elements = {},
     }
-    Inherit(ui, _Instance)
     local uiOBject = Ext.UI.Create(id, Generic.SWF_PATH, Generic.DEFAULT_LAYER)
-    
     Epip.InitializeUI(uiOBject:GetTypeId(), id, ui)
-
+    Inherit(ui, _Instance)
+    
     return ui
+end
+
+---@param elementType string
+---@param elementTable GenericUI_Element
+function Client.UI.Generic.RegisterElementType(elementType, elementTable)
+    Generic.ELEMENTS[elementType] = elementTable
+end
+
+---@param call string
+---@vararg LuaFlashCompatibleType
+---@return fun(self:GenericUI_Element, ...):any?
+function Client.UI.Generic.ExposeFunction(call, ...)
+    local fun = function(obj, ...)
+        local mc = obj:GetMovieClip()
+
+        return mc[call](...)
+    end
+
+    return fun
 end
 
 ---------------------------------------------

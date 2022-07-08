@@ -43,6 +43,8 @@ package arenaResult_fla
             {
                 mc.stringID = id;
 
+                this.elements[id] = mc;
+
                 parent.AddChildElement(mc);
             }
             else
@@ -53,7 +55,7 @@ package arenaResult_fla
 
         public function AddChildElement(mc:MovieClip) : *
         {
-            this.elements[mc.stringID] = mc;
+            this.elements[mc.stringID] = mc; // TODO use childElements
             this[mc.stringID] = mc;
             this.addChild(mc);
         }
