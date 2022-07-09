@@ -69,6 +69,10 @@ function Test.SetupTests()
     -- list:GetMovieClip().visible = false
 
     -- root.tiledbgTest.textTest.SetText("Asd")
+
+    button1:RegisterListener(Generic.ELEMENTS.Button.EVENT_TYPES.PRESSED, function()
+        print("button pressed!")
+    end)
 end
 
 ---------------------------------------------

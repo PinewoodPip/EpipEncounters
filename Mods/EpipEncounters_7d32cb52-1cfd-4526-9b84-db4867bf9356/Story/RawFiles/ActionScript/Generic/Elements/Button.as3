@@ -362,6 +362,9 @@ package Elements
             {
                 removeEventListener(MouseEvent.MOUSE_UP,this.onUp);
             }
+
+            ExternalInterface.call("Button_Pressed", this.stringID);
+
             this.bg_mc.gotoAndStop(2);
             if(this.SND_Click != null)
             {

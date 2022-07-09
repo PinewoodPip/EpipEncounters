@@ -4,10 +4,21 @@ Client.UI.Generic = {
     DEFAULT_LAYER = 15,
     _Element = {},
     ELEMENTS = {}, ---@type table<GenericUI_ElementType, GenericUI_Element>
+    INSTANCES = {} ---@type table<integer, GenericUI_Instance>
 }
 local Generic = Client.UI.Generic
 Epip.InitializeLibrary("Generic", Generic)
 Generic:Debug()
+
+---------------------------------------------
+-- EVENTS/HOOKS
+---------------------------------------------
+
+-- Note that these are bound to each UI! They are not "global" events - you can't listen for an event happening across all instances.
+
+---@class GenericUI_Event_Button_Pressed : Event
+---@field RegisterListener fun(self, listener:fun(stringID:string))
+---@field Fire fun(self, stringID:string)
 
 ---------------------------------------------
 -- ELEMENT
@@ -24,10 +35,12 @@ local _Element = Generic._Element
 ---@field ID string
 ---@field ParentID string Empty string for elements in the root.
 ---@field Type string
+---@field EVENT_TYPES table<string, string>
 ---@field GetMovieClip fun(self):FlashMovieClip
 ---@field SetAsDraggableArea fun(self) Sets this element as the area for dragging the *entire* UI.
 ---@field SetPosition fun(self, x:number, y:number)
 ---@field SetSize fun(self, width:number, height:number)
+---@field RegisterListener fun(self, eventType:string, handler:function)
 
 ---Get the movie clip of this element.
 ---@return FlashMovieClip
@@ -45,6 +58,15 @@ end
 
 function _Element:SetSize(width, height)
     self:GetMovieClip().SetSize(width, height)
+end
+
+function _Element:RegisterListener(eventType, handler)
+    local ui = self.UI
+    ui.Events[eventType]:RegisterListener(function(id, ...)
+        if id == self.ID then
+            handler(...)
+        end
+    end)
 end
 
 ---------------------------------------------
@@ -116,15 +138,24 @@ function Client.UI.Generic.Create(id)
     local ui = {
         ID = id,
         Elements = {},
+        Events = {
+            ---@type GenericUI_Event_Button_Pressed
+            Button_Pressed = {},
+        },
     }
     local uiOBject = Ext.UI.Create(id, Generic.SWF_PATH, Generic.DEFAULT_LAYER)
     Epip.InitializeUI(uiOBject:GetTypeId(), id, ui)
     Inherit(ui, _Instance)
 
+    Generic.INSTANCES[uiOBject:GetTypeId()] = ui
+
     ui:RegisterCallListener("elementMouseUp", Generic.OnElementMouseUp)
     ui:RegisterCallListener("elementMouseDown", Generic.OnElementMouseDown)
     ui:RegisterCallListener("elementMouseOver", Generic.OnElementMouseOver)
     ui:RegisterCallListener("elementMouseOut", Generic.OnElementMouseOut)
+
+    -- Button
+    ui:RegisterCallListener("Button_Pressed", Generic.OnButtonPressed)
     
     return ui
 end
@@ -148,6 +179,12 @@ function Client.UI.Generic.ExposeFunction(call, ...)
     return fun
 end
 
+---@param id integer
+---@return GenericUI_Instance
+function Client.UI.Generic.GetInstance(id)
+    return Generic.INSTANCES[id]
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
@@ -166,4 +203,11 @@ end
 
 Generic.OnElementMouseOut = function(ev, id)
     Generic:DebugLog("CALL onElementMouseOut: ", id)
+end
+
+Generic.OnButtonPressed = function(ev, id)
+    Generic:DebugLog("CALL Button_Pressed: ", id)
+    local ui = Generic.GetInstance(ev.UI:GetTypeId())
+
+    ui.Events.Button_Pressed:Fire(id)
 end
