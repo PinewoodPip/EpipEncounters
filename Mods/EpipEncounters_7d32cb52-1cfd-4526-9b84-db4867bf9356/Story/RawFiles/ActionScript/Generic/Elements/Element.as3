@@ -6,6 +6,7 @@ package Elements
     import LS_Classes.listDisplay;
     import flash.text.TextField;
     import flash.events.MouseEvent;
+    import flash.events.Event;
 
     public dynamic class Element extends MovieClip
     {
@@ -46,6 +47,12 @@ package Elements
         {
             this.scaleX = scale;
             this.scaleY = scale;
+        }
+
+        public function SetPosition(x:Number, y:Number) : *
+        {
+            this.x = x;
+            this.y = y;
         }
 
         // EVENT LISTENERS

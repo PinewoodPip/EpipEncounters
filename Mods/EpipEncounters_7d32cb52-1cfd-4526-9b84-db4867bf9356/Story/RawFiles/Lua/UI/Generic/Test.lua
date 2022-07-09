@@ -23,8 +23,9 @@ function Test.SetupTests()
     ---@type GenericUI_Element_Text
     local text = Test:CreateElement("textTest", "Text", "tiledbgTest")
 
-    bg:SetBackground(Generic.ELEMENTS.TiledBackground.BACKGROUND_TYPES.BOX, 100, 100)
+    bg:SetBackground(Generic.ELEMENTS.TiledBackground.BACKGROUND_TYPES.BLACK, 400, 400)
     text:SetText("Testing!")
+    bg:GetMovieClip().background_mc.alpha = 0.7
 
     bg:SetAsDraggableArea()
 

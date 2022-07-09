@@ -9,6 +9,7 @@ local Generic = Client.UI.Generic
 Client.UI.Generic.ELEMENTS.TiledBackground = {
     BACKGROUND_TYPES = {
         BOX = 0,
+        BLACK = 1,
     }
 }
 local BG = Generic.ELEMENTS.TiledBackground
