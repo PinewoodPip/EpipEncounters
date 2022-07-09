@@ -25,7 +25,7 @@ function Test.SetupTests()
 
     bg:SetBackground(Generic.ELEMENTS.TiledBackground.BACKGROUND_TYPES.BLACK, 400, 400)
     text:SetText("Testing!")
-    bg:GetMovieClip().background_mc.alpha = 0.7
+    bg:GetMovieClip().background_mc.alpha = 0.2
 
     bg:SetAsDraggableArea()
 
@@ -45,12 +45,13 @@ function Test.SetupTests()
     epicEnemiesText:GetMovieClip().text_txt.align = "center"
     epicEnemiesText:SetText(Text.Format("Epic Enemies Perks<br>- This one<br>- That one<br>- Impetus", {
         Color = "ffffff",
-        FontType = Text.FONTS.ITALIC,
+        -- FontType = Text.FONTS.ITALIC,
     }))
     epicEnemiesText:GetMovieClip().text_txt.width = 500
     -- epicEnemiesText:SetPosition(5, 20)
 
     print(epicEnemiesText:GetMovieClip().text_txt.x)
+    epicEnemiesText:SetStroke(0, 2, 1, 1, 2)
 
     -- epicEnemiesText:GetMovieClip().text_txt.x = 0
 

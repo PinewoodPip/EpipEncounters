@@ -1,6 +1,7 @@
 package Elements
 {
     import LS_Classes.LSPanelHelpers;
+    import LS_Classes.textEffect;
     import flash.display.MovieClip;
     import flash.external.ExternalInterface;
     import LS_Classes.listDisplay;
@@ -28,6 +29,11 @@ package Elements
             this.text_txt.htmlText = text;
             this.text_txt.height = this.text_txt.textHeight;
             this.text_txt.width = this.text_txt.textWidth;
+        }
+
+        public function AddStroke(color:uint, size:Number, alpha:Number = 1.0, strength:uint = 1, p5:uint = 2) : *
+        {
+            this.text_txt.filters = textEffect.createStrokeFilter(color, size, alpha, strength, p5);
         }
 
         // TODO setfont
