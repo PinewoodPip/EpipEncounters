@@ -15,11 +15,15 @@ package Elements
         public function IggyIcon()
         {
             super();
-            this.elementType = "IggyIcon";
 
             this.hit_mc.alpha = 0;
 
             this.addFrameScript(0, this.frame1);
+        }
+
+        public override function get elementType() : String
+        {
+            return "IggyIcon";
         }
 
         public function SetIconSize(width:Number, height:Number) : *

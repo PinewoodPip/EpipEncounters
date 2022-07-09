@@ -42,20 +42,12 @@ function Test.SetupTests()
     ---@type GenericUI_Element_Text
     local epicEnemiesText = Test:CreateElement("EpicEnemiesText", "Text", "tiledbgTest")
 
-    -- epicEnemiesText:GetMovieClip().align = "left"
-    epicEnemiesText:SetText("Testing!")
+    epicEnemiesText:SetText(Text.Format("Testing!", {Color = "ffffff"}))
     epicEnemiesText:GetMovieClip().SetType(1)
-    -- epicEnemiesText:GetMovieClip().SetType(0)
     epicEnemiesText:SetPosition(0, 20)
-    -- epicEnemiesText:SetSize(100, 100)
-    -- epicEnemiesText:GetMovieClip().text_txt.width = 100
-    -- epicEnemiesText:GetMovieClip().text_txt.height = 100
     epicEnemiesText:SetSize(400, 200)
-    print(epicEnemiesText:GetMovieClip()._txt_Center.width)
-    print(epicEnemiesText:GetMovieClip()._txt_Left.width)
-    -- epicEnemiesText:GetMovieClip().text_txt.width = 100
-    -- epicEnemiesText:GetMovieClip().SetType(1)
-    -- epicEnemiesText:SetStroke(0, 2, 1, 1, 2)
+    
+    epicEnemiesText:SetStroke(0, 2, 1, 1, 2)
 
     button:SetText("Button!")
 
@@ -66,16 +58,15 @@ function Test.SetupTests()
     local list = Test:CreateElement("list", "VerticalList", "tiledbgTest")
     Test:CreateElement("button_1", "Button", list)
     local button1 = Test:CreateElement("button_2", "Button", list)
-    button1:SetText(Text.Format("Test", {
+    button1:SetText(Text.Format("Test !", {
         Color = "ffffff",
     }))
+    Test:GetElementByID("button_1"):SetText("Test 2!")
+    print(button1:GetMovieClip().text_mc.text_txt.textHeight, button1:GetMovieClip().bg_mc.height, button1:GetMovieClip().text_mc.y)
+    -- button1:GetMovieClip().text_mc.y = 2.5
     -- button1:GetMovieClip().text_txt.align = "center"
 
-    print(button1:GetMovieClip().text_mc.text_txt.visible)
-    button1:GetMovieClip().text_mc.text_txt.y = 100
-    button1:GetMovieClip().bg_mc.visible = false
-
-    list:GetMovieClip().visible = false
+    -- list:GetMovieClip().visible = false
 
     -- root.tiledbgTest.textTest.SetText("Asd")
 end

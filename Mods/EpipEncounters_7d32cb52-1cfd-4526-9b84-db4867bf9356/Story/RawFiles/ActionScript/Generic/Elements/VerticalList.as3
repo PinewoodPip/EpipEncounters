@@ -14,10 +14,14 @@ package Elements
         public function VerticalList()
         {
             super();
-            this.elementType = "VerticalList"; // todo use getter
 
             this.list = new listDisplay();
             this.addChild(this.list);
+        }
+
+        public override function get elementType() : String
+        {
+            return "VerticalList";
         }
 
         // Children are added to the list.

@@ -25,7 +25,6 @@ package Elements
         public function TiledBackground()
         {
             super();
-            this.elementType = "TiledBackground";
 
             this.backgroundTypes = new Array();
 
@@ -33,6 +32,11 @@ package Elements
             this.RegisterType(this._bg_Box, 32, 32, 32, 32, 32, 32); // Black
 
             this.SetBackground(1, 80 + 310 + 80, 89 + 290 + 90);
+        }
+
+        public override function get elementType() : String
+        {
+            return "TiledBackground";
         }
 
         public function SetBackground(backgroundType:int, backgroundWidth:Number, backgroundHeight:Number, useTimer:Boolean = true) : *

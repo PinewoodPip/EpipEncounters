@@ -11,7 +11,6 @@ package Elements
     public dynamic class Element extends MovieClip
     {
         public var stringID:String = "Uninitialized!";
-        public var elementType:String = "Element";
         public var childElements:Array;
 
         private var _ignoreUp = false;
@@ -19,7 +18,6 @@ package Elements
         public function Element()
         {
             super();
-            this.elementType = "Empty";
 
             this.childElements = new Array();
 
@@ -34,6 +32,12 @@ package Elements
             this.childElements[mc.stringID] = mc;
             this[mc.stringID] = mc;
             this.addChild(mc);
+        }
+
+        public function get elementType() : String
+        {
+            trace("Attempted to get elementType of base Element class!");
+            return "Element";
         }
 
         // UTILITY

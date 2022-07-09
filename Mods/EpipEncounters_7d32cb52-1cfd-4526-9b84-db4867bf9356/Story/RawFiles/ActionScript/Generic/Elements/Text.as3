@@ -20,7 +20,6 @@ package Elements
         public function Text()
         {
             super();
-            this.elementType = "Text";
 
             this.textTypes = new Array();
 
@@ -35,6 +34,11 @@ package Elements
             // this.text_txt.align = "center";
             // this.text_txt.x = 0;
             // this.text_txt.y = 0;
+        }
+
+        public override function get elementType() : String
+        {
+            return "Text";
         }
 
         private function RegisterTextType(txt:TextField) : *

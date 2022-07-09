@@ -77,14 +77,10 @@ package Elements
         public var _bg_Brown:MovieClip;
         public var _bg_Red:MovieClip;
         public var buttonTypes:Array;
-
-        private var _disableCounter = 0;
         
         public function Button()
         {
             super();
-
-            this.elementType = "Button";
 
             this.buttonTypes = new Array();
             this.RegisterType(this._bg_Brown);
@@ -125,6 +121,11 @@ package Elements
             this.buttonTypes.push(mc);
         }
 
+        public override function get elementType() : String
+        {
+            return "Button";
+        }
+
         public function SetType(buttonType:int) : *
         {
             // this.gotoAndStop(buttonType + 1);
@@ -137,28 +138,15 @@ package Elements
 
             this.bg_mc.stop();
             this.bg_mc.visible = true;
-
-            // No idea why we cannot just do this instantly.
-            // this._disableCounter = 5;
-            // this.addEventListener(Event.ENTER_FRAME, this.onFrameEnter);
         }
 
         public function SetText(text:String) : *
         {
-            this.text_mc.SetText(text);
-            this.text_mc.SetSize(this.bg_mc.width, this.bg_mc.height);
             this.text_mc.SetType(1);
-        }
-
-        private function onFrameEnter() : *
-        {
-            this._disableCounter--;
-
-            if (this._disableCounter <= 0)
-            {
-                this.bg_mc.gotoAndStop(1);
-                this.removeEventListener(Event.ENTER_FRAME, this.onFrameEnter);
-            }
+            this.text_mc.SetText(text);
+            var textHeight:Number = this.text_mc.text_txt.textHeight;
+            this.text_mc.SetSize(this.bg_mc.width, textHeight);
+            this.text_mc.y = (this.bg_mc.height / 2) - (textHeight / 4); // TODO is this right?
         }
 
         // --------------
