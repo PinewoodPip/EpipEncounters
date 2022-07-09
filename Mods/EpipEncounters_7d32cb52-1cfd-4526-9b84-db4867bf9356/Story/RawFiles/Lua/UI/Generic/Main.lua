@@ -13,7 +13,7 @@ Generic:Debug()
 -- ELEMENT
 ---------------------------------------------
 
----@alias GenericUI_ElementType "Empty"|"TiledBackground"|"Text"|"IggyIcon"|"Button"
+---@alias GenericUI_ElementType "Empty"|"TiledBackground"|"Text"|"IggyIcon"|"Button"|"VerticalList"
 ---@alias FlashMovieClip userdata TODO remove
 
 ---@type GenericUI_Element
@@ -27,6 +27,7 @@ local _Element = Generic._Element
 ---@field GetMovieClip fun(self):FlashMovieClip
 ---@field SetAsDraggableArea fun(self) Sets this element as the area for dragging the *entire* UI.
 ---@field SetPosition fun(self, x:number, y:number)
+---@field SetSize fun(self, width:number, height:number)
 
 ---Get the movie clip of this element.
 ---@return FlashMovieClip
@@ -42,6 +43,10 @@ function _Element:SetPosition(x, y)
     self:GetMovieClip().SetPosition(x, y)
 end
 
+function _Element:SetSize(width, height)
+    self:GetMovieClip().SetSize(width, height)
+end
+
 ---------------------------------------------
 -- INSTANCE
 ---------------------------------------------
@@ -52,7 +57,7 @@ end
 ---@field Elements table<string, GenericUI_Element>
 ---@field GetElementByID fun(self, id:string):GenericUI_Element?
 ---@field GetMovieClipByID fun(self, id:string):FlashMovieClip
----@field CreateElement fun(self, id:string, elementType:GenericUI_ElementType, parentID:string?):GenericUI_Element?
+---@field CreateElement fun(self, id:string, elementType:GenericUI_ElementType, parentID:string|GenericUI_Element?):GenericUI_Element?
 
 ---@type GenericUI_Instance
 local _Instance = {
@@ -75,12 +80,13 @@ end
 
 ---@param id string
 ---@param elementType GenericUI_ElementType
----@param parentID string? Defaults to root of the MainTimeline.
+---@param parentID string|GenericUI_Element? Defaults to root of the MainTimeline.
 ---@return GenericUI_Element? Nil in case of failure (ex. invalid type).
 function _Instance:CreateElement(id, elementType, parentID)
     local element = nil ---@type GenericUI_Element
     local elementTable = Generic.ELEMENTS[elementType]
     local root = self:GetRoot()
+    if type(parentID) == "table" then parentID = parentID.ID end
 
     -- Create element in flash
     root.AddElement(id, elementType, parentID or "")

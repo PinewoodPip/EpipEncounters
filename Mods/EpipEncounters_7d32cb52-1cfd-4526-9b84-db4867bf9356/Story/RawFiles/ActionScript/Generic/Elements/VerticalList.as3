@@ -1,0 +1,42 @@
+package Elements
+{
+    import LS_Classes.LSPanelHelpers;
+    import flash.display.MovieClip;
+    import flash.external.ExternalInterface;
+    import LS_Classes.listDisplay;
+    import flash.text.TextField;
+    import flash.events.MouseEvent;
+
+    public dynamic class VerticalList extends Element
+    {
+        public var list:listDisplay;
+
+        public function VerticalList()
+        {
+            super();
+            this.elementType = "VerticalList"; // todo use getter
+
+            this.list = new listDisplay();
+            this.addChild(this.list);
+        }
+
+        // Children are added to the list.
+        public override function AddChildElement(mc:MovieClip) : *
+        {
+            this.childElements[mc.stringID] = mc;
+            this[mc.stringID] = mc;
+            
+            this.list.addElement(mc);
+        }
+
+        public function Clear() : *
+        {
+            this.list.clearElements();
+        }
+
+        public function Reposition() : *
+        {
+            this.list.positionElements();
+        }
+    }
+}

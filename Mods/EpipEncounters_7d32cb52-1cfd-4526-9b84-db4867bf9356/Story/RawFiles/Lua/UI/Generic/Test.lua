@@ -25,6 +25,8 @@ function Test.SetupTests()
 
     bg:SetBackground(Generic.ELEMENTS.TiledBackground.BACKGROUND_TYPES.BLACK, 400, 400)
     text:SetText("Testing!")
+    text:GetMovieClip().SetType(0)
+    text:SetSize(360/2, 200)
     bg:GetMovieClip().background_mc.alpha = 0.2
 
     bg:SetAsDraggableArea()
@@ -41,24 +43,39 @@ function Test.SetupTests()
     local epicEnemiesText = Test:CreateElement("EpicEnemiesText", "Text", "tiledbgTest")
 
     -- epicEnemiesText:GetMovieClip().align = "left"
-    epicEnemiesText:GetMovieClip().text_txt.autoSize = "center"
-    epicEnemiesText:GetMovieClip().text_txt.align = "center"
-    epicEnemiesText:SetText(Text.Format("Epic Enemies Perks<br>- This one<br>- That one<br>- Impetus", {
-        Color = "ffffff",
-        -- FontType = Text.FONTS.ITALIC,
-    }))
-    epicEnemiesText:GetMovieClip().text_txt.width = 500
-    -- epicEnemiesText:SetPosition(5, 20)
-
-    print(epicEnemiesText:GetMovieClip().text_txt.x)
-    epicEnemiesText:SetStroke(0, 2, 1, 1, 2)
-
-    -- epicEnemiesText:GetMovieClip().text_txt.x = 0
+    epicEnemiesText:SetText("Testing!")
+    epicEnemiesText:GetMovieClip().SetType(1)
+    -- epicEnemiesText:GetMovieClip().SetType(0)
+    epicEnemiesText:SetPosition(0, 20)
+    -- epicEnemiesText:SetSize(100, 100)
+    -- epicEnemiesText:GetMovieClip().text_txt.width = 100
+    -- epicEnemiesText:GetMovieClip().text_txt.height = 100
+    epicEnemiesText:SetSize(400, 200)
+    print(epicEnemiesText:GetMovieClip()._txt_Center.width)
+    print(epicEnemiesText:GetMovieClip()._txt_Left.width)
+    -- epicEnemiesText:GetMovieClip().text_txt.width = 100
+    -- epicEnemiesText:GetMovieClip().SetType(1)
+    -- epicEnemiesText:SetStroke(0, 2, 1, 1, 2)
 
     button:SetText("Button!")
 
     button:GetMovieClip().visible = false
     icon:SetPosition(5, 150)
+
+    ---@type GenericUI_Element_VerticalList
+    local list = Test:CreateElement("list", "VerticalList", "tiledbgTest")
+    Test:CreateElement("button_1", "Button", list)
+    local button1 = Test:CreateElement("button_2", "Button", list)
+    button1:SetText(Text.Format("Test", {
+        Color = "ffffff",
+    }))
+    -- button1:GetMovieClip().text_txt.align = "center"
+
+    print(button1:GetMovieClip().text_mc.text_txt.visible)
+    button1:GetMovieClip().text_mc.text_txt.y = 100
+    button1:GetMovieClip().bg_mc.visible = false
+
+    list:GetMovieClip().visible = false
 
     -- root.tiledbgTest.textTest.SetText("Asd")
 end

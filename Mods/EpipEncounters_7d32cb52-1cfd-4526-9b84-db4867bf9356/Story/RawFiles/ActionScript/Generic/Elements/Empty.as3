@@ -12,6 +12,7 @@ package Elements
         public function Empty()
         {
             super();
+            this.elementType = "Empty";
         }
     }
 }

@@ -12,16 +12,48 @@ package Elements
     {
         public var text_txt:TextField;
 
+        public var _txt_Left:TextField;
+        public var _txt_Center:TextField;
+        private var textTypes:Array;
+        private var _cachedText:String = "";
+
         public function Text()
         {
             super();
             this.elementType = "Text";
 
+            this.textTypes = new Array();
+
+            // this._txt_Center.align = "center";
+
+            this.RegisterTextType(this._txt_Left);
+            this.RegisterTextType(this._txt_Center);
+
+            this.SetType(1);
+
             // this.text_txt.autoSize = "center";
             // this.text_txt.align = "center";
             // this.text_txt.x = 0;
             // this.text_txt.y = 0;
-            this.text_txt.wordWrap = true;
+        }
+
+        private function RegisterTextType(txt:TextField) : *
+        {
+            this.textTypes.push(txt);
+            // txt.wordWrap = true;
+            txt.visible = false;
+        }
+
+        public function SetType(txtType:int) : *
+        {
+            if (this.text_txt)
+            {
+                this.text_txt.visible = false;
+            }
+
+            this.text_txt = this.textTypes[txtType];
+            this.text_txt.visible = true;
+            this.SetText(this._cachedText);
         }
 
         public function SetText(text:String) : *
@@ -29,6 +61,13 @@ package Elements
             this.text_txt.htmlText = text;
             this.text_txt.height = this.text_txt.textHeight;
             this.text_txt.width = this.text_txt.textWidth;
+            this._cachedText = text;
+        }
+
+        public override function SetSize(width:Number, height:Number) : *
+        {
+            this.text_txt.width = width;
+            this.text_txt.height = height;
         }
 
         public function AddStroke(color:uint, size:Number, alpha:Number = 1.0, strength:uint = 1, p5:uint = 2) : *

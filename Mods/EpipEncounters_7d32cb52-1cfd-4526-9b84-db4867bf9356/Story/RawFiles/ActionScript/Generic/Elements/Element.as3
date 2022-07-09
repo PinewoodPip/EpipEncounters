@@ -49,6 +49,11 @@ package Elements
             this.scaleY = scale;
         }
 
+        public function SetSize(width:Number, height:Number) : *
+        {
+            trace("Element.SetSize not implemented for this element: " + this.elementType);
+        }
+
         public function SetPosition(x:Number, y:Number) : *
         {
             this.x = x;

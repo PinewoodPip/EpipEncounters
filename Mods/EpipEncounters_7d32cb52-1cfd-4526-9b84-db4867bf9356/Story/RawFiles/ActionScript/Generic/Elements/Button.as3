@@ -10,7 +10,7 @@ package Elements
     import flash.events.Event;
     
     // Based on LS_CLasses.LSButton
-    public class Button extends Element
+    public dynamic class Button extends Element
     {
         private var pressedFunc:Function = null;
         
@@ -146,6 +146,8 @@ package Elements
         public function SetText(text:String) : *
         {
             this.text_mc.SetText(text);
+            this.text_mc.SetSize(this.bg_mc.width, this.bg_mc.height);
+            this.text_mc.SetType(1);
         }
 
         private function onFrameEnter() : *
