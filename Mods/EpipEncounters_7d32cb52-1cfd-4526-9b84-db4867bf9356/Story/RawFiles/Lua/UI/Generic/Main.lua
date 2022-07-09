@@ -26,6 +26,7 @@ local _Element = Generic._Element
 ---@field Type string
 ---@field GetMovieClip fun(self):FlashMovieClip
 ---@field SetAsDraggableArea fun(self) Sets this element as the area for dragging the *entire* UI.
+---@field SetPosition fun(self, x:number, y:number)
 
 ---Get the movie clip of this element.
 ---@return FlashMovieClip
@@ -35,6 +36,10 @@ end
 
 function _Element:SetAsDraggableArea()
     self:GetMovieClip().SetAsUIDraggableArea()
+end
+
+function _Element:SetPosition(x, y)
+    self:GetMovieClip().SetPosition(x, y)
 end
 
 ---------------------------------------------

@@ -16,13 +16,18 @@ package Elements
             super();
             this.elementType = "Text";
 
-            this.text_txt.autoSize = "center";
-            this.text_txt.align = "center";
+            // this.text_txt.autoSize = "center";
+            // this.text_txt.align = "center";
+            // this.text_txt.x = 0;
+            // this.text_txt.y = 0;
+            this.text_txt.wordWrap = true;
         }
 
         public function SetText(text:String) : *
         {
             this.text_txt.htmlText = text;
+            this.text_txt.height = this.text_txt.textHeight;
+            this.text_txt.width = this.text_txt.textWidth;
         }
 
         // TODO setfont

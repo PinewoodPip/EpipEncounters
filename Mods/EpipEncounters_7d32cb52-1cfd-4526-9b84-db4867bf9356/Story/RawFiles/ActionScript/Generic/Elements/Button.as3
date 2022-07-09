@@ -72,6 +72,12 @@ package Elements
 
         public var text_mc:MovieClip = null;
 
+        public var bg_mc:MovieClip = null;
+
+        public var _bg_Brown:MovieClip;
+        public var _bg_Red:MovieClip;
+        public var buttonTypes:Array;
+
         private var _disableCounter = 0;
         
         public function Button()
@@ -80,7 +86,10 @@ package Elements
 
             this.elementType = "Button";
 
-            this.bg_mc.stop();
+            this.buttonTypes = new Array();
+            this.RegisterType(this._bg_Brown);
+            this.RegisterType(this._bg_Red);
+
             this.SetType(0);
 
             // ------- Larian stuff follows:
@@ -110,13 +119,28 @@ package Elements
             addEventListener(FocusEvent.FOCUS_OUT,this.onFocusLost);
         }
 
+        private function RegisterType(mc:MovieClip) : *
+        {
+            mc.visible = false;
+            this.buttonTypes.push(mc);
+        }
+
         public function SetType(buttonType:int) : *
         {
-            this.gotoAndStop(buttonType + 1);
+            // this.gotoAndStop(buttonType + 1);
+            if (this.bg_mc)
+            {
+                this.bg_mc.visible = false;
+            }
+
+            this.bg_mc = this.buttonTypes[buttonType];
+
+            this.bg_mc.stop();
+            this.bg_mc.visible = true;
 
             // No idea why we cannot just do this instantly.
-            this._disableCounter = 5;
-            this.addEventListener(Event.ENTER_FRAME, this.onFrameEnter);
+            // this._disableCounter = 5;
+            // this.addEventListener(Event.ENTER_FRAME, this.onFrameEnter);
         }
 
         public function SetText(text:String) : *

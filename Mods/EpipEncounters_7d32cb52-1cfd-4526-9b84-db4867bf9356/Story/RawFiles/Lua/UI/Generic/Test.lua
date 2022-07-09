@@ -31,13 +31,33 @@ function Test.SetupTests()
 
     ---@type GenericUI_Element_IggyIcon
     local icon = Test:CreateElement("iggyTest", "IggyIcon", "tiledbgTest")
-    icon:SetIcon("Skill_Warrior_DeflectiveBarrier", 64, 64)
+    icon:SetIcon("AMER_UNI_Spear_D", 64, 64)
 
     ---@type GenericUI_Element_Button
     local button = Test:CreateElement("buttonTest", "Button", "tiledbgTest")
-    button:SetType(G.ELEMENTS.Button.TYPES.RED)
+    button:SetType(G.ELEMENTS.Button.TYPES.BROWN)
+
+    ---@type GenericUI_Element_Text
+    local epicEnemiesText = Test:CreateElement("EpicEnemiesText", "Text", "tiledbgTest")
+
+    -- epicEnemiesText:GetMovieClip().align = "left"
+    epicEnemiesText:GetMovieClip().text_txt.autoSize = "center"
+    epicEnemiesText:GetMovieClip().text_txt.align = "center"
+    epicEnemiesText:SetText(Text.Format("Epic Enemies Perks<br>- This one<br>- That one<br>- Impetus", {
+        Color = "ffffff",
+        FontType = Text.FONTS.ITALIC,
+    }))
+    epicEnemiesText:GetMovieClip().text_txt.width = 500
+    -- epicEnemiesText:SetPosition(5, 20)
+
+    print(epicEnemiesText:GetMovieClip().text_txt.x)
+
+    -- epicEnemiesText:GetMovieClip().text_txt.x = 0
 
     button:SetText("Button!")
+
+    button:GetMovieClip().visible = false
+    icon:SetPosition(5, 150)
 
     -- root.tiledbgTest.textTest.SetText("Asd")
 end
@@ -47,7 +67,7 @@ end
 ---------------------------------------------
 
 Ext.Events.SessionLoaded:Subscribe(function(_)
-    Client.Timer.Start("", 2, function()
+    Client.Timer.Start("", 1.4, function()
         Test.SetupTests()
     end)
 end)
