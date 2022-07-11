@@ -8,6 +8,7 @@ package Elements
     import flash.text.TextFormat;
     import LS_Classes.tooltipHelper;
     import flash.events.Event;
+    import flash.geom.Rectangle;
     
     // Based on LS_CLasses.LSButton
     public dynamic class Button extends Element
@@ -144,9 +145,12 @@ package Elements
         {
             this.text_mc.SetType(1);
             this.text_mc.SetText(text);
+            this.text_mc.SetSize(this.bg_mc.width, this.bg_mc.height);
             var textHeight:Number = this.text_mc.text_txt.textHeight;
-            this.text_mc.SetSize(this.bg_mc.width, textHeight);
-            this.text_mc.y = (this.bg_mc.height / 2) - (textHeight / 4); // TODO is this right?
+            this.text_mc.y = (this.bg_mc.height / 2) - (textHeight / 2); // TODO is this right?
+
+            // this.text_mc.scrollRect = new Rectangle(0, 0, this.bg_mc.width, 10);
+            this.text_mc.SetSize(this.bg_mc.width, this.text_mc.text_txt.height - this.text_mc.y);
         }
 
         // --------------

@@ -24,7 +24,7 @@ Generic:Debug()
 -- ELEMENT
 ---------------------------------------------
 
----@alias GenericUI_ElementType "Empty"|"TiledBackground"|"Text"|"IggyIcon"|"Button"|"VerticalList"
+---@alias GenericUI_ElementType "Empty"|"TiledBackground"|"Text"|"IggyIcon"|"Button"|"VerticalList"|"HorizontalList"|"ScrollList"
 ---@alias FlashMovieClip userdata TODO remove
 
 ---@type GenericUI_Element
@@ -110,6 +110,11 @@ function _Instance:CreateElement(id, elementType, parentID)
     local root = self:GetRoot()
     if type(parentID) == "table" then parentID = parentID.ID end
 
+    if not elementTable then
+        _Instance:LogError("Tried to instantiate an element of unknown type: " .. elementType)
+        return nil
+    end
+
     -- Create element in flash
     root.AddElement(id, elementType, parentID or "")
 
@@ -173,7 +178,13 @@ function Client.UI.Generic.ExposeFunction(call, ...)
     local fun = function(obj, ...)
         local mc = obj:GetMovieClip()
 
-        return mc[call](...)
+        local success, error, result = pcall(mc[call], ...)
+
+        if not success then
+            Generic:LogError("Error while calling exposed function on " .. obj.ID .. ": " .. error)
+        end
+
+        return result
     end
 
     return fun

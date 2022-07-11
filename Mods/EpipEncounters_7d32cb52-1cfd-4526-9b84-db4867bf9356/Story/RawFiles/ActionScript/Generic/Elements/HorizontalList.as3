@@ -1,0 +1,27 @@
+package Elements
+{
+    import LS_Classes.LSPanelHelpers;
+    import flash.display.MovieClip;
+    import flash.external.ExternalInterface;
+    import LS_Classes.horizontalList;
+    import flash.text.TextField;
+    import flash.events.MouseEvent;
+
+    public dynamic class HorizontalList extends VerticalList
+    {
+        // public var list:horizontalList;
+
+        public function HorizontalList()
+        {
+            super();
+            this.removeChild(this.list);
+            this.list = new horizontalList();
+            this.addChild(this.list);
+        }
+
+        public override function get elementType() : String
+        {
+            return "HorizontalList";
+        }
+    }
+}

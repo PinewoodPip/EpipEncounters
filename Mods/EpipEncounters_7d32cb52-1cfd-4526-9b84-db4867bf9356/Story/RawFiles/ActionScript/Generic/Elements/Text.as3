@@ -46,6 +46,8 @@ package Elements
             this.textTypes.push(txt);
             // txt.wordWrap = true;
             txt.visible = false;
+            txt.width = 0;
+            txt.height = 0;
         }
 
         public function SetType(txtType:int) : *
@@ -53,6 +55,8 @@ package Elements
             if (this.text_txt)
             {
                 this.text_txt.visible = false;
+                this.text_txt.width = 0;
+                this.text_txt.height = 0;
             }
 
             this.text_txt = this.textTypes[txtType];

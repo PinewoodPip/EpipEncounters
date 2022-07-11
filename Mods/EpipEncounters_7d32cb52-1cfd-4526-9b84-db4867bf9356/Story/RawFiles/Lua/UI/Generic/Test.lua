@@ -54,15 +54,15 @@ function Test.SetupTests()
     button:GetMovieClip().visible = false
     icon:SetPosition(5, 150)
 
-    ---@type GenericUI_Element_VerticalList
-    local list = Test:CreateElement("list", "VerticalList", "tiledbgTest")
-    Test:CreateElement("button_1", "Button", list)
+    ---@type GenericUI_Element_HorizontalList
+    local list = Test:CreateElement("list", "ScrollList", "tiledbgTest")
     local button1 = Test:CreateElement("button_2", "Button", list)
     button1:SetText(Text.Format("Test !", {
         Color = "ffffff",
     }))
+    local button2 = Test:CreateElement("button_1", "Button", list)
     Test:GetElementByID("button_1"):SetText("Test 2!")
-    print(button1:GetMovieClip().text_mc.text_txt.textHeight, button1:GetMovieClip().bg_mc.height, button1:GetMovieClip().text_mc.y)
+    -- print(button1:GetMovieClip().text_mc.text_txt.textHeight, button1:GetMovieClip().bg_mc.height, button1:GetMovieClip().text_mc.y)
     -- button1:GetMovieClip().text_mc.y = 2.5
     -- button1:GetMovieClip().text_txt.align = "center"
 
@@ -73,6 +73,15 @@ function Test.SetupTests()
     button1:RegisterListener(Generic.ELEMENTS.Button.EVENT_TYPES.PRESSED, function()
         print("button pressed!")
     end)
+
+    -- print(button1:GetMovieClip().height, button1:GetMovieClip().bg_mc.height, button1:GetMovieClip().text_mc._txt_Center.height)
+    print(list, list.GetMovieClip)
+    print(list:GetMovieClip().list.EL_SPACING)
+    list:SetElementSpacing(0)
+    list:RepositionElements()
+    print(list:GetMovieClip().list.EL_SPACING)
+
+    list:SetFrame(20, 50)
 end
 
 ---------------------------------------------

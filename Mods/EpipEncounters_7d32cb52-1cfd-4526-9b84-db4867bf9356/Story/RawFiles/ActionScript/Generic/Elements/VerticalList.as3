@@ -33,6 +33,26 @@ package Elements
             this.list.addElement(mc);
         }
 
+        public function SetTopSpacing(spacing:Number) : *
+        {
+            this.list.TOP_SPACING = spacing;
+        }
+
+        public function SetMouseWheenEnabled(enabled:Boolean) : *
+        {
+            this.list.mouseWheelWhenOverEnabled = enabled;
+        }
+
+        public function SetElementSpacing(spacing:Number) : *
+        {
+            this.list.EL_SPACING = spacing;
+        }
+
+        public function SetSideSpacing(spacing:Number) : *
+        {
+            this.list.SIDE_SPACING = spacing;
+        }
+
         public function Clear() : *
         {
             this.list.clearElements();

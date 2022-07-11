@@ -213,19 +213,19 @@ package ui_fla
         // public function reportCapabilities() : *
         // {
         //     trace(Capabilities.hasAudio);
-        //     trace(Capabilities.hasIME);
+        //     trace(Capabilities.hasIME); // Always false?
         //     trace(Capabilities.hasMP3);
         //     trace(Capabilities.isDebugger);
         //     trace(Capabilities.language);
         //     trace(Capabilities.manufacturer);
             
-        //     trace(Capabilities.os);
+        //     trace(Capabilities.os); // "RAD Windows"
         //     trace(Capabilities.pixelAspectRatio);
         //     trace(Capabilities.playerType);
             
-        //     trace(Capabilities.screenResolutionX);
+        //     trace(Capabilities.screenResolutionX); // Not the screen resolution
             
-        //     trace(Capabilities.screenResolutionY);
+        //     trace(Capabilities.screenResolutionY); // Not the screen resolution
             
         //     trace(Capabilities.serverString);
             

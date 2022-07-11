@@ -12,7 +12,6 @@ package Elements
         public function Empty()
         {
             super();
-            this.elementType = "Empty";
         }
 
         public override function get elementType() : String

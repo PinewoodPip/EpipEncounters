@@ -1,0 +1,32 @@
+package Elements
+{
+    import LS_Classes.LSPanelHelpers;
+    import flash.display.MovieClip;
+    import flash.external.ExternalInterface;
+    import LS_Classes.scrollList;
+    import flash.text.TextField;
+    import flash.events.MouseEvent;
+
+    public dynamic class ScrollList extends VerticalList
+    {
+        // public var list:scrollList;
+
+        public function ScrollList()
+        {
+            super();
+            this.removeChild(this.list);
+            this.list = new scrollList();
+            this.addChild(this.list);
+        }
+
+        public override function get elementType() : String
+        {
+            return "ScrollList";
+        }
+
+        public function SetFrame(width:Number, height:Number) : *
+        {
+            this.list.setFrame(width, height);
+        }
+    }
+}
