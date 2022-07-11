@@ -28,5 +28,10 @@ package Elements
         {
             this.list.setFrame(width, height);
         }
+
+        public function SetScrollbarSpacing(spacing:Number) : *
+        {
+            this.list.SB_SPACING = spacing;
+        }
     }
 }

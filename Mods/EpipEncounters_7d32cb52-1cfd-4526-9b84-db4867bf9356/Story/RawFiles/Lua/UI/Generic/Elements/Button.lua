@@ -13,7 +13,7 @@ Client.UI.Generic.ELEMENTS.Button = {
     },
     EVENT_TYPES = {
         PRESSED = "Button_Pressed",
-    }
+    },
 }
 local Button = Client.UI.Generic.ELEMENTS.Button
 Inherit(Button, Generic._Element)

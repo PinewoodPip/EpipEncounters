@@ -1,0 +1,381 @@
+package Elements
+{
+    import flash.display.MovieClip;
+    import flash.events.FocusEvent;
+    import flash.events.MouseEvent;
+    import flash.external.ExternalInterface;
+    import flash.text.TextField;
+    import flash.text.TextFormat;
+    
+    public dynamic class StateButton extends Element
+    {
+        
+        
+        private var pressedFunc:Function;
+        
+        private var pressedParams:Object;
+        
+        private var m_Active:Boolean = false;
+        
+        private var m_Disabled:Boolean = false;
+        
+        public var SND_Over:String = "UI_Generic_Over";
+        
+        public var SND_Press:String = "";
+        
+        public var SND_Click:String = "UI_Gen_XButton_Click";
+        
+        public var textY:Number;
+        
+        public var textInActiveAlpha:Number = 1;
+        
+        public var textActiveAlpha:Number = 1;
+        
+        public var interactiveTextOnClick:Boolean = true;
+        
+        public var m_AllowToggleActive:Boolean = true;
+        
+        public var hitArea_mc:MovieClip;
+        
+        public var text_txt:TextField;
+        
+        public var disabled_mc:MovieClip;
+        
+        public var onOverFunc:Function;
+        
+        public var onDownFunc:Function;
+        
+        public var onOutFunc:Function;
+
+        // ------
+
+        public var text_mc:MovieClip = null;
+        public var bg_mc:MovieClip = null;
+
+        private var currentState:String = "Normal";
+
+        public var _bg_Checkbox:MovieClip;
+        
+        public function StateButton()
+        {
+            super();
+            this.buttonTypes = new Array();
+
+            this.RegisterType(this._bg_Checkbox);
+
+            this.SetType(0);
+            this.SetHasText(false);
+
+            // ------------ Larian stuff follows:
+            if(this.text_txt)
+            {
+                this.text_txt.mouseEnabled = false;
+                this.text_txt.alpha = this.textInActiveAlpha;
+            }
+            if(this.hitArea_mc)
+            {
+                this.hitArea_mc.addEventListener(MouseEvent.MOUSE_DOWN,this.onDown);
+                this.hitArea_mc.addEventListener(MouseEvent.ROLL_OUT,this.onMouseOut);
+                this.hitArea_mc.addEventListener(MouseEvent.ROLL_OVER,this.onMouseOver);
+            }
+            else
+            {
+                addEventListener(MouseEvent.MOUSE_DOWN,this.onDown);
+                addEventListener(MouseEvent.ROLL_OUT,this.onMouseOut);
+                addEventListener(MouseEvent.ROLL_OVER,this.onMouseOver);
+            }
+            addEventListener(FocusEvent.FOCUS_OUT,this.onFocusLost);
+        }
+
+        private function RegisterType(mc:MovieClip) : *
+        {
+            mc.visible = false;
+            this.buttonTypes.push(mc);
+        }
+
+        public function SetType(buttonType:int) : *
+        {
+            // this.gotoAndStop(buttonType + 1);
+            if (this.bg_mc)
+            {
+                this.bg_mc.visible = false;
+            }
+
+            this.bg_mc = this.buttonTypes[buttonType];
+
+            this.bg_mc.stop();
+            this.bg_mc.visible = true;
+        }
+
+        public function SetHasText(hasText:Boolean) : *
+        {
+            this.text_mc.visible = hasText;
+
+            if (hasText)
+            {
+                this.text_mc.SetText(""); // TODO remember old text
+            }
+            else
+            {
+                this.text_mc.SetSize(0, 0)
+            }
+        }
+
+        public function SetText(text:String) : *
+        {
+            this.text_mc.SetType(1);
+            this.text_mc.SetText(text);
+            this.text_mc.SetSize(this.bg_mc.width, this.bg_mc.height);
+            var textHeight:Number = this.text_mc.text_txt.textHeight;
+            this.text_mc.y = (this.bg_mc.height / 2) - (textHeight / 2); // TODO is this right?
+
+            // this.text_mc.scrollRect = new Rectangle(0, 0, this.bg_mc.width, 10);
+            this.text_mc.SetSize(this.bg_mc.width, this.text_mc.text_txt.height - this.text_mc.y);
+        }
+
+        public override function get elementType() : String
+        {
+            return "StateButton";
+        }
+        
+        public function initialize(param1:String, param2:Function, param3:Object = null, param4:Boolean = false, param5:Number = -1, param6:Boolean = false) : *
+        {
+            var _loc7_:TextFormat = null;
+            if(this.text_txt)
+            {
+                if(param5 != -1)
+                {
+                (_loc7_ = this.text_txt.defaultTextFormat).size = param5;
+                this.text_txt.defaultTextFormat = _loc7_;
+                }
+                this.text_txt.alpha = !!param4 ? Number(this.textActiveAlpha) : Number(this.textInActiveAlpha);
+                this.text_txt.htmlText = param1;
+                this.textY = this.text_txt.y;
+                this.text_txt.y = this.textY;
+            }
+            this.init(param2,param3,param4,param6);
+        }
+        
+        public function init(param1:Function, param2:Object = null, param3:Boolean = false, param4:Boolean = false) : *
+        {
+            this.pressedFunc = param1;
+            if(param2)
+            {
+                this.pressedParams = param2;
+            }
+            if(this.text_txt)
+            {
+                this.text_txt.y = this.textY;
+            }
+
+            this.m_Active = param3;
+            this.setEnabled(!param4);
+        }
+        
+        // public function setText(param1:String, param2:Number = -1) : *
+        // {
+        //     var _loc3_:TextFormat = null;
+        //     if(this.text_txt)
+        //     {
+        //         if(param2 != -1)
+        //         {
+        //         _loc3_ = this.text_txt.defaultTextFormat;
+        //         _loc3_.size = param2;
+        //         this.text_txt.defaultTextFormat = _loc3_;
+        //         }
+        //         this.text_txt.htmlText = param1;
+        //     }
+        // }
+
+        public function SetActiveState(active:Boolean) : *
+        {
+            this.setActive(active, false);
+        }
+
+        public function SetEnabledState(enabled:Boolean) : *
+        {
+            this.setEnabled(enabled);
+        }
+        
+        public function setActive(active:Boolean, fireEvents:Boolean = true) : *
+        {
+            this.m_Active = active;
+            this.SetState(this.currentState);
+            if(this.text_txt)
+            {
+                this.text_txt.alpha = !!active ? Number(this.textActiveAlpha) : Number(this.textInActiveAlpha);
+            }
+
+            if (fireEvents)
+            {
+                ExternalInterface.call("StateButton_StateChanged", this.stringID, active);
+            }
+        }
+        
+        public function get isActive() : Boolean
+        {
+            return this.m_Active;
+        }
+        
+        public function setEnabled(param1:Boolean) : *
+        {
+            if(this.disabled_mc)
+            {
+                this.disabled_mc.visible = !param1;
+            }
+            this.m_Disabled = !param1;
+        }
+        
+        public function get isEnabled() : Boolean
+        {
+            return !this.m_Disabled;
+        }
+        
+        private function onFocusLost(param1:FocusEvent) : void
+        {
+            if(this.text_txt)
+            {
+                this.text_txt.y = this.textY;
+            }
+        }
+        
+        private function onMouseOver(param1:MouseEvent) : *
+        {
+            if(!this.m_Disabled)
+            {
+                this.SetState("Highlighted");
+                if(this.SND_Over != null)
+                {
+                ExternalInterface.call("PlaySound",this.SND_Over);
+                }
+                if(this.text_txt)
+                {
+                this.text_txt.alpha = this.textActiveAlpha;
+                }
+                if(this.onOverFunc != null)
+                {
+                this.onOverFunc(this as MovieClip);
+                }
+            }
+        }
+        
+        private function onMouseOut(param1:MouseEvent) : *
+        {
+            if(this.hitArea_mc)
+            {
+                this.hitArea_mc.removeEventListener(MouseEvent.MOUSE_UP,this.onUp);
+            }
+            else
+            {
+                removeEventListener(MouseEvent.MOUSE_UP,this.onUp);
+            }
+            this.SetState("Normal");
+            if(this.text_txt)
+            {
+                this.text_txt.y = this.textY;
+                // if(!this.activeBG_mc.visible)
+                // {
+                // this.text_txt.alpha = this.textInActiveAlpha;
+                // }
+            }
+            if(this.onOutFunc != null)
+            {
+                this.onOutFunc(this as MovieClip);
+            }
+        }
+
+        private function SetState(state:String) : *
+        {
+            var offset:int = 0;
+            var frame:int = 1;
+
+            if (this.m_Active)
+            {
+                offset += 4;
+            }
+
+            if (state == "Pressed")
+            {
+                frame = 3;
+            }
+            else if (state == "Highlighted")
+            {
+                frame = 2;
+            }
+            else if (state == "Disabled")
+            {
+                frame = 4;
+            }
+
+            this.currentState = state;
+
+            this.bg_mc.gotoAndStop(frame + offset);
+        }
+        
+        private function onDown(param1:MouseEvent) : *
+        {
+            if(!this.m_Disabled)
+            {
+                if(this.SND_Press != null)
+                {
+                ExternalInterface.call("PlaySound",this.SND_Press);
+                }
+                if(this.hitArea_mc)
+                {
+                this.hitArea_mc.addEventListener(MouseEvent.MOUSE_UP,this.onUp);
+                }
+                else
+                {
+                addEventListener(MouseEvent.MOUSE_UP,this.onUp);
+                }
+
+                this.SetState("Pressed");
+
+                if(this.text_txt && this.interactiveTextOnClick)
+                {
+                this.text_txt.y = this.textY + 2;
+                }
+                if(this.onDownFunc != null)
+                {
+                this.onDownFunc(this as MovieClip);
+                }
+            }
+        }
+        
+        private function onUp(param1:MouseEvent) : *
+        {
+            if(this.hitArea_mc)
+            {
+                this.hitArea_mc.removeEventListener(MouseEvent.MOUSE_UP,this.onUp);
+            }
+            else
+            {
+                removeEventListener(MouseEvent.MOUSE_UP,this.onUp);
+            }
+            if(this.SND_Click != null)
+            {
+                ExternalInterface.call("PlaySound",this.SND_Click);
+            }
+            if(!this.m_Disabled && this.m_AllowToggleActive)
+            {
+                this.setActive(!this.m_Active);
+            }
+            this.SetState("Highlighted");
+            if(this.text_txt && this.interactiveTextOnClick)
+            {
+                this.text_txt.y = this.textY;
+            }
+            if(this.pressedFunc != null && !this.m_Disabled)
+            {
+                if(this.pressedParams != null)
+                {
+                this.pressedFunc(this.pressedParams);
+                }
+                else
+                {
+                this.pressedFunc();
+                }
+            }
+        }
+    }
+}

@@ -20,11 +20,15 @@ Generic:Debug()
 ---@field RegisterListener fun(self, listener:fun(stringID:string))
 ---@field Fire fun(self, stringID:string)
 
+---@class GenericUI_Event_StateButton_StateChanged : Event
+---@field RegisterListener fun(self, listener:fun(stringID:string, active:boolean))
+---@field Fire fun(self, stringID:string, active:boolean)
+
 ---------------------------------------------
 -- ELEMENT
 ---------------------------------------------
 
----@alias GenericUI_ElementType "Empty"|"TiledBackground"|"Text"|"IggyIcon"|"Button"|"VerticalList"|"HorizontalList"|"ScrollList"
+---@alias GenericUI_ElementType "Empty"|"TiledBackground"|"Text"|"IggyIcon"|"Button"|"VerticalList"|"HorizontalList"|"ScrollList"|"StateButton"
 ---@alias FlashMovieClip userdata TODO remove
 
 ---@type GenericUI_Element
@@ -146,6 +150,8 @@ function Client.UI.Generic.Create(id)
         Events = {
             ---@type GenericUI_Event_Button_Pressed
             Button_Pressed = {},
+            ---@type GenericUI_Event_StateButton_StateChanged
+            StateButton_StateChanged = {},
         },
     }
     local uiOBject = Ext.UI.Create(id, Generic.SWF_PATH, Generic.DEFAULT_LAYER)
@@ -161,6 +167,9 @@ function Client.UI.Generic.Create(id)
 
     -- Button
     ui:RegisterCallListener("Button_Pressed", Generic.OnButtonPressed)
+
+    -- StateButton
+    ui:RegisterCallListener("StateButton_StateChanged", Generic.OnStateButtonStateChanged)
     
     return ui
 end
@@ -221,4 +230,11 @@ Generic.OnButtonPressed = function(ev, id)
     local ui = Generic.GetInstance(ev.UI:GetTypeId())
 
     ui.Events.Button_Pressed:Fire(id)
+end
+
+Generic.OnStateButtonStateChanged = function(ev, id, active)
+    Generic:DebugLog("CALL StateButton_StateChanged: ", id, active)
+    local ui = Generic.GetInstance(ev.UI:GetTypeId())
+
+    ui.Events.StateButton_StateChanged:Fire(id, active)
 end

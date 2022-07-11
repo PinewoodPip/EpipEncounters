@@ -121,6 +121,7 @@ LOAD_ORDER = {
     "UI/Generic/Elements/VerticalList.lua",
     "UI/Generic/Elements/HorizontalList.lua",
     "UI/Generic/Elements/ScrollList.lua",
+    "UI/Generic/Elements/StateButton.lua",
     "UI/Generic/Test.lua", -- TEST!
 
     "UI/Vanity/Vanity.lua",
