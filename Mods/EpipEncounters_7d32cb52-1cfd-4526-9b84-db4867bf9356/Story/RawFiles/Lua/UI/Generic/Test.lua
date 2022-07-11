@@ -9,6 +9,19 @@ local Test = Generic.Create("PIP_Test")
 -- METHODS
 ---------------------------------------------
 
+function Test.TestButtons()
+    ---@type GenericUI_Element_VerticalList
+    local list = Test:CreateElement("btnList", "VerticalList", Test.Container)
+    list:SetPosition(0, 40)
+
+    for id,index in pairs(Generic.ELEMENTS.Button.TYPES) do
+        local button = list:AddChild(id, "Button") ---@type GenericUI_Element_Button
+
+        button:SetType(index)
+        button:SetText(Text.Format(id, {Color = "ffffff", Size = 15}))
+    end
+end
+
 function Test.SetupTests()
     local ui = Test:GetUI()
     local root = ui:GetRoot()
@@ -19,62 +32,20 @@ function Test.SetupTests()
 
     ---@type GenericUI_Element_TiledBackground
     local bg = Test:CreateElement("tiledbgTest", "TiledBackground", "")
+    Test.Container = bg
 
     ---@type GenericUI_Element_Text
     local text = Test:CreateElement("textTest", "Text", "tiledbgTest")
 
     bg:SetBackground(Generic.ELEMENTS.TiledBackground.BACKGROUND_TYPES.BLACK, 400, 400)
-    text:SetText("Testing!")
-    text:GetMovieClip().SetType(0)
-    text:SetSize(360/2, 200)
+    text:SetText(Text.Format("Generic Test", {Color = "ffffff"}))
+    text:GetMovieClip().SetType(1)
+    text:SetSize(400, 200)
     bg:GetMovieClip().background_mc.alpha = 0.2
 
     bg:SetAsDraggableArea()
 
-    ---@type GenericUI_Element_IggyIcon
-    local icon = Test:CreateElement("iggyTest", "IggyIcon", "tiledbgTest")
-    icon:SetIcon("AMER_UNI_Spear_D", 64, 64)
-
-    ---@type GenericUI_Element_Button
-    local button = Test:CreateElement("buttonTest", "Button", "tiledbgTest")
-    button:SetType(G.ELEMENTS.Button.TYPES.BROWN)
-
-    ---@type GenericUI_Element_Text
-    local epicEnemiesText = Test:CreateElement("EpicEnemiesText", "Text", "tiledbgTest")
-
-    epicEnemiesText:SetText(Text.Format("Testing!", {Color = "ffffff"}))
-    epicEnemiesText:GetMovieClip().SetType(1)
-    epicEnemiesText:SetPosition(0, 20)
-    epicEnemiesText:SetSize(400, 200)
-    
-    epicEnemiesText:SetStroke(0, 2, 1, 1, 2)
-
-    button:SetText("Button!")
-
-    button:GetMovieClip().visible = false
-    icon:SetPosition(5, 150)
-
-    ---@type GenericUI_Element_HorizontalList
-    local list = Test:CreateElement("list", "HorizontalList", "tiledbgTest")
-    local button1 = Test:CreateElement("button_2", "Button", list)
-    button1:SetText(Text.Format("Test !", {
-        Color = "ffffff",
-    }))
-
-    ---@type GenericUI_Element_StateButton
-    local stateButton = Test:CreateElement("stateBtn", "StateButton", list)
-    stateButton:RegisterListener(Generic.ELEMENTS.StateButton.EVENT_TYPES.STATE_CHANGED, function(active)
-        print(active)
-    end)
-
-    local button2 = Test:CreateElement("button_1", "Button", list)
-    Test:GetElementByID("button_1"):SetText("Test 2!")
-
-    button1:RegisterListener(Generic.ELEMENTS.Button.EVENT_TYPES.PRESSED, function()
-        print("button pressed!")
-    end)
-    list:SetElementSpacing(0)
-    list:RepositionElements()
+    Test.TestButtons()
 
     
 end

@@ -77,6 +77,8 @@ package Elements
 
         public var _bg_Brown:MovieClip;
         public var _bg_Red:MovieClip;
+        public var _bg_RedBig:MovieClip;
+        public var _bg_TextEdit:MovieClip;
         public var buttonTypes:Array;
         
         public function Button()
@@ -86,6 +88,8 @@ package Elements
             this.buttonTypes = new Array();
             this.RegisterType(this._bg_Brown);
             this.RegisterType(this._bg_Red);
+            this.RegisterType(this._bg_RedBig);
+            this.RegisterType(this._bg_TextEdit);
 
             this.SetType(0);
 
@@ -119,6 +123,8 @@ package Elements
         private function RegisterType(mc:MovieClip) : *
         {
             mc.visible = false;
+            mc.scaleX = 0;
+            mc.scaleY = 0;
             this.buttonTypes.push(mc);
         }
 
@@ -138,6 +144,8 @@ package Elements
             this.bg_mc = this.buttonTypes[buttonType];
 
             this.bg_mc.stop();
+            this.bg_mc.scaleX = 1;
+            this.bg_mc.scaleY = 1;
             this.bg_mc.visible = true;
         }
 

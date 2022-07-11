@@ -41,6 +41,7 @@ local _Element = Generic._Element
 ---@field Type string
 ---@field EVENT_TYPES table<string, string>
 ---@field GetMovieClip fun(self):FlashMovieClip
+---@field AddChild fun(self, id:string, elementType:GenericUI_ElementType):GenericUI_Element
 ---@field SetAsDraggableArea fun(self) Sets this element as the area for dragging the *entire* UI.
 ---@field SetPosition fun(self, x:number, y:number)
 ---@field SetSize fun(self, width:number, height:number)
@@ -50,6 +51,10 @@ local _Element = Generic._Element
 ---@return FlashMovieClip
 function _Element:GetMovieClip()
     return self.UI:GetMovieClipByID(self.ID)
+end
+
+function _Element:AddChild(id, elementType)
+    return self.UI:CreateElement(id, elementType, self)
 end
 
 function _Element:SetAsDraggableArea()
