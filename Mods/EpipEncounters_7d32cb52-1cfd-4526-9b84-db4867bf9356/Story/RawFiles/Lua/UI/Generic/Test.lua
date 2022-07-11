@@ -13,11 +13,14 @@ function Test.TestButtons()
     ---@type GenericUI_Element_VerticalList
     local list = Test:CreateElement("btnList", "VerticalList", Test.Container)
     list:SetPosition(0, 40)
-    list:AddChild("header", "Text"):SetText("Buttons")
+    local header = list:AddChild("header", "Text")
+    header:SetText(Text.Format("Buttons and StateButtons", {Color = "ffffff"}))
+    header:SetSize(400, 40)
 
     local _B = Generic.ELEMENTS.Button
+    local _SB = Generic.ELEMENTS.StateButton
 
-    for id,index in pairs(Generic.ELEMENTS.Button.TYPES) do
+    for id,index in pairs(_B.TYPES) do
         local button = list:AddChild(id, "Button") ---@type GenericUI_Element_Button
 
         button:SetType(index)
@@ -25,6 +28,17 @@ function Test.TestButtons()
         button:RegisterListener(_B.EVENT_TYPES.PRESSED, function()
             button:SetEnabled(false)
         end)
+    end
+
+    for id,index in pairs(_SB.TYPES) do
+        local button = list:AddChild(id, "StateButton") ---@type GenericUI_Element_StateButton
+
+        button:SetType(index)
+        -- button:SetText(Text.Format(id, {Color = "ffffff", Size = 15}))
+        button:RegisterListener(_SB.EVENT_TYPES.STATE_CHANGED, function(state)
+            print("state changed", state)
+        end)
+
     end
 end
 

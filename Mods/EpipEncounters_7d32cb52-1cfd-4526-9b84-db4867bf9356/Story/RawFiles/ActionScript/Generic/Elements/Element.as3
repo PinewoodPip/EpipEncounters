@@ -55,7 +55,7 @@ package Elements
             this.Log("Element type does not properly support SetMouseEnabled; setting mouseChildren instead.");
         }
 
-        private function Log(msg:String, msgType:int = 1) : *
+        protected function Log(msg:String, msgType:int = 1) : *
         {
             ExternalInterface.call("GenericLog", this.stringID, this.elementType, msg);
         }
