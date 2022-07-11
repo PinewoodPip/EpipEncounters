@@ -77,6 +77,10 @@ package Elements
         public var _bg_Red:MovieClip;
         public var _bg_RedBig:MovieClip;
         public var _bg_TextEdit:MovieClip;
+        public var _bg_StatMinus:MovieClip;
+        public var _bg_StatPlus:MovieClip;
+        public var _bg_Close:MovieClip;
+
         public var buttonTypes:Array;
         public var useDisabledOverylay:Array;
         public var useDisabledOverylayForCurrent:Boolean = false;
@@ -93,6 +97,9 @@ package Elements
             this.RegisterType(this._bg_Red, true);
             this.RegisterType(this._bg_RedBig);
             this.RegisterType(this._bg_TextEdit);
+            this.RegisterType(this._bg_StatMinus, true);
+            this.RegisterType(this._bg_StatPlus, true);
+            this.RegisterType(this._bg_Close, true);
 
             this.SetType(0);
 

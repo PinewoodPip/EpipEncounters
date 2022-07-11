@@ -14,6 +14,9 @@ Client.UI.Generic.ELEMENTS.Button = {
         RED = 1,
         RED_BIG = 2,
         TEXT_EDIT = 3,
+        STAT_MINUS = 4,
+        STAT_PLUS = 5,
+        CLOSE = 6,
     },
     EVENT_TYPES = {
         PRESSED = "Button_Pressed",
