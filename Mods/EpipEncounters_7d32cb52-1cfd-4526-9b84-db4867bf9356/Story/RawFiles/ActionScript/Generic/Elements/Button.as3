@@ -57,8 +57,6 @@ package Elements
         
         public var icon_mc:MovieClip;
         
-        public var disabled_mc:MovieClip;
-        
         public var m_Disabled:Boolean = false;
         
         public var SND_Press:String = "";
@@ -80,14 +78,19 @@ package Elements
         public var _bg_RedBig:MovieClip;
         public var _bg_TextEdit:MovieClip;
         public var buttonTypes:Array;
+        public var useDisabledOverylay:Array;
+        public var useDisabledOverylayForCurrent:Boolean = false;
+
+        // public var disabled_mc:MovieClip;
         
         public function Button()
         {
             super();
 
             this.buttonTypes = new Array();
-            this.RegisterType(this._bg_Brown);
-            this.RegisterType(this._bg_Red);
+            this.useDisabledOverylay = new Array();
+            this.RegisterType(this._bg_Brown, true);
+            this.RegisterType(this._bg_Red, true);
             this.RegisterType(this._bg_RedBig);
             this.RegisterType(this._bg_TextEdit);
 
@@ -120,17 +123,28 @@ package Elements
             addEventListener(FocusEvent.FOCUS_OUT,this.onFocusLost);
         }
 
-        private function RegisterType(mc:MovieClip) : *
+        private function RegisterType(mc:MovieClip, useDisabledOverlay:Boolean = false) : *
         {
             mc.visible = false;
             mc.scaleX = 0;
             mc.scaleY = 0;
+            this.useDisabledOverylay.push(useDisabledOverlay);
             this.buttonTypes.push(mc);
         }
 
         public override function get elementType() : String
         {
             return "Button";
+        }
+
+        public function SetEnabled(enabled:Boolean) : *
+        {
+            this.setEnabled(enabled);
+        }
+
+        public function GetEnabled() : Boolean
+        {
+            return !this.m_Disabled;
         }
 
         public function SetType(buttonType:int) : *
@@ -143,10 +157,14 @@ package Elements
 
             this.bg_mc = this.buttonTypes[buttonType];
 
+            this.useDisabledOverylayForCurrent = this.useDisabledOverylay[buttonType];
+
             this.bg_mc.stop();
             this.bg_mc.scaleX = 1;
             this.bg_mc.scaleY = 1;
             this.bg_mc.visible = true;
+
+            this.SetState("Normal"); // TODO remember state?
         }
 
         public function SetText(text:String) : *
@@ -224,10 +242,6 @@ package Elements
         
         public function setEnabled(param1:Boolean) : *
         {
-            if(this.disabled_mc)
-            {
-                this.disabled_mc.visible = !param1;
-            }
             if(this.text_txt)
             {
                 this.text_txt.alpha = !!param1 ? Number(this.textNormalAlpha) : Number(this.textDisabledAlpha);
@@ -237,6 +251,44 @@ package Elements
                 this.icon_mc.alpha = !!param1 ? Number(this.textNormalAlpha) : Number(this.textDisabledAlpha);
             }
             this.m_Disabled = !param1;
+
+            this.SetState("Normal"); // TODO remember highlighted?
+        }
+
+        private function SetState(state:String) : *
+        {
+            var frame:int = 1;
+
+            if (this.m_Disabled)
+            {
+                frame = 4;
+            }
+            else if (state == "Highlighted")
+            {
+                frame = 2;
+            }
+            else if (state == "Pressed")
+            {
+                frame = 3;
+            }
+
+            if(this.disabled_mc && this.useDisabledOverylayForCurrent && this.m_Disabled)
+            {
+                this.disabled_mc.visible = true;
+                this.disabled_mc.width = this.bg_mc.width;
+                this.disabled_mc.height = this.bg_mc.height;
+                this.disabled_mc.alpha = 0.5;
+                // this.disabled_mc.scaleX = 1;
+                // this.disabled_mc.scaleY = 1;
+            }
+            else
+            {
+                this.disabled_mc.visible = false;
+                this.disabled_mc.scaleX = 0;
+                this.disabled_mc.scaleY = 0;
+            }
+
+            this.bg_mc.gotoAndStop(frame);
         }
         
         private function onFocusLost(param1:FocusEvent) : void
@@ -268,7 +320,9 @@ package Elements
                 {
                 this.icon_mc.alpha = this.textClickAlpha;
                 }
-                this.bg_mc.gotoAndStop(2);
+
+                this.SetState("Highlighted");
+
                 if(this.onOverFunc != null)
                 {
                 if(this.onOverParams == null)
@@ -297,7 +351,9 @@ package Elements
             {
                 ExternalInterface.call("hideTooltip");
             }
-            this.bg_mc.gotoAndStop(1);
+
+            this.SetState("Normal");
+
             if(this.onOutFunc != null)
             {
                 if(this.onOutParams == null)
@@ -337,7 +393,9 @@ package Elements
                 {
                 addEventListener(MouseEvent.MOUSE_UP,this.onUp);
                 }
-                this.bg_mc.gotoAndStop(3);
+
+                this.SetState("Pressed");
+
                 if(this.SND_Press != null)
                 {
                 ExternalInterface.call("PlaySound",this.SND_Press);
@@ -377,7 +435,8 @@ package Elements
 
             ExternalInterface.call("Button_Pressed", this.stringID);
 
-            this.bg_mc.gotoAndStop(2);
+            this.SetState("Highlighted");
+
             if(this.SND_Click != null)
             {
                 ExternalInterface.call("PlaySound",this.SND_Click);

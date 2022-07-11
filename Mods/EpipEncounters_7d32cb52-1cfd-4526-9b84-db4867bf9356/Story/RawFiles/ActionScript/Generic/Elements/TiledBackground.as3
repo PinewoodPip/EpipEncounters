@@ -56,12 +56,12 @@ package Elements
             if (backgroundWidth < minWidth)
             {
                 backgroundWidth = minWidth;
-                trace("TiledBackground.SetBackground: Width below minimum");
+                this.Log("SetBackground: Width below minimum");
             }
             if (backgroundHeight < minHeight)
             {
                 backgroundHeight = minHeight;
-                trace("TiledBackground.SetBackground: Height below minimum");
+                this.Log("SetBackground: Height below minimum");
             }
 
             this.currentWidth = backgroundWidth;

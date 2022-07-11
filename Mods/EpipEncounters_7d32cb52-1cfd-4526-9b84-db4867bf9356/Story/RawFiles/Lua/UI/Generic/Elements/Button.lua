@@ -4,6 +4,8 @@ local Generic = Client.UI.Generic
 ---@class GenericUI_Element_Button : GenericUI_Element
 ---@field SetText fun(self, text:string)
 ---@field SetType fun(self, buttonType:integer)
+---@field SetEnabled fun(self, enabled:boolean)
+---@field IsEnabled fun(self):boolean
 
 ---@type GenericUI_Element_Button
 Client.UI.Generic.ELEMENTS.Button = {
@@ -26,6 +28,8 @@ Inherit(Button, Generic._Element)
 
 Button.SetText = Generic.ExposeFunction("SetText")
 Button.SetType = Generic.ExposeFunction("SetType")
+Button.SetEnabled = Generic.ExposeFunction("SetEnabled")
+Button.IsEnabled = Generic.ExposeFunction("GetEnabled")
 
 ---------------------------------------------
 -- SETUP

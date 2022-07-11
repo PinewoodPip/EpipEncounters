@@ -46,6 +46,8 @@ local _Element = Generic._Element
 ---@field SetPosition fun(self, x:number, y:number)
 ---@field SetSize fun(self, width:number, height:number)
 ---@field RegisterListener fun(self, eventType:string, handler:function)
+---@field SetMouseEnabled fun(self, enabled:boolean)
+---@field SetMouseChildren fun(self, enabled:boolean)
 
 ---Get the movie clip of this element.
 ---@return FlashMovieClip
@@ -67,6 +69,14 @@ end
 
 function _Element:SetSize(width, height)
     self:GetMovieClip().SetSize(width, height)
+end
+
+function _Element:SetMouseEnabled(enabled)
+    self:GetMovieClip().SetMouseEnabled(enabled)
+end
+
+function _Element:SetMouseChildren(enabled)
+    self:GetMovieClip().SetMouseChildren(enabled)
 end
 
 function _Element:RegisterListener(eventType, handler)
@@ -151,12 +161,18 @@ function Client.UI.Generic.Create(id)
     ---@type GenericUI_Instance
     local ui = {
         ID = id,
+        Name = id,
         Elements = {},
         Events = {
             ---@type GenericUI_Event_Button_Pressed
             Button_Pressed = {},
             ---@type GenericUI_Event_StateButton_StateChanged
             StateButton_StateChanged = {},
+        },
+        TRACE_LEVELS = {
+            INFO = 0,
+            WARNING = 1,
+            ERROR = 2,
         },
     }
     local uiOBject = Ext.UI.Create(id, Generic.SWF_PATH, Generic.DEFAULT_LAYER)
@@ -175,6 +191,19 @@ function Client.UI.Generic.Create(id)
 
     -- StateButton
     ui:RegisterCallListener("StateButton_StateChanged", Generic.OnStateButtonStateChanged)
+
+    -- Logging
+    ui:RegisterCallListener("GenericLog", function(ev, elementID, elementType, msg, msgType)
+        msg = string.format("TRACE %s (%s): %s", elementID, elementType, msg)
+
+        if msgType == ui.TRACE_LEVELS.WARNING then
+            ui:LogWarning(msg)
+        elseif msgType == ui.TRACE_LEVELS.ERROR then
+            ui:LogError(msg)
+        else
+            ui:Log(msg)
+        end
+    end)
     
     return ui
 end

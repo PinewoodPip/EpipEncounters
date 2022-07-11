@@ -36,7 +36,7 @@ package Elements
 
         public function get elementType() : String
         {
-            trace("Attempted to get elementType of base Element class!");
+            this.Log("Attempted to get elementType of base Element class!", 2);
             return "Element";
         }
 
@@ -47,6 +47,24 @@ package Elements
             LSPanelHelpers.makeDraggable(this);
         }
 
+        public function SetMouseEnabled(enabled:Boolean) : *
+        {
+            this.mouseEnabled = enabled;
+            this.SetMouseChildren(enabled);
+
+            this.Log("Element type does not properly support SetMouseEnabled; setting mouseChildren instead.");
+        }
+
+        private function Log(msg:String, msgType:int = 1) : *
+        {
+            ExternalInterface.call("GenericLog", this.stringID, this.elementType, msg);
+        }
+
+        public function SetMouseChildren(enabled:Boolean) : *
+        {
+            this.mouseChildren = enabled;
+        }
+
         public function SetScale(scale:Number) : *
         {
             this.scaleX = scale;
@@ -55,7 +73,7 @@ package Elements
 
         public function SetSize(width:Number, height:Number) : *
         {
-            trace("Element.SetSize not implemented for this element: " + this.elementType);
+            this.Log("Element.SetSize not implemented for this element", 2);
         }
 
         public function SetPosition(x:Number, y:Number) : *

@@ -13,12 +13,18 @@ function Test.TestButtons()
     ---@type GenericUI_Element_VerticalList
     local list = Test:CreateElement("btnList", "VerticalList", Test.Container)
     list:SetPosition(0, 40)
+    list:AddChild("header", "Text"):SetText("Buttons")
+
+    local _B = Generic.ELEMENTS.Button
 
     for id,index in pairs(Generic.ELEMENTS.Button.TYPES) do
         local button = list:AddChild(id, "Button") ---@type GenericUI_Element_Button
 
         button:SetType(index)
         button:SetText(Text.Format(id, {Color = "ffffff", Size = 15}))
+        button:RegisterListener(_B.EVENT_TYPES.PRESSED, function()
+            button:SetEnabled(false)
+        end)
     end
 end
 
@@ -32,10 +38,12 @@ function Test.SetupTests()
 
     ---@type GenericUI_Element_TiledBackground
     local bg = Test:CreateElement("tiledbgTest", "TiledBackground", "")
-    Test.Container = bg
+    local container = bg:AddChild("container", "VerticalList")
+    Test.Container = container
 
     ---@type GenericUI_Element_Text
     local text = Test:CreateElement("textTest", "Text", "tiledbgTest")
+    text:SetMouseEnabled(false)
 
     bg:SetBackground(Generic.ELEMENTS.TiledBackground.BACKGROUND_TYPES.BLACK, 400, 400)
     text:SetText(Text.Format("Generic Test", {Color = "ffffff"}))
@@ -45,9 +53,8 @@ function Test.SetupTests()
 
     bg:SetAsDraggableArea()
 
+    -- TESTS
     Test.TestButtons()
-
-    
 end
 
 ---------------------------------------------
