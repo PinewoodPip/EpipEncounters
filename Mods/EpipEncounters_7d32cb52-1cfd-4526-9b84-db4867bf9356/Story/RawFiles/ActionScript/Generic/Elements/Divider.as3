@@ -1,0 +1,81 @@
+package Elements
+{
+    import LS_Classes.LSPanelHelpers;
+    import flash.display.MovieClip;
+    import flash.external.ExternalInterface;
+    import LS_Classes.listDisplay;
+    import flash.text.TextField;
+    import flash.events.MouseEvent;
+
+    public dynamic class Divider extends Element
+    {
+        private var _dividerTypes:Array;
+
+        public var _divider_Elegant:MovieClip;
+        public var _divider_Line:MovieClip;
+
+        public var divider_mc:MovieClip = null;
+
+        public function Divider()
+        {
+            super();
+            this._dividerTypes = new Array();
+
+            this.RegisterType(this._divider_Elegant);
+            this.RegisterType(this._divider_Line);
+
+            this.SetType(0);
+            this.SetSize(100, 10);
+        }
+
+        private function RegisterType(mc:MovieClip) : *
+        {
+            mc.visible = false;
+            mc.scaleX = 0;
+            mc.scaleY = 0;
+
+            this._dividerTypes.push(mc);
+        }
+
+        public function SetType(dividerType:int) : *
+        {
+            if (this.divider_mc)
+            {
+                this.divider_mc.visible = false;
+                this.divider_mc.scaleX = 0;
+                this.divider_mc.scaleY = 0;
+            }
+
+            this.divider_mc = this._dividerTypes[dividerType];
+            this.divider_mc.visible = true;
+            this.divider_mc.scaleX = 1;
+            this.divider_mc.scaleY = 1;
+        }
+
+        public override function SetSize(width:Number, height:Number) : *
+        {
+            var centerLength:Number = width;
+
+            // For dividers with left, right and center pieces
+            if (this.divider_mc.left_shp)
+            {
+                centerLength = width - this.divider_mc.left_shp.width - this.divider_mc.right_shp.width;
+
+                this.divider_mc.line_shp.x = this.divider_mc.left_shp.width;
+                this.divider_mc.right_shp.x = width - this.divider_mc.right_shp.width;
+
+
+                // Centerpiece
+                this.divider_mc.center_shp.x = width / 2 - this.divider_mc.center_shp.width / 2;
+                this.divider_mc.center_shp.y = this.divider_mc.line_shp.height / 2 - this.divider_mc.center_shp.height / 2;
+            }
+
+            this.divider_mc.line_shp.width = centerLength;
+        }
+
+        public override function get elementType() : String
+        {
+            return "Divider";
+        }
+    }
+}

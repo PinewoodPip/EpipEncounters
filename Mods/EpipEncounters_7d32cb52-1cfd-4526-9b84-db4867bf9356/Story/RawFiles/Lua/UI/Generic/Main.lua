@@ -28,7 +28,7 @@ Generic:Debug()
 -- ELEMENT
 ---------------------------------------------
 
----@alias GenericUI_ElementType "Empty"|"TiledBackground"|"Text"|"IggyIcon"|"Button"|"VerticalList"|"HorizontalList"|"ScrollList"|"StateButton"
+---@alias GenericUI_ElementType "Empty"|"TiledBackground"|"Text"|"IggyIcon"|"Button"|"VerticalList"|"HorizontalList"|"ScrollList"|"StateButton"|"Divider"
 ---@alias FlashMovieClip userdata TODO remove
 
 ---@type GenericUI_Element
