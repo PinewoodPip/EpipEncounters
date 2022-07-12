@@ -99,7 +99,6 @@ local function Setup()
 
     local container = panel:AddChild("Container", "VerticalList")
 
-
     local list = container:AddChild("List", "VerticalList")
     list:SetSize(QuickExamine.WIDTH, -1) -- TODO remove, TODO investigate stack overflow
 
@@ -117,9 +116,11 @@ local function Setup()
         Size = 21,
     }))
     charName:SetSize(QuickExamine.WIDTH, 30)
+    charName:SetAsDraggableArea()
     QuickExamine.CharacterNameElement = charName
 
     local div = list:AddChild("MainDiv", "Divider")
+    div:SetAsDraggableArea()
     div:SetSize(QuickExamine.DIVIDER_WIDTH, 20)
     div:SetCenterInLists(true)
 
@@ -129,6 +130,17 @@ local function Setup()
     content:SetScrollbarSpacing(-30)
     content:SetSideSpacing(5)
     QuickExamine.ContentContainer = content
+
+    
+    local closeButton = panel:AddChild("Close", "Button")
+    closeButton:SetType(Generic.ELEMENTS.Button.TYPES.CLOSE)
+    -- closeButton:SetPosition(QuickExamine.WIDTH - closeButton:GetMovieClip().width, 0)
+    closeButton:SetPosition(400 - 23, 0) -- TODO fix
+    closeButton:RegisterListener(Generic.ELEMENTS.Button.EVENT_TYPES.PRESSED, function()
+        ui:GetUI():Hide()
+    end)
+
+    uiObject.Layer = Client.UI.PlayerInfo:GetUI().Layer
 
     uiObject:Hide()
 end
