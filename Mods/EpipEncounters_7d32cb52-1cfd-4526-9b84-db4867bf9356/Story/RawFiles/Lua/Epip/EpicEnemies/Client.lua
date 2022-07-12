@@ -204,7 +204,32 @@ QuickExamine.Events.EntityChanged:RegisterListener(function (entity)
         header:SetText(Text.Format("Epic Enemies Effects", {Color = "ffffff", Size = 19}))
         header:SetSize(QuickExamine.WIDTH, 30)
 
-        for _,effect in ipairs(effects) do
+        if #sortedEffects.Artifacts > 0 then
+            local artifactContainer = container:AddChild("EpicEnemies_Artifacts", "HorizontalList")
+            artifactContainer:SetSize(QuickExamine.WIDTH * 0.8, 35)
+            artifactContainer:SetCenterInLists(true)
+
+            for _,effect in ipairs(sortedEffects.Artifacts) do
+                local artifact = Game.Items.ARTIFACTS[effect.Artifact]
+                local template = Ext.Template.GetTemplate(string.match(artifact.ItemTemplate, Data.Patterns.GUID)) ---@type ItemTemplate
+
+                local icon = artifactContainer:AddChild(artifact.ID .. "icon", "IggyIcon")
+                icon:SetIcon(template.Icon, 32, 32)
+                -- icon:SetPosition(320, 0)
+                icon.Tooltip = {
+                    {
+                        Type = "SkillName",
+                        Label = artifact.ID,
+                    },
+                    {
+                        Type = "SkillDescription",
+                        Label = "Description goes here",
+                    }
+                }
+            end
+        end
+
+        for _,effect in ipairs(sortedEffects.Other) do
             local entry = container:AddChild(effect.ID, "Text")
             local activationConditionText = EpicEnemies.Hooks.GetActivationConditionDescription:Return("", effect.ActivationCondition, entity)
 
@@ -225,16 +250,6 @@ QuickExamine.Events.EntityChanged:RegisterListener(function (entity)
             }))
             entry:GetMovieClip().text_txt.width = QuickExamine.WIDTH
             entry:GetMovieClip().text_txt.height = entry:GetMovieClip().text_txt.textHeight
-
-            -- Show artifact icon
-            if effect.Artifact then
-                local artifact = Game.Items.ARTIFACTS[effect.Artifact]
-                local template = Ext.Template.GetTemplate(string.match(artifact.ItemTemplate, Data.Patterns.GUID)) ---@type ItemTemplate
-
-                local icon = entry:AddChild(entry.ID .. "_icon", "IggyIcon")
-                icon:SetIcon(template.Icon, 32, 32)
-                icon:SetPosition(320, 0)
-            end
         end
 
         local div = container:AddChild("MainDiv", "Divider")

@@ -16,6 +16,7 @@ local _Element = Generic._Element
 ---@field ID string
 ---@field ParentID string Empty string for elements in the root.
 ---@field Type string
+---@field Tooltip TooltipData? Will be rendered upon the element being hovered.
 ---@field EVENT_TYPES table<string, string>
 
 ---Get the movie clip of this element.

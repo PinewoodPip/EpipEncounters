@@ -31,6 +31,7 @@ Generic:Debug()
 ---@class GenericUI_Instance : UI
 local _Instance = {
     ID = "UNKNOWN",
+    CurrentTooltipElement = nil, -- Current element's ID and UI whose tooltip is being displayed.
     Elements = {},
 }
 Inherit(_Instance, Client.UI._BaseUITable)
@@ -88,6 +89,16 @@ function _Instance:CreateElement(id, elementType, parentID)
     return element
 end
 
+---@return number, number
+function _Instance:GetMousePosition()
+    local stage = self:GetRoot().stage
+    local uiX, uiY = self:GetPosition()
+    local x = stage.mouseX + uiX
+    local y = stage.mouseY + uiY
+
+    return x, y
+end
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
@@ -122,6 +133,7 @@ function Client.UI.Generic.Create(id)
     ui:RegisterCallListener("elementMouseDown", Generic.OnElementMouseDown)
     ui:RegisterCallListener("elementMouseOver", Generic.OnElementMouseOver)
     ui:RegisterCallListener("elementMouseOut", Generic.OnElementMouseOut)
+    ui:RegisterCallListener("ShowElementTooltip", Generic.OnElementShowTooltip)
 
     -- Button
     ui:RegisterCallListener("Button_Pressed", Generic.OnButtonPressed)
@@ -189,11 +201,60 @@ Generic.OnElementMouseDown = function(ev, id)
 end
 
 Generic.OnElementMouseOver = function(ev, id)
+    local ui = Generic.GetInstance(ev.UI:GetTypeId())
     Generic:DebugLog("CALL onElementMouseOver: ", id)
+
+    local element = ui:GetElementByID(id)
+
+    if element.Tooltip then
+        element:GetMovieClip().ShowTooltip()
+    end
 end
 
+Generic.OnElementShowTooltip = function(ev, id, x, y, width, height, _, align)
+    local ui = Generic.GetInstance(ev.UI:GetTypeId())
+    local x, y = ui:GetMousePosition()
+    -- local element = ui:GetElementByID(id)
+    Generic.CurrentTooltipElement = {
+        UI = ui,
+        ID = id,
+        Position = {
+            X = x,
+            Y = y,
+        },
+    }
+
+    print(ui:GetRoot().stage.mouseX)
+    -- TODO workaround for Character Creation context
+    Client.UI.Hotbar:ExternalInterfaceCall("showSkillTooltip", Client.UI.Hotbar:GetRoot().hotbar_mc.characterHandle, "Teleportation_FreeFall", x, y, width, height)
+    -- ui:ExternalInterfaceCall("showTalentTooltip", 126, Ext.Utils.HandleToInteger(Client.GetCharacter().Handle), x, y, width, height, "none")
+end
+
+Generic.OnTooltip = function(char, skill, tooltip)
+    if Generic.CurrentTooltipElement then
+        tooltip.Data = Generic.CurrentTooltipElement.UI:GetElementByID(Generic.CurrentTooltipElement.ID).Tooltip or {}  
+    end
+end
+Game.Tooltip.RegisterListener("Skill", nil, Generic.OnTooltip)
+
+Ext.RegisterUINameInvokeListener("showFormattedTooltipAfterPos", function(ui)
+    if Generic.CurrentTooltipElement then
+        local pos = Generic.CurrentTooltipElement.Position
+
+        ui:SetPosition(math.floor(pos.X), math.floor(pos.Y))
+    end
+end, "After")
+
 Generic.OnElementMouseOut = function(ev, id)
+    local ui = Generic.GetInstance(ev.UI:GetTypeId())
     Generic:DebugLog("CALL onElementMouseOut: ", id)
+
+    local element = ui:GetElementByID(id)
+
+    if element.Tooltip and Generic.CurrentTooltipElement and Generic.CurrentTooltipElement.ID == id then -- TODO ui check
+        Client.UI.Hotbar:ExternalInterfaceCall("hideTooltip")
+        Generic.CurrentTooltipElement = nil
+    end
 end
 
 Generic.OnButtonPressed = function(ev, id)

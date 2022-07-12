@@ -1,12 +1,14 @@
 package Elements
 {
     import LS_Classes.LSPanelHelpers;
+    import LS_Classes.tooltipHelper;
     import flash.display.MovieClip;
     import flash.external.ExternalInterface;
     import LS_Classes.listDisplay;
     import flash.text.TextField;
     import flash.events.MouseEvent;
     import flash.events.Event;
+    import flash.geom.Point;
 
     public dynamic class Element extends MovieClip
     {
@@ -47,6 +49,44 @@ package Elements
         public function SetAsUIDraggableArea() : *
         {
             LSPanelHelpers.makeDraggable(this);
+        }
+
+        public function ShowTooltip(align:String = "right") : void
+        {
+            var referenceObject:MovieClip = this.root as MovieClip;
+            var width:Number = this.width;
+            var height:Number = this.height;
+            var xOffset:Number = 0;
+            var yOffset:Number = 0;
+            var context:Number = -1;
+
+            if(this.tooltipOverrideW)
+            {
+                _loc4_ = this.tooltipOverrideW;
+            }
+            if(this.tooltipOverrideH)
+            {
+                height = this.tooltipOverrideH;
+            }
+            if(this.tooltipXOffset)
+            {
+                xOffset = this.tooltipXOffset;
+            }
+            if(this.tooltipYOffset)
+            {
+                yOffset = this.tooltipYOffset;
+            }
+            if(this.contextParam)
+            {
+                context = this.contextParam;
+            }
+
+            var point:Point = tooltipHelper.getGlobalPositionOfMC(this, referenceObject);
+
+            referenceObject.hasTooltip = true;
+            referenceObject.curTooltip = "asdasd";
+
+            ExternalInterface.call("ShowElementTooltip", this.stringID, point.x + xOffset, point.y + yOffset, width, height, context, align);
         }
 
         public function SetCenterInLists(center:Boolean) : *
