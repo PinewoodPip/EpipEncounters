@@ -170,6 +170,8 @@ function EpicEnemies.RegisterEffect(id, effect)
     effect.Weight = nil
     effect.ID = id
     
+    if effect.Visible == nil then effect.Visible = true end
+    
     if not effect.ActivationCondition then effect.ActivationCondition = {} end
     Inherit(effect.ActivationCondition, _EpicEnemiesActivationCondition)
 

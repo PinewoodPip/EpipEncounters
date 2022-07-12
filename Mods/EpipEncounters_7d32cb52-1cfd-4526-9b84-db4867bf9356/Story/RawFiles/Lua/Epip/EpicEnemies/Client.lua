@@ -77,16 +77,21 @@ Client.UI.OptionsSettings.RegisterOptions("EpicEnemies", Settings)
 ---------------------------------------------
 
 ---@param char EclCharacter
+---@param visibleOnly boolean? Defaults to false.
 ---@return EpicEnemiesEffect[] -- In order of application(? unconfirmed)
-function EpicEnemies.GetAppliedEffects(char)
+function EpicEnemies.GetAppliedEffects(char, visibleOnly)
     local effects = {}
 
     -- Grab effects from tags
-    for i,tag in ipairs(char:GetTags()) do
+    for _,tag in ipairs(char:GetTags()) do
         local effectID = tag:match(EpicEnemies.EFFECT_TAG_PREFIX .. "(.+)$")
 
         if effectID then
-            table.insert(effects, EpicEnemies.GetEffectData(effectID))
+            local effectData = EpicEnemies.GetEffectData(effectID)
+
+            if not visibleOnly or (visibleOnly and effectData.Visible) then
+                table.insert(effects, effectData)
+            end
         end
     end
 
@@ -173,29 +178,67 @@ local _T = Generic.ELEMENTS.Text
 QuickExamine.Events.EntityChanged:RegisterListener(function (entity)
     local container = QuickExamine.GetContainer()
 
-    local effects = EpicEnemies.GetAppliedEffects(entity)
+    ---@type EpicEnemiesExtendedEffect[]
+    local effects = EpicEnemies.GetAppliedEffects(entity, true)
 
     if #effects > 0 then
-        local div = container:AddChild("MainDiv", "Divider")
-        div:SetSize(QuickExamine.DIVIDER_WIDTH, 20)
-        div:SetCenterInLists(true)
+        -- Sort effects
+        local sortedEffects = {
+            Artifacts = {},
+            Other = {},
+        }
 
-        for i,effect in ipairs(effects) do
+        for _,effect in ipairs(effects) do
+            if effect.Artifact then
+                table.insert(sortedEffects.Artifacts, effect)
+            else
+                table.insert(sortedEffects.Other, effect)
+            end
+        end
+
+        effects = {}
+        for _,eff in pairs(sortedEffects.Artifacts) do table.insert(effects, eff) end
+        for _,eff in pairs(sortedEffects.Other) do table.insert(effects, eff) end
+
+        local header = container:AddChild("EpicEnemies_Header", "Text")
+        header:SetText(Text.Format("Epic Enemies Effects", {Color = "ffffff", Size = 19}))
+        header:SetSize(QuickExamine.WIDTH, 30)
+
+        for _,effect in ipairs(effects) do
             local entry = container:AddChild(effect.ID, "Text")
             local activationConditionText = EpicEnemies.Hooks.GetActivationConditionDescription:Return("", effect.ActivationCondition, entity)
 
+            local text = Text.Format(Text.Format("• ", {Size = 28}) .. effect.Name, {FontType = Text.FONTS.BOLD, Color = "088cc4"})
+
+            if effect.Description and string.len(effect.Description) > 0 then
+                text = text .. "<br>" .. Text.Format("      " .. effect.Description, {Size = 17})
+            end
+
+            if effect.ActivationCondition.Type ~= "EffectApplied" then
+                text = text .. "<br>" .. Text.Format("      " .. activationConditionText, {Size = 16})
+            end
+
             entry:SetType(_T.TYPES.LEFT_ALIGN)
-            entry:SetText(Text.Format("%s<br>%s<br>%s", {
-                FormatArgs = {
-                    Text.Format(Text.Format("• ", {Size = 28}) .. effect.Name, {FontType = Text.FONTS.BOLD, Color = "088cc4"}),
-                    Text.Format("      " .. effect.Description, {Size = 17}),
-                    Text.Format("      " .. activationConditionText, {Size = 16}),
-                },
+            entry:SetText(Text.Format(text, {
                 Color = "ffffff",
                 Size = 17,
             }))
             entry:GetMovieClip().text_txt.width = QuickExamine.WIDTH
             entry:GetMovieClip().text_txt.height = entry:GetMovieClip().text_txt.textHeight
+
+            -- Show artifact icon
+            if effect.Artifact then
+                local artifact = Game.Items.ARTIFACTS[effect.Artifact]
+                local template = Ext.Template.GetTemplate(string.match(artifact.ItemTemplate, Data.Patterns.GUID)) ---@type ItemTemplate
+
+                local icon = entry:AddChild(entry.ID .. "_icon", "IggyIcon")
+                icon:SetIcon(template.Icon, 32, 32)
+                icon:SetPosition(320, 0)
+            end
         end
+
+        local div = container:AddChild("MainDiv", "Divider")
+        div:SetSize(QuickExamine.DIVIDER_WIDTH, 20)
+        div:SetCenterInLists(true)
     end
 end)

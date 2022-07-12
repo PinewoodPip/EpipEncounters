@@ -45,7 +45,15 @@ function Epip.Features.QuickExamine.SetEntity(entity)
 
         QuickExamine.GetContainer():Clear()
 
+        QuickExamine.CharacterNameElement:SetText(Text.Format(entity.DisplayName, {
+            Color = "ffffff",
+            Size = 21,
+        }))
+        QuickExamine.CharacterNameElement:SetSize(QuickExamine.WIDTH, 50)
+
         QuickExamine.Events.EntityChanged:Fire(entity)
+
+        QuickExamine.UI:GetElementByID("Container"):RepositionElements()
 
         QuickExamine.UI:GetUI():Show()
     else
@@ -74,24 +82,8 @@ end)
 local function Setup()
     local ui = QuickExamine.UI
     local uiObject = ui:GetUI()
-
-    local panel = ui:CreateElement("Panel", "TiledBackground")
-
-    panel:SetSize(QuickExamine.WIDTH, QuickExamine.HEIGHT)
-    panel:SetAlpha(QuickExamine.ALPHA)
-    panel:SetAsDraggableArea()
-    
     uiObject.SysPanelSize = {QuickExamine.WIDTH + QuickExamine.SCROLLBAR_WIDTH, QuickExamine.HEIGHT}
     uiObject.Left = QuickExamine.WIDTH
-
-    local container = panel:AddChild("Container", "ScrollList")
-    container:SetScrollbarSpacing(-20)
-    container:SetMouseWheenEnabled(true)
-    container:SetFrame(QuickExamine.WIDTH, QuickExamine.HEIGHT)
-
-    ---@type GenericUI_Element_VerticalList
-    local list = container:AddChild("List", "VerticalList")
-    list:SetSize(QuickExamine.WIDTH, 9999) -- TODO remove
 
     ui:ExternalInterfaceCall("setPosition", "center", "screen", "right")
 
@@ -99,13 +91,25 @@ local function Setup()
     local x, y = ui:GetPosition()
     uiObject:SetPosition(x, y + 100)
 
-    -- Headers
-    local header = list:AddChild("Header", "Text") ---@type GenericUI_Element_Text
+    -- Build elements
+
+    local panel = ui:CreateElement("Panel", "TiledBackground")
+    panel:SetSize(QuickExamine.WIDTH, QuickExamine.HEIGHT)
+    panel:SetAlpha(QuickExamine.ALPHA)
+
+    local container = panel:AddChild("Container", "VerticalList")
+
+
+    local list = container:AddChild("List", "VerticalList")
+    list:SetSize(QuickExamine.WIDTH, -1) -- TODO remove, TODO investigate stack overflow
+
+    local header = list:AddChild("Header", "Text")
     header:SetText(Text.Format("Quick Examine", {
         Color = "ffffff",
         Size = 15,
     }))
     header:SetSize(QuickExamine.WIDTH, 20)
+    header:SetAsDraggableArea()
 
     local charName = list:AddChild("CharName", "Text")
     charName:SetText(Text.Format("Character Name", {
@@ -115,13 +119,16 @@ local function Setup()
     charName:SetSize(QuickExamine.WIDTH, 30)
     QuickExamine.CharacterNameElement = charName
 
-    ---@type GenericUI_Element_VerticalList
-    local content = list:AddChild("Content", "VerticalList")
-    content:SetSize(QuickExamine.WIDTH, 9999)
+    local div = list:AddChild("MainDiv", "Divider")
+    div:SetSize(QuickExamine.DIVIDER_WIDTH, 20)
+    div:SetCenterInLists(true)
+
+    local content = list:AddChild("Content", "ScrollList")
+    content:SetMouseWheenEnabled(true)
+    content:SetFrame(QuickExamine.WIDTH, 510)
+    content:SetScrollbarSpacing(-30)
     content:SetSideSpacing(5)
     QuickExamine.ContentContainer = content
-
-    container:RepositionElements()
 
     uiObject:Hide()
 end

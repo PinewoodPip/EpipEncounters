@@ -161,7 +161,7 @@ function Client.UI.Generic.ExposeFunction(call, ...)
         local success, error, result = pcall(mc[call], ...)
 
         if not success then
-            Generic:LogError("Error while calling exposed function on " .. obj.ID .. ": " .. error)
+            Generic:LogError("Error while calling exposed " .. call .. "() function on " .. obj.ID .. ": " .. error)
         end
 
         return result
