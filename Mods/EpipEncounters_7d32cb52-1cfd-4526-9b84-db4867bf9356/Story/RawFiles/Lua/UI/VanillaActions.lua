@@ -279,9 +279,11 @@ Hotbar.RegisterActionHook("UseArbitrarySkill", "GetActionName", function(name, c
         local skill = boundSkills[buttonIndex]
 
         if skill then
-            skill = Ext.Stats.Get(skill)
+            skill = Ext.Stats.Get(skill, nil, false)
 
-            name = Ext.L10N.GetTranslatedStringFromKey(skill.DisplayName)
+            if skill then
+                name = Ext.L10N.GetTranslatedStringFromKey(skill.DisplayName)
+            end
         end
     end
 
@@ -344,13 +346,17 @@ Hotbar.RegisterActionHook("UseArbitrarySkill", "GetActionIcon", function(icon, c
         local skill = boundSkills[buttonIndex]
 
         if skill then
-            local ability = Ext.Stats.Get(skill).Ability
-            icon = "hotbar_school_special"
+            local stat = Ext.Stats.Get(skill, nil, false)
 
-            if schoolIcons[ability] then
-                icon = schoolIcons[ability]
-            else
-                print("missing ability icon " .. ability)
+            if stat then
+                local ability = stat.Ability
+                icon = "hotbar_school_special"
+
+                if schoolIcons[ability] then
+                    icon = schoolIcons[ability]
+                else
+                    print("missing ability icon " .. ability)
+                end
             end
         end
     end

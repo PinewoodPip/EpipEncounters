@@ -4,6 +4,7 @@ local G = Generic
 
 ---@type GenericUI_Instance
 local Test = Generic.Create("PIP_Test")
+Test:Debug()
 
 ---------------------------------------------
 -- METHODS
@@ -78,7 +79,9 @@ end
 ---------------------------------------------
 
 Ext.Events.SessionLoaded:Subscribe(function(_)
-    Client.Timer.Start("", 1.4, function()
-        Test.SetupTests()
-    end)
+    if Test:IsDebug() then
+        Client.Timer.Start("", 1.4, function()
+            Test.SetupTests()
+        end)
+    end
 end)

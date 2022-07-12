@@ -38,7 +38,7 @@ Hotbar.SetHotkeyAction(9, "EPIP_UserRest")
 Hotbar.SetHotkeyAction(10, "EPIP_TogglePartyLink")
 
 -- Journal action
-if not Epip.IS_IMPROVED_HOTBAR then
+if not IS_IMPROVED_HOTBAR then
     Hotbar.RegisterAction("EPIP_Journal", {
         Name = "Journal",
         Icon = "hotbar_icon_announcement",

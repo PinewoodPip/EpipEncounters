@@ -21,6 +21,8 @@ package Elements
 
         private var currentWidth:Number = 0;
         private var currentHeight:Number = 0;
+        private var _currentType:int = 0;
+        private var _currentAlpha:Number = 1;
 
         public function TiledBackground()
         {
@@ -39,7 +41,25 @@ package Elements
             return "TiledBackground";
         }
 
-        public function SetBackground(backgroundType:int, backgroundWidth:Number, backgroundHeight:Number, useTimer:Boolean = true) : *
+        public override function SetSize(width:Number, height:Number) : *
+        {
+            this.SetBackground(this._currentType, width, height);
+        }
+
+        public override function SetAlpha(alpha:Number, affectChildren:Boolean = false) : *
+        {
+            if (!affectChildren)
+            {
+                this.background_mc.alpha = alpha;
+                this._currentAlpha = alpha;
+            }
+            else
+            {
+                this.alpha = alpha;
+            }
+        }
+
+        public function SetBackground(backgroundType:int, backgroundWidth:Number, backgroundHeight:Number) : *
         {
             var data:Object = this.backgroundTypes[backgroundType];
             var minWidth:Number = data.Width1 + data.Width2 + data.Width3;
@@ -101,6 +121,10 @@ package Elements
 
             this.background_mc.bottom_right_shp.x = backgroundWidth - data.Width3 + 1; // TODO
             this.background_mc.bottom_right_shp.y = backgroundHeight - data.Height3 - 0.5;
+
+            this._currentType = backgroundType;
+
+            this.SetAlpha(this._currentAlpha);
         }
 
         private function RegisterType(mc:MovieClip, width1:Number, width2:Number, width3:Number, height1:Number, height2:Number, height3:Number) : *

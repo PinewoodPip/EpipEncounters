@@ -13,7 +13,15 @@ Client.UI.StatusConsole = {
     UITypeID = Client.UI.Data.UITypes.statusConsole,
     visible = true,
     modulesRequestingHide = {},
+    FILEPATH_OVERRIDES = {
+        ["Public/Game/GUI/statusConsole.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/statusConsole_rewritten.swf",
+    },
 }
+if IS_IMPROVED_HOTBAR then
+    Client.UI.StatusConsole.FILEPATH_OVERRIDES = {
+        ["Public/Game/GUI/statusConsole.swf"] = "Public/ImprovedHotbar_53cdc613-9d32-4b1d-adaa-fd97c4cef22c/GUI/statusConsole_rewritten.swf",
+    }
+end
 local StatusConsole = Client.UI.StatusConsole
 Epip.InitializeUI(Client.UI.Data.UITypes.statusConsole, "StatsConsole", StatusConsole)
 

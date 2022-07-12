@@ -12,7 +12,7 @@ Client.UI.PlayerInfo = {
         ["Public/Game/GUI/playerInfo.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/playerInfo.swf"
     },
 }
-if Epip.IS_IMPROVED_HOTBAR then
+if IS_IMPROVED_HOTBAR then
     Client.UI.PlayerInfo.FILEPATH_OVERRIDES = {}
 end
 local PlayerInfo = Client.UI.PlayerInfo
@@ -164,7 +164,7 @@ PlayerInfo:RegisterHook("BHDisplaysVisible", function(visible, char, playerEleme
     return visible
 end)
 
-if not Epip.IS_IMPROVED_HOTBAR then
+if not IS_IMPROVED_HOTBAR then
     Ext.RegisterUITypeInvokeListener(PlayerInfo.UITypeID, "updateInfos", function(ui, method)
         PlayerInfo.UpdatePlayers()
     end, "After")
@@ -243,7 +243,7 @@ end, "Before")
 ---------------------------------------------
 
 -- Set some values on playerInfo for summon stretching to work
-if not Epip.IS_IMPROVED_HOTBAR then
+if not IS_IMPROVED_HOTBAR then
     Ext.Events.SessionLoaded:Subscribe(function()
         PlayerInfo.UI = Ext.UI.GetByType(Client.UI.Data.UITypes.playerInfo)
         PlayerInfo.Root = PlayerInfo.UI:GetRoot()

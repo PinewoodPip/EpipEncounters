@@ -22,6 +22,7 @@
 ---@field IsVisible fun(self):boolean
 ---@field IsFlagged fun(self, flag:UIObjectFlag):boolean
 ---@field SetFlag fun(self, flag:UIObjectFlag, enabled:boolean):boolean
+---@field GetPosition fun(self):number, number
 
 ---@alias UIObjectFlag "OF_Load" | "OF_Loaded" | "OF_RequestDelete" | "OF_Visible" | "OF_PlayerInput1" | "OF_PlayerInput2" | "OF_PlayerInput3" | "OF_PlayerInput4" | "OF_PlayerModal1" | "OF_PlayerModal2" | "OF_PlayerModal3" | "OF_PlayerModal4" | "OF_KeepInScreen" | "OF_KeepCustomInScreen" | "OF_DeleteOnChildDestroy" | "OF_PauseRequest" | "OF_SortOnAdd" | "OF_FullScreen" | "OF_PlayerTextInput1" | "OF_PlayerTextInput2" | "OF_PlayerTextInput3" | "OF_PlayerTextInput4" | "OF_DontHideOnDelete" | "OF_PrecacheUIData" | "OF_PreventCameraMove"
 
@@ -203,6 +204,20 @@ function BaseUI:SetFlag(flag, enabled)
     ui.Flags = newFlags
 
     return enabled
+end
+
+function BaseUI:GetPosition()
+    local ui = self:GetUI()
+    local x, y
+
+    if ui then
+        local pos = ui:GetPosition()
+
+        ---@diagnostic disable-next-line: need-check-nil
+        x, y = pos[1], pos[2]
+    end
+
+    return x, y
 end
 
 ---------------------------------------------

@@ -5,7 +5,6 @@ Epip = {
 
     PREFIXED_GUID = "EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356",
     VERSION = 1053, -- Also the story version.
-    IS_IMPROVED_HOTBAR = false,
     cachedAprilFoolsState = nil,
 
     ---@type table<string, OptionsSettingsOption>
@@ -102,6 +101,6 @@ if Ext.IsClient() then
         end
 
         -- Hotbar mod gets no festivities.
-        return (Epip.cachedAprilFoolsState or Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "DEBUG_AprilFools") and not Epip.IS_IMPROVED_HOTBAR)
+        return (Epip.cachedAprilFoolsState or Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "DEBUG_AprilFools") and not IS_IMPROVED_HOTBAR)
     end
 end

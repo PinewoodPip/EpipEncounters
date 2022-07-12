@@ -35,7 +35,7 @@ local Time = {
         ["Sun"] = 7,
     },
 }
-if Epip.IS_IMPROVED_HOTBAR then
+if IS_IMPROVED_HOTBAR then
     Time.PATH = "Public/ImprovedHotbar_53cdc613-9d32-4b1d-adaa-fd97c4cef22c/GUI/time.swf"
 end
 Epip.InitializeUI(nil, "Time", Time)

@@ -42,12 +42,15 @@ local _Element = Generic._Element
 ---@field EVENT_TYPES table<string, string>
 ---@field GetMovieClip fun(self):FlashMovieClip
 ---@field AddChild fun(self, id:string, elementType:GenericUI_ElementType):GenericUI_Element
+---@overload fun(self, id:string, elementType:"ScrollList"):GenericUI_Element_ScrollList
 ---@field SetAsDraggableArea fun(self) Sets this element as the area for dragging the *entire* UI.
 ---@field SetPosition fun(self, x:number, y:number)
 ---@field SetSize fun(self, width:number, height:number)
 ---@field RegisterListener fun(self, eventType:string, handler:function)
 ---@field SetMouseEnabled fun(self, enabled:boolean)
 ---@field SetMouseChildren fun(self, enabled:boolean)
+---@field SetAlpha fun(self, alpha:number, affectChildren:boolean?) Defaults to not affecting children alpha.
+---@field SetCenterInLists fun(self, center:boolean) Sets whether the element should be horizontally centered in VerticalList and ScrollList.
 
 ---Get the movie clip of this element.
 ---@return FlashMovieClip
@@ -57,6 +60,10 @@ end
 
 function _Element:AddChild(id, elementType)
     return self.UI:CreateElement(id, elementType, self)
+end
+
+function _Element:SetCenterInLists(center)
+    self:GetMovieClip().SetCenterInLists(center)
 end
 
 function _Element:SetAsDraggableArea()
@@ -77,6 +84,10 @@ end
 
 function _Element:SetMouseChildren(enabled)
     self:GetMovieClip().SetMouseChildren(enabled)
+end
+
+function _Element:SetAlpha(alpha)
+    self:GetMovieClip().SetAlpha(alpha)
 end
 
 function _Element:RegisterListener(eventType, handler)

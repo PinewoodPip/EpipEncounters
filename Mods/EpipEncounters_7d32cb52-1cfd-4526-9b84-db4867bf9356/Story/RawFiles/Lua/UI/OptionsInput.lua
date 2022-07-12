@@ -55,6 +55,9 @@ local Options = {
         CanExecuteAction = {},
     },
 }
+if IS_IMPROVED_HOTBAR then
+    Options.FILEPATH_OVERRIDES = {}
+end
 Epip.InitializeUI(13, "OptionsInput", Options)
 Client.UI.OptionsInput = Options
 Options:Debug()

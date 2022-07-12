@@ -55,6 +55,9 @@ local ContextMenu = {
         ["Public/Game/GUI/contextMenu.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/contextMenu.swf",
     },
 }
+if IS_IMPROVED_HOTBAR then
+    ContextMenu.FILEPATH_OVERRIDES = {}
+end
 Client.UI.ContextMenu = ContextMenu
 Epip.InitializeUI(Client.UI.Data.UITypes.contextMenu, "ContextMenu", ContextMenu)
 
@@ -740,7 +743,7 @@ end
 Ext.Events.SessionLoaded:Subscribe(function()
 
     -- Setup our custom instance
-    if Epip.IS_IMPROVED_HOTBAR then
+    if IS_IMPROVED_HOTBAR then
         ContextMenu.UI = Ext.UI.Create("pip_contextMenu", "Public/ImprovedHotbar_53cdc613-9d32-4b1d-adaa-fd97c4cef22c/GUI/contextMenu.swf", 300)
     else
         ContextMenu.UI = Ext.UI.Create("pip_contextMenu", "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/contextMenu.swf", 300)
@@ -754,9 +757,12 @@ Ext.Events.SessionLoaded:Subscribe(function()
     Ext.RegisterUICall(ContextMenu.UI, "buttonPressed", OnButtonPressed)
     Ext.RegisterUICall(ContextMenu.UI, "buttonSelected", OnButtonSelected)
     Ext.RegisterUICall(ContextMenu.UI, "pipStatButtonUp", OnStatButtonPressed)
+    Ext.RegisterUICall(ContextMenu.UI, "pipContextMenuClosed", function()
+        ContextMenu.UI:Hide()
+    end)
 
     -- Setup vanilla context menu
-    if not Epip.IS_IMPROVED_HOTBAR then
+    if not IS_IMPROVED_HOTBAR then
         ContextMenu.VanillaUI = Ext.UI.GetByType(Client.UI.Data.UITypes.contextMenu)
         ContextMenu.VanillaUI:GetRoot().contextMenusList.content_array[0].list_string_id = "main"
         ContextMenu.VanillaUI:GetRoot().MAX_HEIGHT = ContextMenu.MAX_HEIGHT
@@ -765,7 +771,7 @@ Ext.Events.SessionLoaded:Subscribe(function()
     -- Vanilla UI calls
     Ext.RegisterUINameCall("openContextMenu", OnContextMenu)
 
-    if not Epip.IS_IMPROVED_HOTBAR then
+    if not IS_IMPROVED_HOTBAR then
         Ext.RegisterUIInvokeListener(ContextMenu.VanillaUI, "updateButtons", OnContextMenuUpdateButtons, "Before")
         Ext.RegisterUICall(ContextMenu.VanillaUI, "buttonPressed", OnButtonPressed)
         Ext.RegisterUICall(ContextMenu.VanillaUI, "buttonSelected", OnButtonSelected)

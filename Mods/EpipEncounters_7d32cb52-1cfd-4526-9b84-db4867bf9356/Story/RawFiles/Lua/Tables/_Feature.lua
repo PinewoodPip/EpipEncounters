@@ -221,7 +221,7 @@ end
 ---Log a value in Debug mode.
 ---@vararg any
 function Feature:DebugLog(...)
-    if self.Logging == self.LOGGING_LEVEL.DEBUG then
+    if self.Logging == self.LOGGING_LEVEL.DEBUG and not IS_IMPROVED_HOTBAR then
         Utilities._Log(self.Name, "", ...)
     end
 end

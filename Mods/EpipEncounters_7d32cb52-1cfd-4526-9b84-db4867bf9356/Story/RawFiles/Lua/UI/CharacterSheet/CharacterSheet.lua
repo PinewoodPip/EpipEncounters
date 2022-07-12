@@ -31,7 +31,7 @@ local CharacterSheet = {
         ["Public/Game/GUI/characterSheet.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/characterSheet.swf",
     },
 }
-if Epip.IS_IMPROVED_HOTBAR then
+if IS_IMPROVED_HOTBAR then
     CharacterSheet.FILEPATH_OVERRIDES = {}
 end
 Epip.InitializeUI(Client.UI.Data.UITypes.characterSheet, "CharacterSheet", CharacterSheet)

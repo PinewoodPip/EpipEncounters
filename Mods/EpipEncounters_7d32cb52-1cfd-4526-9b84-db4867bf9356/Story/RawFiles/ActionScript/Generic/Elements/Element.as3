@@ -14,6 +14,8 @@ package Elements
         public var childElements:Array;
 
         private var _ignoreUp = false;
+
+        public var CENTER_IN_LIST:Boolean = false;
         
         public function Element()
         {
@@ -45,6 +47,23 @@ package Elements
         public function SetAsUIDraggableArea() : *
         {
             LSPanelHelpers.makeDraggable(this);
+        }
+
+        public function SetCenterInLists(center:Boolean) : *
+        {
+            this.CENTER_IN_LIST = center;
+        }
+
+        public function SetAlpha(alpha:Number, affectChildren:Boolean = false) : *
+        {
+            if (!affectChildren)
+            {
+                this.Log("SetAlpha: affectChildren no implemented for this element", 2);
+            }
+            else
+            {
+                this.alpha = alpha;
+            }
         }
 
         public function SetMouseEnabled(enabled:Boolean) : *

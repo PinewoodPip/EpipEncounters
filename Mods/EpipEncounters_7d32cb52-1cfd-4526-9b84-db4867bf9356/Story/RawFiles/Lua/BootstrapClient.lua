@@ -28,6 +28,8 @@
 
 local prefixedGUID = "EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356"
 
+IS_IMPROVED_HOTBAR = false
+
 LOAD_ORDER = {
     "Tables/Epip.lua",
     "Tables/_Events.lua",
@@ -123,7 +125,7 @@ LOAD_ORDER = {
     "UI/Generic/Elements/ScrollList.lua",
     "UI/Generic/Elements/StateButton.lua",
     "UI/Generic/Elements/Divider.lua",
-    "UI/Generic/Test.lua", -- TEST!
+    -- "UI/Generic/Test.lua", -- TEST!
 
     "UI/Vanity/Vanity.lua",
     "UI/Vanity/Tabs/_Tab.lua",
@@ -181,6 +183,8 @@ LOAD_ORDER = {
     "Epip/Client/TooltipAdjustments.lua",
     "Epip/Client/TreasureTableDisplay.lua",
     "Epip/Client/Notifications.lua",
+
+    "Epip/Client/QuickExamine.lua",
 
     "Epip/Client/AprilFoolsCharacterSheet.lua",
     "Epip/Client/HotbarActions.lua",

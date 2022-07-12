@@ -56,8 +56,6 @@ LOAD_ORDER = {
     "Game/Items/Server.lua",
     "Game/Stats/Shared.lua",
     "Game/Net/Shared.lua",
-    "Game/Talents/Shared.lua",
-    "Game/Talents/Server.lua",
 
     "Game/AMERUI/Shared.lua",
     "Game/AMERUI/Server.lua",
