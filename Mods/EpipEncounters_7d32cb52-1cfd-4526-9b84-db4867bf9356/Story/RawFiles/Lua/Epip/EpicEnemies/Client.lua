@@ -73,6 +73,27 @@ Client.UI.OptionsSettings.RegisterMod("EpicEnemies", {
 Client.UI.OptionsSettings.RegisterOptions("EpicEnemies", Settings)
 
 ---------------------------------------------
+-- METHODS
+---------------------------------------------
+
+---@param char EclCharacter
+---@return EpicEnemiesEffect[] -- In order of application(? unconfirmed)
+function EpicEnemies.GetAppliedEffects(char)
+    local effects = {}
+
+    -- Grab effects from tags
+    for i,tag in ipairs(char:GetTags()) do
+        local effectID = tag:match(EpicEnemies.EFFECT_TAG_PREFIX .. "(.+)$")
+
+        if effectID then
+            table.insert(effects, EpicEnemies.GetEffectData(effectID))
+        end
+    end
+
+    return effects
+end
+
+---------------------------------------------
 -- EVENTS/HOOKS
 ---------------------------------------------
 
@@ -87,17 +108,7 @@ Client.UI.OptionsSettings.RegisterOptions("EpicEnemies", Settings)
 -- Render effect info into the status tooltip.
 Game.Tooltip.RegisterListener("Status", nil, function(char, status, tooltip)
     if status.StatusId == "PIP_OSITOOLS_EpicBossesDisplay" then
-        local effects = {}
-
-        -- Grab effects from tags
-        for i,tag in ipairs(char:GetTags()) do
-            local effectID = tag:match(EpicEnemies.EFFECT_TAG_PREFIX .. "(.+)$")
-
-            if effectID then
-                table.insert(effects, EpicEnemies.GetEffectData(effectID))
-            end
-        end
-
+        local effects = EpicEnemies.GetAppliedEffects(char)
         local str = ""
 
         for i,effect in ipairs(effects) do
@@ -152,5 +163,39 @@ Client.UI.OptionsSettings.Events.TabRendered:RegisterListener(function (customTa
         end
 
         Client.UI.OptionsSettings.RenderOption(option, nil, nil)
+    end
+end)
+
+-- Render within Quick Examine.
+local QuickExamine = Epip.Features.QuickExamine
+local Generic = Client.UI.Generic
+local _T = Generic.ELEMENTS.Text
+QuickExamine.Events.EntityChanged:RegisterListener(function (entity)
+    local container = QuickExamine.GetContainer()
+
+    local effects = EpicEnemies.GetAppliedEffects(entity)
+
+    if #effects > 0 then
+        local div = container:AddChild("MainDiv", "Divider")
+        div:SetSize(QuickExamine.DIVIDER_WIDTH, 20)
+        div:SetCenterInLists(true)
+
+        for i,effect in ipairs(effects) do
+            local entry = container:AddChild(effect.ID, "Text")
+            local activationConditionText = EpicEnemies.Hooks.GetActivationConditionDescription:Return("", effect.ActivationCondition, entity)
+
+            entry:SetType(_T.TYPES.LEFT_ALIGN)
+            entry:SetText(Text.Format("%s<br>%s<br>%s", {
+                FormatArgs = {
+                    Text.Format(Text.Format("• ", {Size = 28}) .. effect.Name, {FontType = Text.FONTS.BOLD, Color = "088cc4"}),
+                    Text.Format("      " .. effect.Description, {Size = 17}),
+                    Text.Format("      " .. activationConditionText, {Size = 16}),
+                },
+                Color = "ffffff",
+                Size = 17,
+            }))
+            entry:GetMovieClip().text_txt.width = QuickExamine.WIDTH
+            entry:GetMovieClip().text_txt.height = entry:GetMovieClip().text_txt.textHeight
+        end
     end
 end)

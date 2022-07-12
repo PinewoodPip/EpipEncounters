@@ -104,14 +104,6 @@ end
 ---------------------------------------------
 
 ---@class GenericUI_Instance : UI
----@field ID string
----@field Root GenericUI_Element
----@field Elements table<string, GenericUI_Element>
----@field GetElementByID fun(self, id:string):GenericUI_Element?
----@field GetMovieClipByID fun(self, id:string):FlashMovieClip
----@field CreateElement fun(self, id:string, elementType:GenericUI_ElementType, parentID:string|GenericUI_Element?):GenericUI_Element?
-
----@type GenericUI_Instance
 local _Instance = {
     ID = "UNKNOWN",
     Elements = {},
@@ -130,7 +122,8 @@ function _Instance:GetMovieClipByID(id)
     return self:GetRoot().elements[id]
 end
 
----@param id string
+---@overload fun(id:string, elementType:"Empty", parentID:string|GenericUI_Element?):GenericUI_Element_Empty
+---@overload fun(id:string, elementType:"TiledBackground", parentID:string|GenericUI_Element?):GenericUI_Element_TiledBackground
 ---@param elementType GenericUI_ElementType
 ---@param parentID string|GenericUI_Element? Defaults to root of the MainTimeline.
 ---@return GenericUI_Element? Nil in case of failure (ex. invalid type).

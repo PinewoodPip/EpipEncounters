@@ -5,6 +5,7 @@ Options.RegisterTab("EpipEncounters", {
     Name = "Epip Encounters",
     Label = Text.Format("If you wish to use extra mouse buttons for these hotkeys, please bind the 'Special Binding X' keybinds in the normal menu and use them to set these custom ones.", {Size = 15}),
     Keybinds = {
+        {Name = "Quick Examine", ID = "EpipEncounters_QuickExamine", DefaultInput1 = "V"},
         {Name = "Meditate", ID = "EpicEncounters_Meditate"},
         {Name = "Source Infuse", ID = "EpipEncounters_SourceInfuse"},
         {Name = "Debug Teleport", ID = "EpipEncounters_DebugTeleport", DeveloperOnly = true},

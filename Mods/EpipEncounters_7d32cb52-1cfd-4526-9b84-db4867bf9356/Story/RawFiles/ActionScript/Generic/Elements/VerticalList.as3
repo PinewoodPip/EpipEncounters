@@ -3,19 +3,19 @@ package Elements
     import LS_Classes.LSPanelHelpers;
     import flash.display.MovieClip;
     import flash.external.ExternalInterface;
-    import LS_Classes.listDisplay;
+    import TPW_Classes.ListDisplay;
     import flash.text.TextField;
     import flash.events.MouseEvent;
 
     public dynamic class VerticalList extends Element
     {
-        public var list:listDisplay;
+        public var list:PipListDisplay;
 
         public function VerticalList()
         {
             super();
 
-            this.list = new listDisplay();
+            this.list = new PipListDisplay();
             this.addChild(this.list);
         }
 
@@ -41,6 +41,11 @@ package Elements
         public function SetMouseWheenEnabled(enabled:Boolean) : *
         {
             this.list.mouseWheelWhenOverEnabled = enabled;
+        }
+
+        public override function SetSize(width:Number, height:Number) : *
+        {
+            this.list.setFrame(width, height);
         }
 
         public function SetElementSpacing(spacing:Number) : *

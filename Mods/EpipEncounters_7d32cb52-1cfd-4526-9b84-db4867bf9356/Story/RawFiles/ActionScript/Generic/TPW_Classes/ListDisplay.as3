@@ -1,4 +1,4 @@
-package LS_Classes
+package
 {
     import fl.motion.easing.Quartic;
     import flash.display.DisplayObject;
@@ -9,7 +9,7 @@ package LS_Classes
     import flash.geom.Rectangle;
     import flash.utils.Timer;
     
-    public class listDisplay extends MovieClip
+    public class PipListDisplay extends MovieClip
     {
         
         
@@ -67,7 +67,7 @@ package LS_Classes
         
         public var m_myInterlinie:Number = 0;
         
-        public function listDisplay()
+        public function PipListDisplay()
         {
             this.content_array = new Array();
             this.scrollHit_mc = new MovieClip();
@@ -377,7 +377,6 @@ package LS_Classes
         
         public function positionElements() : *
         {
-            trace("start")
             if(this.content_array.length < 1)
             {
                 return;
@@ -404,15 +403,13 @@ package LS_Classes
 
                     _loc1_ += this.getElementHeight(this.content_array[_loc2_]) + this.EL_SPACING;
 
-                    // trace(this.content_array[_loc2_].CENTER_IN_LIST);
-                    // if(this.content_array[_loc2_].CENTER_IN_LIST)
-                    // {
-                    //     // this.content_array[_loc2_].x = this.m_width / 2 - this.content_array[_loc2_].width / 2;
-                    // }
-
-                    if(this.m_sideSpacing != 0)
+                    if(this.content_array[_loc2_].CENTER_IN_LIST)
                     {
-                        this.content_array[_loc2_].x += this.SIDE_SPACING;
+                        this.content_array[_loc2_].x = this.m_width / 2 - this.content_array[_loc2_].width / 2;
+                    }
+                    else if(this.m_sideSpacing != 0) // Not compatible with CENTER_IN_LIST by design
+                    {
+                        this.content_array[_loc2_].x = this.SIDE_SPACING;
                     }
 
                     if(this.content_array[_loc2_].visible)

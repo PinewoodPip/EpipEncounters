@@ -1,12 +1,13 @@
-package LS_Classes
+package
 {
     import flash.display.MovieClip;
     import flash.events.Event;
     import flash.events.MouseEvent;
     import flash.geom.Rectangle;
+    import LS_Classes.scrollbar;
     import flash.utils.getDefinitionByName;
     
-    public class scrollList extends listDisplay
+    public class PipScrollList extends PipListDisplay
     {
         
         
@@ -38,7 +39,7 @@ package LS_Classes
         
         private var m_bgTile2_mc:MovieClip = null;
         
-        public function scrollList(param1:String = "down_id", param2:String = "up_id", param3:String = "handle_id", param4:String = "scrollBg_id", param5:String = "", param6:String = "")
+        public function PipScrollList(param1:String = "down_id", param2:String = "up_id", param3:String = "handle_id", param4:String = "scrollBg_id", param5:String = "", param6:String = "")
         {
             this.m_dragAutoScrollMod = 0.2;
             this.m_scrollbar_mc = new scrollbar(param1,param2,param3,param4,param5,param6);
@@ -341,7 +342,6 @@ package LS_Classes
         
         override public function positionElements() : *
         {
-            trace("running");
             if(content_array.length == 0)
             {
                 return;
@@ -356,11 +356,9 @@ package LS_Classes
             {
                 content_array[_loc2_].list_pos = _loc2_;
                 content_array[_loc2_].y = _loc1_;
-                trace(content_array[_loc2_].CENTER_IN_LIST);
                 if(content_array[_loc2_].CENTER_IN_LIST)
                 {
-                trace("here");
-                content_array[_loc2_].x = width / 2 - content_array[_loc2_].width / 2;
+                content_array[_loc2_].x = this.m_width / 2 - content_array[_loc2_].width / 2;
                 }
                 content_array[_loc2_].x += SIDE_SPACING;
                 if(content_array[_loc2_].visible)

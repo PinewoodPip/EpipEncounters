@@ -160,10 +160,10 @@ function Client.IsInGameplayState()
 end
 
 ---Returns the primary character on the pointer.
----@param playerIndex integer
+---@param playerIndex integer? Defaults to 1 (player 1)
 ---@return EclCharacter?
 function Client.GetPointerCharacter(playerIndex)
-    local pickingState = Ext.UI.GetPickingState(playerIndex)
+    local pickingState = Ext.UI.GetPickingState(playerIndex or 1)
     local char
 
     if pickingState and pickingState.HoverEntity then
