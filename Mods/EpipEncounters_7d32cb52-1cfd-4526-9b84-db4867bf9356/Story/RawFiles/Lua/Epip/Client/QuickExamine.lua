@@ -75,7 +75,6 @@ local function Setup()
     local ui = QuickExamine.UI
     local uiObject = ui:GetUI()
 
-    ---@type GenericUI_Element_TiledBackground
     local panel = ui:CreateElement("Panel", "TiledBackground")
 
     panel:SetSize(QuickExamine.WIDTH, QuickExamine.HEIGHT)
@@ -85,11 +84,9 @@ local function Setup()
     uiObject.SysPanelSize = {QuickExamine.WIDTH + QuickExamine.SCROLLBAR_WIDTH, QuickExamine.HEIGHT}
     uiObject.Left = QuickExamine.WIDTH
 
-    ---@type GenericUI_Element_ScrollList
     local container = panel:AddChild("Container", "ScrollList")
     container:SetScrollbarSpacing(-20)
     container:SetMouseWheenEnabled(true)
-
     container:SetFrame(QuickExamine.WIDTH, QuickExamine.HEIGHT)
 
     ---@type GenericUI_Element_VerticalList

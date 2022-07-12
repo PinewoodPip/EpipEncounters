@@ -25,81 +25,6 @@ Generic:Debug()
 ---@field Fire fun(self, stringID:string, active:boolean)
 
 ---------------------------------------------
--- ELEMENT
----------------------------------------------
-
----@alias GenericUI_ElementType "Empty"|"TiledBackground"|"Text"|"IggyIcon"|"Button"|"VerticalList"|"HorizontalList"|"ScrollList"|"StateButton"|"Divider"
----@alias FlashMovieClip userdata TODO remove
-
----@type GenericUI_Element
-local _Element = Generic._Element
-
----@class GenericUI_Element
----@field UI GenericUI_Instance
----@field ID string
----@field ParentID string Empty string for elements in the root.
----@field Type string
----@field EVENT_TYPES table<string, string>
----@field GetMovieClip fun(self):FlashMovieClip
----@field AddChild fun(self, id:string, elementType:GenericUI_ElementType):GenericUI_Element
----@overload fun(self, id:string, elementType:"ScrollList"):GenericUI_Element_ScrollList
----@field SetAsDraggableArea fun(self) Sets this element as the area for dragging the *entire* UI.
----@field SetPosition fun(self, x:number, y:number)
----@field SetSize fun(self, width:number, height:number)
----@field RegisterListener fun(self, eventType:string, handler:function)
----@field SetMouseEnabled fun(self, enabled:boolean)
----@field SetMouseChildren fun(self, enabled:boolean)
----@field SetAlpha fun(self, alpha:number, affectChildren:boolean?) Defaults to not affecting children alpha.
----@field SetCenterInLists fun(self, center:boolean) Sets whether the element should be horizontally centered in VerticalList and ScrollList.
-
----Get the movie clip of this element.
----@return FlashMovieClip
-function _Element:GetMovieClip()
-    return self.UI:GetMovieClipByID(self.ID)
-end
-
-function _Element:AddChild(id, elementType)
-    return self.UI:CreateElement(id, elementType, self)
-end
-
-function _Element:SetCenterInLists(center)
-    self:GetMovieClip().SetCenterInLists(center)
-end
-
-function _Element:SetAsDraggableArea()
-    self:GetMovieClip().SetAsUIDraggableArea()
-end
-
-function _Element:SetPosition(x, y)
-    self:GetMovieClip().SetPosition(x, y)
-end
-
-function _Element:SetSize(width, height)
-    self:GetMovieClip().SetSize(width, height)
-end
-
-function _Element:SetMouseEnabled(enabled)
-    self:GetMovieClip().SetMouseEnabled(enabled)
-end
-
-function _Element:SetMouseChildren(enabled)
-    self:GetMovieClip().SetMouseChildren(enabled)
-end
-
-function _Element:SetAlpha(alpha)
-    self:GetMovieClip().SetAlpha(alpha)
-end
-
-function _Element:RegisterListener(eventType, handler)
-    local ui = self.UI
-    ui.Events[eventType]:RegisterListener(function(id, ...)
-        if id == self.ID then
-            handler(...)
-        end
-    end)
-end
-
----------------------------------------------
 -- INSTANCE
 ---------------------------------------------
 
@@ -124,6 +49,14 @@ end
 
 ---@overload fun(id:string, elementType:"Empty", parentID:string|GenericUI_Element?):GenericUI_Element_Empty
 ---@overload fun(id:string, elementType:"TiledBackground", parentID:string|GenericUI_Element?):GenericUI_Element_TiledBackground
+---@overload fun(id:string, elementType:"Text", parentID:string|GenericUI_Element?):GenericUI_Element_Text
+---@overload fun(id:string, elementType:"IggyIcon", parentID:string|GenericUI_Element?):GenericUI_Element_IggyIcon
+---@overload fun(id:string, elementType:"Button", parentID:string|GenericUI_Element?):GenericUI_Element_Button
+---@overload fun(id:string, elementType:"VerticalList", parentID:string|GenericUI_Element?):GenericUI_Element_VerticalList
+---@overload fun(id:string, elementType:"HorizontalList", parentID:string|GenericUI_Element?):GenericUI_Element_HorizontalList
+---@overload fun(id:string, elementType:"ScrollList", parentID:string|GenericUI_Element?):GenericUI_Element_ScrollList
+---@overload fun(id:string, elementType:"StateButton", parentID:string|GenericUI_Element?):GenericUI_Element_StateButton
+---@overload fun(id:string, elementType:"Divider", parentID:string|GenericUI_Element?):GenericUI_Element_Divider
 ---@param elementType GenericUI_ElementType
 ---@param parentID string|GenericUI_Element? Defaults to root of the MainTimeline.
 ---@return GenericUI_Element? Nil in case of failure (ex. invalid type).
