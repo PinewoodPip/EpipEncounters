@@ -194,10 +194,10 @@ package ui_fla
             stage.focus = this.keyboard_txt;
         }
 
-        public function onComplete() : *
-        {
-            trace("wtf");
-        }
+        // public function onComplete() : *
+        // {
+        //     trace("wtf");
+        // }
 
         // Throws IllegalOperationError.
         // public function testNet() : *
@@ -263,8 +263,8 @@ package ui_fla
 
         public function onKeyDown(ev:KeyboardEvent) : *
         {
-            trace("key:");
-            trace(ev.keyCode);
+            // trace("key:");
+            // trace(ev.keyCode);
             ExternalInterface.call("pipKeyDown", ev.keyCode, ev.shiftKey, ev.ctrlKey, ev.altKey, ev.commandKey);
 
             if ((ev.ctrlKey || ev.altKey) && this.handleSpecialKeys)
@@ -275,8 +275,8 @@ package ui_fla
 
         private function inputHandler(ev:KeyboardEvent) : *
         {
-            trace("handling down:");
-            trace(ev.keyCode);
+            // trace("handling down:");
+            // trace(ev.keyCode);
 
             // ExternalInterface.call("pipKeyboardTextFieldCharacterAdded", this.m[ev.keyCode]);
             
@@ -285,8 +285,8 @@ package ui_fla
 
         private function inputHandlerUp(ev:KeyboardEvent) : *
         {
-            trace("handling up:");
-            trace(ev.keyCode);
+            // trace("handling up:");
+            // trace(ev.keyCode);
 
             ExternalInterface.call("pipSpecialKeyUp", ev.keyCode);
 
@@ -346,12 +346,12 @@ package ui_fla
         {
         }
 
-        private function onMouseClick(ev:MouseEvent) : *
-        {
-            trace(ev.buttonDown);
-            trace("ctrl:");
-            trace(ev.ctrlKey);
-        }
+        // private function onMouseClick(ev:MouseEvent) : *
+        // {
+        //     trace(ev.buttonDown);
+        //     trace("ctrl:");
+        //     trace(ev.ctrlKey);
+        // }
         
         private function frame1() : *
         {

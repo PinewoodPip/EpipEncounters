@@ -130,7 +130,6 @@ local function Setup()
     uiObject:SetPosition(x, y + 100)
 
     -- Build elements
-
     local panel = ui:CreateElement("Panel", "TiledBackground")
     panel:SetSize(QuickExamine.WIDTH, QuickExamine.HEIGHT)
     panel:SetAlpha(QuickExamine.ALPHA)

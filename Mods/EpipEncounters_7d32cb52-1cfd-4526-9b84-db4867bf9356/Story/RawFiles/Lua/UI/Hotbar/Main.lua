@@ -955,7 +955,7 @@ function Hotbar.ShouldShowSourceFrame(index)
     local show = false
 
     if slot.Type == "Skill" then
-        local stat = Ext.Stats.Get(slot.SkillOrStatId)
+        local stat = Stats.Get("Skill", slot.SkillOrStatId)
 
         if stat then
             show = stat["Magic Cost"] > 0
@@ -992,7 +992,8 @@ function Hotbar.GetIconForSlot(index)
     local icon
 
     if slot.Type == "Skill" then
-        local stat = Ext.Stats.Get(slot.SkillOrStatId)
+        local stat = Stats.Get("Skill", slot.SkillOrStatId)
+        
         if stat then
             icon = stat.Icon
         end
@@ -1093,7 +1094,6 @@ function Hotbar.RenderCooldowns()
                 local cooldown = 0
 
                 if data.Type == "Skill" then
-                    local skillData = Ext.Stats.Get(data.SkillOrStatId)
                     ---@type EclSkill
                     local skill = char.SkillManager.Skills[data.SkillOrStatId]
         
@@ -1153,7 +1153,6 @@ function Hotbar.RenderSlots()
         
                 -- types: 0 empty, 1 skill, 2 item
                 if data.Type == "Skill" then
-                    local skillData = Ext.Stats.Get(data.SkillOrStatId)
                     ---@type EclSkill
                     local skill = char.SkillManager.Skills[data.SkillOrStatId]
                     tooltip = data.SkillOrStatId

@@ -215,7 +215,6 @@ QuickExamine.Events.EntityChanged:RegisterListener(function (entity)
 
                 local icon = artifactContainer:AddChild(artifact.ID .. "icon", "IggyIcon")
                 icon:SetIcon(template.Icon, 32, 32)
-                -- icon:SetPosition(320, 0)
                 icon.Tooltip = {
                     {
                         Type = "SkillName",
