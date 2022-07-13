@@ -490,6 +490,15 @@ function Hotbar.GetBarCount(char)
     return open
 end
 
+---Attempts to fix desync between current engine row and our bar. The engine current row must be set to 1 at all times for correct functioning.
+function Hotbar.ResyncEngineRow()
+    local realRow = Hotbar.GetCurrentRealRow()
+    while realRow > 1 do
+        Hotbar:ExternalInterfaceCall("prevHotbar")
+        realRow = realRow - 1
+    end
+end
+
 ---Uses a slot from the hotbar UI.
 ---@param index integer Slot to use.
 ---@param isEnabled boolean Passed to the ExternalInterfaceCall. Purpose unknown.
@@ -500,6 +509,8 @@ function Hotbar.UseSlot(index, isEnabled)
     Hotbar:GetUI():ExternalInterfaceCall("slotPressed", index - 1, isEnabled or true)
 
     Hotbar.lastClickedSlot = index
+
+    Hotbar.ResyncEngineRow()
 end
 
 function Hotbar.UpdateActiveSkill()
@@ -1481,6 +1492,8 @@ function OnHotbarSetHandle(uiObj, methodName, handle)
     UpdateSlotTextures()
 
     Utilities.Hooks.FireEvent("Client", "ActiveCharacterChanged", handle)
+
+    Hotbar.ResyncEngineRow()
 end
 
 -- handle switching hotbars the normal way (buttons and hotkeys)
