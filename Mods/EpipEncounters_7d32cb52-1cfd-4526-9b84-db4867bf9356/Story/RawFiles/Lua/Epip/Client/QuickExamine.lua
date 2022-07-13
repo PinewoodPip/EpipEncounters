@@ -146,7 +146,12 @@ local function Setup()
 end
 
 function QuickExamine:__Setup()
-    Client.Timer.Start("", 1.4, function()
+    -- Delayed setup to catch errors
+    if Ext.IsDeveloperMode() then
+        Client.Timer.Start("", 1.4, function()
+            Setup()
+        end)
+    else
         Setup()
-    end)
+    end
 end

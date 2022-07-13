@@ -505,7 +505,7 @@ for id,artifact in pairs(Game.Items.ARTIFACTS) do
         --     description = displayStatus.DisplayNameRef
         -- end
 
-        local description = ""
+        local description = artifact:GetDescription()
         ---@type EpicEnemiesKeywordData
         local keyword = nil
         if #artifact.KeywordActivators > 0 then
@@ -524,7 +524,7 @@ for id,artifact in pairs(Game.Items.ARTIFACTS) do
         local effect = {
             ID = id,
             Name = Text.Format("Artifact: %s", {FormatArgs = {
-                Text.SeparatePascalCase(id:gsub("^Artifact_", ""))
+                artifact:GetName()
             }}),
             DefaultCost = 15,
             DefaultWeight = artifactWeights[id] or 0,
@@ -540,7 +540,7 @@ end
 table.sort(ArtifactsCategory.Effects, function(a, b) return a.Name < b.Name end)
 
 -- Initialize effects
-for i,category in pairs(Effects.Categories) do
+for _,category in pairs(Effects.Categories) do
     EpicEnemies.RegisterEffectCategory(category)
 end
 

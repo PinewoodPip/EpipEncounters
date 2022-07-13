@@ -219,12 +219,17 @@ QuickExamine.Events.EntityChanged:RegisterListener(function (entity)
                 icon.Tooltip = {
                     {
                         Type = "SkillName",
-                        Label = artifact.ID,
+                        Label = Text.Format(artifact:GetName(), {Color = Game.Items.RARITY_COLORS.ARTIFACT}),
                     },
                     {
-                        Type = "SkillDescription",
-                        Label = "Description goes here",
-                    }
+                        Type = "StatsPercentageBoost",
+                        Label = artifact:GetDescription(),
+                        Amount = 1,
+                    },
+                    {
+                        Type = "ItemRarity",
+                        Label = Text.Format("Artifact Power", {Color = Game.Items.RARITY_COLORS.ARTIFACT}),
+                    },
                 }
             end
         end

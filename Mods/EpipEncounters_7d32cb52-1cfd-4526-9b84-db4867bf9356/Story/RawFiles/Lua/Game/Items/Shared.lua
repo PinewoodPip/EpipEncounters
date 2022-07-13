@@ -206,7 +206,6 @@ function Game.Items.GetEquippedSlot(item)
     end
 
     if not isEquipped and slot == "Weapon" then
-        print(char:GetItemBySlot("Shield"))
         isEquipped = char:GetItemBySlot("Shield") == item.MyGuid
 
         if isEquipped then slot = "Shield" end
@@ -227,7 +226,7 @@ function Game.Items.CountItemsInInventory(entity, predicate)
     local items = Game.Items.GetItemsInInventory(entity, predicate)
 
     -- Factor in stacked items.
-    for i,item in pairs(items) do
+    for _,item in pairs(items) do
         count = count + item.Amount
     end
 

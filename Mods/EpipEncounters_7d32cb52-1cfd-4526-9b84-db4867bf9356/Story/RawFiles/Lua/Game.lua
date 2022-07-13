@@ -9,10 +9,17 @@
 ---@field Slot StatsItemSlot
 ---@field ItemTemplate GUID
 ---@field RuneTemplate GUID
+---@field DescriptionHandle TranslatedStringHandle
 ---@field KeywordActivators Keyword[]
 ---@field KeywordMutators Keyword[]
+---@field GetName fun(self):string
+---@field GetDescription fun(self):string
 
 Game.Items = {
+    -- TODO
+    RARITY_COLORS = {
+        ARTIFACT = "a34114",
+    },
     ---@type table<string, ArtifactDefinition>
     ARTIFACTS = {
         Artifact_Absence = {
@@ -22,6 +29,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Absence_Rune_afc31b2e-7949-4835-b688-d26f2046100e",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h5d966ee3g778fg4f92gba5cga83c8c9c5152",
         },
         Artifact_Abyss = {
             ID = "Artifact_Abyss",
@@ -30,6 +38,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Abyss_Rune_686a3e17-d592-4bde-86c9-a43a76a9cf35",
             KeywordActivators = {"Paucity"},
             KeywordMutators = {"ViolentStrike"},
+            DescriptionHandle = "h5e40e819gbafdg4e06g8197g3e7008c41ee4",
         },
         Artifact_Adamant = {
             ID = "Artifact_Adamant",
@@ -38,6 +47,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Adamant_Rune_1c5aba55-57d7-4f51-b792-475f9b5397c9",
             KeywordActivators = {},
             KeywordMutators = {"Ward"},
+            DescriptionHandle = "h898aaae4gc8e2g4b65g9e71gc5979d092621",
         },
         Artifact_AmaranthineBulwark = {
             ID = "Artifact_AmaranthineBulwark",
@@ -46,6 +56,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_AmaranthineBulwark_Rune_e956400b-0adf-4379-8f2b-ac2e7332a62a",
             KeywordActivators = {},
             KeywordMutators = {"Ward"},
+            DescriptionHandle = "he7253e46g7975g4da7g928ag5b9da4316668",
         },
         Artifact_AngelsEgg = {
             ID = "Artifact_AngelsEgg",
@@ -54,6 +65,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_AngelsEgg_Rune_e7b2f2bf-a295-44c6-a6f7-ed5bafe4a477",
             KeywordActivators = {},
             KeywordMutators = {"Purity"},
+            DescriptionHandle = "hf3df7241ge62fg42f3gac6bg118dc039ec61",
         },
         Artifact_AntediluvianCarapace = {
             ID = "Artifact_AntediluvianCarapace",
@@ -62,6 +74,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_AntediluvianCarapace_Rune_46e28b0f-b5ad-445a-8340-ebd78f5765d3",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "he6a395d3g5028g40a2gb3c0g085b1b069bcb",
         },
         Artifact_ApothecarysGuile = {
             ID = "Artifact_ApothecarysGuile",
@@ -70,6 +83,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_ApothecarysGuile_Rune_b6a5af70-a439-4af6-a3d6-e99df73b97d4",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h8277d5b1g848fg49c8g9c93geba404f8d9a3",
         },
         Artifact_Arcturus = {
             ID = "Artifact_Arcturus",
@@ -78,6 +92,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Arcturus_Rune_0fdf74c2-d66a-4940-b58c-ca740f30af0c",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h74f09946g8653g4186gb56fg41d4bb301d73",
         },
         Artifact_Austerity = {
             ID = "Artifact_Austerity",
@@ -86,6 +101,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Austerity_Rune_3b401786-032d-4e66-9352-100322c8e6fd",
             KeywordActivators = {"Ward"},
             KeywordMutators = {"Centurion", "Ward"},
+            DescriptionHandle = "hdd5d5bedg109dg4372gb776g421cd79be8cc",
         },
         Artifact_BlackglassBrand = {
             ID = "Artifact_BlackglassBrand",
@@ -94,6 +110,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_BlackglassBrand_Rune_3355fb9f-2bd6-4d89-9e05-d4aa64a81b84",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h8c435d5cg6379g49e1ga613gf1468018469e",
         },
         Artifact_Bloodforge = {
             ID = "Artifact_Bloodforge",
@@ -102,6 +119,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Bloodforge_Rune_2bb5039f-9ad3-432a-8449-32ab5a5dd759",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "hf3cb9ecag1540g46b9gacceg9ee9d483d07e",
         },
         Artifact_BountyHunter = {
             ID = "Artifact_BountyHunter",
@@ -110,6 +128,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_BountyHunter_Rune_172bacef-0d72-4a5d-941a-c2bcf2069b97",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h84347237g3d2eg41c8ga1b0g6506e785f078",
         },
         Artifact_ButchersDisciple = {
             ID = "Artifact_ButchersDisciple",
@@ -118,6 +137,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_TheButchersDisciple_Rune_e292b87c-25f0-42f8-ba48-3e2cc9f751de",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h5e1d523ag4169g46d3g94d5g821d8e207483",
         },
         Artifact_ButchersWill = {
             ID = "Artifact_ButchersWill",
@@ -126,6 +146,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_TheButchersWill_Rune_d8b48a12-8669-42e1-858e-24ce073a3801",
             KeywordActivators = {},
             KeywordMutators = {"ViolentStrike"},
+            DescriptionHandle = "heba6fb5ag015bg42a1g8e16g332fd5fbbff5",
         },
         Artifact_Cannibal = {
             ID = "Artifact_Cannibal",
@@ -134,6 +155,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_TheCannibal_Rune_d4bc3ff0-9b19-48e2-bbd1-91a90345c653",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "hfb9f92fdga418g4585gb413g377c464c7071",
         },
         Artifact_Carnality = {
             ID = "Artifact_Carnality",
@@ -142,6 +164,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Carnality_Rune_32b919ae-eb51-4c9e-b95d-caf5bd0afbe7",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "hc4b6c453g8680g4d8bgafdcg7cd1c526ec06",
         },
         Artifact_Cataclysm = {
             ID = "Artifact_Cataclysm",
@@ -150,6 +173,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Cataclysm_Rune_08e6b9df-93a6-4415-a53b-31cc4bfe0755",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "hb8754f07g3003g4634gbba8gc14149d32145",
         },
         Artifact_Charity = {
             ID = "Artifact_Charity",
@@ -158,6 +182,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Charity_Rune_b85e93cd-0e4e-4924-91e9-18a294df89cb",
             KeywordActivators = {},
             KeywordMutators = {"Benevolence"},
+            DescriptionHandle = "h5fb32304g5bf1g43f2g9506g3dac41432560",
         },
         Artifact_Chthonian = {
             ID = "Artifact_Chthonian",
@@ -166,6 +191,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_TheChthonian_Rune_86d70ff3-94ef-4cc0-b49e-f6a29e1da756",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h6f5a66b6g3a37g4ee4g84f0gee5d18de791b",
         },
         Artifact_Consecration = {
             ID = "Artifact_Consecration",
@@ -174,6 +200,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Consecration_Rune_fdbc6ad0-62f5-404e-afac-c20cd7944eb9",
             KeywordActivators = {},
             KeywordMutators = {"Celestial"},
+            DescriptionHandle = "he06802c6gf147g4143g969ag1dfbedd33a1f",
         },
         Artifact_Convergence = {
             ID = "Artifact_Convergence",
@@ -182,6 +209,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Convergence_Rune_33ed7f25-c707-4dec-b8fc-1fac3ca8c79d",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "he37bdf01ga0f3g44fcgb24bgd5a99554bc74",
         },
         Artifact_CorruscatingSilks = {
             ID = "Artifact_CorruscatingSilks",
@@ -190,6 +218,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_CoruscatingSilks_Rune_4491045f-e8b3-42b8-8209-1c91177922e5",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "hb0301145g0c26g4ea9g8ca3gb5b0b429229f",
         },
         Artifact_Crucible = {
             ID = "Artifact_Crucible",
@@ -198,6 +227,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_TheCrucible_Rune_c03c3c84-5f29-49a9-82b3-0547a08a733d",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "haa276747g8366g4e51g9609gaaf7ea518b7f",
         },
         Artifact_Deck = {
             ID = "Artifact_Deck",
@@ -206,6 +236,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Deck_Rune_eb9f9170-bf4d-40e6-a2f1-1ff499e4f8c5",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h75ab6c81g3818g4daag8d26g1d0a3bcad31a",
         },
         Artifact_Desperation = {
             ID = "Artifact_Desperation",
@@ -214,6 +245,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Desperation_Rune_74a03339-ef71-46cb-9ae5-91763bef326c",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "hc35ff403g3b10g4b76g879fg28c6c0410f27",
         },
         Artifact_Dread = {
             ID = "Artifact_Dread",
@@ -222,6 +254,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Dread_Rune_23ec2353-2a75-4e05-8de6-2abe839225c1",
             KeywordActivators = {},
             KeywordMutators = {"VitalityVoid"},
+            DescriptionHandle = "ha0d51c88gd8bbg4c09g9b0bg3d3e8cdcaaea",
         },
         Artifact_DrogsLuck = {
             ID = "Artifact_DrogsLuck",
@@ -230,6 +263,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_DrogsLuck_Rune_a942773d-a9b2-4883-8d83-9325676ad294",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h0be20c2dgad3cg4549g8d4cg2d59c16253bd",
         },
         Artifact_Dominion = {
             ID = "Artifact_Dominion",
@@ -238,6 +272,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Dominion_Rune_1640501a-2067-4e39-b3ed-a7c6e23a4ea3",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h7ce54d6cg96afg4eb2gbc71g1b7e13de836a",
         },
         Artifact_Eclipse = {
             ID = "Artifact_Eclipse",
@@ -246,6 +281,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Eclipse_Rune_a40d49d4-b0cb-4a01-aac8-0deda6267f09",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "hc3b282c6g7628g4410g81deg54adf5050175",
         },
         Artifact_EmpyreanVestments = {
             ID = "Artifact_EmpyreanVestments",
@@ -254,6 +290,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_EmpyreanVestments_Rune_8ff8098d-43d0-4a46-9997-a046e8d92d5e",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h2184c7ddg3801g48e3g8ad4gcb4a6c03ae80",
         },
         Artifact_EtherTide = {
             ID = "Artifact_EtherTide",
@@ -262,6 +299,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_EtherTide_Rune_139a3219-f127-489b-9d17-f3ae40cfbd87",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "hfa18ec2ag4cf5g4b16g8683gfd85b10cc92d",
         },
         Artifact_Exaltation = {
             ID = "Artifact_Exaltation",
@@ -270,6 +308,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Exaltation_Rune_cefc217c-7f79-44a4-ad57-bd10587f8297",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h3f1554fdg2390g4c40g82a4g4d527b85d7e9",
         },
         Artifact_Expedition = {
             ID = "Artifact_Expedition",
@@ -278,6 +317,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Expedition_Rune_dffb73c3-8a00-4ce6-a73a-c549ac075f07",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h410e109eg9ac0g4889gb117g03209b52e997",
         },
         Artifact_EyeOfTheStorm = {
             ID = "Artifact_EyeOfTheStorm",
@@ -286,6 +326,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_EyeOfTheStorm_Rune_4d7e68eb-472f-4cee-bbfe-99c2f0bf9b88",
             KeywordActivators = {},
             KeywordMutators = {"Predator"},
+            DescriptionHandle = "h5d372b5cga219g4893g9066g08b796c8807d",
         },
         Artifact_FaceOfTheFallen = {
             ID = "Artifact_FaceOfTheFallen",
@@ -294,6 +335,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_FaceOfTheFallen_Rune_6e6743f6-52b1-4c9b-bc39-8733e8850e2b",
             KeywordActivators = {},
             KeywordMutators = {"Voracity"},
+            DescriptionHandle = "hb35dbcecg6404g4cbeg832bg76286637d82d",
         },
         Artifact_Famine = {
             ID = "Artifact_Famine",
@@ -302,6 +344,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Famine_Rune_e8f8d868-f208-4c72-9b73-aad0d4f7e09f",
             KeywordActivators = {},
             KeywordMutators = {"Paucity"},
+            DescriptionHandle = "h6cfaf825g2533g4d3cg85cegec5be07e81a5",
         },
         Artifact_Fecundity = {
             ID = "Artifact_Fecundity",
@@ -310,6 +353,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Fecundity_Rune_1376a748-664a-4520-ab09-7299d7b15390",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "hd6a93cc6gaee1g4e5cg9ca2g872a8a3edb68",
         },
         Artifact_FistOfDecay = {
             ID = "Artifact_FistOfDecay",
@@ -318,6 +362,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_FistOfDecay_Rune_88d3fab0-ed36-4c20-b050-b82956200dc8",
             KeywordActivators = {"VitalityVoid"},
             KeywordMutators = {},
+            DescriptionHandle = "h3cff3231ga0e2g45fegae09gb300a2722abc",
         },
         Artifact_Ghostflame = {
             ID = "Artifact_Ghostflame",
@@ -326,6 +371,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Ghostflame_Rune_4ccf4271-0eb0-406e-b917-82b84dd87cc2",
             KeywordActivators = {},
             KeywordMutators = {"Occultist"},
+            DescriptionHandle = "hb90ea35cgecb7g4a87ga252g59104441818a",
         },
         Artifact_GiantsSkull = {
             ID = "Artifact_GiantsSkull",
@@ -334,6 +380,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_GiantsSkull_Rune_013e49de-43d4-4d4b-bce3-88864a2dc53d",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "hb48f6728g986dg4e86gbe46g891077a2cd57",
         },
         Artifact_Glacier = {
             ID = "Artifact_Glacier",
@@ -342,6 +389,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Glacier_Rune_aef6fcde-08bb-482f-8ff5-a5d13b7db22f",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h648b695cgf1b3g4680g9afbg9c578291fb02",
         },
         Artifact_Gluttony = {
             ID = "Artifact_Gluttony",
@@ -350,6 +398,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Gluttony_Rune_9daf82cc-db67-4918-8142-12051ec78993",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h17f74d6egbb40g449ega705gec6c543d2eff",
         },
         Artifact_Godspeed = {
             ID = "Artifact_Godspeed",
@@ -358,6 +407,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Godspeed_Rune_371bce5d-2d54-400a-974d-e4f30e092b9b",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h875cd47ag08f3g44efg8032g12ec1a6d8956",
         },
         Artifact_Goldforge = {
             ID = "Artifact_Goldforge",
@@ -366,6 +416,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Goldforge_Rune_8bc09d16-75c7-4e5a-830d-fab9acfa1a11",
             KeywordActivators = {},
             KeywordMutators = {"Prosperity"},
+            DescriptionHandle = "h360ae6d8g7f28g468dg884dg503b0b498ada",
         },
         Artifact_Golem = {
             ID = "Artifact_Golem",
@@ -374,6 +425,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Golem_Rune_6677124c-4604-43cb-952d-23efc50e56a2",
             KeywordActivators = {},
             KeywordMutators = {"Prosperity"},
+            DescriptionHandle = "h26f0c70cg94f3g4330g8683g34607154e3dc",
         },
         Artifact_GramSwordOfGrief = {
             ID = "Artifact_GramSwordOfGrief",
@@ -382,6 +434,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_GramSwordOfGrief_Rune_b943d928-be9d-4e9c-94f0-a624924dd110",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h714b573cge447g43c3g90c4g78c85add610a",
         },
         Artifact_Hibernaculum = {
             ID = "Artifact_Hibernaculum",
@@ -390,6 +443,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Hibernaculum_Rune_0b6d1bf4-c3b5-4291-b790-c39a351b6be0",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "hc14541f3g4339g47fdga180g73d2f0110fd1",
         },
         Artifact_Impetus = {
             ID = "Artifact_Impetus",
@@ -398,6 +452,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Impetus_Rune_8505698b-d328-40d0-8ebe-9112ae585e36",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h50a46432g580ag4c9cga13cg968aea761bf6",
         },
         Artifact_InfernalContract = {
             ID = "Artifact_InfernalContract",
@@ -406,6 +461,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_InfernalContract_Rune_0a48df34-0e22-4e81-9196-96f6b06b93ab",
             KeywordActivators = {"Wither"},
             KeywordMutators = {},
+            DescriptionHandle = "h77139e23ge906g4422g8c10g75b1d5338a65",
         },
         Artifact_IronMaiden = {
             ID = "Artifact_IronMaiden",
@@ -414,6 +470,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_IronMaiden_Rune_ee3702f2-b3e2-4a2f-ac61-e8c227c5c1d1",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h4a4544dbgb942g4973g8d28g861d1256e42c",
         },
         Artifact_Jaguar = {
             ID = "Artifact_Jaguar",
@@ -422,6 +479,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_TheJaguar_Rune_106b7b9b-ab97-490c-bbbb-74d292d042fc",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "hf1fb07bfg5ccfg457agb8c9gee8b662c13e1",
         },
         Artifact_Judgement = {
             ID = "Artifact_Judgement",
@@ -430,6 +488,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Judgement_Rune_a6974e3c-7341-4368-8d37-2fee8e20dd3f",
             KeywordActivators = {},
             KeywordMutators = {"ViolentStrike"},
+            DescriptionHandle = "h02b3e158gdc62g4712ga60bg9fdd8bde3ed4",
         },
         Artifact_Kudzu = {
             ID = "Artifact_Kudzu",
@@ -438,6 +497,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Kudzu_Rune_99f328fc-409a-42af-82e5-3913d6910045",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h105f11c9g74e1g4622g8beag50ed76a29bf9",
         },
         Artifact_LambentBlade = {
             ID = "Artifact_LambentBlade",
@@ -446,6 +506,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_LambentBlade_Rune_5aa5bcdd-6fb4-461a-93ad-2e988df31f8f",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h6acdf35cg6019g4b1fg9791g31afa3070512",
         },
         Artifact_Leper = {
             ID = "Artifact_Leper",
@@ -454,6 +515,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Leper_Rune_d3913dfe-85ff-436f-8880-61e739c02412",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "ha3443f47g06b0g4b52gb8fdgbe1d6a77ae69",
         },
         Artifact_Leviathan = {
             ID = "Artifact_Leviathan",
@@ -462,6 +524,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Leviathan_Rune_c22f2e5b-881a-459a-b552-bcf09f249539",
             KeywordActivators = {},
             KeywordMutators = {"ViolentStrike"},
+            DescriptionHandle = "h6d8034bcgc191g49afg9804g1fe52e13271e",
         },
         Artifact_Lightspire = {
             ID = "Artifact_Lightspire",
@@ -470,6 +533,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Lightspire_Rune_6fbef305-b6a5-47f4-8ffb-a84b490b4ca4",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "hb061ceacgeac3g48a0g8728gb655826d3dc6",
         },
         Artifact_LocustCrown = {
             ID = "Artifact_LocustCrown",
@@ -478,6 +542,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_TheLocustCrown_Rune_45fff2b1-4a44-4d30-af4f-78ba63f6f2a8",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h381e3c72gf72cg4950gb168gd9ab150b5ddf",
         },
         Artifact_Malice = {
             ID = "Artifact_Malice",
@@ -486,6 +551,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Malice_Rune_7b6a9205-4495-416a-96a0-2fde849d4f34",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "hd8597150g92b2g4886g98ccg325f68664927",
         },
         Artifact_MalleusMaleficarum = {
             ID = "Artifact_MalleusMaleficarum",
@@ -494,6 +560,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_MalleusMaleficarum_Rune_e85b626d-513c-4ed5-b36a-284c67add9d7",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h38e7f0a2g28fbg4f8cgbb5dg689cd32f4d5e",
         },
         Artifact_Mirage = {
             ID = "Artifact_Mirage",
@@ -502,6 +569,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Mirage_Rune_b282cb8f-ded5-4509-894b-753f8081cdb9",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "hd6725817g5221g4ec8gbdc0g991f99212005",
         },
         Artifact_Misery = {
             ID = "Artifact_Misery",
@@ -510,6 +578,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Misery_Rune_42ae2948-9b58-4ac3-a1b5-1b8b0cba12d0",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "he34d6f8fg6abag44d7g9874g3794753206a8",
         },
         Artifact_Momentum = {
             ID = "Artifact_Momentum",
@@ -518,6 +587,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Momentum_Rune_d163d762-d41d-4d7a-808d-da4f4e255348",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h1935cdecg80d8g453eg98e8g8e71097d641d",
         },
         Artifact_Mountain = {
             ID = "Artifact_Mountain",
@@ -526,6 +596,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Mountain_Rune_ece3ca0e-0e69-41ad-8219-d1bcff2ab5bd",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "hf98349cege1a6g4035g87c7gc9124b53e1fb",
         },
         Artifact_NecromancersRaiment = {
             ID = "Artifact_NecromancersRaiment",
@@ -534,6 +605,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_NecromancersRaiment_Rune_705f612a-9109-41ca-88c4-60c24be802b0",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h78550f18g084fg4efbga48fg8b04f6ad6932",
         },
         Artifact_Nemesis = {
             ID = "Artifact_Nemesis",
@@ -542,6 +614,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Nemesis_Rune_9d0e48c4-fa53-484c-8ee9-616094ed18ca",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h049cb32bg2cf2g434eg8f82g7d7508db0102",
         },
         Artifact_Nightmare = {
             ID = "Artifact_Nightmare",
@@ -550,6 +623,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Nightmare_Rune_e9314437-7664-4b33-8e4d-2fb65b4f3fc4",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "hd40c744ag08cag4b96ga2c5gab184cf55ca4",
         },
         Artifact_Nihility = {
             ID = "Artifact_Nihility",
@@ -558,6 +632,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Nihility_Rune_05e6365b-39f9-438b-899b-235de8b9e7e1",
             KeywordActivators = {"VitalityVoid"},
             KeywordMutators = {},
+            DescriptionHandle = "h5fcd8aedg9551g4198ga0bdg90446ede755f",
         },
         Artifact_Obelisk = {
             ID = "Artifact_Obelisk",
@@ -566,6 +641,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Obelisk_Rune_5f58d8f6-ba3b-42d1-bece-4667b3397046",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h7fa9b8b4gf8b4g400fg85a8g75ad0642b54f",
         },
         Artifact_Occam = {
             ID = "Artifact_Occam",
@@ -574,6 +650,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Occam_Rune_8483d917-dccd-45a5-b318-210adf8220f2",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "hda69c106g7163g4e06g9fdagd35b8c9a00f7",
         },
         Artifact_Onslaught = {
             ID = "Artifact_Onslaught",
@@ -582,6 +659,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Onslaught_Rune_c3809b72-7533-4bfa-9a84-7bcdf369df95",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "ha49bde61g5e1dg489bg96a2g06bbc40b3cc5",
         },
         Artifact_Ouroboros = {
             ID = "Artifact_Ouroboros",
@@ -590,6 +668,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Ouroboros_Rune_328a74b5-a426-4b8d-a648-dd3c48abfffb",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h2d0fe7d8g5e32g45d9gbcf7ga0e1306cab70",
         },
         Artifact_Paragon = {
             ID = "Artifact_Paragon",
@@ -598,6 +677,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Paragon_Rune_f9acc87d-c30c-4071-8748-6efe0ae5f33a",
             KeywordActivators = {"VitalityVoid"},
             KeywordMutators = {"VitalityVoid"},
+            DescriptionHandle = "hd38441ceg6e88g4c7eg9806gd1467a77082f",
         },
         Artifact_Pariah = {
             ID = "Artifact_Pariah",
@@ -606,6 +686,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Pariah_Rune_00a98dce-78d0-4c60-a7ad-56fc3697cfc4",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "hcae10a94ga8beg4639g82afg20cb747254f5",
         },
         Artifact_Pestilence = {
             ID = "Artifact_Pestilence",
@@ -614,6 +695,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Pestilence_Rune_c1af093a-7489-46b3-bbc2-011637abaad4",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h8ad6b106gbd94g4034g9481gc92252f954cf",
         },
         Artifact_PrismaticBarrier = {
             ID = "Artifact_PrismaticBarrier",
@@ -622,6 +704,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_PrismaticBarrier_Rune_d43243f6-2336-49cf-9360-8c4b169de09f",
             KeywordActivators = {},
             KeywordMutators = {"Prosperity"},
+            DescriptionHandle = "h11593097g0e18g4a50gb07dg5a49b2c77a29",
         },
         Artifact_Prophecy = {
             ID = "Artifact_Prophecy",
@@ -630,6 +713,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Prophecy_Rune_94a62842-121e-4b2d-a080-8400fe195dac",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "ha97beabcg415dg42fbga407gf3f15fa7968d",
         },
         Artifact_Pyre = {
             ID = "Artifact_Pyre",
@@ -638,6 +722,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Pyre_Rune_f6fb7fe6-a08a-40cd-9309-c9b62db9f52d",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h4568f4c6g3b28g4ae3ga05cg37e07e583b2b",
         },
         Artifact_Rapture = {
             ID = "Artifact_Rapture",
@@ -646,6 +731,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Rapture_Rune_64fe7208-a2d3-45e8-ace5-cfd85177438b",
             KeywordActivators = {"Purity"},
             KeywordMutators = {"Celestial"},
+            DescriptionHandle = "he2b25cc0gc524g4365gb809g6c9563a7ea1d",
         },
         Artifact_RedOrison = {
             ID = "Artifact_RedOrison",
@@ -654,6 +740,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_RedOrison_Rune_6673424d-88ae-4323-84a9-186739ff13d8",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h874898d5gbf93g437eg9c74ge0b28c82d1d6",
         },
         Artifact_RodOfAbeyance = {
             ID = "Artifact_RodOfAbeyance",
@@ -662,6 +749,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_RodOfAbeyance_Rune_fc2de115-7044-4424-8eea-6b26895e0dd5",
             KeywordActivators = {},
             KeywordMutators = {"Abeyance"},
+            DescriptionHandle = "h84bc4e85g2fa4g4728gb6f5g60bb321473f6",
         },
         Artifact_RodOfCommand = {
             ID = "Artifact_RodOfCommand",
@@ -670,6 +758,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_RodOfCommand_Rune_68723eaa-c70d-4b1c-bf0f-715cdc00280e",
             KeywordActivators = {},
             KeywordMutators = {"ViolentStrike"},
+            DescriptionHandle = "h1b153723g6fc0g4f18gb5f2gd2e2482af791",
         },
         Artifact_RodOfConviction = {
             ID = "Artifact_RodOfConviction",
@@ -678,6 +767,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_RodOfConviction_Rune_4f2c3afb-6b44-43ba-bea7-dabda13230e8",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h6f3800cfg4d71g4e4cg8b17g5c0beedc8f86",
         },
         Artifact_Salamander = {
             ID = "Artifact_Salamander",
@@ -686,6 +776,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Salamander_Rune_609f79c7-8bb4-4eb9-a599-0014f92e5fb6",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "ha48efc94gfb1ag41e3g8eb9g065ce7aec21c",
         },
         Artifact_SanguineHarvest = {
             ID = "Artifact_SanguineHarvest",
@@ -694,6 +785,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_SanguineHarvest_Rune_e41172c1-4bbf-4125-886e-b28a0d5a05aa",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h0413b6fdg3e93g4347ga1b0gaa8e14d10a3a",
         },
         Artifact_Savage = {
             ID = "Artifact_Savage",
@@ -702,6 +794,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_TheSavage_Rune_093da89a-cbfb-40c2-a5bb-03f5ab9e8f4e",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h71533814gab5cg4145ga1ffg8bc3f7de7454",
         },
         Artifact_Seraph = {
             ID = "Artifact_Seraph",
@@ -710,6 +803,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Seraph_Rune_29328bd4-e510-42c6-a6a8-86de1d4b6e29",
             KeywordActivators = {},
             KeywordMutators = {"Celestial"},
+            DescriptionHandle = "h1ece0e96g859bg4e2ag96e4ge23c36340aa5",
         },
         Artifact_Serenity = {
             ID = "Artifact_Serenity",
@@ -718,6 +812,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Serenity_Rune_a12da803-0fcc-4c03-a194-a29680101725",
             KeywordActivators = {},
             KeywordMutators = {"Purity"},
+            DescriptionHandle = "h289f7db4gd767g494agb5e1gcc2202d7f49a",
         },
         Artifact_Silkclimb = {
             ID = "Artifact_Silkclimb",
@@ -726,6 +821,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Silkclimb_Rune_2444e1a5-fffc-43cb-ac1f-d3208011b9e3",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h87b7af20g042fg4ef0ga067g049335570569",
         },
         Artifact_Smother = {
             ID = "Artifact_Smother",
@@ -734,6 +830,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Smother_Rune_5ab6d0f8-1e0b-4996-98a4-cf865b05540f",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h6c8ef90cg1532g4889g988dgfff2291ea41c",
         },
         Artifact_Thirst = {
             ID = "Artifact_Thirst",
@@ -742,6 +839,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Thirst_Rune_5197b90b-2443-4d84-b8ca-ecabf33170bb",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h53cb94a1gdb29g4669g85f7ge068009d146c",
         },
         Artifact_ThornHalo = {
             ID = "Artifact_ThornHalo",
@@ -750,6 +848,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_ThornHalo_Rune_55cbe2a0-bba4-4a59-aef5-b9d697bf4f80",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h8a22b752gb230g4382g930bgc03d47734251",
         },
         Artifact_Trample = {
             ID = "Artifact_Trample",
@@ -758,6 +857,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Trample_Rune_6ccc1e12-2b2a-4d19-8ed3-1405a0fdfe68",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h8fed3f99g099dg4ba9g842ag274e7a1a8b1a",
         },
         Artifact_Tundra = {
             ID = "Artifact_Tundra",
@@ -766,6 +866,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Tundra_Rune_b01b15df-f259-40f7-919b-66b42ec915c7",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h32667f90g515cg4673g9369gd8cfba9ba84f",
         },
         Artifact_Urgency = {
             ID = "Artifact_Urgency",
@@ -774,6 +875,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Urgency_Rune_fab75597-3448-42de-8796-3a201cf13304",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "hf226d55bg7880g48d5ga412gca57f6155012",
         },
         Artifact_Vault = {
             ID = "Artifact_Vault",
@@ -782,6 +884,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_TheVault_Rune_1cc1459e-490e-46d5-90f1-970ad625c548",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h80e74e0fg92a1g4e4aga19egcccc5bc7625c",
         },
         Artifact_Vertigo = {
             ID = "Artifact_Vertigo",
@@ -790,6 +893,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Vertigo_Rune_1cf2fb87-45df-43b1-980d-52de5fb942d4",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h84985309gce22g4237g9020gc1d53d869f11",
         },
         Artifact_Vortex = {
             ID = "Artifact_Vortex",
@@ -798,6 +902,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Vortex_Rune_7770a77a-b0d0-4361-948b-26366f01c94a",
             KeywordActivators = {},
             KeywordMutators = {"VitalityVoid"},
+            DescriptionHandle = "hffc523adg1228g44f6gab2cg7d977e71b690",
         },
         Artifact_Wendigo = {
             ID = "Artifact_Wendigo",
@@ -806,6 +911,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Wendigo_Rune_7e053219-7d0d-4261-8a2e-c6ed9aa4502e",
             KeywordActivators = {},
             KeywordMutators = {"Predator"},
+            DescriptionHandle = "h2ec337ecgd3a4g4f3egb38agd3bfa1fd0ccc",
         },
         Artifact_WintersGrasp = {
             ID = "Artifact_WintersGrasp",
@@ -814,6 +920,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_WintersGrasp_Rune_00b7fcc4-6625-4bf1-aa7d-1335a3c05e15",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h669882e5gc432g4793gb2ccgb2fe04ca78cc",
         },
         Artifact_Wraith = {
             ID = "Artifact_Wraith",
@@ -822,6 +929,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Wraith_Rune_d476a1fc-74f0-4efc-acb9-816671c9e6eb",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h0631c4bbg73b7g40f9ga360g576bb55f290c",
         },
         Artifact_Zeal = {
             ID = "Artifact_Zeal",
@@ -830,6 +938,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Zeal_Rune_ae09c357-645a-47e7-8daf-3b704032e72b",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h4ca5fbf0gccc8g4c24gbec8gbafbf429cd92",
         },
         Artifact_Zenith = {
             ID = "Artifact_Zenith",
@@ -838,6 +947,7 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Zenith_Rune_f089009a-2bdc-41c3-976f-192c98ad0e7d",
             KeywordActivators = {},
             KeywordMutators = {},
+            DescriptionHandle = "h5cf14dbbg921dg455cga08eg7dcefbe7cea1",
         },
         Artifact_Zodiac = {
             ID = "Artifact_Zodiac",
@@ -846,9 +956,21 @@ Game.Items = {
             RuneTemplate = "AMER_UNI_Zodiac_Rune_eea08f98-dbce-4b28-9971-360c0c27b46b",
             KeywordActivators = {},
             KeywordMutators = {"Celestial"},
+            DescriptionHandle = "h0659baa1g8a2ag416dg953egc09a11b02d40",
         },
     },
 }
+for _,artifact in pairs(Game.Items.ARTIFACTS) do
+    Inherit(artifact, {
+        GetDescription = function(self)
+            return Ext.L10N.GetTranslatedString(self.DescriptionHandle, self.ID)
+        end,
+        GetName = function(self)
+            return Text.SeparatePascalCase(self.ID:gsub("^Artifact_", ""))
+        end,
+    })
+end
+
 Game.Net = {}
 
 Game.EDITOR_VERSION = "v3.6.51.9303"
