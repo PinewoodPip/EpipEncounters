@@ -1,0 +1,12 @@
+
+- Added a "Quick Examine" UI. Currently it only shows the Epic Enemies perks characters that have them. It is invoked by a keybind while hovering over a character; default is V.
+    - You may use the lock button to prevent its selected character from changing whenever you hover over a new one; if you do that, you will need to press the keybinding manually to change targets.
+- Artifact powers in Epic Enemies now have descriptions
+- Hotbar now greys out unusable item skills (ex. arrows)
+- Switching characters or clicking slots on the hotbar now attempts to fix desync issues (the one where your clicks go to the wrong rows)
+- Fixed a freeze when using a controller
+- Temporarily removed the Awesome Soccer minigame
+
+On the technical side of things:
+
+- Added a new lua-based UI system; currently supports backgrounds, text, buttons, state buttons, the common list types (vertical, horizontal, scrolling), dividers, and icons
