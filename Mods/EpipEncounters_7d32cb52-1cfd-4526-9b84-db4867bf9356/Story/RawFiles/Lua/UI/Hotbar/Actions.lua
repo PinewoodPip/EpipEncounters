@@ -382,7 +382,7 @@ Hotbar:RegisterCallListener("pipHotbarStopRearrange", function(_, index)
         end
 
         -- Hide tooltip; otherwise if you keep the cursor on the button you've just dragged an action onto, it shows the old one
-        Hotbar:GetUI():ExternalInterfaceCall("hideTooltip")
+        Hotbar:HideTooltip()
         Hotbar.ToggleDrawer(false)
     end
 

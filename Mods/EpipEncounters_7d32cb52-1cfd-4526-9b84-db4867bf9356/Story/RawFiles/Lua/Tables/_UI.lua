@@ -26,7 +26,7 @@
 
 ---@alias UIObjectFlag "OF_Load" | "OF_Loaded" | "OF_RequestDelete" | "OF_Visible" | "OF_PlayerInput1" | "OF_PlayerInput2" | "OF_PlayerInput3" | "OF_PlayerInput4" | "OF_PlayerModal1" | "OF_PlayerModal2" | "OF_PlayerModal3" | "OF_PlayerModal4" | "OF_KeepInScreen" | "OF_KeepCustomInScreen" | "OF_DeleteOnChildDestroy" | "OF_PauseRequest" | "OF_SortOnAdd" | "OF_FullScreen" | "OF_PlayerTextInput1" | "OF_PlayerTextInput2" | "OF_PlayerTextInput3" | "OF_PlayerTextInput4" | "OF_DontHideOnDelete" | "OF_PrecacheUIData" | "OF_PreventCameraMove"
 
----@type UI
+---@class UI
 local BaseUI = {
     UI = nil, -- Deprecated
     Root = nil, -- Deprecated
@@ -132,6 +132,11 @@ end
 ---@vararg any Event parameters.
 function BaseUI:ExternalInterfaceCall(event, ...)
     self:GetUI():ExternalInterfaceCall(event, ...)
+end
+
+---Hides the UI's current tooltip.
+function BaseUI:HideTooltip()
+    self:ExternalInterfaceCall("hideTooltip")
 end
 
 ---Toggles input on the UI for a given player.

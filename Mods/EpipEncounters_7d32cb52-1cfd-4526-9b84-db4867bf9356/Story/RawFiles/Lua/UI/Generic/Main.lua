@@ -264,7 +264,7 @@ Generic.OnElementMouseOut = function(ev, id)
     local element = ui:GetElementByID(id)
 
     if element and element.Tooltip and Generic.CurrentTooltipElement and Generic.CurrentTooltipElement.ID == id then -- TODO ui check
-        Client.UI.Hotbar:ExternalInterfaceCall("hideTooltip")
+        Client.UI.Hotbar:HideTooltip()
         Generic.CurrentTooltipElement.UI:ExternalInterfaceCall("hideTooltip")
         Generic.CurrentTooltipElement = nil
     end
