@@ -1520,6 +1520,7 @@ function OnHotbarCycleNext(ui, method, current, index)
     CycleHotbar(ui, current, index, 1)
 end
 
+-- Fired from onEventResolution
 function OnVanillaUpdateSlots(ui, method, slots)
     UpdateSlotTextures()
 end

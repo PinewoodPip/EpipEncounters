@@ -70,6 +70,11 @@ function StatusConsole.ShouldBeVisible()
     return true
 end
 
+---Updates position based on hotbar bar count.
+function StatusConsole.UpdatePosition()
+    StatusConsole:GetRoot().y = -55 * (Client.UI.Hotbar.GetBarCount() - 1)
+end
+
 ---------------------------------------------
 -- LISTENERS
 ---------------------------------------------
@@ -104,6 +109,7 @@ local function OnHealthBarUpdate(uiObj, method, param3, num1, str1, bool1)
     root.turnNotice_mc.x = 8000
 
     StatusConsole.Toggle(true, "VanillaBehaviour")
+
 end
 
 ---------------------------------------------
@@ -118,7 +124,7 @@ Ext.Events.SessionLoaded:Subscribe(function()
     Ext.RegisterUICall(StatusConsole.UI, "pipStatusConsoleHealthUpdate", OnHealthBarUpdate)
     Ext.RegisterUICall(StatusConsole.UI, "pipStatusConsoleArmorUpdate", OnHealthBarUpdate)
 
-    Client.UI.Hotbar:RegisterListener("Refreshed", function(barAmount)
-        StatusConsole.Root.y = -55 * (barAmount - 1)
+    Client.UI.Hotbar:RegisterListener("Refreshed", function(_)
+        StatusConsole.UpdatePosition()
     end)
 end)
