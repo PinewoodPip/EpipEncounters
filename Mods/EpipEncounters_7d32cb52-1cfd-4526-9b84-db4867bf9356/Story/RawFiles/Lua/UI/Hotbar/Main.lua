@@ -1183,6 +1183,14 @@ function Hotbar.RenderSlots()
                     if item.Stats then
                         isEnabled = Game.Stats.MeetsRequirements(char, item.Stats.Name, true)
                     end
+
+                    -- Item skills
+                    local useActions = item.RootTemplate.OnUsePeaceActions
+                    for _,action in ipairs(useActions) do
+                        if action.Type == "UseSkill" then
+                            isEnabled = isEnabled and Character.CanUseSkill(char, action.SkillID)
+                        end
+                    end
                 elseif data.Type == "Action" then
                     isEnabled = true
                     slotType = 1
