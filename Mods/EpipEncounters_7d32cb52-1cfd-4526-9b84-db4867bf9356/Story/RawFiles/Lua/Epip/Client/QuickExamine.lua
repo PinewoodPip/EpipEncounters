@@ -12,6 +12,9 @@ Epip.Features.QuickExamine = {
     ALPHA = 0.8,
     HEIGHT = 600,
 
+    SAVE_FILENAME = "EpipEncounters_QuickExamine.json",
+    SAVE_VERSION = 1,
+
     Events = {
         EntityChanged = {}, ---@type QuickExamine_Event_EntityChanged
     },
@@ -38,6 +41,26 @@ QuickExamine.UI = Generic.Create("PIP_QuickExamine")
 ---@return GenericUI_Element_VerticalList
 function Epip.Features.QuickExamine.GetContainer()
     return QuickExamine.ContentContainer
+end
+
+---@param path Path?
+function QuickExamine.LoadData(path)
+    path = path or QuickExamine.SAVE_FILENAME
+    local save = Utilities.LoadJson(path)
+
+    if save then
+        QuickExamine.lockCharacter = save.Lock
+    end
+end
+
+---@param path Path?
+function QuickExamine.SaveData(path)
+    path = path or QuickExamine.SAVE_FILENAME
+
+    Utilities.SaveJson(path, {
+        Version = QuickExamine.SAVE_VERSION,
+        Lock = QuickExamine.lockCharacter,
+    })
 end
 
 ---@return boolean
@@ -97,6 +120,8 @@ local function Setup()
     local uiObject = ui:GetUI()
     uiObject.SysPanelSize = {QuickExamine.WIDTH + QuickExamine.SCROLLBAR_WIDTH, QuickExamine.HEIGHT}
     uiObject.Left = QuickExamine.WIDTH
+
+    QuickExamine.LoadData()
 
     ui:ExternalInterfaceCall("setPosition", "center", "screen", "right")
 
@@ -158,6 +183,7 @@ local function Setup()
     lockButton:SetPosition(400 - 23 - 25, 2)
     lockButton:RegisterListener(Generic.ELEMENTS.StateButton.EVENT_TYPES.STATE_CHANGED, function(state)
         QuickExamine.lockCharacter = state
+        QuickExamine.SaveData()
     end)
     lockButton.Tooltip = "Lock Character"
 
