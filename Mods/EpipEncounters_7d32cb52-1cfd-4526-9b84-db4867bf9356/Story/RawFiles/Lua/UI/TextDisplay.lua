@@ -6,6 +6,9 @@ Client.UI.TextDisplay = {
     ---------------------------------------------
     -- INTERNAL VARIABLES - DO NOT SET
     ---------------------------------------------
+    FILEPATH_OVERRIDES = {
+        ["Public/Game/GUI/textDisplay.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/textDisplay.swf",
+    }
 }
 local TextDisplay = Client.UI.TextDisplay
 local Inv = Client.UI.PartyInventory

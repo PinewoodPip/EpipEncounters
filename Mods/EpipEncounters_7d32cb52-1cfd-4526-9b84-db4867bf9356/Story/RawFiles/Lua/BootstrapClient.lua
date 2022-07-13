@@ -84,7 +84,6 @@ LOAD_ORDER = {
     "UI/OptionsSettings.lua",
 
     -- Needs to be ordered after the above.
-    "Config.lua",
     "Epip/Settings.lua",
     "Epip/Client/SettingsRegistration.lua",
 
@@ -251,5 +250,13 @@ if Ext.Utils.GameVersion() ~= "v3.6.51.9303" then
         Ext.Require(prefixedGUID, script)
     end
 end
+
+-- Loading screen replacement.
+Ext.Events.SessionLoading:Subscribe(function()
+    if Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "LoadingScreen") then
+        -- loading screen replacement. only works after EpipEncounters has loaded. (no effect when module loads for the first time)
+        Ext.IO.AddPathOverride("Public/Game/Assets/Textures/UI/DOS2_Loadscreen_DE.dds", "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/Assets/Textures/epip_encounters_loading_bg.dds")
+    end
+end)
 
 Ext.Require(prefixedGUID, "_LastScript.lua")

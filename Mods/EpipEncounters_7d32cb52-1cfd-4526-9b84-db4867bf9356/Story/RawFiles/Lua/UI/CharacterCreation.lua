@@ -58,6 +58,9 @@ CharacterCreation = {
 
     initialized = false,
     nextTooltipIsPresetTooltip = false,
+    FILEPATH_OVERRIDES = {
+        ["Public/Game/GUI/characterCreation.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/characterCreation_talentsDisabled.swf",
+    },
 }
 Client.UI.CharacterCreation = CharacterCreation
 setmetatable(CharacterCreation, {__index = Client.UI._BaseUITable})

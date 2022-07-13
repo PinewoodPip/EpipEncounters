@@ -3,37 +3,6 @@
 -- Gloabl utility methods.
 ---------------------------------------------
 
-function GetConfig(modname, defaultConfig)
-    local configFilename = "Config_" .. modname .. ".json"
-    local storedSettings = Ext.IO.LoadFile(configFilename)
-
-    if storedSettings then
-        storedSettings = Ext.Json.Parse(storedSettings)
-    else
-        storedSettings = {}
-    end
-
-    -- add missing entries to the config
-    local hasNewEntries = false
-    for i,v in pairs(defaultConfig) do
-        if storedSettings[i] == nil then
-            storedSettings[i] = v
-            hasNewEntries = true
-        end
-    end
-
-    if hasNewEntries then -- resave to add missing options to the file
-        Ext.IO.SaveFile(configFilename, Ext.Json.Stringify(storedSettings))
-    end
-
-    return storedSettings
-end
-
-function SaveConfig(modname, config)
-    local configFilename = "Config_" .. modname .. ".json"
-    Ext.IO.SaveFile(configFilename, Ext.Json.Stringify(config))
-end
-
 ---Sets table1 to index undefined properties in table2.
 ---@param table1 table
 ---@param table2 table
@@ -43,9 +12,6 @@ end
 
 local append = {
     isPaused = false,
-
-    GetConfig = GetConfig,
-    SaveConfig = SaveConfig,
 }
 
 for k,v in pairs(append) do

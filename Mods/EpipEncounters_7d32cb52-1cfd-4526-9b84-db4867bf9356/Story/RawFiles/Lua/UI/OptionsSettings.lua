@@ -11,7 +11,7 @@
 ---@field currentElements table<number, OptionsSettingsOption>
 ---@field currentCustomTabs table<number, string> Binds a side button's numerical ID to the mod it's for.
 
--- -@type OptionsSettingsUI
+---@class OptionsSettingsUI
 local OptionsSettings = {
     Options = {},
     OptionValues = {},
@@ -34,6 +34,9 @@ local OptionsSettings = {
         ---@type OptionsSettingsUI_Event_TabRendered
         TabRendered = {},
     },
+    FILEPATH_OVERRIDES = {
+        ["Public/Game/GUI/optionsSettings.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/optionsSettings.swf",
+    }
 }
 Client.UI.OptionsSettings = OptionsSettings
 Epip.InitializeUI(Client.UI.Data.UITypes.optionsSettings, "OptionsSettings", OptionsSettings)

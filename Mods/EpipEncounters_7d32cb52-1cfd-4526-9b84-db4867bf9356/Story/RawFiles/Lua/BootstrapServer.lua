@@ -62,7 +62,6 @@ LOAD_ORDER = {
     "Game/Ascension/Shared.lua",
     "Game/Ascension/Server.lua",
 
-    "Config.lua",
     "EpicStatsKeywords.lua",
     "EpicStatsDefinitions.lua",
     "EpipEncountersServer.lua",
