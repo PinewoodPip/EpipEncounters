@@ -206,27 +206,39 @@ Generic.OnElementMouseOver = function(ev, id)
 
     local element = ui:GetElementByID(id)
 
-    if element.Tooltip then
+    if element and element.Tooltip then
         element:GetMovieClip().ShowTooltip()
     end
 end
 
 Generic.OnElementShowTooltip = function(ev, id, x, y, width, height, _, align)
     local ui = Generic.GetInstance(ev.UI:GetTypeId())
-    local x, y = ui:GetMousePosition()
+    local mouseX, mouseY = ui:GetMousePosition()
+    local element = ui:GetElementByID(id)
     -- local element = ui:GetElementByID(id)
+
+    print(Ext.UI.GetViewportSize()[1], mouseX, Ext.UI.GetViewportSize()[1] - mouseX < 100)
+    if Ext.UI.GetViewportSize()[1] - mouseX < 100 then
+        mouseX = mouseX - 250
+    end
+
     Generic.CurrentTooltipElement = {
         UI = ui,
         ID = id,
         Position = {
-            X = x,
-            Y = y,
+            X = mouseX,
+            Y = mouseY,
         },
     }
 
-    print(ui:GetRoot().stage.mouseX)
-    -- TODO workaround for Character Creation context
-    Client.UI.Hotbar:ExternalInterfaceCall("showSkillTooltip", Client.UI.Hotbar:GetRoot().hotbar_mc.characterHandle, "Teleportation_FreeFall", x, y, width, height)
+
+    if type(element.Tooltip) == "string" then
+        ui:ExternalInterfaceCall("showTooltip", element.Tooltip, mouseX, mouseY, width, height, "left") -- TODO custom align
+    else
+        -- TODO workaround for Character Creation context
+        Client.UI.Hotbar:ExternalInterfaceCall("showSkillTooltip", Client.UI.Hotbar:GetRoot().hotbar_mc.characterHandle, "Teleportation_FreeFall", mouseX, mouseY, width, height)
+    end
+
     -- ui:ExternalInterfaceCall("showTalentTooltip", 126, Ext.Utils.HandleToInteger(Client.GetCharacter().Handle), x, y, width, height, "none")
 end
 
@@ -251,8 +263,9 @@ Generic.OnElementMouseOut = function(ev, id)
 
     local element = ui:GetElementByID(id)
 
-    if element.Tooltip and Generic.CurrentTooltipElement and Generic.CurrentTooltipElement.ID == id then -- TODO ui check
+    if element and element.Tooltip and Generic.CurrentTooltipElement and Generic.CurrentTooltipElement.ID == id then -- TODO ui check
         Client.UI.Hotbar:ExternalInterfaceCall("hideTooltip")
+        Generic.CurrentTooltipElement.UI:ExternalInterfaceCall("hideTooltip")
         Generic.CurrentTooltipElement = nil
     end
 end

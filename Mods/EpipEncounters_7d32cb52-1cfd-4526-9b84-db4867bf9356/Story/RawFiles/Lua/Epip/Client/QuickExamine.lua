@@ -1,6 +1,8 @@
 
 Epip.Features.QuickExamine = {
-    EntityNetID = nil,
+    entityNetID = nil,
+    lockCharacter = false,
+
     UI = nil, ---@type GenericUI_Instance
     WIDTH = 400,
     SCROLLBAR_WIDTH = 10,
@@ -38,10 +40,15 @@ function Epip.Features.QuickExamine.GetContainer()
     return QuickExamine.ContentContainer
 end
 
+---@return boolean
+function Epip.Features.QuickExamine.IsLocked()
+    return QuickExamine.lockCharacter
+end
+
 ---@param entity Entity
 function Epip.Features.QuickExamine.SetEntity(entity)
     if entity then
-        QuickExamine.EntityNetID = entity.NetID
+        QuickExamine.entityNetID = entity.NetID
 
         QuickExamine.GetContainer():Clear()
 
@@ -57,7 +64,7 @@ function Epip.Features.QuickExamine.SetEntity(entity)
 
         QuickExamine.UI:GetUI():Show()
     else
-        QuickExamine.EntityNetID = nil
+        QuickExamine.entityNetID = nil
 
         QuickExamine.UI:GetUI():Hide()
     end
@@ -72,6 +79,12 @@ Client.UI.OptionsInput.Events.ActionExecuted:RegisterListener(function(action, _
         local char = Client.GetPointerCharacter()
 
         QuickExamine.SetEntity(char)
+    end
+end)
+
+Client.UI.EnemyHealthBar:RegisterListener("updated", function(char, _)
+    if char and QuickExamine.UI:IsVisible() and not QuickExamine.IsLocked() then
+        QuickExamine.SetEntity(char) -- TODO support items
     end
 end)
 
@@ -130,7 +143,6 @@ local function Setup()
     content:SetScrollbarSpacing(-30)
     content:SetSideSpacing(5)
     QuickExamine.ContentContainer = content
-
     
     local closeButton = panel:AddChild("Close", "Button")
     closeButton:SetType(Generic.ELEMENTS.Button.TYPES.CLOSE)
@@ -139,6 +151,15 @@ local function Setup()
     closeButton:RegisterListener(Generic.ELEMENTS.Button.EVENT_TYPES.PRESSED, function()
         ui:GetUI():Hide()
     end)
+
+    local lockButton = panel:AddChild("Lock", "StateButton")
+    lockButton:SetType(Generic.ELEMENTS.StateButton.TYPES.LOCK)
+    lockButton:SetActive(QuickExamine.IsLocked())
+    lockButton:SetPosition(400 - 23 - 25, 2)
+    lockButton:RegisterListener(Generic.ELEMENTS.StateButton.EVENT_TYPES.STATE_CHANGED, function(state)
+        QuickExamine.lockCharacter = state
+    end)
+    lockButton.Tooltip = "Lock Character"
 
     uiObject.Layer = Client.UI.PlayerInfo:GetUI().Layer
 

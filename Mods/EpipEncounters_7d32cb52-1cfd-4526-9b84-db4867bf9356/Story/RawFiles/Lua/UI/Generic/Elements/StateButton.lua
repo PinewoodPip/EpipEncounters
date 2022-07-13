@@ -10,6 +10,7 @@ local Generic = Client.UI.Generic
 Client.UI.Generic.ELEMENTS.StateButton = {
     TYPES = {
         CHECKBOX = 0,
+        LOCK = 1,
     },
     EVENT_TYPES = {
         STATE_CHANGED = "StateButton_StateChanged",

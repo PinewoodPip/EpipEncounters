@@ -55,6 +55,7 @@ package Elements
         private var currentState:String = "Normal";
 
         public var _bg_Checkbox:MovieClip;
+        public var _bg_Lock:MovieClip;
         
         public function StateButton()
         {
@@ -62,6 +63,7 @@ package Elements
             this.buttonTypes = new Array();
 
             this.RegisterType(this._bg_Checkbox);
+            this.RegisterType(this._bg_Lock);
 
             this.SetType(0);
             this.SetHasText(false);
