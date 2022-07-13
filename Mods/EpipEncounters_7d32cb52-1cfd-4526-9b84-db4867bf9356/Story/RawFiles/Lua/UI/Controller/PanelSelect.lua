@@ -145,28 +145,28 @@ function Wheel.GetStickAxes()
     return {Horizontal = root.stickHAxis, Vertical = root.stickVAxis}
 end
 
-Ext.Events.Tick:Subscribe(function()
+-- Ext.Events.Tick:Subscribe(function()
 
-    if Client.IsUsingController() then
-        Wheel:SetFlag(Client.UI._BaseUITable.UI_FLAGS.VISIBLE, true)
+--     if Client.IsUsingController() then
+--         Wheel:SetFlag(Client.UI._BaseUITable.UI_FLAGS.VISIBLE, true)
 
-        -- Wheel:GetRoot().events[0] = "IE UICancel"
+--         -- Wheel:GetRoot().events[0] = "IE UICancel"
         
-        -- Wheel:GetRoot().events[1] = "IE PanelSelect"
-        if Wheel.hidden then
-            Wheel:SetFlag(Client.UI._BaseUITable.UI_FLAGS.PLAYER_INPUT_1, false)
-            -- Wheel:GetRoot().events[0] = "None"
-        else
-            Wheel:SetFlag(Client.UI._BaseUITable.UI_FLAGS.PLAYER_INPUT_1, true)
-            -- Wheel:GetRoot().events[0] = "IE UICancel"
-        end
-        -- Wheel:SetFlag(Client.UI._BaseUITable.UI_FLAGS.PLAYER_INPUT_1, true)
-        -- Wheel:GetRoot().events[0] = "IE UICancel"
-        -- Wheel:GetRoot().events[0] = "None"
-        _D(Wheel.GetStickAxes())
-        -- Wheel:SetFlag(Client.UI._BaseUITable.UI_FLAGS.VISIBLE, false)
-    end
-end)
+--         -- Wheel:GetRoot().events[1] = "IE PanelSelect"
+--         if Wheel.hidden then
+--             Wheel:SetFlag(Client.UI._BaseUITable.UI_FLAGS.PLAYER_INPUT_1, false)
+--             -- Wheel:GetRoot().events[0] = "None"
+--         else
+--             Wheel:SetFlag(Client.UI._BaseUITable.UI_FLAGS.PLAYER_INPUT_1, true)
+--             -- Wheel:GetRoot().events[0] = "IE UICancel"
+--         end
+--         -- Wheel:SetFlag(Client.UI._BaseUITable.UI_FLAGS.PLAYER_INPUT_1, true)
+--         -- Wheel:GetRoot().events[0] = "IE UICancel"
+--         -- Wheel:GetRoot().events[0] = "None"
+--         _D(Wheel.GetStickAxes())
+--         -- Wheel:SetFlag(Client.UI._BaseUITable.UI_FLAGS.VISIBLE, false)
+--     end
+-- end)
 
 -- Vanilla functionality
 Wheel:RegisterHook("IsPanelFlashing", function(flashing, id)

@@ -1122,7 +1122,7 @@ end)
 
 -- Hide level up blips while the UI is open.
 Ext.Events.Tick:Subscribe(function()
-    if Ext.Client.GetGameState() == "Running" then
+    if Ext.Client.GetGameState() == "Running" and not Client.IsUsingController() then
         if Vanity.visible and CharacterSheet:Exists() then
             Vanity.TogglePointsWarning(false)
         else
