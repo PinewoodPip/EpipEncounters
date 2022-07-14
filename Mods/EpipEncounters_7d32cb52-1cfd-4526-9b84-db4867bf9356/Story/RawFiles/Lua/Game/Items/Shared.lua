@@ -1,13 +1,14 @@
 
 ---@meta Library: GameItem, ContextShared, Item
 
+---@class ItemLib
 local Items = Item
 
 ---Returns true if the item is an Artifact by checking the AMER_UNI tag.
 ---@param item Item
 ---@return boolean
 function Items.IsArtifact(item)
-    return item:HasTag("AMER_UNI")
+    return item:HasTag("AMER_UNI") and not item:HasTag("PIP_FAKE_ARTIFACT")
 end
 
 ---Returns whether item is a melee weapon (satisfying a MeleeWeapon requirement)

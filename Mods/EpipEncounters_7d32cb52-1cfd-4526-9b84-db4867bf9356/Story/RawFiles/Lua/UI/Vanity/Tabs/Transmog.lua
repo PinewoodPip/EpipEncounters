@@ -303,7 +303,7 @@ function Tab:Render()
                 end
             end
         else
-            Vanity.RenderText("InvalidItem", "This item is too brittle to transmog.<br>Larian needs to invest in better blacksmiths.")
+            Vanity.RenderText("InvalidItem", "This item is too brittle to transmog.")
         end
     else
         Vanity.RenderText("NoItem", "You don't have an item equipped in that slot!")
@@ -383,7 +383,7 @@ Utilities.Hooks.RegisterListener("Client", "ActiveCharacterChanged", function()
 end)
 
 Transmog.Hooks.CanTransmog:RegisterHook(function (canTransmog, item)
-    if Transmog.BLOCKED_TEMPLATES[item.RootTemplate.Id] then
+    if Transmog.BLOCKED_TEMPLATES[item.RootTemplate.Id] or Item.IsArtifact(item) then
         canTransmog = false
     end
 
