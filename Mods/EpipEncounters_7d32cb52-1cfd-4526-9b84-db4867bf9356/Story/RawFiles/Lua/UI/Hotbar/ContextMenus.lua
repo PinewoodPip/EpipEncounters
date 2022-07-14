@@ -127,15 +127,15 @@ Client.UI.ContextMenu.RegisterElementListener("hotBarLoadLoadout", "buttonPresse
             Type = "Message",
             LoadoutID = params.ID,
             Buttons = {
-                {Type = 1, Text = "Apply"},
-                {Type = 1, Text = "Cancel"},
+                {Type = 1, Text = "Apply", ID = 1},
+                {Type = 1, Text = "Cancel", ID = 2},
             }
         })
     end
 end)
 
 Client.UI.MessageBox.RegisterMessageListener("epip_Hotbar_LoadLoadout", Client.UI.MessageBox.Events.ButtonPressed, function(buttonId, data)
-    if buttonId == 0 then
+    if buttonId == 1 then
         Hotbar.ApplyLoadout(Client.GetCharacter(), data.LoadoutID,Hotbar.currentLoadoutRow, true)
     end
     Hotbar.currentLoadoutRow = nil

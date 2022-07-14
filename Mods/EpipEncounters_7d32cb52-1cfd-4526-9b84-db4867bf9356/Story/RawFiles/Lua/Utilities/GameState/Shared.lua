@@ -126,7 +126,7 @@ Ext.Events.Tick:Subscribe(function()
     local now = Ext.Utils.MonotonicTime()
     local lastTickTime = GameState.lastTickTime or now
 
-    if not GameState.IsPaused() then
+    if Ext.GetGameState() == GameState.CLIENT_STATES.RUNNING then
         local deltaTime = now - lastTickTime
 
         GameState.Events.RunningTick:Throw({
