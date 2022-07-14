@@ -115,7 +115,7 @@ end)
 
 Ext.RegisterUITypeCall(Client.UI.Data.UITypes.overhead, "pipOverheadAttempt", function(ui, method, handle, str)
 
-    str = str:gsub(Client.UI.Data.Patterns.FONT_SIZE, string.format(Client.UI.Data.StringTemplates.FONT_SIZE, Overhead.currentDamageOverheadSize))
+    str = str:gsub(Text.PATTERNS.FONT_SIZE, string.format(Text.TEMPLATES.FONT_SIZE, Overhead.currentDamageOverheadSize))
 
     local char = Ext.GetCharacter(Ext.UI.DoubleToHandle(handle))
     if not char then char = Ext.GetItem(Ext.UI.DoubleToHandle(handle)) end
@@ -127,7 +127,7 @@ end)
 
 Ext.RegisterUITypeCall(Client.UI.Data.UITypes.overhead, "pipOverheadDialogAttempt", function(ui, method, handle, str, duration)
 
-    str = str:gsub(Client.UI.Data.Patterns.FONT_SIZE, string.format(Client.UI.Data.StringTemplates.FONT_SIZE, Overhead.currentOverheadSize))
+    str = str:gsub(Text.PATTERNS.FONT_SIZE, string.format(Text.TEMPLATES.FONT_SIZE, Overhead.currentOverheadSize))
 
     Overhead:GetRoot().addADialog(handle, str, duration)
 end)
@@ -136,7 +136,13 @@ end)
 Net.RegisterListener("EPIPENCOUNTERS_Overhead", function(cmd, payload)
     local data = payload
     local char = Ext.GetCharacter(payload.NetID)
-    local color = Client.UI.Data.ARMOR_COLORS[data.Type]
+    local color
+
+    if payload.Type == "MagicArmor" then
+        color = Color.COLORS.MAGIC_ARMOR
+    else
+        color = Color.COLORS.PHYSICAL_ARMOR
+    end
 
     Overhead.ShowDamage(char, data.Amount, color)
 end)

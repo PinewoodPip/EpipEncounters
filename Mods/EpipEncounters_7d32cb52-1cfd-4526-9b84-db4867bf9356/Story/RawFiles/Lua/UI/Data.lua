@@ -108,11 +108,6 @@ Data.DAMAGE_TYPES = {
 -- MISC
 ---------------------------------------------
 
-Data.ARMOR_COLORS = {
-    PhysicalArmor = "#A8A8A8",
-    MagicArmor = "#188EDE",
-}
-
 -- IDs of vanilla UIs.
 Data.UITypes = {
     mods = 49,
@@ -169,16 +164,3 @@ Data.UITypes = {
     optionsInput = 13,
     playerInfo_controller = 61,
 }
-
----------------------------------------------
--- PATTERNS
----------------------------------------------
-
-Data.Patterns.FONT_SIZE = 'size="([0-9]+)"'
-Data.Patterns.FONT_COLOR = 'color="(#......)"'
-
----------------------------------------------
--- STRING TEMPLATES
----------------------------------------------
-
-Data.StringTemplates.FONT_SIZE = 'size="%d"'

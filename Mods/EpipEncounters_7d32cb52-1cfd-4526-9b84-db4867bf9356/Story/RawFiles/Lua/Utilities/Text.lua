@@ -23,6 +23,13 @@ Text = {
         ["?"] = "%?",
         ["\0"] = "%z",
     },
+    PATTERNS = {
+        FONT_SIZE = 'size="([0-9]+)"',
+        FONT_COLOR = 'color="(#......)"',
+    },
+    TEMPLATES = {
+        FONT_SIZE = 'size="%d"',
+    },
 }
 
 ---@alias Font "Bold" | "Italic" | "Normal"

@@ -7,6 +7,11 @@
 
 Color = {
     RGBColor = nil,
+
+    COLORS = {
+        PHYSICAL_ARMOR = "#A8A8A8",
+        MAGIC_ARMOR = "#188EDE",
+    },
 }
 
 ---------------------------------------------
