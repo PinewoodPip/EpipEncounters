@@ -38,14 +38,14 @@ function Auras.ApplyAura(aura)
 
     -- Auras.RemoveCurrentAura()
 
-    Game.Net.PostToServer("EPIPENCOUNTERS_Vanity_ApplyAura", {
+    Net.PostToServer("EPIPENCOUNTERS_Vanity_ApplyAura", {
         NetID = Client.GetCharacter().NetID,
         Aura = aura,
     })
 end
 
 function Auras.RemoveCurrentAura()
-    Game.Net.PostToServer("EPIPENCOUNTERS_Vanity_RemoveAura", {
+    Net.PostToServer("EPIPENCOUNTERS_Vanity_RemoveAura", {
         NetID = Client.GetCharacter().NetID,
     })
 end

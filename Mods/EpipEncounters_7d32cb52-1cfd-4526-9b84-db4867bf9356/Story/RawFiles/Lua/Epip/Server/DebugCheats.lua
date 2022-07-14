@@ -4,12 +4,12 @@
 ---------------------------------------------
 
 -- Warp to AMER_Test.
-Game.Net.RegisterListener("EPIPENCOUNTERS_WARPPARTY", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_WARPPARTY", function(cmd, payload)
     CharacterTeleportPartiesToTrigger(payload.Trigger, "")
 end)
 
 -- Kill/Resurrect.
-Game.Net.RegisterListener("EPIP_CHEATS_KILLRESURRECT", function(cmd, payload)
+Net.RegisterListener("EPIP_CHEATS_KILLRESURRECT", function(cmd, payload)
     local char = Ext.GetCharacter(payload.NetID)
 
     if Osi.CharacterIsDead(char.MyGuid) == 0 then
@@ -20,7 +20,7 @@ Game.Net.RegisterListener("EPIP_CHEATS_KILLRESURRECT", function(cmd, payload)
 end)
 
 -- Add tag.
-Game.Net.RegisterListener("EPIP_CHEATS_ADDTAG", function(cmd, payload)
+Net.RegisterListener("EPIP_CHEATS_ADDTAG", function(cmd, payload)
     local char = Ext.GetCharacter(payload.NetID)
 
     print(payload.Tag)
@@ -28,21 +28,21 @@ Game.Net.RegisterListener("EPIP_CHEATS_ADDTAG", function(cmd, payload)
 end)
 
 -- Remove tag.
-Game.Net.RegisterListener("EPIP_CHEATS_REMOVETAG", function(cmd, payload)
+Net.RegisterListener("EPIP_CHEATS_REMOVETAG", function(cmd, payload)
     local char = Ext.GetCharacter(payload.NetID)
 
     ClearTag(char.MyGuid, payload.Tag)
 end)
 
 -- Restore HP + Armors.
-Game.Net.RegisterListener("EPIP_CHEATS_HEAL", function(cmd, payload)
+Net.RegisterListener("EPIP_CHEATS_HEAL", function(cmd, payload)
     local char = Ext.GetCharacter(payload.NetID)
 
     Osi.PROC_AMER_GEN_Heal_Percentage(char.MyGuid, 100, "All", char.MyGuid, 1, 0)
 end)
 
 -- Give AP/SP.
-Game.Net.RegisterListener("EPIP_CHEATS_GIVESP", function(cmd, payload)
+Net.RegisterListener("EPIP_CHEATS_GIVESP", function(cmd, payload)
     local char = Ext.GetCharacter(payload.NetID)
 
     Osi.PROC_AMER_CharacterAddSourcePoints(char.MyGuid, 99)
@@ -50,28 +50,28 @@ Game.Net.RegisterListener("EPIP_CHEATS_GIVESP", function(cmd, payload)
 end)
 
 -- Reset cooldowns.
-Game.Net.RegisterListener("EPIP_CHEATS_RESETCDS", function(cmd, payload)
+Net.RegisterListener("EPIP_CHEATS_RESETCDS", function(cmd, payload)
     local char = Ext.GetCharacter(payload.NetID)
 
     Osi.CharacterResetCooldowns(char.MyGuid)
 end)
 
 -- Give Flexstat spells.
-Game.Net.RegisterListener("EPIP_CHEATS_SPELL", function(cmd, payload)
+Net.RegisterListener("EPIP_CHEATS_SPELL", function(cmd, payload)
     local char = Ext.GetCharacter(payload.NetID)
 
     Osi.PROC_AMER_FlexStat_CharacterAddStat(char.MyGuid, "Spell", payload.StatsID)
 end)
 
 -- Apply status.
-Game.Net.RegisterListener("EPIP_CHEATS_ADDSTATUS", function(cmd, payload)
+Net.RegisterListener("EPIP_CHEATS_ADDSTATUS", function(cmd, payload)
     local char = Ext.GetCharacter(payload.NetID)
 
     Osi.ApplyStatus(char.MyGuid, payload.StatusID, payload.Duration, 1)
 end)
 
 -- Give numeric Flexstats
-Game.Net.RegisterListener("EPIP_CHEATS_FLEXSTAT", function(cmd, payload)
+Net.RegisterListener("EPIP_CHEATS_FLEXSTAT", function(cmd, payload)
     local char = Ext.GetCharacter(payload.NetID)
     
     local stat = payload.Stat
@@ -96,7 +96,7 @@ Game.Net.RegisterListener("EPIP_CHEATS_FLEXSTAT", function(cmd, payload)
 end)
 
 -- Teleport to object.
-Game.Net.RegisterListener("EPIP_CHEATS_TELEPORTTO", function(cmd, payload)
+Net.RegisterListener("EPIP_CHEATS_TELEPORTTO", function(cmd, payload)
     local char = Ext.GetCharacter(payload.NetID)
     local target = Ext.GetCharacter(payload.TargetGUID)
 
@@ -116,7 +116,7 @@ Game.Net.RegisterListener("EPIP_CHEATS_TELEPORTTO", function(cmd, payload)
 end)
 
 -- Grant treasure.
-Game.Net.RegisterListener("EPIP_CHEATS_GRANTTREASURE", function(cmd, payload)
+Net.RegisterListener("EPIP_CHEATS_GRANTTREASURE", function(cmd, payload)
     local char = Ext.GetCharacter(payload.NetID)
     local treasure = payload.Treasure
     local rolls = payload.Amount
@@ -127,14 +127,14 @@ Game.Net.RegisterListener("EPIP_CHEATS_GRANTTREASURE", function(cmd, payload)
 end)
 
 -- Add SpecialLogic.
-Game.Net.RegisterListener("EPIP_CHEATS_SPECIALLOGIC", function(cmd, payload)
+Net.RegisterListener("EPIP_CHEATS_SPECIALLOGIC", function(cmd, payload)
     local char = Ext.GetCharacter(payload.NetID)
 
     Osi.PROC_AMER_UI_Ascension_SpecialLogic_Add(char.MyGuid, payload.SpecialLogic, payload.Amount)
 end)
 
 -- Add all artifacts.
-Game.Net.RegisterListener("EPIPENCOUNTERS_CHEATS_SPAWNARTIFACTS", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_CHEATS_SPAWNARTIFACTS", function(cmd, payload)
     local char = Ext.GetCharacter(payload.NetID)
 
     for i,tuple in pairs(Osi.DB_AMER_Artifacts:Get(nil, nil, nil, nil)) do
@@ -147,7 +147,7 @@ Game.Net.RegisterListener("EPIPENCOUNTERS_CHEATS_SPAWNARTIFACTS", function(cmd, 
 end)
 
 -- Add all artifacts foci.
-Game.Net.RegisterListener("EPIPENCOUNTERS_CHEATS_SPAWNARTIFACTSFOCI", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_CHEATS_SPAWNARTIFACTSFOCI", function(cmd, payload)
     local char = Ext.GetCharacter(payload.NetID)
 
     Epip.Features.AutoIdentify.SetForceEnable(true)
@@ -164,7 +164,7 @@ Game.Net.RegisterListener("EPIPENCOUNTERS_CHEATS_SPAWNARTIFACTSFOCI", function(c
 end)
 
 -- Add item template.
-Game.Net.RegisterListener("EPIP_CHEATS_ITEMTEMPLATE", function(cmd, payload)
+Net.RegisterListener("EPIP_CHEATS_ITEMTEMPLATE", function(cmd, payload)
     local char = Ext.GetCharacter(payload.NetID)
     local template = payload.TemplateGUID
     
@@ -172,7 +172,7 @@ Game.Net.RegisterListener("EPIP_CHEATS_ITEMTEMPLATE", function(cmd, payload)
 end)
 
 -- Godmode/Pipmode: Infinite AP, resets cooldowns, RESISTDEATH.
-Game.Net.RegisterListener("EPIP_CHEATS_INFINITEAP", function(cmd, payload)
+Net.RegisterListener("EPIP_CHEATS_INFINITEAP", function(cmd, payload)
     local char = Ext.GetCharacter(payload.NetID)
     
     if not char:HasTag("PIP_DEBUGCHEATS_INFINITEAP") then
@@ -195,7 +195,7 @@ Ext.Osiris.RegisterListener("PROC_AMER_ActionPoints_Changed", 3, "after", functi
 end)
 
 -- Teleport to cursor.
-Game.Net.RegisterListener("EPIPENCOUNTERS_CHEATS_TeleportChar", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_CHEATS_TeleportChar", function(cmd, payload)
     local char = Ext.GetCharacter(payload.NetID)
     local pos = payload.Position
     local teleportParty = payload.TeleportParty

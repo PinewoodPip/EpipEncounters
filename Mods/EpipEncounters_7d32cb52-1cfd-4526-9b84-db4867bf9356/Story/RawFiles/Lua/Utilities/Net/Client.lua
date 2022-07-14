@@ -1,5 +1,5 @@
 
-function Game.Net.PostToServer(channel, message)
+function Net.PostToServer(channel, message)
     message = message or {}
     if type(message) ~= "string" then
         message = Ext.Json.Stringify(message)

@@ -20,7 +20,7 @@ function Inv.AutoUnlockFor(chars)
     end
 end
 
--- Update the data on the UI. Game.Items uses this to query item amounts from this UI, as Amount is not mapped on client.
+-- Update the data on the UI. Item uses this to query item amounts from this UI, as Amount is not mapped on client.
 function Inv.Refresh()
     Ext.UI.SetDirty(Client.GetCharacter().Handle, 16777216)
 end
@@ -58,7 +58,7 @@ Ext.RegisterUITypeCall(Client.UI.Data.UITypes.partyInventory, "startDragging", f
 end)
 
 -- auto-unlock inventories setting; per player.
-Game.Net.RegisterListener("EPIPENCOUNTERS_AutoUnlockPartyInventory", function(event, payload)
+Net.RegisterListener("EPIPENCOUNTERS_AutoUnlockPartyInventory", function(event, payload)
     Inv.AutoUnlockFor(payload.Chars)
 end)
 
@@ -68,7 +68,7 @@ Ext.Events.GameStateChanged:Subscribe(function(event)
     local to = event.ToState
     
     if from == "PrepareRunning" and to == "Running" and Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "AutoUnlockInventory") and not Client.IsUsingController() then
-        Game.Net.PostToServer("EPIPENCOUNTERS_AutoUnlockMe", {NetID = Client.GetCharacter().NetID})
+        Net.PostToServer("EPIPENCOUNTERS_AutoUnlockMe", {NetID = Client.GetCharacter().NetID})
     end
 end)
 

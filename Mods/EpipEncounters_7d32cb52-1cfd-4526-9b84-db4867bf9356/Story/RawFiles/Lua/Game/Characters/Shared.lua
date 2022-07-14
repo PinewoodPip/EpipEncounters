@@ -241,7 +241,7 @@ function Character.HasMeleeWeapon(char)
     local offhand = char:GetItemBySlot("Shield")
     if offhand then offhand = Ext.Entity.GetItem(offhand) end
     
-    return Game.Items.IsMeleeWeapon(weapon) or Game.Items.IsMeleeWeapon(offhand)
+    return Item.IsMeleeWeapon(weapon) or Item.IsMeleeWeapon(offhand)
 end
 
 ---Returns whether char has a bow or crossbow equipped.
@@ -251,7 +251,7 @@ function Character.HasRangedWeapon(char)
     local weapon = char:GetItemBySlot("Weapon")
     if weapon then weapon = Ext.Entity.GetItem(weapon) end
 
-    return Game.Items.IsRangedWeapon(weapon)
+    return Item.IsRangedWeapon(weapon)
 end
 
 ---Returns whether char has a shield equipped.
@@ -261,7 +261,7 @@ function Character.HasShield(char)
     local offhand = char:GetItemBySlot("Shield")
     if offhand then offhand = Ext.Entity.GetItem(offhand) end
 
-    return Game.Items.IsShield(offhand)
+    return Item.IsShield(offhand)
 end
 
 ---Returns whether char has a dagger equipped in either slot.
@@ -274,7 +274,7 @@ function Character.HasDagger(char)
     local offhand = char:GetItemBySlot("Shield")
     if offhand then offhand = Ext.Entity.GetItem(offhand) end
 
-    return Game.Items.IsDagger(weapon) or Game.Items.IsDagger(offhand)
+    return Item.IsDagger(weapon) or Item.IsDagger(offhand)
 end
 
 ---Returns whether char is muted.

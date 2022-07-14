@@ -116,7 +116,7 @@ end
 
 ---@param item EclItem
 function Dyes.ReapplyAppearance(item)
-    local slot = Game.Items.GetItemSlot(item)
+    local slot = Item.GetItemSlot(item)
     local dye = Dyes.activeCharacterDyes[slot]
 
     if dye then
@@ -178,10 +178,10 @@ function Dyes.ApplyDye(item, dyeStatData)
 
     Dyes.CreateDyeStats(item, dyeStatData)
 
-    Game.Net.PostToServer("EPIPENCOUNTERS_CreateDyeStat_ForPeers", {ItemNetID = item.NetID, Stat = dyeStatData})
+    Net.PostToServer("EPIPENCOUNTERS_CreateDyeStat_ForPeers", {ItemNetID = item.NetID, Stat = dyeStatData})
 
     Client.Timer.Start("PIP_ApplyCustomDye", 0.35, function()
-        Game.Net.PostToServer("EPIPENCOUNTERS_DyeItem", {NetID = item.NetID, DyeStat = dyeStatData, CharacterNetID = Client.GetCharacter().NetID})
+        Net.PostToServer("EPIPENCOUNTERS_DyeItem", {NetID = item.NetID, DyeStat = dyeStatData, CharacterNetID = Client.GetCharacter().NetID})
     end)
 end
 
@@ -278,7 +278,7 @@ function Dyes.GetCurrentCustomDye(item, useSliders, useDefaultColors)
 
     -- Try to get the base color of the item
     if (not colorData) and item and useDefaultColors then
-        local boosts = Game.Items.GetNamedBoosts(item)
+        local boosts = Item.GetNamedBoosts(item)
 
         for i=#boosts,1,-1 do
             local stat = Ext.Stats.Get(boosts[i])
@@ -629,7 +629,7 @@ Dyes.Events.DyeUsed:RegisterListener(function (dye, item, character)
     end
 end)
 
-Game.Net.RegisterListener("EPIP_CACHEDYE", function(cmd, payload)
+Net.RegisterListener("EPIP_CACHEDYE", function(cmd, payload)
     local dye = payload.Dye
 
     Dyes.CACHE[dye.Name] = dye
@@ -641,7 +641,7 @@ end)
 -- _D(Ext.GetItem(_C():GetItemBySlot("Breast")):GetDeltaMods())
 -- _D(Ext.Stats.DeltaMod.GetLegacy("Boost_Armor_PIP_GENCOLOR_FF006699_FF669999_FF669999", "Armor"))
 -- SESSIONLOADED WORKS!
-Game.Net.RegisterListener("EPIPENCOUNTERS_CreateVanityDyes", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_CreateVanityDyes", function(cmd, payload)
 -- Ext.Events.SessionLoaded:Subscribe(function()
 
     -- print("Creating dye stats")
@@ -653,7 +653,7 @@ Game.Net.RegisterListener("EPIPENCOUNTERS_CreateVanityDyes", function(cmd, paylo
 end)
 
 -- Create dye stats on this client when requested by the server.
-Game.Net.RegisterListener("EPIPENCOUNTERS_CreateDyeStat", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_CreateDyeStat", function(cmd, payload)
     Dyes.CreateDyeStats(Ext.GetItem(payload.ItemNetID), payload.Stat)
 end)
 

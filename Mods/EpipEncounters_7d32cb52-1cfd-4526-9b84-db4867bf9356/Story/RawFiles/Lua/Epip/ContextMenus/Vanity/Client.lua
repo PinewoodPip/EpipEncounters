@@ -6,7 +6,7 @@ Vanity.Outfits = {}
 
 -- Request to transform an item into a template.
 function Vanity.TransmogItem(item, newTemplate)
-    Game.Net.PostToServer("EPIPENCOUNTERS_VanityTransmog", {
+    Net.PostToServer("EPIPENCOUNTERS_VanityTransmog", {
         Char = Client.GetCharacter().NetID,
         Item = item.NetID,
         NewTemplate = newTemplate,
@@ -47,13 +47,13 @@ end)
 function Vanity.GenerateContextMenuElements(item, category)
     category = Vanity.CATEGORIES[category]
     local entries = {}
-    local itemSlot = Game.Items.GetItemSlot(item)
+    local itemSlot = Item.GetItemSlot(item)
 
     if itemSlot == "Shield" then
         itemSlot = "Weapon"
     end
 
-    local itemSubtype = Game.Items.GetEquipmentSubtype(item)
+    local itemSubtype = Item.GetEquipmentSubtype(item)
 
     for guid,data in pairs(Vanity.TEMPLATES) do
         local shouldRender = Vanity:ReturnFromHooks("ShouldRenderContextMenuEntry", false, item, guid, data, category, itemSlot, itemSubtype)
@@ -109,7 +109,7 @@ end
 
 -- Synch unlocks with other players
 -- function Vanity.SendUnlocks()
---     Game.Net.PostToServer("EPIPENCOUNTERS_VanitySynchUnlocks")
+--     Net.PostToServer("EPIPENCOUNTERS_VanitySynchUnlocks")
 -- end
 
 ---------------------------------------------
@@ -127,7 +127,7 @@ ContextMenu.RegisterMenuHandler("epip_VanityMenu", function()
     local item = ContextMenu.item
 
     -- Categories
-    local slot = Game.Items.GetItemSlot(item)
+    local slot = Item.GetItemSlot(item)
 
     -- We cannot tell the difference between shield and weapon roots.
     if slot == "Shield" then

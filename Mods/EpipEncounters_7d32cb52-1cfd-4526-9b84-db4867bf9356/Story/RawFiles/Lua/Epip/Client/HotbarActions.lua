@@ -25,12 +25,12 @@ end
 
 -- Toggle Party Link
 Hotbar.RegisterActionListener("EPIP_TogglePartyLink", "ActionUsed", function(char)
-    Game.Net.PostToServer("EPIPENCOUNTERS_Hotkey_TogglePartyLink", {NetID = char.NetID})
+    Net.PostToServer("EPIPENCOUNTERS_Hotkey_TogglePartyLink", {NetID = char.NetID})
 end)
 
 -- Bedroll rest
 Hotbar.RegisterActionListener("EPIP_UserRest", "ActionUsed", function(char)
-    Game.Net.PostToServer("EPIPENCOUNTERS_Hotkey_UserRest", {NetID = char.NetID})
+    Net.PostToServer("EPIPENCOUNTERS_Hotkey_UserRest", {NetID = char.NetID})
 end)
 
 -- place these by default on the hotkeys bar

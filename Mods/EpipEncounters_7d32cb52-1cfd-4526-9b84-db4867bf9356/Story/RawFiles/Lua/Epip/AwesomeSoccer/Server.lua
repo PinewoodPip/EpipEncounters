@@ -16,7 +16,7 @@ Epip.AddFeature("AwesomeSoccer", "AwesomeSoccer", Soccer)
 -- Open the UI when interacting with a compatible item.
 Ext.Osiris.RegisterListener("CharacterUsedItemTemplate", 3, "after", function(char, template, item)
     if template == Soccer.TEMPLATE then
-        Game.Net.PostToCharacter(char, "EPIPENCOUNTERS_OpenSoccer")
+        Net.PostToCharacter(char, "EPIPENCOUNTERS_OpenSoccer")
         CharacterPlayHUDSound(char, "Item_Generic_Use")
     end
 end)

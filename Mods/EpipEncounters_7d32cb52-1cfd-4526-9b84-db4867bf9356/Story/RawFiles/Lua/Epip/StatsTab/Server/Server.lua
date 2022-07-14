@@ -60,7 +60,7 @@ function UpdateCustomStatsForCharacter(char)
         Utilities.Hooks.FireEvent("Epip_StatsTab", "UpdateStat_" .. id, char, data)
     end
 
-    Game.Net.PostToUser(char, "EPIPENCOUNTERS_RefreshStatsTab")
+    Net.PostToUser(char, "EPIPENCOUNTERS_RefreshStatsTab")
 end
 
 -- Update the tag storing a stat's value for a char.
@@ -99,7 +99,7 @@ Ext.Osiris.RegisterListener("PROC_AMER_UI_Ascension_NodeAllocated", 3, "after", 
     if EpipStats.STATS[statID] then
         EpipStats.UpdateTaggedStat(Ext.GetCharacter(char), statID, 1)
     else
-        Game.Net.PostToCharacter(char, "EPIPENCOUNTERS_RefreshStatsTab")
+        Net.PostToCharacter(char, "EPIPENCOUNTERS_RefreshStatsTab")
     end
 end)
 
@@ -111,12 +111,12 @@ Ext.Osiris.RegisterListener("PROC_AMER_UI_Ascension_NodeDeallocated", 3, "after"
     if EpipStats.STATS[statID] then
         EpipStats.UpdateTaggedStat(Ext.GetCharacter(char), statID, 0)
     else
-        Game.Net.PostToCharacter(char, "EPIPENCOUNTERS_RefreshStatsTab")
+        Net.PostToCharacter(char, "EPIPENCOUNTERS_RefreshStatsTab")
     end
 end)
 
 -- Requested update from client
-Game.Net.RegisterListener("EPIPENCOUNTERS_UpdateCustomStats", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_UpdateCustomStats", function(cmd, payload)
     local char = Ext.GetCharacter(payload.NetID)
     UpdateCustomStatsForCharacter(char.MyGuid)
 end)

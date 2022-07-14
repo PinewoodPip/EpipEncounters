@@ -1,4 +1,5 @@
 
+---@class TextLib
 Text = {
     FONTS = {
         BOLD = "Ubuntu Mono",
@@ -6,7 +7,22 @@ Text = {
         NORMAL = "Nueva Std Cond",
         BIG_NUMBERS = "CollegiateBlackFLF",
         FALLBACK = "fb",
-    }
+    },
+    LUA_PATTERN_CHARACTERS = {
+        ["^"] = "%^",
+        ["$"] = "%$",
+        ["("] = "%(",
+        [")"] = "%)",
+        ["%"] = "%%",
+        ["."] = "%.",
+        ["["] = "%[",
+        ["]"] = "%]",
+        ["*"] = "%*",
+        ["+"] = "%+",
+        ["-"] = "%-",
+        ["?"] = "%?",
+        ["\0"] = "%z",
+    },
 }
 
 ---@alias Font "Bold" | "Italic" | "Normal"
@@ -20,6 +36,7 @@ Text = {
 ---@field FormatArgs any[]
 ---@field Text? string Used for formatting strings with recursive Text.Format calls.
 
+---@class TextFormatData
 local _TextFormatData = {
     FormatArgs = {},
 }
@@ -68,6 +85,14 @@ function Text.RemoveTrailingZeros(num)
     str = str:gsub("%.$", "")
 
     return str
+end
+
+---Escapes characters that have a special meaning in lua patterns.
+---Source: https://github.com/lua-nucleo/lua-nucleo/blob/v0.1.0/lua-nucleo/string.lua#L245-L267
+---@param str string
+---@return string
+function Text.EscapePatternCharacters(str)
+    return (str:gsub(".", Text.LUA_PATTERN_CHARACTERS))
 end
 
 ---@param str string

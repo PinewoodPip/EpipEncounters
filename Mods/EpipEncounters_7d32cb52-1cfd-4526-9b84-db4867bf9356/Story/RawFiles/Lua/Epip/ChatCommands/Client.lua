@@ -33,7 +33,7 @@ end)
 
 -- Forward commands to server.
 Chat.Events.CommandSent:RegisterListener(function (command, args, char)
-    Game.Net.PostToServer("EPIPENCOUNTERS_EpipChat_CommandSent", {
+    Net.PostToServer("EPIPENCOUNTERS_EpipChat_CommandSent", {
         CharacterNetID = char.NetID,
         Command = command,
         Args = args,

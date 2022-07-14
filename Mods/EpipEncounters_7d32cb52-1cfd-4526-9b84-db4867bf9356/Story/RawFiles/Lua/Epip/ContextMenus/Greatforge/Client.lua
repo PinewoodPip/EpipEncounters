@@ -88,10 +88,10 @@ end
 ---------------------------------------------
 ContextMenu.RegisterVanillaMenuHandler("Item", function(item)
     -- Greatforge menus are only applicable to equipment.
-    if not item.Stats or not Game.Items.IsEquipment(item) then return nil end
+    if not item.Stats or not Item.IsEquipment(item) then return nil end
 
-    local hasRunes = Game.Items.HasRunes(item)
-    local isEquipped = Game.Items.IsEquipped(Client.GetCharacter(), item)
+    local hasRunes = Item.HasRunes(item)
+    local isEquipped = Item.IsEquipped(Client.GetCharacter(), item)
 
     local entries = {
         GreatforgeContextMenu.Entries.EXTRACT_RUNES,
@@ -199,7 +199,7 @@ ContextMenu.RegisterVanillaMenuHandler("Item", function(item)
     for index,guid in pairs(items) do
         local item = Ext.GetItem(guid)
 
-        if Game.Items.IsEquipment(item) then
+        if Item.IsEquipment(item) then
             hasEquipment = true
             break
         end
@@ -220,7 +220,7 @@ ContextMenu.RegisterVanillaMenuHandler("Item", function(item)
 end)
 
 ContextMenu.RegisterElementListener("epip_MassDismantle", "buttonPressed", function(item)
-    Game.Net.PostToServer("EPIPENCOUNTERS_MassDismantle", {Char = Client.GetCharacter().NetID, Container = item.NetID})
+    Net.PostToServer("EPIPENCOUNTERS_MassDismantle", {Char = Client.GetCharacter().NetID, Container = item.NetID})
 end)
 
 ---------------------------------------------
@@ -228,7 +228,7 @@ end)
 ---------------------------------------------
 
 -- Store Deltamod info.
-Game.Net.RegisterListener("EPIPENCOUNTERS_QuickGreatforge_ModList", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_QuickGreatforge_ModList", function(cmd, payload)
     for i,tuple in ipairs(payload) do
         local mod = tuple[1]
         local deltamod = tuple[2]

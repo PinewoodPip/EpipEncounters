@@ -1,7 +1,7 @@
 
----@meta Library: GameItem, ContextShared, Game.Items
+---@meta Library: GameItem, ContextShared, Item
 
-local Items = Game.Items
+local Items = Item
 
 ---Returns true if the item is an Artifact by checking the AMER_UNI tag.
 ---@param item Item
@@ -43,8 +43,8 @@ end
 --- Ignores whether the item is already identified.
 ---@param item Item
 ---@return number
-function Game.Items.GetIdentifyRequirement(item)
-    if not item.Stats then Utilities.LogError("Game.Items", "Item has no stats; cannot get identify requirement.") return nil end
+function Item.GetIdentifyRequirement(item)
+    if not item.Stats then Utilities.LogError("Item", "Item has no stats; cannot get identify requirement.") return nil end
 
     local level = item.Stats.Level
     
@@ -59,7 +59,7 @@ end
 --- Returns true if the item is an armor piece or a weapon.
 ---@param item Item
 ---@return boolean
-function Game.Items.IsEquipment(item)
+function Item.IsEquipment(item)
     if not item.Stats then return false end
 
     local type = item.Stats.ItemType
@@ -70,14 +70,14 @@ end
 --- Returns true for dyeable items (equipment, except rings/amulet/belt).
 ---@param item Item
 ---@return boolean
-function Game.Items.IsDyeable(item)
-    return item.Stats and Game.Items.IsEquipment(item) and not (item.Stats.ItemSlot == "Belt" or item.Stats.ItemSlot == "Ring" or item.Stats.ItemSlot == "Amulet")
+function Item.IsDyeable(item)
+    return item.Stats and Item.IsEquipment(item) and not (item.Stats.ItemSlot == "Belt" or item.Stats.ItemSlot == "Ring" or item.Stats.ItemSlot == "Amulet")
 end
 
 --- Alias for Item.Stats.ItemSlot
 ---@param item Item
 ---@return string
-function Game.Items.GetItemSlot(item)
+function Item.GetItemSlot(item)
     if not item.Stats then return nil end
     local slot = item.Stats.ItemSlot
 
@@ -89,8 +89,8 @@ end
 --- Returns ItemSlot for items with no subtypes
 ---@param item Item
 ---@return EquipmentSubType
-function Game.Items.GetEquipmentSubtype(item)
-    local itemType = Game.Items.GetItemSlot(item)
+function Item.GetEquipmentSubtype(item)
+    local itemType = Item.GetItemSlot(item)
     if not itemType then return nil end
 
     -- for items with no subtypes, return ItemSlot
@@ -99,7 +99,7 @@ function Game.Items.GetEquipmentSubtype(item)
     end
 
     -- for artifacts, look for subtype from root template name
-    if Game.Items.IsArtifact(item) then
+    if Item.IsArtifact(item) then
         local match = (item.RootTemplate.Name .. "_" .. item.RootTemplate.Id):match(Data.Patterns.ARTIFACT_ROOTTEMPLATE_SUBTYPE)
 
         return match
@@ -124,8 +124,8 @@ end
 ---@param item Item
 ---@param dye Dye
 ---@return boolean False if item is already dyed with the same dye, or if dye is ``nil``.
-function Game.Items.ApplyDye(item, dye)
-    local oldDye,data = Game.Items.GetCurrentDye(item)
+function Item.ApplyDye(item, dye)
+    local oldDye,data = Item.GetCurrentDye(item)
     local applied = false
 
     if oldDye ~= dye and dye then
@@ -142,7 +142,7 @@ end
 --- Returns the ID and data for the most recently-applied dye deltamod on the item.
 ---@param item Item
 ---@return string,Dye The dye ID and data table.
-function Game.Items.GetCurrentDye(item)
+function Item.GetCurrentDye(item)
     local pattern = ".*_(Dye_.*)$"
     local dye = nil
 
@@ -165,7 +165,7 @@ end
 ---Returns a list of the named boosts on the item.
 ---@param item Item
 ---@return string[]
-function Game.Items.GetNamedBoosts(item)
+function Item.GetNamedBoosts(item)
     local boosts = {}
 
     for i,v in pairs(item.Stats.DynamicStats) do
@@ -184,15 +184,15 @@ end
 ---@param char Character
 ---@param item Item
 ---@return boolean
-function Game.Items.IsEquipped(char, item)
-    return Game.Items.GetEquippedSlot(item) ~= nil
+function Item.IsEquipped(char, item)
+    return Item.GetEquippedSlot(item) ~= nil
 end
 
 ---Returns the slot that an item is equipped in, or nil if it is not.
 ---@param item Item
 ---@return EquipSlot?
-function Game.Items.GetEquippedSlot(item)
-    local slot = Game.Items.GetItemSlot(item)
+function Item.GetEquippedSlot(item)
+    local slot = Item.GetItemSlot(item)
     local char = Ext.GetCharacter(item:GetOwnerCharacter())
     if not char then return nil end
     
@@ -221,9 +221,9 @@ end
 ---@param entity Entity
 ---@param predicate fun(item: EsvItem)
 ---@return number
-function Game.Items.CountItemsInInventory(entity, predicate)
+function Item.CountItemsInInventory(entity, predicate)
     local count = 0
-    local items = Game.Items.GetItemsInInventory(entity, predicate)
+    local items = Item.GetItemsInInventory(entity, predicate)
 
     -- Factor in stacked items.
     for _,item in pairs(items) do
@@ -241,7 +241,7 @@ end
 ---@param item Item
 ---@param index number
 ---@return StatItem
-function Game.Items.GetRune(item, index)
+function Item.GetRune(item, index)
     if index < 0 or index > 2 then
         Ext.PrintError("Cannot fetch runes with out-of-range index: " .. index)
         return nil
@@ -259,20 +259,20 @@ end
 --- Returns a list of runes on the item.
 ---@param item Item
 ---@return table<number, StatItem> Empty slots are nil.
-function Game.Items.GetRunes(item)
+function Item.GetRunes(item)
     return {
-        [0] = Game.Items.GetRune(item, 0),
-        [1] = Game.Items.GetRune(item, 1),
-        [2] = Game.Items.GetRune(item, 2),
+        [0] = Item.GetRune(item, 0),
+        [1] = Item.GetRune(item, 1),
+        [2] = Item.GetRune(item, 2),
     }
 end
 
 --- Returns true if item has any runes slotted.
 ---@param item Item
 ---@return boolean
-function Game.Items.HasRunes(item)
+function Item.HasRunes(item)
     -- Item has runes if GetRunes() is not empty; but we cannot check the length as it's not a proper list
-    for i,stat in pairs(Game.Items.GetRunes(item)) do
+    for i,stat in pairs(Item.GetRunes(item)) do
         return true
     end
     return false
@@ -287,7 +287,7 @@ end
 ---@param entity Entity
 ---@param predicate fun(item: Item)
 ---@return Item[]
-function Game.Items.GetItemsInInventory(entity, predicate)
+function Item.GetItemsInInventory(entity, predicate)
     local items = {}
 
     for i,guid in pairs(entity:GetInventoryItems()) do

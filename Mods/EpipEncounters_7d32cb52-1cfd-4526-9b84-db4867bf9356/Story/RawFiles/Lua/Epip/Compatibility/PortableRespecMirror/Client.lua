@@ -17,7 +17,7 @@ function Mirror:OnFeatureInit()
     })
 
     Hotbar.RegisterActionListener("PortableRespecMirror_Use", "ActionUsed", function(char, actionData, buttonIndex)
-        Game.Net.PostToServer("EPIPENCOUNTERS_Hotkey_Respec", {NetID = char.NetID})
+        Net.PostToServer("EPIPENCOUNTERS_Hotkey_Respec", {NetID = char.NetID})
     end)
 end
 

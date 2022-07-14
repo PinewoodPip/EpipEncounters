@@ -20,11 +20,11 @@ end)
 ---------------------------------------------
 
 Tab.RegisterStatValueHook("PartyFunds_Gold", function(value, data, char)
-    return Game.Items.GetPartyTemplateCount("LOOT_Gold_A_1c3c9c74-34a1-4685-989e-410dc080be6f")
+    return Item.GetPartyTemplateCount("LOOT_Gold_A_1c3c9c74-34a1-4685-989e-410dc080be6f")
 end)
 
 Tab.RegisterStatValueHook("PartyFunds_Splinters", function(value, data, char)
-    return Game.Items.GetPartyTemplateCount("AMER_LOOT_GreatforgeFragment_A_a41f2a71-6ff1-4c60-a74a-20c96fb9c487")
+    return Item.GetPartyTemplateCount("AMER_LOOT_GreatforgeFragment_A_a41f2a71-6ff1-4c60-a74a-20c96fb9c487")
 end)
 
 ---------------------------------------------

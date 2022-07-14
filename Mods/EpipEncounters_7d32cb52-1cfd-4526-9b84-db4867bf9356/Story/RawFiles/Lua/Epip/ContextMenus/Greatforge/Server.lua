@@ -14,28 +14,28 @@ local GreatforgeContextMenu = Epip.Features.GreatforgeContextMenu
 ---------------------------------------------
 -- DISMANTLE
 ---------------------------------------------
-Game.Net.RegisterListener("EPIPENCOUNTERS_QuickReduce", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_QuickReduce", function(cmd, payload)
     Osi.PROC_PIP_QuickReduce(Ext.GetCharacter(payload.Char).MyGuid, Ext.GetItem(payload.Item).MyGuid)
 end)
 
 ---------------------------------------------
 -- EXTRACT RUNES
 ---------------------------------------------
-Game.Net.RegisterListener("EPIPENCOUNTERS_QuickExtractRunes", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_QuickExtractRunes", function(cmd, payload)
     Osi.PROC_PIP_QuickExtractRunes(Ext.GetCharacter(payload.Char).MyGuid, Ext.GetItem(payload.Item).MyGuid)
 end)
 
 ---------------------------------------------
 -- REMOVE MODS (Cull)
 ---------------------------------------------
-Game.Net.RegisterListener("EPIPENCOUNTERS_QuickGreatforge_RemoveMods", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_QuickGreatforge_RemoveMods", function(cmd, payload)
     Osi.PROC_PIP_QuickGreatforge_RemoveMods(Ext.GetCharacter(payload.Char).MyGuid, Ext.GetItem(payload.Item).MyGuid, payload.Modifier)
 end)
 
 ---------------------------------------------
 -- MASS DISMANTLE
 ---------------------------------------------
-Game.Net.RegisterListener("EPIPENCOUNTERS_MassDismantle", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_MassDismantle", function(cmd, payload)
     local container = Ext.GetItem(payload.Container)
     local char = Ext.GetCharacter(payload.Char)
 
@@ -88,7 +88,7 @@ end)
 ---------------------------------------------
 
 function GreatforgeContextMenu.SendDeltaModsData()
-    Game.Net.Broadcast("EPIPENCOUNTERS_QuickGreatforge_ModList", Osi.DB_AMER_Deltamods_Mod_UniqueMod:Get(nil, nil, nil))
+    Net.Broadcast("EPIPENCOUNTERS_QuickGreatforge_ModList", Osi.DB_AMER_Deltamods_Mod_UniqueMod:Get(nil, nil, nil))
 end
 
 Utilities.Hooks.RegisterListener("Game", "Loaded", function()

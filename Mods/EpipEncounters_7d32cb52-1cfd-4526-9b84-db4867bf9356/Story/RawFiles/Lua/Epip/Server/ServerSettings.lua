@@ -130,7 +130,7 @@ end
 ---------------------------------------------
 
 -- Listen for option changes from the client.
-Game.Net.RegisterListener("EPIPENCOUNTERS_ServerOptionChanged", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_ServerOptionChanged", function(cmd, payload)
     local setting = payload.Setting
     local value = payload.Value
     local module = payload.Mod
@@ -153,7 +153,7 @@ local function Init()
     
                     Settings:DebugLog("Set default value for setting " .. id .. " from module " .. module)
 
-                    Game.Net.PostToCharacter(CharacterGetHostCharacter(), "EPIPENCOUNTERS_ServerSettingSynch", {
+                    Net.PostToCharacter(CharacterGetHostCharacter(), "EPIPENCOUNTERS_ServerSettingSynch", {
                         Module = module,
                         Setting = setting.ID,
                         Value = setting.DefaultValue,
@@ -161,7 +161,7 @@ local function Init()
                 else
                     Settings:DebugLog("Synching setting from server to host: " .. setting.ID)
 
-                    Game.Net.PostToCharacter(CharacterGetHostCharacter(), "EPIPENCOUNTERS_ServerSettingSynch", {
+                    Net.PostToCharacter(CharacterGetHostCharacter(), "EPIPENCOUNTERS_ServerSettingSynch", {
                         Module = module,
                         Setting = setting.ID,
                         Value = Settings.ConvertFromReal(setting, value),

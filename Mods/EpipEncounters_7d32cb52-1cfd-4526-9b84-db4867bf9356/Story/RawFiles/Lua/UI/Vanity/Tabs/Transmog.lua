@@ -98,8 +98,8 @@ function Transmog.ShouldRenderEntry(templateGUID, category, item)
     item = item or Vanity.GetCurrentItem()
     local char = Client.GetCharacter()
     local data = Vanity.TEMPLATES[templateGUID]
-    local itemSlot = Game.Items.GetItemSlot(item)
-    local itemSubtype = Game.Items.GetEquipmentSubtype(item)
+    local itemSlot = Item.GetItemSlot(item)
+    local itemSubtype = Item.GetEquipmentSubtype(item)
 
     if itemSlot == "Shield" then
         itemSlot = "Weapon"
@@ -122,8 +122,8 @@ function Transmog.ShouldKeepAppearance(item)
     local keepAppearance = false
     local char = Client.GetCharacter()
 
-    if item and Game.Items.IsEquipped(char, item) then
-        local tag = Transmog.KEEP_APPEARANCE_TAG_PREFIX .. Game.Items.GetEquippedSlot(item)
+    if item and Item.IsEquipped(char, item) then
+        local tag = Transmog.KEEP_APPEARANCE_TAG_PREFIX .. Item.GetEquippedSlot(item)
 
         keepAppearance = Client.GetCharacter():HasTag(tag)
     end
@@ -132,7 +132,7 @@ function Transmog.ShouldKeepAppearance(item)
 end
 
 function Transmog.ReapplyAppearance(item)
-    local slot = Game.Items.GetItemSlot(item)
+    local slot = Item.GetItemSlot(item)
     local newTemplate = Transmog.activeCharacterTemplates[slot]
     if not newTemplate then return nil end
 
@@ -170,7 +170,7 @@ function Transmog.TransmogItem(item, template)
     item = item or Vanity.GetCurrentItem()
 
     if Transmog.CanTransmogItem(item) and not Transmog.BLOCKED_TEMPLATES[template] then
-        Game.Net.PostToServer("EPIPENCOUNTERS_VanityTransmog", {
+        Net.PostToServer("EPIPENCOUNTERS_VanityTransmog", {
             Char = Client.GetCharacter().NetID,
             Item = item.NetID,
             NewTemplate = template,
@@ -227,7 +227,7 @@ end
 ---@return table<string,VanityCategoryQuery>
 function Transmog.GetCategories(item)
     -- Categories
-    local slot = Game.Items.GetItemSlot(item)
+    local slot = Item.GetItemSlot(item)
     local categories = {}
 
     for i,id in ipairs(Vanity.CATEGORY_ORDER) do
@@ -323,7 +323,7 @@ end)
 Tab:RegisterListener(Vanity.Events.ButtonPressed, function(id)
     if id == "RevertTemplate" then
         Vanity.ignoreNextUnEquip = true
-        Game.Net.PostToServer("EPIPENCOUNTERS_Vanity_RevertTemplate", {
+        Net.PostToServer("EPIPENCOUNTERS_Vanity_RevertTemplate", {
             CharNetID = Client.GetCharacter().NetID,
             ItemNetID = Vanity.GetCurrentItem().NetID,
         })
@@ -332,7 +332,7 @@ end)
 
 Tab:RegisterListener(Vanity.Events.CheckboxPressed, function(id, state)
     if id == "Vanity_KeepAppearance" then
-        Game.Net.PostToServer("EPIPENCOUNTERS_Vanity_Transmog_KeepAppearance", {
+        Net.PostToServer("EPIPENCOUNTERS_Vanity_Transmog_KeepAppearance", {
             NetID = Client.GetCharacter().NetID,
             Slot = Vanity.currentSlot,
             State = state,
@@ -346,7 +346,7 @@ end)
 -- EVENT LISTENERS
 ---------------------------------------------
 
-Game.Net.RegisterListener("EPIPENCOUNTERS_ItemEquipped", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_ItemEquipped", function(cmd, payload)
     local char = Ext.GetCharacter(payload.NetID)
     local item = Ext.GetItem(payload.ItemNetID)
 

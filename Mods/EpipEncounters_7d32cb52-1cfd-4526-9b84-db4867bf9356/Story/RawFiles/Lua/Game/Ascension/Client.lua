@@ -12,6 +12,6 @@ end
 -- LISTENERS
 ---------------------------------------------
 
-Game.Net.RegisterListener("EPIPENCOUNTERS_MeditateStateChanged", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_MeditateStateChanged", function(cmd, payload)
     Ascension:FireEvent("ClientToggledMeditating", payload.State)
 end)

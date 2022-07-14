@@ -15,7 +15,8 @@
 ---@field GetName fun(self):string
 ---@field GetDescription fun(self):string
 
-Game.Items = {
+---@class ItemsLib
+Item = {
     -- TODO
     RARITY_COLORS = {
         ARTIFACT = "a34114",
@@ -960,7 +961,7 @@ Game.Items = {
         },
     },
 }
-for _,artifact in pairs(Game.Items.ARTIFACTS) do
+for _,artifact in pairs(Item.ARTIFACTS) do
     Inherit(artifact, {
         GetDescription = function(self)
             return Ext.L10N.GetTranslatedString(self.DescriptionHandle, self.ID)
@@ -970,7 +971,3 @@ for _,artifact in pairs(Game.Items.ARTIFACTS) do
         end,
     })
 end
-
-Game.Net = {}
-
-Game.EDITOR_VERSION = "v3.6.51.9303"

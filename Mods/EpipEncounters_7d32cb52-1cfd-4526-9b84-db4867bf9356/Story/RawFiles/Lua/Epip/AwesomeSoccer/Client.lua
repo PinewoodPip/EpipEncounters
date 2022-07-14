@@ -92,7 +92,7 @@ end
 -- UI LOGIC
 ---------------------------------------------
 
-Game.Net.RegisterListener("EPIPENCOUNTERS_OpenSoccer", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_OpenSoccer", function(cmd, payload)
     Soccer.Open()
 end)
 

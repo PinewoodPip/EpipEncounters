@@ -466,7 +466,7 @@ function Vanity.SetHeader(text)
     -- header.htmlText = text
 end
 
-Game.Net.RegisterListener("EPIPENCOUNTERS_Vanity_SetTemplateOverride", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_Vanity_SetTemplateOverride", function(cmd, payload)
     Vanity.currentItemTemplateOverride = payload.TemplateOverride
     Vanity.Refresh()
 end)
@@ -479,7 +479,7 @@ end
 
 ---@param slot StatsItemSlot|EclItem
 function Vanity.SetSlot(slot)
-    if type(slot) ~= "string" then slot = Game.Items.GetEquippedSlot(slot) or Game.Items.GetItemSlot(slot) end
+    if type(slot) ~= "string" then slot = Item.GetEquippedSlot(slot) or Item.GetItemSlot(slot) end
 
     Vanity.currentSlot = slot
     Vanity.Refresh()
@@ -1197,7 +1197,7 @@ Vanity:RegisterListener("ComboElementSelected", function(id, index, oldIndex)
 end)
 
 Client.UI.ContextMenu.RegisterVanillaMenuHandler("Item", function(item)
-    if Game.Items.IsDyeable(item) and Game.Items.IsEquipped(Client.GetCharacter(), item) then
+    if Item.IsDyeable(item) and Item.IsEquipped(Client.GetCharacter(), item) then
         local selectable = (not Client.IsInCombat()) and (not Game.Character.IsDead(Client.GetCharacter()))
         Client.UI.ContextMenu.AddElement({
             {id = "epip_OpenVanity", type = "button", text = "Vanity...", selectable = selectable, faded = not selectable},

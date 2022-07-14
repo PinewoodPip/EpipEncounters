@@ -42,6 +42,8 @@ LOAD_ORDER = {
     "Epip/Settings.lua",
     "Utilities/Hooks.lua",
     "Utilities/Color.lua",
+    "Utilities/GameState/Shared.lua",
+    "Utilities/GameState/Client.lua",
     "Utilities.lua",
     "Utilities/Server.lua",
     "Server/Osiris.lua",
@@ -55,7 +57,7 @@ LOAD_ORDER = {
     "Game/Items/Shared.lua",
     "Game/Items/Server.lua",
     "Game/Stats/Shared.lua",
-    "Game/Net/Shared.lua",
+    "Utilities/Net/Shared.lua",
 
     "Game/AMERUI/Shared.lua",
     "Game/AMERUI/Server.lua",
@@ -125,7 +127,7 @@ end
 local function sendDyes(user)
     -- print("Sending dyes", user)
     -- _D(PersistentVars.Dyes)
-    -- Game.Net.Broadcast("EPIPENCOUNTERS_CreateVanityDyes", {
+    -- Net.Broadcast("EPIPENCOUNTERS_CreateVanityDyes", {
     --     Dyes = PersistentVars.Dyes or {},
     -- })
     Ext.Net.PostMessageToUser(user, "EPIPENCOUNTERS_CreateVanityDyes", Ext.Json.Stringify({
@@ -209,11 +211,11 @@ Ext.Osiris.RegisterListener("CharacterStatusApplied", 3, "after", function(targe
     end
 
     if healType == "AllArmor" then
-        Game.Net.Broadcast("EPIPENCOUNTERS_Overhead", {NetID = target.NetID, Amount = status.HealAmount, Type = "PhysicalArmor"})
-        Game.Net.Broadcast("EPIPENCOUNTERS_Overhead", {NetID = target.NetID, Amount = status.HealAmount, Type = "MagicArmor"})
+        Net.Broadcast("EPIPENCOUNTERS_Overhead", {NetID = target.NetID, Amount = status.HealAmount, Type = "PhysicalArmor"})
+        Net.Broadcast("EPIPENCOUNTERS_Overhead", {NetID = target.NetID, Amount = status.HealAmount, Type = "MagicArmor"})
 
     elseif healType == "PhysicalArmor" or healType == "MagicArmor" then
-        Game.Net.Broadcast("EPIPENCOUNTERS_Overhead", {NetID = target.NetID, Amount = status.HealAmount, Type = healType})
+        Net.Broadcast("EPIPENCOUNTERS_Overhead", {NetID = target.NetID, Amount = status.HealAmount, Type = healType})
     end
 end)
 
@@ -233,19 +235,19 @@ end
 -- TODO move elsewhere. Some generic script for events that would be nice to have on client as well.
 Ext.Osiris.RegisterListener("CharacterStatusApplied", 3, "after", function(char, status, causee)
     if status == "UNSHEATHED" then
-        Game.Net.Broadcast("EPIP_StatusApplied", {NetID = Ext.GetCharacter(char).NetID, Status = status})
+        Net.Broadcast("EPIP_StatusApplied", {NetID = Ext.GetCharacter(char).NetID, Status = status})
     end
 end)
 
 Ext.Osiris.RegisterListener("CharacterStatusRemoved", 3, "after", function(char, status, causee)
     if status == "UNSHEATHED" then
-        Game.Net.Broadcast("EPIP_StatusRemoved", {NetID = Ext.GetCharacter(char).NetID, Status = status})
+        Net.Broadcast("EPIP_StatusRemoved", {NetID = Ext.GetCharacter(char).NetID, Status = status})
     end
 end)
 
 NULLGUID = "NULL_00000000-0000-0000-0000-000000000000"
 
-Game.Net.RegisterListener("EPIP_AMERUI_GoBack", function(cmd, payload)
+Net.RegisterListener("EPIP_AMERUI_GoBack", function(cmd, payload)
     local char = Ext.GetCharacter(payload.NetID)
     local instance, ui, _ = Osiris.DB_AMER_UI_UsersInUI(nil, nil, char.MyGuid)
 
@@ -262,7 +264,7 @@ Game.Net.RegisterListener("EPIP_AMERUI_GoBack", function(cmd, payload)
 end)
 
 local _registeredSymbols = {}
-Game.Net.RegisterListener("EPIP_RegisterGenericOsiSymbolEvent", function(cmd, payload)
+Net.RegisterListener("EPIP_RegisterGenericOsiSymbolEvent", function(cmd, payload)
     -- Don't register listeners multiple times
     -- Alternatively we could only send these requests from the host client :thinking:
     for i,s in ipairs(_registeredSymbols) do
@@ -274,7 +276,7 @@ Game.Net.RegisterListener("EPIP_RegisterGenericOsiSymbolEvent", function(cmd, pa
     table.insert(_registeredSymbols, {Symbol = payload.Symbol, Arity = payload.Arity})
 
     Osiris.RegisterSymbolListener(payload.Symbol, payload.Arity, "after", function(...)
-        Game.Net.Broadcast("EPIP_GenericOsiSymbolEvent", {
+        Net.Broadcast("EPIP_GenericOsiSymbolEvent", {
             Symbol = payload.Symbol,
             Arity = payload.Arity,
             Params = {...},

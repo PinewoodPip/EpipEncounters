@@ -161,14 +161,14 @@ end)
 -- Request stat update if the sheet is opened while the tab is open.
 Ext.RegisterUITypeInvokeListener(CharacterSheet.UITypeID, "setHelmetOptionState", function()
     if CharacterSheet:GetRoot().stats_mc.currentOpenPanel == 8 then
-        Game.Net.PostToServer("EPIPENCOUNTERS_UpdateCustomStats", {NetID = CharacterSheet.GetCharacter().NetID})
+        Net.PostToServer("EPIPENCOUNTERS_UpdateCustomStats", {NetID = CharacterSheet.GetCharacter().NetID})
     end
 end)
 
 -- Request update when the tab is opened.
 Ext.RegisterUITypeCall(CharacterSheet.UITypeID, "selectedTab", function(ui, method, tab)
     if tab == 8 then
-        Game.Net.PostToServer("EPIPENCOUNTERS_UpdateCustomStats", {NetID = CharacterSheet.GetCharacter().NetID})
+        Net.PostToServer("EPIPENCOUNTERS_UpdateCustomStats", {NetID = CharacterSheet.GetCharacter().NetID})
     end
 end)
 

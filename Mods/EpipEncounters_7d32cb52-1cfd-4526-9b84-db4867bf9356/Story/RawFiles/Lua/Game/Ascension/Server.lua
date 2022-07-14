@@ -17,7 +17,7 @@ end
 -- LISTENERS
 ---------------------------------------------
 
-Game.Net.RegisterListener("EPIPENCOUNTERS_Greatforge_BenchItem", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_Greatforge_BenchItem", function(cmd, payload)
     StartGreatforge(Ext.GetCharacter(payload.Char), Ext.GetItem(payload.NetID))
 end)
 
@@ -26,12 +26,12 @@ Ext.Osiris.RegisterListener("CharacterStatusApplied", 3, "after", function(char,
     if status ~= Ascension.MEDITATING_STATUS then return nil end
 
     Ascension:FireEvent("CharacterToggledMeditating", Ext.GetCharacter(char), true)
-    Game.Net.PostToCharacter(char, "EPIPENCOUNTERS_MeditateStateChanged", {State = true})
+    Net.PostToCharacter(char, "EPIPENCOUNTERS_MeditateStateChanged", {State = true})
 end)
 
 Ext.Osiris.RegisterListener("CharacterStatusRemoved", 3, "after", function(char, status, causee)
     if status ~= Ascension.MEDITATING_STATUS then return nil end
 
     Ascension:FireEvent("CharacterToggledMeditating", Ext.GetCharacter(char), false)
-    Game.Net.PostToCharacter(char, "EPIPENCOUNTERS_MeditateStateChanged", {State = false})
+    Net.PostToCharacter(char, "EPIPENCOUNTERS_MeditateStateChanged", {State = false})
 end)

@@ -5,11 +5,11 @@
 -- to update the visuals.
 ---------------------------------------------
 
-Game.Net.RegisterListener("EPIPENCOUNTERS_CreateDyeStat_ForPeers", function(cmd, payload)
-    Game.Net.Broadcast("EPIPENCOUNTERS_CreateDyeStat", payload)
+Net.RegisterListener("EPIPENCOUNTERS_CreateDyeStat_ForPeers", function(cmd, payload)
+    Net.Broadcast("EPIPENCOUNTERS_CreateDyeStat", payload)
 end)
 
-Game.Net.RegisterListener("EPIPENCOUNTERS_DyeItem", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_DyeItem", function(cmd, payload)
     local item = Ext.GetItem(payload.NetID)
     local dyeStat = payload.DyeStat
     local char = Ext.GetCharacter(payload.CharacterNetID)
@@ -63,12 +63,12 @@ Game.Net.RegisterListener("EPIPENCOUNTERS_DyeItem", function(cmd, payload)
         Osi.PROC_PIP_ReEquipItem(char.MyGuid, item.MyGuid)
     end
 
-    Game.Net.Broadcast("EPIP_CACHEDYE", {
+    Net.Broadcast("EPIP_CACHEDYE", {
         Dye = dyeStat,
     })
 end)
 
--- Game.Net.RegisterListener("EPIPENCOUNTERS_Vanity_RequestDyes", function(cmd, payload)
+-- Net.RegisterListener("EPIPENCOUNTERS_Vanity_RequestDyes", function(cmd, payload)
 --     local items = {}
 --     local _, _, tuples = Osiris.DB_PIP_Vanity_CustomDyes_DyedItem:Get(nil, nil)
 
@@ -76,12 +76,12 @@ end)
 --         items[tuple[1]] = tuple[2]
 --     end
 
---     -- Game.Net.PostToCharacter(_C().MyGuid, "EPIPENCOUNTERS_Vanity_SetDyes", {Items = items})
+--     -- Net.PostToCharacter(_C().MyGuid, "EPIPENCOUNTERS_Vanity_SetDyes", {Items = items})
 --     print("----SENDING DYES")
---     Game.Net.Broadcast("EPIPENCOUNTERS_Vanity_SetDyes", {Items = items})
+--     Net.Broadcast("EPIPENCOUNTERS_Vanity_SetDyes", {Items = items})
 -- end)
 
-Game.Net.RegisterListener("EPIPENCOUNTERS_DYE", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_DYE", function(cmd, payload)
     local item = Ext.GetItem(payload.Item)
     local char = Ext.GetCharacter(payload.Character)
     local dyeData = payload.DyeData

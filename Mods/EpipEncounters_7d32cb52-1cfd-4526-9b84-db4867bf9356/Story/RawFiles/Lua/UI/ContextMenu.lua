@@ -562,7 +562,7 @@ local function OnButtonPressed(ui, method, id, elementID, handle, amountTxt)
                 msg.State = not elementData.checked
             end
 
-            Game.Net.PostToServer(elementData.netMsg, msg)
+            Net.PostToServer(elementData.netMsg, msg)
         end
 
         if elementData.closeOnButtonPress then

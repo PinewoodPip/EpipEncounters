@@ -654,11 +654,11 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
-Game.Net.RegisterListener("EPIPENCOUNTERS_Hotbar_SetLayout", function(_, payload)
+Net.RegisterListener("EPIPENCOUNTERS_Hotbar_SetLayout", function(_, payload)
     Hotbar.SetState(Ext.GetCharacter(payload.NetID), payload.Layout)
 end)
 
-Game.Net.RegisterListener("EPIPENCOUNTERS_Hotbar_SkillUseChanged", function(_, payload)
+Net.RegisterListener("EPIPENCOUNTERS_Hotbar_SkillUseChanged", function(_, payload)
     Hotbar.SetPreparedSkill(Ext.Entity.GetCharacter(payload.NetID), payload.SkillID, payload.Casting)
 end)
 
@@ -676,7 +676,7 @@ end)
 Utilities.Hooks.RegisterListener("GameState", "GamePaused", function()
     Hotbar.SaveData()
 
-    Game.Net.PostToServer("EPIPENCOUNTERS_Hotbar_SaveLayout", Hotbar.State)
+    Net.PostToServer("EPIPENCOUNTERS_Hotbar_SaveLayout", Hotbar.State)
 end)
 
 Client.UI.OptionsSettings:RegisterListener("OptionSet", function(data, value)
@@ -993,7 +993,7 @@ function Hotbar.GetIconForSlot(index)
 
     if slot.Type == "Skill" then
         local stat = Stats.Get("Skill", slot.SkillOrStatId)
-        
+
         if stat then
             icon = stat.Icon
         end

@@ -210,7 +210,7 @@ QuickExamine.Events.EntityChanged:RegisterListener(function (entity)
             artifactContainer:SetCenterInLists(true)
 
             for _,effect in ipairs(sortedEffects.Artifacts) do
-                local artifact = Game.Items.ARTIFACTS[effect.Artifact]
+                local artifact = Item.ARTIFACTS[effect.Artifact]
                 local template = Ext.Template.GetTemplate(string.match(artifact.ItemTemplate, Data.Patterns.GUID)) ---@type ItemTemplate
 
                 local icon = artifactContainer:AddChild(artifact.ID .. "icon", "IggyIcon")
@@ -218,7 +218,7 @@ QuickExamine.Events.EntityChanged:RegisterListener(function (entity)
                 icon.Tooltip = {
                     {
                         Type = "SkillName",
-                        Label = Text.Format(artifact:GetName(), {Color = Game.Items.RARITY_COLORS.ARTIFACT}),
+                        Label = Text.Format(artifact:GetName(), {Color = Item.RARITY_COLORS.ARTIFACT}),
                     },
                     {
                         Type = "StatsPercentageBoost",
@@ -227,7 +227,7 @@ QuickExamine.Events.EntityChanged:RegisterListener(function (entity)
                     },
                     {
                         Type = "ItemRarity",
-                        Label = Text.Format("Artifact Power", {Color = Game.Items.RARITY_COLORS.ARTIFACT}),
+                        Label = Text.Format("Artifact Power", {Color = Item.RARITY_COLORS.ARTIFACT}),
                     },
                 }
             end

@@ -98,7 +98,7 @@ Ext.Events.GameStateChanged:Subscribe(function(event)
         Utilities.Hooks.FireEvent("GameState", "ClientReady")
 
         if not ready then
-            Game.Net.PostToServer("EPIPENCOUNTERS_ClientReady", {NetID = Client.GetCharacter().NetID})
+            Net.PostToServer("EPIPENCOUNTERS_ClientReady", {NetID = Client.GetCharacter().NetID})
         end
     end
     if new == "Paused" then
@@ -144,12 +144,12 @@ local _loaded = false
 if Ext.IsServer() then
     Ext.Osiris.RegisterListener("SavegameLoaded", 4, "after", function(major, minor, patch, build)
         Utilities.Hooks.FireEvent("Game", "Loaded")
-        Game.Net.Broadcast("EPIPENCOUNTERS_GameLoaded")
+        Net.Broadcast("EPIPENCOUNTERS_GameLoaded")
     end)
 
     Ext.Osiris.RegisterListener("PROC_AMER_GEN_CCFinished_GameStarted", 4, "after", function(major, minor, patch, build)
         Utilities.Hooks.FireEvent("Game", "Loaded")
-        Game.Net.Broadcast("EPIPENCOUNTERS_GameLoaded")
+        Net.Broadcast("EPIPENCOUNTERS_GameLoaded")
     end)
 else
     Ext.RegisterNetListener("EPIPENCOUNTERS_GameLoaded", function(cmd, payload)
@@ -169,5 +169,5 @@ end
 Ext.Events.ResetCompleted:Subscribe(function()
     Utilities.Hooks.FireEvent("Game", "Loaded")
     Utilities.Hooks.FireEvent("GameState", "ClientReady")
-    Game.Net.Broadcast("EPIPENCOUNTERS_GameLoaded")
+    Net.Broadcast("EPIPENCOUNTERS_GameLoaded")
 end)

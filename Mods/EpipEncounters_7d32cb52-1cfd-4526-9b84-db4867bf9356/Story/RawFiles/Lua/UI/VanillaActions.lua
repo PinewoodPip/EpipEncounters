@@ -168,7 +168,7 @@ Hotbar.RegisterAction("TeleporterPyramid", {
 })
 
 Hotbar.RegisterActionListener("TeleporterPyramid", "ActionUsed", function(char, data)
-    Game.Net.PostToServer("EPIP_UseTeleporterPyramid", {NetID = char.NetID})
+    Net.PostToServer("EPIP_UseTeleporterPyramid", {NetID = char.NetID})
 end)
 
 -- Action is disabled if party has fewer than 2 pyramids.
@@ -419,7 +419,7 @@ Hotbar.RegisterActionListener("UseArbitraryTemplate", "ActionUsed", function(cha
         local template = boundItems[buttonIndex]
 
         if template then
-            Game.Net.PostToServer("EPIPENCOUNTERS_Hotbar_UseTemplate", {
+            Net.PostToServer("EPIPENCOUNTERS_Hotbar_UseTemplate", {
                 NetID = char.NetID,
                 Template = template
             })

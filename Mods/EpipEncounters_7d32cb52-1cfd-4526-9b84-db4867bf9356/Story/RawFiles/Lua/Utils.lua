@@ -1,17 +1,21 @@
-function TableHasValue(table, val)
-    for i,v in pairs(table) do
-        if v == val then
-            return true
-        end
-    end
-    return false
-end
 
 function unpack(t, i)
     i = i or 1
     if t[i] ~= nil then
         return t[i], unpack(t, i + 1)
     end
+end
+
+---@return string? Nil if the object is not an extender object.
+function GetExtType(obj)
+    local objType
+
+    if type(obj) == "userdata" then
+        objType = getmetatable(obj)
+    end
+
+    ---@diagnostic disable-next-line: return-type-mismatch
+    return objType
 end
 
 function ParseFlashArray(array, argList, offset)
@@ -98,36 +102,6 @@ end
 function CenterText(element, offset)
     element.htmlText = '<p align="center">' .. element.htmlText .. '</p>'
     element.x = element.x + (offset or 0)
-end
-
-function BoolToInt(bool)
-    if bool then return 1 end
-    return 0
-end
-
-function GetCharacterFromPayload(payload)
-    return (Ext.GetCharacter(tonumber(Ext.Json.Parse(payload).NetID)))
-end
-
--- https://github.com/lua-nucleo/lua-nucleo/blob/v0.1.0/lua-nucleo/string.lua#L245-L267
-local matches = {
-    ["^"] = "%^",
-    ["$"] = "%$",
-    ["("] = "%(",
-    [")"] = "%)",
-    ["%"] = "%%",
-    ["."] = "%.",
-    ["["] = "%[",
-    ["]"] = "%]",
-    ["*"] = "%*",
-    ["+"] = "%+",
-    ["-"] = "%-",
-    ["?"] = "%?",
-    ["\0"] = "%z",
-  }
-
-function escape_lua_pattern(s)
-    return (s:gsub(".", matches))
 end
 
 function string.insert(str1, str2, pos)

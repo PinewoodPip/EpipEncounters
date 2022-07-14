@@ -19,11 +19,11 @@ end)
 Ext.Events.InputEvent:Subscribe(function(ev)
     if ev.Event.EventId == 223 and ev.Event.Release and not Client.IsUsingController() and Game.Ascension.IsMeditating() then
         if Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "ESCClosesAmerUI") then
-            Game.Net.PostToServer("EPIPENCOUNTERS_Hotkey_Meditate", {
+            Net.PostToServer("EPIPENCOUNTERS_Hotkey_Meditate", {
                 NetID = Client.GetCharacter().NetID,
             })
         else -- Pop page
-            Game.Net.PostToServer("EPIP_AMERUI_GoBack", {NetID = Client.GetCharacter().NetID})
+            Net.PostToServer("EPIP_AMERUI_GoBack", {NetID = Client.GetCharacter().NetID})
         end
     end
 end)

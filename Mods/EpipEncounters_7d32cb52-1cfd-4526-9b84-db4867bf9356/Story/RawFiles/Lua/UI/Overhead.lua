@@ -133,7 +133,7 @@ Ext.RegisterUITypeCall(Client.UI.Data.UITypes.overhead, "pipOverheadDialogAttemp
 end)
 
 -- Overhead requests from server (used to fix the undead overhead healing issue)
-Game.Net.RegisterListener("EPIPENCOUNTERS_Overhead", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_Overhead", function(cmd, payload)
     local data = payload
     local char = Ext.GetCharacter(payload.NetID)
     local color = Client.UI.Data.ARMOR_COLORS[data.Type]

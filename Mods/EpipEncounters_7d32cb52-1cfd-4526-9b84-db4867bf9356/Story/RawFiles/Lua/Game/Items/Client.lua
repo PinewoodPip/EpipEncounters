@@ -1,5 +1,5 @@
 
----@meta Library: GameItem, ContextClient, Game.Items
+---@meta Library: GameItem, ContextClient, Item
 
 ---------------------------------------------
 -- REGION Querying items in inventories.
@@ -8,7 +8,7 @@
 --- Count the amount of template instances (prefix + guid) in the client party's inventory.
 ---@param template string
 ---@return number
-function Game.Items.GetPartyTemplateCount(template)
+function Item.GetPartyTemplateCount(template)
     local count = 0
 
     local players = Client.UI.PlayerInfo:GetRoot().player_array
@@ -21,7 +21,7 @@ function Game.Items.GetPartyTemplateCount(template)
     for i=0,#players-1,1 do
         local player = Ext.GetCharacter(Ext.UI.DoubleToHandle(players[i].characterHandle))
 
-        count = count + Game.Items.CountItemsInInventory(player, predicate)
+        count = count + Item.CountItemsInInventory(player, predicate)
     end
 
     return count
@@ -30,7 +30,7 @@ end
 -- As of v56, Amount is now mapped on client.
 --- Count the items in an entity's inventory that match a predicate.  
 --- Different from the server implementation, as item amounts cannot be queried on client from the item object. We rely on partyInventory UI instead.
--- function Game.Items.CountItemsInInventory(entity, predicate)
+-- function Item.CountItemsInInventory(entity, predicate)
 --     local root = Client.UI.PartyInventory:GetRoot()
 --     local count = 0
 
@@ -61,7 +61,7 @@ end
 --     return count
 -- end
 
--- function Game.Items.CountItemsInInventory(entity, predicate)
+-- function Item.CountItemsInInventory(entity, predicate)
 --     local root = Client.UI.PartyInventory:GetRoot()
 --     local count = 0
 

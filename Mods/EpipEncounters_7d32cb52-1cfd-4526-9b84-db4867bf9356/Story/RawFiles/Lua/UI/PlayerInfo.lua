@@ -147,8 +147,8 @@ local function OnStatusToggle(cmd, payload)
         PlayerInfo.UpdatePlayers()
     end
 end
-Game.Net.RegisterListener("EPIP_StatusApplied", OnStatusToggle)
-Game.Net.RegisterListener("EPIP_StatusRemoved", OnStatusToggle)
+Net.RegisterListener("EPIP_StatusApplied", OnStatusToggle)
+Net.RegisterListener("EPIP_StatusRemoved", OnStatusToggle)
 
 -- By default, BH displays are visible if characters are unsheathed.
 -- TODO better combat check.

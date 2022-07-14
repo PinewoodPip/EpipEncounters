@@ -27,10 +27,10 @@ Options.RegisterTab("EpipEncounters", {
 
 Options.Events.ActionExecuted:RegisterListener(function (action, binding)
     if action == "EpicEncounters_Meditate" then
-        Game.Net.PostToServer("EPIPENCOUNTERS_Hotkey_Meditate", {
+        Net.PostToServer("EPIPENCOUNTERS_Hotkey_Meditate", {
             NetID = Client.GetCharacter().NetID,
         })
     elseif action == "EpipEncounters_SourceInfuse" then
-        Game.Net.PostToServer("EPIPENCOUNTERS_Hotkey_SourceInfuse", {NetID = Client.GetCharacter().NetID})
+        Net.PostToServer("EPIPENCOUNTERS_Hotkey_SourceInfuse", {NetID = Client.GetCharacter().NetID})
     end
 end)

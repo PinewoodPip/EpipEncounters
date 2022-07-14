@@ -17,7 +17,7 @@ function Server.RegisterOsirisListener(symbol, arity, handler)
     if not Server.REGISTERED_OSIRIS_SYMBOL_EVENTS[id] and Ext.Client.GetGameState() ~= "Menu" then
         Server.REGISTERED_OSIRIS_SYMBOL_EVENTS[id] = true
 
-        Game.Net.PostToServer("EPIP_RegisterGenericOsiSymbolEvent", {
+        Net.PostToServer("EPIP_RegisterGenericOsiSymbolEvent", {
             Symbol = symbol,
             Arity = arity,
         })
@@ -31,7 +31,7 @@ end
 ---------------------------------------------
 
 -- Forward generic osi events
-Game.Net.RegisterListener("EPIP_GenericOsiSymbolEvent", function(cmd, payload)
+Net.RegisterListener("EPIP_GenericOsiSymbolEvent", function(cmd, payload)
     local id = payload.Symbol .. payload.Arity
 
     Server:FireEvent("OsirisSymbolEvent_" .. id, table.unpack(payload.Params))

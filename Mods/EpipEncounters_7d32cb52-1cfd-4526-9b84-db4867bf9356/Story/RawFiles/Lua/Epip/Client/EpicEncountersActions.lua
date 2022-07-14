@@ -34,12 +34,12 @@ function HA:OnFeatureInit()
     
     -- Source Infuse
     Hotbar.RegisterActionListener("EE_SourceInfuse", "ActionUsed", function(char)
-        Game.Net.PostToServer("EPIPENCOUNTERS_Hotkey_SourceInfuse", {NetID = char.NetID})
+        Net.PostToServer("EPIPENCOUNTERS_Hotkey_SourceInfuse", {NetID = char.NetID})
     end)
     
     -- Meditate
     Hotbar.RegisterActionListener("EE_Meditate", "ActionUsed", function(char)
-        Game.Net.PostToServer("EPIPENCOUNTERS_Hotkey_Meditate", {NetID = char.NetID})
+        Net.PostToServer("EPIPENCOUNTERS_Hotkey_Meditate", {NetID = char.NetID})
     end)
     
     -- Changelog

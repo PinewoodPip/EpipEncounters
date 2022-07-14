@@ -33,7 +33,7 @@ Utilities.Hooks.RegisterListener("UI_TextDisplay", "TextCleared", function(text,
     if true then return nil end
     if not Inv.draggedItemHandle or not Game.AMERUI.ClientIsInSocketScreen() then return nil end
     
-    Game.Net.PostToServer("EPIPENCOUNTERS_Greatforge_BenchItem", {Char = Client.GetCharacter().NetID, NetID = Ext.GetItem(Ext.UI.DoubleToHandle(Inv.draggedItemHandle)).NetID})
+    Net.PostToServer("EPIPENCOUNTERS_Greatforge_BenchItem", {Char = Client.GetCharacter().NetID, NetID = Ext.GetItem(Ext.UI.DoubleToHandle(Inv.draggedItemHandle)).NetID})
 
     Inv.draggedItemHandle = nil
 

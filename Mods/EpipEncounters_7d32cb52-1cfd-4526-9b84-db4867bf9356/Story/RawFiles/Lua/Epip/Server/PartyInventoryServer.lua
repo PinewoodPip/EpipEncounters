@@ -40,7 +40,7 @@ end
 --     Ext.Print("gend")
 -- end
 
-Game.Net.RegisterListener("EPIPENCOUNTERS_AutoUnlockMe", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_AutoUnlockMe", function(cmd, payload)
     local user = CharacterGetReservedUserID(Ext.GetCharacter(payload.NetID).MyGuid)
 
     -- Osi.TimerLaunch("PIP_AutoUnlockInventories", 2000)

@@ -181,7 +181,7 @@ function EpicEnemies.InitializeCharacter(char)
         SetTag(char.MyGuid, EpicEnemies.INITIALIZED_TAG)
         ApplyStatus(char.MyGuid, "PIP_OSITOOLS_EpicBossesDisplay", -1, 1)
 
-        Game.Net.Broadcast("EPIPENCOUNTERS_EpicEnemies_EffectsApplied", {
+        Net.Broadcast("EPIPENCOUNTERS_EpicEnemies_EffectsApplied", {
             Effects = addedEffects,
             CharacterNetID = char.NetID,
         })
@@ -206,7 +206,7 @@ function EpicEnemies.CleanupCharacter(char)
 
         Osi.ClearTag(char.MyGuid, EpicEnemies.INITIALIZED_TAG)
 
-        Game.Net.Broadcast("EPIPENCOUNTERS_EpicEnemies_EffectsRemoved", {
+        Net.Broadcast("EPIPENCOUNTERS_EpicEnemies_EffectsRemoved", {
             CharacterNetID = char.NetID,
         })
 

@@ -34,7 +34,7 @@ function Talents.AddTalent(self, char, id, isMirror)
         Talents.mirrorModifiedTalents[id] = 1
     end
 
-    Game.Net.PostToServer("EPIPENCOUNTERS_CharacterSheet_AddTalent", {NetID = char.NetID, Talent = id})
+    Net.PostToServer("EPIPENCOUNTERS_CharacterSheet_AddTalent", {NetID = char.NetID, Talent = id})
 end
 
 function Talents.RemoveTalent(self, char, id, isMirror)
@@ -42,14 +42,14 @@ function Talents.RemoveTalent(self, char, id, isMirror)
         Talents.mirrorModifiedTalents[id] = -1
     end
 
-    Game.Net.PostToServer("EPIPENCOUNTERS_CharacterSheet_RemoveTalent", {NetID = char.NetID, Talent = id})
+    Net.PostToServer("EPIPENCOUNTERS_CharacterSheet_RemoveTalent", {NetID = char.NetID, Talent = id})
 end
 
 function Talents:HideTalent(id)
     self.hiddenTalents[id] = true
 end
 
-Game.Net.RegisterListener("EPIPENCOUNTERS_Talents_SendPoints", function(channel, payload)
+Net.RegisterListener("EPIPENCOUNTERS_Talents_SendPoints", function(channel, payload)
     -- Ext.Print("set from net")
     if not Talents.isCharacterCreation then
         Talents.talentPoints = payload.Points
@@ -88,7 +88,7 @@ Utilities.Hooks.RegisterListener("UI_CharacterCreation", "PresetWasChanged", fun
     Talents:ResetCharacterCreation()
 end)
 
-Game.Net.RegisterListener("EPIPENCOUNTERS_Talents_CharacterCreationFinished", function(channel, payload)
+Net.RegisterListener("EPIPENCOUNTERS_Talents_CharacterCreationFinished", function(channel, payload)
     Talents.characterCreationTalentOffset = 0
     Talents.mirrorModifiedTalents = {}
 
@@ -126,7 +126,7 @@ function Talents.HasTalent(self, char, talent, isVanilla)
 end
 
 -- TODO keep track of ability changes within the mirror
--- Game.Net.RegisterListener("EPIPENCOUNTERS_Talents_CountAbilities", function(channel, payload)
+-- Net.RegisterListener("EPIPENCOUNTERS_Talents_CountAbilities", function(channel, payload)
 --     local char = Client.GetCharacter()
 
 --     Ext.Print("stats:")
@@ -350,7 +350,7 @@ function OnCharacterCreationTalents(ui, method)
     --     ui:GetRoot().CCPanel_mc.talents_mc.addTalentElement(v.params.id, v.params.label, v.params.chosen, v.params.org, false)
     -- end
 
-    -- Game.Net.PostToServer("EPIPENCOUNTERS_Talents_RequestPoints", {NetID = Client.GetCharacter().NetID})
+    -- Net.PostToServer("EPIPENCOUNTERS_Talents_RequestPoints", {NetID = Client.GetCharacter().NetID})
 end
 
 Client.UI.CharacterCreation:RegisterInvokeListener("updateTalents", function(ev)

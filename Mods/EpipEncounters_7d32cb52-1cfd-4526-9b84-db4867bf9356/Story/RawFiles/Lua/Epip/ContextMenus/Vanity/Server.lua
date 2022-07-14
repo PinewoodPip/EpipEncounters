@@ -12,7 +12,7 @@ function Vanity.RevertAppearace(char, item)
 
         Ext.OnNextTick(function()
             Ext.OnNextTick(function()
-                Game.Net.PostToUser(char.ReservedUserID, "EPIPENCOUNTERS_Vanity_SetTemplateOverride", {TemplateOverride = originalTemplate})
+                Net.PostToUser(char.ReservedUserID, "EPIPENCOUNTERS_Vanity_SetTemplateOverride", {TemplateOverride = originalTemplate})
             end)
         end)
     end
@@ -46,7 +46,7 @@ function Vanity.TransmogItem(char, item, newTemplate, dye)
 
     -- Apply new dye if specified.
     if dye then
-        Game.Items.ApplyDye(item, dye)
+        Item.ApplyDye(item, dye)
     end
 
     -- Remove tag when going from normal item to artifact (not if going from artifact to artifact)
@@ -161,7 +161,7 @@ Ext.Osiris.RegisterListener("ItemEquipped", 2, "after", function(item, char)
         item = Ext.GetItem(item)
         Vanity:DebugLog("Transmogging equipped item to persistent outfit: " .. item.DisplayName)
 
-        local slot = Game.Items.GetItemSlot(item)
+        local slot = Item.GetItemSlot(item)
 
         Vanity.TransmogItem(Ext.GetCharacter(char), item, outfit[1 + Vanity.SLOT_TO_DB_INDEX[slot]])
     end
@@ -171,14 +171,14 @@ Osiris.RegisterSymbolListener("ItemEquipped", 2, "after", function(item, char)
     if Osiris.DB_IsPlayer:Get(char) then
         char = Ext.GetCharacter(char)
     
-        Game.Net.PostToCharacter(char.MyGuid, "EPIPENCOUNTERS_ItemEquipped", {
+        Net.PostToCharacter(char.MyGuid, "EPIPENCOUNTERS_ItemEquipped", {
             NetID = char.NetID,
             ItemNetID = Ext.GetItem(item).NetID,
         })
     end
 end)
 
-Game.Net.RegisterListener("EPIPENCOUNTERS_Vanity_Transmog_KeepAppearance", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_Vanity_Transmog_KeepAppearance", function(cmd, payload)
     local char = Ext.GetCharacter(payload.NetID)
     local tag = "PIP_Vanity_Transmog_KeepAppearance_" .. payload.Slot
 
@@ -201,7 +201,7 @@ function IgnoreVanity()
 end
 
 -- Transmog request.
-Game.Net.RegisterListener("EPIPENCOUNTERS_VanityTransmog", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_VanityTransmog", function(cmd, payload)
     local char = Ext.GetCharacter(payload.Char)
     local item = Ext.GetItem(payload.Item)
     local template = payload.NewTemplate
@@ -210,7 +210,7 @@ Game.Net.RegisterListener("EPIPENCOUNTERS_VanityTransmog", function(cmd, payload
 end)
 
 -- TODO MOVE ELSEWHERE
-Game.Net.RegisterListener("EPIPENCOUNTERS_Vanity_ApplyAura", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_Vanity_ApplyAura", function(cmd, payload)
     local char = Ext.GetCharacter(payload.NetID)
     local aura = payload.Aura ---@type VanityAura
 
@@ -227,7 +227,7 @@ Game.Net.RegisterListener("EPIPENCOUNTERS_Vanity_ApplyAura", function(cmd, paylo
     
     -- Osiris.DB_PIP_Vanity_AppliedAura:Set(char.MyGuid, aura.Effect, handle)
 end)
-Game.Net.RegisterListener("EPIPENCOUNTERS_Vanity_RemoveAura", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_Vanity_RemoveAura", function(cmd, payload)
     local char = Ext.GetCharacter(payload.NetID)
     local _, _, _, tuples = Osiris.DB_PIP_Vanity_AppliedAura:Get(char.MyGuid, nil, nil)
 
@@ -243,7 +243,7 @@ Game.Net.RegisterListener("EPIPENCOUNTERS_Vanity_RemoveAura", function(cmd, payl
 end)
 
 -- Revert appearance.
-Game.Net.RegisterListener("EPIPENCOUNTERS_Vanity_RevertTemplate", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_Vanity_RevertTemplate", function(cmd, payload)
     local char = Ext.GetCharacter(payload.CharNetID)
     local item = Ext.GetItem(payload.ItemNetID)
 
@@ -251,7 +251,7 @@ Game.Net.RegisterListener("EPIPENCOUNTERS_Vanity_RevertTemplate", function(cmd, 
 end)
 
 -- Toggling persistent outfit feature.
-Game.Net.RegisterListener("EPIPENCOUNTERS_VanityPersistOutfit", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_VanityPersistOutfit", function(cmd, payload)
     local char = Ext.GetCharacter(payload.ClientCharacterNetID)
     local enable = payload.State
 
@@ -264,7 +264,7 @@ Game.Net.RegisterListener("EPIPENCOUNTERS_VanityPersistOutfit", function(cmd, pa
 end)
 
 -- Toggling persistent outfit feature, for weapons
-Game.Net.RegisterListener("EPIPENCOUNTERS_VanityPersistWeaponry", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_VanityPersistWeaponry", function(cmd, payload)
     local char = Ext.GetCharacter(payload.ClientCharacterNetID)
     local enable = payload.State
 
@@ -284,8 +284,8 @@ end)
 -- Track new templates gained by players.
 -- Ext.Osiris.RegisterListener("ItemTemplateAddedToCharacter", 3, "after", function(template, item, char)
     -- local item = Ext.GetItem(item)
-    -- if #Osi.DB_IsPlayer:Get(char) > 0 and Game.Items.IsDyeable(item) then
-    --     local slot = Game.Items.GetItemSlot(item)
+    -- if #Osi.DB_IsPlayer:Get(char) > 0 and Item.IsDyeable(item) then
+    --     local slot = Item.GetItemSlot(item)
 
     --     template = string.match(template, Data.Patterns.GUID_CAPTURE)
 
@@ -293,7 +293,7 @@ end)
 
     --     Vanity.UnlockTemplate(template, data)
 
-    --     Game.Net.Broadcast("EPIPENCOUNTERS_VanityTemplateFound", {
+    --     Net.Broadcast("EPIPENCOUNTERS_VanityTemplateFound", {
     --         Template = template,
     --         Data = data,
     --     })

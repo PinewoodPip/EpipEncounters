@@ -572,7 +572,7 @@ function OptionsSettings.SynchToServer(option, value)
 
     if option and option.ServerOnly and Client.IsHost() then
         OptionsSettings:Log("Synching setting to server: " .. option.ID .. " value " .. tostring(value))
-        Game.Net.PostToServer("EPIPENCOUNTERS_ServerOptionChanged", {Mod = option.Mod, Setting = option.ID, Value = value})
+        Net.PostToServer("EPIPENCOUNTERS_ServerOptionChanged", {Mod = option.Mod, Setting = option.ID, Value = value})
     end
 end
 
@@ -598,7 +598,7 @@ end
 ---------------------------------------------
 
 -- TODO move elsewhere as this is from a feature and not the core library.
-Game.Net.RegisterListener("EPIPENCOUNTERS_ServerSettingSynch", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_ServerSettingSynch", function(cmd, payload)
     OptionsSettings.SetOptionValue(payload.Module, payload.Setting, payload.Value, false)
 end)
 

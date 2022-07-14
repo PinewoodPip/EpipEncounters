@@ -42,7 +42,7 @@ function AutoIdentify.CanIdentify(item)
         local level = item.Stats.Level
         local loremaster = Utilities.GetHighestPartyAbility("Loremaster")
 
-        local requirement = Game.Items.GetIdentifyRequirement(item)
+        local requirement = Item.GetIdentifyRequirement(item)
 
         canIdentify = loremaster >= requirement
     end
@@ -58,7 +58,7 @@ Ext.Osiris.RegisterListener("ItemTemplateAddedToCharacter", 3, "after", function
     AutoIdentify.ProcessItem(item)
 end)
 
-Game.Net.RegisterListener("EPIPENCOUNTERS_ServerOptionChanged", function(channel, payload)
+Net.RegisterListener("EPIPENCOUNTERS_ServerOptionChanged", function(channel, payload)
     if payload.Mod == "EpipEncounters" and payload.Setting == "AutoIdentify" then
         AutoIdentify.state = payload.Value
 

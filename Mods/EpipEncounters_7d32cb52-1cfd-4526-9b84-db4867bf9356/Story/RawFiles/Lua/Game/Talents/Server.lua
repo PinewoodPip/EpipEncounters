@@ -17,7 +17,7 @@ function Game.Talents:ValidateTalentRequirements(char)
     end
 end
 
-Game.Net.RegisterListener("EPIPENCOUNTERS_CharacterSheet_AddTalent", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_CharacterSheet_AddTalent", function(cmd, payload)
     local char = Ext.GetCharacter(payload.NetID)
     local talent = payload.Talent
 
@@ -26,7 +26,7 @@ Game.Net.RegisterListener("EPIPENCOUNTERS_CharacterSheet_AddTalent", function(cm
         return nil
     end
 
-    Game.Net.PostToCharacter(char.MyGuid, "EPIPENCOUNTERS_CharacterSheet_RefreshTalents", {TalentPointsOffset = -1})
+    Net.PostToCharacter(char.MyGuid, "EPIPENCOUNTERS_CharacterSheet_RefreshTalents", {TalentPointsOffset = -1})
 
     local isCharacterCreation = #Osi.DB_InCharacterCreation:Get(1) > 0
     if isCharacterCreation then
@@ -45,11 +45,11 @@ Game.Net.RegisterListener("EPIPENCOUNTERS_CharacterSheet_AddTalent", function(cm
     Game.Talents:AddTalent(char, talent)    
 end)
 
-Game.Net.RegisterListener("EPIPENCOUNTERS_CharacterSheet_RemoveTalent", function(channel, payload)
+Net.RegisterListener("EPIPENCOUNTERS_CharacterSheet_RemoveTalent", function(channel, payload)
     local char = Ext.GetCharacter(payload.NetID)
     local talent = payload.Talent
 
-    Game.Net.PostToCharacter(char.MyGuid, "EPIPENCOUNTERS_CharacterSheet_RefreshTalents", {TalentPointsOffset = 1})
+    Net.PostToCharacter(char.MyGuid, "EPIPENCOUNTERS_CharacterSheet_RefreshTalents", {TalentPointsOffset = 1})
 
     local isCharacterCreation = #Osi.DB_InCharacterCreation:Get(1) > 0
     if isCharacterCreation then
@@ -131,7 +131,7 @@ end)
 Ext.Osiris.RegisterListener("CharacterAddToCharacterCreation", 3, "before", function(char, mode, result)
 
     Utilities.Log("Server.Talents", char .. " added to Character Creation")
-    -- Game.Net.PostToCharacter(char, "EPIPENCOUNTERS_Talents_CountAbilities", {})
+    -- Net.PostToCharacter(char, "EPIPENCOUNTERS_Talents_CountAbilities", {})
 
     -- TODO fix properly
     -- Ext.Print("db:")
@@ -148,23 +148,23 @@ Ext.Osiris.RegisterListener("CharacterAddToCharacterCreation", 3, "before", func
     end
 
     if talentsDefined then
-        Game.Net.PostToCharacter(char, "EPIPENCOUNTERS_CharacterSheet_RefreshTalents", {TalentPointsOffset = -99})
+        Net.PostToCharacter(char, "EPIPENCOUNTERS_CharacterSheet_RefreshTalents", {TalentPointsOffset = -99})
         Osi.PROC_PIP_Talents_RespecRememberTruePoints(char, 99)
     else
-        Game.Net.PostToCharacter(char, "EPIPENCOUNTERS_CharacterSheet_RefreshTalents", {TalentPointsOffset = 0})
+        Net.PostToCharacter(char, "EPIPENCOUNTERS_CharacterSheet_RefreshTalents", {TalentPointsOffset = 0})
         Osi.PROC_PIP_Talents_RespecRememberTruePoints(char, 0)
     end
 end)
 
 -- After exiting character creation, double-check requirements of custom talents and remove the ones that can no longer be sustained. An example scenario is All Skilled Up being removed.
 Ext.Osiris.RegisterListener("CharacterCreationFinished", 1, "after", function(char)
-    Game.Net.PostToCharacter(char, "EPIPENCOUNTERS_Talents_CharacterCreationFinished", {})
+    Net.PostToCharacter(char, "EPIPENCOUNTERS_Talents_CharacterCreationFinished", {})
 
     Game.Talents:ValidateTalentRequirements(Ext.GetCharacter(char))
 end)
 
-Game.Net.RegisterListener("EPIPENCOUNTERS_Talents_RequestPoints", function(channel, payload)
+Net.RegisterListener("EPIPENCOUNTERS_Talents_RequestPoints", function(channel, payload)
     local char = Ext.GetCharacter(payload.NetID)
     local points = CharacterGetTalentPoints(char.MyGuid)
-    Game.Net.PostToCharacter(char.MyGuid, "EPIPENCOUNTERS_Talents_SendPoints", {Points = points})
+    Net.PostToCharacter(char.MyGuid, "EPIPENCOUNTERS_Talents_SendPoints", {Points = points})
 end)

@@ -23,7 +23,7 @@ end
 
 -- Post to server when we want to dye an item.
 ContextMenu.RegisterElementListener("PIP_Dye", "buttonPressed", function(item, params)
-    Game.Net.PostToServer("EPIPENCOUNTERS_DYE", {
+    Net.PostToServer("EPIPENCOUNTERS_DYE", {
         Character = Client.GetCharacter().NetID,
         Item = item.NetID,
         DyeID = params.ID,
@@ -32,7 +32,7 @@ end)
 
 -- Add dye option to all equipment.
 -- ContextMenu.RegisterVanillaMenuHandler("Item", function(item)
---     if Game.Items.IsDyeable(item) then
+--     if Item.IsDyeable(item) then
 --         ContextMenu.AddElement({
 --             {id = "epip_DyeSubMenu", type = "subMenu", text = "Dye...", subMenu = "epip_DyeMenu"},
 --         })
@@ -45,7 +45,7 @@ ContextMenu.RegisterMenuHandler("epip_DyeMenu", function()
     -- Check if we own each of the dyes - disable button for unowned dyes.
     for i,entry in pairs(entries) do
         local dye = Data.Game.DYES[entry.params.ID]
-        local count = Game.Items.GetPartyTemplateCount(dye.Template)
+        local count = Item.GetPartyTemplateCount(dye.Template)
         -- entry.text = string.format("%s (%d)", entry.params.Name, count)
 
         entry.faded = count == 0

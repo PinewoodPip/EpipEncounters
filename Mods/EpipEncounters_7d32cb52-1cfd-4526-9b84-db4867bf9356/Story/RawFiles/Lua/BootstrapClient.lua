@@ -40,6 +40,8 @@ LOAD_ORDER = {
     "Utilities/Text.lua",
     "Utilities/Hooks.lua",
     "Utilities/Color.lua",
+    "Utilities/GameState/Shared.lua",
+    "Utilities/GameState/Client.lua",
     "Utilities.lua",
 
     "Data/Game.lua", -- TODO move stuff out of it into appropriate scripts
@@ -51,8 +53,8 @@ LOAD_ORDER = {
     "Game/Items/Shared.lua",
     "Game/Items/Client.lua",
     "Game/Stats/Shared.lua",
-    "Game/Net/Shared.lua",
-    "Game/Net/Client.lua",
+    "Utilities/Net/Shared.lua",
+    "Utilities/Net/Client.lua",
 
     "Client/Client.lua",
     "Client/Server.lua",

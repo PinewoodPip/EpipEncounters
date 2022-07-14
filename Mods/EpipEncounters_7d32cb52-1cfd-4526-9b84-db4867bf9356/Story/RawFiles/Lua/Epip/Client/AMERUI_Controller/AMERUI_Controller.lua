@@ -119,7 +119,7 @@ function Controller.ReturnToPreviousPage()
 end
 
 function Controller.SendServerCommand(command, data)
-    Game.Net.PostToServer(Controller.COMMAND_NET_CHANNEL, {
+    Net.PostToServer(Controller.COMMAND_NET_CHANNEL, {
         Command = command,
         NetID = Client.GetCharacter().NetID,
         Data = data,

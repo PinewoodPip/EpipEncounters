@@ -15,7 +15,7 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
-Game.Net.RegisterListener("EPIPENCOUNTERS_ServerOptionChanged", function(channel, payload)
+Net.RegisterListener("EPIPENCOUNTERS_ServerOptionChanged", function(channel, payload)
     if payload.Mod == "EpipEncounters" and payload.Setting == "DEBUG_ForceStoryPatching" then
         ForceStoryPatching.Toggle(payload.Value)
     end

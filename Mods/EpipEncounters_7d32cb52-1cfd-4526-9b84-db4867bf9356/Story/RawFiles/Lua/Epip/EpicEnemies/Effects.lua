@@ -475,7 +475,7 @@ local EpicEnemies = Epip.Features.EpicEnemies
 ---------------------------------------------
 
 -- Generate Artifact options
-for id,artifact in pairs(Game.Items.ARTIFACTS) do
+for id,artifact in pairs(Item.ARTIFACTS) do
     -- local displayStatus = Ext.Stats.Get("AMER_ARTIFACTPOWER_" .. id:gsub("Artifact_", ""):upper())
 
     -- if not displayStatus then

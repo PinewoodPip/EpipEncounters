@@ -169,7 +169,7 @@ local function GetCurrentDyeInSlot(char, slot)
 
     if item then
         item = Ext.GetItem(item)
-        local id,_t = Game.Items.GetCurrentDye(item)
+        local id,_t = Item.GetCurrentDye(item)
         data = _t
         if id then
             dye = id
@@ -183,7 +183,7 @@ VanityDyes.Events.DyeUsed:RegisterListener(function (dye, item, character)
     if dye.Type == "EE" then
         Vanity.ignoreNextUnEquip = true
 
-        -- Game.Net.PostToServer("EPIPENCOUNTERS_DYE", {
+        -- Net.PostToServer("EPIPENCOUNTERS_DYE", {
         --     Character = character.NetID,
         --     Item = item.NetID,
         --     -- DyeID = dye.ID,
@@ -198,7 +198,7 @@ end)
 Vanity.Hooks.GetLabelColor:RegisterHook(function (color, text, tab, entryID)
     if tab.ID == "PIP_Vanity_Dyes" and Dyes.IsEEDye(entryID) then
         local dye = Dyes.DYE_DATA[entryID]
-        local hasDye = Game.Items.GetPartyTemplateCount(dye.Template) > 0
+        local hasDye = Item.GetPartyTemplateCount(dye.Template) > 0
 
         if not hasDye then
             color = "706262"

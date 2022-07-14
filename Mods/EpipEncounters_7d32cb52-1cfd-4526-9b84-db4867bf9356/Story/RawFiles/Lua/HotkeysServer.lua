@@ -16,7 +16,7 @@ function IsHotkeyReady(id)
     return GetTimeSpan(Ext.Utils.MonotonicTime(), hotkeyCooldowns[id].time) > hotkeyCooldowns[id].cooldown
 end
 
-Game.Net.RegisterListener("EPIPENCOUNTERS_Hotkey_Meditate", function(channel, payload)
+Net.RegisterListener("EPIPENCOUNTERS_Hotkey_Meditate", function(channel, payload)
     local char = Ext.GetCharacter(payload.NetID).MyGuid
 
     if IsHotkeyReady("PIP_Meditate") then
@@ -26,7 +26,7 @@ Game.Net.RegisterListener("EPIPENCOUNTERS_Hotkey_Meditate", function(channel, pa
 end)
 
 -- Source infuse
-Game.Net.RegisterListener("EPIPENCOUNTERS_Hotkey_SourceInfuse", function(channel, payload)
+Net.RegisterListener("EPIPENCOUNTERS_Hotkey_SourceInfuse", function(channel, payload)
     local char = Ext.GetCharacter(payload.NetID).MyGuid
 
     if IsHotkeyReady("PIP_SourceInfuse") then
@@ -36,7 +36,7 @@ Game.Net.RegisterListener("EPIPENCOUNTERS_Hotkey_SourceInfuse", function(channel
 end)
 
 -- Toggle party link
-Game.Net.RegisterListener("EPIPENCOUNTERS_Hotkey_TogglePartyLink", function(channel, payload)
+Net.RegisterListener("EPIPENCOUNTERS_Hotkey_TogglePartyLink", function(channel, payload)
     local char = Ext.GetCharacter(payload.NetID).MyGuid
 
     if IsHotkeyReady("PIP_TogglePartyLink") then
@@ -46,7 +46,7 @@ Game.Net.RegisterListener("EPIPENCOUNTERS_Hotkey_TogglePartyLink", function(chan
 end)
 
 -- Bedroll rest (requires a bedroll, yes; but just one per party)
-Game.Net.RegisterListener("EPIPENCOUNTERS_Hotkey_UserRest", function(channel, payload)
+Net.RegisterListener("EPIPENCOUNTERS_Hotkey_UserRest", function(channel, payload)
     local char = Ext.GetCharacter(payload.NetID).MyGuid
 
     if IsHotkeyReady("PIP_UserRest") then
@@ -56,7 +56,7 @@ Game.Net.RegisterListener("EPIPENCOUNTERS_Hotkey_UserRest", function(channel, pa
 end)
 
 -- Portable Respec Mirror (requires a mirror, yes; but just one per party)
-Game.Net.RegisterListener("EPIPENCOUNTERS_Hotkey_Respec", function(channel, payload)
+Net.RegisterListener("EPIPENCOUNTERS_Hotkey_Respec", function(channel, payload)
     local char = Ext.GetCharacter(payload.NetID).MyGuid
 
     if IsHotkeyReady("PIP_Respec") then

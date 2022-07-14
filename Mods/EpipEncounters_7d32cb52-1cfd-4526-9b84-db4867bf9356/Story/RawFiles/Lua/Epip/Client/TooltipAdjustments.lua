@@ -365,12 +365,12 @@ function TooltipAdjustments.AddBaseDeltamodTierDisplay(item, tooltip)
     if not item.Stats then return nil end
 
     local tier = 0
-    local itemType = Game.Items.GetItemSlot(item)
+    local itemType = Item.GetItemSlot(item)
     local tiers = Data.Game.EQUIPMENT_BASE_BOOST_TIERS
 
     -- use subtypes for armor only
     if itemType ~= "Weapon" and Data.Game.SLOTS_WITH_SUBTYPES[itemType] then
-        itemType = Game.Items.GetEquipmentSubtype(item)
+        itemType = Item.GetEquipmentSubtype(item)
     end
 
     -- happens with the starting tattered robes

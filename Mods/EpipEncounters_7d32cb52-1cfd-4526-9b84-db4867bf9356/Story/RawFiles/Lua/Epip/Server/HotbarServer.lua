@@ -57,11 +57,11 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
-Game.Net.RegisterListener("EPIPENCOUNTERS_Hotbar_UseTemplate", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_Hotbar_UseTemplate", function(cmd, payload)
     Osi.PROC_PIP_Hotbar_UseTemplate(Ext.GetCharacter(payload.NetID).MyGuid, payload.Template)
 end)
 
-Game.Net.RegisterListener("EPIPENCOUNTERS_Hotbar_SaveLayout", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_Hotbar_SaveLayout", function(cmd, payload)
     for guid,state in pairs(payload) do
         Hotbar.SaveLayout(Ext.GetCharacter(tonumber(guid)), state)
     end
@@ -75,7 +75,7 @@ Ext.Osiris.RegisterListener("SavegameLoaded", 4, "before", function(major, minor
 
         if layout then
             Hotbar:Log("Found saved layout for " .. char.DisplayName .. "; sending.")
-            Game.Net.PostToUser(id, "EPIPENCOUNTERS_Hotbar_SetLayout", {
+            Net.PostToUser(id, "EPIPENCOUNTERS_Hotbar_SetLayout", {
                 Layout = layout,
                 NetID = char.NetID,
             })
@@ -94,7 +94,7 @@ Osiris.RegisterSymbolListener("NRD_OnActionStateEnter", 2, "after", function(cha
 
         casters[char.MyGuid] = true
 
-        Game.Net.PostToUser(char.ReservedUserID, "EPIPENCOUNTERS_Hotbar_SkillUseChanged", {
+        Net.PostToUser(char.ReservedUserID, "EPIPENCOUNTERS_Hotbar_SkillUseChanged", {
             NetID = char.NetID,
             SkillID = skillID,
             Casting = true,
@@ -105,7 +105,7 @@ Osiris.RegisterSymbolListener("NRD_OnActionStateEnter", 2, "after", function(cha
 
         Hotbar.preparedSkills[char.MyGuid] = skillID
 
-        Game.Net.PostToUser(char.ReservedUserID, "EPIPENCOUNTERS_Hotbar_SkillUseChanged", {
+        Net.PostToUser(char.ReservedUserID, "EPIPENCOUNTERS_Hotbar_SkillUseChanged", {
             NetID = char.NetID,
             SkillID = skillID,
             Casting = false,
@@ -119,7 +119,7 @@ Ext.Events.Tick:Subscribe(function()
         local char = Ext.Entity.GetCharacter(caster)
 
         if state ~= "UseSkill" then
-            Game.Net.PostToUser(char.ReservedUserID, "EPIPENCOUNTERS_Hotbar_SkillUseChanged", {
+            Net.PostToUser(char.ReservedUserID, "EPIPENCOUNTERS_Hotbar_SkillUseChanged", {
                 NetID = char.NetID,
                 SkillID = nil,
                 Casting = false,
@@ -139,7 +139,7 @@ Ext.Events.Tick:Subscribe(function()
 
                     Hotbar.preparedSkills[charGUID] = nil
                     
-                    Game.Net.PostToUser(char.ReservedUserID, "EPIPENCOUNTERS_Hotbar_SkillUseChanged", {
+                    Net.PostToUser(char.ReservedUserID, "EPIPENCOUNTERS_Hotbar_SkillUseChanged", {
                         NetID = char.NetID,
                         SkillID = nil,
                         Casting = false,

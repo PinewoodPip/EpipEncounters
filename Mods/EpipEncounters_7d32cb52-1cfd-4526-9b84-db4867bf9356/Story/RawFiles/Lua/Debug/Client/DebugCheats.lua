@@ -238,14 +238,14 @@ end)
 
 Client.UI.OptionsSettings:RegisterListener("ButtonClicked", function(element)
     if element.ID == "DEBUG_WarpToAMERTest" then
-        Game.Net.PostToServer("EPIPENCOUNTERS_WARPPARTY", {
+        Net.PostToServer("EPIPENCOUNTERS_WARPPARTY", {
             Trigger = '99343515-4420-4660-9c39-a237634e92b7',
         })
     end
 end)
 
 ContextMenu.RegisterElementListener("epip_Cheats_Stats_AddFlexStat", "statButtonPressed", function(character, params, amount)
-    Game.Net.PostToServer("EPIP_CHEATS_FLEXSTAT", {
+    Net.PostToServer("EPIP_CHEATS_FLEXSTAT", {
         NetID = character.NetID,
         StatType = params.type,
         Stat = params.id,
@@ -268,7 +268,7 @@ ContextMenu.RegisterElementListener("epip_Cheats_AddTag", "buttonPressed", funct
 end)
 
 MessageBox.RegisterMessageListener("epip_Cheats_AddTag", MessageBox.Events.InputSubmitted, function(text, id, data)
-    Game.Net.PostToServer("EPIP_CHEATS_ADDTAG", {NetID = data.NetID, Tag = text})
+    Net.PostToServer("EPIP_CHEATS_ADDTAG", {NetID = data.NetID, Tag = text})
 end)
 
 -- Clear tag.
@@ -286,7 +286,7 @@ ContextMenu.RegisterElementListener("epip_Cheats_RemoveTag", "buttonPressed", fu
 end)
 
 MessageBox.RegisterMessageListener("epip_Cheats_RemoveTag", MessageBox.Events.InputSubmitted, function(text, id, data)
-    Game.Net.PostToServer("EPIP_CHEATS_REMOVETAG", {NetID = data.NetID, Tag = text})
+    Net.PostToServer("EPIP_CHEATS_REMOVETAG", {NetID = data.NetID, Tag = text})
 end)
 
 -- Flexstat spell.
@@ -304,7 +304,7 @@ ContextMenu.RegisterElementListener("epip_Cheats_Stats_FlexStats_Spell", "button
 end)
 
 MessageBox.RegisterMessageListener("epip_Cheats_FlexStats_Spell", MessageBox.Events.InputSubmitted, function(text, _, data)
-    Game.Net.PostToServer("EPIP_CHEATS_SPELL", {NetID = data.NetID, StatsID = text})
+    Net.PostToServer("EPIP_CHEATS_SPELL", {NetID = data.NetID, StatsID = text})
 end)
 
 -- Add status.
@@ -325,7 +325,7 @@ MessageBox.RegisterMessageListener("epip_Cheats_AddStatus", MessageBox.Events.In
     local status, duration = table.unpack(Text.Split(text, " "))
     if duration then duration = duration * 6 else duration = 6 end
 
-    Game.Net.PostToServer("EPIP_CHEATS_ADDSTATUS", {
+    Net.PostToServer("EPIP_CHEATS_ADDSTATUS", {
         NetID = data.NetID, StatusID = status, Duration = duration,
     })
 end)
@@ -345,7 +345,7 @@ ContextMenu.RegisterElementListener("epip_Cheats_Teleport", "buttonPressed", fun
 end)
 
 MessageBox.RegisterMessageListener("epip_Cheats_Teleport", MessageBox.Events.InputSubmitted, function(text, id, data)
-    Game.Net.PostToServer("EPIP_CHEATS_TELEPORTTO", {NetID = data.NetID, TargetGUID = text})
+    Net.PostToServer("EPIP_CHEATS_TELEPORTTO", {NetID = data.NetID, TargetGUID = text})
 end)
 
 -- Grant treasure table.
@@ -365,7 +365,7 @@ ContextMenu.RegisterElementListener("epip_Cheats_Items_SpawnTreasure", "buttonPr
 end)
 
 MessageBox.RegisterMessageListener("epip_Cheats_Items_SpawnTreasure", MessageBox.Events.InputSubmitted, function(text, id, data)
-    Game.Net.PostToServer("EPIP_CHEATS_GRANTTREASURE", {NetID = data.NetID, Treasure = text, Amount = templateAmount})
+    Net.PostToServer("EPIP_CHEATS_GRANTTREASURE", {NetID = data.NetID, Treasure = text, Amount = templateAmount})
 end)
 
 -- Print Char GUID.
@@ -397,7 +397,7 @@ MessageBox.RegisterMessageListener("epip_Cheats_SpecialLogic", MessageBox.Events
         amount = -1.0
     end
 
-    Game.Net.PostToServer("EPIP_CHEATS_SPECIALLOGIC", {NetID = data.NetID, SpecialLogic = text, Amount = amount})
+    Net.PostToServer("EPIP_CHEATS_SPECIALLOGIC", {NetID = data.NetID, SpecialLogic = text, Amount = amount})
 end)
 
 -- Add item template.
@@ -418,7 +418,7 @@ ContextMenu.RegisterElementListener("epip_Cheats_Items_SpawnTemplate", "buttonPr
 end)
 
 MessageBox.RegisterMessageListener("epip_Cheats_Items_SpawnTemplate", MessageBox.Events.InputSubmitted, function(text, id, data)
-    Game.Net.PostToServer("EPIP_CHEATS_ITEMTEMPLATE", {NetID = data.NetID, TemplateGUID = text, Amount = templateAmount})
+    Net.PostToServer("EPIP_CHEATS_ITEMTEMPLATE", {NetID = data.NetID, TemplateGUID = text, Amount = templateAmount})
 end)
 
 -- Teleport to cursor.
@@ -427,7 +427,7 @@ Client.UI.OptionsInput.Events.ActionExecuted:RegisterListener(function (action, 
         local pos = Ext.GetPickingState().WalkablePosition
         
         if pos then
-            Game.Net.PostToServer("EPIPENCOUNTERS_CHEATS_TeleportChar", {
+            Net.PostToServer("EPIPENCOUNTERS_CHEATS_TeleportChar", {
                 NetID = Client.GetCharacter().NetID,
                 Position = pos,
                 TeleportParty = action == "EpipEncounters_DebugTeleport_Party",
