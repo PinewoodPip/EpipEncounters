@@ -120,6 +120,7 @@ function PlayerInfo.UpdateBH(player)
 end
 
 function PlayerInfo.UpdatePlayers()
+    if IS_IMPROVED_HOTBAR then return nil end
     local players = PlayerInfo.Root.player_array
 
     for i=0,#players-1,1 do
