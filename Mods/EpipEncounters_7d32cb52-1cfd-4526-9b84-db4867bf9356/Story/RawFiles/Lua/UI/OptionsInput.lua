@@ -345,7 +345,7 @@ Client.UI.Input.Events.KeyPressed:RegisterListener(function (key)
     key = string.upper(key)
 
     local actions = Options.INPUT_MAP[key]
-    if actions and not Utilities.isPaused then
+    if actions and not GameState.IsPaused() then
         for i,actionID in ipairs(actions) do
             local data = Options.GetActionData(actionID)
 

@@ -744,9 +744,7 @@ local function OnSlotKeyPressed(ui, method, id)
 end
 
 -- Refresh on reset.
--- Used to be Game Loaded, but that one has been borked forever apparently.
--- Utilities.Hooks.RegisterListener("Game", "Loaded", function()
-Utilities.Hooks.RegisterListener("GameState", "ClientReady", function()
+GameState.Events.GameReady:Subscribe(function ()
     Hotbar.initialized = true
     Hotbar.LoadData()
     Hotbar.Refresh()
@@ -783,8 +781,8 @@ end
 
 -- Refresh the hotbar every X ticks.
 -- Utilities.Hooks.RegisterListener("Game", "Loaded", function()
-Ext.Events.Tick:Subscribe(function()
-    if Ext.Client.GetGameState() ~= "Running" or Client.IsUsingController() then return nil end
+GameState.Events.RunningTick:Subscribe(function (e)
+    if Client.IsUsingController() then return nil end
 
     if Hotbar.initialized then
         if Hotbar.tickCounter % Hotbar.COOLDOWN_UPDATE_DELAY == 0 then
@@ -810,7 +808,6 @@ Ext.Events.Tick:Subscribe(function()
         end
     end
 end)
--- end)
 
 ---------------------------------------------
 -- INTERNAL METHODS - DO NOT CALL

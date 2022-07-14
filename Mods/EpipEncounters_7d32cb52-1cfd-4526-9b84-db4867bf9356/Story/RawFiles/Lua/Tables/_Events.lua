@@ -12,7 +12,7 @@
 ---@field Module string
 ---@field Event string
 
----@type Event
+---@class Event
 _Event = {
     Module = "",
     Event = "",
@@ -39,7 +39,7 @@ end
 ---@field Event string
 ---@field Options any TODO document
 
----@type Hook
+---@class Hook
 _Hook = {
     Module = "",
     Event = "",

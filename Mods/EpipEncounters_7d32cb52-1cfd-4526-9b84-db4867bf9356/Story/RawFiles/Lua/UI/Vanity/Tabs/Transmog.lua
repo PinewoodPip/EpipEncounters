@@ -374,13 +374,8 @@ Net.RegisterListener("EPIPENCOUNTERS_ItemEquipped", function(cmd, payload)
     end
 end)
 
-Ext.Events.GameStateChanged:Subscribe(function(event)
-    local from = event.FromState
-    local to = event.ToState
-    
-    if from == "PrepareRunning" and to == "Running" then
-        Transmog.UpdateActiveCharacterTemplates()
-    end
+GameState.Events.GameReady:Subscribe(function (e)
+    Transmog.UpdateActiveCharacterTemplates()
 end)
 
 Utilities.Hooks.RegisterListener("Client", "ActiveCharacterChanged", function()

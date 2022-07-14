@@ -39,7 +39,11 @@ function Epip.InitializeFeature(id, name, feature)
     feature.FILEPATH_OVERRIDES = feature.FILEPATH_OVERRIDES or {}
 
     for ev,data in pairs(feature.Events) do
-        feature:AddEvent(ev, data)
+        if data.Legacy == false or feature.USE_LEGACY_EVENTS == false then
+            feature:AddSubscribableEvent(ev)
+        else
+            feature:AddEvent(ev, data)
+        end
     end
 
     for hook,data in pairs(feature.Hooks) do

@@ -55,6 +55,7 @@ local Feature = {
     },
     REQUIRED_MODS = {},
     FILEPATH_OVERRIDES = {},
+    USE_LEGACY_EVENTS = true,
 }
 _Feature = Feature
 
@@ -78,9 +79,19 @@ function Feature:AddEvent(name, data)
     event.Module = self.Name
     event.Event = name
 
-    setmetatable(event, {__index = _Event})
+    Inherit(event, _Event)
 
     self.Events[name] = event
+
+    return event
+end
+
+---@param evName string
+---@return SubscribableEvent
+function Feature:AddSubscribableEvent(evName)
+    local event = SubscribableEvent:New(evName)
+
+    self.Events[evName] = event
 
     return event
 end
@@ -94,7 +105,7 @@ function Feature:AddHook(name, data)
     hook.Module = self.Name
     hook.Event = name
 
-    setmetatable(hook, {__index = _Hook})
+    Inherit(hook, _Hook)
 
     self.Hooks[name] = hook
 

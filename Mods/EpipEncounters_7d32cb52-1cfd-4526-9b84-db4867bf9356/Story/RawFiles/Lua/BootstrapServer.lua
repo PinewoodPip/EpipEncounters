@@ -31,6 +31,7 @@ Utilities = {}
 local prefixedGUID = "EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356"
 
 LOAD_ORDER = {
+    "Utilities/Event.lua",
     "Tables/Epip.lua",
     "Tables/_Events.lua",
     "Tables/_Feature.lua",
@@ -43,7 +44,7 @@ LOAD_ORDER = {
     "Utilities/Hooks.lua",
     "Utilities/Color.lua",
     "Utilities/GameState/Shared.lua",
-    "Utilities/GameState/Client.lua",
+    "Utilities/GameState/Server.lua",
     "Utilities.lua",
     "Utilities/Server.lua",
     "Server/Osiris.lua",

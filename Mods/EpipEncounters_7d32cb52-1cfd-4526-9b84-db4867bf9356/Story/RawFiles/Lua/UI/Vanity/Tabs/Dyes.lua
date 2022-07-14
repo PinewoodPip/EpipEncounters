@@ -584,13 +584,8 @@ Epip.Features.VanityTransmog.Events.AppearanceReapplied:RegisterListener(functio
     Dyes.ReapplyAppearance(item)
 end)
 
-Ext.Events.GameStateChanged:Subscribe(function(event)
-    local from = event.FromState
-    local to = event.ToState
-    
-    if from == "PrepareRunning" and to == "Running" then
-        Dyes.UpdateActiveCharacterDyes()
-    end
+GameState.Events.GameReady:Subscribe(function ()
+    Dyes.UpdateActiveCharacterDyes()
 end)
 
 Utilities.Hooks.RegisterListener("Client", "ActiveCharacterChanged", function()
@@ -604,7 +599,7 @@ Ext.Events.SessionLoading:Subscribe(function()
 
     if file then
         -- print("creating dyes from cache")
-        for id,dye in pairs(file) do
+        for _,dye in pairs(file) do
             Dyes.CreateDyeStats("Armor", dye)
             Dyes.CreateDyeStats("Weapon", dye)
         end

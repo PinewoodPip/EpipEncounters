@@ -5,6 +5,8 @@ Net = {
     INVALID_USER_ID = -65536,
 }
 
+Game.Net = Net -- Backwards compatibility
+
 function Net.Broadcast(channel, message, excludedChar)
     message = message or {}
     Ext.Net.BroadcastMessage(channel, Utilities.Stringify(message), excludedChar)
