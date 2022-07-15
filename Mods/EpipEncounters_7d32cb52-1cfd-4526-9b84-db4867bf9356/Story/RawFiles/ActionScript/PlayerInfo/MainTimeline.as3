@@ -546,6 +546,12 @@ package playerInfo_fla
 			}
 			this.cleanupAllStatuses(param2);
 		}
+
+		public function ClearStatusArray() : *
+		{
+			this.statusSize = 40;
+			this.status_array = new Array();
+		}
 		
 		public function cleanupAllStatuses(param1:Boolean) : *
 		{
@@ -594,49 +600,61 @@ package playerInfo_fla
 			}
 		}
 		
-		public function cleanupStatusesMC(param1:MovieClip, param2:Boolean) : *
+		public function cleanupStatusesMC(mc:MovieClip, unknown:Boolean) : *
 		{
-			var _loc4_:uint = 0;
-			var _loc5_:MovieClip = null;
-			var _loc3_:Number = 0;
-			var _loc6_:Number = 0;
-			if(param1)
+			var index:uint = 0;
+			var statusMC:MovieClip = null;
+			var nextPosX:Number = 0;
+			var statusesPerRow:Number = 0;
+
+			if(mc)
 			{
-				_loc4_ = 0;
-				_loc6_ = Math.max(Math.ceil(param1.status_array.length / 2),6);
-				while(_loc4_ < param1.status_array.length)
+				mc.status_array = mc.status_array.sortOn("pipSortingIndex");
+
+				// trace("Start statuses");
+
+				index = 0;
+				statusesPerRow = Math.max(Math.ceil(mc.status_array.length / 2),6);
+				while(index < mc.status_array.length)
 				{
-				_loc5_ = param1.status_array[_loc4_];
-				if(!param2)
-				{
-					if(_loc5_.alive)
+					statusMC = mc.status_array[index];
+
+					if(!unknown)
 					{
-						_loc5_.alive = false;
-					}
-					else if(!_loc5_.fadingOut)
-					{
-						if(this.curTooltip == _loc5_.id)
+						if(statusMC.alive)
 						{
-							ExternalInterface.call("hideTooltip");
-							this.curTooltip = Number(-1);
-							this.hasTooltip = false;
+							statusMC.alive = false;
 						}
-						_loc5_.fadeOut();
+						else if(!statusMC.fadingOut)
+						{
+							if(this.curTooltip == statusMC.id)
+							{
+								ExternalInterface.call("hideTooltip");
+								this.curTooltip = Number(-1);
+								this.hasTooltip = false;
+							}
+
+							statusMC.fadeOut();
+						}
+					}
+
+					// trace(statusMC.pipSortingIndex);
+
+					statusMC.x = !!this.isLeft ? Number(nextPosX) : Number(0 - nextPosX);
+					statusMC.y = 0;
+					nextPosX += statusMC.widthOverride;
+					index++;
+
+					if(index > statusesPerRow)
+					{
+						statusMC.y = this.statusSize;
+						statusMC.x -= statusesPerRow * this.statusSize;
 					}
 				}
-				_loc5_.x = !!this.isLeft ? Number(_loc3_) : Number(0 - _loc3_);
-				_loc5_.y = 0;
-				_loc3_ += _loc5_.widthOverride;
-				_loc4_++;
-				if(_loc4_ > _loc6_)
+
+				if(mc.list)
 				{
-					_loc5_.y = this.statusSize;
-					_loc5_.x -= _loc6_ * this.statusSize;
-				}
-				}
-				if(param1.list)
-				{
-				param1.list.positionElements();
+				mc.list.positionElements();
 				}
 			}
 		}
@@ -683,77 +701,83 @@ package playerInfo_fla
 			}
 		}
 		
-		public function setStatus(param1:Boolean, param2:Number, param3:Number, param4:Number, param5:Number, param6:Number, param7:String = "") : *
+		public function setStatus(createIfDoesntExist:Boolean, ownerHandle:Number, statusHandle:Number, elementID:Number, duration:Number, cooldown:Number, tooltip:String = "", sortingIndex:Number = 1) : *
 		{
-			var _loc9_:MovieClip = null;
-			var _loc10_:uint = 0;
-			var _loc11_:uint = 0;
-			var _loc12_:String = null;
-			var _loc8_:MovieClip = this.getPlayerOrSummonByHandle(param2);
-			if(_loc8_)
+			var statusMC:MovieClip = null;
+			var index:uint = 0;
+			var iteratorIndex:uint = 0;
+			var iggyIconID:String = null;
+			var playerMC:MovieClip = this.getPlayerOrSummonByHandle(ownerHandle);
+			if(playerMC)
 			{
-				_loc9_ = null;
-				_loc11_ = 0;
-				while(_loc11_ < _loc8_.status_array.length)
+				statusMC = null;
+				iteratorIndex = 0;
+				while(iteratorIndex < playerMC.status_array.length)
 				{
-				if(_loc8_.status_array[_loc11_].id == param3)
+				if(playerMC.status_array[iteratorIndex].id == statusHandle)
 				{
-					_loc10_ = _loc11_;
-					_loc9_ = _loc8_.status_array[_loc11_];
+					index = iteratorIndex;
+					statusMC = playerMC.status_array[iteratorIndex];
 					break;
 				}
-				_loc11_++;
+				iteratorIndex++;
 				}
-				if(_loc9_ == null && param1)
+				if(statusMC == null && createIfDoesntExist)
 				{
-				_loc9_ = new Status();
-				_loc9_.init();
-				_loc9_.tooltipAlign = "leftbottom";
-				_loc9_.id = param3;
-				_loc9_.isStatus = true;
-				_loc9_.tooltipOverrideH = 40;
-				_loc9_.tooltipOverrideW = 40;
-				_loc9_.name = "status" + _loc8_.id + "::" + param4;
-				_loc9_.owner = param2;
-				_loc9_.iconId = -1;
-				_loc9_.text_mc.textCtrl_txt.autoSize = TextFieldAutoSize.RIGHT;
-				_loc9_.text_mc.textCtrl_txt.visible = this.isController;
-				_loc9_.text_mc.text_txt.visible = !this.isController;
-				_loc10_ = _loc8_.status_array.length;
-				_loc8_.statusHolder_mc.addChild(_loc9_);
-				_loc8_.status_array.push(_loc9_);
-				_loc9_.addEventListener(MouseEvent.ROLL_OVER,_loc9_.onOver);
-				_loc9_.addEventListener(MouseEvent.ROLL_OUT,_loc9_.onOut);
+					statusMC = new Status();
+					statusMC.init();
+					statusMC.tooltipAlign = "leftbottom";
+					statusMC.id = statusHandle;
+					statusMC.isStatus = true;
+					statusMC.tooltipOverrideH = 40;
+					statusMC.tooltipOverrideW = 40;
+					statusMC.name = "status" + playerMC.id + "::" + elementID;
+					statusMC.owner = ownerHandle;
+					statusMC.iconId = -1;
+					statusMC.text_mc.textCtrl_txt.autoSize = TextFieldAutoSize.RIGHT;
+					statusMC.text_mc.textCtrl_txt.visible = this.isController;
+					statusMC.text_mc.text_txt.visible = !this.isController;
+					index = playerMC.status_array.length;
+					playerMC.statusHolder_mc.addChild(statusMC);
+					playerMC.status_array.push(statusMC);
+					statusMC.addEventListener(MouseEvent.ROLL_OVER,statusMC.onOver);
+					statusMC.addEventListener(MouseEvent.ROLL_OUT,statusMC.onOut);
 
-				_loc8_.SetInCombat(_loc8_._inCombat);
+					playerMC.SetInCombat(playerMC._inCombat);
 				}
-				if(_loc9_)
+				if(statusMC)
 				{
-				if(param4 != -1 && _loc9_.iconId != param4)
-				{
-					_loc9_.iconId = param4;
-					_loc12_ = "s" + String(param4);
-					this.setIggyImage(_loc9_,_loc12_);
-					_loc9_.icon_mc.height = _loc9_.icon_mc.width = this.statusIconSize;
-					_loc9_.icon_mc.x = this.statusIconOffsetX;
-					_loc9_.icon_mc.y = this.statusIconOffsetY;
-				}
-				_loc9_.setCoolDown(param6);
-				if(param5 <= 0)
-				{
-					_loc9_.setTurns("");
-				}
-				else
-				{
-					_loc9_.setTurns(Math.ceil(param5));
-				}
-				if(this.curTooltip == param3 && this.curTooltipOwner == param2)
-				{
-					this.showStatusTooltipForMC(_loc9_);
-				}
-				_loc9_.tooltip = param7;
-				_loc9_.widthOverride = this.statusSize + this.statusSpacing;
-				_loc9_.alive = true;
+					statusMC.pipSortingIndex = sortingIndex;
+
+					if(elementID != -1 && statusMC.iconId != elementID)
+					{
+						statusMC.iconId = elementID;
+						iggyIconID = "s" + String(elementID);
+						this.setIggyImage(statusMC,iggyIconID);
+						statusMC.icon_mc.height = statusMC.icon_mc.width = this.statusIconSize;
+						statusMC.icon_mc.x = this.statusIconOffsetX;
+						statusMC.icon_mc.y = this.statusIconOffsetY;
+					}
+
+					statusMC.setCoolDown(cooldown);
+
+					if(duration <= 0)
+					{
+						statusMC.setTurns("");
+					}
+					else
+					{
+						statusMC.setTurns(Math.ceil(duration));
+					}
+
+					if(this.curTooltip == statusHandle && this.curTooltipOwner == ownerHandle)
+					{
+						this.showStatusTooltipForMC(statusMC);
+					}
+
+					statusMC.tooltip = tooltip;
+					statusMC.widthOverride = this.statusSize + this.statusSpacing;
+					statusMC.alive = true;
 				}
 			}
 		}

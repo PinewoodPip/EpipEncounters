@@ -11,15 +11,47 @@ Client.UI.PlayerInfo = {
 
     previousCombatState = nil,
 
+    StatusApplyTime = {
+
+    },
+
+    USE_LEGACY_EVENTS = false,
     FILEPATH_OVERRIDES = {
         ["Public/Game/GUI/playerInfo.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/playerInfo.swf"
     },
+
+    Events = {
+        ---@type SubscribableEvent<PlayerInfoUI_Event_StatusesUpdated>
+        StatusesUpdated = {},
+    }
 }
 if IS_IMPROVED_HOTBAR then
     Client.UI.PlayerInfo.FILEPATH_OVERRIDES = {}
 end
 local PlayerInfo = Client.UI.PlayerInfo
 Epip.InitializeUI(Client.UI.Data.UITypes.playerInfo, "PlayerInfo", PlayerInfo)
+PlayerInfo:Debug()
+
+---@class PlayerInfoStatusUpdate
+---@field CharacterHandle FlashObjectHandle
+---@field Status EclStatus
+---@field StatusHandle FlashObjectHandle
+---@field Duration number
+---@field ElementID integer
+---@field Tooltip string
+---@field Cooldown number
+---@field SortingIndex integer
+
+---------------------------------------------
+-- EVENTS
+---------------------------------------------
+
+---@class PlayerInfoUI_Event_StatusesUpdated
+---@field Data table<NetId, PlayerInfoStatusUpdate[]>
+
+---------------------------------------------
+-- METHODS
+---------------------------------------------
 
 -- ID for this UI is different on controller, despite using the same swf.
 function PlayerInfo:GetUI()
@@ -194,68 +226,92 @@ if not IS_IMPROVED_HOTBAR then
     end, "After")
 end
 
-Ext.RegisterUITypeInvokeListener(PlayerInfo.UITypeID, "updateStatuses", function(ui, method, createIfDoesntExist, cleanupAll)
-    if true then return nil end -- TODO finish
+PlayerInfo:RegisterInvokeListener("updateStatuses", function (event, createIfDoesntExist, cleanupAll)
     local root = PlayerInfo.Root
     local array = root.status_array
+
+    ---@type table<NetId, PlayerInfoStatusUpdate[]>
     local players = {}
 
     root.cleanupAllStatuses(true)
 
+    local now = Ext.Utils.MonotonicTime()
+
     if not cleanupAll then
         for i=0,#array-1,6 do
+            ---@type PlayerInfoStatusUpdate
             local data = {
-                characterHandle = array[i],
-                statusHandle = array[i + 1],
-                statusElementId = array[i + 2],
-                duration = array[i + 3],
-                cooldown = array[i + 4],
-                tooltip = array[i + 5],
-                sortingIndex = i,
+                CharacterHandle = array[i],
+                StatusHandle = array[i + 1],
+                ElementID = array[i + 2],
+                Duration = array[i + 3],
+                Cooldown = array[i + 4],
+                Tooltip = array[i + 5],
+                -- SortingIndex = i,
             }
 
-            data.character = Ext.GetCharacter(Ext.UI.DoubleToHandle(data.characterHandle))
-            data.status = Ext.Stats.Getus(data.character.Handle, Ext.UI.DoubleToHandle(data.statusHandle))
+            local char = Character.Get(Ext.UI.DoubleToHandle(data.CharacterHandle))
 
-            if not players[data.character.NetID] then
-                players[data.character.NetID] = {}
+            local status = Ext.GetStatus(Ext.UI.DoubleToHandle(data.CharacterHandle), Ext.UI.DoubleToHandle(data.StatusHandle))
+            data.Status = status
+
+            if not players[char.NetID] then
+                players[char.NetID] = {}
             end
 
-            local list = players[data.character.NetID]
+            local statusApplyTime = PlayerInfo.StatusApplyTime[status.NetID]
+            if not statusApplyTime then
+                statusApplyTime = now + i -- Adding the index avoids overlaps in priority
+                PlayerInfo.StatusApplyTime[status.NetID] = statusApplyTime -- TODO clean these up regularly
+            end
 
-            data.sortingIndex = #list
+            local list = players[char.NetID]
+
+            data.SortingIndex = -statusApplyTime
 
             table.insert(list, data)
         end
 
-        -- Ext.Dump(statuses)
-        players = PlayerInfo:ReturnFromHooks("updateStatuses", players)
-        -- Ext.Dump(statuses)
+        PlayerInfo.Events.StatusesUpdated:Throw({
+            Data = players,
+        })
 
-        local newArray = {}
-        for netID,statusesList in pairs(players) do
+        -- local newArray = {}
+        for _,statusesList in pairs(players) do
+            table.sort(statusesList, function (a, b)
+                return a.SortingIndex > b.SortingIndex
+            end)
+
             for i,data in pairs(statusesList) do
-                local statusEntry = {
-                    data.characterHandle,
-                    data.statusHandle,
-                    data.statusElementId,
-                    data.duration,
-                    data.cooldown,
-                    data.tooltip,
-                    data.sortingIndex,
-                }
+                -- local statusEntry = {
+                --     data.characterHandle,
+                --     data.,
+                --     data.statusElementId,
+                --     data.duration,
+                --     data.cooldown,
+                --     data.tooltip,
+                --     data.sortingIndex,
+                -- }
     
-                for z,value in pairs(statusEntry) do
-                    table.insert(newArray, value)
-                end
+                -- for _,value in pairs(statusEntry) do
+                --     table.insert(newArray, value)
+                -- end
     
-                -- root.setStatus(createIfDoesntExist, data.characterHandle, data.statusHandle, data.statusElementId, data.duration, data.cooldown, data.tooltip, i)
+                -- PlayerInfo:DebugLog("Status " .. data.Status.StatusId .. ": index " .. data.SortingIndex)
+
+                root.setStatus(createIfDoesntExist, data.CharacterHandle, data.StatusHandle, data.ElementID, data.Duration, data.Cooldown, data.Tooltip, i)
             end
         end
+
+        PlayerInfo:DebugLog("Statuses updated.")
         
 
-        Game.Tooltip.TableToFlash(ui, "status_array", newArray)
-    end  
+        event:PreventAction()
+
+        root.ClearStatusArray()
+        root.cleanupAllStatuses(cleanupAll)
+        -- Game.Tooltip.TableToFlash(ui, "status_array", newArray)
+    end
 end, "Before")
 
 ---------------------------------------------

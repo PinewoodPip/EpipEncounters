@@ -37,7 +37,7 @@
 ---@field LogWarning fun(self, msg)
 ---@field LogError fun(self, msg)
 
----@type Feature
+---@class Feature
 local Feature = {
     Name = "",
     Disabled = false,

@@ -223,6 +223,8 @@ LOAD_ORDER = {
     "Epip/EpicEnemies/Effects.lua",
     "Epip/EpicEnemies/ActivationConditionsClient.lua",
 
+    "Epip/StatusSorting.lua",
+
     "Epip/PreferredTargetDisplay/Shared.lua",
     "Epip/PreferredTargetDisplay/Client.lua",
 
