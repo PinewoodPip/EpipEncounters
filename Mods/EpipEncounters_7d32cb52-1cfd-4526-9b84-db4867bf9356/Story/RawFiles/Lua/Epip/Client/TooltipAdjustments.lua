@@ -210,7 +210,7 @@ function TooltipAdjustments.ShowAbilityScoresForSI(char, skill, tooltip)
     for i,req in pairs(Data.Game.INFUSION_TIERS) do
         if score < req and (Client.Input.IsHoldingModifierKey() or Client.IsPreparingInfusion()) then
             local reqStr = string.format("(requires %d %s):", req, schoolName)
-            local startPos, endPos = element.Label:find(escape_lua_pattern(reqStr))
+            local startPos, endPos = element.Label:find(Text.EscapePatternCharacters(reqStr))
 
             if startPos and endPos then
                 element.Label = element.Label:insert("</font>", endPos)
