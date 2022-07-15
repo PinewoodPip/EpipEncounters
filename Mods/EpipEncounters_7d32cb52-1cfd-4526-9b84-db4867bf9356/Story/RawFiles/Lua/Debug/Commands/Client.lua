@@ -30,7 +30,6 @@ end
 local commands = {
     ["bruteforceuitypes"] = DumpUIInstances,
     ["soundtest"] = SoundTest,
-    ["animtest"] = AnimTest,
 }
 
 for name,command in pairs(commands) do
