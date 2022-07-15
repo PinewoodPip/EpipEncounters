@@ -40,7 +40,7 @@ local function TagFetchPerformance()
         Ext.GetCharacter(guid):HasTag("TEST_TAG")
     end
 
-    local time = Ext.MonotonicTime()  - now
+    time = Ext.MonotonicTime()  - now
     print("EsvCharacter:HasTag(): " .. time .. "ms")
 
     now = Ext.MonotonicTime()
@@ -49,7 +49,7 @@ local function TagFetchPerformance()
         char:HasTag("TEST_TAG")
     end
 
-    local time = Ext.MonotonicTime()  - now
+    time = Ext.MonotonicTime()  - now
     print("EsvCharacter:HasTag() without refetching the character: " .. time .. "ms")
 end
 

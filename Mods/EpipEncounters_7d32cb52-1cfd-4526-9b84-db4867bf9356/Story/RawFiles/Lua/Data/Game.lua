@@ -337,7 +337,6 @@ Data.Game.ABILITIES = {
 -- translate skill requirements from Stats objects to actual field name
 Data.Game.StatObjectAbilities = {
     Warrior = "WarriorLore",
-    Water = "WaterSpecialist",
     Earth = "EarthSpecialist",
     Water = "WaterSpecialist",
     Air = "AirSpecialist",

@@ -1200,7 +1200,7 @@ function Hotbar.RenderSlots()
                     local useActions = item.RootTemplate.OnUsePeaceActions
                     for _,action in ipairs(useActions) do
                         if action.Type == "UseSkill" then
-                            isEnabled = isEnabled and Character.CanUseSkill(char, action.SkillID)
+                            isEnabled = isEnabled and Character.CanUseSkill(char, action.SkillID, true)
                         end
                     end
                 elseif data.Type == "Action" then

@@ -19,12 +19,14 @@ Epip.InitializeLibrary("Stats", Stats)
 
 ---Returns whether char meets the requirements for a stat object to be used.
 ---@param char Character
----@param skillID string
+---@param statID string
+---@param isItem boolean
+---@param isFromItem boolean?
 ---@return boolean
-function Stats.MeetsRequirements(char, statID, isItem)
+function Stats.MeetsRequirements(char, statID, isItem, isFromItem)
     local data = Ext.Stats.Get(statID)
     local stats = char.Stats
-    local dynamicStats = char.Stats.DynamicStats
+    -- local dynamicStats = char.Stats.DynamicStats
 
     -- Dead chars cannot use skills or items.
     if Game.Character.IsDead(char) then
@@ -73,12 +75,12 @@ function Stats.MeetsRequirements(char, statID, isItem)
     local charSkillData = char.SkillManager.Skills[statID]
 
     -- Cooldown
-    if charSkillData and charSkillData.ActiveCooldown > 0 then
+    if charSkillData and charSkillData.ActiveCooldown > 0 and not isFromItem then
         return false
     end
 
-    local grantedByExternalSource = false
-    if charSkillData then
+    local grantedByExternalSource = false or isFromItem
+    if charSkillData and not isFromItem then
         grantedByExternalSource = charSkillData.CauseListSize > 0
     end
 
@@ -107,11 +109,11 @@ function Stats.MeetsRequirements(char, statID, isItem)
             local reqMet = false
 
             if req.Requirement == "Combat" then
-                reqMet = Game.Character.IsInCombat(char, skillID)
+                reqMet = Character.IsInCombat(char)
             elseif req.Requirement == "Tag" then
                 reqMet = char:HasTag(req.Param)
             elseif req.Requirement == "Immobile" then
-                reqMet = Game.Character.GetMovement(char) <= 0
+                reqMet = Character.GetMovement(char) <= 0
             else
                 if not Stats.MeetsRequirementsINT(char, req) then
                     return false
@@ -131,7 +133,7 @@ function Stats.MeetsRequirements(char, statID, isItem)
 
         -- Memorization requirements
         if not isItem then
-            for i,req in ipairs(data.MemorizationRequirements) do
+            for _,req in ipairs(data.MemorizationRequirements) do
                 if not Stats.MeetsRequirementsINT(char, req) then
                     return false
                 end

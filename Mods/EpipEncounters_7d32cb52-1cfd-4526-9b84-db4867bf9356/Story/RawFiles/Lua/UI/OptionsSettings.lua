@@ -474,7 +474,7 @@ function OptionsSettings.GetOptionElement(id)
 end
 
 ---Add an entry to a dropdown element.
----@param id stirng|number
+---@param id string|number
 ---@param option string Label.
 function OptionsSettings.RenderDropdownEntry(id, option)
     if type(id) == "string" then
@@ -492,9 +492,8 @@ end
 ---Render an option directly.
 ---@param elementData OptionsSettingsOption
 ---@param numID? integer
----@param requestID string
----@return number Numeric ID.
-function OptionsSettings.RenderOption(elementData, numID, requestID)
+---@return number? Numeric ID.
+function OptionsSettings.RenderOption(elementData, numID)
     numID = numID or OptionsSettings.nextNumID
     
     -- Register dynamically-created settings
@@ -523,7 +522,8 @@ function OptionsSettings.RenderOption(elementData, numID, requestID)
                 for z,subSettingID in ipairs(elementData.Options[OptionsSettings.GetOptionValue(elementData.Mod, elementData.ID)].SubSettings) do
                     local settingData = OptionsSettings.GetOptionData(subSettingID)
     
-                    local elementID = OptionsSettings.RenderOption(settingData, nil, "Selector")
+                    ---@diagnostic disable-next-line: unused-local
+                    local elementID = OptionsSettings.RenderOption(settingData, nil)
         
                     -- TODO finish
                     -- OptionsSettings:DebugLog("Adding subsetting with id", elementID)
@@ -539,6 +539,8 @@ function OptionsSettings.RenderOption(elementData, numID, requestID)
             return numID
         end
     end
+
+    return nil
 end
 
 ---------------------------------------------

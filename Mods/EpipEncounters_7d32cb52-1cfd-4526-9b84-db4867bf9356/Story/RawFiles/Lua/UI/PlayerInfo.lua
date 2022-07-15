@@ -112,8 +112,8 @@ function PlayerInfo.UpdateBH(player)
 
     local displaysVisible = PlayerInfo:ReturnFromHooks("BHDisplaysVisible", false, char, player)
 
-    local battered = Game.Character.GetStacks(char, "B")
-    local harried = Game.Character.GetStacks(char, "H")
+    local battered = Character.GetStacks(char, "B")
+    local harried = Character.GetStacks(char, "H")
 
     local batteredDisplay = player.battered_mc
     local harriedDisplay = player.harried_mc

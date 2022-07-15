@@ -15,13 +15,13 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
-Osiris.RegisterSymbolListener("GameBookInterfaceClosed", 2, "after", function(item, char)
+Osiris.RegisterSymbolListener("GameBookInterfaceClosed", 2, "after", function(item, _)
     item = Item.Get(item)
 
     ItemTagging.TagItem(item, ItemTagging.BOOK_READ_TAG)
 end)
 
-Osiris.RegisterSymbolListener("ItemUnlocked", 3, "after", function(_, char, keyItem)
+Osiris.RegisterSymbolListener("ItemUnlocked", 3, "after", function(_, _, keyItem)
     if keyItem ~= NULLGUID and not keyItem:find("LockPick") then
         local item = Item.Get(keyItem)
 

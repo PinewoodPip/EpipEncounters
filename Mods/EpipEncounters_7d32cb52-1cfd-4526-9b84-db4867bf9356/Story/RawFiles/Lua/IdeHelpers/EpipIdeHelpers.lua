@@ -32,6 +32,9 @@
 ---@class TooltipData
 ---@field Data table[]
 
+---@type unknown
+Osi = {}
+
 ---@class TooltipData
 TooltipData = {}
 

@@ -191,7 +191,7 @@ end
 
 -- todo split up
 function TooltipAdjustments.ShowAbilityScoresForSI(char, skill, tooltip)
-
+    char = char or Client.GetCharacter()
     local element = tooltip:GetElement("SkillDescription")
     if not element or not skill then return nil end
 
@@ -639,7 +639,7 @@ end
 
 local function OnItemTooltipRender(item, tooltip)
     if not TooltipAdjustments:IsEnabled() then return nil end
-    TooltipAdjustments.ShowAbilityScoresForSI(char, skill, tooltip)
+    -- TooltipAdjustments.ShowAbilityScoresForSI(nil, skill, tooltip) -- TODO
     TooltipAdjustments.FixTooltipAPCosts(tooltip)
     TooltipAdjustments.ChangeArtifactRarityDisplay(item, tooltip)
     TooltipAdjustments.AddBaseDeltamodTierDisplay(item, tooltip)
@@ -668,7 +668,7 @@ Ext.Events.SessionLoaded:Subscribe(function()
 end)
 
 -- Align tooltips to the top of the screen.
-Ext.RegisterUITypeInvokeListener(Client.UI.Data.UITypes.tooltip, "addFormattedTooltip", function(ui, method, ...)
+Ext.RegisterUITypeInvokeListener(Client.UI.Data.UITypes.tooltip, "addFormattedTooltip", function(ui, _)
     if not TooltipAdjustments:IsEnabled() then return nil end
     ui:ExternalInterfaceCall("keepUIinScreen", true)
 end, "After")

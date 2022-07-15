@@ -207,7 +207,7 @@ function Character.GetMovement(char)
     end
 
     -- Items
-    for i,slot in ipairs(Data.Game.EQUIP_SLOTS) do
+    for _,slot in ipairs(Data.Game.EQUIP_SLOTS) do
         local statItem = char.Stats:GetItemBySlot(slot)
 
         if statItem then
@@ -226,9 +226,10 @@ end
 ---Returns whether char can enter preparation state for a skill.
 ---@param char Character
 ---@param skillID string
+---@param isFromItem boolean? Defaults to false.
 ---@return boolean
-function Character.CanUseSkill(char, skillID)
-    return Game.Stats.MeetsRequirements(char, skillID)
+function Character.CanUseSkill(char, skillID, isFromItem)
+    return Game.Stats.MeetsRequirements(char, skillID, false, isFromItem or false)
 end
 
 ---Returns whether char has a melee weapon equipped in either slot.
