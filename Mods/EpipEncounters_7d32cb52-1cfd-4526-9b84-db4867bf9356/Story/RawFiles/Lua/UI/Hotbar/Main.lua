@@ -42,6 +42,7 @@ local Hotbar = {
     currentLoadoutRow = nil,
     tickCounter = 0,
     lastClickedSlot = -1,
+    wasVisible = false,
 
     ACTION_BUTTONS_COUNT = 12,
     SKILL_USE_TIME = 3000, -- Kept as a fallback.
@@ -168,6 +169,8 @@ function Hotbar.ToggleVisibility(visible, requestID)
     else
         Hotbar:GetRoot().y = 6000
     end
+
+    Hotbar.Refresh()
 end
 
 ---Returns whether the hotbar is currently visible.
@@ -783,6 +786,19 @@ end
 -- Utilities.Hooks.RegisterListener("Game", "Loaded", function()
 GameState.Events.RunningTick:Subscribe(function (e)
     if Client.IsUsingController() then return nil end
+
+    -- Refresh the hotbar when it comes into view.
+    local visible = Hotbar:IsVisible()
+    if visible ~= Hotbar.wasVisible then
+        Hotbar.wasVisible = visible
+
+        if visible then
+            Client.Timer.Start("", 0.1, function()
+                print("a")
+                Hotbar.RenderSlots()
+            end)
+        end
+    end
 
     if Hotbar.initialized then
         if Hotbar.tickCounter % Hotbar.COOLDOWN_UPDATE_DELAY == 0 then

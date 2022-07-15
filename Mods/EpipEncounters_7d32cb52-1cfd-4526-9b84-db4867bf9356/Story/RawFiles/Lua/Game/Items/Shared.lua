@@ -1,13 +1,10 @@
 
 ---@meta Library: GameItem, ContextShared, Item
 
----@class ItemLib
-local Items = Item
-
 ---Returns true if the item is an Artifact by checking the AMER_UNI tag.
 ---@param item Item
 ---@return boolean
-function Items.IsArtifact(item)
+function Item.IsArtifact(item)
     return item:HasTag("AMER_UNI") and not item:HasTag("PIP_FAKE_ARTIFACT")
 end
 
@@ -15,28 +12,28 @@ end
 ---Returns true for None-type weaponry.
 ---@param item Item
 ---@return boolean
-function Items.IsMeleeWeapon(item)
+function Item.IsMeleeWeapon(item)
     return item and item.Stats and (Data.Game.MELEE_WEAPONS[item.Stats.WeaponType] or item.Stats.WeaponType == "None")
 end
 
 ---Returns whether item is a shield (satisfying a ShieldWeapon requirement)
 ---@param item Item
 ---@return boolean
-function Items.IsShield(item)
+function Item.IsShield(item)
     return item and item.Stats and item.Stats.ItemSlot == "Shield" -- WeaponType is Sentinel
 end
 
 ---Returns whether item is a dagger (satisfying a DaggerWeapon requirement)
 ---@param item Item
 ---@return boolean
-function Items.IsDagger(item)
+function Item.IsDagger(item)
     return item and item.Stats and item.Stats.WeaponType == "Knife"
 end
 
 ---Returns whether item is a ranged weapon; bow or crossbow only!
 ---@param item Item
 ---@return boolean
-function Items.IsRangedWeapon(item)
+function Item.IsRangedWeapon(item)
     return item and item.Stats and Data.Game.RANGED_WEAPONS[item.Stats.WeaponType]
 end
 

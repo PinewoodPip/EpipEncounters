@@ -90,6 +90,10 @@ StatusConsole:RegisterCallListener("pipMaxAPUpdated", function(ev, amount)
     list.y = -2
     list.positionElements()
 
+    if IS_IMPROVED_HOTBAR then -- TODO
+        list.visible = false
+    end
+
     apHolder.x = (-7) - (listWidth / 2)
     apHolder.y = -92 + 6
 end)

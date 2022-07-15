@@ -4,6 +4,7 @@
 -- The SWF is edited to support a BH display, and status sorting in the future.
 ---------------------------------------------
 
+---@class PlayerInfoUI : UI
 Client.UI.PlayerInfo = {
     LOW_BH_OPACITY = 0.9,
     BH_DISPLAY_SCALE = 0.65,
@@ -121,7 +122,13 @@ end
 
 function PlayerInfo.UpdatePlayers()
     if IS_IMPROVED_HOTBAR then return nil end
-    local players = PlayerInfo.Root.player_array
+    local root = PlayerInfo:GetRoot()
+    local players = root.player_array
+    local inCombat = Client.IsInCombat()
+
+    root.SetPartyInCombat(inCombat)
+    root.STATUS_HOLDER_OPACITY = Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "PlayerInfo_StatusHolderOpacity")
+    root.STATUS_HOLDER_ALPHA_OFFSET = -255 * (1 - root.STATUS_HOLDER_OPACITY)
 
     for i=0,#players-1,1 do
         local player = players[i]
@@ -133,6 +140,11 @@ end
 ---------------------------------------------
 -- LISTENERS
 ---------------------------------------------
+
+-- TODO optimize
+GameState.Events.RunningTick:Subscribe(function (_)
+    PlayerInfo.UpdatePlayers()
+end)
 
 Client.UI.OptionsSettings:RegisterListener("OptionSet", function(data, value)
     if data.ID == "PlayerInfoBH" then

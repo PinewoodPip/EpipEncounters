@@ -9,6 +9,7 @@ package
     import flash.geom.Point;
     import flash.geom.Rectangle;
     import flash.text.TextField;
+    import flash.geom.ColorTransform;
     
     public dynamic class playerInfo extends MovieClip
     {
@@ -93,6 +94,9 @@ package
         public const chainDangleYIn:Number = 100;
         
         public const dangleTime:Number = 0.3;
+
+        private var _inCombat:Boolean = false;
+        private var _statusesHovered:Boolean = false;
         
         public function playerInfo()
         {
@@ -108,6 +112,28 @@ package
             ExternalInterface.call("onCharOut",this.characterHandle);
             this.hasTooltip = false;
             this.hadDown = false;
+        }
+
+        public function SetInCombat(inCombat:Boolean) : *
+        {
+            this._inCombat = inCombat;
+
+            this.UpdateStatusOpacity(this._statusesHovered);
+        }
+
+        private function UpdateStatusOpacity(hovered:Boolean) : *
+        {
+            var alpha:Number = (root as MovieClip).STATUS_HOLDER_OPACITY;
+            var color:ColorTransform = new ColorTransform(0.99, 0.99, 0.99, alpha, 0, 0, 0, 0);
+
+            if (hovered || !this._inCombat || alpha > 0.99)
+            {
+                this.statusHolder_mc.transform.colorTransform = new ColorTransform(1, 1, 1, 1, 0, 0, 0, 0);
+            }
+            else
+            {
+                this.statusHolder_mc.transform.colorTransform = color;
+            }
         }
         
         public function disableMouseClicking() : *
@@ -437,6 +463,20 @@ package
                 this.summonContainer_mc.x = -53;
             }
         }
+
+        private function onStatusesMouseOver(ev:MouseEvent) : *
+        {
+            this._statusesHovered = true;
+
+            this.UpdateStatusOpacity(this._statusesHovered);
+        }
+
+        private function onStatusesMouseOut(ev:MouseEvent) : *
+        {
+            this._statusesHovered = false;
+
+            this.UpdateStatusOpacity(this._statusesHovered);
+        }
         
         function frame1() : *
         {
@@ -473,6 +513,9 @@ package
             this.hadDown = false;
             this.startedChainDangle = false;
             this.statusHolder_mc.scrollRect = new Rectangle(0,0,1920,500);
+
+            this.statusHolder_mc.addEventListener(MouseEvent.ROLL_OVER, this.onStatusesMouseOver);
+            this.statusHolder_mc.addEventListener(MouseEvent.ROLL_OUT, this.onStatusesMouseOut)
 
             // PIP - B/H displays.
             // There is only one type of BH element, that is placed twice within the PlayerInfo clip. We need to toggle one of the backgrounds off for each.

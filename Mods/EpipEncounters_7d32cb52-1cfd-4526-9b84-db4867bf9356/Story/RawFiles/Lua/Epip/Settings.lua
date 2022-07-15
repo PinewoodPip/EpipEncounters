@@ -278,6 +278,32 @@ local OtherOptions = {
     },
 }
 
+local PlayerInfo = {
+    {
+        ID = "Epip_PlayerInfo",
+        Type = "Header",
+        Label = "<font color='7e72d6' size='23'>Player Portraits</font>",
+    },
+    {
+        ID = "PlayerInfoBH",
+        Type = "Checkbox",
+        Label = "Display B/H on player portraits",
+        DefaultValue = false,
+        Tooltip = "If enabled, Battered and Harried stacks will be shown beside player portraits on the left interface.",
+    },
+    {
+        ID = "PlayerInfo_StatusHolderOpacity",
+        Type = "Slider",
+        Label = "Status Opacity in Combat",
+        MinAmount = 0,
+        MaxAmount = 1,
+        DefaultValue = 1,
+        Interval = 0.05,
+        HideNumbers = false,
+        Tooltip = "Controls the opacity of your character portraits's status bars in combat. Hovering over the statuses will always display them at full opacity.<br><br>Default is 1.",
+    },
+}
+
 local TopOptions = {
     {
         ID = "AutoIdentify",
@@ -298,13 +324,6 @@ local TopOptions = {
         Label = "Immersive Meditation",
         Tooltip = "Hides the Hotbar and Minimap while within the Ascension and Greatforge UIs.",
         DefaultValue = false,
-    },
-    {
-        ID = "PlayerInfoBH",
-        Type = "Checkbox",
-        Label = "Display B/H on player portraits",
-        DefaultValue = false,
-        Tooltip = "If enabled, Battered and Harried stacks will be shown beside player portraits on the left interface.",
     },
     {
         ID = "CastingNotifications",
@@ -372,6 +391,7 @@ local Order = {
     Header,
     TopOptions,
     Hotbar,
+    PlayerInfo,
     Overheads,
     OtherOptions,
     Experimental,

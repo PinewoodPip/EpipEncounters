@@ -102,6 +102,8 @@ LOAD_ORDER = {
 
     "Epip/PreferredTargetDisplay/Shared.lua",
     "Epip/PreferredTargetDisplay/Server.lua",
+    
+    {ScriptSet = "Epip/ItemTagging"},
 
     "Epip/StatsTab/Shared.lua",
     "Epip/StatsTab/Server/Server.lua",
@@ -120,8 +122,16 @@ LOAD_ORDER = {
 
 -- Epip does not work in-editor.
 if Ext.Utils.GameVersion() ~= "v3.6.51.9303" then
-    for i,script in ipairs(LOAD_ORDER) do
-        Ext.Require(prefixedGUID, script)
+    for _,script in ipairs(LOAD_ORDER) do
+        if type(script) == "table" then
+            local contextSpecificScript = "/Client.lua"
+            if Ext.IsServer() then contextSpecificScript = "/Server.lua" end
+
+            -- Ext.Require(prefixedGUID, script.ScriptSet .. "/Shared.lua")
+            -- Ext.Require(prefixedGUID, script.ScriptSet .. contextSpecificScript)
+        else
+            Ext.Require(prefixedGUID, script)
+        end
     end
 end
 

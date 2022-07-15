@@ -6,6 +6,7 @@ package
     import flash.external.ExternalInterface;
     import flash.geom.Point;
     import flash.geom.Rectangle;
+    import flash.geom.ColorTransform;
     
     public dynamic class summonInfo extends MovieClip
     {
@@ -32,6 +33,9 @@ package
         public var sourcepoints:Array;
         
         public var enableMouseClicking:Boolean;
+
+        private var _inCombat:Boolean = false;
+        private var _statusesHovered:Boolean = false;
         
         public function summonInfo()
         {
@@ -49,6 +53,28 @@ package
                 this.sourcepoints[_loc1_].mouseChildren = false;
                 this.sourcepoints[_loc1_].mouseEnabled = false;
                 _loc1_++;
+            }
+        }
+
+        public function SetInCombat(inCombat:Boolean) : *
+        {
+            this._inCombat = inCombat;
+            
+            this.UpdateStatusOpacity(this._statusesHovered);
+        }
+
+        private function UpdateStatusOpacity(hovered:Boolean) : *
+        {
+            var alpha:Number = (root as MovieClip).STATUS_HOLDER_OPACITY;
+            var color:ColorTransform = new ColorTransform(0.99, 0.99, 0.99, alpha, 0, 0, 0, 0);
+
+            if (hovered || !this._inCombat || alpha > 0.99)
+            {
+                this.statusHolder_mc.transform.colorTransform = new ColorTransform(1, 1, 1, 1, 0, 0, 0, 0);
+            }
+            else
+            {
+                this.statusHolder_mc.transform.colorTransform = color;
             }
         }
         
@@ -163,6 +189,20 @@ package
                 this.statusHolder_mc.x = -38;
             }
         }
+
+        private function onStatusesMouseOver(ev:MouseEvent) : *
+        {
+            this._statusesHovered = true;
+
+            this.UpdateStatusOpacity(this._statusesHovered);
+        }
+
+        private function onStatusesMouseOut(ev:MouseEvent) : *
+        {
+            this._statusesHovered = false;
+
+            this.UpdateStatusOpacity(this._statusesHovered);
+        }
         
         function frame1() : *
         {
@@ -173,6 +213,9 @@ package
             this.frame_mc.addEventListener(MouseEvent.ROLL_OUT,this.onOut);
             this.enableMouseClicking = true;
             this.statusHolder_mc.scrollRect = new Rectangle(0,0,1920,500);
+
+            this.statusHolder_mc.addEventListener(MouseEvent.ROLL_OVER, this.onStatusesMouseOver);
+            this.statusHolder_mc.addEventListener(MouseEvent.ROLL_OUT, this.onStatusesMouseOut)
         }
     }
 }

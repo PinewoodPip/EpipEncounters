@@ -66,6 +66,8 @@ local BaseUI = {
 Client.UI._BaseUITable = BaseUI
 Inherit(BaseUI, _Feature)
 
+---@alias FlashMainTimeline unknown
+
 ---Returns the UIObject for this UI.
 ---Note that some UIs are destroyed after use (ex. OptionsSettings)
 ---and therefore do not always exist.

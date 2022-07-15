@@ -3,13 +3,17 @@
 -- Toggles the minimap and hotbar UIs
 -- while the client is Meditating.
 ---------------------------------------------
-local IM = {}
+local IM = {
+    currentState = false,
+}
 local Ascension = Game.Ascension
 Epip.AddFeature("ImmersiveMeditation", "ImmersiveMeditation", IM)
 
 function IM.Update()
     if Client.IsUsingController() then return nil end
     local state = IM:ReturnFromHooks("GetState", false)
+
+    if state == IM.currentState then return nil end
 
     if state then
         Client.UI.Minimap:Toggle(false, false)
@@ -22,6 +26,8 @@ function IM.Update()
         -- Restore visibility based on settings.
         Client.UI.Minimap:ToggleFromSettings()
     end
+
+    IM.currentState = state
 end
 
 ---------------------------------------------
