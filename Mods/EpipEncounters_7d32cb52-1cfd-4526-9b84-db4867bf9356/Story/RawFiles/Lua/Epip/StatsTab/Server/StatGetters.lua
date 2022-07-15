@@ -5,6 +5,23 @@ local EpipStats = Epip.Features.StatsTab
 -- KEYWORDS
 ---------------------------------------------
 
+---@param char EsvCharacter
+---@param embodiment string
+function EpipStats.UpdateEmbodiment(char, embodiment)
+    local statName = "Embodiment_" .. embodiment
+    local value = Osiris.QRY_AMER_UI_Ascension_GetEmbodimentCount(char.MyGuid, embodiment)
+
+    EpipStats.UpdateTaggedStat(char, statName, value)
+end
+
+EpipStats.RegisterListener("UpdateStat", function(char, id, _)
+    local embodiment = id:match("^Embodiment_(.+)$")
+
+    if embodiment then
+        EpipStats.UpdateEmbodiment(char, embodiment)
+    end
+end)
+
 -- Celestial.
 EpipStats.RegisterStatUpdateListener("Keyword_Celestial_Healing", function(char, data)
     local value = EpipStats.GetCelestialRestoration(char)

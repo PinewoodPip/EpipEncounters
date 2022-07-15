@@ -46,6 +46,17 @@
 ---@type EpipStats
 local EpipStats = {
     CATEGORIES = {
+        Embodiments = {
+            Header = Text.Format("——— Embodiments ———", {Size = 21}),
+            Name = "Embodiments",
+            Stats = {
+                "Embodiment_Force",
+                "Embodiment_Entropy",
+                "Embodiment_Form",
+                "Embodiment_Inertia",
+                "Embodiment_Life",
+            },
+        },
         Vitals = {
             Header = "<font size='21'>————— Vitals —————</font>",
             Name = "Vitals", -- Name in tooltip.
@@ -210,6 +221,7 @@ local EpipStats = {
     
     -- TODO rework as a hook
     CATEGORIES_ORDER = {
+        "Embodiments",
         "Vitals",
         "Reactions",
 
@@ -237,6 +249,32 @@ local EpipStats = {
     },
 
     STATS = {
+        -- EMBODIMENTS
+        Embodiment_Force = {
+            Name = "Force",
+            Description = "Force embodied through your Ascensions.",
+            IgnoreForHiding = true,
+        },
+        Embodiment_Entropy = {
+            Name = "Entropy",
+            Description = "Entropy embodied through your Ascensions.",
+            IgnoreForHiding = true,
+        },
+        Embodiment_Form = {
+            Name = "Form",
+            Description = "Form embodied through your Ascensions.",
+            IgnoreForHiding = true,
+        },
+        Embodiment_Inertia = {
+            Name = "Inertia",
+            Description = "Inertia embodied through your Ascensions.",
+            IgnoreForHiding = true,
+        },
+        Embodiment_Life = {
+            Name = "Life",
+            Description = "Life embodied through your Ascensions.",
+            IgnoreForHiding = true,
+        },
         -- CURRENT COMBAT
         CurrentCombat_DamageDealt = {
             Name = "Damage Dealt",
