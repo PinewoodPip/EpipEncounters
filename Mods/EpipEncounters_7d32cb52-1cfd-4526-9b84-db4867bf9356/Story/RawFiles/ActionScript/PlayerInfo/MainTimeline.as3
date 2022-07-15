@@ -146,7 +146,7 @@ package playerInfo_fla
 
 		private var _inCombat:Boolean = true;
 
-		public var STATUS_HOLDER_OPACITY:Number = 0.5;
+		public var STATUS_HOLDER_OPACITY:Number = 1;
 		
 		public function MainTimeline()
 		{
@@ -570,6 +570,7 @@ package playerInfo_fla
 							_loc4_.scaleY = 0.6;
 							_loc4_.icon_mc.scaleY = 1 / 0.6;
 							_loc4_.icon_mc.scrollRect = new Rectangle(0,this.summonIconScrollRectOffset,this.summonIconWidth,this.summonIconHeight);
+							_loc4_.icon_mc.y = 5;
 							_loc4_.y = 42;
 							_loc4_.turns_mc.scaleY = 1 / 0.6;
 							_loc4_.turns_mc.y = this.summonDurationOffset;
@@ -580,6 +581,7 @@ package playerInfo_fla
 							_loc4_.y = 0;
 							_loc4_.icon_mc.scaleY = this.summonNormalScale;
 							_loc4_.icon_mc.scrollRect = new Rectangle(0,0,this.summonIconWidth,this.summonNormalScrollRect);
+							_loc4_.icon_mc.y = 0;
 							_loc4_.turns_mc.scaleY = 1;
 							_loc4_.turns_mc.y = this.summonDurationNormalOffset;
 						}
@@ -722,6 +724,8 @@ package playerInfo_fla
 				_loc8_.status_array.push(_loc9_);
 				_loc9_.addEventListener(MouseEvent.ROLL_OVER,_loc9_.onOver);
 				_loc9_.addEventListener(MouseEvent.ROLL_OUT,_loc9_.onOut);
+
+				_loc8_.SetInCombat(_loc8_._inCombat);
 				}
 				if(_loc9_)
 				{
@@ -1989,7 +1993,7 @@ package playerInfo_fla
 			this.startDragDist = Number(10);
 			this.summonIconHeight = 40;
 			this.summonIconWidth = 60;
-			this.summonIconScrollRectOffset = 20;
+			this.summonIconScrollRectOffset = 22;
 			this.summonDurationOffset = -10;
 			this.summonDurationNormalOffset = 0;
 			this.summonNormalScrollRect = 120;

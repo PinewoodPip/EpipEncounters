@@ -46,6 +46,8 @@ function Stats.MeetsRequirements(char, statID, isItem, itemSource)
         apCost, _ = Game.Math.GetSkillAPCost(data, char.Stats, Ext.Entity.GetAiGrid(), char.Translate, 1)
     end
 
+    apCost = apCost or 0
+
     -- Consider APCostBoost
     local extraApCost = Stats.CountStat(char.Stats, "APCostBoost")
     if stats.CurrentAP < apCost + extraApCost then

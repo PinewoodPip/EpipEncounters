@@ -95,7 +95,7 @@ package
         
         public const dangleTime:Number = 0.3;
 
-        private var _inCombat:Boolean = false;
+        public var _inCombat:Boolean = false;
         private var _statusesHovered:Boolean = false;
         
         public function playerInfo()
@@ -125,6 +125,7 @@ package
         {
             var alpha:Number = (root as MovieClip).STATUS_HOLDER_OPACITY;
             var color:ColorTransform = new ColorTransform(0.99, 0.99, 0.99, alpha, 0, 0, 0, 0);
+            var highAlpha:Boolean = hovered || !this._inCombat || alpha >= 0.7;
 
             if (hovered || !this._inCombat || alpha > 0.99)
             {
@@ -133,6 +134,13 @@ package
             else
             {
                 this.statusHolder_mc.transform.colorTransform = color;
+            }
+
+            for each(var value:Object in this.status_array)
+            {
+                var status:MovieClip = value as MovieClip;
+
+                status.SetShowCooldown(highAlpha);
             }
         }
         

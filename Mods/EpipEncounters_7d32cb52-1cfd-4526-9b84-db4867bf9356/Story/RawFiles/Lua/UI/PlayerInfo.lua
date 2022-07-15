@@ -9,7 +9,7 @@ Client.UI.PlayerInfo = {
     LOW_BH_OPACITY = 0.9,
     BH_DISPLAY_SCALE = 0.65,
 
-    previousCombatState = false,
+    previousCombatState = nil,
 
     FILEPATH_OVERRIDES = {
         ["Public/Game/GUI/playerInfo.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/playerInfo.swf"
@@ -270,7 +270,7 @@ if not IS_IMPROVED_HOTBAR then
     
         PlayerInfo.Root.summonIconHeight = 60
         PlayerInfo.Root.summonIconWidth = 80
-        PlayerInfo.Root.summonIconScrollRectOffset = 20
+        PlayerInfo.Root.summonIconScrollRectOffset = 22
         PlayerInfo.Root.summonDurationOffset = 35
         PlayerInfo.Root.summonDurationNormalOffset = 50
         PlayerInfo.Root.summonNormalScrollRect = 100
