@@ -32,6 +32,9 @@
 ---@class TooltipData
 ---@field Data table[]
 
+---@class TooltipData
+TooltipData = {}
+
 ---@param data table[]
 ---@return TooltipData
 function TooltipData:Create(data) end

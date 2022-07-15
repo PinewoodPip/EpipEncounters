@@ -256,8 +256,8 @@ if Ext.Utils.GameVersion() ~= "v3.6.51.9303" then
             local contextSpecificScript = "/Client.lua"
             if Ext.IsServer() then contextSpecificScript = "/Server.lua" end
 
-            -- Ext.Require(prefixedGUID, script.ScriptSet .. "/Shared.lua")
-            -- Ext.Require(prefixedGUID, script.ScriptSet .. contextSpecificScript)
+            Ext.Require(prefixedGUID, script.ScriptSet .. "/Shared.lua")
+            Ext.Require(prefixedGUID, script.ScriptSet .. contextSpecificScript)
         else
             Ext.Require(prefixedGUID, script)
         end

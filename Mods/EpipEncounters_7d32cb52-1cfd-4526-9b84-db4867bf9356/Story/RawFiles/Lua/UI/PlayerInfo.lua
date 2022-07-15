@@ -9,6 +9,8 @@ Client.UI.PlayerInfo = {
     LOW_BH_OPACITY = 0.9,
     BH_DISPLAY_SCALE = 0.65,
 
+    previousCombatState = false,
+
     FILEPATH_OVERRIDES = {
         ["Public/Game/GUI/playerInfo.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/playerInfo.swf"
     },
@@ -126,9 +128,14 @@ function PlayerInfo.UpdatePlayers()
     local players = root.player_array
     local inCombat = Client.IsInCombat()
 
-    root.SetPartyInCombat(inCombat)
-    root.STATUS_HOLDER_OPACITY = Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "PlayerInfo_StatusHolderOpacity")
-    root.STATUS_HOLDER_ALPHA_OFFSET = -255 * (1 - root.STATUS_HOLDER_OPACITY)
+    if inCombat ~= PlayerInfo.previousCombatState or GameState.IsPaused() then
+        root.SetPartyInCombat(inCombat)
+        root.STATUS_HOLDER_OPACITY = Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "PlayerInfo_StatusHolderOpacity")
+        root.STATUS_HOLDER_ALPHA_OFFSET = -255 * (1 - root.STATUS_HOLDER_OPACITY)
+
+        PlayerInfo.previousCombatState = inCombat
+    end
+
 
     for i=0,#players-1,1 do
         local player = players[i]

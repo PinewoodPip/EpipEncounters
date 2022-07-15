@@ -54,6 +54,12 @@ function Item.GetIdentifyRequirement(item)
     return 1
 end
 
+---@param identifier GUID|NetId|EntityHandle
+---@return Item
+function Item.Get(identifier)
+    return Ext.Entity.GetItem(identifier)
+end
+
 --- Returns true if the item is an armor piece or a weapon.
 ---@param item Item
 ---@return boolean
