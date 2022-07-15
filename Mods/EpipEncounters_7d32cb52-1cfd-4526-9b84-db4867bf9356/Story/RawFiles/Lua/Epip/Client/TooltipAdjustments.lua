@@ -178,7 +178,7 @@ function TooltipAdjustments.AddDeltamodsHandledWarning(item, tooltip)
     local tags = item:GetTags()
     local isMasterworked = false
 
-    for i,v in pairs(item:GetDeltaMods()) do
+    for _,v in pairs(item:GetDeltaMods()) do
         if Data.Game.MASTERWORK_HANDLED_TAGS[v] then
             isMasterworked = true
         end
@@ -207,7 +207,7 @@ function TooltipAdjustments.ShowAbilityScoresForSI(char, skill, tooltip)
 
     -- highlight unmet infusion requirements.
     -- Only do this when infusing or holding shift.
-    for i,req in pairs(Data.Game.INFUSION_TIERS) do
+    for _,req in pairs(Data.Game.INFUSION_TIERS) do
         if score < req and (Client.Input.IsHoldingModifierKey() or Client.IsPreparingInfusion()) then
             local reqStr = string.format("(requires %d %s):", req, schoolName)
             local startPos, endPos = element.Label:find(Text.EscapePatternCharacters(reqStr))
@@ -336,7 +336,6 @@ function OnStatusTooltipRender(char, status, tooltip)
 end
 
 function TooltipAdjustments.AddBaseDeltamodTierDisplay(item, tooltip)
-    
     local elementsToTry = {
         -- "WarningText", -- red X
         "AbilityTitle", -- header of tooltip

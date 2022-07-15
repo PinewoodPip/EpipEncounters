@@ -21,9 +21,9 @@ Epip.InitializeLibrary("Stats", Stats)
 ---@param char Character
 ---@param statID string
 ---@param isItem boolean
----@param isFromItem boolean?
+---@param itemSource Item?
 ---@return boolean
-function Stats.MeetsRequirements(char, statID, isItem, isFromItem)
+function Stats.MeetsRequirements(char, statID, isItem, itemSource)
     local data = Ext.Stats.Get(statID)
     local stats = char.Stats
     -- local dynamicStats = char.Stats.DynamicStats
@@ -38,14 +38,18 @@ function Stats.MeetsRequirements(char, statID, isItem, isFromItem)
     end
 
     --- AP cost
-    if not isItem then
-        local apCost,_ = Game.Math.GetSkillAPCost(data, char.Stats, Ext.Entity.GetAiGrid(), char.Translate, 1)
+    local apCost
 
-        -- Consider APCostBoost
-        local extraApCost = Stats.CountStat(char.Stats, "APCostBoost")
-        if stats.CurrentAP < apCost + extraApCost then
-            return false
-        end
+    if itemSource and itemSource.StatsId then
+        apCost = Stats.Get("Object", itemSource.StatsId).UseAPCost
+    else
+        apCost, _ = Game.Math.GetSkillAPCost(data, char.Stats, Ext.Entity.GetAiGrid(), char.Translate, 1)
+    end
+
+    -- Consider APCostBoost
+    local extraApCost = Stats.CountStat(char.Stats, "APCostBoost")
+    if stats.CurrentAP < apCost + extraApCost then
+        return false
     end
 
     -- Muted
@@ -75,12 +79,12 @@ function Stats.MeetsRequirements(char, statID, isItem, isFromItem)
     local charSkillData = char.SkillManager.Skills[statID]
 
     -- Cooldown
-    if charSkillData and charSkillData.ActiveCooldown > 0 and not isFromItem then
+    if charSkillData and charSkillData.ActiveCooldown > 0 and not itemSource then
         return false
     end
 
-    local grantedByExternalSource = false or isFromItem
-    if charSkillData and not isFromItem then
+    local grantedByExternalSource = false or itemSource
+    if charSkillData and not itemSource then
         grantedByExternalSource = charSkillData.CauseListSize > 0
     end
 

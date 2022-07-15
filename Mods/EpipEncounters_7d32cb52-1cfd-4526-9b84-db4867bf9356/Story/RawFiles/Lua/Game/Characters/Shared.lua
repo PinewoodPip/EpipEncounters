@@ -226,10 +226,10 @@ end
 ---Returns whether char can enter preparation state for a skill.
 ---@param char Character
 ---@param skillID string
----@param isFromItem boolean? Defaults to false.
+---@param itemSource Item?
 ---@return boolean
-function Character.CanUseSkill(char, skillID, isFromItem)
-    return Game.Stats.MeetsRequirements(char, skillID, false, isFromItem or false)
+function Character.CanUseSkill(char, skillID, itemSource)
+    return Game.Stats.MeetsRequirements(char, skillID, false, itemSource)
 end
 
 ---Returns whether char has a melee weapon equipped in either slot.
