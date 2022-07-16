@@ -239,6 +239,36 @@ PlayerInfo:RegisterCallListener("pipStatusExpired", function (event, flashHandle
 
 end)
 
+local function PrepareStatusEntry(data, statusesByHandle, players, now, i)
+    local char = Character.Get(Ext.UI.DoubleToHandle(data.CharacterHandle))
+
+    ---@type EclStatus
+    local status = Ext.GetStatus(Ext.UI.DoubleToHandle(data.CharacterHandle), Ext.UI.DoubleToHandle(data.StatusHandle))
+    data.Status = status
+
+    if not status then PlayerInfo:DebugLog("A status was deleted?") return nil end
+
+    statusesByHandle[data.StatusHandle] = true
+
+    if not players[char.NetID] then
+        players[char.NetID] = {}
+    end
+
+    local statusApplyTime = PlayerInfo.StatusApplyTime[status.NetID]
+    if not statusApplyTime then
+        statusApplyTime = now + i -- Adding the index avoids overlaps in priority
+        PlayerInfo.StatusApplyTime[status.NetID] = statusApplyTime -- TODO clean these up regularly
+        PlayerInfo.StatusNetIDs[data.StatusHandle] = status.NetID
+    end
+
+    local list = players[char.NetID]
+
+    -- Newer statuses are displayed to the right.
+    data.SortingIndex = -statusApplyTime
+
+    table.insert(list, data)
+end
+
 PlayerInfo:RegisterInvokeListener("updateStatuses", function (event, createIfDoesntExist, cleanupAll)
     local settingEnabled = Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "PlayerInfo_EnableSortingFiltering")
     event.UI:GetRoot().ENABLE_SORTING = settingEnabled
@@ -250,6 +280,7 @@ PlayerInfo:RegisterInvokeListener("updateStatuses", function (event, createIfDoe
 
     ---@type table<NetId, PlayerInfoStatusUpdate[]>
     local players = {}
+    local statusesByHandle = {}
 
     root.cleanupAllStatuses(true)
 
@@ -267,29 +298,30 @@ PlayerInfo:RegisterInvokeListener("updateStatuses", function (event, createIfDoe
                 Tooltip = array[i + 5],
             }
 
-            local char = Character.Get(Ext.UI.DoubleToHandle(data.CharacterHandle))
+            PrepareStatusEntry(data, statusesByHandle, players, now, i)
+        end
+        local statusIndex = #array + 1
 
-            ---@type EclStatus
-            local status = Ext.GetStatus(Ext.UI.DoubleToHandle(data.CharacterHandle), Ext.UI.DoubleToHandle(data.StatusHandle))
-            data.Status = status
+        -- Iterate existing statuses in the UI to make sure we don't miss sorting them if the engine isn't updating their info currently
+        local playerArray = root.player_array
+        for i=0,#playerArray-1,1 do
+            local player = playerArray[i]
 
-            if not players[char.NetID] then
-                players[char.NetID] = {}
+            local statusArray = player.status_array
+            for z=0,#statusArray-1,1 do
+                local status = statusArray[z]
+
+                if not statusesByHandle[status.id] then
+                    PrepareStatusEntry({
+                        CharacterHandle = status.owner,
+                        StatusHandle = status.id,
+                        ElementID = status.pipElementID,
+                        Duration = status.pipDuration,
+                        Cooldown = status.pipCooldown,
+                        Tooltip = status.tooltip,
+                    }, statusesByHandle, players, now, statusIndex + z)
+                end
             end
-
-            local statusApplyTime = PlayerInfo.StatusApplyTime[status.NetID]
-            if not statusApplyTime then
-                statusApplyTime = now + i -- Adding the index avoids overlaps in priority
-                PlayerInfo.StatusApplyTime[status.NetID] = statusApplyTime -- TODO clean these up regularly
-                PlayerInfo.StatusNetIDs[data.StatusHandle] = status.NetID
-            end
-
-            local list = players[char.NetID]
-
-            -- Newer statuses are displayed to the right.
-            data.SortingIndex = -statusApplyTime
-
-            table.insert(list, data)
         end
 
         PlayerInfo.Events.StatusesUpdated:Throw({
@@ -335,13 +367,11 @@ PlayerInfo:RegisterInvokeListener("updateStatuses", function (event, createIfDoe
         end
 
         -- PlayerInfo:DebugLog("Statuses updated.")
-        
 
         event:PreventAction()
 
         root.ClearStatusArray()
         root.cleanupAllStatuses(cleanupAll)
-        -- Game.Tooltip.TableToFlash(ui, "status_array", newArray)
     end
 end, "Before")
 

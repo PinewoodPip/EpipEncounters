@@ -66,11 +66,11 @@ PlayerInfo.Events.StatusesUpdated:Subscribe(function (e)
             }
             StatusSorting.Events.ShouldFilterStatus:Throw(event)
 
-            print(statusData.Status.StatusId)
+            StatusSorting:DebugLog("Sorting:", statusData.Status.StatusId)
 
             if event.Filter then
                 table.remove(list, i)
-                print("removing " .. statusData.Status.StatusId)
+                StatusSorting:DebugLog("Removing: ", statusData.Status.StatusId)
             else -- Assign sorting index
                 local index = nil
 
@@ -90,10 +90,10 @@ PlayerInfo.Events.StatusesUpdated:Subscribe(function (e)
                 end
 
                 if index then
-                    print("setting " .. statusData.Status.StatusId .. " to " .. index)
+                    StatusSorting:DebugLog("Setting " .. statusData.Status.StatusId .. " to " .. index)
                     statusData.SortingIndex = #StatusSorting.STATUS_ORDER - index
                 else
-                    print("ignoring " .. statusData.Status.StatusId)
+                    StatusSorting:DebugLog("Ignoring: ", statusData.Status.StatusId)
                 end
             end
         end

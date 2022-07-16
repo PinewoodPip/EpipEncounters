@@ -755,6 +755,10 @@ package playerInfo_fla
 				}
 				if(statusMC)
 				{
+					statusMC.pipElementID = elementID;
+					statusMC.pipDuration = duration;
+					statusMC.pipCooldown = cooldown;
+					
 					if (!this.ENABLE_SORTING)
 					{
 						statusMC.pipSortingIndex = elementID;
