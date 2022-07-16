@@ -147,6 +147,8 @@ package playerInfo_fla
 		private var _inCombat:Boolean = true;
 
 		public var STATUS_HOLDER_OPACITY:Number = 1;
+
+		public var ENABLE_SORTING:Boolean = false;
 		
 		public function MainTimeline()
 		{
@@ -508,6 +510,9 @@ package playerInfo_fla
 				{
 					_loc3_.statusHolder_mc.removeChild(_loc5_);
 					_loc3_.status_array.splice(_loc4_,1);
+
+					
+					ExternalInterface.call("pipStatusExpired", param1, param2);
 					return;
 				}
 				_loc4_++;
@@ -609,7 +614,10 @@ package playerInfo_fla
 
 			if(mc)
 			{
-				mc.status_array = mc.status_array.sortOn("pipSortingIndex");
+				if (this.ENABLE_SORTING)
+				{
+					mc.status_array = mc.status_array.sortOn("pipSortingIndex");
+				}
 
 				// trace("Start statuses");
 

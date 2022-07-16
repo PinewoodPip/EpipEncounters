@@ -14,6 +14,7 @@ Client.UI.PlayerInfo = {
     StatusApplyTime = {
 
     },
+    StatusNetIDs = {},
 
     USE_LEGACY_EVENTS = false,
     FILEPATH_OVERRIDES = {
@@ -226,7 +227,18 @@ if not IS_IMPROVED_HOTBAR then
     end, "After")
 end
 
+-- Cleanup status data on expiry.
+PlayerInfo:RegisterCallListener("pipStatusExpired", function (event, flashHandle, characterFlashHandle)
+    local handle = Ext.UI.DoubleToHandle(flashHandle)
+    local netID = PlayerInfo.StatusNetIDs[flashHandle]
+
+    PlayerInfo.StatusApplyTime[netID] = nil
+    PlayerInfo.StatusNetIDs[handle] = nil
+end)
+
 PlayerInfo:RegisterInvokeListener("updateStatuses", function (event, createIfDoesntExist, cleanupAll)
+    if not Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "PlayerInfo_EnableSortingFiltering") then return nil end
+
     local root = PlayerInfo.Root
     local array = root.status_array
 
@@ -247,11 +259,11 @@ PlayerInfo:RegisterInvokeListener("updateStatuses", function (event, createIfDoe
                 Duration = array[i + 3],
                 Cooldown = array[i + 4],
                 Tooltip = array[i + 5],
-                -- SortingIndex = i,
             }
 
             local char = Character.Get(Ext.UI.DoubleToHandle(data.CharacterHandle))
 
+            ---@type EclStatus
             local status = Ext.GetStatus(Ext.UI.DoubleToHandle(data.CharacterHandle), Ext.UI.DoubleToHandle(data.StatusHandle))
             data.Status = status
 
@@ -263,10 +275,12 @@ PlayerInfo:RegisterInvokeListener("updateStatuses", function (event, createIfDoe
             if not statusApplyTime then
                 statusApplyTime = now + i -- Adding the index avoids overlaps in priority
                 PlayerInfo.StatusApplyTime[status.NetID] = statusApplyTime -- TODO clean these up regularly
+                PlayerInfo.StatusNetIDs[data.StatusHandle] = status.NetID
             end
 
             local list = players[char.NetID]
 
+            -- Newer statuses are displayed to the right.
             data.SortingIndex = -statusApplyTime
 
             table.insert(list, data)
@@ -303,7 +317,7 @@ PlayerInfo:RegisterInvokeListener("updateStatuses", function (event, createIfDoe
             end
         end
 
-        PlayerInfo:DebugLog("Statuses updated.")
+        -- PlayerInfo:DebugLog("Statuses updated.")
         
 
         event:PreventAction()

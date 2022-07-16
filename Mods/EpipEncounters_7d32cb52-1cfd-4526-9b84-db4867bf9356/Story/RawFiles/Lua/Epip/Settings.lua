@@ -302,6 +302,13 @@ local PlayerInfo = {
         HideNumbers = false,
         Tooltip = "Controls the opacity of your character portraits's status bars in combat. Hovering over the statuses will always display them at full opacity.<br><br>Default is 1.",
     },
+    {
+        ID = "PlayerInfo_EnableSortingFiltering",
+        Type = "Checkbox",
+        Label = "Enable sorting/filtering",
+        DefaultValue = false,
+        Tooltip = "Enables the sorting and filtering systems, allowing the settings below to take effect.",
+    },
 }
 
 local TopOptions = {
