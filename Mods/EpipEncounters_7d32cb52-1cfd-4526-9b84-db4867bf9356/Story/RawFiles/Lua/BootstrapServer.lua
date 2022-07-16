@@ -40,9 +40,9 @@ LOAD_ORDER = {
 
     "Utils.lua",
     "Utilities/Text.lua",
-    "Epip/Settings.lua",
     "Utilities/Hooks.lua",
     "Utilities/Color.lua",
+    "Epip/Settings.lua",
     "Utilities/GameState/Shared.lua",
     "Utilities/GameState/Server.lua",
     "Utilities.lua",

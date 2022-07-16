@@ -755,7 +755,14 @@ package playerInfo_fla
 				}
 				if(statusMC)
 				{
-					statusMC.pipSortingIndex = sortingIndex;
+					if (!this.ENABLE_SORTING)
+					{
+						statusMC.pipSortingIndex = elementID;
+					}
+					else
+					{
+						statusMC.pipSortingIndex = sortingIndex;
+					}
 
 					if(elementID != -1 && statusMC.iconId != elementID)
 					{

@@ -307,7 +307,25 @@ local PlayerInfo = {
         Type = "Checkbox",
         Label = "Enable sorting/filtering",
         DefaultValue = false,
-        Tooltip = "Enables the sorting and filtering systems, allowing the settings below to take effect.",
+        Tooltip = Text.Format("Enables the sorting and filtering systems, allowing the settings below to take effect.<br>%s", {
+            FormatArgs = {
+                Text.Format("Changes to this setting will take effect when the UI is refreshed; for example, when a new status is applied, or when the player portraits are dragged.", {Color = Color.COLORS.MAGIC_ARMOR})
+            }
+        }),
+    },
+    {
+        ID = "PlayerInfo_Filter_SourceGen",
+        Type = "Checkbox",
+        Label = "Show Source Generation Status",
+        DefaultValue = true,
+        Tooltip = "Shows the Source Generation status while sorting/filtering is enabled.",
+    },
+    {
+        ID = "PlayerInfo_Filter_BatteredHarried",
+        Type = "Checkbox",
+        Label = "Show Battered/Harried Statuses",
+        DefaultValue = true,
+        Tooltip = "Shows the Battered/Harries statuses while sorting/filtering is enabled.<br>If you disable this, it is recommended to enable the B/H display on the portraits.",
     },
 }
 

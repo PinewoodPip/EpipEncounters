@@ -1,10 +1,15 @@
 
 local PlayerInfo = Client.UI.PlayerInfo
+local OptionsSettings = Client.UI.OptionsSettings
 
 ---@class StatusSortingFeature : Feature
 local StatusSorting = {
     FILTERED_STATUSES = {
 
+    },
+    STATUS_PATTERNS = {
+        ["PlayerInfo_Filter_SourceGen"] = {"^AMER_SOURCEGEN_DISPLAY_%d+$"},
+        ["PlayerInfo_Filter_BatteredHarried"] = {Text.PATTERNS.STATUSES.BATTERED, Text.PATTERNS.STATUSES.HARRIED},
     },
     USE_LEGACY_EVENTS = false,
     Events = {
@@ -42,11 +47,18 @@ PlayerInfo.Events.StatusesUpdated:Subscribe(function (e)
     end
 end)
 
--- Filter Source Gen.
+-- Filter statuses based on patterns.
 StatusSorting.Events.ShouldFilterStatus:Subscribe(function (e)
-    local isSourceGen = e.Status.StatusId:match("^AMER_SOURCEGEN_DISPLAY_%d+$")
+    for setting,patternList in pairs(StatusSorting.STATUS_PATTERNS) do
+        if OptionsSettings.GetOptionValue("EpipEncounters", setting) == false then
+            for _,pattern in ipairs(patternList) do
+                local shouldFilter = e.Status.StatusId:match(pattern)
 
-    if isSourceGen then
-        e.Filter = true
+                if shouldFilter then
+                    e.Filter = true
+                    return nil
+                end
+            end
+        end
     end
 end)

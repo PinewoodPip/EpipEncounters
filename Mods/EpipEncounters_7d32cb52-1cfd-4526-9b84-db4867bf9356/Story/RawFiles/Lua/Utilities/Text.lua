@@ -26,6 +26,11 @@ Text = {
     PATTERNS = {
         FONT_SIZE = 'size="([0-9]+)"',
         FONT_COLOR = 'color="(#......)"',
+        STATUSES = {
+            SOURCE_INFUSING = "AMER_SOURCEINFUSION_(%d+)",
+            BATTERED = "^BATTERED_(%d+)$",
+            HARRIED = "^HARRIED_(%d+)$",
+        },
     },
     TEMPLATES = {
         FONT_SIZE = 'size="%d"',

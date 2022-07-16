@@ -232,12 +232,17 @@ PlayerInfo:RegisterCallListener("pipStatusExpired", function (event, flashHandle
     local handle = Ext.UI.DoubleToHandle(flashHandle)
     local netID = PlayerInfo.StatusNetIDs[flashHandle]
 
-    PlayerInfo.StatusApplyTime[netID] = nil
-    PlayerInfo.StatusNetIDs[handle] = nil
+    if netID then
+        PlayerInfo.StatusApplyTime[netID] = nil
+        PlayerInfo.StatusNetIDs[handle] = nil
+    end
+
 end)
 
 PlayerInfo:RegisterInvokeListener("updateStatuses", function (event, createIfDoesntExist, cleanupAll)
-    if not Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "PlayerInfo_EnableSortingFiltering") then return nil end
+    local settingEnabled = Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "PlayerInfo_EnableSortingFiltering")
+    event.UI:GetRoot().ENABLE_SORTING = settingEnabled
+    if not settingEnabled then return nil end
 
     local root = PlayerInfo.Root
     local array = root.status_array
