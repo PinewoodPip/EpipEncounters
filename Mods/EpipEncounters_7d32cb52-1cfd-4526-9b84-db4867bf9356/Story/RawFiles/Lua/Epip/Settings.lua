@@ -314,6 +314,17 @@ local PlayerInfo = {
         }),
     },
     {
+        ID = "PlayerInfo_SortingFunction",
+        Type = "Dropdown",
+        Label = "Sorting Order",
+        Tooltip = "Determines the order of statuses, in order of importance.",
+        DefaultValue = 1,
+        Options = {
+            "Descending (important first)",
+            "Ascending (important last)",
+        }
+    },
+    {
         ID = "PlayerInfo_Filter_SourceGen",
         Type = "Checkbox",
         Label = "Show Source Generation Status",

@@ -616,7 +616,7 @@ package playerInfo_fla
 			{
 				if (this.ENABLE_SORTING)
 				{
-					mc.status_array = mc.status_array.sortOn("pipSortingIndex");
+					mc.status_array = mc.status_array.sortOn("pipSortingIndex", Array.NUMERIC);
 				}
 
 				// trace("Start statuses");

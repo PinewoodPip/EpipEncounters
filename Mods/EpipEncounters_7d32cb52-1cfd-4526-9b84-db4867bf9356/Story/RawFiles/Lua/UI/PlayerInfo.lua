@@ -246,6 +246,7 @@ PlayerInfo:RegisterInvokeListener("updateStatuses", function (event, createIfDoe
 
     local root = PlayerInfo.Root
     local array = root.status_array
+    local ascendingSort = Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "PlayerInfo_SortingFunction") == 2
 
     ---@type table<NetId, PlayerInfoStatusUpdate[]>
     local players = {}
@@ -296,11 +297,20 @@ PlayerInfo:RegisterInvokeListener("updateStatuses", function (event, createIfDoe
         })
 
         -- local newArray = {}
-        for _,statusesList in pairs(players) do
+        for netID,statusesList in pairs(players) do
             table.sort(statusesList, function (a, b)
-                return a.SortingIndex > b.SortingIndex
+                if ascendingSort then
+                    -- Non-sorted statuses still sort in order of appliance
+                    if a.SortingIndex < 0 and b.SortingIndex < 0 then
+                        return a.SortingIndex > b.SortingIndex
+                    end
+                    return a.SortingIndex < b.SortingIndex
+                else
+                    return a.SortingIndex > b.SortingIndex
+                end
             end)
 
+            PlayerInfo:DebugLog("--------", Character.Get(netID).DisplayName)
             for i,data in pairs(statusesList) do
                 -- local statusEntry = {
                 --     data.characterHandle,
@@ -318,7 +328,9 @@ PlayerInfo:RegisterInvokeListener("updateStatuses", function (event, createIfDoe
     
                 -- PlayerInfo:DebugLog("Status " .. data.Status.StatusId .. ": index " .. data.SortingIndex)
 
-                root.setStatus(createIfDoesntExist, data.CharacterHandle, data.StatusHandle, data.ElementID, data.Duration, data.Cooldown, data.Tooltip, i)
+                PlayerInfo:DebugLog(data.Status.StatusId, data.SortingIndex)
+
+                root.setStatus(createIfDoesntExist, data.CharacterHandle, data.StatusHandle, data.ElementID, data.Duration, data.Cooldown, data.Tooltip, (i - 1))
             end
         end
 

@@ -30,6 +30,7 @@ Text = {
             SOURCE_INFUSING = "AMER_SOURCEINFUSION_(%d+)",
             BATTERED = "^BATTERED_(%d+)$",
             HARRIED = "^HARRIED_(%d+)$",
+            SOURCE_GENERATION = "^AMER_SOURCEGEN_DISPLAY_(%d+)$",
         },
     },
     TEMPLATES = {

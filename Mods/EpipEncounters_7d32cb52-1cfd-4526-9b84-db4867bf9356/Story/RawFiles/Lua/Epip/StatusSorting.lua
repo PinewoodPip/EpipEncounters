@@ -8,18 +8,40 @@ local StatusSorting = {
 
     },
     STATUS_PATTERNS = {
-        ["PlayerInfo_Filter_SourceGen"] = {"^AMER_SOURCEGEN_DISPLAY_%d+$"},
+        ["PlayerInfo_Filter_SourceGen"] = {Text.PATTERNS.STATUSES.SOURCE_GENERATION},
         ["PlayerInfo_Filter_BatteredHarried"] = {Text.PATTERNS.STATUSES.BATTERED, Text.PATTERNS.STATUSES.HARRIED},
+    },
+    STATUS_ORDER = {
+        "LEADERSHIP",
+        {Pattern = Text.PATTERNS.STATUSES.SOURCE_GENERATION},
+
+        -- B/H
+        {Pattern = Text.PATTERNS.STATUSES.BATTERED},
+        {Pattern = Text.PATTERNS.STATUSES.HARRIED},
+
+        -- Battered Statuses
+        {Pattern = "AMER_ATAXIA_%d"},
+        {Pattern = "AMER_ENTHRALLED_%d"},
+        {Pattern = "AMER_DECAYING_%d"},
+        {Pattern = "AMER_WEAKENED_%d"},
+
+        -- Harried Statuses
+        {Pattern = "AMER_SLOWED_%d"},
+        {Pattern = "AMER_TERRIFIED_%d"},
+        {Pattern = "AMER_SQUELCHED_%d"},
+        {Pattern = "AMER_BLIND_%d"},
+
     },
     SUB_SETTINGS = {
         ["PlayerInfo_Filter_SourceGen"] = "Checkbox",
         ["PlayerInfo_Filter_BatteredHarried"] = "Checkbox",
+        ["PlayerInfo_SortingFunction"] = "Dropdown",
     },
     USE_LEGACY_EVENTS = false,
     Events = {
         ---@type SubscribableEvent<StatusSortingFeature_Event_ShouldFilterStatus>
         ShouldFilterStatus = {},
-    }
+    },
 }
 Epip.AddFeature("StatusSorting", "StatusSorting", StatusSorting)
 
@@ -44,8 +66,35 @@ PlayerInfo.Events.StatusesUpdated:Subscribe(function (e)
             }
             StatusSorting.Events.ShouldFilterStatus:Throw(event)
 
+            print(statusData.Status.StatusId)
+
             if event.Filter then
                 table.remove(list, i)
+                print("removing " .. statusData.Status.StatusId)
+            else -- Assign sorting index
+                local index = nil
+
+                for sortingIndex,status in ipairs(StatusSorting.STATUS_ORDER) do
+                    local isStatus = false
+
+                    if type(status) == "table" then
+                        isStatus = statusData.Status.StatusId:match(status.Pattern) ~= nil
+                    else
+                        isStatus = status == statusData.Status.StatusId
+                    end
+
+                    if isStatus then
+                        index = sortingIndex
+                        break
+                    end
+                end
+
+                if index then
+                    print("setting " .. statusData.Status.StatusId .. " to " .. index)
+                    statusData.SortingIndex = #StatusSorting.STATUS_ORDER - index
+                else
+                    print("ignoring " .. statusData.Status.StatusId)
+                end
             end
         end
     end
@@ -71,10 +120,10 @@ local function UpdateOptionAvailability(sortingEnabled)
     if sortingEnabled == nil then sortingEnabled = OptionsSettings.GetOptionValue("EpipEncounters", "PlayerInfo_EnableSortingFiltering") end
 
     for id,elementType in pairs(StatusSorting.SUB_SETTINGS) do
-        if not sortingEnabled then
+        if not sortingEnabled and elementType == "Checkbox" then -- Reset checkboxes
             OptionsSettings.SetOptionValue("EpipEncounters", id, OptionsSettings.GetOptionData(id).DefaultValue)
         end
-        
+
         OptionsSettings.SetElementEnabled(id, sortingEnabled, elementType)
     end
 end
