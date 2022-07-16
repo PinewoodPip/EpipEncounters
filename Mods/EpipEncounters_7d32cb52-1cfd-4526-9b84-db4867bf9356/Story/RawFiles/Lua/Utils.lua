@@ -107,3 +107,14 @@ end
 function string.insert(str1, str2, pos)
     return str1:sub(1,pos)..str2..str1:sub(pos+1)
 end
+
+function table.isEmpty(tbl)
+    local empty = true
+
+    for _,_ in pairs(tbl) do
+        empty = false
+        break
+    end
+
+    return empty
+end

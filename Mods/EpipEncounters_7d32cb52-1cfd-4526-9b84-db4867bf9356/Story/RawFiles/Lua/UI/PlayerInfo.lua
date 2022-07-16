@@ -24,6 +24,8 @@ Client.UI.PlayerInfo = {
     Events = {
         ---@type SubscribableEvent<PlayerInfoUI_Event_StatusesUpdated>
         StatusesUpdated = {},
+        ---@type SubscribableEvent<PlayerInfoUI_Event_StatusHovered>
+        StatusHovered = {},
     }
 }
 if IS_IMPROVED_HOTBAR then
@@ -49,6 +51,10 @@ PlayerInfo:Debug()
 
 ---@class PlayerInfoUI_Event_StatusesUpdated
 ---@field Data table<NetId, PlayerInfoStatusUpdate[]>
+
+---@class PlayerInfoUI_Event_StatusHovered
+---@field Status EclStatus Will be nil when the mouse is moved out.
+---@field Character EclCharacter Will be nil when the mouse is moved out.
 
 ---------------------------------------------
 -- METHODS
@@ -180,6 +186,20 @@ end
 ---------------------------------------------
 -- LISTENERS
 ---------------------------------------------
+
+PlayerInfo:RegisterCallListener("statusHovered", function(ev, charFlashHandle, statusFlashHandle)
+    local char, status
+
+    if charFlashHandle ~= "" then
+        char = Character.Get(Ext.UI.DoubleToHandle(charFlashHandle))
+        status = Ext.GetStatus(char.NetID, Ext.UI.DoubleToHandle(statusFlashHandle))
+    end
+
+    PlayerInfo.Events.StatusHovered:Throw({
+        Character = char,
+        Status = status,
+    })
+end)
 
 -- TODO optimize
 GameState.Events.RunningTick:Subscribe(function (_)

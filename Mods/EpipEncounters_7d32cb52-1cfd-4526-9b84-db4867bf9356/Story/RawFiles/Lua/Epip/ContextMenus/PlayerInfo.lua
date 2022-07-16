@@ -12,7 +12,6 @@ if not Ext.Debug.IsDeveloperMode() then cheatMenu = nil end
 
 -- Show status toggle context menu, as well as debugging cheats.
 Client.UI.ContextMenu.RegisterMenuHandler("playerInfoPlayerPortrait", function()
-
     Client.UI.ContextMenu.Setup({
         menu = {
             id = "main",

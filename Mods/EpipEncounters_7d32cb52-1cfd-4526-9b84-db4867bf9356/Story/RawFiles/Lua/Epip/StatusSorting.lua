@@ -1,9 +1,12 @@
 
 local PlayerInfo = Client.UI.PlayerInfo
+local ContextMenu = Client.UI.ContextMenu
 local OptionsSettings = Client.UI.OptionsSettings
 
 ---@class StatusSortingFeature : Feature
 local StatusSorting = {
+    currentHoveredStatus = nil,
+
     FILTERED_STATUSES = {
 
     },
@@ -46,6 +49,44 @@ local StatusSorting = {
 Epip.AddFeature("StatusSorting", "StatusSorting", StatusSorting)
 
 ---------------------------------------------
+-- METHODS
+---------------------------------------------
+
+---@param statusID string
+---@param filtered boolean
+function StatusSorting.SetStatusFilter(statusID, filtered)
+    if filtered then
+        StatusSorting.FILTERED_STATUSES[statusID] = true
+    else
+        StatusSorting.FILTERED_STATUSES[statusID] = nil
+    end
+end
+
+---Returns whether a status has been chosen to be manually filtered by the user.
+---@param statusID string
+---@return boolean
+function StatusSorting.IsFiltered(statusID)
+    return StatusSorting.FILTERED_STATUSES[statusID]
+end
+
+-- TODO rework
+function StatusSorting.GetContextMenuOption()
+    local option1, option2
+
+    if StatusSorting.currentHoveredStatus then
+        option1 = {id = "StatusSorting_FilterStatus", type = "checkbox", checked = StatusSorting.IsFiltered(StatusSorting.currentHoveredStatus), text = "Hide Status"}
+
+    end
+
+    if not table.isEmpty(StatusSorting.FILTERED_STATUSES) then
+        option2 = {id = "StatusSorting_SubMenu", type = "subMenu", text = "", subMenu = "StatusSorting_FilteredStatuses"}
+    end
+    
+
+    return option1, option2
+end
+
+---------------------------------------------
 -- EVENTS
 ---------------------------------------------
 
@@ -56,6 +97,33 @@ Epip.AddFeature("StatusSorting", "StatusSorting", StatusSorting)
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
+
+Client.UI.ContextMenu.RegisterMenuHandler("playerInfoStatus", function(char, statusFlashHandle)
+    local status = Ext.GetStatus(char.NetID, Ext.UI.DoubleToHandle(statusFlashHandle))
+    if not status or not OptionsSettings.GetOptionValue("EpipEncounters", "PlayerInfo_EnableSortingFiltering") or true then return nil end -- TODO finish
+
+    StatusSorting.currentHoveredStatus = status.StatusId
+
+    Client.UI.ContextMenu.Setup({
+        menu = {
+            id = "main",
+            entries = {
+                {id = "playerInfo_Header", type = "header", text = Text.Format("— %s —", {FormatArgs = {status.StatusId}})},
+
+                StatusSorting.GetContextMenuOption()
+            }
+        }
+    })
+
+    Client.UI.ContextMenu.Open()
+end)
+
+ContextMenu.RegisterElementListener("StatusSorting_FilterStatus", "buttonPressed", function(_, _)
+    local statusID = StatusSorting.currentHoveredStatus
+    local filtered = StatusSorting.IsFiltered(statusID)
+
+    StatusSorting.SetStatusFilter(statusID, not filtered)
+end)
 
 PlayerInfo.Events.StatusesUpdated:Subscribe(function (e)
     for _,list in pairs(e.Data) do
@@ -100,6 +168,14 @@ PlayerInfo.Events.StatusesUpdated:Subscribe(function (e)
     end
 end)
 
+-- Filter statuses based on user settings.
+StatusSorting.Events.ShouldFilterStatus:Subscribe(function (e)
+    if StatusSorting.IsFiltered(e.Status.StatusId) then
+        e.Filter = true
+        -- e:StopPropagation()
+    end
+end)
+
 -- Filter statuses based on patterns.
 StatusSorting.Events.ShouldFilterStatus:Subscribe(function (e)
     for setting,patternList in pairs(StatusSorting.STATUS_PATTERNS) do
@@ -109,6 +185,7 @@ StatusSorting.Events.ShouldFilterStatus:Subscribe(function (e)
 
                 if shouldFilter then
                     e.Filter = true
+                    -- e:StopPropagation()
                     return nil
                 end
             end
@@ -139,4 +216,14 @@ OptionsSettings.Events.TabRendered:RegisterListener(function (customTab, _)
     if customTab and customTab.Mod == "EpipEncounters" then
         UpdateOptionAvailability()
     end
+end)
+
+-- Show status filter menu.
+ContextMenu.RegisterMenuHandler("epip_Cheats_Stats_FlexStats_Immunities", function()
+    ContextMenu.AddSubMenu({
+        menu = {
+            id = "epip_Cheats_Stats_FlexStats_Immunities",
+            entries = FLEXSTAT_CHEATS.Immunity
+        }
+    })
 end)

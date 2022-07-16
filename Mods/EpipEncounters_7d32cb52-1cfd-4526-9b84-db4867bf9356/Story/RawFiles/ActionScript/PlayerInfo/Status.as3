@@ -133,6 +133,21 @@ package
                 this.fadeTween2 = null;
             }
         }
+
+        private function onMouseOver(ev:MouseEvent) : *
+        {
+            ExternalInterface.call("statusHovered", this.owner, this.id);
+        }
+
+        private function onMouseOut(ev:MouseEvent) : *
+        {
+            ExternalInterface.call("statusHovered", "", "");
+        }
+
+        private function onMouseRightClick(ev:MouseEvent) : *
+        {
+            ExternalInterface.call("pipRequestContextMenu", "playerInfoStatus", stage.mouseX, stage.mouseY, this.owner, this.id);
+        }
         
         function frame1() : *
         {
@@ -140,6 +155,10 @@ package
             this.hit_mc.alpha = 0;
             this.fadingOut = false;
             this.borderTimer_mc.scrollRect = new Rectangle(-18,-18,36,36);
+
+            this.addEventListener(MouseEvent.MOUSE_OVER, this.onMouseOver);
+            this.addEventListener(MouseEvent.MOUSE_OUT, this.onMouseOut);
+            this.addEventListener(MouseEvent.RIGHT_CLICK, this.onMouseRightClick);
         }
     }
 }
