@@ -76,6 +76,16 @@ function Slot:SetSkill(skillID)
     }
 end
 
+function Slot:SetItem(item)
+    local slot = self.SlotElement
+    slot:SetIcon(item.RootTemplate.Icon, 50, 50)
+
+    self.Object = {
+        Type = "Item",
+        Item = item, -- TODO change to handle
+    }
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
@@ -89,6 +99,12 @@ function Slot:_OnElementMouseUp(e)
 
         if skill then
             self:SetSkill(objectID)
+        end
+    else
+        local item = Ext.Entity.GetItem(data.DragObject)
+
+        if item then
+            self:SetItem(item)
         end
     end
 end
@@ -111,6 +127,28 @@ function Slot:_OnTick()
         slot:SetLabel("")
         slot:SetCooldown(cooldown, true)
         slot:SetEnabled(enabled)
+    elseif obj.Type == "Item" then
+        local label = ""
+        local item = obj.Item
+        local isEnabled = true
+        if item.Amount > 1 then label = tostring(item.Amount) end
+
+        slot:SetLabel(label)
+        slot:SetCooldown(0, false)
+
+        if item.Stats then
+            isEnabled = Game.Stats.MeetsRequirements(char, item.Stats.Name, true, item)
+        end
+
+        -- Item skills
+        local useActions = item.RootTemplate.OnUsePeaceActions
+        for _,action in ipairs(useActions) do
+            if action.Type == "UseSkill" and isEnabled then
+                isEnabled = isEnabled and Character.CanUseSkill(char, action.SkillID, item)
+            end
+        end
+
+        slot:SetEnabled(isEnabled)
     end
 end
 
@@ -121,6 +159,8 @@ function Slot:_OnSlotClicked(e)
     
     if obj.Type == "Skill" then
         Client.UI.Hotbar.UseSkill(obj.StatsID)
+    elseif obj.Type == "Item" then
+        Client.UI.Hotbar.UseSkill(obj.Item)
     end
 end
 
@@ -128,8 +168,9 @@ function Slot:_OnSlotDragStarted(e)
     local obj = self.Object
 
     if obj.Type == "Skill" then
-        print("Dragging!")
         Ext.UI.GetDragDrop():StartDraggingName(1, obj.StatsID)
+    elseif obj.Type == "Item" then
+        Ext.UI.GetDragDrop():StartDraggingObject(1, obj.Item.Handle)
     end
 end
 

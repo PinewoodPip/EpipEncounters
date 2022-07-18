@@ -1208,7 +1208,7 @@ function Hotbar.RenderCooldowns()
     end
 end
 
----@param skill string
+---@param skill string|EclItem
 function Hotbar.UseSkill(skill)
     local char = Client.GetCharacter()
     local skillBar = char.PlayerData.SkillBarItems
@@ -1219,8 +1219,14 @@ function Hotbar.UseSkill(skill)
         previousSkill = slot.SkillOrStatId
     end
 
-    skillBar[145].SkillOrStatId = skill
-    skillBar[145].Type = "Skill"
+    if type(skill) == "string" then
+        skillBar[145].SkillOrStatId = skill
+        skillBar[145].Type = "Skill"
+    else
+        skillBar[145].ItemHandle = skill.Handle
+        skillBar[145].Type = "Item"
+    end
+
 
     UpdateSlotTextures()
 
@@ -1230,6 +1236,7 @@ function Hotbar.UseSkill(skill)
         -- Rebind the auxiliary slot back to its original skill
         if previousSkill then
             char.PlayerData.SkillBarItems[145].SkillOrStatId = previousSkill
+            char.PlayerData.SkillBarItems[145].ItemHandle = nil
             UpdateSlotTextures()
         end
     end)
