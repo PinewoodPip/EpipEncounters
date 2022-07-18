@@ -1,0 +1,579 @@
+package statusConsole_fla
+{
+    import LS_Classes.larTween;
+    import LS_Classes.textEffect;
+    import LS_Classes.tooltipHelper;
+    import LS_Classes.horizontalList;
+    import fl.motion.easing.Elastic;
+    import fl.motion.easing.Linear;
+    import fl.motion.easing.Quartic;
+    import flash.display.MovieClip;
+    import flash.events.MouseEvent;
+    import flash.external.ExternalInterface;
+    import flash.geom.Point;
+    import statusConsole_fla.sourcePointmc_17;
+    
+    public dynamic class MainTimeline extends MovieClip
+    {
+        
+        
+        public var console_mc:MovieClip;
+        
+        public var fightButtons_mc:MovieClip;
+        
+        public var toGM_mc:BackToGM;
+        
+        public var turnNotice_mc:MovieClip;
+        
+        public const bottomBarHeight:Number = 67;
+        
+        public const YOffset:Number = 1000;
+        
+        public var fleeX:Number;
+        
+        public var guardX:Number;
+        
+        public var endTurnX:Number;
+        
+        public var endTurnY:Number;
+        
+        public var fleeY:Number;
+        
+        public var guardY:Number;
+        
+        public var apX:Number;
+        
+        public var apY:Number;
+        
+        public var mabTxtPosX:Number;
+        
+        public var abTxtPosX:Number;
+        
+        public var twoArmourBars:Boolean;
+        
+        public var firstArmourBarPosX;
+        
+        public var secondArmourBarPosX;
+        
+        public var originalConsolePosY:Number;
+        
+        public var layout:String;
+        
+        public var defaultHPColour:Number;
+        
+        public var events:Array;
+        
+        public var armourUpdateArray:Array;
+        
+        public var armourIsAnimating:Boolean;
+        
+        public const animDelayTime = 1;
+        
+        public const notifTweenTime:Number = 0.2;
+        
+        public const notificationOffset:int = 100;
+        
+        public const upScaled:Number = 1.3;
+        
+        public const originalNotificationPosY = 873;
+        
+        public const minAlpha = 0.3;
+        
+        public var notifTween:larTween;
+        
+        public var scaleXTween:larTween;
+        
+        public var scaleYTween:larTween;
+        
+        public var oldTurnNotification:Number;
+        
+        public var btn_array:Array;
+        
+        public var overrideEndTurn;
+        
+        public var cacheHealthAnim:Array;
+        
+        public var showTurnTimer:Boolean;
+
+        public var sourcePointList:horizontalList;
+        
+        public function MainTimeline()
+        {
+            super();
+            addFrameScript(0,this.frame1);
+        }
+        
+        public function onEventInit() : *
+        {
+            this.oldTurnNotification = -1;
+            this.console_mc.mouseEnabled = false;
+            this.console_mc.mouseChildren = false;
+            ExternalInterface.call("registerAnchorId","statusConsole");
+            ExternalInterface.call("setAnchor","bottom","screen","bottom");
+            this.console_mc.setLeftArmourBar(0,"",false);
+            this.console_mc.setRightArmourBar(0,"",false);
+            this.console_mc.ap_mc.setMaxAp(0);
+            this.console_mc.y -= this.bottomBarHeight;
+            this.fightButtons_mc.y -= this.bottomBarHeight;
+            this.turnNotice_mc.y -= this.bottomBarHeight;
+            this.toGM_mc.y -= this.bottomBarHeight;
+            this.toGM_mc.init(this.backToGM);
+            this.toGM_mc.onOverFunc = this.onIcoOver;
+            this.toGM_mc.onOutFunc = this.onIcoOut;
+            this.toGM_mc.onDownFunc = this.onIcoDown;
+            var _loc1_:uint = 0;
+            while(_loc1_ < this.btn_array.length)
+            {
+                this.setBtnVisible(_loc1_,false);
+                _loc1_++;
+            }
+            this.fightButtons_mc.duoBtns_mc.waitBtn_mc.disabled_mc.visible = true;
+            this.console_mc.abTxt_mc.filters = this.console_mc.mabTxt_mc.filters = this.console_mc.hbTxt_mc.filters = textEffect.createStrokeFilter(0,1.2,0.8,1,4);
+            this.fightButtons_mc.endBtn_mc.text_txt.filters = textEffect.createStrokeFilter(0,2,1,2,5);
+            this.console_mc.hbTxt_mc.visible = false;
+            this.console_mc.abTxt_mc.visible = false;
+            this.console_mc.mabTxt_mc.visible = false;
+            this.turnNotice_mc.visible = false;
+            this.console_mc.rightArmourBarHolder_mc.onComplete = this.executeCachedHealth;
+            this.console_mc.leftArmourBarHolder_mc.onComplete = this.executeCachedHealth;
+        }
+        
+        public function backToGM() : *
+        {
+            ExternalInterface.call("BackToGMPressed");
+            if(this.toGM_mc.ico_mc)
+            {
+                this.toGM_mc.ico_mc.gotoAndStop(2);
+            }
+        }
+        
+        public function onIcoOver() : *
+        {
+            if(this.toGM_mc.ico_mc)
+            {
+                this.toGM_mc.ico_mc.gotoAndStop(2);
+            }
+        }
+        
+        public function onIcoOut() : *
+        {
+            if(this.toGM_mc.ico_mc)
+            {
+                this.toGM_mc.ico_mc.gotoAndStop(1);
+            }
+        }
+        
+        public function onIcoDown() : *
+        {
+            if(this.toGM_mc.ico_mc)
+            {
+                this.toGM_mc.ico_mc.gotoAndStop(3);
+            }
+        }
+        
+        public function updateArmourBar() : *
+        {
+            var _loc1_:uint = 0;
+            var _loc2_:uint = 0;
+            var _loc3_:Number = NaN;
+            var _loc4_:uint = 0;
+            var _loc5_:String = null;
+            var _loc6_:Boolean = false;
+            var _loc7_:Boolean = false;
+            if(this.armourUpdateArray.length != 0)
+            {
+                _loc1_ = 0;
+                while(_loc1_ < this.armourUpdateArray.length)
+                {
+                _loc2_ = this.armourUpdateArray[_loc1_++];
+                _loc3_ = this.armourUpdateArray[_loc1_++];
+                _loc4_ = this.armourUpdateArray[_loc1_++];
+                _loc5_ = this.armourUpdateArray[_loc1_++];
+                _loc6_ = this.armourUpdateArray[_loc1_++];
+                _loc7_ = false;
+                switch(_loc2_)
+                {
+                    case 0:
+                        _loc7_ = this.console_mc.setLeftArmourBar(_loc3_,_loc5_,_loc6_);
+                        break;
+                    case 1:
+                        _loc7_ = this.console_mc.setRightArmourBar(_loc3_,_loc5_,_loc6_);
+                }
+                if(_loc6_ && _loc7_)
+                {
+                    this.armourIsAnimating = true;
+                }
+                else if(!_loc6_)
+                {
+                    this.armourIsAnimating = false;
+                }
+                }
+            }
+            else
+            {
+                this.console_mc.setLeftArmourBar(0,"",false);
+                this.console_mc.setRightArmourBar(0,"",false);
+            }
+            this.armourUpdateArray = new Array();
+            ExternalInterface.call("pipStatusConsoleArmorUpdate");
+        }
+        
+        public function onEventUp(param1:Number) : *
+        {
+            var _loc2_:Boolean = false;
+            switch(this.events[param1])
+            {
+                case "IE UIEndTurn":
+                if(this.fightButtons_mc.endBtn_mc.visible && !this.overrideEndTurn)
+                {
+                    this.btn_array[0].onUp();
+                    _loc2_ = true;
+                    break;
+                }
+            }
+            return _loc2_;
+        }
+        
+        public function onEventDown(param1:Number) : *
+        {
+        }
+        
+        public function resetHPColour() : *
+        {
+            this.setHPColour(1);
+        }
+        
+        public function setHPColour(param1:Number) : *
+        {
+            this.console_mc.hbHolder_mc.bg_mc.gotoAndStop(param1 + 1);
+            this.console_mc.hbHolder_mc.lightBG_mc.gotoAndStop(param1 + 1);
+        }
+        
+        public function setHealth(param1:Number, param2:String, param3:Boolean = false) : *
+        {
+            if(!this.armourIsAnimating)
+            {
+                if(param1 > 1)
+                {
+                param1 = 1;
+                }
+                else if(param1 < 0)
+                {
+                param1 = 0;
+                }
+                this.console_mc.hbTxt_mc.htmlText = param2;
+                this.console_mc.hbHolder_mc.setBar(param1,param3);
+                this.cacheHealthAnim = new Array();
+            }
+            else
+            {
+                this.cacheHealthAnim = new Array(param1,param2,param3);
+            }
+            ExternalInterface.call("pipStatusConsoleArmorUpdate");
+        }
+        
+        public function executeCachedHealth() : *
+        {
+            this.armourIsAnimating = false;
+            if(this.cacheHealthAnim.length > 0)
+            {
+                this.setHealth(this.cacheHealthAnim[0],this.cacheHealthAnim[1],this.cacheHealthAnim[2]);
+            }
+        }
+        
+        public function setMaxAp(param1:Number) : *
+        {
+            this.console_mc.ap_mc.setMaxAp(param1);
+        }
+        
+        public function setActiveAp(param1:Number) : *
+        {
+            this.console_mc.ap_mc.setActiveAp(param1);
+        }
+        
+        public function setAvailableAp(param1:Number) : *
+        {
+            this.console_mc.ap_mc.setAvailableAp(param1);
+        }
+        
+        public function setBonusAP(param1:Number) : *
+        {
+            this.console_mc.ap_mc.setBonusAP(param1);
+        }
+        
+        public function setGreyAP(param1:Number) : *
+        {
+            this.console_mc.ap_mc.setGreyAP(param1);
+        }
+        
+        public function showTooltipForMC(param1:MovieClip) : *
+        {
+            var _loc2_:Point = null;
+            if(param1.tooltip != null && param1.tooltip != "")
+            {
+                _loc2_ = tooltipHelper.getGlobalPositionOfMC(param1,root);
+                ExternalInterface.call("showTooltip",param1.tooltip,_loc2_.x,_loc2_.y,param1.width,param1.height,"top");
+            }
+        }
+        
+        public function setBtnText(param1:Number, param2:String = "") : *
+        {
+            if(param1 >= 0 && param1 < this.btn_array.length && this.btn_array[param1].text_txt)
+            {
+                if(param1 == 3)
+                {
+                this.toGM_mc.setText(param2);
+                this.toGM_mc.ico_mc.x = Math.round((this.toGM_mc.width - this.toGM_mc.text_txt.textWidth) * 0.5 - this.toGM_mc.ico_mc.width);
+                }
+                else
+                {
+                this.btn_array[param1].text_txt.htmlText = param2.toUpperCase();
+                }
+            }
+        }
+        
+        public function setBtnTooltip(param1:Number, param2:String = "") : *
+        {
+            if(param1 >= 0 && param1 < this.btn_array.length)
+            {
+                this.btn_array[param1].tooltip = param2;
+            }
+        }
+        
+        public function setBtnDisabled(param1:Number, param2:Boolean) : *
+        {
+            if(param1 >= 0 && param1 < this.btn_array.length)
+            {
+                if(param1 == 0)
+                {
+                this.btn_array[param1].setEnabled(!param2);
+                }
+                else
+                {
+                this.btn_array[param1].disabled_mc.visible = param2;
+                }
+            }
+        }
+        
+        public function setBtnVisible(param1:Number, param2:Boolean) : *
+        {
+            if(param1 >= 0 && param1 < this.btn_array.length)
+            {
+                this.btn_array[param1].visible = param2;
+                if(param1 == 1 || param1 == 2)
+                {
+                if(this.fightButtons_mc.duoBtns_mc.waitBtn_mc.visible && this.fightButtons_mc.duoBtns_mc.fleeBtn_mc.visible)
+                {
+                    this.fightButtons_mc.duoBtns_mc.duoFrame_mc.gotoAndStop(1);
+                    this.fightButtons_mc.duoBtns_mc.blackBG_mc.gotoAndStop(1);
+                    this.fightButtons_mc.duoBtns_mc.x = -369;
+                }
+                else
+                {
+                    this.fightButtons_mc.duoBtns_mc.duoFrame_mc.gotoAndStop(2);
+                    this.fightButtons_mc.duoBtns_mc.blackBG_mc.gotoAndStop(2);
+                    this.fightButtons_mc.duoBtns_mc.x = -330;
+                }
+                this.fightButtons_mc.duoBtns_mc.visible = param2;
+                }
+                if(param1 == 0)
+                {
+                this.toGM_mc.x = !!param2 ? Number(1446) : Number(1231);
+                }
+            }
+        }
+        
+        public function setSourcePoints(param1:uint) : *
+        {
+            this.console_mc.sourceHolder_mc.source1_mc.gotoAndStop(1);
+            this.console_mc.sourceHolder_mc.source2_mc.gotoAndStop(1);
+            this.console_mc.sourceHolder_mc.source3_mc.gotoAndStop(1);
+        }
+
+        public function pipSetSourcePoints(maximum:int, available:int) : *
+        {
+            this.sourcePointList.clearElements();
+
+            for (var x:int = 0; x < maximum; x++)
+            {
+                var sp:sourcePointmc_17 = new sourcePointmc_17();
+                sp.widthOverride = 15;
+
+                sp.gotoAndStop(x < available ? 2 : 3);
+
+                this.sourcePointList.addElement(sp);
+            }
+        }
+        
+        public function setCombatTurnNotification(param1:int, param2:String = "", param3:Boolean = false, param4:Boolean = false) : *
+        {
+            var turnID:int = param1;
+            var notice:String = param2;
+            var yourTurnAnim:Boolean = param3;
+            var showTimer:Boolean = param4;
+            this.showTurnTimer = showTimer;
+            this.turnNotice_mc.timer_txt.visible = this.showTurnTimer;
+            if(turnID < 0 && this.turnNotice_mc.visible)
+            {
+                this.INTStopNotifTweens();
+                this.turnNotice_mc.visible = false;
+                this.oldTurnNotification = -1;
+            }
+            else if(turnID >= 0 && turnID <= 4)
+            {
+                if(this.turnNotice_mc.currentType == turnID || this.oldTurnNotification == -1)
+                {
+                this.showNotification(turnID,notice,yourTurnAnim);
+                }
+                else
+                {
+                this.INTStopNotifTweens();
+                this.notifTween = new larTween(this.turnNotice_mc,"alpha",Linear.easeIn,1,this.minAlpha,this.notifTweenTime);
+                this.notifTween.onComplete = function():*
+                {
+                    this.showNotification(turnID,notice,yourTurnAnim);
+                };
+                }
+            }
+            else
+            {
+                ExternalInterface.call("UIAssert","\nInvalid value to activate a turn notification: " + turnID);
+            }
+        }
+        
+        public function setTurnTimer(param1:int) : *
+        {
+            this.turnNotice_mc.timer_txt.visible = this.showTurnTimer;
+            this.turnNotice_mc.setTurnTimer(param1);
+        }
+        
+        public function INTStopNotifTweens() : *
+        {
+            if(this.notifTween != null)
+            {
+                this.notifTween.stop();
+            }
+            if(this.scaleXTween != null)
+            {
+                this.scaleXTween.stop();
+            }
+            if(this.scaleYTween != null)
+            {
+                this.scaleYTween.stop();
+            }
+        }
+        
+        public function showNotification(param1:int, param2:String, param3:Boolean) : *
+        {
+            var _loc4_:Number = NaN;
+            if(!this.turnNotice_mc.visible)
+            {
+                this.turnNotice_mc.visible = true;
+            }
+            if(this.turnNotice_mc.currentType != param1 || param1 == 1)
+            {
+                this.turnNotice_mc.setType(param1);
+                this.INTStopNotifTweens();
+                if(param1 == 1)
+                {
+                _loc4_ = this.notifTweenTime * 3;
+                this.turnNotice_mc.y = this.originalNotificationPosY - this.notificationOffset;
+                this.scaleXTween = new larTween(this.turnNotice_mc,"scaleX",Elastic.easeOut,1,this.upScaled,_loc4_,this.yourTurnAnimation);
+                this.scaleYTween = new larTween(this.turnNotice_mc,"scaleY",Elastic.easeOut,1,this.upScaled,_loc4_);
+                this.notifTween = new larTween(this.turnNotice_mc,"alpha",Linear.easeIn,this.minAlpha,1,this.notifTweenTime);
+                }
+                else
+                {
+                this.turnNotice_mc.scaleX = 1;
+                this.turnNotice_mc.scaleY = 1;
+                this.notifTween = new larTween(this.turnNotice_mc,"alpha",Linear.easeIn,this.minAlpha,1,this.notifTweenTime);
+                this.turnNotice_mc.y = this.originalNotificationPosY;
+                }
+            }
+            this.turnNotice_mc.setText(param2.toUpperCase());
+            this.turnNotice_mc.y = this.originalNotificationPosY;
+            switch(param1)
+            {
+                case 0:
+                this.turnNotice_mc.txt_txt.textColor = 15460312;
+                break;
+                case 1:
+                case 2:
+                this.turnNotice_mc.txt_txt.textColor = 14213867;
+                break;
+                case 3:
+                this.turnNotice_mc.txt_txt.textColor = 14216156;
+                break;
+                case 4:
+                this.turnNotice_mc.txt_txt.textColor = 15456472;
+            }
+            this.oldTurnNotification = param1;
+        }
+        
+        public function yourTurnAnimation() : *
+        {
+            this.INTStopNotifTweens();
+            this.turnNotice_mc.alpha = 1;
+            var _loc1_:Number = this.notifTweenTime * 2;
+            this.scaleXTween = new larTween(this.turnNotice_mc,"scaleX",Quartic.easeOut,NaN,1,_loc1_,null,null,this.animDelayTime);
+            this.scaleYTween = new larTween(this.turnNotice_mc,"scaleY",Quartic.easeOut,NaN,1,_loc1_,null,null,this.animDelayTime);
+            this.notifTween = new larTween(this.turnNotice_mc,"y",Quartic.easeOut,this.originalNotificationPosY - this.notificationOffset,this.originalNotificationPosY,_loc1_,this.TurnNoticeAnimDone,null,this.animDelayTime);
+        }
+        
+        public function TurnNoticeAnimDone() : *
+        {
+            ExternalInterface.call("animDone");
+        }
+        
+        public function setOverrideEndTurn(param1:Boolean) : *
+        {
+            this.overrideEndTurn = param1;
+        }
+        
+        function frame1() : *
+        {
+            this.fleeX = 658;
+            this.guardX = 620;
+            this.endTurnX = 1331;
+            this.guardY = this.fleeY = this.endTurnY = this.YOffset - this.bottomBarHeight;
+            this.apX = 960;
+            this.apY = this.YOffset - (this.bottomBarHeight + 25);
+            this.mabTxtPosX = this.console_mc.mabTxt_mc.x;
+            this.abTxtPosX = this.console_mc.abTxt_mc.x;
+            this.twoArmourBars = false;
+            this.firstArmourBarPosX = this.console_mc.leftArmourBarHolder_mc.x;
+            this.secondArmourBarPosX = this.console_mc.rightArmourBarHolder_mc.x;
+            this.console_mc.frame_mc.mouseChildren = false;
+            this.console_mc.frame_mc.mouseEnabled = false;
+            this.console_mc.hbHolder_mc.mouseChildren = false;
+            this.console_mc.hbHolder_mc.mouseEnabled = false;
+            this.layout = "fixed";
+            this.defaultHPColour = 12713984;
+            this.events = new Array("IE UIEndTurn");
+            this.armourUpdateArray = new Array();
+            this.armourIsAnimating = false;
+            this.notifTween = null;
+            this.scaleXTween = null;
+            this.scaleYTween = null;
+            this.btn_array = new Array(this.fightButtons_mc.endBtn_mc,this.fightButtons_mc.duoBtns_mc.waitBtn_mc,this.fightButtons_mc.duoBtns_mc.fleeBtn_mc,this.toGM_mc);
+            this.overrideEndTurn = false;
+            this.fightButtons_mc.showTxtHitBox_mc.addEventListener(MouseEvent.ROLL_OVER,function(param1:MouseEvent):*
+            {
+                console_mc.hbTxt_mc.visible = true;
+                console_mc.abTxt_mc.visible = true;
+                console_mc.mabTxt_mc.visible = true;
+            });
+            this.fightButtons_mc.showTxtHitBox_mc.addEventListener(MouseEvent.ROLL_OUT,function(param1:MouseEvent):*
+            {
+                console_mc.hbTxt_mc.visible = true;
+                console_mc.abTxt_mc.visible = true;
+                console_mc.mabTxt_mc.visible = true;
+            });
+            this.cacheHealthAnim = new Array();
+            this.showTurnTimer = false;
+
+            this.sourcePointList = new horizontalList();
+            this.addChild(this.sourcePointList);
+        }
+    }
+}

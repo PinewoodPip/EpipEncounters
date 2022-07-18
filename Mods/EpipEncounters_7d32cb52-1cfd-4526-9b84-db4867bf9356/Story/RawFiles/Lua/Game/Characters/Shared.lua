@@ -255,6 +255,16 @@ function Character.HasRangedWeapon(char)
     return Item.IsRangedWeapon(weapon)
 end
 
+---Returns the current and maximum source points of char.
+---@param char Character
+---@return integer, integer Current and maximum points.
+function Character.GetSourcePoints(char)
+    local current, max = char.Stats.MPStart, 3
+    if char.Stats.MaxMpOverride ~= -1 then max = char.Stats.MaxMpOverride end
+
+    return current, max
+end
+
 ---Returns whether char has a shield equipped.
 ---@param char Character
 ---@return boolean

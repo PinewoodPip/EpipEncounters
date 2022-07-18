@@ -133,6 +133,26 @@ StatusConsole:RegisterCallListener("pipMaxAPUpdated", function(ev, amount)
     apHolder.apOverflow_mc.visible = amount > 0
 end)
 
+StatusConsole:RegisterInvokeListener("setSourcePoints", function(ev, available)
+    local max = 0
+    local char = Client.GetCharacter()
+    local root = StatusConsole:GetRoot()
+    local list = root.sourcePointList
+
+    available, max = Character.GetSourcePoints(char)
+
+    ev.UI:GetRoot().pipSetSourcePoints(max, available)
+
+    list.x = root.console_mc.x + 7
+    list.y = root.console_mc.y - 13
+
+    list.EL_SPACING = 5
+    list.positionElements()
+
+    -- IDK why .width doesn't work here
+    list.x = list.x - ((15 * max + (max - 2) * 5) // 2)
+end, "After")
+
 local function OnHealthBarUpdate(uiObj, method, param3, num1, str1, bool1)
     local root = uiObj:GetRoot()
     local char = Ext.GetCharacter(uiObj:GetPlayerHandle())
