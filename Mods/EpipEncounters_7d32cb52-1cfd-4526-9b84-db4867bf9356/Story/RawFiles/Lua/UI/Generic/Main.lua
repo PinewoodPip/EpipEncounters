@@ -50,17 +50,17 @@ function _Instance:GetMovieClipByID(id)
     return self:GetRoot().elements[id]
 end
 
----@overload fun(id:string, elementType:"Empty", parentID:string|GenericUI_Element?):GenericUI_Element_Empty
----@overload fun(id:string, elementType:"TiledBackground", parentID:string|GenericUI_Element?):GenericUI_Element_TiledBackground
----@overload fun(id:string, elementType:"Text", parentID:string|GenericUI_Element?):GenericUI_Element_Text
----@overload fun(id:string, elementType:"IggyIcon", parentID:string|GenericUI_Element?):GenericUI_Element_IggyIcon
----@overload fun(id:string, elementType:"Button", parentID:string|GenericUI_Element?):GenericUI_Element_Button
----@overload fun(id:string, elementType:"VerticalList", parentID:string|GenericUI_Element?):GenericUI_Element_VerticalList
----@overload fun(id:string, elementType:"HorizontalList", parentID:string|GenericUI_Element?):GenericUI_Element_HorizontalList
----@overload fun(id:string, elementType:"ScrollList", parentID:string|GenericUI_Element?):GenericUI_Element_ScrollList
----@overload fun(id:string, elementType:"StateButton", parentID:string|GenericUI_Element?):GenericUI_Element_StateButton
----@overload fun(id:string, elementType:"Divider", parentID:string|GenericUI_Element?):GenericUI_Element_Divider
----@overload fun(id:string, elementType:"Slot", parentID:string|GenericUI_Element?):GenericUI_Element_Slot
+---@overload fun(self, id:string, elementType:"Empty", parentID:string|GenericUI_Element?):GenericUI_Element_Empty
+---@overload fun(self, id:string, elementType:"TiledBackground", parentID:string|GenericUI_Element?):GenericUI_Element_TiledBackground
+---@overload fun(self, id:string, elementType:"Text", parentID:string|GenericUI_Element?):GenericUI_Element_Text
+---@overload fun(self, id:string, elementType:"IggyIcon", parentID:string|GenericUI_Element?):GenericUI_Element_IggyIcon
+---@overload fun(self, id:string, elementType:"Button", parentID:string|GenericUI_Element?):GenericUI_Element_Button
+---@overload fun(self, id:string, elementType:"VerticalList", parentID:string|GenericUI_Element?):GenericUI_Element_VerticalList
+---@overload fun(self, id:string, elementType:"HorizontalList", parentID:string|GenericUI_Element?):GenericUI_Element_HorizontalList
+---@overload fun(self, id:string, elementType:"ScrollList", parentID:string|GenericUI_Element?):GenericUI_Element_ScrollList
+---@overload fun(self, id:string, elementType:"StateButton", parentID:string|GenericUI_Element?):GenericUI_Element_StateButton
+---@overload fun(self, id:string, elementType:"Divider", parentID:string|GenericUI_Element?):GenericUI_Element_Divider
+---@overload fun(self, id:string, elementType:"Slot", parentID:string|GenericUI_Element?):GenericUI_Element_Slot
 ---@param elementType GenericUI_ElementType
 ---@param parentID string|GenericUI_Element? Defaults to root of the MainTimeline.
 ---@return GenericUI_Element? Nil in case of failure (ex. invalid type).
@@ -207,22 +207,25 @@ end
 ---------------------------------------------
 
 Generic.OnElementMouseUp = function(ev, id)
-    Generic:DebugLog("CALL onElementMouseUp: ", id)
     local element = Generic.GetInstance(ev.UI:GetTypeId()):GetElementByID(id)
+    if not element then return nil end
+    Generic:DebugLog("CALL onElementMouseUp: ", id)
 
     element.Events.MouseUp:Throw({})
 end
 
 Generic.OnElementMouseDown = function(ev, id)
-    Generic:DebugLog("CALL onElementMouseDown: ", id)
     local element = Generic.GetInstance(ev.UI:GetTypeId()):GetElementByID(id)
+    if not element then return nil end
+    Generic:DebugLog("CALL onElementMouseDown: ", id)
 
     element.Events.MouseDown:Throw({})
 end
 
 Generic.OnElementMouseOver = function(ev, id)
-    Generic:DebugLog("CALL onElementMouseOver: ", id)
     local element = Generic.GetInstance(ev.UI:GetTypeId()):GetElementByID(id)
+    if not element then return nil end
+    Generic:DebugLog("CALL onElementMouseOver: ", id)
 
     element.Events.MouseOver:Throw({})
 
@@ -277,8 +280,9 @@ Ext.RegisterUINameInvokeListener("showFormattedTooltipAfterPos", function(ui)
 end, "After")
 
 Generic.OnElementMouseOut = function(ev, id)
-    Generic:DebugLog("CALL onElementMouseOut: ", id)
     local element = Generic.GetInstance(ev.UI:GetTypeId()):GetElementByID(id)
+    if not element then return nil end
+    Generic:DebugLog("CALL onElementMouseOut: ", id)
 
     element.Events.MouseOut:Throw({})
 
@@ -290,10 +294,13 @@ Generic.OnElementMouseOut = function(ev, id)
 end
 
 Generic.OnButtonPressed = function(ev, id)
+    ---@type GenericUI_Element_Button
+    local element = Generic.GetInstance(ev.UI:GetTypeId()):GetElementByID(id)
     Generic:DebugLog("CALL Button_Pressed: ", id)
     local ui = Generic.GetInstance(ev.UI:GetTypeId())
 
     ui.Events.Button_Pressed:Fire(id)
+    element.Events.Pressed:Throw({})
 end
 
 Generic.OnStateButtonStateChanged = function(ev, id, active)
@@ -304,17 +311,19 @@ Generic.OnStateButtonStateChanged = function(ev, id, active)
 end
 
 Generic.OnSlotDragStarted = function(ev, id)
-    Generic:DebugLog("CALL Slot_DragStarted: ", id)
     ---@type GenericUI_Element_Slot
     local element = Generic.GetInstance(ev.UI:GetTypeId()):GetElementByID(id)
+    if not element then return nil end
+    Generic:DebugLog("CALL Slot_DragStarted: ", id)
 
     element.Events.DragStarted:Throw({})
 end
 
 Generic.OnSlotClicked = function(ev, id)
-    Generic:DebugLog("CALL Slot_Clicked: ", id)
     ---@type GenericUI_Element_Slot
     local element = Generic.GetInstance(ev.UI:GetTypeId()):GetElementByID(id)
+    if not element then return nil end
+    Generic:DebugLog("CALL Slot_Clicked: ", id)
 
     element.Events.Clicked:Throw({})
 end

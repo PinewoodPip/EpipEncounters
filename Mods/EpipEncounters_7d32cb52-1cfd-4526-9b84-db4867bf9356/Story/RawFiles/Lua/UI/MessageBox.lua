@@ -5,11 +5,11 @@
 
 ---@meta MessageBoxUI, ContextClient
 
----@class MessageBoxUI
+---@class MessageBoxUI : UI
 ---@field POPUP_TYPES table<string, number>
 ---@field currentCustomMessageBox MessageBoxData Internal; do not set!
 
----@type MessageBoxUI
+---@class MessageBoxUI
 local MessageBox = {
     POPUP_TYPES = {
         -- TODO Cleanup. These values are wrong

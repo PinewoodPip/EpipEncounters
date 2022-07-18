@@ -47,7 +47,9 @@ end
 
 function Test.TestSlot()
     local list = Test:CreateElement("btnList", "VerticalList", Test.Container)
-    -- local slot = list:AddChild("testSlot", "Slot")
+    local slot = list:AddChild("testSlot", "Slot")
+    slot = slot:GetMovieClip()
+    print(slot.bg_mc.width, slot.unavailable_mc.width, slot.cd_mc.y)
 
     -- slot:SetIcon("Skill_Warrior_PhoenixDive", 50, 50)
     -- slot:SetSourceBorder(true)

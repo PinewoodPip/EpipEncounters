@@ -12,7 +12,7 @@ local Hotbar = Client.UI.Hotbar
 local Slot = {
     ID = nil, ---@type string
     SlotElement = nil, ---@type GenericUI_Element_Slot
-    Object = {}, ---@type GenericUI_Prefab_HotbarSlot_Object
+    Object = {Type = "None"}, ---@type GenericUI_Prefab_HotbarSlot_Object
     Events = {
         ---@type SubscribableEvent<GenericUI_Prefab_HotbarSlot_Event_ObjectDraggedIn>
         ObjectDraggedIn = {},
@@ -43,6 +43,8 @@ function Slot.Create(ui, id, parent)
     }
     Inherit(obj, Slot)
     obj:_RegisterEvents()
+
+    obj:Clear()
 
     obj.SlotElement.Events.MouseUp:Subscribe(function (e) obj:_OnElementMouseUp(e) end)
     obj.SlotElement.Events.Clicked:Subscribe(function (e) obj:_OnSlotClicked(e) end)
@@ -79,10 +81,22 @@ end
 function Slot:SetItem(item)
     local slot = self.SlotElement
     slot:SetIcon(item.RootTemplate.Icon, 50, 50)
+    slot:SetCooldown(0, false)
 
     self.Object = {
         Type = "Item",
         Item = item, -- TODO change to handle
+    }
+end
+
+function Slot:Clear()
+    local slot = self.SlotElement
+    slot:SetIcon("", 1, 1)
+    slot:SetCooldown(0, false)
+    slot:SetEnabled(true)
+
+    self.Object = {
+        Type = "None",
     }
 end
 
@@ -172,6 +186,8 @@ function Slot:_OnSlotDragStarted(e)
     elseif obj.Type == "Item" then
         Ext.UI.GetDragDrop():StartDraggingObject(1, obj.Item.Handle)
     end
+
+    self:Clear()
 end
 
 ---------------------------------------------

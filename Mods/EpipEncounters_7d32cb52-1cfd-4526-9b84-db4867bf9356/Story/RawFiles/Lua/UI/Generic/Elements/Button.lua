@@ -18,12 +18,30 @@ Client.UI.Generic.ELEMENTS.Button = {
         STAT_PLUS = 5,
         CLOSE = 6,
     },
+    Events = {
+        ---@type SubscribableEvent<GenericUI_Element_Event_MouseUp>
+        MouseUp = {},
+        ---@type SubscribableEvent<GenericUI_Element_Event_MouseDown>
+        MouseDown = {},
+        ---@type SubscribableEvent<GenericUI_Element_Event_MouseOver>
+        MouseOver = {},
+        ---@type SubscribableEvent<GenericUI_Element_Event_MouseOut>
+        MouseOut = {},
+        ---@type GenericUI_Element_Button_Event_Pressed
+        Pressed = {},
+    },
     EVENT_TYPES = {
         PRESSED = "Button_Pressed",
     },
 }
 local Button = Client.UI.Generic.ELEMENTS.Button
 Inherit(Button, Generic._Element)
+
+---------------------------------------------
+-- EVENTS
+---------------------------------------------
+
+---@class GenericUI_Element_Button_Event_Pressed
 
 ---------------------------------------------
 -- METHODS

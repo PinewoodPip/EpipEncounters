@@ -130,7 +130,7 @@ LOAD_ORDER = {
     "UI/Generic/Elements/Divider.lua",
     "UI/Generic/Elements/Slot.lua",
     "UI/Generic/Prefabs/HotbarSlot.lua",
-    "UI/Generic/Test.lua", -- TEST!
+    -- "UI/Generic/Test.lua", -- TEST!
 
     "UI/Hotbar/Main.lua",
     "UI/Hotbar/ContextMenus.lua",
@@ -192,7 +192,8 @@ LOAD_ORDER = {
     "Epip/Client/TreasureTableDisplay.lua",
     "Epip/Client/Notifications.lua",
 
-    "Epip/Client/QuickExamine.lua",
+    "Epip/Client/GenericUIs/QuickExamine.lua",
+    "Epip/Client/GenericUIs/HotbarGroup.lua",
 
     "Epip/Client/AprilFoolsCharacterSheet.lua",
     "Epip/Client/HotbarActions.lua",
