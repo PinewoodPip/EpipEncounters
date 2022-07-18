@@ -153,6 +153,7 @@ LOAD_ORDER = {
 
     "UI/CombatLog/Messages/_Base.lua",
     "UI/CombatLog/Messages/_Character.lua",
+    "UI/CombatLog/Messages/_CharacterInteraction.lua",
     "UI/CombatLog/Messages/Unsupported.lua",
     "UI/CombatLog/Messages/Damage.lua",
     "UI/CombatLog/Messages/Healing.lua",
@@ -167,6 +168,8 @@ LOAD_ORDER = {
     "UI/CombatLog/Messages/Attack.lua",
     "UI/CombatLog/Messages/ReflectedDamage.lua",
     "UI/CombatLog/Messages/SurfaceDamage.lua",
+    "UI/CombatLog/Messages/CriticalHit.lua",
+    "UI/CombatLog/Messages/Dodge.lua",
 
     "UI/Controller/PanelSelect.lua",
 

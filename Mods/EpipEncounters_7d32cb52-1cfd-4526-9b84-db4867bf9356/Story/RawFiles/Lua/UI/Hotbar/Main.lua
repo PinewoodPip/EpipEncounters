@@ -794,7 +794,6 @@ GameState.Events.RunningTick:Subscribe(function (e)
 
         if visible then
             Client.Timer.Start("", 0.1, function()
-                print("a")
                 Hotbar.RenderSlots()
             end)
         end

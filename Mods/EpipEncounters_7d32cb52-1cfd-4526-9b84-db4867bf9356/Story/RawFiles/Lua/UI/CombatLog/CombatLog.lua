@@ -53,7 +53,7 @@ local Log = {
 }
 Epip.InitializeUI(Client.UI.Data.UITypes.combatLog, "CombatLog", Log)
 Client.UI.CombatLog = Log
--- Log:Debug()
+Log:Debug()
 
 ---@class CombatLogSentMessage
 ---@field Filter integer
@@ -427,6 +427,14 @@ local DefaultFilters = {
         }
     },
     {
+        ID = "CriticalHits",
+        Name = "Critical Hits & Dodges",
+        MessageTypes = {
+            CriticalHit = true,
+            Dodge = true,
+        },
+    },
+    {
         ID = "StatusApplication",
         Name = "Statuses",
         MessageTypes = {
@@ -460,8 +468,8 @@ local DefaultFilters = {
         Name = "Generic/Scripted",
         MessageTypes = {
             Scripted = true,
-        }
-    }
+        },
+    },
 }
 
 for i,filter in pairs(DefaultFilters) do
