@@ -129,6 +129,7 @@ LOAD_ORDER = {
     "UI/Generic/Elements/StateButton.lua",
     "UI/Generic/Elements/Divider.lua",
     "UI/Generic/Elements/Slot.lua",
+    "UI/Generic/Prefabs/HotbarSlot.lua",
     "UI/Generic/Test.lua", -- TEST!
 
     "UI/Hotbar/Main.lua",

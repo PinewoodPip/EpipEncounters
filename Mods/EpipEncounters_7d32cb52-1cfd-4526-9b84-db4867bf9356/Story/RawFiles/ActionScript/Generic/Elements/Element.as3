@@ -153,13 +153,13 @@ package Elements
             else
             {
                 ExternalInterface.call("elementMouseUp", this.stringID);
-                this._ignoreUp = true;
             }
         }
 
         public function onElementMouseDown(e:MouseEvent) : *
         {
             ExternalInterface.call("elementMouseDown", this.stringID);
+            this._ignoreUp = true;
         }
 
         public function onElementMouseOver(e:MouseEvent) : *

@@ -47,21 +47,22 @@ end
 
 function Test.TestSlot()
     local list = Test:CreateElement("btnList", "VerticalList", Test.Container)
-    local slot = list:AddChild("testSlot", "Slot")
+    -- local slot = list:AddChild("testSlot", "Slot")
 
-    slot:SetIcon("Skill_Warrior_PhoenixDive", 50, 50)
-    slot:SetSourceBorder(true)
-    slot:SetCooldown(0)
-    slot:SetLabel("12")
+    -- slot:SetIcon("Skill_Warrior_PhoenixDive", 50, 50)
+    -- slot:SetSourceBorder(true)
+    -- slot:SetCooldown(0)
+    -- slot:SetLabel("12")
+
+    ---@type GenericUI_Prefab_HotbarSlot
+    local s1 = Generic.PREFABS.Slot.Create(Test, "s1", list)
+    print(s1)
 end
 
 function Test.SetupTests()
     local ui = Test:GetUI()
     local root = ui:GetRoot()
     ui:Show()
-
-    print(Test.ID, Test.GetMovieClipByID)
-    print(root.Root.stringID)
 
     ---@type GenericUI_Element_TiledBackground
     local bg = Test:CreateElement("tiledbgTest", "TiledBackground", "")

@@ -10,6 +10,16 @@ local Generic = Client.UI.Generic
 
 ---@class GenericUI_Element
 local _Element = Generic._Element
+_Element.Events = {
+    ---@type SubscribableEvent<GenericUI_Element_Event_MouseUp>
+    MouseUp = {},
+    ---@type SubscribableEvent<GenericUI_Element_Event_MouseDown>
+    MouseDown = {},
+    ---@type SubscribableEvent<GenericUI_Element_Event_MouseOver>
+    MouseOver = {},
+    ---@type SubscribableEvent<GenericUI_Element_Event_MouseOut>
+    MouseOut = {},
+}
 
 ---@class GenericUI_Element
 ---@field UI GenericUI_Instance
@@ -18,6 +28,19 @@ local _Element = Generic._Element
 ---@field Type string
 ---@field Tooltip TooltipData? Will be rendered upon the element being hovered.
 ---@field EVENT_TYPES table<string, string>
+
+---------------------------------------------
+-- EVENTS
+---------------------------------------------
+
+---@class GenericUI_Element_Event_MouseOver
+---@class GenericUI_Element_Event_MouseOut
+---@class GenericUI_Element_Event_MouseUp
+---@class GenericUI_Element_Event_MouseDown
+
+---------------------------------------------
+-- METHODS
+---------------------------------------------
 
 ---Get the movie clip of this element.
 ---@return FlashMovieClip
@@ -41,6 +64,16 @@ end
 ---@overload fun(self, id:string, elementType:"Slot"):GenericUI_Element_Slot
 function _Element:AddChild(id, elementType)
     return self.UI:CreateElement(id, elementType, self)
+end
+
+function _Element:_RegisterEvents()
+    local _Templates = self.Events
+    
+    self.Events = {}
+
+    for id,tbl in pairs(_Templates) do
+        self.Events[id] = SubscribableEvent:New(id)
+    end
 end
 
 ---Called after the element is created in flash. Override to run initialization routines.

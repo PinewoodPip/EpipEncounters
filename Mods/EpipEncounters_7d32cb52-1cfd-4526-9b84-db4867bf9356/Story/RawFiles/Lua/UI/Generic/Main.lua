@@ -1,9 +1,11 @@
 
+---@class GenericUI
 Client.UI.Generic = {
     SWF_PATH = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/generic.swf",
     DEFAULT_LAYER = 15,
     _Element = {},
     ELEMENTS = {}, ---@type table<GenericUI_ElementType, GenericUI_Element>
+    PREFABS = {},
     INSTANCES = {} ---@type table<integer, GenericUI_Instance>
 }
 local Generic = Client.UI.Generic
@@ -87,6 +89,7 @@ function _Instance:CreateElement(id, elementType, parentID)
     -- Map ID to lua element
     self.Elements[id] = element
 
+    element:_RegisterEvents()
     element:_OnCreation()
 
     return element
@@ -191,23 +194,33 @@ function Client.UI.Generic.GetInstance(id)
     return Generic.INSTANCES[id]
 end
 
+function Client.UI.Generic.RegisterPrefab(id, prefab)
+    Generic.PREFABS[id] = prefab
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
 
 Generic.OnElementMouseUp = function(ev, id)
     Generic:DebugLog("CALL onElementMouseUp: ", id)
+    local element = Generic.GetInstance(ev.UI:GetTypeId()):GetElementByID(id)
+
+    element.Events.MouseUp:Throw({})
 end
 
 Generic.OnElementMouseDown = function(ev, id)
     Generic:DebugLog("CALL onElementMouseDown: ", id)
+    local element = Generic.GetInstance(ev.UI:GetTypeId()):GetElementByID(id)
+
+    element.Events.MouseDown:Throw({})
 end
 
 Generic.OnElementMouseOver = function(ev, id)
-    local ui = Generic.GetInstance(ev.UI:GetTypeId())
     Generic:DebugLog("CALL onElementMouseOver: ", id)
+    local element = Generic.GetInstance(ev.UI:GetTypeId()):GetElementByID(id)
 
-    local element = ui:GetElementByID(id)
+    element.Events.MouseOver:Throw({})
 
     if element and element.Tooltip then
         element:GetMovieClip().ShowTooltip()
@@ -260,10 +273,10 @@ Ext.RegisterUINameInvokeListener("showFormattedTooltipAfterPos", function(ui)
 end, "After")
 
 Generic.OnElementMouseOut = function(ev, id)
-    local ui = Generic.GetInstance(ev.UI:GetTypeId())
     Generic:DebugLog("CALL onElementMouseOut: ", id)
+    local element = Generic.GetInstance(ev.UI:GetTypeId()):GetElementByID(id)
 
-    local element = ui:GetElementByID(id)
+    element.Events.MouseOut:Throw({})
 
     if element and element.Tooltip and Generic.CurrentTooltipElement and Generic.CurrentTooltipElement.ID == id then -- TODO ui check
         Client.UI.Hotbar:HideTooltip()
