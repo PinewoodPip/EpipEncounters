@@ -792,6 +792,7 @@ Data.Game.MELEE_WEAPONS = {
 Data.Game.RANGED_WEAPONS = {
     Bow = true,
     Crossbow = true,
+    Rifle = true,
 }
 
 Data.Game.HOTBAR_ACTIONS = {

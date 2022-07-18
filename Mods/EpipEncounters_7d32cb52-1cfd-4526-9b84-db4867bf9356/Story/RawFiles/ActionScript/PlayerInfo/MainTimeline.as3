@@ -627,6 +627,14 @@ package playerInfo_fla
 				{
 					statusMC = mc.status_array[index];
 
+					// statusMC.visible = statusMC.showStatus;
+
+					// if (!statusMC.showStatus)
+					// {
+					// 	index++;
+					// 	continue;
+					// }
+
 					if(!unknown)
 					{
 						if(statusMC.alive)
@@ -637,9 +645,9 @@ package playerInfo_fla
 						{
 							if(this.curTooltip == statusMC.id)
 							{
-								ExternalInterface.call("hideTooltip");
-								this.curTooltip = Number(-1);
-								this.hasTooltip = false;
+								// ExternalInterface.call("hideTooltip");
+								// this.curTooltip = Number(-1);
+								// this.hasTooltip = false;
 							}
 
 							statusMC.fadeOut();
@@ -669,6 +677,7 @@ package playerInfo_fla
 		
 		public function cleanupStatuses(param1:Number) : *
 		{
+			trace("this runs");
 			var _loc3_:uint = 0;
 			var _loc4_:MovieClip = null;
 			var _loc2_:MovieClip = this.getPlayerOrSummonByHandle(param1);
@@ -709,7 +718,7 @@ package playerInfo_fla
 			}
 		}
 		
-		public function setStatus(createIfDoesntExist:Boolean, ownerHandle:Number, statusHandle:Number, elementID:Number, duration:Number, cooldown:Number, tooltip:String = "", sortingIndex:Number = 1) : *
+		public function setStatus(createIfDoesntExist:Boolean, ownerHandle:Number, statusHandle:Number, elementID:Number, duration:Number, cooldown:Number, tooltip:String = "", sortingIndex:Number = 1, showStatus:Boolean = true, setAlive:Boolean = true) : *
 		{
 			var statusMC:MovieClip = null;
 			var index:uint = 0;
@@ -758,7 +767,8 @@ package playerInfo_fla
 					statusMC.pipElementID = elementID;
 					statusMC.pipDuration = duration;
 					statusMC.pipCooldown = cooldown;
-					
+					statusMC.showStatus = showStatus;
+
 					if (!this.ENABLE_SORTING)
 					{
 						statusMC.pipSortingIndex = elementID;
@@ -796,7 +806,35 @@ package playerInfo_fla
 
 					statusMC.tooltip = tooltip;
 					statusMC.widthOverride = this.statusSize + this.statusSpacing;
-					statusMC.alive = true;
+
+					if (setAlive)
+					{
+						statusMC.alive = true;
+					}
+				}
+			}
+		}
+
+		public function SetStatusSortingIndex(owner:Number, status:Number, index:Number) : *
+		{
+			var statusMC:MovieClip = null;
+			var iteratorIndex:uint = 0;
+			var playerMC:MovieClip = this.getPlayerOrSummonByHandle(owner);
+			if(playerMC)
+			{
+				statusMC = null;
+				iteratorIndex = 0;
+				while(iteratorIndex < playerMC.status_array.length)
+				{
+					if(playerMC.status_array[iteratorIndex].id == status)
+					{
+						index = iteratorIndex;
+						statusMC = playerMC.status_array[iteratorIndex];
+
+						statusMC.pipSortingIndex = index;
+						break;
+					}
+					iteratorIndex++;
 				}
 			}
 		}

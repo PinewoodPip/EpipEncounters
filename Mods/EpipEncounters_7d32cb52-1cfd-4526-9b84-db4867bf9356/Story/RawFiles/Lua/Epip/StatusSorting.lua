@@ -128,40 +128,42 @@ end)
 PlayerInfo.Events.StatusesUpdated:Subscribe(function (e)
     for _,list in pairs(e.Data) do
         for i,statusData in ipairs(list) do
-            local event = {
-                Status = statusData.Status,
-                Filter = false,
-            }
-            StatusSorting.Events.ShouldFilterStatus:Throw(event)
-
-            StatusSorting:DebugLog("Sorting:", statusData.Status.StatusId)
-
-            if event.Filter then
-                table.remove(list, i)
-                StatusSorting:DebugLog("Removing: ", statusData.Status.StatusId)
-            else -- Assign sorting index
-                local index = nil
-
-                for sortingIndex,status in ipairs(StatusSorting.STATUS_ORDER) do
-                    local isStatus = false
-
-                    if type(status) == "table" then
-                        isStatus = statusData.Status.StatusId:match(status.Pattern) ~= nil
+            if statusData.Status then
+                local event = {
+                    Status = statusData.Status,
+                    Filter = false,
+                }
+                StatusSorting.Events.ShouldFilterStatus:Throw(event)
+    
+                StatusSorting:DebugLog("Sorting:", statusData.Status.StatusId)
+    
+                if event.Filter then
+                    table.remove(list, i)
+                    StatusSorting:DebugLog("Removing: ", statusData.Status.StatusId)
+                else -- Assign sorting index
+                    local index = nil
+    
+                    for sortingIndex,status in ipairs(StatusSorting.STATUS_ORDER) do
+                        local isStatus = false
+    
+                        if type(status) == "table" then
+                            isStatus = statusData.Status.StatusId:match(status.Pattern) ~= nil
+                        else
+                            isStatus = status == statusData.Status.StatusId
+                        end
+    
+                        if isStatus then
+                            index = sortingIndex
+                            break
+                        end
+                    end
+    
+                    if index then
+                        StatusSorting:DebugLog("Setting " .. statusData.Status.StatusId .. " to " .. index)
+                        statusData.SortingIndex = #StatusSorting.STATUS_ORDER - index - (i * 0.01)
                     else
-                        isStatus = status == statusData.Status.StatusId
+                        StatusSorting:DebugLog("Ignoring: ", statusData.Status.StatusId)
                     end
-
-                    if isStatus then
-                        index = sortingIndex
-                        break
-                    end
-                end
-
-                if index then
-                    StatusSorting:DebugLog("Setting " .. statusData.Status.StatusId .. " to " .. index)
-                    statusData.SortingIndex = #StatusSorting.STATUS_ORDER - index
-                else
-                    StatusSorting:DebugLog("Ignoring: ", statusData.Status.StatusId)
                 end
             end
         end

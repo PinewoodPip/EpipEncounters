@@ -44,6 +44,7 @@ PlayerInfo:Debug()
 ---@field Tooltip string
 ---@field Cooldown number
 ---@field SortingIndex integer
+---@field KeepAlive boolean
 
 ---------------------------------------------
 -- EVENTS
@@ -266,31 +267,42 @@ local function PrepareStatusEntry(data, statusesByHandle, players, now, i)
     local status = Ext.GetStatus(Ext.UI.DoubleToHandle(data.CharacterHandle), Ext.UI.DoubleToHandle(data.StatusHandle))
     data.Status = status
 
-    if not status then PlayerInfo:DebugLog("A status was deleted?") return nil end
-
-    statusesByHandle[data.StatusHandle] = true
+    local netID = PlayerInfo.StatusNetIDs[data.StatusHandle]
+    if not status then PlayerInfo:DebugLog("A status was deleted?") else netID = status.NetID end
+    PlayerInfo.StatusNetIDs[data.StatusHandle] = netID
+    if not netID then return nil end
 
     if not players[char.NetID] then
         players[char.NetID] = {}
     end
 
-    local statusApplyTime = PlayerInfo.StatusApplyTime[status.NetID]
+    if status then
+        statusesByHandle[data.StatusHandle] = true
+    end
+        
+
+    local statusApplyTime = PlayerInfo.StatusApplyTime[netID]
     if not statusApplyTime then
         statusApplyTime = now + i -- Adding the index avoids overlaps in priority
-        PlayerInfo.StatusApplyTime[status.NetID] = statusApplyTime -- TODO clean these up regularly
-        PlayerInfo.StatusNetIDs[data.StatusHandle] = status.NetID
+        PlayerInfo.StatusApplyTime[netID] = statusApplyTime -- TODO clean these up regularly
     end
-
-    local list = players[char.NetID]
-
+    
     -- Newer statuses are displayed to the right.
     data.SortingIndex = -statusApplyTime
+    if not status then data.SortingIndex = data.SortingIndex + (i * 0.05) end
+    -- else
+    --     local statusApplyTime = PlayerInfo.StatusApplyTime
+    --     data.SortingIndex = -now + 50 -- Fixes flickering issue with spam re-applying
+    -- end
+
+    local list = players[char.NetID]
 
     table.insert(list, data)
 end
 
 PlayerInfo:RegisterInvokeListener("updateStatuses", function (event, createIfDoesntExist, cleanupAll)
-    local settingEnabled = Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "PlayerInfo_EnableSortingFiltering")
+    if IS_IMPROVED_HOTBAR then return nil end
+    local settingEnabled = Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "PlayerInfo_EnableSortingFiltering") and not IS_IMPROVED_HOTBAR
     event.UI:GetRoot().ENABLE_SORTING = settingEnabled
     if not settingEnabled then return nil end
 
@@ -301,8 +313,7 @@ PlayerInfo:RegisterInvokeListener("updateStatuses", function (event, createIfDoe
     ---@type table<NetId, PlayerInfoStatusUpdate[]>
     local players = {}
     local statusesByHandle = {}
-
-    root.cleanupAllStatuses(true)
+    -- root.cleanupAllStatuses(cleanupAll)
 
     local now = Ext.Utils.MonotonicTime()
 
@@ -316,6 +327,7 @@ PlayerInfo:RegisterInvokeListener("updateStatuses", function (event, createIfDoe
                 Duration = array[i + 3],
                 Cooldown = array[i + 4],
                 Tooltip = array[i + 5],
+                KeepAlive = true,
             }
 
             PrepareStatusEntry(data, statusesByHandle, players, now, i)
@@ -339,6 +351,7 @@ PlayerInfo:RegisterInvokeListener("updateStatuses", function (event, createIfDoe
                         Duration = status.pipDuration,
                         Cooldown = status.pipCooldown,
                         Tooltip = status.tooltip,
+                        KeepAlive = false,
                     }, statusesByHandle, players, now, statusIndex + z)
                 end
             end
@@ -348,9 +361,11 @@ PlayerInfo:RegisterInvokeListener("updateStatuses", function (event, createIfDoe
             Data = players,
         })
 
-        -- local newArray = {}
         for netID,statusesList in pairs(players) do
             table.sort(statusesList, function (a, b)
+                if a.SortingIndex == b.SortingIndex then
+                    return a.StatusHandle > b.StatusHandle
+                end
                 if ascendingSort then
                     -- Non-sorted statuses still sort in order of appliance
                     if a.SortingIndex < 0 and b.SortingIndex < 0 then
@@ -362,37 +377,23 @@ PlayerInfo:RegisterInvokeListener("updateStatuses", function (event, createIfDoe
                 end
             end)
 
-            PlayerInfo:DebugLog("--------", Character.Get(netID).DisplayName)
+            -- PlayerInfo:DebugLog("--------", Character.Get(netID).DisplayName)
             for i,data in pairs(statusesList) do
-                -- local statusEntry = {
-                --     data.characterHandle,
-                --     data.,
-                --     data.statusElementId,
-                --     data.duration,
-                --     data.cooldown,
-                --     data.tooltip,
-                --     data.sortingIndex,
-                -- }
-    
-                -- for _,value in pairs(statusEntry) do
-                --     table.insert(newArray, value)
-                -- end
-    
-                -- PlayerInfo:DebugLog("Status " .. data.Status.StatusId .. ": index " .. data.SortingIndex)
+                if data.KeepAlive then
+                    root.setStatus(createIfDoesntExist, data.CharacterHandle, data.StatusHandle, data.ElementID, data.Duration, data.Cooldown, data.Tooltip, (i - 1), data.KeepAlive)
+                else
+                    root.SetStatusSortingIndex(data.CharacterHandle, data.StatusHandle, data.SortingIndex)
+                end
 
-                PlayerInfo:DebugLog(data.Status.StatusId, data.SortingIndex)
-
-                root.setStatus(createIfDoesntExist, data.CharacterHandle, data.StatusHandle, data.ElementID, data.Duration, data.Cooldown, data.Tooltip, (i - 1))
             end
         end
 
         -- PlayerInfo:DebugLog("Statuses updated.")
-
-        event:PreventAction()
-
-        root.ClearStatusArray()
-        root.cleanupAllStatuses(cleanupAll)
     end
+    event:PreventAction()
+
+    root.ClearStatusArray()
+    root.cleanupAllStatuses(cleanupAll)
 end, "Before")
 
 ---------------------------------------------

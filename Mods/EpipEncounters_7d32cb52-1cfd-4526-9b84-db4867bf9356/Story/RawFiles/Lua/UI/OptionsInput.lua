@@ -470,6 +470,8 @@ Options:RegisterCallListener("switchMenu", function(ev, id)
 end)
 
 Options:RegisterInvokeListener("initDone", function(ev)
+    if IS_IMPROVED_HOTBAR then return nil end
+    
     local root = Options:GetRoot()
 
     Options:DebugLog("Rendering custom tabs")

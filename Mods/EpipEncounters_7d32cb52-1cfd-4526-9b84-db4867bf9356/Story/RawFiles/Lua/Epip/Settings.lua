@@ -305,6 +305,7 @@ local PlayerInfo = {
     {
         ID = "PlayerInfo_EnableSortingFiltering",
         Type = "Checkbox",
+        Developer = true,
         Label = "Enable sorting/filtering",
         DefaultValue = false,
         Tooltip = Text.Format("Enables the sorting and filtering systems, allowing the settings below to take effect.<br>%s", {
@@ -316,6 +317,7 @@ local PlayerInfo = {
     {
         ID = "PlayerInfo_SortingFunction",
         Type = "Dropdown",
+        Developer = true,
         Label = "Sorting Order",
         Tooltip = "Determines the order of statuses, in order of importance.",
         DefaultValue = 1,
@@ -327,6 +329,7 @@ local PlayerInfo = {
     {
         ID = "PlayerInfo_Filter_SourceGen",
         Type = "Checkbox",
+        Developer = true,
         Label = "Show Source Generation Status",
         DefaultValue = true,
         Tooltip = "Shows the Source Generation status while sorting/filtering is enabled.",
@@ -334,6 +337,7 @@ local PlayerInfo = {
     {
         ID = "PlayerInfo_Filter_BatteredHarried",
         Type = "Checkbox",
+        Developer = true,
         Label = "Show Battered/Harried Statuses",
         DefaultValue = true,
         Tooltip = "Shows the Battered/Harries statuses while sorting/filtering is enabled.<br>If you disable this, it is recommended to enable the B/H display on the portraits.",

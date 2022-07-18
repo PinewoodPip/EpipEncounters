@@ -99,7 +99,7 @@ function Stats.MeetsRequirements(char, statID, isItem, itemSource)
     if not isItem and data.Requirement ~= "None" then
         if data.Requirement == "MeleeWeapon" and not Game.Character.HasMeleeWeapon(char) then
             return false
-        elseif data.Requirement == "RangedWeapon" and not Game.Character.HasRangedWeapon(char) then
+        elseif data.Requirement == "RangedWeapon" and not Character.HasRangedWeapon(char) then
             return false
         elseif data.Requirement == "ShieldWeapon" and not Game.Character.HasShield(char) then
             return false
@@ -226,10 +226,12 @@ function Stats.MeetsRequirementsINT(char, req)
 
     if type(char.Stats[req.Requirement]) == "boolean" then
         reqMet = char.Stats[req.Requirement]
+    elseif req.Requirement == "Tag" then
+        reqMet = char:HasTag(req.Param)
     else
         local amount = char.Stats[req.Requirement]
 
-        -- Attribute requirements appear bugged at the moment.
+        -- Attribute requirements appear bugged at the moment. TODO
         if not Data.Game.ATTRIBUTE_STATS[req.Requirement] then
             reqMet = amount >= req.Param
         else
