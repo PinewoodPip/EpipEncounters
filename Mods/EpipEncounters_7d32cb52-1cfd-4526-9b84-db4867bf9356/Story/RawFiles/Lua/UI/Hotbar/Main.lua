@@ -562,7 +562,7 @@ end
 
 ---Uses a slot from the hotbar UI.
 ---@param index integer Slot to use.
----@param isEnabled boolean Passed to the ExternalInterfaceCall. Purpose unknown.
+---@param isEnabled boolean? Passed to the ExternalInterfaceCall. Purpose unknown.
 function Hotbar.UseSlot(index, isEnabled)
     Hotbar:DebugLog("Pressed slot: " .. index)
     local slot = Hotbar.GetSlotHolder().slot_array[index - 1]
@@ -1206,6 +1206,33 @@ function Hotbar.RenderCooldowns()
             end
         end
     end
+end
+
+---@param skill string
+function Hotbar.UseSkill(skill)
+    local char = Client.GetCharacter()
+    local skillBar = char.PlayerData.SkillBarItems
+    local slot = skillBar[145]
+    local previousSkill
+
+    if slot.Type == "Skill" then
+        previousSkill = slot.SkillOrStatId
+    end
+
+    skillBar[145].SkillOrStatId = skill
+    skillBar[145].Type = "Skill"
+
+    UpdateSlotTextures()
+
+    Client.Timer.Start("UseHotbarSlot", 0.05, function()
+        Hotbar.UseSlot(145)
+
+        -- Rebind the auxiliary slot back to its original skill
+        if previousSkill then
+            char.PlayerData.SkillBarItems[145].SkillOrStatId = previousSkill
+            UpdateSlotTextures()
+        end
+    end)
 end
 
 function Hotbar.RenderSlots()

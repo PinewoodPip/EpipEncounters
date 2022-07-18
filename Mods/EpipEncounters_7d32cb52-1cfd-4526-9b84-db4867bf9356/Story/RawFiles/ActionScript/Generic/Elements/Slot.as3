@@ -19,6 +19,10 @@ package Elements
         public var iggy_mc:MovieClip;
 
         public var oldCD:Number = 0;
+        private var _dragStartX:Number = 0;
+        private var _dragStartY:Number = 0;
+        private var _dragging:Boolean = false;
+        private var startDragDiff:Number = 10;
 
         // public var enabled:Boolean = true;
 
@@ -42,8 +46,11 @@ package Elements
 
             this.refreshSlot_mc.stop();
             this.refreshSlot_mc.visible = false;
+            this.refreshSlot_mc.addFrameScript(73, this.onRefreshSlotEnd);
 
             this.unavailable_mc.visible = false;
+
+            this.addEventListener(MouseEvent.MOUSE_DOWN, this.onMouseDown);
 
             this.SetCooldown(0);
 
@@ -123,6 +130,44 @@ package Elements
         {
             // Changing icon size does not affect click area. TODO center it
             trace("Nothing to do here?");
+        }
+
+        private function onMouseDown(ev:MouseEvent) : *
+        {
+            this._dragStartX = stage.mouseX;
+            this._dragStartY = stage.mouseY;
+
+            stage.addEventListener(MouseEvent.MOUSE_MOVE, this.onMouseMove);
+            stage.addEventListener(MouseEvent.MOUSE_UP, this.onMouseUp);
+        }
+
+        private function onMouseMove(ev:MouseEvent) : *
+        {
+            if(this._dragStartX + this.startDragDiff < stage.mouseX || this._dragStartY + this.startDragDiff < stage.mouseY || this._dragStartX - this.startDragDiff > stage.mouseX || this._dragStartY - this.startDragDiff > stage.mouseY)
+            {
+                stage.removeEventListener(MouseEvent.MOUSE_MOVE,this.onMouseMove);
+                stage.removeEventListener(MouseEvent.MOUSE_UP, this.onMouseUp);
+                ExternalInterface.call("Slot_DragStarted", this.stringID);
+                // this._dragging = true;
+            }
+        }
+
+        private function onMouseUp(ev:MouseEvent) : *
+        {
+            if (!this._dragging)
+            {
+                ExternalInterface.call("Slot_Clicked", this.stringID);
+            }
+
+            stage.removeEventListener(MouseEvent.MOUSE_MOVE, this.onMouseMove);
+            stage.removeEventListener(MouseEvent.MOUSE_UP, this.onMouseUp);
+            this._dragging = false;
+        }
+
+        private function onRefreshSlotEnd() : *
+        {
+            this.refreshSlot_mc.stop();
+            this.refreshSlot_mc.visible = false;
         }
         
         private function frame1() : *

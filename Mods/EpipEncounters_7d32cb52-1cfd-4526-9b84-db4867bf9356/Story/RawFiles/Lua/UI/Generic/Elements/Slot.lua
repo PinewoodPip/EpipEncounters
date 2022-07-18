@@ -9,8 +9,30 @@ local Generic = Client.UI.Generic
 ---@field SetWarning fun(self, enabled:boolean)
 
 ---@class GenericUI_Element_Slot
-local Slot = {}
+local Slot = {
+    Events = { -- TODO improve inheritance
+        ---@type SubscribableEvent<GenericUI_Element_Event_MouseUp>
+        MouseUp = {},
+        ---@type SubscribableEvent<GenericUI_Element_Event_MouseDown>
+        MouseDown = {},
+        ---@type SubscribableEvent<GenericUI_Element_Event_MouseOver>
+        MouseOver = {},
+        ---@type SubscribableEvent<GenericUI_Element_Event_MouseOut>
+        MouseOut = {},
+        ---@type SubscribableEvent<GenericUI_Element_Slot_Event_DragStarted>
+        DragStarted = {},
+        ---@type SubscribableEvent<GenericUI_Element_Event_Clicked>
+        Clicked = {},
+    }
+}
 Inherit(Slot, Generic.ELEMENTS.IggyIcon)
+
+---------------------------------------------
+-- EVENTS
+---------------------------------------------
+
+---@class GenericUI_Element_Slot_Event_DragStarted
+---@class GenericUI_Element_Event_Clicked
 
 ---------------------------------------------
 -- METHODS

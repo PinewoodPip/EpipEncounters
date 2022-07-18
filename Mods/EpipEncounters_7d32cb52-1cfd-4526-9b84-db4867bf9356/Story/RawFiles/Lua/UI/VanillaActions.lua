@@ -401,28 +401,7 @@ Hotbar.RegisterActionListener("UseArbitrarySkill", "ActionUsed", function(char, 
     local skill = boundSkills[buttonIndex]
 
     if skill then
-        local skillBar = char.PlayerData.SkillBarItems
-        local slot = skillBar[145]
-        local previousSkill
-
-        if slot.Type == "Skill" then
-            previousSkill = slot.SkillOrStatId
-        end
-
-        skillBar[145].SkillOrStatId = skill
-        skillBar[145].Type = "Skill"
-
-        UpdateSlotTextures()
-
-        Client.Timer.Start("UseHotbarSlot", 0.05, function()
-            Hotbar.UseSlot(145)
-
-            -- Rebind the auxiliary slot back to its original skill
-            if previousSkill then
-                char.PlayerData.SkillBarItems[145].SkillOrStatId = previousSkill
-                UpdateSlotTextures()
-            end
-        end)
+        Hotbar.UseSkill(skill)
     end
 end)
 

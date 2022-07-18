@@ -147,6 +147,10 @@ function Client.UI.Generic.Create(id)
     -- StateButton
     ui:RegisterCallListener("StateButton_StateChanged", Generic.OnStateButtonStateChanged)
 
+    -- Slot
+    ui:RegisterCallListener("Slot_DragStarted", Generic.OnSlotDragStarted)
+    ui:RegisterCallListener("Slot_Clicked", Generic.OnSlotClicked)
+
     -- Logging
     ui:RegisterCallListener("GenericLog", function(ev, elementID, elementType, msg, msgType)
         msg = string.format("TRACE %s (%s): %s", elementID, elementType, msg)
@@ -297,4 +301,20 @@ Generic.OnStateButtonStateChanged = function(ev, id, active)
     local ui = Generic.GetInstance(ev.UI:GetTypeId())
 
     ui.Events.StateButton_StateChanged:Fire(id, active)
+end
+
+Generic.OnSlotDragStarted = function(ev, id)
+    Generic:DebugLog("CALL Slot_DragStarted: ", id)
+    ---@type GenericUI_Element_Slot
+    local element = Generic.GetInstance(ev.UI:GetTypeId()):GetElementByID(id)
+
+    element.Events.DragStarted:Throw({})
+end
+
+Generic.OnSlotClicked = function(ev, id)
+    Generic:DebugLog("CALL Slot_Clicked: ", id)
+    ---@type GenericUI_Element_Slot
+    local element = Generic.GetInstance(ev.UI:GetTypeId()):GetElementByID(id)
+
+    element.Events.Clicked:Throw({})
 end

@@ -56,7 +56,6 @@ function Test.TestSlot()
 
     ---@type GenericUI_Prefab_HotbarSlot
     local s1 = Generic.PREFABS.Slot.Create(Test, "s1", list)
-    print(s1)
 end
 
 function Test.SetupTests()
@@ -79,7 +78,7 @@ function Test.SetupTests()
     text:SetSize(400, 200)
     bg:GetMovieClip().background_mc.alpha = 0.2
 
-    bg:SetAsDraggableArea()
+    -- bg:SetAsDraggableArea()
 
     -- TESTS
     Test.TestButtons()
