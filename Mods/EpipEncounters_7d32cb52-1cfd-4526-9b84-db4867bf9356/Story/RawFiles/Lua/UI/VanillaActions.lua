@@ -55,6 +55,11 @@ local vanillaActions = {
         VanillaButtonIndex = 5,
     },
     {
+        ID = "ShowActions",
+        Name = "Show Actions",
+        Icon = "hotbar_icon_clover",
+    },
+    {
         ID = "CombatLog",
         Name = "Combat Log",
         Icon = "hotbar_icon_combatlog",
@@ -79,6 +84,7 @@ local vanillaActions = {
 for i,action in pairs(vanillaActions) do
     Hotbar.RegisterAction(action.ID, action)
 end
+Hotbar.SetHotkeyAction(11, "ShowActions")
 
 -- Buttons from the vanilla hotbar.
 local enabledHotbarButtons = {
@@ -92,6 +98,12 @@ Ext.Events.SessionLoaded:Subscribe(function()
     Ext.RegisterUIInvokeListener(ui, "setButtonActive", function(ui, method, btn, state)
         enabledHotbarButtons[btn] = state
     end)
+end)
+
+Hotbar:RegisterListener("ActionUsed", function(id, char, data)
+    if data.ID == "ShowActions" then
+        Hotbar:GetRoot().toggleActionSkillHolder()
+    end
 end)
 
 Hotbar:RegisterListener("ActionUsed", function(id, char, data)

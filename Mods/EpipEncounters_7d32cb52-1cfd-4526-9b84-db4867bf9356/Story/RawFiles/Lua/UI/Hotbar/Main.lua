@@ -657,6 +657,10 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
+Hotbar:RegisterInvokeListener("updateActionSkills", function(ev)
+    Ext.OnNextTick(Hotbar.UpdateActionHolder)
+end, "After")
+
 Net.RegisterListener("EPIPENCOUNTERS_Hotbar_SetLayout", function(_, payload)
     Hotbar.SetState(Ext.GetCharacter(payload.NetID), payload.Layout)
 end)
@@ -1051,6 +1055,17 @@ function Hotbar.CanRenderExtraSlots()
     return count == 0 and true
 end
 
+function Hotbar.UpdateActionHolder()
+    local dualLayout = Hotbar.HasSecondHotkeysRow()
+    local actionSkillHolder = Hotbar:GetRoot().actionSkillHolder_mc
+
+    if dualLayout then
+        actionSkillHolder.y = 742 - 70
+    else
+        actionSkillHolder.y = 742
+    end
+end
+
 function Hotbar.UpdateFrame()
     local dualLayout = Hotbar.HasSecondHotkeysRow()
     local bottomBar = Hotbar:GetRoot().hotbar_mc
@@ -1071,6 +1086,8 @@ function Hotbar.UpdateFrame()
         bottomBar.iggy_ci.y = 62
         bottomBar.portraitHitBox_mc.y = 62
     end
+
+    Hotbar.UpdateActionHolder()
 end
 
 function Hotbar.PositionDrawer()
