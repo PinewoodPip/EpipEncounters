@@ -335,6 +335,47 @@ function OnStatusTooltipRender(char, status, tooltip)
     end
 end
 
+-- Show status source.
+Game.Tooltip.RegisterListener("Status", nil, function(char, status, tooltip)
+    local source = Character.Get(status.StatusSourceHandle)
+
+    if source then
+        local text = Text.Format("Applied by %s", {
+            FormatArgs = {source.DisplayName},
+            FontType = Text.FONTS.ITALIC,
+            Color = Color.COLORS.LARIAN.LIGHT_GRAY,
+        })
+        local elements = tooltip:GetElements("StatusDescription")
+        local element = elements[#elements] -- Append to the last description (usually the duration text)
+
+        if not element then
+            tooltip:AppendElement({
+                Type = "StatusDescription",
+                Label = text,
+            })
+        else
+            element.Label = element.Label .. "<br>" .. text
+        end
+    end
+end)
+
+
+-- Show status object information in dev mode.
+Game.Tooltip.RegisterListener("Status", nil, function(char, status, tooltip)
+    if Ext.Debug.IsDeveloperMode() then
+        tooltip:AppendElement({
+            Type = "Engraving",
+            Label = Text.Format("StatusId: %s<br>StatusType: %s", {
+                FormatArgs = {
+                    status.StatusId,
+                    status.StatusType,
+                },
+                Color = Color.COLORS.LARIAN.GREEN,
+            })
+        })
+    end
+end)
+
 function TooltipAdjustments.AddBaseDeltamodTierDisplay(item, tooltip)
     local elementsToTry = {
         -- "WarningText", -- red X
