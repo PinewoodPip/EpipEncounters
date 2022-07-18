@@ -80,6 +80,7 @@ end
 ---------------------------------------------
 
 StatusConsole:RegisterCallListener("pipMaxAPUpdated", function(ev, amount)
+    amount = math.min(amount, 21)
     local root = ev.UI:GetRoot()
     local apHolder = root.console_mc.ap_mc
     local list = apHolder.dividerList
@@ -94,8 +95,42 @@ StatusConsole:RegisterCallListener("pipMaxAPUpdated", function(ev, amount)
         list.visible = false
     end
 
-    apHolder.x = (-7) - (listWidth / 2)
+    apHolder.x = (-7) - math.floor(listWidth / 2)
     apHolder.y = -92 + 6
+
+    local apList = apHolder.apList
+    local extraX = 0
+    local SPACING = 2
+    local SPACING_AFTER_DIVIDER = 1
+
+    apList.positionElements()
+
+    for i=0,#apList.content_array-1,1 do
+        if i % 4 == 0 and i > 0 then
+            extraX = extraX + SPACING 
+        end
+
+        local orb = apList.content_array[i]
+        local divider = list.content_array[i]
+
+        divider.x = divider.x + extraX
+        if i % 4 == 0 and i > 0 then
+            extraX = extraX + SPACING + SPACING_AFTER_DIVIDER
+        end
+        orb.x = orb.x + extraX
+
+        if i == #apList.content_array-1 then
+            divider = list.content_array[i + 1]
+            divider.x = divider.x + extraX
+        end
+
+    end
+    apHolder.x = apHolder.x - extraX // 2
+    apHolder.apGlow_mc.visible = false
+    apHolder.apOverflow_mc.x = 503
+    apHolder.apOverflow_mc.y = -7
+    apHolder.apOverflow_mc.overflow_txt.x = -15
+    apHolder.apOverflow_mc.visible = amount > 0
 end)
 
 local function OnHealthBarUpdate(uiObj, method, param3, num1, str1, bool1)

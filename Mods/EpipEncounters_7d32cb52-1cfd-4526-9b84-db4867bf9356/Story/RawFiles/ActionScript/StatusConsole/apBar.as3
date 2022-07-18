@@ -100,7 +100,6 @@ package statusConsole_fla
                     {
                         divider.setSpecialSprite(counter % 4 == 0);
                     }
-
                     this.dividerList.addElement(divider);
 
                     counter++;
@@ -136,7 +135,8 @@ package statusConsole_fla
         public function calculateBarOffset() : *
         {
             var _loc1_:Number = NaN;
-            if(this.apList.size > this.standardAP)
+            // if(this.apList.size > this.standardAP)
+            if (false)
             {
                 _loc1_ = this.apList.size - this.standardAP;
                 this.apHolder_mc.x = this.originalPosX - Math.floor(_loc1_ * 0.5 * (this.slotWidth + this.apList.EL_SPACING));
