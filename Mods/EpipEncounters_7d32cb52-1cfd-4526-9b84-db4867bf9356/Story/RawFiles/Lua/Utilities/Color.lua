@@ -9,8 +9,55 @@ Color = {
     RGBColor = nil,
 
     COLORS = {
-        PHYSICAL_ARMOR = "#A8A8A8",
-        MAGIC_ARMOR = "#188EDE",
+        PHYSICAL_ARMOR = "A8A8A8",
+        MAGIC_ARMOR = "188EDE",
+
+        BLACK = "000000",
+        RED = "FF0000",
+        GREEN = "00FF00",
+        BLUE = "0000FF",
+        WHITE = "FFFFFF",
+
+        -- From https://docs.larian.game/UI_Colors_Reference_Sheet
+        LARIAN = {
+            BLUE = "0078FF",
+            GREEN = "00F27D",
+            RED = "FF0200",
+            YELLOW = "FFFF00",
+            DARK_GRAY = "454545",
+            GRAY = "A8A8A8",
+            LIGHT_GRAY = "DBDBDB",
+            DARK_BLUE = "004672",
+            LIGHT_BLUE = "CFECFF",
+            POISON_GREEN = "00AA00",
+            ORANGE = "FF9600",
+            PINK = "FFC3C3",
+            PURPLE = "7F00FF",
+            BROWN = "B97A57",
+            GOLD = "C7A758",
+        },
+
+        ALIGNMENTS = {
+            PARTY = "00A2FD",
+            ALLY = "11D77A",
+            NEUTRAL = "F3D347",
+            ENEMY = "D7001F",
+        },
+
+        SKILL_SCHOOLS = {
+            AEROTHEURGE = "7478DC",
+            GEOMANCER = "AA895B",
+            PYROKINETIC = "C76537",
+            NECROMANCER = "9A5085",
+            POLYMORPH = "FFB811",
+            HUNTSMAN = "5A9646",
+            SCOUNDREL = "566C6C",
+            SOURCERY = "6EB09D",
+            SUMMONING = "9440B3",
+            WARFARE = "A11919",
+            HYDROSOPHIST = "579CCA",
+        }
+
     },
 }
 
