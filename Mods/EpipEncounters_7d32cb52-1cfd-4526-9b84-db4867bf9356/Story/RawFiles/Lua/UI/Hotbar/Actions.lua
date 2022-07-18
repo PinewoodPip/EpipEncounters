@@ -1,4 +1,5 @@
 
+---@class HotbarUI
 local Hotbar = Client.UI.Hotbar
 
 ---@class HotbarAction

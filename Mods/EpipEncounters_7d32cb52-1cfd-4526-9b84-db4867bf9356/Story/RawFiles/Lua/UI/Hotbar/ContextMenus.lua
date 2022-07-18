@@ -3,6 +3,7 @@
 -- Context menus for the Hotbar.
 ---------------------------------------------
 
+---@class HotbarUI
 local Hotbar = Client.UI.Hotbar
 
 -- Open context menu upon right-clicking a slot.
