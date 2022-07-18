@@ -5,11 +5,11 @@
 
 ---@meta CharacterSheetUI, ContextClient
 
----@class CharacterSheetUI
+---@class CharacterSheetUI : UI
 ---@field StatsTab CharacterSheetStatsTab
 ---@field SECONDARY_STAT_GROUPS table<string, number> IDs of secondarystat groups.
 
----@type CharacterSheetUI
+---@class CharacterSheetUI
 local CharacterSheet = {
     StatsTab = {}, -- See StatsTab.lua
 

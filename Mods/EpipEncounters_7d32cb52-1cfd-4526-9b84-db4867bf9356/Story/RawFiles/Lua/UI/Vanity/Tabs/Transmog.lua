@@ -1,5 +1,6 @@
 
 local Vanity = Client.UI.Vanity
+local Hotbar = Client.UI.Hotbar
 
 local Transmog = {
     favoritedTemplates = {},
@@ -428,4 +429,20 @@ end)
 
 Tab:RegisterListener(Vanity.Events.EntryClicked, function(id)
     Transmog.TransmogItem(nil, id)
+end)
+
+---------------------------------------------
+-- HOTBAR ACTION
+---------------------------------------------
+
+Hotbar.RegisterAction("EpipVanity", {Name = "Vanity", Icon = Hotbar.ACTION_ICONS.HAT})
+Hotbar.RegisterActionListener("EpipVanity", "ActionUsed", function(_)
+    Vanity.SetSlot("Breast")
+    Vanity.Setup(Tab)
+end)
+Hotbar.RegisterActionHook("EpipVanity", "IsActionEnabled", function(enabled, _, _, _)
+    if enabled then
+        enabled = not Client.IsInCombat()
+    end
+    return enabled
 end)

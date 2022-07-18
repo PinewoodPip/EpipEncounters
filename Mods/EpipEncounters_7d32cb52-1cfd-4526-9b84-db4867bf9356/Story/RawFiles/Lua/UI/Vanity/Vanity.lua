@@ -1,20 +1,11 @@
 
 ---@meta ContextClient, VanityUI
 
--- TODO
----@class VanityUI
----@field openCategories table<string,boolean>
----@field currentTab CharacterSheetCustomTab
----@field currentItemTemplateOverride string?
----@field oldContentHeight number
----@field oldScrollY number
----@field ENTRY_WIDTH number
-
 -- Important lessons learnt:
 -- You cannot have mouse listeners on shapes, need to use sprites
 -- Depth 0 elements have 0 width/height
 
----@type VanityUI
+---@class VanityUI
 local Vanity = {
     Position = {0, 0},
 
@@ -428,6 +419,7 @@ end
 ---@field Templates table<string,string>
 ---@field Dyes table<string,string>
 
+---@type CharacterSheetUI
 local CharacterSheet = Client.UI.CharacterSheet
 
 ---------------------------------------------
@@ -540,6 +532,8 @@ end
 ---@param tab CharacterSheetCustomTab
 function Vanity.Setup(tab, ...)
     Vanity.Cleanup()
+
+    CharacterSheet:GetUI():Show()
 
     Vanity.currentTab = tab
     Vanity.SetHeader(tab.Name)
@@ -1222,14 +1216,7 @@ local function OnTick()
     local characterSheet = Client.UI.CharacterSheet:GetRoot()
     local cUI = Client.UI.CharacterSheet:GetUI()
 
-    local isVisible = false
-
-    for i,flag in ipairs(cUI.Flags) do
-        if flag == "OF_Visible" then
-            isVisible = true
-            break
-        end
-    end
+    local isVisible = CharacterSheet:IsVisible() and not Client.IsInCombat()
 
     -- Close UI when the sheet is closed - TODO event
     if Vanity:IsVisible() and not isVisible then

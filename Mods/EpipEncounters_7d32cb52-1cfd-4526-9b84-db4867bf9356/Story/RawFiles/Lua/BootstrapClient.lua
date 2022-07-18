@@ -130,13 +130,6 @@ LOAD_ORDER = {
     "UI/Generic/Elements/Divider.lua",
     -- "UI/Generic/Test.lua", -- TEST!
 
-    "UI/Vanity/Vanity.lua",
-    "UI/Vanity/Tabs/_Tab.lua",
-    "UI/Vanity/Tabs/Transmog.lua",
-    "UI/Vanity/Tabs/Outfits.lua",
-    "UI/Vanity/Tabs/Dyes.lua",
-    -- "UI/Vanity/Tabs/Auras.lua",
-
     "UI/Hotbar/Main.lua",
     "UI/Hotbar/ContextMenus.lua",
     "UI/Hotbar/Actions.lua",
@@ -150,6 +143,13 @@ LOAD_ORDER = {
     "UI/GiftBagContent.lua",
     "UI/ChatLog.lua",
     "UI/CombatLog/CombatLog.lua",
+
+    "UI/Vanity/Vanity.lua",
+    "UI/Vanity/Tabs/_Tab.lua",
+    "UI/Vanity/Tabs/Transmog.lua",
+    "UI/Vanity/Tabs/Outfits.lua",
+    "UI/Vanity/Tabs/Dyes.lua",
+    -- "UI/Vanity/Tabs/Auras.lua",
 
     "UI/CombatLog/Messages/_Base.lua",
     "UI/CombatLog/Messages/_Character.lua",
