@@ -233,8 +233,7 @@ Bar:RegisterHook("GetBottomText", function(text, char, item)
 
         if modifierActive then -- Show alternate info.
             local level = char.Stats.Level
-            local sp = char.Stats.MPStart
-            local maxSp = char.Stats.MaxMpOverride
+            local sp, maxSp = Character.GetSourcePoints(char)
             local ap = char.Stats.CurrentAP
             local init = char.Stats.Initiative
 

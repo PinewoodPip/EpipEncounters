@@ -259,7 +259,7 @@ end
 ---@param char Character
 ---@return integer, integer Current and maximum points.
 function Character.GetSourcePoints(char)
-    local current, max = char.Stats.MPStart, 3
+    local current, max = char.Stats.MPStart, char.Stats.MaxMp
     if char.Stats.MaxMpOverride ~= -1 then max = char.Stats.MaxMpOverride end
 
     return current, max

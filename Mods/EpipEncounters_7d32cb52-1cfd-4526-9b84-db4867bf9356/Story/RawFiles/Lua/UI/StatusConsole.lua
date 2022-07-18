@@ -81,6 +81,7 @@ end
 
 StatusConsole:RegisterCallListener("pipMaxAPUpdated", function(ev, amount)
     amount = math.min(amount, 21)
+    local character = Client.GetCharacter()
     local root = ev.UI:GetRoot()
     local apHolder = root.console_mc.ap_mc
     local list = apHolder.dividerList
@@ -130,7 +131,7 @@ StatusConsole:RegisterCallListener("pipMaxAPUpdated", function(ev, amount)
     apHolder.apOverflow_mc.x = 503
     apHolder.apOverflow_mc.y = -7
     apHolder.apOverflow_mc.overflow_txt.x = -15
-    apHolder.apOverflow_mc.visible = amount > 0
+    apHolder.apOverflow_mc.visible = character.Stats.CurrentAP > 20
 end)
 
 StatusConsole:RegisterInvokeListener("setSourcePoints", function(ev, available)
@@ -143,7 +144,7 @@ StatusConsole:RegisterInvokeListener("setSourcePoints", function(ev, available)
 
     ev.UI:GetRoot().pipSetSourcePoints(max, available)
 
-    list.x = root.console_mc.x + 7
+    list.x = root.console_mc.x + 6
     list.y = root.console_mc.y - 13
 
     list.EL_SPACING = 5
