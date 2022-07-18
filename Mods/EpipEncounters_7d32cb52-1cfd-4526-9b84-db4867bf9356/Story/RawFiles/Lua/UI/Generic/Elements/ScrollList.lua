@@ -6,7 +6,7 @@ local Generic = Client.UI.Generic
 ---@field SetMouseWheenEnabled fun(self, enabled:boolean)
 ---@field SetScrollbarSpacing fun(self, spacing:number) Must be called after SetFrame. TODO remove restriction
 
----@type GenericUI_Element_ScrollList
+---@class GenericUI_Element_ScrollList
 Client.UI.Generic.ELEMENTS.ScrollList = {
 
 }

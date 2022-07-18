@@ -5,7 +5,7 @@ local Generic = Client.UI.Generic
 -- ELEMENT
 ---------------------------------------------
 
----@alias GenericUI_ElementType "Empty"|"TiledBackground"|"Text"|"IggyIcon"|"Button"|"VerticalList"|"HorizontalList"|"ScrollList"|"StateButton"|"Divider"
+---@alias GenericUI_ElementType "Empty"|"TiledBackground"|"Text"|"IggyIcon"|"Button"|"VerticalList"|"HorizontalList"|"ScrollList"|"StateButton"|"Divider"|"Slot"
 ---@alias FlashMovieClip userdata TODO remove
 
 ---@class GenericUI_Element
@@ -38,9 +38,13 @@ end
 ---@overload fun(self, id:string, elementType:"ScrollList"):GenericUI_Element_ScrollList
 ---@overload fun(self, id:string, elementType:"StateButton"):GenericUI_Element_StateButton
 ---@overload fun(self, id:string, elementType:"Divider"):GenericUI_Element_Divider
+---@overload fun(self, id:string, elementType:"Slot"):GenericUI_Element_Slot
 function _Element:AddChild(id, elementType)
     return self.UI:CreateElement(id, elementType, self)
 end
+
+---Called after the element is created in flash. Override to run initialization routines.
+function _Element:_OnCreation() end
 
 ---Sets whether the element should be horizontally centered in VerticalList and ScrollList.
 ---@param center boolean

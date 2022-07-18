@@ -58,6 +58,7 @@ end
 ---@overload fun(id:string, elementType:"ScrollList", parentID:string|GenericUI_Element?):GenericUI_Element_ScrollList
 ---@overload fun(id:string, elementType:"StateButton", parentID:string|GenericUI_Element?):GenericUI_Element_StateButton
 ---@overload fun(id:string, elementType:"Divider", parentID:string|GenericUI_Element?):GenericUI_Element_Divider
+---@overload fun(id:string, elementType:"Slot", parentID:string|GenericUI_Element?):GenericUI_Element_Slot
 ---@param elementType GenericUI_ElementType
 ---@param parentID string|GenericUI_Element? Defaults to root of the MainTimeline.
 ---@return GenericUI_Element? Nil in case of failure (ex. invalid type).
@@ -85,6 +86,8 @@ function _Instance:CreateElement(id, elementType, parentID)
 
     -- Map ID to lua element
     self.Elements[id] = element
+
+    element:_OnCreation()
 
     return element
 end
@@ -166,7 +169,7 @@ end
 ---@param call string
 ---@vararg LuaFlashCompatibleType
 ---@return fun(self:GenericUI_Element, ...):any?
-function Client.UI.Generic.ExposeFunction(call, ...)
+function Client.UI.Generic.ExposeFunction(call)
     local fun = function(obj, ...)
         local mc = obj:GetMovieClip()
 
@@ -217,7 +220,6 @@ Generic.OnElementShowTooltip = function(ev, id, x, y, width, height, _, align)
     local element = ui:GetElementByID(id)
     -- local element = ui:GetElementByID(id)
 
-    print(Ext.UI.GetViewportSize()[1], mouseX, Ext.UI.GetViewportSize()[1] - mouseX < 100)
     if Ext.UI.GetViewportSize()[1] - mouseX < 100 then
         mouseX = mouseX - 250
     end

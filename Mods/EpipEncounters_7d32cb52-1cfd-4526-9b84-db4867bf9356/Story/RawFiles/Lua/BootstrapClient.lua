@@ -128,7 +128,8 @@ LOAD_ORDER = {
     "UI/Generic/Elements/ScrollList.lua",
     "UI/Generic/Elements/StateButton.lua",
     "UI/Generic/Elements/Divider.lua",
-    -- "UI/Generic/Test.lua", -- TEST!
+    "UI/Generic/Elements/Slot.lua",
+    "UI/Generic/Test.lua", -- TEST!
 
     "UI/Hotbar/Main.lua",
     "UI/Hotbar/ContextMenus.lua",

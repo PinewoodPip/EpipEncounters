@@ -45,6 +45,16 @@ function Test.TestButtons()
     end
 end
 
+function Test.TestSlot()
+    local list = Test:CreateElement("btnList", "VerticalList", Test.Container)
+    local slot = list:AddChild("testSlot", "Slot")
+
+    slot:SetIcon("Skill_Warrior_PhoenixDive", 50, 50)
+    slot:SetSourceBorder(true)
+    slot:SetCooldown(0)
+    slot:SetLabel("12")
+end
+
 function Test.SetupTests()
     local ui = Test:GetUI()
     local root = ui:GetRoot()
@@ -72,6 +82,7 @@ function Test.SetupTests()
 
     -- TESTS
     Test.TestButtons()
+    Test.TestSlot()
 end
 
 ---------------------------------------------

@@ -1,0 +1,134 @@
+package Elements
+{
+    import LS_Classes.LSPanelHelpers;
+    import flash.display.MovieClip;
+    import flash.external.ExternalInterface;
+    import LS_Classes.listDisplay;
+    import flash.text.TextField;
+    import flash.events.MouseEvent;
+
+    public dynamic class Slot extends Element
+    {
+        // public var bg_mc:MovieClip;
+        // public var disable_mc:MovieClip;
+        // public var amount_mc:MovieClip;
+        // public var refreshSlot_mc:MovieClip;
+        // public var unavailable_mc:MovieClip;
+        // public var frame_mc:MovieClip;
+        // public var source_frame_mc:Shape;
+        public var iggy_mc:MovieClip;
+
+        public var oldCD:Number = 0;
+
+        // public var enabled:Boolean = true;
+
+        public function Slot()
+        {
+            super();
+
+            this.iggy_mc = new MovieClip();
+            this.addChild(this.iggy_mc);
+            this.setChildIndex(this.iggy_mc, 0);
+            this.setChildIndex(this.bg_mc, 0);
+
+            this.SetEnabled(true);
+            this.SetLabel("");
+            this.SetSourceBorder(false);
+            this.SetWarning(false);
+
+            this.cd_mc.rot = -90;
+            this.cd_mc.cellSize = 50;
+            this.cd_mc.visible = false;
+
+            this.refreshSlot_mc.stop();
+            this.refreshSlot_mc.visible = false;
+
+            this.unavailable_mc.visible = false;
+
+            this.SetCooldown(0);
+
+            this.addFrameScript(0, this.frame1);
+
+            // TODO highlight on hover
+        }
+
+        public override function get elementType() : String
+        {
+            return "Slot";
+        }
+
+        public function SetCooldown(cooldown:Number, param2:Boolean = true) : *
+        {
+            if(cooldown == -1)
+            {
+                this.oldCD = 0;
+                cooldown = 0;
+            }
+            if(cooldown == 0)
+            {
+
+                this.cd_mc.visible = false;
+
+                if(this.oldCD != 0)
+                {
+                    this.refreshSlot_mc.visible = true;
+                    this.refreshSlot_mc.alpha = 1;
+                    this.refreshSlot_mc.gotoAndPlay(2);
+                    ExternalInterface.call("PlaySound","UI_Game_Skill_Cooldown_End");
+
+                    // PIP - set enabled as well
+                    if (param2)
+                    {
+                        this.disable_mc.alpha = 0;
+                        this.isEnabled = true;
+                    }
+                }
+            }
+            else
+            {
+                this.cd_mc.visible = true;
+
+                if (param2)
+                {
+                    this.isEnabled = false;
+                    this.disable_mc.alpha = 0; // intentional, so the overlays dont stack
+                }
+            }
+            this.oldCD = cooldown;
+            this.cd_mc.setCoolDown(cooldown);
+        }
+
+        public function SetEnabled(enabled:Boolean) : *
+        {
+            this.enabled = enabled;
+            this.disable_mc.visible = !enabled;
+        }
+
+        public function SetWarning(enabled:Boolean) : *
+        {
+            this.unavailable_mc.visible = enabled;
+        }
+
+        public function SetLabel(text:String) : *
+        {
+            this.amount_mc.amount_txt.htmlText = text;
+        }
+
+        public function SetSourceBorder(enabled:Boolean) : *
+        {
+            this.source_frame_mc.visible = enabled;
+        }
+
+        public function SetIconSize(width:Number, height:Number) : *
+        {
+            // Changing icon size does not affect click area. TODO center it
+            trace("Nothing to do here?");
+        }
+        
+        private function frame1() : *
+        {
+            // Setup iggy icon
+            this.iggy_mc.name = "iggy_" + this.stringID;
+        }
+    }
+}
