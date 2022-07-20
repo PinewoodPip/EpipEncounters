@@ -215,7 +215,7 @@ end)
 
 -- Enable/disable the sorting settings depending on whether sorting itself is enabled.
 OptionsSettings.Events.TabRendered:RegisterListener(function (customTab, _)
-    if customTab and customTab.Mod == "EpipEncounters" then
+    if customTab and customTab.Mod == "EpipEncounters" and Ext.Debug.IsDeveloperMode() then
         UpdateOptionAvailability()
     end
 end)

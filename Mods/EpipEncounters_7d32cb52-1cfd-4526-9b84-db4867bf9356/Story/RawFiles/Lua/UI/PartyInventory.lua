@@ -13,7 +13,8 @@ Epip.InitializeUI(Client.UI.Data.UITypes.partyInventory, "PartyInventory", Inv)
 function Inv.AutoUnlockFor(chars)
     for char,unlock in pairs(chars) do
         if unlock then
-            Inv:GetUI():ExternalInterfaceCall("lockInventory", Ext.UI.HandleToDouble(Ext.GetCharacter(char).Handle), false)
+            -- Temporarily unavailable
+            -- Inv:GetUI():ExternalInterfaceCall("lockInventory", Ext.UI.HandleToDouble(Ext.GetCharacter(char).Handle), false)
 
             Inv:Log("Unlocked " .. char .. "'s inventory.")
         end

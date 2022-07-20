@@ -557,8 +557,12 @@ function OptionsSettings.RenderOptions(tabID)
 
     OptionsSettings:FireEvent("CustomTabRenderStarted", modID, modData)
 
-    for i,elementData in pairs(modData.Options) do
-        if elementData.VisibleAtTopLevel or elementData.VisibleAtTopLevel == nil then
+    for _,elementData in pairs(modData.Options) do
+        -- TODO hook
+        local canRender = elementData.VisibleAtTopLevel or elementData.VisibleAtTopLevel == nil
+        canRender = canRender and (not elementData.Developer or Ext.Debug.IsDeveloperMode())
+        
+        if canRender then
             OptionsSettings.RenderOption(elementData)
         end
     end

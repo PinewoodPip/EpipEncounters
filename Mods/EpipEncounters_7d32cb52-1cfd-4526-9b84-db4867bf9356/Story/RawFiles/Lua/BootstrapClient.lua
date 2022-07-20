@@ -193,7 +193,7 @@ LOAD_ORDER = {
     "Epip/Client/Notifications.lua",
 
     "Epip/Client/GenericUIs/QuickExamine.lua",
-    "Epip/Client/GenericUIs/HotbarGroup.lua",
+    -- "Epip/Client/GenericUIs/HotbarGroup.lua",
 
     "Epip/Client/AprilFoolsCharacterSheet.lua",
     "Epip/Client/HotbarActions.lua",
