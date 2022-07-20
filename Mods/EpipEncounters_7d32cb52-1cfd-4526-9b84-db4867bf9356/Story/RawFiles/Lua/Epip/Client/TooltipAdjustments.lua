@@ -335,6 +335,19 @@ function OnStatusTooltipRender(char, status, tooltip)
     end
 end
 
+-- Show skill IDs.
+Game.Tooltip.RegisterListener("Skill", nil, function(char, skill, tooltip)
+    if Ext.Debug.IsDeveloperMode() then
+        tooltip:AppendElement({
+            Type = "Engraving",
+            Label = Text.Format("StatsId: %s", {
+                FormatArgs = {skill},
+                Color = Color.COLORS.LARIAN.GREEN,
+            })
+        })
+    end
+end)
+
 -- Show status source.
 Game.Tooltip.RegisterListener("Status", nil, function(char, status, tooltip)
     local source = Character.Get(status.StatusSourceHandle)
@@ -358,7 +371,6 @@ Game.Tooltip.RegisterListener("Status", nil, function(char, status, tooltip)
         end
     end
 end)
-
 
 -- Show status object information in dev mode.
 Game.Tooltip.RegisterListener("Status", nil, function(char, status, tooltip)
