@@ -202,7 +202,7 @@ for id,t in pairs(TTD.TREASURE_TABLES) do
 end
 
 -- Derpy compatibility
-if Ext.Mod.IsModLoaded(Data.Mods.EE_DERPY) then
+if Mod.IsLoaded(Mod.GUIDS.EE_DERPY) then
     TTD.AddTreasureTable("OmegaBoss", {Name = "Omega Boss", ProteanChance = 1})
     TTD.AddTreasureTable("MicroBoss", {Name = "Micro Boss"})
 end

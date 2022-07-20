@@ -1,5 +1,5 @@
 
-local Mods = Data.Mods
+local Mods = Mod.GUIDS
 local Warnings = {
     INCOMPATIBLE_MODS = {
         [Mods.EE_CORE] = {
@@ -30,9 +30,9 @@ Epip.AddFeature("IncompatibleModsWarning", "IncompatibleModsWarning", Warnings)
 
 Osiris.RegisterSymbolListener("SavegameLoaded", 4, "after", function(_, _, _, _)
     for baseModGuid,list in pairs(Warnings.INCOMPATIBLE_MODS) do
-        if Ext.Mod.IsModLoaded(baseModGuid) then
+        if Mod.IsLoaded(baseModGuid) then
             for _,incompatibleModGUID in pairs(list) do
-                if Ext.Mod.IsModLoaded(incompatibleModGUID) then
+                if Mod.IsLoaded(incompatibleModGUID) then
                     local val1, val2 = Osiris.DB_PIP_IncompatibleModWarningSeen(baseModGuid, incompatibleModGUID)
                     local warningSeen = val1 ~= nil and val2 ~= nil
         

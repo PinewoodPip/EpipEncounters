@@ -5,7 +5,7 @@
 
 local Mirror = {
     REQUIRED_MODS = {
-        [Data.Mods.PORTABLE_RESPEC_MIRROR] = "Portable Respec Mirror (FJ Edition)",
+        [Mod.GUIDS.PORTABLE_RESPEC_MIRROR] = "Portable Respec Mirror (FJ Edition)",
     },
 }
 local Hotbar = Client.UI.Hotbar

@@ -996,7 +996,7 @@ function Vanity.LoadTemplateData(file)
 
     for guid,info in pairs(data) do
         -- Only load templates from mods that are loaded
-        if info.Mod == "Shared" or Ext.Mod.IsModLoaded(info.Mod) then
+        if info.Mod == "Shared" or Mod.IsLoaded(info.Mod) then
             Vanity.TEMPLATES[guid] = info
             Vanity.TEMPLATES[guid].GUID = guid
             Vanity.TEMPLATES[guid].Tags = Vanity:ReturnFromHooks("GenerateTemplateTags", {}, guid, info)

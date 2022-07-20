@@ -8,7 +8,7 @@ local Majora = {
     DATA_PATH = "Mods/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/Story/RawFiles/Lua/Epip/ContextMenus/Vanity/Data/Templates_MajoraFashionSins.json",
 
     REQUIRED_MODS = {
-        [Data.Mods.MAJORA_FASHION_SINS] = "Majora's  Fashion Sins",
+        [Mod.GUIDS.MAJORA_FASHION_SINS] = "Majora's  Fashion Sins",
     },
 }
 

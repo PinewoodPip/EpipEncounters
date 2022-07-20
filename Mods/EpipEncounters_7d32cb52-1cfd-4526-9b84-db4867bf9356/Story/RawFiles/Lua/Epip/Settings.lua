@@ -73,7 +73,7 @@ local Hotbar = {
     -- },
 }
 
-if Ext.Mod.IsModLoaded(Data.Mods.WEAPON_EXPANSION) then
+if Mod.IsLoaded(Mod.GUIDS.WEAPON_EXPANSION) then
     table.insert(Hotbar, {
         ID = "WEAPONEX_OriginalButton",
         Type = "Checkbox",

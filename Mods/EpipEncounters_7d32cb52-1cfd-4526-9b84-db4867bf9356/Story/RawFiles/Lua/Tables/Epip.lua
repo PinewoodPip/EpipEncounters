@@ -52,9 +52,9 @@ function Epip.InitializeFeature(id, name, feature)
 
     -- Check required mods
     local missingMods = {}
-    for guid,name in pairs(feature.REQUIRED_MODS) do
-        if not Ext.Mod.IsModLoaded(guid) then
-            table.insert(missingMods, string.format("%s (%s)", guid, name))
+    for guid,modName in pairs(feature.REQUIRED_MODS) do
+        if not Mod.IsLoaded(guid) then
+            table.insert(missingMods, string.format("%s (%s)", guid, modName))
         end
     end
 

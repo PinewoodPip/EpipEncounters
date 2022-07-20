@@ -3,7 +3,7 @@
 -- Locks giftbags incompatible with EE.
 ---------------------------------------------
 
-local MODS = Data.Mods
+local MODS = Mod.GUIDS
 local GBL = {
     enabledGiftbags = {},
     warnedGiftbags = {},

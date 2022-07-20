@@ -8,7 +8,7 @@ local WEX = {
     Menu = nil,
     ModTable = "WeaponExpansion",
     REQUIRED_MODS = {
-        [Data.Mods.WEAPON_EXPANSION] = "LL's Weapon Expansion",
+        [Mod.GUIDS.WEAPON_EXPANSION] = "LL's Weapon Expansion",
     }
 }
 local Hotbar = Client.UI.Hotbar

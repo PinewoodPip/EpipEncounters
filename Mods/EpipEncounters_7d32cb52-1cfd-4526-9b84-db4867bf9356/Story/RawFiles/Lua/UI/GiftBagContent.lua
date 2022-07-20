@@ -1,7 +1,7 @@
 
 ---@meta Library: GiftBagContentUI, ContextClient, Client.UI.GiftBagContent
 
-local MODS = Data.Mods
+local MODS = Mod.GUIDS
 
 -- TODO annotation
 

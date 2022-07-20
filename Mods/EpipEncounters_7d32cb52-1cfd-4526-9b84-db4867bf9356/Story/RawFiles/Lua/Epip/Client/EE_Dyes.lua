@@ -138,7 +138,7 @@ local Dyes = {
     },
     DYE_DATA = {},
     REQUIRED_MODS = {
-        [Data.Mods.EE_CORE] = "Epic Encounters Core",
+        [Mod.GUIDS.EE_CORE] = "Epic Encounters Core",
     },
 }
 Epip.AddFeature("EE_Dyes", "EE_Dyes", Dyes)
