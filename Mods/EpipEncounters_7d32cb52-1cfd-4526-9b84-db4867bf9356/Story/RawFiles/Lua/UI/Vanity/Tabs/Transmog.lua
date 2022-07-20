@@ -384,7 +384,7 @@ Utilities.Hooks.RegisterListener("Client", "ActiveCharacterChanged", function()
 end)
 
 Transmog.Hooks.CanTransmog:RegisterHook(function (canTransmog, item)
-    if Transmog.BLOCKED_TEMPLATES[item.RootTemplate.Id] or Item.IsArtifact(item) then
+    if Transmog.BLOCKED_TEMPLATES[item.RootTemplate.Id] then
         canTransmog = false
     end
 
