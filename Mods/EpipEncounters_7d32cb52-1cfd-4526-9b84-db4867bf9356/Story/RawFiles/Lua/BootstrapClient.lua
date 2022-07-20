@@ -251,6 +251,7 @@ LOAD_ORDER = {
     "Epip/Compatibility/MajoraFashionSins/Client.lua",
     "Epip/Compatibility/PortableRespecMirror/Client.lua",
     "Epip/Compatibility/RendalNPCArmor/Client.lua",
+    "Epip/Compatibility/VisitorsFromCyseal/Client.lua",
 
     "Epip/Keybindings/Client.lua",
 }

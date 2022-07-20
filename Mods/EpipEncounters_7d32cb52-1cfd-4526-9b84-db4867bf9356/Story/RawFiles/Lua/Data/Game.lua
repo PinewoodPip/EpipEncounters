@@ -10,6 +10,7 @@ Data.Mods = {
     MAJORA_FASHION_SINS = "2dd896dc-28eb-443e-8405-0d339375d2c8",
     WEAPON_EXPANSION = "c60718c3-ba22-4702-9c5d-5ad92b41ba5f",
     RENDAL_NPC_ARMOR = "4dfe4bfe-2f7c-772f-9ce9-a83052a39ad2",
+    VISITORS_FROM_CYSEAL = "f21e7a68-c39c-4387-9a3f-04dfd216caba",
 
     GB_8AP = "9b45f7e5-d4e2-4fc2-8ef7-3b8e90a5256c",
     GB_SPRINT = "ec27251d-acc0-4ab8-920e-dbc851e79bb4",
