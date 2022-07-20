@@ -154,7 +154,7 @@ end
 
 ---@param statType StatsObjectType
 ---@param id string
----@return any
+---@return unknown
 function Stats.Get(statType, id)
     local object
 

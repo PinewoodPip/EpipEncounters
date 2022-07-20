@@ -1317,19 +1317,7 @@ function Hotbar.RenderSlots()
         
                     handle = Ext.HandleToDouble(item.Handle)
                     amount = item.Amount
-                    isEnabled = true
-        
-                    if item.Stats then
-                        isEnabled = Game.Stats.MeetsRequirements(char, item.Stats.Name, true, item)
-                    end
-
-                    -- Item skills
-                    local useActions = item.RootTemplate.OnUsePeaceActions
-                    for _,action in ipairs(useActions) do
-                        if action.Type == "UseSkill" and isEnabled then
-                            isEnabled = isEnabled and Character.CanUseSkill(char, action.SkillID, item)
-                        end
-                    end
+                    isEnabled = Item.CanUse(char, item)
                 elseif data.Type == "Action" then
                     isEnabled = true
                     slotType = 1

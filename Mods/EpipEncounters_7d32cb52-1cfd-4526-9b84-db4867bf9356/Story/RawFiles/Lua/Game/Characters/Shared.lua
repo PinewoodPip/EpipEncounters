@@ -38,6 +38,13 @@ function Character.GetStacks(char, type)
     return stacks,lifetime
 end
 
+
+---@param char Character
+---@return integer, integer --Current, maximum
+function Character.GetActionPoints(char)
+    return char.Stats.CurrentAP, char.Stats.APMaximum
+end
+
 ---@param identifier GUID|PrefixedGUID|NetId|EntityHandle
 ---@return Character
 function Character.Get(identifier)
