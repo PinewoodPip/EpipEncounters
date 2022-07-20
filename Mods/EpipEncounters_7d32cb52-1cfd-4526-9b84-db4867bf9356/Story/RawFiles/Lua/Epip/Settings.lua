@@ -406,13 +406,6 @@ local TopOptions = {
         DefaultValue = false,
     },
     {
-        ID = "Minimap",
-        Type = "Checkbox",
-        Label = "Show Minimap",
-        Tooltip = "Toggles visibility of the minimap UI element.",
-        DefaultValue = true,
-    },
-    {
         ID = "CinematicCombat",
         Type = "Checkbox",
         Label = "Cinematic Combat",
