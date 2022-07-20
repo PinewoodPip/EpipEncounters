@@ -14,6 +14,11 @@ SubscribableEvent = {}
 ---@field StopPropagation fun(self:SubscribableEventParams) Stop the event from continuing on to other registered listeners.
 ---@field Stopped boolean?
 
+local SubscribableEventParams = {
+	Stopped = false,
+	StopPropagation = function(self) self.Stopped = true end,
+}
+
 ---@param name string
 ---@return SubscribableEvent
 function SubscribableEvent:New(name)
@@ -125,6 +130,11 @@ end
 
 function SubscribableEvent:Throw(event)
 	local cur = self.First
+
+	if type(event) == "table" then
+		Inherit(event, SubscribableEventParams)
+	end
+
 	while cur ~= nil do
 		if event and event.Stopped then
 			break

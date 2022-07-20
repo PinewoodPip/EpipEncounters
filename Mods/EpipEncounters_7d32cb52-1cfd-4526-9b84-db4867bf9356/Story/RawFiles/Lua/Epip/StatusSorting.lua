@@ -7,9 +7,7 @@ local OptionsSettings = Client.UI.OptionsSettings
 local StatusSorting = {
     currentHoveredStatus = nil,
 
-    FILTERED_STATUSES = {
-
-    },
+    FILTERED_STATUSES = {},
     STATUS_PATTERNS = {
         ["PlayerInfo_Filter_SourceGen"] = {Text.PATTERNS.STATUSES.SOURCE_GENERATION},
         ["PlayerInfo_Filter_BatteredHarried"] = {Text.PATTERNS.STATUSES.BATTERED, Text.PATTERNS.STATUSES.HARRIED},
@@ -174,7 +172,7 @@ end)
 StatusSorting.Events.ShouldFilterStatus:Subscribe(function (e)
     if StatusSorting.IsFiltered(e.Status.StatusId) then
         e.Filter = true
-        -- e:StopPropagation()
+        e:StopPropagation()
     end
 end)
 
@@ -187,7 +185,7 @@ StatusSorting.Events.ShouldFilterStatus:Subscribe(function (e)
 
                 if shouldFilter then
                     e.Filter = true
-                    -- e:StopPropagation()
+                    e:StopPropagation()
                     return nil
                 end
             end
