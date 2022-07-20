@@ -27,7 +27,7 @@ Settings:Debug()
 
 ---Register a set of options. Must be called before GameStarted.
 ---@param module string
----@param settings table<string, OptionsSettingsOption>
+---@param data table<string, OptionsSettingsOption>
 function Settings.AddModule(module, data)
     Settings.MODULES[module] = data
 end

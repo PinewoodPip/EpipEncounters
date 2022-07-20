@@ -127,11 +127,12 @@ end
 
 ---@param category EpicEnemiesEffectsCategory
 function EpicEnemies.RegisterEffectCategory(category)
+    local settingID = "EpicEnemies_CategoryWeight_" .. category.ID
+
     table.insert(EpicEnemies.CATEGORIES, category)
 
     -- Register slider
     if Ext.IsClient() then
-        local settingID = "EpicEnemies_CategoryWeight_" .. category.ID
         local setting = {
             ID = settingID,
             Type = "Slider",
@@ -148,6 +149,22 @@ function EpicEnemies.RegisterEffectCategory(category)
         }
 
         Client.UI.OptionsSettings.RegisterOption("EpicEnemies", setting)
+    else -- Register server setting
+        local setting = {
+            ID = settingID,
+            Type = "Slider",
+            Label = "Category Weight Multiplier",
+            SaveOnServer = true,
+            ServerOnly = true,
+            MinAmount = 0,
+            MaxAmount = 5,
+            Interval = 0.01,
+            DefaultValue = 1,
+            HideNumbers = false,
+            Tooltip = "A multiplier for the weights of the effects of this category.",
+        }
+        
+        Epip.Features.ServerSettings.AddOption("EpicEnemies", setting)
     end
 
     for i,effect in ipairs(category.Effects) do
