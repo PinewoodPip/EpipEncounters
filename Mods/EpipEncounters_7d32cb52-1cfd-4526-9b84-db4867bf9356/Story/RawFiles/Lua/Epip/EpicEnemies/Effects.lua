@@ -544,7 +544,7 @@ for _,category in pairs(Effects.Categories) do
     EpicEnemies.RegisterEffectCategory(category)
 end
 
-if Ext.IsDeveloperMode() then
+if Epip.IsDeveloperMode(true) then
     EpicEnemies.RegisterEffectCategory(TestEffects)
 end
 

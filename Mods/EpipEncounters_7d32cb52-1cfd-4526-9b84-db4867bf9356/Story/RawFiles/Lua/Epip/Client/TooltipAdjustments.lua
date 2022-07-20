@@ -337,7 +337,7 @@ end
 
 -- Show skill IDs.
 Game.Tooltip.RegisterListener("Skill", nil, function(char, skill, tooltip)
-    if Ext.Debug.IsDeveloperMode() then
+    if Epip.IsDeveloperMode() then
         tooltip:AppendElement({
             Type = "Engraving",
             Label = Text.Format("StatsId: %s", {
@@ -374,7 +374,7 @@ end)
 
 -- Show status object information in dev mode.
 Game.Tooltip.RegisterListener("Status", nil, function(char, status, tooltip)
-    if Ext.Debug.IsDeveloperMode() then
+    if Epip.IsDeveloperMode() then
         tooltip:AppendElement({
             Type = "Engraving",
             Label = Text.Format("StatusId: %s<br>StatusType: %s", {

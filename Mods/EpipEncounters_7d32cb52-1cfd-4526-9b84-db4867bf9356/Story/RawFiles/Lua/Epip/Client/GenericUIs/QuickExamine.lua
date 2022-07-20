@@ -193,7 +193,7 @@ end
 
 function QuickExamine:__Setup()
     -- Delayed setup to catch errors
-    if Ext.IsDeveloperMode() then
+    if Epip.IsDeveloperMode(true) then
         Client.Timer.Start("", 1.4, function()
             Setup()
         end)

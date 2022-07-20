@@ -334,7 +334,7 @@ end
 ---------------------------------------------
 
 Options.Hooks.ShouldRenderEntry:RegisterHook(function (render, entry)
-    if entry.DeveloperOnly and not Ext.IsDeveloperMode() then
+    if entry.DeveloperOnly and not Epip.IsDeveloperMode() then
         render = false
     end
     return render
@@ -359,7 +359,7 @@ end)
 -- Developer-only actions cannot be executed outside of developer mode.
 -- Actions cannot be executed in dialogue.
 Options.Hooks.CanExecuteAction:RegisterHook(function (execute, action, data)
-    if data.DeveloperOnly and not Ext.IsDeveloperMode() then
+    if data.DeveloperOnly and not Epip.IsDeveloperMode() then
         execute = false
     end
 

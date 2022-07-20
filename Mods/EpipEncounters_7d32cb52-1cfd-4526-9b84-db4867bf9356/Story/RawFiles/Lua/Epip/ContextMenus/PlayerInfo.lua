@@ -8,7 +8,7 @@ local PlayerInfo = Client.UI.PlayerInfo
 
 local cheatMenu = Debug.CheatsContextMenu
 
-if not Ext.Debug.IsDeveloperMode() then cheatMenu = nil end
+if not Epip.IsDeveloperMode() then cheatMenu = nil end
 
 -- Show status toggle context menu, as well as debugging cheats.
 Client.UI.ContextMenu.RegisterMenuHandler("playerInfoPlayerPortrait", function()

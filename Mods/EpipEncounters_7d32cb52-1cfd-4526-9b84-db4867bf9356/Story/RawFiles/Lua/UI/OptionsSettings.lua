@@ -560,8 +560,8 @@ function OptionsSettings.RenderOptions(tabID)
     for _,elementData in pairs(modData.Options) do
         -- TODO hook
         local canRender = elementData.VisibleAtTopLevel or elementData.VisibleAtTopLevel == nil
-        canRender = canRender and (not elementData.Developer or Ext.Debug.IsDeveloperMode())
-        
+        canRender = canRender and (not elementData.Developer or Epip.IsDeveloperMode())
+
         if canRender then
             OptionsSettings.RenderOption(elementData)
         end

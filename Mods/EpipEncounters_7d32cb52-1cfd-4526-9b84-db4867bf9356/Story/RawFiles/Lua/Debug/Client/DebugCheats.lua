@@ -119,13 +119,14 @@ ContextMenu.RegisterMenuHandler("epip_Cheats", function(char)
 end)
 
 ContextMenu.RegisterVanillaMenuHandler("Character", function(char)
-    if not Ext.Debug.IsDeveloperMode() then return nil end
-    ContextMenu.AddElements(ContextMenu.VanillaUI, {
-        id = "main",
-        entries = {
-            Debug.CheatsContextMenu
-        }
-    })
+    if Epip.IsDeveloperMode() then
+        ContextMenu.AddElements(ContextMenu.VanillaUI, {
+            id = "main",
+            entries = {
+                Debug.CheatsContextMenu
+            }
+        })
+    end
 end)
 
 -- Generic FlexStats.

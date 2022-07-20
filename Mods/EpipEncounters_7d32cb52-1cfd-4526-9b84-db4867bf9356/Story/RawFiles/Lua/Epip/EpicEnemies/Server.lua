@@ -408,7 +408,7 @@ end
 
 -- In developer mode, remove effects after exiting combat
 Ext.Osiris.RegisterListener("PROC_AMER_CharLeftCombat", 2, "after", function(char, combatID)
-    if Ext.IsDeveloperMode() then
+    if Epip.IsDeveloperMode(true) then
         EpicEnemies.CleanupCharacter(Ext.GetCharacter(char))
     end
 end)

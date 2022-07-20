@@ -207,7 +207,7 @@ end)
 ---Show debug-level logging from this feature.
 ---Only work in Developer mode.
 function Feature:Debug()
-    if Ext.IsDeveloperMode() then
+    if Epip.IsDeveloperMode() then
         self.IS_DEBUG = true
         self.Logging = self.LOGGING_LEVEL.DEBUG
     end

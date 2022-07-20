@@ -6,6 +6,7 @@ Epip = {
     PREFIXED_GUID = "EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356",
     VERSION = 1055, -- Also the story version.
     cachedAprilFoolsState = nil,
+    _devMode = nil,
 
     ---@type table<string, OptionsSettingsOption>
     SETTINGS = {},
@@ -27,6 +28,25 @@ end
 
 function Epip.InitializeLibrary(id, lib)
     Epip.InitializeFeature(id, id, lib)
+end
+
+---@param requirePipPoem boolean? Whether a poem to Pip is required for this call to succeed. Defaults to false (which checks Extender dev mode instead)
+---@return boolean
+function Epip.IsDeveloperMode(requirePipPoem)
+    local devMode = false
+
+    -- Initialize _devMode variable
+    if Epip._devMode == nil then
+        Epip._devMode = Ext.IO.LoadFile("Epip_DevMode.txt") ~= nil
+    end
+
+    if requirePipPoem then
+        devMode = Epip._devMode
+    else
+        devMode = Ext.Debug.IsDeveloperMode()
+    end
+
+    return devMode
 end
 
 function Epip.InitializeFeature(id, name, feature)

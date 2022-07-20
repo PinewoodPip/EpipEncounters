@@ -431,7 +431,7 @@ local Order = {
     Experimental,
 }
 
-if Ext.IsDeveloperMode() then
+if Epip.IsDeveloperMode() then
     table.insert(Order, 2, Developer)
 end
 
