@@ -14,6 +14,7 @@ Epip.Features.QuickExamine = {
 
     SAVE_FILENAME = "EpipEncounters_QuickExamine.json",
     SAVE_VERSION = 1,
+    INPUT_DEVICE = "KeyboardMouse",
 
     Events = {
         EntityChanged = {}, ---@type QuickExamine_Event_EntityChanged
@@ -23,8 +24,6 @@ local QuickExamine = Epip.Features.QuickExamine
 Epip.AddFeature("QuickExamine", "QuickExamine", QuickExamine)
 
 local Generic = Client.UI.Generic
-
-QuickExamine.UI = Generic.Create("PIP_QuickExamine")
 
 ---------------------------------------------
 -- EVENTS/HOOKS
@@ -192,6 +191,8 @@ local function Setup()
 end
 
 function QuickExamine:__Setup()
+    QuickExamine.UI = Generic.Create("PIP_QuickExamine")
+
     -- Delayed setup to catch errors
     if Epip.IsDeveloperMode(true) then
         Client.Timer.Start("", 1.4, function()

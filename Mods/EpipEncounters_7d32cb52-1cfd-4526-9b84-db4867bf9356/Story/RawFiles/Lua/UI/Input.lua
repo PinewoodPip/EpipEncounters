@@ -2,7 +2,6 @@
 local Input = {
     ID = "PIP_Input",
     PATH = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/input.swf",
-    INPUT_DEVICE = "KeyboardMouse",
 
     CAPTURED_EVENTS = {
 
@@ -237,6 +236,10 @@ root.keyboard_txt.visible = false
 
 function Input:__Setup()
     Input:Debug()
+
+    if Client.IsUsingController() then
+        Input:GetUI().Layer = 0
+    end
 
     Input:GetRoot().handleSpecialKeys = false
     

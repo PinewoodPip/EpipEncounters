@@ -741,7 +741,8 @@ local function OnContextMenu(ui, method, param3, handle)
 end
 
 Ext.Events.SessionLoaded:Subscribe(function()
-
+    if Client.IsUsingController() then return nil end
+    
     -- Setup our custom instance
     if IS_IMPROVED_HOTBAR then
         ContextMenu.UI = Ext.UI.Create("pip_contextMenu", "Public/ImprovedHotbar_53cdc613-9d32-4b1d-adaa-fd97c4cef22c/GUI/contextMenu.swf", 300)
