@@ -199,6 +199,19 @@ local EpipStats = {
                 "Keyword_VitalityVoid_Radius",
             },
         },
+        Keyword_Voracity = {
+            Header = Text.Format("———— Voracity ————", {Size = 21}),
+            Name = "Voracity",
+            Behaviour = "Hidden",
+            Stats = {
+                "Keyword_Voracity_Life",
+                "Keyword_Voracity_PhysArmor",
+                "Keyword_Voracity_MagicArmor",
+                "Keyword_Voracity_Summon_Life",
+                "Keyword_Voracity_Summon_PhysArmor",
+                "Keyword_Voracity_Summon_MagicArmor",
+            },
+        },
         Keyword_Ward = {
             Header = "<font size='21'>————— Ward —————</font>",
             Name = "Ward",
@@ -241,6 +254,7 @@ local EpipStats = {
         "Keyword_Purity",
         "Keyword_ViolentStrike",
         "Keyword_VitalityVoid",
+        "Keyword_Voracity",
         "Keyword_Ward",
         "Keyword_Wither",
 
@@ -348,6 +362,38 @@ local EpipStats = {
             Description = "The vitality threshold of your basic Prosperity activator.",
             Suffix = "%",
             IgnoreForHiding = true,
+        },
+
+        -- Voracity
+        Keyword_Voracity_Life = {
+            Name = "Vitality Restoration",
+            Description = "Vitality restored upon activating Voracity.",
+            Suffix = "%",
+        },
+        Keyword_Voracity_PhysArmor = {
+            Name = "Phys. Armor Restoration",
+            Description = "Physical Armor restored upon activating Voracity.",
+            Suffix = "%",
+        },
+        Keyword_Voracity_MagicArmor = {
+            Name = "Magic Armor Restoration",
+            Description = "Magic Armor restored upon activating Voracity.",
+            Suffix = "%",
+        },
+        Keyword_Voracity_Summon_Life = {
+            Name = "Summon Life Restoration",
+            Description = "Summon viality restored upon activating Voracity.",
+            Suffix = "%",
+        },
+        Keyword_Voracity_Summon_PhysArmor = {
+            Name = "Summon Phys. Armor Restoration",
+            Description = "Summon Physical Armor restored upon activating Voracity.",
+            Suffix = "%",
+        },
+        Keyword_Voracity_Summon_MagicArmor = {
+            Name = "Summon Magic Armor Restoration",
+            Description = "Summon Magic Armor restored upon activating Voracity.",
+            Suffix = "%",
         },
 
         -- REACTIONS

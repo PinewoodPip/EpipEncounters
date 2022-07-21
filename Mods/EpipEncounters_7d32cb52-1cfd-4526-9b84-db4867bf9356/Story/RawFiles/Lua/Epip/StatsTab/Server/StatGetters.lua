@@ -49,6 +49,71 @@ EpipStats.RegisterStatUpdateListener("Keyword_Prosperity_Threshold", function(ch
     EpipStats.UpdateTaggedStat(char, "Keyword_Prosperity_Threshold", value)
 end)
 
+local function UpdateVoracity(char, voracityType, isSummon)
+    local extendedStatName = "Voracity_" .. voracityType
+    local value = 0
+
+    if isSummon then
+        local _, _, _, _, _, amount = Osiris.DB_AMER_ExtendedStat_AddedStat:Get(char.MyGuid, "SummonStat_ExtendedStat", extendedStatName, nil, nil, nil)
+
+        if amount ~= nil then
+            value = value + amount
+        end
+    else
+        local _, _, _, _, _, amount = Osiris.DB_AMER_ExtendedStat_AddedStat:Get(char.MyGuid, extendedStatName, nil, nil, nil, nil)
+
+        if amount ~= nil then
+            value = value + amount
+        end
+    end
+
+    -- Add BothArmor
+    if voracityType == "PhysArmor" or voracityType == "MagicArmor" then
+        if isSummon then
+            local _, _, _, _, _, amount = Osiris.DB_AMER_ExtendedStat_AddedStat:Get(char.MyGuid, "SummonStat_ExtendedStat", "Voracity_BothArmor", nil, nil, nil)
+
+            if amount ~= nil then
+                value = value + amount
+            end
+        else
+            local _, _, _, _, _, amount = Osiris.DB_AMER_ExtendedStat_AddedStat:Get(char.MyGuid, "Voracity_BothArmor", nil, nil, nil, nil)
+    
+            if amount ~= nil then
+                value = value + amount
+            end
+        end
+    end
+
+    local stat
+    if isSummon then
+        stat = "Keyword_Voracity_Summon_" .. voracityType
+    else
+        stat = "Keyword_Voracity_" .. voracityType
+    end
+
+    EpipStats.UpdateTaggedStat(char, stat, value)
+end
+
+-- Voracity.
+EpipStats.RegisterStatUpdateListener("Keyword_Voracity_Life", function(char, _)
+    UpdateVoracity(char, "Life", false)
+end)
+EpipStats.RegisterStatUpdateListener("Keyword_Voracity_PhysArmor", function(char, _)
+    UpdateVoracity(char, "PhysArmor", false)
+end)
+EpipStats.RegisterStatUpdateListener("Keyword_Voracity_MagicArmor", function(char, _)
+    UpdateVoracity(char, "MagicArmor", false)
+end)
+EpipStats.RegisterStatUpdateListener("Keyword_Voracity_Summon_Life", function(char, _)
+    UpdateVoracity(char, "Life", true)
+end)
+EpipStats.RegisterStatUpdateListener("Keyword_Voracity_Summon_PhysArmor", function(char, _)
+    UpdateVoracity(char, "PhysArmor", true)
+end)
+EpipStats.RegisterStatUpdateListener("Keyword_Voracity_Summon_MagicArmor", function(char, _)
+    UpdateVoracity(char, "MagicArmor", true)
+end)
+
 ---------------------------------------------
 -- CURRENT COMBAT STATS
 ---------------------------------------------
