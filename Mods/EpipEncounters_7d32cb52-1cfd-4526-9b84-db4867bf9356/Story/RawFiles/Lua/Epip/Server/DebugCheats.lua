@@ -23,7 +23,6 @@ end)
 Net.RegisterListener("EPIP_CHEATS_ADDTAG", function(cmd, payload)
     local char = Ext.GetCharacter(payload.NetID)
 
-    print(payload.Tag)
     SetTag(char.MyGuid, payload.Tag)
 end)
 

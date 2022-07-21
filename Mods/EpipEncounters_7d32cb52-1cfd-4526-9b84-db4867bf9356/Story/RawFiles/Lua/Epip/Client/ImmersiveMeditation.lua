@@ -15,6 +15,8 @@ function IM.Update()
 
     if state == IM.currentState then return nil end
 
+    IM.currentState = state
+
     if state then
         Client.UI.Minimap:Toggle(false, false)
         Client.UI.Hotbar.ToggleVisibility(false, "PIP_ImmersiveMeditation")
@@ -26,8 +28,6 @@ function IM.Update()
         -- Restore visibility based on settings.
         Client.UI.Minimap:ToggleFromSettings()
     end
-
-    IM.currentState = state
 end
 
 ---------------------------------------------

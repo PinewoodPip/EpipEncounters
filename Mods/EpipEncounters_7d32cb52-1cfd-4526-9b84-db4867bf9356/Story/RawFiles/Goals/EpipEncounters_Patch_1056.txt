@@ -1,0 +1,20 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+
+KBSECTION
+
+// Tag artifact users.
+PROC PROC_AMER_Versioning_Patch("EpipEncounters", 1056)
+AND
+DB_AMER_Artifacts_EquippedEffects(_Char, _Artifact, _)
+AND
+StringConcatenate("ARTIFACTPOWER_", _Artifact, _Tag)
+THEN
+SetTag(_Char, _Tag);
+GoalCompleted;
+
+EXITSECTION
+
+ENDEXITSECTION
+ParentTargetEdge "AMER_GLO_Versioning_PatchWrapper"
