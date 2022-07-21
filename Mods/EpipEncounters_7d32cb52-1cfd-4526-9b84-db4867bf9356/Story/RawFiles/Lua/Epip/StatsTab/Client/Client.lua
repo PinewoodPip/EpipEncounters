@@ -69,7 +69,7 @@ function EpipStats.RenderCategoryStats(categoryID)
     for i,statID in pairs(category.Stats) do
 
         if category.Behaviour == "Hidden" then
-            if EpipStats.cachedStats[statID] then
+            if CharacterSheet.StatsTab.GetStatValue(statID, Client.GetCharacter()) > 0 then
                 CharacterSheet.StatsTab.RenderStat(statID)
             end
         else
@@ -111,7 +111,7 @@ function EpipStats.HasAnyStatFromCategory(category)
     for i,stat in pairs(category.Stats) do
         local data = CharacterSheet.StatsTab.GetStatData(stat)
 
-        if not data.IgnoreForHiding and EpipStats.cachedStats[stat] and EpipStats.cachedStats[stat] ~= 0 then
+        if not data.IgnoreForHiding and CharacterSheet.StatsTab.GetStatValue(stat, Client.GetCharacter()) > 0 then
             return true
         end
     end

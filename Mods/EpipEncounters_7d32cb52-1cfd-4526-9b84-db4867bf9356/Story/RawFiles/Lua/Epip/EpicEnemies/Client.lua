@@ -210,26 +210,12 @@ QuickExamine.Events.EntityChanged:RegisterListener(function (entity)
             artifactContainer:SetCenterInLists(true)
 
             for _,effect in ipairs(sortedEffects.Artifacts) do
-                local artifact = Item.ARTIFACTS[effect.Artifact]
+                local artifact = Artifact.ARTIFACTS[effect.Artifact]
                 local template = Ext.Template.GetTemplate(string.match(artifact.ItemTemplate, Data.Patterns.GUID)) ---@type ItemTemplate
 
                 local icon = artifactContainer:AddChild(artifact.ID .. "icon", "IggyIcon")
                 icon:SetIcon(template.Icon, 32, 32)
-                icon.Tooltip = {
-                    {
-                        Type = "SkillName",
-                        Label = Text.Format(artifact:GetName(), {Color = Item.RARITY_COLORS.ARTIFACT}),
-                    },
-                    {
-                        Type = "StatsPercentageBoost",
-                        Label = artifact:GetDescription(),
-                        Amount = 1,
-                    },
-                    {
-                        Type = "ItemRarity",
-                        Label = Text.Format("Artifact Power", {Color = Item.RARITY_COLORS.ARTIFACT}),
-                    },
-                }
+                icon.Tooltip = artifact:GetPowerTooltip()
             end
         end
 

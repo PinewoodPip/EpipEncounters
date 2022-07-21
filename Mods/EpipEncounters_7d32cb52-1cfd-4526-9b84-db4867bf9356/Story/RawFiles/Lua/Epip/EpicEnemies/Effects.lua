@@ -475,39 +475,11 @@ local EpicEnemies = Epip.Features.EpicEnemies
 ---------------------------------------------
 
 -- Generate Artifact options
-for id,artifact in pairs(Item.ARTIFACTS) do
-    -- local displayStatus = Ext.Stats.Get("AMER_ARTIFACTPOWER_" .. id:gsub("Artifact_", ""):upper())
-
-    -- if not displayStatus then
-    --     displayStatus = Ext.Stats.Get("AMER_ARTIFACTPOWER_THE" .. id:gsub("Artifact_", ""):upper(), nil, false)
-
-    --     if displayStatus then
-    --         Ext.Stats.SetPersistence("AMER_ARTIFACTPOWER_THE" .. id:gsub("Artifact_", ""):upper(), false)
-    --     end
-    -- else
-    --     Ext.Stats.SetPersistence("AMER_ARTIFACTPOWER_" .. id:gsub("Artifact_", ""):upper(), false)
-    -- end
-
-    -- if id == "Artifact_CorruscatingSilks" then
-    --     displayStatus = Ext.Stats.Get("AMER_ARTIFACTPOWER_CORUSCATINGSILKS", nil, false)
-
-    --     if displayStatus then
-    --         Ext.Stats.SetPersistence("AMER_ARTIFACTPOWER_CORUSCATINGSILKS", false)
-    --     end
-    -- end
-
+for id,artifact in pairs(Artifact.ARTIFACTS) do
     if id ~= "Artifact_Deck" then
-    -- if displayStatus and id ~= "Artifact_Deck" then
-        -- TODO figure out why this fails
-        -- local description = Ext.L10N.GetTranslatedStringFromKey(displayStatus.DisplayName)
-
-        -- if not description or description == "" then
-        --     description = displayStatus.DisplayNameRef
-        -- end
-
         local description = artifact:GetDescription()
-        ---@type EpicEnemiesKeywordData
-        local keyword = nil
+        local keyword = nil ---@type EpicEnemiesKeywordData
+
         if #artifact.KeywordActivators > 0 then
             keyword = {
                 Keyword = artifact.KeywordActivators[1],
@@ -533,8 +505,6 @@ for id,artifact in pairs(Item.ARTIFACTS) do
             Keyword = keyword,
         }
         table.insert(ArtifactsCategory.Effects, effect)
-    else
-        Ext.PrintError("Cannot find DisplayStatus for artifact: " .. id)
     end
 end
 table.sort(ArtifactsCategory.Effects, function(a, b) return a.Name < b.Name end)

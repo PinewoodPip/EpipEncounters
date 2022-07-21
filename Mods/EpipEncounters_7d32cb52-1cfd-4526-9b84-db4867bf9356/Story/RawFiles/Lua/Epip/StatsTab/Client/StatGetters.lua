@@ -16,6 +16,20 @@ Tab.RegisterStatValueHook("LifeSteal", function(value, data, char)
 end)
 
 ---------------------------------------------
+-- ARTIFACTS
+---------------------------------------------
+
+CharacterSheet.StatsTab:RegisterHook("GetStatValue", function(value, data, char)
+    if Artifact.GetData(data.ID) then
+        if Artifact.IsEquipped(char, data.ID) then
+            return 1
+        else
+            return 0
+        end
+    end
+end)
+
+---------------------------------------------
 -- MISC
 ---------------------------------------------
 

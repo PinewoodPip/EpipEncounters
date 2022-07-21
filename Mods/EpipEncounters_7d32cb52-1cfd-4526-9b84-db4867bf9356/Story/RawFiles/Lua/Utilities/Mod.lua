@@ -1,5 +1,5 @@
 
----@class ModsLib
+---@class ModLib
 Mod = {
     GUIDS = {
         EE_CORE = "63bb9b65-2964-4c10-be5b-55a63ec02fa0",

@@ -7,7 +7,7 @@
 ---@field Arity integer
 ---@field Fields OsirisType[]
 
----@type OsirisHelper
+---@class OsirisHelper
 Osiris = {
     Query = {}, -- metatable, has __index override
 

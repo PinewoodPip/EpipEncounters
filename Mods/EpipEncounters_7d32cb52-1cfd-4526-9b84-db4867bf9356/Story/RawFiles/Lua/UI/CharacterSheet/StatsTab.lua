@@ -114,7 +114,7 @@ function StatsTab.GetStatValue(id, char)
     value = StatsTab:ReturnFromHooks("GetStatValue_" .. id, value, data, char)
     value = StatsTab:ReturnFromHooks("GetStatValue", value, data, char)
 
-    return value
+    return tonumber(value)
 end
 
 ---Get the text display for a stat's value.

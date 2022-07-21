@@ -108,13 +108,14 @@ function string.insert(str1, str2, pos)
     return str1:sub(1,pos)..str2..str1:sub(pos+1)
 end
 
-function table.isEmpty(tbl)
-    local empty = true
+function table.simpleSort(tbl, reverse)
+    local fun
 
-    for _,_ in pairs(tbl) do
-        empty = false
-        break
+    if reverse then
+        fun = function(a, b) return a > b end
+    else
+        fun = function(a, b) return a < b end
     end
 
-    return empty
+    table.sort(tbl, fun)
 end

@@ -44,10 +44,11 @@ LOAD_ORDER = {
     "Utilities/Color.lua",
     "Utilities/GameState/Shared.lua",
     "Utilities/GameState/Server.lua",
-    "Utilities/Mods.lua",
+    "Utilities/Mod.lua",
     "Utilities.lua",
     "Utilities/Server.lua",
     "Server/Osiris.lua",
+    {ScriptSet = "Utilities/Artifact"},
     "Epip/Settings.lua",
 
     -- "Data/Game.lua",

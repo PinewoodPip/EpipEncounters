@@ -43,7 +43,7 @@
 ---@field Behaviour EpipStatCategoryBehaviour Controls how default-value stats are shown. GreyOut greys out their label and value, hidden hides them - and the whole category - if no stats are owned.
 ---@field Stats string[] Stats displayed in the category, ordered.
 
----@type EpipStats
+---@class EpipStats
 local EpipStats = {
     CATEGORIES = {
         Embodiments = {
@@ -80,6 +80,13 @@ local EpipStats = {
                 "FreeReaction_Elementalist",
                 "FreeReaction_Occultist",
             },
+        },
+        -- Entries are dynamically generated.
+        Artifacts = {
+            Header = Text.Format("———— Artifacts ————", {Size = 21}),
+            Name = "Artifacts",
+            Behaviour = "Hidden",
+            Stats = {},
         },
         Misc = {
             Header = "<font size='21'>———— Misc ————</font>",
@@ -237,6 +244,7 @@ local EpipStats = {
         "Embodiments",
         "Vitals",
         "Reactions",
+        "Artifacts",
 
         -- Keywords
         "Keyword_Abeyance",
@@ -382,7 +390,7 @@ local EpipStats = {
         },
         Keyword_Voracity_Summon_Life = {
             Name = "Summon Life Restoration",
-            Description = "Summon viality restored upon activating Voracity.",
+            Description = "Summon vitality restored upon activating Voracity.",
             Suffix = "%",
         },
         Keyword_Voracity_Summon_PhysArmor = {
@@ -557,8 +565,23 @@ function EpipStats.AddStatToCategory(statID, categoryID, index)
 end
 
 ---------------------------------------------
--- SETUP (Ascension stats)
+-- SETUP (Ascension and artifact stats)
 ---------------------------------------------
+
+-- Add artifact entries
+for id,artifact in pairs(Artifact.ARTIFACTS) do
+    ---@type EpipStat
+    local stat = {
+        ID = id,
+        Name = artifact:GetName(),
+        Description = artifact:GetDescription(),
+        Boolean = true,
+        Tooltip = artifact:GetPowerTooltip(),
+    }
+    EpipStats.STATS[id] = stat
+    EpipStats.AddStatToCategory(id, "Artifacts")
+end
+table.simpleSort(EpipStats.CATEGORIES.Artifacts.Stats)
 
 Data.Game.ASPECT_NAMES = {}
 -- TODO cache
