@@ -89,8 +89,12 @@ function EpicEnemies.GetAppliedEffects(char, visibleOnly)
         if effectID then
             local effectData = EpicEnemies.GetEffectData(effectID)
 
-            if not visibleOnly or (visibleOnly and effectData.Visible) then
-                table.insert(effects, effectData)
+            if effectData then
+                if not visibleOnly or (visibleOnly and effectData.Visible) then
+                    table.insert(effects, effectData)
+                end
+            else
+                EpicEnemies:LogError("Found an applied effect with no data registered: " .. effectID)
             end
         end
     end

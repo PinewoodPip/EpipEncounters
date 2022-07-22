@@ -39,6 +39,12 @@ function _OsirisDatabase:Get(...)
     return Osiris.DatabaseQuery(self.Name, true, ...)
 end
 
+---Returns a list of tuples matching the query.
+---@return table<integer, any>[]
+function _OsirisDatabase:GetTuples(...)
+    return Osiris.DatabaseQuery(self.Name, false, ...)
+end
+
 ---Delete tuples from the DB.
 ---@vararg any Tuple query to delete.
 function _OsirisDatabase:Delete(...)

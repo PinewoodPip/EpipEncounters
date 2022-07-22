@@ -16,3 +16,27 @@ function Artifact.IsEquipped(char, artifact)
 
     return equipped
 end
+
+---Returns a list of artifact powers active on char.
+---@param char EsvCharacter
+---@return ArtifactDefinition[]
+function Artifact.GetEquippedPowers(char)
+    local pattern = Artifact.EQUIPPED_TAG_PREFIX .. "(.+)$"
+    local artifacts = {}
+
+    for _,tag in ipairs(char:GetTags()) do
+        local artifactID = tag:match(pattern)
+
+        if artifactID then
+            local def = Artifact.GetData(artifactID)
+
+            if def then
+                table.insert(artifacts, def)
+            else
+                Artifact:LogError("Artifact has no definition: " .. artifactID)
+            end
+        end
+    end
+
+    return artifacts
+end

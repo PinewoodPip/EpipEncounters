@@ -1,5 +1,5 @@
 
----@class ArtifactLib
+---@class ArtifactLib : Feature
 Artifact = {
     EQUIPPED_TAG_PREFIX = "ARTIFACTPOWER_",
 
