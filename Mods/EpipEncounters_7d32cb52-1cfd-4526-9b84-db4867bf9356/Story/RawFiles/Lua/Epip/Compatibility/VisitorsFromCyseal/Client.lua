@@ -10,6 +10,10 @@ local VFS = {
     REQUIRED_MODS = {
         [Mod.GUIDS.VISITORS_FROM_CYSEAL] = "Visitors From Cyseal - Weapons Pack",
     },
+    PATH_OVERRIDES = {
+        ["Public/VFC_Weapons_f21e7a68-c39c-4387-9a3f-04dfd216caba/Stats/Generated/Data/ItemProgressionVisuals.txt"] = "Mods/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/Story/RawFiles/Lua/Empty.lua",
+        ["Public/VFC_Weapons_f21e7a68-c39c-4387-9a3f-04dfd216caba/Stats/Generated/Data/ItemProgressionNames.txt"] = "Mods/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/Story/RawFiles/Lua/Empty.lua",
+    },
 }
 
 Epip.AddFeature("VisitorsFromCysealCompatibility", "Vanity - Visitors From Cyseal Support", VFS)
