@@ -70,21 +70,23 @@ end
 ---@param entity Entity
 function Epip.Features.QuickExamine.SetEntity(entity)
     if entity then
-        QuickExamine.entityNetID = entity.NetID
+        if entity.NetID ~= QuickExamine.entityNetID then
+            QuickExamine.entityNetID = entity.NetID
 
-        QuickExamine.GetContainer():Clear()
+            QuickExamine.GetContainer():Clear()
 
-        QuickExamine.CharacterNameElement:SetText(Text.Format(entity.DisplayName, {
-            Color = "ffffff",
-            Size = 21,
-        }))
-        QuickExamine.CharacterNameElement:SetSize(QuickExamine.WIDTH, 50)
+            QuickExamine.CharacterNameElement:SetText(Text.Format(entity.DisplayName, {
+                Color = "ffffff",
+                Size = 21,
+            }))
+            QuickExamine.CharacterNameElement:SetSize(QuickExamine.WIDTH, 50)
 
-        QuickExamine.Events.EntityChanged:Fire(entity)
+            QuickExamine.Events.EntityChanged:Fire(entity)
 
-        QuickExamine.UI:GetElementByID("Container"):RepositionElements()
+            QuickExamine.UI:GetElementByID("Container"):RepositionElements()
 
-        QuickExamine.UI:GetUI():Show()
+            QuickExamine.UI:GetUI():Show()
+        end
     else
         QuickExamine.entityNetID = nil
 
@@ -108,6 +110,33 @@ Client.UI.EnemyHealthBar:RegisterListener("updated", function(char, _)
     if char and QuickExamine.UI:IsVisible() and not QuickExamine.IsLocked() then
         QuickExamine.SetEntity(char) -- TODO support items
     end
+end)
+
+QuickExamine.Events.EntityChanged:RegisterListener(function (entity)
+    local container = QuickExamine.GetContainer()
+    local artifacts = Artifact.GetEquippedPowers(entity)
+
+    local header = container:AddChild("QuickExamine_Artifacts_Header", "Text")
+    header:SetText(Text.Format("Artifact Powers", {Color = "ffffff", Size = 19}))
+    header:SetSize(QuickExamine.WIDTH, 30)
+
+    if #artifacts > 0 then
+        local artifactContainer = container:AddChild("QuickExamine_Artifacts", "HorizontalList")
+        artifactContainer:SetSize(QuickExamine.WIDTH * 0.8, 35)
+        artifactContainer:SetCenterInLists(true)
+
+        for _,artifact in ipairs(artifacts) do
+            local template = Ext.Template.GetTemplate(string.match(artifact.ItemTemplate, Data.Patterns.GUID)) ---@type ItemTemplate
+
+            local icon = artifactContainer:AddChild(artifact.ID .. "icon", "IggyIcon")
+            icon:SetIcon(template.Icon, 32, 32)
+            icon.Tooltip = artifact:GetPowerTooltip()
+        end
+    end
+
+    local div = container:AddChild("QuickExamine_Divider", "Divider")
+    div:SetSize(QuickExamine.DIVIDER_WIDTH, 20)
+    div:SetCenterInLists(true)
 end)
 
 ---------------------------------------------
@@ -134,6 +163,7 @@ local function Setup()
     panel:SetAlpha(QuickExamine.ALPHA)
 
     local container = panel:AddChild("Container", "VerticalList")
+    container:SetSize(QuickExamine.WIDTH, -1)
 
     local list = container:AddChild("List", "VerticalList")
     list:SetSize(QuickExamine.WIDTH, -1) -- TODO remove, TODO investigate stack overflow
@@ -164,7 +194,7 @@ local function Setup()
     content:SetMouseWheenEnabled(true)
     content:SetFrame(QuickExamine.WIDTH, 510)
     content:SetScrollbarSpacing(-30)
-    content:SetSideSpacing(5)
+    content:SetSideSpacing(10)
     QuickExamine.ContentContainer = content
     
     local closeButton = panel:AddChild("Close", "Button")

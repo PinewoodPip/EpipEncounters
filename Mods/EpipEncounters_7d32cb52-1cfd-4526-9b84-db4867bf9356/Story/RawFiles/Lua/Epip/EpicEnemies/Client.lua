@@ -208,20 +208,7 @@ QuickExamine.Events.EntityChanged:RegisterListener(function (entity)
         header:SetText(Text.Format("Epic Enemies Effects", {Color = "ffffff", Size = 19}))
         header:SetSize(QuickExamine.WIDTH, 30)
 
-        if #sortedEffects.Artifacts > 0 then
-            local artifactContainer = container:AddChild("EpicEnemies_Artifacts", "HorizontalList")
-            artifactContainer:SetSize(QuickExamine.WIDTH * 0.8, 35)
-            artifactContainer:SetCenterInLists(true)
-
-            for _,effect in ipairs(sortedEffects.Artifacts) do
-                local artifact = Artifact.ARTIFACTS[effect.Artifact]
-                local template = Ext.Template.GetTemplate(string.match(artifact.ItemTemplate, Data.Patterns.GUID)) ---@type ItemTemplate
-
-                local icon = artifactContainer:AddChild(artifact.ID .. "icon", "IggyIcon")
-                icon:SetIcon(template.Icon, 32, 32)
-                icon.Tooltip = artifact:GetPowerTooltip()
-            end
-        end
+        -- Artifact powers are already handled through the base QuickExamine script
 
         for _,effect in ipairs(sortedEffects.Other) do
             local entry = container:AddChild(effect.ID, "Text")
