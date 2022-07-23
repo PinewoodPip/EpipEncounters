@@ -61,6 +61,7 @@ end
 ---@overload fun(self, id:string, elementType:"StateButton", parentID:string|GenericUI_Element?):GenericUI_Element_StateButton
 ---@overload fun(self, id:string, elementType:"Divider", parentID:string|GenericUI_Element?):GenericUI_Element_Divider
 ---@overload fun(self, id:string, elementType:"Slot", parentID:string|GenericUI_Element?):GenericUI_Element_Slot
+---@overload fun(self, id:string, elementType:"ComboBox", parentID:string|GenericUI_Element?):GenericUI_Element_ComboBox
 ---@param elementType GenericUI_ElementType
 ---@param parentID string|GenericUI_Element? Defaults to root of the MainTimeline.
 ---@return GenericUI_Element? Nil in case of failure (ex. invalid type).
@@ -150,6 +151,9 @@ function Client.UI.Generic.Create(id)
     -- Slot
     ui:RegisterCallListener("Slot_DragStarted", Generic.OnSlotDragStarted)
     ui:RegisterCallListener("Slot_Clicked", Generic.OnSlotClicked)
+
+    -- ComboBox
+    ui:RegisterCallListener("ComboBox_ItemSelected", Generic.OnComboBoxItemSelected)
 
     -- Logging
     ui:RegisterCallListener("GenericLog", function(ev, elementID, elementType, msg, msgType)
@@ -326,4 +330,15 @@ Generic.OnSlotClicked = function(ev, id)
     Generic:DebugLog("CALL Slot_Clicked: ", id)
 
     element.Events.Clicked:Throw({})
+end
+
+Generic.OnComboBoxItemSelected = function(ev, id, index, optionID)
+    ---@type GenericUI_Element_ComboBox
+    local element = Generic.GetInstance(ev.UI:GetTypeId()):GetElementByID(id)
+    if not element then return nil end
+    Generic:DebugLog("CALL ComboBox_ItemSelected: ", id)
+
+    element.Events.OptionSelected:Throw({
+        Index = index + 1,
+    })
 end

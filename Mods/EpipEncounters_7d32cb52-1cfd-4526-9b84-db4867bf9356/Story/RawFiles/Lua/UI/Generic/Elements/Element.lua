@@ -5,8 +5,7 @@ local Generic = Client.UI.Generic
 -- ELEMENT
 ---------------------------------------------
 
----@alias GenericUI_ElementType "Empty"|"TiledBackground"|"Text"|"IggyIcon"|"Button"|"VerticalList"|"HorizontalList"|"ScrollList"|"StateButton"|"Divider"|"Slot"
----@alias FlashMovieClip userdata TODO remove
+---@alias GenericUI_ElementType "Empty"|"TiledBackground"|"Text"|"IggyIcon"|"Button"|"VerticalList"|"HorizontalList"|"ScrollList"|"StateButton"|"Divider"|"Slot"|"ComboBox"
 
 ---@class GenericUI_Element
 local _Element = Generic._Element
@@ -62,6 +61,7 @@ end
 ---@overload fun(self, id:string, elementType:"StateButton"):GenericUI_Element_StateButton
 ---@overload fun(self, id:string, elementType:"Divider"):GenericUI_Element_Divider
 ---@overload fun(self, id:string, elementType:"Slot"):GenericUI_Element_Slot
+---@overload fun(self, id:string, elementType:"ComboBox"):GenericUI_Element_ComboBox
 function _Element:AddChild(id, elementType)
     return self.UI:CreateElement(id, elementType, self)
 end

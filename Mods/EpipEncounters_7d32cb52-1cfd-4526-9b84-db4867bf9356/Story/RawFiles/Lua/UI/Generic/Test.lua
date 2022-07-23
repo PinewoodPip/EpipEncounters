@@ -49,7 +49,6 @@ function Test.TestSlot()
     local list = Test:CreateElement("btnList", "VerticalList", Test.Container)
     local slot = list:AddChild("testSlot", "Slot")
     slot = slot:GetMovieClip()
-    print(slot.bg_mc.width, slot.unavailable_mc.width, slot.cd_mc.y)
 
     -- slot:SetIcon("Skill_Warrior_PhoenixDive", 50, 50)
     -- slot:SetSourceBorder(true)
@@ -58,6 +57,23 @@ function Test.TestSlot()
 
     ---@type GenericUI_Prefab_HotbarSlot
     local s1 = Generic.PREFABS.Slot.Create(Test, "s1", list)
+end
+
+function Test.TestComboBox()
+    local list = Test:CreateElement("btnList", "VerticalList", Test.Container)
+    local combo = list:AddChild("Combo", "ComboBox")
+
+    combo:SetOptions({
+        {ID = "test1", Label = "Test 1"},
+        {ID = "test2", Label = "Test 2"},
+        {ID = "test3", Label = "Test 3"},
+    })
+
+    combo:SelectOption("test2")
+
+    combo.Events.OptionSelected:Subscribe(function (e)
+        print(e.Index)
+    end)
 end
 
 function Test.SetupTests()
@@ -85,6 +101,7 @@ function Test.SetupTests()
     -- TESTS
     Test.TestButtons()
     Test.TestSlot()
+    Test.TestComboBox()
 end
 
 ---------------------------------------------

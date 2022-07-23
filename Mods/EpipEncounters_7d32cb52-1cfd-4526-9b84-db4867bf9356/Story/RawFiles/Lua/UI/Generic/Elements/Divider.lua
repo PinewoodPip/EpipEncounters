@@ -6,7 +6,7 @@ local Generic = Client.UI.Generic
 ---@field SetSize fun(self, width:number) Custom height not currently supported. TODO
 ---@field TYPES table<string, integer>
 
----@type GenericUI_Element_Divider
+---@class GenericUI_Element_Divider
 Client.UI.Generic.ELEMENTS.Divider = {
     BACKGROUND_TYPES = {
         BOX = 0,
