@@ -10,6 +10,7 @@ Client.UI.PlayerInfo = {
     BH_DISPLAY_SCALE = 0.65,
 
     previousCombatState = nil,
+    nextCharacterSelectionIsManual = false,
 
     StatusApplyTime = {
 
@@ -26,11 +27,14 @@ Client.UI.PlayerInfo = {
         StatusesUpdated = {},
         ---@type SubscribableEvent<PlayerInfoUI_Event_StatusHovered>
         StatusHovered = {},
+        ---@type SubscribableEvent<PlayerInfoUI_Event_ActiveCharacterChanged>
+        ActiveCharacterChanged = {},
     }
 }
 if IS_IMPROVED_HOTBAR then
     Client.UI.PlayerInfo.FILEPATH_OVERRIDES = {}
 end
+---@class PlayerInfoUI
 local PlayerInfo = Client.UI.PlayerInfo
 Epip.InitializeUI(Client.UI.Data.UITypes.playerInfo, "PlayerInfo", PlayerInfo)
 PlayerInfo:Debug()
@@ -56,6 +60,11 @@ PlayerInfo:Debug()
 ---@class PlayerInfoUI_Event_StatusHovered
 ---@field Status EclStatus Will be nil when the mouse is moved out.
 ---@field Character EclCharacter Will be nil when the mouse is moved out.
+
+---@class PlayerInfoUI_Event_ActiveCharacterChanged
+---@field PreviousCharacter EclCharacter?
+---@field NewCharacter EclCharacter?
+---@field Manual boolean If true, this character change was requested by the player clicking the portrait.
 
 ---------------------------------------------
 -- METHODS
@@ -184,9 +193,50 @@ function PlayerInfo.UpdatePlayers()
     end
 end
 
+---Returns the active character selected in the UI.
+---@return EclCharacter
+function PlayerInfo.GetControlledCharacter()
+    local root = PlayerInfo:GetRoot()
+    local flashHandle = root.selectedCharacterHandle
+    local char
+
+    if flashHandle ~= 0 then
+        char = Character.Get(flashHandle, true)
+    end
+
+    ---@diagnostic disable-next-line: return-type-mismatch
+    return char
+end
+
+---@param handle EntityHandle
+function PlayerInfo.SelectCharacter(handle)
+    PlayerInfo:ExternalInterfaceCall("charSel", Ext.UI.HandleToDouble(handle), true)
+end
+
 ---------------------------------------------
 -- LISTENERS
 ---------------------------------------------
+
+-- Listen for character being selected by player.
+PlayerInfo:RegisterCallListener("charSel", function(e, handle, isScripted)
+    PlayerInfo.nextCharacterSelectionIsManual = not isScripted
+end)
+
+-- Listen for the active character being changed.
+PlayerInfo:RegisterCallListener("activeCharacterChanged", function(ev, previousHandle, newHandle)
+    local prevChar, newChar
+
+    if previousHandle ~= 0 then prevChar = Character.Get(previousHandle, true) end
+    if newHandle ~= 0 then newChar = Character.Get(newHandle, true) end
+
+    PlayerInfo.Events.ActiveCharacterChanged:Throw({
+        NewCharacter = newChar,
+        PreviousCharacter = prevChar,
+        Manual = PlayerInfo.nextCharacterSelectionIsManual,
+    })
+
+    PlayerInfo.nextCharacterSelectionIsManual = false
+end)
 
 PlayerInfo:RegisterCallListener("statusHovered", function(ev, charFlashHandle, statusFlashHandle)
     local char, status

@@ -192,6 +192,7 @@ LOAD_ORDER = {
     "Epip/Client/ExamineImprovements.lua",
     "Epip/Client/TooltipAdjustments.lua",
     "Epip/Client/TreasureTableDisplay.lua",
+    "Epip/Client/SummonControlFix.lua",
     "Epip/Client/Notifications.lua",
 
     "Epip/Client/GenericUIs/QuickExamine.lua",

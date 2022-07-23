@@ -46,8 +46,13 @@ function Character.GetActionPoints(char)
 end
 
 ---@param identifier GUID|PrefixedGUID|NetId|EntityHandle
+---@param isFlashHandle boolean? If true, the identifier will be passed through DoubleToHandle() first.
 ---@return Character
-function Character.Get(identifier)
+function Character.Get(identifier, isFlashHandle)
+    if isFlashHandle then
+        identifier = Ext.UI.DoubleToHandle(identifier)
+    end
+
     return Ext.Entity.GetCharacter(identifier)
 end
 
