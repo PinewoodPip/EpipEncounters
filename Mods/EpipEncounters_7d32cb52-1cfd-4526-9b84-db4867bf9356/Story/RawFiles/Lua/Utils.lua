@@ -119,3 +119,19 @@ function table.simpleSort(tbl, reverse)
 
     table.sort(tbl, fun)
 end
+
+-- From http://lua-users.org/wiki/CopyTable
+function table.deepCopy(orig)
+    local orig_type = type(orig)
+    local copy
+    if orig_type == 'table' then
+        copy = {}
+        for orig_key, orig_value in next, orig, nil do
+            copy[table.deepCopy(orig_key)] = table.deepCopy(orig_value)
+        end
+        setmetatable(copy, table.deepCopy(getmetatable(orig)))
+    else -- number, string, boolean, etc
+        copy = orig
+    end
+    return copy
+end

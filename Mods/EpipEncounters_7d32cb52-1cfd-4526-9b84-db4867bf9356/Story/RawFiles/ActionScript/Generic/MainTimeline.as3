@@ -30,6 +30,12 @@ package arenaResult_fla
             this.AddElement("Root", "Empty", "");
         }
 
+        // Can't get this to fire.
+        // public function onEventResize() : *
+        // {
+        //     ExternalInterface.call("viewportChanged");
+        // }
+
         public function AddElement(id:String, elementType:String, parentID:String = "") : *
         {
             var elementClass:Class = getDefinitionByName("Elements." + elementType) as Class;

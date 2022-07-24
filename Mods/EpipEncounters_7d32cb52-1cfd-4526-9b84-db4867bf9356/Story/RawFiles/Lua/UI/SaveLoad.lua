@@ -1,6 +1,9 @@
 
 ---@class SaveLoadUI : UI
 local SaveLoad = {
+    currentContent = {},
+    currentCloudIcons = {},
+
     USE_LEGACY_EVENTS = false,
 
     CLOUD_STATES = { -- Names need confirming! TODO
@@ -52,6 +55,50 @@ SaveLoad:Debug()
 ---@field Entries SaveLoadUI_Entry[]
 
 ---------------------------------------------
+-- METHODS
+---------------------------------------------
+
+---@param content SaveLoadUI_Entry[]?
+function SaveLoad.RenderContent(content)
+    local root = SaveLoad:GetRoot()
+    root.removeItems()
+    content = content or table.deepCopy(SaveLoad.currentContent)
+
+    SaveLoad.Events.GetContent:Throw({
+        IsLoadUI = #content > 0 and not content[1].IsSave, -- TODO edge case with no saves to load?
+        Entries = content,
+    })
+
+    for _,entry in ipairs(content) do
+        local fun = root.loadSave_mc.addLoad
+        if entry.IsSave then
+            fun = root.loadSave_mc.addSave
+        end
+
+        local cloudState = SaveLoad.CLOUD_STATES[entry.CloudState:upper()]
+        local difficulty = SaveLoad.DIFFICULTIES[entry.Difficulty:upper()]
+
+        if not cloudState or not difficulty then
+            SaveLoad:LogError("Invalid CloudState or Difficulty in entry " .. entry.Name)
+            return nil
+        end
+
+        fun(entry.ID, entry.Name, entry.Enabled, entry.DateTimeString, entry.IngameTime, entry.SaveVersion, entry.GameVersion, entry.Message, cloudState, difficulty)
+    end
+
+    for _,cloudIconState in ipairs(SaveLoad.currentCloudIcons) do
+        root.setEntryCloudIcon(cloudIconState.Num1, cloudIconState.Num2)
+    end
+
+    SaveLoad:DebugLog("Content updated.")
+
+    root.updateButtonAndInfo()
+    root.loadSave_mc.replaceCursor()
+
+    root.showWin()
+end
+
+---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
 
@@ -101,40 +148,12 @@ SaveLoad:RegisterInvokeListener("updateArraySystem", function(ev)
         "Num1",
         "Num2",
     })
+    SaveLoad.currentCloudIcons = cloudIcons
 
-    SaveLoad.Events.GetContent:Throw({
-        IsLoadUI = #entries > 0 and not entries[1].IsSave, -- TODO edge case with no saves to load?
-        Entries = entries,
-    })
+    SaveLoad.currentContent = entries
 
     -- TODO support replacing the table
     Ext.OnNextTick(function()
-        for _,entry in ipairs(entries) do
-            local fun = root.loadSave_mc.addLoad
-            if entry.IsSave then
-                fun = root.loadSave_mc.addSave
-            end
-    
-            local cloudState = SaveLoad.CLOUD_STATES[entry.CloudState:upper()]
-            local difficulty = SaveLoad.DIFFICULTIES[entry.Difficulty:upper()]
-    
-            if not cloudState or not difficulty then
-                SaveLoad:LogError("Invalid CloudState or Difficulty in entry " .. entry.Name)
-                return nil
-            end
-    
-            fun(entry.ID, entry.Name, entry.Enabled, entry.DateTimeString, entry.IngameTime, entry.SaveVersion, entry.GameVersion, entry.Message, cloudState, difficulty)
-        end
-    
-        for _,cloudIconState in ipairs(cloudIcons) do
-            root.setEntryCloudIcon(cloudIconState.Num1, cloudIconState.Num2)
-        end
-    
-        SaveLoad:DebugLog("Content updated.")
-    
-        root.updateButtonAndInfo()
-        root.loadSave_mc.replaceCursor()
-
-        root.showWin()
+        SaveLoad.RenderContent(entries)
     end)
 end)

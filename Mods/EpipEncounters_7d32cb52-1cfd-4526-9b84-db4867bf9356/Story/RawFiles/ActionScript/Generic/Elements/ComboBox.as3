@@ -69,6 +69,8 @@ package Elements
         
         private var pressedFunc:Function;
 
+        private var _openUpwards:Boolean = false;
+
         public function ComboBox(param1:String = "comboElement", param2:String = "comboDDBG")
         {
             var _loc4_:MovieClip = null;
@@ -101,7 +103,8 @@ package Elements
             }
             this.m_scrollList.addEventListener(MouseEvent.ROLL_OUT,this.scrollListOut);
             this.m_scrollList.addEventListener(Event.CHANGE,this.comboScrolled);
-            addFrameScript(0, this.frame1);
+
+            this.top_mc.button_mc.gotoAndStop(0);
         }
 
         public override function get elementType() : String
@@ -117,6 +120,11 @@ package Elements
             {
                 this.SelectOption(id);
             }
+        }
+
+        public function SetOpenUpwards(up:Boolean) : *
+        {
+            this._openUpwards = up;
         }
 
         public function SelectOption(id:String) : *
@@ -236,6 +244,7 @@ package Elements
         {
             var _loc1_:Point = null;
             var _loc2_:MovieClip = null;
+
             if(this.m_enabled)
             {
                 ExternalInterface.call("PlaySound",this.SND_Open);
@@ -243,27 +252,42 @@ package Elements
                 this.top_mc.button_mc.gotoAndStop(3);
                 _loc1_ = this.localToGlobal(new Point(0,0));
                 this.m_selectContainer.x = _loc1_.x;
-                this.m_selectContainer.y = Math.round(this.top_mc.height + _loc1_.y + this.m_dropOutYDisplacement);
+
+                if (!this._openUpwards)
+                {
+                    this.m_selectContainer.y = Math.round(this.top_mc.height + _loc1_.y + this.m_dropOutYDisplacement);
+                }
+                else
+                {
+                    this.m_selectContainer.y = _loc1_.y - this.GetOptionsContainerHeight() - this.m_dropOutYDisplacement;
+                }
+
                 if(this.stage)
                 {
-                this.stage.addChild(this.m_selectContainer);
+                    this.stage.addChild(this.m_selectContainer);
                 }
+
                 dispatchEvent(new Event(Event.OPEN,true));
+
                 if(this.stage && !this.hasDeactivateListener)
                 {
-                this.stage.addEventListener(MouseEvent.MOUSE_DOWN,this.onDeactivate);
-                this.hasDeactivateListener = true;
-                addEventListener(Event.REMOVED_FROM_STAGE,this.removedFromStageHandler);
+                    this.stage.addEventListener(MouseEvent.MOUSE_DOWN,this.onDeactivate);
+                    this.hasDeactivateListener = true;
+                    addEventListener(Event.REMOVED_FROM_STAGE,this.removedFromStageHandler);
                 }
+
                 _loc2_ = this.m_scrollList.getElement(this.m_selIndex);
+
                 if(_loc2_)
                 {
-                this.m_scrollList.select(_loc2_.list_pos);
+                    this.m_scrollList.select(_loc2_.list_pos);
                 }
+
                 this.m_scrollList.mouseWheelEnabled = true;
+
                 if(this.m_mouseWheelEnabledWhenClosed)
                 {
-                this.stage.removeEventListener(MouseEvent.MOUSE_WHEEL,this.handlemouseWheelEnabledWhenClosed);
+                    this.stage.removeEventListener(MouseEvent.MOUSE_WHEEL,this.handlemouseWheelEnabledWhenClosed);
                 }
             }
         }
@@ -545,6 +569,19 @@ package Elements
             }
             return -1;
         }
+
+        private function GetOptionsContainerHeight() : Number
+        {
+            var height:Number = 20;
+
+            if (this.m_items_array.length > 0)
+            {
+                // TODO improve
+                height = this.m_items_array.length * 32;
+            }
+
+            return height;
+        }
         
         private function _resizeDDBg() : *
         {
@@ -670,11 +707,6 @@ package Elements
                 _loc2_ = _loc2_.parent;
             }
             return _loc1_;
-        }
-
-        private function frame1() : *
-        {
-            this.top_mc.button_mc.gotoAndStop(0);
         }
     }
 }

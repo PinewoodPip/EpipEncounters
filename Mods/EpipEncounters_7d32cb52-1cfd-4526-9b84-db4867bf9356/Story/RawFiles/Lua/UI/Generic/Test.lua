@@ -74,6 +74,8 @@ function Test.TestComboBox()
     combo.Events.OptionSelected:Subscribe(function (e)
         print(e.Index)
     end)
+
+    combo:SetOpenUpwards(true)
 end
 
 function Test.SetupTests()

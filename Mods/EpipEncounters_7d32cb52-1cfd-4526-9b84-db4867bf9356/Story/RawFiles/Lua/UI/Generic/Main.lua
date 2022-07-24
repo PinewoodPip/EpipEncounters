@@ -35,8 +35,16 @@ local _Instance = {
     ID = "UNKNOWN",
     CurrentTooltipElement = nil, -- Current element's ID and UI whose tooltip is being displayed.
     Elements = {},
+    USE_LEGACY_EVENTS = false,
+
+    Events = {
+    },
 }
 Inherit(_Instance, Client.UI._BaseUITable)
+
+---@class GenericUI_Event_ViewportChanged
+---@field Width integer
+---@field Height integer
 
 ---@param id string
 ---@return GenericUI_Element?
@@ -123,6 +131,8 @@ function Client.UI.Generic.Create(id)
             Button_Pressed = {},
             ---@type GenericUI_Event_StateButton_StateChanged
             StateButton_StateChanged = {},
+            ---@type SubscribableEvent<GenericUI_Event_ViewportChanged>
+            ViewportChanged = {Legacy = false},
         },
         TRACE_LEVELS = {
             INFO = 0,
@@ -141,6 +151,7 @@ function Client.UI.Generic.Create(id)
     ui:RegisterCallListener("elementMouseOver", Generic.OnElementMouseOver)
     ui:RegisterCallListener("elementMouseOut", Generic.OnElementMouseOut)
     ui:RegisterCallListener("ShowElementTooltip", Generic.OnElementShowTooltip)
+    -- ui:RegisterCallListener("viewportChanged", Generic.OnViewportChanged)
 
     -- Button
     ui:RegisterCallListener("Button_Pressed", Generic.OnButtonPressed)
@@ -340,5 +351,33 @@ Generic.OnComboBoxItemSelected = function(ev, id, index, optionID)
 
     element.Events.OptionSelected:Throw({
         Index = index + 1,
+        Option = {ID = optionID,}, -- TODO label
     })
 end
+
+-- Generic.OnViewportChanged = function(ui)
+--     local viewport = Ext.UI.GetViewportSize()
+
+--     ui.Events.ViewportChanged:Throw({
+--         Width = viewport[1],
+--         Height = viewport[2],
+--     })
+-- end
+
+-- Listen for viewport changes
+local oldViewport = {0, 0}
+Ext.Events.Tick:Subscribe(function (e)
+    local viewport = Ext.UI.GetViewportSize()
+    local width, height = viewport[1], viewport[2]
+
+    if oldViewport[1] ~= width or oldViewport[2] ~= height then
+        for _,ui in pairs(Generic.INSTANCES) do
+            ui.Events.ViewportChanged:Throw({
+                Width = width,
+                Height = height,
+            })
+        end
+
+        oldViewport = viewport
+    end
+end)

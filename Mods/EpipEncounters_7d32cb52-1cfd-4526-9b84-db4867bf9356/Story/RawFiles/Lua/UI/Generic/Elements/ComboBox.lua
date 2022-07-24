@@ -6,6 +6,7 @@ local Generic = Client.UI.Generic
 ---@field AddOption fun(self, ID:string, label:string)
 ---@field SelectOption fun(self, ID:string)
 ---@field ClearOptions fun(self)
+---@field SetOpenUpwards fun(self, openUpwards:boolean)
 
 ---@class GenericUI_Element_ComboBox
 local ComboBox = {
@@ -44,6 +45,7 @@ Inherit(ComboBox, Generic._Element)
 ComboBox.AddOption = Generic.ExposeFunction("AddOption")
 ComboBox.SelectOption = Generic.ExposeFunction("SelectOption")
 ComboBox.ClearOptions = Generic.ExposeFunction("ClearOptions")
+ComboBox.SetOpenUpwards = Generic.ExposeFunction("SetOpenUpwards")
 
 ---@param options GenericUI_Element_ComboBox_Option[]
 function ComboBox:SetOptions(options)
