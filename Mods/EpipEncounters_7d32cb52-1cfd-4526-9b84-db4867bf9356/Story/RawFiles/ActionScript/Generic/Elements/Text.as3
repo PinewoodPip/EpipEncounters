@@ -7,6 +7,10 @@ package Elements
     import LS_Classes.listDisplay;
     import flash.text.TextField;
     import flash.events.MouseEvent;
+    import flash.events.Event;
+    import flash.events.FocusEvent;
+    import flash.events.KeyboardEvent;
+    import flash.text.TextFormat;
 
     public dynamic class Text extends Element
     {
@@ -16,6 +20,7 @@ package Elements
         public var _txt_Center:TextField;
         private var textTypes:Array;
         private var _cachedText:String = "";
+        private var _editable:Boolean = false;
 
         public function Text()
         {
@@ -29,6 +34,8 @@ package Elements
             this.RegisterTextType(this._txt_Center);
 
             this.SetType(1);
+
+            this.SetEditable(false);
 
             // this.text_txt.autoSize = "center";
             // this.text_txt.align = "center";
@@ -48,6 +55,14 @@ package Elements
             txt.visible = false;
             txt.width = 0;
             txt.height = 0;
+
+            txt.addEventListener(Event.CHANGE,this.onChange);
+            txt.addEventListener(FocusEvent.FOCUS_IN,this.onFocus,false,0,true);
+            txt.addEventListener(FocusEvent.FOCUS_OUT,this.onFocusLost,false,0,true);
+
+            var format:TextFormat = new TextFormat();
+            format.color = 0xffffff
+            txt.defaultTextFormat = format;
         }
 
         public function SetType(txtType:int) : *
@@ -72,6 +87,23 @@ package Elements
             this._cachedText = text;
         }
 
+        public function SetEditable(editable:Boolean) : *
+        {
+            this.text_txt.selectable = editable;
+
+            this._editable = editable;
+
+            if (!editable)
+            {
+                this.text_txt.restrict = "";
+            }
+        }
+
+        public function SetRestrictedCharacters(restriction:String) : *
+        {
+            this.text_txt.restrict = restriction;
+        }
+
         public override function SetSize(width:Number, height:Number) : *
         {
             this.text_txt.width = width;
@@ -81,6 +113,66 @@ package Elements
         public function AddStroke(color:uint, size:Number, alpha:Number = 1.0, strength:uint = 1, p5:uint = 2) : *
         {
             this.text_txt.filters = textEffect.createStrokeFilter(color, size, alpha, strength, p5);
+        }
+
+        private function acceptSave() : *
+        {
+            var _loc1_:String = this.text_txt.text;
+
+            _loc1_ = this.strReplace(_loc1_,"\n","");
+            _loc1_ = this.strReplace(_loc1_,"\r","");
+            _loc1_ = this.strReplace(_loc1_,"\t","");
+
+            this._cachedText = _loc1_;
+
+            ExternalInterface.call("Text_Changed", this.stringID, _loc1_);
+        }
+        
+        private function onChange(param1:Event) : *
+        {
+            if (!this._editable)
+            {
+                this.text_txt.htmlText = this._cachedText;
+            }
+            else
+            {
+                this.acceptSave();
+            }
+        }
+        
+        private function onFocus(param1:FocusEvent) : *
+        {
+            if (this._editable)
+            {
+                var base:MovieClip = root as MovieClip;
+
+                this.text_txt.addEventListener(KeyboardEvent.KEY_DOWN, this.inputHandler);
+                ExternalInterface.call("inputFocus");
+
+                base.focusedElement = this; // TODO remove?
+            }
+        }
+        
+        private function onFocusLost(param1:FocusEvent) : *
+        {
+            this.text_txt.removeEventListener(KeyboardEvent.KEY_DOWN, this.inputHandler);
+            ExternalInterface.call("inputFocusLost");
+        }
+        
+        private function strReplace(param1:String, param2:String, param3:String) : String
+        {
+            return param1.split(param2).join(param3);
+        }
+        
+        private function inputHandler(param1:KeyboardEvent) : *
+        {
+            this.acceptSave();
+
+            if(param1.charCode == 13)
+            {
+                ExternalInterface.call("inputFocusLost");
+                stage.focus = null;
+            }
         }
 
         // TODO setfont

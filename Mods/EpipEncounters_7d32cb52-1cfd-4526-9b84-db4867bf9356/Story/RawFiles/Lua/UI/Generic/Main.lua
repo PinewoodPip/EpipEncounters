@@ -8,7 +8,7 @@ Client.UI.Generic = {
     PREFABS = {},
     INSTANCES = {} ---@type table<integer, GenericUI_Instance>
 }
-local Generic = Client.UI.Generic
+local Generic = Client.UI.Generic ---@class GenericUI
 Epip.InitializeLibrary("Generic", Generic)
 Generic:Debug()
 
@@ -153,6 +153,9 @@ function Client.UI.Generic.Create(id)
     ui:RegisterCallListener("ShowElementTooltip", Generic.OnElementShowTooltip)
     -- ui:RegisterCallListener("viewportChanged", Generic.OnViewportChanged)
 
+    -- Text
+    Generic.ForwardUICall(ui, "Text_Changed", "Changed", {"Text"})
+
     -- Button
     ui:RegisterCallListener("Button_Pressed", Generic.OnButtonPressed)
 
@@ -215,6 +218,26 @@ end
 
 function Client.UI.Generic.RegisterPrefab(id, prefab)
     Generic.PREFABS[id] = prefab
+end
+
+---@param ui GenericUI_Instance
+---@param call string
+---@param eventName string
+---@param fields string[]
+function Generic.ForwardUICall(ui, call, eventName, fields)
+    ui:RegisterCallListener(call, function(ev, id, ...)
+        local element = ui:GetElementByID(id)
+        if not element then return nil end
+    
+        local event = {}
+        local params = {...}
+
+        for i,param in ipairs(params) do
+            event[fields[i]] = param
+        end
+
+        element.Events[eventName]:Throw(event)
+    end)
 end
 
 ---------------------------------------------
