@@ -339,13 +339,7 @@ Hotbar.RegisterActionHook("UseArbitrarySkill", "IsActionEnabled", function(enabl
         local skill = boundSkills[buttonIndex]
 
         if skill then
-            local skillData = char.SkillManager.Skills[skill]
-
-            if skillData then
-                return (skillData.IsActivated or skillData.IsLearned) and skillData.ActiveCooldown <= 0 and (skillData.MaxCharges == 0 or skillData.NumCharges > 0)
-            else
-                return false
-            end
+            return Character.CanUseSkill(Client.GetCharacter(), skill)
         end
     end
 
