@@ -133,6 +133,8 @@ Ext.Events.Tick:Subscribe(function()
             DeltaTime = deltaTime,
         })
     end
+
+    GameState.lastTickTime = now
 end)
 
 -- Also throw GameReady upon reset.

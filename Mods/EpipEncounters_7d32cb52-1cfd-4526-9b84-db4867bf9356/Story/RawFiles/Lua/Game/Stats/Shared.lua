@@ -224,7 +224,9 @@ end
 function Stats.MeetsRequirementsINT(char, req)
     local reqMet = false
 
-    if type(char.Stats[req.Requirement]) == "boolean" then
+    if req.Requirement == "None" then
+        reqMet = true
+    elseif type(char.Stats[req.Requirement]) == "boolean" then
         reqMet = char.Stats[req.Requirement]
     elseif req.Requirement == "Tag" then
         reqMet = char:HasTag(req.Param)

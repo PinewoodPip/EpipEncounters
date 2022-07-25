@@ -44,6 +44,7 @@ local Hotbar = {
     tickCounter = 0,
     lastClickedSlot = -1,
     wasVisible = false,
+    timer = 0,
 
     ACTION_BUTTONS_COUNT = 12,
     SKILL_USE_TIME = 3000, -- Kept as a fallback.
@@ -53,6 +54,7 @@ local Hotbar = {
     CUSTOM_RENDERING = false,
     SAVE_FILENAME = "Config_PIP_ImprovedHotbar.json",
     UPDATE_DELAY = 8,
+    REFRESH_DELAY = 1400,
     COOLDOWN_UPDATE_DELAY = 3,
 
     DEFAULT_ACTION_PROPERTIES = {
@@ -867,7 +869,12 @@ GameState.Events.RunningTick:Subscribe(function (e)
         end
         if Hotbar.tickCounter % Hotbar.UPDATE_DELAY == 0 then
             Hotbar.RenderHotkeys()
-            -- Hotbar.RenderSlots()
+        end
+
+        Hotbar.timer = Hotbar.timer + e.DeltaTime
+        if Hotbar.timer > Hotbar.REFRESH_DELAY then
+            Hotbar.RenderSlots()
+            Hotbar.timer = 0
         end
 
         Hotbar.tickCounter = Hotbar.tickCounter + 1
@@ -1319,7 +1326,6 @@ function Hotbar.RenderSlot(char, canUseHotbar, slotIndex)
     if not canUseHotbar then
         isEnabled = false
     end
-    Ext.Err()
 
     -- print(inUse, slot.tooltip, slot.isEnabled, "isUpdate", slot.isUpdated, "type", slot.type, "handle", slot.handle, slot.oldCD, slot.setCoolDown)
     slotHolder.pipSetSlot(slotIndex, tooltip, isEnabled and cooldown <= 0, inUse, handle, slotType, amount)
@@ -1359,7 +1365,7 @@ function Hotbar.RenderSlots()
                 
                 if not pcall(Hotbar.RenderSlot, char, canUseHotbar, slotIndex + 1) then
                     local data = Hotbar.GetSkillBarItems(char)[slotIndex + 1]
-                    
+
                     Hotbar:LogError("Error rendering slot " .. (slotIndex + 1))
                     Hotbar:LogError(string.format("Slot data: type %s skillID %s", data.Type, data.SkillOrStatId))
                 end
