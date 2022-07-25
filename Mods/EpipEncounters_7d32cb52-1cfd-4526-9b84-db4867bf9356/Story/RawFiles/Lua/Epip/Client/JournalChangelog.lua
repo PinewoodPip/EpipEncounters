@@ -40,17 +40,11 @@ end
 -- INTERNAL METHODS - DO NOT CALL
 ---------------------------------------------
 
-function split(inputstr, sep) sep=sep or '%s' local t={}  for field,s in string.gmatch(inputstr, "([^"..sep.."]*)("..sep.."?)") do table.insert(t,field)  if s=="" then return t end end end
-
 function Changelog.ParseFromFile(path)
-    ---@type JournalParagraph[]
-    local paragraphs = {}
-
     local contents = Ext.IO.LoadFile(path, "data")
-    local currentIndex = 1
-    local nextLineIndex = string.find(contents, "\n")
+    local paragraphs = {} ---@type JournalParagraph[]
 
-    paragraphs = split(contents, "\n")
+    paragraphs = Text.Split(contents, "\n")
 
     return paragraphs
 end

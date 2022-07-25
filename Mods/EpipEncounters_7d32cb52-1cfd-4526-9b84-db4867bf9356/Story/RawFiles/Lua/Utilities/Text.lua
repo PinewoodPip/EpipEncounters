@@ -136,11 +136,9 @@ function Text.Split(inputstr, sep)
 
     for field,s in string.gmatch(inputstr, "([^"..sep.."]*)("..sep.."?)") do 
         table.insert(t,field) 
+    end
     
-        if s=="" then 
-            return t 
-        end 
-    end 
+    return t
 end
 
 -- function Text.Split(s, sep)
