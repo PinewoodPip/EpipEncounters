@@ -1261,6 +1261,82 @@ function Hotbar.UseSkill(skill)
     end)
 end
 
+---@param char EclCharacter
+---@param canUseHotbar boolean
+---@param slotIndex integer 1-based.
+function Hotbar.RenderSlot(char, canUseHotbar, slotIndex)
+    local slotHolder = Hotbar.GetSlotHolder()
+    slotIndex = slotIndex - 1 -- SIKE YA THOUGHT!!!!
+
+    local slot = slotHolder.slot_array[slotIndex]
+    local data = Hotbar.GetSlotData(char, slotIndex + 1)
+
+    local inUse = true -- Whether the slot holds anything.
+    local amount = 0
+    local slotType = 0
+    local handle = 0
+    local tooltip = "" -- TODO is this only for skills?
+    local isEnabled = false -- TODO
+    local cooldown = 0
+
+    -- types: 0 empty, 1 skill, 2 item
+    if data.Type == "Skill" then
+        ---@type EclSkill
+        local skill = char.SkillManager.Skills[data.SkillOrStatId]
+        tooltip = data.SkillOrStatId
+        slotType = 1
+
+        if skill then
+            cooldown = skill.ActiveCooldown / 6
+
+            handle = Ext.HandleToDouble(skill.OwnerHandle)
+
+            isEnabled = Character.CanUseSkill(char, data.SkillOrStatId)
+        else 
+            -- Hotbar:LogError("Trying to update skill not in skillmanager! " .. data.SkillOrStatId)
+            cooldown = 0
+            handle = Ext.HandleToDouble(char.Handle)
+            isEnabled = false
+        end
+    elseif data.Type == "Item" then
+        slotType = 2
+
+        local item = Ext.GetItem(data.ItemHandle)
+
+        handle = Ext.HandleToDouble(item.Handle)
+        amount = item.Amount
+        isEnabled = Item.CanUse(char, item)
+    elseif data.Type == "Action" then
+        isEnabled = true
+        slotType = 1
+        tooltip = data.SkillOrStatId
+        handle = Ext.HandleToDouble(char.Handle)
+    elseif data.Type == "None" then
+        inUse = false
+    end
+
+    -- Disable using any slots during combat, outside your turn, or while casting a skill.
+    if not canUseHotbar then
+        isEnabled = false
+    end
+    Ext.Err()
+
+    -- print(inUse, slot.tooltip, slot.isEnabled, "isUpdate", slot.isUpdated, "type", slot.type, "handle", slot.handle, slot.oldCD, slot.setCoolDown)
+    slotHolder.pipSetSlot(slotIndex, tooltip, isEnabled and cooldown <= 0, inUse, handle, slotType, amount)
+    slot.isUpdated = true
+
+    if not isEnabled and cooldown <= 0 then
+        slot.disable_mc.alpha = 1
+    end
+    
+    -- print(slotIndex, tooltip, isEnabled, inUse, handle, slotType, amount)
+
+    -- slot.unavailable_mc.visible = false -- Leftover from DOS1. (SetSlotPreviewEnabledMC)
+
+    -- We no longer rely on this as it fucks with the cooldown values. Apparently the original code is optimized enough to only update this when needed.
+    -- slotHolder.setSlot(slotIndex, tooltip, isEnabled and cooldown <= 0, handle, slotType, amount)
+end
+
 function Hotbar.RenderSlots()
     local char = Client.GetCharacter()
 
@@ -1280,72 +1356,13 @@ function Hotbar.RenderSlots()
         if Hotbar.IsRowVisible(char, rowIndex) then
             for i=0,Hotbar.GetSlotsPerRow() - 1,1 do
                 local slotIndex = (rowIndex - 1) * Hotbar.GetSlotsPerRow() + i
-                local slot = slotHolder.slot_array[slotIndex]
-                local data = Hotbar.GetSlotData(char, slotIndex + 1)
-        
-                local inUse = true -- Whether the slot holds anything.
-                local amount = 0
-                local slotType = 0
-                local handle = 0
-                local tooltip = "" -- TODO is this only for skills?
-                local isEnabled = false -- TODO
-                local cooldown = 0
-        
-                -- types: 0 empty, 1 skill, 2 item
-                if data.Type == "Skill" then
-                    ---@type EclSkill
-                    local skill = char.SkillManager.Skills[data.SkillOrStatId]
-                    tooltip = data.SkillOrStatId
-                    slotType = 1
-        
-                    if skill then
-                        cooldown = skill.ActiveCooldown / 6
-
-                        handle = Ext.HandleToDouble(skill.OwnerHandle)
-        
-                        isEnabled = Character.CanUseSkill(char, data.SkillOrStatId)
-                    else 
-                        -- Hotbar:LogError("Trying to update skill not in skillmanager! " .. data.SkillOrStatId)
-                        cooldown = 0
-                        handle = Ext.HandleToDouble(char.Handle)
-                        isEnabled = false
-                    end
-                elseif data.Type == "Item" then
-                    slotType = 2
-        
-                    local item = Ext.GetItem(data.ItemHandle)
-        
-                    handle = Ext.HandleToDouble(item.Handle)
-                    amount = item.Amount
-                    isEnabled = Item.CanUse(char, item)
-                elseif data.Type == "Action" then
-                    isEnabled = true
-                    slotType = 1
-                    tooltip = data.SkillOrStatId
-                    handle = Ext.HandleToDouble(char.Handle)
-                elseif data.Type == "None" then
-                    inUse = false
-                end
-        
-                -- Disable using any slots during combat, outside your turn, or while casting a skill.
-                if not canUseHotbar then
-                    isEnabled = false
-                end
-        
-                -- print(inUse, slot.tooltip, slot.isEnabled, "isUpdate", slot.isUpdated, "type", slot.type, "handle", slot.handle, slot.oldCD, slot.setCoolDown)
-                slotHolder.pipSetSlot(slotIndex, tooltip, isEnabled and cooldown <= 0, inUse, handle, slotType, amount)
-                slot.isUpdated = true
-
-                if not isEnabled and cooldown <= 0 then
-                    slot.disable_mc.alpha = 1
-                end
                 
-                -- print(slotIndex, tooltip, isEnabled, inUse, handle, slotType, amount)
-
-                -- slot.unavailable_mc.visible = false -- Leftover from DOS1. (SetSlotPreviewEnabledMC)
-
-                -- We no longer rely on this as it fucks with the cooldown values. Apparently the original code is optimized enough to only update this when needed.
-                -- slotHolder.setSlot(slotIndex, tooltip, isEnabled and cooldown <= 0, handle, slotType, amount)
+                if not pcall(Hotbar.RenderSlot, char, canUseHotbar, slotIndex + 1) then
+                    local data = Hotbar.GetSkillBarItems(char)[slotIndex + 1]
+                    
+                    Hotbar:LogError("Error rendering slot " .. (slotIndex + 1))
+                    Hotbar:LogError(string.format("Slot data: type %s skillID %s", data.Type, data.SkillOrStatId))
+                end
             end
         end
     end
