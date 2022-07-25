@@ -135,3 +135,15 @@ function table.deepCopy(orig)
     end
     return copy
 end
+
+---@param table1 table
+---@param value any
+---@return any
+function table.reverseLookup(table1, value)
+    for i,v in pairs(table1) do
+        if v == value then
+            return i
+        end
+    end
+    return nil
+end

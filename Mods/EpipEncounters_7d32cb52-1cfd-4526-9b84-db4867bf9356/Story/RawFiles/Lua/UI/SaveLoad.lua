@@ -62,7 +62,8 @@ SaveLoad:Debug()
 function SaveLoad.RenderContent(content)
     local root = SaveLoad:GetRoot()
     root.removeItems()
-    content = content or table.deepCopy(SaveLoad.currentContent)
+    if not content then content = SaveLoad.currentContent end
+    content = table.deepCopy(content)
 
     SaveLoad.Events.GetContent:Throw({
         IsLoadUI = #content > 0 and not content[1].IsSave, -- TODO edge case with no saves to load?

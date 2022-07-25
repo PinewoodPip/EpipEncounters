@@ -1,8 +1,9 @@
 
 local Generic = Client.UI.Generic
 local SaveLoad = Client.UI.SaveLoad
+local OptionsSettings = Client.UI.OptionsSettings
 
----@type Feature
+---@type Feature|table
 local Overlay = {
     UI = nil, ---@type GenericUI_Instance
 
@@ -13,6 +14,10 @@ local Overlay = {
         DATE = "Sort_Date",
         ALPHABETIC = "Sort_Alphabetic",
     },
+    SORTING_MODES_SETTINGS = {
+        "Sort_Date",
+        "Sort_Alphabetic",
+    },
 }
 Epip.AddFeature("Overlay", "Overlay", Overlay)
 
@@ -20,13 +25,19 @@ Epip.AddFeature("Overlay", "Overlay", Overlay)
 -- METHODS
 ---------------------------------------------
 
+function Overlay:IsEnabled()
+    return OptionsSettings.GetOptionValue("EpipEncounters", "SaveLoad_Overlay") and not Client.IsUsingController()
+end
+
 function Overlay.GetSortingMode()
-    return Overlay.sortingMode
+    return Overlay.SORTING_MODES_SETTINGS[OptionsSettings.GetOptionValue("EpipEncounters", "SaveLoad_Sorting")]
 end
 
 ---@param mode "Sort_Date"|"Sort_Alphabetic"
 function Overlay.SetSortingMode(mode)
-    Overlay.sortingMode = mode
+    local index = table.reverseLookup(Overlay.SORTING_MODES_SETTINGS, mode)
+
+    OptionsSettings.SetOptionValue("EpipEncounters", "SaveLoad_Sorting", index)
 end
 
 ---@param entries SaveLoadUI_Entry[]
@@ -66,7 +77,6 @@ end
 
 function Overlay.Position()
     local ui = Overlay.UI
-    local root = ui:GetRoot()
 
     ui:ExternalInterfaceCall("setMcSize", 723, 1010)
     ui:ExternalInterfaceCall("setPosition", "top", "screen", "top")
@@ -86,8 +96,6 @@ SaveLoad.Events.GetContent:Subscribe(function (e)
     if Overlay:IsEnabled() then
         local ui = Overlay.UI
 
-        print(#e.Entries)
-
         ui:GetUI():Show()
         ui:GetUI().Layer = SaveLoad:GetUI().Layer + 100
         SaveLoad:SetFlag("OF_PlayerModal1", false)
@@ -101,7 +109,7 @@ end)
 
 -- Hide the overlay when the save menu is closed.
 Ext.Events.Tick:Subscribe(function (e)
-    if Overlay.UI:IsVisible() and (not SaveLoad:Exists() or not SaveLoad:IsVisible()) then
+    if GameState.GetState() == "Paused" and Overlay.UI:IsVisible() and (not SaveLoad:Exists() or not SaveLoad:IsVisible()) then
         Overlay.UI:GetUI():Hide()
         Overlay.searchTerm = ""
     end
@@ -135,7 +143,6 @@ local function SetupUI()
     searchBar:SetAlpha(0.3)
     local searchText = searchBar:AddChild("SearchText", "Text")
     searchText:SetEditable(true)
-    -- searchText:SetRestrictedCharacters("abcd")
     searchText:SetType(0)
     searchText:SetText(Text.Format("Enter to search...", {Color = Color.COLORS.WHITE}))
     searchBar:SetPosition(280, 6)
@@ -158,11 +165,12 @@ local function SetupUI()
     end)
 end
 
-function Overlay:__Setup()
+-- We don't use __Setup so as to allow the setting to be toggled at any time.
+Ext.Events.SessionLoaded:Subscribe(function (_)
     if Client.IsUsingController() then
         Overlay:Disable()
     else
         Overlay.UI = Generic.Create("PIP_Overlay")
         SetupUI()
     end
-end
+end)

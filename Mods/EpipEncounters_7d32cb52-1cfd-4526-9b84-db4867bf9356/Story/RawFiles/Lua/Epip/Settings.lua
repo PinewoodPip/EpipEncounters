@@ -344,6 +344,32 @@ local PlayerInfo = {
     },
 }
 
+local SaveLoadOptions = {
+    {
+        ID = "SaveLoad_Header",
+        Type = "Header",
+        Label = "<font color='7e72d6' size='23'>Save/Load</font>",
+    },
+    {
+        ID = "SaveLoad_Overlay",
+        Type = "Checkbox",
+        Label = "Save/Load UI Improvements",
+        Tooltip = "Enables alternative sorting for the save/load UI, as well as searching.",
+        DefaultValue = false,
+    },
+    {
+        ID = "SaveLoad_Sorting",
+        Type = "Dropdown",
+        Label = "Save/Load Sorting",
+        Tooltip = "Determines sorting in the save/load UI, if improvements for it are enabled.",
+        DefaultValue = 1,
+        Options = {
+            "Date",
+            "Alphabetic",
+        }
+    },
+}
+
 local TopOptions = {
     {
         ID = "AutoIdentify",
@@ -427,6 +453,7 @@ local Order = {
     Hotbar,
     PlayerInfo,
     Overheads,
+    SaveLoadOptions,
     OtherOptions,
     Experimental,
 }
