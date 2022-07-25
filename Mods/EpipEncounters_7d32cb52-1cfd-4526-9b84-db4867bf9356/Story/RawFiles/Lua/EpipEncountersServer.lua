@@ -21,6 +21,13 @@ Ext.Osiris.RegisterListener('PROC_AMER_UI_Greatforge_DoCraft', 11, "after", func
         end
         local newItem = Osi.NRD_ItemClone()
 
+        -- if itemObj:HasTag("PIP_Vanity_Transmogged") then
+        --     local originalTemplate = 
+        --     Osiris.DB_PIP_Vanity_OriginalTemplate:Delete(itemObj.MyGuid, nil)
+        --     Osi.SetTag(newItem, "PIP_Vanity_Transmogged")
+        --     Osiris.DB_PIP_Vanity_OriginalTemplate:Delete(itemObj.MyGuid, nil)
+        -- end
+
         Osi.SetTag(newItem, "AMER_DELTAMODS_HANDLED") -- don't regenerate deltamods on the new item
         Osi.ItemToInventory(newItem, char, 1, 1, 0)
         Osi.PROC_AMER_GEN_UnequipAndRemoveItem(char, item);
@@ -55,7 +62,7 @@ function ItemHasMaxSockets(char, mode)
             limit = 2
         end
 
-        -- Ext.Print(itemId)
+        local isTransmogged = itemData:HasTag("PIP_Vanity_Transmogged")
 
         local isMaxed = GetRuneSlots(itemId) >= limit
         if isMaxed then
@@ -64,8 +71,10 @@ function ItemHasMaxSockets(char, mode)
             else
                 Osi.OpenMessageBox(char, "AMER_UI_Greatforge_AddSockets_InvalidSelection2Sockets")
             end
+        elseif isTransmogged then
+            Osi.OpenMessageBox(char, "I must first restore the item to its original appearance - I cannot do this with transmogrified equipment.")
         end
-        return isMaxed
+        return isMaxed or isTransmogged
     end
     return false
 end

@@ -269,6 +269,12 @@ function Feature:LogWarning(msg)
     end
 end
 
+---Logs a "Not implemented" warning. Use as a placeholder.
+---@param methodName string
+function Feature:LogNotImplemented(methodName)
+    self:LogWarning("Not implemented: " .. methodName)
+end
+
 ---Log an error.
 ---@param msg any
 function Feature:LogError(msg)
