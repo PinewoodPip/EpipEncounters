@@ -897,94 +897,101 @@ end)
 -- INTERNAL METHODS - DO NOT CALL
 ---------------------------------------------
 
-function Hotbar.RenderHotkeys()
+---@param i integer
+---@param state HotbarActionState
+function Hotbar.RenderHotkey(i, state)
     local hotkeys = Hotbar.GetHotkeysHolder()
+    local element = hotkeys.hotkeyButtons[i - 1]
+    local hasAction = Hotbar.HasBoundAction(i)
+    local keyString
+    local enabled = Hotbar.IsActionEnabled(state.ActionID, i)
+    local actionID = state.ActionID or ""
+    local actionData = Hotbar.GetActionData(state.ActionID)
 
-    for i,state in ipairs(Hotbar.GetActionButtons()) do
-        local element = hotkeys.hotkeyButtons[i - 1]
-        local hasAction = Hotbar.HasBoundAction(i)
-        local keyString
-        local enabled = Hotbar.IsActionEnabled(state.ActionID, i)
-        local actionID = state.ActionID or ""
-        local actionData = Hotbar.GetActionData(state.ActionID)
+    if actionID ~= "" and actionData == nil then
+        Hotbar:Log("Unbinding unregistered action: " .. state.ActionID)
 
-        if actionID ~= "" and actionData == nil then
-            Hotbar:Log("Unbinding unregistered action: " .. state.ActionID)
+        Hotbar.UnbindActionButton(i)
+    else
+        local index = (i - 1) % 6 -- index on each row
+        -- Update action
+        element.setAction(actionID)
+        element.action = actionID
+        element.mouseChildren = false
+        element.text_mc.x = -17
+        element.text_mc.y = 27
+        element.icon_mc.mouseEnabled = false
+        element.setActionEnabled(enabled)
+        element.setHighlighted(Hotbar.IsActionHighlighted(actionID))
 
-            Hotbar.UnbindActionButton(i)
-            break
-        else
-            local index = (i - 1) % 6 -- index on each row
-            -- Update action
-            element.setAction(actionID)
-            element.action = actionID
-            element.mouseChildren = false
-            element.text_mc.x = -17
-            element.text_mc.y = 27
-            element.icon_mc.mouseEnabled = false
-            element.setActionEnabled(enabled)
-            element.setHighlighted(Hotbar.IsActionHighlighted(actionID))
+        if hasAction then
+            
+            -- Icon
+            local icon = Hotbar.GetActionIcon(actionID, i)
+            Hotbar:GetUI():SetCustomIcon("pip_hotkey_" .. (i - 1), icon, 32, 32)
 
-            if hasAction then
-                
-                -- Icon
-                local icon = Hotbar.GetActionIcon(actionID, i)
-                Hotbar:GetUI():SetCustomIcon("pip_hotkey_" .. (i - 1), icon, 32, 32)
+            -- Keybind text
+            keyString = Hotbar.GetKeyString(i)
 
-                -- Keybind text
-                keyString = Hotbar.GetKeyString(i)
-
-                if keyString and (Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "HotbarHotkeysText") or IS_IMPROVED_HOTBAR) then
-                    element.text_mc.htmlText = "<font size='14.5' align='center'>" .. keyString .. "</font>" -- TODO
-                else
-                    element.text_mc.htmlText = ""
-                end
-
-                local tooltipKeyString = Hotbar.GetKeyString(i, false)
-                local tooltip = Hotbar.GetActionName(actionData.ID, i)
-                
-                if tooltipKeyString ~= "" then
-                    tooltip = Text.Format("%s (%s)", {
-                        FormatArgs = {
-                            Hotbar.GetActionName(actionData.ID, i),
-                            tooltipKeyString
-                        }
-                    })
-                end
-
-                element.tooltip = tooltip
-                element.tooltipString = tooltip
+            if keyString and (Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "HotbarHotkeysText") or IS_IMPROVED_HOTBAR) then
+                element.text_mc.htmlText = "<font size='14.5' align='center'>" .. keyString .. "</font>" -- TODO
             else
                 element.text_mc.htmlText = ""
-                element.tooltipString = ""
-                element.tooltip = ""
             end
 
-            -- Hide buttons on second row if the row is hidden
-            if i >= 7 and not Hotbar.HasSecondHotkeysRow() then
-                element.visible = false
-                element.x = -5000
-            else
-                element.visible = true
-                element.x = 72 + (index * 34) + (3 * index)
-            end
-
-            if hasAction and keyString ~= "" then
-                element.icon_mc.y = 4
-            else
-                CenterElement(element.icon_mc, element, "y", 32)
-            end
-            element.iconY = element.icon_mc.y
-
-            element.y = 64.5
-            if i > 6 then
-                element.y = element.y - 63
-            end
+            local tooltipKeyString = Hotbar.GetKeyString(i, false)
+            local tooltip = Hotbar.GetActionName(actionData.ID, i)
             
-            element.icon_mc.x = 1
+            if tooltipKeyString ~= "" then
+                tooltip = Text.Format("%s (%s)", {
+                    FormatArgs = {
+                        Hotbar.GetActionName(actionData.ID, i),
+                        tooltipKeyString
+                    }
+                })
+            end
 
-            element.icon_mc.visible = hasAction
-            element.text_mc.visible = hasAction
+            element.tooltip = tooltip
+            element.tooltipString = tooltip
+        else
+            element.text_mc.htmlText = ""
+            element.tooltipString = ""
+            element.tooltip = ""
+        end
+
+        -- Hide buttons on second row if the row is hidden
+        if i >= 7 and not Hotbar.HasSecondHotkeysRow() then
+            element.visible = false
+            element.x = -5000
+        else
+            element.visible = true
+            element.x = 72 + (index * 34) + (3 * index)
+        end
+
+        if hasAction and keyString ~= "" then
+            element.icon_mc.y = 4
+        else
+            CenterElement(element.icon_mc, element, "y", 32)
+        end
+        element.iconY = element.icon_mc.y
+
+        element.y = 64.5
+        if i > 6 then
+            element.y = element.y - 63
+        end
+        
+        element.icon_mc.x = 1
+
+        element.icon_mc.visible = hasAction
+        element.text_mc.visible = hasAction
+    end
+end
+
+function Hotbar.RenderHotkeys()
+    for i,state in ipairs(Hotbar.GetActionButtons()) do
+        if not pcall(Hotbar.RenderHotkey, i, state) then
+            Hotbar:LogError("Error rendering hotkey " .. i .. " " .. state.ActionID)
+            Hotbar.UnbindActionButton(i)
         end
     end
 end
