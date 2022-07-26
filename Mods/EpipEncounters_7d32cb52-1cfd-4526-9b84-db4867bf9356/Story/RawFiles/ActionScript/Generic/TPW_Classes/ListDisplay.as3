@@ -415,9 +415,15 @@ package
 
                     if(this.content_array[_loc2_].CENTER_IN_LIST)
                     {
-                        this.content_array[_loc2_].x = this.frameWidth / 2 - this.content_array[_loc2_].width / 2;
+                        this.content_array[_loc2_].x = this.frameWidth / 2 - this.content_array[_loc2_].width / 2 + this.SIDE_SPACING;
+
+                        if (this.content_array[_loc2_].EL_SIDE_SPACING != null)
+                        {
+                            trace("here");
+                            this.content_array[_loc2_].x += this.content_array[_loc2_].EL_SIDE_SPACING;
+                        }
                     }
-                    else if(this.m_sideSpacing != 0) // Not compatible with CENTER_IN_LIST by design
+                    else if(this.m_sideSpacing != 0)
                     {
                         this.content_array[_loc2_].x = this.SIDE_SPACING;
                     }

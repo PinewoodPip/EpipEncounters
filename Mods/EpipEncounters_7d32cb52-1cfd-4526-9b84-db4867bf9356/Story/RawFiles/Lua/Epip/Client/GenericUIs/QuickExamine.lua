@@ -1,4 +1,5 @@
 
+---@class QuickExamine : Feature
 Epip.Features.QuickExamine = {
     entityNetID = nil,
     lockCharacter = false,
@@ -8,7 +9,7 @@ Epip.Features.QuickExamine = {
     SCROLLBAR_WIDTH = 10,
     ContentContainer = nil, ---@type GenericUI_Element_VerticalList
     CharacterNameElement = nil, ---@type GenericUI_Element_Text
-    DIVIDER_WIDTH = 370,
+    DIVIDER_WIDTH = 350,
     ALPHA = 0.8,
     HEIGHT = 600,
 
@@ -20,6 +21,7 @@ Epip.Features.QuickExamine = {
         EntityChanged = {}, ---@type QuickExamine_Event_EntityChanged
     },
 }
+---@class QuickExamine
 local QuickExamine = Epip.Features.QuickExamine
 Epip.AddFeature("QuickExamine", "QuickExamine", QuickExamine)
 
@@ -40,6 +42,10 @@ local Generic = Client.UI.Generic
 ---@return GenericUI_Element_VerticalList
 function Epip.Features.QuickExamine.GetContainer()
     return QuickExamine.ContentContainer
+end
+
+function QuickExamine.GetContainerWidth()
+    return QuickExamine.GetContainer():GetMovieClip().width - 60
 end
 
 ---@param path Path?
@@ -74,6 +80,9 @@ function Epip.Features.QuickExamine.SetEntity(entity)
             QuickExamine.entityNetID = entity.NetID
 
             QuickExamine.GetContainer():Clear()
+
+            -- Filler to compensate for the top div having a short height for the culling effect.
+            QuickExamine.GetContainer():AddChild("Filler", "Empty"):GetMovieClip().heightOverride = 10
 
             QuickExamine.CharacterNameElement:SetText(Text.Format(entity.DisplayName, {
                 Color = "ffffff",
@@ -118,11 +127,11 @@ QuickExamine.Events.EntityChanged:RegisterListener(function (entity)
 
     local header = container:AddChild("QuickExamine_Artifacts_Header", "Text")
     header:SetText(Text.Format("Artifact Powers", {Color = "ffffff", Size = 19}))
-    header:SetSize(QuickExamine.WIDTH, 30)
+    header:SetSize(QuickExamine.GetContainerWidth(), 30)
 
     if #artifacts > 0 then
         local artifactContainer = container:AddChild("QuickExamine_Artifacts", "HorizontalList")
-        artifactContainer:SetSize(QuickExamine.WIDTH * 0.8, 35)
+        artifactContainer:SetSize(QuickExamine.GetContainerWidth(), 35)
         artifactContainer:SetCenterInLists(true)
 
         for _,artifact in ipairs(artifacts) do
@@ -168,6 +177,7 @@ local function Setup()
 
     local list = container:AddChild("List", "VerticalList")
     list:SetSize(QuickExamine.WIDTH, -1)
+    list:SetSideSpacing(-20)
 
     local header = list:AddChild("Header", "Text")
     header:SetText(Text.Format("Quick Examine", {
@@ -190,12 +200,13 @@ local function Setup()
     div:SetAsDraggableArea()
     div:SetSize(QuickExamine.DIVIDER_WIDTH, 20)
     div:SetCenterInLists(true)
+    div:GetMovieClip().heightOverride = div:GetMovieClip().height / 2
 
     local content = list:AddChild("Content", "ScrollList")
     content:SetMouseWheenEnabled(true)
-    content:SetFrame(QuickExamine.WIDTH, 510)
-    content:SetScrollbarSpacing(-30)
-    content:SetSideSpacing(10)
+    content:SetFrame(QuickExamine.WIDTH - 30, 510)
+    content:SetScrollbarSpacing(20)
+    content:SetSideSpacing(26)
     QuickExamine.ContentContainer = content
     
     local closeButton = panel:AddChild("Close", "Button")

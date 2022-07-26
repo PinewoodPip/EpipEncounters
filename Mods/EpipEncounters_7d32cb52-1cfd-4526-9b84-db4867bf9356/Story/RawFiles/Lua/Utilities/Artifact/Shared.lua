@@ -943,6 +943,7 @@ Artifact = {
         },
     },
 }
+Epip.InitializeLibrary("Artifact", Artifact)
 
 ---@class ArtifactDefinition
 ---@field ID string

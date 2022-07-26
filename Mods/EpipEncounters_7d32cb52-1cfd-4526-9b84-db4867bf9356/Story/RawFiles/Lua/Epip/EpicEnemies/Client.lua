@@ -206,7 +206,7 @@ QuickExamine.Events.EntityChanged:RegisterListener(function (entity)
 
         local header = container:AddChild("EpicEnemies_Header", "Text")
         header:SetText(Text.Format("Epic Enemies Effects", {Color = "ffffff", Size = 19}))
-        header:SetSize(QuickExamine.WIDTH, 30)
+        header:SetSize(QuickExamine.GetContainerWidth(), 30)
 
         -- Artifact powers are already handled through the base QuickExamine script
 
