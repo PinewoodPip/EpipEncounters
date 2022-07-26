@@ -8,7 +8,7 @@ local Overlay = {
     UI = nil, ---@type GenericUI_Instance
 
     sortingMode = "Sort_Date",
-    searchTerm = "",
+    searchTerm = nil,
 
     SORTING_MODES = {
         DATE = "Sort_Date",
@@ -57,7 +57,7 @@ end
 ---@param text string
 ---@return SaveLoadUI_Entry[] By reference (table passed by parameter is mutated).
 function Overlay.FilterContent(entries, fieldName, text)
-    if text ~= "" then
+    if text ~= nil and text ~= "" then
         local i = 1
         while i <= #entries do
             local entry = entries[i]
@@ -100,6 +100,12 @@ SaveLoad.Events.GetContent:Subscribe(function (e)
         ui:GetUI().Layer = SaveLoad:GetUI().Layer + 100
         SaveLoad:SetFlag("OF_PlayerModal1", false)
 
+        if Overlay.searchTerm == nil then
+            Overlay.UI:GetElementByID("SearchText"):SetText("Enter to search...")
+            Overlay.UI:GetElementByID("SearchText"):SetSize(200, 50)
+            Overlay.UI:GetElementByID("Sorting"):SelectOption(Overlay.GetSortingMode())
+        end
+
         -- Sort and filter content
         Overlay.FilterContent(e.Entries, "Name", Overlay.searchTerm)
         Overlay.SortContent(e.Entries)
@@ -111,7 +117,7 @@ end)
 Ext.Events.Tick:Subscribe(function (e)
     if GameState.GetState() == "Paused" and Overlay.UI:IsVisible() and (not SaveLoad:Exists() or not SaveLoad:IsVisible()) then
         Overlay.UI:GetUI():Hide()
-        Overlay.searchTerm = ""
+        Overlay.searchTerm = nil
     end
 end)
 
@@ -144,9 +150,7 @@ local function SetupUI()
     local searchText = searchBar:AddChild("SearchText", "Text")
     searchText:SetEditable(true)
     searchText:SetType(0)
-    searchText:SetText(Text.Format("Enter to search...", {Color = Color.COLORS.WHITE}))
     searchBar:SetPosition(280, 6)
-    searchText:SetSize(200, 50)
     searchText.Events.Changed:Subscribe(function (e)
         Overlay.searchTerm = e.Text
         SaveLoad.RenderContent()
