@@ -156,6 +156,7 @@ LOAD_ORDER = {
     "UI/Vanity/Tabs/Outfits.lua",
     "UI/Vanity/Tabs/Dyes.lua",
     -- "UI/Vanity/Tabs/Auras.lua",
+    {ScriptSet = "UI/Vanity/Tabs/Shapeshift", WIP = true},
 
     "UI/CombatLog/Messages/_Base.lua",
     "UI/CombatLog/Messages/_Character.lua",
@@ -267,13 +268,13 @@ Utilities = {}
 -- Epip does not work in-editor.
 if Ext.Utils.GameVersion() ~= "v3.6.51.9303" then
     for _,script in ipairs(LOAD_ORDER) do
-        if type(script) == "table" then
+        if type(script) == "table" and (not script.WIP or Epip.IsDeveloperMode(true)) then
             local contextSpecificScript = "/Client.lua"
             if Ext.IsServer() then contextSpecificScript = "/Server.lua" end
 
             Ext.Require(prefixedGUID, script.ScriptSet .. "/Shared.lua")
             Ext.Require(prefixedGUID, script.ScriptSet .. contextSpecificScript)
-        else
+        elseif type(script) == "string" then
             Ext.Require(prefixedGUID, script)
         end
     end
