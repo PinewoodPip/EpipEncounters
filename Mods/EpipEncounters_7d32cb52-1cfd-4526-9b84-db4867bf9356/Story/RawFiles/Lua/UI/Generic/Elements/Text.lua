@@ -2,7 +2,7 @@
 local Generic = Client.UI.Generic
 
 ---@class GenericUI_Element_Text : GenericUI_Element
----@field SetText fun(self, text:string)
+---@field SetText fun(self, text:string, setSize:boolean?)
 ---@field SetStroke fun(self, color:uint64, size:number, alpha:number, strength:uint64, unknown:uint64)
 ---@field SetType fun(self, textType:integer)
 ---@field SetEditable fun(self, editable:boolean)

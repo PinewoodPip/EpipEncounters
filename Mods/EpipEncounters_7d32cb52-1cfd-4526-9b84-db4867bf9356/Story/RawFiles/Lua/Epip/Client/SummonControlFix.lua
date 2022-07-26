@@ -20,7 +20,7 @@ PlayerInfo.Events.ActiveCharacterChanged:Subscribe(function (e)
     if newChar and prevChar and not e.Manual then
         
         -- Only restore control if switching from a character to summon. We do not check if the char is the summoner as this bug can cause the control to be switched to other char's summons as well.
-        if newChar.HasOwner then
+        if newChar.HasOwner and not prevChar.HasOwner then
             local summonerHandle = prevChar.Handle
 
             -- And only within combat if the summon does not have its turn

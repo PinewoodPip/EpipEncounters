@@ -98,7 +98,7 @@ function Test.SetupTests()
     text:SetSize(400, 200)
     bg:GetMovieClip().background_mc.alpha = 0.2
 
-    -- bg:SetAsDraggableArea()
+    bg:SetAsDraggableArea()
 
     -- TESTS
     Test.TestButtons()

@@ -199,8 +199,7 @@ local function Setup()
     
     local closeButton = panel:AddChild("Close", "Button")
     closeButton:SetType(Generic.ELEMENTS.Button.TYPES.CLOSE)
-    -- closeButton:SetPosition(QuickExamine.WIDTH - closeButton:GetMovieClip().width, 0)
-    closeButton:SetPosition(400 - 23, 0) -- TODO fix
+    closeButton:SetPosition(QuickExamine.WIDTH - closeButton:GetMovieClip().width, 0)
     closeButton:RegisterListener(Generic.ELEMENTS.Button.EVENT_TYPES.PRESSED, function()
         ui:GetUI():Hide()
     end)

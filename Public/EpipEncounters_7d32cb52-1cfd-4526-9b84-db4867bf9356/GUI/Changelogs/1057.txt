@@ -5,6 +5,8 @@
 - The hotbar now shows a warning for unmemorized skills, as well as skills from items that have been unequipped
 - Fixed some changelogs ingame not showing up
 - Added an option to enable some improvements to the save/load menu: alphabetical sorting and search. The search bar supports lua patterns and is case-sensitive
+- Fixed issues with the hotbar and skills with an explicit "None" requirement
+- Fixed transmogged artifacts breaking if you drilled them
 
 On the technical side of things:
 

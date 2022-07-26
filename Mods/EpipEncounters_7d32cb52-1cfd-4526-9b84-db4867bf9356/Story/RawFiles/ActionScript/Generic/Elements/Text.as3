@@ -19,7 +19,7 @@ package Elements
         public var _txt_Left:TextField;
         public var _txt_Center:TextField;
         private var textTypes:Array;
-        private var _cachedText:String = "";
+        public var _cachedText:String = "";
         private var _editable:Boolean = false;
 
         public function Text()
@@ -79,12 +79,15 @@ package Elements
             this.SetText(this._cachedText);
         }
 
-        public function SetText(text:String) : *
+        public function SetText(text:String, setSize:Boolean=false) : *
         {
             this.text_txt.htmlText = text;
-            this.text_txt.height = this.text_txt.textHeight;
-            this.text_txt.width = this.text_txt.textWidth;
             this._cachedText = text;
+
+            if (setSize)
+            {
+                this.SetSize(this.text_txt.textWidth, this.text_txt.textHeight);
+            }
         }
 
         public function SetEditable(editable:Boolean) : *

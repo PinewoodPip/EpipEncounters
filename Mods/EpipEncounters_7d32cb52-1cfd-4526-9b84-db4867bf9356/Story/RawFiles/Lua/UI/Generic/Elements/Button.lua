@@ -2,7 +2,7 @@
 local Generic = Client.UI.Generic
 
 ---@class GenericUI_Element_Button : GenericUI_Element
----@field SetText fun(self, text:string)
+---@field SetText fun(self, text:string, textY:number?)
 ---@field SetType fun(self, buttonType:integer)
 ---@field SetEnabled fun(self, enabled:boolean)
 ---@field IsEnabled fun(self):boolean

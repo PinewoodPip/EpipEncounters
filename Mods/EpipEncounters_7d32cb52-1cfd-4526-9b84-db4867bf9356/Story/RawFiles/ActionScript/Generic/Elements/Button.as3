@@ -102,6 +102,13 @@ package Elements
             this.RegisterType(this._bg_Close, true);
 
             this.SetType(0);
+            this.SetEnabled(true);
+            this.SetText("");
+
+            this.disabled_mc.width = 0;
+            this.disabled_mc.height = 0;
+
+            this.text_mc.mouseEnabled = false;
 
             // ------- Larian stuff follows:
 
@@ -156,10 +163,11 @@ package Elements
 
         public function SetType(buttonType:int) : *
         {
-            // this.gotoAndStop(buttonType + 1);
             if (this.bg_mc)
             {
                 this.bg_mc.visible = false;
+                this.bg_mc.scaleX = 0;
+                this.bg_mc.scaleY = 0;
             }
 
             this.bg_mc = this.buttonTypes[buttonType];
@@ -172,18 +180,17 @@ package Elements
             this.bg_mc.visible = true;
 
             this.SetState("Normal"); // TODO remember state?
+            this.SetText(this.text_mc._cachedText);
         }
 
-        public function SetText(text:String) : *
+        public function SetText(text:String, textY:Number=0) : *
         {
             this.text_mc.SetType(1);
-            this.text_mc.SetText(text);
-            this.text_mc.SetSize(this.bg_mc.width, this.bg_mc.height);
-            var textHeight:Number = this.text_mc.text_txt.textHeight;
-            this.text_mc.y = (this.bg_mc.height / 2) - (textHeight / 2); // TODO is this right?
+            this.text_mc.SetText(text, false);
 
-            // this.text_mc.scrollRect = new Rectangle(0, 0, this.bg_mc.width, 10);
-            this.text_mc.SetSize(this.bg_mc.width, this.text_mc.text_txt.height - this.text_mc.y);
+            this.text_mc.SetSize(this.bg_mc.width, this.bg_mc.height);
+
+            this.text_mc.y = textY;
         }
 
         // --------------
