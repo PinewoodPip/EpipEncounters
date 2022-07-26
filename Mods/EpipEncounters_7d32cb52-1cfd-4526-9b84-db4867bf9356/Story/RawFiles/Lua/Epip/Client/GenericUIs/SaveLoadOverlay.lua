@@ -145,7 +145,7 @@ local function SetupUI()
     sorting:SetOpenUpwards(true)
 
     local searchBar = panel:AddChild("SearchBar", "TiledBackground")
-    searchBar:SetBackground(1, 200, 50)
+    searchBar:SetBackground(1, 180, 40)
     searchBar:SetAlpha(0.3)
     local searchText = searchBar:AddChild("SearchText", "Text")
     searchText:SetEditable(true)

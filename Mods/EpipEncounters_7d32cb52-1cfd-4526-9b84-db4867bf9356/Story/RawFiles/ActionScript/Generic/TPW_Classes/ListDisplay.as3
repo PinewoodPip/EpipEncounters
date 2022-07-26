@@ -419,7 +419,6 @@ package
 
                         if (this.content_array[_loc2_].EL_SIDE_SPACING != null)
                         {
-                            trace("here");
                             this.content_array[_loc2_].x += this.content_array[_loc2_].EL_SIDE_SPACING;
                         }
                     }
