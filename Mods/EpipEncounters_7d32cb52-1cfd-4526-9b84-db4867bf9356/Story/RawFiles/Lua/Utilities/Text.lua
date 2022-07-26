@@ -141,6 +141,16 @@ function Text.Split(inputstr, sep)
     return t
 end
 
+---Capitalizes the first letter of the string.
+---https://stackoverflow.com/a/2421746
+---@param str string
+---@return string
+function Text.Capitalize(str)
+    str = str:gsub("^%l", string.upper)
+
+    return str
+end
+
 -- function Text.Split(s, sep)
 --     local fields = {}
     

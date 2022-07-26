@@ -149,6 +149,7 @@ LOAD_ORDER = {
     "UI/ChatLog.lua",
     "UI/SaveLoad.lua",
     "UI/CombatLog/CombatLog.lua",
+    "UI/Craft.lua",
 
     "UI/Vanity/Vanity.lua",
     "UI/Vanity/Tabs/_Tab.lua",
@@ -197,6 +198,7 @@ LOAD_ORDER = {
     "Epip/Client/TreasureTableDisplay.lua",
     "Epip/Client/SummonControlFix.lua",
     "Epip/Client/Notifications.lua",
+    "Epip/Client/CraftingFixes.lua",
 
     "Epip/Client/GenericUIs/QuickExamine.lua",
     "Epip/Client/GenericUIs/SaveLoadOverlay.lua",

@@ -370,6 +370,29 @@ local SaveLoadOptions = {
     },
 }
 
+local CraftingOptions = {
+    {
+        ID = "Crafting_Header",
+        Type = "Header",
+        Label = "<font color='7e72d6' size='23'>Crafting</font>",
+    },
+    {
+        ID = "Crafting_DefaultFilter",
+        Type = "Dropdown",
+        Label = "Default Tab",
+        Tooltip = "Determines the default tab for the crafting UI.",
+        DefaultValue = 1,
+        Options = {
+            "All",
+            "Equipment",
+            "Consumables",
+            "Magical",
+            "Ingredients",
+            "Miscellaneous",
+        }
+    },
+}
+
 local TopOptions = {
     {
         ID = "AutoIdentify",
@@ -454,6 +477,7 @@ local Order = {
     PlayerInfo,
     Overheads,
     SaveLoadOptions,
+    CraftingOptions,
     OtherOptions,
     Experimental,
 }
