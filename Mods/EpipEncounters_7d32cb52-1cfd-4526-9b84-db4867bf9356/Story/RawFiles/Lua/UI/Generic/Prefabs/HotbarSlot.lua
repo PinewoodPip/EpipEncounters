@@ -67,7 +67,7 @@ end
 
 ---@param skillID string
 function Slot:SetSkill(skillID)
-    local stat = Stats.Get("Skill", skillID)
+    local stat = Stats.Get("SkillData", skillID)
     local slot = self.SlotElement
 
     slot:SetIcon(stat.Icon, 50, 50)
@@ -109,7 +109,7 @@ function Slot:_OnElementMouseUp(e)
     local objectID = data.DragId
 
     if objectID ~= "" then
-        local skill = Stats.Get("Skill", objectID)
+        local skill = Stats.Get("SkillData", objectID)
 
         if skill then
             self:SetSkill(objectID)

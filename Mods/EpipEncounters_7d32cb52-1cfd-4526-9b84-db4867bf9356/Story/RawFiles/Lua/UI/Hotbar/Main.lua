@@ -1043,7 +1043,7 @@ function Hotbar.ShouldShowSourceFrame(index)
     local show = false
 
     if slot.Type == "Skill" then
-        local stat = Stats.Get("Skill", slot.SkillOrStatId)
+        local stat = Stats.Get("SkillData", slot.SkillOrStatId)
 
         if stat then
             show = stat["Magic Cost"] > 0
@@ -1080,7 +1080,7 @@ function Hotbar.GetIconForSlot(index)
     local icon
 
     if slot.Type == "Skill" then
-        local stat = Stats.Get("Skill", slot.SkillOrStatId)
+        local stat = Stats.Get("SkillData", slot.SkillOrStatId)
 
         if stat then
             icon = stat.Icon
@@ -1292,6 +1292,7 @@ function Hotbar.RenderSlot(char, canUseHotbar, slotIndex)
     local tooltip = "" -- TODO is this only for skills?
     local isEnabled = false -- TODO
     local cooldown = 0
+    local unavailable = false
 
     -- types: 0 empty, 1 skill, 2 item
     if data.Type == "Skill" then
@@ -1306,11 +1307,16 @@ function Hotbar.RenderSlot(char, canUseHotbar, slotIndex)
             handle = Ext.HandleToDouble(skill.OwnerHandle)
 
             isEnabled = Character.CanUseSkill(char, data.SkillOrStatId)
+
+            if not skill.IsLearned then
+                unavailable = true
+            end
         else 
             -- Hotbar:LogError("Trying to update skill not in skillmanager! " .. data.SkillOrStatId)
             cooldown = 0
             handle = Ext.HandleToDouble(char.Handle)
             isEnabled = false
+            unavailable = Stats.Get("SkillData", data.SkillOrStatId) ~= nil -- Only show warning if the skill exists in the current session
         end
     elseif data.Type == "Item" then
         slotType = 2
@@ -1328,6 +1334,8 @@ function Hotbar.RenderSlot(char, canUseHotbar, slotIndex)
     elseif data.Type == "None" then
         inUse = false
     end
+
+    slot.SetUnavailable(unavailable)
 
     -- Disable using any slots during combat, outside your turn, or while casting a skill.
     if not canUseHotbar then

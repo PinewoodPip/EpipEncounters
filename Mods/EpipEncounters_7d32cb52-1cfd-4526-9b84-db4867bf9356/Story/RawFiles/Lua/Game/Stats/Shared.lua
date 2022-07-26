@@ -6,7 +6,7 @@ Stats = {
         Boost = true,
         Armor = true,
         Weapon = true,
-        Skill = true,
+        SkillData = true,
         Object = true,
         Character = true,
         Shield = true,
@@ -150,7 +150,7 @@ function Stats.MeetsRequirements(char, statID, isItem, itemSource)
     return true
 end
 
----@alias StatsObjectType "ItemColor"|"Boost"|"Armor"|"Weapon"|"Skill"|"Object"|"Character"|"Data"|"ItemProgressionNames"|"ItemProgressionVisuals"|"Potion"|"Requirements"|"Shield"|"StatusData"|"CraftingStationsItemComboPreviewData"|"DeltaModifier"|"Equipment"|"ItemCombos"|"ItemTypes"|"ObjectCategoriesItemComboPreviewData"|"SkillSet"|"TreasureGroups"|"TreasureTable"|"DeltaMod"
+---@alias StatsObjectType "ItemColor"|"Boost"|"Armor"|"Weapon"|"SkillData"|"Object"|"Character"|"Data"|"ItemProgressionNames"|"ItemProgressionVisuals"|"Potion"|"Requirements"|"Shield"|"StatusData"|"CraftingStationsItemComboPreviewData"|"DeltaModifier"|"Equipment"|"ItemCombos"|"ItemTypes"|"ObjectCategoriesItemComboPreviewData"|"SkillSet"|"TreasureGroups"|"TreasureTable"|"DeltaMod"
 
 ---@param statType StatsObjectType
 ---@param id string
