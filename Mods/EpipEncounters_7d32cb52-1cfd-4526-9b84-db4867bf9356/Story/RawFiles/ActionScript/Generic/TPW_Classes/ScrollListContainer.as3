@@ -93,9 +93,9 @@ package
                 _loc2_ = this.m_dragAutoScrollDistance - this.mouseY;
                 this.m_scrollbar_mc.adjustScrollHandle(-_loc2_ * this.m_dragAutoScrollMod);
                 }
-                else if(this.mouseY > m_height - this.m_dragAutoScrollDistance && this.mouseY < m_height)
+                else if(this.mouseY > this.frameHeight - this.m_dragAutoScrollDistance && this.mouseY < this.frameHeight)
                 {
-                _loc2_ = this.mouseY - (m_height - this.m_dragAutoScrollDistance);
+                _loc2_ = this.mouseY - (this.frameHeight - this.m_dragAutoScrollDistance);
                 this.m_scrollbar_mc.adjustScrollHandle(_loc2_ * this.m_dragAutoScrollMod);
                 }
             }
@@ -138,7 +138,7 @@ package
                 {
                 _loc2_.y = _loc3_.y + _loc3_.height;
                 }
-                else if(_loc3_.y > this.m_scrollbar_mc.scrolledY + height)
+                else if(_loc3_.y > this.m_scrollbar_mc.scrolledY + this.frameHeight)
                 {
                 _loc3_.y = _loc2_.y - _loc3_.height;
                 }
@@ -174,7 +174,7 @@ package
                 _loc2_ = content_array[_loc1_];
                 if(_loc2_ && _loc2_.elementInView && _loc2_.elementInView is Function)
                 {
-                if(_loc2_.y + getElementHeight(_loc2_) - this.m_TextGlowOffset > this.m_scrollbar_mc.scrolledY && _loc2_.y + this.m_TextGlowOffset <= this.m_scrollbar_mc.scrolledY + height)
+                if(_loc2_.y + getElementHeight(_loc2_) - this.m_TextGlowOffset > this.m_scrollbar_mc.scrolledY && _loc2_.y + this.m_TextGlowOffset <= this.m_scrollbar_mc.scrolledY + this.frameHeight)
                 {
                     _loc2_.elementInView(_loc2_.visible);
                 }
@@ -315,15 +315,15 @@ package
             {
                 this.m_scrollbar_mc.scrollTo(this.m_scrollbar_mc.m_scrolledY);
             }
-            this.m_scrollbar_mc.m_contentFrameHeight = height;
+            this.m_scrollbar_mc.m_contentFrameHeight = this.frameHeight;
             this.m_scrollbar_mc.m_contentHeight = this.m_ScrollHeight;
             this.m_scrollbar_mc.scrollbarVisible();
         }
         
         override public function setFrameWidth(param1:Number) : *
         {
-            width = param1;
-            containerContent_mc.scrollRect = new Rectangle(0,0,param1,height);
+            this.m_width = param1;
+            // containerContent_mc.scrollRect = new Rectangle(0,0,param1,this.frameHeight); -- TODO fix
             this.m_scrollbar_mc.x = this.m_SBSpacing + param1;
             this.m_scrollbar_mc.addContent(containerContent_mc);
             updateScrollHit();
@@ -333,7 +333,7 @@ package
         {
             width = param1;
             height = param2;
-            containerContent_mc.scrollRect = new Rectangle(0,0,param1,param2);
+            this.container_mc.scrollRect = new Rectangle(0,0,this.frameWidth,this.frameHeight);
             this.m_scrollbar_mc.x = this.m_SBSpacing + param1;
             this.m_scrollbar_mc.addContent(containerContent_mc);
             this.checkScrollBar();
@@ -358,7 +358,7 @@ package
                 content_array[_loc2_].y = _loc1_;
                 if(content_array[_loc2_].CENTER_IN_LIST)
                 {
-                content_array[_loc2_].x = this.m_width / 2 - content_array[_loc2_].width / 2;
+                content_array[_loc2_].x = this.frameWidth / 2 - content_array[_loc2_].width / 2;
                 }
                 content_array[_loc2_].x += SIDE_SPACING;
                 if(content_array[_loc2_].visible)
@@ -374,18 +374,20 @@ package
                 this.m_scrollbar_mc.alignContentToBottom();
             }
             this.cullMcsToFrame();
+
+            // this.setFrame(this.m_width, this.m_height);
         }
         
         public function set scrollbarSpacing(param1:Number) : *
         {
             this.m_SBSpacing = param1;
-            this.m_scrollbar_mc.x = width + this.m_SBSpacing + this.m_scrollbar_mc.width;
+            this.m_scrollbar_mc.x = this.frameWidth + this.m_SBSpacing + this.m_scrollbar_mc.width;
         }
         
         public function set SB_SPACING(param1:Number) : *
         {
             this.m_SBSpacing = param1;
-            this.m_scrollbar_mc.x = width + this.m_SBSpacing + this.m_scrollbar_mc.width;
+            this.m_scrollbar_mc.x = this.frameWidth + this.m_SBSpacing + this.m_scrollbar_mc.width;
         }
         
         public function get SB_SPACING() : Number

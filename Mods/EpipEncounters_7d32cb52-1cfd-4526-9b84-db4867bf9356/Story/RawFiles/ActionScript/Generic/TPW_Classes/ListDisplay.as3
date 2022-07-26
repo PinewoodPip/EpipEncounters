@@ -85,7 +85,7 @@ package
             this.container_mc.x = 0;
         }
         
-        override public function get width() : Number
+        public function get frameWidth() : Number
         {
             if(this.m_width == -1)
             {
@@ -94,13 +94,23 @@ package
             return this.m_width;
         }
         
-        override public function get height() : Number
+        public function get frameHeight() : Number
         {
             if(this.m_height == -1)
             {
                 return this.height;
             }
             return this.m_height;
+        }
+
+        public function set frameWidth(num:Number) : void
+        {
+            this.width = num;
+        }
+
+        public function set frameHeight(num:Number) : void
+        {
+            this.height = num;
         }
         
         public function get visibleHeight() : Number
@@ -150,7 +160,7 @@ package
             this.m_width = param1;
             this.m_height = param2;
             this.updateScrollHit();
-            this.container_mc.scrollRect = new Rectangle(0,0,param1,param2);
+            // this.container_mc.scrollRect = new Rectangle(0,0,this.frameWidth,this.frameHeight); -- TODO fix
             this.m_hasScrollRect = true;
         }
         
@@ -166,8 +176,8 @@ package
                 _loc1_.graphics.endFill();
                 this.scrollHit_mc.addChild(_loc1_);
             }
-            this.scrollHit_mc.width = this.width;
-            this.scrollHit_mc.height = this.height;
+            this.scrollHit_mc.width = this.frameWidth;
+            this.scrollHit_mc.height = this.frameHeight;
         }
         
         public function getCurrentMovieClip() : MovieClip
@@ -405,7 +415,7 @@ package
 
                     if(this.content_array[_loc2_].CENTER_IN_LIST)
                     {
-                        this.content_array[_loc2_].x = this.m_width / 2 - this.content_array[_loc2_].width / 2;
+                        this.content_array[_loc2_].x = this.frameWidth / 2 - this.content_array[_loc2_].width / 2;
                     }
                     else if(this.m_sideSpacing != 0) // Not compatible with CENTER_IN_LIST by design
                     {
@@ -424,6 +434,8 @@ package
                 this.m_NeedsSorting = false;
                 dispatchEvent(new Event("listSorted"));
             }
+
+            // this.setFrame(this.m_width, this.m_height);
         }
         
         public function getElementWidth(param1:MovieClip) : Number

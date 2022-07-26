@@ -29,7 +29,10 @@ function Test.TestButtons()
         button:RegisterListener(_B.EVENT_TYPES.PRESSED, function()
             button:SetEnabled(false)
         end)
+        button:SetCenterInLists(true)
     end
+
+    list:SetSize(300, -1)
 
     list:AddChild("div", "Divider"):SetSize(400)
 
@@ -104,6 +107,8 @@ function Test.SetupTests()
     Test.TestButtons()
     Test.TestSlot()
     Test.TestComboBox()
+
+    container:RepositionElements()
 end
 
 ---------------------------------------------

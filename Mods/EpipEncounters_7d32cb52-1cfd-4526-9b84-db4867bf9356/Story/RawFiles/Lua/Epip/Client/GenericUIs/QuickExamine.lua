@@ -164,9 +164,10 @@ local function Setup()
 
     local container = panel:AddChild("Container", "VerticalList")
     container:SetSize(QuickExamine.WIDTH, -1)
+    container:SetCenterInLists(true)
 
     local list = container:AddChild("List", "VerticalList")
-    list:SetSize(QuickExamine.WIDTH, -1) -- TODO remove, TODO investigate stack overflow
+    list:SetSize(QuickExamine.WIDTH, -1)
 
     local header = list:AddChild("Header", "Text")
     header:SetText(Text.Format("Quick Examine", {
