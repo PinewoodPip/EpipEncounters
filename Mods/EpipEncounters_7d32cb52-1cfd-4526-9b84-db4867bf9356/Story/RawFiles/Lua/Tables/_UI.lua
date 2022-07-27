@@ -123,6 +123,28 @@ function BaseUI:Exists()
     return self:GetUI() ~= nil
 end
 
+---Shorthand for UIObject:Show()
+function BaseUI:Show()
+    local ui = self:GetUI()
+
+    if ui then
+        ui:Show()
+    else
+        self:LogError("Show(): UI does not currently exist!")
+    end
+end
+
+---Shorthand for UIObject:Hide()
+function BaseUI:Hide()
+    local ui = self:GetUI()
+
+    if ui then
+        ui:Hide()
+    else
+        self:LogError("Hide(): UI does not currently exist!")
+    end
+end
+
 ---Plays a sound through the PlaySound ExternalInterface call.
 ---@param id string
 function BaseUI:PlaySound(id)

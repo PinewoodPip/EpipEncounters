@@ -70,7 +70,7 @@ Color = {
 ---@field Green integer
 ---@field Blue integer
 
----@type RGBColor
+---@class RGBColor
 local RGBColor = {
     Red = 0, Green = 0, Blue = 0
 }

@@ -8,7 +8,7 @@ local Hotbar = Client.UI.Hotbar
 ---@field StatsID string? Only for skills/actions.
 ---@field Item EclItem? Only for items.
 
----@class GenericUI_Prefab_HotbarSlot
+---@class GenericUI_Prefab_HotbarSlot : GenericUI_Prefab
 local Slot = {
     ID = nil, ---@type string
     SlotElement = nil, ---@type GenericUI_Element_Slot
@@ -18,7 +18,9 @@ local Slot = {
         ObjectDraggedIn = {},
     }
 }
+Inherit(Slot, Generic._Prefab)
 Generic.PREFABS.Slot = Slot
+Generic.RegisterPrefab("Slot", Slot)
 
 ---------------------------------------------
 -- EVENTS
@@ -42,7 +44,7 @@ function Slot.Create(ui, id, parent)
         SlotElement = ui:CreateElement(id, "Slot", parent),
     }
     Inherit(obj, Slot)
-    obj:_RegisterEvents()
+    obj:_Setup()
 
     obj:Clear()
 
@@ -52,17 +54,6 @@ function Slot.Create(ui, id, parent)
     Ext.Events.Tick:Subscribe(function() obj:_OnTick() end)
 
     return obj
-end
-
--- TODO separate table for prefabs
-function Slot:_RegisterEvents()
-    local _Templates = self.Events
-    
-    self.Events = {}
-
-    for id,_ in pairs(_Templates) do
-        self.Events[id] = SubscribableEvent:New(id)
-    end
 end
 
 ---@param skillID string
@@ -92,7 +83,7 @@ end
 function Slot:Clear()
     local slot = self.SlotElement
     slot:SetIcon("", 1, 1)
-    slot:SetCooldown(0, false)
+    slot:SetCooldown(-1, false)
     slot:SetEnabled(true)
 
     self.Object = {

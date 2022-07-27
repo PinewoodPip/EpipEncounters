@@ -7,7 +7,7 @@ local Generic = Client.UI.Generic
 ---@field SetEnabled fun(self, enabled:boolean)
 ---@field IsEnabled fun(self):boolean
 
----@type GenericUI_Element_Button
+---@class GenericUI_Element_Button
 Client.UI.Generic.ELEMENTS.Button = {
     TYPES = {
         BROWN = 0,
@@ -34,7 +34,7 @@ Client.UI.Generic.ELEMENTS.Button = {
         PRESSED = "Button_Pressed",
     },
 }
-local Button = Client.UI.Generic.ELEMENTS.Button
+local Button = Client.UI.Generic.ELEMENTS.Button ---@class GenericUI_Element_Button
 Inherit(Button, Generic._Element)
 
 ---------------------------------------------

@@ -73,9 +73,13 @@ package Elements
             if (this.background_mc)
             {
                 this.background_mc.visible = false;
+                this.background_mc.scaleX = 0;
+                this.background_mc.scaleY = 0;
             }
             this.background_mc = data.MovieClip;
             this.background_mc.visible = true;
+            this.background_mc.scaleX = 1;
+            this.background_mc.scaleY = 1;
 
             if (backgroundWidth < minWidth)
             {
@@ -137,6 +141,8 @@ package Elements
 
             obj.MovieClip = mc;
             mc.visible = false;
+            mc.scaleX = 0;
+            mc.scaleY = 0;
 
             obj.Width1 = width1;
             obj.Width2 = width2;

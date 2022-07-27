@@ -1,5 +1,5 @@
 
----@class GenericUI
+---@class GenericUI : Feature
 Client.UI.Generic = {
     SWF_PATH = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/generic.swf",
     DEFAULT_LAYER = 15,
@@ -115,6 +115,40 @@ function _Instance:GetMousePosition()
 end
 
 ---------------------------------------------
+-- PREFAB
+---------------------------------------------
+
+---@class GenericUI_Prefab
+local Prefab = {
+    ID = "None",
+    UI = nil, ---@type GenericUI_Instance
+    Events = {},
+}
+Generic._Prefab = Prefab
+
+function Prefab:_Setup()
+    self:_SetupEvents()
+end
+
+function Prefab:PrefixID(id)
+    return self.ID .. "_" .. id
+end
+
+function Prefab:GetMainElement()
+    return self.UI:GetElementByID(self:PrefixID("Container"))
+end
+
+function Prefab:_SetupEvents()
+    local _Templates = self.Events
+    
+    self.Events = {}
+
+    for id,_ in pairs(_Templates) do
+        self.Events[id] = SubscribableEvent:New(id)
+    end
+end
+
+---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
@@ -183,6 +217,13 @@ function Client.UI.Generic.Create(id)
     end)
     
     return ui
+end
+
+---Registers a prefab.
+---@param id string
+---@param prefab table
+function Generic.RegisterPrefab(id, prefab)
+    Generic.PREFABS[id] = prefab
 end
 
 ---@param elementType string

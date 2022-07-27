@@ -133,7 +133,8 @@ LOAD_ORDER = {
     "UI/Generic/Elements/Slot.lua",
     "UI/Generic/Elements/ComboBox.lua",
     "UI/Generic/Prefabs/HotbarSlot.lua",
-    -- "UI/Generic/Test.lua", -- TEST!
+    "UI/Generic/Prefabs/Spinner.lua",
+    "UI/Generic/Test.lua", -- TEST!
 
     "UI/Hotbar/Main.lua",
     "UI/Hotbar/ContextMenus.lua",

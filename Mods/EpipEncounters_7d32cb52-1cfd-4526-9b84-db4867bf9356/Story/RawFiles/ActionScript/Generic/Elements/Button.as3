@@ -297,6 +297,10 @@ package Elements
             }
             else
             {
+                // Why this has to be done twice is simply beyond me
+                this.disabled_mc.visible = false;
+                this.disabled_mc.scaleX = 0;
+                this.disabled_mc.scaleY = 0;
                 this.disabled_mc.visible = false;
                 this.disabled_mc.scaleX = 0;
                 this.disabled_mc.scaleY = 0;

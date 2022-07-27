@@ -3,19 +3,19 @@ package Elements
     import LS_Classes.LSPanelHelpers;
     import flash.display.MovieClip;
     import flash.external.ExternalInterface;
-    import LS_Classes.horizontalList;
+    import TPW_Classes.HorizontalList;
     import flash.text.TextField;
     import flash.events.MouseEvent;
 
     public dynamic class HorizontalList extends VerticalList
     {
-        // public var list:horizontalList;
+        // public var list:HorizontalList;
 
         public function HorizontalList()
         {
             super();
             this.removeChild(this.list);
-            this.list = new horizontalList();
+            this.list = new HorizontalList();
             this.addChild(this.list);
         }
 

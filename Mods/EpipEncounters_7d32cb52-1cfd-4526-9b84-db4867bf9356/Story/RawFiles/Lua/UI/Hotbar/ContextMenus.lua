@@ -13,6 +13,9 @@ Client.UI.ContextMenu.RegisterMenuHandler("hotbarSlot", function()
     local entries = {
         {id = "hotBarRow_LoadoutsMenu", type = "subMenu", subMenu = "hotBarLoadoutsMenu", text = "Saved Loadouts..."},
 
+        -- TODO hook
+        {id = "hotBarRow_CreateGroup", type = "button", text = "Create group..."},
+
         {id = "hotBarRow_ShiftLeft", type = "button", text = "Shift slots to the left", closeOnButtonPress = false, params = {Direction = "left"}, eventIDOverride = "hotBar_ShiftRow"},
         {id = "hotBarRow_ShiftRight", type = "button", text = "Shift slots to the right", closeOnButtonPress = false, params = {Direction = "right"}, eventIDOverride = "hotBar_ShiftRow"},
         {id = "hotBarRow_RemoveUnmemorized", type = "button", text = "Remove unmemorized spells", requireShiftClick = true},
