@@ -86,6 +86,21 @@ function PlayerInfo.SetCombatBadgeVisibility(state)
     PlayerInfo:GetRoot().COMBAT_BADGE_ENABLED = state
 end
 
+---Returns the characters being shown in the UI.
+---@return EclCharacter[]
+function PlayerInfo.GetCharacters()
+    local chars = {}
+    local arr = PlayerInfo:GetRoot().player_array
+
+    for i=0,#arr-1,1 do
+        local player = arr[i]
+
+        table.insert(chars, Character.Get(player.characterHandle, true))
+    end
+
+    return chars
+end
+
 function PlayerInfo.ToggleStatuses(visible)
     local players = PlayerInfo.Root.player_array
 

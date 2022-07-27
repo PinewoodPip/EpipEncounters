@@ -4,9 +4,10 @@ local Generic = Client.UI.Generic
 local Hotbar = Client.UI.Hotbar
 
 ---@class GenericUI_Prefab_HotbarSlot_Object
----@field Type "None"|"Skill"|"Item"|"Action"
+---@field Type "None"|"Skill"|"Item"|"Action"|"Template"
 ---@field StatsID string? Only for skills/actions.
 ---@field Item EclItem? Only for items.
+---@field TemplateID GUID? Only for templates.
 
 ---@class GenericUI_Prefab_HotbarSlot : GenericUI_Prefab
 local Slot = {
@@ -80,6 +81,22 @@ function Slot:SetItem(item)
     }
 end
 
+---@param templateID GUID
+function Slot:SetTemplate(templateID)
+    local slot = self.SlotElement
+    local template = Ext.Template.GetTemplate(templateID)
+
+    if template then
+        self.Object = {
+            Type = "Template",
+            TemplateID = templateID,
+        }
+
+        slot:SetIcon(template.Icon, 50, 50)
+        slot:SetCooldown(-1, false)
+    end
+end
+
 function Slot:Clear()
     local slot = self.SlotElement
     slot:SetIcon("", 1, 1)
@@ -109,7 +126,8 @@ function Slot:_OnElementMouseUp(e)
         local item = Ext.Entity.GetItem(data.DragObject)
 
         if item then
-            self:SetItem(item)
+            self:SetTemplate(item.RootTemplate.Id)
+            self.Object.Item = item -- For dragging purposes only.
         end
     end
 end
@@ -132,28 +150,42 @@ function Slot:_OnTick()
         slot:SetLabel("")
         slot:SetCooldown(cooldown, true)
         slot:SetEnabled(enabled)
-    elseif obj.Type == "Item" then
-        local label = ""
-        local item = obj.Item
-        local isEnabled = true
-        if item.Amount > 1 then label = tostring(item.Amount) end
+    elseif obj.Type == "Item" or obj.Type == "Template" then
+        local item
 
-        slot:SetLabel(label)
-        slot:SetCooldown(0, false)
-
-        if item.Stats then
-            isEnabled = Game.Stats.MeetsRequirements(char, item.Stats.Name, true, item)
+        -- Fetch the first item of this template in the party inventory.
+        if obj.Type == "Template" then
+            item = Item.GetItemsInPartyInventory(char, function(invItem) return invItem.RootTemplate.Id == obj.TemplateID end)[1]
+        else
+            item = obj.Item
         end
 
-        -- Item skills
-        local useActions = item.RootTemplate.OnUsePeaceActions
-        for _,action in ipairs(useActions) do
-            if action.Type == "UseSkill" and isEnabled then
-                isEnabled = isEnabled and Character.CanUseSkill(char, action.SkillID, item)
+        if item and item.Amount then
+            -- We display the total item count in the party inventory.
+            local amount = Item.GetPartyTemplateCount(item.RootTemplate.Id)
+            local label = ""
+            local isEnabled = amount > 0
+            if item.Amount > 1 then label = tostring(amount) end
+
+            slot:SetLabel(label)
+            slot:SetCooldown(0, false)
+
+            if item.Stats then
+                isEnabled = isEnabled and Game.Stats.MeetsRequirements(char, item.Stats.Name, true, item)
             end
-        end
 
-        slot:SetEnabled(isEnabled)
+            -- Item skills
+            local useActions = item.RootTemplate.OnUsePeaceActions
+            for _,action in ipairs(useActions) do
+                if action.Type == "UseSkill" and isEnabled then
+                    isEnabled = isEnabled and Character.CanUseSkill(char, action.SkillID, item)
+                end
+            end
+
+            slot:SetEnabled(isEnabled)
+        else -- Clear the slot once we consume all stacks of this item.
+            self:Clear()
+        end
     end
 end
 
@@ -164,8 +196,11 @@ function Slot:_OnSlotClicked(e)
     
     if obj.Type == "Skill" then
         Client.UI.Hotbar.UseSkill(obj.StatsID)
-    elseif obj.Type == "Item" then
-        Client.UI.Hotbar.UseSkill(obj.Item)
+    elseif obj.Type == "Item" or obj.Type == "Template" then
+        local item = obj.Item
+        if not item then item = Item.GetItemsInPartyInventory(char, function(i) return i.RootTemplate.Id == obj.TemplateID end)[1] end
+
+        Client.UI.Hotbar.UseSkill(item)
     end
 end
 

@@ -7,8 +7,9 @@ Game.Character = {
     AI_UNPREFERRED_TAG = "AI_UNPREFERRED_TARGET",
     AI_IGNORED_TAG = "AI_IGNORED_TARGET",
 }
+---@class CharacterLib
 Character = Game.Character
-Epip.InitializeFeature("Character", "Game.Character", Character)
+Epip.InitializeLibrary("Character", Character)
 
 ---Returns the current stacks on char, as well as lifetime. Queries the related status effects.
 ---@meta EE

@@ -10,17 +10,11 @@
 ---@return number
 function Item.GetPartyTemplateCount(template)
     local count = 0
-
-    local players = Client.UI.PlayerInfo:GetRoot().player_array
-
     local predicate = function(item)
-        local id = Utilities.GetPrefixedRootTemplateID(item)
-        return id == template
+        return item.RootTemplate.Id == template
     end
 
-    for i=0,#players-1,1 do
-        local player = Ext.GetCharacter(Ext.UI.DoubleToHandle(players[i].characterHandle))
-
+    for _,player in ipairs(Character.GetPartyMembers(Client.GetCharacter())) do
         count = count + Item.CountItemsInInventory(player, predicate)
     end
 

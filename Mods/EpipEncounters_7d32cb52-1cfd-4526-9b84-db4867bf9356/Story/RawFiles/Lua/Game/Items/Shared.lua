@@ -65,6 +65,28 @@ function Item.CanUse(char, item)
     return canUse
 end
 
+---Returns all items in the party inventory of char matching the predicate, or all if no predicate is passed.
+---@param char Character
+---@param predicate? fun(item:Item):boolean
+function Item.GetItemsInPartyInventory(char, predicate)
+    local items = {}
+    local partyCharacters = Character.GetPartyMembers(char)
+
+    for _,partyMember in ipairs(partyCharacters) do
+        local charItems = partyMember:GetInventoryItems()
+
+        for _,guid in ipairs(charItems) do
+            local item = Item.Get(guid)
+
+            if predicate == nil or predicate(item) then
+                table.insert(items, item)
+            end
+        end
+    end
+
+    return items
+end
+
 --- Gets the amount of Loremaster necessary to identify an item.  
 --- Ignores whether the item is already identified.
 ---@param item Item
