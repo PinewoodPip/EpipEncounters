@@ -27,8 +27,8 @@ package Elements
 
             this.addEventListener(MouseEvent.MOUSE_DOWN, this.onElementMouseDown);
             this.addEventListener(MouseEvent.MOUSE_UP, this.onElementMouseUp);
-            this.addEventListener(MouseEvent.MOUSE_OVER, this.onElementMouseOver);
-            this.addEventListener(MouseEvent.MOUSE_OUT, this.onElementMouseOut);
+            this.addEventListener(MouseEvent.ROLL_OVER, this.onElementMouseOver);
+            this.addEventListener(MouseEvent.ROLL_OUT, this.onElementMouseOut);
         }
 
         public function AddChildElement(mc:MovieClip) : *
