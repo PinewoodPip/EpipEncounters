@@ -69,6 +69,7 @@ function Slot:SetSkill(skillID)
     local slot = self.SlotElement
 
     slot:SetIcon(stat.Icon, 50, 50)
+    slot:SetSourceBorder(stat["Magic Cost"] > 0)
 
     self.Object = {
         Type = "Skill",
