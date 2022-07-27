@@ -51,7 +51,7 @@ function Spinner.Create(ui, id, parent, label, min, max, step)
     spinner.minValue = min
     spinner.step = step
 
-    spinner:_Setup(ui, id, parent, label)
+    spinner:_Setup(ui, parent, label)
 
     return spinner
 end
@@ -95,10 +95,9 @@ function Spinner:UpdateCounter()
 end
 
 ---@param ui GenericUI_Instance
----@param id string
 ---@param parent (GenericUI_Element|string)?
 ---@param label string
-function Spinner:_Setup(ui, id, parent, label)
+function Spinner:_Setup(ui, parent, label)
     self.UI = ui
     self:_SetupEvents()
 

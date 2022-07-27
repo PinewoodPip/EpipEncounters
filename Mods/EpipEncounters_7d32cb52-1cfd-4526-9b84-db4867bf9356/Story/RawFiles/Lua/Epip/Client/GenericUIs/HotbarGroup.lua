@@ -3,9 +3,27 @@ local Generic = Client.UI.Generic
 local HotbarSlot = Generic.PREFABS.HotbarSlot ---@type GenericUI_Prefab_HotbarSlot
 
 local GroupManager = {
-    -- UI = Generic.Create("PIP_HotbarGroup"), ---@type GenericUI_Instance
+    UI = nil, ---@type GenericUI_Instance
+    Groups = {}, ---@type table<string, HotbarGroup>
+
+    nextID = 0,
+
+    CONTENT_WIDTH = 450,
+    UI_WIDTH = 500,
+    UI_HEIGHT = 600,
 }
 Epip.AddFeature("HotbarGroupManager", "HotbarGroupManager", GroupManager)
+
+function GroupManager.Setup()
+    local ui = GroupManager.UI
+
+    ui:ExternalInterfaceCall("setPosition", "center", "screen", "center")
+    ui:Show()
+end
+
+---------------------------------------------
+-- HOTBAR GROUP
+---------------------------------------------
 
 ---@class HotbarGroup
 local HotbarGroup = {
@@ -35,6 +53,7 @@ function HotbarGroup:_Init()
 
     local container = content:AddChild("container", "VerticalList")
     container:SetElementSpacing(HotbarGroup.SLOT_SPACING - 4)
+    container:SetPosition(3, 3)
 
     for i=1,self.ROWS,1 do
         local row = container:AddChild("Row_" .. i, "HorizontalList")
@@ -61,8 +80,12 @@ end
 
 ---@param id string
 ---@return HotbarGroup
-function GroupManager.Create(id)
-    local group = {} ---@type HotbarGroup
+function GroupManager.Create(id, rows, columns)
+    ---@type HotbarGroup
+    local group = {
+        ROWS = rows,
+        COLUMNS = columns,
+    }
     Inherit(group, HotbarGroup)
 
     group.UI = Generic.Create(id)
@@ -72,6 +95,69 @@ function GroupManager.Create(id)
     return group
 end
 
-Ext.Events.SessionLoaded:Subscribe(function (e)
-    local group = GroupManager.Create("test")
+---------------------------------------------
+-- EVENT LISTENERS
+---------------------------------------------
+
+Client.UI.ContextMenu.RegisterElementListener("hotBarRow_CreateGroup", "buttonPressed", function(_)
+    GroupManager.Setup()
 end)
+
+---------------------------------------------
+-- SETUP
+---------------------------------------------
+
+function GroupManager:__Setup()
+    local ui = Generic.Create("PIP_HotbarGroup") ---@type GenericUI_Instance
+    GroupManager.UI = ui
+
+    local bg = ui:CreateElement("BG", "TiledBackground")
+    bg:SetBackground(0, GroupManager.UI_WIDTH, GroupManager.UI_HEIGHT)
+    local uiObject = ui:GetUI()
+    uiObject.SysPanelSize = {GroupManager.UI_WIDTH, GroupManager.UI_HEIGHT}
+
+    -- Content
+    local content = bg:AddChild("Content", "VerticalList")
+    content:SetSize(GroupManager.CONTENT_WIDTH, 600)
+    content:SetPosition(27, 60)
+
+    local text = content:AddChild("Header", "Text")
+    text:SetText(Text.Format("Create Hotbar Group", {Color = Color.COLORS.WHITE, Size = 23}))
+    text:SetStroke(0, 1, 1, 1, 5)
+    text:SetType(1)
+    text:SetSize(GroupManager.CONTENT_WIDTH, 50)
+
+    local rowSpinner = Generic.PREFABS.Spinner.Create(ui, "RowSpinner", content, "Rows", 1, 20, 1)
+    local columnSpinner = Generic.PREFABS.Spinner.Create(ui, "ColumnSpinner", content, "Columns", 1, 20, 1)
+
+    rowSpinner:GetMainElement():SetCenterInLists(true)
+    columnSpinner:GetMainElement():SetCenterInLists(true)
+
+    content:AddChild("Filler", "Empty"):GetMovieClip().heightOverride = 300
+
+    local createButton = content:AddChild("Confirm", "Button")
+    createButton.Events.Pressed:Subscribe(function(_)
+        GroupManager.Create(tostring(GroupManager.nextID), rowSpinner:GetValue(), columnSpinner:GetValue())
+        GroupManager.nextID = GroupManager.nextID + 1
+        GroupManager.UI:Hide()
+    end)
+    createButton:SetCenterInLists(true)
+    createButton:SetType(1)
+    createButton:SetText("Create", 4)
+
+    content:SetElementSpacing(0)
+
+    content:RepositionElements()
+
+    ui:Hide()
+end
+
+---------------------------------------------
+-- TESTS
+---------------------------------------------
+
+-- Ext.Events.SessionLoaded:Subscribe(function (e)
+--     if Epip.IsDeveloperMode(true) then
+--         local group = GroupManager.Create("test")
+--     end
+-- end)
