@@ -10,8 +10,8 @@ Epip.AddFeature("HotbarGroupManager", "HotbarGroupManager", GroupManager)
 ---@class HotbarGroup
 local HotbarGroup = {
     UI = nil, ---@type GenericUI_Instance
-    ROWS = 12,
-    COLUMNS = 28,
+    ROWS = 3,
+    COLUMNS = 3,
     SLOT_SIZE = 50,
     SLOT_SPACING = 0,
 
@@ -43,13 +43,9 @@ function HotbarGroup:_Init()
         HotbarGroup.ELEMENT_ROWS[i] = {}
 
         for z=1,self.COLUMNS,1 do
-            -- Prefabs can be created as wrapper APIs for working with groups of elements, simulating custom sprites
             local slot = HotbarSlot.Create(self.UI, "Row_" .. i .. "_Slot_" .. z, row)
 
             HotbarGroup.ELEMENT_ROWS[i][z] = slot
-
-            -- HotbarSlot extends the "Slot" element type to provide hotbar-style behaviour, automatically setting fields on its self-instanced Slot element like amount_txt, cooldown, etc.
-            -- slot:SetSkill("my skill")
         end
     end
 

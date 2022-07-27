@@ -15,7 +15,7 @@ package Elements
         public var stringID:String = "Uninitialized!";
         public var childElements:Array;
 
-        private var _ignoreUp = false;
+        protected var _ignoreUp = false;
 
         public var CENTER_IN_LIST:Boolean = false;
         
