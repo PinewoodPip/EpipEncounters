@@ -14,6 +14,8 @@ package Elements
 
         public var _bg_Red:MovieClip;
         public var _bg_Box:MovieClip;
+        public var _bg_FormattedTooltip:MovieClip;
+        public var _bg_Note:MovieClip;
         
         public var backgroundTypes:Array;
 
@@ -32,6 +34,8 @@ package Elements
 
             this.RegisterType(this._bg_Red, 80, 310, 80, 89, 290, 90); // Box
             this.RegisterType(this._bg_Box, 1, 1, 1, 1, 1, 1); // Black
+            this.RegisterType(this._bg_FormattedTooltip, 15, 382, 15, 80, 4, 60); // FormattedTooltip
+            this.RegisterType(this._bg_Note, 126, 600, 126, 121, 793, 175); // Note
 
             this.SetBackground(1, 80 + 310 + 80, 89 + 290 + 90);
         }

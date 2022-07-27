@@ -95,11 +95,11 @@ function Test.SetupTests()
     local text = Test:CreateElement("textTest", "Text", "tiledbgTest")
     text:SetMouseEnabled(false)
 
-    bg:SetBackground(Generic.ELEMENTS.TiledBackground.BACKGROUND_TYPES.BLACK, 400, 400)
+    bg:SetBackground(Generic.ELEMENTS.TiledBackground.BACKGROUND_TYPES.BOX, 400, 400)
     text:SetText(Text.Format("Generic Test", {Color = "ffffff"}))
     text:GetMovieClip().SetType(1)
     text:SetSize(400, 200)
-    bg:GetMovieClip().background_mc.alpha = 0.2
+    bg:GetMovieClip().background_mc.alpha = 0.8
 
     bg:SetAsDraggableArea()
 
