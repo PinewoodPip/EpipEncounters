@@ -323,29 +323,39 @@ Generic.OnElementShowTooltip = function(ev, id, x, y, width, height, _, align)
         mouseX = mouseX - 250
     end
 
+    local offset = {0, 0}
+    if type(element.Tooltip) == "table" and element.Tooltip.Spacing then
+        offset = element.Tooltip.Spacing
+    end
+
     Generic.CurrentTooltipElement = {
         UI = ui,
         ID = id,
         Position = {
-            X = mouseX,
-            Y = mouseY,
+            X = mouseX + offset[1],
+            Y = mouseY + offset[2],
         },
     }
-
 
     if type(element.Tooltip) == "string" then
         ui:ExternalInterfaceCall("showTooltip", element.Tooltip, mouseX, mouseY, width, height, "left") -- TODO custom align
     else
-        -- TODO workaround for Character Creation context
-        Client.UI.Hotbar:ExternalInterfaceCall("showSkillTooltip", Client.UI.Hotbar:GetRoot().hotbar_mc.characterHandle, "Teleportation_FreeFall", mouseX, mouseY, width, height)
+        if element.Tooltip.Type == "Formatted" then
+            -- TODO workaround for Character Creation context
+            Client.UI.Hotbar:ExternalInterfaceCall("showSkillTooltip", Client.UI.Hotbar:GetRoot().hotbar_mc.characterHandle, "Teleportation_FreeFall", mouseX, mouseY, width, height)
+        elseif element.Tooltip.Type == "Skill" then
+            Client.UI.Hotbar:ExternalInterfaceCall("showSkillTooltip", Client.UI.Hotbar:GetRoot().hotbar_mc.characterHandle, element.Tooltip.SkillID, mouseX, mouseY, width, height)
+        end
     end
-
-    -- ui:ExternalInterfaceCall("showTalentTooltip", 126, Ext.Utils.HandleToInteger(Client.GetCharacter().Handle), x, y, width, height, "none")
 end
 
 Generic.OnTooltip = function(char, skill, tooltip)
     if Generic.CurrentTooltipElement then
-        tooltip.Data = Generic.CurrentTooltipElement.UI:GetElementByID(Generic.CurrentTooltipElement.ID).Tooltip or {}  
+        local element = Generic.CurrentTooltipElement.UI:GetElementByID(Generic.CurrentTooltipElement.ID)
+
+        if element.Tooltip.Type == "Formatted" then
+            tooltip.Data = element.Tooltip.Data or {}
+        end
     end
 end
 Game.Tooltip.RegisterListener("Skill", nil, Generic.OnTooltip)

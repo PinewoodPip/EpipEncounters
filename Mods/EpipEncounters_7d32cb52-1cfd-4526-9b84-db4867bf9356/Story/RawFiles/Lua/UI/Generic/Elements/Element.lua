@@ -20,12 +20,19 @@ _Element.Events = {
     MouseOut = {},
 }
 
+---@class GenericUI_ElementTooltip
+---@field Type "Formatted"|"Skill"
+---@field Data TooltipData? For formatted tooltips.
+---@field SkillID string For skill tooltips.
+---@field ItemHandle EntityHandle For item tooltips. TODO implement
+---@field Spacing number[]? Offset for tooltip placement, relative to cursor position.
+
 ---@class GenericUI_Element
 ---@field UI GenericUI_Instance
 ---@field ID string
 ---@field ParentID string Empty string for elements in the root.
 ---@field Type string
----@field Tooltip TooltipData? Will be rendered upon the element being hovered.
+---@field Tooltip (GenericUI_ElementTooltip|string)? Will be rendered upon the element being hovered. Strings are rendered as unformatted tooltips.
 ---@field EVENT_TYPES table<string, string>
 
 ---------------------------------------------

@@ -139,7 +139,10 @@ QuickExamine.Events.EntityChanged:RegisterListener(function (entity)
 
             local icon = artifactContainer:AddChild(artifact.ID .. "icon", "IggyIcon")
             icon:SetIcon(template.Icon, 32, 32)
-            icon.Tooltip = artifact:GetPowerTooltip()
+            icon.Tooltip = {
+                Type = "Formatted",
+                Data = artifact:GetPowerTooltip(),
+            }
         end
     end
 

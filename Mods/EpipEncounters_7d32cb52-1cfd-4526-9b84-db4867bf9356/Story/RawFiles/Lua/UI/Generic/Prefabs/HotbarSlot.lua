@@ -74,6 +74,12 @@ function Slot:SetSkill(skillID)
         Type = "Skill",
         StatsID = skillID,
     }
+
+    slot.Tooltip = {
+        Type = "Skill",
+        SkillID = skillID,
+        Spacing = {10, 0},
+    }
 end
 
 function Slot:SetItem(item)
@@ -85,6 +91,8 @@ function Slot:SetItem(item)
         Type = "Item",
         Item = item, -- TODO change to handle
     }
+
+    slot.Tooltip = nil
 end
 
 ---@param templateID GUID
@@ -100,6 +108,8 @@ function Slot:SetTemplate(templateID)
 
         slot:SetIcon(template.Icon, 50, 50)
         slot:SetCooldown(-1, false)
+
+        slot.Tooltip = nil
     end
 end
 
