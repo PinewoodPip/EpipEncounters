@@ -67,7 +67,7 @@ package Elements
 
         public function SetCooldown(cooldown:Number, param2:Boolean = true) : *
         {
-            if(cooldown == -1)
+            if(cooldown == -1) // Set oldCD to 0 so the refresh animation doesn't play.
             {
                 this.oldCD = 0;
                 cooldown = 0;

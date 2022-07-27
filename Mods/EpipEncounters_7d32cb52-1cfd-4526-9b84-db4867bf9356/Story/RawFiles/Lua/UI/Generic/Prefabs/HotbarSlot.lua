@@ -139,7 +139,7 @@ function Slot:_OnTick()
 
     if obj.Type == "Skill" then
         local skill = char.SkillManager.Skills[obj.StatsID]
-        local cooldown = 0
+        local cooldown = -1
         local enabled = false
 
         if skill then
@@ -148,7 +148,7 @@ function Slot:_OnTick()
         end
 
         slot:SetLabel("")
-        slot:SetCooldown(cooldown, true)
+        slot:SetCooldown(cooldown, false)
         slot:SetEnabled(enabled)
     elseif obj.Type == "Item" or obj.Type == "Template" then
         local item
