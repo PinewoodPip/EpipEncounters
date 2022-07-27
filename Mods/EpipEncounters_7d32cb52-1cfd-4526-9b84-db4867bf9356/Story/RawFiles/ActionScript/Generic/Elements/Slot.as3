@@ -4,8 +4,10 @@ package Elements
     import flash.display.MovieClip;
     import flash.external.ExternalInterface;
     import LS_Classes.listDisplay;
+    import LS_Classes.larTween;
     import flash.text.TextField;
     import flash.events.MouseEvent;
+    import fl.motion.easing.Quartic;
 
     public dynamic class Slot extends Element
     {
@@ -17,6 +19,8 @@ package Elements
         // public var frame_mc:MovieClip;
         // public var source_frame_mc:Shape;
         public var iggy_mc:MovieClip;
+        public var activeHighlight_mc:MovieClip;
+        public var highlight_mc:MovieClip;
 
         public var oldCD:Number = 0;
         private var _dragStartX:Number = 0;
@@ -39,6 +43,8 @@ package Elements
             this.SetLabel("");
             this.SetSourceBorder(false);
             this.SetWarning(false);
+            this.SetActive(false);
+            this.SetHighlighted(false);
 
             this.cd_mc.rot = -90;
             this.cd_mc.cellSize = 50;
@@ -63,6 +69,30 @@ package Elements
         public override function get elementType() : String
         {
             return "Slot";
+        }
+
+        public function SetActive(active:Boolean) : *
+        {
+            this.activeHighlight_mc.visible = active;
+        }
+
+        public function SetHighlighted(highlighted:Boolean) : *
+        {
+            this.highlight_mc.visible = highlighted;
+
+            if (highlighted)
+            {
+                if (this.timeline)
+                {
+                    this.timeline.stop();
+                }
+
+                this.timeline = new larTween(this.highlight_mc, "alpha", Quartic.easeOut, NaN, 0.3, 0.2);
+            }
+            else
+            {
+                this.highlight_mc.alpha = 0;
+            }
         }
 
         public function SetCooldown(cooldown:Number, param2:Boolean = true) : *

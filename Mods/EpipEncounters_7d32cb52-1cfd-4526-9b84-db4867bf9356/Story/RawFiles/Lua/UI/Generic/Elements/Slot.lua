@@ -7,6 +7,8 @@ local Generic = Client.UI.Generic
 ---@field SetLabel fun(self, label:string)
 ---@field SetSourceBorder fun(self, enabled:boolean)
 ---@field SetWarning fun(self, enabled:boolean)
+---@field SetActive fun(self, active:boolean)
+---@field SetHighlighted fun(self, highlighted:boolean)
 
 ---@class GenericUI_Element_Slot
 local Slot = {
@@ -43,6 +45,8 @@ Slot.SetEnabled = Generic.ExposeFunction("SetEnabled")
 Slot.SetLabel = Generic.ExposeFunction("SetLabel")
 Slot.SetSourceBorder = Generic.ExposeFunction("SetSourceBorder")
 Slot.SetWarning = Generic.ExposeFunction("SetWarning")
+Slot.SetActive = Generic.ExposeFunction("SetActive")
+Slot.SetHighlighted = Generic.ExposeFunction("SetHighlighted")
 
 function Slot:_OnCreation()
     local mc = self:GetMovieClip()

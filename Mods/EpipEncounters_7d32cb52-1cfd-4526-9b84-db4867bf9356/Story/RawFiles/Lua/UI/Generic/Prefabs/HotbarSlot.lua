@@ -52,6 +52,12 @@ function Slot.Create(ui, id, parent)
     obj.SlotElement.Events.MouseUp:Subscribe(function (e) obj:_OnElementMouseUp(e) end)
     obj.SlotElement.Events.Clicked:Subscribe(function (e) obj:_OnSlotClicked(e) end)
     obj.SlotElement.Events.DragStarted:Subscribe(function(e) obj:_OnSlotDragStarted(e) end)
+    obj.SlotElement.Events.MouseOver:Subscribe(function (e)
+        obj.SlotElement:SetHighlighted(true and obj.SlotElement:GetMovieClip().enabled and obj.SlotElement:GetMovieClip().oldCD == 0)
+    end)
+    obj.SlotElement.Events.MouseOut:Subscribe(function (e)
+        obj.SlotElement:SetHighlighted(false)
+    end)
     Ext.Events.Tick:Subscribe(function() obj:_OnTick() end)
 
     return obj
@@ -101,7 +107,7 @@ function Slot:Clear()
     local slot = self.SlotElement
     slot:SetIcon("", 1, 1)
     slot:SetCooldown(-1, false)
-    slot:SetEnabled(true)
+    slot:SetEnabled(false)
 
     self.Object = {
         Type = "None",
@@ -149,7 +155,7 @@ function Slot:_OnTick()
 
         slot:SetLabel("")
         slot:SetCooldown(cooldown, false)
-        slot:SetEnabled(enabled)
+        slot:SetEnabled(enabled or cooldown > 0)
     elseif obj.Type == "Item" or obj.Type == "Template" then
         local item
 
