@@ -211,6 +211,11 @@ function Slot:_OnSlotDragStarted(e)
         Ext.UI.GetDragDrop():StartDraggingName(1, obj.StatsID)
     elseif obj.Type == "Item" then
         Ext.UI.GetDragDrop():StartDraggingObject(1, obj.Item.Handle)
+    elseif obj.Type == "Template" then
+        local item = obj.Item
+        if not item then item = Item.GetItemsInPartyInventory(Client.GetCharacter(), function(i) return i.RootTemplate.Id == obj.TemplateID end) end
+
+        Ext.UI.GetDragDrop():StartDraggingObject(1, item.Handle)
     end
 
     self:Clear()

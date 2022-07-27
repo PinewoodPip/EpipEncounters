@@ -1229,50 +1229,57 @@ function Hotbar.UseSkill(skill)
     local slot = skillBar[145]
     local previousSkill
 
-    if slot.Type == "Skill" then
-        previousSkill = slot.SkillOrStatId
-    end
-
-    if type(skill) == "string" then
-        skillBar[145].SkillOrStatId = skill
-        skillBar[145].Type = "Skill"
+    if GetExtType(skill) == "ecl::Item" then
+        Net.PostToServer("EPIPENCOUNTERS_Hotbar_UseItem", {
+            ItemNetID = skill.NetID,
+            CharNetID = char.NetID,
+        })
     else
-        skillBar[145].ItemHandle = skill.Handle
-        skillBar[145].Type = "Item"
-    end
-
-    UpdateSlotTextures()
-
-    Client.Timer.Start("UseHotbarSlot", 0.05, function()
-        Hotbar.UseSlot(145)
-
-        -- Rebind the auxiliary slot back to its original skill
-        if previousSkill ~= nil then
-            Ext.OnNextTick(function()
-                char = Client.GetCharacter()
-                char.PlayerData.SkillBarItems[145].SkillOrStatId = previousSkill
-                -- char.PlayerData.SkillBarItems[145].ItemHandle = nil
-                Hotbar.lastClickedSlot = nil
-                UpdateSlotTextures()
-                Hotbar.Refresh()
-                Hotbar.RenderSlots()
-                Hotbar.UpdateSlot(145)
-            end)
-
-        else
-            Ext.OnNextTick(function()
-                char = Client.GetCharacter()
-                char.PlayerData.SkillBarItems[145].Type = "None"
-                -- char.PlayerData.SkillBarItems[145].ItemHandle = nil
-                Hotbar.lastClickedSlot = nil
-                UpdateSlotTextures()
-                Hotbar.Refresh()
-                Hotbar.RenderSlots()
-                Hotbar.UpdateSlot(145)
-            end)
-            
+        if slot.Type == "Skill" then
+            previousSkill = slot.SkillOrStatId
         end
-    end)
+    
+        if type(skill) == "string" then
+            skillBar[145].SkillOrStatId = skill
+            skillBar[145].Type = "Skill"
+        else
+            skillBar[145].ItemHandle = skill.Handle
+            skillBar[145].Type = "Item"
+        end
+    
+        UpdateSlotTextures()
+    
+        Client.Timer.Start("UseHotbarSlot", 0.05, function()
+            Hotbar.UseSlot(145)
+    
+            -- Rebind the auxiliary slot back to its original skill
+            if previousSkill ~= nil then
+                Ext.OnNextTick(function()
+                    char = Client.GetCharacter()
+                    char.PlayerData.SkillBarItems[145].SkillOrStatId = previousSkill
+                    -- char.PlayerData.SkillBarItems[145].ItemHandle = nil
+                    Hotbar.lastClickedSlot = nil
+                    UpdateSlotTextures()
+                    Hotbar.Refresh()
+                    Hotbar.RenderSlots()
+                    Hotbar.UpdateSlot(145)
+                end)
+    
+            else
+                Ext.OnNextTick(function()
+                    char = Client.GetCharacter()
+                    char.PlayerData.SkillBarItems[145].Type = "None"
+                    -- char.PlayerData.SkillBarItems[145].ItemHandle = nil
+                    Hotbar.lastClickedSlot = nil
+                    UpdateSlotTextures()
+                    Hotbar.Refresh()
+                    Hotbar.RenderSlots()
+                    Hotbar.UpdateSlot(145)
+                end)
+                
+            end
+        end)
+    end
 end
 
 ---@param char EclCharacter
