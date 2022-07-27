@@ -142,6 +142,8 @@ function Slot:_OnTick()
     local char = Client.GetCharacter()
     local slot = self.SlotElement
     local obj = self.Object
+    local preparedSkill = Client.UI.Hotbar.GetPreparedSkill(char)
+    local isPreparingSkill = false
 
     if obj.Type == "Skill" then
         local skill = char.SkillManager.Skills[obj.StatsID]
@@ -156,6 +158,10 @@ function Slot:_OnTick()
         slot:SetLabel("")
         slot:SetCooldown(cooldown, false)
         slot:SetEnabled(enabled or cooldown > 0)
+
+        if preparedSkill and not preparedSkill.Casting and preparedSkill.SkillID == obj.StatsID then
+            isPreparingSkill = true
+        end
     elseif obj.Type == "Item" or obj.Type == "Template" then
         local item
 
@@ -193,6 +199,8 @@ function Slot:_OnTick()
             self:Clear()
         end
     end
+
+    slot:SetActive(isPreparingSkill)
 end
 
 function Slot:_OnSlotClicked(e)
