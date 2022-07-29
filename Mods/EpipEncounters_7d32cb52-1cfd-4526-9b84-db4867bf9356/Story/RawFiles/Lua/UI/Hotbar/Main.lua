@@ -989,8 +989,12 @@ end
 
 function Hotbar.RenderHotkeys()
     for i,state in ipairs(Hotbar.GetActionButtons()) do
-        if not pcall(Hotbar.RenderHotkey, i, state) then
+        local success, error = pcall(Hotbar.RenderHotkey, i, state)
+
+        if not success then
             Hotbar:LogError("Error rendering hotkey " .. i .. " " .. state.ActionID)
+            Hotbar:LogError(error)
+
             Hotbar.UnbindActionButton(i)
         end
     end
@@ -1384,11 +1388,13 @@ function Hotbar.RenderSlots()
         if Hotbar.IsRowVisible(char, rowIndex) then
             for i=0,Hotbar.GetSlotsPerRow() - 1,1 do
                 local slotIndex = (rowIndex - 1) * Hotbar.GetSlotsPerRow() + i
+                local success, msg = pcall(Hotbar.RenderSlot, char, canUseHotbar, slotIndex + 1)
                 
-                if not pcall(Hotbar.RenderSlot, char, canUseHotbar, slotIndex + 1) then
+                if not success then
                     local data = Hotbar.GetSkillBarItems(char)[slotIndex + 1]
 
                     Hotbar:LogError("Error rendering slot " .. (slotIndex + 1))
+                    Hotbar:LogError(msg)
                     Hotbar:LogError(string.format("Slot data: type %s skillID %s", data.Type, data.SkillOrStatId))
                 end
             end
