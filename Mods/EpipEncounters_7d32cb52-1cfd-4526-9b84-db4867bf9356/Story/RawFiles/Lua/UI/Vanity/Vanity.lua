@@ -540,9 +540,8 @@ function Vanity.Setup(tab, ...)
     tab:Render()
 
     -- tab buttons
-    for i,registeredTab in ipairs(Vanity.TABS) do
-        print(registeredTab.ID, tab.ID)
-        Vanity.AddTabButton(registeredTab.ID, tab.Name, registeredTab.Icon, registeredTab.ID == tab.ID)
+    for _,registeredTab in ipairs(Vanity.TABS) do
+        Vanity.AddTabButton(registeredTab.ID, registeredTab.Name, registeredTab.Icon, registeredTab.ID == tab.ID)
     end
 
     Vanity.GetMenu().list.positionElements()
@@ -1172,7 +1171,7 @@ Vanity.Events.TabButtonPressed:RegisterListener(function (id)
     Vanity:PlaySound("UI_Generic_Click")
 
     local tab = nil
-    for i,registeredTab in ipairs(Vanity.TABS) do
+    for _,registeredTab in ipairs(Vanity.TABS) do
         if registeredTab.ID == id then
             tab = registeredTab
             break
@@ -1181,6 +1180,11 @@ Vanity.Events.TabButtonPressed:RegisterListener(function (id)
 
     if tab then
         Vanity.Setup(tab)
+
+        -- TODO rework into a Once listener
+        Client.Timer.Start("", 0.1, function()
+            CharacterSheet:HideTooltip()
+        end)
     end
 end)
 

@@ -6,7 +6,7 @@ local Vanity = Client.UI.Vanity
 ---@field Name string
 ---@field ID string
 
----@type CharacterSheetCustomTab
+---@class CharacterSheetCustomTab
 local _CharacterSheetTab = {
     Icon = "unknown",
     Name = "NO NAME",
