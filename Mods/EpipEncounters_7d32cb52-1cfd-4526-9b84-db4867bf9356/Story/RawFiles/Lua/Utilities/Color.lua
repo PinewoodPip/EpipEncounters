@@ -72,7 +72,9 @@ Color = {
 
 ---@class RGBColor
 local RGBColor = {
-    Red = 0, Green = 0, Blue = 0
+    Red = 0, Green = 0, Blue = 0,
+
+    __name = "RGBColor",
 }
 Color.RGBColor = RGBColor
 

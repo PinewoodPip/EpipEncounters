@@ -123,7 +123,7 @@ function GroupManager:__Setup()
 
     local text = content:AddChild("Header", "Text")
     text:SetText(Text.Format("Create Hotbar Group", {Color = Color.COLORS.WHITE, Size = 23}))
-    text:SetStroke(0, 1, 1, 1, 5)
+    text:SetStroke(Color.Create(0, 0, 0), 1, 1, 1, 5)
     text:SetType(1)
     text:SetSize(GroupManager.CONTENT_WIDTH, 50)
 

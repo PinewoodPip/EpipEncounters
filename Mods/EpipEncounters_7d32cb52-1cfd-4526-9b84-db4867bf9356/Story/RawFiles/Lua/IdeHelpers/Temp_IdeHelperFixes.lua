@@ -1,3 +1,5 @@
+---@diagnostic disable
+
 --- @class Ext_Json
 local Ext_Json = {}
 
@@ -8,6 +10,8 @@ function Ext_Json.Parse(obj) end
 --- @param obj table
 --- @return string
 function Ext_Json.Stringify(obj) end
+
+--- @alias FlashMovieClip unknown
 
 --- @class Ext_ServerOsiris
 local Ext_ServerOsiris = {}

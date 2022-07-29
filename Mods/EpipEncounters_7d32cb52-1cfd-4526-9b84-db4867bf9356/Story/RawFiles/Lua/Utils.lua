@@ -18,6 +18,14 @@ function GetExtType(obj)
     return objType
 end
 
+function GetMetatableType(obj)
+    if type(obj) == "table" then
+        return obj.__name
+    else
+        return nil
+    end
+end
+
 function ParseFlashArray(array, argList, offset)
 
     local currentElement = nil

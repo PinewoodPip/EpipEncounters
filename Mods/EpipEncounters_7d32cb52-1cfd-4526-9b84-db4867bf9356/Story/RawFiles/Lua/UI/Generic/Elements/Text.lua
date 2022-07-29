@@ -3,7 +3,7 @@ local Generic = Client.UI.Generic
 
 ---@class GenericUI_Element_Text : GenericUI_Element
 ---@field SetText fun(self, text:string, setSize:boolean?)
----@field SetStroke fun(self, color:uint64, size:number, alpha:number, strength:uint64, unknown:uint64)
+---@field SetStroke fun(self, color:uint64|RGBColor, size:number, alpha:number, strength:uint64, unknown:uint64)
 ---@field SetType fun(self, textType:integer)
 ---@field SetEditable fun(self, editable:boolean)
 ---@field SetRestrictedCharacters fun(self, restriction:string)
@@ -41,8 +41,22 @@ Inherit(Text, Generic._Element)
 -- METHODS
 ---------------------------------------------
 
+---@param color uint64|RGBColor
+---@param size number
+---@param alpha number
+---@param strength uint64
+---@param unknown uint64
+function Text:SetStroke(color, size, alpha, strength, unknown)
+    local root = self:GetMovieClip()
+    local tableType = GetMetatableType(color)
+    if tableType and tableType == "RGBColor" then
+        color = color:ToDecimal()
+    end
+
+    root.AddStroke(color, size, alpha, strength, unknown)
+end
+
 Text.SetText = Generic.ExposeFunction("SetText")
-Text.SetStroke = Generic.ExposeFunction("AddStroke")
 Text.SetType = Generic.ExposeFunction("SetType")
 Text.SetEditable = Generic.ExposeFunction("SetEditable")
 Text.SetRestrictedCharacters = Generic.ExposeFunction("SetRestrictedCharacters")
