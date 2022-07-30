@@ -2,6 +2,7 @@
 ---@class InputLib : Feature
 local Input = {
 
+    HeldKeys = {},
     pressedKeys = {}, ---@type table<InputRawType, true>
     mouseState = nil, ---@type InputMouseState
 
@@ -698,7 +699,7 @@ Ext.Events.RawInput:Subscribe(function(e)
 
     -- Update pressed state tracking
     if inputEventData.Value.State == "Pressed" then
-        Input.pressedKeys[id] = id
+        Input.pressedKeys[id] = true
     else
         Input.pressedKeys[id] = nil
     end

@@ -1684,15 +1684,19 @@ end
 
 -- handle switching hotbars the normal way (buttons and hotkeys)
 function CycleHotbar(ui, current, index, increment)
-    Hotbar:DebugLog("Trying to cycle " .. index)
-    local next = current + increment
-
-    -- add modifier keys to select higher hotbars
-    if Client.Input.IsShiftPressed() then -- cycle 2nd bar
+    -- Use modifier keys to select higher hotbars
+    -- Yes this is slightly ridiculous
+    if Client.Input.IsGUIPressed() then -- Cycle 5th bar
+        index = index + 4
+    elseif Client.Input.IsAltPressed() then -- Cycle 4th bar
+        index = index + 3
+    elseif Client.Input.IsCtrlPressed() then -- Cycle 3rd bar
+        index = index + 2
+    elseif Client.Input.IsShiftPressed() then -- Cycle 2nd bar
         index = index + 1
-    -- elseif Input:KeyHeld(220) then -- cycle 3rd bar
-    --     index = index + 2
     end
+
+    Hotbar:DebugLog("Trying to cycle " .. index)
 
     UpdateSlotTextures()
     Hotbar.CycleBar(index, increment) -- cycle our own scripted bars
