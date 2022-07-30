@@ -268,13 +268,13 @@ function Hotbar.GetKeyString(index, shortName)
             if bindableAction then
                 if bindableAction.Input1 then
                     if shortName then
-                        key = bindableAction:GetShortInputString(1)
+                        key = bindableAction:GetInputString(1)
                     else
                         key = bindableAction.Input1
                     end
                 else
                     if shortName then
-                        key = bindableAction:GetShortInputString(2)
+                        key = bindableAction:GetInputString(2)
                     else
                         key = bindableAction.Input2
                     end
