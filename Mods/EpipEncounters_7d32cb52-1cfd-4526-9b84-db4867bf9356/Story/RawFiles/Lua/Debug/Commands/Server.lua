@@ -1,6 +1,5 @@
 
 local anims = {}
-local DELAY = 1
 
 local function PlayNext()
     if #anims > 0 then
@@ -28,7 +27,7 @@ local function TagFetchPerformance()
 
     print(tests .. " calls:")
 
-    for i=1,tests,1 do
+    for _=1,tests,1 do
         Osi.IsTagged(guid, "TEST_TAG")
     end
 
@@ -36,7 +35,7 @@ local function TagFetchPerformance()
     print("Osi.IsTagged(): " .. time .. "ms")
 
     now = Ext.MonotonicTime()
-    for i=1,tests,1 do
+    for _=1,tests,1 do
         Ext.GetCharacter(guid):HasTag("TEST_TAG")
     end
 
@@ -53,7 +52,7 @@ local function TagFetchPerformance()
     print("EsvCharacter:HasTag() without refetching the character: " .. time .. "ms")
 
     now = Ext.MonotonicTime()
-    for i=1,tests,1 do
+    for _=1,tests,1 do
         Ext.Entity.GetCharacterFast(guid):HasTag("TEST_TAG")
     end
 

@@ -19,6 +19,10 @@
 ---@alias Keyword "ViolentStrike" | "VitalityVoid" | "Predator" | "Elementalist" | "Prosperity" | "Paucity" | "IncarnateChampion" | "Defiance" | "Occultist" | "Disintegrate" | "Wither" | "Centurion" | "Abeyance" | "Benevolence" | "Presence" | "Ward" | "Celestial" | "Purity" | "VolatileArmor" | "Voracity"
 ---@alias KeywordBoonType "Activator" | "Mutator"
 
+---@class Vector2D
+---@field x number
+---@field y number
+
 ---------------------------------------------
 -- UI
 ---------------------------------------------
