@@ -200,6 +200,7 @@ LOAD_ORDER = {
     "Epip/Client/SummonControlFix.lua",
     "Epip/Client/Notifications.lua",
     "Epip/Client/CraftingFixes.lua",
+    -- "Epip/Client/InventoryImprovements.lua",
 
     "Epip/Client/GenericUIs/QuickExamine.lua",
     "Epip/Client/GenericUIs/SaveLoadOverlay.lua",

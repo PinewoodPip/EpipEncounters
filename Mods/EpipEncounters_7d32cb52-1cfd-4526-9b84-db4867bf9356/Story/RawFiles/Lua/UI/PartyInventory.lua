@@ -1,13 +1,46 @@
 
+---@class PartyInventoryUI : UI
 local Inv = {
     ui = nil,
     root = nil,
 
+    nextContentEvent = {},
+
     draggedItemHandle = nil,
     initialized = false,
+
+    USE_LEGACY_EVENTS = false,
+    USE_LEGACY_HOOKS = false,
+    Events = {
+        ContentUpdated = {}, ---@type SubscribableEvent<PartyInventoryUI_Event_ContentUpdated>
+    },
+    Hooks = {
+        GetUpdate = {}, ---@type SubscribableEvent<PartyInventoryUI_Hooks_GetUpdate>
+    },
 }
 Client.UI.PartyInventory = Inv
 Epip.InitializeUI(Client.UI.Data.UITypes.partyInventory, "PartyInventory", Inv)
+
+---@class PartyInventoryItemUpdate
+---@field CharacterHandle FlashObjectHandle
+---@field ItemHandle FlashObjectHandle
+---@field Amount uint64
+---@field SlotID uint64
+---@field IsNewItem boolean
+
+---------------------------------------------
+-- EVENTS/HOOKS
+---------------------------------------------
+
+---@class PartyInventoryUI_Hooks_GetUpdate
+---@field Items PartyInventoryItemUpdate[]
+
+---@class PartyInventoryUI_Event_ContentUpdated
+---@field Items PartyInventoryItemUpdate[]
+
+---------------------------------------------
+-- METHODS
+---------------------------------------------
 
 -- Unlock the inventory of a player.
 function Inv.AutoUnlockFor(chars)
@@ -29,6 +62,45 @@ end
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
+
+Inv:RegisterInvokeListener("updateItems", function(_)
+    local root = Inv:GetRoot()
+    local itemArray = root.itemsUpdateList
+
+    ---@type PartyInventoryItemUpdate[]
+    local items = Client.Flash.ParseArray(itemArray, {
+        "CharacterHandle",
+        "SlotID",
+        "ItemHandle",
+        "Amount",
+        "IsNewItem",
+    })
+
+    ---@type PartyInventoryUI_Hooks_GetUpdate
+    local ev = {
+        Items = items,
+    }
+
+    -- TODO prevent action
+    Inv.Hooks.GetUpdate:Throw(ev)
+
+    for i=0,#ev.Items-1,1 do
+        local item = ev.Items[i + 1]
+        local index = i * 5
+
+        itemArray[index] = item.CharacterHandle
+        itemArray[index + 1] = item.SlotID
+        itemArray[index + 2] = item.ItemHandle
+        itemArray[index + 3] = item.Amount
+        itemArray[index + 4] = item.IsNewItem
+    end
+    
+    Inv.nextContentEvent = {Items = ev.Items}
+end)
+
+Inv:RegisterInvokeListener("updateItems", function(_)
+    Inv.Events.ContentUpdated:Throw(Inv.nextContentEvent)
+end, "After")
 
 -- TODO fix
 Ext.RegisterUINameCall("cancelDragging", function(ui, method)
