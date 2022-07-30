@@ -165,12 +165,34 @@ end
 ---@param binding OptionsInputKeybind
 ---@return string
 function Options.StringifyBinding(binding)
-    local keys = {}
+    local keys = table.deepCopy(binding.Keys)
+    local order = {
+        lctrl = -1,
+        rctrl = 0,
+        lshift = 1,
+        rshift = 2,
+        lalt = 3,
+        ralt = 4,
+        lgui = 5,
+        rgui = 6,
+    }
 
-    for _,key in ipairs(binding.Keys) do
-        table.insert(keys, Client.Input.GetInputName(key, true))
+    -- Sort keys to have modifiers keys at the front, in the order the regular UI shows them (ctrl, shift, then alt)
+    table.sort(keys, function(a, b)
+        if order[a] and order[b] then
+            return order[a] < order[b]
+        elseif order[a] then
+            return true
+        elseif order[b] then
+            return false
+        else
+            return a < b
+        end
+    end)
+
+    for i,key in ipairs(keys) do
+        keys[i] = Client.Input.GetInputName(key, true)
     end
-    table.simpleSort(keys)
 
     return table.concat(keys, " + ")
 end
@@ -218,16 +240,7 @@ function _SavedKeybind:GetInputString(index)
     local str = ""
 
     if input then
-        local keys = table.simpleSort(table.deepCopy(input.Keys))
-       
-        for i,key in ipairs(keys) do
-            str = str .. Client.Input.GetInputName(key, true)
-
-            -- TODO use concat
-            if i ~= #keys then
-                str = str .. " + "
-            end
-        end
+        str = Options.StringifyBinding(input)
     end
 
     return str
