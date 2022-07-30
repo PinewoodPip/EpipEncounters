@@ -692,6 +692,12 @@ function Input.IsGUIPressed()
     return Input.IsKeyPressed("lgui") or Input.IsKeyPressed("rgui")
 end
 
+---Returns true if any modifier key is being pressed.
+---@return boolean
+function Input.AreModifierKeysPressed()
+    return Input.IsShiftPressed() or Input.IsCtrlPressed() or Input.IsAltPressed() or Input.IsGUIPressed()
+end
+
 ---------------------------------------------
 -- INTERNAL METHODS
 ---------------------------------------------

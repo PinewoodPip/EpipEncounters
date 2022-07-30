@@ -800,15 +800,18 @@ local function OnRemoveHotbar(ui, method)
 end
 
 -- Redirect keyboard hotkeys to point to the expected slot.
-local function OnSlotKeyPressed(ui, method, id)
+Hotbar:RegisterCallListener("pipSlotKeyAttempted", function(_, id)
     local state = Hotbar.GetState()
     local firstBarRow = state.Bars[1].Row
 
-    id = id + (firstBarRow - 1) * Hotbar.GetSlotsPerRow()
+    if not Client.Input.AreModifierKeysPressed() then
+        id = id + (firstBarRow - 1) * Hotbar.GetSlotsPerRow()
 
-    Hotbar:DebugLog("Used slot from keyboard: " .. id .. " redirected to row " .. firstBarRow)
-    Hotbar:GetRoot().useSlotFromKey(id)
-end
+        Hotbar:DebugLog("Used slot from keyboard: " .. id .. " redirected to row " .. firstBarRow)
+        
+        Hotbar:GetRoot().useSlotFromKey(id)
+    end
+end)
 
 -- Refresh on reset.
 GameState.Events.GameReady:Subscribe(function ()
@@ -1532,7 +1535,6 @@ Ext.Events.SessionLoaded:Subscribe(function()
     Ext.RegisterUICall(ui, "pipHotbarOpenContextMenu", OnHotkeyRightClick)
     Ext.RegisterUICall(ui, "pipUnbindHotbarButton", OnRequestUnbind)
     Ext.RegisterUICall(ui, "pipSlotPressed", OnSlotPressed)
-    Ext.RegisterUICall(ui, "pipSlotKeyAttempted", OnSlotKeyPressed)
     Ext.RegisterUICall(ui, "SlotHover", OnSlotHover)
     Ext.RegisterUIInvokeListener(ui, "showSkillBar", OnToggleSkillBar, "After")
 
