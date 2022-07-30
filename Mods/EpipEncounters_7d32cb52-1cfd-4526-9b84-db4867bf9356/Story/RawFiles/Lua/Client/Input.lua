@@ -25,6 +25,8 @@ local Input = {
         wheel_xneg = true,
         wheel_ypos = true,
         wheel_yneg = true,
+        x1 = true,
+        x2 = true,
     },
 
     TOUCH_RAW_EVENTS = {
@@ -55,7 +57,7 @@ local Input = {
         ["r"] = {Name = "R", ShortName = "R"},
         ["f23"] = {Name = "Function Key 23", ShortName = "F23"},
         ["kp_8"] = {Name = "Numpad 8", ShortName = "KP8"},
-        ["x1"] = {Name = "Mouse Forward", ShortName = "X1"},
+        ["x1"] = {Name = "Mouse BackAD", ShortName = "M5"},
         ["controller_b"] = {Name = "B Button", ShortName = "[B]"},
         ["item9"] = {Name = "Item 9", ShortName = "I9"},
         ["pagedown"] = {Name = "Page Down", ShortName = "PgDown"},
@@ -152,7 +154,7 @@ local Input = {
         ["s"] = {Name = "S", ShortName = "S"},
         ["f24"] = {Name = "Function Key 24", ShortName = "F24"},
         ["kp_9"] = {Name = "Numpad 9", ShortName = "KP9"},
-        ["x2"] = {Name = "Mouse Back", ShortName = "X2"},
+        ["x2"] = {Name = "Mouse Forward", ShortName = "M4"},
         ["wheel_xneg"] = {Name = "Scroll Wheel X-", ShortName = "Scroll X-"},
         ["item10"] = {Name = "Item 10", ShortName = "I10"},
         ["dash"] = {Name = "Dash", ShortName = "-"},
@@ -718,6 +720,7 @@ Ext.Events.RawInput:Subscribe(function(e)
         Input.pressedKeys[id] = nil
     end
 
+    -- Track mouse movement
     if deviceType == Input.RAW_INPUT_DEVICES.MOUSE then
         local axis = id:match("^motion_(%l)%l%l%l$")
         if not Input.mouseState then
@@ -737,23 +740,23 @@ Ext.Events.RawInput:Subscribe(function(e)
                 state.MoveVector[axis] = state.MoveVector[axis] + value
             end
         end
-    elseif deviceType == Input.RAW_INPUT_DEVICES.KEY then
-        local state = inputEventData.Value.State
+    end
 
-        Input.Events.KeyStateChanged:Throw({
+    local state = inputEventData.Value.State
+
+    Input.Events.KeyStateChanged:Throw({
+        InputID = id,
+        State = state,
+    })
+
+    if state == "Released" then
+        Input.Events.KeyReleased:Throw({
             InputID = id,
-            State = state,
         })
-
-        if state == "Released" then
-            Input.Events.KeyReleased:Throw({
-                InputID = id,
-            })
-        else
-            Input.Events.KeyPressed:Throw({
-                InputID = id,
-            })
-        end
+    else
+        Input.Events.KeyPressed:Throw({
+            InputID = id,
+        })
     end
 end)
 

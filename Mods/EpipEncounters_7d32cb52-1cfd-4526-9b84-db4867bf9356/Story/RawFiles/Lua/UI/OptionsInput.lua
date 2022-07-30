@@ -11,10 +11,6 @@
 
 ---@class OptionsInputUI
 local Options = {
-    CUSTOM_TABS = {}, ---@type table<string, OptionsInputTab>
-    TAB_ORDER = {
-
-    },
     nextCustomTabID = 20,
     ---@type table<integer, string>
     renderedCustomTabs = {},
@@ -25,9 +21,23 @@ local Options = {
     indexBeingBound = nil,
     potentialBinding = nil,
 
+    CUSTOM_TABS = {}, ---@type table<string, OptionsInputTab>
+    TAB_ORDER = {},
     ACTIONS = {}, ---@type table<string, OptionsInputAction>
     BINDINGS = {}, ---@type table<string, OptionsInputSavedKeybind>
     INPUT_MAP = {}, ---@type table<string, string[]> Maps keyboard inputs to a list of actions that are bound to it.
+
+    WHITELISTED_MOUSE_INPUTS = {
+        -- left2 = true, -- Causes an issue with pressing the accept button, lol
+        right2 = true,
+        middle = true,
+        wheel_xpos = true,
+        wheel_xneg = true,
+        wheel_ypos = true,
+        wheel_yneg = true,
+        x1 = true,
+        x2 = true,
+    },
 
     FILEPATH_OVERRIDES = {
         ["Public/Game/GUI/optionsInput.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/optionsInput.swf",
@@ -344,16 +354,25 @@ Options.Hooks.ShouldRenderEntry:RegisterHook(function (render, entry)
     return render
 end)
 
-Client.Input.Events.KeyPressed:Subscribe(function (e)
+local function GetPressedKeys()
     local dummyBinding = {Keys = {}}
-    local mapping
 
-    for _,key in pairs(Client.Input.GetPressedKeys()) do
-        table.insert(dummyBinding.Keys, key)
+    for key,_ in pairs(Client.Input.pressedKeys) do
+        if (not Client.Input.IsMouseInput(key) and not Client.Input.IsTouchInput(key) or Options.WHITELISTED_MOUSE_INPUTS[key]) then
+            table.insert(dummyBinding.Keys, key)
+        end
     end
+
     table.simpleSort(dummyBinding.Keys)
 
-    mapping = Options.StringifyBinding(dummyBinding)
+    return dummyBinding
+end
+
+Client.Input.Events.KeyPressed:Subscribe(function (e)
+    local dummyBinding = GetPressedKeys()
+    if #dummyBinding.Keys == 0 then Options.lastMappingPressed = nil return nil end
+    local mapping = Options.StringifyBinding(dummyBinding)
+    if mapping == Options.lastMappingPressed then return nil end -- Prevents action spam from pressing excepted keys (ex. mouse) while holding others
 
     Options:DebugLog("Mapping pressed: ", mapping)
 
@@ -369,6 +388,14 @@ Client.Input.Events.KeyPressed:Subscribe(function (e)
             end
         end
     end
+
+    Options.lastMappingPressed = mapping
+end)
+
+Client.Input.Events.KeyReleased:Subscribe(function (e)
+    local dummyBinding = GetPressedKeys()
+    local mapping = Options.StringifyBinding(dummyBinding)
+    Options.lastMappingPressed = mapping
 end)
 
 -- Developer-only actions cannot be executed outside of developer mode.
