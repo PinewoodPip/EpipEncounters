@@ -191,7 +191,7 @@ end)
 -- Ext.Events.InputEvent:Subscribe(function(event)
         -- event = event.Event
 
---     if event.EventId == 223 and event.Press and Ext.Debug.IsDeveloperMode() and Client.Input.IsHoldingModifierKey() then
+--     if event.EventId == 223 and event.Press and Ext.Debug.IsDeveloperMode() and Client.Input.IsShiftPressed() then
 --         local x = Client.UI.Hotbar.Root.stage.mouseX
 --         local y = Client.UI.Hotbar.Root.stage.mouseY
 --         Ext.Print(x, y)

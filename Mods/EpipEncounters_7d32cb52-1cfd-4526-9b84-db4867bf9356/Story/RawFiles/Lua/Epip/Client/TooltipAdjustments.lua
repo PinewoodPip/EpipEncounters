@@ -208,7 +208,7 @@ function TooltipAdjustments.ShowAbilityScoresForSI(char, skill, tooltip)
     -- highlight unmet infusion requirements.
     -- Only do this when infusing or holding shift.
     for _,req in pairs(Data.Game.INFUSION_TIERS) do
-        if score < req and (Client.Input.IsHoldingModifierKey() or Client.IsPreparingInfusion()) then
+        if score < req and (Client.Input.IsShiftPressed() or Client.IsPreparingInfusion()) then
             local reqStr = string.format("(requires %d %s):", req, schoolName)
             local startPos, endPos = element.Label:find(Text.EscapePatternCharacters(reqStr))
 
@@ -225,7 +225,7 @@ function TooltipAdjustments.ShowAbilityScoresForSI(char, skill, tooltip)
     end
 
     -- Show current score next to SI text
-    if not Client.Input.IsHoldingModifierKey() then return nil end
+    if not Client.Input.IsShiftPressed() then return nil end
 
     local _, position = element.Label:find("Source Infusions:")
 
@@ -589,7 +589,7 @@ function TooltipAdjustments.TranslateSkillMultipliers(event)
     local params = event.Params
     local skill = event.Skill
 
-    if params["1"] ~= "Damage" or not Client.Input.IsHoldingModifierKey() then return nil end
+    if params["1"] ~= "Damage" or not Client.Input.IsShiftPressed() then return nil end
 
     local isWeapon = skill["UseWeaponDamage"] == "Yes"
 

@@ -320,7 +320,7 @@ local function BindingFinished()
 end
 
 local function PreppendModifiers(key)
-    local shiftHeld = Client.Input.IsHoldingModifierKey()
+    local shiftHeld = Client.Input.IsShiftPressed()
 
     if shiftHeld then
         key = "Shift + " .. key

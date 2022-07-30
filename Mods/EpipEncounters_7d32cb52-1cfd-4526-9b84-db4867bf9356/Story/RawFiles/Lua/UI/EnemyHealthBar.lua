@@ -229,7 +229,7 @@ Bar:RegisterHook("GetBottomText", function(text, char, item)
 
     -- Show resistances for chars, or alternative info if shift is being held.
     if char then
-        local modifierActive = Client.Input.IsHoldingModifierKey()
+        local modifierActive = Client.Input.IsShiftPressed()
 
         if modifierActive then -- Show alternate info.
             local level = char.Stats.Level

@@ -150,7 +150,7 @@ end
 
 Bar:RegisterHook("GetBottomText", function(text, char, item)
     -- Chars require shift, items do not.
-    if TTD:IsEnabled() and (item or (char and Client.Input.IsHoldingModifierKey())) then
+    if TTD:IsEnabled() and (item or (char and Client.Input.IsShiftPressed())) then
         local entity = char if not char then entity = item end
         local treasureData = TTD.GetTreasureData(entity)
         

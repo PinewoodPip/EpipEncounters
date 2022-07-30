@@ -27,6 +27,16 @@ local Input = {
         wheel_yneg = true,
     },
 
+    TOUCH_RAW_EVENTS = {
+        touch_tap = true,
+        touch_hold = true,
+        touch_pinch_in = true,
+        touch_pinch_out = true,
+        touch_rotate = true,
+        touch_flick = true,
+        touch_press = true,
+    },
+
     ---@type table<InputRawType, {Name:string, ShortName:string}>
     RAW_INPUT_NAMES = {
         ["printscreen"] = {Name = "Print Screen", ShortName = "PrtScrn"},
@@ -552,8 +562,8 @@ local Input = {
         KeyReleased = {}, ---@type SubscribableEvent<InputLib_Event_KeyReleased>
     }
 }
-Client.Input = Input
 Epip.InitializeLibrary("Input", Input)
+Client.Input = Input
 Input:Debug()
 
 -- Generate enum table.
@@ -602,7 +612,7 @@ end
 ---Get the numeric ID of a raw input event.
 ---@param name InputRawType
 ---@return integer?
-function Input.GetRawInputEventID(name)
+function Input.GetRawInputNumericID(name)
     local id
 
     name = name:upper()
@@ -619,7 +629,14 @@ end
 ---@param rawID InputRawType
 ---@return boolean
 function Input.IsMouseInput(rawID)
-    return Input.MOUSE_RAW_INPUT_EVENTS[rawID]
+    return Input.MOUSE_RAW_INPUT_EVENTS[rawID] == true
+end
+
+---Returns whether a raw input event ID is a touch-related one.
+---@param rawID InputRawType
+---@return boolean
+function Input.IsTouchInput(rawID)
+    return Input.TOUCH_RAW_EVENTS[rawID] == true
 end
 
 ---Returns true if the game is unpaused and there are no focused elements in Flash.
@@ -659,31 +676,15 @@ function Input.IsGUIPressed()
     return Input.IsKeyPressed("lgui") or Input.IsKeyPressed("rgui")
 end
 
----Returns whether a modifier key is being held.  
----Set modifier keys with `Input.SetModifierKey`.  
----Default is ToggleSneakCones.
----@param num number? Which modifier key to check.
----@return boolean
-function Input.IsHoldingModifierKey(num)
-    num = num or 1
-    return Input.HeldKeys[Input.MODIFIER_KEYS[num]]
-end
-
----Sets the InputEvent for a modifier key.  
----You can declare as many modifier keys as you want,  
----and query them with `Input.IsHoldingModifierKey()`.
----@param event number The InputEvent.
----@param num number Which modifier key to set.
-function Input.SetModifierKey(event, num)
-    Input.MODIFIER_KEYS[num] = event
-end
-
 ---------------------------------------------
--- INTERNAL METHODS - DO NOT CALL
+-- INTERNAL METHODS
 ---------------------------------------------
 
-function Input.SetFocus(focused)
+---Sets whether a UI is focused (capturing input)
+---@param focused boolean
+function Input._SetFocused(focused)
     Input.interfaceFocused = focused
+
     Input:FireEvent("FocusChanged", focused)
 end
 
@@ -692,9 +693,8 @@ end
 ---------------------------------------------
 
 Ext.Events.RawInput:Subscribe(function(e)
-    
-    local id = e.Input.Input.InputId
     local inputEventData = e.Input
+    local id = inputEventData.Input.InputId
     local deviceType = inputEventData.Input.DeviceId
 
     -- Update pressed state tracking
@@ -706,16 +706,13 @@ Ext.Events.RawInput:Subscribe(function(e)
 
     if deviceType == Input.RAW_INPUT_DEVICES.MOUSE then
         local axis = id:match("^motion_(%l)%l%l%l$")
-        local state
-
         if not Input.mouseState then
             Input.mouseState = {
                 MoveVector = {x = 0, y = 0},
                 Moving = false,
             }
         end
-
-        state = Input.mouseState
+        local state = Input.mouseState
 
         if axis then
             local value = inputEventData.Value.Value2
@@ -746,9 +743,9 @@ Ext.Events.RawInput:Subscribe(function(e)
     end
 end)
 
+-- Fire MouseMoved events
 Ext.Events.Tick:Subscribe(function (e)
     if Input.mouseState and Input.mouseState.Moving then
-
         Input.Events.MouseMoved:Throw({
             Vector = Input.mouseState.MoveVector,
         })
@@ -759,11 +756,10 @@ end)
 
 -- Track focus gain/loss in UI
 Ext.RegisterUINameCall("inputFocus", function(ui, method) 
-    Input.SetFocus(true)
+    Input._SetFocused(true)
 end)
-
 Ext.RegisterUINameCall("inputFocusLost", function(ui, method) 
-    Input.SetFocus(false)
+    Input._SetFocused(false)
 end)
 
 -- Listen for input events.

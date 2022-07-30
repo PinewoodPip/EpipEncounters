@@ -1516,7 +1516,7 @@ Ext.Events.SessionLoaded:Subscribe(function()
             _D(Hotbar.currentDraggedSlot)
             Hotbar:FireEvent("SlotDraggedToHotkeyButton", index + 1, Hotbar.currentDraggedSlot)
             Hotbar.currentDraggedSlot = nil
-            Client.Input.SetFocus(false)
+            Client.Input._SetFocused(false)
         end
     end)
 

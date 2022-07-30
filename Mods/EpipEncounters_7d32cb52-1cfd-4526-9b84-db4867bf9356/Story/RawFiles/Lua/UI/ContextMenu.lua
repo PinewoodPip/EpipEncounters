@@ -530,7 +530,7 @@ local function OnButtonPressed(ui, method, id, elementID, handle, amountTxt)
 
     elementID = ContextMenu.GetEventID(elementData)
 
-    local pressable = (not elementData.requireShiftClick) or Client.Input.IsHoldingModifierKey()
+    local pressable = (not elementData.requireShiftClick) or Client.Input.IsShiftPressed()
 
     if pressable then
         -- Clone params
@@ -671,7 +671,7 @@ local function OnStatButtonPressed(ui, method, currentAmount, addition, elementI
     if not addition then amount = -amount end
 
     -- shift-click does 10x
-    if Client.Input.IsHoldingModifierKey() then
+    if Client.Input.IsShiftPressed() then
         amount = amount * 10
     end
 
