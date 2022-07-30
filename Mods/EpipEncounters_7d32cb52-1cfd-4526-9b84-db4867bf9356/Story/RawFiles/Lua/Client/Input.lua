@@ -6,25 +6,202 @@ local Input = {
     keyStates = {},
     mouseState = nil, ---@type InputMouseState
 
-    RAW_INPUT_TYPES = {
+    RAW_INPUT_DEVICES = {
         KEY = "Key",
         MOUSE = "Mouse",
         TOUCH_BAR = "Touchbar",
     },
 
     MOUSE_RAW_INPUT_EVENTS = {
-        MOTION = true,
-        MOTION_X_NEGATIVE = true,
-        MOTION_Y_POSITIVE = true,
-        MOTION_X_POSITIVE = true,
-        MOTION_Y_NEGATIVE = true,
-        LEFT_2 = true,
-        RIGHT_2 = true,
-        MIDDLE = true,
-        WHEEL_X_POSITIVE = true,
-        WHEEL_X_NEGATIVE = true,
-        WHEEL_Y_POSITIVE = true,
-        WHEEL_Y_NEGATIVE = true,
+        motion = true,
+        motion_xneg = true,
+        motion_ypos = true,
+        motion_xpos = true,
+        motion_yneg = true,
+        left2 = true,
+        right2 = true,
+        middle = true,
+        wheel_xpos = true,
+        wheel_xneg = true,
+        wheel_ypos = true,
+        wheel_yneg = true,
+    },
+
+    ---@type table<InputRawType, {Name:string, ShortName:string}>
+    RAW_INPUT_NAMES = {
+        ["printscreen"] = {Name = "Print Screen", ShortName = "PrtScrn"},
+        ["num5"] = {Name = "Number 5", ShortName = "5"},
+        ["f1"] = {Name = "Function Key 1", ShortName = "F1"},
+        ["righttrigger"] = {Name = "Right Trigger", ShortName = "RT"},
+        ["scrolllock"] = {Name = "Scroll Lock", ShortName = "ScrollLock"},
+        ["g"] = {Name = "G", ShortName = "G"},
+        ["f12"] = {Name = "Function Key 12", ShortName = "F12"},
+        ["numlock"] = {Name = "Num Lock", ShortName = "NumLock"},
+        ["lshift"] = {Name = "Left Shift", ShortName = "LShift"},
+        ["controller_a"] = {Name = "A Button", ShortName = "[A]"},
+        ["escape"] = {Name = "Escape", ShortName = "ESC"},
+        ["delete_key"] = {Name = "Delete", ShortName = "Del"},
+        ["equals"] = {Name = "Equals", ShortName = "="},
+        ["r"] = {Name = "R", ShortName = "R"},
+        ["f23"] = {Name = "Function Key 23", ShortName = "F23"},
+        ["kp_8"] = {Name = "Numpad 8", ShortName = "KP8"},
+        ["x1"] = {Name = "Mouse Forward", ShortName = "X1"},
+        ["controller_b"] = {Name = "B Button", ShortName = "[B]"},
+        ["item9"] = {Name = "Item 9", ShortName = "I9"},
+        ["pagedown"] = {Name = "Page Down", ShortName = "PgDown"},
+        ["comma"] = {Name = "Comma", ShortName = ","},
+        ["num7"] = {Name = "Number 7", ShortName = "7"},
+        ["f3"] = {Name = "Function Key 3", ShortName = "F3"},
+        ["controller_x"] = {Name = "X Button", ShortName = "[X]"},
+        ["semicolon"] = {Name = "Semicolon", ShortName = ";"},
+        ["i"] = {Name = "I", ShortName = "I"},
+        ["f14"] = {Name = "Function Key 14", ShortName = "F14"},
+        ["lgui"] = {Name = "Left GUI", ShortName = "LGUI"},
+        ["controller_y"] = {Name = "Y Button", ShortName = "[Y]"},
+        ["leftbracket"] = {Name = "Left Bracket", ShortName = "["},
+        ["t"] = {Name = "T", ShortName = "T"},
+        ["kp_0"] = {Name = "Numpad 0", ShortName = "KP0"},
+        ["motion"] = {Name = "Mouse Motion", ShortName = "Mouse"},
+        ["leftstick"] = {Name = "Left Stick", ShortName = "LStick"},
+        ["item11"] = {Name = "Item 11", ShortName = "I11"},
+        ["dot"] = {Name = "Dot", ShortName = "."},
+        ["backslash"] = {Name = "Backslash", ShortName = "\\"},
+        ["num9"] = {Name = "Number 9", ShortName = "9"},
+        ["f5"] = {Name = "Function Key 5", ShortName = "F5"},
+        ["rightstick"] = {Name = "Right Stick", ShortName = "RStick"},
+        ["rightbracket"] = {Name = "Right Bracket", ShortName = "]"},
+        ["k"] = {Name = "K", ShortName = "K"},
+        ["f16"] = {Name = "Function Key 16", ShortName = "F16"},
+        ["kp_1"] = {Name = "Numpad 1", ShortName = "KP1"},
+        ["rshift"] = {Name = "Right Shift", ShortName = "RShift"},
+        ["leftshoulder"] = {Name = "Left Button", ShortName = "LB"},
+        ["apostrophe"] = {Name = "Apostrophe", ShortName = "'"},
+        ["num0"] = {Name = "Number 0", ShortName = "0"},
+        ["v"] = {Name = "V", ShortName = "V"},
+        ["rightshoulder"] = {Name = "Right Button", ShortName = "RB"},
+        ["b"] = {Name = "B", ShortName = "B"},
+        ["f7"] = {Name = "Function Key 7", ShortName = "F7"},
+        ["kp_divide"] = {Name = "Numpad Divide", ShortName = "KP/"},
+        ["dpad_down"] = {Name = "Numpad Down", ShortName = "NPDown"},
+        ["m"] = {Name = "M", ShortName = "M"},
+        ["f18"] = {Name = "Function Key 18", ShortName = "F18"},
+        ["left"] = {Name = "Left", ShortName = "<-"},
+        ["kp_multiply"] = {Name = "Numpad Multiply", ShortName = "KP*"},
+        ["kp_3"] = {Name = "Numpad 3", ShortName = "KP3"},
+        ["rgui"] = {Name = "Right GUI", ShortName = "RGUI"},
+        ["dpad_left"] = {Name = "Dpad Left", ShortName = "D<-"},
+        ["item4"] = {Name = "Item 4", ShortName = "I4"},
+        ["insert"] = {Name = "Insert", ShortName = "INS"},
+        ["num2"] = {Name = "Number 2", ShortName = "2"},
+        ["x"] = {Name = "X", ShortName = "X"},
+        ["kp_minus"] = {Name = "Numpad Minus", ShortName = "KP-"},
+        ["guide"] = {Name = "Guide", ShortName = "[*]"},
+        ["dpad_right"] = {Name = "Dpad Right", ShortName = "D->"},
+        ["tab"] = {Name = "Tab", ShortName = "TAB"},
+        ["d"] = {Name = "D", ShortName = "D"},
+        ["f9"] = {Name = "Function Key 9", ShortName = "F9"},
+        ["kp_enter"] = {Name = "Enter", ShortName = "ENTER"},
+        ["touch_tap"] = {Name = "Tap", ShortName = "[Tap]"},
+        ["item2"] = {Name = "Item 2", ShortName = "I2"},
+        ["o"] = {Name = "O", ShortName = "O"},
+        ["f20"] = {Name = "Function Key 20", ShortName = "F20"},
+        ["kp_5"] = {Name = "Numpad 5", ShortName = "KP5"},
+        ["kp_period"] = {Name = "Numpad Period", ShortName = "KP."},
+        ["left2"] = {Name = "Left Click", ShortName = "M1"},
+        ["touch_hold"] = {Name = "Touch Hold", ShortName = "[Hold]"},
+        ["item6"] = {Name = "Item 6", ShortName = "I6"},
+        ["pageup"] = {Name = "Page Up", ShortName = "PgUp"},
+        ["num4"] = {Name = "Number 4", ShortName = "4"},
+        ["z"] = {Name = "Z", ShortName = "Z"},
+        ["motion_xneg"] = {Name = "Mouse Movemement Left", ShortName = "Mouse Movement Left"},
+        ["touch_pinch_in"] = {Name = "Pinch In", ShortName = "[PinchIn]"},
+        ["f"] = {Name = "F", ShortName = "F"},
+        ["f11"] = {Name = "F11", ShortName = "F11"},
+        ["lctrl"] = {Name = "Left Ctrl", ShortName = "LCtrl"},
+        ["motion_ypos"] = {Name = "", ShortName = "Mouse Movement Up"},
+        ["touch_pinch_out"] = {Name = "Pinch Out", ShortName = "[PinchOut]"},
+        ["enter"] = {Name = "Enter", ShortName = "Enter"},
+        ["q"] = {Name = "Q", ShortName = "Q"},
+        ["f22"] = {Name = "Function Key 22", ShortName = "F22"},
+        ["kp_7"] = {Name = "Numpad 7", ShortName = "KP7"},
+        ["right2"] = {Name = "] = {Name = "", ShortName = ""},", ShortName = "M2"},
+        ["motion_xpos"] = {Name = "Mouse Movement Right", ShortName = "Mouse Movement Right"},
+        ["touch_rotate"] = {Name = "Touch Rotate", ShortName = "[Rotate]"},
+        ["item8"] = {Name = "Item 8", ShortName = "I8"},
+        ["num6"] = {Name = "Number 6", ShortName = "6"},
+        ["f2"] = {Name = "Function Key 2", ShortName = "F2"},
+        ["up"] = {Name = "Up", ShortName = "Up"},
+        ["motion_yneg"] = {Name = "Mouse Movement Down", ShortName = "Mouse Movement Down"},
+        ["dpad_up"] = {Name = "Dpad Up", ShortName = "Dpad Up"},
+        ["touch_flick"] = {Name = "Touch Flick", ShortName = "[Flick]"},
+        ["h"] = {Name = "H", ShortName = "H"},
+        ["f13"] = {Name = "Function Key 13", ShortName = "F13"},
+        ["lalt"] = {Name = "Left Alt", ShortName = "LAlt"},
+        ["wheel_xpos"] = {Name = "Scroll Wheel X+", ShortName = "Scroll X+"},
+        ["touch_press"] = {Name = "Touch Press", ShortName = "[Press]"},
+        ["s"] = {Name = "S", ShortName = "S"},
+        ["f24"] = {Name = "Function Key 24", ShortName = "F24"},
+        ["kp_9"] = {Name = "Numpad 9", ShortName = "KP9"},
+        ["x2"] = {Name = "Mouse Back", ShortName = "X2"},
+        ["wheel_xneg"] = {Name = "Scroll Wheel X-", ShortName = "Scroll X-"},
+        ["item10"] = {Name = "Item 10", ShortName = "I10"},
+        ["dash"] = {Name = "Dash", ShortName = "-"},
+        ["num8"] = {Name = "Number 8", ShortName = "8"},
+        ["f4"] = {Name = "Function Key 4", ShortName = "F4"},
+        ["wheel_ypos"] = {Name = "Scroll Wheel Up", ShortName = "Scroll Up"},
+        ["j"] = {Name = "J", ShortName = "J"},
+        ["f15"] = {Name = "Function Key 15", ShortName = "F15"},
+        ["rctrl"] = {Name = "Right Ctrl", ShortName = "RCtrl"},
+        ["wheel_yneg"] = {Name = "Scroll Wheel Down", ShortName = "Scroll Down"},
+        ["space"] = {Name = "Space", ShortName = "[Space]"},
+        ["u"] = {Name = "U", ShortName = "U"},
+        ["down"] = {Name = "Down", ShortName = "Down"},
+        ["leftstick_xneg"] = {Name = "Left Stick X-", ShortName = "LStick X-"},
+        ["slash"] = {Name = "Slash", ShortName = "/"},
+        ["a"] = {Name = "A", ShortName = "A"},
+        ["f6"] = {Name = "Function Key 6", ShortName = "F6"},
+        ["leftstick_ypos"] = {Name = "Left Stick Y+", ShortName = "LStick Y+"},
+        ["end"] = {Name = "End", ShortName = "END"},
+        ["l"] = {Name = "L", ShortName = "L"},
+        ["f17"] = {Name = "Function Key 17", ShortName = "F17"},
+        ["right"] = {Name = "Right", ShortName = "->"},
+        ["kp_2"] = {Name = "Numpad 2", ShortName = "KP2"},
+        ["ralt"] = {Name = "", ShortName = "RAlt"},
+        ["leftstick_xpos"] = {Name = "Left Stick X+", ShortName = "LStick X+"},
+        ["item3"] = {Name = "Item 3", ShortName = "I3"},
+        ["pause"] = {Name = "Pause", ShortName = "Pause"},
+        ["num1"] = {Name = "Number 1", ShortName = "1"},
+        ["w"] = {Name = "W", ShortName = "W"},
+        ["leftstick_yneg"] = {Name = "Left Stick Y-", ShortName = "LStick Y-"},
+        ["back"] = {Name = "Back", ShortName = "Back"},
+        ["c"] = {Name = "C", ShortName = "C"},
+        ["f8"] = {Name = "Function Key 8", ShortName = "F8"},
+        ["rightstick_xneg"] = {Name = "Right Stick X-", ShortName = "RStick X-"},
+        ["item1"] = {Name = "Item 1", ShortName = "I1"},
+        ["n"] = {Name = "N", ShortName = "N"},
+        ["f19"] = {Name = "Function Key 19", ShortName = "F19"},
+        ["kp_4"] = {Name = "Numpad 4", ShortName = "KP4"},
+        ["mode"] = {Name = "Mode", ShortName = "Mode"},
+        ["rightstick_ypos"] = {Name = "Right Stick Y+", ShortName = "RStick Y+"},
+        ["item5"] = {Name = "Item 5", ShortName = "I5"},
+        ["home"] = {Name = "Home", ShortName = "Home"},
+        ["num3"] = {Name = "Number 3", ShortName = "3"},
+        ["y"] = {Name = "Y", ShortName = "Y"},
+        ["kp_plus"] = {Name = "Numpad Plus", ShortName = "KP+"},
+        ["rightstick_xpos"] = {Name = "Right Stick X+", ShortName = "RStick X+"},
+        ["start"] = {Name = "Start", ShortName = "Start"},
+        ["backspace"] = {Name = "Backspace", ShortName = "Backspace"},
+        ["tilde"] = {Name = "Tilde", ShortName = "`"},
+        ["e"] = {Name = "E", ShortName = "E"},
+        ["f10"] = {Name = "Function Key 10", ShortName = "F10"},
+        ["rightstick_yneg"] = {Name = "Right Stick Y-", ShortName = "RStick Y-"},
+        ["capslock"] = {Name = "Caps Lock", ShortName = "CapsLock"},
+        ["p"] = {Name = "P", ShortName = "P"},
+        ["f21"] = {Name = "Function Key 21", ShortName = "F21"},
+        ["kp_6"] = {Name = "Numpad 6", ShortName = "KP6"},
+        ["middle"] = {Name = "Middle Click", ShortName = "M3"},
+        ["lefttrigger"] = {Name = "Left Trigger", ShortName = "LT"},
+        ["item7"] = {Name = "Item 7", ShortName = "I7"},
     },
 
     NORBYTE_ENUM_NAMES = {
@@ -370,6 +547,9 @@ local Input = {
 
     Events = {
         MouseMoved = {}, ---@type SubscribableEvent<InputLib_Event_MouseMoved>
+        KeyStateChanged = {}, ---@type SubscribableEvent<InputLib_Event_KeyStateChanged>
+        KeyPressed = {}, ---@type SubscribableEvent<InputLib_Event_KeyPressed>
+        KeyReleased = {}, ---@type SubscribableEvent<InputLib_Event_KeyReleased>
     }
 }
 Client.Input = Input
@@ -391,13 +571,36 @@ end
 
 ---Fired once per tick, since it relies on multiple raw input events firing.
 ---@class InputLib_Event_MouseMoved
----@field Vector Vector2D
+---@field Vector Vector2D Pixels moved.
+
+---@class InputLib_Event_KeyStateChanged
+---@field InputID InputRawType
+---@field State InputState
+
+---@class InputLib_Event_KeyPressed
+---@field InputID InputRawType
+
+---@class InputLib_Event_KeyReleased
+---@field InputID InputRawType
 
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
----@param name string
+---Returns the name for a raw input ID.
+---@param rawID InputRawType
+---@param short boolean?
+---@return string
+function Input.GetInputName(rawID, short)
+    local data = Input.RAW_INPUT_NAMES[rawID]
+    local name = data.Name
+    if short then name = data.ShortName end
+
+    return name
+end
+
+---Get the numeric ID of a raw input event.
+---@param name InputRawType
 ---@return integer?
 function Input.GetRawInputEventID(name)
     local id
@@ -413,13 +616,9 @@ function Input.GetRawInputEventID(name)
 end
 
 ---Returns whether a raw input event ID is a mouse-related one, including movement and buttons.
----@param rawID string|integer
+---@param rawID InputRawType
 ---@return boolean
 function Input.IsMouseInput(rawID)
-    if type(rawID) == "number" then
-        rawID = Input.RAW_INPUT_EVENTS_ENUM[rawID]
-    end
-
     return Input.MOUSE_RAW_INPUT_EVENTS[rawID]
 end
 
@@ -470,20 +669,14 @@ end
 ---------------------------------------------
 
 Ext.Events.RawInput:Subscribe(function(e)
-    -- _D(e.Input)
+    _D(e.Input)
     
-    local id = Input.GetRawInputEventID(e.Input.Input.InputId)
+    local id = e.Input.Input.InputId
     local inputEventData = e.Input
+    local deviceType = inputEventData.Input.DeviceId
 
-    if not id then
-        Input:LogWarning("Input not in enum: " .. e.Input.Input.InputId)
-        return nil
-    end
-
-    local name = Input.RAW_INPUT_EVENTS_ENUM[id]
-
-    if Input.IsMouseInput(id) then
-        local axis = name:match("^MOTION_(%u)_%u+$")
+    if deviceType == Input.RAW_INPUT_DEVICES.MOUSE then
+        local axis = id:match("^motion_(%l)%l%l%l$")
         local state
 
         if not Input.mouseState then
@@ -496,7 +689,6 @@ Ext.Events.RawInput:Subscribe(function(e)
         state = Input.mouseState
 
         if axis then
-            axis = axis:lower()
             local value = inputEventData.Value.Value2
 
             if value ~= 0 then
@@ -504,6 +696,23 @@ Ext.Events.RawInput:Subscribe(function(e)
                 
                 state.MoveVector[axis] = state.MoveVector[axis] + value
             end
+        end
+    elseif deviceType == Input.RAW_INPUT_DEVICES.KEY then
+        local state = inputEventData.Value.State
+
+        Input.Events.KeyStateChanged:Throw({
+            InputID = id,
+            State = state,
+        })
+
+        if state == "Released" then
+            Input.Events.KeyReleased:Throw({
+                InputID = id,
+            })
+        else
+            Input.Events.KeyPressed:Throw({
+                InputID = id,
+            })
         end
     end
 end)
@@ -554,5 +763,9 @@ end)
 ---------------------------------------------
 
 -- Input.Events.MouseMoved:Subscribe(function (e)
+--     _D(e)
+-- end)
+
+-- Input.Events.KeyStateChanged:Subscribe(function (e)
 --     _D(e)
 -- end)
