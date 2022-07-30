@@ -436,3 +436,47 @@ Client.UI.OptionsInput.Events.ActionExecuted:RegisterListener(function (action, 
         end
     end
 end)
+
+---------------------------------------------
+-- COPYING IDENTIFIERS TO CLIPBOARD
+---------------------------------------------
+
+local lastTooltipSkillID = nil
+local lastItemTooltipHandle = nil
+
+Game.Tooltip.RegisterListener("Skill", function(char, skill, tooltip)
+    lastTooltipSkillID = skill
+end)
+Game.Tooltip.RegisterListener("Item", function(item, tooltip)
+    lastItemTooltipHandle = item.MyGuid
+end)
+Ext.RegisterUINameCall("hideTooltip", function (_, _)
+    lastTooltipSkillID = nil
+    lastItemTooltipHandle = nil
+end)
+
+Client.UI.OptionsInput.Events.ActionExecuted:RegisterListener(function (action, _)
+    if action == "EpipEncounters_Debug_CopyIdentifier" then
+        local text
+
+        if lastItemTooltipHandle then
+            local item = Item.Get(lastItemTooltipHandle)
+
+            text = string.format("%s %s", item.MyGuid, Utilities.GetPrefixedRootTemplateID(item))
+        elseif lastTooltipSkillID then
+            text = lastTooltipSkillID
+        else
+            local pointerChar = Client.GetPointerCharacter()
+
+            if pointerChar then
+                text = string.format("%s %s", pointerChar.MyGuid, Utilities.GetPrefixedRootTemplateID(pointerChar))
+            end
+        end
+
+        if text then
+            Client.UI.MessageBox.CopyToClipboard(text)
+
+            print("Copied " .. text .. " to clipboard.")
+        end
+    end
+end)

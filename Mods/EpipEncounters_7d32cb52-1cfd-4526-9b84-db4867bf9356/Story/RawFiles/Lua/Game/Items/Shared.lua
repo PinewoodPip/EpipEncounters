@@ -105,7 +105,7 @@ function Item.GetIdentifyRequirement(item)
 end
 
 ---@param identifier GUID|NetId|EntityHandle
----@param isFlashHandle boolean
+---@param isFlashHandle boolean?
 ---@return Item
 function Item.Get(identifier, isFlashHandle)
     if isFlashHandle then

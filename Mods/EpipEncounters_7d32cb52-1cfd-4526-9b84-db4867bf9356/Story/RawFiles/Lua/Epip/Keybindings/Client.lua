@@ -9,6 +9,7 @@ Options.RegisterTab("EpipEncounters", {
         {Name = "Source Infuse", ID = "EpipEncounters_SourceInfuse"},
         {Name = "Debug Teleport", ID = "EpipEncounters_DebugTeleport", DeveloperOnly = true},
         {Name = "Debug Teleport (Party)", ID = "EpipEncounters_DebugTeleport_Party", DeveloperOnly = true},
+        {Name = "Debug Copy Identifier", ID = "EpipEncounters_Debug_CopyIdentifier", DeveloperOnly = true, DefaultInput1 = {Keys = {"lctrl", "c"}}},
         {Name = "Hotbar Action 1 (bottom row)", ID = "EpipEncounters_Hotbar_1"},
         {Name = "Hotbar Action 2 (bottom row)", ID = "EpipEncounters_Hotbar_2"},
         {Name = "Hotbar Action 3 (bottom row)", ID = "EpipEncounters_Hotbar_3"},
