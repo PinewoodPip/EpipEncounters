@@ -24,7 +24,7 @@ end
 local function TagFetchPerformance()
     local guid = CharacterGetHostCharacter()
     local now = Ext.MonotonicTime()
-    local tests = 10000000
+    local tests = 1000000
 
     print(tests .. " calls:")
 
@@ -51,6 +51,14 @@ local function TagFetchPerformance()
 
     time = Ext.MonotonicTime()  - now
     print("EsvCharacter:HasTag() without refetching the character: " .. time .. "ms")
+
+    now = Ext.MonotonicTime()
+    for i=1,tests,1 do
+        Ext.Entity.GetCharacterFast(guid):HasTag("TEST_TAG")
+    end
+
+    time = Ext.MonotonicTime()  - now
+    print("GetCharacterFast(): " .. time .. "ms VROOM VROOM")
 end
 
 Osiris.RegisterSymbolListener("StoryEvent", 2, "after", function(obj, event)
