@@ -37,6 +37,10 @@ Color = {
             GOLD = "C7A758",
         },
 
+        TOOLTIPS = {
+            MALUS = "DA2121",
+        },
+
         ALIGNMENTS = {
             PARTY = "00A2FD",
             ALLY = "11D77A",

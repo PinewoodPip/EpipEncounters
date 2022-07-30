@@ -110,7 +110,7 @@ function TooltipAdjustments.ChangeArtifactRarityDisplay(item, tooltip, a, b)
     local isArtifact = item.DisplayName == "Protean Artifact" -- proteans don't have a special tag, so we just detect them by name
     local isArtifactRune = false
 
-     -- UI elements to modify. The tooltip UI is modular and uses different elements for different parts of a tooltip. The extender tooltip API lets you change their data from a lua table.
+    -- UI elements to modify. The tooltip UI is modular and uses different elements for different parts of a tooltip. The extender tooltip API lets you change their data from a lua table.
     local itemNameElement = nil
     local rarityElement = nil
     local runeEffectElement = nil
@@ -346,6 +346,24 @@ Game.Tooltip.RegisterListener("Skill", nil, function(char, skill, tooltip)
             })
         })
     end
+end)
+
+-- Fix the erroneous GB5 penalty tooltip icons.
+Game.Tooltip.RegisterListener("Status", nil, function(char, status, tooltip)
+    local desc = tooltip:GetElement("StatusDescription") or {Type = "StatusDescription", Label = ""}
+
+    for _,element in ipairs(tooltip.Data) do
+        if element.Type == "StatusMalus" then
+            desc.Label = Text.Format("%s\n%s", {
+                FormatArgs = {
+                    desc.Label,
+                    Text.Format(element.Label, {Color = Color.COLORS.TOOLTIPS.MALUS})
+                }
+            })
+        end
+    end
+
+    tooltip:RemoveElements("StatusMalus")
 end)
 
 -- Show status source.
