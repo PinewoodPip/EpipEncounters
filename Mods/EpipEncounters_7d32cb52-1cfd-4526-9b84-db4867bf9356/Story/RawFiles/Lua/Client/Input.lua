@@ -18,6 +18,13 @@ local Input = {
         MOTION_Y_POSITIVE = true,
         MOTION_X_POSITIVE = true,
         MOTION_Y_NEGATIVE = true,
+        LEFT_2 = true,
+        RIGHT_2 = true,
+        MIDDLE = true,
+        WHEEL_X_POSITIVE = true,
+        WHEEL_X_NEGATIVE = true,
+        WHEEL_Y_POSITIVE = true,
+        WHEEL_Y_NEGATIVE = true,
     },
 
     NORBYTE_ENUM_NAMES = {
@@ -376,7 +383,7 @@ end
 
 ---@class InputMouseState
 ---@field Moving boolean
----@field MoveVector Vector2D
+---@field MoveVector Vector2D Pixels moved.
 
 ---------------------------------------------
 -- EVENTS/HOOKS
@@ -413,7 +420,7 @@ function Input.IsMouseInput(rawID)
         rawID = Input.RAW_INPUT_EVENTS_ENUM[rawID]
     end
 
-    return Input.MOUSE_RAW_INPUT_EVENTS[rawID] == true
+    return Input.MOUSE_RAW_INPUT_EVENTS[rawID]
 end
 
 ---Returns true if the game is unpaused and there are no focused elements in Flash.
@@ -462,6 +469,56 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
+Ext.Events.RawInput:Subscribe(function(e)
+    -- _D(e.Input)
+    
+    local id = Input.GetRawInputEventID(e.Input.Input.InputId)
+    local inputEventData = e.Input
+
+    if not id then
+        Input:LogWarning("Input not in enum: " .. e.Input.Input.InputId)
+        return nil
+    end
+
+    local name = Input.RAW_INPUT_EVENTS_ENUM[id]
+
+    if Input.IsMouseInput(id) then
+        local axis = name:match("^MOTION_(%u)_%u+$")
+        local state
+
+        if not Input.mouseState then
+            Input.mouseState = {
+                MoveVector = {x = 0, y = 0},
+                Moving = false,
+            }
+        end
+
+        state = Input.mouseState
+
+        if axis then
+            axis = axis:lower()
+            local value = inputEventData.Value.Value2
+
+            if value ~= 0 then
+                state.Moving = true
+                
+                state.MoveVector[axis] = state.MoveVector[axis] + value
+            end
+        end
+    end
+end)
+
+Ext.Events.Tick:Subscribe(function (e)
+    if Input.mouseState and Input.mouseState.Moving then
+
+        Input.Events.MouseMoved:Throw({
+            Vector = Input.mouseState.MoveVector,
+        })
+
+        Input.mouseState = nil
+    end
+end)
+
 -- Track focus gain/loss in UI
 Ext.RegisterUINameCall("inputFocus", function(ui, method) 
     Input.SetFocus(true)
@@ -491,3 +548,11 @@ Ext.Events.InputEvent:Subscribe(function(event)
         Input:FireEvent("SneakConesToggled", event.Press)
     end
 end)
+
+---------------------------------------------
+-- TESTING
+---------------------------------------------
+
+-- Input.Events.MouseMoved:Subscribe(function (e)
+--     _D(e)
+-- end)
