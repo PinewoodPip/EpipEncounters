@@ -173,15 +173,17 @@ end
 
 -- TODO use wrapper table for dye instead
 function Dyes.ApplyDye(item, dyeStatData)
+    local itemNetID = item.NetID
+
     Vanity.ignoreNextUnEquip = true
     -- item.ItemColorOverride = dyeStatData.Name
 
     Dyes.CreateDyeStats(item, dyeStatData)
 
-    Net.PostToServer("EPIPENCOUNTERS_CreateDyeStat_ForPeers", {ItemNetID = item.NetID, Stat = dyeStatData})
+    Net.PostToServer("EPIPENCOUNTERS_CreateDyeStat_ForPeers", {ItemNetID = itemNetID, Stat = dyeStatData})
 
     Client.Timer.Start("PIP_ApplyCustomDye", 0.35, function()
-        Net.PostToServer("EPIPENCOUNTERS_DyeItem", {NetID = item.NetID, DyeStat = dyeStatData, CharacterNetID = Client.GetCharacter().NetID})
+        Net.PostToServer("EPIPENCOUNTERS_DyeItem", {NetID = itemNetID, DyeStat = dyeStatData, CharacterNetID = Client.GetCharacter().NetID})
     end)
 end
 

@@ -45,8 +45,6 @@ local ContextMenu = {
     position = {},
     selectedElements = {},
     elementsCount = 0,
-    character = nil,
-    item = nil,
     vanillaContextData = nil,
 
     MAX_HEIGHT = 500,
@@ -217,8 +215,8 @@ function ContextMenu.Cleanup(ui)
         },
     }
     ContextMenu.selectedElements = {}
-    ContextMenu.character = nil
-    ContextMenu.item = nil
+    ContextMenu.characterHandle = nil
+    ContextMenu.itemHandle = nil
     ContextMenu.elementsCount = 0
 
     local root = ui:GetRoot()
@@ -465,7 +463,15 @@ end
 
 -- Returns either the character bound to the context menu, or the item
 function ContextMenu.GetCurrentEntity()
-    return ContextMenu.character or ContextMenu.item
+    local entity
+
+    if ContextMenu.characterHandle then
+        entity = Character.Get(ContextMenu.characterHandle)
+    elseif ContextMenu.itemHandle then
+        entity =  Item.Get(ContextMenu.itemHandle)
+    end
+
+    return entity
 end
 
 function ContextMenu.CheckRemoveSubMenu(ui, menu, elementID)
@@ -573,9 +579,9 @@ end
 
 Utilities.Hooks.RegisterListener("ContextMenu", "contextMenuOpened", function(ui, elements)
     -- Close our instance - we don't support using both at once
-    local item = ContextMenu.item
+    local item = Item.Get(ContextMenu.itemHandle)
     ContextMenu.Close(ContextMenu.UI)
-    ContextMenu.item = item
+    ContextMenu.itemHandle = item.Handle
     ContextMenu.position = {x = 0, y = 0}
 
     ContextMenu.elementsCount = #elements
@@ -595,17 +601,17 @@ Utilities.Hooks.RegisterListener("ContextMenu", "contextMenuOpened", function(ui
             -- TODO some better solution
 
             if not item then
-                ContextMenu.character = Client.UI.EnemyHealthBar.latestCharacter
+                ContextMenu.characterHandle = Client.UI.EnemyHealthBar.GetCharacter()
             end
             -- ContextMenu.item = nil -- TODO should we allow both at once?
             break
         end
     end
 
-    if ContextMenu.character then
-        Utilities.Hooks.FireEvent("PIP_ContextMenu", "VanillaMenu_Character", ContextMenu.character)
-    elseif ContextMenu.item then
-        Utilities.Hooks.FireEvent("PIP_ContextMenu", "VanillaMenu_Item", ContextMenu.item)
+    if ContextMenu.characterHandle then
+        Utilities.Hooks.FireEvent("PIP_ContextMenu", "VanillaMenu_Character", Character.Get(ContextMenu.characterHandle))
+    elseif ContextMenu.itemHandle then
+        Utilities.Hooks.FireEvent("PIP_ContextMenu", "VanillaMenu_Item", Item.Get(ContextMenu.itemHandle))
     end
 
     ContextMenu.SetPosition(ContextMenu.VanillaUI)
@@ -699,10 +705,15 @@ local function OnRequestContextMenu(ui, method, id, x, y, entityHandle, ...)
     -- The passed character handle, if any, becomes the associated character with this context menu. Otherwise, we default to client-controlled char.
     if entityHandle then
         entityHandle = Ext.UI.DoubleToHandle(entityHandle)
-        ContextMenu.character = Ext.GetCharacter(entityHandle)
-        ContextMenu.item = Ext.GetItem(entityHandle)
+
+        if Character.Get(entityHandle) then
+            ContextMenu.characterHandle = entityHandle
+        else
+            ContextMenu.itemHandle = entityHandle
+        end
+
     else
-        ContextMenu.character = Client.GetCharacter()
+        ContextMenu.characterHandle = Client.GetCharacter().Handle
     end
     
     -- Always use our instance for user-made context menus
@@ -737,7 +748,7 @@ local function OnContextMenu(ui, method, param3, handle)
         item = Ext.GetItem(Ext.UI.DoubleToHandle(param3)) -- but other UIs use this one instead
     end
 
-    ContextMenu.item = item
+    ContextMenu.itemHandle = item.Handle
 end
 
 Ext.Events.SessionLoaded:Subscribe(function()

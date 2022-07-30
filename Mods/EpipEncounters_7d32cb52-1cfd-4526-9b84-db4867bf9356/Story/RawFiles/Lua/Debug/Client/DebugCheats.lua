@@ -446,9 +446,11 @@ local lastItemTooltipHandle = nil
 
 Game.Tooltip.RegisterListener("Skill", function(char, skill, tooltip)
     lastTooltipSkillID = skill
+    lastItemTooltipHandle = nil
 end)
 Game.Tooltip.RegisterListener("Item", function(item, tooltip)
     lastItemTooltipHandle = item.MyGuid
+    lastTooltipSkillID = nil
 end)
 Ext.RegisterUINameCall("hideTooltip", function (_, _)
     lastTooltipSkillID = nil
