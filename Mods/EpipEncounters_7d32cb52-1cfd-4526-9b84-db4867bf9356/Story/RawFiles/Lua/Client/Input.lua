@@ -29,6 +29,14 @@ local Input = {
         x2 = true,
     },
 
+    MOUSE_CLICK_EVENTS = {
+        left2 = true,
+        right2 = true,
+        middle = true,
+        x1 = true,
+        x2 = true,
+    },
+
     TOUCH_RAW_EVENTS = {
         touch_tap = true,
         touch_hold = true,
@@ -562,6 +570,7 @@ local Input = {
         KeyStateChanged = {}, ---@type SubscribableEvent<InputLib_Event_KeyStateChanged>
         KeyPressed = {}, ---@type SubscribableEvent<InputLib_Event_KeyPressed>
         KeyReleased = {}, ---@type SubscribableEvent<InputLib_Event_KeyReleased>
+        MouseButtonPressed = {}, ---@type SubscribableEvent<InputLib_Event_MouseButtonPressed>
     }
 }
 Epip.InitializeLibrary("Input", Input)
@@ -593,6 +602,10 @@ end
 ---@field InputID InputRawType
 
 ---@class InputLib_Event_KeyReleased
+---@field InputID InputRawType
+
+---@class InputLib_Event_MouseButtonPressed
+---@field Position Vector2D
 ---@field InputID InputRawType
 
 ---------------------------------------------
@@ -750,6 +763,16 @@ Ext.Events.RawInput:Subscribe(function(e)
 
     local state = inputEventData.Value.State
 
+    -- Mouse pressed event
+    if Input.MOUSE_CLICK_EVENTS[id] then
+        local x, y = Client.GetMousePosition()
+
+        Input.Events.MouseButtonPressed:Throw({
+            Position = {x = x, y = y},
+            InputID = id,
+        })
+    end
+
     Input.Events.KeyStateChanged:Throw({
         InputID = id,
         State = state,
@@ -807,7 +830,7 @@ Ext.Events.InputEvent:Subscribe(function(event)
 end)
 
 ---------------------------------------------
--- TESTING
+-- TESTS
 ---------------------------------------------
 
 -- Input.Events.MouseMoved:Subscribe(function (e)
@@ -815,5 +838,9 @@ end)
 -- end)
 
 -- Input.Events.KeyStateChanged:Subscribe(function (e)
+--     _D(e)
+-- end)
+
+-- Input.Events.MouseButtonPressed:Subscribe(function (e)
 --     _D(e)
 -- end)
