@@ -85,6 +85,13 @@ function Client.GetDate(utc)
     return Client.UI.Time.GetDate(utc)
 end
 
+---Returns the global position of the mouse in the screen space, in pixel coordinates.
+---Relies on MouseTracker.lua
+---@return integer, integer
+function Client.GetMousePosition()
+    return Epip.Features.MouseTracker.GetMousePosition()
+end
+
 ---Returns true if the client character is currently in dialogue.
 ---@return boolean
 function Client.IsInDialogue()
