@@ -126,6 +126,8 @@ function table.simpleSort(tbl, reverse)
     end
 
     table.sort(tbl, fun)
+
+    return tbl
 end
 
 -- From http://lua-users.org/wiki/CopyTable

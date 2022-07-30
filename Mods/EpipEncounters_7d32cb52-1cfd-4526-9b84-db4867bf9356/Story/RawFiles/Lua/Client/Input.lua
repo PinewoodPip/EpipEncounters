@@ -625,6 +625,20 @@ function Input.GetRawInputNumericID(name)
     return id
 end
 
+---Returns a list of pressed *keyboard* keys.
+---@return InputRawType[]
+function Input.GetPressedKeys()
+    local keys = {}
+
+    for key,_ in pairs(Input.pressedKeys) do
+        if not Input.IsMouseInput(key) and not Input.IsTouchInput(key) then
+            table.insert(keys, key)
+        end
+    end
+
+    return keys
+end
+
 ---Returns whether a raw input event ID is a mouse-related one, including movement and buttons.
 ---@param rawID InputRawType
 ---@return boolean

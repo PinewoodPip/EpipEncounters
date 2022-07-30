@@ -3,9 +3,8 @@ local Options = Client.UI.OptionsInput
 
 Options.RegisterTab("EpipEncounters", {
     Name = "Epip Encounters",
-    Label = Text.Format("If you wish to use extra mouse buttons for these hotkeys, please bind the 'Special Binding X' keybinds in the normal menu and use them to set these custom ones.", {Size = 15}),
     Keybinds = {
-        {Name = "Quick Examine", ID = "EpipEncounters_QuickExamine", DefaultInput1 = "V"},
+        {Name = "Quick Examine", ID = "EpipEncounters_QuickExamine", DefaultInput1 = {Keys = {"v"}}},
         {Name = "Meditate", ID = "EpicEncounters_Meditate"},
         {Name = "Source Infuse", ID = "EpipEncounters_SourceInfuse"},
         {Name = "Debug Teleport", ID = "EpipEncounters_DebugTeleport", DeveloperOnly = true},
@@ -25,7 +24,7 @@ Options.RegisterTab("EpipEncounters", {
     },
 })
 
-Options.Events.ActionExecuted:RegisterListener(function (action, binding)
+Options.Events.ActionExecuted:RegisterListener(function (action, _)
     if action == "EpicEncounters_Meditate" then
         Net.PostToServer("EPIPENCOUNTERS_Hotkey_Meditate", {
             NetID = Client.GetCharacter().NetID,

@@ -423,7 +423,7 @@ MessageBox.RegisterMessageListener("epip_Cheats_Items_SpawnTemplate", MessageBox
 end)
 
 -- Teleport to cursor.
-Client.UI.OptionsInput.Events.ActionExecuted:RegisterListener(function (action, binding)
+Client.UI.OptionsInput.Events.ActionExecuted:RegisterListener(function (action, _)
     if action == "EpipEncounters_DebugTeleport" or action == "EpipEncounters_DebugTeleport_Party" then
         local pos = Ext.GetPickingState().WalkablePosition
         

@@ -828,7 +828,7 @@ local function OnHotkeyRightClick(ui, method)
     Hotbar.ToggleDrawer()
 end
 
-Client.UI.OptionsInput.Events.ActionExecuted:RegisterListener(function (action, binding)
+Client.UI.OptionsInput.Events.ActionExecuted:RegisterListener(function (action, _)
     local actionPattern = "EpipEncounters_Hotbar_(%d+)"
     local index = action:match(actionPattern)
 
