@@ -37,7 +37,7 @@ end
 ---@class PlayerInfoUI
 local PlayerInfo = Client.UI.PlayerInfo
 Epip.InitializeUI(Client.UI.Data.UITypes.playerInfo, "PlayerInfo", PlayerInfo)
-PlayerInfo:Debug()
+-- PlayerInfo:Debug()
 
 ---@class PlayerInfoStatusUpdate
 ---@field CharacterHandle FlashObjectHandle
@@ -344,7 +344,6 @@ local function PrepareStatusEntry(data, statusesByHandle, players, now, i)
     if status then
         statusesByHandle[data.StatusHandle] = true
     end
-        
 
     local statusApplyTime = PlayerInfo.StatusApplyTime[netID]
     if not statusApplyTime then
@@ -354,7 +353,7 @@ local function PrepareStatusEntry(data, statusesByHandle, players, now, i)
     
     -- Newer statuses are displayed to the right.
     data.SortingIndex = -statusApplyTime
-    if not status then data.SortingIndex = data.SortingIndex + (i * 0.05) end
+    if not status then data.SortingIndex = data.SortingIndex + (i * 0.05) end -- Is this necessary?
     -- else
     --     local statusApplyTime = PlayerInfo.StatusApplyTime
     --     data.SortingIndex = -now + 50 -- Fixes flickering issue with spam re-applying
@@ -447,13 +446,32 @@ PlayerInfo:RegisterInvokeListener("updateStatuses", function (event, createIfDoe
                 if data.KeepAlive then
                     root.setStatus(createIfDoesntExist, data.CharacterHandle, data.StatusHandle, data.ElementID, data.Duration, data.Cooldown, data.Tooltip, (i - 1), data.KeepAlive)
                 else
-                    root.SetStatusSortingIndex(data.CharacterHandle, data.StatusHandle, data.SortingIndex)
+                    root.SetStatusSortingIndex(data.CharacterHandle, data.StatusHandle, (i - 1))
                 end
 
             end
         end
 
-        -- PlayerInfo:DebugLog("Statuses updated.")
+        PlayerInfo:DebugLog("Statuses updated.")
+        
+        -- for netID,statuses in pairs(players) do
+        --     local char = Character.Get(netID)
+        --     if char.DisplayName == "Sebille" then
+        --         for _,status in ipairs(statuses) do
+        --             local obj = status.Status
+        --             local name = status.StatusHandle
+        --             if obj then name = status.Status.StatusId end
+
+        --             PlayerInfo:DebugLog(Text.Format("Status %s Priority %s KeepAlive %s", {
+        --                 FormatArgs = {
+        --                     name,
+        --                     status.SortingIndex,
+        --                     status.KeepAlive,
+        --                 }
+        --             }))
+        --         end
+        --     end
+        -- end
     end
     event:PreventAction()
 
