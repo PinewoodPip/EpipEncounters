@@ -1,9 +1,8 @@
 
 ---@class InputLib : Feature
 local Input = {
-    HeldKeys = {},
 
-    keyStates = {},
+    pressedKeys = {}, ---@type table<InputRawType, true>
     mouseState = nil, ---@type InputMouseState
 
     RAW_INPUT_DEVICES = {
@@ -124,7 +123,7 @@ local Input = {
         ["q"] = {Name = "Q", ShortName = "Q"},
         ["f22"] = {Name = "Function Key 22", ShortName = "F22"},
         ["kp_7"] = {Name = "Numpad 7", ShortName = "KP7"},
-        ["right2"] = {Name = "] = {Name = "", ShortName = ""},", ShortName = "M2"},
+        ["right2"] = {Name = "Right Click", ShortName = "M2"},
         ["motion_xpos"] = {Name = "Mouse Movement Right", ShortName = "Mouse Movement Right"},
         ["touch_rotate"] = {Name = "Touch Rotate", ShortName = "[Rotate]"},
         ["item8"] = {Name = "Item 8", ShortName = "I8"},
@@ -628,12 +627,35 @@ function Input.IsAcceptingInput()
     return not GameState.IsPaused() and not Input.interfaceFocused
 end
 
----Returns true if the key bound to the event `id` is being held.  
----Note that not all InputEvents support being held.
----@param id number Input event id.
+---Returns whether a key is pressed.
+---@param rawID InputRawType
 ---@return boolean
-function Input.KeyHeld(id)
-    return Input.HeldKeys[id]
+function Input.IsKeyPressed(rawID)
+    return Input.pressedKeys[rawID] == true
+end
+
+---Returns whether either of the 2 shift keys is being pressed.
+---@return boolean
+function Input.IsShiftPressed()
+    return Input.IsKeyPressed("lshift") or Input.IsKeyPressed("rshift")
+end
+
+---Returns whether either of the 2 ctrl keys is being pressed.
+---@return boolean
+function Input.IsCtrlPressed()
+    return Input.IsKeyPressed("lctrl") or Input.IsKeyPressed("rctrl")
+end
+
+---Returns whether either of the 2 alt keys is being pressed.
+---@return boolean
+function Input.IsAltPressed()
+    return Input.IsKeyPressed("lalt") or Input.IsKeyPressed("ralt")
+end
+
+---Returns whether either of the 2 GUI keys is being pressed.
+---@return boolean
+function Input.IsGUIPressed()
+    return Input.IsKeyPressed("lgui") or Input.IsKeyPressed("rgui")
 end
 
 ---Returns whether a modifier key is being held.  
@@ -669,11 +691,17 @@ end
 ---------------------------------------------
 
 Ext.Events.RawInput:Subscribe(function(e)
-    _D(e.Input)
     
     local id = e.Input.Input.InputId
     local inputEventData = e.Input
     local deviceType = inputEventData.Input.DeviceId
+
+    -- Update pressed state tracking
+    if inputEventData.Value.State == "Pressed" then
+        Input.pressedKeys[id] = id
+    else
+        Input.pressedKeys[id] = nil
+    end
 
     if deviceType == Input.RAW_INPUT_DEVICES.MOUSE then
         local axis = id:match("^motion_(%l)%l%l%l$")

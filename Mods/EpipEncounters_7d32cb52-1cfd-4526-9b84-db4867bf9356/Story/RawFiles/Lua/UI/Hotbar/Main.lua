@@ -1688,7 +1688,7 @@ function CycleHotbar(ui, current, index, increment)
     local next = current + increment
 
     -- add modifier keys to select higher hotbars
-    if Client.Input.KeyHeld(285) then -- cycle 2nd bar
+    if Client.Input.IsShiftPressed() then -- cycle 2nd bar
         index = index + 1
     -- elseif Input:KeyHeld(220) then -- cycle 3rd bar
     --     index = index + 2
