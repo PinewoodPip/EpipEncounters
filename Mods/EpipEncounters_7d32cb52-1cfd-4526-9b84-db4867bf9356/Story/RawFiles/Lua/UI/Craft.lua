@@ -17,12 +17,21 @@ local Craft = {
     Events = {
         FilterSelected = {}, ---@type SubscribableEvent<CraftUI_Event_FilterSelected>
         CharacterSelected = {}, ---@type SubscribableEvent<CraftUI_Event_CharacterSelected>
+        RecipesUpdated = {}, ---@type SubscribableEvent<CraftUI_Event_RecipesUpdated>
     }
 }
 Epip.InitializeUI(102, "Craft", Craft)
 Client.UI.Craft = Craft
 
 ---@alias CraftUI_Filter "All"|"Unknown"|"Equipment"|"Consumables"|"Magical"|"Ingredients"|"Miscellaneous"
+
+---@class CraftUI_RecipeUpdate
+---@field GroupID number
+---@field RecipeID number
+---@field Name string
+---@field Tooltip string
+---@field Value number
+---@field IsNew boolean
 
 ---------------------------------------------
 -- EVENTS
@@ -38,6 +47,9 @@ Client.UI.Craft = Craft
 ---@class CraftUI_Event_CharacterSelected
 ---@field Character EclCharacter
 ---@field IsAvatar boolean
+
+---@class CraftUI_Event_RecipesUpdated
+---@field Recipes CraftUI_RecipeUpdate
 
 ---------------------------------------------
 -- METHODS
@@ -56,6 +68,24 @@ end
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
+
+Craft:RegisterInvokeListener("updateArraySystem", function(_)
+    local arr = Craft:GetRoot().recipe_array
+    
+    ---@type CraftUI_RecipeUpdate[]
+    local recipes = Client.Flash.ParseArray(arr, {
+        "GroupID",
+        "RecipeID",
+        "Name",
+        "Tooltip",
+        "Value",
+        "IsNew",
+    })
+
+    Craft.Events.RecipesUpdated:Throw({
+        Recipes = recipes,
+    })
+end)
 
 Craft:RegisterInvokeListener("setPlayer", function(e, handle, isAvatar)
     Craft.Events.CharacterSelected:Throw({
