@@ -67,7 +67,11 @@ function Epip.InitializeFeature(id, name, feature)
     end
 
     for hook,data in pairs(feature.Hooks) do
-        feature:AddHook(hook, data)
+        if data.Legacy == false or feature.USE_LEGACY_HOOKS == false then
+            feature:AddSubscribableHook(hook)
+        else
+            feature:AddHook(hook, data)
+        end
     end
 
     -- Check required mods

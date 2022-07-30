@@ -56,6 +56,7 @@ local Feature = {
     REQUIRED_MODS = {},
     FILEPATH_OVERRIDES = {},
     USE_LEGACY_EVENTS = true,
+    USE_LEGACY_HOOKS = true,
 }
 _Feature = Feature
 
@@ -92,6 +93,16 @@ function Feature:AddSubscribableEvent(evName)
     local event = SubscribableEvent:New(evName)
 
     self.Events[evName] = event
+
+    return event
+end
+
+---@param evName string
+---@return SubscribableEvent
+function Feature:AddSubscribableHook(evName)
+    local event = SubscribableEvent:New(evName)
+
+    self.Hooks[evName] = event
 
     return event
 end
