@@ -202,6 +202,8 @@ LOAD_ORDER = {
     "Epip/Client/CraftingFixes.lua",
     -- "Epip/Client/InventoryImprovements.lua",
 
+    {ScriptSet = "Epip/Greatforge/DrillSockets"},
+
     "Epip/Client/GenericUIs/QuickExamine.lua",
     "Epip/Client/GenericUIs/SaveLoadOverlay.lua",
     "Epip/Client/GenericUIs/HotbarGroup.lua",

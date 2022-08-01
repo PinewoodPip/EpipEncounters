@@ -101,6 +101,8 @@ LOAD_ORDER = {
     "Epip/EpicEnemies/ActivationConditions.lua",
     "Epip/EpicEnemies/Server.lua",
     "Epip/EpicEnemies/Effects.lua",
+    
+    {ScriptSet = "Epip/Greatforge/DrillSockets"},
 
     "Epip/PreferredTargetDisplay/Shared.lua",
     "Epip/PreferredTargetDisplay/Server.lua",

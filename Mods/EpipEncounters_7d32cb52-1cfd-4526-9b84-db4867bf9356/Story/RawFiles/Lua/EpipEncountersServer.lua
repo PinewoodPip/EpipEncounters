@@ -1,39 +1,4 @@
 
-Ext.Osiris.RegisterListener('PROC_AMER_UI_Greatforge_DoCraft', 11, "after", function(instance, char, cont, item, level, itemType, slot, subType, handedness, value, craftOperation)
-    if (craftOperation == "AddSockets") then
-        
-        -- local baseBoostSlots = Osi.NRD_ItemGetPermanentBoostInt(item, "RuneSlots")
-
-        -- Ext.Print(baseBoostSlots)
-        -- Ext.Print("Item " .. item .. " has " .. runeSlots .. " sockets.")
-
-        -- Osi.NRD_ItemSetPermanentBoostInt(item, "RuneSlots", baseBoostSlots + 1)
-
-        -- local runeSlots = GetRuneSlots(item)
-
-        local itemObj = Ext.GetItem(item)
-
-        itemObj.Stats.DynamicStats[2].RuneSlots = itemObj.Stats.DynamicStats[2].RuneSlots + 1
-
-        Osi.NRD_ItemCloneBegin(item)
-        if (slot == "Weapon") then
-            Osi.NRD_ItemCloneSetString("DamageTypeOverwrite", itemObj.Stats.DynamicStats[1].DamageType)
-        end
-        local newItem = Osi.NRD_ItemClone()
-
-        -- if itemObj:HasTag("PIP_Vanity_Transmogged") then
-        --     local originalTemplate = 
-        --     Osiris.DB_PIP_Vanity_OriginalTemplate:Delete(itemObj.MyGuid, nil)
-        --     Osi.SetTag(newItem, "PIP_Vanity_Transmogged")
-        --     Osiris.DB_PIP_Vanity_OriginalTemplate:Delete(itemObj.MyGuid, nil)
-        -- end
-
-        Osi.SetTag(newItem, "AMER_DELTAMODS_HANDLED") -- don't regenerate deltamods on the new item
-        Osi.ItemToInventory(newItem, char, 1, 1, 0)
-        Osi.PROC_AMER_GEN_UnequipAndRemoveItem(char, item);
-    end
-end)
-
 function GetRuneSlots(item)
     local itemData = Ext.GetItem(item)
 
