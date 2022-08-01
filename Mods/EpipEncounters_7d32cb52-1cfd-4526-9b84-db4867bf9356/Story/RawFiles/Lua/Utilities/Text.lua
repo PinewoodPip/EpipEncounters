@@ -23,6 +23,7 @@ Text = {
         ["?"] = "%?",
         ["\0"] = "%z",
     },
+    UNKNOWN_HANDLE = "ls::TranslatedStringRepository::s_HandleUnknown",
     PATTERNS = {
         FONT_SIZE = 'size="([0-9]+)"',
         FONT_COLOR = 'color="(#......)"',

@@ -13,6 +13,8 @@ function Net.Broadcast(channel, message, excludedChar)
 end
 
 function Net.PostToCharacter(char, channel, message)
+    if GetExtType(char) ~= nil then char = char.MyGuid end
+    
     Ext.Net.PostMessageToClient(char, channel, Utilities.Stringify(message or {}))
 end
 
