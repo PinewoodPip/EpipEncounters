@@ -767,10 +767,13 @@ Ext.Events.RawInput:Subscribe(function(e)
     if Input.MOUSE_CLICK_EVENTS[id] then
         local x, y = Client.GetMousePosition()
 
-        Input.Events.MouseButtonPressed:Throw({
-            Position = {x = x, y = y},
-            InputID = id,
-        })
+        -- This does not fire in Main Menu. TODO?
+        if x and y then
+            Input.Events.MouseButtonPressed:Throw({
+                Position = {x = x, y = y},
+                InputID = id,
+            })
+        end 
     end
 
     Input.Events.KeyStateChanged:Throw({

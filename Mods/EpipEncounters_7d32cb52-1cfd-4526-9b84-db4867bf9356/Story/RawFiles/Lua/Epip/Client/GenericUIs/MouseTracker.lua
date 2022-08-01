@@ -3,13 +3,9 @@ local Generic = Client.UI.Generic
 
 ---@class MouseTracker : Feature
 local MouseTracker = {
-    UI = Generic.Create("PIP_MouseTracker"), ---@type GenericUI_Instance
+    UI = nil, ---@type GenericUI_Instance
 }
 Epip.AddFeature("MouseTracker", "MouseTracker", MouseTracker)
-MouseTracker:Debug()
-
--- MouseTracker.UI:CreateElement("_", "TiledBackground")
-MouseTracker.UI:GetUI():SetPosition(0, 0)
 
 ---------------------------------------------
 -- METHODS
@@ -33,6 +29,19 @@ function MouseTracker.GetMousePosition()
     y = (y / 1080) * height
 
     return Ext.Round(x), Ext.Round(y)
+end
+
+---------------------------------------------
+-- SETUP
+---------------------------------------------
+
+function MouseTracker:__Setup()
+    MouseTracker.UI = Generic.Create("PIP_MouseTracker")
+    MouseTracker.UI:GetUI():SetPosition(0, 0)
+
+    if MouseTracker:IsDebug() then
+        MouseTracker.UI:CreateElement("_", "TiledBackground")
+    end
 end
 
 ---------------------------------------------
