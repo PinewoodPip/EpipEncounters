@@ -254,7 +254,7 @@ local function OnTalentTooltipRequest(ui, method, tooltipId, x, y, loc6, height,
     local player
 
     if not handle then
-        player = Ext.UI.HandleToDouble(Client.UI.EnemyHealthBar.latestCharacter.Handle)
+        player = Client.UI.EnemyHealthBar.latestCharacter
     else
         player = Ext.UI.HandleToDouble(handle)
     end
@@ -469,7 +469,7 @@ end)
 -- Show custom talents in examine menu
 Client.UI.Examine:RegisterHook("Update", function(examineData)
     local char = Client.UI.EnemyHealthBar.latestCharacter
-    if not char then return nil end
+    if not char then return nil else char = Character.Get(char) end
 
     local category = examineData:GetCategory(Client.UI.Examine.CATEGORIES.TALENTS)
 

@@ -65,16 +65,16 @@ Epip.InitializeUI(Client.UI.Data.UITypes.enemyHealthBar, "EnemyHealthBar", Bar)
 
 function Bar.GetCharacter()
     local pointer = Ext.UI.GetPickingState()
-    local char = nil
+    local charHandle, char
 
     if pointer.HoverCharacter then
-        char = pointer.HoverCharacter
+        charHandle = pointer.HoverCharacter
     elseif pointer.HoverCharacter2 then
-        char = pointer.HoverCharacter2 -- Dead characters.
+        charHandle = pointer.HoverCharacter2 -- Dead characters.
     end
 
-    if char then
-        char = Ext.GetCharacter(char) 
+    if charHandle then
+        char = Character.Get(charHandle)
     end
 
     return char
@@ -320,11 +320,11 @@ Ext.Events.SessionLoaded:Subscribe(function()
         local item = Bar.GetItem()
 
         if char then
-            Bar.latestCharacter = Bar.GetCharacter()
+            Bar.latestCharacter = Bar.GetCharacter().Handle
         end
 
         if item then
-            Bar.latestItem = Bar.GetItem()
+            Bar.latestItem = Bar.GetItem().Handle
         end
 
         Bar.UpdateStacks()

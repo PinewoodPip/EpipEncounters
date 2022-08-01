@@ -581,7 +581,10 @@ Utilities.Hooks.RegisterListener("ContextMenu", "contextMenuOpened", function(ui
     -- Close our instance - we don't support using both at once
     local item = Item.Get(ContextMenu.itemHandle)
     ContextMenu.Close(ContextMenu.UI)
-    ContextMenu.itemHandle = item.Handle
+
+    if item then
+        ContextMenu.itemHandle = item.Handle
+    end
     ContextMenu.position = {x = 0, y = 0}
 
     ContextMenu.elementsCount = #elements
@@ -601,7 +604,7 @@ Utilities.Hooks.RegisterListener("ContextMenu", "contextMenuOpened", function(ui
             -- TODO some better solution
 
             if not item then
-                ContextMenu.characterHandle = Client.UI.EnemyHealthBar.GetCharacter()
+                ContextMenu.characterHandle = Client.UI.EnemyHealthBar.latestCharacter
             end
             -- ContextMenu.item = nil -- TODO should we allow both at once?
             break
