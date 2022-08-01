@@ -10,6 +10,7 @@ local Input = {
         KEY = "Key",
         MOUSE = "Mouse",
         TOUCH_BAR = "Touchbar",
+        CONTROLLER = "C",
     },
 
     MOUSE_RAW_INPUT_EVENTS = {
