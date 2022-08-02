@@ -12,6 +12,13 @@ Client.UI.OptionsSettings:RegisterListener("OptionSet", function(data, value)
         local extraData = Stats.ExtraData[data.ID]
 
         DataConfig.SetValue(extraData.ID, value)
+
+        Net.PostToServer("EPIPENCOUNTERS_SetExtraData", {
+            Key = extraData.ID,
+            Value = value,
+        })
+
+        DataConfig.SaveSettings()
     end
 end)
 

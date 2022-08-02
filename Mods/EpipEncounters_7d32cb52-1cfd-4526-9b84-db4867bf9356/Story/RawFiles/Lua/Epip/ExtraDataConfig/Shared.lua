@@ -2,6 +2,8 @@
 ---@class Feature_ExtraDataConfig : Feature
 local DataConfig = {
     ModifiedEntries = {}, ---@type table<string, number>
+    SAVE_VERSION = 0,
+    SAVE_FILENAME = "EpipEncounters_ExtraData.json",
 }
 Epip.AddFeature("ExtraDataConfig", "ExtraDataConfig", DataConfig)
 
@@ -61,7 +63,40 @@ function DataConfig.GetOptionData(key)
         HideNumbers = false,
         Interval = 0.1,
         IsExtraData = true,
+        SaveOnServer = true,
+        ServerOnly = true,
     }
 
     return option
 end
+
+---@param path string?
+function DataConfig.LoadSettings(path)
+    path = path or DataConfig.SAVE_FILENAME
+    local save = Utilities.LoadJson(path)
+
+    if save then
+        for key,value in pairs(save.Keys) do
+            DataConfig.SetValue(key, value)
+        end
+    end
+end
+
+---@param path string?
+function DataConfig.SaveSettings(path)
+    path = path or DataConfig.SAVE_FILENAME
+
+    local save = {
+        Version = DataConfig.SAVE_VERSION,
+        Keys = DataConfig.ModifiedEntries,
+    }
+
+    Utilities.SaveJson(path, save)
+end
+
+---------------------------------------------
+-- SETUP
+---------------------------------------------
+
+-- Load settings.
+DataConfig.LoadSettings()
