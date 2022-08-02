@@ -250,6 +250,7 @@ LOAD_ORDER = {
     "Epip/PreferredTargetDisplay/Client.lua",
 
     {ScriptSet = "Epip/ItemTagging"},
+    {ScriptSet = "Epip/ExtraDataConfig", WIP = true,},
 
     -- AMER UI controller support
     -- "Epip/Client/AMERUI_Controller/AMERUI_Controller.lua",

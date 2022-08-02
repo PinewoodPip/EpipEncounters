@@ -166,6 +166,9 @@ local function Init()
                         Setting = setting.ID,
                         Value = Settings.ConvertFromReal(setting, value),
                     })
+
+                    -- Fire events upon loading.
+                    Settings.SetValue(module, setting.ID, value)
                 end
             end
         end

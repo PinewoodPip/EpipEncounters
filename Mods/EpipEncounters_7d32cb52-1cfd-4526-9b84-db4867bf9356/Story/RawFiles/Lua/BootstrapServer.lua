@@ -109,6 +109,7 @@ LOAD_ORDER = {
     "Epip/PreferredTargetDisplay/Server.lua",
     
     {ScriptSet = "Epip/ItemTagging"},
+    {ScriptSet = "Epip/ExtraDataConfig", WIP = true,},
 
     "Epip/StatsTab/Shared.lua",
     "Epip/StatsTab/Server/Server.lua",

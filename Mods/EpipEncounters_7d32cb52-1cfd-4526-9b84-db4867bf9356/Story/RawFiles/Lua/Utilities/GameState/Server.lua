@@ -12,3 +12,8 @@ end
 function GameState.GetState()
     return Ext.Server.GetGameState()
 end
+
+---@return boolean
+function GameState.IsSessionLoaded()
+    return GameState.IN_SESSION_STATES[GameState.GetState()] == true
+end

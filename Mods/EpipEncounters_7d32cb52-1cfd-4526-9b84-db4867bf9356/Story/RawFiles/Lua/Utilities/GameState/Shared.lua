@@ -5,6 +5,12 @@
 GameState = {
     lastTickTime = nil,
 
+    IN_SESSION_STATES = {
+        Running = true,
+        Paused = true,
+        PrepareRunning = true,
+    },
+
     ---@type table<string, GameState>
     SERVER_STATES = {
         UNKNOWN = "Unknown",
