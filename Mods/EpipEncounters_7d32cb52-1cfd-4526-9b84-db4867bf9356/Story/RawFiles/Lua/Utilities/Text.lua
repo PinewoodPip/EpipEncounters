@@ -77,6 +77,19 @@ function Text.Round(value, decimals)
     return output
 end
 
+---Generate a random GUID.
+---Source: https://gist.github.com/jrus/3197011
+---@return GUID
+function Text.GenerateGUID()
+    local template ='xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
+    local guid, _ = string.gsub(template, '[xy]', function (c)
+        local v = (c == 'x') and Ext.Random(0, 0xf) or Ext.Random(8, 0xb)
+        return string.format('%x', v)
+    end)
+
+    return guid
+end
+
 ---Returns a string with spaces inserted inbetween PascalCase words.
 ---@param str string
 ---@return string
