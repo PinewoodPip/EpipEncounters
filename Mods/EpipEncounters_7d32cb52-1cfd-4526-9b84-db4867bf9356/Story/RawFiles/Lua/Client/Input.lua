@@ -732,6 +732,7 @@ Ext.Events.RawInput:Subscribe(function(e)
     local inputEventData = e.Input
     local id = inputEventData.Input.InputId
     local deviceType = inputEventData.Input.DeviceId
+    if not id then return nil end -- Happens for unsupported keys, ex. < or >
 
     -- Update pressed state tracking
     if inputEventData.Value.State == "Pressed" then
