@@ -46,6 +46,7 @@ LOAD_ORDER = {
     "Utilities/GameState/Client.lua",
     "Utilities/Mod.lua",
     "Utilities.lua",
+    "Utilities/Timer.lua",
     "Utilities/Coroutine.lua",
 
     "Data/Game.lua", -- TODO move stuff out of it into appropriate scripts
@@ -100,8 +101,6 @@ LOAD_ORDER = {
     "EpicStatsDefinitions.lua",
 
     "UI/EnemyHealthBar.lua",
-
-    "Game/Client/Timers.lua",
     
     "UI/Input.lua",
     "UI/OptionsInput.lua",

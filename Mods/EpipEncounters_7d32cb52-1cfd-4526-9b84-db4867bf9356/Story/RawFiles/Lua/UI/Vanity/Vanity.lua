@@ -1139,7 +1139,7 @@ Server.RegisterOsirisListener("ItemUnEquipped", 2, function(item, char)
         if Vanity.ignoreNextUnEquip then
             Vanity.ignoreNextUnEquip = false
         else
-            Client.Timer.Start("PIP_VanityRefresh", 0.15, Vanity.Refresh)
+            Timer.Start("PIP_VanityRefresh", 0.15, Vanity.Refresh)
         end
     end
 end)
@@ -1182,7 +1182,7 @@ Vanity.Events.TabButtonPressed:RegisterListener(function (id)
         Vanity.Setup(tab)
 
         -- TODO rework into a Once listener
-        Client.Timer.Start("", 0.1, function()
+        Timer.Start("", 0.1, function()
             CharacterSheet:HideTooltip()
         end)
     end

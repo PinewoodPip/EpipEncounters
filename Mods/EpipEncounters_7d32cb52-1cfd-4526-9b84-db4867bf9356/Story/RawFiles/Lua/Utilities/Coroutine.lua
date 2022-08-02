@@ -49,7 +49,7 @@ function _Instance:Sleep(time, ...)
 
     self.sleeping = true
 
-    Client.Timer.Start("", request.SleepTime, function()
+    Timer.Start("", request.SleepTime, function()
         self.sleeping = false
         self:Yield()
     end)
@@ -78,7 +78,7 @@ end
 ---------------------------------------------
 
 Ext.Events.SessionLoaded:Subscribe(function (e)
-    Client.Timer.Start("", 2, function()
+    Timer.Start("", 2, function()
         print("Creating")
         local inst = Coroutine.Start(function(inst)
             print("yay")

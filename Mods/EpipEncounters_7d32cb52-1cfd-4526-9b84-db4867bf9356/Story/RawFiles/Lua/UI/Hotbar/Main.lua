@@ -860,7 +860,7 @@ GameState.Events.RunningTick:Subscribe(function (e)
         Hotbar.wasVisible = visible
 
         if visible then
-            Client.Timer.Start("", 0.1, function()
+            Timer.Start("", 0.1, function()
                 Hotbar.RenderSlots()
             end)
         end
@@ -1256,7 +1256,7 @@ function Hotbar.UseSkill(skill)
     
         UpdateSlotTextures()
     
-        Client.Timer.Start("UseHotbarSlot", 0.05, function()
+        Timer.Start("UseHotbarSlot", 0.05, function()
             Hotbar.UseSlot(145)
     
             -- Rebind the auxiliary slot back to its original skill

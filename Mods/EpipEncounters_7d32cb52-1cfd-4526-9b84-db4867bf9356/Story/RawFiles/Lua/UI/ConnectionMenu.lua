@@ -21,7 +21,7 @@ Epip.InitializeUI(Client.UI.Data.UITypes.connectionMenu, "ConnectionMenu", Conne
 Client:RegisterListener("DeterminedAsHost", function()
     -- Client.UI.GameMenu:GetUI():ExternalInterfaceCall("buttonPressed", Client.UI.GameMenu.BUTTON_IDS.CONNECTIVITY)
 
-    -- Client.Timer.Start("_ConnectivityMenuLANToggle", 0.3, function()
+    -- Timer.Start("_ConnectivityMenuLANToggle", 0.3, function()
     --     ConnectionMenu:GetUI():ExternalInterfaceCall("checkBoxID", ConnectionMenu.CHECKBOX_IDS.LAN, 1)
     --     ConnectionMenu:GetUI():ExternalInterfaceCall("cancelPressed")
     --     Client.UI.GameMenu.GetUI():ExternalInterfaceCall("buttonPressed", Client.UI.GameMenu.BUTTON_IDS.RESUME)

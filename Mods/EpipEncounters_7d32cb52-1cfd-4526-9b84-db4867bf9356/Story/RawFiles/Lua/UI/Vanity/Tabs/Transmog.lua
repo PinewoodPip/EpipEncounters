@@ -358,12 +358,12 @@ Net.RegisterListener("EPIPENCOUNTERS_ItemEquipped", function(cmd, payload)
             Transmog.ReapplyAppearance(item)
             Transmog.ignoreNextEquip = true
 
-            Client.Timer.Start("", 0.5, function()
+            Timer.Start("", 0.5, function()
                 Transmog.ignoreNextEquip = false
                 Transmog.UpdateActiveCharacterTemplates()
             end)
         elseif Vanity.IsOpen() then
-            Client.Timer.Start("", 0.5, function()
+            Timer.Start("", 0.5, function()
                 Transmog.UpdateActiveCharacterTemplates()
 
                 -- TODO implement this better...

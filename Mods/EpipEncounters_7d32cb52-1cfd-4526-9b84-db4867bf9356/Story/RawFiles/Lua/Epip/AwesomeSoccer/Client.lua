@@ -255,7 +255,7 @@ Ext.Events.SessionLoaded:Subscribe(function()
     -- Open the menu on reset while debugging.
     -- With enough delay to see any console errors.
     if Soccer.IS_DEBUG then
-        Client.Timer.Start("PIP_Soccer_DebugOpen", 2, function()
+        Timer.Start("PIP_Soccer_DebugOpen", 2, function()
             Soccer.Open()        
         end)
     end

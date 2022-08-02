@@ -191,7 +191,7 @@ end
 function MessageBox.RequestClipboardText(requestID)
     Client.UI.MessageBox:GetUI():ExternalInterfaceCall("pastePressed")
 
-    Client.Timer.Start("PIP_MessageBoxPaste", 0.1, function()
+    Timer.Start("PIP_MessageBoxPaste", 0.1, function()
         local text = MessageBox.GetCurrentInput()
 
         MessageBox.Events.ClipboardTextRequestComplete:Fire(requestID, text)
@@ -229,7 +229,7 @@ function MessageBox.CopyToClipboard(text)
     -- Ext.OnNextTick(function()
         -- Client.UI.MessageBox.UI:ExternalInterfaceCall("copyPressed")
     -- end)
-    Client.Timer.Start("MsgBoxCopy", 0.2, function()
+    Timer.Start("MsgBoxCopy", 0.2, function()
         MessageBox:GetUI():ExternalInterfaceCall("copyPressed")
     end)
 end
@@ -241,7 +241,7 @@ end
 -- Close the message box on reset, since we will have lost the custom message data anyways.
 -- TODO fix
 Ext.Events.ResetCompleted:Subscribe(function()
-    Client.Timer.Start("", 0.5, function() MessageBox:GetUI():Hide() end)
+    Timer.Start("", 0.5, function() MessageBox:GetUI():Hide() end)
 end)
 
 -- Listen for paste-like events

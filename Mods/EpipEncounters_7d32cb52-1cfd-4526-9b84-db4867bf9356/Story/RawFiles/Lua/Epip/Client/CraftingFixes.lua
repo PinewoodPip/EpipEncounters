@@ -23,7 +23,7 @@ Fixes:Debug()
 ---------------------------------------------
 
 Craft.Events.CharacterSelected:Subscribe(function (e)
-    Client.Timer.Start("", 0.05, function()
+    Timer.Start("", 0.05, function()
         Craft.SelectFilter(Fixes.previousFilter)
         Fixes:DebugLog("Setting filter to " .. Fixes.previousFilter)
     end)

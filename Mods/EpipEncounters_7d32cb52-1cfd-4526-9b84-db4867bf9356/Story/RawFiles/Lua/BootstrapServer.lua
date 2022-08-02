@@ -47,6 +47,8 @@ LOAD_ORDER = {
     "Utilities/GameState/Server.lua",
     "Utilities/Mod.lua",
     "Utilities.lua",
+    "Utilities/Timer.lua",
+    "Utilities/Coroutine.lua",
     "Utilities/Server.lua",
     "Server/Osiris.lua",
     {ScriptSet = "Utilities/Artifact"},

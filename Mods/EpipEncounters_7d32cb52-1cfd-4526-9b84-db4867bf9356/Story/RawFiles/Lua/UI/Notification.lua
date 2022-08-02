@@ -105,7 +105,7 @@ Notification:RegisterInvokeListener("showNewSkill", function(ev, name, descripti
     if event.Prevent then
         ev:PreventAction()
 
-        Client.Timer.Start("", 0.5, function()
+        Timer.Start("", 0.5, function()
             Notification:ExternalInterfaceCall("notificationDone")
         end)
     end

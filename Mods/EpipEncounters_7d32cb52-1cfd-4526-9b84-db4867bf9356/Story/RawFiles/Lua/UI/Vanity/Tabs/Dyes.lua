@@ -182,7 +182,7 @@ function Dyes.ApplyDye(item, dyeStatData)
 
     Net.PostToServer("EPIPENCOUNTERS_CreateDyeStat_ForPeers", {ItemNetID = itemNetID, Stat = dyeStatData})
 
-    Client.Timer.Start("PIP_ApplyCustomDye", 0.35, function()
+    Timer.Start("PIP_ApplyCustomDye", 0.35, function()
         Net.PostToServer("EPIPENCOUNTERS_DyeItem", {NetID = itemNetID, DyeStat = dyeStatData, CharacterNetID = Client.GetCharacter().NetID})
     end)
 end
@@ -471,7 +471,7 @@ Tab:RegisterListener(Vanity.Events.ButtonPressed, function(id)
 
         Client.UI.MessageBox.CopyToClipboard(export)
 
-        Client.Timer.Start("", 0.2, function()
+        Timer.Start("", 0.2, function()
             Client.UI.MessageBox.Open({
                 Header = "Dye Exported",
                 Message = "Copied dye colors to clipboard."

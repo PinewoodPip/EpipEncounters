@@ -18,7 +18,7 @@ local function SoundTest()
     local DELAY = 0.65
 
     for guid,sound in pairs(sounds) do
-        Client.Timer.Start("soundTest_" .. sound, delay, function()
+        Timer.Start("soundTest_" .. sound, delay, function()
             print("Playing", sound)
             Client.UI.Time:PlaySound(sound)
         end)

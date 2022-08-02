@@ -1,9 +1,9 @@
 
 ---------------------------------------------
--- Script for client-side timers, powered by the flash UI. 
+-- Script for timers.
 ---------------------------------------------
 
-Client.Timer = {
+Timer = {
     UI = nil,
     Root = nil,
 
@@ -13,7 +13,7 @@ Client.Timer = {
     activeTimers = {},
     previousTime = nil,
 }
-Epip.InitializeLibrary("Timer", Client.Timer)
+Epip.InitializeLibrary("Timer", Timer)
 
 ---@class ClientTimerEntry
 ---@field Event string
@@ -21,7 +21,9 @@ Epip.InitializeLibrary("Timer", Client.Timer)
 ---@field InitiialDuration number
 ---@field Handler function
 
-local Timer = Client.Timer
+---------------------------------------------
+-- METHODS
+---------------------------------------------
 
 function Timer.Start(event, seconds, handler)
     seconds = seconds or 0.001
@@ -34,6 +36,11 @@ function Timer.Start(event, seconds, handler)
     })
 end
 
+---------------------------------------------
+-- EVENT LISTENERS
+---------------------------------------------
+
+-- Decrement timer durations.
 Ext.Events.Tick:Subscribe(function()
     local time = Ext.MonotonicTime()
 

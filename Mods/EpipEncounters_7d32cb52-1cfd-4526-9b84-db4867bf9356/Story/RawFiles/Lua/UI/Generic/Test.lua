@@ -117,7 +117,7 @@ end
 
 Ext.Events.SessionLoaded:Subscribe(function(_)
     if Test:IsDebug() then
-        Client.Timer.Start("", 1.4, function()
+        Timer.Start("", 1.4, function()
             Test.SetupTests()
         end)
     end

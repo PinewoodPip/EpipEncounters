@@ -192,7 +192,7 @@ Input:RegisterCallListener("pipKeyDown", function(ev, keyCode, shiftKey, ctrlKey
     end
 
     -- Stop capturing alt/ctrl after a short while
-    -- Client.Timer.Start("PIP_CancelSpecialKey", 0.5, function()
+    -- Timer.Start("PIP_CancelSpecialKey", 0.5, function()
     --     Input:GetRoot().loseFocus()
     -- end)
 end)

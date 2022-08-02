@@ -100,7 +100,7 @@ Wheel:RegisterCallListener("hideUI", function(ev)
     --     return nil
     -- end
     -- if ev.When == "Before" then
-    --     Client.Timer.Start("_", 1, function()
+    --     Timer.Start("_", 1, function()
     --         Wheel.ignoreOpen = true
     --         -- Wheel:SetFlag("OF_PlayerInput1", true)
     --         Wheel:GetUI():Show()
@@ -111,7 +111,7 @@ Wheel:RegisterCallListener("hideUI", function(ev)
     --             Wheel:ExternalInterfaceCall("closing")
     --             print("ignoring open")
 
-    --             Client.Timer.Start("ignoreopen", 1, function()
+    --             Timer.Start("ignoreopen", 1, function()
     --                 Wheel.ignoreOpen = nil
     --                 print("not ignore open")
     --             end)
