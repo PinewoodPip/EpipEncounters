@@ -23,6 +23,12 @@
 ---@field x number
 ---@field y number
 
+---@class ScriptDefinition
+---@field WIP boolean If true, the script will only load in the "sudo" developer mode.
+---@field Developer boolean If true, the script will only load in developer mode.
+---@field ScriptSet string Folder to load a set of scripts from (Shared.lua, Client.lua and Server.lua)
+---@field Script string Filename
+
 ---------------------------------------------
 -- UI
 ---------------------------------------------
