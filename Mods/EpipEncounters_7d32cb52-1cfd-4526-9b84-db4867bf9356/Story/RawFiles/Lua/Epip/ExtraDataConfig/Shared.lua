@@ -11,7 +11,10 @@ Epip.AddFeature("ExtraDataConfig", "ExtraDataConfig", DataConfig)
 -- METHODS
 ---------------------------------------------
 
-function DataConfig.SetValue(key, value)
+---@param key string
+---@param value number
+---@param save boolean? TODO better name
+function DataConfig.SetValue(key, value, save)
     local data = Stats.ExtraData[key]
 
     if data then
@@ -24,6 +27,12 @@ function DataConfig.SetValue(key, value)
             DataConfig.ModifiedEntries[key] = value
         else
             DataConfig.ModifiedEntries[key] = nil
+        end
+
+        if Ext.IsClient() and save then
+            Client.UI.OptionsSettings.SetOptionValue("ExtraDataConfig", key, value)
+        elseif save then
+            DataConfig.SaveSettings()
         end
     else
         DataConfig:LogError("Invalid key: " .. key)
@@ -77,7 +86,7 @@ function DataConfig.LoadSettings(path)
 
     if save then
         for key,value in pairs(save.Keys) do
-            DataConfig.SetValue(key, value)
+            DataConfig.SetValue(key, value, true)
         end
     end
 end

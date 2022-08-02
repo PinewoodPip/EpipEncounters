@@ -259,6 +259,8 @@ function OptionsSettings.SetElementState(id, state, elementType)
         root.mainMenu_mc.setMenuCheckbox(numID, OptionsSettings.IsElementEnabled(id), checkboxState)
     elseif elementType == "Selector" then
         root.mainMenu_mc.setSelector(numID, state - 1, true)
+    elseif elementType == "Slider" then
+        root.mainMenu_mc.setMenuSlider(numID, state)
     end
 end
 

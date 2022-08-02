@@ -7,7 +7,7 @@ local OptionsSettings = Client.UI.OptionsSettings
 -- EVENT LISTENERS
 ---------------------------------------------
 
-Client.UI.OptionsSettings:RegisterListener("OptionSet", function(data, value)
+OptionsSettings:RegisterListener("OptionSet", function(data, value)
     if data.IsExtraData then
         local extraData = Stats.ExtraData[data.ID]
 
@@ -19,6 +19,18 @@ Client.UI.OptionsSettings:RegisterListener("OptionSet", function(data, value)
         })
 
         DataConfig.SaveSettings()
+    end
+end)
+
+OptionsSettings:RegisterListener("ButtonClicked", function(element)
+    if element.ID == "ExtraDataConfig_Reset" then
+        for key,_ in pairs(DataConfig.ModifiedEntries) do
+            local defaultValue = Stats.ExtraData[key]:GetDefaultValue(Mod.GUIDS.EE_CORE)
+
+            DataConfig.SetValue(key, defaultValue, true)
+
+            DataConfig.SaveSettings()
+        end
     end
 end)
 
@@ -38,6 +50,15 @@ for _,entry in pairs(Stats.ExtraData) do
     table.insert(entries, entry) 
 end
 table.sort(entries, function (a, b) return a:GetName() < b:GetName() end)
+
+OptionsSettings.RegisterOption("ExtraDataConfig", {
+    ID = "ExtraDataConfig_Reset",
+        Type = "Button",
+        ServerOnly = true,
+        Label = "Reset to Defaults",
+        Tooltip = "Resets the settings to default. You will still need to reload for many keys to apply.",
+        DefaultValue = false,
+})
 
 for _,entry in ipairs(entries) do
     OptionsSettings.RegisterOption("ExtraDataConfig", DataConfig.GetOptionData(entry.ID))
