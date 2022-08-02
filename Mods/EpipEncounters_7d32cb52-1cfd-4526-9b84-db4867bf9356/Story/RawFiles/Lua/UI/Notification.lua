@@ -1,11 +1,42 @@
 
+---@class NotificationUI : UI
 local Notification = {
+
+    SOUNDS = {
+        RECEIVE_ABILITY = "UI_Notification_ReceiveAbility",
+        RECEIVE_SKILL = "UI_Notification_ReceiveSkill",
+    },
+
+    USE_LEGACY_EVENTS = false,
+    USE_LEGACY_HOOKS = false,
+
+    Events = {
+
+    },
+    Hooks = {
+        ShowReceivalNotification = {}, ---@type SubscribableEvent<NotificationUI_Hook_ShowReceivalNotification>
+    },
+
     FILEPATH_OVERRIDES = {
         ["Public/Game/GUI/notification.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/notification.swf",
     },
 }
 Client.UI.Notification = Notification
 Epip.InitializeUI(Client.UI.Data.UITypes.notification, "Notification", Notification)
+
+---------------------------------------------
+-- EVENTS
+---------------------------------------------
+
+---@class NotificationUI_Hook_ShowReceivalNotification
+---@field Sound string
+---@field Name string
+---@field Description string
+---@field Prevent boolean Defaults to false.
+
+---------------------------------------------
+-- OLD CODE
+---------------------------------------------
 
 function OnUINotification(ui, method, str1, num1, num2)
     local root = Ext.UI.GetByType(Client.UI.Data.UITypes.notification):GetRoot()
@@ -53,4 +84,29 @@ Ext.Events.SessionLoaded:Subscribe(function()
     -- notification.offsetPerBar = -Ext.UI.GetByType(Client.UI.Data.UITypes.statusConsole):GetRoot().height
 
     Ext.RegisterUITypeInvokeListener(Client.UI.Data.UITypes.notification, "showCastNot", OnUINotification, "After")
+end)
+
+---------------------------------------------
+-- EVENT LISTENERS
+---------------------------------------------
+
+Notification:RegisterInvokeListener("showNewSkill", function(ev, name, description, sound)
+    ---@type NotificationUI_Hook_ShowReceivalNotification
+    local event = {
+        Name = name,
+        Description = description,
+        Sound = sound,
+        Prevent = false,
+    }
+
+    Notification.Hooks.ShowReceivalNotification:Throw(event)
+
+    -- Prevent action.
+    if event.Prevent then
+        ev:PreventAction()
+
+        Client.Timer.Start("", 0.5, function()
+            Notification:ExternalInterfaceCall("notificationDone")
+        end)
+    end
 end)

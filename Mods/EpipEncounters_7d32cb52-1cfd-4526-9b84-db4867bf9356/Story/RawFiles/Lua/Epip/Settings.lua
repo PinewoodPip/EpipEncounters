@@ -415,12 +415,6 @@ local TopOptions = {
         DefaultValue = false,
     },
     {
-        ID = "CastingNotifications",
-        Type = "Checkbox",
-        Label = "Skill-casting Notifications",
-        Tooltip = "Controls whether notifications for characters casting skills show up in combat.",
-    },
-    {
         ID = "ExaminePosition",
         Type = "Dropdown",
         Label = "Examine Menu Position",
@@ -470,11 +464,37 @@ local TopOptions = {
     },
 }
 
+local Notification = {
+    {
+        ID = "Notification_Header",
+        Type = "Header",
+        Label = Text.Format("Notifications", {
+            Color = "7e72d6",
+            Size = 23,
+        })
+    },
+    {
+        ID = "CastingNotifications",
+        Type = "Checkbox",
+        Label = "Skill-casting Notifications",
+        Tooltip = "Controls whether notifications for characters casting skills show up in combat.",
+        DefaultValue = true,
+    },
+    {
+        ID = "Notification_ItemReceival",
+        Type = "Checkbox",
+        Label = "Item Notifications",
+        Tooltip = "Controls whether notifications for receiving items show.",
+        DefaultValue = true,
+    },
+}
+
 local Order = {
     Header,
     TopOptions,
     Hotbar,
     PlayerInfo,
+    Notification,
     Overheads,
     SaveLoadOptions,
     CraftingOptions,
