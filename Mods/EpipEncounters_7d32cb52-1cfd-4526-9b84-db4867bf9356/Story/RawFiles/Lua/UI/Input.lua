@@ -128,12 +128,6 @@ Input:RegisterCallListener("inputFocus", function(ev)
     Input.focused = true
 end)
 
-Input:RegisterCallListener("pipSpecialKeyUp", function(ev)
-    local keycode = ev.Args[1]
-
-    print(keycode, "up")
-end)
-
 Input:RegisterCallListener("pipInputCaptured", function(ev)
     local event = ev.Args[1]
     local id = Input:GetRoot().events[event]

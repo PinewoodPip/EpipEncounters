@@ -14,6 +14,8 @@ Epip.AddFeature("MouseTracker", "MouseTracker", MouseTracker)
 ---Returns the global position of the mouse, in pixel coordinates.
 ---@return integer, integer
 function MouseTracker.GetMousePosition()
+    if not MouseTracker.UI or not MouseTracker.UI:Exists() then return nil, nil end
+
     MouseTracker.UI:GetUI():SetPosition(0, 0)
     local root = MouseTracker.UI:GetRoot()
     local vp = Ext.UI.GetViewportSize()

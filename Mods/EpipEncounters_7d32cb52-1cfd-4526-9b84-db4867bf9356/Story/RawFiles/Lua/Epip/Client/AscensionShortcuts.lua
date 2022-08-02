@@ -16,8 +16,8 @@ Client.UI.GameMenu:RegisterHook("CanOpen", function(canOpen)
     return canOpen
 end)
 
-Ext.Events.InputEvent:Subscribe(function(ev)
-    if ev.Event.EventId == 223 and ev.Event.Release and not Client.IsUsingController() and Game.Ascension.IsMeditating() then
+Client.Input.Events.KeyPressed:Subscribe(function (e)
+    if e.InputID == "escape" and GameState.GetState() == "Running" and Game.Ascension.IsMeditating() then
         if Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "ESCClosesAmerUI") then
             Net.PostToServer("EPIPENCOUNTERS_Hotkey_Meditate", {
                 NetID = Client.GetCharacter().NetID,
