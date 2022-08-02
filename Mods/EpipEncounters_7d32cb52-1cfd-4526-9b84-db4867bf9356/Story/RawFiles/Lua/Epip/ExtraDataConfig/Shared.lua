@@ -34,14 +34,29 @@ function DataConfig.GetOptionData(key)
     local data = Stats.ExtraData[key]
     local defaultValue = data:GetDefaultValue(Mod.GUIDS.EE_CORE)
 
+    local min, max = 0, defaultValue * 2
+
+    -- Set max value to 10 for stats that default to 0 (we can't really know an appropriate range)
+    if defaultValue == 0 then
+        max = 10
+    elseif defaultValue < 0 then -- Allow negative values for keys with a negative default value
+        min = defaultValue * 2
+        max = -defaultValue * 2
+    end
+
     ---@type OptionsSettingsOption
     local option = {
         ID = key,
         Label = data:GetName(),
-        Tooltip = data:GetDescription(),
+        Tooltip = Text.Format("%s<br>Default value: %s", {
+            FormatArgs = {
+                data:GetDescription(),
+                defaultValue,
+            }
+        }),
         Type = "Slider",
-        MinAmount = 0,
-        MaxAmount = defaultValue * 2,
+        MinAmount = min,
+        MaxAmount = max,
         DefaultValue = defaultValue,
         HideNumbers = false,
         Interval = 0.1,
