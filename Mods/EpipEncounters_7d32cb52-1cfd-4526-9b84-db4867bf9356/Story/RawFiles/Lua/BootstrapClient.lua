@@ -46,6 +46,7 @@ LOAD_ORDER = {
     "Utilities/GameState/Client.lua",
     "Utilities/Mod.lua",
     "Utilities.lua",
+    "Utilities/Coroutine.lua",
 
     "Data/Game.lua", -- TODO move stuff out of it into appropriate scripts
 
