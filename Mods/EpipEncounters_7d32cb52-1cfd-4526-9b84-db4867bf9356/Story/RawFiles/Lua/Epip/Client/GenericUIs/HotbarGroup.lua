@@ -11,7 +11,7 @@ local GroupManager = {
 
     CONTENT_WIDTH = 450,
     UI_WIDTH = 500,
-    UI_HEIGHT = 600,
+    UI_HEIGHT = 400,
 
     SAVE_FILENAME = "EpipEncounters_HotbarGroups.json",
     SAVE_VERSION = 0,
@@ -26,6 +26,7 @@ Epip.AddFeature("HotbarGroupManager", "HotbarGroupManager", GroupManager)
 ---@field Rows integer
 ---@field Columns integer
 ---@field SharedContents GenericUI_Prefab_HotbarSlot_Object[][]
+---@field RelativePosition number[]
 
 ---@class HotbarGroup
 local HotbarGroup = {
@@ -57,7 +58,8 @@ function HotbarGroup:GetSlot(row, column)
 end
 
 function HotbarGroup:_Init(id)
-    self.GUID = id or Text.GenerateGUID()
+    self.GUID = id
+    self.UI = Generic.Create("HotbarGroup_" .. self.GUID)
 
     local content = self.UI:CreateElement("ContentContainer", "TiledBackground")
     content:SetAlpha(0)
@@ -129,9 +131,9 @@ function GroupManager.Create(id, rows, columns)
     }
     Inherit(group, HotbarGroup)
 
-    group.UI = Generic.Create(id)
+    id = id or Text.GenerateGUID()
 
-    group:_Init()
+    group:_Init(id)
 
     local width, height = group:GetSlotAreaSize()
     local uiObject = group.UI:GetUI()
@@ -176,6 +178,13 @@ function GroupManager.GetGroupState(group)
         Rows = group.ROWS,
         Columns = group.COLUMNS,
     }
+
+    -- Store position relative to viewport edges
+    local uiObject = group.UI:GetUI()
+    local viewport = Ext.UI.GetViewportSize()
+    state.RelativePosition = uiObject:GetPosition()
+    state.RelativePosition[1] = state.RelativePosition[1] / viewport[1]
+    state.RelativePosition[2] = state.RelativePosition[2] / viewport[2]
 
     if GroupManager.SharedGroups[group.GUID] == true then
         state.SharedContents = {}
@@ -223,6 +232,7 @@ function GroupManager.LoadData(path)
         for guid,data in pairs(groups) do
             local group = GroupManager.Create(guid, data.Rows, data.Columns)
 
+            -- Load shared contents
             if data.SharedContents then
                 for i=1,data.Rows,1 do
                     for z=1,data.Columns,1 do
@@ -233,6 +243,14 @@ function GroupManager.LoadData(path)
                     end
                 end
             end
+
+            -- Set position
+            local position = data.RelativePosition
+            local viewport = Ext.UI.GetViewportSize()
+            
+            Timer.Start("", 0.1, function ()
+                group.UI:GetUI():SetPosition(Ext.Round(position[1] * viewport[1]), Ext.Round(position[2] * viewport[2]))
+            end)
         end
     end
 end
@@ -286,7 +304,7 @@ function GroupManager:__Setup()
 
     -- Content
     local content = bg:AddChild("Content", "VerticalList")
-    content:SetSize(GroupManager.CONTENT_WIDTH, 600)
+    content:SetSize(GroupManager.CONTENT_WIDTH, GroupManager.UI_HEIGHT)
     content:SetPosition(27, 60)
 
     local text = content:AddChild("Header", "Text")
@@ -301,7 +319,7 @@ function GroupManager:__Setup()
     rowSpinner:GetMainElement():SetCenterInLists(true)
     columnSpinner:GetMainElement():SetCenterInLists(true)
 
-    content:AddChild("Filler", "Empty"):GetMovieClip().heightOverride = 300
+    content:AddChild("Filler", "Empty"):GetMovieClip().heightOverride = 175
 
     local createButton = content:AddChild("Confirm", "Button")
     createButton.Events.Pressed:Subscribe(function(_)
