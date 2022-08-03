@@ -366,6 +366,36 @@ Game.Tooltip.RegisterListener("Status", nil, function(char, status, tooltip)
     tooltip:RemoveElements("StatusMalus")
 end)
 
+-- Show ACTIVE_DEFENSE charges.
+Game.Tooltip.RegisterListener("Status", nil, function(char, status, tooltip)
+    status = status ---@type EsvStatusActiveDefense
+
+    if status.StatusType == "ACTIVE_DEFENSE" then
+        local stat = Stats.Get("StatusData", status.StatusId) ---@type StatsStatusPrototype
+        local charges = stat.Charges
+
+        if charges > 0 then
+            local text = Text.Format("Max Charges: %s", {
+                FormatArgs = {charges},
+                FontType = Text.FONTS.ITALIC,
+                Color = Color.COLORS.LARIAN.LIGHT_GRAY,
+            })
+
+            local elements = tooltip:GetElements("StatusDescription")
+            local element = elements[#elements] -- Append to the last description (usually the duration text)
+
+            if not element then
+                tooltip:AppendElement({
+                    Type = "StatusDescription",
+                    Label = text,
+                })
+            else
+                element.Label = element.Label .. "<br>" .. text
+            end
+        end
+    end
+end)
+
 -- Show status source.
 Game.Tooltip.RegisterListener("Status", nil, function(char, status, tooltip)
     local source = Character.Get(status.StatusSourceHandle)
