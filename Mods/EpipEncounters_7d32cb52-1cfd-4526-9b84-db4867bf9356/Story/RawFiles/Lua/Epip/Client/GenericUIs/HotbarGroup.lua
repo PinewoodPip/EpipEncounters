@@ -3,28 +3,29 @@ local Generic = Client.UI.Generic
 local HotbarSlot = Generic.PREFABS.HotbarSlot ---@type GenericUI_Prefab_HotbarSlot
 local ContextMenu = Client.UI.ContextMenu
 
+---@class Feature_HotbarGroupManager : Feature
 local GroupManager = {
     UI = nil, ---@type GenericUI_Instance
-    Groups = {}, ---@type table<string, HotbarGroup>
-
-    nextID = 0,
+    Groups = {}, ---@type table<GUID, HotbarGroup>
+    SharedGroups = {}, ---@type table<GUID, true>
 
     CONTENT_WIDTH = 450,
     UI_WIDTH = 500,
     UI_HEIGHT = 600,
+
+    SAVE_FILENAME = "EpipEncounters_HotbarGroups.json",
+    SAVE_VERSION = 0,
 }
 Epip.AddFeature("HotbarGroupManager", "HotbarGroupManager", GroupManager)
-
-function GroupManager.Setup()
-    local ui = GroupManager.UI
-
-    ui:ExternalInterfaceCall("setPosition", "center", "screen", "center")
-    ui:Show()
-end
 
 ---------------------------------------------
 -- HOTBAR GROUP
 ---------------------------------------------
+
+---@class HotbarGroupState
+---@field Rows integer
+---@field Columns integer
+---@field SharedContents GenericUI_Prefab_HotbarSlot_Object[][]
 
 ---@class HotbarGroup
 local HotbarGroup = {
@@ -48,8 +49,15 @@ function HotbarGroup:GetSlotAreaSize()
     return width, height
 end
 
-function HotbarGroup:_Init()
-    self.GUID = Text.GenerateGUID()
+---@return GenericUI_Prefab_HotbarSlot
+function HotbarGroup:GetSlot(row, column)
+    local slot = self.ELEMENT_ROWS[row][column]
+
+    return slot
+end
+
+function HotbarGroup:_Init(id)
+    self.GUID = id or Text.GenerateGUID()
 
     local content = self.UI:CreateElement("ContentContainer", "TiledBackground")
     content:SetAlpha(0)
@@ -59,16 +67,18 @@ function HotbarGroup:_Init()
     container:SetElementSpacing(HotbarGroup.SLOT_SPACING - 4)
     container:SetPosition(3, 3)
 
+    self.ELEMENT_ROWS = {}
+
     for i=1,self.ROWS,1 do
         local row = container:AddChild("Row_" .. i, "HorizontalList")
         row:SetElementSpacing(HotbarGroup.SLOT_SPACING)
 
-        HotbarGroup.ELEMENT_ROWS[i] = {}
+        self.ELEMENT_ROWS[i] = {}
 
         for z=1,self.COLUMNS,1 do
             local slot = HotbarSlot.Create(self.UI, "Row_" .. i .. "_Slot_" .. z, row)
 
-            HotbarGroup.ELEMENT_ROWS[i][z] = slot
+            self.ELEMENT_ROWS[i][z] = slot
         end
     end
 
@@ -102,6 +112,13 @@ end
 -- METHODS
 ---------------------------------------------
 
+function GroupManager.Setup()
+    local ui = GroupManager.UI
+
+    ui:ExternalInterfaceCall("setPosition", "center", "screen", "center")
+    ui:Show()
+end
+
 ---@param id string
 ---@return HotbarGroup
 function GroupManager.Create(id, rows, columns)
@@ -131,6 +148,7 @@ function GroupManager.Create(id, rows, columns)
     end)
 
     GroupManager.Groups[group.GUID] = group
+    GroupManager.SharedGroups[group.GUID] = true
 
     return group
 end
@@ -150,12 +168,85 @@ function GroupManager.DeleteGroup(group)
     end
 end
 
+---@param group HotbarGroup
+---@return HotbarGroupState
+function GroupManager.GetGroupState(group)
+    ---@type HotbarGroupState
+    local state = {
+        Rows = group.ROWS,
+        Columns = group.COLUMNS,
+    }
+
+    if GroupManager.SharedGroups[group.GUID] == true then
+        state.SharedContents = {}
+
+        for i=1,state.Rows,1 do
+            local row = {}
+
+            state.SharedContents[i] = row
+
+            for z=1,state.Columns,1 do
+                local slot = table.deepCopy(group:GetSlot(i, z).Object) ---@type GenericUI_Prefab_HotbarSlot_Object
+                if slot.ItemHandle then slot.ItemHandle = nil end
+
+                table.insert(row, slot)
+            end
+        end
+    end
+
+    return state
+end
+
+---@param path string?
+function GroupManager.SaveData(path)
+    path = path or GroupManager.SAVE_FILENAME
+    local save = {
+        Version = GroupManager.SAVE_VERSION,
+        Groups = {},
+    }
+
+    for guid,group in pairs(GroupManager.Groups) do
+        save.Groups[guid] = GroupManager.GetGroupState(group)
+    end
+
+    Utilities.SaveJson(path, save)
+end
+
+---@param path string
+function GroupManager.LoadData(path)
+    path = path or GroupManager.SAVE_FILENAME
+    local save = Utilities.LoadJson(path)
+
+    if save and save.Version == 0 then
+        local groups = save.Groups
+
+        for guid,data in pairs(groups) do
+            local group = GroupManager.Create(guid, data.Rows, data.Columns)
+
+            if data.SharedContents then
+                for i=1,data.Rows,1 do
+                    for z=1,data.Columns,1 do
+                        local slotData = data.SharedContents[i][z]
+                        local slot = group:GetSlot(i, z)
+
+                        slot:SetObject(slotData)
+                    end
+                end
+            end
+        end
+    end
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
 
 Client.UI.ContextMenu.RegisterElementListener("hotBarRow_CreateGroup", "buttonPressed", function(_)
     GroupManager.Setup()
+end)
+
+Client.UI.Hotbar:RegisterListener("SaveDataSaved", function()
+    GroupManager.SaveData()
 end)
 
 ---------------------------------------------
@@ -214,8 +305,7 @@ function GroupManager:__Setup()
 
     local createButton = content:AddChild("Confirm", "Button")
     createButton.Events.Pressed:Subscribe(function(_)
-        GroupManager.Create(tostring(GroupManager.nextID), rowSpinner:GetValue(), columnSpinner:GetValue())
-        GroupManager.nextID = GroupManager.nextID + 1
+        GroupManager.Create(nil, rowSpinner:GetValue(), columnSpinner:GetValue())
         GroupManager.UI:Hide()
     end)
     createButton:SetCenterInLists(true)
@@ -227,6 +317,8 @@ function GroupManager:__Setup()
     content:RepositionElements()
 
     ui:Hide()
+
+    GroupManager.LoadData()
 end
 
 ---------------------------------------------

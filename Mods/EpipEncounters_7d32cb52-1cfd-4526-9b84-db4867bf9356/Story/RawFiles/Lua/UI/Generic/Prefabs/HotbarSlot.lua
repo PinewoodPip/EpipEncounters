@@ -63,6 +63,20 @@ function Slot.Create(ui, id, parent)
     return obj
 end
 
+---@param obj GenericUI_Prefab_HotbarSlot_Object
+function Slot:SetObject(obj)
+    if obj.Type == "Skill" then
+        self:SetSkill(obj.StatsID)
+    elseif obj.Type == "Template" then
+        self:SetTemplate(obj.TemplateID)
+    elseif obj.Type == "Item" then
+        -- TODO
+        Ext.PrintWarning("SetObject() with object type Item not supported")
+    else
+        self:Clear()
+    end
+end
+
 ---@param skillID string
 function Slot:SetSkill(skillID)
     local stat = Stats.Get("SkillData", skillID)
@@ -83,6 +97,7 @@ function Slot:SetSkill(skillID)
     }
 end
 
+---@param item EclItem
 function Slot:SetItem(item)
     local slot = self.SlotElement
     slot:SetIcon(item.RootTemplate.Icon, 50, 50)
