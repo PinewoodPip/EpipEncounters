@@ -6,7 +6,7 @@ local Hotbar = Client.UI.Hotbar
 ---@class GenericUI_Prefab_HotbarSlot_Object
 ---@field Type "None"|"Skill"|"Item"|"Action"|"Template"
 ---@field StatsID string? Only for skills/actions.
----@field Item EclItem? Only for items.
+---@field ItemHandle EntityHandle? Only for items.
 ---@field TemplateID GUID? Only for templates.
 
 ---@class GenericUI_Prefab_HotbarSlot : GenericUI_Prefab
@@ -140,11 +140,11 @@ function Slot:_OnElementMouseUp(e)
             self:SetSkill(objectID)
         end
     else
-        local item = Ext.Entity.GetItem(data.DragObject)
+        local item = Item.Get(data.DragObject)
 
         if item then
             self:SetTemplate(item.RootTemplate.Id)
-            self.Object.Item = item -- For dragging purposes only.
+            self.Object.ItemHandle = item.Handle -- For dragging purposes only.
         end
     end
 end
@@ -180,7 +180,7 @@ function Slot:_OnTick()
         if obj.Type == "Template" then
             item = Item.GetItemsInPartyInventory(char, function(invItem) return invItem.RootTemplate.Id == obj.TemplateID end)[1]
         else
-            item = obj.Item
+            item = Item.Get(obj.ItemHandle)
         end
 
         if item and item.Amount then
@@ -222,7 +222,7 @@ function Slot:_OnSlotClicked(e)
     if obj.Type == "Skill" then
         Client.UI.Hotbar.UseSkill(obj.StatsID)
     elseif obj.Type == "Item" or obj.Type == "Template" then
-        local item = obj.Item
+        local item = Item.Get(obj.ItemHandle)
         if not item then item = Item.GetItemsInPartyInventory(char, function(i) return i.RootTemplate.Id == obj.TemplateID end)[1] end
 
         Client.UI.Hotbar.UseSkill(item)
@@ -235,9 +235,9 @@ function Slot:_OnSlotDragStarted(e)
     if obj.Type == "Skill" then
         Ext.UI.GetDragDrop():StartDraggingName(1, obj.StatsID)
     elseif obj.Type == "Item" then
-        Ext.UI.GetDragDrop():StartDraggingObject(1, obj.Item.Handle)
+        Ext.UI.GetDragDrop():StartDraggingObject(1, obj.ItemHandle)
     elseif obj.Type == "Template" then
-        local item = obj.Item
+        local item = Item.Get(obj.ItemHandle)
         if not item then item = Item.GetItemsInPartyInventory(Client.GetCharacter(), function(i) return i.RootTemplate.Id == obj.TemplateID end) end
 
         Ext.UI.GetDragDrop():StartDraggingObject(1, item.Handle)
