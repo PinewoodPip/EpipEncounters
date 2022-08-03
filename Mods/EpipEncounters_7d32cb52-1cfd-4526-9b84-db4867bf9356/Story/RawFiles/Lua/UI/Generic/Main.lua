@@ -152,6 +152,18 @@ end
 -- METHODS
 ---------------------------------------------
 
+---@param ev UIEvent
+---@param elementID string
+---@param eventName string
+---@param eventObj table?
+function Generic.OnElementUICall(ev, elementID, eventName, eventObj)
+    local element = Generic.GetInstance(ev.UI:GetTypeId()):GetElementByID(elementID)
+    if not element then return nil end
+    Generic:DebugLog("CALL " .. eventName, elementID)
+
+    element.Events[eventName]:Throw(eventObj)
+end
+
 ---@param id string
 ---@return GenericUI_Instance
 function Client.UI.Generic.Create(id)
@@ -184,6 +196,9 @@ function Client.UI.Generic.Create(id)
     ui:RegisterCallListener("elementMouseDown", Generic.OnElementMouseDown)
     ui:RegisterCallListener("elementMouseOver", Generic.OnElementMouseOver)
     ui:RegisterCallListener("elementMouseOut", Generic.OnElementMouseOut)
+    ui:RegisterCallListener("elementRightClick", function(ev, stringID)
+        Generic.OnElementUICall(ev, stringID, "RightClick")
+    end)
     ui:RegisterCallListener("ShowElementTooltip", Generic.OnElementShowTooltip)
     -- ui:RegisterCallListener("viewportChanged", Generic.OnViewportChanged)
 

@@ -1,6 +1,7 @@
 
 local Generic = Client.UI.Generic
 local HotbarSlot = Generic.PREFABS.HotbarSlot ---@type GenericUI_Prefab_HotbarSlot
+local ContextMenu = Client.UI.ContextMenu
 
 local GroupManager = {
     UI = nil, ---@type GenericUI_Instance
@@ -35,7 +36,8 @@ local HotbarGroup = {
 
     ELEMENT_ROWS = {
 
-    }
+    },
+    GUID = nil, ---@type GUID
 }
 
 ---@return number, number -- Width, height
@@ -47,6 +49,8 @@ function HotbarGroup:GetSlotAreaSize()
 end
 
 function HotbarGroup:_Init()
+    self.GUID = Text.GenerateGUID()
+
     local content = self.UI:CreateElement("ContentContainer", "TiledBackground")
     content:SetAlpha(0)
     content:SetBackground(1, self:GetSlotAreaSize())
@@ -72,7 +76,7 @@ function HotbarGroup:_Init()
     local width, height = self:GetSlotAreaSize()
     local mcWidth, mcHeight = container:GetMovieClip().width, container:GetMovieClip().height
 
-    local EXTRA_WIDTH = 21 * 2
+    local EXTRA_WIDTH = 15 * 2
     local dragArea = content:AddChild("DragArea", "Divider")
     dragArea:SetAsDraggableArea()
     dragArea:SetType(2)
@@ -120,7 +124,30 @@ function GroupManager.Create(id, rows, columns)
 
     uiObject:ExternalInterfaceCall("setPosition", "center", "screen", "center")
 
+    local container = group.UI:GetElementByID("ContentContainer")
+    container.Events.RightClick:Subscribe(function (e)
+        local x, y = Client.GetMousePosition()
+        ContextMenu.RequestMenu(x, y, "HotbarGroup", nil, group.GUID)
+    end)
+
+    GroupManager.Groups[group.GUID] = group
+
     return group
+end
+
+---@param group HotbarGroup|GUID
+function GroupManager.DeleteGroup(group)
+    if type(group) == "string" then group = GroupManager.Groups[group] end
+
+    if group then
+        -- TODO truly delete
+        -- Ext.UI.Destroy(group.UI.Name)
+        group.UI:Hide()
+
+        GroupManager.Groups[group.GUID] = nil
+    else
+        GroupManager:LogError("Tried to delete group that doesn't exist")
+    end
 end
 
 ---------------------------------------------
@@ -129,6 +156,28 @@ end
 
 Client.UI.ContextMenu.RegisterElementListener("hotBarRow_CreateGroup", "buttonPressed", function(_)
     GroupManager.Setup()
+end)
+
+---------------------------------------------
+-- Listeners for context menus on HotbarGroup
+
+ContextMenu.RegisterMenuHandler("HotbarGroup", function(char, guid)
+    local contextMenu = {
+        {id = "HotbarGroup_Delete", type = "button", text = "Delete", params = {GUID = guid}}
+    }
+
+    Client.UI.ContextMenu.Setup({
+        menu = {
+            id = "main",
+            entries = contextMenu,
+        }
+    })
+
+    Client.UI.ContextMenu.Open()
+end)
+
+ContextMenu.RegisterElementListener("HotbarGroup_Delete", "buttonPressed", function(_, params)
+    GroupManager.DeleteGroup(params.GUID)
 end)
 
 ---------------------------------------------

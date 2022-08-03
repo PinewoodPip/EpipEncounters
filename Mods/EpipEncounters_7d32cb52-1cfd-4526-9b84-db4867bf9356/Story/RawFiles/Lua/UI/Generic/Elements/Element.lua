@@ -18,6 +18,7 @@ _Element.Events = {
     MouseOver = {},
     ---@type SubscribableEvent<GenericUI_Element_Event_MouseOut>
     MouseOut = {},
+    RightClick = {}, ---@type SubscribableEvent<GenericUI_Element_Event_RightClick>
 }
 
 ---@class GenericUI_ElementTooltip
@@ -43,6 +44,7 @@ _Element.Events = {
 ---@class GenericUI_Element_Event_MouseOut
 ---@class GenericUI_Element_Event_MouseUp
 ---@class GenericUI_Element_Event_MouseDown
+---@class GenericUI_Element_Event_RightClick
 
 ---------------------------------------------
 -- METHODS

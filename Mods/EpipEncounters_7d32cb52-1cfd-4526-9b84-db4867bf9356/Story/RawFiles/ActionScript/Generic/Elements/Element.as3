@@ -29,6 +29,7 @@ package Elements
             this.addEventListener(MouseEvent.MOUSE_UP, this.onElementMouseUp);
             this.addEventListener(MouseEvent.ROLL_OVER, this.onElementMouseOver);
             this.addEventListener(MouseEvent.ROLL_OUT, this.onElementMouseOut);
+            this.addEventListener(MouseEvent.RIGHT_CLICK, this.onElementRightClick);
         }
 
         public function AddChildElement(mc:MovieClip) : *
@@ -175,6 +176,11 @@ package Elements
         public function onElementMouseOut(e:MouseEvent) : *
         {
             ExternalInterface.call("elementMouseOut", this.stringID);
+        }
+
+        public function onElementRightClick(e:MouseEvent) : *
+        {
+            ExternalInterface.call("elementRightClick", this.stringID);
         }
     }
 }
