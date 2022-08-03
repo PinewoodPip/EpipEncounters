@@ -39,6 +39,7 @@ Color = {
 
         TOOLTIPS = {
             MALUS = "DA2121",
+            BONUS = "65C900",
         },
 
         ALIGNMENTS = {

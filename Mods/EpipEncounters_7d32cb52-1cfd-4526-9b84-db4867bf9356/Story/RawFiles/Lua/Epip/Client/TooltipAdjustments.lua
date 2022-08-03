@@ -335,6 +335,43 @@ function OnStatusTooltipRender(char, status, tooltip)
     end
 end
 
+-- Make +AP Costs red, since it's a negative effect.
+Game.Tooltip.RegisterListener("Status", nil, function(char, status, tooltip)
+    local statusBonuses = tooltip:GetElements("StatusBonus")
+    local statusMaluses = tooltip:GetElements("StatusMalus")
+
+    if statusBonuses and statusMaluses then
+        for _,malus in ipairs(statusMaluses) do
+            table.insert(statusBonuses, malus)
+        end
+    end
+
+    if statusBonuses then
+        for _,entry in ipairs(statusBonuses) do
+            local amount = entry.Label:match("AP Cost: (%+?%-?%d+)")
+            if amount then
+                amount = tonumber(amount)
+                local color = Color.COLORS.TOOLTIPS.MALUS
+                local sign = "+"
+                entry.Type = "StatusDescription" -- TODO should we append instead?
+
+                if amount < 0 then
+                    color = Color.COLORS.TOOLTIPS.BONUS
+                    sign = ""
+                end
+
+                entry.Label = Text.Format("AP Costs: %s%s", {
+                    Color = color,
+                    FormatArgs = {
+                        sign,
+                        amount
+                    }
+                })
+            end
+        end
+    end
+end)
+
 -- Show skill IDs.
 Game.Tooltip.RegisterListener("Skill", nil, function(char, skill, tooltip)
     if Epip.IsDeveloperMode() then
