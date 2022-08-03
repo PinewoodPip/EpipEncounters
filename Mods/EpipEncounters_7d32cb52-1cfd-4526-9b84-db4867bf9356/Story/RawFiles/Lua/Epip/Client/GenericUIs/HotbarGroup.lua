@@ -68,10 +68,30 @@ function HotbarGroup:_Init()
         end
     end
 
-    local dragArea = container:AddChild("DragArea", "Button")
-    dragArea:SetEnabled(false)
-    dragArea:SetText(Text.Format("Click here to drag", {Color = Color.COLORS.WHITE}))
+    -- Dragging area/handle
+    local width, height = self:GetSlotAreaSize()
+    local mcWidth, mcHeight = container:GetMovieClip().width, container:GetMovieClip().height
+
+    local EXTRA_WIDTH = 21 * 2
+    local dragArea = content:AddChild("DragArea", "Divider")
     dragArea:SetAsDraggableArea()
+    dragArea:SetType(2)
+    dragArea:SetSize(mcWidth + EXTRA_WIDTH)
+
+    -- Show the handle on the longest side of the slot group
+    if width < height then
+        dragArea:SetRotation(90)
+        
+        dragArea:SetSize(mcHeight + EXTRA_WIDTH)
+        dragArea:SetPosition(0, -EXTRA_WIDTH/2)
+        
+    else
+        dragArea:SetPosition(-EXTRA_WIDTH/2, -25)
+    end
+
+    dragArea.Tooltip = "Click and hold to drag."
+
+    content:SetPosition(25, 25)
 end
 
 ---------------------------------------------
@@ -91,6 +111,14 @@ function GroupManager.Create(id, rows, columns)
     group.UI = Generic.Create(id)
 
     group:_Init()
+
+    local width, height = group:GetSlotAreaSize()
+    local uiObject = group.UI:GetUI()
+    
+    uiObject.SysPanelSize = {width, height}
+    uiObject.Left = width
+
+    uiObject:ExternalInterfaceCall("setPosition", "center", "screen", "center")
 
     return group
 end

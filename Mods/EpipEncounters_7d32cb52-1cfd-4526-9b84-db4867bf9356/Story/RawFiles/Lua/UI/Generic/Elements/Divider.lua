@@ -11,6 +11,7 @@ Client.UI.Generic.ELEMENTS.Divider = {
     BACKGROUND_TYPES = {
         BOX = 0,
         BLACK = 1,
+        BORDER = 2,
     }
 }
 local Divider = Generic.ELEMENTS.Divider

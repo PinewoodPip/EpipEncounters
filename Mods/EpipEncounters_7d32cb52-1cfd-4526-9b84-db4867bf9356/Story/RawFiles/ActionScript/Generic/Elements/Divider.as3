@@ -13,6 +13,7 @@ package Elements
 
         public var _divider_Elegant:MovieClip;
         public var _divider_Line:MovieClip;
+        public var _divider_Border:MovieClip;
 
         public var divider_mc:MovieClip = null;
 
@@ -23,6 +24,7 @@ package Elements
 
             this.RegisterType(this._divider_Elegant);
             this.RegisterType(this._divider_Line);
+            this.RegisterType(this._divider_Border);
 
             this.SetType(0);
             this.SetSize(100, 10);
@@ -66,8 +68,11 @@ package Elements
 
 
                 // Centerpiece
-                this.divider_mc.center_shp.x = width / 2 - this.divider_mc.center_shp.width / 2;
-                this.divider_mc.center_shp.y = this.divider_mc.line_shp.height / 2 - this.divider_mc.center_shp.height / 2;
+                if (this.divider_mc.center_shp)
+                {
+                    this.divider_mc.center_shp.x = width / 2 - this.divider_mc.center_shp.width / 2;
+                    this.divider_mc.center_shp.y = this.divider_mc.line_shp.height / 2 - this.divider_mc.center_shp.height / 2;
+                }
             }
 
             this.divider_mc.line_shp.width = centerLength;

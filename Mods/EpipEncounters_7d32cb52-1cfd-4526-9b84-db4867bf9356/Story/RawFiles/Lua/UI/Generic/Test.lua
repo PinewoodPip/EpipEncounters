@@ -34,7 +34,9 @@ function Test.TestButtons()
 
     list:SetSize(300, -1)
 
-    list:AddChild("div", "Divider"):SetSize(400)
+    local div = list:AddChild("div", "Divider")
+    div:SetType(2)
+    div:SetSize(400)
 
     for id,index in pairs(_SB.TYPES) do
         local button = list:AddChild(id, "StateButton") ---@type GenericUI_Element_StateButton

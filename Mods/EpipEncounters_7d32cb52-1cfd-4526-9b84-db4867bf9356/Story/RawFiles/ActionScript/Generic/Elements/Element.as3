@@ -94,6 +94,11 @@ package Elements
             this.CENTER_IN_LIST = center;
         }
 
+        public function SetRotation(degrees:Number) : *
+        {
+            this.rotation = degrees;
+        }
+
         public function SetAlpha(alpha:Number, affectChildren:Boolean = false) : *
         {
             if (!affectChildren)

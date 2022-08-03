@@ -125,6 +125,11 @@ function _Element:SetAlpha(alpha, affectChildren)
     self:GetMovieClip().SetAlpha(alpha, affectChildren)
 end
 
+---@param degrees number
+function _Element:SetRotation(degrees)
+    self:GetMovieClip().SetRotation(degrees)
+end
+
 ---@param eventType string
 ---@param handler function
 function _Element:RegisterListener(eventType, handler)

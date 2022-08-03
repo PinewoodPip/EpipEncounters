@@ -37,7 +37,7 @@ function _Instance:Continue(...)
 
             Ext.PrintError("Error in coroutine: " .. error)
 
-            return nil -- TODO log
+            return nil
         end
     else
         Coroutine:LogWarning("Attempted to yield from sleeping coroutine") -- TODO cancel sleeping and yield
@@ -99,41 +99,48 @@ end
 --     if Ext.IsClient() then
 --         Timer.Start("", 2, function()
 --             print("Creating")
---             local inst = Coroutine.Create(function(inst)
---                 inst:Sleep(1, "beforeSleep")
+--             -- local inst = Coroutine.Create(function(inst)
+--             --     inst:Sleep(1, "beforeSleep")
     
---                 print("after sleep")
+--             --     print("after sleep")
     
---                 -- inst:Continue("test2")
---             end)
+--             --     -- inst:Continue("test2")
+--             -- end)
     
---             local inst2 = Coroutine.Create(function (inst_, ...)
---                 inst_:Yield("test")
---                 inst_:Sleep(1.1, "beforeSleep2")
+--             -- local inst2 = Coroutine.Create(function (inst_, ...)
+--             --     inst_:Yield("test")
+--             --     inst_:Sleep(1.1, "beforeSleep2")
     
---                 print("after sleep2", ...)
---             end)
+--             --     print("after sleep2", ...)
+--             -- end)
     
---             print(inst:Continue())
---             print(inst2:Continue(1, 2))
+--             -- print(inst:Continue())
+--             -- print(inst2:Continue(1, 2))
 --             -- print(inst2:Continue(1, 2))
 --             -- inst2:Continue(1, 2) -- "Attempted to yield from sleeping coroutine" warning
+
+--             ------
+--             local fun = function (inst, guid, name)
+
+--                 -- Sleep 2 seconds and yield a string
+--                 inst:Sleep(2, "Starting")
+
+--                 Client.UI.ChatLog:PlaySound("Item_Potion_Consume")
+    
+--                 -- Sleep until the active client character is Ifan
+--                 inst:Sleep(function()
+--                     return Client.GetCharacter().MyGuid == guid
+--                 end)
+    
+--                 local char = Character.Get(guid)
+--                 assert(not Character.IsDead(char), name .. " is dead")
+--             end
+    
+--             local test = Coroutine.Create(fun)
+--             local test2 = Coroutine.Create(fun)
+    
+--             print(test:Continue("ad9a3327-4456-42a7-9bf4-7ad60cc9e54f", "Ifan")) -- "Starting"
+--             print(test2:Continue("02a77f1f-872b-49ca-91ab-32098c443beb", "Fane")) -- "Starting"
 --         end)
-
---         local test = Coroutine.Create(function (inst, guid)
-
---             -- Sleep 2 seconds and yield a string
---             inst:Sleep(2, "Starting")
-
---             -- Sleep until the active client character is Ifan
---             inst:Sleep(function()
---                 return Client.GetCharacter().MyGuid == guid
---             end)
-
---             local char = Character.Get(guid)
---             assert(not Character.IsDead(char), "Ifan is dead")
---         end)
-
---         print(test:Continue("ad9a3327-4456-42a7-9bf4-7ad60cc9e54f")) -- "Starting"
 --     end
 -- end)
