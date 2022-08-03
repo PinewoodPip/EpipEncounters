@@ -545,7 +545,12 @@ end
 function Stats.MeetsRequirements(char, statID, isItem, itemSource)
     local data = Ext.Stats.Get(statID)
     local stats = char.Stats
+    local isEquipment = false
     -- local dynamicStats = char.Stats.DynamicStats
+
+    if isItem and itemSource then
+        isEquipment = itemSource.Stats.ItemType ~= ""
+    end
 
     -- Dead chars cannot use skills or items.
     if Game.Character.IsDead(char) then
@@ -559,7 +564,9 @@ function Stats.MeetsRequirements(char, statID, isItem, itemSource)
     --- AP cost
     local apCost
 
-    if itemSource and itemSource.StatsId then
+    if isEquipment then
+        apCost = 1 -- TODO is this affected by extra AP costs?
+    elseif itemSource and itemSource.StatsId then
         apCost = Stats.Get("Object", itemSource.StatsId).UseAPCost
     else
         apCost, _ = Game.Math.GetSkillAPCost(data, char.Stats, Ext.Entity.GetAiGrid(), char.Translate, 1)
