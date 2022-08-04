@@ -58,7 +58,9 @@ function Slot.Create(ui, id, parent)
     obj.SlotElement.Events.MouseOut:Subscribe(function (e)
         obj.SlotElement:SetHighlighted(false)
     end)
-    Ext.Events.Tick:Subscribe(function() obj:_OnTick() end)
+    GameState.Events.RunningTick:Subscribe(function (e)
+        obj:_OnTick()
+    end)
 
     return obj
 end
