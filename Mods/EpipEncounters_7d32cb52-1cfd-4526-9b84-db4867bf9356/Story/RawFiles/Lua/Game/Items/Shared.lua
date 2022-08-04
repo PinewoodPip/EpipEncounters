@@ -244,18 +244,24 @@ end
 ---@param item Item
 ---@return boolean
 function Item.IsEquipped(char, item)
-    return Item.GetEquippedSlot(item) ~= nil
+    return Item.GetEquippedSlot(item, char) ~= nil
 end
 
 ---Returns the slot that an item is equipped in, or nil if it is not.
 ---@param item Item
+---@param char Character? Defaults to item's owner.
 ---@return EquipSlot?
-function Item.GetEquippedSlot(item)
+function Item.GetEquippedSlot(item, char)
     local slot = Item.GetItemSlot(item)
-    local char = Ext.GetCharacter(item:GetOwnerCharacter())
+    char = char or Ext.GetCharacter(item:GetOwnerCharacter())
     if not char then return nil end
-    
-    local isEquipped = char:GetItemBySlot(slot) == item.MyGuid
+    local isEquipped = false
+
+    if Ext.IsClient() then
+        isEquipped = char:GetItemBySlot(slot) == item.MyGuid
+    else
+        isEquipped = Osi.CharacterGetEquippedItem(char.MyGuid, slot) ~= NULLGUID
+    end
 
     -- Check Ring2 slot
     if not isEquipped and slot == "Ring" then
@@ -264,6 +270,7 @@ function Item.GetEquippedSlot(item)
         if isEquipped then slot = "Ring2" end
     end
 
+    -- Check Shield slot
     if not isEquipped and slot == "Weapon" then
         isEquipped = char:GetItemBySlot("Shield") == item.MyGuid
 
