@@ -103,6 +103,23 @@ function SubscribableEvent:RemoveNode(node)
 	node.Next = nil
 end
 
+---Unsubscribe all listeners based on a predicate.
+---@param fun fun(node:unknown):boolean Should return true for nodes to be removed.
+function SubscribableEvent:RemoveNodes(fun)
+	local node = self.First
+	while node do
+		if fun(node) then
+			local nextNode = node.Next
+
+			self:RemoveNode(node)
+
+			node = nextNode
+		else
+			node = node.Next
+		end
+	end
+end
+
 function SubscribableEvent:Unsubscribe(handlerIndex) -- TODO string ID
 	local cur = self.First
     local useStringIDs = type(handlerIndex) == "string"

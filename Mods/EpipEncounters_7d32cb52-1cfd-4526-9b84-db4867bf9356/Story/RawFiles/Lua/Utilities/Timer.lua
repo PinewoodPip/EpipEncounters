@@ -70,7 +70,7 @@ function _TimerEntry:Subscribe(fun)
         if ev.Timer == self then
             fun(ev)
         end
-    end)
+    end, {_TimerLib_Entry = self})
 end
 
 ---------------------------------------------
@@ -89,6 +89,7 @@ function Timer.Start(id, seconds, handler)
         id,seconds,handler = handler,id,seconds
     end
 
+    ---@diagnostic disable-next-line: cast-local-type
     seconds = seconds or 0.001
 
     ---@type TimerLib_Entry
@@ -124,6 +125,11 @@ function Timer.Remove(timer)
 
     if index then
         table.remove(Timer.activeTimers, index)
+
+        -- Unsubscribe listeners
+        Timer.Events.TimerCompleted:RemoveNodes(function(node)
+            return node.Options._TimerLib_Entry == timer
+        end)
     else
         Timer:LogError("Failed to remove timer")
         Timer:Dump(timer)
