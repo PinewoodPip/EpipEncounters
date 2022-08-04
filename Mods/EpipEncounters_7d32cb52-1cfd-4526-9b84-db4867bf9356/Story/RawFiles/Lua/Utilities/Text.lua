@@ -226,3 +226,18 @@ function Text.Format(str, formatData)
 
     return str
 end
+
+---Shorthand for Ext.DumpExport() which does not require you to explicitly define the default options (Beautify, StringifyInternalTypes, etc.)
+---@param obj any
+---@param opts unknown? TODO specify type
+function Text.Dump(obj, opts)
+    -- Mimic default Ext.Dump() behaviour
+    opts = opts or {}
+    opts.Beautify = true
+    opts.StringifyInternalTypes = true
+    opts.IterateUserdata = true
+    opts.AvoidRecursion = true
+    opts.LimitDepth = opts.LimitDepth or 2
+
+    return Ext.Json.Stringify(obj, opts)
+end

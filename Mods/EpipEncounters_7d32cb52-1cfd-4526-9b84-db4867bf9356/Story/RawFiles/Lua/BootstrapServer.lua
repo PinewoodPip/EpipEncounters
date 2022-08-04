@@ -113,6 +113,7 @@ LOAD_ORDER = {
     
     {ScriptSet = "Epip/ItemTagging"},
     {ScriptSet = "Epip/ExtraDataConfig", Developer = true,},
+    {ScriptSet = "Epip/Encumbrance", Developer = true,},
 
     "Epip/StatsTab/Shared.lua",
     "Epip/StatsTab/Server/Server.lua",

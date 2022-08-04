@@ -121,7 +121,7 @@ Ext.Events.GameStateChanged:Subscribe(function(ev)
         GameState.Events.GamePaused:Throw()
     elseif to == GameState.CLIENT_STATES.RUNNING and from == GameState.CLIENT_STATES.PAUSED then
         GameState.Events.GameUnpaused:Throw()
-    elseif from == GameState.CLIENT_STATES.PREPARE_RUNNING and to == GameState.CLIENT_STATES.RUNNING then
+    elseif from == GameState.CLIENT_STATES.PREPARE_RUNNING and to == GameState.CLIENT_STATES.RUNNING or (Ext.IsServer() and from == "Sync" and to == "Running") then
         GameState.Events.GameReady:Throw()
     end
 end)

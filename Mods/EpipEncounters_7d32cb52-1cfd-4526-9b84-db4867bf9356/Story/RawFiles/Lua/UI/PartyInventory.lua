@@ -28,12 +28,18 @@ Epip.InitializeUI(Client.UI.Data.UITypes.partyInventory, "PartyInventory", Inv)
 ---@field SlotID uint64
 ---@field IsNewItem boolean
 
+---@class PartyInventoryUI_GoldWeightUpdate
+---@field CharacterHandle FlashObjectHandle
+---@field GoldLabel string
+---@field WeightLabel string
+
 ---------------------------------------------
 -- EVENTS/HOOKS
 ---------------------------------------------
 
 ---@class PartyInventoryUI_Hooks_GetUpdate
 ---@field Items PartyInventoryItemUpdate[]
+---@field GoldAndCarryWeight PartyInventoryUI_GoldWeightUpdate[]
 
 ---@class PartyInventoryUI_Event_ContentUpdated
 ---@field Items PartyInventoryItemUpdate[]
@@ -63,6 +69,21 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
+---@return PartyInventoryUI_GoldWeightUpdate[]
+local function ParseGoldAndWeight()
+    local root = Inv:GetRoot()
+    local array = root.goldWeightList
+
+    ---@type PartyInventoryUI_GoldWeightUpdate[]
+    local data = Client.Flash.ParseArray(array, {
+        "CharacterHandle",
+        "GoldLabel",
+        "WeightLabel",
+    })
+
+    return data
+end
+
 Inv:RegisterInvokeListener("updateItems", function(_)
     local root = Inv:GetRoot()
     local itemArray = root.itemsUpdateList
@@ -79,11 +100,13 @@ Inv:RegisterInvokeListener("updateItems", function(_)
     ---@type PartyInventoryUI_Hooks_GetUpdate
     local ev = {
         Items = items,
+        GoldAndCarryWeight = ParseGoldAndWeight()
     }
 
     -- TODO prevent action
     Inv.Hooks.GetUpdate:Throw(ev)
 
+    -- Items
     for i=0,#ev.Items-1,1 do
         local item = ev.Items[i + 1]
         local index = i * 5
@@ -93,6 +116,17 @@ Inv:RegisterInvokeListener("updateItems", function(_)
         itemArray[index + 2] = item.ItemHandle
         itemArray[index + 3] = item.Amount
         itemArray[index + 4] = item.IsNewItem
+    end
+
+    -- Gold and carry weight
+    local arr = root.goldWeightList
+    for i=0,#ev.GoldAndCarryWeight-1,1 do
+        local data = ev.GoldAndCarryWeight[i + 1]
+        local index = i * 3
+
+        arr[index] = data.CharacterHandle
+        arr[index + 1] = data.GoldLabel
+        arr[index + 2] = data.WeightLabel
     end
     
     Inv.nextContentEvent = {Items = ev.Items}

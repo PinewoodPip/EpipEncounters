@@ -464,6 +464,25 @@ local TopOptions = {
     },
 }
 
+local Inventory = {
+    {
+        ID = "Inventory_Header",
+        Type = "Header",
+        Label = Text.Format("Inventory", {
+            Color = "7e72d6",
+            Size = 23,
+        })
+    },
+    {
+        ID = "Inventory_InfiniteCarryWeight",
+        Type = "Checkbox",
+        Label = "Infinite Carry Weight",
+        Tooltip = "Gives characters practically infinite carry weight.",
+        DefaultValue = false,
+        ServerOnly = true,
+    },
+}
+
 local Notification = {
     {
         ID = "Notification_Header",
@@ -494,6 +513,7 @@ local Order = {
     TopOptions,
     Hotbar,
     PlayerInfo,
+    Inventory,
     Notification,
     Overheads,
     SaveLoadOptions,
