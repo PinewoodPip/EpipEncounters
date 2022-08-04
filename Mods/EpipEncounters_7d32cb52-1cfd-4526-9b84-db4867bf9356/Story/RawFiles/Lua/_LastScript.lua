@@ -4,9 +4,15 @@
 ---------------------------------------------
 
 Ext.Events.SessionLoaded:Subscribe(function()
-    for i,lib in ipairs(Epip._FeatureRegistrationOrder) do
+    for _,lib in ipairs(Epip._FeatureRegistrationOrder) do
         if lib.IsEnabled ~= nil and lib:IsEnabled() then -- TODO move everything to lib system
             lib:__Setup()
+
+            if lib:IsDebug() and Epip.IsDeveloperMode(true) then
+                Timer.Start(2, function (_)
+                    lib:__Test()
+                end)
+            end
         end
     end
 end)

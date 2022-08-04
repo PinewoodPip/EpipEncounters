@@ -22,7 +22,6 @@ Timer = {
     },
 }
 Epip.InitializeLibrary("Timer", Timer)
-Timer:Debug()
 
 ---------------------------------------------
 -- EVENTS/HOOKS
@@ -38,7 +37,7 @@ Timer:Debug()
 ---@class TimerLib_Entry
 ---@field ID string?
 ---@field DurationLeft number
----@field InitiialDuration number
+---@field InitialDuration number
 ---@field RepeatCount integer How many times the timer has repeated.
 ---@field Paused boolean
 local _TimerEntry = {
@@ -78,7 +77,7 @@ end
 -- METHODS
 ---------------------------------------------
 
----@overload fun(seconds:number, handler?:fun(ev:TimerLib_Event_TimerCompleted), id?:string)
+---@overload fun(seconds:number, handler?:fun(ev:TimerLib_Event_TimerCompleted), id?:string):TimerLib_Entry
 ---@param id string?
 ---@param seconds number
 ---@param handler fun(ev:TimerLib_Event_TimerCompleted)
@@ -86,17 +85,15 @@ end
 function Timer.Start(id, seconds, handler)
     -- Overload
     if type(id) ~= "string" then
-        seconds = id
         ---@diagnostic disable-next-line: cast-local-type
-        id = handler
-        handler = seconds
+        id,seconds,handler = handler,id,seconds
     end
 
     seconds = seconds or 0.001
 
     ---@type TimerLib_Entry
     local entry = {
-        ID = id,
+        ID = id or "",
         InitialDuration = seconds,
         DurationLeft = seconds,
         MaxRepeatCount = 1,
@@ -152,6 +149,7 @@ Ext.Events.Tick:Subscribe(function()
             timer.DurationLeft = timer.DurationLeft - (deltaTime / 1000)
     
             if timer.DurationLeft <= 0 then
+                timer.RepeatCount = timer.RepeatCount + 1
     
                 Timer.Events.TimerCompleted:Throw({
                     Timer = timer,
@@ -161,8 +159,7 @@ Ext.Events.Tick:Subscribe(function()
     
                 Timer:DebugLog("Timer finished: " .. timer.ID)
     
-                timer.RepeatCount = timer.RepeatCount + 1
-                timer.DurationLeft = timer.InitiialDuration
+                timer.DurationLeft = timer.InitialDuration
             end
         end
     end
@@ -178,3 +175,22 @@ Ext.Events.Tick:Subscribe(function()
 
     Timer.previousTime = time
 end)
+
+---------------------------------------------
+-- TESTS
+---------------------------------------------
+
+function Timer:__Test()
+    if Ext.IsClient() then
+        local timer1 = Timer.Start("", 1, function (ev)
+            print("Timer1 Complete")
+    
+            print(ev.Timer.RepeatCount)
+            if ev.Timer.RepeatCount == 2 then
+                ev.Timer:Cancel()
+            end
+        end)
+    
+        timer1:SetRepeatCount(3)
+    end
+end

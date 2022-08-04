@@ -137,6 +137,9 @@ end
 ---Override to run initialization routines.
 function Feature:__Setup() end
 
+---Invoked on a small delay after SessionLoaded if Epip.IsDeveloperMode(true) is true and the feature is being debugged.
+function Feature:__Test() end
+
 ---Sets the Disabled flag.
 function Feature:Disable()
     -- TODO fix
