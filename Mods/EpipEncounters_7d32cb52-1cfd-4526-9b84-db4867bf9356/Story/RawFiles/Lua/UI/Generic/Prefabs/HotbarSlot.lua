@@ -136,6 +136,7 @@ function Slot:Clear()
     slot:SetIcon("", 1, 1)
     slot:SetCooldown(-1, false)
     slot:SetEnabled(false)
+    slot:SetLabel("")
 
     self.Object = {
         Type = "None",
