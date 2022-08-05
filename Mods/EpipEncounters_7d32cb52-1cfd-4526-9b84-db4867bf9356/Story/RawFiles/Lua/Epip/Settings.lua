@@ -481,6 +481,13 @@ local Inventory = {
         DefaultValue = false,
         ServerOnly = true,
     },
+    {
+        ID = "Inventory_RewardItemComparison",
+        Type = "Checkbox",
+        Label = "Show Character Sheet in Reward UI",
+        Tooltip = "Allows you to check all your equipped items while in the quest rewards UI.",
+        DefaultValue = false,
+    },
 }
 
 local Notification = {

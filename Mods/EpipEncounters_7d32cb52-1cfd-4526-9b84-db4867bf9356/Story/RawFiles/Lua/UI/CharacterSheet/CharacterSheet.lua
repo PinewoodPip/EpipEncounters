@@ -3,15 +3,12 @@
 -- Hooks for characterSheet.swf.
 ---------------------------------------------
 
----@meta CharacterSheetUI, ContextClient
-
 ---@class CharacterSheetUI : UI
----@field StatsTab CharacterSheetStatsTab
----@field SECONDARY_STAT_GROUPS table<string, number> IDs of secondarystat groups.
-
----@class CharacterSheetUI
 local CharacterSheet = {
     StatsTab = {}, -- See StatsTab.lua
+
+    DEFAULT_LAYER = 9,
+    DEFAULT_RENDER_ORDER = 11,
 
     ---@type SecondaryStatGroup
     SECONDARY_STAT_GROUPS = {
@@ -35,6 +32,7 @@ if IS_IMPROVED_HOTBAR then
     CharacterSheet.FILEPATH_OVERRIDES = {}
 end
 Epip.InitializeUI(Client.UI.Data.UITypes.characterSheet, "CharacterSheet", CharacterSheet)
+Client.UI.CharacterSheet = CharacterSheet
 
 ---@alias SecondaryStatGroup table<string, number>
 

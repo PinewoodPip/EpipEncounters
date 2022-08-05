@@ -152,6 +152,7 @@ LOAD_ORDER = {
     "UI/SaveLoad.lua",
     "UI/CombatLog/CombatLog.lua",
     "UI/Craft.lua",
+    "UI/Reward.lua",
 
     "UI/Vanity/Vanity.lua",
     "UI/Vanity/Tabs/_Tab.lua",
@@ -201,6 +202,7 @@ LOAD_ORDER = {
     "Epip/Client/SummonControlFix.lua",
     "Epip/Client/Notifications.lua",
     "Epip/Client/CraftingFixes.lua",
+    "Epip/Client/RewardItemComparison.lua",
     -- "Epip/Client/InventoryImprovements.lua",
 
     {ScriptSet = "Epip/Greatforge/DrillSockets"},
