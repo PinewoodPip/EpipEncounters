@@ -1,7 +1,4 @@
 
----@meta Library: GameCharacter, ContextShared, Game.Character
- 
-
 Game.Character = {
     AI_PREFERRED_TAG = "AI_PREFERRED_TARGET",
     AI_UNPREFERRED_TAG = "AI_UNPREFERRED_TARGET",
@@ -39,6 +36,16 @@ function Character.GetStacks(char, type)
     return stacks,lifetime
 end
 
+---Returns the maximum carry weight of char.
+---@param char Character
+---@return integer In "grams"
+function Character.GetMaxCarryWeight(char)
+    local base = Stats.ExtraData.CarryWeightBase:GetValue()
+    local strScaling = Stats.ExtraData.CarryWeightPerStr:GetValue()
+    local strength = char.Stats.Strength
+
+    return base + (strength * strScaling)
+end
 
 ---@param char Character
 ---@return integer, integer --Current, maximum
