@@ -247,10 +247,17 @@ function GroupManager.LoadData(path)
             -- Set position
             local position = data.RelativePosition
             local viewport = Ext.UI.GetViewportSize()
+
+            if GameState.GetState() == "Running" then
+                Timer.Start(0.1, function ()
+                    group.UI:GetUI():SetPosition(Ext.Round(position[1] * viewport[1]), Ext.Round(position[2] * viewport[2]))
+                end)
+            else
+                GameState.Events.GameReady:Subscribe(function (e)
+                    group.UI:GetUI():SetPosition(Ext.Round(position[1] * viewport[1]), Ext.Round(position[2] * viewport[2]))
+                end, {Once = true})
+            end
             
-            Timer.Start("", 0.1, function ()
-                group.UI:GetUI():SetPosition(Ext.Round(position[1] * viewport[1]), Ext.Round(position[2] * viewport[2]))
-            end)
         end
     end
 end
