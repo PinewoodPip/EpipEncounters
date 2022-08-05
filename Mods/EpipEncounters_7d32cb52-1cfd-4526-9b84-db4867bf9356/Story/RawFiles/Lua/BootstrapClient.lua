@@ -255,6 +255,7 @@ LOAD_ORDER = {
 
     {ScriptSet = "Epip/ItemTagging"},
     {ScriptSet = "Epip/ExtraDataConfig", Developer = true,},
+    {ScriptSet = "Epip/Housing", WIP = true,},
 
     -- AMER UI controller support
     -- "Epip/Client/AMERUI_Controller/AMERUI_Controller.lua",

@@ -345,6 +345,32 @@ ContextMenu.RegisterElementListener("epip_Cheats_Teleport", "buttonPressed", fun
     })
 end)
 
+-- Log RootTemplate GUID.
+Client.UI.OptionsInput.Events.ActionExecuted:RegisterListener(function (action, _)
+    if action == "EpipEncounters_Debug_LogRootTemplate" then
+        local entity = Ext.UI.GetPickingState(1).HoverItem
+        if entity then
+            entity = Item.Get(entity)
+        else
+            entity = Ext.UI.GetPickingState(1).HoverEntity
+
+            if entity then
+                entity = Character.Get(entity)
+            end
+        end
+
+        if entity then
+            -- local guid = entity.RootTemplate.Name .. "_" .. entity.RootTemplate.Id
+            local guid = entity.RootTemplate.RootTemplate
+            if guid == "" then guid = entity.RootTemplate.Id end
+
+            print(guid)
+
+            Client.CopyToClipboard(guid)
+        end
+    end
+end)
+
 MessageBox.RegisterMessageListener("epip_Cheats_Teleport", MessageBox.Events.InputSubmitted, function(text, id, data)
     Net.PostToServer("EPIP_CHEATS_TELEPORTTO", {NetID = data.NetID, TargetGUID = text})
 end)

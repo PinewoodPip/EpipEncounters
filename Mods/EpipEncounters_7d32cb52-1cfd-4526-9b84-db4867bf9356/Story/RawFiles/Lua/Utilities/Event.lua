@@ -43,7 +43,7 @@ function SubscribableEvent:Subscribe(handler, opts, stringID)
 		Priority = opts.Priority or 100,
 		Once = opts.Once or false,
 		Options = opts,
-        StringID = stringID,
+        StringID = stringID or opts.StringID,
 	}
 
 	self:DoSubscribe(sub)

@@ -22,6 +22,9 @@ Options.RegisterTab("EpipEncounters", {
         {Name = "Hotbar Action 10 (top row)", ID = "EpipEncounters_Hotbar_10"},
         {Name = "Hotbar Action 11 (top row)", ID = "EpipEncounters_Hotbar_11"},
         {Name = "Hotbar Action 12 (top row)", ID = "EpipEncounters_Hotbar_12"},
+
+        {Name = "Move Furniture", ID = "EpipEncounters_Housing_MoveFurniture", DeveloperOnly = true},
+        {Name = "Log RootTemplate", ID = "EpipEncounters_Debug_LogRootTemplate", DeveloperOnly = true},
     },
 })
 

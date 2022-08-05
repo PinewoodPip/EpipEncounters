@@ -1,15 +1,5 @@
 
 ---@class OptionsInputUI : Feature
----@field TAB_ORDER string[]
----@field nextCustomTabID integer
----@field renderedCustomTabs table<integer, string>
----@field tabIndexes table<string, integer>
----@field nextEntryID integer
----@field entries table<integer, string>
----@field keyBeingBound? string
----@field indexBeingBound? integer
-
----@class OptionsInputUI
 local Options = {
     nextCustomTabID = 20,
     ---@type table<integer, string>
