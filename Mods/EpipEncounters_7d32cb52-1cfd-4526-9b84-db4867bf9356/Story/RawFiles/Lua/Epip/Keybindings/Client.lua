@@ -23,7 +23,12 @@ Options.RegisterTab("EpipEncounters", {
         {Name = "Hotbar Action 11 (top row)", ID = "EpipEncounters_Hotbar_11"},
         {Name = "Hotbar Action 12 (top row)", ID = "EpipEncounters_Hotbar_12"},
 
-        {Name = "Move Furniture", ID = "EpipEncounters_Housing_MoveFurniture", DeveloperOnly = true},
+        {Name = "Housing: Select Furniture", ID = "EpipEncounters_Housing_MoveFurniture", DeveloperOnly = true},
+        {Name = "Housing: Rotate Furniture (+ Axis)", ID = "EpipEncounters_Housing_RotateFurniture_Plus", DeveloperOnly = true},
+        {Name = "Housing: Rotate Furniture (- Axis)", ID = "EpipEncounters_Housing_RotateFurniture_Minus", DeveloperOnly = true},
+        {Name = "Housing: Raise Furniture", ID = "EpipEncounters_Housing_RaiseFurniture", DeveloperOnly = true, DefaultInput1 = {Keys = {"lctrl", "wheel_ypos"}}},
+        {Name = "Housing: Lower Furniture", ID = "EpipEncounters_Housing_LowerFurniture", DeveloperOnly = true, DefaultInput1 = {Keys = {"lctrl", "wheel_yneg"}}},
+
         {Name = "Log RootTemplate", ID = "EpipEncounters_Debug_LogRootTemplate", DeveloperOnly = true},
     },
 })

@@ -5,45 +5,78 @@ local Vanity = Client.UI.Vanity
 ---@class Feature_Housing : Feature
 local Housing = Epip.Features.Housing
 
-Housing.movingFurnitureHandle = nil ---@type EntityHandle
+Housing.selectedFurniture = nil ---@type Feature_Housing_SelectedFurniture
+Housing.furnitureYAxisStep = 0.1
+Housing.FURNITURE_ROTATION_STEP = 0.1
+
+---@class Feature_Housing_SelectedFurniture
+---@field Handle EntityHandle
+---@field EntityType "Item"|"Scenery"
+---@field PositionOffset Vector3D
+local _SelectedFurniture = {}
+
+---@return EclItem|EclScenery
+function _SelectedFurniture:GetEntity()
+    return Ext.Entity.GetGameObject(self.Handle)
+end
+
+---@param pos Vector3D
+---@param addOffset boolean? Defaults to true.
+function _SelectedFurniture:SetPosition(pos, addOffset)
+    pos = table.deepCopy(pos)
+    local obj = self:GetEntity()
+    
+    if addOffset then
+        for i,v in ipairs(pos) do
+            pos[i] = v + self.PositionOffset[i]
+        end
+    end
+
+    obj.Translate = pos
+end
 
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
 ---Returns the furniture currently being moved.
----@return EclItem
-function Housing.GetMovingFurniture()
+---@return Feature_Housing_SelectedFurniture
+function Housing.GetSelectedFurniture()
     local obj
 
-    if Housing.movingFurnitureHandle then
-        obj = Item.Get(Housing.movingFurnitureHandle)
+    if Housing.selectedFurniture then
+        obj = Housing.selectedFurniture
     end
 
-    ---@diagnostic disable-next-line: return-type-mismatch
     return obj
 end
 
 ---@return boolean
 function Housing.IsMovingFurniture()
-    return Housing.movingFurnitureHandle ~= nil
+    return Housing.selectedFurniture ~= nil
 end
 
 ---Begins moving a furniture.
----@param obj EclItem
-function Housing.StartMovingFurniture(obj)
+---@param obj EclItem|EclScenery
+function Housing.SelectFurniture(obj)
     Housing:DebugLog("Moving furniture: ", obj.DisplayName)
 
-    Housing.movingFurnitureHandle = obj.Handle
+    ---@type Feature_Housing_SelectedFurniture
+    local selectedObj = {
+        Handle = obj.Handle,
+        EntityType = "Item", -- TODO,
+        PositionOffset = {0, 0, 0},
+    }
+    Inherit(selectedObj, _SelectedFurniture)
+
+    Housing.selectedFurniture = selectedObj
 
     GameState.Events.RunningTick:Subscribe(function (_)
         local pos = Ext.UI.GetPickingState(1).WalkablePosition
         -- local pos = Ext.UI.GetPickingState(1).PlaceablePosition
 
         if pos then
-            local item = Housing.GetMovingFurniture()
-
-            item.Translate = pos
+            Housing.selectedFurniture:SetPosition(pos, true)
         end
     end, {StringID = "Housing_MoveFurniture"})
 
@@ -53,14 +86,14 @@ function Housing.StartMovingFurniture(obj)
 end
 
 function Housing.PlaceMovingFurniture()
-    local obj = Housing.GetMovingFurniture()
+    local obj = Housing.GetSelectedFurniture():GetEntity()
 
     Net.PostToServer("EPIPENCOUNTERS_Housing_PlaceMovingFurniture", {
         ObjNetID = obj.NetID,
         Position = obj.Translate,
     })
 
-    Housing.movingFurnitureHandle = nil
+    Housing.selectedFurniture = nil
     GameState.Events.RunningTick:Unsubscribe("Housing_MoveFurniture")
 
     -- Client.UI.Input.ToggleEventCapture(Client.Input.FLASH_EVENTS.EDIT_CHARACTER, false, "Housing")
@@ -132,18 +165,34 @@ end)
 -- EVENT LISTENERS
 ---------------------------------------------
 
--- Moving furniture.
+-- Interacting with furniture.
 OptionsInput.Events.ActionExecuted:RegisterListener(function (action, binding)
     if action == "EpipEncounters_Housing_MoveFurniture" then
         local pointer = Ext.UI.GetPickingState(1)
-        local handle = pointer.HoverItem -- PlaceableEntity not supported.
+        local handle = pointer.HoverItem -- PlaceableEntity not yet supported.
         
-        if handle then
+        if Housing.IsMovingFurniture() then
+            Housing.PlaceMovingFurniture()
+        elseif handle then
             local obj = Item.Get(handle)
 
             if obj then
-                Housing.StartMovingFurniture(obj)
+                Housing.SelectFurniture(obj)
             end
+        end
+    elseif Housing.IsMovingFurniture() then
+        local obj = Housing.GetSelectedFurniture()
+        local entity = obj:GetEntity()
+
+        if action == "EpipEncounters_Housing_RaiseFurniture" or action == "EpipEncounters_Housing_LowerFurniture" then -- Raise/lower furniture.
+            local offset = Housing.furnitureYAxisStep
+            if action == "EpipEncounters_Housing_LowerFurniture" then
+                offset = -offset
+            end
+
+            obj.PositionOffset = {obj.PositionOffset[1], obj.PositionOffset[2] + offset, obj.PositionOffset[3]}
+        elseif action == "EpipEncounters_Housing_RotateFurniture_Plus" or action == "EpipEncounters_Housing_RotateFurniture_Minus" then
+            -- TODO
         end
     end
 end)

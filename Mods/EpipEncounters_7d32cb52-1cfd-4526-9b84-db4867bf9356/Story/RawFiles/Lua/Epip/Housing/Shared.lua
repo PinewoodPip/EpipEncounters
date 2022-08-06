@@ -499,6 +499,11 @@ local funiture = {
         TemplateGUID = "480f023e-8f64-4b56-b411-c634a2e901d1",
         Type = "Container",
     },
+    {
+        Name = "Lady Mariette Karr",
+        TemplateGUID = "1a504751-a68e-4ba9-8f2c-9cc7d7ec5a0a",
+        Type = "Painting",
+    },
     -- {
     --     Name = "",
     --     TemplateGUID = "",
