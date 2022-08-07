@@ -32,7 +32,14 @@ function _SelectedFurniture:SetPosition(pos, addOffset)
         end
     end
 
-    obj.Translate = pos
+    if self.EntityType == "Item" then
+        obj.Translate = pos
+    else
+        -- TODO
+        -- for _,shape in ipairs(obj.Physics.Shapes) do
+        --     shape.Translate = pos
+        -- end
+    end
 end
 
 ---------------------------------------------
@@ -58,16 +65,21 @@ end
 
 ---Begins moving a furniture.
 ---@param obj EclItem|EclScenery
-function Housing.SelectFurniture(obj)
-    Housing:DebugLog("Moving furniture: ", obj.DisplayName)
+---@param handle? EntityHandle Necessary for scenery due to technical limitations.
+function Housing.SelectFurniture(obj, handle)
+    Housing:DebugLog("Moving furniture: ", obj)
 
     ---@type Feature_Housing_SelectedFurniture
     local selectedObj = {
-        Handle = obj.Handle,
-        EntityType = "Item", -- TODO,
+        Handle = handle or obj.Handle,
+        EntityType = "Scenery",
         PositionOffset = {0, 0, 0},
     }
     Inherit(selectedObj, _SelectedFurniture)
+
+    if GetExtType(obj) == "ecl::Item" then
+        selectedObj.EntityType = "Item"
+    end
 
     Housing.selectedFurniture = selectedObj
 
@@ -169,15 +181,16 @@ end)
 OptionsInput.Events.ActionExecuted:RegisterListener(function (action, binding)
     if action == "EpipEncounters_Housing_MoveFurniture" then
         local pointer = Ext.UI.GetPickingState(1)
-        local handle = pointer.HoverItem -- PlaceableEntity not yet supported.
+        -- local handle = pointer.HoverItem or pointer.PlaceableEntity
+        local handle = pointer.HoverItem
         
         if Housing.IsMovingFurniture() then
             Housing.PlaceMovingFurniture()
         elseif handle then
-            local obj = Item.Get(handle)
+            local obj = Ext.Entity.GetGameObject(handle)
 
             if obj then
-                Housing.SelectFurniture(obj)
+                Housing.SelectFurniture(obj, handle)
             end
         end
     elseif Housing.IsMovingFurniture() then
