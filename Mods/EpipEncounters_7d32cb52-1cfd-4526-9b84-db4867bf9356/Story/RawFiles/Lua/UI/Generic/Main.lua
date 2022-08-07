@@ -218,6 +218,9 @@ function Client.UI.Generic.Create(id)
     -- ComboBox
     ui:RegisterCallListener("ComboBox_ItemSelected", Generic.OnComboBoxItemSelected)
 
+    -- Slider
+    Generic.ForwardUICall(ui, "Slider_HandleReleased", "HandleReleased", {"Value"})
+
     -- Logging
     ui:RegisterCallListener("GenericLog", function(ev, elementID, elementType, msg, msgType)
         msg = string.format("TRACE %s (%s): %s", elementID, elementType, msg)
@@ -239,6 +242,17 @@ end
 ---@param prefab table
 function Generic.RegisterPrefab(id, prefab)
     Generic.PREFABS[id] = prefab
+end
+
+---@param tbl1 table
+---@param tbl2 table
+function Generic.Inherit(tbl1, tbl2)
+    if tbl2.Events then
+        for name,_ in pairs(tbl2.Events) do
+            tbl1.Events[name] = {}
+        end
+    end
+    Inherit(tbl1, tbl2)
 end
 
 ---@param elementType string

@@ -193,6 +193,19 @@ OptionsInput.Events.ActionExecuted:RegisterListener(function (action, binding)
             obj.PositionOffset = {obj.PositionOffset[1], obj.PositionOffset[2] + offset, obj.PositionOffset[3]}
         elseif action == "EpipEncounters_Housing_RotateFurniture_Plus" or action == "EpipEncounters_Housing_RotateFurniture_Minus" then
             -- TODO
+            local rotation = entity.Rotation
+            local offset = Housing.FURNITURE_ROTATION_STEP
+            if action == "EpipEncounters_Housing_RotateFurniture_Minus" then
+                offset = -offset
+            end
+
+            local angles = Ext.Math.ExtractEulerAngles(rotation)
+            local rotationMatrix = Ext.Math.BuildRotation3({1, 0, 0}, 10)
+            rotation = Ext.Math.BuildFromEulerAngles3(angles)
+            
+            entity.Rotation = Ext.Math.Rotate(rotation, 90, {1, 0, 0})
+
+            -- _D(rotation)
         end
     end
 end)

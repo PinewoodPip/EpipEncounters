@@ -46,8 +46,10 @@ function Test.TestButtons()
         button:RegisterListener(_SB.EVENT_TYPES.STATE_CHANGED, function(state)
             print("state changed", state)
         end)
-
     end
+
+    -- Slider
+    local slider = list:AddChild("Slider", "Slider")
 end
 
 function Test.TestSlot()
@@ -103,7 +105,7 @@ function Test.SetupTests()
     text:SetSize(400, 200)
     bg:GetMovieClip().background_mc.alpha = 0.8
 
-    bg:SetAsDraggableArea()
+    -- bg:SetAsDraggableArea()
 
     -- TESTS
     Test.TestButtons()
