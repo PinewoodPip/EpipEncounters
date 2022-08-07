@@ -6,8 +6,6 @@ local Generic = Client.UI.Generic
 ---@field SetType fun(self, buttonType:integer)
 ---@field SetEnabled fun(self, enabled:boolean)
 ---@field IsEnabled fun(self):boolean
-
----@class GenericUI_Element_Button
 Client.UI.Generic.ELEMENTS.Button = {
     TYPES = {
         BROWN = 0,
@@ -19,23 +17,12 @@ Client.UI.Generic.ELEMENTS.Button = {
         CLOSE = 6,
     },
     Events = {
-        ---@type SubscribableEvent<GenericUI_Element_Event_MouseUp>
-        MouseUp = {},
-        ---@type SubscribableEvent<GenericUI_Element_Event_MouseDown>
-        MouseDown = {},
-        ---@type SubscribableEvent<GenericUI_Element_Event_MouseOver>
-        MouseOver = {},
-        ---@type SubscribableEvent<GenericUI_Element_Event_MouseOut>
-        MouseOut = {},
-        ---@type GenericUI_Element_Button_Event_Pressed
+        ---@type SubscribableEvent<GenericUI_Element_Button_Event_Pressed>
         Pressed = {},
-    },
-    EVENT_TYPES = {
-        PRESSED = "Button_Pressed",
     },
 }
 local Button = Client.UI.Generic.ELEMENTS.Button ---@class GenericUI_Element_Button
-Inherit(Button, Generic._Element)
+Generic.Inherit(Button, Generic._Element)
 
 ---------------------------------------------
 -- EVENTS

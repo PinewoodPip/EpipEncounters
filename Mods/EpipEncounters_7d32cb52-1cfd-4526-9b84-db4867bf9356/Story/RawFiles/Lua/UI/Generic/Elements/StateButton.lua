@@ -5,19 +5,24 @@ local Generic = Client.UI.Generic
 ---@field SetType fun(self, buttonType:integer)
 ---@field SetActive fun(self, active:boolean) Will not fire the StateChanged event.
 ---@field SetEnabled fun(self, enabled:boolean)
-
----@type GenericUI_Element_StateButton
 Client.UI.Generic.ELEMENTS.StateButton = {
     TYPES = {
         CHECKBOX = 0,
         LOCK = 1,
     },
-    EVENT_TYPES = {
-        STATE_CHANGED = "StateButton_StateChanged",
-    },
+    Events = {
+        StateChanged = {}, ---@type SubscribableEvent<GenericUI_Element_StateButton_Event_StateChanged>
+    }
 }
 local Button = Client.UI.Generic.ELEMENTS.StateButton
-Inherit(Button, Generic._Element)
+Generic.Inherit(Button, Generic._Element)
+
+---------------------------------------------
+-- EVENTS
+---------------------------------------------
+
+---@class GenericUI_Element_StateButton_Event_StateChanged
+---@field Active boolean
 
 ---------------------------------------------
 -- METHODS

@@ -5,13 +5,11 @@ local Generic = Client.UI.Generic
 ---@field SetFrame fun(self, width:number, height:number)
 ---@field SetMouseWheenEnabled fun(self, enabled:boolean)
 ---@field SetScrollbarSpacing fun(self, spacing:number) Must be called after SetFrame. TODO remove restriction
-
----@class GenericUI_Element_ScrollList
 Client.UI.Generic.ELEMENTS.ScrollList = {
-
+    Events = {},
 }
 local List = Client.UI.Generic.ELEMENTS.ScrollList
-Inherit(List, Generic.ELEMENTS.VerticalList)
+Generic.Inherit(List, Generic.ELEMENTS.VerticalList)
 
 ---------------------------------------------
 -- METHODS

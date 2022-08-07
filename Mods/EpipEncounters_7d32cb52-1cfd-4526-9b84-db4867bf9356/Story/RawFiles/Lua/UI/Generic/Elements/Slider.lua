@@ -3,7 +3,6 @@ local Generic = Client.UI.Generic
 
 ---@class GenericUI_Element_Slider : GenericUI_Element
 local Slider = {
-
     Events = {
         HandleReleased = {}, ---@type SubscribableEvent<GenericUI_Element_Slider_Event_HandleReleased>
     }

@@ -7,28 +7,18 @@ local Generic = Client.UI.Generic
 ---@field SetType fun(self, textType:integer)
 ---@field SetEditable fun(self, editable:boolean)
 ---@field SetRestrictedCharacters fun(self, restriction:string)
-
----@class GenericUI_Element_Text
 Client.UI.Generic.ELEMENTS.Text = {
     TYPES = {
         LEFT_ALIGN = 0,
         CENTER_ALIGN = 1,
     },
     Events = {
-        ---@type SubscribableEvent<GenericUI_Element_Event_MouseUp>
-        MouseUp = {},
-        ---@type SubscribableEvent<GenericUI_Element_Event_MouseDown>
-        MouseDown = {},
-        ---@type SubscribableEvent<GenericUI_Element_Event_MouseOver>
-        MouseOver = {},
-        ---@type SubscribableEvent<GenericUI_Element_Event_MouseOut>
-        MouseOut = {},
         ---@type SubscribableEvent<GenericUI_Element_Text_Event_Changed>
         Changed = {},
     },
 }
-local Text = Client.UI.Generic.ELEMENTS.Text
-Inherit(Text, Generic._Element)
+local Text = Client.UI.Generic.ELEMENTS.Text ---@class GenericUI_Element_Text
+Generic.Inherit(Text, Generic._Element)
 
 ---------------------------------------------
 -- EVENTS

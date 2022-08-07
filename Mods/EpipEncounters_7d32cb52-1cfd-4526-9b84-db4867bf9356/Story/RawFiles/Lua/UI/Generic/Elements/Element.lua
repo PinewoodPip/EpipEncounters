@@ -10,14 +10,10 @@ local Generic = Client.UI.Generic
 ---@class GenericUI_Element
 local _Element = Generic._Element
 _Element.Events = {
-    ---@type SubscribableEvent<GenericUI_Element_Event_MouseUp>
-    MouseUp = {},
-    ---@type SubscribableEvent<GenericUI_Element_Event_MouseDown>
-    MouseDown = {},
-    ---@type SubscribableEvent<GenericUI_Element_Event_MouseOver>
-    MouseOver = {},
-    ---@type SubscribableEvent<GenericUI_Element_Event_MouseOut>
-    MouseOut = {},
+    MouseUp = {}, ---@type SubscribableEvent<GenericUI_Element_Event_MouseUp>
+    MouseDown = {}, ---@type SubscribableEvent<GenericUI_Element_Event_MouseDown>
+    MouseOver = {}, ---@type SubscribableEvent<GenericUI_Element_Event_MouseOver>
+    MouseOut = {}, ---@type SubscribableEvent<GenericUI_Element_Event_MouseOut>
     RightClick = {}, ---@type SubscribableEvent<GenericUI_Element_Event_RightClick>
 }
 
@@ -34,7 +30,6 @@ _Element.Events = {
 ---@field ParentID string Empty string for elements in the root.
 ---@field Type string
 ---@field Tooltip (GenericUI_ElementTooltip|string)? Will be rendered upon the element being hovered. Strings are rendered as unformatted tooltips.
----@field EVENT_TYPES table<string, string>
 
 ---------------------------------------------
 -- EVENTS

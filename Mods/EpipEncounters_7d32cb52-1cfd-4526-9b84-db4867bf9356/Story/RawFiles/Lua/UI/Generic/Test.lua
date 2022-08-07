@@ -26,7 +26,7 @@ function Test.TestButtons()
 
         button:SetType(index)
         button:SetText(Text.Format(id, {Color = "ffffff", Size = 15}))
-        button:RegisterListener(_B.EVENT_TYPES.PRESSED, function()
+        button.Events.Pressed:Subscribe(function (_)
             button:SetEnabled(false)
         end)
         button:SetCenterInLists(true)
@@ -43,8 +43,8 @@ function Test.TestButtons()
 
         button:SetType(index)
         -- button:SetText(Text.Format(id, {Color = "ffffff", Size = 15}))
-        button:RegisterListener(_SB.EVENT_TYPES.STATE_CHANGED, function(state)
-            print("state changed", state)
+        button.Events.StateChanged:Subscribe(function (ev)
+            print("state changed", ev.Active)
         end)
     end
 

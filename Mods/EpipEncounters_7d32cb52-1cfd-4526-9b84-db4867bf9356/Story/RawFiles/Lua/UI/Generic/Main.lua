@@ -192,13 +192,13 @@ function Client.UI.Generic.Create(id)
 
     Generic.INSTANCES[uiOBject:GetTypeId()] = ui
 
-    ui:RegisterCallListener("elementMouseUp", Generic.OnElementMouseUp)
-    ui:RegisterCallListener("elementMouseDown", Generic.OnElementMouseDown)
-    ui:RegisterCallListener("elementMouseOver", Generic.OnElementMouseOver)
-    ui:RegisterCallListener("elementMouseOut", Generic.OnElementMouseOut)
-    ui:RegisterCallListener("elementRightClick", function(ev, stringID)
-        Generic.OnElementUICall(ev, stringID, "RightClick")
-    end)
+    -- Basic element events
+    Generic.ForwardUICall(ui, "elementMouseUp", "MouseUp")
+    Generic.ForwardUICall(ui, "elementMouseDown", "MouseDown")
+    Generic.ForwardUICall(ui, "elementMouseOver", "MouseOver")
+    Generic.ForwardUICall(ui, "elementMouseOut", "MouseOut")
+    Generic.ForwardUICall(ui, "elementRightClick", "RightClick")
+    
     ui:RegisterCallListener("ShowElementTooltip", Generic.OnElementShowTooltip)
     -- ui:RegisterCallListener("viewportChanged", Generic.OnViewportChanged)
 
@@ -206,14 +206,14 @@ function Client.UI.Generic.Create(id)
     Generic.ForwardUICall(ui, "Text_Changed", "Changed", {"Text"})
 
     -- Button
-    ui:RegisterCallListener("Button_Pressed", Generic.OnButtonPressed)
+    Generic.ForwardUICall(ui, "Button_Pressed", "Pressed")
 
     -- StateButton
-    ui:RegisterCallListener("StateButton_StateChanged", Generic.OnStateButtonStateChanged)
+    Generic.ForwardUICall(ui, "StateButton_StateChanged", "StateChanged", {"Active"})
 
     -- Slot
-    ui:RegisterCallListener("Slot_DragStarted", Generic.OnSlotDragStarted)
-    ui:RegisterCallListener("Slot_Clicked", Generic.OnSlotClicked)
+    Generic.ForwardUICall(ui, "Slot_DragStarted", "DragStarted")
+    Generic.ForwardUICall(ui, "Slot_Clicked", "Clicked")
 
     -- ComboBox
     ui:RegisterCallListener("ComboBox_ItemSelected", Generic.OnComboBoxItemSelected)
@@ -293,8 +293,9 @@ end
 ---@param ui GenericUI_Instance
 ---@param call string
 ---@param eventName string
----@param fields string[]
+---@param fields string[]?
 function Generic.ForwardUICall(ui, call, eventName, fields)
+    fields = fields or {}
     ui:RegisterCallListener(call, function(ev, id, ...)
         local element = ui:GetElementByID(id)
         if not element then return nil end

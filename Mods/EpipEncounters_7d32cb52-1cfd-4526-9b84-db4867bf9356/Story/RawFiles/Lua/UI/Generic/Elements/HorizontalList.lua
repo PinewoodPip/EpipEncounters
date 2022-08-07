@@ -2,13 +2,11 @@
 local Generic = Client.UI.Generic
 
 ---@class GenericUI_Element_HorizontalList : GenericUI_Element_VerticalList
-
----@type GenericUI_Element_HorizontalList
 Client.UI.Generic.ELEMENTS.HorizontalList = {
-
+    Events = {},
 }
 local List = Client.UI.Generic.ELEMENTS.HorizontalList
-Inherit(List, Generic.ELEMENTS.VerticalList)
+Generic.Inherit(List, Generic.ELEMENTS.VerticalList)
 
 ---------------------------------------------
 -- METHODS

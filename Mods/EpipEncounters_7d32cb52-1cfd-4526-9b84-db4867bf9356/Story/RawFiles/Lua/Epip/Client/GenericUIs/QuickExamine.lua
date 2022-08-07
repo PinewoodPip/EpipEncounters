@@ -215,7 +215,7 @@ local function Setup()
     local closeButton = panel:AddChild("Close", "Button")
     closeButton:SetType(Generic.ELEMENTS.Button.TYPES.CLOSE)
     closeButton:SetPosition(QuickExamine.WIDTH - closeButton:GetMovieClip().width, 0)
-    closeButton:RegisterListener(Generic.ELEMENTS.Button.EVENT_TYPES.PRESSED, function()
+    closeButton.Events.Pressed:Subscribe(function (_)
         ui:GetUI():Hide()
     end)
 
@@ -223,8 +223,8 @@ local function Setup()
     lockButton:SetType(Generic.ELEMENTS.StateButton.TYPES.LOCK)
     lockButton:SetActive(QuickExamine.IsLocked())
     lockButton:SetPosition(400 - 23 - 25, 2)
-    lockButton:RegisterListener(Generic.ELEMENTS.StateButton.EVENT_TYPES.STATE_CHANGED, function(state)
-        QuickExamine.lockCharacter = state
+    lockButton.Events.StateChanged:Subscribe(function (ev)
+        QuickExamine.lockCharacter = ev.Active
         QuickExamine.SaveData()
     end)
     lockButton.Tooltip = "Lock Character"

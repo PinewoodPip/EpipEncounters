@@ -12,10 +12,11 @@ Client.UI.Generic.ELEMENTS.TiledBackground = {
         BLACK = 1,
         FORMATTED_TOOLTIP = 2,
         NOTE = 3,
-    }
+    },
+    Events = {},
 }
 local BG = Generic.ELEMENTS.TiledBackground
-Inherit(BG, Generic._Element)
+Generic.Inherit(BG, Generic._Element)
 
 ---------------------------------------------
 -- METHODS
