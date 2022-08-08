@@ -195,8 +195,8 @@ function Client.UI.Generic.Create(id)
     -- Basic element events
     Generic.ForwardUICall(ui, "elementMouseUp", "MouseUp")
     Generic.ForwardUICall(ui, "elementMouseDown", "MouseDown")
-    Generic.ForwardUICall(ui, "elementMouseOver", "MouseOver")
-    Generic.ForwardUICall(ui, "elementMouseOut", "MouseOut")
+    ui:RegisterCallListener("elementMouseOver", Generic.OnElementMouseOver)
+    ui:RegisterCallListener("elementMouseOut", Generic.OnElementMouseOut)
     Generic.ForwardUICall(ui, "elementRightClick", "RightClick")
     
     ui:RegisterCallListener("ShowElementTooltip", Generic.OnElementShowTooltip)
@@ -384,7 +384,7 @@ Generic.OnTooltip = function(char, skill, tooltip)
         local element = Generic.CurrentTooltipElement.UI:GetElementByID(Generic.CurrentTooltipElement.ID)
 
         if element.Tooltip.Type == "Formatted" then
-            tooltip.Data = element.Tooltip.Data or {}
+            tooltip.Data = table.deepCopy(element.Tooltip.Data) or {}
         end
     end
 end
