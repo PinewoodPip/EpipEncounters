@@ -10,6 +10,9 @@ local CharacterSheet = {
     DEFAULT_LAYER = 9,
     DEFAULT_RENDER_ORDER = 11,
 
+    USE_LEGACY_EVENTS = false,
+    USE_LEGACY_HOOKS = false,
+
     ---@type SecondaryStatGroup
     SECONDARY_STAT_GROUPS = {
         BELOW_CHARACTER = 0,
@@ -26,6 +29,10 @@ local CharacterSheet = {
     },
     FILEPATH_OVERRIDES = {
         ["Public/Game/GUI/characterSheet.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/characterSheet.swf",
+    },
+
+    Events = {
+        HelmetToggled = {}, ---@type SubscribableEvent<CharacterSheetUI_Event_HelmetToggled>
     },
 }
 if IS_IMPROVED_HOTBAR then
@@ -60,6 +67,10 @@ Client.UI.CharacterSheet = CharacterSheet
 ---@class CharacterSheetUI_SecondaryStatUpdate : Hook
 ---@field stats SecondaryStatBase[]
 ---@field char EclCharacter
+
+---@class CharacterSheetUI_Event_HelmetToggled
+---@field Character EclCharacter
+---@field Active boolean
 
 ---------------------------------------------
 -- METHODS
@@ -162,6 +173,13 @@ local function OnUpdateArraySystem(ui, method)
 
     CharacterSheet.EncodeSecondaryStats(ui, stats)
 end
+
+CharacterSheet:RegisterCallListener("setHelmetOption", function (event, state)
+    CharacterSheet.Events.HelmetToggled:Throw({
+        Character = Client.GetCharacter(),
+        Active = state == 1,
+    })
+end, "After")
 
 ---------------------------------------------
 -- SETUP

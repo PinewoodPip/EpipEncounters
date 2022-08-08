@@ -181,7 +181,6 @@ end
 
 VanityDyes.Events.DyeUsed:RegisterListener(function (dye, item, character)
     if dye.Type == "EE" then
-        Vanity.ignoreNextUnEquip = true
 
         -- Net.PostToServer("EPIPENCOUNTERS_DYE", {
         --     Character = character.NetID,

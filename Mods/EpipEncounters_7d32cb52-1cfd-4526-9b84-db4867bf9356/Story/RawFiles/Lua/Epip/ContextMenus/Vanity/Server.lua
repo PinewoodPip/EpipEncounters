@@ -6,7 +6,7 @@ function Vanity.RevertAppearace(char, item)
     local _,originalTemplate = Osiris.DB_PIP_Vanity_OriginalTemplate:Get(item.MyGuid, nil)
 
     if originalTemplate then
-        Vanity.TransmogItem(char, item, originalTemplate)
+        Vanity.TransmogItem(char, item, originalTemplate, nil, false)
         Osi.ClearTag(item.MyGuid, "PIP_Vanity_Transmogged")
         Osiris.DB_PIP_Vanity_OriginalTemplate:Delete(item.MyGuid, nil)
 
@@ -18,7 +18,7 @@ function Vanity.RevertAppearace(char, item)
     end
 end
 
-function Vanity.TransmogItem(char, item, newTemplate, dye)
+function Vanity.TransmogItem(char, item, newTemplate, dye, keepIcon)
     -- TODO still try to dye if template is the same
     if not newTemplate or not item or item.RootTemplate.Id == newTemplate or newTemplate == "" then return nil end
 
@@ -39,10 +39,12 @@ function Vanity.TransmogItem(char, item, newTemplate, dye)
     local _, _, _, oldArtifactName = Osiris.DB_AMER_Artifacts:Get(oldTemplate.Name .. "_" .. oldTemplate.Id, nil, nil, nil)
 
     Osi.PROC_AMER_GEN_ObjectTransforming(item.RootTemplate.Name .. "_" .. item.MyGuid, template.Name .. "_" .. template.Id)
-    Osi.Transform(item.MyGuid, newTemplate, 0, 1, 0)
 
-    -- Re-equip if necessary
-    Osi.QRY_AMER_GEN_GetEquippedItemSlot(char.MyGuid, item.MyGuid)
+    if keepIcon then
+        Osi.TransformKeepIcon(item.MyGuid, newTemplate, 0, 1, 0)
+    else
+        Osi.Transform(item.MyGuid, newTemplate, 0, 1, 0)
+    end
 
     -- Apply new dye if specified.
     if dye then
@@ -55,10 +57,7 @@ function Vanity.TransmogItem(char, item, newTemplate, dye)
         Osi.SetTag(item.MyGuid, "PIP_FAKE_ARTIFACT")
     end
     
-    -- TODO add this check to the proc instead
-    if Osi.DB_AMER_GEN_OUTPUT_String:Get(nil)[1][1] ~= "None" then
-        Osi.PROC_PIP_ReEquipItem(char.MyGuid, item.MyGuid)
-    end
+    Vanity.RefreshAppearance(char)
 end
 
 function Vanity.GetTemplateInSlot(char, slot)
@@ -108,6 +107,16 @@ function Vanity.SetPersistentOutfit(char, slots, tag)
         currentPersistentOutfit[7],
         currentPersistentOutfit[8]
     )
+end
+
+---Apply a Polymorph status to refresh visuals without needing to re-equip. Credits to Luxen for the discovery!
+---@param char EsvCharacter
+function Vanity.RefreshAppearance(char)
+    Osi.ApplyStatus(char.MyGuid, "PIP_Vanity_Refresh", 0, 1, NULLGUID)
+
+    Timer.Start(0.2, function()
+        Net.PostToCharacter(char, "EPIPENCOUNTERS_Vanity_RefreshSheetAppearance")
+    end)
 end
 
 function Vanity.ClearPersistentOutfit(char, slots, tag)
@@ -189,24 +198,31 @@ Net.RegisterListener("EPIPENCOUNTERS_Vanity_Transmog_KeepAppearance", function(c
     end
 end)
 
--- TODO finish persistent outfit - there is an infinite loop issue with re-equipping.
-function StopIgnoreVanity()
-    Ext.Print("here")
-    Vanity.ignoreItemEquips = false
-end
+Net.RegisterListener("EPIPENCOUNTERS_Vanity_RefreshAppearance", function (_, payload)
+    local char = Character.Get(payload.CharacterNetID)
 
-function IgnoreVanity()
-    Ext.Print("here2")
-    Vanity.ignoreItemEquips = true
-end
+    Vanity.RefreshAppearance(char)
+end)
+
+Net.RegisterListener("EPIPENCOUNTERS_Vanity_Transmog_ToggleWeaponOverlayEffects", function(_, payload)
+    local item = Item.Get(payload.ItemNetID)
+    local hasTag = item:HasTag("DISABLE_WEAPON_EFFECTS")
+
+    if hasTag then
+        Osi.ClearTag(item.MyGuid, "DISABLE_WEAPON_EFFECTS")
+    else
+        Osi.SetTag(item.MyGuid, "DISABLE_WEAPON_EFFECTS")
+    end
+end)
 
 -- Transmog request.
 Net.RegisterListener("EPIPENCOUNTERS_VanityTransmog", function(cmd, payload)
     local char = Ext.GetCharacter(payload.Char)
     local item = Ext.GetItem(payload.Item)
     local template = payload.NewTemplate
+    local keepIcon = payload.KeepIcon == true
 
-    Vanity.TransmogItem(char, item, template)
+    Vanity.TransmogItem(char, item, template, nil, keepIcon)
 end)
 
 -- TODO MOVE ELSEWHERE
@@ -281,23 +297,17 @@ Utilities.Hooks.RegisterListener("ContextMenus_Dyes", "ItemBeingDyed", function(
     Vanity.ignoreItemEquips = true
 end)
 
--- Track new templates gained by players.
--- Ext.Osiris.RegisterListener("ItemTemplateAddedToCharacter", 3, "after", function(template, item, char)
-    -- local item = Ext.GetItem(item)
-    -- if #Osi.DB_IsPlayer:Get(char) > 0 and Item.IsDyeable(item) then
-    --     local slot = Item.GetItemSlot(item)
+Ext.Events.SessionLoaded:Subscribe(function (ev)
+    local stat = Stats.Get("StatusData", "PIP_Vanity_Refresh")
+    if not stat then
+        stat = Ext.Stats.Create("PIP_Vanity_Refresh", "StatusData")
+    end
+    
+    stat.StatusType = "POLYMORPHED"
+    stat.PolymorphResult = "820f165e-62f5-4de4-a739-6274cfac1c8e"
+    stat.InteractionDisabled = false
 
-    --     template = string.match(template, Data.Patterns.GUID_CAPTURE)
-
-    --     local data = Vanity.GetTemplateData(item)
-
-    --     Vanity.UnlockTemplate(template, data)
-
-    --     Net.Broadcast("EPIPENCOUNTERS_VanityTemplateFound", {
-    --         Template = template,
-    --         Data = data,
-    --     })
-
-    --     -- ParseFromFile()
-    -- end
--- end)
+    if Ext.IsServer() then
+        Ext.Stats.Sync("PIP_Vanity_Refresh", false)
+    end
+end)

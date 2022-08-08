@@ -6,7 +6,7 @@ local Transmog = {
     favoritedTemplates = {},
     activeCharacterTemplates = {},
     KEEP_APPEARANCE_TAG_PREFIX = "PIP_Vanity_Transmog_KeepAppearance_",
-    ignoreNextEquip = false,
+    keepIcon = false,
 
     BLOCKED_TEMPLATES = {
         -- Captain
@@ -145,11 +145,11 @@ end
 function Transmog.UpdateActiveCharacterTemplates()
     local char = Client.GetCharacter()
 
-    for i,slot in ipairs(Data.Game.SLOTS_WITH_VISUALS) do
+    for _,slot in ipairs(Data.Game.SLOTS_WITH_VISUALS) do
         local item = char:GetItemBySlot(slot)
 
         if item then
-            item = Ext.GetItem(item)
+            item = Item.Get(item)
 
             Transmog.activeCharacterTemplates[slot] = item.RootTemplate.Id
         else
@@ -175,6 +175,7 @@ function Transmog.TransmogItem(item, template)
             Char = Client.GetCharacter().NetID,
             Item = item.NetID,
             NewTemplate = template,
+            KeepIcon = Transmog.keepIcon;
         })
     
         -- Refresh UI
@@ -182,7 +183,6 @@ function Transmog.TransmogItem(item, template)
             -- We track this to update the UI immediately, without needing to wait for server.
             Vanity.currentItemTemplateOverride = template
             Vanity.Refresh()
-            Vanity.ignoreNextUnEquip = true
         end
     end
 end
@@ -270,8 +270,16 @@ function Tab:Render()
 
     Vanity.RenderItemDropdown()
 
+    -- Unfortunately, TransformKeepIcon is not persistent - thus this option is not very useful.
+    -- Vanity.RenderCheckbox("Vanity_KeepIcon", Text.Format("Keep Icon", {Color = Color.COLORS.BLACK}), Transmog.keepIcon, true)
+
     if item then
         local canTransmog = Transmog.CanTransmogItem(item)
+
+        -- Can toggle weapon overlay effects regardless of whether the item can be transmogged.
+        if Item.IsWeapon(item) then
+            Vanity.RenderCheckbox("Vanity_OverlayEffects", Text.Format("Elemental Effects", {Color = Color.COLORS.BLACK}), not item:HasTag("DISABLE_WEAPON_EFFECTS"), true)
+        end
 
         if canTransmog then
             local categories = Transmog.GetCategories(item)
@@ -291,7 +299,7 @@ function Tab:Render()
                 Vanity.RenderEntry(categoryID, data.Data.Name, true, isOpen)
 
                 if isOpen then
-                    for i,templateData in ipairs(data.Templates) do
+                    for _,templateData in ipairs(data.Templates) do
                         local icon = nil
                         local isEquipped = Vanity.IsTemplateEquipped(templateData.GUID)
 
@@ -323,7 +331,6 @@ end)
 
 Tab:RegisterListener(Vanity.Events.ButtonPressed, function(id)
     if id == "RevertTemplate" then
-        Vanity.ignoreNextUnEquip = true
         Net.PostToServer("EPIPENCOUNTERS_Vanity_RevertTemplate", {
             CharNetID = Client.GetCharacter().NetID,
             ItemNetID = Vanity.GetCurrentItem().NetID,
@@ -340,6 +347,16 @@ Tab:RegisterListener(Vanity.Events.CheckboxPressed, function(id, state)
         })
         
         Transmog.UpdateActiveCharacterTemplates()
+    elseif id == "Vanity_KeepIcon" then
+        Transmog.keepIcon = state
+    elseif id == "Vanity_OverlayEffects" then
+        Net.PostToServer("EPIPENCOUNTERS_Vanity_Transmog_ToggleWeaponOverlayEffects", {
+            ItemNetID = Vanity.GetCurrentItem().NetID,
+        })
+
+        Timer.Start(0.4, function()
+            Vanity.RefreshAppearance()
+        end)
     end
 end)
 
@@ -352,18 +369,16 @@ Net.RegisterListener("EPIPENCOUNTERS_ItemEquipped", function(cmd, payload)
     local item = Ext.GetItem(payload.ItemNetID)
 
     if char == Client.GetCharacter() then
-        if not Vanity.IsOpen() and not Transmog.ignoreNextEquip and Transmog.ShouldKeepAppearance(item) then
+        if not Vanity.IsOpen() and Transmog.ShouldKeepAppearance(item) then
             Transmog:DebugLog("Reapplying appearance.")
 
             Transmog.ReapplyAppearance(item)
-            Transmog.ignoreNextEquip = true
 
-            Timer.Start("", 0.5, function()
-                Transmog.ignoreNextEquip = false
+            Timer.Start("", 0.4, function()
                 Transmog.UpdateActiveCharacterTemplates()
             end)
         elseif Vanity.IsOpen() then
-            Timer.Start("", 0.5, function()
+            Timer.Start("", 0.4, function()
                 Transmog.UpdateActiveCharacterTemplates()
 
                 -- TODO implement this better...
@@ -380,6 +395,10 @@ GameState.Events.GameReady:Subscribe(function (e)
 end)
 
 Utilities.Hooks.RegisterListener("Client", "ActiveCharacterChanged", function()
+    Transmog.UpdateActiveCharacterTemplates()
+end)
+
+Net.RegisterListener("EPIPENCOUNTERS_Vanity_RefreshSheetAppearance", function(_, _)
     Transmog.UpdateActiveCharacterTemplates()
 end)
 

@@ -1,6 +1,4 @@
 
----@meta ContextClient, VanityUI
-
 -- Important lessons learnt:
 -- You cannot have mouse listeners on shapes, need to use sprites
 -- Depth 0 elements have 0 width/height
@@ -18,7 +16,6 @@ local Vanity = {
     oldContentHeight = 0,
     oldScrollY = 0,
     racialCategories = {},
-    ignoreNextUnEquip = false,
 
     ---@type table<string,VanityTemplate>
     TEMPLATES = {},
@@ -330,6 +327,7 @@ local Vanity = {
         InputChanged = {},
         ---@type VanityUI_Event_CheckboxPressed
         CheckboxPressed = {},
+        AppearanceReapplied = {Legacy = false}, ---@type SubscribableEvent<VanityUI_Event_AppearanceRefreshed>
     },
     Hooks = {
         ---@type VanityUI_Hook_GetEntryLabel
@@ -347,6 +345,8 @@ Vanity:Debug()
 ---------------------------------------------
 -- EVENTS / HOOKS
 ---------------------------------------------
+
+---@class VanityUI_Event_AppearanceRefreshed
 
 ---@class VanityUI_Event_EntryClicked : Event
 ---@field RegisterListener fun(self, listener:fun(tab:CharacterSheetCustomTab, id:string))
@@ -479,6 +479,19 @@ end
 
 function Vanity.GetCurrentItem()
     return Ext.GetItem(Client.GetCharacter():GetItemBySlot(Vanity.currentSlot))
+end
+
+---Refreshes the appearance of visuals on the active char by toggling their helmet preference (for character sheet) and applying a polymorph status (for world model). Credits to Luxen for the discovery!
+function Vanity.RefreshAppearance()
+    local char = Client.GetCharacter()
+
+    Net.PostToServer("EPIPENCOUNTERS_Vanity_RefreshAppearance", {
+        CharacterNetID = char.NetID,
+    })
+
+    Timer.Start(0.8, function(_)
+        Vanity.Events.AppearanceReapplied:Throw({})
+    end)
 end
 
 ---------------------------------------------
@@ -1077,6 +1090,17 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
+Net.RegisterListener("EPIPENCOUNTERS_Vanity_RefreshSheetAppearance", function(_, _)
+    local sheet = Client.UI.CharacterSheet
+    local char = Client.GetCharacter()
+    local hasHelm = char.PlayerData.HelmetOptionState
+    if hasHelm then hasHelm = 0 else hasHelm = 1 end
+
+    sheet:ExternalInterfaceCall("setHelmetOption", hasHelm)
+    if hasHelm == 0 then hasHelm = 1 else hasHelm = 0 end
+    sheet:ExternalInterfaceCall("setHelmetOption", hasHelm)
+end)
+
 Vanity:RegisterCallListener("copyFromElement", function(ev, id)
     local element = ev.UI:GetRoot().focusedElement
 
@@ -1136,11 +1160,7 @@ end)
 -- Close the UI when the selected item is unequipped and we're in the transmog menu.
 Server.RegisterOsirisListener("ItemUnEquipped", 2, function(item, char)
     if Vanity:IsVisible() and Vanity.currentTab and Ext.Entity.GetItem(item) == Vanity.GetCurrentItem() then
-        if Vanity.ignoreNextUnEquip then
-            Vanity.ignoreNextUnEquip = false
-        else
-            Timer.Start("PIP_VanityRefresh", 0.15, Vanity.Refresh)
-        end
+        Timer.Start("PIP_VanityRefresh", 0.15, Vanity.Refresh)
     end
 end)
 

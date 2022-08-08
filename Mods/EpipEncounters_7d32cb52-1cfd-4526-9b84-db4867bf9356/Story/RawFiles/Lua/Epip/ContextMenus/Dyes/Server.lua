@@ -56,12 +56,8 @@ Net.RegisterListener("EPIPENCOUNTERS_DyeItem", function(cmd, payload)
     })
 
     Osi.ItemAddDeltaModifier(item.MyGuid, deltaModName)
-
-    Osi.QRY_AMER_GEN_GetEquippedItemSlot(char.MyGuid, item.MyGuid)
     
-    if Osi.DB_AMER_GEN_OUTPUT_String:Get(nil)[1][1] ~= "None" then
-        Osi.PROC_PIP_ReEquipItem(char.MyGuid, item.MyGuid)
-    end
+    Epip.Features.Vanity.RefreshAppearance(char)
 
     Net.Broadcast("EPIP_CACHEDYE", {
         Dye = dyeStat,

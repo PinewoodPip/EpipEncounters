@@ -16,6 +16,13 @@ function Item.IsMeleeWeapon(item)
     return item and item.Stats and (Data.Game.MELEE_WEAPONS[item.Stats.WeaponType] or item.Stats.WeaponType == "None")
 end
 
+---Returns true if the item is a weapon (shields don't count!)
+---@param item Item
+---@return boolean
+function Item.IsWeapon(item)
+    return item and item.Stats and item.Stats.WeaponType ~= "None" and item.Stats.WeaponType ~= "Sentinel"
+end
+
 ---Returns whether item is a shield (satisfying a ShieldWeapon requirement)
 ---@param item Item
 ---@return boolean

@@ -175,16 +175,16 @@ end
 function Dyes.ApplyDye(item, dyeStatData)
     local itemNetID = item.NetID
 
-    Vanity.ignoreNextUnEquip = true
     -- item.ItemColorOverride = dyeStatData.Name
 
     Dyes.CreateDyeStats(item, dyeStatData)
 
     Net.PostToServer("EPIPENCOUNTERS_CreateDyeStat_ForPeers", {ItemNetID = itemNetID, Stat = dyeStatData})
 
-    Timer.Start("PIP_ApplyCustomDye", 0.35, function()
+    Timer.Start("PIP_ApplyCustomDye", 0.55, function()
         Net.PostToServer("EPIPENCOUNTERS_DyeItem", {NetID = itemNetID, DyeStat = dyeStatData, CharacterNetID = Client.GetCharacter().NetID})
     end)
+    Timer.Start(0.8, function(_) Dyes.UpdateActiveCharacterDyes() end)
 end
 
 ---Deletes a saved custom dye.
@@ -320,7 +320,7 @@ end
 function Dyes.UpdateActiveCharacterDyes()
     local char = Client.GetCharacter()
 
-    for i,slot in ipairs(Data.Game.SLOTS_WITH_VISUALS) do
+    for _,slot in ipairs(Data.Game.SLOTS_WITH_VISUALS) do
         local item = char:GetItemBySlot(slot)
 
         if item then
@@ -591,6 +591,10 @@ GameState.Events.GameReady:Subscribe(function ()
 end)
 
 Utilities.Hooks.RegisterListener("Client", "ActiveCharacterChanged", function()
+    Dyes.UpdateActiveCharacterDyes()
+end)
+
+Vanity.Events.AppearanceReapplied:Subscribe(function (_)
     Dyes.UpdateActiveCharacterDyes()
 end)
 
