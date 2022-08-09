@@ -231,6 +231,17 @@ local function OnSheetArrayUpdate(ui, method)
 
     Talents:RenderTalents(ui)
 end
+Client.UI.CharacterSheet:RegisterInvokeListener("updateArraySystem", function(ev)
+    local root = ev.UI:GetRoot()
+    local arr = root.talent_array
+
+    for i=1,128,1 do
+        local index = (i - 1) * 3
+        arr[index] = tostring(i)
+        arr[index + 1] = i
+        arr[index + 2] = false
+    end
+end)
 
 local function OnTalentAdded(ui, method, id, customTalentId)
     if customTalentId == "" then

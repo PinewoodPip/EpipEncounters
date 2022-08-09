@@ -1,12 +1,16 @@
 
-Game.Character = {
+---@class CharacterLib
+Character = {
     AI_PREFERRED_TAG = "AI_PREFERRED_TARGET",
     AI_UNPREFERRED_TAG = "AI_UNPREFERRED_TARGET",
-    AI_IGNORED_TAG = "AI_IGNORED_TARGET",
+    AI_IGNORED_TAG = "AI_IGNORED_TARGET", 
 }
----@class CharacterLib
-Character = Game.Character
+Game.Character = Character
 Epip.InitializeLibrary("Character", Character)
+
+---------------------------------------------
+-- METHODS
+---------------------------------------------
 
 ---Returns the current stacks on char, as well as lifetime. Queries the related status effects.
 ---@meta EE
@@ -23,7 +27,7 @@ function Character.GetStacks(char, type)
     end
 
     -- Search statuses
-    for i,status in pairs(char:GetStatuses()) do
+    for _,status in pairs(char:GetStatuses()) do
         local amount = status:match(pattern)
 
         if amount then
@@ -91,7 +95,7 @@ end
 function Character.GetPreparedInfusionLevel(char)
     local level = 0
 
-    for i,status in pairs(char:GetStatuses()) do
+    for _,status in pairs(char:GetStatuses()) do
         local match = status:match(Data.Patterns.SOURCE_INFUSING_STATUS)
         if match then
             level = tonumber(match)
@@ -189,7 +193,7 @@ function Character.GetRealRace(char)
     local pattern = "^REALLY_(.+)$"
     local race = nil
 
-    for i,tag in ipairs(char:GetTags()) do
+    for _,tag in ipairs(char:GetTags()) do
         local match = tag:match(pattern)
 
         if match then

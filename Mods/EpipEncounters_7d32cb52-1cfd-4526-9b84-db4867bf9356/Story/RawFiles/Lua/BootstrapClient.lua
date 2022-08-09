@@ -53,8 +53,8 @@ LOAD_ORDER = {
 
     -- Static libraries
     "Game.lua",
-    "Game/Characters/Shared.lua",
-    "Game/Characters/Client.lua",
+    {ScriptSet = "Utilities/Character"},
+    "Utilities/Character/Shared_Talents.lua",
     "Game/Items/Shared.lua",
     "Game/Items/Client.lua",
     "Game/Stats/Shared.lua",
