@@ -9,19 +9,21 @@ local Generic = Client.UI.Generic
 ---@field SetWarning fun(self, enabled:boolean)
 ---@field SetActive fun(self, active:boolean)
 ---@field SetHighlighted fun(self, highlighted:boolean)
+---@field Events GenericUI_Element_Slot_Events
 local Slot = {
-    Events = {
-        ---@type SubscribableEvent<GenericUI_Element_Slot_Event_DragStarted>
-        DragStarted = {},
-        ---@type SubscribableEvent<GenericUI_Element_Event_Clicked>
-        Clicked = {},
-    }
+    
 }
-Generic.Inherit(Slot, Generic.ELEMENTS.IggyIcon)
 
 ---------------------------------------------
 -- EVENTS
 ---------------------------------------------
+
+---@class GenericUI_Element_Slot_Events : GenericUI_Element_Events
+Slot.Events = {
+    DragStarted = {}, ---@type SubscribableEvent<GenericUI_Element_Slot_Event_DragStarted>
+    Clicked = {}, ---@type SubscribableEvent<GenericUI_Element_Event_Clicked>
+}
+Generic.Inherit(Slot, Generic.ELEMENTS.IggyIcon)
 
 ---@class GenericUI_Element_Slot_Event_DragStarted
 ---@class GenericUI_Element_Event_Clicked

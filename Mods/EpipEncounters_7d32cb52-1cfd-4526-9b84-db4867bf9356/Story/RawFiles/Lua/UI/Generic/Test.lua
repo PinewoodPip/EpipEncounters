@@ -21,10 +21,10 @@ function Test.TestButtons()
     local _B = Generic.ELEMENTS.Button
     local _SB = Generic.ELEMENTS.StateButton
 
-    for id,index in pairs(_B.TYPES) do
+    for _,id in pairs(_B.TYPES) do
         local button = list:AddChild(id, "Button") ---@type GenericUI_Element_Button
 
-        button:SetType(index)
+        button:SetType(id)
         button:SetText(Text.Format(id, {Color = "ffffff", Size = 15}))
         button.Events.Pressed:Subscribe(function (_)
             button:SetEnabled(false)
@@ -49,12 +49,15 @@ function Test.TestButtons()
     end
 
     -- Slider
-    local slider = list:AddChild("Slider", "Slider")
+    local slider = list:AddChild("Slider", "Slider") ---@type GenericUI_Element_Slider
+    slider.Events.HandleReleased:Subscribe(function (ev)
+        print(ev.Value)
+    end)
 end
 
 function Test.TestSlot()
     local list = Test:CreateElement("btnList", "VerticalList", Test.Container)
-    local slot = list:AddChild("testSlot", "Slot")
+    local slot = list:AddChild("testSlot", "Slot") ---@type GenericUI_Element_Slot
     slot = slot:GetMovieClip()
 
     -- slot:SetIcon("Skill_Warrior_PhoenixDive", 50, 50)

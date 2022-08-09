@@ -15,7 +15,10 @@ local Generic = Client.UI.Generic
 ---@field Tooltip (GenericUI_ElementTooltip|string)? Will be rendered upon the element being hovered. Strings are rendered as unformatted tooltips.
 ---@field SetPositionRelativeToParent fun(self:GenericUI_Element, position:"Center"|"TopLeft"|"TopRight"|"TopCenter"|"Left"|"Right"|"BottomLeft"|"Bottom"|"BottomRight", horizontalOffset:number?, verticalOffset:number?)
 ---@field Move fun(self:GenericUI_Element, x:number, y:number) Moves the element a certain amount of pixels from its current position.
+---@field Events GenericUI_Element_Events
 local _Element = Generic._Element
+
+---@class GenericUI_Element_Events
 _Element.Events = {
     MouseUp = {}, ---@type SubscribableEvent<GenericUI_Element_Event_MouseUp>
     MouseDown = {}, ---@type SubscribableEvent<GenericUI_Element_Event_MouseDown>

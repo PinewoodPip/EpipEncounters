@@ -7,14 +7,11 @@ local Generic = Client.UI.Generic
 ---@field SelectOption fun(self, ID:string)
 ---@field ClearOptions fun(self)
 ---@field SetOpenUpwards fun(self, openUpwards:boolean)
+---@field Events GenericUI_Element_ComboBox_Events
 local ComboBox = {
-    Events = {
-        ---@type SubscribableEvent<GenericUI_Element_ComboBox_Event_OptionSelected>
-        OptionSelected = {},
-    }
+
 }
 Client.UI.Generic.ELEMENTS.ComboBox = ComboBox
-Generic.Inherit(ComboBox, Generic._Element)
 
 ---@class GenericUI_Element_ComboBox_Option
 ---@field Label string
@@ -23,6 +20,12 @@ Generic.Inherit(ComboBox, Generic._Element)
 ---------------------------------------------
 -- EVENTS
 ---------------------------------------------
+
+---@class GenericUI_Element_ComboBox_Events : GenericUI_Element_Events
+ComboBox.Events = {
+    OptionSelected = {}, ---@type SubscribableEvent<GenericUI_Element_ComboBox_Event_OptionSelected>
+}
+Generic.Inherit(ComboBox, Generic._Element)
 
 ---@class GenericUI_Element_ComboBox_Event_OptionSelected
 ---@field Option GenericUI_Element_ComboBox_Option

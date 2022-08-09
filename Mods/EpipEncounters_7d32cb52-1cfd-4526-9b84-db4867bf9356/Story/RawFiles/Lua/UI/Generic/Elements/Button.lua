@@ -6,6 +6,7 @@ local Generic = Client.UI.Generic
 ---@field SetType fun(self, buttonType:"Brown"|"Red"|"RedBig"|"TextEdit"|"StatMinus"|"StatPlus"|"Close")
 ---@field SetEnabled fun(self, enabled:boolean)
 ---@field IsEnabled fun(self):boolean
+---@field Events GenericUI_Element_Button_Events
 Client.UI.Generic.ELEMENTS.Button = {
     TYPES = {
         BROWN = "Brown",
@@ -16,17 +17,18 @@ Client.UI.Generic.ELEMENTS.Button = {
         STAT_PLUS = "StatPlus",
         CLOSE = "Close",
     },
-    Events = {
-        ---@type SubscribableEvent<GenericUI_Element_Button_Event_Pressed>
-        Pressed = {},
-    },
 }
 local Button = Client.UI.Generic.ELEMENTS.Button ---@class GenericUI_Element_Button
-Generic.Inherit(Button, Generic._Element)
 
 ---------------------------------------------
 -- EVENTS
 ---------------------------------------------
+
+---@class GenericUI_Element_Button_Events : GenericUI_Element_Events
+Button.Events = {
+    Pressed = {}, ---@type SubscribableEvent<GenericUI_Element_Button_Event_Pressed>
+}
+Generic.Inherit(Button, Generic._Element)
 
 ---@class GenericUI_Element_Button_Event_Pressed
 

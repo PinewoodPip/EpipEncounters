@@ -7,22 +7,24 @@ local Generic = Client.UI.Generic
 ---@field SetType fun(self, textType:integer)
 ---@field SetEditable fun(self, editable:boolean)
 ---@field SetRestrictedCharacters fun(self, restriction:string)
+---@field Events GenericUI_Element_Text_Events
 Client.UI.Generic.ELEMENTS.Text = {
     TYPES = {
         LEFT_ALIGN = 0,
         CENTER_ALIGN = 1,
     },
-    Events = {
-        ---@type SubscribableEvent<GenericUI_Element_Text_Event_Changed>
-        Changed = {},
-    },
 }
 local Text = Client.UI.Generic.ELEMENTS.Text ---@class GenericUI_Element_Text
-Generic.Inherit(Text, Generic._Element)
 
 ---------------------------------------------
 -- EVENTS
 ---------------------------------------------
+
+---@class GenericUI_Element_Text_Events : GenericUI_Element_Events
+Text.Events = {
+    Changed = {}, ---@type SubscribableEvent<GenericUI_Element_Text_Event_Changed>
+}
+Generic.Inherit(Text, Generic._Element)
 
 ---@class GenericUI_Element_Text_Event_Changed
 ---@field Text string

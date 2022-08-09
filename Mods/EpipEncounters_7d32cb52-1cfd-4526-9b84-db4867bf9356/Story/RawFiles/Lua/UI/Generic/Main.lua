@@ -247,6 +247,7 @@ end
 ---@param tbl1 table
 ---@param tbl2 table
 function Generic.Inherit(tbl1, tbl2)
+    if not tbl1.Events then tbl1.Events = {} end
     if tbl2.Events then
         for name,_ in pairs(tbl2.Events) do
             tbl1.Events[name] = {}

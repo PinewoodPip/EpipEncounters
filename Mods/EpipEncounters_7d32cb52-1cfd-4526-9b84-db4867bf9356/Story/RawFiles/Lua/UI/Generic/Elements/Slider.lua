@@ -2,16 +2,20 @@
 local Generic = Client.UI.Generic
 
 ---@class GenericUI_Element_Slider : GenericUI_Element
+---@field Events GenericUI_Element_Slider_Events
 local Slider = {
-    Events = {
-        HandleReleased = {}, ---@type SubscribableEvent<GenericUI_Element_Slider_Event_HandleReleased>
-    }
+    Events = {},
 }
-Generic.Inherit(Slider, Generic._Element)
 
 ---------------------------------------------
 -- EVENTS
 ---------------------------------------------
+
+---@class GenericUI_Element_Slider_Events : GenericUI_Element_Events
+Slider.Events = {
+    HandleReleased = {}, ---@type SubscribableEvent<GenericUI_Element_Slider_Event_HandleReleased>
+}
+Generic.Inherit(Slider, Generic._Element)
 
 ---@class GenericUI_Element_Slider_Event_HandleReleased
 ---@field Value number
