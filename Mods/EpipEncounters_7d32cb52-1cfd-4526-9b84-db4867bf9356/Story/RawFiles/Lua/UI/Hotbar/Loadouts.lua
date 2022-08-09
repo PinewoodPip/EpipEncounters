@@ -59,19 +59,19 @@ function Client.UI.Hotbar.SaveLoadout(row, name)
     for i=1,Hotbar.GetSlotsPerRow(),1 do
         local slotIndex = startingIndex + i
         local slot = skillBar[slotIndex]
-
         ---@type HotbarLoadoutSlot
         local data = {
             Type = "None",
             ElementID = "",
         }
 
+        -- Saving items is not supported.
         if slot.Type ~= "Item" then
-            table.insert(loadout.Slots, {
-                Type = slot.Type,
-                ElementID = slot.SkillOrStatId,
-            })
+            data.Type = slot.Type
+            data.ElementID = slot.SkillOrStatId
         end
+
+        table.insert(loadout.Slots, data)
     end
 
     Hotbar.Loadouts[name] = loadout
