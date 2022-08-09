@@ -334,7 +334,7 @@ function GroupManager:__Setup()
         GroupManager.UI:Hide()
     end)
     createButton:SetCenterInLists(true)
-    createButton:SetType(1)
+    createButton:SetType("Red")
     createButton:SetText("Create", 4)
 
     content:SetElementSpacing(0)

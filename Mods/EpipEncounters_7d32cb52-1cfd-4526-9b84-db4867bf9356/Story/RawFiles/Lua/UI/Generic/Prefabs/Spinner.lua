@@ -115,7 +115,7 @@ function Spinner:_Setup(ui, parent, label)
 
     ---@type GenericUI_Element_Button
     local minusButton = list:AddChild(self:PrefixID("Minus"), "Button")
-    minusButton:SetType(4)
+    minusButton:SetType("StatMinus")
     minusButton:SetCenterInLists(true)
 
     local amountText = list:AddChild(self:PrefixID("AmountText"), "Text")
@@ -124,7 +124,7 @@ function Spinner:_Setup(ui, parent, label)
 
     ---@type GenericUI_Element_Button
     local plusButton = list:AddChild(self:PrefixID("Plus"), "Button")
-    plusButton:SetType(5)
+    plusButton:SetType("StatPlus")
     plusButton:SetCenterInLists(true)
 
     list:RepositionElements()

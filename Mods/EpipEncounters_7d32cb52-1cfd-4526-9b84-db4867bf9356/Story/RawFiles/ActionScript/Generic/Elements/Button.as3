@@ -81,27 +81,27 @@ package Elements
         public var _bg_StatPlus:MovieClip;
         public var _bg_Close:MovieClip;
 
-        public var buttonTypes:Array;
-        public var useDisabledOverylay:Array;
         public var useDisabledOverylayForCurrent:Boolean = false;
 
         // public var disabled_mc:MovieClip;
+
+        public var visualTypes:Object = null; // maps String -> Object{MovieClip:MovieClip, UseDisabledOverlay:Boolean}
         
         public function Button()
         {
             super();
 
-            this.buttonTypes = new Array();
-            this.useDisabledOverylay = new Array();
-            this.RegisterType(this._bg_Brown, true);
-            this.RegisterType(this._bg_Red, true);
-            this.RegisterType(this._bg_RedBig);
-            this.RegisterType(this._bg_TextEdit);
-            this.RegisterType(this._bg_StatMinus, true);
-            this.RegisterType(this._bg_StatPlus, true);
-            this.RegisterType(this._bg_Close, true);
+            this.visualTypes = new Object();
 
-            this.SetType(0);
+            this.RegisterType("Brown", this._bg_Brown, true);
+            this.RegisterType("Red", this._bg_Red, true);
+            this.RegisterType("RedBig", this._bg_RedBig);
+            this.RegisterType("TextEdit", this._bg_TextEdit);
+            this.RegisterType("StatMinus", this._bg_StatMinus, true);
+            this.RegisterType("StatPlus", this._bg_StatPlus, true);
+            this.RegisterType("Close", this._bg_Close, true);
+
+            this.SetType("Brown");
             this.SetEnabled(true);
             this.SetText("");
 
@@ -137,13 +137,16 @@ package Elements
             addEventListener(FocusEvent.FOCUS_OUT,this.onFocusLost);
         }
 
-        private function RegisterType(mc:MovieClip, useDisabledOverlay:Boolean = false) : *
+        private function RegisterType(ID:String, mc:MovieClip, useDisabledOverlay:Boolean = false) : *
         {
-            mc.visible = false;
-            mc.scaleX = 0;
-            mc.scaleY = 0;
-            this.useDisabledOverylay.push(useDisabledOverlay);
-            this.buttonTypes.push(mc);
+            var obj:Object = new Object();
+            obj.MovieClip = mc;
+            obj.UseDisabledOverlay = useDisabledOverlay;
+
+            this.removeChild(mc);
+            this.visualTypes[ID] = obj;
+
+            mc.stop();
         }
 
         public override function get elementType() : String
@@ -161,26 +164,31 @@ package Elements
             return !this.m_Disabled;
         }
 
-        public function SetType(buttonType:int) : *
+        public function SetType(buttonType:String) : *
         {
-            if (this.bg_mc)
+            var visualData:Object = this.visualTypes[buttonType];
+
+            if (visualData)
             {
-                this.bg_mc.visible = false;
-                this.bg_mc.scaleX = 0;
-                this.bg_mc.scaleY = 0;
+                if (this.bg_mc)
+                {
+                    this.removeChild(this.bg_mc);
+                }
+
+                this.bg_mc = visualData.MovieClip;
+
+                this.addChild(visualData.MovieClip);
+                this.setChildIndex(this.bg_mc, 0);
+
+                this.useDisabledOverylayForCurrent = visualData.UseDisabledOverlay;
+
+                this.SetState("Normal"); // TODO remember state?
+                this.SetText(this.text_mc._cachedText);
+                }
+            else
+            {
+                this.Log("SetType(): invalid type " + buttonType, 2);
             }
-
-            this.bg_mc = this.buttonTypes[buttonType];
-
-            this.useDisabledOverylayForCurrent = this.useDisabledOverylay[buttonType];
-
-            this.bg_mc.stop();
-            this.bg_mc.scaleX = 1;
-            this.bg_mc.scaleY = 1;
-            this.bg_mc.visible = true;
-
-            this.SetState("Normal"); // TODO remember state?
-            this.SetText(this.text_mc._cachedText);
         }
 
         public function SetText(text:String, textY:Number=0) : *

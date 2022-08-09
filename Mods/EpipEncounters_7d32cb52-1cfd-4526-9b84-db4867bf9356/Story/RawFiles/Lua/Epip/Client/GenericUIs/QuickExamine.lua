@@ -213,7 +213,7 @@ local function Setup()
     QuickExamine.ContentContainer = content
     
     local closeButton = panel:AddChild("Close", "Button")
-    closeButton:SetType(Generic.ELEMENTS.Button.TYPES.CLOSE)
+    closeButton:SetType("Close")
     closeButton:SetPosition(QuickExamine.WIDTH - closeButton:GetMovieClip().width, 0)
     closeButton.Events.Pressed:Subscribe(function (_)
         ui:GetUI():Hide()

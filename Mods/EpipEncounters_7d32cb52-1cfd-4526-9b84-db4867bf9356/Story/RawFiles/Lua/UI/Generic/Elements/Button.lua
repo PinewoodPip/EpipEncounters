@@ -3,18 +3,18 @@ local Generic = Client.UI.Generic
 
 ---@class GenericUI_Element_Button : GenericUI_Element
 ---@field SetText fun(self, text:string, textY:number?)
----@field SetType fun(self, buttonType:integer)
+---@field SetType fun(self, buttonType:"Brown"|"Red"|"RedBig"|"TextEdit"|"StatMinus"|"StatPlus"|"Close")
 ---@field SetEnabled fun(self, enabled:boolean)
 ---@field IsEnabled fun(self):boolean
 Client.UI.Generic.ELEMENTS.Button = {
     TYPES = {
-        BROWN = 0,
-        RED = 1,
-        RED_BIG = 2,
-        TEXT_EDIT = 3,
-        STAT_MINUS = 4,
-        STAT_PLUS = 5,
-        CLOSE = 6,
+        BROWN = "Brown",
+        RED = "Red",
+        RED_BIG = "RedBig",
+        TEXT_EDIT = "TextEdit",
+        STAT_MINUS = "StatMinus",
+        STAT_PLUS = "StatPlus",
+        CLOSE = "Close",
     },
     Events = {
         ---@type SubscribableEvent<GenericUI_Element_Button_Event_Pressed>
