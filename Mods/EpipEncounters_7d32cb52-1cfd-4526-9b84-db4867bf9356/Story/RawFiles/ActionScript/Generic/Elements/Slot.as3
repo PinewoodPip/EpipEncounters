@@ -8,6 +8,7 @@ package Elements
     import flash.text.TextField;
     import flash.events.MouseEvent;
     import fl.motion.easing.Quartic;
+    import LS_Classes.textEffect;
 
     public dynamic class Slot extends Element
     {
@@ -60,6 +61,8 @@ package Elements
             this.addEventListener(MouseEvent.MOUSE_UP, this.onMouseUp);
 
             this.SetCooldown(0);
+            
+            this.amount_mc.amount_txt.filters = textEffect.createStrokeFilter(1050888,1.4,1,1.8,3);
 
             this.addFrameScript(0, this.frame1);
 
