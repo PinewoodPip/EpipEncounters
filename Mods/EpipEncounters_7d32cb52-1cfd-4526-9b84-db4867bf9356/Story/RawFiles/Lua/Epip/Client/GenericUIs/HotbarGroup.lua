@@ -16,7 +16,7 @@ local GroupManager = {
     SAVE_FILENAME = "EpipEncounters_HotbarGroups.json",
     SAVE_VERSION = 0,
 }
-Epip.AddFeature("HotbarGroupManager", "HotbarGroupManager", GroupManager)
+Epip.RegisterFeature("HotbarGroupManager", GroupManager)
 
 ---------------------------------------------
 -- HOTBAR GROUP

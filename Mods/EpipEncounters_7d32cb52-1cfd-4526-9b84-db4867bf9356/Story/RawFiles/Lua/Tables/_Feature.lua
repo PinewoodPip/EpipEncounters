@@ -6,7 +6,8 @@
 ---------------------------------------------
 
 ---@class Feature
----@field Name string Used for logging, event handling. Do not set!
+---@field NAME string Used for logging, event handling. Do not set!
+---@field MOD_TABLE string
 ---@field CONTEXT Context Set automatically.
 ---@field Disabled boolean
 ---@field Logging integer Logging level.
@@ -39,7 +40,6 @@
 
 ---@class Feature
 local Feature = {
-    Name = "",
     Disabled = false,
     Logging = 0,
 
@@ -76,8 +76,8 @@ end
 ---@param data? Event
 ---@return Event
 function Feature:AddEvent(name, data)
-    local event = data or {Module = self.Name, Event = name}
-    event.Module = self.Name
+    local event = data or {Module = self.NAME, Event = name}
+    event.Module = self.NAME
     event.Event = name
 
     Inherit(event, _Event)
@@ -112,8 +112,8 @@ end
 ---@param data? Hook
 ---@return Hook
 function Feature:AddHook(name, data)
-    local hook = data or {Module = self.Name, Event = name}
-    hook.Module = self.Name
+    local hook = data or {Module = self.NAME, Event = name}
+    hook.Module = self.NAME
     hook.Event = name
 
     Inherit(hook, _Hook)
@@ -146,7 +146,7 @@ function Feature:Disable()
     self.Disabled = true
     if self._initialized then
         for old,new in pairs(self.FILEPATH_OVERRIDES) do
-            self:LogError(self.Name .. " cannot be disabled post-startup as it uses FILEPATH_OVERRIDES!")
+            self:LogError(self.NAME .. " cannot be disabled post-startup as it uses FILEPATH_OVERRIDES!")
             break
         end
     else
@@ -169,21 +169,21 @@ function Feature:OnFeatureInit() end
 ---@param event string
 ---@param handler function
 function Feature:RegisterListener(event, handler)
-    Utilities.Hooks.RegisterListener(self.Name, event, handler)
+    Utilities.Hooks.RegisterListener(self.NAME, event, handler)
 end
 
 ---Fire an event.
 ---@param event string
 ---@vararg any Event parameters, passed to listeners.
 function Feature:FireEvent(event, ...)
-    Utilities.Hooks.FireEvent(self.Name, event, ...)
+    Utilities.Hooks.FireEvent(self.NAME, event, ...)
 end
 
 ---Register a hook.
 ---@param event string
 ---@param handler function
 function Feature:RegisterHook(event, handler)
-    Utilities.Hooks.RegisterHook(self.Name, event, handler)
+    Utilities.Hooks.RegisterHook(self.NAME, event, handler)
 end
 
 ---Get a value from registered hook listeners.
@@ -191,7 +191,7 @@ end
 ---@param defaultValue any Default value, will be passed to the first listener.
 ---@vararg any Additional parameters (non-modifiable)
 function Feature:ReturnFromHooks(event, defaultValue, ...)
-    return Utilities.Hooks.ReturnFromHooks(self.Name, event, defaultValue, ...)
+    return Utilities.Hooks.ReturnFromHooks(self.NAME, event, defaultValue, ...)
 end
 
 ---Fire an event to all contexts and peers.
@@ -247,7 +247,7 @@ end
 ---@vararg any
 function Feature:DebugLog(...)
     if self.Logging == self.LOGGING_LEVEL.DEBUG and not IS_IMPROVED_HOTBAR then
-        Utilities._Log(self.Name, "", ...)
+        Utilities._Log(self.NAME, "", ...)
     end
 end
 
@@ -263,7 +263,7 @@ end
 ---@param msg any
 function Feature:Log(msg)
     if self.Logging <= self.LOGGING_LEVEL.ALL then
-        Utilities.Log(self.Name, msg)
+        Utilities.Log(self.NAME, msg)
     end
 end
 
@@ -279,7 +279,7 @@ end
 ---@param msg any
 function Feature:LogWarning(msg)
     if self.Logging <= self.LOGGING_LEVEL.WARN then
-        Utilities.LogWarning(self.Name, msg)
+        Utilities.LogWarning(self.NAME, msg)
     end
 end
 
@@ -292,5 +292,5 @@ end
 ---Log an error.
 ---@param msg any
 function Feature:LogError(msg)
-    Utilities.LogError(self.Name, msg)
+    Utilities.LogError(self.NAME, msg)
 end
