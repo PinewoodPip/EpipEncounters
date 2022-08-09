@@ -14,6 +14,9 @@ SubscribableEvent = {}
 ---@field StopPropagation fun(self:SubscribableEventParams) Stop the event from continuing on to other registered listeners.
 ---@field Stopped boolean?
 
+---An event with no parameters.
+---@class EmptyEvent
+
 local SubscribableEventParams = {
 	Stopped = false,
 	StopPropagation = function(self) self.Stopped = true end,
