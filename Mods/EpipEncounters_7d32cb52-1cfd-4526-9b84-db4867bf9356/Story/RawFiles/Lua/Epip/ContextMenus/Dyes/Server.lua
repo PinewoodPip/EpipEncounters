@@ -57,7 +57,7 @@ Net.RegisterListener("EPIPENCOUNTERS_DyeItem", function(cmd, payload)
 
     Osi.ItemAddDeltaModifier(item.MyGuid, deltaModName)
     
-    Epip.Features.Vanity.RefreshAppearance(char)
+    Epip.Features.Vanity.RefreshAppearance(char, true)
 
     Net.Broadcast("EPIP_CACHEDYE", {
         Dye = dyeStat,

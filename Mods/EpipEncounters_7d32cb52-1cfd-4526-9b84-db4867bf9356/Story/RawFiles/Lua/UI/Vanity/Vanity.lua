@@ -482,14 +482,16 @@ function Vanity.GetCurrentItem()
 end
 
 ---Refreshes the appearance of visuals on the active char by toggling their helmet preference (for character sheet) and applying a polymorph status (for world model). Credits to Luxen for the discovery!
-function Vanity.RefreshAppearance()
+---@param useAltStatus boolean
+function Vanity.RefreshAppearance(useAltStatus)
     local char = Client.GetCharacter()
 
     Net.PostToServer("EPIPENCOUNTERS_Vanity_RefreshAppearance", {
         CharacterNetID = char.NetID,
+        UseAltStatus = useAltStatus
     })
 
-    Timer.Start(0.8, function(_)
+    Timer.Start(0.4, function(_)
         Vanity.Events.AppearanceReapplied:Throw({})
     end)
 end

@@ -57,7 +57,7 @@ function Vanity.TransmogItem(char, item, newTemplate, dye, keepIcon)
         Osi.SetTag(item.MyGuid, "PIP_FAKE_ARTIFACT")
     end
     
-    Vanity.RefreshAppearance(char)
+    Vanity.RefreshAppearance(char, false)
 end
 
 function Vanity.GetTemplateInSlot(char, slot)
@@ -111,11 +111,16 @@ end
 
 ---Apply a Polymorph status to refresh visuals without needing to re-equip. Credits to Luxen for the discovery!
 ---@param char EsvCharacter
-function Vanity.RefreshAppearance(char)
-    Osi.ApplyStatus(char.MyGuid, "PIP_Vanity_Refresh", 0, 1, NULLGUID)
+---@param useAlternativeStatus boolean
+function Vanity.RefreshAppearance(char, useAlternativeStatus)
+    local status = "PIP_Vanity_Refresh"
+    local guid = char.MyGuid
+    if useAlternativeStatus then status = "PIP_Vanity_Refresh_Alt" end
+
+    Osi.ApplyStatus(guid, status, 0, 1, NULLGUID)
 
     Timer.Start(0.2, function()
-        Net.PostToCharacter(char, "EPIPENCOUNTERS_Vanity_RefreshSheetAppearance")
+        Net.PostToCharacter(guid, "EPIPENCOUNTERS_Vanity_RefreshSheetAppearance")
     end)
 end
 
@@ -201,7 +206,7 @@ end)
 Net.RegisterListener("EPIPENCOUNTERS_Vanity_RefreshAppearance", function (_, payload)
     local char = Character.Get(payload.CharacterNetID)
 
-    Vanity.RefreshAppearance(char)
+    Vanity.RefreshAppearance(char, payload.UseAltStatus)
 end)
 
 Net.RegisterListener("EPIPENCOUNTERS_Vanity_Transmog_ToggleWeaponOverlayEffects", function(_, payload)
@@ -298,16 +303,23 @@ Utilities.Hooks.RegisterListener("ContextMenus_Dyes", "ItemBeingDyed", function(
 end)
 
 Ext.Events.SessionLoaded:Subscribe(function (ev)
-    local stat = Stats.Get("StatusData", "PIP_Vanity_Refresh")
+    local stat, stat2 = Stats.Get("StatusData", "PIP_Vanity_Refresh"), Stats.Get("StatusData", "PIP_Vanity_Refresh_Alt")
     if not stat then
         stat = Ext.Stats.Create("PIP_Vanity_Refresh", "StatusData")
     end
+    if not stat2 then
+        stat2 = Ext.Stats.Create("PIP_Vanity_Refresh_Alt", "StatusData")
+    end
     
     stat.StatusType = "POLYMORPHED"
-    stat.PolymorphResult = "820f165e-62f5-4de4-a739-6274cfac1c8e"
-    stat.InteractionDisabled = false
+    stat2.StatusType = "POLYMORPHED"
+    stat.PolymorphResult = ""
+    stat2.PolymorphResult = "820f165e-62f5-4de4-a739-6274cfac1c8e" -- Used for dyes. Causes flickering but is necessary for the item color to update.
+    stat.DisableInteractions = "No"
+    stat2.DisableInteractions = "No"
 
     if Ext.IsServer() then
         Ext.Stats.Sync("PIP_Vanity_Refresh", false)
+        Ext.Stats.Sync("PIP_Vanity_Refresh_Alt", false)
     end
 end)

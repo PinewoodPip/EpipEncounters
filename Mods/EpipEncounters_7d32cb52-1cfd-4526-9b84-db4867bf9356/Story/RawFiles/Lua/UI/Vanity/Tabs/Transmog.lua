@@ -355,7 +355,7 @@ Tab:RegisterListener(Vanity.Events.CheckboxPressed, function(id, state)
         })
 
         Timer.Start(0.4, function()
-            Vanity.RefreshAppearance()
+            Vanity.RefreshAppearance(true)
         end)
     end
 end)
