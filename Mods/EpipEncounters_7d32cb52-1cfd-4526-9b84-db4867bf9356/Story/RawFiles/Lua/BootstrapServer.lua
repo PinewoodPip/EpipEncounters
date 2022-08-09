@@ -40,6 +40,7 @@ LOAD_ORDER = {
     "Data/Game.lua",
 
     "Utils.lua",
+    "Utilities/Vector.lua",
     "Utilities/Text.lua",
     "Utilities/Hooks.lua",
     "Utilities/Color.lua",

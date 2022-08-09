@@ -19,10 +19,6 @@
 ---@alias Keyword "ViolentStrike" | "VitalityVoid" | "Predator" | "Elementalist" | "Prosperity" | "Paucity" | "IncarnateChampion" | "Defiance" | "Occultist" | "Disintegrate" | "Wither" | "Centurion" | "Abeyance" | "Benevolence" | "Presence" | "Ward" | "Celestial" | "Purity" | "VolatileArmor" | "Voracity"
 ---@alias KeywordBoonType "Activator" | "Mutator"
 
----@class Vector2D
----@field x number
----@field y number
-
 ---@class ScriptDefinition
 ---@field WIP boolean If true, the script will only load in the "sudo" developer mode.
 ---@field Developer boolean If true, the script will only load in developer mode.
