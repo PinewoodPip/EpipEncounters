@@ -131,7 +131,7 @@ StatusConsole:RegisterCallListener("pipMaxAPUpdated", function(ev, amount)
     apHolder.apOverflow_mc.x = 503
     apHolder.apOverflow_mc.y = -7
     apHolder.apOverflow_mc.overflow_txt.x = -15
-    apHolder.apOverflow_mc.visible = character.Stats.CurrentAP > 20
+    apHolder.apOverflow_mc.visible = character and character.Stats.CurrentAP > 20
 end)
 
 StatusConsole:RegisterInvokeListener("setSourcePoints", function(ev, available)
