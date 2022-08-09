@@ -95,6 +95,96 @@ package Elements
             this.CENTER_IN_LIST = center;
         }
 
+        public function Move(x:Number, y:Number) : *
+        {
+            this.SetPosition(this.GetPositionX() + x, this.GetPositionY() + y);
+        }
+
+        public function GetPositionX() : Number
+        {
+            return this.x;
+        }
+
+        public function GetPositionY() : Number
+        {
+            return this.y;
+        }
+
+        public function SetPositionRelativeToParent(position:String, horizontalOffset:Number=0, verticalOffset:Number=0) : *
+        {
+            var parent:MovieClip = this.parent;
+
+            if (parent)
+            {
+                var parentWidth:Number = parent.width;
+                var parentHeight:Number = parent.height;
+                var success:Boolean = true;
+
+                switch (position)
+                {
+                    case "Center":
+                    {
+                        this.SetPosition(parentWidth/2 - this.width/2, parentHeight/2 - this.height/2);
+                        break;
+                    }
+                    case "TopLeft":
+                    {
+                        this.SetPosition(0, 0);
+                        break;
+                    }
+                    case "TopRight":
+                    {
+                        this.SetPosition(parentWidth - this.width, 0);
+                        break;
+                    }
+                    case "Left":
+                    {
+                        this.SetPosition(0, parentHeight/2 - this.height/2);
+                        break;
+                    }
+                    case "Right":
+                    {
+                        this.SetPosition(parentWidth - this.width, parentHeight/2 - this.height/2);
+                        break;
+                    }
+                    case "BottomLeft":
+                    {
+                        this.SetPosition(0, parentHeight - this.height);
+                        break;
+                    }
+                    case "BottomRight":
+                    {
+                        this.SetPosition(parentWidth - this.width, parentHeight - this.height);
+                        break;
+                    }
+                    case "Top":
+                    {
+                        this.SetPosition(parentWidth/2 - this.width/2, 0);
+                        break;
+                    }
+                    case "Bottom":
+                    {
+                        this.SetPosition(parentWidth/2 - this.width/2, parentHeight - this.height);
+                        break;
+                    }
+                    default:
+                    {
+                        this.Log("SetPositionRelativeToParent(): unsupported position " + position);
+                        success = false;
+                    }
+                }
+
+                if (success && (horizontalOffset != 0 || verticalOffset != 0))
+                {
+                    this.Move(horizontalOffset, verticalOffset);
+                }
+            }
+            else
+            {
+                this.Log("SetPositionRelativeToParent(): element has no parent.", 2);
+            }
+        }
+
         public function SetRotation(degrees:Number) : *
         {
             this.rotation = degrees;

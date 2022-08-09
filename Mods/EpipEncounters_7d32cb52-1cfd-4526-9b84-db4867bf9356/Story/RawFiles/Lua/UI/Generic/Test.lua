@@ -85,6 +85,29 @@ function Test.TestComboBox()
     combo:SetOpenUpwards(true)
 end
 
+function Test.TestPositioning()
+    local parent = Test.BG:AddChild("BGPositionTest", "TiledBackground")
+    parent:SetBackground(1, 600, 600)
+    parent:SetPosition(400, 20)
+
+    local positions = {
+        "Center",
+        "TopLeft",
+        "TopRight",
+        "Top",
+        "Left",
+        "Right",
+        "Bottom",
+        "BottomLeft",
+        "BottomRight",
+    }
+
+    for _,position in ipairs(positions) do
+        local btn = parent:AddChild("PositionTest_" .. position, "Button")
+        btn:SetPositionRelativeToParent(position, 0, 0)
+    end
+end
+
 function Test.SetupTests()
     local ui = Test:GetUI()
     local root = ui:GetRoot()
@@ -94,6 +117,7 @@ function Test.SetupTests()
     local bg = Test:CreateElement("tiledbgTest", "TiledBackground", "")
     local container = bg:AddChild("container", "VerticalList")
     Test.Container = container
+    Test.BG = bg
 
     ---@type GenericUI_Element_Text
     local text = Test:CreateElement("textTest", "Text", "tiledbgTest")
@@ -111,6 +135,7 @@ function Test.SetupTests()
     Test.TestButtons()
     Test.TestSlot()
     Test.TestComboBox()
+    Test.TestPositioning()
 
     container:RepositionElements()
 end
@@ -121,7 +146,7 @@ end
 
 Ext.Events.SessionLoaded:Subscribe(function(_)
     if Test:IsDebug() then
-        Timer.Start("", 1.4, function()
+        Timer.Start("", 1.6, function()
             Test.SetupTests()
         end)
     end

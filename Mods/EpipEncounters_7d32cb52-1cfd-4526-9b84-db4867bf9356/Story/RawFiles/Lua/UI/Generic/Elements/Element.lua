@@ -8,6 +8,13 @@ local Generic = Client.UI.Generic
 ---@alias GenericUI_ElementType "Empty"|"TiledBackground"|"Text"|"IggyIcon"|"Button"|"VerticalList"|"HorizontalList"|"ScrollList"|"StateButton"|"Divider"|"Slot"|"ComboBox"|"Slider"
 
 ---@class GenericUI_Element
+---@field UI GenericUI_Instance
+---@field ID string
+---@field ParentID string Empty string for elements in the root.
+---@field Type string
+---@field Tooltip (GenericUI_ElementTooltip|string)? Will be rendered upon the element being hovered. Strings are rendered as unformatted tooltips.
+---@field SetPositionRelativeToParent fun(self:GenericUI_Element, position:"Center"|"TopLeft"|"TopRight"|"TopCenter"|"Left"|"Right"|"BottomLeft"|"Bottom"|"BottomRight", horizontalOffset:number?, verticalOffset:number?)
+---@field Move fun(self:GenericUI_Element, x:number, y:number) Moves the element a certain amount of pixels from its current position.
 local _Element = Generic._Element
 _Element.Events = {
     MouseUp = {}, ---@type SubscribableEvent<GenericUI_Element_Event_MouseUp>
@@ -23,13 +30,6 @@ _Element.Events = {
 ---@field SkillID string For skill tooltips.
 ---@field ItemHandle EntityHandle For item tooltips. TODO implement
 ---@field Spacing number[]? Offset for tooltip placement, relative to cursor position.
-
----@class GenericUI_Element
----@field UI GenericUI_Instance
----@field ID string
----@field ParentID string Empty string for elements in the root.
----@field Type string
----@field Tooltip (GenericUI_ElementTooltip|string)? Will be rendered upon the element being hovered. Strings are rendered as unformatted tooltips.
 
 ---------------------------------------------
 -- EVENTS
@@ -137,3 +137,13 @@ function _Element:RegisterListener(eventType, handler)
         end
     end)
 end
+
+---@return number, number -- X and Y coordinates in local space.
+function _Element:GetPosition()
+    local mc = self:GetMovieClip()
+
+    return mc.GetPositionX(), mc.GetPositionY()
+end
+
+_Element.SetPositionRelativeToParent = Generic.ExposeFunction("SetPositionRelativeToParent")
+_Element.Move = Generic.ExposeFunction("Move")
