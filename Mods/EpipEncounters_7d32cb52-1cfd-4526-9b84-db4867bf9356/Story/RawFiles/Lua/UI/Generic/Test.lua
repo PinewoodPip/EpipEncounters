@@ -14,7 +14,7 @@ function Test.TestButtons()
     ---@type GenericUI_Element_VerticalList
     local list = Test:CreateElement("btnList", "VerticalList", Test.Container)
     list:SetPosition(0, 40)
-    local header = list:AddChild("header", "Text")
+    local header = list:AddChild("header", "GenericUI_Element_Text")
     header:SetText(Text.Format("Buttons and StateButtons", {Color = "ffffff"}))
     header:SetSize(400, 40)
 
@@ -34,12 +34,12 @@ function Test.TestButtons()
 
     list:SetSize(300, -1)
 
-    local div = list:AddChild("div", "Divider")
+    local div = list:AddChild("div", "GenericUI_Element_Divider")
     div:SetType(2)
     div:SetSize(400)
 
     for id,index in pairs(_SB.TYPES) do
-        local button = list:AddChild(id, "StateButton") ---@type GenericUI_Element_StateButton
+        local button = list:AddChild(id, "GenericUI_Element_StateButton")
 
         button:SetType(index)
         -- button:SetText(Text.Format(id, {Color = "ffffff", Size = 15}))

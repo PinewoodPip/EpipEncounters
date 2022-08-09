@@ -5,7 +5,7 @@ local Generic = Client.UI.Generic
 -- ELEMENT
 ---------------------------------------------
 
----@alias GenericUI_ElementType "Empty"|"TiledBackground"|"Text"|"IggyIcon"|"Button"|"VerticalList"|"HorizontalList"|"ScrollList"|"StateButton"|"Divider"|"Slot"|"ComboBox"|"Slider"
+---@alias GenericUI_ElementType "GenericUI_Element_Empty"|"GenericUI_Element_TiledBackground"|"GenericUI_Element_GenericUI_Element_Text"|"GenericUI_Element_IggyIcon"|"GenericUI_Element_Button"|"GenericUI_Element_VerticalList"|"GenericUI_Element_HorizontalList"|"GenericUI_Element_ScrollList"|"GenericUI_Element_StateButton"|"GenericUI_Element_Divider"|"GenericUI_Element_Slot"|"GenericUI_Element_ComboBox"|"GenericUI_Element_Slider"
 
 ---@class GenericUI_Element
 ---@field UI GenericUI_Instance
@@ -54,21 +54,10 @@ function _Element:GetMovieClip()
     return self.UI:GetMovieClipByID(self.ID)
 end
 
+---@generic T
 ---@param id string
----@param elementType GenericUI_ElementType
----@return GenericUI_Element?
----@overload fun(self, id:string, elementType:"Empty"):GenericUI_Element_Empty
----@overload fun(self, id:string, elementType:"TiledBackground"):GenericUI_Element_TiledBackground
----@overload fun(self, id:string, elementType:"Text"):GenericUI_Element_Text
----@overload fun(self, id:string, elementType:"IggyIcon"):GenericUI_Element_IggyIcon
----@overload fun(self, id:string, elementType:"Button"):GenericUI_Element_Button
----@overload fun(self, id:string, elementType:"VerticalList"):GenericUI_Element_VerticalList
----@overload fun(self, id:string, elementType:"HorizontalList"):GenericUI_Element_HorizontalList
----@overload fun(self, id:string, elementType:"ScrollList"):GenericUI_Element_ScrollList
----@overload fun(self, id:string, elementType:"StateButton"):GenericUI_Element_StateButton
----@overload fun(self, id:string, elementType:"Divider"):GenericUI_Element_Divider
----@overload fun(self, id:string, elementType:"Slot"):GenericUI_Element_Slot
----@overload fun(self, id:string, elementType:"ComboBox"):GenericUI_Element_ComboBox
+---@param elementType `T`|GenericUI_ElementType
+---@return `T`
 function _Element:AddChild(id, elementType)
     return self.UI:CreateElement(id, elementType, self)
 end

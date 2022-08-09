@@ -58,22 +58,13 @@ function _Instance:GetMovieClipByID(id)
     return self:GetRoot().elements[id]
 end
 
----@overload fun(self, id:string, elementType:"Empty", parentID:string|GenericUI_Element?):GenericUI_Element_Empty
----@overload fun(self, id:string, elementType:"TiledBackground", parentID:string|GenericUI_Element?):GenericUI_Element_TiledBackground
----@overload fun(self, id:string, elementType:"Text", parentID:string|GenericUI_Element?):GenericUI_Element_Text
----@overload fun(self, id:string, elementType:"IggyIcon", parentID:string|GenericUI_Element?):GenericUI_Element_IggyIcon
----@overload fun(self, id:string, elementType:"Button", parentID:string|GenericUI_Element?):GenericUI_Element_Button
----@overload fun(self, id:string, elementType:"VerticalList", parentID:string|GenericUI_Element?):GenericUI_Element_VerticalList
----@overload fun(self, id:string, elementType:"HorizontalList", parentID:string|GenericUI_Element?):GenericUI_Element_HorizontalList
----@overload fun(self, id:string, elementType:"ScrollList", parentID:string|GenericUI_Element?):GenericUI_Element_ScrollList
----@overload fun(self, id:string, elementType:"StateButton", parentID:string|GenericUI_Element?):GenericUI_Element_StateButton
----@overload fun(self, id:string, elementType:"Divider", parentID:string|GenericUI_Element?):GenericUI_Element_Divider
----@overload fun(self, id:string, elementType:"Slot", parentID:string|GenericUI_Element?):GenericUI_Element_Slot
----@overload fun(self, id:string, elementType:"ComboBox", parentID:string|GenericUI_Element?):GenericUI_Element_ComboBox
----@param elementType GenericUI_ElementType
+---@generic T
+---@param id string
+---@param elementType `T`|GenericUI_ElementType
 ---@param parentID string|GenericUI_Element? Defaults to root of the MainTimeline.
----@return GenericUI_Element? Nil in case of failure (ex. invalid type).
+---@return `T`
 function _Instance:CreateElement(id, elementType, parentID)
+    elementType = elementType:gsub("GenericUI_Element_", "")
     local element = nil ---@type GenericUI_Element
     local elementTable = Generic.ELEMENTS[elementType]
     local root = self:GetRoot()
