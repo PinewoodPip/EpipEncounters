@@ -561,7 +561,7 @@ local function OnButtonPressed(ui, method, id, elementID, handle, amountTxt)
 
         -- Can specify a net msg to auto-post, eliminating the need to create handlers for simple commands
         if elementData.netMsg then
-            local msg = {NetID = ContextMenu.GetCurrentEntity().NetID, ClientCharacterNetID = Client.GetCharacter().NetID}
+            local msg = {NetID = ContextMenu.GetCurrentEntity().NetID, ClientCharacterNetID = Client.GetCharacter().NetID, Params = elementData.params}
 
             -- If the element is a checkbox, also send new state
             if elementData.type == "checkbox" then

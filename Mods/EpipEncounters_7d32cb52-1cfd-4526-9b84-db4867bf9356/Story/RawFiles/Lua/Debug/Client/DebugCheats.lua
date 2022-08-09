@@ -34,6 +34,23 @@ local MessageBox = Client.UI.MessageBox
 
 local FLEXSTAT_CHEATS = {}
 
+-- Talents
+local TalentMenu = {}
+for id,data in pairs(Character.Talents) do
+    table.insert(TalentMenu, {
+        id = id,
+        text = data:GetName(),
+        type = "checkbox",
+        eventIDOverride = "epip_Cheats_AddTalent",
+        netMsg = "EPIPENCOUNTERS_Cheats_AddTalent",
+        checked = false,
+        params = {ID = id},
+    })
+end
+table.sort(TalentMenu, function (a, b)
+    return a.text < b.text
+end)
+
 for id,data in pairs(Data.Game.FlexStats) do
 
     -- organize by subtype when one is defined
@@ -104,6 +121,7 @@ ContextMenu.RegisterMenuHandler("epip_Cheats", function(char)
                 {id = "epip_Cheats_Stats_FlexStatSubMenu_Generics", type = "subMenu", text = "Add FlexStat...", subMenu = "epip_Cheats_Stats_FlexStats_Generic"},
                 {id = "epip_Cheats_Stats_FlexStatSubMenu_Attributes", type = "subMenu", text = "Add Attribute...", subMenu = "epip_Cheats_Stats_FlexStats_Attribute"},
                 {id = "epip_Cheats_Stats_FlexStatSubMenu_Abilities", type = "subMenu", text = "Add Ability...", subMenu = "epip_Cheats_Stats_FlexStats_Abilities"},
+                {id = "epip_Cheats_Stats_Talents", type = "subMenu", text = "Add Talents...", subMenu = "epip_Cheats_Stats_Talents"},
                 -- {id = "epip_Cheats_Stats_FlexStatSubMenu_Immunities", type = "subMenu", text = "Add Immunity FlexStat...", subMenu = "epip_Cheats_Stats_FlexStats_Immunities"},
 
                 {id = "epip_Cheats_SpecialLogic", type = "button", text = "Add SpecialLogic"},
@@ -155,6 +173,23 @@ ContextMenu.RegisterMenuHandler("epip_Cheats_Stats_FlexStats_Abilities", functio
         menu = {
             id = "epip_Cheats_Stats_FlexStats_Abilities",
             entries = FLEXSTAT_CHEATS.Ability
+        }
+    })
+end)
+
+-- Talents submenu
+ContextMenu.RegisterMenuHandler("epip_Cheats_Stats_Talents", function()
+    local char = Client.GetCharacter()
+
+    -- Refresh checked state
+    for _,entry in ipairs(TalentMenu) do
+        entry.checked = char.Stats["TALENT_" .. entry.params.ID]
+    end
+
+    ContextMenu.AddSubMenu({
+        menu = {
+            id = "epip_Cheats_Stats_Talents",
+            entries = TalentMenu,
         }
     })
 end)
@@ -370,6 +405,19 @@ Client.UI.OptionsInput.Events.ActionExecuted:RegisterListener(function (action, 
         end
     end
 end)
+
+-- For testing talent tooltips.
+-- Client.UI.CharacterSheet:RegisterInvokeListener("updateArraySystem", function(ev)
+--     local root = ev.UI:GetRoot()
+--     local arr = root.talent_array
+
+--     for i=1,128,1 do
+--         local index = (i - 1) * 3
+--         arr[index] = tostring(i)
+--         arr[index + 1] = i
+--         arr[index + 2] = false
+--     end
+-- end)
 
 MessageBox.RegisterMessageListener("epip_Cheats_Teleport", MessageBox.Events.InputSubmitted, function(text, id, data)
     Net.PostToServer("EPIP_CHEATS_TELEPORTTO", {NetID = data.NetID, TargetGUID = text})

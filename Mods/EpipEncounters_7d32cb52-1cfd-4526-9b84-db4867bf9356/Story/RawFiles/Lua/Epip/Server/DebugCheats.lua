@@ -170,6 +170,19 @@ Net.RegisterListener("EPIP_CHEATS_ITEMTEMPLATE", function(cmd, payload)
     Osi.ItemTemplateAddTo(template, char.MyGuid, tonumber(payload.Amount), 1)
 end)
 
+-- Toggle talents.
+Net.RegisterListener("EPIPENCOUNTERS_Cheats_AddTalent", function(_, payload)
+    local active = payload.State
+    local talent = payload.Params.ID
+    local char = Character.Get(payload.NetID)
+
+    if active then
+        Osi.CharacterAddTalent(char.MyGuid, talent)
+    else
+        Osi.CharacterRemoveTalent(char.MyGuid, talent)
+    end
+end)
+
 -- Godmode/Pipmode: Infinite AP, resets cooldowns, RESISTDEATH.
 Net.RegisterListener("EPIP_CHEATS_INFINITEAP", function(cmd, payload)
     local char = Ext.GetCharacter(payload.NetID)
