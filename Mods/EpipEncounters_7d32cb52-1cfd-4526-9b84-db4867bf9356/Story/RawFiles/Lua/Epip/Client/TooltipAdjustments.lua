@@ -651,6 +651,13 @@ function TooltipAdjustments.AddRangeDeltamodDisplay(item, tooltip)
     element.Value = string.format("%sm + %sm", Text.RemoveTrailingZeros(amount), weaponBoostString)
 end
 
+-- Show talent IDs in Talent tooltips.
+Game.Tooltip.RegisterListener("Talent", nil, function(_, talentID, tooltip)
+    if Epip.IsDeveloperMode() then
+        table.insert(tooltip.Data, 1, {Type = "Engraving", Label = Text.Format("ID: %s", {FormatArgs = {talentID}, Color = Color.COLORS.GREEN})})
+    end
+end)
+
 -- Replace damage paramater with the damage multiplier if the modifier key is being held.
 function TooltipAdjustments.TranslateSkillMultipliers(event)
     local params = event.Params
