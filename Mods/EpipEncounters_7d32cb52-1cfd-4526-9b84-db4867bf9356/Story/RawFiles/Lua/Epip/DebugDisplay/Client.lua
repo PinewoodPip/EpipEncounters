@@ -3,10 +3,52 @@ local Generic = Client.UI.Generic
 
 ---@class Feature_DebugDisplay
 local DebugDisplay = Epip.GetFeature("EpipEncounters", "DebugDisplay")
+DebugDisplay.TrackedModVersions = {
+    {GUID = Mod.GUIDS.EPIP_ENCOUNTERS, Name = "Epip"},
+    {GUID = Mod.GUIDS.EE_CORE, Name = "Core"},
+    {GUID = Mod.GUIDS.EE_ORIGINS, Name = "Origins"},
+    {GUID = Mod.GUIDS.EE_DERPY, Name = "Derpy's"},
+}
 
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
+
+function DebugDisplay.UpdateModVersions()
+    local element = DebugDisplay.ModVersionText
+
+    local text = ""
+    for i,data in ipairs(DebugDisplay.TrackedModVersions) do
+        local mod = Ext.Mod.GetMod(data.GUID)
+
+        if mod then
+            local modVer = DebugDisplay.GetModVersionDisplay(mod)
+
+            text = text .. Text.Format("%s: %s", {FormatArgs = {data.Name, modVer}})
+
+            if i ~= #DebugDisplay.TrackedModVersions then
+                text = text .. "\n"
+            end
+        end
+    end
+
+    element:SetText(text)
+end
+
+---@param mod Module
+---@return string
+function DebugDisplay.GetModVersionDisplay(mod)
+    local major, minor, revision, build = Mod.GetStoryVersion(mod.Info.ModuleUUID)
+    local display = ""
+
+    if major > 9 or minor > 9 or revision > 9 or build > 9 then
+        display = Text.Format("v%s.%s.%s.%s", {FormatArgs = {major, minor, revision, build}})
+    else
+        display = Text.Format("v%s%s%s%s", {FormatArgs = {major, minor, revision, build}})
+    end
+
+    return display
+end
 
 ---@param ticks integer
 function DebugDisplay.SetServerTicks(ticks)
@@ -61,7 +103,7 @@ function DebugDisplay:__Setup()
     local container = bg:AddChild("Container", "GenericUI_Element_VerticalList")
     local tickCounter = container:AddChild("TickCounter", "GenericUI_Element_Text")
     tickCounter:SetType(0)
-    tickCounter:SetSize(500, 30)
+    tickCounter:SetSize(500, 25)
 
     Ext.Events.Tick:Subscribe(function (ev)
         DebugDisplay.SetClientTicks(#DebugDisplay.ticks)
@@ -70,7 +112,11 @@ function DebugDisplay:__Setup()
     
     local serverTickCounter = container:AddChild("ServerTickCounter", "GenericUI_Element_Text")
     serverTickCounter:SetType(0)
-    serverTickCounter:SetSize(500, 30)
+    serverTickCounter:SetSize(500, 25)
+
+    local modVersionText = container:AddChild("ModVersionLabel", "GenericUI_Element_Text")
+    modVersionText:SetType(0)
+    modVersionText:SetSize(500, 100)
 
     local uiObject = ui:GetUI()
     uiObject.SysPanelSize = {200, 300}
@@ -81,4 +127,7 @@ function DebugDisplay:__Setup()
     DebugDisplay.UI = ui
     DebugDisplay.ClientTickCounter = tickCounter
     DebugDisplay.ServerTickCounter = serverTickCounter
+    DebugDisplay.ModVersionText = modVersionText
+
+    DebugDisplay.UpdateModVersions()
 end
