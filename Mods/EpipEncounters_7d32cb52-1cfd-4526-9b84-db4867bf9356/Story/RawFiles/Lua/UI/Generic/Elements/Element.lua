@@ -5,7 +5,7 @@ local Generic = Client.UI.Generic
 -- ELEMENT
 ---------------------------------------------
 
----@alias GenericUI_ElementType "GenericUI_Element_Empty"|"GenericUI_Element_TiledBackground"|"GenericUI_Element_GenericUI_Element_Text"|"GenericUI_Element_IggyIcon"|"GenericUI_Element_Button"|"GenericUI_Element_VerticalList"|"GenericUI_Element_HorizontalList"|"GenericUI_Element_ScrollList"|"GenericUI_Element_StateButton"|"GenericUI_Element_Divider"|"GenericUI_Element_Slot"|"GenericUI_Element_ComboBox"|"GenericUI_Element_Slider"
+---@alias GenericUI_ElementType "GenericUI_Element_Empty"|"GenericUI_Element_TiledBackground"|"GenericUI_Element_Text"|"GenericUI_Element_IggyIcon"|"GenericUI_Element_Button"|"GenericUI_Element_VerticalList"|"GenericUI_Element_HorizontalList"|"GenericUI_Element_ScrollList"|"GenericUI_Element_StateButton"|"GenericUI_Element_Divider"|"GenericUI_Element_Slot"|"GenericUI_Element_ComboBox"|"GenericUI_Element_Slider"
 
 ---@class GenericUI_Element
 ---@field UI GenericUI_Instance

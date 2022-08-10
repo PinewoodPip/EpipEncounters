@@ -37,8 +37,6 @@
 ---@field RawLog fun(self, ...:any)
 ---@field LogWarning fun(self, msg)
 ---@field LogError fun(self, msg)
-
----@class Feature
 local Feature = {
     Disabled = false,
     Logging = 0,
@@ -57,6 +55,7 @@ local Feature = {
     FILEPATH_OVERRIDES = {},
     USE_LEGACY_EVENTS = true,
     USE_LEGACY_HOOKS = true,
+    DEVELOPER_ONLY = false,
 }
 _Feature = Feature
 

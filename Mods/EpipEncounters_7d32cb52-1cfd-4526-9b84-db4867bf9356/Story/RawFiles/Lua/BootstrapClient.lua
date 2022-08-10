@@ -211,6 +211,7 @@ LOAD_ORDER = {
     {ScriptSet = "Epip/Greatforge/DrillSockets"},
     {ScriptSet = "Epip/Greatforge/Engrave"},
     {ScriptSet = "Epip/Encumbrance", Developer = true,},
+    {ScriptSet = "Epip/DebugDisplay", Developer = true,},
 
     "Epip/Client/GenericUIs/QuickExamine.lua",
     "Epip/Client/GenericUIs/SaveLoadOverlay.lua",

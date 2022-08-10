@@ -235,14 +235,15 @@ local function Setup()
 end
 
 function QuickExamine:__Setup()
+    local startupDelay = 0.1 -- Required for setPosition to work.
     QuickExamine.UI = Generic.Create("PIP_QuickExamine")
 
     -- Delayed setup to catch errors
-    if Epip.IsDeveloperMode(true) then
-        Timer.Start("", 1.4, function()
-            Setup()
-        end)
-    else
-        Setup()
+    if Epip.IsDeveloperMode(true) and false then
+        startupDelay = 2
     end
+
+    Timer.Start(startupDelay, function()
+        Setup()
+    end)
 end

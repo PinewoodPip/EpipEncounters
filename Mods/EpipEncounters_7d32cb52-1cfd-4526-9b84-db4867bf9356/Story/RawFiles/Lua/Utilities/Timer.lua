@@ -174,7 +174,7 @@ Ext.Events.Tick:Subscribe(function()
     for i=#Timer.activeTimers,1,-1 do
         local timer = Timer.activeTimers[i]
 
-        if timer.RepeatCount >= timer.MaxRepeatCount then
+        if timer.RepeatCount >= timer.MaxRepeatCount and timer.MaxRepeatCount >= 0 then
             Timer.Remove(timer)
         end
     end

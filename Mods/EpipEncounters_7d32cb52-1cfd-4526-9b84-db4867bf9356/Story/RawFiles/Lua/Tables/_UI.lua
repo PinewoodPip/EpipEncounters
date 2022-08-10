@@ -134,6 +134,22 @@ function BaseUI:Show()
     end
 end
 
+---@param pos1 string
+---@param pos2 string
+---@param target string? Defaults to "screen"
+---@param delay number? Defaults to 0. Useful while initializing the UI, as the call does not work during the first few ticks of its existence.
+function BaseUI:SetPosition(pos1, pos2, target, delay)
+    target = target or "screen"
+    
+    if delay then
+        Timer.Start(delay, function (_)
+            self:ExternalInterfaceCall("setPosition", pos1, target, pos2)
+        end)
+    else
+        self:ExternalInterfaceCall("setPosition", pos1, target, pos2)
+    end
+end
+
 ---Shorthand for UIObject:Hide()
 function BaseUI:Hide()
     local ui = self:GetUI()
