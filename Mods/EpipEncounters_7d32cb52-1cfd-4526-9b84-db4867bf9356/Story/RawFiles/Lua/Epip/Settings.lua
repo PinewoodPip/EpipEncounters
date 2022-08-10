@@ -1,11 +1,12 @@
 
+---@param name string
+---@return OptionsSettingsOption
+local function CreateHeader(name)
+    return {ID = "Header_" .. name, Type = "Header", Label = Text.Format(name, {Color = "7E72D6", Size = 23})}
+end
+
 ---@type OptionsSettingsOption[]
 local Header = {
-    -- {
-    --     ID = "Epip_Header",
-    --     Type = "Header",
-    --     Label = "<font color='7e72d6' size='30'>Epip Encounters</font>",
-    -- },
     {
         ID = "Epip_Hint",
         Type = "Header",
@@ -15,11 +16,7 @@ local Header = {
 
 ---@type OptionsSettingsOption[]
 local Hotbar = {
-    {
-        ID = "Epip_Hotbar",
-        Type = "Header",
-        Label = "<font color='7e72d6' size='23'>Hotbar</font>",
-    },
+    CreateHeader("Hotbar"),
     {
         ID = "HotbarCombatLogButton",
         Type = "Checkbox",
@@ -78,11 +75,7 @@ end
 
 ---@type OptionsSettingsOption[]
 local Overheads = {
-    {
-        ID = "Epip_Overheads",
-        Type = "Header",
-        Label = "<font color='7e72d6' size='23'>Overheads</font>",
-    },
+    CreateHeader("Overheads"),
     {
         ID = "OverheadsSize",
         Type = "Slider",
@@ -131,11 +124,7 @@ local Overheads = {
 
 ---@type OptionsSettingsOption[]
 local Developer = {
-    {
-        ID = "Epip_Developer",
-        Type = "Header",
-        Label = "<font color='7e72d6' size='23'>Developer</font>",
-    },
+    CreateHeader("Developer"),
     {
         ID = "DEBUG_WarpToAMERTest",
         Type = "Button",
@@ -215,27 +204,12 @@ local Developer = {
 
 ---@type OptionsSettingsOption[]
 local Experimental = {
-    -- {
-    --     ID = "Epip_Experimental",
-    --     Type = "Header",
-    --     Label = "<font color='7e72d6' size='23'>Experimental/WIP</font>",
-    -- },
-    -- {
-    --     ID = "Vanity",
-    --     Type = "Checkbox",
-    --     Label = "Transmog Context Menu",
-    --     Tooltip = "Enables a transmog context menu option.",
-    --     DefaultValue = true,
-    -- },
+    -- CreateHeader("Experimental"),
 }
 
 ---@type OptionsSettingsOption[]
 local OtherOptions = {
-    {
-        ID = "Epip_OtherOptions",
-        Type = "Header",
-        Label = "<font color='7e72d6' size='23'>Other</font>",
-    },
+    CreateHeader("Other Settings"),
     {
         ID = "RenderShroud",
         Type = "Checkbox",
@@ -272,11 +246,7 @@ local OtherOptions = {
 }
 
 local PlayerInfo = {
-    {
-        ID = "Epip_PlayerInfo",
-        Type = "Header",
-        Label = "<font color='7e72d6' size='23'>Player Portraits</font>",
-    },
+    CreateHeader("Player Portraits"),
     {
         ID = "PlayerInfoBH",
         Type = "Checkbox",
@@ -338,11 +308,7 @@ local PlayerInfo = {
 }
 
 local SaveLoadOptions = {
-    {
-        ID = "SaveLoad_Header",
-        Type = "Header",
-        Label = "<font color='7e72d6' size='23'>Save/Load</font>",
-    },
+    CreateHeader("Save/Load UI"),
     {
         ID = "SaveLoad_Overlay",
         Type = "Checkbox",
@@ -364,11 +330,7 @@ local SaveLoadOptions = {
 }
 
 local CraftingOptions = {
-    {
-        ID = "Crafting_Header",
-        Type = "Header",
-        Label = "<font color='7e72d6' size='23'>Crafting</font>",
-    },
+    CreateHeader("Crafting UI"),
     {
         ID = "Crafting_DefaultFilter",
         Type = "Dropdown",
@@ -458,14 +420,7 @@ local TopOptions = {
 }
 
 local Inventory = {
-    {
-        ID = "Inventory_Header",
-        Type = "Header",
-        Label = Text.Format("Inventory", {
-            Color = "7e72d6",
-            Size = 23,
-        })
-    },
+    CreateHeader("Inventory"),
     {
         ID = "Inventory_InfiniteCarryWeight",
         Type = "Checkbox",
@@ -484,14 +439,7 @@ local Inventory = {
 }
 
 local Notification = {
-    {
-        ID = "Notification_Header",
-        Type = "Header",
-        Label = Text.Format("Notifications", {
-            Color = "7e72d6",
-            Size = 23,
-        })
-    },
+    CreateHeader("Notifications"),
     {
         ID = "CastingNotifications",
         Type = "Checkbox",
@@ -526,8 +474,8 @@ if Epip.IsDeveloperMode() then
     table.insert(Order, 2, Developer)
 end
 
-for i,category in ipairs(Order) do
-    for z,setting in ipairs(category) do
+for _,category in ipairs(Order) do
+    for _,setting in ipairs(category) do
         Epip.SETTINGS[setting.ID] = setting
     end
 end
