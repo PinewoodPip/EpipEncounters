@@ -93,6 +93,7 @@ LOAD_ORDER = {
     "Epip/Server/HotbarServer.lua",
     "Epip/Server/IncompatibleModsWarning.lua",
     "Epip/Server/ServerSettings.lua",
+    {ScriptSet = "Epip/TooltipAdjustments"},
     -- "Epip/Server/FastCasting.lua",
 
     "Epip/ChatCommands/Shared.lua",

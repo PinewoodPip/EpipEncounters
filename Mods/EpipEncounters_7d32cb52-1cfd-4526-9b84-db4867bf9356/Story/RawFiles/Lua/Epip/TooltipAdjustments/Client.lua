@@ -651,6 +651,47 @@ function TooltipAdjustments.AddRangeDeltamodDisplay(item, tooltip)
     element.Value = string.format("%sm + %sm", Text.RemoveTrailingZeros(amount), weaponBoostString)
 end
 
+---@type TooltipLib_FormattedTooltip
+local pendingSurfaceTooltip = nil
+
+-- Prevent surface tooltips, and re-render them once we've obtained extra surface data from the server.
+Client.Tooltip.Hooks.RenderFormattedTooltip:Subscribe(function (ev)
+    pendingSurfaceTooltip = ev.Tooltip
+
+    local position = Ext.UI.GetPickingState().WalkablePosition
+    
+    Net.PostToServer("EPIPENCOUNTERS_GetSurfaceData", {
+        Position = position,
+        CharacterNetID = Client.GetCharacter().NetID,
+    })
+
+    ev.Prevented = true
+end)
+Net.RegisterListener("EPIPENCOUNTERS_ReturnSurfaceData", function(_, payload)
+    if pendingSurfaceTooltip then
+        local groundOwner
+        local cloudOwner
+
+        if payload.GroundSurfaceOwnerNetID then
+            groundOwner = Character.Get(payload.GroundSurfaceOwnerNetID) or Item.Get(payload.GroundSurfaceOwnerNetID)
+        end
+        if payload.CloudSurfaceOwnerNetID then
+            cloudOwner = Character.Get(payload.CloudSurfaceOwnerNetID) or Item.Get(payload.CloudSurfaceOwnerNetID)
+        end
+
+        if groundOwner then
+            pendingSurfaceTooltip:InsertElement({Type = "Duration", Label = Text.Format("Owned by %s", {FormatArgs = {groundOwner.DisplayName}})}, 3)
+        end
+        if cloudOwner then
+            pendingSurfaceTooltip:InsertElement({Type = "Duration", Label = Text.Format("Owned by %s", {FormatArgs = {cloudOwner.DisplayName}})}, #pendingSurfaceTooltip.Elements)
+        end
+
+        Client.Tooltip.ShowFormattedTooltip(Client.UI.TextDisplay:GetUI(), "Surface", pendingSurfaceTooltip)
+
+        pendingSurfaceTooltip = nil
+    end
+end)
+
 -- Show talent IDs in Talent tooltips.
 Game.Tooltip.RegisterListener("Talent", nil, function(_, talentID, tooltip)
     if Epip.IsDeveloperMode() then

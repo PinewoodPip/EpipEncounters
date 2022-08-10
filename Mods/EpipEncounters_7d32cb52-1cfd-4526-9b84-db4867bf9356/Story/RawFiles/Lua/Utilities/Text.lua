@@ -230,6 +230,7 @@ end
 ---Shorthand for Ext.DumpExport() which does not require you to explicitly define the default options (Beautify, StringifyInternalTypes, etc.)
 ---@param obj any
 ---@param opts unknown? TODO specify type
+---@return string
 function Text.Dump(obj, opts)
     -- Mimic default Ext.Dump() behaviour
     opts = opts or {}

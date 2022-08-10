@@ -202,7 +202,7 @@ LOAD_ORDER = {
     "Epip/Client/ImmersiveMeditation.lua",
     "Epip/Client/NameTypoFixes.lua",
     "Epip/Client/ExamineImprovements.lua",
-    "Epip/Client/TooltipAdjustments.lua",
+    {ScriptSet = "Epip/TooltipAdjustments"},
     "Epip/Client/TreasureTableDisplay.lua",
     "Epip/Client/SummonControlFix.lua",
     "Epip/Client/Notifications.lua",
