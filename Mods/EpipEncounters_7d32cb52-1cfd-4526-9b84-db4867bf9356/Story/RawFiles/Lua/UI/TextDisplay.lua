@@ -1,5 +1,8 @@
 
-Client.UI.TextDisplay = {
+local Inv = Client.UI.PartyInventory
+
+---@class TextDisplayUI : UI
+local TextDisplay = {
     UI = nil,
     Root = nil,
 
@@ -8,10 +11,10 @@ Client.UI.TextDisplay = {
     ---------------------------------------------
     FILEPATH_OVERRIDES = {
         ["Public/Game/GUI/textDisplay.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/textDisplay.swf",
-    }
+    },
 }
-local TextDisplay = Client.UI.TextDisplay
-local Inv = Client.UI.PartyInventory
+Client.UI.TextDisplay = TextDisplay
+Epip.InitializeUI(43, "TextDisplay", TextDisplay)
 
 function TextDisplay.ClearText()
     TextDisplay.Root.addText("", 0, 0, false)

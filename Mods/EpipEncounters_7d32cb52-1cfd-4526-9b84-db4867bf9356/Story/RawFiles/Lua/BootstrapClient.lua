@@ -70,6 +70,9 @@ LOAD_ORDER = {
     "Client/Input.lua",
     "Tables/_UI.lua",
 
+    "UI/TextDisplay.lua",
+    "Utilities/Client/Tooltip.lua",
+
     "Client/Client.lua",
     "Client/Server.lua",
     "Client/Flash.lua",
@@ -109,7 +112,6 @@ LOAD_ORDER = {
 
     "UI/CharacterSheet/CharacterSheet.lua",
     "UI/CharacterSheet/StatsTab.lua",
-    "UI/TextDisplay.lua",
     "UI/ContextMenu.lua",
     "UI/CharacterCreation.lua",
     "UI/Overhead.lua",
@@ -119,6 +121,7 @@ LOAD_ORDER = {
     "UI/GameMenu.lua",
     "UI/TutorialBox.lua",
     "UI/Examine.lua",
+    "UI/Tooltip.lua",
 
     "UI/Generic/Main.lua",
     "UI/Generic/Elements/Element.lua",
