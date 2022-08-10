@@ -56,6 +56,33 @@ function Notification.ShowNotification(text, duration, isWarning, sound)
 end
 
 ---@param text string
+---@param icon string
+---@param subTitle string?
+---@param title string? Appears above the toast (ex. "New Skill")
+---@param hint string? Appears below the toast (ex. "Press K to view") with a descending tween.
+---@param sound string?
+function Notification.ShowIconNotification(text, icon, subTitle, title, hint, sound)
+    local root = Notification:GetRoot()
+    sound = sound or ""
+    subTitle = subTitle or ""
+    title = title or ""
+    hint = hint or ""
+
+    if not icon then Notification:LogError("ShowIconNotification(): no icon provided.") return nil end
+
+    Notification:GetUI():SetCustomIcon("si", icon, 50, 50)
+
+    root.setLabel(0, title)
+    root.setLabel(1, hint)
+    root.showNewSkill(text, subTitle, sound)
+
+    -- Clear custom icon once the notification ends.
+    Timer.Start(3.1, function (_)
+        Notification:GetUI():ClearCustomIcon("si")
+    end, "NotificationUI_ClearIggy_si")
+end
+
+---@param text string
 ---@param duration number? Defaults to 2 (seconds)
 ---@param sound string?
 function Notification.ShowWarning(text, duration, sound)

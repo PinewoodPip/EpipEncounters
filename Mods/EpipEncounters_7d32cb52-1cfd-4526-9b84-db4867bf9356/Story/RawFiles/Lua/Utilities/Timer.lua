@@ -102,12 +102,37 @@ function Timer.Start(id, seconds, handler)
     }
     Inherit(entry, _TimerEntry)
 
+    -- Replace the old timer, if any.
+    if id ~= "" then
+        local oldTimer = Timer.GetTimer(id)
+        
+        if oldTimer then
+            oldTimer:Cancel()
+        end
+    end
+
     -- Auto-subscribe handler
     if handler then
         entry:Subscribe(handler)
     end
 
     table.insert(Timer.activeTimers, entry)
+
+    return entry
+end
+
+---Returns the timer with the passed string ID.
+---@param stringID string
+---@return TimerLib_Entry
+function Timer.GetTimer(stringID)
+    local entry
+
+    for _,timer in ipairs(Timer.activeTimers) do
+        if timer.ID == stringID then
+            entry = timer
+            break
+        end
+    end
 
     return entry
 end
