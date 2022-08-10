@@ -17,13 +17,15 @@ local function SoundTest()
     local delay = 2 -- 2 seconds delay so you can exit console in time
     local DELAY = 0.65
 
-    for guid,sound in pairs(sounds) do
-        Timer.Start("soundTest_" .. sound, delay, function()
-            print("Playing", sound)
-            Client.UI.Time:PlaySound(sound)
-        end)
-
-        delay = delay + DELAY
+    for _,sound in pairs(sounds) do
+        if not sound:match("_GM_") then
+            Timer.Start("soundTest_" .. sound, delay, function()
+                print("Playing", sound)
+                Client.UI.Time:PlaySound(sound)
+            end)
+    
+            delay = delay + DELAY
+        end
     end
 end
 

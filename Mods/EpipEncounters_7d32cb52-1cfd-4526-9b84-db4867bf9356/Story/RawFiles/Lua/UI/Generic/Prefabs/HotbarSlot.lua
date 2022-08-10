@@ -42,6 +42,7 @@ function Slot.Create(ui, id, parent)
     ---@type GenericUI_Prefab_HotbarSlot
     local obj = {
         ID = id,
+        UI = ui,
         SlotElement = ui:CreateElement(id, "Slot", parent),
     }
     Inherit(obj, Slot)
@@ -260,6 +261,9 @@ function Slot:_OnSlotDragStarted(e)
 
         Ext.UI.GetDragDrop():StartDraggingObject(1, item.Handle)
     end
+
+    -- Play dragging sound
+    self.UI:PlaySound("UI_Game_PartyFormation_PickUp")
 
     self:Clear()
 end
