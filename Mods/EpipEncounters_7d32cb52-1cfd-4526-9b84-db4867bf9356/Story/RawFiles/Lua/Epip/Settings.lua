@@ -20,13 +20,6 @@ local Hotbar = {
         Type = "Header",
         Label = "<font color='7e72d6' size='23'>Hotbar</font>",
     },
-    -- {
-    --     ID = "Hotbar",
-    --     Type = "Checkbox",
-    --     Label = "Improved Hotbar",
-    --     Tooltip = "Enables Epip Encounter's hotbar improvements: multiple rows and customizable hotkey buttons.",
-    --     DefaultValue = true,
-    -- },
     {
         ID = "HotbarCombatLogButton",
         Type = "Checkbox",

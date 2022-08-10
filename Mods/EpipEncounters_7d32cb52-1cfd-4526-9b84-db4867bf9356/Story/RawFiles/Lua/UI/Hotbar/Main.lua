@@ -20,8 +20,6 @@
 ---@field SLOT_SPACING number
 ---@field modulesRequestingHide table<string,boolean> Modules that are currently requesting the hotbar to stay hidden.
 ---@field ACTION_BUTTONS_COUNT integer Amount of action buttons available in total.
-
----@class HotbarUI : UI
 local Hotbar = {
     Actions = {},
     State = {
@@ -119,8 +117,19 @@ local Hotbar = {
         WARFARE = "hotbar_school_warfare",
     },
 
+    USE_LEGACY_EVENTS = false,
+    USE_LEGACY_HOOKS = false,
+
+    Events = {
+        BarPlusMinusButtonPressed = {}, ---@type SubscribableEvent<HotbarUI_Event_BarPlusMinusButtonPressed>
+    },
+    Hooks = {
+        IsBarVisible = {}, ---@type SubscribableEvent<HotbarUI_Hook_IsBarVisible>
+        CanAddBar = {}, ---@type SubscribableEvent<HotbarUI_Hook_CanAddBar>
+        CanRemoveBar = {}, ---@type SubscribableEvent<HotbarUI_Hook_CanRemoveBar>
+    },
+
     FILEPATH_OVERRIDES = {
-        -- ["Public/Game/GUI/hotBar.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/hotBar.swf",
         ["Public/Game/GUI/hotBar.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/hotBar.swf",
     },
 }
@@ -133,7 +142,7 @@ Client.UI.Hotbar = Hotbar
 Epip.InitializeUI(Client.UI.Data.UITypes.hotBar, "Hotbar", Hotbar)
 Hotbar:Debug()
 
-for i=1,Hotbar.ACTION_BUTTONS_COUNT,1 do
+for _=1,Hotbar.ACTION_BUTTONS_COUNT,1 do
     table.insert(Hotbar.ActionsState, {
         ActionID = "",
     })
@@ -171,6 +180,26 @@ end
 ---@field SkillId string
 ---@field Type string Skill archetype.
 ---@field ZeroMemory boolean
+
+---------------------------------------------
+-- EVENTS/HOOKS
+---------------------------------------------
+
+---Fired after the corresponding procedures are ran.
+---@class HotbarUI_Event_BarPlusMinusButtonPressed
+---@field IsPlusButton boolean
+
+---@class HotbarUI_Hook_IsBarVisible
+---@field BarIndex integer
+---@field Visible boolean Hookable.
+
+---@class HotbarUI_Hook_CanAddBar
+---@field BarToAddIndex integer
+---@field CanAdd boolean Hookable.
+
+---@class HotbarUI_Hook_CanRemoveBar
+---@field BarToRemoveIndex integer
+---@field CanRemove boolean Hookable.
 
 ---------------------------------------------
 -- METHODS
@@ -246,6 +275,17 @@ function Hotbar.IsVisible()
     return Hotbar.elementsToggled
 end
 
+---@param index integer
+---@return boolean
+function Hotbar.IsBarVisible(index)
+    local bar = Hotbar.GetState().Bars[index]
+    local event = {BarIndex = index, Visible = bar.Visible} ---@type HotbarUI_Hook_IsBarVisible
+
+    Hotbar.Hooks.IsBarVisible:Throw(event)
+
+    return event.Visible
+end
+
 ---Returns the slotHolder movieclip.
 ---@return FlashMovieClip
 function Hotbar.GetSlotHolder()
@@ -292,7 +332,7 @@ function Hotbar.IsRowVisible(char, row)
 
     for i,bar in ipairs(state.Bars) do
         if bar.Row == row then
-            return bar.Visible
+            return Hotbar.IsBarVisible(i)
         end
     end
 
@@ -545,7 +585,7 @@ function Hotbar.GetBarCount(char)
     local open = 0
 
     for i,bar in ipairs(state.Bars) do
-        if bar.Visible then
+        if Hotbar.IsBarVisible(i) then
             open = open + 1
         end
     end
@@ -598,11 +638,13 @@ end
 function Hotbar.AddBar(char)
     local count = Hotbar.GetBarCount(char)
     local state = Hotbar.GetState(char)
+    local hook = {BarToAddIndex = count + 1, CanAdd = count < 5} ---@type HotbarUI_Hook_CanAddBar
 
-    if count < 5 then
-        state.Bars[count + 1].Visible = true -- TODO rows update
+    Hotbar.Hooks.CanAddBar:Throw(hook)
 
-        -- TODO update activeSkill highlight
+    -- Cannot have more than 5 bars.
+    if hook.CanAdd and count < 5 then
+        state.Bars[count + 1].Visible = true
     end
 
     if Hotbar.IsDrawerOpen() then
@@ -614,16 +656,19 @@ function Hotbar.AddBar(char)
 end
 
 ---Removes a bar from char. Bars are removed from top to bottom.
----@param char EclCharacter
+---@param char EclCharacter?
 function Hotbar.RemoveBar(char)
     local count = Hotbar.GetBarCount(char)
     local state = Hotbar.GetState(char)
+    local hook = {BarToRemoveIndex = count, CanRemove = count > 1} ---@type HotbarUI_Hook_CanRemoveBar
 
-    -- Can't remove the first bar!
-    if count > 1 then
+    Hotbar.Hooks.CanRemoveBar:Throw(hook)
+
+    -- Can't remove the first bar! Not even if hooked.
+    if hook.CanRemove and count > 1 then
         state.Bars[count].Visible = false
 
-        -- Update activeSkill highlight
+        -- Hide activeSkill highlight if it was in this row
         local slotHolder = Hotbar.GetSlotHolder()
         if slotHolder.activeSkillSlotNr >= (Hotbar.GetSlotsPerRow() * (count - 1)) then
             slotHolder.showActiveSkill(-1)
@@ -645,7 +690,7 @@ function Hotbar.CycleBar(index, increment)
     local bar = state.Bars[index]
 
     -- Can only cycle visible bars.
-    if bar.Visible then
+    if Hotbar.IsBarVisible(index) then
         local currentRowIndex = bar.Row
         local nextRowIndex = currentRowIndex + increment
         if nextRowIndex < 1 then nextRowIndex = 5 -- Loop index
@@ -791,13 +836,17 @@ local function OnSlotHover(ui, method, id)
     slotHolder.setHighlightedSlot(id)
 end
 
-local function OnAddHotbar(ui, method)
+Hotbar:RegisterCallListener("pipAddHotbar", function(_)
     Hotbar.AddBar()
-end
 
-local function OnRemoveHotbar(ui, method)
+    Hotbar.Events.BarPlusMinusButtonPressed:Throw({IsPlusButton = true})
+end)
+
+Hotbar:RegisterCallListener("pipRemoveHotbar", function(_)
     Hotbar.RemoveBar()
-end
+
+    Hotbar.Events.BarPlusMinusButtonPressed:Throw({IsPlusButton = false})
+end)
 
 -- Redirect keyboard hotkeys to point to the expected slot.
 Hotbar:RegisterCallListener("pipSlotKeyAttempted", function(_, id)
@@ -1530,8 +1579,6 @@ Ext.Events.SessionLoaded:Subscribe(function()
     Ext.RegisterUICall(ui, "pipUpdateSlots", OnVanillaUpdateSlots)
     Ext.RegisterUIInvokeListener(ui, "updateSlots", OnUpdateSlots, "After")
     -- Ext.RegisterUIInvokeListener(ui, "updateSlotData", OnUpdateSlotData, "After")
-    Ext.RegisterUICall(ui, "pipAddHotbar", OnAddHotbar)
-    Ext.RegisterUICall(ui, "pipRemoveHotbar", OnRemoveHotbar)
     Ext.RegisterUICall(ui, "pipHotbarOpenContextMenu", OnHotkeyRightClick)
     Ext.RegisterUICall(ui, "pipUnbindHotbarButton", OnRequestUnbind)
     Ext.RegisterUICall(ui, "pipSlotPressed", OnSlotPressed)
@@ -1628,7 +1675,7 @@ function Hotbar.Refresh()
         -- let flash know which bar holds which row, for correct slot-selection in slotHolder.getSlotOnXY() TODO remove - not used anymore
         slotHolder.rowOrder_array[i - 1] = bar.Row - 1
 
-        if bar.Visible then
+        if Hotbar.IsBarVisible(i) then
             Hotbar.PositionBar(i, bar.Row)
         else
             Hotbar.HideBar(i, bar.Row)

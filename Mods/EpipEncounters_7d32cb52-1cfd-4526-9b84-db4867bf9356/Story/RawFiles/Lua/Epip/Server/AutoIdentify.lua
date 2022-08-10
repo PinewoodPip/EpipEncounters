@@ -26,7 +26,6 @@ end
 
 function AutoIdentify.ProcessItem(item)
     if item.Stats and AutoIdentify.IsEnabled() then
-
         if AutoIdentify.CanIdentify(item) then
             Osi.NRD_ItemSetIdentified(item.MyGuid, 1)
         end
@@ -39,7 +38,6 @@ function AutoIdentify.CanIdentify(item)
 
     -- Check ability requirement
     if not canIdentify and state == AutoIdentify.STATES.NEED_LOREMASTER then
-        local level = item.Stats.Level
         local loremaster = Utilities.GetHighestPartyAbility("Loremaster")
 
         local requirement = Item.GetIdentifyRequirement(item)
