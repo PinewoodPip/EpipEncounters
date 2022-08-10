@@ -639,34 +639,34 @@ end
 
 ---Cycles a bar's row.
 ---@param index integer Bar index.
----@param increment integer Direction to cycle: 1 or -1.
+---@param increment -1|1 Direction to cycle.
 function Hotbar.CycleBar(index, increment)
     local state = Hotbar.GetState()
-
     local bar = state.Bars[index]
 
-    local currentRowIndex = bar.Row
-    local nextRowIndex = currentRowIndex + increment
+    -- Can only cycle visible bars.
+    if bar.Visible then
+        local currentRowIndex = bar.Row
+        local nextRowIndex = currentRowIndex + increment
+        if nextRowIndex < 1 then nextRowIndex = 5 -- Loop index
+        elseif nextRowIndex > 5 then nextRowIndex = 1 end
+        local nextBar = nil
 
-    -- Loop
-    if nextRowIndex < 1 then nextRowIndex = 5 end
-    if nextRowIndex > 5 then nextRowIndex = 1 end
-
-    local nextBar = nil
-
-    for i,bar in ipairs(state.Bars) do
-        if bar.Row == nextRowIndex then
-            nextBar = bar
+        for _,otherBar in ipairs(state.Bars) do
+            if otherBar.Row == nextRowIndex then
+                nextBar = otherBar
+                break
+            end
         end
-    end
 
-    if nextBar ~= nil then -- attempt to swap rows
-        nextBar.Row = currentRowIndex
-    end
-    
-    bar.Row = nextRowIndex
+        if nextBar then -- attempt to swap rows
+            nextBar.Row = currentRowIndex
+        end
+        
+        bar.Row = nextRowIndex
 
-    Hotbar:DebugLog("Cycled bar " .. index)
+        Hotbar:DebugLog("Cycled bar " .. index)
+    end
 end
 
 ---Returns whether the hotbar is locked.
