@@ -1,6 +1,7 @@
 
 local Hotbar = Client.UI.Hotbar
 local OptionsInput = Client.UI.OptionsInput
+local Notification = Client.UI.Notification
 
 local Tweaks = {
     barsVisible = true,
@@ -21,6 +22,10 @@ OptionsInput.Events.ActionExecuted:RegisterListener(function (action, _)
 
         Tweaks:DebugLog("Toggling bar visibility")
         Hotbar.Refresh()
+
+        local notif = "Toggled extra bars visibility on."
+        if not Tweaks.barsVisible then notif = "Toggled extra bars visibility off." end
+        Notification.ShowNotification(notif)
     end
 end)
 

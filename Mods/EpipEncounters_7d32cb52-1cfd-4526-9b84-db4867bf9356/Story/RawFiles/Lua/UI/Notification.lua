@@ -35,22 +35,36 @@ Epip.InitializeUI(Client.UI.Data.UITypes.notification, "Notification", Notificat
 ---@field Prevent boolean Defaults to false.
 
 ---------------------------------------------
--- OLD CODE
+-- METHODS
 ---------------------------------------------
 
-function OnUINotification(ui, method, str1, num1, num2)
-    local root = Ext.UI.GetByType(Client.UI.Data.UITypes.notification):GetRoot()
-    -- root.notCast_mc.y = 360
-    -- root.notCast_mc.visible = root.showCastNots
-    -- root.notCastY = 120
-    -- root.hideCastNot(0)
+---@param text string
+---@param duration number? Defaults to 2 (seconds)
+---@param isWarning boolean? If true, the notification will use a simpler style with yellow text.
+---@param sound string?
+function Notification.ShowNotification(text, duration, isWarning, sound)
+    duration = duration or 2
+    sound = sound or ""
+    if isWarning == nil then isWarning = false end
 
-    -- local notCast = root.notCast_mc
-    -- local visible = root.showCastNots
-    -- notCast.bgM_mc.visible = visible
-    -- notCast.bg_mc.visible = visible
-    -- notCast.text_txt.visible = visible
+    Notification:GetRoot().setNotification(text, "", duration, not isWarning)
+
+    -- Done here as the warning-style notification type does not call it.
+    if sound ~= "" then
+        Notification:PlaySound(sound)
+    end
 end
+
+---@param text string
+---@param duration number? Defaults to 2 (seconds)
+---@param sound string?
+function Notification.ShowWarning(text, duration, sound)
+    Notification.ShowNotification(text, duration, true, sound)
+end
+
+---------------------------------------------
+-- OLD CODE
+---------------------------------------------
 
 Client.UI.Hotbar:RegisterListener("Refreshed", function(barCount)
     if not notification.showCastNots then
@@ -82,8 +96,6 @@ Ext.Events.SessionLoaded:Subscribe(function()
     notification.showCastNots = Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "CastingNotifications")
 
     -- notification.offsetPerBar = -Ext.UI.GetByType(Client.UI.Data.UITypes.statusConsole):GetRoot().height
-
-    Ext.RegisterUITypeInvokeListener(Client.UI.Data.UITypes.notification, "showCastNot", OnUINotification, "After")
 end)
 
 ---------------------------------------------
