@@ -140,6 +140,7 @@ LOAD_ORDER = {
     "UI/Generic/Elements/ComboBox.lua",
     "UI/Generic/Prefabs/HotbarSlot.lua",
     "UI/Generic/Prefabs/Spinner.lua",
+    "UI/Generic/Prefabs/Text.lua",
     -- {Script = "UI/Generic/Test.lua", WIP = true}, -- TEST!
 
     "UI/Hotbar/Main.lua",

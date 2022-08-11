@@ -17,8 +17,7 @@ local Spinner = {
 
     }
 }
-Inherit(Spinner, Generic._Prefab)
-Generic.RegisterPrefab("Spinner", Spinner)
+Generic.RegisterPrefab("GenericUI_Prefab_Spinner", Spinner)
 
 ---------------------------------------------
 -- EVENTS

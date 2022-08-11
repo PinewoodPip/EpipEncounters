@@ -12,6 +12,8 @@ local Generic = Client.UI.Generic ---@class GenericUI
 Epip.InitializeLibrary("Generic", Generic)
 Generic:Debug()
 
+---@alias GenericUI_PrefabClass "GenericUI_Prefab_HotbarSlot"|"GenericUI_Prefab_Spinner"|"GenericUI_Prefab_Text"
+
 ---------------------------------------------
 -- EVENTS/HOOKS
 ---------------------------------------------
@@ -235,6 +237,13 @@ function Generic.RegisterPrefab(id, prefab)
     Generic.PREFABS[id] = prefab
 end
 
+---@generic T
+---@param className `T`|GenericUI_PrefabClass
+---@return T
+function Generic.GetPrefab(className)
+    return Generic.PREFABS[className]
+end
+
 ---@param tbl1 table
 ---@param tbl2 table
 function Generic.Inherit(tbl1, tbl2)
@@ -279,6 +288,8 @@ function Client.UI.Generic.GetInstance(id)
 end
 
 function Client.UI.Generic.RegisterPrefab(id, prefab)
+    Inherit(prefab, Generic._Prefab)
+
     Generic.PREFABS[id] = prefab
 end
 

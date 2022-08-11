@@ -6,7 +6,9 @@ Epip.InitializeLibrary("Vector", Vector)
 -- VECTOR TABLE
 ---------------------------------------------
 
+---@alias Vector2 Vector
 ---@alias Vector2D Vector
+---@alias Vector3 Vector
 ---@alias Vector3D Vector
 
 ---@class Vector

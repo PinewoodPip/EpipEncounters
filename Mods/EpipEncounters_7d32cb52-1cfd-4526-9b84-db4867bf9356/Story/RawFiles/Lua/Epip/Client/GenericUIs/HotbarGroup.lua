@@ -1,6 +1,7 @@
 
 local Generic = Client.UI.Generic
-local HotbarSlot = Generic.PREFABS.HotbarSlot ---@type GenericUI_Prefab_HotbarSlot
+local HotbarSlot = Generic.GetPrefab("GenericUI_Prefab_HotbarSlot")
+local Spinner = Generic.GetPrefab("GenericUI_Prefab_Spinner")
 local ContextMenu = Client.UI.ContextMenu
 
 ---@class Feature_HotbarGroupManager : Feature
@@ -320,8 +321,8 @@ function GroupManager:__Setup()
     text:SetType(1)
     text:SetSize(GroupManager.CONTENT_WIDTH, 50)
 
-    local rowSpinner = Generic.PREFABS.Spinner.Create(ui, "RowSpinner", content, "Rows", 1, 20, 1)
-    local columnSpinner = Generic.PREFABS.Spinner.Create(ui, "ColumnSpinner", content, "Columns", 1, 20, 1)
+    local rowSpinner = Spinner.Create(ui, "RowSpinner", content, "Rows", 1, 20, 1)
+    local columnSpinner = Spinner.Create(ui, "ColumnSpinner", content, "Columns", 1, 20, 1)
 
     rowSpinner:GetMainElement():SetCenterInLists(true)
     columnSpinner:GetMainElement():SetCenterInLists(true)

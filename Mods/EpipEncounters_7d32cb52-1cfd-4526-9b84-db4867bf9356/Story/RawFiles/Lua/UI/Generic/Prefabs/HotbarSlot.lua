@@ -19,9 +19,7 @@ local Slot = {
         ObjectDraggedIn = {},
     }
 }
-Inherit(Slot, Generic._Prefab)
-Generic.PREFABS.Slot = Slot
-Generic.RegisterPrefab("Slot", Slot)
+Generic.RegisterPrefab("GenericUI_Prefab_HotbarSlot", Slot)
 
 ---------------------------------------------
 -- EVENTS

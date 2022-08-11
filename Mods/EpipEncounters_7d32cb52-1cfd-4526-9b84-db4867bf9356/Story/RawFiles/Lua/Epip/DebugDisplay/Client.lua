@@ -1,5 +1,6 @@
 
 local Generic = Client.UI.Generic
+local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 
 ---@class Feature_DebugDisplay
 local DebugDisplay = Epip.GetFeature("EpipEncounters", "DebugDisplay")
@@ -94,6 +95,7 @@ end)
 ---------------------------------------------
 
 function DebugDisplay:__Setup()
+    local textSize = Vector.Create(500, 25)
     local ui = Generic.Create("PIP_DebugDisplay")
     local bg = ui:CreateElement("BG", "GenericUI_Element_TiledBackground")
     bg:SetBackground(1, 200, 200)
@@ -101,22 +103,18 @@ function DebugDisplay:__Setup()
     bg:SetAsDraggableArea()
 
     local container = bg:AddChild("Container", "GenericUI_Element_VerticalList")
-    local tickCounter = container:AddChild("TickCounter", "GenericUI_Element_Text")
-    tickCounter:SetType(0)
-    tickCounter:SetSize(500, 25)
+
+    local tickCounter = TextPrefab.Create(ui, "TickCounter", container, "", 0, textSize)
 
     Ext.Events.Tick:Subscribe(function (ev)
         DebugDisplay.SetClientTicks(#DebugDisplay.ticks)
     end)
 
-    
-    local serverTickCounter = container:AddChild("ServerTickCounter", "GenericUI_Element_Text")
-    serverTickCounter:SetType(0)
-    serverTickCounter:SetSize(500, 25)
+    local serverTickCounter = TextPrefab.Create(ui, "ServerTickCounter", container, "", 0, textSize)
 
-    local modVersionText = container:AddChild("ModVersionLabel", "GenericUI_Element_Text")
-    modVersionText:SetType(0)
-    modVersionText:SetSize(500, 100)
+    local extVersionText = TextPrefab.Create(ui, "ExtVersionLabel", container, Text.Format("Ext: v%s", {FormatArgs = {Ext.Utils.Version()}}), 0, textSize)
+
+    local modVersionText = TextPrefab.Create(ui, "ModVersionLabel", container, "", 0, {500, 200})
 
     local uiObject = ui:GetUI()
     uiObject.SysPanelSize = {200, 300}
@@ -128,6 +126,7 @@ function DebugDisplay:__Setup()
     DebugDisplay.ClientTickCounter = tickCounter
     DebugDisplay.ServerTickCounter = serverTickCounter
     DebugDisplay.ModVersionText = modVersionText
+    DebugDisplay.ExtVersionText = extVersionText
 
     DebugDisplay.UpdateModVersions()
 end

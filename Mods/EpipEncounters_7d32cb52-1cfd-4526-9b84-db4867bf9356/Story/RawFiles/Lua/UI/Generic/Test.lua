@@ -66,7 +66,7 @@ function Test.TestSlot()
     -- slot:SetLabel("12")
 
     ---@type GenericUI_Prefab_HotbarSlot
-    local s1 = Generic.PREFABS.Slot.Create(Test, "s1", list)
+    local s1 = Generic.GetPrefab("GenericUI_Prefab_HotbarSlot").Create(Test, "s1", list)
 end
 
 function Test.TestComboBox()
