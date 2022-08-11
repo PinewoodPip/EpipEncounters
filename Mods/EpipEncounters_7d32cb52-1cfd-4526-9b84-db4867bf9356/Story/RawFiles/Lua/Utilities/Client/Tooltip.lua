@@ -8,6 +8,7 @@ local Tooltip = {
 
     Hooks = {
         RenderFormattedTooltip = {}, ---@type SubscribableEvent<TooltipLib_Hook_RenderFormattedTooltip>
+        RenderMouseTextTooltip = {}, ---@type SubscribableEvent<TooltipLib_Hook_RenderMouseTextTooltip>
     },
 }
 Client.Tooltip = Tooltip
@@ -36,6 +37,10 @@ end
 ---@field UI UIObject
 ---@field Prevented boolean Hookable.
 
+---@class TooltipLib_Hook_RenderMouseTextTooltip
+---@field Text string Hookable.
+---@field Prevented boolean Hookable.
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
@@ -54,6 +59,13 @@ function Tooltip.ShowFormattedTooltip(ui, tooltipType, tooltip)
 
         root.displaySurfaceText(Client.GetMousePosition())
     end
+end
+
+---@param text string
+function Tooltip.ShowMouseTextTooltip(text)
+    local root = TextDisplay:GetRoot()
+
+    root.addText(text, Client.GetMousePosition())
 end
 
 ---@param ui UIObject
@@ -95,6 +107,20 @@ TextDisplay:RegisterInvokeListener("displaySurfaceText", function(ev, _, _)
         local newTable = Game.Tooltip.EncodeTooltipArray(hook.Tooltip.Elements)
 
         Game.Tooltip.ReplaceTooltipArray(ui, arrayFieldName, newTable, tbl)
+    else
+        ev:PreventAction()
+    end
+end)
+
+TextDisplay:RegisterInvokeListener("addText", function(ev, text, x, y)
+    local hook = {Text = text} ---@type TooltipLib_Hook_RenderMouseTextTooltip
+
+    Tooltip.Hooks.RenderMouseTextTooltip:Throw(hook)
+
+    if not hook.Prevented then
+        ev.Args[1] = hook.Text
+        ev.UI:GetRoot().addText(hook.Text, x, y)
+        ev:PreventAction()
     else
         ev:PreventAction()
     end

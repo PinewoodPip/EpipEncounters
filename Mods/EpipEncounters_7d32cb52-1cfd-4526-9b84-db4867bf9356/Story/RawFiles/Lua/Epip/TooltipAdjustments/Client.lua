@@ -692,6 +692,60 @@ Net.RegisterListener("EPIPENCOUNTERS_ReturnSurfaceData", function(_, payload)
     end
 end)
 
+-- Show partial AP used while hovering on the ground to move.
+---@param text string
+---@return string
+
+local function GetExpandedMovementCostText(text)
+    local shownAPCost, distance, extraText = text:match("(%d+)AP<br><font color=\"#DBDBDB\">(.+)m</font><br><font color=\"#C80030\">(.*)</font>")
+    local newText = nil
+
+    if distance and Client.Input.IsShiftPressed() then
+        local char = Client.GetCharacter()
+        local movement = Character.GetMovement(char) / 100
+        local apCost = tonumber(distance) / movement
+        if apCost < 0.1 then
+            apCost = Text.Round(apCost, 2)
+        else
+            apCost = Text.Round(apCost, 1)
+        end
+
+        -- At the moment we cannot keep track of The Pawn.
+        if not char.Stats.TALENT_QuickStep then
+            newText = Text.Format("%s AP (%s AP)<br><font color=\"#DBDBDB\">%sm</font><br><font color=\"#C80030\">%s</font>", {
+                FormatArgs = {shownAPCost, apCost, distance, extraText}
+            })
+        else
+            newText = Text.Format("%s AP (Cannot check precise cost with Pawn)<br><font color=\"#DBDBDB\">%sm</font><br><font color=\"#C80030\">%s</font>", {
+                FormatArgs = {shownAPCost, distance, extraText}
+            })
+        end
+
+    elseif distance then -- Add a space between the amount of AP and the text anyways, cuz it's prettier that way.
+        newText = Text.Format("%s AP<br><font color=\"#DBDBDB\">%sm</font><br><font color=\"#C80030\">%s</font>", {
+            FormatArgs = {shownAPCost, distance, extraText}
+        })
+    end
+
+    return newText
+end
+
+-- Keep track of the current mouse text, for instant re-rendering when shift is toggled.
+local currentMouseText = nil
+Client.Tooltip.Hooks.RenderMouseTextTooltip:Subscribe(function (ev)
+    currentMouseText = ev.Text
+
+    ev.Text = GetExpandedMovementCostText(ev.Text) or ev.Text
+end)
+Client.Input.Events.KeyStateChanged:Subscribe(function (ev)
+    if ev.InputID == "lshift" and currentMouseText then
+        Client.Tooltip.ShowMouseTextTooltip(GetExpandedMovementCostText(currentMouseText) or currentMouseText)
+    end
+end)
+Client.UI.TextDisplay:RegisterInvokeListener("removeText", function(_)
+    currentMouseText = nil
+end)
+
 -- Show talent IDs in Talent tooltips.
 Game.Tooltip.RegisterListener("Talent", nil, function(_, talentID, tooltip)
     if Epip.IsDeveloperMode() then

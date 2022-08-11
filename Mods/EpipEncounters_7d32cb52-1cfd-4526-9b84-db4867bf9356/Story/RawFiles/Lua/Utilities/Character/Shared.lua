@@ -217,6 +217,8 @@ function Character.IsInCombat(char)
     return char:GetStatus("COMBAT") ~= nil
 end
 
+---@param char Character
+---@return number In centimeters.
 function Character.GetMovement(char)
     local movement = 0
     local movementBoost = 100
@@ -243,6 +245,9 @@ function Character.GetMovement(char)
             end
         end
     end
+
+    -- Add scoundrel bonus
+    movement = movement + char.Stats.RogueLore * Stats.ExtraData.SkillAbilityMovementSpeedPerPoint:GetValue()
 
     return movement * (movementBoost / 100)
 end
