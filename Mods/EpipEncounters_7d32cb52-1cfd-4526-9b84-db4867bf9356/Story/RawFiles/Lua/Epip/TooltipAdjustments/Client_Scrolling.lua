@@ -7,7 +7,7 @@ local TooltipScrolling = {
     originalTooltipPosition = {0, 0}, ---@type Vector2D
 
     INPUT_ACTION = "EpipEncounters_ScrollTooltip",
-    SCROLLING_STEP = 30,
+    SCROLLING_STEP = 40,
 }
 Epip.RegisterFeature("TooltipScrolling", TooltipScrolling)
 TooltipScrolling:Debug()
@@ -75,6 +75,11 @@ TooltipUI:RegisterInvokeListener("addFormattedTooltip", function (_)
     TooltipScrolling.tooltipExists = true
 
     TooltipScrolling:DebugLog("Tooltip now exists")
+
+    -- It's possible for a tooltip being rendered without removeTooltip being called for a previous one.
+    if TooltipScrolling.IsActive() then
+        TooltipScrolling.Toggle(false, false)
+    end
 end)
 
 TooltipUI:RegisterInvokeListener("removeTooltip", function (_)
