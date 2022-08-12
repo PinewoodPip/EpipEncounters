@@ -383,7 +383,7 @@ Client.Input.Events.KeyPressed:Subscribe(function (e)
         Options.SetPotentialBinding(dummyBinding)
     else -- Fire action
         local actions = Options.INPUT_MAP[mapping]
-        if actions and not GameState.IsPaused() then
+        if actions then
             for _,actionID in ipairs(actions) do
                 if Options.CanExecuteAction(actionID) then
                     Options.Events.ActionExecuted:Fire(actionID, dummyBinding)
@@ -409,7 +409,9 @@ Options.Hooks.CanExecuteAction:RegisterHook(function (execute, action, data)
     end
 
     if execute then
-        execute = not Client.IsInDialogue()
+        execute = not Client.IsInDialogue() -- Cannot execute in dialogue.
+        execute = execute and not GameState.IsPaused() -- Cannot execute in pause.
+        execute = execute and Client.Input.IsAcceptingInput() -- Cannot execute while a UI is accepting text input.
     end
 
     return execute
