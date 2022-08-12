@@ -134,6 +134,14 @@ local Developer = {
         DefaultValue = false,
     },
     {
+        ID = "Developer_DebugDisplay",
+        Type = "Checkbox",
+        Label = "Debug Display",
+        Tooltip = "Enables a UI widget that displays framerate, server tickrate, and mod versions.",
+        DefaultValue = false,
+        Developer = true,
+    },
+    {
         ID = "DEBUG_SniffUICalls",
         Type = "Dropdown",
         Label = "Sniff UI Calls",

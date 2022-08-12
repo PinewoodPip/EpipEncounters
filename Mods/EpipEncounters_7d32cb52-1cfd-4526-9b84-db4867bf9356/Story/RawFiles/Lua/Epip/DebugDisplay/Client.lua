@@ -15,6 +15,15 @@ DebugDisplay.TrackedModVersions = {
 -- METHODS
 ---------------------------------------------
 
+---@param active boolean
+function DebugDisplay.Toggle(active)
+    if active and Epip.IsDeveloperMode() then
+        DebugDisplay.UI:Show()
+    else
+        DebugDisplay.UI:Hide()
+    end
+end
+
 function DebugDisplay.UpdateModVersions()
     local element = DebugDisplay.ModVersionText
 
@@ -90,6 +99,12 @@ Net.RegisterListener("EPIPENCOUNTERS_DebugDisplay_ServerTicks", function (_, pay
     DebugDisplay.SetServerTicks(ticks)
 end)
 
+Client.UI.OptionsSettings:RegisterListener("OptionSet", function(data, value)
+    if data.ID == "Developer_DebugDisplay" then
+        DebugDisplay.Toggle(value)
+    end
+end)
+
 ---------------------------------------------
 -- SETUP
 ---------------------------------------------
@@ -120,7 +135,9 @@ function DebugDisplay:__Setup()
     uiObject.SysPanelSize = {200, 300}
     uiObject.Left = 200
 
-    ui:SetPosition("topright", "topright", nil, 0.1)
+    GameState.Events.GameReady:Subscribe(function (ev)
+        ui:SetPosition("topright", "topright", nil, 0.1)
+    end, {Once = true})
 
     DebugDisplay.UI = ui
     DebugDisplay.ClientTickCounter = tickCounter
@@ -129,4 +146,6 @@ function DebugDisplay:__Setup()
     DebugDisplay.ExtVersionText = extVersionText
 
     DebugDisplay.UpdateModVersions()
+
+    DebugDisplay.Toggle(Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "Developer_DebugDisplay"))
 end
