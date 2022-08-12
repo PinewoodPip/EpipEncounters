@@ -59,6 +59,7 @@ LOAD_ORDER = {
     "Game/Items/Shared.lua",
     "Game/Items/Client.lua",
     "Game/Stats/Shared.lua",
+    "Game/Stats/Shared_ModifierLists.lua",
     "Utilities/Net/Shared.lua",
     "Utilities/Net/Client.lua",
     {ScriptSet = "Utilities/Artifact"},
@@ -141,6 +142,7 @@ LOAD_ORDER = {
     "UI/Generic/Prefabs/HotbarSlot.lua",
     "UI/Generic/Prefabs/Spinner.lua",
     "UI/Generic/Prefabs/Text.lua",
+    "UI/Generic/Prefabs/LabelledDropdown.lua",
     -- {Script = "UI/Generic/Test.lua", WIP = true}, -- TEST!
 
     "UI/Hotbar/Main.lua",
@@ -264,6 +266,7 @@ LOAD_ORDER = {
     {ScriptSet = "Epip/ItemTagging"},
     {ScriptSet = "Epip/ExtraDataConfig", Developer = true,},
     {ScriptSet = "Epip/Housing", WIP = true,},
+    {ScriptSet = "Epip/StatsEditor", WIP = true,},
 
     -- AMER UI controller support
     -- "Epip/Client/AMERUI_Controller/AMERUI_Controller.lua",

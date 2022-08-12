@@ -60,6 +60,14 @@ function Spinner:GetValue()
     return self.currentValue
 end
 
+---Sets the value of the spinner. Ignores min/max bounds or step.
+---@param value number
+function Spinner:SetValue(value)
+    self.currentValue = value
+
+    self:UpdateCounter()
+end
+
 ---@return number
 function Spinner:Decrement()
     return self:AddValue(-self.step)

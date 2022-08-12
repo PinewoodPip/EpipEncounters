@@ -64,6 +64,7 @@ LOAD_ORDER = {
     "Game/Items/Shared.lua",
     "Game/Items/Server.lua",
     "Game/Stats/Shared.lua",
+    "Game/Stats/Shared_ModifierLists.lua",
     "Utilities/Net/Shared.lua",
 
     "Game/AMERUI/Shared.lua",
@@ -117,6 +118,7 @@ LOAD_ORDER = {
     {ScriptSet = "Epip/ExtraDataConfig", Developer = true,},
     {ScriptSet = "Epip/Encumbrance", Developer = true,},
     {ScriptSet = "Epip/Housing", WIP = true,},
+    {ScriptSet = "Epip/StatsEditor", WIP = true,},
     {ScriptSet = "Epip/DebugDisplay", Developer = true,},
 
     "Epip/StatsTab/Shared.lua",

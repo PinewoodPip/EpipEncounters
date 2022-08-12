@@ -77,6 +77,23 @@ function Text.Round(value, decimals)
     return output
 end
 
+---Concatenates 2 strings and adds enough whitespace padding inbetween them to ensure a specific length.
+---@param str1 string
+---@param str2 string
+---@param space integer
+---@return string
+function Text.EqualizeSpace(str1, str2, space)
+    local normalLength = #str1 + #str2 - 1
+    local output = str1 .. " " -- minimum of 1 space
+
+    while normalLength < space do
+        output = output .. " "
+        normalLength = normalLength + 1
+    end
+
+    return output .. str2
+end
+
 ---Generate a random GUID.
 ---Source: https://gist.github.com/jrus/3197011
 ---@return GUID

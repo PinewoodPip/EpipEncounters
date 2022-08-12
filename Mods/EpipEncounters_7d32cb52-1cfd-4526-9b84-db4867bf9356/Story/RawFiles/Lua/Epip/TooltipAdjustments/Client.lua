@@ -865,7 +865,7 @@ function TooltipAdjustments.TestElements(item, tooltip)
     end
 end
 
-local function OnSkillGetDescription(event)    
+local function OnSkillGetDescription(event)
     TooltipAdjustments.TranslateSkillMultipliers(event)
 end
 
@@ -907,7 +907,8 @@ Ext.Events.SessionLoaded:Subscribe(function()
 end)
 
 -- Align tooltips to the top of the screen.
-Ext.RegisterUITypeInvokeListener(Client.UI.Data.UITypes.tooltip, "addFormattedTooltip", function(ui, _)
-    if not TooltipAdjustments:IsEnabled() then return nil end
-    ui:ExternalInterfaceCall("keepUIinScreen", true)
-end, "After")
+Ext.RegisterUITypeInvokeListener(44, "addFormattedTooltip", function(ui)
+    if TooltipAdjustments:IsEnabled() then
+        ui:ExternalInterfaceCall("keepUIinScreen", true)
+    end
+end)

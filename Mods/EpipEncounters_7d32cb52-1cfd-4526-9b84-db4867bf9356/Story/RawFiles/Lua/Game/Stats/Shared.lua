@@ -1,4 +1,5 @@
 
+---@class StatsLib
 Stats = {
     STATS_OBJECT_TYPES = {
         Boost = true,
@@ -11,6 +12,37 @@ Stats = {
         StatusData = true,
         Potion = true,
     },
+
+    Enums = {
+        ---@enum StatEntry_CastCheckType
+        CastCheckType = {
+            [0] = "None",
+            [1] = "Distance",
+            [2] = "DamageType",
+            [3] = "TargetSurfaceType",
+        },
+        ---@enum StatEntry_SkillRequirement
+        SkillElement = {
+            [0] = "None",
+        },
+        ---@enum StatEntry_SkillAbility
+        SkillAbility = {
+            [0] = "None",
+            [1] = "Warrior",
+            [2] = "Ranger",
+            [3] = "Rogue",
+            [4] = "Source",
+            [5] = "Fire",
+            [6] = "Water",
+            [7] = "Air",
+            [8] = "Earth",
+            [9] = "Death",
+            [10] = "Summoning",
+            [11] = "Polymorph",
+        },
+    },
+
+    ModifierLists = {},
 
     ---@type table<GUID, table<string, number>> Default values, per mod.
     EXTRA_DATA_DEFAULT_VALUES = {
@@ -535,6 +567,36 @@ end
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
+
+-- Unavailable as the relevant call is currently bugged.
+--@param statID string
+--@param statType StatsObjectType?
+--@return GUID
+-- function Stats.GetSourceMod(statID, statType)
+--     local mods = Ext.Mod.GetLoadOrder()
+--     local source
+
+--     for _,guid in ipairs(mods) do
+--         print(Text.EqualizeSpace(Ext.Mod.GetMod(guid).Info.Name, guid, 130))
+--     end
+
+--     for i,guid in ipairs(mods) do
+--         local stats = Ext.Stats.GetStatsLoadedBefore(guid, statType)
+
+--         for _,stat in ipairs(stats) do
+--             if stat == statID then
+--                 source = mods[i - 1] -- If we find a stat in mod[i], it was declared in mods[i - 1].
+--                 break
+--             end
+--         end
+
+--         if source then
+--             break
+--         end
+--     end
+    
+--     return source
+-- end
 
 ---Returns whether char meets the requirements for a stat object to be used.
 ---@param char Character
