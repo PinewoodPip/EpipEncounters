@@ -24,6 +24,23 @@ function Net.PostToUser(user, channel, message, excludedChar)
     Ext.Net.PostMessageToUser(user, channel, Utilities.Stringify(message), excludedChar)
 end
 
+---@param char Character
+---@param channel string
+---@param message any
+function Net.PostToOwner(char, channel, message)
+    local owner = char
+    if char.HasOwner then
+        -- Mildly annoying inconsistency with field names.
+        if Ext.IsClient() then
+            owner = Character.Get(char.OwnerCharacterHandle)
+        else
+            owner = Character.Get(char.OwnerHandle)
+        end
+    end
+
+    Net.PostToCharacter(owner, channel, message)
+end
+
 -- Wrapper for Ext.RegisterNetListener that parses json payload and fires a hookable event afterwards.
 function Net.RegisterListener(channel, func)
     Ext.RegisterNetListener(channel, function(cmd, payload)

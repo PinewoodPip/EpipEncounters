@@ -33,7 +33,7 @@ Net.RegisterListener("EPIPENCOUNTERS_GetSurfaceData", function(_, payload)
             cloudSurfaceOwnerNetID = netID
         end
 
-        Net.PostToCharacter(Character.Get(charNetID), "EPIPENCOUNTERS_ReturnSurfaceData", {
+        Net.PostToOwner(Character.Get(charNetID), "EPIPENCOUNTERS_ReturnSurfaceData", {
             GroundSurfaceOwnerNetID = groundSurfaceOwnerNetID,
             CloudSurfaceOwnerNetID = cloudSurfaceOwnerNetID,
         })
