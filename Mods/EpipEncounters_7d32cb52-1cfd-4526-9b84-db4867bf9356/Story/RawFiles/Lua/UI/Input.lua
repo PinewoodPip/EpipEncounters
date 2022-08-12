@@ -81,6 +81,11 @@ function Input.EventIsBeingCaptured(event)
     return captured
 end
 
+---@param active boolean
+function Input.SetMouseWheelBlocked(active)
+    Input:GetRoot().captureMouseWheel(active)
+end
+
 function Input.ToggleEventCapture(event, capture, requestID)
     if not requestID then Input:LogError("ToggleEventCapture(): A request ID must be passed.") end
     if not capture then capture = nil end

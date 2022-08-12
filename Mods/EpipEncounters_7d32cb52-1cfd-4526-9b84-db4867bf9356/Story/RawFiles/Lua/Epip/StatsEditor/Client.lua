@@ -138,5 +138,5 @@ function StatsEditor:__Setup()
 end
 
 function StatsEditor:__Test()
-    StatsEditor.Setup("SkillData", "Projectile_Fireball")
+    -- StatsEditor.Setup("SkillData", "Projectile_Fireball")
 end

@@ -4,6 +4,7 @@ local Options = Client.UI.OptionsInput
 Options.RegisterTab("EpipEncounters", {
     Name = "Epip Encounters",
     Keybinds = {
+        {Name = "Toggle Tooltip Scrolling", ID = "EpipEncounters_ScrollTooltip", DefaultInput1 = {Keys = {"middle"}}},
         {Name = "Quick Examine", ID = "EpipEncounters_QuickExamine", DefaultInput1 = {Keys = {"v"}}},
         {Name = "Meditate", ID = "EpicEncounters_Meditate"},
         {Name = "Source Infuse", ID = "EpipEncounters_SourceInfuse"},
