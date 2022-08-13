@@ -267,6 +267,7 @@ LOAD_ORDER = {
     {ScriptSet = "Epip/ItemTagging"},
     {ScriptSet = "Epip/ExtraDataConfig", Developer = true,},
     {ScriptSet = "Epip/Housing", WIP = true,},
+    "Epip/Housing/Shared_Furniture.lua",
     {ScriptSet = "Epip/StatsEditor", WIP = true,},
 
     -- AMER UI controller support
