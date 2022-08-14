@@ -65,6 +65,7 @@ LOAD_ORDER = {
     "Game/Items/Server.lua",
     "Game/Stats/Shared.lua",
     "Game/Stats/Shared_ModifierLists.lua",
+    "Game/Stats/Shared_ExtraData.lua",
     "Utilities/Net/Shared.lua",
 
     "Game/AMERUI/Shared.lua",
