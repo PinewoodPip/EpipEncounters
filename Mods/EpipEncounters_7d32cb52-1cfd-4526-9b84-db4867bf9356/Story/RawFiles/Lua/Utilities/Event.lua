@@ -3,7 +3,8 @@
 -- Based on v56's event system.
 ---------------------------------------------
 
---- @class SubscribableEvent<T>:{ (Subscribe:fun(self:SubscribableEvent, callback:fun(ev:T|SubscribableEventParams), opts:SubscribableEventOptions|nil, stringID:string|nil):integer), Unsubscribe:fun(self:SubscribableEvent, index:integer|string), (Throw:fun(self:SubscribableEvent, event:T|SubscribableEventParams|nil))}
+---@class SubscribableEvent<T>:{ (Subscribe:fun(self:SubscribableEvent, callback:fun(ev:T|SubscribableEventParams), opts:SubscribableEventOptions|nil, stringID:string|nil):integer), Unsubscribe:fun(self:SubscribableEvent, index:integer|string), (Throw:fun(self:SubscribableEvent, event:T|SubscribableEventParams|nil))}
+---@field Preventable false
 SubscribableEvent = {}
 
 ---@class SubscribableEventOptions
@@ -13,22 +14,45 @@ SubscribableEvent = {}
 ---@class SubscribableEventParams
 ---@field StopPropagation fun(self:SubscribableEventParams) Stop the event from continuing on to other registered listeners.
 ---@field Stopped boolean?
-
----An event with no parameters.
----@class EmptyEvent
-
 local SubscribableEventParams = {
 	Stopped = false,
+	Preventable = false,
 	StopPropagation = function(self) self.Stopped = true end,
 }
 
+---An event whose consequences can be prevented.
+---@class PreventableEvent<T>:{ (Subscribe:fun(self:SubscribableEvent, callback:fun(ev:T|PreventableEventParams), opts:SubscribableEventOptions|nil, stringID:string|nil):integer), Unsubscribe:fun(self:SubscribableEvent, index:integer|string), (Throw:fun(self:SubscribableEvent, event:T|PreventableEventParams|nil)), (Prevent:fun(self:PreventableEvent))}
+---@field Preventable true
+
+---@class PreventableEventParams
+local PreventableEventParams = {
+	Preventable = true,
+	Prevented = false,
+	Prevent = function(self)
+		if self.Preventable then
+			self.Prevented = true
+		end
+	end,
+
+}
+Inherit(PreventableEventParams, SubscribableEventParams)
+
+---An event object with no parameters.
+---@class EmptyEvent
+
+---------------------------------------------
+-- METHODS
+---------------------------------------------
+
 ---@param name string
+---@param preventable boolean? Defaults to false.
 ---@return SubscribableEvent
-function SubscribableEvent:New(name)
+function SubscribableEvent:New(name, preventable)
 	local o = {
 		First = nil,
 		NextIndex = 1,
-		Name = name
+		Name = name,
+		Preventable = preventable or false,
 	}
 	setmetatable(o, self)
     self.__index = self
@@ -152,7 +176,11 @@ function SubscribableEvent:Throw(event)
 	local cur = self.First
 
 	if type(event) == "table" then
-		Inherit(event, SubscribableEventParams)
+		if self.Preventable then
+			Inherit(event, PreventableEventParams)
+		else
+			Inherit(event, SubscribableEventParams)
+		end
 	end
 
 	while cur ~= nil do

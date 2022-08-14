@@ -87,9 +87,10 @@ function Feature:AddEvent(name, data)
 end
 
 ---@param evName string
+---@param preventable boolean? Defaults to false.
 ---@return SubscribableEvent
-function Feature:AddSubscribableEvent(evName)
-    local event = SubscribableEvent:New(evName)
+function Feature:AddSubscribableEvent(evName, preventable)
+    local event = SubscribableEvent:New(evName, preventable)
 
     self.Events[evName] = event
 
@@ -97,9 +98,10 @@ function Feature:AddSubscribableEvent(evName)
 end
 
 ---@param evName string
+---@param preventable boolean? Defaults to false.
 ---@return SubscribableEvent
-function Feature:AddSubscribableHook(evName)
-    local event = SubscribableEvent:New(evName)
+function Feature:AddSubscribableHook(evName, preventable)
+    local event = SubscribableEvent:New(evName, preventable)
 
     self.Hooks[evName] = event
 

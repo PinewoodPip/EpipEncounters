@@ -7,8 +7,8 @@ local Tooltip = {
     USE_LEGACY_HOOKS = false,
 
     Hooks = {
-        RenderFormattedTooltip = {}, ---@type SubscribableEvent<TooltipLib_Hook_RenderFormattedTooltip>
-        RenderMouseTextTooltip = {}, ---@type SubscribableEvent<TooltipLib_Hook_RenderMouseTextTooltip>
+        RenderFormattedTooltip = {}, ---@type PreventableEvent<TooltipLib_Hook_RenderFormattedTooltip>
+        RenderMouseTextTooltip = {}, ---@type PreventableEvent<TooltipLib_Hook_RenderMouseTextTooltip>
     },
 }
 Client.Tooltip = Tooltip
@@ -31,15 +31,13 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
----@class TooltipLib_Hook_RenderFormattedTooltip
+---@class TooltipLib_Hook_RenderFormattedTooltip : PreventableEventParams
 ---@field Type TooltipLib_FormattedTooltipType
 ---@field Tooltip TooltipLib_FormattedTooltip Hookable.
 ---@field UI UIObject
----@field Prevented boolean Hookable.
 
----@class TooltipLib_Hook_RenderMouseTextTooltip
+---@class TooltipLib_Hook_RenderMouseTextTooltip : PreventableEventParams
 ---@field Text string Hookable.
----@field Prevented boolean Hookable.
 
 ---------------------------------------------
 -- METHODS
@@ -81,7 +79,6 @@ function Tooltip._SendFormattedTooltipHook(ui, tooltipType, data)
         Type = tooltipType,
         Tooltip = obj,
         UI = ui,
-        Prevented = false,
     }
 
     Tooltip.Hooks.RenderFormattedTooltip:Throw(hook)

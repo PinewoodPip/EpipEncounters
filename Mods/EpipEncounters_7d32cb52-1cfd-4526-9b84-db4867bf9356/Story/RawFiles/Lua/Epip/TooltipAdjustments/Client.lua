@@ -665,7 +665,7 @@ Client.Tooltip.Hooks.RenderFormattedTooltip:Subscribe(function (ev)
         CharacterNetID = Client.GetCharacter().NetID,
     })
 
-    ev.Prevented = true
+    ev:Prevent()
 end)
 Net.RegisterListener("EPIPENCOUNTERS_ReturnSurfaceData", function(payload)
     if pendingSurfaceTooltip then
