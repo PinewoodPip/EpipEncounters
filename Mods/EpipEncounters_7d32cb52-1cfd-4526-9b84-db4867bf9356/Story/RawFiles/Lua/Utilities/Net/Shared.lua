@@ -29,23 +29,40 @@ Game.Net = Net -- Backwards compatibility
 -- METHODS
 ---------------------------------------------
 
+---Sends a message to all peers.
+---@generic T
+---@param channel `T`
+---@param message T
+---@param excludedChar GUID?
 function Net.Broadcast(channel, message, excludedChar)
     message = message or {}
+
     Ext.Net.BroadcastMessage(channel, Utilities.Stringify(message), excludedChar)
 end
 
+---Sends a message to the user that currently controls char. Fails if char is a summon.
+---@generic T
+---@param char Character
+---@param channel `T`
+---@param message T
 function Net.PostToCharacter(char, channel, message)
     if GetExtType(char) ~= nil then char = char.MyGuid end
     
     Ext.Net.PostMessageToClient(char, channel, Utilities.Stringify(message or {}))
 end
 
+---Sends a message to a user.
+---@param user UserId
+---@param channel `T`
+---@param message T
+---@param excludedChar GUID?
 function Net.PostToUser(user, channel, message, excludedChar)
     if type(user) == "userdata" then user = user.ReservedUserID end
     
     Ext.Net.PostMessageToUser(user, channel, Utilities.Stringify(message), excludedChar)
 end
 
+---Sends a message to the owner of char. Use if you suspect the char might be a summon.
 ---@param char Character
 ---@param channel string
 ---@param message any
@@ -76,6 +93,7 @@ function Net.RegisterListener(channel, func)
     end)
 end
 
+---Returns the event associated with the passed message channel.
 ---@generic T
 ---@param channel string`T`
 ---@return SubscribableEvent<Net_Event_MessageReceived<`T`>>
@@ -93,6 +111,7 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
+-- Forward Net messages to corresponding events.
 Ext.Events.NetMessageReceived:Subscribe(function(ev)
     local payload = Ext.Json.Parse(ev.Payload)
     local event = {Message = payload, Channel = ev.Channel, UserID = ev.UserID} ---@type Net_Event_MessageReceived
