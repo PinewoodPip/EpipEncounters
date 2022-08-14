@@ -116,7 +116,7 @@ Ext.Osiris.RegisterListener("PROC_AMER_UI_Ascension_NodeDeallocated", 3, "after"
 end)
 
 -- Requested update from client
-Net.RegisterListener("EPIPENCOUNTERS_UpdateCustomStats", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_UpdateCustomStats", function(payload)
     local char = Ext.GetCharacter(payload.NetID)
     UpdateCustomStatsForCharacter(char.MyGuid)
 end)

@@ -766,11 +766,11 @@ Hotbar:RegisterInvokeListener("updateActionSkills", function(ev)
     Ext.OnNextTick(Hotbar.UpdateActionHolder)
 end, "After")
 
-Net.RegisterListener("EPIPENCOUNTERS_Hotbar_SetLayout", function(_, payload)
+Net.RegisterListener("EPIPENCOUNTERS_Hotbar_SetLayout", function(payload)
     Hotbar.SetState(Ext.GetCharacter(payload.NetID), payload.Layout)
 end)
 
-Net.RegisterListener("EPIPENCOUNTERS_Hotbar_SkillUseChanged", function(_, payload)
+Net.RegisterListener("EPIPENCOUNTERS_Hotbar_SkillUseChanged", function(payload)
     Hotbar.SetPreparedSkill(Ext.Entity.GetCharacter(payload.NetID), payload.SkillID, payload.Casting)
 end)
 

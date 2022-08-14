@@ -56,7 +56,7 @@ Ext.Osiris.RegisterListener("ItemTemplateAddedToCharacter", 3, "after", function
     AutoIdentify.ProcessItem(item)
 end)
 
-Net.RegisterListener("EPIPENCOUNTERS_ServerOptionChanged", function(channel, payload)
+Net.RegisterListener("EPIPENCOUNTERS_ServerOptionChanged", function(payload)
     if payload.Mod == "EpipEncounters" and payload.Setting == "AutoIdentify" then
         AutoIdentify.state = payload.Value
 

@@ -20,7 +20,7 @@ Osiris.RegisterSymbolListener('PROC_AMER_UI_Greatforge_DoCraft', 11, "after", fu
     end
 end)
 
-Net.RegisterListener("EPIPENCOUNTERS_GreatforgeEngrave_Confirm", function(_, payload)
+Net.RegisterListener("EPIPENCOUNTERS_GreatforgeEngrave_Confirm", function(payload)
     local item = Item.Get(payload.ItemNetID)
     local text = payload.Name
 

@@ -228,7 +228,7 @@ end)
 ---------------------------------------------
 
 -- Store Deltamod info.
-Net.RegisterListener("EPIPENCOUNTERS_QuickGreatforge_ModList", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_QuickGreatforge_ModList", function(payload)
     for i,tuple in ipairs(payload) do
         local mod = tuple[1]
         local deltamod = tuple[2]

@@ -20,7 +20,7 @@ end
 ---------------------------------------------
 
 -- Listen for furniture being moved.
-Net.RegisterListener("EPIPENCOUNTERS_Housing_PlaceMovingFurniture", function(_, payload)
+Net.RegisterListener("EPIPENCOUNTERS_Housing_PlaceMovingFurniture", function(payload)
     local obj = Item.Get(payload.ObjNetID)
     local position = payload.Position
 
@@ -30,6 +30,6 @@ Net.RegisterListener("EPIPENCOUNTERS_Housing_PlaceMovingFurniture", function(_, 
 end)
 
 -- Spawn furniture.
-Net.RegisterListener("EPIPENCOUNTERS_Housing_SpawnFurniture", function(_, payload)
+Net.RegisterListener("EPIPENCOUNTERS_Housing_SpawnFurniture", function(payload)
     Housing.SpawnFurniture(Housing.GetFurniture(payload.FurnitureGUID), payload.Position)
 end)

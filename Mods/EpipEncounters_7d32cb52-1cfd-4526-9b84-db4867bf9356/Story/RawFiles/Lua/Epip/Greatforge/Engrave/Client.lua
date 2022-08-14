@@ -7,7 +7,7 @@ local MessageBox = Client.UI.MessageBox
 -- EVENT LISTENERS
 ---------------------------------------------
 
-Net.RegisterListener("EPIPENCOUNTERS_GreatforgeEngrave", function(_, payload)
+Net.RegisterListener("EPIPENCOUNTERS_GreatforgeEngrave", function(payload)
     local item = Item.Get(payload.ItemNetID)
 
     Engrave.currentItemHandle = item.Handle

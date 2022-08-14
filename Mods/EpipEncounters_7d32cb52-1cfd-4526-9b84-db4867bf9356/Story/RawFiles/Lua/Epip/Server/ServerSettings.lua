@@ -130,7 +130,7 @@ end
 ---------------------------------------------
 
 -- Listen for option changes from the client.
-Net.RegisterListener("EPIPENCOUNTERS_ServerOptionChanged", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_ServerOptionChanged", function(payload)
     local setting = payload.Setting
     local value = payload.Value
     local module = payload.Mod

@@ -52,7 +52,7 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
-Net.RegisterListener("EPIPENCOUNTERS_ControllerSupport_Command", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_ControllerSupport_Command", function(payload)
     local command = payload.Command
     local char = Ext.GetCharacter(payload.NetID)
     local state = Controller.GetState(char)

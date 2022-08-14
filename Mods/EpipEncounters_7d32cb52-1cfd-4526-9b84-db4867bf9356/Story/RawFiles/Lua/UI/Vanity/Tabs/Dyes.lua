@@ -630,7 +630,7 @@ Dyes.Events.DyeUsed:RegisterListener(function (dye, item, character)
     end
 end)
 
-Net.RegisterListener("EPIP_CACHEDYE", function(cmd, payload)
+Net.RegisterListener("EPIP_CACHEDYE", function(payload)
     local dye = payload.Dye
 
     Dyes.CACHE[dye.Name] = dye
@@ -642,7 +642,7 @@ end)
 -- _D(Ext.GetItem(_C():GetItemBySlot("Breast")):GetDeltaMods())
 -- _D(Ext.Stats.DeltaMod.GetLegacy("Boost_Armor_PIP_GENCOLOR_FF006699_FF669999_FF669999", "Armor"))
 -- SESSIONLOADED WORKS!
-Net.RegisterListener("EPIPENCOUNTERS_CreateVanityDyes", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_CreateVanityDyes", function(payload)
 -- Ext.Events.SessionLoaded:Subscribe(function()
 
     -- print("Creating dye stats")
@@ -654,7 +654,7 @@ Net.RegisterListener("EPIPENCOUNTERS_CreateVanityDyes", function(cmd, payload)
 end)
 
 -- Create dye stats on this client when requested by the server.
-Net.RegisterListener("EPIPENCOUNTERS_CreateDyeStat", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_CreateDyeStat", function(payload)
     Dyes.CreateDyeStats(Ext.GetItem(payload.ItemNetID), payload.Stat)
 end)
 

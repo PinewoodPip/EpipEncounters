@@ -5,11 +5,11 @@
 -- to update the visuals.
 ---------------------------------------------
 
-Net.RegisterListener("EPIPENCOUNTERS_CreateDyeStat_ForPeers", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_CreateDyeStat_ForPeers", function(payload)
     Net.Broadcast("EPIPENCOUNTERS_CreateDyeStat", payload)
 end)
 
-Net.RegisterListener("EPIPENCOUNTERS_DyeItem", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_DyeItem", function(payload)
     local item = Ext.GetItem(payload.NetID)
     local dyeStat = payload.DyeStat
     local char = Ext.GetCharacter(payload.CharacterNetID)
@@ -77,7 +77,7 @@ end)
 --     Net.Broadcast("EPIPENCOUNTERS_Vanity_SetDyes", {Items = items})
 -- end)
 
-Net.RegisterListener("EPIPENCOUNTERS_DYE", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_DYE", function(payload)
     local item = Ext.GetItem(payload.Item)
     local char = Ext.GetCharacter(payload.Character)
     local dyeData = payload.DyeData

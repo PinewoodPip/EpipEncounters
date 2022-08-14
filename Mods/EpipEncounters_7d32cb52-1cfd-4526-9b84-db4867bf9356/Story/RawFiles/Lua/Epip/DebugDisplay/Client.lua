@@ -93,7 +93,7 @@ Ext.Events.Tick:Subscribe(function (ev)
     DebugDisplay.AddTick()
 end)
 
-Net.RegisterListener("EPIPENCOUNTERS_DebugDisplay_ServerTicks", function (_, payload)
+Net.RegisterListener("EPIPENCOUNTERS_DebugDisplay_ServerTicks", function (payload)
     local ticks = payload.Ticks
 
     DebugDisplay.SetServerTicks(ticks)

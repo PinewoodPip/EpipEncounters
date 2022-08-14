@@ -14,28 +14,28 @@ local GreatforgeContextMenu = Epip.Features.GreatforgeContextMenu
 ---------------------------------------------
 -- DISMANTLE
 ---------------------------------------------
-Net.RegisterListener("EPIPENCOUNTERS_QuickReduce", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_QuickReduce", function(payload)
     Osi.PROC_PIP_QuickReduce(Ext.GetCharacter(payload.Char).MyGuid, Ext.GetItem(payload.Item).MyGuid)
 end)
 
 ---------------------------------------------
 -- EXTRACT RUNES
 ---------------------------------------------
-Net.RegisterListener("EPIPENCOUNTERS_QuickExtractRunes", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_QuickExtractRunes", function(payload)
     Osi.PROC_PIP_QuickExtractRunes(Ext.GetCharacter(payload.Char).MyGuid, Ext.GetItem(payload.Item).MyGuid)
 end)
 
 ---------------------------------------------
 -- REMOVE MODS (Cull)
 ---------------------------------------------
-Net.RegisterListener("EPIPENCOUNTERS_QuickGreatforge_RemoveMods", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_QuickGreatforge_RemoveMods", function(payload)
     Osi.PROC_PIP_QuickGreatforge_RemoveMods(Ext.GetCharacter(payload.Char).MyGuid, Ext.GetItem(payload.Item).MyGuid, payload.Modifier)
 end)
 
 ---------------------------------------------
 -- MASS DISMANTLE
 ---------------------------------------------
-Net.RegisterListener("EPIPENCOUNTERS_MassDismantle", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_MassDismantle", function(payload)
     local container = Ext.GetItem(payload.Container)
     local char = Ext.GetCharacter(payload.Char)
 

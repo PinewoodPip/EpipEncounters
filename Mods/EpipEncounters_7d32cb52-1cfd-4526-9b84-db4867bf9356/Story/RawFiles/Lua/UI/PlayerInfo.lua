@@ -279,7 +279,7 @@ Client.UI.OptionsSettings:RegisterListener("OptionSet", function(data, value)
 end)
 
 -- Update the BH displays when characters sheathe/unsheathe
-local function OnStatusToggle(cmd, payload)
+local function OnStatusToggle(payload)
     local status = payload.Status
 
     if status == "UNSHEATHED" then

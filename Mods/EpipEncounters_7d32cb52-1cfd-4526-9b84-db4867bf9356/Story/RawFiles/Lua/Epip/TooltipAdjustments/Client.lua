@@ -667,7 +667,7 @@ Client.Tooltip.Hooks.RenderFormattedTooltip:Subscribe(function (ev)
 
     ev.Prevented = true
 end)
-Net.RegisterListener("EPIPENCOUNTERS_ReturnSurfaceData", function(_, payload)
+Net.RegisterListener("EPIPENCOUNTERS_ReturnSurfaceData", function(payload)
     if pendingSurfaceTooltip then
         local groundOwner
         local cloudOwner

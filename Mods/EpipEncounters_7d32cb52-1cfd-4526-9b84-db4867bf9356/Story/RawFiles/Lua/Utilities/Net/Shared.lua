@@ -1,11 +1,33 @@
 
 
----@class Net
+---@class Net : Feature
 Net = {
     INVALID_USER_ID = -65536,
+
+    USE_LEGACY_EVENTS = false,
+    USE_LEGACY_HOOKS = false,
+
+    Events = {
+        MessageReceived = {}, ---@type SubscribableEvent<Net_Event_MessageReceived>
+    },
 }
+Epip.InitializeLibrary("Net", Net)
 
 Game.Net = Net -- Backwards compatibility
+
+---------------------------------------------
+-- EVENTS
+---------------------------------------------
+
+---@generic T
+---@class Net_Event_MessageReceived<T>
+---@field Channel string
+---@field Message `T`
+---@field UserID UserId
+
+---------------------------------------------
+-- METHODS
+---------------------------------------------
 
 function Net.Broadcast(channel, message, excludedChar)
     message = message or {}
@@ -41,11 +63,44 @@ function Net.PostToOwner(char, channel, message)
     Net.PostToCharacter(owner, channel, message)
 end
 
--- Wrapper for Ext.RegisterNetListener that parses json payload and fires a hookable event afterwards.
+---Wrapper for Ext.RegisterNetListener that parses json payloads and fires an event afterwards.
+---@generic T
+---@param channel `T`
+---@param func fun(payload:`T`)
 function Net.RegisterListener(channel, func)
-    Ext.RegisterNetListener(channel, function(cmd, payload)
-        local payload = Ext.Json.Parse(payload)
-        func(channel, payload)
-        Utilities.Hooks.FireEvent("PIP_Net", channel, payload) -- TODO make more easily registerable
+    local event = Net._GetChannelMessageEvent(channel)
+
+    event:Subscribe(function (ev)
+        ---@diagnostic disable-next-line: redundant-parameter
+        func(ev.Message, ev.Message) -- Second param is for backwards compatibility with listeners that expected the first param to be the channel name.
     end)
 end
+
+---@generic T
+---@param channel string`T`
+---@return SubscribableEvent<Net_Event_MessageReceived<`T`>>
+function Net._GetChannelMessageEvent(channel)
+    local event = Net.Events[channel]
+
+    if not event then
+        event = Net:AddSubscribableEvent(channel)
+    end
+
+    return event
+end
+
+---------------------------------------------
+-- EVENT LISTENERS
+---------------------------------------------
+
+Ext.Events.NetMessageReceived:Subscribe(function(ev)
+    local payload = Ext.Json.Parse(ev.Payload)
+    local event = {Message = payload, Channel = ev.Channel, UserID = ev.UserID} ---@type Net_Event_MessageReceived
+
+    local subscribableEvent = Net._GetChannelMessageEvent(ev.Channel)
+
+    subscribableEvent:Throw(event)
+
+    -- The generic listener goes last.
+    Net.Events.MessageReceived:Throw(event)
+end)

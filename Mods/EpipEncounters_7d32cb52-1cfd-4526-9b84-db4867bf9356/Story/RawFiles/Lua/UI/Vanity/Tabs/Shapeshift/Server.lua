@@ -14,13 +14,13 @@ local function ClearStatuses(char)
     end
 end
 
-Net.RegisterListener("EPIPENCOUNTERS_Vanity_Shapeshift_Revert", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_Vanity_Shapeshift_Revert", function(payload)
     local char = Character.Get(payload.NetID)
 
     ClearStatuses(char)
 end)
 
-Net.RegisterListener("EPIPENCOUNTERS_Vanity_Shapeshift_Apply", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_Vanity_Shapeshift_Apply", function(payload)
     local char = Character.Get(payload.NetID)
     local form = Shapeshift.GetForm(payload.TemplateGUID)
     local statusName = form:GetStatusName()

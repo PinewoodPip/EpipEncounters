@@ -1,6 +1,6 @@
 
 -- Sends surface data to client on request.
-Net.RegisterListener("EPIPENCOUNTERS_GetSurfaceData", function(_, payload)
+Net.RegisterListener("EPIPENCOUNTERS_GetSurfaceData", function(payload)
     local position = payload.Position
     local charNetID = payload.CharacterNetID
     local cell = Ext.Entity.GetAiGrid():GetCellInfo(position[1], position[3])

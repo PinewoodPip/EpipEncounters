@@ -6,7 +6,7 @@ local DataConfig = Epip.Features.ExtraDataConfig
 -- EVENT LISTENERS
 ---------------------------------------------
 
-Net.RegisterListener("EPIPENCOUNTERS_SetExtraData", function(_, payload)
+Net.RegisterListener("EPIPENCOUNTERS_SetExtraData", function(payload)
     local key = payload.Key
     local value = payload.Value
 

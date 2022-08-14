@@ -192,7 +192,7 @@ Osiris.RegisterSymbolListener("ItemEquipped", 2, "after", function(item, char)
     end
 end)
 
-Net.RegisterListener("EPIPENCOUNTERS_Vanity_Transmog_KeepAppearance", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_Vanity_Transmog_KeepAppearance", function(payload)
     local char = Ext.GetCharacter(payload.NetID)
     local tag = "PIP_Vanity_Transmog_KeepAppearance_" .. payload.Slot
 
@@ -203,13 +203,13 @@ Net.RegisterListener("EPIPENCOUNTERS_Vanity_Transmog_KeepAppearance", function(c
     end
 end)
 
-Net.RegisterListener("EPIPENCOUNTERS_Vanity_RefreshAppearance", function (_, payload)
+Net.RegisterListener("EPIPENCOUNTERS_Vanity_RefreshAppearance", function (payload)
     local char = Character.Get(payload.CharacterNetID)
 
     Vanity.RefreshAppearance(char, payload.UseAltStatus)
 end)
 
-Net.RegisterListener("EPIPENCOUNTERS_Vanity_Transmog_ToggleWeaponOverlayEffects", function(_, payload)
+Net.RegisterListener("EPIPENCOUNTERS_Vanity_Transmog_ToggleWeaponOverlayEffects", function(payload)
     local item = Item.Get(payload.ItemNetID)
     local hasTag = item:HasTag("DISABLE_WEAPON_EFFECTS")
 
@@ -221,7 +221,7 @@ Net.RegisterListener("EPIPENCOUNTERS_Vanity_Transmog_ToggleWeaponOverlayEffects"
 end)
 
 -- Transmog request.
-Net.RegisterListener("EPIPENCOUNTERS_VanityTransmog", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_VanityTransmog", function(payload)
     local char = Ext.GetCharacter(payload.Char)
     local item = Ext.GetItem(payload.Item)
     local template = payload.NewTemplate
@@ -231,7 +231,7 @@ Net.RegisterListener("EPIPENCOUNTERS_VanityTransmog", function(cmd, payload)
 end)
 
 -- TODO MOVE ELSEWHERE
-Net.RegisterListener("EPIPENCOUNTERS_Vanity_ApplyAura", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_Vanity_ApplyAura", function(payload)
     local char = Ext.GetCharacter(payload.NetID)
     local aura = payload.Aura ---@type VanityAura
 
@@ -248,7 +248,7 @@ Net.RegisterListener("EPIPENCOUNTERS_Vanity_ApplyAura", function(cmd, payload)
     
     -- Osiris.DB_PIP_Vanity_AppliedAura:Set(char.MyGuid, aura.Effect, handle)
 end)
-Net.RegisterListener("EPIPENCOUNTERS_Vanity_RemoveAura", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_Vanity_RemoveAura", function(payload)
     local char = Ext.GetCharacter(payload.NetID)
     local _, _, _, tuples = Osiris.DB_PIP_Vanity_AppliedAura:Get(char.MyGuid, nil, nil)
 
@@ -264,7 +264,7 @@ Net.RegisterListener("EPIPENCOUNTERS_Vanity_RemoveAura", function(cmd, payload)
 end)
 
 -- Revert appearance.
-Net.RegisterListener("EPIPENCOUNTERS_Vanity_RevertTemplate", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_Vanity_RevertTemplate", function(payload)
     local char = Ext.GetCharacter(payload.CharNetID)
     local item = Ext.GetItem(payload.ItemNetID)
 
@@ -272,7 +272,7 @@ Net.RegisterListener("EPIPENCOUNTERS_Vanity_RevertTemplate", function(cmd, paylo
 end)
 
 -- Toggling persistent outfit feature.
-Net.RegisterListener("EPIPENCOUNTERS_VanityPersistOutfit", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_VanityPersistOutfit", function(payload)
     local char = Ext.GetCharacter(payload.ClientCharacterNetID)
     local enable = payload.State
 
@@ -285,7 +285,7 @@ Net.RegisterListener("EPIPENCOUNTERS_VanityPersistOutfit", function(cmd, payload
 end)
 
 -- Toggling persistent outfit feature, for weapons
-Net.RegisterListener("EPIPENCOUNTERS_VanityPersistWeaponry", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_VanityPersistWeaponry", function(payload)
     local char = Ext.GetCharacter(payload.ClientCharacterNetID)
     local enable = payload.State
 

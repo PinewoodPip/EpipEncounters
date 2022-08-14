@@ -220,7 +220,7 @@ end
 ---------------------------------------------
 
 -- Refresh stats tab.
-Net.RegisterListener("EPIPENCOUNTERS_RefreshStatsTab", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_RefreshStatsTab", function(payload)
     -- Needs a delay, as applying tags is apparently slower than this.
     Timer.Start("UI_CharacterSheet", 0.1, function()
         StatsTab.RenderStats()

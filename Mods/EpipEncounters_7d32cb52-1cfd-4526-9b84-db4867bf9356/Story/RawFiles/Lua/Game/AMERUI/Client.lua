@@ -22,7 +22,7 @@ function AMERUI.ClientIsInUI()
     return Client.GetCharacter():GetStatus(Game.Ascension.MEDITATING_STATUS)
 end
 
-Net.RegisterListener("EPIPENCOUNTERS_AMERUI_StateChanged", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_AMERUI_StateChanged", function(payload)
     local guid = payload.Character
     payload.Character = Ext.GetCharacter(guid)
 

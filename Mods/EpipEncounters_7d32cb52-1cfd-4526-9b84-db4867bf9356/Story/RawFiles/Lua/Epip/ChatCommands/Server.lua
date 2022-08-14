@@ -11,7 +11,7 @@ local Commands = Epip.Features.ChatCommands
 -- EVENT LISTENERS
 ---------------------------------------------
 
-Net.RegisterListener("EPIPENCOUNTERS_EpipChat_CommandSent", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_EpipChat_CommandSent", function(payload)
     local char = Ext.GetCharacter(payload.CharacterNetID)
     local command = payload.Command
     local args = payload.Args

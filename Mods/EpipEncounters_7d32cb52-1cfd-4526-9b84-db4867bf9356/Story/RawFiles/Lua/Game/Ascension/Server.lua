@@ -17,7 +17,7 @@ end
 -- LISTENERS
 ---------------------------------------------
 
-Net.RegisterListener("EPIPENCOUNTERS_Greatforge_BenchItem", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_Greatforge_BenchItem", function(payload)
     StartGreatforge(Ext.GetCharacter(payload.Char), Ext.GetItem(payload.NetID))
 end)
 

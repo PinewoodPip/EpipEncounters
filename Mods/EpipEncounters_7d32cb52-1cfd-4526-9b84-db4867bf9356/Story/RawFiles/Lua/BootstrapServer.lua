@@ -263,7 +263,7 @@ end)
 
 NULLGUID = "NULL_00000000-0000-0000-0000-000000000000"
 
-Net.RegisterListener("EPIP_AMERUI_GoBack", function(cmd, payload)
+Net.RegisterListener("EPIP_AMERUI_GoBack", function(payload)
     local char = Ext.GetCharacter(payload.NetID)
     local instance, ui, _ = Osiris.DB_AMER_UI_UsersInUI(nil, nil, char.MyGuid)
 
@@ -280,7 +280,7 @@ Net.RegisterListener("EPIP_AMERUI_GoBack", function(cmd, payload)
 end)
 
 local _registeredSymbols = {}
-Net.RegisterListener("EPIP_RegisterGenericOsiSymbolEvent", function(cmd, payload)
+Net.RegisterListener("EPIP_RegisterGenericOsiSymbolEvent", function(payload)
     -- Don't register listeners multiple times
     -- Alternatively we could only send these requests from the host client :thinking:
     for i,s in ipairs(_registeredSymbols) do

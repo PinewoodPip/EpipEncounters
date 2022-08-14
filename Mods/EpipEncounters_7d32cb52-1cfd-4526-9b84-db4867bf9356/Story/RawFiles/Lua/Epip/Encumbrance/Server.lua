@@ -5,7 +5,7 @@ local Encumbrance = Epip.Features.Encumbrance
 -- EVENT LISTENERS
 ---------------------------------------------
 
-Net.RegisterListener("EPIPENCOUNTERS_ServerOptionChanged", function(_, payload)
+Net.RegisterListener("EPIPENCOUNTERS_ServerOptionChanged", function(payload)
     if payload.Mod == "EpipEncounters" and payload.Setting == "Inventory_InfiniteCarryWeight" then
         Encumbrance.Toggle(payload.Value)
 

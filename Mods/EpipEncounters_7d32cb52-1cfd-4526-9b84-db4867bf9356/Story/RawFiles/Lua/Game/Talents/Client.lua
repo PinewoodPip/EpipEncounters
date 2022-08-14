@@ -49,7 +49,7 @@ function Talents:HideTalent(id)
     self.hiddenTalents[id] = true
 end
 
-Net.RegisterListener("EPIPENCOUNTERS_Talents_SendPoints", function(channel, payload)
+Net.RegisterListener("EPIPENCOUNTERS_Talents_SendPoints", function(payload)
     -- Ext.Print("set from net")
     if not Talents.isCharacterCreation then
         Talents.talentPoints = payload.Points
@@ -88,7 +88,7 @@ Utilities.Hooks.RegisterListener("UI_CharacterCreation", "PresetWasChanged", fun
     Talents:ResetCharacterCreation()
 end)
 
-Net.RegisterListener("EPIPENCOUNTERS_Talents_CharacterCreationFinished", function(channel, payload)
+Net.RegisterListener("EPIPENCOUNTERS_Talents_CharacterCreationFinished", function(payload)
     Talents.characterCreationTalentOffset = 0
     Talents.mirrorModifiedTalents = {}
 

@@ -613,7 +613,7 @@ end
 ---------------------------------------------
 
 -- TODO move elsewhere as this is from a feature and not the core library.
-Net.RegisterListener("EPIPENCOUNTERS_ServerSettingSynch", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_ServerSettingSynch", function(payload)
     OptionsSettings.SetOptionValue(payload.Module, payload.Setting, payload.Value, false)
 end)
 

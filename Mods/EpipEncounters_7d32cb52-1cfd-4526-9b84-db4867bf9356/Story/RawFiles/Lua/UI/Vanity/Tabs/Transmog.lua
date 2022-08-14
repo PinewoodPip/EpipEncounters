@@ -364,7 +364,7 @@ end)
 -- EVENT LISTENERS
 ---------------------------------------------
 
-Net.RegisterListener("EPIPENCOUNTERS_ItemEquipped", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_ItemEquipped", function(payload)
     local char = Ext.GetCharacter(payload.NetID)
     local item = Ext.GetItem(payload.ItemNetID)
 
@@ -398,7 +398,7 @@ Utilities.Hooks.RegisterListener("Client", "ActiveCharacterChanged", function()
     Transmog.UpdateActiveCharacterTemplates()
 end)
 
-Net.RegisterListener("EPIPENCOUNTERS_Vanity_RefreshSheetAppearance", function(_, _)
+Net.RegisterListener("EPIPENCOUNTERS_Vanity_RefreshSheetAppearance", function(_)
     Transmog.UpdateActiveCharacterTemplates()
 end)
 

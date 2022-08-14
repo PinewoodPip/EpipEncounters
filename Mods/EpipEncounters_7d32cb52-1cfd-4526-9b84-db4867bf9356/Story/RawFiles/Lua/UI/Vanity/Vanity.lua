@@ -458,7 +458,7 @@ function Vanity.SetHeader(text)
     -- header.htmlText = text
 end
 
-Net.RegisterListener("EPIPENCOUNTERS_Vanity_SetTemplateOverride", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_Vanity_SetTemplateOverride", function(payload)
     Vanity.currentItemTemplateOverride = payload.TemplateOverride
     Vanity.Refresh()
 end)
@@ -1099,7 +1099,7 @@ Client.UI.CharacterSheet:RegisterCallListener("showStatTooltip", function(ev)
     end
 end)
 
-Net.RegisterListener("EPIPENCOUNTERS_Vanity_RefreshSheetAppearance", function(_, _)
+Net.RegisterListener("EPIPENCOUNTERS_Vanity_RefreshSheetAppearance", function(_)
     local sheet = Client.UI.CharacterSheet
     local char = Client.GetCharacter()
     local hasHelm = char.PlayerData.HelmetOptionState

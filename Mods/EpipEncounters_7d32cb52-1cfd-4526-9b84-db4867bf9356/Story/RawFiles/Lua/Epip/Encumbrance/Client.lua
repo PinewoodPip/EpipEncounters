@@ -6,7 +6,7 @@ local PartyInventory = Client.UI.PartyInventory
 -- EVENT LISTENERS
 ---------------------------------------------
 
-Net.RegisterListener("EPIPENCOUNTERS_ToggleEncumbrance", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_ToggleEncumbrance", function(payload)
     Encumbrance.Toggle(payload.Enabled)
 end)
 

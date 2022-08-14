@@ -165,7 +165,7 @@ Ext.RegisterUITypeCall(Client.UI.Data.UITypes.partyInventory, "startDragging", f
 end)
 
 -- auto-unlock inventories setting; per player.
-Net.RegisterListener("EPIPENCOUNTERS_AutoUnlockPartyInventory", function(event, payload)
+Net.RegisterListener("EPIPENCOUNTERS_AutoUnlockPartyInventory", function(payload)
     Inv.AutoUnlockFor(payload.Chars)
 end)
 

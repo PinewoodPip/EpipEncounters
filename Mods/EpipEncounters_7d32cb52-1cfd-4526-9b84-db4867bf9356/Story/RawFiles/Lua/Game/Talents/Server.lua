@@ -17,7 +17,7 @@ function Game.Talents:ValidateTalentRequirements(char)
     end
 end
 
-Net.RegisterListener("EPIPENCOUNTERS_CharacterSheet_AddTalent", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_CharacterSheet_AddTalent", function(payload)
     local char = Ext.GetCharacter(payload.NetID)
     local talent = payload.Talent
 
@@ -45,7 +45,7 @@ Net.RegisterListener("EPIPENCOUNTERS_CharacterSheet_AddTalent", function(cmd, pa
     Game.Talents:AddTalent(char, talent)    
 end)
 
-Net.RegisterListener("EPIPENCOUNTERS_CharacterSheet_RemoveTalent", function(channel, payload)
+Net.RegisterListener("EPIPENCOUNTERS_CharacterSheet_RemoveTalent", function(payload)
     local char = Ext.GetCharacter(payload.NetID)
     local talent = payload.Talent
 
@@ -163,7 +163,7 @@ Ext.Osiris.RegisterListener("CharacterCreationFinished", 1, "after", function(ch
     Game.Talents:ValidateTalentRequirements(Ext.GetCharacter(char))
 end)
 
-Net.RegisterListener("EPIPENCOUNTERS_Talents_RequestPoints", function(channel, payload)
+Net.RegisterListener("EPIPENCOUNTERS_Talents_RequestPoints", function(payload)
     local char = Ext.GetCharacter(payload.NetID)
     local points = CharacterGetTalentPoints(char.MyGuid)
     Net.PostToCharacter(char.MyGuid, "EPIPENCOUNTERS_Talents_SendPoints", {Points = points})

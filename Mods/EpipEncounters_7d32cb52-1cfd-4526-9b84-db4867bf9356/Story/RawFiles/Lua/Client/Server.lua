@@ -31,7 +31,7 @@ end
 ---------------------------------------------
 
 -- Forward generic osi events
-Net.RegisterListener("EPIP_GenericOsiSymbolEvent", function(cmd, payload)
+Net.RegisterListener("EPIP_GenericOsiSymbolEvent", function(payload)
     local id = payload.Symbol .. payload.Arity
 
     Server:FireEvent("OsirisSymbolEvent_" .. id, table.unpack(payload.Params))

@@ -63,15 +63,15 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
-Net.RegisterListener("EPIPENCOUNTERS_Hotbar_UseItem", function(_, payload)
+Net.RegisterListener("EPIPENCOUNTERS_Hotbar_UseItem", function(payload)
     Hotbar.UseItem(Character.Get(payload.CharNetID), Item.Get(payload.ItemNetID))
 end)
 
-Net.RegisterListener("EPIPENCOUNTERS_Hotbar_UseTemplate", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_Hotbar_UseTemplate", function(payload)
     Osi.PROC_PIP_Hotbar_UseTemplate(Ext.GetCharacter(payload.NetID).MyGuid, payload.Template)
 end)
 
-Net.RegisterListener("EPIPENCOUNTERS_Hotbar_SaveLayout", function(cmd, payload)
+Net.RegisterListener("EPIPENCOUNTERS_Hotbar_SaveLayout", function(payload)
     for guid,state in pairs(payload) do
         Hotbar.SaveLayout(Ext.GetCharacter(tonumber(guid)), state)
     end
