@@ -351,12 +351,12 @@ Game.Tooltip.RegisterListener("Status", nil, function(char, status, tooltip)
             local amount = entry.Label:match("AP Cost: (%+?%-?%d+)")
             if amount then
                 amount = tonumber(amount)
-                local color = Color.COLORS.TOOLTIPS.MALUS
+                local color = Color.TOOLTIPS.MALUS
                 local sign = "+"
                 entry.Type = "StatusDescription" -- TODO should we append instead?
 
                 if amount < 0 then
-                    color = Color.COLORS.TOOLTIPS.BONUS
+                    color = Color.TOOLTIPS.BONUS
                     sign = ""
                 end
 
@@ -379,7 +379,7 @@ Game.Tooltip.RegisterListener("Skill", nil, function(char, skill, tooltip)
             Type = "Engraving",
             Label = Text.Format("StatsId: %s", {
                 FormatArgs = {skill},
-                Color = Color.COLORS.LARIAN.GREEN,
+                Color = Color.LARIAN.GREEN,
             })
         })
     end
@@ -394,7 +394,7 @@ Game.Tooltip.RegisterListener("Status", nil, function(char, status, tooltip)
             desc.Label = Text.Format("%s\n%s", {
                 FormatArgs = {
                     desc.Label,
-                    Text.Format(element.Label, {Color = Color.COLORS.TOOLTIPS.MALUS})
+                    Text.Format(element.Label, {Color = Color.TOOLTIPS.MALUS})
                 }
             })
         end
@@ -415,7 +415,7 @@ Game.Tooltip.RegisterListener("Status", nil, function(char, status, tooltip)
             local text = Text.Format("Max Charges: %s", {
                 FormatArgs = {charges},
                 FontType = Text.FONTS.ITALIC,
-                Color = Color.COLORS.LARIAN.LIGHT_GRAY,
+                Color = Color.LARIAN.LIGHT_GRAY,
             })
 
             local elements = tooltip:GetElements("StatusDescription")
@@ -441,7 +441,7 @@ Game.Tooltip.RegisterListener("Status", nil, function(char, status, tooltip)
         local text = Text.Format("Applied by %s", {
             FormatArgs = {source.DisplayName},
             FontType = Text.FONTS.ITALIC,
-            Color = Color.COLORS.LARIAN.LIGHT_GRAY,
+            Color = Color.LARIAN.LIGHT_GRAY,
         })
         local elements = tooltip:GetElements("StatusDescription")
         local element = elements[#elements] -- Append to the last description (usually the duration text)
@@ -467,7 +467,7 @@ Game.Tooltip.RegisterListener("Status", nil, function(char, status, tooltip)
                     status.StatusId,
                     status.StatusType,
                 },
-                Color = Color.COLORS.LARIAN.GREEN,
+                Color = Color.LARIAN.GREEN,
             })
         })
     end
@@ -749,7 +749,7 @@ end)
 -- Show talent IDs in Talent tooltips.
 Game.Tooltip.RegisterListener("Talent", nil, function(_, talentID, tooltip)
     if Epip.IsDeveloperMode() then
-        table.insert(tooltip.Data, 1, {Type = "Engraving", Label = Text.Format("ID: %s", {FormatArgs = {talentID}, Color = Color.COLORS.GREEN})})
+        table.insert(tooltip.Data, 1, {Type = "Engraving", Label = Text.Format("ID: %s", {FormatArgs = {talentID}, Color = Color.GREEN})})
     end
 end)
 

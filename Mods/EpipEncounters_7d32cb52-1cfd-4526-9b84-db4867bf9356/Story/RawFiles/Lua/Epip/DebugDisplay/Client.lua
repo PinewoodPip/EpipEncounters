@@ -66,7 +66,7 @@ function DebugDisplay.SetServerTicks(ticks)
     local switches = Ext.Utils.GetGlobalSwitches()
     local frameCap = switches.ServerFrameCap
 
-    element:SetText(Text.Format("Server TPS: %s/%s", {FormatArgs = {ticks, frameCap}, Color = Color.COLORS.WHITE}))
+    element:SetText(Text.Format("Server TPS: %s/%s", {FormatArgs = {ticks, frameCap}, Color = Color.WHITE}))
 end
 
 ---@param ticks integer
@@ -82,7 +82,7 @@ function DebugDisplay.SetClientTicks(ticks)
         suffix = " (VSync)"
     end
 
-    element:SetText(Text.Format("Client FPS: %s%s", {FormatArgs = {ticks, suffix}, Color = Color.COLORS.WHITE}))
+    element:SetText(Text.Format("Client FPS: %s%s", {FormatArgs = {ticks, suffix}, Color = Color.WHITE}))
 end
 
 ---------------------------------------------

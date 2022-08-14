@@ -67,7 +67,7 @@ function StatsEditor.Setup(statType, statID)
             statType,
         },
         Size = 23,
-        Color = Color.COLORS.BLACK,
+        Color = Color.BLACK,
     }))
 
     StatsEditor.UI:Show()
@@ -125,7 +125,7 @@ function StatsEditor:__Setup()
     container:SetPositionRelativeToParent("TopLeft", 0, 50) -- Position below label
 
     local header = TextPrefab.Create(ui, "Header", frame, "", 1, StatsEditor.UI_CONTENT_SIZE)
-    header:GetMainElement():SetStroke(Color.CreateFromHex(Color.COLORS.WHITE), 1, 0.5, 1, 2)
+    header:GetMainElement():SetStroke(Color.CreateFromHex(Color.WHITE), 1, 0.5, 1, 2)
     header:GetMainElement():SetMouseEnabled(false)
 
     StatsEditor.UI.Header = header

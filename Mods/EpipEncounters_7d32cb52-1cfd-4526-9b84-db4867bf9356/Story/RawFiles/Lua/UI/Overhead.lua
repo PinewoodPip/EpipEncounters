@@ -139,9 +139,9 @@ Net.RegisterListener("EPIPENCOUNTERS_Overhead", function(payload)
     local color
 
     if payload.Type == "MagicArmor" then
-        color = Color.COLORS.MAGIC_ARMOR
+        color = Color.MAGIC_ARMOR
     else
-        color = Color.COLORS.PHYSICAL_ARMOR
+        color = Color.PHYSICAL_ARMOR
     end
 
     Overhead.ShowDamage(char, data.Amount, color)

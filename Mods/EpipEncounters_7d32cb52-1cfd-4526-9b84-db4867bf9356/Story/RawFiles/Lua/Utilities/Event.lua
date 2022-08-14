@@ -35,7 +35,7 @@ local PreventableEventParams = {
 	end,
 
 }
-Inherit(PreventableEventParams, SubscribableEventParams)
+setmetatable(PreventableEventParams, {__index = SubscribableEventParams})
 
 ---An event object with no parameters.
 ---@class EmptyEvent

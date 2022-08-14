@@ -281,7 +281,7 @@ local PlayerInfo = {
         DefaultValue = false,
         Tooltip = Text.Format("Enables the sorting and filtering systems, allowing the settings below to take effect.<br>%s", {
             FormatArgs = {
-                Text.Format("Changes to this setting will take effect when the UI is refreshed; for example, when a new status is applied, or when the player portraits are dragged.", {Color = Color.COLORS.MAGIC_ARMOR})
+                Text.Format("Changes to this setting will take effect when the UI is refreshed; for example, when a new status is applied, or when the player portraits are dragged.", {Color = Color.MAGIC_ARMOR})
             }
         }),
     },

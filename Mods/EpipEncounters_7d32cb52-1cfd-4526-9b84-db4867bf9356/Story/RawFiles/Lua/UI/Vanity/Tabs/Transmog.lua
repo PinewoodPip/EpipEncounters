@@ -271,14 +271,14 @@ function Tab:Render()
     Vanity.RenderItemDropdown()
 
     -- Unfortunately, TransformKeepIcon is not persistent - thus this option is not very useful.
-    -- Vanity.RenderCheckbox("Vanity_KeepIcon", Text.Format("Keep Icon", {Color = Color.COLORS.BLACK}), Transmog.keepIcon, true)
+    -- Vanity.RenderCheckbox("Vanity_KeepIcon", Text.Format("Keep Icon", {Color = Color.BLACK}), Transmog.keepIcon, true)
 
     if item then
         local canTransmog = Transmog.CanTransmogItem(item)
 
         -- Can toggle weapon overlay effects regardless of whether the item can be transmogged.
         if Item.IsWeapon(item) then
-            Vanity.RenderCheckbox("Vanity_OverlayEffects", Text.Format("Elemental Effects", {Color = Color.COLORS.BLACK}), not item:HasTag("DISABLE_WEAPON_EFFECTS"), true)
+            Vanity.RenderCheckbox("Vanity_OverlayEffects", Text.Format("Elemental Effects", {Color = Color.BLACK}), not item:HasTag("DISABLE_WEAPON_EFFECTS"), true)
         end
 
         if canTransmog then
