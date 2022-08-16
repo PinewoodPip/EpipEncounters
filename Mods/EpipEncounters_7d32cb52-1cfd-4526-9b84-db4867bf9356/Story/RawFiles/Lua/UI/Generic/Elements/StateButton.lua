@@ -2,14 +2,15 @@
 local Generic = Client.UI.Generic
 
 ---@class GenericUI_Element_StateButton : GenericUI_Element
----@field SetType fun(self, buttonType:integer)
+---@field SetType fun(self, buttonType:GenericUI_Element_StateButton_Type)
 ---@field SetActive fun(self, active:boolean) Will not fire the StateChanged event.
 ---@field SetEnabled fun(self, enabled:boolean)
 ---@field Events GenericUI_Element_StateButton_Events
 Client.UI.Generic.ELEMENTS.StateButton = {
+    ---@enum GenericUI_Element_StateButton_Type
     TYPES = {
-        CHECKBOX = 0,
-        LOCK = 1,
+        CHECKBOX = "CheckBox",
+        LOCK = "Lock",
     },
 }
 local Button = Client.UI.Generic.ELEMENTS.StateButton

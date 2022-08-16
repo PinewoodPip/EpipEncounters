@@ -54,18 +54,20 @@ package Elements
 
         private var currentState:String = "Normal";
 
+        private var visualTypes:Object = null;
+
         public var _bg_Checkbox:MovieClip;
         public var _bg_Lock:MovieClip;
         
         public function StateButton()
         {
             super();
-            this.buttonTypes = new Array();
+            this.visualTypes = new Object();
 
-            this.RegisterType(this._bg_Checkbox);
-            this.RegisterType(this._bg_Lock);
+            this.RegisterType("CheckBox", this._bg_Checkbox);
+            this.RegisterType("Lock", this._bg_Lock);
 
-            this.SetType(0);
+            this.SetType("CheckBox");
             this.SetHasText(false);
 
             // ------------ Larian stuff follows:
@@ -89,24 +91,39 @@ package Elements
             addEventListener(FocusEvent.FOCUS_OUT,this.onFocusLost);
         }
 
-        private function RegisterType(mc:MovieClip) : *
+        private function RegisterType(stringID:String, mc:MovieClip) : *
         {
-            mc.visible = false;
-            this.buttonTypes.push(mc);
+            var obj:Object = new Object();
+
+            obj.MovieClip = mc;
+
+            this.removeChild(mc);
+
+            this.visualTypes[stringID] = obj;
         }
 
-        public function SetType(buttonType:int) : *
+        public function SetType(buttonType:String) : *
         {
-            // this.gotoAndStop(buttonType + 1);
-            if (this.bg_mc)
+            var data:Object = this.visualTypes[buttonType];
+
+            if (data)
             {
-                this.bg_mc.visible = false;
+                if (this.bg_mc)
+                {
+                    this.removeChild(this.bg_mc);
+                }
+
+                this.bg_mc = data.MovieClip;
+                this.addChild(this.bg_mc);
+                this.setChildIndex(this.bg_mc, 0);
+
+                this.bg_mc.stop();
+                this.bg_mc.visible = true;
             }
-
-            this.bg_mc = this.buttonTypes[buttonType];
-
-            this.bg_mc.stop();
-            this.bg_mc.visible = true;
+            else
+            {
+                this.Log("SetType(): invalid visual type " + buttonType, 2);
+            }
         }
 
         public function SetHasText(hasText:Boolean) : *
