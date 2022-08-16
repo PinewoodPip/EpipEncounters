@@ -149,7 +149,6 @@ local function SetupUI()
     searchBar:SetAlpha(0.3)
     local searchText = searchBar:AddChild("SearchText", "GenericUI_Element_Text")
     searchText:SetEditable(true)
-    searchText:SetType(0)
     searchBar:SetPosition(280, 6)
     searchText.Events.Changed:Subscribe(function (e)
         Overlay.searchTerm = e.Text

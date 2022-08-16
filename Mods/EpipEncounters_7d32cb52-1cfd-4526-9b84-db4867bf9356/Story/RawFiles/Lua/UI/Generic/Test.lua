@@ -17,6 +17,7 @@ function Test.TestButtons()
     local header = list:AddChild("header", "GenericUI_Element_Text")
     header:SetText(Text.Format("Buttons and StateButtons", {Color = "ffffff"}))
     header:SetSize(400, 40)
+    header:SetType("Right")
 
     local _B = Generic.ELEMENTS.Button
     local _SB = Generic.ELEMENTS.StateButton
@@ -128,7 +129,7 @@ function Test.SetupTests()
 
     bg:SetBackground("Black", 400, 400)
     text:SetText(Text.Format("Generic Test", {Color = "ffffff"}))
-    text:GetMovieClip().SetType(1)
+    text:SetType("Center")
     text:SetSize(400, 200)
     bg:GetMovieClip().background_mc.alpha = 0.8
 

@@ -318,7 +318,6 @@ function GroupManager:__Setup()
     local text = content:AddChild("Header", "GenericUI_Element_Text")
     text:SetText(Text.Format("Create Hotbar Group", {Color = Color.WHITE, Size = 23}))
     text:SetStroke(Color.Create(0, 0, 0), 1, 1, 1, 5)
-    text:SetType(1)
     text:SetSize(GroupManager.CONTENT_WIDTH, 50)
 
     local rowSpinner = Spinner.Create(ui, "RowSpinner", content, "Rows", 1, 20, 1)

@@ -193,7 +193,7 @@ package Elements
 
         public function SetText(text:String, textY:Number=0) : *
         {
-            this.text_mc.SetType(1);
+            this.text_mc.SetType("Center");
             this.text_mc.SetText(text, false);
 
             this.text_mc.SetSize(this.bg_mc.width, this.bg_mc.height);

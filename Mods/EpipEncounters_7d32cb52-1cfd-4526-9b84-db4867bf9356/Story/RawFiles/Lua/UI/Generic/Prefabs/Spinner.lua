@@ -117,7 +117,7 @@ function Spinner:_Setup(ui, parent, label)
 
     local text = list:AddChild("Text", "GenericUI_Element_Text")
     text:SetText(label)
-    text:SetType(0)
+    text:SetType("Left")
     text:SetSize(110, 30)
 
     local minusButton = list:AddChild(self:PrefixID("Minus"), "GenericUI_Element_Button")

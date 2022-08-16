@@ -212,7 +212,7 @@ package Elements
 
         protected function Log(msg:String, msgType:int = 1) : *
         {
-            ExternalInterface.call("GenericLog", this.stringID, this.elementType, msg);
+            ExternalInterface.call("GenericLog", this.stringID, this.elementType, msg, msgType);
         }
 
         public function SetMouseChildren(enabled:Boolean) : *

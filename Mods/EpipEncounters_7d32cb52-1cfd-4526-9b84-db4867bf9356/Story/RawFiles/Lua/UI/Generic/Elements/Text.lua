@@ -4,14 +4,16 @@ local Generic = Client.UI.Generic
 ---@class GenericUI_Element_Text : GenericUI_Element
 ---@field SetText fun(self, text:string, setSize:boolean?)
 ---@field SetStroke fun(self, color:uint64|RGBColor, size:number, alpha:number, strength:uint64, unknown:uint64)
----@field SetType fun(self, textType:integer)
+---@field SetType fun(self, textType:GenericUI_Element_Text_Align)
 ---@field SetEditable fun(self, editable:boolean)
 ---@field SetRestrictedCharacters fun(self, restriction:string)
 ---@field Events GenericUI_Element_Text_Events
 Client.UI.Generic.ELEMENTS.Text = {
+    ---@enum GenericUI_Element_Text_Align
     TYPES = {
-        LEFT_ALIGN = 0,
-        CENTER_ALIGN = 1,
+        LEFT_ALIGN = "Left",
+        CENTER_ALIGN = "Center",
+        RIGHT_ALIGN = "Right",
     },
 }
 local Text = Client.UI.Generic.ELEMENTS.Text ---@class GenericUI_Element_Text
