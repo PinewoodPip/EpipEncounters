@@ -146,6 +146,16 @@ function table.deepCopy(orig)
     return copy
 end
 
+function table.unpackSelect(p, l, i)
+    i = i or 1
+
+    if i == l then
+        return p[i]
+    else
+        return p[i], table.unpackSelect(p, l, i + 1)
+    end
+end
+
 ---@param table1 table
 ---@param value any
 ---@return any

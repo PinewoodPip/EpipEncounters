@@ -1,7 +1,4 @@
 
----@class OsirisHelper
----@field DATABASES table<string, OsirisDatabase>
-
 ---@class OsirisDatabase
 ---@field Name string
 ---@field Arity integer
@@ -9,23 +6,24 @@
 
 ---@class OsirisHelper
 Osiris = {
-    Query = {}, -- metatable, has __index override
-
     DATABASES = {},
     USER_QUERIES = {},
 }
--- Epip.InitializeLibrary("Osiris", Osiris)
 
 ---@alias OsirisType "INTEGER" | "INTEGER64" | "REAL" | "STRING" | "REAL" | "GUIDSTRING" | "CHARACTERGUID" | "ITEMGUID" | "TRIGGERGUID" | "SPLINEGUID" | "LEVELTEMPLATEGUID"
 
 ---@class OsirisDatabase
 ---@field Name string
-
-_OsirisDatabase = {
+local _OsirisDatabase = {
     Name = "",
 }
 
--- TODO query class
+---Table for built-in osi symbols.
+---@class Osiris_BuiltInSymbol
+local _BuiltInOsiSymbol = {Name = ""}
+function _BuiltInOsiSymbol:__call(...)
+    Osi[self.Name](Osiris._ParseParameters(...))
+end
 
 -- Calling the table itself does a query (backwards compatibility)
 function _OsirisDatabase:__call(...)
@@ -67,11 +65,26 @@ function Osiris.RegisterDatabase(db, fields)
     }
 end
 
+---Requires all these parameters since we cannot store nil in a table.
+function Osiris._ParseParameters(...)
+    local params = table.pack(...)
+    local length = select("#", ...)
+
+    for i=1,length,1 do
+        local v = params[i]
+        -- Convert entity references to their GUIDs.
+        if GetExtType(v) then
+            params[i] = v.MyGuid
+        end
+    end
+
+    return table.unpackSelect(params, length)
+end
+
 ---@param name string
 ---@param outputDBs OsirisDatabase[]
 function Osiris.RegisterUserQuery(name, outputDBs)
-
-    for i,outputDB in ipairs(outputDBs) do
+    for _,outputDB in ipairs(outputDBs) do
         if not Osiris.DATABASES[outputDB] then
             Osiris:LogError("Output DB must be registered before query: " .. outputDB)
             return nil
@@ -89,32 +102,22 @@ end
 -- CALL WRAPPER
 ---------------------------------------------
 
--- TODO vanilla queries?
-local function meta_osiindex(self, key, ...)
-    -- local params = {table.unpack(params)}
-
-    -- TODO
-    -- -- Automatically convert Entities in parameters into Entity.MyGuid
-    -- for i,v in ipairs(params) do
-    --     if type(v) == "userdata" then
-    --         params[i] = v.MyGuid
-    --     end
-    -- end
-
-    if Osiris.USER_QUERIES[key] then
+local function meta_osiindex(_, key)
+    if Osiris.USER_QUERIES[key] then -- User Query
         return function(...)
             return Osiris.UserQuery(key, ...)
         end
-    else -- Default to DB query
+    elseif key:match("^DB_") then -- DB query
         local tb = {Name = key}
         setmetatable(tb, {__index = _OsirisDatabase, __call = _OsirisDatabase.__call})
         return tb
+    else -- Default to built-in symbol
+        local symbol = {Name = key}
+        setmetatable(symbol, _BuiltInOsiSymbol)
+
+        return symbol
     end
 end
-
-setmetatable(Osiris.Query, {
-    __index = meta_osiindex
-})
 setmetatable(Osiris, { -- Access is query by default
     __index = meta_osiindex
 })
@@ -125,9 +128,8 @@ setmetatable(Osiris, { -- Access is query by default
 ---@vararg any Query parameters.
 ---@return any Unpacked values or list of tuples, based on unpack parameter.
 function Osiris.DatabaseQuery(name, unpack, ...)
-    -- local params = Osiris.DATABASES[name].Fields
     local output = {}
-    local db = Osi[name]:Get(...)
+    local db = Osi[name]:Get(Osiris._ParseParameters(...))
 
     if #db >= 1 then
         -- Unpack first value
@@ -145,7 +147,7 @@ function Osiris.DatabaseQuery(name, unpack, ...)
         end
 
     elseif db == nil then
-        Osiris:LogError("Database does not exist: " .. name)
+        error("[OSIRIS] Database does not exist: " .. name)
     else
         return nil
     end
@@ -159,7 +161,7 @@ function Osiris.UserQuery(name, ...)
     local output = {}
 
     -- Call query
-    Osi[name](...)
+    Osi[name](Osiris._ParseParameters(...))
 
     -- Fetch its output DBs
     for i,dbName in ipairs(dbs) do
@@ -184,11 +186,11 @@ function Osiris.UserQuery(name, ...)
         elseif dbData.Arity == 7 then
             result = Osiris.DatabaseQuery(dbName, false, nil, nil, nil, nil, nil, nil, nil, nil)
         else
-            Osiris:LogError("Unsupported arity: " .. dbData.Arity)
+            Ext.PrintError("[OSIRIS] Unsupported arity: " .. dbData.Arity)
         end
 
-        for i,queryResult in ipairs(result) do
-            for z,value in ipairs(queryResult) do
+        for _,queryResult in ipairs(result) do
+            for _,value in ipairs(queryResult) do
                 table.insert(output, value)
             end
         end
