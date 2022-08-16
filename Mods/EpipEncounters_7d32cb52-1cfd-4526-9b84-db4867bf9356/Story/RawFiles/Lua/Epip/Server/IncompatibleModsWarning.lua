@@ -14,15 +14,18 @@ local Warnings = {
             Mods.INITIATIVE_TURN_ORDER,
             Mods.WILDFIRE,
             Mods.RELICS_OF_RIVELLON_FIX,
+            Mods.UNLEASHED,
+            Mods.GREED,
         },
         [Mods.EPIP_ENCOUNTERS] = {
             Mods.IMPROVED_HOTBAR,
             Mods.LEADERLIB,
+            Mods.MULTIHOTBARS,
         },
     },
     MESSAGE = "Mod '%s' is incompatible with '%s' and it is not recommended to use them together.",
 }
-Epip.AddFeature("IncompatibleModsWarning", "IncompatibleModsWarning", Warnings)
+Epip.RegisterFeature("IncompatibleModsWarning", Warnings)
 
 ---------------------------------------------
 -- EVENT LISTENERS

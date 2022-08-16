@@ -42,6 +42,10 @@ Mod = {
         WEAPON_EXPANSION = "c60718c3-ba22-4702-9c5d-5ad92b41ba5f",
         RENDAL_NPC_ARMOR = "4dfe4bfe-2f7c-772f-9ce9-a83052a39ad2",
         VISITORS_FROM_CYSEAL = "f21e7a68-c39c-4387-9a3f-04dfd216caba",
+
+        MULTIHOTBARS = "c14438b8-b988-44c6-ac12-563f2b87c853",
+        UNLEASHED = "e844229e-b744-4294-9102-a7362a926f71",
+        GREED = "d1ba8097-dba1-d74b-7efe-8fca3ef71fe5",
     },
 }
 Epip.InitializeLibrary("Mods", Mod)
