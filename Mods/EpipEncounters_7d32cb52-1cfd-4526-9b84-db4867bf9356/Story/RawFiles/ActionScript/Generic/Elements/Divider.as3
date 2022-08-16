@@ -9,49 +9,67 @@ package Elements
 
     public dynamic class Divider extends Element
     {
-        private var _dividerTypes:Array;
-
         public var _divider_Elegant:MovieClip;
         public var _divider_Line:MovieClip;
         public var _divider_Border:MovieClip;
 
         public var divider_mc:MovieClip = null;
 
+        public var visualTypes:Object = null;
+
         public function Divider()
         {
             super();
-            this._dividerTypes = new Array();
+            this.visualTypes = new Object();
 
-            this.RegisterType(this._divider_Elegant);
-            this.RegisterType(this._divider_Line);
-            this.RegisterType(this._divider_Border);
+            this.RegisterType("Elegant", this._divider_Elegant);
+            this.RegisterType("Line", this._divider_Line);
+            this.RegisterType("Border", this._divider_Border);
 
-            this.SetType(0);
+            this.SetType("Elegant");
             this.SetSize(100, 10);
         }
 
-        private function RegisterType(mc:MovieClip) : *
+        public override function get elementType() : String
         {
-            mc.visible = false;
-            mc.scaleX = 0;
-            mc.scaleY = 0;
-
-            this._dividerTypes.push(mc);
+            return "Divider";
         }
 
-        public function SetType(dividerType:int) : *
+        private function RegisterType(stringID:String, mc:MovieClip) : *
+        {
+            var obj:Object = new Object();
+
+            obj.MovieClip = mc;
+            
+            this.visualTypes[stringID] = obj;
+
+            this.removeChild(mc);
+        }
+
+        public function SetType(dividerType:String) : *
         {
             if (this.divider_mc)
             {
-                this.divider_mc.visible = false;
-                this.divider_mc.scaleX = 0;
-                this.divider_mc.scaleY = 0;
+                this.removeChild(this.divider_mc);
             }
 
-            this.divider_mc = this._dividerTypes[dividerType];
-            this.divider_mc.visible = true;
-            this.divider_mc.scaleX = 1;
-            this.divider_mc.scaleY = 1;
+            var visualData:Object = this.visualTypes[dividerType];
+
+            if (visualData)
+            {
+                this.divider_mc = visualData.MovieClip;
+
+                this.addChild(this.divider_mc);
+                this.setChildIndex(this.divider_mc, 0);
+
+                this.divider_mc.visible = true;
+                this.divider_mc.scaleX = 1;
+                this.divider_mc.scaleY = 1;
+            }
+            else
+            {
+                this.Log("SetType(): invalid visual type " + dividerType, 2);
+            }
         }
 
         public override function SetSize(width:Number, height:Number) : *
@@ -76,11 +94,6 @@ package Elements
             }
 
             this.divider_mc.line_shp.width = centerLength;
-        }
-
-        public override function get elementType() : String
-        {
-            return "Divider";
         }
     }
 }

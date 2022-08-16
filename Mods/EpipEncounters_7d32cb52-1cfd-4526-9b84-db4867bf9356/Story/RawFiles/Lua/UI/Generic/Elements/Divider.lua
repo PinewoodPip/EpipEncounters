@@ -2,14 +2,14 @@
 local Generic = Client.UI.Generic
 
 ---@class GenericUI_Element_Divider : GenericUI_Element
----@field SetType fun(self, dividerType:integer)
+---@field SetType fun(self, dividerType:GenericUI_Element_Divider_Type)
 ---@field SetSize fun(self, width:number) Custom height not currently supported. TODO
----@field TYPES table<string, integer>
 Client.UI.Generic.ELEMENTS.Divider = {
-    BACKGROUND_TYPES = {
-        BOX = 0,
-        BLACK = 1,
-        BORDER = 2,
+    ---@enum GenericUI_Element_Divider_Type
+    TYPES = {
+        ELEGANT = "Elegant",
+        LINE = "Line",
+        BORDER = "Border",
     },
     Events = {},
 }

@@ -92,7 +92,7 @@ function HotbarGroup:_Init(id)
     local EXTRA_WIDTH = 15 * 2
     local dragArea = content:AddChild("DragArea", "GenericUI_Element_Divider")
     dragArea:SetAsDraggableArea()
-    dragArea:SetType(2)
+    dragArea:SetType("Border")
     dragArea:SetSize(mcWidth + EXTRA_WIDTH)
 
     -- Show the handle on the longest side of the slot group

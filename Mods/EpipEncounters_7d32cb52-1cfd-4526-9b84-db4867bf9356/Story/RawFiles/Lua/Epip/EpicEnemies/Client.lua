@@ -204,14 +204,14 @@ QuickExamine.Events.EntityChanged:RegisterListener(function (entity)
         for _,eff in pairs(sortedEffects.Artifacts) do table.insert(effects, eff) end
         for _,eff in pairs(sortedEffects.Other) do table.insert(effects, eff) end
 
-        local header = container:AddChild("EpicEnemies_Header", "Text")
+        local header = container:AddChild("EpicEnemies_Header", "GenericUI_Element_Text")
         header:SetText(Text.Format("Epic Enemies Effects", {Color = "ffffff", Size = 19}))
         header:SetSize(QuickExamine.GetContainerWidth(), 30)
 
         -- Artifact powers are already handled through the base QuickExamine script
 
         for _,effect in ipairs(sortedEffects.Other) do
-            local entry = container:AddChild(effect.ID, "Text")
+            local entry = container:AddChild(effect.ID, "GenericUI_Element_Text")
             local activationConditionText = EpicEnemies.Hooks.GetActivationConditionDescription:Return("", effect.ActivationCondition, entity)
 
             local text = Text.Format(Text.Format("• ", {Size = 28}) .. effect.Name, {FontType = Text.FONTS.BOLD, Color = "088cc4"})
@@ -233,8 +233,8 @@ QuickExamine.Events.EntityChanged:RegisterListener(function (entity)
             entry:GetMovieClip().text_txt.height = entry:GetMovieClip().text_txt.textHeight
         end
 
-        local div = container:AddChild("MainDiv", "Divider")
-        div:SetSize(QuickExamine.DIVIDER_WIDTH, 20)
+        local div = container:AddChild("MainDiv", "GenericUI_Element_Divider")
+        div:SetSize(QuickExamine.DIVIDER_WIDTH)
         div:SetCenterInLists(true)
     end
 end)

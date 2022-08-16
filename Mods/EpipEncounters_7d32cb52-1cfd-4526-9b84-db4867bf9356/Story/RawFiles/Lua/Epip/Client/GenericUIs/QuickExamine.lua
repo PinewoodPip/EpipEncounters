@@ -146,8 +146,8 @@ QuickExamine.Events.EntityChanged:RegisterListener(function (entity)
         end
     end
 
-    local div = container:AddChild("QuickExamine_Divider", "Divider")
-    div:SetSize(QuickExamine.DIVIDER_WIDTH, 20)
+    local div = container:AddChild("QuickExamine_Divider", "GenericUI_Element_Divider")
+    div:SetSize(QuickExamine.DIVIDER_WIDTH)
     div:SetCenterInLists(true)
 end)
 
@@ -170,19 +170,19 @@ local function Setup()
     uiObject:SetPosition(x, y + 100)
 
     -- Build elements
-    local panel = ui:CreateElement("Panel", "TiledBackground")
+    local panel = ui:CreateElement("Panel", "GenericUI_Element_TiledBackground")
     panel:SetSize(QuickExamine.WIDTH, QuickExamine.HEIGHT)
     panel:SetAlpha(QuickExamine.ALPHA)
 
-    local container = panel:AddChild("Container", "VerticalList")
+    local container = panel:AddChild("Container", "GenericUI_Element_VerticalList")
     container:SetSize(QuickExamine.WIDTH, -1)
     container:SetCenterInLists(true)
 
-    local list = container:AddChild("List", "VerticalList")
+    local list = container:AddChild("List", "GenericUI_Element_VerticalList")
     list:SetSize(QuickExamine.WIDTH, -1)
     list:SetSideSpacing(-20)
 
-    local header = list:AddChild("Header", "Text")
+    local header = list:AddChild("Header", "GenericUI_Element_Text")
     header:SetText(Text.Format("Quick Examine", {
         Color = "ffffff",
         Size = 15,
@@ -190,7 +190,7 @@ local function Setup()
     header:SetSize(QuickExamine.WIDTH, 20)
     header:SetAsDraggableArea()
 
-    local charName = list:AddChild("CharName", "Text")
+    local charName = list:AddChild("CharName", "GenericUI_Element_Text")
     charName:SetText(Text.Format("Character Name", {
         Color = "ffffff",
         Size = 21,
@@ -199,27 +199,27 @@ local function Setup()
     charName:SetAsDraggableArea()
     QuickExamine.CharacterNameElement = charName
 
-    local div = list:AddChild("MainDiv", "Divider")
+    local div = list:AddChild("MainDiv", "GenericUI_Element_Divider")
     div:SetAsDraggableArea()
-    div:SetSize(QuickExamine.DIVIDER_WIDTH, 20)
+    div:SetSize(QuickExamine.DIVIDER_WIDTH)
     div:SetCenterInLists(true)
     div:GetMovieClip().heightOverride = div:GetMovieClip().height / 2
 
-    local content = list:AddChild("Content", "ScrollList")
+    local content = list:AddChild("Content", "GenericUI_Element_ScrollList")
     content:SetMouseWheenEnabled(true)
     content:SetFrame(QuickExamine.WIDTH - 30, 510)
     content:SetScrollbarSpacing(20)
     content:SetSideSpacing(26)
     QuickExamine.ContentContainer = content
     
-    local closeButton = panel:AddChild("Close", "Button")
+    local closeButton = panel:AddChild("Close", "GenericUI_Element_Button")
     closeButton:SetType("Close")
     closeButton:SetPosition(QuickExamine.WIDTH - closeButton:GetMovieClip().width, 0)
     closeButton.Events.Pressed:Subscribe(function (_)
         ui:GetUI():Hide()
     end)
 
-    local lockButton = panel:AddChild("Lock", "StateButton")
+    local lockButton = panel:AddChild("Lock", "GenericUI_Element_StateButton")
     lockButton:SetType(Generic.ELEMENTS.StateButton.TYPES.LOCK)
     lockButton:SetActive(QuickExamine.IsLocked())
     lockButton:SetPosition(400 - 23 - 25, 2)

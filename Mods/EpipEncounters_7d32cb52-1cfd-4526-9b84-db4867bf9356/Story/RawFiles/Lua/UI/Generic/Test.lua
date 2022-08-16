@@ -35,7 +35,7 @@ function Test.TestButtons()
     list:SetSize(300, -1)
 
     local div = list:AddChild("div", "GenericUI_Element_Divider")
-    div:SetType(2)
+    div:SetType("Border")
     div:SetSize(400)
 
     for id,index in pairs(_SB.TYPES) do
