@@ -25,7 +25,7 @@ function Dropdown.Create(ui, id, parent, label, opts)
     obj:_Setup()
 
     local container = ui:CreateElement(obj:PrefixID("Container"), "GenericUI_Element_TiledBackground", parent)
-    container:SetBackground(1, 600, 50)
+    container:SetBackground("Black", 600, 50)
     container:SetAlpha(0.2)
 
     local labelElement = container:AddChild(obj:PrefixID("Label"), "GenericUI_Element_Text")

@@ -113,7 +113,7 @@ function DebugDisplay:__Setup()
     local textSize = Vector.Create(500, 25)
     local ui = Generic.Create("PIP_DebugDisplay")
     local bg = ui:CreateElement("BG", "GenericUI_Element_TiledBackground")
-    bg:SetBackground(1, 200, 200)
+    bg:SetBackground("Black", 200, 200)
     bg:SetAlpha(0.4)
     bg:SetAsDraggableArea()
 

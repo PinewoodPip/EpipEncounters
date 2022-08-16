@@ -62,18 +62,18 @@ function HotbarGroup:_Init(id)
     self.GUID = id
     self.UI = Generic.Create("HotbarGroup_" .. self.GUID)
 
-    local content = self.UI:CreateElement("ContentContainer", "TiledBackground")
+    local content = self.UI:CreateElement("ContentContainer", "GenericUI_Element_TiledBackground")
     content:SetAlpha(0)
-    content:SetBackground(1, self:GetSlotAreaSize())
+    content:SetBackground("Black", self:GetSlotAreaSize())
 
-    local container = content:AddChild("container", "VerticalList")
+    local container = content:AddChild("container", "GenericUI_Element_VerticalList")
     container:SetElementSpacing(HotbarGroup.SLOT_SPACING - 4)
     container:SetPosition(3, 3)
 
     self.ELEMENT_ROWS = {}
 
     for i=1,self.ROWS,1 do
-        local row = container:AddChild("Row_" .. i, "HorizontalList")
+        local row = container:AddChild("Row_" .. i, "GenericUI_Element_HorizontalList")
         row:SetElementSpacing(HotbarGroup.SLOT_SPACING)
 
         self.ELEMENT_ROWS[i] = {}
@@ -90,7 +90,7 @@ function HotbarGroup:_Init(id)
     local mcWidth, mcHeight = container:GetMovieClip().width, container:GetMovieClip().height
 
     local EXTRA_WIDTH = 15 * 2
-    local dragArea = content:AddChild("DragArea", "Divider")
+    local dragArea = content:AddChild("DragArea", "GenericUI_Element_Divider")
     dragArea:SetAsDraggableArea()
     dragArea:SetType(2)
     dragArea:SetSize(mcWidth + EXTRA_WIDTH)
@@ -222,7 +222,7 @@ function GroupManager.SaveData(path)
     Utilities.SaveJson(path, save)
 end
 
----@param path string
+---@param path string?
 function GroupManager.LoadData(path)
     path = path or GroupManager.SAVE_FILENAME
     local save = Utilities.LoadJson(path)
@@ -305,17 +305,17 @@ function GroupManager:__Setup()
     local ui = Generic.Create("PIP_HotbarGroup") ---@type GenericUI_Instance
     GroupManager.UI = ui
 
-    local bg = ui:CreateElement("BG", "TiledBackground")
-    bg:SetBackground(0, GroupManager.UI_WIDTH, GroupManager.UI_HEIGHT)
+    local bg = ui:CreateElement("BG", "GenericUI_Element_TiledBackground")
+    bg:SetBackground("RedPrompt", GroupManager.UI_WIDTH, GroupManager.UI_HEIGHT)
     local uiObject = ui:GetUI()
     uiObject.SysPanelSize = {GroupManager.UI_WIDTH, GroupManager.UI_HEIGHT}
 
     -- Content
-    local content = bg:AddChild("Content", "VerticalList")
+    local content = bg:AddChild("Content", "GenericUI_Element_VerticalList")
     content:SetSize(GroupManager.CONTENT_WIDTH, GroupManager.UI_HEIGHT)
     content:SetPosition(27, 60)
 
-    local text = content:AddChild("Header", "Text")
+    local text = content:AddChild("Header", "GenericUI_Element_Text")
     text:SetText(Text.Format("Create Hotbar Group", {Color = Color.WHITE, Size = 23}))
     text:SetStroke(Color.Create(0, 0, 0), 1, 1, 1, 5)
     text:SetType(1)
@@ -327,9 +327,9 @@ function GroupManager:__Setup()
     rowSpinner:GetMainElement():SetCenterInLists(true)
     columnSpinner:GetMainElement():SetCenterInLists(true)
 
-    content:AddChild("Filler", "Empty"):GetMovieClip().heightOverride = 175
+    content:AddChild("Filler", "GenericUI_Element_Empty"):GetMovieClip().heightOverride = 175
 
-    local createButton = content:AddChild("Confirm", "Button")
+    local createButton = content:AddChild("Confirm", "GenericUI_Element_Button")
     createButton.Events.Pressed:Subscribe(function(_)
         GroupManager.Create(nil, rowSpinner:GetValue(), columnSpinner:GetValue())
         GroupManager.UI:Hide()

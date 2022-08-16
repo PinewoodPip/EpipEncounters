@@ -128,11 +128,11 @@ end)
 local function SetupUI()
     local ui = Overlay.UI
 
-    local panel = ui:CreateElement("Panel", "TiledBackground")
+    local panel = ui:CreateElement("Panel", "GenericUI_Element_TiledBackground")
     panel:SetAlpha(0)
     panel:SetPosition(0, 600)
 
-    local sorting = panel:AddChild("Sorting", "ComboBox")
+    local sorting = panel:AddChild("Sorting", "GenericUI_Element_ComboBox")
     sorting:SetOptions({
         {ID = "Sort_Date", Label = "Date"},
         {ID = "Sort_Alphabetic", Label = "Alphabetic"},
@@ -144,10 +144,10 @@ local function SetupUI()
     end)
     sorting:SetOpenUpwards(true)
 
-    local searchBar = panel:AddChild("SearchBar", "TiledBackground")
-    searchBar:SetBackground(1, 180, 40)
+    local searchBar = panel:AddChild("SearchBar", "GenericUI_Element_TiledBackground")
+    searchBar:SetBackground("Black", 180, 40)
     searchBar:SetAlpha(0.3)
-    local searchText = searchBar:AddChild("SearchText", "Text")
+    local searchText = searchBar:AddChild("SearchText", "GenericUI_Element_Text")
     searchText:SetEditable(true)
     searchText:SetType(0)
     searchBar:SetPosition(280, 6)

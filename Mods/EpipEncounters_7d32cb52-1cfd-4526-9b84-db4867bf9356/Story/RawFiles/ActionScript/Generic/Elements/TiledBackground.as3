@@ -16,28 +16,28 @@ package Elements
         public var _bg_Box:MovieClip;
         public var _bg_FormattedTooltip:MovieClip;
         public var _bg_Note:MovieClip;
-        
-        public var backgroundTypes:Array;
 
         private var _delay:int = 0;
 
         private var currentWidth:Number = 0;
         private var currentHeight:Number = 0;
-        private var _currentType:int = 0;
+        private var _currentType:String = "";
         private var _currentAlpha:Number = 1;
+
+        public var visualTypes:Object = null; // maps String -> Object{MovieClip:MovieClip, Width1:Number, Width2:Number, Width3:Number, Height1:Number, Height2:Number, Height3:Number}
 
         public function TiledBackground()
         {
             super();
 
-            this.backgroundTypes = new Array();
+            this.visualTypes = new Object();
 
-            this.RegisterType(this._bg_Red, 80, 310, 80, 89, 290, 90); // Box
-            this.RegisterType(this._bg_Box, 1, 1, 1, 1, 1, 1); // Black
-            this.RegisterType(this._bg_FormattedTooltip, 15, 382, 15, 80, 4, 60); // FormattedTooltip
-            this.RegisterType(this._bg_Note, 126, 600, 126, 121, 793, 175); // Note
+            this.RegisterType("RedPrompt", this._bg_Red, 80, 310, 80, 89, 290, 90); // Box
+            this.RegisterType("Black", this._bg_Box, 1, 1, 1, 1, 1, 1); // Black
+            this.RegisterType("FormattedTooltip", this._bg_FormattedTooltip, 15, 382, 15, 80, 4, 60); // FormattedTooltip
+            this.RegisterType("Note", this._bg_Note, 126, 600, 126, 121, 793, 175); // Note
 
-            this.SetBackground(1, 80 + 310 + 80, 89 + 290 + 90);
+            this.SetBackground("Black", 80 + 310 + 80, 89 + 290 + 90);
         }
 
         public override function get elementType() : String
@@ -63,20 +63,20 @@ package Elements
             }
         }
 
-        public function SetBackground(backgroundType:int, backgroundWidth:Number, backgroundHeight:Number) : *
+        public function SetBackground(backgroundType:String, backgroundWidth:Number, backgroundHeight:Number) : *
         {
-            var data:Object = this.backgroundTypes[backgroundType];
+            var data:Object = this.visualTypes[backgroundType];
             var minWidth:Number = data.Width1 + data.Width2 + data.Width3;
             var minHeight:Number = data.Height1 + data.Height2 + data.Height3;
 
-            // this.gotoAndStop(backgroundType + 1);
             if (this.background_mc)
             {
-                this.background_mc.visible = false;
-                this.background_mc.scaleX = 0;
-                this.background_mc.scaleY = 0;
+                this.removeChild(this.background_mc);
             }
             this.background_mc = data.MovieClip;
+            this.addChild(data.MovieClip);
+            this.setChildIndex(data.MovieClip, 0);
+
             this.background_mc.visible = true;
             this.background_mc.scaleX = 1;
             this.background_mc.scaleY = 1;
@@ -135,24 +135,21 @@ package Elements
             this.SetAlpha(this._currentAlpha);
         }
 
-        private function RegisterType(mc:MovieClip, width1:Number, width2:Number, width3:Number, height1:Number, height2:Number, height3:Number) : *
+        private function RegisterType(stringID:String, mc:MovieClip, width1:Number, width2:Number, width3:Number, height1:Number, height2:Number, height3:Number) : *
         {
             var obj:Object = new Object();
 
             obj.MovieClip = mc;
-            mc.visible = false;
-            mc.scaleX = 0;
-            mc.scaleY = 0;
-
             obj.Width1 = width1;
             obj.Width2 = width2;
             obj.Width3 = width3;
-
             obj.Height1 = height1;
             obj.Height2 = height2;
             obj.Height3 = height3;
 
-            this.backgroundTypes.push(obj);
+            this.visualTypes[stringID] = obj;
+
+            this.removeChild(mc);
         }
     }
 }

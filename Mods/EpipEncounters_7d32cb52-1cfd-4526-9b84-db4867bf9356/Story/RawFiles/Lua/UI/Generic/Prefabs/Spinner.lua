@@ -108,29 +108,27 @@ function Spinner:_Setup(ui, parent, label)
     self.UI = ui
     self:_SetupEvents()
 
-    local container = ui:CreateElement(self:PrefixID("Container"), "TiledBackground", parent)
-    container:SetBackground(1, 200, 30)
+    local container = ui:CreateElement(self:PrefixID("Container"), "GenericUI_Element_TiledBackground", parent)
+    container:SetBackground("Black", 200, 30)
     container:SetAlpha(0.2)
 
-    local list = container:AddChild(self:PrefixID("List"), "HorizontalList")
+    local list = container:AddChild(self:PrefixID("List"), "GenericUI_Element_HorizontalList")
     list:SetSize(100, 30)
 
-    local text = list:AddChild("Text", "Text")
+    local text = list:AddChild("Text", "GenericUI_Element_Text")
     text:SetText(label)
     text:SetType(0)
     text:SetSize(110, 30)
 
-    ---@type GenericUI_Element_Button
-    local minusButton = list:AddChild(self:PrefixID("Minus"), "Button")
+    local minusButton = list:AddChild(self:PrefixID("Minus"), "GenericUI_Element_Button")
     minusButton:SetType("StatMinus")
     minusButton:SetCenterInLists(true)
 
-    local amountText = list:AddChild(self:PrefixID("AmountText"), "Text")
+    local amountText = list:AddChild(self:PrefixID("AmountText"), "GenericUI_Element_Text")
     amountText:SetText(tostring(self:GetValue()))
     amountText:SetSize(30, 30)
 
-    ---@type GenericUI_Element_Button
-    local plusButton = list:AddChild(self:PrefixID("Plus"), "Button")
+    local plusButton = list:AddChild(self:PrefixID("Plus"), "GenericUI_Element_Button")
     plusButton:SetType("StatPlus")
     plusButton:SetCenterInLists(true)
 

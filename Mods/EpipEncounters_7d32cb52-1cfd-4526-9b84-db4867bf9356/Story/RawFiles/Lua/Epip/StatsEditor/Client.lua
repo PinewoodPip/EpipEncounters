@@ -115,7 +115,7 @@ function StatsEditor:__Setup()
     StatsEditor.UI = ui
 
     local bg = ui:CreateElement("BG", "GenericUI_Element_TiledBackground")
-    bg:SetBackground(3, table.unpack(StatsEditor.UI_SIZE))
+    bg:SetBackground("Note", table.unpack(StatsEditor.UI_SIZE))
 
     local frame = bg:AddChild("Content", "GenericUI_Element_Empty")
     frame:SetPositionRelativeToParent("TopLeft", 110, 100)

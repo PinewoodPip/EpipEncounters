@@ -89,8 +89,8 @@ function Test.TestComboBox()
 end
 
 function Test.TestPositioning()
-    local parent = Test.BG:AddChild("BGPositionTest", "TiledBackground")
-    parent:SetBackground(1, 600, 600)
+    local parent = Test.BG:AddChild("BGPositionTest", "GenericUI_Element_TiledBackground")
+    parent:SetBackground("Black", 600, 600)
     parent:SetPosition(400, 20)
 
     local positions = {
@@ -126,7 +126,7 @@ function Test.SetupTests()
     local text = Test:CreateElement("textTest", "Text", "tiledbgTest")
     text:SetMouseEnabled(false)
 
-    bg:SetBackground(Generic.ELEMENTS.TiledBackground.BACKGROUND_TYPES.BOX, 400, 400)
+    bg:SetBackground("Black", 400, 400)
     text:SetText(Text.Format("Generic Test", {Color = "ffffff"}))
     text:GetMovieClip().SetType(1)
     text:SetSize(400, 200)

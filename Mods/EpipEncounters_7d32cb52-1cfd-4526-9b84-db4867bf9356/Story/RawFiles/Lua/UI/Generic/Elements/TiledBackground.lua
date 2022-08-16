@@ -2,16 +2,14 @@
 local Generic = Client.UI.Generic
 
 ---@class GenericUI_Element_TiledBackground : GenericUI_Element
----@field SetBackground fun(self, bgID:integer, width:number, height:number)
----@field BACKGROUND_TYPES table<string, integer>
-
----@class GenericUI_Element_TiledBackground
+---@field SetBackground fun(self, bgID:GenericUI_Element_TiledBackground_Type, width:number, height:number)
 Client.UI.Generic.ELEMENTS.TiledBackground = {
+    ---@enum GenericUI_Element_TiledBackground_Type
     BACKGROUND_TYPES = {
-        BOX = 0,
-        BLACK = 1,
-        FORMATTED_TOOLTIP = 2,
-        NOTE = 3,
+        RED_PROMPT = "RedPrompt",
+        BLACK = "Black",
+        FORMATTED_TOOLTIP = "FormattedTooltip",
+        NOTE = "Note",
     },
     Events = {},
 }
