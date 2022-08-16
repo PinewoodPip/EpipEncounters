@@ -124,6 +124,7 @@ LOAD_ORDER = {
     "UI/TutorialBox.lua",
     "UI/Examine.lua",
     "UI/Tooltip.lua",
+    "UI/LoadingScreen.lua",
 
     "UI/Generic/Main.lua",
     "UI/Generic/Elements/Element.lua",
