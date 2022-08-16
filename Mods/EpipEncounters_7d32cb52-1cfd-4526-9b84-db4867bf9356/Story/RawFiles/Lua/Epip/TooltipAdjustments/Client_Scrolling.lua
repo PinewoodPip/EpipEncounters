@@ -1,6 +1,7 @@
 
 local TooltipUI = Client.UI.Tooltip
 
+---@class Feature_TooltipScrolling : Feature
 local TooltipScrolling = {
     active = false,
     tooltipExists = false,
@@ -20,7 +21,7 @@ TooltipScrolling:Debug()
 ---@param notify boolean?
 function TooltipScrolling.Toggle(active, notify)
     if active ~= TooltipScrolling.active then
-        Client.UI.Input.SetMouseWheelBlocked(active)
+        Client.UI.Input.SetMouseWheelBlocked(active) -- We do not block the mouse wheel motion directly as that breaks the middle click events from firing, apparently - and this is the default binding for this feature.
 
         if notify then
             local message = "Tooltip scrolling enabled."
@@ -45,6 +46,11 @@ end
 
 function TooltipScrolling.IsActive()
     return TooltipScrolling.active and TooltipScrolling.tooltipExists
+end
+
+-- This feature is disabled if TooltipAdjustments is disabled.
+function TooltipScrolling:IsEnabled()
+    return not self.Disabled and Epip.GetFeature("EpipEncounters", "TooltipAdjustments"):IsEnabled()
 end
 
 ---------------------------------------------

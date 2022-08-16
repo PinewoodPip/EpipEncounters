@@ -3,7 +3,7 @@
 -- Numerous tooltip adjustments.
 ---------------------------------------------
 
-Epip.Features.TooltipAdjustments = {
+TooltipAdjustments = {
     Name = "TooltipAdjustments",
 
     -- ===================================================
@@ -16,8 +16,7 @@ Epip.Features.TooltipAdjustments = {
     -- #9e4b06
     -- #9c561e -- PoE color, iirc?
 }
-local TooltipAdjustments = Epip.Features.TooltipAdjustments
-setmetatable(TooltipAdjustments, {__index = _Feature})
+Epip.RegisterFeature("TooltipAdjustments", TooltipAdjustments)
 
 ---------------------------------------------
 -- LISTENERS

@@ -5,7 +5,9 @@ local Input = {
     HeldKeys = {},
     pressedKeys = {}, ---@type table<InputRawType, true>
     mouseState = nil, ---@type InputMouseState
+    blockedInputs = {}, ---@type table<InputRawType, true>
 
+    ---@enum RawInputDevice
     RAW_INPUT_DEVICES = {
         KEY = "Key",
         MOUSE = "Mouse",
@@ -568,7 +570,7 @@ local Input = {
 
     Events = {
         MouseMoved = {}, ---@type SubscribableEvent<InputLib_Event_MouseMoved>
-        KeyStateChanged = {}, ---@type SubscribableEvent<InputLib_Event_KeyStateChanged>
+        KeyStateChanged = {Preventable = true}, ---@type PreventableEvent<InputLib_Event_KeyStateChanged>
         KeyPressed = {}, ---@type SubscribableEvent<InputLib_Event_KeyPressed>
         KeyReleased = {}, ---@type SubscribableEvent<InputLib_Event_KeyReleased>
         MouseButtonPressed = {}, ---@type SubscribableEvent<InputLib_Event_MouseButtonPressed>
@@ -595,7 +597,7 @@ end
 ---@class InputLib_Event_MouseMoved
 ---@field Vector Vector2D Pixels moved.
 
----@class InputLib_Event_KeyStateChanged
+---@class InputLib_Event_KeyStateChanged : PreventableEventParams
 ---@field InputID InputRawType
 ---@field State InputState
 
@@ -623,6 +625,29 @@ function Input.GetInputName(rawID, short)
     if short then name = data.ShortName end
 
     return name
+end
+
+---@param rawID InputRawType
+---@param requestID string
+---@param blocked boolean
+function Input.SetInputBlocked(rawID, requestID, blocked)
+    if not Input.blockedInputs[rawID] then
+        Input.blockedInputs[rawID] = {}
+    end
+
+    Input.blockedInputs[rawID][requestID] = blocked or nil
+end
+
+---@param rawID InputRawType
+---@return boolean
+function Input.IsInputBlocked(rawID)
+    local blocked = false
+
+    for _,bool in pairs(Input.blockedInputs[rawID] or {}) do
+        if bool then blocked = true break end
+    end
+
+    return blocked
 end
 
 ---Get the numeric ID of a raw input event.
@@ -778,10 +803,9 @@ Ext.Events.RawInput:Subscribe(function(e)
         end 
     end
 
-    Input.Events.KeyStateChanged:Throw({
-        InputID = id,
-        State = state,
-    })
+    local event = {InputID = id, State = state,} ---@type InputLib_Event_KeyStateChanged
+
+    Input.Events.KeyStateChanged:Throw(event)
 
     if state == "Released" then
         Input.Events.KeyReleased:Throw({
@@ -791,6 +815,10 @@ Ext.Events.RawInput:Subscribe(function(e)
         Input.Events.KeyPressed:Throw({
             InputID = id,
         })
+    end
+
+    if event.Prevented then
+        inputEventData.Input.InputId = "item7" -- Let's hope no one manages to bind this particular one...
     end
 end)
 
@@ -805,11 +833,18 @@ Ext.Events.Tick:Subscribe(function (e)
     end
 end)
 
+-- Block inputs based on requests to SetInputBlocked()
+Input.Events.KeyStateChanged:Subscribe(function (ev)
+    if Input.IsInputBlocked(ev.InputID) then
+        ev:Prevent()
+    end
+end, {Priority = -9999})
+
 -- Track focus gain/loss in UI
-Ext.RegisterUINameCall("inputFocus", function(ui, method) 
+Ext.RegisterUINameCall("inputFocus", function(_) 
     Input._SetFocused(true)
 end)
-Ext.RegisterUINameCall("inputFocusLost", function(ui, method) 
+Ext.RegisterUINameCall("inputFocusLost", function(_) 
     Input._SetFocused(false)
 end)
 

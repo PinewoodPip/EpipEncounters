@@ -7,8 +7,8 @@ local Tooltip = {
     USE_LEGACY_HOOKS = false,
 
     Hooks = {
-        RenderFormattedTooltip = {}, ---@type PreventableEvent<TooltipLib_Hook_RenderFormattedTooltip>
-        RenderMouseTextTooltip = {}, ---@type PreventableEvent<TooltipLib_Hook_RenderMouseTextTooltip>
+        RenderFormattedTooltip = {Preventable = true}, ---@type PreventableEvent<TooltipLib_Hook_RenderFormattedTooltip>
+        RenderMouseTextTooltip = {Preventable = true}, ---@type PreventableEvent<TooltipLib_Hook_RenderMouseTextTooltip>
     },
 }
 Client.Tooltip = Tooltip

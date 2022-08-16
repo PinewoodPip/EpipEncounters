@@ -109,7 +109,7 @@ function Epip.InitializeFeature(id, name, feature)
 
     for ev,data in pairs(feature.Events) do
         if data.Legacy == false or feature.USE_LEGACY_EVENTS == false then
-            feature:AddSubscribableEvent(ev)
+            feature:AddSubscribableEvent(ev, data.Preventable)
         else
             feature:AddEvent(ev, data)
         end
@@ -117,7 +117,7 @@ function Epip.InitializeFeature(id, name, feature)
 
     for hook,data in pairs(feature.Hooks) do
         if data.Legacy == false or feature.USE_LEGACY_HOOKS == false then
-            feature:AddSubscribableHook(hook)
+            feature:AddSubscribableHook(hook, data.Preventable)
         else
             feature:AddHook(hook, data)
         end

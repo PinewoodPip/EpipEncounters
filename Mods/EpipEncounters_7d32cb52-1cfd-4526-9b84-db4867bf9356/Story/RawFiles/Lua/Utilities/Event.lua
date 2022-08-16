@@ -24,7 +24,7 @@ local SubscribableEventParams = {
 ---@class PreventableEvent<T>:{ (Subscribe:fun(self:SubscribableEvent, callback:fun(ev:T|PreventableEventParams), opts:SubscribableEventOptions|nil, stringID:string|nil):integer), Unsubscribe:fun(self:SubscribableEvent, index:integer|string), (Throw:fun(self:SubscribableEvent, event:T|PreventableEventParams|nil)), (Prevent:fun(self:PreventableEvent))}
 ---@field Preventable true
 
----@class PreventableEventParams
+---@class PreventableEventParams : SubscribableEventParams
 local PreventableEventParams = {
 	Preventable = true,
 	Prevented = false,
@@ -33,7 +33,6 @@ local PreventableEventParams = {
 			self.Prevented = true
 		end
 	end,
-
 }
 setmetatable(PreventableEventParams, {__index = SubscribableEventParams})
 
