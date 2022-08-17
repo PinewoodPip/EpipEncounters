@@ -29,6 +29,7 @@ function Dropdown.Create(ui, id, parent, label, opts)
     container:SetAlpha(0.2)
 
     local labelElement = container:AddChild(obj:PrefixID("Label"), "GenericUI_Element_Text")
+    labelElement:SetType("Left")
     labelElement:SetSize(200, 50)
     labelElement:SetText(label)
 

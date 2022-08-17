@@ -111,6 +111,7 @@ LOAD_ORDER = {
     
     {ScriptSet = "Epip/Greatforge/DrillSockets"},
     {ScriptSet = "Epip/Greatforge/Engrave"},
+    "Epip/Greatforge/Empower/Server.lua",
 
     "Epip/PreferredTargetDisplay/Shared.lua",
     "Epip/PreferredTargetDisplay/Server.lua",
