@@ -44,30 +44,41 @@ function Item.IsRangedWeapon(item)
     return item and item.Stats and Data.Game.RANGED_WEAPONS[item.Stats.WeaponType]
 end
 
+---@param item Item
+---@return integer
+function Item.GetUseAPCost(item)
+    local cost = 0 -- TODO is the default cost 0 or 1?
+
+    local useActions = item.RootTemplate.OnUsePeaceActions
+    for _,action in ipairs(useActions) do
+        -- if action.Type == "UseSkill" then
+        --     cost = Stats.Get("SkillData", action.SkillID).ActionPoints-- Pretty sure items ignore Elemental Affinity? Not 100% sure, TODO
+        if action.Type == "Consume" or action.Type == "UseSkill" then -- Item object costs override skill AP costs.
+            local stat = Stats.Get("Potion", item.StatsId) or Stats.Get("Object", item.StatsId)
+
+            cost = stat.UseAPCost
+        end
+    end
+
+    return cost
+end
+
 ---@param char Character
 ---@param item Item
 ---@return boolean
 function Item.CanUse(char, item)
     local canUse = true
+    local ap, _ = Character.GetActionPoints(char)
 
     if item.Stats then
         canUse = canUse and Stats.MeetsRequirements(char, item.Stats.Name, true, item)
     end
 
     -- Item skills
-    local useActions = item.RootTemplate.OnUsePeaceActions
-    for _,action in ipairs(useActions) do
-        if action.Type == "UseSkill" then
-            canUse = canUse and Character.CanUseSkill(char, action.SkillID, item)
-        elseif action.Type == "Consume" then
-            local stat = Stats.Get("Potion", item.StatsId) or Stats.Get("Object", item.StatsId)
+    local apCost = Item.GetUseAPCost(item)
+    apCost = apCost + Character.GetDynamicStat(char, "APCostBoost")
 
-            if stat then
-                local ap, _ = Character.GetActionPoints(char)
-                canUse = canUse and ap >= stat.UseAPCost
-            end
-        end
-    end
+    canUse = canUse and ap >= apCost
 
     return canUse
 end

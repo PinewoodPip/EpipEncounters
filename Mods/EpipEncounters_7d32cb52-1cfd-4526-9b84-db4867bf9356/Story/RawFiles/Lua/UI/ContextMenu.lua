@@ -468,7 +468,7 @@ function ContextMenu.GetCurrentEntity()
     if ContextMenu.characterHandle then
         entity = Character.Get(ContextMenu.characterHandle)
     elseif ContextMenu.itemHandle then
-        entity =  Item.Get(ContextMenu.itemHandle)
+        entity = Item.Get(ContextMenu.itemHandle)
     end
 
     return entity

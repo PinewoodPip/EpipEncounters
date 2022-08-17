@@ -271,6 +271,7 @@ LOAD_ORDER = {
     {ScriptSet = "Epip/Housing", WIP = true,},
     "Epip/Housing/Shared_Furniture.lua",
     {ScriptSet = "Epip/StatsEditor", WIP = true,},
+    {ScriptSet = "Epip/APCostBoostFix"},
 
     -- AMER UI controller support
     -- "Epip/Client/AMERUI_Controller/AMERUI_Controller.lua",

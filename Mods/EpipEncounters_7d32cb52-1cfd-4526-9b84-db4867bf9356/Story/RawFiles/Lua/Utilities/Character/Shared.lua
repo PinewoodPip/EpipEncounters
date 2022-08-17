@@ -40,6 +40,21 @@ function Character.GetStacks(char, type)
     return stacks,lifetime
 end
 
+---@param char Character
+---@param statName string
+function Character.GetDynamicStat(char, statName)
+    local total = 0
+    local dynStats = char.Stats.DynamicStats
+
+    for i=1,#dynStats,1 do
+        local dynStat = dynStats[i]
+
+        total = total + dynStat[statName]
+    end
+
+    return total
+end
+
 ---Returns the maximum carry weight of char.
 ---@param char Character
 ---@return integer In "grams"

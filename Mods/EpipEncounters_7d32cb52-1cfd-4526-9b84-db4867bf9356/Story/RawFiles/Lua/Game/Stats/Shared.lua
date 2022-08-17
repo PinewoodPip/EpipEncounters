@@ -119,7 +119,7 @@ function Stats.MeetsRequirements(char, statID, isItem, itemSource)
     if isEquipment then
         apCost = 1 -- TODO is this affected by extra AP costs?
     elseif itemSource and itemSource.StatsId then
-        apCost = Stats.Get("Object", itemSource.StatsId).UseAPCost
+        apCost = Item.GetUseAPCost(itemSource)
     else
         apCost, _ = Game.Math.GetSkillAPCost(data, char.Stats, Ext.Entity.GetAiGrid(), char.Translate, 1)
     end

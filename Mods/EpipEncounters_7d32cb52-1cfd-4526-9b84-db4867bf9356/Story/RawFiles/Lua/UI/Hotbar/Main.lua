@@ -122,6 +122,7 @@ local Hotbar = {
 
     Events = {
         BarPlusMinusButtonPressed = {}, ---@type SubscribableEvent<HotbarUI_Event_BarPlusMinusButtonPressed>
+        SlotPressed = {}, ---@type SubscribableEvent<HotbarUI_Event_SlotPressed>
     },
     Hooks = {
         IsBarVisible = {}, ---@type SubscribableEvent<HotbarUI_Hook_IsBarVisible>
@@ -200,6 +201,11 @@ end
 ---@class HotbarUI_Hook_CanRemoveBar
 ---@field BarToRemoveIndex integer
 ---@field CanRemove boolean Hookable.
+
+---@class HotbarUI_Event_SlotPressed
+---@field SlotData EocSkillBarItem
+---@field IsEnabled boolean
+---@field Index integer Starts at 1.
 
 ---------------------------------------------
 -- METHODS
@@ -608,12 +614,19 @@ end
 function Hotbar.UseSlot(index, isEnabled)
     Hotbar:DebugLog("Pressed slot: " .. index)
     local slot = Hotbar.GetSlotHolder().slot_array[index - 1]
+    local data = Client.GetCharacter().PlayerData.SkillBarItems[index]
 
     Hotbar:GetUI():ExternalInterfaceCall("slotPressed", index - 1, isEnabled or true)
 
     Hotbar.lastClickedSlot = index
 
     Hotbar.ResyncEngineRow()
+
+    Hotbar.Events.SlotPressed:Throw({
+        SlotData = data,
+        Index = index,
+        IsEnabled = slot.isEnabled,
+    })
 end
 
 function Hotbar.UpdateActiveSkill()
