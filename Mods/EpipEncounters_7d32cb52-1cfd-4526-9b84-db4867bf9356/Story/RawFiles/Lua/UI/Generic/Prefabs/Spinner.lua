@@ -42,12 +42,10 @@ function Spinner.Create(ui, id, parent, label, min, max, step)
     step = step or 1
 
     ---@type GenericUI_Prefab_Spinner
-    local spinner = {ID = id}
-    Inherit(spinner, Spinner)
+    local spinner = Spinner:_Create(ui, id, ui, parent, label)
 
     spinner.currentValue = min
 
-    spinner:_Setup(ui, parent, label)
     spinner:SetBounds(min, max, step)
 
     return spinner
@@ -103,9 +101,6 @@ end
 ---@param parent (GenericUI_Element|string)?
 ---@param label string
 function Spinner:_Setup(ui, parent, label)
-    self.UI = ui
-    self:_SetupEvents()
-
     local container = ui:CreateElement(self:PrefixID("Container"), "GenericUI_Element_TiledBackground", parent)
     container:SetAlpha(0.2)
 

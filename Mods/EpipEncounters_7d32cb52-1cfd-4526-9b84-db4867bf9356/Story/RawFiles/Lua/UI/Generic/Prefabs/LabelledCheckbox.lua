@@ -22,8 +22,7 @@ Generic.RegisterPrefab("GenericUI_Prefab_LabelledCheckbox", Checkbox)
 ---@param label string
 ---@return GenericUI_Prefab_LabelledCheckbox
 function Checkbox.Create(ui, id, parent, label)
-    local obj = {UI = ui, ID = id} ---@type GenericUI_Prefab_LabelledCheckbox
-    Inherit(obj, Checkbox)
+    local obj = Checkbox:_Create(ui, id) ---@type GenericUI_Prefab_LabelledCheckbox
 
     local container = ui:CreateElement(obj:PrefixID("Container"), "GenericUI_Element_TiledBackground", parent)
     container:SetAlpha(0.2)

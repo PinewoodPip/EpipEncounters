@@ -20,9 +20,7 @@ Generic.RegisterPrefab("GenericUI_Prefab_LabelledDropdown", Dropdown)
 ---@return GenericUI_Prefab_LabelledDropdown
 function Dropdown.Create(ui, id, parent, label, opts)
     opts = opts or {}
-    local obj = {ID = id, UI = ui} ---@type GenericUI_Prefab_LabelledDropdown
-    Inherit(obj, Dropdown)
-    obj:_Setup()
+    local obj = Dropdown:_Create(ui, id) ---@type GenericUI_Prefab_LabelledDropdown
 
     local container = ui:CreateElement(obj:PrefixID("Container"), "GenericUI_Element_TiledBackground", parent)
     container:SetAlpha(0.2)

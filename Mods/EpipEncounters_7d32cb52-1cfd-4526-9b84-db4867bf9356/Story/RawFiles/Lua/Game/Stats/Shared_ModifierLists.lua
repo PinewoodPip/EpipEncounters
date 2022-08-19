@@ -9,7 +9,7 @@ Stats.ModifierLists = {
         SkillType = "String",
         Ability = "SkillAbility",
         Element = "SkillElement",
-        SkillRequirements = "SkillRequirements",
+        Requirement = "SkillRequirement",
         Requirements = "StatRequirements",
         DisplayName = "String",
         DisplayNameRef = "String",
@@ -39,7 +39,7 @@ Stats.ModifierLists = {
         MaleImpactEffects = "String",
         FemaleImpactEffects = "String",
         OnHitEffect = "String",
-        SelectedCharacterOffset = "String",
+        SelectedCharacterEffect = "String",
         SelectedObjectEffect = "String",
         SelectedPositionEffect = "String",
         DisappearEffect = "String",
@@ -79,7 +79,7 @@ Stats.ModifierLists = {
         AddWeaponRange = "YesNo",
         ActionPoints = "Integer",
         Cooldown = "Integer",
-        CooldownReducation = "Integer",
+        CooldownReduction = "Integer",
         ChargeDuration = "Integer",
         CastDelay = "Integer",
         Offset = "Integer",
@@ -88,4 +88,4 @@ Stats.ModifierLists = {
     },
 }
 
----@alias StatEntry_FieldType "String"|"Integer"|"SkillAbility"|"SkillElement"|"SkillRequirements"|"StatRequirements"|"CastCheckType"|"YesNo"|"Qualifier"
+---@alias StatEntry_FieldType "String"|"Integer"|"SkillAbility"|"SkillElement"|"SkillRequirement"|"StatRequirements"|"CastCheckType"|"YesNo"|"Qualifier"

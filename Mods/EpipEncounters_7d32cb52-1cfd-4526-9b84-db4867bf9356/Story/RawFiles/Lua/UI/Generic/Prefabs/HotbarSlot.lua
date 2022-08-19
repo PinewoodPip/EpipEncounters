@@ -38,13 +38,8 @@ Generic.RegisterPrefab("GenericUI_Prefab_HotbarSlot", Slot)
 ---@return GenericUI_Prefab_HotbarSlot
 function Slot.Create(ui, id, parent)
     ---@type GenericUI_Prefab_HotbarSlot
-    local obj = {
-        ID = id,
-        UI = ui,
-        SlotElement = ui:CreateElement(id, "Slot", parent),
-    }
-    Inherit(obj, Slot)
-    obj:_Setup()
+    local obj = Slot:_Create(ui, id)
+    obj.SlotElement = ui:CreateElement(id, "Slot", parent)
 
     obj:Clear()
 

@@ -23,8 +23,7 @@ Generic.RegisterPrefab("GenericUI_Prefab_LabelledTextField", Text)
 ---@param label string
 ---@return GenericUI_Prefab_LabelledTextField
 function Text.Create(ui, id, parent, label)
-    local obj = {UI = ui, ID = id} ---@type GenericUI_Prefab_LabelledTextField
-    Inherit(obj, Text)
+    local obj = Text:_Create(ui, id) ---@type GenericUI_Prefab_LabelledTextField
 
     local container = ui:CreateElement(obj:PrefixID("Container"), "GenericUI_Element_TiledBackground", parent)
     container:SetAlpha(0.2)

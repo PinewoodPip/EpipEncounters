@@ -20,9 +20,7 @@ InheritMultiple(Text, Generic._Prefab, Generic.ELEMENTS.Text)
 ---@param size Vector2
 ---@return GenericUI_Prefab_Text
 function Text.Create(ui, id, parent, text, alignType, size)
-    local obj = {ID = id, UI = ui} ---@type GenericUI_Prefab_Text
-    Inherit(obj, Text)
-    obj:_Setup()
+    local obj = Text:_Create(ui, id) ---@type GenericUI_Prefab_Text
 
     local textElement = ui:CreateElement(id, "GenericUI_Element_Text", parent)
     obj.Element = textElement

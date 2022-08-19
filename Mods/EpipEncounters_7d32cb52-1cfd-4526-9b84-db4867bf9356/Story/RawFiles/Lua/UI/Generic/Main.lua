@@ -119,9 +119,20 @@ local Prefab = {
 }
 Generic._Prefab = Prefab
 
-function Prefab:_Setup()
-    self:_SetupEvents()
+---@param ui GenericUI_Instance
+---@param id string
+---@return GenericUI_Prefab
+function Prefab:_Create(ui, id, ...)
+    local obj = {UI = ui, ID = id}
+    Inherit(obj, self)
+
+    obj:_SetupEvents()
+    obj:_Setup(...)
+
+    return obj
 end
+
+function Prefab:_Setup() end
 
 function Prefab:PrefixID(id)
     return self.ID .. "_" .. id
