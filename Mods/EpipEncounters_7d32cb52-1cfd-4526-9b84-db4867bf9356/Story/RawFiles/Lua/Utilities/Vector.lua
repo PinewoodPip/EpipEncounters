@@ -1,6 +1,21 @@
 
+---@class VectorLib
+---@field zero2 Vector Shorthand for Vector.Create(0, 0)
+---@field zero3 Vector Shorthand for Vector.Create(0, 0, 0)
 Vector = {}
 Epip.InitializeLibrary("Vector", Vector)
+setmetatable(Vector, {
+    __index = function(self, key)
+        if key == "zero2" then
+            return Vector.Create(0, 0)
+        elseif key == "zero3" then
+            return Vector.Create(0, 0, 0)
+        else
+            return getmetatable(self)[key]
+        end
+    end
+
+})
 
 ---------------------------------------------
 -- VECTOR TABLE

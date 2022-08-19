@@ -46,11 +46,9 @@ function Spinner.Create(ui, id, parent, label, min, max, step)
     Inherit(spinner, Spinner)
 
     spinner.currentValue = min
-    spinner.maxValue = max
-    spinner.minValue = min
-    spinner.step = step
 
     spinner:_Setup(ui, parent, label)
+    spinner:SetBounds(min, max, step)
 
     return spinner
 end
@@ -109,16 +107,16 @@ function Spinner:_Setup(ui, parent, label)
     self:_SetupEvents()
 
     local container = ui:CreateElement(self:PrefixID("Container"), "GenericUI_Element_TiledBackground", parent)
-    container:SetBackground("Black", 200, 30)
     container:SetAlpha(0.2)
 
     local list = container:AddChild(self:PrefixID("List"), "GenericUI_Element_HorizontalList")
     list:SetSize(100, 30)
 
-    local text = list:AddChild("Text", "GenericUI_Element_Text")
+    local text = container:AddChild(self:PrefixID("Text"), "GenericUI_Element_Text")
     text:SetText(label)
     text:SetType("Left")
     text:SetSize(110, 30)
+    text:SetMouseEnabled(false)
 
     local minusButton = list:AddChild(self:PrefixID("Minus"), "GenericUI_Element_Button")
     minusButton:SetType("StatMinus")
@@ -147,6 +145,37 @@ function Spinner:_Setup(ui, parent, label)
     self.CounterText = amountText
     self.PlusButton = plusButton
     self.MinusButton = minusButton
+    self.ButtonList = list
+
+    self:SetSize(200, 30)
+end
+
+---Sets the bounds of the allowed values on the spinner and clamps the current value to the new valid range.
+---@param min number? Defaults to current.
+---@param max number? Defaults to current.
+---@param step number? Defaults to current.
+function Spinner:SetBounds(min, max, step)
+    min = min or self.minValue
+    max = max or self.maxValue
+    step = step or self.step
+
+    self.minValue = min
+    self.maxValue = max
+    self.step = step
+    
+    self:SetValue(Ext.Math.Clamp(self.currentValue, min, max))
+end
+
+---@param width number
+---@param height number
+function Spinner:SetSize(width, height)
+    local container = self:GetMainElement() ---@type GenericUI_Element_TiledBackground
+
+    container:SetBackground("Black", width, height)
+
+    self.Label:SetSize(width, 30)
+    self.Label:SetPositionRelativeToParent("Left")
+    self.ButtonList:SetPositionRelativeToParent("Right")
 end
 
 ---------------------------------------------

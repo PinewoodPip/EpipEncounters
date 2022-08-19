@@ -1,7 +1,7 @@
 
 
 Stats.ModifierLists = {
-    ----@type table<string, StatEntry_PropertyType> Type commented out as it breaks auto-complete.
+    ----@type table<string, StatEntry_FieldType> Type commented out as it breaks auto-complete.
     SkillData = {
         Name = "String",
         Level = "Integer",
@@ -39,7 +39,53 @@ Stats.ModifierLists = {
         MaleImpactEffects = "String",
         FemaleImpactEffects = "String",
         OnHitEffect = "String",
+        SelectedCharacterOffset = "String",
+        SelectedObjectEffect = "String",
+        SelectedPositionEffect = "String",
+        DisappearEffect = "String",
+        ReappearEffect = "String",
+        ReappearEffectTextEvent = "String",
+        RainEffect = "String",
+        StormEffect = "String",
+        FlyEffect = "String",
+        SpatterEffect = "String",
+        ShieldMaterial = "String",
+        ShieldEffect = "String",
+        ContinueEffect = "String",
+        SkillEffect = "String",
+        Template = "String",
+        TemplateCheck = "CastCheckType",
+        TemplateOverride = "String",
+        TemplateAdvanced = "String",
+        Totem = "YesNo",
+        Template1 = "String",
+        Template2 = "String",
+        Template3 = "String",
+        WeaponBones = "String",
+        TeleportSelf = "YesNo",
+        CanTargetCharacters = "YesNo",
+        CanTargetItems = "YesNo",
+        CanTargetTerrain = "YesNo",
+        ForceTarget = "YesNo",
+        TargetProjectiles = "YesNo",
+        UseCharacterStats = "YesNo",
+        UseWeaponDamage = "YesNo",
+        UseWeaponProperties = "YesNo",
+        SingleSource = "YesNo",
+        ContinueOnKill = "YesNo",
+        Autocast = "YesNo",
+        AmountOfTargets = "Integer",
+        AutoAim = "YesNo",
+        AddWeaponRange = "YesNo",
+        ActionPoints = "Integer",
+        Cooldown = "Integer",
+        CooldownReducation = "Integer",
+        ChargeDuration = "Integer",
+        CastDelay = "Integer",
+        Offset = "Integer",
+        Lifetime = "Integer",
+        Duration = "Qualifier",
     },
 }
 
----@alias StatEntry_FieldType "String"|"Integer"|"SkillAbility"|"SkillElement"|"SkillRequirements"|"StatRequirements"|"CastCheckType"
+---@alias StatEntry_FieldType "String"|"Integer"|"SkillAbility"|"SkillElement"|"SkillRequirements"|"StatRequirements"|"CastCheckType"|"YesNo"|"Qualifier"

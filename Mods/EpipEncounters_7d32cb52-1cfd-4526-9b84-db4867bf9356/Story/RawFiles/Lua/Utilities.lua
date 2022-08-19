@@ -10,6 +10,20 @@ function Inherit(table1, table2)
     setmetatable(table1, {__index = table2})
 end
 
+function InheritMultiple(table1, ...)
+    local tbls = {...}
+
+    setmetatable(table1, {
+        __index = function(_, key)
+            for _,tbl in ipairs(tbls) do
+                if tbl[key] ~= nil then
+                    return tbl[key]
+                end
+            end
+        end
+    })
+end
+
 local append = {
     isPaused = false,
 }

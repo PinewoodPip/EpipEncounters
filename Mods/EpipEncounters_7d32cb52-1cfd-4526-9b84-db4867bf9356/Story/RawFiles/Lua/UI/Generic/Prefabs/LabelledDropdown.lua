@@ -25,16 +25,13 @@ function Dropdown.Create(ui, id, parent, label, opts)
     obj:_Setup()
 
     local container = ui:CreateElement(obj:PrefixID("Container"), "GenericUI_Element_TiledBackground", parent)
-    container:SetBackground("Black", 600, 50)
     container:SetAlpha(0.2)
 
     local labelElement = container:AddChild(obj:PrefixID("Label"), "GenericUI_Element_Text")
     labelElement:SetType("Left")
-    labelElement:SetSize(200, 50)
     labelElement:SetText(label)
 
     local combo = container:AddChild(obj:PrefixID("Combo"), "GenericUI_Element_ComboBox")
-    combo:SetPositionRelativeToParent("Right")
 
     for _,option in ipairs(opts) do
         combo:AddOption(option.ID, option.Label)
@@ -43,7 +40,24 @@ function Dropdown.Create(ui, id, parent, label, opts)
     obj.Label = labelElement
     obj.ComboBox = combo
 
+    obj:SetSize(600, 50) -- Default size
+
     return obj
+end
+
+---@param width number
+---@param height number
+function Dropdown:SetSize(width, height)
+    local labelElement = self.Label
+    local combo = self.ComboBox
+    local container = self:GetMainElement() ---@type GenericUI_Element_TiledBackground
+
+    container:SetBackground("Black", width, height)
+
+    labelElement:SetSize(width, 30)
+    labelElement:SetPositionRelativeToParent("Left")
+
+    combo:SetPositionRelativeToParent("Right")
 end
 
 ---@param id string

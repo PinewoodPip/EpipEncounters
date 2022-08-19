@@ -145,6 +145,8 @@ LOAD_ORDER = {
     "UI/Generic/Prefabs/Spinner.lua",
     "UI/Generic/Prefabs/Text.lua",
     "UI/Generic/Prefabs/LabelledDropdown.lua",
+    "UI/Generic/Prefabs/LabelledCheckbox.lua",
+    "UI/Generic/Prefabs/LabelledTextField.lua",
     -- {Script = "UI/Generic/Test.lua", WIP = true}, -- TEST!
 
     "UI/Hotbar/Main.lua",
