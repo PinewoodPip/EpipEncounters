@@ -4,6 +4,10 @@ local Generic = Client.UI.Generic
 ---@class GenericUI_Prefab_Text : GenericUI_Prefab, GenericUI_Element_Text
 local Text = {
     Element = nil, ---@type GenericUI_Element_Text
+
+    Events = {
+        TextEdited = {}, ---@type SubscribableEvent<GenericUI_Element_Text_Event_Changed>
+    }
 }
 Generic.RegisterPrefab("GenericUI_Prefab_Text", Text)
 InheritMultiple(Text, Generic._Prefab, Generic.ELEMENTS.Text)
@@ -28,6 +32,11 @@ function Text.Create(ui, id, parent, text, alignType, size)
     textElement:SetType(alignType)
     textElement:SetSize(size[1], size[2])
     textElement:SetText(text)
+
+    -- Forward events
+    textElement.Events.Changed:Subscribe(function (ev)
+        obj.Events.TextEdited:Throw(ev)
+    end)
 
     return obj
 end

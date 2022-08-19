@@ -5,12 +5,12 @@ local Generic = Client.UI.Generic
 local Checkbox = {
     Checkbox = nil, ---@type GenericUI_Element_StateButton
     Label = nil, ---@type GenericUI_Element_Text
+
+    Events = {
+        StateChanged = {}, ---@type SubscribableEvent<GenericUI_Element_StateButton_Event_StateChanged>
+    }
 }
 Generic.RegisterPrefab("GenericUI_Prefab_LabelledCheckbox", Checkbox)
-
----------------------------------------------
--- EVENTS
----------------------------------------------
 
 ---------------------------------------------
 -- METHODS
@@ -38,6 +38,11 @@ function Checkbox.Create(ui, id, parent, label)
     obj.Label = text
 
     obj:SetSize(600, 50)
+
+    -- Forward events
+    checkbox.Events.StateChanged:Subscribe(function (ev)
+        obj.Events.StateChanged:Throw(ev)
+    end)
 
     return obj
 end

@@ -14,7 +14,7 @@ local Spinner = {
     currentValue = 0,
 
     Events = {
-
+        ValueChanged = {}, ---@type SubscribableEvent<GenericUI_Prefab_Spinner_Event_ValueChanged>
     }
 }
 Generic.RegisterPrefab("GenericUI_Prefab_Spinner", Spinner)
@@ -22,6 +22,9 @@ Generic.RegisterPrefab("GenericUI_Prefab_Spinner", Spinner)
 ---------------------------------------------
 -- EVENTS
 ---------------------------------------------
+
+---@class GenericUI_Prefab_Spinner_Event_ValueChanged
+---@field Value number
 
 ---------------------------------------------
 -- METHODS
@@ -62,7 +65,7 @@ function Spinner:SetValue(value)
     if self.step == 1 then
         value = math.floor(value)
     end
-    
+
     self.currentValue = value
 
     self:UpdateCounter()
@@ -73,18 +76,20 @@ function Spinner:Decrement()
     return self:AddValue(-self.step)
 end
 
+---Adds to the current value. **Throws the ValueChanged event!**
 ---@param val number
 ---@return number New value.
 function Spinner:AddValue(val)
     local value = self:GetValue()
 
-    value = value + val
-    if value < self.minValue then value = self.minValue end
-    if value > self.maxValue then value = self.maxValue end
+    value = Ext.Math.Clamp(value + val, self.minValue, self.maxValue)
 
     self.currentValue = value
 
     self:UpdateCounter()
+
+    -- Throw event
+    self.Events.ValueChanged:Throw({Value = value})
 
     return value
 end
@@ -97,6 +102,9 @@ end
 function Spinner:UpdateCounter()
     local value = self:GetValue()
     local text = self.CounterText
+    if self.step == 1 then
+        value = Text.RemoveTrailingZeros(value)
+    end
 
     text:SetText(tostring(value))
 end

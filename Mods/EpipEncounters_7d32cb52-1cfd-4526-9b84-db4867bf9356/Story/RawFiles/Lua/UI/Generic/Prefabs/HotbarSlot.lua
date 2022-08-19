@@ -16,7 +16,7 @@ local Slot = {
     Object = {Type = "None"}, ---@type GenericUI_Prefab_HotbarSlot_Object
     Events = {
         ---@type SubscribableEvent<GenericUI_Prefab_HotbarSlot_Event_ObjectDraggedIn>
-        ObjectDraggedIn = {},
+        ObjectDraggedIn = {}, -- TODO!
     }
 }
 Generic.RegisterPrefab("GenericUI_Prefab_HotbarSlot", Slot)

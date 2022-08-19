@@ -5,6 +5,10 @@ local Generic = Client.UI.Generic
 local Dropdown = {
     Label = nil, ---@type GenericUI_Element_Text
     ComboBox = nil, ---@type GenericUI_Element_ComboBox
+
+    Events = {
+        OptionSelected = {}, ---@type SubscribableEvent<GenericUI_Element_ComboBox_Event_OptionSelected>
+    }
 }
 Generic.RegisterPrefab("GenericUI_Prefab_LabelledDropdown", Dropdown)
 
@@ -39,6 +43,11 @@ function Dropdown.Create(ui, id, parent, label, opts)
     obj.ComboBox = combo
 
     obj:SetSize(600, 50) -- Default size
+
+    -- Forward events
+    combo.Events.OptionSelected:Subscribe(function (ev)
+        obj.Events.OptionSelected:Throw(ev)
+    end)
 
     return obj
 end

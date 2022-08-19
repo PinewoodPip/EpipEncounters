@@ -6,12 +6,12 @@ local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 local Text = {
     Label = nil, ---@type GenericUI_Prefab_Text
     Text = nil, ---@type GenericUI_Prefab_Text
+
+    Events = {
+        TextEdited = {}, ---@type SubscribableEvent<GenericUI_Element_StateButton_Event_StateChanged>
+    }
 }
 Generic.RegisterPrefab("GenericUI_Prefab_LabelledTextField", Text)
-
----------------------------------------------
--- EVENTS
----------------------------------------------
 
 ---------------------------------------------
 -- METHODS
@@ -31,6 +31,11 @@ function Text.Create(ui, id, parent, label)
     local labelElement = TextPrefab.Create(ui, obj:PrefixID("Label"), container, label, "Left", Vector.zero2)
     local text = TextPrefab.Create(ui, obj:PrefixID("Text"), container, "", "Right", Vector.zero2)
     text:SetEditable(true)
+
+    -- Forward events
+    text.Events.TextEdited:Subscribe(function (ev)
+        obj.Events.TextEdited:Throw(ev)
+    end)
 
     obj.Text = text
     obj.Label = labelElement
