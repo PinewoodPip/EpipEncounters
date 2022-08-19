@@ -125,6 +125,7 @@ LOAD_ORDER = {
     "UI/Examine.lua",
     "UI/Tooltip.lua",
     "UI/LoadingScreen.lua",
+    "UI/Skills.lua",
 
     "UI/Generic/Main.lua",
     "UI/Generic/Elements/Element.lua",
@@ -221,8 +222,9 @@ LOAD_ORDER = {
 
     {ScriptSet = "Epip/Greatforge/DrillSockets"},
     {ScriptSet = "Epip/Greatforge/Engrave"},
-    {ScriptSet = "Epip/Encumbrance", Developer = true,},
+    {ScriptSet = "Epip/Encumbrance"},
     {ScriptSet = "Epip/DebugDisplay", Developer = true,},
+    {ScriptSet = "Epip/UnlearnSkills"},
 
     "Epip/Client/GenericUIs/QuickExamine.lua",
     "Epip/Client/GenericUIs/SaveLoadOverlay.lua",

@@ -54,10 +54,15 @@ function Epip.RegisterFeature(modTable, id, feature)
     modData.Features[id] = feature
 end
 
+---@overload fun(id:string):Feature
 ---@param modTable string
 ---@param id string
 ---@return Feature
 function Epip.GetFeature(modTable, id)
+    -- Overload to get features built-in into Epip.
+    if id == nil then
+        modTable, id = "EpipEncounters", modTable
+    end
     local modData = Epip._Features[modTable]
     local feature
 

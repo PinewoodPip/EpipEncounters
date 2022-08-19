@@ -118,12 +118,13 @@ LOAD_ORDER = {
     
     {ScriptSet = "Epip/ItemTagging"},
     {ScriptSet = "Epip/ExtraDataConfig", Developer = true,},
-    {ScriptSet = "Epip/Encumbrance", Developer = true,},
+    {ScriptSet = "Epip/Encumbrance",},
     {ScriptSet = "Epip/Housing", WIP = true,},
     "Epip/Housing/Shared_Furniture.lua",
     {ScriptSet = "Epip/StatsEditor", WIP = true,},
     {ScriptSet = "Epip/APCostBoostFix"},
     {ScriptSet = "Epip/DebugDisplay", Developer = true,},
+    {ScriptSet = "Epip/UnlearnSkills"},
 
     "Epip/StatsTab/Shared.lua",
     "Epip/StatsTab/Server/Server.lua",

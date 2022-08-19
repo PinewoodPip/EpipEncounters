@@ -791,7 +791,7 @@ Ext.Events.RawInput:Subscribe(function(e)
     local state = inputEventData.Value.State
 
     -- Mouse pressed event
-    if Input.MOUSE_CLICK_EVENTS[id] then
+    if Input.MOUSE_CLICK_EVENTS[id] and state == "Pressed" then
         local x, y = Client.GetMousePosition()
 
         -- This does not fire in Main Menu. TODO?
