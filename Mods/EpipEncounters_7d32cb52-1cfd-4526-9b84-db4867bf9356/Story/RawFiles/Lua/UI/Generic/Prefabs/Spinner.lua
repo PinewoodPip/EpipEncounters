@@ -59,6 +59,10 @@ end
 ---Sets the value of the spinner. Ignores min/max bounds or step.
 ---@param value number
 function Spinner:SetValue(value)
+    if self.step == 1 then
+        value = math.floor(value)
+    end
+    
     self.currentValue = value
 
     self:UpdateCounter()
@@ -119,7 +123,7 @@ function Spinner:_Setup(ui, parent, label)
 
     local amountText = list:AddChild(self:PrefixID("AmountText"), "GenericUI_Element_Text")
     amountText:SetText(tostring(self:GetValue()))
-    amountText:SetSize(30, 30)
+    amountText:SetSize(50, 30)
 
     local plusButton = list:AddChild(self:PrefixID("Plus"), "GenericUI_Element_Button")
     plusButton:SetType("StatPlus")
