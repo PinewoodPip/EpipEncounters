@@ -14,7 +14,6 @@ setmetatable(Vector, {
             return getmetatable(self)[key]
         end
     end
-
 })
 
 ---------------------------------------------
@@ -29,11 +28,16 @@ setmetatable(Vector, {
 ---@class Vector
 ---@field Arity integer Getter. Equivalent to #self.
 ---@field Length number Getter. Equivalent to Vector.GetLength()
+---@field unpack fun(self:Vector):... Equivalent to table.unpack(self)
 local _Vector = {
     __index = function(self, key)
         -- Alternative way to fetch arity.
         if key == "Arity" then
             return #self
+        elseif key == "unpack" then
+            return function(vector)
+                return table.unpack(vector)
+            end
         elseif key == "Length" then
             return Vector.GetLength(self)
         end
