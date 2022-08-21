@@ -654,10 +654,10 @@ end
 local pendingSurfaceTooltip = nil
 
 -- Prevent surface tooltips, and re-render them once we've obtained extra surface data from the server.
-Client.Tooltip.Hooks.RenderFormattedTooltip:Subscribe(function (ev)
-    pendingSurfaceTooltip = ev.Tooltip
-
+Client.Tooltip.Hooks.RenderSurfaceTooltip:Subscribe(function (ev)
     local position = Ext.UI.GetPickingState().WalkablePosition
+
+    pendingSurfaceTooltip = ev.Tooltip
     
     Net.PostToServer("EPIPENCOUNTERS_GetSurfaceData", {
         Position = position,

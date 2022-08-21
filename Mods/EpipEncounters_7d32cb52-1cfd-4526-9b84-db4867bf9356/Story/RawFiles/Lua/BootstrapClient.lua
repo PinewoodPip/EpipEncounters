@@ -73,7 +73,6 @@ LOAD_ORDER = {
     "Tables/_UI.lua",
 
     "UI/TextDisplay.lua",
-    "Utilities/Client/Tooltip.lua",
 
     "Client/Client.lua",
     "Client/Server.lua",
@@ -126,6 +125,8 @@ LOAD_ORDER = {
     "UI/Tooltip.lua",
     "UI/LoadingScreen.lua",
     "UI/Skills.lua",
+    
+    "Utilities/Client/Tooltip.lua",
 
     "UI/Generic/Main.lua",
     "UI/Generic/Elements/Element.lua",

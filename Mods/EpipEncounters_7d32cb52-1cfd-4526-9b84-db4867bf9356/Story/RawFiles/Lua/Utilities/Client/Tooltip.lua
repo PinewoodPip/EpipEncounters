@@ -3,19 +3,27 @@ local TextDisplay = Client.UI.TextDisplay
 
 ---@class TooltipLib : Feature
 local Tooltip = {
+    nextTooltipData = nil, ---@type TooltipLib_TooltipSourceData
+
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
 
     Hooks = {
         RenderFormattedTooltip = {Preventable = true}, ---@type PreventableEvent<TooltipLib_Hook_RenderFormattedTooltip>
+        RenderSkillTooltip = {Preventable = true,}, ---@type PreventableEvent<TooltipLib_Hook_RenderFormattedTooltip>
+        RenderSurfaceTooltip = {Preventable = true,}, ---@type PreventableEvent<TooltipLib_Hook_RenderFormattedTooltip>
         RenderMouseTextTooltip = {Preventable = true}, ---@type PreventableEvent<TooltipLib_Hook_RenderMouseTextTooltip>
     },
 }
 Client.Tooltip = Tooltip
 Epip.InitializeLibrary("TooltipLib", Tooltip)
 
----@alias TooltipLib_FormattedTooltipType "Surface"
+---@alias TooltipLib_FormattedTooltipType "Surface"|"Skill"
 ---@alias TooltipLib_Element table See `Game.Tooltip`. TODO
+
+---@class TooltipLib_TooltipSourceData
+---@field UIType integer
+---@field Type TooltipLib_FormattedTooltipType
 
 ---@class TooltipLib_FormattedTooltip
 ---@field Elements TooltipLib_Element[]
@@ -81,6 +89,14 @@ function Tooltip._SendFormattedTooltipHook(ui, tooltipType, data)
         UI = ui,
     }
 
+    -- Specific listeners go first.
+    local specificEvent = Tooltip.Hooks["Render" .. tooltipType .. "Tooltip"]
+    if specificEvent then
+        specificEvent:Throw(hook)
+    else
+        Tooltip:LogWarning("No specific hook defined for tooltip type " .. tooltipType)
+    end
+
     Tooltip.Hooks.RenderFormattedTooltip:Throw(hook)
 
     return hook
@@ -90,13 +106,49 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
+---@param ui UIObject
+---@param fieldName string
+---@return table
+local function ParseArray(ui, fieldName)
+    return Game.Tooltip.ParseTooltipArray(Game.Tooltip.TableFromFlash(ui, fieldName))
+end
+
+local function HandleFormattedTooltip(ev, arrayFieldName, x, y, unknown)
+    local sourceData = Tooltip.nextTooltipData
+
+    if sourceData then
+        local tbl = ParseArray(ev.UI, arrayFieldName)
+        local hook = Tooltip._SendFormattedTooltipHook(Ext.UI.GetByType(sourceData.UIType), sourceData.Type, tbl)
+
+        if not hook.Prevented then
+            local newTable = Game.Tooltip.EncodeTooltipArray(hook.Tooltip.Elements)
+
+            Game.Tooltip.ReplaceTooltipArray(ev.UI, arrayFieldName, newTable, tbl)
+        else
+            ev:PreventAction()
+        end
+    end
+
+    Tooltip.nextTooltipData = nil
+end
+
+Ext.Events.UICall:Subscribe(function(ev)
+    if ev.Function == "showSkillTooltip" then
+        Tooltip.nextTooltipData = {UIType = ev.UI:GetTypeId(), Type = "Skill"}
+    end
+end)
+
+Client.UI.Tooltip:RegisterInvokeListener("addFormattedTooltip", function(ev, x, y, unknown)
+    HandleFormattedTooltip(ev, "tooltip_array", x, y, unknown)
+end)
+
 -- Listen for surface tooltips from TextDisplay.
 -- TODO place dummy values.
 TextDisplay:RegisterInvokeListener("displaySurfaceText", function(ev, _, _)
     local ui = ev.UI
     local arrayFieldName = "tooltipArray"
 
-    local tbl = Game.Tooltip.ParseTooltipArray(Game.Tooltip.TableFromFlash(ui, "tooltipArray"))
+    local tbl = Game.Tooltip.ParseTooltipArray(Game.Tooltip.TableFromFlash(ui, arrayFieldName))
 
     local hook = Tooltip._SendFormattedTooltipHook(ui, "Surface", tbl)
 

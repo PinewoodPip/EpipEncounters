@@ -6,41 +6,42 @@ local MessageBox = Client.UI.MessageBox
 local Unlearn = Epip.GetFeature("UnlearnSkills")
 
 ---------------------------------------------
+-- METHODS
+---------------------------------------------
+
+
+
+---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
 
--- Open unlearn prompt upon right-clicking a skill.
+-- Show tooltip hint on how to use the feature. Only appears for skills that can be unlearnt.
+Client.Tooltip.Hooks.RenderSkillTooltip:Subscribe(function (ev)
+    if ev.UI.Type == Ext.UI.TypeID.skills then
+        local skill = SkillBook.GetSelectedSkill()
+
+        if skill then
+            local canUnlearn, _ = Unlearn.CanUnlearn(Client.GetCharacter(), skill)
+
+            if canUnlearn then
+                ev.Tooltip:InsertElement({Type = "Engraving", Label = Text.Format("Right-click to unlearn.", {Color = Color.GREEN}), 1})
+            end
+        end
+    end
+end)
+
+-- Open unlearn prompt upon right-clicking a skill, or an error message if the skill cannot be unlearnt.
 Client.Input.Events.MouseButtonPressed:Subscribe(function (e)
     if e.InputID == "right2" then
         local skillID = SkillBook.GetSelectedSkill()
-        local playerData = Client.GetCharacter().SkillManager.Skills[skillID]
 
-        if skillID and playerData.CauseListSize == 0 and not playerData.ZeroMemory then
+        if skillID then
             local stat = Stats.Get("SkillData", skillID)
-            local skillName = Ext.L10N.GetTranslatedStringFromKey(stat.DisplayName)
+            local canUnlearn, reason = Unlearn.CanUnlearn(Client.GetCharacter(), skillID)
+            
+            if canUnlearn then
+                local skillName = Ext.L10N.GetTranslatedStringFromKey(stat.DisplayName)
 
-            if Unlearn.BLOCKED_SKILLS[skillID] then -- Cannot unlearn explicitly blocked skills.
-                local msg = "I cannot unlearn this skill."
-
-                -- Easter egg messages.
-                if skillID == "Shout_NexusMeditate" then
-                    msg = "I would lose my special spark if I were to give that up."
-                elseif skillID == "Shout_SourceInfusion" then
-                    msg = "Sourcery is an innate part of who I am; I cannot get rid of it."
-                end
-
-                MessageBox.Open({
-                    Header = "",
-                    Message = msg,
-                })
-            elseif stat["Memory Cost"] == 0 then -- Cannot unlearn innate spells.
-                local msg = Text.Format("%s is an innate skill; it might be unwise to rid myself of it.", {FormatArgs = {skillName}})
-
-                MessageBox.Open({
-                    Header = "",
-                    Message = msg,
-                })
-            else
                 MessageBox.Open({
                     ID = "PIP_UnlearnSkill",
                     SkillID = skillID,
@@ -50,6 +51,11 @@ Client.Input.Events.MouseButtonPressed:Subscribe(function (e)
                         {Type = 1, ID = 1, Text = "Unlearn"},
                         {Type = 1, ID = 2, Text = "Cancel"},
                     },
+                })
+            else
+                MessageBox.Open({
+                    Header = "",
+                    Message = reason,
                 })
             end
         end
