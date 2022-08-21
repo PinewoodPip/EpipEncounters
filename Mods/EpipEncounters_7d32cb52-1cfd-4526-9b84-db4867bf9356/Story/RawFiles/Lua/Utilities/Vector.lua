@@ -1,5 +1,5 @@
 
----@class VectorLib
+---@class VectorLib : Library
 ---@field zero2 Vector Shorthand for Vector.Create(0, 0)
 ---@field zero3 Vector Shorthand for Vector.Create(0, 0, 0)
 Vector = {}
@@ -42,6 +42,10 @@ local _Vector = {
             return Vector.GetLength(self)
         end
     end,
+    __add = function(self, v) return Vector.Sum(self, v) end,
+    __sub = function(self, v) return Vector.Subtract(self, v) end,
+    __mul = function(self, v) return Vector.DotProduct(self, v) end,
+    __unm = function(self) return Vector.Negate(self) end,
 }
 
 ---------------------------------------------
@@ -56,6 +60,54 @@ function Vector.Create(...)
     setmetatable(vector, _Vector)
 
     return vector
+end
+
+---Performs a dot product between two vectors of the same dimensions.
+---@param v1 Vector
+---@param v2 Vector
+---@return number
+function Vector.DotProduct(v1, v2)
+    if v1.Arity ~= v2.Arity then Vector:Error("DotProduct", "Vector dimension mismatch") end
+
+    local value = 0
+
+    for i=1,#v1,1 do
+        value = value + v1[i] * v2[i]
+    end
+
+    return value
+end
+
+---Sums the components of two vectors of the same dimensions.
+---@param v1 Vector
+---@param v2 Vector
+---@return Vector
+function Vector.Sum(v1, v2)
+    if v1.Arity ~= v2.Arity then Vector:Error("DotProduct", "Vector dimension mismatch") end
+
+    local v = Vector.Clone(v1)
+
+    for i=1,#v1,1 do
+        v[i] = v1[i] + v2[i]
+    end
+
+    return v
+end
+
+function Vector.Subtract(v1, v2)
+    return Vector.Sum(v1, Vector.Negate(v2))
+end
+
+---@param v Vector
+---@return Vector
+function Vector.Negate(v)
+    v = Vector.Clone(v)
+
+    for i=1,#v,1 do
+        v[i] = -v[i]
+    end
+
+    return v
 end
 
 ---@param vector Vector

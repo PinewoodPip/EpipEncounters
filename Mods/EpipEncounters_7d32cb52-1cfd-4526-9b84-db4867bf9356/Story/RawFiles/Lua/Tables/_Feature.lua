@@ -295,3 +295,10 @@ end
 function Feature:LogError(msg)
     Utilities.LogError(self.NAME, msg)
 end
+
+---Throws an error.
+---@param method string
+---@param msg string
+function Feature:Error(method, msg)
+    error(Text.Format("%s(): %s", {FormatArgs = {method, msg}}))
+end
