@@ -4,7 +4,7 @@
 ---@field Arity integer
 ---@field Fields OsirisType[]
 
----@class OsirisHelper
+---@class OsirisLib : Osi
 Osiris = {
     DATABASES = {},
     USER_QUERIES = {},
