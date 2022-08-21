@@ -8,7 +8,13 @@
 ---@alias pattern string
 ---@alias TranslatedStringHandle string
 
--- Temporary alias.
+---@class NetMessage_Character
+---@field CharacterNetID NetId
+
+---@class NetMessage_Item
+---@field ItemNetID NetId
+
+---Temporary alias.
 ---@class Library: Feature
 
 ---@alias EquipSlot "Helmet" | "Breast" | "Leggings" | "Weapon" | "Shield" | "Ring" | "Belt" | "Boots" | "Gloves" | "Amulet" | "Ring" | "Ring2" | "Horns" | "Overhead"

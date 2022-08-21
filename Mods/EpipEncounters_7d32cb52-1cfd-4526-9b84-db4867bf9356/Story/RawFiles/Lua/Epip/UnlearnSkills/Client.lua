@@ -9,7 +9,24 @@ local Unlearn = Epip.GetFeature("UnlearnSkills")
 -- METHODS
 ---------------------------------------------
 
+---@param char EclCharacter? Defaults to client character.
+---@param skillID string
+function Unlearn.UnlearnSkill(char, skillID)
+    char = char or Client.GetCharacter()
 
+    Net.PostToServer("EPIPENCOUNTERS_UnlearnSkill", {
+        CharacterNetID = char.NetID,
+        SkillID = skillID,
+    })
+
+    -- Refresh the UI. The memorized spell window does not update if a skill is unlearnt while the UI is open.
+    if SkillBook:IsVisible() then
+        SkillBook:Hide()
+        Timer.Start(0.1, function (_)
+            SkillBook:Show()
+        end)
+    end
+end
 
 ---------------------------------------------
 -- EVENT LISTENERS
@@ -65,15 +82,6 @@ end)
 -- Listen for prompt being accepted.
 MessageBox.RegisterMessageListener("PIP_UnlearnSkill", MessageBox.Events.ButtonPressed, function(buttonId, data)
     if buttonId == 1 then
-        Net.PostToServer("EPIPENCOUNTERS_UnlearnSkill", {
-            CharacterNetID = Client.GetCharacter().NetID,
-            SkillID = data.SkillID,
-        })
-
-        -- Refresh the UI. The memorized spell window does not update if a skill is unlearnt while the UI is open.
-        SkillBook:Hide()
-        Timer.Start(0.1, function (_)
-            SkillBook:Show()
-        end)
+        Unlearn.UnlearnSkill(nil, data.SkillID)
     end
 end)

@@ -10,6 +10,13 @@ local Unlearn = {
 Epip.RegisterFeature("UnlearnSkills", Unlearn)
 
 ---------------------------------------------
+-- NET MESSAGES
+---------------------------------------------
+
+---@class EPIPENCOUNTERS_UnlearnSkill : NetMessage_Character
+---@field SkillID string
+
+---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
