@@ -29,3 +29,40 @@ function Character.GetPartyMembers(char)
 
     return members
 end
+
+---@param char Character
+---@return CharacterLib_StatusFromItem[]
+function Character.GetStatusesFromItems(char)
+    local items = Character.GetEquippedItems(char)
+    local statuses = {}
+
+    for _,item in ipairs(items) do
+        local props = item.Stats.PropertyLists
+        local extraProps = props.ExtraProperties
+
+        -- Check SelfOnEquip properties
+        if extraProps and table.contains(extraProps.AllPropertyContexts, "SelfOnEquip") then
+            local name = extraProps.Name
+            name = string.sub(name, 1, string.len(name)//2)
+            name = name:gsub("_ExtraProperties$", "") -- Boost name
+
+            -- Examine boost stat to find the status name
+            local stat = Stats.Get("Boost", name)
+            if stat then
+                local statProps = stat.ExtraProperties
+
+                for _,statProp in ipairs(statProps) do
+                    if statProp.Type == "Status" then
+                        local status = char:GetStatus(statProp.Action)
+    
+                        if status then
+                            table.insert(statuses, {Status = status, ItemSource = item})
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    return statuses
+end

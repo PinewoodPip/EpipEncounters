@@ -172,3 +172,16 @@ function table.reverseLookup(table1, value)
     end
     return nil
 end
+
+---@param tbl table
+---@param value any
+---@return boolean
+function table.contains(tbl, value)
+    for _,val in pairs(tbl) do
+        if val == value then
+            return true
+        end
+    end
+
+    return false
+end

@@ -22,7 +22,7 @@ local _OsirisDatabase = {
 ---@class Osiris_BuiltInSymbol
 local _BuiltInOsiSymbol = {Name = ""}
 function _BuiltInOsiSymbol:__call(...)
-    Osi[self.Name](Osiris._ParseParameters(...))
+    return Osi[self.Name](Osiris._ParseParameters(...))
 end
 
 -- Calling the table itself does a query (backwards compatibility)

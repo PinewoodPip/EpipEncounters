@@ -1,10 +1,11 @@
 
----@alias Entity EclCharacter | EsvCharacter | EclItem | EsvItem
----@alias Character EsvCharacter | EclCharacter
----@alias Item EclItem | EsvItem
+---@alias Entity EclCharacter|EsvCharacter|EclItem|EsvItem
+---@alias Character EsvCharacter|EclCharacter
+---@alias Item EclItem|EsvItem
+---@alias Status EclStatus|EsvStatus
 ---@alias GUID string
 ---@alias PrefixedGUID string
----@alias Context "Client" | "Server" 
+---@alias Context "Client"|"Server" 
 ---@alias pattern string
 ---@alias TranslatedStringHandle string
 

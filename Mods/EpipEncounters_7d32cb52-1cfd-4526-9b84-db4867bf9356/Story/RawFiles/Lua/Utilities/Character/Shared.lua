@@ -1,12 +1,34 @@
 
----@class CharacterLib
+---@class CharacterLib : Library
 Character = {
     AI_PREFERRED_TAG = "AI_PREFERRED_TARGET",
     AI_UNPREFERRED_TAG = "AI_UNPREFERRED_TARGET",
-    AI_IGNORED_TAG = "AI_IGNORED_TARGET", 
+    AI_IGNORED_TAG = "AI_IGNORED_TARGET",
+
+    ---@enum ItemSlot
+    EQUIPMENT_SLOTS = {
+        HELMET = "Helmet",
+        BREAST = "Breast",
+        LEGGINGS = "Leggings",
+        WEAPON = "Weapon",
+        SHIELD = "Shield",
+        RING = "Ring",
+        BELT = "Belt",
+        BOOTS = "Boots",
+        GLOVES = "Gloves",
+        AMULET = "Amulet",
+        RING2 = "Ring2",
+        WINGS = "Wings",
+        HORNS = "Horns",
+        OVERHEAD = "Overhead",
+    }
 }
 Game.Character = Character
 Epip.InitializeLibrary("Character", Character)
+
+---@class CharacterLib_StatusFromItem
+---@field Status Status
+---@field ItemSource Item
 
 ---------------------------------------------
 -- METHODS
@@ -38,6 +60,32 @@ function Character.GetStacks(char, type)
     end
 
     return stacks,lifetime
+end
+
+---@param char Character
+---@return table<ItemSlot, EclItem>
+function Character.GetEquippedItems(char)
+    local items = {}
+
+    for _,slot in pairs(Character.EQUIPMENT_SLOTS) do
+        local item
+
+        if Ext.IsClient() then
+            item = char:GetItemBySlot(slot)
+            if item then
+                item = Item.Get(item)
+            end
+        else
+            item = Osiris.CharacterGetEquippedItem(char, slot)
+            if item then
+                item = Item.Get(item)
+            end
+        end
+
+        table.insert(items, item)
+    end
+
+    return items
 end
 
 ---@param char Character
