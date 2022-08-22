@@ -340,7 +340,6 @@ local Vanity = {
 }
 Epip.InitializeUI(nil, "Vanity", Vanity)
 Client.UI.Vanity = Vanity
-Vanity:Debug()
 
 ---------------------------------------------
 -- EVENTS / HOOKS

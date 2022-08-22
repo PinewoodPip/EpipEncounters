@@ -10,7 +10,6 @@ local Settings = {
 }
 Epip.AddFeature("ServerSettings", "ServerSettings", Settings)
 Epip.Features.ServerSettings = Settings
-Settings:Debug()
 
 ---------------------------------------------
 -- EVENTS/HOOKS

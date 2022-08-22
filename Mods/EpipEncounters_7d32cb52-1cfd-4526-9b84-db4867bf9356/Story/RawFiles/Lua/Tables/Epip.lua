@@ -20,7 +20,7 @@ Epip = {
 
 ---@deprecated Legacy call.
 function Epip.AddFeature(id, name, feature)
-    Epip.InitializeFeature(id, name, feature)
+    Epip.RegisterFeature(id, feature)
     
     Epip.Features[id] = feature
 end

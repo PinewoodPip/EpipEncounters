@@ -2,6 +2,7 @@
 ---@class VectorLib : Library
 ---@field zero2 Vector Shorthand for Vector.Create(0, 0)
 ---@field zero3 Vector Shorthand for Vector.Create(0, 0, 0)
+---@field __call fun(...):Vector
 Vector = {}
 Epip.InitializeLibrary("Vector", Vector)
 setmetatable(Vector, {
@@ -13,7 +14,10 @@ setmetatable(Vector, {
         else
             return getmetatable(self)[key]
         end
-    end
+    end,
+    __call = function(...) -- Shorthand for creating vectors.
+        return Vector.Create(...)
+    end,
 })
 
 ---------------------------------------------

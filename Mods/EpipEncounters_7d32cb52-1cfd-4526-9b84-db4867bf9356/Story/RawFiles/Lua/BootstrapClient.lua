@@ -143,6 +143,7 @@ LOAD_ORDER = {
     "UI/Generic/Elements/Slot.lua",
     "UI/Generic/Elements/Slider.lua",
     "UI/Generic/Elements/ComboBox.lua",
+    "UI/Generic/Elements/Grid.lua",
     "UI/Generic/Prefabs/HotbarSlot.lua",
     "UI/Generic/Prefabs/Spinner.lua",
     "UI/Generic/Prefabs/Text.lua",
@@ -226,6 +227,7 @@ LOAD_ORDER = {
     {ScriptSet = "Epip/Encumbrance"},
     {ScriptSet = "Epip/DebugDisplay", Developer = true,},
     {ScriptSet = "Epip/UnlearnSkills"},
+    {ScriptSet = "Epip/DebugMenu"},
 
     "Epip/Client/GenericUIs/QuickExamine.lua",
     "Epip/Client/GenericUIs/SaveLoadOverlay.lua",

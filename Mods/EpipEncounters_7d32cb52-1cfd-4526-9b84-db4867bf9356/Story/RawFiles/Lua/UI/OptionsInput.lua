@@ -51,7 +51,6 @@ if IS_IMPROVED_HOTBAR then
 end
 Epip.InitializeUI(13, "OptionsInput", Options)
 Client.UI.OptionsInput = Options
-Options:Debug()
 
 ---@class OptionsInputTab
 ---@field ID string

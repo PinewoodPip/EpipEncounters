@@ -52,6 +52,12 @@ package Elements
             LSPanelHelpers.makeDraggable(this);
         }
 
+        public function SetSizeOverride(width:Number, height:Number) : *
+        {
+            this.widthOverride = width;
+            this.heightOverride = height;
+        }
+
         public function ShowTooltip(align:String = "right") : void
         {
             var referenceObject:MovieClip = this.root as MovieClip;

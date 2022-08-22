@@ -5,7 +5,7 @@ local Generic = Client.UI.Generic
 -- ELEMENT
 ---------------------------------------------
 
----@alias GenericUI_ElementType "GenericUI_Element_Empty"|"GenericUI_Element_TiledBackground"|"GenericUI_Element_Text"|"GenericUI_Element_IggyIcon"|"GenericUI_Element_Button"|"GenericUI_Element_VerticalList"|"GenericUI_Element_HorizontalList"|"GenericUI_Element_ScrollList"|"GenericUI_Element_StateButton"|"GenericUI_Element_Divider"|"GenericUI_Element_Slot"|"GenericUI_Element_ComboBox"|"GenericUI_Element_Slider"
+---@alias GenericUI_ElementType "GenericUI_Element_Empty"|"GenericUI_Element_TiledBackground"|"GenericUI_Element_Text"|"GenericUI_Element_IggyIcon"|"GenericUI_Element_Button"|"GenericUI_Element_VerticalList"|"GenericUI_Element_HorizontalList"|"GenericUI_Element_ScrollList"|"GenericUI_Element_StateButton"|"GenericUI_Element_Divider"|"GenericUI_Element_Slot"|"GenericUI_Element_ComboBox"|"GenericUI_Element_Slider"|"GenericUI_Element_Grid"
 
 ---@class GenericUI_Element
 ---@field UI GenericUI_Instance
@@ -13,7 +13,7 @@ local Generic = Client.UI.Generic
 ---@field ParentID string Empty string for elements in the root.
 ---@field Type string
 ---@field Tooltip (GenericUI_ElementTooltip|string)? Will be rendered upon the element being hovered. Strings are rendered as unformatted tooltips.
----@field SetPositionRelativeToParent fun(self:GenericUI_Element, position:"Center"|"TopLeft"|"TopRight"|"TopCenter"|"Left"|"Right"|"BottomLeft"|"Bottom"|"BottomRight", horizontalOffset:number?, verticalOffset:number?)
+---@field SetPositionRelativeToParent fun(self:GenericUI_Element, position:"Center"|"TopLeft"|"TopRight"|"Top"|"Left"|"Right"|"BottomLeft"|"Bottom"|"BottomRight", horizontalOffset:number?, verticalOffset:number?)
 ---@field Move fun(self:GenericUI_Element, x:number, y:number) Moves the element a certain amount of pixels from its current position.
 ---@field Events GenericUI_Element_Events
 local _Element = Generic._Element
@@ -135,6 +135,16 @@ function _Element:GetPosition()
     local mc = self:GetMovieClip()
 
     return mc.GetPositionX(), mc.GetPositionY()
+end
+
+---Sets the size override, used to override the element size within list-like elements.
+---@overload fun(self:GenericUI_Element, size:Vector2)
+---@param width number
+---@param height number
+function _Element:SetSizeOverride(width, height)
+    if type(width) == "table" then width, height = width:unpack() end
+
+    self:GetMovieClip().SetSizeOverride(width, height)
 end
 
 _Element.SetPositionRelativeToParent = Generic.ExposeFunction("SetPositionRelativeToParent")

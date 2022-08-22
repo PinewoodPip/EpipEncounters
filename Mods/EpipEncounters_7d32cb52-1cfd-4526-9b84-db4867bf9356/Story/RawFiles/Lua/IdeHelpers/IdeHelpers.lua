@@ -6930,10 +6930,6 @@ function Ext_Utils.ShowErrorAndExitGame(message) end
 --- @field Utils Ext_Utils
 Ext = {Events = {}}
 
-
-
---- @class SubscribableEvent<T>:{ (Subscribe:fun(self:SubscribableEvent, callback:fun(e:T|SubscribableEventParams), opts:{Priority:integer, Once:boolean}|nil):integer), (Unsubscribe:fun(self:SubscribableEvent, index:integer))}
-
 --- @class SubscribableEventParams
 --- @field StopPropagation fun(self:SubscribableEventParams) Stop the event from continuing on to other registered listeners.
 

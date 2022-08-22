@@ -130,6 +130,23 @@ function table.simpleSort(tbl, reverse)
     return tbl
 end
 
+---@param tbl table
+---@param prop string
+---@param reverse boolean? Defaults to false.
+function table.sortByProperty(tbl, prop, reverse)
+    local fun
+
+    if reverse then
+        fun = function(a, b) return a[prop] > b[prop] end
+    else
+        fun = function(a, b) return a[prop] < b[prop] end
+    end
+
+    table.sort(tbl, fun)
+
+    return tbl
+end
+
 -- From http://lua-users.org/wiki/CopyTable
 function table.deepCopy(orig)
     local orig_type = type(orig)
