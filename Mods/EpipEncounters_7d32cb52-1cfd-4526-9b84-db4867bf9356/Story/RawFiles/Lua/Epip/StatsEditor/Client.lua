@@ -162,9 +162,9 @@ function StatsEditor:__Setup()
     local container = frame:AddChild("Container", "GenericUI_Element_ScrollList")
     container:SetSize(table.unpack(StatsEditor.UI_CONTENT_SIZE))
     container:SetPositionRelativeToParent("TopLeft", 0, 50) -- Position below label
-    container:SetMouseWheenEnabled(true)
+    container:SetMouseWheelEnabled(true)
 
-    local header = TextPrefab.Create(ui, "Header", frame, "", 1, StatsEditor.UI_CONTENT_SIZE)
+    local header = TextPrefab.Create(ui, "Header", frame, "", "Center", StatsEditor.UI_CONTENT_SIZE)
     header:GetMainElement():SetStroke(Color.CreateFromHex(Color.WHITE), 1, 0.5, 1, 2)
     header:GetMainElement():SetMouseEnabled(false)
 

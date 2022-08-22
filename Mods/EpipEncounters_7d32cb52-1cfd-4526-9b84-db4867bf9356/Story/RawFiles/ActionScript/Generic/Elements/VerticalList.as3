@@ -38,7 +38,7 @@ package Elements
             this.list.TOP_SPACING = spacing;
         }
 
-        public function SetMouseWheenEnabled(enabled:Boolean) : *
+        public function SetMouseWheelEnabled(enabled:Boolean) : *
         {
             this.list.mouseWheelWhenOverEnabled = enabled;
         }

@@ -206,7 +206,7 @@ local function Setup()
     div:GetMovieClip().heightOverride = div:GetMovieClip().height / 2
 
     local content = list:AddChild("Content", "GenericUI_Element_ScrollList")
-    content:SetMouseWheenEnabled(true)
+    content:SetMouseWheelEnabled(true)
     content:SetFrame(QuickExamine.WIDTH - 30, 510)
     content:SetScrollbarSpacing(20)
     content:SetSideSpacing(26)
