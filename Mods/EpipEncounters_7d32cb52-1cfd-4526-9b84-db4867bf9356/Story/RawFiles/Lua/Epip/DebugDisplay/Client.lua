@@ -119,17 +119,17 @@ function DebugDisplay:__Setup()
 
     local container = bg:AddChild("Container", "GenericUI_Element_VerticalList")
 
-    local tickCounter = TextPrefab.Create(ui, "TickCounter", container, "", 0, textSize)
+    local tickCounter = TextPrefab.Create(ui, "TickCounter", container, "", "Left", textSize)
 
     Ext.Events.Tick:Subscribe(function (ev)
         DebugDisplay.SetClientTicks(#DebugDisplay.ticks)
     end)
 
-    local serverTickCounter = TextPrefab.Create(ui, "ServerTickCounter", container, "", 0, textSize)
+    local serverTickCounter = TextPrefab.Create(ui, "ServerTickCounter", container, "", "Left", textSize)
 
-    local extVersionText = TextPrefab.Create(ui, "ExtVersionLabel", container, Text.Format("Ext: v%s", {FormatArgs = {Ext.Utils.Version()}}), 0, textSize)
+    local extVersionText = TextPrefab.Create(ui, "ExtVersionLabel", container, Text.Format("Ext: v%s", {FormatArgs = {Ext.Utils.Version()}}), "Left", textSize)
 
-    local modVersionText = TextPrefab.Create(ui, "ModVersionLabel", container, "", 0, {500, 200})
+    local modVersionText = TextPrefab.Create(ui, "ModVersionLabel", container, "", "Left", {500, 200})
 
     local uiObject = ui:GetUI()
     uiObject.SysPanelSize = {200, 300}
