@@ -224,6 +224,7 @@ function Client.UI.Generic.Create(id)
 
     -- Slider
     Generic.ForwardUICall(ui, "Slider_HandleReleased", "HandleReleased", {"Value"})
+    Generic.ForwardUICall(ui, "Slider_HandleMoved", "HandleMoved", {"Value"})
 
     -- Logging
     ui:RegisterCallListener("GenericLog", function(ev, elementID, elementType, msg, msgType)

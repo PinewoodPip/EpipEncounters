@@ -52,7 +52,10 @@ function Test.TestButtons()
     -- Slider
     local slider = list:AddChild("Slider", "Slider") ---@type GenericUI_Element_Slider
     slider.Events.HandleReleased:Subscribe(function (ev)
-        print(ev.Value)
+        print("HandleReleased", ev.Value)
+    end)
+    slider.Events.HandleMoved:Subscribe(function (e)
+        print("HandleMoved", e.Value)
     end)
 end
 

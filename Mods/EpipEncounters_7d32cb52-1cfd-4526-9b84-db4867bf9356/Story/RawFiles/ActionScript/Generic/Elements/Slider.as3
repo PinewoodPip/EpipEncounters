@@ -446,10 +446,7 @@ package Elements
                 stage.removeEventListener(MouseEvent.MOUSE_UP,this.handleReleased);
                 stage.removeEventListener(MouseEvent.MOUSE_MOVE,this.handleMove);
 
-                if (!this._ignoreUp)
-                {
-                    ExternalInterface.call("Slider_HandleReleased", this.stringID, this.value);
-                }
+                ExternalInterface.call("Slider_HandleReleased", this.stringID, this.value);
             }
             this.m_handleDown = false;
         }
@@ -483,6 +480,8 @@ package Elements
                 {
                 this.setScrolledXInt(_loc2_);
                 }
+
+                ExternalInterface.call("Slider_HandleMoved", this.stringID, this.value);
             }
         }
         
