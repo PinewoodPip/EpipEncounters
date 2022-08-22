@@ -63,6 +63,27 @@ function _TimerEntry:SetRepeatCount(repeats)
     self.MaxRepeatCount = repeats
 end
 
+---@param deltaTime number
+---@return boolean Whether the timer has finished one iteration due to this call.
+function _TimerEntry:TickDown(deltaTime)
+    local finished = false
+
+    self.DurationLeft = self.DurationLeft - (deltaTime / 1000)
+    
+    if self.DurationLeft <= 0 then
+        self.RepeatCount = self.RepeatCount + 1
+        self.DurationLeft = self.InitialDuration
+
+        finished = true
+    end
+
+    return finished
+end
+
+---@return boolean
+function _TimerEntry:IsFinished()
+    return self.RepeatCount >= self.MaxRepeatCount and self.MaxRepeatCount >= 0
+end
 
 ---@param fun fun(ev:TimerLib_Event_TimerCompleted)
 function _TimerEntry:Subscribe(fun)
@@ -74,15 +95,35 @@ function _TimerEntry:Subscribe(fun)
 end
 
 ---------------------------------------------
+-- TICK TIMER
+---------------------------------------------
+
+---@class TimerLib_TickTimerEntry : TimerLib_Entry
+local _TickTimer = {}
+Inherit(_TickTimer, _TimerEntry)
+
+function _TickTimer:TickDown(_)
+    return _TimerEntry.TickDown(self, 1000) -- Tick timers tick down one unit every call.
+end
+
+---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
----@overload fun(seconds:number, handler?:fun(ev:TimerLib_Event_TimerCompleted), id?:string):TimerLib_Entry
+---@overload fun(seconds:number, handler?:fun(ev:TimerLib_Event_TimerCompleted), id?:string):TimerLib_Entry|TimerLib_TickTimerEntry
 ---@param id string?
 ---@param seconds number
 ---@param handler fun(ev:TimerLib_Event_TimerCompleted)
----@return TimerLib_Entry
-function Timer.Start(id, seconds, handler)
+---@param timerType "Normal"|"Tick"
+---@return TimerLib_Entry|TimerLib_TickTimerEntry
+function Timer.Start(id, seconds, handler, timerType)
+    local timerTable = _TimerEntry
+    if timerType then
+        if timerType == "Tick" then
+            timerTable = _TickTimer
+        end
+    end
+
     -- Overload
     if type(id) ~= "string" then
         ---@diagnostic disable-next-line: cast-local-type
@@ -100,7 +141,7 @@ function Timer.Start(id, seconds, handler)
         MaxRepeatCount = 1,
         RepeatCount = 0,
     }
-    Inherit(entry, _TimerEntry)
+    Inherit(entry, timerTable)
 
     -- Replace the old timer, if any.
     if id ~= "" then
@@ -119,6 +160,16 @@ function Timer.Start(id, seconds, handler)
     table.insert(Timer.activeTimers, entry)
 
     return entry
+end
+
+---@overload fun(seconds:number, handler?:fun(ev:TimerLib_Event_TimerCompleted), id?:string):TimerLib_TickTimerEntry
+---@param id string?
+---@param seconds number
+---@param handler fun(ev:TimerLib_Event_TimerCompleted)
+---@return TimerLib_TickTimerEntry
+function Timer.StartTickTimer(id, seconds, handler)
+    ---@diagnostic disable-next-line: return-type-mismatch
+    return Timer.Start(id, seconds, handler, "Tick") -- wtf lmao what is this diagnostic
 end
 
 ---Returns the timer with the passed string ID.
@@ -177,29 +228,25 @@ Ext.Events.Tick:Subscribe(function()
 
     for _,timer in ipairs(Timer.activeTimers) do
         if not timer.Paused then
-            timer.DurationLeft = timer.DurationLeft - (deltaTime / 1000)
-    
-            if timer.DurationLeft <= 0 then
-                timer.RepeatCount = timer.RepeatCount + 1
-    
+            if timer:TickDown(deltaTime) then
                 Timer.Events.TimerCompleted:Throw({
                     Timer = timer,
                 })
-    
+        
                 Utilities.Hooks.FireEvent("Timer", "TimerComplete_" .. timer.ID)
-    
-                Timer:DebugLog("Timer finished: " .. timer.ID)
-    
-                timer.DurationLeft = timer.InitialDuration
+        
+                if timer.ID ~= "" then
+                    Timer:DebugLog("Timer finished: " .. timer.ID)
+                end
             end
         end
     end
 
-    -- Remove timers once their deplete their repeats
+    -- Remove timers once they deplete their repeats
     for i=#Timer.activeTimers,1,-1 do
         local timer = Timer.activeTimers[i]
 
-        if timer.RepeatCount >= timer.MaxRepeatCount and timer.MaxRepeatCount >= 0 then
+        if timer:IsFinished() then
             Timer.Remove(timer)
         end
     end
@@ -213,7 +260,7 @@ end)
 
 function Timer:__Test()
     if Ext.IsClient() then
-        local timer1 = Timer.Start("", 1, function (ev)
+        local timer1 = Timer.Start("TestTimer1", 1, function (ev)
             print("Timer1 Complete")
     
             print(ev.Timer.RepeatCount)
@@ -223,5 +270,11 @@ function Timer:__Test()
         end)
     
         timer1:SetRepeatCount(3)
+
+        print("timer2")
+        local timer2 = Timer.StartTickTimer("TestTimer2", 66, function (ev)
+            print(ev.Timer.RepeatCount)
+        end)
+        timer2:SetRepeatCount(3)
     end
 end
