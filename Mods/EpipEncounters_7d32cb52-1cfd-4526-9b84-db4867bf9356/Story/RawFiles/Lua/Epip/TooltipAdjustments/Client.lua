@@ -432,9 +432,10 @@ Game.Tooltip.RegisterListener("Status", nil, function(char, status, tooltip)
     end
 end)
 
--- Show status source.
+-- Show status source (character and item).
 Game.Tooltip.RegisterListener("Status", nil, function(char, status, tooltip)
     local source = Character.Get(status.StatusSourceHandle)
+    local statusesFromItems = Character.GetStatusesFromItems(char)
 
     if source then
         local text = Text.Format("Applied by %s", {
@@ -452,6 +453,29 @@ Game.Tooltip.RegisterListener("Status", nil, function(char, status, tooltip)
             })
         else
             element.Label = element.Label .. "<br>" .. text
+        end
+    end
+
+    -- Check if the status is from an equipped item
+    for _,entry in ipairs(statusesFromItems) do
+        if entry.Status == status then
+            local addendum = Text.Format("From item: %s", {
+                FormatArgs = {entry.ItemSource.DisplayName}, 
+                FontType = Text.FONTS.ITALIC,
+                Color = Color.LARIAN.LIGHT_GRAY,
+            })
+
+            local elements = tooltip:GetElements("StatusDescription")
+            local element = elements[#elements] -- Append to the last description (usually the duration text)
+
+            if not element then
+                tooltip:AppendElement({
+                    Type = "StatusDescription",
+                    Label = addendum,
+                })
+            else
+                element.Label = element.Label .. "<br>" .. addendum
+            end
         end
     end
 end)
