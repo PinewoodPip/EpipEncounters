@@ -150,6 +150,7 @@ LOAD_ORDER = {
     "UI/Generic/Prefabs/LabelledDropdown.lua",
     "UI/Generic/Prefabs/LabelledCheckbox.lua",
     "UI/Generic/Prefabs/LabelledTextField.lua",
+    "UI/Generic/Prefabs/FormHorizontalList.lua",
     -- {Script = "UI/Generic/Test.lua", WIP = true}, -- TEST!
 
     "UI/Hotbar/Main.lua",

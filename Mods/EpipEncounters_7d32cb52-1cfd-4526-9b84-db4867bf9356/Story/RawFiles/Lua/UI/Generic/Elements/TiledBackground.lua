@@ -3,6 +3,7 @@ local Generic = Client.UI.Generic
 
 ---@class GenericUI_Element_TiledBackground : GenericUI_Element
 ---@field SetBackground fun(self, bgID:GenericUI_Element_TiledBackground_Type, width:number, height:number)
+---@field Events GenericUI_Element_Events
 Client.UI.Generic.ELEMENTS.TiledBackground = {
     ---@enum GenericUI_Element_TiledBackground_Type
     BACKGROUND_TYPES = {

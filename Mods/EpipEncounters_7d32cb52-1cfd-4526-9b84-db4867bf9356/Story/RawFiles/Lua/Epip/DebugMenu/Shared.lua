@@ -2,7 +2,7 @@
 ---@class Feature_DebugMenu : Feature
 local DebugMenu = {
     SAVE_FILENAME = "Epip_DebugMenu.json",
-    SAVE_VERSION = 0,
+    SAVE_VERSION = 1,
 
     ---@type table<string, table<string, DebugMenu_State>>
     State = {},
@@ -11,7 +11,7 @@ Epip.RegisterFeature("DebugMenu", DebugMenu)
 
 ---@class DebugMenu_State
 ---@field Debug boolean
----@field ShutUp boolean
+---@field LoggingLevel Feature_LoggingLevel
 ---@field Enabled boolean
 
 ---------------------------------------------

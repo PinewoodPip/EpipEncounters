@@ -2,15 +2,18 @@
 local Generic = Client.UI.Generic
 local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 local LabelledCheckbox = Generic.GetPrefab("GenericUI_Prefab_LabelledCheckbox")
+local FormEntry = Generic.GetPrefab("GenericUI_Prefab_FormHorizontalList")
 
 ---@class Feature_DebugMenu
 local DebugMenu = Epip.GetFeature("DebugMenu")
 DebugMenu.UI = nil ---@type GenericUI_Instance
 DebugMenu.BG_SIZE = Vector.Create(1200, 800)
 DebugMenu.CONTENT_SIZE = Vector.Create(1000, 800)
-DebugMenu.TEXT_SIZING = Vector.Create(400, 30)
 DebugMenu.GRID_CELL_SIZE = Vector.Create(150, 50)
-DebugMenu.TEXT_GRID_CELL_SIZE = Vector.Create(400, 50)
+DebugMenu.FORM_ENTRY_SIZE = Vector.Create(1000, 40)
+DebugMenu.FORM_ENTRY_LABEL_SIZE = Vector.Create(500, 40)
+DebugMenu.CHECKBOX_SIZE = Vector.Create(80, 40)
+DebugMenu.DROPDOWN_SIZE = Vector.Create(250, 40)
 
 ---------------------------------------------
 -- METHODS
@@ -31,13 +34,11 @@ function DebugMenu.LoadConfig(path)
 
                 state.Debug = storedState.Debug
                 state.Enabled = storedState.Enabled
-                state.ShutUp = storedState.ShutUp
+                state.LoggingLevel = storedState.LoggingLevel
 
-                if state.ShutUp then
-                    feature:ShutUp()
-                end
+                feature.Logging = state.LoggingLevel
 
-                if not state.Enabled then
+                if not state.Enabled then -- TODO improve
                     feature:Disable("DebugMenu")
                 end
 
@@ -68,11 +69,14 @@ end)
 ---------------------------------------------
 
 function DebugMenu._PopulateFeatureList()
-    local grid = DebugMenu.UI.Grid
-    local headerFormatting = {Color = Color.BLACK, Size = 25} ---@type TextFormatData
+    local list = DebugMenu.UI.ScrollList
+    local headerFormatting = {Color = Color.BLACK} ---@type TextFormatData
+    local ui = DebugMenu.UI
 
-    TextPrefab.Create(DebugMenu.UI, "Header_Feature", grid, Text.Format("Feature", headerFormatting), "Center", DebugMenu.TEXT_GRID_CELL_SIZE)
-    TextPrefab.Create(DebugMenu.UI, "Header_Debug", grid, Text.Format("Debug", headerFormatting), "Center", DebugMenu.GRID_CELL_SIZE)
+    local header = FormEntry.Create(ui, "Header", list, Text.Format("Feature & Source", headerFormatting), DebugMenu.FORM_ENTRY_SIZE, DebugMenu.FORM_ENTRY_LABEL_SIZE)
+    -- header.Label:SetType("Center") -- TODO fix
+    local debugModeHeader = TextPrefab.Create(ui, "DebugHeader", header.List, Text.Format("Debug", headerFormatting), "Center", DebugMenu.CHECKBOX_SIZE)
+    TextPrefab.Create(ui, "LoggingHeader", header.List, Text.Format("Logging", headerFormatting), "Center", DebugMenu.DROPDOWN_SIZE)
 
     for mod,featureTable in pairs(Epip._Features) do
 
@@ -82,7 +86,9 @@ function DebugMenu._PopulateFeatureList()
         end
         table.sortByProperty(features, "MODULE_ID")
 
-        for i,feature in pairs(features) do
+        for _,feature in pairs(features) do
+            feature = feature ---@type Feature
+
             local featureID = feature.MODULE_ID
             local labelText = Text.Format("%s", {
                 FormatArgs = {feature.MODULE_ID},
@@ -94,12 +100,12 @@ function DebugMenu._PopulateFeatureList()
                 Color = Color.BLACK,
             })
 
-            local text = TextPrefab.Create(DebugMenu.UI, "FeatureName_" .. i, grid, labelText, "Left", DebugMenu.TEXT_GRID_CELL_SIZE)
+            local formList = FormEntry.Create(ui, featureID, list, labelText, DebugMenu.FORM_ENTRY_SIZE, DebugMenu.FORM_ENTRY_LABEL_SIZE)
 
-            local checkbox = grid:AddChild(featureID .. "_Debug", "GenericUI_Element_StateButton")
+            local checkbox = formList:AddChild(featureID .. "_Debug", "GenericUI_Element_StateButton")
             checkbox:SetType("CheckBox")
             checkbox:SetActive(feature:IsDebug())
-            checkbox:SetSizeOverride(DebugMenu.GRID_CELL_SIZE)
+            checkbox:SetSizeOverride(DebugMenu.CHECKBOX_SIZE)
             checkbox.Events.StateChanged:Subscribe(function (ev)
                 local state = DebugMenu.GetState(mod, featureID)
 
@@ -108,8 +114,23 @@ function DebugMenu._PopulateFeatureList()
                 state:GetFeature().IS_DEBUG = ev.Active
             end)
 
-            local sourceText = TextPrefab.Create(DebugMenu.UI, featureID .. "_Source", text:GetMainElement(), sourceLabel, "Right", DebugMenu.TEXT_GRID_CELL_SIZE)
+            local sourceText = TextPrefab.Create(DebugMenu.UI, featureID .. "_Source", formList.Label, sourceLabel, "Right", DebugMenu.FORM_ENTRY_LABEL_SIZE)
             sourceText:Move(0, 10)
+
+            -- Logging dropdown
+            local combo = formList:AddChild("LoggingCombo", "GenericUI_Element_ComboBox")
+            combo:SetOptions({
+                {ID = 0, Label = "Normal"},
+                {ID = 1, Label = "Warnings"},
+                {ID = 2, Label = "Errors"},
+            })
+            combo:SelectOption(feature.Logging)
+            combo.Events.OptionSelected:Subscribe(function (ev)
+                local state = DebugMenu.GetState(mod, featureID)
+
+                state.LoggingLevel = ev.Option.ID
+                state:GetFeature().Logging = state.LoggingLevel
+            end)
         end
     end
 
@@ -126,13 +147,9 @@ function DebugMenu:__Setup()
     content:SetSize(DebugMenu.CONTENT_SIZE:unpack())
     content:SetPositionRelativeToParent("Top", 0, 120)
     content:SetMouseWheelEnabled(true)
-
-    -- Grid
-    local grid = content:AddChild("Grid", "GenericUI_Element_Grid")
-    grid:SetGridSize(2, 999)
+    content:SetElementSpacing(0)
 
     DebugMenu.UI = ui
-    DebugMenu.UI.Grid = grid
     DebugMenu.UI.ScrollList = content
 
     DebugMenu.LoadConfig()

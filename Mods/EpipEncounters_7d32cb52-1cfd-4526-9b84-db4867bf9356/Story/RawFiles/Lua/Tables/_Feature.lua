@@ -45,8 +45,9 @@ local Feature = {
     Hooks = {},
 
     CONTEXT = nil,
+
+    ---@enum Feature_LoggingLevel
     LOGGING_LEVEL = {
-        DEBUG = -1,
         ALL = 0,
         WARN = 1,
         MUTED = 2, -- Errors only.
@@ -224,7 +225,6 @@ end)
 function Feature:Debug()
     if Epip.IsDeveloperMode() then
         self.IS_DEBUG = true
-        self.Logging = self.LOGGING_LEVEL.DEBUG
     end
 end
 
@@ -247,7 +247,7 @@ end
 ---Log a value in Debug mode.
 ---@vararg any
 function Feature:DebugLog(...)
-    if self.Logging == self.LOGGING_LEVEL.DEBUG and self:IsDebug() and not IS_IMPROVED_HOTBAR then
+    if self:IsDebug() and not IS_IMPROVED_HOTBAR then
         Utilities._Log(self.NAME, "", ...)
     end
 end
@@ -255,7 +255,7 @@ end
 ---Dump a value to the console, in Debug mode.
 ---@param msg any
 function Feature:Dump(msg)
-    if self.Logging == self.LOGGING_LEVEL.DEBUG then
+    if self:IsDebug() then
         _D(msg)
     end
 end
