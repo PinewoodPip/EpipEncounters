@@ -19,43 +19,6 @@ DebugMenu.DROPDOWN_SIZE = Vector.Create(250, 40)
 -- METHODS
 ---------------------------------------------
 
----@param path string?
-function DebugMenu.LoadConfig(path)
-    path = path or DebugMenu.SAVE_FILENAME
-
-    local config = Utilities.LoadJson(path)
-
-    -- No backwards compatibility for DebugMenu configs.
-    if config and config.Version == DebugMenu.SAVE_VERSION then
-        for modTable,features in pairs(config.State) do
-            for id,storedState in pairs(features) do
-                local state = DebugMenu.GetState(modTable, id)
-                local feature = state:GetFeature()
-
-                state.Debug = storedState.Debug
-                state.Enabled = storedState.Enabled
-                state.LoggingLevel = storedState.LoggingLevel
-
-                feature.Logging = state.LoggingLevel
-
-                if not state.Enabled then -- TODO improve
-                    feature:Disable("DebugMenu")
-                end
-
-                feature.IS_DEBUG = state.Debug
-            end
-        end
-    end
-end
-
----@param path string?
-function DebugMenu.SaveConfig(path)
-    local save = {State = table.deepCopy(DebugMenu.State)}
-    save.Version = DebugMenu.SAVE_VERSION
-
-    Utilities.SaveJson(path or DebugMenu.SAVE_FILENAME, save)
-end
-
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
@@ -73,9 +36,12 @@ function DebugMenu._PopulateFeatureList()
     local headerFormatting = {Color = Color.BLACK} ---@type TextFormatData
     local ui = DebugMenu.UI
 
+    -- Setup header
     local header = FormEntry.Create(ui, "Header", list, Text.Format("Feature & Source", headerFormatting), DebugMenu.FORM_ENTRY_SIZE, DebugMenu.FORM_ENTRY_LABEL_SIZE)
+    header.SELECTED_BG_ALPHA = 0 -- Do not highlight this entry upon hover
     -- header.Label:SetType("Center") -- TODO fix
     local debugModeHeader = TextPrefab.Create(ui, "DebugHeader", header.List, Text.Format("Debug", headerFormatting), "Center", DebugMenu.CHECKBOX_SIZE)
+    TextPrefab.Create(ui, "EnabledHeader", header.List, Text.Format("Enabled", headerFormatting), "Center", DebugMenu.CHECKBOX_SIZE)
     TextPrefab.Create(ui, "LoggingHeader", header.List, Text.Format("Logging", headerFormatting), "Center", DebugMenu.DROPDOWN_SIZE)
 
     for mod,featureTable in pairs(Epip._Features) do
@@ -102,16 +68,22 @@ function DebugMenu._PopulateFeatureList()
 
             local formList = FormEntry.Create(ui, featureID, list, labelText, DebugMenu.FORM_ENTRY_SIZE, DebugMenu.FORM_ENTRY_LABEL_SIZE)
 
+            -- "Debug" checkbox.
             local checkbox = formList:AddChild(featureID .. "_Debug", "GenericUI_Element_StateButton")
             checkbox:SetType("CheckBox")
             checkbox:SetActive(feature:IsDebug())
             checkbox:SetSizeOverride(DebugMenu.CHECKBOX_SIZE)
             checkbox.Events.StateChanged:Subscribe(function (ev)
-                local state = DebugMenu.GetState(mod, featureID)
+                DebugMenu.SetDebugState(mod, featureID, ev.Active)
+            end)
 
-                state.Debug = ev.Active
-
-                state:GetFeature().IS_DEBUG = ev.Active
+            -- "Enabled" checkbox.
+            local enabledCheckbox = formList:AddChild("Enabled", "GenericUI_Element_StateButton")
+            enabledCheckbox:SetType("CheckBox")
+            enabledCheckbox:SetActive(feature:IsEnabled())
+            enabledCheckbox:SetSizeOverride(DebugMenu.CHECKBOX_SIZE)
+            enabledCheckbox.Events.StateChanged:Subscribe(function (ev)
+                DebugMenu.SetEnabledState(mod, featureID, ev.Active)
             end)
 
             local sourceText = TextPrefab.Create(DebugMenu.UI, featureID .. "_Source", formList.Label, sourceLabel, "Right", DebugMenu.FORM_ENTRY_LABEL_SIZE)
@@ -126,10 +98,7 @@ function DebugMenu._PopulateFeatureList()
             })
             combo:SelectOption(feature.Logging)
             combo.Events.OptionSelected:Subscribe(function (ev)
-                local state = DebugMenu.GetState(mod, featureID)
-
-                state.LoggingLevel = ev.Option.ID
-                state:GetFeature().Logging = state.LoggingLevel
+                DebugMenu.SetLoggingState(mod, featureID, ev.Option.ID)
             end)
         end
     end
@@ -152,6 +121,5 @@ function DebugMenu:__Setup()
     DebugMenu.UI = ui
     DebugMenu.UI.ScrollList = content
 
-    DebugMenu.LoadConfig()
     DebugMenu._PopulateFeatureList()
 end
