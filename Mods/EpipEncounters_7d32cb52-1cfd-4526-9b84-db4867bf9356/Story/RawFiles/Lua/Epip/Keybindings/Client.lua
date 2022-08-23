@@ -11,6 +11,7 @@ Options.RegisterTab("EpipEncounters", {
         {Name = "Debug Teleport", ID = "EpipEncounters_DebugTeleport", DeveloperOnly = true},
         {Name = "Debug Teleport (Party)", ID = "EpipEncounters_DebugTeleport_Party", DeveloperOnly = true},
         {Name = "Debug Copy Identifier", ID = "EpipEncounters_Debug_CopyIdentifier", DeveloperOnly = true, DefaultInput1 = {Keys = {"lctrl", "c"}}},
+        {Name = "Debug Open Features Menu", ID = "EpipEncounters_Debug_OpenDebugMenu", DeveloperOnly = true, DefaultInput1 = {Keys = {"lctrl", "f"}}},
 
         -- Hotbar
         {Name = "Hotbar Toggle Extra Bars Vibisility", ID = "EpipEncounters_Hotbar_ToggleVisibility"},
