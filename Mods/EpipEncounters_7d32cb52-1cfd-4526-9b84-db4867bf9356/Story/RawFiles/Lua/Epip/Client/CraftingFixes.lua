@@ -47,6 +47,7 @@ end
 -- TESTS
 ---------------------------------------------
 
+-- Checks if restoring previous tab works, and whether it is kept while switching chars.
 Fixes:RegisterTest("Test1", function(inst)
     Fixes.previousFilter = "Equipment" 
 
@@ -54,5 +55,7 @@ Fixes:RegisterTest("Test1", function(inst)
 
     inst:Sleep(0.5)
 
-    assert(Craft:GetRoot().craftPanel_mc.experimentPanel_mc.filterTabList.content_array[Craft.FILTERS.EQUIPMENT - 1].select_mc.visible, "Equipment tab was not selected") -- Need to shift the index down since the "unknown" tab is not rendered
+    local button = Craft:GetRoot().craftPanel_mc.experimentPanel_mc.filterTabList.content_array[Craft.FILTERS.EQUIPMENT - 1] -- Need to shift the index down since the "unknown" tab (index 1) is not rendered in the UI
+
+    assert(button.select_mc.visible, "Equipment tab was not selected upon opening the UI") 
 end)
