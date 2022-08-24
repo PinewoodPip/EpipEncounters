@@ -6,13 +6,14 @@ local Vanity = Client.UI.Vanity
 local Housing = Epip.Features.Housing
 
 Housing.selectedFurniture = nil ---@type Feature_Housing_SelectedFurniture
-Housing.furnitureYAxisStep = 0.1
+Housing.furnitureYAxisStep = 0.5
 Housing.FURNITURE_ROTATION_STEP = 0.1
 
 ---@class Feature_Housing_SelectedFurniture
 ---@field Handle EntityHandle
 ---@field EntityType "Item"|"Scenery"
 ---@field PositionOffset Vector3D
+---@field OriginalPosition Vector3D
 local _SelectedFurniture = {}
 
 ---@return EclItem|EclScenery
@@ -35,10 +36,15 @@ function _SelectedFurniture:SetPosition(pos, addOffset)
     if self.EntityType == "Item" then
         obj.Translate = pos
     else
-        -- TODO
-        -- for _,shape in ipairs(obj.Physics.Shapes) do
-        --     shape.Translate = pos
-        -- end
+        -- Objects do not automatically snap to walkable grid, since many of them are walkable themselves and cause the object to infinitely rise.
+        local y = self.OriginalPosition[2]
+
+        pos[2] = y
+        if addOffset then
+            pos[2] = pos[2] + self.PositionOffset[2]
+        end
+
+        obj.Translate = pos
     end
 end
 
@@ -74,6 +80,7 @@ function Housing.SelectFurniture(obj, handle)
         Handle = handle or obj.Handle,
         EntityType = "Scenery",
         PositionOffset = {0, 0, 0},
+        OriginalPosition = obj.Translate,
     }
     Inherit(selectedObj, _SelectedFurniture)
 
@@ -95,21 +102,27 @@ function Housing.SelectFurniture(obj, handle)
     -- Cannot prevent mouse events unfortunately.
     -- Client.UI.Input.ToggleEventCapture(Client.Input.FLASH_EVENTS.EDIT_CHARACTER, true, "Housing")
     -- Client.UI.Input.ToggleEventCapture(Client.Input.FLASH_EVENTS.CONTEXT_MENU, true, "Housing")
+
+    Client.UI.Input.SetMouseWheelBlocked(true)
 end
 
 function Housing.PlaceMovingFurniture()
     local obj = Housing.GetSelectedFurniture():GetEntity()
 
-    Net.PostToServer("EPIPENCOUNTERS_Housing_PlaceMovingFurniture", {
-        ObjNetID = obj.NetID,
-        Position = obj.Translate,
-    })
+    -- Sync item positions to server
+    if Housing.GetSelectedFurniture().EntityType == "Item" then
+        Net.PostToServer("EPIPENCOUNTERS_Housing_PlaceMovingFurniture", {
+            ObjNetID = obj.NetID,
+            Position = obj.Translate,
+        })
+    end
 
     Housing.selectedFurniture = nil
     GameState.Events.RunningTick:Unsubscribe("Housing_MoveFurniture")
 
     -- Client.UI.Input.ToggleEventCapture(Client.Input.FLASH_EVENTS.EDIT_CHARACTER, false, "Housing")
     -- Client.UI.Input.ToggleEventCapture(Client.Input.FLASH_EVENTS.CONTEXT_MENU, false, "Housing")
+    Client.UI.Input.SetMouseWheelBlocked(false)
 end
 
 ---@param furniture GUID|Feature_Housing_Furniture
@@ -181,8 +194,8 @@ end)
 OptionsInput.Events.ActionExecuted:RegisterListener(function (action, binding)
     if action == "EpipEncounters_Housing_MoveFurniture" then
         local pointer = Ext.UI.GetPickingState(1)
-        -- local handle = pointer.HoverItem or pointer.PlaceableEntity
-        local handle = pointer.HoverItem
+        local handle = pointer.HoverItem or pointer.PlaceableEntity
+        -- local handle = pointer.HoverItem
         
         if Housing.IsMovingFurniture() then
             Housing.PlaceMovingFurniture()
