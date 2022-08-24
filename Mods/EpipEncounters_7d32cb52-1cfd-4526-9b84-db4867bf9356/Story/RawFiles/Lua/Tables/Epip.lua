@@ -100,12 +100,14 @@ function Epip.IsDeveloperMode(requirePipPoem)
     return devMode
 end
 
+---TODO move to Feature
 ---@param id string
 ---@param name string
 ---@param feature Feature
 function Epip.InitializeFeature(id, name, feature)
     setmetatable(feature, {__index = _Feature})
 
+    feature._Tests = {}
     feature.MODULE_ID = id
 
     feature.NAME = name or id

@@ -9,11 +9,101 @@ local DebugMenu = {
 }
 Epip.RegisterFeature("DebugMenu", DebugMenu)
 
+---------------------------------------------
+-- STATE
+---------------------------------------------
+
 ---@class DebugMenu_State
+---@field ModTable string
+---@field FeatureID string
 ---@field Debug boolean
 ---@field LoggingLevel Feature_LoggingLevel
 ---@field Enabled boolean
----@field GetFeature fun(self:DebugMenu_State):Feature
+---@field DateTested string
+---@field VersionTested integer
+---@field TestsPassed table<string, boolean>
+local _State = {TEST_CHECK_DELAY = 2}
+
+---@return Feature
+function _State:GetFeature()
+    return Epip.GetFeature(self.ModTable, self.FeatureID) 
+end
+
+function _State:RunTests()
+    self.DateTested = Client.GetDateString()
+    self.VersionTested = Epip.VERSION
+    self.TestsPassed = {}
+    
+    for _,test in ipairs(self:GetFeature()._Tests) do
+        test:Run()
+    end
+
+    -- Check test results after a delay as they might use sleep coroutines.
+    Timer.Start(self.TEST_CHECK_DELAY, function (_)
+        self:UpdateTestResults()
+    end)
+end
+
+function _State:UpdateTestResults()
+    for _,test in ipairs(self:GetFeature()._Tests) do
+        if test:IsFinished() then
+            self.TestsPassed[test.Name] = test.State == "Passed"
+        end
+    end
+end
+
+---@return string
+function _State:GetTestingLabel()
+    local formatting = {Color = Color.BLACK} ---@type TextFormatData
+    local label = Text.Format("None available", formatting)
+    local testCount = #self:GetFeature()._Tests
+
+    if testCount > 0 then
+        local passed = 0
+        local ran = 0
+
+        if self.DateTested ~= "Never" then -- Use cached results
+            for _,result in pairs(self.TestsPassed) do
+                if result then passed = passed + 1 end
+                ran = ran + 1
+                -- Yes, this does not consider the possibility of failing a test, and then closing the game and going to sleep irl.
+            end
+        else
+            for _,test in ipairs(self:GetFeature()._Tests) do -- Retrieve from tests
+                if test.State == "Passed" then
+                    passed = passed + 1
+                end
+    
+                if test.State ~= "NotRun" then
+                    ran = ran + 1
+                end
+            end
+        end
+
+        if testCount == 0 then
+            label = Text.Format("None available", formatting)
+        elseif self.DateTested == "Never" then
+            formatting.FormatArgs = {testCount}
+            label = Text.Format("Never ran (%s)", formatting)
+        else
+            local color = Color.LARIAN.DARK_BLUE
+            if passed < ran then color = Color.RED end
+
+            formatting.Color = color
+            formatting.FormatArgs = {passed, ran, testCount, self.VersionTested}
+
+            label = Text.Format("%s/%s Passed (total %s) on v%s", formatting)
+        end
+    end
+
+    return label 
+end
+
+---@param testsPassed integer
+function _State:SetTestingResults(testsPassed)
+    self.DateTested = Client.GetDateString()
+    self.TestsPassed = testsPassed
+end
 
 ---------------------------------------------
 -- METHODS
@@ -23,20 +113,16 @@ Epip.RegisterFeature("DebugMenu", DebugMenu)
 ---@param featureID string
 function DebugMenu.GetState(modTable, featureID)
     local allStates = DebugMenu.State
-    local state = {Debug = false, ShutUp = false, Enabled = true} ---@type DebugMenu_State
-    setmetatable(state, {
-        __index = function(self, key, ...)
-            if key == "GetFeature" then
-                return function(...) return Epip.GetFeature(modTable, featureID) end
-            end
-        end
-    })
+    local state
 
     if not allStates[modTable] then allStates[modTable] = {} end
 
     if allStates[modTable][featureID] then
         state = allStates[modTable][featureID]
     else -- Initialize state
+        state = {Debug = false, ShutUp = false, Enabled = true, DateTested = "Never", VersionTested = -1, TestsPassed = 0, ModTable = modTable, FeatureID = featureID} ---@type DebugMenu_State
+        Inherit(state, _State)
+
         DebugMenu.State[modTable][featureID] = state
     end
 
@@ -60,8 +146,12 @@ function DebugMenu.LoadConfig(path)
                     local feature = state:GetFeature()
     
                     state.Debug = storedState.Debug
-                    state.Enabled = storedState.Enabled
                     state.LoggingLevel = storedState.LoggingLevel
+                    state.Enabled = storedState.Enabled
+
+                    state.DateTested = storedState.DateTested
+                    state.VersionTested = storedState.VersionTested
+                    state.TestsPassed = storedState.TestsPassed
     
                     feature.Logging = state.LoggingLevel
     

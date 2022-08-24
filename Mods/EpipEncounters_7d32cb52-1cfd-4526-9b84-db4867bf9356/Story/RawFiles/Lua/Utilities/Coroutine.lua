@@ -14,6 +14,10 @@ local _Instance = {
     thread = nil, ---@type thread
     sleeping = false,
     sleepFunctionCheckInterval = 0.2,
+
+    Events = {
+        Finished = SubscribableEvent:New("Finished"), ---@type SubscribableEvent<EmptyEvent>
+    },
 }
 
 ---@return boolean
@@ -30,6 +34,11 @@ function _Instance:Continue(...)
         if result[1] then
             table.remove(result, 1) -- Success check
             table.remove(result, 1) -- Reserved for future methods
+
+            -- Fire a status when a coroutine ends.
+            if self:IsDead() then
+                self.Events.Finished:Throw()
+            end
         
             return table.unpack(result)
         else
@@ -73,6 +82,11 @@ end
 ---@vararg any
 function _Instance:Yield(...)
     coroutine.yield({}, ...)
+end
+
+---@return boolean
+function _Instance:IsDead()
+    return coroutine.status(self.thread) == "dead"
 end
 
 ---------------------------------------------

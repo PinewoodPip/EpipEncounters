@@ -28,10 +28,6 @@ NOT DB_PIP_PreferredTargetDisplay_Tagged(NULL_00000000-0000-0000-0000-0000000000
 
 KBSECTION
 
-IF CharacterGuarded(_)
-THEN
-DB_NOOP();
-
 // PROC PIP_INT64DB_TEST()
 // AND
 // CharacterGetHostCharacter(_Host)

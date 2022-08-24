@@ -1,7 +1,7 @@
 
 local Craft = Client.UI.Craft
 
----@type Feature|table<string, any>
+---@class Feature_CraftingFixes : Feature
 local Fixes = {
     previousFilter = "All", ---@type CraftUI_Filter
 
@@ -42,3 +42,17 @@ end)
 function Fixes:__Setup()
     Fixes.previousFilter = Fixes.DEFAULT_FILTER_OPTIONS[Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "Crafting_DefaultFilter")]
 end
+
+---------------------------------------------
+-- TESTS
+---------------------------------------------
+
+Fixes:RegisterTest("Test1", function(inst)
+    Fixes.previousFilter = "Equipment" 
+
+    Client.UI.Hotbar.UseAction("Crafting", 1)
+
+    inst:Sleep(0.5)
+
+    assert(Craft:GetRoot().craftPanel_mc.experimentPanel_mc.filterTabList.content_array[Craft.FILTERS.EQUIPMENT - 1].select_mc.visible, "Equipment tab was not selected") -- Need to shift the index down since the "unknown" tab is not rendered
+end)

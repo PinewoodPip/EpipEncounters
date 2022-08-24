@@ -228,7 +228,7 @@ LOAD_ORDER = {
     {ScriptSet = "Epip/Encumbrance"},
     {ScriptSet = "Epip/DebugDisplay", Developer = true,},
     {ScriptSet = "Epip/UnlearnSkills"},
-    {ScriptSet = "Epip/DebugMenu"},
+    {ScriptSet = "Epip/DebugMenu", Developer = true,},
 
     "Epip/Client/GenericUIs/QuickExamine.lua",
     "Epip/Client/GenericUIs/SaveLoadOverlay.lua",

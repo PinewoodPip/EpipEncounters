@@ -6,13 +6,15 @@ local FormEntry = Generic.GetPrefab("GenericUI_Prefab_FormHorizontalList")
 ---@class Feature_DebugMenu
 local DebugMenu = Epip.GetFeature("DebugMenu")
 DebugMenu.UI = nil ---@type GenericUI_Instance
-DebugMenu.BG_SIZE = Vector.Create(1200, 1100)
-DebugMenu.CONTENT_SIZE = Vector.Create(1000, 870)
+DebugMenu.BG_SIZE = Vector.Create(1600, 1100)
+DebugMenu.CONTENT_SIZE = Vector.Create(1400, 870)
 DebugMenu.GRID_CELL_SIZE = Vector.Create(150, 50)
-DebugMenu.FORM_ENTRY_SIZE = Vector.Create(1000, 40)
+DebugMenu.FORM_ENTRY_SIZE = Vector.Create(1400, 40)
 DebugMenu.FORM_ENTRY_LABEL_SIZE = Vector.Create(500, 40)
 DebugMenu.CHECKBOX_SIZE = Vector.Create(80, 40)
 DebugMenu.DROPDOWN_SIZE = Vector.Create(250, 40)
+DebugMenu.INFO_SIZE = Vector.Create(250, 40)
+DebugMenu.BUTTON_SIZE = Vector.Create(250, 40)
 
 ---------------------------------------------
 -- METHODS
@@ -49,13 +51,17 @@ function DebugMenu._PopulateFeatureList()
     local headerFormatting = {Color = Color.BLACK} ---@type TextFormatData
     local ui = DebugMenu.UI
 
+    list:Clear()
+
     -- Setup header
     local header = FormEntry.Create(ui, "Header", list, Text.Format("Feature & Source Mod", headerFormatting), DebugMenu.FORM_ENTRY_SIZE, DebugMenu.FORM_ENTRY_LABEL_SIZE)
     header.SELECTED_BG_ALPHA = 0 -- Do not highlight this entry upon hover
     -- header.Label:SetType("Center") -- TODO fix
-    local debugModeHeader = TextPrefab.Create(ui, "DebugHeader", header.List, Text.Format("Debug", headerFormatting), "Center", DebugMenu.CHECKBOX_SIZE)
+    TextPrefab.Create(ui, "DebugHeader", header.List, Text.Format("Debug", headerFormatting), "Center", DebugMenu.CHECKBOX_SIZE)
     TextPrefab.Create(ui, "EnabledHeader", header.List, Text.Format("Enabled", headerFormatting), "Center", DebugMenu.CHECKBOX_SIZE)
     TextPrefab.Create(ui, "LoggingHeader", header.List, Text.Format("Logging", headerFormatting), "Center", DebugMenu.DROPDOWN_SIZE)
+    TextPrefab.Create(ui, "LoggingHeader", header.List, Text.Format("Test Status", headerFormatting), "Center", DebugMenu.INFO_SIZE)
+    TextPrefab.Create(ui, "LoggingHeader", header.List, Text.Format("Test", headerFormatting), "Center", DebugMenu.BUTTON_SIZE)
 
     local divider = list:AddChild("HeaderDivider", "GenericUI_Element_Divider")
     divider:SetType("Line")
@@ -70,9 +76,10 @@ function DebugMenu._PopulateFeatureList()
         table.sortByProperty(features, "MODULE_ID")
 
         for _,feature in pairs(features) do
+            local featureID = feature.MODULE_ID
+            local state = DebugMenu.GetState(mod, featureID)
             feature = feature ---@type Feature
 
-            local featureID = feature.MODULE_ID
             local labelText = Text.Format("%s", {
                 FormatArgs = {feature.MODULE_ID},
                 Color = Color.BLACK,
@@ -117,6 +124,24 @@ function DebugMenu._PopulateFeatureList()
             combo.Events.OptionSelected:Subscribe(function (ev)
                 DebugMenu.SetLoggingState(mod, featureID, ev.Option.ID)
             end)
+
+            -- Testing status
+            local testLabel = TextPrefab.Create(ui, featureID .. "_TestingLabel", formList.List, state:GetTestingLabel(), "Left", DebugMenu.INFO_SIZE)
+
+            local testButton = formList:AddChild("TestButton", "GenericUI_Element_Button")
+            testButton:SetType("Red")
+            testButton:SetText("Run Tests", 4)
+            testButton:SetEnabled(#feature._Tests > 0)
+            testButton.Events.Pressed:Subscribe(function (_)
+                testLabel:SetText(Text.Format("Running...", {Color = Color.BLACK}))
+
+                state:RunTests()
+
+                Timer.Start(state.TEST_CHECK_DELAY, function (_)
+                    DebugMenu:Log("Tests finished for " .. featureID)
+                    testLabel:SetText(state:GetTestingLabel())
+                end)
+            end)
         end
     end
 
@@ -145,6 +170,12 @@ function DebugMenu:__Setup()
 
     DebugMenu.UI = ui
     DebugMenu.UI.ScrollList = content
+
+    ui.Show = function()
+        DebugMenu._PopulateFeatureList()
+    
+        Client.UI._BaseUITable.Show(ui)
+    end
 
     DebugMenu._PopulateFeatureList()
 
