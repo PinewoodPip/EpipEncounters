@@ -34,7 +34,6 @@ local Dyes = {
     },
 }
 Epip.AddFeature("VanityDyes", "VanityDyes", Dyes)
-Dyes:Debug()
 
 ---@type CharacterSheetCustomTab
 local Tab = Vanity.CreateTab({

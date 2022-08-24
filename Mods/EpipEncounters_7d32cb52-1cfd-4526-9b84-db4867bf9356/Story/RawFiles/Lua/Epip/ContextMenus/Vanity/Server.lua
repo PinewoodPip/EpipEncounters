@@ -1,6 +1,5 @@
 
 local Vanity = Epip.Features.Vanity
-Vanity:Debug()
 
 function Vanity.RevertAppearace(char, item)
     local _,originalTemplate = Osiris.DB_PIP_Vanity_OriginalTemplate:Get(item.MyGuid, nil)

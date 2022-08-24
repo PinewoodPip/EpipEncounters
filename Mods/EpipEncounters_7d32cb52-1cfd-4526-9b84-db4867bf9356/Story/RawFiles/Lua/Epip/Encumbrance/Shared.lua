@@ -10,7 +10,6 @@ local Encumbrance = {
     INFINITE_VALUE = 9999999,
 }
 Epip.AddFeature("Encumbrance", "Encumbrance", Encumbrance)
-Encumbrance:Debug()
 
 ---------------------------------------------
 -- METHODS

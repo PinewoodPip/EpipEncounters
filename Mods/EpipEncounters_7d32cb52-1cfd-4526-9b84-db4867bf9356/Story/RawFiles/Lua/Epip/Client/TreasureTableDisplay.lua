@@ -68,7 +68,6 @@ local TTD = {
 }
 Epip.AddFeature("TreasureTableDisplay", "TreasureTableDisplay", TTD)
 Epip.Features.TreasureTableDisplay = TTD
--- TTD:Debug()
 
 ---@class TreasureTableDisplay_Hook_GetTreasureData : Hook
 ---@field RegisterHook fun(self, handler:fun(data:TreasureTableDisplayEntry, char:EclCharacter))

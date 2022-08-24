@@ -12,7 +12,6 @@ local Fix = {
     }
 }
 Epip.AddFeature("SummonControlFix", "SummonControlFix", Fix)
-Fix:Debug()
 
 ---------------------------------------------
 -- EVENT LISTENERS

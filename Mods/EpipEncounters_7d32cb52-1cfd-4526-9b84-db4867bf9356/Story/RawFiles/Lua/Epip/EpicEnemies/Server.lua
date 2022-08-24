@@ -54,7 +54,6 @@ local settings = {
         Tooltip = "A multiplier for the amount of points normal enemies receive.",
     },
 }
--- EpicEnemies:Debug()
 
 ServerSettings.AddModule("EpicEnemies", settings)
 

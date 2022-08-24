@@ -1,17 +1,14 @@
 
----@class EpipDocsAPI
+---@class EpipDocsAPI : Feature
 ---@field Categories table<string, DocsCategoryData>
 ---@field CategoryOrder string[]
 ---@field JOURNAL_MODE string
-
----@type EpipDocsAPI
 local Docs = {
     Categories = {},
     CategoryOrder = {},
     JOURNAL_MODE = "Docs",
 }
 Epip.AddFeature("Docs", "Docs", Docs)
-Docs:Debug()
 
 local Journal = Client.UI.Journal
 

@@ -11,7 +11,6 @@ local TooltipScrolling = {
     SCROLLING_STEP = 40,
 }
 Epip.RegisterFeature("TooltipScrolling", TooltipScrolling)
-TooltipScrolling:Debug()
 
 ---------------------------------------------
 -- METHODS

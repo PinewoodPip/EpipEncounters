@@ -34,8 +34,6 @@ Client.UI.CharacterSheet.StatsTab = StatsTab
 Epip.InitializeLibrary("CharacterSheet.StatsTab", StatsTab)
 local CharacterSheet = Client.UI.CharacterSheet
 
--- StatsTab:Debug()
-
 ---@class StatsTabStat
 ---@field ID string
 ---@field Name string

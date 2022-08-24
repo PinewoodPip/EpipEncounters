@@ -8,7 +8,6 @@ local Shapeshift = {
 }
 Epip.AddFeature("VanityShapeshift", "VanityShapeshift", Shapeshift)
 Epip.Features.VanityShapeshift = Shapeshift
-Shapeshift:Debug()
 
 ---@class VanityShapeshiftForm
 ---@field Template GUID

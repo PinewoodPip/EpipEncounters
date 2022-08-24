@@ -45,7 +45,6 @@ local StatusSorting = {
     },
 }
 Epip.AddFeature("StatusSorting", "StatusSorting", StatusSorting)
--- StatusSorting:Debug()
 
 ---------------------------------------------
 -- METHODS

@@ -17,7 +17,6 @@ local Templates = {
 }
 Epip.AddFeature("EpicEnemiesEffectTemplates", "EpicEnemiesEffectTemplates", Templates)
 Epip.Features.EpicEnemiesEffectTemplates = Templates
-Templates:Debug()
 
 local EpicEnemies = Epip.Features.EpicEnemies
 

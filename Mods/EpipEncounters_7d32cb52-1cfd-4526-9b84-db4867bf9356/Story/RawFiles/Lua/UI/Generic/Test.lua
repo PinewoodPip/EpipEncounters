@@ -1,10 +1,8 @@
 
 local Generic = Client.UI.Generic
-local G = Generic
 
 ---@type GenericUI_Instance
 local Test = Generic.Create("PIP_Test")
-Test:Debug()
 
 ---------------------------------------------
 -- METHODS

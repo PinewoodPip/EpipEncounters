@@ -16,7 +16,6 @@ local Fixes = {
     },
 }
 Epip.AddFeature("CraftingFixes", "CraftingFixes", Fixes)
-Fixes:Debug()
 
 ---------------------------------------------
 -- EVENT LISTENERS

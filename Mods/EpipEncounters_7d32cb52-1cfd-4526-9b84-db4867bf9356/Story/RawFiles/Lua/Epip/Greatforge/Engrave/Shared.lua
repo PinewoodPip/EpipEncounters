@@ -6,7 +6,6 @@ local Engrave = {
     OPTION_DESCRIPTION = Text.Format("Carve a name onto the item to signify the special bond between yourself and it.<br><font color=\"a8a8a8\" size=\"21\" face=\"Averia Serif\">Purely cosmetic.</font>", {}),
 }
 Epip.AddFeature("GreatforgeEngrave", "GreatforgeEngrave", Engrave)
-Engrave:Debug()
 
 ---------------------------------------------
 -- SETUP

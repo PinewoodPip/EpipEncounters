@@ -27,7 +27,6 @@ local Housing = {
     },
 }
 Epip.RegisterFeature("Housing", Housing)
-Housing:Debug()
 
 ---@alias Feature_Housing_FurnitureType string|"Chair"|"Table"|"Bed"|"Container"|"Light"|"Facility"|"Trinket"|"Painting"|"Door"|"Clutter"|"Hangable"|"Statue"|"Decor"|"Interactables"|"Item"|"Other"
 

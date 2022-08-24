@@ -62,7 +62,6 @@ local Transmog = {
 }
 Epip.AddFeature("VanityTransmog", "VanityTransmog", Transmog)
 Epip.Features.VanityTransmog = Transmog
-Transmog:Debug()
 
 ---@type CharacterSheetCustomTab
 local Tab = Vanity.CreateTab({

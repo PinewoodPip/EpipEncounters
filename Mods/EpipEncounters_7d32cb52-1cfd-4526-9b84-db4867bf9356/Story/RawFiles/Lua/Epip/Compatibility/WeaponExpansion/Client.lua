@@ -13,7 +13,6 @@ local WEX = {
 }
 local Hotbar = Client.UI.Hotbar
 Epip.AddFeature("WeaponExpansionCompatibility", "WeaponExpansionCompatibility", WEX)
-WEX:Debug()
 
 function WEX.RepositionButton()
     local button = WEX.Menu.ToggleButtonInstance:GetRoot()

@@ -9,7 +9,6 @@ local Tweaks = {
     TOGGLE_BARS_KEYBIND = "EpipEncounters_Hotbar_ToggleVisibility",
 }
 Epip.RegisterFeature("HotbarTweaks", Tweaks)
-Tweaks:Debug()
 
 ---------------------------------------------
 -- EVENT LISTENERS
