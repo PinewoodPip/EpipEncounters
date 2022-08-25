@@ -139,12 +139,12 @@ function DebugMenu.LoadConfig(path)
     if config and config.Version == DebugMenu.SAVE_VERSION then
         for modTable,features in pairs(config.State) do
             for id,storedState in pairs(features) do
-                local s, state = pcall(DebugMenu.GetState, modTable, id)
+                local state = DebugMenu.GetState(modTable, id)
 
                 -- The pcall fails if the feature is not on the current context.
+                local s, feature = pcall(state.GetFeature, state)
+
                 if s then
-                    local feature = state:GetFeature()
-    
                     state.Debug = storedState.Debug
                     state.LoggingLevel = storedState.LoggingLevel
                     state.Enabled = storedState.Enabled
@@ -152,13 +152,13 @@ function DebugMenu.LoadConfig(path)
                     state.DateTested = storedState.DateTested
                     state.VersionTested = storedState.VersionTested
                     state.TestsPassed = storedState.TestsPassed
-    
+
                     feature.Logging = state.LoggingLevel
-    
+
                     if not state.Enabled then -- TODO improve
                         feature:Disable("DebugMenu")
                     end
-    
+
                     feature.IS_DEBUG = state.Debug
                 end
             end

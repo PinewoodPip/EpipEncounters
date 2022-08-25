@@ -228,7 +228,6 @@ LOAD_ORDER = {
     {ScriptSet = "Epip/Encumbrance"},
     {ScriptSet = "Epip/DebugDisplay", Developer = true,},
     {ScriptSet = "Epip/UnlearnSkills"},
-    {ScriptSet = "Epip/DebugMenu", Developer = true,},
 
     "Epip/Client/GenericUIs/QuickExamine.lua",
     "Epip/Client/GenericUIs/SaveLoadOverlay.lua",
@@ -299,6 +298,9 @@ LOAD_ORDER = {
     "Epip/Compatibility/VisitorsFromCyseal/Client.lua",
 
     "Epip/Keybindings/Client.lua",
+
+    -- Should be loaded last
+    {ScriptSet = "Epip/DebugMenu", Developer = true,},
 }
 
 Utilities = {}
