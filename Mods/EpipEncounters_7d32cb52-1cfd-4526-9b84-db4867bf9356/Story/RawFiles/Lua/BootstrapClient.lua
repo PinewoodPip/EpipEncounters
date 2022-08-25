@@ -262,6 +262,7 @@ LOAD_ORDER = {
     "Epip/Client/GiftbagLocker.lua",
     "Epip/Client/EE_Dyes.lua",
     "Epip/Client/ChatNotificationSound.lua",
+    "Epip/Client/ToggleableWorldTooltips.lua",
 
     -- Epic Enemies
     "Epip/EpicEnemies/Shared.lua",

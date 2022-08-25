@@ -11,6 +11,7 @@ local Sound = {
     },
     SETTING_ID = "Chat_MessageSound",
 }
+Epip.RegisterFeature("ChatNotificationSound", Sound)
 
 ---------------------------------------------
 -- METHODS

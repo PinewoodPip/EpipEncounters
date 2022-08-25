@@ -627,6 +627,15 @@ function Input.GetInputName(rawID, short)
     return name
 end
 
+---@param deviceID InputDevice
+---@param rawID InputRawType
+---@param state InputState
+---@param value1 number
+---@param value2 number
+function Input.Inject(deviceID, rawID, state, value1, value2)
+    Ext.Input.InjectInput(deviceID, rawID, state, value1, value2)
+end
+
 ---@param rawID InputRawType
 ---@param requestID string
 ---@param blocked boolean
