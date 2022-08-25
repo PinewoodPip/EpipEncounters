@@ -169,6 +169,7 @@ LOAD_ORDER = {
     "UI/CombatLog/CombatLog.lua",
     "UI/Craft.lua",
     "UI/Reward.lua",
+    "UI/WorldTooltip.lua",
 
     "UI/Vanity/Vanity.lua",
     "UI/Vanity/Tabs/_Tab.lua",
@@ -263,6 +264,7 @@ LOAD_ORDER = {
     "Epip/Client/EE_Dyes.lua",
     "Epip/Client/ChatNotificationSound.lua",
     "Epip/Client/ToggleableWorldTooltips.lua",
+    "Epip/Client/WorldTooltipFiltering.lua",
 
     -- Epic Enemies
     "Epip/EpicEnemies/Shared.lua",

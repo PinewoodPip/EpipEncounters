@@ -482,6 +482,17 @@ local Notification = {
     },
 }
 
+local WorldTooltips = {
+    CreateHeader("World Item Tooltips"),
+    {
+        ID = "WorldTooltip_EmptyContainers",
+        Type = "Checkbox",
+        Label = "Show empty containers/bodies",
+        Tooltip = "Controls whether tooltips are shown for empty containers and bodies.",
+        DefaultValue = true,
+    }
+}
+
 local Order = {
     Header,
     TopOptions,
@@ -490,6 +501,7 @@ local Order = {
     Inventory,
     Notification,
     Chat,
+    WorldTooltips,
     Overheads,
     SaveLoadOptions,
     CraftingOptions,

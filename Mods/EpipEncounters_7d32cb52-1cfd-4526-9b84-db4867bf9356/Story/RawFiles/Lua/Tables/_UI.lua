@@ -13,7 +13,6 @@
 ---@field INPUT_DEVICE InputDevice
 ---@field UI_FLAGS table<string, UIObjectFlag> Flags for UIObject.
 ---@field GetUI fun(self):UIObject?
----@field RegisterInvokeListener fun(self, method:string, handler:fun(event:UIEvent), when:"Before"|"After"?)
 ---@field GetRoot fun(self):FlashMainTimeline?
 ---@field Exists fun(self):boolean
 ---@field PlaySound fun(self, id:string)
@@ -84,7 +83,7 @@ end
 
 ---Register a listener for a UI Invoke raw event.
 ---@param method string Method name.
----@param handler fun(event:UIEvent)
+---@param handler fun(ev:UIEvent)
 ---@param when? "Before"|"After"
 function BaseUI:RegisterInvokeListener(method, handler, when)
     local path = self.PATH or self.UITypeID
@@ -95,7 +94,7 @@ end
 
 ---Register a listener for a UI Call raw event.
 ---@param method string ExternalInterface call name.
----@param handler fun(event:UIEvent)
+---@param handler fun(ev:UIEvent)
 ---@param when? "Before"|"After"
 function BaseUI:RegisterCallListener(method, handler, when)
     local path = self.PATH or self.UITypeID

@@ -5,7 +5,7 @@ Options.RegisterTab("EpipEncounters", {
     Name = "Epip Encounters",
     Keybinds = {
         {Name = "Toggle Tooltip Scrolling", ID = "EpipEncounters_ScrollTooltip", DefaultInput1 = {Keys = {"middle"}}},
-        {Name = "Toggle World Item Tooltips", ID = "EpipEncounters_ToggleWorldTooltips", DefaultInput1 = {Keys = {"lctrl", "lalt"}}},
+        {Name = "Toggle World Item Tooltips", ID = "EpipEncounters_ToggleWorldTooltips"},
         {Name = "Quick Examine", ID = "EpipEncounters_QuickExamine", DefaultInput1 = {Keys = {"v"}}},
         {Name = "Meditate", ID = "EpicEncounters_Meditate"},
         {Name = "Source Infuse", ID = "EpipEncounters_SourceInfuse"},
