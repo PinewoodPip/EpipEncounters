@@ -261,6 +261,7 @@ LOAD_ORDER = {
     -- "Epip/AwesomeSoccer/Client.lua",
     "Epip/Client/GiftbagLocker.lua",
     "Epip/Client/EE_Dyes.lua",
+    "Epip/Client/ChatNotificationSound.lua",
 
     -- Epic Enemies
     "Epip/EpicEnemies/Shared.lua",

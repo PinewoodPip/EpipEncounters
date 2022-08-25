@@ -3,7 +3,7 @@
 -- Based on v56's event system.
 ---------------------------------------------
 
----@class SubscribableEvent<T>:{ (Subscribe:fun(self:SubscribableEvent, callback:fun(ev:T|SubscribableEventParams), opts:SubscribableEventOptions|nil, stringID:string|nil):integer), Unsubscribe:fun(self:SubscribableEvent, index:integer|string), (Throw:fun(self:SubscribableEvent, event:T|SubscribableEventParams|nil))}
+---@class SubscribableEvent<T>:{ (Subscribe:fun(self:SubscribableEvent, callback:fun(ev:T|SubscribableEventParams), opts:SubscribableEventOptions|nil, stringID:string|nil):integer), Unsubscribe:fun(self:SubscribableEvent, index:integer|string), (Throw:fun(self:SubscribableEvent, event:T|SubscribableEventParams|nil):SubscribableEventParams)}
 ---@field Preventable false
 SubscribableEvent = {}
 
@@ -21,7 +21,7 @@ local SubscribableEventParams = {
 }
 
 ---An event whose consequences can be prevented.
----@class PreventableEvent<T>:{ (Subscribe:fun(self:SubscribableEvent, callback:fun(ev:T|PreventableEventParams), opts:SubscribableEventOptions|nil, stringID:string|nil):integer), Unsubscribe:fun(self:SubscribableEvent, index:integer|string), (Throw:fun(self:SubscribableEvent, event:T|PreventableEventParams|nil)), (Prevent:fun(self:PreventableEvent))}
+---@class PreventableEvent<T>:{ (Subscribe:fun(self:SubscribableEvent, callback:fun(ev:T|PreventableEventParams), opts:SubscribableEventOptions|nil, stringID:string|nil):integer), Unsubscribe:fun(self:SubscribableEvent, index:integer|string), (Throw:fun(self:SubscribableEvent, event:T|PreventableEventParams|nil):PreventableEventParams)}
 ---@field Preventable true
 
 ---@class PreventableEventParams : SubscribableEventParams
@@ -200,4 +200,6 @@ function SubscribableEvent:Throw(event)
 			cur = cur.Next
 		end
 	end
+
+	return event
 end

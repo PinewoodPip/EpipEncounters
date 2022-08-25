@@ -1,19 +1,12 @@
 
----@meta Library: ChatLogUI, ContextClient, Client.UI.ChatLog
-
 ---@class ChatLogUI : UI
-
----@type ChatLogUI
 local Chat = {
     Events = {
-        ---@type ChatLogUI_Event_MessageSent
-        MessageSent = {},
-        ---@type ChatLogUI_Event_MessageAdded
-        MessageAdded = {},
+        MessageSent = {}, ---@type PreventableEvent<ChatLogUI_Event_MessageSent>
+        MessageAdded = {}, ---@type PreventableEvent<ChatLogUI_Event_MessageAdded>
     },
     Hooks = {
-        ---@type ChatLogUI_Hook_CanSendMessage
-        CanSendMessage = {},
+
     },
 
     TABS = {
@@ -26,6 +19,10 @@ local Chat = {
     MESSAGE_COLOR = "ffffff",
     FONT_SIZE = 16,
     nextCustomTabID = 3,
+    nextMessageIsFromClient = false,
+
+    USE_LEGACY_EVENTS = false,
+    USE_LEGACY_HOOKS = false,
 }
 Epip.InitializeUI(Client.UI.Data.UITypes.chatLog, "ChatLog", Chat)
 Client.UI.ChatLog = Chat
@@ -35,19 +32,16 @@ Client.UI.ChatLog = Chat
 ---------------------------------------------
 
 ---Fired when the client sends a message in chat. TODO pass tab
----@class ChatLogUI_Event_MessageSent : Event
----@field RegisterListener fun(self, listener:fun(text:string, clientChar:EclCharacter))
----@field Fire fun(self, text:string, clientChar:EclCharacter)
+---@class ChatLogUI_Event_MessageSent
+---@field Text string
+---@field Character EclCharacter
+---@field Tab integer|string String for custom tabs.
 
 ---Fired when a message is rendered onto the UI.
----@class ChatLogUI_Event_MessageAdded : Event
----@field RegisterListener fun(self, listener:fun(tab:integer|string, text:string))
----@field Fire fun(self, tab:integer|string, text:string)
-
----Fired when the client attempts to send a message.
----@class ChatLogUI_Hook_CanSendMessage : Hook
----@field RegisterHook fun(self, handler:fun(canSend:boolean, text:string, char:EclCharacter))
----@field Return fun(self, canSend:boolean, text:string, char:EclCharacter)
+---@class ChatLogUI_Event_MessageAdded
+---@field Tab integer|string String for custom tabs.
+---@field Text string
+---@field IsFromClient boolean Whether this message was typed by the client.
 
 ---------------------------------------------
 -- METHODS
@@ -98,12 +92,13 @@ function Chat.AddMessage(tab, text)
         tab = Chat.CUSTOM_TABS[tab]
 
         if not tab then 
-            Chat:LogError("Tried to add message to unregistered custom tab.")
+            Chat:LogError("Tried to add message to unregistered custom tab " .. tab)
         return nil end
     end
 
-    root.addTextToTab(tab, text)
-    Chat.Events.MessageAdded:Fire(tab, text)
+    if Chat._OnMessageAdded(nil, tab, text) then
+        root.addTextToTab(tab, text)
+    end
 end
 
 ---Adds a tab to the chat log.
@@ -119,22 +114,67 @@ function Chat.AddTab(tabID, label)
     Chat.nextCustomTabID = Chat.nextCustomTabID + 1
 end
 
+---@param ev UIEvent
+---@param tab integer
+---@param text string
+---@return boolean True for success (not prevented).
+function Chat._OnMessageAdded(ev, tab, text)
+    local event = Chat.Events.MessageAdded:Throw({
+        Text = text,
+        Tab = Chat.GetTabStringID(tab) or tab,
+        IsFromClient = Chat.nextMessageIsFromClient,
+    })
+
+    if ev and event.Prevented then
+        ev:PreventAction()
+    end
+
+    return not event.Prevented
+end
+
+---@param numID integer
+---@return string?
+function Chat.GetTabStringID(numID)
+    return table.reverseLookup(Chat.CUSTOM_TABS, numID)
+end
+
+---@return integer|string
+function Chat.GetCurrentTab()
+    local numericID = Chat:GetRoot().log_mc.currentTab
+    local id = numericID
+
+    local customTabID = Chat.GetTabStringID(id)
+    if customTabID then
+        id = customTabID
+    end
+
+    return id
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
 
 Chat:RegisterCallListener("inputString", function(ev, text)
     local char = Client.GetCharacter()
-    local canSend = Chat.Hooks.CanSendMessage:Return(true, text, char)
+    local event = Chat.Events.MessageSent:Throw({
+        Character = char,
+        Text = text,
+        Tab = Chat.GetCurrentTab(),
+    })
 
-    if canSend then
-        Chat.Events.MessageSent:Fire(text, char)
-    else
+    Chat:DebugLog("Client attempting to send msg: ", text)
+
+    if event.Prevented then
         ev:PreventAction()
+    elseif text ~= "" then -- Empty messages do not get sent by the engine.
+        Chat.nextMessageIsFromClient = true
     end
 end)
 
 Chat:RegisterInvokeListener("addTextToTab", function(ev, tab, text)
-    Chat.Events.MessageAdded:Fire(tab, text)
+    Chat._OnMessageAdded(ev, tab, text)
+
+    Chat.nextMessageIsFromClient = false
 end)
 

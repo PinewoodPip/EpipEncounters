@@ -123,6 +123,24 @@ local Overheads = {
 }
 
 ---@type OptionsSettingsOption[]
+local Chat = {
+    CreateHeader("Chat"),
+    {
+        ID = "Chat_MessageSound",
+        Type = "Dropdown",
+        Label = "Message Sound",
+        Tooltip = "Plays a sound effect when a message is received, so as to make it easier to notice.",
+        DefaultValue = 1,
+        Options = {
+            "None",
+            "Sound 1 (Click)",
+            "Sound 2 (High-pitched click)",
+            "Sound 3 (Synth)",
+        }
+    }
+}
+
+---@type OptionsSettingsOption[]
 local Developer = {
     CreateHeader("Developer"),
     {
@@ -471,6 +489,7 @@ local Order = {
     PlayerInfo,
     Inventory,
     Notification,
+    Chat,
     Overheads,
     SaveLoadOptions,
     CraftingOptions,
