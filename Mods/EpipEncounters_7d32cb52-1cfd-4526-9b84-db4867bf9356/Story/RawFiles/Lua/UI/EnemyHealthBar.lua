@@ -7,6 +7,7 @@
 -- As such it cannot be disabled.
 ---------------------------------------------
 
+---@class EnemyHealthBarUI : UI
 local Bar = {
     latestCharacter = nil,
     latestItem = nil,
@@ -58,6 +59,7 @@ local Bar = {
         ["Public/Game/GUI/enemyHealthBar.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/enemyHealthBarTween.swf"
     },
 }
+Client.UI.EnemyHealthBar = Bar
 if IS_IMPROVED_HOTBAR then
     Bar.FILEPATH_OVERRIDES = {}
 end

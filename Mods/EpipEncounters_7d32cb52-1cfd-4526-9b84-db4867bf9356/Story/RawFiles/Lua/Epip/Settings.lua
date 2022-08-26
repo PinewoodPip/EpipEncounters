@@ -245,6 +245,13 @@ local OtherOptions = {
         DefaultValue = true,
     },
     {
+        ID = "Feature_WalkOnCorpses",
+        Type = "Checkbox",
+        Label = "Allow walking to corpses in combat",
+        Tooltip = "Disables looting corpses in combat, unless shift is held. This allows you to easily move to their position.",
+        DefaultValue = true,
+    },
+    {
         ID = "CombatLogImprovements",
         Type = "Checkbox",
         Label = "Improved Combat Log",

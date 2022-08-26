@@ -231,6 +231,7 @@ LOAD_ORDER = {
     {ScriptSet = "Epip/UnlearnSkills"},
 
     "Epip/ShowConsumableEffects.lua",
+    "Epip/WalkOnCorpses.lua",
 
     "Epip/Client/GenericUIs/QuickExamine.lua",
     "Epip/Client/GenericUIs/SaveLoadOverlay.lua",
