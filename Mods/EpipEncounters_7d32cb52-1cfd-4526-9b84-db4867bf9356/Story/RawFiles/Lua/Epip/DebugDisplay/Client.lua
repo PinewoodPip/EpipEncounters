@@ -10,6 +10,7 @@ DebugDisplay.TrackedModVersions = {
     {GUID = Mod.GUIDS.EE_ORIGINS, Name = "Origins"},
     {GUID = Mod.GUIDS.EE_DERPY, Name = "Derpy's"},
 }
+DebugDisplay.BG_SIZE = Vector.Create(200, 200)
 
 ---------------------------------------------
 -- METHODS
@@ -110,10 +111,10 @@ end)
 ---------------------------------------------
 
 function DebugDisplay:__Setup()
-    local textSize = Vector.Create(500, 25)
+    local textSize = Vector.Create(DebugDisplay.BG_SIZE[1], 25)
     local ui = Generic.Create("PIP_DebugDisplay")
     local bg = ui:CreateElement("BG", "GenericUI_Element_TiledBackground")
-    bg:SetBackground("Black", 200, 200)
+    bg:SetBackground("Black", DebugDisplay.BG_SIZE:unpack())
     bg:SetAlpha(0.4)
     bg:SetAsDraggableArea()
 
@@ -129,7 +130,7 @@ function DebugDisplay:__Setup()
 
     local extVersionText = TextPrefab.Create(ui, "ExtVersionLabel", container, Text.Format("Ext: v%s", {FormatArgs = {Ext.Utils.Version()}}), "Left", textSize)
 
-    local modVersionText = TextPrefab.Create(ui, "ModVersionLabel", container, "", "Left", {500, 200})
+    local modVersionText = TextPrefab.Create(ui, "ModVersionLabel", container, "", "Left", Vector.Create(DebugDisplay.BG_SIZE[1], 200))
 
     local uiObject = ui:GetUI()
     uiObject.SysPanelSize = {200, 300}
