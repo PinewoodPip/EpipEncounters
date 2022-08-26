@@ -37,7 +37,7 @@ end
 
 -- Play the sound when a chat message is received.
 Chat.Events.MessageAdded:Subscribe(function (ev)
-    if not ev.IsFromClient then
+    if not ev.IsFromClient and not ev.Text:match("Welcome to the local chat") and not ev.Text:match("Welcome to the party chat") then
         Sound.PlaySound()
     end
 end)
