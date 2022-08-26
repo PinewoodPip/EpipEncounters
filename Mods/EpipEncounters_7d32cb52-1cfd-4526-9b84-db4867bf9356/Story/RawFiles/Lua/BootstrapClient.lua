@@ -230,6 +230,8 @@ LOAD_ORDER = {
     {ScriptSet = "Epip/DebugDisplay", Developer = true,},
     {ScriptSet = "Epip/UnlearnSkills"},
 
+    "Epip/ShowConsumableEffects.lua",
+
     "Epip/Client/GenericUIs/QuickExamine.lua",
     "Epip/Client/GenericUIs/SaveLoadOverlay.lua",
     "Epip/Client/GenericUIs/HotbarGroup.lua",

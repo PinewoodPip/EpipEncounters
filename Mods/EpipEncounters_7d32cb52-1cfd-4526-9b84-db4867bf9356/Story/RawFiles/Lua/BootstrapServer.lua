@@ -127,6 +127,8 @@ LOAD_ORDER = {
     {ScriptSet = "Epip/UnlearnSkills"},
     {ScriptSet = "Epip/DebugMenu", Developer = true,},
 
+    "Epip/ShowConsumableEffects.lua",
+
     "Epip/StatsTab/Shared.lua",
     "Epip/StatsTab/Server/Server.lua",
     "Epip/StatsTab/Server/StatGetters.lua",
