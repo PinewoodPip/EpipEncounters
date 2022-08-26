@@ -22,9 +22,22 @@ function _ExtraDataEntry:GetDescription()
     return self.Description or ""
 end
 
----@param mod GUID
+---@param mod GUID? Defaults to the last mod in the load order that has this value overwritten.
 ---@return number
 function _ExtraDataEntry:GetDefaultValue(mod)
+    if not mod then
+        local loadOrder = Ext.Mod.GetLoadOrder()
+
+        for i=#loadOrder,1,-1 do
+            local guid = loadOrder[i]
+
+            if Stats.EXTRA_DATA_DEFAULT_VALUES[guid] and Stats.EXTRA_DATA_DEFAULT_VALUES[guid][self.ID] ~= nil then
+                mod = guid
+                break
+            end
+        end
+    end
+
     local modData = Stats.EXTRA_DATA_DEFAULT_VALUES[mod]
     local value
     if not modData then
@@ -270,6 +283,14 @@ Stats.EXTRA_DATA_DEFAULT_VALUES = {
         AttributeSoftCap = 40.0,
         FirstVitalityLeapGrowth = 1.0,
         TalentSneakingDamageBonus = 0.0,
+    },
+    [Mod.GUIDS.EE_DERPY] = {
+        DamageToThrownWeightRatio = 0,
+        CarryWeightBase = 300000,
+        TalentCivilAbilityPointsBonus = 2,
+        CharacterBaseMemoryCapacity = 6,
+        CharacterBaseMemoryCapacityGrowth = 0.75,
+        TalentMemoryBonus = 5,
     },
     Shared = {
         FirstItemTypeShift = 9,

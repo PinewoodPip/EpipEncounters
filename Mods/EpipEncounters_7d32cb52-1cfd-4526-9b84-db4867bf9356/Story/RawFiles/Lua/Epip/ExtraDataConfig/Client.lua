@@ -25,7 +25,7 @@ end)
 OptionsSettings:RegisterListener("ButtonClicked", function(element)
     if element.ID == "ExtraDataConfig_Reset" then
         for key,_ in pairs(DataConfig.ModifiedEntries) do
-            local defaultValue = Stats.ExtraData[key]:GetDefaultValue(Mod.GUIDS.EE_CORE)
+            local defaultValue = Stats.ExtraData[key]:GetDefaultValue()
 
             DataConfig.SetValue(key, defaultValue, true)
 

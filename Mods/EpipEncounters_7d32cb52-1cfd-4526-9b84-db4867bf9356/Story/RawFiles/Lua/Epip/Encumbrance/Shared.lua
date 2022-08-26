@@ -23,7 +23,7 @@ end
 function Encumbrance.Toggle(enabled)
     Encumbrance:DebugLog("Toggled encumbrance: " .. tostring(enabled))
 
-    local value = Stats.ExtraData.CarryWeightBase:GetDefaultValue(Mod.GUIDS.EE_CORE) -- TODO consider Derpy's mod, also set str scaling
+    local value = Stats.ExtraData.CarryWeightBase:GetDefaultValue() -- TODO also set str scaling
 
     if enabled then
         value = Encumbrance.INFINITE_VALUE

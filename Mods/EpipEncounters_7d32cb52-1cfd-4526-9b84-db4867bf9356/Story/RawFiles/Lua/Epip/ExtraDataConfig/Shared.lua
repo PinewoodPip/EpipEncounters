@@ -18,7 +18,7 @@ function DataConfig.SetValue(key, value, save)
     local data = Stats.ExtraData[key]
 
     if data then
-        local defaultValue = data:GetDefaultValue(Mod.GUIDS.EE_CORE)
+        local defaultValue = data:GetDefaultValue()
 
         Stats.Update("Data", key, value)
 
@@ -43,7 +43,7 @@ end
 ---@return OptionsSettingsOption
 function DataConfig.GetOptionData(key)
     local data = Stats.ExtraData[key]
-    local defaultValue = data:GetDefaultValue(Mod.GUIDS.EE_CORE)
+    local defaultValue = data:GetDefaultValue()
 
     local min, max = 0, defaultValue * 2
 
