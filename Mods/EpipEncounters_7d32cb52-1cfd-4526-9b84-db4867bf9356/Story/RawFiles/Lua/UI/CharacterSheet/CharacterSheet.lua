@@ -13,6 +13,29 @@ local CharacterSheet = {
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
 
+    SECONDARY_STAT_ARRAY_ENTRY_TEMPLATE = {
+        -- Spacing
+        [true] = {
+            Name = "Spacing",
+            Template = {
+                "ID",
+                "Height",
+            },
+        },
+        -- Real entry
+        [false] = {
+            Name = "Stat",
+            Template = {
+                "Type",
+                "Label",
+                "ValueLabel",
+                "StatID",
+                "IconID",
+                "BoostValue",
+            },
+        },
+    },
+
     ---@type SecondaryStatGroup
     SECONDARY_STAT_GROUPS = {
         BELOW_CHARACTER = 0,
@@ -33,7 +56,11 @@ local CharacterSheet = {
 
     Events = {
         HelmetToggled = {}, ---@type SubscribableEvent<CharacterSheetUI_Event_HelmetToggled>
+        TabChanged = {}, ---@type SubscribableEvent<CharacterSheetUI_Event_TabChanged>
     },
+    Hooks = {
+        UpdateSecondaryStats = {}, ---@type SubscribableEvent<CharacterSheetUI_Hook_UpdateSecondaryStats>
+    }
 }
 if IS_IMPROVED_HOTBAR then
     CharacterSheet.FILEPATH_OVERRIDES = {}
@@ -46,16 +73,16 @@ Client.UI.CharacterSheet = CharacterSheet
 ---@class SecondaryStatBase
 
 ---@class SecondaryStat : SecondaryStatBase
----@field IsSpacingElement boolean
----@field Group SecondaryStatGroup Determines where the stat is rendered.
+---@field EntryTypeID "Stat"
+---@field Type SecondaryStatGroup Determines where the stat is rendered.
 ---@field Label string Text on the left.
----@field Value string Text on the right.
----@field EngineStat number Used for the tooltip.
----@field Icon number
----@field Unknown1 number
+---@field ValueLabel string Text on the right.
+---@field StatID number Used for the tooltip.
+---@field IconID number
+---@field BoostValue number Unknown. Used for editText_txt, possibly a GM feature.
 
 ---@class SecondaryStatSpacing : SecondaryStatBase
----@field IsSpacingElement boolean
+---@field EntryTypeID "Spacing"
 ---@field ElementId number
 ---@field Height number
 
@@ -63,14 +90,17 @@ Client.UI.CharacterSheet = CharacterSheet
 -- EVENTS
 ---------------------------------------------
 
----Hook to manipulate a secondary stats update.
----@class CharacterSheetUI_SecondaryStatUpdate : Hook
----@field stats SecondaryStatBase[]
----@field char EclCharacter
+---@class CharacterSheetUI_Event_TabChanged
+---@field TabID integer
 
 ---@class CharacterSheetUI_Event_HelmetToggled
 ---@field Character EclCharacter
 ---@field Active boolean
+
+---Hook to manipulate a secondary stats update.
+---@class CharacterSheetUI_Hook_UpdateSecondaryStats
+---@field Stats SecondaryStatBase[] Hookable.
+---@field Character EclCharacter
 
 ---------------------------------------------
 -- METHODS
@@ -93,99 +123,46 @@ end
 -- INTERNAL METHODS - DO NOT CALL
 ---------------------------------------------
 
+---@param UI UIObject
 ---@return SecondaryStatBase[]
 function CharacterSheet.DecodeSecondaryStats(ui)
     local root = ui:GetRoot()
-    local secStats = Game.Tooltip.TableFromFlash(ui, "secStat_array")
     local arr = root.secStat_array
 
-    local stats = {}
-    for i=0,#arr-1,7 do
-        if arr[i] then -- Spacing element
-            table.insert(stats, {
-                IsSpacingElement = true, -- Adds spacing instead of a stat. Height is the Label prop value. Group becomes id.
-                ElementId = arr[i + 1],
-                Height = arr[i + 2],
-            })
-        else -- Stat element
-            table.insert(stats, {
-                IsSpacingElement = false,
-                Group = arr[i + 1], -- which group this stat belongs to. See SECONDARY_STAT_GROUPS
-                Label = arr[i + 2], -- Left label
-                Value = arr[i + 3], -- Right label
-                EngineStat = arr[i + 4], -- tooltip stat enum
-                Icon = arr[i + 5], -- icon enum. The phys one here is slightly different resolution, so it does not center properly. todo fix
-                Unknown1 = arr[i + 6], -- Used for editText_txt, possibly a GM feature.
-            })
-        end
-    end
-
-    return stats
+    return Client.Flash.ParseArray(arr, CharacterSheet.SECONDARY_STAT_ARRAY_ENTRY_TEMPLATE, true, 7)
 end
 
+---@param ui UIObject
+---@param stats SecondaryStatBase[]
 function CharacterSheet.EncodeSecondaryStats(ui, stats)
-    local arr = {}
-
-    local attributeOrder = {
-        "IsSpacingElement",
-        "Group",
-        "Label",
-        "Value",
-        "EngineStat",
-        "Icon",
-        "Unknown1",
-    }
-
-    for i,stat in ipairs(stats) do
-        if stat.IsSpacingElement then
-            table.insert(arr, stat.IsSpacingElement)
-            table.insert(arr, stat.ElementId)
-            table.insert(arr, stat.Height)
-
-            table.insert(arr, 0)
-            table.insert(arr, 0)
-            table.insert(arr, 0)
-            table.insert(arr, 0)
-        else
-            for z,attribute in ipairs(attributeOrder) do
-                table.insert(arr, stat[attribute])
-            end
-        end
-    end
-
-    Game.Tooltip.TableToFlash(ui, "secStat_array", arr)
+    Client.Flash.EncodeArray(ui:GetRoot().secStat_array, CharacterSheet.SECONDARY_STAT_ARRAY_ENTRY_TEMPLATE, stats, true, 7)
 end
 
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
 
-local function OnTabOpen(ui, method, id)
-    CharacterSheet:FireEvent("TabChanged", id)
-end
+CharacterSheet:RegisterCallListener("selectedTab", function (_, id)
+    CharacterSheet.Events.TabChanged:Throw({TabID = id})
+end)
 
-local function OnUpdateArraySystem(ui, method)
-    local char = CharacterSheet.GetCharacter()
-    local stats = CharacterSheet.DecodeSecondaryStats(ui)
-    
-    -- Hook to manipulate secStats_array, parsed into an array, one stat per entry.
-    stats = CharacterSheet:ReturnFromHooks("SecondaryStatUpdate", stats, char)
-
-    CharacterSheet.EncodeSecondaryStats(ui, stats)
-end
-
-CharacterSheet:RegisterCallListener("setHelmetOption", function (event, state)
+-- Listen for player changing helmet visual preference.
+CharacterSheet:RegisterCallListener("setHelmetOption", function (_, state)
     CharacterSheet.Events.HelmetToggled:Throw({
         Character = Client.GetCharacter(),
         Active = state == 1,
     })
 end, "After")
 
----------------------------------------------
--- SETUP
----------------------------------------------
+-- Listen for array system updates.
+CharacterSheet:RegisterInvokeListener("updateArraySystem", function (ev)
+    local char = CharacterSheet.GetCharacter()
+    local stats = CharacterSheet.DecodeSecondaryStats(ev.UI)
+    
+    local hook = CharacterSheet.Hooks.UpdateSecondaryStats:Throw({
+        Character = char,
+        Stats = stats,
+    })
 
-Ext.Events.SessionLoading:Subscribe(function()
-    Ext.RegisterUITypeInvokeListener(Client.UI.Data.UITypes.characterSheet, "updateArraySystem", OnUpdateArraySystem, "Before")
-    Ext.RegisterUITypeCall(Client.UI.Data.UITypes.characterSheet, "selectedTab", OnTabOpen, "After") -- tab open handler
-end)
+    CharacterSheet.EncodeSecondaryStats(ev.UI, hook.Stats)
+end, "Before")

@@ -1178,7 +1178,7 @@ Utilities.Hooks.RegisterListener("Client", "ActiveCharacterChanged", function()
 end)
 
 -- Close when the character sheet tab is changed.
-Client.UI.CharacterSheet:RegisterListener("TabChanged", function(tabID)
+Client.UI.CharacterSheet.Events.TabChanged:Subscribe(function (_)
     Vanity.Toggle(false)
 end)
 

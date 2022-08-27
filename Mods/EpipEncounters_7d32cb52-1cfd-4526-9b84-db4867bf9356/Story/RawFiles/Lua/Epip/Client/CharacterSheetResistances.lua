@@ -15,52 +15,69 @@ local function Colorize(str, color)
     return '<font color="' .. color .. '">' .. str .. "</font>"
 end
 
-CharacterSheet:RegisterHook("SecondaryStatUpdate", function(stats, char)
-    if not Resistances:IsEnabled() then return nil end
+CharacterSheet.Hooks.UpdateSecondaryStats:Subscribe(function (ev)
+    if Resistances:IsEnabled() then
+        local char = ev.Character
 
-    -- Calculated, final values.
-    local physRes = char.Stats.PhysicalResistance
-    local pierceRes = char.Stats.PiercingResistance
+        -- Calculated, final values.
+        local physRes = char.Stats.PhysicalResistance
+        local pierceRes = char.Stats.PiercingResistance
 
-    local physLabel = "Physical"
-    local pierceLabel = "Pierce"
+        local physColor = nil
+        local pierceColor = nil
 
-    -- Mimicking vanilla behaviour of colorizing boosted stats
-    local physResString = tostring(physRes) .. "%"
-    if physRes > 0 then 
-        physResString = Colorize(physResString, Data.Colors.StatBlue)
-        physLabel = Colorize(physLabel, Data.Colors.StatBlue)
-    elseif physRes < 0 then
-        physResString = Colorize(physResString, Data.Colors.StatRed)
-        physLabel = Colorize(physLabel, Data.Colors.StatRed)
+        -- Mimicking vanilla behaviour of colorizing boosted stats
+        if physRes > 0 then 
+            physColor = Color.TOOLTIPS.STAT_BLUE
+        elseif physRes < 0 then
+            physColor = Color.TOOLTIPS.STAT_RED
+        end
+
+        if pierceRes > 0 then
+            pierceColor = Color.TOOLTIPS.STAT_BLUE
+        elseif pierceRes < 0 then
+            pierceColor = Color.TOOLTIPS.STAT_RED
+        end
+
+        local physLabel = Text.Format("Physical", {
+            Color = physColor,
+        })
+        local pierceLabel = Text.Format("Pierce", {
+            Color = physColor,
+        })
+
+        local physValueLabel = Text.Format("%s%%", {
+            FormatArgs = {physRes},
+            Color = physColor,
+        })
+        local pierceValueLabel = Text.Format("%s%%", {
+            FormatArgs = {pierceRes},
+            Color = pierceColor,
+        })
+
+        ---@type SecondaryStat
+        local physResEntry = {
+            EntryTypeID = "Stat",
+            Type = 2,
+            Label = physLabel,
+            ValueLabel = physValueLabel,
+            StatID = 24,
+            IconID = 21,
+            BoostValue = 20,
+        }
+
+        ---@type SecondaryStat
+        local pierceResEntry = {
+            EntryTypeID = "Stat",
+            Type = 2,
+            Label = pierceLabel,
+            ValueLabel = pierceValueLabel,
+            StatID = 23,
+            IconID = 22,
+            BoostValue = 17,
+        }
+
+        table.insert(ev.Stats, physResEntry)
+        table.insert(ev.Stats, pierceResEntry)
     end
-
-    local piercingResString = tostring(pierceRes) .. "%"
-    if pierceRes > 0 then
-        piercingResString = Colorize(piercingResString, Data.Colors.StatBlue)
-        pierceLabel = Colorize(pierceLabel, Data.Colors.StatBlue)
-    elseif pierceRes < 0 then
-        piercingResString = Colorize(piercingResString, Data.Colors.StatRed)
-        pierceLabel = Colorize(pierceLabel, Data.Colors.StatRed)
-    end
-
-    table.insert(stats, {
-        IsSpacingElement = false,
-        Group = 2,
-        Label = physLabel,
-        Value = physResString,
-        EngineStat = 24,
-        Icon = 21,
-        Unknown1 = 20,
-    })
-
-    table.insert(stats, {
-        IsSpacingElement = false,
-        Group = 2,
-        Label = pierceLabel,
-        Value = piercingResString,
-        EngineStat = 23,
-        Icon = 22,
-        Unknown1 = 17,
-    })
 end)

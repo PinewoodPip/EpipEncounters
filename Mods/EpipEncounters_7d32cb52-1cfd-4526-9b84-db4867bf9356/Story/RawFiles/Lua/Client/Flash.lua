@@ -18,7 +18,7 @@ end
 ---@field Name string For human/script reference. Does not correspond to internal ID.
 ---@field Template (string|FlashArrayEntryTemplate)[] 
 
----Parses an update array. Only works for non-typed arrays (where elements are all of the same "type").
+---Parses an update array.
 ---@param arr FlashArray
 ---@param entryTemplate (string|FlashArrayEntryTemplate|FlashArrayMultiElementEntryTemplate)[] Parameter names/templates, in order.
 ---@param multipleElementTypes boolean?
@@ -91,10 +91,22 @@ function Flash.EncodeArray(array, entryTemplate, data, multipleEntryTypes, force
         local paramsAdded = 0
 
         if multipleEntryTypes then
-            template = entryTemplate[entry.EntryTypeFlashID].Template
+            local entryFlashID = entry.EntryTypeFlashID 
+
+            -- Search within templates. This is used if a hook adds entries but does not define this internal type, instead using the user-friendly string ID.
+            if entryFlashID == nil then
+                for key,tbl in pairs(entryTemplate) do
+                    if tbl.Name == entry.EntryTypeID then
+                        entryFlashID = key
+                        break
+                    end
+                end
+            end
+
+            template = entryTemplate[entryFlashID].Template
 
             -- Place entry ID
-            array[newArrayLength] = entry.EntryTypeFlashID
+            array[newArrayLength] = entryFlashID
             newArrayLength = newArrayLength + 1
             paramsAdded = paramsAdded + 1
         end
