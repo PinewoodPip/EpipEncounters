@@ -14,9 +14,13 @@ end
 ---@field Name string
 ---@field Enum table<integer, string>? Converts number parameters to string.
 
+---@class FlashArrayMultiElementEntryTemplate
+---@field Name string For human/script reference. Does not correspond to internal ID.
+---@field Template (string|FlashArrayEntryTemplate)[] 
+
 ---Parses an update array. Only works for non-typed arrays (where elements are all of the same "type").
 ---@param arr FlashArray
----@param entryTemplate (string|FlashArrayEntryTemplate)[] Parameter names/templates, in order.
+---@param entryTemplate (string|FlashArrayEntryTemplate|FlashArrayMultiElementEntryTemplate)[] Parameter names/templates, in order.
 ---@param multipleElementTypes boolean?
 ---@param forcedElementCount integer?
 ---@return table<string, any>[]
@@ -30,6 +34,7 @@ function Flash.ParseArray(arr, entryTemplate, multipleElementTypes, forcedElemen
         local template = entryTemplate
         local entry = {}
         local startingIndex = 0
+        local entryFlashID
         
         if multipleElementTypes then
             local typeValue = arr[i]
@@ -38,6 +43,8 @@ function Flash.ParseArray(arr, entryTemplate, multipleElementTypes, forcedElemen
             template = entryTemplate[typeValue].Template
             startingIndex = 1
             paramCount = #template
+
+            entryFlashID = typeValue
         end
         
         for z=1,paramCount,1 do
@@ -59,6 +66,7 @@ function Flash.ParseArray(arr, entryTemplate, multipleElementTypes, forcedElemen
             entry[paramName] = value
 
             entry.EntryTypeID = elementTypeName
+            entry.EntryTypeFlashID = entryFlashID
         end
 
         i = i + (forcedElementCount or #template)
@@ -70,36 +78,65 @@ function Flash.ParseArray(arr, entryTemplate, multipleElementTypes, forcedElemen
 end
 
 ---@param array FlashArray
----@param template (string|FlashArrayEntryTemplate)[]
+---@param entryTemplate (string|FlashArrayEntryTemplate|FlashArrayMultiElementEntryTemplate)[]
 ---@param data table
-function Flash.EncodeArray(array, template, data)
-    local elementCount = #data
-    local paramCount = #template
+---@param multipleEntryTypes boolean? Defaults to false.
+---@param forcedElementCount integer?
+function Flash.EncodeArray(array, entryTemplate, data, multipleEntryTypes, forcedElementCount)
+    local i = 1
+    local newArrayLength = 0
+    while i <= #data do
+        local entry = data[i]
+        local template = entryTemplate
+        local paramsAdded = 0
 
-    for i=0,elementCount-1,1 do
-        local baseIndex = i * paramCount
+        if multipleEntryTypes then
+            template = entryTemplate[entry.EntryTypeFlashID].Template
 
-        for z=0,paramCount-1,1 do
-            local param = template[z + 1]
-            local paramKey = param
+            -- Place entry ID
+            array[newArrayLength] = entry.EntryTypeFlashID
+            newArrayLength = newArrayLength + 1
+            paramsAdded = paramsAdded + 1
+        end
+
+        for _,key in ipairs(template) do
+            local param = entry[key]
             local value
 
-            value = data[i + 1][paramKey]
-
             if type(param) == "table" then
-                paramKey = param.Name
+                local paramName = param.Name
 
                 if param.Enum then
                     local values = param.Enum
-                    value = table.reverseLookup(values, value)
+                    value = table.reverseLookup(values, entry[paramName])
                 end
+            else
+                value = param
             end
 
-            array[baseIndex + z] = value
+            array[newArrayLength] = value
+
+            newArrayLength = newArrayLength + 1
+
+            paramsAdded = paramsAdded + 1
         end
+
+        -- Pad out element array if necessary
+        while paramsAdded < (forcedElementCount or -1) do
+            array[newArrayLength] = 0
+
+            newArrayLength = newArrayLength + 1
+            paramsAdded = paramsAdded + 1
+        end
+
+        i = i + 1
     end
 
-    array.length = elementCount * paramCount
+    if forcedElementCount then
+        array.length = #data * forcedElementCount
+    else
+        array.length = newArrayLength
+    end
 end
 
 ---Returns the first element of an array whose field value matches the one passed as parameter.
