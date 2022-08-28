@@ -973,7 +973,7 @@ for _,artifact in pairs(Artifact.ARTIFACTS) do
                 },
                 {
                     Type = "StatsPercentageBoost",
-                    Label = self:GetDescription(),
+                    Label = self:GetDescription() .. ".", -- We append a period manually as this is usually automatically done through the deltamod "Set X" string.
                     Amount = 1,
                 },
                 {
