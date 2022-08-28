@@ -13,27 +13,57 @@ local CharacterSheet = {
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
 
-    SECONDARY_STAT_ARRAY_ENTRY_TEMPLATE = {
-        -- Spacing
-        [true] = {
-            Name = "Spacing",
-            Template = {
-                "ID",
-                "Height",
+    ARRAY_ENTRY_TEMPLATES = {
+        PRIMARY_STAT = {
+            "StatID",
+            "Label",
+            "ValueLabel",
+            "TooltipStatID",
+        },
+        SECONDARY_STAT = {
+            -- Spacing
+            [true] = {
+                Name = "Spacing",
+                Template = {
+                    "ID",
+                    "Height",
+                },
+            },
+            -- Real entry
+            [false] = {
+                Name = "Stat",
+                Template = {
+                    "Type",
+                    "Label",
+                    "ValueLabel",
+                    "StatID",
+                    "IconID",
+                    "BoostValue",
+                },
             },
         },
-        -- Real entry
-        [false] = {
-            Name = "Stat",
-            Template = {
-                "Type",
-                "Label",
-                "ValueLabel",
-                "StatID",
-                "IconID",
-                "BoostValue",
-            },
+        ABILITY_STAT = {
+            "IsCivil",
+            "GroupID",
+            "StatID",
+            "Label",
+            "ValueLabel",
+            "PlusButtonTooltip",
+            "MinusButtonTooltip",
         },
+        TALENT = {
+            "Label",
+            "StatID",
+            {
+                Name = "State",
+                Enum = {
+                    [0] = "Active",
+                    [1] = "GrantedExternally",
+                    [2] = "Available",
+                    [3] = "Unavailable"
+                }
+            }
+        }
     },
 
     ---@type SecondaryStatGroup
@@ -60,6 +90,9 @@ local CharacterSheet = {
     },
     Hooks = {
         UpdateSecondaryStats = {}, ---@type SubscribableEvent<CharacterSheetUI_Hook_UpdateSecondaryStats>
+        UpdatePrimaryStats = {}, ---@type SubscribableEvent<CharacterSheetUI_Hook_UpdatePrimaryStats>
+        UpdateAbilityStats = {}, ---@type SubscribableEvent<CharacterSheetUI_Hook_UpdateAbilityStats>
+        UpdateTalents = {}, ---@type SubscribableEvent<CharacterSheetUI_Hook_UpdateTalents>
     }
 }
 if IS_IMPROVED_HOTBAR then
@@ -86,6 +119,26 @@ Client.UI.CharacterSheet = CharacterSheet
 ---@field ElementId number
 ---@field Height number
 
+---@class CharacterSheetUI_PrimaryStat
+---@field StatID integer
+---@field Label string
+---@field ValueLabel string
+---@field TooltipStatID integer
+
+---@class CharacterSheetUI_AbilityStat
+---@field IsCivil boolean
+---@field GroupID integer
+---@field StatID integer
+---@field Label string
+---@field ValueLabel string
+---@field PlusButtonTooltip string
+---@field MinusButtonTooltip string
+
+---@class CharacterSheetUI_Talent
+---@field Label string
+---@field StatID integer
+---@field State "Active"|"GrantedExternally"|"Available"|"Unavailable"
+
 ---------------------------------------------
 -- EVENTS
 ---------------------------------------------
@@ -97,10 +150,22 @@ Client.UI.CharacterSheet = CharacterSheet
 ---@field Character EclCharacter
 ---@field Active boolean
 
----Hook to manipulate a secondary stats update.
----@class CharacterSheetUI_Hook_UpdateSecondaryStats
----@field Stats SecondaryStatBase[] Hookable.
+---@class _CharacterSheetUI_Hook_UpdateStat
 ---@field Character EclCharacter
+
+---Hook to manipulate a secondary stats update (dodge chance, crit, etc.).
+---@class CharacterSheetUI_Hook_UpdateSecondaryStats : _CharacterSheetUI_Hook_UpdateStat
+---@field Stats SecondaryStatBase[] Hookable.
+
+---Hook to manipulate a primary stat update (attributes)
+---@class CharacterSheetUI_Hook_UpdatePrimaryStats : _CharacterSheetUI_Hook_UpdateStat
+---@field Stats CharacterSheetUI_PrimaryStat[] Hookable.
+
+---@class CharacterSheetUI_Hook_UpdateAbilityStats : _CharacterSheetUI_Hook_UpdateStat
+---@field Stats CharacterSheetUI_AbilityStat[] Hookable.
+
+---@class CharacterSheetUI_Hook_UpdateTalents : _CharacterSheetUI_Hook_UpdateStat
+---@field Stats CharacterSheetUI_Talent[] Hookable.
 
 ---------------------------------------------
 -- METHODS
@@ -165,4 +230,34 @@ CharacterSheet:RegisterInvokeListener("updateArraySystem", function (ev)
     })
 
     CharacterSheet.EncodeSecondaryStats(ev.UI, hook.Stats)
+
+    -- Primary stats
+    local root = ev.UI:GetRoot()
+    local primaryStatsArray = root.primStat_array
+    local primaryStats = Client.Flash.ParseArray(primaryStatsArray, CharacterSheet.ARRAY_ENTRY_TEMPLATES.PRIMARY_STAT)
+
+    local primaryStatsHook = CharacterSheet.Hooks.UpdatePrimaryStats:Throw({
+        Character = char,
+        Stats = primaryStats,
+    })
+    Client.Flash.EncodeArray(primaryStatsArray, CharacterSheet.ARRAY_ENTRY_TEMPLATES.PRIMARY_STAT, primaryStatsHook.Stats)
+
+    -- Ability stats
+    local abilityStatsArray = root.ability_array
+    local abilityStats = Client.Flash.ParseArray(abilityStatsArray, CharacterSheet.ARRAY_ENTRY_TEMPLATES.ABILITY_STAT)
+
+    local abilityStatsHook = CharacterSheet.Hooks.UpdateAbilityStats:Throw({
+        Character = char,
+        Stats = abilityStats,
+    })
+    Client.Flash.EncodeArray(abilityStatsArray, CharacterSheet.ARRAY_ENTRY_TEMPLATES.ABILITY_STAT, abilityStatsHook.Stats)
+
+    -- Talents
+    local talentsArray = root.talent_array
+    local talents = Client.Flash.ParseArray(talentsArray, CharacterSheet.ARRAY_ENTRY_TEMPLATES.TALENT)
+    local talentsHook = CharacterSheet.Hooks.UpdateTalents:Throw({
+        Character = char,
+        Stats = talents,
+    })
+    Client.Flash.EncodeArray(talentsArray, CharacterSheet.ARRAY_ENTRY_TEMPLATES.TALENT, talentsHook.Stats)
 end, "Before")
