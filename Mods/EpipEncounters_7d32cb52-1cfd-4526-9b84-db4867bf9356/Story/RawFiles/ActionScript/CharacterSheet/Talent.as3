@@ -84,8 +84,8 @@ package
         {
             this.widthOverride = 269 + 44;
             this.mOffsetY = -this.base.stats_mc.talentHolder_mc.list.m_scrollbar_mc.scrolledY - 26;
-            this.tooltip = this.customTalentId;
-            this.showTooltipForMC(this,"pipShowTalentTooltip");
+            // this.tooltip = this.customTalentId;
+            this.base.showTooltipForMC(this,"showTalentTooltip");
             this.hl_mc.visible = true;
             if(this.timeline && this.timeline.isPlaying)
             {
@@ -100,18 +100,6 @@ package
             this.base.hasTooltip = false;
             ExternalInterface.call("hideTooltip");
         }
-
-        public function onMinusButtonUp() : *
-        {
-            ExternalInterface.call("pipMinusTalent", this.statId, this.customTalentId);
-        }
-
-        public function onPlusButtonUp() : *
-        {
-            // trace(this.statId);
-            // trace(this.customTalentId);
-            ExternalInterface.call("pipPlusTalent", this.statId, this.customTalentId);
-        }
         
         function frame1() : *
         {
@@ -122,11 +110,8 @@ package
             this.hl_mc.height = 24;
             this.label_txt.mouseEnabled = false;
 
-            // PIP - changed callbacks to support custom talents.
-            this.minus_mc.callbackStr = "";
-            this.plus_mc.callbackStr = "";
-            this.minus_mc.onUpFunc = this.onMinusButtonUp;
-            this.plus_mc.onUpFunc = this.onPlusButtonUp;
+            this.minus_mc.callbackStr = "minusTalent";
+            this.plus_mc.callbackStr = "plusTalent";
         }
     }
 }

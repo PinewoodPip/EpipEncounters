@@ -170,6 +170,9 @@ function StatsTab.RenderStats()
     StatsTab:DebugLog("Finished rendering")
 
     stats.customStats_mc.list.positionElements()
+
+    -- Not sure why this is bugging out all of a sudden - TODO investigate
+    stats.customStats_mc.list.m_scrollbar_mc.visible = CharacterSheet:GetRoot().stats_mc.currentOpenPanel == 8
 end
 
 ---Register a FormatStatValue hook for a specific stat.

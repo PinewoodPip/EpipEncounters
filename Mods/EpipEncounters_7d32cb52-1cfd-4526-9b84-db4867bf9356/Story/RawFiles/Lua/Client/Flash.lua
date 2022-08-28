@@ -115,12 +115,14 @@ function Flash.EncodeArray(array, entryTemplate, data, multipleEntryTypes, force
             local param = entry[key]
             local value
 
-            if type(param) == "table" then
-                local paramName = param.Name
+            if type(key) == "table" then
+                local paramName = key.Name
 
-                if param.Enum then
-                    local values = param.Enum
-                    value = table.reverseLookup(values, entry[paramName])
+                if key.Enum then
+                    local values = key.Enum
+                    local stringValue = entry[paramName]
+
+                    value = table.reverseLookup(values, stringValue)
                 end
             else
                 value = param

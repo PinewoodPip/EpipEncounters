@@ -78,8 +78,6 @@ LOAD_ORDER = {
     "EpipEncountersServer.lua",
     "HotkeysServer.lua",
 
-    "EpipTalents.lua",
-
     -- "GreatforgeExclude.lua",
 
     "Epip/Server/Shroud.lua",

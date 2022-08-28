@@ -229,31 +229,21 @@ package examine_fla
             return _loc2_;
         }
         
-        public function showTooltipForMC(param1:MovieClip, param2:Number, param3:Boolean = false) : *
+        public function showTooltipForMC(param1:MovieClip, param2:Number) : *
         {
-            var _loc4_:Point = this.getGlobalPositionOfMC(param1);
-            var _loc5_:Number = param1.width;
+            var _loc3_:Point = this.getGlobalPositionOfMC(param1);
+            var _loc4_:Number = param1.width;
             this.hasTooltip = true;
-            var _loc6_:Number = 0;
+            var _loc5_:Number = 0;
             if(param1 && param1.mOffsetY)
             {
-                _loc6_ = param1.mOffsetY;
+                _loc5_ = param1.mOffsetY;
             }
             if(param1 && param1.mWOverride)
             {
-                _loc5_ = param1.mWOverride;
+                _loc4_ = param1.mWOverride;
             }
-
-            // custom talent tooltip
-            if (param3)
-            {
-                // ExternalInterface.call("pipShowTalentTooltip",param1.type,param2,_loc4_.x,_loc4_.y + _loc6_,_loc5_,param1.height,"right",param1.val_txt.htmlText);
-                ExternalInterface.call("pipShowTalentTooltip",param2,_loc4_.x,_loc4_.y + _loc6_,_loc5_,param1.height,"right","",param1.val_txt.htmlText);
-            }
-            else
-            {
-                ExternalInterface.call("showTooltip",param1.type,param2,_loc4_.x,_loc4_.y + _loc6_,_loc5_,param1.height,"right");
-            }
+            ExternalInterface.call("showTooltip",param1.type,param2,_loc3_.x,_loc3_.y + _loc5_,_loc4_,param1.height,"right");
         }
         
         public function startsWith(param1:String, param2:String) : Boolean

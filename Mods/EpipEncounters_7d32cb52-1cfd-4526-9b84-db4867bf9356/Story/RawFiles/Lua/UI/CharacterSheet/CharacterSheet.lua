@@ -194,13 +194,13 @@ function CharacterSheet.DecodeSecondaryStats(ui)
     local root = ui:GetRoot()
     local arr = root.secStat_array
 
-    return Client.Flash.ParseArray(arr, CharacterSheet.SECONDARY_STAT_ARRAY_ENTRY_TEMPLATE, true, 7)
+    return Client.Flash.ParseArray(arr, CharacterSheet.ARRAY_ENTRY_TEMPLATES.SECONDARY_STAT, true, 7)
 end
 
 ---@param ui UIObject
 ---@param stats SecondaryStatBase[]
 function CharacterSheet.EncodeSecondaryStats(ui, stats)
-    Client.Flash.EncodeArray(ui:GetRoot().secStat_array, CharacterSheet.SECONDARY_STAT_ARRAY_ENTRY_TEMPLATE, stats, true, 7)
+    Client.Flash.EncodeArray(ui:GetRoot().secStat_array, CharacterSheet.ARRAY_ENTRY_TEMPLATES.SECONDARY_STAT, stats, true, 7)
 end
 
 ---------------------------------------------

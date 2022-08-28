@@ -201,15 +201,9 @@ LOAD_ORDER = {
 
     "UI/Controller/PanelSelect.lua",
 
-    -- Talents
-    "Game/Talents/Shared.lua",
-    "Game/Talents/Client.lua",
-
     "Debug/Shared.lua",
     "Debug/Client.lua",
     "Debug/Commands/Client.lua",
-
-    "EpipTalents.lua",
 
     "Epip/Client/ImmersiveMeditation.lua",
     "Epip/Client/NameTypoFixes.lua",
