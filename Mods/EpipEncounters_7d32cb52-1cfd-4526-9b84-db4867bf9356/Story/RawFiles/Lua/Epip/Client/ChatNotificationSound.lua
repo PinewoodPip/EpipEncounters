@@ -10,6 +10,7 @@ local Sound = {
         "Synth_440tone_200ms",
     },
     SETTING_ID = "Chat_MessageSound",
+    USER_MESSAGE_PATTERN = "^<font size=16 color=#bbbbbb>.+:</font> <font size=16 color=#ffffff>.+</font>$"
 }
 Epip.RegisterFeature("ChatNotificationSound", Sound)
 
@@ -35,9 +36,9 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
--- Play the sound when a chat message is received.
+-- Play the sound when a chat message is received from another user.
 Chat.Events.MessageAdded:Subscribe(function (ev)
-    if not ev.IsFromClient and not ev.Text:match("Welcome to the local chat") and not ev.Text:match("Welcome to the party chat") then
+    if not ev.IsFromClient and ev.Text:match(Sound.USER_MESSAGE_PATTERN) then
         Sound.PlaySound()
     end
 end)

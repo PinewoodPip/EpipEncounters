@@ -2,8 +2,8 @@
 ---@class ChatLogUI : UI
 local Chat = {
     Events = {
-        MessageSent = {}, ---@type PreventableEvent<ChatLogUI_Event_MessageSent>
-        MessageAdded = {}, ---@type PreventableEvent<ChatLogUI_Event_MessageAdded>
+        MessageSent = {Preventable = true}, ---@type PreventableEvent<ChatLogUI_Event_MessageSent>
+        MessageAdded = {Preventable = true}, ---@type PreventableEvent<ChatLogUI_Event_MessageAdded>
     },
     Hooks = {
 

@@ -7,8 +7,8 @@ Chat.UI = Client.UI.ChatLog
 ---------------------------------------------
 
 -- Listen for slash commands.
-Chat.UI.Hooks.CanSendMessage:RegisterHook(function (canSend, text, char)
-    local command = string.match(text, "^/(.*)$")
+Chat.UI.Events.MessageSent:Subscribe(function (ev)
+    local command = string.match(ev.Text, "^/(.*)$")
 
     if command then
         local args = Text.Split(command, " ")
@@ -25,10 +25,8 @@ Chat.UI.Hooks.CanSendMessage:RegisterHook(function (canSend, text, char)
         end
         
 
-        canSend = false
+        ev:Prevent()
     end
-
-    return canSend
 end)
 
 -- Forward commands to server.
@@ -40,15 +38,15 @@ Chat.Events.CommandSent:RegisterListener(function (command, args, char)
     })
 end)
 
-Chat.UI.Events.MessageSent:RegisterListener(function (text, clientChar)
+Chat.UI.Events.MessageSent:Subscribe(function (ev)
     local root = Client.UI.ChatLog:GetRoot()
-
     -- TODO finish
     -- root.log_mc.input_txt.selectable = true
     -- -- root.log_mc.setInputFocus(false)
     -- root.log_mc.onFocusLost()
     -- root.stage.focus = 0
     -- print(root.stage.focus)
+    
 end)
 
 ---------------------------------------------
