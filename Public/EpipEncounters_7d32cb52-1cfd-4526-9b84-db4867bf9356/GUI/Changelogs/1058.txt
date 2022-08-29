@@ -1,0 +1,94 @@
+
+New features:
+
+- Consumables like food and mushrooms now show their effects by default; there's no need to eat them once for them to appear in the tooltip
+- Added a setting to enable infinite carry weight
+- You can now right-click skills in the skillbook while out of combat to unmemorize them
+- Added a keybind to toggle world item tooltips (so you don't need to hold the alt key)
+- Surface tooltips now show their owner (who the surface damage scales from and who owns its applied statuses)
+- Added a setting to disable the "Item Received" notifications
+- Added a setting to allow viewing the character sheet while in the quest rewards UI; this lets you compare your equipped items with the rewards.
+- Vanity: transmog and dyes no longer require items to be re-equipped, making it overall faster to try on different looks
+- Added an option to hide empty corpses/containers from the world item tooltips (the ones that appear from the alt key)
+- Added a setting to allow you to walk *onto* corpses while in combat without looting them. You may still loot them while holding shift. This settings is enabled by default.
+- The fix to character control being lost upon creating new summons now also applies to having your summons be killed
+- Added an option to play a sound effect when a chat message is received, so they're easier to notice
+- Empowering items now properly scales their armor values, but this will only take effect after a reload
+- Fixed the vanilla bug that prevented you from using items in certain conditions if you had +AP Cost effects 
+- Added a keybind to scroll the fancy item/skill tooltips
+- ACTIVE_DEFENSE statuses (ex. Empyrean Tears) now show max charges in the tooltip
+- Holding shift while moving in combat now shows approximate decimal AP costs
+- Status tooltips now show if they were applied by an equipped item
+- Fixed the tooltip color for effects that alter AP costs. They now display in green if they reduce AP costs, and red if they increase them.
+- The custom input menu has been reworked to use new extender tech; all keys supported by the game are now bindable, including modifier keys like alt/ctrl. Your previous bindings will be wiped upon updating.
+- Added new modifier keys to cycle bars on the hotbar: ctrl cycles 3rd bar (from bottom), alt cycles 4th one, gui (Windows key) cycles 5th one
+- Added an "Engrave" option to the Greatforge which lets you rename items. This is purely visual.
+    - It does not currently have a custom graphic. It will appear as another "Drill Sockets" in the Greatforge wheel.
+- Minor visual adjustments to QuickExamine
+- The Epip settings menu is slightly more organized now
+- Added more mods to the incompatible mods warning: DU, Greed, Multihotbars
+
+Hotbar:
+
+- Slots can no longer be used while holding modifier keys. This means you can use shift/ctrl/alt + number keys as a custom keybind without it interfering with the hotbar.
+- Fixed loadouts not saving empty gaps inbetween slots
+- You can't cycle hidden bars anymore
+- Added custom slot groups. Right-click a row on the hotbar to create one. These are shared across all your characters. Right-click them to delete them. Known issues:
+    - Items there do not display tooltips yet
+
+Fixes:
+
+- Fixed tooltips for Vanity tabs
+- Fixed negative status effects displaying wrong ever since GB5
+- Epip's artifact tooltips (in Quick Examine, stats tab, etc.) now have a period at the end of them
+- Hotkey to exit Meditate is now escape, instead of escape / right-click.
+- Fixed action names on the hotbar buttons
+- Fixed some character sheet tooltips appearing while in the Vanity menu
+
+Stuff for developer mode:
+
+- Added a keybind to copy identifiers (GUID for chars/items, stat ID for skills) of the object over your mouse
+- Added a settings menu to change Data.txt values ingame. Most of them apply instantly / upon character stat recalculation, but some may require a session reload.
+- Talents show their IDs in tooltips
+- The cheats context menu now lets you add talents
+- Added an option to enable a widget that shows FPS, TPS, and relevant mod versions
+- Added a keybind to open a debug menu from which you can toggle debug mode on features, disable them (or their logging), and run tests (a new feature of the Feature table)
+
+On the technical side of things:
+
+- Osiris library now supports built-in symbols (calls and queries) and extender objects are converted to their GUID when being passed
+- Added a Vector library (with some cool arithmetic operator overloads)
+- Added a new tooltip library (WIP), advantage include preventing tooltips and manipulating surface tooltips, viewing source UI of a tooltip
+- SubscribableEvent nodes can now be removed based on a predicate function, and preventable events are supported
+- Fixed some log spam related to the hotbar
+- Added groundwork for the Epip Housing(TM) feature
+- Slight modernization to Net library: the payload is now passed as the first parameter, and IDE hints are available by defining the net msg as a class with the payload's table fields
+- Timer lib is now available on the server, and a tick-based timer option has been added, as well as option to repeat / pause them
+- Added a better coroutine table with sleeping (either for X seconds, or until a condition is met)
+- Added a new Epip.RegisterFeature() call which can keep track of the source mod of a feature
+- Added a new Input library using v57 RawInput
+- Added more hooks to CharacterSheet UI in preparations for custom talents 2.0 (and other stats)
+- Added ExtraData tables to Stats library
+- Added PartyInventory hooks
+- Removed numerous archaic/unused scripts, like the custom talents ones
+- GenericUI:
+    - Added more bg options for TiledBackground
+    - Added new elements: Slider, Grid
+    - Events now have proper IDE support, and no more issues with inheritance
+    - Element creation now has proper IDE support, if you instantiate elements using their class name
+    - Added more position-related calls
+    - Element visuals now use string IDs, and unused visuals are set off-stage (less possibility for jank)
+    - Fixed button size issues
+    - Removed minimum size for black background
+    - Fixed stack overflow issue with lists
+    - Added support for skill tooltips
+    - Fixed issues with MouseUp on the slot element
+    - Changed mouse events to use the roll ones
+    - Added proper support for prefabs, with the following implemented:
+        - Spinner
+        - Text (offers simpler initialization of Text elements)
+        - HotbarSlot (with many improvements to bring it closer to hotbar behavior)
+        - FormHorizontalList
+        - LabelledCheckbox
+        - LabelledDropdown
+        - LabelledTextField

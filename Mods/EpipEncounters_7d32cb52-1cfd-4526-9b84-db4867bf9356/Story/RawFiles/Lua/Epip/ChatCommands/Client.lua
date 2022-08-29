@@ -24,8 +24,8 @@ Chat.UI.Events.MessageSent:Subscribe(function (ev)
             Chat.UI.AddMessage(nil, "Invalid command! Use /help for a list of commands.")
         end
         
-
         ev:Prevent()
+        ev:StopPropagation()
     end
 end)
 
@@ -36,17 +36,6 @@ Chat.Events.CommandSent:RegisterListener(function (command, args, char)
         Command = command,
         Args = args,
     })
-end)
-
-Chat.UI.Events.MessageSent:Subscribe(function (ev)
-    local root = Client.UI.ChatLog:GetRoot()
-    -- TODO finish
-    -- root.log_mc.input_txt.selectable = true
-    -- -- root.log_mc.setInputFocus(false)
-    -- root.log_mc.onFocusLost()
-    -- root.stage.focus = 0
-    -- print(root.stage.focus)
-    
 end)
 
 ---------------------------------------------

@@ -238,6 +238,7 @@ LOAD_ORDER = {
     "Epip/Client/AscensionShortcuts.lua",
     "Epip/Client/ModDocs.lua",
     "Epip/Client/JournalChangelog.lua",
+    -- "Epip/Client/ExitChatAfterMessage.lua", -- Disabled as there seems to be an issue with InjectInput.
 
     -- Chat commands
     "Epip/ChatCommands/Shared.lua",
@@ -277,7 +278,7 @@ LOAD_ORDER = {
     {ScriptSet = "Epip/ItemTagging"},
     {ScriptSet = "Epip/ExtraDataConfig", Developer = true,},
     {ScriptSet = "Epip/Housing", WIP = true,},
-    "Epip/Housing/Shared_Furniture.lua",
+    {Script = "Epip/Housing/Shared_Furniture.lua", WIP = true},
     {ScriptSet = "Epip/StatsEditor", WIP = true,},
     {ScriptSet = "Epip/APCostBoostFix"},
 
@@ -302,6 +303,8 @@ LOAD_ORDER = {
 
     -- Should be loaded last
     {ScriptSet = "Epip/DebugMenu", Developer = true,},
+
+    "Epip/Client/HideIncons.lua",
 }
 
 Utilities = {}

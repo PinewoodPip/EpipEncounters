@@ -23,12 +23,14 @@ end
 ---@param entryTemplate (string|FlashArrayEntryTemplate|FlashArrayMultiElementEntryTemplate)[] Parameter names/templates, in order.
 ---@param multipleElementTypes boolean?
 ---@param forcedElementCount integer?
+---@param startingIndex integer? 0-based. Defaults to 0.
 ---@return table<string, any>[]
-function Flash.ParseArray(arr, entryTemplate, multipleElementTypes, forcedElementCount)
+function Flash.ParseArray(arr, entryTemplate, multipleElementTypes, forcedElementCount, startingIndex)
     local paramCount = #entryTemplate
     local entries = {}
+    startingIndex = startingIndex or 0
 
-    local i = 0
+    local i = startingIndex
     while i <= #arr-1 do
         local elementTypeName
         local template = entryTemplate
@@ -82,9 +84,12 @@ end
 ---@param data table
 ---@param multipleEntryTypes boolean? Defaults to false.
 ---@param forcedElementCount integer?
-function Flash.EncodeArray(array, entryTemplate, data, multipleEntryTypes, forcedElementCount)
+---@param startingIndex integer? 0-based. Defaults to 0.
+function Flash.EncodeArray(array, entryTemplate, data, multipleEntryTypes, forcedElementCount, startingIndex)
+    startingIndex = startingIndex or 0
+
     local i = 1
-    local newArrayLength = 0
+    local newArrayLength = startingIndex
     while i <= #data do
         local entry = data[i]
         local template = entryTemplate

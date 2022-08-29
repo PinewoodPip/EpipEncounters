@@ -26,6 +26,28 @@ local CharacterCreation = {
         "Wayfarer",
     },
 
+    ARRAY_ENTRY_TEMPLATES = {
+        TALENT_NORMAL = {
+            "TalentID",
+            "Label",
+            "State",
+            "Available",
+        },
+        TALENT_RACIAL = {
+            "TalentID",
+            "Label",
+        },
+        ABILITY = {
+            "GroupID",
+            "GroupLabel",
+            "StatID",
+            "Label",
+            "ValueLabel",
+            "Delta",
+            "IsCivil",
+        }
+    },
+
     SELECTOR_CONTENT_IDS = {
         ORIGIN = 0,
         PRESET = 1,
@@ -35,33 +57,71 @@ local CharacterCreation = {
     USE_LEGACY_HOOKS = false,
 
     Events = {
-        Finished = {}, ---@type SubscribableEvent<CharacterCreation_Event_Finished>
-        SelectorScrolled = {}, ---@type SubscribableEvent<CharacterCreation_Event_SelectorScrolled>
-        OriginChanged = {}, ---@type SubscribableEvent<CharacterCreation_Event_OriginChanged>
-        PresetChanged = {}, ---@type SubscribableEvent<CharacterCreation_Event_PresetChanged>
+        Finished = {}, ---@type SubscribableEvent<CharacterCreationUI_Event_Finished>
+        SelectorScrolled = {}, ---@type SubscribableEvent<CharacterCreationUI_Event_SelectorScrolled>
+        OriginChanged = {}, ---@type SubscribableEvent<CharacterCreationUI_Event_OriginChanged>
+        PresetChanged = {}, ---@type SubscribableEvent<CharacterCreationUI_Event_PresetChanged>
     },
+    Hooks = {
+        UpdateTalents = {}, ---@type SubscribableEvent<CharacterCreationUI_Hook_UpdateTalents>
+        UpdateAbilities = {}, ---@type SubscribableEvent<CharacterCreationUI_Hook_UpdateAbilities>
+    }
 }
 Client.UI.CharacterCreation = CharacterCreation
 Epip.InitializeUI(Ext.UI.TypeID.characterCreation, "CharacterCreation", CharacterCreation)
 
 ---------------------------------------------
+-- CLASSES
+---------------------------------------------
+
+---Base class for a talent entry.
+---@class _CharacterCreationUI_Talent
+---@field TalentID integer
+---@field Label string
+
+---@class CharacterCreationUI_Talent : _CharacterCreationUI_Talent
+---@field State integer
+---@field Available boolean
+
+---@class CharacterCreationUI_RacialTalent : _CharacterCreationUI_Talent
+
+---@class CharacterCreationUI_Ability
+---@field GroupID number
+---@field GroupLabel string
+---@field StatID integer
+---@field Label string
+---@field ValueLabel string
+---@field Delta number
+---@field IsCivil any
+
+---------------------------------------------
 -- EVENTS/HOOKS
 ---------------------------------------------
 
----@class CharacterCreation_Event_Finished
+---@class CharacterCreationUI_Event_Finished
 ---@field Character EclCharacter
 ---@field Cancelled boolean True if the player cancelled their respec.
 
----@class CharacterCreation_Event_SelectorScrolled
+---@class CharacterCreationUI_Event_SelectorScrolled
 ---@field SelectorID integer
 ---@field OptionID integer
 ---@field IsScrollingToRight boolean
 
----@class CharacterCreation_Event_OriginChanged
+---@class CharacterCreationUI_Event_OriginChanged
 ---@field Index integer 1-based.
 
----@class CharacterCreation_Event_PresetChanged
+---@class CharacterCreationUI_Event_PresetChanged
 ---@field Index integer 1-based.
+
+---@class CharacterCreationUI_Hook_UpdateTalents
+---@field Talents CharacterCreationUI_Talent[] Hookable.
+---@field RacialTalents CharacterCreationUI_RacialTalent[] Hookable.
+---@field TalentPoints integer Hookable.
+---@field Character EclCharacter
+
+---@class CharacterCreationUI_Hook_UpdateAbilities
+---@field Abilities CharacterCreationUI_Ability[]
+---@field Character EclCharacter
 
 ---------------------------------------------
 -- METHODS
@@ -85,13 +145,13 @@ end
 ---------------------------------------------
 
 -- Listen for character creation/respec being finished.
-CharacterCreation:RegisterCallListener("creationDone", function (ev)
+CharacterCreation:RegisterCallListener("creationDone", function (_)
     CharacterCreation.Events.Finished:Throw({
         Character = Client.GetCharacter(),
         Cancelled = false,
     })
 end, "After")
-CharacterCreation:RegisterCallListener("mainMenu", function (ev)
+CharacterCreation:RegisterCallListener("mainMenu", function (_)
     CharacterCreation.Events.Finished:Throw({
         Character = Client.GetCharacter(),
         Cancelled = true,
@@ -99,7 +159,7 @@ CharacterCreation:RegisterCallListener("mainMenu", function (ev)
 end, "After")
 
 -- Listen for selectors being scrolled.
-CharacterCreation:RegisterCallListener("selectOption", function (ev, selectorID, optionID, scrollingRight)
+CharacterCreation:RegisterCallListener("selectOption", function (_, selectorID, optionID, scrollingRight)
     CharacterCreation.Events.SelectorScrolled:Throw({
         SelectorID = selectorID,
         OptionID = optionID,
@@ -115,4 +175,38 @@ CharacterCreation:RegisterCallListener("selectOption", function (ev, selectorID,
             Index = optionID,
         })
     end
+end)
+
+-- Listen for talents being updated.
+CharacterCreation:RegisterInvokeListener("updateTalents", function (ev)
+    local root = ev.UI:GetRoot()
+    local talentsArray = root.talentArray
+    local racialTalentsArray = root.racialTalentArray
+
+    local points = talentsArray[1]
+
+    local talentsHook = CharacterCreation.Hooks.UpdateTalents:Throw({
+        Character = Client.GetCharacter(),
+        TalentPoints = points,
+        Talents = Client.Flash.ParseArray(talentsArray, CharacterCreation.ARRAY_ENTRY_TEMPLATES.TALENT_NORMAL, false, nil, 1),
+        RacialTalents = Client.Flash.ParseArray(racialTalentsArray, CharacterCreation.ARRAY_ENTRY_TEMPLATES.TALENT_RACIAL),
+    })
+
+    Client.Flash.EncodeArray(talentsArray, CharacterCreation.ARRAY_ENTRY_TEMPLATES.TALENT_NORMAL, talentsHook.Talents, false, nil, 1)
+    Client.Flash.EncodeArray(racialTalentsArray, CharacterCreation.ARRAY_ENTRY_TEMPLATES.TALENT_RACIAL, talentsHook.RacialTalents)
+
+    talentsArray[1] = talentsHook.TalentPoints
+end)
+
+-- Listen for abilities being updated.
+CharacterCreation:RegisterInvokeListener("updateAbilities", function (ev)
+    local root = ev.UI:GetRoot()
+    local array = root.abilityArray
+
+    local hook = CharacterCreation.Hooks.UpdateAbilities:Throw({
+        Character = Client.GetCharacter(),
+        Abilities = Client.Flash.ParseArray(array, CharacterCreation.ARRAY_ENTRY_TEMPLATES.ABILITY)
+    })
+
+    Client.Flash.EncodeArray(array, CharacterCreation.ARRAY_ENTRY_TEMPLATES.ABILITY, hook.Abilities)
 end)
