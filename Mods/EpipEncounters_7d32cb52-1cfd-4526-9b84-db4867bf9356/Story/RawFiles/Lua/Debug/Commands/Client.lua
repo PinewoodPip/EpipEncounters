@@ -12,7 +12,7 @@ end
 
 local function TestActionHandles()
     for id,action in pairs(Stats.Actions) do
-        print(id, action:GetName(), action:GetName(true))
+        print(id, action:GetName(), action:GetName(true), action:GetDescription())
     end
 end
 

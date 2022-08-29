@@ -1159,7 +1159,9 @@ function Hotbar.GetIconForSlot(index)
 
         icon = item.RootTemplate.Icon
     elseif slot.Type == "Action" then
-        icon = Data.Game.HOTBAR_ACTIONS[slot.SkillOrStatId]
+        local action = Stats.GetAction(slot.SkillOrStatId)
+        
+        icon = action.Icon
 
         if not icon then
             Hotbar:LogError("Unknown hotbar action " .. slot.SkillOrStatId)

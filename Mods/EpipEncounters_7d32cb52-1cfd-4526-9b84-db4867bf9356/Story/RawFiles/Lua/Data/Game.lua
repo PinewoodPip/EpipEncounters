@@ -753,19 +753,6 @@ Data.Game.RANGED_WEAPONS = {
     Rifle = true,
 }
 
-Data.Game.HOTBAR_ACTIONS = {
-    ActionSkillSneak = "Action_Sneak",
-    ActionAttackGround = "Action_AttackGround", -- Force-attack.
-    ActionSkillDisarm = "Action_Disarm",
-    ActionSkillFlee = "Action_Flee",
-    ActionSkillGuard = "Action_Guard", -- Delay turn.
-    ActionSkillLockpick = "Action_LockPick",
-    ActionSkillSheathe = "Action_Sheath",
-    ActionSkillRepair = "Action_Repair",
-    ActionSkillIdentify = "Action_Identify",
-    ActionSkillEndTurn = "Action_EndOfTurn",
-}
-
 Data.Game.SLOTS_WITH_VISUALS = {
     "Helmet",
     "Breast",
