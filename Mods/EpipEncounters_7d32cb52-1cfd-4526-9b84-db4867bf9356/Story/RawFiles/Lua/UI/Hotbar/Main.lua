@@ -1,6 +1,4 @@
 
----@meta HotbarUI, ContextClient
-
 ---@class HotbarUI : UI
 ---@field Actions table<string, HotbarAction>
 ---@field ActionsState HotbarActionState[]
@@ -117,6 +115,13 @@ local Hotbar = {
         WARFARE = "hotbar_school_warfare",
     },
 
+    ARRAY_ENTRY_TEMPLATES = {
+        ACTIONS = {
+            "ActionID",
+            "Enabled",
+        },
+    },
+
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
 
@@ -128,6 +133,7 @@ local Hotbar = {
         IsBarVisible = {}, ---@type SubscribableEvent<HotbarUI_Hook_IsBarVisible>
         CanAddBar = {}, ---@type SubscribableEvent<HotbarUI_Hook_CanAddBar>
         CanRemoveBar = {}, ---@type SubscribableEvent<HotbarUI_Hook_CanRemoveBar>
+        UpdateEngineActions = {}, ---@type SubscribableEvent<HotbarUI_Hook_UpdateEngineActions>
     },
 
     FILEPATH_OVERRIDES = {
@@ -182,6 +188,10 @@ end
 ---@field Type string Skill archetype.
 ---@field ZeroMemory boolean
 
+---@class HotbarUI_ArrayEntry_EngineAction
+---@field ActionID StatsLib_Action_ID
+---@field Enabled boolean
+
 ---------------------------------------------
 -- EVENTS/HOOKS
 ---------------------------------------------
@@ -206,6 +216,10 @@ end
 ---@field SlotData EocSkillBarItem
 ---@field IsEnabled boolean
 ---@field Index integer Starts at 1.
+
+---Invoked when the engine updates the vanilla action holder.
+---@class HotbarUI_Hook_UpdateEngineActions
+---@field Actions HotbarUI_ArrayEntry_EngineAction[]
 
 ---------------------------------------------
 -- METHODS
@@ -775,6 +789,16 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
+-- Listen for engine action holder being updated. Does not include setting the active action.
+Hotbar:RegisterInvokeListener("updateActionSkills", function (ev)
+    local array = ev.UI:GetRoot().actionSkillArray
+    local hook = Hotbar.Hooks.UpdateEngineActions:Throw({
+        Actions = Client.Flash.ParseArray(array, Hotbar.ARRAY_ENTRY_TEMPLATES.ACTIONS)
+    })
+    
+    Client.Flash.EncodeArray(array, Hotbar.ARRAY_ENTRY_TEMPLATES.ACTIONS, hook.Actions)
+end, "Before")
+
 Hotbar:RegisterInvokeListener("updateActionSkills", function(ev)
     Ext.OnNextTick(Hotbar.UpdateActionHolder)
 end, "After")
@@ -1160,7 +1184,7 @@ function Hotbar.GetIconForSlot(index)
         icon = item.RootTemplate.Icon
     elseif slot.Type == "Action" then
         local action = Stats.GetAction(slot.SkillOrStatId)
-        
+
         icon = action.Icon
 
         if not icon then
@@ -1784,10 +1808,23 @@ function handleUpdateSlots(uiObj, methodName, param3, slotsAmount)
 end
 
 Ext.Events.SessionLoaded:Subscribe(function()
+    local ui = Hotbar:GetUI()
+
     Hotbar.GetSlotHolder().rowHeight = 65
 
     Ext.RegisterUITypeInvokeListener(Client.UI.Data.UITypes.hotBar, "setPlayerHandle", OnHotbarSetHandle, "After")
     Ext.RegisterUITypeInvokeListener(Client.UI.Data.UITypes.hotBar, "updateSlots", handleUpdateSlots, "Before")
+
+    if ui then
+        -- Hide the original iggy icon.
+        Hotbar:GetRoot().actionSkillHolder_mc.iggy_actions.visible = false
+    
+        -- Setup custom icons for all engine actions.
+        for id,entry in pairs(Stats.Actions) do
+            ui:SetCustomIcon(id, entry.Icon, 50, 50)
+        end
+    end
+
 
     Hotbar.initialized = true
 end)
