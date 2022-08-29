@@ -233,8 +233,6 @@ Ext.Events.Tick:Subscribe(function()
                     Timer = timer,
                 })
         
-                Utilities.Hooks.FireEvent("Timer", "TimerComplete_" .. timer.ID)
-        
                 if timer.ID ~= "" then
                     Timer:DebugLog("Timer finished: " .. timer.ID)
                 end
