@@ -10,6 +10,12 @@ local function DumpUIInstances()
     end
 end
 
+local function TestActionHandles()
+    for id,action in pairs(Stats.Actions) do
+        print(id, action:GetName(), action:GetName(true))
+    end
+end
+
 local function SoundTest()
     print("Testing sounds...")
     print("Exit console to see IDs, and turn off mute-when-out-of-focus in game settings.")
@@ -32,6 +38,7 @@ end
 local commands = {
     ["bruteforceuitypes"] = DumpUIInstances,
     ["soundtest"] = SoundTest,
+    ["testactionhandles"] = TestActionHandles,
 }
 
 for name,command in pairs(commands) do

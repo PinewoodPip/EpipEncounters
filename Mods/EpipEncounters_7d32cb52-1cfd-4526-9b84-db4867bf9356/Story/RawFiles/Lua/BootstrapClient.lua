@@ -61,6 +61,7 @@ LOAD_ORDER = {
     "Game/Stats/Shared.lua",
     "Game/Stats/Shared_ModifierLists.lua",
     "Game/Stats/Shared_ExtraData.lua",
+    "Game/Stats/Shared_Actions.lua",
     "Utilities/Net/Shared.lua",
     "Utilities/Net/Client.lua",
     {ScriptSet = "Utilities/Artifact"},
