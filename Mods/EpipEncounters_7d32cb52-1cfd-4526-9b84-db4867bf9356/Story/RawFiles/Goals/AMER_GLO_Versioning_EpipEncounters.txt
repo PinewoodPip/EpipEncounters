@@ -10,7 +10,7 @@ INITSECTION
 //See any of the AMER_EECore_Patch_xxx goals for patch file examples.
 
 
-DB_AMER_Versioning_ModVersion("EpipEncounters", 1058);    //Should always be updated to your mod's current version, along with below.
+DB_AMER_Versioning_ModVersion("EpipEncounters", 1059);    //Should always be updated to your mod's current version, along with below.
 // PROC_AMER_Versioning_FirstPatch("EpipEncounters");    //Must be ordered after above.
 
 PROC_AMER_GEN_TSK_Add("EN", "EpipEncounters_Patch_A", "Epip Encounters has been updated from version ");
@@ -22,7 +22,7 @@ KBSECTION
 //This is required. It tells the patcher what version to update your mod to.
 PROC PROC_AMER_Versioning_CheckVersion()
 THEN
-PROC_AMER_Versioning_CheckVersion("EpipEncounters", 1058);	//Should always be updated to your mod's current version, along with above.
+PROC_AMER_Versioning_CheckVersion("EpipEncounters", 1059);	//Should always be updated to your mod's current version, along with above.
 
 //This is not necessary; it shows a warning if the user is trying to downgrade their mod version.
 //If you want to do something like this you'll want to define your own downgrade message so that

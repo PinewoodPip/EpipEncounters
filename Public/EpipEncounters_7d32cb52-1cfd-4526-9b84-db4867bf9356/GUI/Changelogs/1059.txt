@@ -1,0 +1,8 @@
+
+- Fixed an issue with using items in hotbar groups after reloading
+- Fixed item amounts displaying incorrectly in hotbar groups
+- Fixed an issue with the unlearn skills prompt appearing while the UI is closed
+
+On the technical side of things:
+
+- Added "Actions" (ground attack, sheathe/unsheathe, etc.) to the Stats library
