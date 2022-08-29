@@ -13,6 +13,11 @@ Epip.InitializeUI(Ext.UI.TypeID.skills, "Skills", Skills)
 ---Returns the skill currently being hovered over.
 ---@return string?
 function Skills.GetSelectedSkill()
+    -- Exiting the UI without hovering out of a skill will not fire hideTooltip; we must clear the selected skill ourselves.
+    if not Skills:IsVisible() then
+        Skills.selectedSkill = nil
+    end
+
     return Skills.selectedSkill
 end
 
