@@ -226,7 +226,7 @@ function Slot:_OnTick()
             local amount = Item.GetPartyTemplateCount(item.RootTemplate.Id)
             local label = ""
             local isEnabled = amount > 0
-            if item.Amount > 1 then label = tostring(amount) end
+            if amount > 1 then label = tostring(amount) end -- Only display label for >1 item stacks
 
             slot:SetLabel(label)
             slot:SetCooldown(0, false)
