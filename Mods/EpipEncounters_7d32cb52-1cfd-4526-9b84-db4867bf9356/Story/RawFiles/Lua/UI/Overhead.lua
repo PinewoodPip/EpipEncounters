@@ -92,7 +92,7 @@ end
 ---------------------------------------------
 
 Client.UI.OptionsSettings:RegisterListener("OptionSet", function(data, value)
-    if Overhead.SETTINGS[data.ID] then
+    if data and Overhead.SETTINGS[data.ID] then -- TODO investigate nil
         Overhead.SetFromSettings()
     end
 end)

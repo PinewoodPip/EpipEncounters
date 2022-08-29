@@ -3,23 +3,67 @@
 local Generic = Client.UI.Generic
 local Hotbar = Client.UI.Hotbar
 
----@class GenericUI_Prefab_HotbarSlot_Object
----@field Type "None"|"Skill"|"Item"|"Action"|"Template"
----@field StatsID string? Only for skills/actions.
----@field ItemHandle EntityHandle? Only for items.
----@field TemplateID GUID? Only for templates.
-
 ---@class GenericUI_Prefab_HotbarSlot : GenericUI_Prefab
 local Slot = {
     ID = nil, ---@type string
     SlotElement = nil, ---@type GenericUI_Element_Slot
-    Object = {Type = "None"}, ---@type GenericUI_Prefab_HotbarSlot_Object
+    Object = nil, ---@type GenericUI_Prefab_HotbarSlot_Object
     Events = {
         ---@type SubscribableEvent<GenericUI_Prefab_HotbarSlot_Event_ObjectDraggedIn>
         ObjectDraggedIn = {}, -- TODO!
     }
 }
 Generic.RegisterPrefab("GenericUI_Prefab_HotbarSlot", Slot)
+
+---------------------------------------------
+-- CLASSES
+---------------------------------------------
+
+---@alias GenericUI_Prefab_HotbarSlot_Object_Type "None"|"Skill"|"Item"|"Action"|"Template"
+
+---@class GenericUI_Prefab_HotbarSlot_Object
+---@field Type GenericUI_Prefab_HotbarSlot_Object_Type
+---@field StatsID string? Only for skills/actions.
+---@field ItemHandle EntityHandle? Only for items.
+---@field TemplateID GUID? Only for templates.
+local _SlotObject = {}
+
+---@param type GenericUI_Prefab_HotbarSlot_Object_Type
+---@param data GenericUI_Prefab_HotbarSlot_Object?
+---@return GenericUI_Prefab_HotbarSlot_Object
+function _SlotObject.Create(type, data)
+    local obj = table.deepCopy(data or {}) ---@type GenericUI_Prefab_HotbarSlot_Object
+    obj.Type = type
+    Inherit(obj, _SlotObject)
+
+    return obj
+end
+
+---@return EclItem|StatsSkillPrototype|StatsLib_Action
+function _SlotObject:GetEntity()
+    if self.Type == "Skill" then
+        return Stats.Get("SkillData", self.StatsID)
+    elseif self.Type == "Action" then
+        Ext.PrintError("_SlotObject:GetEntity() not implemented for Actions!!!!")
+    elseif self.Type == "Template" or self.Type == "Item" then
+        local item
+
+        if self.ItemHandle then
+            item = Item.Get(self.ItemHandle) ---@type EclItem
+        end
+
+        -- Fetch the first item with this template instead.
+        if not item then
+            self.ItemHandle = nil -- Clear invalid handles
+
+            item = Item.GetItemsInPartyInventory(Client.GetCharacter(), function(i)
+                return i.RootTemplate.Id == self.TemplateID
+            end)[1]
+        end
+
+        return item
+    end
+end
 
 ---------------------------------------------
 -- EVENTS
@@ -81,10 +125,7 @@ function Slot:SetSkill(skillID)
     slot:SetIcon(stat.Icon, 50, 50)
     slot:SetSourceBorder(stat["Magic Cost"] > 0)
 
-    self.Object = {
-        Type = "Skill",
-        StatsID = skillID,
-    }
+    self.Object = _SlotObject.Create("Skill", {StatsID = skillID})
 
     slot.Tooltip = {
         Type = "Skill",
@@ -99,10 +140,7 @@ function Slot:SetItem(item)
     slot:SetIcon(item.RootTemplate.Icon, 50, 50)
     slot:SetCooldown(0, false)
 
-    self.Object = {
-        Type = "Item",
-        Item = item, -- TODO change to handle
-    }
+    self.Object = _SlotObject.Create("Item", {ItemHandle = item.Handle})
 
     slot.Tooltip = nil
 end
@@ -113,10 +151,7 @@ function Slot:SetTemplate(templateID)
     local template = Ext.Template.GetTemplate(templateID)
 
     if template then
-        self.Object = {
-            Type = "Template",
-            TemplateID = templateID,
-        }
+        self.Object = _SlotObject.Create("Template", {TemplateID = templateID})
 
         slot:SetIcon(template.Icon, 50, 50)
         slot:SetCooldown(-1, false)
@@ -132,9 +167,7 @@ function Slot:Clear()
     slot:SetEnabled(false)
     slot:SetLabel("")
 
-    self.Object = {
-        Type = "None",
-    }
+    self.Object = _SlotObject.Create("None")
 end
 
 ---------------------------------------------
@@ -186,14 +219,7 @@ function Slot:_OnTick()
             isPreparingSkill = true
         end
     elseif obj.Type == "Item" or obj.Type == "Template" then
-        local item
-
-        -- Fetch the first item of this template in the party inventory.
-        if obj.Type == "Template" then
-            item = Item.GetItemsInPartyInventory(char, function(invItem) return invItem.RootTemplate.Id == obj.TemplateID end)[1]
-        else
-            item = Item.Get(obj.ItemHandle)
-        end
+        local item = obj:GetEntity()
 
         if item and item.Amount then
             -- We display the total item count in the party inventory.
@@ -234,8 +260,7 @@ function Slot:_OnSlotClicked(e)
     if obj.Type == "Skill" then
         Client.UI.Hotbar.UseSkill(obj.StatsID)
     elseif obj.Type == "Item" or obj.Type == "Template" then
-        local item = Item.Get(obj.ItemHandle)
-        if not item then item = Item.GetItemsInPartyInventory(char, function(i) return i.RootTemplate.Id == obj.TemplateID end)[1] end
+        local item = obj:GetEntity()
 
         Client.UI.Hotbar.UseSkill(item)
     end
@@ -249,8 +274,7 @@ function Slot:_OnSlotDragStarted(e)
     elseif obj.Type == "Item" then
         Ext.UI.GetDragDrop():StartDraggingObject(1, obj.ItemHandle)
     elseif obj.Type == "Template" then
-        local item = Item.Get(obj.ItemHandle)
-        if not item then item = Item.GetItemsInPartyInventory(Client.GetCharacter(), function(i) return i.RootTemplate.Id == obj.TemplateID end) end
+        local item = obj:GetEntity()
 
         Ext.UI.GetDragDrop():StartDraggingObject(1, item.Handle)
     end

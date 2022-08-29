@@ -118,7 +118,7 @@ LOAD_ORDER = {
     {ScriptSet = "Epip/ExtraDataConfig", Developer = true,},
     {ScriptSet = "Epip/Encumbrance",},
     {ScriptSet = "Epip/Housing", WIP = true,},
-    "Epip/Housing/Shared_Furniture.lua",
+    {Script = "Epip/Housing/Shared_Furniture.lua", WIP = true},
     {ScriptSet = "Epip/StatsEditor", WIP = true,},
     {ScriptSet = "Epip/APCostBoostFix"},
     {ScriptSet = "Epip/DebugDisplay", Developer = true,},
