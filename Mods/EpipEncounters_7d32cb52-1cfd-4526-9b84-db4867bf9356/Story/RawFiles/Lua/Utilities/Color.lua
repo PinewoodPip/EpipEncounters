@@ -66,7 +66,6 @@ Color = {
         HYDROSOPHIST = "579CCA",
     },
 }
-Color = Color -- For backwards compatibility with scripts that expect color enums to be nested within this table.
 
 ---------------------------------------------
 -- RGBCOLOR INSTANCE

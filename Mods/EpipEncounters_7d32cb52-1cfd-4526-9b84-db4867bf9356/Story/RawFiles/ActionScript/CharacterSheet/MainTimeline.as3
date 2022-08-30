@@ -814,12 +814,6 @@ package characterSheet_fla
         
         public function clearTalents() : *
         {
-            // this.stats_mc.talentHolder_mc.list.clearElements();
-        }
-
-        // PIP
-        public function clearTalentsForReal() : *
-        {
             this.stats_mc.talentHolder_mc.list.clearElements();
         }
         
