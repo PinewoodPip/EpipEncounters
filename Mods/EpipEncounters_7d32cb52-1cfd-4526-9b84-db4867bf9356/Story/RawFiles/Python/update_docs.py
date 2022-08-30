@@ -138,8 +138,16 @@ class Meta(CommentedTag):
 class Symbol:
     def __init__(self, library:str, data:list, groups:list):
         self.data = []
+        
+        self.setContext("Shared")
 
         self.addData(data)
+
+    def getContext(self) -> str:
+        return self.context
+
+    def setContext(self, context:str):
+        self.context = context
 
     def getLibraryID(self) -> str:
         return "_none"
@@ -457,17 +465,40 @@ class DocParser:
         return len(self.lines) == 0
 
 class DocGenerator:
-    libraries = {}
+    LOAD_ORDER_SCRIPT_REGEX = re.compile("    \"(?P<Script>\S+\.lua)\",")
+    SCRIPT_SET_REGEX = re.compile("    {ScriptSet = \"(?P<Script>\S+)\".*},$")
+    libraries = {} # TODO don't make this static
 
     def getLuaFiles(self) -> list:
-        lua_files = []
+        lua_files = set()
 
-        for root_path, dirs, files in os.walk(MOD_ROOT):
-            for file_name in files:
-                if pathlib.Path(file_name).suffix == ".lua" and file_name == "Text.lua":
-                    absolute_path = os.path.join(root_path, file_name)
+        CONTEXTS = {
+            "Client": "BootstrapClient.lua",
+            "Server": "BootstrapServer.lua",
+        }
 
-                    lua_files.append(absolute_path)
+        for context in CONTEXTS:
+            bootstrap = CONTEXTS[context]
+
+            with open(os.path.join(MOD_ROOT, bootstrap), "r") as f:
+                for line in f.readlines():
+                    match = DocGenerator.LOAD_ORDER_SCRIPT_REGEX.match(line)
+
+                    if match != None:
+                        script_filename = match.groupdict()["Script"]
+
+                        lua_files.add(os.path.join(MOD_ROOT, script_filename))
+                    else:
+                        match = DocGenerator.SCRIPT_SET_REGEX.match(line)
+
+                        if match != None:
+                            script_filename = match.groupdict()["Script"]
+
+                            script_filename_shared = os.path.join(MOD_ROOT, script_filename + "/Shared.lua")
+                            script_filename_context_specific = os.path.join(MOD_ROOT, script_filename + "/" + context + ".lua")
+
+                            lua_files.add(script_filename_shared)
+                            lua_files.add(script_filename_context_specific)
 
         return lua_files
 
