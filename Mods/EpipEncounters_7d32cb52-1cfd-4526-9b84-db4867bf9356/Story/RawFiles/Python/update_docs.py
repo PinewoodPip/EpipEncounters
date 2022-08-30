@@ -23,12 +23,6 @@ LUA_IGNORE = {
     "EpipIdeHelpers.lua": True,
 }
 
-# Remaps functions defined on local aliases to their absolute path in the mod. TODO
-LIBRARY_PATHS = {
-    # "Input": "Client.Input",
-    "Inv": "PartyInventory",
-}
-
 EVENTS = {
     "Event" : True,
     "Hook" : True,
@@ -184,18 +178,16 @@ class Meta(CommentedTag):
 
 # A symbol is a collection of metadata.
 class Symbol:
-    def __init__(self, library:str, data:list, groups:list, lib):
+    def __init__(self, library:str, data:list, groups:list):
         self.data = []
-        self.library = lib
-        
-        self.setLibrary(library)
+
         self.addData(data)
+
+    def getLibraryID(self) -> str:
+        return "_none"
 
     def isFinishedParsing(self, nextLine):
         return True
-    
-    def setLibrary(self, library):
-        self.library = library
 
     def addData(self, data:list):
         # if type(data) == list:
@@ -219,7 +211,7 @@ class Function(Symbol):
         "RequireBothContexts": "Must be called on both contexts"
     }
 
-    def __init__(self, library:str, data:list, groups:list, lib):
+    def __init__(self, library:str, data:list, groups:list):
         self.comments = []
         self.parameters = []
         self.returnType = None
@@ -229,7 +221,10 @@ class Function(Symbol):
         self.metaTags = []
 
         # Parse data
-        super().__init__(library, data, groups, lib)
+        super().__init__(library, data, groups)
+
+    def getLibraryID(self) -> str:
+        return self.nameSpace # TODO translate to global
         
     def addData(self, data: list):
         super().addData(data)
@@ -278,28 +273,15 @@ class Function(Symbol):
 
         return output
 
-class LibraryDefinition(Symbol):
-    def __init__(self, library, data, groups, lib):
-        self.name = groups["Library"]
-        self.context = groups["Context"]
-        self.absolutePath = groups["AbsolutePath"]
-
-        if "LocalName" in groups:
-            self.localName = groups["LocalName"]
-        else:
-            self.localName = None
-
-        super().__init__(library, data, groups, lib)
-
-    def __str__(self): # Library definition tags do not show
-        return f""
-
 class Class(Symbol):
-    def __init__(self, library, data, groups, lib):
+    def __init__(self, library, data, groups):
         self.className = groups["Class"]
         self.comment = None
 
-        super().__init__(library, data, groups, lib)
+        super().__init__(library, data, groups)
+
+    def getLibraryID(self) -> str:
+        return self.className
 
     def addData(self, data):
         for entry in data:
@@ -326,13 +308,13 @@ class Class(Symbol):
 class Listenable(Symbol):
     TAG = "listenable"
 
-    def __init__(self, library, data, groups, lib):
+    def __init__(self, library, data, groups):
         self.className = groups["Class"]
         self.event = groups["Event"]
         self.comments = []
         self.fields = []
 
-        super().__init__(library, data, groups, lib)
+        super().__init__(library, data, groups)
 
     def addData(self, data):
         super().addData(data)
@@ -387,7 +369,6 @@ DATA_MATCHERS = [
 
 SYMBOL_MATCHERS = [
     Matcher(FUNCTION_REGEX, Function),
-    Matcher(re.compile("^---@meta Library: (?P<Library>\S*), (?P<Context>[^,]+)(, )?(?P<AbsolutePath>\S+)?(, )?(?P<LocalName>\S+)?$"), LibraryDefinition),
     Matcher(re.compile("^---@class (?P<Class>\S*)_Hook_(?P<Event>\S*) : Hook$"), Hook),
     Matcher(re.compile("^---@class (?P<Class>\S*)_Event_(?P<Event>\S*) : Event$"), Event),
     Matcher(re.compile("^---@class (?P<Class>.+)$"), Class),
@@ -397,11 +378,11 @@ DOC_TEMPLATE_REGEX = re.compile('^<epip class="(.+)" symbols="(.+)">')
 DOC_TEMPLATE_END_REGEX = re.compile('^<\/epip>')
 
 class Library:
-    def __init__(self, name, context, absolutePath):
+    def __init__(self, name):
         self.name = name
-        self.context = context
+        # self.context = context
         self.symbols = []
-        self.absolutePath = absolutePath
+        self.absolutePath = "TODO_AbsolutePath"
 
     def addSymbol(self, symbol:Symbol):
         symbol.library = self # TODO fix properly
@@ -409,10 +390,11 @@ class Library:
 
     def __str__(self):
         output = "Library: " + self.name + "\n"
-        output += "Context: " + self.context + "\n"
+        # output += "Context: " + self.context + "\n"
 
         for symbol in self.symbols:
-            output += "Symbol: " + "\n"
+            output += "Symbol: " + type(symbol).__name__ + "\n"
+            output += "Library: " + self.name + "\n"
             output += str(symbol) + "\n\n"
         
         return output
@@ -427,8 +409,24 @@ class Library:
         return lines + "```\n"
 
 
-class DocGenerator:
-    libraries = {}
+class DocParser:
+    def __init__(self, file_name) -> None:
+        self.file_name = file_name
+        self.file = open(file_name, "r")
+        self.lines = self.file.readlines()
+        self.symbolsPerLibrary = {}
+
+        self.Parse()
+
+    def Parse(self) -> None:
+        while not self.isFinished():
+            symbol = self.getSymbol()
+
+            libraryName = symbol.getLibraryID()
+            if libraryName not in self.symbolsPerLibrary:
+                self.symbolsPerLibrary[libraryName] = []
+
+            self.symbolsPerLibrary[libraryName].append(symbol)
 
     def getDataOnLine(self, line):
         data = None
@@ -443,7 +441,7 @@ class DocGenerator:
 
         return data
 
-    def getSymbolOnLine(self, line, library):
+    def getSymbolOnLine(self, line:str):
         symbol = None
 
         for matcher in SYMBOL_MATCHERS:
@@ -451,100 +449,89 @@ class DocGenerator:
 
             if match:
                 symbolType = matcher.classType
-                symbol = symbolType(None, [], match.groupdict(), library) # TODO
+                symbol = symbolType(None, [], match.groupdict()) # TODO
                 break
 
         return symbol
 
-    def getSymbol(self, lines, library):
-        dataStack = []
-        consumedLines = 0
-        symbol = None
+    def getSymbol(self) -> Symbol:
+        metadata = []
+        lineIndex = 0
+        foundSymbol = None
 
-        for line in lines:
-            match = None
+        while lineIndex < len(self.lines):
+            line = self.lines[lineIndex]
 
-            lineSymbol = self.getSymbolOnLine(line, library)
+            lineSymbol = self.getSymbolOnLine(line)
 
-            if lineSymbol and symbol:
-                # found new symbol, stopping data search
+            # Exit if we found a second symbol.
+            if lineSymbol and foundSymbol:
                 break
-            elif lineSymbol and not symbol: # found first symbol, add data found until now
-                symbol = lineSymbol
-                symbol.addData(dataStack)
-                dataStack = []
-            else: # search for data
+            elif lineSymbol: # Add metadata found until now
+                foundSymbol = lineSymbol
+                foundSymbol.addData(metadata)
+            else: # Search for metadata
                 lineData = self.getDataOnLine(line)
 
                 if lineData:
-                    if symbol and symbol.isFinishedParsing(lineData):
+                    # Break if we found metadata intended for another symbol
+                    if foundSymbol and foundSymbol.isFinishedParsing(lineData):
                         break
-                    elif symbol:
-                        symbol.addData([lineData])
+                    elif foundSymbol:
+                        foundSymbol.addData([lineData])
                     else:
-                        dataStack.append(lineData)
+                        metadata.append(lineData)
 
-            consumedLines += 1
+            lineIndex += 1
 
-        # consume lines
-        for i in range(consumedLines):
-            lines.pop(0)
+        # Consume lines
+        self.lines = self.lines[lineIndex+1::]
 
-        # add remaining data
-        # if symbol:
-        #     symbol.addData(dataStack)
+        return foundSymbol
 
-        return symbol
+    def isFinished(self):
+        return len(self.lines) == 0
 
-    def findLibrary(self, lines:list):
-        # We assume it's the first one
-        meta = self.getSymbol(lines, None)
-
-        # And if it isn't, I guess the file does not define any
-        if type(meta) != LibraryDefinition:
-            meta = None
-
-        return meta
+class DocGenerator:
+    libraries = {}
 
     def parseLuaFile(self, filePath:str):
-
         with open(filePath, "r") as f:
-            lines = f.readlines()
+            parser = DocParser(filePath)
             library = None
-
-            # Find library name first
-            # TODO do this some other way? automatic from table declaration?
-            libraryDefinition = self.findLibrary(lines)
-
-            if libraryDefinition:
-                if libraryDefinition.name in self.libraries:
-                    library = self.libraries[libraryDefinition.name]
+            
+            for key in parser.symbolsPerLibrary:
+                if key not in self.libraries:
+                    library = Library(key)
+                    self.libraries[key] = library
                 else:
-                    library = Library(libraryDefinition.name, libraryDefinition.context, libraryDefinition.absolutePath)
-                    self.libraries[library.name] = library
+                    library = self.libraries[key]
 
-                while len(lines) > 0:
-                    symbol = self.getSymbol(lines, library)
-
-                    if symbol:
-                        library.addSymbol(symbol)
+                for symbol in parser.symbolsPerLibrary[key]:
+                    library.addSymbol(symbol)
     
 # --------------------------------------
 gen = DocGenerator()
 
 # QUICK TEST
-# gen.parseLuaFile(r"C:\Program Files (x86)\Steam\steamapps\common\Divinity Original Sin 2\DefEd\Data\Mods\EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356\Story\RawFiles\Lua\UI\GiftBagContent.lua")
+gen.parseLuaFile(r"C:\Program Files (x86)\Steam\steamapps\common\Divinity Original Sin 2\DefEd\Data\Mods\EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356\Story\RawFiles\Lua\Utilities\Text.lua")
+gen.parseLuaFile(r"C:\Program Files (x86)\Steam\steamapps\common\Divinity Original Sin 2\DefEd\Data\Mods\EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356\Story\RawFiles\Lua\Utilities\Color.lua")
 
-# print(gen.libraries["GiftBagContentUI"])
+# print(gen.libraries["_none"])
+print(gen.libraries["Text"])
+print(gen.libraries["Color"])
+print(gen.libraries["RGBColor"])
 
 # Parse lua
 for root_path, dirs, files in os.walk(MOD_ROOT):
     for file_name in files:
-        if pathlib.Path(file_name).suffix == ".lua":
-            gen.parseLuaFile(os.path.join(root_path, file_name))
+        if pathlib.Path(file_name).suffix == ".lua" and file_name == "Text.lua":
+            # gen.parseLuaFile(os.path.join(root_path, file_name))
+            pass
 
 # Update docs
 for root_path, dirs, files in os.walk(DOCS_ROOT):
     for file_name in files:
         if pathlib.Path(file_name).suffix == ".md" and file_name != "patchnotes.md":
-            updateFile(os.path.join(root_path, file_name))
+            # updateFile(os.path.join(root_path, file_name))
+            pass
