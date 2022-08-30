@@ -15,6 +15,14 @@ from typing import Type
 #MOD_ROOT = sys.argv[1]
 #DOCS_ROOT = sys.argv[2]
 
+ALIASES = {}
+
+def aliasToLibraryID(alias):
+    if alias in ALIASES:
+        return ALIASES[alias]
+
+    return alias
+
 DOCS_ROOT = r'C:\Users\Usuario\Documents\ActualDocuments\Dev\Docs\epip\docs'
 MOD_ROOT = r'C:\Program Files (x86)\Steam\steamapps\common\Divinity Original Sin 2\DefEd\Data\Mods\EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356\Story\RawFiles\Lua'
 
@@ -69,63 +77,6 @@ def enterCodeBlock(string:str):
 def exitCodeBlock(string:str):
     return string + "```\n"
 
-def updateFile(file_path:str):
-    template = ""
-    removing = False
-    replacedSomething = False
-
-    with open(file_path, "r") as f:
-        for line in f.readlines():
-            openMatch = DOC_TEMPLATE_REGEX.match(line)
-            closeMatch = DOC_TEMPLATE_END_REGEX.match(line)
-
-            if closeMatch:
-                removing = False
-            elif openMatch:
-                removing = True
-                replacedSomething = True
-                template += line + "\n"
-
-                # categories = openMatch.groups()[0].split(", ")
-                libName = openMatch.groups()[0]
-                symbolTypes = openMatch.groups()[1]
-                symbolTypes = symbolTypes.split(",")
-
-                template += gen.libraries[libName].export(symbolTypes)
-
-                # taggedFuncs = getTaggedFunctions(functions, categories)
-
-                # for func in taggedFuncs:
-                #     template += "```lua\n"
-                #     for line in func.lines:
-                #         template += line + "\n"
-
-                #     header = func.name
-
-                #     suffixCount = 0
-                #     for tag in CONTEXT_SUFFIXES:
-                #         if tag in func.tags:
-                #             if suffixCount == 0:
-                #                 header += " -- "
-
-                #             if suffixCount > 0:
-                #                 header += ", "
-
-                #             header += CONTEXT_SUFFIXES[tag]
-                #             suffixCount += 1
-
-                #     template += header + "\n"
-                #     template += "```\n"
-
-            # add original content
-            if not removing:
-                template += line
-
-    if replacedSomething:
-        with open(file_path, "w") as f:
-            print("Updating " +  file_path)
-            f.write(template)
-
 # -----------------
 # Metadata Classes
 # -----------------
@@ -141,6 +92,13 @@ class Comment(Data):
 
     def __str__(self):
         return f"---{self.comment}"
+
+class ClassAlias(Data):
+    def __init__(self, groups):
+        self.alias = groups["Alias"]
+
+    def __str__(self):
+        return ""
 
 class CommentedTag(Data):
     def __init__(self, groups):
@@ -224,7 +182,7 @@ class Function(Symbol):
         super().__init__(library, data, groups)
 
     def getLibraryID(self) -> str:
-        return self.nameSpace # TODO translate to global
+        return aliasToLibraryID(self.nameSpace)
         
     def addData(self, data: list):
         super().addData(data)
@@ -287,11 +245,14 @@ class Class(Symbol):
         for entry in data:
             if type(entry) == Comment:
                 self.comment = entry
+            elif type(entry) == ClassAlias:
+                print("Found alias " + entry.alias)
+                ALIASES[entry.alias] = self.getLibraryID()
             else:
                 self.data.append(entry)
 
     def isFinishedParsing(self, nextLine):
-        return type(nextLine) != ClassField and nextLine != None and nextLine != "\n" and nextLine != ""
+        return type(nextLine) != ClassField and nextLine != None and nextLine != "\n" and nextLine != "" and type(nextLine) != ClassAlias
 
     def __str__(self):
         output = ""
@@ -365,17 +326,18 @@ DATA_MATCHERS = [
     Matcher(re.compile("^---@field (?P<Type>\S*) ?(?P<Comment>.*)$"), ClassField),
     Matcher(re.compile("^---@meta (?P<Comment>.*)$"), Meta),
     Matcher(re.compile("^---(?P<Comment>[^-@].+)$"), Comment),
+    Matcher(re.compile("^(local )?(?P<Alias>\S+) = {"), ClassAlias)
 ]
 
 SYMBOL_MATCHERS = [
     Matcher(FUNCTION_REGEX, Function),
-    Matcher(re.compile("^---@class (?P<Class>\S*)_Hook_(?P<Event>\S*) : Hook$"), Hook),
-    Matcher(re.compile("^---@class (?P<Class>\S*)_Event_(?P<Event>\S*) : Event$"), Event),
+    Matcher(re.compile("^---@class (?P<Class>\S*)_Hook_(?P<Event>\S*) : Hook$"), Hook), # TODO fix
+    Matcher(re.compile("^---@class (?P<Class>\S*)_Event_(?P<Event>\S*) : Event$"), Event), # TODO fix
     Matcher(re.compile("^---@class (?P<Class>.+)$"), Class),
 ]
 
-DOC_TEMPLATE_REGEX = re.compile('^<epip class="(.+)" symbols="(.+)">')
-DOC_TEMPLATE_END_REGEX = re.compile('^<\/epip>')
+DOC_TEMPLATE_REGEX = re.compile('^<doc class="(.+)" symbols="(.+)">')
+DOC_TEMPLATE_END_REGEX = re.compile('^<\/doc>')
 
 class Library:
     def __init__(self, name):
@@ -389,12 +351,13 @@ class Library:
         self.symbols.append(symbol)
 
     def __str__(self):
-        output = "Library: " + self.name + "\n"
-        # output += "Context: " + self.context + "\n"
+        output = ""
 
         for symbol in self.symbols:
             output += "Symbol: " + type(symbol).__name__ + "\n"
             output += "Library: " + self.name + "\n"
+            # output += "Context: " + self.context + "\n"
+
             output += str(symbol) + "\n\n"
         
         return output
@@ -422,11 +385,12 @@ class DocParser:
         while not self.isFinished():
             symbol = self.getSymbol()
 
-            libraryName = symbol.getLibraryID()
-            if libraryName not in self.symbolsPerLibrary:
-                self.symbolsPerLibrary[libraryName] = []
+            if symbol:
+                libraryID = symbol.getLibraryID()
+                if libraryID not in self.symbolsPerLibrary:
+                    self.symbolsPerLibrary[libraryID] = []
 
-            self.symbolsPerLibrary[libraryName].append(symbol)
+                self.symbolsPerLibrary[libraryID].append(symbol)
 
     def getDataOnLine(self, line):
         data = None
@@ -495,6 +459,34 @@ class DocParser:
 class DocGenerator:
     libraries = {}
 
+    def getLuaFiles(self) -> list:
+        lua_files = []
+
+        for root_path, dirs, files in os.walk(MOD_ROOT):
+            for file_name in files:
+                if pathlib.Path(file_name).suffix == ".lua" and file_name == "Text.lua":
+                    absolute_path = os.path.join(root_path, file_name)
+
+                    lua_files.append(absolute_path)
+
+        return lua_files
+
+    def updateDocs(self) -> None:
+        files = self.getLuaFiles()
+
+        # Parse lua
+        for absolute_path in files:
+            self.parseLuaFile(absolute_path)
+
+        # Update markdown docs
+        for root_path, dirs, files in os.walk(DOCS_ROOT):
+            for file_name in files:
+                if pathlib.Path(file_name).suffix == ".md" and file_name != "patchnotes.md":
+                    self.updateDocFile(os.path.join(root_path, file_name))
+
+    def getLibrary(self, id:str) -> Library:
+        return self.libraries[id]
+
     def parseLuaFile(self, filePath:str):
         with open(filePath, "r") as f:
             parser = DocParser(filePath)
@@ -510,28 +502,51 @@ class DocGenerator:
                 for symbol in parser.symbolsPerLibrary[key]:
                     library.addSymbol(symbol)
     
+    def updateDocFile(self, file_path:str):
+        template = ""
+        removing = False
+        replacedSomething = False
+
+        with open(file_path, "r") as f:
+            for line in f.readlines():
+                openMatch = DOC_TEMPLATE_REGEX.match(line)
+                closeMatch = DOC_TEMPLATE_END_REGEX.match(line)
+
+                if closeMatch:
+                    removing = False
+                elif openMatch:
+                    removing = True
+                    replacedSomething = True
+                    template += line + "\n"
+
+                    # categories = openMatch.groups()[0].split(", ")
+                    libName = openMatch.groups()[0]
+                    symbolTypes = openMatch.groups()[1]
+                    symbolTypes = symbolTypes.split(",")
+
+                    template += gen.libraries[libName].export(symbolTypes)
+
+                if not removing:
+                    template += line
+
+        if replacedSomething:
+            with open(file_path, "w") as f:
+                print("Updating " +  file_path)
+                f.write(template)
+
 # --------------------------------------
 gen = DocGenerator()
 
+gen.updateDocs()
+
 # QUICK TEST
-gen.parseLuaFile(r"C:\Program Files (x86)\Steam\steamapps\common\Divinity Original Sin 2\DefEd\Data\Mods\EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356\Story\RawFiles\Lua\Utilities\Text.lua")
-gen.parseLuaFile(r"C:\Program Files (x86)\Steam\steamapps\common\Divinity Original Sin 2\DefEd\Data\Mods\EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356\Story\RawFiles\Lua\Utilities\Color.lua")
+# gen.parseLuaFile(r"C:\Program Files (x86)\Steam\steamapps\common\Divinity Original Sin 2\DefEd\Data\Mods\EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356\Story\RawFiles\Lua\Utilities\Text.lua")
+# gen.parseLuaFile(r"C:\Program Files (x86)\Steam\steamapps\common\Divinity Original Sin 2\DefEd\Data\Mods\EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356\Story\RawFiles\Lua\Utilities\Color.lua")
 
-# print(gen.libraries["_none"])
-print(gen.libraries["Text"])
-print(gen.libraries["Color"])
-print(gen.libraries["RGBColor"])
+# # print(gen.libraries["_none"])
+# print(gen.libraries["Text"])
+# print(gen.libraries["Color"])
+# print(gen.libraries["RGBColor"])
 
-# Parse lua
-for root_path, dirs, files in os.walk(MOD_ROOT):
-    for file_name in files:
-        if pathlib.Path(file_name).suffix == ".lua" and file_name == "Text.lua":
-            # gen.parseLuaFile(os.path.join(root_path, file_name))
-            pass
-
-# Update docs
-for root_path, dirs, files in os.walk(DOCS_ROOT):
-    for file_name in files:
-        if pathlib.Path(file_name).suffix == ".md" and file_name != "patchnotes.md":
-            # updateFile(os.path.join(root_path, file_name))
-            pass
+for lib in gen.libraries:
+    print(gen.libraries[lib])
