@@ -1,4 +1,8 @@
 
+---------------------------------------------
+-- Extensions to the math table.
+---------------------------------------------
+
 ---Clamps a value to a range. Returned value is always a float.
 ---@param value number
 ---@param min number

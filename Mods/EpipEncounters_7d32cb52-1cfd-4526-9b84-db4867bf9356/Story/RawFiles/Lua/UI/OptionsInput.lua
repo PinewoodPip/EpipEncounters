@@ -443,7 +443,7 @@ Options:RegisterCallListener("inputAcceptPressed", function(ev)
 
         Options.SetKeybind(actionID, Options.indexBeingBound + 1, Options.potentialBinding)
 
-        Options:GetRoot().setInput(ReverseLookup(Options.entries, Options.keyBeingBound), Options.indexBeingBound, Options.StringifyBinding(Options.potentialBinding))
+        Options:GetRoot().setInput(table.reverseLookup(Options.entries, Options.keyBeingBound), Options.indexBeingBound, Options.StringifyBinding(Options.potentialBinding))
 
         BindingFinished()
         ev:PreventAction()
@@ -469,7 +469,7 @@ Options:RegisterCallListener("inputClearPressed", function(ev)
 
         Options.SetKeybind(actionID, Options.indexBeingBound + 1, nil)
         
-        Options:GetRoot().setInput(ReverseLookup(Options.entries, Options.keyBeingBound), Options.indexBeingBound, "")
+        Options:GetRoot().setInput(table.reverseLookup(Options.entries, Options.keyBeingBound), Options.indexBeingBound, "")
 
         BindingFinished()
 

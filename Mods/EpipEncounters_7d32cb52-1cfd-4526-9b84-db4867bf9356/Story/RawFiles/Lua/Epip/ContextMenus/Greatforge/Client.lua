@@ -65,7 +65,7 @@ function GreatforgeContextMenu.GetDeltaModTier(data, deltamod)
 
         local orderedDeltamods = {}
         for i=1,maxValue,1 do
-            local dmod = ReverseLookup(data.DeltaMods, i)
+            local dmod = table.reverseLookup(data.DeltaMods, i)
 
             if dmod then
                 table.insert(orderedDeltamods, dmod)
