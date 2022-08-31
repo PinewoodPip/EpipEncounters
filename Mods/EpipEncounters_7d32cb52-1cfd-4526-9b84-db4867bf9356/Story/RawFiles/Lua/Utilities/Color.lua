@@ -146,6 +146,38 @@ function RGBColor:Equals(color)
     return self.Red == color.Red and self.Green == color.Green and self.Blue == color.Blue
 end
 
+---__eq overload. Equivalent to calling RGBColor.Equals()
+---@param color1 RGBColor
+---@param color2 RGBColor
+---@return boolean
+function RGBColor.__eq(color1, color2)
+    return RGBColor.Equals(color1, color2)
+end
+
+---__add overload. Adds the RGB values of both colors.
+---@param color1 RGBColor
+---@param color2 RGBColor
+---@return RGBColor
+function RGBColor.__add(color1, color2)
+    local r = math.min(color1.Red + color2.Red, 255)
+    local g = math.min(color1.Green + color2.Green, 255)
+    local b = math.min(color1.Blue + color2.Blue, 255)
+
+    return RGBColor.Create(r, g, b)
+end
+
+---__sub overload. Subtracts the RGB values.
+---@param color1 RGBColor
+---@param color2 RGBColor
+---@return RGBColor
+function RGBColor.__sub(color1, color2)
+    local r = math.max(color1.Red - color2.Red, 0)
+    local g = math.max(color1.Green - color2.Green, 0)
+    local b = math.max(color1.Blue - color2.Blue, 0)
+
+    return RGBColor.Create(r, g, b)
+end
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
