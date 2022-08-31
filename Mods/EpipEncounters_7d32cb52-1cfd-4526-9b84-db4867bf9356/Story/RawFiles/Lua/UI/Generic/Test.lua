@@ -3,6 +3,7 @@ local Generic = Client.UI.Generic
 
 ---@type GenericUI_Instance
 local Test = Generic.Create("PIP_Test")
+Test:Debug() -- TODO make this a feature
 
 ---------------------------------------------
 -- METHODS

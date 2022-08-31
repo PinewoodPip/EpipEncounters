@@ -31,7 +31,8 @@ function Unlearn.CanUnlearn(char, skillID)
 
     if not stat then
         reason = "I cannot unlearn skills that do not exist."
-    elseif playerData.CauseListSize > 0 then
+        Unlearn:LogError("Tried to unlearn skill that doesn't exist: " .. skillID)
+    elseif playerData.CauseListSize > 0 then -- This and the condition after are already checked for by Character.IsSkillInnate(), but we wanted a different message for them.
         reason = "I cannot unlearn skills granted by external sources."
     elseif playerData.ZeroMemory then
         reason = "I cannot unlearn skills that take up no memory."
@@ -46,7 +47,7 @@ function Unlearn.CanUnlearn(char, skillID)
         elseif skillID == "Shout_SourceInfusion" then
             reason = "Sourcery is an innate part of who I am; I cannot get rid of it."
         end
-    elseif stat["Memory Cost"] == 0 then
+    elseif Character.IsSkillInnate(char, skillID) then
         local skillName = Ext.L10N.GetTranslatedStringFromKey(stat.DisplayName)
 
         reason = Text.Format("%s is an innate skill; it might be unwise to rid myself of it.", {FormatArgs = {skillName}})

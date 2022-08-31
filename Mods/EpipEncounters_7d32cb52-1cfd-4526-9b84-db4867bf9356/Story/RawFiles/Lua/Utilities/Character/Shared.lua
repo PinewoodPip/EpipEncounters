@@ -62,6 +62,23 @@ function Character.GetStacks(char, type)
     return stacks,lifetime
 end
 
+---Returns whether a skill is innate to a character.
+---Returns false if the character doesn't have the skill in any way.
+---@param char Character
+---@param skillID string
+---@return boolean
+function Character.IsSkillInnate(char, skillID)
+    local playerData = char.SkillManager.Skills[skillID]
+    local stat = Stats.Get("SkillData", skillID)
+    local innate = false
+
+    if stat and playerData then
+        innate = stat["Memory Cost"] == 0 or playerData.ZeroMemory
+    end
+
+    return innate
+end
+
 ---@param char Character
 ---@return table<ItemSlot, EclItem>
 function Character.GetEquippedItems(char)
