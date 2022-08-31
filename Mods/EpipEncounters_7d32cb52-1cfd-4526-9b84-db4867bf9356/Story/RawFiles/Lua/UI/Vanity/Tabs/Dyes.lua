@@ -598,7 +598,7 @@ Vanity.Events.AppearanceReapplied:Subscribe(function (_)
 end)
 
 Ext.Events.SessionLoading:Subscribe(function()
-    local file = Utilities.LoadJson("pip_useddyes.json")
+    local file = IO.LoadFile("pip_useddyes.json")
 
     Dyes.CACHE = file or {}
 
@@ -634,7 +634,7 @@ Net.RegisterListener("EPIP_CACHEDYE", function(payload)
 
     Dyes.CACHE[dye.Name] = dye
 
-    Utilities.SaveJson("pip_useddyes.json", Dyes.CACHE)
+    IO.SaveFile("pip_useddyes.json", Dyes.CACHE)
 end)
 
 -- _D(Ext.Stats.ItemColor.Get("PIP_GENCOLOR_FF006699_FF669999_FF669999"))

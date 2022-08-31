@@ -100,7 +100,7 @@ function Options.SaveBindings()
         SaveVersion = Options.SAVE_FORMAT,
     }
 
-    Utilities.SaveJson(Options.SAVE_FILENAME, save)
+    IO.SaveFile(Options.SAVE_FILENAME, save)
 end
 
 ---Returns whether a keybind should show up in the UI.
@@ -126,7 +126,7 @@ end
 
 ---Loads the user's bindings from the disk.
 function Options.LoadBindings()
-    local save = Utilities.LoadJson(Options.SAVE_FILENAME)
+    local save = IO.LoadFile(Options.SAVE_FILENAME)
 
     if save and save.Bindings and save.SaveVersion > 0 then
         Options.BINDINGS = save.Bindings

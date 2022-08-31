@@ -82,7 +82,7 @@ end
 ---@param path string?
 function DataConfig.LoadSettings(path)
     path = path or DataConfig.SAVE_FILENAME
-    local save = Utilities.LoadJson(path)
+    local save = IO.LoadFile(path)
 
     if save then
         for key,value in pairs(save.Keys) do
@@ -100,7 +100,7 @@ function DataConfig.SaveSettings(path)
         Keys = DataConfig.ModifiedEntries,
     }
 
-    Utilities.SaveJson(path, save)
+    IO.SaveFile(path, save)
 end
 
 ---------------------------------------------

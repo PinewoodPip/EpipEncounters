@@ -103,13 +103,13 @@ function Log.SaveConfig(file)
     }
     file = file or Log.SAVE_NAME
 
-    Utilities.SaveJson(file, config)
+    IO.SaveFile(file, config)
 end
 
 ---@param file string?
 function Log.LoadConfig(file)
     file = file or Log.SAVE_NAME
-    local config = Utilities.LoadJson(file)
+    local config = IO.LoadFile(file)
 
     if config then
         Log.EnabledFilters = config.Filters

@@ -566,14 +566,14 @@ function Hotbar.SaveData()
 
     save = Hotbar:ReturnFromHooks("GetHotbarSaveData", save)
 
-    Utilities.SaveJson(Hotbar.SAVE_FILENAME, save)
+    IO.SaveFile(Hotbar.SAVE_FILENAME, save)
 
     Hotbar:FireEvent("SaveDataSaved")
 end
 
 ---Loads saved data from the disk: loadouts, hotkey buttons.
 function Hotbar.LoadData()
-    local save = Utilities.LoadJson(Hotbar.SAVE_FILENAME)
+    local save = IO.LoadFile(Hotbar.SAVE_FILENAME)
 
     if save then
         for i,state in ipairs(save.Hotkeys) do

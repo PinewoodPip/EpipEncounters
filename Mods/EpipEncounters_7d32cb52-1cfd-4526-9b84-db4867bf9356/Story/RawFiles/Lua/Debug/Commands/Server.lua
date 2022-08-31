@@ -15,7 +15,7 @@ local function AnimTest()
     print("Testing animations...")
     print("Exit console to see IDs, or look at the combat log.")
 
-    anims = Utilities.LoadJson("Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/anim_test.json", "data")
+    anims = IO.LoadFile("Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/anim_test.json", "data")
 
     PlayNext()
 end

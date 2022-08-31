@@ -72,20 +72,6 @@ function Utilities.RandomSign()
     end
 end
 
-function Utilities.LoadJson(file, source)
-    local contents = Ext.IO.LoadFile(file, source)
-
-    if contents then
-        contents = Ext.Json.Parse(contents)
-    end
-
-    return contents
-end
-
-function Utilities.SaveJson(filename, contents)
-    Ext.IO.SaveFile(filename, Ext.DumpExport(contents))
-end
-
 ---Count the amount of keys in a table.
 ---@param t table
 ---@return integer Key count.

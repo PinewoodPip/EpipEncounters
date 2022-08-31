@@ -219,13 +219,13 @@ function GroupManager.SaveData(path)
         save.Groups[guid] = GroupManager.GetGroupState(group)
     end
 
-    Utilities.SaveJson(path, save)
+    IO.SaveFile(path, save)
 end
 
 ---@param path string?
 function GroupManager.LoadData(path)
     path = path or GroupManager.SAVE_FILENAME
-    local save = Utilities.LoadJson(path)
+    local save = IO.LoadFile(path)
 
     if save and save.Version == 0 then
         local groups = save.Groups

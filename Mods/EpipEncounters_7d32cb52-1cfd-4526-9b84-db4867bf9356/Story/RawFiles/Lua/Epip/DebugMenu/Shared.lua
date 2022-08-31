@@ -133,7 +133,7 @@ end
 function DebugMenu.LoadConfig(path)
     path = path or DebugMenu.SAVE_FILENAME
 
-    local config = Utilities.LoadJson(path)
+    local config = IO.LoadFile(path)
 
     -- No backwards compatibility for DebugMenu configs.
     if config and config.Version == DebugMenu.SAVE_VERSION then
@@ -171,7 +171,7 @@ function DebugMenu.SaveConfig(path)
     local save = {State = table.deepCopy(DebugMenu.State)}
     save.Version = DebugMenu.SAVE_VERSION
 
-    Utilities.SaveJson(path or DebugMenu.SAVE_FILENAME, save)
+    IO.SaveFile(path or DebugMenu.SAVE_FILENAME, save)
 end
 
 ---@param modTable string

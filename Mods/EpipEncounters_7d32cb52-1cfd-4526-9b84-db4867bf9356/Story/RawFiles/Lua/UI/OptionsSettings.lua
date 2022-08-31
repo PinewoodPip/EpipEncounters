@@ -605,7 +605,7 @@ function OptionsSettings.SaveSettings()
         end
     end
 
-    Utilities.SaveJson(OptionsSettings.SAVE_FILENAME, json)
+    IO.SaveFile(OptionsSettings.SAVE_FILENAME, json)
 end
 
 ---------------------------------------------
@@ -901,7 +901,7 @@ end
 
 -- Load saved settings
 Ext.Events.SessionLoading:Subscribe(function()
-    local savedSettings = Utilities.LoadJson(OptionsSettings.SAVE_FILENAME)
+    local savedSettings = IO.LoadFile(OptionsSettings.SAVE_FILENAME)
 
     if savedSettings then
         OptionsSettings:DebugLog("Loading settings")

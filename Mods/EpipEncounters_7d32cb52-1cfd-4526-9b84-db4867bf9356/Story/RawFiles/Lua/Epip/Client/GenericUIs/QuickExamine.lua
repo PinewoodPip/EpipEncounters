@@ -51,7 +51,7 @@ end
 ---@param path Path?
 function QuickExamine.LoadData(path)
     path = path or QuickExamine.SAVE_FILENAME
-    local save = Utilities.LoadJson(path)
+    local save = IO.LoadFile(path)
 
     if save then
         QuickExamine.lockCharacter = save.Lock
@@ -62,7 +62,7 @@ end
 function QuickExamine.SaveData(path)
     path = path or QuickExamine.SAVE_FILENAME
 
-    Utilities.SaveJson(path, {
+    IO.SaveFile(path, {
         Version = QuickExamine.SAVE_VERSION,
         Lock = QuickExamine.lockCharacter,
     })

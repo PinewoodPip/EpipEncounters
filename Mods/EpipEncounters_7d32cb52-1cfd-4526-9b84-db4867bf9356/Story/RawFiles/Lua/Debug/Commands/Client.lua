@@ -19,7 +19,7 @@ end
 local function SoundTest()
     print("Testing sounds...")
     print("Exit console to see IDs, and turn off mute-when-out-of-focus in game settings.")
-    local sounds = Utilities.LoadJson("Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/sound_test.json", "data")
+    local sounds = IO.LoadFile("Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/sound_test.json", "data")
     local delay = 2 -- 2 seconds delay so you can exit console in time
     local DELAY = 0.65
 

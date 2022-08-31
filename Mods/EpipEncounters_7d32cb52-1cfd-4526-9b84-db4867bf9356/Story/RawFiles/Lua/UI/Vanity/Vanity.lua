@@ -507,12 +507,12 @@ function Vanity.SaveData(path)
 
     save = Vanity.Hooks.GetSaveData:Return(save)
 
-    Utilities.SaveJson(path, save)
+    IO.SaveFile(path, save)
 end
 
 function Vanity.LoadData(path)
     path = path or Vanity.SAVE_FILENAME
-    local save = Utilities.LoadJson(path)
+    local save = IO.LoadFile(path)
 
     Vanity.Events.SaveDataLoaded:Fire(save)
 end
