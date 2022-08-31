@@ -116,9 +116,14 @@ function DebugDisplay:__Setup()
     local bg = ui:CreateElement("BG", "GenericUI_Element_TiledBackground")
     bg:SetBackground("Black", DebugDisplay.BG_SIZE:unpack())
     bg:SetAlpha(0.4)
-    bg:SetAsDraggableArea()
+
+    local dragArea = bg:AddChild("DragArea", "GenericUI_Element_TiledBackground") -- This is a bit ridiculous - even if children are not mouse enabled, they still extend the mouse range of the background, so we need to use a "hit_mc" instead of making BG the dragging area.
+    dragArea:SetBackground("Black", DebugDisplay.BG_SIZE:unpack())
+    dragArea:SetAlpha(0)
+    dragArea:SetAsDraggableArea()
 
     local container = bg:AddChild("Container", "GenericUI_Element_VerticalList")
+    container:SetMouseEnabled(false) -- So the container does not block dragging (though its children already do not...)
 
     local tickCounter = TextPrefab.Create(ui, "TickCounter", container, "", "Left", textSize)
 

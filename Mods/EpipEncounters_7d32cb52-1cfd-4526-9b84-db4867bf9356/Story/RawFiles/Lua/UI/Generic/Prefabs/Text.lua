@@ -32,6 +32,7 @@ function Text.Create(ui, id, parent, text, alignType, size)
     textElement:SetType(alignType)
     textElement:SetSize(size[1], size[2])
     textElement:SetText(text)
+    textElement:SetMouseEnabled(false)
 
     -- Forward events
     textElement.Events.Changed:Subscribe(function (ev)

@@ -213,7 +213,7 @@ package Elements
             this.mouseEnabled = enabled;
             this.SetMouseChildren(enabled);
 
-            this.Log("Element type does not properly support SetMouseEnabled; setting mouseChildren instead.");
+            this.Log("Element type does not properly support SetMouseEnabled; setting mouseChildren as well.");
         }
 
         protected function Log(msg:String, msgType:int = 1) : *
