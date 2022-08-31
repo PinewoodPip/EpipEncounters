@@ -128,10 +128,10 @@ function MessageBox.Open(data)
     end
 
     -- Set metatables
-    Inherit(data, MessageBoxData)
-    for i,button in pairs(data.Buttons) do
+    for _,button in pairs(data.Buttons or {}) do
         Inherit(button, MessageBoxButton)
     end
+    Inherit(data, MessageBoxData)
 
     local type = MessageBox.POPUP_TYPES[data.Type:upper()] or MessageBox.POPUP_TYPES.MESSAGE
     if data:GetNumericType() == MessageBox.POPUP_TYPES.INPUT then
