@@ -171,6 +171,7 @@ LOAD_ORDER = {
     "UI/Craft.lua",
     "UI/Reward.lua",
     "UI/WorldTooltip.lua",
+    "UI/CombatTurn.lua",
 
     "UI/Vanity/Vanity.lua",
     "UI/Vanity/Tabs/_Tab.lua",
