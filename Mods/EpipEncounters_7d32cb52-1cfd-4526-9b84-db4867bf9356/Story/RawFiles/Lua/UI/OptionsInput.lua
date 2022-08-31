@@ -152,8 +152,9 @@ end
 
 ---Stringifies an OptionsInputKeybind table. Use to compare binds for equality.
 ---@param binding OptionsInputKeybind
+---@param useShortNames boolean? Defaults to false.
 ---@return string
-function Options.StringifyBinding(binding)
+function Options.StringifyBinding(binding, useShortNames)
     local keys = table.deepCopy(binding.Keys)
     local order = {
         lctrl = -1,
@@ -180,7 +181,7 @@ function Options.StringifyBinding(binding)
     end)
 
     for i,key in ipairs(keys) do
-        keys[i] = Client.Input.GetInputName(key, true)
+        keys[i] = Client.Input.GetInputName(key, useShortNames or false)
     end
 
     return table.concat(keys, " + ")
