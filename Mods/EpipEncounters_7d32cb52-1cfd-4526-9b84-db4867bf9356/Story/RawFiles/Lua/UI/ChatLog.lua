@@ -114,7 +114,7 @@ function Chat.AddTab(tabID, label)
     Chat.nextCustomTabID = Chat.nextCustomTabID + 1
 end
 
----@param ev UIEvent
+---@param ev EclLuaUICallEvent
 ---@param tab integer
 ---@param text string
 ---@return boolean True for success (not prevented).

@@ -156,7 +156,7 @@ end
 -- METHODS
 ---------------------------------------------
 
----@param ev UIEvent
+---@param ev EclLuaUICallEvent
 ---@param elementID string
 ---@param eventName string
 ---@param eventObj table?
