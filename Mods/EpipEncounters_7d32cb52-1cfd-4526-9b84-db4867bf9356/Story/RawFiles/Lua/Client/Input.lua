@@ -477,22 +477,10 @@ local Input = {
         ITEM_11 = 172,
     },
 
-    -- Not complete!
-    INPUT_EVENTS = {
-        CLICK = 1,
-        INTERACT = 4,
-        CANCEL_ACTION = 223,
-        QUEUE_COMMAND = 232,
-        ZOOM_OUT = 233,
-        ZOOM_IN = 234,
-        UNSHEATHE = 237,
-        FORCE_ATTACK = 242,
-        TOGGLE_UI = 214,
-        TOGGLE_MENU = 241,
-        SHOW_SNEAK_CONES = 285,
-        GM_ALIGN_TO_TERRAIN = 269,
-        GM_TOGGLE_MINIMAP = 265
-    },
+    
+    INPUT_EVENTS = {}, ---@type table<integer, InputLib_InputEventDefinition> Automatically generated. See Setup region.
+    INPUT_EVENT_STRING_ID_MAP = {}, ---@type table<InputLib_InputEventStringID, integer> Automatically generated. See Setup region.
+
     CONTROLLER_EVENTS = {
         RIGHT_BUTTON = 233,
         LEFT_BUTTON = 234,
@@ -585,9 +573,27 @@ for name,index in pairs(Input.RAW_INPUT_EVENTS) do
     Input.RAW_INPUT_EVENTS_ENUM[index] = name
 end
 
+---------------------------------------------
+-- CLASSES
+---------------------------------------------
+
+---@alias InputLib_InputEventStringID "FlashLeftMouse"|"FlashRightMouse"|"FlashMiddleMouse"|"Action1"|"ControllerUnlinkedBack"|"ControllerUnlinkedStart"|"ControllerUnlinkedA"|"ControllerUnlinkedB"|"ControllerUnlinkedX"|"ControllerUnlinkedY"|"KeyboardAny"|"ToggleFullscreen"|"ReloadInputConfig"|"Screenshot"|"Benchmark"|"CloseApplication"|"DefaultCameraPanCamera"|"DefaultCameraSpecialPanCamera1"|"DefaultCameraSpecialPanCamera2"|"DefaultCameraToggleMouseRotation"|"DefaultCameraCaptureInput"|"DefaultCameraLeft"|"DefaultCameraRight"|"DefaultCameraForward"|"DefaultCameraBackward"|"DefaultCameraZoomIn"|"DefaultCameraZoomOut"|"DefaultCameraRotateLeft"|"DefaultCameraRotateRight"|"DefaultCameraRotateUp"|"DefaultCameraRotateDown"|"DefaultCameraMouseLeft"|"DefaultCameraMouseRight"|"DefaultCameraMouseUp"|"DefaultCameraMouseDown"|"DefaultCameraTopView"|"DefaultCameraLeftView"|"DefaultCameraFrontView"|"DefaultCameraSlow"|"DefaultCameraFast"|"WidgetToggleOutput"|"WidgetToggleEffectStats"|"WidgetScreenshot"|"WidgetScreenshotVideo"|"WidgetToggleOptions"|"WidgetToggleHierarchicalProfiler"|"WidgetToggleStats"|"WidgetToggleDebugConsole"|"WidgetToggleGraphicsDebug"|"WidgetToggleDevComments"|"WidgetButtonTab"|"WidgetButtonLeft"|"WidgetButtonRight"|"WidgetButtonUp"|"WidgetButtonDown"|"WidgetButtonHome"|"WidgetButtonEnd"|"WidgetButtonDelete"|"WidgetButtonBackSpace"|"WidgetButtonEnter"|"WidgetButtonEscape"|"WidgetButtonPageUp"|"WidgetButtonPageDown"|"WidgetButtonSpace"|"WidgetButtonA"|"WidgetButtonC"|"WidgetButtonV"|"WidgetButtonX"|"WidgetButtonY"|"WidgetButtonZ"|"WidgetScrollUp"|"WidgetScrollDown"|"WidgetMouseMotion"|"WidgetMouseLeft"|"WidgetMouseRight"|"FlashPerfmonUp"|"FlashPerfmonDown"|"FlashPerfmonLeft"|"FlashPerfmonRight"|"FlashPerfmonLShoulder"|"FlashPerfmonRShoulder"|"FlashPerfmonRTrigger"|"FlashPerfmonLTrigger"|"FlashPerfmonButton1"|"FlashPerfmonButton2"|"FlashPerfmonButton3"|"FlashPerfmonButton4"|"FlashMouseMove"|"FlashArrowUp"|"FlashArrowLeft"|"FlashArrowRight"|"FlashArrowDown"|"FlashEnter"|"FlashPgUp"|"FlashPgDn"|"FlashBackspace"|"FlashTab"|"FlashDelete"|"FlashHome"|"FlashEnd"|"FlashCtrl"|"FlashAlt"|"FlashScrollUp"|"FlashScrollDown"|"FlashCancel"|"FlashMouseMoveLeft"|"FlashMouseMoveRight"|"FlashMouseMoveUp"|"FlashMouseMoveDown"|"ActionMenu"|"CameraCenter"|"CameraToggleMouseRotate"|"CameraBackward"|"CameraForward"|"CameraLeft"|"CameraRight"|"CameraZoomIn"|"CameraZoomOut"|"CameraRotateLeft"|"CameraRotateRight"|"CameraRotateMouseLeft"|"CameraRotateMouseRight"|"FreeCameraToggleMouseRotate"|"FreeCameraMoveForward"|"FreeCameraMoveBackward"|"FreeCameraMoveLeft"|"FreeCameraMoveRight"|"FreeCameraFoVInc"|"FreeCameraFoVDec"|"FreeCameraSpeedInc"|"FreeCameraSpeedDec"|"FreeCameraSpeedReset"|"FreeCameraRotSpeedInc"|"FreeCameraRotSpeedDec"|"FreeCameraRotateControllerLeft"|"FreeCameraRotateControllerRight"|"FreeCameraRotateControllerUp"|"FreeCameraRotateControllerDown"|"FreeCameraRotateMouseLeft"|"FreeCameraRotateMouseRight"|"FreeCameraRotateMouseUp"|"FreeCameraRotateMouseDown"|"FreeCameraHeightInc"|"FreeCameraHeightDec"|"FreeCameraSlowdown"|"FreeCameraFreezeGameTime"|"CharacterCreationRotateLeft"|"CharacterCreationRotateRight"|"CharacterCreationAccept"|"CharacterMoveForward"|"CharacterMoveBackward"|"CharacterMoveLeft"|"CharacterMoveRight"|"ClearSurface"|"CreateWaterSurface"|"CreateFrozenWaterSurface"|"CreateBloodSurface"|"CreatePoisonSurface"|"CreateOilSurface"|"CreateFireSurface"|"CreateSourceSurface"|"CreateLavaSurface"|"CreateWaterCloud"|"CreateBloodCloud"|"CreatePoisonCloud"|"CreateSmokeCloud"|"CreateFireCloud"|"BlessSurface"|"CurseSurface"|"ElectrifySurface"|"FreezeSurface"|"MeltSurface"|"CondenseSurface"|"VaporizeSurface"|"IncreaseSurfaceBrush"|"DecreaseSurfaceBrush"|"DebugViewHide"|"DebugViewScrollUp"|"DebugViewScrollDown"|"DebugAIGridTakeStep"|"DebugToggleCharacter"|"DebugLevelUp"|"DebugTogglePartyEdit"|"DebugKillCombat"|"ToggleFlyCam"|"DebugSelectCharacter"|"DebugDeselectCharacter"|"DebugToggleUseWorkerThreads"|"DebugToggleThreadedServer"|"SwitchDebugParty"|"ShowSoundDebugWindow"|"ForceKillApp"|"TelemetryStart"|"TelemetryStop"|"ForceEndDialog"|"JoinLocalLobby"|"ForceKillObject"|"ForceRemoveObject"|"ForceKillParty"|"GiveSomeGold"|"Revive"|"ShowWayPointMenu"|"EnableController"|"IggyExplorerNext"|"IggyExplorerPrev"|"ForceEndTurn"|"ToggleAiGrid"|"TogglePhysics"|"ToggleAIBounds"|"ToggleDecalBounds"|"ToggleBlindToCriminals"|"ForceAnimation"|"DragSingleToggle"|"TogglePresentation"|"PartyManagement"|"MoveCharacterUpInGroup"|"PanelSelect"|"CycleCharactersNext"|"CycleCharactersPrev"|"DestructionToggle"|"HighlightCharacters"|"Interact"|"ActionCancel"|"NextObject"|"Pause"|"PrevObject"|"QueueCommand"|"QuickLoad"|"QuickSave"|"ShowChat"|"SkipVideo"|"SplitItemToggle"|"RotateItemLeft"|"RotateItemRight"|"TeleportPlayer"|"TeleportParty"|"ToggleCombatMode"|"ToggleSplitscreen"|"ToggleEquipment"|"ToggleHomestead"|"ToggleInGameMenu"|"ToggleInfo"|"ToggleInputMode"|"CancelSelectorMode"|"ToggleCharacterPane"|"ToggleInventory"|"ToggleCraft"|"ToggleRecipes"|"ToggleJournal"|"ToggleMap"|"ToggleSkills"|"ToggleSneak"|"ToggleStats"|"AreaPickup"|"ToggleMonsterSelect"|"ToggleSetStartPoint"|"ToggleSurfacePainter"|"ToggleOverviewMap"|"ToggleVignette"|"ToggleGMPause"|"ToggleGMShroud"|"ToggleRollPanel"|"ToggleGMInventory"|"ToggleManageTarget"|"ToggleGMMiniMap"|"GMKillResurrect"|"GMSetHealth"|"SwitchGMMode"|"GMNormalAlignMode"|"ToggleGMRewardPanel"|"ToggleGMItemGeneratorPane"|"ToggleGMMoodPanel"|"ToggleStatusPanel"|"ToggleReputationPanel"|"TogglePartyManagement"|"ContextMenu"|"ControllerContextMenu"|"Combine"|"ToggleTacticalCamera"|"ShowWorldTooltips"|"SelectorMoveBackward"|"SelectorMoveForward"|"SelectorMoveLeft"|"SelectorMoveRight"|"ShowSneakCones"|"UIDelete"|"UIAccept"|"UIBack"|"UICancel"|"UITakeAll"|"UIEndTurn"|"UIHotBarNext"|"UIHotBarPrev"|"UIRadialLeft"|"UIRadialRight"|"UIRadialUp"|"UIRadialDown"|"UILeft"|"UIRight"|"UIUp"|"UIDown"|"UIContextMenuModifier"|"UISelectChar1"|"UISelectChar2"|"UISelectChar3"|"UISelectChar4"|"UISelectSlot0"|"UISelectSlot1"|"UISelectSlot2"|"UISelectSlot3"|"UISelectSlot4"|"UISelectSlot5"|"UISelectSlot6"|"UISelectSlot7"|"UISelectSlot8"|"UISelectSlot9"|"UISelectSlot11"|"UISelectSlot12"|"UIToggleEquipment"|"CCZoomIn"|"CCZoomOut"|"UIRefresh"|"UITabPrev"|"UITabNext"|"UIShowTooltip"|"UICompareItems"|"UITooltipUp"|"UITooltipDown"|"UIDialogTextUp"|"UIDialogTextDown"|"UIRequestTrade"|"UIAddPoints"|"UIRemovePoints"|"UIDialogRPSRock"|"UIDialogRPSPaper"|"UIDialogRPSScissors"|"UICreateProfile"|"UIDeleteProfile"|"UISetSlot"|"UICreationPrev"|"UICreationNext"|"UICreationEditClassPrev"|"UICreationEditClassNext"|"UICreationTabPrev"|"UICreationTabNext"|"UIStartGame"|"UIEditCharacter"|"UIPortraitPrev"|"UIPortraitNext"|"UIShowInfo"|"UIRename"|"UIFilter"|"UIMapDown"|"UIMapUp"|"UIMapLeft"|"UIMapRight"|"UIMapZoomIn"|"UIMapZoomOut"|"UIMapReset"|"UIMapRemoveMarker"|"UITradeSwitchWindow"|"UITradeRemoveOffer"|"UITradeBalance"|"UIRemoveItemSelection"|"UIMessageBoxA"|"UIMessageBoxB"|"UIMessageBoxX"|"UIMessageBoxY"|"UIInvite"|"UIToggleTutorials"|"UICreationAddSkill"|"UICreationRemoveSkill"|"UIModPrev"|"UIModNext"|"UIAddonUp"|"UIAddonDown"|"Ping"|"UICopy"|"UICut"|"UIPaste"|"UIMarkWares"|"UIToggleMultiselection"|"UIToggleActions"|"UIToggleHelmet"|"CopyVersionToClipboard"|"UISend"|"ConnectivityMenu"|"UISwitchLeft"|"UISwitchRight"|"UISwitchUp"|"UISwitchDown"|"Unknown"
+
 ---@class InputMouseState
 ---@field Moving boolean
 ---@field MoveVector Vector2D Pixels moved.
+
+---@class InputLib_InputEventDefinition
+---@field NameHandle TranslatedStringHandle
+---@field ReferenceName string
+---@field EventID integer
+---@field StringID string
+---@field CategoryName string
+local _InputEventDefinition = {}
+
+function _InputEventDefinition:GetName()
+    return Ext.L10N.GetTranslatedString(self.NameHandle, self.ReferenceName)
+end
 
 ---------------------------------------------
 -- EVENTS/HOOKS
@@ -625,6 +631,16 @@ function Input.GetInputName(rawID, short)
     if short then name = data.ShortName end
 
     return name
+end
+
+---@param id integer|InputLib_InputEventStringID
+---@return InputLib_InputEventDefinition
+function Input.GetInputEventDefinition(id)
+    if type(id) == "string" then
+        id = Input.INPUT_EVENT_STRING_ID_MAP[id] 
+    end
+
+    return Input.INPUT_EVENTS[id]
 end
 
 ---@param deviceID InputDevice
@@ -863,20 +879,32 @@ Ext.Events.InputEvent:Subscribe(function(event)
 
     Input.HeldKeys[event.EventId] = event.Press
 
-    if Input:IsDebug() then
-        -- TODO fix
-        if not Input.INPUT_EVENTS[event.EventId] and not Input.CONTROLLER_EVENTS[event.EventId] then
-            Input:DebugLog("INPUT ID NOT IN ENUM: " .. event.EventId)
-            -- Input:Dump(event)
-            -- print(OptionsMenu:GetKey(event.EventId))
-        end
-    end
-
     -- Fire event for sneak cones. TODO generic ones too!
-    if event.EventId == Input.INPUT_EVENTS.SHOW_SNEAK_CONES then
+    if event.EventId == 285 then
         Input:FireEvent("SneakConesToggled", event.Press)
     end
 end)
+
+---------------------------------------------
+-- SETUP
+---------------------------------------------
+
+-- Generate InputEvent integer -> string map
+local InputManager = Ext.Input.GetInputManager() ---@type InputManager
+for eventID,data in pairs(InputManager.InputDefinitions) do
+    ---@type InputLib_InputEventDefinition
+    local entry = {
+        NameHandle = data.EventDesc.Handle.Handle,
+        ReferenceName = data.EventDesc.Handle.ReferenceString,
+        EventID = eventID,
+        StringID = data.EventName,
+        CategoryName = data.CategoryName,
+    }
+    Inherit(entry, _InputEventDefinition)
+
+    Input.INPUT_EVENTS[eventID] = entry
+    Input.INPUT_EVENT_STRING_ID_MAP[entry.StringID] = eventID
+end
 
 ---------------------------------------------
 -- TESTS

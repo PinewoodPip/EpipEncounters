@@ -35,10 +35,21 @@ local function SoundTest()
     end
 end
 
+local function GenerateInputEventAlias()
+    local alias = "---@alias InputLib_InputEventStringID "
+
+    for _,entry in pairs(Client.Input.INPUT_EVENTS) do
+        alias = alias .. "\"" .. entry.StringID .. "\"|"
+    end
+
+    print(alias:sub(1, string.len(alias) - 1))
+end
+
 local commands = {
     ["bruteforceuitypes"] = DumpUIInstances,
     ["soundtest"] = SoundTest,
     ["testactionhandles"] = TestActionHandles,
+    ["generateinputeventalias"] = GenerateInputEventAlias,
 }
 
 for name,command in pairs(commands) do
