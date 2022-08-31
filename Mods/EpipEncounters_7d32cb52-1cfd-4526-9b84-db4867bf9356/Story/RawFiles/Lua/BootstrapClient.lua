@@ -39,6 +39,7 @@ LOAD_ORDER = {
 
     -- Utilities
     "Utils.lua",
+    "Utilities/math.lua",
     "Utilities/IO.lua",
     "Utilities/Vector.lua",
     "Utilities/Text.lua",

@@ -129,7 +129,11 @@ end
 
 ---@return RGBColor
 function RGBColor.Create(r, g, b)
-    local color = {Red = r or 0, Green = g or 0, Blue = b or 0}
+    r = math.clamp(r or 0, 0, 255)
+    g = math.clamp(g or 0, 0, 255)
+    b = math.clamp(b or 0, 0, 255)
+
+    local color = {Red = r, Green = g, Blue = b}
     Inherit(color, RGBColor)
     
     return color
@@ -191,7 +195,7 @@ function Color.Create(red, green, blue)
     return Color.CreateFromRGB(red, green, blue)
 end
 
----Creates a color from RGB values. Expected range is [0-255].
+---Creates a color from RGB values. Expected range of values is [0-255].
 ---@param red integer
 ---@param green integer
 ---@param blue integer
