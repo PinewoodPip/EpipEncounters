@@ -1,0 +1,13 @@
+package
+{
+    import flash.display.MovieClip;
+    
+    public dynamic class SimpleSprite extends MovieClip
+    {
+        public function SimpleSprite()
+        {
+            super();
+            this.stop();
+        }
+    }
+}
