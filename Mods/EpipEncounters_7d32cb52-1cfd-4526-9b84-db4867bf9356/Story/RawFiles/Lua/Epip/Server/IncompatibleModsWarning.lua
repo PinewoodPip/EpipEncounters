@@ -16,6 +16,7 @@ local Warnings = {
             Mods.RELICS_OF_RIVELLON_FIX,
             Mods.UNLEASHED,
             Mods.GREED,
+            Mods.LET_THERE_BE_TOOLTIPS,
         },
         [Mods.EPIP_ENCOUNTERS] = {
             Mods.IMPROVED_HOTBAR,
