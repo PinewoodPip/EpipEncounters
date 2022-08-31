@@ -3,16 +3,21 @@
 -- Hooks for the StatusConsole UI (the healthbar above the hotbar)
 ---------------------------------------------
 
-Client.UI.StatusConsole = {
+---@class StatusConsoleUI : UI
+local StatusConsole = {
     UI = nil,
     Root = nil,
-
-    ---------------------------------------------
-    -- INTERNAL VARIABLES - DO NOT SET
-    ---------------------------------------------
-    UITypeID = Client.UI.Data.UITypes.statusConsole,
+    
     visible = true,
     modulesRequestingHide = {},
+
+    USE_LEGACY_EVENTS = false,
+    USE_LEGACY_HOOKS = false,
+
+    Events = {
+        TurnEnded = {}, ---@type PreventableEvent<StatusConsoleUI_Event_TurnEnded>
+    },
+
     FILEPATH_OVERRIDES = {
         ["Public/Game/GUI/statusConsole.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/statusConsole.swf",
     },
@@ -22,8 +27,19 @@ if IS_IMPROVED_HOTBAR then
         ["Public/Game/GUI/statusConsole.swf"] = "Public/ImprovedHotbar_53cdc613-9d32-4b1d-adaa-fd97c4cef22c/GUI/statusConsole.swf",
     }
 end
-local StatusConsole = Client.UI.StatusConsole
-Epip.InitializeUI(Client.UI.Data.UITypes.statusConsole, "StatsConsole", StatusConsole)
+Client.UI.StatusConsole = StatusConsole
+Epip.InitializeUI(Ext.UI.TypeID.statusConsole, "StatsConsole", StatusConsole)
+
+---------------------------------------------
+-- EVENTS/HOOKS
+---------------------------------------------
+
+---@class StatusConsoleUI_Event_TurnEnded : PreventableEventParams
+---@field Character EclCharacter
+
+---------------------------------------------
+-- METHODS
+---------------------------------------------
 
 function StatusConsole.Toggle(visible, requestID)
 
@@ -76,8 +92,20 @@ function StatusConsole.UpdatePosition()
 end
 
 ---------------------------------------------
--- LISTENERS
+-- EVENT LISTENERS
 ---------------------------------------------
+
+-- Listen for turn being ended.
+-- This is invoked by a key press as well, from onEventUp.
+StatusConsole:RegisterCallListener("EndButtonPressed", function (ev)
+    local event = StatusConsole.Events.TurnEnded:Throw({
+        Character = Client.GetCharacter(),
+    })
+
+    if event.Prevented then
+        ev:PreventAction()
+    end
+end)
 
 StatusConsole:RegisterCallListener("pipMaxAPUpdated", function(ev, amount)
     amount = math.min(amount, 21)

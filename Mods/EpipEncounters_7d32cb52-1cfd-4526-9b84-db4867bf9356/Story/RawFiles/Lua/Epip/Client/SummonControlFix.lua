@@ -29,6 +29,13 @@ Ext.Events.InputEvent:Subscribe(function(ev)
     end
 end)
 
+-- Listen for turn being ended. We have to ignore next swap since Client.IsActiveCombatant() is not currently 100% reliable.
+Client.UI.StatusConsole.Events.TurnEnded:Subscribe(function (_)
+    Fix:DebugLog("End Turn requested")
+
+    Fix.ignoreNextSelect = true
+end)
+
 PlayerInfo.Events.ActiveCharacterChanged:Subscribe(function (e)
     local newChar = e.NewCharacter
     local prevChar = e.PreviousCharacter

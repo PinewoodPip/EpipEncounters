@@ -1,9 +1,11 @@
 
----@meta Client, ContextClient
-
+---@class ClientLib : Library
 Client = {
     UI = {},
     Input = {}, -- See Input.lua
+
+    USE_LEGACY_EVENTS = false,
+    USE_LEGACY_HOOKS = false,
 
     ---------------------------------------------
     -- Internal variables - do not set
@@ -188,7 +190,7 @@ function Client.CopyToClipboard(text)
     Client.UI.MessageBox.CopyToClipboard(text)
 end
 
----Returns whether the client's char is currently playing its turn in a combat.
+---Returns whether the client's char is currently playing its turn in a combat. TODO this fails while fear is applied.
 ---Relies on StatusConsole.
 ---@return boolean
 function Client.IsActiveCombatant()
