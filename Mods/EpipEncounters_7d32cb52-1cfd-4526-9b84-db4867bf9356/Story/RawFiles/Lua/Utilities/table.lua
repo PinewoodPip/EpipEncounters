@@ -101,3 +101,16 @@ function table.contains(tbl, value)
 
     return false
 end
+
+---Count the amount of keys in a table.
+---@param t table
+---@return integer Key count.
+function table.getKeyCount(t)
+    local count = 0
+
+    for _,_ in pairs(t) do
+        count = count + 1
+    end
+
+    return count
+end

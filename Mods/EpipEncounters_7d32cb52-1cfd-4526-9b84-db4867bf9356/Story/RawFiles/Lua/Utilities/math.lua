@@ -11,3 +11,12 @@
 function math.clamp(value, min, max)
     return Ext.Math.Clamp(value, min, max)
 end
+
+---@return 1|-1
+function math.randomSign()
+    if Ext.Random(0, 1) == 1 then
+        return 1
+    else
+        return -1
+    end
+end

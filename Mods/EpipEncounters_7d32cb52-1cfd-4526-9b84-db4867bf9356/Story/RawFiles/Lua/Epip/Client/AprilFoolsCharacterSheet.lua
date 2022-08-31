@@ -16,7 +16,7 @@ local function OnTick()
     if not currentlyOpen and AF.sheetOpen then
         local sheetRoot = sheet:GetRoot()
         local vanityRoot = Client.UI.Vanity:GetRoot()
-        local newRotation = sheetRoot.rotation + Ext.Random(1, 2) * Utilities.RandomSign()
+        local newRotation = sheetRoot.rotation + Ext.Random(1, 2) * math.randomSign()
 
         -- Wrapping!
         if newRotation < -6 then

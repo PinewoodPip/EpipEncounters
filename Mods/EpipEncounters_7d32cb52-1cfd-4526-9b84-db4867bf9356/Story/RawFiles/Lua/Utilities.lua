@@ -64,25 +64,6 @@ for k,v in pairs(append) do
     Utilities[k] = v
 end
 
-function Utilities.RandomSign()
-    if Ext.Random(0, 1) == 1 then
-        return 1
-    else
-        return -1
-    end
-end
-
----Count the amount of keys in a table.
----@param t table
----@return integer Key count.
-function Utilities.CountKeys(t)
-    local count = 0
-    for i,v in pairs(t) do
-        count = count + 1
-    end
-    return count
-end
-
 function Utilities.IsClientControlled(character)
     local root = Client.UI.PlayerInfo:GetRoot()
 
