@@ -191,6 +191,7 @@ function Color.Create(red, green, blue)
     return Color.CreateFromRGB(red, green, blue)
 end
 
+---Creates a color from RGB values. Expected range is [0-255].
 ---@param red integer
 ---@param green integer
 ---@param blue integer
@@ -199,18 +200,21 @@ function Color.CreateFromRGB(red, green, blue)
     return RGBColor.Create(red, green, blue)
 end
 
+---Creates a color from a decimal value.
 ---@param num integer
 ---@return RGBColor
 function Color.CreateFromDecimal(num)
     return RGBColor.CreateFromDecimal(num)
 end
 
+---Creates a color from an html-format hex color code.
 ---@param hex string
 ---@return RGBColor
 function Color.CreateFromHex(hex)
     return RGBColor.CreateFromHex(hex)
 end
 
+---Clones a color instance.
 ---@param color RGBColor
 ---@return RGBColor New instance with same values.
 function Color.Clone(color)
