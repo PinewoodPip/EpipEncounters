@@ -22,6 +22,7 @@ package Elements
 
         public var _cachedText:String = "";
         private var _editable:Boolean = false;
+        private var _mouseEnabled:Boolean = false;
 
         private var visualTypes:Object = null;
 
@@ -35,6 +36,7 @@ package Elements
             this.RegisterTextType("Right", this._txt_Right);
 
             this.SetType("Center");
+            this.SetMouseEnabled(this._mouseEnabled);
 
             this.SetEditable(false);
         }
@@ -42,6 +44,14 @@ package Elements
         public override function get elementType() : String
         {
             return "Text";
+        }
+
+        public override function SetMouseEnabled(enabled) : *
+        {
+            this._mouseEnabled = enabled;
+
+            this.mouseEnabled = enabled;
+            this.text_txt.mouseEnabled = enabled;
         }
 
         private function RegisterTextType(stringID:String, txt:TextField) : *
@@ -85,6 +95,7 @@ package Elements
 
                 this.SetText(this._cachedText);
                 this.SetEditable(this._editable);
+                this.SetMouseEnabled(this._mouseEnabled);
             }
             else
             {
