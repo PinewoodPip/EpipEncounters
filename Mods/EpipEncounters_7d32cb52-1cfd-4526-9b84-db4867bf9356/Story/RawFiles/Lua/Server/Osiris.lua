@@ -168,26 +168,7 @@ function Osiris.UserQuery(name, ...)
         local dbData = Osiris.DATABASES[dbName]
         local result
 
-        -- TODO find a better way to do this
-        if dbData.Arity == 0 then
-            result = Osiris.DatabaseQuery(dbName, false)
-        elseif dbData.Arity == 1 then
-            result = Osiris.DatabaseQuery(dbName, false, nil)
-        elseif dbData.Arity == 2 then
-            result = Osiris.DatabaseQuery(dbName, false, nil, nil)
-        elseif dbData.Arity == 3 then
-            result = Osiris.DatabaseQuery(dbName, false, nil, nil, nil)
-        elseif dbData.Arity == 4 then
-            result = Osiris.DatabaseQuery(dbName, false, nil, nil, nil, nil)
-        elseif dbData.Arity == 5 then
-            result = Osiris.DatabaseQuery(dbName, false, nil, nil, nil, nil, nil, nil)
-        elseif dbData.Arity == 6 then
-            result = Osiris.DatabaseQuery(dbName, false, nil, nil, nil, nil, nil, nil, nil)
-        elseif dbData.Arity == 7 then
-            result = Osiris.DatabaseQuery(dbName, false, nil, nil, nil, nil, nil, nil, nil, nil)
-        else
-            Ext.PrintError("[OSIRIS] Unsupported arity: " .. dbData.Arity)
-        end
+        result = Osiris.DatabaseQuery(dbName, false, table.unpackSelect({}, dbData.Arity))
 
         for _,queryResult in ipairs(result) do
             for _,value in ipairs(queryResult) do
