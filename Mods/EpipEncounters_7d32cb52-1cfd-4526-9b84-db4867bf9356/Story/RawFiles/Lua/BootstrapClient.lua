@@ -52,6 +52,7 @@ LOAD_ORDER = {
     "Utilities.lua",
     "Utilities/Timer.lua",
     "Utilities/Coroutine.lua",
+    "Utilities/Client/Pointer.lua",
 
     "Data/Game.lua", -- TODO move stuff out of it into appropriate scripts
 
@@ -221,6 +222,7 @@ LOAD_ORDER = {
     "Epip/Client/CraftingFixes.lua",
     "Epip/Client/RewardItemComparison.lua",
     "Epip/Client/HotbarTweaks.lua",
+    -- "Epip/Client/ExamineKeybind.lua",
     -- "Epip/Client/InventoryImprovements.lua",
 
     {ScriptSet = "Epip/Greatforge/DrillSockets"},
