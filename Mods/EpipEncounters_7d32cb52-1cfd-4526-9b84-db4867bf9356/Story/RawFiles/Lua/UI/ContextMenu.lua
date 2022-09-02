@@ -15,10 +15,10 @@
 -- fix clicking to close
 -- recenter amount text upon change
 
+---@class ContextMenuUI : UI
 local ContextMenu = {
     Root = nil,
     UI = nil,
-    VanillaUI = nil,
 
     VANILLA_ACTIONS = {
         LOOT_CHARACTER = 3,
@@ -47,6 +47,18 @@ local ContextMenu = {
     elementsCount = 0,
     vanillaContextData = nil,
 
+    ARRAY_ENTRY_TEMPLATES = {
+        BUTTON = {
+            "Index",
+            "ActionID",
+            "PlayClickSound",
+            "Unused1",
+            "Label",
+            "Disabled",
+            "Legal",
+        },
+    },
+
     MAX_HEIGHT = 500,
 
     FILEPATH_OVERRIDES = {
@@ -59,7 +71,57 @@ end
 Client.UI.ContextMenu = ContextMenu
 Epip.InitializeUI(Client.UI.Data.UITypes.contextMenu, "ContextMenu", ContextMenu)
 
+---------------------------------------------
+-- CLASSES
+---------------------------------------------
+
+---@class ContextMenuUI_ArrayEntry_Button
+---@field Index integer 0-based. Used by the engine instead of the action ID.
+---@field ActionID integer
+---@field PlayClickSound boolean
+---@field Unused1 ""
+---@field Label string
+---@field Disabled boolean
+---@field Legal boolean
+
+---------------------------------------------
+-- METHODS
+---------------------------------------------
+
+---Register a listener for a UI Call raw event.
+---@override Necessary to distinguish between the 2 instances.
+---@param method string ExternalInterface call name.
+---@param handler fun(ev:EclLuaUICallEvent)
+---@param uiInstance "Vanilla"|"Custom"
+---@param when? "Before"|"After"
+function ContextMenu:RegisterCallListener(method, handler, uiInstance, when)
+    Client.UI._BaseUITable.RegisterCallListener(self, method, function (ev)
+        if ev.UI:GetTypeId() < 1000 and uiInstance == "Vanilla" then
+            handler(ev)
+        elseif uiInstance == "Custom" and not IS_IMPROVED_HOTBAR then -- These listeners do not work in standalone mod.
+            handler(ev)
+        end
+    end, when)
+end
+
+---Register a listener for a UI Invoke raw event.
+---@override Necessary to distinguish between the 2 instances.
+---@param method string ExternalInterface call name.
+---@param handler fun(ev:EclLuaUICallEvent)
+---@param uiInstance "Vanilla"|"Custom"
+---@param when? "Before"|"After"
+function ContextMenu:RegisterInvokeListener(method, handler, uiInstance, when)
+    Client.UI._BaseUITable.RegisterInvokeListener(self, method, function (ev)
+        if ev.UI:GetTypeId() < 1000 and uiInstance == "Vanilla" then
+            handler(ev)
+        elseif uiInstance == "Custom" and not IS_IMPROVED_HOTBAR then -- These listeners do not work in standalone mod.
+            handler(ev)
+        end
+    end, when)
+end
+
 function ContextMenu.SetPosition(ui, x, y)
+    ui = ui or ContextMenu.GetActiveUI()
     -- TODO pushback near edges
     x = x or ContextMenu.position.x
     y = y or ContextMenu.position.y
@@ -196,6 +258,8 @@ function ContextMenu.Open()
 end
 
 function ContextMenu.Close(ui)
+    ui = ui or ContextMenu.GetActiveUI()
+
     local root = ui:GetRoot()
     root.close()
 
@@ -251,6 +315,7 @@ end
 -- INTERNAL METHODS - DO NOT CALL
 ---------------------------------------------
 function ContextMenu.AddElements(ui, menuData)
+    ui = ui or ContextMenu.GetActiveUI()
     local menuID = menuData.id
     for i,data in pairs(menuData.entries) do
         local type = data.type
@@ -306,7 +371,7 @@ function ContextMenu.GetActiveUI()
     local ui = ContextMenu.UI
 
     if not ContextMenu.Root.visible then
-        ui = ContextMenu.VanillaUI
+        ui = Ext.UI.GetByType(Ext.UI.TypeID.contextMenu.Object)
     end
 
     return ui
@@ -515,7 +580,7 @@ end
 -- LISTENERS
 ---------------------------------------------
 
--- Handling redirected vanilla context menus
+-- Handling redirected vanilla context menus - UNUSED?
 Client.UI.ContextMenu.RegisterElementListener("vanilla_button", "buttonPressed", function(character, params)
     local ui = Ext.UI.GetByType(Client.UI.Data.UITypes.contextMenu)
     local root = ui:GetRoot()
@@ -577,8 +642,10 @@ local function OnButtonPressed(ui, method, id, elementID, handle, amountTxt)
     end
 end
 
-Utilities.Hooks.RegisterListener("ContextMenu", "contextMenuOpened", function(ui, elements)
+-- Listen for vanilla context menu being opened.
+ContextMenu:RegisterCallListener("pipVanillaContextMenuOpened", function (ev)
     -- Close our instance - we don't support using both at once
+    local vanillaElements = ContextMenu.vanillaContextData
     local item = Item.Get(ContextMenu.itemHandle)
     ContextMenu.Close(ContextMenu.UI)
 
@@ -587,26 +654,19 @@ Utilities.Hooks.RegisterListener("ContextMenu", "contextMenuOpened", function(ui
     end
     ContextMenu.position = {x = 0, y = 0}
 
-    ContextMenu.elementsCount = #elements
-
-    -- Ext.Dump(elements)
+    ContextMenu.elementsCount = #vanillaElements
 
     -- Scan elements to check if we're examining a character
     -- If this context menu is from an item, the UICall listener will have already caught it - characters take priority though.
-    for i,data in pairs(elements) do
-        local action = data[2]
+    for i,data in pairs(vanillaElements) do
+        local action = data.ActionID
 
         -- TODO apparently the open option is the same for both corpses and items... how to distinguish without checking string?
 
         -- TODO reverse logic - assume it's a char until we find an option that proves it's an item. Since the issue are items; right-clicking them from inventory does not pull up the health bar so we cannot rely on it to know that an item was context'd
 
         if action == ContextMenu.VANILLA_ACTIONS.TALK or action == ContextMenu.VANILLA_ACTIONS.LOOT_CHARACTER or action == ContextMenu.VANILLA_ACTIONS.CHAIN or action == ContextMenu.VANILLA_ACTIONS.PICKPOCKET or action == ContextMenu.VANILLA_ACTIONS.UNCHAIN then
-            -- TODO some better solution
-
-            if not item then
-                ContextMenu.characterHandle = Client.UI.EnemyHealthBar.latestCharacter
-            end
-            -- ContextMenu.item = nil -- TODO should we allow both at once?
+            ContextMenu.characterHandle = Client.UI.EnemyHealthBar.latestCharacter
             break
         end
     end
@@ -617,9 +677,9 @@ Utilities.Hooks.RegisterListener("ContextMenu", "contextMenuOpened", function(ui
         Utilities.Hooks.FireEvent("PIP_ContextMenu", "VanillaMenu_Item", Item.Get(ContextMenu.itemHandle))
     end
 
-    ContextMenu.SetPosition(ContextMenu.VanillaUI)
-    ContextMenu.VanillaUI:GetRoot().windowsMenu_mc.updateDone(true)
-end)
+    ContextMenu.SetPosition(nil)
+    ContextMenu.GetActiveUI():GetRoot().windowsMenu_mc.updateDone(true)
+end, "Vanilla")
 
 -- Fired when you hover over an entry
 local function OnButtonSelected(ui, method, elementID)
@@ -724,24 +784,12 @@ local function OnRequestContextMenu(ui, method, id, x, y, entityHandle, ...)
 end
 
 -- Parses updateButtons() from vanilla context menu to keep track of vanilla context menu elements.
-local function OnContextMenuUpdateButtons(ui, method, param3)
-    local root = ui:GetRoot()
-    local data = {{}}
-    local entryIndex = 1
-
-    for i=0,#root.buttonArr-1,1 do
-        local element = root.buttonArr[i]
-
-        if (i) % 7 == 0 and i > 0 then
-            entryIndex = entryIndex + 1
-            table.insert(data, {})
-        end
-
-        table.insert(data[entryIndex], element)
-    end
+ContextMenu:RegisterInvokeListener("updateButtons", function(ev)
+    local root = ev.UI:GetRoot()
+    local data = Client.Flash.ParseArray(root.buttonArr, ContextMenu.ARRAY_ENTRY_TEMPLATES.BUTTON) ---@type ContextMenuUI_ArrayEntry_Button[]
 
     ContextMenu.vanillaContextData = data
-end
+end, "Vanilla")
 
 -- Fetches item from vanilla context menu calls.
 local function OnContextMenu(ui, method, param3, handle)
@@ -756,6 +804,8 @@ end
 
 Ext.Events.SessionLoaded:Subscribe(function()
     if Client.IsUsingController() then return nil end
+
+    local vanillaUI = Ext.UI.GetByType(Ext.UI.TypeID.contextMenu.Object)
     
     -- Setup our custom instance
     if IS_IMPROVED_HOTBAR then
@@ -778,32 +828,19 @@ Ext.Events.SessionLoaded:Subscribe(function()
 
     -- Setup vanilla context menu
     if not IS_IMPROVED_HOTBAR then
-        ContextMenu.VanillaUI = Ext.UI.GetByType(Client.UI.Data.UITypes.contextMenu)
-        ContextMenu.VanillaUI:GetRoot().contextMenusList.content_array[0].list_string_id = "main"
-        ContextMenu.VanillaUI:GetRoot().MAX_HEIGHT = ContextMenu.MAX_HEIGHT
+        vanillaUI:GetRoot().contextMenusList.content_array[0].list_string_id = "main"
+        vanillaUI:GetRoot().MAX_HEIGHT = ContextMenu.MAX_HEIGHT
     end
 
     -- Vanilla UI calls
     Ext.RegisterUINameCall("openContextMenu", OnContextMenu)
 
     if not IS_IMPROVED_HOTBAR then
-        Ext.RegisterUIInvokeListener(ContextMenu.VanillaUI, "updateButtons", OnContextMenuUpdateButtons, "Before")
-        Ext.RegisterUICall(ContextMenu.VanillaUI, "buttonPressed", OnButtonPressed)
-        Ext.RegisterUICall(ContextMenu.VanillaUI, "buttonSelected", OnButtonSelected)
-        Ext.RegisterUICall(ContextMenu.VanillaUI, "pipStatButtonUp", OnStatButtonPressed)
-        Ext.RegisterUICall(ContextMenu.VanillaUI, "pipContextMenuClosed", function(ui)
+        Ext.RegisterUICall(vanillaUI, "buttonPressed", OnButtonPressed)
+        Ext.RegisterUICall(vanillaUI, "buttonSelected", OnButtonSelected)
+        Ext.RegisterUICall(vanillaUI, "pipStatButtonUp", OnStatButtonPressed)
+        Ext.RegisterUICall(vanillaUI, "pipContextMenuClosed", function(ui)
             ContextMenu.Cleanup(ui)
-        end)
-        Ext.RegisterUICall(ContextMenu.VanillaUI, "pipVanillaContextMenuOpened", function(ui, method)
-            Utilities.Hooks.FireEvent("ContextMenu", "contextMenuOpened", ui, ContextMenu.vanillaContextData)
-        end, "After")
-    else -- We still need to listen for closing
-        Ext.Events.Tick:Subscribe(function()
-            local ui = ContextMenu.GetActiveUI()
-
-            -- if ui then
-            --     ContextMenu.Cleanup(ui)
-            -- end
         end)
     end
     

@@ -112,7 +112,7 @@ ContextMenu.RegisterVanillaMenuHandler("Item", function(item)
     -- Additionally, require shift+click for dismantling if items has runes.
     GreatforgeContextMenu.Entries.DISMANTLE.requireShiftClick = hasRunes or isEquipped
 
-    ContextMenu.AddElements(ContextMenu.VanillaUI, {
+    ContextMenu.AddElements(nil, {
         id = "main",
         entries = entries,
     })
@@ -206,7 +206,7 @@ ContextMenu.RegisterVanillaMenuHandler("Item", function(item)
     end
 
     if hasEquipment then
-        ContextMenu.AddElements(ContextMenu.VanillaUI, {
+        ContextMenu.AddElements(nil, {
             id = "main",
             entries = {
                 {

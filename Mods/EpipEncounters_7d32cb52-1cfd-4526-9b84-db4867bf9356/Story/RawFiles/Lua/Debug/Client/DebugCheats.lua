@@ -138,7 +138,7 @@ end)
 
 ContextMenu.RegisterVanillaMenuHandler("Character", function(char)
     if Epip.IsDeveloperMode() then
-        ContextMenu.AddElements(ContextMenu.VanillaUI, {
+        ContextMenu.AddElements(nil, {
             id = "main",
             entries = {
                 Debug.CheatsContextMenu
