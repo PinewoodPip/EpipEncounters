@@ -126,6 +126,10 @@ package Elements
             {
                 this.text_txt.restrict = "";
             }
+            else // Setting a field to be editable also turns on mouse events.
+            {
+                this.SetMouseEnabled(true);
+            }
         }
 
         public function SetRestrictedCharacters(restriction:String) : *
