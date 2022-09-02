@@ -10,7 +10,7 @@
 ---@class UI : Feature
 ---@field UITypeID integer? Use only for built-in UIs.
 ---@field PATH string? Path to the SWF. Use only for custom UIs.
----@field INPUT_DEVICE InputDevice
+---@field INPUT_DEVICE UI_InputDevice
 ---@field UI_FLAGS table<string, UIObjectFlag> Flags for UIObject.
 ---@field GetUI fun(self):UIObject?
 ---@field GetRoot fun(self):FlashMainTimeline?

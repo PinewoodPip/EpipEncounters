@@ -39,7 +39,7 @@
 -- UI
 ---------------------------------------------
 
----@alias InputDevice "Any" | "Controller" | "KeyboardMouse"
+---@alias UI_InputDevice "Any" | "Controller" | "KeyboardMouse"
 ---@alias FlashObjectHandle int64
 
 ---------------------------------------------
