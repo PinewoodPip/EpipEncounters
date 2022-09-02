@@ -323,10 +323,10 @@ Ext.Events.SessionLoaded:Subscribe(function()
 
         if char then
             Bar.latestCharacter = Bar.GetCharacter().Handle
-        end
-
-        if item then
+            Bar.latestItem = nil
+        elseif item then
             Bar.latestItem = Bar.GetItem().Handle
+            Bar.latestCharacter = nil
         end
 
         Bar.UpdateStacks()
