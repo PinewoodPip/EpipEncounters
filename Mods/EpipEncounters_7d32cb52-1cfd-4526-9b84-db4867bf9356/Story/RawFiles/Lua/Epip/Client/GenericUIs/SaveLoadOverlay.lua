@@ -115,7 +115,7 @@ end)
 
 -- Hide the overlay when the save menu is closed.
 Ext.Events.Tick:Subscribe(function (e)
-    if Overlay.UI:IsVisible() and (not SaveLoad:Exists() or not SaveLoad:IsVisible()) then
+    if Overlay.UI and Overlay.UI:IsVisible() and (not SaveLoad:Exists() or not SaveLoad:IsVisible()) then
         Overlay.UI:GetUI():Hide()
         Overlay.searchTerm = nil
     end
@@ -166,6 +166,8 @@ local function SetupUI()
     ui.Events.ViewportChanged:Subscribe(function (e)
         Overlay.Position()
     end)
+
+    ui:Hide()
 end
 
 -- We don't use __Setup so as to allow the setting to be toggled at any time.
