@@ -115,7 +115,7 @@ end)
 
 -- Hide the overlay when the save menu is closed.
 Ext.Events.Tick:Subscribe(function (e)
-    if GameState.GetState() == "Paused" and Overlay.UI:IsVisible() and (not SaveLoad:Exists() or not SaveLoad:IsVisible()) then
+    if Overlay.UI:IsVisible() and (not SaveLoad:Exists() or not SaveLoad:IsVisible()) then
         Overlay.UI:GetUI():Hide()
         Overlay.searchTerm = nil
     end
