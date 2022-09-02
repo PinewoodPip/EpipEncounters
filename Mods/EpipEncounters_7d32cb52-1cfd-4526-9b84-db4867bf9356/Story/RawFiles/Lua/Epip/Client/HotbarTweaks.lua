@@ -14,6 +14,45 @@ Epip.RegisterFeature("HotbarTweaks", Tweaks)
 -- EVENT LISTENERS
 ---------------------------------------------
 
+-- Add all actions to the action holder.
+Hotbar.Hooks.UpdateEngineActions:Subscribe(function (ev)
+    local actionOrder = {
+        "ActionAttackGround",
+        "ActionSkillSheathe",
+        "ActionSkillSneak",
+        "ActionSkillIdentify",
+        "ActionSkillLockpick",
+        "ActionSkillDisarm",
+        "ActionSkillRepair",
+        "ActionSkillEndTurn",
+        "ActionSkillGuard",
+    }
+    local requiresCombat = {
+        ActionSkillFlee = true,
+        ActionSkillGuard = true,
+        ActionSkillEndTurn = true,
+    }
+    local actions = {} ---@type HotbarUI_ArrayEntry_EngineAction[]
+
+    -- Flee is not shown in EE.
+    if not Mod.IsLoaded(Mod.GUIDS.EE_CORE) then
+        table.insert(actionOrder, "ActionSkillFlee")
+    end
+
+    for _,id in ipairs(actionOrder) do
+        local action = Stats.GetAction(id)
+        local enabled = true
+
+        if requiresCombat[action.ID] then
+            enabled = Client.IsActiveCombatant()
+        end
+
+        table.insert(actions, {ActionID = action.ID, Enabled = enabled})
+    end
+
+    ev.Actions = actions
+end)
+
 -- Listen for keybind.
 OptionsInput.Events.ActionExecuted:RegisterListener(function (action, _)
     if action == Tweaks.TOGGLE_BARS_KEYBIND then

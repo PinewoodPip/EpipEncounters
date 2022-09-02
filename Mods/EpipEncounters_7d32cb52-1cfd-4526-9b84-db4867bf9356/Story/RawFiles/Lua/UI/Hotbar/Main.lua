@@ -41,6 +41,7 @@ local Hotbar = {
     lastClickedSlot = -1,
     wasVisible = false,
     timer = 0,
+    engineActionsCount = 3,
 
     ACTION_BUTTONS_COUNT = 12,
     SKILL_USE_TIME = 3000, -- Kept as a fallback.
@@ -797,11 +798,11 @@ Hotbar:RegisterInvokeListener("updateActionSkills", function (ev)
     })
     
     Client.Flash.EncodeArray(array, Hotbar.ARRAY_ENTRY_TEMPLATES.ACTIONS, hook.Actions)
-end, "Before")
 
-Hotbar:RegisterInvokeListener("updateActionSkills", function(ev)
-    Ext.OnNextTick(Hotbar.UpdateActionHolder)
-end, "After")
+    Hotbar.engineActionsCount = #hook.Actions
+
+    Hotbar.UpdateActionHolder()
+end, "Before")
 
 Net.RegisterListener("EPIPENCOUNTERS_Hotbar_SetLayout", function(payload)
     Hotbar.SetState(Ext.GetCharacter(payload.NetID), payload.Layout)
@@ -1225,12 +1226,13 @@ end
 function Hotbar.UpdateActionHolder()
     local dualLayout = Hotbar.HasSecondHotkeysRow()
     local actionSkillHolder = Hotbar:GetRoot().actionSkillHolder_mc
+    local y = 742 - (Hotbar.engineActionsCount - 3) * 55
 
     if dualLayout then
-        actionSkillHolder.y = 742 - 70
-    else
-        actionSkillHolder.y = 742
+        y = y - 70
     end
+
+    actionSkillHolder.y = y
 end
 
 function Hotbar.UpdateFrame()
