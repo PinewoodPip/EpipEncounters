@@ -4,15 +4,22 @@ local Options = Client.UI.OptionsInput
 Options.RegisterTab("EpipEncounters", {
     Name = "Epip Encounters",
     Keybinds = {
-        {Name = "Toggle Tooltip Scrolling", ID = "EpipEncounters_ScrollTooltip", DefaultInput1 = {Keys = {"middle"}}},
-        {Name = "Toggle World Item Tooltips", ID = "EpipEncounters_ToggleWorldTooltips"},
-        {Name = "Quick Examine", ID = "EpipEncounters_QuickExamine", DefaultInput1 = {Keys = {"v"}}},
-        {Name = "Meditate", ID = "EpicEncounters_Meditate"},
-        {Name = "Source Infuse", ID = "EpipEncounters_SourceInfuse"},
+        -- Developer
         {Name = "Debug Teleport", ID = "EpipEncounters_DebugTeleport", DeveloperOnly = true},
         {Name = "Debug Teleport (Party)", ID = "EpipEncounters_DebugTeleport_Party", DeveloperOnly = true},
         {Name = "Debug Copy Identifier", ID = "EpipEncounters_Debug_CopyIdentifier", DeveloperOnly = true, DefaultInput1 = {Keys = {"lctrl", "c"}}},
         {Name = "Debug Open Features Menu", ID = "EpipEncounters_Debug_OpenDebugMenu", DeveloperOnly = true, DefaultInput1 = {Keys = {"lctrl", "f"}}},
+        {Name = "Log RootTemplate", ID = "EpipEncounters_Debug_LogRootTemplate", DeveloperOnly = true},
+
+        -- EE
+        {Name = "Meditate", ID = "EpicEncounters_Meditate"},
+        {Name = "Source Infuse", ID = "EpipEncounters_SourceInfuse"},
+
+        -- Misc
+        {Name = "Toggle Tooltip Scrolling", ID = "EpipEncounters_ScrollTooltip", DefaultInput1 = {Keys = {"middle"}}},
+        {Name = "Toggle World Item Tooltips", ID = "EpipEncounters_ToggleWorldTooltips"},
+        {Name = "Quick Examine", ID = "EpipEncounters_QuickExamine", DefaultInput1 = {Keys = {"v"}}},
+        -- {Name = "Examine", ID = "EpipEncounters_Examine", DefaultInput1 = {Keys = {"lctrl", "lshift", "f"}}},
 
         -- Hotbar
         {Name = "Hotbar Toggle Extra Bars Vibisility", ID = "EpipEncounters_Hotbar_ToggleVisibility"},
@@ -29,13 +36,12 @@ Options.RegisterTab("EpipEncounters", {
         {Name = "Hotbar Action 11 (top row)", ID = "EpipEncounters_Hotbar_11"},
         {Name = "Hotbar Action 12 (top row)", ID = "EpipEncounters_Hotbar_12"},
 
+        -- Housing
         {Name = "Housing: Select Furniture", ID = "EpipEncounters_Housing_MoveFurniture", DeveloperOnly = true},
         {Name = "Housing: Rotate Furniture (+ Axis)", ID = "EpipEncounters_Housing_RotateFurniture_Plus", DeveloperOnly = true},
         {Name = "Housing: Rotate Furniture (- Axis)", ID = "EpipEncounters_Housing_RotateFurniture_Minus", DeveloperOnly = true},
         {Name = "Housing: Raise Furniture", ID = "EpipEncounters_Housing_RaiseFurniture", DeveloperOnly = true, DefaultInput1 = {Keys = {"lctrl", "wheel_ypos"}}},
         {Name = "Housing: Lower Furniture", ID = "EpipEncounters_Housing_LowerFurniture", DeveloperOnly = true, DefaultInput1 = {Keys = {"lctrl", "wheel_yneg"}}},
-
-        {Name = "Log RootTemplate", ID = "EpipEncounters_Debug_LogRootTemplate", DeveloperOnly = true},
     },
 })
 
