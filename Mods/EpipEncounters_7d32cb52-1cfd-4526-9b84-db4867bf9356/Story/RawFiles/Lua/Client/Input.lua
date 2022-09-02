@@ -566,7 +566,7 @@ local Input = {
 }
 Epip.InitializeLibrary("Input", Input)
 Client.Input = Input
-Input:Debug()
+-- Input:Debug()
 
 -- Generate enum table.
 for name,index in pairs(Input.RAW_INPUT_EVENTS) do
@@ -643,13 +643,15 @@ function Input.GetInputEventDefinition(id)
     return Input.INPUT_EVENTS[id]
 end
 
----@param deviceID InputDevice
+---@param deviceID RawInputDevice
 ---@param rawID InputRawType
 ---@param state InputState
 ---@param value1 number? Defaults to 0 for released, 1 for pressed.
 ---@param value2 number? Defaults to 0 for released, 1 for pressed.
-function Input.Inject(deviceID, rawID, state, value1, value2)
+---@param immediate boolean? Defaults to true. If false, the input will be processed on the next frame.
+function Input.Inject(deviceID, rawID, state, value1, value2, immediate)
     local defaultValues = {Pressed = 1, Released = 0}
+    if immediate == nil then immediate = true end
     
     if value1 == nil then
         value1 = defaultValues[state]
@@ -658,7 +660,7 @@ function Input.Inject(deviceID, rawID, state, value1, value2)
         value2 = defaultValues[state]
     end
 
-    Ext.Input.InjectInput(deviceID, rawID, state, value1, value2)
+    Ext.Input.InjectInput(deviceID, rawID, state, value1, value2, immediate)
 end
 
 ---@param rawID InputRawType
@@ -798,6 +800,10 @@ Ext.Events.RawInput:Subscribe(function(e)
         Input.pressedKeys[id] = true
     else
         Input.pressedKeys[id] = nil
+    end
+
+    if not id:match("motion") then
+        Input:Dump(e)
     end
 
     -- Track mouse movement
