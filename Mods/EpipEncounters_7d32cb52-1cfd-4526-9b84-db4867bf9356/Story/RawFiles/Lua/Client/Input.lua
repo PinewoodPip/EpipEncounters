@@ -646,9 +646,18 @@ end
 ---@param deviceID InputDevice
 ---@param rawID InputRawType
 ---@param state InputState
----@param value1 number
----@param value2 number
+---@param value1 number? Defaults to 0 for released, 1 for pressed.
+---@param value2 number? Defaults to 0 for released, 1 for pressed.
 function Input.Inject(deviceID, rawID, state, value1, value2)
+    local defaultValues = {Pressed = 1, Released = 0}
+    
+    if value1 == nil then
+        value1 = defaultValues[state]
+    end
+    if value2 == nil then
+        value2 = defaultValues[state]
+    end
+
     Ext.Input.InjectInput(deviceID, rawID, state, value1, value2)
 end
 
