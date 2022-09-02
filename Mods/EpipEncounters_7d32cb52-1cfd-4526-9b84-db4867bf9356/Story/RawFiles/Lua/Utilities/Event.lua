@@ -39,6 +39,15 @@ setmetatable(PreventableEventParams, {__index = SubscribableEventParams})
 ---An event object with no parameters.
 ---@class EmptyEvent
 
+---@class SubscribableEvent_CharacterEventParams
+---@field Character Character
+
+---@class SubscribableEvent_ItemEventParams
+---@field Item Item
+
+---@class SubscribableEvent_EntityEventParams
+---@field Entity Entity
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
