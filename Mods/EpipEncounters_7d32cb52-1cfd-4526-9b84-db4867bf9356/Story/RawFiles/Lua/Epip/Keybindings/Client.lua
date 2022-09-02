@@ -19,7 +19,7 @@ Options.RegisterTab("EpipEncounters", {
         {Name = "Toggle Tooltip Scrolling", ID = "EpipEncounters_ScrollTooltip", DefaultInput1 = {Keys = {"middle"}}},
         {Name = "Toggle World Item Tooltips", ID = "EpipEncounters_ToggleWorldTooltips"},
         {Name = "Quick Examine", ID = "EpipEncounters_QuickExamine", DefaultInput1 = {Keys = {"v"}}},
-        -- {Name = "Examine", ID = "EpipEncounters_Examine", DefaultInput1 = {Keys = {"lctrl", "lshift", "f"}}},
+        {Name = "Examine", ID = "EpipEncounters_Examine"},
 
         -- Hotbar
         {Name = "Hotbar Toggle Extra Bars Vibisility", ID = "EpipEncounters_Hotbar_ToggleVisibility"},
