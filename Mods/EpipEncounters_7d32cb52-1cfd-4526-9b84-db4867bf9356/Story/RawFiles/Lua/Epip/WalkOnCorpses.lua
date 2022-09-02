@@ -6,8 +6,6 @@
 
 ---@class WalkOnCorpses : Feature
 local WalkOnCorpses = {
-    currentCharHandle = nil, ---@type EntityHandle
-
     SETTING_ID = "Feature_WalkOnCorpses",
 }
 Epip.RegisterFeature("WalkOnCorpses", WalkOnCorpses)
@@ -33,7 +31,7 @@ GameState.Events.RunningTick:Subscribe(function (_)
         char = Character.Get(state.HoverCharacter2)
     end
 
-    if char and char.Dead and char.CorpseLootable and WalkOnCorpses:IsEnabled() then
+    if char and char.Dead and char.CorpseLootable and WalkOnCorpses:IsEnabled() and not WalkOnCorpses.currentEntityHandle then
         WalkOnCorpses:DebugLog("Disabling corpse looting on ", char.DisplayName)
 
         char.CorpseLootable = false
@@ -57,6 +55,8 @@ GameState.Events.RunningTick:Subscribe(function (_)
                 char.CorpseLootable = true
 
                 GameState.Events.RunningTick:Unsubscribe("WalkOnCorpses")
+
+                WalkOnCorpses.currentEntityHandle = nil
             end
         end, {StringID = "WalkOnCorpses"})
     end
