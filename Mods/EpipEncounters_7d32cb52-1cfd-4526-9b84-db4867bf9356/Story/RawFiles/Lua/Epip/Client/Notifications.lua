@@ -27,6 +27,13 @@ NotificationUI.Hooks.ShowReceivalNotification:Subscribe(function (e)
     end
 end)
 
+-- Hide "X has shared Z stat" notifications.
+NotificationUI.Events.TextNotificationShown:Subscribe(function (ev)
+    if not ev.IsScripted and ev.Label:match(" shares ") and not OptionsSettings.GetOptionValue("EpipEncounters", "Notification_StatSharing") then
+        ev:Prevent()
+    end
+end)
+
 -- Set duration of region labels, or hide them immediately.
 NotificationUI:RegisterInvokeListener("setRegionText", function(ev)
     local root = ev.UI:GetRoot()

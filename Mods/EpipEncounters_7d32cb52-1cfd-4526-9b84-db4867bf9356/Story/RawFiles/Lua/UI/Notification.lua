@@ -11,7 +11,7 @@ local Notification = {
     USE_LEGACY_HOOKS = false,
 
     Events = {
-
+        TextNotificationShown = {Preventable = true}, ---@type PreventableEvent<NotificationUI_Event_TextNotificationShown>
     },
     Hooks = {
         ShowReceivalNotification = {}, ---@type SubscribableEvent<NotificationUI_Hook_ShowReceivalNotification>
@@ -25,8 +25,17 @@ Client.UI.Notification = Notification
 Epip.InitializeUI(Client.UI.Data.UITypes.notification, "Notification", Notification)
 
 ---------------------------------------------
--- EVENTS
+-- EVENTS/HOOKS
 ---------------------------------------------
+
+---@class NotificationUI_Event_TextNotificationShown : PreventableEventParams
+---@field Label string
+---@field Sound string
+---@field Duration number In seconds.
+---@field IsNormal boolean If false, the notification will be a warning-style one.
+---@field Unused1 number
+---@field IsScripted boolean True if the notification came from a lua script.
+
 
 ---@class NotificationUI_Hook_ShowReceivalNotification
 ---@field Sound string
@@ -47,11 +56,15 @@ function Notification.ShowNotification(text, duration, isWarning, sound)
     sound = sound or ""
     if isWarning == nil then isWarning = false end
 
-    Notification:GetRoot().setNotification(text, "", duration, not isWarning)
+    local success = Notification._FireTextNotificationEvent(text, sound, duration, not isWarning, nil, true)
 
-    -- Done here as the warning-style notification type does not call it.
-    if sound ~= "" then
-        Notification:PlaySound(sound)
+    if success then
+        Notification:GetRoot().setNotification(text, "", duration, not isWarning)
+
+        -- Done here as the warning-style notification type does not call it in the swf.
+        if sound ~= "" then
+            Notification:PlaySound(sound)
+        end
     end
 end
 
@@ -87,6 +100,24 @@ end
 ---@param sound string?
 function Notification.ShowWarning(text, duration, sound)
     Notification.ShowNotification(text, duration, true, sound)
+end
+
+---@param label string
+---@param sound string
+---@param duration number
+---@param isNormal boolean
+---@param unused1 number?
+---@param isScripted boolean? Defaults to false.
+---@return boolean True if the event was not prevented.
+function Notification._FireTextNotificationEvent(label, sound, duration, isNormal, unused1, isScripted)
+    return not Notification.Events.TextNotificationShown:Throw({
+        Label = label,
+        Sound = sound,
+        Duration = duration,
+        IsNormal = isNormal,
+        Unused1 = unused1 or 0,
+        IsScripted = isScripted or false,
+    }).Prevented
 end
 
 ---------------------------------------------
@@ -129,6 +160,19 @@ end)
 -- EVENT LISTENERS
 ---------------------------------------------
 
+-- Listen for regular toasts.
+Notification:RegisterInvokeListener("setNotification", function (ev, label, sound, duration, isWarning, unused1) -- Last param is unused.
+    if not Notification._FireTextNotificationEvent(label, sound, duration, not isWarning, unused1, false) then
+        ev:PreventAction()
+
+        -- Call notif done - this is done so as not to confuse the notification queue in the engine.
+        Timer.Start("", 0.5, function()
+            Notification:ExternalInterfaceCall("notificationDone")
+        end)
+    end
+end)
+
+-- Listen for skill/item notifications.
 Notification:RegisterInvokeListener("showNewSkill", function(ev, name, description, sound)
     ---@type NotificationUI_Hook_ShowReceivalNotification
     local event = {

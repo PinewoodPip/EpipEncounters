@@ -494,6 +494,13 @@ local Notification = {
         Tooltip = "Controls whether notifications for receiving items show.",
         DefaultValue = true,
     },
+    {
+        ID = "Notification_StatSharing",
+        Type = "Checkbox",
+        Label = "Stat-sharing Notifications",
+        Tooltip = "Controls whether notifications for sharing stats (Loremaster, Lucky Charm) show.",
+        DefaultValue = true,
+    },
 }
 
 local WorldTooltips = {
