@@ -1,0 +1,27 @@
+
+- Added a better frame for the hotbar health bar, and shadows for the AP bar (thanks Elric)
+- Added a keybind to bring up the examine UI (the real one)
+- Added all engine actions (the ones you see in the controller UI) to the hotbar actions drawer (the vanilla one, bound to `X`), except for flee
+- Reordered some keybindings
+- Added "Let there be tooltips" to the list of EE-incompatible mods
+- Fixed character-specific context menus appearing on items
+- Fixed the save/load overlay not disappearing in multiplayer when the UI is closed
+- Fixed a possible edge case with walking over corpses in combat that would result in the corpse not being lootable after combat
+- Fixed the dragging area for the debug display being too large
+- Fixed an issue with character control switching rapidly
+- Fixed hotbar tooltips not showing keybinds
+- Removed the "Special Binding 1 & 2" keys since they are no longer used
+
+On the technical side of things:
+
+- Added data for all InputEvents to `Input` as well as possibly the world's biggest alias
+- Added an `IO` table
+- Began modernizing the context menu APIs
+- Added a Pointer library, currently deals only with `Ext.UI.GetPickingState()`-related matters
+- Added `table.lua` and `math.lua` containing the extensions to the respective built-in tables
+- RGBColor creation now clamps the color values
+- Implemented __eq, __add and __sub for RGBColor
+- Various fixes for outdated/clashing IDE class names
+- Fixed an infinite loop when using the default buttons for `MessageBox`
+- Added a table for `combatTurn` UI
+    - Unfortunately this UI does not appear to hold any character handles, making it not very useful.
