@@ -20,3 +20,10 @@ if Epip.IsDeveloperMode() then
     end)
     timer:SetRepeatCount(-1)
 end
+
+-- Respond to pings.
+Net.RegisterListener("EPIPENCOUNTERS_DebugDisplay_Ping", function (payload)
+    local char = Character.Get(payload.NetID)
+
+    Net.PostToOwner(char, "EPIPENCOUNTERS_DebugDisplay_Ping", payload)
+end)

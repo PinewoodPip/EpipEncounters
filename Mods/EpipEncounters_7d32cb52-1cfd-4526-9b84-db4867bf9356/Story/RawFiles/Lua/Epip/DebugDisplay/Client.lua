@@ -11,14 +11,30 @@ DebugDisplay.TrackedModVersions = {
     {GUID = Mod.GUIDS.EE_DERPY, Name = "Derpy's"},
 }
 DebugDisplay.BG_SIZE = Vector.Create(200, 200)
+DebugDisplay.PING_INTERVAL = 0.8
+DebugDisplay.pingTime = Ext.Utils.MonotonicTime()
+
+---------------------------------------------
+-- CLASSES
+---------------------------------------------
+
+---@class EPIPENCOUNTERS_DebugDisplay_Ping
+---@field ClientTime integer
+---@field NetID NetId
 
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
+---@override
+---@return boolean
+function DebugDisplay:IsEnabled()
+    return Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "Developer_DebugDisplay") and Epip.IsDeveloperMode() and _Feature.IsEnabled(self)
+end
+
 ---@param active boolean
 function DebugDisplay.Toggle(active)
-    if active and Epip.IsDeveloperMode() then
+    if active and DebugDisplay:IsEnabled() then
         DebugDisplay.UI:Show()
     else
         DebugDisplay.UI:Hide()
@@ -86,9 +102,25 @@ function DebugDisplay.SetClientTicks(ticks)
     element:SetText(Text.Format("Client FPS: %s%s", {FormatArgs = {ticks, suffix}, Color = Color.WHITE}))
 end
 
+function DebugDisplay.SendPingRequest()
+    if GameState.IsInSession() then
+        DebugDisplay.pingTime = Ext.Utils.MonotonicTime()
+    
+        Net.PostToServer("EPIPENCOUNTERS_DebugDisplay_Ping", {ClientTime = Ext.Utils.MonotonicTime(), NetID = Client.GetCharacter().NetID})
+    end
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
+
+-- Listen for pings being sent back.
+Net.RegisterListener("EPIPENCOUNTERS_DebugDisplay_Ping", function (payload)
+    local now = Ext.Utils.MonotonicTime()
+    local timeElapsed = now - payload.ClientTime
+
+    DebugDisplay.PingLabel:SetText(Text.Format("Ping: %sms", {FormatArgs = {timeElapsed}, Color = Color.WHITE}))
+end)
 
 Ext.Events.Tick:Subscribe(function (ev)
     DebugDisplay.AddTick()
@@ -132,7 +164,7 @@ function DebugDisplay:__Setup()
     end)
 
     local serverTickCounter = TextPrefab.Create(ui, "ServerTickCounter", container, "", "Left", textSize)
-
+    local pingCounter = TextPrefab.Create(ui, "PingLabel", container, "", "Left", textSize)
     local extVersionText = TextPrefab.Create(ui, "ExtVersionLabel", container, Text.Format("Ext: v%s", {FormatArgs = {Ext.Utils.Version()}}), "Left", textSize)
 
     local modVersionText = TextPrefab.Create(ui, "ModVersionLabel", container, "", "Left", Vector.Create(DebugDisplay.BG_SIZE[1], 200))
@@ -150,8 +182,15 @@ function DebugDisplay:__Setup()
     DebugDisplay.ServerTickCounter = serverTickCounter
     DebugDisplay.ModVersionText = modVersionText
     DebugDisplay.ExtVersionText = extVersionText
+    DebugDisplay.PingLabel = pingCounter
 
     DebugDisplay.UpdateModVersions()
 
     DebugDisplay.Toggle(Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "Developer_DebugDisplay"))
+
+    Timer.Start(DebugDisplay.PING_INTERVAL, function (ev)
+        if DebugDisplay:IsEnabled() then
+            DebugDisplay.SendPingRequest()
+        end
+    end):SetRepeatCount(-1)
 end

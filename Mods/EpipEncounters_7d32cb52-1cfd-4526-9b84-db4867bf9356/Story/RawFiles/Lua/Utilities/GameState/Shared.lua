@@ -105,6 +105,16 @@ Epip.InitializeLibrary("GameState", GameState)
 ---@field To GameState
 
 ---------------------------------------------
+-- METHODS
+---------------------------------------------
+
+---Returns whether the game state is currently in a session.
+---@return boolean
+function GameState.IsInSession()
+    return GameState.IN_SESSION_STATES[GameState.GetState()] == true
+end
+
+---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
 
