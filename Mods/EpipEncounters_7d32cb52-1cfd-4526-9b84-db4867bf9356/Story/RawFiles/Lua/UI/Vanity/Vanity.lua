@@ -1092,11 +1092,15 @@ end
 ---------------------------------------------
 
 -- Block character sheet tooltips while the UI is open. Temporary fix for a new(?) strange issue where the sheet receives hover events.
-Client.UI.CharacterSheet:RegisterCallListener("showStatTooltip", function(ev)
+---@param ev EclLuaUICallEvent
+local function PreventTooltip(ev)
     if Vanity.IsOpen() then
         ev:PreventAction()
     end
-end)
+end
+Client.UI.CharacterSheet:RegisterCallListener("showStatTooltip", PreventTooltip)
+Client.UI.CharacterSheet:RegisterCallListener("showAbilityTooltip", PreventTooltip)
+Client.UI.CharacterSheet:RegisterCallListener("showTalentTooltip", PreventTooltip)
 
 Net.RegisterListener("EPIPENCOUNTERS_Vanity_RefreshSheetAppearance", function(_)
     local sheet = Client.UI.CharacterSheet
