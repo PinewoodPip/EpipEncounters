@@ -138,13 +138,13 @@ local Chat = {
             "Sound 3 (Synth)",
         }
     },
-    -- {
-    --     ID = "Chat_ExitAfterSendingMessage",
-    --     Type = "Checkbox",
-    --     Label = "Unfocus after sending messages",
-    --     Tooltip = "Unfocuses the UI after you send a message, restoring input to the rest of the game.",
-    --     DefaultValue = true,
-    -- },
+    {
+        ID = "Chat_ExitAfterSendingMessage",
+        Type = "Checkbox",
+        Label = "Unfocus after sending messages",
+        Tooltip = "Unfocuses the UI after you send a message, restoring input to the rest of the game.",
+        DefaultValue = false,
+    },
 }
 
 ---@type OptionsSettingsOption[]

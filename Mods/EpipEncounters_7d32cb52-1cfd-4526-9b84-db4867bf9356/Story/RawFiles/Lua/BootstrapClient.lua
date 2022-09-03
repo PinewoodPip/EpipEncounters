@@ -245,7 +245,7 @@ LOAD_ORDER = {
     "Epip/Client/AscensionShortcuts.lua",
     "Epip/Client/ModDocs.lua",
     "Epip/Client/JournalChangelog.lua",
-    -- "Epip/Client/ExitChatAfterMessage.lua", -- Disabled as there seems to be an issue with InjectInput.
+    "Epip/Client/ExitChatAfterMessage.lua",
 
     -- Chat commands
     "Epip/ChatCommands/Shared.lua",
