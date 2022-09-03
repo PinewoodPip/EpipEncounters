@@ -58,12 +58,14 @@ end
 ---@return SaveLoadUI_Entry[] By reference (table passed by parameter is mutated).
 function Overlay.FilterContent(entries, fieldName, text)
     if text ~= nil and text ~= "" then
+        text = text:lower() -- Searching is case-insensitive - this does technically break using patterns, but oh well.
+
         local i = 1
         while i <= #entries do
             local entry = entries[i]
             local fieldValue = entry[fieldName]
 
-            if not fieldValue:match(text) then
+            if not fieldValue:lower():match(text) then
                 table.remove(entries, i)
                 i = i - 1
             end
