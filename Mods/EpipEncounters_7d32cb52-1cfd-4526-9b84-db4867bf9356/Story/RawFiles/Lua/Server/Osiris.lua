@@ -72,10 +72,20 @@ function Osiris._ParseParameters(...)
 
     for i=1,length,1 do
         local v = params[i]
-        -- Convert entity references to their GUIDs.
-        if GetExtType(v) then
-            params[i] = v.MyGuid
+        local convertedParam = v
+
+        -- Convert parameter types.
+        if GetExtType(v) then -- Convert entity references to their GUIDs.
+            convertedParam = v.MyGuid
+        elseif type(v) == "boolean" then -- Convert booleans to 0/1.
+            if v then
+                convertedParam = 1
+            else
+                convertedParam = 0
+            end
         end
+
+        params[i] = convertedParam
     end
 
     return table.unpackSelect(params, length)
