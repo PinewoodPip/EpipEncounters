@@ -33,6 +33,50 @@ function Item.GetIcon(item)
     return icon
 end
 
+---Returns whether the item has a flag.
+---@param item Item
+---@param flag EclItemFlags|EsvItemFlags|EclItemFlags2|EsvItemFlags2
+function Item.HasFlag(item, flag)
+    local hasFlag = false
+
+    -- Search Flags
+    for _,itemFlag in ipairs(item.Flags) do
+        if itemFlag == flag then
+            hasFlag = true
+            break
+        end
+    end
+
+    -- Search Flags2
+    if not hasFlag then
+        for _,itemFlag in ipairs(item.Flags2) do
+            if itemFlag == flag then
+                hasFlag = true
+                break
+            end
+        end
+    end
+
+    return hasFlag
+end
+
+---Returns whether an item is a container.
+---@param item Item
+---@return boolean
+function Item.IsContainer(item)
+   local actions = item.RootTemplate.OnUsePeaceActions
+   local isContainer = false
+
+   for _,action in ipairs(actions) do
+        if action.Type == "OpenClose" then
+            isContainer = true
+            break
+        end
+   end
+
+   return isContainer
+end
+
 ---Returns true if the item is a weapon (shields don't count!)
 ---@param item Item
 ---@return boolean
