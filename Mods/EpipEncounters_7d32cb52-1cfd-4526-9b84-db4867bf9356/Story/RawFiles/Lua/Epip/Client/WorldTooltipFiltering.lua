@@ -23,7 +23,7 @@ function Filtering.ShouldFilter(entry)
 
     -- Filter out empty bodies/containers
     if not Filtering._IsSettingEnabled(Filtering.SETTINGS.EMPTY_BODIES) then
-        if entry.Label:match("%(empty%)$") then
+        if entry.Label:match("%(empty%)") then
             shouldFilter = true
         end
     end
