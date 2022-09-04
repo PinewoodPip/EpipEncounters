@@ -519,6 +519,13 @@ local WorldTooltips = {
         Tooltip = "If enabled, clicking world tooltips will open containers rather than picking them up.",
         DefaultValue = false,
     },
+    {
+        ID = "WorldTooltip_MoreTooltips",
+        Type = "Checkbox",
+        Label = "Show more items",
+        Tooltip = "If enabled, world tooltips will be shown for all items. This includes clutter like doors.<br>" .. Text.Format("Requires a reload.", {Color = Color.LARIAN.YELLOW}),
+        DefaultValue = false,
+    },
 }
 
 local Order = {

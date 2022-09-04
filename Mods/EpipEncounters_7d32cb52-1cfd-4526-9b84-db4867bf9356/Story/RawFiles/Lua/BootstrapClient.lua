@@ -223,6 +223,7 @@ LOAD_ORDER = {
     "Epip/Client/RewardItemComparison.lua",
     "Epip/Client/HotbarTweaks.lua",
     "Epip/Client/ExamineKeybind.lua",
+    "Epip/Client/MoreWorldTooltips.lua",
     -- "Epip/Client/InventoryImprovements.lua",
 
     {ScriptSet = "Epip/Greatforge/DrillSockets"},
