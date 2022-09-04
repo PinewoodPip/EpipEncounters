@@ -91,6 +91,58 @@ function Item.HasUseActions(item)
     return #item.RootTemplate.OnUsePeaceActions > 0
 end
 
+---Returns the current owner of the item.
+---The owner will be nil if the character who owned the item died.
+---@param item Item
+---@return Character?
+function Item.GetOwner(item)
+    local ownerHandle
+    local owner
+
+    -- Unfortunate naming inconsistency
+    if Ext.IsServer() then
+        ownerHandle = item.OwnerHandle
+    else
+        ownerHandle = item.OwnerCharacterHandle
+    end
+
+    if Ext.Utils.IsValidHandle(ownerHandle) then
+        owner = Character.Get(ownerHandle)
+    end
+
+    return owner
+end
+
+---Returns whether interacting with an item is legal.
+---@param item Item
+---@return boolean
+function Item.IsLegal(item)
+    local template = item.RootTemplate
+    local isLegal = true
+    local legalActions = { -- Having any of these actions makes the item legal.
+        Sit = true,
+        Lying = true,
+        Ladder = true,
+    }
+
+    if not template.IsPublicDomain then
+        local owner = Item.GetOwner(item) -- Owner will be nil if the character who owned the item died.
+
+        if owner and not owner.InParty then
+            isLegal = false
+
+            for _,action in ipairs(template.OnUsePeaceActions) do
+                if legalActions[action.Type] then
+                    isLegal = true
+                    break
+                end
+            end
+        end
+    end
+
+    return isLegal
+end
+
 ---Returns true if the item is a weapon (shields don't count!)
 ---@param item Item
 ---@return boolean

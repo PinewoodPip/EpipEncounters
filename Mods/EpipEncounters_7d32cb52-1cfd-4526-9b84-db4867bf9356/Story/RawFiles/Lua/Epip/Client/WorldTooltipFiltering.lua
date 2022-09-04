@@ -99,23 +99,38 @@ end)
 -- SETUP
 ---------------------------------------------
 
----@param label string
+---@param entry WorldTooltipUI_Entry
+---@param entity Entity
+---@param isItem boolean
 ---@param settingID string
 ---@return string
-local function EmphasizeLabel(label, settingID)
-    local color = Filtering.EMPHASIS_COLORS[Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", settingID)]
-    local splitLabel = Text.Split_2(label, "<br>")
-    splitLabel[1] = Text.StripFontTags(splitLabel[1])
+local function EmphasizeLabel(entry, entity, isItem, settingID)
+    local label = entry.Label
+    local canEmphasize = true
 
-    for i=2,#splitLabel,1 do -- Make subtitle(s?) smaller again
-        splitLabel[i] = Text.Format(splitLabel[i], {Size = 19, RemovePreviousFormatting = true})
+    -- Cannot emphasize illegal items
+    if isItem then
+        if not Item.IsLegal(entity) then
+            canEmphasize = false
+        end
     end
 
-    local separator = ""
-    if #splitLabel > 1 then separator = "<br>" end
-    label = string.concat(splitLabel, separator)
+    if canEmphasize then
+        local color = Filtering.EMPHASIS_COLORS[Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", settingID)]
+        local splitLabel = Text.Split_2(label, "<br>")
+        splitLabel[1] = Text.StripFontTags(splitLabel[1])
 
-    return Text.Format(label, {Color = color})
+        for i=2,#splitLabel,1 do -- Make subtitle(s?) smaller again
+            splitLabel[i] = Text.Format(splitLabel[i], {Size = 19, RemovePreviousFormatting = true})
+        end
+
+        local separator = ""
+        if #splitLabel > 1 then separator = "<br>" end
+        label = string.concat(splitLabel, separator)
+        label = Text.Format(label, {Color = color})
+    end
+
+    return label
 end
 
 -- Register default settings.
@@ -173,7 +188,7 @@ local settings = {
 
             if GetExtType(entity) == "ecl::Item" then
                 if Item.HasUseAction(entity, "Consume") then
-                    label = EmphasizeLabel(label, "WorldTooltip_HighlightConsumables")
+                    label = EmphasizeLabel(entry, entity, true, "WorldTooltip_HighlightConsumables")
                 end
             end
 
@@ -188,7 +203,7 @@ local settings = {
 
             if GetExtType(entity) == "ecl::Item" then
                 if Item.IsEquipment(entity) then
-                    label = EmphasizeLabel(label, "WorldTooltip_HighlightEquipment")
+                    label = EmphasizeLabel(entry, entity, true, "WorldTooltip_HighlightEquipment")
                 end
             end
 
@@ -203,7 +218,7 @@ local settings = {
 
             if GetExtType(entity) == "ecl::Item" then
                 if Item.IsContainer(entity) then
-                    label = EmphasizeLabel(label, "WorldTooltip_HighlightContainers")
+                    label = EmphasizeLabel(entry, entity, true, "WorldTooltip_HighlightContainers")
                 end
             end
 
