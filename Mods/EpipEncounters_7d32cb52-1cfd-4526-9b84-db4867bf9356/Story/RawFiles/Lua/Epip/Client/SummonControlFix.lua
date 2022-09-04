@@ -5,6 +5,8 @@ local CharacterSheet = Client.UI.CharacterSheet
 ---@class Feature_SummonControlFix : Feature
 local Fix = {
     ignoreNextSelect = false,
+    previousHandles = {},
+    currentTimer = nil, ---@type TimerLib_Entry
 
     CHARACTER_SWITCH_INPUT_EVENTS = {
         [218] = true,
@@ -40,16 +42,27 @@ PlayerInfo.Events.ActiveCharacterChanged:Subscribe(function (e)
     local newChar = e.NewCharacter
     local prevChar = e.PreviousCharacter
 
-    -- Ignore manual character changes
-    if newChar and prevChar and not e.Manual and not Fix.ignoreNextSelect then
+    -- Cancel our change if the engine has requested another one in the meantime.
+    if not e.Manual and Fix.currentTimer then
+        Fix.currentTimer:Cancel()
+        Fix.currentTimer = nil
+    else
+        -- Ignore manual character changes
+        if newChar and prevChar and not e.Manual and not Fix.ignoreNextSelect then
 
-        -- Only swap if it is not the new char's turn
-        if Client.IsInCombat() and not Client.IsActiveCombatant() then
-            local previousCharacter = Character.Get(prevChar.Handle)
+            -- Only swap if it is not the new char's turn
+            if Client.IsInCombat() and not Client.IsActiveCombatant() and not prevChar.HasOwner then
+                local prevCharHandle = prevChar.Handle
+                local newCharHandle = newChar.Handle
+    
+                Fix:DebugLog("Restoring control to previous character", prevChar.DisplayName)
 
-            Fix:DebugLog("Restoring control to previous character", previousCharacter.DisplayName)
+                Fix.currentTimer = Timer.Start(0.4, function (_)
+                    PlayerInfo.SelectCharacter(prevCharHandle)
 
-            PlayerInfo.SelectCharacter(previousCharacter.Handle)
+                    Fix.previousHandles = {NewChar = newCharHandle, PreviousChar = prevCharHandle}
+                end)
+            end
         end
     end
 
