@@ -8,6 +8,8 @@ local Inv = {
 
     draggedItemHandle = nil,
     initialized = false,
+    _inventoryIDs = {}, ---@type table<FlashObjectHandle, integer>
+    _nextInventoryID = 0,
 
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
@@ -17,6 +19,9 @@ local Inv = {
     Hooks = {
         GetUpdate = {}, ---@type SubscribableEvent<PartyInventoryUI_Hooks_GetUpdate>
     },
+    FILEPATH_OVERRIDES = {
+        -- ["Public/Game/GUI/partyInventory.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/partyInventory.swf",
+    }
 }
 Client.UI.PartyInventory = Inv
 Epip.InitializeUI(Client.UI.Data.UITypes.partyInventory, "PartyInventory", Inv)
@@ -131,6 +136,52 @@ Inv:RegisterInvokeListener("updateItems", function(_)
     
     Inv.nextContentEvent = {Items = ev.Items}
 end)
+
+-- WIP.
+if Epip.IsDeveloperMode(true) and false then
+    Inv:RegisterInvokeListener("updateInventories", function (ev)
+        local entries = Client.Flash.ParseArray(ev.UI:GetRoot().inventoryUpdateList, {
+            "CharacterHandle",
+            "Unknown2",
+            "Unknown3",
+            "Unknown4",
+            "Unknown5",
+        })
+    
+        for _,entry in ipairs(entries) do
+            if Inv._inventoryIDs[entry.CharacterHandle] == nil then
+                Inv._inventoryIDs[entry.CharacterHandle] = Inv._nextInventoryID
+    
+                Inv._nextInventoryID = Inv._nextInventoryID + 1
+            end
+        end
+    end)
+    
+    -- Set icons for each item
+    Inv.Hooks.GetUpdate:Subscribe(function (ev)
+        local ui = Inv:GetUI()
+    
+        for _,entry in ipairs(ev.Items) do
+            -- print("iggy_slot_" .. Text.RemoveTrailingZeros(entry.SlotID))
+            if entry.ItemHandle > 0 then
+                -- print(entry.CharacterHandle)
+                local item = Item.Get(entry.ItemHandle, true)
+                local icon = Item.GetIcon(item)
+                local inventoryID = Inv._inventoryIDs[entry.CharacterHandle]
+    
+                local iggyIconID = string.format("inventory_%s_slot_%s", Text.RemoveTrailingZeros(inventoryID), Text.RemoveTrailingZeros(entry.SlotID))
+                ui:SetCustomIcon(iggyIconID, icon, 50, 50)
+            end
+        end
+    
+        -- Reduced vanilla iggy icon opacity to check if icons are correct.
+        local inv_mc = ui:GetRoot().inventory_mc
+        inv_mc.list.content_array[0].inv.m_IggyImageHolder.alpha = 0
+        inv_mc.list.content_array[1].inv.m_IggyImageHolder.alpha = 0
+        inv_mc.list.content_array[2].inv.m_IggyImageHolder.alpha = 0
+        inv_mc.list.content_array[3].inv.m_IggyImageHolder.alpha = 0
+    end)
+end
 
 Inv:RegisterInvokeListener("updateItems", function(_)
     Inv.Events.ContentUpdated:Throw(Inv.nextContentEvent)

@@ -16,6 +16,23 @@ function Item.IsMeleeWeapon(item)
     return item and item.Stats and (Data.Game.MELEE_WEAPONS[item.Stats.WeaponType] or item.Stats.WeaponType == "None")
 end
 
+---Returns the icon of the item.
+---@param item Item
+---@return string
+function Item.GetIcon(item)
+    local icon = item.RootTemplate.Icon
+
+    -- Logic for getting icons is different per context.
+    -- TODO! Requires an extender patch; otherwise we cannot get the right namegroup.
+    -- if Ext.IsClient() and item.Stats then
+    --     local statObject = Ext.Stats.Get(item.Stats.Name)
+    --     local itemGroup = Ext.Stats.ItemGroup.GetLegacy(statObject.ItemGroup)
+    --     local index = item
+    -- end
+
+    return icon
+end
+
 ---Returns true if the item is a weapon (shields don't count!)
 ---@param item Item
 ---@return boolean
