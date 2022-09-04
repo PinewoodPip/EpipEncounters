@@ -503,8 +503,47 @@ local Notification = {
     },
 }
 
+local WorldTooltipsEmphasisColorsDropdown = {
+    "None",
+    "Blue Label",
+    "Green Label",
+    "Yellow Label",
+    "Orange Label",
+}
+
 local WorldTooltips = {
     CreateHeader("World Item Tooltips"),
+    {
+        ID = "WorldTooltip_OpenContainers",
+        Type = "Checkbox",
+        Label = "Open containers",
+        Tooltip = "If enabled, clicking world tooltips will open containers rather than picking them up.",
+        DefaultValue = false,
+    },
+    {
+        ID = "WorldTooltip_HighlightContainers",
+        Type = "Dropdown",
+        Label = "Containers Emphasis",
+        Tooltip = "Emphasizes container items in world tooltips.",
+        DefaultValue = 1,
+        Options = WorldTooltipsEmphasisColorsDropdown,
+    },
+    {
+        ID = "WorldTooltip_HighlightConsumables",
+        Type = "Dropdown",
+        Label = "Consumables Emphasis",
+        Tooltip = "Emphasizes consumable items in world tooltips.",
+        DefaultValue = 1,
+        Options = WorldTooltipsEmphasisColorsDropdown,
+    },
+    {
+        ID = "WorldTooltip_HighlightEquipment",
+        Type = "Dropdown",
+        Label = "Equipment Emphasis",
+        Tooltip = "Emphasizes equipment items in world tooltips.",
+        DefaultValue = 1,
+        Options = WorldTooltipsEmphasisColorsDropdown,
+    },
     {
         ID = "WorldTooltip_EmptyContainers",
         Type = "Checkbox",
@@ -513,11 +552,25 @@ local WorldTooltips = {
         DefaultValue = true,
     },
     {
-        ID = "WorldTooltip_OpenContainers",
+        ID = "WorldTooltip_ShowSittableAndLadders",
         Type = "Checkbox",
-        Label = "Open containers",
-        Tooltip = "If enabled, clicking world tooltips will open containers rather than picking them up.",
-        DefaultValue = false,
+        Label = "Show chairs and ladders",
+        Tooltip = "If enabled, chairs and ladders will show world tooltips. Requires \"Show more items\" to be enabled, as these do not have tooltips by default.",
+        DefaultValue = true,
+    },
+    {
+        ID = "WorldTooltip_ShowDoors",
+        Type = "Checkbox",
+        Label = "Show doors",
+        Tooltip = "If enabled, doors will show world tooltips. Requires \"Show more items\" to be enabled, as these do not have tooltips by default.",
+        DefaultValue = true,
+    },
+    {
+        ID = "WorldTooltip_ShowInactionable",
+        Type = "Checkbox",
+        Label = "Show items with no use actions",
+        Tooltip = "If enabled, items with no use actions will show world tooltips.",
+        DefaultValue = true,
     },
     {
         ID = "WorldTooltip_MoreTooltips",

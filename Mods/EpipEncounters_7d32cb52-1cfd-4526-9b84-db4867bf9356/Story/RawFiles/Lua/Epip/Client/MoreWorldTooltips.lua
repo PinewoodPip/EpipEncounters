@@ -18,7 +18,8 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
-GameState.Events.GameReady:Subscribe(function (ev)
+-- Enable tooltips for all registered items on the level.
+GameState.Events.GameReady:Subscribe(function (_)
     if MoreWorldTooltips:IsEnabled() then
         local level = Ext.Entity.GetCurrentLevel()
         local levelID = level.LevelDesc.UniqueKey

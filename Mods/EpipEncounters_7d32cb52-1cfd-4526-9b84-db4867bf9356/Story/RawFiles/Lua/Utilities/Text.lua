@@ -49,10 +49,10 @@ Text = {
 ---@field Align FontAlign
 ---@field FormatArgs any[]
 ---@field Text? string Used for formatting strings with recursive Text.Format calls.
-
----@class TextFormatData
+---@field RemovePreviousFormatting boolean Defaults to false.
 local _TextFormatData = {
     FormatArgs = {},
+    RemovePreviousFormatting = false,
 }
 
 ---Returns a string representation of a number, rounded.
@@ -172,6 +172,33 @@ function Text.Split(inputstr, sep)
     return t
 end
 
+-- WIP
+function Text.Split_2(str, sep)
+    local splitStrings = {}
+    local newStr = ""
+    local separatorLength = #sep
+
+    local i = 1
+    while i <= #str do
+        local char = str:sub(i, i)
+
+        if str:sub(i, i + separatorLength - 1) == sep then
+            i = i + separatorLength
+
+            table.insert(splitStrings, newStr)
+            newStr = ""
+        else
+            newStr = newStr .. char
+
+            i = i + 1
+        end
+    end
+
+    table.insert(splitStrings, newStr)
+
+    return splitStrings
+end
+
 ---Capitalizes the first letter of the string.
 ---https://stackoverflow.com/a/2421746
 ---@param str string
@@ -198,6 +225,10 @@ end
 ---@return string 
 function Text.Format(str, formatData)
     setmetatable(formatData, {__index = _TextFormatData})
+
+    if formatData.RemovePreviousFormatting then
+        str = Text.StripFontTags(str)
+    end
 
     -- Parse args, which can be a TextFormatData as well.
     local finalArgs = {}
@@ -242,6 +273,37 @@ function Text.Format(str, formatData)
     str = string.format("<font%s%s%s%s>%s</font>", fontType, color, size, align, str)
 
     return str
+end
+
+---Removes all <font> tags from a string. WIP!
+---@param str string
+---@return string
+function Text.StripFontTags(str)
+    str = str:gsub("</br>", "<br>")
+
+    local newStr = ""
+    local length = string.len(str)
+    local inTag = 0
+    for i=1,length,1 do
+        local char = str:sub(i, i)
+
+        if char == "<" then -- TODO consider escapes
+            inTag = inTag + 1
+
+            local isBr = str:sub(i, i + 3) == "<br>"
+            if isBr then
+                newStr = newStr .. "<br>"
+
+                i = i + 3
+            end
+        elseif char == ">" then
+            inTag = inTag - 1
+        elseif inTag == 0 then 
+            newStr = newStr .. char
+        end
+    end
+
+    return newStr
 end
 
 ---Shorthand for Ext.DumpExport() which does not require you to explicitly define the default options (Beautify, StringifyInternalTypes, etc.)

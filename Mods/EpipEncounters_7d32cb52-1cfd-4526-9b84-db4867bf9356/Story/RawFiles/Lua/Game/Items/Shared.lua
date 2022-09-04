@@ -64,17 +64,31 @@ end
 ---@param item Item
 ---@return boolean
 function Item.IsContainer(item)
-   local actions = item.RootTemplate.OnUsePeaceActions
-   local isContainer = false
+   return Item.HasUseAction(item, "OpenClose")
+end
 
-   for _,action in ipairs(actions) do
-        if action.Type == "OpenClose" then
-            isContainer = true
+---@param item Item
+---@param useActionID ActionDataType
+---@return boolean
+function Item.HasUseAction(item, useActionID)
+    local actions = item.RootTemplate.OnUsePeaceActions
+    local hasAction = false
+
+    for _,action in ipairs(actions) do
+        if action.Type == useActionID then
+            hasAction = true
             break
         end
    end
 
-   return isContainer
+    return hasAction
+end
+
+---Returns whether an item has any use actions.
+---@param item Item
+---@return boolean
+function Item.HasUseActions(item)
+    return #item.RootTemplate.OnUsePeaceActions > 0
 end
 
 ---Returns true if the item is a weapon (shields don't count!)

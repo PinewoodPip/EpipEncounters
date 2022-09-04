@@ -26,6 +26,22 @@ function GetMetatableType(obj)
     end
 end
 
+---@param strList str[]
+---@param separator string?
+function string.concat(strList, separator)
+    local newStr = ""
+
+    for i,str in ipairs(strList) do
+        newStr = newStr .. str
+
+        if separator and i ~= #str then
+            newStr = newStr .. separator
+        end
+    end
+
+    return newStr
+end
+
 function ParseFlashArray(array, argList, offset)
 
     local currentElement = nil
