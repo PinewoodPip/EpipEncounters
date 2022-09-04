@@ -27,9 +27,9 @@ Client.UI.OptionsInput.Events.ActionExecuted:RegisterListener(function (action, 
 
         -- Send an alt press/release when toggled.
         if ToggleableWorldTooltips:IsEnabled() then
-            Input.Inject("KeyboardMouse", "lalt", "Pressed", 1, 1)
+            Input.Inject("Key", "lalt", "Pressed", 1, 1)
         else
-            Input.Inject("KeyboardMouse", "lalt", "Released", 1, 1)
+            Input.Inject("Key", "lalt", "Released", 0, 0)
         end
     end
 end)
