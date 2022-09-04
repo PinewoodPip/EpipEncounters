@@ -230,6 +230,7 @@ LOAD_ORDER = {
     {ScriptSet = "Epip/Encumbrance"},
     {ScriptSet = "Epip/DebugDisplay", Developer = true,},
     {ScriptSet = "Epip/UnlearnSkills"},
+    {ScriptSet = "Epip/WorldTooltipOpenContainers"},
 
     "Epip/ShowConsumableEffects.lua",
     "Epip/WalkOnCorpses.lua",

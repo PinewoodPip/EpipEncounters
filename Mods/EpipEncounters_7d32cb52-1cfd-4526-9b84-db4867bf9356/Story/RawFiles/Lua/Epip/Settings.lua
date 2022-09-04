@@ -511,7 +511,14 @@ local WorldTooltips = {
         Label = "Show empty containers/bodies",
         Tooltip = "Controls whether tooltips are shown for empty containers and bodies.",
         DefaultValue = true,
-    }
+    },
+    {
+        ID = "WorldTooltip_OpenContainers",
+        Type = "Checkbox",
+        Label = "Open containers",
+        Tooltip = "If enabled, clicking world tooltips will open containers rather than picking them up.",
+        DefaultValue = false,
+    },
 }
 
 local Order = {

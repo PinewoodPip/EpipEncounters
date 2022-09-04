@@ -98,6 +98,7 @@ LOAD_ORDER = {
     "Epip/Server/IncompatibleModsWarning.lua",
     "Epip/Server/ServerSettings.lua",
     {ScriptSet = "Epip/TooltipAdjustments"},
+    {ScriptSet = "Epip/WorldTooltipOpenContainers"},
     -- "Epip/Server/FastCasting.lua",
 
     "Epip/ChatCommands/Shared.lua",

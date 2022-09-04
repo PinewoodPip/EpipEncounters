@@ -35,6 +35,8 @@
 ---@field ScriptSet string Folder to load a set of scripts from (Shared.lua, Client.lua and Server.lua)
 ---@field Script string Filename
 
+---@class NetMessage
+
 ---------------------------------------------
 -- UI
 ---------------------------------------------
