@@ -1,6 +1,7 @@
 
 ---@class TextLib
 Text = {
+    ---@enum TextLib_Font
     FONTS = {
         BOLD = "Ubuntu Mono",
         ITALIC = "Averia Serif",
@@ -38,12 +39,10 @@ Text = {
         FONT_SIZE = 'size="%d"',
     },
 }
-
----@alias Font "Bold" | "Italic" | "Normal"
 ---@alias FontAlign "center" | "right" | "left"
 
 ---@class TextFormatData
----@field FontType Font
+---@field FontType TextLib_Font
 ---@field Size number
 ---@field Color string
 ---@field Align FontAlign
