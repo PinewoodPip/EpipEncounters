@@ -72,27 +72,42 @@ Color = {
 ---------------------------------------------
 
 ---@class RGBColor
----@field Red integer
----@field Green integer
----@field Blue integer
-
----@class RGBColor
+---@field Red integer In integer range [0-255]
+---@field Green integer In integer range [0-255]
+---@field Blue integer In integer range [0-255]
+---@field Alpha integer In integer range [0-255]
 local RGBColor = {
-    Red = 0, Green = 0, Blue = 0,
+    Red = 0,
+    Green = 0,
+    Blue = 0,
+    Alpha = 255,
 
     __name = "RGBColor",
 }
 Color.RGBColor = RGBColor
 
+---Returns the decimal representation of the color.
+---Actionscript expects colors to be represented in this way.
+---@param addAlpha boolean? Defaults to false.
 ---@return integer
-function RGBColor:ToDecimal()
-    return self.Blue + self.Green * 256 + self.Red * 256 ^ 2
+function RGBColor:ToDecimal(addAlpha)
+    local value
+
+    if addAlpha then
+        value = self.Alpha + self.Blue * 256 + self.Green * 256 ^ 2 + self.Red * 256 ^ 3
+    else
+        value = self.Blue + self.Green * 256 + self.Red * 256 ^ 2
+    end
+
+    return value  
 end
 
+---Returns the hexadecimal representation of the color.
 ---@param prefix boolean? Prefix the string with #. Defaults to false.
+---@param addAlpha boolean? Defaults to false. If enabled, resulting color will be in the format `#RRGGBBAA`
 ---@return string
-function RGBColor:ToHex(prefix)
-    local valStr = string.format("%x", self:ToDecimal())
+function RGBColor:ToHex(prefix, addAlpha)
+    local valStr = string.format("%x", self:ToDecimal(addAlpha))
     
     while string.len(valStr) < 6 do
         valStr = "0" .. valStr
@@ -105,12 +120,14 @@ function RGBColor:ToHex(prefix)
     return valStr:upper()
 end
 
----@param color RGBColor
+---Returns a new instance of RGBColor with the same values.
 ---@return RGBColor
-function RGBColor.Clone(color)
-    return RGBColor.Create(color.Red, color.Green, color.Blue)
+function RGBColor:Clone()
+    return RGBColor.Create(self.Red, self.Green, self.Blue, self.Alpha)
 end
 
+---Creates a color from a decimal value.
+---Does not support alpha.
 ---@param num integer
 ---@return RGBColor
 function RGBColor.CreateFromDecimal(num)
@@ -127,27 +144,38 @@ function RGBColor.CreateFromDecimal(num)
     return Color.Create(red, green, blue)
 end
 
+---Creates a color from RGBA values.
+---Expected range is [0-255] and will be clamped.
+---@param r integer
+---@param g integer
+---@param b integer
+---@param a integer? Defaults to 255.
 ---@return RGBColor
-function RGBColor.Create(r, g, b)
+function RGBColor.Create(r, g, b, a)
     r = math.clamp(r or 0, 0, 255)
     g = math.clamp(g or 0, 0, 255)
     b = math.clamp(b or 0, 0, 255)
+    a = math.clamp(a or 255, 0, 255)
 
-    local color = {Red = r, Green = g, Blue = b}
+    local color = {Red = r, Green = g, Blue = b, Alpha = a}
     Inherit(color, RGBColor)
     
     return color
 end
 
+---Creates a color from a hexadecimal value.
+---Does not support alpha.
+---@param hex string
 ---@return RGBColor
 function RGBColor.CreateFromHex(hex)
     return Color.Create(tonumber(string.sub(hex, 1, 2), 16), tonumber(string.sub(hex, 3, 4), 16), tonumber(string.sub(hex, 5, 6), 16))
 end
 
+---Returns whether 2 colors have the same RGBA values.
 ---@param color RGBColor
 ---@return boolean
 function RGBColor:Equals(color)
-    return self.Red == color.Red and self.Green == color.Green and self.Blue == color.Blue
+    return self.Red == color.Red and self.Green == color.Green and self.Blue == color.Blue and self.Alpha == color.Alpha
 end
 
 ---__eq overload. Equivalent to calling RGBColor.Equals()
@@ -186,25 +214,28 @@ end
 -- METHODS
 ---------------------------------------------
 
----Alias for creating an RGBColor from RGB values.
+---Alias for creating an RGBColor from RGBA values.
 ---@param red integer
 ---@param green integer
 ---@param blue integer
+---@param alpha integer?
 ---@return RGBColor
-function Color.Create(red, green, blue)
-    return Color.CreateFromRGB(red, green, blue)
+function Color.Create(red, green, blue, alpha)
+    return Color.CreateFromRGB(red, green, blue, alpha)
 end
 
----Creates a color from RGB values. Expected range of values is [0-255].
+---Creates a color from RGBA values. Expected range of values is [0-255].
 ---@param red integer
 ---@param green integer
 ---@param blue integer
+---@param alpha integer?
 ---@return RGBColor
-function Color.CreateFromRGB(red, green, blue)
-    return RGBColor.Create(red, green, blue)
+function Color.CreateFromRGB(red, green, blue, alpha)
+    return RGBColor.Create(red, green, blue, alpha)
 end
 
 ---Creates a color from a decimal value.
+---Does not support alpha.
 ---@param num integer
 ---@return RGBColor
 function Color.CreateFromDecimal(num)
@@ -212,6 +243,7 @@ function Color.CreateFromDecimal(num)
 end
 
 ---Creates a color from an html-format hex color code.
+---Does not support alpha.
 ---@param hex string
 ---@return RGBColor
 function Color.CreateFromHex(hex)
