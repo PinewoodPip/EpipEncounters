@@ -47,6 +47,7 @@ LOAD_ORDER = {
     "Utilities/Text.lua",
     "Utilities/Hooks.lua",
     "Utilities/Color.lua",
+    {ScriptSet = "Utilities/Entity"},
     "Utilities/GameState/Shared.lua",
     "Utilities/GameState/Server.lua",
     "Utilities/Mod.lua",
