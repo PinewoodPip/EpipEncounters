@@ -1,5 +1,5 @@
 
----@class StatsLib
+---@class StatsLib : Library
 Stats = {
     STATS_OBJECT_TYPES = {
         Boost = true,

@@ -1,11 +1,24 @@
 
----@meta Library: GameItem, ContextShared, Item
+---@class ItemsLib
+Item = {
+    -- TODO
+    RARITY_COLORS = {
+        ARTIFACT = "a34114",
+    },
+}
 
 ---Returns true if the item is an Artifact by checking the AMER_UNI tag.
 ---@param item Item
 ---@return boolean
 function Item.IsArtifact(item)
     return item:HasTag("AMER_UNI") and not item:HasTag("PIP_FAKE_ARTIFACT")
+end
+
+---Returns whether the item is a rune.
+---@param item Item
+---@return boolean
+function Item.IsRune(item)
+    return Stats.GetRuneDefinition(item.StatsId) ~= nil
 end
 
 ---Returns whether item is a melee weapon (satisfying a MeleeWeapon requirement)
