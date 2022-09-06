@@ -35,14 +35,11 @@ end
 -- Show tooltip hint on how to use the feature. Only appears for skills that can be unlearnt.
 Client.Tooltip.Hooks.RenderSkillTooltip:Subscribe(function (ev)
     if ev.UI.Type == Ext.UI.TypeID.skills then
-        local skill = SkillBook.GetSelectedSkill()
+        local skill = ev.SkillID
+        local canUnlearn, _ = Unlearn.CanUnlearn(Client.GetCharacter(), skill)
 
-        if skill then
-            local canUnlearn, _ = Unlearn.CanUnlearn(Client.GetCharacter(), skill)
-
-            if canUnlearn then
-                ev.Tooltip:InsertElement({Type = "Engraving", Label = Text.Format("Right-click to unlearn.", {Color = Color.GREEN}), 1})
-            end
+        if canUnlearn then
+            ev.Tooltip:InsertElement({Type = "Engraving", Label = Text.Format("Right-click to unlearn.", {Color = Color.GREEN}), 1})
         end
     end
 end)

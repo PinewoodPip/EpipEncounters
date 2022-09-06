@@ -20,7 +20,7 @@ local Tooltip = {
 
     Hooks = {
         RenderFormattedTooltip = {Preventable = true}, ---@type PreventableEvent<TooltipLib_Hook_RenderFormattedTooltip>
-        RenderSkillTooltip = {Preventable = true,}, ---@type PreventableEvent<TooltipLib_Hook_RenderFormattedTooltip>
+        RenderSkillTooltip = {Preventable = true,}, ---@type PreventableEvent<TooltipLib_Hook_RenderSkillTooltip>
         RenderItemTooltip = {Preventable = true,}, ---@type PreventableEvent<TooltipLib_Hook_RenderItemTooltip>
         RenderSurfaceTooltip = {Preventable = true,}, ---@type PreventableEvent<TooltipLib_Hook_RenderFormattedTooltip>
         RenderMouseTextTooltip = {Preventable = true}, ---@type PreventableEvent<TooltipLib_Hook_RenderMouseTextTooltip>
@@ -38,6 +38,7 @@ Epip.InitializeLibrary("TooltipLib", Tooltip)
 ---@field Type TooltipLib_FormattedTooltipType
 ---@field FlashCharacterHandle FlashObjectHandle?
 ---@field FlashItemHandle FlashObjectHandle?
+---@field SkillID string?
 
 ---@class TooltipLib_FormattedTooltip
 ---@field Elements TooltipLib_Element[]
@@ -124,6 +125,9 @@ end
 ---@class TooltipLib_Hook_RenderItemTooltip : TooltipLib_Hook_RenderFormattedTooltip
 ---@field Item EclItem
 
+---@class TooltipLib_Hook_RenderSkillTooltip : TooltipLib_Hook_RenderFormattedTooltip
+---@field SkillID string
+
 ---@class TooltipLib_Hook_RenderMouseTextTooltip : PreventableEventParams
 ---@field Text string Hookable.
 
@@ -182,6 +186,7 @@ function Tooltip._SendFormattedTooltipHook(ui, tooltipType, data, sourceData)
         UI = ui,
         Character = character,
         Item = item,
+        SkillID = sourceData.SkillID,
     }
 
     -- Specific listeners go first.
@@ -227,6 +232,7 @@ local function HandleFormattedTooltip(ev, arrayFieldName, x, y, unknown)
     Tooltip.nextTooltipData = nil
 end
 
+-- Listen for global tooltip request calls.
 Ext.Events.UICall:Subscribe(function(ev)
     local param1, param2 = table.unpack(ev.Args)
 
@@ -237,12 +243,12 @@ Ext.Events.UICall:Subscribe(function(ev)
     end
 end)
 
+-- Listen for formatted tooltip invokes on the general tooltip UI.
 Client.UI.Tooltip:RegisterInvokeListener("addFormattedTooltip", function(ev, x, y, unknown)
     HandleFormattedTooltip(ev, "tooltip_array", x, y, unknown)
 end)
 
 -- Listen for surface tooltips from TextDisplay.
--- TODO place dummy values.
 TextDisplay:RegisterInvokeListener("displaySurfaceText", function(ev, _, _)
     local ui = ev.UI
     local arrayFieldName = "tooltipArray"
@@ -260,6 +266,7 @@ TextDisplay:RegisterInvokeListener("displaySurfaceText", function(ev, _, _)
     end
 end)
 
+-- Listen for mouse text tooltips.
 TextDisplay:RegisterInvokeListener("addText", function(ev, text, x, y)
     local hook = {Text = text} ---@type TooltipLib_Hook_RenderMouseTextTooltip
 
