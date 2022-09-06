@@ -5,6 +5,16 @@ local TextDisplay = Client.UI.TextDisplay
 local Tooltip = {
     nextTooltipData = nil, ---@type TooltipLib_TooltipSourceData
 
+    SURFACE_DAMAGE_ELEMENT_TYPES = {
+        Fire = true,
+        Water = true,
+        Earth = true,
+        Air = true,
+        Poison = true,
+        Physical = true,
+        Sulphur = true,
+    },
+
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
 
@@ -20,6 +30,7 @@ Epip.InitializeLibrary("TooltipLib", Tooltip)
 
 ---@alias TooltipLib_FormattedTooltipType "Surface"|"Skill"
 ---@alias TooltipLib_Element table See `Game.Tooltip`. TODO
+---@alias TooltipLib_FormattedTooltipElementType string TODO
 
 ---@class TooltipLib_TooltipSourceData
 ---@field UIType integer
@@ -33,6 +44,69 @@ local _FormattedTooltip = {}
 ---@param index integer? Defaults to next index.
 function _FormattedTooltip:InsertElement(element, index)
     table.insert(self.Elements, index or #self.Elements + 1, element)
+end
+
+---@param elementType TooltipLib_FormattedTooltipElementType?
+---@return TooltipLib_Element[] If elementType is nil, the list will be passed by reference.
+function _FormattedTooltip:GetElements(elementType)
+    local elements = {}
+
+    if elementType ~= nil then
+        for _,element in ipairs(self.Elements) do
+            if element.Type == elementType then
+                table.insert(elements, element)
+            end
+        end
+    else
+        elements = self.Elements
+    end
+
+    return elements
+end
+
+---@param elementType TooltipLib_FormattedTooltipElementType?
+function _FormattedTooltip:GetFirstElement(elementType)
+    return self:GetElements(elementType)[1]
+end
+
+---If the target element is not found, the new element will be inserted at the end.
+---@param target TooltipLib_Element|TooltipLib_FormattedTooltipElementType The element before which to insert the new one.
+---@param element TooltipLib_Element The element to insert.
+function _FormattedTooltip:InsertAfter(target, element)
+    local inserted = false
+
+    for i=#self.Elements,1,-1 do
+        local existingElement = self.Elements[i]
+
+        if existingElement.Type == target or existingElement == target then
+            self:InsertElement(element, i + 1)
+            inserted = true
+            break
+        end
+    end
+
+    if not inserted then
+        _FormattedTooltip:InsertElement(element)
+    end
+end
+
+---If the target element is not found, the new element will be inserted at the end.
+---@param target TooltipLib_Element|TooltipLib_FormattedTooltipElementType The element before which to insert the new one.
+---@param element TooltipLib_Element The element to insert.
+function _FormattedTooltip:InsertBefore(target, element)
+    local inserted = false
+
+    for i,existingElement in ipairs(self.Elements) do
+        if existingElement.Type == target or existingElement == target then
+            self:InsertElement(element, i)
+            inserted = true
+            break
+        end
+    end
+
+    if not inserted then
+        _FormattedTooltip:InsertElement(element)
+    end
 end
 
 ---------------------------------------------

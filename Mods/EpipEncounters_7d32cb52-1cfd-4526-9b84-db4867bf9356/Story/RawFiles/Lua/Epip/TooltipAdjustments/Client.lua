@@ -3,6 +3,8 @@
 -- Numerous tooltip adjustments.
 ---------------------------------------------
 
+local TooltipLib = Client.Tooltip
+
 TooltipAdjustments = {
     Name = "TooltipAdjustments",
 
@@ -694,6 +696,17 @@ Net.RegisterListener("EPIPENCOUNTERS_ReturnSurfaceData", function(payload)
     if pendingSurfaceTooltip then
         local groundOwner
         local cloudOwner
+        local dealsDamage = false
+
+        -- Look for the first damage element - we will insert a dmg scaling hint before it.
+        for elementType,_ in pairs(TooltipLib.SURFACE_DAMAGE_ELEMENT_TYPES) do
+            local damageElements =  pendingSurfaceTooltip:GetElements(elementType)
+
+            if #damageElements > 0 then
+                dealsDamage = true
+                break
+            end
+        end
 
         if payload.GroundSurfaceOwnerNetID then
             groundOwner = Character.Get(payload.GroundSurfaceOwnerNetID) or Item.Get(payload.GroundSurfaceOwnerNetID)
@@ -707,6 +720,14 @@ Net.RegisterListener("EPIPENCOUNTERS_ReturnSurfaceData", function(payload)
         end
         if cloudOwner then
             pendingSurfaceTooltip:InsertElement({Type = "Duration", Label = Text.Format("Owned by %s", {FormatArgs = {cloudOwner.DisplayName}})}, #pendingSurfaceTooltip.Elements)
+        end
+
+        -- Also add a hint on how surface damage scales
+        if (groundOwner or cloudOwner) and dealsDamage then
+            pendingSurfaceTooltip:InsertBefore("Duration", {
+                Type = "SurfaceDescription",
+                Label = Text.Format("Damage scales only with character level.", {FontType = Text.FONTS.ITALIC, Color = Color.LARIAN.LIGHT_GRAY})
+            })
         end
 
         Client.Tooltip.ShowFormattedTooltip(Client.UI.TextDisplay:GetUI(), "Surface", pendingSurfaceTooltip)
