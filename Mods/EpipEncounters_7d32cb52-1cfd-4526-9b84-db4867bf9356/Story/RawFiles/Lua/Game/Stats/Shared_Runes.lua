@@ -6,15 +6,17 @@ local Stats = Stats
 -- CLASSES
 ---------------------------------------------
 
+---@alias StatsLib_Rune_Material "Bloodstone"|"Bone"|"Clay"|"Emerald"|"Flame"|"Frost"|"Gold"|"Granite"|"Iron"|"Jade"|"Lapis"|"Malachite"|"Masterwork"|"Obsidian"|"Onyx"|"Pearl"|"Ruby"|"Sapphire"|"Silver"|"Steel"|"Thunder"|"TigersEye"|"Topaz"|"Venom"
+
 ---@class ItemLib_RuneGroup
----@field Material ItemLib_Rune_Material
+---@field Material StatsLib_Rune_Material
 ---@field SmallRune ItemLib_Rune
 ---@field MediumRune ItemLib_Rune
 ---@field LargeRune ItemLib_Rune
 ---@field GiantRune ItemLib_Rune
 
 ---@class ItemLib_Rune
----@field Material ItemLib_Rune_Material
+---@field Material StatsLib_Rune_Material
 ---@field StatsID string
 ---@field Template GUID
 ---@field Size "Small"|"Medium"|"Large"|"Giant"
@@ -39,7 +41,7 @@ function Stats.GetRuneDefinition(statsID)
     return Stats.Runes[statsID]
 end
 
----@param materialID ItemLib_Rune_Material
+---@param materialID StatsLib_Rune_Material
 ---@return ItemLib_RuneGroup
 function Stats.GetRuneGroup(materialID)
     return Stats.RuneGroups[materialID]
