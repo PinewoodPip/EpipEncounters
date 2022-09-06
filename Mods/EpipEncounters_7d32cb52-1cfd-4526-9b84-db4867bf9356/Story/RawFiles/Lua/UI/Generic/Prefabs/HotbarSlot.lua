@@ -137,7 +137,7 @@ end
 ---@param item EclItem
 function Slot:SetItem(item)
     local slot = self.SlotElement
-    slot:SetIcon(item.RootTemplate.Icon, 50, 50)
+    slot:SetIcon(Item.GetIcon(item), 50, 50)
     slot:SetCooldown(0, false)
 
     self.Object = _SlotObject.Create("Item", {ItemHandle = item.Handle})

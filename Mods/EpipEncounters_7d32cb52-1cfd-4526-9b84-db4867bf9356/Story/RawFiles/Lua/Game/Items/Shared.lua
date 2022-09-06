@@ -30,18 +30,43 @@ function Item.IsMeleeWeapon(item)
 end
 
 ---Returns the icon of the item.
+---Ignores the icon override (if any) as it is currently inaccessible.
 ---@param item Item
+---@param useClientIcons boolean? Defaults to false. If true, the icon will be checked using client logic.
 ---@return string
-function Item.GetIcon(item)
+function Item.GetIcon(item, useClientIcons)
     local icon = item.RootTemplate.Icon
 
-    -- Logic for getting icons is different per context.
-    -- TODO! Requires an extender patch; otherwise we cannot get the right namegroup.
-    -- if Ext.IsClient() and item.Stats then
-    --     local statObject = Ext.Stats.Get(item.Stats.Name)
-    --     local itemGroup = Ext.Stats.ItemGroup.GetLegacy(statObject.ItemGroup)
-    --     local index = item
-    -- end
+    -- Gold is a special case.
+    if item.RootTemplate.Id == "1c3c9c74-34a1-4685-989e-410dc080be6f" then
+        local amount = item.Amount
+
+        if amount >= 500 then
+            icon = "Item_Loot_Gold_A"
+        elseif amount >= 100 then
+            icon = "Item_LOOT_Gold_Medium_A"
+        elseif amount == 1 then
+            icon = "Item_LOOT_Gold_Coin_A"
+        else
+            icon = "Item_LOOT_Gold_Small_A"
+        end
+    else
+        -- Logic for getting icons is different per context. Server checks only the root template.
+        if (Ext.IsClient() or useClientIcons) and item.Stats then
+            local statObject = Ext.Stats.Get(item.Stats.Name)
+            local itemGroup = Ext.Stats.ItemGroup.GetLegacy(statObject.ItemGroup)
+
+            if itemGroup and item.LevelGroupIndex < #itemGroup.LevelGroups then
+                local levelGroup = itemGroup.LevelGroups[item.LevelGroupIndex + 1]
+                local rootGroup = levelGroup.RootGroups[item.RootGroupIndex + 1]
+                local nameGroupLink = rootGroup.NameGroupLinks[item.NameGroupIndex + 1]
+
+                if nameGroupLink.ItemName ~= "" then
+                    icon = nameGroupLink.ItemName
+                end
+            end
+        end
+    end
 
     return icon
 end
@@ -80,6 +105,7 @@ function Item.IsContainer(item)
    return Item.HasUseAction(item, "OpenClose")
 end
 
+---Returns whether the item has a OnUsePeaceAction of the passed type.
 ---@param item Item
 ---@param useActionID ActionDataType
 ---@return boolean
@@ -132,7 +158,7 @@ end
 function Item.IsLegal(item)
     local template = item.RootTemplate
     local isLegal = true
-    local legalActions = { -- Having any of these actions makes the item legal.
+    local legalActions = { -- Having any of these actions makes the item legal to interact with.
         Sit = true,
         Lying = true,
         Ladder = true,
@@ -144,6 +170,7 @@ function Item.IsLegal(item)
         if owner and not owner.InParty then
             isLegal = false
 
+            -- Check for legal actions
             for _,action in ipairs(template.OnUsePeaceActions) do
                 if legalActions[action.Type] then
                     isLegal = true

@@ -1182,7 +1182,7 @@ function Hotbar.GetIconForSlot(index)
     elseif slot.Type == "Item" then
         local item = Ext.GetItem(slot.ItemHandle)
 
-        icon = item.RootTemplate.Icon
+        icon = Item.GetIcon(item)
     elseif slot.Type == "Action" then
         local action = Stats.GetAction(slot.SkillOrStatId)
 
