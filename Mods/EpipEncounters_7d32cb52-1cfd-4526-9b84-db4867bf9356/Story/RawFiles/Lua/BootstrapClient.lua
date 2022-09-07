@@ -219,6 +219,7 @@ LOAD_ORDER = {
     {ScriptSet = "Epip/TooltipAdjustments"},
     "Epip/TooltipAdjustments/Client_Scrolling.lua",
     "Epip/TooltipAdjustments/Client_RuneCraftingHint.lua",
+    "Epip/TooltipAdjustments/Client_RewardGenerationWarning.lua",
     "Epip/Client/TreasureTableDisplay.lua",
     "Epip/Client/SummonControlFix.lua",
     "Epip/Client/Notifications.lua",

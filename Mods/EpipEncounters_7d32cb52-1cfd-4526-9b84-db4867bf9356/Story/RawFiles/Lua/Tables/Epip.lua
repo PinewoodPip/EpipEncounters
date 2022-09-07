@@ -1,4 +1,5 @@
 
+---@class Epip
 Epip = {
     Features = {}, ---@type table<string, Feature> Legacy table.
     _Features = {}, ---@type table<string, table<string, Feature>>
@@ -54,15 +55,22 @@ function Epip.RegisterFeature(modTable, id, feature)
     modData.Features[id] = feature
 end
 
----@overload fun(id:string):Feature
+---Overload for fetching features defined in EpipEncounters.
+---@generic T
+---@param id `T`
+---@return `T`
+function Epip.GetFeature(id) end -- IDE dummy
+
+---@generic T
 ---@param modTable string
----@param id string
----@return Feature
+---@param id `T`
+---@return `T`
 function Epip.GetFeature(modTable, id)
     -- Overload to get features built-in into Epip.
     if id == nil then
         modTable, id = "EpipEncounters", modTable
     end
+    id = id:gsub("^Feature_", "", 1)
     local modData = Epip._Features[modTable]
     local feature
 
@@ -171,6 +179,7 @@ if Ext.IsClient() then
         setmetatable(ui, {__index = Client.UI._BaseUITable})
     
         ui.UITypeID = type
+        ui.TypeID = type
     
         if ui.INPUT_DEVICE == "Controller" and not Client.IsUsingController() then
             ui:Disable()
