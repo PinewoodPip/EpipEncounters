@@ -16,6 +16,13 @@ Epip.InitializeLibrary("Net", Net)
 Game.Net = Net -- Backwards compatibility
 
 ---------------------------------------------
+-- CLASSES
+---------------------------------------------
+
+---@class Net_SimpleMessage_NetID
+---@field NetID NetId
+
+---------------------------------------------
 -- EVENTS
 ---------------------------------------------
 

@@ -429,14 +429,6 @@ local TopOptions = {
         DefaultValue = true,
     },
     {
-        ID = "AutoUnlockInventory",
-        Type = "Checkbox",
-        Label = "Auto-unlock inventory (Multiplayer)",
-        Tooltip = "If enabled, your characters's inventories in multiplayer will be automatically unlocked after a reload.",
-        DefaultValue = true,
-        Developer = true,
-    },
-    {
         ID = "TreasureTableDisplay",
         Type = "Checkbox",
         Label = "Show loot drops in health bar",
@@ -461,6 +453,13 @@ local TopOptions = {
 
 local Inventory = {
     CreateHeader("Inventory"),
+    {
+        ID = "Inventory_AutoUnlockInventory",
+        Type = "Checkbox",
+        Label = "Auto-unlock inventory (Multiplayer)",
+        Tooltip = "If enabled, your characters's inventories in multiplayer will be automatically unlocked after a reload.",
+        DefaultValue = false,
+    },
     {
         ID = "Inventory_InfiniteCarryWeight",
         Type = "Checkbox",

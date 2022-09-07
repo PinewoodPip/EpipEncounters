@@ -90,7 +90,6 @@ LOAD_ORDER = {
     "Epip/Server/AMERUI_Controller.lua",
 
     "JournalServer.lua",
-    "Epip/Server/PartyInventoryServer.lua",
     "Epip/Server/AutoIdentify.lua",
     "Epip/Server/DebugCheats.lua",
     "Epip/Server/AI.lua",
@@ -131,6 +130,7 @@ LOAD_ORDER = {
     {ScriptSet = "Epip/DebugDisplay", Developer = true,},
     {ScriptSet = "Epip/UnlearnSkills"},
     {ScriptSet = "Epip/DebugMenu", Developer = true,},
+    {ScriptSet = "Epip/AutoUnlockInventory"},
 
     "Epip/ShowConsumableEffects.lua",
 

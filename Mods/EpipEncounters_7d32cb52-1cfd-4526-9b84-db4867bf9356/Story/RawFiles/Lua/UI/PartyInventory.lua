@@ -53,18 +53,6 @@ Epip.InitializeUI(Client.UI.Data.UITypes.partyInventory, "PartyInventory", Inv)
 -- METHODS
 ---------------------------------------------
 
--- Unlock the inventory of a player.
-function Inv.AutoUnlockFor(chars)
-    for char,unlock in pairs(chars) do
-        if unlock then
-            -- Temporarily unavailable
-            -- Inv:GetUI():ExternalInterfaceCall("lockInventory", Ext.UI.HandleToDouble(Ext.GetCharacter(char).Handle), false)
-
-            Inv:Log("Unlocked " .. char .. "'s inventory.")
-        end
-    end
-end
-
 -- Update the data on the UI. Item uses this to query item amounts from this UI, as Amount is not mapped on client.
 function Inv.Refresh()
     Ext.UI.SetDirty(Client.GetCharacter().Handle, 16777216)
@@ -213,21 +201,6 @@ Ext.RegisterUITypeCall(Client.UI.Data.UITypes.partyInventory, "startDragging", f
     Inv:DebugLog("Started dragging: " .. handle)
 
     Inv.draggedItemHandle = handle
-end)
-
--- auto-unlock inventories setting; per player.
-Net.RegisterListener("EPIPENCOUNTERS_AutoUnlockPartyInventory", function(payload)
-    Inv.AutoUnlockFor(payload.Chars)
-end)
-
--- Notify the server we want our inventories to be unlocked when game begins running.
-Ext.Events.GameStateChanged:Subscribe(function(event)
-    local from = event.FromState
-    local to = event.ToState
-    
-    if from == "PrepareRunning" and to == "Running" and Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "AutoUnlockInventory") and not Client.IsUsingController() then
-        Net.PostToServer("EPIPENCOUNTERS_AutoUnlockMe", {NetID = Client.GetCharacter().NetID})
-    end
 end)
 
 ---------------------------------------------
