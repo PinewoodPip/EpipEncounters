@@ -103,10 +103,12 @@ function DebugDisplay.SetClientTicks(ticks)
 end
 
 function DebugDisplay.SendPingRequest()
-    if GameState.IsInSession() then
+    local char = Client.GetCharacter() -- The client character is not set immediately upon the session going into Running.
+
+    if GameState.IsInSession() and DebugDisplay.UI and char then
         DebugDisplay.pingTime = Ext.Utils.MonotonicTime()
     
-        Net.PostToServer("EPIPENCOUNTERS_DebugDisplay_Ping", {ClientTime = Ext.Utils.MonotonicTime(), NetID = Client.GetCharacter().NetID})
+        Net.PostToServer("EPIPENCOUNTERS_DebugDisplay_Ping", {ClientTime = Ext.Utils.MonotonicTime(), NetID = char.NetID})
     end
 end
 
