@@ -81,11 +81,10 @@ function _Test:Run(...)
     coro.Events.Finished:Subscribe(function (_)
         self.State = "Passed"
     end)
-
-    local success, msg = pcall(coro.Continue, coro)
-
     self.State = "Failed"
     self.Coroutine = coro
+
+    local success, msg = pcall(coro.Continue, coro)
 
     return success, msg
 end

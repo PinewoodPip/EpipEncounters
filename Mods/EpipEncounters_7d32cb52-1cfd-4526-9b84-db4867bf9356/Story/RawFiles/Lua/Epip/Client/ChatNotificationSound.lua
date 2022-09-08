@@ -1,7 +1,7 @@
 
 local Chat = Client.UI.ChatLog
 
----@class Feature_ChatNotificationSound
+---@class Feature_ChatNotificationSound : Feature
 local Sound = {
     -- Indexes correspond to dropdown setting.
     SOUNDS = {
@@ -17,6 +17,12 @@ Epip.RegisterFeature("ChatNotificationSound", Sound)
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
+
+---@param msg string
+---@return boolean
+function Sound.IsUserMessage(msg)
+    return msg:match(Sound.USER_MESSAGE_PATTERN) ~= nil
+end
 
 ---@param sound string? Defaults to using the setting.
 function Sound.PlaySound(sound)
@@ -38,7 +44,19 @@ end
 
 -- Play the sound when a chat message is received from another user.
 Chat.Events.MessageAdded:Subscribe(function (ev)
-    if not ev.IsFromClient and ev.Text:match(Sound.USER_MESSAGE_PATTERN) then
+    if not ev.IsFromClient and Sound.IsUserMessage(ev.Text) then
         Sound.PlaySound()
     end
+end)
+
+---------------------------------------------
+-- TESTS
+---------------------------------------------
+
+Sound:RegisterTest("UserMessage", function (inst)
+    local dummyMessage = "<font size=16 color=#bbbbbb>Pip:</font> <font size=16 color=#ffffff>Hello</font>"
+    assert(Sound.IsUserMessage(dummyMessage), "User message check failed")
+    
+    dummyMessage = "Welcome to party chat"
+    assert(not Sound.IsUserMessage(dummyMessage), "User message check faulty")
 end)
