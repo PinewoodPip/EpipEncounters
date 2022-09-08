@@ -7,4 +7,5 @@ Epip.RegisterFeature("AutoUnlockPartyInventory", AutoUnlock)
 -- CLASSES
 ---------------------------------------------
 
----@class EPIPENCOUNTERS_AutoUnlockInventory : Net_SimpleMessage_NetID
+---@class EPIPENCOUNTERS_ToggleInventoryLock : Net_SimpleMessage_NetID
+---@field State boolean
