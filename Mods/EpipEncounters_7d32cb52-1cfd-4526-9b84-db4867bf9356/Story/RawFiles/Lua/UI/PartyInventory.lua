@@ -23,7 +23,6 @@ local Inv = {
         -- ["Public/Game/GUI/partyInventory.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/partyInventory.swf",
     }
 }
-Client.UI.PartyInventory = Inv
 Epip.InitializeUI(Client.UI.Data.UITypes.partyInventory, "PartyInventory", Inv)
 
 ---@class PartyInventoryItemUpdate

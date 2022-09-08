@@ -1,12 +1,12 @@
 
-Client.UI.Minimap = {
+---@class MinimapUI : UI
+local Minimap = {
 
     ---------------------------------------------
     -- INTERNAL VARIABLES - DO NOT SET
     ---------------------------------------------
     visible = true,
 }
-local Minimap = Client.UI.Minimap
 Epip.InitializeUI(Client.UI.Data.UITypes.minimap, "Minimap", Minimap)
 
 function Minimap:Toggle(state, updateState, force)

@@ -25,7 +25,6 @@ local Chat = {
     USE_LEGACY_HOOKS = false,
 }
 Epip.InitializeUI(Client.UI.Data.UITypes.chatLog, "ChatLog", Chat)
-Client.UI.ChatLog = Chat
 
 ---------------------------------------------
 -- EVENTS/HOOKS

@@ -21,7 +21,6 @@ local Craft = {
     }
 }
 Epip.InitializeUI(102, "Craft", Craft)
-Client.UI.Craft = Craft
 
 ---@alias CraftUI_Filter "All"|"Unknown"|"Equipment"|"Consumables"|"Magical"|"Ingredients"|"Miscellaneous"
 

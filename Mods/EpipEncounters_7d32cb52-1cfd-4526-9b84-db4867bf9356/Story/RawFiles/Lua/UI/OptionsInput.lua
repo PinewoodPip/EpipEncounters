@@ -50,7 +50,6 @@ if IS_IMPROVED_HOTBAR then
     Options.FILEPATH_OVERRIDES = {}
 end
 Epip.InitializeUI(13, "OptionsInput", Options)
-Client.UI.OptionsInput = Options
 
 ---@class OptionsInputTab
 ---@field ID string

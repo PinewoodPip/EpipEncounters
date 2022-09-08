@@ -78,14 +78,14 @@ local _Test = {}
 ---@return boolean, string -- Success, message
 function _Test:Run(...)
     local coro = Coroutine.Create(self.Function)
+    coro.Events.Finished:Subscribe(function (_)
+        self.State = "Passed"
+    end)
+
     local success, msg = pcall(coro.Continue, coro)
 
     self.State = "Failed"
     self.Coroutine = coro
-
-    coro.Events.Finished:Subscribe(function (_)
-        self.State = "Passed"
-    end)
 
     return success, msg
 end

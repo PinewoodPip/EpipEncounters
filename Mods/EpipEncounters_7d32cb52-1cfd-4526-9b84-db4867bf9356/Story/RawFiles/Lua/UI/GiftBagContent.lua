@@ -36,7 +36,6 @@ local GB = {
         GetContent = {},
     },
 }
-Client.UI.GiftBagContent = GB
 
 ---Fired after the UI's content is updated, upon opening the UI.
 ---@class GiftBagContentUI_Event_ContentUpdated : Event

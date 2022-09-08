@@ -1,4 +1,5 @@
 
+---@class InputUI : UI
 local Input = {
     ID = "PIP_Input",
     PATH = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/input.swf",
@@ -44,10 +45,7 @@ local Input = {
 if IS_IMPROVED_HOTBAR then
     Input.PATH = "Public/ImprovedHotbar_53cdc613-9d32-4b1d-adaa-fd97c4cef22c/GUI/input.swf"
 end
-Client.UI.Input = Input
 Epip.InitializeUI(nil, "Input", Input)
-
-local UI_EVENTS = Client.Input.FLASH_EVENTS
 
 ---------------------------------------------
 -- EVENTS/HOOKS

@@ -68,7 +68,6 @@ local ContextMenu = {
 if IS_IMPROVED_HOTBAR then
     ContextMenu.FILEPATH_OVERRIDES = {}
 end
-Client.UI.ContextMenu = ContextMenu
 Epip.InitializeUI(Client.UI.Data.UITypes.contextMenu, "ContextMenu", ContextMenu)
 
 ---------------------------------------------

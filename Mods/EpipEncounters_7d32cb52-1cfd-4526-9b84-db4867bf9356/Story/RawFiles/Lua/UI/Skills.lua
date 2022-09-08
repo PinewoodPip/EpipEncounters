@@ -3,7 +3,6 @@
 local Skills = {
     selectedSkill = nil, ---@type string
 }
-Client.UI.Skills = Skills
 Epip.InitializeUI(Ext.UI.TypeID.skills, "Skills", Skills)
 
 ---------------------------------------------

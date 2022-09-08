@@ -67,7 +67,6 @@ local CharacterCreation = {
         UpdateAbilities = {}, ---@type SubscribableEvent<CharacterCreationUI_Hook_UpdateAbilities>
     }
 }
-Client.UI.CharacterCreation = CharacterCreation
 Epip.InitializeUI(Ext.UI.TypeID.characterCreation, "CharacterCreation", CharacterCreation)
 
 ---------------------------------------------

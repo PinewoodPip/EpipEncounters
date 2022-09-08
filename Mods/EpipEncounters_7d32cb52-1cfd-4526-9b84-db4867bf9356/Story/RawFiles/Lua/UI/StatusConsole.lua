@@ -27,8 +27,7 @@ if IS_IMPROVED_HOTBAR then
         ["Public/Game/GUI/statusConsole.swf"] = "Public/ImprovedHotbar_53cdc613-9d32-4b1d-adaa-fd97c4cef22c/GUI/statusConsole.swf",
     }
 end
-Client.UI.StatusConsole = StatusConsole
-Epip.InitializeUI(Ext.UI.TypeID.statusConsole, "StatsConsole", StatusConsole)
+Epip.InitializeUI(Ext.UI.TypeID.statusConsole, "StatusConsole", StatusConsole)
 
 ---------------------------------------------
 -- EVENTS/HOOKS

@@ -47,7 +47,6 @@ local MessageBox = {
     currentCustomMessageBox = nil,
 }
 Epip.InitializeUI(Client.UI.Data.UITypes.msgBox, "MessageBox", MessageBox)
-Client.UI.MessageBox = MessageBox
 MessageBox:Debug()
 
 ---@alias MessageBoxButtonType "Normal" | "Blue" | "Yes" | "No"

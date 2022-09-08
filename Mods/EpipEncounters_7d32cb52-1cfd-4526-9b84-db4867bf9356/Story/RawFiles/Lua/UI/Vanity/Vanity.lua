@@ -3,7 +3,7 @@
 -- You cannot have mouse listeners on shapes, need to use sprites
 -- Depth 0 elements have 0 width/height
 
----@class VanityUI
+---@class VanityUI : UI
 local Vanity = {
     Position = {0, 0},
 
@@ -339,7 +339,6 @@ local Vanity = {
     },
 }
 Epip.InitializeUI(nil, "Vanity", Vanity)
-Client.UI.Vanity = Vanity
 
 ---------------------------------------------
 -- EVENTS / HOOKS

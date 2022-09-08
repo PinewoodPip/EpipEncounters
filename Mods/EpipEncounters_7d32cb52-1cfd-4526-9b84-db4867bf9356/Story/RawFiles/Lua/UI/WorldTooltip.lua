@@ -13,7 +13,6 @@ local WorldTooltip = {
         UpdateContent = {}, ---@type SubscribableEvent<WorldTooltipUI_Hook_UpdateContent>
     },
 }
-Client.UI.WorldTooltip = WorldTooltip
 Epip.InitializeUI(Ext.UI.TypeID.worldTooltip, "WorldTooltip", WorldTooltip)
 
 ---------------------------------------------

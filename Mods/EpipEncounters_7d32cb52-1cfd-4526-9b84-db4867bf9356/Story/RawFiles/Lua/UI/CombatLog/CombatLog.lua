@@ -52,7 +52,6 @@ local Log = {
     SAVE_FORMAT = 0,
 }
 Epip.InitializeUI(Client.UI.Data.UITypes.combatLog, "CombatLog", Log)
-Client.UI.CombatLog = Log
 -- Log:Debug()
 
 ---@class CombatLogSentMessage

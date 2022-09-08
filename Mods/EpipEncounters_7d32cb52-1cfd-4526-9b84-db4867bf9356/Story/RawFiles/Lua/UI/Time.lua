@@ -5,8 +5,6 @@
 ---@field DATE_PATTERN string
 ---@field FLASH_MONTHS table<string, integer>
 ---@field FLASH_WEEKDAYS table<string, integer>
-
----@type TimeUI
 local Time = {
     ID = "PIP_Time",
     PATH = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/time.swf",
@@ -39,7 +37,6 @@ if IS_IMPROVED_HOTBAR then
     Time.PATH = "Public/ImprovedHotbar_53cdc613-9d32-4b1d-adaa-fd97c4cef22c/GUI/time.swf"
 end
 Epip.InitializeUI(nil, "Time", Time)
-Client.UI.Time = Time
 
 ---@class DateTime
 ---@field WeekDay integer

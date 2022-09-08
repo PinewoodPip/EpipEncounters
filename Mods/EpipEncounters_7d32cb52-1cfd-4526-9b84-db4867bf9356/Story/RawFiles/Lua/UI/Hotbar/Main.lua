@@ -146,7 +146,6 @@ if IS_IMPROVED_HOTBAR then
         ["Public/Game/GUI/hotBar.swf"] = "Public/ImprovedHotbar_53cdc613-9d32-4b1d-adaa-fd97c4cef22c/GUI/hotBar.swf",
     }
 end
-Client.UI.Hotbar = Hotbar
 Epip.InitializeUI(Client.UI.Data.UITypes.hotBar, "Hotbar", Hotbar)
 Hotbar:Debug()
 

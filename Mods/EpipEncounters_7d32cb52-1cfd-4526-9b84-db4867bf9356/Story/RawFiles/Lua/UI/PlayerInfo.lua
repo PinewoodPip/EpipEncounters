@@ -5,7 +5,7 @@
 ---------------------------------------------
 
 ---@class PlayerInfoUI : UI
-Client.UI.PlayerInfo = {
+local PlayerInfo = {
     LOW_BH_OPACITY = 0.9,
     BH_DISPLAY_SCALE = 0.65,
 
@@ -34,8 +34,6 @@ Client.UI.PlayerInfo = {
 if IS_IMPROVED_HOTBAR then
     Client.UI.PlayerInfo.FILEPATH_OVERRIDES = {}
 end
----@class PlayerInfoUI
-local PlayerInfo = Client.UI.PlayerInfo
 Epip.InitializeUI(Client.UI.Data.UITypes.playerInfo, "PlayerInfo", PlayerInfo)
 -- PlayerInfo:Debug()
 

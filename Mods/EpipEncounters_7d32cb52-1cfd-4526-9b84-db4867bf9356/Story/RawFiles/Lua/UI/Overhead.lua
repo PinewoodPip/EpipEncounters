@@ -4,7 +4,8 @@
 -- Epip uses this to fix overhead damage text for restoring armor on undead characters, which does not work in the base game.
 ---------------------------------------------
 
-Client.UI.Overhead = {
+---@class OverheadUI : UI
+local Overhead = {
     UI = nil,
     Root = nil,
 
@@ -28,7 +29,6 @@ Client.UI.Overhead = {
         OverheadsSize = true,
     }
 }
-local Overhead = Client.UI.Overhead
 Epip.InitializeUI(Client.UI.Data.UITypes.overhead, "Overhead", Overhead)
 
 -- TODO call for normal overhead

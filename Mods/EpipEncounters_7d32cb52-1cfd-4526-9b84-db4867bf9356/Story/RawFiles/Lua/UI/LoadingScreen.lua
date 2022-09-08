@@ -11,7 +11,6 @@ local Loading = {
         GetHintText = {}, ---@type SubscribableEvent<LoadingScreenUI_Hook_GetHintText>
     }
 }
-Client.UI.LoadingScreen = Loading
 Epip.InitializeUI(23, "LoadingScreen", Loading)
 
 ---------------------------------------------

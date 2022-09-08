@@ -99,7 +99,6 @@ if IS_IMPROVED_HOTBAR then
     CharacterSheet.FILEPATH_OVERRIDES = {}
 end
 Epip.InitializeUI(Client.UI.Data.UITypes.characterSheet, "CharacterSheet", CharacterSheet)
-Client.UI.CharacterSheet = CharacterSheet
 
 ---@alias SecondaryStatGroup table<string, number>
 

@@ -195,9 +195,14 @@ end
 ---@return boolean
 function Client.IsActiveCombatant()
     local sc = Client.UI.StatusConsole
-    local root = sc:GetRoot()
 
-    return root and root.fightButtons_mc.duoBtns_mc.visible
+    if sc:Exists() then
+        local root = sc:GetRoot()
+    
+        return root and root.fightButtons_mc.duoBtns_mc.visible
+    else
+        return false
+    end
 end
 
 ---Returns whether the client char is in combat.

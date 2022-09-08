@@ -79,7 +79,6 @@ local Examine = {
         ["Public/Game/GUI/examine.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/examine.swf",
     },
 }
-Client.UI.Examine = Examine
 Epip.InitializeUI(Client.UI.Data.UITypes.examine, "Examine", Examine)
 
 -- Represents the contents of an update to the UI.

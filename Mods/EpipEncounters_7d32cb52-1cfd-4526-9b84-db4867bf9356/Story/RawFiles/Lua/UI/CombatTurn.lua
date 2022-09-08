@@ -35,7 +35,6 @@ local CombatTurn = {
         UpdateTurnList = {}, ---@type SubscribableEvent<CombatTurnUI_Hook_UpdateTurnList>
     }
 }
-Client.UI.CombatTurn = CombatTurn
 Epip.InitializeUI(Ext.UI.TypeID.combatTurn, "CombatTurn", CombatTurn)
 
 ---------------------------------------------

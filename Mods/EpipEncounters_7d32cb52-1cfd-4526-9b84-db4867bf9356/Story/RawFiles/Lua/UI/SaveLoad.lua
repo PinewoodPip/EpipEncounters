@@ -27,7 +27,6 @@ local SaveLoad = {
     },
 }
 Epip.InitializeUI(39, "SaveLoad", SaveLoad)
-Client.UI.SaveLoad = SaveLoad
 SaveLoad:Debug()
 
 ---@alias SaveLoadUI_CloudState "Disabled"|"Uploaded"|"Uploading"|"Unuploaded"
