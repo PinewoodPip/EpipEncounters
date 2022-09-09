@@ -5,7 +5,8 @@
 
 local TooltipLib = Client.Tooltip
 
-TooltipAdjustments = {
+---@class Feature_TooltipAdjustments : Feature
+local TooltipAdjustments = {
     Name = "TooltipAdjustments",
 
     -- ===================================================
@@ -406,18 +407,27 @@ end)
 
 -- Show ACTIVE_DEFENSE charges.
 Game.Tooltip.RegisterListener("Status", nil, function(char, status, tooltip)
-    status = status ---@type EsvStatusActiveDefense
+    status = status ---@type EclStatusActiveDefense
 
     if status.StatusType == "ACTIVE_DEFENSE" then
-        local stat = Stats.Get("StatusData", status.StatusId) ---@type StatsStatusPrototype
-        local charges = stat.Charges
+        local stat = Stats.Get("StatusData", status.StatusId)
+        local maxCharges = stat.Charges
+        local charges = status.Charges
 
         if charges > 0 then
-            local text = Text.Format("Max Charges: %s", {
-                FormatArgs = {charges},
+            local text = Text.Format("Charges: %s/%s", {
+                FormatArgs = {charges, maxCharges},
                 FontType = Text.FONTS.ITALIC,
                 Color = Color.LARIAN.LIGHT_GRAY,
             })
+
+            -- Special case for statuses with "infinite" charges.
+            if charges >= 999 then
+                text = Text.Format("Infinite Charges", {
+                    FontType = Text.FONTS.ITALIC,
+                    Color = Color.LARIAN.LIGHT_GRAY,
+                })
+            end
 
             local elements = tooltip:GetElements("StatusDescription")
             local element = elements[#elements] -- Append to the last description (usually the duration text)

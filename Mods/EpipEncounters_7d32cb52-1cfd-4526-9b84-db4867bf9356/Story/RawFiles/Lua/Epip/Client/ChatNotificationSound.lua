@@ -53,7 +53,7 @@ end)
 -- TESTS
 ---------------------------------------------
 
-Sound:RegisterTest("UserMessage", function (inst)
+Sound:RegisterTest("UserMessage", function (_)
     local dummyMessage = "<font size=16 color=#bbbbbb>Pip:</font> <font size=16 color=#ffffff>Hello</font>"
     assert(Sound.IsUserMessage(dummyMessage), "User message check failed")
     

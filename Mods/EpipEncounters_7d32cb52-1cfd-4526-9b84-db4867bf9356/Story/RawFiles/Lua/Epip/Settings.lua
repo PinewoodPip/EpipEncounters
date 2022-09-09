@@ -574,7 +574,7 @@ local WorldTooltips = {
     {
         ID = "WorldTooltip_MoreTooltips",
         Type = "Checkbox",
-        Label = "Show more items",
+        Label = "Enable tooltips for all items",
         Tooltip = "If enabled, world tooltips will be shown for all items. This includes clutter like doors.<br>" .. Text.Format("Requires a reload.", {Color = Color.LARIAN.YELLOW}),
         DefaultValue = false,
     },
