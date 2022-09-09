@@ -619,37 +619,6 @@ function TooltipAdjustments.RemoveSetDeltamodsText(item, tooltip)
     end
 end
 
----@param item EclItem
----@param tooltip TooltipData
-function TooltipAdjustments.ShowDamageBoost(item, tooltip)
-    if not tooltip:IsIdentified() then return nil end
-    local dmgType, amount
-
-    for i,deltamodID in ipairs(item:GetDeltaMods()) do
-        dmgType, amount = deltamodID:match('^Boost_Weapon_Damage_(.+)_(%d+)$')
-
-        if dmgType then
-            break
-        end
-    end
-
-    if dmgType then
-        tooltip:AppendElement({
-            Type = "ExtraProperties",
-            -- Label = Text.Format("%s Damage (Tier %s/%s)", {
-            --     FormatArgs = {
-            --         dmgType, Text.RemoveTrailingZeros(tonumber(amount) / 5), Text.RemoveTrailingZeros(35 / 5),
-            --     },
-            -- })
-            Label = Text.Format("+%s%% Weapon %s Damage", {
-                FormatArgs = {
-                    amount, dmgType
-                }
-            })
-        })
-    end
-end
-
 ---@type TooltipLib_FormattedTooltip
 local pendingSurfaceTooltip = nil
 
@@ -902,7 +871,6 @@ local function OnItemTooltipRender(item, tooltip)
     TooltipAdjustments.AddBaseDeltamodTierDisplay(item, tooltip)
     TooltipAdjustments.AddDeltamodsHandledWarning(item, tooltip)
     TooltipAdjustments.RemoveSetDeltamodsText(item, tooltip)
-    TooltipAdjustments.ShowDamageBoost(item, tooltip)
 
     -- TooltipAdjustments.TestElements(item, tooltip)
 end
