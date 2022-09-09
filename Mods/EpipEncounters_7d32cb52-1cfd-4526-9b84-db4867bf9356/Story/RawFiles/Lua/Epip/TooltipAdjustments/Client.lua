@@ -650,42 +650,6 @@ function TooltipAdjustments.ShowDamageBoost(item, tooltip)
     end
 end
 
--- Show range deltamods as an ExtraProperty
-local WEAPON_RANGE_DELTAMOD_PATTERN = "Boost_Weapon_Range_(.*)$"
-function TooltipAdjustments.AddRangeDeltamodDisplay(item, tooltip)
-    if not tooltip:IsIdentified() then return nil end
-
-    local weaponRangeBoost = nil;
-
-    for i,v in pairs(item:GetDeltaMods()) do
-        local match = v:match(WEAPON_RANGE_DELTAMOD_PATTERN)
-
-        if match then
-            weaponRangeBoost = match
-            break
-        end
-    end
-
-    if not weaponRangeBoost then return nil end
-
-    -- weapon range is in centimeters within stats
-    local weaponBoostString = Text.RemoveTrailingZeros(weaponRangeBoost / 100)
-
-    tooltip:AppendElement({
-        Type = "ExtraProperties",
-        Label = string.format("+%sm Weapon Range", weaponBoostString) 
-    })
-
-    local element = tooltip:GetElement("WeaponRange")
-    if not element then return nil end
-
-    local amount = element.Value:gsub("m", "")
-    amount = tonumber(amount)
-    amount = amount - (weaponRangeBoost / 100)
-
-    element.Value = string.format("%sm + %sm", Text.RemoveTrailingZeros(amount), weaponBoostString)
-end
-
 ---@type TooltipLib_FormattedTooltip
 local pendingSurfaceTooltip = nil
 
@@ -938,7 +902,6 @@ local function OnItemTooltipRender(item, tooltip)
     TooltipAdjustments.AddBaseDeltamodTierDisplay(item, tooltip)
     TooltipAdjustments.AddDeltamodsHandledWarning(item, tooltip)
     TooltipAdjustments.RemoveSetDeltamodsText(item, tooltip)
-    TooltipAdjustments.AddRangeDeltamodDisplay(item, tooltip)
     TooltipAdjustments.ShowDamageBoost(item, tooltip)
 
     -- TooltipAdjustments.TestElements(item, tooltip)
