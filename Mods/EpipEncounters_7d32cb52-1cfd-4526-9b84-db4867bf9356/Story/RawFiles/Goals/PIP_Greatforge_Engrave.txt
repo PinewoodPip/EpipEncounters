@@ -2,7 +2,7 @@ Version 1
 SubGoalCombiner SGC_AND
 INITSECTION
 
-DB_AMER_UI_Greatforge_Option("PIP_Engrave", "AMER_UI_Greatforge_Option_DrillSocket");
+DB_AMER_UI_Greatforge_Option("PIP_Engrave", "PIP_FX_Greatforge_Option_Engrave");
 DB_AMER_UI_Greatforge_Option_Cost("PIP_Engrave", "GreatforgeFrags", "AMER_LOOT_GreatforgeFragment_A_a41f2a71-6ff1-4c60-a74a-20c96fb9c487", 0.2);
 
 KBSECTION

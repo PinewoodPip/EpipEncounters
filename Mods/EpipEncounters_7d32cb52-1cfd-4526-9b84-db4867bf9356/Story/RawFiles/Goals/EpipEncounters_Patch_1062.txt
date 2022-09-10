@@ -1,0 +1,19 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+
+KBSECTION
+
+// Change GF Engrave icons.
+PROC PROC_AMER_Versioning_Patch("EpipEncounters", 1062)
+AND
+DB_AMER_UI_Greatforge_Option("PIP_Engrave", "AMER_UI_Greatforge_Option_DrillSocket")
+THEN
+NOT DB_AMER_UI_Greatforge_Option("PIP_Engrave", "AMER_UI_Greatforge_Option_DrillSocket");
+DB_AMER_UI_Greatforge_Option("PIP_Engrave", "PIP_FX_Greatforge_Option_Engrave");
+GoalCompleted;
+
+EXITSECTION
+
+ENDEXITSECTION
+ParentTargetEdge "AMER_GLO_Versioning_PatchWrapper"
