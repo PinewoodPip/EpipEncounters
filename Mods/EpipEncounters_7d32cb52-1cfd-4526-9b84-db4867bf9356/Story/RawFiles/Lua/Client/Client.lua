@@ -114,48 +114,13 @@ function Client.IsInDialogue()
 end
 
 ---Returns the currently-controlled character on the client.  
----Checks StatusConsole (or bottomBar for controllers), then CharacterCreation and Hotbar as a fallback.
+---@param playerIndex integer? Defaults to 1.
 ---@return EclCharacter
-function Client.GetCharacter()
-    -- StatusConsole is the most reliable UI from my experience. CharacterSheet and Hotbar can fail/lag behind (and the former is not updated while closed!)
-    local ui
-    local handle
-    local char = nil
-    local isController = Client.IsUsingController()
+function Client.GetCharacter(playerIndex)
+    playerIndex = playerIndex or 1
+    local playerManager = Ext.Entity.GetPlayerManager()
+    local char = Character.Get(playerManager.ClientPlayerData[playerIndex].CharacterNetId) ---@type EclCharacter
 
-    if isController then
-        ui = Ext.UI.GetByPath("Public/Game/GUI/bottomBar_c.swf")
-        handle = ui:GetRoot().characterHandle
-
-        if handle then
-            handle = Ext.UI.DoubleToHandle(handle)
-        end
-    else
-        ui = Ext.UI.GetByType(Client.UI.Data.UITypes.statusConsole)
-        handle = ui:GetPlayerHandle()
-        -- If StatusConsole fails, we must be in CharacterCreation.
-        if not handle then 
-            ui = Ext.UI.GetByType(Client.UI.Data.UITypes.characterCreation)
-
-            if ui then
-                handle = ui:GetRoot().characterHandle -- GetPlayerHandle() does not work for this UI
-            
-                if handle then
-                    handle = Ext.UI.DoubleToHandle(handle)
-                else
-                    -- Last resort attempt: try the hotbar UI
-                    if Client.UI.Hotbar:GetUI() then
-                        handle = Client.UI.Hotbar:GetUI():GetPlayerHandle()
-                    end
-                end
-            end
-        end
-    end
-
-    if handle then
-        char = Ext.GetCharacter(handle)
-    end
-    
     return char
 end
 
