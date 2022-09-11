@@ -51,8 +51,9 @@ function Item.GetIcon(item, useClientIcons)
             icon = "Item_LOOT_Gold_Small_A"
         end
     else
-        -- Logic for getting icons is different per context. Server checks only the root template.
-        if (Ext.IsClient() or useClientIcons) and item.Stats then
+        if item.Icon ~= "" then
+            icon = item.Icon
+        elseif (Ext.IsClient() or useClientIcons) and item.Stats then -- Logic for getting icons is different per context. Server checks only the root template.
             local statObject = Ext.Stats.Get(item.Stats.Name)
             local itemGroup = Ext.Stats.ItemGroup.GetLegacy(statObject.ItemGroup)
 

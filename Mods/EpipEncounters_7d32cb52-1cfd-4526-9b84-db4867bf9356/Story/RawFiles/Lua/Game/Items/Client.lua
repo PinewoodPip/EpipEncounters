@@ -5,7 +5,15 @@
 -- REGION Querying items in inventories.
 ---------------------------------------------
 
---- Count the amount of template instances (prefix + guid) in the client party's inventory.
+---Sets a custom icon for an item.
+---Not persistent!
+---@param item Item
+---@param icon string
+function Item.SetIconOverride(item, icon)
+    item.Icon = icon
+end
+
+---Count the amount of template instances (prefix + guid) in the client party's inventory.
 ---@param template string
 ---@return number
 function Item.GetPartyTemplateCount(template)

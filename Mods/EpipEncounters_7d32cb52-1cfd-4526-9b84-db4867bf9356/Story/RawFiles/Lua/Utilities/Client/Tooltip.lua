@@ -240,6 +240,8 @@ Ext.Events.UICall:Subscribe(function(ev)
         Tooltip.nextTooltipData = {UIType = ev.UI:GetTypeId(), Type = "Skill", FlashCharacterHandle = param1, SkillID = param2}
     elseif ev.Function == "showItemTooltip" then
         Tooltip.nextTooltipData = {UIType = ev.UI:GetTypeId(), Type = "Item", FlashItemHandle = param1}
+    elseif ev.Function == "displaySurfaceText" then
+        Tooltip.nextTooltipData = {UIType = ev.UI:GetTypeId(), Type = "Surface"}
     end
 end)
 
