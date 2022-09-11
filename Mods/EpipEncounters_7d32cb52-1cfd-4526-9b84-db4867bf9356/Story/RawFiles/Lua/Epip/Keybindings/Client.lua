@@ -10,6 +10,7 @@ Options.RegisterTab("EpipEncounters", {
         {Name = "Debug Copy Identifier", ID = "EpipEncounters_Debug_CopyIdentifier", DeveloperOnly = true, DefaultInput1 = {Keys = {"lctrl", "c"}}},
         {Name = "Debug Open Features Menu", ID = "EpipEncounters_Debug_OpenDebugMenu", DeveloperOnly = true, DefaultInput1 = {Keys = {"lctrl", "f"}}},
         {Name = "Log RootTemplate", ID = "EpipEncounters_Debug_LogRootTemplate", DeveloperOnly = true},
+        {Name = "Test Camera Scripts", ID = "EpipEncounters_Debug_TestCamera", DeveloperOnly = true},
 
         -- EE
         {Name = "Meditate", ID = "EpicEncounters_Meditate"},

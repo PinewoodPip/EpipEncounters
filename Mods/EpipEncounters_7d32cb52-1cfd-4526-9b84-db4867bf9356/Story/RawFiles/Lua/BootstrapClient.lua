@@ -87,6 +87,7 @@ LOAD_ORDER = {
     "Client/Sound.lua",
     "UI/Data.lua",
     "Client/Input.lua",
+    "Client/Camera.lua",
 
     "Game/Client/Tooltip.lua",
     "Game/Tooltip.lua",

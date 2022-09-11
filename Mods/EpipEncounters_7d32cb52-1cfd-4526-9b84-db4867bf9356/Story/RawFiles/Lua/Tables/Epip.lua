@@ -173,6 +173,19 @@ function Epip.InitializeFeature(id, name, feature)
     table.insert(Epip._FeatureRegistrationOrder, feature)
 end
 
+---@param obj any
+---@param opts any?
+---@param fileName string?
+function Epip.SaveDump(obj, opts, fileName)
+    IO.SaveFile(fileName or "debug_dump.json", Text.Dump(obj, opts or {
+        Beautify = true,
+        StringifyInternalTypes = true,
+        IterateUserdata = true,
+        AvoidRecursion = true,
+        LimitDepth = 6,
+    }), true)
+end
+
 if Ext.IsClient() then
     function Epip.InitializeUI(type, id, ui)
         Epip.InitializeFeature(id, ui.NAME or id, ui)

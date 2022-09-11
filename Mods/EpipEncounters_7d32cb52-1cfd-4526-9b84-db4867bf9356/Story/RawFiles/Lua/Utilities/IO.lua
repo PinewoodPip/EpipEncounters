@@ -18,8 +18,11 @@ IO = {
 ---Serializes contents into json and saves them to a file.
 ---@param filename string
 ---@param contents any
-function IO.SaveFile(filename, contents)
-    Ext.IO.SaveFile(filename, Ext.DumpExport(contents))
+---@param raw boolean? Defaults to false.
+function IO.SaveFile(filename, contents, raw)
+    if not raw then contents = Ext.DumpExport(contents) end
+    
+    Ext.IO.SaveFile(filename, contents)
 end
 
 ---Loads a file.
