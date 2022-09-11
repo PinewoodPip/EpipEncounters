@@ -16,8 +16,8 @@ local Tooltip = {
     },
 
     SIMPLE_TOOLTIP_STYLES = {
-        Simple = 0,
-        Fancy = 1,
+        Fancy = 0,
+        Simple = 1,
     },
     SIMPLE_TOOLTIP_MOUSE_STICK_MODE = {
         None = 0,
@@ -180,6 +180,24 @@ function Tooltip.ShowFormattedTooltip(ui, tooltipType, tooltip)
     end
 end
 
+---Shows a simple tooltip.
+---Does not fire events.
+---@param data TooltipLib_SimpleTooltip
+function Tooltip.ShowSimpleTooltip(data)
+    local root = Client.UI.Tooltip:GetRoot()
+    local x, y = data.Position:unpack()
+
+    root.addTooltip(data.Label, x, y, data.UseDelay, Tooltip.SIMPLE_TOOLTIP_MOUSE_STICK_MODE[data.MouseStickMode], Tooltip.SIMPLE_TOOLTIP_STYLES[data.TooltipStyle])
+
+    if data.MouseStickMode == "None" then
+        root.checkTooltipBoundaries(root.getTooltipWidth(), root.getTooltipHeight(), x + root.frameSpacing, y + root.frameSpacing) -- This function is responsible for positioning the tooltip if it is not set to stick to mouse.
+    end
+        
+    Ext.OnNextTick(function ()
+        root.INTshowTooltip()
+    end)
+end
+
 ---@param text string
 function Tooltip.ShowMouseTextTooltip(text)
     local root = TextDisplay:GetRoot()
@@ -331,15 +349,9 @@ Client.UI.Tooltip:RegisterInvokeListener("addTooltip", function (ev, text, x, y,
         }
     })
 
-    root.addTooltip(event.Tooltip.Label, event.Tooltip.Position[1], event.Tooltip.Position[2], event.Tooltip.UseDelay, Tooltip.SIMPLE_TOOLTIP_MOUSE_STICK_MODE[event.Tooltip.MouseStickMode], Tooltip.SIMPLE_TOOLTIP_STYLES[event.Tooltip.TooltipStyle])
-
-    if event.Tooltip.MouseStickMode == "None" then
-        root.checkTooltipBoundaries(root.getTooltipWidth(), root.getTooltipHeight(), x + root.frameSpacing, y + root.frameSpacing) -- This function is responsible for positioning the tooltip if it is not set to stick to mouse.
+    if not event.Prevented then
+        Tooltip.ShowSimpleTooltip(event.Tooltip)
     end
-        
-    Ext.OnNextTick(function ()
-        root.INTshowTooltip()
-    end)
 
     ev:PreventAction()
 end, "Before")

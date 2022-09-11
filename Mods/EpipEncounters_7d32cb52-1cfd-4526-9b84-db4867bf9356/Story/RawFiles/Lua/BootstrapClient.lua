@@ -223,6 +223,7 @@ LOAD_ORDER = {
     "Epip/TooltipAdjustments/Client_RewardGenerationWarning.lua",
     "Epip/TooltipAdjustments/Client_WeaponRangeDeltamod.lua",
     "Epip/TooltipAdjustments/Client_DamageTypeDeltamods.lua",
+    "Epip/TooltipAdjustments/Client_SimpleTooltips.lua",
     "Epip/Client/TreasureTableDisplay.lua",
     "Epip/Client/SummonControlFix.lua",
     "Epip/Client/Notifications.lua",

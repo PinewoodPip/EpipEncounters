@@ -510,6 +510,32 @@ local WorldTooltipsEmphasisColorsDropdown = {
     "Orange Label",
 }
 
+local Tooltips = {
+    CreateHeader("Tooltips"),
+    {
+        ID = "Tooltip_SimpleTooltipDelay_World",
+        Type = "Slider",
+        Label = "Simple Tooltip Delay (World)",
+        MinAmount = 0,
+        MaxAmount = 4,
+        DefaultValue = 0.5,
+        Interval = 0.1,
+        HideNumbers = false,
+        Tooltip = "Controls the delay for simple tooltips to appear while hovering over objects in the world.<br><br>Default is 0.5s.",
+    },
+    {
+        ID = "Tooltip_SimpleTooltipDelay_UI",
+        Type = "Slider",
+        Label = "Simple Tooltip Delay (UI)",
+        MinAmount = 0,
+        MaxAmount = 4,
+        DefaultValue = 0.1, -- TODO figure out why this doesn't seem to work properly. Causes some tooltips to be "missed" and never show up.
+        Interval = 0.1,
+        HideNumbers = false,
+        Tooltip = "Controls the delay for simple tooltips to appear while hovering over UI elements.<br><br>Default is 0.5s.",
+    },
+}
+
 local WorldTooltips = {
     CreateHeader("World Item Tooltips"),
     {
@@ -588,6 +614,7 @@ local Order = {
     Inventory,
     Notification,
     Chat,
+    Tooltips,
     WorldTooltips,
     Overheads,
     SaveLoadOptions,
