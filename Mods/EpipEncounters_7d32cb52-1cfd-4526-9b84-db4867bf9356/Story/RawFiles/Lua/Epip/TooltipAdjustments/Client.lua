@@ -237,13 +237,6 @@ function TooltipAdjustments.ShowAbilityScoresForSI(char, skill, tooltip)
     element.Label = element.Label:insert(string.format(" <font size='17'>(current: %d %s)</font>", score, schoolName), position)
 end
 
--- Make normal tooltips appear instantly, without the 0.5s delay.
--- This is not perfect; it will not work if you open a new tooltip while one is already existing. But that only happens in situations where you move the mosue very fast,
--- so it's probably fine.
-Ext.RegisterUINameInvokeListener("addTooltip", function(ui, method, str, offsetx, offsety, delay, param5, param6)
-    ui:GetRoot().addTooltip(str, offsetx, offsety, 0, param5, param6)
-end, "After")
-
 -- Fix tooltips when char has increased AP costs (ex. Slowed III in old Epip)
 function TooltipAdjustments.FixTooltipAPCosts(tooltip)
     local char = Client.GetCharacter()

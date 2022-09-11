@@ -15,6 +15,18 @@ local Tooltip = {
         Sulphur = true,
     },
 
+    SIMPLE_TOOLTIP_STYLES = {
+        Simple = 0,
+        Fancy = 1,
+    },
+    SIMPLE_TOOLTIP_MOUSE_STICK_MODE = {
+        None = 0,
+        BottomRight = 1,
+        BottomLeft = 2,
+        TopRight = 3,
+        TopLeft = 4,
+    },
+
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
 
@@ -24,10 +36,15 @@ local Tooltip = {
         RenderItemTooltip = {Preventable = true,}, ---@type PreventableEvent<TooltipLib_Hook_RenderItemTooltip>
         RenderSurfaceTooltip = {Preventable = true,}, ---@type PreventableEvent<TooltipLib_Hook_RenderFormattedTooltip>
         RenderMouseTextTooltip = {Preventable = true}, ---@type PreventableEvent<TooltipLib_Hook_RenderMouseTextTooltip>
+        RenderSimpleTooltip = {Preventable = true}, ---@type PreventableEvent<TooltipLib_Hook_RenderSimpleTooltip>
     },
 }
 Client.Tooltip = Tooltip
 Epip.InitializeLibrary("TooltipLib", Tooltip)
+
+---------------------------------------------
+-- CLASSES
+---------------------------------------------
 
 ---@alias TooltipLib_FormattedTooltipType "Surface"|"Skill"|"Item"
 ---@alias TooltipLib_Element table See `Game.Tooltip`. TODO
@@ -39,6 +56,13 @@ Epip.InitializeLibrary("TooltipLib", Tooltip)
 ---@field FlashCharacterHandle FlashObjectHandle?
 ---@field FlashItemHandle FlashObjectHandle?
 ---@field SkillID string?
+
+---@class TooltipLib_SimpleTooltip
+---@field Label string Supports <bp>, <line> and <shortline>
+---@field Position Vector2D
+---@field UseDelay boolean
+---@field MouseStickMode "None"|"BottomRight"|"BottomLeft"|"TopRight"|"TopLeft"
+---@field TooltipStyle "Simple"|"Fancy"
 
 ---@class TooltipLib_FormattedTooltip
 ---@field Elements TooltipLib_Element[]
@@ -130,6 +154,9 @@ end
 
 ---@class TooltipLib_Hook_RenderMouseTextTooltip : PreventableEventParams
 ---@field Text string Hookable.
+
+---@class TooltipLib_Hook_RenderSimpleTooltip : PreventableEventParams
+---@field Tooltip TooltipLib_SimpleTooltip
 
 ---------------------------------------------
 -- METHODS
@@ -282,3 +309,37 @@ TextDisplay:RegisterInvokeListener("addText", function(ev, text, x, y)
         ev:PreventAction()
     end
 end)
+
+-- Listen for simple tooltips.
+Client.UI.Tooltip:RegisterInvokeListener("addTooltip", function (ev, text, x, y, allowDelay, stickToMouseMode, tooltipStyle)
+    local root = ev.UI:GetRoot()
+
+    -- Default values from flash method.
+    x = x or 0
+    y = y or 18
+    stickToMouseMode = stickToMouseMode or 0
+    if allowDelay == nil then allowDelay = true end
+    if tooltipStyle == nil then tooltipStyle = 0 end
+
+    local event = Tooltip.Hooks.RenderSimpleTooltip:Throw({
+        Tooltip = {
+            Label = text,
+            Position = Vector.Create(x, y),
+            UseDelay = allowDelay,
+            MouseStickMode = table.reverseLookup(Tooltip.SIMPLE_TOOLTIP_MOUSE_STICK_MODE, stickToMouseMode),
+            TooltipStyle = table.reverseLookup(Tooltip.SIMPLE_TOOLTIP_STYLES, tooltipStyle)
+        }
+    })
+
+    root.addTooltip(event.Tooltip.Label, event.Tooltip.Position[1], event.Tooltip.Position[2], event.Tooltip.UseDelay, Tooltip.SIMPLE_TOOLTIP_MOUSE_STICK_MODE[event.Tooltip.MouseStickMode], Tooltip.SIMPLE_TOOLTIP_STYLES[event.Tooltip.TooltipStyle])
+
+    if event.Tooltip.MouseStickMode == "None" then
+        root.checkTooltipBoundaries(root.getTooltipWidth(), root.getTooltipHeight(), x + root.frameSpacing, y + root.frameSpacing) -- This function is responsible for positioning the tooltip if it is not set to stick to mouse.
+    end
+        
+    Ext.OnNextTick(function ()
+        root.INTshowTooltip()
+    end)
+
+    ev:PreventAction()
+end, "Before")
