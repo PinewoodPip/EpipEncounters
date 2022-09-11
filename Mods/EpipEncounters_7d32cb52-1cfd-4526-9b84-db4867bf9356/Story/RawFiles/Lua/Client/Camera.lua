@@ -17,3 +17,9 @@ function Camera.GetPlayerCamera(playerIndex)
 
     return cameraManager.Controllers[cameraID]
 end
+
+---@param mode integer? Defaults to 0.
+---@return GlobalCameraSwitches
+function Camera.GetGlobalSwitches(mode)
+    return Ext.Utils.GetGlobalSwitches()["CameraSwitchesMode" .. (mode or 0)]
+end

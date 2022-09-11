@@ -339,6 +339,7 @@ function OptionsSettings.SetOptionValue(mod, option, value, synch)
     -- If the UI is open, update the element.
     if OptionsSettings:GetUI() ~= nil then
         OptionsSettings.SetElementState(option, value)
+        OptionsSettings.PendingValueChanges[option] = value
     end
 
     if OptionsMenu.initialized then
@@ -507,7 +508,7 @@ function OptionsSettings.RenderOption(elementData, numID)
             OptionsSettings:LogError("Tried to render setting with no bound mod: " .. elementData.ID)
             return nil
         else
-            elementData.Mod = OptionsSettings.currentCustomTabs[OptionsSettings.currentTab]
+            elementData.Mod = elementData.Mod or OptionsSettings.currentCustomTabs[OptionsSettings.currentTab] -- TODO remove latter case?
             elementData.VisibleAtTopLevel = elementData.VisibleAtTopLevel or false
 
             OptionsSettings.RegisterOption(elementData.Mod, elementData)
@@ -520,8 +521,6 @@ function OptionsSettings.RenderOption(elementData, numID)
             OptionsSettings.currentElements[numID] = elementData
 
             OptionsSettings:FireEvent("ElementRenderRequest", elementData.Type, elementData, numID)
-
-            OptionsSettings.nextNumID = OptionsSettings.nextNumID + 1
 
             if elementData.Type == "Selector" then
                 for z,subSettingID in ipairs(elementData.Options[OptionsSettings.GetOptionValue(elementData.Mod, elementData.ID)].SubSettings) do
@@ -631,6 +630,8 @@ OptionsSettings:RegisterListener("ElementRenderRequest", function(elementType, d
     elseif elementType == "Selector" then
         OptionsSettings.RenderSelector(data, numID)
     end
+
+    OptionsSettings.nextNumID = OptionsSettings.nextNumID + 1
 end)
 
 -- Synch server-only settings once the client has been detected as the host

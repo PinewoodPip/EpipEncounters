@@ -114,3 +114,20 @@ function table.getKeyCount(t)
 
     return count
 end
+
+---Creates a new array by inserting elements from t1 and t2 in order.
+---@param t1 any[]
+---@param t2 any[]
+---@return any[]
+function table.join(t1, t2)
+    local result = {}
+
+    for _,value in ipairs(t1) do
+        table.insert(result, value)
+    end
+    for _,value in ipairs(t2) do
+        table.insert(result, value)
+    end
+
+    return result
+end
