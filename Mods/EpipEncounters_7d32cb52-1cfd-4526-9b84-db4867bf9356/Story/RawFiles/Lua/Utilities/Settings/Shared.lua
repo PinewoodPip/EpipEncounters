@@ -37,6 +37,10 @@ Epip.InitializeLibrary("Settings", Settings)
 ---@class SettingsLib_Setting
 ---@field ID string
 ---@field Type SettingsLib_SettingType
+---@field Name string? Defaults to ID.
+---@field NameHandle TranslatedStringHandle? Preferred over Name.
+---@field Description string? Defaults to empty string.
+---@field DescriptionHandle TranslatedStringHandle? Preferred over Description.
 ---@field Context "Shared"|"Client"|"Server"
 ---@field ModTable string
 ---@field Value any
@@ -54,6 +58,16 @@ function _Setting:Create(data)
     data:SetValue(data.DefaultValue)
 
     return data
+end
+
+---@return string
+function _Setting:GetName()
+    return Ext.L10N.GetTranslatedString(self.NameHandle, self.Name or self.ID)
+end
+
+---@return string
+function _Setting:GetDescription()
+    return Ext.L10N.GetTranslatedString(self.DescriptionHandle, self.Description or "")
 end
 
 function _Setting:GetValue() return self.Value end
