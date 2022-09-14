@@ -57,6 +57,7 @@ LOAD_ORDER = {
     {
         Scripts = {
             "Utilities/Settings/Shared.lua",
+            "Utilities/Settings/Client.lua",
             "Utilities/Settings/Setting_Boolean.lua",
             "Utilities/Settings/Setting_Number.lua",
             "Utilities/Settings/Setting_ClampedNumber.lua",
