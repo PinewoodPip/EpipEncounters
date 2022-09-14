@@ -53,6 +53,16 @@ LOAD_ORDER = {
     "Utilities.lua",
     "Utilities/Timer.lua",
     "Utilities/Coroutine.lua",
+    {
+        Scripts = {
+            "Utilities/Settings/Shared.lua",
+            "Utilities/Settings/Setting_Boolean.lua",
+            "Utilities/Settings/Setting_Number.lua",
+            "Utilities/Settings/Setting_ClampedNumber.lua",
+            "Utilities/Settings/Setting_Choice.lua",
+        },
+        WIP = true,
+    },
     "Utilities/Client/Pointer.lua",
 
     "Data/Game.lua", -- TODO move stuff out of it into appropriate scripts

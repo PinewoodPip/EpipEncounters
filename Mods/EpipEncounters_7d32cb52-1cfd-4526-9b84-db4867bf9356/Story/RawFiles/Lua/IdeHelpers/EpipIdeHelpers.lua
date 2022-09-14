@@ -34,6 +34,7 @@
 ---@field Developer boolean If true, the script will only load in developer mode.
 ---@field ScriptSet string Folder to load a set of scripts from (Shared.lua, Client.lua and Server.lua)
 ---@field Script string Filename
+---@field Scripts string[] Extra scripts to load after the main script or scriptset.
 
 ---@class NetMessage
 

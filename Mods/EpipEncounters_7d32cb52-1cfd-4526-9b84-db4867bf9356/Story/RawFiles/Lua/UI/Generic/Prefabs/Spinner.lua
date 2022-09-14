@@ -106,7 +106,7 @@ function Spinner:UpdateCounter()
         value = Text.RemoveTrailingZeros(value)
     end
 
-    text:SetText(tostring(value))
+    text:SetText(Text.Format(tostring(value), {Color = Color.BLACK}))
 end
 
 ---@param ui GenericUI_Instance
