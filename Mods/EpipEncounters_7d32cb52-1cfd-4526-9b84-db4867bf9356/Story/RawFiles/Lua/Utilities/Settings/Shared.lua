@@ -9,9 +9,6 @@ Settings = {
     Modules = {}, ---@type table<string, SettingsLib_Module>
     SettingTypes = {}, ---@type table<SettingsLib_SettingType, SettingsLib_Setting>
 
-    DEFAULT_SAVE_FILENAME = "Epip/Settings/%s_%s.json",
-    SAVE_VERSION = 0,
-
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
 
