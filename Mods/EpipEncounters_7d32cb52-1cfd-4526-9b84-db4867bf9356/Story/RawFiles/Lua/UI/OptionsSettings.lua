@@ -343,10 +343,18 @@ function OptionsSettings.SetOptionValue(mod, option, value, synch)
     end
 
     if OptionsMenu.initialized then
-        OptionsSettings:FireEvent("OptionSet", OptionsSettings.GetOptionData(option), value)
+        local data = OptionsSettings.GetOptionData(option)
+
+        if data then
+            OptionsSettings:FireEvent("OptionSet", data, value)
+        end
     else
         GameState.Events.GameReady:Subscribe(function (e)
-            OptionsSettings:FireEvent("OptionSet", OptionsSettings.GetOptionData(option), value)
+            local data = OptionsSettings.GetOptionData(option)
+
+            if data then
+                OptionsSettings:FireEvent("OptionSet", data, value)
+            end
         end, {Once = true})
     end
 end
