@@ -27,10 +27,11 @@ end
 
 ---Loads a file.
 ---@param filename string
----@param context InputOutputLib_FileContext
+---@param context InputOutputLib_FileContext? Defaults to "Data"
 ---@return any
 function IO.LoadFile(filename, context)
     local contents = Ext.IO.LoadFile(filename, context)
+    context = context or IO.FILE_CONTEXTS.DATA
 
     if contents then
         contents = Ext.Json.Parse(contents)

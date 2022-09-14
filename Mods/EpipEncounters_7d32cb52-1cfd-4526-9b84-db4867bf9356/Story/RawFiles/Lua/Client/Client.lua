@@ -124,6 +124,16 @@ function Client.GetCharacter(playerIndex)
     return char
 end
 
+---Returns the profile GUID of a player.
+---@param playerIndex integer? Defaults to 1.
+---@return GUID
+function Client.GetProfileGUID(playerIndex)
+    playerIndex = playerIndex or 1
+    local playerManager = Ext.Entity.GetPlayerManager()
+
+    return playerManager.ClientPlayerData[playerIndex].ProfileGuid
+end
+
 ---Returns true if the game is in a gameplay state, or late into loading.
 ---@return boolean
 function Client.IsInGameplayState()
