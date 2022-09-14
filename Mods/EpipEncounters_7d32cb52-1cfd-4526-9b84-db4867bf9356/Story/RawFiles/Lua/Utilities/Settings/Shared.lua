@@ -67,6 +67,21 @@ function _Setting:GetDescription()
     return Ext.L10N.GetTranslatedString(self.DescriptionHandle, self.Description or "")
 end
 
+---Returns whether this setting's intended context matches the current environment.
+function _Setting:IsInValidContext()
+    local isValid = self.Context == "Shared"
+
+    if not isValid then
+        if Ext.IsClient() then
+            isValid = self.Context == "Client"
+        else
+            isValid = self.Context == "Server"
+        end
+    end
+
+    return isValid
+end
+
 function _Setting:GetValue() return self.Value end
 function _Setting:SetValue(value) self.Value = value end
 function _Setting:_Init() end
@@ -100,14 +115,18 @@ function Settings.SetValue(modTable, settingID, ...)
     })
 end
 
+---Returns a table of setting IDs and their current values.
 ---@param modTable string
+---@param includeInvalidContexts boolean? If true, settings with a mismatched context will be included, if any are registered. Defaults to false.
 ---@return table<string, any> Maps setting ID to value.
-function Settings.GetModuleSettingValues(modTable)
+function Settings.GetModuleSettingValues(modTable, includeInvalidContexts)
     local module = Settings.GetModule(modTable)
     local output = {}
 
     for id,setting in pairs(module.Settings) do
-        output[id] = setting:GetValue()
+        if includeInvalidContexts or setting:IsInValidContext() then
+            output[id] = setting:GetValue()
+        end
     end
 
     return output
