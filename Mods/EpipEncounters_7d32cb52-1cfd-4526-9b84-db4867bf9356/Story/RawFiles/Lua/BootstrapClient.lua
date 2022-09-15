@@ -64,6 +64,7 @@ LOAD_ORDER = {
         },
         WIP = true,
     },
+    {ScriptSet = "Utilities/Combat"},
     "Utilities/Client/Pointer.lua",
 
     "Data/Game.lua", -- TODO move stuff out of it into appropriate scripts

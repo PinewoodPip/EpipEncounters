@@ -62,6 +62,20 @@ function Character.GetStacks(char, type)
     return stacks,lifetime
 end
 
+---Returns the combat ID and team ID of char, if any.
+---@param char Character
+---@return integer?, integer? -- The combat ID and team ID. Nil if the character is not in combat. This is different from the osi query, which returns a reserved value.
+function Character.GetCombatID(char)
+    local status = char:GetStatusByType("COMBAT") ---@type EclStatusCombat
+    local id, teamID
+
+    if status then
+        id, teamID = status.CombatTeamId.CombatId, status.CombatTeamId.CombinedId
+    end
+
+    return id, teamID
+end
+
 ---Returns whether a skill is innate to a character.
 ---Returns false if the character doesn't have the skill in any way.
 ---@param char Character
