@@ -30,7 +30,6 @@ function Item.IsMeleeWeapon(item)
 end
 
 ---Returns the icon of the item.
----Ignores the icon override (if any) as it is currently inaccessible.
 ---@param item Item
 ---@param useClientIcons boolean? Defaults to false. If true, the icon will be checked using client logic.
 ---@return string
