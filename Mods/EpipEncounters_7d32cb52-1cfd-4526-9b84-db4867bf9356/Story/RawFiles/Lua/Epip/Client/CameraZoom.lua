@@ -1,5 +1,6 @@
 
 local OptionsSettings = Client.UI.OptionsSettings
+local Camera = Client.Camera
 
 ---@class Feature_CameraZoom : Feature
 local CameraZoom = {
@@ -209,32 +210,36 @@ end)
 
 -- Register camera positions.
 local switches = Client.Camera.GetGlobalSwitches()
+local defaultPos = Camera.GetDefaultPosition("Default")
+local overheadPos = Camera.GetDefaultPosition("Overhead")
+local controllerPos = Camera.GetDefaultPosition("Controller")
+local combatPos = Camera.GetDefaultPosition("Combat")
 
 ---@type Feature_CameraZoom_CameraPosition[]
 local positions = {
     {
         Name = "Regular Camera",
         GlobalSwitchID = "DefaultPosition",
-        DefaultPositionZoomedIn = switches.DefaultPosition2,
-        DefaultPositionZoomedOut = switches.DefaultPosition,
+        DefaultPositionZoomedIn = defaultPos.ZoomedIn,
+        DefaultPositionZoomedOut = defaultPos.ZoomedOut,
     },
     {
         Name = "Combat Camera",
         GlobalSwitchID = "DefaultCombatPosition",
-        DefaultPositionZoomedIn = switches.DefaultCombatPosition2,
-        DefaultPositionZoomedOut = switches.DefaultCombatPosition,
+        DefaultPositionZoomedIn = combatPos.ZoomedIn,
+        DefaultPositionZoomedOut = combatPos.ZoomedOut,
     },
     {
         Name = "Tactical Camera",
         GlobalSwitchID = "DefaultOverheadPosition",
-        DefaultPositionZoomedIn = switches.DefaultOverheadPosition2,
-        DefaultPositionZoomedOut = switches.DefaultOverheadPosition,
+        DefaultPositionZoomedIn = overheadPos.ZoomedIn,
+        DefaultPositionZoomedOut = overheadPos.ZoomedOut,
     },
     {
         Name = "Controller Camera",
         GlobalSwitchID = "DefaultControllerPosition",
-        DefaultPositionZoomedIn = switches.DefaultControllerPosition2,
-        DefaultPositionZoomedOut = switches.DefaultControllerPosition,
+        DefaultPositionZoomedIn = controllerPos.ZoomedIn,
+        DefaultPositionZoomedOut = controllerPos.ZoomedOut,
     },
 }
 for _,position in ipairs(positions) do

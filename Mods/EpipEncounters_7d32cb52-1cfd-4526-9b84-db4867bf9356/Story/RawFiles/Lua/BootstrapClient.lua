@@ -99,7 +99,12 @@ LOAD_ORDER = {
     "Client/Sound.lua",
     "UI/Data.lua",
     "Client/Input.lua",
-    "Client/Camera.lua",
+    {
+        Scripts = {
+            "Client/Camera/Camera.lua",
+            "Client/Camera/Camera_DefaultPositions.lua",
+        },
+    },
 
     "Game/Client/Tooltip.lua",
     "Game/Tooltip.lua",

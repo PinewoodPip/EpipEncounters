@@ -1,6 +1,9 @@
 
 ---@class CameraLib : Library
-local Camera = {}
+local Camera = {
+    
+}
+Epip.InitializeLibrary("Camera", Camera)
 Client.Camera = Camera
 
 ---------------------------------------------
