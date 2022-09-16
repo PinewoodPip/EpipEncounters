@@ -427,7 +427,7 @@ function Text.GenerateLocalizationTemplate(modTable)
 
     for handle,data in pairs(Text._RegisteredTranslatedHandles) do
         if data.ModTable == modTable then
-            local key = data.Key or ""
+            local key = data.Key
             local text = data.Text
 
             ---@type TextLib_LocalizationTemplate_Entry
