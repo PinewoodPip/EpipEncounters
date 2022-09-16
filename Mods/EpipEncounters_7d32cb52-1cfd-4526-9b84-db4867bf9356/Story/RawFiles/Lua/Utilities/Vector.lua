@@ -2,7 +2,7 @@
 ---@class VectorLib : Library
 ---@field zero2 Vector Shorthand for Vector.Create(0, 0)
 ---@field zero3 Vector Shorthand for Vector.Create(0, 0, 0)
----@field __call fun(...):Vector
+---@operator call:Vector Equivalent to Vector.Create()
 Vector = {}
 Epip.InitializeLibrary("Vector", Vector)
 setmetatable(Vector, {
@@ -33,6 +33,10 @@ setmetatable(Vector, {
 ---@field Arity integer Getter. Equivalent to #self.
 ---@field Length number Getter. Equivalent to Vector.GetLength()
 ---@field unpack fun(self:Vector):... Equivalent to table.unpack(self)
+---@operator add(Vector):Vector Equivalent to Vector.Sum()
+---@operator mul(Vector):number Equivalent to Vector.DotProduct()
+---@operator sub(Vector):Vector Equivalent to Vector.Subtract()
+---@operator unm:Vector Equivalent to Vector.Negate()
 local _Vector = {
     __index = function(self, key)
         -- Alternative way to fetch arity.

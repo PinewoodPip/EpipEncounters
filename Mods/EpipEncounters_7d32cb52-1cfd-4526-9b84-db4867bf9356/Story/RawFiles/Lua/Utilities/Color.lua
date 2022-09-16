@@ -76,6 +76,8 @@ Color = {
 ---@field Green integer In integer range [0-255]
 ---@field Blue integer In integer range [0-255]
 ---@field Alpha integer In integer range [0-255]
+---@operator add(RGBColor):RGBColor
+---@operator sub(RGBColor):RGBColor
 local RGBColor = {
     Red = 0,
     Green = 0,
