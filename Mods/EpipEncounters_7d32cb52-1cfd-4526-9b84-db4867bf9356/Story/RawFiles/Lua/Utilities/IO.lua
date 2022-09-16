@@ -4,10 +4,10 @@ IO = {
     ---@enum InputOutputLib_FileContext
     FILE_CONTEXTS = {
         ROOT = "Root", -- Not usable.
-        DATA = "Data",
+        DATA = "Data", -- Use "data" for Ext calls.
         PUBLIC = "Public", -- Not usable.
         MY_DOCUMENTS = "MyDocuments", -- Not usable.
-        GAME_STORAGE = "GameStorage",
+        GAME_STORAGE = "GameStorage", -- Use "user" for Ext calls.
     }
 }
 
@@ -27,11 +27,11 @@ end
 
 ---Loads a file.
 ---@param filename string
----@param context InputOutputLib_FileContext? Defaults to "Data"
+---@param context ("user"|"data")? Defaults to "user"
 ---@return any
 function IO.LoadFile(filename, context)
+    context = context or "user"
     local contents = Ext.IO.LoadFile(filename, context)
-    context = context or IO.FILE_CONTEXTS.DATA
 
     if contents then
         contents = Ext.Json.Parse(contents)

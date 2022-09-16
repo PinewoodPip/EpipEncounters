@@ -16,6 +16,22 @@ local function TestActionHandles()
     end
 end
 
+local function GenerateTSKHandle()
+    print(Text.GenerateTranslatedStringHandle())
+end
+
+local function GenerateGUID()
+    print(Text.GenerateGUID())
+end
+
+local function GenerateLocalizationTemplate(_, modTable)
+    print("Dummy language xml created in Osiris Data/Epip/localization_template.json", modTable)
+
+    local template = Text.GenerateLocalizationTemplate(modTable)
+
+    IO.SaveFile("Epip/localization_template.json", template)
+end
+
 local function SoundTest()
     print("Testing sounds...")
     print("Exit console to see IDs, and turn off mute-when-out-of-focus in game settings.")
@@ -50,6 +66,9 @@ local commands = {
     ["soundtest"] = SoundTest,
     ["testactionhandles"] = TestActionHandles,
     ["generateinputeventalias"] = GenerateInputEventAlias,
+    ["tskhandle"] = GenerateTSKHandle,
+    ["guid"] = GenerateGUID,
+    ["generatelocalizationtemplate"] = GenerateLocalizationTemplate,
 }
 
 for name,command in pairs(commands) do

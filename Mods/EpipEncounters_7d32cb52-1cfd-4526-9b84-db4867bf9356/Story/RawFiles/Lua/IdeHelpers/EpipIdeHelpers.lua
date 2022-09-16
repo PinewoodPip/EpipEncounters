@@ -8,12 +8,15 @@
 ---@alias Context "Client"|"Server" 
 ---@alias pattern string
 ---@alias TranslatedStringHandle string
+---@alias ModTableID string|"EpipEncounters"
 
 ---@class NetMessage_Character
 ---@field CharacterNetID NetId
 
 ---@class NetMessage_Item
 ---@field ItemNetID NetId
+
+Mods = {}
 
 ---Temporary alias.
 ---@class Library: Feature

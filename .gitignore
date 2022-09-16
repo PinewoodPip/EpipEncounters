@@ -41,7 +41,7 @@ luac.out
 
 # DIV
 *.pak
-Localization/
+/Localization/
 Editor/
 Mods/Shared
 Public/Shared
