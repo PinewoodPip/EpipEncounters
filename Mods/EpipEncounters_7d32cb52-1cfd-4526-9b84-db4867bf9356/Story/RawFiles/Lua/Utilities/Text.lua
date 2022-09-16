@@ -95,15 +95,23 @@ end
 
 ---Generate a random GUID.
 ---Source: https://gist.github.com/jrus/3197011
+---@param pattern pattern? Defaults to GUID4 pattern.
 ---@return GUID
-function Text.GenerateGUID()
-    local template ='xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
-    local guid, _ = string.gsub(template, '[xy]', function (c)
-        local v = (c == 'x') and Ext.Random(0, 0xf) or Ext.Random(8, 0xb)
-        return string.format('%x', v)
+function Text.GenerateGUID(pattern)
+    local template = pattern or "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx"
+
+    local guid, _ = string.gsub(template, "[xy]", function (c)
+        local v = (c == "x") and Ext.Random(0, 0xf) or Ext.Random(8, 0xb)
+        return string.format("%x", v)
     end)
 
     return guid
+end
+
+---Generates a random handle in the format that Larian uses for TranslatedStringHandle.
+---@return TranslatedStringHandle
+function Text.GenerateTranslatedStringHandle()
+    return Text.GenerateGUID("hxxxxxxxxgxxxxg4xxxgyxxxgxxxxxxxxxxxx") -- Prefixed with h, dashes replaced by g
 end
 
 ---Returns a string with spaces inserted inbetween PascalCase words.
@@ -319,4 +327,41 @@ function Text.Dump(obj, opts)
     opts.LimitDepth = opts.LimitDepth or 2
 
     return Ext.Json.Stringify(obj, opts)
+end
+
+---Returns the string bound to a TranslatedStringHandle, or a key.
+---@param handle TranslatedStringHandle|string Accepts handles or keys.
+---@param fallBack string?
+---@return string Defaults to the handle, of fallBack if specified.
+function Text.GetTranslatedString(handle, fallBack)
+    local str = Ext.L10N.GetTranslatedString(handle)
+
+    if not str or str == "" then
+        str = Ext.L10N.GetTranslatedStringFromKey(handle)
+    end
+
+    return str or fallBack or handle
+end
+
+---Registers a translated string, optionally binding a key to it.
+---@param text string
+---@param handle TranslatedStringHandle
+---@param key string?
+---@return string -- The text passed as parameter, or the text the handle already pointed to, if already registered/localized.
+function Text.RegisterTranslatedString(text, handle, key)
+    local currentText = Text.GetTranslatedString(handle)
+
+    -- Recreating the handle would remove existing localization.
+    if not currentText or currentText == "" then
+        Ext.L10N.CreateTranslatedStringHandle(handle, text)
+
+        -- Bind handle to key
+        if key then
+            Ext.L10N.CreateTranslatedStringKey(key, handle)
+        end
+    else
+        text = currentText
+    end
+
+    return text
 end
