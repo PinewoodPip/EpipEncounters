@@ -17,15 +17,19 @@ local function TestActionHandles()
 end
 
 local function GenerateTSKHandle()
-    print(Text.GenerateTranslatedStringHandle())
+    local handle = Text.GenerateTranslatedStringHandle()
+    Client.CopyToClipboard(handle)
+    print(handle, "copied to clipboard")
 end
 
 local function GenerateGUID()
-    print(Text.GenerateGUID())
+    local guid = Text.GenerateGUID()
+    Client.CopyToClipboard(guid)
+    print(guid, "copied to clipboard")
 end
 
 local function GenerateLocalizationTemplate(_, modTable)
-    print("Dummy language xml created in Osiris Data/Epip/localization_template.json", modTable)
+    print("Dummy language xml created in Osiris Data/Epip/localization_template.json")
 
     local template = Text.GenerateLocalizationTemplate(modTable)
 
