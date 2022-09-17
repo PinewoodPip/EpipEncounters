@@ -22,7 +22,7 @@ end
 
 Chat.Events.MessageSent:Subscribe(function (ev)
     -- Only do this if the message was not prevented; this is somewhat of a compatibility consideration for chat commands feature.
-    if not ev.Prevented and Exit:IsEnabled() then
+    if not ev.Prevented and Exit:IsEnabled() and not Client.Input.IsShiftPressed() then
         Exit:DebugLog("Exiting chat")
 
         Client.Input.Inject("Key", "escape", "Pressed")
