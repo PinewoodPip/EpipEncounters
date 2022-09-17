@@ -30,10 +30,10 @@ function Item.IsMeleeWeapon(item)
 end
 
 ---Returns the icon of the item.
+---Fetching the icon is technically different per context; the server only cares about root template icon (except for the gold template). This function uses the client logic (which also checks icon override and icon from stats).
 ---@param item Item
----@param useClientIcons boolean? Defaults to false. If true, the icon will be checked using client logic.
 ---@return string
-function Item.GetIcon(item, useClientIcons)
+function Item.GetIcon(item)
     local icon = item.RootTemplate.Icon
 
     -- Gold is a special case.
@@ -50,9 +50,9 @@ function Item.GetIcon(item, useClientIcons)
             icon = "Item_LOOT_Gold_Small_A"
         end
     else
-        if item.Icon ~= "" then
+        if item.Icon ~= "" then -- GB5 Icon override
             icon = item.Icon
-        elseif (Ext.IsClient() or useClientIcons) and item.Stats then -- Logic for getting icons is different per context. Server checks only the root template.
+        elseif item.Stats then
             local statObject = Ext.Stats.Get(item.Stats.Name)
             local itemGroup = Ext.Stats.ItemGroup.GetLegacy(statObject.ItemGroup)
 

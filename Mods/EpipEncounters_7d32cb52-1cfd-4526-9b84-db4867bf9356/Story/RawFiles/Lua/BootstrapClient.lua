@@ -47,12 +47,13 @@ LOAD_ORDER = {
     "Utilities/Hooks.lua",
     "Utilities/Color.lua",
     {ScriptSet = "Utilities/Entity"},
-    "Utilities/GameState/Shared.lua",
-    "Utilities/GameState/Client.lua",
+    {ScriptSet = "Utilities/GameState"},
     "Utilities/Mod.lua",
     "Utilities.lua",
     "Utilities/Timer.lua",
     "Utilities/Coroutine.lua",
+
+    -- SettingsLib
     {
         Scripts = {
             "Utilities/Settings/Shared.lua",
@@ -64,6 +65,7 @@ LOAD_ORDER = {
         },
         WIP = true,
     },
+
     {ScriptSet = "Utilities/Combat"},
     "Utilities/Client/Pointer.lua",
 
@@ -71,17 +73,39 @@ LOAD_ORDER = {
 
     -- Static libraries
     "Game.lua",
-    {ScriptSet = "Utilities/Character"},
-    "Utilities/Character/Shared_Talents.lua",
-    "Game/Items/Shared.lua",
-    "Game/Items/Client.lua",
-    "Game/Stats/Shared.lua",
-    "Game/Stats/Shared_ModifierLists.lua",
-    "Game/Stats/Shared_ExtraData.lua",
-    "Game/Stats/Shared_Actions.lua",
-    "Game/Stats/Shared_Runes.lua",
-    "Utilities/Net/Shared.lua",
-    "Utilities/Net/Client.lua",
+
+    -- CharacterLib
+    {
+        ScriptSet = "Utilities/Character",
+        Scripts = {
+            "Utilities/Character/Shared_Talents.lua",
+        },
+    },
+
+    -- ItemLib
+    {
+        ScriptSet = "Utilities/Item",
+    },
+
+    -- Stats
+    {
+        Scripts = {
+            "Utilities/Stats/Shared.lua",
+            "Utilities/Stats/Shared_ModifierLists.lua",
+            "Utilities/Stats/Shared_ExtraData.lua",
+            "Utilities/Stats/Shared_Actions.lua",
+            "Utilities/Stats/Shared_Runes.lua",
+        },
+    },
+    
+    -- Net
+    {
+        Scripts = {
+            "Utilities/Net/Shared.lua",
+            "Utilities/Net/Client.lua",
+        },
+    },
+    
     {ScriptSet = "Utilities/Artifact"},
 
     "Client/Client.lua",
@@ -98,7 +122,6 @@ LOAD_ORDER = {
     "Client/Flash.lua",
     "Client/Sound.lua",
     "UI/Data.lua",
-    "Client/Input.lua",
     {
         Scripts = {
             "Client/Camera/Camera.lua",
@@ -110,11 +133,20 @@ LOAD_ORDER = {
     "Game/Tooltip.lua",
 
     -- AMER UI
-    "Game/AMERUI/Shared.lua",
-    "Game/AMERUI/Client.lua",
+    {
+        Scripts = {
+            "Game/AMERUI/Shared.lua",
+            "Game/AMERUI/Client.lua",
+        },
+    },
 
-    "Game/Ascension/Shared.lua",
-    "Game/Ascension/Client.lua",
+    -- Ascension
+    {
+        Scripts = {
+            "Game/Ascension/Shared.lua",
+            "Game/Ascension/Client.lua",
+        },
+    },
 
     "Game/SkillDamageCalculation.lua",
 
@@ -136,8 +168,15 @@ LOAD_ORDER = {
     "UI/OptionsInput.lua",
     "UI/Time.lua",
 
-    "UI/CharacterSheet/CharacterSheet.lua",
-    "UI/CharacterSheet/StatsTab.lua",
+    -- Character Sheet
+    {
+        Scripts = {
+            "UI/CharacterSheet/CharacterSheet.lua",
+            "UI/CharacterSheet/StatsTab.lua",
+        },
+    },
+    
+    -- UIs
     "UI/ContextMenu.lua",
     "UI/CharacterCreation.lua",
     "UI/Overhead.lua",
@@ -153,35 +192,48 @@ LOAD_ORDER = {
     
     "Utilities/Client/Tooltip.lua",
 
-    "UI/Generic/Main.lua",
-    "UI/Generic/Elements/Element.lua",
-    "UI/Generic/Elements/Empty.lua",
-    "UI/Generic/Elements/TiledBackground.lua",
-    "UI/Generic/Elements/Text.lua",
-    "UI/Generic/Elements/IggyIcon.lua",
-    "UI/Generic/Elements/Button.lua",
-    "UI/Generic/Elements/VerticalList.lua",
-    "UI/Generic/Elements/HorizontalList.lua",
-    "UI/Generic/Elements/ScrollList.lua",
-    "UI/Generic/Elements/StateButton.lua",
-    "UI/Generic/Elements/Divider.lua",
-    "UI/Generic/Elements/Slot.lua",
-    "UI/Generic/Elements/Slider.lua",
-    "UI/Generic/Elements/ComboBox.lua",
-    "UI/Generic/Elements/Grid.lua",
-    "UI/Generic/Prefabs/HotbarSlot.lua",
-    "UI/Generic/Prefabs/Spinner.lua",
-    "UI/Generic/Prefabs/Text.lua",
-    "UI/Generic/Prefabs/LabelledDropdown.lua",
-    "UI/Generic/Prefabs/LabelledCheckbox.lua",
-    "UI/Generic/Prefabs/LabelledTextField.lua",
-    "UI/Generic/Prefabs/FormHorizontalList.lua",
+    -- GenericUI
+    {
+        Scripts = {
+            "UI/Generic/Main.lua",
+
+            "UI/Generic/Elements/Element.lua",
+            "UI/Generic/Elements/Empty.lua",
+            "UI/Generic/Elements/TiledBackground.lua",
+            "UI/Generic/Elements/Text.lua",
+            "UI/Generic/Elements/IggyIcon.lua",
+            "UI/Generic/Elements/Button.lua",
+            "UI/Generic/Elements/VerticalList.lua",
+            "UI/Generic/Elements/HorizontalList.lua",
+            "UI/Generic/Elements/ScrollList.lua",
+            "UI/Generic/Elements/StateButton.lua",
+            "UI/Generic/Elements/Divider.lua",
+            "UI/Generic/Elements/Slot.lua",
+            "UI/Generic/Elements/Slider.lua",
+            "UI/Generic/Elements/ComboBox.lua",
+            "UI/Generic/Elements/Grid.lua",
+
+            "UI/Generic/Prefabs/HotbarSlot.lua",
+            "UI/Generic/Prefabs/Spinner.lua",
+            "UI/Generic/Prefabs/Text.lua",
+            "UI/Generic/Prefabs/LabelledDropdown.lua",
+            "UI/Generic/Prefabs/LabelledCheckbox.lua",
+            "UI/Generic/Prefabs/LabelledTextField.lua",
+            "UI/Generic/Prefabs/FormHorizontalList.lua",
+        },
+    },
     -- {Script = "UI/Generic/Test.lua", WIP = true}, -- TEST!
 
-    "UI/Hotbar/Main.lua",
-    "UI/Hotbar/ContextMenus.lua",
-    "UI/Hotbar/Actions.lua",
-    "UI/Hotbar/Loadouts.lua",
+    -- Hotbar
+    {
+        Scripts = {
+            "UI/Hotbar/Main.lua",
+            "UI/Hotbar/ContextMenus.lua",
+            "UI/Hotbar/Actions.lua",
+            "UI/Hotbar/Loadouts.lua",
+        },
+    },
+    
     "UI/Notification.lua",
     "UI/Minimap.lua",
     "UI/VanillaActions.lua",
@@ -191,39 +243,50 @@ LOAD_ORDER = {
     "UI/GiftBagContent.lua",
     "UI/ChatLog.lua",
     "UI/SaveLoad.lua",
-    "UI/CombatLog/CombatLog.lua",
     "UI/Craft.lua",
     "UI/Reward.lua",
     "UI/WorldTooltip.lua",
     "UI/CombatTurn.lua",
 
-    "UI/Vanity/Vanity.lua",
-    "UI/Vanity/Tabs/_Tab.lua",
-    "UI/Vanity/Tabs/Transmog.lua",
-    "UI/Vanity/Tabs/Outfits.lua",
-    "UI/Vanity/Tabs/Dyes.lua",
-    -- "UI/Vanity/Tabs/Auras.lua",
+    -- Vanity
+    {
+        Scripts = {
+            "UI/Vanity/Vanity.lua",
+            "UI/Vanity/Tabs/_Tab.lua",
+            "UI/Vanity/Tabs/Transmog.lua",
+            "UI/Vanity/Tabs/Outfits.lua",
+            "UI/Vanity/Tabs/Dyes.lua",
+            -- "UI/Vanity/Tabs/Auras.lua",
+        },
+    },
     {ScriptSet = "UI/Vanity/Tabs/Shapeshift", WIP = true},
 
-    "UI/CombatLog/Messages/_Base.lua",
-    "UI/CombatLog/Messages/_Character.lua",
-    "UI/CombatLog/Messages/_CharacterInteraction.lua",
-    "UI/CombatLog/Messages/Unsupported.lua",
-    "UI/CombatLog/Messages/Damage.lua",
-    "UI/CombatLog/Messages/Healing.lua",
-    "UI/CombatLog/Messages/Lifesteal.lua",
-    "UI/CombatLog/Messages/Status.lua",
-    "UI/CombatLog/Messages/Scripted.lua",
-    "UI/CombatLog/Messages/SourceInfusionLevel.lua",
-    "UI/CombatLog/Messages/SourceGeneration.lua",
-    "UI/CombatLog/Messages/APPreservation.lua",
-    "UI/CombatLog/Messages/Skill.lua",
-    "UI/CombatLog/Messages/ReactionCharges.lua",
-    "UI/CombatLog/Messages/Attack.lua",
-    "UI/CombatLog/Messages/ReflectedDamage.lua",
-    "UI/CombatLog/Messages/SurfaceDamage.lua",
-    "UI/CombatLog/Messages/CriticalHit.lua",
-    "UI/CombatLog/Messages/Dodge.lua",
+    {
+        Scripts = {
+            "UI/CombatLog/CombatLog.lua",
+
+            "UI/CombatLog/Messages/_Base.lua",
+            "UI/CombatLog/Messages/_Character.lua",
+            "UI/CombatLog/Messages/_CharacterInteraction.lua",
+
+            "UI/CombatLog/Messages/Unsupported.lua",
+            "UI/CombatLog/Messages/Damage.lua",
+            "UI/CombatLog/Messages/Healing.lua",
+            "UI/CombatLog/Messages/Lifesteal.lua",
+            "UI/CombatLog/Messages/Status.lua",
+            "UI/CombatLog/Messages/Scripted.lua",
+            "UI/CombatLog/Messages/SourceInfusionLevel.lua",
+            "UI/CombatLog/Messages/SourceGeneration.lua",
+            "UI/CombatLog/Messages/APPreservation.lua",
+            "UI/CombatLog/Messages/Skill.lua",
+            "UI/CombatLog/Messages/ReactionCharges.lua",
+            "UI/CombatLog/Messages/Attack.lua",
+            "UI/CombatLog/Messages/ReflectedDamage.lua",
+            "UI/CombatLog/Messages/SurfaceDamage.lua",
+            "UI/CombatLog/Messages/CriticalHit.lua",
+            "UI/CombatLog/Messages/Dodge.lua",
+        },
+    },
 
     "UI/Controller/PanelSelect.lua",
 
@@ -234,13 +297,19 @@ LOAD_ORDER = {
     "Epip/Client/ImmersiveMeditation.lua",
     "Epip/Client/NameTypoFixes.lua",
     "Epip/Client/ExamineImprovements.lua",
-    {ScriptSet = "Epip/TooltipAdjustments"},
-    "Epip/TooltipAdjustments/Client_Scrolling.lua",
-    "Epip/TooltipAdjustments/Client_RuneCraftingHint.lua",
-    "Epip/TooltipAdjustments/Client_RewardGenerationWarning.lua",
-    "Epip/TooltipAdjustments/Client_WeaponRangeDeltamod.lua",
-    "Epip/TooltipAdjustments/Client_DamageTypeDeltamods.lua",
-    "Epip/TooltipAdjustments/Client_SimpleTooltips.lua",
+
+    {
+        ScriptSet = "Epip/TooltipAdjustments",
+        Scripts = {
+            "Epip/TooltipAdjustments/Client_Scrolling.lua",
+            "Epip/TooltipAdjustments/Client_RuneCraftingHint.lua",
+            "Epip/TooltipAdjustments/Client_RewardGenerationWarning.lua",
+            "Epip/TooltipAdjustments/Client_WeaponRangeDeltamod.lua",
+            "Epip/TooltipAdjustments/Client_DamageTypeDeltamods.lua",
+            "Epip/TooltipAdjustments/Client_SimpleTooltips.lua",
+        },
+    },
+    
     "Epip/Client/TreasureTableDisplay.lua",
     "Epip/Client/SummonControlFix.lua",
     "Epip/Client/Notifications.lua",
@@ -276,9 +345,10 @@ LOAD_ORDER = {
     "Epip/Client/ExitChatAfterMessage.lua",
     "Epip/Client/CameraZoom.lua",
 
-    -- Chat commands
-    "Epip/ChatCommands/Shared.lua",
-    "Epip/ChatCommands/Client.lua",
+    -- Chat Commands
+    {
+        ScriptSet = "Epip/ChatCommands",
+    },
     "Epip/EmoteCommands.lua",
 
     "Epip/Compatibility/WeaponExpansion/Client.lua",

@@ -48,8 +48,7 @@ LOAD_ORDER = {
     "Utilities/Hooks.lua",
     "Utilities/Color.lua",
     {ScriptSet = "Utilities/Entity"},
-    "Utilities/GameState/Shared.lua",
-    "Utilities/GameState/Server.lua",
+    {ScriptSet = "Utilities/GameState"},
     "Utilities/Mod.lua",
     "Utilities.lua",
     "Utilities/Timer.lua",
@@ -77,14 +76,29 @@ LOAD_ORDER = {
 
     {ScriptSet = "Utilities/Character"},
     "Utilities/Character/Shared_Talents.lua",
-    "Game/Items/Shared.lua",
-    "Game/Items/Server.lua",
-    "Game/Stats/Shared.lua",
-    "Game/Stats/Shared_ModifierLists.lua",
-    "Game/Stats/Shared_ExtraData.lua",
-    "Game/Stats/Shared_Actions.lua",
-    "Game/Stats/Shared_Runes.lua",
-    "Utilities/Net/Shared.lua",
+
+    -- ItemLib
+    {
+        ScriptSet = "Utilities/Item",
+    },
+
+    -- Stats
+    {
+        Scripts = {
+            "Utilities/Stats/Shared.lua",
+            "Utilities/Stats/Shared_ModifierLists.lua",
+            "Utilities/Stats/Shared_ExtraData.lua",
+            "Utilities/Stats/Shared_Actions.lua",
+            "Utilities/Stats/Shared_Runes.lua",
+        },
+    },
+
+    -- Net
+    {
+        Scripts = {
+            "Utilities/Net/Shared.lua",
+        },
+    },
 
     "Game/AMERUI/Shared.lua",
     "Game/AMERUI/Server.lua",
@@ -114,8 +128,10 @@ LOAD_ORDER = {
     {ScriptSet = "Epip/WorldTooltipOpenContainers"},
     -- "Epip/Server/FastCasting.lua",
 
-    "Epip/ChatCommands/Shared.lua",
-    "Epip/ChatCommands/Server.lua",
+    -- Chat Commands
+    {
+        ScriptSet = "Epip/ChatCommands",
+    },
     "Epip/EmoteCommands.lua",
     "Debug/Commands/Server.lua",
 
