@@ -248,6 +248,9 @@ LOAD_ORDER = {
     "UI/WorldTooltip.lua",
     "UI/CombatTurn.lua",
 
+    -- Title screen UIs
+    "UI/Mods.lua",
+
     -- Vanity
     {
         Scripts = {
@@ -344,6 +347,7 @@ LOAD_ORDER = {
     "Epip/Client/JournalChangelog.lua",
     "Epip/Client/ExitChatAfterMessage.lua",
     "Epip/Client/CameraZoom.lua",
+    "Epip/Client/ModMenuImprovements.lua",
 
     -- Chat Commands
     {

@@ -62,6 +62,25 @@ function Mod.IsLoaded(guid)
     return Ext.Mod.IsModLoaded(guid)
 end
 
+---Returns a mod by its guid.
+---@return Module
+function Mod.Get(guid)
+    return Ext.Mod.GetMod(guid)
+end
+
+---Returns a list of the currently loaded mods.
+---@return Module[]
+function Mod.GetLoadOrder()
+    local loadOrder = Ext.Mod.GetLoadOrder()
+    local mods = {}
+
+    for _,guid in ipairs(loadOrder) do
+        table.insert(mods, Mod.Get(guid))
+    end
+
+    return mods
+end
+
 ---@param guid GUID
 ---@return integer?, integer?, integer?, integer? --Major, minor, revision, build version. Fails if the mod is not loaded.
 function Mod.GetStoryVersion(guid)

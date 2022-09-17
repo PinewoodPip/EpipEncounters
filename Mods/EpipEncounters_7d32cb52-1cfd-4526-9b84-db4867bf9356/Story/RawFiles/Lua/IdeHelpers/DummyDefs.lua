@@ -35,3 +35,4 @@ Client.UI.CharacterSheet = {} ---@type CharacterSheetUI
 Client.UI.CombatLog = {} ---@type CombatLogUI
 Client.UI.Hotbar = {} ---@type HotbarUI
 Client.UI.Vanity = {} ---@type VanityUI
+Client.UI.Mods = {} ---@type ModsUI
