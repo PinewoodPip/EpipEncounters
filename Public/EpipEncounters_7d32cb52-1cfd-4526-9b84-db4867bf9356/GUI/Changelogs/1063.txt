@@ -1,0 +1,13 @@
+
+- If "Unfocus after sending messages" is enabled, holding shift while sending a chat message will keep the chat focused
+- The mods menu will try to re-check mods disabled by a version change
+- Fixed settings not saving if you didn't visit the camera settings tab
+
+On the technical side of things:
+
+- Added operator overload annotations for `RGBColor`, `Vector`
+- `Vector.Create()` accepts an existing array as a parameter (only one)
+- Added TSK-related methods to `Text`
+    - This includes a localization system for strings in scripts; you can generate templates for localizing with `Text.GenerateLocalizationTemplate()` and they will be loaded from `Mods/MyMod_MyGuid/Localization/Epip/MyTargetLanguage/ModTable.json`, where `ModTable` is the mod table whose strings you've localized using the template
+        - Support for this within Epip will be added throughout future updates; currently only some camera settings support this
+    - You can generate fresh GUIDs or TSK handles with `!guid` and `!tskhandle` commands (on client context); they'll be copied to the clipboard
