@@ -46,6 +46,7 @@ function _CameraPosition:GetSliderDefinitions()
             MinAmount = self.SLIDER_MIN,
             MaxAmount = self.SLIDER_MAX,
             Interval = self.SLIDER_INTERVAL,
+            VisibleAtTopLevel = false,
             HideNumbers = false,
             Mod = "EpipEncounters",
         })
@@ -61,6 +62,7 @@ function _CameraPosition:GetSliderDefinitions()
             MinAmount = self.SLIDER_MIN,
             MaxAmount = self.SLIDER_MAX,
             Interval = self.SLIDER_INTERVAL,
+            VisibleAtTopLevel = false,
             HideNumbers = false,
             Mod = "EpipEncounters",
         })
@@ -107,6 +109,12 @@ function CameraZoom.RegisterPosition(data)
 
     CameraZoom.POSITIONS[data.GlobalSwitchID] = data
     table.insert(CameraZoom.POSITIONS_REGISTRATION_ORDER, data.GlobalSwitchID)
+
+    -- Register slider settings
+    local zoomedIn, zoomedOut = data:GetSliderDefinitions()
+    for _,slider in pairs(table.join(zoomedIn, zoomedOut)) do
+        OptionsSettings.RegisterOption("EpipEncounters_Camera", slider)
+    end
 end
 
 function CameraZoom.LoadSettings()
@@ -210,7 +218,6 @@ end)
 ---------------------------------------------
 
 -- Register camera positions.
-local switches = Client.Camera.GetGlobalSwitches()
 local defaultPos = Camera.GetDefaultPosition("Default")
 local overheadPos = Camera.GetDefaultPosition("Overhead")
 local controllerPos = Camera.GetDefaultPosition("Controller")
@@ -243,18 +250,21 @@ local positions = {
         DefaultPositionZoomedOut = controllerPos.ZoomedOut,
     },
 }
-for _,position in ipairs(positions) do
-    CameraZoom.RegisterPosition(position)
-end
 
 -- Register settings tab.
 OptionsSettings.RegisterMod("EpipEncounters_Camera", {
     TabHeader = Text.Format(T("Camera", "h54d9066eg87bdg439fg92f9g7027970af6ca"), {Color = "7e72d6", Size = 23}),
     SideButtonLabel = Text.GetTranslatedString("h54d9066eg87bdg439fg92f9g7027970af6ca", "Camera"),
 })
+
+-- Register positions. Should be ordered after registering the settings tab.
+for _,position in ipairs(positions) do
+    CameraZoom.RegisterPosition(position)
+end
+
 local cameraSettings = {
     {
-        ID = "Camer_Header",
+        ID = "Camera_Header",
         Type = "Header",
         Label = Text.Format(T("General", "h804e5cefgef0eg4351gb19cge60e92ca4297"), {Color = "7E72D6", Size = 23})
     },
