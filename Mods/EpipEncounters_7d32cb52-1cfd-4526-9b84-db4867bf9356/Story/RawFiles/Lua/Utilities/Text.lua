@@ -1,7 +1,7 @@
 
 ---@class TextLib
 Text = {
-    _RegisteredTranslatedHandles = {}, ---@type table<TranslatedStringHandle, {Text:string, Key:string?, ModTable:string}> Maps handle to original text.
+    _RegisteredTranslatedHandles = {}, ---@type table<TranslatedStringHandle, TextLib_TranslatedString> Maps handle to original text.
     ---@enum TextLib_Font
 
     LOCALIZATION_FILE_FORMAT_VERSION = 0,
@@ -47,6 +47,27 @@ Text = {
 -- CLASSES
 ---------------------------------------------
 
+---@class TextLib_TranslatedString
+---@field Handle TranslatedStringHandle
+---@field Text string
+---@field ModTable ModTableID?
+---@field Key string?
+---@field ContextDescription string?
+local _TranslatedString = {}
+
+---@param data TextLib_TranslatedString
+---@return TextLib_TranslatedString
+function _TranslatedString.Create(data)
+    Inherit(data, _TranslatedString)
+
+    return data
+end
+
+---@return string
+function _TranslatedString:GetString()
+    return Text.GetTranslatedString(self.Handle, self.Handle)
+end
+
 ---@alias FontAlign "center" | "right" | "left"
 
 ---@class TextFormatData
@@ -66,6 +87,7 @@ local _TextFormatData = {
 ---@field ReferenceText string
 ---@field ReferenceKey string?
 ---@field TranslatedText string
+---@field ContextDescription string?
 
 ---@class TextLib_LocalizationTemplate
 ---@field ModTable string
@@ -385,18 +407,37 @@ function Text.GetTranslatedString(handle, fallBack)
 end
 
 ---Registers a translated string, optionally binding a key to it.
+---@overload fun(data:TextLib_TranslatedString, replaceExisting:boolean?):string,TextLib_TranslatedString
 ---@param text string
 ---@param handle TranslatedStringHandle
 ---@param key string?
 ---@param modTable ModTableID? Used to keep track of where translated strings come from. Optional.
 ---@param replaceExisting boolean? Defaults to false.
----@return string -- The text passed as parameter, or the text the handle already pointed to, if already registered/localized.
+---@return string, TextLib_TranslatedString -- First return value will be the text passed as parameter, or the text the handle already pointed to, if already registered/localized.
 function Text.RegisterTranslatedString(text, handle, key, modTable, replaceExisting)
+    local contextDescription
+    local obj = text
+
+    -- Table overload.
+    if type(text) == "table" then
+        text, handle, key, modTable, replaceExisting, contextDescription = text.Text, text.Handle, text.Key, text.ModTable, handle, text.ContextDescription
+    else
+        ---@type TextLib_TranslatedString
+        obj = {
+            Text = text,
+            Handle = handle,
+            Key = key,
+            ModTable = modTable,
+        }
+    end
+
+    obj = _TranslatedString.Create(obj)
+
     local currentText = Text.GetTranslatedString(handle)
 
     -- Keep track of original text.
     if modTable and not replaceExisting then
-        Text._RegisteredTranslatedHandles[handle] = {Text = text, Key = key, ModTable = modTable}
+        Text._RegisteredTranslatedHandles[handle] = obj
     end
 
     -- Recreating the handle would remove existing localization.
@@ -411,7 +452,7 @@ function Text.RegisterTranslatedString(text, handle, key, modTable, replaceExist
         text = currentText
     end
 
-    return text
+    return text, obj
 end
 
 ---Generates a template file for localizing strings registered through this library.
@@ -429,12 +470,14 @@ function Text.GenerateLocalizationTemplate(modTable)
         if data.ModTable == modTable then
             local key = data.Key
             local text = data.Text
+            local contextInfo = data.ContextDescription
 
             ---@type TextLib_LocalizationTemplate_Entry
             local entry = {
                 ReferenceKey = key,
                 ReferenceText = text,
                 TranslatedText = text,
+                ContextDescription = contextInfo,
             }
 
             template.TranslatedStrings[handle] = entry

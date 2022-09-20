@@ -193,7 +193,9 @@ end
 ---@param key string?
 ---@return string
 function Epip._RegisterTranslatedString(text, handle, key)
-    return Text.RegisterTranslatedString(text, handle, key, "EpipEncounters")
+    local str, _ = Text.RegisterTranslatedString({Text = text, Handle = handle, Key = key, ModTable = "EpipEncounters"})
+    
+    return str
 end
 
 if Ext.IsClient() then
