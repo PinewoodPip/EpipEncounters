@@ -8,7 +8,7 @@ local Text = {
     Text = nil, ---@type GenericUI_Prefab_Text
 
     Events = {
-        TextEdited = {}, ---@type SubscribableEvent<GenericUI_Element_StateButton_Event_StateChanged>
+        TextEdited = {}, ---@type Event<GenericUI_Element_StateButton_Event_StateChanged>
     }
 }
 Generic.RegisterPrefab("GenericUI_Prefab_LabelledTextField", Text)

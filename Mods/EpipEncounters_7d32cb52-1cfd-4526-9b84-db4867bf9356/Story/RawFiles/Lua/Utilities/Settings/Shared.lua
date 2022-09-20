@@ -13,7 +13,7 @@ Settings = {
     USE_LEGACY_HOOKS = false,
 
     Events = {
-        SettingValueChanged = {}, ---@type SubscribableEvent<SettingsLib_Event_SettingValueChanged>
+        SettingValueChanged = {}, ---@type Event<SettingsLib_Event_SettingValueChanged>
     }
 }
 Epip.InitializeLibrary("Settings", Settings)

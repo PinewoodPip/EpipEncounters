@@ -16,7 +16,7 @@ local _Instance = {
     sleepFunctionCheckInterval = 0.2,
 
     Events = {
-        Finished = SubscribableEvent:New("Finished"), ---@type SubscribableEvent<EmptyEvent>
+        Finished = SubscribableEvent:New("Finished"), ---@type Event<EmptyEvent>
     },
 }
 

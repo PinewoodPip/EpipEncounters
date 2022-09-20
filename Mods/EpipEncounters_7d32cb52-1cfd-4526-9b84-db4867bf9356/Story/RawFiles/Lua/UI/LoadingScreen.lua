@@ -5,10 +5,10 @@ local Loading = {
     USE_LEGACY_HOOKS = false,
 
     Events = {
-        ProgressChanged = {}, ---@type SubscribableEvent<LoadingScreenUI_Event_ProgressChanged>
+        ProgressChanged = {}, ---@type Event<LoadingScreenUI_Event_ProgressChanged>
     },
     Hooks = {
-        GetHintText = {}, ---@type SubscribableEvent<LoadingScreenUI_Hook_GetHintText>
+        GetHintText = {}, ---@type Event<LoadingScreenUI_Hook_GetHintText>
     }
 }
 Epip.InitializeUI(23, "LoadingScreen", Loading)

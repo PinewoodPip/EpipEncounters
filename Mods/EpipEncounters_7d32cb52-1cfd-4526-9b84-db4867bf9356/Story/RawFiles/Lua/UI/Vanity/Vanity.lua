@@ -327,7 +327,7 @@ local Vanity = {
         InputChanged = {},
         ---@type VanityUI_Event_CheckboxPressed
         CheckboxPressed = {},
-        AppearanceReapplied = {Legacy = false}, ---@type SubscribableEvent<VanityUI_Event_AppearanceRefreshed>
+        AppearanceReapplied = {Legacy = false}, ---@type Event<VanityUI_Event_AppearanceRefreshed>
     },
     Hooks = {
         ---@type VanityUI_Hook_GetEntryLabel

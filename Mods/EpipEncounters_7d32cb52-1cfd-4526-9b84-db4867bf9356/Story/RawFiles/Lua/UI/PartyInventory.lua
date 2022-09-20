@@ -14,10 +14,10 @@ local Inv = {
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
     Events = {
-        ContentUpdated = {}, ---@type SubscribableEvent<PartyInventoryUI_Event_ContentUpdated>
+        ContentUpdated = {}, ---@type Event<PartyInventoryUI_Event_ContentUpdated>
     },
     Hooks = {
-        GetUpdate = {}, ---@type SubscribableEvent<PartyInventoryUI_Hooks_GetUpdate>
+        GetUpdate = {}, ---@type Event<PartyInventoryUI_Hooks_GetUpdate>
     },
     FILEPATH_OVERRIDES = {
         -- ["Public/Game/GUI/partyInventory.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/partyInventory.swf",

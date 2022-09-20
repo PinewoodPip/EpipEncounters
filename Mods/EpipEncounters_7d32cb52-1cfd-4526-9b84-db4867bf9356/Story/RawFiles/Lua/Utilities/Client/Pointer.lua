@@ -12,10 +12,10 @@ Pointer = {
     USE_LEGACY_HOOKS= false,
 
     Events = {
-        HoverCharacterChanged = {}, ---@type SubscribableEvent<PointerLib_Event_HoverCharacterChanged>
-        HoverCharacter2Changed = {}, ---@type SubscribableEvent<PointerLib_Event_HoverCharacter2Changed>
-        HoverItemChanged = {}, ---@type SubscribableEvent<PointerLib_Event_HoverItemChanged>
-        HoverEntityChanged = {}, ---@type SubscribableEvent<PointerLib_Event_HoverEntityChanged>
+        HoverCharacterChanged = {}, ---@type Event<PointerLib_Event_HoverCharacterChanged>
+        HoverCharacter2Changed = {}, ---@type Event<PointerLib_Event_HoverCharacter2Changed>
+        HoverItemChanged = {}, ---@type Event<PointerLib_Event_HoverItemChanged>
+        HoverEntityChanged = {}, ---@type Event<PointerLib_Event_HoverEntityChanged>
     },
 }
 Epip.InitializeLibrary("Pointer", Pointer)

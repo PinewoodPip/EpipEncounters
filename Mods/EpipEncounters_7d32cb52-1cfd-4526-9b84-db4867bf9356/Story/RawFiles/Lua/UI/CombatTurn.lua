@@ -32,7 +32,7 @@ local CombatTurn = {
     USE_LEGACY_HOOKS = false,
 
     Hooks = {
-        UpdateTurnList = {}, ---@type SubscribableEvent<CombatTurnUI_Hook_UpdateTurnList>
+        UpdateTurnList = {}, ---@type Event<CombatTurnUI_Hook_UpdateTurnList>
     }
 }
 Epip.InitializeUI(Ext.UI.TypeID.combatTurn, "CombatTurn", CombatTurn)

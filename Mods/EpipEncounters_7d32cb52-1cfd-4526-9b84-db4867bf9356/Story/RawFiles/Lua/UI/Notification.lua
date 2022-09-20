@@ -14,7 +14,7 @@ local Notification = {
         TextNotificationShown = {Preventable = true}, ---@type PreventableEvent<NotificationUI_Event_TextNotificationShown>
     },
     Hooks = {
-        ShowReceivalNotification = {}, ---@type SubscribableEvent<NotificationUI_Hook_ShowReceivalNotification>
+        ShowReceivalNotification = {}, ---@type Event<NotificationUI_Hook_ShowReceivalNotification>
     },
 
     FILEPATH_OVERRIDES = {

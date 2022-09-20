@@ -128,7 +128,7 @@ end
 
 ---@param evName string
 ---@param preventable boolean? Defaults to false.
----@return SubscribableEvent
+---@return Event
 function Feature:AddSubscribableEvent(evName, preventable)
     local event = SubscribableEvent:New(evName, preventable)
 
@@ -139,7 +139,7 @@ end
 
 ---@param evName string
 ---@param preventable boolean? Defaults to false.
----@return SubscribableEvent
+---@return Event
 function Feature:AddSubscribableHook(evName, preventable)
     local event = SubscribableEvent:New(evName, preventable)
 

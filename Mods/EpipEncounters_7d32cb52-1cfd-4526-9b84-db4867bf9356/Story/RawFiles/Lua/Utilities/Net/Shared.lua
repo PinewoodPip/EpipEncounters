@@ -8,7 +8,7 @@ Net = {
     USE_LEGACY_HOOKS = false,
 
     Events = {
-        MessageReceived = {}, ---@type SubscribableEvent<Net_Event_MessageReceived>
+        MessageReceived = {}, ---@type Event<Net_Event_MessageReceived>
     },
 }
 Epip.InitializeLibrary("Net", Net)
@@ -103,7 +103,7 @@ end
 ---Returns the event associated with the passed message channel.
 ---@generic T
 ---@param channel string`T`
----@return SubscribableEvent<Net_Event_MessageReceived<`T`>>
+---@return Event<Net_Event_MessageReceived<`T`>>
 function Net._GetChannelMessageEvent(channel)
     local event = Net.Events[channel]
 

@@ -23,11 +23,11 @@ local PlayerInfo = {
     },
 
     Events = {
-        ---@type SubscribableEvent<PlayerInfoUI_Event_StatusesUpdated>
+        ---@type Event<PlayerInfoUI_Event_StatusesUpdated>
         StatusesUpdated = {},
-        ---@type SubscribableEvent<PlayerInfoUI_Event_StatusHovered>
+        ---@type Event<PlayerInfoUI_Event_StatusHovered>
         StatusHovered = {},
-        ---@type SubscribableEvent<PlayerInfoUI_Event_ActiveCharacterChanged>
+        ---@type Event<PlayerInfoUI_Event_ActiveCharacterChanged>
         ActiveCharacterChanged = {},
     }
 }

@@ -57,14 +57,14 @@ local CharacterCreation = {
     USE_LEGACY_HOOKS = false,
 
     Events = {
-        Finished = {}, ---@type SubscribableEvent<CharacterCreationUI_Event_Finished>
-        SelectorScrolled = {}, ---@type SubscribableEvent<CharacterCreationUI_Event_SelectorScrolled>
-        OriginChanged = {}, ---@type SubscribableEvent<CharacterCreationUI_Event_OriginChanged>
-        PresetChanged = {}, ---@type SubscribableEvent<CharacterCreationUI_Event_PresetChanged>
+        Finished = {}, ---@type Event<CharacterCreationUI_Event_Finished>
+        SelectorScrolled = {}, ---@type Event<CharacterCreationUI_Event_SelectorScrolled>
+        OriginChanged = {}, ---@type Event<CharacterCreationUI_Event_OriginChanged>
+        PresetChanged = {}, ---@type Event<CharacterCreationUI_Event_PresetChanged>
     },
     Hooks = {
-        UpdateTalents = {}, ---@type SubscribableEvent<CharacterCreationUI_Hook_UpdateTalents>
-        UpdateAbilities = {}, ---@type SubscribableEvent<CharacterCreationUI_Hook_UpdateAbilities>
+        UpdateTalents = {}, ---@type Event<CharacterCreationUI_Hook_UpdateTalents>
+        UpdateAbilities = {}, ---@type Event<CharacterCreationUI_Hook_UpdateAbilities>
     }
 }
 Epip.InitializeUI(Ext.UI.TypeID.characterCreation, "CharacterCreation", CharacterCreation)

@@ -7,7 +7,7 @@ local Checkbox = {
     Label = nil, ---@type GenericUI_Element_Text
 
     Events = {
-        StateChanged = {}, ---@type SubscribableEvent<GenericUI_Element_StateButton_Event_StateChanged>
+        StateChanged = {}, ---@type Event<GenericUI_Element_StateButton_Event_StateChanged>
     }
 }
 Generic.RegisterPrefab("GenericUI_Prefab_LabelledCheckbox", Checkbox)

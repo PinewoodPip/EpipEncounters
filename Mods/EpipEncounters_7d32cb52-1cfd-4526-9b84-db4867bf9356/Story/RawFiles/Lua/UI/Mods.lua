@@ -8,10 +8,10 @@ local Mods = {
     USE_LEGACY_HOOKS = false,
 
     Events = {
-        Opened = {}, ---@type SubscribableEvent<ModsUI_Event_Opened>
+        Opened = {}, ---@type Event<ModsUI_Event_Opened>
     },
     Hooks = {
-        AddMod = {}, ---@type SubscribableEvent<ModsUI_Hook_AddMod>
+        AddMod = {}, ---@type Event<ModsUI_Hook_AddMod>
     },
 }
 Epip.InitializeUI(Ext.UI.TypeID.mods, "Mods", Mods)

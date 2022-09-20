@@ -181,7 +181,7 @@ function Client.UI.Generic.Create(id)
             Button_Pressed = {},
             ---@type GenericUI_Event_StateButton_StateChanged
             StateButton_StateChanged = {},
-            ---@type SubscribableEvent<GenericUI_Event_ViewportChanged>
+            ---@type Event<GenericUI_Event_ViewportChanged>
             ViewportChanged = {Legacy = false},
         },
         TRACE_LEVELS = {

@@ -24,7 +24,7 @@ local Text = Client.UI.Generic.ELEMENTS.Text ---@class GenericUI_Element_Text
 
 ---@class GenericUI_Element_Text_Events : GenericUI_Element_Events
 Text.Events = {
-    Changed = {}, ---@type SubscribableEvent<GenericUI_Element_Text_Event_Changed>
+    Changed = {}, ---@type Event<GenericUI_Element_Text_Event_Changed>
 }
 Generic.Inherit(Text, Generic._Element)
 

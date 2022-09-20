@@ -85,14 +85,14 @@ local CharacterSheet = {
     },
 
     Events = {
-        HelmetToggled = {}, ---@type SubscribableEvent<CharacterSheetUI_Event_HelmetToggled>
-        TabChanged = {}, ---@type SubscribableEvent<CharacterSheetUI_Event_TabChanged>
+        HelmetToggled = {}, ---@type Event<CharacterSheetUI_Event_HelmetToggled>
+        TabChanged = {}, ---@type Event<CharacterSheetUI_Event_TabChanged>
     },
     Hooks = {
-        UpdateSecondaryStats = {}, ---@type SubscribableEvent<CharacterSheetUI_Hook_UpdateSecondaryStats>
-        UpdatePrimaryStats = {}, ---@type SubscribableEvent<CharacterSheetUI_Hook_UpdatePrimaryStats>
-        UpdateAbilityStats = {}, ---@type SubscribableEvent<CharacterSheetUI_Hook_UpdateAbilityStats>
-        UpdateTalents = {}, ---@type SubscribableEvent<CharacterSheetUI_Hook_UpdateTalents>
+        UpdateSecondaryStats = {}, ---@type Event<CharacterSheetUI_Hook_UpdateSecondaryStats>
+        UpdatePrimaryStats = {}, ---@type Event<CharacterSheetUI_Hook_UpdatePrimaryStats>
+        UpdateAbilityStats = {}, ---@type Event<CharacterSheetUI_Hook_UpdateAbilityStats>
+        UpdateTalents = {}, ---@type Event<CharacterSheetUI_Hook_UpdateTalents>
     }
 }
 if IS_IMPROVED_HOTBAR then

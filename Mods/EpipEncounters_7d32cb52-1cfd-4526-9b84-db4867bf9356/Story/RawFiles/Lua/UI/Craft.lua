@@ -15,9 +15,9 @@ local Craft = {
 
     USE_LEGACY_EVENTS = false,
     Events = {
-        FilterSelected = {}, ---@type SubscribableEvent<CraftUI_Event_FilterSelected>
-        CharacterSelected = {}, ---@type SubscribableEvent<CraftUI_Event_CharacterSelected>
-        RecipesUpdated = {}, ---@type SubscribableEvent<CraftUI_Event_RecipesUpdated>
+        FilterSelected = {}, ---@type Event<CraftUI_Event_FilterSelected>
+        CharacterSelected = {}, ---@type Event<CraftUI_Event_CharacterSelected>
+        RecipesUpdated = {}, ---@type Event<CraftUI_Event_RecipesUpdated>
     }
 }
 Epip.InitializeUI(102, "Craft", Craft)

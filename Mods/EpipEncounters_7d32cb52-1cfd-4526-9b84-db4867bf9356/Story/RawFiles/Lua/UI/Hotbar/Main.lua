@@ -127,14 +127,14 @@ local Hotbar = {
     USE_LEGACY_HOOKS = false,
 
     Events = {
-        BarPlusMinusButtonPressed = {}, ---@type SubscribableEvent<HotbarUI_Event_BarPlusMinusButtonPressed>
-        SlotPressed = {}, ---@type SubscribableEvent<HotbarUI_Event_SlotPressed>
+        BarPlusMinusButtonPressed = {}, ---@type Event<HotbarUI_Event_BarPlusMinusButtonPressed>
+        SlotPressed = {}, ---@type Event<HotbarUI_Event_SlotPressed>
     },
     Hooks = {
-        IsBarVisible = {}, ---@type SubscribableEvent<HotbarUI_Hook_IsBarVisible>
-        CanAddBar = {}, ---@type SubscribableEvent<HotbarUI_Hook_CanAddBar>
-        CanRemoveBar = {}, ---@type SubscribableEvent<HotbarUI_Hook_CanRemoveBar>
-        UpdateEngineActions = {}, ---@type SubscribableEvent<HotbarUI_Hook_UpdateEngineActions>
+        IsBarVisible = {}, ---@type Event<HotbarUI_Hook_IsBarVisible>
+        CanAddBar = {}, ---@type Event<HotbarUI_Hook_CanAddBar>
+        CanRemoveBar = {}, ---@type Event<HotbarUI_Hook_CanRemoveBar>
+        UpdateEngineActions = {}, ---@type Event<HotbarUI_Hook_UpdateEngineActions>
     },
 
     FILEPATH_OVERRIDES = {

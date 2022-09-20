@@ -18,7 +18,7 @@ StatsEditor.SupportedFields = { -- TODO
 
     },
 }
-StatsEditor.Events.RenderProperty = StatsEditor:AddSubscribableEvent("RenderProperty") ---@type SubscribableEvent<Feature_StatsEditor_Event_RenderProperty>
+StatsEditor.Events.RenderProperty = StatsEditor:AddSubscribableEvent("RenderProperty") ---@type Event<Feature_StatsEditor_Event_RenderProperty>
 
 ---------------------------------------------
 -- EVENTS/HOOKS

@@ -18,7 +18,7 @@ Timer = {
     USE_LEGACY_HOOKS = false,
 
     Events = {
-        TimerCompleted = {}, ---@type SubscribableEvent<TimerLib_Event_TimerCompleted>
+        TimerCompleted = {}, ---@type Event<TimerLib_Event_TimerCompleted>
     },
 }
 Epip.InitializeLibrary("Timer", Timer)

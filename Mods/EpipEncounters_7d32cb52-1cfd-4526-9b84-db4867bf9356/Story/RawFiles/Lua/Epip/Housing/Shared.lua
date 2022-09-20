@@ -23,7 +23,7 @@ local Housing = {
     USE_LEGACY_HOOKS = false,
 
     Hooks = {
-        GetFurnitureTypeName = {}, ---@type SubscribableEvent<Feature_Housing_Hook_GetFurnitureTypeName>
+        GetFurnitureTypeName = {}, ---@type Event<Feature_Housing_Hook_GetFurnitureTypeName>
     },
 }
 Epip.RegisterFeature("Housing", Housing)

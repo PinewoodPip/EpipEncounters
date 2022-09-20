@@ -40,7 +40,7 @@ local StatusSorting = {
     },
     USE_LEGACY_EVENTS = false,
     Events = {
-        ---@type SubscribableEvent<StatusSortingFeature_Event_ShouldFilterStatus>
+        ---@type Event<StatusSortingFeature_Event_ShouldFilterStatus>
         ShouldFilterStatus = {},
     },
 }

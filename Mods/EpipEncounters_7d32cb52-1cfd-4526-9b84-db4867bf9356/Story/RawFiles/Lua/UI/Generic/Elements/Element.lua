@@ -20,11 +20,11 @@ local _Element = Generic._Element
 
 ---@class GenericUI_Element_Events
 _Element.Events = {
-    MouseUp = {}, ---@type SubscribableEvent<GenericUI_Element_Event_MouseUp>
-    MouseDown = {}, ---@type SubscribableEvent<GenericUI_Element_Event_MouseDown>
-    MouseOver = {}, ---@type SubscribableEvent<GenericUI_Element_Event_MouseOver>
-    MouseOut = {}, ---@type SubscribableEvent<GenericUI_Element_Event_MouseOut>
-    RightClick = {}, ---@type SubscribableEvent<GenericUI_Element_Event_RightClick>
+    MouseUp = {}, ---@type Event<GenericUI_Element_Event_MouseUp>
+    MouseDown = {}, ---@type Event<GenericUI_Element_Event_MouseDown>
+    MouseOver = {}, ---@type Event<GenericUI_Element_Event_MouseOver>
+    MouseOut = {}, ---@type Event<GenericUI_Element_Event_MouseOut>
+    RightClick = {}, ---@type Event<GenericUI_Element_Event_RightClick>
 }
 
 ---@class GenericUI_ElementTooltip

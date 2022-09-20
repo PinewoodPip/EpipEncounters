@@ -6,7 +6,7 @@ local Text = {
     Element = nil, ---@type GenericUI_Element_Text
 
     Events = {
-        TextEdited = {}, ---@type SubscribableEvent<GenericUI_Element_Text_Event_Changed>
+        TextEdited = {}, ---@type Event<GenericUI_Element_Text_Event_Changed>
     }
 }
 Generic.RegisterPrefab("GenericUI_Prefab_Text", Text)

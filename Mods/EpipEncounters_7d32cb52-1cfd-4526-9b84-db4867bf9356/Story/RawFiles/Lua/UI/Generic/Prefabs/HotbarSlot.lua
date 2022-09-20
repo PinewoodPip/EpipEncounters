@@ -9,7 +9,7 @@ local Slot = {
     SlotElement = nil, ---@type GenericUI_Element_Slot
     Object = nil, ---@type GenericUI_Prefab_HotbarSlot_Object
     Events = {
-        ---@type SubscribableEvent<GenericUI_Prefab_HotbarSlot_Event_ObjectDraggedIn>
+        ---@type Event<GenericUI_Prefab_HotbarSlot_Event_ObjectDraggedIn>
         ObjectDraggedIn = {}, -- TODO!
     }
 }

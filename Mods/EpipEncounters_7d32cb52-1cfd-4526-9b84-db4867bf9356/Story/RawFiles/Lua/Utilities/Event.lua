@@ -3,16 +3,17 @@
 -- Based on v56's event system.
 ---------------------------------------------
 
----@class SubscribableEvent<T>:{ (Subscribe:fun(self:SubscribableEvent, callback:fun(ev:T|SubscribableEventParams), opts:SubscribableEventOptions|nil, stringID:string|nil):integer), Unsubscribe:fun(self:SubscribableEvent, index:integer|string), (Throw:fun(self:SubscribableEvent, event:T|SubscribableEventParams|nil):SubscribableEventParams|T)}
+---@class Event<T>:{ (Subscribe:fun(self:Event, callback:fun(ev:T|Event_Params), opts:Event_Options|nil, stringID:string|nil):integer), Unsubscribe:fun(self:Event, index:integer|string), (Throw:fun(self:Event, event:T|Event_Params|nil):Event_Params|T)}
 ---@field Preventable false
+---@field Name string
 SubscribableEvent = {}
 
----@class SubscribableEventOptions
+---@class Event_Options
 ---@field Priority number? Defaults to 100.
 ---@field Once boolean? If true, the listener will only fire once, then be unsubscribed.
 
----@class SubscribableEventParams
----@field StopPropagation fun(self:SubscribableEventParams) Stop the event from continuing on to other registered listeners.
+---@class Event_Params
+---@field StopPropagation fun(self:Event_Params) Stop the event from continuing on to other registered listeners.
 ---@field Stopped boolean?
 local SubscribableEventParams = {
 	Stopped = false,
@@ -21,10 +22,10 @@ local SubscribableEventParams = {
 }
 
 ---An event whose consequences can be prevented.
----@class PreventableEvent<T>:{ (Subscribe:fun(self:SubscribableEvent, callback:fun(ev:T|PreventableEventParams), opts:SubscribableEventOptions|nil, stringID:string|nil):integer), Unsubscribe:fun(self:SubscribableEvent, index:integer|string), (Throw:fun(self:SubscribableEvent, event:T|PreventableEventParams|nil):PreventableEventParams|T)}
+---@class PreventableEvent<T>:{ (Subscribe:fun(self:Event, callback:fun(ev:T|PreventableEventParams), opts:Event_Options|nil, stringID:string|nil):integer), Unsubscribe:fun(self:Event, index:integer|string), (Throw:fun(self:Event, event:T|PreventableEventParams|nil):PreventableEventParams|T)}
 ---@field Preventable true
 
----@class PreventableEventParams : SubscribableEventParams
+---@class PreventableEventParams : Event_Params
 local PreventableEventParams = {
 	Preventable = true,
 	Prevented = false,
@@ -39,13 +40,13 @@ setmetatable(PreventableEventParams, {__index = SubscribableEventParams})
 ---An event object with no parameters.
 ---@class EmptyEvent
 
----@class SubscribableEvent_CharacterEventParams
+---@class Event_CharacterEventParams
 ---@field Character Character
 
----@class SubscribableEvent_ItemEventParams
+---@class Event_ItemEventParams
 ---@field Item Item
 
----@class SubscribableEvent_EntityEventParams
+---@class Event_EntityEventParams
 ---@field Entity Entity
 
 ---------------------------------------------
@@ -54,7 +55,7 @@ setmetatable(PreventableEventParams, {__index = SubscribableEventParams})
 
 ---@param name string
 ---@param preventable boolean? Defaults to false.
----@return SubscribableEvent
+---@return Event
 function SubscribableEvent:New(name, preventable)
 	local o = {
 		First = nil,

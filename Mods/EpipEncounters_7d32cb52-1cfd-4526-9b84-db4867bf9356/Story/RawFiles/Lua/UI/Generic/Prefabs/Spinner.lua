@@ -14,7 +14,7 @@ local Spinner = {
     currentValue = 0,
 
     Events = {
-        ValueChanged = {}, ---@type SubscribableEvent<GenericUI_Prefab_Spinner_Event_ValueChanged>
+        ValueChanged = {}, ---@type Event<GenericUI_Prefab_Spinner_Event_ValueChanged>
     }
 }
 Generic.RegisterPrefab("GenericUI_Prefab_Spinner", Spinner)

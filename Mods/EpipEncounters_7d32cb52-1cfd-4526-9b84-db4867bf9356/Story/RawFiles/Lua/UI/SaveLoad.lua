@@ -22,7 +22,7 @@ local SaveLoad = {
     },
 
     Events = {
-        ---@type SubscribableEvent<SaveLoadUI_Event_GetContent>
+        ---@type Event<SaveLoadUI_Event_GetContent>
         GetContent = {},
     },
 }

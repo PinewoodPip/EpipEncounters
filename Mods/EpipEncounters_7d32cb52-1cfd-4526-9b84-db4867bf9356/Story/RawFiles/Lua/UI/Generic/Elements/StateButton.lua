@@ -21,7 +21,7 @@ local Button = Client.UI.Generic.ELEMENTS.StateButton
 
 ---@class GenericUI_Element_StateButton_Events : GenericUI_Element_Events
 Button.Events = {
-    StateChanged = {}, ---@type SubscribableEvent<GenericUI_Element_StateButton_Event_StateChanged>
+    StateChanged = {}, ---@type Event<GenericUI_Element_StateButton_Event_StateChanged>
 }
 Generic.Inherit(Button, Generic._Element)
 

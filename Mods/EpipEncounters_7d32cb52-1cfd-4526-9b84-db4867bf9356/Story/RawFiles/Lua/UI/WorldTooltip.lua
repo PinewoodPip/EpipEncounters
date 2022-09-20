@@ -7,10 +7,10 @@ local WorldTooltip = {
     USE_LEGACY_HOOKS = false,
 
     Events = {
-        TooltipClicked = {Preventable = true}, ---@type SubscribableEvent<WorldTooltipUI_Event_TooltipClicked>
+        TooltipClicked = {Preventable = true}, ---@type Event<WorldTooltipUI_Event_TooltipClicked>
     },
     Hooks = {
-        UpdateContent = {}, ---@type SubscribableEvent<WorldTooltipUI_Hook_UpdateContent>
+        UpdateContent = {}, ---@type Event<WorldTooltipUI_Hook_UpdateContent>
     },
 }
 Epip.InitializeUI(Ext.UI.TypeID.worldTooltip, "WorldTooltip", WorldTooltip)

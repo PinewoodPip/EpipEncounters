@@ -23,7 +23,7 @@ Client.UI.Generic.ELEMENTS.ComboBox = ComboBox
 
 ---@class GenericUI_Element_ComboBox_Events : GenericUI_Element_Events
 ComboBox.Events = {
-    OptionSelected = {}, ---@type SubscribableEvent<GenericUI_Element_ComboBox_Event_OptionSelected>
+    OptionSelected = {}, ---@type Event<GenericUI_Element_ComboBox_Event_OptionSelected>
 }
 Generic.Inherit(ComboBox, Generic._Element)
 

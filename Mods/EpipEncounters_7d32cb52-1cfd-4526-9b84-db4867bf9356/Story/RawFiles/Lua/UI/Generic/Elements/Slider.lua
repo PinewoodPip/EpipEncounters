@@ -13,8 +13,8 @@ local Slider = {
 
 ---@class GenericUI_Element_Slider_Events : GenericUI_Element_Events
 Slider.Events = {
-    HandleReleased = {}, ---@type SubscribableEvent<GenericUI_Element_Slider_Event_HandleReleased>
-    HandleMoved = {}, ---@type SubscribableEvent<GenericUI_Element_Slider_Event_HandleMoved>
+    HandleReleased = {}, ---@type Event<GenericUI_Element_Slider_Event_HandleReleased>
+    HandleMoved = {}, ---@type Event<GenericUI_Element_Slider_Event_HandleMoved>
 }
 Generic.Inherit(Slider, Generic._Element)
 

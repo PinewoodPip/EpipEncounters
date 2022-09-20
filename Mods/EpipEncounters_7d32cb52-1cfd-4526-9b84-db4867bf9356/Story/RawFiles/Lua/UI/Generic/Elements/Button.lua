@@ -26,7 +26,7 @@ local Button = Client.UI.Generic.ELEMENTS.Button ---@class GenericUI_Element_But
 
 ---@class GenericUI_Element_Button_Events : GenericUI_Element_Events
 Button.Events = {
-    Pressed = {}, ---@type SubscribableEvent<GenericUI_Element_Button_Event_Pressed>
+    Pressed = {}, ---@type Event<GenericUI_Element_Button_Event_Pressed>
 }
 Generic.Inherit(Button, Generic._Element)
 

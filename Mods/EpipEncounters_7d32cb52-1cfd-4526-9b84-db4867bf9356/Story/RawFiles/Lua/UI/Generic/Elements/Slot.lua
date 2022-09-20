@@ -20,8 +20,8 @@ local Slot = {
 
 ---@class GenericUI_Element_Slot_Events : GenericUI_Element_Events
 Slot.Events = {
-    DragStarted = {}, ---@type SubscribableEvent<GenericUI_Element_Slot_Event_DragStarted>
-    Clicked = {}, ---@type SubscribableEvent<GenericUI_Element_Event_Clicked>
+    DragStarted = {}, ---@type Event<GenericUI_Element_Slot_Event_DragStarted>
+    Clicked = {}, ---@type Event<GenericUI_Element_Event_Clicked>
 }
 Generic.Inherit(Slot, Generic.ELEMENTS.IggyIcon)
 

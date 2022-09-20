@@ -74,15 +74,15 @@ GameState = {
 
     USE_LEGACY_EVENTS = false,
     Events = {
-        ---@type SubscribableEvent<GameStateLib_Event_GamePaused>
+        ---@type Event<GameStateLib_Event_GamePaused>
         GamePaused = {},
-        ---@type SubscribableEvent<GameStateLib_Event_GameUnpaused>
+        ---@type Event<GameStateLib_Event_GameUnpaused>
         GameUnpaused = {},
-        ---@type SubscribableEvent<GameStateLib_Event_StateChanged>
+        ---@type Event<GameStateLib_Event_StateChanged>
         StateChanged = {},
-        ---@type SubscribableEvent<GameStateLib_Event_GameReady>
+        ---@type Event<GameStateLib_Event_GameReady>
         GameReady = {},
-        ---@type SubscribableEvent<GameStateLib_Event_RunningTick>
+        ---@type Event<GameStateLib_Event_RunningTick>
         RunningTick = {},
     }
 }

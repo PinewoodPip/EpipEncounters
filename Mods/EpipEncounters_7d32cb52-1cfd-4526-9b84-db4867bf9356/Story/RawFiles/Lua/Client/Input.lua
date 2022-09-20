@@ -557,11 +557,11 @@ local Input = {
     USE_LEGACY_HOOKS = false,
 
     Events = {
-        MouseMoved = {}, ---@type SubscribableEvent<InputLib_Event_MouseMoved>
+        MouseMoved = {}, ---@type Event<InputLib_Event_MouseMoved>
         KeyStateChanged = {Preventable = true}, ---@type PreventableEvent<InputLib_Event_KeyStateChanged>
-        KeyPressed = {}, ---@type SubscribableEvent<InputLib_Event_KeyPressed>
-        KeyReleased = {}, ---@type SubscribableEvent<InputLib_Event_KeyReleased>
-        MouseButtonPressed = {}, ---@type SubscribableEvent<InputLib_Event_MouseButtonPressed>
+        KeyPressed = {}, ---@type Event<InputLib_Event_KeyPressed>
+        KeyReleased = {}, ---@type Event<InputLib_Event_KeyReleased>
+        MouseButtonPressed = {}, ---@type Event<InputLib_Event_MouseButtonPressed>
     }
 }
 Epip.InitializeLibrary("Input", Input)

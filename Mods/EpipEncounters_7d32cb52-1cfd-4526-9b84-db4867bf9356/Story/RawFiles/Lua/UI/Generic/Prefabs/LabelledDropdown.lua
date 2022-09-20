@@ -7,7 +7,7 @@ local Dropdown = {
     ComboBox = nil, ---@type GenericUI_Element_ComboBox
 
     Events = {
-        OptionSelected = {}, ---@type SubscribableEvent<GenericUI_Element_ComboBox_Event_OptionSelected>
+        OptionSelected = {}, ---@type Event<GenericUI_Element_ComboBox_Event_OptionSelected>
     }
 }
 Generic.RegisterPrefab("GenericUI_Prefab_LabelledDropdown", Dropdown)
