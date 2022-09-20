@@ -10,19 +10,17 @@ local Minimap = {
 Epip.InitializeUI(Client.UI.Data.UITypes.minimap, "Minimap", Minimap)
 
 function Minimap:Toggle(state, updateState, force)
-
-    -- updateState == false is used for temporarily hiding the minimap (not saved)
-    if updateState then
-        Minimap.visible = state
-    end
-
-    if not Client.UI.CharacterCreation.IsInCharacterCreation() or force then
-        
-        if (state) then
+    if (not Client.UI.CharacterCreation.IsInCharacterCreation() or force) and state ~= Minimap.visible then
+        if state then
             Minimap:GetUI():Show()
         else
             Minimap:GetUI():Hide()
         end
+    end
+
+    -- updateState == false is used for temporarily hiding the minimap (not saved)
+    if updateState then
+        Minimap.visible = state
     end
 end
 
