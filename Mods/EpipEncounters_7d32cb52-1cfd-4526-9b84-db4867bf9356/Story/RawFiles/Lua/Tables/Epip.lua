@@ -38,6 +38,8 @@ function Epip.RegisterFeature(modTable, id, feature)
         modTable,id,feature = "EpipEncounters",modTable,id
     end
 
+    feature.MOD_TABLE_ID = modTable
+
     Epip.InitializeFeature(id, feature.NAME or id, feature)
     feature.MOD_TABLE = modTable
 
@@ -170,6 +172,8 @@ function Epip.InitializeFeature(id, name, feature)
         end
     end
 
+    feature.Create(feature)
+
     table.insert(Epip._FeatureRegistrationOrder, feature)
 end
 
@@ -194,7 +198,7 @@ end
 ---@return string
 function Epip._RegisterTranslatedString(text, handle, key)
     local str, _ = Text.RegisterTranslatedString({Text = text, Handle = handle, Key = key, ModTable = "EpipEncounters"})
-    
+
     return str
 end
 

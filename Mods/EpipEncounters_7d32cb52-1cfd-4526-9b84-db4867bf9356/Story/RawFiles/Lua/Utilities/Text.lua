@@ -476,7 +476,7 @@ function Text.GenerateLocalizationTemplate(modTable)
             local entry = {
                 ReferenceKey = key,
                 ReferenceText = text,
-                TranslatedText = text,
+                TranslatedText = string.format("[TODO TRANSLATE] %s", text),
                 ContextDescription = contextInfo,
             }
 

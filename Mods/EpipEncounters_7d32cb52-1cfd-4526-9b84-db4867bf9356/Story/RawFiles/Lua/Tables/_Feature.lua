@@ -36,12 +36,15 @@
 ---@field RawLog fun(self, ...:any)
 ---@field LogWarning fun(self, msg)
 ---@field LogError fun(self, msg)
+---@field MOD_TABLE_ID string
 local Feature = {
     Disabled = false,
     Logging = 0,
 
     Events = {},
     Hooks = {},
+    TranslatedStrings = {}, ---@type table<TranslatedStringHandle, TextLib_TranslatedString>
+    TSK = {}, ---@type table<TranslatedStringHandle, string> Automatically managed.
 
     CONTEXT = nil,
 
@@ -167,6 +170,35 @@ end
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
+
+---WIP. Do not use! Use Epip.RegisterFeature() for the time being.
+---@param feature Feature
+---@return Feature
+function Feature.Create(feature)
+    -- Initialize translated strings
+    for handle,data in pairs(feature.TranslatedStrings) do
+        data.Handle = handle
+        data.ModTable = feature.MOD_TABLE_ID
+
+        Text.RegisterTranslatedString(data)
+    end
+
+    -- Create TSK table
+    local TSKtable = {
+        __index = function (_, key)
+            local obj = feature.TranslatedStrings[key]
+
+            if not obj then
+                error("Tried to get TSK for handle not from this feature " .. key)
+            end
+
+            return obj:GetString()
+        end
+    }
+    feature.TSK = TSKtable
+
+    return feature
+end
 
 ---Returns whether the feature has *not* been disabled. Use to condition your feature's logic.
 ---@return boolean

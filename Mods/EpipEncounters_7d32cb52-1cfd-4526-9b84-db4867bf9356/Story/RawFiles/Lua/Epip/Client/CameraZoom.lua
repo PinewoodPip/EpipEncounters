@@ -1,14 +1,66 @@
 
 local OptionsSettings = Client.UI.OptionsSettings
 local Camera = Client.Camera
-local T = Epip._RegisterTranslatedString
 
 ---@class Feature_CameraZoom : Feature
 local CameraZoom = {
     POSITIONS = {}, ---@type table<string, Feature_CameraZoom_CameraPosition>
-    POSITIONS_REGISTRATION_ORDER = {} ---@type string[]
+    POSITIONS_REGISTRATION_ORDER = {}, ---@type string[]
+    
+    TranslatedStrings = {
+        ["h54d9066eg87bdg439fg92f9g7027970af6ca"] = {
+            Text = "Camera",
+            ContextDescription = "Settings tab name",
+        },
+        ["h804e5cefgef0eg4351gb19cge60e92ca4297"] = {
+            Text = "General",
+            ContextDescription = "Top header of settings menu",
+        },
+        ["haa0297d1ga978g4be1gb3b4g7295b9451b31"] = {
+            Text = "Maximum Distance",
+        },
+        ["h8403161cgb78fg453fg9676gd4c14f3afd29"] = {
+            Text = "Controls the maximum distance the camera can zoom out in regular gameplay.<br>Default is 19.",
+            ContextDescription = "Tooltip for max distance setting"
+        },
+        ["h1ec057edg09a1g413dgaefdgaf7942d579ce"] = {
+            Text = "Maximum Distance (tactical view)",
+        },
+        ["h22447dfage02dg4c93gbf2agded54810ce36"] = {
+            Text = "Controls the maximum distance the camera can zoom out in tactical view mode.<br>Default is 25.",
+        },
+        ["h3e9e4282gb66cg4498g83e0g8b79a4cec500"] = {
+            Text = "Maximum Distance (controller mode)",
+        },
+        ["h97ac5f1fg0ae8g490dg9050gb5f8fe4025a4"] = {
+            Text = "Controls the maximum distance the camera can zoom out in controller mode.<br>Default is 13.",
+        },
+        ["h6270c4d7g0531g453agbae3g2503fb8c3c59"] = {
+            Text = "Maximum Distance (locked-on)",
+        },
+        ["h3af2fabcg24ffg4e29ga965g69180c641040"] = {
+            Text = "Controls the maximum distance the camera can zoom out while it is tracking an entity.<br>Default is 17.",
+        },
+        ["h265f89a4g9e80g420egb7adgd27aced5697b"] = {
+            Text = "Field of View",
+        },
+        ["hec25a517g9521g47e3g8f74gfa658861a320"] = {
+            Text = "Controls the FOV of the camera. Low/high values may cause issues with dynamic shadows.<br>Default is 45.",
+        },
+        ["h3c77115cga69dg4c67g880bgd314b8072f7c"] = {
+            Text = "Camera Angles",
+        },
+        ["h3ddc3759g3f70g4ac5g9401g76ced6258d7a"] = {
+            Text = "Reset to defaults",
+        },
+        ["h24797af2gde0ag48cdgb741gec2049e1c631"] = {
+            Text = "Restores the angle settings to default values.",
+            ContextDescription = "Tooltip for reset button"
+        },
+    },
 }
 Epip.RegisterFeature("CameraZoom", CameraZoom)
+local TSK = CameraZoom.TSK
 
 ---------------------------------------------
 -- CLASSES
@@ -253,8 +305,8 @@ local positions = {
 
 -- Register settings tab.
 OptionsSettings.RegisterMod("EpipEncounters_Camera", {
-    TabHeader = Text.Format(T("Camera", "h54d9066eg87bdg439fg92f9g7027970af6ca"), {Color = "7e72d6", Size = 23}),
-    SideButtonLabel = Text.GetTranslatedString("h54d9066eg87bdg439fg92f9g7027970af6ca", "Camera"),
+    TabHeader = Text.Format(CameraZoom.TSK["h54d9066eg87bdg439fg92f9g7027970af6ca"], {Color = "7e72d6", Size = 23}),
+    SideButtonLabel = CameraZoom.TSK["h54d9066eg87bdg439fg92f9g7027970af6ca"],
 })
 
 -- Register positions. Should be ordered after registering the settings tab.
@@ -266,13 +318,13 @@ local cameraSettings = {
     {
         ID = "Camera_Header",
         Type = "Header",
-        Label = Text.Format(T("General", "h804e5cefgef0eg4351gb19cge60e92ca4297"), {Color = "7E72D6", Size = 23})
+        Label = Text.Format(CameraZoom.TSK["h804e5cefgef0eg4351gb19cge60e92ca4297"], {Color = "7E72D6", Size = 23})
     },
     {
         ID = "Camera_NormalModeZoomLimit",
         Type = "Slider",
-        Label = T("Maximum Distance", "haa0297d1ga978g4be1gb3b4g7295b9451b31"),
-        Tooltip = T("Controls the maximum distance the camera can zoom out in regular gameplay.<br>Default is 19.", "h8403161cgb78fg453fg9676gd4c14f3afd29"),
+        Label = CameraZoom.TSK["haa0297d1ga978g4be1gb3b4g7295b9451b31"],
+        Tooltip = TSK["h8403161cgb78fg453fg9676gd4c14f3afd29"],
         DefaultValue = 19,
         MinAmount = 10,
         MaxAmount = 40,
@@ -282,8 +334,8 @@ local cameraSettings = {
     {
         ID = "Camera_OverheadModeZoomLimit",
         Type = "Slider",
-        Label = T("Maximum Distance (tactical view)", "h1ec057edg09a1g413dgaefdgaf7942d579ce"),
-        Tooltip = T("Controls the maximum distance the camera can zoom out in tactical view mode.<br>Default is 25.", "h22447dfage02dg4c93gbf2agded54810ce36"),
+        Label = TSK["h1ec057edg09a1g413dgaefdgaf7942d579ce"],
+        Tooltip = TSK["h22447dfage02dg4c93gbf2agded54810ce36"],
         DefaultValue = 25,
         MinAmount = 10,
         MaxAmount = 40,
@@ -293,8 +345,8 @@ local cameraSettings = {
     {
         ID = "Camera_ControllerModeZoomLimit",
         Type = "Slider",
-        Label = T("Maximum Distance (controller mode)", "h3e9e4282gb66cg4498g83e0g8b79a4cec500"),
-        Tooltip = T("Controls the maximum distance the camera can zoom out in controller mode.<br>Default is 13.", "h97ac5f1fg0ae8g490dg9050gb5f8fe4025a4"),
+        Label = TSK["h3e9e4282gb66cg4498g83e0g8b79a4cec500"],
+        Tooltip = TSK["h97ac5f1fg0ae8g490dg9050gb5f8fe4025a4"],
         DefaultValue = 13,
         MinAmount = 10,
         MaxAmount = 40,
@@ -304,8 +356,8 @@ local cameraSettings = {
     {
         ID = "Camera_TargetModeZoomLimit",
         Type = "Slider",
-        Label = T("Maximum Distance (locked-on)", "h6270c4d7g0531g453agbae3g2503fb8c3c59"),
-        Tooltip = T("Controls the maximum distance the camera can zoom out while it is tracking an entity.<br>Default is 17.", "h3af2fabcg24ffg4e29ga965g69180c641040"),
+        Label = TSK["h6270c4d7g0531g453agbae3g2503fb8c3c59"],
+        Tooltip = TSK["h3af2fabcg24ffg4e29ga965g69180c641040"],
         DefaultValue = 17,
         MinAmount = 10,
         MaxAmount = 40,
@@ -315,8 +367,8 @@ local cameraSettings = {
     {
         ID = "Camera_FieldOfView",
         Type = "Slider",
-        Label = T("Field of View", "h265f89a4g9e80g420egb7adgd27aced5697b"),
-        Tooltip = T("Controls the FOV of the camera. Low/high values may cause issues with dynamic shadows.<br>Default is 45.", "hec25a517g9521g47e3g8f74gfa658861a320"),
+        Label = TSK["h265f89a4g9e80g420egb7adgd27aced5697b"],
+        Tooltip = TSK["hec25a517g9521g47e3g8f74gfa658861a320"],
         DefaultValue = 45,
         MinAmount = 20,
         MaxAmount = 90,
@@ -326,13 +378,13 @@ local cameraSettings = {
     {
         ID = "Camera_SubHeader_Positions",
         Type = "Header",
-        Label = Text.Format(T("Camera Angles", "h3c77115cga69dg4c67g880bgd314b8072f7c"), {Color = "7E72D6", Size = 22})
+        Label = Text.Format(TSK["h3c77115cga69dg4c67g880bgd314b8072f7c"], {Color = "7E72D6", Size = 22})
     },
     {
         ID = "Camera_Positions_Reset",
         Type = "Button",
-        Label = T("Reset to defaults", "h3ddc3759g3f70g4ac5g9401g76ced6258d7a"),
-        Tooltip = T("Restores the angle settings to default values.", "h24797af2gde0ag48cdgb741gec2049e1c631"),
+        Label = TSK["h3ddc3759g3f70g4ac5g9401g76ced6258d7a"],
+        Tooltip = TSK["h24797af2gde0ag48cdgb741gec2049e1c631"],
         DefaultValue = false,
     },
     -- {
