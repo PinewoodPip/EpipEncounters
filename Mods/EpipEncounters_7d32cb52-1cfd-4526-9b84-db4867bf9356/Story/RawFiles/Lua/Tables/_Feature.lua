@@ -43,8 +43,9 @@ local Feature = {
 
     Events = {},
     Hooks = {},
-    TranslatedStrings = {}, ---@type table<TranslatedStringHandle, TextLib_TranslatedString>
+    TranslatedStrings = {}, ---@type table<TranslatedStringHandle, Feature_TranslatedString>
     TSK = {}, ---@type table<TranslatedStringHandle, string> Automatically managed.
+    _localTranslatedStringKeys = {}, ---@type table<string, TranslatedStringHandle>
 
     CONTEXT = nil,
 
@@ -96,6 +97,13 @@ end
 function _Test:IsFinished()
     return self.Coroutine and self.Coroutine:IsDead()
 end
+
+---------------------------------------------
+-- CLASSES
+---------------------------------------------
+
+---@class Feature_TranslatedString : TextLib_TranslatedString
+---@field LocalKey string? Usable with Feature.TSK - but not globally. Use when you want TSK keys without needing to prefix them to avoid collisions.
 
 ---------------------------------------------
 -- EVENTS/HOOKS
@@ -176,17 +184,34 @@ end
 ---@return Feature
 function Feature.Create(feature)
     -- Initialize translated strings
+    feature._localTranslatedStringKeys = {}
     for handle,data in pairs(feature.TranslatedStrings) do
         data.Handle = handle
         data.ModTable = feature.MOD_TABLE_ID
+
+        if data.LocalKey then
+            feature._localTranslatedStringKeys[data.LocalKey] = handle
+        end
+
+        -- Make indexing via key work as well
+        if data.Key then
+            feature.TranslatedStrings[data.Key] = data
+        end
 
         Text.RegisterTranslatedString(data)
     end
 
     -- Create TSK table
-    local TSKtable = {
+    local TSKmetatable = {
         __index = function (_, key)
             local obj = feature.TranslatedStrings[key]
+
+            -- Lookup using local key name instead
+            if not obj then
+                local handle = feature._localTranslatedStringKeys[key]
+
+                obj = handle and feature.TranslatedStrings[handle]
+            end
 
             if not obj then
                 error("Tried to get TSK for handle not from this feature " .. key)
@@ -195,7 +220,8 @@ function Feature.Create(feature)
             return obj:GetString()
         end
     }
-    feature.TSK = TSKtable
+    feature.TSK = {}
+    setmetatable(feature.TSK, TSKmetatable)
 
     return feature
 end

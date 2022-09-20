@@ -11,6 +11,7 @@ local CameraZoom = {
         ["h54d9066eg87bdg439fg92f9g7027970af6ca"] = {
             Text = "Camera",
             ContextDescription = "Settings tab name",
+            LocalKey = "SettingsTabName",
         },
         ["h804e5cefgef0eg4351gb19cge60e92ca4297"] = {
             Text = "General",
@@ -305,8 +306,8 @@ local positions = {
 
 -- Register settings tab.
 OptionsSettings.RegisterMod("EpipEncounters_Camera", {
-    TabHeader = Text.Format(CameraZoom.TSK["h54d9066eg87bdg439fg92f9g7027970af6ca"], {Color = "7e72d6", Size = 23}),
-    SideButtonLabel = CameraZoom.TSK["h54d9066eg87bdg439fg92f9g7027970af6ca"],
+    TabHeader = Text.Format(CameraZoom.TSK.SettingsTabName, {Color = "7e72d6", Size = 23}),
+    SideButtonLabel = CameraZoom.TSK.SettingsTabName,
 })
 
 -- Register positions. Should be ordered after registering the settings tab.
