@@ -364,8 +364,8 @@ end)
 ---------------------------------------------
 
 Net.RegisterListener("EPIPENCOUNTERS_ItemEquipped", function(payload)
-    local char = Ext.GetCharacter(payload.NetID)
-    local item = Ext.GetItem(payload.ItemNetID)
+    local char = Character.Get(payload.NetID)
+    local item = Item.Get(payload.ItemNetID)
 
     if char == Client.GetCharacter() then
         if not Vanity.IsOpen() and Transmog.ShouldKeepAppearance(item) then

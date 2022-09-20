@@ -347,7 +347,7 @@ LOAD_ORDER = {
     "Epip/Client/JournalChangelog.lua",
     "Epip/Client/ExitChatAfterMessage.lua",
     "Epip/Client/CameraZoom.lua",
-    "Epip/Client/ModMenuImprovements.lua",
+    -- "Epip/Client/ModMenuImprovements.lua",
 
     -- Chat Commands
     {
