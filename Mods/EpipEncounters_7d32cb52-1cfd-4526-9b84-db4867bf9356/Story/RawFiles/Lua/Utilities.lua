@@ -179,8 +179,10 @@ else
     end)
 end
 
-Ext.Events.ResetCompleted:Subscribe(function()
-    Utilities.Hooks.FireEvent("Game", "Loaded")
-    Utilities.Hooks.FireEvent("GameState", "ClientReady")
-    Net.Broadcast("EPIPENCOUNTERS_GameLoaded")
-end)
+if Ext.IsServer() then
+    Ext.Events.ResetCompleted:Subscribe(function()
+        Utilities.Hooks.FireEvent("Game", "Loaded")
+        Utilities.Hooks.FireEvent("GameState", "ClientReady")
+        Net.Broadcast("EPIPENCOUNTERS_GameLoaded")
+    end)
+end

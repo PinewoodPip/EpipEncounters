@@ -39,7 +39,7 @@ Game.Net = Net -- Backwards compatibility
 ---Sends a message to all peers.
 ---@generic T
 ---@param channel `T`
----@param message T
+---@param message T?
 ---@param excludedChar GUID?
 function Net.Broadcast(channel, message, excludedChar)
     message = message or {}
