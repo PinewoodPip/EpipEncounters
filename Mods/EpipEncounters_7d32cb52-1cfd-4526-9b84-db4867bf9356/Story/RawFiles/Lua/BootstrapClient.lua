@@ -36,6 +36,7 @@ LOAD_ORDER = {
     "Tables/Epip.lua",
     "Tables/_Events.lua",
     "Tables/_Feature.lua",
+    "Utilities.lua",
 
     -- Utilities
     "Utils.lua",
@@ -49,7 +50,6 @@ LOAD_ORDER = {
     {ScriptSet = "Utilities/Entity"},
     {ScriptSet = "Utilities/GameState"},
     "Utilities/Mod.lua",
-    "Utilities.lua",
     "Utilities/Timer.lua",
     "Utilities/Coroutine.lua",
 
