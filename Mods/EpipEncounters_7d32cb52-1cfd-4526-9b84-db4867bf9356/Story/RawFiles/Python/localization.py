@@ -9,15 +9,18 @@ class TranslatedString:
     def __init__(self, handle, obj):
         self.text = obj["ReferenceText"]
         self.description = obj["ContextDescription"] if "ContextDescription" in obj else ""
+        self.translation = obj["TranslatedText"] if "TranslatedText" in obj else ""
+        self.key = obj["ReferenceKey"] if "ReferenceKey" in obj else ""
         self.handle = handle
 
 class SheetColumn:
-    def __init__(self, name, width, locked:bool=True, wrap_text:bool=True, font=None):
+    def __init__(self, name, width, locked:bool=True, wrap_text:bool=True, font=None, json_key:str=None):
         self.name = name
         self.width = width
         self.locked = locked
         self.wrap_text = wrap_text
         self.font = font
+        self.json_key = json_key
 
 class Sheet:
     ROW_HEIGHT = 30
@@ -97,9 +100,9 @@ class Workbook:
 class Module:
     COLUMN_DEFINITIONS = [
         SheetColumn("Handle", 10, wrap_text=False, font=Font(color="999999")),
-        SheetColumn("Original Text", 65),
+        SheetColumn("Original Text", 65, json_key="ReferenceText"),
         SheetColumn("Contextual Info", 40),
-        SheetColumn("Translation", 65, locked=False),
+        SheetColumn("Translation", 65, locked=False, json_key="TranslatedText"),
         SheetColumn("Translation Notes", 30, locked=False),
         SheetColumn("Translation Author", 30, locked=False),
     ]
@@ -122,9 +125,9 @@ class Module:
                 handle,
                 tsk.text,
                 tsk.description,
-                "", # Translation
-                "", # Translation author
-                "", # Translation notes
+                tsk.translation, # Translation
+                "", # Translation author - these are not kept within the json, cannot import
+                "", # Translation notes - same case as author
             ])
 
 def importLocalization(file_name):
@@ -145,4 +148,48 @@ def importLocalization(file_name):
     print("Saving workbook")
     book.save("output.xlsx")
 
+def exportLocalizationSheet(file_name, sheet_name):
+    book = openpyxl.load_workbook(file_name)
+    sheet = book[sheet_name]
+
+    # module = Module(sheet_name)
+
+    output = {
+        "FileFormatVersion": 0,
+        "ModTable": sheet_name,
+        "TranslatedStrings": {},
+    }
+    tsks = output["TranslatedStrings"]
+
+    for row in range(2, 10):
+        handle = sheet["A" + str(row)].value
+        tsks[handle] = {}
+        tsk = tsks[handle]
+
+        for column_index in range(len(Module.COLUMN_DEFINITIONS)):
+            column_def = Module.COLUMN_DEFINITIONS[column_index]
+
+            if column_def.json_key:
+                cell = sheet[get_column_letter(column_index + 1) + str(row)]
+                value = cell.value
+
+                tsk[column_def.json_key] = value
+
+        # erase TSKs with no translation
+        handles_to_delete = []
+        for handle,data in tsks.items():
+            if "TranslatedText" not in data or data["TranslatedText"] == None:
+                handles_to_delete.append(handle)
+
+        for handle in handles_to_delete:
+            del tsks[handle]
+
+    with open("language.json", "w") as f:
+        f.write(json.dumps(output, indent=2, ensure_ascii=False))
+
+        print("Converted sheet to json")
+
+
 importLocalization(r"C:\Users\Usuario\Documents\Larian Studios\Divinity Original Sin 2 Definitive Edition\Osiris Data\Epip\localization_template.json")
+
+exportLocalizationSheet(r"spanish.xlsx", "Spanish")
