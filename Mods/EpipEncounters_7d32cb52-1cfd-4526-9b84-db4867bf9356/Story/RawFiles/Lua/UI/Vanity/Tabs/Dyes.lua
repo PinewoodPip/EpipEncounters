@@ -264,7 +264,7 @@ function Dyes.GetCurrentCustomDye(item, useSliders, useDefaultColors)
 
         -- Support for legacy dyes applied via deltamod.
         if not colorData then
-            for _,mod in ipairs(item:GetTags()) do
+            for _,mod in ipairs(item:GetDeltaMods()) do
                 local c1,c2,c3 = string.match(mod, "PIP_GENCOLOR_FF(%x%x%x%x%x%x)_FF(%x%x%x%x%x%x)_FF(%x%x%x%x%x%x)")
     
                 if c1 then
