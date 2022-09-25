@@ -229,12 +229,19 @@ end
 ---------------------------------------------
 
 ---Alias for creating an RGBColor from RGBA values.
+---@overload fun(color:RGBColor):RGBColor
 ---@param red integer?
 ---@param green integer?
 ---@param blue integer?
 ---@param alpha integer?
 ---@return RGBColor
 function Color.Create(red, green, blue, alpha)
+    -- Table overload.
+    if type(red) == "table" then
+        local tbl = red
+        red, green, blue, alpha = tbl.Red, tbl.Green, tbl.Blue, tbl.Alpha
+    end
+
     return Color.CreateFromRGB(red, green, blue, alpha)
 end
 

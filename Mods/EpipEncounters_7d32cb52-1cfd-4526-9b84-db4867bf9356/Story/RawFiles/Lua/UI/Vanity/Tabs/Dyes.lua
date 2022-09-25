@@ -695,11 +695,26 @@ Vanity.Events.SaveDataLoaded:RegisterListener(function (data)
     if data.Version >= 4 then
         Dyes.CustomDyes = data.Dyes or {}
 
+        -- Initialize Color objects for saved dyes
         for id,dye in pairs(Dyes.CustomDyes) do
-            Inherit(dye.Color1, Color.RGBColor)
-            Inherit(dye.Color2, Color.RGBColor)
-            Inherit(dye.Color3, Color.RGBColor)
+            Dyes.CustomDyes[id].Color1 = Color.Create(dye.Color1)
+            Dyes.CustomDyes[id].Color2 = Color.Create(dye.Color2)
+            Dyes.CustomDyes[id].Color3 = Color.Create(dye.Color3)
             dye.Type = "Custom"
+        end
+
+        -- Initialize Color objects for outfits
+        local outfits = data.Outfits ---@type table<string, VanityOutfit>
+        for _,outfit in pairs(outfits) do
+            ---@diagnostic disable undefined-field
+            for slot,dye in pairs(outfit.CustomDyes or {}) do
+                outfit.CustomDyes[slot] = {
+                    Color1 = Color.Create(dye.Color1),
+                    Color2 = Color.Create(dye.Color2),
+                    Color3 = Color.Create(dye.Color3),
+                }
+                ---@diagnostic enable undefined-field
+            end
         end
     end
 end)
