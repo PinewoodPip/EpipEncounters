@@ -110,7 +110,7 @@ end
 
 ---Apply a Polymorph status to refresh visuals without needing to re-equip. Credits to Luxen for the discovery!
 ---@param char EsvCharacter
----@param useAlternativeStatus boolean
+---@param useAlternativeStatus boolean?
 function Vanity.RefreshAppearance(char, useAlternativeStatus)
     local status = "PIP_Vanity_Refresh"
     local guid = char.MyGuid
@@ -217,6 +217,20 @@ Net.RegisterListener("EPIPENCOUNTERS_Vanity_Transmog_ToggleWeaponOverlayEffects"
     else
         Osi.SetTag(item.MyGuid, "DISABLE_WEAPON_EFFECTS")
     end
+end)
+
+-- Listen for equipment visibility being toggled.
+Net.RegisterListener("EPIPENCOUNTERS_Vanity_Transmog_ToggleVisibility", function (payload)
+    local item = Item.Get(payload.ItemNetID)
+    local char = Character.Get(payload.CharacterNetID)
+    
+    if payload.State then
+        Osiris.ClearTag(item, "PIP_VANITY_INVISIBLE")
+    else
+        Osiris.SetTag(item, "PIP_VANITY_INVISIBLE")
+    end
+
+    Vanity.RefreshAppearance(char, true)
 end)
 
 -- Transmog request.

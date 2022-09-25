@@ -6,6 +6,7 @@ local Transmog = {
     favoritedTemplates = {},
     activeCharacterTemplates = {},
     KEEP_APPEARANCE_TAG_PREFIX = "PIP_Vanity_Transmog_KeepAppearance_",
+    INVISIBLE_TAG = "PIP_VANITY_INVISIBLE",
     keepIcon = false,
 
     BLOCKED_TEMPLATES = {
@@ -69,6 +70,12 @@ local Tab = Vanity.CreateTab({
     ID = "PIP_Vanity_Transmog",
     Icon = "hotbar_icon_magic",
 })
+
+---------------------------------------------
+-- CLASSES
+---------------------------------------------
+
+---@class EPIPENCOUNTERS_Vanity_Transmog_ToggleVisibility : Net_SimpleMessage_State, NetMessage_Item, NetMessage_Character
 
 ---------------------------------------------
 -- EVENTS / HOOKS
@@ -186,6 +193,20 @@ function Transmog.TransmogItem(item, template)
     end
 end
 
+---Toggles visibility of an equipment item's visuals while it is equipped.
+---@param item EclItem? Defaults to current vanity item.
+---@param visible boolean?
+function Transmog.ToggleVisibility(item, visible)
+    item = item or Vanity.GetCurrentItem()
+    if visible == nil then visible = item:HasTag(Transmog.INVISIBLE_TAG) end
+
+    Net.PostToServer("EPIPENCOUNTERS_Vanity_Transmog_ToggleVisibility", {
+        CharacterNetID = Client.GetCharacter().NetID,
+        ItemNetID = item.NetID,
+        State = visible,
+    })
+end
+
 ---Returns whether a template belongs to a category.
 ---@param templateData VanityTemplate
 ---@param category VanityCategory | string
@@ -272,6 +293,12 @@ function Tab:Render()
     -- Unfortunately, TransformKeepIcon is not persistent - thus this option is not very useful.
     -- Vanity.RenderCheckbox("Vanity_KeepIcon", Text.Format("Keep Icon", {Color = Color.BLACK}), Transmog.keepIcon, true)
 
+    -- Don't show the visibility option for helms,
+    -- as they already have one in the vanilla UI.
+    if Item.GetItemSlot(item) ~= "Helmet" then
+        Vanity.RenderCheckbox("Vanity_MakeInvisible", Text.Format("Visible", {Color = Color.BLACK}), not item:HasTag(Transmog.INVISIBLE_TAG), true)
+    end
+
     if item then
         local canTransmog = Transmog.CanTransmogItem(item)
 
@@ -348,6 +375,8 @@ Tab:RegisterListener(Vanity.Events.CheckboxPressed, function(id, state)
         Transmog.UpdateActiveCharacterTemplates()
     elseif id == "Vanity_KeepIcon" then
         Transmog.keepIcon = state
+    elseif id == "Vanity_MakeInvisible" then
+        Transmog.ToggleVisibility()
     elseif id == "Vanity_OverlayEffects" then
         Net.PostToServer("EPIPENCOUNTERS_Vanity_Transmog_ToggleWeaponOverlayEffects", {
             ItemNetID = Vanity.GetCurrentItem().NetID,
@@ -362,6 +391,28 @@ end)
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
+
+-- Make item visuals invisible if they were set to be.
+Ext.Events.CreateEquipmentVisualsRequest:Subscribe(function(ev)
+    ev = ev ---@type EclLuaCreateEquipmentVisualsRequestEvent
+    local request = ev.Params
+    local char = ev.Character
+    local item
+
+    if char then
+        local itemGUID = char:GetItemBySlot(request.Slot)
+
+        if itemGUID then
+            item = Item.Get(itemGUID)
+        end
+
+        if item and item:IsTagged(Transmog.INVISIBLE_TAG) then
+            request.VisualResourceID = ""
+            request.EquipmentSlotMask = 0 -- Might be unnecessary?
+            request.VisualSetSlotMask = 0
+        end
+    end
+end)
 
 Net.RegisterListener("EPIPENCOUNTERS_ItemEquipped", function(payload)
     local char = Character.Get(payload.NetID)

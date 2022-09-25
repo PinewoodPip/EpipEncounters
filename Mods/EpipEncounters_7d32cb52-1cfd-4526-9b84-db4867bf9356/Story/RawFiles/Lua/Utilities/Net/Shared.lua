@@ -22,6 +22,9 @@ Game.Net = Net -- Backwards compatibility
 ---@class Net_SimpleMessage_NetID
 ---@field NetID NetId
 
+---@class Net_SimpleMessage_State
+---@field State boolean
+
 ---------------------------------------------
 -- EVENTS
 ---------------------------------------------
