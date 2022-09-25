@@ -163,22 +163,6 @@ function Dyes.IsEEDye(id)
     return Dyes.DYE_DATA[id] ~= nil
 end
 
-local function GetCurrentDyeInSlot(char, slot)
-    local item = char:GetItemBySlot(slot)
-    local dye,data = nil
-
-    if item then
-        item = Ext.GetItem(item)
-        local id,_t = Item.GetCurrentDye(item)
-        data = _t
-        if id then
-            dye = id
-        end
-    end
-
-    return dye,data
-end
-
 VanityDyes.Events.DyeUsed:RegisterListener(function (dye, item, character)
     if dye.Type == "EE" then
 

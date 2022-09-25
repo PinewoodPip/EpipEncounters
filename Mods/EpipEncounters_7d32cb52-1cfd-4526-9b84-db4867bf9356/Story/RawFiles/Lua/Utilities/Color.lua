@@ -104,6 +104,12 @@ function RGBColor:ToDecimal(addAlpha)
     return value  
 end
 
+---Unpacks the color's RGB values, alpha included.
+---@return integer ...
+function RGBColor:Unpack()
+    return self.Red, self.Green, self.Blue, self.Alpha
+end
+
 ---Returns the hexadecimal representation of the color.
 ---@param prefix boolean? Prefix the string with #. Defaults to false.
 ---@param addAlpha boolean? Defaults to false. If enabled, resulting color will be in the format `#RRGGBBAA`
@@ -120,6 +126,12 @@ function RGBColor:ToHex(prefix, addAlpha)
     end
 
     return valStr:upper()
+end
+
+---Returns the RGBA values as floats in the range[0.0 - 1.0]
+---@return number, number, number, number
+function RGBColor:ToFloats()
+    return self.Red / 255, self.Green / 255, self.Blue / 255, self.Alpha / 255
 end
 
 ---Returns a new instance of RGBColor with the same values.
@@ -148,9 +160,9 @@ end
 
 ---Creates a color from RGBA values.
 ---Expected range is [0-255] and will be clamped.
----@param r integer
----@param g integer
----@param b integer
+---@param r integer?
+---@param g integer?
+---@param b integer?
 ---@param a integer? Defaults to 255.
 ---@return RGBColor
 function RGBColor.Create(r, g, b, a)
@@ -217,9 +229,9 @@ end
 ---------------------------------------------
 
 ---Alias for creating an RGBColor from RGBA values.
----@param red integer
----@param green integer
----@param blue integer
+---@param red integer?
+---@param green integer?
+---@param blue integer?
 ---@param alpha integer?
 ---@return RGBColor
 function Color.Create(red, green, blue, alpha)
@@ -227,9 +239,9 @@ function Color.Create(red, green, blue, alpha)
 end
 
 ---Creates a color from RGBA values. Expected range of values is [0-255].
----@param red integer
----@param green integer
----@param blue integer
+---@param red integer?
+---@param green integer?
+---@param blue integer?
 ---@param alpha integer?
 ---@return RGBColor
 function Color.CreateFromRGB(red, green, blue, alpha)

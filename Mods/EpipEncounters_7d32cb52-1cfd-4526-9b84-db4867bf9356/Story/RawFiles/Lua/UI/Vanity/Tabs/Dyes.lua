@@ -1,6 +1,7 @@
 
 local Vanity = Client.UI.Vanity
 
+---@class Feature_Vanity_Dyes : Feature
 local Dyes = {
     Tab = nil,
     CustomDyes = {},
@@ -21,6 +22,7 @@ local Dyes = {
     COLOR_NAMES = {"Primary", "Secondary", "Tertiary"},
     CACHE = {},
     DYE_HISTORY_LIMIT = 10,
+    DYED_ITEM_TAG = "^PIP_DYE_(%x+)_(%x+)_(%x+)$",
 
     activeCharacterDyes = {},
 
@@ -33,7 +35,7 @@ local Dyes = {
         GetCategories = {},
     },
 }
-Epip.AddFeature("VanityDyes", "VanityDyes", Dyes)
+Epip.RegisterFeature("VanityDyes", Dyes)
 
 ---@type CharacterSheetCustomTab
 local Tab = Vanity.CreateTab({
@@ -42,6 +44,13 @@ local Tab = Vanity.CreateTab({
     Icon = "hotbar_icon_dye",
 })
 Dyes.Tab = Tab
+
+---------------------------------------------
+-- CLASSES
+---------------------------------------------
+
+---@class EPIPENCOUNTERS_DyeItem : NetMessage_Character, NetMessage_Item
+---@field Dye VanityDye
 
 ---@class VanityDye
 ---@field Name string? Can be anonymous.
@@ -150,38 +159,10 @@ end
 ---@param item EclItem?
 function Dyes.ApplyCustomDye(dye, item)
     item = item or Vanity.GetCurrentItem()
-    local color1 = dye.Color1
-    local color2 = dye.Color2
-    local color3 = dye.Color3
-    local itemColorStat = string.format("PIP_GENCOLOR_FF%s%s%s_FF%s%s%s_FF%s%s%s", hex(color1.Red, 2), hex(color1.Green, 2), hex(color1.Blue, 2), hex(color2.Red, 2), hex(color2.Green, 2), hex(color2.Blue, 2), hex(color3.Red, 2), hex(color3.Green, 2), hex(color3.Blue, 2))
-    
-    Dyes:DebugLog("ItemColor stat: " .. itemColorStat)
-
-    local statData = {
-        Name = itemColorStat,
-        Color1 = (256 ^ 4) + (color1.Red * 256 ^ 2) + (color1.Green * 256) + (color1.Blue),
-        Color2 = (256 ^ 4) + (color2.Red * 256 ^ 2) + (color2.Green * 256) + (color2.Blue),
-        Color3 = (256 ^ 4) + (color3.Red * 256 ^ 2) + (color3.Green * 256) + (color3.Blue),
-    }
-
-    Stats.Update("ItemColor", statData)
-    Dyes:Dump(Stats.Get("ItemColor", itemColorStat))
-
-    Dyes.ApplyDye(item, statData)
-end
-
--- TODO use wrapper table for dye instead
-function Dyes.ApplyDye(item, dyeStatData)
     local itemNetID = item.NetID
 
-    -- item.ItemColorOverride = dyeStatData.Name
-
-    Dyes.CreateDyeStats(item, dyeStatData)
-
-    Net.PostToServer("EPIPENCOUNTERS_CreateDyeStat_ForPeers", {ItemNetID = itemNetID, Stat = dyeStatData})
-
     Timer.Start("PIP_ApplyCustomDye", 0.55, function()
-        Net.PostToServer("EPIPENCOUNTERS_DyeItem", {NetID = itemNetID, DyeStat = dyeStatData, CharacterNetID = Client.GetCharacter().NetID})
+        Net.PostToServer("EPIPENCOUNTERS_DyeItem", {ItemNetID = itemNetID, Dye = dye, CharacterNetID = Client.GetCharacter().NetID})
     end)
     Timer.Start(0.8, function(_) Dyes.UpdateActiveCharacterDyes() end)
 end
@@ -263,16 +244,36 @@ function Dyes.GetCurrentCustomDye(item, useSliders, useDefaultColors)
     if useDefaultColors == nil then useDefaultColors = true end
     local colorData
 
+    -- Read custom dye.
     if item then
-        for i,mod in ipairs(item:GetDeltaMods()) do
-            local c1,c2,c3 = string.match(mod, "PIP_GENCOLOR_FF(%x%x%x%x%x%x)_FF(%x%x%x%x%x%x)_FF(%x%x%x%x%x%x)")
+        local tags = item:GetTags()
+        for i=#tags,1,-1 do
+            local tag = tags[i]
 
-            if c1 then
-                colorData = {
-                    Color1 = Color.CreateFromHex(c1),
-                    Color2 = Color.CreateFromHex(c2),
-                    Color3 = Color.CreateFromHex(c3),
-                }
+            local color1, color2, color3 = tag:match(Dyes.DYED_ITEM_TAG)
+
+            if color1 then
+                color1 = Color.CreateFromHex(color1)
+                color2 = Color.CreateFromHex(color2)
+                color3 = Color.CreateFromHex(color3)
+
+                colorData = {Color1 = color1, Color2 = color2, Color3 = color3}
+                break
+            end
+        end
+
+        -- Support for legacy dyes applied via deltamod.
+        if not colorData then
+            for _,mod in ipairs(item:GetTags()) do
+                local c1,c2,c3 = string.match(mod, "PIP_GENCOLOR_FF(%x%x%x%x%x%x)_FF(%x%x%x%x%x%x)_FF(%x%x%x%x%x%x)")
+    
+                if c1 then
+                    colorData = {
+                        Color1 = Color.CreateFromHex(c1),
+                        Color2 = Color.CreateFromHex(c2),
+                        Color3 = Color.CreateFromHex(c3),
+                    }
+                end
             end
         end
     end
@@ -297,6 +298,7 @@ function Dyes.GetCurrentCustomDye(item, useSliders, useDefaultColors)
         end
     end
 
+    -- Fall back to sliders.
     if not colorData and useSliders then
         colorData = {
             Color1 = Dyes.GetCurrentSliderColor(1),
@@ -581,6 +583,32 @@ end)
 -- EVENT LISTENERS
 ---------------------------------------------
 
+-- Apply colors to dyed items.
+Ext.Events.CreateEquipmentVisualsRequest:Subscribe(function(ev)
+    ev = ev ---@type EclLuaCreateEquipmentVisualsRequestEvent
+    local request = ev.Params
+    local char = ev.Character
+    local item
+
+    if char then
+        local itemGUID = char:GetItemBySlot(request.Slot)
+
+        if itemGUID then
+            item = Item.Get(itemGUID)
+        end
+
+        if item then
+            local dye = Dyes.GetCurrentCustomDye(item, false, false)
+
+            if dye then
+                request.Colors[3] = {dye.Color1:ToFloats()}
+                request.Colors[4] = {dye.Color2:ToFloats()}
+                request.Colors[5] = {dye.Color3:ToFloats()}
+            end
+        end
+    end
+end)
+
 Epip.Features.VanityTransmog.Events.AppearanceReapplied:RegisterListener(function (item, template)
     Dyes.ReapplyAppearance(item)
 end)
@@ -629,23 +657,7 @@ Dyes.Events.DyeUsed:RegisterListener(function (dye, item, character)
     end
 end)
 
-Net.RegisterListener("EPIP_CACHEDYE", function(payload)
-    local dye = payload.Dye
-
-    Dyes.CACHE[dye.Name] = dye
-
-    IO.SaveFile("pip_useddyes.json", Dyes.CACHE)
-end)
-
--- _D(Ext.Stats.ItemColor.Get("PIP_GENCOLOR_FF006699_FF669999_FF669999"))
--- _D(Ext.GetItem(_C():GetItemBySlot("Breast")):GetDeltaMods())
--- _D(Ext.Stats.DeltaMod.GetLegacy("Boost_Armor_PIP_GENCOLOR_FF006699_FF669999_FF669999", "Armor"))
--- SESSIONLOADED WORKS!
 Net.RegisterListener("EPIPENCOUNTERS_CreateVanityDyes", function(payload)
--- Ext.Events.SessionLoaded:Subscribe(function()
-
-    -- print("Creating dye stats")
-    -- _D(payload)
     for id,dye in pairs(payload.Dyes) do
         Dyes.CreateDyeStats("Armor", dye)
         Dyes.CreateDyeStats("Weapon", dye)
@@ -717,7 +729,7 @@ Dyes.Events.DyeUsed:RegisterListener(function (dye, item, character)
     if dye.Type == "Custom" then
         Dyes.ApplyCustomDye(dye)
 
-        Tab:SetSliderColors(dye, true)
+        Tab:SetSliderColors(dye)
     end
 end)
 

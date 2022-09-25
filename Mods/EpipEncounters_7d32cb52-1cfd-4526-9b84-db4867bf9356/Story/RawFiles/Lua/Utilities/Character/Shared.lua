@@ -21,7 +21,21 @@ Character = {
         WINGS = "Wings",
         HORNS = "Horns",
         OVERHEAD = "Overhead",
-    }
+    },
+
+    ---@enum CharacterLib_EquipmentVisualMask
+    EQUIPMENT_VISUAL_MASKS = {
+        NONE = 0,
+        HAIR = 1,
+        BREAST = 2,
+        LEGS = 4,
+        WEAPON = 8,
+        UNKNOWN_1 = 16,
+        UNKNOWN_2 = 32,
+        UNKNOWN_3 = 64,
+        LOWER_BODY = 128,
+        -- Unknown if more exist
+    },
 }
 Game.Character = Character
 Epip.InitializeLibrary("Character", Character)

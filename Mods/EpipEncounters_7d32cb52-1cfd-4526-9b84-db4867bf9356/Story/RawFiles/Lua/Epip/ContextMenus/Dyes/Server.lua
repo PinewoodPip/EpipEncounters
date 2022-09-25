@@ -9,73 +9,40 @@ Net.RegisterListener("EPIPENCOUNTERS_CreateDyeStat_ForPeers", function(payload)
     Net.Broadcast("EPIPENCOUNTERS_CreateDyeStat", payload)
 end)
 
-Net.RegisterListener("EPIPENCOUNTERS_DyeItem", function(payload)
-    local item = Ext.GetItem(payload.NetID)
-    local dyeStat = payload.DyeStat
-    local char = Ext.GetCharacter(payload.CharacterNetID)
+local function hex(val, minLength)
+    minLength = minLength or 0
+    local valStr = string.format("%x", val)
 
-    -- Osiris.DB_PIP_Vanity_CustomDyes_DyedItem:Set(item.MyGuid, dyeStat.Name)
-
-    Stats.Update("ItemColor", dyeStat)
-
-    PersistentVars = PersistentVars or {}
-    if not PersistentVars.Dyes then PersistentVars.Dyes = {} end
-
-    PersistentVars.Dyes[dyeStat.Name] = dyeStat
-
-    -- Ext.Stats.Sync(dyeStat.Name, true)
-    -- Ext.Stats.SetPersistence(dyeStat.Name, true)
-
-    local statType = item.Stats.ItemType
-    local deltaModName = string.format("Boost_%s_%s", statType, dyeStat.Name)
-    local boostStatName = "_" .. deltaModName
-    local stat = Stats.Get(statType, boostStatName)
-    Ext.Stats.SetPersistence(boostStatName, true)
-
-    if not stat then
-        stat = Ext.Stats.Create(boostStatName, statType)
+    
+    while string.len(valStr) < minLength do
+        valStr = "0" .. valStr
     end
 
-    stat.ItemColor = dyeStat.Name
+    return valStr:upper()
+end
 
-    Stats.Update("DeltaModifier", {
-        Name = deltaModName,
-        MinLevel = 1,
-        Frequency = 1,
-        BoostType = "ItemCombo",
-        ModifierType = statType,
-        SlotType = "Sentinel",
-        WeaponType = "Sentinel",
-        Handedness = "Any",
-        Boosts = {
-            {
-                Boost = boostStatName,
-                Count = 1,
-            }
-        }
-    })
+Net.RegisterListener("EPIPENCOUNTERS_DyeItem", function(payload)
+    local item = Item.Get(payload.ItemNetID)
+    local dye = payload.Dye
+    local char = Character.Get(payload.CharacterNetID)
+    local color1 = dye.Color1
+    local color2 = dye.Color2
+    local color3 = dye.Color3
+    local tag = string.format("PIP_DYE_%s%s%s_%s%s%s_%s%s%s", hex(color1.Red, 2), hex(color1.Green, 2), hex(color1.Blue, 2), hex(color2.Red, 2), hex(color2.Green, 2), hex(color2.Blue, 2), hex(color3.Red, 2), hex(color3.Green, 2), hex(color3.Blue, 2))
+    
+    print("Color tag: " .. tag)
 
-    Osi.ItemAddDeltaModifier(item.MyGuid, deltaModName)
+    -- Clear previous dye tags
+    for _,existingTag in ipairs(item:GetTags()) do
+        if existingTag:match("^PIP_DYE_(%x+)_(%x+)_(%x+)$") then -- TODO use constant
+            Osiris.ClearTag(item, existingTag)
+        end
+    end
+
+    Osiris.SetTag(item, tag)
     
     Epip.Features.Vanity.RefreshAppearance(char, true)
-
-    Net.Broadcast("EPIP_CACHEDYE", {
-        Dye = dyeStat,
-    })
 end)
-
--- Net.RegisterListener("EPIPENCOUNTERS_Vanity_RequestDyes", function(cmd, payload)
---     local items = {}
---     local _, _, tuples = Osiris.DB_PIP_Vanity_CustomDyes_DyedItem:Get(nil, nil)
-
---     for i,tuple in ipairs(tuples) do
---         items[tuple[1]] = tuple[2]
---     end
-
---     -- Net.PostToCharacter(_C().MyGuid, "EPIPENCOUNTERS_Vanity_SetDyes", {Items = items})
---     print("----SENDING DYES")
---     Net.Broadcast("EPIPENCOUNTERS_Vanity_SetDyes", {Items = items})
--- end)
 
 Net.RegisterListener("EPIPENCOUNTERS_DYE", function(payload)
     local item = Ext.GetItem(payload.Item)
