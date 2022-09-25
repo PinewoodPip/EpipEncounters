@@ -320,7 +320,7 @@ end
 
 --- Alias for Item.Stats.ItemSlot
 ---@param item Item
----@return string
+---@return ItemSlot
 function Item.GetItemSlot(item)
     if not item.Stats then return nil end
     local slot = item.Stats.ItemSlot

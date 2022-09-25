@@ -75,7 +75,7 @@ local Tab = Vanity.CreateTab({
 -- CLASSES
 ---------------------------------------------
 
----@class EPIPENCOUNTERS_Vanity_Transmog_ToggleVisibility : Net_SimpleMessage_State, NetMessage_Item, NetMessage_Character
+---@class EPIPENCOUNTERS_Vanity_Transmog_ToggleVisibility : Net_SimpleMessage_State, Net_SimpleMessage_Item, Net_SimpleMessage_Character
 
 ---------------------------------------------
 -- EVENTS / HOOKS

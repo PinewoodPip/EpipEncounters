@@ -49,7 +49,7 @@ Dyes.Tab = Tab
 -- CLASSES
 ---------------------------------------------
 
----@class EPIPENCOUNTERS_DyeItem : NetMessage_Character, NetMessage_Item
+---@class EPIPENCOUNTERS_DyeItem : Net_SimpleMessage_Character, Net_SimpleMessage_Item
 ---@field Dye VanityDye
 
 ---@class VanityDye

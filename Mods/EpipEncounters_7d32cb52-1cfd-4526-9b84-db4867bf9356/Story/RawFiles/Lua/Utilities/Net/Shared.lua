@@ -19,6 +19,12 @@ Game.Net = Net -- Backwards compatibility
 -- CLASSES
 ---------------------------------------------
 
+---@class Net_SimpleMessage_Character
+---@field CharacterNetID NetId
+
+---@class Net_SimpleMessage_Item
+---@field ItemNetID NetId
+
 ---@class Net_SimpleMessage_NetID
 ---@field NetID NetId
 

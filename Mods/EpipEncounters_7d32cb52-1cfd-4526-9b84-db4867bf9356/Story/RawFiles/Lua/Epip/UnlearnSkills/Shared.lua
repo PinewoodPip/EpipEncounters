@@ -13,7 +13,7 @@ Epip.RegisterFeature("UnlearnSkills", Unlearn)
 -- NET MESSAGES
 ---------------------------------------------
 
----@class EPIPENCOUNTERS_UnlearnSkill : NetMessage_Character
+---@class EPIPENCOUNTERS_UnlearnSkill : Net_SimpleMessage_Character
 ---@field SkillID string
 
 ---------------------------------------------
