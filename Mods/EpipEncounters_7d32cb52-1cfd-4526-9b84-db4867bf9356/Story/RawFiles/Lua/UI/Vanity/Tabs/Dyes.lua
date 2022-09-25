@@ -155,11 +155,25 @@ function Dyes.SaveCustomDye(id, data)
     Vanity.SaveData()
 end
 
+function Dyes.SetItemColorOverride(item, dye)
+    local statName = string.format("PIP_DYE_%s_%s_%s", dye.Color1:ToHex(), dye.Color2:ToHex(), dye.Color3:ToHex())
+    Stats.Update("ItemColor", {
+        Name = statName,
+        Color1 = dye.Color1:ToDecimal(),
+        Color2 = dye.Color2:ToDecimal(),
+        Color3 = dye.Color3:ToDecimal(),
+    })
+
+    item.ItemColorOverride = statName
+end
+
 ---@param dye VanityDye
 ---@param item EclItem?
 function Dyes.ApplyCustomDye(dye, item)
     item = item or Vanity.GetCurrentItem()
     local itemNetID = item.NetID
+
+    Dyes.SetItemColorOverride(item, dye)
 
     Timer.Start("PIP_ApplyCustomDye", 0.55, function()
         Net.PostToServer("EPIPENCOUNTERS_DyeItem", {ItemNetID = itemNetID, Dye = dye, CharacterNetID = Client.GetCharacter().NetID})
@@ -604,6 +618,8 @@ Ext.Events.CreateEquipmentVisualsRequest:Subscribe(function(ev)
                 request.Colors[3] = {dye.Color1:ToFloats()}
                 request.Colors[4] = {dye.Color2:ToFloats()}
                 request.Colors[5] = {dye.Color3:ToFloats()}
+                
+                Dyes.SetItemColorOverride(item, dye)
             end
         end
     end
