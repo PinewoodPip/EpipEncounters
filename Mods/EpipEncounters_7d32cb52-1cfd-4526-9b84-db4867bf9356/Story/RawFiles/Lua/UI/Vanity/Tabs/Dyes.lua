@@ -631,7 +631,7 @@ Ext.Events.CreateEquipmentVisualsRequest:Subscribe(function(ev)
     end
 end)
 
-Epip.Features.VanityTransmog.Events.AppearanceReapplied:RegisterListener(function (item, template)
+Epip.GetFeature("Feature_Vanity_Transmog").Events.AppearanceReapplied:RegisterListener(function (item, template)
     Dyes.ReapplyAppearance(item)
 end)
 

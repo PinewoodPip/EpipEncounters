@@ -68,7 +68,7 @@ function Outfits.ApplyOutfit(char, outfitID)
 
             if item then
                 item = Ext.GetItem(item)
-                Epip.Features.VanityTransmog.TransmogItem(item, template)
+                Epip.GetFeature("Feature_Vanity_Transmog").TransmogItem(item, template)
             end
         end
         Outfits.Events.OutfitApplied:Fire(outfit, char)

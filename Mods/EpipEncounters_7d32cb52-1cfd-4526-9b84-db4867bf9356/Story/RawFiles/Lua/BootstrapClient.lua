@@ -256,9 +256,6 @@ LOAD_ORDER = {
         Scripts = {
             "UI/Vanity/Vanity.lua",
             "UI/Vanity/Tabs/_Tab.lua",
-            "UI/Vanity/Tabs/Transmog.lua",
-            "UI/Vanity/Tabs/Outfits.lua",
-            "UI/Vanity/Tabs/Dyes.lua",
             -- "UI/Vanity/Tabs/Auras.lua",
         },
     },
@@ -369,7 +366,6 @@ LOAD_ORDER = {
     "Epip/Client/DifficultyToggle.lua",
     -- "Epip/AwesomeSoccer/Client.lua",
     "Epip/Client/GiftbagLocker.lua",
-    "Epip/Client/EE_Dyes.lua",
     "Epip/Client/ChatNotificationSound.lua",
     "Epip/Client/ToggleableWorldTooltips.lua",
     "Epip/Client/WorldTooltipFiltering.lua",
@@ -412,7 +408,16 @@ LOAD_ORDER = {
     -- Vanity Transmog
     {
         ScriptSet = "Epip/Vanity/Transmog",
+        Scripts = {
+            "Epip/Vanity/Transmog/Client_Tab.lua",
+
+            -- TODO move
+            "UI/Vanity/Tabs/Outfits.lua",
+            "UI/Vanity/Tabs/Dyes.lua",
+        }
     },
+    
+    "Epip/Client/EE_Dyes.lua",
 
     "Epip/Compatibility/MajoraFashionSins/Client.lua",
     "Epip/Compatibility/PortableRespecMirror/Client.lua",
