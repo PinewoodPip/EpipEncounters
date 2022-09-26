@@ -729,7 +729,7 @@ Client.UI.MessageBox.RegisterMessageListener("PIP_Vanity_SaveDye", Client.UI.Mes
     Dyes.SaveCustomDye(input, Dyes.GetSelectedDye())
 end)
 
-Epip.Features.VanityOutfits.Hooks.GetOutfitSaveData:RegisterHook(function(outfit, char)
+Epip.GetFeature("Feature_Vanity_Outfits").Hooks.GetOutfitSaveData:RegisterHook(function(outfit, char)
     outfit.CustomDyes = {}
 
     for i,slot in ipairs(Data.Game.SLOTS_WITH_VISUALS) do
@@ -746,7 +746,7 @@ Epip.Features.VanityOutfits.Hooks.GetOutfitSaveData:RegisterHook(function(outfit
     return outfit
 end)
 
-Epip.Features.VanityOutfits.Events.OutfitApplied:RegisterListener(function (outfit, char)
+Epip.GetFeature("Feature_Vanity_Outfits").Events.OutfitApplied:RegisterListener(function (outfit, char)
     if outfit.CustomDyes then
         for slot,dye in pairs(outfit.CustomDyes) do
             local item = char:GetItemBySlot(slot)

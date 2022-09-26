@@ -410,13 +410,17 @@ LOAD_ORDER = {
         ScriptSet = "Epip/Vanity/Transmog",
         Scripts = {
             "Epip/Vanity/Transmog/Client_Tab.lua",
-
-            -- TODO move
-            "UI/Vanity/Tabs/Outfits.lua",
-            "UI/Vanity/Tabs/Dyes.lua",
         }
     },
-    
+    -- Vanity Outfits
+    {
+        ScriptSet = "Epip/Vanity/Outfits",
+        Scripts = {
+            "Epip/Vanity/Outfits/Client_Tab.lua",
+        },
+    },
+    "UI/Vanity/Tabs/Dyes.lua",
+
     "Epip/Client/EE_Dyes.lua",
 
     "Epip/Compatibility/MajoraFashionSins/Client.lua",
