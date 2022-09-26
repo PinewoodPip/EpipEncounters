@@ -60,7 +60,7 @@ end
 ---@generic T
 ---@param char Character
 ---@param channel `T`
----@param message T
+---@param message T?
 function Net.PostToCharacter(char, channel, message)
     if GetExtType(char) ~= nil then char = char.MyGuid end
     

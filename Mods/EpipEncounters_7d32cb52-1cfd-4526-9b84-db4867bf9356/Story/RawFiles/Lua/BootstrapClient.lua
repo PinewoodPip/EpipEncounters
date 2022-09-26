@@ -401,8 +401,18 @@ LOAD_ORDER = {
     "Epip/ContextMenus/Greatforge/Client.lua",
     "Epip/ContextMenus/Dyes/Client.lua",
     "Epip/ContextMenus/PlayerInfo.lua", 
-    "Epip/ContextMenus/Vanity/Shared.lua",
-    "Epip/ContextMenus/Vanity/Client.lua",
+
+    -- Vanity
+    {
+        ScriptSet = "Epip/Vanity",
+        Scripts = {
+            
+        },
+    },
+    -- Vanity Transmog
+    {
+        ScriptSet = "Epip/Vanity/Transmog",
+    },
 
     "Epip/Compatibility/MajoraFashionSins/Client.lua",
     "Epip/Compatibility/PortableRespecMirror/Client.lua",

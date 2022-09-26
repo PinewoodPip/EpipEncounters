@@ -168,8 +168,19 @@ LOAD_ORDER = {
 
     "Epip/ContextMenus/Greatforge/Server.lua",
     "Epip/ContextMenus/Dyes/Server.lua",
-    "Epip/ContextMenus/Vanity/Shared.lua",
-    "Epip/ContextMenus/Vanity/Server.lua",
+    
+    -- Vanity
+    {
+        ScriptSet = "Epip/Vanity",
+        Scripts = {
+            
+        },
+    },
+    -- Vanity Transmog
+    {
+        ScriptSet = "Epip/Vanity/Transmog",
+    },
+
     {ScriptSet = "UI/Vanity/Tabs/Shapeshift", WIP = true},
 
     "Epip/AwesomeSoccer/Server.lua",

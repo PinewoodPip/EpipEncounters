@@ -7,6 +7,7 @@ local ARMOR_SLOTS = {
     Helmet = true,
 }
 
+---@class Feature_Vanity : Feature
 local Vanity = {
     Name = "Vanity",
 
@@ -304,7 +305,7 @@ local Vanity = {
         Shield = true,
     },
 }
-Epip.AddFeature("Vanity", "Vanity", Vanity)
+Epip.RegisterFeature("Vanity", Vanity)
 
 ---@class VanityCategory
 ---@field Name string

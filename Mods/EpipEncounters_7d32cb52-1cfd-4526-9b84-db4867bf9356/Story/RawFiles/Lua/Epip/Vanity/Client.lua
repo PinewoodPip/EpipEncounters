@@ -1,5 +1,5 @@
 
-local Vanity = Epip.Features.Vanity
+local Vanity = Epip.GetFeature("Feature_Vanity")
 local ContextMenu = Client.UI.ContextMenu
 
 Vanity.Outfits = {}

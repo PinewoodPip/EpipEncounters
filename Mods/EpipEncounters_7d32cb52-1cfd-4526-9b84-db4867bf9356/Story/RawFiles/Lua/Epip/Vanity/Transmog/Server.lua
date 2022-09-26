@@ -1,22 +1,29 @@
 
-local Vanity = Epip.Features.Vanity
+---@class Feature_Vanity
+local Vanity = Epip.GetFeature("Feature_Vanity")
 
-function Vanity.RevertAppearace(char, item)
-    local _,originalTemplate = Osiris.DB_PIP_Vanity_OriginalTemplate:Get(item.MyGuid, nil)
+---------------------------------------------
+-- METHODS
+---------------------------------------------
 
-    if originalTemplate then
-        Vanity.TransmogItem(char, item, originalTemplate, nil, false)
-        Osi.ClearTag(item.MyGuid, "PIP_Vanity_Transmogged")
-        Osiris.DB_PIP_Vanity_OriginalTemplate:Delete(item.MyGuid, nil)
+-- TODO move to Item
+function Vanity.GetTemplateInSlot(char, slot)
+    local item = Osi.CharacterGetEquippedItem(char.MyGuid, slot)
+    local template = ""
 
-        Ext.OnNextTick(function()
-            Ext.OnNextTick(function()
-                Net.PostToUser(char.ReservedUserID, "EPIPENCOUNTERS_Vanity_SetTemplateOverride", {TemplateOverride = originalTemplate})
-            end)
-        end)
+    if item then
+        template = Ext.GetItem(item).RootTemplate.Id
     end
+
+    return template
 end
 
+---Transmogrifies an item into another template.
+---@param char EsvCharacter
+---@param item EsvItem
+---@param newTemplate GUID
+---@param dye any? TODO remove
+---@param keepIcon boolean?
 function Vanity.TransmogItem(char, item, newTemplate, dye, keepIcon)
     -- TODO still try to dye if template is the same
     if not newTemplate or not item or item.RootTemplate.Id == newTemplate or newTemplate == "" then return nil end
@@ -59,17 +66,29 @@ function Vanity.TransmogItem(char, item, newTemplate, dye, keepIcon)
     Vanity.RefreshAppearance(char, false)
 end
 
-function Vanity.GetTemplateInSlot(char, slot)
-    local item = Osi.CharacterGetEquippedItem(char.MyGuid, slot)
-    local template = ""
+---Reverts the appearance of an item to its original one.
+---@param char EsvCharacter
+---@param item EsvItem
+function Vanity.RevertAppearace(char, item)
+    local _,originalTemplate = Osiris.DB_PIP_Vanity_OriginalTemplate:Get(item.MyGuid, nil)
 
-    if item then
-        template = Ext.GetItem(item).RootTemplate.Id
+    if originalTemplate then
+        Vanity.TransmogItem(char, item, originalTemplate, nil, false)
+        Osi.ClearTag(item.MyGuid, "PIP_Vanity_Transmogged")
+        Osiris.DB_PIP_Vanity_OriginalTemplate:Delete(item.MyGuid, nil)
+
+        Ext.OnNextTick(function()
+            Ext.OnNextTick(function()
+                Net.PostToUser(char.ReservedUserID, "EPIPENCOUNTERS_Vanity_SetTemplateOverride", {TemplateOverride = originalTemplate})
+            end)
+        end)
     end
-
-    return template
 end
 
+---Sets the persistent outfit for a character to its current templates.
+---@param char EsvCharacter
+---@param slots ItemSlot[]
+---@param tag string
 function Vanity.SetPersistentOutfit(char, slots, tag)
     Vanity:DebugLog("Persistent outfit set: " .. char.DisplayName)
 
@@ -89,7 +108,7 @@ function Vanity.SetPersistentOutfit(char, slots, tag)
     end
 
     -- Update only the requested slots.
-    for i,slot in ipairs(slots) do
+    for _,slot in ipairs(slots) do
         local index = Vanity.SLOT_TO_DB_INDEX[slot] + 1
         currentPersistentOutfit[index] = Vanity.GetTemplateInSlot(char, slot)
     end
@@ -108,21 +127,7 @@ function Vanity.SetPersistentOutfit(char, slots, tag)
     )
 end
 
----Apply a Polymorph status to refresh visuals without needing to re-equip. Credits to Luxen for the discovery!
----@param char EsvCharacter
----@param useAlternativeStatus boolean?
-function Vanity.RefreshAppearance(char, useAlternativeStatus)
-    local status = "PIP_Vanity_Refresh"
-    local guid = char.MyGuid
-    if useAlternativeStatus then status = "PIP_Vanity_Refresh_Alt" end
-
-    Osi.ApplyStatus(guid, status, 0, 1, NULLGUID)
-
-    Timer.Start(0.2, function()
-        Net.PostToCharacter(guid, "EPIPENCOUNTERS_Vanity_RefreshSheetAppearance")
-    end)
-end
-
+---Removes a persistent outfit from a character.
 function Vanity.ClearPersistentOutfit(char, slots, tag)
     Vanity:DebugLog("Persistent outfit cleared: " .. char.DisplayName)
 
@@ -162,9 +167,34 @@ function Vanity.ClearPersistentOutfit(char, slots, tag)
     Osi.ClearTag(char.MyGuid, tag)
 end
 
+---Apply a Polymorph status to refresh character visuals without needing to re-equip. Credits to Luxen for the discovery!
+---@param char EsvCharacter
+---@param useAlternativeStatus boolean?
+function Vanity.RefreshAppearance(char, useAlternativeStatus)
+    local status = "PIP_Vanity_Refresh"
+    local guid = char.MyGuid
+    if useAlternativeStatus then status = "PIP_Vanity_Refresh_Alt" end
+
+    Osi.ApplyStatus(guid, status, 0, 1, NULLGUID)
+
+    Timer.Start(0.2, function()
+        Net.PostToCharacter(guid, "EPIPENCOUNTERS_Vanity_RefreshSheetAppearance")
+    end)
+end
+
 ---------------------------------------------
--- LISTENERS
+-- EVENT LISTENERS
 ---------------------------------------------
+
+-- Listen for transmog requests.
+Net.RegisterListener("EPIPENCOUNTERS_VanityTransmog", function(payload)
+    local char = Ext.GetCharacter(payload.Char)
+    local item = Ext.GetItem(payload.Item)
+    local template = payload.NewTemplate
+    local keepIcon = payload.KeepIcon == true
+
+    Vanity.TransmogItem(char, item, template, nil, keepIcon)
+end)
 
 -- Listen for equip swaps, apply new visuals.
 Ext.Osiris.RegisterListener("ItemEquipped", 2, "after", function(item, char)
@@ -180,17 +210,7 @@ Ext.Osiris.RegisterListener("ItemEquipped", 2, "after", function(item, char)
     end
 end)
 
-Osiris.RegisterSymbolListener("ItemEquipped", 2, "after", function(item, char)
-    if Osiris.DB_IsPlayer:Get(char) then
-        char = Ext.GetCharacter(char)
-    
-        Net.PostToCharacter(char.MyGuid, "EPIPENCOUNTERS_ItemEquipped", {
-            NetID = char.NetID,
-            ItemNetID = Ext.GetItem(item).NetID,
-        })
-    end
-end)
-
+-- Listen for "keep appearance" being toggled for a character's item slot.
 Net.RegisterListener("EPIPENCOUNTERS_Vanity_Transmog_KeepAppearance", function(payload)
     local char = Ext.GetCharacter(payload.NetID)
     local tag = "PIP_Vanity_Transmog_KeepAppearance_" .. payload.Slot
@@ -202,12 +222,41 @@ Net.RegisterListener("EPIPENCOUNTERS_Vanity_Transmog_KeepAppearance", function(p
     end
 end)
 
-Net.RegisterListener("EPIPENCOUNTERS_Vanity_RefreshAppearance", function (payload)
-    local char = Character.Get(payload.CharacterNetID)
+-- Listen for requests to revert item appearance.
+Net.RegisterListener("EPIPENCOUNTERS_Vanity_RevertTemplate", function(payload)
+    local char = Character.Get(payload.CharNetID)
+    local item = Item.Get(payload.ItemNetID)
 
-    Vanity.RefreshAppearance(char, payload.UseAltStatus)
+    Vanity.RevertAppearace(char, item)
 end)
 
+-- Listen for toggling persistent outfit feature.
+Net.RegisterListener("EPIPENCOUNTERS_VanityPersistOutfit", function(payload)
+    local char = Ext.GetCharacter(payload.ClientCharacterNetID)
+    local enable = payload.State
+
+    local slots = {"Helmet", "Breast", "Gloves", "Leggings", "Boots"}
+    if enable then
+        Vanity.SetPersistentOutfit(char, slots, Vanity.PERSISTENT_OUTFIT_TAG)
+    else
+        Vanity.ClearPersistentOutfit(char, slots, Vanity.PERSISTENT_OUTFIT_TAG)
+    end
+end)
+
+-- Toggling persistent outfit feature, for weapons
+Net.RegisterListener("EPIPENCOUNTERS_VanityPersistWeaponry", function(payload)
+    local char = Ext.GetCharacter(payload.ClientCharacterNetID)
+    local enable = payload.State
+
+    local slots = {"Weapon", "Shield"}
+    if enable then
+        Vanity.SetPersistentOutfit(char, slots, Vanity.PERSISTENT_WEAPONRY_TAG)
+    else
+        Vanity.ClearPersistentOutfit(char, slots, Vanity.PERSISTENT_WEAPONRY_TAG)
+    end
+end)
+
+-- Listen for requests to disable elemental damage visual effects.
 Net.RegisterListener("EPIPENCOUNTERS_Vanity_Transmog_ToggleWeaponOverlayEffects", function(payload)
     local item = Item.Get(payload.ItemNetID)
     local hasTag = item:HasTag("DISABLE_WEAPON_EFFECTS")
@@ -233,14 +282,28 @@ Net.RegisterListener("EPIPENCOUNTERS_Vanity_Transmog_ToggleVisibility", function
     Vanity.RefreshAppearance(char, true)
 end)
 
--- Transmog request.
-Net.RegisterListener("EPIPENCOUNTERS_VanityTransmog", function(payload)
-    local char = Ext.GetCharacter(payload.Char)
-    local item = Ext.GetItem(payload.Item)
-    local template = payload.NewTemplate
-    local keepIcon = payload.KeepIcon == true
+-- Listen for requests to refresh visuals.
+Net.RegisterListener("EPIPENCOUNTERS_Vanity_RefreshAppearance", function (payload)
+    local char = Character.Get(payload.CharacterNetID)
 
-    Vanity.TransmogItem(char, item, template, nil, keepIcon)
+    Vanity.RefreshAppearance(char, payload.UseAltStatus)
+end)
+
+-- Forward item equipped events.
+Osiris.RegisterSymbolListener("ItemEquipped", 2, "after", function(item, char)
+    if Osiris.DB_IsPlayer:Get(char) then
+        char = Ext.GetCharacter(char)
+    
+        Net.PostToCharacter(char.MyGuid, "EPIPENCOUNTERS_ItemEquipped", {
+            NetID = char.NetID,
+            ItemNetID = Ext.GetItem(item).NetID,
+        })
+    end
+end)
+
+-- TODO better handling - this can break with multiple people equipping stuff at once
+Utilities.Hooks.RegisterListener("ContextMenus_Dyes", "ItemBeingDyed", function(item)
+    Vanity.ignoreItemEquips = true
 end)
 
 -- TODO MOVE ELSEWHERE
@@ -276,45 +339,7 @@ Net.RegisterListener("EPIPENCOUNTERS_Vanity_RemoveAura", function(payload)
     Osiris.DB_PIP_Vanity_AppliedAura:Delete(char.MyGuid, nil, nil)
 end)
 
--- Revert appearance.
-Net.RegisterListener("EPIPENCOUNTERS_Vanity_RevertTemplate", function(payload)
-    local char = Ext.GetCharacter(payload.CharNetID)
-    local item = Ext.GetItem(payload.ItemNetID)
-
-    Vanity.RevertAppearace(char, item)
-end)
-
--- Toggling persistent outfit feature.
-Net.RegisterListener("EPIPENCOUNTERS_VanityPersistOutfit", function(payload)
-    local char = Ext.GetCharacter(payload.ClientCharacterNetID)
-    local enable = payload.State
-
-    local slots = {"Helmet", "Breast", "Gloves", "Leggings", "Boots"}
-    if enable then
-        Vanity.SetPersistentOutfit(char, slots, Vanity.PERSISTENT_OUTFIT_TAG)
-    else
-        Vanity.ClearPersistentOutfit(char, slots, Vanity.PERSISTENT_OUTFIT_TAG)
-    end
-end)
-
--- Toggling persistent outfit feature, for weapons
-Net.RegisterListener("EPIPENCOUNTERS_VanityPersistWeaponry", function(payload)
-    local char = Ext.GetCharacter(payload.ClientCharacterNetID)
-    local enable = payload.State
-
-    local slots = {"Weapon", "Shield"}
-    if enable then
-        Vanity.SetPersistentOutfit(char, slots, Vanity.PERSISTENT_WEAPONRY_TAG)
-    else
-        Vanity.ClearPersistentOutfit(char, slots, Vanity.PERSISTENT_WEAPONRY_TAG)
-    end
-end)
-
--- TODO better handling - this can break with multiple people equipping stuff at once
-Utilities.Hooks.RegisterListener("ContextMenus_Dyes", "ItemBeingDyed", function(item)
-    Vanity.ignoreItemEquips = true
-end)
-
+-- Create statuses for refreshing visuals.
 Ext.Events.SessionLoaded:Subscribe(function (ev)
     local stat, stat2 = Stats.Get("StatusData", "PIP_Vanity_Refresh"), Stats.Get("StatusData", "PIP_Vanity_Refresh_Alt")
     if not stat then
@@ -331,7 +356,7 @@ Ext.Events.SessionLoaded:Subscribe(function (ev)
     stat.DisableInteractions = "No"
     stat2.DisableInteractions = "No"
 
-    if Ext.IsServer() then
+    if Ext.IsServer() then -- TODO redundant?
         Ext.Stats.Sync("PIP_Vanity_Refresh", false)
         Ext.Stats.Sync("PIP_Vanity_Refresh_Alt", false)
     end
