@@ -248,6 +248,19 @@ function Dyes.GetCurrentSliderColor(index)
     return Color.Create(sliderColor.Red, sliderColor.Green, sliderColor.Blue)
 end
 
+---Gets the dye selected in the UI's sliders.
+---@return VanityDye
+function Dyes.GetSelectedDye()
+    ---@type VanityDye
+    local dye = {
+        Color1 = Dyes.GetCurrentSliderColor(1),
+        Color2 = Dyes.GetCurrentSliderColor(2),
+        Color3 = Dyes.GetCurrentSliderColor(3),
+    }
+
+    return dye
+end
+
 ---Gets the custom dye of the item. If item is nil, returns the values from the sliders instead.
 ---@param item EclItem?
 ---@param useSliders boolean? Defaults to true.
@@ -314,11 +327,7 @@ function Dyes.GetCurrentCustomDye(item, useSliders, useDefaultColors)
 
     -- Fall back to sliders.
     if not colorData and useSliders then
-        colorData = {
-            Color1 = Dyes.GetCurrentSliderColor(1),
-            Color2 = Dyes.GetCurrentSliderColor(2),
-            Color3 = Dyes.GetCurrentSliderColor(3),
-        }
+        colorData = Dyes.GetSelectedDye()
     end
 
     return colorData
@@ -413,10 +422,7 @@ function Tab:Render()
     local categories = Dyes.Hooks.GetCategories:Return({})
 
     if item then
-        local char = Client.GetCharacter()
-        local visuals = {}
-
-        currentSliderColor = {
+        local currentSliderColor = {
             Color1 = Color.Create(),
             Color2 = Color.Create(),
             Color3 = Color.Create(),
@@ -720,7 +726,7 @@ Vanity.Events.SaveDataLoaded:RegisterListener(function (data)
 end)
 
 Client.UI.MessageBox.RegisterMessageListener("PIP_Vanity_SaveDye", Client.UI.MessageBox.Events.InputSubmitted, function(input, id, data)
-    Dyes.SaveCustomDye(input, Dyes.GetCurrentCustomDye())
+    Dyes.SaveCustomDye(input, Dyes.GetSelectedDye())
 end)
 
 Epip.Features.VanityOutfits.Hooks.GetOutfitSaveData:RegisterHook(function(outfit, char)
