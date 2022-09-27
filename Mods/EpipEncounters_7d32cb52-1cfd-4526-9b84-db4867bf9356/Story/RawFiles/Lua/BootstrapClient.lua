@@ -419,7 +419,13 @@ LOAD_ORDER = {
             "Epip/Vanity/Outfits/Client_Tab.lua",
         },
     },
-    "UI/Vanity/Tabs/Dyes.lua",
+    -- Vanity Dyes
+    {
+        ScriptSet = "Epip/Vanity/Dyes",
+        Scripts = {
+            "Epip/Vanity/Dyes/Client_Tab.lua",
+        },
+    },
 
     "Epip/Client/EE_Dyes.lua",
 

@@ -172,13 +172,14 @@ LOAD_ORDER = {
     -- Vanity
     {
         ScriptSet = "Epip/Vanity",
-        Scripts = {
-            
-        },
     },
     -- Vanity Transmog
     {
         ScriptSet = "Epip/Vanity/Transmog",
+    },
+    -- Vanity Dyes
+    {
+        ScriptSet = "Epip/Vanity/Dyes",
     },
 
     {ScriptSet = "UI/Vanity/Tabs/Shapeshift", WIP = true},

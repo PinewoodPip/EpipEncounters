@@ -1,8 +1,9 @@
 
+---@class Feature_Vanity_Dyes
+local Dyes = Epip.GetFeature("Feature_Vanity_Dyes")
+
 ---------------------------------------------
--- Server scripting for dyeing from context menu.
--- Applies the deltamods directly, then re-equips
--- to update the visuals.
+-- EVENT LISTENERS
 ---------------------------------------------
 
 Net.RegisterListener("EPIPENCOUNTERS_CreateDyeStat_ForPeers", function(payload)
