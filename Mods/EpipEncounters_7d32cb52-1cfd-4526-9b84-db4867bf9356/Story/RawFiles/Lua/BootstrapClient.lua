@@ -395,7 +395,6 @@ LOAD_ORDER = {
     -- "Epip/Client/AMERUI_Controller/Handlers/Ascension/Cluster.lua",
 
     "Epip/ContextMenus/Greatforge/Client.lua",
-    "Epip/ContextMenus/Dyes/Client.lua",
     "Epip/ContextMenus/PlayerInfo.lua", 
 
     -- Vanity

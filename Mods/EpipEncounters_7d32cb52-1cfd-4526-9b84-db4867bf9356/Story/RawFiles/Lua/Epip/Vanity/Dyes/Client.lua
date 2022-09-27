@@ -389,11 +389,6 @@ Net.RegisterListener("EPIPENCOUNTERS_CreateVanityDyes", function(payload)
     end
 end)
 
--- Create dye stats on this client when requested by the server.
-Net.RegisterListener("EPIPENCOUNTERS_CreateDyeStat", function(payload)
-    Dyes.CreateDyeStats(Ext.GetItem(payload.ItemNetID), payload.Stat)
-end)
-
 Vanity.Hooks.GetSaveData:RegisterHook(function (data)
     data.Dyes = Dyes.CustomDyes
 

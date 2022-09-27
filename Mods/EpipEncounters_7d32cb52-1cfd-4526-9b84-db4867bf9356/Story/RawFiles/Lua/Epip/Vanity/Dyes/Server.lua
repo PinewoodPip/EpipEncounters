@@ -6,10 +6,6 @@ local Dyes = Epip.GetFeature("Feature_Vanity_Dyes")
 -- EVENT LISTENERS
 ---------------------------------------------
 
-Net.RegisterListener("EPIPENCOUNTERS_CreateDyeStat_ForPeers", function(payload)
-    Net.Broadcast("EPIPENCOUNTERS_CreateDyeStat", payload)
-end)
-
 local function hex(val, minLength)
     minLength = minLength or 0
     local valStr = string.format("%x", val)
