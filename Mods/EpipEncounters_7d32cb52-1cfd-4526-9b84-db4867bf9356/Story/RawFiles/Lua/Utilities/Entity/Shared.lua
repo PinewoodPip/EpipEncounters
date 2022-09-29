@@ -7,7 +7,9 @@ Entity = {}
 ---------------------------------------------
 
 ---Return types of GetGameObject().
----@alias EntityLib_GetGameObjectFuntionReturnType "esv::Character"|"ecl::Character"|"ecl::Inventory"|"ecl::Scenery"|"ecl::Item"|"esv::Item"|"Trigger"|"esv::Projectile"|"ecl::Projectile"
+---@alias EntityLib_GetGameObjectFuntionReturnType "esv::Character"|"ecl::Character"|"ecl::Inventory"|"ecl::Scenery"|"ecl::Item"|"esv::Item"|"Trigger"|"esv::Projectile"|"ecl::Projectile"|"ecl::CombatComponent"
+
+---@alias EntityLib_EntityComponent string|EclCharacter|EsvCharacter|EclItem|EsvItem|EclScenery|EclProjectile|EclCombatComponent|EsvProjectile
 
 ---------------------------------------------
 -- METHODS
@@ -35,6 +37,16 @@ function Entity.GetRegisteredItems()
     return items
 end
 
+---@param entity BaseComponent|ComponentHandle
+---@return IGameObject
+function Entity.GetEntity(entity)
+    if Ext.Utils.IsValidHandle(entity) then
+        entity = Entity.GetComponent(entity)
+    end
+
+    return entity.Base.Entity
+end
+
 ---Returns a list of characters registered on the current level.
 ---@return EclCharacter[]|EsvCharacter[] Read-only.
 function Entity.GetRegisteredCharacters()
@@ -52,9 +64,40 @@ function Entity.GetRegisteredCharacters()
     return characters
 end
 
----@param handle EntityHandle|GUID
+---Returns a component from a base entity.
+---@generic T
+---@param entity Entity|EntityHandle
+---@param component `T`|EntityLib_EntityComponent
+---@return T
+function Entity.GetComponent(entity, component)
+    if Ext.Utils.IsValidHandle(entity) then
+        entity = Entity.GetEntity(entity).Base.Entity
+    end
+
+    return entity:GetComponent(component)
+end
+
+---Returns the main game object component of an entity.
+---This will be either a character or item component, if either are on the entity.
+---@param entity Entity|EntityHandle
+function Entity.GetGameObjectComponent(entity)
+    if Ext.Utils.IsValidHandle(entity) then
+        entity = Entity.GetEntity(entity)
+    end
+    local component
+
+    if entity:HasComponent("Character") then
+        component = Entity.GetComponent(entity, "Character")
+    elseif entity:HasComponent("Item") then
+        component = Entity.GetComponent(entity, "Item")
+    end
+
+    return component
+end
+
+---@param handle ComponentHandle|GUID
 ---@return Entity?
-function Entity._Get(handle)
+function Entity._GetComponent(handle)
     local entity
 
     if type(handle) ~= "userdata" or Ext.Utils.IsValidHandle(handle) then

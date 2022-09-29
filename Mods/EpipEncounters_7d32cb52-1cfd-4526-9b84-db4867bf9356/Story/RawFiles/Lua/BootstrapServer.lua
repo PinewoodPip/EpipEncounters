@@ -167,7 +167,6 @@ LOAD_ORDER = {
     "Epip/StatsTab/Server/StatGetters.lua",
 
     "Epip/ContextMenus/Greatforge/Server.lua",
-    "Epip/ContextMenus/Dyes/Server.lua",
     
     -- Vanity
     {

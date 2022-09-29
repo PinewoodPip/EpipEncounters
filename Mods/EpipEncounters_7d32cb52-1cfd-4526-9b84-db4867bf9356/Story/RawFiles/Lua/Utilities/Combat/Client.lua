@@ -20,7 +20,7 @@ local Combat = Combat
 
 ---Returns the character participants of a combat.
 ---@return CombatLib_TurnOrder
--- function Combat.GetTurnOrder(combatID) -- Commented out as we do not have access to CombatComponent atm, making fetching the actual characters/items ridiculously hard.
+-- function Combat.GetTurnOrder(combatID) -- Commented out as fetching Combat components appears to not currently work?
 --     ---@type CombatLib_TurnOrder
 --     local info = {
 --         CombatID = combatID,
@@ -33,15 +33,19 @@ local Combat = Combat
 --     } 
 --     local combat = Combat.GetCombat(combatID)
 
---     for _,team in ipairs(combat.CurrentRoundTeams) do
---         local entity = Entity.Get(team.Handle)
+--     if not combat then
+--         Combat:LogError("No combat found with ID " .. combatID)
+--     end
 
---         table.insert(info.CurrentRound.Participants, entity)
+--     for _,team in ipairs(combat.CurrentRoundTeams) do
+--         local entity = Entity.GetEntity(team.Handle)
+
+--         table.insert(info.CurrentRound.Participants, Entity.GetGameObjectComponent(entity))
 --     end
 --     for _,team in ipairs(combat.NextRoundTeams) do
---         local entity = Entity.Get(team.Handle)
+--         local entity = Entity.GetEntity(team.Handle)
 
---         table.insert(info.NextRound.Participants, entity)
+--         table.insert(info.NextRound.Participants, Entity.GetGameObjectComponent(entity))
 --     end
 
 --     return info

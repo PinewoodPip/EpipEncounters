@@ -153,7 +153,7 @@ for i,data in ipairs(Dyes.DYES) do
 end
 
 local Vanity = Client.UI.Vanity
-local VanityDyes = Epip.Features.VanityDyes
+local VanityDyes = Epip.GetFeature("Vanity_Dyes")
 
 ---------------------------------------------
 -- EVENT LISTENERS

@@ -1,6 +1,7 @@
 
----@class CombatLib
+---@class CombatLib : Library
 Combat = {}
+Epip.InitializeLibrary("Combat", Combat)
 
 ---------------------------------------------
 -- METHODS
