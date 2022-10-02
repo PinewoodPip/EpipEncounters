@@ -10,6 +10,8 @@
 ---@alias TranslatedStringHandle string
 ---@alias ModTableID string|"EpipEncounters"
 
+---@alias ClientGameObject EclCharacter|EclItem
+
 Mods = {}
 
 ---Temporary alias.

@@ -223,6 +223,14 @@ function Feature.Create(feature)
     feature.TSK = {}
     setmetatable(feature.TSK, TSKmetatable)
 
+    -- Initialize PersistentVars
+    if Ext.IsServer() then
+        if not PersistentVars.Features[feature.MOD_TABLE_ID] then
+            PersistentVars.Features[feature.MOD_TABLE_ID] = {}
+        end
+        PersistentVars.Features[feature.MOD_TABLE_ID][feature.MODULE_ID] = {}
+    end
+
     return feature
 end
 
@@ -250,6 +258,33 @@ function Feature:Disable()
         end
     else
         self.Disabled = true
+    end
+end
+
+if Ext.IsServer() then
+
+    ---Returns the feature's PersistentVars table.
+    ---@return table
+    function Feature:GetPersistentVariables()
+        return PersistentVars.Features[self.MOD_TABLE_ID][self.MODULE_ID]
+
+    end
+    ---Sets a persistent variable.
+    ---@param key string
+    ---@param value any
+    function Feature:SetPersistentVariable(key, value)
+        local tbl = self:GetPersistentVariables()
+
+        tbl[key] = value
+    end
+
+    ---Gets a persistent value by key.
+    ---@param key string
+    ---@return any
+    function Feature:GetPersistentVariable(key)
+        local tbl = self:GetPersistentVariables()
+
+        return tbl[key]
     end
 end
 
@@ -398,4 +433,15 @@ end
 ---@param msg string
 function Feature:Error(method, msg)
     error(Text.Format("%s(): %s", {FormatArgs = {method, msg}}))
+end
+
+---------------------------------------------
+-- SETUP
+---------------------------------------------
+
+-- Initialize persistent vars.
+if Ext.IsServer() then
+    if not PersistentVars.Features then
+        PersistentVars.Features = {}
+    end
 end

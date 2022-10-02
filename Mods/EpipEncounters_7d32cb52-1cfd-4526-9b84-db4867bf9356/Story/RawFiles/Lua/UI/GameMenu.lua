@@ -1,6 +1,5 @@
 
----@meta ContextClient, GameMenuUI
-
+---@class GameMenuUI : UI
 local Menu = {
     BUTTON_IDS = {
         RESUME = 0,

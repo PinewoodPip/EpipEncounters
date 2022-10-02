@@ -9,7 +9,7 @@ Game.Ascension = {
     },
 }
 local Ascension = Game.Ascension
-Epip.InitializeFeature("Ascension", "Ascension", Ascension)
+Epip.InitializeLibrary("Ascension", Ascension)
 
 function Ascension:FireEvent(id, ...)
     Utilities.Hooks.FireEvent("Ascension", id, ...)

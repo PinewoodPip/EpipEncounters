@@ -36,3 +36,4 @@ Client.UI.CombatLog = {} ---@type CombatLogUI
 Client.UI.Hotbar = {} ---@type HotbarUI
 Client.UI.Vanity = {} ---@type VanityUI
 Client.UI.Mods = {} ---@type ModsUI
+Client.UI.GameMenu = {} ---@type GameMenuUI

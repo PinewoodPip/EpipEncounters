@@ -88,6 +88,7 @@ function Epip.GetFeature(modTable, id)
 end
 
 function Epip.InitializeLibrary(id, lib)
+    lib.MOD_TABLE_ID = "EpipEncounters" -- TODO allow setting it to others
     Epip.InitializeFeature(id, id, lib)
 end
 

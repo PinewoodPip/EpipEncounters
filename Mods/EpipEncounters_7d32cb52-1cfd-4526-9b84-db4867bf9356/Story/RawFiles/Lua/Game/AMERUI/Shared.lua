@@ -22,7 +22,7 @@ Game.AMERUI = {
 }
 local AMERUI = Game.AMERUI
 
-Epip.InitializeFeature("AMERUI", "AMERUI", AMERUI)
+Epip.InitializeLibrary("AMERUI", AMERUI)
 
 ---@class AMERUI_CharacterState
 ---@field Instance integer
