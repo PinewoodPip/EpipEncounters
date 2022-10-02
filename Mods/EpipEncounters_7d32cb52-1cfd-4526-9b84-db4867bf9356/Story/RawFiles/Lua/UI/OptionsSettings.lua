@@ -42,7 +42,7 @@ if IS_IMPROVED_HOTBAR then
     OptionsSettings.FILEPATH_OVERRIDES = {}
 end
 Epip.InitializeUI(Client.UI.Data.UITypes.optionsSettings, "OptionsSettings", OptionsSettings)
-OptionsSettings:Debug()
+-- OptionsSettings:Debug()
 
 -- Strange, Type does not seem to work.
 function OptionsSettings:GetUI()

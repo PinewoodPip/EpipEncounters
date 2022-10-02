@@ -9,6 +9,8 @@ Settings = {
     Modules = {}, ---@type table<string, SettingsLib_Module>
     SettingTypes = {}, ---@type table<SettingsLib_SettingType, SettingsLib_Setting>
 
+    NET_SYNC_CHANNEL = "EPIP_SETTINGS_SYNC",
+
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
 
@@ -17,12 +19,18 @@ Settings = {
     }
 }
 Epip.InitializeLibrary("Settings", Settings)
+Settings:Debug()
 
 ---------------------------------------------
 -- CLASSES
 ---------------------------------------------
 
 ---@alias SettingsLib_SettingType "Boolean"|"Number"|"ClampedNumber"|"Choice"
+
+---@class EPIP_SETTINGS_SYNC
+---@field Module string
+---@field ID string
+---@field Value any
 
 ---A module defines the settings registered for a particular mod.
 ---@class SettingsLib_Module
@@ -38,7 +46,7 @@ Epip.InitializeLibrary("Settings", Settings)
 ---@field NameHandle TranslatedStringHandle? Preferred over Name.
 ---@field Description string? Defaults to empty string.
 ---@field DescriptionHandle TranslatedStringHandle? Preferred over Description.
----@field Context "Shared"|"Client"|"Server"
+---@field Context "Client"|"Server"|"Host"
 ---@field ModTable string
 ---@field Value any
 ---@field DefaultValue any
@@ -68,15 +76,14 @@ function _Setting:GetDescription()
 end
 
 ---Returns whether this setting's intended context matches the current environment.
+---@return boolean
 function _Setting:IsInValidContext()
-    local isValid = self.Context == "Shared"
+    local isValid
 
-    if not isValid then
-        if Ext.IsClient() then
-            isValid = self.Context == "Client"
-        else
-            isValid = self.Context == "Server"
-        end
+    if Ext.IsClient() then
+        isValid = self.Context == "Client" or (self.Context == "Host" and Client.IsHost())
+    else
+        isValid = self.Context == "Server"
     end
 
     return isValid
@@ -104,6 +111,11 @@ function _Setting:_Init() end
 ---@param ... any
 function Settings.SetValue(modTable, settingID, ...)
     local setting = Settings.GetSetting(modTable, settingID)
+
+    if not setting then
+        Settings:LogError("Tried to set value of an unregistered setting: " .. modTable .. " " .. settingID)
+    end
+
     local newValue = {...}
     if #newValue == 1 then newValue = newValue[1] elseif #newValue == 0 then newValue = nil end
 
@@ -118,7 +130,7 @@ end
 ---Returns a table of setting IDs and their current values.
 ---@param modTable string
 ---@param includeInvalidContexts boolean? If true, settings with a mismatched context will be included, if any are registered. Defaults to false.
----@return table<string, any> Maps setting ID to value.
+---@return table<string, any> -- Maps setting ID to value.
 function Settings.GetModuleSettingValues(modTable, includeInvalidContexts)
     local module = Settings.GetModule(modTable)
     local output = {}
@@ -188,4 +200,16 @@ function Settings.RegisterSetting(data)
     local mod = Settings.GetModule(data.ModTable)
 
     mod.Settings[data.ID] = setting
+end
+
+---Returns a table of all the registered modules.
+---@return table<string, SettingsLib_Module>
+function Settings.GetModules()
+    local modules = {}
+
+    for id,module in pairs(Settings.Modules) do
+        modules[id] = module
+    end
+
+    return modules
 end

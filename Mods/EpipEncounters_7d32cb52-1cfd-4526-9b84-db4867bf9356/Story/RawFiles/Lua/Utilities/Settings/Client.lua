@@ -56,3 +56,51 @@ function Settings.Load(moduleName, fileName)
         Settings:LogError("Load(): module not registered: " .. moduleName)
     end
 end
+
+---@param setting SettingsLib_Setting
+function Settings.SynchronizeSetting(setting)
+    local value = setting:GetValue()
+
+    if setting.Context == "Host" and Client.IsHost() then
+        Net.PostToServer(Settings.NET_SYNC_CHANNEL, {
+            Module = setting.ModTable,
+            ID = setting.ID,
+            Value = value,
+        })
+    end
+end
+
+---------------------------------------------
+-- EVENT LISTENERS
+---------------------------------------------
+
+-- Synchronize host setting changes to the server.
+Settings.Events.SettingValueChanged:Subscribe(function (ev)
+    if ev.Setting.Context == "Host" then
+        Settings.SynchronizeSetting(ev.Setting)
+    end
+end)
+
+-- Synchronize host settings to the server.
+Client:RegisterListener("DeterminedAsHost", function ()
+    local modules = Settings.GetModules()
+
+    for _,module in pairs(modules) do
+        for _,setting in pairs(module.Settings) do
+            Settings.SynchronizeSetting(setting)
+        end
+    end
+end)
+
+-- Listen for sync requests from the server.
+Net.RegisterListener(Settings.NET_SYNC_CHANNEL, function (payload)
+    local setting = Settings.GetSetting(payload.Module, payload.ID)
+
+    if setting then
+        Settings:DebugLog("Synched setting from server: " .. setting.ID)
+
+        Settings.SetValue(setting.ModTable, setting.ID, payload.Value)
+    else
+        Settings:LogError("Tried to sync an unregistered setting: " .. payload.ID)
+    end
+end)

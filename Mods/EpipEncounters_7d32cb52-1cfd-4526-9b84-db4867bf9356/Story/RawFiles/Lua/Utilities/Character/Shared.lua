@@ -36,6 +36,11 @@ Character = {
         LOWER_BODY = 128,
         -- Unknown if more exist
     },
+
+    USE_LEGACY_EVENTS = false,
+    USE_LEGACY_HOOKS = false,
+
+    Events = {},
 }
 Game.Character = Character
 Epip.InitializeLibrary("Character", Character)
