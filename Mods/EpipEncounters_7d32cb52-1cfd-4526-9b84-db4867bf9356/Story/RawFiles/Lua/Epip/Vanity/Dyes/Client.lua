@@ -307,9 +307,8 @@ end
 ---------------------------------------------
 
 -- Apply colors to dyed items.
-Ext.Events.CreateEquipmentVisualsRequest:Subscribe(function(ev)
-    ev = ev ---@type EclLuaCreateEquipmentVisualsRequestEvent
-    local request = ev.Params
+Character.Hooks.CreateEquipmentVisuals:Subscribe(function (ev)
+    local request = ev.Request
     local char = ev.Character
     local item
 

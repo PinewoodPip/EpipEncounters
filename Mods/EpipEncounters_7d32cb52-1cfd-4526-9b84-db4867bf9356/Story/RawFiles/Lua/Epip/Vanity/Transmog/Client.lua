@@ -225,24 +225,20 @@ end
 ---------------------------------------------
 
 -- Make item visuals invisible if they were set to be.
-Ext.Events.CreateEquipmentVisualsRequest:Subscribe(function(ev)
-    ev = ev ---@type EclLuaCreateEquipmentVisualsRequestEvent
-    local request = ev.Params
+Character.Hooks.CreateEquipmentVisuals:Subscribe(function (ev)
     local char = ev.Character
+    local request = ev.Request
     local item
+    local itemGUID = char:GetItemBySlot(request.Slot)
 
-    if char then
-        local itemGUID = char:GetItemBySlot(request.Slot)
+    if itemGUID then
+        item = Item.Get(itemGUID)
+    end
 
-        if itemGUID then
-            item = Item.Get(itemGUID)
-        end
-
-        if item and item:IsTagged(Transmog.INVISIBLE_TAG) then
-            request.VisualResourceID = ""
-            request.EquipmentSlotMask = 0 -- Might be unnecessary?
-            request.VisualSetSlotMask = 0
-        end
+    if item and item:IsTagged(Transmog.INVISIBLE_TAG) then
+        request.VisualResourceID = ""
+        request.EquipmentSlotMask = 0 -- Might be unnecessary?
+        request.VisualSetSlotMask = 0
     end
 end)
 

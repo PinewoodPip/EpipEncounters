@@ -1,6 +1,17 @@
 
 ---@class CharacterLib
-local Character = Game.Character
+local Character = Character
+
+---------------------------------------------
+-- EVENTS
+---------------------------------------------
+
+Character.Hooks.CreateEquipmentVisuals = Character:AddSubscribableHook("CreateEquipmentVisuals") ---@type Event<CharacterLib_Hook_CreateEquipmentVisuals>
+
+---@class CharacterLib_Hook_CreateEquipmentVisuals
+---@field Character EclCharacter
+---@field Request EclEquipmentVisualSystemSetParam
+---@field RawEvent EclLuaCreateEquipmentVisualsRequestEvent
 
 ---------------------------------------------
 -- METHODS
@@ -70,3 +81,19 @@ function Character.GetStatusesFromItems(char)
 
     return statuses
 end
+
+---------------------------------------------
+-- EVENT LISTENERS
+---------------------------------------------
+
+-- Forward equipment visual events.
+Ext.Events.CreateEquipmentVisualsRequest:Subscribe(function (ev)
+    ev = ev ---@type EclLuaCreateEquipmentVisualsRequestEvent
+    local char = ev.Character or Client.GetCharacter() -- If character is nil, then we are rendering the sheet paperdoll
+
+    Character.Hooks.CreateEquipmentVisuals:Throw({
+        Character = char,
+        Request = ev.Params,
+        RawEvent = ev,
+    })
+end)

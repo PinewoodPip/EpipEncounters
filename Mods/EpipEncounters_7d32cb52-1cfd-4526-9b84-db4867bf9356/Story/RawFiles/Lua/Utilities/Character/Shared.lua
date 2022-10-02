@@ -41,9 +41,16 @@ Character = {
     USE_LEGACY_HOOKS = false,
 
     Events = {},
+    Hooks = {
+        CreateEquipmentVisuals = {}, ---@type Event<CharacterLib_Hook_CreateEquipmentVisuals> Client-only.
+    },
 }
 Game.Character = Character
 Epip.InitializeLibrary("Character", Character)
+
+---------------------------------------------
+-- CLASSES
+---------------------------------------------
 
 ---@class CharacterLib_StatusFromItem
 ---@field Status Status
