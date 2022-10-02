@@ -26,14 +26,21 @@ Character = {
     ---@enum CharacterLib_EquipmentVisualMask
     EQUIPMENT_VISUAL_MASKS = {
         NONE = 0,
-        HAIR = 1,
+        HELMET = 1,
         BREAST = 2,
-        LEGS = 4,
+        LEGGINGS = 4,
         WEAPON = 8,
-        UNKNOWN_1 = 16,
-        UNKNOWN_2 = 32,
-        UNKNOWN_3 = 64,
-        LOWER_BODY = 128,
+        SHIELD = 16,
+        RING = 32,
+        BELT = 64,
+        BOOTS = 128,
+        GLOVES = 256,
+        AMULET = 512,
+        RING_2 = 1024,
+        WINGS = 2048,
+        HORNS = 4096,
+        OVERHEAD = 8192,
+        SENTINEL = 16384,
         -- Unknown if more exist
     },
 
