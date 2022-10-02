@@ -53,19 +53,6 @@ LOAD_ORDER = {
     "Utilities/Timer.lua",
     "Utilities/Coroutine.lua",
 
-    -- SettingsLib
-    {
-        Scripts = {
-            "Utilities/Settings/Shared.lua",
-            "Utilities/Settings/Client.lua",
-            "Utilities/Settings/Setting_Boolean.lua",
-            "Utilities/Settings/Setting_Number.lua",
-            "Utilities/Settings/Setting_ClampedNumber.lua",
-            "Utilities/Settings/Setting_Choice.lua",
-        },
-        WIP = true,
-    },
-
     {ScriptSet = "Utilities/Combat"},
     "Utilities/Client/Pointer.lua",
 
@@ -114,6 +101,18 @@ LOAD_ORDER = {
     "UI/Data.lua",
     "Client/Input.lua",
     "Tables/_UI.lua",
+
+    -- SettingsLib
+    {
+        ScriptSet = "Utilities/Settings",
+        Scripts = {
+            "Utilities/Settings/Setting_Boolean.lua",
+            "Utilities/Settings/Setting_Number.lua",
+            "Utilities/Settings/Setting_ClampedNumber.lua",
+            "Utilities/Settings/Setting_Choice.lua",
+        },
+        WIP = true,
+    },
 
     "UI/TextDisplay.lua",
 
@@ -309,6 +308,13 @@ LOAD_ORDER = {
             "Epip/TooltipAdjustments/Client_SimpleTooltips.lua",
         },
     },
+
+    -- Custom settings UI
+    {
+        Scripts = {
+            "Epip/Client/SettingsMenu/Client.lua",
+        },
+    },
     
     "Epip/Client/TreasureTableDisplay.lua",
     "Epip/Client/SummonControlFix.lua",
@@ -439,6 +445,8 @@ LOAD_ORDER = {
     {ScriptSet = "Epip/DebugMenu", Developer = true,},
 
     "Epip/Client/HideIncons.lua",
+
+    "Epip/Client/EpipSettingsMenu.lua",
 }
 
 Utilities = {}

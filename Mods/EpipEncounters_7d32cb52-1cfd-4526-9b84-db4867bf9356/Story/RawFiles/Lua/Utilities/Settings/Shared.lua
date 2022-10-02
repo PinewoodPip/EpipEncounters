@@ -67,12 +67,12 @@ end
 
 ---@return string
 function _Setting:GetName()
-    return Ext.L10N.GetTranslatedString(self.NameHandle, self.Name or self.ID)
+    return Ext.L10N.GetTranslatedString(self.NameHandle or "", self.Name or self.ID)
 end
 
 ---@return string
 function _Setting:GetDescription()
-    return Ext.L10N.GetTranslatedString(self.DescriptionHandle, self.Description or "")
+    return Ext.L10N.GetTranslatedString(self.DescriptionHandle or "", self.Description or "")
 end
 
 ---Returns whether this setting's intended context matches the current environment.
@@ -178,11 +178,15 @@ function Settings.GetSetting(modTable, id)
     return setting
 end
 
+---@overload fun(setting:SettingsLib_Setting):any
 ---@param modTable string
 ---@param id string
 ---@return any
 function Settings.GetSettingValue(modTable, id)
-    local setting = Settings.GetSetting(modTable, id)
+    local setting = modTable -- Setting overload.
+    if type(modTable) ~= "table" then
+        setting = Settings.GetSetting(modTable, id)
+    end
 
     return setting:GetValue()
 end

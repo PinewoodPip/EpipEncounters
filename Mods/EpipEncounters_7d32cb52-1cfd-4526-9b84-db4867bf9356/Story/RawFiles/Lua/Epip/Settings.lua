@@ -1,4 +1,12 @@
 
+---@class Feature_EpipSettings : Feature
+local EpipSettings = {
+    TranslatedStrings = {
+        -- TODO
+    },
+}
+Epip.RegisterFeature("EpipSettings", EpipSettings)
+
 ---@param name string
 ---@return OptionsSettingsOption
 local function CreateHeader(name)
@@ -634,3 +642,48 @@ for _,category in ipairs(Order) do
 end
 
 Epip.SETTINGS_CATEGORIES = Order
+
+-- New settings declarations
+---@type SettingsLib_Setting[]
+local newSettings = {
+    -- Main Epip settings
+    {
+        ID = "AutoIdentify",
+        Type = "Choice",
+        Context = "Host",
+        Name = "Auto-Identify Items",
+        Description = "Automatically and instantly identify items whenever they are generated.<br>'With enough Loremaster' uses the highest Loremaster of all player characters, regardless of party.",
+        DefaultValue = 1,
+        ---@type SettingsLib_Setting_Choice_Entry[]
+        Choices = {
+            {ID = 1, Name = "Disabled"},
+            {ID = 2, Name = "With enough Loremaster"},
+            {ID = 3, Name = "Always"},
+        }
+    },
+    {
+        ID = "ImmersiveMeditation",
+        Type = "Boolean",
+        Name = "Immersive Meditation",
+        Description = "Hides the Hotbar and Minimap while within the Ascension and Greatforge UIs.",
+        DefaultValue = false,
+    },
+    {
+        ID = "ExaminePosition",
+        Type = "Choice",
+        Name = "Examine Menu Position",
+        Description = "Controls the default position of the Examine menu when it is opened.",
+        DefaultValue = 1,
+        ---@type SettingsLib_Setting_Choice_Entry[]
+        Choices = {
+            {ID = 1, Name = "Center"},
+            {ID = 2, Name = "Middle Right"},
+            {ID = 3, Name = "Middle Left"},
+        }
+    },
+}
+for _,setting in ipairs(newSettings) do
+    setting.ModTable = setting.ModTable or "EpipEncounters"
+
+    Settings.RegisterSetting(setting)
+end

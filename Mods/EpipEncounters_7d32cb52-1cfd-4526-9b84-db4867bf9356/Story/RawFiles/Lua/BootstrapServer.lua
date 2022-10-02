@@ -28,6 +28,8 @@
 
 Utilities = {}
 
+PersistentVars = PersistentVars or {}
+
 local prefixedGUID = "EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356"
 
 ---@type (string|ScriptDefinition)[]
@@ -53,22 +55,11 @@ LOAD_ORDER = {
     "Utilities/Mod.lua",
     "Utilities/Timer.lua",
     "Utilities/Coroutine.lua",
-    {
-        Scripts = {
-            "Utilities/Settings/Shared.lua",
-            "Utilities/Settings/Client.lua",
-            "Utilities/Settings/Setting_Boolean.lua",
-            "Utilities/Settings/Setting_Number.lua",
-            "Utilities/Settings/Setting_ClampedNumber.lua",
-            "Utilities/Settings/Setting_Choice.lua",
-        },
-        WIP = true,
-    },
+
     {ScriptSet = "Utilities/Combat"},
     "Utilities/Server.lua",
     "Server/Osiris.lua",
     {ScriptSet = "Utilities/Artifact"},
-    "Epip/Settings.lua",
 
     -- "Data/Game.lua",
 
@@ -99,6 +90,19 @@ LOAD_ORDER = {
             "Utilities/Net/Shared.lua",
         },
     },
+
+    -- SettingsLib
+    {
+        ScriptSet = "Utilities/Settings",
+        Scripts = {
+            "Utilities/Settings/Setting_Boolean.lua",
+            "Utilities/Settings/Setting_Number.lua",
+            "Utilities/Settings/Setting_ClampedNumber.lua",
+            "Utilities/Settings/Setting_Choice.lua",
+        },
+        WIP = true,
+    },
+    "Epip/Settings.lua",
 
     "Game/AMERUI/Shared.lua",
     "Game/AMERUI/Server.lua",
