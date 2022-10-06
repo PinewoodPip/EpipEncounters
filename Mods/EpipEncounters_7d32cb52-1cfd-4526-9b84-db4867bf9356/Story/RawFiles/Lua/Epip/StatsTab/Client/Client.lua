@@ -66,13 +66,15 @@ end
 function EpipStats.RenderCategoryStats(categoryID)
     local category = EpipStats.GetCategory(categoryID)
 
-    for i,statID in pairs(category.Stats) do
+    for _,statID in pairs(category.Stats) do
+        local canRender = true
 
+        -- Stats in Hidden categories only render if they have a value > 0        
         if category.Behaviour == "Hidden" then
-            if CharacterSheet.StatsTab.GetStatValue(statID, Client.GetCharacter()) > 0 then
-                CharacterSheet.StatsTab.RenderStat(statID)
-            end
-        else
+            canRender = CharacterSheet.StatsTab.GetStatValue(statID, Client.GetCharacter()) > 0
+        end
+
+        if canRender then
             CharacterSheet.StatsTab.RenderStat(statID)
         end
     end

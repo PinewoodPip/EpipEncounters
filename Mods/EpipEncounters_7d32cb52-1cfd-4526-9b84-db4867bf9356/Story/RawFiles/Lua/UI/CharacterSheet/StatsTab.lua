@@ -3,9 +3,7 @@
 -- Scripting for the custom stats tab.
 ---------------------------------------------
 
----@meta CharacterSheetUIStatsTab, ContextClient
-
----@class CharacterSheetUIStatsTab
+---@class CharacterSheetUIStatsTab : Library
 ---@field Stats table<string, StatsTabStat>
 ---@field StatsOrder string[] Order in which stats are rendered.
 ---@field TOOLTIP_TALENT_ID number Enum of the talent ID we hijack the tooltip of.
@@ -13,8 +11,6 @@
 ---@field DEFAULT_STAT_VALUE number
 ---@field ignoreUpdate boolean Internal; do not set
 ---@field nextNumericalID number Internal; do not set
-
----@type CharacterSheetUIStatsTab
 local StatsTab = {
     Stats = {},
     StatsOrder = {},
@@ -102,7 +98,7 @@ end
 
 ---Get the numerical value of a stat. Hookable.
 ---@param id string
----@param char EclCharacter
+---@param char EclCharacter?
 ---@return number
 function StatsTab.GetStatValue(id, char)
     local data = StatsTab.GetStatData(id)
@@ -118,11 +114,12 @@ end
 ---Get the text display for a stat's value.
 ---@param id string The stat ID.
 ---@param value number The value to format.
+---@param char EclCharacter?
 ---@return string|number
-function StatsTab.FormatStatValue(id, value)
+function StatsTab.FormatStatValue(id, value, char)
     value = value or StatsTab.GetStatValue(id, char)
     local data = StatsTab.GetStatData(id)
-    local char = CharacterSheet.GetCharacter() -- TODO fix params
+    char = char or CharacterSheet.GetCharacter()
 
     value = StatsTab:ReturnFromHooks("FormatStatValue_" .. id, value, data, char)
     value = StatsTab:ReturnFromHooks("FormatStatValue", value, data, char)
