@@ -176,7 +176,7 @@ function Menu.GetUI()
             ID = Menu.UI_ID,
             PATH = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/optionsSettings.swf", -- TODO expose
         }
-        local uiObject = Ext.UI.Create(ui.ID, ui.PATH, 100)
+        local uiObject = Ext.UI.Create(ui.ID, ui.PATH, 20)
 
         Epip.InitializeUI(nil, Menu.UI_ID, ui)
 
@@ -314,10 +314,11 @@ end, "After")
 OptionsSettings:RegisterCallListener("EPIP_OpenSettingsMenu", function (ev)
     Menu.Open()
 
-    ev.UI:Hide()
-    Client.UI.GameMenu:Hide()
-    -- TODO don't close fade
-    Ext.UI.GetByType(Ext.UI.TypeID.uiFade):Hide()
+    ev.UI:ExternalInterfaceCall("requestCloseUI")
+
+    Ext.OnNextTick(function ()
+        Client.UI.GameMenu:ExternalInterfaceCall("ButtonPressed", Client.UI.GameMenu.BUTTON_IDS.RESUME)
+    end)
 end)
 
 -- Close the menu with Esc.
