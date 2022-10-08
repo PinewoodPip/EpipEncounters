@@ -35,9 +35,15 @@ Epip.RegisterFeature("SettingsMenu", Menu)
 ---@field ID string
 ---@field ButtonLabel string
 ---@field HeaderLabel string
----@field Settings Feature_SettingsMenu_Entry[]
+---@field Elements Feature_SettingsMenu_Entry[]
 
 ---@class Feature_SettingsMenu_Entry
+---@field Type "Setting"|"Label"
+
+---@class Feature_SettingsMenu_Entry_Label : Feature_SettingsMenu_Entry
+---@field Label string
+
+---@class Feature_SettingsMenu_Entry_Setting : Feature_SettingsMenu_Entry
 ---@field Module string
 ---@field ID string
 
@@ -113,14 +119,23 @@ function Menu.RenderSettings(tab)
 
     -- TODO render event
 
-    for _,entry in ipairs(tab.Settings) do
-        local setting = Settings.GetSetting(entry.Module, entry.ID) ---@type Feature_SettingsMenu_Setting
-        local canRender = setting.Visible or setting.Visible == nil
+    for _,entry in ipairs(tab.Elements) do
+        -- TODO extract methods for these, add events
+        if entry.Type == "Setting" then
+            entry = entry ---@type Feature_SettingsMenu_Entry_Setting
+            local setting = Settings.GetSetting(entry.Module, entry.ID) ---@type Feature_SettingsMenu_Setting
+            local canRender = setting.Visible or setting.Visible == nil
 
-        canRender = canRender and (not setting.DeveloperOnly or Epip.IsDeveloperMode())
+            canRender = canRender and (not setting.DeveloperOnly or Epip.IsDeveloperMode())
 
-        if canRender then
-            Menu.RenderSetting(setting)
+            if canRender then
+                Menu.RenderSetting(setting)
+            end
+        elseif entry.Type == "Label" then
+            local numID = Menu.nextElementNumID
+            Menu.nextElementNumID = Menu.nextElementNumID + 1
+
+            Menu._RenderLabel(entry, numID)
         end
     end
 
@@ -225,6 +240,21 @@ function Menu.SetActiveTab(tabID)
     end
 end
 
+---@param data Feature_SettingsMenu_Entry_Label
+---@param numID Feature_SettingsMenu_ElementID
+function Menu._RenderLabel(data, numID)
+    -- TODO figure out why raw strings do not work
+    if not Text.Contains(data.Label, "<font") then data.Label = Text.Format(data.Label, {Size = 19}) end
+
+    local root = Menu.GetUI():GetRoot()
+    root.mainMenu_mc.addMenuMultilineLabel(numID, data.Label)
+    local element = Client.Flash.GetLastElement(root.mainMenu_mc.list.content_array)
+
+    element.text_txt.x = 160
+    element.autoSize = "center"
+    element.text_txt.height = element.text_txt.textHeight
+end
+
 ---@param setting Feature_SettingsMenu_Setting
 ---@param elementID Feature_SettingsMenu_ElementID
 function Menu._RenderCheckbox(setting, elementID)
@@ -242,11 +272,11 @@ end
 ---@param setting Feature_SettingsMenu_Setting_Slider
 ---@param elementID Feature_SettingsMenu_ElementID
 function Menu._RenderSlider(setting, elementID)
-    local root = OptionsSettings:GetRoot()
+    local root = Menu.GetUI():GetRoot()
     local value = Settings.GetSettingValue(setting.ModTable, setting.ID)
 
     root.mainMenu_mc.addMenuSlider(elementID, setting:GetName(), value, setting.Min, setting.Max, setting.Step, setting.HideNumbers, setting:GetDescription())
-    
+
     local element = Client.Flash.GetLastElement(root.mainMenu_mc.list.content_array)
     element.label_txt.autoSize = "center"
 end

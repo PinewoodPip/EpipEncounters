@@ -7,17 +7,20 @@ local tabs = {
         ID = "Epip Encounters",
         ButtonLabel = "Epip Encounters",
         HeaderLabel = "Epip Encounters",
-        Settings = {
+        Elements = {
             "AutoIdentify",
             "ImmersiveMeditation",
             "ExaminePosition",
+            {Type = "Label", Label = "Testing!!!"}
         }
     }
 }
 
 for moduleID,tab in pairs(tabs) do
-    for i,settingID in ipairs(tab.Settings) do
-        tab.Settings[i] = {Module = moduleID, ID = settingID}
+    for i,entry in ipairs(tab.Elements) do
+        if type(entry) == "string" then
+            tab.Elements[i] = {Type = "Setting", Module = moduleID, ID = entry}
+        end
     end
 
     Menu.RegisterModule(tab)
