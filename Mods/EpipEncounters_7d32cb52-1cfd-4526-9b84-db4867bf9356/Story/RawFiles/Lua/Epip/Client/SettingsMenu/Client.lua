@@ -45,6 +45,10 @@ Epip.RegisterFeature("SettingsMenu", Menu)
 ---@field Visible boolean? Defaults to true.
 ---@field DeveloperOnly boolean? Defaults to false.
 
+---@class Feature_SettingsMenu_Setting_Slider : Feature_SettingsMenu_Setting, SettingsLib_Setting_ClampedNumber
+---@field Step number
+---@field HideNumbers boolean? Defaults to false.
+
 ---------------------------------------------
 -- EVENTS
 ---------------------------------------------
@@ -235,6 +239,18 @@ function Menu._RenderCheckbox(setting, elementID)
     Menu.GetUI():GetRoot().mainMenu_mc.addMenuCheckbox(elementID, setting:GetName(), enabled, stateId, 0, setting:GetDescription()) -- TODO filteredBool
 end
 
+---@param setting Feature_SettingsMenu_Setting_Slider
+---@param elementID Feature_SettingsMenu_ElementID
+function Menu._RenderSlider(setting, elementID)
+    local root = OptionsSettings:GetRoot()
+    local value = Settings.GetSettingValue(setting.ModTable, setting.ID)
+
+    root.mainMenu_mc.addMenuSlider(elementID, setting:GetName(), value, setting.Min, setting.Max, setting.Step, setting.HideNumbers, setting:GetDescription())
+    
+    local element = Client.Flash.GetLastElement(root.mainMenu_mc.list.content_array)
+    element.label_txt.autoSize = "center"
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
@@ -252,6 +268,8 @@ Menu.Events.RenderSetting:Subscribe(function (ev)
 
     if settingType == "Boolean" then
         Menu._RenderCheckbox(setting, ev.ElementID)
+    elseif settingType == "ClampedNumber" then
+        Menu._RenderSlider(setting, ev.ElementID)
     end
 end)
 
