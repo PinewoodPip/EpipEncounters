@@ -38,7 +38,7 @@ Epip.RegisterFeature("SettingsMenu", Menu)
 ---@field Elements Feature_SettingsMenu_Entry[]
 
 ---@class Feature_SettingsMenu_Entry
----@field Type "Setting"|"Label"
+---@field Type "Setting"|"Label"|"Button"
 
 ---@class Feature_SettingsMenu_Entry_Label : Feature_SettingsMenu_Entry
 ---@field Label string
@@ -46,6 +46,11 @@ Epip.RegisterFeature("SettingsMenu", Menu)
 ---@class Feature_SettingsMenu_Entry_Setting : Feature_SettingsMenu_Entry
 ---@field Module string
 ---@field ID string
+
+---@class Feature_SettingsMenu_Entry_Button : Feature_SettingsMenu_Entry_Label
+---@field ID string
+---@field Tooltip string
+---@field SoundOnUp string
 
 ---@class Feature_SettingsMenu_Setting : SettingsLib_Setting
 ---@field Visible boolean? Defaults to true.
@@ -68,7 +73,7 @@ Epip.RegisterFeature("SettingsMenu", Menu)
 ---------------------------------------------
 
 ---@param data Feature_SettingsMenu_Tab
-function Menu.RegisterModule(data)
+function Menu.RegisterTab(data)
     Menu.Tabs[data.ID] = data
     table.insert(Menu.TabRegistrationOrder, data.ID)
 end
@@ -124,18 +129,28 @@ function Menu.RenderSettings(tab)
         if entry.Type == "Setting" then
             entry = entry ---@type Feature_SettingsMenu_Entry_Setting
             local setting = Settings.GetSetting(entry.Module, entry.ID) ---@type Feature_SettingsMenu_Setting
-            local canRender = setting.Visible or setting.Visible == nil
-
-            canRender = canRender and (not setting.DeveloperOnly or Epip.IsDeveloperMode())
-
-            if canRender then
-                Menu.RenderSetting(setting)
+            
+            if setting then
+                local canRender = setting.Visible or setting.Visible == nil
+    
+                canRender = canRender and (not setting.DeveloperOnly or Epip.IsDeveloperMode())
+    
+                if canRender then
+                    Menu.RenderSetting(setting)
+                end
+            else
+                Menu:LogError("Tried to render setting that doesn't exist " .. entry.Module .. " " .. entry.ID)
             end
         elseif entry.Type == "Label" then
             local numID = Menu.nextElementNumID
             Menu.nextElementNumID = Menu.nextElementNumID + 1
 
             Menu._RenderLabel(entry, numID)
+        elseif entry.Type == "Button" then
+            local numID = Menu.nextElementNumID
+            Menu.nextElementNumID = Menu.nextElementNumID + 1
+
+            Menu._RenderButton(entry, numID)
         end
     end
 
@@ -218,8 +233,9 @@ function Menu.GetElementSetting(elementID)
     return setting
 end
 
----@param element Feature_SettingsMenu_Setting|Feature_SettingsMenu_ElementID
+---@param element Feature_SettingsMenu_Setting|Feature_SettingsMenu_ElementID|Feature_SettingsMenu_Entry
 function Menu.IsElementEnabled(element)
+    -- ID overload.
     if type(element) ~= "table" then
         element = Menu.GetElementSetting(element)
     end
@@ -253,6 +269,15 @@ function Menu._RenderLabel(data, numID)
     element.text_txt.x = 160
     element.autoSize = "center"
     element.text_txt.height = element.text_txt.textHeight
+end
+
+---@param data Feature_SettingsMenu_Entry_Button
+---@param numID Feature_SettingsMenu_ElementID
+function Menu._RenderButton(data, numID)
+    local root = Menu.GetUI():GetRoot()
+    local enabled = Menu.IsElementEnabled(data)
+
+    root.mainMenu_mc.addMenuButton(numID, data.Label, data.SoundOnUp or "", enabled, data.Tooltip)
 end
 
 ---@param setting Feature_SettingsMenu_Setting
