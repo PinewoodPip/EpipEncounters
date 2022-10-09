@@ -110,8 +110,11 @@ function Menu._Setup()
     Menu.RenderTabButtons()
 
     -- Render tab contents
-    if Menu.currentTabID then
-        Menu.RenderSettings(Menu.GetTab(Menu.currentTabID))
+    -- Defaults to first tab registered (if any!)
+    if Menu.currentTabID or #Menu.TabRegistrationOrder > 0 then
+        local tab = Menu.GetTab(Menu.currentTabID or Menu.TabRegistrationOrder[1])
+
+        Menu.RenderSettings(tab)
     end
 end
 
@@ -165,6 +168,8 @@ function Menu.RenderSettings(tab)
     end
 
     Menu.currentTabID = tab.ID
+
+    root.mainMenu_mc.setTitle(tab.HeaderLabel or tab.ID)
 
     -- TODO fire tabrendered
 end
@@ -398,7 +403,7 @@ end)
 OptionsSettings:RegisterInvokeListener("parseBaseUpdateArray", function(ev)
     local root = ev.UI:GetRoot()
 
-    root.mainMenu_mc.addOptionButton("Mod Settings", "EPIP_OpenSettingsMenu", -1, false)
+    root.mainMenu_mc.addOptionButton("Epip Settings", "EPIP_OpenSettingsMenu", -1, false)
 end, "After")
 
 -- Open the menu when the button is pressed from the vanilla UI.
@@ -433,7 +438,7 @@ end)
 local root = UI:GetRoot()
 local mainMenu = root.mainMenu_mc
 
-mainMenu.toptitle_txt.htmlText = "MOD SETTINGS"
+mainMenu.toptitle_txt.htmlText = "EPIP SETTINGS"
 mainMenu.ok_mc.text_txt.htmlText = "ACCEPT"
 mainMenu.cancel_mc.text_txt.htmlText = "CANCEL"
 mainMenu.apply_mc.text_txt.htmlText = "APPLY"
