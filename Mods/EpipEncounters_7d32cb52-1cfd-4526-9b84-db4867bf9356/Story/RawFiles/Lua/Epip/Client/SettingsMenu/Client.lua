@@ -206,7 +206,6 @@ function Menu.SetSettingElementState(elementID, setting, state)
 
     -- TODO extract methods
     if setting.Type == "Choice" then
-        print(elementID, state - 1)
         root.mainMenu_mc.selectMenuDropDownEntry(elementID, state - 1) -- Converting from 1-based to 0-based index
     else
         Menu:LogError("Setting element state for settings of type " .. setting.Type .. " is not supported!")
@@ -396,6 +395,8 @@ Menu.Events.RenderSetting:Subscribe(function (ev)
         Menu._RenderSlider(setting, ev.ElementID)
     elseif settingType == "Choice" then
         Menu._RenderComboBox(setting, ev.ElementID, entry)
+    else
+        Menu:LogWarning("Unknown setting type: " .. settingType .. " did Pip forgot to re-implement something? If this is a custom setting type, let them know to remove this warning call.")
     end
 end)
 

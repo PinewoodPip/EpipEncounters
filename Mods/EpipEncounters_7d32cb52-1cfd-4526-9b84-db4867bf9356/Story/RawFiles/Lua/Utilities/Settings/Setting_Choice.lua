@@ -50,7 +50,13 @@ end
 ---@param value integer|string Index or string ID.
 function _Choice:SetValue(value)
     if type(value) ~= "string" then
-        value = self.Choices[value].ID
+        local choice = self.Choices[value]
+
+        if choice then
+            value = choice.ID
+        else
+            error("SetValue(): Invalid choice index " .. value)
+        end
     end
 
     self.Value = value
