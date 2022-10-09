@@ -27,9 +27,6 @@ function Tab:Render()
 
     Vanity.RenderItemDropdown()
 
-    -- Unfortunately, TransformKeepIcon is not persistent - thus this option is not very useful.
-    -- Vanity.RenderCheckbox("Vanity_KeepIcon", Text.Format("Keep Icon", {Color = Color.BLACK}), Transmog.keepIcon, true)
-
     -- Don't show the visibility option for helms,
     -- as they already have one in the vanilla UI.
     if Item.GetItemSlot(item) ~= "Helmet" then
@@ -45,6 +42,8 @@ function Tab:Render()
         end
 
         if canTransmog then
+            Vanity.RenderCheckbox("Vanity_KeepIcon", Text.Format("Keep Icon", {Color = Color.BLACK}), Transmog.keepIcon, true)
+
             local categories = Transmog.GetCategories(item)
 
             -- TODO fix disabled button item:HasTag("PIP_Vanity_Transmogged")

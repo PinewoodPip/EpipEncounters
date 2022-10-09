@@ -21,7 +21,7 @@ function Entity.GetLevel()
 end
 
 ---Returns a list of items registered on the current level.
----@return EclItem[]|EsvItem[] Read-only.
+---@return EclItem[]|EsvItem[] -- Read-only.
 function Entity.GetRegisteredItems()
     local level = Entity.GetLevel()
     local items
@@ -96,7 +96,7 @@ function Entity.GetGameObjectComponent(entity)
 end
 
 ---@param handle ComponentHandle|GUID
----@return Entity?
+---@return BaseComponent?
 function Entity._GetComponent(handle)
     local entity
 
@@ -105,4 +105,18 @@ function Entity._GetComponent(handle)
     end
 
     return entity
+end
+
+---Returns the values of the first parametrized tag by pattern.
+---@param gameObject IGameObject
+---@param pattern pattern
+---@return string ...
+function Entity.GetParameterTagValue(gameObject, pattern)
+    for _,tag in ipairs(gameObject:GetTags()) do
+        local params = {tag:match(pattern)}
+
+        if #params > 0 then
+            return table.unpack(params)
+        end
+    end
 end

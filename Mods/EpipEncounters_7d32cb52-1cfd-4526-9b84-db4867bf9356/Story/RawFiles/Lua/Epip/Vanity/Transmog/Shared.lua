@@ -5,6 +5,8 @@ local Transmog = {
     activeCharacterTemplates = {},
     KEEP_APPEARANCE_TAG_PREFIX = "PIP_Vanity_Transmog_KeepAppearance_",
     INVISIBLE_TAG = "PIP_VANITY_INVISIBLE",
+    KEEP_ICON_TAG = "PIP_VANITY_TRANSMOG_ICON_%s",
+    KEEP_ICON_PATTERN = "^PIP_VANITY_TRANSMOG_ICON_(.+)$",
     keepIcon = false,
 
     BLOCKED_TEMPLATES = {
@@ -50,3 +52,13 @@ local Transmog = {
     Hooks = {},
 }
 Epip.RegisterFeature("Vanity_Transmog", Transmog)
+
+---------------------------------------------
+-- METHODS
+---------------------------------------------
+
+---@param item Item
+---@return string?
+function Transmog.GetIconOverride(item)
+    return Entity.GetParameterTagValue(item, Transmog.KEEP_ICON_PATTERN)
+end

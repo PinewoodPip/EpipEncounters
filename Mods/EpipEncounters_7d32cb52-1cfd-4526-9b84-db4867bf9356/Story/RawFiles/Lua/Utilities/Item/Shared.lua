@@ -50,7 +50,7 @@ function Item.GetIcon(item)
             icon = "Item_LOOT_Gold_Small_A"
         end
     else
-        if item.Icon ~= "" then -- GB5 Icon override
+        if Ext.IsClient() and item.Icon ~= "" then -- GB5 Icon override
             icon = item.Icon
         elseif item.Stats then
             local statObject = Ext.Stats.Get(item.Stats.Name)

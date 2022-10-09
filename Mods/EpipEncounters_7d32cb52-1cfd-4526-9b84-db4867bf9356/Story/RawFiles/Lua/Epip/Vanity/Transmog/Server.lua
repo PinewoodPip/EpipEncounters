@@ -1,6 +1,7 @@
 
 ---@class Feature_Vanity
 local Vanity = Epip.GetFeature("Feature_Vanity")
+local Transmog = Epip.GetFeature("Feature_Vanity_Transmog")
 
 ---------------------------------------------
 -- METHODS
@@ -47,8 +48,19 @@ function Vanity.TransmogItem(char, item, newTemplate, dye, keepIcon)
     Osi.PROC_AMER_GEN_ObjectTransforming(item.RootTemplate.Name .. "_" .. item.MyGuid, template.Name .. "_" .. template.Id)
 
     if keepIcon then
+        local icon = Transmog.GetIconOverride(item)
+        if not icon then
+            icon = Item.GetIcon(item) -- No need to check for Icon override since server context doesn't have it.
+        end
+
+        Entity.RemoveTagsByPattern(item, Transmog.KEEP_ICON_PATTERN)
+
+        Osiris.SetTag(item, Transmog.KEEP_ICON_TAG:format(icon))
+
         Osi.TransformKeepIcon(item.MyGuid, newTemplate, 0, 1, 0)
     else
+        Entity.RemoveTagsByPattern(item, Transmog.KEEP_ICON_PATTERN)
+        
         Osi.Transform(item.MyGuid, newTemplate, 0, 1, 0)
     end
 

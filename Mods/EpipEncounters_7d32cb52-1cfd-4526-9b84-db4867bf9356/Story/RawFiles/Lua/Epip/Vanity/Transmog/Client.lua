@@ -127,6 +127,13 @@ function Transmog.TransmogItem(item, template)
             NewTemplate = template,
             KeepIcon = Transmog.keepIcon;
         })
+
+        -- Clear icon override.
+        if not Transmog.keepIcon then
+            item.Icon = ""
+        else
+            item.Icon = Item.GetIcon(item)
+        end
     
         -- Refresh UI
         if Vanity.currentTab ~= nil then
@@ -322,6 +329,31 @@ end)
 Client.UI.ContextMenu.RegisterElementListener("epip_OpenVanity", "buttonPressed", function(item, params)
     Vanity.SetSlot(item)
     Vanity.Setup(Vanity.currentTab or Transmog.Tab)
+end)
+
+-- Set Icon overrides for items upon loading in.
+GameState.Events.GameReady:Subscribe(function (_)
+    Transmog:DebugLog("Finding icon overrides...")
+
+    -- Set icon overrides for items in player character inventories.
+    local chars = Client.UI.PlayerInfo.GetCharacters()
+    for _,char in ipairs(chars) do
+        local items = char:GetInventoryItems()
+
+        for _,itemGUID in ipairs(items) do
+            local item = Item.Get(itemGUID)
+
+            if Item.IsEquipment(item) then
+                local icon = Entity.GetParameterTagValue(item, Transmog.KEEP_ICON_PATTERN)
+    
+                if icon then
+                    Transmog:DebugLog("Found icon override for", item.DisplayName)
+    
+                    item.Icon = icon
+                end
+            end       
+        end
+    end
 end)
 
 ---------------------------------------------
