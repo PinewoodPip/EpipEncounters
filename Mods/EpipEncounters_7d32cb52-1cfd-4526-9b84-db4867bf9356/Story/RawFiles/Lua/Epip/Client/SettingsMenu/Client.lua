@@ -60,6 +60,8 @@ Epip.RegisterFeature("SettingsMenu", Menu)
 ---@field Step number
 ---@field HideNumbers boolean? Defaults to false.
 
+---@class Feature_SettingsMenu_Setting_ComboBox : Feature_SettingsMenu_Setting, SettingsLib_Setting_Choice
+
 ---------------------------------------------
 -- EVENTS
 ---------------------------------------------
@@ -125,6 +127,7 @@ function Menu.RenderSettings(tab)
     -- TODO render event
 
     for _,entry in ipairs(tab.Elements) do
+        local numID
         -- TODO extract methods for these, add events
         if entry.Type == "Setting" then
             entry = entry ---@type Feature_SettingsMenu_Entry_Setting
@@ -136,21 +139,28 @@ function Menu.RenderSettings(tab)
                 canRender = canRender and (not setting.DeveloperOnly or Epip.IsDeveloperMode())
     
                 if canRender then
-                    Menu.RenderSetting(setting)
+                    numID = Menu.RenderSetting(setting)
                 end
             else
                 Menu:LogError("Tried to render setting that doesn't exist " .. entry.Module .. " " .. entry.ID)
             end
         elseif entry.Type == "Label" then
-            local numID = Menu.nextElementNumID
+            numID = Menu.nextElementNumID
             Menu.nextElementNumID = Menu.nextElementNumID + 1
 
             Menu._RenderLabel(entry, numID)
         elseif entry.Type == "Button" then
-            local numID = Menu.nextElementNumID
+            numID = Menu.nextElementNumID
             Menu.nextElementNumID = Menu.nextElementNumID + 1
 
             Menu._RenderButton(entry, numID)
+        end
+
+        if numID then
+            Menu.currentElements[numID] = entry
+        else
+            Menu:DebugLog("Entry render not processed:")
+            Menu:Dump(entry)
         end
     end
 
@@ -160,6 +170,7 @@ function Menu.RenderSettings(tab)
 end
 
 ---@param setting Feature_SettingsMenu_Setting
+---@return Feature_SettingsMenu_ElementID
 function Menu.RenderSetting(setting)
     local numID = Menu.nextElementNumID
     Menu.nextElementNumID = Menu.nextElementNumID + 1
@@ -171,14 +182,52 @@ function Menu.RenderSetting(setting)
     -- Host-only settings are only shown for host
     -- TODO server settings
     if (setting.Context ~= "Host" and setting.Context ~= "Server") or Client.IsHost() then
-        Menu.currentElements[numID] = {Module = setting.ModTable, ID = setting.ID}
-
         Menu.Events.RenderSetting:Throw({
             Setting = setting,
             ElementID = numID,
         })
 
         -- TODO selectors
+    end
+
+    return numID
+end
+
+---@param elementID Feature_SettingsMenu_ElementID
+---@param setting Feature_SettingsMenu_Setting
+---@param state any
+function Menu.SetSettingElementState(elementID, setting, state)
+    local root = Menu.GetUI():GetRoot()
+
+    -- TODO extract methods
+    if setting.Type == "Choice" then
+        print(elementID, state - 1)
+        root.mainMenu_mc.selectMenuDropDownEntry(elementID, state - 1) -- Converting from 1-based to 0-based index
+    else
+        Menu:LogError("Setting element state for settings of type " .. setting.Type .. " is not supported!")
+    end
+end
+
+---@param elementID Feature_SettingsMenu_ElementID
+---@param state any
+---@param entry Feature_SettingsMenu_Entry
+function Menu.SetElementState(elementID, state, entry)
+    entry = entry or Menu.currentElements[elementID]
+    local root = Menu.GetUI():GetRoot()
+
+    if entry then
+        local entryType = entry.Type
+
+        if entryType == "Setting" then
+            entry = entry ---@type Feature_SettingsMenu_Entry_Setting
+            local setting = Settings.GetSetting(entry.Module, entry.ID)
+
+            Menu.SetSettingElementState(elementID, setting, state)
+        else
+            Menu:LogError("Setting element state for entries of type " .. entryType .. " is not supported!")
+        end
+    else
+        Menu:LogError("Tried to set state of element that doesn't exist")
     end
 end
 
@@ -272,12 +321,12 @@ function Menu._RenderLabel(data, numID)
 end
 
 ---@param data Feature_SettingsMenu_Entry_Button
----@param numID Feature_SettingsMenu_ElementID
-function Menu._RenderButton(data, numID)
+---@param elementID Feature_SettingsMenu_ElementID
+function Menu._RenderButton(data, elementID)
     local root = Menu.GetUI():GetRoot()
     local enabled = Menu.IsElementEnabled(data)
 
-    root.mainMenu_mc.addMenuButton(numID, data.Label, data.SoundOnUp or "", enabled, data.Tooltip)
+    root.mainMenu_mc.addMenuButton(elementID, data.Label, data.SoundOnUp or "", enabled, data.Tooltip)
 end
 
 ---@param setting Feature_SettingsMenu_Setting
@@ -306,6 +355,21 @@ function Menu._RenderSlider(setting, elementID)
     element.label_txt.autoSize = "center"
 end
 
+---@param setting Feature_SettingsMenu_Setting_ComboBox
+---@param elementID Feature_SettingsMenu_ElementID
+function Menu._RenderComboBox(setting, elementID)
+    local root = Menu.GetUI():GetRoot()
+
+    root.mainMenu_mc.addMenuDropDown(elementID, setting:GetName(), setting:GetDescription())
+
+    for _,choice in ipairs(setting.Choices) do
+        root.mainMenu_mc.addMenuDropDownEntry(elementID, choice:GetName())
+    end
+
+    -- TODO set enabled
+    Menu.SetSettingElementState(elementID, setting, setting:GetChoiceIndex(setting:GetValue()))
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
@@ -325,6 +389,8 @@ Menu.Events.RenderSetting:Subscribe(function (ev)
         Menu._RenderCheckbox(setting, ev.ElementID)
     elseif settingType == "ClampedNumber" then
         Menu._RenderSlider(setting, ev.ElementID)
+    elseif settingType == "Choice" then
+        Menu._RenderComboBox(setting, ev.ElementID, entry)
     end
 end)
 

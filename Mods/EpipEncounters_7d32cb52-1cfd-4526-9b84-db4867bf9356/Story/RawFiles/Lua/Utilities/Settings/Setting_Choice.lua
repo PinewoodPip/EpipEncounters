@@ -25,7 +25,7 @@ end
 
 ---@return string?
 function _Entry:GetName()
-    return Ext.L10N.GetTranslatedString(self.NameHandle, self.Name)
+    return Ext.L10N.GetTranslatedString(self.NameHandle or "", self.Name or "")
 end
 
 ---------------------------------------------
@@ -54,4 +54,19 @@ function _Choice:SetValue(value)
     end
 
     self.Value = value
+end
+
+---@param choiceID string
+---@return integer?
+function _Choice:GetChoiceIndex(choiceID)
+    local index
+
+    for i,choice in ipairs(self.Choices) do
+        if choice.ID == choiceID then
+            index = i
+            break
+        end
+    end
+
+    return index
 end
