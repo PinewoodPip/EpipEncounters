@@ -87,9 +87,9 @@ function Entity.GetGameObjectComponent(entity)
     local component
 
     if entity:HasComponent("Character") then
-        component = Entity.GetComponent(entity, "Character")
+        component = Entity.GetComponent(entity:GetComponent("Character"))
     elseif entity:HasComponent("Item") then
-        component = Entity.GetComponent(entity, "Item")
+        component = Entity.GetComponent(entity:GetComponent("Item"))
     end
 
     return component

@@ -20,33 +20,36 @@ local Combat = Combat
 
 ---Returns the character participants of a combat.
 ---@return CombatLib_TurnOrder
--- function Combat.GetTurnOrder(combatID) -- Commented out as fetching Combat components appears to not currently work?
---     ---@type CombatLib_TurnOrder
---     local info = {
---         CombatID = combatID,
---         CurrentRound = {
---             Participants = {},
---         },
---         NextRound = {
---             Participants = {},
---         },
---     } 
---     local combat = Combat.GetCombat(combatID)
+function Combat.GetTurnOrder(combatID)
+    ---@type CombatLib_TurnOrder
+    local info = {
+        CombatID = combatID,
+        CurrentRound = {
+            Participants = {},
+        },
+        NextRound = {
+            Participants = {},
+        },
+    } 
+    local combat = Combat.GetCombat(combatID)
 
---     if not combat then
---         Combat:LogError("No combat found with ID " .. combatID)
---     end
+    if not combat then
+        Combat:LogError("No combat found with ID " .. combatID)
+        return nil
+    end
 
---     for _,team in ipairs(combat.CurrentRoundTeams) do
---         local entity = Entity.GetEntity(team.Handle)
+    for _,team in ipairs(combat.CurrentRoundTeams) do
+        local component = Ext.Entity.GetCombatComponent(team.Handle) ---@type EclCombatComponent
+        local gameObject = Entity.GetGameObjectComponent(component.Base.Entity)
 
---         table.insert(info.CurrentRound.Participants, Entity.GetGameObjectComponent(entity))
---     end
---     for _,team in ipairs(combat.NextRoundTeams) do
---         local entity = Entity.GetEntity(team.Handle)
+        table.insert(info.CurrentRound.Participants, gameObject)
+    end
+    for _,team in ipairs(combat.NextRoundTeams) do
+        local component = Ext.Entity.GetCombatComponent(team.Handle) ---@type EclCombatComponent
+        local gameObject = Entity.GetGameObjectComponent(component.Base.Entity)
 
---         table.insert(info.NextRound.Participants, Entity.GetGameObjectComponent(entity))
---     end
+        table.insert(info.NextRound.Participants, gameObject)
+    end
 
---     return info
--- end
+    return info
+end
