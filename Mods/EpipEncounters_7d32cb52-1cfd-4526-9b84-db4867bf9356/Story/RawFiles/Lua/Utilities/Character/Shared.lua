@@ -132,6 +132,13 @@ function Character.GetCombatID(char)
     return id, teamID
 end
 
+---Returns whether char has their weapon(s) unsheathed.
+---@param char Character
+---@return boolean
+function Character.IsUnsheathed(char)
+    return char:GetStatusByType("UNSHEATHED") ~= nil
+end
+
 ---Returns whether a skill is innate to a character.
 ---Returns false if the character doesn't have the skill in any way.
 ---@param char Character

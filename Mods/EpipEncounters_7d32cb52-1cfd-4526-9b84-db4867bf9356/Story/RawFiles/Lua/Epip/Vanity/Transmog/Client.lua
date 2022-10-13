@@ -4,6 +4,7 @@ local Hotbar = Client.UI.Hotbar
 
 ---@class Feature_Vanity_Transmog
 local Transmog = Epip.GetFeature("Feature_Vanity_Transmog")
+Transmog.keepIcon = false
 
 ---------------------------------------------
 -- CLASSES
@@ -334,19 +335,58 @@ Character.Hooks.CreateEquipmentVisuals:Subscribe(function (ev)
     if ev.Item then
         local char = ev.Character
         local transmoggedTemplate = Transmog.GetTransmoggedTemplate(ev.Item)
+        local slot = ev.Request.Slot
 
         if transmoggedTemplate then
             local template = Ext.Template.GetTemplate(transmoggedTemplate) ---@type ItemTemplate
-            local equipmentClassIndex = Character.EQUIPMENT_VISUAL_CLASS.NONE
-            local gender = Character.IsMale(char) and "MALE" or "FEMALE"
-            local race = Character.GetRace(char):upper()
-            local isUndead = Character.IsUndead(char) and "UNDEAD_" or ""
 
-            equipmentClassIndex = Character.EQUIPMENT_VISUAL_CLASS[string.format("%s%s_%s", isUndead, race, gender)]
+            if slot == "Weapon" or slot == "Shield" then
+                ev.Request.VisualResourceID = template.VisualTemplate
+                ev.Request.EquipmentSlotMask = 0
+                ev.Request.VisualSetSlotMask = 0
 
-            ev.Request.VisualResourceID = template.Equipment.VisualResources[equipmentClassIndex]
-            ev.Request.EquipmentSlotMask = template.Equipment.EquipmentSlots
-            ev.Request.VisualSetSlotMask = template.Equipment.VisualSetSlots
+                -- Change the attachment point of weapons/offhands.
+                if not char.WeaponSheathed then
+                    local bone
+                    local vanityData = Vanity.TEMPLATES[transmoggedTemplate]
+
+                    if vanityData then
+                        -- Set bone based on vanity tags.
+                        local tags = vanityData.Tags
+                        local BONES = Item.SHEATHED_ATTACHMENT_BONES
+
+                        if tags["Shield"] then
+                            bone = BONES.SHIELD
+                        elseif tags["Staff"] or tags["Spear"] then
+                            bone = BONES.POLEARM
+                        elseif tags["Bow"] then
+                            bone = BONES.BOW
+                        elseif tags["Crossbow"] then
+                            bone = BONES.CROSSBOW
+                        elseif tags["2H"] then
+                            bone = BONES.TWO_HANDED
+                        else
+                            bone = slot == "Weapon" and BONES.ONE_HANDED or BONES.OFF_HAND
+                        end
+                        
+                        ev.Request.AttachmentBoneName = bone
+                    else
+                        Transmog:LogError("Vanity template data missing for " .. transmoggedTemplate)
+                    end
+                end
+            else
+                -- If the slot is not weapon/shield, we need to fetch the correct visual from the template's Equipment.
+                local equipmentClassIndex = Character.EQUIPMENT_VISUAL_CLASS.NONE
+                local gender = Character.IsMale(char) and "MALE" or "FEMALE"
+                local race = Character.GetRace(char):upper()
+                local isUndead = Character.IsUndead(char) and "UNDEAD_" or ""
+
+                equipmentClassIndex = Character.EQUIPMENT_VISUAL_CLASS[string.format("%s%s_%s", isUndead, race, gender)]
+
+                ev.Request.VisualResourceID = template.Equipment.VisualResources[equipmentClassIndex]
+                ev.Request.EquipmentSlotMask = template.Equipment.EquipmentSlots
+                ev.Request.VisualSetSlotMask = template.Equipment.VisualSetSlots
+            end
         end
     end
 end)

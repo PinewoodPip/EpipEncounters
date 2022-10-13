@@ -9,7 +9,6 @@ local Transmog = {
     KEEP_ICON_PATTERN = "^PIP_VANITY_TRANSMOG_ICON_(.+)$",
     TRANSMOGGED_TAG = "PIP_VANITY_TRANSMOG_TEMPLATE_%s",
     TRANSMOGGED_TAG_PATTERN = "^PIP_VANITY_TRANSMOG_TEMPLATE_(.+)$",
-    keepIcon = false,
 
     BLOCKED_TEMPLATES = {
         -- Captain

@@ -5,6 +5,24 @@ Item = {
     RARITY_COLORS = {
         ARTIFACT = "a34114",
     },
+
+    SHEATHED_ATTACHMENT_BONES = {
+        BOW = "Dummy_Weapon_BOW",
+        TWO_HANDED = "Dummy_Weapon_2H",
+        OFF_HAND = "Dummy_Weapon_L_1H",
+        POLEARM = "Dummy_Weapon_Pole",
+        ONE_HANDED = "Dummy_Weapon_R_1H",
+        SHIELD = "Dummy_Weapon_SH",
+        CROSSBOW = "Dummy_Weapon_XB",
+    },
+
+    WEAPON_ATTACK_BONES = {
+        Dummy_FX = true,
+        Dummy_FX_01 = true,
+        Dummy_FX_02 = true,
+        Dummy_Attachment = true,
+        Dummy_ProjectileFX = true,
+    },
 }
 
 ---Returns true if the item is an Artifact by checking the AMER_UNI tag.
