@@ -38,7 +38,7 @@ function Vanity.TransmogItem(char, item, newTemplate, dye, keepIcon)
 
     Vanity:Log("Transforming item " .. item.DisplayName .. " to " .. newTemplate)
 
-    local template = Ext.Template.GetTemplate(newTemplate)
+    local template = Ext.Template.GetTemplate(newTemplate) ---@type ItemTemplate
     local _, _, _, artifactName = Osiris.DB_AMER_Artifacts:Get(template.Name .. "_" .. template.Id, nil, nil, nil)
     local oldTemplate = item.RootTemplate
     if originalTemplate then oldTemplate = Ext.Template.GetTemplate(originalTemplate) end
@@ -49,15 +49,15 @@ function Vanity.TransmogItem(char, item, newTemplate, dye, keepIcon)
 
     if keepIcon then
         local icon = Transmog.GetIconOverride(item)
-        if not icon then
-            icon = Item.GetIcon(item) -- No need to check for Icon override since server context doesn't have it.
+        if icon then
+            Entity.RemoveTagsByPattern(item, Transmog.KEEP_ICON_PATTERN)
+            Osiris.SetTag(item, Transmog.KEEP_ICON_TAG:format(icon))
         end
-
-        Entity.RemoveTagsByPattern(item, Transmog.KEEP_ICON_PATTERN)
-
-        Osiris.SetTag(item, Transmog.KEEP_ICON_TAG:format(icon))
     else
+        local icon = template.Icon
+        
         Entity.RemoveTagsByPattern(item, Transmog.KEEP_ICON_PATTERN)
+        Osiris.SetTag(item, Transmog.KEEP_ICON_TAG:format(icon))
     end
 
     -- Apply new dye if specified.

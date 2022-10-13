@@ -128,9 +128,11 @@ function Transmog.TransmogItem(item, template)
             KeepIcon = Transmog.keepIcon;
         })
 
-        -- Clear icon override.
+        -- Set icon override.
         if not Transmog.keepIcon then
-            item.Icon = ""
+            local itemTemplate = Ext.Template.GetTemplate(template) ---@type ItemTemplate
+
+            item.Icon = itemTemplate.Icon
         else
             item.Icon = Item.GetIcon(item)
         end
@@ -322,7 +324,7 @@ Vanity.Events.SaveDataLoaded:RegisterListener(function (data)
     end
 end)
 
-Client.UI.ContextMenu.RegisterElementListener("epip_OpenVanity", "buttonPressed", function(item, params)
+Client.UI.ContextMenu.RegisterElementListener("epip_OpenVanity", "buttonPressed", function(item, _)
     Vanity.SetSlot(item)
     Vanity.Setup(Vanity.currentTab or Transmog.Tab)
 end)
@@ -331,10 +333,10 @@ end)
 Character.Hooks.CreateEquipmentVisuals:Subscribe(function (ev)
     if ev.Item then
         local char = ev.Character
-        local transmoggedTemplate = Entity.GetParameterTagValue(ev.Item, Transmog.TRANSMOGGED_TAG_PATTERN)
+        local transmoggedTemplate = Transmog.GetTransmoggedTemplate(ev.Item)
 
         if transmoggedTemplate then
-            local template = Ext.Template.GetTemplate(transmoggedTemplate)
+            local template = Ext.Template.GetTemplate(transmoggedTemplate) ---@type ItemTemplate
             local equipmentClassIndex = Character.EQUIPMENT_VISUAL_CLASS.NONE
             local gender = Character.IsMale(char) and "MALE" or "FEMALE"
             local race = Character.GetRace(char):upper()
@@ -362,7 +364,7 @@ GameState.Events.GameReady:Subscribe(function (_)
             local item = Item.Get(itemGUID)
 
             if Item.IsEquipment(item) then
-                local icon = Entity.GetParameterTagValue(item, Transmog.KEEP_ICON_PATTERN)
+                local icon = Transmog.GetIconOverride(item)
     
                 if icon then
                     Transmog:DebugLog("Found icon override for", item.DisplayName)

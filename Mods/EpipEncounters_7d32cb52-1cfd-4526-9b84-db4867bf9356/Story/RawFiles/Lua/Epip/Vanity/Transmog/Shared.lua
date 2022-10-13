@@ -64,3 +64,10 @@ Epip.RegisterFeature("Vanity_Transmog", Transmog)
 function Transmog.GetIconOverride(item)
     return Entity.GetParameterTagValue(item, Transmog.KEEP_ICON_PATTERN)
 end
+
+---Returns the template an item has been transmogged into, if any.
+---@param item Item
+---@return GUID?
+function Transmog.GetTransmoggedTemplate(item)
+    return Entity.GetParameterTagValue(item, Transmog.TRANSMOGGED_TAG_PATTERN)
+end
