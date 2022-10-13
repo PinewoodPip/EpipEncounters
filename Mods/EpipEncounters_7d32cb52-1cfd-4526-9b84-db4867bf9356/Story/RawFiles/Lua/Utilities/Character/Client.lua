@@ -10,6 +10,7 @@ Character.Hooks.CreateEquipmentVisuals = Character:AddSubscribableHook("CreateEq
 
 ---@class CharacterLib_Hook_CreateEquipmentVisuals
 ---@field Character EclCharacter
+---@field Item EclItem
 ---@field Request EclEquipmentVisualSystemSetParam
 ---@field RawEvent EclLuaCreateEquipmentVisualsRequestEvent
 
@@ -90,10 +91,14 @@ end
 Ext.Events.CreateEquipmentVisualsRequest:Subscribe(function (ev)
     ev = ev ---@type EclLuaCreateEquipmentVisualsRequestEvent
     local char = ev.Character or Client.GetCharacter() -- If character is nil, then we are rendering the sheet paperdoll
+    local item = char:GetItemBySlot(ev.Params.Slot)
+    ---@diagnostic disable-next-line: cast-local-type
+    item = item and Item.Get(item)
 
     Character.Hooks.CreateEquipmentVisuals:Throw({
         Character = char,
         Request = ev.Params,
         RawEvent = ev,
+        Item = item,
     })
 end)

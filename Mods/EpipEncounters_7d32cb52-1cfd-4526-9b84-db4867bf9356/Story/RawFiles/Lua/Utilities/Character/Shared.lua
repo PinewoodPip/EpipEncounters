@@ -23,6 +23,29 @@ Character = {
         OVERHEAD = "Overhead",
     },
 
+    EQUIPMENT_VISUAL_CLASS = {
+        HUMAN_MALE = 1,
+        HUMAN_FEMALE = 2,
+        DWARF_MALE = 3,
+        DWARF_FEMALE = 4,
+        ELF_MALE = 5,
+        ELF_FEMALE = 6,
+        LIZARD_MALE = 7,
+        LIZARD_FEMALE = 8,
+
+        NONE = 9,
+        
+        UNDEAD_HUMAN_MALE = 10,
+        UNDEAD_HUMAN_FEMALE = 11,
+        UNDEAD_DWARF_MALE = 12,
+        UNDEAD_DWARF_FEMALE = 13,
+        UNDEAD_ELF_MALE = 14,
+        UNDEAD_ELF_FEMALE = 15,
+        UNDEAD_LIZARD_MALE = 16,
+        UNDEAD_LIZARD_FEMALE = 17,
+
+    },
+
     ---@enum CharacterLib_EquipmentVisualMask
     EQUIPMENT_VISUAL_MASKS = {
         NONE = 0,
@@ -288,6 +311,13 @@ end
 ---@return boolean
 function Character.IsMale(char)
     return char:HasTag("MALE")
+end
+
+---Returns true if char is undead.
+---@param char Character
+---@return boolean
+function Character.IsUndead(char)
+    return char:HasTag("UNDEAD")
 end
 
 ---Returns the current race of char.

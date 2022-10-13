@@ -56,12 +56,8 @@ function Vanity.TransmogItem(char, item, newTemplate, dye, keepIcon)
         Entity.RemoveTagsByPattern(item, Transmog.KEEP_ICON_PATTERN)
 
         Osiris.SetTag(item, Transmog.KEEP_ICON_TAG:format(icon))
-
-        Osi.TransformKeepIcon(item.MyGuid, newTemplate, 0, 1, 0)
     else
         Entity.RemoveTagsByPattern(item, Transmog.KEEP_ICON_PATTERN)
-        
-        Osi.Transform(item.MyGuid, newTemplate, 0, 1, 0)
     end
 
     -- Apply new dye if specified.
@@ -69,13 +65,17 @@ function Vanity.TransmogItem(char, item, newTemplate, dye, keepIcon)
         Item.ApplyDye(item, dye)
     end
 
+    -- Update parameter tag
+    Entity.RemoveTagsByPattern(item, Transmog.TRANSMOGGED_TAG_PATTERN)
+    Osiris.SetTag(item, Transmog.TRANSMOGGED_TAG:format(newTemplate))
+
     -- Remove tag when going from normal item to artifact (not if going from artifact to artifact)
     if artifactName and not oldArtifactName then
         -- Osi.ClearTag(item.MyGuid, "AMER_UNI") -- Does not work.
         Osi.SetTag(item.MyGuid, "PIP_FAKE_ARTIFACT")
     end
     
-    Vanity.RefreshAppearance(char, false)
+    Vanity.RefreshAppearance(char, true)
 end
 
 ---Reverts the appearance of an item to its original one.

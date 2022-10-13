@@ -233,19 +233,15 @@ end
 
 -- Make item visuals invisible if they were set to be.
 Character.Hooks.CreateEquipmentVisuals:Subscribe(function (ev)
-    local char = ev.Character
     local request = ev.Request
-    local item
-    local itemGUID = char:GetItemBySlot(request.Slot)
-
-    if itemGUID then
-        item = Item.Get(itemGUID)
-    end
+    local item = ev.Item
 
     if item and item:IsTagged(Transmog.INVISIBLE_TAG) then
         request.VisualResourceID = ""
         request.EquipmentSlotMask = 0 -- Might be unnecessary?
         request.VisualSetSlotMask = 0
+
+        ev:StopPropagation()
     end
 end)
 
@@ -267,7 +263,7 @@ Net.RegisterListener("EPIPENCOUNTERS_ItemEquipped", function(payload)
                 Transmog.UpdateActiveCharacterTemplates()
 
                 -- TODO implement this better...
-                Epip.Features.VanityDyes.UpdateActiveCharacterDyes()
+                Epip.GetFeature("Feature_Vanity_Dyes").UpdateActiveCharacterDyes()
             end)
         else
             Transmog.UpdateActiveCharacterTemplates()
@@ -329,6 +325,28 @@ end)
 Client.UI.ContextMenu.RegisterElementListener("epip_OpenVanity", "buttonPressed", function(item, params)
     Vanity.SetSlot(item)
     Vanity.Setup(Vanity.currentTab or Transmog.Tab)
+end)
+
+-- Show transmog'd visuals instead of the item's real ones.
+Character.Hooks.CreateEquipmentVisuals:Subscribe(function (ev)
+    if ev.Item then
+        local char = ev.Character
+        local transmoggedTemplate = Entity.GetParameterTagValue(ev.Item, Transmog.TRANSMOGGED_TAG_PATTERN)
+
+        if transmoggedTemplate then
+            local template = Ext.Template.GetTemplate(transmoggedTemplate)
+            local equipmentClassIndex = Character.EQUIPMENT_VISUAL_CLASS.NONE
+            local gender = Character.IsMale(char) and "MALE" or "FEMALE"
+            local race = Character.GetRace(char):upper()
+            local isUndead = Character.IsUndead(char) and "UNDEAD_" or ""
+
+            equipmentClassIndex = Character.EQUIPMENT_VISUAL_CLASS[string.format("%s%s_%s", isUndead, race, gender)]
+
+            ev.Request.VisualResourceID = template.Equipment.VisualResources[equipmentClassIndex]
+            ev.Request.EquipmentSlotMask = template.Equipment.EquipmentSlots
+            ev.Request.VisualSetSlotMask = template.Equipment.VisualSetSlots
+        end
+    end
 end)
 
 -- Set Icon overrides for items upon loading in.
