@@ -13,6 +13,7 @@ local Menu = {
     currentElements = {}, ---@type table<Feature_SettingsMenu_ElementID, Feature_SettingsMenu_Entry>
     nextElementNumID = 1, ---@type Feature_SettingsMenu_ElementID
     tabButtonToTabID = {}, ---@type table<integer, string>
+    pendingChanges = {}, ---@type table<string, any>
 
     _initializedUI = false,
 
@@ -101,6 +102,30 @@ function Menu.RenderTabButtons()
     end
 end
 
+---@param setting Feature_SettingsMenu_Setting
+---@param value any
+function Menu.SetPendingChange(setting, value)
+    if not Menu.pendingChanges[setting.ModTable] then
+        Menu.pendingChanges[setting.ModTable] = {}
+    end
+
+    Menu.pendingChanges[setting.ModTable][setting.ID] = value
+
+    Menu:DebugLog("Pending change set:", setting.ID, value)
+end
+
+function Menu.ApplyPendingChanges()
+    Menu:DebugLog("Applying pending changes")
+
+    for moduleID,changes in pairs(Menu.pendingChanges) do
+        for settingID,value in pairs(changes) do
+            Settings.SetValue(moduleID, settingID, value)
+        end
+
+        Settings.Save(moduleID)
+    end
+end
+
 function Menu._Setup()
     local UI = Menu.GetUI()
     local root = UI:GetRoot()
@@ -131,6 +156,7 @@ function Menu.RenderSettings(tab)
 
     for _,entry in ipairs(tab.Elements) do
         local numID
+
         -- TODO extract methods for these, add events
         if entry.Type == "Setting" then
             entry = entry ---@type Feature_SettingsMenu_Entry_Setting
@@ -193,6 +219,8 @@ function Menu.RenderSetting(setting)
         })
 
         -- TODO selectors
+    else
+        numID = nil -- Don't associate the setting to the numID.
     end
 
     return numID
@@ -304,6 +332,9 @@ function Menu.SetActiveTab(tabID)
     
     Menu:DebugLog("Switching tab to", tabID)
 
+    -- Clear pending changes
+    Menu.pendingChanges = {}
+
     if Menu.GetUI():IsVisible() then
         Menu._Setup()
     end
@@ -380,8 +411,35 @@ end
 
 local UI = Menu.GetUI()
 
+-- Listen for tabs being switched.
 UI:RegisterCallListener("EPIP_TabClicked", function (_, buttonID)
     Menu.SetActiveTab(Menu.tabButtonToTabID[buttonID])
+end)
+
+-- Listen for checkboxes changing state.
+UI:RegisterCallListener("checkBoxID", function (_, elementID, stateID)
+    local setting = Menu.GetElementSetting(elementID)
+
+    Menu.SetPendingChange(setting, stateID == 1)
+end)
+
+-- Listen for combo boxes having their choice changed.
+UI:RegisterCallListener("comboBoxID", function (_, elementID, optionIndex)
+    local setting = Menu.GetElementSetting(elementID) ---@type Feature_SettingsMenu_Setting_ComboBox
+
+    Menu.SetPendingChange(setting, setting.Choices[optionIndex + 1])
+end)
+
+-- Listen for sliders being slid.
+UI:RegisterCallListener("menuSliderID", function (_, elementID, value)
+    local setting = Menu.GetElementSetting(elementID) ---@type Feature_SettingsMenu_Setting_Slider
+    
+    Menu.SetPendingChange(setting, value)
+end)
+
+-- Listen for apply being pressed.
+UI:RegisterCallListener("applyPressed", function (_)
+    Menu.ApplyPendingChanges()
 end)
 
 -- Render the built-in element types.

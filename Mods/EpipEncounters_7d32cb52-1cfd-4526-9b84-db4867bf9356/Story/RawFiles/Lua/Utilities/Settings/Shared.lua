@@ -9,6 +9,8 @@ Settings = {
     Modules = {}, ---@type table<string, SettingsLib_Module>
     SettingTypes = {}, ---@type table<SettingsLib_SettingType, SettingsLib_Setting>
 
+    unregisteredSettingValues = {},
+
     NET_SYNC_CHANNEL = "EPIP_SETTINGS_SYNC",
 
     USE_LEGACY_EVENTS = false,
@@ -106,25 +108,33 @@ function _Setting:_Init() end
 ---------------------------------------------
 
 ---Sets a setting's value and fires corresponding events.
----@param modTable string
+---@param moduleID string
 ---@param settingID string
 ---@param ... any
-function Settings.SetValue(modTable, settingID, ...)
-    local setting = Settings.GetSetting(modTable, settingID)
+function Settings.SetValue(moduleID, settingID, ...)
+    local setting = Settings.GetSetting(moduleID, settingID)
 
     if not setting then
-        Settings:LogError("Tried to set value of an unregistered setting: " .. modTable .. " " .. settingID)
+        if GameState.IsInSession() then
+            Settings:LogWarning("Tried to set value of an unregistered setting: " .. moduleID .. " " .. settingID .. ". The value will be stored until the setting is registered.")
+        end
+        if not Settings.unregisteredSettingValues[moduleID] then
+            Settings.unregisteredSettingValues[moduleID] = {}
+        end
+
+        local values = {...}
+        Settings.unregisteredSettingValues[moduleID][settingID] = values[1]
+    else
+        local newValue = {...}
+        if #newValue == 1 then newValue = newValue[1] elseif #newValue == 0 then newValue = nil end -- TODO why is this being truncated? and only in the event??
+
+        setting:SetValue(...)
+
+        Settings.Events.SettingValueChanged:Throw({
+            Setting = setting,
+            Value = newValue,
+        })
     end
-
-    local newValue = {...}
-    if #newValue == 1 then newValue = newValue[1] elseif #newValue == 0 then newValue = nil end
-
-    setting:SetValue(...)
-
-    Settings.Events.SettingValueChanged:Throw({
-        Setting = setting,
-        Value = newValue,
-    })
 end
 
 ---Returns a table of setting IDs and their current values.
@@ -183,12 +193,19 @@ end
 ---@param id string
 ---@return any
 function Settings.GetSettingValue(modTable, id)
+    local value = nil
     local setting = modTable -- Setting overload.
     if type(modTable) ~= "table" then
         setting = Settings.GetSetting(modTable, id)
     end
 
-    return setting:GetValue()
+    if setting then
+        value = setting:GetValue()
+    elseif Settings.unregisteredSettingValues[modTable] then
+        value = Settings.unregisteredSettingValues[modTable][id]
+    end
+
+    return value
 end
 
 function Settings.RegisterSettingType(settingType, baseTable)
@@ -201,9 +218,20 @@ end
 function Settings.RegisterSetting(data)
     local settingTable = Settings.SettingTypes[data.Type] ---@type SettingsLib_Setting
     local setting = settingTable:Create(data)
+
+    if not Settings.Modules[data.ModTable] then
+        Settings.Load(data.ModTable)
+    end
+
     local mod = Settings.GetModule(data.ModTable)
 
     mod.Settings[data.ID] = setting
+
+    -- Initialize saved value
+    local unregisteredSettingValues = Settings.unregisteredSettingValues[data.ModTable]
+    if unregisteredSettingValues and unregisteredSettingValues[data.ID] ~= nil then
+        Settings.SetValue(data.ModTable, data.ID, unregisteredSettingValues[data.ID])
+    end
 end
 
 ---Returns a table of all the registered modules.
