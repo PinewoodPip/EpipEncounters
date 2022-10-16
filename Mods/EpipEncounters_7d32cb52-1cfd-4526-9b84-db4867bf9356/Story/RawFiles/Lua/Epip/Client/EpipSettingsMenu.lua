@@ -13,7 +13,7 @@ local tabs = {
         ID = "EpipEncounters",
         ButtonLabel = "General",
         HeaderLabel = "Epip Encounters",
-        Elements = {
+        Entries = {
             {Type = "Label", Label = Text.Format("Most options require a reload for changes to apply.", {Size = 19})},
             "AutoIdentify",
             "ImmersiveMeditation",
@@ -33,7 +33,7 @@ local tabs = {
         ID = "Epip_Hotbar",
         ButtonLabel = "Hotbar",
         HeaderLabel = "Hotbar",
-        Elements = {
+        Entries = {
             CreateHeader("Hotbar"),
             "HotbarCombatLogButton",
             "HotbarHotkeysText",
@@ -45,7 +45,7 @@ local tabs = {
         ID = "Epip_Overheads",
         ButtonLabel = "Overheads",
         HeaderLabel = "Overheads",
-        Elements = {
+        Entries = {
             CreateHeader("Overheads"),
             "OverheadsSize",
             "DamageOverheadsSize",
@@ -57,7 +57,7 @@ local tabs = {
         ID = "Epip_Chat",
         ButtonLabel = "Chat",
         HeaderLabel = "Chat",
-        Elements = {
+        Entries = {
             CreateHeader("Chat"),
             "Chat_MessageSound",
             "Chat_ExitAfterSendingMessage",
@@ -67,7 +67,7 @@ local tabs = {
         ID = "Epip_Developer",
         ButtonLabel = "Developer",
         HeaderLabel = "Developer",
-        Elements = {
+        Entries = {
             CreateHeader("Developer"),
             {Type = "Button", Label = "Warp to AMER_Test", ID = "DEBUG_WarpToAMERTest"},
             "Developer_DebugDisplay",
@@ -80,7 +80,7 @@ local tabs = {
         ID = "Epip_PlayerInfo",
         ButtonLabel = "Player Portraits",
         HeaderLabel = "Player Portraits",
-        Elements = {
+        Entries = {
             CreateHeader("Player Portraits UI"),
             "PlayerInfoBH",
             "PlayerInfo_StatusHolderOpacity",
@@ -94,7 +94,7 @@ local tabs = {
         ID = "Epip_SaveLoad",
         ButtonLabel = "Save/Load UI",
         HeaderLabel = "Save/Load UI",
-        Elements = {
+        Entries = {
             CreateHeader("Save/Load UI"),
             "SaveLoad_Overlay",
             "SaveLoad_Sorting",
@@ -104,7 +104,7 @@ local tabs = {
         ID = "Epip_Crafting",
         ButtonLabel = "Crafting UI",
         HeaderLabel = "Crafting UI",
-        Elements = {
+        Entries = {
             CreateHeader("Crafting UI"),
             "Crafting_DefaultFilter",
         }
@@ -113,7 +113,7 @@ local tabs = {
         ID = "Epip_Inventory",
         ButtonLabel = "Inventory UI",
         HeaderLabel = "Inventory UI",
-        Elements = {
+        Entries = {
             CreateHeader("Inventory UI"),
             "Inventory_AutoUnlockInventory",
             "Inventory_InfiniteCarryWeight",
@@ -124,7 +124,7 @@ local tabs = {
         ID = "Epip_Notifications",
         ButtonLabel = "Notifications",
         HeaderLabel = "Notifications",
-        Elements = {
+        Entries = {
             CreateHeader("Notifications"),
             "CastingNotifications",
             "Notification_ItemReceival",
@@ -135,7 +135,7 @@ local tabs = {
         ID = "Epip_Tooltips",
         ButtonLabel = "Tooltips",
         HeaderLabel = "Tooltips",
-        Elements = {
+        Entries = {
             CreateHeader("UI Tooltips"),
             "Tooltip_SimpleTooltipDelay_World",
             "Tooltip_SimpleTooltipDelay_UI",
@@ -169,9 +169,9 @@ local tabOrder = {
 }
 
 for _,tab in ipairs(tabOrder) do
-    for i,entry in ipairs(tab.Elements) do
+    for i,entry in ipairs(tab.Entries) do
         if type(entry) == "string" then
-            tab.Elements[i] = {Type = "Setting", Module = tab.ID, ID = entry} -- We make the Module ID be the same as tab ID 
+            tab.Entries[i] = {Type = "Setting", Module = tab.ID, ID = entry} -- We make the Module ID be the same as tab ID 
         end
     end
 

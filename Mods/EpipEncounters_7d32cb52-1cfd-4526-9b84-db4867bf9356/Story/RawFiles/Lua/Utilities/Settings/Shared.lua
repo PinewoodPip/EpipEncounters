@@ -148,6 +148,8 @@ function Settings.GetModuleSettingValues(modTable, includeInvalidContexts)
     for id,setting in pairs(module.Settings) do
         if includeInvalidContexts or setting:IsInValidContext() then
             output[id] = setting:GetValue()
+        else
+            Settings:DebugLog("Setting " .. id .. " not saved due to being in incorrect context")
         end
     end
 
@@ -218,6 +220,14 @@ end
 function Settings.RegisterSetting(data)
     local settingTable = Settings.SettingTypes[data.Type] ---@type SettingsLib_Setting
     local setting = settingTable:Create(data)
+
+    if not data.ID or not data.ModTable then
+        Settings:LogError("Settings must declare ID and ModTable")
+        return nil
+    end
+
+    -- Default to client context
+    data.Context = data.Context or "Client"
 
     if not Settings.Modules[data.ModTable] then
         Settings.Load(data.ModTable)

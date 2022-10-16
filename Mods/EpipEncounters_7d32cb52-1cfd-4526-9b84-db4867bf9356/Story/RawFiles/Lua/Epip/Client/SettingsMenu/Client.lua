@@ -22,7 +22,12 @@ local Menu = {
 
     Events = {
         RenderSetting = {}, ---@type Event<Feature_SettingsMenu_Event_RenderSetting>
+        ChangesApplied = {}, ---@type Event<Feature_SettingsMenu_Event_ChangesApplied>
+        ButtonPressed = {}, ---@type Event<Feature_SettingsMenu_Event_ButtonPressed>
     },
+    Hooks = {
+        GetTabEntries = {} ---@type Event<Feature_SettingsMenu_Hook_GetTabEntries>
+    }
 }
 Epip.RegisterFeature("SettingsMenu", Menu)
 
@@ -36,7 +41,7 @@ Epip.RegisterFeature("SettingsMenu", Menu)
 ---@field ID string
 ---@field ButtonLabel string
 ---@field HeaderLabel string
----@field Elements Feature_SettingsMenu_Entry[]
+---@field Entries Feature_SettingsMenu_Entry[]
 
 ---@class Feature_SettingsMenu_Entry
 ---@field Type "Setting"|"Label"|"Button"
@@ -70,6 +75,17 @@ Epip.RegisterFeature("SettingsMenu", Menu)
 ---@class Feature_SettingsMenu_Event_RenderSetting
 ---@field Setting Feature_SettingsMenu_Setting
 ---@field ElementID Feature_SettingsMenu_ElementID
+
+---@class Feature_SettingsMenu_Event_ChangesApplied
+---@field Changes table<string, table<string, any>> Changes made. First index is module, second index is setting ID.
+
+---@class Feature_SettingsMenu_Event_ButtonPressed
+---@field Tab Feature_SettingsMenu_Tab
+---@field ButtonID string
+
+---@class Feature_SettingsMenu_Hook_GetTabEntries
+---@field Tab Feature_SettingsMenu_Tab
+---@field Entries Feature_SettingsMenu_Entry[] Hookable.
 
 ---------------------------------------------
 -- METHODS
@@ -124,6 +140,12 @@ function Menu.ApplyPendingChanges()
 
         Settings.Save(moduleID)
     end
+
+    Menu.Events.ChangesApplied:Throw({
+        Changes = Menu.pendingChanges,
+    })
+
+    Menu.pendingChanges = {}
 end
 
 function Menu._Setup()
@@ -152,9 +174,11 @@ function Menu.RenderSettings(tab)
 
     Menu:DebugLog("Rendering tab", tab.ID)
 
-    -- TODO render event
-
-    for _,entry in ipairs(tab.Elements) do
+    local entries = Menu.Hooks.GetTabEntries:Throw({
+        Tab = tab,
+        Entries = tab.Entries,
+    }).Entries
+    for _,entry in ipairs(entries) do
         local numID
 
         -- TODO extract methods for these, add events
@@ -427,7 +451,7 @@ end)
 UI:RegisterCallListener("comboBoxID", function (_, elementID, optionIndex)
     local setting = Menu.GetElementSetting(elementID) ---@type Feature_SettingsMenu_Setting_ComboBox
 
-    Menu.SetPendingChange(setting, setting.Choices[optionIndex + 1])
+    Menu.SetPendingChange(setting, setting.Choices[optionIndex + 1].ID)
 end)
 
 -- Listen for sliders being slid.
@@ -435,6 +459,20 @@ UI:RegisterCallListener("menuSliderID", function (_, elementID, value)
     local setting = Menu.GetElementSetting(elementID) ---@type Feature_SettingsMenu_Setting_Slider
     
     Menu.SetPendingChange(setting, value)
+end)
+
+-- Listen for button entries being pressed.
+UI:RegisterCallListener("buttonPressed", function (_, elementID)
+    local entry = Menu.currentElements[elementID] ---@type Feature_SettingsMenu_Entry_Button
+
+    if entry and entry.ID then
+        Menu.Events.ButtonPressed:Throw({
+            Tab = Menu.GetTab(Menu.currentTabID),
+            ButtonID = entry.ID,
+        })
+    else
+        Menu:LogWarning("A button has been pressed which was not declared with any ID - it will not be usable in scripting.")
+    end
 end)
 
 -- Listen for apply being pressed.
