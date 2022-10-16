@@ -41,6 +41,7 @@ Epip.RegisterFeature("SettingsMenu", Menu)
 ---@field ID string
 ---@field ButtonLabel string
 ---@field HeaderLabel string
+---@field HostOnly boolean? Defaults to false.
 ---@field Entries Feature_SettingsMenu_Entry[]
 
 ---@class Feature_SettingsMenu_Entry
@@ -112,9 +113,11 @@ function Menu.RenderTabButtons()
     for i,id in ipairs(Menu.TabRegistrationOrder) do
         local tab = Menu.GetTab(id)
 
-        Menu.tabButtonToTabID[i] = id
-        
-        root.mainMenu_mc.addOptionButton(tab.ButtonLabel, "EPIP_TabClicked", i, false)
+        if not tab.HostOnly or Client.IsHost() then
+            Menu.tabButtonToTabID[i] = id
+            
+            root.mainMenu_mc.addOptionButton(tab.ButtonLabel, "EPIP_TabClicked", i, false)
+        end
     end
 end
 

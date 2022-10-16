@@ -3,8 +3,6 @@
 ---@field ID string
 ---@field Name string
 ---@field Description string
-
----@class ExtraDataEntry
 local _ExtraDataEntry = {}
 
 ---@return number

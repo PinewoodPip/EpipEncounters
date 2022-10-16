@@ -4,8 +4,17 @@ local DataConfig = {
     ModifiedEntries = {}, ---@type table<string, number>
     SAVE_VERSION = 0,
     SAVE_FILENAME = "EpipEncounters_ExtraData.json",
+    SETTINGS_MODULE_ID = "ExtraDataConfig",
 }
 Epip.AddFeature("ExtraDataConfig", "ExtraDataConfig", DataConfig)
+
+---------------------------------------------
+-- NET MESSAGES
+---------------------------------------------
+
+---@class EPIPENCOUNTERS_SetExtraData : NetMessage
+---@field Key string
+---@field Value number
 
 ---------------------------------------------
 -- METHODS
@@ -29,10 +38,13 @@ function DataConfig.SetValue(key, value, save)
             DataConfig.ModifiedEntries[key] = nil
         end
 
-        if Ext.IsClient() and save then
-            Client.UI.OptionsSettings.SetOptionValue("ExtraDataConfig", key, value)
-        elseif save then
-            DataConfig.SaveSettings()
+        -- Save settings.
+        if save then
+            if Ext.IsClient() then
+                Settings.SetValue(DataConfig.SETTINGS_MODULE_ID, key, value)
+            else 
+                DataConfig.SaveSettings()
+            end
         end
     else
         DataConfig:LogError("Invalid key: " .. key)
@@ -40,7 +52,7 @@ function DataConfig.SetValue(key, value, save)
 end
 
 ---@param key string
----@return OptionsSettingsOption
+---@return SettingsLib_Setting_ClampedNumber
 function DataConfig.GetOptionData(key)
     local data = Stats.ExtraData[key]
     local defaultValue = data:GetDefaultValue()
@@ -55,25 +67,26 @@ function DataConfig.GetOptionData(key)
         max = -defaultValue * 2
     end
 
-    ---@type OptionsSettingsOption
+    ---@type SettingsLib_Setting_ClampedNumber
     local option = {
         ID = key,
-        Label = data:GetName(),
-        Tooltip = Text.Format("%s<br>Default value: %s", {
+        Type = "ClampedNumber",
+        ModTable = DataConfig.SETTINGS_MODULE_ID,
+        Name = data:GetName(),
+        Description = Text.Format("%s<br>Default value: %s", {
             FormatArgs = {
                 data:GetDescription(),
                 defaultValue,
             }
         }),
-        Type = "Slider",
-        MinAmount = min,
-        MaxAmount = max,
-        DefaultValue = defaultValue,
+        Min = min,
+        Max = max,
+        Step = 0.1,
         HideNumbers = false,
-        Interval = 0.1,
         IsExtraData = true,
         SaveOnServer = true,
         ServerOnly = true,
+        DefaultValue = defaultValue,
     }
 
     return option
