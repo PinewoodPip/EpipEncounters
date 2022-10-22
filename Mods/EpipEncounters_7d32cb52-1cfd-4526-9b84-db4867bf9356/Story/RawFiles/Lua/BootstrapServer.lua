@@ -355,4 +355,10 @@ Net.RegisterListener("EPIP_RegisterGenericOsiSymbolEvent", function(payload)
     end)
 end)
 
+GameState.Events.GamePaused:Subscribe(function (_)
+    if Settings._SettingsLoaded then
+        IO.SaveFile("_Epip_PersistentVars", PersistentVars)
+    end
+end)
+
 Ext.Require(prefixedGUID, "_LastScript.lua");

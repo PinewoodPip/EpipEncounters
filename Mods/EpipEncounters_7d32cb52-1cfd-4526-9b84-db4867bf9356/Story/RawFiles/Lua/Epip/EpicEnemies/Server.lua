@@ -329,7 +329,7 @@ Ext.Events.ResetCompleted:Subscribe(function()
     if Ext.Osiris.IsCallable() and EpicEnemies:IsDebug() then
         local _, _, tuples = Osiris.DB_PIP_EpicEnemies_AppliedEffect:Get(nil, nil)
 
-        for _,tuple in ipairs(tuples) do
+        for _,tuple in ipairs(tuples or {}) do
             EpicEnemies.CleanupCharacter(Character.Get(tuple[1]))
         end
     end

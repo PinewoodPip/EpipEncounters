@@ -17,7 +17,6 @@ local EpicEnemies = {
             Type = "Boolean",
             Name = "Enabled",
             Description = "Enables the Epic Enemies feature.",
-            Context = "Host",
             ServerOnly = true,
             SaveOnServer = true,
             DefaultValue = false,
@@ -248,7 +247,7 @@ function EpicEnemies.GenerateOptionData(effect)
         ID = effect.ID,
         Type = "ClampedNumber",
         ModTable = EpicEnemies.SETTINGS_MODULE_ID,
-        Context = "Host",
+        Context = "Server",
         Name = effect.Name,
         Description = Text.Format("%s<br><br>Costs %s points.", {FormatArgs = {
             effect.Description,

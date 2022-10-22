@@ -53,11 +53,15 @@ end
 Settings.Events.SettingValueChanged:Subscribe(function (ev)
     local setting = ev.Setting
 
-    if setting.Context == "Server" and Settings._SettingsLoaded then
-        local vars = Settings:GetPersistentVariables()
-        
-        -- TODO optimize
-        vars[setting.ModTable] = Settings.GetModuleSettingValues(setting.ModTable)
+    if setting.Context == "Server" then
+        Settings.SynchronizeSetting(setting)
+
+        if Settings._SettingsLoaded then
+            local vars = Settings:GetPersistentVariables()
+            
+            -- TODO optimize
+            vars[setting.ModTable] = Settings.GetModuleSettingValues(setting.ModTable)
+        end
     end
 end)
 
@@ -68,7 +72,7 @@ Net.RegisterListener(Settings.NET_SYNC_CHANNEL, function (payload)
     if setting then
         Settings:DebugLog("Synched setting from host: " .. setting.ID)
 
-        Settings.SetValue(setting.ModTable, setting.ID, payload.Value)
+        Settings.SetValue(setting.ModTable, setting.ID, payload.Value, false)
     else
         Settings:LogError("Tried to sync an unregistered setting: " .. payload.ID)
     end
@@ -77,4 +81,16 @@ end)
 -- Load and synchronize server settings upon the game starting.
 Ext.Osiris.RegisterListener("GameStarted", 2, "after", function()
     Settings.Load()
+end)
+
+-- Load and synchronize server settings after a reset.
+Ext.Events.ResetCompleted:Subscribe(function (_)
+    Ext.OnNextTick(function ()
+        local vars = IO.LoadFile("_Epip_PersistentVars", "user")
+    
+        if vars then
+            PersistentVars = vars
+        end
+        Settings.Load()
+    end)
 end)

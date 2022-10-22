@@ -11,6 +11,8 @@ Settings = {
 
     unregisteredSettingValues = {},
 
+    _unregisteredSettingWarningShown = false,
+
     NET_SYNC_CHANNEL = "EPIP_SETTINGS_SYNC",
 
     USE_LEGACY_EVENTS = false,
@@ -117,30 +119,32 @@ function _Setting:_Init() end
 ---Sets a setting's value and fires corresponding events.
 ---@param moduleID string
 ---@param settingID string
----@param ... any
-function Settings.SetValue(moduleID, settingID, ...)
+---@param value any
+---@param notify boolean? Defaults to true.
+function Settings.SetValue(moduleID, settingID, value, notify)
     local setting = Settings.GetSetting(moduleID, settingID)
+    if notify == nil then notify = true end
 
     if not setting then
-        if GameState.IsInSession() then
-            Settings:LogWarning("Tried to set value of an unregistered setting: " .. moduleID .. " " .. settingID .. ". The value will be stored until the setting is registered.")
+        if GameState.IsInSession() and not Settings._unregisteredSettingWarningShown then
+            Settings:LogWarning("Tried to set value of an unregistered setting: " .. moduleID .. " " .. settingID .. ". The value will be stored until the setting is registered (this warning is only shown once per session).")
+
+            Settings._unregisteredSettingWarningShown = true
         end
         if not Settings.unregisteredSettingValues[moduleID] then
             Settings.unregisteredSettingValues[moduleID] = {}
         end
 
-        local values = {...}
-        Settings.unregisteredSettingValues[moduleID][settingID] = values[1]
+        Settings.unregisteredSettingValues[moduleID][settingID] = value
     else
-        local newValue = {...}
-        if #newValue == 1 then newValue = newValue[1] elseif #newValue == 0 then newValue = nil end -- TODO why is this being truncated? and only in the event??
+        setting:SetValue(value)
 
-        setting:SetValue(...)
-
-        Settings.Events.SettingValueChanged:Throw({
-            Setting = setting,
-            Value = newValue,
-        })
+        if notify then
+            Settings.Events.SettingValueChanged:Throw({
+                Setting = setting,
+                Value = value,
+            })
+        end
     end
 end
 

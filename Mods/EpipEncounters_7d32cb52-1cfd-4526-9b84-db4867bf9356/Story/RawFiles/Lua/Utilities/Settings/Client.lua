@@ -19,6 +19,16 @@ function Settings.Save(moduleName, fileName)
 
     if module then
         local settingValues = Settings.GetModuleSettingValues(moduleName)
+
+        -- Don't save server settings.
+        for id,_ in pairs(settingValues) do
+            local setting = Settings.GetSetting(moduleName, id)
+
+            if setting and setting.Context == "Server" then
+                settingValues[id] = nil
+            end
+        end
+
         local save = {
             SaveVersion = Settings.SAVE_VERSION,
             Settings = settingValues,
@@ -99,7 +109,7 @@ Net.RegisterListener(Settings.NET_SYNC_CHANNEL, function (payload)
     if setting then
         Settings:DebugLog("Synched setting from server: " .. setting.ID)
 
-        Settings.SetValue(setting.ModTable, setting.ID, payload.Value)
+        Settings.SetValue(setting.ModTable, setting.ID, payload.Value, false)
     else
         Settings:LogError("Tried to sync an unregistered setting: " .. payload.ID)
     end

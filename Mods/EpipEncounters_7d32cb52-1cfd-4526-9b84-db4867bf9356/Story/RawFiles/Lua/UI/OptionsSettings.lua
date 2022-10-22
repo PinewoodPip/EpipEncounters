@@ -313,15 +313,14 @@ end
 ---@param id string
 ---@return any Type varies based on element type. Boolean for checkboxes, number for other vanilla elements.
 function OptionsSettings.GetOptionValue(mod, id)
+    -- OptionsSettings:LogWarning("A script is trying to access setting values through OptionsSettings - this is deprecated! Setting: " .. id)
     local data = OptionsSettings.GetOptionData(id)
     local value = OptionsSettings.OptionValues[id]
     
     value = OptionsSettings:ReturnFromHooks("GetOptionValue", value, data)
 
-    -- Dev settings always use default values if developer mode isnt on
-    -- TODO
-
     return value
+    -- return Settings.GetSettingValue(mod, id)
 end
 
 ---Set a custom option's value. Immediately synchronized to server, if need be.
@@ -779,25 +778,25 @@ function OptionsSettings.EncodeBaseUpdate(ui, elements)
 end
 
 -- Insert mod tabs
-OptionsSettings:RegisterHook("BaseUpdate", function(elements)
-    OptionsSettings.currentCustomTabs = {}
+-- OptionsSettings:RegisterHook("BaseUpdate", function(elements)
+--     OptionsSettings.currentCustomTabs = {}
 
-    local numID = 10
-    for modID,modData in pairs(OptionsSettings.Options) do
+--     local numID = 10
+--     for modID,modData in pairs(OptionsSettings.Options) do
 
-        if not modData.ServerOnly or Client.IsHost() then
-            table.insert(elements, {
-                Type = "TabButton",
-                ID = numID,
-                Label = OptionsSettings:ReturnFromHooks("GetSideButtonLabel", modData.SideButtonLabel or modID, modData),
-                Active = false,
-                Callback = "PipCustomTabClick",
-            })
-            OptionsSettings.currentCustomTabs[numID] = modID
-            numID = numID + 1
-        end
-    end
-end)
+--         if not modData.ServerOnly or Client.IsHost() then
+--             table.insert(elements, {
+--                 Type = "TabButton",
+--                 ID = numID,
+--                 Label = OptionsSettings:ReturnFromHooks("GetSideButtonLabel", modData.SideButtonLabel or modID, modData),
+--                 Active = false,
+--                 Callback = "PipCustomTabClick",
+--             })
+--             OptionsSettings.currentCustomTabs[numID] = modID
+--             numID = numID + 1
+--         end
+--     end
+-- end)
 
 Ext.RegisterUINameCall("PipCustomTabClick", function(ui, method, id)
     local tab = OptionsSettings.currentCustomTabs[id]
