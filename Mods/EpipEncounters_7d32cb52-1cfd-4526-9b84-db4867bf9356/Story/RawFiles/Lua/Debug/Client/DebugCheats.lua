@@ -5,6 +5,8 @@
 -- Make the flexstat table only be parsed at SessionLoaded to make it easier to modify
 ---------------------------------------------
 
+local SettingsMenu = Epip.GetFeature("Feature_SettingsMenu")
+
 Epip.Features.DebugCheats = {
     -- FlexStats visible in the "Add FlexStat..." context menu.
     -- All FlexStats are supported and need no special implementation, we just only display select ones so as not make the context menu look bloated.
@@ -272,8 +274,9 @@ end)
 -- LISTENERS
 ---------------------------------------------
 
-Client.UI.OptionsSettings:RegisterListener("ButtonClicked", function(element)
-    if element.ID == "DEBUG_WarpToAMERTest" then
+-- Listen for "Warp to AMER_Test" button being pressed in settings menu.
+SettingsMenu.Events.ButtonPressed:Subscribe(function (ev)
+    if ev.ButtonID == "DEBUG_WarpToAMERTest" then
         Net.PostToServer("EPIPENCOUNTERS_WARPPARTY", {
             Trigger = '99343515-4420-4660-9c39-a237634e92b7',
         })

@@ -1,61 +1,7 @@
 
----@meta Library: EpicEnemies, ContextServer, Epip.Features.EpicEnemies
-
+---@class Feature_EpicEnemies
 local EpicEnemies = Epip.Features.EpicEnemies
-local ServerSettings = Epip.Features.ServerSettings
-
-local settings = {
-    EpicEnemies_Toggle = {
-        ID = "EpicEnemies_Toggle",
-        Type = "Checkbox",
-        Label = "Enabled",
-        ServerOnly = true,
-        SaveOnServer = true,
-        Tooltip = "Enables the Epic Enemies feature.",
-        DefaultValue = false,
-    },
-    EpicEnemies_PointsBudget = {
-        ID = "EpicEnemies_PointsBudget",
-        Type = "Slider",
-        Label = "Points Budget",
-        SaveOnServer = true,
-        ServerOnly = true,
-        MinAmount = 1,
-        MaxAmount = 100,
-        Interval = 1,
-        DefaultValue = 30,
-        HideNumbers = false,
-        Tooltip = "Controls how many effects enemies affected by Epic Enemies can receive. Effects cost a variable amount of points based on how powerful they are.",
-    },
-    EpicEnemies_PointsMultiplier_Bosses = {
-        ID = "EpicEnemies_PointsMultiplier_Bosses",
-        Type = "Slider",
-        Label = "Boss Enemy Points Multiplier",
-        SaveOnServer = true,
-        ServerOnly = true,
-        MinAmount = 0,
-        MaxAmount = 5,
-        Interval = 0.01,
-        DefaultValue = 1,
-        HideNumbers = false,
-        Tooltip = "A multiplier for the amount of points boss enemies receive.",
-    },
-    EpicEnemies_PointsMultiplier_Normies = {
-        ID = "EpicEnemies_PointsMultiplier_Normies",
-        Type = "Slider",
-        Label = "Normal Enemy Points Multiplier",
-        SaveOnServer = true,
-        ServerOnly = true,
-        MinAmount = 0,
-        MaxAmount = 5,
-        Interval = 0.01,
-        DefaultValue = 0,
-        HideNumbers = false,
-        Tooltip = "A multiplier for the amount of points normal enemies receive.",
-    },
-}
-
-ServerSettings.AddModule("EpicEnemies", settings)
+local Settings = Settings
 
 ---------------------------------------------
 -- EVENTS/HOOKS
@@ -116,16 +62,12 @@ EpicEnemies.Hooks.GetPointsForCharacter = EpicEnemies:AddHook("GetPointsForChara
 ---@param char EsvCharacter|GUID
 ---@return bool
 function EpicEnemies.IsInitialized(char)
-    if type(char) == "userdata" then
-        return char:HasTag(EpicEnemies.INITIALIZED_TAG)
-    else
-        return Osi.IsTagged(char, EpicEnemies.INITIALIZED_TAG)
-    end
+    return Osiris.IsTagged(char, EpicEnemies.INITIALIZED_TAG) == 1
 end
 
 ---@param char EsvCharacter
 function EpicEnemies.InitializeCharacter(char)
-    if not ServerSettings.GetValue("EpicEnemies", "EpicEnemies_Toggle") then return nil end
+    if not Settings.GetSettingValue(EpicEnemies.SETTINGS_MODULE_ID, "EpicEnemies_Toggle") then return nil end
 
     local eligible = EpicEnemies.IsEligible(char)
 
@@ -158,8 +100,8 @@ function EpicEnemies.InitializeCharacter(char)
             attempts = attempts + 1
         end
 
-        SetTag(char.MyGuid, EpicEnemies.INITIALIZED_TAG)
-        ApplyStatus(char.MyGuid, "PIP_OSITOOLS_EpicBossesDisplay", -1, 1)
+        Osiris.SetTag(char, EpicEnemies.INITIALIZED_TAG)
+        Osiris.ApplyStatus(char, "PIP_OSITOOLS_EpicBossesDisplay", -1, 1, NULLGUID)
 
         Net.Broadcast("EPIPENCOUNTERS_EpicEnemies_EffectsApplied", {
             Effects = addedEffects,
@@ -175,16 +117,16 @@ end
 ---Remove all effects from a character.
 ---@param char EsvCharacter
 function EpicEnemies.CleanupCharacter(char)
-    if char:IsTagged(EpicEnemies.INITIALIZED_TAG) then
+    if EpicEnemies.IsInitialized(char) then
         local _, _, tuples = Osiris.DB_PIP_EpicEnemies_AppliedEffect:Get(char.MyGuid, nil)
 
         if tuples then
-            for i,tuple in ipairs(tuples) do
+            for _,tuple in ipairs(tuples) do
                 EpicEnemies.RemoveEffect(char, tuple[2])
             end
         end
 
-        Osi.ClearTag(char.MyGuid, EpicEnemies.INITIALIZED_TAG)
+        Osiris.ClearTag(char, EpicEnemies.INITIALIZED_TAG)
 
         Net.Broadcast("EPIPENCOUNTERS_EpicEnemies_EffectsRemoved", {
             CharacterNetID = char.NetID,
@@ -192,7 +134,7 @@ function EpicEnemies.CleanupCharacter(char)
 
         EpicEnemies:DebugLog("Removed effects from " .. char.DisplayName)
 
-        Osi.RemoveStatus(char.MyGuid, "PIP_OSITOOLS_EpicBossesDisplay")
+        Osiris.RemoveStatus(char, "PIP_OSITOOLS_EpicBossesDisplay")
 
         EpicEnemies.Events.CharacterCleanedUp:Fire(char)
     end
@@ -210,7 +152,7 @@ function EpicEnemies.ApplyEffect(char, effect)
     EpicEnemies:DebugLog("Applying effect: " .. effect.Name .. " to " .. char.DisplayName)
 
     Osiris.DB_PIP_EpicEnemies_AppliedEffect:Set(char.MyGuid, effect.ID)
-    Osi.SetTag(char.MyGuid, EpicEnemies.EFFECT_TAG_PREFIX .. effect.ID)
+    Osiris.SetTag(char, EpicEnemies.EFFECT_TAG_PREFIX .. effect.ID)
 
     EpicEnemies.ActivateEffects(char, "EffectApplied")
 end
@@ -246,7 +188,7 @@ function EpicEnemies.GetAppliedEffects(char, predicate)
     local effects = {}
 
     if tuples then
-        for i,tuple in ipairs(tuples) do
+        for _,tuple in ipairs(tuples) do
             local effect = EpicEnemies.GetEffectData(tuple[2])
     
             if not predicate or predicate(char, effect) then
@@ -259,14 +201,14 @@ function EpicEnemies.GetAppliedEffects(char, predicate)
 end
 
 ---@param char EsvCharacter
----@param effect EpicEnemiesCharacter
+---@param effect EpicEnemiesEffect
 ---@return boolean
 function EpicEnemies.EffectIsActive(char, effect)
     return EpicEnemies.GetEffectActivationCount(char, effect) > 0
 end
 
 ---@param char EsvCharacter
----@param effect EpicEnemiesCharacter
+---@param effect EpicEnemiesEffect
 ---@return integer
 function EpicEnemies.GetEffectActivationCount(char, effect)
     local _, _, activationCount = Osiris.DB_PIP_EpicEnemies_ActivatedEffect:Get(char.MyGuid, effect.ID, nil)
@@ -280,7 +222,7 @@ end
 function EpicEnemies.ActivateEffects(char, effectType, params)
     if type(char) ~= "userdata" then char = Ext.GetCharacter(char) end
 
-    for id,effect in pairs(EpicEnemies.GetAppliedEffects(char, function(char, eff) return eff.ActivationCondition.Type == effectType end)) do
+    for _,effect in pairs(EpicEnemies.GetAppliedEffects(char, function(_, eff) return eff.ActivationCondition.Type == effectType end)) do
         if EpicEnemies.Hooks.CanActivateEffect:Return(false, char, effect, effect.ActivationCondition, params) then
             EpicEnemies.ActivateEffect(char, effect)
         end
@@ -317,7 +259,7 @@ function EpicEnemies.RemoveEffect(char, effectID)
     EpicEnemies.DeactivateEffect(char, effect, EpicEnemies.GetEffectActivationCount(char, effect))
 
     Osiris.DB_PIP_EpicEnemies_AppliedEffect:Delete(char.MyGuid, effectID)
-    Osi.ClearTag(char.MyGuid, EpicEnemies.EFFECT_TAG_PREFIX .. effectID)
+    Osiris.ClearTag(char, EpicEnemies.EFFECT_TAG_PREFIX .. effectID)
 
     EpicEnemies:DebugLog("Removing effect: " .. effect.Name .. " from " .. char.DisplayName)
 
@@ -342,13 +284,13 @@ function EpicEnemies.GetRandomEffect(char, effectPool, activeEffects)
         end
     end
 
-    for id,effect in pairs(filteredPool) do
+    for _,effect in pairs(filteredPool) do
         totalWeight = totalWeight + effect:GetWeight()
     end
 
     local seed = Ext.Random(0, math.floor(totalWeight))
 
-    for id,effect in pairs(filteredPool) do
+    for _,effect in pairs(filteredPool) do
         seed = seed - effect:GetWeight()
 
         if seed < 0 then
@@ -362,7 +304,7 @@ end
 
 ---@param char EsvCharacter
 function EpicEnemies.GetPointsForCharacter(char)
-    return EpicEnemies.Hooks.GetPointsForCharacter:Return(ServerSettings.GetValue("EpicEnemies", "EpicEnemies_PointsBudget"), char)
+    return EpicEnemies.Hooks.GetPointsForCharacter:Return(Settings.GetSettingValue(EpicEnemies.SETTINGS_MODULE_ID, "EpicEnemies_PointsBudget"), char)
 end
 
 ---------------------------------------------
@@ -374,9 +316,9 @@ EpicEnemies.Hooks.GetPointsForCharacter:RegisterHook(function(points, char)
     local isBoss = Osi.IsBoss(char.MyGuid) == 1
 
     if isBoss then
-        points = points * ServerSettings.GetValue("EpicEnemies", "EpicEnemies_PointsMultiplier_Bosses")
+        points = points * Settings.GetSettingValue(EpicEnemies.SETTINGS_MODULE_ID, "EpicEnemies_PointsMultiplier_Bosses")
     else
-        points = points * ServerSettings.GetValue("EpicEnemies", "EpicEnemies_PointsMultiplier_Normies")
+        points = points * Settings.GetSettingValue(EpicEnemies.SETTINGS_MODULE_ID, "EpicEnemies_PointsMultiplier_Normies")
     end
 
     return points
@@ -387,8 +329,8 @@ Ext.Events.ResetCompleted:Subscribe(function()
     if Ext.Osiris.IsCallable() and EpicEnemies:IsDebug() then
         local _, _, tuples = Osiris.DB_PIP_EpicEnemies_AppliedEffect:Get(nil, nil)
 
-        for i,tuple in ipairs(tuples) do
-            EpicEnemies.CleanupCharacter(Ext.GetCharacter(tuple[1]))
+        for _,tuple in ipairs(tuples) do
+            EpicEnemies.CleanupCharacter(Character.Get(tuple[1]))
         end
     end
 end)
@@ -406,24 +348,24 @@ if false then
 end
 
 -- In developer mode, remove effects after exiting combat
-Ext.Osiris.RegisterListener("PROC_AMER_CharLeftCombat", 2, "after", function(char, combatID)
+Ext.Osiris.RegisterListener("PROC_AMER_CharLeftCombat", 2, "after", function(char, _)
     if Epip.IsDeveloperMode(true) then
-        EpicEnemies.CleanupCharacter(Ext.GetCharacter(char))
+        EpicEnemies.CleanupCharacter(Character.Get(char))
     end
 end)
 
 -- Initialize characters when combat starts.
-Ext.Osiris.RegisterListener("PROC_AMER_CharAddedToCombat", 2, "after", function(char, combatID)
-    EpicEnemies.InitializeCharacter(Ext.GetCharacter(char))
+Ext.Osiris.RegisterListener("PROC_AMER_CharAddedToCombat", 2, "after", function(char, _)
+    EpicEnemies.InitializeCharacter(Character.Get(char))
 end)
 
 -- TODO register this later so it runs last.
 EpicEnemies.Hooks.IsEligible:RegisterHook(function (eligible, char)
     -- Eligibility based on slider settings
     if Osi.IsBoss(char.MyGuid) == 1 then
-        eligible = ServerSettings.GetValue("EpicEnemies", "EpicEnemies_PointsMultiplier_Bosses") > 0
+        eligible = Settings.GetSettingValue(EpicEnemies.SETTINGS_MODULE_ID, "EpicEnemies_PointsMultiplier_Bosses") > 0
     else
-        eligible = ServerSettings.GetValue("EpicEnemies", "EpicEnemies_PointsMultiplier_Normies") > 0
+        eligible = Settings.GetSettingValue(EpicEnemies.SETTINGS_MODULE_ID, "EpicEnemies_PointsMultiplier_Normies") > 0
     end
 
     -- Players cannot be affected.
@@ -453,13 +395,12 @@ end)
 -- ACTIVATION CONDITIONS
 ---------------------------------------------
 
-EpicEnemies.Hooks.CanActivateEffect:RegisterHook(function(activate, char, effect, activationCondition, params)
+-- Activate effects with the "EffectApplied" condition always.
+EpicEnemies.Hooks.CanActivateEffect:RegisterHook(function(activate, _, _, activationCondition, _)
     local condition = activationCondition.Type
 
-    if not activate then
-        if condition == "EffectApplied" then
-            return true
-        end
+    if condition == "EffectApplied" then
+        activate = true
     end
 
     return activate

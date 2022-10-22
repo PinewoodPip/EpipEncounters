@@ -61,7 +61,7 @@ end
 function Settings.SynchronizeSetting(setting)
     local value = setting:GetValue()
 
-    if setting.Context == "Host" and Client.IsHost() then
+    if setting.Context ~= "Client" and Client.IsHost() then
         Net.PostToServer(Settings.NET_SYNC_CHANNEL, {
             Module = setting.ModTable,
             ID = setting.ID,
@@ -76,7 +76,7 @@ end
 
 -- Synchronize host setting changes to the server.
 Settings.Events.SettingValueChanged:Subscribe(function (ev)
-    if ev.Setting.Context == "Host" then
+    if ev.Setting.Context ~= "Client" then
         Settings.SynchronizeSetting(ev.Setting)
     end
 end)

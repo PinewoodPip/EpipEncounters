@@ -1,7 +1,6 @@
 
 ---@class Feature_ExtraDataConfig : Feature
 local DataConfig = Epip.Features.ExtraDataConfig
-local OptionsSettings = Client.UI.OptionsSettings
 local SettingsMenu = Epip.GetFeature("Feature_SettingsMenu")
 
 ---------------------------------------------
@@ -40,8 +39,6 @@ end)
 ---------------------------------------------
 -- SETUP
 ---------------------------------------------
-
-
 
 -- Generate settings.
 local tab = {

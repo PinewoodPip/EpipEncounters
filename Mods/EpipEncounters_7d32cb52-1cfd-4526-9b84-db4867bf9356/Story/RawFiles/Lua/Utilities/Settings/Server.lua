@@ -1,6 +1,7 @@
 
 ---@class SettingsLib
 local Settings = Settings
+Settings._SettingsLoaded = false
 
 ---------------------------------------------
 -- METHODS
@@ -31,12 +32,15 @@ function Settings.Load()
     local vars = Settings:GetPersistentVariables()
 
     Settings:DebugLog("Loading server settings")
+    Settings:Dump(vars)
 
     for moduleID,settings in pairs(vars) do
         for id,value in pairs(settings) do
             Settings.SetValue(moduleID, id, value)
         end
     end
+
+    Settings._SettingsLoaded = true
 
     Settings.SynchronizeSettings()
 end
@@ -49,9 +53,10 @@ end
 Settings.Events.SettingValueChanged:Subscribe(function (ev)
     local setting = ev.Setting
 
-    if setting.Context == "Server" then
+    if setting.Context == "Server" and Settings._SettingsLoaded then
         local vars = Settings:GetPersistentVariables()
         
+        -- TODO optimize
         vars[setting.ModTable] = Settings.GetModuleSettingValues(setting.ModTable)
     end
 end)
@@ -69,12 +74,7 @@ Net.RegisterListener(Settings.NET_SYNC_CHANNEL, function (payload)
     end
 end)
 
--- Load saved settings.
-Ext.Events.SessionLoading:Subscribe(function (_)
-    Settings.Load()
-end)
-
--- Synchronize server settings upon the game starting.
+-- Load and synchronize server settings upon the game starting.
 Ext.Osiris.RegisterListener("GameStarted", 2, "after", function()
-    Settings.SynchronizeSettings()
+    Settings.Load()
 end)

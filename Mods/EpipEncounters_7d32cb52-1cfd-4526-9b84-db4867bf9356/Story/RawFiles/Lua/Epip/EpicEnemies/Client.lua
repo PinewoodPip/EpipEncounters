@@ -1,76 +1,23 @@
 
----@meta Library: EpicEnemies, ContextClient, Epip.Features.EpicEnemies
-
-local EpicEnemies = Epip.Features.EpicEnemies
+local EpicEnemies = Epip.GetFeature("Feature_EpicEnemies")
+local SettingsMenu = Epip.GetFeature("Feature_SettingsMenu")
 
 ---@type EpicEnemies_Hook_GetActivationConditionDescription
 EpicEnemies.Hooks.GetActivationConditionDescription = EpicEnemies:AddHook("GetActivationConditionDescription")
 
----@type OptionsSettingsOption[]
-local Settings = {
-    {
-        ID = "EpicEnemies_Header",
-        Type = "Header",
-        Label = "Epic Enemies is a randomizer feature that gives enemies in combat<br>random keyword effects, artifacts and other boons.<br><br>The sliders in this menu control the relative chance of each effect being applied; you may set them to 0 to prevent the effect from being applied.<br><br>Every effect has a certain 'point cost', reducing the possibility of enemies appearing with numerous very strong effects. You may configure this points budget to control how many effects enemies gain.<br>Enemies affected by this feature gain 2 free Generic reaction charges per turn.", 
-    },
-    {
-        ID = "EpicEnemies_Toggle",
-        Type = "Checkbox",
-        Label = "Enabled",
-        ServerOnly = true,
-        SaveOnServer = true,
-        Tooltip = "Enables the Epic Enemies feature.",
-        DefaultValue = false,
-    },
-    {
-        ID = "EpicEnemies_PointsBudget",
-        Type = "Slider",
-        Label = "Points Budget",
-        SaveOnServer = true,
-        ServerOnly = true,
-        MinAmount = 1,
-        MaxAmount = 100,
-        Interval = 1,
-        DefaultValue = 30,
-        HideNumbers = false,
-        Tooltip = "Controls how many effects enemies affected by Epic Enemies can receive. Effects cost a variable amount of points based on how powerful they are.",
-    },
-    {
-        ID = "EpicEnemies_PointsMultiplier_Bosses",
-        Type = "Slider",
-        Label = "Boss Enemy Points Multiplier",
-        SaveOnServer = true,
-        ServerOnly = true,
-        MinAmount = 0,
-        MaxAmount = 5,
-        Interval = 0.01,
-        DefaultValue = 1,
-        HideNumbers = false,
-        Tooltip = "A multiplier for the amount of points boss enemies receive.",
-    },
-    {
-        ID = "EpicEnemies_PointsMultiplier_Normies",
-        Type = "Slider",
-        Label = "Normal Enemy Points Multiplier",
-        SaveOnServer = true,
-        ServerOnly = true,
-        MinAmount = 0,
-        MaxAmount = 5,
-        Interval = 0.01,
-        DefaultValue = 0,
-        HideNumbers = false,
-        Tooltip = "A multiplier for the amount of points normal enemies receive.",
+local tab = {
+    ID = EpicEnemies.SETTINGS_MODULE_ID,
+    ButtonLabel = "Epic Enemies",
+    HeaderLabel = Text.Format("Epic Enemies", {Color = "7e72d6", Size = 23}),
+    HostOnly = true,
+    Entries = {
+        {Type = "Label", Label = "Epic Enemies is a randomizer feature that gives enemies in combat<br>random keyword effects, artifacts and other boons.<br><br>The sliders in this menu control the relative chance of each effect being applied; you may set them to 0 to prevent the effect from being applied.<br><br>Every effect has a certain 'point cost', reducing the possibility of enemies appearing with numerous very strong effects. You may configure this points budget to control how many effects enemies gain.<br>Enemies affected by this feature gain 2 free Generic reaction charges per turn."},
     },
 }
-
-Client.UI.OptionsSettings.RegisterMod("EpicEnemies", {
-    ServerOnly = true,
-    SideButtonLabel = "Epic Enemies",
-    TabHeader = Text.Format("Epic Enemies", {Color = "7e72d6", Size = 23}),
-    -- Options = Settings -- TODO investigate hang ???
-})
-
-Client.UI.OptionsSettings.RegisterOptions("EpicEnemies", Settings)
+for _,setting in ipairs(EpicEnemies._SHARED_SETTINGS) do
+    table.insert(tab.Entries, {Type = "Setting", Module = EpicEnemies.SETTINGS_MODULE_ID, ID = setting.ID})
+end
+SettingsMenu.RegisterTab(tab)
 
 ---------------------------------------------
 -- METHODS
@@ -120,7 +67,7 @@ Game.Tooltip.RegisterListener("Status", nil, function(char, status, tooltip)
         local effects = EpicEnemies.GetAppliedEffects(char)
         local str = ""
 
-        for i,effect in ipairs(effects) do
+        for _,effect in ipairs(effects) do
             if effect.Visible or effect.Visible == nil then
                 local activationConditionText = EpicEnemies.Hooks.GetActivationConditionDescription:Return("", effect.ActivationCondition, char)
 
@@ -144,34 +91,34 @@ Game.Tooltip.RegisterListener("Status", nil, function(char, status, tooltip)
 end)
 
 -- Render category selector.
-Client.UI.OptionsSettings.Events.TabRendered:RegisterListener(function (customTab, index)
-    if customTab and customTab.Mod == "EpicEnemies" then
+SettingsMenu.Hooks.GetTabEntries:Subscribe(function (ev)
+    if ev.Tab.ID == EpicEnemies.SETTINGS_MODULE_ID then
+        ---@type Feature_SettingsMenu_Entry_Category
         local option = {
             ID = "EpicEnemies_CategorySelector",
-            Mod = "EpicEnemies",
+            Type = "Category",
             Label = Text.Format("Effect Categories", {FontType = Text.FONTS.BOLD}),
-            DefaultValue = 1,
-            Type = "Selector",
             Options = {},
-            VisibleAtTopLevel = false,
         }
 
         for i,category in ipairs(EpicEnemies.CATEGORIES) do
-            local tab = {
+            ---@type Feature_SettingsMenu_Entry_Category_Option
+            local optionEntry = {
+                ID = i,
                 Label = category.Name,
-                SubSettings = {
-                    "EpicEnemies_CategoryWeight_" .. category.ID,
+                SubEntries = {
+                    {Type = "Setting", Module = EpicEnemies.SETTINGS_MODULE_ID, ID = "EpicEnemies_CategoryWeight_" .. category.ID,}
                 },
             }
         
-            for z,effectID in ipairs(category.Effects) do
-                table.insert(tab.SubSettings, effectID)
+            for _,effectID in ipairs(category.Effects) do
+                table.insert(optionEntry.SubEntries, {Type = "Setting", Module = EpicEnemies.SETTINGS_MODULE_ID, ID = effectID})
             end
         
-            table.insert(option.Options, tab)
+            table.insert(option.Options, optionEntry)
         end
 
-        Client.UI.OptionsSettings.RenderOption(option, nil, nil)
+        table.insert(ev.Entries, option)
     end
 end)
 

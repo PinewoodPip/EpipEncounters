@@ -1,6 +1,5 @@
 
----@meta Library: EpicEnemies, ContextShared, Epip.Features.EpicEnemies, EpicEnemies
-
+---@class Feature_EpicEnemies : Feature
 local EpicEnemies = {
     ---@type table<string, EpicEnemiesEffect>
     EFFECTS = {},
@@ -9,6 +8,61 @@ local EpicEnemies = {
     INITIALIZED_TAG = "PIP_EpicEnemy",
     INELIGIBLE_TAG = "PIP_EpicEnemies_Ineligible",
     EFFECT_TAG_PREFIX = "PIP_EpicEnemies_Effect_",
+    SETTINGS_MODULE_ID = "EpicEnemies",
+
+    ---@type SettingsLib_Setting[]
+    _SHARED_SETTINGS = {
+        {
+            ID = "EpicEnemies_Toggle",
+            Type = "Boolean",
+            Name = "Enabled",
+            Description = "Enables the Epic Enemies feature.",
+            Context = "Host",
+            ServerOnly = true,
+            SaveOnServer = true,
+            DefaultValue = false,
+        },
+        {
+            ID = "EpicEnemies_PointsBudget",
+            Type = "ClampedNumber",
+            Name = "Points Budget",
+            Description = "Controls how many effects enemies affected by Epic Enemies can receive. Effects cost a variable amount of points based on how powerful they are.",
+            SaveOnServer = true,
+            ServerOnly = true,
+            Min = 1,
+            Max = 100,
+            Step = 1,
+            DefaultValue = 30,
+            HideNumbers = false,
+        },
+        {
+            ID = "EpicEnemies_PointsMultiplier_Bosses",
+            Type = "ClampedNumber",
+            Name = "Boss Enemy Points Multiplier",
+            Description = "A multiplier for the amount of points boss enemies receive.",
+            SaveOnServer = true,
+            ServerOnly = true,
+            Min = 0,
+            Max = 5,
+            Step = 0.01,
+            DefaultValue = 1,
+            HideNumbers = false,
+        },
+        {
+            ID = "EpicEnemies_PointsMultiplier_Normies",
+            Type = "ClampedNumber",
+            Name = "Normal Enemy Points Multiplier",
+            Description = "A multiplier for the amount of points normal enemies receive.",
+            SaveOnServer = true,
+            ServerOnly = true,
+            Min = 0,
+            Max = 5,
+            Step = 0.01,
+            DefaultValue = 0,
+            HideNumbers = false,
+        },
+    },
+
     Events = {
         
     },
@@ -32,7 +86,7 @@ if Ext.IsServer() then
     EpicEnemies.Hooks.CanActivateEffect = {}
 end
 
-Epip.AddFeature("EpicEnemies", "EpicEnemies", EpicEnemies)
+Epip.RegisterFeature("EpicEnemies", EpicEnemies)
 Epip.Features.EpicEnemies = EpicEnemies
 
 ---@class EpicEnemiesActivationCondition
@@ -43,6 +97,15 @@ local _EpicEnemiesActivationCondition = {
     Type = "EffectApplied",
     MaxActivations = 1,
 }
+
+---@class EpicEnemiesKeywordData
+---@field Keyword Keyword
+---@field BoonType KeywordBoonType
+
+---@class EpicEnemiesEffectsCategory
+---@field Name string
+---@field ID string
+---@field Effects string[]|EpicEnemiesEffect[] Can be an array of EpicEnemiesEffect while calling the register method. Will be turned into an ID array afterwards.
 
 ---@class EpicEnemiesEffect
 ---@field ID string
@@ -55,17 +118,6 @@ local _EpicEnemiesActivationCondition = {
 ---@field ActivationCondition EpicEnemiesActivationCondition
 ---@field Category string?
 ---@field Visible boolean? Whether this effect appears in tooltips. Defaults to true.
-
----@class EpicEnemiesKeywordData
----@field Keyword Keyword
----@field BoonType KeywordBoonType
-
----@class EpicEnemiesEffectsCategory
----@field Name string
----@field ID string
----@field Effects string[]|EpicEnemiesEffect[] Can be an array of EpicEnemiesEffect while calling the register method. Will be turned into an ID array afterwards.
-
----@type EpicEnemiesEffect
 _EpicEnemiesEffect = {
     Description = "NO DESCRIPTION",
     Name = "NO NAME",
@@ -92,17 +144,17 @@ function _EpicEnemiesEffect:GetWeight()
     local weight = self.DefaultWeight or self.Weight
 
     if Ext.IsClient() then
-        weight = Client.UI.OptionsSettings.GetOptionValue("EpicEnemies", self.ID)
+        weight = Settings.GetSettingValue(EpicEnemies.SETTINGS_MODULE_ID, self.ID)
 
         if self.Category then
-            weight = weight * Client.UI.OptionsSettings.GetOptionValue("EpicEnemies", "EpicEnemies_CategoryWeight_" .. self.Category)
+            weight = weight * Settings.GetSettingValue(EpicEnemies.SETTINGS_MODULE_ID, "EpicEnemies_CategoryWeight_" .. self.Category)
         end
     else
-        weight = Epip.Features.ServerSettings.GetValue("EpicEnemies", self.ID) or 0
+        weight = Settings.GetSettingValue(EpicEnemies.SETTINGS_MODULE_ID, self.ID) or 0
 
         -- Multiply by category multiplier
         if self.Category then
-            weight = weight * (Epip.Features.ServerSettings.GetValue("EpicEnemies", "EpicEnemies_CategoryWeight_" .. self.Category) or 1)
+            weight = weight * (Settings.GetSettingValue(EpicEnemies.SETTINGS_MODULE_ID, "EpicEnemies_CategoryWeight_" .. self.Category) or 1)
         end
     end
 
@@ -131,41 +183,26 @@ function EpicEnemies.RegisterEffectCategory(category)
 
     table.insert(EpicEnemies.CATEGORIES, category)
 
-    -- Register slider
-    if Ext.IsClient() then
-        local setting = {
-            ID = settingID,
-            Type = "Slider",
-            Label = "Category Weight Multiplier",
-            SaveOnServer = true,
-            ServerOnly = true,
-            MinAmount = 0,
-            MaxAmount = 5,
-            Interval = 0.01,
-            DefaultValue = 1,
-            HideNumbers = false,
-            VisibleAtTopLevel = false,
-            Tooltip = Text.Format("A multiplier for the weights of the effects of this category (%s).", {FormatArgs = {category.Name}}),
-        }
+    -- Register setting
+    ---@type SettingsLib_Setting_ClampedNumber
+    local setting = {
+        ID = settingID,
+        ModTable = EpicEnemies.SETTINGS_MODULE_ID,
+        Type = "ClampedNumber",
+        Context = "Server",
+        Name = "Category Weight Multiplier",
+        Description = Text.Format("A multiplier for the weights of the effects of this category (%s).", {FormatArgs = {category.Name}}),
+        SaveOnServer = true,
+        ServerOnly = true,
+        Min = 0,
+        Max = 5,
+        Step = 0.01,
+        DefaultValue = 1,
+        HideNumbers = false,
+        VisibleAtTopLevel = false,
+    }
 
-        Client.UI.OptionsSettings.RegisterOption("EpicEnemies", setting)
-    else -- Register server setting
-        local setting = {
-            ID = settingID,
-            Type = "Slider",
-            Label = "Category Weight Multiplier",
-            SaveOnServer = true,
-            ServerOnly = true,
-            MinAmount = 0,
-            MaxAmount = 5,
-            Interval = 0.01,
-            DefaultValue = 1,
-            HideNumbers = false,
-            Tooltip = "A multiplier for the weights of the effects of this category.",
-        }
-        
-        Epip.Features.ServerSettings.AddOption("EpicEnemies", setting)
-    end
+    Settings.RegisterSetting(setting)
 
     for i,effect in ipairs(category.Effects) do
         if type(effect) == "table" then
@@ -199,35 +236,45 @@ function EpicEnemies.RegisterEffect(id, effect)
 
     EpicEnemies.EFFECTS[id] = effect
 
-    -- Register customizable option
-    local option = EpicEnemies.GenerateOptionData(effect)
-    if Ext.IsClient() then
-        Client.UI.OptionsSettings.RegisterOption("EpicEnemies", option)
-    else
-        Epip.Features.ServerSettings.AddOption("EpicEnemies", option)
-    end
+    -- Register customizable setting
+    local setting = EpicEnemies.GenerateOptionData(effect)
+    Settings.RegisterSetting(setting)
 end
 
 ---@param effect EpicEnemiesEffect
 function EpicEnemies.GenerateOptionData(effect)
-    ---@type OptionsSettingsOption
+    ---@type SettingsLib_Setting_ClampedNumber
     local option = {
         ID = effect.ID,
-        Type = "Slider",
-        ServerOnly = true,
-        SaveOnServer = true,
-        Interval = 1,
-        MinAmount = 0,
-        MaxAmount = 100,
-        VisibleAtTopLevel = false,
-        HideNumbers = false,
-        DefaultValue = effect.DefaultWeight,
-        Label = effect.Name,
-        Tooltip = Text.Format("%s<br><br>Costs %s points.", {FormatArgs = {
+        Type = "ClampedNumber",
+        ModTable = EpicEnemies.SETTINGS_MODULE_ID,
+        Context = "Host",
+        Name = effect.Name,
+        Description = Text.Format("%s<br><br>Costs %s points.", {FormatArgs = {
             effect.Description,
             effect:GetCost(),
         }}),
+        ServerOnly = true,
+        SaveOnServer = true,
+        Step = 1,
+        Min = 0,
+        Max = 100,
+        VisibleAtTopLevel = false,
+        HideNumbers = false,
+        DefaultValue = effect.DefaultWeight,
     }
 
     return option
+end
+
+---------------------------------------------
+-- SETUP
+---------------------------------------------
+
+-- Register shared settings
+for _,setting in ipairs(EpicEnemies._SHARED_SETTINGS) do
+    setting.ModTable = EpicEnemies.SETTINGS_MODULE_ID
+    setting.Context = "Server"
+
+    Settings.RegisterSetting(setting)
 end

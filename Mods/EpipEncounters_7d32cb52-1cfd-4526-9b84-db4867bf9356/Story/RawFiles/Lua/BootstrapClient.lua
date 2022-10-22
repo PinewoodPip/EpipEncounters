@@ -289,10 +289,6 @@ LOAD_ORDER = {
 
     "UI/Controller/PanelSelect.lua",
 
-    "Debug/Shared.lua",
-    "Debug/Client.lua",
-    "Debug/Commands/Client.lua",
-
     "Epip/Client/ImmersiveMeditation.lua",
     "Epip/Client/NameTypoFixes.lua",
     "Epip/Client/ExamineImprovements.lua",
@@ -315,6 +311,10 @@ LOAD_ORDER = {
             "Epip/Client/SettingsMenu/Client.lua",
         },
     },
+
+    "Debug/Shared.lua",
+    "Debug/Client.lua",
+    "Debug/Commands/Client.lua",
     
     "Epip/Client/TreasureTableDisplay.lua",
     "Epip/Client/SummonControlFix.lua",

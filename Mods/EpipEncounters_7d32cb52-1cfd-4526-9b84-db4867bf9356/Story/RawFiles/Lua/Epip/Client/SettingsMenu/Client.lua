@@ -14,6 +14,7 @@ local Menu = {
     nextElementNumID = 1, ---@type Feature_SettingsMenu_ElementID
     tabButtonToTabID = {}, ---@type table<integer, string>
     pendingChanges = {}, ---@type table<string, any>
+    categoryStateIndexes = {},
 
     _initializedUI = false,
 
@@ -45,7 +46,7 @@ Epip.RegisterFeature("SettingsMenu", Menu)
 ---@field Entries Feature_SettingsMenu_Entry[]
 
 ---@class Feature_SettingsMenu_Entry
----@field Type "Setting"|"Label"|"Button"
+---@field Type "Setting"|"Label"|"Button"|"Category"
 
 ---@class Feature_SettingsMenu_Entry_Label : Feature_SettingsMenu_Entry
 ---@field Label string
@@ -58,6 +59,16 @@ Epip.RegisterFeature("SettingsMenu", Menu)
 ---@field ID string
 ---@field Tooltip string
 ---@field SoundOnUp string
+
+---@class Feature_SettingsMenu_Entry_Category_Option
+---@field ID any Defaults to index.
+---@field Label string
+---@field SubEntries Feature_SettingsMenu_Entry[]
+
+---@class Feature_SettingsMenu_Entry_Category : Feature_SettingsMenu_Entry
+---@field Label string
+---@field ID string
+---@field Options Feature_SettingsMenu_Entry_Category_Option[]
 
 ---@class Feature_SettingsMenu_Setting : SettingsLib_Setting
 ---@field Visible boolean? Defaults to true.
@@ -173,51 +184,17 @@ function Menu.RenderSettings(tab)
     local UI = Menu.GetUI()
     local root = UI:GetRoot()
     Menu.nextElementNumID = 1
+    Menu.currentElements = {}
     root.removeItems()
 
     Menu:DebugLog("Rendering tab", tab.ID)
 
     local entries = Menu.Hooks.GetTabEntries:Throw({
         Tab = tab,
-        Entries = tab.Entries,
+        Entries = table.deepCopy(tab.Entries),
     }).Entries
     for _,entry in ipairs(entries) do
-        local numID
-
-        -- TODO extract methods for these, add events
-        if entry.Type == "Setting" then
-            entry = entry ---@type Feature_SettingsMenu_Entry_Setting
-            local setting = Settings.GetSetting(entry.Module, entry.ID) ---@type Feature_SettingsMenu_Setting
-            
-            if setting then
-                local canRender = setting.Visible or setting.Visible == nil
-    
-                canRender = canRender and (not setting.DeveloperOnly or Epip.IsDeveloperMode())
-    
-                if canRender then
-                    numID = Menu.RenderSetting(setting)
-                end
-            else
-                Menu:LogError("Tried to render setting that doesn't exist " .. entry.Module .. " " .. entry.ID)
-            end
-        elseif entry.Type == "Label" then
-            numID = Menu.nextElementNumID
-            Menu.nextElementNumID = Menu.nextElementNumID + 1
-
-            Menu._RenderLabel(entry, numID)
-        elseif entry.Type == "Button" then
-            numID = Menu.nextElementNumID
-            Menu.nextElementNumID = Menu.nextElementNumID + 1
-
-            Menu._RenderButton(entry, numID)
-        end
-
-        if numID then
-            Menu.currentElements[numID] = entry
-        else
-            Menu:DebugLog("Entry render not processed:")
-            Menu:Dump(entry)
-        end
+        Menu.RenderEntry(entry)
     end
 
     Menu.currentTabID = tab.ID
@@ -225,6 +202,54 @@ function Menu.RenderSettings(tab)
     root.mainMenu_mc.setTitle(tab.HeaderLabel or tab.ID)
 
     -- TODO fire tabrendered
+end
+
+---@param entry Feature_SettingsMenu_Entry
+---@return Feature_SettingsMenu_ElementID
+function Menu.RenderEntry(entry)
+    local numID
+
+    if entry.Type == "Setting" then
+        entry = entry ---@type Feature_SettingsMenu_Entry_Setting
+        local setting = Settings.GetSetting(entry.Module, entry.ID) ---@type Feature_SettingsMenu_Setting
+        
+        if setting then
+            local canRender = setting.Visible or setting.Visible == nil
+
+            canRender = canRender and (not setting.DeveloperOnly or Epip.IsDeveloperMode())
+
+            if canRender then
+                numID = Menu.RenderSetting(setting)
+            end
+        else
+            Menu:LogError("Tried to render setting that doesn't exist " .. entry.Module .. " " .. entry.ID)
+        end
+    elseif entry.Type == "Category" then
+        entry = entry ---@type Feature_SettingsMenu_Entry_Category
+        numID = Menu.nextElementNumID
+        Menu.nextElementNumID = Menu.nextElementNumID + 1
+
+        Menu._RenderCategory(entry, numID)
+    elseif entry.Type == "Label" then
+        numID = Menu.nextElementNumID
+        Menu.nextElementNumID = Menu.nextElementNumID + 1
+
+        Menu._RenderLabel(entry, numID)
+    elseif entry.Type == "Button" then
+        numID = Menu.nextElementNumID
+        Menu.nextElementNumID = Menu.nextElementNumID + 1
+
+        Menu._RenderButton(entry, numID)
+    end
+
+    if numID then
+        Menu.currentElements[numID] = entry
+    else
+        Menu:DebugLog("Entry render not processed:")
+        Menu:Dump(entry)
+    end
+
+    return numID
 end
 
 ---@param setting Feature_SettingsMenu_Setting
@@ -282,6 +307,8 @@ function Menu.SetElementState(elementID, state, entry)
             local setting = Settings.GetSetting(entry.Module, entry.ID)
 
             Menu.SetSettingElementState(elementID, setting, state)
+        elseif entryType == "Category" then
+            root.mainMenu_mc.setSelector(elementID, state - 1, true)
         else
             Menu:LogError("Setting element state for entries of type " .. entryType .. " is not supported!")
         end
@@ -322,6 +349,8 @@ end
 
 function Menu.Close()
     local ui = Menu.GetUI()
+
+    Menu.categoryStateIndexes = {}
 
     -- ui:SetFlag("OF_PauseRequest", false)
 
@@ -380,6 +409,52 @@ function Menu._RenderLabel(data, numID)
     element.text_txt.x = 160
     element.autoSize = "center"
     element.text_txt.height = element.text_txt.textHeight
+end
+
+---@param entry Feature_SettingsMenu_Entry_Category
+---@param numID Feature_SettingsMenu_ElementID
+function Menu._RenderCategory(entry, numID)
+    Menu._RenderSelector(entry, numID)
+
+    -- Render sub-entries
+    local currentOption = entry.Options[Menu.categoryStateIndexes[entry.ID]]
+    for _,subEntry in ipairs(currentOption.SubEntries) do
+        Menu.RenderEntry(subEntry)
+    end
+end
+
+---@param data Feature_SettingsMenu_Entry_Category
+---@param numID Feature_SettingsMenu_ElementID
+function Menu._RenderSelector(data, numID)
+    local root = Menu.GetUI():GetRoot()
+
+    root.mainMenu_mc.addMenuSelector(numID, data.Label)
+    local element = Client.Flash.GetLastElement(root.mainMenu_mc.list.content_array)
+    element.title_txt.y = element.title_txt.y + 20
+    element.heightOverride = element.height + 40
+    element.formHL_mc.alpha = 0
+    element.selectorData_mc.alpha = 0
+    element.title_txt.mouseEnabled = false
+    element = element.selection_mc
+    element.hit_mc.alpha = 0
+
+    element.y = element.y + 50
+    element.x = 180
+    element.hit_mc.mouseEnabled = false -- TODO
+
+    element.LB_mc.x = 0
+    element.text_txt.x = 0
+    element.text_txt.mouseEnabled = false
+    element.RB_mc.x = 550
+
+    for i,option in ipairs(data.Options) do
+        option.ID = option.ID or i
+        root.mainMenu_mc.addSelectorOption(numID, i - 1, option.Label)
+    end
+
+    Menu.categoryStateIndexes[data.ID] = Menu.categoryStateIndexes[data.ID] or 1
+    
+    Menu.SetElementState(numID, Menu.categoryStateIndexes[data.ID], data)
 end
 
 ---@param data Feature_SettingsMenu_Entry_Button
@@ -475,6 +550,18 @@ UI:RegisterCallListener("buttonPressed", function (_, elementID)
         })
     else
         Menu:LogWarning("A button has been pressed which was not declared with any ID - it will not be usable in scripting.")
+    end
+end)
+
+-- Listen for selectors being switched.
+UI:RegisterCallListener("selectOption", function (_, elementID, optionIndex, _)
+    -- TODO extract method
+    local entry = Menu.currentElements[elementID] ---@type Feature_SettingsMenu_Entry_Category
+
+    if entry and entry.Type == "Category" then
+        Menu.categoryStateIndexes[entry.ID] = optionIndex + 1
+
+        Menu.RenderSettings(Menu.GetTab(Menu.currentTabID))
     end
 end)
 

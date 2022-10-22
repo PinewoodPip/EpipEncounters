@@ -148,8 +148,6 @@ function Settings.GetModuleSettingValues(modTable, includeInvalidContexts)
     for id,setting in pairs(module.Settings) do
         if includeInvalidContexts or setting:IsInValidContext() then
             output[id] = setting:GetValue()
-        else
-            Settings:DebugLog("Setting " .. id .. " not saved due to being in incorrect context")
         end
     end
 
@@ -229,7 +227,9 @@ function Settings.RegisterSetting(data)
     -- Default to client context
     data.Context = data.Context or "Client"
 
-    if not Settings.Modules[data.ModTable] then
+    -- Pre-load saved client setting values.
+    -- For server, we must wait for PersistentVars to be available.
+    if not Settings.Modules[data.ModTable] and Ext.IsClient() then
         Settings.Load(data.ModTable)
     end
 

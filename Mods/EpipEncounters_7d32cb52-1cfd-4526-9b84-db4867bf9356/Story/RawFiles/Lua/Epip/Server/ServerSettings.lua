@@ -1,4 +1,9 @@
 
+---------------------------------------------
+-- THIS FEATURE IS NOW DEPRECATED!
+-- Please use the new Settings lib.
+---------------------------------------------
+
 local Settings = {
     MODULES = {
 
