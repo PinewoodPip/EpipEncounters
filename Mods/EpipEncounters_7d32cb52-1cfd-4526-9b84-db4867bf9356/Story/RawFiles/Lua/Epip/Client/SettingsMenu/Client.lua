@@ -618,6 +618,15 @@ UI:RegisterCallListener("requestCloseUI", function (ev)
     ev:PreventAction()
 end)
 
+-- Make developer settings return their default value if dev mode is off.
+Settings.Hooks.GetSettingValue:Subscribe(function (ev)
+    local setting = ev.Setting ---@type Feature_SettingsMenu_Setting
+
+    if setting.DeveloperOnly and not Epip.IsDeveloperMode() then
+        ev.Value = setting.DefaultValue
+    end
+end)
+
 ---------------------------------------------
 -- SETUP
 ---------------------------------------------

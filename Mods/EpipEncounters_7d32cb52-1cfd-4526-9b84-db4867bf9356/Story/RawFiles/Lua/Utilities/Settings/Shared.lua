@@ -18,6 +18,9 @@ Settings = {
 
     Events = {
         SettingValueChanged = {}, ---@type Event<SettingsLib_Event_SettingValueChanged>
+    },
+    Hooks = {
+        GetSettingValue = {}, ---@type Event<SettingsLib_Hook_GetSettingValue>
     }
 }
 Epip.InitializeLibrary("Settings", Settings)
@@ -102,6 +105,10 @@ function _Setting:_Init() end
 ---@class SettingsLib_Event_SettingValueChanged
 ---@field Setting SettingsLib_Setting
 ---@field Value any
+
+---@class SettingsLib_Hook_GetSettingValue
+---@field Setting SettingsLib_Setting
+---@field Value any Hookable.
 
 ---------------------------------------------
 -- METHODS
@@ -204,6 +211,11 @@ function Settings.GetSettingValue(modTable, id)
     elseif Settings.unregisteredSettingValues[modTable] then
         value = Settings.unregisteredSettingValues[modTable][id]
     end
+
+    value = Settings.Hooks.GetSettingValue:Throw({
+        Setting = setting,
+        Value = value
+    }).Value
 
     return value
 end
