@@ -10,7 +10,7 @@ local SettingsMenu = Epip.GetFeature("Feature_SettingsMenu")
 -- TODO rework this into server settings, so it synchs automatically?
 Settings.Events.SettingValueChanged:Subscribe(function (ev)
     local setting = ev.Setting ---@type {IsExtraData: boolean} | SettingsLib_Setting
-    if setting.IsExtraData then
+    if setting.IsExtraData and GameState.IsInSession() then
         local extraData = Stats.ExtraData[setting.ID]
 
         DataConfig.SetValue(extraData.ID, ev.Value)

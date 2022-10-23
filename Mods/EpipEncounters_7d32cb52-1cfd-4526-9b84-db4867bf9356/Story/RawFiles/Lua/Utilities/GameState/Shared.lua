@@ -10,6 +10,14 @@ GameState = {
         Paused = true,
         PrepareRunning = true,
     },
+    LOADING_STATES = {
+        LOAD_LEVEL = "LoadLevel",
+        LOAD_SESSION = "LoadSession",
+        LOAD_MODULE = "LoadModule",
+        SWAP_LEVEL = "SwapLevel",
+        PREPARE_RUNNING = "PrepareRunning",
+        START_LOADING = "StartLoading",
+    },
 
     ---@type table<string, GameState>
     SERVER_STATES = {
@@ -112,6 +120,10 @@ Epip.InitializeLibrary("GameState", GameState)
 ---@return boolean
 function GameState.IsInSession()
     return GameState.IN_SESSION_STATES[GameState.GetState()] == true
+end
+
+function GameState.IsLoading()
+    return GameState.LOADING_STATES[GameState.GetState()] == true
 end
 
 ---------------------------------------------

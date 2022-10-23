@@ -49,22 +49,6 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
--- Synchronize setting changes to PersistentVars.
-Settings.Events.SettingValueChanged:Subscribe(function (ev)
-    local setting = ev.Setting
-
-    if setting.Context == "Server" then
-        Settings.SynchronizeSetting(setting)
-
-        if Settings._SettingsLoaded then
-            local vars = Settings:GetPersistentVariables()
-            
-            -- TODO optimize
-            vars[setting.ModTable] = Settings.GetModuleSettingValues(setting.ModTable)
-        end
-    end
-end)
-
 -- Listen for requests to sync settings from the host.
 Net.RegisterListener(Settings.NET_SYNC_CHANNEL, function (payload)
     local setting = Settings.GetSetting(payload.Module, payload.ID)
@@ -73,6 +57,20 @@ Net.RegisterListener(Settings.NET_SYNC_CHANNEL, function (payload)
         Settings:DebugLog("Synched setting from host: " .. setting.ID)
 
         Settings.SetValue(setting.ModTable, setting.ID, payload.Value, false)
+
+        -- Synchronize setting changes to PersistentVars.
+        if setting.Context == "Server" then
+            Settings.SynchronizeSetting(setting)
+    
+            if Settings._SettingsLoaded then
+                local vars = Settings:GetPersistentVariables()
+                
+                Settings:DebugLog("Saved setting to PersistentVars", setting.ID, payload.Value)
+                
+                -- TODO optimize
+                vars[setting.ModTable] = Settings.GetModuleSettingValues(setting.ModTable)
+            end
+        end
     else
         Settings:LogError("Tried to sync an unregistered setting: " .. payload.ID)
     end
