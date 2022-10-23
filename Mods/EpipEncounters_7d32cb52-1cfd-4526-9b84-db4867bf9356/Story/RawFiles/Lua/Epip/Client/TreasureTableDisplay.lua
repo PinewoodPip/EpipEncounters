@@ -86,7 +86,7 @@ local _TreasureTableEntry = {
 local Bar = Client.UI.EnemyHealthBar
 
 function TTD:IsEnabled()
-    return not self.Disabled and Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "TreasureTableDisplay")
+    return not self.Disabled and Settings.GetSettingValue("EpipEncounters", "TreasureTableDisplay")
 end
 
 ---Add a treasure table to display in the UI.

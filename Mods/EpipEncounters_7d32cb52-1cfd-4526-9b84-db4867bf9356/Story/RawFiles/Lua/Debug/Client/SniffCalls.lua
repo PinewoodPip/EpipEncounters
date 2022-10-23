@@ -47,7 +47,7 @@ local function SniffCall(event)
 end
 
 Ext.Events.SessionLoaded:Subscribe(function()
-    local dropdownValue = Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "DEBUG_SniffUICalls")
+    local dropdownValue = Settings.GetSettingValue("EpipEncounters", "DEBUG_SniffUICalls")
 
     sniffAll = dropdownValue == 3
 

@@ -205,7 +205,7 @@ end
 ---@return boolean
 function Hotbar.HasSecondHotkeysRow()
     local dualLayout = false
-    local setting = Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "HotbarHotkeysLayout")
+    local setting = Settings.GetSettingValue("EpipEncounters", "HotbarHotkeysLayout")
 
     -- Force dual-row layout
     if setting == 3 then

@@ -843,18 +843,6 @@ local newSettings = {
         HideNumbers = false,
         DefaultValue = 1,
     },
-    {
-        ID = "RegionLabelDuration",
-        ModTable = "Epip_Overheads",
-        Type = "ClampedNumber",
-        Name = "Area Transition Label Duration",
-        Description = "Changes the duration of the label that appears at the top of the screen when you change areas. Set to 0 to disable them entirely.<br><br>Default is 5 seconds.",
-        Min = 0,
-        Max = 5,
-        Step = 0.1,
-        HideNumbers = false,
-        DefaultValue = 5,
-    },
 
     -- Chat settings
     {
@@ -1091,6 +1079,18 @@ local newSettings = {
         Name = "Stat-sharing Notifications",
         Description = "Controls whether notifications for sharing stats (Loremaster, Lucky Charm) show.",
         DefaultValue = true,
+    },
+    {
+        ID = "RegionLabelDuration",
+        ModTable = "Epip_Notifications",
+        Type = "ClampedNumber",
+        Name = "Area Transition Label Duration",
+        Description = "Changes the duration of the label that appears at the top of the screen when you change areas. Set to 0 to disable them entirely.<br><br>Default is 5 seconds.",
+        Min = 0,
+        Max = 5,
+        Step = 0.1,
+        HideNumbers = false,
+        DefaultValue = 5,
     },
 
     -- Tooltip settings

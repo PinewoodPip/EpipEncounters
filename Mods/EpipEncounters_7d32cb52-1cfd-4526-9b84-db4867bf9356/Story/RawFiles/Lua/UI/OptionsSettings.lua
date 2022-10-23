@@ -309,6 +309,7 @@ function OptionsSettings.GetOptionData(id)
 end
 
 ---Get the value of a custom option.
+---@deprecated
 ---@param mod string
 ---@param id string
 ---@return any Type varies based on element type. Boolean for checkboxes, number for other vanilla elements.
@@ -319,8 +320,7 @@ function OptionsSettings.GetOptionValue(mod, id)
     
     value = OptionsSettings:ReturnFromHooks("GetOptionValue", value, data)
 
-    return value
-    -- return Settings.GetSettingValue(mod, id)
+    return Settings.GetSettingValue(mod, id)
 end
 
 ---Set a custom option's value. Immediately synchronized to server, if need be.

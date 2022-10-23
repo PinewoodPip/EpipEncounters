@@ -67,8 +67,8 @@ end
 
 -- Set sizes from Epip settings
 function Overhead.SetFromSettings()
-    Overhead.SetSizes(Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "OverheadsSize"), Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "DamageOverheadsSize"))
-    Overhead.SetStatusDurationMultiplier(Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "StatusOverheadsDurationMultiplier"))
+    Overhead.SetSizes(Settings.GetSettingValue("Epip_Overheads", "OverheadsSize"), Settings.GetSettingValue("Epip_Overheads", "DamageOverheadsSize"))
+    Overhead.SetStatusDurationMultiplier(Settings.GetSettingValue("Epip_Overheads", "StatusOverheadsDurationMultiplier"))
 end
 
 -- Reset sizes to the default ones
@@ -91,8 +91,8 @@ end
 -- LISTENERS
 ---------------------------------------------
 
-Client.UI.OptionsSettings:RegisterListener("OptionSet", function(data, value)
-    if data and Overhead.SETTINGS[data.ID] then -- TODO investigate nil
+Settings.Events.SettingValueChanged:Subscribe(function (ev)
+    if ev.Setting.ModTable == "Epip_Overheads" and Overhead.SETTINGS[ev.Setting.ID] then
         Overhead.SetFromSettings()
     end
 end)

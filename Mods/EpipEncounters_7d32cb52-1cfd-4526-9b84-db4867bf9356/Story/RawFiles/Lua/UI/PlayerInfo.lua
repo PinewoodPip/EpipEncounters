@@ -195,7 +195,7 @@ function PlayerInfo.UpdatePlayers()
 
     if inCombat ~= PlayerInfo.previousCombatState or GameState.IsPaused() then
         root.SetPartyInCombat(inCombat)
-        root.STATUS_HOLDER_OPACITY = Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "PlayerInfo_StatusHolderOpacity")
+        root.STATUS_HOLDER_OPACITY = Settings.GetSettingValue("Epip_PlayerInfo", "PlayerInfo_StatusHolderOpacity")
         root.STATUS_HOLDER_ALPHA_OFFSET = -255 * (1 - root.STATUS_HOLDER_OPACITY)
 
         PlayerInfo.previousCombatState = inCombat
@@ -273,9 +273,9 @@ GameState.Events.RunningTick:Subscribe(function (_)
     PlayerInfo.UpdatePlayers()
 end)
 
-Client.UI.OptionsSettings:RegisterListener("OptionSet", function(data, value)
-    if data.ID == "PlayerInfoBH" then
-        PlayerInfo.SetCombatBadgeVisibility(not value)
+Settings.Events.SettingValueChanged:Subscribe(function (ev)
+    if ev.Setting.ModTable == "Epip_PlayerInfo" and ev.Setting.ID == "PlayerInfoBH" then
+        PlayerInfo.SetCombatBadgeVisibility(not ev.Value)
     end
 end)
 
@@ -297,7 +297,7 @@ PlayerInfo:RegisterHook("BHDisplaysVisible", function(visible, char, playerEleme
 
     -- Show badges when character is unsheathed.
     if not visible then
-        visible = char:GetStatus("UNSHEATHED") ~= nil and Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "PlayerInfoBH")
+        visible = char:GetStatus("UNSHEATHED") ~= nil and Settings.GetSettingValue("Epip_PlayerInfo", "PlayerInfoBH")
         -- visible = badge.currentFrame == 1 or badge.currentFrame == 5
     end
 
@@ -367,13 +367,13 @@ end
 
 PlayerInfo:RegisterInvokeListener("updateStatuses", function (event, createIfDoesntExist, cleanupAll)
     if IS_IMPROVED_HOTBAR then return nil end
-    local settingEnabled = Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "PlayerInfo_EnableSortingFiltering") and not IS_IMPROVED_HOTBAR
+    local settingEnabled = Settings.GetSettingValue("Epip_PlayerInfo", "PlayerInfo_EnableSortingFiltering") and not IS_IMPROVED_HOTBAR
     event.UI:GetRoot().ENABLE_SORTING = settingEnabled
     if not settingEnabled then return nil end
 
     local root = PlayerInfo.Root
     local array = root.status_array
-    local ascendingSort = Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "PlayerInfo_SortingFunction") == 2
+    local ascendingSort = Settings.GetSettingValue("Epip_PlayerInfo", "PlayerInfo_SortingFunction") == 2
 
     ---@type table<NetId, PlayerInfoStatusUpdate[]>
     local players = {}
@@ -499,6 +499,6 @@ if not IS_IMPROVED_HOTBAR then
         PlayerInfo.Root.summonNormalScale = 0.8
     
         -- Variable within SWF tracks whether to hide combat badge.
-        PlayerInfo.SetCombatBadgeVisibility(not Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "PlayerInfoBH"))
+        PlayerInfo.SetCombatBadgeVisibility(not Settings.GetSettingValue("Epip_PlayerInfo", "PlayerInfoBH"))
     end)
 end

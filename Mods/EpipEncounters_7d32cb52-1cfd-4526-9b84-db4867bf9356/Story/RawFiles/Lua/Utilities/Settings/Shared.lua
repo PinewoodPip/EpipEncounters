@@ -212,14 +212,16 @@ function Settings.GetSettingValue(modTable, id)
 
     if setting then
         value = setting:GetValue()
+
+        value = Settings.Hooks.GetSettingValue:Throw({
+            Setting = setting,
+            Value = value
+        }).Value
     elseif Settings.unregisteredSettingValues[modTable] then
         value = Settings.unregisteredSettingValues[modTable][id]
+    else
+        error("Setting not found: " .. id)
     end
-
-    value = Settings.Hooks.GetSettingValue:Throw({
-        Setting = setting,
-        Value = value
-    }).Value
 
     return value
 end

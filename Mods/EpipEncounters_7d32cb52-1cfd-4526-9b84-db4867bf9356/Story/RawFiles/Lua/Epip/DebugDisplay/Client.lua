@@ -29,7 +29,7 @@ DebugDisplay.pingTime = Ext.Utils.MonotonicTime()
 ---@override
 ---@return boolean
 function DebugDisplay:IsEnabled()
-    return Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "Developer_DebugDisplay") and Epip.IsDeveloperMode() and _Feature.IsEnabled(self)
+    return Settings.GetSettingValue("Epip_Developer", "Developer_DebugDisplay") and Epip.IsDeveloperMode() and _Feature.IsEnabled(self)
 end
 
 ---@param active boolean
@@ -121,7 +121,9 @@ Net.RegisterListener("EPIPENCOUNTERS_DebugDisplay_Ping", function (payload)
     local now = Ext.Utils.MonotonicTime()
     local timeElapsed = now - payload.ClientTime
 
-    DebugDisplay.PingLabel:SetText(Text.Format("Ping: %sms", {FormatArgs = {timeElapsed}, Color = Color.WHITE}))
+    if DebugDisplay:IsEnabled() then
+        DebugDisplay.PingLabel:SetText(Text.Format("Ping: %sms", {FormatArgs = {timeElapsed}, Color = Color.WHITE}))
+    end
 end)
 
 Ext.Events.Tick:Subscribe(function (ev)
@@ -131,12 +133,14 @@ end)
 Net.RegisterListener("EPIPENCOUNTERS_DebugDisplay_ServerTicks", function (payload)
     local ticks = payload.Ticks
 
-    DebugDisplay.SetServerTicks(ticks)
+    if DebugDisplay:IsEnabled() then
+        DebugDisplay.SetServerTicks(ticks)
+    end
 end)
 
-Client.UI.OptionsSettings:RegisterListener("OptionSet", function(data, value)
-    if data.ID == "Developer_DebugDisplay" then
-        DebugDisplay.Toggle(value)
+Settings.Events.SettingValueChanged:Subscribe(function (ev)
+    if ev.Setting.ModTable == "Epip_Developer" and ev.Setting.ID == "Developer_DebugDisplay" then
+        DebugDisplay.Toggle(ev.Value)
     end
 end)
 
@@ -188,7 +192,7 @@ function DebugDisplay:__Setup()
 
     DebugDisplay.UpdateModVersions()
 
-    DebugDisplay.Toggle(Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "Developer_DebugDisplay"))
+    DebugDisplay.Toggle(Settings.GetSettingValue("Epip_Developer", "Developer_DebugDisplay"))
 
     Timer.Start(DebugDisplay.PING_INTERVAL, function (ev)
         if DebugDisplay:IsEnabled() then

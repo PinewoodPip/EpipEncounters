@@ -24,7 +24,7 @@ local Examine = Client.UI.Examine
 -- Reposition the menu when it is opened.
 Examine:RegisterListener("ExamineOpened", function(examineData)
     local ui = Examine:GetUI()
-    local position = Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "ExaminePosition")
+    local position = Settings.GetSettingValue("EpipEncounters", "ExaminePosition")
 
     if position == ExamineImprovements.POSITION_SETTING.MIDDLE_RIGHT then
         ui:ExternalInterfaceCall("setPosition", "right", "screen", "right")

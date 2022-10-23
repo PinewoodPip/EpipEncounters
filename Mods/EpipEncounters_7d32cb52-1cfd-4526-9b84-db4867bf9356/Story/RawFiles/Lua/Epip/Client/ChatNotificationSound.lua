@@ -27,7 +27,7 @@ end
 ---@param sound string? Defaults to using the setting.
 function Sound.PlaySound(sound)
     if Sound:IsEnabled() then
-        sound = sound or Sound.SOUNDS[Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", Sound.SETTING_ID) - 1]
+        sound = sound or Sound.SOUNDS[Settings.GetSettingValue("Epip_Chat", Sound.SETTING_ID) - 1]
     
         Chat:PlaySound(sound)
     end
@@ -35,7 +35,7 @@ end
 
 ---@override
 function Sound:IsEnabled()
-    return Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", Sound.SETTING_ID) > 1 and _Feature.IsEnabled(self)
+    return Settings.GetSettingValue("Epip_Chat", Sound.SETTING_ID) > 1 and _Feature.IsEnabled(self)
 end
 
 ---------------------------------------------

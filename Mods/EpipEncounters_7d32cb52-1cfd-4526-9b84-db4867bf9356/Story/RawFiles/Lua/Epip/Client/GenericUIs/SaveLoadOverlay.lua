@@ -26,18 +26,18 @@ Epip.AddFeature("Overlay", "Overlay", Overlay)
 ---------------------------------------------
 
 function Overlay:IsEnabled()
-    return OptionsSettings.GetOptionValue("EpipEncounters", "SaveLoad_Overlay") and not Client.IsUsingController()
+    return Settings.GetSettingValue("Epip_SaveLoad", "SaveLoad_Overlay") and not Client.IsUsingController()
 end
 
 function Overlay.GetSortingMode()
-    return Overlay.SORTING_MODES_SETTINGS[OptionsSettings.GetOptionValue("EpipEncounters", "SaveLoad_Sorting")]
+    return Overlay.SORTING_MODES_SETTINGS[Settings.GetSettingValue("Epip_SaveLoad", "SaveLoad_Sorting")]
 end
 
 ---@param mode "Sort_Date"|"Sort_Alphabetic"
 function Overlay.SetSortingMode(mode)
     local index = table.reverseLookup(Overlay.SORTING_MODES_SETTINGS, mode)
 
-    OptionsSettings.SetOptionValue("EpipEncounters", "SaveLoad_Sorting", index)
+    Settings.SetValue("Epip_SaveLoad", "SaveLoad_Sorting", index)
 end
 
 ---@param entries SaveLoadUI_Entry[]

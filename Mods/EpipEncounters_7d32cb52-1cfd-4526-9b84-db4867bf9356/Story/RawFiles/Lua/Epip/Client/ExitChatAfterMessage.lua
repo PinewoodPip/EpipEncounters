@@ -13,7 +13,7 @@ Epip.RegisterFeature("ExitChatAfterMessage", Exit)
 
 ---@override
 function Exit:IsEnabled()
-    return Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", Exit.SETTING_ID) and _Feature.IsEnabled(self)
+    return Settings.GetSettingValue("Epip_Chat", Exit.SETTING_ID) and _Feature.IsEnabled(self)
 end
 
 ---------------------------------------------

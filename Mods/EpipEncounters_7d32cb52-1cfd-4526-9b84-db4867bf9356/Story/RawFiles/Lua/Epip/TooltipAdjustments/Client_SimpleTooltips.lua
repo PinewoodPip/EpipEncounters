@@ -31,7 +31,7 @@ TooltipLib.Hooks.RenderSimpleTooltip:Subscribe(function (ev)
             settingID = TooltipAdjustments.SIMPLE_TOOLTIP_UI_DELAY_SETTING
         end
     
-        local delay = Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", settingID)
+        local delay = Settings.GetSettingValue("Epip_Tooltips", settingID)
 
         ev.Tooltip.UseDelay = false
 

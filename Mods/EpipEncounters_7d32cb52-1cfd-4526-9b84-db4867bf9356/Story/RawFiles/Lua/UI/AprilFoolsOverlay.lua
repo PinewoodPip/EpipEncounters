@@ -87,9 +87,9 @@ local function UpdateCinematicMode()
     AF.ToggleCinematicMode(cinematicMode)
 end
 
-Client.UI.OptionsSettings:RegisterListener("ChangeApplied", function(setting, value)
-    if setting.ID == "CinematicCombat" then
-        AF.cinematicCombatOption = value
+Settings.Events.SettingValueChanged:Subscribe(function (ev)
+    if ev.Setting.ModTable == "EpipEncounters" and ev.Setting.ID == "CinematicCombat" then
+        AF.cinematicCombatOption = ev.Value
     end
 end)
 
@@ -99,7 +99,7 @@ end)
 
 function AF:__Setup()
 -- Ext.Events.SessionLoaded:Subscribe(function()
-    AF.cinematicCombatOption = Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "CinematicCombat")
+    AF.cinematicCombatOption = Settings.GetSettingValue("EpipEncounters", "CinematicCombat")
 
     if not Epip.IsAprilFools() and not AF.cinematicCombatOption then AF:Disable() return nil end
 

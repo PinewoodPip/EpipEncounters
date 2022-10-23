@@ -39,7 +39,7 @@ end
 ---@param setting Feature_WorldTooltipFiltering_Setting
 function Filtering._IsSettingEnabled(setting)
     local enabled = false
-    local value = Client.UI.OptionsSettings.GetOptionValue(setting.ModTableID, setting.SettingID)
+    local value = Settings.GetSettingValue(setting.ModTableID, setting.SettingID)
 
     if type(value) == "boolean" then
         enabled = value
@@ -116,7 +116,7 @@ local function EmphasizeLabel(entry, entity, isItem, settingID)
     end
 
     if canEmphasize then
-        local color = Filtering.EMPHASIS_COLORS[Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", settingID)]
+        local color = Filtering.EMPHASIS_COLORS[Settings.GetSettingValue("Epip_Tooltips", settingID)]
         local splitLabel = Text.Split_2(label, "<br>")
         splitLabel[1] = Text.StripFontTags(splitLabel[1])
 
@@ -138,7 +138,7 @@ end
 local settings = {
     {
         SettingID = "WorldTooltip_EmptyContainers",
-        ModTableID = "EpipEncounters",
+        ModTableID = "Epip_Tooltips",
         FilterPredicate = function (entry, _)
             if entry.Label:match("%(empty%)") then
                 return true
@@ -149,7 +149,7 @@ local settings = {
     },
     {
         SettingID = "WorldTooltip_ShowSittableAndLadders",
-        ModTableID = "EpipEncounters",
+        ModTableID = "Epip_Tooltips",
         FilterPredicate = function (_, entity)
             if GetExtType(entity) == "ecl::Item" then
                 return Item.HasUseAction(entity, "Sit") or Item.HasUseAction(entity, "Ladder")
@@ -160,7 +160,7 @@ local settings = {
     },
     {
         SettingID = "WorldTooltip_ShowDoors",
-        ModTableID = "EpipEncounters",
+        ModTableID = "Epip_Tooltips",
         FilterPredicate = function (_, entity)
             if GetExtType(entity) == "ecl::Item" then
                 return Item.HasUseAction(entity, "Door")
@@ -171,7 +171,7 @@ local settings = {
     },
     {
         SettingID = "WorldTooltip_ShowInactionable",
-        ModTableID = "EpipEncounters",
+        ModTableID = "Epip_Tooltips",
         FilterPredicate = function (_, entity)
             if GetExtType(entity) == "ecl::Item" then
                 return not Item.HasUseActions(entity) and not Item.IsEquipment(entity)
@@ -182,7 +182,7 @@ local settings = {
     },
     {
         SettingID = "WorldTooltip_HighlightConsumables",
-        ModTableID = "EpipEncounters",
+        ModTableID = "Epip_Tooltips",
         GetLabel = function (entry, entity)
             local label = entry.Label
 
@@ -197,7 +197,7 @@ local settings = {
     },
     {
         SettingID = "WorldTooltip_HighlightEquipment",
-        ModTableID = "EpipEncounters",
+        ModTableID = "Epip_Tooltips",
         GetLabel = function (entry, entity)
             local label = entry.Label
 
@@ -212,7 +212,7 @@ local settings = {
     },
     {
         SettingID = "WorldTooltip_HighlightContainers",
-        ModTableID = "EpipEncounters",
+        ModTableID = "Epip_Tooltips",
         GetLabel = function (entry, entity)
             local label = entry.Label
 

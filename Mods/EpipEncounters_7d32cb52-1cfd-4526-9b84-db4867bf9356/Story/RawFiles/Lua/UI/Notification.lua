@@ -149,8 +149,8 @@ Ext.Events.SessionLoaded:Subscribe(function()
     notification.ui = notif
     notification.root = root
 
-    root.showCastNots = Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "CastingNotifications")
-    notification.showCastNots = Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "CastingNotifications")
+    root.showCastNots = Settings.GetSettingValue("Epip_Notifications", "CastingNotifications")
+    notification.showCastNots = Settings.GetSettingValue("Epip_Notifications", "CastingNotifications")
 
     -- notification.offsetPerBar = -Ext.UI.GetByType(Client.UI.Data.UITypes.statusConsole):GetRoot().height
 end)

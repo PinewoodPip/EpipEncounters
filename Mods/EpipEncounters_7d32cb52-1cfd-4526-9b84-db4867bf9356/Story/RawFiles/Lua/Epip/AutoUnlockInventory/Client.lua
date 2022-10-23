@@ -11,7 +11,7 @@ AutoUnlock.SETTING_ID = "Inventory_AutoUnlockInventory"
 
 ---@override
 function AutoUnlock:IsEnabled()
-    return Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", AutoUnlock.SETTING_ID) and _Feature.IsEnabled(self)
+    return Settings.GetSettingValue("Epip_Inventory", AutoUnlock.SETTING_ID) and _Feature.IsEnabled(self)
 end
 
 ---------------------------------------------

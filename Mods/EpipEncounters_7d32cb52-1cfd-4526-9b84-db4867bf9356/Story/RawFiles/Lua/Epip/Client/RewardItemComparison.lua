@@ -12,7 +12,7 @@ Epip.AddFeature("RewardItemComparison", "RewardItemComparison", ItemComparison)
 ---------------------------------------------
 
 function ItemComparison:IsEnabled()
-    return Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "Inventory_RewardItemComparison")
+    return Settings.GetSettingValue("Epip_Inventory", "Inventory_RewardItemComparison")
 end
 
 ---------------------------------------------

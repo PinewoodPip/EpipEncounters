@@ -374,7 +374,7 @@ function Hotbar.CanUseHotbar()
         end
     end
 
-    if isCasting and Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "HotbarCastingGreyOut") then
+    if isCasting and Settings.GetSettingValue("Epip_Hotbar", "HotbarCastingGreyOut") then
         canUse = false
     end
 
@@ -828,8 +828,8 @@ Utilities.Hooks.RegisterListener("GameState", "GamePaused", function()
     Net.PostToServer("EPIPENCOUNTERS_Hotbar_SaveLayout", Hotbar.State)
 end)
 
-Client.UI.OptionsSettings:RegisterListener("OptionSet", function(data, value)
-    if data.ID == "HotbarCombatLogLegacyBehaviour" then
+Settings.Events.SettingValueChanged:Subscribe(function (ev)
+    if ev.Setting.ModTable == "Epip_Hotbar" and ev.Setting.ID == "HotbarCombatLogLegacyBehaviour" then
         Hotbar.PositionCombatLogButton()
     end
 end)
@@ -1022,7 +1022,7 @@ function Hotbar.RenderHotkey(i, state)
             -- Keybind text
             keyString = Hotbar.GetKeyString(i)
 
-            if keyString and (Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "HotbarHotkeysText") or IS_IMPROVED_HOTBAR) then
+            if keyString and (Settings.GetSettingValue("Epip_Hotbar", "HotbarHotkeysText") or IS_IMPROVED_HOTBAR) then
                 element.text_mc.htmlText = "<font size='14.5' align='center'>" .. keyString .. "</font>" -- TODO
             else
                 element.text_mc.htmlText = ""
@@ -1550,7 +1550,7 @@ function Hotbar.HideBar(index, row)
 end
 
 function Hotbar.PositionCombatLogButton()
-    Hotbar:GetRoot().showLog_mc.visible = (Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "HotbarCombatLogButton") or IS_IMPROVED_HOTBAR) and Hotbar.IsVisible()
+    Hotbar:GetRoot().showLog_mc.visible = (Settings.GetSettingValue("Epip_Hotbar", "HotbarCombatLogButton") or IS_IMPROVED_HOTBAR) and Hotbar.IsVisible()
 end
 
 Hotbar:RegisterListener("Refreshed", function(barCount)

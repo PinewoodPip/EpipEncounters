@@ -36,7 +36,7 @@ end
 
 -- Enable when we're in Ascension. Never enable immersive meditation if the option is off.
 IM:RegisterHook("GetState", function(enabled)
-    if not enabled and Game.AMERUI.ClientIsInUI() and Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "ImmersiveMeditation") and IM:IsEnabled() then
+    if not enabled and Game.AMERUI.ClientIsInUI() and Settings.GetSettingValue("EpipEncounters", "ImmersiveMeditation") and IM:IsEnabled() then
         enabled = true
     end
 

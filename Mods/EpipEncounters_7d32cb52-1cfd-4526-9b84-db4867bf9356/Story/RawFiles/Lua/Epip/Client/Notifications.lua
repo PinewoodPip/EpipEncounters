@@ -3,7 +3,6 @@
 -- Makes Region transition notifications's duration configurable, or lets you disable them entirely. Also controls item notifications appearing.
 ---------------------------------------------
 
-local OptionsSettings = Client.UI.OptionsSettings
 local NotificationUI = Client.UI.Notification
 
 local Notifs = {
@@ -21,7 +20,7 @@ Epip.AddFeature("Notifications", "Notifications", Notifs)
 NotificationUI.Hooks.ShowReceivalNotification:Subscribe(function (e)
     local isItemNotification = e.Sound == NotificationUI.SOUNDS.RECEIVE_ABILITY
 
-    if isItemNotification and OptionsSettings.GetOptionValue("EpipEncounters", "Notification_ItemReceival") == false then
+    if isItemNotification and Settings.GetSettingValue("Epip_Notifications", "Notification_ItemReceival") == false then
         e.Prevent = true
         e:StopPropagation()
     end
@@ -29,7 +28,7 @@ end)
 
 -- Hide "X has shared Z stat" notifications.
 NotificationUI.Events.TextNotificationShown:Subscribe(function (ev)
-    if not ev.IsScripted and ev.Label:match(" shares ") and not OptionsSettings.GetOptionValue("EpipEncounters", "Notification_StatSharing") then
+    if not ev.IsScripted and ev.Label:match(" shares ") and not Settings.GetSettingValue("Epip_Notifications", "Notification_StatSharing") then
         ev:Prevent()
     end
 end)
@@ -38,7 +37,7 @@ end)
 NotificationUI:RegisterInvokeListener("setRegionText", function(ev)
     local root = ev.UI:GetRoot()
     local label = ev.Args[1]
-    local duration = Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "RegionLabelDuration")
+    local duration = Settings.GetSettingValue("Epip_Notifications", "RegionLabelDuration")
 
     -- Change Y location of the notification
     -- root.beginRegionY = Notifs.BEGIN_REGION_Y

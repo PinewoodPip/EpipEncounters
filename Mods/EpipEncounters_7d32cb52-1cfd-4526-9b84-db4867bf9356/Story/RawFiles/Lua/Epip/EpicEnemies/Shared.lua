@@ -128,14 +128,6 @@ _EpicEnemiesEffect = {
 function _EpicEnemiesEffect:GetCost()
     local cost = self.DefaultCost or self.Cost
 
-    -- if Ext.IsClient() then
-    --     cost = Client.UI.OptionsSettings.GetOptionValue("EpicEnemies", self.ID)
-    --     print("client: " .. cost)
-    -- else
-    --     cost = Epip.Features.ServerSettings.GetValue("EpicEnemies", self.ID)
-    --     print("server: " .. cost)
-    -- end
-
     return cost
 end
 

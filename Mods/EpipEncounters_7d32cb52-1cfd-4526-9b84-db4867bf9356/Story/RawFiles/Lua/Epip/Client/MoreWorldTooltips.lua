@@ -11,7 +11,7 @@ Epip.RegisterFeature("MoreWorldTooltips", MoreWorldTooltips)
 
 ---@override
 function MoreWorldTooltips:IsEnabled()
-    return Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", MoreWorldTooltips.SETTING_ID)
+    return Settings.GetSettingValue("Epip_Tooltips", MoreWorldTooltips.SETTING_ID)
 end
 
 ---------------------------------------------

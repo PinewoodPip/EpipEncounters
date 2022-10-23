@@ -16,7 +16,7 @@ Epip.RegisterFeature("WalkOnCorpses", WalkOnCorpses)
 
 ---@override
 function WalkOnCorpses:IsEnabled()
-    return not Client.Input.IsShiftPressed() and _Feature.IsEnabled(self) and Client.IsInCombat() and Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", WalkOnCorpses.SETTING_ID)
+    return not Client.Input.IsShiftPressed() and _Feature.IsEnabled(self) and Client.IsInCombat() and Settings.GetSettingValue("EpipEncounters", WalkOnCorpses.SETTING_ID)
 end
 
 ---------------------------------------------

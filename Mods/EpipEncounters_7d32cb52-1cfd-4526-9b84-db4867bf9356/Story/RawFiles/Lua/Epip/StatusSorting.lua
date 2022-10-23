@@ -98,7 +98,7 @@ end
 
 Client.UI.ContextMenu.RegisterMenuHandler("playerInfoStatus", function(char, statusFlashHandle)
     local status = Ext.GetStatus(char.NetID, Ext.UI.DoubleToHandle(statusFlashHandle))
-    if not status or not OptionsSettings.GetOptionValue("EpipEncounters", "PlayerInfo_EnableSortingFiltering") or true then return nil end -- TODO finish
+    if not status or not Settings.GetSettingValue("Epip_PlayerInfo", "PlayerInfo_EnableSortingFiltering") or true then return nil end -- TODO finish
 
     StatusSorting.currentHoveredStatus = status.StatusId
 
@@ -181,7 +181,7 @@ end)
 -- Filter statuses based on patterns.
 StatusSorting.Events.ShouldFilterStatus:Subscribe(function (e)
     for setting,patternList in pairs(StatusSorting.STATUS_PATTERNS) do
-        if OptionsSettings.GetOptionValue("EpipEncounters", setting) == false then
+        if Settings.GetSettingValue("Epip_PlayerInfo", setting) == false then
             for _,pattern in ipairs(patternList) do
                 local shouldFilter = e.Status.StatusId:match(pattern)
 
@@ -196,7 +196,7 @@ StatusSorting.Events.ShouldFilterStatus:Subscribe(function (e)
 end)
 
 local function UpdateOptionAvailability(sortingEnabled)
-    if sortingEnabled == nil then sortingEnabled = OptionsSettings.GetOptionValue("EpipEncounters", "PlayerInfo_EnableSortingFiltering") end
+    if sortingEnabled == nil then sortingEnabled = Settings.GetSettingValue("Epip_PlayerInfo", "PlayerInfo_EnableSortingFiltering") end
 
     for id,elementType in pairs(StatusSorting.SUB_SETTINGS) do
         if not sortingEnabled and elementType == "Checkbox" then -- Reset checkboxes
@@ -207,6 +207,7 @@ local function UpdateOptionAvailability(sortingEnabled)
     end
 end
 
+-- TODO rework
 OptionsSettings:RegisterListener("CheckboxClicked", function(element, active)
     if element and element.ID == "PlayerInfo_EnableSortingFiltering" then
         UpdateOptionAvailability(active)

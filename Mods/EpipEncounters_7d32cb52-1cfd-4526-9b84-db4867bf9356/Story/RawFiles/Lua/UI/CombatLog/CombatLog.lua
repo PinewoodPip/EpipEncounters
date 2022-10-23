@@ -278,7 +278,7 @@ end)
 
 Log:RegisterInvokeListener("addTextToFilter", function(ev, filter, text)
 
-    if Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "CombatLogImprovements") then
+    if Settings.GetSettingValue("EpipEncounters", "CombatLogImprovements") then
 
         -- The engine sometimes sends these empty messages which confuse the system. Fuck em.
         if text == '<font size="16"></font>' then
@@ -321,7 +321,7 @@ end)
 Client.UI.ContextMenu.RegisterMenuHandler("combatLog", function()
     local filters = {}
 
-    if not Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "CombatLogImprovements") then
+    if not Settings.GetSettingValue("EpipEncounters", "CombatLogImprovements") then
         Client.UI.MessageBox.Open({
             ID = "CombatLog_Disabled",
             Header = "Feature Not Enabled",

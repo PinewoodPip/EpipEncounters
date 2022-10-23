@@ -11,7 +11,7 @@ OpenContainers.SETTING_ID = "WorldTooltip_OpenContainers"
 
 ---@override
 function OpenContainers:IsEnabled()
-    return Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", OpenContainers.SETTING_ID) and _Feature.IsEnabled(self)
+    return Settings.GetSettingValue("Epip_Tooltips", OpenContainers.SETTING_ID) and _Feature.IsEnabled(self)
 end
 
 ---------------------------------------------

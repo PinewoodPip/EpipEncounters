@@ -39,7 +39,7 @@ end)
 ---------------------------------------------
 
 function Fixes:__Setup()
-    Fixes.previousFilter = Fixes.DEFAULT_FILTER_OPTIONS[Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "Crafting_DefaultFilter")]
+    Fixes.previousFilter = Fixes.DEFAULT_FILTER_OPTIONS[Settings.GetSettingValue("Epip_Crafting", "Crafting_DefaultFilter")]
 end
 
 ---------------------------------------------

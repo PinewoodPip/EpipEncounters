@@ -25,7 +25,7 @@ function Minimap:Toggle(state, updateState, force)
 end
 
 function Minimap:ToggleFromSettings()
-    local showMinimap = Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "Minimap")
+    local showMinimap = Settings.GetSettingValue("EpipEncounters", "Minimap")
 
     Minimap:Toggle(showMinimap, true)
 end
@@ -43,9 +43,9 @@ Client.UI.Hotbar:RegisterListener("Initialized", function()
     Minimap:ToggleFromSettings()
 end)
 
-Client.UI.OptionsSettings:RegisterListener("OptionSet", function(data, value)
-    if data.ID == "Minimap" then
-        Minimap:Toggle(value, true)
+Settings.Events.SettingValueChanged:Subscribe(function (ev)
+    if ev.Setting.ModTable == "EpipEncounters" and ev.Setting.ID == "Minimap" then
+        Minimap:Toggle(ev.Setting, true)
     end
 end)
 
@@ -56,7 +56,7 @@ end, "After")
 -- Only resave the setting to the file on pause to reduce the amount of times we write this to disk
 Utilities.Hooks.RegisterListener("GameState", "GamePaused", function()
     
-    if (Minimap.visible ~= Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "Minimap")) then
+    if (Minimap.visible ~= Settings.GetSettingValue("EpipEncounters", "Minimap")) then
         Client.UI.OptionsSettings.SetOptionValue("EpipEncounters", "Minimap", Minimap.visible)
 
         Client.UI.OptionsSettings.SaveSettings()

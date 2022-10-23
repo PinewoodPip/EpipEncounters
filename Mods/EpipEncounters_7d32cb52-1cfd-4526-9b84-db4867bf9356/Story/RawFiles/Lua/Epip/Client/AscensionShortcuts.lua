@@ -18,7 +18,7 @@ end)
 
 Client.Input.Events.KeyPressed:Subscribe(function (e)
     if e.InputID == "escape" and GameState.GetState() == "Running" and Game.Ascension.IsMeditating() then
-        if Client.UI.OptionsSettings.GetOptionValue("EpipEncounters", "ESCClosesAmerUI") then
+        if Settings.GetSettingValue("EpipEncounters", "ESCClosesAmerUI") then
             Net.PostToServer("EPIPENCOUNTERS_Hotkey_Meditate", {
                 NetID = Client.GetCharacter().NetID,
             })
