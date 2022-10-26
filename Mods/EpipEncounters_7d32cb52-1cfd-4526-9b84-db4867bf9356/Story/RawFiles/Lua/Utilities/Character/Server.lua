@@ -10,8 +10,10 @@ function Character.GetPartyMembers(char)
 
     local players = Osiris.DB_IsPlayer:GetTuples(nil)
 
-    for _,playerGUID in ipairs(players) do
-        if char.MyGuid == playerGUID or Osi.CharacterIsInPartyWith(char.MyGuid, playerGUID) == 1 then
+    for _,tuple in ipairs(players) do
+        local playerGUID = tuple[1]
+
+        if char.MyGuid == playerGUID or Osiris.CharacterIsInPartyWith(char, playerGUID) == 1 then
             table.insert(members, Character.Get(playerGUID))
         end
     end

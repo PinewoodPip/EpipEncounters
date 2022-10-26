@@ -825,8 +825,8 @@ Utilities.Hooks.RegisterListener("Saving", "SavingStarted", function()
     Hotbar.SaveData()
 end)
 
--- Save when the game is paused
-Utilities.Hooks.RegisterListener("GameState", "GamePaused", function()
+-- Save when the pause menu is opened.
+Client.UI.GameMenu.Events.Opened:Subscribe(function (_)
     Hotbar.SaveData()
 
     Net.PostToServer("EPIPENCOUNTERS_Hotbar_SaveLayout", Hotbar.State)

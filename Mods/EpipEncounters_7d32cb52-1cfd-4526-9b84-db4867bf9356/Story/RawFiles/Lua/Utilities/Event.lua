@@ -183,6 +183,7 @@ end
 
 function SubscribableEvent:Throw(event)
 	local cur = self.First
+	event = event or {}
 
 	if type(event) == "table" then
 		if self.Preventable then

@@ -13,6 +13,13 @@ local Menu = {
         MAIN_MENU = 12,
         CONNECTIVITY = 15,
         GIFT_BAGS = 24,
+    },
+
+    USE_LEGACY_EVENTS = false,
+    USE_LEGACY_HOOKS = false,
+
+    Events = {
+        Opened = {} ---@type Event<EmptyEvent>
     }
 }
 Epip.InitializeUI(Client.UI.Data.UITypes.gameMenu, "GameMenu", Menu)
@@ -22,6 +29,10 @@ Menu:Debug()
 ---@field ID integer
 ---@field Label string
 ---@field Enabled boolean
+
+---------------------------------------------
+-- METHODS
+---------------------------------------------
 
 ---Returns whether the pause menu can be opened. Hookable.
 ---@return boolean
@@ -73,6 +84,8 @@ Menu:RegisterInvokeListener("openMenu", function(ev)
     if not canOpen then
         ev:PreventAction()
         ev.UI:Hide()
+    else
+        Menu.Events.Opened:Throw()
     end
 end)
 

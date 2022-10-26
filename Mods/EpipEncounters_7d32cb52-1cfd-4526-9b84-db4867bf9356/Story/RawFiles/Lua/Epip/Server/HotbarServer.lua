@@ -100,8 +100,15 @@ Net.RegisterListener("EPIPENCOUNTERS_Hotbar_SaveLayout", function(payload)
     end
 end)
 
+-- Listen for clients becoming ready.
 GameState.Events.ClientReady:Subscribe(function (ev)
-    Hotbar.SynchLayout(Character.Get(ev.CharacterNetID))
+    local userChar = Character.Get(ev.CharacterNetID)
+
+    for _,char in ipairs(Character.GetPartyMembers(userChar)) do
+        if char.ReservedUserID == userChar.ReservedUserID then
+            Hotbar.SynchLayout(char)
+        end
+    end
 end)
 
 local casters = {}
