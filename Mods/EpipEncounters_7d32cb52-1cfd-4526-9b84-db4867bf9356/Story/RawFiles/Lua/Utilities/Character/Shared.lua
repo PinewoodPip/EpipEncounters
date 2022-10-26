@@ -139,6 +139,31 @@ function Character.IsUnsheathed(char)
     return char:GetStatusByType("UNSHEATHED") ~= nil
 end
 
+---Returns whether char has an owner.
+---@param char Character
+---@return boolean
+function Character.HasOwner(char)
+    return char.HasOwner
+end
+
+---Returns the character's owner, if it is a summon or party follower(?).
+---@param char Character
+---@return Character?
+function Character.GetOwner(char)
+    local ownerHandle
+
+    -- Unfortunate inconsistency.
+    if char.HasOwner then
+        if Ext.IsClient() then
+            ownerHandle = char.OwnerCharacterHandle
+        else
+            ownerHandle = char.OwnerHandle
+        end
+    end
+
+    return ownerHandle and Character.Get(ownerHandle)
+end
+
 ---Returns whether a skill is innate to a character.
 ---Returns false if the character doesn't have the skill in any way.
 ---@param char Character
@@ -290,7 +315,7 @@ end
 ---@param char Character
 ---@return boolean
 function Character.IsSummon(char)
-    return char:HasTag("SUMMON")
+    return char:HasTag("SUMMON") -- Summon flag does not do what's expected.
 end
 
 ---Returns true if the character is dead.
