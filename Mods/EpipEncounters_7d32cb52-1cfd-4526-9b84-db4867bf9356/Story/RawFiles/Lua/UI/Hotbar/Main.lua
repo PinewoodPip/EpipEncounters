@@ -342,6 +342,10 @@ function Hotbar.SetState(char, state)
     Hotbar.State[char.NetID] = state
 
     Hotbar:DebugLog("Set state for " .. char.DisplayName)
+
+    if char.Handle == Client.GetCharacter().Handle then
+        Hotbar.Refresh()
+    end
 end
 
 ---Returns whether a row is visible for char.

@@ -81,17 +81,13 @@ GameState = {
     },
 
     USE_LEGACY_EVENTS = false,
-    Events = {
-        ---@type Event<GameStateLib_Event_GamePaused>
-        GamePaused = {},
-        ---@type Event<GameStateLib_Event_GameUnpaused>
-        GameUnpaused = {},
-        ---@type Event<GameStateLib_Event_StateChanged>
-        StateChanged = {},
-        ---@type Event<GameStateLib_Event_GameReady>
-        GameReady = {},
-        ---@type Event<GameStateLib_Event_RunningTick>
-        RunningTick = {},
+    Events = {        
+        GamePaused = {}, ---@type Event<GameStateLib_Event_GamePaused>
+        GameUnpaused = {}, ---@type Event<GameStateLib_Event_GameUnpaused>
+        StateChanged = {}, ---@type Event<GameStateLib_Event_StateChanged>        
+        GameReady = {}, ---@type Event<GameStateLib_Event_GameReady>
+        RunningTick = {}, ---@type Event<GameStateLib_Event_RunningTick>
+        LuaResetted = {}, ---@type Event<GameStateLib_Event_LuaResetted>
     }
 }
 Epip.InitializeLibrary("GameState", GameState)
@@ -111,6 +107,8 @@ Epip.InitializeLibrary("GameState", GameState)
 ---@class GameStateLib_Event_StateChanged
 ---@field From GameState
 ---@field To GameState
+
+---@class GameStateLib_Event_LuaResetted
 
 ---------------------------------------------
 -- METHODS
@@ -166,4 +164,9 @@ end)
 -- Also throw GameReady upon reset.
 Ext.Events.ResetCompleted:Subscribe(function()
     GameState.Events.GameReady:Throw()
+end)
+
+-- Listen for lua being reset.
+Ext.Events.ResetCompleted:Subscribe(function (_)
+    GameState.Events.LuaResetted:Throw({})
 end)
