@@ -17,22 +17,20 @@ end
 function Hotbar.SaveLayout(char, layout)
     Osi.DB_PIP_Hotbar_State:Delete(char.MyGuid, nil, nil, nil)
 
-    for i,bar in ipairs(layout.Bars) do
-        local visible = 0
-
-        if bar.Visible then
-            visible = 1
+    if not Character.HasOwner(char) then
+        for i,bar in ipairs(layout.Bars) do
+            local visible = bar.Visible and 1 or 0
+    
+            Osi.DB_PIP_Hotbar_State(
+                char.MyGuid,
+                i,
+                bar.Row,
+                visible
+            )
         end
-
-        Osi.DB_PIP_Hotbar_State(
-            char.MyGuid,
-            i,
-            bar.Row,
-            visible
-        )
+    
+        Hotbar:DebugLog("Saved state for " .. char.DisplayName)
     end
-
-    Hotbar:DebugLog("Saved state for " .. char.DisplayName)
 end
 
 function Hotbar.GetSavedLayout(char)
