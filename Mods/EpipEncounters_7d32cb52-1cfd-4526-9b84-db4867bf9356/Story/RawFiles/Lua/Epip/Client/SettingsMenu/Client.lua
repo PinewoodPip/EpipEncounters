@@ -340,7 +340,8 @@ end
 function Menu.Open()
     local ui = Menu.GetUI()
 
-    -- ui:SetFlag("OF_PauseRequest", true)
+    ui:SetFlag("OF_PlayerModal1", true)
+    ui:SetFlag("OF_PauseRequest", true)
 
     Menu._Setup()
 
@@ -351,8 +352,6 @@ function Menu.Close()
     local ui = Menu.GetUI()
 
     Menu.categoryStateIndexes = {}
-
-    -- ui:SetFlag("OF_PauseRequest", false)
 
     ui:Hide()
 end
