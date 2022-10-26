@@ -50,6 +50,11 @@ LOAD_ORDER = {
     "Utilities/Vector.lua",
     "Utilities/Text.lua",
     "Utilities/Color.lua",
+    {
+        Scripts = {
+            "Utilities/Net/Shared.lua",
+        },
+    },
     {ScriptSet = "Utilities/Entity"},
     {ScriptSet = "Utilities/GameState"},
     "Utilities/Mod.lua",
@@ -81,13 +86,6 @@ LOAD_ORDER = {
             "Utilities/Stats/Shared_ExtraData.lua",
             "Utilities/Stats/Shared_Actions.lua",
             "Utilities/Stats/Shared_Runes.lua",
-        },
-    },
-
-    -- Net
-    {
-        Scripts = {
-            "Utilities/Net/Shared.lua",
         },
     },
 

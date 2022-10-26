@@ -59,20 +59,26 @@ function Hotbar.GetSavedLayout(char)
     end
 end
 
-function Hotbar.SynchLoadouts()
+---@param char EsvCharacter
+function Hotbar.SynchLayout(char)
+    local layout = Hotbar.GetSavedLayout(char)
+    local id = Osiris.CharacterGetReservedUserID(char)
+
+    if layout then
+        Hotbar:DebugLog("Found saved layout for " .. char.DisplayName .. "; sending.")
+
+        Net.PostToUser(id, "EPIPENCOUNTERS_Hotbar_SetLayout", {
+            Layout = layout,
+            NetID = char.NetID,
+        })
+    end
+end
+
+function Hotbar.SynchLayouts()
     for _,tuple in ipairs(Osi.DB_IsPlayer:Get(nil)) do
         local char = Character.Get(tuple[1])
-        local layout = Hotbar.GetSavedLayout(char)
-        local id = Osiris.CharacterGetReservedUserID(char)
-
-        if layout then
-            Hotbar:DebugLog("Found saved layout for " .. char.DisplayName .. "; sending.")
-
-            Net.PostToUser(id, "EPIPENCOUNTERS_Hotbar_SetLayout", {
-                Layout = layout,
-                NetID = char.NetID,
-            })
-        end
+        
+        Hotbar.SynchLayout(char)
     end
 end
 
@@ -94,16 +100,8 @@ Net.RegisterListener("EPIPENCOUNTERS_Hotbar_SaveLayout", function(payload)
     end
 end)
 
--- Restore loadouts after a reset.
-GameState.Events.LuaResetted:Subscribe(function (_)
-    Timer.Start(0.5, function (_)
-        Hotbar.SynchLoadouts()
-    end)
-end)
-
--- Restore layouts upon the game loading.
-Ext.Osiris.RegisterListener("SavegameLoaded", 4, "before", function(_, _, _, _)
-    Hotbar.SynchLoadouts()
+GameState.Events.ClientReady:Subscribe(function (ev)
+    Hotbar.SynchLayout(Character.Get(ev.CharacterNetID))
 end)
 
 local casters = {}

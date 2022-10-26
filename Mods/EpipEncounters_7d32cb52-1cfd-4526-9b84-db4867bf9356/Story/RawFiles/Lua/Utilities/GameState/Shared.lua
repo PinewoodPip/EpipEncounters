@@ -87,10 +87,17 @@ GameState = {
         StateChanged = {}, ---@type Event<GameStateLib_Event_StateChanged>        
         GameReady = {}, ---@type Event<GameStateLib_Event_GameReady>
         RunningTick = {}, ---@type Event<GameStateLib_Event_RunningTick>
-        LuaResetted = {}, ---@type Event<GameStateLib_Event_LuaResetted>
+        LuaResetted = {}, ---@type Event<EmptyEvent>
+        ClientReady = {}, ---@type Event<GameStateLib_Event_ClientReady>
     }
 }
 Epip.InitializeLibrary("GameState", GameState)
+
+---------------------------------------------
+-- NET MESSAGES
+---------------------------------------------
+
+---@class EPIPENCOUNTERS_GameStateLib_ClientReady : NetMessage, GameStateLib_Event_ClientReady
 
 ---------------------------------------------
 -- EVENTS
@@ -108,7 +115,9 @@ Epip.InitializeLibrary("GameState", GameState)
 ---@field From GameState
 ---@field To GameState
 
----@class GameStateLib_Event_LuaResetted
+---@class GameStateLib_Event_ClientReady
+---@field CharacterNetID NetId
+---@field ProfileGUID GUID
 
 ---------------------------------------------
 -- METHODS
@@ -143,6 +152,11 @@ Ext.Events.GameStateChanged:Subscribe(function(ev)
         GameState.Events.GameUnpaused:Throw()
     elseif from == GameState.CLIENT_STATES.PREPARE_RUNNING and to == GameState.CLIENT_STATES.RUNNING or (Ext.IsServer() and from == "Sync" and to == "Running") then
         GameState.Events.GameReady:Throw()
+
+        -- Throw ClientReady event, and notify the server.
+        if Ext.IsClient() then
+            GameState._ThrowClientReadyEvent()
+        end
     end
 end)
 
