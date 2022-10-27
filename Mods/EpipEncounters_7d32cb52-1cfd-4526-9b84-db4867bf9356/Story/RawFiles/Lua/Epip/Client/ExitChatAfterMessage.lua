@@ -26,5 +26,6 @@ Chat.Events.MessageSent:Subscribe(function (ev)
         Exit:DebugLog("Exiting chat")
 
         Client.Input.Inject("Key", "escape", "Pressed")
+        Client.Input.Inject("Key", "escape", "Released")
     end
 end)

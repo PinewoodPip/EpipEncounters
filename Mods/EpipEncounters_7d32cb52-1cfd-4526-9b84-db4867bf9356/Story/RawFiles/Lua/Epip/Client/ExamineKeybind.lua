@@ -28,7 +28,8 @@ OptionsInput.Events.ActionExecuted:RegisterListener(function (action, _)
         end
 
         -- Open context menu.
-        Client.Input.Inject("Mouse", "right2", "Pressed", 1, 1, true)
+        Client.Input.Inject("Mouse", "right2", "Pressed")
+        Client.Input.Inject("Mouse", "right2", "Released")
 
         Timer.Start(ExamineKeybind.DELAY, function (_)
             if ContextMenu:IsVisible() then
@@ -49,11 +50,11 @@ OptionsInput.Events.ActionExecuted:RegisterListener(function (action, _)
                 if not hasExamineButton then
                     ContextMenu.Close()
                 end
-
-                Timer.Start(ExamineKeybind.DELAY, function (_)
-                    ExamineKeybind._opening = false
-                end)
             end
+
+            Timer.Start(ExamineKeybind.DELAY, function (_)
+                ExamineKeybind._opening = false
+            end)
         end)
     end
 end)
