@@ -121,7 +121,7 @@ end
 function Transmog.TransmogItem(item, template)
     item = item or Vanity.GetCurrentItem()
 
-    if Transmog.CanTransmogItem(item) and not Transmog.BLOCKED_TEMPLATES[template] then
+    if Transmog.CanTransmogItem(item) then
         Net.PostToServer("EPIPENCOUNTERS_VanityTransmog", {
             Char = Client.GetCharacter().NetID,
             Item = item.NetID,
@@ -241,9 +241,9 @@ Character.Hooks.CreateEquipmentVisuals:Subscribe(function (ev)
 
     if item and item:IsTagged(Transmog.INVISIBLE_TAG) then
         request.VisualResourceID = ""
-        request.EquipmentSlotMask = 0 -- Might be unnecessary?
+        request.EquipmentSlotMask = 0
         request.VisualSetSlotMask = 0
-
+        
         ev:StopPropagation()
     end
 end)
@@ -284,14 +284,6 @@ end)
 
 Net.RegisterListener("EPIPENCOUNTERS_Vanity_RefreshSheetAppearance", function(_)
     Transmog.UpdateActiveCharacterTemplates()
-end)
-
-Transmog.Hooks.CanTransmog:RegisterHook(function (canTransmog, item)
-    if Transmog.BLOCKED_TEMPLATES[item.RootTemplate.Id] then
-        canTransmog = false
-    end
-
-    return canTransmog
 end)
 
 -- Render templates of the same slot as the item being transmog'd
