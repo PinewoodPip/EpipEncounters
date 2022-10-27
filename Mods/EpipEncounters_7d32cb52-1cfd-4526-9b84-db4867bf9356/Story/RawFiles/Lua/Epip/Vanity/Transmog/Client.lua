@@ -102,7 +102,7 @@ function Transmog.UpdateActiveCharacterTemplates()
         if item then
             item = Item.Get(item)
 
-            Transmog.activeCharacterTemplates[slot] = item.RootTemplate.Id
+            Transmog.activeCharacterTemplates[slot] = Transmog.GetTransmoggedTemplate(item) or item.RootTemplate.Id
         else
             Transmog.activeCharacterTemplates[slot] = nil
         end
