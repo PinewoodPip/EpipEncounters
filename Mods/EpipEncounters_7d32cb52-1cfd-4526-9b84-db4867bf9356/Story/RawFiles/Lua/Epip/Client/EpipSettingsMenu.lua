@@ -65,6 +65,7 @@ local tabs = {
         ID = "Epip_Developer",
         ButtonLabel = "Developer",
         HeaderLabel = "Developer",
+        DeveloperOnly = true,
         Entries = {
             CreateHeader("Developer"),
             {Type = "Button", Label = "Warp to AMER_Test", ID = "DEBUG_WarpToAMERTest"},

@@ -43,6 +43,7 @@ Epip.RegisterFeature("SettingsMenu", Menu)
 ---@field ButtonLabel string
 ---@field HeaderLabel string
 ---@field HostOnly boolean? Defaults to false.
+---@field DeveloperOnly boolean? Defaults to false.
 ---@field Entries Feature_SettingsMenu_Entry[]
 
 ---@class Feature_SettingsMenu_Entry
@@ -115,6 +116,16 @@ function Menu.GetTab(id)
     return Menu.Tabs[id]
 end
 
+---@param tab Feature_SettingsMenu_Tab
+function Menu.CanRenderTabButton(tab)
+    local render = true
+
+    render = render and (not tab.HostOnly or Client.IsHost())
+    render = render and (not tab.DeveloperOnly or Epip.IsDeveloperMode())
+
+    return render
+end
+
 function Menu.RenderTabButtons()
     local UI = Menu.GetUI()
     local root = UI:GetRoot()
@@ -124,7 +135,7 @@ function Menu.RenderTabButtons()
     for i,id in ipairs(Menu.TabRegistrationOrder) do
         local tab = Menu.GetTab(id)
 
-        if not tab.HostOnly or Client.IsHost() then
+        if Menu.CanRenderTabButton(tab) then
             Menu.tabButtonToTabID[i] = id
             
             root.mainMenu_mc.addOptionButton(tab.ButtonLabel, "EPIP_TabClicked", i, false)
