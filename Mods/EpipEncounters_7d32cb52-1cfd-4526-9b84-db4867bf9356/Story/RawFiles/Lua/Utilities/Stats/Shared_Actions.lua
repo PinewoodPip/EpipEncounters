@@ -94,7 +94,6 @@ Stats.Actions = {
         DescriptionHandle = "h2c4c2857g4d73g4012g862agf598785f348d",
     },
 }
-
 for id,action in pairs(Stats.Actions) do
     action.ID = id
     

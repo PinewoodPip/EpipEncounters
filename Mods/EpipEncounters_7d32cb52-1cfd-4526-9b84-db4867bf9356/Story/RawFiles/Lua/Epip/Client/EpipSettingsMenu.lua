@@ -41,26 +41,24 @@ local tabs = {
             "HotbarCastingGreyOut",
         }
     },
-    ["Epip_Overheads"] = {
-        ID = "Epip_Overheads",
-        ButtonLabel = "Overheads",
-        HeaderLabel = "Overheads",
+    ["Epip_Other"] = {
+        ID = "Epip_Other",
+        ButtonLabel = "Miscellaneous",
+        HeaderLabel = "Miscellaneous",
         Entries = {
             CreateHeader("Overheads"),
-            "OverheadsSize",
-            "DamageOverheadsSize",
-            "StatusOverheadsDurationMultiplier",
-            "RegionLabelDuration",
-        }
-    },
-    ["Epip_Chat"] = {
-        ID = "Epip_Chat",
-        ButtonLabel = "Chat",
-        HeaderLabel = "Chat",
-        Entries = {
+            {Module = "Epip_Overheads", ID = "OverheadsSize"},
+            {Module = "Epip_Overheads", ID = "DamageOverheadsSize"},
+            {Module = "Epip_Overheads", ID = "StatusOverheadsDurationMultiplier"},
+            {Module = "Epip_Overheads", ID = "RegionLabelDuration"},
+
             CreateHeader("Chat"),
-            "Chat_MessageSound",
-            "Chat_ExitAfterSendingMessage",
+            {Module = "Epip_Chat", ID = "Chat_MessageSound"},
+            {Module = "Epip_Chat", ID = "Chat_ExitAfterSendingMessage"},
+
+            CreateHeader("Save/Load UI"),
+            {Module = "Epip_SaveLoad", ID = "SaveLoad_Overlay"},
+            {Module = "Epip_SaveLoad", ID = "SaveLoad_Sorting"},
         }
     },
     ["Epip_Developer"] = {
@@ -90,34 +88,17 @@ local tabs = {
             "PlayerInfo_Filter_BatteredHarried",
         }
     },
-    ["Epip_SaveLoad"] = {
-        ID = "Epip_SaveLoad",
-        ButtonLabel = "Save/Load UI",
-        HeaderLabel = "Save/Load UI",
-        Entries = {
-            CreateHeader("Save/Load UI"),
-            "SaveLoad_Overlay",
-            "SaveLoad_Sorting",
-        }
-    },
-    ["Epip_Crafting"] = {
-        ID = "Epip_Crafting",
-        ButtonLabel = "Crafting UI",
-        HeaderLabel = "Crafting UI",
-        Entries = {
-            CreateHeader("Crafting UI"),
-            "Crafting_DefaultFilter",
-        }
-    },
     ["Epip_Inventory"] = {
         ID = "Epip_Inventory",
-        ButtonLabel = "Inventory UI",
-        HeaderLabel = "Inventory UI",
+        ButtonLabel = "Inventory",
+        HeaderLabel = "Inventory",
         Entries = {
             CreateHeader("Inventory UI"),
             "Inventory_AutoUnlockInventory",
             "Inventory_InfiniteCarryWeight",
             "Inventory_RewardItemComparison",
+            CreateHeader("Crafting UI"),
+            {Module = "Epip_Crafting", ID = "Crafting_DefaultFilter"},
         }
     },
     ["Epip_Notifications"] = {
@@ -155,23 +136,25 @@ local tabs = {
 }
 
 local tabOrder = {
+    tabs.Epip_Developer,
     tabs.EpipEncounters,
     tabs.Epip_Hotbar,
-    tabs.Epip_Overheads,
-    tabs.Epip_Chat,
-    tabs.Epip_Developer,
     tabs.Epip_PlayerInfo,
-    tabs.Epip_SaveLoad,
-    tabs.Epip_Crafting,
     tabs.Epip_Inventory,
     tabs.Epip_Notifications,
     tabs.Epip_Tooltips,
+    tabs.Epip_Other
 }
 
 for _,tab in ipairs(tabOrder) do
     for i,entry in ipairs(tab.Entries) do
         if type(entry) == "string" then
-            tab.Entries[i] = {Type = "Setting", Module = tab.ID, ID = entry} -- We make the Module ID be the same as tab ID 
+            tab.Entries[i] = {Type = "Setting", Module = tab.ID, ID = entry} -- We make the Module ID be the same as tab ID
+        else
+            ---@diagnostic disable-next-line: undefined-field
+            if entry.Module then
+                entry.Type = "Setting"
+            end
         end
     end
 
