@@ -27,7 +27,8 @@ local Menu = {
         ButtonPressed = {}, ---@type Event<Feature_SettingsMenu_Event_ButtonPressed>
     },
     Hooks = {
-        GetTabEntries = {} ---@type Event<Feature_SettingsMenu_Hook_GetTabEntries>
+        GetTabEntries = {}, ---@type Event<Feature_SettingsMenu_Hook_GetTabEntries>
+        CanRenderTabButton = {}, ---@type Event<Feature_SettingsMenu_Hook_CanRenderTabButton>
     }
 }
 Epip.RegisterFeature("SettingsMenu", Menu)
@@ -100,6 +101,10 @@ Epip.RegisterFeature("SettingsMenu", Menu)
 ---@field Tab Feature_SettingsMenu_Tab
 ---@field Entries Feature_SettingsMenu_Entry[] Hookable.
 
+---@class Feature_SettingsMenu_Hook_CanRenderTabButton
+---@field Tab Feature_SettingsMenu_Tab
+---@field Render boolean Hookable.
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
@@ -123,7 +128,7 @@ function Menu.CanRenderTabButton(tab)
     render = render and (not tab.HostOnly or Client.IsHost())
     render = render and (not tab.DeveloperOnly or Epip.IsDeveloperMode())
 
-    return render
+    return Menu.Hooks.CanRenderTabButton:Throw({Tab = tab, Render = render}).Render
 end
 
 function Menu.RenderTabButtons()
@@ -174,10 +179,6 @@ function Menu.ApplyPendingChanges()
 end
 
 function Menu._Setup()
-    local UI = Menu.GetUI()
-    local root = UI:GetRoot()
-    local mainMenu = root.mainMenu_mc
-
     -- Render tab buttons
     Menu.RenderTabButtons()
 
@@ -337,7 +338,7 @@ function Menu.GetUI()
             ID = Menu.UI_ID,
             PATH = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/optionsSettings.swf", -- TODO expose
         }
-        local uiObject = Ext.UI.Create(ui.ID, ui.PATH, 20)
+        Ext.UI.Create(ui.ID, ui.PATH, 20)
 
         Epip.InitializeUI(nil, Menu.UI_ID, ui)
 
@@ -373,7 +374,8 @@ function Menu.GetElementSetting(elementID)
     local entry = Menu.currentElements[elementID]
     local setting
 
-    if entry then
+    if entry and entry.Type == "Setting" then
+        entry = entry ---@type Feature_SettingsMenu_Entry_Setting
         setting = Settings.GetSetting(entry.Module, entry.ID) ---@type Feature_SettingsMenu_Setting
     end
 
@@ -590,7 +592,7 @@ Menu.Events.RenderSetting:Subscribe(function (ev)
     elseif settingType == "ClampedNumber" then
         Menu._RenderSlider(setting, ev.ElementID)
     elseif settingType == "Choice" then
-        Menu._RenderComboBox(setting, ev.ElementID, entry)
+        Menu._RenderComboBox(setting, ev.ElementID)
     else
         Menu:LogWarning("Unknown setting type: " .. settingType .. " did Pip forgot to re-implement something? If this is a custom setting type, let them know to remove this warning call.")
     end

@@ -50,7 +50,7 @@ local tabs = {
             {Module = "Epip_Overheads", ID = "OverheadsSize"},
             {Module = "Epip_Overheads", ID = "DamageOverheadsSize"},
             {Module = "Epip_Overheads", ID = "StatusOverheadsDurationMultiplier"},
-            {Module = "Epip_Overheads", ID = "RegionLabelDuration"},
+            {Module = "Epip_Notifications", ID = "RegionLabelDuration"},
 
             CreateHeader("Chat"),
             {Module = "Epip_Chat", ID = "Chat_MessageSound"},
