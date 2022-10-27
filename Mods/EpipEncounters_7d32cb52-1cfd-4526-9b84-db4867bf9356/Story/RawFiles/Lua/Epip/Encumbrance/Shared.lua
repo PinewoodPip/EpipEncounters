@@ -1,4 +1,5 @@
 
+---@class Feature_InfiniteCarryWeight : Feature
 local Encumbrance = {
     enabled = false,
 
@@ -9,7 +10,7 @@ local Encumbrance = {
     STATUS_ID = "ENCUMBERED",
     INFINITE_VALUE = 9999999,
 }
-Epip.AddFeature("Encumbrance", "Encumbrance", Encumbrance)
+Epip.RegisterFeature("InfiniteCarryWeight", Encumbrance)
 
 ---------------------------------------------
 -- METHODS

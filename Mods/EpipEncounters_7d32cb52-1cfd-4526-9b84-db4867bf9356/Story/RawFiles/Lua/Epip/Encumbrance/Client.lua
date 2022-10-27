@@ -1,5 +1,6 @@
 
-local Encumbrance = Epip.Features.Encumbrance
+---@class Feature_InfiniteCarryWeight
+local Encumbrance = Epip.GetFeature("Feature_InfiniteCarryWeight")
 local PartyInventory = Client.UI.PartyInventory
 
 ---------------------------------------------

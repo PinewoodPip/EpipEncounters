@@ -56,7 +56,7 @@ Net.RegisterListener(Settings.NET_SYNC_CHANNEL, function (payload)
     if setting then
         Settings:DebugLog("Synched setting from host: " .. setting.ID)
 
-        Settings.SetValue(setting.ModTable, setting.ID, payload.Value, false)
+        Settings.SetValue(setting.ModTable, setting.ID, payload.Value, true)
 
         -- Synchronize setting changes to PersistentVars.
         if setting.Context == "Server" then

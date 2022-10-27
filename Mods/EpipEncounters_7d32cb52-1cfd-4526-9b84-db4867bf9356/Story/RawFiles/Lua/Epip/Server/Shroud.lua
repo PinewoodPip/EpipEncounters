@@ -22,9 +22,12 @@ local Shroud = Epip.Features.Shroud
 -- LISTENERS
 ---------------------------------------------
 
-Net.RegisterListener("EPIPENCOUNTERS_ServerOptionChanged", function(payload)
-    if payload.Mod == "EpipEncounters" and payload.Setting == "RenderShroud" then
-        Shroud.queriedState = payload.Value
+Settings.Events.SettingValueChanged:Subscribe(function (ev)
+    local setting = ev.Setting
+
+    if setting.ModTable == "EpipEncounters" and setting.ID == "RenderShroud" then
+        Shroud.queriedState = ev.Value
+        
         Osi.ShroudRender(Shroud.queriedState)
     end
 end)

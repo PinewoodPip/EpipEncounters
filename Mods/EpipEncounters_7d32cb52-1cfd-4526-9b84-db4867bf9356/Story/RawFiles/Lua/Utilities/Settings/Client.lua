@@ -72,6 +72,8 @@ function Settings.SynchronizeSetting(setting)
     local value = setting:GetValue()
 
     if setting.Context ~= "Client" and Client.IsHost() then
+        Settings:DebugLog("Synchronizing " .. setting.ID)
+        
         Net.PostToServer(Settings.NET_SYNC_CHANNEL, {
             Module = setting.ModTable,
             ID = setting.ID,

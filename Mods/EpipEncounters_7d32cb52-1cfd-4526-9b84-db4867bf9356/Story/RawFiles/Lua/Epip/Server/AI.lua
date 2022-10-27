@@ -88,9 +88,11 @@ end)
 -- EVENT LISTENERS
 ---------------------------------------------
 
-Net.RegisterListener("EPIPENCOUNTERS_ServerOptionChanged", function(payload)
-    if payload.Mod == "EpipEncounters" and payload.Setting == "DEBUG_AI" then
-        AI.enabled = payload.Value
+Settings.Events.SettingValueChanged:Subscribe(function (ev)
+    local setting = ev.Setting
+
+    if setting.ModTable == "Epip_Developer" and setting.ID == "DEBUG_AI" then
+        AI.enabled = ev.Value
     end
 end)
 
