@@ -18,3 +18,9 @@ end)
 GameState.Events.GameReady:Subscribe(function (_)
     Net.Broadcast("EPIPENCOUNTERS_ToggleEncumbrance", {Enabled = Encumbrance.enabled})
 end)
+
+GameState.Events.ClientReady:Subscribe(function (ev)
+    local char = Character.Get(ev.CharacterNetID)
+
+    Net.PostToUser(char.ReservedUserID, "EPIPENCOUNTERS_ToggleEncumbrance", {Enabled = Encumbrance.enabled})
+end)

@@ -328,7 +328,7 @@ LOAD_ORDER = {
 
     {ScriptSet = "Epip/Greatforge/DrillSockets"},
     {ScriptSet = "Epip/Greatforge/Engrave"},
-    {ScriptSet = "Epip/Encumbrance"},
+    {ScriptSet = "Epip/InfiniteCarryWeight"},
     {ScriptSet = "Epip/DebugDisplay", Developer = true,},
     {ScriptSet = "Epip/UnlearnSkills"},
     {ScriptSet = "Epip/WorldTooltipOpenContainers"},

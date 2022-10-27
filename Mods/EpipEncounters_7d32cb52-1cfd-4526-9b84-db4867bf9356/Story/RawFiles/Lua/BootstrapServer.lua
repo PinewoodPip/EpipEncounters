@@ -152,7 +152,7 @@ LOAD_ORDER = {
     
     {ScriptSet = "Epip/ItemTagging"},
     {ScriptSet = "Epip/ExtraDataConfig", Developer = true,},
-    {ScriptSet = "Epip/Encumbrance",},
+    {ScriptSet = "Epip/InfiniteCarryWeight",},
     {ScriptSet = "Epip/Housing", WIP = true,},
     {Script = "Epip/Housing/Shared_Furniture.lua", WIP = true},
     {ScriptSet = "Epip/StatsEditor", WIP = true,},

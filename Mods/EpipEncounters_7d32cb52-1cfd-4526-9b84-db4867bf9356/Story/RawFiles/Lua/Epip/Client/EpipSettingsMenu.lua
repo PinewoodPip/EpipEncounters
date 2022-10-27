@@ -43,8 +43,8 @@ local tabs = {
     },
     ["Epip_Other"] = {
         ID = "Epip_Other",
-        ButtonLabel = "Miscellaneous",
-        HeaderLabel = "Miscellaneous",
+        ButtonLabel = "Miscellaneous UI",
+        HeaderLabel = "Miscellaneous UI",
         Entries = {
             CreateHeader("Overheads"),
             {Module = "Epip_Overheads", ID = "OverheadsSize"},
