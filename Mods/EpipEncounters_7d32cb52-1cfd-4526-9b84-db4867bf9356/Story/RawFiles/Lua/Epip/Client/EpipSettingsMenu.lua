@@ -147,7 +147,7 @@ local tabOrder = {
     tabs.Epip_Other
 }
 
-for _,tab in ipairs(tabOrder) do
+for tabIndex,tab in ipairs(tabOrder) do
     for i,entry in ipairs(tab.Entries) do
         if type(entry) == "string" then
             tab.Entries[i] = {Type = "Setting", Module = tab.ID, ID = entry} -- We make the Module ID be the same as tab ID
@@ -159,5 +159,5 @@ for _,tab in ipairs(tabOrder) do
         end
     end
 
-    Menu.RegisterTab(tab)
+    Menu.RegisterTab(tab, tabIndex)
 end

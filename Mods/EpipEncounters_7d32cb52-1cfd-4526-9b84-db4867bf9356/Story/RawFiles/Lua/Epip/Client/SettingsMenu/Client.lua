@@ -110,9 +110,11 @@ Epip.RegisterFeature("SettingsMenu", Menu)
 ---------------------------------------------
 
 ---@param data Feature_SettingsMenu_Tab
-function Menu.RegisterTab(data)
+---@param renderOrderIndex integer?
+function Menu.RegisterTab(data, renderOrderIndex)
     Menu.Tabs[data.ID] = data
-    table.insert(Menu.TabRegistrationOrder, data.ID)
+    
+    table.insert(Menu.TabRegistrationOrder, renderOrderIndex or #Menu.TabRegistrationOrder + 1, data.ID)
 end
 
 ---@param id string
