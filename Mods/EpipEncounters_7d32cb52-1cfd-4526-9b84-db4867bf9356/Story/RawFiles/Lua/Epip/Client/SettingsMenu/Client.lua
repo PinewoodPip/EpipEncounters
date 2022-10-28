@@ -370,6 +370,11 @@ function Menu.Close()
     ui:Hide()
 end
 
+---@return boolean
+function Menu.HasPendingChanges()
+    return not table.isempty(Menu.pendingChanges)
+end
+
 ---@param elementID Feature_SettingsMenu_ElementID
 ---@return Feature_SettingsMenu_Setting
 function Menu.GetElementSetting(elementID)
@@ -521,6 +526,18 @@ function Menu._RenderComboBox(setting, elementID)
     Menu.SetSettingElementState(elementID, setting, setting:GetChoiceIndex(setting:GetValue()))
 end
 
+function Menu._ShowPendingChangesPrompt()
+    Client.UI.MessageBox.Open({
+        Header = "Unsaved Changes",
+        Message = "You have unsaved changes. Do you wish to apply them?",
+        ID = "Feature_SettingsMenu_UnsavedChanges",
+        Buttons = {
+            {ID = 1, Text = "Save"},
+            {ID = 2, Text = "Exit"},
+        }
+    })
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
@@ -627,9 +644,30 @@ end)
 
 -- Do not destroy the UI - instead hide it.
 UI:RegisterCallListener("requestCloseUI", function (ev)
-    Menu.Close()
+    if Menu.HasPendingChanges() then
+        Menu._ShowPendingChangesPrompt()
+    else
+        Menu.Close()
+    end
 
     ev:PreventAction()
+end)
+
+-- Listen for the accept button being pressed.
+UI:RegisterCallListener("acceptPressed", function (ev)
+    if Menu.HasPendingChanges() then
+        Menu._ShowPendingChangesPrompt()
+    else
+        Menu.Close()
+    end
+end)
+
+Client.UI.MessageBox.RegisterMessageListener("Feature_SettingsMenu_UnsavedChanges", Client.UI.MessageBox.Events.ButtonPressed, function (buttonID, _)
+    if buttonID == 1 then
+        Menu.ApplyPendingChanges()
+    end
+    
+    Menu.Close()
 end)
 
 -- Make developer settings return their default value if dev mode is off.

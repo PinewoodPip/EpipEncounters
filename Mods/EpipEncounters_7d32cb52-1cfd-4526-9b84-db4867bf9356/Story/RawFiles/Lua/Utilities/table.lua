@@ -21,6 +21,20 @@ function table.simpleSort(tbl, reverse)
     return tbl
 end
 
+---Returns whether a table contains no keys.
+---@param tbl table
+---@return boolean
+function table.isempty(tbl)
+    local empty = true
+
+    for _,_ in pairs(tbl) do
+        empty = false
+        break
+    end
+
+    return empty
+end
+
 ---Sorts a an array of tables based on a property. The property must be a key in all tables contained in the array.
 ---@param tbl table
 ---@param prop string Property name.
