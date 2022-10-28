@@ -246,6 +246,7 @@ LOAD_ORDER = {
     "UI/Reward.lua",
     "UI/WorldTooltip.lua",
     "UI/CombatTurn.lua",
+    "UI/Fade.lua",
 
     -- Title screen UIs
     "UI/Mods.lua",

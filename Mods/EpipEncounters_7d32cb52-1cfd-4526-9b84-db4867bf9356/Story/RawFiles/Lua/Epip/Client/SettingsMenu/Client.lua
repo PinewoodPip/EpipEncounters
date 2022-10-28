@@ -359,6 +359,11 @@ function Menu.Open()
 
     Menu._Setup()
 
+    -- Needs a delay, else the engine cleans up the UI due to the real settings menu hiding.
+    Ext.OnNextTick(function ()
+        Client.UI.Fade.FadeIn(0)
+    end)
+
     ui:Show()
 end
 
@@ -366,6 +371,8 @@ function Menu.Close()
     local ui = Menu.GetUI()
 
     Menu.categoryStateIndexes = {}
+
+    Client.UI.Fade.FadeOut()
 
     ui:Hide()
 end
@@ -666,7 +673,7 @@ Client.UI.MessageBox.RegisterMessageListener("Feature_SettingsMenu_UnsavedChange
     if buttonID == 1 then
         Menu.ApplyPendingChanges()
     end
-    
+
     Menu.Close()
 end)
 
