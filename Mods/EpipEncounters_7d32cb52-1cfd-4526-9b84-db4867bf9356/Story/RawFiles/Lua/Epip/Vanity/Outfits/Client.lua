@@ -1,5 +1,6 @@
 
 local Vanity = Client.UI.Vanity
+local Transmog = Epip.GetFeature("Feature_Vanity_Transmog")
 
 ---@class Feature_Vanity_Outfits
 local Outfits = Epip.GetFeature("Feature_Vanity_Outfits")
@@ -52,8 +53,8 @@ function Outfits.ApplyOutfit(char, outfitID)
         for slot,template in pairs(outfit.Templates) do
             local item = char:GetItemBySlot(slot)
 
-            if item then
-                item = Ext.GetItem(item)
+            if item and template ~= "" then
+                item = Item.Get(item)
                 Epip.GetFeature("Feature_Vanity_Transmog").TransmogItem(item, template)
             end
         end
@@ -80,7 +81,12 @@ function Outfits.SaveCurrentOutfit(name, slots)
         outfit.Templates[slot] = ""
 
         if slots[slot] then
-            outfit.Templates[slot] = Vanity.GetTemplateInSlot(char, slot)
+            local itemGUID = char:GetItemBySlot(slot)
+            local item = itemGUID and Item.Get(itemGUID)
+
+            if item then
+                outfit.Templates[slot] = Transmog.GetTransmoggedTemplate(item) or Vanity.GetTemplateInSlot(char, slot)
+            end
         end
     end
 
