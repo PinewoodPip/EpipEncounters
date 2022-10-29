@@ -10,6 +10,16 @@ local DebugMenu = {
 Epip.RegisterFeature("DebugMenu", DebugMenu)
 
 ---------------------------------------------
+-- NET MESSAGES
+---------------------------------------------
+
+---@class Feature_DebugMenu_Net_FeatureStateChanged
+---@field FeatureID string
+---@field ModTableID string
+---@field Property "Debug"|"Enabled"|"Logging"
+---@field Value any
+
+---------------------------------------------
 -- STATE
 ---------------------------------------------
 
@@ -183,6 +193,15 @@ function DebugMenu.SetEnabledState(modTable, featureID, enabled)
     state.Enabled = enabled
 
     state:GetFeature().Disabled = not enabled
+
+    if Ext.IsClient() then
+        Net.PostToServer("Feature_DebugMenu_Net_FeatureStateChanged", {
+            ModTableID = modTable,
+            FeatureID = featureID,
+            Property = "Enabled",
+            Value = enabled,
+        })
+    end
 end
 
 ---@param modTable string
@@ -193,6 +212,15 @@ function DebugMenu.SetDebugState(modTable, featureID, enabled)
     state.Debug = enabled
 
     state:GetFeature().IS_DEBUG = enabled
+
+    if Ext.IsClient() then
+        Net.PostToServer("Feature_DebugMenu_Net_FeatureStateChanged", {
+            ModTableID = modTable,
+            FeatureID = featureID,
+            Property = "Debug",
+            Value = enabled,
+        })
+    end
 end
 
 ---@param modTable string
@@ -203,6 +231,15 @@ function DebugMenu.SetLoggingState(modTable, featureID, level)
     state.LoggingLevel = level
 
     state:GetFeature().Logging = level
+
+    if Ext.IsClient() then
+        Net.PostToServer("Feature_DebugMenu_Net_FeatureStateChanged", {
+            ModTableID = modTable,
+            FeatureID = featureID,
+            Property = "Logging",
+            Value = level,
+        })
+    end
 end
 
 ---------------------------------------------
