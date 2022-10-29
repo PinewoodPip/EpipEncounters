@@ -27,18 +27,20 @@ Net.RegisterListener("EPIPENCOUNTERS_DyeItem", function(payload)
     local color3 = dye.Color3
     local tag = string.format("PIP_DYE_%s%s%s_%s%s%s_%s%s%s", hex(color1.Red, 2), hex(color1.Green, 2), hex(color1.Blue, 2), hex(color2.Red, 2), hex(color2.Green, 2), hex(color2.Blue, 2), hex(color3.Red, 2), hex(color3.Green, 2), hex(color3.Blue, 2))
     
-    print("Color tag: " .. tag)
+    Dyes:DebugLog("Color tag: " .. tag)
 
     -- Clear previous dye tags
     for _,existingTag in ipairs(item:GetTags()) do
         if existingTag:match("^PIP_DYE_(%x+)_(%x+)_(%x+)$") then -- TODO use constant
+            Dyes:DebugLog("Removing previous color tag:", existingTag)
+            
             Osiris.ClearTag(item, existingTag)
         end
     end
 
     Osiris.SetTag(item, tag)
     
-    Epip.Features.Vanity.RefreshAppearance(char, true)
+    Epip.GetFeature("Feature_Vanity").RefreshAppearance(char, true)
 end)
 
 Net.RegisterListener("EPIPENCOUNTERS_DYE", function(payload)

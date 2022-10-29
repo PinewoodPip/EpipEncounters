@@ -115,9 +115,12 @@ function Dyes.ApplyCustomDye(dye, item)
     item = item or Vanity.GetCurrentItem()
     local itemNetID = item.NetID
 
+    Dyes:DebugLog("Applying dye to ", item.DisplayName, item.Slot)
+    Dyes:Dump(dye)
+
     Dyes.SetItemColorOverride(item, dye)
 
-    Timer.Start("PIP_ApplyCustomDye", 0.55, function()
+    Timer.Start(0.55, function()
         Net.PostToServer("EPIPENCOUNTERS_DyeItem", {ItemNetID = itemNetID, Dye = dye, CharacterNetID = Client.GetCharacter().NetID})
     end)
     Timer.Start(0.8, function(_) Dyes.UpdateActiveCharacterDyes() end)
@@ -447,10 +450,9 @@ Epip.GetFeature("Feature_Vanity_Outfits").Events.OutfitApplied:RegisterListener(
     if outfit.CustomDyes then
         for slot,dye in pairs(outfit.CustomDyes) do
             local item = char:GetItemBySlot(slot)
+            item = item and Item.Get(item)
 
             if item then
-                item = Ext.GetItem(item)
-    
                 Dyes.ApplyCustomDye(dye, item)
             end
         end
