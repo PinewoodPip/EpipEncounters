@@ -15,6 +15,36 @@ local Input = {
         CONTROLLER = "C",
     },
 
+    MOTION_EVENTS = {
+        motion = true,
+        motion_xneg = true,
+        motion_ypos = true,
+        motion_xpos = true,
+        motion_yneg = true,
+    },
+
+    MOTION_AXIS = {
+        motion_xneg = "x",
+        motion_xpos = "x",
+        motion_ypos = "y",
+        motion_yneg = "y",
+
+        wheel_xpos = "x",
+        wheel_xneg = "x",
+        wheel_ypos = "y",
+        wheel_yneg = "y",
+
+        leftstick_xpos = "x",
+        leftstick_xneg = "x",
+        leftstick_ypos = "y",
+        leftstick_yneg = "y",
+
+        rightstick_xpos = "x",
+        rightstick_xneg = "x",
+        rightstick_ypos = "y",
+        rightstick_yneg = "y",
+    },
+
     MOUSE_RAW_INPUT_EVENTS = {
         motion = true,
         motion_xneg = true,
@@ -791,8 +821,8 @@ end
 
 Ext.Events.RawInput:Subscribe(function(e)
     local inputEventData = e.Input
-    local id = inputEventData.Input.InputId
-    local deviceType = inputEventData.Input.DeviceId
+    local id = tostring(inputEventData.Input.InputId)
+    local deviceType = tostring(inputEventData.Input.DeviceId)
     if not id then return nil end -- Happens for unsupported keys, ex. < or >
 
     -- Update pressed state tracking
@@ -802,13 +832,13 @@ Ext.Events.RawInput:Subscribe(function(e)
         Input.pressedKeys[id] = nil
     end
 
-    if not id:match("motion") then
+    if not Input.MOTION_EVENTS[id] then
         Input:Dump(e)
     end
 
     -- Track mouse movement
     if deviceType == Input.RAW_INPUT_DEVICES.MOUSE then
-        local axis = id:match("^motion_(%l)%l%l%l$")
+        local axis = Input.MOTION_AXIS[id]
         if not Input.mouseState then
             Input.mouseState = {
                 MoveVector = {x = 0, y = 0},

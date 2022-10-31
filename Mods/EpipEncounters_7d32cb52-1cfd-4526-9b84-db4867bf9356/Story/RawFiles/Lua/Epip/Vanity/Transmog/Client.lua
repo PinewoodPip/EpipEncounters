@@ -75,7 +75,7 @@ function Transmog.ShouldKeepAppearance(item)
     local char = Client.GetCharacter()
 
     if item and Item.IsEquipped(char, item) then
-        local tag = Transmog.KEEP_APPEARANCE_TAG_PREFIX .. Item.GetEquippedSlot(item)
+        local tag = Transmog.KEEP_APPEARANCE_TAG_PREFIX .. Item.GetEquippedSlot(item).Label
 
         keepAppearance = Client.GetCharacter():HasTag(tag)
     end

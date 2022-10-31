@@ -642,15 +642,15 @@ OptionsSettings:RegisterListener("ElementRenderRequest", function(elementType, d
 end)
 
 -- Synch server-only settings once the client has been detected as the host
-Client:RegisterListener("DeterminedAsHost", function()
-    for modID,modData in pairs(OptionsSettings.Options) do
-        for i,setting in ipairs(modData.Options) do
-            if not setting.SaveOnServer then
-                OptionsSettings.SynchToServer(setting.ID, OptionsSettings.GetOptionValue(modID, setting.ID))
-            end
-        end
-    end
-end)
+-- Client:RegisterListener("DeterminedAsHost", function()
+--     for modID,modData in pairs(OptionsSettings.Options) do
+--         for i,setting in ipairs(modData.Options) do
+--             if not setting.SaveOnServer then
+--                 OptionsSettings.SynchToServer(setting.ID, OptionsSettings.GetOptionValue(modID, setting.ID))
+--             end
+--         end
+--     end
+-- end)
 
 local function onupdate(ui, method)
     local root = ui:GetRoot()
@@ -972,5 +972,5 @@ Ext.Events.SessionLoaded:Subscribe(function()
     Ext.RegisterUINameCall("menuSliderID", OnSliderChange)
     Ext.RegisterUINameCall("comboBoxID", OnDropdownChange)
     Ext.RegisterUINameCall("buttonPressed", OnButton)
-    Ext.RegisterUINameCall("applyPressed", OnApplyOverrides)
+    Ext.RegisterUITypeCall(Ext.UI.TypeID.optionsSettings, "applyPressed", OnApplyOverrides)
 end)

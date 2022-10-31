@@ -155,6 +155,10 @@ local VERSIONS = {
         Version = 1063,
         Date = "19/09/22",
     },
+    {
+        Version = 1064,
+        Date = "29/10/22",
+    },
 }
 
 for i=#VERSIONS,1,-1 do
