@@ -60,6 +60,12 @@ LOAD_ORDER = {
     "Utilities/Mod.lua",
     "Utilities/Timer.lua",
     "Utilities/Coroutine.lua",
+    {
+        Scripts = {
+            "Utilities/DataStructures/Main.lua",
+            "Utilities/DataStructures/DefaultTable.lua",
+        },
+    },
 
     {ScriptSet = "Utilities/Combat"},
     "Utilities/Server.lua",
