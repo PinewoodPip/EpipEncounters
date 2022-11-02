@@ -5,6 +5,7 @@ local OptionsSettings = Client.UI.OptionsSettings
 ---@class Feature_SettingsMenu : Feature
 local Menu = {
     UI_ID = "EPIP_SettingsMenu",
+    TAB_BUTTON_ID = 1337,
     UI = nil, ---@type UI
 
     Tabs = {}, ---@type table<string, Feature_SettingsMenu_Tab>
@@ -626,20 +627,30 @@ end)
 
 -- Add a button to open Epip's settings menus to the vanilla UI.
 OptionsSettings:RegisterInvokeListener("parseBaseUpdateArray", function(ev)
-    local root = ev.UI:GetRoot()
+    -- Don't show the button in the main menu.
+    local tbl = {}
+    tbl[GameState.GetState()] = 1
+    for k,_ in pairs(tbl) do print(k, GetExtType(k)) end
 
-    root.mainMenu_mc.addOptionButton("Epip Settings", "EPIP_OpenSettingsMenu", -1, false)
+    if GameState.IsInSession() then
+        local root = ev.UI:GetRoot()
+    
+        root.mainMenu_mc.addOptionButton("Epip Settings", "EPIP_OpenSettingsMenu", Menu.TAB_BUTTON_ID, false)
+    end
 end, "After")
 
 -- Open the menu when the button is pressed from the vanilla UI.
-OptionsSettings:RegisterCallListener("EPIP_OpenSettingsMenu", function (ev)
-    Menu.Open()
+OptionsSettings:RegisterCallListener("EPIP_OpenSettingsMenu", function (ev, buttonID)
+    if buttonID == Menu.TAB_BUTTON_ID then
+        Menu.Open()
 
-    ev.UI:ExternalInterfaceCall("requestCloseUI")
-
-    Ext.OnNextTick(function ()
-        Client.UI.GameMenu:ExternalInterfaceCall("ButtonPressed", Client.UI.GameMenu.BUTTON_IDS.RESUME)
-    end)
+        ev.UI:ExternalInterfaceCall("requestCloseUI")
+    
+        -- Close the game menu that appears as a result of closing the vanilla settings menu
+        Ext.OnNextTick(function ()
+            Client.UI.GameMenu:ExternalInterfaceCall("ButtonPressed", Client.UI.GameMenu.BUTTON_IDS.RESUME)
+        end)
+    end
 end)
 
 -- Close the menu with Esc.

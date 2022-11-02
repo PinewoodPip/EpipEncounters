@@ -34,9 +34,6 @@ local OptionsSettings = {
         ---@type OptionsSettingsUI_Event_TabRendered
         TabRendered = {},
     },
-    FILEPATH_OVERRIDES = {
-        ["Public/Game/GUI/optionsSettings.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/optionsSettings.swf",
-    }
 }
 if IS_IMPROVED_HOTBAR then
     OptionsSettings.FILEPATH_OVERRIDES = {}
