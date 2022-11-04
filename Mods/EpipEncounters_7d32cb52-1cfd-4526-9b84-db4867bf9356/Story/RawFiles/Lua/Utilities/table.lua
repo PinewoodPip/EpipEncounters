@@ -129,6 +129,24 @@ function table.getKeyCount(t)
     return count
 end
 
+---Recursively copies the table onto a new one calling pairs() to get all values,
+---without metatables nor keys that are skipped by any custom __pairs() or __ipairs() implementation.
+---@param t table
+---@return table
+function table.clean(t)
+    local tbl = {}
+
+    for k,v in pairs(t) do
+        if type(v) == "table" then
+            v = table.clean(v)
+        end
+
+        tbl[k] = v
+    end
+
+    return tbl
+end
+
 ---Creates a new array by inserting elements from t1 and t2 in order.
 ---@param t1 any[]
 ---@param t2 any[]

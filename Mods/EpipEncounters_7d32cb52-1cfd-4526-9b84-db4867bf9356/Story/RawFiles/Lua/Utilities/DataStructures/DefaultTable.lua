@@ -1,7 +1,7 @@
 
 ---@class DataStructures_DefaultTable
 local DefaultTable = {
-    _DefaultValue = nil, ---@type any
+    _DefaultValue = {}, ---@type any
     _DeepCopyTables = true,
 }
 DataStructures.Register("DataStructures_DefaultTable", DefaultTable)
@@ -37,4 +37,21 @@ function DefaultTable.__index(self, key)
     self[key] = defaultValue
 
     return defaultValue
+end
+
+function DefaultTable.__pairs(self)
+    local generator = function(tbl, k)
+        local v
+
+        k, v = next(tbl, k)
+
+        -- Ignore internal variables
+        while DefaultTable[k] ~= nil do
+            k, v = next(tbl, k)
+        end
+
+        return k, v
+    end
+
+    return generator, self, nil
 end

@@ -20,6 +20,9 @@ IO = {
 ---@param contents any
 ---@param raw boolean? Defaults to false.
 function IO.SaveFile(filename, contents, raw)
+    if type(contents) == "table" then
+        contents = table.clean(contents)
+    end
     if not raw then contents = Ext.DumpExport(contents) end
     
     Ext.IO.SaveFile(filename, contents)
