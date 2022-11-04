@@ -26,7 +26,6 @@ Settings = {
     }
 }
 Epip.InitializeLibrary("Settings", Settings)
-Settings:Debug()
 
 ---------------------------------------------
 -- CLASSES

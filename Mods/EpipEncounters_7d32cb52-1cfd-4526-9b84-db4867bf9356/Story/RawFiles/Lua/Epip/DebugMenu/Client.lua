@@ -17,8 +17,93 @@ DebugMenu.INFO_SIZE = Vector.Create(250, 40)
 DebugMenu.BUTTON_SIZE = Vector.Create(250, 40)
 
 ---------------------------------------------
+-- CLASSES
+---------------------------------------------
+
+---@class Feature_DebugMenu_FeatureEntry
+---@field Feature Feature
+---@field Source string
+
+---------------------------------------------
 -- METHODS
 ---------------------------------------------
+
+---@param features Feature_DebugMenu_FeatureEntry[]
+function DebugMenu._RenderFeatures(features)
+    local list = DebugMenu.UI.ScrollList
+    local ui = DebugMenu.UI
+
+    for _,featureData in pairs(features) do
+        local feature = featureData.Feature
+        local mod = featureData.Source
+        local featureID = feature.MODULE_ID
+        local state = DebugMenu.GetState(mod, featureID)
+        feature = feature ---@type Feature
+
+        local labelText = Text.Format("%s", {
+            FormatArgs = {feature.MODULE_ID},
+            Color = Color.BLACK,
+        })
+        local sourceLabel = Text.Format("(%s)", {
+            FormatArgs = {mod},
+            Size = 13,
+            Color = Color.BLACK,
+        })
+
+        local formList = FormEntry.Create(ui, featureID, list, labelText, DebugMenu.FORM_ENTRY_SIZE, DebugMenu.FORM_ENTRY_LABEL_SIZE)
+
+        -- "Debug" checkbox.
+        local checkbox = formList:AddChild(featureID .. "_Debug", "GenericUI_Element_StateButton")
+        checkbox:SetType("CheckBox")
+        checkbox:SetActive(feature:IsDebug())
+        checkbox:SetSizeOverride(DebugMenu.CHECKBOX_SIZE)
+        checkbox.Events.StateChanged:Subscribe(function (ev)
+            DebugMenu.SetDebugState(mod, featureID, ev.Active)
+        end)
+
+        -- "Enabled" checkbox.
+        local enabledCheckbox = formList:AddChild("Enabled", "GenericUI_Element_StateButton")
+        enabledCheckbox:SetType("CheckBox")
+        enabledCheckbox:SetActive(feature:IsEnabled())
+        enabledCheckbox:SetSizeOverride(DebugMenu.CHECKBOX_SIZE)
+        enabledCheckbox.Events.StateChanged:Subscribe(function (ev)
+            DebugMenu.SetEnabledState(mod, featureID, ev.Active)
+        end)
+
+        local sourceText = TextPrefab.Create(DebugMenu.UI, featureID .. "_Source", formList.Label, sourceLabel, "Right", DebugMenu.FORM_ENTRY_LABEL_SIZE)
+        sourceText:Move(0, 10)
+
+        -- Logging dropdown
+        local combo = formList:AddChild("LoggingCombo", "GenericUI_Element_ComboBox")
+        combo:SetOptions({
+            {ID = 0, Label = "Normal"},
+            {ID = 1, Label = "Warnings & Errors Only"},
+            {ID = 2, Label = "Errors Only"},
+        })
+        combo:SelectOption(feature.Logging)
+        combo.Events.OptionSelected:Subscribe(function (ev)
+            DebugMenu.SetLoggingState(mod, featureID, ev.Option.ID)
+        end)
+
+        -- Testing status
+        local testLabel = TextPrefab.Create(ui, featureID .. "_TestingLabel", formList.List, state:GetTestingLabel(), "Left", DebugMenu.INFO_SIZE)
+
+        local testButton = formList:AddChild("TestButton", "GenericUI_Element_Button")
+        testButton:SetType("Red")
+        testButton:SetText("Run Tests", 4)
+        testButton:SetEnabled(#feature._Tests > 0)
+        testButton.Events.Pressed:Subscribe(function (_)
+            testLabel:SetText(Text.Format("Running...", {Color = Color.BLACK}))
+
+            state:RunTests()
+
+            Timer.Start(state.TEST_CHECK_DELAY, function (_)
+                DebugMenu:Log("Tests finished for " .. featureID)
+                testLabel:SetText(state:GetTestingLabel())
+            end)
+        end)
+    end
+end
 
 ---------------------------------------------
 -- EVENT LISTENERS
@@ -67,83 +152,24 @@ function DebugMenu._PopulateFeatureList()
     divider:SetType("Line")
     divider:SetSize(DebugMenu.FORM_ENTRY_SIZE:unpack())
 
+    local features = {} ---@type Feature_DebugMenu_FeatureEntry[]
+
+    -- Add actual features.
     for mod,featureTable in pairs(Epip._Features) do
-
-        local features = {}
         for _,feature in pairs(featureTable.Features) do
-            table.insert(features, feature)
-        end
-        table.sortByProperty(features, "MODULE_ID")
-
-        for _,feature in pairs(features) do
-            local featureID = feature.MODULE_ID
-            local state = DebugMenu.GetState(mod, featureID)
-            feature = feature ---@type Feature
-
-            local labelText = Text.Format("%s", {
-                FormatArgs = {feature.MODULE_ID},
-                Color = Color.BLACK,
-            })
-            local sourceLabel = Text.Format("(%s)", {
-                FormatArgs = {mod},
-                Size = 13,
-                Color = Color.BLACK,
-            })
-
-            local formList = FormEntry.Create(ui, featureID, list, labelText, DebugMenu.FORM_ENTRY_SIZE, DebugMenu.FORM_ENTRY_LABEL_SIZE)
-
-            -- "Debug" checkbox.
-            local checkbox = formList:AddChild(featureID .. "_Debug", "GenericUI_Element_StateButton")
-            checkbox:SetType("CheckBox")
-            checkbox:SetActive(feature:IsDebug())
-            checkbox:SetSizeOverride(DebugMenu.CHECKBOX_SIZE)
-            checkbox.Events.StateChanged:Subscribe(function (ev)
-                DebugMenu.SetDebugState(mod, featureID, ev.Active)
-            end)
-
-            -- "Enabled" checkbox.
-            local enabledCheckbox = formList:AddChild("Enabled", "GenericUI_Element_StateButton")
-            enabledCheckbox:SetType("CheckBox")
-            enabledCheckbox:SetActive(feature:IsEnabled())
-            enabledCheckbox:SetSizeOverride(DebugMenu.CHECKBOX_SIZE)
-            enabledCheckbox.Events.StateChanged:Subscribe(function (ev)
-                DebugMenu.SetEnabledState(mod, featureID, ev.Active)
-            end)
-
-            local sourceText = TextPrefab.Create(DebugMenu.UI, featureID .. "_Source", formList.Label, sourceLabel, "Right", DebugMenu.FORM_ENTRY_LABEL_SIZE)
-            sourceText:Move(0, 10)
-
-            -- Logging dropdown
-            local combo = formList:AddChild("LoggingCombo", "GenericUI_Element_ComboBox")
-            combo:SetOptions({
-                {ID = 0, Label = "Normal"},
-                {ID = 1, Label = "Warnings & Errors Only"},
-                {ID = 2, Label = "Errors Only"},
-            })
-            combo:SelectOption(feature.Logging)
-            combo.Events.OptionSelected:Subscribe(function (ev)
-                DebugMenu.SetLoggingState(mod, featureID, ev.Option.ID)
-            end)
-
-            -- Testing status
-            local testLabel = TextPrefab.Create(ui, featureID .. "_TestingLabel", formList.List, state:GetTestingLabel(), "Left", DebugMenu.INFO_SIZE)
-
-            local testButton = formList:AddChild("TestButton", "GenericUI_Element_Button")
-            testButton:SetType("Red")
-            testButton:SetText("Run Tests", 4)
-            testButton:SetEnabled(#feature._Tests > 0)
-            testButton.Events.Pressed:Subscribe(function (_)
-                testLabel:SetText(Text.Format("Running...", {Color = Color.BLACK}))
-
-                state:RunTests()
-
-                Timer.Start(state.TEST_CHECK_DELAY, function (_)
-                    DebugMenu:Log("Tests finished for " .. featureID)
-                    testLabel:SetText(state:GetTestingLabel())
-                end)
-            end)
+            table.insert(features, {Feature = feature, Source = mod, SORTING_KEY = feature.MODULE_ID})
         end
     end
+
+    -- Add UI libraries.
+    for id,lib in pairs(Client.UI) do
+        if lib.MODULE_ID then
+            table.insert(features, {Feature = lib, Source = "_Client", SORTING_KEY = "xxx_" .. id})
+        end
+    end
+    table.sortByProperty(features, "SORTING_KEY")
+
+    DebugMenu._RenderFeatures(features)
 
     DebugMenu.UI.ScrollList:RepositionElements()
 end
