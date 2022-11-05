@@ -188,6 +188,10 @@ LOAD_ORDER = {
     {
         ScriptSet = "Epip/Vanity/Dyes",
     },
+    -- Vanity Auras
+    {
+        ScriptSet = "Epip/Vanity/Auras",
+    },
 
     {ScriptSet = "UI/Vanity/Tabs/Shapeshift", WIP = true},
 

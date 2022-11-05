@@ -318,39 +318,6 @@ Utilities.Hooks.RegisterListener("ContextMenus_Dyes", "ItemBeingDyed", function(
     Vanity.ignoreItemEquips = true
 end)
 
--- TODO MOVE ELSEWHERE
-Net.RegisterListener("EPIPENCOUNTERS_Vanity_ApplyAura", function(payload)
-    local char = Ext.GetCharacter(payload.NetID)
-    local aura = payload.Aura ---@type VanityAura
-
-    Osi.PROC_LoopEffect(aura.Effect, char.MyGuid, "PIP_VanityAura", "__ANY__", "")
-    -- local handle = Osiris.DB_PlayLoopEffectHandleResult:Get(nil)
-    local _, handle = Osiris.DB_LoopEffect:Get(char.MyGuid, nil, "PIP_VanityAura", "__ANY__", aura.Effect, nil)
-
-
-    print("Handle:", handle)
-
-    Osi.DB_PIP_Vanity_AppliedAura(char.MyGuid, aura.Effect, handle)
-    _D(Osi.DB_PIP_Vanity_AppliedAura:Get(char.MyGuid, aura.Effect, nil))
-
-    
-    -- Osiris.DB_PIP_Vanity_AppliedAura:Set(char.MyGuid, aura.Effect, handle)
-end)
-Net.RegisterListener("EPIPENCOUNTERS_Vanity_RemoveAura", function(payload)
-    local char = Ext.GetCharacter(payload.NetID)
-    local _, _, _, tuples = Osiris.DB_PIP_Vanity_AppliedAura:Get(char.MyGuid, nil, nil)
-
-    if tuples then
-        for i,tuple in ipairs(tuples) do
-            local handle = tuple[3]
-            print("Stopping effect:", handle)
-            Osi.ProcStopLoopEffect(handle)
-        end
-    end
-
-    Osiris.DB_PIP_Vanity_AppliedAura:Delete(char.MyGuid, nil, nil)
-end)
-
 -- Create statuses for refreshing visuals.
 Ext.Events.SessionLoaded:Subscribe(function (ev)
     local stat, stat2 = Stats.Get("StatusData", "PIP_Vanity_Refresh"), Stats.Get("StatusData", "PIP_Vanity_Refresh_Alt")

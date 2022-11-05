@@ -438,6 +438,13 @@ LOAD_ORDER = {
             "Epip/Vanity/Dyes/Client_Tab.lua",
         },
     },
+    -- Vanity Auras
+    {
+        ScriptSet = "Epip/Vanity/Auras",
+        Scripts = {
+            "Epip/Vanity/Auras/Client_Tab.lua",
+        },
+    },
 
     "Epip/Client/EE_Dyes.lua",
 

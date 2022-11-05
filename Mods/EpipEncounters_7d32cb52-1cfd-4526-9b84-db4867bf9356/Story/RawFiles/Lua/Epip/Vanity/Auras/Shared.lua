@@ -1,85 +1,48 @@
 
-local Vanity = Client.UI.Vanity
-local Auras = {
-    AURAS = {}, ---@type table<string, VanityAura>
-    Tab = Vanity.CreateTab({
-        Name = "Auras",
-        ID = "PIP_Auras",
-        Icon = "hotbar_icon_magic",
-    })
-}
-Epip.AddFeature("VanityAuras", "VanityAuras", Auras)
-local Tab = Auras.Tab
 
----@class VanityAura
+---@class Feature_Vanity_Auras : Feature
+local Auras = {
+    _RegisteredAuras = {}, ---@type table<string, Feature_Vanity_Auras_Entry>
+    
+}
+Epip.RegisterFeature("Vanity_Auras", Auras)
+
+---------------------------------------------
+-- CLASSES
+---------------------------------------------
+
+---@class Feature_Vanity_Auras_Entry
 ---@field Name string
 ---@field Effect string
+
+---------------------------------------------
+-- NET MESSAGES
+---------------------------------------------
+
+---@class EPIPENCOUNTERS_Vanity_ApplyAura : NetMessage, Net_SimpleMessage_NetID
+---@field AuraID string
+
+---@class EPIPENCOUNTERS_Vanity_RemoveAura : NetMessage, Net_SimpleMessage_NetID
 
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
----@param data VanityAura
+---@param data Feature_Vanity_Auras_Entry
 function Auras.RegisterAura(data)
-    Auras.AURAS[data.Effect] = data
-
-    -- Vanity.Refresh()
+    Auras._RegisteredAuras[data.Effect] = data
 end
 
 ---@param id string
----@return VanityAura
+---@return Feature_Vanity_Auras_Entry
 function Auras.GetAura(id)
-    return Auras.AURAS[id]
+    return Auras._RegisteredAuras[id]
 end
 
----@param aura VanityAura|string
-function Auras.ApplyAura(aura)
-    if type(aura) == "string" then aura = Auras.GetAura(aura) end
-
-    -- Auras.RemoveCurrentAura()
-
-    Net.PostToServer("EPIPENCOUNTERS_Vanity_ApplyAura", {
-        NetID = Client.GetCharacter().NetID,
-        Aura = aura,
-    })
+---@return table<string, Feature_Vanity_Auras_Entry> -- Mutable.
+function Auras.GetRegisteredAuras()
+    return Auras._RegisteredAuras
 end
-
-function Auras.RemoveCurrentAura()
-    Net.PostToServer("EPIPENCOUNTERS_Vanity_RemoveAura", {
-        NetID = Client.GetCharacter().NetID,
-    })
-end
-
----------------------------------------------
--- EVENT LISTENERS
----------------------------------------------
-
----------------------------------------------
--- TAB RENDERING
----------------------------------------------
-
-function Tab:Render()
-    Vanity.RenderButton("RemoveAura", "Remove Aura", true)
-
-    local open = Vanity.IsCategoryOpen("Auras")
-    Vanity.RenderEntry("Auras", "Auras", true, open, false, false, nil, false, nil)
-
-    if open then
-        for id,effect in pairs(Auras.AURAS) do
-            Vanity.RenderEntry(effect.Effect, effect.Name, false, false, false, false, nil, false, nil)
-        end
-    end
-end
-
-Tab:RegisterListener(Vanity.Events.ButtonPressed, function(id)
-    if id == "RemoveAura" then
-        Auras.RemoveCurrentAura()
-    end
-end)
-
-Tab:RegisterListener(Vanity.Events.EntryClicked, function(id)
-    Auras.ApplyAura(id)
-end)
 
 ---------------------------------------------
 -- TESTING
@@ -118,7 +81,6 @@ local effs = {
     "RS3_FX_Environment_Waterfall_fume_03",
     "RS3_FX_Environment_Waterfall_Night_Hit_01",
 }
-
-for i,eff in ipairs(effs) do
+for _,eff in ipairs(effs) do
     Auras.RegisterAura({Name = eff, Effect = eff})
 end
