@@ -14,8 +14,9 @@ function Auras.ApplyAura(char, aura)
     Osiris.PROC_LoopEffect(aura.Effect, char, "PIP_VanityAura", "__ANY__", "")
     local _, handle, _, _, _, _ = Osiris.DB_LoopEffect:Get(char.MyGuid, nil, "PIP_VanityAura", "__ANY__", aura.Effect, nil)
 
-    Osiris.DB_PIP_Vanity_AppliedAura:Set(char, aura:GetID(), handle)
+    Auras:DebugLog("Applying aura", aura:GetID(), handle)
 
+    Osiris.DB_PIP_Vanity_AppliedAura:Set(char, aura:GetID(), handle)
     Osiris.SetTag(char, Auras._GetAuraTag(aura:GetID()))
 end
 
@@ -26,12 +27,14 @@ function Auras.RemoveAura(char, aura)
     local auraID = aura:GetID()
 
     local tuples = Osiris.DB_PIP_Vanity_AppliedAura:GetTuples(char, auraID, nil)
-    for _,tuple in ipairs(tuples or {}) do
+    if not tuples then Auras:LogError("Tried to remove an aura that is not applied! " .. auraID) return nil end
+    for _,tuple in ipairs(tuples) do
         local handle = tuple[3]
 
         Auras:DebugLog("Stopping effect:", handle)
 
-        Osi.ProcStopLoopEffect(handle)
+        Osiris.ProcStopLoopEffect(handle)
+        Osiris.DB_LoopEffect:Delete(char, nil, "PIP_VanityAura", nil, aura.Effect, nil)
         Osiris.ClearTag(char, Auras._GetAuraTag(auraID))
     end
 
