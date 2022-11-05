@@ -424,11 +424,13 @@ function Text.RegisterTranslatedString(text, handle, key, modTable, replaceExist
         text, handle, key, modTable, replaceExisting, contextDescription = text.Text, text.Handle, text.Key, text.ModTable, handle, text.ContextDescription
     else
         ---@type TextLib_TranslatedString
+        ---@diagnostic disable-next-line: cast-local-type
         obj = {
             Text = text,
             Handle = handle,
             Key = key,
             ModTable = modTable,
+            ContextDescription = contextDescription,
         }
     end
 
@@ -437,7 +439,7 @@ function Text.RegisterTranslatedString(text, handle, key, modTable, replaceExist
     local currentText = Text.GetTranslatedString(handle)
 
     -- Keep track of original text.
-    if modTable and not replaceExisting then
+    if modTable and (not replaceExisting or Text._RegisteredTranslatedHandles[handle] == nil) then
         Text._RegisteredTranslatedHandles[handle] = obj
     end
 

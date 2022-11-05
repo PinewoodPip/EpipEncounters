@@ -198,7 +198,7 @@ function Feature.Create(feature)
             feature.TranslatedStrings[data.Key] = data
         end
 
-        Text.RegisterTranslatedString(data)
+        Text.RegisterTranslatedString(data, true)
     end
 
     -- Create TSK table

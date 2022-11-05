@@ -191,6 +191,9 @@ LOAD_ORDER = {
     -- Vanity Auras
     {
         ScriptSet = "Epip/Vanity/Auras",
+        Scripts = {
+            "Epip/Vanity/Auras/Shared_Data.lua",
+        },
     },
 
     {ScriptSet = "UI/Vanity/Tabs/Shapeshift", WIP = true},

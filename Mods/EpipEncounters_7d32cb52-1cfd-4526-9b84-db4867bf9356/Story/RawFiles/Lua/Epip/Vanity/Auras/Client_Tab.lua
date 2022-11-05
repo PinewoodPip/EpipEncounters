@@ -26,7 +26,7 @@ function Tab:Render()
         for id,effect in pairs(Auras.GetRegisteredAuras()) do
             local icon = Auras.HasAura(char, id) and "hotbar_icon_charsheet" or nil
 
-            Vanity.RenderEntry(id, effect.Name, false, false, false, false, icon, false, nil)
+            Vanity.RenderEntry(id, effect:GetName(), false, false, false, false, icon, false, nil)
         end
     end
 end

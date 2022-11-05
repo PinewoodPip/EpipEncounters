@@ -442,6 +442,7 @@ LOAD_ORDER = {
     {
         ScriptSet = "Epip/Vanity/Auras",
         Scripts = {
+            "Epip/Vanity/Auras/Shared_Data.lua",
             "Epip/Vanity/Auras/Client_Tab.lua",
         },
     },
