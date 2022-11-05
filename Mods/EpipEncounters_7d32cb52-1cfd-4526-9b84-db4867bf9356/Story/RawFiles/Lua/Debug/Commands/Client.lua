@@ -46,7 +46,7 @@ local function GenerateLocalizationTemplate(_, modTable, existingLocalization)
         print("Outdated/removed strings:", outdatedStrings)
     end
 
-    IO.SaveFile("Epip/localization_template.json", template)
+    IO.SaveFile("Epip/localization_template.json", template, nil, true)
 end
 
 local function SoundTest()
