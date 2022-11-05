@@ -46,13 +46,13 @@ end
 ---Delete tuples from the DB.
 ---@vararg any Tuple query to delete.
 function _OsirisDatabase:Delete(...)
-    Osi[self.Name]:Delete(...)
+    Osi[self.Name]:Delete(Osiris._ParseParameters(...))
 end
 
 ---Set a tuple on the DB.
 ---@vararg any Tuple values
 function _OsirisDatabase:Set(...)
-    Osi[self.Name](...)
+    Osi[self.Name](Osiris._ParseParameters(...))
 end
 
 ---@param db string
