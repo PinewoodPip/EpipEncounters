@@ -222,7 +222,7 @@ function DebugMenu.SaveConfig(path)
         end
     end
 
-    IO.SaveFile(path or DebugMenu.SAVE_FILENAME, save)
+    IO.SaveFile(path or DebugMenu.SAVE_FILENAME, save, nil, true)
 end
 
 ---@param modTable string

@@ -15,6 +15,7 @@ Net.RegisterListener("EPIPENCOUNTERS_Vanity_ApplyAura", function(payload)
 
     Osi.DB_PIP_Vanity_AppliedAura(char.MyGuid, aura.Effect, handle)
     Osiris.DB_PIP_Vanity_AppliedAura:Set(char.MyGuid, aura.Effect, handle)
+    Osiris.SetTag(char, Auras._GetAuraTag(payload.AuraID))
 end)
 
 Net.RegisterListener("EPIPENCOUNTERS_Vanity_RemoveAura", function(payload)
@@ -22,11 +23,13 @@ Net.RegisterListener("EPIPENCOUNTERS_Vanity_RemoveAura", function(payload)
     local tuples = Osiris.DB_PIP_Vanity_AppliedAura:GetTuples(char.MyGuid, nil, nil)
 
     for _,tuple in ipairs(tuples or {}) do
+        local auraID = tuple[2]
         local handle = tuple[3]
 
         Auras:DebugLog("Stopping effect:", handle)
 
         Osi.ProcStopLoopEffect(handle)
+        Osiris.ClearTag(char, Auras._GetAuraTag(auraID))
     end
 
     Osiris.DB_PIP_Vanity_AppliedAura:Delete(char.MyGuid, nil, nil)
