@@ -15,6 +15,12 @@ Epip.RegisterFeature("Vanity_Auras", Auras)
 ---@class Feature_Vanity_Auras_Entry
 ---@field Name string
 ---@field Effect string
+local _Aura = {}
+
+---@return string
+function _Aura:GetID()
+    return self.Effect
+end
 
 ---------------------------------------------
 -- NET MESSAGES
@@ -24,6 +30,9 @@ Epip.RegisterFeature("Vanity_Auras", Auras)
 ---@field AuraID string
 
 ---@class EPIPENCOUNTERS_Vanity_RemoveAura : NetMessage, Net_SimpleMessage_NetID
+---@field AuraID string
+
+---@class EPIPENCOUNTERS_Vanity_RemoveAuras : NetMessage, Net_SimpleMessage_NetID
 
 ---------------------------------------------
 -- METHODS
@@ -31,6 +40,8 @@ Epip.RegisterFeature("Vanity_Auras", Auras)
 
 ---@param data Feature_Vanity_Auras_Entry
 function Auras.RegisterAura(data)
+    Inherit(data, _Aura)
+    
     Auras._RegisteredAuras[data.Effect] = data
 end
 

@@ -19,7 +19,7 @@ function Tab:Render()
     local open = Vanity.IsCategoryOpen("Auras")
     local char = Client.GetCharacter()
 
-    Vanity.RenderButton("RemoveAura", "Remove Auras", true)
+    Vanity.RenderButton("RemoveAuras", "Remove Auras", true)
 
     Vanity.RenderEntry("Auras", "Auras", true, open, false, false, nil, false, nil)
     if open then
@@ -33,8 +33,8 @@ end
 
 -- Listen for buttons being pressed.
 Tab:RegisterListener(Vanity.Events.ButtonPressed, function(id)
-    if id == "RemoveAura" then
-        Auras.RemoveCurrentAura()
+    if id == "RemoveAuras" then
+        Auras.RemoveAuras()
     end
 
     Timer.Start(Tab.REFRESH_DELAY, function (_)
@@ -44,7 +44,7 @@ end)
 
 -- Listen for entries being pressed.
 Tab:RegisterListener(Vanity.Events.EntryClicked, function(id)
-    Auras.ApplyAura(id)
+    Auras.ToggleAura(Client.GetCharacter(), id)
 
     Timer.Start(Tab.REFRESH_DELAY, function (_)
         Vanity.Refresh()
