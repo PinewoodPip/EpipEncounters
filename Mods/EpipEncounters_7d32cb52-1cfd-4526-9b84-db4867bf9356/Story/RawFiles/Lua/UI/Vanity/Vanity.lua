@@ -1080,9 +1080,14 @@ function Vanity.TogglePointsWarning(state)
     local root = CharacterSheet:GetRoot()
     local list = root.stats_mc.pointsWarn
 
-    for i=0,2,1 do
-        local element = list[i]
-        element.alpha = alpha
+    -- Hide stat blips in the character sheet for all tabs covered up by custom ones.
+    for i=1,math.min(#Vanity.TABS, 4),1 do
+        local element = list[i - 1]
+
+        -- TODO there are more tabs (ex. the GM ones, with different indexes), can they have blips?
+        if element then
+            element.alpha = alpha
+        end
     end
 end
 
