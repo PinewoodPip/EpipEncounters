@@ -34,7 +34,7 @@ function Tab:Render()
     Vanity.RenderButton("RemoveAuras", "Remove Auras", true)
 
     Vanity.RenderText("_BoneLabel", "Attachment Point")
-    Vanity.RenderDropdown("Auras_Bone", Tab:_GetBoneDropdownOptions(), Tab.SelectedBoneIndex - 1)
+    Vanity.RenderDropdown("Auras_Bone", Tab:_GetBoneDropdownOptions(), Tab.SelectedBoneIndex)
 
     Vanity.RenderEntry("Auras", "Auras", true, open, false, false, nil, false, nil)
     if open then

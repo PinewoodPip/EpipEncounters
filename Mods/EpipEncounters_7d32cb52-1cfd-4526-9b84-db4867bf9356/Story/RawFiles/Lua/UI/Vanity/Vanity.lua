@@ -629,14 +629,14 @@ end
 
 function Vanity.RenderItemDropdown()
     local itemSlot = Vanity.currentSlot
-    local dropdownIndex = 0
+    local dropdownIndex = 1
 
     local slotOptions = {}
 
     for i,v in ipairs(Data.Game.SLOTS_WITH_VISUALS) do
         table.insert(slotOptions, v)
         if v == itemSlot then
-            dropdownIndex = i - 1
+            dropdownIndex = i
         end
     end
 
@@ -793,18 +793,18 @@ end
 
 function Vanity.RenderDropdown(id, options, selectedIndex)
     local menu = Vanity.GetMenu()
-    selectedIndex = selectedIndex or 0
+    selectedIndex = selectedIndex or 1
 
     menu.addCombo(id)
 
-    for i,optionName in ipairs(options) do
+    for _,optionName in ipairs(options) do
         menu.addComboOption(id, optionName)
     end
 
     local list = menu.list.content_array
     local combo = list[#list-1]
 
-    combo.selectedIndex = selectedIndex
+    combo.selectedIndex = selectedIndex - 1
     combo.heightOverride = 50
 end
 
@@ -1248,8 +1248,6 @@ end
 
 local function OnTick()
     local root = Vanity:GetRoot()
-    local characterSheet = Client.UI.CharacterSheet:GetRoot()
-    local cUI = Client.UI.CharacterSheet:GetUI()
 
     local isVisible = CharacterSheet:IsVisible() and not Client.IsInCombat()
 
