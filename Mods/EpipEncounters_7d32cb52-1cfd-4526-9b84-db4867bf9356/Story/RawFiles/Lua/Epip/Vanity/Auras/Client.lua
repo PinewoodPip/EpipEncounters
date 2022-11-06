@@ -8,13 +8,15 @@ local Auras = Epip.GetFeature("Feature_Vanity_Auras")
 
 ---@param char EclCharacter?
 ---@param aura Feature_Vanity_Auras_Entry|string
-function Auras.ApplyAura(char, aura)
+---@param boneID string
+function Auras.ApplyAura(char, aura, boneID)
     if type(aura) == "string" then aura = Auras.GetAura(aura) end
     char = char or Client.GetCharacter()
 
     Net.PostToServer("EPIPENCOUNTERS_Vanity_ApplyAura", {
         NetID = char.NetID,
         AuraID = aura:GetID(),
+        BoneID = boneID,
     })
 end
 
@@ -41,13 +43,15 @@ end
 
 ---@param char EclCharacter?
 ---@param aura Feature_Vanity_Auras_Entry|string
-function Auras.ToggleAura(char, aura)
+---@param boneID string
+function Auras.ToggleAura(char, aura, boneID)
     if type(aura) == "string" then aura = Auras.GetAura(aura) end
     char = char or Client.GetCharacter()
 
+    -- Cannot have the same aura applied in different bones at the moment.
     if Auras.HasAura(char, aura:GetID()) then
         Auras.RemoveAura(char, aura)
     else
-        Auras.ApplyAura(char, aura)
+        Auras.ApplyAura(char, aura, boneID)
     end
 end

@@ -8,13 +8,15 @@ local Auras = Epip.GetFeature("Feature_Vanity_Auras")
 
 ---@param char EsvCharacter
 ---@param aura Feature_Vanity_Auras_Entry|string
-function Auras.ApplyAura(char, aura)
+---@param boneID string? Defaults to empty string.
+function Auras.ApplyAura(char, aura, boneID)
     if type(aura) == "string" then aura = Auras.GetAura(aura) end
+    boneID = boneID or ""
 
-    Osiris.PROC_LoopEffect(aura.Effect, char, "PIP_VanityAura", "__ANY__", "")
+    Osiris.PROC_LoopEffect(aura.Effect, char, "PIP_VanityAura", "__ANY__", boneID)
     local _, handle, _, _, _, _ = Osiris.DB_LoopEffect:Get(char.MyGuid, nil, "PIP_VanityAura", "__ANY__", aura.Effect, nil)
 
-    Auras:DebugLog("Applying aura", aura:GetID(), handle)
+    Auras:DebugLog("Applying aura", aura:GetID(), handle, "to bone", boneID)
 
     Osiris.DB_PIP_Vanity_AppliedAura:Set(char, aura:GetID(), handle)
     Osiris.SetTag(char, Auras._GetAuraTag(aura:GetID()))
@@ -60,7 +62,7 @@ end
 Net.RegisterListener("EPIPENCOUNTERS_Vanity_ApplyAura", function(payload)
     local char = Character.Get(payload.NetID)
 
-    Auras.ApplyAura(char, payload.AuraID)
+    Auras.ApplyAura(char, payload.AuraID, payload.BoneID)
 end)
 
 -- Listen for aura removal requests.

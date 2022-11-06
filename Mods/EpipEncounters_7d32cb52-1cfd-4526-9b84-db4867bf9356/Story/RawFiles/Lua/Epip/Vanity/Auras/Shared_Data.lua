@@ -101,7 +101,7 @@ Epip.RegisterFeature("EpipAuras", EpipAuras)
 ---------------------------------------------
 
 -- Define and register built-in auras.
----@type table<string, Feature_Vanity_Auras_Entry>
+---@type string[]
 local effs = {
     "RS3_FX_GP_ScriptedEvent_FJ_RedPrinceO_DarknessFadeIn_Looping_01",
     "RS3_FX_ScriptedEvent_ARX_KemmsGarden_Transform_Loop_01",

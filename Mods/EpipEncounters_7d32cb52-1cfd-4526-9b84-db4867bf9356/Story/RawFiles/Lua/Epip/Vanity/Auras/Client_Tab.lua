@@ -10,16 +10,31 @@ Auras.Tab = Vanity.CreateTab({
 })
 local Tab = Auras.Tab
 Tab.REFRESH_DELAY = 0.2
+Tab.SelectedBoneIndex = 1
 
 ---------------------------------------------
 -- TAB RENDERING
 ---------------------------------------------
+
+---@return string[]
+function Tab:_GetBoneDropdownOptions()
+    local options = {}
+
+    for i,data in ipairs(Auras.BONES) do
+        options[i] = data.Name
+    end
+
+    return options
+end
 
 function Tab:Render()
     local open = Vanity.IsCategoryOpen("Auras")
     local char = Client.GetCharacter()
 
     Vanity.RenderButton("RemoveAuras", "Remove Auras", true)
+
+    Vanity.RenderText("_BoneLabel", "Attachment Point")
+    Vanity.RenderDropdown("Auras_Bone", Tab:_GetBoneDropdownOptions(), Tab.SelectedBoneIndex - 1)
 
     Vanity.RenderEntry("Auras", "Auras", true, open, false, false, nil, false, nil)
     if open then
@@ -30,6 +45,16 @@ function Tab:Render()
         end
     end
 end
+
+---------------------------------------------
+-- EVENT LISTENERS
+---------------------------------------------
+
+Vanity:RegisterListener("ComboElementSelected", function(id, index, _)
+    if id == "Auras_Bone" then
+        Tab.SelectedBoneIndex = index
+    end
+end)
 
 -- Listen for buttons being pressed.
 Tab:RegisterListener(Vanity.Events.ButtonPressed, function(id)
@@ -44,7 +69,7 @@ end)
 
 -- Listen for entries being pressed.
 Tab:RegisterListener(Vanity.Events.EntryClicked, function(id)
-    Auras.ToggleAura(Client.GetCharacter(), id)
+    Auras.ToggleAura(Client.GetCharacter(), id, Auras.BONES[Tab.SelectedBoneIndex].BoneID)
 
     Timer.Start(Tab.REFRESH_DELAY, function (_)
         Vanity.Refresh()
