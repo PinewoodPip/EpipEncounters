@@ -15,6 +15,14 @@ local Input = {
         CONTROLLER = "C",
     },
 
+    ---@type table<InputModifier, {Name:string, ShortName:string}>
+    MODIFIER_NAMES = {
+        Shift = {Name = "Shift", ShortName = "Shft"},
+        Ctrl = {Name = "Ctrl", ShortName = "^"},
+        Alt = {Name = "Alt", ShortName = "Alt"},
+        Gui = {Name = "Windows", ShortName = "Win"},
+    },
+
     MOTION_EVENTS = {
         motion = true,
         motion_xneg = true,
@@ -625,6 +633,71 @@ function _InputEventDefinition:GetName()
     return Ext.L10N.GetTranslatedString(self.NameHandle, self.ReferenceName)
 end
 
+---@class InputLib_GameEventDefinition
+---@field EventName string
+---@field CategoryName string
+---@field ReferenceString string
+---@field NumID integer
+
+---@class InputLib_Binding
+local _Binding = {}
+
+---@param useShortNames boolean? Defaults to false.
+---@return string
+function _Binding:Stringify(useShortNames)
+    return ""
+end
+
+function _Binding.__tostring(self)
+    return self:Stringify()
+end
+
+---@class InputLib_GameEventBinding : InputLib_Binding
+---@field DeviceType RawInputDevice
+---@field InputID InputRawType
+---@field Shift boolean
+---@field Ctrl boolean
+---@field Alt boolean
+---@field GUI boolean
+local _GameBinding = {}
+Inherit(_GameBinding, _Binding)
+
+---@param data InputLib_GameEventBinding
+---@return InputLib_GameEventBinding
+function _GameBinding.Create(data)
+    Inherit(data, _GameBinding)
+
+    return data
+end
+
+---@param useShortNames boolean? Defaults to false.
+---@return string
+function _GameBinding:Stringify(useShortNames)
+    local modifierNames = {}
+    local modifierProperties = {
+        {TableKey = "Shift", Modifier = "Shift"},
+        {TableKey = "Alt", Modifier = "Alt"},
+        {TableKey = "Ctrl", Modifier = "Ctrl"},
+        {TableKey = "GUI", Modifier = "Gui"},
+    }
+
+    for _,mod in ipairs(modifierProperties) do
+        if self[mod.TableKey] then
+            local modifierName = Input.MODIFIER_NAMES[mod.Modifier]
+
+            table.insert(modifierNames, useShortNames and modifierName.ShortName or modifierName.Name)
+        end
+    end
+
+    table.insert(modifierNames, Input.GetInputName(self.InputID, useShortNames))
+
+    return string.concat(modifierNames, useShortNames and "+" or " + ")
+end
+
+function _GameBinding.__tostring(self)
+    return self:Stringify()
+end
+
 ---------------------------------------------
 -- EVENTS/HOOKS
 ---------------------------------------------
@@ -650,6 +723,75 @@ end
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
+
+---@return InputManager
+function Input.GetManager()
+    return Ext.Input.GetInputManager()
+end
+
+---@param eventID string
+---@return integer
+function Input.GetGameEventNumID(eventID)
+    local manager = Input.GetManager()
+    local numID
+
+    for i,def in pairs(manager.InputDefinitions) do -- TODO cache these
+        if def.EventName == eventID then
+            numID = i
+            break
+        end
+    end
+
+    return numID
+end
+
+---@param id string|integer
+---@return InputLib_GameEventDefinition
+function Input.GetGameEvent(id)
+    local manager = Input.GetManager()
+    if type(id) == "string" then id = Input.GetGameEventNumID(id) end
+    local data = manager.InputDefinitions[id]
+
+    ---@type InputLib_GameEventDefinition
+    local event = {
+        EventName = data.EventName,
+        CategoryName = data.CategoryName,
+        ReferenceString = data.EventDesc.Handle.ReferenceString,
+        NumID = id,
+    }
+
+    return event
+end
+
+---@param eventID string|integer
+---@param bindingIndex (1|2)? Defaults to 1.
+---@param playerIndex integer Defaults to 1 (player index 0 in engine).
+---@return InputLib_Binding?
+function Input.GetBinding(eventID, bindingIndex, playerIndex)
+    if type(eventID) == "string" then eventID = Input.GetGameEventNumID(eventID) end
+    local manager = Input.GetManager()
+    local scheme = manager.InputScheme
+    playerIndex = playerIndex or 1
+    bindingIndex = bindingIndex or 1
+
+    local obj
+    local binding = scheme.PerPlayerBindings[playerIndex][eventID]
+    binding = binding and binding[bindingIndex]
+
+    if binding then
+        ---@type InputLib_GameEventBinding
+        obj = _GameBinding.Create({
+            Alt = binding.Alt,
+            Shift = binding.Shift,
+            Ctrl = binding.Ctrl,
+            GUI = binding.Gui,
+            InputID = binding.InputId,
+            DeviceType = binding.DeviceId,
+        })
+    end
+
+    return obj
+end
 
 ---Returns the name for a raw input ID.
 ---@param rawID InputRawType
