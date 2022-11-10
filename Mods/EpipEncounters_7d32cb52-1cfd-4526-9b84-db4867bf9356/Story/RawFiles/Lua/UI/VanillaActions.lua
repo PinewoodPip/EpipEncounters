@@ -11,7 +11,7 @@ local vanillaActions = {
         Name = "Pause",
         Type = "VanillaHotbarButton",
         Icon = "hotbar_icon_pause",
-        InputEventID = 225,
+        InputEventID = 241,
         VanillaButtonIndex = 0,
     },
     {

@@ -256,12 +256,10 @@ function Hotbar.GetKeyString(index, shortName)
 
     if state.ActionID ~= "" then
         local actionData = Hotbar.Actions[state.ActionID]
-        local inputEvent = nil
 
-        -- Manually-defined inputevent takes priority
+        -- Manually-defined InputEvent takes priority
         if actionData.InputEventID then
-            inputEvent = actionData.InputEventID
-            key = OptionsMenu:GetKey(inputEvent, true)
+            key = Client.Input.GetBinding(actionData.InputEventID):Stringify(true)
         else -- Use the hotbar keybinds
             local bindableAction = Client.UI.OptionsInput.GetKeybinds("EpipEncounters_Hotbar_" .. Text.RemoveTrailingZeros(index))
 

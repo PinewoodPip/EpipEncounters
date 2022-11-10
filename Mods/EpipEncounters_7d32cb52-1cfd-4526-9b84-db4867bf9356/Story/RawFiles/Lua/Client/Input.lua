@@ -633,7 +633,7 @@ function _InputEventDefinition:GetName()
     return Ext.L10N.GetTranslatedString(self.NameHandle, self.ReferenceName)
 end
 
----@class InputLib_GameEventDefinition
+---@class InputLib_InputEventDefinition
 ---@field EventName string
 ---@field CategoryName string
 ---@field ReferenceString string
@@ -652,7 +652,7 @@ function _Binding.__tostring(self)
     return self:Stringify()
 end
 
----@class InputLib_GameEventBinding : InputLib_Binding
+---@class InputLib_InputEventBinding : InputLib_Binding
 ---@field DeviceType RawInputDevice
 ---@field InputID InputRawType
 ---@field Shift boolean
@@ -662,8 +662,8 @@ end
 local _GameBinding = {}
 Inherit(_GameBinding, _Binding)
 
----@param data InputLib_GameEventBinding
----@return InputLib_GameEventBinding
+---@param data InputLib_InputEventBinding
+---@return InputLib_InputEventBinding
 function _GameBinding.Create(data)
     Inherit(data, _GameBinding)
 
@@ -746,13 +746,13 @@ function Input.GetGameEventNumID(eventID)
 end
 
 ---@param id string|integer
----@return InputLib_GameEventDefinition
+---@return InputLib_InputEventDefinition
 function Input.GetGameEvent(id)
     local manager = Input.GetManager()
     if type(id) == "string" then id = Input.GetGameEventNumID(id) end
     local data = manager.InputDefinitions[id]
 
-    ---@type InputLib_GameEventDefinition
+    ---@type InputLib_InputEventDefinition
     local event = {
         EventName = data.EventName,
         CategoryName = data.CategoryName,
@@ -764,22 +764,32 @@ function Input.GetGameEvent(id)
 end
 
 ---@param eventID string|integer
+---@param deviceType RawInputDevice? Defaults to "Key"
 ---@param bindingIndex (1|2)? Defaults to 1.
----@param playerIndex integer Defaults to 1 (player index 0 in engine).
+---@param playerIndex integer? Defaults to 1 (player index 0 in engine).
 ---@return InputLib_Binding?
-function Input.GetBinding(eventID, bindingIndex, playerIndex)
+function Input.GetBinding(eventID, deviceType, bindingIndex, playerIndex)
     if type(eventID) == "string" then eventID = Input.GetGameEventNumID(eventID) end
     local manager = Input.GetManager()
     local scheme = manager.InputScheme
     playerIndex = playerIndex or 1
     bindingIndex = bindingIndex or 1
+    deviceType = deviceType or "Key"
 
     local obj
-    local binding = scheme.PerPlayerBindings[playerIndex][eventID]
-    binding = binding and binding[bindingIndex]
+    local binding
+    local bindings = scheme.PerPlayerBindings[playerIndex][eventID]
+
+    local validBindings = {}
+    for _,b in ipairs(bindings) do
+        if b.DeviceId == deviceType then
+            table.insert(validBindings, b)
+        end
+    end
+    binding = #validBindings > 0 and validBindings[bindingIndex]
 
     if binding then
-        ---@type InputLib_GameEventBinding
+        ---@type InputLib_InputEventBinding
         obj = _GameBinding.Create({
             Alt = binding.Alt,
             Shift = binding.Shift,
