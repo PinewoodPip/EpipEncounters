@@ -155,7 +155,6 @@ LOAD_ORDER = {
 
     "Game/SkillDamageCalculation.lua",
 
-    "UI/Options.lua",
     "UI/OptionsSettings.lua",
 
     -- Needs to be ordered after the above.

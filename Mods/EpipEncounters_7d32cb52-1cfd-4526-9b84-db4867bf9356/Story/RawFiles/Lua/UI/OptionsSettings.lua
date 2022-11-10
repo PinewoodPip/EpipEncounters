@@ -338,7 +338,7 @@ function OptionsSettings.SetOptionValue(mod, option, value, synch)
         OptionsSettings.PendingValueChanges[option] = value
     end
 
-    if OptionsMenu.initialized then
+    if GameState.IsInSession() then
         local data = OptionsSettings.GetOptionData(option)
 
         if data then
