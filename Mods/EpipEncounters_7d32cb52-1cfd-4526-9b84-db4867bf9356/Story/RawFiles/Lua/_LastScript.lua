@@ -3,7 +3,7 @@
 -- Script for registering events that must run after all others.
 ---------------------------------------------
 
-Ext.Events.SessionLoaded:Subscribe(function()
+Ext.Events.SessionLoaded:Subscribe(function(_)
     for _,lib in ipairs(Epip._FeatureRegistrationOrder) do
         if lib.IsEnabled ~= nil and lib:IsEnabled() then -- TODO move everything to lib system
             lib:__Setup()

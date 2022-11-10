@@ -382,6 +382,7 @@ LOAD_ORDER = {
     "Epip/Client/ChatNotificationSound.lua",
     "Epip/Client/ToggleableWorldTooltips.lua",
     "Epip/Client/WorldTooltipFiltering.lua",
+    -- "Epip/Client/LoadingScreenReplacement.lua",
 
     -- Epic Enemies
     "Epip/EpicEnemies/Shared.lua",
@@ -467,13 +468,5 @@ LOAD_ORDER = {
 Utilities = {}
 
 Ext.Require(prefixedGUID, "Bootstrap.lua")
-
--- Loading screen replacement.
-Ext.Events.SessionLoading:Subscribe(function()
-    if Settings.GetSettingValue("EpipEncounters", "LoadingScreen") then
-        -- loading screen replacement. only works after EpipEncounters has loaded. (no effect when module loads for the first time)
-        Ext.IO.AddPathOverride("Public/Game/Assets/Textures/UI/DOS2_Loadscreen_DE.dds", "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/Assets/Textures/epip_encounters_loading_bg.dds")
-    end
-end)
 
 Ext.Require(prefixedGUID, "_LastScript.lua")

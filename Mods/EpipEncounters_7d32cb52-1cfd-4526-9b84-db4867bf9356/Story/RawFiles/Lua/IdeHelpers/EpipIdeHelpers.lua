@@ -7,6 +7,7 @@
 ---@alias PrefixedGUID string
 ---@alias Context "Client"|"Server" 
 ---@alias pattern string
+---@alias path string
 ---@alias TranslatedStringHandle string
 ---@alias ModTableID string|"EpipEncounters"
 

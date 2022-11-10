@@ -26,7 +26,6 @@ local tabs = {
             "Feature_WalkOnCorpses",
             "CombatLogImprovements",
             "PreferredTargetDisplay",
-            "LoadingScreen",
         }
     },
     ["Epip_Hotbar"] = {
