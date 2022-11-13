@@ -1,4 +1,5 @@
 import os, pathlib, re
+from collections import defaultdict
 
 ## TODO define absolute path to functions, ex. Inv - > Client.UI.PartyInventory
 ## Done? support different implementations across contexts
@@ -46,6 +47,8 @@ DOC_TEMPLATE_REGEX2 = re.compile('^<doc (\w*)="(.*)">')
 DOC_FIELDS_REGEX = re.compile('^<doc fields="(.*)">')
 EMPTY_LINE_REGEX = re.compile("^ *$")
 
+SUBCLASS_REGEX = re.compile("([^_]+)_.+")
+
 functions = {}
 classes = {}
 events = {}
@@ -87,6 +90,13 @@ class Comment(Data):
 class ClassAlias(Data):
     def __init__(self, groups):
         self.alias = groups["Alias"]
+
+    def __str__(self):
+        return ""
+
+class FileRegionHeader(Data):
+    def __init__(self, groups:dict):
+        self.region = groups["Region"]
 
     def __str__(self):
         return ""
@@ -321,6 +331,7 @@ DATA_MATCHERS = [
     Matcher(re.compile("^---(?P<Comment>[^-@].+)$"), Comment),
     Matcher(re.compile("^(local )?(?P<Alias>\S+) = {"), ClassAlias),
     Matcher(re.compile("^(local )?(?P<Alias>\S+) = \S+$"), ClassAlias),
+    Matcher(re.compile("^-- (?P<Region>[[:upper:]]+)$"), FileRegionHeader)
 ]
 
 SYMBOL_MATCHERS = [
@@ -371,7 +382,7 @@ class DocParser:
         self.file_name = file_name
         self.file = open(file_name, "r")
         self.lines = self.file.readlines()
-        self.symbolsPerLibrary = {}
+        self.symbolsPerLibrary = defaultdict(list)
 
         self.Parse()
 
@@ -381,8 +392,6 @@ class DocParser:
 
             if symbol:
                 libraryID = symbol.getLibraryID()
-                if libraryID not in self.symbolsPerLibrary:
-                    self.symbolsPerLibrary[libraryID] = []
 
                 self.symbolsPerLibrary[libraryID].append(symbol)
 
@@ -548,7 +557,20 @@ class DocGenerator:
                     symbolTypes = openMatch.groups()[1]
                     symbolTypes = symbolTypes.split(",")
 
-                    template += gen.libraries[libName].export(symbolTypes)
+                    # Export subclasses
+                    if "_SubClasses" in symbolTypes:
+                        libs_to_export = []
+
+                        for _,lib in gen.libraries.items():
+                            match = SUBCLASS_REGEX.match(lib.name)
+
+                            if match and match.groups()[0] == libName:
+                                libs_to_export.append(lib)
+
+                        for lib in libs_to_export:
+                            template += lib.export(["Class", "Function"])
+                    else:
+                        template += gen.libraries[libName].export(symbolTypes)
 
                 if not removing:
                     template += line
