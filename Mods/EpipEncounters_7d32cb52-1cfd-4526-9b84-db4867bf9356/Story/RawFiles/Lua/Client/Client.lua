@@ -197,6 +197,14 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
+-- Open the pause menu while loading to check for host status.
+GameState.Events.ClientReady:Subscribe(function (_)
+    Client.UI.GameMenu:GetUI():Show()
+    Timer.StartTickTimer(1, function (_)
+        Client.UI.GameMenu:GetUI():Hide()
+    end)
+end)
+
 -- Listen for the save/load buttons being added to the pause menu to
 -- determine if this client is the host.
 Utilities.Hooks.RegisterListener("GameMenu", "ButtonAdded", function(id, name, enabled)
