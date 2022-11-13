@@ -1,9 +1,4 @@
-from dataclasses import field
-from importlib.resources import path
-import os, sys, pathlib, re
-import string
-import random
-from typing import Type
+import os, pathlib, re
 
 ## TODO define absolute path to functions, ex. Inv - > Client.UI.PartyInventory
 ## Done? support different implementations across contexts
@@ -11,9 +6,6 @@ from typing import Type
 ## TODO hide internal fields
 ## TODO auto-generate IDE helper
 ## TODO fix lack of spaces breaking it? probably from isFinishingParsing() usage
-
-#MOD_ROOT = sys.argv[1]
-#DOCS_ROOT = sys.argv[2]
 
 ALIASES = {}
 
@@ -43,7 +35,6 @@ CONTEXT_SUFFIXES = {
     "RequireBothContexts": "Must be called on both contexts"
 }
 
-COMMENT_REGEX = re.compile("(^---.*)$")
 FUNCTION_REGEX = re.compile("^function (?P<Namespace>[^ .:]+)(?P<SyntacticSugar>\.|:)(?P<Signature>\S+\(.*\))$")
 TAGS_REGEX = re.compile("^---@meta (.*)$")
 ALIAS_REGEX = re.compile("^---@alias (\S*) (.*)$")
@@ -156,11 +147,6 @@ class Symbol:
         return True
 
     def addData(self, data:list):
-        # if type(data) == list:
-        #     for entry in data:
-        #         self.addData(entry)
-        # else:
-        #     self.data.append(data)
         for entry in data:
             self.data.append(entry)
 
@@ -195,7 +181,7 @@ class Function(Symbol):
     def addData(self, data: list):
         super().addData(data)
 
-        for entry in self.data:
+        for entry in data:
             if type(entry) == Comment:
                 self.comments.append(entry)
             elif type(entry) == Parameter:
@@ -341,7 +327,7 @@ SYMBOL_MATCHERS = [
     Matcher(FUNCTION_REGEX, Function),
     Matcher(re.compile("^---@class (?P<Class>\S*)_Hook_(?P<Event>\S*) : Hook$"), Hook), # TODO fix
     Matcher(re.compile("^---@class (?P<Class>\S*)_Event_(?P<Event>\S*) : Event$"), Event), # TODO fix
-    Matcher(re.compile("^---@class (?P<Class>.+)$"), Class),
+    Matcher(re.compile("^---@class (?P<Class>\S+)"), Class),
 ]
 
 DOC_TEMPLATE_REGEX = re.compile('^<doc class="(.+)" symbols="(.+)">')
@@ -429,6 +415,7 @@ class DocParser:
     def getSymbol(self) -> Symbol:
         metadata = []
         lineIndex = 0
+        lastIndex = 0
         foundSymbol = None
 
         while lineIndex < len(self.lines):
@@ -442,6 +429,7 @@ class DocParser:
             elif lineSymbol: # Add metadata found until now
                 foundSymbol = lineSymbol
                 foundSymbol.addData(metadata)
+                lastIndex = lineIndex
             else: # Search for metadata
                 lineData = self.getDataOnLine(line)
 
@@ -454,10 +442,12 @@ class DocParser:
                     else:
                         metadata.append(lineData)
 
+                    lastIndex = lineIndex
+
             lineIndex += 1
 
-        # Consume lines
-        self.lines = self.lines[lineIndex+1::]
+        # Consume lines up until the last metadata found
+        self.lines = self.lines[lastIndex+1::]
 
         return foundSymbol
 
@@ -573,6 +563,7 @@ gen.updateDocs()
 # QUICK TEST
 # gen.parseLuaFile(r"C:\Program Files (x86)\Steam\steamapps\common\Divinity Original Sin 2\DefEd\Data\Mods\EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356\Story\RawFiles\Lua\Utilities\Text.lua")
 # gen.parseLuaFile(r"C:\Program Files (x86)\Steam\steamapps\common\Divinity Original Sin 2\DefEd\Data\Mods\EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356\Story\RawFiles\Lua\Utilities\Color.lua")
+# gen.parseLuaFile(r"C:\Program Files (x86)\Steam\steamapps\common\Divinity Original Sin 2\DefEd\Data\Mods\EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356\Story\RawFiles\Lua\Utilities\Text.lua")
 
 # # print(gen.libraries["_none"])
 # print(gen.libraries["Text"])

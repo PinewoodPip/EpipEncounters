@@ -56,6 +56,7 @@ Epip.InitializeLibrary("Text", Text)
 ---@field ContextDescription string?
 local _TranslatedString = {}
 
+---test comment
 ---@param data TextLib_TranslatedString
 ---@return TextLib_TranslatedString
 function _TranslatedString.Create(data)
