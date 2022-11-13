@@ -240,7 +240,6 @@ class Class(Symbol):
             if type(entry) == Comment:
                 self.comment = entry
             elif type(entry) == ClassAlias:
-                print("Found alias " + entry.alias)
                 ALIASES[entry.alias] = self.getLibraryID()
             else:
                 self.data.append(entry)
@@ -320,7 +319,8 @@ DATA_MATCHERS = [
     Matcher(re.compile("^---@field (?P<Type>\S*) ?(?P<Comment>.*)$"), ClassField),
     Matcher(re.compile("^---@meta (?P<Comment>.*)$"), Meta),
     Matcher(re.compile("^---(?P<Comment>[^-@].+)$"), Comment),
-    Matcher(re.compile("^(local )?(?P<Alias>\S+) = {"), ClassAlias)
+    Matcher(re.compile("^(local )?(?P<Alias>\S+) = {"), ClassAlias),
+    Matcher(re.compile("^(local )?(?P<Alias>\S+) = \S+$"), ClassAlias),
 ]
 
 SYMBOL_MATCHERS = [
@@ -456,7 +456,7 @@ class DocParser:
 
 class DocGenerator:
     LOAD_ORDER_SCRIPT_REGEX = re.compile("    \"(?P<Script>\S+\.lua)\",")
-    SCRIPT_SET_REGEX = re.compile("    {ScriptSet = \"(?P<Script>\S+)\".*},$")
+    SCRIPT_SET_REGEX = re.compile("\"(?P<Script>[^\.]+)\"")
     libraries = {} # TODO don't make this static
 
     def getLuaFiles(self) -> list:
@@ -479,7 +479,7 @@ class DocGenerator:
 
                         lua_files.add(os.path.join(MOD_ROOT, script_filename))
                     else:
-                        match = DocGenerator.SCRIPT_SET_REGEX.match(line)
+                        match = DocGenerator.SCRIPT_SET_REGEX.search(line)
 
                         if match != None:
                             script_filename = match.groupdict()["Script"]
@@ -487,8 +487,10 @@ class DocGenerator:
                             script_filename_shared = os.path.join(MOD_ROOT, script_filename + "/Shared.lua")
                             script_filename_context_specific = os.path.join(MOD_ROOT, script_filename + "/" + context + ".lua")
 
-                            lua_files.add(script_filename_shared)
-                            lua_files.add(script_filename_context_specific)
+                            if os.path.isfile(script_filename_shared):
+                                lua_files.add(script_filename_shared)
+                            if os.path.isfile(script_filename_context_specific):
+                                lua_files.add(script_filename_context_specific)
 
         return lua_files
 
@@ -497,6 +499,7 @@ class DocGenerator:
 
         # Parse lua
         for absolute_path in files:
+            print("Parsing", absolute_path)
             self.parseLuaFile(absolute_path)
 
         # Update markdown docs
@@ -563,7 +566,7 @@ gen.updateDocs()
 # QUICK TEST
 # gen.parseLuaFile(r"C:\Program Files (x86)\Steam\steamapps\common\Divinity Original Sin 2\DefEd\Data\Mods\EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356\Story\RawFiles\Lua\Utilities\Text.lua")
 # gen.parseLuaFile(r"C:\Program Files (x86)\Steam\steamapps\common\Divinity Original Sin 2\DefEd\Data\Mods\EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356\Story\RawFiles\Lua\Utilities\Color.lua")
-# gen.parseLuaFile(r"C:\Program Files (x86)\Steam\steamapps\common\Divinity Original Sin 2\DefEd\Data\Mods\EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356\Story\RawFiles\Lua\Utilities\Text.lua")
+# gen.parseLuaFile(r"C:\Program Files (x86)\Steam\steamapps\common\Divinity Original Sin 2\DefEd\Data\Mods\EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356\Story\RawFiles\Lua\Utilities\Character\Client.lua")
 
 # # print(gen.libraries["_none"])
 # print(gen.libraries["Text"])
