@@ -4,7 +4,8 @@
 -- either always or if the loremaster requirement is met.
 ---------------------------------------------
 
-Epip.Features.AutoIdentify = {
+---@class Feature_AutoIdentify : Feature
+local AutoIdentify = {
     STATES = {
         DISABLED = 1,
         NEED_LOREMASTER = 2,
@@ -13,7 +14,7 @@ Epip.Features.AutoIdentify = {
     state = 1,
     forceEnable = false,
 }
-local AutoIdentify = Epip.Features.AutoIdentify
+Epip.RegisterFeature("AutoIdentify", AutoIdentify)
 
 function AutoIdentify.SetForceEnable(state)
     AutoIdentify.forceEnable = state or true
@@ -21,7 +22,7 @@ end
 
 function AutoIdentify.IsEnabled()
     local state = AutoIdentify.state
-    return (state > AutoIdentify.STATES.DISABLED) or forceEnable
+    return (state > AutoIdentify.STATES.DISABLED) or AutoIdentify.forceEnable
 end
 
 function AutoIdentify.ProcessItem(item)
@@ -38,7 +39,8 @@ function AutoIdentify.CanIdentify(item)
 
     -- Check ability requirement
     if not canIdentify and state == AutoIdentify.STATES.NEED_LOREMASTER then
-        local loremaster = Utilities.GetHighestPartyAbility("Loremaster")
+        local partyLeader = Character.Get(Osiris.CharacterGetHostCharacter()) -- We don't have a way of identifying to who is looting this item.
+        local loremaster = Character.GetHighestPartyAbility(partyLeader, "Loremaster")
 
         local requirement = Item.GetIdentifyRequirement(item)
 

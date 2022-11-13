@@ -3,6 +3,8 @@
 -- Server implementation for debug cheats.
 ---------------------------------------------
 
+local AutoIdentify = Epip.GetFeature("Feature_AutoIdentify")
+
 -- Warp to AMER_Test.
 Net.RegisterListener("EPIPENCOUNTERS_WARPPARTY", function(payload)
     CharacterTeleportPartiesToTrigger(payload.Trigger, "")
@@ -149,7 +151,7 @@ end)
 Net.RegisterListener("EPIPENCOUNTERS_CHEATS_SPAWNARTIFACTSFOCI", function(payload)
     local char = Ext.GetCharacter(payload.NetID)
 
-    Epip.Features.AutoIdentify.SetForceEnable(true)
+    AutoIdentify.SetForceEnable(true)
     
     for i,tuple in pairs(Osi.DB_AMER_Artifacts:Get(nil, nil, nil, nil)) do
         local root,runeRoot,slot,id = tuple[1],tuple[2],tuple[3],tuple[4]
@@ -159,7 +161,7 @@ Net.RegisterListener("EPIPENCOUNTERS_CHEATS_SPAWNARTIFACTSFOCI", function(payloa
         end
     end
 
-    Epip.Features.AutoIdentify.SetForceEnable(false)
+    AutoIdentify.SetForceEnable(false)
 end)
 
 -- Add item template.

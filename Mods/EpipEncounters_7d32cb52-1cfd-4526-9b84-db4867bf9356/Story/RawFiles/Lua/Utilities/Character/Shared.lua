@@ -519,3 +519,21 @@ end
 function Character.IsDisarmed(char)
     return char:GetStatusByType("DISARMED") ~= nil
 end
+
+---Gets the highest stat score of all characters in char's party.
+---@param char Character
+---@param ability string Needs to be a property indexable in char.Stats
+---@return integer
+function Character.GetHighestPartyAbility(char, ability)
+    local highest = 0
+
+    for _,member in ipairs(Character.GetPartyMembers(char)) do
+        local score = member.Stats[ability]
+
+        if score > highest then
+            highest = score
+        end
+    end
+
+    return highest
+end

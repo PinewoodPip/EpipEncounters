@@ -68,7 +68,6 @@ LOAD_ORDER = {
     },
 
     {ScriptSet = "Utilities/Combat"},
-    "Utilities/Server.lua",
     "Server/Osiris.lua",
     {ScriptSet = "Utilities/Artifact"},
 
