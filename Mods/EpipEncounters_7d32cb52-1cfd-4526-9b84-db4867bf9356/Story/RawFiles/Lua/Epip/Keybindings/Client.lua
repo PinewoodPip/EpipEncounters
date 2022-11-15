@@ -9,6 +9,8 @@ Options.RegisterTab("EpipEncounters", {
         {Name = "Debug Teleport (Party)", ID = "EpipEncounters_DebugTeleport_Party", DeveloperOnly = true},
         {Name = "Debug Copy Identifier", ID = "EpipEncounters_Debug_CopyIdentifier", DeveloperOnly = true, DefaultInput1 = {Keys = {"lctrl", "c"}}},
         {Name = "Debug Open Features Menu", ID = "EpipEncounters_Debug_OpenDebugMenu", DeveloperOnly = true, DefaultInput1 = {Keys = {"lctrl", "f"}}},
+        {Name = "Debug Generic Hookable Hotkey", ID = "EpipEncounters_Debug_Generic", DeveloperOnly = true, DefaultInput1 = {Keys = {"lctrl", "e"}}},
+        
         {Name = "Log RootTemplate", ID = "EpipEncounters_Debug_LogRootTemplate", DeveloperOnly = true},
 
         -- EE
