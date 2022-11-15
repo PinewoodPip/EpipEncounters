@@ -3,7 +3,7 @@
 Artifact = {
     EQUIPPED_TAG_PREFIX = "ARTIFACTPOWER_",
 
-    ---@type table<string, ArtifactDefinition>
+    ---@type table<string, ArtifactLib_ArtifactDefinition>
     ARTIFACTS = {
         Artifact_Absence = {
             ID = "Artifact_Absence",
@@ -945,7 +945,11 @@ Artifact = {
 }
 Epip.InitializeLibrary("Artifact", Artifact)
 
----@class ArtifactDefinition
+---------------------------------------------
+-- CLASSES
+---------------------------------------------
+
+---@class ArtifactLib_ArtifactDefinition
 ---@field ID string
 ---@field Slot StatsItemSlot
 ---@field ItemTemplate GUID
@@ -956,34 +960,39 @@ Epip.InitializeLibrary("Artifact", Artifact)
 ---@field GetName fun(self):string
 ---@field GetDescription fun(self):string
 ---@field GetPowerTooltip fun(self):TooltipElement[]
+local _ArtifactDef = {}
 
-for _,artifact in pairs(Artifact.ARTIFACTS) do
-    Inherit(artifact, {
-        GetDescription = function(self)
-            return Ext.L10N.GetTranslatedString(self.DescriptionHandle, self.ID)
-        end,
-        GetName = function(self)
-            return Text.SeparatePascalCase(self.ID:gsub("^Artifact_", ""))
-        end,
-        GetPowerTooltip = function(self)
-            local tooltip = {
-                {
-                    Type = "ItemName",
-                    Label = Text.Format(self:GetName(), {Color = Item.RARITY_COLORS.ARTIFACT})
-                },
-                {
-                    Type = "StatsPercentageBoost",
-                    Label = self:GetDescription() .. ".", -- We append a period manually as this is usually automatically done through the deltamod "Set X" string.
-                    Amount = 1,
-                },
-                {
-                    Type = "ItemRarity",
-                    Label = Text.Format("Artifact Power", {Color = Item.RARITY_COLORS.ARTIFACT})
-                }
-            }
-            return tooltip
-        end
-    })
+---Returns the artifact's name.
+---@return string
+function _ArtifactDef:GetName()
+    return Text.SeparatePascalCase(self.ID:gsub("^Artifact_", ""))
+end
+
+---Returns the artifact power's description.
+---@return string
+function _ArtifactDef:GetDescription()
+    return Ext.L10N.GetTranslatedString(self.DescriptionHandle, self.ID)
+end
+
+---Returns a full tooltip showing the artifact's name and power.
+---@return string
+function _ArtifactDef:GetPowerTooltip()
+    local tooltip = {
+        {
+            Type = "ItemName",
+            Label = Text.Format(self:GetName(), {Color = Item.RARITY_COLORS.ARTIFACT})
+        },
+        {
+            Type = "StatsPercentageBoost",
+            Label = self:GetDescription() .. ".", -- We append a period manually as this is usually automatically done through the deltamod "Set X" string.
+            Amount = 1,
+        },
+        {
+            Type = "ItemRarity",
+            Label = Text.Format("Artifact Power", {Color = Item.RARITY_COLORS.ARTIFACT})
+        }
+    }
+    return tooltip
 end
 
 ---------------------------------------------
@@ -992,7 +1001,28 @@ end
 
 ---Returns the definition for an artifact.
 ---@param artifactID string
----@return ArtifactDefinition?
+---@return ArtifactLib_ArtifactDefinition?
 function Artifact.GetData(artifactID)
     return Artifact.ARTIFACTS[artifactID]
+end
+
+---Registers the data for an artifact.
+---@param data ArtifactLib_ArtifactDefinition
+---@return ArtifactLib_ArtifactDefinition
+function Artifact.RegisterArtifact(data)
+    if not data.ID then Artifact:LogError("Artifact is missing an ID.") return nil end
+
+    Inherit(data, _ArtifactDef)
+    Artifact.ARTIFACTS[data.ID] = data
+
+    return data
+end
+
+---------------------------------------------
+-- SETUP
+---------------------------------------------
+
+-- Register data of the base mod artifacts.
+for _,artifact in pairs(Artifact.ARTIFACTS) do
+    Artifact.RegisterArtifact(artifact)
 end

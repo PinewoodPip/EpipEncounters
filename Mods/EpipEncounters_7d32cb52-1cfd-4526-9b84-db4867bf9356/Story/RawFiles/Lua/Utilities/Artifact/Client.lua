@@ -1,11 +1,14 @@
 
+---@class ArtifactLib
+local Artifact = Artifact
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
 ---Returns whether char has the artifact power active.
----@param char Character
----@param artifact ArtifactDefinition|string
+---@param char EclCharacter
+---@param artifact ArtifactLib_ArtifactDefinition|string
 ---@return boolean
 function Artifact.IsEquipped(char, artifact)
     local equipped = false
@@ -18,8 +21,8 @@ function Artifact.IsEquipped(char, artifact)
 end
 
 ---Returns a list of artifact powers active on char.
----@param char EsvCharacter
----@return ArtifactDefinition[]
+---@param char EclCharacter
+---@return ArtifactLib_ArtifactDefinition[]
 function Artifact.GetEquippedPowers(char)
     local pattern = Artifact.EQUIPPED_TAG_PREFIX .. "(.+)$"
     local artifacts = {}

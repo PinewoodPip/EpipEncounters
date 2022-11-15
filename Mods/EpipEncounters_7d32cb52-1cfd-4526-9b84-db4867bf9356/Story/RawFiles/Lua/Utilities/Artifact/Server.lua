@@ -1,11 +1,14 @@
 
+---@class ArtifactLib
+local Artifact = Artifact
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
 ---Returns whether char has the artifact power active.
----@param char Character
----@param artifact ArtifactDefinition|string
+---@param char EsvCharacter
+---@param artifact ArtifactLib_ArtifactDefinition|string
 ---@return boolean
 function Artifact.IsEquipped(char, artifact)
     local artifactID = artifact
@@ -17,7 +20,7 @@ end
 
 ---Returns a list of artifact powers active on char.
 ---@param char EsvCharacter
----@return ArtifactDefinition[]
+---@return ArtifactLib_ArtifactDefinition[]
 function Artifact.GetEquippedPowers(char)
     local tuples = Osiris.DB_AMER_Artifacts_EquippedEffects:GetTuples(char.MyGuid, nil, nil)
     local artifacts = {}
