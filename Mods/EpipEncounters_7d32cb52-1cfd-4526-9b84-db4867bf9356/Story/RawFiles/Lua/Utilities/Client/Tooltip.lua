@@ -4,6 +4,9 @@ local TextDisplay = Client.UI.TextDisplay
 ---@class TooltipLib : Feature
 local Tooltip = {
     nextTooltipData = nil, ---@type TooltipLib_TooltipSourceData
+    _nextCustomTooltip = nil, ---@type TooltipLib_CustomFormattedTooltip
+
+    _POSITION_OFFSET = -34,
 
     SURFACE_DAMAGE_ELEMENT_TYPES = {
         Fire = true,
@@ -32,6 +35,7 @@ local Tooltip = {
 
     Hooks = {
         RenderFormattedTooltip = {Preventable = true}, ---@type PreventableEvent<TooltipLib_Hook_RenderFormattedTooltip>
+        RenderCustomFormattedTooltip = {Preventable = true}, ---@type PreventableEvent<TooltipLib_Hook_RenderCustomFormattedTooltip>
         RenderSkillTooltip = {Preventable = true,}, ---@type PreventableEvent<TooltipLib_Hook_RenderSkillTooltip>
         RenderItemTooltip = {Preventable = true,}, ---@type PreventableEvent<TooltipLib_Hook_RenderItemTooltip>
         RenderSurfaceTooltip = {Preventable = true,}, ---@type PreventableEvent<TooltipLib_Hook_RenderFormattedTooltip>
@@ -46,7 +50,7 @@ Epip.InitializeLibrary("TooltipLib", Tooltip)
 -- CLASSES
 ---------------------------------------------
 
----@alias TooltipLib_FormattedTooltipType "Surface"|"Skill"|"Item"
+---@alias TooltipLib_FormattedTooltipType "Surface"|"Skill"|"Item"|"Custom"
 ---@alias TooltipLib_Element table See `Game.Tooltip`. TODO
 ---@alias TooltipLib_FormattedTooltipElementType string TODO
 
@@ -137,6 +141,10 @@ function _FormattedTooltip:InsertBefore(target, element)
     end
 end
 
+---@class TooltipLib_CustomFormattedTooltip : TooltipLib_FormattedTooltip
+---@field ID string
+---@field Position Vector2D
+
 ---------------------------------------------
 -- EVENTS/HOOKS
 ---------------------------------------------
@@ -145,6 +153,9 @@ end
 ---@field Type TooltipLib_FormattedTooltipType
 ---@field Tooltip TooltipLib_FormattedTooltip Hookable.
 ---@field UI UIObject
+
+---@class TooltipLib_Hook_RenderCustomFormattedTooltip : TooltipLib_Hook_RenderFormattedTooltip
+---@field Tooltip TooltipLib_CustomFormattedTooltip Hookable.
 
 ---@class TooltipLib_Hook_RenderItemTooltip : TooltipLib_Hook_RenderFormattedTooltip
 ---@field Item EclItem
@@ -205,6 +216,19 @@ function Tooltip.ShowMouseTextTooltip(text)
     root.addText(text, Client.GetMousePosition())
 end
 
+---@param tooltip TooltipLib_CustomFormattedTooltip
+function Tooltip.ShowCustomFormattedTooltip(tooltip)
+    local ui = Client.UI.Hotbar -- TODO replace once a better option becomes available.
+    local characterHandle = Client.UI.Hotbar:GetRoot().hotbar_mc.characterHandle
+    local mouseX, mouseY = Client.GetMousePosition()
+
+    tooltip.Position = tooltip.Position or Vector.Create(mouseX, mouseY)
+
+    Tooltip._nextCustomTooltip = tooltip
+
+    ui:ExternalInterfaceCall("showSkillTooltip", characterHandle, "Teleportation_FreeFall", mouseX, mouseY, 100, 100, "left")
+end
+
 ---@param ui UIObject
 ---@param tooltipType TooltipLib_FormattedTooltipType
 ---@param data TooltipLib_Element[]
@@ -235,7 +259,7 @@ function Tooltip._SendFormattedTooltipHook(ui, tooltipType, data, sourceData)
     }
 
     -- Specific listeners go first.
-    local specificEvent = Tooltip.Hooks["Render" .. tooltipType .. "Tooltip"]
+    local specificEvent = tooltipType == "Custom" and Tooltip.Hooks.RenderCustomFormattedTooltip or Tooltip.Hooks["Render" .. tooltipType .. "Tooltip"]
     if specificEvent then
         specificEvent:Throw(hook)
     else
@@ -258,17 +282,16 @@ local function ParseArray(ui, fieldName)
     return Game.Tooltip.ParseTooltipArray(Game.Tooltip.TableFromFlash(ui, fieldName))
 end
 
-local function HandleFormattedTooltip(ev, arrayFieldName, x, y, unknown)
-    local sourceData = Tooltip.nextTooltipData
-
+local function HandleFormattedTooltip(ev, arrayFieldName, sourceData, tooltipData)
     if sourceData then
-        local tbl = ParseArray(ev.UI, arrayFieldName)
-        local hook = Tooltip._SendFormattedTooltipHook(Ext.UI.GetByType(sourceData.UIType), sourceData.Type, tbl, sourceData)
+        tooltipData = tooltipData or ParseArray(ev.UI, arrayFieldName)
+
+        local hook = Tooltip._SendFormattedTooltipHook(Ext.UI.GetByType(sourceData.UIType), sourceData.Type, tooltipData, sourceData)
 
         if not hook.Prevented then
             local newTable = Game.Tooltip.EncodeTooltipArray(hook.Tooltip.Elements)
 
-            Game.Tooltip.ReplaceTooltipArray(ev.UI, arrayFieldName, newTable, tbl)
+            Game.Tooltip.ReplaceTooltipArray(ev.UI, arrayFieldName, newTable, tooltipData)
         else
             ev:PreventAction()
         end
@@ -281,7 +304,7 @@ end
 Ext.Events.UICall:Subscribe(function(ev)
     local param1, param2 = table.unpack(ev.Args)
 
-    if ev.Function == "showSkillTooltip" then
+    if ev.Function == "showSkillTooltip" and not Tooltip._nextCustomTooltip then
         Tooltip.nextTooltipData = {UIType = ev.UI:GetTypeId(), Type = "Skill", FlashCharacterHandle = param1, SkillID = param2}
     elseif ev.Function == "showItemTooltip" then
         Tooltip.nextTooltipData = {UIType = ev.UI:GetTypeId(), Type = "Item", FlashItemHandle = param1}
@@ -291,9 +314,30 @@ Ext.Events.UICall:Subscribe(function(ev)
 end)
 
 -- Listen for formatted tooltip invokes on the general tooltip UI.
-Client.UI.Tooltip:RegisterInvokeListener("addFormattedTooltip", function(ev, x, y, unknown)
-    HandleFormattedTooltip(ev, "tooltip_array", x, y, unknown)
+Client.UI.Tooltip:RegisterInvokeListener("addFormattedTooltip", function(ev, _, _, _)
+    HandleFormattedTooltip(ev, "tooltip_array", Tooltip.nextTooltipData, nil)
 end)
+
+-- Listen for custom formatted tooltip render requests.
+Client.UI.Tooltip:RegisterInvokeListener("addFormattedTooltip", function(ev, _, _, _)
+    if Tooltip._nextCustomTooltip then
+        local tooltipData = Tooltip._nextCustomTooltip
+
+        HandleFormattedTooltip(ev, "tooltip_array", {UIType = Ext.UI.TypeID.hotBar, Type = "Custom", FlashCharacterHandle = Ext.UI.HandleToDouble(Client.GetCharacter().Handle)}, tooltipData.Elements)
+    end
+end)
+
+-- Position custom formatted tooltips after rendering.
+Ext.RegisterUINameInvokeListener("showFormattedTooltipAfterPos", function(ui)
+    if Tooltip._nextCustomTooltip then
+        local pos = Tooltip._nextCustomTooltip.Position
+
+        -- Tooltips are offset vertically so the position matches up with the top left corner.
+        ui:SetPosition(math.floor(pos[1]), math.floor(pos[2]) + Tooltip._POSITION_OFFSET)
+
+        Tooltip._nextCustomTooltip = nil
+    end
+end, "After")
 
 -- Listen for surface tooltips from TextDisplay.
 TextDisplay:RegisterInvokeListener("displaySurfaceText", function(ev, _, _)
