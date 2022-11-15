@@ -10,6 +10,7 @@ local AstrologerFix = {
     ---@type table<string, true> Skill archetypes affected by the bug.
     AFFECTED_ARCHETYPES = {
         Cone = true,
+        Zone = true,
     },
     RANGE_BONUS = 200, -- Range bonus from the talent, in centimeters.
 }
