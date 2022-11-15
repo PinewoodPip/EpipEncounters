@@ -308,6 +308,7 @@ LOAD_ORDER = {
             "Epip/TooltipAdjustments/Client_WeaponRangeDeltamod.lua",
             "Epip/TooltipAdjustments/Client_DamageTypeDeltamods.lua",
             "Epip/TooltipAdjustments/Client_SimpleTooltips.lua",
+            "Epip/TooltipAdjustments/Client_AstrologerFix.lua",
         },
     },
 
