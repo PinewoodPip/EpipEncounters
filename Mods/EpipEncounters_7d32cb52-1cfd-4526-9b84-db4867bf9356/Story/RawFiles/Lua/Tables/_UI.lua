@@ -83,7 +83,7 @@ end
 
 ---Register a listener for a UI Invoke raw event.
 ---@param method string Method name.
----@param handler fun(ev:EclLuaUICallEvent)
+---@param handler fun(ev:EclLuaUICallEvent, ...)
 ---@param when? "Before"|"After"
 function BaseUI:RegisterInvokeListener(method, handler, when)
     local path = self.PATH or self.UITypeID
@@ -94,7 +94,7 @@ end
 
 ---Register a listener for a UI Call raw event.
 ---@param method string ExternalInterface call name.
----@param handler fun(ev:EclLuaUICallEvent)
+---@param handler fun(ev:EclLuaUICallEvent, ...)
 ---@param when? "Before"|"After"
 function BaseUI:RegisterCallListener(method, handler, when)
     local path = self.PATH or self.UITypeID
