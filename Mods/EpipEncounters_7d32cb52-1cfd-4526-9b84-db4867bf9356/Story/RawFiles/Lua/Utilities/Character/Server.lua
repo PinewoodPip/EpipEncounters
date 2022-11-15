@@ -1,6 +1,10 @@
 
 ---@class CharacterLib
-local Character = Game.Character
+local Character = Character
+
+---------------------------------------------
+-- METHODS
+---------------------------------------------
 
 ---Returns a list of party members of char's party. Char must be a player.
 ---@param char EsvCharacter

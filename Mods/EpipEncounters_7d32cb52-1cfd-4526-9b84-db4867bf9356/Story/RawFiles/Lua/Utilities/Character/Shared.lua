@@ -75,7 +75,7 @@ Character = {
         CreateEquipmentVisuals = {}, ---@type Event<CharacterLib_Hook_CreateEquipmentVisuals> Client-only.
     },
 }
-Game.Character = Character
+Game.Character = Character -- Legacy alias.
 Epip.InitializeLibrary("Character", Character)
 
 ---------------------------------------------
@@ -406,8 +406,9 @@ function Character.IsInCombat(char)
     return char:GetStatus("COMBAT") ~= nil
 end
 
+---Returns the calculated movement stat of a character.
 ---@param char Character
----@return number In centimeters.
+---@return number -- In centimeters.
 function Character.GetMovement(char)
     local movement = 0
     local movementBoost = 100

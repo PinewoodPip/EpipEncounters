@@ -374,8 +374,6 @@ end)
 
 -- Listen for simple tooltips.
 Client.UI.Tooltip:RegisterInvokeListener("addTooltip", function (ev, text, x, y, allowDelay, stickToMouseMode, tooltipStyle)
-    local root = ev.UI:GetRoot()
-
     -- Default values from flash method.
     x = x or 0
     y = y or 18
