@@ -4,7 +4,7 @@ local Generic = Client.UI.Generic
 ---@class GenericUI_Element_IggyIcon : GenericUI_Element
 ---@field SetIcon fun(self, icon:string, width:number, height:number)
 Client.UI.Generic.ELEMENTS.IggyIcon = {
-    Events = {},
+    
 }
 local IggyIcon = Client.UI.Generic.ELEMENTS.IggyIcon ---@class GenericUI_Element_IggyIcon
 Generic.Inherit(IggyIcon, Generic._Element)

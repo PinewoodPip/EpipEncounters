@@ -19,7 +19,7 @@ package Elements
         // public var unavailable_mc:MovieClip;
         // public var frame_mc:MovieClip;
         // public var source_frame_mc:Shape;
-        public var iggy_mc:MovieClip;
+        // public var iggy_mc:MovieClip;
         public var activeHighlight_mc:MovieClip;
         public var highlight_mc:MovieClip;
 
@@ -35,8 +35,6 @@ package Elements
         {
             super();
 
-            this.iggy_mc = new MovieClip();
-            this.addChild(this.iggy_mc);
             this.setChildIndex(this.iggy_mc, 0);
             this.setChildIndex(this.bg_mc, 0);
 
