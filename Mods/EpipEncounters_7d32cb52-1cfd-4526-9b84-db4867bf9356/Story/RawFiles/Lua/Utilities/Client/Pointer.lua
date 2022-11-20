@@ -56,32 +56,37 @@ Epip.InitializeLibrary("Pointer", Pointer)
 -- METHODS
 ---------------------------------------------
 
+---@param playerIndex integer? Defaults to 1.
 ---@param includeDead boolean? Defaults to false.
 ---@return EclCharacter?
-function Pointer.GetCurrentCharacter(includeDead)
-    local char = Pointer._GetCurrentEntity("HoverCharacter") ---@type EclCharacter
+function Pointer.GetCurrentCharacter(playerIndex, includeDead)
+    local char = Pointer._GetCurrentEntity(playerIndex, "HoverCharacter") ---@type EclCharacter
     
+    -- Check HoverCharacter2 for corpses.
     if not char and includeDead then
-        char = Pointer._GetCurrentEntity("HoverCharacter2") ---@type EclCharacter
+        char = Pointer._GetCurrentEntity(playerIndex, "HoverCharacter2") ---@type EclCharacter
     end
 
     return char
 end
 
+---@param playerIndex integer? Defaults to 1.
 ---@return EclItem?
-function Pointer.GetCurrentItem()
+function Pointer.GetCurrentItem(playerIndex)
     ---@diagnostic disable-next-line: return-type-mismatch
-    return Pointer._GetCurrentEntity("HoverItem")
+    return Pointer._GetCurrentEntity(playerIndex, "HoverItem")
 end
 
+---@param playerIndex integer? Defaults to 1.
 ---@return Entity?
-function Pointer.GetCurrentEntity()
-    return Pointer._GetCurrentEntity("HoverEntity")
+function Pointer.GetCurrentEntity(playerIndex)
+    return Pointer._GetCurrentEntity(playerIndex, "HoverEntity")
 end
 
+---@param playerIndex integer? Defaults to 1.
 ---@return Vector3D
-function Pointer.GetWalkablePosition()
-    local state = Ext.UI.GetPickingState()
+function Pointer.GetWalkablePosition(playerIndex)
+    local state = Ext.UI.GetPickingState(playerIndex or 1)
     local position
     
     if state then
@@ -91,10 +96,11 @@ function Pointer.GetWalkablePosition()
     return position
 end
 
+---@param playerIndex integer? Defaults to 1.
 ---@param fieldName string
 ---@return Entity
-function Pointer._GetCurrentEntity(fieldName)
-    local state = Ext.UI.GetPickingState()
+function Pointer._GetCurrentEntity(playerIndex, fieldName)
+    local state = Ext.UI.GetPickingState(playerIndex or 1)
     local entity
 
     if state then

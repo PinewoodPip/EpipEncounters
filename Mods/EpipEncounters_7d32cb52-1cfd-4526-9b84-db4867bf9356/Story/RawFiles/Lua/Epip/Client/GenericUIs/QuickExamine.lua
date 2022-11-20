@@ -107,7 +107,7 @@ end
 
 Client.UI.OptionsInput.Events.ActionExecuted:RegisterListener(function(action, _)
     if action == "EpipEncounters_QuickExamine" then
-        local char = Client.GetPointerCharacter()
+        local char = Pointer.GetCurrentCharacter(nil, true)
 
         QuickExamine.SetEntity(char)
     end

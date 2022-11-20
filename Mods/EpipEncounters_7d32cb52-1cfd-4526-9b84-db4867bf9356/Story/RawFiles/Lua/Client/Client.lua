@@ -143,20 +143,6 @@ function Client.IsInGameplayState()
     return state == STATES.LOAD_SESSION or state == STATES.RUNNING or state == STATES.PREPARE_RUNNING
 end
 
----Returns the primary character on the pointer.
----@param playerIndex integer? Defaults to 1 (player 1)
----@return EclCharacter?
-function Client.GetPointerCharacter(playerIndex)
-    local pickingState = Ext.UI.GetPickingState(playerIndex or 1)
-    local char
-
-    if pickingState and pickingState.HoverEntity then
-        char = Ext.Entity.GetCharacter(pickingState.HoverEntity)
-    end
-
-    return char
-end
-
 --- Copies text to the clipboard.  
 ---Some characters, like newlines, will be trimmed out as per the vanilla scripting on the swf.
 ---Relies on MessageBox.

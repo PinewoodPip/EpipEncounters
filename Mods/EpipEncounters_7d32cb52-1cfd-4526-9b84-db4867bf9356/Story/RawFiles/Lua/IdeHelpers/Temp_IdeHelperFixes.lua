@@ -11,6 +11,13 @@ function Ext_Json.Parse(obj) end
 --- @return string
 function Ext_Json.Stringify(obj) end
 
+--- @class Ext_ClientEntity
+local Ext_ClientEntity = {}
+
+--- @param handle EntityHandle
+--- @return IEoCClientObject
+function Ext_ClientEntity.GetGameObject(handle) end
+
 --- @alias FlashMovieClip unknown
 
 --- @class Ext_ServerOsiris
