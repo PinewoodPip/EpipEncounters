@@ -448,6 +448,13 @@ LOAD_ORDER = {
         },
     },
 
+    -- Quick Examine
+    {
+        Scripts = {
+            "Epip/Client/QuickExamine/SkillsDisplay.lua",
+        },
+    },
+
     "Epip/Client/EE_Dyes.lua",
 
     "Epip/Compatibility/MajoraFashionSins/Client.lua",

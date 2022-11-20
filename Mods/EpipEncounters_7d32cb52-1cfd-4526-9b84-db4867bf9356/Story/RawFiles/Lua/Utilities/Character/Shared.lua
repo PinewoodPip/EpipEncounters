@@ -118,6 +118,16 @@ function Character.GetStacks(char, type)
     return stacks,lifetime
 end
 
+---Returns whether char has a skill memorized. Returns true for innate skills.
+---@param char Character
+---@param skillID string
+---@return boolean
+function Character.IsSkillMemorized(char, skillID)
+    local state = char.SkillManager.Skills[skillID]
+
+    return state and state.IsLearned or Character.IsSkillInnate(char, skillID)
+end
+
 ---Returns the combat ID and team ID of char, if any.
 ---@param char Character
 ---@return integer?, integer? -- The combat ID and team ID. Nil if the character is not in combat. This is different from the osi query, which returns a reserved value.

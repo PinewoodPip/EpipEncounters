@@ -1,6 +1,8 @@
 
----@class QuickExamine : Feature
-Epip.Features.QuickExamine = {
+local Generic = Client.UI.Generic
+
+---@class Feature_QuickExamine : Feature
+local QuickExamine = {
     entityNetID = nil,
     lockCharacter = false,
 
@@ -21,11 +23,7 @@ Epip.Features.QuickExamine = {
         EntityChanged = {}, ---@type QuickExamine_Event_EntityChanged
     },
 }
----@class QuickExamine
-local QuickExamine = Epip.Features.QuickExamine
-Epip.AddFeature("QuickExamine", "QuickExamine", QuickExamine)
-
-local Generic = Client.UI.Generic
+Epip.RegisterFeature("QuickExamine", QuickExamine)
 
 ---------------------------------------------
 -- EVENTS/HOOKS
@@ -40,7 +38,7 @@ local Generic = Client.UI.Generic
 ---------------------------------------------
 
 ---@return GenericUI_Element_VerticalList
-function Epip.Features.QuickExamine.GetContainer()
+function QuickExamine.GetContainer()
     return QuickExamine.ContentContainer
 end
 
@@ -69,12 +67,12 @@ function QuickExamine.SaveData(path)
 end
 
 ---@return boolean
-function Epip.Features.QuickExamine.IsLocked()
+function QuickExamine.IsLocked()
     return QuickExamine.lockCharacter
 end
 
 ---@param entity Entity
-function Epip.Features.QuickExamine.SetEntity(entity)
+function QuickExamine.SetEntity(entity)
     if entity then
         if entity.NetID ~= QuickExamine.entityNetID then
             QuickExamine.entityNetID = entity.NetID
