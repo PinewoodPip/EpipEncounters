@@ -20,6 +20,20 @@ function Entity.GetLevel()
     return Ext.Entity.GetCurrentLevel()
 end
 
+---@param component EntityComponent
+function Entity.IsCharacter(component)
+    local className = GetExtType(component)
+
+    return className and className == "ecl::Character" or className == "esv::Character"
+end
+
+---@param component EntityComponent
+function Entity.IsItem(component)
+    local className = GetExtType(component)
+
+    return className and className == "ecl::Item" or className == "esv::Item"
+end
+
 ---Returns a list of items registered on the current level.
 ---@return EclItem[]|EsvItem[] -- Read-only.
 function Entity.GetRegisteredItems()
