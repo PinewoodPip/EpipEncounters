@@ -186,7 +186,6 @@ local function Setup()
         Size = 15,
     }))
     header:SetSize(QuickExamine.WIDTH, 20)
-    header:SetAsDraggableArea()
 
     local charName = list:AddChild("CharName", "GenericUI_Element_Text")
     charName:SetText(Text.Format("Character Name", {
@@ -194,14 +193,18 @@ local function Setup()
         Size = 21,
     }))
     charName:SetSize(QuickExamine.WIDTH, 30)
-    charName:SetAsDraggableArea()
     QuickExamine.CharacterNameElement = charName
 
     local div = list:AddChild("MainDiv", "GenericUI_Element_Divider")
-    div:SetAsDraggableArea()
     div:SetSize(QuickExamine.DIVIDER_WIDTH)
     div:SetCenterInLists(true)
     div:GetMovieClip().heightOverride = div:GetMovieClip().height / 2
+
+    -- Draggable area
+    local dragArea = panel:AddChild("DragArea", "GenericUI_Element_TiledBackground")
+    dragArea:SetBackground("Black", QuickExamine.WIDTH, 75)
+    dragArea:SetAlpha(0.2)
+    dragArea:SetAsDraggableArea()
 
     local content = list:AddChild("Content", "GenericUI_Element_ScrollList")
     content:SetMouseWheelEnabled(true)
