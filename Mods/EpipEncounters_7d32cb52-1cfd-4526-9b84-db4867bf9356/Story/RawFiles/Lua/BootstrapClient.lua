@@ -117,7 +117,6 @@ LOAD_ORDER = {
             "Utilities/Settings/Setting_ClampedNumber.lua",
             "Utilities/Settings/Setting_Choice.lua",
         },
-        WIP = true,
     },
 
     "UI/TextDisplay.lua",
