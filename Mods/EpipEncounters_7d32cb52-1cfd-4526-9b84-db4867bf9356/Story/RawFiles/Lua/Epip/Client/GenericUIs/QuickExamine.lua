@@ -157,7 +157,7 @@ local function Setup()
     local ui = QuickExamine.UI
     local uiObject = ui:GetUI()
     uiObject.SysPanelSize = {QuickExamine.WIDTH + QuickExamine.SCROLLBAR_WIDTH, QuickExamine.HEIGHT}
-    uiObject.Left = QuickExamine.WIDTH
+    uiObject.Left = QuickExamine.WIDTH - 2
 
     QuickExamine.LoadData()
 
