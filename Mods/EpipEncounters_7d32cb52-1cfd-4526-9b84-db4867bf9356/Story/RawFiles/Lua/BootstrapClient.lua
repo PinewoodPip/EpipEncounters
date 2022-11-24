@@ -346,7 +346,6 @@ LOAD_ORDER = {
     "Epip/Client/GenericUIs/QuickExamine.lua",
     "Epip/Client/GenericUIs/SaveLoadOverlay.lua",
     "Epip/Client/GenericUIs/HotbarGroup.lua",
-    "Epip/Client/GenericUIs/MouseTracker.lua",
 
     "Epip/Client/AprilFoolsCharacterSheet.lua",
     "Epip/Client/HotbarActions.lua",

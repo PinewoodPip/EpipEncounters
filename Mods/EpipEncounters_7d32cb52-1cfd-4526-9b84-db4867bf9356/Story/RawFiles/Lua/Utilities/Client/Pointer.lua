@@ -1,5 +1,6 @@
 
 ---@class PointerLib : Library
+---@field private CurrentHandles table
 Pointer = {
     CurrentHandles = {
         HoverCharacter = {EventName = "HoverCharacterChanged", EntityEventFieldName = "Character", CurrentHandle = nil},
