@@ -167,7 +167,7 @@ class Symbol:
 # For symbols, the line that defines them is passed as vararg(s)
 
 class Function(Symbol):
-    META_TAGS = {
+    META_TAGS = { # TODO fix
         "ContextClient": "Client-only",
         "ContextServer": "Server-only",
         "EE": "EE-related",
@@ -290,12 +290,12 @@ class Listenable(Symbol):
             elif type(entry) == ClassField:
                 self.fields.append(entry)
 
-    def isFinishedParsing(self, nextSymbol):
-        if nextSymbol:
-            if type(nextSymbol) == Comment:
-                return len(self.comments) > 0
+    def getLibraryID(self) -> str:
+        return aliasToLibraryID(self.className)
 
-        return False
+    def isFinishedParsing(self, nextSymbol):
+        # Any comment after the symbol is found is guaranteed to be unrelated.
+        return nextSymbol and type(nextSymbol) == Comment
 
     def __str__(self):
         output = ""
@@ -337,8 +337,8 @@ DATA_MATCHERS = [
 
 SYMBOL_MATCHERS = [
     Matcher(FUNCTION_REGEX, Function),
-    Matcher(re.compile("^---@class (?P<Class>\S*)_Hook_(?P<Event>\S*) : Hook$"), Hook), # TODO fix
-    Matcher(re.compile("^---@class (?P<Class>\S*)_Event_(?P<Event>\S*) : Event$"), Event), # TODO fix
+    Matcher(re.compile("^---@class (?P<Class>\S*)_Hook_(?P<Event>\S*)(?: : Event)?$"), Hook),
+    Matcher(re.compile("^---@class (?P<Class>\S*)_Event_(?P<Event>\S*)(?: : Event)?$"), Event),
     Matcher(re.compile("^---@class (?P<Class>\S+)"), Class),
 ]
 
@@ -588,14 +588,7 @@ gen = DocGenerator()
 gen.updateDocs()
 
 # QUICK TEST
-# gen.parseLuaFile(r"C:\Program Files (x86)\Steam\steamapps\common\Divinity Original Sin 2\DefEd\Data\Mods\EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356\Story\RawFiles\Lua\Utilities\Text.lua")
-# gen.parseLuaFile(r"C:\Program Files (x86)\Steam\steamapps\common\Divinity Original Sin 2\DefEd\Data\Mods\EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356\Story\RawFiles\Lua\Utilities\Color.lua")
-# gen.parseLuaFile(r"C:\Program Files (x86)\Steam\steamapps\common\Divinity Original Sin 2\DefEd\Data\Mods\EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356\Story\RawFiles\Lua\Utilities\Artifact\Shared.lua")
-
-# # print(gen.libraries["_none"])
-# print(gen.libraries["Text"])
-# print(gen.libraries["Color"])
-# print(gen.libraries["RGBColor"])
+# gen.parseLuaFile(r"C:\Program Files (x86)\Steam\steamapps\common\Divinity Original Sin 2\DefEd\Data\Mods\EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356\Story\RawFiles\Lua\Utilities\Client\Pointer.lua")
 
 # for lib in gen.libraries:
 #     print(gen.libraries[lib])
