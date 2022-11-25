@@ -48,6 +48,7 @@ DOC_FIELDS_REGEX = re.compile('^<doc fields="(.*)">')
 EMPTY_LINE_REGEX = re.compile("^ *$")
 
 SUBCLASS_REGEX = re.compile("([^_]+)_.+")
+HOOKABLE_REGEX = re.compile("[^_]+_(?:Event|Hook)_.+")
 
 functions = {}
 classes = {}
@@ -563,8 +564,9 @@ class DocGenerator:
 
                         for _,lib in gen.libraries.items():
                             match = SUBCLASS_REGEX.match(lib.name)
+                            is_hookable = HOOKABLE_REGEX.match(lib.name) != None
 
-                            if match and match.groups()[0] == libName:
+                            if match and match.groups()[0] == libName and not is_hookable:
                                 libs_to_export.append(lib)
 
                         for lib in libs_to_export:
@@ -588,12 +590,12 @@ gen.updateDocs()
 # QUICK TEST
 # gen.parseLuaFile(r"C:\Program Files (x86)\Steam\steamapps\common\Divinity Original Sin 2\DefEd\Data\Mods\EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356\Story\RawFiles\Lua\Utilities\Text.lua")
 # gen.parseLuaFile(r"C:\Program Files (x86)\Steam\steamapps\common\Divinity Original Sin 2\DefEd\Data\Mods\EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356\Story\RawFiles\Lua\Utilities\Color.lua")
-# gen.parseLuaFile(r"C:\Program Files (x86)\Steam\steamapps\common\Divinity Original Sin 2\DefEd\Data\Mods\EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356\Story\RawFiles\Lua\Utilities\Character\Client.lua")
+# gen.parseLuaFile(r"C:\Program Files (x86)\Steam\steamapps\common\Divinity Original Sin 2\DefEd\Data\Mods\EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356\Story\RawFiles\Lua\Utilities\Artifact\Shared.lua")
 
 # # print(gen.libraries["_none"])
 # print(gen.libraries["Text"])
 # print(gen.libraries["Color"])
 # print(gen.libraries["RGBColor"])
 
-for lib in gen.libraries:
-    print(gen.libraries[lib])
+# for lib in gen.libraries:
+#     print(gen.libraries[lib])
