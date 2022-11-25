@@ -145,6 +145,11 @@ class Symbol:
 
         self.addData(data)
 
+    # Returns whether this symbol is private: 
+    # not intended to be used by other modders, usually used internally
+    def isPrivate(self) -> bool:
+        return False
+
     def getContext(self) -> str:
         return self.context
 
@@ -198,6 +203,9 @@ class Function(Symbol):
 
     def getLibraryID(self) -> str:
         return aliasToLibraryID(self.nameSpace)
+
+    def isPrivate(self) -> bool:
+        return self.signature.startswith("_")
         
     def addData(self, data: list):
         super().addData(data)
@@ -415,6 +423,9 @@ class Library:
             # Include symbols if a list wasn't passed,
             # or if their category is in the list
             can_export = (not symbolTypes) or (symbol.getSymbolCategory() in symbolTypes)
+
+            # Cannot export private symbols
+            can_export = can_export and not symbol.isPrivate()
 
             if can_export:
                 lines.append(str(symbol) + "\n")
