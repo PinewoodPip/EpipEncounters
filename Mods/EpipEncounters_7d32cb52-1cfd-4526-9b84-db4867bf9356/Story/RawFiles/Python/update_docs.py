@@ -213,38 +213,26 @@ class Function(Symbol):
                 self.metaTags.append(entry)
 
     def __str__(self):
-        output = ""
+        output = []
 
-        for comment in self.comments:
-            output += str(comment) + "\n"
+        # Append comments
+        output += [str(comment) for comment in self.comments]
 
-        for param in self.parameters:
-            output += str(param) + "\n"
+        # Append parameters
+        output += [str(param) for param in self.parameters]
 
+        # Append return type
         if self.returnType:
-            output += str(self.returnType) + "\n"
+            output.append(str(self.returnType))
 
-        # if self.library:
-        #     namespace = self.library.name
+        # Append signature
+        signature_output = f"function {self.nameSpace}{self.syntacticSugar}{self.signature}"
+        if len(self.metaTags) > 0: # Append tags to signature
+            signature_output += " -- "
+            signature_output += ", ".join([metaTag.comment for metaTag in self.metaTags])
+        output.append(signature_output)
 
-            # if self.library.absolutePath:
-            #     namespace = self.library.absolutePath
-
-        output += f"function {self.nameSpace}{self.syntacticSugar}{self.signature}"
-        # else:
-        #     output += "WRONG LIB DEF TODO"
-
-        # append tags to signature
-        if len(self.metaTags) > 0:
-            output += " --"
-
-            for i in range(len(self.metaTags)):
-                output += self.metaTags[i].comment
-
-                if i != len(self.metaTags) - 1:
-                    output += ", "
-
-        return output
+        return "\n".join(output)
 
 class Class(Symbol):
     def __init__(self, library, data, groups):
@@ -269,16 +257,19 @@ class Class(Symbol):
         return type(nextLine) != ClassField and nextLine != None and nextLine != "\n" and nextLine != "" and type(nextLine) != ClassAlias
 
     def __str__(self):
-        output = ""
-        if self.comment:
-            output = str(self.comment) + "\n"
+        output = []
 
-        output += f"---@class {self.className}" + "\n"
+        # Append comment
+        if self.comment: # TODO why is there only one?
+            output.append(str(self.comment))
 
-        for field in self.data:
-            output += str(field) + "\n"
+        # Append signature
+        output.append(f"---@class {self.className}")
 
-        return output
+        # Append fields
+        output += [str(field) for field in self.data]
+
+        return "\n".join(output)
 
 class Listenable(Symbol):
     TAG = "listenable"
@@ -311,18 +302,18 @@ class Listenable(Symbol):
         return nextSymbol and type(nextSymbol) == Comment
 
     def __str__(self):
-        output = ""
+        output = []
 
-        for comment in self.comments:
-            output += str(comment) + "\n"
+        # Append comments
+        output += [str(comment) for comment in self.comments]
 
-        output += f"---@{self.TAG} {self.event}" + "\n"
+        # Append signature
+        output.append(f"---@{self.TAG} {self.event}")
 
-        # TODO make fancier?
-        for field in self.fields:
-            output += str(field) + "\n"
+        # Append fields
+        output += [str(field) for field in self.fields]
 
-        return output
+        return "\n".join(output)
 
 class Event(Listenable):
     TAG = "event"
@@ -418,7 +409,7 @@ class Library:
 
     # Exports the library's symbols to markdown, optionally sorted.
     def export(self, symbolTypes:list=None):
-        lines = "```lua\n"
+        lines = ["```lua"]
 
         for symbol in self.symbols:
             # Include symbols if a list wasn't passed,
@@ -426,9 +417,10 @@ class Library:
             can_export = (not symbolTypes) or (symbol.getSymbolCategory() in symbolTypes)
 
             if can_export:
-                lines += str(symbol) + "\n\n"
+                lines.append(str(symbol) + "\n")
 
-        return lines + "```\n"
+        lines.append("```\n")
+        return "\n".join(lines)
 
 
 class DocParser:
