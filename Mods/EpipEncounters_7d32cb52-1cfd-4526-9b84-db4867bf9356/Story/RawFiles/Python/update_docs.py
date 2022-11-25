@@ -154,6 +154,11 @@ class Symbol:
     def getLibraryID(self) -> str:
         return "_none"
 
+    # Returns the category this symbol belongs to,
+    # used to group symbols while exporting.
+    def getSymbolCategory(self) -> str:
+        return type(self).__name__
+
     def isFinishedParsing(self, nextLine):
         return True
 
@@ -293,6 +298,9 @@ class Listenable(Symbol):
     def getLibraryID(self) -> str:
         return aliasToLibraryID(self.className)
 
+    def getSymbolCategory(self) -> str:
+        return "Listenable"
+
     def isFinishedParsing(self, nextSymbol):
         # Any comment after the symbol is found is guaranteed to be unrelated.
         return nextSymbol and type(nextSymbol) == Comment
@@ -368,11 +376,16 @@ class Library:
         
         return output
 
-    def export(self, symbolTypes:list):
+    # Exports the library's symbols to markdown, optionally sorted.
+    def export(self, symbolTypes:list=None):
         lines = "```lua\n"
 
         for symbol in self.symbols:
-            if len(symbolTypes) == 0 or type(symbol).__name__ in symbolTypes:
+            # Include symbols if a list wasn't passed,
+            # or if their category is in the list
+            can_export = (not symbolTypes) or (symbol.getSymbolCategory() in symbolTypes)
+
+            if can_export:
                 lines += str(symbol) + "\n\n"
 
         return lines + "```\n"
