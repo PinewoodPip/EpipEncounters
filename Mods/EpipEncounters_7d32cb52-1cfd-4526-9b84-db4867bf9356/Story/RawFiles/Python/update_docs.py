@@ -166,6 +166,11 @@ class Symbol:
         for entry in data:
             self.data.append(entry)
 
+    # Returns all of this symbol's metadata stringified,
+    # in a list.
+    def getDataStrings(self) -> list[str]:
+        return [str(field) for field in self.data]
+
     def __str__(self):
         pass
 
@@ -325,6 +330,37 @@ class Event(Listenable):
 class Hook(Listenable):
     TAG = "hook"
 
+class NetMessage(Class):
+    def __init__(self, library, data, groups):
+        self.libraryID = groups["Library"]
+        self.eventName = groups["Event"]
+        self.signature = groups["Signature"]
+
+        super().__init__(library, data, groups)
+
+    def getLibraryID(self) -> str:
+        return self.libraryID
+
+    def getSymbolCategory(self) -> str:
+        return "Listenable"
+    
+    def __str__(self):
+        output = []
+
+        # Preppend comment TODO why is it only one?
+        if self.comment:
+            output.append(str(self.comment))
+
+        # Append signature
+        output.append(f"---@netmsg {self.signature}")
+
+        # Append metadata
+        output += self.getDataStrings()
+
+        return "\n".join(output)
+
+# ------------
+#   MATCHERS
 # ------------
 
 class Matcher():
@@ -343,10 +379,14 @@ DATA_MATCHERS = [
     Matcher(re.compile("^-- (?P<Region>[[:upper:]]+)$"), FileRegionHeader)
 ]
 
+# Symbol regex patterns, in order of priority.
 SYMBOL_MATCHERS = [
     Matcher(FUNCTION_REGEX, Function),
     Matcher(re.compile("^---@class (?P<Class>\S*)_Hook_(?P<Event>\S*)(?: : Event)?$"), Hook),
     Matcher(re.compile("^---@class (?P<Class>\S*)_Event_(?P<Event>\S*)(?: : Event)?$"), Event),
+    Matcher(re.compile("^---@class (?P<Signature>(?P<Class>EPIPENCOUNTERS_(?P<Library>\S*)_(?P<Event>\S*))(?: : .+))$"), NetMessage),
+
+    # Generic class should have the lowest priority
     Matcher(re.compile("^---@class (?P<Class>\S+)"), Class),
 ]
 
@@ -369,7 +409,7 @@ class Library:
 
         for symbol in self.symbols:
             output += "Symbol: " + type(symbol).__name__ + "\n"
-            output += "Library: " + self.name + "\n"
+            output += "Library: " + symbol.getLibraryID() + "\n"
             # output += "Context: " + self.context + "\n"
 
             output += str(symbol) + "\n\n"
@@ -601,7 +641,7 @@ gen = DocGenerator()
 gen.updateDocs()
 
 # QUICK TEST
-# gen.parseLuaFile(r"C:\Program Files (x86)\Steam\steamapps\common\Divinity Original Sin 2\DefEd\Data\Mods\EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356\Story\RawFiles\Lua\Utilities\Client\Pointer.lua")
+# gen.parseLuaFile(r"C:\Program Files (x86)\Steam\steamapps\common\Divinity Original Sin 2\DefEd\Data\Mods\EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356\Story\RawFiles\Lua\Utilities\GameState\Shared.lua")
 
 # for lib in gen.libraries:
 #     print(gen.libraries[lib])
