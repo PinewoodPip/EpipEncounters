@@ -72,6 +72,14 @@ def enterCodeBlock(string:str):
 def exitCodeBlock(string:str):
     return string + "```\n"
 
+class LuaFile:
+    def __init__(self, path):
+        self.path = path
+        self.context = "Shared"
+
+    def setContext(self, context:str):
+        self.context = context
+
 # -----------------
 # Metadata Classes
 # -----------------
@@ -150,9 +158,6 @@ class Symbol:
     # not intended to be used by other modders, usually used internally
     def isPrivate(self) -> bool:
         return False
-
-    def getPriority(self) -> int:
-        return self.line_number
 
     def getContext(self) -> str:
         return self.context
@@ -397,6 +402,12 @@ DOC_TEMPLATE_REGEX = re.compile('^<doc class="(.+)" symbols="(.+)">')
 DOC_TEMPLATE_END_REGEX = re.compile('^<\/doc>')
 
 class Library:
+    SYMBOL_TYPE_EXPORT_ORDER = [
+        "Shared",
+        "Client",
+        "Server",
+    ]
+
     def __init__(self, name):
         self.name = name
         # self.context = context
@@ -422,6 +433,8 @@ class Library:
     def export(self, symbolTypes:list=None):
         lines = ["```lua"]
 
+        symbols_by_context = defaultdict(list)
+
         for symbol in self.symbols:
             # Include symbols if a list wasn't passed,
             # or if their category is in the list
@@ -431,6 +444,12 @@ class Library:
             can_export = can_export and not symbol.isPrivate()
 
             if can_export:
+                symbols_by_context[symbol.getContext()].append(symbol)
+        
+        for symbol_type in self.SYMBOL_TYPE_EXPORT_ORDER:
+            symbols = symbols_by_context[symbol_type]
+
+            for symbol in symbols:
                 lines.append(str(symbol) + "\n")
 
         lines.append("```\n")
@@ -438,9 +457,9 @@ class Library:
 
 
 class DocParser:
-    def __init__(self, file_name) -> None:
-        self.file_name = file_name
-        self.file = open(file_name, "r")
+    def __init__(self, lua_file:LuaFile) -> None:
+        self.lua_file = lua_file
+        self.file = open(self.lua_file.path, "r")
         self.lines = self.file.readlines()
         self.symbolsPerLibrary = defaultdict(list)
 
@@ -518,6 +537,10 @@ class DocParser:
         # Consume lines up until the last metadata found
         self.lines = self.lines[lastIndex+1::]
 
+        if foundSymbol:
+            foundSymbol.setLineNumber(lastIndex + 1)
+            foundSymbol.setContext(self.lua_file.context)
+
         return foundSymbol
 
     def isFinished(self):
@@ -529,7 +552,7 @@ class DocGenerator:
     libraries = {} # TODO don't make this static
 
     def getLuaFiles(self) -> list:
-        lua_files = set()
+        lua_files = {} # Maps path to LuaFile
 
         CONTEXTS = {
             "Client": "BootstrapClient.lua",
@@ -545,8 +568,10 @@ class DocGenerator:
 
                     if match != None:
                         script_filename = match.groupdict()["Script"]
+                        script_path = os.path.join(MOD_ROOT, script_filename)
 
-                        lua_files.add(os.path.join(MOD_ROOT, script_filename))
+                        lua_files[script_path] = LuaFile(script_path)
+                        lua_files[script_path].setContext(context)
                     else:
                         match = DocGenerator.SCRIPT_SET_REGEX.search(line)
 
@@ -557,9 +582,15 @@ class DocGenerator:
                             script_filename_context_specific = os.path.join(MOD_ROOT, script_filename + "/" + context + ".lua")
 
                             if os.path.isfile(script_filename_shared):
-                                lua_files.add(script_filename_shared)
+                                lua_file = LuaFile(script_filename_shared)
+                                lua_file.setContext("Shared")
+
+                                lua_files[script_filename_shared] = lua_file
                             if os.path.isfile(script_filename_context_specific):
-                                lua_files.add(script_filename_context_specific)
+                                lua_file = LuaFile(script_filename_context_specific)
+                                lua_file.setContext(context)
+
+                                lua_files[script_filename_context_specific] = lua_file
 
         return lua_files
 
@@ -567,9 +598,9 @@ class DocGenerator:
         files = self.getLuaFiles()
 
         # Parse lua
-        for absolute_path in files:
+        for absolute_path, lua_file in files.items():
             print("Parsing", absolute_path)
-            self.parseLuaFile(absolute_path)
+            self.parseLuaFile(lua_file)
 
         # Update markdown docs
         for root_path, dirs, files in os.walk(DOCS_ROOT):
@@ -580,20 +611,20 @@ class DocGenerator:
     def getLibrary(self, id:str) -> Library:
         return self.libraries[id]
 
-    def parseLuaFile(self, filePath:str):
-        with open(filePath, "r") as f:
-            parser = DocParser(filePath)
-            library = None
-            
-            for key in parser.symbolsPerLibrary:
-                if key not in self.libraries:
-                    library = Library(key)
-                    self.libraries[key] = library
-                else:
-                    library = self.libraries[key]
+    # Gathers symbols from a lua file.
+    def parseLuaFile(self, lua_file:LuaFile):
+        parser = DocParser(lua_file)
+        library = None
+        
+        for key in parser.symbolsPerLibrary:
+            if key not in self.libraries:
+                library = Library(key)
+                self.libraries[key] = library
+            else:
+                library = self.libraries[key]
 
-                for symbol in parser.symbolsPerLibrary[key]:
-                    library.addSymbol(symbol)
+            for symbol in parser.symbolsPerLibrary[key]:
+                library.addSymbol(symbol)
     
     def updateDocFile(self, file_path:str):
         template = ""
