@@ -138,17 +138,21 @@ class Meta(CommentedTag):
 
 # A symbol is a collection of metadata.
 class Symbol:
-    def __init__(self, library:str, data:list, groups:list):
+    def __init__(self, groups:list):
         self.data = []
         
         self.setContext("Shared")
 
-        self.addData(data)
+    def setLineNumber(self, line_number:int):
+        self.line_number = line_number
 
     # Returns whether this symbol is private: 
     # not intended to be used by other modders, usually used internally
     def isPrivate(self) -> bool:
         return False
+
+    def getPriority(self) -> int:
+        return self.line_number
 
     def getContext(self) -> str:
         return self.context
@@ -189,7 +193,7 @@ class Function(Symbol):
         "RequireBothContexts": "Must be called on both contexts"
     }
 
-    def __init__(self, library:str, data:list, groups:list):
+    def __init__(self, groups:list):
         self.comments = []
         self.parameters = []
         self.returnType = None
@@ -199,7 +203,7 @@ class Function(Symbol):
         self.metaTags = []
 
         # Parse data
-        super().__init__(library, data, groups)
+        super().__init__(groups)
 
     def getLibraryID(self) -> str:
         return aliasToLibraryID(self.nameSpace)
@@ -243,11 +247,11 @@ class Function(Symbol):
         return "\n".join(output)
 
 class Class(Symbol):
-    def __init__(self, library, data, groups):
+    def __init__(self, groups):
         self.className = groups["Class"]
         self.comment = None
 
-        super().__init__(library, data, groups)
+        super().__init__(groups)
 
     def getLibraryID(self) -> str:
         return self.className
@@ -282,13 +286,13 @@ class Class(Symbol):
 class Listenable(Symbol):
     TAG = "listenable"
 
-    def __init__(self, library, data, groups):
+    def __init__(self, groups):
         self.className = groups["Class"]
         self.event = groups["Event"]
         self.comments = []
         self.fields = []
 
-        super().__init__(library, data, groups)
+        super().__init__(groups)
 
     def addData(self, data):
         super().addData(data)
@@ -330,12 +334,12 @@ class Hook(Listenable):
     TAG = "hook"
 
 class NetMessage(Class):
-    def __init__(self, library, data, groups):
+    def __init__(self, groups):
         self.libraryID = groups["Library"]
         self.eventName = groups["Event"]
         self.signature = groups["Signature"]
 
-        super().__init__(library, data, groups)
+        super().__init__(groups)
 
     def getLibraryID(self) -> str:
         return self.libraryID
@@ -400,7 +404,6 @@ class Library:
         self.absolutePath = "TODO_AbsolutePath"
 
     def addSymbol(self, symbol:Symbol):
-        symbol.library = self # TODO fix properly
         self.symbols.append(symbol)
 
     def __str__(self):
@@ -473,7 +476,7 @@ class DocParser:
 
             if match:
                 symbolType = matcher.classType
-                symbol = symbolType(None, [], match.groupdict()) # TODO
+                symbol = symbolType(match.groupdict()) # TODO
                 break
 
         return symbol
