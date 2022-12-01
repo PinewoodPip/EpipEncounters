@@ -1,13 +1,6 @@
 import os, pathlib, re
 from collections import defaultdict
 
-## TODO define absolute path to functions, ex. Inv - > Client.UI.PartyInventory
-## Done? support different implementations across contexts
-## TODO aliases
-## TODO hide internal fields
-## TODO auto-generate IDE helper
-## TODO fix lack of spaces breaking it? probably from isFinishingParsing() usage
-
 ALIASES = {}
 
 def aliasToLibraryID(alias):
@@ -15,9 +8,6 @@ def aliasToLibraryID(alias):
         return ALIASES[alias]
 
     return alias
-
-DOCS_ROOT = r'C:\Users\Usuario\Documents\ActualDocuments\Dev\Docs\epip\docs'
-MOD_ROOT = r'C:\Program Files (x86)\Steam\steamapps\common\Divinity Original Sin 2\DefEd\Data\Mods\EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356\Story\RawFiles\Lua'
 
 LUA_IGNORE = {
     "ExtIdeHelpers.lua": True,
@@ -49,28 +39,6 @@ EMPTY_LINE_REGEX = re.compile("^ *$")
 
 SUBCLASS_REGEX = re.compile("([^_]+)_.+")
 HOOKABLE_REGEX = re.compile("[^_]+_(?:Event|Hook)_.+")
-
-functions = {}
-classes = {}
-events = {}
-
-def getTaggedFunctions(dictionary, tags):
-    funcs = []
-
-    for func in dictionary.values():
-        if "Internal" not in func.tags:
-            for tag in tags:
-                if tag in func.tags:
-                    funcs.append(func)
-                    break
-
-    return funcs
-
-def enterCodeBlock(string:str):
-    return string + "```lua\n"
-
-def exitCodeBlock(string:str):
-    return string + "```\n"
 
 class LuaFile:
     def __init__(self, path):
@@ -314,9 +282,8 @@ class Listenable(Symbol):
     def getSymbolCategory(self) -> str:
         return "Listenable"
 
-    def isFinishedParsing(self, nextSymbol):
-        # Any comment after the symbol is found is guaranteed to be unrelated.
-        return nextSymbol and type(nextSymbol) == Comment
+    def isFinishedParsing(self, nextLine):
+        return type(nextLine) != ClassField and nextLine != None and nextLine != "\n" and nextLine != "" and type(nextLine) != ClassAlias
 
     def __str__(self):
         output = []
@@ -551,6 +518,10 @@ class DocGenerator:
     SCRIPT_SET_REGEX = re.compile("\"(?P<Script>[^\.]+)\"")
     libraries = {} # TODO don't make this static
 
+    def __init__(self, mod_root_path:str, docs_root_path:str):
+        self.mod_root_path = mod_root_path
+        self.docs_root_path = docs_root_path
+
     def getLuaFiles(self) -> list:
         lua_files = {} # Maps path to LuaFile
 
@@ -562,13 +533,13 @@ class DocGenerator:
         for context in CONTEXTS:
             bootstrap = CONTEXTS[context]
 
-            with open(os.path.join(MOD_ROOT, bootstrap), "r") as f:
+            with open(os.path.join(self.mod_root_path, bootstrap), "r") as f:
                 for line in f.readlines():
                     match = DocGenerator.LOAD_ORDER_SCRIPT_REGEX.match(line)
 
                     if match != None:
                         script_filename = match.groupdict()["Script"]
-                        script_path = os.path.join(MOD_ROOT, script_filename)
+                        script_path = os.path.join(self.mod_root_path, script_filename)
 
                         lua_files[script_path] = LuaFile(script_path)
                         lua_files[script_path].setContext(context)
@@ -578,8 +549,8 @@ class DocGenerator:
                         if match != None:
                             script_filename = match.groupdict()["Script"]
 
-                            script_filename_shared = os.path.join(MOD_ROOT, script_filename + "/Shared.lua")
-                            script_filename_context_specific = os.path.join(MOD_ROOT, script_filename + "/" + context + ".lua")
+                            script_filename_shared = os.path.join(self.mod_root_path, script_filename + "/Shared.lua")
+                            script_filename_context_specific = os.path.join(self.mod_root_path, script_filename + "/" + context + ".lua")
 
                             if os.path.isfile(script_filename_shared):
                                 lua_file = LuaFile(script_filename_shared)
@@ -603,7 +574,7 @@ class DocGenerator:
             self.parseLuaFile(lua_file)
 
         # Update markdown docs
-        for root_path, dirs, files in os.walk(DOCS_ROOT):
+        for root_path, dirs, files in os.walk(self.docs_root_path):
             for file_name in files:
                 if pathlib.Path(file_name).suffix == ".md" and file_name != "patchnotes.md":
                     self.updateDocFile(os.path.join(root_path, file_name))
@@ -652,7 +623,7 @@ class DocGenerator:
                     if "_SubClasses" in symbolTypes:
                         libs_to_export = []
 
-                        for _,lib in gen.libraries.items():
+                        for _,lib in self.libraries.items():
                             match = SUBCLASS_REGEX.match(lib.name)
                             is_hookable = HOOKABLE_REGEX.match(lib.name) != None
 
@@ -662,7 +633,7 @@ class DocGenerator:
                         for lib in libs_to_export:
                             template += lib.export(["Class", "Function"])
                     else:
-                        template += gen.libraries[libName].export(symbolTypes)
+                        template += self.libraries[libName].export(symbolTypes)
 
                 if not removing:
                     template += line
@@ -671,14 +642,3 @@ class DocGenerator:
             with open(file_path, "w") as f:
                 print("Updating " +  file_path)
                 f.write(template)
-
-# --------------------------------------
-gen = DocGenerator()
-
-gen.updateDocs()
-
-# QUICK TEST
-# gen.parseLuaFile(r"C:\Program Files (x86)\Steam\steamapps\common\Divinity Original Sin 2\DefEd\Data\Mods\EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356\Story\RawFiles\Lua\Utilities\GameState\Shared.lua")
-
-# for lib in gen.libraries:
-#     print(gen.libraries[lib])
