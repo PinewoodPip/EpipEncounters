@@ -21,7 +21,7 @@ local Time = {
         ["Sep"] = 9,
         ["Oct"] = 10,
         ["Nov"] = 11,
-        ["Dev"] = 12,
+        ["Dec"] = 12,
     },
     FLASH_WEEKDAYS = {
         ["Mon"] = 1,
