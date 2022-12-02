@@ -134,6 +134,19 @@ function Menu.CanRenderTabButton(tab)
     return Menu.Hooks.CanRenderTabButton:Throw({Tab = tab, Render = render}).Render
 end
 
+---@return Feature_SettingsMenu_Tab?
+function Menu.GetCurrentTab()
+    return Menu.currentTabID and Menu.GetTab(Menu.currentTabID)
+end
+
+---@param tabID string
+---@return boolean
+function Menu.IsTabOpen(tabID)
+    local currentTab = Menu.GetCurrentTab()
+
+    return currentTab and currentTab.ID == tabID
+end
+
 function Menu.RenderTabButtons()
     local UI = Menu.GetUI()
     local root = UI:GetRoot()
@@ -146,7 +159,7 @@ function Menu.RenderTabButtons()
         if Menu.CanRenderTabButton(tab) then
             Menu.tabButtonToTabID[i] = id
             
-            root.mainMenu_mc.addOptionButton(tab.ButtonLabel, "EPIP_TabClicked", i, false)
+            root.mainMenu_mc.addOptionButton(tab.ButtonLabel, "EPIP_TabClicked", i, Menu.IsTabOpen(id))
         end
     end
 end
@@ -182,9 +195,6 @@ function Menu.ApplyPendingChanges()
 end
 
 function Menu._Setup()
-    -- Render tab buttons
-    Menu.RenderTabButtons()
-
     -- Render tab contents
     -- Defaults to first tab registered (if any!)
     if Menu.currentTabID or #Menu.TabRegistrationOrder > 0 then
@@ -192,6 +202,9 @@ function Menu._Setup()
 
         Menu.RenderSettings(tab)
     end
+
+    -- Render tab buttons
+    Menu.RenderTabButtons()
 end
 
 ---@param tab Feature_SettingsMenu_Tab
@@ -202,6 +215,8 @@ function Menu.RenderSettings(tab)
     Menu.currentElements = {}
     root.removeItems()
 
+    Menu.currentTabID = tab.ID
+
     Menu:DebugLog("Rendering tab", tab.ID)
 
     local entries = Menu.Hooks.GetTabEntries:Throw({
@@ -211,8 +226,6 @@ function Menu.RenderSettings(tab)
     for _,entry in ipairs(entries) do
         Menu.RenderEntry(entry)
     end
-
-    Menu.currentTabID = tab.ID
 
     root.mainMenu_mc.setTitle(tab.HeaderLabel or tab.ID)
 

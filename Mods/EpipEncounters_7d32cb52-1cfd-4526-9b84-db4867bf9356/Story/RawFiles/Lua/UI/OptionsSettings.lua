@@ -564,7 +564,7 @@ end
 ---Register a listener for a UI Call raw event.
 ---@param method string ExternalInterface call name.
 ---@param handler fun(ev:EclLuaUICallEvent, ...)
----@param when ("Before"|"After")
+---@param when ("Before"|"After")?
 ---@param typeID OptionsSettingsUI_TypeID? Defaults to all.
 function OptionsSettings:RegisterCallListener(method, handler, when, typeID)
     for _,UITypeID in pairs(OptionsSettings.TAB_TYPE_IDS) do
