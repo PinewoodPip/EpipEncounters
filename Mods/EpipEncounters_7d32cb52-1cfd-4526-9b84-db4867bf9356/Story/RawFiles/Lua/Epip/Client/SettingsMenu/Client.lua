@@ -628,10 +628,6 @@ end)
 -- Add a button to open Epip's settings menus to the vanilla UI.
 OptionsSettings:RegisterInvokeListener("parseBaseUpdateArray", function(ev)
     -- Don't show the button in the main menu.
-    local tbl = {}
-    tbl[GameState.GetState()] = 1
-    for k,_ in pairs(tbl) do print(k, GetExtType(k)) end
-
     if GameState.IsInSession() then
         local root = ev.UI:GetRoot()
     

@@ -85,8 +85,9 @@ end
 ---@param method string Method name.
 ---@param handler fun(ev:EclLuaUICallEvent, ...)
 ---@param when? "Before"|"After"
-function BaseUI:RegisterInvokeListener(method, handler, when)
-    local path = self.PATH or self.UITypeID
+---@param typeID integer? Defaults to the UI's type ID. Used for UIs that are reused with different type IDs (ex. OptionsSettings)
+function BaseUI:RegisterInvokeListener(method, handler, when, typeID)
+    local path = typeID or self.PATH or self.UITypeID
     when = when or "Before"
 
     Utilities.Hooks.RegisterListener("GenericUIEventManager", "UI_" .. path .. "_UIInvoke_" .. method .. "_" .. when, handler)
@@ -95,9 +96,10 @@ end
 ---Register a listener for a UI Call raw event.
 ---@param method string ExternalInterface call name.
 ---@param handler fun(ev:EclLuaUICallEvent, ...)
----@param when? "Before"|"After"
-function BaseUI:RegisterCallListener(method, handler, when)
-    local path = self.PATH or self.UITypeID
+---@param when ("Before"|"After")?
+---@param typeID integer? Defaults to the UI's type ID. Used for UIs that are reused with different type IDs (ex. OptionsSettings)
+function BaseUI:RegisterCallListener(method, handler, when, typeID)
+    local path = typeID or self.PATH or self.UITypeID
     when = when or "Before"
 
     Utilities.Hooks.RegisterListener("GenericUIEventManager", "UI_" .. path .. "_UICall_" .. method .. "_" .. when, handler)
@@ -182,7 +184,7 @@ end
 ---UIs without input do not capture mouse or keyboard events; mouse clicks go through them, into UIs below (or the world)
 ---@param enabled? boolean Defaults to toggling.
 ---@param player? integer Defaults to 1.
----@return boolean The new state.
+---@return boolean -- The new state.
 function BaseUI:TogglePlayerInput(enabled, player)
     player = player or 1
     local flag = "OF_PlayerInput" .. tostring(player)
@@ -219,7 +221,7 @@ end
 ---Changes the state of a flag.
 ---@param flag UIObjectFlag
 ---@param enabled? boolean Defaults to toggling to complimentary state.
----@return boolean The new state.
+---@return boolean -- The new state.
 function BaseUI:SetFlag(flag, enabled)
     if enabled == nil then
         enabled = not self:IsFlagged(flag)

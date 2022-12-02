@@ -1,6 +1,4 @@
 
----@meta OptionsSettingsUI, ContextClient
-
 ---@class OptionsSettingsUI : UI
 ---@field Options table<string, OptionsSettingsOptionSet>
 ---@field OptionValues table<string, table>
@@ -10,8 +8,6 @@
 ---@field currentTab number
 ---@field currentElements table<number, OptionsSettingsOption>
 ---@field currentCustomTabs table<number, string> Binds a side button's numerical ID to the mod it's for.
-
----@class OptionsSettingsUI
 local OptionsSettings = {
     Options = {},
     OptionValues = {},
@@ -24,6 +20,14 @@ local OptionsSettings = {
     },
     SAVE_FILENAME = "epip_modsettings.json",
     STARTING_NUM_ID = 1337,
+
+    ---@enum OptionsSettingsUI_TypeID
+    TAB_TYPE_IDS = {
+        Audio = Ext.UI.TypeID.optionsSettings.Audio,
+        -- Default = Ext.UI.TypeID.optionsSettings.Default, -- Duplicate. Purpose unknown.
+        Game = Ext.UI.TypeID.optionsSettings.Game,
+        Video = Ext.UI.TypeID.optionsSettings.Video,
+    },
 
     currentTab = 0,
     currentElements = {},
@@ -549,6 +553,38 @@ function OptionsSettings.RenderOption(elementData, numID)
     end
 
     return nil
+end
+
+---------------------------------------------
+-- OVERRIDES
+---------------------------------------------
+-- UI event listener registration calls needs to be overwritten,
+-- since each of the tabs on the options menu has its own type ID.
+
+---Register a listener for a UI Call raw event.
+---@param method string ExternalInterface call name.
+---@param handler fun(ev:EclLuaUICallEvent, ...)
+---@param when ("Before"|"After")
+---@param typeID OptionsSettingsUI_TypeID? Defaults to all.
+function OptionsSettings:RegisterCallListener(method, handler, when, typeID)
+    for _,UITypeID in pairs(OptionsSettings.TAB_TYPE_IDS) do
+        if UITypeID == typeID or typeID == nil then
+            Client.UI._BaseUITable.RegisterCallListener(self, method, handler, when, UITypeID)
+        end
+    end
+end
+
+---Register a listener for a UI Invoke raw event.
+---@param method string Method name.
+---@param handler fun(ev:EclLuaUICallEvent, ...)
+---@param when? "Before"|"After"
+---@param typeID OptionsSettingsUI_TypeID? Defaults to all.
+function OptionsSettings:RegisterInvokeListener(method, handler, when, typeID)
+    for _,UITypeID in pairs(OptionsSettings.TAB_TYPE_IDS) do
+        if UITypeID == typeID or typeID == nil then
+            Client.UI._BaseUITable.RegisterInvokeListener(self, method, handler, when, UITypeID)
+        end
+    end
 end
 
 ---------------------------------------------
