@@ -90,7 +90,7 @@ class TypedTag(Data):
 
     def __init__(self, groups):
         self.type = groups["Type"]
-        self.comment = groups["Comment"]
+        self.comment = groups["Comment"] if "Comment" in groups else "" # Comment is optional
 
     def __str__(self):
         return f"---@{self.TAG} {self.type} {self.comment}"
@@ -98,6 +98,9 @@ class TypedTag(Data):
 # Parameters
 class Parameter(TypedTag):
     TAG = "param"
+
+class Overload(TypedTag):
+    TAG = "overload"
 
 class Return(TypedTag):
     TAG = "return"
@@ -174,6 +177,7 @@ class Function(Symbol):
         self.nameSpace = groups["Namespace"]
         self.syntacticSugar = groups["SyntacticSugar"]
         self.metaTags = []
+        self.overloads = []
 
         # Parse data
         super().__init__(groups)
@@ -196,12 +200,17 @@ class Function(Symbol):
                 self.returnType = entry
             elif type(entry) == Meta:
                 self.metaTags.append(entry)
+            elif type(entry) == Overload:
+                self.overloads.append(entry)
 
     def __str__(self):
         output = []
 
         # Append comments
         output += [str(comment) for comment in self.comments]
+
+        # Append overloads
+        output += [str(overload) for overload in self.overloads]
 
         # Append parameters
         output += [str(param) for param in self.parameters]
@@ -345,6 +354,7 @@ class Matcher():
 
 DATA_MATCHERS = [
     Matcher(re.compile("^---@param (?P<Type>\S*) (?P<Comment>.*)$"), Parameter),
+    Matcher(re.compile("^---@overload (?P<Type>.+)$"), Overload),
     Matcher(re.compile("^---@return (?P<Type>\S*) ?(?P<Comment>.*)$"), Return),
     Matcher(re.compile("^---@field (?P<Type>\S*) ?(?P<Comment>.*)$"), ClassField),
     Matcher(re.compile("^---@meta (?P<Comment>.*)$"), Meta),
@@ -535,7 +545,7 @@ class DocGenerator:
 
             with open(os.path.join(self.mod_root_path, bootstrap), "r") as f:
                 for line in f.readlines():
-                    match = DocGenerator.LOAD_ORDER_SCRIPT_REGEX.match(line)
+                    match = DocGenerator.LOAD_ORDER_SCRIPT_REGEX.search(line)
 
                     if match != None:
                         script_filename = match.groupdict()["Script"]
