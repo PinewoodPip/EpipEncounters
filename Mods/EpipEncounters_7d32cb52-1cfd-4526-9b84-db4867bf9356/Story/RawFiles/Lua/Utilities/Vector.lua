@@ -92,12 +92,26 @@ function Vector.DotProduct(v1, v2)
     return value
 end
 
+---Performs a scalar product of a vector, multiplying each of its components.
+---@param v Vector
+---@param scalar number
+---@return Vector
+function Vector.ScalarProduct(v, scalar)
+    local output = Vector.Clone(v)
+
+    for i=1,#v,1 do
+        output[i] = v[1] * scalar
+    end
+
+    return output
+end
+
 ---Sums the components of two vectors of the same dimensions.
 ---@param v1 Vector
 ---@param v2 Vector
 ---@return Vector
 function Vector.Sum(v1, v2)
-    if v1.Arity ~= v2.Arity then Vector:Error("DotProduct", "Vector dimension mismatch") end
+    if v1.Arity ~= v2.Arity then Vector:Error("Sum", "Vector dimension mismatch") end
 
     local v = Vector.Clone(v1)
 
@@ -108,6 +122,10 @@ function Vector.Sum(v1, v2)
     return v
 end
 
+---Subtracts the components of two vectors of the same dimension.
+---@param v1 Vector
+---@param v2 Vector
+---@return Vector
 function Vector.Subtract(v1, v2)
     return Vector.Sum(v1, Vector.Negate(v2))
 end
