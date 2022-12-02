@@ -273,7 +273,7 @@ function Character.IsUnpreferredByAI(char)
     return char:HasTag(Character.AI_UNPREFERRED_TAG)
 end
 
----Returns whether char is ignroed by AI.
+---Returns whether char is ignored by AI.
 ---@param char Character
 ---@return boolean
 function Character.IsIgnoredByAI(char)

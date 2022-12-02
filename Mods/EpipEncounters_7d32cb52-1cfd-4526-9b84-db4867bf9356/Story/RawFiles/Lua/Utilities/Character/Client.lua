@@ -8,10 +8,11 @@ local Character = Character
 
 Character.Hooks.CreateEquipmentVisuals = Character:AddSubscribableHook("CreateEquipmentVisuals") ---@type Event<CharacterLib_Hook_CreateEquipmentVisuals>
 
+---Wrapper for Ext.Events.CreateEquipmentVisualsRequest.
 ---@class CharacterLib_Hook_CreateEquipmentVisuals
 ---@field Character EclCharacter
 ---@field Item EclItem
----@field Request EclEquipmentVisualSystemSetParam
+---@field Request EclEquipmentVisualSystemSetParam Hookable.
 ---@field RawEvent EclLuaCreateEquipmentVisualsRequestEvent
 
 ---------------------------------------------
@@ -46,6 +47,7 @@ function Character.GetPartyMembers(char)
     return members
 end
 
+---Returns a list of statuses the character has from its equipped items.
 ---@param char Character
 ---@return CharacterLib_StatusFromItem[]
 function Character.GetStatusesFromItems(char)

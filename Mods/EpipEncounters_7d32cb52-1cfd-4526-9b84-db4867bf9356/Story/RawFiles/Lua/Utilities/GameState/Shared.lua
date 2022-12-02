@@ -105,6 +105,9 @@ Epip.InitializeLibrary("GameState", GameState)
 
 ---@class GameStateLib_Event_GamePaused
 ---@class GameStateLib_Event_GameUnpaused
+
+---Fires when the game transitions from PrepareRunning to Running (on the client)
+---or when transitioning from Sync to Running (on the server)
 ---@class GameStateLib_Event_GameReady
 
 ---Fired every tick while the game is not paused.
@@ -115,6 +118,8 @@ Epip.InitializeLibrary("GameState", GameState)
 ---@field From GameState
 ---@field To GameState
 
+---Fired when the client transitions from PrepareRunning to Running,
+---as well as when lua is reset.
 ---@class GameStateLib_Event_ClientReady
 ---@field CharacterNetID NetId
 ---@field ProfileGUID GUID

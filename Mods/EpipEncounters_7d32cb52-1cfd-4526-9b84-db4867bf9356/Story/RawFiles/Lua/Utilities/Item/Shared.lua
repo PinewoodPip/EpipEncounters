@@ -1,5 +1,5 @@
 
----@class ItemsLib
+---@class ItemLib : Library
 Item = {
     -- TODO
     RARITY_COLORS = {
