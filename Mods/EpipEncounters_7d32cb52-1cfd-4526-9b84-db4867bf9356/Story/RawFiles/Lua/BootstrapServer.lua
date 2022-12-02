@@ -64,6 +64,7 @@ LOAD_ORDER = {
         Scripts = {
             "Utilities/DataStructures/Main.lua",
             "Utilities/DataStructures/DefaultTable.lua",
+            "Utilities/DataStructures/Set.lua",
         },
     },
 

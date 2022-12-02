@@ -56,6 +56,7 @@ LOAD_ORDER = {
         Scripts = {
             "Utilities/DataStructures/Main.lua",
             "Utilities/DataStructures/DefaultTable.lua",
+            "Utilities/DataStructures/Set.lua",
         },
     },
 
@@ -395,8 +396,8 @@ LOAD_ORDER = {
 
     {ScriptSet = "Epip/ItemTagging"},
     {ScriptSet = "Epip/ExtraDataConfig", Developer = true,},
-    {ScriptSet = "Epip/Housing", WIP = true,},
-    {Script = "Epip/Housing/Shared_Furniture.lua", WIP = true},
+    -- {ScriptSet = "Epip/Housing", WIP = true,},
+    -- {Script = "Epip/Housing/Shared_Furniture.lua", WIP = true},
     {ScriptSet = "Epip/StatsEditor", WIP = true,},
     {ScriptSet = "Epip/APCostBoostFix"},
 
