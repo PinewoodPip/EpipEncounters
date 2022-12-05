@@ -198,6 +198,9 @@ LOAD_ORDER = {
     -- Fishing
     {
         ScriptSet = "Epip/Fishing",
+        Scripts = {
+            "Epip/Fishing/Shared_Data.lua",
+        }
     },
 
     {ScriptSet = "UI/Vanity/Tabs/Shapeshift", WIP = true},

@@ -96,9 +96,49 @@ local _TextFormatData = {
 ---@field FileFormatVersion integer
 ---@field TranslatedStrings table<TranslatedStringHandle, TextLib_LocalizationTemplate_Entry>
 
+---@class TextLib_DescribableObject
+---@field NameHandle TranslatedStringHandle
+---@field DescriptionHandle TranslatedStringHandle
+local _DescripableObject = {}
+
+---@return string
+function _DescripableObject:GetName()
+    local name = "MISSING NAME"
+
+    if self.NameHandle then
+        name = Ext.L10N.GetTranslatedString(self.NameHandle, name)
+    end
+
+    return name
+end
+
+---@return string
+function _DescripableObject:GetDescription()
+    local desc = "MISSING DESCRIPTION"
+
+    if self.DescriptionHandle then
+        desc = Ext.L10N.GetTranslatedString(self.DescriptionHandle, desc)
+    end
+
+    return desc
+end
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
+
+---Inherits DescribableObject's methods onto the passed table.
+---@param tbl table
+---@return TextLib_DescribableObject
+function Text.MakeDescribable(tbl)
+    for key,field in pairs(_DescripableObject) do
+        if type(field) == "function" then
+            tbl[key] = field
+        end
+    end
+
+    return tbl
+end
 
 ---Returns a string representation of a number, rounded.
 ---@param value number

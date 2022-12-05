@@ -28,6 +28,7 @@ setmetatable(Vector, {
 ---@alias Vector2D Vector
 ---@alias Vector3 Vector
 ---@alias Vector3D Vector
+---@alias Vector4 Vector
 
 ---@class Vector
 ---@field Arity integer Getter. Equivalent to #self.

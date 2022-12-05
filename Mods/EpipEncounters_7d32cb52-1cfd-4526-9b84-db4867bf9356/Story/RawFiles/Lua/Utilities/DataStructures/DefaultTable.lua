@@ -6,7 +6,7 @@ local DefaultTable = {
 }
 DataStructures.Register("DataStructures_DefaultTable", DefaultTable)
 
----@class DataStructures_DefaultTable<K, V>:{[K]: V, Create:fun(defaultValue:V):DataStructures_DefaultTable<K,V>}
+---@class DataStructures_DefaultTable<K, V>:{[K]: V}
 
 ---------------------------------------------
 -- METHODS

@@ -459,6 +459,7 @@ LOAD_ORDER = {
     {
         ScriptSet = "Epip/Fishing",
         Scripts = {
+            "Epip/Fishing/Shared_Data.lua",
             "Epip/Fishing/Client_UI.lua",
         }
     },

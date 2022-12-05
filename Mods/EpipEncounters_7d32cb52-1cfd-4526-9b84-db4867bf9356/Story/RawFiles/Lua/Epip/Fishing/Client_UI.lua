@@ -8,6 +8,8 @@ local UI = Generic.Create("Feature_Fishing")
 Fishing.UI = UI
 UI:Hide()
 
+UI.Elements = {} -- Holds references to various important elements of the UI.
+
 UI._GameState = nil ---@type Feature_Fishing_GameState
 UI._GameObjects = {} ---@type Feature_Fishing_GameObject[]
 
@@ -19,6 +21,7 @@ UI.SIZE = V(50, 500)
 UI.BLOBBER_AREA_SIZE = V(40, 490)
 UI.BLOBBER_SIZE = V(40, 70)
 UI.FISH_SIZE = V(32, 32)
+UI.FISH_ICON_SIZE = V(32, 32)
 UI.BOBBER_COLOR = Color.CreateFromHex(Color.LARIAN.GREEN)
 UI.GRAVITY = 250
 UI.PLAYER_STRENGTH = 550 -- Used to be 400
@@ -35,12 +38,15 @@ UI.PROGRESS_BAR_WIDTH = 5
 ---@class Feature_Fishing_GameState
 local _GameState = {
     Progress = 0,
+    CurrentFish = nil, ---@type Feature_Fishing_Fish
 }
 
+---@param fish Feature_Fishing_Fish
 ---@return Feature_Fishing_GameState
-function _GameState.Create()
+function _GameState.Create(fish)
     local tbl = {
-        Progress = 0
+        Progress = 0,
+        CurrentFish = fish,
     }
     Inherit(tbl, _GameState)
 
@@ -225,7 +231,10 @@ end
 function UI.Start()
     UI.Cleanup()
 
-    UI._GameState = _GameState.Create()
+    local region = Fishing.GetRegionAt(Client.GetCharacter().WorldPos)
+    if not region then Client.UI.Notification.ShowWarning("There don't seem to be any fish here...") return nil end
+
+    UI._GameState = _GameState.Create(Fishing.GetRandomFish(region))
 
     local bobber = _Bobber:Create("Bobber", UI.BLOBBER_SIZE, _State.Create())
     local fish = _Fish:Create("Fish", UI.FISH_SIZE, _State.Create())
@@ -238,6 +247,7 @@ function UI.Start()
 
     UI.SnapToCursor()
     UI.UpdateProgressBar()
+    UI.UpdateFishIcon()
     UI:Show()
 
     GameState.Events.RunningTick:Subscribe(UI._OnTick, nil, "Feature_Fishing_UI_Tick")
@@ -278,6 +288,12 @@ function UI.UpdateProgressBar()
     element:SetSize(UI.PROGRESS_BAR_WIDTH, length)
     element:SetPosition(UI.SIZE[1], UI.SIZE[2] - length)
     -- element:SetPositionRelativeToParent("BottomRight", 5, -length) -- TODO investigate issue
+end
+
+function UI.UpdateFishIcon()
+    local state = UI.GetGameState()
+
+    UI.Elements.Fish:SetIcon(state.CurrentFish.Icon, UI.FISH_ICON_SIZE:unpack())
 end
 
 function UI.SnapToCursor()
@@ -364,8 +380,10 @@ function Fishing:__Setup()
     bobber:SetColor(UI.BOBBER_COLOR)
 
     local fish = bobberArea:AddChild("Fish", "GenericUI_Element_IggyIcon")
-    fish:SetIcon("Item_CON_Food_Fish_B", 32, 32)
+    fish:SetIcon("Item_CON_Food_Fish_B", UI.FISH_ICON_SIZE:unpack())
+    UI.Elements.Fish = fish
 
     local progressBar = panel:AddChild("ProgressBar", "GenericUI_Element_Color")
     progressBar:SetSize(0, 0)
+    UI.Elements.ProgressBar = progressBar
 end
