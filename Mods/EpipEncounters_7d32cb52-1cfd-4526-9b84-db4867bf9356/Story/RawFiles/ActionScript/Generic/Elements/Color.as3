@@ -1,0 +1,40 @@
+package Elements
+{
+    import LS_Classes.LSPanelHelpers;
+    import flash.display.MovieClip;
+    import flash.external.ExternalInterface;
+    import LS_Classes.listDisplay;
+    import flash.text.TextField;
+    import flash.events.MouseEvent;
+    import flash.geom.ColorTransform;
+
+    public dynamic class Color extends Element
+    {
+        // public var hit_mc:MovieClip;
+
+        public function Color()
+        {
+            super();
+        }
+
+        public override function get elementType() : String
+        {
+            return "Color";
+        }
+
+        public override function SetSize(width:Number, height:Number) : *
+        {
+            this.hit_mc.width = width;
+            this.hit_mc.height = height;
+        }
+
+        public function SetColor(color:Number) : *
+        {
+            var colorTransform:ColorTransform = new ColorTransform();
+
+            colorTransform.color = color;
+
+            this.hit_mc.transform.colorTransform = colorTransform;
+        }
+    }
+}
