@@ -346,6 +346,23 @@ function Item.GetItemSlot(item)
     return slot
 end
 
+---@param char Character
+---@param slot ItemSlot
+---@return Item?
+function Item.GetEquippedItem(char, slot)
+    local item
+
+    if Ext.IsClient() then
+        item = char:GetItemBySlot(slot)
+    else
+        item = Osiris.CharacterGetEquippedItem(char, slot)
+    end
+
+    item = item and Item.Get(item)
+
+    return item
+end
+
 --- Like ItemSlot, but distinguishes armor subtypes  
 --- Get subtype of item (ex. "Dagger" or "Platemail").  
 --- Returns ItemSlot for items with no subtypes

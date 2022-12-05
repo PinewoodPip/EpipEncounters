@@ -195,6 +195,11 @@ LOAD_ORDER = {
         },
     },
 
+    -- Fishing
+    {
+        ScriptSet = "Epip/Fishing",
+    },
+
     {ScriptSet = "UI/Vanity/Tabs/Shapeshift", WIP = true},
 
     "Epip/AwesomeSoccer/Server.lua",

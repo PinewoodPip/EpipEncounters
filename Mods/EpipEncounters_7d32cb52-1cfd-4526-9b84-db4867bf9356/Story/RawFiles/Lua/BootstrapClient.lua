@@ -455,6 +455,14 @@ LOAD_ORDER = {
         },
     },
 
+    -- Fishing
+    {
+        ScriptSet = "Epip/Fishing",
+        Scripts = {
+            "Epip/Fishing/Client_UI.lua",
+        }
+    },
+
     "Epip/Client/EE_Dyes.lua",
 
     "Epip/Compatibility/MajoraFashionSins/Client.lua",
