@@ -367,9 +367,34 @@ Client.Input.Events.MouseButtonPressed:Subscribe(function (ev)
     end
 end)
 
+-- Cancel the minigame when the character is switched.
+Client.Events.ActiveCharacterChanged:Subscribe(function (_)
+    local state = UI.GetGameState()
+    
+    if state then
+        UI.Cleanup("Cancelled")
+    end
+end)
+
+-- Listen for requests to exit the minigame with escape.
+Client.Input.Events.KeyStateChanged:Subscribe(function (ev)
+    local state = UI.GetGameState()
+
+    if state and ev.InputID == "escape" then
+        UI.Cleanup("Cancelled")
+
+        ev:Prevent()
+    end
+end)
+
 ---@param ev GameStateLib_Event_RunningTick
 function UI._OnTick(ev)
-    UI.UpdateGameObjects(ev.DeltaTime)
+    -- Exit the minigame if the client goes into dialogue.
+    if Client.IsInDialogue() then
+        UI.Cleanup("Cancelled")
+    else
+        UI.UpdateGameObjects(ev.DeltaTime)
+    end
 end
 
 ---------------------------------------------

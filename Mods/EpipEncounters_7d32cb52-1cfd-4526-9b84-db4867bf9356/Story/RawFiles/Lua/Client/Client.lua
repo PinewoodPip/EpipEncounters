@@ -47,8 +47,24 @@ Client = {
         BUILD_STORY = "BuildStory",
         LOAD_LOCALIZATION = "LoadLoca", -- Name confirmed by Norbyte, though looks to be unused?
     },
+
+    Events = {
+        ActiveCharacterChanged = {}, ---@type Event<ClientLib_Event_ActiveCharacterChanged>
+    }
 }
 Epip.InitializeLibrary("Client", Client)
+
+---------------------------------------------
+-- EVENTS
+---------------------------------------------
+
+---@class ClientLib_Event_ActiveCharacterChanged
+---@field PreviousCharacter EclCharacter
+---@field NewCharacter EclCharacter
+
+---------------------------------------------
+-- METHODS
+---------------------------------------------
 
 ---Get the Source Infusion level the client character is currently preparing.
 ---@meta EE
@@ -218,4 +234,19 @@ Ext.RegisterUITypeCall(119, "setPosition", function(ui, method, pos1, mode, pos2
     local viewport = Ext.UI.GetViewportSize()
     
     Client:FireEvent("ViewportChanged", viewport[1], viewport[2])
+end)
+
+---------------------------------------------
+-- SETUP
+---------------------------------------------
+
+-- Forward active character change events, which currently
+-- rely on PlayerInfo.
+Ext.Events.SessionLoaded:Subscribe(function (_)
+    Client.UI.PlayerInfo.Events.ActiveCharacterChanged:Subscribe(function (ev)
+        Client.Events.ActiveCharacterChanged:Throw({
+            NewCharacter = ev.NewCharacter,
+            PreviousCharacter = ev.PreviousCharacter,
+        })
+    end)
 end)
