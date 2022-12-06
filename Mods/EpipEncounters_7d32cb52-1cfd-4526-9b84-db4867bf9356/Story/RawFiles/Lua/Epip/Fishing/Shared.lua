@@ -10,7 +10,9 @@ local Fishing = {
 
     FISHING_IN_PROGRESS_TAG = "EPIP_FISHING",
     FISHING_ROD_TEMPLATES = Set.Create({
-        "81cbf17f-cc71-4e09-9ab3-ca2a5cb0cefc"
+        "81cbf17f-cc71-4e09-9ab3-ca2a5cb0cefc", -- HAR_FishingRod_A, green fish-shaped lure
+        "90cdb693-3564-415a-a8fa-4027b7f76f41", -- HAR_FishingRod_B, classic red/white bobber
+        "9fc3cb5f-894e-4783-9eef-fbceef0104b0", -- HAR_FishingRod_C, red/yellow lure
     }),
 
     USE_LEGACY_EVENTS = false,
@@ -112,7 +114,16 @@ Epip.RegisterFeature("Fishing", Fishing)
 
 ---@class Feature_Fishing_Fish : TextLib_DescribableObject
 ---@field ID string
----@field Icon string
+---@field Icon string? Defaults to the template's icon.
+---@field TemplateID GUID
+local _Fish = {}
+
+---@return string
+function _Fish:GetIcon()
+    local itemTemplate = Ext.Template.GetTemplate(self.TemplateID) ---@type ItemTemplate
+
+    return self.Icon or itemTemplate.Icon
+end
 
 ---@class Feature_Fishing_Region
 ---@field ID string
@@ -131,7 +142,7 @@ Epip.RegisterFeature("Fishing", Fishing)
 ---@param data Feature_Fishing_Fish
 function Fishing.RegisterFish(data)
     if not data.ID then Fishing:Error("RegisterFish", "Data must include ID.") end
-
+    Inherit(data, _Fish)
     Text.MakeDescribable(data)
 
     Fishing._Fish[data.ID] = data
@@ -140,6 +151,7 @@ end
 ---@param data Feature_Fishing_Region
 function Fishing.RegisterRegion(data)
     if not data.ID then Fishing:Error("RegisterRegion", "Data must include ID.") end
+    if #data.Fish == 0 then Fishing:Error("RegisterRegion", "Regions must have at least one fish entry.") end
     
     table.insert(Fishing._RegionsByLevel[data.LevelID], data)
 end

@@ -309,7 +309,7 @@ end
 function UI.UpdateFishIcon()
     local state = UI.GetGameState()
 
-    UI.Elements.Fish:SetIcon(state.CurrentFish.Icon, UI.FISH_ICON_SIZE:unpack())
+    UI.Elements.Fish:SetIcon(state.CurrentFish:GetIcon(), UI.FISH_ICON_SIZE:unpack())
 end
 
 function UI.SnapToCursor()
