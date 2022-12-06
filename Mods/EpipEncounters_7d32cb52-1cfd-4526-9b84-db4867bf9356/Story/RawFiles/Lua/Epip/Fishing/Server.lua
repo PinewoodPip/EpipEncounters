@@ -3,6 +3,7 @@
 local Fishing = Epip.GetFeature("Feature_Fishing")
 Fishing.MINIGAME_ANIMATION = "skill_prepare_weapon_01_loop"
 Fishing.ANIMATION_EVENT = "EPIP_FISHING_LOOP"
+Fishing.SUCCESS_ANIMATION = "use_loot"
 
 ---------------------------------------------
 -- METHODS
@@ -34,9 +35,14 @@ Osiris.RegisterSymbolListener("StoryEvent", 2, "after", function (obj, event)
     end
 end)
 
--- Tag characters when they finish fishing.
+-- Untag characters when they finish fishing.
 Fishing.Events.CharacterStoppedFishing:Subscribe(function (ev)
     Osiris.ClearTag(ev.Character, Fishing.FISHING_IN_PROGRESS_TAG)
+
+    if ev.Reason == "Success" then
+        Osiris.CharacterStatusText(ev.Character, "Success!")
+        Osiris.PlayAnimation(ev.Character, Fishing.SUCCESS_ANIMATION)
+    end
 end)
 
 -- Listen for clients starting to fish and forward the event.

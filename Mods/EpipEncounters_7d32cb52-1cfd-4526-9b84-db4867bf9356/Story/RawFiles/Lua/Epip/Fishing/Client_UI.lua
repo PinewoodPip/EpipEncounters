@@ -270,7 +270,10 @@ function UI.AddProgress(progress)
     state.Progress = state.Progress + progress
 
     UI.UpdateProgressBar()
-    -- TODO check victory conditions
+    
+    if state.Progress >= 1 then
+        UI.Cleanup("Success")
+    end
 end
 
 ---@param reason Feature_Fishing_MinigameExitReason
