@@ -45,6 +45,7 @@ Fishing.Events.CharacterStoppedFishing:Subscribe(function (ev)
     if ev.Reason == "Success" then
         Osiris.CharacterStatusText(char, "Success!")
         Osiris.PlayAnimation(char, Fishing.SUCCESS_ANIMATION, "")
+        Osiris.ItemTemplateAddTo(ev.Fish.TemplateID, char, 1, 1)
     end
 end)
 
@@ -64,6 +65,7 @@ end)
 Net.RegisterListener("Feature_Fishing_NetMsg_CharacterStoppedFishing", function (payload)
     Fishing.Events.CharacterStoppedFishing:Throw({
         Character = Character.Get(payload.CharacterNetID),
-        Reason = payload.Reason
+        Reason = payload.Reason,
+        Fish = Fishing.GetFish(payload.FishID),
     })
 end)

@@ -36,15 +36,29 @@ function Fishing.Start(char)
 end
 
 ---@param char EclCharacter
+---@param fish Feature_Fishing_Fish TODO rework param
 ---@param reason Feature_Fishing_MinigameExitReason
-function Fishing.Stop(char, reason)
+function Fishing.Stop(char, fish, reason)
     Fishing.Events.CharacterStoppedFishing:Throw({
         Character = char,
         Reason = reason,
+        Fish = fish,
     })
 
     Net.PostToServer("Feature_Fishing_NetMsg_CharacterStoppedFishing", {
         CharacterNetID = char.NetID,
         Reason = reason,
+        FishID = fish.ID,
     })
 end
+
+---------------------------------------------
+-- EVENT LISTENERS
+---------------------------------------------
+
+-- Show notification for successful catches.
+Fishing.Events.CharacterStoppedFishing:Subscribe(function (ev)
+    if ev.Reason == "Success" then
+        Client.UI.Notification.ShowIconNotification(ev.Fish:GetName(), ev.Fish:GetIcon(), nil, "Fish Caught!", nil, "UI_Notification_ReceiveAbility") -- TODO notify about new catches and show how to open the journal
+    end
+end)

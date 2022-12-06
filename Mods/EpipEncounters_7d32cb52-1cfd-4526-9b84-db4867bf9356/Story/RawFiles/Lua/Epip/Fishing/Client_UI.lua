@@ -287,7 +287,7 @@ function UI.Cleanup(reason)
 
     UI:Hide()
     
-    Fishing.Stop(Character.Get(state.CharacterHandle), reason)
+    Fishing.Stop(Character.Get(state.CharacterHandle), state.CurrentFish, reason)
 end
 
 ---@return Feature_Fishing_GameObject[]

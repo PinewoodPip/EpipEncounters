@@ -91,6 +91,7 @@ Epip.RegisterFeature("Fishing", Fishing)
 
 ---@class Feature_Fishing_NetMsg_CharacterStoppedFishing : Net_SimpleMessage_Character
 ---@field Reason Feature_Fishing_MinigameExitReason
+---@field FishID string
 
 ---@class Feature_Fishin_Hook_IsFishingRod
 ---@field Character Character
@@ -105,6 +106,7 @@ Epip.RegisterFeature("Fishing", Fishing)
 ---@class Feature_Fishing_Event_CharacterStoppedFishing
 ---@field Character Character
 ---@field Reason Feature_Fishing_MinigameExitReason
+---@field Fish Feature_Fishing_Fish
 
 ---------------------------------------------
 -- CLASSES
