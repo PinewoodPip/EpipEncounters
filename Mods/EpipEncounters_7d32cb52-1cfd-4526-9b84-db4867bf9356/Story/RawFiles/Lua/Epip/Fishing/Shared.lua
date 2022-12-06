@@ -5,8 +5,10 @@ local Set = DataStructures.Get("DataStructures_Set")
 ---@class Feature_Fishing : Feature
 local Fishing = {
     _Fish = {}, ---@type table<string, Feature_Fishing_Fish>
-    _Regions = DefaultTable.Create({}), ---@type DataStructures_DefaultTable<string, Feature_Fishing_Region[]>
+    _RegionsByLevel = DefaultTable.Create({}), ---@type DataStructures_DefaultTable<string, Feature_Fishing_Region[]>
+    _RegionsByID = {}, ---@type table<string, Feature_Fishing_Region>
 
+    FISHING_IN_PROGRESS_TAG = "EPIP_FISHING",
     FISHING_ROD_TEMPLATES = Set.Create({
         "81cbf17f-cc71-4e09-9ab3-ca2a5cb0cefc"
     }),
@@ -66,6 +68,11 @@ local Fishing = {
             LocalKey = "FishE_Description",
         },
     },
+
+    Events = {
+        CharacterStartedFishing = {}, ---@type Event<Feature_Fishing_Event_CharacterStartedFishing>
+        CharacterStoppedFishing = {}, ---@type Event<Feature_Fishing_Event_CharacterStoppedFishing>
+    },
     Hooks = {
         IsFishingRod = {}, ---@type Event<Feature_Fishin_Hook_IsFishingRod>
     },
@@ -76,20 +83,39 @@ Epip.RegisterFeature("Fishing", Fishing)
 -- EVENTS
 ---------------------------------------------
 
+---@class Feature_Fishing_NetMsg_CharacterStartedFishing : Net_SimpleMessage_Character
+---@field RegionID string
+---@field FishID string
+
+---@class Feature_Fishing_NetMsg_CharacterStoppedFishing : Net_SimpleMessage_Character
+---@field Reason Feature_Fishing_MinigameExitReason
+
 ---@class Feature_Fishin_Hook_IsFishingRod
 ---@field Character Character
 ---@field Item Item
 ---@field IsFishingRod boolean Hookable. Defaults to false.
 
+---@class Feature_Fishing_Event_CharacterStartedFishing
+---@field Character Character
+---@field Region Feature_Fishing_Region
+---@field Fish Feature_Fishing_Fish
+
+---@class Feature_Fishing_Event_CharacterStoppedFishing
+---@field Character Character
+---@field Reason Feature_Fishing_MinigameExitReason
+
 ---------------------------------------------
 -- CLASSES
 ---------------------------------------------
+
+---@alias Feature_Fishing_MinigameExitReason "Success"|"Failure"|"Cancelled"
 
 ---@class Feature_Fishing_Fish : TextLib_DescribableObject
 ---@field ID string
 ---@field Icon string
 
 ---@class Feature_Fishing_Region
+---@field ID string
 ---@field LevelID string
 ---@field Bounds Vector4 X, Y, width, height.
 ---@field Fish Feature_Fishing_Region_FishEntry[]
@@ -113,13 +139,27 @@ end
 
 ---@param data Feature_Fishing_Region
 function Fishing.RegisterRegion(data)
-    table.insert(Fishing._Regions[data.LevelID], data)
+    if not data.ID then Fishing:Error("RegisterRegion", "Data must include ID.") end
+    
+    table.insert(Fishing._RegionsByLevel[data.LevelID], data)
 end
 
 ---@param levelID string
 ---@return Feature_Fishing_Region[]
 function Fishing.GetRegions(levelID)
-    return Fishing._Regions[levelID]
+    return Fishing._RegionsByLevel[levelID]
+end
+
+---@param id string
+---@return Feature_Fishing_Region?
+function Fishing.GetRegion(id)
+    return Fishing._RegionsByID[id]
+end
+
+---@param char Character
+---@return boolean
+function Fishing.IsFishing(char)
+    return char:IsTagged(Fishing.FISHING_IN_PROGRESS_TAG)
 end
 
 ---@param id string

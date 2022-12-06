@@ -1,4 +1,3 @@
-
 local Generic = Client.UI.Generic
 local V = Vector.Create
 
@@ -39,14 +38,17 @@ UI.PROGRESS_BAR_WIDTH = 5
 local _GameState = {
     Progress = 0,
     CurrentFish = nil, ---@type Feature_Fishing_Fish
+    CharacterHandle = nil, ---@type ComponentHandle
 }
 
+---@param char EclCharacter
 ---@param fish Feature_Fishing_Fish
 ---@return Feature_Fishing_GameState
-function _GameState.Create(fish)
+function _GameState.Create(char, fish)
     local tbl = {
         Progress = 0,
         CurrentFish = fish,
+        CharacterHandle = char.Handle,
     }
     Inherit(tbl, _GameState)
 
@@ -95,8 +97,10 @@ function _GameObject:GetUpperBound()
     return self.State.Position + self.Size[2]
 end
 
+---@diagnostic disable: unused-local
 ---@param deltaTime number In milliseconds.
 function _GameObject:Update(deltaTime) error("Not implemented") end -- TODO use template method pattern
+---@diagnostic enable: unused-local
 
 ---@param otherObject Feature_Fishing_GameObject
 ---@return boolean
@@ -107,9 +111,11 @@ function _GameObject:IsCollidingWith(otherObject)
     return myState.Position < (otherObject:GetUpperBound()) and self:GetUpperBound() >= otherState.Position
 end
 
+---@diagnostic disable: unused-local
 ---@param otherObject Feature_Fishing_GameObject
 ---@param deltaTime number In milliseconds.
 function _GameObject:OnCollideWith(otherObject, deltaTime) end
+---@diagnostic enable: unused-local
 
 ---@return Feature_Fishing_GameObject_State
 function _GameObject:GetState()
@@ -228,13 +234,13 @@ function Fishing.GetUI()
     return Fishing.UI
 end
 
-function UI.Start()
-    UI.Cleanup()
+---@param ev Feature_Fishing_Event_CharacterStartedFishing
+function UI.Start(ev)
+    if UI._GameState then
+        UI:Error("Start", "Instance already in use")
+    end
 
-    local region = Fishing.GetRegionAt(Client.GetCharacter().WorldPos)
-    if not region then Client.UI.Notification.ShowWarning("There don't seem to be any fish here...") return nil end
-
-    UI._GameState = _GameState.Create(Fishing.GetRandomFish(region))
+    UI._GameState = _GameState.Create(ev.Character, ev.Fish)
 
     local bobber = _Bobber:Create("Bobber", UI.BLOBBER_SIZE, _State.Create())
     local fish = _Fish:Create("Fish", UI.FISH_SIZE, _State.Create())
@@ -267,11 +273,18 @@ function UI.AddProgress(progress)
     -- TODO check victory conditions
 end
 
-function UI.Cleanup()
+---@param reason Feature_Fishing_MinigameExitReason
+function UI.Cleanup(reason)
+    local state = UI.GetGameState()
+
     UI._GameState = nil
     UI._GameObjects = {}
 
     GameState.Events.RunningTick:Unsubscribe("Feature_Fishing_UI_Tick")
+
+    UI:Hide()
+    
+    Fishing.Stop(Character.Get(state.CharacterHandle), reason)
 end
 
 ---@return Feature_Fishing_GameObject[]
@@ -360,9 +373,17 @@ end
 -- SETUP
 ---------------------------------------------
 
+-- Start the minigame when fishing starts.
+-- Unsubscribe this listener to replace the minigame with a different implementation.
+-- The minigame should call Fishing.Stop() when it exits for any reason.
+Fishing.Events.CharacterStartedFishing:Subscribe(function (ev)
+    UI.Start(ev)
+end, {StringID = "DefaultImplementation"})
+
+-- TODO remove once the start sequence is implemented.
 Client.UI.OptionsInput.Events.ActionExecuted:RegisterListener(function (action, _)
     if action == "EpipEncounters_Debug_Generic" then
-        UI.Start()
+        Fishing.Start(Client.GetCharacter())
     end
 end)
 
@@ -386,4 +407,6 @@ function Fishing:__Setup()
     local progressBar = panel:AddChild("ProgressBar", "GenericUI_Element_Color")
     progressBar:SetSize(0, 0)
     UI.Elements.ProgressBar = progressBar
+
+    UI:Hide()
 end

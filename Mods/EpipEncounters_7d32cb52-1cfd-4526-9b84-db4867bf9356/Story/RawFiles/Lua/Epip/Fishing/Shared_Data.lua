@@ -27,6 +27,7 @@ local fishes = {
 ---@type Feature_Fishing_Region[]
 local regions = {
     {
+        ID = "test",
         LevelID = "FJ_FortJoy_Main",
         Bounds = Vector.Create(390, 236, 100, 100),
         Fish = {
