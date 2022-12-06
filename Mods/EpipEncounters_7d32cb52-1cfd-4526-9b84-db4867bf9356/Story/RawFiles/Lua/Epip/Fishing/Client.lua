@@ -12,6 +12,8 @@ function Fishing.Start(char)
 
     if Fishing.IsFishing(char) then
         Client.UI.Notification.ShowNotification("I'm already fishing!")
+    elseif not Character.IsUnsheathed(char) then
+        Client.UI.Notification.ShowNotification("I must unsheathe my fishing rod first.")
     elseif not Fishing.HasFishingRodEquipped(char) then
         Client.UI.Notification.ShowNotification("I must have a fishing rod equipped to fish!")
     elseif not region then

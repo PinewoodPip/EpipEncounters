@@ -37,11 +37,14 @@ end)
 
 -- Untag characters when they finish fishing.
 Fishing.Events.CharacterStoppedFishing:Subscribe(function (ev)
-    Osiris.ClearTag(ev.Character, Fishing.FISHING_IN_PROGRESS_TAG)
+    local char = ev.Character
+
+    Osiris.CharacterFlushQueue(char)
+    Osiris.ClearTag(char, Fishing.FISHING_IN_PROGRESS_TAG)
 
     if ev.Reason == "Success" then
-        Osiris.CharacterStatusText(ev.Character, "Success!")
-        Osiris.PlayAnimation(ev.Character, Fishing.SUCCESS_ANIMATION)
+        Osiris.CharacterStatusText(char, "Success!")
+        Osiris.PlayAnimation(char, Fishing.SUCCESS_ANIMATION, "")
     end
 end)
 
