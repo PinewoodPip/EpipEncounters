@@ -29,6 +29,8 @@ UI.MAX_ACCELERATION = 150
 UI.CLICK_ACCELERATION_BOOST = 60 -- TODO add cooldown
 UI.PROGRESS_PER_SECOND = 0.15
 UI.PROGRESS_BAR_WIDTH = 5
+UI.STARTING_PROGRESS = 0.45
+UI.PROGRESS_DRAIN = 0.1
 
 ---------------------------------------------
 -- CLASSES
@@ -46,7 +48,7 @@ local _GameState = {
 ---@return Feature_Fishing_GameState
 function _GameState.Create(char, fish)
     local tbl = {
-        Progress = 0,
+        Progress = UI.STARTING_PROGRESS,
         CurrentFish = fish,
         CharacterHandle = char.Handle,
     }
@@ -172,7 +174,8 @@ end
 ---@param deltaTime number In milliseconds.
 function _Bobber:OnCollideWith(otherObject, deltaTime)
     if otherObject.Type == "Fish" then
-        UI.AddProgress(UI.PROGRESS_PER_SECOND * deltaTime / 1000)
+        -- Add progress. The drain must be offset.
+        UI.AddProgress((UI.PROGRESS_DRAIN + UI.PROGRESS_PER_SECOND) * deltaTime / 1000)
     end
 end
 
@@ -267,12 +270,14 @@ end
 function UI.AddProgress(progress)
     local state = UI.GetGameState()
 
-    state.Progress = state.Progress + progress
+    state.Progress = math.clamp(state.Progress + progress, 0, 1)
 
     UI.UpdateProgressBar()
     
     if state.Progress >= 1 then
         UI.Cleanup("Success")
+    elseif state.Progress <= 0 then
+        UI.Cleanup("Failure")
     end
 end
 
@@ -300,7 +305,7 @@ function UI.UpdateProgressBar()
     local element = UI:GetElementByID("ProgressBar") ---@type GenericUI_Element_Color
     local length = state.Progress * UI.SIZE[2]
 
-    element:SetColor(Color.CreateFromHex(Color.LARIAN.GOLD))
+    element:SetColor(Color.CreateFromHex(Color.LARIAN.YELLOW))
     element:SetSize(UI.PROGRESS_BAR_WIDTH, length)
     element:SetPosition(UI.SIZE[1], UI.SIZE[2] - length)
     -- element:SetPositionRelativeToParent("BottomRight", 5, -length) -- TODO investigate issue
@@ -389,6 +394,9 @@ end)
 
 ---@param ev GameStateLib_Event_RunningTick
 function UI._OnTick(ev)
+    -- Drain progress.
+    UI.AddProgress(-UI.PROGRESS_DRAIN * ev.DeltaTime / 1000)
+
     -- Exit the minigame if the client goes into dialogue.
     if Client.IsInDialogue() then
         UI.Cleanup("Cancelled")

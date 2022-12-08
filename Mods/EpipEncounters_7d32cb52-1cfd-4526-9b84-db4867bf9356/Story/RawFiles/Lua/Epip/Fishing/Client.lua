@@ -56,9 +56,11 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
--- Show notification for successful catches.
+-- Show notifications for success or failure.
 Fishing.Events.CharacterStoppedFishing:Subscribe(function (ev)
     if ev.Reason == "Success" then
         Client.UI.Notification.ShowIconNotification(ev.Fish:GetName(), ev.Fish:GetIcon(), nil, "Fish Caught!", nil, "UI_Notification_ReceiveAbility") -- TODO notify about new catches and show how to open the journal
+    elseif ev.Reason == "Failure" then
+        Client.UI.Notification.ShowWarning("The fish got away...")
     end
 end)
