@@ -38,5 +38,10 @@ package Elements
             this.gridList.row = height;
             this.gridList.col = width;
         }
+
+        public function ClearElements() : *
+        {
+            this.gridList.clearElements();
+        }
     }
 }
