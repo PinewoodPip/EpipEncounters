@@ -1,6 +1,16 @@
 
 ---@class Feature_Fishing
 local Fishing = Epip.GetFeature("Feature_Fishing")
+Fishing.Hooks.CanStartFishing = Fishing:AddSubscribableHook("CanStartFishing") ---@type Event<Feature_Fishing_Hook_CanStartFishing>
+
+---------------------------------------------
+-- EVENTS/HOOKS
+---------------------------------------------
+
+---@class Feature_Fishing_Hook_CanStartFishing
+---@field Character EclCharacter
+---@field CanStartFishing boolean Hookable. Defaults to true.
+---@field FailureReason string? Will be shown in a notification toast if CanStartFishing is false.
 
 ---------------------------------------------
 -- METHODS
@@ -9,31 +19,37 @@ local Fishing = Epip.GetFeature("Feature_Fishing")
 ---@param char Character
 function Fishing.Start(char)
     local region = Fishing.GetRegionAt(char.WorldPos)
-
-    if Fishing.IsFishing(char) then
-        Client.UI.Notification.ShowNotification("I'm already fishing!")
-    elseif not Fishing.IsNearWater(char) then
-        Client.UI.Notification.ShowNotification("I'm not close enough to water to fish.")
-    elseif not Fishing.HasFishingRodEquipped(char) then
-        Client.UI.Notification.ShowNotification("I must have a fishing rod equipped to fish!")
-    elseif not Character.IsUnsheathed(char) then
-        Client.UI.Notification.ShowNotification("I must unsheathe my fishing rod first.")
-    elseif not region then
+    
+    -- Cannot fish in areas with no fishing region.
+    if not region then
         Client.UI.Notification.ShowWarning("There don't seem to be any fish here...")
     else
-        local fish = Fishing.GetRandomFish(region)
-
-        Fishing.Events.CharacterStartedFishing:Throw({
+        local hook = Fishing.Hooks.CanStartFishing:Throw({
             Character = char,
-            Region = region,
-            Fish = fish,
+            CanStartFishing = true,
         })
 
-        Net.PostToServer("Feature_Fishing_NetMsg_CharacterStartedFishing", {
-            CharacterNetID = char.NetID,
-            RegionID = region.ID,
-            FishID = fish.ID,
-        })
+        -- Begin fishing if no listener prevented it.
+        if hook.CanStartFishing then
+            local fish = Fishing.GetRandomFish(region)
+
+            Fishing.Events.CharacterStartedFishing:Throw({
+                Character = char,
+                Region = region,
+                Fish = fish,
+            })
+
+            Net.PostToServer("Feature_Fishing_NetMsg_CharacterStartedFishing", {
+                CharacterNetID = char.NetID,
+                RegionID = region.ID,
+                FishID = fish.ID,
+            })
+        else -- Otherwise show failure reason (if provided)
+            if hook.FailureReason then
+                Client.UI.Notification.ShowNotification(hook.FailureReason)
+            end
+        end
+        
     end
 end
 
@@ -101,3 +117,26 @@ Fishing.Events.CharacterStoppedFishing:Subscribe(function (ev)
         Client.UI.Notification.ShowWarning("The fish got away...")
     end
 end)
+
+-- Default conditions that prevent fishing.
+Fishing.Hooks.CanStartFishing:Subscribe(function (ev)
+    local char = ev.Character
+    local reason
+
+    if Fishing.IsFishing(char) then
+        reason = "I'm already fishing!"
+    elseif Client.IsInCombat() or Client.IsInDialogue() then
+        reason = "Now's not the time for fishing!"
+    elseif not Fishing.IsNearWater(char) then
+        reason = "I'm not close enough to water to fish."
+    elseif not Fishing.HasFishingRodEquipped(char) then
+        reason = "I must have a fishing rod equipped to fish!"
+    elseif not Character.IsUnsheathed(char) then
+        reason = "I must unsheathe my fishing rod first."
+    end
+
+    if reason then
+        ev.CanStartFishing = false
+        ev.FailureReason = reason
+    end
+end, {StringID = "DefaultImplementation"})
