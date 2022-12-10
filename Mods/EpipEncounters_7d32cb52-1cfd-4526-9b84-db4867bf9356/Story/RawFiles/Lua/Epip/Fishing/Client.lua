@@ -35,6 +35,12 @@ function Fishing.Start(char)
     end
 end
 
+---@param fishID string
+---@return integer
+function Fishing.GetTimesCaught(fishID)
+    return Fishing:GetSettingValue(Fishing.Settings.FishCaught)[fishID] or 0
+end
+
 ---@param char EclCharacter
 ---@param fish Feature_Fishing_Fish TODO rework param
 ---@param reason Feature_Fishing_MinigameExitReason
@@ -50,6 +56,24 @@ function Fishing.Stop(char, fish, reason)
         Reason = reason,
         FishID = fish.ID,
     })
+
+    if reason == "Success" then
+        Fishing._OnSuccess(fish)
+    end
+end
+
+---@param fish Feature_Fishing_Fish
+function Fishing._OnSuccess(fish)
+    local setting = Fishing:GetSettingValue(Fishing.Settings.FishCaught)
+
+    -- Increment catch counter.
+    if not setting[fish.ID] then
+        setting[fish.ID] = 1
+    else
+        setting[fish.ID] = setting[fish.ID] + 1
+    end
+
+    Fishing:SaveSettings()
 end
 
 ---------------------------------------------

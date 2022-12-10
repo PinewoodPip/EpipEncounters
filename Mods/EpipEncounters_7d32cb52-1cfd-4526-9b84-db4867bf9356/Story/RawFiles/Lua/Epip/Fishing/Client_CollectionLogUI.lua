@@ -35,7 +35,10 @@ function UI._SetupFishGrid()
 
     for _,fish in ipairs(fishes) do
         local icon = grid:AddChild(fish.ID, "GenericUI_Element_IggyIcon")
-        icon:SetIcon(fish:GetIcon(), UI.FISH_SIZE:unpack())
+        local greyedOut = Fishing.GetTimesCaught(fish.ID) == 0
+        local width, height = UI.FISH_SIZE:unpack()
+
+        icon:SetIcon(fish:GetIcon(), width, height, greyedOut and UI.UNCAUGHT_FISH_MATERIAL or nil)
 
         -- TODO rework Generic to use new tooltip lib
         -- icon.Tooltip = {

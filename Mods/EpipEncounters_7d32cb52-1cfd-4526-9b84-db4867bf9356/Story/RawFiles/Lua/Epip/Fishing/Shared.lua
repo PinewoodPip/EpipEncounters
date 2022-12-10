@@ -18,6 +18,22 @@ local Fishing = {
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
 
+    Settings = {
+        Enabled = {
+            Type = "Boolean",
+            Name = "Enabled",
+            Description = "Controls whether fishing is enabled.",
+            DefaultValue = false,
+            Context = "Client",
+        },
+        FishCaught = {
+            Type = "Map",
+            Name = "Fish Caught",
+            Description = "Fish caught.",
+            Context = "Client",
+        },
+    },
+
     TranslatedStrings = {
         ["h467929cdge276g4833gbcffg7294c0a60514"] = {
             Text = "Fish A",
@@ -135,6 +151,16 @@ function _Fish:GetTooltip()
             {
                 Type = "ItemName",
                 Label = self:GetName(), -- TODO rarity color
+            },
+            -- Multiple SkillDescriptions are ordered inversely, lol TODO fix?
+            {
+                Type = "SkillDescription",
+                Label = Text.Format("Total caught: %s", {
+                    FormatArgs = {
+                        Fishing.GetTimesCaught(self.ID),
+                    },
+                    Color = Color.LARIAN.GREEN,
+                }),
             },
             {
                 Type = "SkillDescription",

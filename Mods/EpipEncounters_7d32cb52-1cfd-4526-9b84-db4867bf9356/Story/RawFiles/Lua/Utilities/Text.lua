@@ -332,11 +332,16 @@ end
 -- end
 
 ---Format a string.
----@param str string | TextFormatData
+---@param str string
 ---@param formatData TextFormatData
+---@overload fun(str:TextFormatData)
 ---@return string 
 function Text.Format(str, formatData)
     setmetatable(formatData, {__index = _TextFormatData})
+
+    if type(str) == "table" then
+        str, formatData = str.Text, str
+    end
 
     if formatData.RemovePreviousFormatting then
         str = Text.StripFontTags(str)
@@ -382,7 +387,9 @@ function Text.Format(str, formatData)
         size = string.format(" size='%d'", formatData.Size)
     end
 
-    str = string.format("<font%s%s%s%s>%s</font>", fontType, color, size, align, str)
+    if fontType ~= "" or align ~= "" or color ~= "" or size ~= "" then
+        str = string.format("<font%s%s%s%s>%s</font>", fontType, color, size, align, str)
+    end
 
     return str
 end
