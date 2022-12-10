@@ -143,6 +143,18 @@ local regions = {
                 Weight = 1,
             },
         },
+    },
+
+    {
+        ID = "FJ_StartingBeach",
+        LevelID = "FJ_FortJoy_Main",
+        Bounds = Vector.Create(128, 410, 216 - 128, 410 - 189),
+        Fish = {
+            {
+                ID = "Pearl",
+                Weight = 0.5,
+            },
+        },
     }
 }
 

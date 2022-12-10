@@ -14,6 +14,7 @@ local Fishing = {
         "90cdb693-3564-415a-a8fa-4027b7f76f41", -- HAR_FishingRod_B, classic red/white bobber
         "9fc3cb5f-894e-4783-9eef-fbceef0104b0", -- HAR_FishingRod_C, red/yellow lure
     }),
+    WATER_SEARCH_RADIUS = 4,
 
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
@@ -245,7 +246,9 @@ function Fishing.GetRegionAt(pos)
 
     for _,otherRegion in ipairs(regions) do
         local bounds = otherRegion.Bounds
-        if pos[1] >= bounds[1] and pos[1] <= bounds[1] + bounds[3] and pos[3] >= bounds[2] and pos[3] <= bounds[2] + bounds[4] then
+
+        -- Boundaries go from north-west to south-east.
+        if pos[1] >= bounds[1] and pos[1] <= bounds[1] + bounds[3] and pos[3] <= bounds[2] and pos[3] >= bounds[2] - bounds[4] then
             region = otherRegion
             break
         end

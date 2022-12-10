@@ -12,6 +12,8 @@ function Fishing.Start(char)
 
     if Fishing.IsFishing(char) then
         Client.UI.Notification.ShowNotification("I'm already fishing!")
+    elseif not Fishing.IsNearWater(char) then
+        Client.UI.Notification.ShowNotification("I'm not close enough to water to fish.")
     elseif not Fishing.HasFishingRodEquipped(char) then
         Client.UI.Notification.ShowNotification("I must have a fishing rod equipped to fish!")
     elseif not Character.IsUnsheathed(char) then
@@ -33,6 +35,17 @@ function Fishing.Start(char)
             FishID = fish.ID,
         })
     end
+end
+
+---@param char EclCharacter?
+---@return boolean
+function Fishing.IsNearWater(char)
+    char = char or Client.GetCharacter()
+    local grid = Ext.Entity.GetAiGrid()
+    local position = char.WorldPos
+    local foundCell = grid:SearchForCell(position[1], position[3], Fishing.WATER_SEARCH_RADIUS, "Deepwater", 0)
+
+    return foundCell
 end
 
 ---@param fishID string
