@@ -534,6 +534,20 @@ Ext.RegisterUINameCall("hideTooltip", function (_, _)
     lastItemTooltipHandle = nil
 end)
 
+-- Copy world position of pointer to clipboard.
+Client.UI.OptionsInput.Events.ActionExecuted:RegisterListener(function (action, _)
+    if action == "EpipEncounters_Debug_CopyPosition2D" then
+        local position = Pointer.GetWalkablePosition()
+        position = Vector.Create(position[1], position[3])
+        local text = Text.Format("%s, %s", {
+            FormatArgs = {position:unpack()}
+        })
+
+        Client.CopyToClipboard(text)
+        Client.UI.Notification.ShowNotification(text)
+    end
+end)
+
 Client.UI.OptionsInput.Events.ActionExecuted:RegisterListener(function (action, _)
     if action == "EpipEncounters_Debug_CopyIdentifier" then
         local text

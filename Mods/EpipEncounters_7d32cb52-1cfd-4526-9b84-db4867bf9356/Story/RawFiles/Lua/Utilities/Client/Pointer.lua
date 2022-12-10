@@ -98,6 +98,19 @@ function Pointer.GetWalkablePosition(playerIndex)
 end
 
 ---@param playerIndex integer? Defaults to 1.
+---@return Vector3D
+function Pointer.GetWorldPosition(playerIndex)
+    local state = Ext.UI.GetPickingState(playerIndex or 1)
+    local position
+    
+    if state then
+        position = Vector.Create(state.WorldPosition)
+    end
+
+    return position
+end
+
+---@param playerIndex integer? Defaults to 1.
 ---@param fieldName string
 ---@return Entity
 function Pointer._GetCurrentEntity(playerIndex, fieldName)
