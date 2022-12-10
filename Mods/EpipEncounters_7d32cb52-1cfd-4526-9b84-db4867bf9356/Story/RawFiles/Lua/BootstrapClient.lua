@@ -117,6 +117,8 @@ LOAD_ORDER = {
             "Utilities/Settings/Setting_Number.lua",
             "Utilities/Settings/Setting_ClampedNumber.lua",
             "Utilities/Settings/Setting_Choice.lua",
+            "Utilities/Settings/Setting_Set.lua",
+            "Utilities/Settings/Setting_Map.lua",
         },
     },
 

@@ -31,7 +31,7 @@ Epip.InitializeLibrary("Settings", Settings)
 -- CLASSES
 ---------------------------------------------
 
----@alias SettingsLib_SettingType "Boolean"|"Number"|"ClampedNumber"|"Choice"
+---@alias SettingsLib_SettingType "Boolean"|"Number"|"ClampedNumber"|"Choice"|"Set"|"Map"
 
 ---@class EPIP_SETTINGS_SYNC
 ---@field Module string
@@ -63,12 +63,17 @@ Settings._SettingClass = _Setting
 ---@param data SettingsLib_Setting
 function _Setting:Create(data)
     Inherit(data, self)
-    data.Value = data.DefaultValue
+    data.Value = data:GetDefaultValue()
 
     data:_Init()
     data:SetValue(data.DefaultValue)
 
     return data
+end
+
+---@return any
+function _Setting:GetDefaultValue()
+    return self.DefaultValue
 end
 
 ---@return string

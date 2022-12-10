@@ -702,7 +702,7 @@ Settings.Hooks.GetSettingValue:Subscribe(function (ev)
     local setting = ev.Setting ---@type Feature_SettingsMenu_Setting
 
     if setting.DeveloperOnly and not Epip.IsDeveloperMode() then
-        ev.Value = setting.DefaultValue
+        ev.Value = setting:GetDefaultValue()
     end
 end)
 

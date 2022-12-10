@@ -11,6 +11,7 @@
 ---@field CONTEXT Context Set automatically.
 ---@field Disabled boolean
 ---@field Logging integer Logging level.
+---@field Settings table<string, SettingsLib_Setting>
 ---@field Events table<string, Event> Metatables initialized automatically.
 ---@field Hooks table<string, Hook> Metatables initialized automatically.
 ---@field LOGGING_LEVEL table<string, integer> Valid logging levels.
@@ -40,6 +41,8 @@
 local Feature = {
     Disabled = false,
     Logging = 0,
+
+    Settings = {}, ---@type table<string, SettingsLib_Setting>
 
     Events = {},
     Hooks = {},
@@ -231,6 +234,14 @@ function Feature.Create(feature)
         PersistentVars.Features[feature.MOD_TABLE_ID][feature.MODULE_ID] = {}
     end
 
+    -- Initialize settings
+    for id,setting in pairs(feature.Settings) do
+        setting.ID = id
+        setting.ModTable = feature:GetSettingsModuleID()
+
+        Settings.RegisterSetting(setting)
+    end
+
     return feature
 end
 
@@ -292,6 +303,32 @@ end
 ---if it is not disabled.
 ---Override to run initialization routines.
 function Feature:OnFeatureInit() end
+
+---------------------------------------------
+-- SETTINGSLIB METHODS
+---------------------------------------------
+
+---@param setting string|SettingsLib_Setting
+function Feature:GetSettingValue(setting)
+    if type(setting) == "table" then
+        setting = setting.ID
+    end
+
+    return Settings.GetSettingValue(self:GetSettingsModuleID(), setting)
+end
+
+---@return string
+function Feature:GetSettingsModuleID()
+    return self.MOD_TABLE_ID .. "_" .. self.MODULE_ID
+end
+
+function Feature:SaveSettings()
+    if Ext.IsServer() then
+        Feature:Error("SaveSettings", "SaveSettings() not implemented on server")
+    else
+        Settings.Save(self:GetSettingsModuleID())
+    end
+end
 
 ---------------------------------------------
 -- LISTENER/HOOK FUNCTIONS

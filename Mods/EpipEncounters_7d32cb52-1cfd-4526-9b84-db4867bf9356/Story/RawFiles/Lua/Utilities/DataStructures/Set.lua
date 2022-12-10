@@ -22,7 +22,7 @@ function Set.Create(elements)
         __ipairs = Set.__ipairs,
     })
 
-    for _,element in ipairs(elements) do
+    for _,element in ipairs(elements or {}) do
         tbl:Add(element)
     end
 
