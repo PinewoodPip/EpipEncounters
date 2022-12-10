@@ -6,6 +6,7 @@ local Tooltip = {
     nextTooltipData = nil, ---@type TooltipLib_TooltipSourceData
     _nextCustomTooltip = nil, ---@type TooltipLib_CustomFormattedTooltip
     _nextSkillTooltip = nil,
+    _currentTooltipData = nil, ---@type TooltipLib_TooltipSourceData
 
     _POSITION_OFFSET = -34,
 
@@ -61,6 +62,8 @@ Epip.InitializeLibrary("TooltipLib", Tooltip)
 ---@field FlashCharacterHandle FlashObjectHandle?
 ---@field FlashItemHandle FlashObjectHandle?
 ---@field SkillID string?
+---@field FlashParams LuaFlashCompatibleType[]?
+---@field UICall string?
 
 ---@class TooltipLib_SimpleTooltip
 ---@field Label string Supports <bp>, <line> and <shortline>
@@ -250,6 +253,8 @@ function Tooltip.HideTooltip()
     local ui = Client.UI.Hotbar
 
     ui:ExternalInterfaceCall("hideTooltip")
+
+    Tooltip._currentTooltipData = nil
 end
 
 ---@param ui UIObject
@@ -321,6 +326,7 @@ local function HandleFormattedTooltip(ev, arrayFieldName, sourceData, tooltipDat
     end
 
     Tooltip.nextTooltipData = nil
+    Tooltip._currentTooltipData = tooltipData
 end
 
 -- Listen for global tooltip request calls.
@@ -328,9 +334,11 @@ Ext.Events.UICall:Subscribe(function(ev)
     local param1, param2 = table.unpack(ev.Args)
 
     if ev.Function == "showSkillTooltip" and not Tooltip._nextCustomTooltip and not Tooltip._nextSkillTooltip then
-        Tooltip.nextTooltipData = {UIType = ev.UI:GetTypeId(), Type = "Skill", FlashCharacterHandle = param1, SkillID = param2}
+        Tooltip.nextTooltipData = {UIType = ev.UI:GetTypeId(), Type = "Skill", FlashCharacterHandle = param1, SkillID = param2, UICall = ev.Function, FlashParams = {table.unpack(ev.Args)}}
+        Tooltip._currentTooltipData = Tooltip.nextTooltipData
     elseif ev.Function == "showItemTooltip" then
-        Tooltip.nextTooltipData = {UIType = ev.UI:GetTypeId(), Type = "Item", FlashItemHandle = param1}
+        Tooltip.nextTooltipData = {UIType = ev.UI:GetTypeId(), Type = "Item", FlashItemHandle = param1, UICall = ev.Function, FlashParams = {table.unpack(ev.Args)}}
+        Tooltip._currentTooltipData = Tooltip.nextTooltipData
     elseif ev.Function == "displaySurfaceText" then
         Tooltip.nextTooltipData = {UIType = ev.UI:GetTypeId(), Type = "Surface"}
     end
@@ -432,3 +440,25 @@ Client.UI.Tooltip:RegisterInvokeListener("addTooltip", function (ev, text, x, y,
 
     ev:PreventAction()
 end, "Before")
+
+-- Re-render the current tooltip when shift is pressed/released
+-- Used for conditional rendering based on the shift key being pressed.
+-- Currently only supported for skill and item tooltips.
+Client.Input.Events.KeyStateChanged:Subscribe(function (ev)
+    if ev.InputID == "lshift" then
+        local currentTooltip = Tooltip._currentTooltipData
+
+        if currentTooltip and currentTooltip.UICall then
+            Ext.OnNextTick(function()
+                local ui = Ext.UI.GetByType(currentTooltip.UIType)
+
+                ui:ExternalInterfaceCall("hideTooltip")
+                ui:ExternalInterfaceCall(currentTooltip.UICall, unpack(currentTooltip.FlashParams))
+            end)
+        end
+    end
+end)
+
+Ext.RegisterUINameCall("hideTooltip", function()
+    Tooltip._currentTooltipData = nil
+end)

@@ -1,24 +1,4 @@
 
-Game.Tooltip.nextTooltipIsReRender = false
-Game.Tooltip.currentTooltip = nil
--- format:
--- {UI = UI, UICall = UICall, Params = {}}
-
--- Detect tooltips appearing/disappearing, store their data for re-renders
--- Supported for Item and Skill tooltips.
-function onReqTooltip(ui, method, ...)
-    if not Game.Tooltip.nextTooltipIsReRender then
-        Game.Tooltip.currentTooltip = {UI = ui, UICall = method, Params = {...}}
-    end
-end
-
-Ext.RegisterUINameCall("hideTooltip", function()
-    -- do not remove tooltip data while re-rendering
-    if not Game.Tooltip.nextTooltipIsReRender then
-        Game.Tooltip.currentTooltip = nil
-    end
-end)
-
 -- April fools: scrollable tooltips... but sideways
 Ext.Events.InputEvent:Subscribe(function(e)
     local scrollDirection = 0
@@ -73,21 +53,3 @@ Game.Tooltip.TooltipHooks.GetCompareItem = function(self, ui, item, offHand)
         return char:GetItemBySlot(item.Stats.ItemSlot)
     end
 end
-
--- Re-render the current tooltip when Show Sneak Cones is pressed/released
--- Used for conditional rendering based on the Show Sneak Cones key being pressed
-Client.Input:RegisterListener("SneakConesToggled", function(pressed)
-    local currentTooltip = Game.Tooltip.currentTooltip
-
-    if currentTooltip then
-        Ext.OnNextTick(function()
-            Game.Tooltip.nextTooltipIsReRender = true
-            currentTooltip.UI:ExternalInterfaceCall("hideTooltip")
-            currentTooltip.UI:ExternalInterfaceCall(currentTooltip.UICall, unpack(currentTooltip.Params))
-            Game.Tooltip.nextTooltipIsReRender = false
-        end)
-    end
-end)
-
-Ext.RegisterUINameCall("showSkillTooltip", onReqTooltip)
-Ext.RegisterUINameCall("showItemTooltip", onReqTooltip)
