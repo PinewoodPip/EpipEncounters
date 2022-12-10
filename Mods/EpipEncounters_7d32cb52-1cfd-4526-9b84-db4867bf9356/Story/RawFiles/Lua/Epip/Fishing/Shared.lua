@@ -127,6 +127,29 @@ function _Fish:GetIcon()
     return self.Icon or itemTemplate.Icon
 end
 
+---@return TooltipLib_FormattedTooltip
+function _Fish:GetTooltip()
+    ---@type TooltipLib_FormattedTooltip
+    local tooltip = {
+        Elements = {
+            {
+                Type = "ItemName",
+                Label = self:GetName(), -- TODO rarity color
+            },
+            {
+                Type = "SkillDescription",
+                Label = self:GetDescription(),
+            },
+            {
+                Type = "ItemRarity",
+                Label = "Fish", -- TODO
+            }
+        }
+    }
+
+    return tooltip
+end
+
 ---@class Feature_Fishing_Region
 ---@field ID string
 ---@field LevelID string
@@ -180,6 +203,11 @@ end
 ---@return Feature_Fishing_Fish?
 function Fishing.GetFish(id)
     return Fishing._Fish[id]
+end
+
+---@return table<string, Feature_Fishing_Fish>
+function Fishing.GetFishes()
+    return Fishing._Fish
 end
 
 ---@param pos Vector3D

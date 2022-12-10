@@ -44,6 +44,9 @@ Options.RegisterTab("EpipEncounters", {
         {Name = "Housing: Rotate Furniture (- Axis)", ID = "EpipEncounters_Housing_RotateFurniture_Minus", DeveloperOnly = true},
         {Name = "Housing: Raise Furniture", ID = "EpipEncounters_Housing_RaiseFurniture", DeveloperOnly = true, DefaultInput1 = {Keys = {"lctrl", "wheel_ypos"}}},
         {Name = "Housing: Lower Furniture", ID = "EpipEncounters_Housing_LowerFurniture", DeveloperOnly = true, DefaultInput1 = {Keys = {"lctrl", "wheel_yneg"}}},
+
+        -- Fishing
+        {Name = "Fishing: Open Collection Log", ID = "EpipEncounters_Fishing_OpenCollectionLog", DeveloperOnly = true, DefaultInput1 = {Keys = {"lshift", "f"}}},
     },
 })
 

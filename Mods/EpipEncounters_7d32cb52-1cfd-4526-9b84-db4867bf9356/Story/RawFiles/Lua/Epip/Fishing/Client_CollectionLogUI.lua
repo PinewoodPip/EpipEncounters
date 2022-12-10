@@ -1,0 +1,110 @@
+local Generic = Client.UI.Generic
+local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
+local V = Vector.Create
+
+---@class Feature_Fishing
+local Fishing = Epip.GetFeature("Feature_Fishing")
+local UI = Generic.Create("Feature_Fishing_CollectionLog")
+Fishing.CollectionLogUI = UI
+
+---------------------------------------------
+-- CONSTANTS
+---------------------------------------------
+
+UI.SIZE = V(600, 450)
+UI.HEADER_SIZE = V(600, 50)
+UI.KEYBIND = "EpipEncounters_Fishing_OpenCollectionLog"
+UI.FISH_SIZE = V(64, 64)
+UI.FISH_GRID_SIZE = V(500, 300)
+UI.UNCAUGHT_FISH_MATERIAL = "126592b3-f4b0-4652-9fd5-a81a9619c447"
+
+---------------------------------------------
+-- METHODS
+---------------------------------------------
+
+function UI._SetupFishGrid()
+    local grid = UI.FishGrid
+    grid:ClearElements()
+
+    local fishes = {} ---@type Feature_Fishing_Fish[]
+    for _,fish in pairs(Fishing.GetFishes()) do
+        table.insert(fishes, fish)
+    end
+
+    table.sortByName(fishes)
+
+    for _,fish in ipairs(fishes) do
+        local icon = grid:AddChild(fish.ID, "GenericUI_Element_IggyIcon")
+        icon:SetIcon(fish:GetIcon(), UI.FISH_SIZE:unpack())
+
+        -- TODO rework Generic to use new tooltip lib
+        -- icon.Tooltip = {
+        --     Type = "Formatted",
+        --     Data = fish:GetTooltip(),
+        -- }
+        icon.Events.MouseOver:Subscribe(function (_)
+            Client.Tooltip.ShowCustomFormattedTooltip(fish:GetTooltip())
+        end)
+        icon.Events.MouseOut:Subscribe(function (_)
+            Client.Tooltip.HideTooltip()
+        end)
+    end
+
+    UI.RootContainer:RepositionElements()
+end
+
+---@diagnostic disable-next-line: duplicate-set-field
+function UI:Show()
+    UI._SetupFishGrid()
+
+    Client.UI._BaseUITable.Show(self)
+    UI:SetPosition("center", "center", "screen")
+end
+
+---------------------------------------------
+-- EVENT LISTENERS
+---------------------------------------------
+
+-- Toggle the UI when the keybind is used.
+Client.UI.OptionsInput.Events.ActionExecuted:RegisterListener(function (action, _)
+    if action == UI.KEYBIND then
+        if UI:IsVisible() then
+            UI:Hide()
+        else
+            UI:Show()
+        end
+    end
+end)
+
+---------------------------------------------
+-- SETUP
+---------------------------------------------
+
+function UI:__Setup()
+    local bg = UI:CreateElement("Background", "GenericUI_Element_TiledBackground")
+    bg:SetBackground("RedPrompt", UI.SIZE:unpack())
+
+    UI:GetUI().SysPanelSize = UI.SIZE
+
+    local rootContainer = bg:AddChild("RootContainer", "GenericUI_Element_VerticalList")
+    UI.RootContainer = rootContainer
+
+    local filler = rootContainer:AddChild("Filler", "GenericUI_Element_Empty")
+    filler:SetSizeOverride(V(0, 60))
+    TextPrefab.Create(UI, "Header", rootContainer, Text.Format("Fishing Journal", {Color = Color.BLACK}), "Center", UI.HEADER_SIZE)
+
+    local grid = rootContainer:AddChild("FishGrid", "GenericUI_Element_Grid")
+    grid:SetGridSize(UI.FISH_GRID_SIZE[1] // UI.FISH_SIZE[1], -1)
+    grid:SetCenterInLists(true)
+    UI.FishGrid = grid
+
+    local closeButton = bg:AddChild("CloseButton", "GenericUI_Element_Button")
+    closeButton:SetType("Close")
+    closeButton:SetPositionRelativeToParent("TopRight", -20, 20)
+
+    closeButton.Events.Pressed:Subscribe(function (_)
+        UI:Hide()
+    end)
+
+    UI:Hide()
+end

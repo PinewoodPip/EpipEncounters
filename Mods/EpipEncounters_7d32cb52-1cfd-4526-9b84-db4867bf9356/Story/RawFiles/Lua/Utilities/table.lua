@@ -54,6 +54,16 @@ function table.sortByProperty(tbl, prop, reverse)
     return tbl
 end
 
+---Sorts an array of Describables by their name. TODO move to a static method of the interface
+---@param tbl I_Describable[]
+function table.sortByName(tbl)
+    local fun = function(a, b) return a:GetName() < b:GetName() end
+
+    table.sort(tbl, fun)
+
+    return tbl
+end
+
 ---Copies a table's values recursively, including metatables.
 ---From http://lua-users.org/wiki/CopyTable
 ---@param orig table
