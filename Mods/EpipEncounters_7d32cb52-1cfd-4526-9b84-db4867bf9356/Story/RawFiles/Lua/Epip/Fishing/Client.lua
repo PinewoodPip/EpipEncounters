@@ -9,6 +9,7 @@ Fishing.Hooks.CanStartFishing = Fishing:AddSubscribableHook("CanStartFishing") -
 
 ---@class Feature_Fishing_Hook_CanStartFishing
 ---@field Character EclCharacter
+---@field Region Feature_Fishing_Region
 ---@field CanStartFishing boolean Hookable. Defaults to true.
 ---@field FailureReason string? Will be shown in a notification toast if CanStartFishing is false.
 
@@ -27,11 +28,16 @@ function Fishing.Start(char)
         local hook = Fishing.Hooks.CanStartFishing:Throw({
             Character = char,
             CanStartFishing = true,
+            Region = region,
         })
 
         -- Begin fishing if no listener prevented it.
         if hook.CanStartFishing then
             local fish = Fishing.GetRandomFish(region)
+
+            if Fishing:IsDebug() then
+                Client.UI.Notification.ShowNotification("Starting fishing in " .. region.ID)
+            end
 
             Fishing.Events.CharacterStartedFishing:Throw({
                 Character = char,
@@ -127,7 +133,7 @@ Fishing.Hooks.CanStartFishing:Subscribe(function (ev)
         reason = "I'm already fishing!"
     elseif Client.IsInCombat() or Client.IsInDialogue() then
         reason = "Now's not the time for fishing!"
-    elseif not Fishing.IsNearWater(char) then
+    elseif ev.Region.RequiresWater and not Fishing.IsNearWater(char) then
         reason = "I'm not close enough to water to fish."
     elseif not Fishing.HasFishingRodEquipped(char) then
         reason = "I must have a fishing rod equipped to fish!"

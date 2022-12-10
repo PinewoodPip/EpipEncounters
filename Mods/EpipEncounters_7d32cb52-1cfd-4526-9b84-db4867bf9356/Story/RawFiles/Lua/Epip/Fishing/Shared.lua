@@ -182,6 +182,12 @@ end
 ---@field LevelID string
 ---@field Bounds Vector4 X, Y, width, height.
 ---@field Fish Feature_Fishing_Region_FishEntry[]
+---@field RequiresWater boolean? Defaults to true.
+---@field Priority integer? Defaults to 0.
+local _Region = {
+    RequiresWater = true,
+    Priority = 0,
+}
 
 ---@class Feature_Fishing_Region_FishEntry
 ---@field ID string ID of the fish.
@@ -204,6 +210,7 @@ end
 function Fishing.RegisterRegion(data)
     if not data.ID then Fishing:Error("RegisterRegion", "Data must include ID.") end
     if #data.Fish == 0 then Fishing:Error("RegisterRegion", "Regions must have at least one fish entry.") end
+    Inherit(data, _Region)
     
     table.insert(Fishing._RegionsByLevel[data.LevelID], data)
 end
@@ -242,15 +249,18 @@ end
 function Fishing.GetRegionAt(pos)
     local levelID = Entity.GetLevel().LevelDesc.LevelName
     local regions = Fishing.GetRegions(levelID)
-    local region
+    local region = nil ---@type Feature_Fishing_Region
 
-    for _,otherRegion in ipairs(regions) do
-        local bounds = otherRegion.Bounds
+    for _,levelRegion in ipairs(regions) do
+        local bounds = levelRegion.Bounds
 
         -- Boundaries go from north-west to south-east.
         if pos[1] >= bounds[1] and pos[1] <= bounds[1] + bounds[3] and pos[3] <= bounds[2] and pos[3] >= bounds[2] - bounds[4] then
-            region = otherRegion
-            break
+            
+            -- Higher-priority regions take priority.
+            if not region or levelRegion.Priority > region.Priority then
+                region = levelRegion
+            end
         end
     end
 

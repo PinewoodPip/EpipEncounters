@@ -1,4 +1,6 @@
 
+local V = Vector.Create
+
 ---------------------------------------------
 -- Default data for the Fishing feature.
 ---------------------------------------------
@@ -121,41 +123,110 @@ local fishes = {
 
 ---@type Feature_Fishing_Region[]
 local regions = {
-    {
-        ID = "test",
-        LevelID = "FJ_FortJoy_Main",
-        Bounds = Vector.Create(390, 236, 100, 100),
-        Fish = {
-            {
-                ID = "FishA",
-                Weight = 1,
-            },
-            {
-                ID = "Pearl",
-                Weight = 0.5,
-            },
-            {
-                ID = "Shell_Big_B",
-                Weight = 1,
-            },
-            {
-                ID = "FishE_Tainted",
-                Weight = 1,
-            },
-        },
-    },
-
+    -- FJ_FortJoy_Main
     {
         ID = "FJ_StartingBeach",
         LevelID = "FJ_FortJoy_Main",
-        Bounds = Vector.Create(128, 410, 216 - 128, 410 - 189),
+        Bounds = Vector.Create(128, 410, 216, 189),
         Fish = {
             {
                 ID = "Pearl",
                 Weight = 0.5,
             },
         },
-    }
+    },
+    {
+        ID = "FJ_PrisonerArea",
+        LevelID = "FJ_FortJoy_Main",
+        Bounds = V(83, 257, 291, 52),
+        Fish = {
+            {
+                ID = "Pearl",
+                Weight = 0.5,
+            },
+        },
+    },
+    {
+        ID = "FJ_TurtleBeach",
+        LevelID = "FJ_FortJoy_Main",
+        Bounds = V(218, 416, 324, 341),
+        Fish = {
+            {
+                ID = "Pearl",
+                Weight = 0.5,
+            },
+        },
+    },
+    {
+        ID = "FJ_NorthCoast",
+        LevelID = "FJ_FortJoy_Main",
+        Bounds = V(299, 341, 664, 220),
+        Fish = {
+            {
+                ID = "Starfish",
+                Weight = 0.5,
+            },
+        },
+    },
+    {
+        ID = "FJ_SouthCoast",
+        LevelID = "FJ_FortJoy_Main",
+        Bounds = V(303, 120, 591, 5),
+        Fish = {
+            {
+                ID = "Starfish",
+                Weight = 0.5,
+            },
+        },
+    },
+    {
+        ID = "FJ_AmadiaSanctuary",
+        LevelID = "FJ_FortJoy_Main",
+        Bounds = V(419, 41, 434, 12),
+        RequiresWater = false,
+        Priority = 99,
+        Fish = {
+            {
+                ID = "Pearl",
+                Weight = 0.5,
+            },
+        },
+    },
+    {
+        ID = "FJ_DragonBeach",
+        LevelID = "FJ_FortJoy_Main",
+        Bounds = V(533, 209, 608, 86),
+        Fish = {
+            {
+                ID = "Pearl",
+                Weight = 0.5,
+            },
+        },
+    },
+    -- No deepwater here; this one will need multiple bounds defined.
+    -- {
+    --     ID = "FJ_ElfCave",
+    --     LevelID = "FJ_FortJoy_Main",
+    --     Bounds = V(475, 557, 545, 481),
+    --     Fish = {
+    --         {
+    --             ID = "Pearl",
+    --             Weight = 0.5,
+    --         },
+    --     },
+    -- },
+    {
+        ID = "FJ_FortDungeons",
+        LevelID = "FJ_FortJoy_Main",
+        Bounds = V(308, 597, 327, 567),
+        RequiresWater = false,
+        Fish = {
+            {
+                ID = "SkeletonFish",
+                Weight = 0.5,
+            },
+        },
+    },
 }
 
 for id,fish in pairs(fishes) do
@@ -168,5 +239,11 @@ for id,fish in pairs(fishes) do
 end
 
 for _,region in ipairs(regions) do
+    local bounds = region.Bounds
+
+    -- Set the bounds to use width/height for 3rd and 4th element, instead of coords.
+    bounds[3] = bounds[3] - bounds[1]
+    bounds[4] = bounds[2] - bounds[4]
+
     Fishing.RegisterRegion(region)
 end
