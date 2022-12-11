@@ -137,6 +137,11 @@ function _Element:GetPosition()
     return mc.GetPositionX(), mc.GetPositionY()
 end
 
+---@param visible boolean
+function _Element:SetVisible(visible)
+    self:GetMovieClip().SetVisible(visible)
+end
+
 ---Sets the size override, used to override the element size within list-like elements.
 ---@overload fun(self:GenericUI_Element, size:Vector2)
 ---@param width number

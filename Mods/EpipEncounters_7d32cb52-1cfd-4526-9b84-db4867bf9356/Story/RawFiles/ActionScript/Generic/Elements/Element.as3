@@ -208,6 +208,11 @@ package Elements
             }
         }
 
+        public function SetVisible(visible:Boolean) : *
+        {
+            this.visible = visible;
+        }
+
         public function SetMouseEnabled(enabled:Boolean) : *
         {
             this.mouseEnabled = enabled;
