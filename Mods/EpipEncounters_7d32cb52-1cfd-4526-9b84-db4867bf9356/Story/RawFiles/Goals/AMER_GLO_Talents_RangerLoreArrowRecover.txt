@@ -46,6 +46,8 @@ PROC PROC_AMER_Combat_TurnStarted((CHARACTERGUID)_Char, (INTEGER)_)
 // now happens always, instead of only happening if the sneak was from this talent.
 // AND
 // DB_PIP_Incons_Sneaking(_Char)
+AND
+CharacterHasTalent(_Char, "RangerLoreArrowRecover", 1)
 THEN
 // CharacterStatusText(_Char, "Unsneaking");
 ProcObjectTimer(_Char, "PIP_TricksterRepertoire_Unsneak", 100);
