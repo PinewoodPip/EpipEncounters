@@ -2,12 +2,6 @@ Version 1
 SubGoalCombiner SGC_AND
 INITSECTION
 
-DB_PIP_Setting_Integer("", "", 0);
-NOT DB_PIP_Setting_Integer("", "", 0);
-
-DB_PIP_Setting_Real("", "", 0.0);
-NOT DB_PIP_Setting_Real("", "", 0.0);
-
 DB_PIP_EpicEnemies_AppliedEffect(NULL_00000000-0000-0000-0000-000000000000, "");
 NOT DB_PIP_EpicEnemies_AppliedEffect(NULL_00000000-0000-0000-0000-000000000000, "");
 
@@ -27,17 +21,6 @@ DB_PIP_PreferredTargetDisplay_Tagged(NULL_00000000-0000-0000-0000-000000000000, 
 NOT DB_PIP_PreferredTargetDisplay_Tagged(NULL_00000000-0000-0000-0000-000000000000, NULL_00000000-0000-0000-0000-000000000000);
 
 KBSECTION
-
-// PROC PIP_INT64DB_TEST()
-// AND
-// CharacterGetHostCharacter(_Host)
-// AND
-// DB_LoopEffect(_Host, _Handle, _, _, _, _)
-// AND
-// IntegertoString(_Handle, _Out)
-// THEN
-// CharacterStatusText(_Host, _Out);
-// NRD_ModCall("EpipEncounters", "TestPrint", )
 
 EXITSECTION
 

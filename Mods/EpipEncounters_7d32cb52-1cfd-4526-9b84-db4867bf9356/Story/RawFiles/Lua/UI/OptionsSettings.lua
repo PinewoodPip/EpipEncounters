@@ -650,11 +650,6 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
--- TODO move elsewhere as this is from a feature and not the core library.
-Net.RegisterListener("EPIPENCOUNTERS_ServerSettingSynch", function(payload)
-    OptionsSettings.SetOptionValue(payload.Module, payload.Setting, payload.Value, false)
-end)
-
 -- Render the basic element types
 OptionsSettings:RegisterListener("ElementRenderRequest", function(elementType, data, numID)
     if elementType == "Checkbox" then

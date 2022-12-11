@@ -139,7 +139,6 @@ LOAD_ORDER = {
     "Epip/Server/DefaultHotbarActions.lua",
     "Epip/Server/HotbarServer.lua",
     "Epip/Server/IncompatibleModsWarning.lua",
-    "Epip/Server/ServerSettings.lua",
     {ScriptSet = "Epip/TooltipAdjustments"},
     {ScriptSet = "Epip/WorldTooltipOpenContainers"},
     -- "Epip/Server/FastCasting.lua",
