@@ -1,6 +1,7 @@
 
 ---@class Feature_Fishing
 local Fishing = Epip.GetFeature("Feature_Fishing")
+
 Fishing.Hooks.CanStartFishing = Fishing:AddSubscribableHook("CanStartFishing") ---@type Event<Feature_Fishing_Hook_CanStartFishing>
 
 ---------------------------------------------
@@ -34,6 +35,8 @@ function Fishing.Start(char)
         -- Begin fishing if no listener prevented it.
         if hook.CanStartFishing then
             local fish = Fishing.GetRandomFish(region)
+
+            Fishing._CharactersFishing:Add(char.Handle)
 
             if Fishing:IsDebug() then
                 Client.UI.Notification.ShowNotification("Starting fishing in " .. region.ID)
@@ -92,6 +95,8 @@ end
 ---@param fish Feature_Fishing_Fish TODO rework param
 ---@param reason Feature_Fishing_MinigameExitReason
 function Fishing.Stop(char, fish, reason)
+    Fishing._CharactersFishing:Remove(char.Handle)
+
     Fishing.Events.CharacterStoppedFishing:Throw({
         Character = char,
         Reason = reason,

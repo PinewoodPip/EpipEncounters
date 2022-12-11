@@ -7,8 +7,8 @@ local Fishing = {
     _Fish = {}, ---@type table<string, Feature_Fishing_Fish>
     _RegionsByLevel = DefaultTable.Create({}), ---@type DataStructures_DefaultTable<string, Feature_Fishing_Region[]>
     _RegionsByID = {}, ---@type table<string, Feature_Fishing_Region>
+    _CharactersFishing = Set.Create(), -- Not synchronized across clients!
 
-    FISHING_IN_PROGRESS_TAG = "EPIP_FISHING",
     FISHING_ROD_TEMPLATES = Set.Create({
         "81cbf17f-cc71-4e09-9ab3-ca2a5cb0cefc", -- HAR_FishingRod_A, green fish-shaped lure
         "90cdb693-3564-415a-a8fa-4027b7f76f41", -- HAR_FishingRod_B, classic red/white bobber
@@ -235,7 +235,7 @@ end
 ---@param char Character
 ---@return boolean
 function Fishing.IsFishing(char)
-    return char:IsTagged(Fishing.FISHING_IN_PROGRESS_TAG)
+    return Fishing._CharactersFishing:Contains(char.Handle)
 end
 
 ---@param id string
