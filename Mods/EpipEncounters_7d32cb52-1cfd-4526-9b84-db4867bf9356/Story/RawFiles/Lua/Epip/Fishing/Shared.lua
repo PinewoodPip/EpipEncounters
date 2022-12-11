@@ -131,8 +131,7 @@ Epip.RegisterFeature("Fishing", Fishing)
 
 ---@alias Feature_Fishing_MinigameExitReason "Success"|"Failure"|"Cancelled"
 
----@class Feature_Fishing_Fish : TextLib_DescribableObject
----@field ID string
+---@class Feature_Fishing_Fish : I_Identifiable, I_Describable
 ---@field Icon string? Defaults to the template's icon.
 ---@field TemplateID GUID
 local _Fish = {}
@@ -177,8 +176,7 @@ function _Fish:GetTooltip()
     return tooltip
 end
 
----@class Feature_Fishing_Region
----@field ID string
+---@class Feature_Fishing_Region : I_Identifiable
 ---@field LevelID string
 ---@field Bounds Vector4 X, Y, width, height.
 ---@field Fish Feature_Fishing_Region_FishEntry[]
@@ -201,7 +199,8 @@ local _Region = {
 function Fishing.RegisterFish(data)
     if not data.ID then Fishing:Error("RegisterFish", "Data must include ID.") end
     Inherit(data, _Fish)
-    Text.MakeDescribable(data)
+    Interfaces.Apply(data, "I_Identifiable")
+    Interfaces.Apply(data, "I_Describable")
 
     Fishing._Fish[data.ID] = data
 end
@@ -211,6 +210,7 @@ function Fishing.RegisterRegion(data)
     if not data.ID then Fishing:Error("RegisterRegion", "Data must include ID.") end
     if #data.Fish == 0 then Fishing:Error("RegisterRegion", "Regions must have at least one fish entry.") end
     Inherit(data, _Region)
+    Interfaces.Apply(data, "I_Identifiable")
     
     table.insert(Fishing._RegionsByLevel[data.LevelID], data)
 end

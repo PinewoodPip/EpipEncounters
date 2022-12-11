@@ -467,9 +467,10 @@ end
 
 ---Throws an error.
 ---@param method string
----@param msg string
-function Feature:Error(method, msg)
-    error(Text.Format("%s(): %s", {FormatArgs = {method, msg}}))
+function Feature:Error(method, ...)
+    local params = {...}
+    local str = Text.Join(params, " ")
+    error(Text.Format("%s(): %s", {FormatArgs = {method, str}}))
 end
 
 ---------------------------------------------

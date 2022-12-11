@@ -67,6 +67,13 @@ LOAD_ORDER = {
             "Utilities/DataStructures/Set.lua",
         },
     },
+    {
+        Scripts = {
+            "Utilities/Interfaces/Main.lua",
+            "Utilities/Interfaces/Identifiable.lua",
+            "Utilities/Interfaces/Describable.lua",
+        },
+    },
 
     {ScriptSet = "Utilities/Combat"},
     "Server/Osiris.lua",
