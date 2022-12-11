@@ -1,4 +1,5 @@
 local Generic = Client.UI.Generic
+local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 local V = Vector.Create
 
 ---@class Feature_Fishing
@@ -273,6 +274,7 @@ function UI.Start(ev)
     UI.SnapToCursor()
     UI.UpdateProgressBar()
     UI.UpdateFishIcon()
+    UI.UpdateTutorialText()
     UI:Show()
 
     GameState.Events.RunningTick:Subscribe(UI._OnTick, nil, "Feature_Fishing_UI_Tick")
@@ -353,6 +355,12 @@ function UI.UpdateFishIcon()
     local state = UI.GetGameState()
 
     UI.Elements.Fish:SetIcon(state.CurrentFish:GetIcon(), UI.FISH_ICON_SIZE:unpack())
+end
+
+function UI.UpdateTutorialText()
+    local element = UI.Elements.TutorialText
+
+    element:SetVisible(Fishing.GetTotalFishCaught() <= 0)
 end
 
 function UI.SnapToCursor()
@@ -489,6 +497,11 @@ function Fishing:__Setup()
     local progressBar = panel:AddChild("ProgressBar", "GenericUI_Element_Color")
     progressBar:SetSize(0, 0)
     UI.Elements.ProgressBar = progressBar
+
+    local tutorialText = TextPrefab.Create(UI, "TutorialText", panel, Text.Format(Fishing.TSK["MinigameTutorialHint"], {Color = Color.WHITE}), "Left", V(300, 200))
+    tutorialText:SetStroke(Color.Create(Color.BLACK), 1, 1, 15, 1)
+    tutorialText:SetPosition(UI.SIZE[1] + 10, 0)
+    UI.Elements.TutorialText = tutorialText
 
     UI:Hide()
 end

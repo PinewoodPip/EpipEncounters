@@ -36,6 +36,11 @@ local Fishing = {
     },
 
     TranslatedStrings = {
+        ["hcced1bb7ge818g4803gbf45gf0644370163f"] = {
+            Text = "Hold left-click to raise the bar,\nlet go to have it fall.\n\nKeep the bar by the fish until the yellow bar fills up!",
+            ContextDescription = "Tutorial message",
+            LocalKey = "MinigameTutorialHint",
+        },
         ["h467929cdge276g4833gbcffg7294c0a60514"] = {
             Text = "Fish A",
             ContextDescription = "TODO",
