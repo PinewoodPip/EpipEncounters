@@ -116,6 +116,9 @@ end
 ---@param name string
 ---@param feature Feature
 function Epip.InitializeFeature(id, name, feature)
+    feature.Events = feature.Events or {}
+    feature.Hooks = feature.Hooks or {}
+    
     setmetatable(feature, {__index = _Feature})
 
     feature._Tests = {}

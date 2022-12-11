@@ -12,6 +12,9 @@ UI.Elements = {} -- Holds references to various important elements of the UI.
 UI._GameState = nil ---@type Feature_Fishing_GameState
 UI._GameObjects = {} ---@type Feature_Fishing_GameObject[]
 
+UI.USE_LEGACY_HOOKS = false
+UI.Hooks.GetProgressDrain = UI:AddSubscribableHook("GetProgressDrain") ---@type Event<Feature_Fishing_UI_Hook_GetProgressDrain>
+
 ---------------------------------------------
 -- CONSTANTS
 ---------------------------------------------
@@ -31,6 +34,17 @@ UI.PROGRESS_PER_SECOND = 0.15
 UI.PROGRESS_BAR_WIDTH = 5
 UI.STARTING_PROGRESS = 0.45
 UI.PROGRESS_DRAIN = 0.1
+UI.TUTORIAL_PROGRESS_DRAIN_MULTIPLIER = 0.5
+
+---------------------------------------------
+-- EVENTS/HOOKS
+---------------------------------------------
+
+---@class Feature_Fishing_UI_Hook_GetProgressDrain
+---@field Drain integer Hookable.
+---@field GameState Feature_Fishing_GameState
+---@field Character EclCharacter
+---@field Fish Feature_Fishing_Fish
 
 ---------------------------------------------
 -- CLASSES
@@ -175,7 +189,9 @@ end
 function _Bobber:OnCollideWith(otherObject, deltaTime)
     if otherObject.Type == "Fish" then
         -- Add progress. The drain must be offset.
-        UI.AddProgress((UI.PROGRESS_DRAIN + UI.PROGRESS_PER_SECOND) * deltaTime / 1000)
+        local drain = UI.GetProgressDrain()
+
+        UI.AddProgress((drain + UI.PROGRESS_PER_SECOND) * deltaTime / 1000)
     end
 end
 
@@ -265,6 +281,28 @@ end
 ---@return Feature_Fishing_GameState
 function UI.GetGameState()
     return UI._GameState
+end
+
+---@return EclCharacter?
+function UI.GetCharacter()
+    local state = UI.GetGameState()
+    local char = state and Character.Get(state.CharacterHandle) ---@type EclCharacter
+
+    return char
+end
+
+function UI.GetProgressDrain()
+    local drain = UI.PROGRESS_DRAIN
+    local char = UI.GetCharacter()
+    local state = UI.GetGameState()
+    local hook = UI.Hooks.GetProgressDrain:Throw({
+        GameState = state,
+        Character = char,
+        Drain = drain,
+        Fish = state.CurrentFish,
+    })
+
+    return hook.Drain
 end
 
 function UI.AddProgress(progress)
@@ -395,7 +433,7 @@ end)
 ---@param ev GameStateLib_Event_RunningTick
 function UI._OnTick(ev)
     -- Drain progress.
-    UI.AddProgress(-UI.PROGRESS_DRAIN * ev.DeltaTime / 1000)
+    UI.AddProgress(-UI.GetProgressDrain() * ev.DeltaTime / 1000)
 
     -- Exit the minigame if the client goes into dialogue.
     if Client.IsInDialogue() then
@@ -404,6 +442,14 @@ function UI._OnTick(ev)
         UI.UpdateGameObjects(ev.DeltaTime)
     end
 end
+
+-- If the user is catching fish for the first time, slow down the drain
+-- so as to let give them more time to get used to the controls.
+UI.Hooks.GetProgressDrain:Subscribe(function (ev)
+    if Fishing.GetTotalFishCaught() <= 0 then
+        ev.Drain = ev.Drain * UI.TUTORIAL_PROGRESS_DRAIN_MULTIPLIER
+    end
+end)
 
 ---------------------------------------------
 -- SETUP

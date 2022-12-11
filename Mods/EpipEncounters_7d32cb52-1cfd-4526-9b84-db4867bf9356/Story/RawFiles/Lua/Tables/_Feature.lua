@@ -12,8 +12,6 @@
 ---@field Disabled boolean
 ---@field Logging integer Logging level.
 ---@field Settings table<string, SettingsLib_Setting>
----@field Events table<string, Event> Metatables initialized automatically.
----@field Hooks table<string, Hook> Metatables initialized automatically.
 ---@field LOGGING_LEVEL table<string, integer> Valid logging levels.
 ---@field REQUIRED_MODS table<GUID, string> The feature will be automatically disabled if any required mods are missing.
 ---@field FILEPATH_OVERRIDES table<string, string>

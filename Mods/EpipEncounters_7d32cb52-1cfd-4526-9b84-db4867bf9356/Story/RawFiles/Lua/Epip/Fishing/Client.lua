@@ -76,6 +76,18 @@ function Fishing.GetTimesCaught(fishID)
     return Fishing:GetSettingValue(Fishing.Settings.FishCaught)[fishID] or 0
 end
 
+---@return integer
+function Fishing.GetTotalFishCaught()
+    local fishes = Fishing.GetFishes()
+    local total = 0
+
+    for id,_ in pairs(fishes) do
+        total = total + Fishing.GetTimesCaught(id)
+    end
+
+    return total
+end
+
 ---@param char EclCharacter
 ---@param fish Feature_Fishing_Fish TODO rework param
 ---@param reason Feature_Fishing_MinigameExitReason
