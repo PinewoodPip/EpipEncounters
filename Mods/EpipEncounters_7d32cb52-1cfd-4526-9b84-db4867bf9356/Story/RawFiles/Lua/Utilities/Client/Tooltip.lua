@@ -214,10 +214,23 @@ function Tooltip.ShowSimpleTooltip(data)
 end
 
 ---@param text string
-function Tooltip.ShowMouseTextTooltip(text)
+---@param offset Vector2D?
+function Tooltip.ShowMouseTextTooltip(text, offset)
+    local root = TextDisplay:GetRoot()
+    local mousePos = Vector.Create(Client.GetMousePosition())
+    local position = mousePos
+
+    if offset then
+        position = position + offset
+    end
+
+    root.addText(text, position:unpack())
+end
+
+function Tooltip.HideMouseTextTooltip()
     local root = TextDisplay:GetRoot()
 
-    root.addText(text, Client.GetMousePosition())
+    root.removeText()
 end
 
 ---@param tooltip TooltipLib_CustomFormattedTooltip
