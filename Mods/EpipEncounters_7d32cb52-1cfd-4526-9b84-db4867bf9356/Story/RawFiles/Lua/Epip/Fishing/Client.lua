@@ -1,6 +1,9 @@
 
+local NotificationUI = Client.UI.Notification
+
 ---@class Feature_Fishing
 local Fishing = Epip.GetFeature("Feature_Fishing")
+Fishing.OPEN_LOG_KEYBIND = "EpipEncounters_Fishing_OpenCollectionLog"
 
 Fishing.Hooks.CanStartFishing = Fishing:AddSubscribableHook("CanStartFishing") ---@type Event<Feature_Fishing_Hook_CanStartFishing>
 
@@ -24,7 +27,7 @@ function Fishing.Start(char)
     
     -- Cannot fish in areas with no fishing region.
     if not region then
-        Client.UI.Notification.ShowWarning("There don't seem to be any fish here...")
+        NotificationUI.ShowWarning("There don't seem to be any fish here...")
     else
         local hook = Fishing.Hooks.CanStartFishing:Throw({
             Character = char,
@@ -39,7 +42,7 @@ function Fishing.Start(char)
             Fishing._CharactersFishing:Add(char.Handle)
 
             if Fishing:IsDebug() then
-                Client.UI.Notification.ShowNotification("Starting fishing in " .. region.ID)
+                NotificationUI.ShowNotification("Starting fishing in " .. region.ID)
             end
 
             Fishing.Events.CharacterStartedFishing:Throw({
@@ -55,7 +58,7 @@ function Fishing.Start(char)
             })
         else -- Otherwise show failure reason (if provided)
             if hook.FailureReason then
-                Client.UI.Notification.ShowNotification(hook.FailureReason)
+                NotificationUI.ShowNotification(hook.FailureReason)
             end
         end
         
@@ -97,6 +100,10 @@ end
 function Fishing.Stop(char, fish, reason)
     Fishing._CharactersFishing:Remove(char.Handle)
 
+    if reason == "Success" then
+        Fishing._OnSuccess(fish)
+    end
+
     Fishing.Events.CharacterStoppedFishing:Throw({
         Character = char,
         Reason = reason,
@@ -108,10 +115,6 @@ function Fishing.Stop(char, fish, reason)
         Reason = reason,
         FishID = fish.ID,
     })
-
-    if reason == "Success" then
-        Fishing._OnSuccess(fish)
-    end
 end
 
 ---@param fish Feature_Fishing_Fish
@@ -135,9 +138,25 @@ end
 -- Show notifications for success or failure.
 Fishing.Events.CharacterStoppedFishing:Subscribe(function (ev)
     if ev.Reason == "Success" then
-        Client.UI.Notification.ShowIconNotification(ev.Fish:GetName(), ev.Fish:GetIcon(), nil, "Fish Caught!", nil, "UI_Notification_ReceiveAbility") -- TODO notify about new catches and show how to open the journal
+        local subTitle = nil
+
+        -- Show a hint on how to open the collection log the first time you catch each type of fish.
+        if Fishing.GetTimesCaught(ev.Fish:GetID()) == 1 then
+            local keybinds = Client.UI.OptionsInput.GetKeybinds(Fishing.OPEN_LOG_KEYBIND)
+            local keybind = keybinds.Input1 or keybinds.Input2
+
+            if keybind then
+                subTitle = Text.Format(Fishing.TSK["Toast_Success_Subtitle"], {
+                    FormatArgs = {
+                        Client.UI.OptionsInput.StringifyBinding(keybind, true)
+                    }
+                })
+            end
+        end
+
+        NotificationUI.ShowIconNotification(ev.Fish:GetName(), ev.Fish:GetIcon(), nil, Fishing.TSK["Toast_Success"], subTitle, "UI_Notification_ReceiveAbility") -- TODO notify about new catches and show how to open the journal
     elseif ev.Reason == "Failure" then
-        Client.UI.Notification.ShowWarning("The fish got away...")
+        NotificationUI.ShowWarning("The fish got away...")
     end
 end)
 
