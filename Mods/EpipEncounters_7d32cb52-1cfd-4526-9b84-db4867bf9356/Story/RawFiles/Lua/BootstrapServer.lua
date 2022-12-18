@@ -218,6 +218,8 @@ LOAD_ORDER = {
 
     "Debug/Shared.lua",
     "Debug/Server.lua",
+
+    {ScriptSet = "Epip/AnimationCancelling"},
 }
 
 Ext.Require(prefixedGUID, "Bootstrap.lua")

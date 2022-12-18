@@ -149,6 +149,11 @@ function Character.IsUnsheathed(char)
     return char:GetStatusByType("UNSHEATHED") ~= nil
 end
 
+---Returns whether char is currently the active character of any player.
+function Character.IsActive(char)
+    return Osiris.CharacterIsControlled(char) == 1
+end
+
 ---Returns whether char has an owner.
 ---@param char Character
 ---@return boolean

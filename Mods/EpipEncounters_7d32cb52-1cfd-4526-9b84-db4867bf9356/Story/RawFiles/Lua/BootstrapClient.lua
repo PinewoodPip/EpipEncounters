@@ -497,6 +497,8 @@ LOAD_ORDER = {
     "Epip/Client/HideIncons.lua",
 
     "Epip/Client/EpipSettingsMenu.lua",
+
+    {ScriptSet = "Epip/AnimationCancelling"},
 }
 
 Utilities = {}

@@ -26,6 +26,7 @@ local tabs = {
             "Feature_WalkOnCorpses",
             "CombatLogImprovements",
             "PreferredTargetDisplay",
+            {Type = "Setting", Module = "EpipEncounters_AnimationCancelling", ID = "Enabled"}
         }
     },
     ["Epip_Hotbar"] = {
