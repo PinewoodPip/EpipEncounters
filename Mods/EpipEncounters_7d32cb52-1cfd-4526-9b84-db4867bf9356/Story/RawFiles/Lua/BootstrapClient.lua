@@ -477,6 +477,8 @@ LOAD_ORDER = {
             "Epip/Fishing/GameObjects/Bobber.lua",
 
             "Epip/Fishing/Client_CollectionLogUI.lua",
+
+            "Epip/Fishing/Client_CharacterTask.lua",
         }
     },
 

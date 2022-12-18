@@ -66,12 +66,21 @@ function Fishing.Start(char)
 end
 
 ---@param char EclCharacter?
+---@param searchRadius number? Defaults to WATER_SEARCH_RADIUS.
 ---@return boolean
-function Fishing.IsNearWater(char)
+function Fishing.IsNearWater(char, searchRadius)
     char = char or Client.GetCharacter()
-    local grid = Ext.Entity.GetAiGrid()
     local position = char.WorldPos
-    local foundCell = grid:SearchForCell(position[1], position[3], Fishing.WATER_SEARCH_RADIUS, "Deepwater", 0)
+
+    return Fishing.IsPositionNearWater(Vector.Create(position), searchRadius)
+end
+
+---@param position Vector3D
+---@param searchRadius number? Defaults to WATER_SEARCH_RADIUS.
+---@return boolean
+function Fishing.IsPositionNearWater(position, searchRadius)
+    local grid = Ext.Entity.GetAiGrid()
+    local foundCell = grid:SearchForCell(position[1], position[3], searchRadius or Fishing.WATER_SEARCH_RADIUS, "Deepwater", 0)
 
     return foundCell
 end

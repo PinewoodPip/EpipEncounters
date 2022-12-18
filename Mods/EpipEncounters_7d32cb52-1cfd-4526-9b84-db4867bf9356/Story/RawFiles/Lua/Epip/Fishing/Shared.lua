@@ -41,6 +41,22 @@ local Fishing = {
             ContextDescription = "Tutorial message",
             LocalKey = "MinigameTutorialHint",
         },
+        ["h25bb86bcge5edg4a61g9ebdgce438fa04de1"] = {
+            Text = "Fish Caught!",
+            ContextDescription = "Toast notification for minigame success",
+            LocalKey = "Toast_Success",
+        },
+        ["h13c51b21g9d2bg4489g9e4bg460b162e8b3c"] = {
+            Text = "Press %s to open the collection log.",
+            ContextDescription = "Toast notification for minigame success, when catching new types of fish",
+            LocalKey = "Toast_Success_Subtitle",
+        },
+        ["h26c81552g4b40g4f9bg88c5g0380578c6964"] = {
+            Text = "Click to start fishing.",
+            ContextDescription = "Mouseover text for fishable areas",
+            LocalKey = "CharacterTask_MouseTextTooltip",
+        },
+
         ["h467929cdge276g4833gbcffg7294c0a60514"] = {
             Text = "Fish A",
             ContextDescription = "TODO",
@@ -90,6 +106,84 @@ local Fishing = {
             Text = "Fish E",
             ContextDescription = "TODO",
             LocalKey = "FishE_Description",
+        },
+
+        -- Fish
+        ["h141d4a29g7c4fg4f1fgb731g041599f3bed1"] = {
+            Text = "Bluefish",
+            ContextDescription = "Bluefish name",
+            LocalKey = "Bluefish_Name",
+        },
+        ["h76a85cf9gf73fg4872g9af8gf7669011a879"] = {
+            Text = "Known as \"tailors\" in foreign lands, the bluefish favor temperate, subtropical waters.",
+            ContextDescription = "Bluefish description",
+            LocalKey = "Bluefish_Description",
+        },
+
+        ["h38178e46g2bd2g4a6eg8fdbgac07a828b84e"] = {
+            Text = "Perch",
+            ContextDescription = "Perch name",
+            LocalKey = "Perch_Name",
+        },
+        ["h1cb6821fgd35eg4186g9898gda566c626444"] = {
+            Text = "Though small, perches have become a fisherman's favorite for the fight they put up - and the tasty dinner that results afterwards.",
+            ContextDescription = "Perch description",
+            LocalKey = "Perch_Description",
+        },
+
+        ["h11ccc999gf9b1g4f84gb988g336d5fef8867"] = {
+            Text = "Swordfish",
+            ContextDescription = "Swordfish name",
+            LocalKey = "Swordfish_Name",
+        },
+        ["he360edb5g6cddg442dgaaf0g09f9862ee688"] = {
+            Text = "Despite their impressively pointed bill, the swordfish are not particularly popular swords.",
+            ContextDescription = "Swordfish description",
+            LocalKey = "Swordfish_Description",
+        },
+
+        ["h74cbecd6gf6f6g466dgae10ga62172e84861"] = {
+            Text = "Wolffish",
+            ContextDescription = "Wolffish name",
+            LocalKey = "Wolffish_Name",
+        },
+        ["h972baf77g22c3g43c3gb406gda7196bad1e8"] = {
+            Text = "Known by many terrifying names, the wolffish patrol the seabed, staying warm through a natural antifreeze in their blood.",
+            ContextDescription = "Wolffish description",
+            LocalKey = "Wolffish_Description",
+        },
+
+        ["h0b82f63cg83b4g4284g922agba1c2cbac71f"] = {
+            Text = "Moi",
+            ContextDescription = "Moi name",
+            LocalKey = "Moi_Name",
+        },
+        ["h51d2668dg4b4ag43bdg819bg68b66dd9070d"] = {
+            Text = "Distinguished by their silver scales and whiskers, the Moi traditionally used to be delicacies reserved for only the finest chefs.",
+            ContextDescription = "Moi description",
+            LocalKey = "Moi_Description",
+        },
+
+        ["h77c88602gcf61g48ffg99cdg058e686dab45"] = {
+            Text = "Mahi-mahi",
+            ContextDescription = "Mahi-mahi name",
+            LocalKey = "Mahimahi_Name",
+        },
+        ["h83c4f9cegcc30g4fafg9071g62fac5469f3d"] = {
+            Text = "Despite being carnivorous, the mahi-mahi like to scour the surface waters for sargassum algae.",
+            ContextDescription = "Mahi-mahi description",
+            LocalKey = "Mahimahi_Description",
+        },
+
+        ["hf0de72a5gf56bg4f02g8b8cg064de7a27c43"] = {
+            Text = "Starfish",
+            ContextDescription = "Starfish name",
+            LocalKey = "Starfish_Name",
+        },
+        ["h11236241g8b34g4b56g9ce6g43656ffa7e47"] = {
+            Text = "TODO",
+            ContextDescription = "Starfish description",
+            LocalKey = "Starfish_Description",
         },
     },
 

@@ -9,6 +9,154 @@ Housing.selectedFurniture = nil ---@type Feature_Housing_SelectedFurniture
 Housing.furnitureYAxisStep = 0.5
 Housing.FURNITURE_ROTATION_STEP = 0.1
 
+local _MovementTask = {}
+
+function _MovementTask:Enter()
+    print("entering...")
+    if not self:HasValidTarget() then return false end
+    
+    local pointer = Ext.UI.GetPickingState(1)
+        local handle = pointer.HoverItem or pointer.PlaceableEntity
+        
+        if handle then
+            local obj = Ext.Entity.GetGameObject(handle)
+
+            if obj then
+                Housing.SelectFurniture(obj, handle)
+                self.Running = true
+                print("entered!")
+                return true
+            end
+        end
+
+    return false
+end
+
+function _MovementTask:SetCursor()
+    local cc = Ext.UI.GetCursorControl()
+
+    if self.Running then
+        cc.MouseCursor = "CursorItemMove"
+
+        cc.RequestedFlags = 0x30
+        SetCursorText(Text.Format("Left-click to place.<br>Ctrl+Mouse Wheel to lower/raise", {
+            Color = Color.LARIAN.GREEN,
+        }))
+    elseif self.Previewing then
+        cc.MouseCursor = "CursorItemMove"
+    else
+        cc.MouseCursor = "CursorSystem"
+    end
+end
+
+function _MovementTask:Update()
+    print("updating")
+    self:SetCursor()
+
+    return self._RequestStop
+end
+
+function _MovementTask:CanEnter() -- Necessary for preview to be entered. Called when the priority is highest
+    -- print("canenter")
+    return self:HasValidTarget() and Client.Input.IsAltPressed()
+end
+
+function _MovementTask:CanExit()
+    Ext.Print("CanExit")
+    return not Client.Input.IsAltPressed()
+end
+
+function _MovementTask:CanExit2()
+    Ext.Print("CanExit2")
+    return not Client.Input.IsAltPressed()
+end
+
+function _MovementTask:ExitPreview()
+    Ext.Print("ExitPreview")
+    self.Previewing = false
+end
+
+function _MovementTask:Exit()
+    self.Running = false
+    Housing.PlaceMovingFurniture()
+end
+
+function _MovementTask:GetPriority(previousPriority)
+    -- print(self)
+    if previousPriority < 9999 and self:HasValidTarget() then
+        -- print("high prio")
+        return 9999
+    end
+
+    return 0
+end
+
+function _MovementTask:GetDescription()
+    return "asdasd"
+end
+
+function _MovementTask:GetExecutePriority(previousPriority)
+    return self:GetPriority(previousPriority)
+end
+
+function _MovementTask:Start() -- When left clicked
+    print("start")
+    self._RequestStop = false
+end
+
+function _MovementTask:Stop() -- When cancelled by right-click
+    print("stop")
+    self._RequestStop = false
+    Housing.PlaceMovingFurniture()
+end
+
+function _MovementTask:HasValidTargetPos()
+    return (Ext.UI.GetPickingHelper().WalkableAiFlags & 1) == 0
+end
+
+function _MovementTask:HasValidTarget()
+    local pointer = Ext.UI.GetPickingState(1)
+    local handle = pointer.HoverItem or pointer.PlaceableEntity
+    
+    if handle then
+        local obj = Ext.Entity.GetGameObject(handle)
+
+        if obj then
+            return true
+        end
+    end
+
+    return false
+end
+
+function _MovementTask:UpdatePreview()
+    -- print("updating preview")
+end
+
+_MovementTask.GetError = function (self)
+    if self.Running and not _MovementTask:HasValidTargetPos() then
+       return 4
+    else
+       return 0
+    end
+ end
+
+function _MovementTask:EnterPreview() -- Called when the task has high enough priority
+    Ext.Print("EnterPreview")
+    self.Previewing = true
+end
+
+function _MovementTask:HandleInputEvent(ev, state)
+    local evDesc = Ext.Input.GetInputManager().InputDefinitions[ev.EventId]
+    if evDesc.EventName == "Action1" and ev.OldValue.State == "Pressed" and Client.Input.IsAltPressed() and not _MovementTask.Running and self.Previewing and self:HasValidTarget() then
+        state.RequestRun = true
+        print(Text.Dump(state))
+    elseif _MovementTask.Running and evDesc.EventName == "Action1" and ev.OldValue.State == "Pressed" then
+        -- Housing.PlaceMovingFurniture()
+        -- _MovementTask:Exit()
+    end
+end
+
 ---@class Feature_Housing_SelectedFurniture
 ---@field Handle EntityHandle
 ---@field EntityType "Item"|"Scenery"
@@ -104,6 +252,9 @@ function Housing.SelectFurniture(obj, handle)
     -- Client.UI.Input.ToggleEventCapture(Client.Input.FLASH_EVENTS.CONTEXT_MENU, true, "Housing")
 
     Client.UI.Input.SetMouseWheelBlocked(true)
+
+    -- Ext.UI.RegisterCharacterTask(Client.GetCharacter(), _MovementTask)
+    -- _MovementTask.RequestRun = true
 end
 
 function Housing.PlaceMovingFurniture()
@@ -239,6 +390,73 @@ end)
 -- Place down moving furniture.
 Client.Input.Events.MouseButtonPressed:Subscribe(function (e)
     if Housing.IsMovingFurniture() and (e.InputID == "left2" or e.InputID == "right2") then
-        Housing.PlaceMovingFurniture()
+        -- Housing.PlaceMovingFurniture()
+        _MovementTask._RequestStop = true
     end
+end)
+
+-- userAction.HandleInputEvent = function (self, ev, state)
+--     local evDesc = Ext.Input.GetInputManager().InputDefinitions[ev.EventId]
+--     if evDesc.EventName == "Action1" and ev.OldValue.State == "Pressed" and ev.NewValue.State == "Released" then
+--        if not self.Running and self.Previewing and self:HasValidTarget() then
+--           Ext.Print("RequestRun")
+--           state.RequestRun = true
+--        end
+       
+--        if self.Running and self:HasValidTargetPos() then
+--           Ext.PrintWarning("HIT!!!!!")
+--           local pos = Ext.UI.GetPickingHelper().WalkablePos.Position
+--           Ext.PrintWarning("Move " .. tostring(self.Target) .. " to " .. pos[1] .. "," .. pos[2] .. "," .. pos[3])
+--        end
+--     end
+--  end
+
+function ClearCursorText()
+    local cc = Ext.UI.GetCursorControl()
+    if cc.HasTextDisplay then
+       local ui = Ext.UI.GetByHandle(cc.TextDisplayUIHandle)
+       if ui.Text ~= "" then
+          ui:GetRoot().removeText()
+          ui.Text = ""
+       end
+       cc.HasTextDisplay = false
+    end
+end
+ 
+function SetCursorText(text)
+    local cc = Ext.UI.GetCursorControl()
+    local ui = Ext.UI.GetByHandle(cc.TextDisplayUIHandle)
+    local pos = Ext.UI.GetMouseFlashPos(ui)
+    if ui.Text ~= text then
+       ui:GetRoot().addText(text, pos[1], pos[2])
+       ui.Text = text
+    elseif (ui.WorldScreenPositionX ~= pos[1] or ui.WorldScreenPositionY ~= pos[2]) then
+       ui:GetRoot().moveText(pos[1], pos[2])
+    end
+    cc.HasTextDisplay = true
+ end
+ 
+-- local userAction = {
+--     Running = false,
+--     Previewing = false,
+--     Target = nil
+-- }
+
+-- userAction.HandleInputEvent = function (self, ev, state)
+--    if evDesc.EventName == "Action1" and ev.OldValue.State == "Pressed" and ev.NewValue.State == "Released" then
+--       if not self.Running and self.Previewing and self:HasValidTarget() then
+--          Ext.Print("RequestRun")
+--          state.RequestRun = true
+--       end
+      
+--       if self.Running and self:HasValidTargetPos() then
+--          Ext.PrintWarning("HIT!!!!!")
+--          local pos = Ext.UI.GetPickingHelper().WalkablePos.Position
+--          Ext.PrintWarning("Move " .. tostring(self.Target) .. " to " .. pos[1] .. "," .. pos[2] .. "," .. pos[3])
+--       end
+--    end
+-- end
+
+Ext.Events.SessionLoaded:Subscribe(function (e)
+    Ext.UI.RegisterCharacterTask(Client.GetCharacter(), _MovementTask)
 end)
