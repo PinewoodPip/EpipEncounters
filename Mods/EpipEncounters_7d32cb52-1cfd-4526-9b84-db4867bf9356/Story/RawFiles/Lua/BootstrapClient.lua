@@ -499,6 +499,17 @@ LOAD_ORDER = {
     "Epip/Client/EpipSettingsMenu.lua",
 
     {ScriptSet = "Epip/AnimationCancelling"},
+
+    {
+        Scripts = {
+            "Utilities/Image/Shared.lua",
+            "Utilities/Image/_Decoder.lua",
+            "Utilities/Image/Decoders/PNG/Decoder.lua",
+            -- "Utilities/Image/Decoders/PNG/Chunks/IHDR.lua", -- TODO
+            -- "Utilities/Image/Decoders/PNG/Chunks/IDAT.lua",
+            -- "Utilities/Image/Decoders/PNG/Chunks/IEND.lua",
+        }
+    }
 }
 
 Utilities = {}

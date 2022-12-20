@@ -32,12 +32,13 @@ end
 ---Loads a file.
 ---@param filename string
 ---@param context ("user"|"data")? Defaults to "user"
+---@param raw boolean? Defaults to false.
 ---@return any
-function IO.LoadFile(filename, context)
+function IO.LoadFile(filename, context, raw)
     context = context or "user"
     local contents = Ext.IO.LoadFile(filename, context)
 
-    if contents then
+    if contents and not raw then
         contents = Ext.Json.Parse(contents)
     end
 

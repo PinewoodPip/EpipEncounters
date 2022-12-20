@@ -303,6 +303,16 @@ end
 function Feature:OnFeatureInit() end
 
 ---------------------------------------------
+-- TSK METHODS
+---------------------------------------------
+
+---@param localKey string
+---@return TranslatedStringHandle?
+function Feature:GetTranslatedStringHandleForKey(localKey)
+    return self._localTranslatedStringKeys[localKey]
+end
+
+---------------------------------------------
 -- SETTINGSLIB METHODS
 ---------------------------------------------
 
@@ -416,6 +426,15 @@ end
 function Feature:DebugLog(...)
     if self:IsDebug() and not IS_IMPROVED_HOTBAR then
         Utilities._Log(self.NAME, "", ...)
+    end
+end
+
+---Log a message in the format "[MODULE] method(): msg"
+---@param method any
+---@param ... any
+function Feature:LogMethod(method, ...)
+    if self:IsDebug() and not IS_IMPROVED_HOTBAR then
+        Utilities._Log(self.NAME, string.format("%s():", method), ...)
     end
 end
 
