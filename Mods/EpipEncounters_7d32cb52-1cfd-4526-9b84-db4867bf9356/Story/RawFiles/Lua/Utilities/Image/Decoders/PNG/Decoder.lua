@@ -6,6 +6,9 @@ local Image = Client.Image
 ---@field Essential true?
 ---@field Name string
 
+---@class ImageLib_Decoder_PNG_ChunkParser
+---@field ReadChunk fun(self:ImageLib_Decoder_PNG, byteCount:integer)
+
 ---@class ImageLib_Decoder_PNG : ImageLib_Decoder
 local _PNG = {
     ---@type table<string, ImageLib_Decoder_PNG_ChunkDescriptor>
@@ -20,10 +23,24 @@ local _PNG = {
         zTXt = {Hex = "7A 54 58 74"},
         iTXt = {Hex = "69 54 58 74"},
     },
+    _ChunkParsers = {}, ---@type table<string, ImageLib_Decoder_PNG_ChunkParser>
+    _Finished = false,
 }
 for k,v in pairs(_PNG.CHUNKS) do v.Name = k end
 Inherit(_PNG, Image.GetDecoder("ImageLib_Decoder"))
 Image.RegisterDecoder("ImageLib_Decoder_PNG", _PNG)
+
+---@param chunkHex string
+---@param parserClass ImageLib_Decoder_PNG_ChunkParser
+function _PNG.RegisterChunkParser(chunkHex, parserClass)
+    _PNG._ChunkParsers[chunkHex] = parserClass
+end
+
+---@param chunkHex string
+---@return ImageLib_Decoder_PNG_ChunkParser
+function _PNG.GetChunkParser(chunkHex)
+    return _PNG._ChunkParsers[chunkHex]
+end
 
 local function toHex(str)
     local valStr = string.format("%x", str)
@@ -54,7 +71,7 @@ function _PNG:Decode()
     self.Index = 1
 
     self:ReadHeader()
-    while self.Index <= #self.Bytes do
+    while self.Index <= #self.Bytes and not self._Finished do
         self:ReadChunk()
     end
 
@@ -81,64 +98,9 @@ function _PNG:ReadChunk()
     Image:DebugLog("ReadChunk", "Next chunk size", self:ToSpacedHex(chunkSizeBytes))
 
     -- IHDR chunk, first one
-    local width, height, bitDepth, colorType, compressionType, filterMethod, interlaceMethod
-    if chunkType == self.CHUNKS.IHDR.Hex then -- IHDR chunk
-        Image:DebugLog("Found IHDR chunk")
-
-        width = self:ConsumeInteger(4)
-        height = self:ConsumeInteger(4)
-        bitDepth = self:ConsumeInteger(1)
-        colorType = self:ConsumeInteger(1)
-        compressionType = self:ConsumeInteger(1)
-        filterMethod = self:ConsumeInteger(1)
-        interlaceMethod = self:ConsumeInteger(1)
-
-        self.Width = width
-        self.Height = height
-        self.BitDepth = bitDepth
-        self.ColorType = colorType
-        self.CompressionType = compressionType
-        self.FilterMethod = filterMethod
-        self.InterlaceMethod = interlaceMethod
-        
-        Image:DebugLog("IHDR chunk:")
-        Image:Dump({
-            Width = width,
-            Height = height,
-            BitDepth = bitDepth,
-            ColorType = colorType, -- TODO implement the various color types, at least 2 (truecolor, rgb) and 6 (truecolor and alpha)
-            CompressionType = compressionType,
-            FilterMethod = filterMethod, -- TODO implement; alters the compression
-            InterlaceMethod = interlaceMethod, -- TODO only allow 0 (no Adam7)
-        })
-    elseif chunkType == self.CHUNKS.IDAT.Hex then
-        Image:DebugLog("ReadChunk", "Found IDAT chunk")
-        -- local dataChunkByteCount = self:ConsumeInteger(4)
-        local method = self:ConsumeInteger(1)
-        local flag = self:ConsumeInteger(1)
-        local bytes = self:ConsumeBytes(chunkSize - 1 - 1 - 4)
-        local adler32 = self:ConsumeInteger(4)
-
-        print("Method, flag, adler32")
-        print(method, flag, adler32)
-
-        local compressed = ""
-        for _,byte in ipairs(bytes) do
-            compressed = compressed .. string.char(byte)
-        end
-        local decompressed = Image.LibDeflate:DecompressDeflate(compressed)
-        -- print(compressed, #compressed)
-        -- print(decompressed, #decompressed)
-
-        local bytesDecompressed = {}
-        for i=1,#decompressed,1 do
-            table.insert(bytesDecompressed, string.byte(decompressed:sub(i, i)))
-        end
-
-        self:PrintHex(bytesDecompressed, "Image data")
-    elseif chunkType == self.CHUNKS.IEND.Hex then
-        Image:DebugLog("ReadChunk", "Found IEND/eof chunk")
-        self:ConsumeBytes(chunkSize)
+    local parser = _PNG.GetChunkParser(chunkType)
+    if parser then
+        parser.ReadChunk(self, chunkSize)
     else
         local chunkData = self:GetChunkData(chunkType)
 

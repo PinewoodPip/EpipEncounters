@@ -505,9 +505,9 @@ LOAD_ORDER = {
             "Utilities/Image/Shared.lua",
             "Utilities/Image/_Decoder.lua",
             "Utilities/Image/Decoders/PNG/Decoder.lua",
-            -- "Utilities/Image/Decoders/PNG/Chunks/IHDR.lua", -- TODO
-            -- "Utilities/Image/Decoders/PNG/Chunks/IDAT.lua",
-            -- "Utilities/Image/Decoders/PNG/Chunks/IEND.lua",
+            "Utilities/Image/Decoders/PNG/Chunks/IHDR.lua",
+            "Utilities/Image/Decoders/PNG/Chunks/IDAT.lua",
+            "Utilities/Image/Decoders/PNG/Chunks/IEND.lua",
         }
     }
 }
