@@ -16,6 +16,48 @@ Image:Debug()
 
 ---@alias ImageLib_ByteStream integer[]
 
+---@class ImageLib_Image
+---@field Pixels RGBColor[][] Pixel matrix. Indexing is row, column.
+---@field Width integer
+---@field Height integer
+local _Image = {
+    _PixelsAdded = 0,
+}
+
+---@param width integer
+---@param height integer
+---@return ImageLib_Image
+function _Image.Create(width, height)
+    ---@type ImageLib_Image
+    local tbl = {
+        Pixels = {},
+        Width = width,
+        Height = height
+    }
+    Inherit(tbl, _Image)
+
+    -- Create rows
+    for i=1,height,1 do
+        tbl.Pixels[i] = {}
+    end
+
+    return tbl
+end
+
+---@param color RGBColor
+function _Image:AddPixel(color)
+    if self._PixelsAdded >= self.Width * self.Height then
+        Image:Error("Image:AddPixel", "All pixels have already been added.")
+    end
+
+    local row = (self._PixelsAdded // self.Width) + 1
+    local column = (self._PixelsAdded - (row - 1)*self.Height) + 1
+
+    self.Pixels[row][column] = color
+
+    self._PixelsAdded = self._PixelsAdded + 1
+end
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
@@ -33,11 +75,18 @@ function Image.GetDecoder(className)
     return Image._Decoders[className]
 end
 
+---@param width integer
+---@param height integer
+---@return ImageLib_Image
+function Image.CreateImage(width, height)
+    return _Image.Create(width, height)
+end
+
 ---------------------------------------------
 -- TESTS
 ---------------------------------------------
 
-local testFilename = "test.png"
+local testFilename = "test_rgb.png"
 function Image:__Test()
     local PNG = Image.GetDecoder("ImageLib_Decoder_PNG")
     local pngDecoder = PNG:Create(testFilename)

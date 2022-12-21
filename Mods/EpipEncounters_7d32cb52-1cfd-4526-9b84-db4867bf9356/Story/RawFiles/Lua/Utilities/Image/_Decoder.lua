@@ -36,6 +36,12 @@ local function toHex(str)
     return valStr:upper()
 end
 
+---@param width integer
+---@param height integer
+function _Decoder:CreateImage(width, height)
+    self.Image = Image.CreateImage(width, height)
+end
+
 ---@param bytes ImageLib_ByteStream
 ---@return integer
 function _Decoder:BytesToNumber(bytes)

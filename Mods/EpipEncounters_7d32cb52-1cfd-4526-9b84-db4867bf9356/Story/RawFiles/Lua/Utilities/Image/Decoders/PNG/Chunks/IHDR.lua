@@ -39,5 +39,8 @@ function IHDR.ReadChunk(png, _)
         FilterMethod = filterMethod, -- TODO implement; alters the compression
         InterlaceMethod = interlaceMethod, -- TODO only allow 0 (no Adam7)
     })
+
+    -- Can initialize image at this point
+    png:CreateImage(width, height)
 end
 

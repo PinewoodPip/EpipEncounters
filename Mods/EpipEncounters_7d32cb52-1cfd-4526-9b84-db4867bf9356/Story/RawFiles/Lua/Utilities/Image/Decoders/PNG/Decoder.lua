@@ -25,6 +25,14 @@ local _PNG = {
     },
     _ChunkParsers = {}, ---@type table<string, ImageLib_Decoder_PNG_ChunkParser>
     _Finished = false,
+
+    Width = nil, ---@type integer
+    Height = nil, ---@type integer
+    BitDepth = nil, ---@type integer
+    ColorType = nil, ---@type integer -- TODO implement the various color types, at least 2 (truecolor, rgb) and 6 (truecolor and alpha)
+    CompressionType = nil, ---@type integer
+    FilterMethod = nil, ---@type integer
+    InterlaceMethod = nil, ---@type integer -- TODO only allow 0 (no Adam7)
 }
 for k,v in pairs(_PNG.CHUNKS) do v.Name = k end
 Inherit(_PNG, Image.GetDecoder("ImageLib_Decoder"))
@@ -76,6 +84,7 @@ function _PNG:Decode()
     end
 
     Image:DebugLog("PNG.Decode()", "Decoder reached end")
+    Image:Dump(self.Image)
 end
 
 function _PNG:ReadHeader()
