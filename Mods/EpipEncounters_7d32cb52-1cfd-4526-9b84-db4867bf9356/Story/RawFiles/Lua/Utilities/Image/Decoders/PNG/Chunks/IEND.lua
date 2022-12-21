@@ -13,4 +13,5 @@ function IEND.ReadChunk(png, byteCount)
     png:ConsumeBytes(byteCount)
 
     png._Finished = true
+    png:DecompressData()
 end
