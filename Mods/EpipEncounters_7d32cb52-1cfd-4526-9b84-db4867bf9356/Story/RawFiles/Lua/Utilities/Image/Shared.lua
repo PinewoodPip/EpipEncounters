@@ -51,7 +51,7 @@ function _Image:AddPixel(color)
     end
 
     local row = (self._PixelsAdded // self.Width) + 1
-    local column = (self._PixelsAdded - (row - 1)*self.Height) + 1
+    local column = (self._PixelsAdded - (row - 1)*self.Width) + 1
 
     self.Pixels[row][column] = color
 
