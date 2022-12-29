@@ -162,14 +162,14 @@ function Timer.Start(id, seconds, handler, timerType)
     return entry
 end
 
----@overload fun(seconds:number, handler?:fun(ev:TimerLib_Event_TimerCompleted), id?:string):TimerLib_TickTimerEntry
+---@overload fun(ticks:number, handler?:fun(ev:TimerLib_Event_TimerCompleted), id?:string):TimerLib_TickTimerEntry
 ---@param id string?
----@param seconds number
+---@param ticks number
 ---@param handler fun(ev:TimerLib_Event_TimerCompleted)
 ---@return TimerLib_TickTimerEntry
-function Timer.StartTickTimer(id, seconds, handler)
+function Timer.StartTickTimer(id, ticks, handler)
     ---@diagnostic disable-next-line: return-type-mismatch
-    return Timer.Start(id, seconds, handler, "Tick") -- wtf lmao what is this diagnostic
+    return Timer.Start(id, ticks, handler, "Tick") -- wtf lmao what is this diagnostic
 end
 
 ---Returns the timer with the passed string ID.

@@ -77,7 +77,7 @@ end
 ---@field Size number
 ---@field Color string
 ---@field Align FontAlign
----@field FormatArgs any[]
+---@field FormatArgs (any|TextFormatData)[]
 ---@field Text? string Used for formatting strings with recursive Text.Format calls.
 ---@field RemovePreviousFormatting boolean Defaults to false.
 local _TextFormatData = {
