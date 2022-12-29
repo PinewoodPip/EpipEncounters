@@ -56,6 +56,11 @@ local Fishing = {
             ContextDescription = "Mouseover text for fishable areas",
             LocalKey = "CharacterTask_MouseTextTooltip",
         },
+        ["hf433845bg662bg4cdegbbd5g002d2abb4743"] = {
+            Text = "You haven't caught this fish yet.",
+            ContextDescription = "Tooltip for fish not registered in collection log",
+            LocalKey = "CollectionLog_UncaughtFish",
+        },
 
         ["h467929cdge276g4833gbcffg7294c0a60514"] = {
             Text = "Fish A",

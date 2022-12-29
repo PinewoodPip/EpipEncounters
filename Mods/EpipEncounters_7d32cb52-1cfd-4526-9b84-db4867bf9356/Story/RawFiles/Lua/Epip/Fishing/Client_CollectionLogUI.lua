@@ -17,10 +17,34 @@ UI.KEYBIND = "EpipEncounters_Fishing_OpenCollectionLog"
 UI.FISH_SIZE = V(64, 64)
 UI.FISH_GRID_SIZE = V(500, 300)
 UI.UNCAUGHT_FISH_MATERIAL = "126592b3-f4b0-4652-9fd5-a81a9619c447"
+UI.UNCAUGHT_FISH_TOOLTIP = { ---@type TooltipLib_FormattedTooltip
+    Elements = {
+        {
+            Type = "ItemName",
+            Label = "???",
+        },
+        {
+            Type = "SkillDescription",
+            Label = Fishing.TSK["CollectionLog_UncaughtFish"],
+        },
+        {
+            Type = "ItemRarity",
+            Label = "???",
+        },
+    }
+}
 
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
+
+---@param id string
+---@return TooltipLib_FormattedTooltip
+function UI.GetFishTooltip(id)
+    local fish = Fishing.GetFish(id)
+
+    return Fishing.GetTimesCaught(fish.ID) > 0 and fish:GetTooltip() or UI.UNCAUGHT_FISH_TOOLTIP
+end
 
 function UI._SetupFishGrid()
     local grid = UI.FishGrid
@@ -38,7 +62,7 @@ function UI._SetupFishGrid()
         local greyedOut = Fishing.GetTimesCaught(fish.ID) == 0
         local width, height = UI.FISH_SIZE:unpack()
 
-        icon:SetIcon(fish:GetIcon(), width, height, greyedOut and UI.UNCAUGHT_FISH_MATERIAL or nil)
+        icon:SetIcon(greyedOut and "unknown" or fish:GetIcon(), width, height, greyedOut and UI.UNCAUGHT_FISH_MATERIAL or nil)
 
         -- TODO rework Generic to use new tooltip lib
         -- icon.Tooltip = {
@@ -46,7 +70,7 @@ function UI._SetupFishGrid()
         --     Data = fish:GetTooltip(),
         -- }
         icon.Events.MouseOver:Subscribe(function (_)
-            Client.Tooltip.ShowCustomFormattedTooltip(fish:GetTooltip())
+            Client.Tooltip.ShowCustomFormattedTooltip(UI.GetFishTooltip(fish.ID))
         end)
         icon.Events.MouseOut:Subscribe(function (_)
             Client.Tooltip.HideTooltip()
