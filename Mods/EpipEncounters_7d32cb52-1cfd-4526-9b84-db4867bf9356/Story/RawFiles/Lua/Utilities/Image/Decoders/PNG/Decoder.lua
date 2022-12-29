@@ -105,7 +105,7 @@ function _PNG:DecompressData()
         local row = byteArray[i]
         local scanlineFiltering = row[1]
 
-        Image:DebugLog("IDAT.ReadChunk", "Scanline filtering", scanlineFiltering)
+        -- Image:DebugLog("IDAT.ReadChunk", "Scanline filtering", scanlineFiltering)
 
         for j=2,rowLength,1 do -- For each pixel (X bytes, based on channel count). j is 2 because first byte is filter type
             local filteringValue
@@ -159,7 +159,7 @@ function _PNG:DecompressData()
                 Image:Error("IDAT.ReadChunk", "Unimplemented filtering type", scanlineFiltering)
             end
 
-            print("defiltered val", byteX, byteY, currentByte, filteringValue)
+            -- print("defiltered val", byteX, byteY, currentByte, filteringValue)
             currentByte = currentByte + filteringValue
             currentByte = currentByte % 256
             byteArray[byteX][byteY] = currentByte
@@ -213,7 +213,9 @@ function _PNG:Decode()
     end
 
     Image:DebugLog("PNG.Decode()", "Decoder reached end")
-    Image:Dump(self.Image)
+    -- Image:Dump(self.Image)
+
+    return self.Image
 end
 
 function _PNG:ReadHeader()

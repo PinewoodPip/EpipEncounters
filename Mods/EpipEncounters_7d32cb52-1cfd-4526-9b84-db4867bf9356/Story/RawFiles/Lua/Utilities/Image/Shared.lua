@@ -6,7 +6,6 @@ local Image = {
 Client.Image = Image
 Epip.InitializeLibrary("Image", Image)
 Image.LibDeflate = Ext.Require("Utilities/LibDeflate.lua")
-Image:Debug()
 
 ---------------------------------------------
 -- CLASSES

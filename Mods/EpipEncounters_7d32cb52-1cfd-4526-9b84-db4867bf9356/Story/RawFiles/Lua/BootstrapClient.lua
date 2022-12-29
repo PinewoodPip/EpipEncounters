@@ -509,7 +509,9 @@ LOAD_ORDER = {
             "Utilities/Image/Decoders/PNG/Chunks/IDAT.lua",
             "Utilities/Image/Decoders/PNG/Chunks/IEND.lua",
         }
-    }
+    },
+
+    "Epip/Client/ImageViewer.lua",
 }
 
 Utilities = {}

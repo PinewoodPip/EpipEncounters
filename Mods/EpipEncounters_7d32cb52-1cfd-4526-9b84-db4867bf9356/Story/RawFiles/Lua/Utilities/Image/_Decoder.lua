@@ -54,6 +54,7 @@ function _Decoder:BytesToNumber(bytes)
     return tonumber(num, 16)
 end
 
+---@return ImageLib_Image
 function _Decoder:Decode()
     error("Not implemented")
 end
