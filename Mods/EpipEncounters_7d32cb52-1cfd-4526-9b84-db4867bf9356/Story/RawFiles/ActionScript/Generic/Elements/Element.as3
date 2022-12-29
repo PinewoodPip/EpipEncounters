@@ -3,6 +3,8 @@ package Elements
     import LS_Classes.LSPanelHelpers;
     import LS_Classes.tooltipHelper;
     import flash.display.MovieClip;
+    import flash.display.Bitmap;
+    import flash.display.BitmapData;
     import flash.external.ExternalInterface;
     import LS_Classes.listDisplay;
     import flash.text.TextField;
@@ -18,6 +20,8 @@ package Elements
         protected var _ignoreUp = false;
 
         public var CENTER_IN_LIST:Boolean = false;
+
+        public var customBitmap:Bitmap;
         
         public function Element()
         {
@@ -282,6 +286,22 @@ package Elements
         public function onElementRightClick(e:MouseEvent) : *
         {
             ExternalInterface.call("elementRightClick", this.stringID);
+        }
+
+        public function setTexture(width:Number, height:Number, guid:String) : *
+        {
+            if (this.customBitmap != null)
+            {
+                this.removeChild(this.customBitmap);
+            }
+            this.customBitmap = new Bitmap(new BitmapData(1, 1));
+            this.addChild(this.customBitmap);
+            
+            IggyFunctions.setTextureForBitmap(this.customBitmap, guid);
+
+            // Must be done setTextureForBitmap(); initial values for BitmapData constructor are disregarded
+            this.customBitmap.width = width;
+            this.customBitmap.height = height;
         }
     }
 }
