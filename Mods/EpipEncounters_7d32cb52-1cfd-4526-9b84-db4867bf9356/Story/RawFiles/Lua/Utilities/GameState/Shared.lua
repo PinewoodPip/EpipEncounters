@@ -89,6 +89,7 @@ GameState = {
         RunningTick = {}, ---@type Event<GameStateLib_Event_RunningTick>
         LuaResetted = {}, ---@type Event<EmptyEvent>
         ClientReady = {}, ---@type Event<GameStateLib_Event_ClientReady>
+        RegionStarted = {} ---@type Event<GameStateLib_Event_RegionStarted> Server-only.
     }
 }
 Epip.InitializeLibrary("GameState", GameState)
