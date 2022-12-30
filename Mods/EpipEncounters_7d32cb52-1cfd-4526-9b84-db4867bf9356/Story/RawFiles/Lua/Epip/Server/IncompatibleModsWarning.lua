@@ -17,6 +17,7 @@ local Warnings = {
             Mods.UNLEASHED,
             Mods.GREED,
             Mods.LET_THERE_BE_TOOLTIPS,
+            Mods.ANIMATIONS_PLUS,
         },
         [Mods.EPIP_ENCOUNTERS] = {
             Mods.IMPROVED_HOTBAR,
@@ -32,7 +33,7 @@ Epip.RegisterFeature("IncompatibleModsWarning", Warnings)
 -- EVENT LISTENERS
 ---------------------------------------------
 
-Osiris.RegisterSymbolListener("SavegameLoaded", 4, "after", function(_, _, _, _)
+GameState.Events.GameReady:Subscribe(function (ev)
     for baseModGuid,list in pairs(Warnings.INCOMPATIBLE_MODS) do
         if Mod.IsLoaded(baseModGuid) then
             for _,incompatibleModGUID in pairs(list) do

@@ -56,6 +56,7 @@ LOAD_ORDER = {
         },
     },
     {ScriptSet = "Utilities/Entity"},
+    "Server/Osiris.lua",
     {ScriptSet = "Utilities/GameState"},
     "Utilities/Mod.lua",
     "Utilities/Timer.lua",
@@ -76,7 +77,6 @@ LOAD_ORDER = {
     },
 
     {ScriptSet = "Utilities/Combat"},
-    "Server/Osiris.lua",
     {ScriptSet = "Utilities/Artifact"},
 
     -- "Data/Game.lua",
