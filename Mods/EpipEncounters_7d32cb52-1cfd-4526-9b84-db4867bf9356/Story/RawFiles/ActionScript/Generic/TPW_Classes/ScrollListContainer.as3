@@ -342,29 +342,32 @@ package
         
         override public function positionElements() : *
         {
-            if(content_array.length == 0)
+            if(this.content_array.length == 0)
             {
                 return;
             }
-            if(m_NeedsSorting && m_SortOnFieldName && content_array && content_array.length > 1)
+            if(this.m_NeedsSorting && this.m_SortOnFieldName && this.content_array && this.content_array.length > 1)
             {
-                content_array.sortOn(m_SortOnFieldName,m_SortOnOptions);
+                this.content_array.sortOn(m_SortOnFieldName,m_SortOnOptions);
             }
             var _loc1_:* = this.TOP_SPACING;
             var _loc2_:uint = 0;
-            while(_loc2_ < content_array.length)
+            while(_loc2_ < this.content_array.length)
             {
-                content_array[_loc2_].list_pos = _loc2_;
-                content_array[_loc2_].y = _loc1_;
-                if(content_array[_loc2_].CENTER_IN_LIST)
+                this.content_array[_loc2_].list_pos = _loc2_;
+                this.content_array[_loc2_].y = _loc1_;
+
+                if(this.content_array[_loc2_].CENTER_IN_LIST)
                 {
-                content_array[_loc2_].x = this.frameWidth / 2 - content_array[_loc2_].width / 2;
+                    this.content_array[_loc2_].x = this.frameWidth / 2 - this.content_array[_loc2_].width / 2;
                 }
-                content_array[_loc2_].x += SIDE_SPACING;
-                if(content_array[_loc2_].visible)
+                this.content_array[_loc2_].x += SIDE_SPACING;
+
+                if(this.content_array[_loc2_].visible)
                 {
-                _loc1_ += getElementHeight(content_array[_loc2_]) + EL_SPACING;
+                    _loc1_ += this.getElementHeight(content_array[_loc2_]) + EL_SPACING;
                 }
+                
                 _loc2_++;
             }
             this.m_ScrollHeight = _loc1_ - EL_SPACING;

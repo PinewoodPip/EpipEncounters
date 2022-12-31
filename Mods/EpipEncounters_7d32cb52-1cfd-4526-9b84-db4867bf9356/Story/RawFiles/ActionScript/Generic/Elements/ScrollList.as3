@@ -3,7 +3,6 @@ package Elements
     import LS_Classes.LSPanelHelpers;
     import flash.display.MovieClip;
     import flash.external.ExternalInterface;
-    import LS_Classes.scrollList;
     import flash.text.TextField;
     import flash.events.MouseEvent;
 
@@ -15,7 +14,7 @@ package Elements
         {
             super();
             this.removeChild(this.list);
-            this.list = new scrollList();
+            this.list = new PipScrollList();
             this.addChild(this.list);
         }
 
