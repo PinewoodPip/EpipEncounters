@@ -827,9 +827,11 @@ end)
 
 -- Save when the pause menu is opened.
 Client.UI.GameMenu.Events.Opened:Subscribe(function (_)
-    Hotbar.SaveData()
-
-    Net.PostToServer("EPIPENCOUNTERS_Hotbar_SaveLayout", Hotbar.State)
+    if GameState.IsInSession() then
+        Hotbar.SaveData()
+    
+        Net.PostToServer("EPIPENCOUNTERS_Hotbar_SaveLayout", Hotbar.State)
+    end
 end)
 
 Settings.Events.SettingValueChanged:Subscribe(function (ev)
