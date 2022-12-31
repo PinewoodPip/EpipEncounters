@@ -6,7 +6,9 @@ local QuickExamine = {
     entityNetID = nil,
     lockCharacter = false,
 
-    UI = nil, ---@type GenericUI_Instance
+    _Widgets = {}, ---@type Feature_QuickExamine_Widget[]
+
+    UI = nil, ---@type Feature_QuickExamine_UI
     WIDTH = 400,
     SCROLLBAR_WIDTH = 10,
     ContentContainer = nil, ---@type GenericUI_Element_VerticalList
@@ -26,6 +28,34 @@ local QuickExamine = {
 Epip.RegisterFeature("QuickExamine", QuickExamine)
 
 ---------------------------------------------
+-- CLASSES
+---------------------------------------------
+
+---@alias Feature_QuickExamine_Entity EclCharacter|EclItem
+
+---@class Feature_QuickExamine_UI : GenericUI_Instance
+
+---@class Feature_QuickExamine_Widget
+---@field Name string
+local _Widget = {
+    
+}
+
+---@param entity Feature_QuickExamine_Entity
+---@return GenericUI_Element
+---@diagnostic disable
+function _Widget:Render(entity)
+    QuickExamine:Error("Widget:Construct", "Not implemented for ", self.Name)
+end
+
+---@param entity Feature_QuickExamine_Entity
+---@return boolean
+function _Widget:CanRender(entity)
+    return true
+end
+---@diagnostic enable
+
+---------------------------------------------
 -- EVENTS/HOOKS
 ---------------------------------------------
 
@@ -36,6 +66,20 @@ Epip.RegisterFeature("QuickExamine", QuickExamine)
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
+
+---@param name string
+---@return Feature_QuickExamine_Widget
+function QuickExamine.RegisterWidget(name)
+    ---@type Feature_QuickExamine_Widget
+    local widget = {
+        Name = name,
+    }
+    Inherit(widget, _Widget)
+
+    table.insert(QuickExamine._Widgets, widget)
+
+    return widget
+end
 
 ---@return GenericUI_Element_VerticalList
 function QuickExamine.GetContainer()
@@ -80,7 +124,7 @@ function QuickExamine.SetEntity(entity)
             QuickExamine.GetContainer():Clear()
 
             -- Filler to compensate for the top div having a short height for the culling effect.
-            QuickExamine.GetContainer():AddChild("Filler", "Empty"):GetMovieClip().heightOverride = 10
+            QuickExamine.GetContainer():AddChild("Filler", "GenericUI_Element_Empty"):GetMovieClip().heightOverride = 10
 
             QuickExamine.CharacterNameElement:SetText(Text.Format(entity.DisplayName, {
                 Color = "ffffff",
@@ -90,7 +134,7 @@ function QuickExamine.SetEntity(entity)
 
             QuickExamine.Events.EntityChanged:Fire(entity)
 
-            QuickExamine.UI:GetElementByID("Container"):RepositionElements()
+            QuickExamine.UI.Container:RepositionElements()
 
             QuickExamine.UI:GetUI():Show()
         end
@@ -119,34 +163,13 @@ Client.UI.EnemyHealthBar:RegisterListener("updated", function(char, _)
     end
 end)
 
+-- Render widgets whenever the entity changes.
 QuickExamine.Events.EntityChanged:RegisterListener(function (entity)
-    local container = QuickExamine.GetContainer()
-    local artifacts = Artifact.GetEquippedPowers(entity)
-
-    local header = container:AddChild("QuickExamine_Artifacts_Header", "Text")
-    header:SetText(Text.Format("Artifact Powers", {Color = "ffffff", Size = 19}))
-    header:SetSize(QuickExamine.GetContainerWidth(), 30)
-
-    if #artifacts > 0 then
-        local artifactContainer = container:AddChild("QuickExamine_Artifacts", "HorizontalList")
-        artifactContainer:SetSize(QuickExamine.GetContainerWidth(), 35)
-        artifactContainer:SetCenterInLists(true)
-
-        for _,artifact in ipairs(artifacts) do
-            local template = Ext.Template.GetTemplate(string.match(artifact.ItemTemplate, Data.Patterns.GUID)) ---@type ItemTemplate
-
-            local icon = artifactContainer:AddChild(artifact.ID .. "icon", "IggyIcon")
-            icon:SetIcon(template.Icon, 32, 32)
-            icon.Tooltip = {
-                Type = "Formatted",
-                Data = artifact:GetPowerTooltip(),
-            }
+    for _,widget in ipairs(QuickExamine._Widgets) do
+        if widget:CanRender(entity) then
+            widget:Render(entity)
         end
     end
-
-    local div = container:AddChild("QuickExamine_Divider", "GenericUI_Element_Divider")
-    div:SetSize(QuickExamine.DIVIDER_WIDTH)
-    div:SetCenterInLists(true)
 end)
 
 ---------------------------------------------
@@ -154,6 +177,7 @@ end)
 ---------------------------------------------
 
 local function Setup()
+    ---@class Feature_QuickExamine_UI
     local ui = QuickExamine.UI
     local uiObject = ui:GetUI()
     uiObject.SysPanelSize = {QuickExamine.WIDTH + QuickExamine.SCROLLBAR_WIDTH, QuickExamine.HEIGHT}
@@ -175,6 +199,7 @@ local function Setup()
     local container = panel:AddChild("Container", "GenericUI_Element_VerticalList")
     container:SetSize(QuickExamine.WIDTH, -1)
     container:SetCenterInLists(true)
+    ui.Container = container
 
     local list = container:AddChild("List", "GenericUI_Element_VerticalList")
     list:SetSize(QuickExamine.WIDTH, -1)
@@ -238,11 +263,6 @@ end
 function QuickExamine:__Setup()
     local startupDelay = 0.1 -- Required for setPosition to work.
     QuickExamine.UI = Generic.Create("PIP_QuickExamine")
-
-    -- Delayed setup to catch errors
-    if Epip.IsDeveloperMode(true) and false then
-        startupDelay = 2
-    end
 
     Timer.Start(startupDelay, function()
         Setup()

@@ -45,31 +45,30 @@ function Skills._RenderSkill(container, char, skillID)
 end
 
 ---------------------------------------------
--- EVENT LISTENERS
+-- WIDGET
 ---------------------------------------------
 
-QuickExamine.Events.EntityChanged:RegisterListener(function (entity)
+local Widget = QuickExamine.RegisterWidget("SkillsDisplay")
 
-    if Skills:IsEnabled() and Entity.IsCharacter(entity) then
-        local hasSkills = not table.isempty(entity.SkillManager.Skills)
+function Widget:CanRender(entity)
+    return Skills:IsEnabled() and Entity.IsCharacter(entity) and not table.isempty(entity.SkillManager.Skills)
+end
 
-        if hasSkills then
-            local container = QuickExamine.GetContainer()
-    
-            TextPrefab.Create(QuickExamine.UI, "SkillsDisplay_Header", container, "Skills", "Center", V(QuickExamine.GetContainerWidth(), 30))
+function Widget:Render(entity)
+    local container = QuickExamine.GetContainer()
 
-            local grid = container:AddChild("SkillsDisplay_Grid", "GenericUI_Element_Grid")
+    TextPrefab.Create(QuickExamine.UI, "SkillsDisplay_Header", container, "Skills", "Center", V(QuickExamine.GetContainerWidth(), 30))
 
-            grid:SetCenterInLists(true)
-            grid:SetGridSize(QuickExamine.GetContainerWidth() / Skills.SKILL_ICON_SIZE - 2, -1)
+    local grid = container:AddChild("SkillsDisplay_Grid", "GenericUI_Element_Grid")
 
-            local skills = entity.SkillManager.Skills
-            for skill,_ in pairs(skills) do
-                Skills._RenderSkill(grid, entity, skill)
-            end
+    grid:SetCenterInLists(true)
+    grid:SetGridSize(QuickExamine.GetContainerWidth() / Skills.SKILL_ICON_SIZE - 2, -1)
 
-            local div = container:AddChild("QuickExamine_Divider", "GenericUI_Element_Divider")
-            div:SetSize(QuickExamine.DIVIDER_WIDTH)
-        end
+    local skills = entity.SkillManager.Skills
+    for skill,_ in pairs(skills) do
+        Skills._RenderSkill(grid, entity, skill)
     end
-end)
+
+    local div = container:AddChild("QuickExamine_Divider", "GenericUI_Element_Divider")
+    div:SetSize(QuickExamine.DIVIDER_WIDTH)
+end

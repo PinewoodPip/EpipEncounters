@@ -354,7 +354,16 @@ LOAD_ORDER = {
     "Epip/ShowConsumableEffects.lua",
     "Epip/WalkOnCorpses.lua",
 
-    "Epip/Client/GenericUIs/QuickExamine.lua",
+    -- Quick Examine
+    {
+        Scripts = {
+            "Epip/Client/QuickExamine/Client.lua",
+
+            "Epip/Client/QuickExamine/Widgets/Artifacts.lua",
+            "Epip/Client/QuickExamine/Widgets/SkillsDisplay.lua",
+            "Epip/EpicEnemies/QuickExamineWidget.lua",
+        },
+    },
     "Epip/Client/GenericUIs/SaveLoadOverlay.lua",
     "Epip/Client/GenericUIs/HotbarGroup.lua",
 
@@ -398,6 +407,7 @@ LOAD_ORDER = {
     "Epip/EpicEnemies/Client.lua",
     "Epip/EpicEnemies/Effects.lua",
     "Epip/EpicEnemies/ActivationConditionsClient.lua",
+    "Epip/EpicEnemies/QuickExamineWidget.lua",
 
     "Epip/StatusSorting.lua",
 
@@ -454,13 +464,6 @@ LOAD_ORDER = {
         Scripts = {
             "Epip/Vanity/Auras/Shared_Data.lua",
             "Epip/Vanity/Auras/Client_Tab.lua",
-        },
-    },
-
-    -- Quick Examine
-    {
-        Scripts = {
-            "Epip/Client/QuickExamine/SkillsDisplay.lua",
         },
     },
 
