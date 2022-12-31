@@ -359,6 +359,7 @@ LOAD_ORDER = {
         Scripts = {
             "Epip/Client/QuickExamine/Client.lua",
 
+            "Epip/Client/QuickExamine/Widgets/Resources.lua",
             "Epip/Client/QuickExamine/Widgets/Artifacts.lua",
             "Epip/Client/QuickExamine/Widgets/SkillsDisplay.lua",
             "Epip/EpicEnemies/QuickExamineWidget.lua",

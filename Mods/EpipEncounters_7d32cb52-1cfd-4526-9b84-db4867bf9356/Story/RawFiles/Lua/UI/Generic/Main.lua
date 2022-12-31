@@ -11,7 +11,7 @@ Client.UI.Generic = {
 local Generic = Client.UI.Generic ---@class GenericUI
 Epip.InitializeLibrary("Generic", Generic)
 
----@alias GenericUI_PrefabClass "GenericUI_Prefab_HotbarSlot"|"GenericUI_Prefab_Spinner"|"GenericUI_Prefab_Text"|"GenericUI_Prefab_LabelledDropdown"|"GenericUI_Prefab_LabelledCheckbox"|"GenericUI_Prefab_LabelledTextField"|"GenericUI_Prefab_FormHorizontalList"
+---@alias GenericUI_PrefabClass "GenericUI_Prefab_HotbarSlot"|"GenericUI_Prefab_Spinner"|"GenericUI_Prefab_Text"|"GenericUI_Prefab_LabelledDropdown"|"GenericUI_Prefab_LabelledCheckbox"|"GenericUI_Prefab_LabelledTextField"|"GenericUI_Prefab_FormHorizontalList"|"GenericUI_Prefab_LabelledIcon"
 
 ---------------------------------------------
 -- EVENTS/HOOKS
@@ -176,6 +176,7 @@ function Client.UI.Generic.Create(id)
         Name = id,
         Elements = {},
         Events = {
+            -- TODO remove
             ---@type GenericUI_Event_Button_Pressed
             Button_Pressed = {},
             ---@type GenericUI_Event_StateButton_StateChanged
