@@ -37,7 +37,5 @@ function Widget:Render(entity)
         }
     end
 
-    local div = container:AddChild("QuickExamine_Divider", "GenericUI_Element_Divider")
-    div:SetSize(QuickExamine.DIVIDER_WIDTH)
-    div:SetCenterInLists(true)
+    self:CreateDivider("ArtifactsDivider", container)
 end

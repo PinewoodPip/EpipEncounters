@@ -39,9 +39,7 @@ function Widget:Render(entity)
     for _,eff in pairs(sortedEffects.Artifacts) do table.insert(effects, eff) end
     for _,eff in pairs(sortedEffects.Other) do table.insert(effects, eff) end
 
-    local header = container:AddChild("EpicEnemies_Header", "GenericUI_Element_Text")
-    header:SetText(Text.Format("Epic Enemies Effects", {Color = "ffffff", Size = 19}))
-    header:SetSize(QuickExamine.GetContainerWidth(), 30)
+    self:CreateHeader("EpicEnemies_Header", container, "Epic Enemies Effects")
 
     -- Artifact powers are already handled through the base QuickExamine script
 
@@ -64,11 +62,9 @@ function Widget:Render(entity)
             Color = "ffffff",
             Size = 17,
         }))
-        entry:GetMovieClip().text_txt.width = QuickExamine.WIDTH
+        entry:GetMovieClip().text_txt.width = QuickExamine.GetContainerWidth()
         entry:GetMovieClip().text_txt.height = entry:GetMovieClip().text_txt.textHeight
     end
 
-    local div = container:AddChild("MainDiv", "GenericUI_Element_Divider")
-    div:SetSize(QuickExamine.DIVIDER_WIDTH)
-    div:SetCenterInLists(true)
+    self:CreateDivider("EpicEnemiesDivider", container)
 end

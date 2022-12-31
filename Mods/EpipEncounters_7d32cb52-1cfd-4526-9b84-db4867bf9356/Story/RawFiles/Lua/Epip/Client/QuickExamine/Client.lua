@@ -1,5 +1,6 @@
 
 local Generic = Client.UI.Generic
+local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 
 ---@class Feature_QuickExamine : Feature
 local QuickExamine = {
@@ -10,10 +11,10 @@ local QuickExamine = {
 
     UI = nil, ---@type Feature_QuickExamine_UI
     WIDTH = 400,
-    SCROLLBAR_WIDTH = 10,
+    CONTAINER_PADDING = 5,
+    SCROLLBAR_WIDTH = 18,
     ContentContainer = nil, ---@type GenericUI_Element_VerticalList
     CharacterNameElement = nil, ---@type GenericUI_Element_Text
-    DIVIDER_WIDTH = 350,
     ALPHA = 0.8,
     HEIGHT = 600,
 
@@ -55,6 +56,27 @@ function _Widget:CanRender(entity)
 end
 ---@diagnostic enable
 
+---@param id string
+---@param parentElement string|GenericUI_Element
+---@param label string
+---@return GenericUI_Prefab_Text
+function _Widget:CreateHeader(id, parentElement, label)
+    return TextPrefab.Create(QuickExamine.UI, id, parentElement, label, "Center", Vector.Create(QuickExamine.GetContainerWidth(), 30))
+end
+
+---@param id string
+---@param parentElement string|GenericUI_Element
+---@return GenericUI_Element_Divider
+function _Widget:CreateDivider(id, parentElement)
+    if type(parentElement) == "string" then
+        parentElement = QuickExamine.UI:GetElementByID(parentElement)
+    end
+    local div = parentElement:AddChild(id, "GenericUI_Element_Divider")
+    div:SetSize(QuickExamine.GetContainerWidth())
+
+    return div
+end
+
 ---------------------------------------------
 -- EVENTS/HOOKS
 ---------------------------------------------
@@ -87,7 +109,7 @@ function QuickExamine.GetContainer()
 end
 
 function QuickExamine.GetContainerWidth()
-    return QuickExamine.GetContainer():GetMovieClip().width - 60
+    return QuickExamine.WIDTH - QuickExamine.CONTAINER_PADDING * 2 - QuickExamine.SCROLLBAR_WIDTH
 end
 
 ---@param path Path?
@@ -203,7 +225,6 @@ local function Setup()
 
     local list = container:AddChild("List", "GenericUI_Element_VerticalList")
     list:SetSize(QuickExamine.WIDTH, -1)
-    list:SetSideSpacing(-20)
 
     local header = list:AddChild("Header", "GenericUI_Element_Text")
     header:SetText(Text.Format("Quick Examine", {
@@ -221,7 +242,7 @@ local function Setup()
     QuickExamine.CharacterNameElement = charName
 
     local div = list:AddChild("MainDiv", "GenericUI_Element_Divider")
-    div:SetSize(QuickExamine.DIVIDER_WIDTH)
+    div:SetSize(QuickExamine.GetContainerWidth())
     div:SetCenterInLists(true)
     div:GetMovieClip().heightOverride = div:GetMovieClip().height / 2
 
@@ -233,9 +254,9 @@ local function Setup()
 
     local content = list:AddChild("Content", "GenericUI_Element_ScrollList")
     content:SetMouseWheelEnabled(true)
-    content:SetFrame(QuickExamine.WIDTH - 30, 510)
-    content:SetScrollbarSpacing(20)
-    content:SetSideSpacing(26)
+    content:SetFrame(QuickExamine.GetContainerWidth(), 510)
+    content:Move(QuickExamine.CONTAINER_PADDING, 0)
+    content:SetScrollbarSpacing(-QuickExamine.CONTAINER_PADDING * 2)
     QuickExamine.ContentContainer = content
     
     local closeButton = panel:AddChild("Close", "GenericUI_Element_Button")

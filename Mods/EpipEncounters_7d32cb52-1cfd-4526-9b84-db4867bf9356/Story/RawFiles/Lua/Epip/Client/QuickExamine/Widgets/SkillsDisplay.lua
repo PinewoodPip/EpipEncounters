@@ -57,7 +57,7 @@ end
 function Widget:Render(entity)
     local container = QuickExamine.GetContainer()
 
-    TextPrefab.Create(QuickExamine.UI, "SkillsDisplay_Header", container, "Skills", "Center", V(QuickExamine.GetContainerWidth(), 30))
+    self:CreateHeader("SkillsDisplay_Header", container, "Skills")
 
     local grid = container:AddChild("SkillsDisplay_Grid", "GenericUI_Element_Grid")
 
@@ -69,6 +69,5 @@ function Widget:Render(entity)
         Skills._RenderSkill(grid, entity, skill)
     end
 
-    local div = container:AddChild("QuickExamine_Divider", "GenericUI_Element_Divider")
-    div:SetSize(QuickExamine.DIVIDER_WIDTH)
+    self:CreateDivider("SkillsDisplayDivider", container)
 end
