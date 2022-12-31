@@ -4,14 +4,13 @@ package
     import flash.events.Event;
     import flash.events.MouseEvent;
     import flash.geom.Rectangle;
-    import LS_Classes.scrollbar;
     import flash.utils.getDefinitionByName;
     
     public class PipScrollList extends PipListDisplay
     {
         
         
-        public var m_scrollbar_mc:scrollbar;
+        public var m_scrollbar_mc:PipScrollBar;
         
         public var m_bottomAligned:Boolean = false;
         
@@ -42,7 +41,7 @@ package
         public function PipScrollList(param1:String = "down_id", param2:String = "up_id", param3:String = "handle_id", param4:String = "scrollBg_id", param5:String = "", param6:String = "")
         {
             this.m_dragAutoScrollMod = 0.2;
-            this.m_scrollbar_mc = new scrollbar(param1,param2,param3,param4,param5,param6);
+            this.m_scrollbar_mc = new PipScrollBar(param1,param2,param3,param4,param5,param6);
             super();
             this.m_scrollbar_mc.visible = false;
             this.addChild(this.m_scrollbar_mc);
@@ -119,8 +118,8 @@ package
             this.m_bgTile2_mc = new _loc2_();
             this.m_bgTile1_mc.id = 1;
             this.m_bgTile2_mc.id = 2;
-            containerBG_mc.addChild(this.m_bgTile1_mc);
-            containerBG_mc.addChild(this.m_bgTile2_mc);
+            this.containerBG_mc.addChild(this.m_bgTile1_mc);
+            this.containerBG_mc.addChild(this.m_bgTile2_mc);
             this.m_bgTile1_mc.y = 0;
             this.m_bgTile2_mc.y = this.m_bgTile1_mc.y + this.m_bgTile1_mc.height;
         }
@@ -129,7 +128,7 @@ package
         {
             var _loc2_:MovieClip = null;
             var _loc3_:MovieClip = null;
-            containerBG_mc.scrollRect = containerContent_mc.scrollRect;
+            this.containerBG_mc.scrollRect = this.containerContent_mc.scrollRect;
             if(this.m_bgTile1_mc && this.m_bgTile2_mc)
             {
                 _loc2_ = this.topBgTile;
@@ -143,7 +142,7 @@ package
                 _loc3_.y = _loc2_.y - _loc3_.height;
                 }
             }
-            dispatchEvent(new Event(Event.CHANGE));
+            this.dispatchEvent(new Event(Event.CHANGE));
             this.cullMcsToFrame();
         }
         
@@ -220,22 +219,22 @@ package
             var _loc4_:MovieClip = null;
             var _loc5_:Number = NaN;
             var _loc3_:Boolean = true;
-            if(param1 && m_CurrentSelection && param1.list_pos < m_CurrentSelection.list_pos)
+            if(param1 && this.m_CurrentSelection && param1.list_pos < this.m_CurrentSelection.list_pos)
             {
                 _loc3_ = false;
             }
             super.selectMC(param1,param2);
             if(this.m_scrollbar_mc.visible && this.m_allowKeepIntoView)
             {
-                _loc4_ = getFirstVisible();
+                _loc4_ = this.getFirstVisible();
                 if(m_CurrentSelection == _loc4_)
                 {
                 this.m_scrollbar_mc.scrollTo(0,this.m_scrollbar_mc.m_animateScrolling);
                 }
                 else
                 {
-                _loc5_ = getElementHeight(m_CurrentSelection);
-                this.m_scrollbar_mc.scrollIntoView(m_CurrentSelection.y,_loc5_);
+                _loc5_ = this.getElementHeight(m_CurrentSelection);
+                this.m_scrollbar_mc.scrollIntoView(this.m_CurrentSelection.y,_loc5_);
                 }
             }
         }
@@ -268,11 +267,11 @@ package
             param1 += this.TOP_SPACING;
             param1 += this.m_scrollbar_mc.scrolledY;
             _loc4_ = 0;
-            while(_loc4_ < content_array.length)
+            while(_loc4_ < this.content_array.length)
             {
-                if((_loc5_ = content_array[_loc4_]) && _loc5_.visible)
+                if((_loc5_ = this.content_array[_loc4_]) && _loc5_.visible)
                 {
-                _loc6_ = getElementHeight(_loc5_);
+                _loc6_ = this.getElementHeight(_loc5_);
                 if(_loc5_.y <= param1 && _loc5_.y + _loc6_ > param1)
                 {
                     _loc3_ = true;
@@ -323,21 +322,22 @@ package
         override public function setFrameWidth(param1:Number) : *
         {
             this.m_width = param1;
-            // containerContent_mc.scrollRect = new Rectangle(0,0,param1,this.frameHeight); -- TODO fix
+            this.containerContent_mc.scrollRect = new Rectangle(0,0,param1,this.frameHeight);
             this.m_scrollbar_mc.x = this.m_SBSpacing + param1;
-            this.m_scrollbar_mc.addContent(containerContent_mc);
-            updateScrollHit();
+            this.m_scrollbar_mc.addContent(this.containerContent_mc);
+            this.updateScrollHit();
         }
         
         override public function setFrame(param1:Number, param2:Number) : *
         {
-            width = param1;
-            height = param2;
+            this.width = param1;
+            this.height = param2;
             this.container_mc.scrollRect = new Rectangle(0,0,this.frameWidth,this.frameHeight);
+            this.containerContent_mc.scrollRect = this.container_mc.scrollRect;
             this.m_scrollbar_mc.x = this.m_SBSpacing + param1;
-            this.m_scrollbar_mc.addContent(containerContent_mc);
+            this.m_scrollbar_mc.addContent(this.containerContent_mc);
             this.checkScrollBar();
-            updateScrollHit();
+            this.updateScrollHit();
         }
         
         override public function positionElements() : *
@@ -367,7 +367,7 @@ package
                 {
                     _loc1_ += this.getElementHeight(content_array[_loc2_]) + EL_SPACING;
                 }
-                
+
                 _loc2_++;
             }
             this.m_ScrollHeight = _loc1_ - EL_SPACING;

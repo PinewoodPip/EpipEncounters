@@ -164,7 +164,7 @@ package
             this.m_hasScrollRect = true;
         }
         
-        protected function updateScrollHit() : *
+        public function updateScrollHit() : *
         {
             var _loc1_:Sprite = null;
             if(this.scrollHit_mc.numChildren == 0)
