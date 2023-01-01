@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<save>
+    <header version="2" />
+    <version major="3" minor="6" revision="6" build="0" />
+    <region id="IconUVList">
+        <node id="root">
+            <children>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="ui_24x_action_point" type="22" />
+                    <attribute id="U1" value="0.00195313" type="6" />
+                    <attribute id="U2" value="0.0917969" type="6" />
+                    <attribute id="V1" value="0.00195313" type="6" />
+                    <attribute id="V2" value="0.0917969" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="ui_24x_initiative" type="22" />
+                    <attribute id="U1" value="0.0957031" type="6" />
+                    <attribute id="U2" value="0.185547" type="6" />
+                    <attribute id="V1" value="0.00195313" type="6" />
+                    <attribute id="V2" value="0.0917969" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="ui_24x_source_point" type="22" />
+                    <attribute id="U1" value="0.189453" type="6" />
+                    <attribute id="U2" value="0.279297" type="6" />
+                    <attribute id="V1" value="0.00195313" type="6" />
+                    <attribute id="V2" value="0.0917969" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="ui_24x_sword" type="22" />
+                    <attribute id="U1" value="0.283203" type="6" />
+                    <attribute id="U2" value="0.373047" type="6" />
+                    <attribute id="V1" value="0.00195313" type="6" />
+                    <attribute id="V2" value="0.0917969" type="6" />
+                </node>
+            </children>
+        </node>
+    </region>
+    <region id="TextureAtlasInfo">
+        <node id="root">
+            <children>
+                <node id="TextureAtlasIconSize">
+                    <attribute id="Height" value="24" type="4" />
+                    <attribute id="Width" value="24" type="4" />
+                </node>
+                <node id="TextureAtlasPath">
+                    <attribute id="Path" value="Assets/Textures/Icons/UI_24x.dds" type="20" />
+                    <attribute id="UUID" value="e0f79a68-362f-4ac6-984f-4e0218606664" type="22" />
+                </node>
+                <node id="TextureAtlasTextureSize">
+                    <attribute id="Height" value="256" type="4" />
+                    <attribute id="Width" value="256" type="4" />
+                </node>
+            </children>
+        </node>
+    </region>
+</save>

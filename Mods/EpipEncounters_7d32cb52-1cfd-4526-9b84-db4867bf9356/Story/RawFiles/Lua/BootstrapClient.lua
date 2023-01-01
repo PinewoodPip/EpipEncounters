@@ -235,6 +235,7 @@ LOAD_ORDER = {
             "UI/Generic/Prefabs/LabelledCheckbox.lua",
             "UI/Generic/Prefabs/LabelledTextField.lua",
             "UI/Generic/Prefabs/FormHorizontalList.lua",
+            "UI/Generic/Prefabs/LabelledIcon.lua",
         },
     },
     -- {Script = "UI/Generic/Test.lua", WIP = true}, -- TEST!
@@ -360,10 +361,9 @@ LOAD_ORDER = {
         Scripts = {
             "Epip/Client/QuickExamine/Client.lua",
 
-            "Epip/Client/QuickExamine/Widgets/Resources.lua",
+            "Epip/Client/QuickExamine/Widgets/BasicInfo.lua",
             "Epip/Client/QuickExamine/Widgets/Artifacts.lua",
             "Epip/Client/QuickExamine/Widgets/SkillsDisplay.lua",
-            "Epip/EpicEnemies/QuickExamineWidget.lua",
         },
     },
     "Epip/Client/GenericUIs/SaveLoadOverlay.lua",

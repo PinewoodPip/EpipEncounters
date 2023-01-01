@@ -189,7 +189,11 @@ end)
 QuickExamine.Events.EntityChanged:RegisterListener(function (entity)
     for _,widget in ipairs(QuickExamine._Widgets) do
         if widget:CanRender(entity) then
-            widget:Render(entity)
+            local success, msg = pcall(widget.Render, widget, entity)
+            
+            if not success then
+                QuickExamine:LogError("Error while rendering widget: " .. msg)
+            end
         end
     end
 end)

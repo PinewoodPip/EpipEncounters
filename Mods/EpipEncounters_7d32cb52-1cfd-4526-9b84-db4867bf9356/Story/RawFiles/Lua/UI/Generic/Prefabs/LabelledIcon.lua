@@ -30,10 +30,13 @@ function Icon.Create(ui, id, parent, icon, text, iconSize, textSize)
 
     local iconElement = list:AddChild(obj:PrefixID("Icon"), "GenericUI_Element_IggyIcon")
     iconElement:SetIcon(icon, iconSize:unpack())
+    iconElement:SetCenterInLists(true)
     obj.Icon = iconElement
 
     local textElement = TextPrefab.Create(ui, obj:PrefixID("Text"), list, text, "Left", textSize)
     obj.Text = textElement
 
+    list:RepositionElements()
+    
     return obj
 end
