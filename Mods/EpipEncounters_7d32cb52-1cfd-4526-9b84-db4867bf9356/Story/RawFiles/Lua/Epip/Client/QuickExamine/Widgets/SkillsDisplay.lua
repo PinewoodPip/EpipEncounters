@@ -48,7 +48,13 @@ end
 -- WIDGET
 ---------------------------------------------
 
-local Widget = QuickExamine.RegisterWidget("SkillsDisplay")
+local Widget = QuickExamine.RegisterWidget("SkillsDisplay", {Setting = {
+    ID = "Widget_Skills",
+    Type = "Boolean",
+    Name = "Show Skills",
+    Description = "Shows the skills of player characters and their cooldowns. Does not apply to non-player characters.",
+    DefaultValue = true,
+}})
 
 function Widget:CanRender(entity)
     return Skills:IsEnabled() and Entity.IsCharacter(entity) and not table.isempty(entity.SkillManager.Skills)

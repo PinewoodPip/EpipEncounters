@@ -41,6 +41,17 @@ local tabs = {
             "HotbarCastingGreyOut",
         }
     },
+    ["Epip_QuickExamine"] = {
+        ID = "Epip_QuickExamine",
+        ButtonLabel = "Quick Examine",
+        HeaderLabel = "Quick Examine",
+        Entries = {
+            CreateHeader("Quick Examine"),
+            {Module = "EpipEncounters_QuickExamine", ID = "AllowDead"},
+            {Module = "EpipEncounters_QuickExamine", ID = "Widget_Artifacts"},
+            {Module = "EpipEncounters_QuickExamine", ID = "Widget_Skills"},
+        }
+    },
     ["Epip_Other"] = {
         ID = "Epip_Other",
         ButtonLabel = "Miscellaneous UI",
@@ -140,6 +151,7 @@ local tabOrder = {
     tabs.Epip_Developer,
     tabs.EpipEncounters,
     tabs.Epip_Hotbar,
+    tabs.Epip_QuickExamine,
     tabs.Epip_PlayerInfo,
     tabs.Epip_Inventory,
     tabs.Epip_Notifications,

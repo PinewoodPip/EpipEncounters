@@ -8,7 +8,13 @@ Epip.RegisterFeature("QuickExamine_ArtifactsDisplay", ArtifactsDisplay)
 -- WIDGET
 ---------------------------------------------
 
-local Widget = QuickExamine.RegisterWidget("ArtifactsDisplay")
+local Widget = QuickExamine.RegisterWidget("ArtifactsDisplay", {Setting = {
+    ID = "Widget_Artifacts",
+    Type = "Boolean",
+    Name = "Show Artifacts",
+    Description = "Shows the equipped artifacts of characters.",
+    DefaultValue = true,
+}})
 
 function Widget:CanRender(entity)
     return Entity.IsCharacter(entity) and #Artifact.GetEquippedPowers(entity) > 0

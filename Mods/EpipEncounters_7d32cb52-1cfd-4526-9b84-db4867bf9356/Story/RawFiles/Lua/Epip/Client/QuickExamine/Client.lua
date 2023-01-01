@@ -22,9 +22,24 @@ local QuickExamine = {
     SAVE_VERSION = 1,
     INPUT_DEVICE = "KeyboardMouse",
 
+    Settings = {
+        AllowDead = {
+            ID = "AllowDead",
+            Type = "Boolean",
+            Name = "Enable Corpses",
+            Description = "Allows examining dead characters.",
+            DefaultValue = false,
+        },
+    },
+
+    USE_LEGACY_HOOKS = false,
+
     Events = {
         EntityChanged = {}, ---@type QuickExamine_Event_EntityChanged
     },
+    Hooks = {
+        IsEligible = {}, ---@type Event<Feature_QuickExamine_Hook_IsEligible>
+    }
 }
 Epip.RegisterFeature("QuickExamine", QuickExamine)
 
@@ -39,7 +54,7 @@ Epip.RegisterFeature("QuickExamine", QuickExamine)
 ---@class Feature_QuickExamine_Widget
 ---@field Name string
 local _Widget = {
-    
+    Setting = nil, ---@type SettingsLib_Setting_Boolean If defined, the widget will not render if the setting is not enabled.
 }
 
 ---@param entity Feature_QuickExamine_Entity
@@ -85,22 +100,46 @@ end
 ---@field RegisterListener fun(self, listener:fun(entity:Entity))
 ---@field Fire fun(self, entity:Entity)
 
+---@class Feature_QuickExamine_Hook_IsEligible
+---@field Entity Entity
+---@field Eligible boolean Hookable. Defaults to `true`.
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
 ---@param name string
+---@param data Feature_QuickExamine_Widget?
 ---@return Feature_QuickExamine_Widget
-function QuickExamine.RegisterWidget(name)
+function QuickExamine.RegisterWidget(name, data)
     ---@type Feature_QuickExamine_Widget
-    local widget = {
-        Name = name,
-    }
+    local widget = data or {}
+    widget.Name = name
     Inherit(widget, _Widget)
 
     table.insert(QuickExamine._Widgets, widget)
 
+    local setting = widget.Setting
+    if setting then
+        setting.ModTable = setting.ModTable or QuickExamine:GetSettingsModuleID()
+        setting.ID = setting.ID or ("Widget_" .. name)
+        Settings.RegisterSetting(widget.Setting)
+    end
+
     return widget
+end
+
+---@param widget Feature_QuickExamine_Widget
+---@param entity Entity
+---@return boolean
+function QuickExamine.CanRenderWidget(widget, entity)
+    local isEnabled = true
+
+    if widget.Setting then
+        isEnabled = Settings.GetSettingValue(widget.Setting)
+    end
+
+    return isEnabled and widget:CanRender(entity)
 end
 
 ---@return GenericUI_Element_VerticalList
@@ -138,8 +177,19 @@ function QuickExamine.IsLocked()
 end
 
 ---@param entity Entity
+---@return boolean
+function QuickExamine.IsEligible(entity)
+    local hook = QuickExamine.Hooks.IsEligible:Throw({
+        Entity = entity,
+        Eligible = true,
+    })
+
+    return hook.Eligible
+end
+
+---@param entity Entity
 function QuickExamine.SetEntity(entity)
-    if entity then
+    if entity and QuickExamine.IsEligible(entity) then
         if entity.NetID ~= QuickExamine.entityNetID then
             QuickExamine.entityNetID = entity.NetID
 
@@ -160,7 +210,7 @@ function QuickExamine.SetEntity(entity)
 
             QuickExamine.UI:GetUI():Show()
         end
-    else
+    elseif not entity then -- Only hide the UI is entity passed is nil.
         QuickExamine.entityNetID = nil
 
         QuickExamine.UI:GetUI():Hide()
@@ -185,10 +235,21 @@ Client.UI.EnemyHealthBar:RegisterListener("updated", function(char, _)
     end
 end)
 
+-- Disallow dead characters if the setting is disabled.
+QuickExamine.Hooks.IsEligible:Subscribe(function (ev)
+    if Entity.IsCharacter(ev.Entity) then
+        local char = ev.Entity
+
+        if QuickExamine:GetSettingValue(QuickExamine.Settings.AllowDead) == false and Character.IsDead(char) then
+            ev.Eligible = false
+        end
+    end
+end)
+
 -- Render widgets whenever the entity changes.
 QuickExamine.Events.EntityChanged:RegisterListener(function (entity)
     for _,widget in ipairs(QuickExamine._Widgets) do
-        if widget:CanRender(entity) then
+        if QuickExamine.CanRenderWidget(widget, entity) then
             local success, msg = pcall(widget.Render, widget, entity)
             
             if not success then
