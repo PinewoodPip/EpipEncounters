@@ -41,6 +41,7 @@ local Tooltip = {
         RenderSkillTooltip = {Preventable = true,}, ---@type PreventableEvent<TooltipLib_Hook_RenderSkillTooltip>
         RenderItemTooltip = {Preventable = true,}, ---@type PreventableEvent<TooltipLib_Hook_RenderItemTooltip>
         RenderSurfaceTooltip = {Preventable = true,}, ---@type PreventableEvent<TooltipLib_Hook_RenderFormattedTooltip>
+        RenderStatusTooltip = {Preventable = true,}, ---@type PreventableEvent<TooltipLib_Hook_RenderStatusTooltip>
         RenderMouseTextTooltip = {Preventable = true}, ---@type PreventableEvent<TooltipLib_Hook_RenderMouseTextTooltip>
         RenderSimpleTooltip = {Preventable = true}, ---@type PreventableEvent<TooltipLib_Hook_RenderSimpleTooltip>
     },
@@ -52,7 +53,7 @@ Epip.InitializeLibrary("TooltipLib", Tooltip)
 -- CLASSES
 ---------------------------------------------
 
----@alias TooltipLib_FormattedTooltipType "Surface"|"Skill"|"Item"|"Custom"
+---@alias TooltipLib_FormattedTooltipType "Surface"|"Skill"|"Item"|"Custom"|"Status"
 ---@alias TooltipLib_Element table See `Game.Tooltip`. TODO
 ---@alias TooltipLib_FormattedTooltipElementType string TODO
 
@@ -60,6 +61,7 @@ Epip.InitializeLibrary("TooltipLib", Tooltip)
 ---@field UIType integer
 ---@field Type TooltipLib_FormattedTooltipType
 ---@field FlashCharacterHandle FlashObjectHandle?
+---@field FlashStatusHandle FlashObjectHandle?
 ---@field FlashItemHandle FlashObjectHandle?
 ---@field SkillID string?
 ---@field FlashParams LuaFlashCompatibleType[]?
@@ -163,6 +165,10 @@ end
 
 ---@class TooltipLib_Hook_RenderItemTooltip : TooltipLib_Hook_RenderFormattedTooltip
 ---@field Item EclItem
+
+---@class TooltipLib_Hook_RenderStatusTooltip : TooltipLib_Hook_RenderFormattedTooltip
+---@field Character EclCharacter
+---@field Status EclStatus
 
 ---@class TooltipLib_Hook_RenderSkillTooltip : TooltipLib_Hook_RenderFormattedTooltip
 ---@field SkillID string
@@ -278,8 +284,7 @@ end
 function Tooltip._SendFormattedTooltipHook(ui, tooltipType, data, sourceData)
     local obj = {Elements = data} ---@type TooltipLib_FormattedTooltip
     Inherit(obj, _FormattedTooltip)
-    local character
-    local item
+    local character, item, status
 
     -- Fetch entities involved
     if sourceData.FlashCharacterHandle then
@@ -287,6 +292,9 @@ function Tooltip._SendFormattedTooltipHook(ui, tooltipType, data, sourceData)
     end
     if sourceData.FlashItemHandle then
         item = Item.Get(sourceData.FlashItemHandle, true)
+    end
+    if sourceData.FlashStatusHandle then
+        status = Character.GetStatusByHandle(character, Ext.UI.DoubleToHandle(sourceData.FlashStatusHandle))
     end
 
     ---@type TooltipLib_Hook_RenderFormattedTooltip
@@ -297,6 +305,7 @@ function Tooltip._SendFormattedTooltipHook(ui, tooltipType, data, sourceData)
         Character = character,
         Item = item,
         SkillID = sourceData.SkillID,
+        Status = status,
     }
 
     -- Specific listeners go first.
@@ -354,12 +363,19 @@ Ext.Events.UICall:Subscribe(function(ev)
         Tooltip._currentTooltipData = Tooltip.nextTooltipData
     elseif ev.Function == "displaySurfaceText" then
         Tooltip.nextTooltipData = {UIType = ev.UI:GetTypeId(), Type = "Surface"}
+    elseif ev.Function == "showStatusTooltip" then
+        Tooltip.nextTooltipData = {UIType = ev.UI:GetTypeId(), Type = "Status", FlashStatusHandle = param2, FlashCharacterHandle = param1}
     end
 end)
 
--- Listen for formatted tooltip invokes on the general tooltip UI.
+-- Listen for formatted tooltip invokes on the main tooltip UI.
 Client.UI.Tooltip:RegisterInvokeListener("addFormattedTooltip", function(ev, _, _, _)
     HandleFormattedTooltip(ev, "tooltip_array", Tooltip.nextTooltipData, nil)
+end)
+
+-- Listen for status tooltip invokes on the main tooltip UI.
+Client.UI.Tooltip:RegisterInvokeListener("addStatusTooltip", function (ev)
+    HandleFormattedTooltip(ev, "tooltip_array", Tooltip.nextTooltipData)
 end)
 
 -- Listen for custom formatted tooltip render requests.

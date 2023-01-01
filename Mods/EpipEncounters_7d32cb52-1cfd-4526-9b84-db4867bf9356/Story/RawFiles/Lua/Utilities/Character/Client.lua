@@ -47,6 +47,13 @@ function Character.GetPartyMembers(char)
     return members
 end
 
+---@param char EclCharacter
+---@param handle EntityHandle
+---@return EclStatus
+function Character.GetStatusByHandle(char, handle)
+    return Ext.GetStatus(char, handle)
+end
+
 ---Returns a list of statuses the character has from its equipped items.
 ---@param char Character
 ---@return CharacterLib_StatusFromItem[]
