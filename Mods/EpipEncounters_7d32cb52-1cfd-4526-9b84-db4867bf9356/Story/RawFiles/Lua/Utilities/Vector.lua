@@ -33,7 +33,7 @@ setmetatable(Vector, {
 ---@class Vector
 ---@field Arity integer Getter. Equivalent to #self.
 ---@field Length number Getter. Equivalent to Vector.GetLength()
----@field unpack fun(self:Vector):... Equivalent to table.unpack(self)
+---@field unpack fun(self:Vector):...number Equivalent to table.unpack(self)
 ---@operator add(Vector):Vector Equivalent to Vector.Sum()
 ---@operator mul(Vector):number Equivalent to Vector.DotProduct()
 ---@operator sub(Vector):Vector Equivalent to Vector.Subtract()

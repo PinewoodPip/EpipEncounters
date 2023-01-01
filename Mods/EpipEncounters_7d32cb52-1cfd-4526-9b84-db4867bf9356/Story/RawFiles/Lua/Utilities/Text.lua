@@ -166,6 +166,7 @@ end
 ---@param separator string? Defaults to ` `
 ---@overload fun(str:string[], separator:string?)
 function Text.Join(str1, str2, separator)
+    if type(str1) == "table" then separator = str2 end
     separator = separator or " "
     local newString
 
@@ -422,7 +423,7 @@ end
 ---Returns the string bound to a TranslatedStringHandle, or a key.
 ---@param handle TranslatedStringHandle|string Accepts handles or keys.
 ---@param fallBack string?
----@return string Defaults to the handle, of fallBack if specified.
+---@return string -- Defaults to the handle, of fallBack if specified.
 function Text.GetTranslatedString(handle, fallBack)
     local str = Ext.L10N.GetTranslatedString(handle)
 

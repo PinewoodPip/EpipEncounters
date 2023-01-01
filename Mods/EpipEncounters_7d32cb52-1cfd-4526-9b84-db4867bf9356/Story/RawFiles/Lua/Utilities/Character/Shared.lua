@@ -196,6 +196,14 @@ function Character.IsSkillInnate(char, skillID)
     return innate
 end
 
+---Returns wether char has a certain immunity.
+---@param char Character
+---@param immunityName StatsLib_ImmunityID
+function Character.HasImmunity(char, immunityName)
+    return char.Stats[immunityName .. "Immunity"]
+end
+
+---Returns the equipped items of char, per slot.
 ---@param char Character
 ---@return table<ItemSlot, EclItem>
 function Character.GetEquippedItems(char)

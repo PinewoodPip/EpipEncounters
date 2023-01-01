@@ -99,6 +99,7 @@ LOAD_ORDER = {
             "Utilities/Stats/Shared_ExtraData.lua",
             "Utilities/Stats/Shared_Actions.lua",
             "Utilities/Stats/Shared_Runes.lua",
+            "Utilities/Stats/Shared_Immunities.lua",
         },
     },
 
