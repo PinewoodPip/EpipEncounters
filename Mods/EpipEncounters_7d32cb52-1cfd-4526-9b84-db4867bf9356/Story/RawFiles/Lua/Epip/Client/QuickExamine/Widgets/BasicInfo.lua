@@ -11,14 +11,29 @@ local BasicInfo = {
     AP_ICON = "ui_24x_action_point",
     SP_ICON = "ui_24x_source_point",
     INITIATIVE_ICON = "ui_24x_initiative",
+
+    RESISTANCE_COLORS = {
+        Fire = "f77c27",
+        Water = "27aff6",
+        Earth = "aa7840",
+        Air = "8f83cb",
+        Poison = "5bd42b",
+        Physical = "acacac",
+        Piercing = "c23c3c",
+        Shadow = "5b34ca",
+    },
+
+    RESISTANCES_DISPLAYED = {
+        "Fire", "Water", "Earth", "Air", "Poison", "Physical", "Piercing",
+    },
 }
-Epip.RegisterFeature("QuickExamine_Widget_Resources", BasicInfo)
+Epip.RegisterFeature("QuickExamine_Widget_BasicInfo", BasicInfo)
 
 ---------------------------------------------
 -- WIDGET
 ---------------------------------------------
 
-local Widget = QuickExamine.RegisterWidget("Resources")
+local Widget = QuickExamine.RegisterWidget("BasicInfo")
 
 function Widget:CanRender(entity)
     return BasicInfo:IsEnabled() and Entity.IsCharacter(entity)
@@ -54,6 +69,19 @@ function Widget:Render(entity)
     
     -- Initiative
     LabelledIcon.Create(QuickExamine.UI, "Resources_Initiative", horizontalList, BasicInfo.INITIATIVE_ICON, tostring(char.Stats.Initiative), Vector.Create(ICON_SIZE, ICON_SIZE), Vector.Create(32, BasicInfo.RESOURCE_TEXT_SIZE))
+
+    -- Resistances
+    local resistanceLabel = ""
+    for _,resistanceId in ipairs(BasicInfo.RESISTANCES_DISPLAYED) do
+        local amount = char.Stats[resistanceId .. "Resistance"]
+        local display = Text.Format("%s%%", {
+            Color = BasicInfo.RESISTANCE_COLORS[resistanceId],
+            FormatArgs = {amount},
+        })
+
+        resistanceLabel = resistanceLabel .. "  " .. display
+    end
+    TextPrefab.Create(QuickExamine.UI, "Resources_Resistances", verticalList, resistanceLabel, "Center", Vector.Create(QuickExamine.GetContainerWidth(), 40))
 
     -- Immunities
     local immunities = {}
