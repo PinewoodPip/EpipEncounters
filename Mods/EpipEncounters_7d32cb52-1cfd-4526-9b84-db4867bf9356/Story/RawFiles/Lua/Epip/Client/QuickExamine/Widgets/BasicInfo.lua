@@ -32,7 +32,7 @@ function Widget:Render(entity)
     local horizontalList = verticalList:AddChild("ResourcesList", "GenericUI_Element_HorizontalList")
     -- verticalList:SetSize(QuickExamine.GetContainerWidth(), -1)
     local sizingDummy = verticalList:AddChild("_", "GenericUI_Element_TiledBackground") -- A ridiculous hack
-    sizingDummy:SetSize(QuickExamine.GetContainerWidth(), 0)
+    sizingDummy:SetSize(QuickExamine.GetContainerWidth(), 3)
     sizingDummy:SetAlpha(0)
     horizontalList:SetCenterInLists(true)
 

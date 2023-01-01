@@ -1,6 +1,7 @@
 
 local Generic = Client.UI.Generic
 local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
+local Set = DataStructures.Get("DataStructures_Set")
 
 ---@class Feature_QuickExamine : Feature
 local QuickExamine = {
@@ -10,25 +11,56 @@ local QuickExamine = {
     _Widgets = {}, ---@type Feature_QuickExamine_Widget[]
 
     UI = nil, ---@type Feature_QuickExamine_UI
-    WIDTH = 400,
     CONTAINER_PADDING = 5,
     SCROLLBAR_WIDTH = 18,
     ContentContainer = nil, ---@type GenericUI_Element_VerticalList
     CharacterNameElement = nil, ---@type GenericUI_Element_Text
-    ALPHA = 0.8,
-    HEIGHT = 600,
 
     SAVE_FILENAME = "EpipEncounters_QuickExamine.json",
     SAVE_VERSION = 1,
     INPUT_DEVICE = "KeyboardMouse",
+    GRAPHICAL_SETTINGS = Set.Create({
+        "Opacity",
+        "Width",
+        "Height",
+    }),
 
     Settings = {
         AllowDead = {
-            ID = "AllowDead",
             Type = "Boolean",
             Name = "Enable Corpses",
             Description = "Allows examining dead characters.",
             DefaultValue = false,
+        },
+        Opacity = {
+            Type = "ClampedNumber",
+            Name = "Background Opacity",
+            Description = "Controls the opacity of the background panel.<br><br>Default is 80%.",
+            Min = 0,
+            Max = 100,
+            Step = 1,
+            HideNumbers = false,
+            DefaultValue = 80,
+        },
+        Width = {
+            Type = "ClampedNumber",
+            Name = "Width",
+            Description = "Controls the width of the user interface.<br><br>Default is 400.",
+            Min = 300,
+            Max = 800,
+            Step = 1,
+            HideNumbers = false,
+            DefaultValue = 400,
+        },
+        Height = {
+            Type = "ClampedNumber",
+            Name = "Height",
+            Description = "Controls the height of the user interface.<br><br>Default is 600.",
+            Min = 300,
+            Max = 800,
+            Step = 1,
+            HideNumbers = false,
+            DefaultValue = 600,
         },
     },
 
@@ -147,8 +179,19 @@ function QuickExamine.GetContainer()
     return QuickExamine.ContentContainer
 end
 
+---@return number
+function QuickExamine.GetWidth()
+    return QuickExamine:GetSettingValue(QuickExamine.Settings.Width)
+end
+
+---@return number
+function QuickExamine.GetHeight()
+    return QuickExamine:GetSettingValue(QuickExamine.Settings.Height)
+end
+
+---@return number
 function QuickExamine.GetContainerWidth()
-    return QuickExamine.WIDTH - QuickExamine.CONTAINER_PADDING * 2 - QuickExamine.SCROLLBAR_WIDTH
+    return QuickExamine.GetWidth() - QuickExamine.CONTAINER_PADDING * 2 - QuickExamine.SCROLLBAR_WIDTH
 end
 
 ---@param path Path?
@@ -187,13 +230,55 @@ function QuickExamine.IsEligible(entity)
     return hook.Eligible
 end
 
+---@return Feature_QuickExamine_Widget[]
+function QuickExamine.GetWidgets()
+    return QuickExamine._Widgets
+end
+
+function QuickExamine._UpdatePanelSize()
+    local UI = QuickExamine.UI
+    local uiObject = UI:GetUI()
+    local width = QuickExamine.GetWidth()
+    local height = QuickExamine.GetHeight()
+
+    uiObject.SysPanelSize = {width + QuickExamine.SCROLLBAR_WIDTH, height}
+    uiObject.Left = width - 2
+end
+
+---@param setting SettingsLib_Setting
+---@return boolean
+function QuickExamine.IsWidgetSetting(setting)
+    local isWidgetSetting = false
+
+    for _,widget in ipairs(QuickExamine.GetWidgets()) do
+        if widget.Setting and widget.Setting.ID == setting.ID and setting.ModTable == widget.Setting.ModTable then
+            isWidgetSetting = true
+            break
+        end
+    end
+
+    return isWidgetSetting
+end
+
 ---@param entity Entity
-function QuickExamine.SetEntity(entity)
+---@param forceUpdate boolean? Defaults to false.
+function QuickExamine.SetEntity(entity, forceUpdate)
     if entity and QuickExamine.IsEligible(entity) then
-        if entity.NetID ~= QuickExamine.entityNetID then
+        if entity.NetID ~= QuickExamine.entityNetID or forceUpdate then
+            local width = QuickExamine.GetWidth()
+            local height = QuickExamine.GetHeight()
+            local UI = QuickExamine.UI
+
             QuickExamine.entityNetID = entity.NetID
 
             QuickExamine.GetContainer():Clear()
+
+            UI.Container:SetSize(width, -1)
+            UI.HeaderList:SetSize(width, -1)
+            UI.HeaderText:SetSize(width, 20)
+            UI.CharacterNameText:SetSize(width, 30)
+            UI.DraggingArea:SetBackground("Black", width, 75)
+            UI.CloseButton:SetPosition(width - UI.CloseButton:GetMovieClip().width, 0)
 
             -- Filler to compensate for the top div having a short height for the culling effect.
             QuickExamine.GetContainer():AddChild("Filler", "GenericUI_Element_Empty"):GetMovieClip().heightOverride = 10
@@ -202,13 +287,29 @@ function QuickExamine.SetEntity(entity)
                 Color = "ffffff",
                 Size = 21,
             }))
-            QuickExamine.CharacterNameElement:SetSize(QuickExamine.WIDTH, 50)
+            QuickExamine.CharacterNameElement:SetSize(width, 50)
+
+            UI.MainDivider:SetSize(QuickExamine.GetContainerWidth())
+
+            UI.HeaderList:RepositionElements()
+
+            UI.ContentContainer:SetFrame(QuickExamine.GetContainerWidth(), QuickExamine.GetHeight() - 99)
+            UI.ContentContainer:SetScrollbarSpacing(-QuickExamine.CONTAINER_PADDING * 2)
+            UI.LockButton:SetPosition(QuickExamine.GetWidth() - 48, 2)
+
+            -- Set background alpha.
+            local background = UI.Background
+            background:SetAlpha(QuickExamine:GetSettingValue(QuickExamine.Settings.Opacity) / 100)
+            background:SetSize(width, height)
+
+            -- Set UIObject properties.
+            QuickExamine._UpdatePanelSize()
 
             QuickExamine.Events.EntityChanged:Fire(entity)
 
-            QuickExamine.UI.Container:RepositionElements()
+            UI.Container:RepositionElements()
 
-            QuickExamine.UI:GetUI():Show()
+            UI:GetUI():Show()
         end
     elseif not entity then -- Only hide the UI is entity passed is nil.
         QuickExamine.entityNetID = nil
@@ -259,87 +360,100 @@ QuickExamine.Events.EntityChanged:RegisterListener(function (entity)
     end
 end)
 
+-- Refresh the UI when graphical settings are changed.
+Settings.Events.SettingValueChanged:Subscribe(function (ev)
+    if QuickExamine.GRAPHICAL_SETTINGS:Contains(ev.Setting.ID) or QuickExamine.IsWidgetSetting(ev.Setting) then
+        local width = QuickExamine.UI:GetUI().SysPanelSize[1]
+        local newWidth
+        local posX, posY
+
+        QuickExamine.SetEntity(Character.Get(QuickExamine.entityNetID), true) -- TODO support items
+
+        newWidth = QuickExamine.UI:GetUI().SysPanelSize[1]
+        posX, posY = QuickExamine.UI:GetPosition()
+        QuickExamine.UI:GetUI():SetPosition(posX - (newWidth - width), posY)
+    end
+end)
+
 ---------------------------------------------
 -- SETUP
 ---------------------------------------------
 
 local function Setup()
     ---@class Feature_QuickExamine_UI
-    local ui = QuickExamine.UI
-    local uiObject = ui:GetUI()
-    uiObject.SysPanelSize = {QuickExamine.WIDTH + QuickExamine.SCROLLBAR_WIDTH, QuickExamine.HEIGHT}
-    uiObject.Left = QuickExamine.WIDTH - 2
+    local UI = QuickExamine.UI
+    local uiObject = UI:GetUI()
 
+    -- Load config.
     QuickExamine.LoadData()
 
-    ui:ExternalInterfaceCall("setPosition", "center", "screen", "right")
+    QuickExamine._UpdatePanelSize()
+
+    UI:ExternalInterfaceCall("setPosition", "center", "screen", "right")
 
     -- Push the UI down a bit from the center, so it's below the minimap at 1080p
-    local x, y = ui:GetPosition()
+    local x, y = UI:GetPosition()
     uiObject:SetPosition(x, y + 100)
 
     -- Build elements
-    local panel = ui:CreateElement("Panel", "GenericUI_Element_TiledBackground")
-    panel:SetSize(QuickExamine.WIDTH, QuickExamine.HEIGHT)
-    panel:SetAlpha(QuickExamine.ALPHA)
+    local panel = UI:CreateElement("Panel", "GenericUI_Element_TiledBackground")
+    UI.Background = panel
 
     local container = panel:AddChild("Container", "GenericUI_Element_VerticalList")
-    container:SetSize(QuickExamine.WIDTH, -1)
     container:SetCenterInLists(true)
-    ui.Container = container
+    UI.Container = container
 
     local list = container:AddChild("List", "GenericUI_Element_VerticalList")
-    list:SetSize(QuickExamine.WIDTH, -1)
+    UI.HeaderList = list
 
     local header = list:AddChild("Header", "GenericUI_Element_Text")
     header:SetText(Text.Format("Quick Examine", {
         Color = "ffffff",
         Size = 15,
     }))
-    header:SetSize(QuickExamine.WIDTH, 20)
+    UI.HeaderText = header
 
     local charName = list:AddChild("CharName", "GenericUI_Element_Text")
     charName:SetText(Text.Format("Character Name", {
         Color = "ffffff",
         Size = 21,
     }))
-    charName:SetSize(QuickExamine.WIDTH, 30)
+    UI.CharacterNameText = charName
     QuickExamine.CharacterNameElement = charName
 
     local div = list:AddChild("MainDiv", "GenericUI_Element_Divider")
-    div:SetSize(QuickExamine.GetContainerWidth())
     div:SetCenterInLists(true)
     div:GetMovieClip().heightOverride = div:GetMovieClip().height / 2
+    UI.MainDivider = div
 
     -- Draggable area
     local dragArea = panel:AddChild("DragArea", "GenericUI_Element_TiledBackground")
-    dragArea:SetBackground("Black", QuickExamine.WIDTH, 75)
     dragArea:SetAlpha(0.2)
     dragArea:SetAsDraggableArea()
+    UI.DraggingArea = dragArea
 
     local content = list:AddChild("Content", "GenericUI_Element_ScrollList")
     content:SetMouseWheelEnabled(true)
-    content:SetFrame(QuickExamine.GetContainerWidth(), 510)
     content:Move(QuickExamine.CONTAINER_PADDING, 0)
-    content:SetScrollbarSpacing(-QuickExamine.CONTAINER_PADDING * 2)
     QuickExamine.ContentContainer = content
+    UI.ContentContainer = content
     
     local closeButton = panel:AddChild("Close", "GenericUI_Element_Button")
     closeButton:SetType("Close")
-    closeButton:SetPosition(QuickExamine.WIDTH - closeButton:GetMovieClip().width, 0)
     closeButton.Events.Pressed:Subscribe(function (_)
-        ui:GetUI():Hide()
+        UI:GetUI():Hide()
     end)
+    UI.CloseButton = closeButton
 
     local lockButton = panel:AddChild("Lock", "GenericUI_Element_StateButton")
     lockButton:SetType(Generic.ELEMENTS.StateButton.TYPES.LOCK)
     lockButton:SetActive(QuickExamine.IsLocked())
-    lockButton:SetPosition(400 - 23 - 25, 2)
     lockButton.Events.StateChanged:Subscribe(function (ev)
         QuickExamine.lockCharacter = ev.Active
         QuickExamine.SaveData()
     end)
     lockButton.Tooltip = "Lock Character"
+    UI.LockButton = lockButton
 
     uiObject.Layer = Client.UI.PlayerInfo:GetUI().Layer
 

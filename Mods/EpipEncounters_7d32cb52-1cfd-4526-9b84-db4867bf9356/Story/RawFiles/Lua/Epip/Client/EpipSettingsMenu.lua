@@ -48,6 +48,9 @@ local tabs = {
         Entries = {
             CreateHeader("Quick Examine"),
             {Module = "EpipEncounters_QuickExamine", ID = "AllowDead"},
+            {Module = "EpipEncounters_QuickExamine", ID = "Opacity"},
+            {Module = "EpipEncounters_QuickExamine", ID = "Width"},
+            {Module = "EpipEncounters_QuickExamine", ID = "Height"},
             {Module = "EpipEncounters_QuickExamine", ID = "Widget_Artifacts"},
             {Module = "EpipEncounters_QuickExamine", ID = "Widget_Skills"},
         }
