@@ -43,7 +43,6 @@ Mods = {}
 ---------------------------------------------
 
 ---@alias UI_InputDevice "Any" | "Controller" | "KeyboardMouse"
----@alias FlashObjectHandle int64
 
 ---------------------------------------------
 -- GAME.TOOLTIP

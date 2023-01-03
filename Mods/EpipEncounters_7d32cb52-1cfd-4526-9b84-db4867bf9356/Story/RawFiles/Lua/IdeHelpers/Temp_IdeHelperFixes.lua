@@ -105,3 +105,8 @@ local Ext_ClientEntity = {}
 ---@param identifier NetId|ObjectHandle|GUID
 ---@return EclCharacter
 function Ext_ClientEntity.GetCharacter(identifier) end
+
+---@param entityHandle EntityHandle
+---@param statusHandle EntityHandle
+---@return EclStatus
+function Ext_ClientEntity.GetStatus(entityHandle, statusHandle) end

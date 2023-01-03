@@ -3,12 +3,11 @@ local Flash = {}
 Epip.InitializeLibrary("Flash", Flash)
 Client.Flash = Flash
 
----Returns the last element of an array.
----@param array FlashArray
----@return any
-function Flash.GetLastElement(array)
-    return array[#array - 1]
-end
+---------------------------------------------
+-- CLASSES
+---------------------------------------------
+
+---@alias FlashObjectHandle int64
 
 ---@class FlashArrayEntryTemplate
 ---@field Name string
@@ -17,6 +16,17 @@ end
 ---@class FlashArrayMultiElementEntryTemplate
 ---@field Name string For human/script reference. Does not correspond to internal ID.
 ---@field Template (string|FlashArrayEntryTemplate)[] 
+
+---------------------------------------------
+-- METHODS
+---------------------------------------------
+
+---Returns the last element of an array.
+---@param array FlashArray
+---@return any
+function Flash.GetLastElement(array)
+    return array[#array - 1]
+end
 
 ---Parses an update array.
 ---@param arr FlashArray
@@ -176,4 +186,18 @@ function Flash.GetElementByField(array, field, value)
     end
 
     return element
+end
+
+---Converts a handle to its flash representation.
+---@param handle EntityHandle
+---@return FlashObjectHandle
+function Flash.ToFlashHandle(handle)
+    return Ext.UI.HandleToDouble(handle)
+end
+
+---Converts a flash handle to its engine counterpart.
+---@param flashHandle FlashObjectHandle
+---@return EntityHandle
+function Flash.ToEngineHandle(flashHandle)
+    return Ext.UI.DoubleToHandle(flashHandle)
 end

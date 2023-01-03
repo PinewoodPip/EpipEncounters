@@ -53,6 +53,7 @@ Epip.InitializeLibrary("TooltipLib", Tooltip)
 -- CLASSES
 ---------------------------------------------
 
+---@alias TooltipLib_TooltipType "Custom"|"Skill"|"Item"|"Status"|"Simple" TODO talent, stat, others
 ---@alias TooltipLib_FormattedTooltipType "Surface"|"Skill"|"Item"|"Custom"|"Status"
 ---@alias TooltipLib_Element table See `Game.Tooltip`. TODO
 ---@alias TooltipLib_FormattedTooltipElementType string TODO
@@ -266,6 +267,19 @@ function Tooltip.ShowSkillTooltip(char, skillID, position)
     }
 
     ui:ExternalInterfaceCall("showSkillTooltip", Ext.UI.HandleToDouble(char.Handle), skillID, mouseX, mouseY, 100, 100, "left")
+end
+
+---@param char EclCharacter
+---@param status EclStatus
+---@param position Vector2D? Defaults to mouse position.
+function Tooltip.ShowStatusTooltip(char, status, position)
+    local ui = Client.UI.Hotbar -- TODO replace once a better option becomes available.
+    local mouseX, mouseY = Client.GetMousePosition()
+
+    Tooltip._nextTooltipPosition = position or Vector.Create(mouseX, mouseY)
+    position = Tooltip._nextTooltipPosition
+
+    ui:ExternalInterfaceCall("showStatusTooltip", Client.Flash.ToFlashHandle(char.Handle), Client.Flash.ToFlashHandle(status.StatusHandle), position[1], position[2], 100, 100, "right") -- TODO
 end
 
 function Tooltip.HideTooltip()

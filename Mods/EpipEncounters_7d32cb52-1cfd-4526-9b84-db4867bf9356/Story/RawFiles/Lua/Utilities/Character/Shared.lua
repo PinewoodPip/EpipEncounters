@@ -348,6 +348,14 @@ function Character.IsDead(char)
     return char:GetStatus("DYING") ~= nil
 end
 
+---Returns a status by handle.
+---@param char Character
+---@param handle EntityHandle
+---@return EclStatus|EsvStatus
+function Character.GetStatusByHandle(char, handle)
+    return Ext.Entity.GetStatus(char.Handle, handle)
+end
+
 ---Returns the gender of char.
 ---@param char Character
 ---@return Gender
