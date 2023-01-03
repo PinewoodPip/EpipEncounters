@@ -15,6 +15,8 @@ local Status = {
     TEXT_SIZE = Vector.Create(32, 18),
     TEXT_FONT_SIZE = 12,
     DURATION_BORDER_WIDTH = 1,
+    DURATION_BORDER_COLOR = Color.Create(255, 255, 255),
+    DURATION_BORDER_INFINITE_COLOR = Color.Create(105, 105, 105),
 }
 Generic.RegisterPrefab("GenericUI_Prefab_Status", Status)
 
@@ -58,12 +60,11 @@ function Status.Create(ui, id, parent, entity, status)
     return element
 end
 
-local function DrawWedge(element, graphics, relativeDurationLeft, relativeWedgeLength, wedgeMaxLength, position)
-        graphics.beginFill(Color.Create(255, 255, 255):ToDecimal(), 1)
+local function DrawWedge(element, graphics, relativeDurationLeft, relativeWedgeLength, wedgeMaxLength, color, position)
     local wedgeLength = math.clamp(relativeDurationLeft / relativeWedgeLength, 0, 1) * wedgeMaxLength
     wedgeLength = Ext.Round(wedgeLength)
 
-    graphics.beginFill(Color.Create(255, 255, 255):ToDecimal(), 1)
+    graphics.beginFill(color:ToDecimal(), 1)
     if position == "TopLeft" then
         graphics.drawRect(element.SIZE[1]/2 - wedgeLength, 0, wedgeLength, element.DURATION_BORDER_WIDTH)
     elseif position == "Left" then
@@ -87,6 +88,9 @@ end
 function Status:SetStatus(entity, status)
     local icon = self.Icon
     local durationTurns = status.CurrentLifeTime // 6
+    if status.CurrentLifeTime % 6 > 0 then -- Round turns up.
+        durationTurns = durationTurns + 1
+    end
 
     self.EntityHandle = entity.Handle
     self.StatusHandle = status.StatusHandle
@@ -105,25 +109,28 @@ function Status:SetStatus(entity, status)
     -- Draw duration border
     local TOP_WEDGE_LENGTH = 1/8
     local SIDE_WEDGE_LENGTH = 1/4
-    if status.LifeTime > 0 then
-        local graphics = self.BorderDummy:GetMovieClip().graphics
-        local relativeDurationLeft = status.CurrentLifeTime / status.LifeTime
-        graphics.clear()
-        
-        if relativeDurationLeft >= 0 then
-            relativeDurationLeft = DrawWedge(self, graphics, relativeDurationLeft, TOP_WEDGE_LENGTH, self.SIZE[1]/2, "TopLeft")
-        end
-        if relativeDurationLeft >= 0 then
-            relativeDurationLeft = DrawWedge(self, graphics, relativeDurationLeft, SIDE_WEDGE_LENGTH, self.SIZE[2], "Left")
-        end
-        if relativeDurationLeft >= 0 then
-            relativeDurationLeft = DrawWedge(self, graphics, relativeDurationLeft, SIDE_WEDGE_LENGTH, self.SIZE[1], "Bottom")
-        end
-        if relativeDurationLeft >= 0 then
-            relativeDurationLeft = DrawWedge(self, graphics, relativeDurationLeft, SIDE_WEDGE_LENGTH, self.SIZE[2], "Right")
-        end
-        if relativeDurationLeft >= 0 then
-            relativeDurationLeft = DrawWedge(self, graphics, relativeDurationLeft, TOP_WEDGE_LENGTH, self.SIZE[1]/2, "TopRight")
-        end
+    local color = status.LifeTime > 0 and self.DURATION_BORDER_COLOR or self.DURATION_BORDER_INFINITE_COLOR
+    
+    local graphics = self.BorderDummy:GetMovieClip().graphics
+    local relativeDurationLeft = status.CurrentLifeTime / status.LifeTime
+    graphics.clear()
+    if status.LifeTime < 0 then -- Draw the whole rect for infinite statuses
+        relativeDurationLeft = 1
+    end
+    
+    if relativeDurationLeft >= 0 then
+        relativeDurationLeft = DrawWedge(self, graphics, relativeDurationLeft, TOP_WEDGE_LENGTH, self.SIZE[1]/2, color, "TopLeft")
+    end
+    if relativeDurationLeft >= 0 then
+        relativeDurationLeft = DrawWedge(self, graphics, relativeDurationLeft, SIDE_WEDGE_LENGTH, self.SIZE[2], color, "Left")
+    end
+    if relativeDurationLeft >= 0 then
+        relativeDurationLeft = DrawWedge(self, graphics, relativeDurationLeft, SIDE_WEDGE_LENGTH, self.SIZE[1], color, "Bottom")
+    end
+    if relativeDurationLeft >= 0 then
+        relativeDurationLeft = DrawWedge(self, graphics, relativeDurationLeft, SIDE_WEDGE_LENGTH, self.SIZE[2], color, "Right")
+    end
+    if relativeDurationLeft >= 0 then
+        relativeDurationLeft = DrawWedge(self, graphics, relativeDurationLeft, TOP_WEDGE_LENGTH, self.SIZE[1]/2, color, "TopRight")
     end
 end
