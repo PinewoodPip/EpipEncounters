@@ -236,6 +236,7 @@ LOAD_ORDER = {
             "UI/Generic/Prefabs/LabelledTextField.lua",
             "UI/Generic/Prefabs/FormHorizontalList.lua",
             "UI/Generic/Prefabs/LabelledIcon.lua",
+            "UI/Generic/Prefabs/Status.lua",
         },
     },
     -- {Script = "UI/Generic/Test.lua", WIP = true}, -- TEST!

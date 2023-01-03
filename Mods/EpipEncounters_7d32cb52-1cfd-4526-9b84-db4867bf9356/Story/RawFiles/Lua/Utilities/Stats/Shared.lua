@@ -274,6 +274,38 @@ function Stats.Update(statType, data, ...)
     end
 end
 
+---@param status EclStatus|EsvStatus
+function Stats.IsStatusVisible(status)
+    local icon = Stats.GetStatusIcon(status)
+
+    return icon and icon ~= "unknown" and icon ~= "" 
+end
+
+---@param status EclStatus|EsvStatus
+function Stats.GetStatusIcon(status)
+    local stat = Stats.Get("StatusData", status.StatusId)
+    local icon
+
+    if stat then
+        icon = stat.Icon
+
+        if icon == "" then -- Fetch potion instead
+            local potion = Stats.Get("Potion", stat.StatsId)
+
+            if potion then
+                icon = potion.StatusIcon
+            end
+        end
+    end
+
+    if not icon then
+        Stats:LogError("GetStatusIcon(): Could not find icon for " .. status.StatusId)
+        icon = "unknown"
+    end
+
+    return icon
+end
+
 function Stats.CountStat(stats, stat)
     local count = 0
     local dynStats = stats.DynamicStats

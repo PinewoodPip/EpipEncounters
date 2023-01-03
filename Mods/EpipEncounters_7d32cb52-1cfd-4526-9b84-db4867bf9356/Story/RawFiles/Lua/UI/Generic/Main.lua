@@ -11,7 +11,7 @@ Client.UI.Generic = {
 local Generic = Client.UI.Generic ---@class GenericUI
 Epip.InitializeLibrary("Generic", Generic)
 
----@alias GenericUI_PrefabClass "GenericUI_Prefab_HotbarSlot"|"GenericUI_Prefab_Spinner"|"GenericUI_Prefab_Text"|"GenericUI_Prefab_LabelledDropdown"|"GenericUI_Prefab_LabelledCheckbox"|"GenericUI_Prefab_LabelledTextField"|"GenericUI_Prefab_FormHorizontalList"|"GenericUI_Prefab_LabelledIcon"
+---@alias GenericUI_PrefabClass "GenericUI_Prefab_HotbarSlot"|"GenericUI_Prefab_Spinner"|"GenericUI_Prefab_Text"|"GenericUI_Prefab_LabelledDropdown"|"GenericUI_Prefab_LabelledCheckbox"|"GenericUI_Prefab_LabelledTextField"|"GenericUI_Prefab_FormHorizontalList"|"GenericUI_Prefab_LabelledIcon"|"GenericUI_Prefab_Status"
 
 ---------------------------------------------
 -- EVENTS/HOOKS
@@ -131,6 +131,15 @@ function Prefab:_Create(ui, id, ...)
     return obj
 end
 
+---@generic T
+---@param id string Automatically prefixed.
+---@param elementType `T`|GenericUI_ElementType
+---@param parent (GenericUI_Element|string)?
+---@return T
+function Prefab:CreateElement(id, elementType, parent)
+    return self.UI:CreateElement(self:PrefixID(id), elementType, parent)
+end
+
 function Prefab:_Setup() end
 
 function Prefab:PrefixID(id)
@@ -169,7 +178,7 @@ end
 
 ---@param id string
 ---@return GenericUI_Instance
-function Client.UI.Generic.Create(id)
+function Generic.Create(id)
     ---@type GenericUI_Instance
     local ui = {
         ID = id,
@@ -242,13 +251,6 @@ function Client.UI.Generic.Create(id)
     return ui
 end
 
----Registers a prefab.
----@param id string
----@param prefab table
-function Generic.RegisterPrefab(id, prefab)
-    Generic.PREFABS[id] = prefab
-end
-
 ---@generic T
 ---@param className `T`|GenericUI_PrefabClass
 ---@return T
@@ -270,14 +272,14 @@ end
 
 ---@param elementType string
 ---@param elementTable GenericUI_Element
-function Client.UI.Generic.RegisterElementType(elementType, elementTable)
+function Generic.RegisterElementType(elementType, elementTable)
     Generic.ELEMENTS[elementType] = elementTable
 end
 
 ---@param call string
 ---@vararg LuaFlashCompatibleType
 ---@return fun(self:GenericUI_Element, ...):any?
-function Client.UI.Generic.ExposeFunction(call)
+function Generic.ExposeFunction(call)
     local fun = function(obj, ...)
         local mc = obj:GetMovieClip()
 
@@ -295,11 +297,14 @@ end
 
 ---@param id integer
 ---@return GenericUI_Instance
-function Client.UI.Generic.GetInstance(id)
+function Generic.GetInstance(id)
     return Generic.INSTANCES[id]
 end
 
-function Client.UI.Generic.RegisterPrefab(id, prefab)
+---Registers a prefab.
+---@param id string
+---@param prefab table
+function Generic.RegisterPrefab(id, prefab)
     Inherit(prefab, Generic._Prefab)
 
     Generic.PREFABS[id] = prefab
