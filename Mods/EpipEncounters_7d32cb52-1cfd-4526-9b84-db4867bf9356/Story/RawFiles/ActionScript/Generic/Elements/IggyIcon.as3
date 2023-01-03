@@ -10,7 +10,7 @@ package Elements
     public dynamic class IggyIcon extends Element
     {
         public var hit_mc:MovieClip;
-        public var iggy_mc:MovieClip;
+        // public var iggy_mc:Shape;
 
         public function IggyIcon()
         {
