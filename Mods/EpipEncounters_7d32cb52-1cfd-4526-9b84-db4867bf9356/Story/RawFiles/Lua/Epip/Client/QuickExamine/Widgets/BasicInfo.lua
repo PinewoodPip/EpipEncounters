@@ -99,6 +99,4 @@ function Widget:Render(entity)
     end
 
     verticalList:RepositionElements()
-
-    self:CreateDivider("Resources_Divider", container)
 end

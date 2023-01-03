@@ -12,8 +12,8 @@ local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 local Status = {
     SIZE = Vector.Create(32, 32),
     ICON_SIZE = Vector.Create(28, 28),
-    TEXT_SIZE = Vector.Create(32, 16),
-    TEXT_FONT_SIZE = 13,
+    TEXT_SIZE = Vector.Create(32, 18),
+    TEXT_FONT_SIZE = 12,
     DURATION_BORDER_WIDTH = 1,
 }
 Generic.RegisterPrefab("GenericUI_Prefab_Status", Status)
@@ -100,7 +100,7 @@ function Status:SetStatus(entity, status)
         Color = Color.WHITE,
     }) or "")
     self.DurationText:SetStroke(Color.Create(0, 0, 0), 1, 1, 15, 1)
-    self.DurationText:SetPositionRelativeToParent("BottomRight")
+    self.DurationText:SetPositionRelativeToParent("BottomRight", 2, 2)
 
     -- Draw duration border
     local TOP_WEDGE_LENGTH = 1/8
