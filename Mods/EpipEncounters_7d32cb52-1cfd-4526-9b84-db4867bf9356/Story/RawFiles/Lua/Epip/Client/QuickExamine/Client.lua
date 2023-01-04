@@ -392,7 +392,7 @@ end)
 
 -- Refresh the UI when graphical settings are changed.
 Settings.Events.SettingValueChanged:Subscribe(function (ev)
-    if QuickExamine.GRAPHICAL_SETTINGS:Contains(ev.Setting.ID) or QuickExamine.IsWidgetSetting(ev.Setting) then
+    if QuickExamine.UI and (QuickExamine.GRAPHICAL_SETTINGS:Contains(ev.Setting.ID) or QuickExamine.IsWidgetSetting(ev.Setting)) then
         local width = QuickExamine.UI:GetUI().SysPanelSize[1]
         local newWidth
         local posX, posY
