@@ -281,6 +281,15 @@ function Stats.IsStatusVisible(status)
     return icon and icon ~= "unknown" and icon ~= "" 
 end
 
+local HARDCODED_STATUS_ICONS = {
+    ADRENALINE = "statIcons_Adrenaline",
+    CHARMED = "statIcons_Charmed",
+    CLEAN = "statIcons_Clean",
+    DYING = "statIcons_Dead",
+    ENCUMBERED = "statIcons_Encumbered",
+    LEADERSHIP = "statIcons_Leadership", -- This one does have a potion entry, why doesn't our code pick it up? TODO investigate
+}
+
 ---@param status EclStatus|EsvStatus
 function Stats.GetStatusIcon(status)
     local stat = Stats.Get("StatusData", status.StatusId)
@@ -297,6 +306,9 @@ function Stats.GetStatusIcon(status)
             end
         end
     end
+
+    -- Use hardcoded icons for hardcoded status types.
+    icon = icon or HARDCODED_STATUS_ICONS[status.StatusId]
 
     if not icon then
         Stats:LogError("GetStatusIcon(): Could not find icon for " .. status.StatusId)

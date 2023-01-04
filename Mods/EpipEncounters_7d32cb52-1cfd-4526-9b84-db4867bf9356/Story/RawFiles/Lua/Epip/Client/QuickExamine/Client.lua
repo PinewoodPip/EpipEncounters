@@ -357,6 +357,8 @@ QuickExamine.Events.EntityChanged:RegisterListener(function (entity)
                 QuickExamine:LogError("Error while rendering widget: " .. msg)
             end
         end
+
+        QuickExamine.GetContainer():RepositionElements()
     end
 end)
 
