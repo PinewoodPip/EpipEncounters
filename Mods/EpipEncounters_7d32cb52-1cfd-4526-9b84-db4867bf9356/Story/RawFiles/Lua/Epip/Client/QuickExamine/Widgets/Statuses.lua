@@ -30,7 +30,7 @@ function Widget:Render(entity)
     local container = QuickExamine.GetContainer()
 
     local grid = container:AddChild("Statuses_Grid", "GenericUI_Element_Grid")
-    grid:SetGridSize(QuickExamine.GetContainerWidth() // StatusPrefab.SIZE[1], -1)
+    grid:SetGridSize(QuickExamine.GetContainerWidth() // StatusPrefab.SIZE[1] - 1, -1)
     grid:SetCenterInLists(true)
 
     local statuses = char:GetStatusObjects() ---@type EclStatus[]
