@@ -64,21 +64,6 @@ function Widget:Render(entity)
     batteredIcon:SetCenterInLists(true)
     harriedIcon:SetCenterInLists(true)
 
-    -- Immunities
-    local immunities = {}
-    for id,immunity in pairs(Stats.Immunities) do
-        if Character.HasImmunity(char, id) then
-            table.insert(immunities, immunity:GetName())
-        end
-    end
-    table.sort(immunities)
-    if #immunities > 0 then
-        local immunityLabel = "Immune to " .. Text.Join(immunities, ", ")
-        immunityLabel = Text.Format(immunityLabel, {Size = 13})
-
-        TextPrefab.Create(QuickExamine.UI, "Resources_Immunities", verticalList, immunityLabel, "Center", Vector.Create(QuickExamine.GetContainerWidth(), 30))
-    end
-
     horizontalList:RepositionElements()
     verticalList:RepositionElements()
 end

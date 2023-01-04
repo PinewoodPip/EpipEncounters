@@ -364,6 +364,7 @@ LOAD_ORDER = {
 
             "Epip/Client/QuickExamine/Widgets/BasicInfo.lua",
             "Epip/Client/QuickExamine/Widgets/Resistances.lua",
+            "Epip/Client/QuickExamine/Widgets/Immunities.lua",
             "Epip/Client/QuickExamine/Widgets/Statuses.lua",
             "Epip/Client/QuickExamine/Widgets/Artifacts.lua",
             "Epip/Client/QuickExamine/Widgets/SkillsDisplay.lua",

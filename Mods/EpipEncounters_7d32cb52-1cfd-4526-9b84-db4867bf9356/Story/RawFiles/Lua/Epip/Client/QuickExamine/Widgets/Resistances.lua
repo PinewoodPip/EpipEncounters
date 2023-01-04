@@ -27,7 +27,7 @@ Epip.RegisterFeature("QuickExamine_Widget_Resistances", Resistances)
 
 local Widget = QuickExamine.RegisterWidget("Resistances")
 
-function Widget:CanRender(entity)
+function Widget:CanRender(_)
     return Resistances:IsEnabled()
 end
 
