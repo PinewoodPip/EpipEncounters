@@ -6,6 +6,20 @@
         <node id="root">
             <children>
                 <node id="IconUV">
+                    <attribute id="MapKey" value="AMER_Icon_Status_Battered_0" type="22" />
+                    <attribute id="U1" value="0.250977" type="6" />
+                    <attribute id="U2" value="0.374023" type="6" />
+                    <attribute id="V1" value="0.000976563" type="6" />
+                    <attribute id="V2" value="0.124023" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="AMER_Icon_Status_Harried_0" type="22" />
+                    <attribute id="U1" value="0.375977" type="6" />
+                    <attribute id="U2" value="0.499023" type="6" />
+                    <attribute id="V1" value="0.000976563" type="6" />
+                    <attribute id="V2" value="0.124023" type="6" />
+                </node>
+                <node id="IconUV">
                     <attribute id="MapKey" value="InventoryCell" type="22" />
                     <attribute id="U1" value="0.125977" type="6" />
                     <attribute id="U2" value="0.249023" type="6" />

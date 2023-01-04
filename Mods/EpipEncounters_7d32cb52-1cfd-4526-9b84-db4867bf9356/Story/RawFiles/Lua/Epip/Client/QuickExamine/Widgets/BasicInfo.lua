@@ -6,7 +6,7 @@ local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 
 ---@class Feature_QuickExamine_Widget_Resources : Feature
 local BasicInfo = {
-    ICON_SIZE = 20,
+    ICON_SIZE = 22,
     RESOURCE_TEXT_SIZE = 32,
     AP_ICON = "ui_24x_action_point",
     SP_ICON = "ui_24x_source_point",
@@ -51,9 +51,18 @@ function Widget:Render(entity)
         }
     })
     LabelledIcon.Create(QuickExamine.UI, "Resources_SP", horizontalList, BasicInfo.SP_ICON, spLabel, Vector.Create(ICON_SIZE, ICON_SIZE), Vector.Create(64, BasicInfo.RESOURCE_TEXT_SIZE))
-    
+
     -- Initiative
-    LabelledIcon.Create(QuickExamine.UI, "Resources_Initiative", horizontalList, BasicInfo.INITIATIVE_ICON, tostring(char.Stats.Initiative), Vector.Create(ICON_SIZE, ICON_SIZE), Vector.Create(32, BasicInfo.RESOURCE_TEXT_SIZE))
+    LabelledIcon.Create(QuickExamine.UI, "Resources_Initiative", horizontalList, BasicInfo.INITIATIVE_ICON, tostring(char.Stats.Initiative), Vector.Create(ICON_SIZE, ICON_SIZE), Vector.Create(64, BasicInfo.RESOURCE_TEXT_SIZE))
+
+    -- Battered & Harried
+    local battered, harried = Character.GetStacks(char, "Battered"), Character.GetStacks(char, "Harried")
+    local batteredIcon = horizontalList:AddChild("BasicInfo_Battered", "GenericUI_Element_IggyIcon")
+    local harriedIcon = horizontalList:AddChild("BasicInfo_Harried", "GenericUI_Element_IggyIcon")
+    batteredIcon:SetIcon("AMER_Icon_Status_Battered_" .. battered, ICON_SIZE, ICON_SIZE)
+    harriedIcon:SetIcon("AMER_Icon_Status_Harried_" .. harried, ICON_SIZE, ICON_SIZE)
+    batteredIcon:SetCenterInLists(true)
+    harriedIcon:SetCenterInLists(true)
 
     -- Immunities
     local immunities = {}
@@ -70,5 +79,6 @@ function Widget:Render(entity)
         TextPrefab.Create(QuickExamine.UI, "Resources_Immunities", verticalList, immunityLabel, "Center", Vector.Create(QuickExamine.GetContainerWidth(), 30))
     end
 
+    horizontalList:RepositionElements()
     verticalList:RepositionElements()
 end
