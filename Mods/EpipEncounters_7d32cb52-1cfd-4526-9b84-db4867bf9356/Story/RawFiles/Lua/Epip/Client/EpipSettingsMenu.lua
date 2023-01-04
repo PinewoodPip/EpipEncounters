@@ -52,6 +52,7 @@ local tabs = {
             {Module = "EpipEncounters_QuickExamine", ID = "Width"},
             {Module = "EpipEncounters_QuickExamine", ID = "Height"},
             {Module = "EpipEncounters_QuickExamine", ID = "Widget_Artifacts"},
+            {Module = "EpipEncounters_QuickExamine", ID = "Widget_Statuses"},
             {Module = "EpipEncounters_QuickExamine", ID = "Widget_Skills"},
         }
     },

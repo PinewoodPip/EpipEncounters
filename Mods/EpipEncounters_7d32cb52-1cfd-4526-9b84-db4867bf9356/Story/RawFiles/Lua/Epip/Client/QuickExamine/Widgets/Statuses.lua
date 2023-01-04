@@ -11,7 +11,15 @@ Epip.RegisterFeature("QuickExamine_Widget_Statuses", Statuses)
 -- WIDGET
 ---------------------------------------------
 
-local Widget = QuickExamine.RegisterWidget("Statuses")
+local Widget = QuickExamine.RegisterWidget("Statuses", {
+    Setting = {
+        ID = "Widget_Statuses",
+        Type = "Boolean",
+        Name = "Show Statuses",
+        Description = "Shows the active, visible statuses of characters.",
+        DefaultValue = true,
+    },
+})
 
 function Widget:CanRender(entity)
     return Statuses:IsEnabled() and Entity.IsCharacter(entity)
