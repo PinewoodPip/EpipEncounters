@@ -62,6 +62,14 @@ local QuickExamine = {
             HideNumbers = false,
             DefaultValue = 600,
         },
+        -- Hidden from the user, set through a button in the settings menu.
+        Position = {
+            Type = "Vector",
+            Name = "Position",
+            Arity = 2,
+            Description = "Controls the position of the interface.",
+            DefaultValue = Vector.Create(-1, -1),
+        },
     },
 
     USE_LEGACY_HOOKS = false,
@@ -245,6 +253,26 @@ function QuickExamine._UpdatePanelSize()
     uiObject.Left = width - 2
 end
 
+function QuickExamine._RestorePosition()
+    local savedPosition = QuickExamine:GetSettingValue(QuickExamine.Settings.Position) ---@type Vector2D
+    local viewportSize = Ext.UI.GetViewportSize()
+
+    -- Do not restore position if it would be placed off-screen (possible scenario if user's resolution changes)
+    if savedPosition[1] >= 0 and savedPosition[2] >= 0 and savedPosition[1] < viewportSize[1] and savedPosition[2] < viewportSize[2] then
+        QuickExamine:DebugLog("Restoring saved position", savedPosition:unpack())
+
+        QuickExamine.UI:GetUI():SetPosition(savedPosition:unpack())
+    end
+end
+
+---@param position Vector2D? Defaults to current position.
+function QuickExamine._SetDefaultPosition(position)
+    position = position or Vector.Create(QuickExamine.UI:GetUI():GetPosition())
+
+    QuickExamine.Settings.Position:SetValue(position)
+    QuickExamine:SaveSettings()
+end
+
 ---@param setting SettingsLib_Setting
 ---@return boolean
 function QuickExamine.IsWidgetSetting(setting)
@@ -377,6 +405,14 @@ Settings.Events.SettingValueChanged:Subscribe(function (ev)
     end
 end)
 
+-- Listen for "Save default position" button being pressed in the settings menu.
+local SettingsMenu = Epip.GetFeature("Feature_SettingsMenu")
+SettingsMenu.Events.ButtonPressed:Subscribe(function (ev)
+    if ev.ButtonID == "QuickExamine_SaveDefaultPosition" then
+        QuickExamine._SetDefaultPosition()
+    end
+end)
+
 ---------------------------------------------
 -- SETUP
 ---------------------------------------------
@@ -458,6 +494,11 @@ local function Setup()
     UI.LockButton = lockButton
 
     uiObject.Layer = Client.UI.PlayerInfo:GetUI().Layer
+
+    -- Needs a delay to not collide with the setposition UI
+    Timer.StartTickTimer(3, function (_)
+        QuickExamine._RestorePosition()
+    end)
 
     uiObject:Hide()
 end

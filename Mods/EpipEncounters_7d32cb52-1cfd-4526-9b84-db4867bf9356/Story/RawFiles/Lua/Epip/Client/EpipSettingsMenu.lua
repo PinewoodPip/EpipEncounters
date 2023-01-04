@@ -54,6 +54,7 @@ local tabs = {
             {Module = "EpipEncounters_QuickExamine", ID = "Widget_Artifacts"},
             {Module = "EpipEncounters_QuickExamine", ID = "Widget_Statuses"},
             {Module = "EpipEncounters_QuickExamine", ID = "Widget_Skills"},
+            {Type = "Button", ID = "QuickExamine_SaveDefaultPosition", Label = "Save Default Position", Tooltip = "Saves the UI's current position and restores it upon reloading. Use to set the default position of the UI."},
         }
     },
     ["Epip_Other"] = {

@@ -49,6 +49,8 @@ local _Vector = {
             end
         elseif key == "Length" then
             return Vector.GetLength(self)
+        elseif key == "__name" then
+            return "Vector"
         end
     end,
     __add = function(self, v) return Vector.Sum(self, v) end,

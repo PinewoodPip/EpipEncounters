@@ -127,6 +127,7 @@ LOAD_ORDER = {
             "Utilities/Settings/Setting_Choice.lua",
             "Utilities/Settings/Setting_Set.lua",
             "Utilities/Settings/Setting_Map.lua",
+            "Utilities/Settings/Setting_Vector.lua",
         },
     },
 
