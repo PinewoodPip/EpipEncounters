@@ -26,8 +26,7 @@ CONTEXT_SUFFIXES = {
     "RequireBothContexts": "Must be called on both contexts"
 }
 
-FUNCTION_REGEX = re.compile("^function (?P<Namespace>[^ .:]+)(?P<SyntacticSugar>\.|:)(?P<Signature>\S+\(.*\))$")
-TAGS_REGEX = re.compile("^---@meta (.*)$")
+FUNCTION_REGEX = re.compile("^function (?P<Namespace>[^ .:]+)(?P<SyntacticSugar>\.|:)(?P<Signature>\S+\(.*\))( end)?$")
 ALIAS_REGEX = re.compile("^---@alias (\S*) (.*)$")
 EVENT_REGEX = re.compile("^---@class .*_(.*) : (.*)?$")
 CLASS_REGEX = re.compile("^---@class (.*)$")
@@ -528,9 +527,10 @@ class DocGenerator:
     SCRIPT_SET_REGEX = re.compile("\"(?P<Script>[^\.]+)\"")
     libraries = {} # TODO don't make this static
 
-    def __init__(self, mod_root_path:str, docs_root_path:str):
+    def __init__(self, mod_root_path:str, docs_root_path:str, annotation_directories:list[str]):
         self.mod_root_path = mod_root_path
         self.docs_root_path = docs_root_path
+        self.annotation_directories = annotation_directories
 
     def getLuaFiles(self) -> list:
         lua_files = {} # Maps path to LuaFile
@@ -573,6 +573,13 @@ class DocGenerator:
 
                                 lua_files[script_filename_context_specific] = lua_file
 
+        for annotation_dir in self.annotation_directories:
+            for root_path, _, files in os.walk(annotation_dir):
+                for file_name in files:
+                    if pathlib.Path(file_name).suffix == ".lua":
+                        lua_file_path = os.path.join(root_path, file_name)
+                        lua_files[lua_file_path] = LuaFile(lua_file_path) # Only shared annotations are supported for now. TODO
+
         return lua_files
 
     def updateDocs(self) -> None:
@@ -598,10 +605,10 @@ class DocGenerator:
         library = None
         
         for key in parser.symbolsPerLibrary:
-            if key not in self.libraries:
+            if key not in self.libraries: # Create a library if it didn't already exist
                 library = Library(key)
                 self.libraries[key] = library
-            else:
+            else: # Else append the symbols to the existing ones
                 library = self.libraries[key]
 
             for symbol in parser.symbolsPerLibrary[key]:
@@ -634,10 +641,11 @@ class DocGenerator:
                         libs_to_export = []
 
                         for _,lib in self.libraries.items():
-                            match = SUBCLASS_REGEX.match(lib.name)
-                            is_hookable = HOOKABLE_REGEX.match(lib.name) != None
+                            regex = re.compile(f'({libName})_(?P<SubClass>.+)')
+                            match = regex.match(lib.name)
+                            is_hookable = HOOKABLE_REGEX.match(lib.name) != None # Do not consider listenables as subclasses.
 
-                            if match and match.groups()[0] == libName and not is_hookable:
+                            if match and match.groups()[0] == libName and not is_hookable and not "Events" in match.groupdict()["SubClass"]:
                                 libs_to_export.append(lib)
 
                         for lib in libs_to_export:
