@@ -2,25 +2,21 @@
 local Generic = Client.UI.Generic
 
 ---@class GenericUI_Element_ScrollList : GenericUI_Element_VerticalList
----@field SetFrame fun(self, width:number, height:number)
----@field SetMouseWheelEnabled fun(self, enabled:boolean)
----@field SetScrollbarSpacing fun(self, spacing:number) Must be called after SetFrame. TODO remove restriction
-Client.UI.Generic.ELEMENTS.ScrollList = {
+local ScrollList = {
     Events = {},
 }
-local List = Client.UI.Generic.ELEMENTS.ScrollList
-Generic.Inherit(List, Generic.ELEMENTS.VerticalList)
+Generic.Inherit(ScrollList, Generic.ELEMENTS.VerticalList)
 
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
-List.SetFrame = Generic.ExposeFunction("SetFrame")
-List.SetMouseWheelEnabled = Generic.ExposeFunction("SetMouseWheelEnabled")
-List.SetScrollbarSpacing = Generic.ExposeFunction("SetScrollbarSpacing")
+ScrollList.SetFrame = Generic.ExposeFunction("SetFrame")
+ScrollList.SetMouseWheelEnabled = Generic.ExposeFunction("SetMouseWheelEnabled")
+ScrollList.SetScrollbarSpacing = Generic.ExposeFunction("SetScrollbarSpacing")
 
 ---------------------------------------------
 -- SETUP
 ---------------------------------------------
 
-Generic.RegisterElementType("ScrollList", List)
+Generic.RegisterElementType("ScrollList", ScrollList)

@@ -28,16 +28,19 @@ Generic.Inherit(Slider, Generic._Element)
 -- METHODS
 ---------------------------------------------
 
+---Returns the current value selected in the slider.
 ---@return number
 function Slider:GetValue()
     return self:GetMovieClip().value
 end
 
+---Sets the minimum value accepted by the slider.
 ---@param min number
 function Slider:SetMin(min)
     self:GetMovieClip().minimum = min
 end
 
+---Sets the maximum value accepted by the slider.
 ---@param max number
 function Slider:SetMax(max)
     self:GetMovieClip().maximum = max

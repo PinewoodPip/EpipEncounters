@@ -2,13 +2,6 @@
 local Generic = Client.UI.Generic
 
 ---@class GenericUI_Element_Slot : GenericUI_Element_IggyIcon
----@field SetCooldown fun(self, cooldown:number, playRefreshAnimation:boolean?)
----@field SetEnabled fun(self, enabled:boolean)
----@field SetLabel fun(self, label:string)
----@field SetSourceBorder fun(self, enabled:boolean)
----@field SetWarning fun(self, enabled:boolean)
----@field SetActive fun(self, active:boolean)
----@field SetHighlighted fun(self, highlighted:boolean)
 ---@field Events GenericUI_Element_Slot_Events
 local Slot = {
     

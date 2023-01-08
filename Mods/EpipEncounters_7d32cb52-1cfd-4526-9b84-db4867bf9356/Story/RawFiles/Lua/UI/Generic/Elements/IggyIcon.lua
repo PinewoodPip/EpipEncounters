@@ -3,16 +3,20 @@ local Generic = Client.UI.Generic
 
 ---@class GenericUI_Element_IggyIcon : GenericUI_Element
 ---@field SetIcon fun(self, icon:string, width:number, height:number, materialGUID:GUID?)
-Client.UI.Generic.ELEMENTS.IggyIcon = {
+local IggyIcon = {
     
 }
-local IggyIcon = Client.UI.Generic.ELEMENTS.IggyIcon ---@class GenericUI_Element_IggyIcon
 Generic.Inherit(IggyIcon, Generic._Element)
 
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
+---Sets the icon displayed by the element.
+---@param icon string
+---@param width number
+---@param height number
+---@param materialGUID GUID?
 function IggyIcon:SetIcon(icon, width, height, materialGUID)
     local mc = self:GetMovieClip()
     local ui = self.UI:GetUI()

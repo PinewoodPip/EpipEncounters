@@ -9,6 +9,7 @@ Generic.Inherit(Color, Generic._Element)
 -- METHODS
 ---------------------------------------------
 
+---Sets the color shown by the element.
 ---@param color RGBColor
 function Color:SetColor(color)
     self:GetMovieClip().SetColor(color:ToDecimal(false))

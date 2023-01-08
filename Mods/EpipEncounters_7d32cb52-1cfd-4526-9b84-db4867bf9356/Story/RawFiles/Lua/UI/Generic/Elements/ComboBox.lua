@@ -3,16 +3,13 @@
 local Generic = Client.UI.Generic
 
 ---@class GenericUI_Element_ComboBox : GenericUI_Element
----@field AddOption fun(self, ID:string, label:string)
----@field SelectOption fun(self, ID:string)
----@field ClearOptions fun(self)
----@field SetOpenUpwards fun(self, openUpwards:boolean)
 ---@field Events GenericUI_Element_ComboBox_Events
 local ComboBox = {
 
 }
-Client.UI.Generic.ELEMENTS.ComboBox = ComboBox
+local _ComboBox = ComboBox ---@type GenericUI_Element_ComboBox Used to workaround an IDE issue with annotations pointing to ExposeFunction().
 
+---Represents an option in the combobox.
 ---@class GenericUI_Element_ComboBox_Option
 ---@field Label string
 ---@field ID string
@@ -27,6 +24,7 @@ ComboBox.Events = {
 }
 Generic.Inherit(ComboBox, Generic._Element)
 
+---Fired when the user selects an option.
 ---@class GenericUI_Element_ComboBox_Event_OptionSelected
 ---@field Option GenericUI_Element_ComboBox_Option
 ---@field Index integer
@@ -35,11 +33,12 @@ Generic.Inherit(ComboBox, Generic._Element)
 -- METHODS
 ---------------------------------------------
 
-ComboBox.AddOption = Generic.ExposeFunction("AddOption")
-ComboBox.SelectOption = Generic.ExposeFunction("SelectOption")
-ComboBox.ClearOptions = Generic.ExposeFunction("ClearOptions")
-ComboBox.SetOpenUpwards = Generic.ExposeFunction("SetOpenUpwards")
+_ComboBox.AddOption = Generic.ExposeFunction("AddOption")
+_ComboBox.SelectOption = Generic.ExposeFunction("SelectOption")
+_ComboBox.ClearOptions = Generic.ExposeFunction("ClearOptions")
+_ComboBox.SetOpenUpwards = Generic.ExposeFunction("SetOpenUpwards")
 
+---Sets the options for the combobox. Equivalent to calling `ClearOptions()` then `AddOption()` for each option in the list passed.
 ---@param options GenericUI_Element_ComboBox_Option[]
 function ComboBox:SetOptions(options)
     self:ClearOptions()

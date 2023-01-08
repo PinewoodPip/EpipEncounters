@@ -2,13 +2,8 @@
 local Generic = Client.UI.Generic
 
 ---@class GenericUI_Element_Text : GenericUI_Element
----@field SetText fun(self, text:string, setSize:boolean?)
----@field SetStroke fun(self, color:uint64|RGBColor, size:number, alpha:number, strength:uint64, unknown:uint64)
----@field SetType fun(self, textType:GenericUI_Element_Text_Align)
----@field SetEditable fun(self, editable:boolean)
----@field SetRestrictedCharacters fun(self, restriction:string)
 ---@field Events GenericUI_Element_Text_Events
-Client.UI.Generic.ELEMENTS.Text = {
+local Text = {
     ---@enum GenericUI_Element_Text_Align
     TYPES = {
         LEFT_ALIGN = "Left",
@@ -16,7 +11,7 @@ Client.UI.Generic.ELEMENTS.Text = {
         RIGHT_ALIGN = "Right",
     },
 }
-local Text = Client.UI.Generic.ELEMENTS.Text ---@class GenericUI_Element_Text
+local _Text = Text
 
 ---------------------------------------------
 -- EVENTS
@@ -35,6 +30,7 @@ Generic.Inherit(Text, Generic._Element)
 -- METHODS
 ---------------------------------------------
 
+---Sets the stroke style and color of the text element.
 ---@param color uint64|RGBColor
 ---@param size number
 ---@param alpha number
@@ -50,10 +46,10 @@ function Text:SetStroke(color, size, alpha, strength, unknown)
     root.AddStroke(color, size, alpha, strength, unknown)
 end
 
-Text.SetText = Generic.ExposeFunction("SetText")
-Text.SetType = Generic.ExposeFunction("SetType")
-Text.SetEditable = Generic.ExposeFunction("SetEditable")
-Text.SetRestrictedCharacters = Generic.ExposeFunction("SetRestrictedCharacters")
+_Text.SetText = Generic.ExposeFunction("SetText")
+_Text.SetType = Generic.ExposeFunction("SetType")
+_Text.SetEditable = Generic.ExposeFunction("SetEditable")
+_Text.SetRestrictedCharacters = Generic.ExposeFunction("SetRestrictedCharacters")
 
 ---------------------------------------------
 -- SETUP

@@ -7,6 +7,9 @@ local Generic = Client.UI.Generic
 
 ---@alias GenericUI_ElementType "GenericUI_Element_Empty"|"GenericUI_Element_TiledBackground"|"GenericUI_Element_Text"|"GenericUI_Element_IggyIcon"|"GenericUI_Element_Button"|"GenericUI_Element_VerticalList"|"GenericUI_Element_HorizontalList"|"GenericUI_Element_ScrollList"|"GenericUI_Element_StateButton"|"GenericUI_Element_Divider"|"GenericUI_Element_Slot"|"GenericUI_Element_ComboBox"|"GenericUI_Element_Slider"|"GenericUI_Element_Grid"|"GenericUI_Element_Color"
 
+---@class GenericUI_ContainerElement : GenericUI_Element
+---@field ClearElements fun(self) Removes all elements from the container.
+
 ---@class GenericUI_Element
 ---@field UI GenericUI_Instance
 ---@field ID string
@@ -16,6 +19,7 @@ local Generic = Client.UI.Generic
 ---@field SetPositionRelativeToParent fun(self:GenericUI_Element, position:"Center"|"TopLeft"|"TopRight"|"Top"|"Left"|"Right"|"BottomLeft"|"Bottom"|"BottomRight", horizontalOffset:number?, verticalOffset:number?)
 ---@field Move fun(self:GenericUI_Element, x:number, y:number) Moves the element a certain amount of pixels from its current position.
 ---@field Events GenericUI_Element_Events
+---@field _Tooltip GenericUI_ElementTooltip
 local _Element = Generic._Element
 
 ---@class GenericUI_Element_Events
@@ -27,12 +31,9 @@ _Element.Events = {
     RightClick = {}, ---@type Event<GenericUI_Element_Event_RightClick>
 }
 
+---TODO!
 ---@class GenericUI_ElementTooltip
----@field Type "Formatted"|"Skill"
----@field Data TooltipData? For formatted tooltips.
----@field SkillID string For skill tooltips.
----@field ItemHandle EntityHandle For item tooltips. TODO implement
----@field Spacing number[]? Offset for tooltip placement, relative to cursor position.
+---@field Type TooltipLib_TooltipType
 
 ---------------------------------------------
 -- EVENTS

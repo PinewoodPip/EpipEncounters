@@ -2,12 +2,8 @@
 local Generic = Client.UI.Generic
 
 ---@class GenericUI_Element_Button : GenericUI_Element
----@field SetText fun(self, text:string, textY:number?)
----@field SetType fun(self, buttonType:"Brown"|"Red"|"RedBig"|"TextEdit"|"StatMinus"|"StatPlus"|"Close")
----@field SetEnabled fun(self, enabled:boolean)
----@field IsEnabled fun(self):boolean
 ---@field Events GenericUI_Element_Button_Events
-Client.UI.Generic.ELEMENTS.Button = {
+local Button = {
     TYPES = {
         BROWN = "Brown",
         RED = "Red",
@@ -18,7 +14,7 @@ Client.UI.Generic.ELEMENTS.Button = {
         CLOSE = "Close",
     },
 }
-local Button = Client.UI.Generic.ELEMENTS.Button ---@class GenericUI_Element_Button
+local _Button = Button ---@type GenericUI_Element_Button Used to workaround an IDE issue with annotations pointing to ExposeFunction().
 
 ---------------------------------------------
 -- EVENTS
@@ -36,10 +32,10 @@ Generic.Inherit(Button, Generic._Element)
 -- METHODS
 ---------------------------------------------
 
-Button.SetText = Generic.ExposeFunction("SetText")
-Button.SetType = Generic.ExposeFunction("SetType")
-Button.SetEnabled = Generic.ExposeFunction("SetEnabled")
-Button.IsEnabled = Generic.ExposeFunction("GetEnabled")
+_Button.SetText = Generic.ExposeFunction("SetText")
+_Button.SetType = Generic.ExposeFunction("SetType")
+_Button.SetEnabled = Generic.ExposeFunction("SetEnabled")
+_Button.IsEnabled = Generic.ExposeFunction("GetEnabled")
 
 ---------------------------------------------
 -- SETUP

@@ -2,9 +2,8 @@
 local Generic = Client.UI.Generic
 
 ---@class GenericUI_Element_TiledBackground : GenericUI_Element
----@field SetBackground fun(self, bgID:GenericUI_Element_TiledBackground_Type, width:number, height:number)
 ---@field Events GenericUI_Element_Events
-Client.UI.Generic.ELEMENTS.TiledBackground = {
+local TiledBackground = {
     ---@enum GenericUI_Element_TiledBackground_Type
     BACKGROUND_TYPES = {
         RED_PROMPT = "RedPrompt",
@@ -14,8 +13,8 @@ Client.UI.Generic.ELEMENTS.TiledBackground = {
     },
     Events = {},
 }
-local BG = Generic.ELEMENTS.TiledBackground
-Generic.Inherit(BG, Generic._Element)
+Generic.Inherit(TiledBackground, Generic._Element)
+local BG = TiledBackground
 
 ---------------------------------------------
 -- METHODS
@@ -27,4 +26,4 @@ BG.SetBackground = Generic.ExposeFunction("SetBackground")
 -- SETUP
 ---------------------------------------------
 
-Generic.RegisterElementType("TiledBackground", BG)
+Generic.RegisterElementType("TiledBackground", TiledBackground)

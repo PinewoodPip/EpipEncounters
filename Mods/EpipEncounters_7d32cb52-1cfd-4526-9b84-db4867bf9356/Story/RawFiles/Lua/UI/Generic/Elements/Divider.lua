@@ -2,9 +2,7 @@
 local Generic = Client.UI.Generic
 
 ---@class GenericUI_Element_Divider : GenericUI_Element
----@field SetType fun(self, dividerType:GenericUI_Element_Divider_Type)
----@field SetSize fun(self, width:number) Custom height not currently supported. TODO
-Client.UI.Generic.ELEMENTS.Divider = {
+local Divider = {
     ---@enum GenericUI_Element_Divider_Type
     TYPES = {
         ELEGANT = "Elegant",
@@ -13,14 +11,14 @@ Client.UI.Generic.ELEMENTS.Divider = {
     },
     Events = {},
 }
-local Divider = Generic.ELEMENTS.Divider
 Generic.Inherit(Divider, Generic._Element)
+local _Divider = Divider ---@type GenericUI_Element_Divider Used to workaround an IDE issue with annotations pointing to ExposeFunction().
 
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
-Divider.SetType = Generic.ExposeFunction("SetType")
+_Divider.SetType = Generic.ExposeFunction("SetType")
 
 ---------------------------------------------
 -- SETUP
