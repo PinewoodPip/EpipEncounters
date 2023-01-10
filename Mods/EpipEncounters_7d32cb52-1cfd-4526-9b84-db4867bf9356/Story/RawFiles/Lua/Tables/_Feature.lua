@@ -46,6 +46,7 @@ local Feature = {
     Hooks = {},
     TranslatedStrings = {}, ---@type table<TranslatedStringHandle, Feature_TranslatedString>
     TSK = {}, ---@type table<TranslatedStringHandle, string> Automatically managed.
+    UserVariables = {}, ---@type table<string, UserVarsLib_UserVar>
     _localTranslatedStringKeys = {}, ---@type table<string, TranslatedStringHandle>
 
     CONTEXT = nil,
@@ -240,6 +241,11 @@ function Feature.Create(feature)
         Settings.RegisterSetting(setting)
     end
 
+    -- Initialize user variables
+    for id,data in pairs(feature.UserVariables) do
+        feature:RegisterUserVariable(id, data)
+    end
+
     return feature
 end
 
@@ -336,6 +342,53 @@ function Feature:SaveSettings()
     else
         Settings.Save(self:GetSettingsModuleID())
     end
+end
+
+---------------------------------------------
+-- USERVARS METHODS
+---------------------------------------------
+
+---Registers a user variable.
+---@param name string
+---@param data UserVarsLib_UserVar?
+function Feature:RegisterUserVariable(name, data)
+    name = self:_GetUserVarsKey(name)
+
+    self.UserVariables[name] = UserVars.Register(name, data)
+end
+
+---Gets the value of a user variable on an entity component.
+---@param component EntityLib_Component
+---@param variable string|UserVarsLib_UserVar
+---@return any
+function Feature:GetUserVariable(component, variable)
+    if type(variable) == "table" then variable = variable.ID end
+    local userVarName = self:_GetUserVarsKey(variable)
+
+    return component.UserVars[userVarName]
+end
+
+---Sets the value of a user variable.
+---@param component EntityLib_Component
+---@param variable string|UserVarsLib_UserVar
+---@param value any
+function Feature:SetUserVariable(component, variable, value)
+    if type(variable) == "table" then variable = variable.ID end
+    local userVarName = self:_GetUserVarsKey(variable)
+
+    component.UserVars[userVarName] = value
+end
+
+---@param suffix string?
+---@return string
+function Feature:_GetUserVarsKey(suffix)
+    local key = self.MOD_TABLE_ID .. "_" .. self.MODULE_ID
+
+    if suffix then
+        key = key .. "_" .. suffix
+    end
+
+    return key
 end
 
 ---------------------------------------------

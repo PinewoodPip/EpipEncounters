@@ -61,6 +61,7 @@ LOAD_ORDER = {
     "Utilities/Mod.lua",
     "Utilities/Timer.lua",
     "Utilities/Coroutine.lua",
+    "Utilities/UserVars.lua",
     {
         Scripts = {
             "Utilities/DataStructures/Main.lua",
