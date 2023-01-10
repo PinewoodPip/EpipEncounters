@@ -281,6 +281,8 @@ LOAD_ORDER = {
     },
     {ScriptSet = "UI/Vanity/Tabs/Shapeshift", WIP = true},
 
+    {ScriptSet = "Epip/DatabaseSync"},
+
     {
         Scripts = {
             "UI/CombatLog/CombatLog.lua",

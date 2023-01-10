@@ -117,6 +117,8 @@ LOAD_ORDER = {
         },
     },
     "Epip/Settings.lua",
+    
+    {ScriptSet = "Epip/DatabaseSync"},
 
     "Game/AMERUI/Shared.lua",
     "Game/AMERUI/Server.lua",
@@ -246,52 +248,6 @@ end)
 Osiris.RegisterSymbolListener("UserConnected", 3, "after", function(user)
     print("user joined")
     sendDyes(user)
-end)
-
--- Ext.Events.SessionLoaded:Subscribe(function()
-Osiris.RegisterSymbolListener("SavegameLoading", 4, "after", function(user)
-
-    -- local dyeStat = {
-    --     Name = "PIP_GENCOLOR_FF006699_FF669999_FF669999",
-    --     Color1 = 6723993,
-    --     Color2 = 6723993,
-    --     Color3 = 6723993,
-    -- }
-    -- Ext.Stats.ItemColor.Update(dyeStat, true)
-
-    
-
-    Osi.IterateUsers("PIP_LoadDyes")
-    -- Ext.Net.PostMessageToUser(user, "EPIPENCOUNTERS_CreateVanityDyes", {
-    --     Dyes = PersistentVars.Dyes or {},
-    -- })
-
-    -- local statType = "Armor"
-    -- local deltaModName = string.format("Boost_%s_%s", statType, dyeStat.Name)
-    -- local boostStatName = "_" .. deltaModName
-    -- local stat = Ext.Stats.Create(boostStatName, statType)
-    -- Ext.Stats.SetPersistence(boostStatName, true)
-
-    -- if stat then
-    --     stat.ItemColor = dyeStat.Name
-    -- end
-
-    -- Ext.Stats.DeltaMod.Update({
-    --     Name = deltaModName,
-    --     MinLevel = 1,
-    --     Frequency = 1,
-    --     BoostType = "ItemCombo",
-    --     ModifierType = statType,
-    --     SlotType = "Sentinel",
-    --     WeaponType = "Sentinel",
-    --     Handedness = "Any",
-    --     Boosts = {
-    --         {
-    --             Boost = boostStatName,
-    --             Count = 1,
-    --         }
-    --     }
-    -- })
 end)
 
 Ext.Osiris.RegisterListener("CharacterStatusApplied", 3, "after", function(target, id, causee)

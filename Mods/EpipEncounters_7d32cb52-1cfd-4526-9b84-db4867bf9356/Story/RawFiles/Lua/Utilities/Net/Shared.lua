@@ -19,6 +19,8 @@ Game.Net = Net -- Backwards compatibility
 -- CLASSES
 ---------------------------------------------
 
+---@class NetLib_Message
+
 ---@class Net_SimpleMessage_Character
 ---@field CharacterNetID NetId
 
@@ -58,7 +60,7 @@ end
 
 ---Sends a message to the user that currently controls char. Fails if char is a summon.
 ---@generic T
----@param char Character
+---@param char Character|GUID|NetId
 ---@param channel `T`
 ---@param message T?
 function Net.PostToCharacter(char, channel, message)

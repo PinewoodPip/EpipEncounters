@@ -159,7 +159,7 @@ function Osiris.DatabaseQuery(name, unpack, ...)
     elseif db == nil then
         error("[OSIRIS] Database does not exist: " .. name)
     else
-        return nil
+        return {}
     end
 end
 
