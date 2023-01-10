@@ -191,7 +191,7 @@ function Osiris.UserQuery(name, ...)
 end
 
 ---------------------------------------------
--- TESTING
+-- DB AND QUERY REGISTRATION - TODO MOVE
 ---------------------------------------------
 
 local Integer = "DB_AMER_GEN_OUTPUT_Integer"

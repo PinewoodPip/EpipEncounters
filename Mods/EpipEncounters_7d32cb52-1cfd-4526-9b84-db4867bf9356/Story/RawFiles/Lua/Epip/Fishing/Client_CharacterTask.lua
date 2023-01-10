@@ -29,6 +29,8 @@ function _Task:Enter()
     return false
 end
 
+function _Task:Attached() end
+
 -- Called once per tick while the task has priority.
 function _Task:SetCursor()
     local cc = Ext.UI.GetCursorControl()
@@ -62,7 +64,6 @@ end
 
 -- Called when the task loses top priority or is cancelled.
 function _Task:ExitPreview()
-    Ext.Print("ExitPreview")
     self._Previewing = false
 
     Client.Tooltip.HideMouseTextTooltip()

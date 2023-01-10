@@ -110,3 +110,6 @@ function Ext_ClientEntity.GetCharacter(identifier) end
 ---@param statusHandle EntityHandle
 ---@return EclStatus
 function Ext_ClientEntity.GetStatus(entityHandle, statusHandle) end
+
+--- @class Ext_Utils
+--- @field RegisterUserVariable fun(a1: FixedString, a2:table)

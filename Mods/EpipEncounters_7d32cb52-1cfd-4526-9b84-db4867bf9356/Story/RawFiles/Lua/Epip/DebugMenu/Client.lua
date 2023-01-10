@@ -203,8 +203,6 @@ function DebugMenu:__Setup()
         Client.UI._BaseUITable.Show(ui)
     end
 
-    DebugMenu._PopulateFeatureList()
-
     -- Set UI bounds
     uiObject.SysPanelSize = DebugMenu.BG_SIZE
     ui:ExternalInterfaceCall("registerAnchorId", "PIP_DebugMenu")
