@@ -74,6 +74,8 @@ Epip.InitializeLibrary("TooltipLib", Tooltip)
 ---@field UseDelay boolean
 ---@field MouseStickMode "None"|"BottomRight"|"BottomLeft"|"TopRight"|"TopLeft"
 ---@field TooltipStyle "Simple"|"Fancy"
+---@field IsCharacterTooltip boolean Whether this tooltip comes from a showCharTooltip call.
+---@field IsExperienceTooltip boolean Whether this tooltip comes from a showExpTooltip call.
 
 ---@class TooltipLib_FormattedTooltip
 ---@field Elements TooltipLib_Element[]
@@ -210,14 +212,6 @@ function Tooltip.ShowSimpleTooltip(data)
     local x, y = data.Position:unpack()
 
     root.addTooltip(data.Label, x, y, data.UseDelay, Tooltip.SIMPLE_TOOLTIP_MOUSE_STICK_MODE[data.MouseStickMode], Tooltip.SIMPLE_TOOLTIP_STYLES[data.TooltipStyle])
-
-    if data.MouseStickMode == "None" then
-        root.checkTooltipBoundaries(root.getTooltipWidth(), root.getTooltipHeight(), x + root.frameSpacing, y + root.frameSpacing) -- This function is responsible for positioning the tooltip if it is not set to stick to mouse.
-    end
-        
-    Ext.OnNextTick(function ()
-        root.INTshowTooltip()
-    end)
 end
 
 ---@param text string
@@ -459,6 +453,19 @@ TextDisplay:RegisterInvokeListener("addText", function(ev, text, x, y)
 end)
 
 -- Listen for simple tooltips.
+local isCharTooltip = false
+local isExpTooltip = false
+Ext.Events.UICall:Subscribe(function(ev)
+    ev = ev ---@type EclLuaUICallEvent
+
+    if ev.When == "Before" then
+        if ev.Function == "showCharTooltip" then
+            isCharTooltip = true
+        elseif ev.Function == "showExpTooltip" then
+            isExpTooltip = true
+        end
+    end
+end)
 Client.UI.Tooltip:RegisterInvokeListener("addTooltip", function (ev, text, x, y, allowDelay, stickToMouseMode, tooltipStyle)
     -- Default values from flash method.
     x = x or 0
@@ -473,13 +480,18 @@ Client.UI.Tooltip:RegisterInvokeListener("addTooltip", function (ev, text, x, y,
             Position = Vector.Create(x, y),
             UseDelay = allowDelay,
             MouseStickMode = table.reverseLookup(Tooltip.SIMPLE_TOOLTIP_MOUSE_STICK_MODE, stickToMouseMode),
-            TooltipStyle = table.reverseLookup(Tooltip.SIMPLE_TOOLTIP_STYLES, tooltipStyle)
+            TooltipStyle = table.reverseLookup(Tooltip.SIMPLE_TOOLTIP_STYLES, tooltipStyle),
+            IsCharacterTooltip = isCharTooltip,
+            IsExperienceTooltip = isExpTooltip,
         }
     })
 
     if not event.Prevented then
         Tooltip.ShowSimpleTooltip(event.Tooltip)
     end
+
+    isCharTooltip = false
+    isExpTooltip = false
 
     ev:PreventAction()
 end, "Before")

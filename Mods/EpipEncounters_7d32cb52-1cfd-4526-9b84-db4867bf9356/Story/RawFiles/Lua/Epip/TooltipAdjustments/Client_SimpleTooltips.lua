@@ -24,16 +24,18 @@ end
 
 TooltipLib.Hooks.RenderSimpleTooltip:Subscribe(function (ev)
     local settingID = TooltipAdjustments.SIMPLE_TOOLTIP_WORLD_DELAY_SETTING
+    local tooltip = ev.Tooltip
 
-    if TooltipAdjustments:IsEnabled() then
+    -- Character and experience tooltips are not supported due to engine wonkiness.
+    if TooltipAdjustments:IsEnabled() and not (tooltip.IsCharacterTooltip or tooltip.IsExperienceTooltip) then
         -- We assume context based on this variable.
-        if ev.Tooltip.TooltipStyle == "Simple" then
+        if tooltip.TooltipStyle == "Simple" then
             settingID = TooltipAdjustments.SIMPLE_TOOLTIP_UI_DELAY_SETTING
         end
     
         local delay = Settings.GetSettingValue("Epip_Tooltips", settingID)
 
-        ev.Tooltip.UseDelay = false
+        tooltip.UseDelay = false
 
         -- Cancel current rescheduled tooltip, if any.
         if currentTimer and not currentTimer:IsFinished() then
