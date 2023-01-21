@@ -17,13 +17,19 @@ local _Tuple = {
 }
 DBSync._Tuple = _Tuple
 
+function _Tuple.__index(self, key)
+    return _Tuple.ToTable(self)[key]
+end
+
 ---Creates a tuple.
 ---@param tuple any[]
+---@param def Feature_DatabaseSync_DatabaseDefinition
 ---@return Feature_DatabaseSync_Entry_Tuple
-function _Tuple.Create(tuple)
+function _Tuple.Create(tuple, def)
     ---@type Feature_DatabaseSync_Entry_Tuple
     local obj = {
         Values = tuple,
+        DatabaseDefinition = def,
     }
     Inherit(obj, _Tuple)
 
@@ -71,6 +77,11 @@ function _Entry:Query(...)
 
         for i,element in ipairs(tuple.Values) do
             local queriedValue = query[i]
+            if GetExtType(queriedValue) ~= nil then -- Convert userdata to GUID for comparisons
+                queriedValue = queriedValue.MyGuid
+            end
+
+            element = string.match(element, Text.PATTERNS.GUID) or element
 
             if queriedValue ~= nil and element ~= queriedValue then
                 isValid = false
@@ -91,9 +102,10 @@ end
 ---------------------------------------------
 
 ---Queries a synched database.
----@param dbName string
+---@generic T
+---@param dbName `T`|OsirisLib_DatabaseName
 ---@param ... any Query parameters.
----@return Feature_DatabaseSync_Entry_Tuple[]
+---@return (Feature_DatabaseSync_Entry_Tuple|`T`)[]
 function DBSync.Query(dbName, ...)
     local arity = select("#", ...)
     local db = DBSync._Entries[dbName][arity]
@@ -103,6 +115,15 @@ function DBSync.Query(dbName, ...)
     end
 
     return db and db:Query(...) or {}
+end
+
+---Queries a synched database and returns only the first matched tuple.
+---@generic T
+---@param dbName `T`|OsirisLib_DatabaseName
+---@param ... any Query parameters.
+---@return Feature_DatabaseSync_Entry_Tuple|`T`
+function DBSync.QueryFirst(dbName, ...)
+    return DBSync.Query(dbName, ...)[1]
 end
 
 ---------------------------------------------
@@ -115,7 +136,13 @@ Net.RegisterListener("Feature_DatabaseSync_NetMessage_SyncDatabase", function (p
     local tuples = {}
     
     for i,t in ipairs(payload.Tuples) do
-        tuples[i] = DBSync._Tuple.Create(t)
+        local def = DBSync._Definitions[name][arity]
+
+        if not def then
+            DBSync:Error("Feature_DatabaseSync_NetMessage_SyncDatabase", "Attemped to sync database that is not registered on the client", name, arity)
+        end
+
+        tuples[i] = DBSync._Tuple.Create(t, def)
     end
 
     DBSync._Entries[name][arity] = DBSync._Entry.Create(tuples)

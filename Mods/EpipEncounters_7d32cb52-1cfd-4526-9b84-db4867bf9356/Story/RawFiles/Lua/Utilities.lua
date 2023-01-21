@@ -8,7 +8,7 @@
 ---@param table2 table
 function Inherit(table1, table2)
     setmetatable(table1, {
-        __index = table2,
+        __index = table2.__index or table2,
         __newindex = table2.__newindex,
         __mode = table2.__mode,
         __call = table2.__call,

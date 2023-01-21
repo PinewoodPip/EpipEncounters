@@ -43,15 +43,19 @@ function DBSync.RegisterDatabase(name, arity, fieldNames)
         FieldNames = fieldNames,
     }
 
-    if Ext.IsServer() then
-        Osiris.RegisterSymbolListener(name, arity, "after", function (_)
+    if DBSync._Definitions[name][arity] then
+        DBSync:DebugLog("DB already registered", name, arity)
+    else
+        if Ext.IsServer() then
+            Osiris.RegisterSymbolListener(name, arity, "after", function (_)
+                DBSync._UpdateDatabaseVariables(name, arity)
+            end)
+    
             DBSync._UpdateDatabaseVariables(name, arity)
-        end)
-
-        DBSync._UpdateDatabaseVariables(name, arity)
+        end
+    
+        DBSync._Definitions[name][arity] = entry
     end
-
-    DBSync._Definitions[name][arity] = entry
 end
 
 ---------------------------------------------
