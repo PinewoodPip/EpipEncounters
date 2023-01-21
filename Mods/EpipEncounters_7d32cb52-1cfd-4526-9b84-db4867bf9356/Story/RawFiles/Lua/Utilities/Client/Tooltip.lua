@@ -375,8 +375,6 @@ Ext.Events.UICall:Subscribe(function(ev)
     elseif ev.Function == "showItemTooltip" then
         Tooltip.nextTooltipData = {UIType = ev.UI:GetTypeId(), Type = "Item", FlashItemHandle = param1, UICall = ev.Function, FlashParams = {table.unpack(ev.Args)}}
         Tooltip._currentTooltipData = Tooltip.nextTooltipData
-    elseif ev.Function == "displaySurfaceText" then
-        Tooltip.nextTooltipData = {UIType = ev.UI:GetTypeId(), Type = "Surface"}
     elseif ev.Function == "showStatusTooltip" then
         Tooltip.nextTooltipData = {UIType = ev.UI:GetTypeId(), Type = "Status", FlashStatusHandle = param2, FlashCharacterHandle = param1}
     end
@@ -429,6 +427,8 @@ end, "After")
 TextDisplay:RegisterInvokeListener("displaySurfaceText", function(ev, _, _)
     local ui = ev.UI
     local arrayFieldName = "tooltipArray"
+
+    Tooltip.nextTooltipData = {UIType = ev.UI:GetTypeId(), Type = "Surface"}
 
     local tbl = Game.Tooltip.ParseTooltipArray(Game.Tooltip.TableFromFlash(ui, arrayFieldName))
 
