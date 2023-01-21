@@ -224,7 +224,9 @@ function Character.GetEquippedItems(char)
             end
         end
 
-        table.insert(items, item)
+        if item then
+            items[slot] = item
+        end
     end
 
     return items

@@ -54,7 +54,7 @@ function Character.GetStatusesFromItems(char)
     local items = Character.GetEquippedItems(char)
     local statuses = {}
 
-    for _,item in ipairs(items) do
+    for _,item in pairs(items) do
         local props = item.Stats.PropertyLists
         local extraProps = props.ExtraProperties
 
