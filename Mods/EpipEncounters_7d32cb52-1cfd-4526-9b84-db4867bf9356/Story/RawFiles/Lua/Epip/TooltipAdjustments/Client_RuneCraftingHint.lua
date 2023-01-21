@@ -1,5 +1,5 @@
 
-local TooltipAdjustments = Epip.GetFeature("TooltipAdjustments")
+local TooltipAdjustments = Epip.GetFeature("Feature_TooltipAdjustments")
 local TooltipLib = Client.Tooltip
 
 local RuneCraftingHint = {
@@ -57,7 +57,7 @@ end
 TooltipLib.Hooks.RenderItemTooltip:Subscribe(function (ev)
     local item = ev.Item
 
-    if TooltipAdjustments:IsEnabled() and RuneCraftingHint.IsRuneCraftingMaterial(item) then
+    if TooltipAdjustments.IsAdjustmentEnabled(TooltipAdjustments.Settings.RuneCraftingHint) and RuneCraftingHint.IsRuneCraftingMaterial(item) then
         ev.Tooltip:InsertElement({
             Type = "ExtraProperties",
             Label = Text.Format("Rune crafting material<br>%s", {

@@ -18,11 +18,83 @@ local TooltipAdjustments = {
     -- #9c561e
     -- #9e4b06
     -- #9c561e -- PoE color, iirc?
+
+    Settings = {
+        AstrologerFix = {
+            Type = "Boolean",
+            Name = "Fix Astrologer's Gaze / Far Out Man range",
+            Description = "If enabled, zone and cone-type skills will display the correct range if the character has Atrologer's Gaze / Far Out Man.",
+            DefaultValue = true,
+        },
+        DamageTypeDeltamods = {
+            Type = "Boolean",
+            Name = "Display +Elemental damage deltamods",
+            Description = Text.Format("If enabled, deltamods that add elemental damage will display in item tooltips.<br>%s", {
+                FormatArgs = {
+                    {Text = "Applies only to EE deltamods.", Color = Color.LARIAN.YELLOW},
+                },
+            }),
+            DefaultValue = true,
+        },
+        RewardGenerationWarning = {
+            Type = "Boolean",
+            Name = "Display quest reward deltamod generation warning",
+            Description = Text.Format("If enabled, the quest rewards screen will warn about deltamod generation only occuring afterwards.<br>%s", {
+                FormatArgs = {
+                    {Text = "Applies only to EE.", Color = Color.LARIAN.YELLOW},
+                },
+            }),
+            DefaultValue = true,
+        },
+        RuneCraftingHint = {
+            Type = "Boolean",
+            Name = "Display rune crafting hint",
+            Description = Text.Format("If enabled, items whose only purpose is to be crafted into runes will display how to do so in their tooltip.<br>%s", {
+                FormatArgs = {
+                    {Text = "Applies only to EE.", Color = Color.LARIAN.YELLOW},
+                },
+            }),
+            DefaultValue = true,
+        },
+        SurfaceTooltips = {
+            Type = "Boolean",
+            Name = "Show surface tooltip ownership and scaling",
+            Description = "If enabled, surface tooltips will show the owner of the surface, as well as hints regarding their damage scaling.",
+            DefaultValue = true,
+        },
+        WeaponRangeDeltamods = {
+            Type = "Boolean",
+            Name = "Show weapon range deltamods",
+            Description = "If enabled, weapons with deltamods that scale their range will be displayed like regular deltamods.",
+            DefaultValue = true,
+        }
+    }
 }
 Epip.RegisterFeature("TooltipAdjustments", TooltipAdjustments)
 
 ---------------------------------------------
--- LISTENERS
+-- NET MESSAGES
+---------------------------------------------
+
+---@class EPIPENCOUNTERS_GetSurfaceData : NetLib_Message_Character
+---@field Position table {1:integer, 2:integer, 3:integer}
+
+---@class EPIPENCOUNTERS_ReturnSurfaceData : NetLib_Message
+---@field GroundSurfaceOwnerNetID NetId
+---@field CloudSurfaceOwnerNetID NetId
+
+---------------------------------------------
+-- METHODS
+---------------------------------------------
+
+---@param setting SettingsLib_Setting
+---@return boolean
+function TooltipAdjustments.IsAdjustmentEnabled(setting)
+    return TooltipAdjustments:IsEnabled() and TooltipAdjustments:GetSettingValue(setting) == true
+end
+
+---------------------------------------------
+-- EVENT LISTENERS
 ---------------------------------------------
 
 -- Fix the mess that is the character sheet damage tooltip.
@@ -612,70 +684,9 @@ function TooltipAdjustments.RemoveSetDeltamodsText(item, tooltip)
     end
 end
 
----@type TooltipLib_FormattedTooltip
-local pendingSurfaceTooltip = nil
-
--- Prevent surface tooltips, and re-render them once we've obtained extra surface data from the server.
-Client.Tooltip.Hooks.RenderSurfaceTooltip:Subscribe(function (ev)
-    local position = Ext.UI.GetPickingState().WalkablePosition
-
-    pendingSurfaceTooltip = ev.Tooltip
-    
-    Net.PostToServer("EPIPENCOUNTERS_GetSurfaceData", {
-        Position = position,
-        CharacterNetID = Client.GetCharacter().NetID,
-    })
-
-    ev:Prevent()
-end)
-Net.RegisterListener("EPIPENCOUNTERS_ReturnSurfaceData", function(payload)
-    if pendingSurfaceTooltip then
-        local groundOwner
-        local cloudOwner
-        local dealsDamage = false
-
-        -- Look for the first damage element - we will insert a dmg scaling hint before it.
-        for elementType,_ in pairs(TooltipLib.SURFACE_DAMAGE_ELEMENT_TYPES) do
-            local damageElements =  pendingSurfaceTooltip:GetElements(elementType)
-
-            if #damageElements > 0 then
-                dealsDamage = true
-                break
-            end
-        end
-
-        if payload.GroundSurfaceOwnerNetID then
-            groundOwner = Character.Get(payload.GroundSurfaceOwnerNetID) or Item.Get(payload.GroundSurfaceOwnerNetID)
-        end
-        if payload.CloudSurfaceOwnerNetID then
-            cloudOwner = Character.Get(payload.CloudSurfaceOwnerNetID) or Item.Get(payload.CloudSurfaceOwnerNetID)
-        end
-
-        if groundOwner then
-            pendingSurfaceTooltip:InsertElement({Type = "Duration", Label = Text.Format("Owned by %s", {FormatArgs = {groundOwner.DisplayName}})}, 3)
-        end
-        if cloudOwner then
-            pendingSurfaceTooltip:InsertElement({Type = "Duration", Label = Text.Format("Owned by %s", {FormatArgs = {cloudOwner.DisplayName}})}, #pendingSurfaceTooltip.Elements)
-        end
-
-        -- Also add a hint on how surface damage scales
-        if (groundOwner or cloudOwner) and dealsDamage then
-            pendingSurfaceTooltip:InsertBefore("Duration", {
-                Type = "SurfaceDescription",
-                Label = Text.Format("Damage scales only with character level.", {FontType = Text.FONTS.ITALIC, Color = Color.LARIAN.LIGHT_GRAY})
-            })
-        end
-
-        Client.Tooltip.ShowFormattedTooltip(Client.UI.TextDisplay:GetUI(), "Surface", pendingSurfaceTooltip)
-
-        pendingSurfaceTooltip = nil
-    end
-end)
-
 -- Show partial AP used while hovering on the ground to move.
 ---@param text string
 ---@return string
-
 local function GetExpandedMovementCostText(text)
     local shownAPCost, distance, extraText = text:match("(%d+)AP<br><font color=\"#DBDBDB\">(.+)m</font><br><font color=\"#C80030\">(.*)</font>")
     local newText = nil

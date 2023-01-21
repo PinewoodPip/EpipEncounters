@@ -14,7 +14,7 @@ TooltipAdjustments.WEAPON_DAMAGE_BOOST_PATTERN = "^Boost_Weapon_Damage_(.+)_(%d+
 Client.Tooltip.Hooks.RenderItemTooltip:Subscribe(function (ev)
     local item = ev.Item
 
-    if item.Stats and item.Stats.IsIdentified then
+    if TooltipAdjustments.IsAdjustmentEnabled(TooltipAdjustments.Settings.DamageTypeDeltamods) and item.Stats and item.Stats.IsIdentified then
         local damageBoosts = {} ---@type {Type:string, Value:number}[]
 
         -- Look for +damage deltamods.

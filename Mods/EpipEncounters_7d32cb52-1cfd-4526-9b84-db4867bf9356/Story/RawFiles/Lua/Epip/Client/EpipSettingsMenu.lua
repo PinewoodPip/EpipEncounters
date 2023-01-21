@@ -148,6 +148,14 @@ local tabs = {
             "WorldTooltip_ShowDoors",
             "WorldTooltip_ShowInactionable",
             "WorldTooltip_MoreTooltips",
+
+            CreateHeader("Tooltip Adjustments"),
+            {Module = "EpipEncounters_TooltipAdjustments", ID = "AstrologerFix"},
+            {Module = "EpipEncounters_TooltipAdjustments", ID = "DamageTypeDeltamods"},
+            {Module = "EpipEncounters_TooltipAdjustments", ID = "RewardGenerationWarning"},
+            {Module = "EpipEncounters_TooltipAdjustments", ID = "RuneCraftingHint"},
+            {Module = "EpipEncounters_TooltipAdjustments", ID = "SurfaceTooltips"},
+            {Module = "EpipEncounters_TooltipAdjustments", ID = "WeaponRangeDeltamods"},
         }
     }
 }

@@ -4,6 +4,7 @@
 -- is affected by Astrologer's Gaze (it is not!)
 ---------------------------------------------
 
+local TooltipAdjustments = Epip.GetFeature("Feature_TooltipAdjustments")
 local Tooltip = Client.Tooltip
 
 local AstrologerFix = {
@@ -38,7 +39,7 @@ Tooltip.Hooks.RenderSkillTooltip:Subscribe(function (ev)
     local skill = Stats.Get("SkillData", ev.SkillID)
     local char = Client.GetCharacter()
 
-    if skill and AstrologerFix.IsAffected(char, skill) and AstrologerFix:IsEnabled() then
+    if TooltipAdjustments.IsAdjustmentEnabled(TooltipAdjustments.Settings.AstrologerFix) and skill and AstrologerFix.IsAffected(char, skill) and AstrologerFix:IsEnabled() then
         local element = ev.Tooltip:GetFirstElement("SkillRange")
         local range = element.Value:match("(%d+%.?%d*)m$")
 
