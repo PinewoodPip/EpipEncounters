@@ -166,6 +166,9 @@ LOAD_ORDER = {
     },
 
     "Game/SkillDamageCalculation.lua",
+    
+    {ScriptSet = "Epip/DatabaseSync"},
+    {ScriptSet = "Utilities/EpicEncounters/BatteredHarried"},
 
     "UI/OptionsSettings.lua",
 
@@ -280,8 +283,6 @@ LOAD_ORDER = {
         },
     },
     {ScriptSet = "UI/Vanity/Tabs/Shapeshift", WIP = true},
-
-    {ScriptSet = "Epip/DatabaseSync"},
 
     {
         Scripts = {

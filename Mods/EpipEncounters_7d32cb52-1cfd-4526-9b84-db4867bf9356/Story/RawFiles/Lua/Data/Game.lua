@@ -706,8 +706,6 @@ Data.Game.TORTURER_SKILL_OVERRIDES = {
 }
 
 Data.Game.MAX_INFUSION_LEVEL = 3
-Data.Game.T3_STACKS_REQUIREMENT = 7
-Data.Game.T3_STACKS_REQUIREMENT_INFUSING_REDUCTION = 2
 
 Data.Patterns.GUID = "%x%x%x%x%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%x%x%x%x%x%x%x%x"
 Data.Patterns.GUID_CAPTURE = "_(" .. Data.Patterns.GUID .. ")$"
@@ -717,8 +715,6 @@ Data.Patterns.STAT_ADJUSTMENT_PATTERN = "From Stat Adjustment: (%+?-?%d*%.?%d*)%
 Data.Patterns.LW_BOOST_PATTERN = "(From Lone Wolf: %+0%%)"
 
 -- Game
-Data.Patterns.BATTERED_STATUS = "^BATTERED_(%d+)$"
-Data.Patterns.HARRIED_STATUS = "^HARRIED_(%d+)$"
 Data.Patterns.SOURCE_INFUSING_STATUS = "AMER_SOURCEINFUSION_(%d+)"
 
 Data.Patterns.WeaponAbilityPatterns = {

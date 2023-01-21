@@ -7,6 +7,8 @@
 -- As such it cannot be disabled.
 ---------------------------------------------
 
+local BH = EpicEncounters.BatteredHarried
+
 ---@class EnemyHealthBarUI : UI
 local Bar = {
     latestCharacter = nil,
@@ -134,8 +136,8 @@ function Bar.UpdateStacks()
         Bar.SetStack("Battered", 0)
         Bar.SetStack("Harried", 0)
     else
-        local battered,batteredDuration = Game.Character.GetStacks(char, "B")
-        local harried,harriedDuration = Game.Character.GetStacks(char, "H")
+        local battered,batteredDuration = BH.GetStacks(char, "B")
+        local harried,harriedDuration = BH.GetStacks(char, "H")
 
         Bar.SetStack("Battered", battered, batteredDuration)
         Bar.SetStack("Harried", harried, harriedDuration)
@@ -212,7 +214,7 @@ end)
 
 -- Set opacity for stack backgrounds based on if the amount if enough to inflict a T3.
 Bar:RegisterHook("GetStackOpacity", function(opacity, stack, amount)
-    local threshold = Game.Character.GetStacksNeededToInflictTier3(Client.GetCharacter())
+    local threshold = BH.GetStacksNeededToInflictTier3(Client.GetCharacter())
 
     if amount >= threshold then
         opacity = 1

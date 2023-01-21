@@ -90,34 +90,6 @@ Epip.InitializeLibrary("Character", Character)
 -- METHODS
 ---------------------------------------------
 
----Returns the current stacks on char, as well as lifetime. Queries the related status effects.
----@meta EE
----@param char Character
----@param type StackType
----@return number,number Stack count, duration left (as seconds)
-function Character.GetStacks(char, type)
-    local stacks = 0
-    local lifetime = 0
-    local pattern = Data.Patterns.BATTERED_STATUS -- Default to Battered
-
-    if type == "Harried" or type == "H" then
-        pattern = Data.Patterns.HARRIED_STATUS
-    end
-
-    -- Search statuses
-    for _,status in pairs(char:GetStatuses()) do
-        local amount = status:match(pattern)
-
-        if amount then
-            stacks = tonumber(amount)
-            lifetime = char:GetStatus(status).CurrentLifeTime
-            break
-        end
-    end
-
-    return stacks,lifetime
-end
-
 ---Returns whether char has a skill memorized. Returns true for innate skills.
 ---@param char Character
 ---@param skillID string
@@ -319,21 +291,6 @@ end
 ---@return boolean
 function Character.IsPreparingInfusion(char)
     return Character.GetPreparedInfusionLevel(char) > 0
-end
-
----Get the stack amount this character needs to apply a T3 to someone else.
----**This only takes into account the bonus from infusing!**
----@meta EE
----@param char Character
----@return number Stacks needed
-function Character.GetStacksNeededToInflictTier3(char)
-    local amount = Data.Game.T3_STACKS_REQUIREMENT
-
-    if Character.IsPreparingInfusion(char) then
-        amount = amount - Data.Game.T3_STACKS_REQUIREMENT_INFUSING_REDUCTION
-    end
-
-    return amount
 end
 
 ---Returns true if char is a summon.

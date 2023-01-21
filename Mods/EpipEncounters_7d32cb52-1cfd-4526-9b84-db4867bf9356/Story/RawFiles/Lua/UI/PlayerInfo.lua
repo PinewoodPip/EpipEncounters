@@ -4,6 +4,8 @@
 -- The SWF is edited to support a BH display, and status sorting in the future.
 ---------------------------------------------
 
+local BH = EpicEncounters.BatteredHarried
+
 ---@class PlayerInfoUI : UI
 local PlayerInfo = {
     LOW_BH_OPACITY = 0.9,
@@ -177,8 +179,8 @@ function PlayerInfo.UpdateBH(player)
 
     local displaysVisible = PlayerInfo:ReturnFromHooks("BHDisplaysVisible", false, char, player)
 
-    local battered = Character.GetStacks(char, "B")
-    local harried = Character.GetStacks(char, "H")
+    local battered = BH.GetStacks(char, "B")
+    local harried = BH.GetStacks(char, "H")
 
     local batteredDisplay = player.battered_mc
     local harriedDisplay = player.harried_mc

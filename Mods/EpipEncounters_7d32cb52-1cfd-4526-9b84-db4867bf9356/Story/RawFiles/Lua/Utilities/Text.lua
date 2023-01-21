@@ -29,6 +29,7 @@ Text = {
     },
     UNKNOWN_HANDLE = "ls::TranslatedStringRepository::s_HandleUnknown",
     PATTERNS = {
+        GUID = "(%x%x%x%x%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%x%x%x%x%x%x%x%x)",
         FONT_SIZE = 'size="([0-9]+)"',
         FONT_COLOR = 'color="(#......)"',
         STATUSES = {
