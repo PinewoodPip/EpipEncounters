@@ -411,6 +411,7 @@ LOAD_ORDER = {
     "Epip/Client/ChatNotificationSound.lua",
     "Epip/Client/ToggleableWorldTooltips.lua",
     "Epip/Client/WorldTooltipFiltering.lua",
+    "Epip/Client/HoverCharacterEffects.lua",
     -- "Epip/Client/LoadingScreenReplacement.lua",
 
     -- Epic Enemies

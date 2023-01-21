@@ -113,3 +113,20 @@ function Ext_ClientEntity.GetStatus(entityHandle, statusHandle) end
 
 --- @class Ext_Utils
 --- @field RegisterUserVariable fun(a1: FixedString, a2:table)
+
+---------------------------------------------
+-- Visual
+---------------------------------------------
+
+--- @class Ext_ClientVisual
+local Ext_ClientVisual = {}
+
+--- @param position vec3 
+--- @param char EclCharacter
+--- @return EclLuaVisualClientMultiVisual
+function Ext_ClientVisual.CreateOnCharacter(position, char) end
+
+--- @param position vec3 
+--- @param item EclItem
+--- @return EclLuaVisualClientMultiVisual
+function Ext_ClientVisual.CreateOnItem(position, item) end
