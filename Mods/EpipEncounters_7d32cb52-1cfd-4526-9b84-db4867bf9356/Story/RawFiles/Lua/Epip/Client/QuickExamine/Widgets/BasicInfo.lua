@@ -3,6 +3,7 @@ local QuickExamine = Epip.GetFeature("Feature_QuickExamine")
 local Generic = Client.UI.Generic
 local LabelledIcon = Generic.GetPrefab("GenericUI_Prefab_LabelledIcon")
 local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
+local BH = EpicEncounters.BatteredHarried
 
 ---@class Feature_QuickExamine_Widget_Resources : Feature
 local BasicInfo = {
@@ -27,6 +28,7 @@ end
 function Widget:Render(entity)
     local ICON_SIZE = BasicInfo.ICON_SIZE
     local char = entity ---@type EclCharacter
+    local UI = QuickExamine.UI
     local container = QuickExamine.GetContainer()
     local verticalList = container:AddChild("Resources_RootContainer", "GenericUI_Element_VerticalList")
     local horizontalList = verticalList:AddChild("ResourcesList", "GenericUI_Element_HorizontalList")
@@ -56,13 +58,17 @@ function Widget:Render(entity)
     LabelledIcon.Create(QuickExamine.UI, "Resources_Initiative", horizontalList, BasicInfo.INITIATIVE_ICON, tostring(char.Stats.Initiative), Vector.Create(ICON_SIZE, ICON_SIZE), Vector.Create(64, BasicInfo.RESOURCE_TEXT_SIZE))
 
     -- Battered & Harried
-    local battered, harried = Character.GetStacks(char, "Battered"), Character.GetStacks(char, "Harried")
+    local battered, harried = BH.GetStacks(char, "Battered"), BH.GetStacks(char, "Harried")
     local batteredIcon = horizontalList:AddChild("BasicInfo_Battered", "GenericUI_Element_IggyIcon")
     local harriedIcon = horizontalList:AddChild("BasicInfo_Harried", "GenericUI_Element_IggyIcon")
     batteredIcon:SetIcon("AMER_Icon_Status_Battered_" .. battered, ICON_SIZE, ICON_SIZE)
     harriedIcon:SetIcon("AMER_Icon_Status_Harried_" .. harried, ICON_SIZE, ICON_SIZE)
     batteredIcon:SetCenterInLists(true)
     harriedIcon:SetCenterInLists(true)
+
+    -- Battered/Harried damage buffered
+    local bhProgress = Text.Format("%s%%", {FormatArgs = {Text.Round(EpicEncounters.BatteredHarried.GetBufferedDamage(char) * 100, 2)}})
+    TextPrefab.Create(UI, "BasicInfo_BHProgress", horizontalList, bhProgress, "Left", Vector.Create(64, BasicInfo.RESOURCE_TEXT_SIZE))    
 
     horizontalList:RepositionElements()
     verticalList:RepositionElements()
