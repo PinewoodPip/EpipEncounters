@@ -409,6 +409,7 @@ LOAD_ORDER = {
     "Epip/StatsTab/Client/StatGetters.lua",
 
     "Epip/Client/CharacterSheetResistances.lua",
+    "Epip/Client/CharacterSheetLevelProgress.lua",
     "Epip/Client/DifficultyToggle.lua",
     -- "Epip/AwesomeSoccer/Client.lua",
     "Epip/Client/GiftbagLocker.lua",

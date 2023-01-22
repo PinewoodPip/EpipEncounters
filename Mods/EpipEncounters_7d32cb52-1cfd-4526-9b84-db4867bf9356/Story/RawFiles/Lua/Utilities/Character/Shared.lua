@@ -267,32 +267,6 @@ function Character.IsIgnoredByAI(char)
     return char:HasTag(Character.AI_IGNORED_TAG)
 end
 
----Get the infusion level that char is currently preparing (how many times they've cast Source Infuse).
----@meta EE
----@param char Character
----@return number Infusion count.
-function Character.GetPreparedInfusionLevel(char)
-    local level = 0
-
-    for _,status in pairs(char:GetStatuses()) do
-        local match = status:match(Data.Patterns.SOURCE_INFUSING_STATUS)
-        if match then
-            level = tonumber(match)
-            break
-        end
-    end
-
-    return level
-end
-
----Returns true if char is preparing a Source Infusion.
----@meta EE
----@param char Character
----@return boolean
-function Character.IsPreparingInfusion(char)
-    return Character.GetPreparedInfusionLevel(char) > 0
-end
-
 ---Returns true if char is a summon.
 ---@param char Character
 ---@return boolean
@@ -527,4 +501,53 @@ function Character.GetHighestPartyAbility(char, ability)
     end
 
     return highest
+end
+
+---Returns the level of char.
+---@param char Character
+---@return integer
+function Character.GetLevel(char)
+    return char.Stats.Level
+end
+
+---Returns the current experience points of char.
+---@param char Character
+---@return integer
+function Character.GetExperience(char)
+    return char.Stats.Experience
+end
+
+---Returns the **cumulative** experience required to reach a level.
+---@param targetLevel integer
+---@return integer --Experience points.
+function Character.GetExperienceRequiredForLevel(targetLevel)
+    local levelCap = Stats.Get("Data", "LevelCap") or 1
+    local totalXp = 0
+
+    for level=1,targetLevel - 1,1 do
+        local levelXp 
+
+        if level <= 0 or level >= levelCap then
+            levelXp = 0
+        else
+            local v8
+            local v9 = 1
+            local over8Scaler = math.min(level, 8)
+            local levelsOver8 = level - over8Scaler
+
+            v8 = over8Scaler * (over8Scaler + 1)
+
+            if level - over8Scaler > 0 then
+                v9 = 1.39 ^ levelsOver8 -- This part has had a compiler pow() optimization removed.
+            end
+
+            v8 = Ext.Round(v8 * v9)
+
+            levelXp = 25 * ((1000 * v8 + 24) // 25)
+        end
+
+        totalXp = totalXp + levelXp
+    end
+
+    return totalXp
 end
