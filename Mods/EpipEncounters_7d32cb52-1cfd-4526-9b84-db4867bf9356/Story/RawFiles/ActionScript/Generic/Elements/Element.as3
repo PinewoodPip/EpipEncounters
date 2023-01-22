@@ -1,5 +1,9 @@
 package Elements
 {
+    import com.flashdynamix.motion.TweensyTimelineZero;
+    import com.flashdynamix.motion.TweensyZero;
+    import fl.motion.easing.Linear;
+    import fl.motion.easing.Quartic;
     import LS_Classes.LSPanelHelpers;
     import LS_Classes.tooltipHelper;
     import flash.display.MovieClip;
@@ -22,6 +26,9 @@ package Elements
         public var CENTER_IN_LIST:Boolean = false;
 
         public var customBitmap:Bitmap;
+
+        public var _nextTweenFromProperties:Object = null;
+        public var _nextTweenToProperties:Object;
         
         public function Element()
         {
@@ -34,6 +41,8 @@ package Elements
             this.addEventListener(MouseEvent.ROLL_OVER, this.onElementMouseOver);
             this.addEventListener(MouseEvent.ROLL_OUT, this.onElementMouseOut);
             this.addEventListener(MouseEvent.RIGHT_CLICK, this.onElementRightClick);
+
+            this._nextTweenToProperties = {};
         }
 
         public function AddChildElement(mc:MovieClip) : *
@@ -302,6 +311,82 @@ package Elements
             // Must be done setTextureForBitmap(); initial values for BitmapData constructor are disregarded
             this.customBitmap.width = width;
             this.customBitmap.height = height;
+        }
+
+        // Registers a property to be tween on the next startTween() call.
+        public function addTweenProperty(property:String, phase:String, toValue:Object) : *
+        {
+            if (phase == "From")
+            {
+                if (this._nextTweenFromProperties == null)
+                {
+                    this._nextTweenFromProperties = {};
+                }
+                this._nextTweenFromProperties[property] = toValue;
+            }
+            else
+            {
+                this._nextTweenToProperties[property] = toValue;
+            }
+        }
+
+        // Start a tween. Properties to tween must first be set via addTweenProperty()
+        public function startTween(eventID:String, duration:Number, functionType:String, delay:Number=0) : *
+        {
+            var func:Function = null;
+            switch (functionType)
+            {
+                case "Linear_EaseNone":
+                    func = Linear.easeNone;
+                    break;
+                case "Linear_EaseIn":
+                    func = Linear.easeIn;
+                    break
+                case "Linear_EaseOut":
+                    func = Linear.easeOut;
+                    break
+                case "Linear_EaseInOut":
+                    func = Linear.easeInOut;
+                    break;
+                    
+                case "Quartic_EaseIn":
+                    func = Quartic.easeIn;
+                    break
+                case "Quartic_EaseOut":
+                    func = Quartic.easeOut;
+                    break
+                case "Quartic_EaseInOut":
+                    func = Quartic.easeInOut;
+                    break;
+
+                default:
+                    this.Log("Invalid tweening function and/or easing combo " + functionType, 2);
+            }
+
+            var tween:TweensyTimelineZero = null;
+            if (this._nextTweenFromProperties != null)
+            {
+                tween = TweensyZero.fromTo(this, this._nextTweenFromProperties, this._nextTweenToProperties, duration, func, delay);
+            }
+            else
+            {
+                tween = TweensyZero.to(this, this._nextTweenToProperties, duration, func, delay);
+            }
+
+            var parameters:Array = new Array();
+            parameters.push(this.stringID, eventID);
+
+            tween.onComplete = this._onTweenCompleted;
+            tween.onCompleteParams = parameters;
+
+            this._nextTweenFromProperties = null;
+            this._nextTweenToProperties = {};
+        }
+
+        // Forward tween completion events.
+        public function _onTweenCompleted(elementID:String, eventID:String) : *
+        {
+            ExternalInterface.call("elementTweenCompleted", elementID, eventID);
         }
     }
 }

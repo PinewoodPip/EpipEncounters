@@ -29,11 +29,23 @@ _Element.Events = {
     MouseOver = {}, ---@type Event<GenericUI_Element_Event_MouseOver>
     MouseOut = {}, ---@type Event<GenericUI_Element_Event_MouseOut>
     RightClick = {}, ---@type Event<GenericUI_Element_Event_RightClick>
+    TweenCompleted = {}, ---@type Event<GenericUI_Element_Event_TweenCompleted>
 }
 
 ---TODO!
 ---@class GenericUI_ElementTooltip
 ---@field Type TooltipLib_TooltipType
+
+---@class GenericUI_ElementTween
+---@field EventID string
+---@field Duration number
+---@field Type "To"
+---@field StartingValues table<string, any> Maps property to starting value.
+---@field FinalValues table<string, any> Maps property to final value.
+---@field Function "Linear"|"Quartic"
+---@field Ease "EaseNone"|"EaseIn"|"EaseOut"|"EaseInOut"
+---@field Delay number? Defaults to 0 seconds.
+---@field OnComplete fun(ev:GenericUI_Element_Event_TweenCompleted)? Shorthand for registering a TweenCompleted listener. Will run only once, then be unsubscribed.
 
 ---------------------------------------------
 -- EVENTS
@@ -44,6 +56,9 @@ _Element.Events = {
 ---@class GenericUI_Element_Event_MouseUp
 ---@class GenericUI_Element_Event_MouseDown
 ---@class GenericUI_Element_Event_RightClick
+
+---@class GenericUI_Element_Event_TweenCompleted
+---@field EventID string
 
 ---------------------------------------------
 -- METHODS
@@ -141,6 +156,33 @@ end
 ---@param visible boolean
 function _Element:SetVisible(visible)
     self:GetMovieClip().SetVisible(visible)
+end
+
+---@param tween GenericUI_ElementTween
+function _Element:Tween(tween)
+    if not tween.Function or not tween.Ease then
+        Generic:Error("Element:Tween", "Tweens must define Function and Ease")
+    end
+    if not tween.FinalValues or table.getKeyCount(tween.FinalValues) == 0 then
+        Generic:Error("Element:Tween", "Tweens must define at least one final property value")
+    end
+
+    local mc = self:GetMovieClip()
+    local tweenFunction = tween.Function .. "_" .. tween.Ease
+
+    -- Set starting and final values of each property
+    for key,value in pairs(tween.StartingValues or {}) do
+        mc.addTweenProperty(key, "From", value)
+    end
+    for key,value in pairs(tween.FinalValues) do
+        mc.addTweenProperty(key, "To", value)
+    end
+
+    if tween.OnComplete then
+        self.Events.TweenCompleted:Subscribe(tween.OnComplete, {Once = true})
+    end
+
+    mc.startTween(tween.EventID, tween.Duration, tweenFunction, tween.Delay or 0)
 end
 
 ---Sets the size override, used to override the element size within list-like elements.

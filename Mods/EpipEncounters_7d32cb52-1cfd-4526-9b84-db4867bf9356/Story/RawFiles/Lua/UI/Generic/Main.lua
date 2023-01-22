@@ -211,6 +211,7 @@ function Generic.Create(id)
     ui:RegisterCallListener("elementMouseOver", Generic.OnElementMouseOver)
     ui:RegisterCallListener("elementMouseOut", Generic.OnElementMouseOut)
     Generic.ForwardUICall(ui, "elementRightClick", "RightClick")
+    Generic.ForwardUICall(ui, "elementTweenCompleted", "TweenCompleted", {"EventID"})
     
     ui:RegisterCallListener("ShowElementTooltip", Generic.OnElementShowTooltip)
     -- ui:RegisterCallListener("viewportChanged", Generic.OnViewportChanged)
@@ -236,7 +237,7 @@ function Generic.Create(id)
     Generic.ForwardUICall(ui, "Slider_HandleMoved", "HandleMoved", {"Value"})
 
     -- Logging
-    ui:RegisterCallListener("GenericLog", function(ev, elementID, elementType, msg, msgType)
+    ui:RegisterCallListener("GenericLog", function(_, elementID, elementType, msg, msgType)
         msg = string.format("TRACE %s (%s): %s", elementID, elementType, msg)
 
         if msgType == ui.TRACE_LEVELS.WARNING then
