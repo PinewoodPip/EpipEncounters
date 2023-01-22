@@ -1,14 +1,14 @@
 
 local Generic = Client.UI.Generic
 local SaveLoad = Client.UI.SaveLoad
-local OptionsSettings = Client.UI.OptionsSettings
 
 ---@type Feature|table
 local Overlay = {
     UI = nil, ---@type GenericUI_Instance
-
     sortingMode = "Sort_Date",
     searchTerm = nil,
+
+    _nextAccessIsFromGameMenu = false,
 
     SORTING_MODES = {
         DATE = "Sort_Date",
@@ -19,7 +19,7 @@ local Overlay = {
         "Sort_Alphabetic",
     },
 }
-Epip.AddFeature("Overlay", "Overlay", Overlay)
+Epip.RegisterFeature("SaveLoadOverlay", Overlay)
 
 ---------------------------------------------
 -- METHODS
@@ -41,7 +41,7 @@ function Overlay.SetSortingMode(mode)
 end
 
 ---@param entries SaveLoadUI_Entry[]
----@return SaveLoadUI_Entry[] By reference (table passed by parameter is mutated).
+---@return SaveLoadUI_Entry[] --By reference (table passed by parameter is mutated).
 function Overlay.SortContent(entries)
     local mode = Overlay.GetSortingMode()
 
@@ -93,9 +93,19 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
+-- Listen for the menu being opened from GameMenu.
+-- The feature currently does not work when it is opened from the
+-- game over state due to issues with the modal flag and
+-- msgBox UI.
+Client.UI.GameMenu.Events.ButtonPressed:Subscribe(function (ev)
+    if ev.NumID == Client.UI.GameMenu.BUTTON_IDS.LOAD then
+        Overlay._nextAccessIsFromGameMenu = true
+    end
+end)
+
 -- Sort content and show overlay.
 SaveLoad.Events.GetContent:Subscribe(function (e)
-    if Overlay:IsEnabled() then
+    if Overlay:IsEnabled() and Overlay._nextAccessIsFromGameMenu then
         local ui = Overlay.UI
 
         ui:GetUI():Show()
@@ -103,9 +113,12 @@ SaveLoad.Events.GetContent:Subscribe(function (e)
         SaveLoad:SetFlag("OF_PlayerModal1", false)
 
         if Overlay.searchTerm == nil then
-            Overlay.UI:GetElementByID("SearchText"):SetText("Enter to search...")
-            Overlay.UI:GetElementByID("SearchText"):SetSize(200, 50)
-            Overlay.UI:GetElementByID("Sorting"):SelectOption(Overlay.GetSortingMode())
+            local searchBox = Overlay.UI:GetElementByID("SearchText") ---@type GenericUI_Element_Text
+            local sortingCombobox = Overlay.UI:GetElementByID("Sorting") ---@type GenericUI_Element_ComboBox
+
+            searchBox:SetText("Enter to search...")
+            searchBox:SetSize(200, 50)
+            sortingCombobox:SelectOption(Overlay.GetSortingMode())
         end
 
         -- Sort and filter content
@@ -116,10 +129,11 @@ SaveLoad.Events.GetContent:Subscribe(function (e)
 end)
 
 -- Hide the overlay when the save menu is closed.
-Ext.Events.Tick:Subscribe(function (e)
+Ext.Events.Tick:Subscribe(function (_)
     if Overlay.UI and Overlay.UI:IsVisible() and (not SaveLoad:Exists() or not SaveLoad:IsVisible()) then
         Overlay.UI:GetUI():Hide()
         Overlay.searchTerm = nil
+        Overlay._nextAccessIsFromGameMenu = false
     end
 end)
 
@@ -165,7 +179,7 @@ local function SetupUI()
     ui:ExternalInterfaceCall("setPosition", "top", "screen", "top")
     uiObject:Hide()
 
-    ui.Events.ViewportChanged:Subscribe(function (e)
+    ui.Events.ViewportChanged:Subscribe(function (_)
         Overlay.Position()
     end)
 

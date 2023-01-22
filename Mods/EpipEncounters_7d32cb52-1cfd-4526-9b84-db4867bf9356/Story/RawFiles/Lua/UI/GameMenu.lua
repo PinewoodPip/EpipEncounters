@@ -19,16 +19,28 @@ local Menu = {
     USE_LEGACY_HOOKS = false,
 
     Events = {
-        Opened = {} ---@type Event<EmptyEvent>
-    }
+        Opened = {}, ---@type Event<EmptyEvent>
+        ButtonPressed = {}, ---@type Event<GameMenuUI_Event_ButtonPressed>
+    },
 }
 Epip.InitializeUI(Client.UI.Data.UITypes.gameMenu, "GameMenu", Menu)
 Menu:Debug()
+
+---------------------------------------------
+-- CLASSES
+---------------------------------------------
 
 ---@class GameMenuButton
 ---@field ID integer
 ---@field Label string
 ---@field Enabled boolean
+
+---------------------------------------------
+-- EVENTS
+---------------------------------------------
+
+---@class GameMenuUI_Event_ButtonPressed
+---@field NumID integer
 
 ---------------------------------------------
 -- METHODS
@@ -94,6 +106,10 @@ Menu:RegisterCallListener("buttonPressed", function(ev)
     Menu:DebugLog("Button pressed: " .. buttonID)
 
     Menu:FireEvent("ButtonPressed", buttonID)
+
+    Menu.Events.ButtonPressed:Throw({
+        NumID = buttonID,
+    })
 end)
 
 ---------------------------------------------
