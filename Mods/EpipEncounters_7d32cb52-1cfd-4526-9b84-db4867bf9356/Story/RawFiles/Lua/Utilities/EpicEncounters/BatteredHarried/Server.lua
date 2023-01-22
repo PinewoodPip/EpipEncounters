@@ -1,5 +1,5 @@
 
----@class BatteredHarriedLib
+---@class EpicEncounters_BatteredHarriedLib
 local BH = EpicEncounters.BatteredHarried
 
 ---------------------------------------------

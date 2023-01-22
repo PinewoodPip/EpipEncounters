@@ -1,7 +1,8 @@
 
 local DBSync = Epip.GetFeature("Feature_DatabaseSync")
+local SourceInfusion = EpicEncounters.SourceInfusion
 
----@class BatteredHarriedLib : Library
+---@class EpicEncounters_BatteredHarriedLib : Library
 local BH = {
     T3_STACKS_REQUIREMENT = 7,
     T3_STACKS_REQUIREMENT_INFUSING_REDUCTION = 2,
@@ -68,7 +69,7 @@ end
 function BH.GetStacksNeededToInflictTier3(char)
     local amount = BH.T3_STACKS_REQUIREMENT
 
-    if Character.IsPreparingInfusion(char) then
+    if SourceInfusion.IsPreparingInfusion(char) then
         amount = amount - BH.T3_STACKS_REQUIREMENT_INFUSING_REDUCTION
     end
 

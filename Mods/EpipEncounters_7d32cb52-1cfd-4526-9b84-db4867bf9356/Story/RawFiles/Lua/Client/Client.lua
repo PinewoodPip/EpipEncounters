@@ -66,18 +66,11 @@ Epip.InitializeLibrary("Client", Client)
 -- METHODS
 ---------------------------------------------
 
----Get the Source Infusion level the client character is currently preparing.
----@meta EE
----@return number Infusion level
-function Client.GetPreparedInfusionLevel()
-    return Game.Character.GetPreparedInfusionLevel(Client.GetCharacter())
-end
-
 ---Returns true if the client character is preparing a Source Infusion.
 ---@meta EE
 ---@return boolean
 function Client.IsPreparingInfusion()
-    return Game.Character.IsPreparingInfusion(Client.GetCharacter())
+    return EpicEncounters.SourceInfusion.IsPreparingInfusion(Client.GetCharacter())
 end
 
 ---Returns true if the client is the host of the current session.  

@@ -4,6 +4,7 @@
 ---------------------------------------------
 
 local TooltipLib = Client.Tooltip
+local SourceInfusion = EpicEncounters.SourceInfusion
 
 ---@class Feature_TooltipAdjustments : Feature
 local TooltipAdjustments = {
@@ -281,7 +282,7 @@ function TooltipAdjustments.ShowAbilityScoresForSI(char, skill, tooltip)
 
     -- highlight unmet infusion requirements.
     -- Only do this when infusing or holding shift.
-    for _,req in pairs(Data.Game.INFUSION_TIERS) do
+    for _,req in pairs(SourceInfusion.INFUSION_ABILITY_REQUIREMENTS) do
         if score < req and (Client.Input.IsShiftPressed() or Client.IsPreparingInfusion()) then
             local reqStr = string.format("(requires %d %s):", req, schoolName)
             local startPos, endPos = element.Label:find(Text.EscapePatternCharacters(reqStr))

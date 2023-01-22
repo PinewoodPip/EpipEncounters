@@ -170,6 +170,7 @@ LOAD_ORDER = {
     {ScriptSet = "Epip/DatabaseSync"},
 
     {ScriptSet = "Utilities/EpicEncounters"},
+    {ScriptSet = "Utilities/EpicEncounters/SourceInfusion"},
     {ScriptSet = "Utilities/EpicEncounters/BatteredHarried"},
 
     "UI/OptionsSettings.lua",

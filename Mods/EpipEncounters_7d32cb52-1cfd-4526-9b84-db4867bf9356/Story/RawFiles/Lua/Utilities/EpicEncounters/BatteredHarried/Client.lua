@@ -1,7 +1,7 @@
 
 local DB = Epip.GetFeature("Feature_DatabaseSync")
 
----@class BatteredHarriedLib
+---@class EpicEncounters_BatteredHarriedLib
 local BH = EpicEncounters.BatteredHarried
 
 ---------------------------------------------

@@ -307,13 +307,6 @@ Data.Game.StatObjectAbilities = {
     Fire = "FireSpecialist",
 }
 
--- Ability requirement per infusion tier
-Data.Game.INFUSION_TIERS = {
-    0,
-    5,
-    9,
-}
-
 Data.Game.SLOTS_WITH_SUBTYPES = {
     ["Gloves"] = true,
     ["Breast"] = true,
@@ -705,17 +698,12 @@ Data.Game.TORTURER_SKILL_OVERRIDES = {
     Projectile_AMER_SCRIPT_StatusDamage_Charged = "Projectile_AMER_SCRIPT_StatusDamage_Charged_Tort",
 }
 
-Data.Game.MAX_INFUSION_LEVEL = 3
-
 Data.Patterns.GUID = "%x%x%x%x%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%x%x%x%x%x%x%x%x"
 Data.Patterns.GUID_CAPTURE = "_(" .. Data.Patterns.GUID .. ")$"
 Data.Patterns.ARTIFACT_ROOTTEMPLATE_SUBTYPE = "^AMER_UNI_.*_(.*)_" .. Data.Patterns.GUID .. "$"
 -- Data.Patterns.STAT_ADJUSTMENT_PATTERN = "From Stat Adjustment: (%+?-?%d*)%%*"
 Data.Patterns.STAT_ADJUSTMENT_PATTERN = "From Stat Adjustment: (%+?-?%d*%.?%d*)%%*"
 Data.Patterns.LW_BOOST_PATTERN = "(From Lone Wolf: %+0%%)"
-
--- Game
-Data.Patterns.SOURCE_INFUSING_STATUS = "AMER_SOURCEINFUSION_(%d+)"
 
 Data.Patterns.WeaponAbilityPatterns = {
     ["Two%-Handed"] = "Two-Handed",
