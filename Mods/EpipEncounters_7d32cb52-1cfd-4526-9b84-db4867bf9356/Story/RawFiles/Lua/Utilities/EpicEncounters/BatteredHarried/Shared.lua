@@ -1,5 +1,4 @@
 
-EpicEncounters = {} -- TODO move
 local DBSync = Epip.GetFeature("Feature_DatabaseSync")
 
 ---@class BatteredHarriedLib : Library

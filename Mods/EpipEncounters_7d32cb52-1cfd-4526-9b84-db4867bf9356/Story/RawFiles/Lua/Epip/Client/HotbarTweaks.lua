@@ -35,7 +35,7 @@ Hotbar.Hooks.UpdateEngineActions:Subscribe(function (ev)
     local actions = {} ---@type HotbarUI_ArrayEntry_EngineAction[]
 
     -- Flee is not shown in EE.
-    if not Mod.IsLoaded(Mod.GUIDS.EE_CORE) then
+    if not EpicEncounters.IsEnabled() then
         table.insert(actionOrder, "ActionSkillFlee")
     end
 

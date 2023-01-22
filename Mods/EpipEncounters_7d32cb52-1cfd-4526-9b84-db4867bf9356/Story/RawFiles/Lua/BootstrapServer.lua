@@ -119,6 +119,8 @@ LOAD_ORDER = {
     "Epip/Settings.lua",
     
     {ScriptSet = "Epip/DatabaseSync"},
+    
+    {ScriptSet = "Utilities/EpicEncounters"},
     {ScriptSet = "Utilities/EpicEncounters/BatteredHarried"},
 
     "Game/AMERUI/Shared.lua",
