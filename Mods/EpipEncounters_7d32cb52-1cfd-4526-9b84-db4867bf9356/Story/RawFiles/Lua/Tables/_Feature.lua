@@ -195,12 +195,12 @@ function Feature.Create(feature)
             feature._localTranslatedStringKeys[data.LocalKey] = handle
         end
 
-        -- Make indexing via key work as well
-        if data.Key then
-            feature.TranslatedStrings[data.Key] = data
+        -- Make indexing via string key work as well
+        if data.StringKey then
+            feature.TranslatedStrings[data.StringKey] = data
         end
 
-        Text.RegisterTranslatedString(data, true)
+        Text.RegisterTranslatedString(data)
     end
 
     -- Create TSK table

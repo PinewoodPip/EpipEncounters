@@ -1,7 +1,10 @@
 
+local DefaultTable = DataStructures.Get("DataStructures_DefaultTable")
+
 ---@class TextLib : Library
 Text = {
     _RegisteredTranslatedHandles = {}, ---@type table<TranslatedStringHandle, TextLib_TranslatedString> Maps handle to original text.
+    _TranslatedStrings = DefaultTable.Create({}), ---@type table<string, table<TranslatedStringHandle, string>> -- Maps language to table of TSK translations.
     ---@enum TextLib_Font
 
     LOCALIZATION_FILE_FORMAT_VERSION = 0,
@@ -53,7 +56,7 @@ Epip.InitializeLibrary("Text", Text)
 ---@field Handle TranslatedStringHandle
 ---@field Text string
 ---@field ModTable ModTableID?
----@field Key string?
+---@field StringKey string?
 ---@field ContextDescription string?
 local _TranslatedString = {}
 
@@ -435,55 +438,53 @@ function Text.GetTranslatedString(handle, fallBack)
     return str or fallBack or handle
 end
 
----Registers a translated string, optionally binding a key to it.
----@overload fun(data:TextLib_TranslatedString, replaceExisting:boolean?):string,TextLib_TranslatedString
----@param text string
+---Registers a translated string.
+---@overload fun(data:TextLib_TranslatedString)
 ---@param handle TranslatedStringHandle
----@param key string?
----@param modTable ModTableID? Used to keep track of where translated strings come from. Optional.
----@param replaceExisting boolean? Defaults to false.
----@return string, TextLib_TranslatedString -- First return value will be the text passed as parameter, or the text the handle already pointed to, if already registered/localized.
-function Text.RegisterTranslatedString(text, handle, key, modTable, replaceExisting)
-    local contextDescription
-    local obj = text
+---@param text string
+function Text.RegisterTranslatedString(handle, text)
+    local tsk ---@type TextLib_TranslatedString
 
     -- Table overload.
-    if type(text) == "table" then
-        text, handle, key, modTable, replaceExisting, contextDescription = text.Text, text.Handle, text.Key, text.ModTable, handle, text.ContextDescription
+    if type(handle) == "table" then
+        tsk = handle
     else
-        ---@type TextLib_TranslatedString
-        ---@diagnostic disable-next-line: cast-local-type
-        obj = {
-            Text = text,
+        tsk = {
             Handle = handle,
-            Key = key,
-            ModTable = modTable,
-            ContextDescription = contextDescription,
+            Text = text,
         }
     end
 
-    obj = _TranslatedString.Create(obj)
-
-    local currentText = Text.GetTranslatedString(handle)
-
-    -- Keep track of original text.
-    if modTable and (not replaceExisting or Text._RegisteredTranslatedHandles[handle] == nil) then
-        Text._RegisteredTranslatedHandles[handle] = obj
+    if Text._RegisteredTranslatedHandles[tsk.Handle] ~= nil then
+        Text:Error("RegisterTranslatedString", "A TSK with the handle", tsk.Handle, "has already been registered.")
     end
 
-    -- Recreating the handle would remove existing localization.
-    if not currentText or currentText == "" or replaceExisting then
-        Ext.L10N.CreateTranslatedStringHandle(handle, text)
-    else
-        text = currentText
+    tsk = _TranslatedString.Create(tsk)
+    Text._RegisteredTranslatedHandles[tsk.Handle] = tsk
+
+    -- Only set the handle's text if it hasn't been set already.
+    if not Text.GetTranslatedStringTranslation(tsk.Handle, "English") then
+        Text.SetTranslatedStringTranslation(tsk.Handle, "English", tsk.Text)
     end
 
-    -- Bind handle to key, regardless if the handle has already been registered
-    if key then
-        Ext.L10N.CreateTranslatedStringKey(key, handle)
+    -- Bind handle to key
+    if tsk.StringKey then
+        Text.SetStringKey(tsk.StringKey, tsk.Handle)
     end
+end
 
-    return text, obj
+---Sets the text of a translated string.
+---@param handle TranslatedStringHandle
+---@param text string
+function Text.SetTranslatedString(handle, text)
+    Ext.L10N.CreateTranslatedStringHandle(handle, text)
+end
+
+---Binds a TSK to a string key.
+---@param key string
+---@param handle TranslatedStringHandle
+function Text.SetStringKey(key, handle)
+    Ext.L10N.CreateTranslatedStringKey(key, handle)
 end
 
 ---Generates a template file for localizing strings registered through this library.
@@ -501,7 +502,7 @@ function Text.GenerateLocalizationTemplate(modTable, existingTemplate)
 
     for handle,data in pairs(Text._RegisteredTranslatedHandles) do
         if data.ModTable == modTable then
-            local key = data.Key
+            local key = data.StringKey
             local text = data.Text
             local contextInfo = data.ContextDescription
 
@@ -548,14 +549,47 @@ function Text.GenerateLocalizationTemplate(modTable, existingTemplate)
     return template, newStrings, outdatedStrings
 end
 
+---Returns the language the game is set to.
+---@return string
+function Text.GetCurrentLanguage()
+    return Ext.Utils.GetGlobalSwitches().ChatLanguage
+end
+
+---Sets the translation of a TSK.
+---The handle's bound text will be updated if the game's language matches.
+---@param handle TranslatedStringHandle
+---@param language string
+---@param text string
+function Text.SetTranslatedStringTranslation(handle, language, text)
+    local currentLanguage = Text.GetCurrentLanguage()
+
+    Text._TranslatedStrings[language][handle] = text
+
+    -- Update TSK if the language matches.
+    if currentLanguage == language then
+        Text.SetTranslatedString(handle, text)
+    end
+end
+
+---Returns the translation for a handle.
+---@param handle TranslatedStringHandle
+---@param language string? Defaults to current language.
+---@return string? --`nil` if the handle is not translated
+function Text.GetTranslatedStringTranslation(handle, language)
+    language = language or Text.GetCurrentLanguage()
+
+    return Text._TranslatedStrings[language][handle]
+end
+
 ---Loads a localization file. Must be in the format generated by GenerateLocalizationTemplate()
+---@param language string
 ---@param filePath string
-function Text.LoadLocalization(filePath)
+function Text.LoadLocalization(language, filePath)
     local file = IO.LoadFile(filePath, "data") ---@type TextLib_LocalizationTemplate
 
     if file and file.FileFormatVersion == Text.LOCALIZATION_FILE_FORMAT_VERSION then
         for handle,data in pairs(file.TranslatedStrings) do
-            Text.RegisterTranslatedString(data.TranslatedText, handle, data.ReferenceKey, nil, true)
+            Text.SetTranslatedStringTranslation(handle, language, data.TranslatedText)
         end
     end
 end
@@ -564,17 +598,17 @@ end
 -- SETUP
 ---------------------------------------------
 
--- Automatically load localization for this library's strings from mod folders.
+-- Automatically load localization files from mod folders.
 local mods = Ext.Mod.GetLoadOrder()
 for _,guid in ipairs(mods) do
     local mod = Ext.Mod.GetMod(guid)
-    local currentLanguage = Ext.Utils.GetGlobalSwitches().ChatLanguage
+    local currentLanguage = Text.GetCurrentLanguage()
     local modID = mod.Info.Directory
 
     -- Load localization override for each mod with a ModTable
     for modTableID,_ in pairs(Mods) do
         local path = string.format('Mods/%s/Localization/Epip/%s/%s.json', modID, currentLanguage, modTableID)
 
-        Text.LoadLocalization(path)
+        Text.LoadLocalization(currentLanguage, path)
     end
 end

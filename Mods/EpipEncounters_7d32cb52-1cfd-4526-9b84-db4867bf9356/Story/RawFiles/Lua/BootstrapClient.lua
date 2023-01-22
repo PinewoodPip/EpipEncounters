@@ -45,7 +45,6 @@ LOAD_ORDER = {
     "Utilities/math.lua",
     "Utilities/IO.lua",
     "Utilities/Vector.lua",
-    "Utilities/Text.lua",
     "Utilities/Color.lua",
     {ScriptSet = "Utilities/Entity"},
     {ScriptSet = "Utilities/GameState"},
@@ -60,6 +59,7 @@ LOAD_ORDER = {
             "Utilities/DataStructures/Set.lua",
         },
     },
+    "Utilities/Text.lua",
     {
         Scripts = {
             "Utilities/Interfaces/Main.lua",

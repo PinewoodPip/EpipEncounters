@@ -21,16 +21,16 @@ Game.Net = Net -- Backwards compatibility
 
 ---@class NetLib_Message
 
----@class Net_SimpleMessage_Character
+---@class NetLib_Message_Character
 ---@field CharacterNetID NetId
 
----@class Net_SimpleMessage_Item
+---@class NetLib_Message_Item
 ---@field ItemNetID NetId
 
----@class Net_SimpleMessage_NetID
+---@class NetLib_Message_NetID
 ---@field NetID NetId
 
----@class Net_SimpleMessage_State
+---@class NetLib_Message_State
 ---@field State boolean
 
 ---------------------------------------------

@@ -194,18 +194,6 @@ function Epip.SaveDump(obj, opts, fileName)
     }), true)
 end
 
----Shorthand for Text.RegisterTranslatedString()
----Intended only for internal use within EpipEncounters.
----@param text string
----@param handle TranslatedStringHandle
----@param key string?
----@return string
-function Epip._RegisterTranslatedString(text, handle, key)
-    local str, _ = Text.RegisterTranslatedString({Text = text, Handle = handle, Key = key, ModTable = "EpipEncounters"})
-
-    return str
-end
-
 if Ext.IsClient() then
     function Epip.InitializeUI(type, id, ui)
         Epip.InitializeFeature(id, ui.NAME or id, ui)
