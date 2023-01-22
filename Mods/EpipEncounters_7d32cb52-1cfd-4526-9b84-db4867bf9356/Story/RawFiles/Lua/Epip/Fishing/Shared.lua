@@ -192,6 +192,8 @@ local Fishing = {
         },
     },
 
+    DoNotExportTSKs = true,
+
     Events = {
         CharacterStartedFishing = {}, ---@type Event<Feature_Fishing_Event_CharacterStartedFishing>
         CharacterStoppedFishing = {}, ---@type Event<Feature_Fishing_Event_CharacterStoppedFishing>

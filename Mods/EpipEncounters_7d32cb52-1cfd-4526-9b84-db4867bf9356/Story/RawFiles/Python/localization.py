@@ -5,6 +5,12 @@ from openpyxl.utils import *
 from openpyxl.styles import *
 from openpyxl.styles import Alignment
 
+TEXTLIB_TRANSLATION_FILE_FORMAT_VERSION = 0
+
+# -----------------
+# CLASSES
+# -----------------
+
 class TranslatedString:
     def __init__(self, handle, obj):
         self.text = obj["ReferenceText"]
@@ -12,6 +18,7 @@ class TranslatedString:
         self.translation = obj["TranslatedText"] if "TranslatedText" in obj else ""
         self.key = obj["ReferenceKey"] if "ReferenceKey" in obj else ""
         self.handle = handle
+        self.featureID = obj["FeatureID"] if "FeatureID" in obj else ""
 
 class SheetColumn:
     def __init__(self, name, width, locked:bool=True, wrap_text:bool=True, font=None, json_key:str=None):
@@ -46,6 +53,7 @@ class Sheet:
         self.sheet.append(values)
 
     def addRow(self, values:list):
+        # Add the header row
         if not self._initialized:
             self.sheet.append([column.name for column in self.column_defs])
 
@@ -100,6 +108,7 @@ class Workbook:
 class Module:
     COLUMN_DEFINITIONS = [
         SheetColumn("Handle", 10, wrap_text=False, font=Font(color="999999")),
+        SheetColumn("Script", 20, wrap_text=False),
         SheetColumn("Original Text", 65, json_key="ReferenceText"),
         SheetColumn("Contextual Info", 40),
         SheetColumn("Translation", 65, locked=False, json_key="TranslatedText"),
@@ -123,6 +132,7 @@ class Module:
         for handle,tsk in self.translated_strings.items():
             sheet.addRow([
                 handle,
+                tsk.featureID,
                 tsk.text,
                 tsk.description,
                 tsk.translation, # Translation
@@ -130,11 +140,10 @@ class Module:
                 "", # Translation notes - same case as author
             ])
 
-def importLocalization(file_name):
+def createSpreadsheet(file_name, output_file_name):
     file = open(file_name, "r")
     localization = json.load(file)
 
-    # TODO use one module per feature? maybe just a column for it is enough
     module = Module(localization["ModTable"])
 
     for handle,data in localization["TranslatedStrings"].items():
@@ -146,22 +155,22 @@ def importLocalization(file_name):
     module.export(book)
     
     print("Saving workbook")
-    book.save("output.xlsx")
+    book.save(output_file_name)
 
-def exportLocalizationSheet(file_name, sheet_name):
+def createTranslationJSON(file_name:str, modTable:str, sheet_name:str):
     book = openpyxl.load_workbook(file_name)
     sheet = book[sheet_name]
 
     # module = Module(sheet_name)
 
     output = {
-        "FileFormatVersion": 0,
-        "ModTable": sheet_name,
+        "FileFormatVersion": TEXTLIB_TRANSLATION_FILE_FORMAT_VERSION,
+        "ModTable": modTable,
         "TranslatedStrings": {},
     }
     tsks = output["TranslatedStrings"]
 
-    for row in range(2, 10):
+    for row in range(2, sheet.max_row + 1):
         handle = sheet["A" + str(row)].value
         tsks[handle] = {}
         tsk = tsks[handle]
@@ -188,8 +197,3 @@ def exportLocalizationSheet(file_name, sheet_name):
         f.write(json.dumps(output, indent=2, ensure_ascii=False))
 
         print("Converted sheet to json")
-
-
-importLocalization(r"C:\Users\Usuario\Documents\Larian Studios\Divinity Original Sin 2 Definitive Edition\Osiris Data\Epip\localization_template.json")
-
-exportLocalizationSheet(r"spanish.xlsx", "Spanish")

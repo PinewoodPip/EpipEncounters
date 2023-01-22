@@ -60,13 +60,13 @@ end
 ---Overload for fetching features defined in EpipEncounters.
 ---@generic T
 ---@param id `T`
----@return `T`
+---@return Feature|`T`
 function Epip.GetFeature(id) end -- IDE dummy
 
 ---@generic T
 ---@param modTable string
 ---@param id `T`
----@return `T`
+---@return Feature|`T`
 function Epip.GetFeature(modTable, id)
     -- Overload to get features built-in into Epip.
     if id == nil then

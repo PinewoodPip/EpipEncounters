@@ -28,10 +28,11 @@ local function GenerateGUID()
     print(guid, "copied to clipboard")
 end
 
-local function GenerateLocalizationTemplate(_, modTable, existingLocalization)
+local function GenerateLocalizationTemplate(_, modTable, existingLocalization, filename)
+    filename = filename or "Epip/localization_template.json"
     local patch
 
-    print("Dummy language xml created in Osiris Data/Epip/localization_template.json")
+    print("Dummy language xml created in Osiris Data/" .. filename)
 
     if existingLocalization then
         print("Patching from " .. existingLocalization)
@@ -46,7 +47,7 @@ local function GenerateLocalizationTemplate(_, modTable, existingLocalization)
         print("Outdated/removed strings:", outdatedStrings)
     end
 
-    IO.SaveFile("Epip/localization_template.json", template, nil, true)
+    IO.SaveFile(filename, template, nil, true)
 end
 
 local function SoundTest()
@@ -68,6 +69,18 @@ local function SoundTest()
     end
 end
 
+local function GenerateLocalizationTemplates()
+    local languages = {
+        "Spanish",
+        "Russian",
+        "Chinese",
+    }
+
+    for _,language in ipairs(languages) do
+        GenerateLocalizationTemplate(nil, "EpipEncounters", "Mods/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/Localization/Epip/" .. language .. "/EpipEncounters.json", "Epip/LocalizationExports/" .. language .. ".json")
+    end
+end
+
 local function GenerateInputEventAlias()
     local alias = "---@alias InputLib_InputEventStringID "
 
@@ -86,6 +99,7 @@ local commands = {
     ["tskhandle"] = GenerateTSKHandle,
     ["guid"] = GenerateGUID,
     ["generatelocalizationtemplate"] = GenerateLocalizationTemplate,
+    ["generatelocalizationtemplates"] = GenerateLocalizationTemplates,
 }
 
 for name,command in pairs(commands) do

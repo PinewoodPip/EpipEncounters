@@ -5,6 +5,12 @@ DataStructures = {
 }
 
 ---------------------------------------------
+-- CLASSES
+---------------------------------------------
+
+---@alias DataStructures_DataStructureClassName "DataStructures_DefaultTable"|"DataStructures_Set"
+
+---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
@@ -15,7 +21,7 @@ function DataStructures.Register(className, tbl)
 end
 
 ---@generic T
----@param className `T`
+---@param className `T`|DataStructures_DataStructureClassName
 ---@return T
 function DataStructures.Get(className)
     return DataStructures._Structures[className]

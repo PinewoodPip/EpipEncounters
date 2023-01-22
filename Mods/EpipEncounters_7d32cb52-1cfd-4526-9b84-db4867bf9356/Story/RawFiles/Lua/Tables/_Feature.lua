@@ -36,6 +36,7 @@
 ---@field LogWarning fun(self, msg)
 ---@field LogError fun(self, msg)
 ---@field MOD_TABLE_ID string
+---@field DoNotExportTSKs boolean? If `true`, TSKs will not be exported to localization templates.
 local Feature = {
     Disabled = false,
     Logging = 0,
@@ -190,6 +191,7 @@ function Feature.Create(feature)
     for handle,data in pairs(feature.TranslatedStrings) do
         data.Handle = handle
         data.ModTable = feature.MOD_TABLE_ID
+        data.FeatureID = feature.MODULE_ID
 
         if data.LocalKey then
             feature._localTranslatedStringKeys[data.LocalKey] = handle

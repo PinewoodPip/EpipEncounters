@@ -45,6 +45,13 @@ Text = {
     TEMPLATES = {
         FONT_SIZE = 'size="%d"',
     },
+
+    USE_LEGACY_EVENTS = false,
+    USE_LEGACY_HOOKS = false,
+
+    Hooks = {
+        GetTranslationTemplateEntry = {}, ---@type Event<TextLib_Hook_GetTranslationTemplateEntry>
+    },
 }
 Epip.InitializeLibrary("Text", Text)
 
@@ -99,6 +106,14 @@ local _TextFormatData = {
 ---@field ModTable string
 ---@field FileFormatVersion integer
 ---@field TranslatedStrings table<TranslatedStringHandle, TextLib_LocalizationTemplate_Entry>
+
+---------------------------------------------
+-- EVENTS
+---------------------------------------------
+
+---@class TextLib_Hook_GetTranslationTemplateEntry
+---@field Entry TextLib_LocalizationTemplate_Entry Hookable. Set to nil to prevent an entry from getting exported.
+---@field TranslatedString TextLib_TranslatedString
 
 ---------------------------------------------
 -- METHODS
@@ -514,17 +529,25 @@ function Text.GenerateLocalizationTemplate(modTable, existingTemplate)
                 ContextDescription = contextInfo,
             }
 
-            template.TranslatedStrings[handle] = entry
-            newStrings = newStrings + 1
+            -- Throw an event to allow other scripts to append metadata.
+            entry = Text.Hooks.GetTranslationTemplateEntry:Throw({
+                TranslatedString = data,
+                Entry = entry,
+            }).Entry
+
+            if entry then
+                template.TranslatedStrings[handle] = entry
+                newStrings = newStrings + 1
+            end
         end
     end
 
-    local outdatedStrings
+    local outdatedStrings = nil
     if existingTemplate then
         outdatedStrings = 0
 
         if existingTemplate.ModTable ~= modTable then
-            Text:LogWarning("GenerateLocalizationTemplate(): Generating a patched template with mismatched mod tables")
+            Text:Error("GenerateLocalizationTemplate", "Generating a patched template with mismatched mod tables")
         end
 
         for handle,data in pairs(existingTemplate.TranslatedStrings or {}) do
@@ -540,6 +563,8 @@ function Text.GenerateLocalizationTemplate(modTable, existingTemplate)
                 else
                     outdatedStrings = outdatedStrings + 1
                 end
+            else
+                outdatedStrings = outdatedStrings + 1
             end
         end
     else
@@ -593,6 +618,28 @@ function Text.LoadLocalization(language, filePath)
         end
     end
 end
+
+---------------------------------------------
+-- EVENT LISTENERS
+---------------------------------------------
+
+-- Append Feature ID to translation template entries.
+-- TODO move this to Feature script
+Text.Hooks.GetTranslationTemplateEntry:Subscribe(function (ev)
+    local entry, tsk = ev.Entry, ev.TranslatedString
+
+    ---@diagnostic disable undefined-field
+    if tsk.FeatureID then
+        local feature = Epip.GetFeature(tsk.ModTable, tsk.FeatureID)
+
+        if feature.DoNotExportTSKs then
+            ev.Entry = nil
+        else
+            entry.FeatureID = tsk.FeatureID
+        end
+    end
+    ---@diagnostic enable undefined-field
+end)
 
 ---------------------------------------------
 -- SETUP
