@@ -189,12 +189,14 @@ function Feature.Create(feature)
     -- Initialize translated strings
     feature._localTranslatedStringKeys = {}
     for handle,data in pairs(feature.TranslatedStrings) do
-        data.Handle = handle
+        local localKey = data.Handle and handle or data.LocalKey -- If Handle is manually set, use table key as localKey
+
+        data.Handle = data.Handle or handle
         data.ModTable = feature.MOD_TABLE_ID
         data.FeatureID = feature.MODULE_ID
 
-        if data.LocalKey then
-            feature._localTranslatedStringKeys[data.LocalKey] = handle
+        if localKey then
+            feature._localTranslatedStringKeys[localKey] = handle
         end
 
         -- Make indexing via string key work as well

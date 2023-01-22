@@ -67,7 +67,6 @@ Epip.InitializeLibrary("Text", Text)
 ---@field ContextDescription string?
 local _TranslatedString = {}
 
----test comment
 ---@param data TextLib_TranslatedString
 ---@return TextLib_TranslatedString
 function _TranslatedString.Create(data)
@@ -440,16 +439,24 @@ function Text.Dump(obj, opts)
 end
 
 ---Returns the string bound to a TranslatedStringHandle, or a key.
----@param handle TranslatedStringHandle|string Accepts handles or keys.
+---@param handle TranslatedStringHandle|string|TextLib_TranslatedString Accepts handles or keys.
 ---@param fallBack string?
 ---@return string -- Defaults to the handle, of fallBack if specified.
 function Text.GetTranslatedString(handle, fallBack)
-    local str = Ext.L10N.GetTranslatedString(handle)
+    local str
+
+    -- Object overload.
+    if type(handle) == "table" then
+        str = handle:GetString()
+    else
+        str = Ext.L10N.GetTranslatedString(handle)
+    end
 
     if not str or str == "" then
         str = Ext.L10N.GetTranslatedStringFromKey(handle)
     end
 
+    ---@diagnostic disable-next-line: return-type-mismatch
     return str or fallBack or handle
 end
 
@@ -472,6 +479,8 @@ function Text.RegisterTranslatedString(handle, text)
 
     if Text._RegisteredTranslatedHandles[tsk.Handle] ~= nil then
         Text:Error("RegisterTranslatedString", "A TSK with the handle", tsk.Handle, "has already been registered.")
+    elseif tsk.Handle:sub(1, 1) ~= "h" then
+        Text:Error("RegisterTranslatedString", "Handle does not start with h - possibly malformed?")
     end
 
     tsk = _TranslatedString.Create(tsk)

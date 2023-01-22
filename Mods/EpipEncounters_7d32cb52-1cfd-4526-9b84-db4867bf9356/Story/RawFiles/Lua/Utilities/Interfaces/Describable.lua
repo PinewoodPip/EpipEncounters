@@ -2,8 +2,10 @@
 local Interfaces = Interfaces
 
 ---@class I_Describable : InterfaceLib_Interface
----@field NameHandle TranslatedStringHandle
----@field DescriptionHandle TranslatedStringHandle
+---@field NameHandle TranslatedStringHandle|TextLib_TranslatedString
+---@field DescriptionHandle TranslatedStringHandle|TextLib_TranslatedString
+---@field Name string Fallback if NameHandle isn't set.
+---@field Description string Fallback if DescriptionHandle isn't set.
 local _Describable = {
 
 }
@@ -11,10 +13,10 @@ Interfaces.RegisterInterface("I_Describable", _Describable)
 
 ---@return string
 function _Describable:GetName()
-    local name = "MISSING NAME"
+    local name = self.Name or "MISSING NAME"
 
     if self.NameHandle then
-        name = Ext.L10N.GetTranslatedString(self.NameHandle, name)
+        name = Text.GetTranslatedString(self.NameHandle, name)
     end
 
     return name
@@ -22,10 +24,10 @@ end
 
 ---@return string
 function _Describable:GetDescription()
-    local desc = "MISSING DESCRIPTION"
+    local desc = self.Description or "MISSING DESCRIPTION"
 
     if self.DescriptionHandle then
-        desc = Ext.L10N.GetTranslatedString(self.DescriptionHandle, desc)
+        desc = Text.GetTranslatedString(self.DescriptionHandle, desc)
     end
 
     return desc

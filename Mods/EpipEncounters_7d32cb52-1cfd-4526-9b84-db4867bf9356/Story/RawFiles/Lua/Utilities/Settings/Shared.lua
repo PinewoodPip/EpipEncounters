@@ -45,13 +45,8 @@ Epip.InitializeLibrary("Settings", Settings)
 
 ---Represents a setting and holds its value.
 ---For serialization, you are expected to implement value getter/setters as functions that return only one value. Additional ones will be discarded.
----@class SettingsLib_Setting
----@field ID string
+---@class SettingsLib_Setting : I_Identifiable, I_Describable
 ---@field Type SettingsLib_SettingType
----@field Name string? Defaults to ID.
----@field NameHandle TranslatedStringHandle? Preferred over Name.
----@field Description string? Defaults to empty string.
----@field DescriptionHandle TranslatedStringHandle? Preferred over Description.
 ---@field Context "Client"|"Server"|"Host"
 ---@field ModTable string
 ---@field Value any
@@ -70,20 +65,12 @@ function _Setting:Create(data)
 
     return data
 end
+Interfaces.Apply(_Setting, "I_Describable")
+Interfaces.Apply(_Setting, "I_Identifiable")
 
 ---@return any
 function _Setting:GetDefaultValue()
     return self.DefaultValue
-end
-
----@return string
-function _Setting:GetName()
-    return Ext.L10N.GetTranslatedString(self.NameHandle or "", self.Name or self.ID)
-end
-
----@return string
-function _Setting:GetDescription()
-    return Ext.L10N.GetTranslatedString(self.DescriptionHandle or "", self.Description or "")
 end
 
 ---Returns whether this setting's intended context matches the current environment.
