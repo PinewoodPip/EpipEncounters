@@ -10,7 +10,7 @@ Transmog.keepIcon = false
 -- CLASSES
 ---------------------------------------------
 
----@class EPIPENCOUNTERS_Vanity_Transmog_ToggleVisibility : Net_SimpleMessage_State, Net_SimpleMessage_Item, Net_SimpleMessage_Character
+---@class EPIPENCOUNTERS_Vanity_Transmog_ToggleVisibility : NetLib_Message_State, NetLib_Message_Item, NetLib_Message_Character
 
 ---------------------------------------------
 -- EVENTS / HOOKS

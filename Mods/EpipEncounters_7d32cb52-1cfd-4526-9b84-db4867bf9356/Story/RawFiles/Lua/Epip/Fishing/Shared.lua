@@ -206,11 +206,11 @@ Epip.RegisterFeature("Fishing", Fishing)
 -- EVENTS
 ---------------------------------------------
 
----@class Feature_Fishing_NetMsg_CharacterStartedFishing : Net_SimpleMessage_Character
+---@class Feature_Fishing_NetMsg_CharacterStartedFishing : NetLib_Message_Character
 ---@field RegionID string
 ---@field FishID string
 
----@class Feature_Fishing_NetMsg_CharacterStoppedFishing : Net_SimpleMessage_Character
+---@class Feature_Fishing_NetMsg_CharacterStoppedFishing : NetLib_Message_Character
 ---@field Reason Feature_Fishing_MinigameExitReason
 ---@field FishID string
 

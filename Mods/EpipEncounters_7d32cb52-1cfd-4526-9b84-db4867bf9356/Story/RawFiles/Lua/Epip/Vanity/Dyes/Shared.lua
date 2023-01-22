@@ -33,7 +33,7 @@ Epip.RegisterFeature("Vanity_Dyes", Dyes)
 -- CLASSES
 ---------------------------------------------
 
----@class EPIPENCOUNTERS_DyeItem : Net_SimpleMessage_Character, Net_SimpleMessage_Item
+---@class EPIPENCOUNTERS_DyeItem : NetLib_Message_Character, NetLib_Message_Item
 ---@field Dye VanityDye
 
 ---@class VanityDye

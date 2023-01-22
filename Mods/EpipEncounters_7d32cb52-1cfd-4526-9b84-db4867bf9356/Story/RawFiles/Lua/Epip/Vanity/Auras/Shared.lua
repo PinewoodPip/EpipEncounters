@@ -47,14 +47,14 @@ end
 -- NET MESSAGES
 ---------------------------------------------
 
----@class EPIPENCOUNTERS_Vanity_ApplyAura : NetMessage, Net_SimpleMessage_NetID
+---@class EPIPENCOUNTERS_Vanity_ApplyAura : NetMessage, NetLib_Message_NetID
 ---@field AuraID string
 ---@field BoneID string
 
----@class EPIPENCOUNTERS_Vanity_RemoveAura : NetMessage, Net_SimpleMessage_NetID
+---@class EPIPENCOUNTERS_Vanity_RemoveAura : NetMessage, NetLib_Message_NetID
 ---@field AuraID string
 
----@class EPIPENCOUNTERS_Vanity_RemoveAuras : NetMessage, Net_SimpleMessage_NetID
+---@class EPIPENCOUNTERS_Vanity_RemoveAuras : NetMessage, NetLib_Message_NetID
 
 ---------------------------------------------
 -- METHODS
