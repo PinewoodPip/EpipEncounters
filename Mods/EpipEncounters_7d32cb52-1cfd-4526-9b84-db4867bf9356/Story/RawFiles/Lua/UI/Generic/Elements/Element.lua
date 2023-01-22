@@ -42,7 +42,7 @@ _Element.Events = {
 ---@field Type "To"
 ---@field StartingValues table<string, any> Maps property to starting value.
 ---@field FinalValues table<string, any> Maps property to final value.
----@field Function "Linear"|"Quartic"
+---@field Function "Linear"|"Quadratic"|"Cubic"|"Quartic"|"Sine"|"Elastic"
 ---@field Ease "EaseNone"|"EaseIn"|"EaseOut"|"EaseInOut"
 ---@field Delay number? Defaults to 0 seconds.
 ---@field OnComplete fun(ev:GenericUI_Element_Event_TweenCompleted)? Shorthand for registering a TweenCompleted listener. Will run only once, then be unsubscribed.

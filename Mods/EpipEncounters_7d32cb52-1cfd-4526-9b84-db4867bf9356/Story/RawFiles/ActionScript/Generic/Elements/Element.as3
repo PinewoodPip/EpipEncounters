@@ -3,7 +3,11 @@ package Elements
     import com.flashdynamix.motion.TweensyTimelineZero;
     import com.flashdynamix.motion.TweensyZero;
     import fl.motion.easing.Linear;
+    import fl.motion.easing.Quadratic;
+    import fl.motion.easing.Cubic;
     import fl.motion.easing.Quartic;
+    import fl.motion.easing.Sine;
+    import fl.motion.easing.Elastic;
     import LS_Classes.LSPanelHelpers;
     import LS_Classes.tooltipHelper;
     import flash.display.MovieClip;
@@ -349,6 +353,26 @@ package Elements
                     func = Linear.easeInOut;
                     break;
                     
+                case "Quadratic_EaseIn":
+                    func = Quadratic.easeIn;
+                    break
+                case "Quadratic_EaseOut":
+                    func = Quadratic.easeOut;
+                    break
+                case "Quadratic_EaseInOut":
+                    func = Quadratic.easeInOut;
+                    break;
+
+                case "Cubic_EaseIn":
+                    func = Cubic.easeIn;
+                    break
+                case "Cubic_EaseOut":
+                    func = Cubic.easeOut;
+                    break
+                case "Cubic_EaseInOut":
+                    func = Cubic.easeInOut;
+                    break;
+
                 case "Quartic_EaseIn":
                     func = Quartic.easeIn;
                     break
@@ -357,6 +381,26 @@ package Elements
                     break
                 case "Quartic_EaseInOut":
                     func = Quartic.easeInOut;
+                    break;
+
+                case "Sine_EaseIn":
+                    func = Sine.easeIn;
+                    break
+                case "Sine_EaseOut":
+                    func = Sine.easeOut;
+                    break
+                case "Sine_EaseInOut":
+                    func = Sine.easeInOut;
+                    break;
+
+                case "Elastic_EaseIn":
+                    func = Elastic.easeIn;
+                    break
+                case "Elastic_EaseOut":
+                    func = Elastic.easeOut;
+                    break
+                case "Elastic_EaseInOut":
+                    func = Elastic.easeInOut;
                     break;
 
                 default:
