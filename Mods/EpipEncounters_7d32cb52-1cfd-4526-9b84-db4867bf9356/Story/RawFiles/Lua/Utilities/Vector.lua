@@ -57,6 +57,7 @@ local _Vector = {
     __sub = function(self, v) return Vector.Subtract(self, v) end,
     __mul = function(self, v) return Vector.DotProduct(self, v) end,
     __unm = function(self) return Vector.Negate(self) end,
+    __eq = function (self, v) return Vector.AreEqual(self, v) end,
 }
 
 ---------------------------------------------
@@ -143,6 +144,27 @@ function Vector.Negate(v)
     end
 
     return v
+end
+
+---Returns whether 2 vectors are equal.
+---Vectors are equal if they have the same arity and components.
+---@param v1 Vector
+---@param v2 Vector
+function Vector.AreEqual(v1, v2)
+    if not v1 or not v2 then
+        Vector:Error("Vector:AreEqual", "Parameters must not be nil")
+    end
+    local equal = v1.Arity == v2.Arity
+
+    if equal then
+        for i,value in ipairs(v1) do
+            if value ~= v2[i] then
+                equal = false
+            end
+        end
+    end
+
+    return equal
 end
 
 ---@param vector Vector
