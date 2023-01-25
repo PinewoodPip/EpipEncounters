@@ -1,19 +1,26 @@
 
 ---@class Feature_Bedazzled : Feature
 local Bedazzled = {
-    GEM_TYPES = {
-        Blood = "Item_LOOT_Rune_Bloodstone_Medium",
-        Emerald = "Item_LOOT_Rune_Emerald_Medium",
-        Thunder = "Item_LOOT_Rune_Thunder_Medium",
-
-    },
-
+    _Gems = {}, ---@type table<string, Feature_Bedazzled_Gem>
     _GemStateClasses = {}, ---@type table<string, Feature_Bedazzled_Board_Gem_State>>
+
+    TranslatedStrings = {
+        GameTitle = {
+            Handle = "h833e3d98g6e6bg4cfag9c23g1bcd1c8e9de1",
+            Text = "Bedazzled",
+        },
+        Score = {
+            Handle = "h4bc543cag5f19g4e91gbb76gc3a18177874b",
+            Text = "Score %s",
+            ContextDescription = "Template string for displaying current score",
+        },
+    },
+    DoNotExportTSKs = true,
+
     SPAWNED_GEM_INITIAL_VELOCITY = -4.5,
     GRAVITY = 5.5, -- Units per second squared
     MINIMUM_MATCH_GEMS = 3,
     GEM_SIZE = 1,
-    _Gems = {}, ---@type table<string, Feature_Bedazzled_Gem>
 }
 Epip.RegisterFeature("Bedazzled", Bedazzled)
 
@@ -255,6 +262,7 @@ end
 ---------------------------------------------
 
 ---@class Feature_Bedazzled_Match
+---@field Score integer
 ---@field OriginPosition Vector2
 ---@field Gems Feature_Bedazzled_Board_Gem[]
 local _Match = {}
@@ -284,17 +292,33 @@ function _Match:GetGemCount()
     return #self.Gems
 end
 
+---Gets the match's point score.
+---Match scores have to be set manually by the matching algorithm;
+---they are not handled by this class.
+---@return integer
+function _Match:GetScore()
+    return self.Score
+end
+
+---Sets the match's points score.
+---@param score integer
+function _Match:SetScore(score)
+    self.Score = score
+end
+
 ---------------------------------------------
 -- BOARD
 ---------------------------------------------
 
 ---@class Feature_Bedazzled_Board
+---@field Score integer
 ---@field Size Vector2
 ---@field Columns Feature_Bedazzled_Board_Column[]
 local _Board = {
     Events = {
         Updated = {}, ---@type Event<Feature_Bedazzled_Board_Event_Updated>
         GemAdded = {}, ---@type Event<Feature_Bedazzled_Board_Event_GemAdded>
+        MatchExecuted = {}, ---@type Event<Feature_Bedazzled_Board_Event_MatchExecuted>
     }
 }
 
@@ -305,11 +329,15 @@ local _Board = {
 ---@field Column Feature_Bedazzled_Board_Column
 ---@field Gem Feature_Bedazzled_Board_Gem
 
+---@class Feature_Bedazzled_Board_Event_MatchExecuted
+---@field Match Feature_Bedazzled_Match
+
 ---@param size Vector2
 ---@return Feature_Bedazzled_Board
 function _Board.Create(size)
     ---@type Feature_Bedazzled_Board
     local board = {
+        Score = 0,
         Size = size,
         Columns = {},
         Events = {},
@@ -334,6 +362,10 @@ function _Board.Create(size)
     end)
 
     return board
+end
+
+function _Board:GetScore()
+    return self.Score
 end
 
 ---@param dt number In seconds.
@@ -390,6 +422,18 @@ function _Board:ConsumeMatch(match)
     for _,gem in ipairs(match.Gems) do
         gem:SetState(consumingState:Create())    
     end
+
+    self:AddScore(match:GetScore())
+
+    self.Events.MatchExecuted:Throw({
+        Match = match,
+    })
+end
+
+---Increments the player's score.
+---@param points integer
+function _Board:AddScore(points)
+    self.Score = self.Score + points
 end
 
 ---@param x integer Column index.
@@ -525,17 +569,25 @@ function _Board:GetMatchAt(x, y)
         verticalGem = self:GetGemAt(x, currentY)
     end
 
+    local score = 0
+
     -- Only add gems if there were >= MINIMUM_MATCH_GEMS in the row/column
     if #horizontalGems >= Bedazzled.MINIMUM_MATCH_GEMS then
         for _,hgem in ipairs(horizontalGems) do
             match:AddGem(hgem)
         end
+
+        score = score + (1 + (#horizontalGems - Bedazzled.MINIMUM_MATCH_GEMS)) * 100
     end
     if #verticalGems >= Bedazzled.MINIMUM_MATCH_GEMS then
         for _,vgem in ipairs(verticalGems) do
             match:AddGem(vgem)
         end
+
+        score = score + (1 + (#verticalGems - Bedazzled.MINIMUM_MATCH_GEMS)) * 100
     end
+
+    match:SetScore(score)
 
     return match:GetGemCount() >= Bedazzled.MINIMUM_MATCH_GEMS and match or nil
 end

@@ -1,6 +1,7 @@
 
 local Bedazzled = Epip.GetFeature("Feature_Bedazzled")
 local Generic = Client.UI.Generic
+local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 local Input = Client.Input
 local V = Vector.Create
 
@@ -14,8 +15,11 @@ UI.GemSelection = nil ---@type Feature_Bedazzled_UI_GemSelection
 
 UI.CELL_BACKGROUND = "Item_Epic"
 UI.CELL_SIZE = V(64, 64)
-UI.BACKGROUND_SIZE = V(700, 800)
+UI.BACKGROUND_SIZE = V(900, 800)
 UI.MOUSE_SWIPE_DISTANCE_THRESHOLD = 30
+UI.CELL_BACKGROUND_COLOR = Color.Create(150, 131, 93)
+UI.MINIMUM_SCORE_DIGITS = 9
+    EXPLOSION = "Items_Objects_UNI_Teleport_Pyramid_Teleport",
 
 ---------------------------------------------
 -- CLASSES
@@ -121,7 +125,7 @@ function UI.Setup()
     board.Events.GemAdded:Subscribe(function (ev)
         local gem = ev.Gem
         local guid = Text.GenerateGUID()
-        local element = GemPrefab.Create(UI, guid, UI.Background, gem)
+        local element = GemPrefab.Create(UI, guid, UI.GemContainer, gem)
 
         -- Forward state change events.
         gem.Events.StateChanged:Subscribe(function (stateChangeEv)
@@ -313,33 +317,71 @@ function UI.GetBoardDimensions()
     return UI.Board.Size[2] * UI.CELL_SIZE[1], UI.Board.Size[1] * UI.CELL_SIZE[2]
 end
 
+function UI.CreateText(id, parent, label, align, size)
+    local text = TextPrefab.Create(UI, id, parent, label, align, size)
+    text:SetStroke(Color.Create(0, 0, 0):ToDecimal(), 2, 1, 15, 15)
+
+    return text
+end
+
+function UI.UpdateScore()
+    local text = UI.ScoreText
+    local pointsLabel = Text.AddPadding(tostring(UI.Board:GetScore()), UI.MINIMUM_SCORE_DIGITS, "0")
+
+    -- Add comma separators
+    local newStr = ""
+    for i=1,#pointsLabel,1 do
+        local index = #pointsLabel + 1 - i
+        newStr = pointsLabel:sub(index, index) .. newStr
+
+        if i % 3 == 0 and i ~= #pointsLabel then
+            newStr = "," .. newStr
+        end
+    end
+
+    text:SetText(Text.Format(Bedazzled.TranslatedStrings.Score:GetString(), {
+        FormatArgs = {
+            newStr
+        }
+    }))
+end
+
 ---@param board Feature_Bedazzled_Board
 function UI._Initialize(board)
     if not UI._Initialized then
+        -- UI background
         local bg = UI:CreateElement("Background", "GenericUI_Element_TiledBackground")
         UI.Background = bg
-        bg:SetBackground("Black", UI.BACKGROUND_SIZE:unpack())
-        bg:SetAlpha(0.1)
+        bg:SetBackground("Note", UI.BACKGROUND_SIZE:unpack())
 
-        local grid = bg:AddChild("BackgroundGrid", "GenericUI_Element_Grid")
-        grid:SetGridSize(board.Size:unpack())
-        grid:SetElementSpacing(0, 0)
-        UI.Grid = grid
+        -- Header and scoring
+        local topContainer = bg:AddChild("TopContainer", "GenericUI_Element_VerticalList")
+        topContainer:SetPositionRelativeToParent("TopLeft", 0, 80)
 
-        for i=1,board.Size[1]*board.Size[2],1 do
-            local icon = grid:AddChild("BackgroundGrid_Icon_" .. i, "GenericUI_Element_IggyIcon")
-            icon:SetIcon(UI.CELL_BACKGROUND, UI.CELL_SIZE:unpack())
-        end
+        UI.CreateText("TitleHeader", topContainer, Text.Format(Bedazzled.TranslatedStrings.GameTitle:GetString(), {Size = 42, Color = "7E72D6", FontType = Text.FONTS.ITALIC}), "Center", V(UI.BACKGROUND_SIZE[1], 50))
+
+        local scoreText = UI.CreateText("ScoreText", topContainer, "", "Center", V(UI.BACKGROUND_SIZE[1], 50))
+        UI.ScoreText = scoreText
+
+        -- Draggable area
+        local draggableArea = bg:AddChild("DraggableArea", "GenericUI_Element_TiledBackground")
+        draggableArea:SetBackground("Black", UI.BACKGROUND_SIZE:unpack())
+        draggableArea:SetAlpha(0)
+        draggableArea:SetAsDraggableArea()
+
+        local gemContainer = bg:AddChild("GemContainer", "GenericUI_Element_Empty")
+        local BOARD_WIDTH = board.Size[2] * UI.CELL_SIZE[1]
+        UI.GemContainer = gemContainer
+        gemContainer:SetPosition(UI.BACKGROUND_SIZE[1]/2 - BOARD_WIDTH/2, 300)
 
         -- Create clickboxes for selecting gems
-        local clickboxGrid = bg:AddChild("ClickboxGrid", "GenericUI_Element_Grid")
+        local clickboxGrid = gemContainer:AddChild("ClickboxGrid", "GenericUI_Element_Grid")
         clickboxGrid:SetGridSize(board.Size:unpack())
-        -- clickboxGrid:GetMovieClip().gridList.ROW_SPACING = 0
         clickboxGrid:SetElementSpacing(0, 0)
         for i=1,board.Size[1],1 do
             for j=1,board.Size[2],1 do
                 local clickbox = clickboxGrid:AddChild("Clickbox_" .. i .. "_" .. j, "GenericUI_Element_Color")
-                clickbox:SetColor(Color.Create(255, 128, 128))
+                clickbox:SetColor(UI.CELL_BACKGROUND_COLOR)
                 clickbox:SetSize(UI.CELL_SIZE:unpack())
     
                 clickbox.Events.MouseDown:Subscribe(function (_)
@@ -348,7 +390,8 @@ function UI._Initialize(board)
             end
         end
 
-        local selector = bg:AddChild("Selector", "GenericUI_Element_IggyIcon")
+        -- Gem selector
+        local selector = gemContainer:AddChild("Selector", "GenericUI_Element_IggyIcon")
         selector:SetIcon("Item_Divine", UI.CELL_SIZE:unpack())
         selector:SetVisible(false)
         selector:SetMouseEnabled(false)
@@ -386,6 +429,8 @@ function UI.Update(dt)
     for _,element in pairs(UI.Gems) do
         element:Update()
     end
+
+    UI.UpdateScore()
 end
 
 ---------------------------------------------

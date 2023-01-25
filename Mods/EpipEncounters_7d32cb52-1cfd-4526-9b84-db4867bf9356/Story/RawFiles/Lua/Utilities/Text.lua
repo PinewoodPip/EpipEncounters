@@ -254,6 +254,21 @@ function Text.Contains(str, pattern)
     return str:find(pattern) ~= nil
 end
 
+---Adds padding characters to the front of a string to meet a minimum length.
+---@param str string
+---@param minLength integer
+---@param paddingCharacter string? Defaults to `""`
+---@return string
+function Text.AddPadding(str, minLength, paddingCharacter)
+    paddingCharacter = paddingCharacter or ""
+
+    while #str < minLength do
+        str = paddingCharacter .. str
+    end
+
+    return str
+end
+
 ---Split a string by delimiter. Source: https://stackoverflow.com/questions/1426954/split-string-in-lua
 ---@param inputstr string
 ---@param sep string
