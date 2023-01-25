@@ -532,6 +532,21 @@ LOAD_ORDER = {
     },
 
     "Epip/Client/ImageViewer.lua",
+
+    {
+        Scripts = {
+            "Epip/Bedazzled/Client.lua",
+            "Epip/Bedazzled/UI.lua",
+
+            "Epip/Bedazzled/Model/Gem/States/_State.lua",
+            "Epip/Bedazzled/Model/Gem/States/Idle.lua",
+            "Epip/Bedazzled/Model/Gem/States/Falling.lua",
+            "Epip/Bedazzled/Model/Gem/States/InvalidSwap.lua",
+            "Epip/Bedazzled/Model/Gem/States/Swapping.lua",
+            "Epip/Bedazzled/Model/Gem/States/Consuming.lua",
+        },
+        WIP = true,
+    }
 }
 
 Utilities = {}
