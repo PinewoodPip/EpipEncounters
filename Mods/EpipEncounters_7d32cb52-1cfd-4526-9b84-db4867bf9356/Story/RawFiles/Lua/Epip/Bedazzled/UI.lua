@@ -1,6 +1,7 @@
 
 local Bedazzled = Epip.GetFeature("Feature_Bedazzled")
 local Generic = Client.UI.Generic
+local Input = Client.Input
 local V = Vector.Create
 
 local UI = Generic.Create("Feature_Bedazzled")
@@ -9,11 +10,21 @@ UI:Hide()
 UI._Initialized = false
 UI.Board = nil ---@type Feature_Bedazzled_Board
 UI.Gems = {} ---@type table<GUID, GenericUI_Prefab_Bedazzled_Gem>
-UI.SelectedPosition = nil ---@type Vector2?
+UI.GemSelection = nil ---@type Feature_Bedazzled_UI_GemSelection
 
 UI.CELL_BACKGROUND = "Item_Epic"
 UI.CELL_SIZE = V(64, 64)
 UI.BACKGROUND_SIZE = V(700, 800)
+UI.MOUSE_SWIPE_DISTANCE_THRESHOLD = 30
+
+---------------------------------------------
+-- CLASSES
+---------------------------------------------
+
+---@class Feature_Bedazzled_UI_GemSelection
+---@field Position Vector2
+---@field InitialMousePosition Vector2
+---@field CanSwipe boolean
 
 ---------------------------------------------
 -- GEM PREFAB
@@ -234,33 +245,53 @@ function UI.OnGemStateChanged(gem, newState, oldState)
     end
 end
 
----@param x integer
----@param y integer
-function UI.SelectGem(x, y)
-    local newSelection = V(x, y)
+---@return boolean
+function UI.HasGemSelection()
+    return UI.GemSelection ~= nil
+end
+
+---@return Vector2?
+function UI.GetSelectedPosition()
+    return UI.GemSelection and UI.GemSelection.Position or nil
+end
+
+---@return boolean
+function UI.CanMouseSwipe()
+    return UI.GemSelection and UI.GemSelection.CanSwipe or false
+end
+
+function UI.ClearSelection()
     local selector = UI.Selector
-    local gem = UI.Board:GetGemAt(x, y)
+
+    UI.GemSelection = nil
+    selector:SetVisible(false)
+end
+
+---@param gem Feature_Bedazzled_Board_Gem
+function UI.SelectGem(gem)
     local element = UI.GetGemElement(gem)
+    local selector = UI.Selector
+    local visualPositionX, visualPositionY = element:GetGridPosition()
 
-    if gem and element and not gem:IsBusy() and not gem:IsFalling() then
-        if UI.SelectedPosition and newSelection == UI.SelectedPosition then -- Deselect position
-            UI.SelectedPosition = nil
-            selector:SetVisible(false)
-        elseif UI.SelectedPosition then -- Swap gems TODO change to idle only
-            UI.Board:Swap(UI.SelectedPosition, V(x, y))
-            UI.SelectedPosition = nil
-            selector:SetVisible(false)
-        else -- Select gem
-            local visualPositionX, visualPositionY = element:GetGridPosition()
-            visualPositionX = visualPositionX - UI.CELL_SIZE[1]/2
-            visualPositionY = visualPositionY - UI.CELL_SIZE[2]/2
+    visualPositionX = visualPositionX - UI.CELL_SIZE[1]/2
+    visualPositionY = visualPositionY - UI.CELL_SIZE[2]/2
 
-            selector:SetPosition(visualPositionX, visualPositionY)
-            selector:SetVisible(true)
+    selector:SetPosition(visualPositionX, visualPositionY)
+    selector:SetVisible(true)
 
-            UI.SelectedPosition = V(x, y)
-        end
-    end
+    UI.GemSelection = {
+        Position = V(UI.Board:GetGemGridCoordinates(gem)),
+        InitialMousePosition = V(Client.GetMousePosition()),
+        CanSwipe = true,
+    }
+end
+
+---@param pos1 Vector2
+---@param pos2 Vector2
+function UI.RequestSwap(pos1, pos2)
+    UI.Board:Swap(pos1, pos2)
+
+    UI.ClearSelection()
 end
 
 ---@param gem Feature_Bedazzled_Board_Gem
@@ -312,7 +343,7 @@ function UI._Initialize(board)
                 clickbox:SetSize(UI.CELL_SIZE:unpack())
     
                 clickbox.Events.MouseDown:Subscribe(function (_)
-                    UI.SelectGem(j, board.Size[1] - i + 1)
+                    UI.OnGemClickboxClicked(j, board.Size[1] - i + 1)
                 end)
             end
         end
@@ -360,6 +391,58 @@ end
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
+
+---Handle clickboxes being clicked.
+---@param x integer
+---@param y integer
+function UI.OnGemClickboxClicked(x, y)
+    local newSelection = V(x, y)
+    local gem = UI.Board:GetGemAt(x, y)
+    local element = UI.GetGemElement(gem)
+
+    if gem and element and not gem:IsBusy() and not gem:IsFalling() then
+        if UI.HasGemSelection() and newSelection == UI.GetSelectedPosition() then -- Deselect position
+            UI.ClearSelection()
+        elseif UI.HasGemSelection() then -- Swap gems TODO change to idle only
+            UI.RequestSwap(UI.GetSelectedPosition(), V(x, y))
+        else -- Select gem
+            UI.SelectGem(gem)
+        end
+    end
+end
+
+-- Listen for mouse swipe gestures.
+Input.Events.MouseMoved:Subscribe(function (_)
+    if UI.CanMouseSwipe() then
+        local currentPos = V(Client.GetMousePosition())
+        local difference = currentPos - UI.GemSelection.InitialMousePosition
+
+        if Vector.GetLength(difference) >= UI.MOUSE_SWIPE_DISTANCE_THRESHOLD then
+            -- Get the dominant axis
+            local swipeDirection = V(1, 0)
+            if difference[1] < 0 then
+                swipeDirection = V(-1, 0)
+            end
+
+            if difference[2] > 0 and difference[2] > math.abs(difference[1]) then
+                swipeDirection = V(0, -1)
+            elseif difference[2] < 0 and math.abs(difference[2]) > math.abs(difference[1]) then
+                swipeDirection = V(0, 1)
+            end
+
+            UI.RequestSwap(UI.GetSelectedPosition(), UI.GetSelectedPosition() + swipeDirection)
+        end
+    end
+end)
+
+-- Stop listening for swipes if left click is released.
+Input.Events.KeyStateChanged:Subscribe(function (ev)
+    if ev.InputID == "left2" and ev.State == "Released" then
+        if UI.HasGemSelection() then
+            UI.GemSelection.CanSwipe = false
+        end
+    end
+end)
 
 -- Add Bedazzled option to gem context menus.
 local function IsRuneCraftingMaterial(item) -- TODO move

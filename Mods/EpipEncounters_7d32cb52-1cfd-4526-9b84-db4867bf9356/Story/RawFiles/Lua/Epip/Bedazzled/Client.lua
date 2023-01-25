@@ -445,18 +445,20 @@ function _Board:Swap(position1, position2)
     local gem1 = self:GetGemAt(position1:unpack())
     local gem2 = self:GetGemAt(position2:unpack())
 
-    if gem1 and gem2 and self:CanSwap(gem1, gem2) then
-        gem1.Type, gem2.Type = gem2.Type, gem1.Type
-
-        local swappingState = Bedazzled.GetGemStateClass("Feature_Bedazzled_Board_Gem_State_Swapping")
-
-        gem1:SetState(swappingState:Create(gem2))
-        gem2:SetState(swappingState:Create(gem1))
-    elseif gem1:IsAdjacentTo(gem2) then -- Enter invalid swap busy state - only if gems are adjacent
-        local invalidSwapState = Bedazzled.GetGemStateClass("Feature_Bedazzled_Board_Gem_State_InvalidSwap")
-
-        gem1:SetState(invalidSwapState:Create(gem2))
-        gem2:SetState(invalidSwapState:Create(gem1))
+    if gem1 and gem2 then
+        if self:CanSwap(gem1, gem2) then
+            gem1.Type, gem2.Type = gem2.Type, gem1.Type
+    
+            local swappingState = Bedazzled.GetGemStateClass("Feature_Bedazzled_Board_Gem_State_Swapping")
+    
+            gem1:SetState(swappingState:Create(gem2))
+            gem2:SetState(swappingState:Create(gem1))
+        elseif gem1:IsAdjacentTo(gem2) then -- Enter invalid swap busy state - only if gems are adjacent
+            local invalidSwapState = Bedazzled.GetGemStateClass("Feature_Bedazzled_Board_Gem_State_InvalidSwap")
+    
+            gem1:SetState(invalidSwapState:Create(gem2))
+            gem2:SetState(invalidSwapState:Create(gem1))
+        end
     end
 end
 
