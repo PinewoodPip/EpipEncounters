@@ -5,7 +5,7 @@ local Bedazzled = Epip.GetFeature("Feature_Bedazzled")
 ---@field OtherGem Feature_Bedazzled_Board_Gem
 ---@field TimeElapsed integer
 local State = {
-    Duration = 0.4,
+    Duration = 0.65,
 }
 Inherit(State, Bedazzled.GetGemStateClass("Feature_Bedazzled_Board_Gem_State"))
 Bedazzled.RegisterGemStateClass("Feature_Bedazzled_Board_Gem_State_InvalidSwap", State)

@@ -53,6 +53,25 @@ function _BoardColumn.Create(index, size)
     return obj
 end
 
+---Returns the index of a gem within the column.
+---Ignores whether a gem is falling;
+---the index indicates the order of the gem within the whole column,
+---regardless of where it currently physically is.
+---@param gem Feature_Bedazzled_Board_Gem
+---@return integer? --Fails if the gem is not in the column.
+function _BoardColumn:GetGemIndex(gem)
+    local index
+
+    for i,cgem in ipairs(self.Gems) do
+        if cgem == gem then
+            index = i
+            break
+        end
+    end
+
+    return index
+end
+
 ---@param gem Feature_Bedazzled_Board_Gem
 function _BoardColumn:InsertGem(gem)
     -- Initial position is at the top of the board,
@@ -382,6 +401,22 @@ function _Board:GetGemAt(x, y)
     return column and column.Gems[y]
 end
 
+---@param gem Feature_Bedazzled_Board_Gem
+---@return Vector2
+function _Board:GetGemGridCoordinates(gem)
+    local position ---@type Vector2
+
+    for x,column in ipairs(self.Columns) do
+        local indexInColumn = column:GetGemIndex(gem)
+
+        if indexInColumn then
+            position = Vector.Create(x, indexInColumn)
+        end
+    end
+
+    return position
+end
+
 ---@param gem1 Feature_Bedazzled_Board_Gem
 ---@param gem2 Feature_Bedazzled_Board_Gem
 function _Board:CanSwap(gem1, gem2)
@@ -390,6 +425,16 @@ function _Board:CanSwap(gem1, gem2)
     canSwap = canSwap and gem1 ~= gem2
     canSwap = canSwap and gem1:IsAdjacentTo(gem2)
     canSwap = canSwap and not gem1:IsBusy() and not gem2:IsBusy()
+
+    -- Can only swap if it were to result in a valid move
+    -- TODO consider falling gems
+    -- Possible solution: have a method that returns a memento of the board including fall gems (but not busy ones) - and check matches there instead
+    gem1.Type, gem2.Type = gem2.Type, gem1.Type
+    local match1, match2 = self:GetMatchAt(self:GetGemGridCoordinates(gem1):unpack()), self:GetMatchAt(self:GetGemGridCoordinates(gem2):unpack())
+    canSwap = canSwap and (match1 ~= nil or match2 ~= nil)
+
+    -- Undo the swap
+    gem1.Type, gem2.Type = gem2.Type, gem1.Type
 
     return canSwap
 end
@@ -407,6 +452,11 @@ function _Board:Swap(position1, position2)
 
         gem1:SetState(swappingState:Create(gem2))
         gem2:SetState(swappingState:Create(gem1))
+    elseif gem1:IsAdjacentTo(gem2) then -- Enter invalid swap busy state - only if gems are adjacent
+        local invalidSwapState = Bedazzled.GetGemStateClass("Feature_Bedazzled_Board_Gem_State_InvalidSwap")
+
+        gem1:SetState(invalidSwapState:Create(gem2))
+        gem2:SetState(invalidSwapState:Create(gem1))
     end
 end
 

@@ -192,6 +192,45 @@ function UI.OnGemStateChanged(gem, newState, oldState)
             Ease = "EaseInOut",
             Duration = state.Duration,
         })
+    elseif newState == "Feature_Bedazzled_Board_Gem_State_InvalidSwap" then -- Play invalid swap animation
+        state = gem.State ---@type Feature_Bedazzled_Board_Gem_State_InvalidSwap
+
+        local otherGem = state.OtherGem
+        local otherElement = UI.GetGemElement(otherGem)
+
+        local element1x, element1y = UI.GamePositionToUIPosition(element.Gem:GetBoardPosition())
+        local element2x, element2y = UI.GamePositionToUIPosition(otherElement.Gem:GetBoardPosition())
+
+        element:Tween({
+            EventID = "Bedazzled_InvalidSwap",
+            FinalValues = {
+                x = element2x,
+                y = element2y,
+            },
+            StartingValues = {
+                x = element1x,
+                y = element1y,
+            },
+            Function = "Quadratic",
+            Ease = "EaseInOut",
+            Duration = state.Duration / 2,
+            OnComplete = function (_) -- Animate back to initial position
+                element:Tween({
+                    EventID = "Bedazzled_InvalidSwap_Return",
+                    FinalValues = {
+                        x = element1x,
+                        y = element1y,
+                    },
+                    StartingValues = {
+                        x = element2x,
+                        y = element2y,
+                    },
+                    Function = "Quadratic",
+                    Ease = "EaseInOut",
+                    Duration = state.Duration / 2,
+                })
+            end
+        })
     end
 end
 
