@@ -237,13 +237,16 @@ end
 ---@param x integer
 ---@param y integer
 function UI.SelectGem(x, y)
+    local newSelection = V(x, y)
     local selector = UI.Selector
     local gem = UI.Board:GetGemAt(x, y)
     local element = UI.GetGemElement(gem)
 
     if gem and element and not gem:IsBusy() and not gem:IsFalling() then
-        -- TODO change to idle only
-        if UI.SelectedPosition then -- Swap gems
+        if UI.SelectedPosition and newSelection == UI.SelectedPosition then -- Deselect position
+            UI.SelectedPosition = nil
+            selector:SetVisible(false)
+        elseif UI.SelectedPosition then -- Swap gems TODO change to idle only
             UI.Board:Swap(UI.SelectedPosition, V(x, y))
             UI.SelectedPosition = nil
             selector:SetVisible(false)
@@ -317,6 +320,7 @@ function UI._Initialize(board)
         local selector = bg:AddChild("Selector", "GenericUI_Element_IggyIcon")
         selector:SetIcon("Item_Divine", UI.CELL_SIZE:unpack())
         selector:SetVisible(false)
+        selector:SetMouseEnabled(false)
         UI.Selector = selector
     end
 
