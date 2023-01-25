@@ -32,6 +32,7 @@ UI.SOUNDS = {
     GAME_OVER = "UI_Game_GameOver",
     GEM_FUSION = "Items_Inventory_Consumeables_Magic",
     STAR_MATCH = "UI_Game_Party_Merge",
+    SWIPE = "UI_Game_Dialog_Open",
 }
 
 ---------------------------------------------
@@ -137,7 +138,13 @@ function UI.Setup()
 
     -- Create text flyovers for scoring matches.
     board.Events.MatchExecuted:Subscribe(function (ev)
+        UI:PlaySound(UI.SOUNDS.MATCH)
         UI.CreateScoreFlyover(ev.Match)
+    end)
+
+    -- Play sound for invalid swaps.
+    board.Events.InvalidSwapPerformed:Subscribe(function (_)
+        UI:PlaySound(UI.SOUNDS.INVALID_MATCH)
     end)
 
     board.Events.GemAdded:Subscribe(function (ev)
@@ -433,7 +440,7 @@ function UI._Initialize(board)
         local gemContainer = bg:AddChild("GemContainer", "GenericUI_Element_Empty")
         local BOARD_WIDTH = board.Size[2] * UI.CELL_SIZE[1]
         UI.GemContainer = gemContainer
-        gemContainer:SetPosition(UI.BACKGROUND_SIZE[1]/2 - BOARD_WIDTH/2, 300)
+        gemContainer:SetPosition(UI.BACKGROUND_SIZE[1]/2 - BOARD_WIDTH/2, 200)
 
         -- Create clickboxes for selecting gems
         local clickboxGrid = gemContainer:AddChild("ClickboxGrid", "GenericUI_Element_Grid")
@@ -537,6 +544,8 @@ Input.Events.MouseMoved:Subscribe(function (_)
             end
 
             UI.RequestSwap(UI.GetSelectedPosition(), UI.GetSelectedPosition() + swipeDirection)
+
+            UI:PlaySound(UI.SOUNDS.SWIPE)
         end
     end
 end)
@@ -545,6 +554,9 @@ end)
 Input.Events.KeyStateChanged:Subscribe(function (ev)
     if ev.InputID == "left2" and ev.State == "Released" then
         if UI.HasGemSelection() then
+            -- Also play a click sound. This is here so it doesn't play while swiping.
+            UI:PlaySound(UI.SOUNDS.CLICK) 
+
             UI.GemSelection.CanSwipe = false
         end
     end

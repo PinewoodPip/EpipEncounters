@@ -319,6 +319,7 @@ local _Board = {
         Updated = {}, ---@type Event<Feature_Bedazzled_Board_Event_Updated>
         GemAdded = {}, ---@type Event<Feature_Bedazzled_Board_Event_GemAdded>
         MatchExecuted = {}, ---@type Event<Feature_Bedazzled_Board_Event_MatchExecuted>
+        InvalidSwapPerformed = {}, ---@type Event<Feature_Bedazzled_Board_Event_InvalidSwapPerformed>
     }
 }
 
@@ -331,6 +332,10 @@ local _Board = {
 
 ---@class Feature_Bedazzled_Board_Event_MatchExecuted
 ---@field Match Feature_Bedazzled_Match
+
+---@class Feature_Bedazzled_Board_Event_InvalidSwapPerformed
+---@field Gem1 Feature_Bedazzled_Board_Gem
+---@field Gem2 Feature_Bedazzled_Board_Gem
 
 ---@param size Vector2
 ---@return Feature_Bedazzled_Board
@@ -502,6 +507,11 @@ function _Board:Swap(position1, position2)
     
             gem1:SetState(invalidSwapState:Create(gem2))
             gem2:SetState(invalidSwapState:Create(gem1))
+
+            self.Events.InvalidSwapPerformed:Throw({
+                Gem1 = gem1,
+                Gem2 = gem2,
+            })
         end
     end
 end
