@@ -11,7 +11,7 @@ local Bedazzled = {
         },
         Score = {
             Handle = "h4bc543cag5f19g4e91gbb76gc3a18177874b",
-            Text = "Score %s",
+            Text = "Score    %s",
             ContextDescription = "Template string for displaying current score",
         },
     },

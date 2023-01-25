@@ -19,7 +19,20 @@ UI.BACKGROUND_SIZE = V(900, 800)
 UI.MOUSE_SWIPE_DISTANCE_THRESHOLD = 30
 UI.CELL_BACKGROUND_COLOR = Color.Create(150, 131, 93)
 UI.MINIMUM_SCORE_DIGITS = 9
+UI.SCORE_FLYOVER_DURATION = 1
+UI.SCORE_FLYOVER_Y_OFFSET = -40
+UI.SCORE_FLYOVER_TRAVEL_DISTANCE = -50
+
+UI.SOUNDS = {
+    CLICK = "UI_Game_Skillbar_Unlock",
+    LONG_MATCH = "UI_Game_Persuasion_Success",
+    MATCH = "UI_Game_Reward_DropReward", -- UI_MainMenu_CharacterCreation_Plus
     EXPLOSION = "Items_Objects_UNI_Teleport_Pyramid_Teleport",
+    INVALID_MATCH = "UI_Game_ActionUnavailable",
+    GAME_OVER = "UI_Game_GameOver",
+    GEM_FUSION = "Items_Inventory_Consumeables_Magic",
+    STAR_MATCH = "UI_Game_Party_Merge",
+}
 
 ---------------------------------------------
 -- CLASSES
@@ -120,6 +133,11 @@ function UI.Setup()
     -- Update UI when the board updates.
     board.Events.Updated:Subscribe(function (ev)
         UI.Update(ev.DeltaTime)
+    end)
+
+    -- Create text flyovers for scoring matches.
+    board.Events.MatchExecuted:Subscribe(function (ev)
+        UI.CreateScoreFlyover(ev.Match)
     end)
 
     board.Events.GemAdded:Subscribe(function (ev)
@@ -322,6 +340,49 @@ function UI.CreateText(id, parent, label, align, size)
     text:SetStroke(Color.Create(0, 0, 0):ToDecimal(), 2, 1, 15, 15)
 
     return text
+end
+
+---@param match Feature_Bedazzled_Match
+function UI.CreateScoreFlyover(match)
+    -- We need to calculate the UI position to spawn the text at
+    -- we spawn it at the center top of the rect formed by all gems in the match
+    local leftmostGem = match.Gems[1]
+    local rightmostGem = match.Gems[1]
+    local topmostGem = match.Gems[1]
+
+    for _,gem in ipairs(match.Gems) do
+        if gem.X < leftmostGem.X then
+            leftmostGem = gem
+        end
+        if gem.X > rightmostGem.X then
+            rightmostGem = gem
+        end
+        if gem:GetPosition() > topmostGem:GetPosition() then
+            topmostGem = gem
+        end
+    end
+
+    local left = V(UI.GamePositionToUIPosition(leftmostGem:GetBoardPosition()))
+    local right = V(UI.GamePositionToUIPosition(rightmostGem:GetBoardPosition()))
+    local _, top = UI.GamePositionToUIPosition(topmostGem:GetBoardPosition())
+    local positionX = left[1] + ((right[1] - left[1]) / 2) - UI.CELL_SIZE[1]/2
+    local position = V(positionX, top + UI.SCORE_FLYOVER_Y_OFFSET)
+
+    local text = UI.CreateText("MatchScoreFlyoverText", UI.GemContainer, tostring(match:GetScore()), "Center", UI.CELL_SIZE)
+    text:SetPosition(position:unpack())
+    text.Element:Tween({
+        EventID = "FlyUp",
+        Duration = UI.SCORE_FLYOVER_DURATION,
+        Function = "Quadratic",
+        Ease = "EaseInOut",
+        FinalValues = {
+            y = position[2] + UI.SCORE_FLYOVER_TRAVEL_DISTANCE,
+            alpha = 0,
+        },
+        OnComplete = function (_)
+            -- TODO dispose of the element
+        end
+    })
 end
 
 function UI.UpdateScore()
