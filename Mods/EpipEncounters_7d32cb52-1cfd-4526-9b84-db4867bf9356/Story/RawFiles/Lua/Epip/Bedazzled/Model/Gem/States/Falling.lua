@@ -5,6 +5,7 @@ local Bedazzled = Epip.GetFeature("Feature_Bedazzled")
 ---@field Acceleration number
 ---@field Velocity number
 ---@field TargetPosition number
+---@field StallingPosition number?
 local State = {}
 Inherit(State, Bedazzled.GetGemStateClass("Feature_Bedazzled_Board_Gem_State"))
 Bedazzled.RegisterGemStateClass("Feature_Bedazzled_Board_Gem_State_Falling", State)
@@ -31,11 +32,17 @@ function State:Update(dt)
     local currentPos = gem:GetPosition()
     local acceleration, velocity = self.Acceleration, self.Velocity
 
-    if currentPos > intendedPosition then
+    local canFall = true
+    canFall = canFall and (not self.StallingPosition or self.StallingPosition == self.TargetPosition or currentPos > self.StallingPosition)
+    canFall = canFall and currentPos > intendedPosition
+    if canFall then
         acceleration = acceleration - Bedazzled.GRAVITY * dt
         velocity = velocity + acceleration * dt
+
+        self.Acceleration = acceleration
+        self.Velocity = velocity
     else
-        acceleration, velocity = 0, 0
+        acceleration, velocity = 0, 0 -- For this update frame only
     end
 
     -- Transition to idle state
@@ -47,16 +54,9 @@ function State:Update(dt)
     end
 
     gem:SetPosition(currentPos + velocity * dt)
-
-    self.Acceleration = acceleration
-    self.Velocity = velocity
 end
 
 -- Falling gems can be matched - but the game will not do so until they stop falling. This is so they are considered as valid gems for match-finding algorithms, allowing matches to stall until the gems stop falling.
 function State:IsMatchable()
-    return true
-end
-
-function State:IsBusy()
     return true
 end

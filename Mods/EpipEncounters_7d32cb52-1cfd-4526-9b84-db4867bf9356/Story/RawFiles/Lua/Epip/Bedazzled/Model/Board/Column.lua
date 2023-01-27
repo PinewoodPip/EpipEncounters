@@ -78,16 +78,25 @@ function _BoardColumn:Update(dt)
         end
     end
 
+    -- the position of the last busy *or* falling gem
+    local lastBusyGemPosition = nil
     for i,gem in ipairs(self.Gems) do
         local targetPosition = (i - 1) * gem:GetSize()
+
         if gem:IsFalling() then
             local state = gem.State ---@type Feature_Bedazzled_Board_Gem_State_Falling
             state.TargetPosition = targetPosition
+            state.StallingPosition = lastBusyGemPosition
+
+            lastBusyGemPosition = gem:GetPosition()
+        elseif gem:IsBusy() then
+            lastBusyGemPosition = gem:GetPosition() + gem:GetSize()
         elseif gem:GetPosition() ~= targetPosition and not gem:IsBusy() then -- If a gem is not in its target position, cause it to fall
             gem:SetState(Bedazzled.GetGemStateClass("Feature_Bedazzled_Board_Gem_State_Falling"):Create())
 
             local state = gem.State ---@type Feature_Bedazzled_Board_Gem_State_Falling
             state.TargetPosition = targetPosition
+            state.StallingPosition = lastBusyGemPosition
             state.Velocity = Bedazzled.SPAWNED_GEM_INITIAL_VELOCITY
         end
 
