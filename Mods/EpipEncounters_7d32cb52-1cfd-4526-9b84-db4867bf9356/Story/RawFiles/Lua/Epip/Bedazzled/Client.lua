@@ -41,7 +41,7 @@ Epip.RegisterFeature("Bedazzled", Bedazzled)
 function Bedazzled.RegisterGem(data)
     local GemClass = Bedazzled:GetClass("Feature_Bedazzled_Gem")
 
-    Inherit(data, GemClass)
+    data = GemClass.Create(data)
 
     Bedazzled._Gems[data.Type] = data
 end
@@ -69,12 +69,30 @@ end
 
 ---@return Feature_Bedazzled_Gem
 function Bedazzled.GetRandomGemDescriptor()
-    local gems = {}
+    local totalWeight = 0
+    local gems = {} ---@type Feature_Bedazzled_Gem[]
+    local chosenGem
+
     for _,g in pairs(Bedazzled._Gems) do
+        totalWeight = totalWeight + g.Weight
         table.insert(gems, g)
     end
 
-    return gems[math.random(#gems)]
+    if #gems == 0 then
+        Bedazzled:Error("GetRandomGemDescriptor", "No gems are registered.")
+    end
+
+    local seed = math.random(0, totalWeight)
+    for _,g in ipairs(gems) do
+        seed = seed - g.Weight
+
+        if seed <= 0 then
+            chosenGem = g
+            break
+        end
+    end
+
+    return chosenGem
 end
 
 ---@generic T
