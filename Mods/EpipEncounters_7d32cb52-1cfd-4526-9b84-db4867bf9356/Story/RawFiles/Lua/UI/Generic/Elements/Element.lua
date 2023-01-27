@@ -135,6 +135,10 @@ function _Element:SetRotation(degrees)
     self:GetMovieClip().SetRotation(degrees)
 end
 
+function _Element:Destroy()
+    self.UI:DestroyElement(self)
+end
+
 ---@param eventType string
 ---@param handler function
 function _Element:RegisterListener(eventType, handler)

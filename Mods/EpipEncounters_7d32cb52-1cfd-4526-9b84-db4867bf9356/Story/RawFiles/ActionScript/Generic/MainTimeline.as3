@@ -49,6 +49,11 @@ package arenaResult_fla
             {
                 mc.stringID = id;
 
+                if (parentID != "")
+                {
+                    mc.parentElement = parent as Element;
+                }
+
                 this.elements[id] = mc;
 
                 parent.AddChildElement(mc);
@@ -64,6 +69,33 @@ package arenaResult_fla
             this.elements[mc.stringID] = mc; // TODO use childElements
             this[mc.stringID] = mc;
             this.addChild(mc);
+        }
+
+        public function DestroyElement(id:String) : *
+        {
+            var element:MovieClip = this.GetElementByID(id);
+
+            if (element == null)
+            {
+                trace("DestroyElement(): element not found " + id);
+            }
+            else
+            {
+                this.RecursivelyDestroyElement(element);
+            }
+        }
+
+        private function RecursivelyDestroyElement(element:MovieClip) : *
+        {
+            for (var key:String in element.childElements)
+            {
+                RecursivelyDestroyElement(element.childElements[key]);
+            }
+
+            if (element.HasParent())
+            {
+                element.parentElement.RemoveChildElement(element);
+            }
         }
 
         public function GetElementByID(id:String) : MovieClip

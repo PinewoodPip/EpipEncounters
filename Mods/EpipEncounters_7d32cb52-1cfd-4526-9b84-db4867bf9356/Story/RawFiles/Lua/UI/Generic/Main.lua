@@ -53,6 +53,13 @@ function _Instance:GetElementByID(id)
     return self.Elements[id]
 end
 
+---@param element GenericUI_Element
+function _Instance:DestroyElement(element)
+    local root = self:GetRoot()
+
+    root.DestroyElement(element.ID)
+end
+
 ---@param id string
 ---@return FlashMovieClip?
 function _Instance:GetMovieClipByID(id)
@@ -158,6 +165,10 @@ function Prefab:_SetupEvents()
     for id,_ in pairs(_Templates) do
         self.Events[id] = SubscribableEvent:New(id)
     end
+end
+
+function Prefab:Destroy()
+    Generic:Error("Prefab:Destroy", "Not implemented for this prefab")
 end
 
 ---------------------------------------------
