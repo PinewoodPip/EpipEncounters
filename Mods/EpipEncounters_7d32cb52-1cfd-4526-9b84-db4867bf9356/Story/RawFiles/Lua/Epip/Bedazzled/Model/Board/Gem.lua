@@ -88,9 +88,7 @@ end
 ---Busy gems cannot start falling.
 ---@return boolean
 function _BoardGem:IsBusy()
-    local currentStateClass = self.State.ClassName
-
-    return currentStateClass == "Feature_Bedazzled_Board_Gem_State_InvalidSwap" or currentStateClass == "Feature_Bedazzled_Board_Gem_State_Falling" or currentStateClass == "Feature_Bedazzled_Board_Gem_State_Consuming"
+    return self.State:IsBusy()
 end
 
 ---@param y number
@@ -115,7 +113,7 @@ end
 
 ---@return boolean
 function _BoardGem:IsMatchable()
-    return self.State.ClassName == "Feature_Bedazzled_Board_Gem_State_Idle"
+    return self.State:IsMatchable()
 end
 
 ---@param otherGem Feature_Bedazzled_Board_Gem

@@ -51,3 +51,12 @@ function State:Update(dt)
     self.Acceleration = acceleration
     self.Velocity = velocity
 end
+
+-- Falling gems can be matched - but the game will not do so until they stop falling. This is so they are considered as valid gems for match-finding algorithms, allowing matches to stall until the gems stop falling.
+function State:IsMatchable()
+    return true
+end
+
+function State:IsBusy()
+    return true
+end

@@ -13,3 +13,7 @@ Bedazzled.RegisterGemStateClass("Feature_Bedazzled_Board_Gem_State_Idle", State)
 function State:IsIdle()
     return true
 end
+
+function State:IsMatchable()
+    return true
+end

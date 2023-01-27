@@ -35,3 +35,7 @@ function State:Update(dt)
         self.Gem:SetState(idleState:Create())
     end
 end
+
+function State:IsBusy()
+    return true
+end

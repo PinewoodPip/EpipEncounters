@@ -627,7 +627,7 @@ function UI.OnGemClickboxClicked(x, y)
     local gem = UI.Board:GetGemAt(x, y)
     local element = UI.GetGemElement(gem)
 
-    if gem and element and not gem:IsBusy() and not gem:IsFalling() then
+    if gem and element and gem:IsIdle() then
         if UI.HasGemSelection() and newSelection == UI.GetSelectedPosition() then -- Deselect position
             UI.ClearSelection()
         elseif UI.HasGemSelection() then -- Swap gems TODO change to idle only

@@ -232,7 +232,7 @@ function _Board:CanSwap(gem1, gem2)
 
     canSwap = canSwap and gem1 ~= gem2
     canSwap = canSwap and gem1:IsAdjacentTo(gem2)
-    canSwap = canSwap and not gem1:IsBusy() and not gem2:IsBusy()
+    canSwap = canSwap and gem1:IsMatchable() and gem2:IsMatchable()
 
     -- Can only swap if it were to result in a valid move
     -- TODO consider falling gems
@@ -432,5 +432,19 @@ function _Board:GetMatchAt(x, y)
 
     match:SetScore(score)
 
-    return match:GetGemCount() >= Bedazzled.MINIMUM_MATCH_GEMS and match or nil
+    -- Discard the match if any gem is not idle.
+    -- This allows matches to be stalled until "animation" states complete.
+    for _,addedGem in ipairs(match.Gems) do
+        if not addedGem:IsIdle() then
+            match = nil
+            break
+        end
+    end
+
+    -- Discard matches that do not meet the minimum gem count.
+    if match and match:GetGemCount() < Bedazzled.MINIMUM_MATCH_GEMS then
+        match = nil
+    end
+
+    return match
 end

@@ -37,3 +37,16 @@ end
 function State:IsIdle()
     return false
 end
+
+---Returns whether the gem is in a "busy" state.
+---Busy gems cannot start falling.
+---@return boolean
+function State:IsBusy()
+    return false
+end
+
+---Returns whether this gem can be used in matches.
+---@return boolean
+function State:IsMatchable()
+    return false
+end

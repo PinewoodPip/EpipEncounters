@@ -30,3 +30,7 @@ end
 function State:IsConsumed()
     return self.TimeElapsed >= self.Duration
 end
+
+function State:IsBusy()
+    return true
+end
