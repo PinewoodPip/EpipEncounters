@@ -542,6 +542,7 @@ LOAD_ORDER = {
             "Epip/Bedazzled/Model/Board/Gem.lua",
             "Epip/Bedazzled/Model/Board/GemDescriptor.lua",
             "Epip/Bedazzled/Model/Board/Match.lua",
+            "Epip/Bedazzled/Model/Board/GemModifierDescriptor.lua",
             "Epip/Bedazzled/Model/Board/Board.lua",
 
             "Epip/Bedazzled/Model/Gem/States/_State.lua",
@@ -550,6 +551,7 @@ LOAD_ORDER = {
             "Epip/Bedazzled/Model/Gem/States/InvalidSwap.lua",
             "Epip/Bedazzled/Model/Gem/States/Swapping.lua",
             "Epip/Bedazzled/Model/Gem/States/Consuming.lua",
+            "Epip/Bedazzled/Model/Gem/States/Fusing.lua",
         },
         WIP = true,
     }

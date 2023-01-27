@@ -7,7 +7,7 @@ local Bedazzled = Epip.GetFeature("Feature_Bedazzled")
 local State = {}
 Bedazzled.RegisterGemStateClass("Feature_Bedazzled_Board_Gem_State", State)
 
----@alias Feature_Bedazzled_Board_Gem_StateClassName "Feature_Bedazzled_Board_Gem_State"|"Feature_Bedazzled_Board_Gem_State_Idle"|"Feature_Bedazzled_Board_Gem_State_Falling"|"Feature_Bedazzled_Board_Gem_State_InvalidSwap"|"Feature_Bedazzled_Board_Gem_State_Swapping"|"Feature_Bedazzled_Board_Gem_State_Consuming"
+---@alias Feature_Bedazzled_Board_Gem_StateClassName "Feature_Bedazzled_Board_Gem_State"|"Feature_Bedazzled_Board_Gem_State_Idle"|"Feature_Bedazzled_Board_Gem_State_Falling"|"Feature_Bedazzled_Board_Gem_State_InvalidSwap"|"Feature_Bedazzled_Board_Gem_State_Swapping"|"Feature_Bedazzled_Board_Gem_State_Consuming"|"Feature_Bedazzled_Board_Gem_State_Fusing"
 
 ---------------------------------------------
 -- METHODS
@@ -48,5 +48,9 @@ end
 ---Returns whether this gem can be used in matches.
 ---@return boolean
 function State:IsMatchable()
+    return false
+end
+
+function State:IsConsumed()
     return false
 end

@@ -3,6 +3,7 @@ local Bedazzled = Epip.GetFeature("Feature_Bedazzled")
 
 ---@class Feature_Bedazzled_Board_Gem
 ---@field Type string
+---@field Modifiers string[]
 ---@field X number
 ---@field Y number
 ---@field State Feature_Bedazzled_Board_Gem_State
@@ -24,6 +25,7 @@ function _BoardGem:Create(type, state)
     ---@type Feature_Bedazzled_Board_Gem
     local obj = {
         Type = type,
+        Modifiers = {},
         Y = 0,
         X = 0,
         Events = {},
@@ -44,6 +46,19 @@ end
 ---@param dt number In seconds.
 function _BoardGem:Update(dt)
     self.State:Update(dt)
+end
+
+---Adds a modifier to the gem.
+---@param id string
+function _BoardGem:AddModifier(id)
+    table.insert(self.Modifiers, id)
+end
+
+---Returns whether the gem has a modifier.
+---@param id string
+---@return boolean
+function _BoardGem:HasModifier(id)
+    return table.contains(self.Modifiers, id)
 end
 
 function _BoardGem:GetIcon()
@@ -73,10 +88,8 @@ function _BoardGem:IsFalling()
     return self.State.ClassName == "Feature_Bedazzled_Board_Gem_State_Falling"
 end
 
-function _BoardGem:IsConsumed() -- TODO delegate these methods to state interface
-    local state = self.State ---@type Feature_Bedazzled_Board_Gem_State_Consuming
-
-    return self.State.ClassName == "Feature_Bedazzled_Board_Gem_State_Consuming" and state:IsConsumed()
+function _BoardGem:IsConsumed()
+    return self.State:IsConsumed()
 end
 
 ---Returns whether the gem is in an "idle" state, not performing any specific action.

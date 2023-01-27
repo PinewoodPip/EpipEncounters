@@ -16,7 +16,7 @@ Bedazzled.RegisterGemStateClass("Feature_Bedazzled_Board_Gem_State_Swapping", St
 
 ---@param otherGem Feature_Bedazzled_Board_Gem
 function State:Create(otherGem)
-    ---@type Feature_Bedazzled_Board_Gem_State_InvalidSwap
+    ---@type Feature_Bedazzled_Board_Gem_State_Swapping
     local state = {
         TimeElapsed = 0,
         OtherGem = otherGem,

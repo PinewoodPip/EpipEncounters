@@ -54,7 +54,16 @@ UI.SOUNDS = {
 ---@field Root GenericUI_Element_Empty
 ---@field Icon GenericUI_Element_IggyIcon
 local GemPrefab = {
-
+    RUNE_ICONS = {
+        Bloodstone = "Item_LOOT_Rune_Bloodstone_Giant",
+        Jade = "Item_LOOT_Rune_Jade_Giant",
+        Sapphire = "Item_LOOT_Rune_Sapphire_Giant",
+        Topaz = "Item_LOOT_Rune_Topaz_Giant",
+        Onyx = "Item_LOOT_Rune_Onyx_Giant",
+        Emerald = "Item_LOOT_Rune_Emerald_Giant",
+        Lapis = "Item_LOOT_Rune_Lapis_Giant",
+        TigersEye = "Item_LOOT_Rune_TigersEye_Giant",
+    }
 }
 Generic.RegisterPrefab("GenericUI_Prefab_Bedazzled_Gem", GemPrefab)
 
@@ -104,12 +113,23 @@ function GemPrefab:Update()
     self:UpdateIcon()
 end
 
+---Gets the icon for a Rune-modified gem.
+---@param gemType string
+---@return string
+function GemPrefab.GetIconForRune(gemType)
+    return GemPrefab.RUNE_ICONS[gemType] or "unknown"
+end
+
 function GemPrefab:UpdateIcon()
     local iconElement = self.Icon
     local gem = self.Gem
     local icon
     
-    icon = gem:GetIcon()
+    if gem:HasModifier("Rune") then
+        icon = GemPrefab.GetIconForRune(gem.Type)
+    else
+        icon = gem:GetIcon()
+    end
 
     iconElement:SetIcon(icon, UI.CELL_SIZE:unpack())
 end
@@ -304,6 +324,28 @@ function UI.OnGemStateChanged(gem, newState, oldState)
                 })
             end
         })
+    elseif newState == "Feature_Bedazzled_Board_Gem_State_Fusing" then
+        state = gem.State ---@type Feature_Bedazzled_Board_Gem_State_Fusing
+
+        local targetGem = state.TargetGem
+        local targetX, targetY = UI.GamePositionToUIPosition(targetGem:GetBoardPosition())
+
+        element:Tween({
+            EventID = "Bedazzled_Fusion",
+            FinalValues = {
+                x = targetX,
+                y = targetY,
+                scaleX = 0.7,
+                scaleY = 0.7,
+            },
+            Function = "Cubic",
+            Ease = "EaseOut",
+            Duration = state.Duration,
+            OnComplete = function (_)
+                element:Destroy()
+                UI.Gems[element.ID] = nil
+            end
+        })
     end
 end
 
@@ -406,20 +448,30 @@ end
 function UI.CreateScoreFlyover(match)
     -- We need to calculate the UI position to spawn the text at
     -- we spawn it at the center top of the rect formed by all gems in the match
-    local leftmostGem = match.Gems[1]
-    local rightmostGem = match.Gems[1]
-    local topmostGem = match.Gems[1]
 
-    for _,gem in ipairs(match.Gems) do
-        if gem.X < leftmostGem.X then
-            leftmostGem = gem
+    local leftmostGem
+    local rightmostGem
+    local topmostGem
+    if #match.Fusions == 0 then -- Use position of consumed gems if there are no fusions
+        leftmostGem = match.Gems[1]
+        rightmostGem = match.Gems[1]
+        topmostGem = match.Gems[1]
+
+        for _,gem in ipairs(match.Gems) do
+            if gem.X < leftmostGem.X then
+                leftmostGem = gem
+            end
+            if gem.X > rightmostGem.X then
+                rightmostGem = gem
+            end
+            if gem:GetPosition() > topmostGem:GetPosition() then
+                topmostGem = gem
+            end
         end
-        if gem.X > rightmostGem.X then
-            rightmostGem = gem
-        end
-        if gem:GetPosition() > topmostGem:GetPosition() then
-            topmostGem = gem
-        end
+    else -- Use first fusion
+        local fusion = match.Fusions[1]
+
+        leftmostGem, rightmostGem, topmostGem = fusion.TargetGem, fusion.TargetGem, fusion.TargetGem
     end
 
     local left = V(UI.GamePositionToUIPosition(leftmostGem:GetBoardPosition()))

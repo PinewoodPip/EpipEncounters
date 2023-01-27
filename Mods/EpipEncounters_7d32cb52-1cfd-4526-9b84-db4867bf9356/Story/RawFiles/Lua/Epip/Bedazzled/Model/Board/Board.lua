@@ -3,6 +3,7 @@ local Bedazzled = Epip.GetFeature("Feature_Bedazzled")
 local BoardColumn = Bedazzled:GetClass("Feature_Bedazzled_Board_Column")
 local BoardGem = Bedazzled:GetClass("Feature_Bedazzled_Board_Gem")
 local Match = Bedazzled:GetClass("Feature_Bedazzled_Match")
+local Fusion = Bedazzled:GetClass("Feature_Bedazzled_Match_Fusion")
 local V = Vector.Create
 
 ---@class Feature_Bedazzled_Board
@@ -122,7 +123,6 @@ function _Board:Update(dt)
     -- Search for a match. Only a single match is processed per tick.
     -- The highest-scoring match is prioritized.
     local bestMatch = nil ---@type Feature_Bedazzled_Match
-    -- local match = self:GetMatchAt(1, 1)
     for x=1,self.Size[2],1 do
         for y=1,self.Size[1],1 do
             local match = self:GetMatchAt(x, y)
@@ -166,11 +166,23 @@ end
 ---@param match Feature_Bedazzled_Match
 function _Board:ConsumeMatch(match)
     local consumingState = Bedazzled.GetGemStateClass("Feature_Bedazzled_Board_Gem_State_Consuming")
+    local fusingState = Bedazzled.GetGemStateClass("Feature_Bedazzled_Board_Gem_State_Fusing")
 
     self.MatchesSinceLastMove = self.MatchesSinceLastMove + 1
 
+    -- Consume gems
     for _,gem in ipairs(match.Gems) do
         gem:SetState(consumingState:Create())    
+    end
+
+    -- Fuse gems
+    for _,fusion in ipairs(match.Fusions) do
+        local target = fusion.TargetGem
+        target:AddModifier(fusion.TargetModifier)
+
+        for _,gem in ipairs(fusion.FusingGems) do
+            gem:SetState(fusingState:Create(target))
+        end
     end
 
     self:AddScore(match:GetScore())
@@ -412,13 +424,33 @@ function _Board:GetMatchAt(x, y)
 
     -- Only add gems if there were >= MINIMUM_MATCH_GEMS in the row/column
     if #horizontalGems >= Bedazzled.MINIMUM_MATCH_GEMS then
-        for _,hgem in ipairs(horizontalGems) do
-            match:AddGem(hgem)
+        if #horizontalGems >= 4 then -- Fuse into a Rune
+            local targetGem = horizontalGems[2] -- TODO prioritize fusing into the gem the player swiped
+            local fusingGems = table.shallowCopy(horizontalGems)
+            table.remove(fusingGems, 2)
+
+            local fusion = Fusion.Create(targetGem, "Rune", fusingGems)
+
+            match:AddFusion(fusion)
+        else -- Add gems for consumption
+            for _,hgem in ipairs(horizontalGems) do
+                match:AddGem(hgem)
+            end
         end
     end
     if #verticalGems >= Bedazzled.MINIMUM_MATCH_GEMS then
-        for _,vgem in ipairs(verticalGems) do
-            match:AddGem(vgem)
+        if #verticalGems >= 4 then -- Fuse into a Rune
+            local targetGem = verticalGems[2]
+            local fusingGems = table.shallowCopy(verticalGems)
+            table.remove(fusingGems, 2)
+
+            local fusion = Fusion.Create(targetGem, "Rune", fusingGems)
+
+            match:AddFusion(fusion)
+        else
+            for _,vgem in ipairs(verticalGems) do
+                match:AddGem(vgem)
+            end
         end
     end
 

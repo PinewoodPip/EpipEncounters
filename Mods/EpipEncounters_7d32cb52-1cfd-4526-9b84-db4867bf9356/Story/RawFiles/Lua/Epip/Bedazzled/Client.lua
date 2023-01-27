@@ -2,6 +2,7 @@
 ---@class Feature_Bedazzled : Feature
 local Bedazzled = {
     _Gems = {}, ---@type table<string, Feature_Bedazzled_Gem>
+    _GemModifierDescriptors = {}, ---@type table<string, Feature_Bedazzled_GemModifier>
     _GemStateClasses = {}, ---@type table<string, Feature_Bedazzled_Board_Gem_State>>
 
     TranslatedStrings = {
@@ -113,10 +114,27 @@ function Bedazzled.RegisterGemStateClass(className, class)
     Bedazzled._GemStateClasses[className] = class
 end
 
+---Registers a gem modifier.
+---@param id string
+---@param mod Feature_Bedazzled_GemModifier
+function Bedazzled.RegisterGemModifier(id, mod)
+    local class = Bedazzled:GetClass("Feature_Bedazzled_GemModifier")
+
+    Bedazzled._GemModifierDescriptors[id] = class.Create(id, mod)
+end
+
+---Gets the descriptor of a gem modifier.
+---@param id string
+---@return Feature_Bedazzled_GemModifier
+function Bedazzled.GetGemModifier(id)
+    return Bedazzled._GemModifierDescriptors[id]
+end
+
 ---------------------------------------------
 -- SETUP
 ---------------------------------------------
 
+-- Register built-in gem types and modifiers.
 GameState.Events.ClientReady:Subscribe(function (_)
     ---@type Feature_Bedazzled_Gem[]
     local gems = {
@@ -155,5 +173,14 @@ GameState.Events.ClientReady:Subscribe(function (_)
     }
     for _,gem in ipairs(gems) do
         Bedazzled.RegisterGem(gem)
+    end
+
+    ---@type table<string, Feature_Bedazzled_GemModifier>
+    local mods = {
+        Rune = {}
+    }
+
+    for id,data in pairs(mods) do
+        Bedazzled.RegisterGemModifier(id, data)
     end
 end)
