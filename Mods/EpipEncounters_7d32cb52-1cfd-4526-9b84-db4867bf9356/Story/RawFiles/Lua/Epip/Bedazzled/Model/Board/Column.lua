@@ -86,7 +86,7 @@ function _BoardColumn:Update(dt)
         if gem:IsFalling() then
             local state = gem.State ---@type Feature_Bedazzled_Board_Gem_State_Falling
             state.TargetPosition = targetPosition
-            state.StallingPosition = lastBusyGemPosition
+            state.StallingPosition = lastBusyGemPosition and lastBusyGemPosition + gem:GetSize()
 
             lastBusyGemPosition = gem:GetPosition()
         elseif gem:IsBusy() then
