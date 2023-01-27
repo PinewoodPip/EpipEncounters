@@ -547,7 +547,6 @@ function UI._Initialize(board)
             }
         }), "Center", UI.BACKGROUND_SIZE)
         gameOverText:SetPositionRelativeToParent("Center", 0, 100)
-        gameOverText:SetVisible(false)
         UI.GameOverText = gameOverText
     else -- Cleanup previous elements
         for _,gem in pairs(UI.Gems) do
@@ -557,6 +556,7 @@ function UI._Initialize(board)
         UI.Gems = {}
     end
 
+    UI.GameOverText:SetVisible(false)
     UI.ClearSelection()
 
     UI._Initialized = true
