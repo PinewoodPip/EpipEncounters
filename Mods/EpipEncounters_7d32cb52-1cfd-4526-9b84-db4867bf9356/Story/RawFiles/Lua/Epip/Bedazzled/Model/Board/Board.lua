@@ -6,6 +6,7 @@ local Match = Bedazzled:GetClass("Feature_Bedazzled_Match")
 
 ---@class Feature_Bedazzled_Board
 ---@field Score integer
+---@field MatchesSinceLastMove integer
 ---@field Size Vector2
 ---@field Columns Feature_Bedazzled_Board_Column[]
 local _Board = {
@@ -17,6 +18,10 @@ local _Board = {
     }
 }
 Bedazzled:RegisterClass("Feature_Bedazzled_Board", _Board)
+
+---------------------------------------------
+-- EVENTS
+---------------------------------------------
 
 ---@class Feature_Bedazzled_Board_Event_Updated
 ---@field DeltaTime number In seconds.
@@ -32,12 +37,17 @@ Bedazzled:RegisterClass("Feature_Bedazzled_Board", _Board)
 ---@field Gem1 Feature_Bedazzled_Board_Gem
 ---@field Gem2 Feature_Bedazzled_Board_Gem
 
+---------------------------------------------
+-- METHODS
+---------------------------------------------
+
 ---@param size Vector2
 ---@return Feature_Bedazzled_Board
 function _Board.Create(size)
     ---@type Feature_Bedazzled_Board
     local board = {
         Score = 0,
+        MatchesSinceLastMove = 0,
         Size = size,
         Columns = {},
         Events = {},
@@ -64,6 +74,7 @@ function _Board.Create(size)
     return board
 end
 
+---@return integer
 function _Board:GetScore()
     return self.Score
 end
@@ -118,6 +129,8 @@ end
 ---@param match Feature_Bedazzled_Match
 function _Board:ConsumeMatch(match)
     local consumingState = Bedazzled.GetGemStateClass("Feature_Bedazzled_Board_Gem_State_Consuming")
+
+    self.MatchesSinceLastMove = self.MatchesSinceLastMove + 1
 
     for _,gem in ipairs(match.Gems) do
         gem:SetState(consumingState:Create())    
@@ -190,13 +203,18 @@ function _Board:Swap(position1, position2)
     local gem2 = self:GetGemAt(position2:unpack())
 
     if gem1 and gem2 then
-        if self:CanSwap(gem1, gem2) then
+        if self:CanSwap(gem1, gem2) then -- Swap gems
+            -- Swap occurs instantly, but the gems cannot
+            -- be matched until the Swapping state ends
             gem1.Type, gem2.Type = gem2.Type, gem1.Type
     
             local swappingState = Bedazzled.GetGemStateClass("Feature_Bedazzled_Board_Gem_State_Swapping")
     
             gem1:SetState(swappingState:Create(gem2))
             gem2:SetState(swappingState:Create(gem1))
+
+            -- Reset cascade counter
+            self.MatchesSinceLastMove = 0
         elseif gem1:IsAdjacentTo(gem2) then -- Enter invalid swap busy state - only if gems are adjacent
             local invalidSwapState = Bedazzled.GetGemStateClass("Feature_Bedazzled_Board_Gem_State_InvalidSwap")
     
@@ -291,6 +309,11 @@ function _Board:GetMatchAt(x, y)
 
         score = score + (1 + (#verticalGems - Bedazzled.MINIMUM_MATCH_GEMS)) * 100
     end
+
+    -- Multiplier for cascades
+    -- the var is incremented only after consuming matches,
+    -- so in this context it is "1 match behind"
+    score = score * (self.MatchesSinceLastMove + 1)
 
     match:SetScore(score)
 
