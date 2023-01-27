@@ -19,6 +19,7 @@
 ---@field AddHook fun(self, name:string, data:Hook?):Hook
 ---@field IsEnabled fun(self):boolean
 ---@field __Setup fun(self)
+---@field _Classes table<string, table>
 ---@field Disable fun(self)
 ---@field OnFeatureInit fun(self)
 ---@field RegisterListener fun(self, event:string, handler:function)
@@ -206,6 +207,9 @@ function Feature.Create(feature)
 
         Text.RegisterTranslatedString(data)
     end
+
+    -- Create class holder
+    feature._Classes = {}
 
     -- Create TSK table
     local TSKmetatable = {
@@ -449,6 +453,25 @@ Ext.RegisterNetListener("EPIPFeature_GlobalEvent", function(_, payload)
 
     Utilities.Hooks.FireEvent(payload.Module, payload.Event, table.unpack(payload.Args))
 end)
+
+---------------------------------------------
+-- OOP
+---------------------------------------------
+
+---Registers a class.
+---@param className string
+---@param class table Class table.
+function Feature:RegisterClass(className, class)
+    self._Classes[className] = class
+end
+
+---Returns a class's base table.
+---@generic T
+---@param className `T`
+---@return `T`
+function Feature:GetClass(className)
+    return self._Classes[className]
+end
 
 ---------------------------------------------
 -- LOGGING FUNCTIONS

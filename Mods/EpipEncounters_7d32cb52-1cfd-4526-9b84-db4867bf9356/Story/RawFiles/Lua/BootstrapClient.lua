@@ -538,6 +538,12 @@ LOAD_ORDER = {
             "Epip/Bedazzled/Client.lua",
             "Epip/Bedazzled/UI.lua",
 
+            "Epip/Bedazzled/Model/Board/Column.lua",
+            "Epip/Bedazzled/Model/Board/Gem.lua",
+            "Epip/Bedazzled/Model/Board/GemDescriptor.lua",
+            "Epip/Bedazzled/Model/Board/Match.lua",
+            "Epip/Bedazzled/Model/Board/Board.lua",
+
             "Epip/Bedazzled/Model/Gem/States/_State.lua",
             "Epip/Bedazzled/Model/Gem/States/Idle.lua",
             "Epip/Bedazzled/Model/Gem/States/Falling.lua",
