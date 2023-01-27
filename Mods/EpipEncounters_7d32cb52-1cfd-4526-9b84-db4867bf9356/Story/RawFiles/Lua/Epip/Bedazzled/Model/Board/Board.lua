@@ -266,7 +266,7 @@ function _Board:Swap(position1, position2)
 
             -- Reset cascade counter
             self.MatchesSinceLastMove = 0
-        elseif gem1:IsAdjacentTo(gem2) then -- Enter invalid swap busy state - only if gems are adjacent
+        elseif gem1:IsAdjacentTo(gem2) and gem1:IsIdle() and gem2:IsIdle() then -- Enter invalid swap busy state - only if gems are adjacent and idle
             local invalidSwapState = Bedazzled.GetGemStateClass("Feature_Bedazzled_Board_Gem_State_InvalidSwap")
     
             gem1:SetState(invalidSwapState:Create(gem2))

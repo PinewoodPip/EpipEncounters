@@ -34,3 +34,7 @@ end
 function State:IsBusy()
     return true
 end
+
+function State:IsMatchable()
+    return false
+end
