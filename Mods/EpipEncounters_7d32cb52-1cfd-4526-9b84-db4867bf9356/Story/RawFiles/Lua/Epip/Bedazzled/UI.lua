@@ -121,12 +121,27 @@ function GemPrefab:GetGridPosition()
     return UI.GamePositionToUIPosition(x, y)
 end
 
+function GemPrefab:Destroy()
+    self.Root:Destroy()
+    self.Root, self.Icon = nil, nil
+end
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
 function UI.Setup()
     local board = Bedazzled.CreateBoard()
+
+    -- Unsubscribe from previous board
+    if UI.Board then
+        local oldBoard = UI.Board
+        oldBoard.Events.Updated:Unsubscribe("BedazzledUI_Updated")
+        oldBoard.Events.MatchExecuted:Unsubscribe("BedazzledUI_MatchExecuted")
+        oldBoard.Events.InvalidSwapPerformed:Unsubscribe("BedazzledUI_InvalidSwapPerformed")
+        oldBoard.Events.GemAdded:Unsubscribe("BedazzledUI_GemAdded")
+    end
+
     UI.Board = board
 
     UI._Initialize(board)
@@ -134,18 +149,18 @@ function UI.Setup()
     -- Update UI when the board updates.
     board.Events.Updated:Subscribe(function (ev)
         UI.Update(ev.DeltaTime)
-    end)
+    end, {StringID = "BedazzledUI_Updated"})
 
     -- Create text flyovers for scoring matches.
     board.Events.MatchExecuted:Subscribe(function (ev)
         UI:PlaySound(UI.SOUNDS.MATCH)
         UI.CreateScoreFlyover(ev.Match)
-    end)
+    end, {StringID = "BedazzledUI_MatchExecuted"})
 
     -- Play sound for invalid swaps.
     board.Events.InvalidSwapPerformed:Subscribe(function (_)
         UI:PlaySound(UI.SOUNDS.INVALID_MATCH)
-    end)
+    end, {StringID = "BedazzledUI_InvalidSwapPerformed"})
 
     board.Events.GemAdded:Subscribe(function (ev)
         local gem = ev.Gem
@@ -158,7 +173,7 @@ function UI.Setup()
         end)
 
         UI.Gems[guid] = element
-    end)
+    end, {StringID = "BedazzledUI_GemAdded"})
 
     UI:Show()
 end
@@ -221,7 +236,7 @@ function UI.OnGemStateChanged(gem, newState, oldState)
         element:Tween({
             EventID = "Bedazzled_Consume",
             FinalValues = {
-                scaleX = 0, -- TODO dispose of elements afterwards
+                scaleX = 0,
                 scaleY = 0,
             },
             StartingValues = {
@@ -231,6 +246,10 @@ function UI.OnGemStateChanged(gem, newState, oldState)
             Function = "Quadratic",
             Ease = "EaseInOut",
             Duration = state.Duration,
+            OnComplete = function (_)
+                element:Destroy()
+                UI.Gems[element.ID] = nil
+            end
         })
     elseif newState == "Feature_Bedazzled_Board_Gem_State_InvalidSwap" then -- Play invalid swap animation
         state = gem.State ---@type Feature_Bedazzled_Board_Gem_State_InvalidSwap
@@ -387,7 +406,7 @@ function UI.CreateScoreFlyover(match)
             alpha = 0,
         },
         OnComplete = function (_)
-            -- TODO dispose of the element
+            text.Element:Destroy()
         end
     })
 end
@@ -416,7 +435,7 @@ end
 
 ---@param board Feature_Bedazzled_Board
 function UI._Initialize(board)
-    if not UI._Initialized then
+    if not UI._Initialized then -- TODO support resizing the board
         -- UI background
         local bg = UI:CreateElement("Background", "GenericUI_Element_TiledBackground")
         UI.Background = bg
@@ -464,7 +483,15 @@ function UI._Initialize(board)
         selector:SetVisible(false)
         selector:SetMouseEnabled(false)
         UI.Selector = selector
+    else -- Cleanup previous elements
+        for _,gem in pairs(UI.Gems) do
+            gem:Destroy()
+        end
+
+        UI.Gems = {}
     end
+
+    UI.ClearSelection()
 
     UI._Initialized = true
 end
@@ -587,7 +614,6 @@ local function IsRuneCraftingMaterial(item) -- TODO move
     return RUNE_MATERIAL_STATS[item.StatsId] ~= nil
 end
 Client.UI.ContextMenu.RegisterVanillaMenuHandler("Item", function(item)
-    print(IsRuneCraftingMaterial(item))
     if IsRuneCraftingMaterial(item) then
         Client.UI.ContextMenu.AddElement({
             {id = "epip_Feature_Bedazzled", type = "button", text = "Bedazzle"},
@@ -597,5 +623,10 @@ end)
 
 -- Start the game when the context menu option is selected.
 Client.UI.ContextMenu.RegisterElementListener("epip_Feature_Bedazzled", "buttonPressed", function(_, _)
+    UI.Setup()
+end)
+
+-- Start the game from a console command.
+Ext.RegisterConsoleCommand("bedazzle", function (_, ...)
     UI.Setup()
 end)
