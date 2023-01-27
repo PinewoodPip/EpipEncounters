@@ -14,6 +14,15 @@ local Bedazzled = {
             Text = "Score    %s",
             ContextDescription = "Template string for displaying current score",
         },
+        GameOver = {
+            Handle = "h3166017ag50b9g4943g8ae9g5335c23c58e4",
+            Text = "Game Over",
+        },
+        GameOverSubTitle = {
+            Handle = "h1b460fc0ge72dg4879g9886g1dc640a782cb",
+            Text = "No more valid moves on the board!",
+            ContextDescription = "Subtitle for game over text",
+        }
     },
     DoNotExportTSKs = true,
 

@@ -3,8 +3,11 @@ local Bedazzled = Epip.GetFeature("Feature_Bedazzled")
 local BoardColumn = Bedazzled:GetClass("Feature_Bedazzled_Board_Column")
 local BoardGem = Bedazzled:GetClass("Feature_Bedazzled_Board_Gem")
 local Match = Bedazzled:GetClass("Feature_Bedazzled_Match")
+local V = Vector.Create
 
 ---@class Feature_Bedazzled_Board
+---@field GUID GUID
+---@field _IsRunning boolean
 ---@field Score integer
 ---@field MatchesSinceLastMove integer
 ---@field Size Vector2
@@ -15,6 +18,7 @@ local _Board = {
         GemAdded = {}, ---@type Event<Feature_Bedazzled_Board_Event_GemAdded>
         MatchExecuted = {}, ---@type Event<Feature_Bedazzled_Board_Event_MatchExecuted>
         InvalidSwapPerformed = {}, ---@type Event<Feature_Bedazzled_Board_Event_InvalidSwapPerformed>
+        GameOver = {}, ---@type Event<Feature_Bedazzled_Board_Event_GameOver>
     }
 }
 Bedazzled:RegisterClass("Feature_Bedazzled_Board", _Board)
@@ -37,6 +41,8 @@ Bedazzled:RegisterClass("Feature_Bedazzled_Board", _Board)
 ---@field Gem1 Feature_Bedazzled_Board_Gem
 ---@field Gem2 Feature_Bedazzled_Board_Gem
 
+---@class Feature_Bedazzled_Board_Event_GameOver
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
@@ -46,6 +52,8 @@ Bedazzled:RegisterClass("Feature_Bedazzled_Board", _Board)
 function _Board.Create(size)
     ---@type Feature_Bedazzled_Board
     local board = {
+        GUID = Text.GenerateGUID(),
+        _IsRunning = true,
         Score = 0,
         MatchesSinceLastMove = 0,
         Size = size,
@@ -69,7 +77,7 @@ function _Board.Create(size)
     -- Register update event
     GameState.Events.RunningTick:Subscribe(function (ev)
         board:Update(ev.DeltaTime / 1000)
-    end)
+    end, {StringID = "Bedazzled_" .. board.GUID})
 
     return board
 end
@@ -124,6 +132,30 @@ function _Board:Update(dt)
     end
 
     self.Events.Updated:Throw({DeltaTime = dt})
+
+    -- Game over if all gems are idling with no moves available.
+    if self:IsIdle() and not self:HasMovesAvailable() then
+        self:EndGame()
+    end
+end
+
+---Returns whether the game is still running.
+---@return boolean
+function _Board:IsRunning()
+    return self._IsRunning
+end
+
+---Ends the game and stops the update loop.
+function _Board:EndGame()
+    if not self._IsRunning then
+        Bedazzled:Error("Board:EndGame", "Attempted to end a board that is not running")
+    end
+
+    self._IsRunning = false
+    self.Events.GameOver:Throw({})
+
+    -- Stop updates
+    GameState.Events.RunningTick:Unsubscribe("Bedazzled_" .. self.GUID)
 end
 
 ---@param match Feature_Bedazzled_Match
@@ -227,6 +259,50 @@ function _Board:Swap(position1, position2)
             })
         end
     end
+end
+
+---Returns whether the board has any valid moves remaining.
+---@return boolean
+function _Board:HasMovesAvailable()
+    local hasMoves = false
+    local moveDirections = {
+        V(-1, 0),
+        V(1, 0),
+        V(0, -1),
+        V(0, 1),
+    }
+
+    for x=1,self.Size[2],1 do
+        for y=1,self.Size[1],1 do
+            for _,v in ipairs(moveDirections) do
+                local pos = V(x, y)
+                local gem1, gem2 = self:GetGemAt(pos:unpack()), self:GetGemAt((pos + v):unpack())
+
+                if gem1 and gem2 and self:CanSwap(gem1, gem2) then
+                    return true
+                end
+            end
+        end
+    end
+
+    return hasMoves
+end
+
+---Returns whether all gems on the board are idle.
+---@return boolean
+function _Board:IsIdle()
+    for x=1,self.Size[2],1 do
+        for y=1,self.Size[1],1 do
+            local pos = V(x, y)
+            local gem = self:GetGemAt(pos:unpack())
+
+            if not gem:IsIdle() then
+                return false
+            end
+        end
+    end
+
+    return true
 end
 
 ---Returns whether 2 gems can be matched.

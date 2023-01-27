@@ -31,3 +31,9 @@ end
 function State:Update(dt)
     
 end
+
+---Returns whether the gem is in an "idle" state, not performing any specific action.
+---@return boolean
+function State:IsIdle()
+    return false
+end

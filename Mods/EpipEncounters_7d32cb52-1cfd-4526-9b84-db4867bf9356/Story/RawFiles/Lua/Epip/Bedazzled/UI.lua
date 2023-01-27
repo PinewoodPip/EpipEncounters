@@ -140,6 +140,7 @@ function UI.Setup()
         oldBoard.Events.MatchExecuted:Unsubscribe("BedazzledUI_MatchExecuted")
         oldBoard.Events.InvalidSwapPerformed:Unsubscribe("BedazzledUI_InvalidSwapPerformed")
         oldBoard.Events.GemAdded:Unsubscribe("BedazzledUI_GemAdded")
+        oldBoard.Events.GameOver:Unsubscribe("BedazzledUI_GameOver")
     end
 
     UI.Board = board
@@ -174,6 +175,10 @@ function UI.Setup()
 
         UI.Gems[guid] = element
     end, {StringID = "BedazzledUI_GemAdded"})
+
+    board.Events.GameOver:Subscribe(function (_)
+        UI.OnGameOver()
+    end)
 
     UI:Show()
 end
@@ -291,6 +296,26 @@ function UI.OnGemStateChanged(gem, newState, oldState)
             end
         })
     end
+end
+
+---Shows the game over text.
+function UI.OnGameOver()
+    local text = UI.GameOverText
+
+    text:SetVisible(true)
+
+    text:Tween({
+        EventID = "FadeIn",
+        Duration = 0.8,
+        StartingValues = {
+            alpha = 0,
+        },
+        FinalValues = {
+            alpha = 1,
+        },
+        Function = "Cubic",
+        Ease = "EaseOut",
+    })
 end
 
 ---@return boolean
@@ -483,6 +508,24 @@ function UI._Initialize(board)
         selector:SetVisible(false)
         selector:SetMouseEnabled(false)
         UI.Selector = selector
+
+        -- Game Over text
+        local gameOverText = UI.CreateText("GameOverText", bg, Text.Format("%s\n%s", {
+            FormatArgs = {
+                {
+                    Text = Bedazzled.TranslatedStrings.GameOver:GetString(),
+                    Size = 45,
+                    Color = Color.CreateFromHex(Color.LARIAN.RED):ToHex(),
+                },
+                {
+                    Text = Bedazzled.TranslatedStrings.GameOverSubTitle:GetString(),
+                    Size = 25,
+                },
+            }
+        }), "Center", UI.BACKGROUND_SIZE)
+        gameOverText:SetPositionRelativeToParent("Center", 0, 100)
+        gameOverText:SetVisible(false)
+        UI.GameOverText = gameOverText
     else -- Cleanup previous elements
         for _,gem in pairs(UI.Gems) do
             gem:Destroy()
@@ -626,7 +669,18 @@ Client.UI.ContextMenu.RegisterElementListener("epip_Feature_Bedazzled", "buttonP
     UI.Setup()
 end)
 
+---------------------------------------------
+-- COMMANDS
+---------------------------------------------
+
 -- Start the game from a console command.
-Ext.RegisterConsoleCommand("bedazzle", function (_, ...)
+Ext.RegisterConsoleCommand("bedazzled", function (_)
     UI.Setup()
+end)
+
+-- Force a game over.
+Ext.RegisterConsoleCommand("bedazzledgameover", function (_)
+    if UI.Board and UI.Board:IsRunning() then
+        UI.Board:EndGame()
+    end
 end)

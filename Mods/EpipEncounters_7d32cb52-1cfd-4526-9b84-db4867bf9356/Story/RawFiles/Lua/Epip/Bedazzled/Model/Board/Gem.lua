@@ -79,6 +79,12 @@ function _BoardGem:IsConsumed() -- TODO delegate these methods to state interfac
     return self.State.ClassName == "Feature_Bedazzled_Board_Gem_State_Consuming" and state:IsConsumed()
 end
 
+---Returns whether the gem is in an "idle" state, not performing any specific action.
+---@return boolean
+function _BoardGem:IsIdle()
+    return self.State:IsIdle()
+end
+
 ---Busy gems cannot start falling.
 ---@return boolean
 function _BoardGem:IsBusy()
