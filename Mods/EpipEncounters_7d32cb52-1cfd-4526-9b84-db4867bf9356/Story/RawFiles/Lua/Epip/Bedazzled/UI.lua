@@ -22,6 +22,7 @@ UI.MINIMUM_SCORE_DIGITS = 9
 UI.SCORE_FLYOVER_DURATION = 1
 UI.SCORE_FLYOVER_Y_OFFSET = -40
 UI.SCORE_FLYOVER_TRAVEL_DISTANCE = -50
+UI.HoveredGridPosition = nil ---@type Vector2?
 
 UI.SOUNDS = {
     CLICK = "UI_Game_Skillbar_Unlock",
@@ -335,6 +336,7 @@ end
 
 function UI.ClearSelection()
     local selector = UI.Selector
+    local secondarySelector = UI.SecondarySelector
 
     UI.GemSelection = nil
     selector:SetVisible(false)
@@ -499,16 +501,30 @@ function UI._Initialize(board)
                 clickbox.Events.MouseDown:Subscribe(function (_)
                     UI.OnGemClickboxClicked(j, board.Size[1] - i + 1)
                 end)
+                clickbox.Events.MouseOver:Subscribe(function (_)
+                    UI.OnGemClickboxHovered(j, board.Size[1] - i + 1)
+                end)
             end
         end
 
+        -- Hide secondary selector when mouse exits the grid
+        clickboxGrid.Events.MouseOut:Subscribe(function (_)
+            UI.SecondarySelector:SetVisible(false)
+        end)
+
         -- Gem selector
+        local secondarySelector = gemContainer:AddChild("SecondarySelector", "GenericUI_Element_IggyIcon")
+        secondarySelector:SetIcon("Item_Rare", UI.CELL_SIZE:unpack())
+        secondarySelector:SetVisible(false)
+        secondarySelector:SetMouseEnabled(false)
+        UI.SecondarySelector = secondarySelector
+
         local selector = gemContainer:AddChild("Selector", "GenericUI_Element_IggyIcon")
         selector:SetIcon("Item_Divine", UI.CELL_SIZE:unpack())
         selector:SetVisible(false)
         selector:SetMouseEnabled(false)
         UI.Selector = selector
-
+        
         -- Game Over text
         local gameOverText = UI.CreateText("GameOverText", bg, Text.Format("%s\n%s", {
             FormatArgs = {
@@ -574,6 +590,27 @@ end
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
+
+---Handle clickboxes being hovered over.
+---@param x integer
+---@param y integer
+function UI.OnGemClickboxHovered(x, y)
+    local gem = UI.Board:GetGemAt(x, y)
+    local element = UI.GetGemElement(gem)
+    local selector = UI.SecondarySelector
+
+    if gem and element then
+        local visualPositionX, visualPositionY = element:GetGridPosition()
+
+        visualPositionX = visualPositionX - UI.CELL_SIZE[1]/2
+        visualPositionY = visualPositionY - UI.CELL_SIZE[2]/2
+
+        selector:SetPosition(visualPositionX, visualPositionY)
+        selector:SetVisible(true)
+    end
+
+    UI.HoveredGridPosition = (gem and element) and V(x, y) or nil
+end
 
 ---Handle clickboxes being clicked.
 ---@param x integer
