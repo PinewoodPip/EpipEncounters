@@ -25,7 +25,7 @@ package Elements
     {
         public var stringID:String = "Uninitialized!";
         public var childElements:Dictionary;
-        public var parentElement:Element = null;
+        public var parentElement:MovieClip = null;
 
         protected var _ignoreUp = false;
 
@@ -61,7 +61,7 @@ package Elements
         public function RemoveChildElement(mc:MovieClip) : *
         {
             delete this.childElements[mc.stringID];
-            this.removeChild(mc);
+            this.removeChild(mc as MovieClip);
         }
 
         public function HasParent() : Boolean

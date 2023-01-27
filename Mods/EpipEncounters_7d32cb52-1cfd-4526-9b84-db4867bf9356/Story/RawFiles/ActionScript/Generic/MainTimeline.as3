@@ -51,7 +51,7 @@ package arenaResult_fla
 
                 if (parentID != "")
                 {
-                    mc.parentElement = parent as Element;
+                    mc.parentElement = parent;
                 }
 
                 this.elements[id] = mc;
