@@ -415,16 +415,15 @@ function _Board:GetMatchAt(x, y)
         for _,hgem in ipairs(horizontalGems) do
             match:AddGem(hgem)
         end
-
-        score = score + (1 + (#horizontalGems - Bedazzled.MINIMUM_MATCH_GEMS)) * 100
     end
     if #verticalGems >= Bedazzled.MINIMUM_MATCH_GEMS then
         for _,vgem in ipairs(verticalGems) do
             match:AddGem(vgem)
         end
-
-        score = score + (1 + (#verticalGems - Bedazzled.MINIMUM_MATCH_GEMS)) * 100
     end
+
+    -- 100 points awarded for each gem in the match beyond the 2nd.
+    score = score + (1 + (match:GetGemCount() - Bedazzled.MINIMUM_MATCH_GEMS)) * 100
 
     -- Multiplier for cascades
     -- the var is incremented only after consuming matches,

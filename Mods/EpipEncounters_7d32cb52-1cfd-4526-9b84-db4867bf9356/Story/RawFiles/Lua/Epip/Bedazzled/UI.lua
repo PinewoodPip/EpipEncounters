@@ -743,8 +743,8 @@ Input.Events.KeyPressed:Subscribe(function (ev)
 
             if currentGem then
                 local currentIndex = table.reverseLookup(list, currentGem:GetDescriptor().Type)
-                local newIndex = (currentIndex + 1) % #list
-                if newIndex == 0 then newIndex = 1 end
+                local newIndex = currentIndex + 1
+                if newIndex == #list + 1 then newIndex = 1 end
 
                 board:TransformGem(currentGem, list[newIndex])
             end
