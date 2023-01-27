@@ -119,25 +119,21 @@ function _Board:Update(dt)
         column:Update(dt)
     end
 
-    -- Search for a match. Only one match is processed per tick.
-    local match ---@type Feature_Bedazzled_Match
+    -- Search for a match. Only a single match is processed per tick.
+    -- The highest-scoring match is prioritized.
+    local bestMatch = nil ---@type Feature_Bedazzled_Match
     -- local match = self:GetMatchAt(1, 1)
     for x=1,self.Size[2],1 do
         for y=1,self.Size[1],1 do
-            match = self:GetMatchAt(x, y)
+            local match = self:GetMatchAt(x, y)
 
-            if match then
-                break
+            if match and (not bestMatch or match:GetScore() > bestMatch:GetScore()) then
+                bestMatch = match
             end
         end
-
-        if match then
-            break
-        end
     end
-
-    if match then
-        self:ConsumeMatch(match)
+    if bestMatch ~= nil then
+        self:ConsumeMatch(bestMatch)
     end
 
     self.Events.Updated:Throw({DeltaTime = dt})
