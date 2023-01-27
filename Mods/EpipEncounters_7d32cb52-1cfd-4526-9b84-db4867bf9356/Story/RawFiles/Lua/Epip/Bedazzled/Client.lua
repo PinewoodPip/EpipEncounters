@@ -52,6 +52,12 @@ function Bedazzled.GetGemDescriptor(type)
     return Bedazzled._Gems[type]
 end
 
+---Returns all registered gem descriptors.
+---@return table<string, Feature_Bedazzled_Gem>
+function Bedazzled.GetGemDescriptors()
+    return Bedazzled._Gems
+end
+
 ---@return Feature_Bedazzled_Board
 function Bedazzled.CreateBoard()
     local BoardClass = Bedazzled:GetClass("Feature_Bedazzled_Board")

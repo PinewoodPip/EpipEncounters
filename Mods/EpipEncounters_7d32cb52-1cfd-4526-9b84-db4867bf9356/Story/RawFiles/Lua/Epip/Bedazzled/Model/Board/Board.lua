@@ -8,6 +8,7 @@ local V = Vector.Create
 ---@class Feature_Bedazzled_Board
 ---@field GUID GUID
 ---@field _IsRunning boolean
+---@field _Paused boolean
 ---@field Score integer
 ---@field MatchesSinceLastMove integer
 ---@field Size Vector2
@@ -19,6 +20,7 @@ local _Board = {
         MatchExecuted = {}, ---@type Event<Feature_Bedazzled_Board_Event_MatchExecuted>
         InvalidSwapPerformed = {}, ---@type Event<Feature_Bedazzled_Board_Event_InvalidSwapPerformed>
         GameOver = {}, ---@type Event<Feature_Bedazzled_Board_Event_GameOver>
+        GemTransformed = {}, ---@type Event<Feature_Bedazzled_Board_Event_GemTransformed>
     }
 }
 Bedazzled:RegisterClass("Feature_Bedazzled_Board", _Board)
@@ -42,6 +44,11 @@ Bedazzled:RegisterClass("Feature_Bedazzled_Board", _Board)
 ---@field Gem2 Feature_Bedazzled_Board_Gem
 
 ---@class Feature_Bedazzled_Board_Event_GameOver
+
+---@class Feature_Bedazzled_Board_Event_GemTransformed
+---@field Gem Feature_Bedazzled_Gem
+---@field OldType string
+---@field NewType string
 
 ---------------------------------------------
 -- METHODS
@@ -76,7 +83,9 @@ function _Board.Create(size)
 
     -- Register update event
     GameState.Events.RunningTick:Subscribe(function (ev)
-        board:Update(ev.DeltaTime / 1000)
+        if not board:IsPaused() then
+            board:Update(ev.DeltaTime / 1000)
+        end
     end, {StringID = "Bedazzled_" .. board.GUID})
 
     return board
@@ -190,6 +199,20 @@ function _Board:GetGemAt(x, y)
     return column and column.Gems[y]
 end
 
+---Sets whether the board is paused.
+---@see Feature_Bedazzled_Board.IsPaused
+---@param paused boolean
+function _Board:SetPaused(paused)
+    self._Paused = paused
+end
+
+---Returns whether the board is paused.
+---Paused boards do not run the update loop.
+---@return boolean
+function _Board:IsPaused()
+    return self._Paused
+end
+
 ---@param gem Feature_Bedazzled_Board_Gem
 ---@return Vector2
 function _Board:GetGemGridCoordinates(gem)
@@ -296,13 +319,34 @@ function _Board:IsIdle()
             local pos = V(x, y)
             local gem = self:GetGemAt(pos:unpack())
 
-            if not gem:IsIdle() then
+            if not gem or not gem:IsIdle() then
                 return false
             end
         end
     end
 
     return true
+end
+
+---Transforms a gem into another type.
+---@param gem Feature_Bedazzled_Board_Gem
+---@param newType string
+function _Board:TransformGem(gem, newType)
+    if not Bedazzled.GetGemDescriptor(newType) then
+        Bedazzled:Error("Board:TransformGem", "Unregistered type", newType)
+    end
+    if not gem then
+        Bedazzled:Error("Board:TransformGem", "Gem cannot be nil")
+    end
+    local oldType = gem.Type
+
+    gem.Type = newType
+
+    self.Events.GemTransformed:Throw({
+        Gem = gem,
+        OldType = oldType,
+        NewType = newType,
+    })
 end
 
 ---Returns whether 2 gems can be matched.

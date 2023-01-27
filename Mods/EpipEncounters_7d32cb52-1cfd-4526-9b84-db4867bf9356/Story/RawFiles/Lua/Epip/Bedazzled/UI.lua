@@ -142,6 +142,7 @@ function UI.Setup()
         oldBoard.Events.InvalidSwapPerformed:Unsubscribe("BedazzledUI_InvalidSwapPerformed")
         oldBoard.Events.GemAdded:Unsubscribe("BedazzledUI_GemAdded")
         oldBoard.Events.GameOver:Unsubscribe("BedazzledUI_GameOver")
+        oldBoard.Events.GemTransformed:Unsubscribe("BedazzledUI_GemTransformed")
     end
 
     UI.Board = board
@@ -179,7 +180,14 @@ function UI.Setup()
 
     board.Events.GameOver:Subscribe(function (_)
         UI.OnGameOver()
-    end)
+    end, {StringID = "BedazzledUI_GameOver"})
+
+    -- Update gem visuals immediately when a gem transforms.
+    -- This is so the new visuals are reflected even when the board is paused (for cheats)
+    board.Events.GemTransformed:Subscribe(function (ev)
+        local element = UI.GetGemElement(ev.Gem)
+        element:UpdateIcon()
+    end, {StringID = "BedazzledUI_GemTransformed"})
 
     UI:Show()
 end
@@ -336,7 +344,6 @@ end
 
 function UI.ClearSelection()
     local selector = UI.Selector
-    local secondarySelector = UI.SecondarySelector
 
     UI.GemSelection = nil
     selector:SetVisible(false)
@@ -704,6 +711,45 @@ end)
 -- Start the game when the context menu option is selected.
 Client.UI.ContextMenu.RegisterElementListener("epip_Feature_Bedazzled", "buttonPressed", function(_, _)
     UI.Setup()
+end)
+
+-- Cheat: middle-click pauses board updates.
+Input.Events.KeyPressed:Subscribe(function (ev)
+    if Bedazzled:IsDebug() and UI.Board and ev.InputID == "middle" then
+        local board = UI.Board
+        local wasPaused = board:IsPaused()
+
+        board:SetPaused(not wasPaused)
+
+        Client.UI.Notification.ShowNotification(wasPaused and "Board unpaused" or "Board paused")
+    end
+end)
+
+-- Cheat: right-click cycles gem types.
+Input.Events.KeyPressed:Subscribe(function (ev)
+    if Bedazzled:IsDebug() and ev.InputID == "right2" and UI.Board then
+        local pos = UI.HoveredGridPosition
+        local board = UI.Board
+
+        if pos then
+            local descriptors = table.deepCopy(Bedazzled.GetGemDescriptors()) ---@type table<string, Feature_Bedazzled_Gem>
+            local list = {} ---@type Feature_Bedazzled_Gem[]
+            for _,v in pairs(descriptors) do
+                table.insert(list, v.Type)
+            end
+            table.sort(list)
+
+            local currentGem = board:GetGemAt(pos:unpack())
+
+            if currentGem then
+                local currentIndex = table.reverseLookup(list, currentGem:GetDescriptor().Type)
+                local newIndex = (currentIndex + 1) % #list
+                if newIndex == 0 then newIndex = 1 end
+
+                board:TransformGem(currentGem, list[newIndex])
+            end
+        end
+    end
 end)
 
 ---------------------------------------------
