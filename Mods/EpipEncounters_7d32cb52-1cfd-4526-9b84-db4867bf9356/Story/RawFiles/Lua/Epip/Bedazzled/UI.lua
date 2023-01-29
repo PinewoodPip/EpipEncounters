@@ -27,13 +27,24 @@ UI.HoveredGridPosition = nil ---@type Vector2?
 UI.SOUNDS = {
     CLICK = "UI_Game_Skillbar_Unlock",
     LONG_MATCH = "UI_Game_Persuasion_Success",
-    MATCH = "UI_Game_Reward_DropReward", -- UI_MainMenu_CharacterCreation_Plus
+    MATCH = "UI_MainMenu_CharacterCreation_Plus", -- previously UI_Game_Reward_DropReward
     EXPLOSION = "Items_Objects_UNI_Teleport_Pyramid_Teleport",
     INVALID_MATCH = "UI_Game_ActionUnavailable",
     GAME_OVER = "UI_Game_GameOver",
-    GEM_FUSION = "Items_Inventory_Consumeables_Magic",
-    STAR_MATCH = "UI_Game_Party_Merge",
     SWIPE = "UI_Game_Dialog_Open",
+}
+---Sounds to play when a fusion results in a modifier.
+---@type table<Feature_Bedazzled_GemModifier_ID, string>
+UI.FUSION_MODIFIER_SOUNDS = {
+    Rune = "Items_Inventory_Consumeables_Magic",
+    LargeRune = "UI_Game_Party_Merge",
+    GiantRune = "UI_Game_Persuasion_Success",
+}
+
+---Sounds to play when a fusion results in a gem type transformation.
+---@type table<Feature_Bedazzled_GemDescriptor_ID, string>
+UI.FUSION_TRANSFORM_SOUNDS = {
+    Protean = "UI_Game_Persuasion_Success",
 }
 
 ---------------------------------------------
@@ -218,8 +229,7 @@ function UI.Setup()
 
     -- Create text flyovers for scoring matches.
     board.Events.MatchExecuted:Subscribe(function (ev)
-        UI:PlaySound(UI.SOUNDS.MATCH)
-        UI.CreateScoreFlyover(ev.Match)
+        UI.OnMatchExecuted(ev)
     end, {StringID = "BedazzledUI_MatchExecuted"})
 
     -- Play sound for invalid swaps.
@@ -774,6 +784,24 @@ function UI.OnGemClickboxClicked(x, y)
             UI.SelectGem(gem)
         end
     end
+end
+
+-- Listen for matches being executed.
+---@param ev Feature_Bedazzled_Board_Event_MatchExecuted
+function UI.OnMatchExecuted(ev)
+    UI:PlaySound(UI.SOUNDS.MATCH)
+
+    -- Play extra sounds for special gem creation
+    for _,fusion in ipairs(ev.Match.Fusions) do
+        if fusion.TargetType then
+            UI:PlaySound(UI.FUSION_TRANSFORM_SOUNDS[fusion.TargetType] or "")
+        end
+        if fusion.TargetModifier then
+            UI:PlaySound(UI.FUSION_MODIFIER_SOUNDS[fusion.TargetModifier] or "")
+        end
+    end
+
+    UI.CreateScoreFlyover(ev.Match)
 end
 
 -- Listen for mouse swipe gestures.
