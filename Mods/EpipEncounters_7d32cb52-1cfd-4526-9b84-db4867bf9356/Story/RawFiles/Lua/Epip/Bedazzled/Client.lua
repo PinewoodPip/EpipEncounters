@@ -38,7 +38,8 @@ Epip.RegisterFeature("Bedazzled", Bedazzled)
 -- CLASSES
 ---------------------------------------------
 
----@alias Feature_Bedazzled_GemModifier_ID "Rune"|"LargeRune"|"GiantRune"|"Protean"
+---@alias Feature_Bedazzled_GemModifier_ID "Rune"|"LargeRune"|"GiantRune"
+---@alias Feature_Bedazzled_GemDescriptor_ID "Bloodstone"|"Jade"|"Sapphire"|"Topaz"|"Onyx"|"Emerald"|"Lapis"|"TigersEye"|"Protean"
 
 ---------------------------------------------
 -- METHODS
@@ -175,6 +176,11 @@ GameState.Events.ClientReady:Subscribe(function (_)
         {
             Type = "TigersEye",
             Icon = "Item_LOOT_Gem_TigersEye",
+        },
+        {
+            Type = "Protean",
+            Icon = "AMER_UNI_ProteanArtifact",
+            Weight = 0,
         },
     }
     for _,gem in ipairs(gems) do

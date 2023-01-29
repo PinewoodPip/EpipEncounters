@@ -15,16 +15,18 @@ Bedazzled:RegisterClass("Feature_Bedazzled_Match", _Match)
 
 ---@class Feature_Bedazzled_Match_Fusion
 ---@field TargetGem Feature_Bedazzled_Board_Gem
----@field TargetModifier Feature_Bedazzled_GemModifier_ID
+---@field TargetModifier Feature_Bedazzled_GemModifier_ID?
+---@field TargetType Feature_Bedazzled_GemDescriptor_ID?
 ---@field FusingGems Feature_Bedazzled_Board_Gem[]
 local _Fusion = {}
 Bedazzled:RegisterClass("Feature_Bedazzled_Match_Fusion", _Fusion)
 
 ---@param targetGem Feature_Bedazzled_Board_Gem
----@param targetModifier Feature_Bedazzled_GemModifier_ID
+---@param targetModifier Feature_Bedazzled_GemModifier_ID?
 ---@param fusingGems Feature_Bedazzled_Board_Gem[]
+---@param targetType Feature_Bedazzled_GemDescriptor_ID?
 ---@return Feature_Bedazzled_Match_Fusion
-function _Fusion.Create(targetGem, targetModifier, fusingGems)
+function _Fusion.Create(targetGem, targetModifier, fusingGems, targetType)
     -- Target gem cannot be a fusing gem
     local index = table.reverseLookup(fusingGems, targetGem)
     if index then
@@ -35,6 +37,7 @@ function _Fusion.Create(targetGem, targetModifier, fusingGems)
     local fusion = {
         TargetGem = targetGem,
         TargetModifier = targetModifier,
+        TargetType = targetType,
         FusingGems = fusingGems,
     }
     Inherit(fusion, _Fusion)

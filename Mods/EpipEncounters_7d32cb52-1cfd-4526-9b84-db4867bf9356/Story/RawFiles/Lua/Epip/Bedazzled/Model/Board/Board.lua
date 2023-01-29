@@ -117,6 +117,9 @@ function _Board:Update(dt)
 
             local gem = BoardGem:Create(desc.Type, startingState)
             gem.X = i
+            gem.Events.StateChanged:Subscribe(function (ev)
+                self:OnGemStateChanged(gem, ev)
+            end, {StringID = "DefaultBoardListener"})
 
             column:InsertGem(gem)
 
@@ -150,6 +153,27 @@ function _Board:Update(dt)
     -- Game over if all gems are idling with no moves available.
     if self:IsIdle() and not self:HasMovesAvailable() then
         self:EndGame()
+    end
+end
+
+---Listen for gems changing states.
+---@param gem Feature_Bedazzled_Board_Gem
+---@param ev Feature_Bedazzled_Board_Gem_Event_StateChanged
+function _Board:OnGemStateChanged(gem, ev)
+    -- Queue matches for proteans.
+    if ev.OldState.ClassName == "Feature_Bedazzled_Board_Gem_State_Swapping" and gem.Type == "Protean" then
+        local zap = Match.Create(self:GetGemGridCoordinates(gem))
+        local state = ev.OldState ---@type Feature_Bedazzled_Board_Gem_State_Swapping
+
+        zap:AddGem(gem)
+
+        for _,otherGem in ipairs(self:_GetGemsInArea(V(1, self.Size[1]), V(self.Size[2], 1))) do
+            if otherGem.Type == state.OtherGem.Type then
+                zap:AddGem(otherGem)
+            end
+        end
+
+        table.insert(self._QueuedMatches, zap)
     end
 end
 
@@ -237,15 +261,19 @@ function _Board:ConsumeMatch(match)
             supernova:AddGems(self:_GetGemsInArea(V(coords[1] - 1, self.Size[1]), V(coords[1] + 1, 1)))
 
             table.insert(self._QueuedMatches, supernova)
-        elseif gem:HasModifier("Protean") then
-            -- TODO
         end
     end
 
     -- Fuse gems
     for _,fusion in ipairs(match.Fusions) do
         local target = fusion.TargetGem
-        target:AddModifier(fusion.TargetModifier)
+
+        if fusion.TargetType then
+            self:TransformGem(target, fusion.TargetType)
+        end
+        if fusion.TargetModifier then
+            target:AddModifier(fusion.TargetModifier)
+        end
         target:SetState(transformingState:Create())
 
         for _,gem in ipairs(fusion.FusingGems) do
@@ -332,6 +360,9 @@ function _Board:CanSwap(gem1, gem2)
 
     -- Undo the swap
     self:_SwapGems(gem1, gem2)
+
+    -- Can always swap hypercubes
+    canSwap = canSwap or (gem1:GetDescriptor().Type == "Protean" or gem2:GetDescriptor().Type == "Protean")
 
     return canSwap
 end
@@ -461,10 +492,9 @@ function _Board:_AddGemsFromListToMatch(match, list)
         if #list >= 6 then -- Fuse into a supernova
             local fusion = Fusion.Create(list[1], "GiantRune", list)
             match:AddFusion(fusion)
-        -- TODO
-        -- elseif #list >= 5 then -- Fuse into a hypercube
-        --     local fusion = Fusion.Create(list[1], "Protean", list)
-        --     match:AddFusion(fusion)
+        elseif #list >= 5 then -- Fuse into a hypercube
+            local fusion = Fusion.Create(list[1], nil, list, "Protean")
+            match:AddFusion(fusion)
         elseif #list >= 4 then -- Fuse into a Rune
             local fusion = Fusion.Create(list[2], "Rune", list)
             match:AddFusion(fusion)

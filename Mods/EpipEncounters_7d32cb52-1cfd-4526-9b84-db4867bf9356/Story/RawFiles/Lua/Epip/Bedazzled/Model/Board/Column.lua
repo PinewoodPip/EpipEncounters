@@ -75,6 +75,8 @@ function _BoardColumn:Update(dt)
         local gem = self.Gems[i]
         if gem:IsConsumed() then
             table.remove(self.Gems, i)
+
+            gem.Events.StateChanged:Unsubscribe("DefaultBoardListener")
         end
     end
 

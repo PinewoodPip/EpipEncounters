@@ -108,6 +108,7 @@ function GemPrefab.Create(ui, id, parent, gem)
     local icon = element:CreateElement("Icon", "GenericUI_Element_IggyIcon", root)
     element.Icon = icon
 
+    -- Offset the icon so its anchor is at the center, for when we tween the scale of the root element.
     icon:SetPosition(-UI.CELL_SIZE[1] / 2, -UI.CELL_SIZE[2]/2)
 
     root:SetMouseEnabled(false)
@@ -884,8 +885,6 @@ Input.Events.KeyPressed:Subscribe(function (ev)
             modifier = "LargeRune"
         elseif ev.InputID == "num3" then
             modifier = "GiantRune"
-        elseif ev.InputID == "num4" then
-            modifier = "Protean"
         end
 
         if gem and modifier then
