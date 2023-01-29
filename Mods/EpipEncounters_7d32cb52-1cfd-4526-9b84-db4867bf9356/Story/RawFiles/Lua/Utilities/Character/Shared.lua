@@ -551,3 +551,24 @@ function Character.GetExperienceRequiredForLevel(targetLevel)
 
     return totalXp
 end
+
+---Returns the contents of a character's skillbar row's.
+---@param char Character Must be a player.
+---@param row integer
+---@param slotsPerRow integer? Defaults to 29.
+---@return EocSkillBarItem[]
+function Character.GetSkillBarRowContents(char, row, slotsPerRow)
+    slotsPerRow = slotsPerRow or 29
+    local skillBar = char.PlayerData.SkillBarItems
+    local items = {}
+
+    local startingIndex = (row - 1) * slotsPerRow
+    for i=1,slotsPerRow,1 do
+        local slotIndex = startingIndex + i
+        local slot = skillBar[slotIndex]
+
+        table.insert(items, slot)
+    end
+
+    return items
+end

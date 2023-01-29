@@ -122,6 +122,31 @@ local Hotbar = {
             "Enabled",
         },
     },
+    
+    POSITIONING = {
+        CYCLERS = {
+            X = 315,
+            Y = -55,
+        },
+        HOTKEYS = {
+            PORTRAIT = {X = 17, Y = 27},
+            PORTRAIT_SINGLE = {X = 17, Y = 62},
+            BASEFRAME_POS = {X = -88, Y = -152+138}, -- -152
+            BUTTON = {
+                STARTING_POS = {X = 55, Y = 64.5},
+                SPACING = 3,
+                TEXT = {X = -17, Y = 27},
+                SECOND_ROW_OFFSET_Y = -63,
+                DRAG_THRESHOLD = 10,
+            },
+            DRAWER_BUTTON = {
+                STARTING_POS = {X = 55, Y = -10, Y_SINGLE = 60},
+                TEXT = {X = 20, Y = 0},
+                TEXT_WIDTH = 200,
+                ICON = {X = 2, Y = nil}, -- vertically centered
+            },
+        },
+    },
 
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
@@ -129,6 +154,7 @@ local Hotbar = {
     Events = {
         BarPlusMinusButtonPressed = {}, ---@type Event<HotbarUI_Event_BarPlusMinusButtonPressed>
         SlotPressed = {}, ---@type Event<HotbarUI_Event_SlotPressed>
+        ContentDraggedToHotkey = {Legacy = false}, ---@type Event<HotbarUI_Event_ContentDraggedToHotkey>
     },
     Hooks = {
         IsBarVisible = {}, ---@type Event<HotbarUI_Hook_IsBarVisible>
@@ -160,33 +186,12 @@ end
 ---@field StartTime integer
 ---@field Casting boolean True if the spell is being cast.
 
----@class SkillBarItem
----@field Type string
----@field ItemHandle userdata
----@field SkillOrStatId string
-
 ---@class HotbarState
 ---@field Bars HotbarBarState[]
 
 ---@class HotbarBarState
 ---@field Row integer
 ---@field Visible boolean
-
----@class EclSkill
----@field ActiveCooldown number Cooldown remaining, in seconds.
----@field CanActivate boolean
----@field CauseListSize integer Amount of external sources of this skill currently active (ex. equipped items or statuses)
----@field Handle userdata
----@field HasCooldown boolean
----@field IsActivated boolean Whether the skill is learnt.
----@field IsLearned boolean Whether this skill is memorized.
----@field MaxCharges integer
----@field NetID integer
----@field NumCharges integer
----@field OwnerHandle userdata
----@field SkillId string
----@field Type string Skill archetype.
----@field ZeroMemory boolean
 
 ---@class HotbarUI_ArrayEntry_EngineAction
 ---@field ActionID StatsLib_Action_ID
@@ -221,6 +226,11 @@ end
 ---@class HotbarUI_Hook_UpdateEngineActions
 ---@field Actions HotbarUI_ArrayEntry_EngineAction[]
 
+---Fired when content is dragged to the hotkey buttons.
+---@class HotbarUI_Event_ContentDraggedToHotkey
+---@field DragDrop DragDropManagerPlayerDragInfo
+---@field Index integer
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
@@ -234,9 +244,10 @@ end
 ---Returns the skillbar data of the slot at index.
 ---@param char? EclCharacter
 ---@param index integer
----@return SkillBarItem
+---@return EocSkillBarItem
 function Hotbar.GetSlotData(char, index)
     if not char then char = Client.GetCharacter() end
+
     return char.PlayerData.SkillBarItems[index]
 end
 
@@ -286,7 +297,7 @@ end
 ---Considers ToggleVisiblity() as well as vanilla hiding logic (ex. during dialogues)
 ---@return boolean
 function Hotbar.IsVisible()
-    for request,state in pairs(Hotbar.modulesRequestingHide) do
+    for _,state in pairs(Hotbar.modulesRequestingHide) do
         if state then
             return false
         end
@@ -385,28 +396,10 @@ function Hotbar.CanUseHotbar()
     return canUse
 end
 
--- Returns a list of slots of a character's skillbar from a specific row.
----@param row integer
----@return SkillBarItem[]
-function Hotbar.GetSkillBarRow(row)
-    local skillBar = char.PlayerData.SkillBarItems
-    local items = {}
-
-    local startingIndex = (row - 1) * Hotbar.GetSlotsPerRow()
-    for i=1,Hotbar.GetSlotsPerRow(),1 do
-        local slotIndex = startingIndex + i
-        local slot = skillBar[slotIndex]
-
-        table.insert(items, slot)
-    end
-
-    return items
-end
-
 ---Returns the SkillBarItems array of char, optionally filtered by predicate.
 ---@param char? EclCharacter
----@param predicate? fun(char: EclCharacter, slot: SkillBarItem, index:integer)
----@return table<integer, SkillBarItem>
+---@param predicate? fun(char: EclCharacter, slot: EocSkillBarItem, index:integer)
+---@return table<integer, EocSkillBarItem>
 function Hotbar.GetSkillBarItems(char, predicate)
     local slots = {}
     local skillBar
@@ -792,6 +785,18 @@ end
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
+
+-- Listen for cursor dragging ending on a hotkey button.
+Hotbar:RegisterCallListener("pipStoppedDragOnButton", function (_, index)
+    if Pointer.IsDragging() then
+        Hotbar:DebugLog("Assigning slot to hotkey button!" .. index)
+
+        Hotbar.Events.ContentDraggedToHotkey:Throw({
+            DragDrop = Pointer.GetDragDropState(),
+            Index = index + 1,
+        })
+    end
+end)
 
 -- Listen for engine action holder being updated. Does not include setting the active action.
 Hotbar:RegisterInvokeListener("updateActionSkills", function (ev)
@@ -1508,8 +1513,8 @@ function Hotbar.PositionBar(index, row)
         local buttons = Hotbar:GetRoot().hotbar_mc["cycleHotBar" .. (index) .. "_mc"]
 
         buttons.barIndex = index
-        buttons.x = hotbar.POSITIONING.CYCLERS.X
-        buttons.y = (index - 2) * hotbar.POSITIONING.CYCLERS.Y
+        buttons.x = Hotbar.POSITIONING.CYCLERS.X
+        buttons.y = (index - 2) * Hotbar.POSITIONING.CYCLERS.Y
         buttons.visible = Hotbar.elementsToggled
         buttons.text_txt.htmlText = tostring(row)
         buttons.text_txt.align = "center"
@@ -1518,7 +1523,7 @@ function Hotbar.PositionBar(index, row)
     else
         local buttons = Hotbar:GetRoot().hotbar_mc.cycleHotBar_mc
         buttons.text_txt.htmlText = tostring(row)
-        buttons.x = hotbar.POSITIONING.CYCLERS.X
+        buttons.x = Hotbar.POSITIONING.CYCLERS.X
     end
 
     local SLOTSIZE = Hotbar.SLOT_SIZE
@@ -1608,16 +1613,6 @@ Ext.Events.SessionLoaded:Subscribe(function()
         end
     end)
 
-    Ext.RegisterUICall(ui, "pipStoppedDragOnButton", function(ui, method, index)
-        if Hotbar.currentDraggedSlot then
-            Hotbar:DebugLog("Assigning slot to hotkey button!" .. index)
-            _D(Hotbar.currentDraggedSlot)
-            Hotbar:FireEvent("SlotDraggedToHotkeyButton", index + 1, Hotbar.currentDraggedSlot)
-            Hotbar.currentDraggedSlot = nil
-            Client.Input._SetFocused(false)
-        end
-    end)
-
     Ext.RegisterUICall(ui, "stopDragging", OnStopDragging, "After")
     Ext.RegisterUICall(ui, "cancelDragging", OnStopDragging, "After")
     Ext.RegisterUICall(ui, "pipPrevHotbar", OnHotbarCyclePrev)
@@ -1684,8 +1679,8 @@ function Hotbar.PositionElements()
     bottombar.chatBtn_mc.visible = false
 
     -- base frame
-    bottombar.pip_baseframe.x = hotbar.POSITIONING.HOTKEYS.BASEFRAME_POS.X
-    bottombar.pip_baseframe.y = hotbar.POSITIONING.HOTKEYS.BASEFRAME_POS.Y
+    bottombar.pip_baseframe.x = Hotbar.POSITIONING.HOTKEYS.BASEFRAME_POS.X
+    bottombar.pip_baseframe.y = Hotbar.POSITIONING.HOTKEYS.BASEFRAME_POS.Y
 
     bottombar.pip_baseframe2.x = 0
     bottombar.pip_baseframe2.y = 53
@@ -1730,34 +1725,6 @@ function Hotbar.Refresh()
 
     Hotbar:FireEvent("Refreshed", Hotbar.GetBarCount())
 end
-
-hotbar = {
-    POSITIONING = {
-        CYCLERS = {
-            X = 315,
-            Y = -55,
-        },
-        HOTKEYS = {
-            PORTRAIT = {X = 17, Y = 27},
-            PORTRAIT_SINGLE = {X = 17, Y = 62},
-            BASEFRAME_POS = {X = -88, Y = -152+138}, -- -152
-            BUTTON = {
-                STARTING_POS = {X = 55, Y = 64.5},
-                SPACING = 3,
-                TEXT = {X = -17, Y = 27},
-                SECOND_ROW_OFFSET_Y = -63,
-                DRAG_THRESHOLD = 10,
-            },
-            DRAWER_BUTTON = {
-                STARTING_POS = {X = 55, Y = -10, Y_SINGLE = 60},
-                TEXT = {X = 20, Y = 0},
-                TEXT_WIDTH = 200,
-                ICON = {X = 2, Y = nil}, -- vertically centered
-            }
-        }
-    }
-}
-setmetatable(hotbar, {__index = Client.UI._BaseUITable})
 
 function UpdateSlotTextures()
     if Hotbar.CanRenderExtraSlots() then

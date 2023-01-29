@@ -119,7 +119,7 @@ end
 
 ---Returns the skill being dragged by a player.
 ---@param playerIndex integer? Defaults to 1.
----@return string?
+---@return string? --Can be an action as well.
 function Pointer.GetDraggedSkill(playerIndex)
     local dragDrop = Pointer.GetDragDropState(playerIndex)
     local skill = nil
@@ -144,6 +144,13 @@ function Pointer.GetDraggedItem(playerIndex)
 
     ---@diagnostic disable-next-line: return-type-mismatch
     return item
+end
+
+---Returns whether the player's cursor is dragging anything.
+---@param playerIndex integer? Defaults to 1.
+---@return boolean
+function Pointer.IsDragging(playerIndex)
+    return Pointer.GetDragDropState(playerIndex).IsDragging
 end
 
 ---@param playerIndex integer? Defaults to 1.

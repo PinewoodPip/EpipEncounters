@@ -370,12 +370,17 @@ Hotbar.RegisterActionHook("UseArbitrarySkill", "GetActionIcon", function(icon, c
     return icon
 end)
 
-Hotbar:RegisterListener("SlotDraggedToHotkeyButton", function(index, data)
-    if data.Type == "Skill" then
-        boundSkills[index] = data.SkillOrStatId
+Hotbar.Events.ContentDraggedToHotkey:Subscribe(function (ev)
+    local draggedSkill = Pointer.GetDraggedSkill()
+    local draggedItem = Pointer.GetDraggedItem()
+    local index = ev.Index
+
+    -- Cannot drag actions to the hotkeys.
+    if draggedSkill and not Stats.GetAction(draggedSkill) then
+        boundSkills[index] = draggedSkill
         Hotbar.SetHotkeyAction(index, "UseArbitrarySkill")
-    elseif data.Type == "Item" then
-        boundItems[index] = Ext.GetItem(data.ItemHandle).RootTemplate.Id
+    elseif draggedItem then
+        boundItems[index] = draggedItem.RootTemplate.Id
         Hotbar.SetHotkeyAction(index, "UseArbitraryTemplate")
     else
         Client.UI.MessageBox.Open({

@@ -1,5 +1,21 @@
 ---@diagnostic disable
 
+---@class EclSkill
+---@field ActiveCooldown number Cooldown remaining, in seconds.
+---@field CanActivate boolean
+---@field CauseListSize integer Amount of external sources of this skill currently active (ex. equipped items or statuses)
+---@field Handle userdata
+---@field HasCooldown boolean
+---@field IsActivated boolean Whether the skill is learnt.
+---@field IsLearned boolean Whether this skill is memorized.
+---@field MaxCharges integer
+---@field NetID integer
+---@field NumCharges integer
+---@field OwnerHandle userdata
+---@field SkillId string
+---@field Type string Skill archetype.
+---@field ZeroMemory boolean
+
 --- @class Ext_Json
 local Ext_Json = {}
 
@@ -113,6 +129,11 @@ function Ext_ClientEntity.GetStatus(entityHandle, statusHandle) end
 
 --- @class Ext_Utils
 --- @field RegisterUserVariable fun(a1: FixedString, a2:table)
+local Ext_Utils = {}
+
+---@param handle ComponentHandle
+---@return bool
+function Ext_Utils.IsValidHandle(handle) end
 
 ---------------------------------------------
 -- Visual
