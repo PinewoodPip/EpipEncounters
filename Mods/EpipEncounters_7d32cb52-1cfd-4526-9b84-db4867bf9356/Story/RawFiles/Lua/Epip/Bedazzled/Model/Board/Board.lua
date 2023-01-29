@@ -172,6 +172,24 @@ function _Board:EndGame()
     GameState.Events.RunningTick:Unsubscribe("Bedazzled_" .. self.GUID)
 end
 
+---Returns the gems in a rect.
+---@param upperLeft Vector2
+---@param lowerRight Vector2
+---@return Feature_Bedazzled_Board_Gem[]
+function _Board:_GetGemsInArea(upperLeft, lowerRight)
+    local gems = {}
+    
+    for i=upperLeft[1],lowerRight[1],1 do
+        for j=lowerRight[2],upperLeft[2],1 do
+            local gem = self:GetGemAt(i, j)
+
+            table.insert(gems, gem)
+        end
+    end
+
+    return gems
+end
+
 ---@param match Feature_Bedazzled_Match
 function _Board:ConsumeMatch(match)
     local consumingState = Bedazzled.GetGemStateClass("Feature_Bedazzled_Board_Gem_State_Consuming")
@@ -182,28 +200,45 @@ function _Board:ConsumeMatch(match)
 
     -- Consume gems
     for _,gem in ipairs(match.Gems) do
+        local coords = self:GetGemGridCoordinates(gem)
+
         if gem:IsMatchable() then -- Only matchable gems can be consumed
             gem:SetState(consumingState:Create())
         end
 
         -- For each detonating gem in the match, queue a new match
         if gem:HasModifier("Rune") then
-            local coords = self:GetGemGridCoordinates(gem)
             local explosion = Match.Create(coords)
             gem:RemoveModifier("Rune")
 
             -- Add gems in a 3x3 area
-            for i=-1,1,1 do
-                for j=-1,1,1 do
-                    local nearbyGem = self:GetGemAt(coords[1] + i, coords[2] + j)
-
-                    if nearbyGem then
-                        explosion:AddGem(nearbyGem)
-                    end
-                end
-            end
+            explosion:AddGems(self:_GetGemsInArea(V(coords[1] - 1, coords[2] + 1), V(coords[1] + 1, coords[2] - 1)))
 
             table.insert(self._QueuedMatches, explosion)
+        elseif gem:HasModifier("LargeRune") then
+            local lightning = Match.Create(coords)
+            gem:RemoveModifier("LargeRune")
+
+            -- Add gems in row
+            lightning:AddGems(self:_GetGemsInArea(V(1, coords[2]), V(self.Size[2], coords[2])))
+
+            -- Add gems in column
+            lightning:AddGems(self:_GetGemsInArea(V(coords[1], self.Size[1]), V(coords[1], 1)))
+
+            table.insert(self._QueuedMatches, lightning)
+        elseif gem:HasModifier("GiantRune") then
+            local supernova = Match.Create(coords)
+            gem:RemoveModifier("GiantRune")
+
+            -- Add gems in rows
+            supernova:AddGems(self:_GetGemsInArea(V(1, coords[2] + 1), V(self.Size[2], coords[2] - 1)))
+
+            -- Add gems in columns
+            supernova:AddGems(self:_GetGemsInArea(V(coords[1] - 1, self.Size[1]), V(coords[1] + 1, 1)))
+
+            table.insert(self._QueuedMatches, supernova)
+        elseif gem:HasModifier("Protean") then
+            -- TODO
         end
     end
 
@@ -416,6 +451,31 @@ function _Board:IsGemMatchableWith(gem, otherGem)
     return matchable
 end
 
+---Adds gems from a list to a match, following the default logic for fusions.
+---@param match Feature_Bedazzled_Match Mutated.
+---@param list Feature_Bedazzled_Board_Gem[]
+function _Board:_AddGemsFromListToMatch(match, list)
+    -- TODO prioritize fusing into swiped gem
+    -- Only add gems if there were >= MINIMUM_MATCH_GEMS in the row/column
+    if #list >= Bedazzled.MINIMUM_MATCH_GEMS then
+        if #list >= 6 then -- Fuse into a supernova
+            local fusion = Fusion.Create(list[1], "GiantRune", list)
+            match:AddFusion(fusion)
+        -- TODO
+        -- elseif #list >= 5 then -- Fuse into a hypercube
+        --     local fusion = Fusion.Create(list[1], "Protean", list)
+        --     match:AddFusion(fusion)
+        elseif #list >= 4 then -- Fuse into a Rune
+            local fusion = Fusion.Create(list[2], "Rune", list)
+            match:AddFusion(fusion)
+        else -- Add gems for consumption
+            for _,hgem in ipairs(list) do
+                match:AddGem(hgem)
+            end
+        end
+    end
+end
+
 ---Returns the match that exists at the coordinates.
 ---@param x integer
 ---@param y integer
@@ -463,38 +523,31 @@ function _Board:GetMatchAt(x, y)
     end
 
     local score = 0
+    
+    -- Fuse star matches into lightning gems
+    if #horizontalGems >= 3 and #verticalGems >= 3 then
+        local fusionTarget = horizontalGems[#horizontalGems]
+        local fusingGems = {}
 
-    -- Only add gems if there were >= MINIMUM_MATCH_GEMS in the row/column
-    if #horizontalGems >= Bedazzled.MINIMUM_MATCH_GEMS then
-        if #horizontalGems >= 4 then -- Fuse into a Rune
-            local targetGem = horizontalGems[2] -- TODO prioritize fusing into the gem the player swiped
-            local fusingGems = table.shallowCopy(horizontalGems)
-            table.remove(fusingGems, 2)
-
-            local fusion = Fusion.Create(targetGem, "Rune", fusingGems)
-
-            match:AddFusion(fusion)
-        else -- Add gems for consumption
-            for _,hgem in ipairs(horizontalGems) do
-                match:AddGem(hgem)
+        -- TODO allow lightning gem + flame gem to generate at once
+        for _,hgem in ipairs(horizontalGems) do
+            table.insert(fusingGems, hgem)
+        end
+        for _,vgem in ipairs(verticalGems) do
+            if not table.contains(fusingGems, vgem) then
+                table.insert(fusingGems, vgem)
             end
         end
-    end
-    if #verticalGems >= Bedazzled.MINIMUM_MATCH_GEMS then
-        if #verticalGems >= 4 then -- Fuse into a Rune
-            local targetGem = verticalGems[2]
-            local fusingGems = table.shallowCopy(verticalGems)
-            table.remove(fusingGems, 2)
 
-            local fusion = Fusion.Create(targetGem, "Rune", fusingGems)
+        local fusion = Fusion.Create(fusionTarget, "LargeRune", fusingGems)
+        match:AddFusion(fusion)
 
-            match:AddFusion(fusion)
-        else
-            for _,vgem in ipairs(verticalGems) do
-                match:AddGem(vgem)
-            end
-        end
+        horizontalGems = {}
+        verticalGems = {}
     end
+
+    self:_AddGemsFromListToMatch(match, verticalGems)
+    self:_AddGemsFromListToMatch(match, horizontalGems)
 
     -- 100 points awarded for each gem in the match beyond the 2nd.
     score = score + (1 + (match:GetGemCount() - Bedazzled.MINIMUM_MATCH_GEMS)) * 100

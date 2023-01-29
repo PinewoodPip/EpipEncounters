@@ -55,6 +55,26 @@ UI.SOUNDS = {
 ---@field Icon GenericUI_Element_IggyIcon
 local GemPrefab = {
     RUNE_ICONS = {
+        Bloodstone = "Item_LOOT_Rune_Bloodstone_Medium",
+        Jade = "Item_LOOT_Rune_Jade_Medium",
+        Sapphire = "Item_LOOT_Rune_Sapphire_Medium",
+        Topaz = "Item_LOOT_Rune_Topaz_Medium",
+        Onyx = "Item_LOOT_Rune_Onyx_Medium",
+        Emerald = "Item_LOOT_Rune_Emerald_Medium",
+        Lapis = "Item_LOOT_Rune_Lapis_Medium",
+        TigersEye = "Item_LOOT_Rune_TigersEye_Medium",
+    },
+    LARGE_RUNE_ICONS = {
+        Bloodstone = "Item_LOOT_Rune_Bloodstone_Large",
+        Jade = "Item_LOOT_Rune_Jade_Large",
+        Sapphire = "Item_LOOT_Rune_Sapphire_Large",
+        Topaz = "Item_LOOT_Rune_Topaz_Large",
+        Onyx = "Item_LOOT_Rune_Onyx_Large",
+        Emerald = "Item_LOOT_Rune_Emerald_Large",
+        Lapis = "Item_LOOT_Rune_Lapis_Large",
+        TigersEye = "Item_LOOT_Rune_TigersEye_Large",
+    },
+    GIANT_RUNE_ICONS = {
         Bloodstone = "Item_LOOT_Rune_Bloodstone_Giant",
         Jade = "Item_LOOT_Rune_Jade_Giant",
         Sapphire = "Item_LOOT_Rune_Sapphire_Giant",
@@ -63,7 +83,12 @@ local GemPrefab = {
         Emerald = "Item_LOOT_Rune_Emerald_Giant",
         Lapis = "Item_LOOT_Rune_Lapis_Giant",
         TigersEye = "Item_LOOT_Rune_TigersEye_Giant",
-    }
+    },
+    MODIFIER_PRIORITY_LIST = { -- Priorities for icons based on modifiers, from most important to least.
+        "GiantRune",
+        "LargeRune",
+        "Rune",
+    },
 }
 Generic.RegisterPrefab("GenericUI_Prefab_Bedazzled_Gem", GemPrefab)
 
@@ -113,21 +138,37 @@ function GemPrefab:Update()
     self:UpdateIcon()
 end
 
----Gets the icon for a Rune-modified gem.
+---Gets the icon for a modified gem.
 ---@param gemType string
----@return string
-function GemPrefab.GetIconForRune(gemType)
-    return GemPrefab.RUNE_ICONS[gemType] or "unknown"
+---@param modifier string
+---@return icon
+function GemPrefab.GetIconForModifier(gemType, modifier)
+    local icon
+
+    if modifier == "Rune" then
+        icon = GemPrefab.RUNE_ICONS[gemType]
+    elseif modifier == "LargeRune" then
+        icon = GemPrefab.LARGE_RUNE_ICONS[gemType]
+    elseif modifier == "GiantRune" then
+        icon = GemPrefab.GIANT_RUNE_ICONS[gemType]
+    end
+
+    return icon or "unknown"
 end
 
 function GemPrefab:UpdateIcon()
     local iconElement = self.Icon
     local gem = self.Gem
     local icon
+
+    for _,mod in ipairs(GemPrefab.MODIFIER_PRIORITY_LIST) do
+        if gem:HasModifier(mod) then
+            icon = self.GetIconForModifier(gem.Type, mod)
+            break
+        end
+    end
     
-    if gem:HasModifier("Rune") then
-        icon = GemPrefab.GetIconForRune(gem.Type)
-    else
+    if not icon then
         icon = gem:GetIcon()
     end
 
@@ -825,6 +866,30 @@ Input.Events.KeyPressed:Subscribe(function (ev)
 
                 board:TransformGem(currentGem, list[newIndex])
             end
+        end
+    end
+end)
+
+-- Cheat: number keys add modifiers.
+Input.Events.KeyPressed:Subscribe(function (ev)
+    if Bedazzled:IsDebug() and UI.Board and UI.HoveredGridPosition then
+        local pos = UI.HoveredGridPosition
+        local board = UI.Board
+        local gem = board:GetGemAt(pos:unpack())
+        local modifier = nil
+
+        if ev.InputID == "num1" then
+            modifier = "Rune"
+        elseif ev.InputID == "num2" then
+            modifier = "LargeRune"
+        elseif ev.InputID == "num3" then
+            modifier = "GiantRune"
+        elseif ev.InputID == "num4" then
+            modifier = "Protean"
+        end
+
+        if gem and modifier then
+            gem:AddModifier(modifier)
         end
     end
 end)

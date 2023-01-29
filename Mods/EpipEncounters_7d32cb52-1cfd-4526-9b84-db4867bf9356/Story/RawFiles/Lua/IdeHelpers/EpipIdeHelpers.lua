@@ -26,6 +26,8 @@ Mods = {}
 ---@alias Gender "Male" | "Female"
 ---@alias Race "Human" | "Elf" | "Dwarf" | "Lizard"
 
+---@alias icon string
+
 ---@alias Keyword "ViolentStrike" | "VitalityVoid" | "Predator" | "Elementalist" | "Prosperity" | "Paucity" | "IncarnateChampion" | "Defiance" | "Occultist" | "Disintegrate" | "Wither" | "Centurion" | "Abeyance" | "Benevolence" | "Presence" | "Ward" | "Celestial" | "Purity" | "VolatileArmor" | "Voracity"
 ---@alias KeywordBoonType "Activator" | "Mutator"
 

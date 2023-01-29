@@ -35,6 +35,12 @@ local Bedazzled = {
 Epip.RegisterFeature("Bedazzled", Bedazzled)
 
 ---------------------------------------------
+-- CLASSES
+---------------------------------------------
+
+---@alias Feature_Bedazzled_GemModifier_ID "Rune"|"LargeRune"|"GiantRune"|"Protean"
+
+---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
@@ -177,7 +183,10 @@ GameState.Events.ClientReady:Subscribe(function (_)
 
     ---@type table<string, Feature_Bedazzled_GemModifier>
     local mods = {
-        Rune = {}
+        Rune = {}, -- Flame gem
+        LargeRune = {}, -- Lightning gem
+        GiantRune = {}, -- Supernova
+        Protean = {}, -- Hypercube
     }
 
     for id,data in pairs(mods) do

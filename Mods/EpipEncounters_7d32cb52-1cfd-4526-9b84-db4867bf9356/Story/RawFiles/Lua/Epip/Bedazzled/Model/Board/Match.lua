@@ -15,16 +15,22 @@ Bedazzled:RegisterClass("Feature_Bedazzled_Match", _Match)
 
 ---@class Feature_Bedazzled_Match_Fusion
 ---@field TargetGem Feature_Bedazzled_Board_Gem
----@field TargetModifier string
+---@field TargetModifier Feature_Bedazzled_GemModifier_ID
 ---@field FusingGems Feature_Bedazzled_Board_Gem[]
 local _Fusion = {}
 Bedazzled:RegisterClass("Feature_Bedazzled_Match_Fusion", _Fusion)
 
 ---@param targetGem Feature_Bedazzled_Board_Gem
----@param targetModifier string
+---@param targetModifier Feature_Bedazzled_GemModifier_ID
 ---@param fusingGems Feature_Bedazzled_Board_Gem[]
 ---@return Feature_Bedazzled_Match_Fusion
 function _Fusion.Create(targetGem, targetModifier, fusingGems)
+    -- Target gem cannot be a fusing gem
+    local index = table.reverseLookup(fusingGems, targetGem)
+    if index then
+        table.remove(fusingGems, index)
+    end
+
     ---@type Feature_Bedazzled_Match_Fusion
     local fusion = {
         TargetGem = targetGem,
@@ -69,10 +75,32 @@ function _Match:AddGem(gem)
     end
 end
 
+---Adds multiple gems to be consumed.
+---@param gems Feature_Bedazzled_Board_Gem[]
+function _Match:AddGems(gems)
+    for _,gem in ipairs(gems) do
+        self:AddGem(gem)
+    end
+end
+
 ---Adds a fusion to the match.
 ---@param fusion Feature_Bedazzled_Match_Fusion
 function _Match:AddFusion(fusion)
-    table.insert(self.Fusions, fusion)
+    local containsGem = false
+    if self:ContainsGem(fusion.TargetGem) then
+       containsGem = true 
+    end
+    for _,existingFusion in ipairs(self.Fusions) do
+        if existingFusion:ContainsGem(existingFusion.TargetGem) then
+            containsGem = true
+            break
+        end
+    end
+
+    -- Cannot add fusion if one or more of its gems are already involved in the match
+    if not containsGem then
+        table.insert(self.Fusions, fusion)
+    end
 end
 
 ---Returns whether this match already contains the gem in any form (simple consumption or fusion)
