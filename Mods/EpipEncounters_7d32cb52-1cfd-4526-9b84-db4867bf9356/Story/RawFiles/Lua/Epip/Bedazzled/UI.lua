@@ -346,6 +346,31 @@ function UI.OnGemStateChanged(gem, newState, oldState)
                 UI.Gems[element.ID] = nil
             end
         })
+    elseif newState == "Feature_Bedazzled_Board_Gem_State_Transforming" then
+        state = gem.State ---@type Feature_Bedazzled_Board_Gem_State_Transforming
+
+        element:Tween({
+            EventID = "Bedazzled_Transforming_1",
+            FinalValues = {
+                scaleX = 1.2,
+                scaleY = 1.2,
+            },
+            Function = "Cubic",
+            Ease = "EaseOut",
+            Duration = state.Duration / 2,
+            OnComplete = function (_)
+                element:Tween({
+                    EventID = "Bedazzled_Transforming_2",
+                    FinalValues = {
+                        scaleX = 1,
+                        scaleY = 1,
+                    },
+                    Function = "Cubic",
+                    Ease = "EaseIn",
+                    Duration = state.Duration / 2,
+                })
+            end
+        })
     end
 end
 

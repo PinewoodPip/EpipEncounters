@@ -552,6 +552,7 @@ LOAD_ORDER = {
             "Epip/Bedazzled/Model/Gem/States/Swapping.lua",
             "Epip/Bedazzled/Model/Gem/States/Consuming.lua",
             "Epip/Bedazzled/Model/Gem/States/Fusing.lua",
+            "Epip/Bedazzled/Model/Gem/States/Transforming.lua",
         },
         WIP = true,
     }

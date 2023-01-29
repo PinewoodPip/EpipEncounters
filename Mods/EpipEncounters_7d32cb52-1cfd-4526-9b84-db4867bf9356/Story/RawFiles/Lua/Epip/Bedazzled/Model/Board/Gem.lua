@@ -1,9 +1,10 @@
 
 local Bedazzled = Epip.GetFeature("Feature_Bedazzled")
+local Set = DataStructures.Get("DataStructures_Set")
 
 ---@class Feature_Bedazzled_Board_Gem
 ---@field Type string
----@field Modifiers string[]
+---@field Modifiers DataStructures_Set
 ---@field X number
 ---@field Y number
 ---@field State Feature_Bedazzled_Board_Gem_State
@@ -25,7 +26,7 @@ function _BoardGem:Create(type, state)
     ---@type Feature_Bedazzled_Board_Gem
     local obj = {
         Type = type,
-        Modifiers = {},
+        Modifiers = Set.Create(),
         Y = 0,
         X = 0,
         Events = {},
@@ -51,14 +52,18 @@ end
 ---Adds a modifier to the gem.
 ---@param id string
 function _BoardGem:AddModifier(id)
-    table.insert(self.Modifiers, id)
+    self.Modifiers:Add(id)
+end
+
+function _BoardGem:RemoveModifier(id)
+    self.Modifiers:Remove(id)
 end
 
 ---Returns whether the gem has a modifier.
 ---@param id string
 ---@return boolean
 function _BoardGem:HasModifier(id)
-    return table.contains(self.Modifiers, id)
+    return self.Modifiers:Contains(id)
 end
 
 function _BoardGem:GetIcon()

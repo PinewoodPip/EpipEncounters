@@ -14,6 +14,7 @@ local V = Vector.Create
 ---@field MatchesSinceLastMove integer
 ---@field Size Vector2
 ---@field Columns Feature_Bedazzled_Board_Column[]
+---@field _QueuedMatches Feature_Bedazzled_Match[]
 local _Board = {
     Events = {
         Updated = {}, ---@type Event<Feature_Bedazzled_Board_Event_Updated>
@@ -62,6 +63,7 @@ function _Board.Create(size)
     local board = {
         GUID = Text.GenerateGUID(),
         _IsRunning = true,
+        _QueuedMatches = {},
         Score = 0,
         MatchesSinceLastMove = 0,
         Size = size,
@@ -99,6 +101,13 @@ end
 
 ---@param dt number In seconds.
 function _Board:Update(dt)
+    -- Process queued matches
+    for _,match in ipairs(self._QueuedMatches) do
+        self:ConsumeMatch(match)
+    end
+    self._QueuedMatches = {}
+
+    -- Update columns
     for i,column in ipairs(self.Columns) do
         -- Insert new gem
         if not column:IsFilled() then
@@ -167,18 +176,42 @@ end
 function _Board:ConsumeMatch(match)
     local consumingState = Bedazzled.GetGemStateClass("Feature_Bedazzled_Board_Gem_State_Consuming")
     local fusingState = Bedazzled.GetGemStateClass("Feature_Bedazzled_Board_Gem_State_Fusing")
+    local transformingState = Bedazzled.GetGemStateClass("Feature_Bedazzled_Board_Gem_State_Transforming")
 
     self.MatchesSinceLastMove = self.MatchesSinceLastMove + 1
 
     -- Consume gems
     for _,gem in ipairs(match.Gems) do
-        gem:SetState(consumingState:Create())    
+        if gem:IsMatchable() then -- Only matchable gems can be consumed
+            gem:SetState(consumingState:Create())
+        end
+
+        -- For each detonating gem in the match, queue a new match
+        if gem:HasModifier("Rune") then
+            local coords = self:GetGemGridCoordinates(gem)
+            local explosion = Match.Create(coords)
+            gem:RemoveModifier("Rune")
+
+            -- Add gems in a 3x3 area
+            for i=-1,1,1 do
+                for j=-1,1,1 do
+                    local nearbyGem = self:GetGemAt(coords[1] + i, coords[2] + j)
+
+                    if nearbyGem then
+                        explosion:AddGem(nearbyGem)
+                    end
+                end
+            end
+
+            table.insert(self._QueuedMatches, explosion)
+        end
     end
 
     -- Fuse gems
     for _,fusion in ipairs(match.Fusions) do
         local target = fusion.TargetGem
         target:AddModifier(fusion.TargetModifier)
+        target:SetState(transformingState:Create())
 
         for _,gem in ipairs(fusion.FusingGems) do
             gem:SetState(fusingState:Create(target))

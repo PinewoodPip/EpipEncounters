@@ -7,7 +7,7 @@ local Bedazzled = Epip.GetFeature("Feature_Bedazzled")
 local State = {}
 Bedazzled.RegisterGemStateClass("Feature_Bedazzled_Board_Gem_State", State)
 
----@alias Feature_Bedazzled_Board_Gem_StateClassName "Feature_Bedazzled_Board_Gem_State"|"Feature_Bedazzled_Board_Gem_State_Idle"|"Feature_Bedazzled_Board_Gem_State_Falling"|"Feature_Bedazzled_Board_Gem_State_InvalidSwap"|"Feature_Bedazzled_Board_Gem_State_Swapping"|"Feature_Bedazzled_Board_Gem_State_Consuming"|"Feature_Bedazzled_Board_Gem_State_Fusing"
+---@alias Feature_Bedazzled_Board_Gem_StateClassName "Feature_Bedazzled_Board_Gem_State"|"Feature_Bedazzled_Board_Gem_State_Idle"|"Feature_Bedazzled_Board_Gem_State_Falling"|"Feature_Bedazzled_Board_Gem_State_InvalidSwap"|"Feature_Bedazzled_Board_Gem_State_Swapping"|"Feature_Bedazzled_Board_Gem_State_Consuming"|"Feature_Bedazzled_Board_Gem_State_Fusing"|"Feature_Bedazzled_Board_Gem_State_Transforming"
 
 ---------------------------------------------
 -- METHODS

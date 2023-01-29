@@ -2,7 +2,7 @@
 local Bedazzled = Epip.GetFeature("Feature_Bedazzled")
 
 ---@class Feature_Bedazzled_Match
----@field Score integer
+---@field Score integer Defaults to `0`.
 ---@field OriginPosition Vector2
 ---@field Gems Feature_Bedazzled_Board_Gem[]
 ---@field Fusions Feature_Bedazzled_Match_Fusion[]
@@ -112,7 +112,7 @@ end
 ---they are not handled by this class.
 ---@return integer
 function _Match:GetScore()
-    return self.Score
+    return self.Score or 0
 end
 
 ---Sets the match's points score.
