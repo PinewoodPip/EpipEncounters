@@ -164,6 +164,9 @@ LOAD_ORDER = {
     "Epip/EpicEnemies/Server.lua",
     "Epip/EpicEnemies/Effects.lua",
     
+    {
+        ScriptSet = "Epip/AscensionShortcuts",
+    },
     {ScriptSet = "Epip/Greatforge/DrillSockets"},
     {ScriptSet = "Epip/Greatforge/Engrave"},
     "Epip/Greatforge/Empower/Server.lua",
@@ -308,22 +311,6 @@ Ext.Osiris.RegisterListener("CharacterStatusRemoved", 3, "after", function(char,
 end)
 
 NULLGUID = "NULL_00000000-0000-0000-0000-000000000000"
-
-Net.RegisterListener("EPIP_AMERUI_GoBack", function(payload)
-    local char = Ext.GetCharacter(payload.NetID)
-    local instance, ui, _ = Osiris.DB_AMER_UI_UsersInUI(nil, nil, char.MyGuid)
-
-    if instance ~= nil then
-        local _, stackCount = Osiris.DB_AMER_UI_PageStack_Count(instance, nil)
-
-        -- Pop page if there are any. We don't call the method directly as there are some special listeners for it to manipulate the stack in the Greatforge UI.
-        if stackCount and stackCount > 0 and ui ~= "AMER_UI_ModSettings" then
-            CharacterItemEvent(char.MyGuid, NULLGUID, "AMER_UI_GEN_PagePop")
-        else -- Exit UI otherwise
-            Osi.PROC_AMER_UI_ExitUI(char.MyGuid)
-        end
-    end
-end)
 
 local _registeredSymbols = {}
 Net.RegisterListener("EPIP_RegisterGenericOsiSymbolEvent", function(payload)

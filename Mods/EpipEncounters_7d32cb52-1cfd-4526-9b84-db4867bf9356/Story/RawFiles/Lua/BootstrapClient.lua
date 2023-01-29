@@ -385,7 +385,9 @@ LOAD_ORDER = {
     "Epip/Client/AprilFoolsCharacterSheet.lua",
     "Epip/Client/HotbarActions.lua",
     "Epip/Client/EpicEncountersActions.lua",
-    "Epip/Client/AscensionShortcuts.lua",
+    {
+        ScriptSet = "Epip/AscensionShortcuts",
+    },
     "Epip/Client/ModDocs.lua",
     "Epip/Client/JournalChangelog.lua",
     "Epip/Client/ExitChatAfterMessage.lua",

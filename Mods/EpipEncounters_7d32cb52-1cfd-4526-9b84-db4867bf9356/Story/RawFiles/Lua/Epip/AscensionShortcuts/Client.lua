@@ -1,21 +1,11 @@
 
-local Shortcuts = {
-
-}
-Epip.AddFeature("AscensionShortcuts", "AscensionShortcuts", Shortcuts)
+local Shortcuts = Epip.GetFeature("Feature_AscensionShortcuts")
 
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
 
-Client.UI.GameMenu:RegisterHook("CanOpen", function(canOpen)
-    if canOpen then
-        canOpen = not Game.Ascension.IsMeditating()
-    end
-
-    return canOpen
-end)
-
+-- Listen for escape key being pressed.
 Client.Input.Events.KeyPressed:Subscribe(function (e)
     if e.InputID == "escape" and GameState.GetState() == "Running" and Game.Ascension.IsMeditating() then
         if Settings.GetSettingValue("EpipEncounters", "ESCClosesAmerUI") then
@@ -23,7 +13,16 @@ Client.Input.Events.KeyPressed:Subscribe(function (e)
                 NetID = Client.GetCharacter().NetID,
             })
         else -- Pop page
-            Net.PostToServer("EPIP_AMERUI_GoBack", {NetID = Client.GetCharacter().NetID})
+            Net.PostToServer(Shortcuts.POP_PAGE_NET_MSG, {CharacterNetID = Client.GetCharacter().NetID})
         end
     end
+end)
+
+-- Prevent the game menu from showing up. We want our escape press to be "consumed".
+Client.UI.GameMenu:RegisterHook("CanOpen", function(canOpen)
+    if canOpen then
+        canOpen = not Game.Ascension.IsMeditating()
+    end
+
+    return canOpen
 end)
