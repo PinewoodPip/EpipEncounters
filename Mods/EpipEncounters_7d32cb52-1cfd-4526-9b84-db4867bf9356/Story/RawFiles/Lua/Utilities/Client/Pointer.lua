@@ -110,6 +110,42 @@ function Pointer.GetWorldPosition(playerIndex)
     return position
 end
 
+---Returns the drag-drop system state for a player.
+---@param playerIndex integer? Defaults to 1.
+---@return DragDropManagerPlayerDragInfo
+function Pointer.GetDragDropState(playerIndex)
+    return Ext.UI.GetDragDrop().PlayerDragDrops[playerIndex or 1]
+end
+
+---Returns the skill being dragged by a player.
+---@param playerIndex integer? Defaults to 1.
+---@return string?
+function Pointer.GetDraggedSkill(playerIndex)
+    local dragDrop = Pointer.GetDragDropState(playerIndex)
+    local skill = nil
+
+    if dragDrop.DragId ~= "" then
+        skill = dragDrop.DragId
+    end
+
+    return skill
+end
+
+---Returns the item being dragged by a player.
+---@param playerIndex integer? Defaults to 1.
+---@return EclItem?
+function Pointer.GetDraggedItem(playerIndex)
+    local dragDrop = Pointer.GetDragDropState(playerIndex)
+    local item = nil
+
+    if Ext.Utils.IsValidHandle(dragDrop.DragObject) then
+        item = Item.Get(dragDrop.DragObject)
+    end
+
+    ---@diagnostic disable-next-line: return-type-mismatch
+    return item
+end
+
 ---@param playerIndex integer? Defaults to 1.
 ---@param fieldName string
 ---@return Entity
