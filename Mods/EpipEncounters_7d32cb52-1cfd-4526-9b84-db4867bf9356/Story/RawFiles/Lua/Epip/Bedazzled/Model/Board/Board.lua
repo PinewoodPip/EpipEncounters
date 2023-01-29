@@ -270,6 +270,15 @@ function _Board:GetGemGridCoordinates(gem)
     return position
 end
 
+---Swaps the type and data of 2 gems.
+---@param gem1 Feature_Bedazzled_Board_Gem
+---@param gem2 Feature_Bedazzled_Board_Gem
+function _Board:_SwapGems(gem1, gem2)
+    -- TODO use memento pattern
+    gem1.Type, gem2.Type = gem2.Type, gem1.Type
+    gem1.Modifiers, gem2.Modifiers = gem2.Modifiers, gem1.Modifiers
+end
+
 ---@param gem1 Feature_Bedazzled_Board_Gem
 ---@param gem2 Feature_Bedazzled_Board_Gem
 function _Board:CanSwap(gem1, gem2)
@@ -282,12 +291,12 @@ function _Board:CanSwap(gem1, gem2)
     -- Can only swap if it were to result in a valid move
     -- TODO consider falling gems
     -- Possible solution: have a method that returns a memento of the board including fall gems (but not busy ones) - and check matches there instead
-    gem1.Type, gem2.Type = gem2.Type, gem1.Type
+    self:_SwapGems(gem1, gem2)
     local match1, match2 = self:GetMatchAt(self:GetGemGridCoordinates(gem1):unpack()), self:GetMatchAt(self:GetGemGridCoordinates(gem2):unpack())
     canSwap = canSwap and (match1 ~= nil or match2 ~= nil)
 
     -- Undo the swap
-    gem1.Type, gem2.Type = gem2.Type, gem1.Type
+    self:_SwapGems(gem1, gem2)
 
     return canSwap
 end
@@ -302,7 +311,7 @@ function _Board:Swap(position1, position2)
         if self:CanSwap(gem1, gem2) then -- Swap gems
             -- Swap occurs instantly, but the gems cannot
             -- be matched until the Swapping state ends
-            gem1.Type, gem2.Type = gem2.Type, gem1.Type
+            self:_SwapGems(gem1, gem2)
     
             local swappingState = Bedazzled.GetGemStateClass("Feature_Bedazzled_Board_Gem_State_Swapping")
     
