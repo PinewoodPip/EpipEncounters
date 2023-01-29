@@ -11,9 +11,6 @@ NOT DB_PIP_EpicEnemies_ActivatedEffect(NULL_00000000-0000-0000-0000-000000000000
 DB_AMER_FlexStat_Master("Sight");
 DB_AMER_FlexStat_Master("Hearing");
 
-DB_PIP_Vanity_CustomDyes_DyedItem(NULL_00000000-0000-0000-0000-000000000000, "");
-NOT DB_PIP_Vanity_CustomDyes_DyedItem(NULL_00000000-0000-0000-0000-000000000000, "");
-
 DB_PIP_Vanity_AppliedAura(NULL_00000000-0000-0000-0000-000000000000, "", (INTEGER64)-1);
 NOT DB_PIP_Vanity_AppliedAura(NULL_00000000-0000-0000-0000-000000000000, "", (INTEGER64)-1);
 
@@ -21,6 +18,19 @@ DB_PIP_PreferredTargetDisplay_Tagged(NULL_00000000-0000-0000-0000-000000000000, 
 NOT DB_PIP_PreferredTargetDisplay_Tagged(NULL_00000000-0000-0000-0000-000000000000, NULL_00000000-0000-0000-0000-000000000000);
 
 KBSECTION
+
+// Dummy rule to shut up the IDE warnings.
+IF ItemSendToHomesteadEvent(_, _)
+AND
+DB_PIP_EpicEnemies_AppliedEffect(_, _)
+AND
+DB_PIP_EpicEnemies_ActivatedEffect(_, _, _)
+AND
+DB_PIP_Vanity_AppliedAura(_, _, _)
+AND
+DB_PIP_PreferredTargetDisplay_Tagged(_, _)
+THEN
+DB_NOOP();
 
 EXITSECTION
 

@@ -25,9 +25,11 @@ IF NRD_OnActionStateEnter(_Char, _State)
 THEN
 DB_NOOP();
 
+/* [OSITOOLS_ONLY]
 IF NRD_OnActionStateExit(_Char, _State)
 THEN
 DB_NOOP();
+*/
 
 PROC PROC_PIP_Hotbar_UseTemplate((CHARACTERGUID)_Char, (STRING)_Template)
 AND
