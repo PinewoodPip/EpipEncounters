@@ -126,6 +126,26 @@ function _Match:ContainsGem(gem)
     return containsGem
 end
 
+---Returns a list of all gems involved in the match.
+---@return Feature_Bedazzled_Board_Gem[]
+function _Match:GetAllGems()
+    local gems = {}
+
+    for _,gem in ipairs(self.Gems) do
+        table.insert(gems, gem)
+    end
+
+    for _,fusion in ipairs(self.Fusions) do
+        table.insert(gems, fusion.TargetGem)
+
+        for _,gem in ipairs(fusion.FusingGems) do
+            table.insert(gems, gem)
+        end
+    end
+
+    return gems
+end
+
 ---Returns the count of all gems involved in this match, including gems being fused.
 ---@return integer
 function _Match:GetGemCount()

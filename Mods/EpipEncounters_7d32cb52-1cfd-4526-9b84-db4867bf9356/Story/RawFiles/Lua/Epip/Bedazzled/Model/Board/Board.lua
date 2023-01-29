@@ -591,7 +591,7 @@ function _Board:GetMatchAt(x, y)
 
     -- Discard the match if any gem is not idle.
     -- This allows matches to be stalled until "animation" states complete.
-    for _,addedGem in ipairs(match.Gems) do
+    for _,addedGem in ipairs(match:GetAllGems()) do
         if not addedGem:IsIdle() then
             match = nil
             break
