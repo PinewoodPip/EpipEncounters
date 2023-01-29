@@ -67,7 +67,7 @@ function Hotbar.SynchLayout(char)
 
         Net.PostToUser(id, "EPIPENCOUNTERS_Hotbar_SetLayout", {
             Layout = layout,
-            NetID = char.NetID,
+            CharacterNetID = char.NetID,
         })
     end
 end
@@ -121,7 +121,7 @@ Osiris.RegisterSymbolListener("NRD_OnActionStateEnter", 2, "after", function(cha
         casters[char.MyGuid] = true
 
         Net.PostToUser(char.ReservedUserID, "EPIPENCOUNTERS_Hotbar_SkillUseChanged", {
-            NetID = char.NetID,
+            CharacterNetID = char.NetID,
             SkillID = skillID,
             Casting = true,
         })
@@ -132,7 +132,7 @@ Osiris.RegisterSymbolListener("NRD_OnActionStateEnter", 2, "after", function(cha
         Hotbar.preparedSkills[char.MyGuid] = skillID
 
         Net.PostToUser(char.ReservedUserID, "EPIPENCOUNTERS_Hotbar_SkillUseChanged", {
-            NetID = char.NetID,
+            CharacterNetID = char.NetID,
             SkillID = skillID,
             Casting = false,
         })
@@ -146,7 +146,7 @@ Ext.Events.Tick:Subscribe(function()
 
         if state ~= "UseSkill" then
             Net.PostToUser(char.ReservedUserID, "EPIPENCOUNTERS_Hotbar_SkillUseChanged", {
-                NetID = char.NetID,
+                CharacterNetID = char.NetID,
                 SkillID = nil,
                 Casting = false,
             })
@@ -166,7 +166,7 @@ Ext.Events.Tick:Subscribe(function()
                     Hotbar.preparedSkills[charGUID] = nil
                     
                     Net.PostToUser(char.ReservedUserID, "EPIPENCOUNTERS_Hotbar_SkillUseChanged", {
-                        NetID = char.NetID,
+                        CharacterNetID = char.NetID,
                         SkillID = nil,
                         Casting = false,
                     })

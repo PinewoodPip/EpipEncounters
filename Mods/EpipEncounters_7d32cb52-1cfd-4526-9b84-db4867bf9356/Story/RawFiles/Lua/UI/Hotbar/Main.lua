@@ -232,6 +232,17 @@ end
 ---@field Index integer
 
 ---------------------------------------------
+-- NET MESSAGES
+---------------------------------------------
+
+---@class EPIPENCOUNTERS_Hotbar_SetLayout : NetLib_Message_Character
+---@field Layout HotbarState
+
+---@class EPIPENCOUNTERS_Hotbar_SkillUseChanged : NetLib_Message_Character
+---@field SkillID string
+---@field Casting boolean
+
+---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
@@ -317,6 +328,10 @@ function Hotbar.IsBarVisible(index)
     return event.Visible
 end
 
+function Hotbar.UpdateSlotTextures()
+    Hotbar:GetUI():ExternalInterfaceCall("updateSlots", Hotbar.GetSlotsPerRow())
+end
+
 ---Returns the slotHolder movieclip.
 ---@return FlashMovieClip
 function Hotbar.GetSlotHolder()
@@ -398,7 +413,7 @@ end
 
 ---Returns the SkillBarItems array of char, optionally filtered by predicate.
 ---@param char? EclCharacter
----@param predicate? fun(char: EclCharacter, slot: EocSkillBarItem, index:integer)
+---@param predicate? fun(char: EclCharacter, slot: EocSkillBarItem, index:integer):boolean
 ---@return table<integer, EocSkillBarItem>
 function Hotbar.GetSkillBarItems(char, predicate)
     local slots = {}
@@ -461,7 +476,6 @@ function Hotbar.ShiftSlots(selectedSlot, direction)
         end
 
         local skillBar = Hotbar.GetSkillBarItems()
-        local row = Hotbar.GetRowForSlot(selectedSlot)
         local endSlot = 1 -- Slot to end the search at. Previously we bounded it to the same row; removed as it didn't feel necessary.
 
         if direction > 0 then
@@ -504,7 +518,7 @@ function Hotbar.ShiftSlots(selectedSlot, direction)
 
         -- Store slot data
         local slotData = {}
-        for i,slotIndex in ipairs(slots) do
+        for _,slotIndex in ipairs(slots) do
             slotData[slotIndex] = {
                 Type = skillBar[slotIndex].Type,
                 SkillOrStatId = skillBar[slotIndex].SkillOrStatId,
@@ -514,7 +528,7 @@ function Hotbar.ShiftSlots(selectedSlot, direction)
 
         -- Start shifting
         index = selectedSlot
-        for i,slotIndex in ipairs(slots) do
+        for _,slotIndex in ipairs(slots) do
             local newIndex = slotIndex + direction
             local data = slotData[slotIndex]
             local slot = skillBar[newIndex]
@@ -535,7 +549,7 @@ end
 ---Clear the skillbar data of char on a specific row, optionally filtering by a predicate function.
 ---@param char EclCharacter
 ---@param row integer
----@param predicate fun(char: EclCharacter, slot: SkillBarItem)
+---@param predicate fun(char: EclCharacter, slot: EocSkillBarItem)
 function Hotbar.ClearRow(char, row, predicate)
     local skillBar = char.PlayerData.SkillBarItems
 
@@ -601,7 +615,7 @@ function Hotbar.GetBarCount(char)
     local state = Hotbar.GetState(char)
     local open = 0
 
-    for i,bar in ipairs(state.Bars) do
+    for i,_ in ipairs(state.Bars) do
         if Hotbar.IsBarVisible(i) then
             open = open + 1
         end
@@ -647,13 +661,22 @@ function Hotbar.UpdateActiveSkill()
     local index = -1
 
     if preparedSkill and not preparedSkill.Casting then
-        local items = Hotbar.GetSkillBarItems(char, function (char, slot, slotIndex)
+        -- A strange use of the predicate, but whatever.
+        Hotbar.GetSkillBarItems(char, function (_, slot, slotIndex)
+            local valid = false
+
+            -- If we clicked a slot recently, prioritize it.
+            -- Otherwise use the last slot with the skill.
+            -- A skill CAN be in multiple slots, mainly if you install the mod mid-playthrough.
             if slot.SkillOrStatId == preparedSkill.SkillID and (index == -1 or slotIndex == Hotbar.lastClickedSlot) then
                 index = slotIndex - 1 -- Subtract one because we're sending to flash.
-                return true
+                valid = true
             end
+
+            return valid
         end)
     end
+
     slotHolder.showActiveSkill(index)
 end
 
@@ -798,6 +821,62 @@ Hotbar:RegisterCallListener("pipStoppedDragOnButton", function (_, index)
     end
 end)
 
+-- Listen for context menu being requested.
+Hotbar:RegisterCallListener("pipHotbarOpenContextMenu", function (_)
+    Hotbar:DebugLog("Toggling drawer from hotkey")
+
+    Hotbar.ToggleDrawer()
+end)
+
+-- Listen for slots being pressed.
+Hotbar:RegisterCallListener("pipSlotPressed", function (_, index, isEnabled, _)
+    Hotbar:DebugLog("Mouse pressed slot " .. index)
+
+    Hotbar.UseSlot(index + 1, isEnabled)
+end)
+
+-- Listen for slots being hovered.
+Hotbar:RegisterCallListener("SlotHover", function (_, index)
+    local slotHolder = Hotbar.GetSlotHolder()
+
+    slotHolder.setHighlightedSlot(index)
+end)
+
+-- Listen for the UI requesting a slots update.
+Hotbar:RegisterCallListener("updateSlots", function (_, _)
+    Hotbar.RenderSlots()
+end)
+Hotbar:RegisterCallListener("pipUpdateSlots", function (_, _) -- Fired from onEventResolution
+    Hotbar.UpdateSlotTextures()
+end, "After")
+
+-- Listen for hotbar cyclers being pressed.
+local function CycleHotbar(barIndex, increment)
+    -- Use modifier keys to select higher hotbars
+    -- Yes this is slightly ridiculous
+    if Client.Input.IsGUIPressed() then -- Cycle 5th bar
+        barIndex = barIndex + 4
+    elseif Client.Input.IsAltPressed() then -- Cycle 4th bar
+        barIndex = barIndex + 3
+    elseif Client.Input.IsCtrlPressed() then -- Cycle 3rd bar
+        barIndex = barIndex + 2
+    elseif Client.Input.IsShiftPressed() then -- Cycle 2nd bar
+        barIndex = barIndex + 1
+    end
+
+    Hotbar:DebugLog("Trying to cycle " .. barIndex)
+
+    Hotbar.UpdateSlotTextures()
+    Hotbar.CycleBar(barIndex, increment) -- cycle our own scripted bars
+end
+Hotbar:RegisterCallListener("pipPrevHotbar", function (_, _, index)
+    CycleHotbar(index, -1)
+    
+end)
+Hotbar:RegisterCallListener("pipNextHotbar", function (_, _, index)
+    CycleHotbar(index, 1)
+end)
+
 -- Listen for engine action holder being updated. Does not include setting the active action.
 Hotbar:RegisterInvokeListener("updateActionSkills", function (ev)
     local array = ev.UI:GetRoot().actionSkillArray
@@ -812,12 +891,62 @@ Hotbar:RegisterInvokeListener("updateActionSkills", function (ev)
     Hotbar.UpdateActionHolder()
 end, "Before")
 
+-- Listen for the UI being toggled by the engine.
+-- Unlike most UIs, the hotbar does not use Show() and Hide()
+Hotbar:RegisterInvokeListener("showSkillBar", function (_, enabled)
+    local root = Hotbar:GetRoot()
+    local isSummon = Game.Character.IsSummon(Client.GetCharacter())
+
+    Hotbar.GetHotkeysHolder().visible = enabled
+
+    root.hotbar_mc.pip_baseframe.visible = enabled
+    root.hotbar_mc.plusBtn_mc.visible = enabled and not isSummon
+    root.hotbar_mc.minusBtn_mc.visible = enabled and not isSummon
+    root.hotbar_mc.drawerBtn_mc.visible = enabled
+    root.hotbar_mc.pip_baseframe2.visible = enabled
+
+    if not enabled then
+        root.hotbar_mc.cycleHotBar2_mc.visible = false
+        root.hotbar_mc.cycleHotBar3_mc.visible = false
+        root.hotbar_mc.cycleHotBar4_mc.visible = false
+        root.hotbar_mc.cycleHotBar5_mc.visible = false
+    else
+        Hotbar.Refresh()
+    end
+
+    Hotbar.elementsToggled = enabled
+    
+end, "After")
+
+-- Listen for engine requests to refresh slots.
+Hotbar:RegisterInvokeListener("updateSlots", function (_, _, _)
+    Hotbar.Refresh()
+end)
+
+-- Listen for player handle being set.
+Hotbar:RegisterInvokeListener("setPlayerHandle", function (_, playerHandle)
+    Hotbar.UpdateSlotTextures()
+
+    Utilities.Hooks.FireEvent("Client", "ActiveCharacterChanged", playerHandle)
+
+    Hotbar.ResyncEngineRow()
+end, "After")
+
+-- Listen for hotkey buttons being unbound.
+Hotbar:RegisterCallListener("pipUnbindHotbarButton", function (_, index)
+    Hotbar:DebugLog("Unbinding hotkey button", index)
+
+    Hotbar.UnbindActionButton(index + 1)
+
+    Hotbar.RenderHotkeys()
+end)
+
 Net.RegisterListener("EPIPENCOUNTERS_Hotbar_SetLayout", function(payload)
-    Hotbar.SetState(Ext.GetCharacter(payload.NetID), payload.Layout)
+    Hotbar.SetState(Character.Get(payload.CharacterNetID), payload.Layout)
 end)
 
 Net.RegisterListener("EPIPENCOUNTERS_Hotbar_SkillUseChanged", function(payload)
-    Hotbar.SetPreparedSkill(Ext.Entity.GetCharacter(payload.NetID), payload.SkillID, payload.Casting)
+    Hotbar.SetPreparedSkill(Ext.Entity.GetCharacter(payload.CharacterNetID), payload.SkillID, payload.Casting)
 end)
 
 -- Reposition combat log button
@@ -844,45 +973,6 @@ Settings.Events.SettingValueChanged:Subscribe(function (ev)
         Hotbar.PositionCombatLogButton()
     end
 end)
-
-local function OnRequestUnbind(ui, method, index)
-    Hotbar:DebugLog("Unbinding!")
-
-    Hotbar.UnbindActionButton(index + 1)
-
-    Hotbar.RenderHotkeys()
-end
-
-local function OnToggleSkillBar(ui, method, bool)
-    local root = Hotbar:GetRoot()
-    local isSummon = Game.Character.IsSummon(Client.GetCharacter())
-
-    Hotbar.GetHotkeysHolder().visible = bool
-
-    root.hotbar_mc.pip_baseframe.visible = bool
-    root.hotbar_mc.plusBtn_mc.visible = bool and not isSummon
-    root.hotbar_mc.minusBtn_mc.visible = bool and not isSummon
-    root.hotbar_mc.drawerBtn_mc.visible = bool
-    root.hotbar_mc.pip_baseframe2.visible = bool
-
-    if not bool then
-        root.hotbar_mc.cycleHotBar2_mc.visible = false
-        root.hotbar_mc.cycleHotBar3_mc.visible = false
-        root.hotbar_mc.cycleHotBar4_mc.visible = false
-        root.hotbar_mc.cycleHotBar5_mc.visible = false
-    else
-        Hotbar.Refresh()
-    end
-
-    Hotbar.elementsToggled = bool
-end
-
-local function OnSlotHover(ui, method, id)
-    local slotHolder = Hotbar.GetSlotHolder()
-    local slot = slotHolder.slot_array[id]
-
-    slotHolder.setHighlightedSlot(id)
-end
 
 Hotbar:RegisterCallListener("pipAddHotbar", function(_)
     Hotbar.AddBar()
@@ -917,17 +1007,6 @@ GameState.Events.GameReady:Subscribe(function ()
     Hotbar.Refresh()
 end)
 
-local function OnSlotPressed(ui, method, id, isEnabled, fromKeyboard)
-    Hotbar:DebugLog("Mouse pressed slot " .. id)
-
-    Hotbar.UseSlot(id + 1, isEnabled)
-end
-
-local function OnHotkeyRightClick(ui, method)
-    Hotbar:DebugLog("Toggling drawer from hotkey")
-    Hotbar.ToggleDrawer()
-end
-
 Client.UI.OptionsInput.Events.ActionExecuted:RegisterListener(function (action, _)
     local actionPattern = "EpipEncounters_Hotbar_(%d+)"
     local index = action:match(actionPattern)
@@ -937,19 +1016,10 @@ Client.UI.OptionsInput.Events.ActionExecuted:RegisterListener(function (action, 
     end
 end)
 
-local function OnUpdateSlots(ui, method)
-    Hotbar.RenderSlots()
-end
-
-local function OnStopDragging(ui, method, slot)
-    Hotbar:DebugLog("Stopping drag")
-    Hotbar.currentDraggedSlot = nil
-end
-
 -- Refresh the hotbar every X ticks.
 -- Utilities.Hooks.RegisterListener("Game", "Loaded", function()
 GameState.Events.RunningTick:Subscribe(function (e)
-    if Client.IsUsingController() then return nil end
+    if Client.IsUsingController() then return end
 
     -- Refresh the hotbar when it comes into view.
     local visible = Hotbar:IsVisible()
@@ -1108,8 +1178,7 @@ function Hotbar.RenderDrawerButtons()
     local hotkeys = Hotbar.GetHotkeysHolder()
     local drawerButtonArray = hotkeys.drawer_mc.content_array
 
-    for i,id in ipairs(Hotbar.RegisteredActionOrder) do
-        local data = Hotbar.Actions[id]
+    for _,id in ipairs(Hotbar.RegisteredActionOrder) do
         local enabled = Hotbar.IsActionEnabled(id)
         local visible = Hotbar.IsActionVisibleInDrawer(id)
         local button
@@ -1204,33 +1273,6 @@ function Hotbar.GetIconForSlot(index)
     end
 
     return icon
-end
-
--- TODO remove
-function Hotbar.CanRenderExtraSlots()
-    if Hotbar.ready or Hotbar.CUSTOM_RENDERING then
-        return true
-    end
-
-    local players = Client.UI.PlayerInfo:GetRoot().player_array
-    local count = 0
-    
-
-    for i=0,#players-1,1 do
-        local char = Ext.GetCharacter(Ext.UI.DoubleToHandle(players[i].characterHandle))
-
-        count = count + 1
-    end
-
-    for netID,row in pairs(Hotbar.CurrentVanillaRows) do
-        if row ~= 1 then
-            return false
-        else
-            count = count - 1
-        end
-    end
-
-    return count == 0 and true
 end
 
 function Hotbar.UpdateActionHolder()
@@ -1354,7 +1396,7 @@ function Hotbar.UseSkill(skill)
             skillBar[145].Type = "Item"
         end
     
-        UpdateSlotTextures()
+        Hotbar.UpdateSlotTextures()
     
         Timer.Start("UseHotbarSlot", 0.05, function()
             Hotbar.UseSlot(145)
@@ -1366,7 +1408,7 @@ function Hotbar.UseSkill(skill)
                     char.PlayerData.SkillBarItems[145].SkillOrStatId = previousSkill
                     -- char.PlayerData.SkillBarItems[145].ItemHandle = nil
                     Hotbar.lastClickedSlot = nil
-                    UpdateSlotTextures()
+                    Hotbar.UpdateSlotTextures()
                     Hotbar.Refresh()
                     Hotbar.RenderSlots()
                     Hotbar.UpdateSlot(145)
@@ -1378,7 +1420,7 @@ function Hotbar.UseSkill(skill)
                     char.PlayerData.SkillBarItems[145].Type = "None"
                     -- char.PlayerData.SkillBarItems[145].ItemHandle = nil
                     Hotbar.lastClickedSlot = nil
-                    UpdateSlotTextures()
+                    Hotbar.UpdateSlotTextures()
                     Hotbar.Refresh()
                     Hotbar.RenderSlots()
                     Hotbar.UpdateSlot(145)
@@ -1477,7 +1519,6 @@ function Hotbar.RenderSlots()
 
     if not Hotbar.CUSTOM_RENDERING or not char then return nil end
 
-    local slotHolder = Hotbar.GetSlotHolder()
     local startingBar = 2
     local canUseHotbar = Hotbar.CanUseHotbar()
 
@@ -1564,7 +1605,8 @@ function Hotbar.PositionCombatLogButton()
     Hotbar:GetRoot().showLog_mc.visible = (Settings.GetSettingValue("Epip_Hotbar", "HotbarCombatLogButton") or IS_IMPROVED_HOTBAR) and Hotbar.IsVisible()
 end
 
-Hotbar:RegisterListener("Refreshed", function(barCount)
+-- Reposition combat log button when the hotbar updates.
+Hotbar:RegisterListener("Refreshed", function(_)
     Hotbar.PositionCombatLogButton()
 end)
 
@@ -1594,37 +1636,6 @@ Ext.Events.SessionLoaded:Subscribe(function()
     Client.UI.CharacterSheet:GetUI().Layer = 9
     ui.Layer = 10
     skillbook.Layer = 9
-
-    Ext.RegisterUICall(ui, "startDragging", function(ui, method, slot)
-        Hotbar:DebugLog("Now dragging slot " .. slot)
-        local slotData = Client.GetCharacter().PlayerData.SkillBarItems[slot + 1]
-        Hotbar.currentDraggedSlot = {
-            ItemHandle = slotData.ItemHandle,
-            SkillOrStatId = slotData.SkillOrStatId,
-            Type = slotData.Type,
-        }
-    end)
-
-    -- Clear the dragged slot data when we drag out of bounds
-    Ext.Events.InputEvent:Subscribe(function(ev)
-        ev = ev.Event
-        if (ev.EventId == 1 or ev.EventId == 4) and ev.Release then
-            Hotbar.currentDraggedSlot = nil
-        end
-    end)
-
-    Ext.RegisterUICall(ui, "stopDragging", OnStopDragging, "After")
-    Ext.RegisterUICall(ui, "cancelDragging", OnStopDragging, "After")
-    Ext.RegisterUICall(ui, "pipPrevHotbar", OnHotbarCyclePrev)
-    Ext.RegisterUICall(ui, "pipNextHotbar", OnHotbarCycleNext)
-    Ext.RegisterUICall(ui, "pipUpdateSlots", OnVanillaUpdateSlots)
-    Ext.RegisterUIInvokeListener(ui, "updateSlots", OnUpdateSlots, "After")
-    -- Ext.RegisterUIInvokeListener(ui, "updateSlotData", OnUpdateSlotData, "After")
-    Ext.RegisterUICall(ui, "pipHotbarOpenContextMenu", OnHotkeyRightClick)
-    Ext.RegisterUICall(ui, "pipUnbindHotbarButton", OnRequestUnbind)
-    Ext.RegisterUICall(ui, "pipSlotPressed", OnSlotPressed)
-    Ext.RegisterUICall(ui, "SlotHover", OnSlotHover)
-    Ext.RegisterUIInvokeListener(ui, "showSkillBar", OnToggleSkillBar, "After")
 
     for i=0,144,1 do
         Hotbar.SetupSlot(i)
@@ -1726,68 +1737,10 @@ function Hotbar.Refresh()
     Hotbar:FireEvent("Refreshed", Hotbar.GetBarCount())
 end
 
-function UpdateSlotTextures()
-    if Hotbar.CanRenderExtraSlots() then
-        Hotbar:GetUI():ExternalInterfaceCall("updateSlots", Hotbar.GetSlotsPerRow())
-        -- Ext.UI.SetDirty(Client.GetCharacter().Handle, 524288)
-        -- Ext.UI.SetDirty(Client.GetCharacter().Handle, 2)
-    else
-        Hotbar:GetUI():ExternalInterfaceCall("updateSlots", Hotbar.GetSlotsPerRow())
-    end
-end
-
-function OnHotbarSetHandle(uiObj, methodName, handle)
-    UpdateSlotTextures()
-
-    Utilities.Hooks.FireEvent("Client", "ActiveCharacterChanged", handle)
-
-    Hotbar.ResyncEngineRow()
-end
-
--- handle switching hotbars the normal way (buttons and hotkeys)
-function CycleHotbar(ui, current, index, increment)
-    -- Use modifier keys to select higher hotbars
-    -- Yes this is slightly ridiculous
-    if Client.Input.IsGUIPressed() then -- Cycle 5th bar
-        index = index + 4
-    elseif Client.Input.IsAltPressed() then -- Cycle 4th bar
-        index = index + 3
-    elseif Client.Input.IsCtrlPressed() then -- Cycle 3rd bar
-        index = index + 2
-    elseif Client.Input.IsShiftPressed() then -- Cycle 2nd bar
-        index = index + 1
-    end
-
-    Hotbar:DebugLog("Trying to cycle " .. index)
-
-    UpdateSlotTextures()
-    Hotbar.CycleBar(index, increment) -- cycle our own scripted bars
-end
-
-function OnHotbarCyclePrev(ui, method, current, index)
-    CycleHotbar(ui, current, index, -1)
-end
-
-function OnHotbarCycleNext(ui, method, current, index)
-    CycleHotbar(ui, current, index, 1)
-end
-
--- Fired from onEventResolution
-function OnVanillaUpdateSlots(ui, method, slots)
-    UpdateSlotTextures()
-end
-
-function handleUpdateSlots(uiObj, methodName, param3, slotsAmount)
-    Hotbar.Refresh()
-end
-
 Ext.Events.SessionLoaded:Subscribe(function()
     local ui = Hotbar:GetUI()
 
     Hotbar.GetSlotHolder().rowHeight = 65
-
-    Ext.RegisterUITypeInvokeListener(Client.UI.Data.UITypes.hotBar, "setPlayerHandle", OnHotbarSetHandle, "After")
-    Ext.RegisterUITypeInvokeListener(Client.UI.Data.UITypes.hotBar, "updateSlots", handleUpdateSlots, "Before")
 
     if ui then
         -- Hide the original iggy icon.

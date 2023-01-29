@@ -67,15 +67,12 @@ function Hotbar.RegisterActionHook(action, event, handler)
 end
 
 ---Toggles the action drawer.
----@param state boolean True for open.
-function Hotbar.ToggleDrawer(state)
+---@param open boolean? Defaults to toggling.
+function Hotbar.ToggleDrawer(open)
     local hotkeys = Hotbar.GetHotkeysHolder()
+    open = open or not hotkeys.drawer_mc.visible
 
-    if state == nil then
-        state = not hotkeys.drawer_mc.visible
-    end
-
-    hotkeys.toggleDrawer(state)
+    hotkeys.toggleDrawer(open)
 end
 
 ---Returns the data for an action.
