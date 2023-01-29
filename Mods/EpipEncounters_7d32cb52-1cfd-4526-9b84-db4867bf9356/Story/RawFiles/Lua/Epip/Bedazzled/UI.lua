@@ -9,7 +9,7 @@ local UI = Generic.Create("Feature_Bedazzled")
 UI:Hide()
 
 UI._Initialized = false
-UI.Board = nil ---@type Feature_Bedazzled_Board
+UI.Board = nil ---@type Feature_Bedazzled_Board?
 UI.Gems = {} ---@type table<GUID, GenericUI_Prefab_Bedazzled_Gem>
 UI.GemSelection = nil ---@type Feature_Bedazzled_UI_GemSelection
 
@@ -446,6 +446,19 @@ function UI.GetSelectedPosition()
     return UI.GemSelection and UI.GemSelection.Position or nil
 end
 
+---Returns the gem currently selected by the cursor.
+---@return Feature_Bedazzled_Board_Gem?
+function UI.GetSelectedGem()
+    local board = UI.GetBoard()
+    local gem = nil
+
+    if board and UI.HasGemSelection() then
+        gem = board:GetGemAt(UI.GetSelectedPosition():unpack())
+    end
+
+    return gem
+end
+
 ---@return boolean
 function UI.CanMouseSwipe()
     return UI.GemSelection and UI.GemSelection.CanSwipe or false
@@ -738,6 +751,12 @@ function UI.OnGemClickboxHovered(x, y)
     UI.HoveredGridPosition = (gem and element) and V(x, y) or nil
 end
 
+---Returns the board being currently played.
+---@return Feature_Bedazzled_Board?
+function UI.GetBoard()
+    return UI.Board
+end
+
 ---Handle clickboxes being clicked.
 ---@param x integer
 ---@param y integer
@@ -749,9 +768,9 @@ function UI.OnGemClickboxClicked(x, y)
     if gem and element and gem:IsIdle() then
         if UI.HasGemSelection() and newSelection == UI.GetSelectedPosition() then -- Deselect position
             UI.ClearSelection()
-        elseif UI.HasGemSelection() then -- Swap gems TODO change to idle only
+        elseif UI.HasGemSelection() and gem:IsAdjacentTo(UI.GetSelectedGem()) then
             UI.RequestSwap(UI.GetSelectedPosition(), V(x, y))
-        else -- Select gem
+        else -- Select gem or change selection
             UI.SelectGem(gem)
         end
     end
