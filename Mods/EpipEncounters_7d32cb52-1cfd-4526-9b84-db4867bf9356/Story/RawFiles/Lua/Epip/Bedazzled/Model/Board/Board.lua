@@ -156,27 +156,6 @@ function _Board:Update(dt)
     end
 end
 
----Listen for gems changing states.
----@param gem Feature_Bedazzled_Board_Gem
----@param ev Feature_Bedazzled_Board_Gem_Event_StateChanged
-function _Board:OnGemStateChanged(gem, ev)
-    -- Queue matches for proteans.
-    if ev.OldState.ClassName == "Feature_Bedazzled_Board_Gem_State_Swapping" and gem.Type == "Protean" then
-        local zap = Match.Create(self:GetGemGridCoordinates(gem))
-        local state = ev.OldState ---@type Feature_Bedazzled_Board_Gem_State_Swapping
-
-        zap:AddGem(gem)
-
-        for _,otherGem in ipairs(self:_GetGemsInArea(V(1, self.Size[1]), V(self.Size[2], 1))) do
-            if otherGem.Type == state.OtherGem.Type then
-                zap:AddGem(otherGem)
-            end
-        end
-
-        table.insert(self._QueuedMatches, zap)
-    end
-end
-
 ---Returns whether the game is still running.
 ---@return boolean
 function _Board:IsRunning()
@@ -238,7 +217,7 @@ function _Board:ConsumeMatch(match)
             -- Add gems in a 3x3 area
             explosion:AddGems(self:_GetGemsInArea(V(coords[1] - 1, coords[2] + 1), V(coords[1] + 1, coords[2] - 1)))
 
-            table.insert(self._QueuedMatches, explosion)
+            self:QueueMatch(explosion)
         elseif gem:HasModifier("LargeRune") then
             local lightning = Match.Create(coords)
             gem:RemoveModifier("LargeRune")
@@ -249,7 +228,7 @@ function _Board:ConsumeMatch(match)
             -- Add gems in column
             lightning:AddGems(self:_GetGemsInArea(V(coords[1], self.Size[1]), V(coords[1], 1)))
 
-            table.insert(self._QueuedMatches, lightning)
+            self:QueueMatch(lightning)
         elseif gem:HasModifier("GiantRune") then
             local supernova = Match.Create(coords)
             gem:RemoveModifier("GiantRune")
@@ -260,7 +239,7 @@ function _Board:ConsumeMatch(match)
             -- Add gems in columns
             supernova:AddGems(self:_GetGemsInArea(V(coords[1] - 1, self.Size[1]), V(coords[1] + 1, 1)))
 
-            table.insert(self._QueuedMatches, supernova)
+            self:QueueMatch(supernova)
         end
     end
 
@@ -604,4 +583,35 @@ function _Board:GetMatchAt(x, y)
     end
 
     return match
+end
+
+---Queues a match to be consumed next tick.
+---@param match Feature_Bedazzled_Match
+function _Board:QueueMatch(match)
+    table.insert(self._QueuedMatches, match)
+end
+
+---------------------------------------------
+-- EVENT LISTENERS
+---------------------------------------------
+
+---Listen for gems changing states.
+---@param gem Feature_Bedazzled_Board_Gem
+---@param ev Feature_Bedazzled_Board_Gem_Event_StateChanged
+function _Board:OnGemStateChanged(gem, ev)
+    -- Queue matches for proteans.
+    if ev.OldState.ClassName == "Feature_Bedazzled_Board_Gem_State_Swapping" and gem.Type == "Protean" then
+        local zap = Match.Create(self:GetGemGridCoordinates(gem))
+        local state = ev.OldState ---@type Feature_Bedazzled_Board_Gem_State_Swapping
+
+        zap:AddGem(gem)
+
+        for _,otherGem in ipairs(self:_GetGemsInArea(V(1, self.Size[1]), V(self.Size[2], 1))) do
+            if otherGem.Type == state.OtherGem.Type then
+                zap:AddGem(otherGem)
+            end
+        end
+
+        self:QueueMatch(zap)
+    end
 end
