@@ -32,6 +32,7 @@ UI.SOUNDS = {
     INVALID_MATCH = "UI_Game_ActionUnavailable",
     GAME_OVER = "UI_Game_GameOver",
     SWIPE = "UI_Game_Dialog_Open",
+    HYPERCUBE_DETONATION = "UI_Game_XPgain",
 }
 ---Sounds to play when a fusion results in a modifier.
 ---@type table<Feature_Bedazzled_GemModifier_ID, string>
@@ -273,6 +274,14 @@ function UI.OnGemStateChanged(gem, newState, oldState)
 
     if oldState.ClassName == "Feature_Bedazzled_Board_Gem_State_Swapping" then
         element:UpdateIcon()
+    end
+
+    -- Play sound for hypercubes being consumed
+    -- The sound effect for this has a long delay, which is why we play it on swap.
+    if newState == "Feature_Bedazzled_Board_Gem_State_Swapping" and gem.Type == "Protean" then
+        Timer.Start(0.2, function (_)
+            UI:PlaySound(UI.SOUNDS.HYPERCUBE_DETONATION)
+        end)
     end
 
     if newState == "Feature_Bedazzled_Board_Gem_State_Swapping" then
@@ -789,7 +798,7 @@ end
 -- Listen for matches being executed.
 ---@param ev Feature_Bedazzled_Board_Event_MatchExecuted
 function UI.OnMatchExecuted(ev)
-    UI:PlaySound(UI.SOUNDS.MATCH)
+    local reason = ev.Match.Reason
 
     -- Play extra sounds for special gem creation
     for _,fusion in ipairs(ev.Match.Fusions) do
@@ -799,6 +808,13 @@ function UI.OnMatchExecuted(ev)
         if fusion.TargetModifier then
             UI:PlaySound(UI.FUSION_MODIFIER_SOUNDS[fusion.TargetModifier] or "")
         end
+    end
+
+    -- Play a different sound for explosions.
+    if reason == ev.Match.REASONS.EXPLOSION then
+        UI:PlaySound(UI.SOUNDS.EXPLOSION)
+    else
+        UI:PlaySound(UI.SOUNDS.MATCH)
     end
 
     UI.CreateScoreFlyover(ev.Match)

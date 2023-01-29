@@ -3,10 +3,18 @@ local Bedazzled = Epip.GetFeature("Feature_Bedazzled")
 
 ---@class Feature_Bedazzled_Match
 ---@field Score integer Defaults to `0`.
+---@field Reason Feature_Bedazzled_Match_Reason
 ---@field OriginPosition Vector2
 ---@field Gems Feature_Bedazzled_Board_Gem[]
 ---@field Fusions Feature_Bedazzled_Match_Fusion[]
-local _Match = {}
+local _Match = {
+    ---@enum Feature_Bedazzled_Match_Reason
+    REASONS = {
+        PLAYER_MOVE = "PlayerMove",
+        CASCADE = "Cascade",
+        EXPLOSION = "Explosion",
+    },
+}
 Bedazzled:RegisterClass("Feature_Bedazzled_Match", _Match)
 
 ---------------------------------------------
@@ -57,11 +65,13 @@ end
 ---------------------------------------------
 
 ---@param originPosition Vector2
+---@param reason Feature_Bedazzled_Match_Reason
 ---@return Feature_Bedazzled_Match
-function _Match.Create(originPosition)
+function _Match.Create(originPosition, reason)
     ---@type Feature_Bedazzled_Match
     local match = {
         OriginPosition = originPosition,
+        Reason = reason,
         Gems = {},
         Fusions = {},
     }
@@ -177,4 +187,10 @@ end
 ---@param score integer
 function _Match:SetScore(score)
     self.Score = score
+end
+
+---Sets the reason for the match ocurring.
+---@param reason Feature_Bedazzled_Match_Reason
+function _Match:SetReason(reason)
+    self.Reason = reason
 end

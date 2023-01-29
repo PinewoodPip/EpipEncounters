@@ -214,7 +214,7 @@ function _Board:ConsumeMatch(match)
         -- preventing matches with detonations from immediately detonating any newly created special gems
         if gem.State.ClassName ~= "Feature_Bedazzled_Board_Gem_State_Transforming" then
             if gem:HasModifier("Rune") then
-                local explosion = Match.Create(coords)
+                local explosion = Match.Create(coords, Match.REASONS.EXPLOSION)
                 gem:RemoveModifier("Rune")
     
                 -- Add gems in a 3x3 area
@@ -222,7 +222,7 @@ function _Board:ConsumeMatch(match)
     
                 self:QueueMatch(explosion)
             elseif gem:HasModifier("LargeRune") then
-                local lightning = Match.Create(coords)
+                local lightning = Match.Create(coords, Match.REASONS.EXPLOSION)
                 gem:RemoveModifier("LargeRune")
     
                 -- Add gems in row
@@ -233,7 +233,7 @@ function _Board:ConsumeMatch(match)
     
                 self:QueueMatch(lightning)
             elseif gem:HasModifier("GiantRune") then
-                local supernova = Match.Create(coords)
+                local supernova = Match.Create(coords, Match.REASONS.EXPLOSION)
                 gem:RemoveModifier("GiantRune")
     
                 -- Add gems in rows
@@ -499,7 +499,7 @@ function _Board:GetMatchAt(x, y)
 
     local startingX = x
     local startingY = y
-    local match = Match.Create(Vector.Create(x, y))
+    local match = Match.Create(Vector.Create(x, y), Match.REASONS.PLAYER_MOVE)
 
     -- Find starting X position for the match
     local otherGem = self:GetGemAt(x - 1, startingY)
@@ -570,6 +570,10 @@ function _Board:GetMatchAt(x, y)
     -- so in this context it is "1 match behind"
     score = score * (self.MatchesSinceLastMove + 1)
 
+    if self.MatchesSinceLastMove > 0 then
+        match:SetReason(Match.REASONS.CASCADE)
+    end
+
     match:SetScore(score)
 
     -- Discard the match if any gem is not idle.
@@ -605,7 +609,7 @@ end
 function _Board:OnGemStateChanged(gem, ev)
     -- Queue matches for proteans.
     if ev.OldState.ClassName == "Feature_Bedazzled_Board_Gem_State_Swapping" and gem.Type == "Protean" then
-        local zap = Match.Create(self:GetGemGridCoordinates(gem))
+        local zap = Match.Create(self:GetGemGridCoordinates(gem), Match.REASONS.PLAYER_MOVE)
         local state = ev.OldState ---@type Feature_Bedazzled_Board_Gem_State_Swapping
 
         zap:AddGem(gem)
