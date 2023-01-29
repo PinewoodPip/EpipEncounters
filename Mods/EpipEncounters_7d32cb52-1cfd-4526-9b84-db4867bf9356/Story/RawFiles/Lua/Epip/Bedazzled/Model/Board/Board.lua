@@ -201,45 +201,49 @@ function _Board:ConsumeMatch(match)
 
     self.MatchesSinceLastMove = self.MatchesSinceLastMove + 1
 
-    -- Consume gems
-    for _,gem in ipairs(match.Gems) do
+    -- Consume gems and queue matches from special gems
+    for _,gem in ipairs(match:GetAllGems()) do
         local coords = self:GetGemGridCoordinates(gem)
 
-        if gem:IsMatchable() then -- Only matchable gems can be consumed
+        if gem:IsMatchable() and match:WillConsumeGem(gem) then -- Only matchable gems can be consumed
             gem:SetState(consumingState:Create())
         end
 
         -- For each detonating gem in the match, queue a new match
-        if gem:HasModifier("Rune") then
-            local explosion = Match.Create(coords)
-            gem:RemoveModifier("Rune")
-
-            -- Add gems in a 3x3 area
-            explosion:AddGems(self:_GetGemsInArea(V(coords[1] - 1, coords[2] + 1), V(coords[1] + 1, coords[2] - 1)))
-
-            self:QueueMatch(explosion)
-        elseif gem:HasModifier("LargeRune") then
-            local lightning = Match.Create(coords)
-            gem:RemoveModifier("LargeRune")
-
-            -- Add gems in row
-            lightning:AddGems(self:_GetGemsInArea(V(1, coords[2]), V(self.Size[2], coords[2])))
-
-            -- Add gems in column
-            lightning:AddGems(self:_GetGemsInArea(V(coords[1], self.Size[1]), V(coords[1], 1)))
-
-            self:QueueMatch(lightning)
-        elseif gem:HasModifier("GiantRune") then
-            local supernova = Match.Create(coords)
-            gem:RemoveModifier("GiantRune")
-
-            -- Add gems in rows
-            supernova:AddGems(self:_GetGemsInArea(V(1, coords[2] + 1), V(self.Size[2], coords[2] - 1)))
-
-            -- Add gems in columns
-            supernova:AddGems(self:_GetGemsInArea(V(coords[1] - 1, self.Size[1]), V(coords[1] + 1, 1)))
-
-            self:QueueMatch(supernova)
+        -- Gems cannot detonate while transforming,
+        -- preventing matches with detonations from immediately detonating any newly created special gems
+        if gem.State.ClassName ~= "Feature_Bedazzled_Board_Gem_State_Transforming" then
+            if gem:HasModifier("Rune") then
+                local explosion = Match.Create(coords)
+                gem:RemoveModifier("Rune")
+    
+                -- Add gems in a 3x3 area
+                explosion:AddGems(self:_GetGemsInArea(V(coords[1] - 1, coords[2] + 1), V(coords[1] + 1, coords[2] - 1)))
+    
+                self:QueueMatch(explosion)
+            elseif gem:HasModifier("LargeRune") then
+                local lightning = Match.Create(coords)
+                gem:RemoveModifier("LargeRune")
+    
+                -- Add gems in row
+                lightning:AddGems(self:_GetGemsInArea(V(1, coords[2]), V(self.Size[2], coords[2])))
+    
+                -- Add gems in column
+                lightning:AddGems(self:_GetGemsInArea(V(coords[1], self.Size[1]), V(coords[1], 1)))
+    
+                self:QueueMatch(lightning)
+            elseif gem:HasModifier("GiantRune") then
+                local supernova = Match.Create(coords)
+                gem:RemoveModifier("GiantRune")
+    
+                -- Add gems in rows
+                supernova:AddGems(self:_GetGemsInArea(V(1, coords[2] + 1), V(self.Size[2], coords[2] - 1)))
+    
+                -- Add gems in columns
+                supernova:AddGems(self:_GetGemsInArea(V(coords[1] - 1, self.Size[1]), V(coords[1] + 1, 1)))
+    
+                self:QueueMatch(supernova)
+            end
         end
     end
 
