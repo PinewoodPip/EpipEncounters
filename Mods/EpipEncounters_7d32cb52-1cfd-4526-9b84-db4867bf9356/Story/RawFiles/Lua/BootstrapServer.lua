@@ -237,6 +237,8 @@ LOAD_ORDER = {
     "Debug/Server.lua",
 
     {ScriptSet = "Epip/AnimationCancelling"},
+
+    "Epip/OsirisIDEAnnotationGenerator.lua",
 }
 
 Ext.Require(prefixedGUID, "Bootstrap.lua")
