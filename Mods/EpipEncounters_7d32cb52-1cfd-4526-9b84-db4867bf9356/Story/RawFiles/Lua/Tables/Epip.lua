@@ -40,7 +40,7 @@ function Epip.RegisterFeature(modTable, id, feature)
 
     feature.MOD_TABLE_ID = modTable
 
-    Epip.InitializeFeature(id, feature.NAME or id, feature)
+    Epip.InitializeFeature(modTable, id, feature)
     feature.MOD_TABLE = modTable
 
     -- Initialize mod data
@@ -88,8 +88,8 @@ function Epip.GetFeature(modTable, id)
 end
 
 function Epip.InitializeLibrary(id, lib)
-    lib.MOD_TABLE_ID = "EpipEncounters" -- TODO allow setting it to others
-    Epip.InitializeFeature(id, id, lib)
+    -- TODO allow setting it to others
+    OOP.GetClass("Library").Create("EpipEncounters", id, lib)
 end
 
 ---@param requirePipPoem boolean? Whether a poem to Pip is required for this call to succeed. Defaults to false (which checks Extender dev mode instead)
@@ -112,14 +112,11 @@ function Epip.IsDeveloperMode(requirePipPoem)
 end
 
 ---TODO move to Feature
+---@param modTable string
 ---@param id string
----@param name string
 ---@param feature Feature
-function Epip.InitializeFeature(id, name, feature)
-    feature.Events = feature.Events or {}
-    feature.Hooks = feature.Hooks or {}
-    
-    setmetatable(feature, {__index = _Feature})
+function Epip.InitializeFeature(modTable, id, feature)
+    OOP.GetClass("Feature").Create(modTable, id, feature)
 
     feature._Tests = {}
     feature.MODULE_ID = id
@@ -127,22 +124,6 @@ function Epip.InitializeFeature(id, name, feature)
     feature.NAME = name or id
     feature.REQUIRED_MODS = feature.REQUIRED_MODS or {}
     feature.FILEPATH_OVERRIDES = feature.FILEPATH_OVERRIDES or {}
-
-    for ev,data in pairs(feature.Events) do
-        if data.Legacy == false or feature.USE_LEGACY_EVENTS == false then
-            feature:AddSubscribableEvent(ev, data.Preventable)
-        else
-            feature:AddEvent(ev, data)
-        end
-    end
-
-    for hook,data in pairs(feature.Hooks) do
-        if data.Legacy == false or feature.USE_LEGACY_HOOKS == false then
-            feature:AddSubscribableHook(hook, data.Preventable)
-        else
-            feature:AddHook(hook, data)
-        end
-    end
 
     -- Check required mods
     local missingMods = {}
@@ -176,8 +157,6 @@ function Epip.InitializeFeature(id, name, feature)
         end
     end
 
-    feature.Create(feature)
-
     table.insert(Epip._FeatureRegistrationOrder, feature)
 end
 
@@ -196,7 +175,7 @@ end
 
 if Ext.IsClient() then
     function Epip.InitializeUI(type, id, ui)
-        Epip.InitializeFeature(id, ui.NAME or id, ui)
+        Epip.InitializeFeature("EpipEncounters", id, ui)
         setmetatable(ui, {__index = Client.UI._BaseUITable})
     
         ui.UITypeID = type

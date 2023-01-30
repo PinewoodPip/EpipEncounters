@@ -32,6 +32,12 @@ IS_IMPROVED_HOTBAR = false
 
 ---@type (string|ScriptDefinition)[]
 LOAD_ORDER = {
+    {
+        Scripts = {
+            "Utilities/OOP/OOP.lua",
+            "Utilities/OOP/_Library.lua",
+        },
+    },
     "Utilities/Event.lua",
     "Tables/Epip.lua",
     "Tables/_Events.lua",

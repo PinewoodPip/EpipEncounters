@@ -7,7 +7,7 @@ if Ext.Utils.GameVersion() ~= "v3.6.51.9303" then
         -- For troubleshooting startup crashes
         -- print("Loading script: ")
         -- if type(script) == "table" then
-        --     print(script.Script or script.ScriptSet)
+        --     print(script.Script or script.ScriptSet or script.Scripts[1] .. " and others")
         -- else
         --     print(script)
         -- end

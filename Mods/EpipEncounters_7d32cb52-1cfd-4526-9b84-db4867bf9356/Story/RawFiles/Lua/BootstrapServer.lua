@@ -34,6 +34,12 @@ local prefixedGUID = "EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356"
 
 ---@type (string|ScriptDefinition)[]
 LOAD_ORDER = {
+    {
+        Scripts = {
+            "Utilities/OOP/OOP.lua",
+            "Utilities/OOP/_Library.lua",
+        },
+    },
     "Utilities/Event.lua",
     "Tables/Epip.lua",
     "Tables/_Events.lua",
