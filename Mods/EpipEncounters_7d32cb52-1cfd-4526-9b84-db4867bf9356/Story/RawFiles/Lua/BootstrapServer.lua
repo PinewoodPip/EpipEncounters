@@ -243,28 +243,6 @@ LOAD_ORDER = {
 
 Ext.Require(prefixedGUID, "Bootstrap.lua")
 
-local function sendDyes(user)
-    -- print("Sending dyes", user)
-    -- _D(PersistentVars.Dyes)
-    -- Net.Broadcast("EPIPENCOUNTERS_CreateVanityDyes", {
-    --     Dyes = PersistentVars.Dyes or {},
-    -- })
-    Ext.Net.PostMessageToUser(user, "EPIPENCOUNTERS_CreateVanityDyes", Ext.Json.Stringify({
-        Dyes = PersistentVars.Dyes or {},
-    }))
-end
-
-Osiris.RegisterSymbolListener("UserEvent", 2, "after", function(user, ev)
-    if ev == "PIP_LoadDyes" then
-        sendDyes(user)
-    end
-end)
-
-Osiris.RegisterSymbolListener("UserConnected", 3, "after", function(user)
-    print("user joined")
-    sendDyes(user)
-end)
-
 Ext.Osiris.RegisterListener("CharacterStatusApplied", 3, "after", function(target, id, causee)
     -- Disabled until a fix for clicking is found
     if true then return nil end

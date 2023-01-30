@@ -384,13 +384,6 @@ Dyes.Events.DyeUsed:RegisterListener(function (dye, item, character)
     end
 end)
 
-Net.RegisterListener("EPIPENCOUNTERS_CreateVanityDyes", function(payload)
-    for id,dye in pairs(payload.Dyes) do
-        Dyes.CreateDyeStats("Armor", dye)
-        Dyes.CreateDyeStats("Weapon", dye)
-    end
-end)
-
 Vanity.Hooks.GetSaveData:RegisterHook(function (data)
     data.Dyes = Dyes.CustomDyes
 
