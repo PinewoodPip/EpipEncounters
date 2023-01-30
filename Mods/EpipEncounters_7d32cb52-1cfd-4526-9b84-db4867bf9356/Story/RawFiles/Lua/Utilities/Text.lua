@@ -289,7 +289,7 @@ function Text.Split(inputstr, sep)
         end
     end
 
-    for field,s in string.gmatch(inputstr, "([^"..sep.."]*)("..sep.."?)") do 
+    for field,_ in string.gmatch(inputstr, "([^"..sep.."]*)("..sep.."?)") do 
         table.insert(t,field) 
     end
     
@@ -361,9 +361,8 @@ function Text.Format(str, formatData)
 
     -- Parse args, which can be a TextFormatData as well.
     local finalArgs = {}
-
     if formatData.FormatArgs then
-        for i,arg in ipairs(formatData.FormatArgs) do
+        for _,arg in ipairs(formatData.FormatArgs) do
             if type(arg) == "table" then
                 table.insert(finalArgs, Text.Format(arg.Text, arg))
             elseif type(arg) == "number" then

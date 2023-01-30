@@ -24,8 +24,9 @@ local Ext_Json = {}
 function Ext_Json.Parse(obj) end
 
 --- @param obj table
+--- @param opts table
 --- @return string
-function Ext_Json.Stringify(obj) end
+function Ext_Json.Stringify(obj, opts) end
 
 --- @class Ext_ClientEntity
 local Ext_ClientEntity = {}

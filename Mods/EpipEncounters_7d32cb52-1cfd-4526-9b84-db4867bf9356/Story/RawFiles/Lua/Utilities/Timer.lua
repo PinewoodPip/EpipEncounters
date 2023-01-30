@@ -221,35 +221,34 @@ Ext.Events.Tick:Subscribe(function()
     local time = Ext.MonotonicTime()
     if not Timer.previousTime then
         Timer.previousTime = time
-        return nil
-    end
+    else
+        local deltaTime = time - Timer.previousTime
 
-    local deltaTime = time - Timer.previousTime
-
-    for _,timer in ipairs(Timer.activeTimers) do
-        if not timer.Paused then
-            if timer:TickDown(deltaTime) then
-                Timer.Events.TimerCompleted:Throw({
-                    Timer = timer,
-                })
-        
-                if timer.ID ~= "" then
-                    Timer:DebugLog("Timer finished: " .. timer.ID)
+        for _,timer in ipairs(Timer.activeTimers) do
+            if not timer.Paused then
+                if timer:TickDown(deltaTime) then
+                    Timer.Events.TimerCompleted:Throw({
+                        Timer = timer,
+                    })
+            
+                    if timer.ID ~= "" then
+                        Timer:DebugLog("Timer finished: " .. timer.ID)
+                    end
                 end
             end
         end
-    end
 
-    -- Remove timers once they deplete their repeats
-    for i=#Timer.activeTimers,1,-1 do
-        local timer = Timer.activeTimers[i]
+        -- Remove timers once they deplete their repeats
+        for i=#Timer.activeTimers,1,-1 do
+            local timer = Timer.activeTimers[i]
 
-        if timer:IsFinished() then
-            Timer.Remove(timer)
+            if timer:IsFinished() then
+                Timer.Remove(timer)
+            end
         end
-    end
 
-    Timer.previousTime = time
+        Timer.previousTime = time
+    end
 end)
 
 ---------------------------------------------

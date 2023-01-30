@@ -3,7 +3,7 @@
 -- Based on v56's event system.
 ---------------------------------------------
 
----@class Event<T>:{ (Subscribe:fun(self:Event, callback:fun(ev:T|Event_Params), opts:Event_Options|nil, stringID:string|nil):integer), Unsubscribe:fun(self:Event, index:integer|string), (Throw:fun(self:Event, event:T|Event_Params|nil):Event_Params|T)}
+---@class Event<T>:{ (Subscribe:fun(self:Event, callback:fun(ev:T|Event_Params), opts:Event_Options|nil, stringID:string|nil):integer), Unsubscribe:fun(self:Event, index:integer|string), (Throw:fun(self:Event, event:T|Event_Params|nil):Event_Params|T), (RemoveNodes:fun(self:Event, predicate:fun(node:table):boolean))}
 ---@field Preventable false
 ---@field Name string
 SubscribableEvent = {}
