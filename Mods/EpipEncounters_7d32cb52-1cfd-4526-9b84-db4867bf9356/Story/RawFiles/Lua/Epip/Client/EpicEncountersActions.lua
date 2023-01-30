@@ -3,6 +3,9 @@
 -- Hotbar actions for Epic Encounters.
 ---------------------------------------------
 
+local Hotbar = Client.UI.Hotbar
+
+---@type Feature
 local HA = {
     ---@type table<string, HotbarAction>
     Actions = {
@@ -21,14 +24,14 @@ local HA = {
         [Mod.GUIDS.EE_CORE] = "Epic Encounters Core",
     },
 }
-local Hotbar = Client.UI.Hotbar
+Epip.RegisterFeature("EE_HotbarActions", HA)
 
 ---------------------------------------------
 -- SETUP
 ---------------------------------------------
 
 function HA:OnFeatureInit()
-    for i,action in ipairs(HA.Actions) do
+    for _,action in ipairs(HA.Actions) do
         Hotbar.RegisterAction(action.ID, action)
     end
     
@@ -42,14 +45,7 @@ function HA:OnFeatureInit()
         Net.PostToServer("EPIPENCOUNTERS_Hotkey_Meditate", {NetID = char.NetID})
     end)
     
-    -- Changelog
-    Hotbar.RegisterActionListener("EPIP_OpenChangelog", "ActionUsed", function(char)
-        OpenLatestChangelog()
-    end)
-    
     -- place these by default on the hotkeys bar
     Hotbar.SetHotkeyAction(11, "EE_Meditate")
     Hotbar.SetHotkeyAction(12, "EE_SourceInfuse")
 end
-
-Epip.AddFeature("EE_HotbarActions", "EE_HotbarActions", HA)
