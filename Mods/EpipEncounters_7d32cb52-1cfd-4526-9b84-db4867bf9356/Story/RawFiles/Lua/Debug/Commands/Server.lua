@@ -3,7 +3,7 @@ local anims = {}
 
 local function PlayNext()
     if #anims > 0 then
-        PlayAnimation(CharacterGetHostCharacter(), anims[1], "PIP_AnimTest_Finished")
+        Osiris.PlayAnimation(Osiris.CharacterGetHostCharacter(), anims[1], "PIP_AnimTest_Finished")
 
         print(anims[1])
 
@@ -20,47 +20,7 @@ local function AnimTest()
     PlayNext()
 end
 
-local function TagFetchPerformance()
-    local guid = CharacterGetHostCharacter()
-    local now = Ext.MonotonicTime()
-    local tests = 1000000
-
-    print(tests .. " calls:")
-
-    for _=1,tests,1 do
-        Osi.IsTagged(guid, "TEST_TAG")
-    end
-
-    local time = Ext.MonotonicTime()  - now
-    print("Osi.IsTagged(): " .. time .. "ms")
-
-    now = Ext.MonotonicTime()
-    for _=1,tests,1 do
-        Ext.GetCharacter(guid):HasTag("TEST_TAG")
-    end
-
-    time = Ext.MonotonicTime()  - now
-    print("EsvCharacter:HasTag(): " .. time .. "ms")
-
-    now = Ext.MonotonicTime()
-    local char = Ext.GetCharacter(guid)
-    for i=1,tests,1 do
-        char:HasTag("TEST_TAG")
-    end
-
-    time = Ext.MonotonicTime()  - now
-    print("EsvCharacter:HasTag() without refetching the character: " .. time .. "ms")
-
-    now = Ext.MonotonicTime()
-    for _=1,tests,1 do
-        Ext.Entity.GetCharacterFast(guid):HasTag("TEST_TAG")
-    end
-
-    time = Ext.MonotonicTime()  - now
-    print("GetCharacterFast(): " .. time .. "ms VROOM VROOM")
-end
-
-Osiris.RegisterSymbolListener("StoryEvent", 2, "after", function(obj, event)
+Osiris.RegisterSymbolListener("StoryEvent", 2, "after", function(_, event)
     if event == "PIP_AnimTest_Finished" then
         PlayNext()
     end
@@ -68,7 +28,6 @@ end)
 
 local commands = {
     ["animtest"] = AnimTest,
-    ["worryaboutsuchsmallthings"] = TagFetchPerformance,
 }
 
 for name,command in pairs(commands) do
