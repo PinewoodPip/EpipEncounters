@@ -31,6 +31,13 @@ local Bedazzled = {
     GRAVITY = 5.5, -- Units per second squared
     MINIMUM_MATCH_GEMS = 3,
     GEM_SIZE = 1,
+    BASE_SCORING = {
+        MATCH = 100,
+        MEDIUM_RUNE_DETONATION = 250,
+        LARGE_RUNE_DETONATION = 500,
+        GIANT_RUNE_DETONATION = 1337,
+        PROTEAN_PER_GEM = 200, -- Rather high, but I think encouraging people to use hypercubes is good
+    },
 }
 Epip.RegisterFeature("Bedazzled", Bedazzled)
 
@@ -94,7 +101,7 @@ function Bedazzled.GetRandomGemDescriptor()
     for _,g in ipairs(gems) do
         seed = seed - g.Weight
 
-        if seed <= 0 then
+        if seed <= 0 and g.Weight > 0 then -- Never choose gems with 0 weight
             chosenGem = g
             break
         end

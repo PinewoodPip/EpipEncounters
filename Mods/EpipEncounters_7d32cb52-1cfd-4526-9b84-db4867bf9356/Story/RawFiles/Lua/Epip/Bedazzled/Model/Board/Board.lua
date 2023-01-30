@@ -199,8 +199,6 @@ function _Board:ConsumeMatch(match)
     local fusingState = Bedazzled.GetGemStateClass("Feature_Bedazzled_Board_Gem_State_Fusing")
     local transformingState = Bedazzled.GetGemStateClass("Feature_Bedazzled_Board_Gem_State_Transforming")
 
-    self.MatchesSinceLastMove = self.MatchesSinceLastMove + 1
-
     -- Consume gems and queue matches from special gems
     for _,gem in ipairs(match:GetAllGems()) do
         local coords = self:GetGemGridCoordinates(gem)
@@ -215,6 +213,7 @@ function _Board:ConsumeMatch(match)
         if gem.State.ClassName ~= "Feature_Bedazzled_Board_Gem_State_Transforming" then
             if gem:HasModifier("Rune") then
                 local explosion = Match.Create(coords, Match.REASONS.EXPLOSION)
+                explosion:SetScore(self:ApplyScoreMultiplier(Bedazzled.BASE_SCORING.MEDIUM_RUNE_DETONATION))
                 gem:RemoveModifier("Rune")
     
                 -- Add gems in a 3x3 area
@@ -223,6 +222,7 @@ function _Board:ConsumeMatch(match)
                 self:QueueMatch(explosion)
             elseif gem:HasModifier("LargeRune") then
                 local lightning = Match.Create(coords, Match.REASONS.EXPLOSION)
+                lightning:SetScore(self:ApplyScoreMultiplier(Bedazzled.BASE_SCORING.LARGE_RUNE_DETONATION))
                 gem:RemoveModifier("LargeRune")
     
                 -- Add gems in row
@@ -234,6 +234,7 @@ function _Board:ConsumeMatch(match)
                 self:QueueMatch(lightning)
             elseif gem:HasModifier("GiantRune") then
                 local supernova = Match.Create(coords, Match.REASONS.EXPLOSION)
+                supernova:SetScore(self:ApplyScoreMultiplier(Bedazzled.BASE_SCORING.GIANT_RUNE_DETONATION))
                 gem:RemoveModifier("GiantRune")
     
                 -- Add gems in rows
@@ -246,6 +247,8 @@ function _Board:ConsumeMatch(match)
             end
         end
     end
+
+    self.MatchesSinceLastMove = self.MatchesSinceLastMove + 1
 
     -- Fuse gems
     for _,fusion in ipairs(match.Fusions) do
@@ -489,6 +492,19 @@ function _Board:_AddGemsFromListToMatch(match, list)
     end
 end
 
+---Returns the current score multiplier.
+---@return number
+function _Board:GetScoreMultiplier()
+    return (self.MatchesSinceLastMove + 1)
+end
+
+---Multiplies a score by the current score multiplier.
+---@param baseScore number
+---@return number
+function _Board:ApplyScoreMultiplier(baseScore)
+    return baseScore * self:GetScoreMultiplier()
+end
+
 ---Returns the match that exists at the coordinates.
 ---@param x integer
 ---@param y integer
@@ -563,12 +579,12 @@ function _Board:GetMatchAt(x, y)
     self:_AddGemsFromListToMatch(match, horizontalGems)
 
     -- 100 points awarded for each gem in the match beyond the 2nd.
-    score = score + (1 + (match:GetGemCount() - Bedazzled.MINIMUM_MATCH_GEMS)) * 100
+    score = score + (1 + (match:GetGemCount() - Bedazzled.MINIMUM_MATCH_GEMS)) * Bedazzled.BASE_SCORING.MATCH
 
     -- Multiplier for cascades
     -- the var is incremented only after consuming matches,
     -- so in this context it is "1 match behind"
-    score = score * (self.MatchesSinceLastMove + 1)
+    score = score * self:GetScoreMultiplier()
 
     if self.MatchesSinceLastMove > 0 then
         match:SetReason(Match.REASONS.CASCADE)
@@ -619,6 +635,9 @@ function _Board:OnGemStateChanged(gem, ev)
                 zap:AddGem(otherGem)
             end
         end
+
+        local gemsZapped = zap:GetGemCount() - 1 -- Excludes the protean itself
+        zap:SetScore(self:ApplyScoreMultiplier(Bedazzled.BASE_SCORING.PROTEAN_PER_GEM * gemsZapped))
 
         self:QueueMatch(zap)
     end
