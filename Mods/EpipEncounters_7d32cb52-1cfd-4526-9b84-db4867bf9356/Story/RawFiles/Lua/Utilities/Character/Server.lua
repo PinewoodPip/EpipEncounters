@@ -24,3 +24,28 @@ function Character.GetPartyMembers(char)
 
     return members
 end
+
+---------------------------------------------
+-- EVENT LISTENERS
+---------------------------------------------
+
+-- Forward status application events.
+Ext.Events.BeforeStatusApply:Subscribe(function (ev)
+    local status = ev.Status ---@type EsvStatus
+    local owner = ev.Owner ---@type EsvCharacter|EsvItem
+
+    Character.Events.StatusApplied:Throw({
+        Status = status,
+        SourceHandle = status.OwnerHandle,
+        Victim = owner,
+    })
+
+    local ownerNetID = owner.NetID
+    local statusNetID = status.NetID
+    Timer.Start(0.2, function (_) -- Needs a delay. This message would otherwise arrive before the object is created on the client. TODO seek improvements
+        Net.Broadcast("EPIP_CharacterLib_StatusApplied", {
+            OwnerNetID = ownerNetID,
+            StatusNetID = statusNetID,
+        })
+    end)
+end, {Priority = -999999999})

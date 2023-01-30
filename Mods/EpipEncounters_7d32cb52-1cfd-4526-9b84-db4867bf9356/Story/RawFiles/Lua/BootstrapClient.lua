@@ -82,6 +82,14 @@ LOAD_ORDER = {
     -- Static libraries
     "Game.lua",
 
+    -- Net
+    {
+        Scripts = {
+            "Utilities/Net/Shared.lua",
+            "Utilities/Net/Client.lua",
+        },
+    },
+    
     -- CharacterLib
     {
         ScriptSet = "Utilities/Character",
@@ -104,14 +112,6 @@ LOAD_ORDER = {
             "Utilities/Stats/Shared_Actions.lua",
             "Utilities/Stats/Shared_Runes.lua",
             "Utilities/Stats/Shared_Immunities.lua",
-        },
-    },
-    
-    -- Net
-    {
-        Scripts = {
-            "Utilities/Net/Shared.lua",
-            "Utilities/Net/Client.lua",
         },
     },
     

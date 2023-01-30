@@ -70,13 +70,33 @@ Character = {
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
 
-    Events = {},
+    Events = {
+        StatusApplied = {}, ---@type Event<CharacterLib_Event_StatusApplied>
+    },
     Hooks = {
         CreateEquipmentVisuals = {}, ---@type Event<CharacterLib_Hook_CreateEquipmentVisuals> Client-only.
     },
 }
 Game.Character = Character -- Legacy alias.
 Epip.InitializeLibrary("Character", Character)
+
+---------------------------------------------
+-- EVENTS
+---------------------------------------------
+
+---TODO move somewhere else, since victim could be an item
+---@class CharacterLib_Event_StatusApplied
+---@field SourceHandle EntityHandle
+---@field Victim Character|Item
+---@field Status EclStatus|EsvStatus
+
+---------------------------------------------
+-- NET MESSAGES
+---------------------------------------------
+
+---@class EPIP_CharacterLib_StatusApplied : NetLib_Message
+---@field OwnerNetID NetId
+---@field StatusNetID NetId
 
 ---------------------------------------------
 -- CLASSES
@@ -571,4 +591,22 @@ function Character.GetSkillBarRowContents(char, row, slotsPerRow)
     end
 
     return items
+end
+
+---Returns a status on char by its net ID.
+---@param char Character
+---@param netID NetId
+---@return EclStatus|EsvStatus
+function Character.GetStatusByNetID(char, netID)
+    local statuses = char:GetStatusObjects() ---@type (EclStatus|EsvStatus)[]
+    local status
+
+    for _,obj in ipairs(statuses) do
+        if obj.NetID == netID then
+            status = obj
+            break
+        end
+    end
+
+    return status
 end
