@@ -105,7 +105,9 @@ function table.unpackSelect(p, l, i)
     i = i or 1
     l = l or p.n -- Tables created by select() have this key as "length".
 
-    if i == l then
+    if l == 0 then
+        return
+    elseif i == l then
         return p[i]
     else
         return p[i], table.unpackSelect(p, l, i + 1)
