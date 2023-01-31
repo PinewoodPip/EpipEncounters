@@ -10,7 +10,9 @@ Epip.InitializeLibrary("EpicEncounters", EpicEncounters)
 ---Returns whether EE Core is loaded.
 ---@return boolean
 function EpicEncounters.IsEnabled()
-    return Mod.IsLoaded(Mod.GUIDS.EE_CORE)
+    local devSettingValue = Settings.GetSettingValue("Epip_Developer", "Developer_SimulateNoEE")
+    
+    return Mod.IsLoaded(Mod.GUIDS.EE_CORE) and devSettingValue == false
 end
 
 ---Returns whether EE Origins is loaded.

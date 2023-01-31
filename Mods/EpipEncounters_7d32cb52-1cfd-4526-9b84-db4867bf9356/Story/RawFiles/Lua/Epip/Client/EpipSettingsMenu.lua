@@ -86,6 +86,7 @@ local tabs = {
             CreateHeader("Developer"),
             {Type = "Button", Label = "Warp to AMER_Test", ID = "DEBUG_WarpToAMERTest"},
             "Developer_DebugDisplay",
+            "Developer_SimulateNoEE",
             "DEBUG_ForceStoryPatching",
             "DEBUG_AI",
             "DEBUG_AprilFools",

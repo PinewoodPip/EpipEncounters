@@ -255,6 +255,16 @@ local EpipSettings = {
             Text = "Enables a UI widget that displays framerate, server tickrate, and mod versions.",
             ContextDescription = "Debug display setting tooltip",
         },
+        Developer_SimulateNoEE_Name = {
+            Handle = "hbe066f75ge516g49f1g8f3cg328153a5d890",
+            Text = "Simulate no EE",
+            ContextDescription = "'Simulate no EE' setting name",
+        },
+        Developer_SimulateNoEE_Description = {
+            Handle = "hb74bc767gb91ag4a4cg9d9cg4c574397046c",
+            Text = "Causes EpicEncounters.IsLoaded() call to return false even if EE Core is enabled.",
+            ContextDescription = "'Simulate no EE' setting tooltip",
+        },
         Developer_ForceStoryPatching_Name = {
             Handle = "h3a72d579gc132g43d8gb6f0g097bfdbf76fb",
             Text = "Force Story Patching",
@@ -1446,6 +1456,15 @@ local newSettings = {
         Context = "Host",
         NameHandle = TSKs.Developer_ForceStoryPatching_Name,
         DescriptionHandle = TSKs.Developer_ForceStoryPatching_Description,
+        DefaultValue = false,
+    },
+    {
+        ID = "Developer_SimulateNoEE",
+        Type = "Boolean",
+        ModTable = "Epip_Developer",
+        Context = "Host",
+        NameHandle = TSKs.Developer_SimulateNoEE_Name,
+        DescriptionHandle = TSKs.Developer_SimulateNoEE_Description,
         DefaultValue = false,
     },
     {
