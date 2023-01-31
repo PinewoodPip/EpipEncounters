@@ -283,19 +283,6 @@ function GreatforgeGetItemData(char, item)
     return Text.RemoveTrailingZeros(level), itemType, slot
 end
 
--- TODO move elsewhere. Some generic script for events that would be nice to have on client as well.
-Ext.Osiris.RegisterListener("CharacterStatusApplied", 3, "after", function(char, status, causee)
-    if status == "UNSHEATHED" then
-        Net.Broadcast("EPIP_StatusApplied", {NetID = Ext.GetCharacter(char).NetID, Status = status})
-    end
-end)
-
-Ext.Osiris.RegisterListener("CharacterStatusRemoved", 3, "after", function(char, status, causee)
-    if status == "UNSHEATHED" then
-        Net.Broadcast("EPIP_StatusRemoved", {NetID = Ext.GetCharacter(char).NetID, Status = status})
-    end
-end)
-
 NULLGUID = "NULL_00000000-0000-0000-0000-000000000000"
 
 local _registeredSymbols = {}

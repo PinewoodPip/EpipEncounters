@@ -33,11 +33,11 @@ local PlayerInfo = {
         ActiveCharacterChanged = {},
     }
 }
-if IS_IMPROVED_HOTBAR then
-    Client.UI.PlayerInfo.FILEPATH_OVERRIDES = {}
-end
-Epip.InitializeUI(Client.UI.Data.UITypes.playerInfo, "PlayerInfo", PlayerInfo)
--- PlayerInfo:Debug()
+Epip.InitializeUI(Ext.UI.TypeID.playerInfo, "PlayerInfo", PlayerInfo)
+
+---------------------------------------------
+-- CLASSES
+---------------------------------------------
 
 ---@class PlayerInfoStatusUpdate
 ---@field CharacterHandle FlashObjectHandle
@@ -73,21 +73,23 @@ Epip.InitializeUI(Client.UI.Data.UITypes.playerInfo, "PlayerInfo", PlayerInfo)
 -- ID for this UI is different on controller, despite using the same swf.
 function PlayerInfo:GetUI()
     local isController = Client.IsUsingController()
-    local id = Client.UI.Data.UITypes.playerInfo
+    local id = Ext.UI.TypeID.playerInfo
 
     if isController then
-        id = Client.UI.Data.UITypes.playerInfo_controller
+        id = Ext.UI.TypeID.playerInfo_c
     end
 
     return Ext.UI.GetByType(id)
 end
 
+---Sets whether the combat badge should show on portraits.
+---@param state boolean
 function PlayerInfo.SetCombatBadgeVisibility(state)
     PlayerInfo:GetRoot().COMBAT_BADGE_ENABLED = state
 end
 
 ---Returns the characters being shown in the UI.
----@param controlledOnly boolean? Defaults to false.
+---@param controlledOnly boolean? Defaults to `false`.
 ---@return EclCharacter[]
 function PlayerInfo.GetCharacters(controlledOnly)
     local chars = {}
@@ -104,6 +106,8 @@ function PlayerInfo.GetCharacters(controlledOnly)
     return chars
 end
 
+---Toggles the visibility of status holders.
+---@param visible boolean? Defaults to toggling.
 function PlayerInfo.ToggleStatuses(visible)
     local players = PlayerInfo.Root.player_array
 
@@ -117,6 +121,8 @@ function PlayerInfo.ToggleStatuses(visible)
     end
 end
 
+---Toggles the visibility of summons.
+---@param visible boolean? Defaults to toggling.
 function PlayerInfo.ToggleSummons(visible)
     local players = PlayerInfo.Root.player_array
 
@@ -132,13 +138,17 @@ function PlayerInfo.ToggleSummons(visible)
     end
 end
 
--- TODO support disabling per player
+---Returns whether status holders are visible.
+---TODO support disabling per player
+---@return boolean
 function PlayerInfo.GetStatusesVisibility()
     local players = PlayerInfo.Root.player_array
 
     return players[0].statusHolder_mc.visible
 end
 
+---Returns whether summons are visible.
+---@return boolean
 function PlayerInfo.GetSummonsVisibility()
     local players = PlayerInfo.Root.player_array
 
@@ -281,17 +291,6 @@ Settings.Events.SettingValueChanged:Subscribe(function (ev)
     end
 end)
 
--- Update the BH displays when characters sheathe/unsheathe
-local function OnStatusToggle(payload)
-    local status = payload.Status
-
-    if status == "UNSHEATHED" then
-        PlayerInfo.UpdatePlayers()
-    end
-end
-Net.RegisterListener("EPIP_StatusApplied", OnStatusToggle)
-Net.RegisterListener("EPIP_StatusRemoved", OnStatusToggle)
-
 -- By default, BH displays are visible if characters are unsheathed.
 -- TODO better combat check.
 PlayerInfo:RegisterHook("BHDisplaysVisible", function(visible, char, playerElement)
@@ -368,7 +367,6 @@ local function PrepareStatusEntry(data, statusesByHandle, players, now, i)
 end
 
 PlayerInfo:RegisterInvokeListener("updateStatuses", function (event, createIfDoesntExist, cleanupAll)
-    if IS_IMPROVED_HOTBAR then return nil end
     local settingEnabled = Settings.GetSettingValue("Epip_PlayerInfo", "PlayerInfo_EnableSortingFiltering") and not IS_IMPROVED_HOTBAR
     event.UI:GetRoot().ENABLE_SORTING = settingEnabled
     if not settingEnabled then return nil end
