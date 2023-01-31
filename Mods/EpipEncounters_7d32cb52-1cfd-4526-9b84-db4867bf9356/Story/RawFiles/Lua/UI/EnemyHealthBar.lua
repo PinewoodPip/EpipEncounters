@@ -8,11 +8,19 @@
 ---------------------------------------------
 
 local BH = EpicEncounters.BatteredHarried
+local V = Vector.Create
 
 ---@class EnemyHealthBarUI : UI
 local Bar = {
     latestCharacter = nil,
     latestItem = nil,
+
+    _FRAME_FLASH_SHAPES = {
+        ITEM = "itemBg_mc",
+        BOSS = "bossBg_mc",
+        REGULAR = "frame_mc",
+        VANILLA_BOSS = "vanillaBg_mc",
+    },
 
     -- These are not the 'official' colors,
     -- they're lightly modified for readability.
@@ -44,6 +52,7 @@ local Bar = {
     POSITIONING = {
         BOSS_FRAME = {X = -238.5, Y = -43.75},
         ITEM_FRAME = {X = -198, Y = -10},
+        VANILLA_FRAME = V(-219, -43.75),
         BOTTOM_TEXT = {Y = 57},
         BH_BACKGROUND = {
             SCALE = 0.48,
@@ -58,45 +67,40 @@ local Bar = {
     },
 
     FILEPATH_OVERRIDES = {
-        ["Public/Game/GUI/enemyHealthBar.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/enemyHealthBarTween.swf"
+        ["Public/Game/GUI/enemyHealthBar.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/enemyHealthBar.swf"
     },
 }
 Epip.InitializeUI(Client.UI.Data.UITypes.enemyHealthBar, "EnemyHealthBar", Bar)
 
+---Returns the character being shown on the bar.
+---@return EclCharacter?
 function Bar.GetCharacter()
-    local pointer = Ext.UI.GetPickingState()
-    local charHandle, char
-
-    if pointer.HoverCharacter then
-        charHandle = pointer.HoverCharacter
-    elseif pointer.HoverCharacter2 then
-        charHandle = pointer.HoverCharacter2 -- Dead characters.
-    end
-
-    if charHandle then
-        char = Character.Get(charHandle)
-    end
-
-    return char
+    return Pointer.GetCurrentCharacter(nil, true)
 end
 
+---Returns the item being shown on the bar.
+---@return EclItem?
 function Bar.GetItem()
-    local pointer = Ext.UI.GetPickingState()
+    local hasChar = Bar.GetCharacter() ~= nil
     local item = nil
 
-    if pointer.HoverItem then
-        item = Ext.GetItem(pointer.HoverItem)
+    if not hasChar then -- Characters take priority.
+        item = Pointer.GetCurrentItem()
     end
 
     return item
 end
 
+---Sets the label below the frame.
+---@param text string
 function Bar.SetBottomText(text)
     local element = Bar:GetRoot().hp_mc.textHolder_mc.label_txt
 
     element.htmlText = text
 end
 
+---Returns the label below the frame.
+---@return string
 function Bar.GetBottomText()
     local element = Bar:GetRoot().hp_mc.textHolder_mc.label_txt
 
@@ -113,7 +117,9 @@ end
 -- INTERNAL METHODS - DO NOT CALL
 ---------------------------------------------
 
-function Bar.UpdateBottomText()
+---Updates the label below the frame.
+---@return string
+function Bar._UpdateBottomText()
     local root = Bar:GetRoot()
     local char = Bar:GetCharacter()
     local item = Bar:GetItem()
@@ -122,13 +128,17 @@ function Bar.UpdateBottomText()
     Bar.SetBottomText(text)
 
     root.hp_mc.statusHolder_mc.y = Bar:ReturnFromHooks("GetStatusHolderY", Bar.STATUS_HOLDER_Y, char, item)
+
+    return text
 end
 
 function Bar.UpdateStacks()
+    local isEE = EpicEncounters.IsEnabled()
     local char = Bar.GetCharacter()
+    local showStacks = char and isEE
 
     -- Hide stacks if we're not hovering over a character.
-    if not char then
+    if not showStacks then
         Bar.SetStack("Battered", 0)
         Bar.SetStack("Harried", 0)
     else
@@ -139,7 +149,7 @@ function Bar.UpdateStacks()
         Bar.SetStack("Harried", harried, harriedDuration)
     end
 
-    Bar.UpdateBottomText()
+    Bar._UpdateBottomText()
 end
 
 function Bar.SetStack(stack, amount, duration)
@@ -169,22 +179,44 @@ function Bar.SetStack(stack, amount, duration)
 end
 
 function Bar.UpdateFrame()
+    local isEE = EpicEncounters.IsEnabled()
     local char = Bar.GetCharacter()
     local item = Bar.GetItem()
     local root = Bar:GetRoot()
+    local hpHolder = root.hp_mc
+    local currentFrameName ---@type string
+
+    -- Hide all frames first
+    for _,shape in pairs(Bar._FRAME_FLASH_SHAPES) do
+        hpHolder[shape].visible = false
+    end
 
     -- Old boss frame toggle. Was flawed because it did not account for chars that were made into a boss with Osiris / instance override. We now rely on the engine info.
     -- local isBoss = char ~= nil and char.RootTemplate.CombatTemplate.IsBoss
     local isBoss = root.hp_mc.frame_mc.currentFrame == 2
     local isItem = item ~= nil and char == nil -- char takes priority, though I don't think you can have your cursor on both to begin with?
 
-    root.hp_mc.itemBg_mc.visible = isItem
-    root.hp_mc.bossBg_mc.visible = isBoss
-    root.hp_mc.frame_mc.visible = not isBoss and not isItem
+    if isEE then
+        if isBoss then
+            currentFrameName = Bar._FRAME_FLASH_SHAPES.BOSS
+        elseif isItem then
+            currentFrameName = Bar._FRAME_FLASH_SHAPES.ITEM
+        else
+            currentFrameName = Bar._FRAME_FLASH_SHAPES.REGULAR
+        end
+    else
+        if isBoss then
+            currentFrameName = Bar._FRAME_FLASH_SHAPES.VANILLA_BOSS
+        else -- Regular enemies use item frame (which also doesn't have BH indicators)
+            currentFrameName = Bar._FRAME_FLASH_SHAPES.ITEM
+        end
+    end
 
-    -- hide B/H background for items
-    root.hp_mc.b_0_mc.visible = not isItem
-    root.hp_mc.h_0_mc.visible = not isItem
+    hpHolder[currentFrameName].visible = true
+
+    -- Hide B/H background for items, or outside EE
+    hpHolder.b_0_mc.visible = not isItem or not isEE
+    hpHolder.h_0_mc.visible = not isItem or not isEE
 end
 
 ---------------------------------------------
@@ -205,14 +237,16 @@ end)
 
 -- Update bottom text when shift is pressed.
 Utilities.Hooks.RegisterListener("Input", "SneakConesToggled", function(pressed)
-    Bar.UpdateBottomText()
+    Bar._UpdateBottomText()
 end)
 
 -- Set opacity for stack backgrounds based on if the amount if enough to inflict a T3.
 Bar:RegisterHook("GetStackOpacity", function(opacity, stack, amount)
     local threshold = BH.GetStacksNeededToInflictTier3(Client.GetCharacter())
 
-    if amount >= threshold then
+    if not EpicEncounters.IsEnabled() then
+        opacity = 0
+    elseif amount >= threshold then
         opacity = 1
     elseif amount == 0 then
         opacity = 0.5
@@ -308,36 +342,41 @@ function Bar.PositionElements()
     local itemFrame = root.hp_mc.itemBg_mc
     itemFrame.x = Bar.POSITIONING.ITEM_FRAME.X
     itemFrame.y = Bar.POSITIONING.ITEM_FRAME.Y
+
+    local vanillaBossFrame = root.hp_mc.vanillaBg_mc
+    vanillaBossFrame.x, vanillaBossFrame.y = Bar.POSITIONING.VANILLA_FRAME:unpack()
 end
+
+-- Listen for texts being set.
+Bar:RegisterInvokeListener("setText", function (ev, header, footer, useLongTextField)
+    Bar.cachedVanillaBottomText = footer
+
+    ev:PreventAction()
+    ev.UI:GetRoot().setText(header, Bar._UpdateBottomText(), useLongTextField)
+end, "Before")
+
+-- Listen for statuses being updated.
+-- This is where we update all the new functionality of the UI.
+Bar:RegisterInvokeListener("updateStatuses", function (_, _) -- Param 1 decides whether to add new statuses if the element doesn't exist
+    local char = Bar.GetCharacter()
+    local item = Bar.GetItem()
+
+    if char then
+        Bar.latestCharacter = Bar.GetCharacter().Handle
+        Bar.latestItem = nil
+    elseif item then
+        Bar.latestItem = Bar.GetItem().Handle
+        Bar.latestCharacter = nil
+    end
+
+    Bar.UpdateStacks()
+    Bar.UpdateFrame()
+
+    Bar:FireEvent("updated", char, item)
+end, "After")
 
 Ext.Events.SessionLoaded:Subscribe(function()
     local root = Bar:GetRoot()
-
-    Ext.RegisterUITypeCall(Bar.UITypeID, "pipEnemyHealthBarHook", function(ui, method, ...)
-        local char = Bar.GetCharacter()
-        local item = Bar.GetItem()
-
-        if char then
-            Bar.latestCharacter = Bar.GetCharacter().Handle
-            Bar.latestItem = nil
-        elseif item then
-            Bar.latestItem = Bar.GetItem().Handle
-            Bar.latestCharacter = nil
-        end
-
-        Bar.UpdateStacks()
-        Bar.UpdateFrame()
-
-        Bar:FireEvent("updated", char, item)
-    end)
-
-    Ext.RegisterUITypeCall(Bar.UITypeID, "pipEnemyHealthBarTextSet", function(ui, method, param1, param2, param3)
-        -- Bar.SetHeader(topStr:upper())
-
-        -- Utilities.Hooks.FireEvent("PIP_enemyHealthBar", "engineTextSet", topStr, bottomStr, bool1)
-        Bar.cachedVanillaBottomText = param2
-        Bar.UpdateBottomText()
-    end, "After")
 
     Bar.PositionElements()
 

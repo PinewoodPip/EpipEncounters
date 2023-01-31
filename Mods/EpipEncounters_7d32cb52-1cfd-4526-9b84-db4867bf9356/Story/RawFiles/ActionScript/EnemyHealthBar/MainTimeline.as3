@@ -1,4 +1,3 @@
- 
 package enemyHealthBar_fla
 {
     import LS_Classes.horizontalList;
@@ -104,8 +103,8 @@ package enemyHealthBar_fla
         public function setText(param1:String, param2:String, param3:Boolean = false) : *
         {
             var _loc6_:TextFormat = null;
-            this.hp_mc.frame_mc.gotoAndStop(!!param3 ? 2 : 1);
-            this.hp_mc.textbg_mc.y = !!param3 ? -1 : 1;
+            this.hp_mc.frame_mc.gotoAndStop(param3 ? 2 : 1);
+            this.hp_mc.textbg_mc.y = param3 ? -1 : 1;
             if(param3)
             {
                 this.hp_mc.nameHolder_mc.text_txt.width = 260;
@@ -116,7 +115,7 @@ package enemyHealthBar_fla
             }
             this.hp_mc.nameHolder_mc.text_txt.x = -Math.round(this.hp_mc.nameHolder_mc.text_txt.width * 0.5);
             var _loc4_:Number = 22;
-            var _loc5_:Number = !!param3 ? Number(-20) : Number(-14);
+            var _loc5_:Number = param3 ? Number(-20) : Number(-14);
             (_loc6_ = this.hp_mc.nameHolder_mc.text_txt.getTextFormat()).size = _loc4_;
             _loc6_.color = this.hp_mc.nameHolder_mc.text_txt.textColor;
             this.hp_mc.nameHolder_mc.text_txt.setTextFormat(_loc6_);
@@ -131,8 +130,6 @@ package enemyHealthBar_fla
                 }
                 this.hp_mc.nameHolder_mc.text_txt.y = -Math.round(this.hp_mc.nameHolder_mc.text_txt.textHeight);
                 this.hp_mc.textHolder_mc.label_txt.htmlText = param2;
-
-                ExternalInterface.call("pipEnemyHealthBarTextSet", param1, param2, param3);
             }
         }
         
@@ -267,7 +264,6 @@ package enemyHealthBar_fla
             {
                 this.statusList.positionElements();
             }
-            ExternalInterface.call("pipEnemyHealthBarHook");
         }
         
         public function clearStatusses() : *
@@ -303,7 +299,7 @@ package enemyHealthBar_fla
             }
         }
         
-        function frame1() : *
+        internal function frame1() : *
         {
             this.events = new Array();
             this.layout = "fixed";
