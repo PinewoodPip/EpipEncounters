@@ -115,7 +115,7 @@ end
 ---Log a value in Debug mode.
 ---@vararg any
 function Library:DebugLog(...)
-    if self:IsDebug() and not IS_IMPROVED_HOTBAR then
+    if self:IsDebug() then
         Utilities._Log(self.__name, "", ...)
     end
 end
@@ -124,7 +124,7 @@ end
 ---@param method any
 ---@param ... any
 function Library:LogMethod(method, ...)
-    if self:IsDebug() and not IS_IMPROVED_HOTBAR then
+    if self:IsDebug() then
         Utilities._Log(self.__name, string.format("%s():", method), ...)
     end
 end

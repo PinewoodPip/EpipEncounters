@@ -22,11 +22,6 @@ local StatusConsole = {
         ["Public/Game/GUI/statusConsole.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/statusConsole.swf",
     },
 }
-if IS_IMPROVED_HOTBAR then
-    Client.UI.StatusConsole.FILEPATH_OVERRIDES = {
-        ["Public/Game/GUI/statusConsole.swf"] = "Public/ImprovedHotbar_53cdc613-9d32-4b1d-adaa-fd97c4cef22c/GUI/statusConsole.swf",
-    }
-end
 Epip.InitializeUI(Ext.UI.TypeID.statusConsole, "StatusConsole", StatusConsole)
 
 ---------------------------------------------
@@ -118,10 +113,6 @@ StatusConsole:RegisterCallListener("pipMaxAPUpdated", function(ev, amount)
     list.x = -14.5
     list.y = -2
     list.positionElements()
-
-    if IS_IMPROVED_HOTBAR then -- TODO
-        list.visible = false
-    end
 
     apHolder.x = (-7) - math.floor(listWidth / 2)
     apHolder.y = -92 + 6

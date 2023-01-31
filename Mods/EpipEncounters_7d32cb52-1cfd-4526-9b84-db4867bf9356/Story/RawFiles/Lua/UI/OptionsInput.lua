@@ -46,9 +46,6 @@ local Options = {
         CanExecuteAction = {},
     },
 }
-if IS_IMPROVED_HOTBAR then
-    Options.FILEPATH_OVERRIDES = {}
-end
 Epip.InitializeUI(13, "OptionsInput", Options)
 
 ---@class OptionsInputTab
@@ -497,8 +494,6 @@ Options:RegisterCallListener("switchMenu", function(ev, id)
 end)
 
 Options:RegisterInvokeListener("initDone", function(ev)
-    if IS_IMPROVED_HOTBAR then return nil end
-    
     local root = Options:GetRoot()
 
     Options:DebugLog("Rendering custom tabs")

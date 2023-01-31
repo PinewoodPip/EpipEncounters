@@ -200,7 +200,6 @@ function PlayerInfo.UpdateBH(player)
 end
 
 function PlayerInfo.UpdatePlayers()
-    if IS_IMPROVED_HOTBAR then return nil end
     local root = PlayerInfo:GetRoot()
     local players = root.player_array
     local inCombat = Client.IsInCombat()
@@ -305,15 +304,13 @@ PlayerInfo:RegisterHook("BHDisplaysVisible", function(visible, char, playerEleme
     return visible
 end)
 
-if not IS_IMPROVED_HOTBAR then
-    Ext.RegisterUITypeInvokeListener(PlayerInfo.UITypeID, "updateInfos", function(ui, method)
-        PlayerInfo.UpdatePlayers()
-    end, "After")
-    
-    Ext.RegisterUITypeInvokeListener(PlayerInfo.UITypeID, "updateStatuses", function(ui, method, createIfDoesntExist, cleanupAll)
-        PlayerInfo.UpdatePlayers()
-    end, "After")
-end
+Ext.RegisterUITypeInvokeListener(PlayerInfo.UITypeID, "updateInfos", function(ui, method)
+    PlayerInfo.UpdatePlayers()
+end, "After")
+
+Ext.RegisterUITypeInvokeListener(PlayerInfo.UITypeID, "updateStatuses", function(ui, method, createIfDoesntExist, cleanupAll)
+    PlayerInfo.UpdatePlayers()
+end, "After")
 
 -- Cleanup status data on expiry.
 PlayerInfo:RegisterCallListener("pipStatusExpired", function (event, flashHandle, characterFlashHandle)
@@ -367,7 +364,7 @@ local function PrepareStatusEntry(data, statusesByHandle, players, now, i)
 end
 
 PlayerInfo:RegisterInvokeListener("updateStatuses", function (event, createIfDoesntExist, cleanupAll)
-    local settingEnabled = Settings.GetSettingValue("Epip_PlayerInfo", "PlayerInfo_EnableSortingFiltering") and not IS_IMPROVED_HOTBAR
+    local settingEnabled = Settings.GetSettingValue("Epip_PlayerInfo", "PlayerInfo_EnableSortingFiltering")
     event.UI:GetRoot().ENABLE_SORTING = settingEnabled
     if not settingEnabled then return nil end
 
@@ -485,20 +482,18 @@ end, "Before")
 ---------------------------------------------
 
 -- Set some values on playerInfo for summon stretching to work
-if not IS_IMPROVED_HOTBAR then
-    Ext.Events.SessionLoaded:Subscribe(function()
-        PlayerInfo.UI = Ext.UI.GetByType(Client.UI.Data.UITypes.playerInfo)
-        PlayerInfo.Root = PlayerInfo.UI:GetRoot()
-    
-        PlayerInfo.Root.summonIconHeight = 60
-        PlayerInfo.Root.summonIconWidth = 80
-        PlayerInfo.Root.summonIconScrollRectOffset = 22
-        PlayerInfo.Root.summonDurationOffset = 35
-        PlayerInfo.Root.summonDurationNormalOffset = 50
-        PlayerInfo.Root.summonNormalScrollRect = 100
-        PlayerInfo.Root.summonNormalScale = 0.8
-    
-        -- Variable within SWF tracks whether to hide combat badge.
-        PlayerInfo.SetCombatBadgeVisibility(not Settings.GetSettingValue("Epip_PlayerInfo", "PlayerInfoBH"))
-    end)
-end
+Ext.Events.SessionLoaded:Subscribe(function()
+    PlayerInfo.UI = Ext.UI.GetByType(Client.UI.Data.UITypes.playerInfo)
+    PlayerInfo.Root = PlayerInfo.UI:GetRoot()
+
+    PlayerInfo.Root.summonIconHeight = 60
+    PlayerInfo.Root.summonIconWidth = 80
+    PlayerInfo.Root.summonIconScrollRectOffset = 22
+    PlayerInfo.Root.summonDurationOffset = 35
+    PlayerInfo.Root.summonDurationNormalOffset = 50
+    PlayerInfo.Root.summonNormalScrollRect = 100
+    PlayerInfo.Root.summonNormalScale = 0.8
+
+    -- Variable within SWF tracks whether to hide combat badge.
+    PlayerInfo.SetCombatBadgeVisibility(not Settings.GetSettingValue("Epip_PlayerInfo", "PlayerInfoBH"))
+end)

@@ -42,9 +42,6 @@ local Input = {
         KeyPressed = {},
     },
 }
-if IS_IMPROVED_HOTBAR then
-    Input.PATH = "Public/ImprovedHotbar_53cdc613-9d32-4b1d-adaa-fd97c4cef22c/GUI/input.swf"
-end
 Epip.InitializeUI(nil, "Input", Input)
 
 ---------------------------------------------

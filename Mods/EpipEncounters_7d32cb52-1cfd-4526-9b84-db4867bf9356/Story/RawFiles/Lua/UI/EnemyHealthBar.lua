@@ -61,9 +61,6 @@ local Bar = {
         ["Public/Game/GUI/enemyHealthBar.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/enemyHealthBarTween.swf"
     },
 }
-if IS_IMPROVED_HOTBAR then
-    Bar.FILEPATH_OVERRIDES = {}
-end
 Epip.InitializeUI(Client.UI.Data.UITypes.enemyHealthBar, "EnemyHealthBar", Bar)
 
 function Bar.GetCharacter()
@@ -117,7 +114,6 @@ end
 ---------------------------------------------
 
 function Bar.UpdateBottomText()
-    if IS_IMPROVED_HOTBAR then return nil end
     local root = Bar:GetRoot()
     local char = Bar:GetCharacter()
     local item = Bar:GetItem()
@@ -315,7 +311,6 @@ function Bar.PositionElements()
 end
 
 Ext.Events.SessionLoaded:Subscribe(function()
-    if IS_IMPROVED_HOTBAR then return nil end
     local root = Bar:GetRoot()
 
     Ext.RegisterUITypeCall(Bar.UITypeID, "pipEnemyHealthBarHook", function(ui, method, ...)

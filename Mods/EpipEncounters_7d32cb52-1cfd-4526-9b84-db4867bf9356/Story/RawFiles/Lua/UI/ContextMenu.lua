@@ -65,9 +65,6 @@ local ContextMenu = {
         ["Public/Game/GUI/contextMenu.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/contextMenu.swf",
     },
 }
-if IS_IMPROVED_HOTBAR then
-    ContextMenu.FILEPATH_OVERRIDES = {}
-end
 Epip.InitializeUI(Client.UI.Data.UITypes.contextMenu, "ContextMenu", ContextMenu)
 
 ---------------------------------------------
@@ -97,7 +94,7 @@ function ContextMenu:RegisterCallListener(method, handler, uiInstance, when)
     Client.UI._BaseUITable.RegisterCallListener(self, method, function (ev)
         if ev.UI:GetTypeId() < 1000 and uiInstance == "Vanilla" then
             handler(ev)
-        elseif uiInstance == "Custom" and not IS_IMPROVED_HOTBAR then -- These listeners do not work in standalone mod.
+        elseif uiInstance == "Custom" then
             handler(ev)
         end
     end, when)
@@ -113,7 +110,7 @@ function ContextMenu:RegisterInvokeListener(method, handler, uiInstance, when)
     Client.UI._BaseUITable.RegisterInvokeListener(self, method, function (ev)
         if ev.UI:GetTypeId() < 1000 and uiInstance == "Vanilla" then
             handler(ev)
-        elseif uiInstance == "Custom" and not IS_IMPROVED_HOTBAR then -- These listeners do not work in standalone mod.
+        elseif uiInstance == "Custom" then
             handler(ev)
         end
     end, when)
@@ -807,11 +804,7 @@ Ext.Events.SessionLoaded:Subscribe(function()
     local vanillaUI = Ext.UI.GetByType(Ext.UI.TypeID.contextMenu.Object)
     
     -- Setup our custom instance
-    if IS_IMPROVED_HOTBAR then
-        ContextMenu.UI = Ext.UI.Create("pip_contextMenu", "Public/ImprovedHotbar_53cdc613-9d32-4b1d-adaa-fd97c4cef22c/GUI/contextMenu.swf", 300)
-    else
-        ContextMenu.UI = Ext.UI.Create("pip_contextMenu", "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/contextMenu.swf", 300)
-    end
+    ContextMenu.UI = Ext.UI.Create("pip_contextMenu", "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/contextMenu.swf", 300)
     
     ContextMenu.Root = ContextMenu.UI:GetRoot()
     ContextMenu.Root.isCustomInstance = true
@@ -826,22 +819,18 @@ Ext.Events.SessionLoaded:Subscribe(function()
     end)
 
     -- Setup vanilla context menu
-    if not IS_IMPROVED_HOTBAR then
-        vanillaUI:GetRoot().contextMenusList.content_array[0].list_string_id = "main"
-        vanillaUI:GetRoot().MAX_HEIGHT = ContextMenu.MAX_HEIGHT
-    end
+    vanillaUI:GetRoot().contextMenusList.content_array[0].list_string_id = "main"
+    vanillaUI:GetRoot().MAX_HEIGHT = ContextMenu.MAX_HEIGHT
 
     -- Vanilla UI calls
     Ext.RegisterUINameCall("openContextMenu", OnContextMenu)
 
-    if not IS_IMPROVED_HOTBAR then
-        Ext.RegisterUICall(vanillaUI, "buttonPressed", OnButtonPressed)
-        Ext.RegisterUICall(vanillaUI, "buttonSelected", OnButtonSelected)
-        Ext.RegisterUICall(vanillaUI, "pipStatButtonUp", OnStatButtonPressed)
-        Ext.RegisterUICall(vanillaUI, "pipContextMenuClosed", function(ui)
-            ContextMenu.Cleanup(ui)
-        end)
-    end
+    Ext.RegisterUICall(vanillaUI, "buttonPressed", OnButtonPressed)
+    Ext.RegisterUICall(vanillaUI, "buttonSelected", OnButtonSelected)
+    Ext.RegisterUICall(vanillaUI, "pipStatButtonUp", OnStatButtonPressed)
+    Ext.RegisterUICall(vanillaUI, "pipContextMenuClosed", function(ui)
+        ContextMenu.Cleanup(ui)
+    end)
     
     -- Global call to begin creating a custom context menu
     Ext.RegisterUINameCall("pipRequestContextMenu", OnRequestContextMenu)

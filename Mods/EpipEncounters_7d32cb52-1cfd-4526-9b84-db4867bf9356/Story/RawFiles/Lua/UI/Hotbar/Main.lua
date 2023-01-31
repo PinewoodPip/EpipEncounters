@@ -167,11 +167,6 @@ local Hotbar = {
         ["Public/Game/GUI/hotBar.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/hotBar.swf",
     },
 }
-if IS_IMPROVED_HOTBAR then
-    Hotbar.FILEPATH_OVERRIDES = {
-        ["Public/Game/GUI/hotBar.swf"] = "Public/ImprovedHotbar_53cdc613-9d32-4b1d-adaa-fd97c4cef22c/GUI/hotBar.swf",
-    }
-end
 Epip.InitializeUI(Client.UI.Data.UITypes.hotBar, "Hotbar", Hotbar)
 Hotbar:Debug()
 
@@ -1103,7 +1098,7 @@ function Hotbar.RenderHotkey(i, state)
             -- Keybind text
             keyString = Hotbar.GetKeyString(i)
 
-            if keyString and (Settings.GetSettingValue("Epip_Hotbar", "HotbarHotkeysText") or IS_IMPROVED_HOTBAR) then
+            if keyString and Settings.GetSettingValue("Epip_Hotbar", "HotbarHotkeysText") then
                 element.text_mc.htmlText = "<font size='14.5' align='center'>" .. keyString .. "</font>" -- TODO
             else
                 element.text_mc.htmlText = ""
@@ -1602,7 +1597,7 @@ function Hotbar.HideBar(index, row)
 end
 
 function Hotbar.PositionCombatLogButton()
-    Hotbar:GetRoot().showLog_mc.visible = (Settings.GetSettingValue("Epip_Hotbar", "HotbarCombatLogButton") or IS_IMPROVED_HOTBAR) and Hotbar.IsVisible()
+    Hotbar:GetRoot().showLog_mc.visible = Settings.GetSettingValue("Epip_Hotbar", "HotbarCombatLogButton") and Hotbar.IsVisible()
 end
 
 -- Reposition combat log button when the hotbar updates.

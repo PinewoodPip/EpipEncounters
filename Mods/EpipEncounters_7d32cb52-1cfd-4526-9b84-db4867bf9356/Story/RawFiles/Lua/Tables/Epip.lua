@@ -198,6 +198,6 @@ if Ext.IsClient() then
         end
 
         -- Hotbar mod gets no festivities.
-        return (Epip.cachedAprilFoolsState or Settings.GetSettingValue("Epip_Developer", "DEBUG_AprilFools") and not IS_IMPROVED_HOTBAR)
+        return Epip.cachedAprilFoolsState or Settings.GetSettingValue("Epip_Developer", "DEBUG_AprilFools")
     end
 end

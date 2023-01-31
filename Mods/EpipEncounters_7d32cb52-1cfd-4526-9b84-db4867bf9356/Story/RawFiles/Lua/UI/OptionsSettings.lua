@@ -39,9 +39,6 @@ local OptionsSettings = {
         TabRendered = {},
     },
 }
-if IS_IMPROVED_HOTBAR then
-    OptionsSettings.FILEPATH_OVERRIDES = {}
-end
 Epip.InitializeUI(Client.UI.Data.UITypes.optionsSettings, "OptionsSettings", OptionsSettings)
 -- OptionsSettings:Debug()
 

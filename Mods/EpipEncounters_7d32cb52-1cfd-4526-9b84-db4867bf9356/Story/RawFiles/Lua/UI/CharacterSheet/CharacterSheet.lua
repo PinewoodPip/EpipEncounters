@@ -95,9 +95,6 @@ local CharacterSheet = {
         UpdateTalents = {}, ---@type Event<CharacterSheetUI_Hook_UpdateTalents>
     }
 }
-if IS_IMPROVED_HOTBAR then
-    CharacterSheet.FILEPATH_OVERRIDES = {}
-end
 Epip.InitializeUI(Client.UI.Data.UITypes.characterSheet, "CharacterSheet", CharacterSheet)
 
 ---@alias SecondaryStatGroup table<string, number>
