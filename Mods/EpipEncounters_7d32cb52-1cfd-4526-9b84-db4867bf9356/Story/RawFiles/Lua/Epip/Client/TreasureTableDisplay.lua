@@ -3,6 +3,7 @@
 -- Shows treasure table and artifact chances on the EnemyHealthBar UI.
 ---------------------------------------------
 
+---@class Feture_TreasureTableDisplay : Feature
 local TTD = {
     -- Treasure tables checked and their display name. Use AddTreasureTable() to add more.
     ---@type table<string, TreasureTableDisplayEntry>
@@ -77,7 +78,6 @@ Epip.Features.TreasureTableDisplay = TTD
 ---@field Name string
 ---@field ArtifactChance? number
 ---@field ProteanChance? number
-
 local _TreasureTableEntry = {
     GetArtifactChance = function(self) return self.ArtifactChance or 0 end,
     GetProteanChance = function(self) return self.ProteanChance or 0 end,
@@ -147,15 +147,16 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
-Bar:RegisterHook("GetBottomText", function(text, char, item)
+Bar.Hooks.GetBottomLabel:Subscribe(function (ev)
+    local char, item = ev.Character, ev.Item
+
     -- Chars require shift, items do not.
     if TTD:IsEnabled() and (item or (char and Client.Input.IsShiftPressed())) then
-        local entity = char if not char then entity = item end
+        local entity = char or item
         local treasureData = TTD.GetTreasureData(entity)
-        
 
         if treasureData then
-            local addendum = "\nTreasure: " .. treasureData.Name
+            local addendum = "Treasure: " .. treasureData.Name
             
             local artifactChance = treasureData:GetArtifactChance()
             local proteanChance = treasureData:GetProteanChance()
@@ -180,16 +181,14 @@ Bar:RegisterHook("GetBottomText", function(text, char, item)
                 end
             end
 
-            text = text .. "<font size='14.5'>" ..  addendum .. "</font>"
+            table.insert(ev.Labels, "<font size='14.5'>" ..  addendum .. "</font>")
 
             -- lmao will keep this one for 2023. See you then
             if item and Epip.IsAprilFools() then
-                text = text .. "\n<font size='30'>THIS ONE CAN HAVE ARTIFACT !!!!\nCLICK IT <font size='42'>NOW</font></font>\n           |\n           |\n           |\n           V"
+                table.insert(ev.Labels, "\n<font size='30'>THIS ONE CAN HAVE ARTIFACT !!!!\nCLICK IT <font size='42'>NOW</font></font>\n           |\n           |\n           |\n           V")
             end
         end
     end
-
-    return text
 end)
 
 ---------------------------------------------

@@ -54,6 +54,6 @@ NotificationUI:RegisterInvokeListener("setRegionText", function(ev)
 end)
 
 -- Hide region notification immediately when the HP bar is brought up
-Client.UI.EnemyHealthBar:RegisterListener("updated", function(_, _)
+Client.UI.EnemyHealthBar.Events.Updated:Subscribe(function (_)
     NotificationUI:GetRoot().hideRegionMC()
 end)

@@ -50,27 +50,62 @@ local Bar = {
     ALTERNATE_STATUS_OPACITY = 0.1, -- Opacity for Status Holder when shift is being held.
 
     POSITIONING = {
-        BOSS_FRAME = {X = -238.5, Y = -43.75},
-        ITEM_FRAME = {X = -198, Y = -10},
+        BOSS_FRAME = V(-238.5, -43.75),
+        ITEM_FRAME = V(-198, -10),
         VANILLA_FRAME = V(-219, -43.75),
-        BOTTOM_TEXT = {Y = 57},
-        BH_BACKGROUND = {
-            SCALE = 0.48,
-            X = 125,
-            Y = 77.75,
-        },
-        NUMERALS = {
-            SCALE = 0.6,
-            X = 121,
-            Y = 74,
-        },
+        BOTTOM_TEXT_Y = 57,
+        BH_BACKGROUND_SCALE = 0.48,
+        BH_BACKGROUND = V(125, 77.75),
+        BH_SCALE = 0.6,
+        BH_NUMBERS = V(121, 74),
     },
 
     FILEPATH_OVERRIDES = {
         ["Public/Game/GUI/enemyHealthBar.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/enemyHealthBar.swf"
     },
+
+    USE_LEGACY_EVENTS = false,
+    USE_LEGACY_HOOKS = false,
+    
+    Events = {
+        Updated = {}, ---@type Event<EnemyHealthBarUI_Event_Updated>
+    },
+    Hooks = {
+        GetBottomLabel = {}, ---@type Event<EnemyHealthBarUI_Hook_GetBottomLabel>
+        GetStatusHolderPosition = {}, ---@type Event<EnemyHealthBarUI_Hook_GetStatusHolderPosition>
+        GetStatusHolderOpacity = {}, ---@type Event<EnemyHealthBarUI_Hook_GetStatusHolderOpacity>
+        GetStackOpacity = {}, ---@type Event<EnemyHealthBar_Hook_GetStackOpacity>
+    },
 }
 Epip.InitializeUI(Client.UI.Data.UITypes.enemyHealthBar, "EnemyHealthBar", Bar)
+
+---------------------------------------------
+-- EVENTS
+---------------------------------------------
+
+---@class EnemyHealthBarUI_Event_Updated
+---@field Character EclCharacter?
+---@field Item EclItem?
+
+---@class EnemyHealthBarUI_Hook_GetBottomLabel
+---@field Labels string[] Hookable.
+---@field Character EclCharacter?
+---@field Item EclItem?
+
+---@class EnemyHealthBarUI_Hook_GetStatusHolderPosition
+---@field PositionY number Hookable.
+
+---@class EnemyHealthBarUI_Hook_GetStatusHolderOpacity
+---@field Opacity number Hookable.
+
+---@class EnemyHealthBar_Hook_GetStackOpacity
+---@field Stack string
+---@field Opacity number Hookable.
+---@field Amount integer
+
+---------------------------------------------
+-- METHODS
+---------------------------------------------
 
 ---Returns the character being shown on the bar.
 ---@return EclCharacter?
@@ -114,45 +149,77 @@ function Bar.SetHeader(text)
 end
 
 ---------------------------------------------
--- INTERNAL METHODS - DO NOT CALL
+-- INTERNAL METHODS
 ---------------------------------------------
+
+---Updates all the new features of the UI.
+function Bar._Update()
+    Bar._UpdateFrame()
+    Bar._UpdateStacks()
+    Bar._UpdateBottomText()
+    Bar._UpdateStatusHolder()
+end
+
+---Updates the position and opacity of the status bar.
+function Bar._UpdateStatusHolder()
+    local root = Bar:GetRoot()
+    local statusHolder = root.hp_mc.statusHolder_mc
+
+    -- Update position
+    statusHolder.y = Bar.Hooks.GetStatusHolderPosition:Throw({
+        PositionY = Bar.STATUS_HOLDER_Y,
+    }).PositionY
+
+    -- Update opacity
+    statusHolder.alpha = Bar.Hooks.GetStatusHolderOpacity:Throw({
+        Opacity = 1,
+    }).Opacity
+end
 
 ---Updates the label below the frame.
 ---@return string
 function Bar._UpdateBottomText()
-    local root = Bar:GetRoot()
     local char = Bar:GetCharacter()
     local item = Bar:GetItem()
+    local text
+    
+    local labels = Bar.Hooks.GetBottomLabel:Throw({
+        Labels = {Bar._cachedVanillaBottomText or Bar.GetBottomText()},
+        Character = char,
+        Item = item,
+    }).Labels
 
-    local text = Bar:ReturnFromHooks("GetBottomText", Bar.cachedVanillaBottomText or Bar.GetBottomText(), char, item)
-    Bar.SetBottomText(text)
-
-    root.hp_mc.statusHolder_mc.y = Bar:ReturnFromHooks("GetStatusHolderY", Bar.STATUS_HOLDER_Y, char, item)
+    Bar.SetBottomText(Text.Join(labels, "\n"))
 
     return text
 end
 
-function Bar.UpdateStacks()
+---Updates the BH stack displays.
+function Bar._UpdateStacks()
     local isEE = EpicEncounters.IsEnabled()
     local char = Bar.GetCharacter()
     local showStacks = char and isEE
 
     -- Hide stacks if we're not hovering over a character.
     if not showStacks then
-        Bar.SetStack("Battered", 0)
-        Bar.SetStack("Harried", 0)
+        Bar._SetStack("Battered", 0)
+        Bar._SetStack("Harried", 0)
     else
         local battered,batteredDuration = BH.GetStacks(char, "B")
         local harried,harriedDuration = BH.GetStacks(char, "H")
 
-        Bar.SetStack("Battered", battered, batteredDuration)
-        Bar.SetStack("Harried", harried, harriedDuration)
+        Bar._SetStack("Battered", battered, batteredDuration)
+        Bar._SetStack("Harried", harried, harriedDuration)
     end
 
     Bar._UpdateBottomText()
 end
 
-function Bar.SetStack(stack, amount, duration)
+---Sets the amount of BH displayed.
+---@param stack string
+---@param amount integer
+---@param duration number
+function Bar._SetStack(stack, amount, duration)
     local root = Bar:GetRoot()
     local shorthand = "b"
     if stack == "Harried" then
@@ -168,7 +235,11 @@ function Bar.SetStack(stack, amount, duration)
     end
 
     -- Background opacity
-    background.alpha = Bar:ReturnFromHooks("GetStackOpacity", 1, stack, amount) or 1
+    background.alpha = Bar.Hooks.GetStackOpacity:Throw({
+        Stack = stack,
+        Amount = amount,
+        Opacity = 1,
+    }).Opacity
 
     -- Duration. Blink if >0 and < 1 turn.
     if duration and duration <= 6.0 and duration > 0 then
@@ -178,7 +249,8 @@ function Bar.SetStack(stack, amount, duration)
     end
 end
 
-function Bar.UpdateFrame()
+---Updates the frame of the UI.
+function Bar._UpdateFrame()
     local isEE = EpicEncounters.IsEnabled()
     local char = Bar.GetCharacter()
     local item = Bar.GetItem()
@@ -223,26 +295,18 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
--- Change opacity of Status Holder when shift is being pressed.
-Utilities.Hooks.RegisterListener("Input", "SneakConesToggled", function(pressed)
-    local root = Bar:GetRoot()
-    local statusHolder = root.hp_mc.statusHolder_mc
-
-    if pressed then
-        statusHolder.alpha = Bar.ALTERNATE_STATUS_OPACITY
-    else
-        statusHolder.alpha = 1
+-- Update the UI when shift is toggled.
+Client.Input.Events.KeyStateChanged:Subscribe(function (ev)
+    if ev.InputID == "lshift" then
+        Bar._Update()
     end
 end)
 
--- Update bottom text when shift is pressed.
-Utilities.Hooks.RegisterListener("Input", "SneakConesToggled", function(pressed)
-    Bar._UpdateBottomText()
-end)
-
 -- Set opacity for stack backgrounds based on if the amount if enough to inflict a T3.
-Bar:RegisterHook("GetStackOpacity", function(opacity, stack, amount)
+Bar.Hooks.GetStackOpacity:Subscribe(function (ev)
     local threshold = BH.GetStacksNeededToInflictTier3(Client.GetCharacter())
+    local amount = ev.Amount
+    local opacity
 
     if not EpicEncounters.IsEnabled() then
         opacity = 0
@@ -254,13 +318,15 @@ Bar:RegisterHook("GetStackOpacity", function(opacity, stack, amount)
         opacity = 0.75
     end
 
-    return opacity
+    ev.Opacity = opacity
 end)
 
 -- Set bottom text.
-Bar:RegisterHook("GetBottomText", function(text, char, item)
-
+Bar.Hooks.GetBottomLabel:Subscribe(function (ev)
     -- Show resistances for chars, or alternative info if shift is being held.
+    local char, item = ev.Character, ev.Item
+    local text = ""
+
     if char then
         local modifierActive = Client.Input.IsShiftPressed()
 
@@ -279,7 +345,7 @@ Bar:RegisterHook("GetBottomText", function(text, char, item)
 
             text = ""
 
-            for i,resistanceId in ipairs(Bar.RESISTANCES_DISPLAYED) do
+            for _,resistanceId in ipairs(Bar.RESISTANCES_DISPLAYED) do
                 local amount = char.Stats[resistanceId .. "Resistance"]
                 local display = string.format(Bar.RESISTANCE_STRING, Bar.RESISTANCE_COLORS[resistanceId], amount)
 
@@ -291,14 +357,62 @@ Bar:RegisterHook("GetBottomText", function(text, char, item)
     end
 
     -- Make text smaller.
-    return string.format("<font size='14.5'>%s</font>", text)
+    text = string.format("<font size='14.5'>%s</font>", text)
+
+    table.insert(ev.Labels, text)
+end)
+
+-- Listen for texts being set.
+Bar:RegisterInvokeListener("setText", function (ev, header, footer, useLongTextField)
+    Bar._cachedVanillaBottomText = footer
+
+    ev:PreventAction()
+    ev.UI:GetRoot().setText(header, Bar._UpdateBottomText(), useLongTextField)
+end, "Before")
+
+-- Listen for statuses being updated.
+-- This is where we update all the new functionality of the UI.
+Bar:RegisterInvokeListener("updateStatuses", function (_, _) -- Param 1 decides whether to add new statuses if the element doesn't exist
+    local char = Bar.GetCharacter()
+    local item = Bar.GetItem()
+
+    if char then
+        Bar.latestCharacter = Bar.GetCharacter().Handle
+        Bar.latestItem = nil
+    elseif item then
+        Bar.latestItem = Bar.GetItem().Handle
+        Bar.latestCharacter = nil
+    end
+
+    Bar._Update()
+
+    Bar.Events.Updated:Throw({
+        Character = char,
+        Item = item,
+    })
+end, "After")
+
+-- Move status holder downwards based on bottom text height.
+Bar.Hooks.GetStatusHolderPosition:Subscribe(function (ev)
+    local element = Bar:GetRoot().hp_mc.textHolder_mc.label_txt
+    local offset = -22.62
+
+    offset = offset + element.height
+
+    ev.PositionY = ev.PositionY + offset
+end)
+
+-- Fade out status holder if shift is held.
+Bar.Hooks.GetStatusHolderOpacity:Subscribe(function (ev)
+    ev.Opacity = Client.Input.IsShiftPressed() and Bar.ALTERNATE_STATUS_OPACITY or ev.Opacity
 end)
 
 ---------------------------------------------
 -- SETUP
 ---------------------------------------------
 
-function Bar.PositionElements()
+---Positions the new elements of the UI.
+function Bar._PositionElements()
     local root = Bar:GetRoot()
 
     for i=0,Bar.MAX_STACKS,1 do -- need to start at 0 here to also reposition the base icon
@@ -320,78 +434,36 @@ function Bar.PositionElements()
     local battered = root.hp_mc["b_0_mc"]
     local harried = root.hp_mc["h_0_mc"]
 
-    harried.scaleX = Bar.POSITIONING.BH_BACKGROUND.SCALE
-    harried.scaleY = Bar.POSITIONING.BH_BACKGROUND.SCALE
-    harried.x = Bar.POSITIONING.BH_BACKGROUND.X
-    harried.y = Bar.POSITIONING.BH_BACKGROUND.Y
+    harried.scaleX, harried.scaleY = Bar.POSITIONING.BH_SCALE, Bar.POSITIONING.BH_SCALE
+    harried.x, harried.y = Bar.POSITIONING.BH_BACKGROUND:unpack()
 
-    battered.scaleX = Bar.POSITIONING.BH_BACKGROUND.SCALE
-    battered.scaleY = Bar.POSITIONING.BH_BACKGROUND.SCALE
-    battered.x = -Bar.POSITIONING.BH_BACKGROUND.X - battered.width * 0.9 -- wtf?
-    battered.y = Bar.POSITIONING.BH_BACKGROUND.Y
+    battered.scaleX, battered.scaleY = Bar.POSITIONING.BH_BACKGROUND:unpack()
+    battered.x = -Bar.POSITIONING.BH_BACKGROUND[1] - battered.width * 0.9 -- wtf?
+    battered.y = Bar.POSITIONING.BH_BACKGROUND[2]
 
     -- Bottom text
-    root.hp_mc.textHolder_mc.label_txt.y = Bar.POSITIONING.BOTTOM_TEXT.Y
+    root.hp_mc.textHolder_mc.label_txt.y = Bar.POSITIONING.BOTTOM_TEXT_Y
     root.hp_mc.textHolder_mc.label_txt.wordWrap = false
 
     -- Frames
     local bossFrame = root.hp_mc.bossBg_mc
-    bossFrame.x = Bar.POSITIONING.BOSS_FRAME.X
-    bossFrame.y = Bar.POSITIONING.BOSS_FRAME.Y
+    bossFrame.x, bossFrame.y = Bar.POSITIONING.BOSS_FRAME:unpack()
 
     local itemFrame = root.hp_mc.itemBg_mc
-    itemFrame.x = Bar.POSITIONING.ITEM_FRAME.X
-    itemFrame.y = Bar.POSITIONING.ITEM_FRAME.Y
+    itemFrame.x, itemFrame.y = Bar.POSITIONING.ITEM_FRAME:unpack()
 
     local vanillaBossFrame = root.hp_mc.vanillaBg_mc
     vanillaBossFrame.x, vanillaBossFrame.y = Bar.POSITIONING.VANILLA_FRAME:unpack()
 end
 
--- Listen for texts being set.
-Bar:RegisterInvokeListener("setText", function (ev, header, footer, useLongTextField)
-    Bar.cachedVanillaBottomText = footer
-
-    ev:PreventAction()
-    ev.UI:GetRoot().setText(header, Bar._UpdateBottomText(), useLongTextField)
-end, "Before")
-
--- Listen for statuses being updated.
--- This is where we update all the new functionality of the UI.
-Bar:RegisterInvokeListener("updateStatuses", function (_, _) -- Param 1 decides whether to add new statuses if the element doesn't exist
-    local char = Bar.GetCharacter()
-    local item = Bar.GetItem()
-
-    if char then
-        Bar.latestCharacter = Bar.GetCharacter().Handle
-        Bar.latestItem = nil
-    elseif item then
-        Bar.latestItem = Bar.GetItem().Handle
-        Bar.latestCharacter = nil
-    end
-
-    Bar.UpdateStacks()
-    Bar.UpdateFrame()
-
-    Bar:FireEvent("updated", char, item)
-end, "After")
-
+-- Position elements once the UI is loaded.
 Ext.Events.SessionLoaded:Subscribe(function()
     local root = Bar:GetRoot()
 
-    Bar.PositionElements()
+    Bar._PositionElements()
 
     -- Set blinking animation vars
     root.hp_mc.BHFlashAlpha = Bar.BLINK_OUT_ALPHA
     root.hp_mc.BHFlashInDuration = Bar.BLINK_IN_DURATION
     root.hp_mc.BHFlashOutDuration = Bar.BLINK_OUT_DURATION
-end)
-
--- Move status holder downwards based on bottom text height.
-Bar:RegisterHook("GetStatusHolderY", function(y, char, item)
-    local element = Bar:GetRoot().hp_mc.textHolder_mc.label_txt
-    local offset = -22.62
-
-    offset = offset + element.height
-
-    return y + offset
 end)

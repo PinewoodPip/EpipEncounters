@@ -358,9 +358,10 @@ Client.UI.OptionsInput.Events.ActionExecuted:RegisterListener(function(action, _
     end
 end)
 
-Client.UI.EnemyHealthBar:RegisterListener("updated", function(char, _)
-    if char and QuickExamine.UI:IsVisible() and not QuickExamine.IsLocked() then
-        QuickExamine.SetEntity(char) -- TODO support items
+-- Update the entity when the health bar updates.
+Client.UI.EnemyHealthBar.Events.Updated:Subscribe(function (ev)
+    if ev.Character and QuickExamine.UI:IsVisible() and not QuickExamine.IsLocked() then
+        QuickExamine.SetEntity(ev.Character) -- TODO support items
     end
 end)
 

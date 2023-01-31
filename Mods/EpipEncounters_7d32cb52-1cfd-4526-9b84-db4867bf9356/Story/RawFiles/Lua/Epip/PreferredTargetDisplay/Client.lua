@@ -55,8 +55,9 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
-Client.UI.EnemyHealthBar:RegisterHook("GetBottomText", function(text, char, _)
+Client.UI.EnemyHealthBar.Hooks.GetBottomLabel:Subscribe(function (ev)
     local settingValue = Settings.GetSettingValue("EpipEncounters", "PreferredTargetDisplay")
+    local char = ev.Character
 
     if char and settingValue > 1 then
         local holdingShift = Client.Input.IsShiftPressed()
@@ -68,14 +69,12 @@ Client.UI.EnemyHealthBar:RegisterHook("GetBottomText", function(text, char, _)
             local tauntStr = PreferredTargetDisplay.GetTauntString(char)
 
             if preferredStr then
-                text = text .. "<br>" .. preferredStr
+                table.insert(ev.Labels, preferredStr)
             end
 
             if tauntStr then
-                text = text .. "<br>" .. tauntStr
+                table.insert(ev.Labels, tauntStr)
             end
         end
     end
-
-    return text
 end)
