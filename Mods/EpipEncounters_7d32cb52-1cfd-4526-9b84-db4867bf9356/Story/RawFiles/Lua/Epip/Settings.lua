@@ -1283,7 +1283,7 @@ local newSettings = {
         Type = "Boolean",
         NameHandle = TSKs.ImprovedCombatLog_Name,
         DescriptionHandle = TSKs.ImprovedCombatLog_Description,
-        DefaultValue = false,
+        DefaultValue = true,
     },
     {
         ID = "PreferredTargetDisplay",
