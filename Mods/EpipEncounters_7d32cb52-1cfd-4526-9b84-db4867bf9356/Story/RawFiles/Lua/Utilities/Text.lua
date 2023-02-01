@@ -528,7 +528,7 @@ end
 ---Generates a template file for localizing strings registered through this library.
 ---@param modTable string? Defaults to "EpipEncounters"
 ---@param existingTemplate TextLib_LocalizationTemplate? If present, translated strings from this template will be patched into the new one, if the reference text is still up-to-date.
----@return TextLib_LocalizationTemplate, integer?, integer? -- Second param is amount of new strings, third is amount of outdated strings. Second param onwards is only returned while patching.
+---@return TextLib_LocalizationTemplate, integer[]?, integer[]? -- Second param is new strings, third is outdated strings. Second param onwards is only returned while patching.
 function Text.GenerateLocalizationTemplate(modTable, existingTemplate)
     ---@type TextLib_LocalizationTemplate
     local template = {
@@ -536,7 +536,7 @@ function Text.GenerateLocalizationTemplate(modTable, existingTemplate)
         FileFormatVersion = Text.LOCALIZATION_FILE_FORMAT_VERSION,
         TranslatedStrings = {},
     }
-    local newStrings = 0
+    local newStrings = {}
 
     for handle,data in pairs(Text._RegisteredTranslatedHandles) do
         if data.ModTable == modTable then
@@ -560,14 +560,14 @@ function Text.GenerateLocalizationTemplate(modTable, existingTemplate)
 
             if entry then
                 template.TranslatedStrings[handle] = entry
-                newStrings = newStrings + 1
+                table.insert(newStrings, handle)
             end
         end
     end
 
     local outdatedStrings = nil
     if existingTemplate then
-        outdatedStrings = 0
+        outdatedStrings = {}
 
         if existingTemplate.ModTable ~= modTable then
             Text:Error("GenerateLocalizationTemplate", "Generating a patched template with mismatched mod tables")
@@ -579,15 +579,15 @@ function Text.GenerateLocalizationTemplate(modTable, existingTemplate)
             -- Do not add in strings that are no longer used in the newly generated template.
             -- Also do not patch strings with outdated ReferenceText.
             if templateEntry then
-                newStrings = newStrings - 1
+                table.remove(newStrings, table.reverseLookup(newStrings, handle))
                 
                 if data.ReferenceText == templateEntry.ReferenceText then
                     template.TranslatedStrings[handle].TranslatedText = data.TranslatedText
                 else
-                    outdatedStrings = outdatedStrings + 1
+                    table.insert(outdatedStrings, handle)
                 end
             else
-                outdatedStrings = outdatedStrings + 1
+                table.insert(outdatedStrings, handle)
             end
         end
     else
@@ -600,7 +600,14 @@ end
 ---Returns the language the game is set to.
 ---@return string
 function Text.GetCurrentLanguage()
-    return Ext.Utils.GetGlobalSwitches().ChatLanguage
+    local language = Ext.Utils.GetGlobalSwitches().ChatLanguage
+    local settingOverride = IO.LoadFile("Epip/LanguageOverride.txt", "user", true)
+
+    if settingOverride and settingOverride ~= "" then
+        language = settingOverride
+    end
+
+    return language
 end
 
 ---Sets the translation of a TSK.

@@ -15,6 +15,7 @@ local tabs = {
         HeaderLabel = "Epip Encounters",
         Entries = {
             {Type = "Label", Label = Text.Format("Most options require a reload for changes to apply.", {Size = 19})},
+            "EpipLanguage",
             "AutoIdentify",
             "ImmersiveMeditation",
             "ExaminePosition",
@@ -26,7 +27,13 @@ local tabs = {
             "Feature_WalkOnCorpses",
             "CombatLogImprovements",
             "PreferredTargetDisplay",
-            {Type = "Setting", Module = "EpipEncounters_AnimationCancelling", ID = "Enabled"}
+            {Type = "Setting", Module = "EpipEncounters_AnimationCancelling", ID = "Enabled"},
+            {Type = "Label", Label = Text.Format("——————————————————————————————", {
+                Size = 19,
+            })},
+            {Type = "Label", Label = Text.Format("Russian translation by Cathe & JoienReid", {
+                Size = 19,
+            })},
         }
     },
     ["Epip_Hotbar"] = {

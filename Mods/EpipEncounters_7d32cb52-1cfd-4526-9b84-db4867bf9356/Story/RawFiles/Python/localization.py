@@ -157,7 +157,7 @@ def createSpreadsheet(file_name, output_file_name):
     print("Saving workbook")
     book.save(output_file_name)
 
-def createTranslationJSON(file_name:str, modTable:str, sheet_name:str):
+def createTranslationJSON(file_name:str, modTable:str, sheet_name:str, output_filename:str):
     book = openpyxl.load_workbook(file_name)
     sheet = book[sheet_name]
 
@@ -193,7 +193,7 @@ def createTranslationJSON(file_name:str, modTable:str, sheet_name:str):
         for handle in handles_to_delete:
             del tsks[handle]
 
-    with open("language.json", "w") as f:
+    with open(output_filename, "w") as f:
         f.write(json.dumps(output, indent=2, ensure_ascii=False))
 
         print("Converted sheet to json")

@@ -9,6 +9,16 @@
 ---@class Feature_EpipSettings : Feature
 local EpipSettings = {
     TranslatedStrings = {
+        EpipLanguage_Name = {
+            Handle = "h2b23b849g0345g4d0dgb48dg15315ade1779",
+            Text = "Epip Language",
+            ContextDescription = "Epip language setting name",
+        },
+        EpipLanguage_Description = {
+            Handle = "h2c6440beg71c6g45c3g8a8bg9f6c64454faf",
+            Text = "Changes Epip's language to display in a language different than the one the game is running in.\nUse to remedy current issues with running EE mods in languages other than English.",
+            ContextDescription = "Epip language setting tooltip",
+        },
         AutoIdentify_Name = {
             Handle = "h799513e4g3995g4d45g8e0bg3ee08e6cd1db",
             Text = "Auto-Identify Items",
@@ -1212,6 +1222,19 @@ local TSKs = EpipSettings.TranslatedStrings
 local newSettings = {
     -- Main Epip settings
     {
+        ID = "EpipLanguage",
+        Type = "Choice",
+        Context = "Client",
+        NameHandle = TSKs.EpipLanguage_Name,
+        DescriptionHandle = TSKs.EpipLanguage_Description,
+        DefaultValue = "",
+        ---@type SettingsLib_Setting_Choice_Entry[]
+        Choices = {
+            {ID = "", Name = "Game Language"},
+            {ID = "Russian", Name = "Russian"},
+        }
+    },
+    {
         ID = "AutoIdentify",
         Type = "Choice",
         Context = "Host",
@@ -1768,3 +1791,12 @@ for _,setting in ipairs(newSettings) do
 
     Settings.RegisterSetting(setting)
 end
+
+-- Update language setting.
+-- This is stored in a different manner to allow it to be loaded ASAP.
+Settings.Events.SettingValueChanged:Subscribe(function (ev)
+    local setting = ev.Setting
+    if setting.ModTable == "EpipEncounters" and setting.ID == "EpipLanguage" then
+        IO.SaveFile("Epip/LanguageOverride.txt", ev.Value, true)
+    end
+end)

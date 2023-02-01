@@ -1,8 +1,5 @@
 {
-	"FileFormatVersion" : 0,
-	"ModTable" : "EpipEncounters",
-	"TranslatedStrings" : 
-	{
-		
-	}
+  "FileFormatVersion": 0,
+  "ModTable": "EpipEncounters",
+  "TranslatedStrings": {}
 }
