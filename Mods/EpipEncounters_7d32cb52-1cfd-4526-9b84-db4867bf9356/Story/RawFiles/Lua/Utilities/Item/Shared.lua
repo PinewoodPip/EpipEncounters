@@ -564,6 +564,13 @@ function Item.HasRunes(item)
     return false
 end
 
+---Returns the level of an item.
+---@param item Item
+---@return integer? --`nil` if the item has no stats.
+function Item.GetLevel(item)
+    return item.Stats and item.Stats.Level or nil
+end
+
 ---------------------------------------------
 -- REGION Querying items in inventories.
 ---------------------------------------------

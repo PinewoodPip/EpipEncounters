@@ -75,6 +75,7 @@ local Bar = {
         GetStatusHolderPosition = {}, ---@type Event<EnemyHealthBarUI_Hook_GetStatusHolderPosition>
         GetStatusHolderOpacity = {}, ---@type Event<EnemyHealthBarUI_Hook_GetStatusHolderOpacity>
         GetStackOpacity = {}, ---@type Event<EnemyHealthBar_Hook_GetStackOpacity>
+        GetHeader = {}, ---@type Event<EnemyHealthBarUI_Hook_GetHeader>
     },
 }
 Epip.InitializeUI(Client.UI.Data.UITypes.enemyHealthBar, "EnemyHealthBar", Bar)
@@ -84,6 +85,11 @@ Epip.InitializeUI(Client.UI.Data.UITypes.enemyHealthBar, "EnemyHealthBar", Bar)
 ---------------------------------------------
 
 ---@class EnemyHealthBarUI_Event_Updated
+---@field Character EclCharacter?
+---@field Item EclItem?
+
+---@class EnemyHealthBarUI_Hook_GetHeader
+---@field Header string Hookable.
 ---@field Character EclCharacter?
 ---@field Item EclItem?
 
@@ -156,7 +162,7 @@ end
 function Bar._Update()
     Bar._UpdateFrame()
     Bar._UpdateStacks()
-    Bar._UpdateBottomText()
+    Bar._UpdateTexts()
     Bar._UpdateStatusHolder()
 end
 
@@ -177,21 +183,35 @@ function Bar._UpdateStatusHolder()
 end
 
 ---Updates the label below the frame.
----@return string
-function Bar._UpdateBottomText()
+---@param originalHeader string? Defaults to entity display name.
+---@return string, string --Header, bottom label.
+function Bar._UpdateTexts(originalHeader)
     local char = Bar:GetCharacter()
     local item = Bar:GetItem()
-    local text
+    local header, footer
+    if not originalHeader then
+        if char then
+            originalHeader = char.DisplayName
+        elseif item then
+            originalHeader = item.DisplayName
+        end
+    end
     
+    header = Bar.Hooks.GetHeader:Throw({
+        Header = originalHeader,
+        Character = char,
+        Item = item,
+    }).Header
     local labels = Bar.Hooks.GetBottomLabel:Throw({
         Labels = {Bar._cachedVanillaBottomText or Bar.GetBottomText()},
         Character = char,
         Item = item,
     }).Labels
+    footer = Text.Join(labels, "\n")
 
-    Bar.SetBottomText(Text.Join(labels, "\n"))
+    Bar.SetBottomText(footer)
 
-    return text
+    return header, footer
 end
 
 ---Updates the BH stack displays.
@@ -211,14 +231,12 @@ function Bar._UpdateStacks()
         Bar._SetStack("Battered", battered, batteredDuration)
         Bar._SetStack("Harried", harried, harriedDuration)
     end
-
-    Bar._UpdateBottomText()
 end
 
 ---Sets the amount of BH displayed.
 ---@param stack string
 ---@param amount integer
----@param duration number
+---@param duration number? Inapplicable to backgrounds.
 function Bar._SetStack(stack, amount, duration)
     local root = Bar:GetRoot()
     local shorthand = "b"
@@ -365,9 +383,10 @@ end)
 -- Listen for texts being set.
 Bar:RegisterInvokeListener("setText", function (ev, header, footer, useLongTextField)
     Bar._cachedVanillaBottomText = footer
+    local t1, t2 = Bar._UpdateTexts(header)
 
     ev:PreventAction()
-    ev.UI:GetRoot().setText(header, Bar._UpdateBottomText(), useLongTextField)
+    ev.UI:GetRoot().setText(t1, t2, useLongTextField)
 end, "Before")
 
 -- Listen for statuses being updated.
@@ -407,6 +426,19 @@ Bar.Hooks.GetStatusHolderOpacity:Subscribe(function (ev)
     ev.Opacity = Client.Input.IsShiftPressed() and Bar.ALTERNATE_STATUS_OPACITY or ev.Opacity
 end)
 
+-- Display level by character name and hide it from the footer.
+Bar.Hooks.GetHeader:Subscribe(function (ev)
+    local char, item = ev.Character, ev.Item
+    local level = (char and Character.GetLevel(char)) or (item and Item.GetLevel(item))
+
+    if level then
+        ev.Header = string.format("%s - Lvl %s", ev.Header, level)
+    end
+end)
+Bar.Hooks.GetBottomLabel:Subscribe(function (ev)
+    table.remove(ev.Labels, 1)
+end, {Priority = -9999999})
+
 ---------------------------------------------
 -- SETUP
 ---------------------------------------------
@@ -419,25 +451,22 @@ function Bar._PositionElements()
         local battered = root.hp_mc["b_" .. i .. "_mc"]
         local harried = root.hp_mc["h_" .. i .. "_mc"]
 
-        battered.scaleX = Bar.POSITIONING.NUMERALS.SCALE
-        battered.scaleY = Bar.POSITIONING.NUMERALS.SCALE
-        battered.x = -Bar.POSITIONING.NUMERALS.X - battered.width * 0.935 -- wtf?
-        battered.y = Bar.POSITIONING.NUMERALS.Y
+        battered.scaleX, battered.scaleY = Bar.POSITIONING.BH_SCALE, Bar.POSITIONING.BH_SCALE
+        battered.x = -Bar.POSITIONING.BH_NUMBERS[1] - battered.width * 0.935 -- wtf?
+        battered.y = Bar.POSITIONING.BH_NUMBERS[2]
 
-        harried.scaleX = Bar.POSITIONING.NUMERALS.SCALE
-        harried.scaleY = Bar.POSITIONING.NUMERALS.SCALE
-        harried.x = Bar.POSITIONING.NUMERALS.X
-        harried.y = Bar.POSITIONING.NUMERALS.Y
+        harried.scaleX, harried.scaleY = Bar.POSITIONING.BH_SCALE, Bar.POSITIONING.BH_SCALE
+        harried.x, harried.y = Bar.POSITIONING.BH_NUMBERS:unpack()
     end
 
     -- Positioning the base icons
     local battered = root.hp_mc["b_0_mc"]
     local harried = root.hp_mc["h_0_mc"]
 
-    harried.scaleX, harried.scaleY = Bar.POSITIONING.BH_SCALE, Bar.POSITIONING.BH_SCALE
+    harried.scaleX, harried.scaleY = Bar.POSITIONING.BH_BACKGROUND_SCALE, Bar.POSITIONING.BH_BACKGROUND_SCALE
     harried.x, harried.y = Bar.POSITIONING.BH_BACKGROUND:unpack()
 
-    battered.scaleX, battered.scaleY = Bar.POSITIONING.BH_BACKGROUND:unpack()
+    battered.scaleX, battered.scaleY = Bar.POSITIONING.BH_BACKGROUND_SCALE, Bar.POSITIONING.BH_BACKGROUND_SCALE
     battered.x = -Bar.POSITIONING.BH_BACKGROUND[1] - battered.width * 0.9 -- wtf?
     battered.y = Bar.POSITIONING.BH_BACKGROUND[2]
 
