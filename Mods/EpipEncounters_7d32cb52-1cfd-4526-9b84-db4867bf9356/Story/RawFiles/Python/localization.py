@@ -4,6 +4,7 @@ from openpyxl.utils import get_column_letter
 from openpyxl.utils import *
 from openpyxl.styles import *
 from openpyxl.styles import Alignment
+from openpyxl.worksheet import worksheet
 
 TEXTLIB_TRANSLATION_FILE_FORMAT_VERSION = 0
 
@@ -28,6 +29,27 @@ class SheetColumn:
         self.wrap_text = wrap_text
         self.font = font
         self.json_key = json_key
+
+def addSheetRow(column_defs, i, sheet, row, content:str):
+    column_def = column_defs[i]
+    letter = get_column_letter(i + 1)
+
+    cell = sheet[letter + str(row)]
+
+    sheet.row_dimensions[row].height = Sheet.ROW_HEIGHT
+    
+    # Set font
+    cell.font = column_def.font
+
+    cell.value = content
+
+    # Set alignment
+    if column_def.wrap_text:
+        cell.alignment = Alignment(wrap_text=True)
+
+    # Unlock cell for editing
+    if not column_def.locked:
+        cell.protection = Protection(locked=False)
 
 class Sheet:
     ROW_HEIGHT = 30
@@ -67,23 +89,7 @@ class Sheet:
         self.sheet.append(values)
 
         for i in range(len(values)):
-            column_def = self.column_defs[i]
-            letter = get_column_letter(i + 1)
-
-            cell = self.sheet[letter + str(self.filled_rows + 1)]
-
-            self.sheet.row_dimensions[self.filled_rows + 1].height = Sheet.ROW_HEIGHT
-            
-            # Set font
-            cell.font = column_def.font
-
-            # Set alignment
-            if column_def.wrap_text:
-                cell.alignment = Alignment(wrap_text=True)
-
-            # Unlock cell for editing
-            if not column_def.locked:
-                cell.protection = Protection(locked=False)
+            addSheetRow(self.column_defs, i, self.sheet, self.filled_rows + 1, values[i])
 
 
 class Workbook:
@@ -118,29 +124,73 @@ class Module:
 
     def __init__(self, name):
         self.name = name
-        self.translated_strings = {}
+        self.translated_strings:dict[str, TranslatedString] = {}
 
     def addTSK(self, tsk):
         self.translated_strings[tsk.handle] = tsk
 
-    def export(self, book:Workbook):
-        sheet = book.addSheet(self.name)
+    def export(self, book:Workbook, oldBook:openpyxl.Workbook=None, oldSheetName:str=None, oldBookPath:str=None):
 
-        for column_def in Module.COLUMN_DEFINITIONS:
-            sheet.addColumnDefinition(column_def)
+        if oldBook == None:
+            sheet = book.addSheet(self.name)
 
-        for handle,tsk in self.translated_strings.items():
-            sheet.addRow([
-                handle,
-                tsk.featureID,
-                tsk.text,
-                tsk.description,
-                tsk.translation, # Translation
-                "", # Translation author - these are not kept within the json, cannot import
-                "", # Translation notes - same case as author
-            ])
+            for column_def in Module.COLUMN_DEFINITIONS:
+                sheet.addColumnDefinition(column_def)
 
-def createSpreadsheet(file_name, output_file_name):
+            for handle,tsk in self.translated_strings.items():
+                sheet.addRow([
+                    handle,
+                    tsk.featureID,
+                    tsk.text,
+                    tsk.description,
+                    tsk.translation, # Translation
+                    "", # Translation author - these are not kept within the json, cannot import
+                    "", # Translation notes - same case as author
+                ])
+        else:
+            print("Parsing existing sheet")
+
+            oldSheet:worksheet = oldBook.get_sheet_by_name(oldSheetName)
+
+            existingTSKs = set()
+            for rowIndex in range(2, oldSheet.max_row + 1):
+                handleCell = oldSheet.cell(row=rowIndex, column=1)
+                originalTextCell = oldSheet.cell(row=rowIndex, column=3)
+                tskData = self.translated_strings[handleCell.value]
+                translationCell = oldSheet.cell(row=rowIndex, column=5)
+
+                # Clear translation if original text doesnt match
+                if tskData.text != originalTextCell.value:
+                    print("Removed outdated translation for " + tskData.handle)
+                    translationCell.value = ""
+
+                originalTextCell.value = tskData.text
+
+                existingTSKs.add(tskData.handle)
+
+            # Add new rows
+            newRowIndex = len(existingTSKs) + 2
+            for key,data in self.translated_strings.items():
+                if key not in existingTSKs:
+                    print("Adding new TSK " + key)
+                    rowData = [
+                        data.handle,
+                        data.featureID,
+                        data.text,
+                        data.description,
+                        data.translation, # Translation
+                        "", # Translation author - these are not kept within the json, cannot import
+                        "", # Translation notes - same case as author
+                    ]
+                    for i in range(len(rowData)):
+                        addSheetRow(Module.COLUMN_DEFINITIONS, i, oldSheet, newRowIndex, rowData[i])
+
+                    newRowIndex += 1
+
+            oldBook.save(oldBookPath)
+
+
+def createSpreadsheet(file_name, output_file_name, existing_sheet_file_name=None, oldSheetName:str=None):
     file = open(file_name, "r")
     localization = json.load(file)
 
@@ -151,11 +201,15 @@ def createSpreadsheet(file_name, output_file_name):
 
         module.addTSK(tsk)
 
+    oldBook = None
+    if existing_sheet_file_name != None:
+        oldBook = openpyxl.open(existing_sheet_file_name)
     book = Workbook()
-    module.export(book)
+    module.export(book, oldBook, oldSheetName, existing_sheet_file_name)
     
     print("Saving workbook")
-    book.save(output_file_name)
+    if existing_sheet_file_name == None:
+        book.save(output_file_name)
 
 def createTranslationJSON(file_name:str, modTable:str, sheet_name:str, output_filename:str):
     book = openpyxl.load_workbook(file_name)
