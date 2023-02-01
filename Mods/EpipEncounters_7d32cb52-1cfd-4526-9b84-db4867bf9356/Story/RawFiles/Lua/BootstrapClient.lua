@@ -357,6 +357,7 @@ LOAD_ORDER = {
     "Epip/Client/HotbarTweaks.lua",
     "Epip/Client/ExamineKeybind.lua",
     "Epip/Client/MoreWorldTooltips.lua",
+    "Epip/Client/EnemyHealthBarExtraInfo.lua",
     -- "Epip/Client/InventoryImprovements.lua",
 
     {ScriptSet = "Epip/Greatforge/DrillSockets"},

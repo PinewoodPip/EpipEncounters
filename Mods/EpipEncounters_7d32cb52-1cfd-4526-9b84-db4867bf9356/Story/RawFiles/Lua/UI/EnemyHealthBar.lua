@@ -1,7 +1,7 @@
 
 ---------------------------------------------
 -- Hooks and scripting for the EE-fied EnemyHealthBar.
--- Displays B/H, resistances and misc info.
+-- Displays B/H and misc info.
 -- Is also used as an utility to fetch the "last hovered character"
 -- The B/H display is considered a core feature of the UI, not an "Epip Feature".
 -- As such it cannot be disabled.
@@ -22,31 +22,11 @@ local Bar = {
         VANILLA_BOSS = "vanillaBg_mc",
     },
 
-    -- These are not the 'official' colors,
-    -- they're lightly modified for readability.
-    RESISTANCE_COLORS = {
-        Fire = "f77c27",
-        Water = "27aff6",
-        Earth = "aa7840",
-        Air = "8f83cb",
-        Poison = "5bd42b",
-        Physical = "acacac",
-        Piercing = "c23c3c",
-        Shadow = "5b34ca",
-    },
-
-    RESISTANCES_DISPLAYED = {
-        "Fire", "Water", "Earth", "Air", "Poison", "Physical", "Piercing",
-    },
-
     BLINK_IN_DURATION = 0.2,
     BLINK_OUT_DURATION = 1.0,
     BLINK_OUT_ALPHA = 0.5, -- Alpha to which the blinkout animation fades (blinkin is 1.0)
-    STATUS_HOLDER_Y = 123,
 
     MAX_STACKS = 10,
-
-    RESISTANCE_STRING = "<font color='#%s'>%s%%</font>", -- Params: Color, value.
     ALTERNATE_STATUS_OPACITY = 0.1, -- Opacity for Status Holder when shift is being held.
 
     POSITIONING = {
@@ -58,6 +38,7 @@ local Bar = {
         BH_BACKGROUND = V(125, 77.75),
         BH_SCALE = 0.6,
         BH_NUMBERS = V(121, 74),
+        STATUS_HOLDER_Y = 123,
     },
 
     FILEPATH_OVERRIDES = {
@@ -173,7 +154,7 @@ function Bar._UpdateStatusHolder()
 
     -- Update position
     statusHolder.y = Bar.Hooks.GetStatusHolderPosition:Throw({
-        PositionY = Bar.STATUS_HOLDER_Y,
+        PositionY = Bar.POSITIONING.STATUS_HOLDER_Y,
     }).PositionY
 
     -- Update opacity
@@ -339,47 +320,6 @@ Bar.Hooks.GetStackOpacity:Subscribe(function (ev)
     ev.Opacity = opacity
 end)
 
--- Set bottom text.
-Bar.Hooks.GetBottomLabel:Subscribe(function (ev)
-    -- Show resistances for chars, or alternative info if shift is being held.
-    local char, item = ev.Character, ev.Item
-    local text = ""
-
-    if char then
-        local modifierActive = Client.Input.IsShiftPressed()
-
-        if modifierActive then -- Show alternate info.
-            local level = char.Stats.Level
-            local sp, maxSp = Character.GetSourcePoints(char)
-            local ap = char.Stats.CurrentAP
-            local init = char.Stats.Initiative
-
-            if maxSp == -1 then
-                maxSp = 3
-            end
-
-            text = string.format("Level %s  %s AP  %s/%s SP  %s INIT", level, ap, sp, maxSp, init)
-        else -- Show resistances.
-
-            text = ""
-
-            for _,resistanceId in ipairs(Bar.RESISTANCES_DISPLAYED) do
-                local amount = char.Stats[resistanceId .. "Resistance"]
-                local display = string.format(Bar.RESISTANCE_STRING, Bar.RESISTANCE_COLORS[resistanceId], amount)
-
-                text = text .. "  " .. display
-            end
-        end
-    elseif item and item.Stats then -- Show item level.
-        text = string.format("Level %s", item.Stats.Level)
-    end
-
-    -- Make text smaller.
-    text = string.format("<font size='14.5'>%s</font>", text)
-
-    table.insert(ev.Labels, text)
-end)
-
 -- Listen for texts being set.
 Bar:RegisterInvokeListener("setText", function (ev, header, footer, useLongTextField)
     Bar._cachedVanillaBottomText = footer
@@ -425,19 +365,6 @@ end)
 Bar.Hooks.GetStatusHolderOpacity:Subscribe(function (ev)
     ev.Opacity = Client.Input.IsShiftPressed() and Bar.ALTERNATE_STATUS_OPACITY or ev.Opacity
 end)
-
--- Display level by character name and hide it from the footer.
-Bar.Hooks.GetHeader:Subscribe(function (ev)
-    local char, item = ev.Character, ev.Item
-    local level = (char and Character.GetLevel(char)) or (item and Item.GetLevel(item))
-
-    if level then
-        ev.Header = string.format("%s - Lvl %s", ev.Header, level)
-    end
-end)
-Bar.Hooks.GetBottomLabel:Subscribe(function (ev)
-    table.remove(ev.Labels, 1)
-end, {Priority = -9999999})
 
 ---------------------------------------------
 -- SETUP

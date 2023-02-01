@@ -256,6 +256,22 @@ function Character.GetActionPoints(char)
     return char.Stats.CurrentAP, char.Stats.APMaximum
 end
 
+---Returns the initiative of char.
+---@param char Character
+---@return integer
+function Character.GetInitiative(char)
+    return char.Stats.Initiative
+end
+
+---Returns the computed resistance value of char.
+---@param char Character
+---@param damageType StatsDamageType
+---@param baseValuesOnly boolean? If `true`, base value will be returned. Defaults to `false`.
+---@return integer
+function Character.GetResistance(char, damageType, baseValuesOnly)
+    return Ext.Stats.Math.GetResistance(char.Stats, damageType, baseValuesOnly)
+end
+
 ---@param identifier GUID|PrefixedGUID|NetId|EntityHandle
 ---@param isFlashHandle boolean? If true, the identifier will be passed through DoubleToHandle() first.
 ---@return Character
