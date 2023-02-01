@@ -863,6 +863,8 @@ local function CycleHotbar(barIndex, increment)
 
     Hotbar.UpdateSlotTextures()
     Hotbar.CycleBar(barIndex, increment) -- cycle our own scripted bars
+
+    Hotbar.RenderSlots()
 end
 Hotbar:RegisterCallListener("pipPrevHotbar", function (_, _, index)
     CycleHotbar(index, -1)
@@ -925,6 +927,18 @@ Hotbar:RegisterInvokeListener("setPlayerHandle", function (_, playerHandle)
     Utilities.Hooks.FireEvent("Client", "ActiveCharacterChanged", playerHandle)
 
     Hotbar.ResyncEngineRow()
+
+    Hotbar.RenderSlots()
+end, "After")
+
+-- Update slots whenever the engine would request so.
+Hotbar:RegisterInvokeListener("updateSlots", function (_, _)
+    Hotbar.RenderSlots()
+end)
+Hotbar:RegisterInvokeListener("setAllSlotsEnabled", function (_, _)
+    Timer.StartTickTimer(1, function (_)
+        Hotbar.RenderSlots()
+    end)
 end, "After")
 
 -- Listen for hotkey buttons being unbound.

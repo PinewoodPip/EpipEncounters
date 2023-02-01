@@ -30,22 +30,24 @@ Epip.RegisterFeature("EE_HotbarActions", HA)
 -- SETUP
 ---------------------------------------------
 
-function HA:OnFeatureInit()
-    for _,action in ipairs(HA.Actions) do
-        Hotbar.RegisterAction(action.ID, action)
+GameState.Events.GameReady:Subscribe(function (ev)
+    if HA:IsEnabled() then
+        for _,action in ipairs(HA.Actions) do
+            Hotbar.RegisterAction(action.ID, action)
+        end
+        
+        -- Source Infuse
+        Hotbar.RegisterActionListener("EE_SourceInfuse", "ActionUsed", function(char)
+            Net.PostToServer("EPIPENCOUNTERS_Hotkey_SourceInfuse", {NetID = char.NetID})
+        end)
+        
+        -- Meditate
+        Hotbar.RegisterActionListener("EE_Meditate", "ActionUsed", function(char)
+            Net.PostToServer("EPIPENCOUNTERS_Hotkey_Meditate", {NetID = char.NetID})
+        end)
+        
+        -- place these by default on the hotkeys bar
+        Hotbar.SetHotkeyAction(11, "EE_Meditate")
+        Hotbar.SetHotkeyAction(12, "EE_SourceInfuse")
     end
-    
-    -- Source Infuse
-    Hotbar.RegisterActionListener("EE_SourceInfuse", "ActionUsed", function(char)
-        Net.PostToServer("EPIPENCOUNTERS_Hotkey_SourceInfuse", {NetID = char.NetID})
-    end)
-    
-    -- Meditate
-    Hotbar.RegisterActionListener("EE_Meditate", "ActionUsed", function(char)
-        Net.PostToServer("EPIPENCOUNTERS_Hotkey_Meditate", {NetID = char.NetID})
-    end)
-    
-    -- place these by default on the hotkeys bar
-    Hotbar.SetHotkeyAction(11, "EE_Meditate")
-    Hotbar.SetHotkeyAction(12, "EE_SourceInfuse")
-end
+end, {Priority = 99999})
