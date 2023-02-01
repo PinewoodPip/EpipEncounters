@@ -621,7 +621,7 @@ function Text.SetTranslatedStringTranslation(handle, language, text)
     Text._TranslatedStrings[language][handle] = text
 
     -- Update TSK if the language matches.
-    if currentLanguage == language then
+    if currentLanguage == language or (language == "English" and not Text.GetTranslatedStringTranslation(handle, currentLanguage)) then
         Text.SetTranslatedString(handle, text)
     end
 end
