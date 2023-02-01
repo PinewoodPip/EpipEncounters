@@ -19,10 +19,12 @@ local PlayerInfo = {
     },
     StatusNetIDs = {},
 
-    USE_LEGACY_EVENTS = false,
     FILEPATH_OVERRIDES = {
         ["Public/Game/GUI/playerInfo.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/playerInfo.swf"
     },
+
+    USE_LEGACY_EVENTS = false,
+    USE_LEGACY_HOOKS = false,
 
     Events = {
         ---@type Event<PlayerInfoUI_Event_StatusesUpdated>
@@ -31,24 +33,12 @@ local PlayerInfo = {
         StatusHovered = {},
         ---@type Event<PlayerInfoUI_Event_ActiveCharacterChanged>
         ActiveCharacterChanged = {},
+    },
+    Hooks = {
+        GetBHVisibility = {}, ---@type Event<PlayerInfoUI_Hook_GetBHVisibility>
     }
 }
 Epip.InitializeUI(Ext.UI.TypeID.playerInfo, "PlayerInfo", PlayerInfo)
-
----------------------------------------------
--- CLASSES
----------------------------------------------
-
----@class PlayerInfoStatusUpdate
----@field CharacterHandle FlashObjectHandle
----@field Status EclStatus
----@field StatusHandle FlashObjectHandle
----@field Duration number
----@field ElementID integer
----@field Tooltip string
----@field Cooldown number
----@field SortingIndex integer
----@field KeepAlive boolean
 
 ---------------------------------------------
 -- EVENTS
@@ -65,6 +55,25 @@ Epip.InitializeUI(Ext.UI.TypeID.playerInfo, "PlayerInfo", PlayerInfo)
 ---@field PreviousCharacter EclCharacter?
 ---@field NewCharacter EclCharacter?
 ---@field Manual boolean If true, this character change was requested by the player clicking the portrait.
+
+---@class PlayerInfoUI_Hook_GetBHVisibility
+---@field Character EclCharacter
+---@field Visible boolean Hookable.
+
+---------------------------------------------
+-- CLASSES
+---------------------------------------------
+
+---@class PlayerInfoStatusUpdate
+---@field CharacterHandle FlashObjectHandle
+---@field Status EclStatus
+---@field StatusHandle FlashObjectHandle
+---@field Duration number
+---@field ElementID integer
+---@field Tooltip string
+---@field Cooldown number
+---@field SortingIndex integer
+---@field KeepAlive boolean
 
 ---------------------------------------------
 -- METHODS
@@ -184,10 +193,15 @@ function PlayerInfo.SetBH(player, element, stacks, visible, height)
     end
 end
 
-function PlayerInfo.UpdateBH(player)
-    local char = Ext.GetCharacter(Ext.DoubleToHandle(player.characterHandle))
+---Updates the BH indicators for a player.
+---@param player FlashObjectHandle
+function PlayerInfo._UpdateBH(player)
+    local char = Character.Get(player.characterHandle, true)
 
-    local displaysVisible = PlayerInfo:ReturnFromHooks("BHDisplaysVisible", false, char, player)
+    local displaysVisible = PlayerInfo.Hooks.GetBHVisibility:Throw({
+        Visible = true,
+        Character = char
+    }).Visible
 
     local battered = BH.GetStacks(char, "B")
     local harried = BH.GetStacks(char, "H")
@@ -216,7 +230,7 @@ function PlayerInfo.UpdatePlayers()
     for i=0,#players-1,1 do
         local player = players[i]
 
-        PlayerInfo.UpdateBH(player)
+        PlayerInfo._UpdateBH(player)
     end
 end
 
@@ -290,18 +304,15 @@ Settings.Events.SettingValueChanged:Subscribe(function (ev)
     end
 end)
 
--- By default, BH displays are visible if characters are unsheathed.
--- TODO better combat check.
-PlayerInfo:RegisterHook("BHDisplaysVisible", function(visible, char, playerElement)
-    -- local badge = playerElement.currentActionState_mc
+-- By default, BH displays are visible if characters are in combat, with the setting enabled.
+PlayerInfo.Hooks.GetBHVisibility:Subscribe(function (ev)
+    local visible = ev.Visible
 
-    -- Show badges when character is unsheathed.
-    if not visible then
-        visible = char:GetStatus("UNSHEATHED") ~= nil and Settings.GetSettingValue("Epip_PlayerInfo", "PlayerInfoBH")
-        -- visible = badge.currentFrame == 1 or badge.currentFrame == 5
-    end
+    visible = visible and EpicEncounters.IsEnabled()
+    visible = visible and Settings.GetSettingValue("Epip_PlayerInfo", "PlayerInfoBH")
+    visible = visible and Character.IsInCombat(ev.Character)
 
-    return visible
+    ev.Visible = visible
 end)
 
 Ext.RegisterUITypeInvokeListener(PlayerInfo.UITypeID, "updateInfos", function(ui, method)
