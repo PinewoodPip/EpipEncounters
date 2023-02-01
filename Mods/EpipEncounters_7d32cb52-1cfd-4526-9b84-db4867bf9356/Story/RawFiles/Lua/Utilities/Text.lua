@@ -395,7 +395,7 @@ function Text.Format(str, formatData)
 
     local size = ""
     if formatData.Size then
-        size = string.format(" size='%d'", formatData.Size)
+        size = string.format(" size='%s'", formatData.Size)
     end
 
     if fontType ~= "" or align ~= "" or color ~= "" or size ~= "" then
