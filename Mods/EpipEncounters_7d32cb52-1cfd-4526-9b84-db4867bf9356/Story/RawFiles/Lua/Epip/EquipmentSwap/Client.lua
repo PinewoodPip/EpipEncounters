@@ -19,6 +19,16 @@ UI.HEADER_SIZE = V(400, 50)
 UI.SCROLL_LIST_FRAME = V(380, 260)
 UI.ITEM_SIZE = V(50, 50)
 UI.ITEMS_PER_ROW = 6
+UI.RARITY_PRIORITY = {
+    Common = 1,
+    Uncommon = 2,
+    Rare = 3,
+    Epic = 4,
+    Legendary = 5,
+    Divine = 6,
+    Unique = 7,
+    Artifact = 8,
+}
 
 ---------------------------------------------
 -- METHODS
@@ -35,9 +45,29 @@ function UI.Setup(char, slot)
         return Item.GetItemSlot(item) == slot
     end)
 
+    -- Sort by rarity
+    table.sort(items, function (a, b)
+        a, b = a, b ---@type EclItem, EclItem
+        local rarityA, rarityB = a.Stats.Rarity, b.Stats.Rarity
+        local scoreA, scoreB
+
+        if Item.IsArtifact(a) then
+            rarityA = "Artifact"
+        end
+        if Item.IsArtifact(b) then
+            rarityB = "Artifact"
+        end
+
+        scoreA, scoreB = UI.RARITY_PRIORITY[rarityA] or 0, UI.RARITY_PRIORITY[rarityB] or 0
+
+        return scoreA > scoreB
+    end)
+
     for _,item in ipairs(items) do
         UI._RenderItem(item)
     end
+
+    UI.ItemsList:RepositionElements()
 
     local x, y = Client.GetMousePosition()
     UI:GetUI():SetPosition(x, y - UI.BACKGROUND_SIZE[2])
@@ -69,7 +99,6 @@ function UI._RenderItem(item)
         table.insert(UI._Lists, UI.ItemsList:AddChild("List_" .. listIndex, "GenericUI_Element_HorizontalList"))
     end
     local list = UI._Lists[listIndex]
-
     local element = HotbarSlot.Create(UI, item.MyGuid, list)
     element:SetItem(item)
     element:SetUpdateDelay(-1)
@@ -120,7 +149,7 @@ Input.Events.KeyStateChanged:Subscribe(function (ev)
         ev:Prevent()
     end
 end)
-Input.Events.MouseButtonPressed:Subscribe(function (ev)
+Input.Events.MouseButtonPressed:Subscribe(function (_)
     if UI:IsVisible() and not UI._IsCursorOverUI then
         UI.Close()
     end
