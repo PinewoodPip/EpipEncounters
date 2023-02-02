@@ -187,7 +187,7 @@ function Stats.MeetsRequirements(char, statID, isItem, itemSource)
     end
 
     -- Only check other requirements if this spell is natural to the character
-    if not grantedByExternalSource then
+    if not grantedByExternalSource or isItem then
         -- Requirements
         for _,req in ipairs(data.Requirements) do
             local reqMet = false
@@ -355,12 +355,7 @@ function Stats.MeetsRequirementsINT(char, req)
     else
         local amount = char.Stats[req.Requirement]
 
-        -- Attribute requirements appear bugged at the moment. TODO
-        if not Data.Game.ATTRIBUTE_STATS[req.Requirement] then
-            reqMet = amount >= req.Param
-        else
-            reqMet = true
-        end
+        reqMet = amount >= req.Param
     end
 
     if req.Not then
