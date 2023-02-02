@@ -1,19 +1,34 @@
 
 ---@class GenericUI
 local Generic = Client.UI.Generic
-local Hotbar = Client.UI.Hotbar
+local Tooltip = Client.Tooltip
+local V = Vector.Create
 
 ---@class GenericUI_Prefab_HotbarSlot : GenericUI_Prefab
+---@field RarityIcon GenericUI_Element_IggyIcon
+---@field _CanDragDrop boolean
+---@field _AutoUpdateDelay number In seconds.
+---@field _AutoUpdateRemainingDelay number In seconds.
 local Slot = {
     ID = nil, ---@type string
     SlotElement = nil, ---@type GenericUI_Element_Slot
     Object = nil, ---@type GenericUI_Prefab_HotbarSlot_Object
+
+    ICON_SIZE = V(52, 52),
+
     Events = {
-        ---@type Event<GenericUI_Prefab_HotbarSlot_Event_ObjectDraggedIn>
-        ObjectDraggedIn = {}, -- TODO!
+        ObjectDraggedIn = {}, ---@type Event<GenericUI_Prefab_HotbarSlot_Event_ObjectDraggedIn>
+        Clicked = {}, ---@type Event<EmptyEvent>
     }
 }
 Generic.RegisterPrefab("GenericUI_Prefab_HotbarSlot", Slot)
+
+---------------------------------------------
+-- EVENTS
+---------------------------------------------
+
+---@class GenericUI_Prefab_HotbarSlot_Event_ObjectDraggedIn
+---@field Object GenericUI_Prefab_HotbarSlot_Object
 
 ---------------------------------------------
 -- CLASSES
@@ -39,12 +54,15 @@ function _SlotObject.Create(type, data)
     return obj
 end
 
----@return EclItem|StatsSkillPrototype|StatsLib_Action
+---Returns the entity assigned to the slot.
+---@return EclItem|StatsLib_SkillData|StatsLib_Action
 function _SlotObject:GetEntity()
+    local entity
+
     if self.Type == "Skill" then
-        return Stats.Get("SkillData", self.StatsID)
+        entity = Stats.Get("SkillData", self.StatsID)
     elseif self.Type == "Action" then
-        Ext.PrintError("_SlotObject:GetEntity() not implemented for Actions!!!!")
+        entity = Stats.GetAction(self.StatsID)
     elseif self.Type == "Template" or self.Type == "Item" then
         local item
 
@@ -61,16 +79,11 @@ function _SlotObject:GetEntity()
             end)[1]
         end
 
-        return item
+        entity = item
     end
+
+    return entity
 end
-
----------------------------------------------
--- EVENTS
----------------------------------------------
-
----@class GenericUI_Prefab_HotbarSlot_Event_ObjectDraggedIn
----@field Object GenericUI_Prefab_HotbarSlot_Object
 
 ---------------------------------------------
 -- METHODS
@@ -83,22 +96,34 @@ end
 function Slot.Create(ui, id, parent)
     ---@type GenericUI_Prefab_HotbarSlot
     local obj = Slot:_Create(ui, id)
+    obj._CanDragDrop = false
+    obj._AutoUpdateDelay = 0.1
+    obj._AutoUpdateRemainingDelay = obj._AutoUpdateDelay
+
     obj.SlotElement = ui:CreateElement(id, "Slot", parent)
+    local slot = obj.SlotElement
 
     obj:Clear()
 
-    obj.SlotElement.Events.MouseUp:Subscribe(function (e) obj:_OnElementMouseUp(e) end)
-    obj.SlotElement.Events.Clicked:Subscribe(function (e) obj:_OnSlotClicked(e) end)
-    obj.SlotElement.Events.DragStarted:Subscribe(function(e) obj:_OnSlotDragStarted(e) end)
-    obj.SlotElement.Events.MouseOver:Subscribe(function (e)
-        obj.SlotElement:SetHighlighted(true and obj.SlotElement:GetMovieClip().enabled and obj.SlotElement:GetMovieClip().oldCD == 0)
+    ---@diagnostic disable invisible
+    slot.Events.MouseUp:Subscribe(function (e) obj:_OnElementMouseUp(e) end)
+    slot.Events.Clicked:Subscribe(function (e) obj:_OnSlotClicked(e) end)
+    slot.Events.DragStarted:Subscribe(function(_) obj:_OnSlotDragStarted() end)
+    slot.Events.MouseOver:Subscribe(function (_)
+        obj:_ShowTooltip()
+        slot:SetHighlighted(slot:GetMovieClip().enabled and obj.SlotElement:GetMovieClip().oldCD == 0)
     end)
-    obj.SlotElement.Events.MouseOut:Subscribe(function (e)
-        obj.SlotElement:SetHighlighted(false)
+    slot.Events.MouseOut:Subscribe(function (_)
+        Tooltip.HideTooltip()
+        slot:SetHighlighted(false)
     end)
-    GameState.Events.RunningTick:Subscribe(function (e)
-        obj:_OnTick()
+    GameState.Events.RunningTick:Subscribe(function (ev)
+        obj:_OnTick(ev)
     end)
+    ---@diagnostic enable invisible
+
+    local icon = obj:CreateElement("RarityIcon", "GenericUI_Element_IggyIcon", slot)
+    obj.RarityIcon = icon
 
     return obj
 end
@@ -110,8 +135,7 @@ function Slot:SetObject(obj)
     elseif obj.Type == "Template" then
         self:SetTemplate(obj.TemplateID)
     elseif obj.Type == "Item" then
-        -- TODO
-        Ext.PrintWarning("SetObject() with object type Item not supported")
+        self:SetItem(Item.Get(obj.ItemHandle))
     else
         self:Clear()
     end
@@ -122,7 +146,7 @@ function Slot:SetSkill(skillID)
     local stat = Stats.Get("SkillData", skillID)
     local slot = self.SlotElement
 
-    slot:SetIcon(stat.Icon, 50, 50)
+    self:SetIcon(stat.Icon)
     slot:SetSourceBorder(stat["Magic Cost"] > 0)
 
     self.Object = _SlotObject.Create("Skill", {StatsID = skillID})
@@ -137,32 +161,65 @@ end
 ---@param item EclItem
 function Slot:SetItem(item)
     local slot = self.SlotElement
-    slot:SetIcon(Item.GetIcon(item), 50, 50)
+    self:SetIcon(Item.GetIcon(item))
+    self:SetRarityIcon(item)
     slot:SetCooldown(0, false)
 
     self.Object = _SlotObject.Create("Item", {ItemHandle = item.Handle})
-
     slot.Tooltip = nil
 end
 
+---Sets the icon of the slot.
+---@param icon icon
+---@param size Vector2?
+function Slot:SetIcon(icon, size)
+    local slot = self.SlotElement
+    size = size or Slot.ICON_SIZE
+
+    slot:SetIcon(icon, size:unpack())
+end
+
+---Sets the rarity frame.
+---@param rarity ItemLib_Rarity|EclItem
+function Slot:SetRarityIcon(rarity)
+    local element = self.RarityIcon
+    local icon = Item.GetRarityIcon(rarity)
+    
+    if icon then
+        element:SetIcon(icon, Slot.ICON_SIZE:unpack())
+    else
+        element:SetIcon("", 1, 1)
+    end
+end
+
+---Sets the slot to contain an item template.
+---Does not set rarity icon by design (since the player could have multiple items of the same template with varying rarities).
 ---@param templateID GUID
 function Slot:SetTemplate(templateID)
     local slot = self.SlotElement
-    local template = Ext.Template.GetTemplate(templateID)
+    local template = Ext.Template.GetTemplate(templateID) ---@type ItemTemplate
 
     if template then
         self.Object = _SlotObject.Create("Template", {TemplateID = templateID})
 
-        slot:SetIcon(template.Icon, 50, 50)
+        self:SetIcon(template.Icon)
         slot:SetCooldown(-1, false)
 
         slot.Tooltip = nil
     end
 end
 
+---Sets the enabled state of the slot.
+---@param enabled boolean
+function Slot:SetEnabled(enabled)
+    local slot = self.SlotElement
+
+    slot:SetEnabled(enabled)
+end
+
 function Slot:Clear()
     local slot = self.SlotElement
-    slot:SetIcon("", 1, 1)
+    self:SetIcon("", V(1, 1))
     slot:SetCooldown(-1, false)
     slot:SetEnabled(false)
     slot:SetLabel("")
@@ -170,91 +227,160 @@ function Slot:Clear()
     self.Object = _SlotObject.Create("None")
 end
 
+---Returns whether entities can be dragged in or out of the slot.
+---@return boolean
+function Slot:CanDragDrop()
+    return self._CanDragDrop
+end
+
+---Sets whether entities can be dragged in or out of the slot.
+---@param canDrag boolean
+function Slot:SetCanDragDrop(canDrag)
+    self._CanDragDrop = canDrag
+end
+
+---Sets the time between the element being automatically updated with data of its set entity.
+---@param delay number In seconds. Set to `-1` to disable.
+function Slot:SetUpdateDelay(delay)
+    self._AutoUpdateDelay = delay
+end
+
+---Returns whether the slot currently holds no object.
+---@return boolean
+function Slot:IsEmpty()
+    return self.Object == nil or self.Object.Type == "None"
+end
+
+---Shows the tooltip for the slot's held object.
+function Slot:_ShowTooltip()
+    if not self:IsEmpty() then
+        local obj = self.Object
+        if obj.Type == "Item" or obj.Type == "Template" then
+            local entity = obj:GetEntity() ---@type EclItem?
+    
+            if entity then
+                Tooltip.ShowItemTooltip(entity)
+            end
+        elseif obj.Type == "Skill" or obj.Type == "Action" then
+            Tooltip.ShowSkillTooltip(Client.GetCharacter(), obj.StatsID)
+        end
+    end
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
 
-function Slot:_OnElementMouseUp(e)
-    local data = Ext.UI.GetDragDrop().PlayerDragDrops[1]
-    local objectID = data.DragId
-
-    if objectID ~= "" then
-        local skill = Stats.Get("SkillData", objectID)
-
-        if skill then
-            self:SetSkill(objectID)
+function Slot:_OnElementMouseUp(_)
+    if self:CanDragDrop() then
+        local data = Ext.UI.GetDragDrop().PlayerDragDrops[1]
+        local objectID = data.DragId
+    
+        if objectID ~= "" then
+            local skill = Stats.Get("SkillData", objectID)
+    
+            if skill then
+                self:SetSkill(objectID)
+            end
+        else
+            local item = Item.Get(data.DragObject)
+    
+            if item then
+                self:SetTemplate(item.RootTemplate.Id)
+                self.Object.ItemHandle = item.Handle -- For dragging purposes only.
+            end
         end
-    else
-        local item = Item.Get(data.DragObject)
 
-        if item then
-            self:SetTemplate(item.RootTemplate.Id)
-            self.Object.ItemHandle = item.Handle -- For dragging purposes only.
+        -- Fire event if an item was set
+        if not self:IsEmpty() then
+            self.Events.ObjectDraggedIn:Throw({
+                Object = self.Object
+            })
         end
     end
 end
 
-function Slot:_OnTick()
-    local char = Client.GetCharacter()
-    local slot = self.SlotElement
-    local obj = self.Object
-    local preparedSkill = Client.UI.Hotbar.GetPreparedSkill(char)
-    local isPreparingSkill = false
+---Updates the element based on the held entity.
+---@param ev GameStateLib_Event_RunningTick
+function Slot:_OnTick(ev)
+    local canUpdate = false
 
-    if obj.Type == "Skill" then
-        local skill = char.SkillManager.Skills[obj.StatsID]
-        local cooldown = -1
-        local enabled = false
+    if self._AutoUpdateDelay > -1 then -- TODO use a timer instead
+        local remainingTime = self._AutoUpdateRemainingDelay
 
-        if skill then
-            cooldown = skill.ActiveCooldown / 6
-            enabled = Character.CanUseSkill(char, obj.StatsID)
+        remainingTime = remainingTime - ev.DeltaTime / 1000
+
+        if remainingTime <= 0 then
+            canUpdate = true
+
+            remainingTime = self._AutoUpdateDelay
         end
 
-        slot:SetLabel("")
-        slot:SetCooldown(cooldown, false)
-        slot:SetEnabled(enabled or cooldown > 0)
+        self._AutoUpdateRemainingDelay = remainingTime
+    end
 
-        if preparedSkill and not preparedSkill.Casting and preparedSkill.SkillID == obj.StatsID then
-            isPreparingSkill = true
-        end
-    elseif obj.Type == "Item" or obj.Type == "Template" then
-        local item = obj:GetEntity()
-
-        if item and item.Amount then
-            -- We display the total item count in the party inventory.
-            local amount = Item.GetPartyTemplateCount(item.RootTemplate.Id)
-            local label = ""
-            local isEnabled = amount > 0
-            if amount > 1 then label = tostring(amount) end -- Only display label for >1 item stacks
-
-            slot:SetLabel(label)
-            slot:SetCooldown(0, false)
-
-            if item.Stats then
-                isEnabled = isEnabled and Game.Stats.MeetsRequirements(char, item.Stats.Name, true, item)
+    if canUpdate then
+        local char = Client.GetCharacter()
+        local slot = self.SlotElement
+        local obj = self.Object
+        local preparedSkill = Client.UI.Hotbar.GetPreparedSkill(char)
+        local isPreparingSkill = false
+    
+        if obj.Type == "Skill" then
+            local skill = char.SkillManager.Skills[obj.StatsID]
+            local cooldown = -1
+            local enabled = false
+    
+            if skill then
+                cooldown = skill.ActiveCooldown / 6
+                enabled = Character.CanUseSkill(char, obj.StatsID)
             end
-
-            -- Item skills
-            local useActions = item.RootTemplate.OnUsePeaceActions
-            for _,action in ipairs(useActions) do
-                if action.Type == "UseSkill" and isEnabled then
-                    isEnabled = isEnabled and Character.CanUseSkill(char, action.SkillID, item)
+    
+            slot:SetLabel("")
+            slot:SetCooldown(cooldown, false)
+            self:SetEnabled(enabled or cooldown > 0)
+    
+            if preparedSkill and not preparedSkill.Casting and preparedSkill.SkillID == obj.StatsID then
+                isPreparingSkill = true
+            end
+        elseif obj.Type == "Item" or obj.Type == "Template" then
+            local item = obj:GetEntity()
+    
+            if item and item.Amount then
+                -- We display the total item count in the party inventory.
+                local amount = Item.GetPartyTemplateCount(item.RootTemplate.Id)
+                local label = ""
+                local isEnabled = amount > 0
+                if amount > 1 then label = tostring(amount) end -- Only display label for >1 item stacks
+    
+                slot:SetLabel(label)
+                slot:SetCooldown(0, false)
+    
+                if item.Stats then
+                    isEnabled = isEnabled and Game.Stats.MeetsRequirements(char, item.Stats.Name, true, item)
                 end
+    
+                -- Item skills
+                local useActions = item.RootTemplate.OnUsePeaceActions
+                for _,action in ipairs(useActions) do
+                    if action.Type == "UseSkill" and isEnabled then
+                        action = action ---@type UseSkillActionData
+
+                        isEnabled = isEnabled and Character.CanUseSkill(char, action.SkillID, item)
+                    end
+                end
+    
+                slot:SetEnabled(isEnabled)
+            else -- Clear the slot once we consume all stacks of this item.
+                self:Clear()
             end
-
-            slot:SetEnabled(isEnabled)
-        else -- Clear the slot once we consume all stacks of this item.
-            self:Clear()
         end
+    
+        slot:SetActive(isPreparingSkill)
     end
-
-    slot:SetActive(isPreparingSkill)
 end
 
-function Slot:_OnSlotClicked(e)
-    local char = Client.GetCharacter()
-    local slot = self.SlotElement
+function Slot:_OnSlotClicked(_)
     local obj = self.Object
     
     if obj.Type == "Skill" then
@@ -264,25 +390,30 @@ function Slot:_OnSlotClicked(e)
 
         Client.UI.Hotbar.UseSkill(item)
     end
+
+    self.Events.Clicked:Throw()
 end
 
-function Slot:_OnSlotDragStarted(e)
-    local obj = self.Object
-
-    if obj.Type == "Skill" then
-        Ext.UI.GetDragDrop():StartDraggingName(1, obj.StatsID)
-    elseif obj.Type == "Item" then
-        Ext.UI.GetDragDrop():StartDraggingObject(1, obj.ItemHandle)
-    elseif obj.Type == "Template" then
-        local item = obj:GetEntity()
-
-        Ext.UI.GetDragDrop():StartDraggingObject(1, item.Handle)
+---Handles drag-drops starting on the slot.
+function Slot:_OnSlotDragStarted()
+    if self:CanDragDrop() then
+        local obj = self.Object
+    
+        if obj.Type == "Skill" then
+            Ext.UI.GetDragDrop():StartDraggingName(1, obj.StatsID)
+        elseif obj.Type == "Item" then
+            Ext.UI.GetDragDrop():StartDraggingObject(1, obj.ItemHandle)
+        elseif obj.Type == "Template" then
+            local item = obj:GetEntity()
+    
+            Ext.UI.GetDragDrop():StartDraggingObject(1, item.Handle)
+        end
+    
+        -- Play dragging sound
+        self.UI:PlaySound("UI_Game_PartyFormation_PickUp")
+    
+        self:Clear()
     end
-
-    -- Play dragging sound
-    self.UI:PlaySound("UI_Game_PartyFormation_PickUp")
-
-    self:Clear()
 end
 
 ---------------------------------------------

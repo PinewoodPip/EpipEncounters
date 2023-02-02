@@ -23,7 +23,27 @@ Item = {
         Dummy_Attachment = true,
         Dummy_ProjectileFX = true,
     },
+
+    ---@type table<ItemLib_Rarity, icon>
+    _ITEM_RARITY_ICONS = {
+        Uncommon = "Item_Uncommon",
+        Rare = "Item_Rare",
+        Epic = "Item_Epic",
+        Legendary = "Item_Legendary",
+        Divine = "Item_Divine",
+        Unique = "Item_Unique",
+    },
 }
+
+---------------------------------------------
+-- CLASSES
+---------------------------------------------
+
+---@alias ItemLib_Rarity "Common"|"Uncommon"|"Rare"|"Epic"|"Legendary"|"Divine"|"Unique"
+
+---------------------------------------------
+-- METHODS
+---------------------------------------------
 
 ---Returns true if the item is an Artifact by checking the AMER_UNI tag.
 ---@param item Item
@@ -569,6 +589,20 @@ end
 ---@return integer? --`nil` if the item has no stats.
 function Item.GetLevel(item)
     return item.Stats and item.Stats.Level or nil
+end
+
+---Returns the icon frame for a rarity, if any.
+---@param rarity ItemLib_Rarity|EclItem
+---@return icon? --Not all rarities have icons.
+function Item.GetRarityIcon(rarity)
+    ---Item overload.
+    if type(rarity) ~= "string" then
+        local item = rarity
+
+        rarity = item.Stats.Rarity
+        print(rarity)
+    end
+    return Item._ITEM_RARITY_ICONS[rarity]
 end
 
 ---------------------------------------------
