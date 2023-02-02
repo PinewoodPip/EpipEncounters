@@ -263,6 +263,21 @@ function Tooltip.ShowSkillTooltip(char, skillID, position)
     ui:ExternalInterfaceCall("showSkillTooltip", Ext.UI.HandleToDouble(char.Handle), skillID, mouseX, mouseY, 100, 100, "left")
 end
 
+---Renders an item tooltip.
+---@param item EclItem
+---@param position Vector2D? Defaults to mouse position.
+function Tooltip.ShowItemTooltip(item, position)
+    local ui = Client.UI.Hotbar -- TODO replace once a better option becomes available.
+    local mouseX, mouseY = Client.GetMousePosition()
+
+    Tooltip._nextItemTooltip = {
+        ItemHandle = item.Handle,
+        Position = position or Vector.Create(mouseX, mouseY)
+    }
+
+    ui:ExternalInterfaceCall("showItemTooltip", Ext.UI.HandleToDouble(item.Handle), mouseX, mouseY, 100, 100, -1, "left") -- TODO customize align
+end
+
 ---@param char EclCharacter
 ---@param status EclStatus
 ---@param position Vector2D? Defaults to mouse position.
@@ -366,7 +381,7 @@ Ext.Events.UICall:Subscribe(function(ev)
     if ev.Function == "showSkillTooltip" and not Tooltip._nextCustomTooltip and not Tooltip._nextSkillTooltip then
         Tooltip.nextTooltipData = {UIType = ev.UI:GetTypeId(), Type = "Skill", FlashCharacterHandle = param1, SkillID = param2, UICall = ev.Function, FlashParams = {table.unpack(ev.Args)}}
         Tooltip._currentTooltipData = Tooltip.nextTooltipData
-    elseif ev.Function == "showItemTooltip" then
+    elseif ev.Function == "showItemTooltip" and not Tooltip._nextItemTooltip then
         Tooltip.nextTooltipData = {UIType = ev.UI:GetTypeId(), Type = "Item", FlashItemHandle = param1, UICall = ev.Function, FlashParams = {table.unpack(ev.Args)}}
         Tooltip._currentTooltipData = Tooltip.nextTooltipData
     elseif ev.Function == "showStatusTooltip" then
@@ -407,13 +422,15 @@ end, "After")
 
 -- Position custom skill tooltips after rendering.
 Ext.RegisterUINameInvokeListener("showFormattedTooltipAfterPos", function(ui)
-    if Tooltip._nextSkillTooltip then
-        local pos = Tooltip._nextSkillTooltip.Position
+    local customTooltip = Tooltip._nextSkillTooltip or Tooltip._nextItemTooltip
+    if customTooltip then
+        local pos = customTooltip.Position
 
         -- Tooltips are offset vertically so the position matches up with the top left corner.
         ui:SetPosition(math.floor(pos[1]), math.floor(pos[2]) + Tooltip._POSITION_OFFSET)
 
         Tooltip._nextSkillTooltip = nil
+        Tooltip._nextItemTooltip = nil
     end
 end, "After")
 

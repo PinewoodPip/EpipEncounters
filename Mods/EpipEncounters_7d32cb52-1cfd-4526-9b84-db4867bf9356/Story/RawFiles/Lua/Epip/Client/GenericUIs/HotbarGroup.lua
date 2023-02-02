@@ -80,6 +80,7 @@ function HotbarGroup:_Init(id)
 
         for z=1,self.COLUMNS,1 do
             local slot = HotbarSlot.Create(self.UI, "Row_" .. i .. "_Slot_" .. z, row)
+            slot:SetCanDragDrop(true)
 
             self.ELEMENT_ROWS[i][z] = slot
         end
