@@ -229,7 +229,7 @@ LOAD_ORDER = {
         }
     },
     
-    {ScriptSet = "Epip/EquipmentSwap", WIP = true,},
+    {ScriptSet = "Epip/EquipmentSwap"},
 
     {ScriptSet = "UI/Vanity/Tabs/Shapeshift", WIP = true},
 

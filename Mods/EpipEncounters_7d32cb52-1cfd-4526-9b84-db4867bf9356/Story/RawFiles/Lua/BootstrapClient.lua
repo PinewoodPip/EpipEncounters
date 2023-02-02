@@ -509,7 +509,7 @@ LOAD_ORDER = {
         }
     },
 
-    {ScriptSet = "Epip/EquipmentSwap", WIP = true,},
+    {ScriptSet = "Epip/EquipmentSwap"},
 
     "Epip/Client/EE_Dyes.lua",
 

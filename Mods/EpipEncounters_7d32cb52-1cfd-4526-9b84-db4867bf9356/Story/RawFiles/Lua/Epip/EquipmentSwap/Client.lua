@@ -98,6 +98,7 @@ function UI._RenderItem(item)
     if listIndex > #UI._Lists then
         table.insert(UI._Lists, UI.ItemsList:AddChild("List_" .. listIndex, "GenericUI_Element_HorizontalList"))
     end
+    local itemHandle = item.Handle
     local list = UI._Lists[listIndex]
     local element = HotbarSlot.Create(UI, item.MyGuid, list)
     element:SetItem(item)
@@ -105,7 +106,10 @@ function UI._RenderItem(item)
     element:SetEnabled(Stats.MeetsRequirements(Client.GetCharacter(), item.StatsId, true, item))
 
     element.Events.Clicked:Subscribe(function (_)
-        UI.Close()
+        local slottedItem = Item.Get(itemHandle)
+        if Stats.MeetsRequirements(Client.GetCharacter(), slottedItem.StatsId, true, slottedItem) then
+            UI.Close()
+        end
     end)
 
     UI._CurrentItemCount = UI._CurrentItemCount + 1
