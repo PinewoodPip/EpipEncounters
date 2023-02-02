@@ -139,6 +139,9 @@ package Elements
         {
             this.enabled = enabled;
             this.disable_mc.visible = !enabled;
+
+            // Keep enabled overlay above other elements.
+            this.setChildIndex(this.disable_mc, this.numChildren - 1);
         }
 
         public function SetWarning(enabled:Boolean) : *

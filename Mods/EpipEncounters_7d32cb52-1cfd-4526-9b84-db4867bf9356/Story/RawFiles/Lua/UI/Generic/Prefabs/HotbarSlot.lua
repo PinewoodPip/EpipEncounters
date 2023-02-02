@@ -111,6 +111,7 @@ function Slot.Create(ui, id, parent)
     iconMC.iggy_mc.x = 1
 
     local rarityIcon = obj:CreateElement("RarityIcon", "GenericUI_Element_IggyIcon", slot)
+    rarityIcon:SetPosition(1, 1)
     obj.RarityIcon = rarityIcon
 
     ---@diagnostic disable invisible

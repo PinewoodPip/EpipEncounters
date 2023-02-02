@@ -42,6 +42,8 @@ function Slot:_OnCreation()
     mc.source_frame_mc.y = -3
     mc.bg_mc.x = -3
     mc.bg_mc.y = -3
+    mc.highlight_mc.x, mc.highlight_mc.y = 1.5, 2
+    mc.disable_mc.x, mc.disable_mc.y = 2, 2
 end
 
 ---------------------------------------------
