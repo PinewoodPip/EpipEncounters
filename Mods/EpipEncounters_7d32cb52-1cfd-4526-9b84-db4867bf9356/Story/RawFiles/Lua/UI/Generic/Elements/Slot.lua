@@ -1,7 +1,7 @@
 
 local Generic = Client.UI.Generic
 
----@class GenericUI_Element_Slot : GenericUI_Element_IggyIcon
+---@class GenericUI_Element_Slot : GenericUI_Element
 ---@field Events GenericUI_Element_Slot_Events
 local Slot = {
     
@@ -16,7 +16,7 @@ Slot.Events = {
     DragStarted = {}, ---@type Event<GenericUI_Element_Slot_Event_DragStarted>
     Clicked = {}, ---@type Event<GenericUI_Element_Event_Clicked>
 }
-Generic.Inherit(Slot, Generic.ELEMENTS.IggyIcon)
+Generic.Inherit(Slot, Generic._Element)
 
 ---@class GenericUI_Element_Slot_Event_DragStarted
 ---@class GenericUI_Element_Event_Clicked
@@ -36,8 +36,6 @@ Slot.SetHighlighted = Generic.ExposeFunction("SetHighlighted")
 function Slot:_OnCreation()
     local mc = self:GetMovieClip()
 
-    mc.iggy_mc.y = 1
-    mc.iggy_mc.x = 1
     mc.frame_mc.x = -3
     mc.frame_mc.y = -3
     mc.source_frame_mc.x = -3

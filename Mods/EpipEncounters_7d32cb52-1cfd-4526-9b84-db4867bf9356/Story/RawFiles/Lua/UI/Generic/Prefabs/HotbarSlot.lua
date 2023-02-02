@@ -5,6 +5,7 @@ local Tooltip = Client.Tooltip
 local V = Vector.Create
 
 ---@class GenericUI_Prefab_HotbarSlot : GenericUI_Prefab
+---@field SlotIcon GenericUI_Element_IggyIcon
 ---@field RarityIcon GenericUI_Element_IggyIcon
 ---@field _CanDragDrop boolean
 ---@field _AutoUpdateDelay number In seconds.
@@ -103,7 +104,14 @@ function Slot.Create(ui, id, parent)
     obj.SlotElement = ui:CreateElement(id, "Slot", parent)
     local slot = obj.SlotElement
 
-    obj:Clear()
+    local icon = obj:CreateElement("Icon", "GenericUI_Element_IggyIcon", slot)
+    obj.SlotIcon = icon
+    local iconMC = icon:GetMovieClip()
+    iconMC.iggy_mc.y = 1
+    iconMC.iggy_mc.x = 1
+
+    local rarityIcon = obj:CreateElement("RarityIcon", "GenericUI_Element_IggyIcon", slot)
+    obj.RarityIcon = rarityIcon
 
     ---@diagnostic disable invisible
     slot.Events.MouseUp:Subscribe(function (e) obj:_OnElementMouseUp(e) end)
@@ -122,8 +130,7 @@ function Slot.Create(ui, id, parent)
     end)
     ---@diagnostic enable invisible
 
-    local icon = obj:CreateElement("RarityIcon", "GenericUI_Element_IggyIcon", slot)
-    obj.RarityIcon = icon
+    obj:Clear()
 
     return obj
 end
@@ -173,7 +180,7 @@ end
 ---@param icon icon
 ---@param size Vector2?
 function Slot:SetIcon(icon, size)
-    local slot = self.SlotElement
+    local slot = self.SlotIcon
     size = size or Slot.ICON_SIZE
 
     slot:SetIcon(icon, size:unpack())

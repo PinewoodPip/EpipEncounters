@@ -1,7 +1,7 @@
 
 ---@meta
 
----@class GenericUI_Element_Slot : GenericUI_Element_IggyIcon
+---@class GenericUI_Element_Slot
 local Slot = {}
 
 ---Sets the cooldown displayed by the slot.

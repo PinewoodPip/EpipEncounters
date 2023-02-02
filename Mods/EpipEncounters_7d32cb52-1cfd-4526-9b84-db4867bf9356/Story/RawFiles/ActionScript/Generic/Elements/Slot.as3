@@ -19,7 +19,6 @@ package Elements
         // public var unavailable_mc:MovieClip;
         // public var frame_mc:MovieClip;
         // public var source_frame_mc:Shape;
-        // public var iggy_mc:MovieClip;
         public var activeHighlight_mc:MovieClip;
         public var highlight_mc:MovieClip;
 
@@ -35,7 +34,6 @@ package Elements
         {
             super();
 
-            this.setChildIndex(this.iggy_mc, 0);
             this.setChildIndex(this.bg_mc, 0);
 
             this.SetEnabled(true);
@@ -206,8 +204,7 @@ package Elements
         
         private function frame1() : *
         {
-            // Setup iggy icon
-            this.iggy_mc.name = "iggy_" + this.stringID;
+            
         }
     }
 }
