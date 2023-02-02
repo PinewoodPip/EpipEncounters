@@ -3,6 +3,7 @@ local Generic = Client.UI.Generic
 local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 local HotbarSlot = Generic.GetPrefab("GenericUI_Prefab_HotbarSlot")
 local Tooltip = Client.Tooltip
+local Input = Client.Input
 local V = Vector.Create
 
 ---@class Feature_EquipmentSwap
@@ -11,6 +12,7 @@ local UI = Generic.Create("Epip_EquipmentSwap")
 UI._Initialized = false
 UI._Lists = {} ---@type GenericUI_Element_HorizontalList[]
 UI._CurrentItemCount = 0
+UI._IsCursorOverUI = false
 
 UI.BACKGROUND_SIZE = V(400, 400)
 UI.HEADER_SIZE = V(400, 50)
@@ -85,6 +87,12 @@ function UI._Initialize()
     if not UI._Initialized then
         local bg = UI:CreateElement("Background", "GenericUI_Element_TiledBackground")
         bg:SetBackground("FormattedTooltip", UI.BACKGROUND_SIZE:unpack())
+        bg.Events.MouseOver:Subscribe(function (_)
+            UI._IsCursorOverUI = true
+        end)
+        bg.Events.MouseOut:Subscribe(function (_)
+            UI._IsCursorOverUI = false
+        end)
 
         local header = TextPrefab.Create(UI, "Header", bg, "Quick Swap", "Center", UI.HEADER_SIZE)
         header:SetPositionRelativeToParent("Top", 0, 20)
@@ -104,6 +112,19 @@ end
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
+
+-- Close the UI when escape is pressed, or when a mouse press occurs outside the UI.
+Input.Events.KeyStateChanged:Subscribe(function (ev)
+    if ev.InputID == "escape" and UI:IsVisible() then
+        UI.Close()
+        ev:Prevent()
+    end
+end)
+Input.Events.MouseButtonPressed:Subscribe(function (ev)
+    if UI:IsVisible() and not UI._IsCursorOverUI then
+        UI.Close()
+    end
+end)
 
 -- Add option to equipment context menus.
 Client.UI.ContextMenu.RegisterVanillaMenuHandler("Item", function(item)
