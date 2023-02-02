@@ -509,6 +509,8 @@ LOAD_ORDER = {
         }
     },
 
+    {ScriptSet = "Epip/EquipmentSwap", WIP = true,},
+
     "Epip/Client/EE_Dyes.lua",
 
     "Epip/Compatibility/MajoraFashionSins/Client.lua",

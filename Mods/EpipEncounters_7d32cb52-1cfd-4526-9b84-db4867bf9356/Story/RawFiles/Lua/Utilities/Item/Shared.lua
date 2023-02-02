@@ -600,7 +600,6 @@ function Item.GetRarityIcon(rarity)
         local item = rarity
 
         rarity = item.Stats.Rarity
-        print(rarity)
     end
     return Item._ITEM_RARITY_ICONS[rarity]
 end
