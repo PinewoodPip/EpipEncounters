@@ -19,6 +19,7 @@ local EpipSettings = {
             Text = "Changes Epip's language to display in a language different than the one the game is running in.\nUse to remedy current issues with running EE mods in languages other than English.",
             ContextDescription = "Epip language setting tooltip",
         },
+
         AutoIdentify_Name = {
             Handle = "h799513e4g3995g4d45g8e0bg3ee08e6cd1db",
             Text = "Auto-Identify Items",
@@ -28,6 +29,11 @@ local EpipSettings = {
             Handle = "he0bb8817g7c40g4572g9170gce3d351dc753",
             Text = "Automatically and instantly identify items whenever they are generated.<br>'With enough Loremaster' uses the highest Loremaster of all player characters, regardless of party.",
             ContextDescription = "Auto-identify setting tooltip",
+        },
+        AutoIdentify_Option_WithLoremaster = {
+           Handle = "h00be848dgbfbfg404agabddg983860260ed4",
+           Text = "With enough Loremaster",
+           ContextDescription = "Autoidentify option",
         },
 
         ImmersiveMeditation_Name = {
@@ -1244,7 +1250,7 @@ local newSettings = {
         ---@type SettingsLib_Setting_Choice_Entry[]
         Choices = {
             {ID = 1, Name = "Disabled"},
-            {ID = 2, Name = "With enough Loremaster"},
+            {ID = 2, NameHandle = TSKs.AutoIdentify_Option_WithLoremaster.Handle},
             {ID = 3, Name = "Always"},
         }
     },

@@ -24,20 +24,21 @@ local AnimCancel = {
         "Target_DaggersDrawn",
     }),
 
-    Settings = {
-        Enabled = {
-            Type = "Boolean",
-            Name = "Animation Cancelling",
-            Description = Text.Format("Cancels your controlled character's spell animations after their effects execute.\n\n%s", {
-                FormatArgs = {
-                    {
-                        Text = "Experimental! May cause issues with certain skills. Please report any!",
-                        Color = Color.LARIAN.YELLOW,
-                    },
-                },
-            }),
-            DefaultValue = false,
-            Context = "Client",
+    TranslatedStrings = {
+        Setting_Name = {
+           Handle = "h3bf7ae10g24e1g4f50gbc69g71a8b95b1a51",
+           Text = "Animation Cancelling",
+           ContextDescription = "Setting name",
+        },
+        Setting_Tooltip = {
+           Handle = "he5c3a752gd8bag48fagb611g35b5d23bef9d",
+           Text = "Cancels your controlled character's spell animations after their effects execute.\n\n%s",
+           ContextDescription = "Setting tooltip",
+        },
+        Setting_Warning = {
+           Handle = "he9f82492g81f0g4e53g9eefg731a6f800db8",
+           Text = "Experimental! May cause issues with certain skills. Please report any!",
+           ContextDescription = "Setting warning",
         },
     },
 
@@ -50,6 +51,25 @@ local AnimCancel = {
     }
 }
 Epip.RegisterFeature("AnimationCancelling", AnimCancel)
+
+---------------------------------------------
+-- SETTINGS
+---------------------------------------------
+
+AnimCancel:RegisterSetting("Enabled", {
+    Type = "Boolean",
+    NameHandle = AnimCancel.TranslatedStrings.Setting_Name,
+    Description = Text.Format(AnimCancel.TranslatedStrings.Setting_Tooltip:GetString(), {
+        FormatArgs = {
+            {
+                Text = AnimCancel.TranslatedStrings.Setting_Warning:GetString(),
+                Color = Color.LARIAN.YELLOW,
+            },
+        },
+    }),
+    DefaultValue = false,
+    Context = "Client",
+})
 
 ---------------------------------------------
 -- NET MESSAGES

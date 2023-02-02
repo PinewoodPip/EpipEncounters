@@ -455,7 +455,7 @@ end
 ---Returns the string bound to a TranslatedStringHandle, or a key.
 ---@param handle TranslatedStringHandle|string|TextLib_TranslatedString Accepts handles or keys.
 ---@param fallBack string?
----@return string -- Defaults to the handle, of fallBack if specified.
+---@return string -- Defaults to the handle, or fallBack if specified.
 function Text.GetTranslatedString(handle, fallBack)
     local str
 
@@ -470,8 +470,12 @@ function Text.GetTranslatedString(handle, fallBack)
         str = Ext.L10N.GetTranslatedStringFromKey(handle)
     end
 
-    ---@diagnostic disable-next-line: return-type-mismatch
-    return str or fallBack or handle
+    -- Consider empty strings invalid and use fallback.
+    if str == "" then
+        str = fallBack or handle ---@type string
+    end
+
+    return str
 end
 
 ---Registers a translated string.

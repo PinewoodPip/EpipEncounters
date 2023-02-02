@@ -5,7 +5,6 @@
 
 ---@class Feature : Library
 ---@field Disabled boolean
----@field Settings table<string, SettingsLib_Setting>
 ---@field REQUIRED_MODS table<GUID, string> The feature will be automatically disabled if any required mods are missing.
 ---@field FILEPATH_OVERRIDES table<string, string>
 ---@field IsEnabled fun(self):boolean
@@ -20,13 +19,12 @@
 ---@field FireGlobalEvent fun(self, event:string, ...:any)
 ---@field MOD_TABLE_ID string
 ---@field DoNotExportTSKs boolean? If `true`, TSKs will not be exported to localization templates.
+---@field TranslatedStrings table<TranslatedStringHandle, Feature_TranslatedString>
+---@field Settings table<string, SettingsLib_Setting>
 local Feature = {
     Disabled = false,
     Logging = 0,
 
-    Settings = {}, ---@type table<string, SettingsLib_Setting>
-
-    TranslatedStrings = {}, ---@type table<TranslatedStringHandle, Feature_TranslatedString>
     TSK = {}, ---@type table<TranslatedStringHandle, string> Automatically managed.
     UserVariables = {}, ---@type table<string, UserVarsLib_UserVar>
     _localTranslatedStringKeys = {}, ---@type table<string, TranslatedStringHandle>
@@ -106,6 +104,7 @@ function Feature.Create(modTable, id, feature)
 
     -- Initialize translated strings
     feature._localTranslatedStringKeys = {}
+    feature.TranslatedStrings = feature.TranslatedStrings or {}
     for handle,data in pairs(feature.TranslatedStrings) do
         local localKey = data.Handle and handle or data.LocalKey -- If Handle is manually set, use table key as localKey
 
@@ -151,11 +150,9 @@ function Feature.Create(modTable, id, feature)
     setmetatable(feature.TSK, TSKmetatable)
 
     -- Initialize settings
-    for id,setting in pairs(feature.Settings) do
-        setting.ID = id
-        setting.ModTable = feature:GetSettingsModuleID()
-
-        Settings.RegisterSetting(setting)
+    feature.Settings = feature.Settings or {}
+    for settingID,setting in pairs(feature.Settings) do
+        feature:RegisterSetting(settingID, setting)
     end
 
     -- Initialize user variables
@@ -211,6 +208,19 @@ end
 ---------------------------------------------
 -- SETTINGSLIB METHODS
 ---------------------------------------------
+
+---Registers a setting with the feature's module ID.
+---@param id string
+---@param data SettingsLib_Setting
+function Feature:RegisterSetting(id, data)
+    data.ID = id
+    data.ModTable = self:GetSettingsModuleID()
+    data.Context = data.Context or Mod.GetCurrentContext()
+
+    Settings.RegisterSetting(data)
+
+    self.Settings[id] = data
+end
 
 ---@param setting string|SettingsLib_Setting
 function Feature:GetSettingValue(setting)

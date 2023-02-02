@@ -25,50 +25,56 @@ local QuickExamine = {
         "Height",
     }),
 
-    Settings = {
-        AllowDead = {
-            Type = "Boolean",
-            Name = "Enable Corpses",
-            Description = "Allows examining dead characters.",
-            DefaultValue = false,
+    TranslatedStrings = {
+        SavePosition = {
+           Handle = "h6cc76e3fg8d5cg466egb96agb780b490d0d5",
+           Text = "Save Default Position",
+           ContextDescription = "Settings button to set default position",
         },
-        Opacity = {
-            Type = "ClampedNumber",
-            Name = "Background Opacity",
-            Description = "Controls the opacity of the background panel.<br><br>Default is 80%.",
-            Min = 0,
-            Max = 100,
-            Step = 1,
-            HideNumbers = false,
-            DefaultValue = 80,
+        SavePositionTooltip = {
+           Handle = "h9e8f2aecg2b81g4f48ga9bbg43dd8f593686",
+           Text = "Saves the UI's current position and restores it upon reloading. Use to set the default position of the UI.",
+           ContextDescription = "Tooltip for button to set default position",
         },
-        Width = {
-            Type = "ClampedNumber",
-            Name = "Width",
-            Description = "Controls the width of the user interface.<br><br>Default is 400.",
-            Min = 300,
-            Max = 800,
-            Step = 1,
-            HideNumbers = false,
-            DefaultValue = 400,
+        EnableCorpses_Name = {
+           Handle = "h30052af9g5fbag4abcg9a0eg1ee45676a79c",
+           Text = "Enable Corpses",
+           ContextDescription = "Setting name",
         },
-        Height = {
-            Type = "ClampedNumber",
-            Name = "Height",
-            Description = "Controls the height of the user interface.<br><br>Default is 600.",
-            Min = 300,
-            Max = 800,
-            Step = 1,
-            HideNumbers = false,
-            DefaultValue = 600,
+        EnableCorpses_Description = {
+           Handle = "ha15ba540g2da4g4056g8174gcd25a3b1d343",
+           Text = "Allows examining dead characters.",
+           ContextDescription = "Setting tooltip",
         },
-        -- Hidden from the user, set through a button in the settings menu.
-        Position = {
-            Type = "Vector",
-            Name = "Position",
-            Arity = 2,
-            Description = "Controls the position of the interface.",
-            DefaultValue = Vector.Create(-1, -1),
+        Opacity_Name = {
+           Handle = "h042a555bg1f1dg43efg97a8g0df8238a0eb5",
+           Text = "Background Opacity",
+           ContextDescription = "Setting name",
+        },
+        Opacity_Description = {
+           Handle = "h3985c604gd7a2g4e68gb817g4d1311259a13",
+           Text = "Controls the opacity of the background panel.<br><br>Default is 80%.",
+           ContextDescription = "Setting tooltip",
+        },
+        Width_Name = {
+           Handle = "h3a060f85gad6dg4e73g8526ga0606d366478",
+           Text = "Width",
+           ContextDescription = "Setting name",
+        },
+        Width_Description = {
+           Handle = "h4f610121gdb42g4d2fg9a8ag61eeedb018cb",
+           Text = "Controls the width of the user interface.<br><br>Default is 400.",
+           ContextDescription = "Setting tooltip",
+        },
+        Height_Name = {
+           Handle = "h693e7865g63d9g402bgba37g2f627a59d4c6",
+           Text = "Height",
+           ContextDescription = "Setting name",
+        },
+        Height_Description = {
+           Handle = "hccad2bc4g7010g48e3gae5dg045ab5228de2",
+           Text = "Controls the height of the user interface.<br><br>Default is 600.",
+           ContextDescription = "Setting tooltip",
         },
     },
 
@@ -82,6 +88,57 @@ local QuickExamine = {
     }
 }
 Epip.RegisterFeature("QuickExamine", QuickExamine)
+
+---------------------------------------------
+-- SETTINGS
+---------------------------------------------
+
+local TSKs = QuickExamine.TranslatedStrings
+
+QuickExamine:RegisterSetting("AllowDead", {
+    Type = "Boolean",
+    Name = TSKs.EnableCorpses_Name,
+    Description = TSKs.EnableCorpses_Description,
+    DefaultValue = false,
+})
+QuickExamine:RegisterSetting("Opacity", {
+    Type = "ClampedNumber",
+    Name = TSKs.Opacity_Name,
+    Description = TSKs.Opacity_Description,
+    Min = 0,
+    Max = 100,
+    Step = 1,
+    HideNumbers = false,
+    DefaultValue = 80,
+})
+QuickExamine:RegisterSetting("Width", {
+    Type = "ClampedNumber",
+    Name = TSKs.Width_Name,
+    Description = TSKs.Width_Description,
+    Min = 300,
+    Max = 800,
+    Step = 1,
+    HideNumbers = false,
+    DefaultValue = 400,
+})
+QuickExamine:RegisterSetting("Height", {
+    Type = "ClampedNumber",
+    Name = TSKs.Height_Name,
+    Description = TSKs.Height_Description,
+    Min = 300,
+    Max = 800,
+    Step = 1,
+    HideNumbers = false,
+    DefaultValue = 600,
+})
+-- Hidden from the user, set through a button in the settings menu.
+QuickExamine:RegisterSetting("Position", {
+    Type = "Vector",
+    Name = "Position",
+    Arity = 2,
+    Description = "Controls the position of the interface.",
+    DefaultValue = Vector.Create(-1, -1),
+})
 
 ---------------------------------------------
 -- CLASSES

@@ -102,3 +102,15 @@ function Mod.GetStoryVersion(guid)
 
     return major, minor, revision, build
 end
+
+---Returns the context the caller script is running in.
+---@return "Client"|"Server"
+function Mod.GetCurrentContext()
+    local ctx = "Client"
+
+    if Ext.IsServer() then
+        ctx = "Server"
+    end
+
+    return ctx
+end
