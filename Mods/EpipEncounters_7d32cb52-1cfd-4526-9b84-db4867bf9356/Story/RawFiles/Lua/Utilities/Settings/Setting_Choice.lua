@@ -55,7 +55,7 @@ function _Choice:SetValue(value)
         if choice then
             value = choice.ID
         else
-            error("SetValue(): Invalid choice index " .. (value or "nil"))
+            error("SetValue(): Invalid choice index " .. (tostring(value) or "nil"))
         end
     end
 

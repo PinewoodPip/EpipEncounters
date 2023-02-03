@@ -306,6 +306,13 @@ Client.UI.ContextMenu.RegisterVanillaMenuHandler("Item", function(item)
 end)
 
 -- Listen for context menu button being pressed.
-Client.UI.ContextMenu.RegisterElementListener("epip_Feature_QuickInventory", "buttonPressed", function(_, _)
-    UI.Setup() -- TODO set settings
+Client.UI.ContextMenu.RegisterElementListener("epip_Feature_QuickInventory", "buttonPressed", function(item, _)
+    item = item ---@type EclItem
+
+    -- Set filters to show items valid for the slot
+    QuickInventory:SetSettingValue(QuickInventory.Settings.ItemCategory, "Equipment")
+    QuickInventory:SetSettingValue(QuickInventory.Settings.ItemSlot, tostring(Item.GetItemSlot(item)))
+    QuickInventory:SetSettingValue(QuickInventory.Settings.WeaponSubType, "Any")
+    
+    UI.Setup()
 end)
