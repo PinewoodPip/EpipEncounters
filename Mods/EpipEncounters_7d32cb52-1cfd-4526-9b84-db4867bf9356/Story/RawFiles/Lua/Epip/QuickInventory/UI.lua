@@ -88,9 +88,10 @@ function UI._RenderItem(item)
     local itemHandle = item.Handle
     local list = UI._Lists[listIndex]
     local element = HotbarSlot.Create(UI, item.MyGuid, list)
+    local meetsRequirements = Stats.MeetsRequirements(Client.GetCharacter(), item.StatsId, true, item)
     element:SetItem(item)
     element:SetUpdateDelay(-1)
-    element:SetEnabled(Stats.MeetsRequirements(Client.GetCharacter(), item.StatsId, true, item))
+    element:SetEnabled(meetsRequirements)
 
     element.Events.Clicked:Subscribe(function (_)
         local slottedItem = Item.Get(itemHandle)
@@ -201,6 +202,13 @@ end
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
+
+-- Refresh the UI when the client character changes.
+Client.Events.ActiveCharacterChanged:Subscribe(function (_)
+    if UI:IsVisible() then
+        UI.Refresh()
+    end
+end)
 
 -- Close the UI when escape is pressed, or when a mouse press occurs outside the UI.
 Input.Events.KeyStateChanged:Subscribe(function (ev)
