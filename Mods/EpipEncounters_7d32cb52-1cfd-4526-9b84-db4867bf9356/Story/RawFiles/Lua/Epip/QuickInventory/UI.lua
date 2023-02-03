@@ -163,6 +163,13 @@ function UI._Initialize()
         end)
         UI.Background = bg
 
+        local closeButton = bg:AddChild("CloseButton", "GenericUI_Element_Button")
+        closeButton:SetType("Close")
+        closeButton:SetPositionRelativeToParent("TopLeft", 9, 9)
+        closeButton.Events.Pressed:Subscribe(function (_)
+            UI:Hide()
+        end)
+
         local scrollList = bg:AddChild("Items", "GenericUI_Element_ScrollList")
         scrollList:SetFrame(UI.SCROLL_LIST_FRAME:unpack())
         scrollList:SetMouseWheelEnabled(true)
