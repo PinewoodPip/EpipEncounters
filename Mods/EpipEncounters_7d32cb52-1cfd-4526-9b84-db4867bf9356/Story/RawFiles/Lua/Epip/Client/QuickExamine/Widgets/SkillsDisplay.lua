@@ -1,7 +1,7 @@
 
 local QuickExamine = Epip.GetFeature("Feature_QuickExamine")
 local Generic = Client.UI.Generic
-local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
+local HotbarSlot = Generic.GetPrefab("GenericUI_Prefab_HotbarSlot")
 local V = Vector.Create
 
 ---@class Feature_QuickExamine_SkillsDisplay : Feature
@@ -22,24 +22,25 @@ function Skills._RenderSkill(container, char, skillID)
     local state = char.SkillManager.Skills[skillID]
 
     if state and Character.IsSkillMemorized(char, skillID) then
-        local element = container:AddChild(skillID, "GenericUI_Element_Slot")
-        local movieClip = element:GetMovieClip()
+        local element = HotbarSlot.Create(QuickExamine.UI, skillID, container)
+        local movieClip = element.SlotElement:GetMovieClip()
         local cooldown = state.ActiveCooldown
         local handle = char.Handle
 
+        element:SetUpdateDelay(-1)
+        element:SetUsable(false)
+        element:SetSkill(skillID)
         element:SetEnabled(cooldown <= 0)
         element:SetCooldown(math.ceil(cooldown / 6), false)
-        element:SetIcon(skill.Icon, 50, 50)
+        element:SetIcon(skill.Icon)
         movieClip.width = Skills.SKILL_ICON_SIZE
         movieClip.height = Skills.SKILL_ICON_SIZE
     
-        element.Events.MouseOver:Subscribe(function (_) -- Show tooltip.
+        element.Hooks.GetTooltipData:Subscribe(function (ev)
             local position = V(QuickExamine.UI:GetUI():GetPosition())
 
-            Client.Tooltip.ShowSkillTooltip(Character.Get(handle), skillID, position - V(420, 0))
-        end)
-        element.Events.MouseOut:Subscribe(function (_) -- Hide tooltip.
-            Client.Tooltip.HideTooltip()
+            ev.Owner = Character.Get(handle)
+            ev.Position = position - V(420, 0) -- Rough width of tooltip UI
         end)
     end
 end
