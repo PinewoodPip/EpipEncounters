@@ -12,6 +12,8 @@ local QuickInventory = {
         Artifact = 8,
     },
 
+    Settings = {},
+
     TranslatedStrings = {
         Header = {
            Handle = "hf196badfg6c61g4bd5g91e8g7bfbf9874cbf",
@@ -27,6 +29,16 @@ local QuickInventory = {
            Handle = "hd5a53bd8gdcaag4280ga76dg905f40bde45e",
            Text = "Show learned skills",
            ContextDescription = "Checkbox for showing learnt skillbooks",
+        },
+        ConsumablesCategory_Name = {
+           Handle = "hb29270e7g6dc8g44c0g9391g21b25965aea6",
+           Text = "Consumable Type",
+           ContextDescription = "Name for consumables dropdown (for selecting potion/scroll etc.)",
+        },
+        ScrollsAndGrenades = {
+           Handle = "hc9a05852g3523g4c85gad7cg49f293c2cd29",
+           Text = "Scrolls and Grenades",
+           ContextDescription = "Name for consumables dropdown option",
         },
     },
 
@@ -87,4 +99,20 @@ function QuickInventory.GetItems()
     end)
 
     return items
+end
+
+---Returns whether an item has any tags from a set.
+---@param item EclItem
+---@param tags DataStructures_Set
+function QuickInventory.ItemHasRelevantTag(item, tags)
+    local hasTag = false
+
+    for tag in tags:Iterator() do
+        if item:HasTag(tag) then
+            hasTag = true
+            break
+        end
+    end
+
+    return hasTag
 end

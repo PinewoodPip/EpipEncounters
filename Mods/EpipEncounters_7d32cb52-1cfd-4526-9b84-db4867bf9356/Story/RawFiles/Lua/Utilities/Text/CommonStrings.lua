@@ -199,6 +199,18 @@ Text.CommonStrings.AbilitySchool = Text.RegisterTranslatedString({
    Handle = "h5025c292g5fd8g46fegac5bgee45a7acc134",
    Text = "Ability School",
 })
+Text.CommonStrings.Potions = Text.RegisterTranslatedString({
+   Handle = "h962807b6g8756g412dga48eg5a2c6a71e76f",
+   Text = "Potions",
+})
+Text.CommonStrings.Scrolls = Text.RegisterTranslatedString({
+   Handle = "hb986b161gd6c3g459bga8f6gba07c8483103",
+   Text = "Scrolls",
+})
+Text.CommonStrings.FoodAndDrinks = Text.RegisterTranslatedString({
+   Handle = "h8d88a6c9gb72cg422fg8929g396e84f1e77b",
+   Text = "Food and Drinks",
+})
 
 ---------------------------------------------
 -- SETUP
