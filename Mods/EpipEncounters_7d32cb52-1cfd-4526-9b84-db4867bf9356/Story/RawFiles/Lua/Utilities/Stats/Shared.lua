@@ -101,7 +101,11 @@ function Stats.MeetsRequirements(char, statID, isItem, itemSource)
     -- local dynamicStats = char.Stats.DynamicStats
 
     if isItem and itemSource then
-        isEquipment = itemSource.Stats.ItemType ~= ""
+        if not itemSource.Stats then
+            return true
+        else
+            isEquipment = itemSource.Stats.ItemType ~= ""
+        end
     end
 
     -- Dead chars cannot use skills or items.

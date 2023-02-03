@@ -107,6 +107,7 @@ function Slot.Create(ui, id, parent)
     obj._CanDragDrop = false
     obj._AutoUpdateDelay = 0.1
     obj._AutoUpdateRemainingDelay = obj._AutoUpdateDelay
+    obj._Usable = true
 
     obj.SlotElement = ui:CreateElement(id, "Slot", parent)
     local slot = obj.SlotElement

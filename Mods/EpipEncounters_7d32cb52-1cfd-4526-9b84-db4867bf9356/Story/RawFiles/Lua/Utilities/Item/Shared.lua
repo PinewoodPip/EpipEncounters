@@ -1,10 +1,22 @@
 
+local Set = DataStructures.Get("DataStructures_Set")
+
 ---@class ItemLib : Library
 Item = {
     -- TODO
     RARITY_COLORS = {
         ARTIFACT = "a34114",
     },
+
+    MELEE_WEAPON_TYPES = Set.Create({
+        "Sword",
+        "Club",
+        "Knife",
+        "Dagger",
+        "Axe",
+        "Spear",
+        "Staff",
+    }),
 
     SHEATHED_ATTACHMENT_BONES = {
         BOW = "Dummy_Weapon_BOW",
@@ -64,7 +76,7 @@ end
 ---@param item Item
 ---@return boolean
 function Item.IsMeleeWeapon(item)
-    return item and item.Stats and (Data.Game.MELEE_WEAPONS[item.Stats.WeaponType] or item.Stats.WeaponType == "None")
+    return item and item.Stats and (Item.MELEE_WEAPON_TYPES:Contains(item.Stats.WeaponType) or item.Stats.WeaponType == "None")
 end
 
 ---Returns the icon of the item.
@@ -599,9 +611,16 @@ function Item.GetRarityIcon(rarity)
     if type(rarity) ~= "string" then
         local item = rarity
 
-        rarity = item.Stats.Rarity
+        rarity = item.Stats and item.Stats.Rarity or ""
     end
     return Item._ITEM_RARITY_ICONS[rarity]
+end
+
+---Returns whether an item is marked as wares.
+---@param item Item
+---@return boolean
+function Item.IsMarkedAsWares(item)
+    return item.Flags["DontAddToBottomBar"]
 end
 
 ---------------------------------------------

@@ -516,7 +516,12 @@ LOAD_ORDER = {
         }
     },
 
-    {ScriptSet = "Epip/EquipmentSwap"},
+    {
+        Scripts = {
+            "Epip/QuickInventory/Client.lua",
+            "Epip/QuickInventory/UI.lua",
+        }
+    },
 
     "Epip/Client/EE_Dyes.lua",
 

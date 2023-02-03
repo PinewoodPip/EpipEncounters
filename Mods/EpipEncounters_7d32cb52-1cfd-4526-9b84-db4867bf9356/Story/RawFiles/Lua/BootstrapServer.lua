@@ -234,8 +234,6 @@ LOAD_ORDER = {
             "Epip/Fishing/Shared_Data.lua",
         }
     },
-    
-    {ScriptSet = "Epip/EquipmentSwap"},
 
     {ScriptSet = "UI/Vanity/Tabs/Shapeshift", WIP = true},
 

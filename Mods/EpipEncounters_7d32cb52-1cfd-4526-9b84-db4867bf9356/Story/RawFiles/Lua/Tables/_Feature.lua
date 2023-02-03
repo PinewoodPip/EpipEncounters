@@ -224,11 +224,24 @@ end
 
 ---@param setting string|SettingsLib_Setting
 function Feature:GetSettingValue(setting)
+    -- Table overload.
     if type(setting) == "table" then
         setting = setting.ID
     end
 
     return Settings.GetSettingValue(self:GetSettingsModuleID(), setting)
+end
+
+---Sets the value of a setting.
+---@param setting string|SettingsLib_Setting
+---@param value any
+function Feature:SetSettingValue(setting, value)
+    -- Table overload.
+    if type(setting) == "table" then
+        setting = setting.ID
+    end
+
+    Settings.SetValue(self:GetSettingsModuleID(), setting, value)
 end
 
 ---@return string

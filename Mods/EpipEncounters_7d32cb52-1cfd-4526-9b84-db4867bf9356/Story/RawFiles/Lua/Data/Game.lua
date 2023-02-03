@@ -721,16 +721,6 @@ Data.Game.ATTRIBUTE_STATS = {
     ["Wits"] = true,
 }
 
-Data.Game.MELEE_WEAPONS = {
-    Sword = true,
-    Club = true,
-    Knife = true,
-    Dagger = true, -- Alias
-    Axe = true,
-    Spear = true,
-    Staff = true,
-}
-
 Data.Game.RANGED_WEAPONS = {
     Bow = true,
     Crossbow = true,
