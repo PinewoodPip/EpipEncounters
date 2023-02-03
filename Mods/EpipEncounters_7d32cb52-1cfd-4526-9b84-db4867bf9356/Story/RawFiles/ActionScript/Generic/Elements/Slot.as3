@@ -152,6 +152,7 @@ package Elements
         public function SetLabel(text:String) : *
         {
             this.amount_mc.amount_txt.htmlText = text;
+            this.setChildIndex(this.amount_mc, this.numChildren - 1);
         }
 
         public function SetSourceBorder(enabled:Boolean) : *

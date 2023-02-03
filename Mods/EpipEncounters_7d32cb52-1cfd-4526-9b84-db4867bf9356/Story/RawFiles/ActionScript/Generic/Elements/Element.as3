@@ -60,6 +60,27 @@ package Elements
             this.addChild(mc);
         }
 
+        public function SetChildIndex(childID:String, index:Number) : *
+        {
+            var childElement:MovieClip = this.childElements[childID];
+            for each(var value:Object in this.childElements)
+            {
+                if (value == childID)
+                {
+                    childElement = this.childElement[value];
+                }
+            }
+
+            if (childElement == null)
+            {
+                this.Log(childID + " is not a child of " + this.stringID, 2);
+            }
+            else
+            {
+                this.setChildIndex(childElement, index);
+            }
+        }
+
         public function RemoveChildElement(mc:MovieClip) : *
         {
             delete this.childElements[mc.stringID];

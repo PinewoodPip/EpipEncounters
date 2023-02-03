@@ -174,9 +174,18 @@ function Slot:SetItem(item)
     self:SetIcon(Item.GetIcon(item))
     self:SetRarityIcon(item)
     self:SetCooldown(0, false)
+    self:SetLabel(item.Amount > 1 and item.Amount or "")
 
     self.Object = _SlotObject.Create("Item", {ItemHandle = item.Handle})
     slot.Tooltip = nil
+end
+
+---Sets the label of the slot, displayed in the bottom right corner.
+---@param label string
+function Slot:SetLabel(label)
+    local slot = self.SlotElement
+
+    slot:SetLabel(tostring(label))
 end
 
 ---Sets the icon of the slot.
@@ -248,7 +257,7 @@ function Slot:Clear()
     self:SetIcon("", V(1, 1))
     self:SetCooldown(-1, false)
     slot:SetEnabled(false)
-    slot:SetLabel("")
+    self:SetLabel("")
 
     self.Object = _SlotObject.Create("None")
 end
@@ -367,7 +376,7 @@ function Slot:_OnTick(ev)
                 enabled = Character.CanUseSkill(char, obj.StatsID)
             end
     
-            slot:SetLabel("")
+            self:SetLabel("")
             self:SetCooldown(cooldown, false)
             self:SetEnabled(enabled or cooldown > 0)
     
@@ -384,7 +393,7 @@ function Slot:_OnTick(ev)
                 local isEnabled = amount > 0
                 if amount > 1 then label = tostring(amount) end -- Only display label for >1 item stacks
     
-                slot:SetLabel(label)
+                self:SetLabel(label)
                 self:SetCooldown(0, false)
     
                 if item.Stats then

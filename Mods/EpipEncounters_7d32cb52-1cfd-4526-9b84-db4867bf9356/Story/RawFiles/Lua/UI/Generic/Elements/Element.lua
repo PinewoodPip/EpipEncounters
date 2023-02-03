@@ -214,5 +214,15 @@ function _Element:RemoveScrollRect()
     self:GetMovieClip().RemoveScrollRect()
 end
 
+---Sets the Z-order index of a child element.
+---@param child string|GenericUI_Element
+---@param index integer
+function _Element:SetChildIndex(child, index)
+    if type(child) == "table" then -- Table overload
+        child = child.ID
+    end
+    self:GetMovieClip().SetChildIndex(child, index)
+end
+
 _Element.SetPositionRelativeToParent = Generic.ExposeFunction("SetPositionRelativeToParent")
 _Element.Move = Generic.ExposeFunction("Move")
