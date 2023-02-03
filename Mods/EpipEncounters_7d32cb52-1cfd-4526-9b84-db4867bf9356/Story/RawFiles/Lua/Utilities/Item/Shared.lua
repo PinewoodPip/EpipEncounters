@@ -12,10 +12,26 @@ Item = {
         "Sword",
         "Club",
         "Knife",
-        "Dagger",
         "Axe",
         "Spear",
         "Staff",
+    }),
+
+    ITEM_SLOTS = Set.Create({
+        "Helmet",
+        "Breast",
+        "Leggings",
+        "Weapon",
+        "Shield",
+        "Ring",
+        "Belt",
+        "Boots",
+        "Gloves",
+        "Amulet",
+        "Ring2",
+        "Wings",
+        "Horns",
+        "Overhead",
     }),
 
     SHEATHED_ATTACHMENT_BONES = {
@@ -178,6 +194,23 @@ end
 ---@return boolean
 function Item.HasUseActions(item)
     return #item.RootTemplate.OnUsePeaceActions > 0
+end
+
+---Returns the use actions of an item, optionally filtered by type.
+---@param item Item
+---@param actionType ActionDataType
+---@return IActionData[]
+function Item.GetUseActions(item, actionType)
+    local allActions = item.RootTemplate.OnUsePeaceActions
+    local actions = {}
+
+    for _,action in ipairs(allActions) do
+        if not actionType or action.Type == actionType then
+            table.insert(actions, action)
+        end
+   end
+
+   return actions
 end
 
 ---Returns the current owner of the item.
@@ -396,7 +429,7 @@ function Item.GetEquippedItem(char, slot)
 end
 
 --- Like ItemSlot, but distinguishes armor subtypes  
---- Get subtype of item (ex. "Dagger" or "Platemail").  
+--- Get subtype of item (ex. "Knife" or "Platemail").  
 --- Returns ItemSlot for items with no subtypes
 ---@param item Item
 ---@return EquipmentSubType

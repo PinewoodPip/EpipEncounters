@@ -740,23 +740,6 @@ Data.Game.SLOTS_WITH_VISUALS = {
     -- "Overhead",
 }
 
-Data.Game.EQUIP_SLOTS = {
-    "Helmet",
-    "Breast",
-    "Leggings",
-    "Weapon",
-    "Shield",
-    "Ring",
-    "Belt",
-    "Boots",
-    "Gloves",
-    "Amulet",
-    "Ring2",
-    "Wings",
-    "Horns",
-    "Overhead",
-}
-
 Data.Game.BASE_BOOST_TO_EQUIP_TYPE = {
     ["ARM_Heavy_UpperBody"] = "Platemail",
     ["ARM_Heavy_LowerBody"] = "Platemail",
@@ -783,8 +766,8 @@ Data.Game.BASE_BOOST_TO_EQUIP_TYPE = {
     ["WPN_Shield"] = "Shield",
 
     -- Weapons
-    ["WPN_Dagger"] = "Dagger",
-    ["WPN_Dagger_ReqB"] = "Dagger",
+    ["WPN_Dagger"] = "Knife",
+    ["WPN_Dagger_ReqB"] = "Knife",
     ["WPN_Sword_1H"] = "Sword",
     ["WPN_Sword_1H_ReqB"] = "Sword",
     ["WPN_Axe_1H"] = "Axe",

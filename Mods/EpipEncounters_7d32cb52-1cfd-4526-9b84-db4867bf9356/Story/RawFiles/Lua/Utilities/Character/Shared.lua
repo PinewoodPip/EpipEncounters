@@ -120,6 +120,16 @@ function Character.IsSkillMemorized(char, skillID)
     return state and state.IsLearned or Character.IsSkillInnate(char, skillID)
 end
 
+---Returns whether char has a skill learnt. Returns true for innate skills.
+---@param char Character
+---@param skillID string
+---@return boolean
+function Character.IsSkillLearnt(char, skillID)
+    local state = char.SkillManager.Skills[skillID]
+
+    return state and state.IsActivated or Character.IsSkillInnate(char, skillID)
+end
+
 ---Returns the combat ID and team ID of char, if any.
 ---@param char Character
 ---@return integer?, integer? -- The combat ID and team ID. Nil if the character is not in combat. This is different from the osi query, which returns a reserved value.
@@ -423,7 +433,7 @@ function Character.GetMovement(char)
     end
 
     -- Items
-    for _,slot in ipairs(Data.Game.EQUIP_SLOTS) do
+    for slot in Item.ITEM_SLOTS:Iterator() do
         local statItem = char.Stats:GetItemBySlot(slot)
 
         if statItem then

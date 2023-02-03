@@ -5,37 +5,30 @@
 Text.CommonStrings.Enabled = Text.RegisterTranslatedString({
     Handle = "he58ba92dg936fg49fagac2bg61a9c20dd142",
     Text = "Enabled",
-    FeatureID = "CommonStrings",
 })
 Text.CommonStrings.Enable = Text.RegisterTranslatedString({
     Handle = "ha5227515g6663g4386gb3bcga4ffb2043b65",
     Text = "Enable",
-    FeatureID = "CommonStrings",
 })
 Text.CommonStrings.Active = Text.RegisterTranslatedString({
     Handle = "hd6db0ca4g7edag4067g9635g88ad68b24784",
     Text = "Active",
-    FeatureID = "CommonStrings",
 })
 Text.CommonStrings.Apply = Text.RegisterTranslatedString({
     Handle = "h67b0f5b2gce06g4eefgbc69g36069a35bb3c",
     Text = "Apply",
-    FeatureID = "CommonStrings",
 })
 Text.CommonStrings.Any = Text.RegisterTranslatedString({
    Handle = "hcb8d99d9g28aeg4310gba17g4561e98b4b8e",
    Text = "Any",
-   FeatureID = "CommonStrings",
 })
 Text.CommonStrings.Type = Text.RegisterTranslatedString({
    Handle = "h4119cfcegbfc2g4045gbeecgfb1c96de38e2",
    Text = "Type",
-   FeatureID = "CommonStrings",
 })
 Text.CommonStrings.Settings = Text.RegisterTranslatedString({
     Handle = "hbd6a0da2gd153g40c7g972agb0d16bfe78d4",
     Text = "Settings",
-    FeatureID = "CommonStrings",
 })
 
 ---------------------------------------------
@@ -45,37 +38,88 @@ Text.CommonStrings.Settings = Text.RegisterTranslatedString({
 Text.CommonStrings.Sword = Text.RegisterTranslatedString({
     Handle = "h0f112ed1gcc18g470egaf01ga5cd65d1f22b",
     Text = "Sword",
-    FeatureID = "CommonStrings",
 })
 Text.CommonStrings.Club = Text.RegisterTranslatedString({
     Handle = "h2eea4c8ag25e9g48c3gbe20g5c84eaf9243b",
     Text = "Club",
-    FeatureID = "CommonStrings",
 })
 Text.CommonStrings.Knife = Text.RegisterTranslatedString({
     Handle = "h7e55ac61g269fg4f0dgabf9g06cbe52d0d22",
     Text = "Knife",
-    FeatureID = "CommonStrings",
 })
 Text.CommonStrings.Dagger = Text.RegisterTranslatedString({
     Handle = "h82933829g4fd3g4dfeg9b84ga47e14020bd6",
     Text = "Dagger",
-    FeatureID = "CommonStrings",
 })
 Text.CommonStrings.Axe = Text.RegisterTranslatedString({
     Handle = "h7f4d1a8egfe38g4a39gb104g57738c21fd93",
     Text = "Axe",
-    FeatureID = "CommonStrings",
 })
 Text.CommonStrings.Spear = Text.RegisterTranslatedString({
     Handle = "hefb45469g4aabg4a8ega8aagbed67af313e1",
     Text = "Spear",
-    FeatureID = "CommonStrings",
 })
 Text.CommonStrings.Staff = Text.RegisterTranslatedString({
     Handle = "h55519c1fgecd7g4c73gafb2gebf09ecf7168",
     Text = "Staff",
-    FeatureID = "CommonStrings",
+})
+
+---------------------------------------------
+-- ITEM SLOTS
+---------------------------------------------
+
+Text.CommonStrings.Helmet = Text.RegisterTranslatedString({
+   Handle = "h0212f2a7gcebag4eaag8641g64cfb7bfc0d2",
+   Text = "Helmet",
+})
+Text.CommonStrings.Breast = Text.RegisterTranslatedString({
+   Handle = "h5df736bfgcdc9g48e4ga09ag1967abc64832",
+   Text = "Breast",
+})
+Text.CommonStrings.Leggings = Text.RegisterTranslatedString({
+   Handle = "h16088a37gd5b2g4bf3g9f7fgc3477eda6c4d",
+   Text = "Leggings",
+})
+Text.CommonStrings.Weapon = Text.RegisterTranslatedString({
+   Handle = "h8192e5abg5593g45ccgbcb9gd6b79952ed2d",
+   Text = "Weapon",
+})
+Text.CommonStrings.Shield = Text.RegisterTranslatedString({
+   Handle = "h3d0006a6g5449g47fdg91d6g2920c42ea0f3",
+   Text = "Shield",
+})
+Text.CommonStrings.Ring = Text.RegisterTranslatedString({
+   Handle = "h7afd19eegf79bg42f9g97e7g66f4ac3a51c6",
+   Text = "Ring",
+})
+Text.CommonStrings.Belt = Text.RegisterTranslatedString({
+   Handle = "h0441f7fegeeebg4aedgb1a8ge5ef84a7b400",
+   Text = "Belt",
+})
+Text.CommonStrings.Boots = Text.RegisterTranslatedString({
+   Handle = "ha8c99111g67d2g4321g8e8cg92282405ebe8",
+   Text = "Boots",
+})
+Text.CommonStrings.Gloves = Text.RegisterTranslatedString({
+   Handle = "h6b38d491gbeccg47d1gad43g5e56e7b19242",
+   Text = "Gloves",
+})
+Text.CommonStrings.Amulet = Text.RegisterTranslatedString({
+   Handle = "h3b607ec3gf978g48ccgbb02g96aba3dd1430",
+   Text = "Amulet",
+})
+Text.CommonStrings.Wings = Text.RegisterTranslatedString({
+   Handle = "hbcadc230g935eg4da1ga40dg153966dd04a2",
+   Text = "Wings",
+})
+Text.CommonStrings.Horns = Text.RegisterTranslatedString({
+   Handle = "h3140c19bgec23g4a62g8d4ag9703a6bf89f4",
+   Text = "Horns",
+})
+Text.CommonStrings.Overhead = Text.RegisterTranslatedString({
+   Handle = "hbb33eea8g0ce7g4bbcga719gc5c4e7811d4a",
+   Text = "Overhead",
+   ContextDescription = "Item slot name",
 })
 
 ---------------------------------------------
@@ -85,15 +129,21 @@ Text.CommonStrings.Staff = Text.RegisterTranslatedString({
 Text.CommonStrings.Equipment = Text.RegisterTranslatedString({
    Handle = "ha5ce3e75g6795g493bgbd94g5d7779a15deb",
    Text = "Equipment",
-   FeatureID = "CommonStrings",
 })
 Text.CommonStrings.Consumables = Text.RegisterTranslatedString({
    Handle = "h2fef0484g1ad5g4422gafb7g5a277c035095",
    Text = "Consumables",
-   FeatureID = "CommonStrings",
 })
 Text.CommonStrings.Skillbooks = Text.RegisterTranslatedString({
    Handle = "h4fc7301egc609g4739g9752g7b0fae2e8c5b",
    Text = "Skillbooks",
-   FeatureID = "CommonStrings",
 })
+
+---------------------------------------------
+-- SETUP
+---------------------------------------------
+
+-- Add a FeatureID to all common strings for exporting to spreadsheet.
+for _,tsk in pairs(Text.CommonStrings) do
+    tsk.FeatureID = "CommonStrings"
+end
