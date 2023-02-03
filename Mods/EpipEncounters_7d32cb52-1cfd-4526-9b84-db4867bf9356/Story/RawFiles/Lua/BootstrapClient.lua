@@ -520,6 +520,11 @@ LOAD_ORDER = {
         Scripts = {
             "Epip/QuickInventory/Client.lua",
             "Epip/QuickInventory/Client_Settings.lua",
+
+            "Epip/QuickInventory/Filters/Equipment.lua",
+            "Epip/QuickInventory/Filters/Consumables.lua",
+            "Epip/QuickInventory/Filters/Skillbooks.lua",
+
             "Epip/QuickInventory/UI.lua",
         }
     },
