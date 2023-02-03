@@ -13,6 +13,7 @@ local QuickInventory = Epip.GetFeature("Feature_QuickInventory")
 local UI = Generic.Create("Epip_EquipmentSwap")
 UI._Initialized = false
 UI._Lists = {} ---@type GenericUI_Element_HorizontalList[]
+UI._Slots = DataStructures.Get("DataStructures_DefaultTable").Create({}) -- Pooling for HotbarSlots, since they are expensive to create.
 UI._CurrentItemCount = 0
 UI._IsCursorOverUI = false
 
@@ -48,9 +49,6 @@ function UI.RenderItems()
     -- Cleanup previous state.
     UI._CurrentItemCount = 0
     UI.ItemsList:GetMovieClip().list.m_scrollbar_mc.resetHandle()
-    for _,list in ipairs(UI._Lists) do
-        list:Clear()
-    end
 
     local items = QuickInventory.GetItems()
 
@@ -58,9 +56,17 @@ function UI.RenderItems()
         UI._RenderItem(item)
     end
 
-    for _,list in ipairs(UI._Lists) do
-        list:RepositionElements()
+    for i=UI._CurrentItemCount+1,UI._GetTotalSlots(),1 do
+        local slot = UI._GetHotbarSlot(i)
+
+        slot.SlotElement:SetVisible(false)
     end
+end
+
+---Returns the total amount of slot objects available.
+---@return integer
+function UI._GetTotalSlots()
+    return #UI._Lists * UI.GetItemsPerRow()
 end
 
 ---Refreshes the contents of the UI.
@@ -78,34 +84,69 @@ end
 ---Renders an item onto the list.
 ---@param item EclItem
 function UI._RenderItem(item)
-    local listIndex = (UI._CurrentItemCount // UI.GetItemsPerRow()) + 1
-    if listIndex > #UI._Lists then
-        local newList = UI.ItemsList:AddChild("List_" .. listIndex, "GenericUI_Element_HorizontalList")
-        newList:SetElementSpacing(UI.ELEMENT_SPACING)
-        newList:SetRepositionAfterAdding(false)
-
-        table.insert(UI._Lists, newList)
-    end
-    local itemHandle = item.Handle
-    local list = UI._Lists[listIndex]
-    local element = HotbarSlot.Create(UI, item.MyGuid, list)
+    local element = UI._GetHotbarSlot(UI._CurrentItemCount + 1)
     local meetsRequirements = Stats.MeetsRequirements(Client.GetCharacter(), item.StatsId, true, item)
     element:SetItem(item)
     element:SetUpdateDelay(-1)
     element:SetEnabled(meetsRequirements)
-
-    element.Events.Clicked:Subscribe(function (_)
-        local slottedItem = Item.Get(itemHandle)
-        if Stats.MeetsRequirements(Client.GetCharacter(), slottedItem.StatsId, true, slottedItem) then
-            UI.Close()
-        end
-    end)
-
-    element.Hooks.GetTooltipData:Subscribe(function (ev)
-        ev.Position = V(UI:GetPosition()) + V(UI.BACKGROUND_SIZE[1], 0)
-    end)
+    element.SlotElement:SetVisible(true)
 
     UI._CurrentItemCount = UI._CurrentItemCount + 1
+end
+
+---Returns a pooled HotbarSlot.
+---@overload fun(globalItemIndex:integer):GenericUI_Prefab_HotbarSlot
+---@param listIndex integer
+---@param itemIndex integer
+---@return GenericUI_Prefab_HotbarSlot
+function UI._GetHotbarSlot(listIndex, itemIndex)
+    if itemIndex == nil then
+        local globalItemIndex = listIndex
+        listIndex = ((globalItemIndex - 1) // UI.GetItemsPerRow()) + 1
+        itemIndex = globalItemIndex - (listIndex - 1) * UI.GetItemsPerRow()
+    end
+
+    local hasAddedLists = false
+    while listIndex > #UI._Lists do
+        local newList = UI.ItemsList:AddChild("List_" .. #UI._Lists + 1, "GenericUI_Element_HorizontalList")
+        newList:SetElementSpacing(UI.ELEMENT_SPACING)
+        newList:SetRepositionAfterAdding(false)
+
+        table.insert(UI._Lists, newList)
+        local list = UI._Lists[#UI._Lists]
+        list:SetSizeOverride(V(UI.ITEM_SIZE[1] * UI.GetItemsPerRow() + (UI.GetItemsPerRow() - 1) * UI.ELEMENT_SPACING, UI.ITEM_SIZE[2]))
+
+        -- Insert hotbar slots to the new list
+        for i=1,UI.GetItemsPerRow(),1 do
+            local element = HotbarSlot.Create(UI, string.format("%s_%s", #UI._Lists, i), list)
+        
+            element.Events.Clicked:Subscribe(function (_)
+                local slottedItem = element.Object:GetEntity()
+                if Stats.MeetsRequirements(Client.GetCharacter(), slottedItem.StatsId, true, slottedItem) then
+                    UI.Close()
+                end
+            end)
+        
+            element.Hooks.GetTooltipData:Subscribe(function (ev)
+                ev.Position = V(UI:GetPosition()) + V(UI.BACKGROUND_SIZE[1], 0)
+            end)
+
+            UI._Slots[#UI._Lists][i] = element
+
+            element.SlotElement:SetSizeOverride(UI.ITEM_SIZE)
+        end
+
+        hasAddedLists = true
+    end
+
+    if hasAddedLists then
+        for _,list in ipairs(UI._Lists) do
+            list:RepositionElements()
+        end
+        UI.ItemsList:RepositionElements()
+    end
+
+    return UI._Slots[listIndex][itemIndex]
 end
 
 ---Creates the core elements of the UI.
@@ -140,7 +181,8 @@ function UI._RenderSettingsPanel()
     end
 
     local settingsPanel = TooltipPanelPrefab.Create(UI, "Settings", UI.Background.Background, UI.SETTINGS_PANEL_SIZE, Text.Format(Text.CommonStrings.Settings:GetString(), {Size = 23}), UI.HEADER_SIZE)
-    settingsPanel.Background:SetPosition(UI.BACKGROUND_SIZE[1], 0)
+    settingsPanel.Background:SetPosition(UI.BACKGROUND_SIZE[1] - 15, 0)
+    UI.Background.Background:SetChildIndex(settingsPanel.Background.ID, 0)
     UI.SettingsPanel = settingsPanel
 
     local list = settingsPanel:AddChild("List", "GenericUI_Element_VerticalList")

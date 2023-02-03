@@ -72,7 +72,7 @@ local QuickInventory = {
         },
         LearntSkillbooks = {
             Type = "Boolean",
-            Name = "Show learnt skills",
+            Name = "Show learned skills",
             Description = "",
             DefaultValue = false,
         },
