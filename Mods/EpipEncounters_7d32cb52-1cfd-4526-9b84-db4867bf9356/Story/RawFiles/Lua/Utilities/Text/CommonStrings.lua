@@ -187,6 +187,18 @@ Text.CommonStrings.Skillbooks = Text.RegisterTranslatedString({
    Handle = "h4fc7301egc609g4739g9752g7b0fae2e8c5b",
    Text = "Skillbooks",
 })
+Text.CommonStrings.ItemSlot = Text.RegisterTranslatedString({
+   Handle = "h543a5832g1c08g4c3eg9e21g9ee1414c9941",
+   Text = "Item Slot",
+})
+Text.CommonStrings.WeaponType = Text.RegisterTranslatedString({
+   Handle = "h53ac110bgde75g4517ga5a6gdb5daf3abc88",
+   Text = "Weapon Type",
+})
+Text.CommonStrings.AbilitySchool = Text.RegisterTranslatedString({
+   Handle = "h5025c292g5fd8g46fegac5bgee45a7acc134",
+   Text = "Ability School",
+})
 
 ---------------------------------------------
 -- SETUP

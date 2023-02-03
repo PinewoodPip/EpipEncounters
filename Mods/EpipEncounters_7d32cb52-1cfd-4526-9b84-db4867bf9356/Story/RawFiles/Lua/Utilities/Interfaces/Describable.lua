@@ -17,7 +17,7 @@ function _Describable:GetName()
 
     if type(self.Name) == "table" then
         name = self.Name:GetString()
-    else
+    elseif self.NameHandle or self.Name then
         name = Text.GetTranslatedString(self.NameHandle or self.Name, self.Name or name)
     end
 
@@ -31,7 +31,7 @@ function _Describable:GetDescription()
 
     if type(self.Description) == "table" then
         desc = self.Description:GetString()
-    else
+    elseif self.DescriptionHandle or self.Description then
         desc = Text.GetTranslatedString(self.DescriptionHandle or self.Description, self.Description or desc)
     end
 

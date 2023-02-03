@@ -212,6 +212,7 @@ end
 ---Registers a setting with the feature's module ID.
 ---@param id string
 ---@param data SettingsLib_Setting
+---@return SettingsLib_Setting
 function Feature:RegisterSetting(id, data)
     data.ID = id
     data.ModTable = self:GetSettingsModuleID()
@@ -220,6 +221,8 @@ function Feature:RegisterSetting(id, data)
     Settings.RegisterSetting(data)
 
     self.Settings[id] = data
+
+    return data
 end
 
 ---@param setting string|SettingsLib_Setting

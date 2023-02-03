@@ -1,6 +1,4 @@
 
-local CommonStrings = Text.CommonStrings
-
 ---@class Feature_QuickInventory : Feature
 local QuickInventory = {
     RARITY_PRIORITY = {
@@ -20,81 +18,15 @@ local QuickInventory = {
            Text = "Quick Find",
            ContextDescription = "Header for the UI",
         },
-    },
-
-    Settings = {
-        ItemCategory = {
-            Type = "Choice",
-            Name = "Item Category",
-            Description = "",
-            DefaultValue = "Equipment",
-            ---@type SettingsLib_Setting_Choice_Entry[]
-            Choices = {
-                {ID = "Equipment", NameHandle = CommonStrings.Equipment.Handle},
-                {ID = "Consumables", NameHandle = CommonStrings.Consumables.Handle},
-                {ID = "Skillbooks", NameHandle = CommonStrings.Skillbooks.Handle},
-            },
+        ItemCategory_Name = {
+           Handle = "h87e9e867gfd89g458eg850fga1129b558d59",
+           Text = "Item Category",
+           ContextDescription = "Name for item category filter dropdown (equipment/consumable/skillbook etc.)",
         },
-        ItemSlot = {
-            Type = "Choice",
-            Name = "Item Slot",
-            Description = "",
-            DefaultValue = "Helmet",
-            ---@type SettingsLib_Setting_Choice_Entry[]
-            Choices = {
-                {ID = "Any", NameHandle = CommonStrings.Any.Handle},
-                {ID = "Helmet", NameHandle = CommonStrings.Helmet.Handle},
-                {ID = "Breast", NameHandle = CommonStrings.Breast.Handle},
-                {ID = "Leggings", NameHandle = CommonStrings.Leggings.Handle},
-                {ID = "Weapon", NameHandle = CommonStrings.Weapon.Handle},
-                {ID = "Shield", NameHandle = CommonStrings.Shield.Handle},
-                {ID = "Ring", NameHandle = CommonStrings.Ring.Handle},
-                {ID = "Boots", NameHandle = CommonStrings.Boots.Handle},
-                {ID = "Belt", NameHandle = CommonStrings.Belt.Handle},
-                {ID = "Amulet", NameHandle = CommonStrings.Amulet.Handle},
-            },
-        },
-        WeaponSubType = {
-            Type = "Choice",
-            Name = "Weapon Type",
-            Description = "",
-            DefaultValue = "Any",
-            ---@type SettingsLib_Setting_Choice_Entry[]
-            Choices = {
-                {ID = "Any", NameHandle = Text.CommonStrings.Any.Handle},
-                {ID = "Sword", NameHandle = Text.CommonStrings.Sword.Handle},
-                {ID = "Axe", NameHandle = Text.CommonStrings.Axe.Handle},
-                {ID = "Club", NameHandle = Text.CommonStrings.Club.Handle},
-                {ID = "Staff", NameHandle = Text.CommonStrings.Staff.Handle},
-                {ID = "Knife", NameHandle = Text.CommonStrings.Knife.Handle},
-                {ID = "Spear", NameHandle = Text.CommonStrings.Spear.Handle},
-            },
-        },
-        LearntSkillbooks = {
-            Type = "Boolean",
-            Name = "Show learned skills",
-            Description = "",
-            DefaultValue = false,
-        },
-        SkillbookSchool = {
-            Type = "Choice",
-            Name = "Ability School",
-            Description = "",
-            DefaultValue = "Any",
-            ---@type SettingsLib_Setting_Choice_Entry[]
-            Choices = { -- Ordered by appearance in skillbook UI
-                {ID = "Any", NameHandle = Text.CommonStrings.Any.Handle},
-                {ID = "Warrior", NameHandle = Text.CommonStrings.Warfare.Handle},
-                {ID = "Ranger", NameHandle = Text.CommonStrings.Huntsman.Handle},
-                {ID = "Rogue", NameHandle = Text.CommonStrings.Scoundrel.Handle},
-                {ID = "Fire", NameHandle = Text.CommonStrings.Pyrokinetic.Handle},
-                {ID = "Water", NameHandle = Text.CommonStrings.Hydrosophist.Handle},
-                {ID = "Air", NameHandle = Text.CommonStrings.Aerotheurge.Handle},
-                {ID = "Earth", NameHandle = Text.CommonStrings.Geomancer.Handle},
-                {ID = "Death", NameHandle = Text.CommonStrings.Necromancer.Handle},
-                {ID = "Summoning", NameHandle = Text.CommonStrings.Summoning.Handle},
-                {ID = "Polymorph", NameHandle = Text.CommonStrings.Polymorph.Handle},
-            },
+        ShowLearntSkills_Name = {
+           Handle = "hd5a53bd8gdcaag4280ga76dg905f40bde45e",
+           Text = "Show learned skills",
+           ContextDescription = "Checkbox for showing learnt skillbooks",
         },
     },
 
