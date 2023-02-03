@@ -264,6 +264,10 @@ function Generic.Create(id)
             ui:Log(msg)
         end
     end)
+
+    if ui:Exists() then
+        ui:Hide()
+    end
     
     return ui
 end

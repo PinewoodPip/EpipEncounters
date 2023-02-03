@@ -110,6 +110,8 @@ function HotbarGroup:_Init(id)
     dragArea.Tooltip = "Click and hold to drag."
 
     content:SetPosition(25, 25)
+
+    self.UI:Show()
 end
 
 ---------------------------------------------
