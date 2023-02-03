@@ -12,6 +12,8 @@ package Elements
     {
         public var gridList:Grid = null;
 
+        public var respositionAfterAdding:Boolean = true;
+
         public function Grid()
         {
             super();
@@ -30,7 +32,12 @@ package Elements
             this.childElements[mc.stringID] = mc;
             this[mc.stringID] = mc;
             
-            this.gridList.addElement(mc);
+            this.gridList.addElement(mc, this.respositionAfterAdding);
+        }
+        
+        public function SetRepositionAfterAdding(reposition:Boolean) : *
+        {
+            this.respositionAfterAdding = reposition;
         }
 
         public function SetGridSize(width:Number, height:Number) : *

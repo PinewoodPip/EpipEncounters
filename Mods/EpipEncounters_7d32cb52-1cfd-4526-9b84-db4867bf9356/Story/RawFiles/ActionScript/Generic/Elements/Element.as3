@@ -13,12 +13,14 @@ package Elements
     import flash.display.MovieClip;
     import flash.display.Bitmap;
     import flash.display.BitmapData;
+    import flash.display.DisplayObject;
     import flash.external.ExternalInterface;
     import LS_Classes.listDisplay;
     import flash.text.TextField;
     import flash.events.MouseEvent;
     import flash.events.Event;
     import flash.utils.Dictionary;
+    import flash.geom.Rectangle;
     import flash.geom.Point;
 
     public dynamic class Element extends MovieClip
@@ -61,7 +63,14 @@ package Elements
         public function RemoveChildElement(mc:MovieClip) : *
         {
             delete this.childElements[mc.stringID];
-            this.removeChild(mc as MovieClip);
+            try // TODO investigate what the issue is with lists
+            {
+                this.removeChild(mc);
+            }
+            catch (error:Error)
+            {
+                
+            }
         }
 
         public function HasParent() : Boolean
@@ -150,6 +159,20 @@ package Elements
         {
             var parent:MovieClip = this.parent;
 
+            // Reset the element's position to 0, 0 and temporarily set scale to 0
+            // so it doesn't affect parent calculated width / height.
+            var oldScaleX:Number = this.scaleX;
+            var oldScaleY:Number = this.scaleY;
+            var elementWidth:Number = this.width;
+            var elementHeight:Number = this.height;
+
+            // TODO support width/height override?
+            
+            this.x = 0;
+            this.y = 0;
+            this.scaleX = 0;
+            this.scaleY = 0;
+
             if (parent)
             {
                 var parentWidth:Number = parent.width;
@@ -160,7 +183,7 @@ package Elements
                 {
                     case "Center":
                     {
-                        this.SetPosition(parentWidth/2 - this.width/2, parentHeight/2 - this.height/2);
+                        this.SetPosition(parentWidth/2 - elementWidth/2, parentHeight/2 - elementHeight/2);
                         break;
                     }
                     case "TopLeft":
@@ -170,37 +193,37 @@ package Elements
                     }
                     case "TopRight":
                     {
-                        this.SetPosition(parentWidth - this.width, 0);
+                        this.SetPosition(parentWidth - elementWidth, 0);
                         break;
                     }
                     case "Left":
                     {
-                        this.SetPosition(0, parentHeight/2 - this.height/2);
+                        this.SetPosition(0, parentHeight/2 - elementHeight/2);
                         break;
                     }
                     case "Right":
                     {
-                        this.SetPosition(parentWidth - this.width, parentHeight/2 - this.height/2);
+                        this.SetPosition(parentWidth - elementWidth, parentHeight/2 - elementHeight/2);
                         break;
                     }
                     case "BottomLeft":
                     {
-                        this.SetPosition(0, parentHeight - this.height);
+                        this.SetPosition(0, parentHeight - elementWidth);
                         break;
                     }
                     case "BottomRight":
                     {
-                        this.SetPosition(parentWidth - this.width, parentHeight - this.height);
+                        this.SetPosition(parentWidth - elementWidth, parentHeight - elementHeight);
                         break;
                     }
                     case "Top":
                     {
-                        this.SetPosition(parentWidth/2 - this.width/2, 0);
+                        this.SetPosition(parentWidth/2 - elementWidth/2, 0);
                         break;
                     }
                     case "Bottom":
                     {
-                        this.SetPosition(parentWidth/2 - this.width/2, parentHeight - this.height);
+                        this.SetPosition(parentWidth/2 - elementWidth/2, parentHeight - elementHeight);
                         break;
                     }
                     default:
@@ -219,6 +242,9 @@ package Elements
             {
                 this.Log("SetPositionRelativeToParent(): element has no parent.", 2);
             }
+
+            this.scaleX = oldScaleX;
+            this.scaleY = oldScaleY;
         }
 
         public function SetRotation(degrees:Number) : *
@@ -328,6 +354,16 @@ package Elements
             // Must be done setTextureForBitmap(); initial values for BitmapData constructor are disregarded
             this.customBitmap.width = width;
             this.customBitmap.height = height;
+        }
+
+        public function SetScrollRect(x:Number, y:Number, width:Number, height:Number) : *
+        {
+            this.scrollRect = new Rectangle(x, y, width, height);
+        }
+
+        public function RemoveScrollRect() : *
+        {
+            this.scrollRect = null;
         }
 
         // Registers a property to be tween on the next startTween() call.

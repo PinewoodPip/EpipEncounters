@@ -199,5 +199,20 @@ function _Element:SetSizeOverride(width, height)
     self:GetMovieClip().SetSizeOverride(width, height)
 end
 
+---Sets the scroll rect of the element.
+---@param position Vector2
+---@param size Vector2
+function _Element:SetScrollRect(position, size)
+    local x, y = position:unpack()
+    local w, h = size:unpack()
+
+    self:GetMovieClip().SetScrollRect(x, y, w, h)
+end
+
+---Removes the scroll rect from the element, if any.
+function _Element:RemoveScrollRect()
+    self:GetMovieClip().RemoveScrollRect()
+end
+
 _Element.SetPositionRelativeToParent = Generic.ExposeFunction("SetPositionRelativeToParent")
 _Element.Move = Generic.ExposeFunction("Move")

@@ -11,6 +11,8 @@ package Elements
     {
         public var list:PipListDisplay;
 
+        public var respositionAfterAdding:Boolean = true;
+
         public function VerticalList()
         {
             super();
@@ -30,7 +32,12 @@ package Elements
             this.childElements[mc.stringID] = mc;
             this[mc.stringID] = mc;
             
-            this.list.addElement(mc);
+            this.list.addElement(mc, this.respositionAfterAdding);
+        }
+
+        public function SetRepositionAfterAdding(reposition:Boolean) : *
+        {
+            this.respositionAfterAdding = reposition;
         }
 
         public function SetTopSpacing(spacing:Number) : *
