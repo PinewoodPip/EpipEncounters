@@ -17,7 +17,7 @@ local QuickInventory = {
     TranslatedStrings = {
         Header = {
            Handle = "hf196badfg6c61g4bd5g91e8g7bfbf9874cbf",
-           Text = "Quick Swap",
+           Text = "Quick Find",
            ContextDescription = "Header for the UI",
         },
     },
@@ -42,16 +42,16 @@ local QuickInventory = {
             DefaultValue = "Helmet",
             ---@type SettingsLib_Setting_Choice_Entry[]
             Choices = {
-                {ID = "Any", Name = "Any"},
-                {ID = "Helmet", Name = "Helmet"},
-                {ID = "Breast", Name = "Breast"},
-                {ID = "Leggings", Name = "Leggings"},
-                {ID = "Weapon", Name = "Weapon"},
-                {ID = "Shield", Name = "Shield"},
-                {ID = "Ring", Name = "Ring"},
-                {ID = "Boots", Name = "Boots"},
-                {ID = "Belt", Name = "Belt"},
-                {ID = "Amulet", Name = "Amulet"},
+                {ID = "Any", NameHandle = CommonStrings.Any.Handle},
+                {ID = "Helmet", NameHandle = CommonStrings.Helmet.Handle},
+                {ID = "Breast", NameHandle = CommonStrings.Breast.Handle},
+                {ID = "Leggings", NameHandle = CommonStrings.Leggings.Handle},
+                {ID = "Weapon", NameHandle = CommonStrings.Weapon.Handle},
+                {ID = "Shield", NameHandle = CommonStrings.Shield.Handle},
+                {ID = "Ring", NameHandle = CommonStrings.Ring.Handle},
+                {ID = "Boots", NameHandle = CommonStrings.Boots.Handle},
+                {ID = "Belt", NameHandle = CommonStrings.Belt.Handle},
+                {ID = "Amulet", NameHandle = CommonStrings.Amulet.Handle},
             },
         },
         WeaponSubType = {
@@ -61,15 +61,21 @@ local QuickInventory = {
             DefaultValue = "Any",
             ---@type SettingsLib_Setting_Choice_Entry[]
             Choices = {
-                {ID = "Any", Name = Text.CommonStrings.Any:GetString()},
-                {ID = "Sword", Name = Text.CommonStrings.Sword:GetString()},
-                {ID = "Axe", Name = Text.CommonStrings.Axe:GetString()},
-                {ID = "Club", Name = Text.CommonStrings.Club:GetString()},
-                {ID = "Staff", Name = Text.CommonStrings.Staff:GetString()},
-                {ID = "Knife", Name = Text.CommonStrings.Knife:GetString()},
-                {ID = "Spear", Name = Text.CommonStrings.Spear:GetString()},
+                {ID = "Any", NameHandle = Text.CommonStrings.Any.Handle},
+                {ID = "Sword", NameHandle = Text.CommonStrings.Sword.Handle},
+                {ID = "Axe", NameHandle = Text.CommonStrings.Axe.Handle},
+                {ID = "Club", NameHandle = Text.CommonStrings.Club.Handle},
+                {ID = "Staff", NameHandle = Text.CommonStrings.Staff.Handle},
+                {ID = "Knife", NameHandle = Text.CommonStrings.Knife.Handle},
+                {ID = "Spear", NameHandle = Text.CommonStrings.Spear.Handle},
             },
         },
+        LearntSkillbooks = {
+            Type = "Boolean",
+            Name = "Show learnt skills",
+            Description = "",
+            DefaultValue = false,
+        }
     },
 
     USE_LEGACY_EVENTS = false,
@@ -149,6 +155,8 @@ QuickInventory.Hooks.IsItemVisible:Subscribe(function (ev)
         if itemSlotSetting == "Weapon" then
             local weaponSubTypeSetting = QuickInventory:GetSettingValue(QuickInventory.Settings.WeaponSubType)
 
+            visible = visible and Item.GetItemSlot(item) == itemSlotSetting
+
             -- Weapon subtype restriction
             if weaponSubTypeSetting ~= "Any" then
                 visible = visible and Item.GetEquipmentSubtype(item) == weaponSubTypeSetting
@@ -199,7 +207,24 @@ QuickInventory.Hooks.IsItemVisible:Subscribe(function (ev)
     local visible = ev.Visible
 
     if QuickInventory:GetSettingValue(QuickInventory.Settings.ItemCategory) == "Skillbooks" then
+        local showLearntSkills = QuickInventory:GetSettingValue(QuickInventory.Settings.LearntSkillbooks) == true
+
         visible = visible and Item.HasUseAction(item, "SkillBook")
+        
+        if not showLearntSkills then
+            local skillBookActions = Item.GetUseActions(item, "SkillBook") ---@type SkillBookActionData[]
+            local knowsAllSkills = true
+
+            for _,action in ipairs(skillBookActions) do
+                if not Character.IsSkillLearnt(Client.GetCharacter(), action.SkillID) then
+                    knowsAllSkills = false
+                    break
+                end
+            end
+
+            -- Only filter out the item if all skills from the book are learnt.
+            visible = visible and not knowsAllSkills
+        end
     end
     
     ev.Visible = visible

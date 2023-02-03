@@ -3,6 +3,7 @@ local Generic = Client.UI.Generic
 local HotbarSlot = Generic.GetPrefab("GenericUI_Prefab_HotbarSlot")
 local TooltipPanelPrefab = Generic.GetPrefab("GenericUI_Prefab_TooltipPanel")
 local LabelledDropdownPrefab = Generic.GetPrefab("GenericUI_Prefab_LabelledDropdown")
+local LabelledCheckboxPrefab = Generic.GetPrefab("GenericUI_Prefab_LabelledCheckbox")
 local Tooltip = Client.Tooltip
 local Input = Client.Input
 local V = Vector.Create
@@ -147,22 +148,46 @@ function UI._RenderSettingsPanel()
     UI.SettingsPanelList = list
 
     -- Item category
-    UI.RenderComboBoxFromSetting(QuickInventory.Settings.ItemCategory)
+    UI.RenderSetting(QuickInventory.Settings.ItemCategory)
 
-    if QuickInventory:GetSettingValue(QuickInventory.Settings.ItemCategory) == "Equipment" then
-        -- Equipment slot
-        UI.RenderComboBoxFromSetting(QuickInventory.Settings.ItemSlot)
+    local itemCategory = QuickInventory:GetSettingValue(QuickInventory.Settings.ItemCategory)
+    if itemCategory == "Equipment" then
+        UI.RenderSetting(QuickInventory.Settings.ItemSlot) -- Equipment slot
 
         if QuickInventory:GetSettingValue(QuickInventory.Settings.ItemSlot) == "Weapon" then
-            -- Equipment subtype
-            UI.RenderComboBoxFromSetting(QuickInventory.Settings.WeaponSubType)
+            UI.RenderSetting(QuickInventory.Settings.WeaponSubType) -- Equipment subtype
         end
+    elseif itemCategory == "Skillbooks" then
+        UI.RenderSetting(QuickInventory.Settings.LearntSkillbooks)
     end
 end
 
----Renders a combobox to the settings panel from a setting.
+---Renders a widget to the settings panel from a setting.
+---@param setting SettingsLib_Setting_Choice|SettingsLib_Setting_Boolean
+function UI.RenderSetting(setting)
+    if setting.Type == "Boolean" then
+        UI._RenderCheckboxFromSetting(setting)
+    elseif setting.Type == "Choice" then
+        UI._RenderComboBoxFromSetting(setting)
+    end
+end
+
+---Returns the amount of items that fit per row.
+---@return integer
+function UI.GetItemsPerRow()
+    return UI.SCROLL_LIST_AREA[1] // UI.ITEM_SIZE[1]
+end
+
+---Returns the width of the the item list, with all columns filled.
+---@return number
+function UI.GetItemListWidth()
+    local items = UI.GetItemsPerRow()
+    return items * UI.ITEM_SIZE[1] + UI.SCROLLBAR_WIDTH + (items - 1) * UI.ELEMENT_SPACING
+end
+
+---Renders a checkbox to the settings panel from a setting.
 ---@param setting SettingsLib_Setting_Choice
-function UI.RenderComboBoxFromSetting(setting)
+function UI._RenderComboBoxFromSetting(setting)
     local list = UI.SettingsPanelList
 
     -- Generate combobox options from setting choices.
@@ -186,17 +211,21 @@ function UI.RenderComboBoxFromSetting(setting)
     end)
 end
 
----Returns the amount of items that fit per row.
----@return integer
-function UI.GetItemsPerRow()
-    return UI.SCROLL_LIST_AREA[1] // UI.ITEM_SIZE[1]
-end
+---Renders a combobox to the settings panel from a setting.
+---@param setting SettingsLib_Setting_Boolean
+function UI._RenderCheckboxFromSetting(setting)
+    local list = UI.SettingsPanelList
 
----Returns the width of the the item list, with all columns filled.
----@return number
-function UI.GetItemListWidth()
-    local items = UI.GetItemsPerRow()
-    return items * UI.ITEM_SIZE[1] + UI.SCROLLBAR_WIDTH + (items - 1) * UI.ELEMENT_SPACING
+    local checkbox = LabelledCheckboxPrefab.Create(UI, setting.ID, list, setting:GetName())
+    checkbox:SetSize(UI.SETTINGS_PANEL_ELEMENT_SIZE:unpack())
+    checkbox:SetState(setting:GetValue())
+
+    -- Set setting value and refresh UI.
+    checkbox.Events.StateChanged:Subscribe(function (ev)
+        QuickInventory:SetSettingValue(setting, ev.Active)
+
+        UI.Refresh()
+    end)
 end
 
 ---------------------------------------------
