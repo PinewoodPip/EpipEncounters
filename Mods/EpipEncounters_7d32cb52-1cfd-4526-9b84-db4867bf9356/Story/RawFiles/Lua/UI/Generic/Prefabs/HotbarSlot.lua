@@ -20,7 +20,10 @@ local Slot = {
     Events = {
         ObjectDraggedIn = {}, ---@type Event<GenericUI_Prefab_HotbarSlot_Event_ObjectDraggedIn>
         Clicked = {}, ---@type Event<EmptyEvent>
-    }
+    },
+    Hooks = {
+        GetTooltipData = {}, ---@type Event<GenericUI_Prefab_HotbarSlot_Hook_GetTooltipData>
+    },
 }
 Generic.RegisterPrefab("GenericUI_Prefab_HotbarSlot", Slot)
 
@@ -30,6 +33,10 @@ Generic.RegisterPrefab("GenericUI_Prefab_HotbarSlot", Slot)
 
 ---@class GenericUI_Prefab_HotbarSlot_Event_ObjectDraggedIn
 ---@field Object GenericUI_Prefab_HotbarSlot_Object
+
+---@class GenericUI_Prefab_HotbarSlot_Hook_GetTooltipData
+---@field Position Vector2 Hookable. Defaults to mouse position.
+---@field Owner EclCharacter Hookable. Defaults to client character.
 
 ---------------------------------------------
 -- CLASSES
@@ -158,12 +165,6 @@ function Slot:SetSkill(skillID)
     slot:SetSourceBorder(stat["Magic Cost"] > 0)
 
     self.Object = _SlotObject.Create("Skill", {StatsID = skillID})
-
-    slot.Tooltip = {
-        Type = "Skill",
-        SkillID = skillID,
-        Spacing = {10, 0},
-    }
 end
 
 ---@param item EclItem
@@ -171,7 +172,7 @@ function Slot:SetItem(item)
     local slot = self.SlotElement
     self:SetIcon(Item.GetIcon(item))
     self:SetRarityIcon(item)
-    slot:SetCooldown(0, false)
+    self:SetCooldown(0, false)
 
     self.Object = _SlotObject.Create("Item", {ItemHandle = item.Handle})
     slot.Tooltip = nil
@@ -211,7 +212,7 @@ function Slot:SetTemplate(templateID)
         self.Object = _SlotObject.Create("Template", {TemplateID = templateID})
 
         self:SetIcon(template.Icon)
-        slot:SetCooldown(-1, false)
+        self:SetCooldown(-1, false)
 
         slot.Tooltip = nil
     end
@@ -225,10 +226,26 @@ function Slot:SetEnabled(enabled)
     slot:SetEnabled(enabled)
 end
 
+---Sets the cooldown displayed on the slot.
+---@param cooldown number In turns.
+---@param playRefreshAnimation boolean? Defaults to `false`.
+function Slot:SetCooldown(cooldown, playRefreshAnimation)
+    local slot = self.SlotElement
+
+    slot:SetCooldown(cooldown, playRefreshAnimation)
+end
+
+---Sets whether the slot can be interacted with to use its object.
+---Default behaviour is to allow usage.
+---@param usable boolean
+function Slot:SetUsable(usable)
+    self._Usable = usable
+end
+
 function Slot:Clear()
     local slot = self.SlotElement
     self:SetIcon("", V(1, 1))
-    slot:SetCooldown(-1, false)
+    self:SetCooldown(-1, false)
     slot:SetEnabled(false)
     slot:SetLabel("")
 
@@ -261,16 +278,21 @@ end
 
 ---Shows the tooltip for the slot's held object.
 function Slot:_ShowTooltip()
+    local data = self.Hooks.GetTooltipData:Throw({
+        Position = V(Client.GetMousePosition()),
+        Owner = Client.GetCharacter(),
+    })
+
     if not self:IsEmpty() then
         local obj = self.Object
         if obj.Type == "Item" or obj.Type == "Template" then
             local entity = obj:GetEntity() ---@type EclItem?
     
             if entity then
-                Tooltip.ShowItemTooltip(entity)
+                Tooltip.ShowItemTooltip(entity, data.Position)
             end
         elseif obj.Type == "Skill" or obj.Type == "Action" then
-            Tooltip.ShowSkillTooltip(Client.GetCharacter(), obj.StatsID)
+            Tooltip.ShowSkillTooltip(data.Owner, obj.StatsID, data.Position)
         end
     end
 end
@@ -345,7 +367,7 @@ function Slot:_OnTick(ev)
             end
     
             slot:SetLabel("")
-            slot:SetCooldown(cooldown, false)
+            self:SetCooldown(cooldown, false)
             self:SetEnabled(enabled or cooldown > 0)
     
             if preparedSkill and not preparedSkill.Casting and preparedSkill.SkillID == obj.StatsID then
@@ -362,7 +384,7 @@ function Slot:_OnTick(ev)
                 if amount > 1 then label = tostring(amount) end -- Only display label for >1 item stacks
     
                 slot:SetLabel(label)
-                slot:SetCooldown(0, false)
+                self:SetCooldown(0, false)
     
                 if item.Stats then
                     isEnabled = isEnabled and Game.Stats.MeetsRequirements(char, item.Stats.Name, true, item)
@@ -390,15 +412,18 @@ end
 
 function Slot:_OnSlotClicked(_)
     local obj = self.Object
-    
-    if obj.Type == "Skill" then
-        Client.UI.Hotbar.UseSkill(obj.StatsID)
-    elseif obj.Type == "Item" or obj.Type == "Template" then
-        local item = obj:GetEntity()
 
-        Client.UI.Hotbar.UseSkill(item)
+    if self._Usable then
+        if obj.Type == "Skill" then
+            Client.UI.Hotbar.UseSkill(obj.StatsID)
+        elseif obj.Type == "Item" or obj.Type == "Template" then
+            local item = obj:GetEntity()
+    
+            Client.UI.Hotbar.UseSkill(item)
+        end
     end
 
+    -- Throw clicked event regardless of usable state
     self.Events.Clicked:Throw()
 end
 
