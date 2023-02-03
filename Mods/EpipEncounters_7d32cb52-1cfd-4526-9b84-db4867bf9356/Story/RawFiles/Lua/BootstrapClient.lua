@@ -63,7 +63,13 @@ LOAD_ORDER = {
             "Utilities/DataStructures/Set.lua",
         },
     },
-    "Utilities/Text.lua",
+    {
+        Scripts = {
+            "Utilities/Text/Library.lua",
+            "Utilities/Text/CommonStrings.lua",
+            "Utilities/Text/Localization.lua",
+        },
+    },
     {
         Scripts = {
             "Utilities/Interfaces/Main.lua",

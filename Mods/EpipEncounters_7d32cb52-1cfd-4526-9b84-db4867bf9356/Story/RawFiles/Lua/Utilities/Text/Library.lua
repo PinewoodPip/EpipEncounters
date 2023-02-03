@@ -7,6 +7,8 @@ Text = {
     _TranslatedStrings = DefaultTable.Create({}), ---@type table<string, table<TranslatedStringHandle, string>> -- Maps language to table of TSK translations.
     ---@enum TextLib_Font
 
+    CommonStrings = {},
+
     LOCALIZATION_FILE_FORMAT_VERSION = 0,
     FONTS = {
         BOLD = "Ubuntu Mono",
@@ -479,9 +481,10 @@ function Text.GetTranslatedString(handle, fallBack)
 end
 
 ---Registers a translated string.
----@overload fun(data:TextLib_TranslatedString)
+---@overload fun(data:TextLib_TranslatedString):TextLib_TranslatedString
 ---@param handle TranslatedStringHandle
 ---@param text string
+---@return TextLib_TranslatedString
 function Text.RegisterTranslatedString(handle, text)
     local tsk ---@type TextLib_TranslatedString
 
@@ -513,6 +516,8 @@ function Text.RegisterTranslatedString(handle, text)
     if tsk.StringKey then
         Text.SetStringKey(tsk.StringKey, tsk.Handle)
     end
+
+    return tsk
 end
 
 ---Sets the text of a translated string.
@@ -674,22 +679,3 @@ Text.Hooks.GetTranslationTemplateEntry:Subscribe(function (ev)
     end
     ---@diagnostic enable undefined-field
 end)
-
----------------------------------------------
--- SETUP
----------------------------------------------
-
--- Automatically load localization files from mod folders.
-local mods = Ext.Mod.GetLoadOrder()
-for _,guid in ipairs(mods) do
-    local mod = Ext.Mod.GetMod(guid)
-    local currentLanguage = Text.GetCurrentLanguage()
-    local modID = mod.Info.Directory
-
-    -- Load localization override for each mod with a ModTable
-    for modTableID,_ in pairs(Mods) do
-        local path = string.format('Mods/%s/Localization/Epip/%s/%s.json', modID, currentLanguage, modTableID)
-
-        Text.LoadLocalization(currentLanguage, path)
-    end
-end
