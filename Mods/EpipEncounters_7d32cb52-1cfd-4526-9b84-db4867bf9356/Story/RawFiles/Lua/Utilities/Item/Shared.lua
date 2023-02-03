@@ -17,6 +17,20 @@ Item = {
         "Staff",
     }),
 
+    RUNE_SLOT_ICONS = {
+        E = "Item_RuneSlot_Overlay_E", -- 1 slot, empty.
+        F = "Item_RuneSlot_Overlay_F", -- 1 slot, filled.
+
+        EE = "Item_RuneSlot_Overlay_EE", -- 2 slots, both empty.
+        EF = "Item_RuneSlot_Overlay_EF", -- 2 slots, one filled.
+        FF = "Item_RuneSlot_Overlay_FF", -- etc.
+
+        EEE = "Item_RuneSlot_Overlay_EEE",
+        EEF = "Item_RuneSlot_Overlay_EEF",
+        EFF = "Item_RuneSlot_Overlay_EFF",
+        FFF = "Item_RuneSlot_Overlay_FFF",
+    },
+
     ITEM_SLOTS = Set.Create({
         "Helmet",
         "Breast",
@@ -61,6 +75,8 @@ Item = {
         Divine = "Item_Divine",
         Unique = "Item_Unique",
     },
+
+    MAX_RUNE_SLOTS = 3,
 }
 
 ---------------------------------------------
@@ -590,7 +606,7 @@ end
 
 --- Gets the stats object of the rune inserted at rune index ``index`` on item.
 ---@param item Item
----@param index number
+---@param index integer **0-based.**
 ---@return StatItem
 function Item.GetRune(item, index)
     if index < 0 or index > 2 then
@@ -609,7 +625,7 @@ end
 
 --- Returns a list of runes on the item.
 ---@param item Item
----@return table<number, StatItem> Empty slots are nil.
+---@return table<number, StatItem> --Empty slots are nil.
 function Item.GetRunes(item)
     return {
         [0] = Item.GetRune(item, 0),
@@ -618,15 +634,50 @@ function Item.GetRunes(item)
     }
 end
 
+---Returns the amount of rune slots an item has.
+---@param item Item
+---@return integer
+function Item.GetRuneSlots(item)
+    local runeSlots = 0
+    for _,v in pairs(item.Stats.DynamicStats) do
+        runeSlots = runeSlots + v.RuneSlots
+    end
+
+    -- Game only supports a certain amount of slots.
+    return math.min(runeSlots, Item.MAX_RUNE_SLOTS)
+end
+
+---Returns the icon displaying the state of item's rune slots.
+---@param item Item
+---@return icon
+function Item.GetRuneSlotsIcon(item)
+    local icon
+    local runes = Item.GetRunes(item)
+    local slots = Item.GetRuneSlots(item)
+    local filledSlots = 0
+    local key = ""
+
+    for _,_ in pairs(runes) do
+        filledSlots = filledSlots + 1
+    end
+
+    for _=1,slots-filledSlots,1 do
+        key = key .. "E"
+    end
+    for _=1,filledSlots,1 do
+        key = key .. "F"
+    end
+
+    icon = Item.RUNE_SLOT_ICONS[key]
+
+    return icon
+end
+
 --- Returns true if item has any runes slotted.
 ---@param item Item
 ---@return boolean
 function Item.HasRunes(item)
-    -- Item has runes if GetRunes() is not empty; but we cannot check the length as it's not a proper list
-    for i,stat in pairs(Item.GetRunes(item)) do
-        return true
-    end
-    return false
+    return not table.isempty(Item.GetRunes(item))
 end
 
 ---Returns the level of an item.

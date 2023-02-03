@@ -7,6 +7,7 @@ local V = Vector.Create
 ---@class GenericUI_Prefab_HotbarSlot : GenericUI_Prefab
 ---@field SlotIcon GenericUI_Element_IggyIcon
 ---@field RarityIcon GenericUI_Element_IggyIcon
+---@field RuneSlotsIcon GenericUI_Element_IggyIcon
 ---@field _CanDragDrop boolean
 ---@field _AutoUpdateDelay number In seconds.
 ---@field _AutoUpdateRemainingDelay number In seconds.
@@ -118,6 +119,10 @@ function Slot.Create(ui, id, parent)
     iconMC.iggy_mc.y = 1
     iconMC.iggy_mc.x = 1
 
+    local runeSlotsIcon = obj:CreateElement("RuneSlotsIcon", "GenericUI_Element_IggyIcon", slot)
+    runeSlotsIcon:SetPosition(1, 1)
+    obj.RuneSlotsIcon = runeSlotsIcon
+
     local rarityIcon = obj:CreateElement("RarityIcon", "GenericUI_Element_IggyIcon", slot)
     rarityIcon:SetPosition(1, 1)
     obj.RarityIcon = rarityIcon
@@ -175,6 +180,14 @@ function Slot:SetItem(item)
     self:SetRarityIcon(item)
     self:SetCooldown(0, false)
     self:SetLabel(item.Amount > 1 and item.Amount or "")
+
+    local runeSlotsIcon = Item.IsEquipment(item) and Item.GetRuneSlotsIcon(item) or nil
+    if runeSlotsIcon then
+        self.RuneSlotsIcon:SetIcon(runeSlotsIcon, Slot.ICON_SIZE:unpack())
+        self.RuneSlotsIcon:SetVisible(true)
+    else
+        self.RuneSlotsIcon:SetVisible(false)
+    end
 
     self.Object = _SlotObject.Create("Item", {ItemHandle = item.Handle})
     slot.Tooltip = nil
