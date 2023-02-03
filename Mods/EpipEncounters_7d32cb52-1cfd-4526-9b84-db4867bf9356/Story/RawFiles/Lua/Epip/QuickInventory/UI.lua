@@ -159,6 +159,7 @@ function UI._RenderSettingsPanel()
         end
     elseif itemCategory == "Skillbooks" then
         UI.RenderSetting(QuickInventory.Settings.LearntSkillbooks)
+        UI.RenderSetting(QuickInventory.Settings.SkillbookSchool)
     end
 end
 

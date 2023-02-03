@@ -123,6 +123,55 @@ Text.CommonStrings.Overhead = Text.RegisterTranslatedString({
 })
 
 ---------------------------------------------
+-- ABILITIES
+---------------------------------------------
+
+Text.CommonStrings.Warfare = Text.RegisterTranslatedString({
+   Handle = "h06dec330gb7d7g49bcg89d5g0c7c6f737147",
+   Text = "Warfare",
+})
+Text.CommonStrings.Geomancer = Text.RegisterTranslatedString({
+   Handle = "h421f56f3g378cg4dfaga0d1ge6e2ea2f17c4",
+   Text = "Geomancer",
+})
+Text.CommonStrings.Hydrosophist = Text.RegisterTranslatedString({
+   Handle = "h5837c5abg3931g4b5cgbffdgd634be631879",
+   Text = "Hydrosophist",
+})
+Text.CommonStrings.Aerotheurge = Text.RegisterTranslatedString({
+   Handle = "ha588e93ag94d4g4b21gbd50g4863aea40d21",
+   Text = "Aerotheurge",
+})
+Text.CommonStrings.Summoning = Text.RegisterTranslatedString({
+   Handle = "h3a0f5c0fg2207g403bg9c7fge9fae83627f9",
+   Text = "Summoning",
+})
+Text.CommonStrings.Necromancer = Text.RegisterTranslatedString({
+   Handle = "hb09a2fc1g7ad5g4caag8606g936398d62a3b",
+   Text = "Necromancer",
+})
+Text.CommonStrings.Scoundrel = Text.RegisterTranslatedString({
+   Handle = "h7ca5d696g5244g435eg887bg524f556990f6",
+   Text = "Scoundrel",
+})
+Text.CommonStrings.Huntsman = Text.RegisterTranslatedString({
+   Handle = "h7c16563egd7cdg471cga0c5g30aa3344eeda",
+   Text = "Huntsman",
+})
+Text.CommonStrings.Sourcery = Text.RegisterTranslatedString({
+   Handle = "hee5bca62g5b34g4846g92fdgdaafaa1a5625",
+   Text = "Sourcery",
+})
+Text.CommonStrings.Pyrokinetic = Text.RegisterTranslatedString({
+   Handle = "h02f2946agf229g4398g8acfga7abe6a9bf0b",
+   Text = "Pyrokinetic",
+})
+Text.CommonStrings.Polymorph = Text.RegisterTranslatedString({
+   Handle = "haa78ab06gafaag4c9dg910bg9f5c8c81b22c",
+   Text = "Polymorph",
+})
+
+---------------------------------------------
 -- GAME TERMS
 ---------------------------------------------
 

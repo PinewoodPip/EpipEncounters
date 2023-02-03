@@ -75,7 +75,27 @@ local QuickInventory = {
             Name = "Show learnt skills",
             Description = "",
             DefaultValue = false,
-        }
+        },
+        SkillbookSchool = {
+            Type = "Choice",
+            Name = "Ability School",
+            Description = "",
+            DefaultValue = "Any",
+            ---@type SettingsLib_Setting_Choice_Entry[]
+            Choices = { -- Ordered by appearance in skillbook UI
+                {ID = "Any", NameHandle = Text.CommonStrings.Any.Handle},
+                {ID = "Warrior", NameHandle = Text.CommonStrings.Warfare.Handle},
+                {ID = "Ranger", NameHandle = Text.CommonStrings.Huntsman.Handle},
+                {ID = "Rogue", NameHandle = Text.CommonStrings.Scoundrel.Handle},
+                {ID = "Fire", NameHandle = Text.CommonStrings.Pyrokinetic.Handle},
+                {ID = "Water", NameHandle = Text.CommonStrings.Hydrosophist.Handle},
+                {ID = "Air", NameHandle = Text.CommonStrings.Aerotheurge.Handle},
+                {ID = "Earth", NameHandle = Text.CommonStrings.Geomancer.Handle},
+                {ID = "Death", NameHandle = Text.CommonStrings.Necromancer.Handle},
+                {ID = "Summoning", NameHandle = Text.CommonStrings.Summoning.Handle},
+                {ID = "Polymorph", NameHandle = Text.CommonStrings.Polymorph.Handle},
+            },
+        },
     },
 
     USE_LEGACY_EVENTS = false,
@@ -208,22 +228,33 @@ QuickInventory.Hooks.IsItemVisible:Subscribe(function (ev)
 
     if QuickInventory:GetSettingValue(QuickInventory.Settings.ItemCategory) == "Skillbooks" then
         local showLearntSkills = QuickInventory:GetSettingValue(QuickInventory.Settings.LearntSkillbooks) == true
+        local school = QuickInventory:GetSettingValue(QuickInventory.Settings.SkillbookSchool)
 
         visible = visible and Item.HasUseAction(item, "SkillBook")
         
-        if not showLearntSkills then
-            local skillBookActions = Item.GetUseActions(item, "SkillBook") ---@type SkillBookActionData[]
-            local knowsAllSkills = true
-
-            for _,action in ipairs(skillBookActions) do
-                if not Character.IsSkillLearnt(Client.GetCharacter(), action.SkillID) then
-                    knowsAllSkills = false
-                    break
+        if visible then
+            if not showLearntSkills then
+                local skillBookActions = Item.GetUseActions(item, "SkillBook") ---@type SkillBookActionData[]
+                local knowsAllSkills = true
+    
+                for _,action in ipairs(skillBookActions) do
+                    if not Character.IsSkillLearnt(Client.GetCharacter(), action.SkillID) then
+                        knowsAllSkills = false
+                        break
+                    end
                 end
+    
+                -- Only filter out the item if all skills from the book are learnt.
+                visible = visible and not knowsAllSkills
             end
+    
+            if school ~= "Any" then
+                -- Only checks first skill
+                local action = Item.GetUseActions(item, "SkillBook")[1] ---@type SkillBookActionData
+                local skillStat = Stats.Get("SkillData", action.SkillID)
 
-            -- Only filter out the item if all skills from the book are learnt.
-            visible = visible and not knowsAllSkills
+                visible = visible and skillStat.Ability == school
+            end
         end
     end
     
