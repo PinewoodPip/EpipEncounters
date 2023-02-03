@@ -4,11 +4,6 @@
 ---@class GenericUI_Element_ComboBox : GenericUI_Element
 local ComboBox = {}
 
----Adds an option to the combobox.
----@param id string
----@param label string
-function ComboBox:AddOption(id, label) end
-
 ---Sets the currently selected option.
 ---@param id string
 function ComboBox:SelectOption(id) end

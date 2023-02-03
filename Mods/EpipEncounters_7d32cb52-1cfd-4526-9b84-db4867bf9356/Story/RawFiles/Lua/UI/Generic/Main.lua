@@ -125,6 +125,7 @@ local Prefab = {
 }
 Generic._Prefab = Prefab
 
+---@protected
 ---@param ui GenericUI_Instance
 ---@param id string
 ---@return GenericUI_Prefab
@@ -158,12 +159,16 @@ function Prefab:GetMainElement()
 end
 
 function Prefab:_SetupEvents()
-    local _Templates = self.Events
+    local eventTemplates = self.Events
+    local hookTemplates = self.Hooks
     
     self.Events = {}
-
-    for id,_ in pairs(_Templates) do
+    self.Hooks = {}
+    for id,_ in pairs(eventTemplates or {}) do
         self.Events[id] = SubscribableEvent:New(id)
+    end
+    for id,_ in pairs(hookTemplates or {}) do
+        self.Hooks[id] = SubscribableEvent:New(id)
     end
 end
 
@@ -487,7 +492,8 @@ Generic.OnComboBoxItemSelected = function(ev, id, index, optionID)
 
     element.Events.OptionSelected:Throw({
         Index = index + 1,
-        Option = {ID = optionID,}, -- TODO label
+        ---@diagnostic disable-next-line: invisible
+        Option = element._Options[index + 1]
     })
 end
 

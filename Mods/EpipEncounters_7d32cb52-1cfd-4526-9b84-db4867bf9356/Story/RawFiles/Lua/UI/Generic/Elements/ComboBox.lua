@@ -3,16 +3,12 @@
 local Generic = Client.UI.Generic
 
 ---@class GenericUI_Element_ComboBox : GenericUI_Element
+---@field _Options GenericUI_Element_ComboBox_Option[]
 ---@field Events GenericUI_Element_ComboBox_Events
 local ComboBox = {
 
 }
 local _ComboBox = ComboBox ---@type GenericUI_Element_ComboBox Used to workaround an IDE issue with annotations pointing to ExposeFunction().
-
----Represents an option in the combobox.
----@class GenericUI_Element_ComboBox_Option
----@field Label string
----@field ID string
 
 ---------------------------------------------
 -- EVENTS
@@ -28,6 +24,15 @@ Generic.Inherit(ComboBox, Generic._Element)
 ---@class GenericUI_Element_ComboBox_Event_OptionSelected
 ---@field Option GenericUI_Element_ComboBox_Option
 ---@field Index integer
+
+---------------------------------------------
+-- CLASSES
+---------------------------------------------
+
+---Represents an option in the combobox.
+---@class GenericUI_Element_ComboBox_Option
+---@field Label string
+---@field ID string
 
 ---------------------------------------------
 -- METHODS
@@ -48,8 +53,21 @@ function ComboBox:SetOptions(options)
     end
 end
 
+---Adds an option to the combobox.
+---@param id string
+---@param label string
+function ComboBox:AddOption(id, label)
+    table.insert(self._Options, {ID = id, Label = label})
+
+    self:GetMovieClip().AddOption(id, label)
+end
+
 ---------------------------------------------
 -- SETUP
 ---------------------------------------------
+
+function ComboBox:_OnCreation()
+    self._Options = {}
+end
 
 Generic.RegisterElementType("ComboBox", ComboBox)
