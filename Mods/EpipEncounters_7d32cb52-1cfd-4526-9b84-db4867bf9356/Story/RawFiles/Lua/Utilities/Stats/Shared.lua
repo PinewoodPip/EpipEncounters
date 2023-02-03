@@ -191,7 +191,7 @@ function Stats.MeetsRequirements(char, statID, isItem, itemSource)
     end
 
     -- Only check other requirements if this spell is natural to the character
-    if not grantedByExternalSource or isItem then
+    if not grantedByExternalSource then
         -- Requirements
         for _,req in ipairs(data.Requirements) do
             local reqMet = false
@@ -203,11 +203,7 @@ function Stats.MeetsRequirements(char, statID, isItem, itemSource)
             elseif req.Requirement == "Immobile" then
                 reqMet = Character.GetMovement(char) <= 0
             else
-                if not Stats.MeetsRequirementsINT(char, req) then
-                    return false
-                else
-                    reqMet = true
-                end
+                reqMet = Stats.MeetsRequirementsINT(char, req)
             end
 
             if req.Not then
@@ -227,6 +223,31 @@ function Stats.MeetsRequirements(char, statID, isItem, itemSource)
                 end
             end
         end
+    end
+
+    if itemSource then
+        for _,req in ipairs(itemSource.Stats.Requirements) do
+            local reqMet = false
+
+            if req.Requirement == "Combat" then
+                reqMet = Character.IsInCombat(char)
+            elseif req.Requirement == "Tag" then
+                reqMet = char:HasTag(req.Param)
+            elseif req.Requirement == "Immobile" then
+                reqMet = Character.GetMovement(char) <= 0
+            else
+                reqMet = Stats.MeetsRequirementsINT(char, req)
+            end
+
+            if req.Not then
+                reqMet = not reqMet
+            end
+
+            if not reqMet then
+                return false
+            end
+        end
+
     end
 
     return true
@@ -366,9 +387,5 @@ function Stats.MeetsRequirementsINT(char, req)
         reqMet = not reqMet
     end
 
-    if not reqMet then
-        return false
-    end
-
-    return true
+    return reqMet
 end
