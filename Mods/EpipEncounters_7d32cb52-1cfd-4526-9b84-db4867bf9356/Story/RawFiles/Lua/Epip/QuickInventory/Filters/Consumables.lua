@@ -21,12 +21,24 @@ QuickInventory.FOOD_AND_DRINK_TAGS = Set.Create({
     "DRINK", -- Similar case to POTIONS and Potion.
     "BEVERAGES",
 })
-QuickInventory.SCROLL_AND_GRENADES_TAGS = Set.Create({
+QuickInventory.SCROLL_TAGS = Set.Create({
     "SCROLLS",
     "ORGANIZE_SCROLL",
+})
+QuickInventory.GRENADE_TAGS = Set.Create({
     "GRENADES",
     "ORGANIZE_GRENADE",
 })
+
+---------------------------------------------
+-- METHODS
+---------------------------------------------
+
+---@param item EclItem
+---@return boolean
+local function IsScrollOrGrenade(item)
+    return QuickInventory.ItemHasRelevantTag(item, QuickInventory.SCROLL_TAGS) or QuickInventory.ItemHasRelevantTag(item, QuickInventory.GRENADE_TAGS)
+end
 
 ---------------------------------------------
 -- SETTINGS
@@ -71,7 +83,7 @@ QuickInventory.Hooks.IsItemVisible:Subscribe(function (ev)
             if subTypeSetting == "Potions" then
                 visible = visible and QuickInventory.ItemHasRelevantTag(item, QuickInventory.POTION_TAGS)
             elseif subTypeSetting == "ScrollsAndGrenades" then
-                visible = visible and QuickInventory.ItemHasRelevantTag(item, QuickInventory.SCROLL_AND_GRENADES_TAGS)
+                visible = visible and IsScrollOrGrenade(item)
             elseif subTypeSetting == "FoodAndDrinks" then
                 visible = visible and QuickInventory.ItemHasRelevantTag(item, QuickInventory.FOOD_AND_DRINK_TAGS) and not QuickInventory.ItemHasRelevantTag(item, QuickInventory.POTION_TAGS) -- Excludes potions.
             end

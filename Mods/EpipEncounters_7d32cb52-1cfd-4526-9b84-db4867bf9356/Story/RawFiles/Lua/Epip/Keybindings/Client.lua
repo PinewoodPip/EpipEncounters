@@ -8,7 +8,7 @@ Options.RegisterTab("EpipEncounters", {
         {Name = "Debug Teleport", ID = "EpipEncounters_DebugTeleport", DeveloperOnly = true},
         {Name = "Debug Teleport (Party)", ID = "EpipEncounters_DebugTeleport_Party", DeveloperOnly = true},
         {Name = "Debug Copy Identifier", ID = "EpipEncounters_Debug_CopyIdentifier", DeveloperOnly = true, DefaultInput1 = {Keys = {"lctrl", "c"}}},
-        {Name = "Debug Open Features Menu", ID = "EpipEncounters_Debug_OpenDebugMenu", DeveloperOnly = true, DefaultInput1 = {Keys = {"lctrl", "f"}}},
+        {Name = "Debug Open Features Menu", ID = "EpipEncounters_Debug_OpenDebugMenu", DeveloperOnly = true, DefaultInput1 = {Keys = {"lctrl", "b"}}},
         {Name = "Debug Generic Hookable Hotkey", ID = "EpipEncounters_Debug_Generic", DeveloperOnly = true, DefaultInput1 = {Keys = {"lctrl", "e"}}},
         {Name = "Copy 2D Position", ID = "EpipEncounters_Debug_CopyPosition2D", DeveloperOnly = true, DefaultInput1 = {Keys = {"lshift", "t"}}},
         
@@ -17,6 +17,8 @@ Options.RegisterTab("EpipEncounters", {
         -- EE
         {Name = "Meditate", ID = "EpicEncounters_Meditate"},
         {Name = "Source Infuse", ID = "EpipEncounters_SourceInfuse"},
+
+        {Name = "Open Quick Find", ID = "EpipEncounters_QuickFind", DefaultInput1 = {Keys = {"lctrl", "f"}}},
 
         -- Misc
         {Name = "Toggle Tooltip Scrolling", ID = "EpipEncounters_ScrollTooltip", DefaultInput1 = {Keys = {"middle"}}},

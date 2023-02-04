@@ -286,7 +286,7 @@ end
 
 -- Refresh the UI when the client character changes.
 Client.Events.ActiveCharacterChanged:Subscribe(function (_)
-    if UI:IsVisible() then
+    if UI:IsVisible() and UI._Initialized then -- TODO why does this error on load?
         UI.Refresh()
     end
 end)
@@ -324,4 +324,11 @@ Client.UI.ContextMenu.RegisterElementListener("epip_Feature_QuickInventory", "bu
     QuickInventory:SetSettingValue(QuickInventory.Settings.WeaponSubType, "Any")
     
     UI.Setup()
+end)
+
+-- Open the UI through a keybind.
+Client.UI.OptionsInput.Events.ActionExecuted:RegisterListener(function (action, _)
+    if action == "EpipEncounters_QuickFind" then
+        UI.Setup()
+    end
 end)
