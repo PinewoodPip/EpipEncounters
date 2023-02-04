@@ -22,7 +22,9 @@ end)
 -- EXTRACT RUNES
 ---------------------------------------------
 Net.RegisterListener("EPIPENCOUNTERS_QuickExtractRunes", function(payload)
-    Osi.PROC_PIP_QuickExtractRunes(Ext.GetCharacter(payload.Char).MyGuid, Ext.GetItem(payload.Item).MyGuid)
+    local char, item = Character.Get(payload.Char), Item.Get(payload.Item)
+
+    Osiris.PROC_PIP_QuickExtractRunes(char, item)
 end)
 
 ---------------------------------------------

@@ -34,8 +34,6 @@ Epip.Features.GreatforgeContextMenu = {
 local GreatforgeContextMenu = Epip.Features.GreatforgeContextMenu
 local ContextMenu = Client.UI.ContextMenu
 
-local options
-
 -- Returns the mod family name and the value of the deltamod passed,
 -- if it is compatible with EE systems. Otherwise, returns nil.
 function GreatforgeContextMenu.IsCullable(deltamod)

@@ -277,13 +277,14 @@ Ext.Osiris.RegisterListener("CharacterStatusApplied", 3, "after", function(targe
 end)
 
 function GreatforgeGetItemData(char, item)
-    char = Ext.GetCharacter(char)
-    item = Ext.GetItem(item)
+    char = Character.Get(char)
+    item = Item.Get(item)
 
     local level = item.Stats.Level
     local itemType = item.Stats.ItemTypeReal
     local slot = item.Stats.ItemSlot
-    -- local subType = item.Stats.ItemType
+
+    slot  = tostring(slot)
 
     -- returns ilevel, itemtype, slot,
     return Text.RemoveTrailingZeros(level), itemType, slot
