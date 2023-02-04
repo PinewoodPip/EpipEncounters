@@ -120,22 +120,26 @@ Osiris.RegisterSymbolListener("NRD_OnActionStateEnter", 2, "after", function(cha
 
         casters[char.MyGuid] = true
 
-        Net.PostToUser(char.ReservedUserID, "EPIPENCOUNTERS_Hotbar_SkillUseChanged", {
-            CharacterNetID = char.NetID,
-            SkillID = skillID,
-            Casting = true,
-        })
+        if Character.IsActive(char) then
+            Net.PostToOwner(char, "EPIPENCOUNTERS_Hotbar_SkillUseChanged", {
+                CharacterNetID = char.NetID,
+                SkillID = skillID,
+                Casting = true,
+            })
+        end
     elseif state == "PrepareSkill" and player then
         char = Ext.Entity.GetCharacter(char)
         local skillID = NRD_ActionStateGetString(char.MyGuid, "SkillId")
 
         Hotbar.preparedSkills[char.MyGuid] = skillID
 
-        Net.PostToUser(char.ReservedUserID, "EPIPENCOUNTERS_Hotbar_SkillUseChanged", {
-            CharacterNetID = char.NetID,
-            SkillID = skillID,
-            Casting = false,
-        })
+        if Character.IsActive(char) then
+            Net.PostToOwner(char, "EPIPENCOUNTERS_Hotbar_SkillUseChanged", {
+                CharacterNetID = char.NetID,
+                SkillID = skillID,
+                Casting = false,
+            })
+        end
     end
 end)
 
@@ -145,11 +149,13 @@ Ext.Events.Tick:Subscribe(function()
         local char = Ext.Entity.GetCharacter(caster)
 
         if state ~= "UseSkill" then
-            Net.PostToUser(char.ReservedUserID, "EPIPENCOUNTERS_Hotbar_SkillUseChanged", {
-                CharacterNetID = char.NetID,
-                SkillID = nil,
-                Casting = false,
-            })
+            if Character.IsActive(char) then
+                Net.PostToOwner(char, "EPIPENCOUNTERS_Hotbar_SkillUseChanged", {
+                    CharacterNetID = char.NetID,
+                    SkillID = nil,
+                    Casting = false,
+                })
+            end
 
             casters[caster] = nil
         end
@@ -165,11 +171,13 @@ Ext.Events.Tick:Subscribe(function()
 
                     Hotbar.preparedSkills[charGUID] = nil
                     
-                    Net.PostToUser(char.ReservedUserID, "EPIPENCOUNTERS_Hotbar_SkillUseChanged", {
-                        CharacterNetID = char.NetID,
-                        SkillID = nil,
-                        Casting = false,
-                    })
+                    if Character.IsActive(char) then
+                        Net.PostToOwner(char, "EPIPENCOUNTERS_Hotbar_SkillUseChanged", {
+                            CharacterNetID = char.NetID,
+                            SkillID = nil,
+                            Casting = false,
+                        })
+                    end
                 end
             end)
         end

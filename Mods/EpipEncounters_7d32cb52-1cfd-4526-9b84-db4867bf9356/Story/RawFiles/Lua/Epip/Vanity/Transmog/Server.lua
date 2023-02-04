@@ -305,8 +305,8 @@ end)
 Osiris.RegisterSymbolListener("ItemEquipped", 2, "after", function(item, char)
     if Osiris.DB_IsPlayer:Get(char) then
         char = Ext.GetCharacter(char)
-    
-        Net.PostToCharacter(char.MyGuid, "EPIPENCOUNTERS_ItemEquipped", {
+        
+        Net.Broadcast("EPIPENCOUNTERS_ItemEquipped", {
             NetID = char.NetID,
             ItemNetID = Ext.GetItem(item).NetID,
         })
