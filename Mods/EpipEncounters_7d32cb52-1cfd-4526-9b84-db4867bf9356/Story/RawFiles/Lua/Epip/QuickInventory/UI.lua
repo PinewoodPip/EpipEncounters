@@ -335,9 +335,13 @@ Client.UI.ContextMenu.RegisterElementListener("epip_Feature_QuickInventory", "bu
     UI.Setup()
 end)
 
--- Open the UI through a keybind.
+-- Toggle the UI through a keybind.
 Client.UI.OptionsInput.Events.ActionExecuted:RegisterListener(function (action, _)
     if action == "EpipEncounters_QuickFind" then
-        UI.Setup()
+        if UI:IsVisible() then
+            UI.Close()
+        else
+            UI.Setup()
+        end
     end
 end)
