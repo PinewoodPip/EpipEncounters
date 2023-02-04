@@ -170,7 +170,7 @@ function StatsEditor:__Setup()
     StatsEditor.UI.Container = container
 
     ui:GetUI().SysPanelSize = {StatsEditor.UI_SIZE[1], StatsEditor.UI_SIZE[2] + 150}
-    ui:SetPosition("center", "center", nil, 2)
+    ui:SetPositionRelativeToViewport("center", "center", nil, 2)
 
     ui:Hide()
 end

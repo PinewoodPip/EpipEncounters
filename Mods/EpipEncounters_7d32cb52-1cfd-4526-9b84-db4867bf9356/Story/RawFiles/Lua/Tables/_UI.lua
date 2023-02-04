@@ -135,20 +135,29 @@ function BaseUI:Show()
     end
 end
 
----@param pos1 string
----@param pos2 string
----@param target string? Defaults to "screen"
----@param delay number? Defaults to 0. Useful while initializing the UI, as the call does not work during the first few ticks of its existence.
-function BaseUI:SetPosition(pos1, pos2, target, delay)
+---Sets the position of the UIObject relative to viewport.
+---Equivalent to the `setPosition` UI call.
+---@param anchor "center"|"topleft"|"topright"|"bottomleft"|"bottomright"
+---@param position "center"|"topleft"|"topright"|"bottomleft"|"bottomright"
+---@param target ("screen"|"splitscreen")? Defaults to `"screen"`
+---@param delay number? Defaults to 0 seconds. Useful while initializing the UI, as the call does not work during the first few ticks of its existence.
+function BaseUI:SetPositionRelativeToViewport(anchor, position, target, delay)
     target = target or "screen"
     
     if delay then
         Timer.Start(delay, function (_)
-            self:ExternalInterfaceCall("setPosition", pos1, target, pos2)
+            self:ExternalInterfaceCall("setPosition", anchor, target, position)
         end)
     else
-        self:ExternalInterfaceCall("setPosition", pos1, target, pos2)
+        self:ExternalInterfaceCall("setPosition", anchor, target, position)
     end
+end
+
+---Sets the position of the UIObject.
+---Equivalent to `UIObject:SetPosition()`
+---@param pos Vector2
+function BaseUI:SetPosition(pos)
+    self:GetUI():SetPosition(pos:unpack())
 end
 
 ---Shorthand for UIObject:Hide()

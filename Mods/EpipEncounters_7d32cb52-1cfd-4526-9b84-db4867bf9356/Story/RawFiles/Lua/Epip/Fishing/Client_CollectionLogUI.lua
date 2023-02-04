@@ -85,7 +85,7 @@ function UI:Show()
     UI._SetupFishGrid()
 
     Client.UI._BaseUITable.Show(self)
-    UI:SetPosition("center", "center", "screen")
+    UI:SetPositionRelativeToViewport("center", "center")
 end
 
 ---------------------------------------------

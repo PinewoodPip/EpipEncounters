@@ -179,8 +179,9 @@ function DebugDisplay:__Setup()
     uiObject.SysPanelSize = {200, 300}
     uiObject.Left = 200
 
-    GameState.Events.GameReady:Subscribe(function (ev)
-        ui:SetPosition("topright", "topright", nil, 0.1)
+    -- Snap to top-right of screen.
+    GameState.Events.GameReady:Subscribe(function (_)
+        ui:SetPositionRelativeToViewport("topright", "topright", nil, 0.1)
     end, {Once = true})
 
     DebugDisplay.UI = ui
