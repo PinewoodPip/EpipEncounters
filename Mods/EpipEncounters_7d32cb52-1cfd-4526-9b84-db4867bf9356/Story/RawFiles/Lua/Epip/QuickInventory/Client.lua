@@ -20,6 +20,11 @@ local QuickInventory = {
            Text = "Quick Find",
            ContextDescription = "Header for the UI",
         },
+        SettingsMenuInfo = {
+           Handle = "h6232b543g92dag4b65gac80g0d3f7e833f72",
+           Text = "Quick Find is a UI that shows a customizable filtered view of the party inventory, opened using Ctrl+F by default.",
+           ContextDescription = "Info shown in settings menu",
+        },
         ItemCategory_Name = {
            Handle = "h87e9e867gfd89g458eg850fga1129b558d59",
            Text = "Item Category",
@@ -39,6 +44,16 @@ local QuickInventory = {
            Handle = "hc9a05852g3523g4c85gad7cg49f293c2cd29",
            Text = "Scrolls and Grenades",
            ContextDescription = "Name for consumables dropdown option",
+        },
+        CloseAfterUsing_Name = {
+           Handle = "h1d691e43g71beg469ag8795g8f6fdf95be62",
+           Text = "Close UI after using an item",
+           ContextDescription = "Setting name",
+        },
+        CloseAfterUsing_Description = {
+           Handle = "h8de93e20gae0dg45cfg9695g478ba659f71a",
+           Text = "If enabled, the UI will close after using an item.\n\nYou can hold shift while clicking an item to temporarily invert this setting.",
+           ContextDescription = "Tooltip for 'close after using' setting",
         },
     },
 

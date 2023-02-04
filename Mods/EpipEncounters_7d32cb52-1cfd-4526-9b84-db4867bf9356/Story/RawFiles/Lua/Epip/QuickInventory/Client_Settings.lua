@@ -8,6 +8,13 @@ local CommonStrings = Text.CommonStrings
 ---@class Feature_QuickInventory
 local QuickInventory = Epip.GetFeature("Feature_QuickInventory")
 
+QuickInventory.Settings.CloseAfterUsing = QuickInventory:RegisterSetting("CloseAfterUsing", {
+    Type = "Boolean",
+    Name = QuickInventory.TranslatedStrings.CloseAfterUsing_Name,
+    Description = QuickInventory.TranslatedStrings.CloseAfterUsing_Description,
+    DefaultValue = true,
+})
+
 QuickInventory.Settings.ItemCategory = QuickInventory:RegisterSetting("ItemCategory", {
     Type = "Choice",
     Name = QuickInventory.TranslatedStrings.ItemCategory_Name,

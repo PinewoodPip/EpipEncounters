@@ -122,7 +122,14 @@ function UI._GetHotbarSlot(listIndex, itemIndex)
         
             element.Events.Clicked:Subscribe(function (_)
                 local slottedItem = element.Object:GetEntity()
-                if Stats.MeetsRequirements(Client.GetCharacter(), slottedItem.StatsId, true, slottedItem) then
+                local shouldClose = QuickInventory:GetSettingValue(QuickInventory.Settings.CloseAfterUsing) == true
+
+                -- Invert behaviour if shift is pressed
+                if Input.IsShiftPressed() then
+                    shouldClose = not shouldClose
+                end
+
+                if shouldClose and Stats.MeetsRequirements(Client.GetCharacter(), slottedItem.StatsId, true, slottedItem) then
                     UI.Close()
                 end
             end)
