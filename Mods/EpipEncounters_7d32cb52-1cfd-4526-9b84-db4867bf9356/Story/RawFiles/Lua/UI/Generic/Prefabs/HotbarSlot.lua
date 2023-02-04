@@ -8,7 +8,9 @@ local V = Vector.Create
 ---@field SlotIcon GenericUI_Element_IggyIcon
 ---@field RarityIcon GenericUI_Element_IggyIcon
 ---@field RuneSlotsIcon GenericUI_Element_IggyIcon
----@field _CanDragDrop boolean
+---@field _CanDrag boolean
+---@field _CanDrop boolean
+---@field _ClearAfterDrag boolean
 ---@field _AutoUpdateDelay number In seconds.
 ---@field _AutoUpdateRemainingDelay number In seconds.
 local Slot = {
@@ -105,7 +107,9 @@ end
 function Slot.Create(ui, id, parent)
     ---@type GenericUI_Prefab_HotbarSlot
     local obj = Slot:_Create(ui, id)
-    obj._CanDragDrop = false
+    obj._CanDrag = false
+    obj._CanDrop = false
+    obj._ClearAfterDrag = false
     obj._AutoUpdateDelay = 0.1
     obj._AutoUpdateRemainingDelay = obj._AutoUpdateDelay
     obj._Usable = true
@@ -275,16 +279,27 @@ function Slot:Clear()
     self.Object = _SlotObject.Create("None")
 end
 
----Returns whether entities can be dragged in or out of the slot.
----@return boolean
-function Slot:CanDragDrop()
-    return self._CanDragDrop
+---Sets whether objects can be dragged out of the slot.
+---@param canDrag boolean
+---@param clearSlotAfterwards boolean? Whether to clear the slot when dragging out. Defaults to same value as `canDrag`.
+function Slot:SetCanDrag(canDrag, clearSlotAfterwards)
+    self._CanDrag = canDrag
+    self._ClearAfterDrag = clearSlotAfterwards == nil and canDrag or clearSlotAfterwards
 end
 
----Sets whether entities can be dragged in or out of the slot.
----@param canDrag boolean
-function Slot:SetCanDragDrop(canDrag)
-    self._CanDragDrop = canDrag
+---Sets whether objects can be dragged onto the slot to assign them.
+---@param canDrop boolean
+function Slot:SetCanDrop(canDrop)
+    self._CanDrop = canDrop
+end
+
+---Sets whether entities can be dragged in and out of the slot.
+---@see GenericUI_Prefab_HotbarSlot.SetCanDrag
+---@see GenericUI_Prefab_HotbarSlot.SetCanDrop
+---@param canDragDrop boolean
+function Slot:SetCanDragDrop(canDragDrop)
+    self:SetCanDrag(canDragDrop)
+    self:SetCanDrop(canDragDrop)
 end
 
 ---Sets the time between the element being automatically updated with data of its set entity.
@@ -325,15 +340,17 @@ end
 ---------------------------------------------
 
 function Slot:_OnElementMouseUp(_)
-    if self:CanDragDrop() then
+    if self._CanDrop then
         local data = Ext.UI.GetDragDrop().PlayerDragDrops[1]
         local objectID = data.DragId
+        local objectWasDropped = false
     
         if objectID ~= "" then
             local skill = Stats.Get("SkillData", objectID)
     
             if skill then
                 self:SetSkill(objectID)
+                objectWasDropped = true
             end
         else
             local item = Item.Get(data.DragObject)
@@ -341,11 +358,12 @@ function Slot:_OnElementMouseUp(_)
             if item then
                 self:SetTemplate(item.RootTemplate.Id)
                 self.Object.ItemHandle = item.Handle -- For dragging purposes only.
+                objectWasDropped = true
             end
         end
 
         -- Fire event if an item was set
-        if not self:IsEmpty() then
+        if objectWasDropped then
             self.Events.ObjectDraggedIn:Throw({
                 Object = self.Object
             })
@@ -452,7 +470,7 @@ end
 
 ---Handles drag-drops starting on the slot.
 function Slot:_OnSlotDragStarted()
-    if self:CanDragDrop() then
+    if self._CanDrag then
         local obj = self.Object
     
         if obj.Type == "Skill" then
@@ -468,7 +486,9 @@ function Slot:_OnSlotDragStarted()
         -- Play dragging sound
         self.UI:PlaySound("UI_Game_PartyFormation_PickUp")
     
-        self:Clear()
+        if self._ClearAfterDrag then
+            self:Clear()
+        end
     end
 end
 
