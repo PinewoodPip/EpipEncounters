@@ -555,14 +555,14 @@ Client.UI.OptionsInput.Events.ActionExecuted:RegisterListener(function (action, 
         if lastItemTooltipHandle then
             local item = Item.Get(lastItemTooltipHandle)
 
-            text = string.format("%s %s", item.MyGuid, Utilities.GetPrefixedRootTemplateID(item))
+            text = item.MyGuid
         elseif lastTooltipSkillID then
             text = lastTooltipSkillID
         else
             local pointerChar = Pointer.GetCurrentCharacter(nil, true)
 
             if pointerChar then
-                text = string.format("%s %s", pointerChar.MyGuid, Utilities.GetPrefixedRootTemplateID(pointerChar))
+                text = pointerChar.MyGuid
             end
         end
 
