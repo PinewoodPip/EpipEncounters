@@ -118,6 +118,7 @@ function UI._GetHotbarSlot(listIndex, itemIndex)
         -- Insert hotbar slots to the new list
         for i=1,UI.GetItemsPerRow(),1 do
             local element = HotbarSlot.Create(UI, string.format("%s_%s", #UI._Lists, i), list)
+            element:SetCanDrag(true, false) -- Can drag items out of the slot, without removing them from it.
         
             element.Events.Clicked:Subscribe(function (_)
                 local slottedItem = element.Object:GetEntity()
