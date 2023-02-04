@@ -39,8 +39,7 @@ function UI.Setup()
 
     UI._RenderSettingsPanel()
 
-    local x, y = Client.GetMousePosition()
-    UI:GetUI():SetPosition(x, y - UI.BACKGROUND_SIZE[2])
+    UI:SetPositionRelativeToViewport("center", "center")
     UI:Show()
 end
 
@@ -152,6 +151,8 @@ end
 ---Creates the core elements of the UI.
 function UI._Initialize()
     if not UI._Initialized then
+        UI:GetUI().SysPanelSize = {UI.BACKGROUND_SIZE[1] + UI.SETTINGS_PANEL_SIZE[1], UI.BACKGROUND_SIZE[2]}
+
         local bg = TooltipPanelPrefab.Create(UI, "Background", nil, UI.BACKGROUND_SIZE, Text.Format(QuickInventory.TranslatedStrings.Header:GetString(), {
             Size = 23,
         }), UI.HEADER_SIZE)
