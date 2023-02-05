@@ -30,6 +30,23 @@ Text.CommonStrings.Settings = Text.RegisterTranslatedString({
     Handle = "hbd6a0da2gd153g40c7g972agb0d16bfe78d4",
     Text = "Settings",
 })
+Text.CommonStrings.Chat = Text.RegisterTranslatedString({
+   Handle = "h6108a8b5gd998g4138g9ce5g12cc0695be7f",
+   Text = "Chat",
+})
+Text.CommonStrings.Developer = Text.RegisterTranslatedString({
+   Handle = "hd286ded2g4b06g4fedg923cg235ebaa1ae49",
+   Text = "Developer",
+})
+Text.CommonStrings.Notifications = Text.RegisterTranslatedString({
+   Handle = "hc2b715dfgf2a2g4ea3g8691gbc66ca160a1d",
+   Text = "Notifications",
+})
+Text.CommonStrings.Tooltips = Text.RegisterTranslatedString({
+   Handle = "h921639b1g5656g4eafg9c4dg735bda9ba283",
+   Text = "Tooltips",
+   ContextDescription = "As in, UI tooltips",
+})
 
 ---------------------------------------------
 -- WEAPON TYPES
@@ -211,6 +228,10 @@ Text.CommonStrings.FoodAndDrinks = Text.RegisterTranslatedString({
    Handle = "h8d88a6c9gb72cg422fg8929g396e84f1e77b",
    Text = "Food and Drinks",
 })
+Text.CommonStrings.Inventory = Text.RegisterTranslatedString({
+   Handle = "he8c517d9gc48fg42f8ga501g35f9909946b9",
+   Text = "Inventory",
+})
 
 ---------------------------------------------
 -- SETUP
@@ -219,4 +240,5 @@ Text.CommonStrings.FoodAndDrinks = Text.RegisterTranslatedString({
 -- Add a FeatureID to all common strings for exporting to spreadsheet.
 for _,tsk in pairs(Text.CommonStrings) do
     tsk.FeatureID = "CommonStrings"
+    tsk.ModTable = "EpipEncounters"
 end

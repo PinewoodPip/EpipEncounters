@@ -69,7 +69,15 @@ local TooltipAdjustments = {
             Description = "If enabled, weapons with deltamods that scale their range will be displayed like regular deltamods.",
             DefaultValue = true,
         }
-    }
+    },
+
+    TranslatedStrings = {
+        Name = {
+           Handle = "haabd6906gee2dg4b39ga339gf5cdf1a2ee8b",
+           Text = "Tooltip Adjustments",
+           ContextDescription = "Feature name",
+        },
+    },
 }
 Epip.RegisterFeature("TooltipAdjustments", TooltipAdjustments)
 

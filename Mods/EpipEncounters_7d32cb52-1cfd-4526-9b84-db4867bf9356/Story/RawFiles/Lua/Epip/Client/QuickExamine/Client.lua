@@ -26,6 +26,11 @@ local QuickExamine = {
     }),
 
     TranslatedStrings = {
+        Name = {
+           Handle = "h939f9996g8c0fg46dbg8d51g5816929f1387",
+           Text = "Quick Examine",
+           ContextDescription = "Name of the feature",
+        },
         SavePosition = {
            Handle = "h6cc76e3fg8d5cg466egb96agb780b490d0d5",
            Text = "Save Default Position",
