@@ -1,8 +1,105 @@
 
 local CommonStrings = Text.CommonStrings
+local Set = DataStructures.Get("DataStructures_Set")
 
 ---@class Feature_QuickInventory
 local QuickInventory = Epip.GetFeature("Feature_QuickInventory")
+QuickInventory.DELTAMOD_FIELD_ALIASES = {
+    -- Resistances
+    ["Fire"] = Set.Create({
+        "Fire Resistance",
+        "Resistance",
+
+        "Fire Damage",
+        "Damage",
+    }),
+    ["Air"] = Set.Create({
+        "Air Resistance",
+        "Resistance",
+
+        "Air Damage",
+        "Damage",
+    }),
+    ["Water"] = Set.Create({
+        "Water Resistance",
+        "Resistance",
+
+        "Water Damage",
+        "Damage",
+    }),
+    ["Earth"] = Set.Create({
+        "Earth Resistance",
+        "Resistance",
+
+        "Earth Damage",
+        "Damage",
+    }),
+    ["Poison"] = Set.Create({
+        "Poison Resistance",
+        "Resistance",
+
+        "Poison Damage",
+        "Damage",
+    }),
+    ["Physical"] = Set.Create({
+        "Physical Resistance",
+        "Resistance",
+
+        "Physical Damage",
+        "Damage",
+    }),
+    ["Piercing"] = Set.Create({
+        "Piercing Resistance",
+        "Resistance",
+
+        "Piercing Damage",
+        "Damage",
+    }),
+
+    -- Abilities
+    ["WarriorLore"] = Set.Create({
+        "Warfare",
+    }),
+    ["RangerLore"] = Set.Create({
+        "Huntsman",
+    }),
+    ["RogueLore"] = Set.Create({
+        "Scoundrel",
+    }),
+    ["FireSpecialist"] = Set.Create({
+        "Pyrokinetic",
+    }),
+    ["WaterSpecialist"] = Set.Create({
+        "Hydrosophist",
+    }),
+    ["AirSpecialist"] = Set.Create({
+        "Aerotheurge",
+        "Aerothurge", -- Alias for Ameranth
+    }),
+    ["EarthSpecialist"] = Set.Create({
+        "Geomancer",
+    }),
+    ["Necromancy"] = Set.Create({
+        "Necromancy",
+        "Necromancer",
+    }),
+    ["Barter"] = Set.Create({
+        "Bartering",
+    }),
+    ["Luck"] = Set.Create({
+        "Lucky Charm",
+    }),
+
+    ["Vitality"] = Set.Create({
+        "Vitality",
+        "HP",
+        "Health",
+    }),
+    ["IntelligenceBoost"] = Set.Create({
+        "Power",
+        "Intelligence", -- For non-EE.
+    }),
+}
 
 ---------------------------------------------
 -- SETTINGS
@@ -43,6 +140,67 @@ QuickInventory.Settings.WeaponSubType = QuickInventory:RegisterSetting("WeaponSu
     },
 })
 
+QuickInventory.Settings.DynamicStat = QuickInventory:RegisterSetting("DynamicStat", {
+    Type = "String",
+    Name = QuickInventory.TranslatedStrings.DynamicStat_Name,
+    DefaultValue = "",
+})
+
+---------------------------------------------
+-- METHODS
+---------------------------------------------
+
+local function ItemMatchesDeltamodQuery(item, query)
+    local deltaMods = item:GetDeltaMods()
+    local matches = false
+
+    for _,deltaModID in ipairs(deltaMods) do
+        local deltaModStat = Stats.Get("DeltaMod", deltaModID)
+
+        if deltaModStat then
+            for _,boost in ipairs(deltaModStat.Boosts) do
+                local boostStat = Stats.Get("Boost", boost.Boost)
+
+                for field,value in pairs(boostStat) do
+                    local valueIsNotDefault = false
+                    local valueAsNum = tonumber(value)
+
+                    if type(value) == "boolean" then
+                        valueIsNotDefault = value
+                    elseif type(value) == "number" then
+                        valueIsNotDefault = value > 0 -- Don't consider penalties.
+                    elseif valueAsNum then -- Qualifiers.
+                        valueIsNotDefault = valueAsNum ~= 0
+                    end
+
+                    if valueIsNotDefault then
+                        local boostNames = {field}
+                        local aliases = QuickInventory.DELTAMOD_FIELD_ALIASES[field]
+
+                        if aliases then
+                            boostNames = {}
+                            for alias in aliases:Iterator() do
+                                table.insert(boostNames, alias)
+                            end
+                        end
+
+                        for _,boostName in ipairs(boostNames) do
+                            local match = string.match(boostName:lower(), query:lower())
+                            if match then
+                                matches = true
+                                goto ItemMatchesDeltamodQuery_Done
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+    ::ItemMatchesDeltamodQuery_Done::
+
+    return matches
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
@@ -54,6 +212,7 @@ QuickInventory.Hooks.IsItemVisible:Subscribe(function (ev)
 
     if QuickInventory:GetSettingValue(QuickInventory.Settings.ItemCategory) == "Equipment" then
         local itemSlotSetting = QuickInventory:GetSettingValue(QuickInventory.Settings.ItemSlot)
+        local statBoostSetting = QuickInventory:GetSettingValue(QuickInventory.Settings.DynamicStat)
 
         visible = Item.IsEquipment(item)
 
@@ -69,6 +228,11 @@ QuickInventory.Hooks.IsItemVisible:Subscribe(function (ev)
             end
         elseif itemSlotSetting ~= "Any" then
             visible = visible and Item.GetItemSlot(item) == itemSlotSetting
+        end
+
+        -- Filter by deltamod stat boosts.
+        if statBoostSetting ~= "" then
+            visible = visible and ItemMatchesDeltamodQuery(item, statBoostSetting)
         end
     end
 

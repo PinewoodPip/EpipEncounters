@@ -55,6 +55,11 @@ local QuickInventory = {
            Text = "If enabled, the UI will close after using an item.\n\nYou can hold shift while clicking an item to temporarily invert this setting.",
            ContextDescription = "Tooltip for 'close after using' setting",
         },
+        DynamicStat_Name = {
+           Handle = "h4f83fd0cg8556g4826gb76cg82ec728bef2b",
+           Text = "Stat Boost",
+           ContextDescription = "Text field for filtering equipment by stat boost",
+        },
     },
 
     USE_LEGACY_EVENTS = false,

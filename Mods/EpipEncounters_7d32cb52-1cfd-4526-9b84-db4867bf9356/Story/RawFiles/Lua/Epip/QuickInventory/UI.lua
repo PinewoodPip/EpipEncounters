@@ -4,6 +4,7 @@ local HotbarSlot = Generic.GetPrefab("GenericUI_Prefab_HotbarSlot")
 local TooltipPanelPrefab = Generic.GetPrefab("GenericUI_Prefab_TooltipPanel")
 local LabelledDropdownPrefab = Generic.GetPrefab("GenericUI_Prefab_LabelledDropdown")
 local LabelledCheckboxPrefab = Generic.GetPrefab("GenericUI_Prefab_LabelledCheckbox")
+local LabelledTextField = Generic.GetPrefab("GenericUI_Prefab_LabelledTextField")
 local Tooltip = Client.Tooltip
 local Input = Client.Input
 local V = Vector.Create
@@ -205,6 +206,8 @@ function UI._RenderSettingsPanel()
         if QuickInventory:GetSettingValue(QuickInventory.Settings.ItemSlot) == "Weapon" then
             UI.RenderSetting(QuickInventory.Settings.WeaponSubType) -- Equipment subtype
         end
+
+        UI.RenderSetting(QuickInventory.Settings.DynamicStat)
     elseif itemCategory == "Skillbooks" then
         UI.RenderSetting(QuickInventory.Settings.LearntSkillbooks)
         UI.RenderSetting(QuickInventory.Settings.SkillbookSchool)
@@ -220,6 +223,8 @@ function UI.RenderSetting(setting)
         UI._RenderCheckboxFromSetting(setting)
     elseif setting.Type == "Choice" then
         UI._RenderComboBoxFromSetting(setting)
+    elseif setting.Type == "String" then
+        UI._RenderTextFieldFromSetting(setting)
     end
 end
 
@@ -257,7 +262,6 @@ function UI._RenderComboBoxFromSetting(setting)
     -- Set setting value and refresh UI.
     dropdown.Events.OptionSelected:Subscribe(function (ev)
         QuickInventory:SetSettingValue(setting, ev.Option.ID)
-
         UI.Refresh()
     end)
 end
@@ -274,8 +278,31 @@ function UI._RenderCheckboxFromSetting(setting)
     -- Set setting value and refresh UI.
     checkbox.Events.StateChanged:Subscribe(function (ev)
         QuickInventory:SetSettingValue(setting, ev.Active)
-
         UI.Refresh()
+    end)
+end
+
+---Renders an editable text field to the settings panel from a setting.
+---@param setting SettingsLib_Setting_String
+function UI._RenderTextFieldFromSetting(setting)
+    local list = UI.SettingsPanelList
+    local timerID = "Epip_QuickInventory_UI_" .. setting.ID
+
+    local field = LabelledTextField.Create(UI, setting.ID, list, setting:GetName())
+    field:SetText(setting:GetValue())
+    field:SetSize(UI.SETTINGS_PANEL_ELEMENT_SIZE:unpack())
+
+    -- Set setting value and refresh UI - this uses a delay to reduce lag from needless updates.
+    field.Events.TextEdited:Subscribe(function (ev)
+        local existingTimer = Timer.GetTimer(timerID)
+        if existingTimer then
+            existingTimer:Cancel()
+        end
+
+        Timer.Start(timerID, 0.6, function (_)
+            QuickInventory:SetSettingValue(setting, ev.Text)
+            UI.RenderItems()
+        end)
     end)
 end
 
@@ -343,6 +370,7 @@ Client.UI.ContextMenu.RegisterElementListener("epip_Feature_QuickInventory", "bu
     QuickInventory:SetSettingValue(QuickInventory.Settings.ItemCategory, "Equipment")
     QuickInventory:SetSettingValue(QuickInventory.Settings.ItemSlot, tostring(Item.GetItemSlot(item)))
     QuickInventory:SetSettingValue(QuickInventory.Settings.WeaponSubType, "Any")
+    QuickInventory:SetSettingValue(QuickInventory.Settings.DynamicStat, "")
     
     UI.Setup()
 end)
