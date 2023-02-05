@@ -121,17 +121,7 @@ function UI._GetHotbarSlot(listIndex, itemIndex)
             element:SetCanDrag(true, false) -- Can drag items out of the slot, without removing them from it.
         
             element.Events.Clicked:Subscribe(function (_)
-                local slottedItem = element.Object:GetEntity()
-                local shouldClose = QuickInventory:GetSettingValue(QuickInventory.Settings.CloseAfterUsing) == true
-
-                -- Invert behaviour if shift is pressed
-                if Input.IsShiftPressed() then
-                    shouldClose = not shouldClose
-                end
-
-                if shouldClose and Stats.MeetsRequirements(Client.GetCharacter(), slottedItem.StatsId, true, slottedItem) then
-                    UI.Close()
-                end
+                UI._OnSlotClicked(element)
             end)
         
             element.Hooks.GetTooltipData:Subscribe(function (ev)
@@ -292,6 +282,28 @@ end
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
+
+---Handle slots being clicked.
+---@param slot GenericUI_Prefab_HotbarSlot
+function UI._OnSlotClicked(slot)
+    local slottedItem = slot.Object:GetEntity()
+    local shouldClose = QuickInventory:GetSettingValue(QuickInventory.Settings.CloseAfterUsing) == true
+
+    -- Invert behaviour if shift is pressed
+    if Input.IsShiftPressed() then
+        shouldClose = not shouldClose
+    end
+
+    shouldClose = shouldClose and Stats.MeetsRequirements(Client.GetCharacter(), slottedItem.StatsId, true, slottedItem)
+
+    if shouldClose then
+        UI.Close()
+    else -- Refresh UI after using an item. Needs a delay for the item to be consumed first.
+        Timer.Start(0.3, function (_)
+            UI.Refresh()
+        end)
+    end
+end
 
 -- Refresh the UI when the client character changes.
 Client.Events.ActiveCharacterChanged:Subscribe(function (_)
