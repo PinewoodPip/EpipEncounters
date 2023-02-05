@@ -89,6 +89,10 @@ QuickInventory.DYNAMIC_STAT_FIELD_ALIASES = {
     ["Luck"] = Set.Create({
         "Lucky Charm",
     }),
+    ["PainReflection"] = Set.Create({
+        "Retribution",
+        "Reflect",
+    }),
 
     ["Vitality"] = Set.Create({
         "Vitality",
@@ -100,6 +104,16 @@ QuickInventory.DYNAMIC_STAT_FIELD_ALIASES = {
         "Intelligence", -- For non-EE.
     }),
 }
+-- Convert set elements to lowercase
+for k,aliasSet in pairs(QuickInventory.DYNAMIC_STAT_FIELD_ALIASES) do
+    local newSet = Set.Create()
+    for element in aliasSet:Iterator() do
+        newSet:Add(string.lower(element))
+    end
+    QuickInventory.DYNAMIC_STAT_FIELD_ALIASES[k] = newSet
+end
+
+local CACHED_STAT_FIELDS = nil ---@type table<string, string>
 
 ---------------------------------------------
 -- SETTINGS
@@ -159,11 +173,30 @@ local function ItemMatchesStatBoostQuery(item, query)
     local dynamicStats = item.Stats.DynamicStats
     query = query:lower()
 
+    -- Build a list of dynamic stat keys and their lowercase forms, for performance
+    if not CACHED_STAT_FIELDS then
+        local dynStat = dynamicStats[1]
+        CACHED_STAT_FIELDS = {}
+
+        for k,v in pairs(dynStat) do
+            -- Only check bool and number fields.
+            if type(v) == "boolean" or type(v) == "number" then
+                CACHED_STAT_FIELDS[k] = string.lower(k)
+            end
+        end
+    end
+
     for i=1,#dynamicStats,1 do
         local dynStat = dynamicStats[i]
         
         for field,value in pairs(dynStat) do
             local valueIsNotDefault = false
+            local lowerCaseField = CACHED_STAT_FIELDS[field]
+
+            if not lowerCaseField then
+                lowerCaseField = field:lower()
+                CACHED_STAT_FIELDS[field] = lowerCaseField
+            end
 
             if type(value) == "boolean" then
                 valueIsNotDefault = value
@@ -172,7 +205,7 @@ local function ItemMatchesStatBoostQuery(item, query)
             end
 
             if valueIsNotDefault then
-                local boostNames = {field}
+                local boostNames = {lowerCaseField}
                 local aliases = QuickInventory.DYNAMIC_STAT_FIELD_ALIASES[field]
 
                 if aliases then
@@ -183,7 +216,7 @@ local function ItemMatchesStatBoostQuery(item, query)
                 end
 
                 for _,boostName in ipairs(boostNames) do
-                    local match = string.match(boostName:lower(), query)
+                    local match = string.match(boostName, query)
                     if match then
                         matches = true
                         goto ItemMatchesDeltamodQuery_Done
