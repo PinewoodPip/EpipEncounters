@@ -565,6 +565,23 @@ Game.Tooltip.RegisterListener("Status", nil, function(char, status, tooltip)
         end
     end
 end)
+-- Center camera on the source of a status when a status element is clicked.
+Client.Input.Events.MouseButtonPressed:Subscribe(function (ev)
+    if ev.InputID == "left2" then
+        local currentTooltip = Client.Tooltip.GetCurrentTooltipSourceData()
+
+        if currentTooltip and currentTooltip.Type == "Status" then
+            local char = Character.Get(currentTooltip.FlashCharacterHandle, true)
+            local statusHandle = Ext.UI.DoubleToHandle(currentTooltip.FlashStatusHandle)
+            local status = Character.GetStatusByHandle(char, statusHandle)
+            local sourceChar = Ext.Utils.IsValidHandle(status.StatusSourceHandle) and Character.Get(status.StatusSourceHandle) or nil
+
+            if sourceChar then
+                Client.UI.PlayerInfo:ExternalInterfaceCall("centerCamOnCharacter", Ext.UI.HandleToDouble(sourceChar.Handle))
+            end
+        end
+    end
+end)
 
 -- Show status object information in dev mode.
 Game.Tooltip.RegisterListener("Status", nil, function(char, status, tooltip)

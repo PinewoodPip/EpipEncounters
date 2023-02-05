@@ -228,6 +228,12 @@ function Tooltip.ShowMouseTextTooltip(text, offset)
     root.addText(text, position:unpack())
 end
 
+---Returns the source data of the currently visible **formatted** tooltip.
+---@return TooltipLib_TooltipSourceData? `nil` if there is no tooltip visible.
+function Tooltip.GetCurrentTooltipSourceData()
+    return Tooltip._currentTooltipData
+end
+
 function Tooltip.HideMouseTextTooltip()
     local root = TextDisplay:GetRoot()
 
@@ -386,6 +392,7 @@ Ext.Events.UICall:Subscribe(function(ev)
         Tooltip._currentTooltipData = Tooltip.nextTooltipData
     elseif ev.Function == "showStatusTooltip" then
         Tooltip.nextTooltipData = {UIType = ev.UI:GetTypeId(), Type = "Status", FlashStatusHandle = param2, FlashCharacterHandle = param1}
+        Tooltip._currentTooltipData = Tooltip.nextTooltipData
     end
 end)
 
