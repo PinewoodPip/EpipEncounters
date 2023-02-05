@@ -4,7 +4,7 @@ local Set = DataStructures.Get("DataStructures_Set")
 
 ---@class Feature_QuickInventory
 local QuickInventory = Epip.GetFeature("Feature_QuickInventory")
-QuickInventory.DELTAMOD_FIELD_ALIASES = {
+QuickInventory.DYNAMIC_STAT_FIELD_ALIASES = {
     -- Resistances
     ["Fire"] = Set.Create({
         "Fire Resistance",
@@ -150,47 +150,43 @@ QuickInventory.Settings.DynamicStat = QuickInventory:RegisterSetting("DynamicSta
 -- METHODS
 ---------------------------------------------
 
-local function ItemMatchesDeltamodQuery(item, query)
-    local deltaMods = item:GetDeltaMods()
+---Returns whether an item's stat boosts match a string query.
+---@param item EclItem
+---@param query string Case-insensitive.
+---@return boolean
+local function ItemMatchesStatBoostQuery(item, query)
     local matches = false
+    local dynamicStats = item.Stats.DynamicStats
+    query = query:lower()
 
-    for _,deltaModID in ipairs(deltaMods) do
-        local deltaModStat = Stats.Get("DeltaMod", deltaModID)
+    for i=1,#dynamicStats,1 do
+        local dynStat = dynamicStats[i]
+        
+        for field,value in pairs(dynStat) do
+            local valueIsNotDefault = false
 
-        if deltaModStat then
-            for _,boost in ipairs(deltaModStat.Boosts) do
-                local boostStat = Stats.Get("Boost", boost.Boost)
+            if type(value) == "boolean" then
+                valueIsNotDefault = value
+            elseif type(value) == "number" then
+                valueIsNotDefault = value > 0 -- Don't consider penalties.
+            end
 
-                for field,value in pairs(boostStat) do
-                    local valueIsNotDefault = false
-                    local valueAsNum = tonumber(value)
+            if valueIsNotDefault then
+                local boostNames = {field}
+                local aliases = QuickInventory.DYNAMIC_STAT_FIELD_ALIASES[field]
 
-                    if type(value) == "boolean" then
-                        valueIsNotDefault = value
-                    elseif type(value) == "number" then
-                        valueIsNotDefault = value > 0 -- Don't consider penalties.
-                    elseif valueAsNum then -- Qualifiers.
-                        valueIsNotDefault = valueAsNum ~= 0
+                if aliases then
+                    boostNames = {}
+                    for alias in aliases:Iterator() do
+                        table.insert(boostNames, alias)
                     end
+                end
 
-                    if valueIsNotDefault then
-                        local boostNames = {field}
-                        local aliases = QuickInventory.DELTAMOD_FIELD_ALIASES[field]
-
-                        if aliases then
-                            boostNames = {}
-                            for alias in aliases:Iterator() do
-                                table.insert(boostNames, alias)
-                            end
-                        end
-
-                        for _,boostName in ipairs(boostNames) do
-                            local match = string.match(boostName:lower(), query:lower())
-                            if match then
-                                matches = true
-                                goto ItemMatchesDeltamodQuery_Done
-                            end
-                        end
+                for _,boostName in ipairs(boostNames) do
+                    local match = string.match(boostName:lower(), query)
+                    if match then
+                        matches = true
+                        goto ItemMatchesDeltamodQuery_Done
                     end
                 end
             end
@@ -232,7 +228,7 @@ QuickInventory.Hooks.IsItemVisible:Subscribe(function (ev)
 
         -- Filter by deltamod stat boosts.
         if statBoostSetting ~= "" then
-            visible = visible and ItemMatchesDeltamodQuery(item, statBoostSetting)
+            visible = visible and ItemMatchesStatBoostQuery(item, statBoostSetting)
         end
     end
 
