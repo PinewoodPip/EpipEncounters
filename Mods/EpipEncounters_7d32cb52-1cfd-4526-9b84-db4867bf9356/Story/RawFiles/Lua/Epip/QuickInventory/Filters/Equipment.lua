@@ -103,6 +103,9 @@ QuickInventory.DYNAMIC_STAT_FIELD_ALIASES = {
         "Power",
         "Intelligence", -- For non-EE.
     }),
+    ["CriticalChance"] = Set.Create({
+        "Critical Chance",
+    }),
 }
 -- Convert set elements to lowercase
 for k,aliasSet in pairs(QuickInventory.DYNAMIC_STAT_FIELD_ALIASES) do
