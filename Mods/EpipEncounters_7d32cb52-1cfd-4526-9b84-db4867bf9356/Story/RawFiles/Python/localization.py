@@ -156,17 +156,19 @@ class Module:
             for rowIndex in range(2, oldSheet.max_row + 1):
                 handleCell = oldSheet.cell(row=rowIndex, column=1)
                 originalTextCell = oldSheet.cell(row=rowIndex, column=3)
-                tskData = self.translated_strings[handleCell.value]
-                translationCell = oldSheet.cell(row=rowIndex, column=5)
 
-                # Clear translation if original text doesnt match
-                if tskData.text != originalTextCell.value:
-                    print("Removed outdated translation for " + tskData.handle)
-                    translationCell.value = ""
+                if handleCell.value != None:
+                    tskData = self.translated_strings[handleCell.value]
+                    translationCell = oldSheet.cell(row=rowIndex, column=5)
 
-                originalTextCell.value = tskData.text
+                    # Clear translation if original text doesnt match
+                    if tskData.text != originalTextCell.value:
+                        print("Removed outdated translation for " + tskData.handle)
+                        translationCell.value = ""
 
-                existingTSKs.add(tskData.handle)
+                    originalTextCell.value = tskData.text
+
+                    existingTSKs.add(tskData.handle)
 
             # Add new rows
             newRowIndex = len(existingTSKs) + 2
