@@ -26,7 +26,7 @@ end
 -- Listen for the mouse moving and check the cursor to determine if its over a UI or the world to add a hint.
 -- No better way of knowing this at the moment.
 Input.Events.MouseMoved:Subscribe(function (_)
-    if GreatforgeDragDrop._CanDrop() then
+    if Client.GetCharacter() and GreatforgeDragDrop._CanDrop() then
         TextDisplay.ShowText(Text.Format(GreatforgeDragDrop.TranslatedStrings.MouseHint:GetString(), {
             Color = Color.AREA_INTERACT,
         }), Vector.Create(Client.GetMousePosition()))

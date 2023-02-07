@@ -232,6 +232,10 @@ Text.CommonStrings.Inventory = Text.RegisterTranslatedString({
    Handle = "he8c517d9gc48fg42f8ga501g35f9909946b9",
    Text = "Inventory",
 })
+Text.CommonStrings.CriticalChance = Text.RegisterTranslatedString({
+   Handle = "h304b2c12g06dag4389gaa3bg0f28e9916d32",
+   Text = "Critical Chance",
+})
 
 ---------------------------------------------
 -- SETUP

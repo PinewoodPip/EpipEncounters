@@ -3,15 +3,16 @@
 -- Hooks for the Examine UI.
 ---------------------------------------------
 
----@meta Library: ExamineUI, ContextClient
-
----@class ExamineUI
----@field CATEGORIES table<string, number>
----@field ENTRY_TYPES table<string, number>
----@field ICONS table<string, number> IDs for embedded icons.
-
----@type ExamineUI
+---@class ExamineUI : UI
 local Examine = {
+
+    _FLASH_STATS_ARRAY_TEMPLATE = {
+        "EntryType",
+        "StatID",
+        "IconID",
+        "Label",
+        "ValueLabel",
+    },
 
     CATEGORIES = {
         RESISTANCES = 1, -- Entry type 1
@@ -25,7 +26,7 @@ local Examine = {
         -- STAT = 2,
     },
 
-    -- Named after what they're used for in Character Sheet, if they appear there; otherwise they're named after appearance/DOS1 usage.
+    -- IDs for embedded icons. Named after what they're used for in Character Sheet, if they appear there; otherwise they're named after appearance/DOS1 usage.
     ICONS = {
         NONE = 0,
         ACTION_POINT = 1,
@@ -75,177 +76,220 @@ local Examine = {
         SOURCERY = 49,
     },
 
-    FILEPATH_OVERRIDES = {
-        ["Public/Game/GUI/examine.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/examine.swf",
+    USE_LEGACY_EVENTS = false,
+    USE_LEGACY_HOOKS = false,
+
+    Events = {
+        Opened = {}, ---@type Event<ExamineUI_Event_Opened>
+    },
+    Hooks = {
+        GetUpdateData = {}, ---@type Event<ExamineUI_Hook_GetUpdateData>
     },
 }
-Epip.InitializeUI(Client.UI.Data.UITypes.examine, "Examine", Examine)
-
--- Represents the contents of an update to the UI.
----@class ExamineData
----@field Categories table[]
-
----@type ExamineData
-local ExamineData = {}
-
----Get a category of entries by its id.
----@param id number
-function ExamineData:GetCategory(id)
-    for i,category in pairs(self.Categories) do
-        if category.id == id then
-            return category
-        end
-    end
-    return nil
-end
-
----Inserts an element into a category at the specified index, appending by default.
----@param category id
----@param element table
----@param index? number
-function ExamineData:InsertElement(category, element, index)
-    local categoryData = self:GetCategory(category) -- TODO accept category obj as param
-    if categoryData then
-        table.insert(categoryData.entries, index or #categoryData.entries, element)
-    else
-        Examine:LogError("Category not found for ExamineData:InsertElement(): " .. category)
-    end
-end
-
----Returns the first element, its index and category, using the engine statID.
----@param category? number If nil, all categories are searched.
----@param statID number
-function ExamineData:GetElement(category, statID)
-    category = self:GetCategory(category)
-
-    local categories = self.Categories -- search all categories if category requested is nil
-    if category then categories = {category} end
-    
-    for id,category in pairs(categories) do
-        for index,element in pairs(category.entries) do
-            if element.id == statID then
-                return element, index, category
-            end
-        end
-    end
-end
+Epip.InitializeUI(Ext.UI.TypeID.examine, "Examine", Examine)
 
 ---------------------------------------------
 -- EVENTS
 ---------------------------------------------
 
 ---Fired when the UI is opened.
----@class ExamineUI_ExamineOpened : Event
----@field categories ExamineData
+---@class ExamineUI_Event_Opened
+---@field Data ExamineUI_UpdateData
 
----Hook to manipulate the update data.
----@class ExamineUI_Update : Hook
----@field data ExamineData
+---@class ExamineUI_Hook_GetUpdateData
+---@field Data ExamineUI_UpdateData Hookable.
+
+---------------------------------------------
+-- CLASSES
+---------------------------------------------
+
+---@class ExamineUI_UpdateData_Entry
+---@field EntryType integer
+---@field StatID integer
+---@field IconID integer
+---@field Label string
+---@field ValueLabel string
+
+---@class ExamineUI_UpdateData_Category : Class
+---@field Entries ExamineUI_UpdateData_Entry[]
+---@field ID integer
+---@field Label string
+---@field EntryType integer
+local _Category = {
+    __name = "ExamineUI_UpdateData_Category"
+}
+OOP.RegisterClass("ExamineUI_UpdateData_Category", _Category)
+
+---@param id integer
+---@param label string
+---@param entryType integer
+---@return ExamineUI_UpdateData_Category
+function _Category:Create(id, label, entryType)
+    ---@type ExamineUI_UpdateData_Category
+    local instance = {
+        Entries = {},
+        ID = id,
+        Label = label,
+        EntryType = entryType,
+    }
+    self:__Create(instance)
+    
+    return instance
+end
+
+---Adds an entry to the category.
+---@param entry ExamineUI_UpdateData_Entry
+function _Category:AddEntry(entry)
+    table.insert(self.Entries, entry)
+end
+
+-- Represents the contents of an update to the UI.
+---@class ExamineUI_UpdateData : Class
+---@field Categories ExamineUI_UpdateData_Category[]
+local _ExamineData = {}
+OOP.RegisterClass("ExamineUI_UpdateData", _ExamineData)
+
+---Creates a new instance of UpdateData.
+---@return ExamineUI_UpdateData
+function _ExamineData:Create()
+    ---@type ExamineUI_UpdateData
+    local instance = {
+        Categories = {}
+    }
+    self:__Create(instance)
+
+    return instance
+end
+
+---Adds a category.
+---@param category ExamineUI_UpdateData_Category
+function _ExamineData:AddCategory(category)
+    table.insert(self.Categories, category)
+end
+
+---Get a category of entries by its id.
+---@param id number
+---@return ExamineUI_UpdateData_Category?
+function _ExamineData:GetCategory(id)
+    local foundCategory = nil
+    for _,category in pairs(self.Categories) do
+        if category.ID == id then
+            foundCategory = category
+            break
+        end
+    end
+    return foundCategory
+end
+
+---Inserts an element into a category at the specified index, appending by default.
+---@param category integer
+---@param entry ExamineUI_UpdateData_Entry
+---@param index? integer Defaults to appending.
+function _ExamineData:AddEntry(category, entry, index)
+    local categoryData = self:GetCategory(category)
+    index = index or #categoryData.Entries
+
+    if categoryData then
+        table.insert(categoryData.Entries, index, entry)
+    else
+        Examine:Error("UpdateData:InsertElement", "Category not found for ExamineData:InsertElement(): " .. category)
+    end
+end
+
+---Returns the first entry with a specific stat ID.
+---@param statID integer
+---@param category integer? If `nil`, all categories are searched.
+---@return ExamineUI_UpdateData_Entry?, integer?, integer? --Entry, category ID, index within category.
+function _ExamineData:GetEntry(statID, category)
+    local foundEntry = nil
+    local categoryID, categoryIndex = nil, nil
+    
+    for _,searchCategory in ipairs(self.Categories) do
+        if not category or searchCategory.ID == category then
+            for entryIndex,entry in pairs(searchCategory.Entries) do
+                if entry.StatID == statID then
+                    foundEntry = entry
+                    categoryID = searchCategory.ID
+                    categoryIndex = entryIndex
+                    goto End
+                end
+            end
+        end
+    end
+    ::End::
+
+    return foundEntry, categoryID, categoryIndex
+end
+
+---Encodes the data to be sent back to Flash.
+---@return table[]
+function _ExamineData:Encode()
+    local newArray = {}
+    for _,category in ipairs(self.Categories) do
+        table.insert(newArray, {
+            EntryType = category.EntryType,
+            StatID = category.ID,
+            IconID = 0,
+            Label = category.Label,
+            ValueLabel = 0,
+        })
+
+        for _,entry in ipairs(category.Entries) do
+            table.insert(newArray, {
+                EntryType = entry.EntryType,
+                StatID = entry.StatID,
+                IconID = entry.IconID,
+                Label = entry.Label,
+                ValueLabel = entry.ValueLabel,
+            })
+        end
+    end
+
+    return newArray
+end
 
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
----Get the character currently being examined.
+---Returns the character currently being examined.
 ---@return EclCharacter
 function Examine.GetCharacter()
-    return Ext.GetCharacter(Examine:GetUI():GetPlayerHandle())
+    ---@diagnostic disable-next-line: return-type-mismatch
+    return Character.Get(Examine:GetUI():GetPlayerHandle())
 end
 
----------------------------------------------
--- INTERNAL METHODS - DO NOT CALL
----------------------------------------------
-
--- Parse the current contents of the Flash update arrays.
-function Examine.ParseEntries()
+---Parses the current contents of the Flash update arrays.
+---@return ExamineUI_UpdateData
+function Examine._ParseEntries()
     local root = Examine:GetRoot()
     local statsArray = root.addStats_array
 
-    local categories = {}
+    ---@type ExamineUI_UpdateData_Entry[]
+    local array = Client.Flash.ParseArray(statsArray, Examine._FLASH_STATS_ARRAY_TEMPLATE)
 
-    -- Parse entries.
-    -- We sort them into categories (delimited by the header elements)
-    local currentCategory = nil
-    for i=0,#statsArray-1,5 do
-        local type = statsArray[i]
-        local entry = {}
-
-        -- Keys ordered by parameter order in ActionScript.
-        if type == 5 then
-            entry = {
-                id = statsArray[i + 1], -- Stat ID, loc3
-                label = statsArray[i + 3], -- wrong?, loc5
-                type = statsArray[i], -- loc2
-            }
-
-            -- Insert category
-            table.insert(categories, {
-                id = entry.id,
-                label = entry.label,
-                type = entry.type,
-
-                entries = {},
-            })
-
-            currentCategory = entry.id
+    local updateData = _ExamineData:Create()
+    for _,entry in ipairs(array) do
+        if entry.EntryType == 5 then
+            updateData:AddCategory(_Category:Create(entry.StatID, entry.Label, entry.EntryType))
         else
-            entry = {
-                id = statsArray[i + 1], -- loc3
-                iconID = statsArray[i + 2], -- 
-                label = statsArray[i + 3], -- loc5
-                value = statsArray[i + 4], -- 
-                type = statsArray[i], -- loc2
-            }
-
-            table.insert(categories[#categories].entries, entry)
+            updateData.Categories[#updateData.Categories]:AddEntry(entry) 
         end
     end
 
-    categories = {
-        Categories = categories
-    }
-    setmetatable(categories, {__index = ExamineData})
+    Examine:Dump(updateData)
 
-    if Examine.IS_DEBUG then
-        Ext.Dump(categories)
-    end
-
-    return categories
+    return updateData
 end
 
--- Send entry info back to Flash.
-function Examine.EncodeEntries(categories)
-    local newArray = {}
-    for index,category in pairs(categories.Categories) do
-        -- Add category header
-        local entry = {
-            category.type, -- loc2
-            category.id, -- loc3
-            0,
-            category.label, -- loc5
-            0,
-        }
-        for z,value in pairs(entry) do
-            table.insert(newArray, value)
-        end
+-- Sends update info back to Flash.
+---@param data ExamineUI_UpdateData
+function Examine._EncodeEntries(data)
+    local root = Examine:GetRoot()
+    local statsArray = root.addStats_array
+    local newArray = data:Encode()
 
-        -- Add category entries
-        for i,data in pairs(category.entries) do
-            entry = {
-                data.type, -- loc2
-                data.id, -- loc3
-                data.iconID, -- loc4
-                data.label, -- loc5
-                data.value, --loc6
-            }
-    
-            for z,value in pairs(entry) do
-                table.insert(newArray, value)
-            end
-        end
-    end
-
-    Game.Tooltip.TableToFlash(Examine:GetUI(), "addStats_array", newArray)
+    Client.Flash.EncodeArray(statsArray, Examine._FLASH_STATS_ARRAY_TEMPLATE, newArray)
 end
 
 ---------------------------------------------
@@ -253,14 +297,15 @@ end
 ---------------------------------------------
 
 -- Hook the update method.
-Ext.RegisterUITypeInvokeListener(Client.UI.Data.UITypes.examine, "update", function(ui, method)
-    local categories = Examine.ParseEntries()
+Examine:RegisterInvokeListener("update", function (_)
+    local updateData = Examine._ParseEntries()
+    updateData = Examine.Hooks.GetUpdateData:Throw({
+        Data = updateData,
+    }).Data
 
-    -- Gather modifications from hooks
-    categories = Examine:ReturnFromHooks("Update", categories)
+    Examine._EncodeEntries(updateData)
 
-    -- Send back to Flash
-    Examine.EncodeEntries(categories)
-
-    Examine:FireEvent("ExamineOpened", categories)
-end, "Before")
+    Examine.Events.Opened:Throw({
+        Data = updateData
+    })
+end)

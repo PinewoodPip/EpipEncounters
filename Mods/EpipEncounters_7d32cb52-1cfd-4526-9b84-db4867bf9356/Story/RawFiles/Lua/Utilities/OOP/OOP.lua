@@ -14,10 +14,10 @@ local Class = {}
 
 ---Creates a new table with the metatable of the class set.
 ---@protected
----@param data table
+---@param data table?
 ---@return Class
 function Class:__Create(data)
-    OOP.SetMetatable(data, self)
+    OOP.SetMetatable(data or {}, self)
 
     return data
 end
