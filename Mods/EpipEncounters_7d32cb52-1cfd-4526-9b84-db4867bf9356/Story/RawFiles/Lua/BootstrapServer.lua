@@ -195,6 +195,7 @@ LOAD_ORDER = {
     {Script = "Epip/Housing/Shared_Furniture.lua", WIP = true},
     {ScriptSet = "Epip/StatsEditor", WIP = true,},
     {ScriptSet = "Epip/APCostBoostFix"},
+    {ScriptSet = "Epip/GreatforgeDragDrop"},
     {ScriptSet = "Epip/DebugDisplay", Developer = true,},
     {ScriptSet = "Epip/UnlearnSkills"},
     {ScriptSet = "Epip/DebugMenu", Developer = true,},

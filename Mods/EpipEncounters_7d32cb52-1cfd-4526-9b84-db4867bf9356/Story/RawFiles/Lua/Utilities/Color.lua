@@ -45,6 +45,9 @@ Color = {
         STAT_RED = "C80030",
     },
 
+    AREA_INTERACT = "FFD400",
+    ILLEGAL_ACTION = "CD1F1F",
+
     ALIGNMENTS = {
         PARTY = "00A2FD",
         ALLY = "11D77A",

@@ -17,10 +17,6 @@ end
 -- LISTENERS
 ---------------------------------------------
 
-Net.RegisterListener("EPIPENCOUNTERS_Greatforge_BenchItem", function(payload)
-    StartGreatforge(Ext.GetCharacter(payload.Char), Ext.GetItem(payload.NetID))
-end)
-
 -- Events for characters entering/exiting meditate
 Ext.Osiris.RegisterListener("CharacterStatusApplied", 3, "after", function(char, status, causee)
     if status ~= Ascension.MEDITATING_STATUS then return nil end

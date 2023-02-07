@@ -324,18 +324,6 @@ Data.Game.MASTERWORK_HANDLED_TAGS = {
     ["Boost_Shield_Masterwork"] = true,
 }
 
--- https://docs.larian.game/UI_Colors_Reference_Sheet
-Data.Colors = {
-    Red = "#C80030",
-    Blue = "#188EDE",
-    Green = "#40B606",
-    IllegalAction = "#CD1F1F",
-    AreaInteract = "#FFD400",
-    
-    StatBlue = "#00547F",
-    StatRed = "#C80030",
-}
-
 Data.Game.DamageTypes = {
     None = {
         Name = "Pure",

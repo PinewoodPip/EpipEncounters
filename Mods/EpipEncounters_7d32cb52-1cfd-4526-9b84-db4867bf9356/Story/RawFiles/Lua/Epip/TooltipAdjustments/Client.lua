@@ -297,7 +297,7 @@ function TooltipAdjustments.ShowAbilityScoresForSI(char, skill, tooltip)
 
             if startPos and endPos then
                 element.Label = element.Label:insert("</font>", endPos)
-                element.Label = element.Label:insert(string.format("<font color='%s'>", Data.Colors.IllegalAction), startPos - 1)
+                element.Label = element.Label:insert(string.format("<font color='%s'>", Color.ILLEGAL_ACTION), startPos - 1)
 
                 -- local text = element.Label:sub(1, startPost)
                 -- Ext.Print(reqStr)

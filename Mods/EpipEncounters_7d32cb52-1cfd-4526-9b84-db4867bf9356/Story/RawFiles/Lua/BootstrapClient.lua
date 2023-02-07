@@ -452,6 +452,7 @@ LOAD_ORDER = {
     -- {Script = "Epip/Housing/Shared_Furniture.lua", WIP = true},
     {ScriptSet = "Epip/StatsEditor", WIP = true,},
     {ScriptSet = "Epip/APCostBoostFix"},
+    {ScriptSet = "Epip/GreatforgeDragDrop"},
 
     -- AMER UI controller support
     -- "Epip/Client/AMERUI_Controller/AMERUI_Controller.lua",
