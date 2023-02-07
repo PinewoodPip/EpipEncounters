@@ -217,7 +217,6 @@ end
 ---@param text string
 ---@param offset Vector2D?
 function Tooltip.ShowMouseTextTooltip(text, offset)
-    local root = TextDisplay:GetRoot()
     local mousePos = Vector.Create(Client.GetMousePosition())
     local position = mousePos
 
@@ -225,7 +224,7 @@ function Tooltip.ShowMouseTextTooltip(text, offset)
         position = position + offset
     end
 
-    root.addText(text, position:unpack())
+    TextDisplay.ShowText(text, position)
 end
 
 ---Returns the source data of the currently visible **formatted** tooltip.
@@ -462,17 +461,15 @@ TextDisplay:RegisterInvokeListener("displaySurfaceText", function(ev, _, _)
 end)
 
 -- Listen for mouse text tooltips.
-TextDisplay:RegisterInvokeListener("addText", function(ev, text, x, y)
-    local hook = {Text = text} ---@type TooltipLib_Hook_RenderMouseTextTooltip
+TextDisplay.Hooks.GetText:Subscribe(function (ev)
+    local hook = {Text = ev.Label} ---@type TooltipLib_Hook_RenderMouseTextTooltip
 
     Tooltip.Hooks.RenderMouseTextTooltip:Throw(hook)
 
-    if not hook.Prevented then
-        ev.Args[1] = hook.Text
-        ev.UI:GetRoot().addText(hook.Text, x, y)
-        ev:PreventAction()
+    if hook.Prevented then
+        ev:Prevent()
     else
-        ev:PreventAction()
+        ev.Label = hook.Text
     end
 end)
 

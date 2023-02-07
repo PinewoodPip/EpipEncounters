@@ -108,14 +108,16 @@ end)
 -- Listen for status application events from server.
 Net.RegisterListener("EPIP_CharacterLib_StatusApplied", function (payload)
     local entity = Character.Get(payload.OwnerNetID) or Item.Get(payload.OwnerNetID) ---@type IGameObject
-    local status = Character.GetStatusByNetID(entity, payload.StatusNetID)
-
-    -- This is not reliable for statuses that are quickly deleted(?)
-    if status then
-        Character.Events.StatusApplied:Throw({
-            Status = status,
-            SourceHandle = status.StatusSourceHandle,
-            Victim = entity,
-        })
+    if entity then
+        local status = Character.GetStatusByNetID(entity, payload.StatusNetID)
+    
+        -- This is not reliable for statuses that are quickly deleted(?)
+        if status then
+            Character.Events.StatusApplied:Throw({
+                Status = status,
+                SourceHandle = status.StatusSourceHandle,
+                Victim = entity,
+            })
+        end
     end
 end)

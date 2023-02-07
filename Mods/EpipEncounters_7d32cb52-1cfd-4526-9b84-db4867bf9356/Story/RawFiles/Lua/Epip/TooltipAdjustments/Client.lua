@@ -759,7 +759,7 @@ Client.Input.Events.KeyStateChanged:Subscribe(function (ev)
         Client.Tooltip.ShowMouseTextTooltip(GetExpandedMovementCostText(currentMouseText) or currentMouseText)
     end
 end)
-Client.UI.TextDisplay:RegisterInvokeListener("removeText", function(_)
+Client.UI.TextDisplay.Events.TextRemoved:Subscribe(function (ev)
     currentMouseText = nil
 end)
 
