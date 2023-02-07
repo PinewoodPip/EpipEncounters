@@ -1,4 +1,0 @@
-new skillset "Summon_SoulWolf"
-add skill "Shout_WolfTaunt"
-add skill "Target_WolfBite"
-add skill "Projectile_EnemyFlight_9m"

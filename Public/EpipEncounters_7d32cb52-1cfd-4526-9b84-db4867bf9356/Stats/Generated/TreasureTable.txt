@@ -34,8 +34,3 @@ new subtable "1,1"
 object category "I_SKILLBOOK_Ranger_Farsight",1,0,0,0,0,0,0,0
 new subtable "1,1"
 object category "I_SKILLBOOK_Ranger_SplinteredArrow",1,0,0,0,0,0,0,0
-new treasuretable "Treasure_PIP_IdolaDeus"
-MinLevel "-30"
-MaxLevel "0"
-new subtable "1,1"
-object category "I_PIP_UNI_IdolaDeus",1,0,0,0,0,0,0,0

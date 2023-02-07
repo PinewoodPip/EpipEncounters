@@ -1,1 +1,0 @@
-new itemcolor "PIP_UNI_IdolaDeus","FFFF6363","FF7FFFD4","FF7CFF75"

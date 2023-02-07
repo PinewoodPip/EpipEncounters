@@ -1,3 +1,0 @@
-new namegroup "PIP_UNI_IdolaDeus"
-add name "Idola Deus",""
-
