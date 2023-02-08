@@ -57,7 +57,10 @@ TextDisplay:RegisterInvokeListener("addText", function (ev, text, mouseX, mouseY
     ev:PreventAction()
 
     if not hook.Prevented then
-        TextDisplay.ShowText(hook.Label, hook.Position)
+        -- Hit % label needs a delay for some unknown reason. TODO
+        Ext.OnNextTick(function ()
+            TextDisplay.ShowText(hook.Label, hook.Position)
+        end)
     end
 end)
 
