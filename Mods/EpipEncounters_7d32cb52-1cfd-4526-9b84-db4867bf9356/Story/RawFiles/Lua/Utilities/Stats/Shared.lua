@@ -282,7 +282,6 @@ end
 ---@param statType StatsObjectType
 ---@param data any
 function Stats.Update(statType, data, ...)
-
     if statType == "ItemColor" then
         Ext.Stats.ItemColor.Update(data)
     elseif statType == "DeltaModifier" or statType == "DeltaMod" then

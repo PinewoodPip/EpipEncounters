@@ -1,0 +1,45 @@
+
+---@meta
+
+---Annotates a Object stats entry.
+---@class StatsLib_StatsEntry_Object
+---@field ModifierType StatsLib_Enum_ModifierType
+---@field Act 1
+---@field Act_part StatsLib_Enum_ActPart
+---@field UseAPCost integer
+---@field Value integer
+---@field ComboCategory string
+---@field Weight integer
+---@field Strength StatsLib_Enum_PreciseQualifier
+---@field Finesse StatsLib_Enum_PreciseQualifier
+---@field Intelligence StatsLib_Enum_PreciseQualifier
+---@field Constitution StatsLib_Enum_PreciseQualifier
+---@field Memory StatsLib_Enum_PreciseQualifier
+---@field Wits StatsLib_Enum_PreciseQualifier
+---@field Vitality integer
+---@field Armor StatsLib_Enum_PreciseQualifier
+---@field FireResistance integer
+---@field EarthResistance integer
+---@field WaterResistance integer
+---@field AirResistance integer
+---@field PoisonResistance integer
+---@field PiercingResistance integer
+---@field PhysicalResistance integer
+---@field ShadowResistance integer
+---@field Flags StatsLib_Enum_AttributeFlags
+---@field Requirements StatsLib_StatsEntryField_Requirements
+---@field InventoryTab StatsLib_Enum_InventoryTabs
+---@field RootTemplate string
+---@field ObjectCategory string
+---@field MinAmount integer
+---@field MaxAmount integer
+---@field Priority integer
+---@field Unique integer
+---@field MinLevel integer
+---@field RuneEffectWeapon string
+---@field RuneEffectUpperbody string
+---@field RuneEffectAmulet string
+---@field RuneLevel integer
+---@field MaxLevel integer
+---@field AddToBottomBar "Yes"|"No"
+---@field IgnoredByAI "Yes"|"No"

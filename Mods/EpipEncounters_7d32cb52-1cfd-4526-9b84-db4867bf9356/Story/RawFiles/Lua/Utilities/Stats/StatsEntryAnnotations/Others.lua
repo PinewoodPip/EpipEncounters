@@ -1,0 +1,28 @@
+
+---@meta
+
+---Annotates a Crime stats entry.
+---@class StatsLib_StatsEntry_Crime
+---@field CrimeType string
+---@field TensionWeight integer
+---@field Lifetime integer
+---@field Audible "Yes"|"No"
+---@field DetectionRange integer
+---@field CreatesCrimescene "Yes"|"No"
+---@field Continuous "Yes"|"No"
+---@field VictimReaction string
+---@field NoticedAD string
+---@field WarningDialog string
+---@field ArrestDialog string
+---@field InterrogateDialog string
+---@field ReactionCategory_Tag string
+---@field ReactionCategory_Priority integer
+---@field ReactionCategory_PrimaryReaction string
+---@field ReactionCategory_SecondaryReaction string
+---@field MaxInvestigators integer
+---@field ContinuousDelayTimer integer
+---@field SoundEvent string
+---@field AudibleRange integer
+---@field VictimDialog string
+---@field CanRaiseAlarm "Yes"|"No"
+---@field CanMerge "Yes"|"No"
