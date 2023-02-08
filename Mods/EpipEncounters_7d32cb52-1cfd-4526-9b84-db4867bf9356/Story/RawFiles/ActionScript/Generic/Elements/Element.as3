@@ -361,22 +361,6 @@ package Elements
             ExternalInterface.call("elementRightClick", this.stringID);
         }
 
-        public function setTexture(width:Number, height:Number, guid:String) : *
-        {
-            if (this.customBitmap != null)
-            {
-                this.removeChild(this.customBitmap);
-            }
-            this.customBitmap = new Bitmap(new BitmapData(1, 1));
-            this.addChild(this.customBitmap);
-            
-            IggyFunctions.setTextureForBitmap(this.customBitmap, guid);
-
-            // Must be done setTextureForBitmap(); initial values for BitmapData constructor are disregarded
-            this.customBitmap.width = width;
-            this.customBitmap.height = height;
-        }
-
         public function SetScrollRect(x:Number, y:Number, width:Number, height:Number) : *
         {
             this.scrollRect = new Rectangle(x, y, width, height);

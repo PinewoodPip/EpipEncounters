@@ -1,0 +1,45 @@
+package Elements
+{
+    import LS_Classes.LSPanelHelpers;
+    import flash.display.MovieClip;
+    import flash.external.ExternalInterface;
+    import LS_Classes.listDisplay;
+    import flash.text.TextField;
+    import flash.events.MouseEvent;
+    import flash.display.Bitmap;
+    import flash.display.BitmapData;
+
+    public dynamic class Texture extends Element
+    {
+        private var customBitmap:Bitmap = null;
+
+        public function Texture()
+        {
+            super();
+        }
+
+        public override function get elementType() : String
+        {
+            return "Texture";
+        }
+
+        public function SetTexture(guid:String, width:Number, height:Number) : *
+        {
+            if (this.customBitmap != null)
+            {
+                this.removeChild(this.customBitmap);
+            }
+            this.customBitmap = new Bitmap(new BitmapData(1, 1));
+            this.addChild(this.customBitmap);
+            
+            IggyFunctions.setTextureForBitmap(this.customBitmap, guid);
+
+            // Must be done setTextureForBitmap(); initial values for BitmapData constructor are disregarded
+            if (width != -1 && height != 1)
+            {
+                this.customBitmap.width = width;
+                this.customBitmap.height = height;
+            }
+        }
+    }
+}

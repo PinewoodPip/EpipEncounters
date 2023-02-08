@@ -247,6 +247,7 @@ LOAD_ORDER = {
             "UI/Generic/Elements/ComboBox.lua",
             "UI/Generic/Elements/Grid.lua",
             "UI/Generic/Elements/Color.lua",
+            "UI/Generic/Elements/Texture.lua",
 
             "UI/Generic/Prefabs/HotbarSlot.lua",
             "UI/Generic/Prefabs/Spinner.lua",
