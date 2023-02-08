@@ -225,7 +225,7 @@ function Stats.MeetsRequirements(char, statID, isItem, itemSource)
         end
     end
 
-    if itemSource then
+    if itemSource and itemSource.Stats then
         for _,req in ipairs(itemSource.Stats.Requirements) do
             local reqMet = false
 
@@ -247,7 +247,6 @@ function Stats.MeetsRequirements(char, statID, isItem, itemSource)
                 return false
             end
         end
-
     end
 
     return true
