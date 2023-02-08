@@ -15,10 +15,7 @@ local Notification = {
     },
     Hooks = {
         ShowReceivalNotification = {}, ---@type Event<NotificationUI_Hook_ShowReceivalNotification>
-    },
-
-    FILEPATH_OVERRIDES = {
-        ["Public/Game/GUI/notification.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/notification.swf",
+        ShowCastingNotification = {Preventable = true}, ---@type PreventableEvent<NotificationUI_Hook_ShowCastingNotification>
     },
 }
 Epip.InitializeUI(Client.UI.Data.UITypes.notification, "Notification", Notification)
@@ -41,6 +38,11 @@ Epip.InitializeUI(Client.UI.Data.UITypes.notification, "Notification", Notificat
 ---@field Name string
 ---@field Description string
 ---@field Prevent boolean Defaults to false.
+
+---@class NotificationUI_Hook_ShowCastingNotification
+---@field Label string Hookable.
+---@field Duration number Hookable.
+---@field PositionY number Hookable.
 
 ---------------------------------------------
 -- METHODS
@@ -108,7 +110,7 @@ end
 ---@param unused1 number?
 ---@param isScripted boolean? Defaults to false.
 ---@return boolean True if the event was not prevented.
-function Notification._FireTextNotificationEvent(label, sound, duration, isNormal, unused1, isScripted)
+function Notification._FireTextNotificationEvent(label, sound, duration, isNormal, unused1, isScripted) -- TODO turn into a hook?
     return not Notification.Events.TextNotificationShown:Throw({
         Label = label,
         Sound = sound,
@@ -119,41 +121,13 @@ function Notification._FireTextNotificationEvent(label, sound, duration, isNorma
     }).Prevented
 end
 
----------------------------------------------
--- OLD CODE
----------------------------------------------
-
-Client.UI.Hotbar:RegisterListener("Refreshed", function(barCount)
-    if not notification.showCastNots then
-        notification.root.notCastY = -545
-        return nil
-    end
-    barAmount = (barCount - 1)
-    
-    notification.root.notCastY = notification.baseY + ((barAmount) * notification.offsetPerBar)
-end)
-
-notification = {
-    ui = nil,
-    root = nil,
-    showCastNots = true,
-
-    baseY = 850,
-    offsetPerBar = -65,
-}
-
-Ext.Events.SessionLoaded:Subscribe(function()
-    local notif = Ext.UI.GetByType(Client.UI.Data.UITypes.notification)
-    local root = notif:GetRoot()
-
-    notification.ui = notif
-    notification.root = root
-
-    root.showCastNots = Settings.GetSettingValue("Epip_Notifications", "CastingNotifications")
-    notification.showCastNots = Settings.GetSettingValue("Epip_Notifications", "CastingNotifications")
-
-    -- notification.offsetPerBar = -Ext.UI.GetByType(Client.UI.Data.UITypes.statusConsole):GetRoot().height
-end)
+---Notifies the engine that a notification has ended.
+---Needed for when we prevent notifications, so future ones are not blocked indefinitely.
+function Notification._ClearEngineQueue()
+    Timer.Start(0.5, function()
+        Notification:ExternalInterfaceCall("notificationDone")
+    end)
+end
 
 ---------------------------------------------
 -- EVENT LISTENERS
@@ -164,10 +138,23 @@ Notification:RegisterInvokeListener("setNotification", function (ev, label, soun
     if not Notification._FireTextNotificationEvent(label, sound, duration, not isWarning, unused1, false) then
         ev:PreventAction()
 
-        -- Call notif done - this is done so as not to confuse the notification queue in the engine.
-        Timer.Start("", 0.5, function()
-            Notification:ExternalInterfaceCall("notificationDone")
-        end)
+        Notification._ClearEngineQueue()
+    end
+end)
+
+-- Listen for casting notifications and throw hooks.
+Notification:RegisterInvokeListener("showCastNot", function (ev, label, duration, yPosition)
+    local hook = Notification.Hooks.ShowCastingNotification:Throw({
+        Label = label,
+        Duration = duration,
+        PositionY = yPosition,
+    })
+
+    ev:PreventAction()
+    if not hook.Prevented then
+        ev.UI:GetRoot().showCastNot(hook.Label, hook.Duration, hook.PositionY)
+    else
+        Notification._ClearEngineQueue()
     end
 end)
 
@@ -186,9 +173,7 @@ Notification:RegisterInvokeListener("showNewSkill", function(ev, name, descripti
     -- Prevent action.
     if event.Prevent then
         ev:PreventAction()
-
-        Timer.Start("", 0.5, function()
-            Notification:ExternalInterfaceCall("notificationDone")
-        end)
+        
+        Notification._ClearEngineQueue()
     end
 end)

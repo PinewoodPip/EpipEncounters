@@ -1,20 +1,32 @@
 
 ---------------------------------------------
--- Makes Region transition notifications's duration configurable, or lets you disable them entirely. Also controls item notifications appearing.
+-- Makes Region transition notifications's duration configurable, or lets you disable them entirely. Also controls item notifications appearing as well as casting notifications.
 ---------------------------------------------
 
 local NotificationUI = Client.UI.Notification
+local EnemyHealthBar = Client.UI.EnemyHealthBar
+local Hotbar = Client.UI.Hotbar
 
-local Notifs = {
-    -- Not used.
-    -- BEGIN_REGION_Y = 30,
-    -- END_REGION_Y = 40,
-}
-Epip.AddFeature("Notifications", "Notifications", Notifs)
+---@type Feature
+local Notifs = {}
+Epip.RegisterFeature("Notifications", Notifs)
 
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
+
+-- Move casting notifications to the bottom of the screen,
+-- pushing the upwards based on how many hotbar rows are visible.
+-- Also disables casting notifications if the setting is disabled.
+NotificationUI.Hooks.ShowCastingNotification:Subscribe(function (ev)
+    if Settings.GetSettingValue("Epip_Notifications", "CastingNotifications") == true then
+        local barCount = Hotbar.GetBarCount()
+        
+        ev.PositionY = 915 - (barCount) * 65
+    else
+        ev:Prevent()
+    end
+end)
 
 -- Hide item receival notifications.
 NotificationUI.Hooks.ShowReceivalNotification:Subscribe(function (e)
@@ -39,10 +51,6 @@ NotificationUI:RegisterInvokeListener("setRegionText", function(ev)
     local label = ev.Args[1]
     local duration = Settings.GetSettingValue("Epip_Notifications", "RegionLabelDuration")
 
-    -- Change Y location of the notification
-    -- root.beginRegionY = Notifs.BEGIN_REGION_Y
-    -- root.endRegionY = Notifs.END_REGION_Y
-
     root.setRegionText(label, duration)
 
     -- Hide immediately - we still need to call setRegionText for the UI to not "softlock"
@@ -54,6 +62,6 @@ NotificationUI:RegisterInvokeListener("setRegionText", function(ev)
 end)
 
 -- Hide region notification immediately when the HP bar is brought up
-Client.UI.EnemyHealthBar.Events.Updated:Subscribe(function (_)
+EnemyHealthBar.Events.Updated:Subscribe(function (_)
     NotificationUI:GetRoot().hideRegionMC()
 end)
