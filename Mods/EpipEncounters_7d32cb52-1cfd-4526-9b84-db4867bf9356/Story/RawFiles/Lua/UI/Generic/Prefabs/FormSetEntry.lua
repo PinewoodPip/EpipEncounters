@@ -11,7 +11,6 @@ local Prefab = {
 Inherit(Prefab, Generic.GetPrefab("GenericUI_Prefab_FormElement"))
 Generic.RegisterPrefab("GenericUI_Prefab_FormSetEntry", Prefab)
 
-
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
@@ -30,11 +29,21 @@ function Prefab.Create(ui, id, parent, label, minimumSize)
 
     local button = instance:CreateElement("RemoveButton", "GenericUI_Element_Button", instance.Background)
     button:SetType("Close")
-    button:SetPositionRelativeToParent("Right", -5)
 
     button.Events.Pressed:Subscribe(function (_)
         instance.Events.RemovePressed:Throw()
     end)
+
+    -- Resize the element to fit the text
+    local textSize = instance.Label:GetTextSize() + Vector.Create(40, 0)
+    textSize = Vector.Create(math.max(minimumSize[1], textSize[1]), 30)
+
+    instance:SetBackgroundSize(textSize)
+    instance.Label:SetSize(textSize:unpack())
+    instance.Label:SetPositionRelativeToParent("Left")
+
+    -- Needs to be set after determining real background size from text size
+    button:SetPositionRelativeToParent("Right", -5)
 
     return instance
 end
