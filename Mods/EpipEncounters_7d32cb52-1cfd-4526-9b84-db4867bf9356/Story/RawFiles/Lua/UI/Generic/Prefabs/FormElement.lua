@@ -36,6 +36,7 @@ end
 function Prefab:__SetupBackground(parent, size)
     local bg = self:CreateElement("Background", "GenericUI_Element_TiledBackground", parent)
     local text = TextPrefab.Create(self.UI, self:PrefixID("Label"), bg, "", "Left", Vector.Create(size[1], 30))
+    text:SetWordWrap(false)
 
     self.Background = bg
     self.Label = text
@@ -58,6 +59,12 @@ function Prefab:SetBackgroundSize(size)
     root:SetAlpha(0.2)
 end
 
+---Returns the label of the element.
+---@return string
+function Prefab:GetLabel()
+    return self.Label:GetMovieClip().text_txt.htmlText
+end
+
 ---Sets the label.
 ---@param label string
 function Prefab:SetLabel(label)
@@ -72,7 +79,7 @@ end
 
 ---Sets the tooltip of the element.
 ---@param type TooltipLib_TooltipType
----@param tooltip any
+---@param tooltip any TODO document
 function Prefab:SetTooltip(type, tooltip)
     local targetElement = self:GetRootElement()
 
@@ -83,10 +90,15 @@ function Prefab:SetTooltip(type, tooltip)
         targetElement.Events.MouseOver:Subscribe(function (_)
             Tooltip.ShowSimpleTooltip(tooltip)
         end)
-        targetElement.Events.MouseOut:Subscribe(function (_)
-            Tooltip.HideTooltip()
+    elseif type == "Skill" then
+        targetElement.Events.MouseOver:Subscribe(function (_)
+            Tooltip.ShowSkillTooltip(Client.GetCharacter(), tooltip)
         end)
     else
         Generic:LogError("FormElement:SetTooltip: unsupported tooltip type " .. type)
     end
+
+    targetElement.Events.MouseOut:Subscribe(function (_)
+        Tooltip.HideTooltip()
+    end)
 end
