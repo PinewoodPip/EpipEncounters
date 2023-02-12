@@ -26,14 +26,14 @@ function Checkbox.Create(ui, id, parent, label)
     local obj = Checkbox:_Create(ui, id) ---@type GenericUI_Prefab_LabelledCheckbox
     obj._Style = "Right-aligned"
 
-    local container = ui:CreateElement(obj:PrefixID("Container"), "GenericUI_Element_TiledBackground", parent)
+    local container = obj:CreateElement("Container", "GenericUI_Element_TiledBackground", parent)
     container:SetAlpha(0.2)
 
-    local text = container:AddChild("Label", "GenericUI_Element_Text")
+    local text = obj:CreateElement("Label", "GenericUI_Element_Text", container)
     text:SetType("Left")
     text:SetText(label)
 
-    local checkbox = container:AddChild("Checkbox", "GenericUI_Element_StateButton")
+    local checkbox = obj:CreateElement("Checkbox", "GenericUI_Element_StateButton", container)
     checkbox:SetType("CheckBox")
 
     obj.Checkbox = checkbox

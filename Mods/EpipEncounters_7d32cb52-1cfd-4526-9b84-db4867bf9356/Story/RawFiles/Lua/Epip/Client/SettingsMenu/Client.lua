@@ -173,7 +173,7 @@ function Menu.SetPendingChange(setting, value)
 
     Menu.pendingChanges[setting.ModTable][setting.ID] = value
 
-    Menu:DebugLog("Pending change set:", setting.ID, value)
+    Menu:DebugLog("Pending change set:", setting.ModTable, setting.ID, value)
 end
 
 function Menu.ApplyPendingChanges()
@@ -181,6 +181,7 @@ function Menu.ApplyPendingChanges()
 
     for moduleID,changes in pairs(Menu.pendingChanges) do
         for settingID,value in pairs(changes) do
+            Menu:DebugLog("Set value of", settingID, "to", value)
             Settings.SetValue(moduleID, settingID, value)
         end
 
