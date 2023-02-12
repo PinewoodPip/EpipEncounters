@@ -1,15 +1,14 @@
 
 local Generic = Client.UI.Generic
 
----@class GenericUI_Prefab_LabelledDropdown : GenericUI_Prefab
+---@class GenericUI_Prefab_LabelledDropdown : GenericUI_Prefab_FormElement
+---@field ComboBox GenericUI_Element_ComboBox
 local Dropdown = {
-    Label = nil, ---@type GenericUI_Element_Text
-    ComboBox = nil, ---@type GenericUI_Element_ComboBox
-
     Events = {
         OptionSelected = {}, ---@type Event<GenericUI_Element_ComboBox_Event_OptionSelected>
     }
 }
+OOP.SetMetatable(Dropdown, Generic.GetPrefab("GenericUI_Prefab_FormElement"))
 Generic.RegisterPrefab("GenericUI_Prefab_LabelledDropdown", Dropdown)
 
 ---------------------------------------------
@@ -21,28 +20,22 @@ Generic.RegisterPrefab("GenericUI_Prefab_LabelledDropdown", Dropdown)
 ---@param parent (GenericUI_Element|string)?
 ---@param label string
 ---@param opts GenericUI_Element_ComboBox_Option[]?
+---@param size Vector2? Defaults to `DEFAULT_SIZE`
 ---@return GenericUI_Prefab_LabelledDropdown
-function Dropdown.Create(ui, id, parent, label, opts)
+function Dropdown.Create(ui, id, parent, label, opts, size)
     opts = opts or {}
+    size = size or Dropdown.DEFAULT_SIZE
     local obj = Dropdown:_Create(ui, id) ---@type GenericUI_Prefab_LabelledDropdown
+    obj:__SetupBackground(parent, size)
+    obj:SetLabel(label)
 
-    local container = ui:CreateElement(obj:PrefixID("Container"), "GenericUI_Element_TiledBackground", parent)
-    container:SetAlpha(0.2)
-
-    local labelElement = container:AddChild(obj:PrefixID("Label"), "GenericUI_Element_Text")
-    labelElement:SetType("Left")
-    labelElement:SetText(label)
-
-    local combo = container:AddChild(obj:PrefixID("Combo"), "GenericUI_Element_ComboBox")
-
+    local combo = obj:CreateElement("Combo", "GenericUI_Element_ComboBox", obj:GetRootElement())
     for _,option in ipairs(opts) do
         combo:AddOption(option.ID, option.Label)
     end
-
-    obj.Label = labelElement
     obj.ComboBox = combo
 
-    obj:SetSize(600, 50) -- Default size
+    obj:SetSize(size:unpack())
 
     -- Forward events
     combo.Events.OptionSelected:Subscribe(function (ev)
@@ -57,9 +50,8 @@ end
 function Dropdown:SetSize(width, height)
     local labelElement = self.Label
     local combo = self.ComboBox
-    local container = self:GetMainElement() ---@type GenericUI_Element_TiledBackground
 
-    container:SetBackground("Black", width, height)
+    self:SetBackgroundSize(Vector.Create(width, height))
 
     labelElement:SetSize(width, 30)
     labelElement:SetPositionRelativeToParent("Left")

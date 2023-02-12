@@ -682,7 +682,7 @@ UI:RegisterCallListener("requestCloseUI", function (ev)
 end)
 
 -- Listen for the accept button being pressed.
-UI:RegisterCallListener("acceptPressed", function (ev)
+UI:RegisterCallListener("acceptPressed", function (_)
     if Menu.HasPendingChanges() then
         Menu._ShowPendingChangesPrompt()
     else

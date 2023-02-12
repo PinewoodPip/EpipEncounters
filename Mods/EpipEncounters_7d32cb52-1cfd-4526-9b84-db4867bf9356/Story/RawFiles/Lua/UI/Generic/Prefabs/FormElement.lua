@@ -1,12 +1,15 @@
 
 local Generic = Client.UI.Generic
 local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
+local Tooltip = Client.Tooltip
 
 ---Base class for prefabs styled as a form element.
 ---@class GenericUI_Prefab_FormElement : GenericUI_Prefab
 ---@field Background GenericUI_Element_TiledBackground
 ---@field Label GenericUI_Prefab_Text
-local Prefab = {}
+local Prefab = {
+    DEFAULT_SIZE = Vector.Create(600, 50),
+}
 Generic.RegisterPrefab("GenericUI_Prefab_FormElement", Prefab)
 
 ---------------------------------------------
@@ -41,15 +44,49 @@ function Prefab:__SetupBackground(parent, size)
     text:SetPositionRelativeToParent("Left")
 end
 
+---@return GenericUI_Element_TiledBackground
+function Prefab:GetRootElement()
+    return self.Background
+end
+
 ---Sets the size of the background.
 ---@param size Vector2
 function Prefab:SetBackgroundSize(size)
-    self.Background:SetBackground("Black", size:unpack())
-    self.Background:SetAlpha(0.2)
+    local root = self:GetRootElement()
+
+    root:SetBackground("Black", size:unpack())
+    root:SetAlpha(0.2)
 end
 
 ---Sets the label.
 ---@param label string
 function Prefab:SetLabel(label)
     self.Label:SetText(label)
+end
+
+---Sets whether the element should be centered in lists.
+---@param center boolean
+function Prefab:SetCenterInLists(center)
+    self:GetRootElement():SetCenterInLists(center)
+end
+
+---Sets the tooltip of the element.
+---@param type TooltipLib_TooltipType
+---@param tooltip any
+function Prefab:SetTooltip(type, tooltip)
+    local targetElement = self:GetRootElement()
+
+    targetElement.Events.MouseOver:Unsubscribe("_Tooltip")
+    targetElement.Events.MouseOut:Unsubscribe("_Tooltip")
+
+    if type == "Simple" then
+        targetElement.Events.MouseOver:Subscribe(function (_)
+            Tooltip.ShowSimpleTooltip(tooltip)
+        end)
+        targetElement.Events.MouseOut:Subscribe(function (_)
+            Tooltip.HideTooltip()
+        end)
+    else
+        Generic:LogError("FormElement:SetTooltip: unsupported tooltip type " .. type)
+    end
 end

@@ -70,7 +70,7 @@ Epip.InitializeLibrary("TooltipLib", Tooltip)
 
 ---@class TooltipLib_SimpleTooltip
 ---@field Label string Supports <bp>, <line> and <shortline>
----@field Position Vector2D
+---@field Position Vector2D? Defaults to mouse position.
 ---@field UseDelay boolean
 ---@field MouseStickMode "None"|"BottomRight"|"BottomLeft"|"TopRight"|"TopLeft"
 ---@field TooltipStyle "Simple"|"Fancy"
@@ -208,8 +208,9 @@ end
 ---Does not fire events.
 ---@param data TooltipLib_SimpleTooltip
 function Tooltip.ShowSimpleTooltip(data)
+    local position = data.Position or Vector.Create(Client.GetMousePosition())
     local root = Client.UI.Tooltip:GetRoot()
-    local x, y = data.Position:unpack()
+    local x, y = position:unpack()
 
     root.addTooltip(data.Label, x, y, data.UseDelay, Tooltip.SIMPLE_TOOLTIP_MOUSE_STICK_MODE[data.MouseStickMode], Tooltip.SIMPLE_TOOLTIP_STYLES[data.TooltipStyle])
 end
@@ -300,6 +301,8 @@ function Tooltip.HideTooltip()
     local ui = Client.UI.Hotbar
 
     ui:ExternalInterfaceCall("hideTooltip")
+
+    Client.UI.Tooltip:GetRoot().removeTooltip()
 
     Tooltip._currentTooltipData = nil
 end

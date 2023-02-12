@@ -154,6 +154,7 @@ function Prefab:PrefixID(id)
     return self.ID .. "_" .. id
 end
 
+---@deprecated
 function Prefab:GetMainElement()
     return self.UI:GetElementByID(self:PrefixID("Container"))
 end

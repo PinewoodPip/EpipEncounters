@@ -1,16 +1,15 @@
 
 local Generic = Client.UI.Generic
 
----@class GenericUI_Prefab_LabelledCheckbox : GenericUI_Prefab
+---@class GenericUI_Prefab_LabelledCheckbox : GenericUI_Prefab_FormElement
+---@field Checkbox GenericUI_Element_StateButton
 ---@field _Style "Right-aligned"|"Left-aligned"
 local Checkbox = {
-    Checkbox = nil, ---@type GenericUI_Element_StateButton
-    Label = nil, ---@type GenericUI_Element_Text
-
     Events = {
         StateChanged = {}, ---@type Event<GenericUI_Element_StateButton_Event_StateChanged>
     }
 }
+OOP.SetMetatable(Checkbox, Generic.GetPrefab("GenericUI_Prefab_FormElement"))
 Generic.RegisterPrefab("GenericUI_Prefab_LabelledCheckbox", Checkbox)
 
 ---------------------------------------------
@@ -21,23 +20,19 @@ Generic.RegisterPrefab("GenericUI_Prefab_LabelledCheckbox", Checkbox)
 ---@param id string
 ---@param parent (GenericUI_Element|string)?
 ---@param label string
+---@param size Vector2? Defaults to `DEFAULT_SIZE`
 ---@return GenericUI_Prefab_LabelledCheckbox
-function Checkbox.Create(ui, id, parent, label)
+function Checkbox.Create(ui, id, parent, label, size)
+    size = size or Checkbox.DEFAULT_SIZE
     local obj = Checkbox:_Create(ui, id) ---@type GenericUI_Prefab_LabelledCheckbox
     obj._Style = "Right-aligned"
+    obj:__SetupBackground(parent, size)
+    obj:SetLabel(label)
 
-    local container = obj:CreateElement("Container", "GenericUI_Element_TiledBackground", parent)
-    container:SetAlpha(0.2)
-
-    local text = obj:CreateElement("Label", "GenericUI_Element_Text", container)
-    text:SetType("Left")
-    text:SetText(label)
-
-    local checkbox = obj:CreateElement("Checkbox", "GenericUI_Element_StateButton", container)
+    local checkbox = obj:CreateElement("Checkbox", "GenericUI_Element_StateButton", obj:GetRootElement())
     checkbox:SetType("CheckBox")
 
     obj.Checkbox = checkbox
-    obj.Label = text
 
     obj:SetSize(600, 50)
 
@@ -62,10 +57,7 @@ end
 ---@param width number
 ---@param height number
 function Checkbox:SetSize(width, height)
-    local container = self:GetMainElement() ---@type GenericUI_Element_TiledBackground
-
-    container:SetBackground("Black", width, height)
-
+    self:SetBackgroundSize(Vector.Create(width, height))
     self.Label:SetSize(width - self.Checkbox:GetMovieClip().width, 30)
 
     self:Render()

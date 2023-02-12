@@ -2,15 +2,14 @@
 local Generic = Client.UI.Generic
 local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 
----@class GenericUI_Prefab_LabelledTextField : GenericUI_Prefab
+---@class GenericUI_Prefab_LabelledTextField : GenericUI_Prefab_FormElement
+---@field Text GenericUI_Prefab_Text
 local Text = {
-    Label = nil, ---@type GenericUI_Prefab_Text
-    Text = nil, ---@type GenericUI_Prefab_Text
-
     Events = {
         TextEdited = {}, ---@type Event<GenericUI_Element_Text_Event_Changed>
     }
 }
+OOP.SetMetatable(Text, Generic.GetPrefab("GenericUI_Prefab_FormElement"))
 Generic.RegisterPrefab("GenericUI_Prefab_LabelledTextField", Text)
 
 ---------------------------------------------
@@ -21,15 +20,15 @@ Generic.RegisterPrefab("GenericUI_Prefab_LabelledTextField", Text)
 ---@param id string
 ---@param parent (GenericUI_Element|string)?
 ---@param label string
+---@param size Vector2? Defaults to `DEFAULT_SIZE`
 ---@return GenericUI_Prefab_LabelledTextField
-function Text.Create(ui, id, parent, label)
+function Text.Create(ui, id, parent, label, size)
+    size = size or Text.DEFAULT_SIZE
     local obj = Text:_Create(ui, id) ---@type GenericUI_Prefab_LabelledTextField
+    obj:__SetupBackground(parent, size)
+    obj:SetLabel(label)
 
-    local container = ui:CreateElement(obj:PrefixID("Container"), "GenericUI_Element_TiledBackground", parent)
-    container:SetAlpha(0.2)
-
-    local labelElement = TextPrefab.Create(ui, obj:PrefixID("Label"), container, label, "Left", Vector.zero2)
-    local text = TextPrefab.Create(ui, obj:PrefixID("Text"), container, "", "Right", Vector.zero2)
+    local text = TextPrefab.Create(ui, obj:PrefixID("Text"), obj:GetRootElement(), "", "Right", Vector.zero2)
     text:SetEditable(true)
 
     -- Forward events
@@ -38,9 +37,8 @@ function Text.Create(ui, id, parent, label)
     end)
 
     obj.Text = text
-    obj.Label = labelElement
 
-    obj:SetSize(600, 50)
+    obj:SetSize(size:unpack())
     
     return obj
 end
@@ -48,9 +46,7 @@ end
 ---@param width number
 ---@param height number
 function Text:SetSize(width, height)
-    local container = self:GetMainElement() ---@type GenericUI_Element_TiledBackground
-
-    container:SetBackground("Black", width, height)
+    self:SetBackgroundSize(Vector.Create(width, height))
 
     self.Label:SetSize(width, 30)
     self.Text:SetSize(width, 30)
