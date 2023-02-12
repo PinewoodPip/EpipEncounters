@@ -10,7 +10,7 @@ local Text = {
     }
 }
 Generic.RegisterPrefab("GenericUI_Prefab_Text", Text)
-InheritMultiple(Text, Generic._Prefab, Generic.ELEMENTS.Text)
+InheritMultiple(Text, Generic._Prefab, Generic.ELEMENTS.Text) -- Inheritance with basic Text class works because all methods fetch the MC by ID
 
 ---------------------------------------------
 -- METHODS

@@ -46,6 +46,21 @@ function Text:SetStroke(color, size, alpha, strength, unknown)
     root.AddStroke(color, size, alpha, strength, unknown)
 end
 
+---Returns the size of the text itself.
+---@return Vector2
+function Text:GetTextSize()
+    local mc = self:GetMovieClip()
+    local txt = mc.text_txt
+
+    return Vector.Create(txt.textWidth, txt.textHeight)
+end
+
+---Sets whether text should wrap once it reaches the edge of the element's size.
+---@param wrap boolean
+function Text:SetWordWrap(wrap)
+    self:GetMovieClip().text_txt.wordWrap = wrap
+end
+
 _Text.SetText = Generic.ExposeFunction("SetText")
 _Text.SetType = Generic.ExposeFunction("SetType")
 _Text.SetEditable = Generic.ExposeFunction("SetEditable")
