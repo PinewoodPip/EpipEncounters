@@ -11,7 +11,7 @@ Client.UI.Generic = {
 local Generic = Client.UI.Generic ---@class GenericUI
 Epip.InitializeLibrary("Generic", Generic)
 
----@alias GenericUI_PrefabClass "GenericUI_Prefab_HotbarSlot"|"GenericUI_Prefab_Spinner"|"GenericUI_Prefab_Text"|"GenericUI_Prefab_LabelledDropdown"|"GenericUI_Prefab_LabelledCheckbox"|"GenericUI_Prefab_LabelledTextField"|"GenericUI_Prefab_FormHorizontalList"|"GenericUI_Prefab_LabelledIcon"|"GenericUI_Prefab_Status"|"GenericUI_Prefab_TooltipPanel"
+---@alias GenericUI_PrefabClass "GenericUI_Prefab_HotbarSlot"|"GenericUI_Prefab_Spinner"|"GenericUI_Prefab_Text"|"GenericUI_Prefab_LabelledDropdown"|"GenericUI_Prefab_LabelledCheckbox"|"GenericUI_Prefab_LabelledTextField"|"GenericUI_Prefab_FormHorizontalList"|"GenericUI_Prefab_LabelledIcon"|"GenericUI_Prefab_Status"|"GenericUI_Prefab_TooltipPanel"|"GenericUI_Prefab_FormElementBackground"|"GenericUI_Prefab_LabelledSlider"|"GenericUI_Prefab_FormSet"|"GenericUI_Prefab_FormElement"|"GenericUI_Prefab_FormSetEntry"
 
 ---------------------------------------------
 -- EVENTS/HOOKS
@@ -326,7 +326,10 @@ end
 ---@param id string
 ---@param prefab table
 function Generic.RegisterPrefab(id, prefab)
-    Inherit(prefab, Generic._Prefab)
+    -- Only set metatable if the prefab has not manually inherited from something else
+    if getmetatable(prefab) == nil then
+        Inherit(prefab, Generic._Prefab)
+    end
 
     Generic.PREFABS[id] = prefab
 end

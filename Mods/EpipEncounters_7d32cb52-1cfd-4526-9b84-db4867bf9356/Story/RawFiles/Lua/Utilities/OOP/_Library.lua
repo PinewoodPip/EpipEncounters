@@ -9,8 +9,6 @@
 ---@field protected __ModTable string
 ---@field protected __LoggingLevel Library_LoggingLevel
 ---@field protected __IsDebug boolean
----@field Events table<string, Event>
----@field Hooks table<string, Event>
 local Library = {
     ---@enum Library_LoggingLevel
     LOGGING_LEVELS = {

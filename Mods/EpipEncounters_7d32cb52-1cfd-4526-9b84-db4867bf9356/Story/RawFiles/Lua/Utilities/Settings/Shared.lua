@@ -9,7 +9,7 @@ Settings = {
     Modules = {}, ---@type table<string, SettingsLib_Module>
     SettingTypes = {}, ---@type table<SettingsLib_SettingType, SettingsLib_Setting>
 
-    unregisteredSettingValues = {},
+    unregisteredSettingValues = {}, ---@type table<string, table<string, {Value: any, Deserialize: boolean?}>>
 
     _unregisteredSettingWarningShown = false,
 
@@ -61,7 +61,7 @@ function _Setting:Create(data)
     data.Value = data:GetDefaultValue()
 
     data:_Init()
-    data:SetValue(data.DefaultValue)
+    data:SetValue(data.DefaultValue or data:GetDefaultValue())
 
     return data
 end
@@ -85,6 +85,19 @@ function _Setting:IsInValidContext()
     end
 
     return isValid
+end
+
+---Serializes the setting's current value to be saved.
+---@return any
+function _Setting:SerializeValue()
+    return self:GetValue()
+end
+
+---Deserializes a saved value for this setting type.
+---@param value any
+---@return any
+function _Setting.DeserializeValue(value)
+    return value
 end
 
 function _Setting:GetValue() return self.Value end
@@ -111,8 +124,9 @@ function _Setting:_Init() end
 ---@param moduleID string
 ---@param settingID string
 ---@param value any
----@param notify boolean? Defaults to true.
-function Settings.SetValue(moduleID, settingID, value, notify)
+---@param notify boolean? Defaults to `true`.
+---@param deserialize boolean? Defaults to `false`.
+function Settings.SetValue(moduleID, settingID, value, notify, deserialize)
     local setting = Settings.GetSetting(moduleID, settingID)
     if notify == nil then notify = true end
 
@@ -126,8 +140,12 @@ function Settings.SetValue(moduleID, settingID, value, notify)
             Settings.unregisteredSettingValues[moduleID] = {}
         end
 
-        Settings.unregisteredSettingValues[moduleID][settingID] = value
+        Settings.unregisteredSettingValues[moduleID][settingID] = {Value = value, Deserialize = deserialize}
     else
+        if deserialize then
+            value = setting.DeserializeValue(value)
+        end
+
         setting:SetValue(value)
 
         if notify then
@@ -137,6 +155,13 @@ function Settings.SetValue(moduleID, settingID, value, notify)
             })
         end
     end
+end
+
+---@param moduleID string
+---@param settingID string
+---@param value any
+function Settings._SetValueFromSave(moduleID, settingID, value)
+    Settings.SetValue(moduleID, settingID, value, nil, true)
 end
 
 ---Returns a table of setting IDs and their current values.
@@ -149,7 +174,7 @@ function Settings.GetModuleSettingValues(modTable, includeInvalidContexts)
 
     for id,setting in pairs(module.Settings) do
         if includeInvalidContexts or setting:IsInValidContext() then
-            output[id] = setting:GetValue()
+            output[id] = setting:SerializeValue()
         end
     end
 
@@ -209,7 +234,11 @@ function Settings.GetSettingValue(modTable, id)
             Value = value
         }).Value
     elseif Settings.unregisteredSettingValues[modTable] then
-        value = Settings.unregisteredSettingValues[modTable][id]
+        local settingPendingData = Settings.unregisteredSettingValues[modTable][id]
+
+        if settingPendingData then
+            value = settingPendingData.Value -- TODO error if value has not been deserialized yet
+        end
     else
         error("Setting not found: " .. id)
     end
@@ -249,7 +278,7 @@ function Settings.RegisterSetting(data)
     -- Initialize saved value
     local unregisteredSettingValues = Settings.unregisteredSettingValues[data.ModTable]
     if unregisteredSettingValues and unregisteredSettingValues[data.ID] ~= nil then
-        Settings.SetValue(data.ModTable, data.ID, unregisteredSettingValues[data.ID])
+        Settings.SetValue(data.ModTable, data.ID, unregisteredSettingValues[data.ID].Value, nil, unregisteredSettingValues[data.ID].Deserialize)
     end
 end
 

@@ -1,9 +1,10 @@
 
----@class DataStructures_Set
+---@class DataStructures_Set : Class
 local Set = {
     _Elements = {},
 }
 DataStructures.Register("DataStructures_Set", Set)
+OOP.RegisterClass("DataStructures_Set", Set)
 
 ---------------------------------------------
 -- METHODS

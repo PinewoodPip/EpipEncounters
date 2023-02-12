@@ -14,6 +14,22 @@ function _Set:GetDefaultValue()
     return SetDataStructure.Create()
 end
 
+---@param elements any[]|DataStructures_Set
 function _Set:SetValue(elements)
-    self.Value = SetDataStructure.Create(elements)
+    if OOP.IsClass(elements) and elements:GetClassName() == "DataStructures_Set" then
+        self.Value = elements
+    else
+        self.Value = SetDataStructure.Create(elements)
+    end
+end
+
+---@return any[]
+function _Set:SerializeValue()
+    local tbl = {} -- Sets are serialized to a list.
+
+    for element in self:GetValue():Iterator() do
+        table.insert(tbl, element)
+    end
+
+    return tbl
 end

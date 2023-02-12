@@ -259,6 +259,11 @@ LOAD_ORDER = {
             "UI/Generic/Prefabs/LabelledIcon.lua",
             "UI/Generic/Prefabs/Status.lua",
             "UI/Generic/Prefabs/TooltipPanel.lua",
+            "UI/Generic/Prefabs/FormElementBackground.lua",
+            "UI/Generic/Prefabs/LabelledSlider.lua",
+            "UI/Generic/Prefabs/FormElement.lua",
+            "UI/Generic/Prefabs/FormSetEntry.lua",
+            "UI/Generic/Prefabs/FormSet.lua",
         },
     },
     -- {Script = "UI/Generic/Test.lua", WIP = true}, -- TEST!

@@ -224,5 +224,33 @@ function _Element:SetChildIndex(child, index)
     self:GetMovieClip().SetChildIndex(child, index)
 end
 
+---Returns the calculated width of the element.
+---@return number
+function _Element:GetWidth()
+    return self:GetMovieClip().width
+end
+
+---Returns the calculated height of the element.
+---@return number
+function _Element:GetHeight()
+    return self:GetMovieClip().height
+end
+
+---Sets the scale of the element.
+---@param scale Vector2
+function _Element:SetScale(scale)
+    local mc = self:GetMovieClip()
+
+    mc.scaleX, mc.scaleY = scale[1], scale[2]
+end
+
+---Returns the scale of the element.
+---@return Vector2
+function _Element:GetScale()
+    local mc = self:GetMovieClip()
+
+    return Vector.Create(mc.scaleX, mc.scaleY)
+end
+
 _Element.SetPositionRelativeToParent = Generic.ExposeFunction("SetPositionRelativeToParent")
 _Element.Move = Generic.ExposeFunction("Move")

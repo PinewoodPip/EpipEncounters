@@ -36,7 +36,7 @@ function Settings.Load()
 
     for moduleID,settings in pairs(vars) do
         for id,value in pairs(settings) do
-            Settings.SetValue(moduleID, id, value)
+            Settings._SetValueFromSave(moduleID, id, value)
         end
     end
 

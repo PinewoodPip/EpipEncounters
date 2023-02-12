@@ -61,6 +61,21 @@ function OOP.GetClass(className)
     return class 
 end
 
+---Returns whether a table is a class table or instance.
+---@param tbl table
+---@return boolean
+function OOP.IsClass(tbl)
+    local isClassed = false
+    
+    if type(tbl) == "table" then
+        if tbl.__name and OOP.GetClass(tbl.__name) ~= nil then
+            isClassed = true
+        end
+    end
+
+    return isClassed
+end
+
 ---Sets a table's metatable.
 ---@param table table Mutated.
 ---@param metatable table

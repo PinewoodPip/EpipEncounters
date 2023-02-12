@@ -59,7 +59,7 @@ function Settings.Load(moduleName, fileName)
         if save and save.SaveVersion == 0 then
             -- Set values of all stored settings.
             for settingID,value in pairs(save.Settings) do
-                Settings.SetValue(moduleName, settingID, value)
+                Settings._SetValueFromSave(moduleName, settingID, value)
             end
         end
     else

@@ -46,6 +46,12 @@ function Slider:SetMax(max)
     self:GetMovieClip().maximum = max
 end
 
+---Sets the step interval of the slider.
+---@param step number
+function Slider:SetStep(step)
+    self:GetMovieClip().snapInterval = step
+end
+
 ---------------------------------------------
 -- SETUP
 ---------------------------------------------

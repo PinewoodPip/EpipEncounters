@@ -2,6 +2,7 @@
 local Generic = Client.UI.Generic
 
 ---@class GenericUI_Prefab_LabelledCheckbox : GenericUI_Prefab
+---@field _Style "Right-aligned"|"Left-aligned"
 local Checkbox = {
     Checkbox = nil, ---@type GenericUI_Element_StateButton
     Label = nil, ---@type GenericUI_Element_Text
@@ -23,6 +24,7 @@ Generic.RegisterPrefab("GenericUI_Prefab_LabelledCheckbox", Checkbox)
 ---@return GenericUI_Prefab_LabelledCheckbox
 function Checkbox.Create(ui, id, parent, label)
     local obj = Checkbox:_Create(ui, id) ---@type GenericUI_Prefab_LabelledCheckbox
+    obj._Style = "Right-aligned"
 
     local container = ui:CreateElement(obj:PrefixID("Container"), "GenericUI_Element_TiledBackground", parent)
     container:SetAlpha(0.2)
@@ -64,8 +66,30 @@ function Checkbox:SetSize(width, height)
 
     container:SetBackground("Black", width, height)
 
-    self.Label:SetSize(width, 30)
+    self.Label:SetSize(width - self.Checkbox:GetMovieClip().width, 30)
 
-    self.Label:SetPositionRelativeToParent("Left")
-    self.Checkbox:SetPositionRelativeToParent("Right")
+    self:Render()
+end
+
+---Changes the layout of the element.
+---@param style "Right-aligned"|"Left-aligned" Default style is `"Right-aligned"`
+function Checkbox:SetStyle(style)
+    self._Style = style
+
+    self:Render()
+end
+
+---Re-renders the element with the current style.
+function Checkbox:Render()
+    if self._Style == "Right-aligned" then
+        self.Label:SetPositionRelativeToParent("Left")
+        self.Checkbox:SetPositionRelativeToParent("Right")
+
+    elseif self._Style == "Left-aligned" then
+        self.Label:SetPositionRelativeToParent("Right")
+        self.Checkbox:SetPositionRelativeToParent("Left")
+    else
+        Generic:Error("GenericUI_Prefab_LabelledCheckbox:Render", "Invalid style value")
+    end
+    
 end
