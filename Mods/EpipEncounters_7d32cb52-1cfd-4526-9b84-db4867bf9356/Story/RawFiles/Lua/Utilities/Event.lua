@@ -178,7 +178,6 @@ function SubscribableEvent:Unsubscribe(handlerIndex) -- TODO string ID
 		cur = cur.Next
 	end
 	
-	Ext.PrintWarning("Attempted to remove subscriber ID " .. handlerIndex .. " for event '" .. self.Name .. "', but no such subscriber exists (maybe it was removed already?)")
 	return false
 end
 

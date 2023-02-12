@@ -8,11 +8,6 @@
 -- EVENTS
 ---------------------------------------------
 
----@class Event
----@field Module string
----@field Event string
-
----@class Event
 _Event = {
     Module = "",
     Event = "",
