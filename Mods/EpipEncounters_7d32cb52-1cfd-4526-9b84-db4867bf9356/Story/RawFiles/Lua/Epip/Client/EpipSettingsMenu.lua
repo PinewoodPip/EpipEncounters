@@ -3,6 +3,7 @@ local Menu = Epip.GetFeature("Feature_SettingsMenu")
 local QuickExamine = Epip.GetFeature("Feature_QuickExamine")
 local QuickInventory = Epip.GetFeature("Feature_QuickInventory")
 local TooltipAdjustments = Epip.GetFeature("Feature_TooltipAdjustments")
+local AnimationCancelling = Epip.GetFeature("Feature_AnimationCancelling")
 local CommonStrings = Text.CommonStrings
 
 ---@class Feature_EpipSettingsMenu : Feature
@@ -102,7 +103,11 @@ local tabs = {
             "Feature_WalkOnCorpses",
             "CombatLogImprovements",
             "PreferredTargetDisplay",
+
+            CreateHeader(AnimationCancelling.TranslatedStrings.Setting_Name),
             {Type = "Setting", Module = "EpipEncounters_AnimationCancelling", ID = "Enabled"},
+            {Type = "Setting", Module = "EpipEncounters_AnimationCancelling", ID = "Blacklist"},
+
             {Type = "Label", Label = Text.Format("——————————————————————————————", {
                 Size = 19,
             })},

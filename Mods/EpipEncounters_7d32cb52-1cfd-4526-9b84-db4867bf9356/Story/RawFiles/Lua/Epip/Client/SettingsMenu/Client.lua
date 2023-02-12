@@ -77,6 +77,9 @@ Epip.RegisterFeature("SettingsMenu", Menu)
 ---@field Visible boolean? Defaults to true.
 ---@field DeveloperOnly boolean? Defaults to false.
 
+---@class Feature_SettingsMenu_Setting_Set : SettingsLib_Setting_Set
+---@field ElementsAreSkills boolean? If `true`, elements will show skill tooltips.
+
 ---@class Feature_SettingsMenu_Setting_Slider : Feature_SettingsMenu_Setting, SettingsLib_Setting_ClampedNumber
 ---@field Step number
 ---@field HideNumbers boolean? Defaults to false.

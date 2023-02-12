@@ -552,8 +552,6 @@ LOAD_ORDER = {
 
     "Epip/Client/HideIncons.lua",
 
-    "Epip/Client/EpipSettingsMenu.lua",
-
     {ScriptSet = "Epip/AnimationCancelling"},
 
     {
@@ -591,7 +589,9 @@ LOAD_ORDER = {
             "Epip/Bedazzled/Model/Gem/States/Transforming.lua",
         },
         WIP = true,
-    }
+    },
+    
+    "Epip/Client/EpipSettingsMenu.lua",
 }
 
 Utilities = {}

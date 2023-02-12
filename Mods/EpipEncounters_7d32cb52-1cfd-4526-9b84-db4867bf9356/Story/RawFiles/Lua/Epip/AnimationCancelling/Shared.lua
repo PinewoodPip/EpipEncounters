@@ -40,6 +40,16 @@ local AnimCancel = {
            Text = "Experimental! May cause issues with certain skills. Please report any!",
            ContextDescription = "Setting warning",
         },
+        Blacklist_Name = {
+           Handle = "ha50d50eag4185g4e10g82fdg19548a304b32",
+           Text = "Blacklisted Skills",
+           ContextDescription = "Name for blacklist setting",
+        },
+        Blacklist_Description = {
+           Handle = "he043b9f9gfc52g4c39ga4f1gc53ea4fcd5ce",
+           Text = "Add skill IDs to this setting to blacklist them from being animation-cancelled.",
+           ContextDescription = "Tooltip for blacklist setting",
+        },
     },
 
     USE_LEGACY_EVENTS = false,
@@ -51,25 +61,6 @@ local AnimCancel = {
     }
 }
 Epip.RegisterFeature("AnimationCancelling", AnimCancel)
-
----------------------------------------------
--- SETTINGS
----------------------------------------------
-
-AnimCancel:RegisterSetting("Enabled", {
-    Type = "Boolean",
-    NameHandle = AnimCancel.TranslatedStrings.Setting_Name,
-    Description = Text.Format(AnimCancel.TranslatedStrings.Setting_Tooltip:GetString(), {
-        FormatArgs = {
-            {
-                Text = AnimCancel.TranslatedStrings.Setting_Warning:GetString(),
-                Color = Color.LARIAN.YELLOW,
-            },
-        },
-    }),
-    DefaultValue = false,
-    Context = "Client",
-})
 
 ---------------------------------------------
 -- NET MESSAGES
