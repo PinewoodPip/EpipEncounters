@@ -11,6 +11,7 @@ local Prefab = {
     Events = {
         EntryRemoved = {}, ---@type Event<GenericUI_Prefab_FormSet_Event_EntryModified>
         EntryAdded = {}, ---@type Event<GenericUI_Prefab_FormSet_Event_EntryModified>
+        EntryElementCreated = {}, ---@type Event<GenericUI_Prefab_FormSet_Event_EntryElementCreated>
     }
 }
 Inherit(Prefab, Generic.GetPrefab("GenericUI_Prefab_FormElement"))
@@ -19,6 +20,9 @@ Generic.RegisterPrefab("GenericUI_Prefab_FormSet", Prefab)
 ---------------------------------------------
 -- EVENTS
 ---------------------------------------------
+
+---@class GenericUI_Prefab_FormSet_Event_EntryElementCreated
+---@field Element GenericUI_Prefab_FormSetEntry
 
 ---@class GenericUI_Prefab_FormSet_Event_EntryModified
 ---@field Value string
@@ -40,8 +44,7 @@ function Prefab.Create(ui, id, parent, label, minimumSize)
     instance:__SetupBackground(parent, minimumSize)
     instance:SetLabel(label)
 
-    local list = instance:CreateElement("List", "GenericUI_Element_HorizontalList", instance.Background)
-    list:SetPosition(0, minimumSize[2])
+    instance:_CreateList()
 
     local addButton = instance:CreateElement("AddButton", "GenericUI_Element_Button", instance.Background)
     addButton:SetType("Brown")
@@ -61,8 +64,6 @@ function Prefab.Create(ui, id, parent, label, minimumSize)
         })
     end)
 
-    instance.HorizontalList = list
-
     return instance
 end
 
@@ -71,10 +72,11 @@ function Prefab:RenderFromSetting(setting)
     local list = self.HorizontalList
     local set = setting:GetValue() ---@type DataStructures_Set
 
-    list:Clear()
+    list = self:_CreateList()
     for element in set:Iterator() do
         self:_AddEntry(tostring(element))
     end
+    list:RepositionElements()
 
     self:SetBackgroundSize(self._MinimumSize + Vector.Create(0, list:GetHeight()))
 end
@@ -89,6 +91,29 @@ function Prefab:_AddEntry(label)
             Value = label,
         })
     end)
+
+    self.Events.EntryElementCreated:Throw({
+        Element = entry,
+    })
+end
+
+---@return GenericUI_Element_HorizontalList
+function Prefab:_CreateList()
+    local list = self.HorizontalList
+
+    if list then -- TODO investigate issue with Clear() when row holders are used
+        list:Destroy()
+    end
+
+    list = self:CreateElement("List", "GenericUI_Element_HorizontalList", self.Background)
+    list:GetMovieClip().list.m_MaxWidth = self._MinimumSize[1]
+    list:SetElementSpacing(15)
+    list:SetRepositionAfterAdding(false)
+    list:SetPosition(0, self._MinimumSize[2])
+
+    self.HorizontalList = list
+
+    return self.HorizontalList
 end
 
 ---------------------------------------------
