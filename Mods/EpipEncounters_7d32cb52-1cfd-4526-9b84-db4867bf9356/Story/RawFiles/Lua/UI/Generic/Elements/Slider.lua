@@ -34,6 +34,18 @@ function Slider:GetValue()
     return self:GetMovieClip().value
 end
 
+---Sets the value of the slider.
+---@param value number
+function Slider:SetValue(value)
+    self:GetMovieClip().value = value
+end
+
+---Sets whether the slider should use notches and snap to them.
+---@param useNotches boolean Default behaviour is `false`.
+function Slider:SetUseNotches(useNotches)
+    self:GetMovieClip().useNotches = useNotches
+end
+
 ---Sets the minimum value accepted by the slider.
 ---@param min number
 function Slider:SetMin(min)
