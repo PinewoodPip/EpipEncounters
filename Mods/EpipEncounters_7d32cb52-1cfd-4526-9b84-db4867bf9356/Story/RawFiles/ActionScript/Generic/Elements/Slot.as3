@@ -133,6 +133,9 @@ package Elements
             }
             this.oldCD = cooldown;
             this.cd_mc.setCoolDown(cooldown);
+
+            // Keep cooldown above other elements
+            this.setChildIndex(this.cd_mc, this.numChildren - 2);
         }
 
         public function SetEnabled(enabled:Boolean) : *
