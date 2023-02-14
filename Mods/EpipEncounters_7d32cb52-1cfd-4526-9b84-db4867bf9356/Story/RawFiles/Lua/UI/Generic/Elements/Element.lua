@@ -1,5 +1,6 @@
 
 local Generic = Client.UI.Generic
+local Tooltip = Client.Tooltip
 
 ---------------------------------------------
 -- ELEMENT
@@ -84,7 +85,7 @@ function _Element:_RegisterEvents()
     self.Events = {}
 
     for id,tbl in pairs(_Templates) do
-        self.Events[id] = SubscribableEvent:New(id)
+        self.Events[id] = SubscribableEvent:New(id, tbl.Preventable)
     end
 end
 
@@ -250,6 +251,42 @@ function _Element:GetScale()
     local mc = self:GetMovieClip()
 
     return Vector.Create(mc.scaleX, mc.scaleY)
+end
+
+
+---Sets the tooltip of the element.
+---@param tooltipType TooltipLib_TooltipType
+---@param tooltip any TODO document
+function _Element:SetTooltip(tooltipType, tooltip)
+    local targetElement = self
+
+    targetElement.Events.MouseOver:Unsubscribe("_Tooltip")
+    targetElement.Events.MouseOut:Unsubscribe("_Tooltip")
+
+    if tooltipType == "Simple" then
+        if type(tooltip) == "string" then -- String overload
+            tooltip = {
+                Label = tooltip,
+                TooltipStyle = "Simple",
+                MouseStickMode = "None",
+                UseDelay = true,
+            }
+        end
+
+        targetElement.Events.MouseOver:Subscribe(function (_)
+            Tooltip.ShowSimpleTooltip(tooltip)
+        end)
+    elseif tooltipType == "Skill" then
+        targetElement.Events.MouseOver:Subscribe(function (_)
+            Tooltip.ShowSkillTooltip(Client.GetCharacter(), tooltip)
+        end)
+    else
+        Generic:LogError("FormElement:SetTooltip: unsupported tooltip type " .. tooltipType)
+    end
+
+    targetElement.Events.MouseOut:Subscribe(function (_)
+        Tooltip.HideTooltip()
+    end)
 end
 
 _Element.SetPositionRelativeToParent = Generic.ExposeFunction("SetPositionRelativeToParent")

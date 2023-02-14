@@ -81,24 +81,5 @@ end
 ---@param type TooltipLib_TooltipType
 ---@param tooltip any TODO document
 function Prefab:SetTooltip(type, tooltip)
-    local targetElement = self:GetRootElement()
-
-    targetElement.Events.MouseOver:Unsubscribe("_Tooltip")
-    targetElement.Events.MouseOut:Unsubscribe("_Tooltip")
-
-    if type == "Simple" then
-        targetElement.Events.MouseOver:Subscribe(function (_)
-            Tooltip.ShowSimpleTooltip(tooltip)
-        end)
-    elseif type == "Skill" then
-        targetElement.Events.MouseOver:Subscribe(function (_)
-            Tooltip.ShowSkillTooltip(Client.GetCharacter(), tooltip)
-        end)
-    else
-        Generic:LogError("FormElement:SetTooltip: unsupported tooltip type " .. type)
-    end
-
-    targetElement.Events.MouseOut:Subscribe(function (_)
-        Tooltip.HideTooltip()
-    end)
+    self:GetRootElement():SetTooltip(type, tooltip)
 end
