@@ -246,13 +246,7 @@ function Menu.RenderEntry(entry)
         local setting = Settings.GetSetting(entry.Module, entry.ID) ---@type Feature_SettingsMenu_Setting
         
         if setting then
-            local canRender = setting.Visible or setting.Visible == nil
-
-            canRender = canRender and (not setting.DeveloperOnly or Epip.IsDeveloperMode())
-
-            if canRender then
-                numID = Menu.RenderSetting(setting)
-            end
+            numID = Menu.RenderSetting(setting)
         else
             Menu:LogError("Tried to render setting that doesn't exist " .. entry.Module .. " " .. entry.ID)
         end
@@ -708,6 +702,32 @@ Settings.Hooks.GetSettingValue:Subscribe(function (ev)
     if setting.DeveloperOnly and not Epip.IsDeveloperMode() then
         ev.Value = setting:GetDefaultValue()
     end
+end)
+
+-- Filter out settings that are developer-only or set to not be visible.
+Menu.Hooks.GetTabEntries:Subscribe(function (ev)
+    local filteredEntries = {}
+
+    for _,entry in ipairs(ev.Entries) do
+        if entry.Type == "Setting" then
+            entry = entry ---@type Feature_SettingsMenu_Entry_Setting
+            local setting = Settings.GetSetting(entry.Module, entry.ID) ---@type Feature_SettingsMenu_Setting
+            
+            if setting then
+                local canRender = setting.Visible or setting.Visible == nil
+    
+                canRender = canRender and (not setting.DeveloperOnly or Epip.IsDeveloperMode())
+
+                if canRender then
+                    table.insert(filteredEntries, entry)
+                end
+            end
+        else
+            table.insert(filteredEntries, entry)
+        end
+    end
+
+    ev.Entries = filteredEntries
 end)
 
 ---------------------------------------------
