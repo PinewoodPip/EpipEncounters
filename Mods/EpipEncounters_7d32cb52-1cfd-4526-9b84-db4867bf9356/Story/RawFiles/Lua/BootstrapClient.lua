@@ -566,6 +566,7 @@ LOAD_ORDER = {
     },
 
     "Epip/Client/ImageViewer.lua",
+    "Epip/Client/SettingsMenuOverlay.lua",
 
     {
         Scripts = {

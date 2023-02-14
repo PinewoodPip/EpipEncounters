@@ -171,7 +171,7 @@ local tabs = {
         DeveloperOnly = true,
         Entries = {
             CreateHeader(CommonStrings.Developer),
-            {Type = "Button", Label = EpipSettingsMenu.TranslatedStrings.WarpToTestLevel:GetString(), ID = "DEBUG_WarpToAMERTest"},
+            {Type = "Button", Label = EpipSettingsMenu.TranslatedStrings.WarpToTestLevel:GetString(), ID = "DEBUG_WarpToAMERTest", Tooltip = ""},
             "Developer_DebugDisplay",
             "Developer_SimulateNoEE",
             "DEBUG_ForceStoryPatching",
