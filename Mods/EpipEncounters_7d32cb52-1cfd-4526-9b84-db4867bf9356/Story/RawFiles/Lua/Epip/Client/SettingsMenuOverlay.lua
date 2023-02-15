@@ -58,10 +58,12 @@ function Overlay.Setup(entries)
         })
     end
 
-    UI.List:RepositionElements()
+    -- What the fuck? Why does the engine keep wanting to crop it?
+    local subscriberID = Ext.Events.Tick:Subscribe(function (_)
+        UI:ExternalInterfaceCall("setMcSize", 1920, 1080)
+    end)
 
-    UI:SetPositionRelativeToViewport("center", "center")
-    UI:SetPosition(V(UI:GetUI():GetPosition()) + V(170, -25))
+    UI.List:RepositionElements()
     UI:GetUI().Layer = SettingsMenu:GetUI():GetUI().Layer + 1
     SettingsMenu:GetUI():SetFlag("OF_PlayerModal1", false)
     UI:Show()
@@ -71,6 +73,8 @@ function Overlay.Setup(entries)
 
             Overlay.Close()
             GameState.Events.RunningTick:Unsubscribe("SettingsMenuOverlay")
+
+            Ext.Events.Tick:Unsubscribe(subscriberID)
         end
     end, {StringID = "SettingsMenuOverlay"})
 end
@@ -89,9 +93,13 @@ end
 ---Creates the core elements of the UI, if not already initialized.
 function Overlay._Initialize()
     if not UI._Initialized then
-        UI:GetUI().SysPanelSize = {UI.LIST_SIZE:unpack()}
+        local settingsUIObject = SettingsMenu:GetUI():GetUI()
+        local UIObject = UI:GetUI()
+        UIObject.SysPanelSize = settingsUIObject.SysPanelSize
+        UIObject.MovieLayout = settingsUIObject.MovieLayout
 
         local root = UI:CreateElement("UIRoot", "GenericUI_Element_Empty")
+        root:SetPosition(665, 145) -- Needs to be done in UI space.
         -- root:SetColor(Color.Create(120, 0, 0))
         -- root:SetSize(UI.LIST_SIZE:unpack())
 
@@ -99,6 +107,7 @@ function Overlay._Initialize()
         list:SetFrame(UI.LIST_SIZE:unpack())
         list:SetScrollbarSpacing(-30)
         list:SetMouseWheelEnabled(true)
+        list:SetRepositionAfterAdding(false)
         UI.List = list
 
         UI._Initialized = true
