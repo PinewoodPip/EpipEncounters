@@ -83,6 +83,7 @@ Item = {
 -- CLASSES
 ---------------------------------------------
 
+---@alias ItemLib_EquipmentType StatsWeaponType|StatsArmorType
 ---@alias ItemLib_Rarity "Common"|"Uncommon"|"Rare"|"Epic"|"Legendary"|"Divine"|"Unique"
 
 ---------------------------------------------
@@ -444,37 +445,17 @@ function Item.GetEquippedItem(char, slot)
     return item
 end
 
---- Like ItemSlot, but distinguishes armor subtypes  
---- Get subtype of item (ex. "Knife" or "Platemail").  
---- Returns ItemSlot for items with no subtypes
+---Returns the subtype of item (ex. "Knife" or "Platemail").  
+---Returns ItemSlot for items with no subtypes.
 ---@param item Item
----@return EquipmentSubType
+---@return ItemLib_EquipmentType|ItemSlot
 function Item.GetEquipmentSubtype(item)
-    local itemType = Item.GetItemSlot(item)
-    if not itemType then return nil end
+    local itemType = Item.GetItemSlot(item) -- Defaults to item slot
 
-    -- for items with no subtypes, return ItemSlot
-    if not Data.Game.SLOTS_WITH_SUBTYPES[itemType] then
-        return itemType
-    end
-
-    -- for artifacts, look for subtype from root template name
-    if Item.IsArtifact(item) then
-        local match = (item.RootTemplate.Name .. "_" .. item.RootTemplate.Id):match(Data.Patterns.ARTIFACT_ROOTTEMPLATE_SUBTYPE)
-
-        return match
-    end
-
-    -- for randomly generated items, find subtype based on base boost
-    for i,v in pairs(item.Stats.DynamicStats) do
-
-        local boostName = v.ObjectInstanceName
-        local subTypes = Data.Game.BASE_BOOST_TO_EQUIP_TYPE
-        
-        if subTypes[boostName] ~= nil then
-            itemType = subTypes[boostName]
-            break
-        end
+    if Item.IsWeapon(item) then
+        itemType = tostring(item.Stats.WeaponType)
+    elseif Item.IsEquipment(item) then
+        itemType = Stats.Get("Armor", item.StatsId).ArmorType
     end
 
     return itemType

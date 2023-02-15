@@ -51,7 +51,6 @@ function Transmog.ShouldRenderEntry(templateGUID, category, item)
     local char = Client.GetCharacter()
     local data = Vanity.TEMPLATES[templateGUID]
     local itemSlot = Item.GetItemSlot(item)
-    local itemSubtype = Item.GetEquipmentSubtype(item)
 
     if itemSlot == "Shield" then
         itemSlot = "Weapon"
