@@ -41,7 +41,7 @@ function Prefab:__SetupBackground(parent, size)
     self.Background = bg
     self.Label = text
 
-    self:SetBackgroundSize(size)
+    Prefab.SetBackgroundSize(self, size) -- Ignore overrides
     text:SetPositionRelativeToParent("Left")
 end
 

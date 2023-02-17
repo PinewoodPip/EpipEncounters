@@ -47,6 +47,14 @@ Text.CommonStrings.Tooltips = Text.RegisterTranslatedString({
    Text = "Tooltips",
    ContextDescription = "As in, UI tooltips",
 })
+Text.CommonStrings.Next = Text.RegisterTranslatedString({
+   Handle = "ha752b7e8g5211g424fg9350g7111ead5cbac",
+   Text = "Next",
+})
+Text.CommonStrings.Previous = Text.RegisterTranslatedString({
+   Handle = "h5bf72ea7ge22ag4ccag9c30g88d06bcd9cc6",
+   Text = "Previous",
+})
 
 ---------------------------------------------
 -- WEAPON TYPES
