@@ -7,6 +7,7 @@ local DropdownPrefab = Generic.GetPrefab("GenericUI_Prefab_LabelledDropdown")
 local SliderPrefab = Generic.GetPrefab("GenericUI_Prefab_LabelledSlider")
 local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 local SetPrefab = Generic.GetPrefab("GenericUI_Prefab_FormSet")
+local SelectorPrefab = Generic.GetPrefab("GenericUI_Prefab_Selector")
 local V = Vector.Create
 
 ---@class Feature_SettingsMenuOverlay : Feature
@@ -40,6 +41,7 @@ UI.DEFAULT_LABEL_SIZE = V(800, 50)
 
 ---@class Feature_SettingsMenuOverlay_Event_RenderEntry
 ---@field Entry Feature_SettingsMenu_Entry
+---@field Parent string|GenericUI_Element
 
 ---------------------------------------------
 -- METHODS
@@ -53,9 +55,7 @@ function Overlay.Setup(entries)
     list:Clear()
 
     for _,entry in ipairs(entries) do
-        Overlay.Events.RenderEntry:Throw({
-            Entry = entry,
-        })
+        UI.RenderEntry(entry)
     end
 
     -- What the fuck? Why does the engine keep wanting to crop it?
@@ -83,6 +83,16 @@ end
 function Overlay.Close()
     SettingsMenu:GetUI():SetFlag("OF_PlayerModal1", true)
     UI:Hide()
+end
+
+---Renders an entry.
+---@param entry Feature_SettingsMenu_Entry
+---@param parent GenericUI_ParentIdentifier? Defaults to the main list.
+function UI.RenderEntry(entry, parent)
+    Overlay.Events.RenderEntry:Throw({
+        Entry = entry,
+        Parent = parent or UI.List,
+    })
 end
 
 ---Repositions elements within the main list.
@@ -116,10 +126,10 @@ end
 
 ---Renders a Set setting.
 ---@param setting Feature_SettingsMenu_Setting_Set
+---@param parent GenericUI_ParentIdentifier?
 ---@return GenericUI_Prefab_FormSet
-function UI._RenderSet(setting)
-    local list = UI.List
-    local element = SetPrefab.Create(UI, setting.ID, list, setting:GetName(), UI.FORM_ELEMENT_SIZE)
+function UI._RenderSet(setting, parent)
+    local element = SetPrefab.Create(UI, setting.ID, parent, setting:GetName(), UI.FORM_ELEMENT_SIZE)
 
     -- Listen for add/remove events and update the setting.
     -- This is a little bit flawed as it does not set the changes as pending. TODO
@@ -153,8 +163,9 @@ end
 
 ---Renders a Choice setting.
 ---@param setting SettingsLib_Setting_Choice
+---@param parent GenericUI_ParentIdentifier?
 ---@return GenericUI_Prefab_LabelledDropdown
-function UI._RenderChoice(setting)
+function UI._RenderChoice(setting, parent)
     -- Generate combobox options from setting choices.
     local options = {}
     for _,choice in ipairs(setting.Choices) do
@@ -164,7 +175,7 @@ function UI._RenderChoice(setting)
         })
     end
 
-    local dropdown = DropdownPrefab.Create(UI, setting.ID, UI.List, setting:GetName(), options)
+    local dropdown = DropdownPrefab.Create(UI, setting.ID, parent, setting:GetName(), options)
     dropdown:SetSize(UI.FORM_ELEMENT_SIZE:unpack())
     dropdown:SelectOption(setting:GetValue())
 
@@ -177,9 +188,10 @@ end
 
 ---Renders a Boolean setting.
 ---@param setting SettingsLib_Setting_Boolean
+---@param parent GenericUI_ParentIdentifier?
 ---@return GenericUI_Prefab_LabelledCheckbox
-function UI._RenderCheckbox(setting)
-    local element = CheckboxPrefab.Create(UI, setting.ID, UI.List, setting:GetName())
+function UI._RenderCheckbox(setting, parent)
+    local element = CheckboxPrefab.Create(UI, setting.ID, parent, setting:GetName())
 
     element:SetState(setting:GetValue() == true)
     element:SetSize(UI.FORM_ELEMENT_SIZE:unpack())
@@ -193,9 +205,10 @@ end
 
 ---Renders a ClampedNumber setting.
 ---@param setting Feature_SettingsMenu_Setting_Slider
+---@param parent GenericUI_ParentIdentifier?
 ---@return GenericUI_Prefab_LabelledSlider
-function UI._RenderClampedNumber(setting)
-    local element = SliderPrefab.Create(UI, setting.ID, UI.List, UI.FORM_ELEMENT_SIZE, setting:GetName(), setting.Min, setting.Max, setting.Step or 1)
+function UI._RenderClampedNumber(setting, parent)
+    local element = SliderPrefab.Create(UI, setting.ID, parent, UI.FORM_ELEMENT_SIZE, setting:GetName(), setting.Min, setting.Max, setting.Step or 1)
 
     element:SetValue(setting:GetValue())
 
@@ -207,19 +220,21 @@ function UI._RenderClampedNumber(setting)
 end
 
 ---Renders a label entry.
----@param entry Feature_SettingsMenu_Entry_Label
+---@param data Feature_SettingsMenuOverlay_Event_RenderEntry
 ---@return GenericUI_Prefab_Text
-function UI._RenderLabel(entry)
-    local element = TextPrefab.Create(UI, Text.GenerateGUID(), UI.List, entry.Label, "Center", UI.DEFAULT_LABEL_SIZE)
+function UI._RenderLabel(data)
+    local entry = data.Entry ---@type Feature_SettingsMenu_Entry_Label
+    local element = TextPrefab.Create(UI, Text.GenerateGUID(), data.Parent, entry.Label, "Center", UI.DEFAULT_LABEL_SIZE)
 
     return element
 end
 
 ---Renders a button entry.
----@param entry Feature_SettingsMenu_Entry_Button
+---@param data Feature_SettingsMenuOverlay_Event_RenderEntry
 ---@return GenericUI_Element_Button
-function UI._RenderButton(entry)
-    local element = UI:CreateElement(entry.ID, "GenericUI_Element_Button", UI.List)
+function UI._RenderButton(data)
+    local entry = data.Entry ---@type Feature_SettingsMenu_Entry_Button
+    local element = UI:CreateElement(entry.ID, "GenericUI_Element_Button", data.Parent)
 
     element:SetType("RedBig")
     element:SetCenterInLists(true)
@@ -236,22 +251,57 @@ function UI._RenderButton(entry)
     return element
 end
 
+---Renders a category of settings.
+---@param data Feature_SettingsMenuOverlay_Event_RenderEntry
+---@return GenericUI_Prefab_Selector
+function UI._RenderCategory(data)
+    local entry = data.Entry ---@type Feature_SettingsMenu_Entry_Category
+    local options = {}
+    for i,option in ipairs(entry.Options) do
+        options[i] = option.Label
+    end
+
+    local element = SelectorPrefab.Create(UI, entry.ID, UI.List, entry.Label, UI.FORM_ELEMENT_SIZE, options)
+
+    -- Create sub-elements
+    for i,option in ipairs(entry.Options) do
+        local container = element:GetSubElementContainer(i)
+        container:SetRepositionAfterAdding(false)
+
+        for _,subEntry in ipairs(option.SubEntries) do
+            UI.RenderEntry(subEntry, container)
+        end
+
+        container:RepositionElements()
+    end
+
+    -- When the option changes, we need to reposition the main list,
+    -- as the new contents might clip into entries below the selector.
+    element.Events.Updated:Subscribe(function (_)
+        UI._RepositionEntries()
+    end)
+
+    return element
+end
+
 ---Renders a setting entry.
----@param settingEntry Feature_SettingsMenu_Entry_Setting
+---@param data Feature_SettingsMenuOverlay_Event_RenderEntry
 ---@return GenericUI_Prefab_FormElement
-function UI._RenderSetting(settingEntry)
-    local setting = Settings.GetSetting(settingEntry.Module, settingEntry.ID) ---@type Feature_SettingsMenu_Setting
+function UI._RenderSetting(data)
+    local entry = data.Entry ---@type Feature_SettingsMenu_Entry_Setting
+    local parent = data.Parent
+    local setting = Settings.GetSetting(entry.Module, entry.ID) ---@type Feature_SettingsMenu_Setting
     local settingType = setting.Type
     local element ---@type GenericUI_Prefab_FormElement
 
     if settingType == "Set" then
-        element = UI._RenderSet(setting)
+        element = UI._RenderSet(setting, parent)
     elseif settingType == "Boolean" then
-        element = UI._RenderCheckbox(setting)
+        element = UI._RenderCheckbox(setting, parent)
     elseif settingType == "Choice" then
-        element = UI._RenderChoice(setting)
+        element = UI._RenderChoice(setting, parent)
     elseif settingType == "ClampedNumber" then
-        element = UI._RenderClampedNumber(setting)
+        element = UI._RenderClampedNumber(setting, parent)
     else
         Overlay:LogWarning("Unsupported setting type: " .. settingType)
     end
@@ -282,11 +332,13 @@ Overlay.Events.RenderEntry:Subscribe(function (ev)
     local element ---@type GenericUI_Element
 
     if entryType == "Setting" then
-        UI._RenderSetting(entry) -- Centering and such is handled within the method, return is discarded
+        UI._RenderSetting(ev) -- Centering and such is handled within the method, return is discarded
     elseif entryType == "Label" then
-        element = UI._RenderLabel(entry)
+        element = UI._RenderLabel(ev)
     elseif entryType == "Button" then
-        element = UI._RenderButton(entry)
+        element = UI._RenderButton(ev)
+    elseif entryType == "Category" then
+        element = UI._RenderCategory(ev)
     else
         Overlay:LogWarning("Unsupported entry type: " .. entry.Type)
     end
