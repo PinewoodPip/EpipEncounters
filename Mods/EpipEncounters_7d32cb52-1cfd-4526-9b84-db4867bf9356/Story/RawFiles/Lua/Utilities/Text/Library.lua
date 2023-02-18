@@ -658,6 +658,13 @@ function Text.LoadLocalization(language, filePath)
     end
 end
 
+---Returns the GUID passed by parameter with any prefixes removed.
+---@param guid PrefixedGUID
+---@return GUID
+function Text.RemoveGUIDPrefix(guid)
+    return guid:match(Text.PATTERNS.GUID)
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------

@@ -2,7 +2,7 @@
 local AMERUI = Game.AMERUI
 
 function AMERUI.UpdateState(char, instance, interface, page)
-
+    char = Text.RemoveGUIDPrefix(char)
     AMERUI.characterStates[char] = {
         Instance = instance,
         Interface = interface,
@@ -13,6 +13,7 @@ function AMERUI.UpdateState(char, instance, interface, page)
 end
 
 function AMERUI.ClearState(char)
+    char = Text.RemoveGUIDPrefix(char)
     Net.Broadcast("EPIPENCOUNTERS_AMERUI_StateChanged", {Character = char})
 
     AMERUI.characterStates[char] = nil
