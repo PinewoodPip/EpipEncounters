@@ -61,12 +61,6 @@ LOAD_ORDER = {
         },
     },
     {ScriptSet = "Utilities/Entity"},
-    "Server/Osiris.lua",
-    {ScriptSet = "Utilities/GameState"},
-    "Utilities/Mod.lua",
-    "Utilities/Timer.lua",
-    "Utilities/Coroutine.lua",
-    "Utilities/UserVars.lua",
     {
         Scripts = {
             "Utilities/DataStructures/Main.lua",
@@ -88,6 +82,12 @@ LOAD_ORDER = {
             "Utilities/Interfaces/Describable.lua",
         },
     },
+    "Utilities/Mod.lua",
+    "Utilities/Timer.lua",
+    "Utilities/Coroutine.lua",
+    "Utilities/UserVars.lua",
+    "Server/Osiris.lua",
+    {ScriptSet = "Utilities/GameState"},
 
     {ScriptSet = "Utilities/Combat"},
     {ScriptSet = "Utilities/Artifact"},

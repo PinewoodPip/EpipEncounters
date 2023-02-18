@@ -63,13 +63,19 @@ end
 
 ---Returns whether a table is a class table or instance.
 ---@param tbl table
+---@param className string?
 ---@return boolean
-function OOP.IsClass(tbl)
+function OOP.IsClass(tbl, className)
     local isClassed = false
     
     if type(tbl) == "table" then
-        if tbl.__name and OOP.GetClass(tbl.__name) ~= nil then
-            isClassed = true
+        if tbl.__name then
+            local class = OOP.GetClass(tbl.__name) ~= nil
+            local isCorrectClass = className == nil or class.__name == className
+
+            if isCorrectClass then
+                isClassed = true
+            end
         end
     end
 
@@ -80,8 +86,19 @@ end
 ---@param table table Mutated.
 ---@param metatable table
 function OOP.SetMetatable(table, metatable)
+    local indexTable = metatable
+    if metatable.__index then
+        indexTable = function(tbl, key) -- TODO cleaner declaration for classes
+            if metatable[key] ~= nil then
+                return metatable[key]
+            else
+                return metatable.__index(tbl, key)
+            end
+        end
+    end
+
     setmetatable(table, {
-        __index = metatable.__index or metatable,
+        __index = indexTable,
         __newindex = metatable.__newindex,
         __mode = metatable.__mode,
         __call = metatable.__call,

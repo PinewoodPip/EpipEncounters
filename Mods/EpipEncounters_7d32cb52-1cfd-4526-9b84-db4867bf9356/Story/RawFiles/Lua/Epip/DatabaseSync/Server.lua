@@ -13,7 +13,7 @@ function DBSync._ResyncAll()
             Net.Broadcast("Feature_DatabaseSync_NetMessage_SyncDatabase", {
                 DatabaseName = dbName,
                 Arity = arity,
-                Tuples = Osiris.DatabaseQuery(dbName, false, table.unpackSelect({}, arity))
+                Tuples = Osiris.DatabaseQuery(dbName, false, table.unpackSelect({}, arity)) or {}
             })
         end
     end
