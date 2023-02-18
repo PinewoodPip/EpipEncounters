@@ -39,7 +39,7 @@ function TextDisplay.ShowText(label, pos)
 end
 
 ---Clears the mouse text displayed in the UI.
-function TextDisplay.ClearText()
+function TextDisplay.RemoveText()
     TextDisplay:GetRoot().removeText()
 end
 

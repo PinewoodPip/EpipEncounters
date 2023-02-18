@@ -30,6 +30,8 @@ Input.Events.MouseMoved:Subscribe(function (_)
         TextDisplay.ShowText(Text.Format(GreatforgeDragDrop.TranslatedStrings.MouseHint:GetString(), {
             Color = Color.AREA_INTERACT,
         }), Vector.Create(Client.GetMousePosition()))
+    elseif Game.AMERUI.ClientIsInSocketScreen() then
+        TextDisplay.RemoveText()
     end
 end)
 
@@ -44,7 +46,7 @@ Input.Events.KeyReleased:Subscribe(function (ev)
                 ItemNetID = draggedItem.NetID,
             })
 
-            TextDisplay.ClearText()
+            TextDisplay.RemoveText()
         end
     end
 end)
