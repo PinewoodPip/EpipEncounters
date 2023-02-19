@@ -57,17 +57,17 @@ LOAD_ORDER = {
     "Utilities/Color.lua",
     {
         Scripts = {
-            "Utilities/Net/Shared.lua",
-        },
-    },
-    {ScriptSet = "Utilities/Entity"},
-    {
-        Scripts = {
             "Utilities/DataStructures/Main.lua",
             "Utilities/DataStructures/DefaultTable.lua",
             "Utilities/DataStructures/Set.lua",
         },
     },
+    {
+        Scripts = {
+            "Utilities/Net/Shared.lua",
+        },
+    },
+    {ScriptSet = "Utilities/Entity"},
     {
         Scripts = {
             "Utilities/Text/Library.lua",

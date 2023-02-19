@@ -50,12 +50,6 @@ LOAD_ORDER = {
     "Utilities/IO.lua",
     "Utilities/Vector.lua",
     "Utilities/Color.lua",
-    {ScriptSet = "Utilities/Entity"},
-    {ScriptSet = "Utilities/GameState"},
-    "Utilities/Mod.lua",
-    "Utilities/Timer.lua",
-    "Utilities/Coroutine.lua",
-    "Utilities/UserVars.lua",
     {
         Scripts = {
             "Utilities/DataStructures/Main.lua",
@@ -63,6 +57,12 @@ LOAD_ORDER = {
             "Utilities/DataStructures/Set.lua",
         },
     },
+    {ScriptSet = "Utilities/Entity"},
+    {ScriptSet = "Utilities/GameState"},
+    "Utilities/Mod.lua",
+    "Utilities/Timer.lua",
+    "Utilities/Coroutine.lua",
+    "Utilities/UserVars.lua",
     {
         Scripts = {
             "Utilities/Text/Library.lua",

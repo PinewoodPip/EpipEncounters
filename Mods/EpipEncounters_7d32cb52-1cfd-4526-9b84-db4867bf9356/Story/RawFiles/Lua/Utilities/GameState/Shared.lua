@@ -1,4 +1,6 @@
 
+local Set = DataStructures.Get("DataStructures_Set")
+
 ---@alias GameState "Unknown"|"Unitialized"|"Init"|"Idle"|"Exit"|"LoadLevel"|"LoadModule"|"LoadGMCampaign"|"LoadSession"|"UnloadLevel"|"UnloadModule"|"UnloadSession"|"Sync"|"Paused"|"Running"|"Save"|"Disconnect"|"GameMasterPause"|"BuildStory"|"ReloadStory"|"Installation"|"InitMenu"|"InitNetwork"|"InitConnection"|"LoadMenu"|"Menu"|"SwapLevel"|"PrepareRunning"|"Running"|"Disconnect"|"Join"|"Save"|"StartLoading"|"StartServer"|"Movie"|"ModReceiving"|"Lobby"|"LoadLoca"
 
 ---@class GameStateLib : Feature
@@ -18,6 +20,14 @@ GameState = {
         PREPARE_RUNNING = "PrepareRunning",
         START_LOADING = "StartLoading",
     },
+    MENU_STATES = Set.Create({
+        "Unitialized",
+        "Init",
+        "InitMenu",
+        "LoadMenu",
+        "Menu",
+        "Lobby",
+    }),
 
     ---@type table<string, GameState>
     SERVER_STATES = {
@@ -135,8 +145,23 @@ function GameState.IsInSession()
     return GameState.IN_SESSION_STATES[GameState.GetState()] == true
 end
 
+---Returns whether the game is within a loading-related state.
+---@return boolean
 function GameState.IsLoading()
     return GameState.LOADING_STATES[GameState.GetState()] == true
+end
+
+---Returns whether the game is in a main menu-related state.
+---@see GameStateLib.MENU_STATES
+---@return boolean
+function GameState.IsInMainMenu()
+    return GameState.MENU_STATES:Contains(GameState.GetState())
+end
+
+---Returns whether the game state is within a running session (not paused)
+---@return boolean
+function GameState.IsInRunningSession()
+    return GameState.GetState() == "Running"
 end
 
 ---------------------------------------------

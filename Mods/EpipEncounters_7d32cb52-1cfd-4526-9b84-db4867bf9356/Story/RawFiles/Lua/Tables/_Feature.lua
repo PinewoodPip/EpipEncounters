@@ -21,6 +21,7 @@
 ---@field DoNotExportTSKs boolean? If `true`, TSKs will not be exported to localization templates.
 ---@field TranslatedStrings table<TranslatedStringHandle, Feature_TranslatedString>
 ---@field Settings table<string, SettingsLib_Setting>
+---@field SupportedGameStates bitfield Defaults to all. See GAME_STATES.
 local Feature = {
     Disabled = false,
     Logging = 0,
@@ -29,6 +30,12 @@ local Feature = {
     UserVariables = {}, ---@type table<string, UserVarsLib_UserVar>
     _localTranslatedStringKeys = {}, ---@type table<string, TranslatedStringHandle>
 
+    GAME_STATES = {
+        MAIN_MENU = 1,
+        LOADING = 2,
+        PAUSED_SESSION = 4,
+        RUNNING_SESSION = 8,
+    },
     REQUIRED_MODS = {},
     FILEPATH_OVERRIDES = {},
     DEVELOPER_ONLY = false,
@@ -102,6 +109,9 @@ function Feature.Create(modTable, id, feature)
     feature = Feature:__Create(feature) ---@type Feature
     feature.MODULE_ID, feature.MOD_TABLE_ID = id, modTable -- TODO remove
 
+    -- Defaults to all game states.
+    feature.SupportedGameStates = feature.SupportedGameStates or (2^Feature._GetAllSupportedGameStatesBitfield() - 1)
+
     -- Initialize translated strings
     feature._localTranslatedStringKeys = {}
     feature.TranslatedStrings = feature.TranslatedStrings or {}
@@ -166,7 +176,27 @@ end
 ---Returns whether the feature has *not* been disabled. Use to condition your feature's logic.
 ---@return boolean
 function Feature:IsEnabled()
-    return not self.Disabled
+    local isEnabled = not self.Disabled
+
+    if self.SupportedGameStates ~= Feature._GetAllSupportedGameStatesBitfield() then
+        local featureStates = self.SupportedGameStates
+        local STATES = Feature.GAME_STATES
+
+        if featureStates & STATES.MAIN_MENU == 0 then
+            isEnabled = isEnabled and not GameState.IsInMainMenu()
+        end
+        if featureStates & STATES.LOADING == 0 then
+            isEnabled = isEnabled and not GameState.IsLoading()
+        end
+        if featureStates & STATES.PAUSED_SESSION == 0 then
+            isEnabled = isEnabled and not GameState.IsPaused()
+        end
+        if featureStates & STATES.RUNNING_SESSION == 0 then
+            isEnabled = isEnabled and not GameState.IsInRunningSession()
+        end
+    end
+
+    return isEnabled
 end
 
 ---Invoked on SessionLoaded if the feature is not disabled.
@@ -194,6 +224,12 @@ end
 ---if it is not disabled.
 ---Override to run initialization routines.
 function Feature:OnFeatureInit() end
+
+---Returns the bitfield that supports all game states.
+---@return integer
+function Feature._GetAllSupportedGameStatesBitfield()
+    return table.getKeyCount(Feature.GAME_STATES)
+end
 
 ---------------------------------------------
 -- TSK METHODS

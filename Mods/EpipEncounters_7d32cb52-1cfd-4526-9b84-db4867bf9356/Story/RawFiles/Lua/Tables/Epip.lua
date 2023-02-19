@@ -35,7 +35,7 @@ function Epip.RegisterFeature(modTable, id, feature)
     -- Overload for Epip's built-in features
     if not feature and type(id) == "table" then 
         ---@diagnostic disable-next-line: cast-local-type
-        modTable,id,feature = "EpipEncounters",modTable,id
+        modTable, id, feature = "EpipEncounters", modTable, id
     end
 
     feature.MOD_TABLE_ID = modTable

@@ -8,6 +8,7 @@
 ---@alias Context "Client"|"Server" 
 ---@alias pattern string
 ---@alias path string
+---@alias bitfield integer
 ---@alias TranslatedStringHandle string
 ---@alias ModTableID string|"EpipEncounters"
 
