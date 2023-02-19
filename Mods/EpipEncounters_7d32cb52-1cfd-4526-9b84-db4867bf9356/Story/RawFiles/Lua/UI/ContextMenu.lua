@@ -20,13 +20,19 @@ local ContextMenu = {
     Root = nil,
     UI = nil,
 
+    _LatestHoveredCharacterHandle = nil, ---@type ComponentHandle
+    _LatestHoveredItemHandle = nil, ---@type ComponentHandle
+
     VANILLA_ACTIONS = {
         LOOT_CHARACTER = 3,
+        PICK_UP = 4,
         ATTACK = 6,
         TALK = 11,
         CHAIN = 13,
         UNCHAIN = 14,
         PICKPOCKET = 15,
+        SEND_TO_CHARACTER = 18,
+        DROP = 20,
         EXAMINE = 22,
     },
 
@@ -83,6 +89,19 @@ Epip.InitializeUI(Client.UI.Data.UITypes.contextMenu, "ContextMenu", ContextMenu
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
+
+---Returns the character associated with the currently open context menu.
+---@param force boolean?
+---@return EclCharacter?
+function ContextMenu.GetCurrentCharacter(force)
+    local char = nil
+
+    if ContextMenu.IsOpen() or force then
+        char = Character.Get(ContextMenu._LatestHoveredCharacterHandle) ---@cast char EclCharacter
+    end
+
+    return char
+end
 
 ---Register a listener for a UI Call raw event.
 ---@override Necessary to distinguish between the 2 instances.
@@ -263,7 +282,24 @@ function ContextMenu.Close(ui)
 end
 
 function ContextMenu.IsOpen()
-    return #ContextMenu.GetActiveUI():GetRoot().contextMenusList.content_array > 0
+    return ContextMenu.GetActiveUI().OF_Visible
+end
+
+local function UpdateLatestHoveredCharacter()
+    -- Living characters are prioritized.
+    local char = Pointer.GetCurrentCharacter(nil, true)
+
+    -- Do not update the char is a context menu is already open.
+    if char and not ContextMenu.IsOpen() then
+        ContextMenu._LatestHoveredCharacterHandle = char.Handle
+    end
+end
+local function UpdateLatestHoveredItem()
+    local item = Pointer.GetCurrentItem()
+
+    if item and not ContextMenu.IsOpen() then
+        ContextMenu._LatestHoveredItemHandle = item.Handle
+    end
 end
 
 function ContextMenu.Cleanup(ui)
@@ -275,7 +311,8 @@ function ContextMenu.Cleanup(ui)
         },
     }
     ContextMenu.selectedElements = {}
-    ContextMenu.characterHandle = nil
+    UpdateLatestHoveredCharacter()
+    UpdateLatestHoveredItem()
     ContextMenu.itemHandle = nil
     ContextMenu.elementsCount = 0
 
@@ -526,10 +563,10 @@ end
 function ContextMenu.GetCurrentEntity()
     local entity
 
-    if ContextMenu.characterHandle then
-        entity = Character.Get(ContextMenu.characterHandle)
-    elseif ContextMenu.itemHandle then
+    if ContextMenu.itemHandle then
         entity = Item.Get(ContextMenu.itemHandle)
+    else
+        entity = ContextMenu.GetCurrentCharacter(true)
     end
 
     return entity
@@ -642,7 +679,7 @@ end
 ContextMenu:RegisterCallListener("pipVanillaContextMenuOpened", function (ev)
     -- Close our instance - we don't support using both at once
     local vanillaElements = ContextMenu.vanillaContextData
-    local item = Item.Get(ContextMenu.itemHandle)
+    local item = Item.Get(ContextMenu.itemHandle) or (ContextMenu._LatestHoveredItemHandle and Item.Get(ContextMenu._LatestHoveredItemHandle))
     ContextMenu.Close(ContextMenu.UI)
 
     if item then
@@ -652,25 +689,29 @@ ContextMenu:RegisterCallListener("pipVanillaContextMenuOpened", function (ev)
 
     ContextMenu.elementsCount = #vanillaElements
 
-    -- Scan elements to check if we're examining a character
-    -- If this context menu is from an item, the UICall listener will have already caught it - characters take priority though.
-    for i,data in pairs(vanillaElements) do
+    -- Scan elements to check if we're examining an item
+    -- If this context menu is from an item, the UICall listener will have already caught it.
+    local isFromItem = false
+    for _,data in pairs(vanillaElements) do
         local action = data.ActionID
 
         -- TODO apparently the open option is the same for both corpses and items... how to distinguish without checking string?
 
         -- TODO reverse logic - assume it's a char until we find an option that proves it's an item. Since the issue are items; right-clicking them from inventory does not pull up the health bar so we cannot rely on it to know that an item was context'd
 
-        if action == ContextMenu.VANILLA_ACTIONS.TALK or action == ContextMenu.VANILLA_ACTIONS.LOOT_CHARACTER or action == ContextMenu.VANILLA_ACTIONS.CHAIN or action == ContextMenu.VANILLA_ACTIONS.PICKPOCKET or action == ContextMenu.VANILLA_ACTIONS.UNCHAIN then
-            ContextMenu.characterHandle = Client.UI.EnemyHealthBar.latestCharacter
+        if action == ContextMenu.VANILLA_ACTIONS.SEND_TO_CHARACTER or action == ContextMenu.VANILLA_ACTIONS.DROP or action == ContextMenu.VANILLA_ACTIONS.PICK_UP then
+            isFromItem = true
             break
         end
     end
 
-    if ContextMenu.characterHandle then
-        Utilities.Hooks.FireEvent("PIP_ContextMenu", "VanillaMenu_Character", Character.Get(ContextMenu.characterHandle))
-    elseif ContextMenu.itemHandle then
+    if isFromItem then
+        ContextMenu._LatestHoveredCharacterHandle = nil
         Utilities.Hooks.FireEvent("PIP_ContextMenu", "VanillaMenu_Item", Item.Get(ContextMenu.itemHandle))
+    else
+        ContextMenu.itemHandle = nil
+        ContextMenu._LatestHoveredItemHandle = nil
+        Utilities.Hooks.FireEvent("PIP_ContextMenu", "VanillaMenu_Character", ContextMenu.GetCurrentCharacter(true))
     end
 
     ContextMenu.SetPosition(nil)
@@ -766,13 +807,10 @@ local function OnRequestContextMenu(ui, method, id, x, y, entityHandle, ...)
         entityHandle = Ext.UI.DoubleToHandle(entityHandle)
 
         if Character.Get(entityHandle) then
-            ContextMenu.characterHandle = entityHandle
+            ContextMenu._LatestHoveredCharacterHandle = entityHandle
         else
             ContextMenu.itemHandle = entityHandle
         end
-
-    else
-        ContextMenu.characterHandle = Client.GetCharacter().Handle
     end
     
     -- Always use our instance for user-made context menus
@@ -834,4 +872,21 @@ Ext.Events.SessionLoaded:Subscribe(function()
     
     -- Global call to begin creating a custom context menu
     Ext.RegisterUINameCall("pipRequestContextMenu", OnRequestContextMenu)
+end)
+
+---------------------------------------------
+-- EVENT LISTENERS
+---------------------------------------------
+
+-- Listen for characters being hovered to remember the latest hovered character.
+Pointer.Events.HoverCharacterChanged:Subscribe(function (_)
+    UpdateLatestHoveredCharacter()
+end)
+Pointer.Events.HoverCharacter2Changed:Subscribe(function (_)
+    UpdateLatestHoveredCharacter()
+end)
+
+-- Listen for items being hovered in the world to track their handle.
+Pointer.Events.HoverItemChanged:Subscribe(function (_)
+    UpdateLatestHoveredItem()
 end)
