@@ -164,5 +164,8 @@ function Ext_ClientVisual.CreateOnItem(position, item) end
 -- Item
 ---------------------------------------------
 
+---@class EsvItem
+---@field Rarity ItemLib_Rarity
+
 ---@class CDivinityStatsItem
 ---@field Rarity ItemLib_Rarity

@@ -27,7 +27,7 @@ Epip.InitializeLibrary("EpicEncounters_BatteredHarried", BH)
 -- CLASSES
 ---------------------------------------------
 
----@class DB_AMER_BatteredHarried_BufferedDamage : OsirisLib_DatabaseTuple
+---@class DB_AMER_BatteredHarried_BufferedDamage : OsirisLib_Tuple
 ---@field CharacterGUID GUID
 ---@field Amount number
 

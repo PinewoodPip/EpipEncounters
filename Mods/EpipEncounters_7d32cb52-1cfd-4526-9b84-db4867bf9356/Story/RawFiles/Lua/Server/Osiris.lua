@@ -1,7 +1,7 @@
 
 local DefaultTable = DataStructures.Get("DataStructures_DefaultTable")
 
----@class OsirisLib : Library
+---@class OsirisLib : Library, {[string]: function}
 Osiris = {
     _Databases = DefaultTable.Create({}), ---@type table<string, table<integer, OsirisLib_Database>>
     _UserQueries = DefaultTable.Create({}), ---@type table<string, table<integer, OsirisLib_UserQuery>>
