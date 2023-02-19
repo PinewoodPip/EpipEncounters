@@ -253,8 +253,6 @@ local _OsirisDatabase = {
 ---@class Osiris_BuiltInSymbol
 local _BuiltInOsiSymbol = {Name = ""}
 function _BuiltInOsiSymbol:__call(...)
-    Osiris:LogWarning("Calling the table is deprecated! " .. self.Name)
-    
     return Osi[self.Name](Osiris._ParseParameters(...))
 end
 
