@@ -110,7 +110,7 @@ function Feature.Create(modTable, id, feature)
     feature.MODULE_ID, feature.MOD_TABLE_ID = id, modTable -- TODO remove
 
     -- Defaults to all game states.
-    feature.SupportedGameStates = feature.SupportedGameStates or (2^Feature._GetAllSupportedGameStatesBitfield() - 1)
+    feature.SupportedGameStates = feature.SupportedGameStates or Feature._GetAllSupportedGameStatesBitfield()
 
     -- Initialize translated strings
     feature._localTranslatedStringKeys = {}
@@ -228,7 +228,7 @@ function Feature:OnFeatureInit() end
 ---Returns the bitfield that supports all game states.
 ---@return integer
 function Feature._GetAllSupportedGameStatesBitfield()
-    return table.getKeyCount(Feature.GAME_STATES)
+    return 2^table.getKeyCount(Feature.GAME_STATES) - 1
 end
 
 ---------------------------------------------
