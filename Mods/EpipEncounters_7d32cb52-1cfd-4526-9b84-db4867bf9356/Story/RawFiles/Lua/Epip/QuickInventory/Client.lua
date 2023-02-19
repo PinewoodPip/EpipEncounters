@@ -60,6 +60,11 @@ local QuickInventory = {
            Text = "Stat Boost",
            ContextDescription = "Text field for filtering equipment by stat boost",
         },
+        ContextMenuButtonLabel = {
+           Handle = "h3c90f954gcf43g4f24gab42gca440c18cdda",
+           Text = "Quick Swap...",
+           ContextDescription = "Context menu button label",
+        },
     },
 
     USE_LEGACY_EVENTS = false,

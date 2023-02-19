@@ -1,4 +1,5 @@
 
+local ContextMenu = Client.UI.ContextMenu
 local Generic = Client.UI.Generic
 local HotbarSlot = Generic.GetPrefab("GenericUI_Prefab_HotbarSlot")
 local TooltipPanelPrefab = Generic.GetPrefab("GenericUI_Prefab_TooltipPanel")
@@ -354,16 +355,16 @@ end)
 -- end)
 
 -- Add option to equipment context menus.
-Client.UI.ContextMenu.RegisterVanillaMenuHandler("Item", function(item)
-    if Item.IsEquipment(item) then
-        Client.UI.ContextMenu.AddElement({
-            {id = "epip_Feature_QuickInventory", type = "button", text = "Quick Swap..."},
+ContextMenu.RegisterVanillaMenuHandler("Item", function(item)
+    if Item.IsEquipment(item) and Item.IsEquipped(Client.GetCharacter(), item) then
+        ContextMenu.AddElement({
+            {id = "epip_Feature_QuickInventory", type = "button", text = QuickInventory.TranslatedStrings.ContextMenuButtonLabel:GetString()},
         })
     end
 end)
 
 -- Listen for context menu button being pressed.
-Client.UI.ContextMenu.RegisterElementListener("epip_Feature_QuickInventory", "buttonPressed", function(item, _)
+ContextMenu.RegisterElementListener("epip_Feature_QuickInventory", "buttonPressed", function(item, _)
     item = item ---@type EclItem
 
     -- Set filters to show items valid for the slot
