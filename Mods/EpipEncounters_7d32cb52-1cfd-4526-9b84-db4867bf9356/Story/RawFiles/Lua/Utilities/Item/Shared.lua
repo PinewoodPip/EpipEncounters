@@ -102,7 +102,7 @@ end
 ---@param item Item
 ---@return boolean
 function Item.IsUnique(item)
-    return item.Stats.Rarity == "Unique"
+    return item.Rarity == "Unique"
 end
 
 ---Returns whether the item is a rune.
@@ -587,6 +587,21 @@ function Item.CountItemsInInventory(entity, predicate)
     end
 
     return count
+end
+
+---Returns the items contained within a container item, optionally filtered by predicate.
+---@param container Item
+---@param predicate (fun(item:Item):boolean)? The predicate should return `true` for items to be included. If `nil`, all items will be included.
+---@return Item[]
+function Item.GetContainedItems(container, predicate)
+    local items = container:GetInventoryItems() ---@cast items Item[]
+    for i,item in ipairs(items) do -- Change from GUID to Item class
+        items[i] = Item.Get(item)
+    end
+
+    items = table.filter(items, predicate)
+
+    return items
 end
 
 ---------------------------------------------

@@ -154,6 +154,22 @@ function table.getKeyCount(t)
     return count
 end
 
+---Returns a new list with entries filtered based on a predicate.
+---@param list any[]
+---@param predicate fun(item:any):boolean Should return true for items to be included in the new list.
+---@return any[]
+function table.filter(list, predicate)
+    local newList = {}
+
+    for _,item in ipairs(list) do
+        if predicate(item) then
+            table.insert(newList, item)
+        end
+    end
+
+    return newList
+end
+
 ---Recursively copies the table onto a new one calling pairs() to get all values,
 ---without metatables nor keys that are skipped by any custom __pairs() or __ipairs() implementation.
 ---@param t table
