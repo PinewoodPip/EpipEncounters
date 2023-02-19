@@ -197,6 +197,8 @@ LOAD_ORDER = {
     {ScriptSet = "Epip/StatsEditor", WIP = true,},
     {ScriptSet = "Epip/APCostBoostFix"},
     {ScriptSet = "Epip/GreatforgeDragDrop"},
+    {ScriptSet = "Epip/Greatforge/MassDismantle"},
+    
     {ScriptSet = "Epip/DebugDisplay", Developer = true,},
     {ScriptSet = "Epip/UnlearnSkills"},
     {ScriptSet = "Epip/DebugMenu", Developer = true,},

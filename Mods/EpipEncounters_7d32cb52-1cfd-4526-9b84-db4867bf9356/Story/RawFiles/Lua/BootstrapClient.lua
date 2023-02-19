@@ -461,6 +461,7 @@ LOAD_ORDER = {
     {ScriptSet = "Epip/StatsEditor", WIP = true,},
     {ScriptSet = "Epip/APCostBoostFix"},
     {ScriptSet = "Epip/GreatforgeDragDrop"},
+    {ScriptSet = "Epip/Greatforge/MassDismantle"},
 
     -- AMER UI controller support
     -- "Epip/Client/AMERUI_Controller/AMERUI_Controller.lua",

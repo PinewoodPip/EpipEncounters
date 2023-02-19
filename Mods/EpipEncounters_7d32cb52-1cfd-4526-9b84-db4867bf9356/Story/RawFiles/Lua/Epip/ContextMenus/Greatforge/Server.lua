@@ -4,10 +4,6 @@
 ---------------------------------------------
 
 Epip.Features.GreatforgeContextMenu = {
-    MassDismantle = {
-        currentChar = nil,
-        itemQueue = nil,
-    }
 }
 local GreatforgeContextMenu = Epip.Features.GreatforgeContextMenu
 
@@ -32,57 +28,6 @@ end)
 ---------------------------------------------
 Net.RegisterListener("EPIPENCOUNTERS_QuickGreatforge_RemoveMods", function(payload)
     Osi.PROC_PIP_QuickGreatforge_RemoveMods(Ext.GetCharacter(payload.Char).MyGuid, Ext.GetItem(payload.Item).MyGuid, payload.Modifier)
-end)
-
----------------------------------------------
--- MASS DISMANTLE
----------------------------------------------
-Net.RegisterListener("EPIPENCOUNTERS_MassDismantle", function(payload)
-    local container = Ext.GetItem(payload.Container)
-    local char = Ext.GetCharacter(payload.Char)
-
-    -- Don't allow multiple people to use this at once
-    -- TODO maybe add a message?
-    if GreatforgeContextMenu.MassDismantle.currentChar then
-        return nil
-    end
-
-    local items = container:GetInventoryItems()
-
-    GreatforgeContextMenu.MassDismantle.currentChar = char
-    GreatforgeContextMenu.MassDismantle.itemQueue = items
-
-    GreatforgeContextMenu.DismantleNextItemInQueue()
-end)
-
-function GreatforgeContextMenu.DismantleNextItemInQueue()
-    local itemQueue = GreatforgeContextMenu.MassDismantle.itemQueue
-    if not itemQueue or #itemQueue == 0 then return nil end
-
-    local item = itemQueue[1]
-
-    Osi.PROC_PIP_QuickReduce(GreatforgeContextMenu.MassDismantle.currentChar.MyGuid, item)
-
-    table.remove(itemQueue, 1)
-
-    Osi.TimerLaunch("PIP_MassDismantle", 50)
-end
-
-function GreatforgeContextMenu.CleanupMassDismantleQueue()
-    GreatforgeContextMenu.MassDismantle.currentChar = nil
-    GreatforgeContextMenu.MassDismantle.itemQueue = nil
-end
-
-Ext.Osiris.RegisterListener("TimerFinished", 1, "after", function(event)
-    if event == "PIP_MassDismantle" then
-        local itemQueue = GreatforgeContextMenu.MassDismantle.itemQueue
-
-        if #itemQueue > 0 then
-            GreatforgeContextMenu.DismantleNextItemInQueue()
-        else
-            GreatforgeContextMenu.CleanupMassDismantleQueue()
-        end
-    end
 end)
 
 ---------------------------------------------
