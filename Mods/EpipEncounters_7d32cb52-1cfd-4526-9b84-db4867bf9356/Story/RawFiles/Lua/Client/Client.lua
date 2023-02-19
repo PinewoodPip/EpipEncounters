@@ -187,6 +187,12 @@ function Client.IsUsingController()
     return Ext.UI.GetByPath("Public/Game/GUI/msgBox_c.swf") ~= nil
 end
 
+---Returns the viewport size.
+---@return Vector2
+function Client.GetViewportSize()
+    return Vector.Create(Ext.UI.GetViewportSize())
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
