@@ -12,14 +12,21 @@ GameState = {
         Paused = true,
         PrepareRunning = true,
     },
-    LOADING_STATES = {
-        LOAD_LEVEL = "LoadLevel",
-        LOAD_SESSION = "LoadSession",
-        LOAD_MODULE = "LoadModule",
-        SWAP_LEVEL = "SwapLevel",
-        PREPARE_RUNNING = "PrepareRunning",
-        START_LOADING = "StartLoading",
-    },
+    LOADING_STATES = Set.Create({
+        "LoadLevel",
+        "LoadSession",
+        "LoadModule",
+        "SwapLevel",
+        "PrepareRunning",
+        "StartLoading",
+        "InitConnection",
+        "InitNetwork",
+        "StartServer",
+        "UnloadSession",
+        "UnloadLevel",
+        "UnloadModule",
+        "Idle",
+    }),
     MENU_STATES = Set.Create({
         "Unitialized",
         "Init",
@@ -148,7 +155,7 @@ end
 ---Returns whether the game is within a loading-related state.
 ---@return boolean
 function GameState.IsLoading()
-    return GameState.LOADING_STATES[GameState.GetState()] == true
+    return GameState.LOADING_STATES:Contains(GameState.GetState())
 end
 
 ---Returns whether the game is in a main menu-related state.
