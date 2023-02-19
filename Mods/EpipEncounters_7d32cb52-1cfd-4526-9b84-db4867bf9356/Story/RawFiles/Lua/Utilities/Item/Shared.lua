@@ -97,6 +97,14 @@ function Item.IsArtifact(item)
     return item:HasTag("AMER_UNI") and not item:HasTag("PIP_FAKE_ARTIFACT")
 end
 
+---Returns whether an item is of Unique rarity.
+---Returns `true` for Artifact items.
+---@param item Item
+---@return boolean
+function Item.IsUnique(item)
+    return item.Stats.Rarity == "Unique"
+end
+
 ---Returns whether the item is a rune.
 ---@param item Item
 ---@return boolean

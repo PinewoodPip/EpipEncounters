@@ -159,3 +159,10 @@ function Ext_ClientVisual.CreateOnCharacter(position, char) end
 --- @param item EclItem
 --- @return EclLuaVisualClientMultiVisual
 function Ext_ClientVisual.CreateOnItem(position, item) end
+
+---------------------------------------------
+-- Item
+---------------------------------------------
+
+---@class CDivinityStatsItem
+---@field Rarity ItemLib_Rarity
