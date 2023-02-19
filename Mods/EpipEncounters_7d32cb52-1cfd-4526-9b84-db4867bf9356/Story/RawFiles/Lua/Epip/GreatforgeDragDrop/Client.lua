@@ -14,7 +14,7 @@ GreatforgeDragDrop._ITEM_DROP_CURSOR = "CursorItemMove"
 function GreatforgeDragDrop._CanDrop()
     local mouseState = Ext.UI.GetCursorControl()
 
-    return Game.AMERUI.ClientIsInSocketScreen() and Pointer.GetDraggedItem() and mouseState.MouseCursor == GreatforgeDragDrop._ITEM_DROP_CURSOR
+    return GreatforgeDragDrop:IsEnabled() and Game.AMERUI.ClientIsInSocketScreen() and Pointer.GetDraggedItem() and mouseState.MouseCursor == GreatforgeDragDrop._ITEM_DROP_CURSOR
 end
 
 ---------------------------------------------
@@ -26,12 +26,14 @@ end
 -- Listen for the mouse moving and check the cursor to determine if its over a UI or the world to add a hint.
 -- No better way of knowing this at the moment.
 Input.Events.MouseMoved:Subscribe(function (_)
-    if Client.GetCharacter() and GreatforgeDragDrop._CanDrop() then
-        TextDisplay.ShowText(Text.Format(GreatforgeDragDrop.TranslatedStrings.MouseHint:GetString(), {
-            Color = Color.AREA_INTERACT,
-        }), Vector.Create(Client.GetMousePosition()))
-    elseif Game.AMERUI.ClientIsInSocketScreen() then
-        TextDisplay.RemoveText()
+    if GreatforgeDragDrop:IsEnabled() then
+        if Client.GetCharacter() and GreatforgeDragDrop._CanDrop() then
+            TextDisplay.ShowText(Text.Format(GreatforgeDragDrop.TranslatedStrings.MouseHint:GetString(), {
+                Color = Color.AREA_INTERACT,
+            }), Vector.Create(Client.GetMousePosition()))
+        elseif Game.AMERUI.ClientIsInSocketScreen() then
+            TextDisplay.RemoveText()
+        end
     end
 end)
 

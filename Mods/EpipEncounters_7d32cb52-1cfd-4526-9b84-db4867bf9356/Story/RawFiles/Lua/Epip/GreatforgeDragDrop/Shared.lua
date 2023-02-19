@@ -13,7 +13,8 @@ local GreatforgeDragDrop = {
            Text = "Release left-click to Greatforge this item.",
            ContextDescription = "Mouse hint for drag-drop",
         },
-    }
+    },
+    SupportedGameStates = _Feature.GAME_STATES.RUNNING_SESSION,
 }
 Epip.RegisterFeature("GreatforgeDragDrop", GreatforgeDragDrop)
 
