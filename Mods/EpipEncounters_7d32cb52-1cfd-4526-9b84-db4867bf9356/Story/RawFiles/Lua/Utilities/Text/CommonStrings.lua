@@ -90,6 +90,28 @@ Text.CommonStrings.Staff = Text.RegisterTranslatedString({
 })
 
 ---------------------------------------------
+-- ARMOR TYPES
+---------------------------------------------
+
+Text.CommonStrings.ClothArmor = Text.RegisterTranslatedString({
+   Handle = "hbef0236fga72cg4b4bg930ag44ba332514dd",
+   Text = "Cloth",
+})
+Text.CommonStrings.RobesArmor = Text.RegisterTranslatedString({
+   Handle = "h1a5fc697g8419g4d7cg87eagf9632537ff34",
+   Text = "Robes",
+})
+Text.CommonStrings.LeatherArmor = Text.RegisterTranslatedString({
+   Handle = "h7038367dgd010g46fbg9b9fg7c5c40d7ef44",
+   Text = "Leather",
+})
+Text.CommonStrings.PlateArmor = Text.RegisterTranslatedString({
+   Handle = "h7fafa02fg8cfdg4ff0g8f14g51597db59549",
+   Text = "Plate",
+   ContextDescription = "As in, plated armor."
+})
+
+---------------------------------------------
 -- ITEM SLOTS
 ---------------------------------------------
 
@@ -219,6 +241,10 @@ Text.CommonStrings.ItemSlot = Text.RegisterTranslatedString({
 Text.CommonStrings.WeaponType = Text.RegisterTranslatedString({
    Handle = "h53ac110bgde75g4517ga5a6gdb5daf3abc88",
    Text = "Weapon Type",
+})
+Text.CommonStrings.ArmorType = Text.RegisterTranslatedString({
+   Handle = "h37567161ge719g4466g96e1gb6fc29c40e6c",
+   Text = "Armor Type",
 })
 Text.CommonStrings.AbilitySchool = Text.RegisterTranslatedString({
    Handle = "h5025c292g5fd8g46fegac5bgee45a7acc134",

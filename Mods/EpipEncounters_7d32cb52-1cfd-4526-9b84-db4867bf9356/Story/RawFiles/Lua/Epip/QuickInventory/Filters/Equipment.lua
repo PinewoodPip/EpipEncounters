@@ -4,6 +4,15 @@ local Set = DataStructures.Get("DataStructures_Set")
 
 ---@class Feature_QuickInventory
 local QuickInventory = Epip.GetFeature("Feature_QuickInventory")
+
+QuickInventory.SLOTS_WITH_ARMOR_SUBTYPES = Set.Create({
+    "Helmet",
+    "Breast",
+    "Leggings",
+    "Boots",
+    "Gloves"
+})
+
 QuickInventory.DYNAMIC_STAT_FIELD_ALIASES = {
     -- Resistances
     ["Fire"] = Set.Create({
@@ -157,6 +166,20 @@ QuickInventory.Settings.WeaponSubType = QuickInventory:RegisterSetting("WeaponSu
     },
 })
 
+QuickInventory.Settings.ArmorSubType = QuickInventory:RegisterSetting("ArmorSubType", {
+    Type = "Choice",
+    Name = CommonStrings.ArmorType,
+    DefaultValue = "Any",
+    ---@type SettingsLib_Setting_Choice_Entry[]
+    Choices = {
+        {ID = "Any", NameHandle = Text.CommonStrings.Any.Handle},
+        {ID = "Cloth", NameHandle = Text.CommonStrings.ClothArmor.Handle},
+        {ID = "Robe", NameHandle = Text.CommonStrings.RobesArmor.Handle},
+        {ID = "Leather", NameHandle = Text.CommonStrings.LeatherArmor.Handle},
+        {ID = "Plate", NameHandle = Text.CommonStrings.PlateArmor.Handle},
+    },
+})
+
 QuickInventory.Settings.DynamicStat = QuickInventory:RegisterSetting("DynamicStat", {
     Type = "String",
     Name = QuickInventory.TranslatedStrings.DynamicStat_Name,
@@ -248,18 +271,25 @@ QuickInventory.Hooks.IsItemVisible:Subscribe(function (ev)
 
         visible = Item.IsEquipment(item)
 
+        if itemSlotSetting ~= "Any" then
+            visible = visible and Item.GetItemSlot(item) == itemSlotSetting
+        end
+
         -- Slot restriction
         if itemSlotSetting == "Weapon" then
             local weaponSubTypeSetting = QuickInventory:GetSettingValue(QuickInventory.Settings.WeaponSubType)
-
-            visible = visible and Item.GetItemSlot(item) == itemSlotSetting
 
             -- Weapon subtype restriction
             if weaponSubTypeSetting ~= "Any" then
                 visible = visible and Item.GetEquipmentSubtype(item) == weaponSubTypeSetting
             end
-        elseif itemSlotSetting ~= "Any" then
-            visible = visible and Item.GetItemSlot(item) == itemSlotSetting
+        elseif QuickInventory.SLOTS_WITH_ARMOR_SUBTYPES:Contains(itemSlotSetting) then 
+            local armorSubTypeSetting = QuickInventory:GetSettingValue(QuickInventory.Settings.ArmorSubType)
+
+            -- Armor subtype restriction
+            if armorSubTypeSetting ~= "Any" then
+                visible = visible and Item.GetEquipmentSubtype(item) == armorSubTypeSetting
+            end
         end
 
         -- Filter by deltamod stat boosts.

@@ -202,10 +202,14 @@ function UI._RenderSettingsPanel()
 
     local itemCategory = QuickInventory:GetSettingValue(QuickInventory.Settings.ItemCategory)
     if itemCategory == "Equipment" then
+        local itemSlot = QuickInventory:GetSettingValue(QuickInventory.Settings.ItemSlot)
+
         UI.RenderSetting(QuickInventory.Settings.ItemSlot) -- Equipment slot
 
-        if QuickInventory:GetSettingValue(QuickInventory.Settings.ItemSlot) == "Weapon" then
+        if itemSlot == "Weapon" then
             UI.RenderSetting(QuickInventory.Settings.WeaponSubType) -- Equipment subtype
+        elseif QuickInventory.SLOTS_WITH_ARMOR_SUBTYPES:Contains(itemSlot) then
+            UI.RenderSetting(QuickInventory.Settings.ArmorSubType) -- Armor subtype
         end
 
         UI.RenderSetting(QuickInventory.Settings.DynamicStat)
