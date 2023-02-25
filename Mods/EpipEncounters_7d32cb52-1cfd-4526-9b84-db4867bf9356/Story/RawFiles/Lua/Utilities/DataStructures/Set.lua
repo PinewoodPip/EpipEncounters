@@ -21,6 +21,7 @@ function Set.Create(elements)
         __index = Set,
         __pairs = Set.__pairs,
         __ipairs = Set.__ipairs,
+        __len = Set.__len,
     })
 
     for _,element in ipairs(elements or {}) do
@@ -74,6 +75,10 @@ function Set.Iterator(self)
     end
 
     return generator
+end
+
+function Set.__len(self)
+    return table.getKeyCount(self._Elements)
 end
 
 function Set.__pairs(_)

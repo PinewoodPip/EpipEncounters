@@ -1,4 +1,6 @@
 
+local MinimapToggle = Epip.GetFeature("Feature_MinimapToggle")
+
 local AF = {
     cinematicCombatOption = false, -- Cached value
     ID = "PIP_AprilFoolsOverlay",
@@ -34,9 +36,9 @@ function AF.ToggleCinematicMode(enabled)
     bg2.visible = enabled
 
     if enabled then
-        Client.UI.Minimap:Toggle(false, false)
+        MinimapToggle.RequestState("ImmersiveCombat", false)
     else
-        Client.UI.Minimap:ToggleFromSettings()
+        MinimapToggle.RequestState("ImmersiveCombat", true)
     end
 
     Client.UI.PlayerInfo:GetRoot().visible = not enabled

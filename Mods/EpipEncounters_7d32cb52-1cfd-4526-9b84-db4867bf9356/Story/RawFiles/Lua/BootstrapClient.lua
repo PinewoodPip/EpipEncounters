@@ -282,7 +282,6 @@ LOAD_ORDER = {
     "UI/Notification.lua",
     "UI/Minimap.lua",
     "UI/VanillaActions.lua",
-    "UI/AprilFoolsOverlay.lua",
     "UI/Journal.lua",
     "UI/Saving.lua",
     "UI/GiftBagContent.lua",
@@ -336,7 +335,6 @@ LOAD_ORDER = {
 
     "UI/Controller/PanelSelect.lua",
 
-    "Epip/Client/ImmersiveMeditation.lua",
     "Epip/Client/NameTypoFixes.lua",
     "Epip/Client/ExamineImprovements.lua",
 
@@ -413,6 +411,9 @@ LOAD_ORDER = {
     "Epip/Client/JournalChangelog.lua",
     "Epip/Client/ExitChatAfterMessage.lua",
     "Epip/Client/CameraZoom.lua",
+    "Epip/Client/MinimapToggle.lua",
+    "UI/AprilFoolsOverlay.lua",
+    "Epip/Client/ImmersiveMeditation.lua",
     -- "Epip/Client/ModMenuImprovements.lua",
 
     -- Chat Commands

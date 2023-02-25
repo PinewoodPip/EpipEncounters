@@ -3,6 +3,9 @@
 -- Toggles the minimap and hotbar UIs
 -- while the client is Meditating.
 ---------------------------------------------
+
+local MinimapToggle = Epip.GetFeature("Feature_MinimapToggle")
+
 local IM = {
     currentState = false,
 }
@@ -18,15 +21,15 @@ function IM.Update()
     IM.currentState = state
 
     if state then
-        Client.UI.Minimap:Toggle(false, false)
         Client.UI.Hotbar.ToggleVisibility(false, "PIP_ImmersiveMeditation")
         Client.UI.StatusConsole.Toggle(false, "PIP_ImmersiveMeditation")
+        
+        MinimapToggle.RequestState("ImmersiveMeditation", false)
     else
         Client.UI.Hotbar.ToggleVisibility(true, "PIP_ImmersiveMeditation")
         Client.UI.StatusConsole.Toggle(true, "PIP_ImmersiveMeditation")
 
-        -- Restore visibility based on settings.
-        Client.UI.Minimap:ToggleFromSettings()
+        MinimapToggle.RequestState("ImmersiveMeditation", true)
     end
 end
 
