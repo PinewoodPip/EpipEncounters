@@ -24,8 +24,62 @@ local ExtraInfo = {
     RESISTANCES_DISPLAYED = {
         "Fire", "Water", "Earth", "Air", "Poison", "Physical", "Piercing",
     },
+    CHARACTER_LEVEL_MODES = {
+        HIDDEN = 1,
+        NEAR_NAME = 2,
+        BELOW_BAR = 3,
+        IN_ALT_INFO = 4,
+    },
+    TEXT_SIZE = 14.5,
+
+    TranslatedStrings = {
+        SettingName = {
+           Handle = "h52f49bccg59f7g4b72g8440g55847b964cde",
+           Text = "Character Level Display",
+           ContextDescription = "Name for setting for health bar",
+        },
+        SettingDescription = {
+           Handle = "hedbf4e2fgb8e6g400cgb08bgd33f99bc101d",
+           Text = "Controls how character levels are displayed in the health bar UI.",
+           ContextDescription = "Tooltip for 'Character Level Display' setting for health bar",
+        },
+        NearName = {
+           Handle = "hd2e9ffeega495g4fdagb818gbc7b6275e9b3",
+           Text = "After Name",
+           ContextDescription = "Option for 'show enemy level in hp bar' setting",
+        },
+        BelowBar = {
+           Handle = "h2a5a9fedg9c42g4f0ag9d54gb4098614b91b",
+           Text = "Below Health Bar",
+           ContextDescription = "Option for 'show enemy level in hp bar' setting",
+        },
+        NearAltInfo = {
+           Handle = "h7e532f24g51f1g439cg9851g8ff8f12a6b17",
+           Text = "When holding Shift",
+           ContextDescription = "Option for 'show enemy level in hp bar' setting",
+        },
+    },
 }
 Epip.RegisterFeature("EnemyHealthBarExtraInfo", ExtraInfo)
+
+---------------------------------------------
+-- SETTINGS
+---------------------------------------------
+
+ExtraInfo:RegisterSetting("Mode", {
+    Type = "Choice",
+    Context = "Client",
+    NameHandle = ExtraInfo.TranslatedStrings.SettingName,
+    DescriptionHandle = ExtraInfo.TranslatedStrings.SettingDescription,
+    DefaultValue = 4,
+    ---@type SettingsLib_Setting_Choice_Entry[]
+    Choices = {
+        {ID = ExtraInfo.CHARACTER_LEVEL_MODES.HIDDEN, NameHandle = Text.CommonStrings.Hidden.Handle},
+        {ID = ExtraInfo.CHARACTER_LEVEL_MODES.NEAR_NAME, NameHandle = ExtraInfo.TranslatedStrings.NearName.Handle},
+        {ID = ExtraInfo.CHARACTER_LEVEL_MODES.BELOW_BAR, NameHandle = ExtraInfo.TranslatedStrings.BelowBar.Handle},
+        {ID = ExtraInfo.CHARACTER_LEVEL_MODES.IN_ALT_INFO, NameHandle = ExtraInfo.TranslatedStrings.NearAltInfo.Handle},
+    },
+})
 
 ---------------------------------------------
 -- EVENT LISTENERS
@@ -40,16 +94,26 @@ EnemyHealthBar.Hooks.GetBottomLabel:Subscribe(function (ev)
 
         if char then
             if Client.Input.IsShiftPressed() then -- Show alternate info.
-                local level = Character.GetLevel(char)
                 local sp, maxSp = Character.GetSourcePoints(char)
                 local ap, maxAp = Character.GetActionPoints(char)
                 local init = Character.GetInitiative(char)
-    
                 if maxSp == -1 then
                     maxSp = 3
                 end
+                local texts = {
+                    string.format("%s/%s AP", ap, maxAp),
+                    string.format("%s/%s SP", sp, maxSp),
+                    string.format("%s INIT", init),
+                }
+
+                -- Insert level, based on user setting
+                if ExtraInfo:GetSettingValue(ExtraInfo.Settings.Mode) == ExtraInfo.CHARACTER_LEVEL_MODES.IN_ALT_INFO then
+                    local level = Character.GetLevel(char)
+
+                    table.insert(texts, 1, string.format("Level %s", level))
+                end
     
-                text = string.format("Level %s  %s/%s AP  %s/%s SP  %s INIT", level, ap, maxAp, sp, maxSp, init)
+                text = Text.Join(texts, "  ")
             else -- Show resistances.
                 local resistances = {}
     
@@ -74,16 +138,19 @@ EnemyHealthBar.Hooks.GetBottomLabel:Subscribe(function (ev)
         end
     
         -- Make text smaller.
-        text = Text.Format(text, {Size = 14.5})
+        text = Text.Format(text, {Size = ExtraInfo.TEXT_SIZE})
     
         table.insert(ev.Labels, text)
     end
 end)
 
 
--- Display level by character name and hide it from the footer.
+-- Display level by character name and hide it from the footer,
+-- depending on user settings.
 EnemyHealthBar.Hooks.GetHeader:Subscribe(function (ev)
-    if ExtraInfo:IsEnabled() then
+    local setting = ExtraInfo:GetSettingValue(ExtraInfo.Settings.Mode)
+
+    if ExtraInfo:IsEnabled() and setting == ExtraInfo.CHARACTER_LEVEL_MODES.NEAR_NAME then
         local char, item = ev.Character, ev.Item
         local level = (char and Character.GetLevel(char)) or (item and Item.GetLevel(item))
     
@@ -93,7 +160,15 @@ EnemyHealthBar.Hooks.GetHeader:Subscribe(function (ev)
     end
 end)
 EnemyHealthBar.Hooks.GetBottomLabel:Subscribe(function (ev)
-    if ExtraInfo:IsEnabled() then
+    local setting = ExtraInfo:GetSettingValue(ExtraInfo.Settings.Mode)
+
+    if ExtraInfo:IsEnabled() and setting ~= ExtraInfo.CHARACTER_LEVEL_MODES.BELOW_BAR then
         table.remove(ev.Labels, 1)
+    else
+        -- Move to the end and lower text size - more aesthetically pleasing
+        local label = ev.Labels[1]
+        table.remove(ev.Labels, 1)
+        table.insert(ev.Labels, Text.Format(label, {Size = ExtraInfo.TEXT_SIZE}))
+
     end
-end, {Priority = -9999999})
+end, {Priority = -9999999}) -- TODO better way of ensuring we are operating on the level label - implement string IDs for the labels, possibly.

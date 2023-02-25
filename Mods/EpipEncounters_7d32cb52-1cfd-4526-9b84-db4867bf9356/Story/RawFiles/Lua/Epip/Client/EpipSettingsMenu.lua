@@ -97,6 +97,7 @@ local tabs = {
             "ExaminePosition",
             "Minimap",
             "TreasureTableDisplay",
+            {Type = "Setting", Module = "EpipEncounters_EnemyHealthBarExtraInfo", ID = "Mode"},
             "CinematicCombat",
             "ESCClosesAmerUI",
             "RenderShroud",

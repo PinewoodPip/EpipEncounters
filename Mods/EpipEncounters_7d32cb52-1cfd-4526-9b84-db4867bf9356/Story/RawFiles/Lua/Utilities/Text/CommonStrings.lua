@@ -55,6 +55,18 @@ Text.CommonStrings.Previous = Text.RegisterTranslatedString({
    Handle = "h5bf72ea7ge22ag4ccag9c30g88d06bcd9cc6",
    Text = "Previous",
 })
+Text.CommonStrings.Disable = Text.RegisterTranslatedString({
+   Handle = "hc66b270egc5bcg4bc3gbc2bgdd8278522f62",
+   Text = "Disable",
+})
+Text.CommonStrings.Disabled = Text.RegisterTranslatedString({
+   Handle = "h905ae122g47e8g41caga162g68a68b6a88af",
+   Text = "Disabled",
+})
+Text.CommonStrings.Hidden = Text.RegisterTranslatedString({
+   Handle = "h1a45624fgcbe1g48b8g9b4ag23e6f8cebe67",
+   Text = "Hidden",
+})
 
 ---------------------------------------------
 -- WEAPON TYPES

@@ -15,7 +15,7 @@ Settings.RegisterSettingType("Choice", _Choice)
 ---@class SettingsLib_Setting_Choice_Entry
 ---@field Name string?
 ---@field NameHandle TranslatedStringHandle?
----@field ID string? Defaults to stringified index of the choice.
+---@field ID any? Defaults to stringified index of the choice.
 local _Entry = {}
 
 ---@param data SettingsLib_Setting_Choice_Entry
