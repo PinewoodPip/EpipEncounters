@@ -36,8 +36,8 @@ Epip.InitializeLibrary("UserVars", UserVars)
 function UserVars.Register(name, data)
     data = data or {} ---@type UserVarsLib_UserVar
     data.Name = name
-    data.Client = data.Client or Ext.IsClient()
-    data.Server = data.Server or Ext.IsServer()
+    data.Client = data.Client ~= nil and data.Client or true
+    data.Server = data.Server ~= nil and data.Server or true
     data.WriteableOnServer = data.WriteableOnServer or true
     data.WriteableOnClient = data.WriteableOnClient or false
     data.Persistent = data.Persistent or false
