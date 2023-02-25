@@ -98,7 +98,7 @@ function OOP.SetMetatable(table, metatable)
     end
 
     setmetatable(table, {
-        __index = indexTable,
+        __index = indexTable, -- Can't assign `.__index or metatable` because inheriting fields in metatable would break
         __newindex = metatable.__newindex,
         __mode = metatable.__mode,
         __call = metatable.__call,

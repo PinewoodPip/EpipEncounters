@@ -152,6 +152,7 @@ function Character.IsUnsheathed(char)
 end
 
 ---Returns whether char is currently the active character of any player.
+---@return boolean
 function Character.IsActive(char)
     return Osiris.CharacterIsControlled(char) == 1
 end
@@ -201,6 +202,7 @@ end
 ---Returns wether char has a certain immunity.
 ---@param char Character
 ---@param immunityName StatsLib_ImmunityID
+---@return boolean
 function Character.HasImmunity(char, immunityName)
     return char.Stats[immunityName .. "Immunity"]
 end
@@ -251,7 +253,7 @@ end
 
 ---Returns the maximum carry weight of char.
 ---@param char Character
----@return integer In "grams"
+---@return integer --In "grams"
 function Character.GetMaxCarryWeight(char)
     local base = Stats.ExtraData.CarryWeightBase:GetValue()
     local strScaling = Stats.ExtraData.CarryWeightPerStr:GetValue()
@@ -486,7 +488,7 @@ end
 
 ---Returns the current and maximum source points of char.
 ---@param char Character
----@return integer, integer Current and maximum points.
+---@return integer, integer --Current and maximum points.
 function Character.GetSourcePoints(char)
     local current, max = char.Stats.MPStart, char.Stats.MaxMp
     if char.Stats.MaxMpOverride ~= -1 then max = char.Stats.MaxMpOverride end
@@ -598,7 +600,7 @@ function Character.GetExperienceRequiredForLevel(targetLevel)
     return totalXp
 end
 
----Returns the contents of a character's skillbar row's.
+---Returns the contents of a character's skillbar row.
 ---@param char Character Must be a player.
 ---@param row integer
 ---@param slotsPerRow integer? Defaults to 29.

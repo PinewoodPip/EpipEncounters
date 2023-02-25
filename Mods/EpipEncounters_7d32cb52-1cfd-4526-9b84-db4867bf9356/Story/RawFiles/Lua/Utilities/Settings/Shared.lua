@@ -31,7 +31,7 @@ Epip.InitializeLibrary("Settings", Settings)
 -- CLASSES
 ---------------------------------------------
 
----@alias SettingsLib_SettingType "Boolean"|"Number"|"ClampedNumber"|"Choice"|"Set"|"Map"
+---@alias SettingsLib_SettingType "Boolean"|"Number"|"ClampedNumber"|"Choice"|"Set"|"Map"|"String"
 
 ---@class EPIP_SETTINGS_SYNC
 ---@field Module string
