@@ -27,6 +27,9 @@ local Overlay = {
     Events = {
         RenderEntry = {}, ---@type Event<Feature_SettingsMenuOverlay_Event_RenderEntry>
     },
+    Hooks = {
+        CanRenderEntry = {}, ---@type Event<Feature_SettingsMenuOverlay_Hook_CanRenderEntry>
+    }
 }
 Epip.RegisterFeature("SettingsMenuOverlay", Overlay)
 local UI = Generic.Create("PIP_SettingsMenuOverlay")
@@ -42,6 +45,10 @@ UI.DEFAULT_LABEL_SIZE = V(800, 50)
 ---@class Feature_SettingsMenuOverlay_Event_RenderEntry
 ---@field Entry Feature_SettingsMenu_Entry
 ---@field Parent string|GenericUI_Element
+
+---@class Feature_SettingsMenuOverlay_Hook_CanRenderEntry
+---@field Entry Feature_SettingsMenu_Entry
+---@field CanRender boolean Defaults to `true`.
 
 ---------------------------------------------
 -- METHODS
@@ -89,10 +96,17 @@ end
 ---@param entry Feature_SettingsMenu_Entry
 ---@param parent GenericUI_ParentIdentifier? Defaults to the main list.
 function UI.RenderEntry(entry, parent)
-    Overlay.Events.RenderEntry:Throw({
+    local canRender = Overlay.Hooks.CanRenderEntry:Throw({
         Entry = entry,
-        Parent = parent or UI.List,
-    })
+        CanRender = true,
+    }).CanRender
+
+    if canRender then
+        Overlay.Events.RenderEntry:Throw({
+            Entry = entry,
+            Parent = parent or UI.List,
+        })
+    end
 end
 
 ---Repositions elements within the main list.
@@ -324,6 +338,19 @@ end
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
+
+-- Prevent developer entries from rendering outside of developer mode.
+Overlay.Hooks.CanRenderEntry:Subscribe(function (ev)
+    local entry = ev.Entry
+    if entry.Type == "Setting" then
+        ---@cast entry Feature_SettingsMenu_Entry_Setting
+        local setting = Settings.GetSetting(entry.Module, entry.ID) ---@cast setting Feature_SettingsMenu_Setting
+
+        if (setting.DeveloperOnly and not Epip.IsDeveloperMode()) or setting.Visible == false then
+            ev.CanRender = false
+        end
+    end
+end)
 
 -- Listen for entry render requests.
 Overlay.Events.RenderEntry:Subscribe(function (ev)

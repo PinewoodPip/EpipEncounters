@@ -742,7 +742,7 @@ local Developer = {
         Label = "Debug Display",
         Tooltip = "Enables a UI widget that displays framerate, server tickrate, and mod versions.",
         DefaultValue = false,
-        Developer = true,
+        DeveloperOnly = true,
     },
     {
         ID = "DEBUG_SniffUICalls",
@@ -886,7 +886,7 @@ local PlayerInfo = {
     {
         ID = "PlayerInfo_EnableSortingFiltering",
         Type = "Checkbox",
-        Developer = true,
+        DeveloperOnly = true,
         Label = "Enable sorting/filtering",
         DefaultValue = false,
         Tooltip = Text.Format("Enables the sorting and filtering systems, allowing the settings below to take effect.<br>%s", {
@@ -898,7 +898,7 @@ local PlayerInfo = {
     {
         ID = "PlayerInfo_SortingFunction",
         Type = "Dropdown",
-        Developer = true,
+        DeveloperOnly = true,
         Label = "Sorting Order",
         Tooltip = "Determines the order of statuses, in order of importance.",
         DefaultValue = 1,
@@ -910,7 +910,7 @@ local PlayerInfo = {
     {
         ID = "PlayerInfo_Filter_SourceGen",
         Type = "Checkbox",
-        Developer = true,
+        DeveloperOnly = true,
         Label = "Show Source Generation Status",
         DefaultValue = true,
         Tooltip = "Shows the Source Generation status while sorting/filtering is enabled.",
@@ -918,7 +918,7 @@ local PlayerInfo = {
     {
         ID = "PlayerInfo_Filter_BatteredHarried",
         Type = "Checkbox",
-        Developer = true,
+        DeveloperOnly = true,
         Label = "Show Battered/Harried Statuses",
         DefaultValue = true,
         Tooltip = "Shows the Battered/Harries statuses while sorting/filtering is enabled.<br>If you disable this, it is recommended to enable the B/H display on the portraits.",
@@ -1463,7 +1463,7 @@ local newSettings = {
         NameHandle = TSKs.Developer_DebugDisplay_Name,
         DescriptionHandle = TSKs.Developer_DebugDisplay_Description,
         DefaultValue = false,
-        Developer = true,
+        DeveloperOnly = true,
     },
     -- TODO remove
     -- {
@@ -1539,7 +1539,7 @@ local newSettings = {
         ID = "PlayerInfo_EnableSortingFiltering",
         Type = "Boolean",
         ModTable = "Epip_PlayerInfo",
-        Developer = true,
+        DeveloperOnly = true,
         Name = "Enable sorting/filtering",
         DefaultValue = false,
         Description = Text.Format("Enables the sorting and filtering systems, allowing the settings below to take effect.<br>%s", {
@@ -1552,7 +1552,7 @@ local newSettings = {
         ID = "PlayerInfo_SortingFunction",
         Type = "Choice",
         ModTable = "Epip_PlayerInfo",
-        Developer = true,
+        DeveloperOnly = true,
         NameHandle = TSKs.PlayerInfo_SortingFunction_Name,
         DescriptionHandle = TSKs.PlayerInfo_SortingFunction_Description,
         DefaultValue = 1,
@@ -1569,7 +1569,7 @@ local newSettings = {
         NameHandle = TSKs.PlayerInfo_Filter_SourceGen_Name,
         DescriptionHandle = TSKs.PlayerInfo_Filter_SourceGen_Description,
         DefaultValue = true,
-        Developer = true,
+        DeveloperOnly = true,
     },
     {
         ID = "PlayerInfo_Filter_BatteredHarried",
@@ -1578,7 +1578,7 @@ local newSettings = {
         NameHandle = TSKs.PlayerInfo_Filter_BatteredHarried_Name,
         DescriptionHandle = TSKs.PlayerInfo_Filter_BatteredHarried_Description,
         DefaultValue = true,
-        Developer = true,
+        DeveloperOnly = true,
     },
 
     -- Save/Load settings
