@@ -20,6 +20,13 @@
                     <attribute id="V2" value="0.124023" type="6" />
                 </node>
                 <node id="IconUV">
+                    <attribute id="MapKey" value="AMER_LOOT_CallistoAnomaly" type="22" />
+                    <attribute id="U1" value="0.500977" type="6" />
+                    <attribute id="U2" value="0.624023" type="6" />
+                    <attribute id="V1" value="0.000976563" type="6" />
+                    <attribute id="V2" value="0.124023" type="6" />
+                </node>
+                <node id="IconUV">
                     <attribute id="MapKey" value="InventoryCell" type="22" />
                     <attribute id="U1" value="0.125977" type="6" />
                     <attribute id="U2" value="0.249023" type="6" />
