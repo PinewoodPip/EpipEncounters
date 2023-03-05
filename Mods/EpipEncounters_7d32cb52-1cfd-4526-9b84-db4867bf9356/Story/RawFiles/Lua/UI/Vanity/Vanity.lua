@@ -1,7 +1,9 @@
 
--- Important lessons learnt:
--- You cannot have mouse listeners on shapes, need to use sprites
--- Depth 0 elements have 0 width/height
+---------------------------------------------
+-- UI for the Vanity feature.
+---------------------------------------------
+
+local CharacterSheet = Client.UI.CharacterSheet
 
 ---@class VanityUI : UI
 local Vanity = {
@@ -416,9 +418,6 @@ end
 ---@field Gender Gender
 ---@field Templates table<string,string>
 ---@field Dyes table<string,string>
-
----@type CharacterSheetUI
-local CharacterSheet = Client.UI.CharacterSheet
 
 ---------------------------------------------
 -- METHODS

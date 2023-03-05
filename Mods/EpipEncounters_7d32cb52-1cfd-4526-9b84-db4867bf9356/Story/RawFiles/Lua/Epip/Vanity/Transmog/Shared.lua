@@ -3,6 +3,7 @@
 local Transmog = {
     favoritedTemplates = {},
     activeCharacterTemplates = {},
+    NET_MSG_ICON_REMOVED = "Feature_Vanity_Transmog_NetMessage_IconOverrideRemoved",
     KEEP_APPEARANCE_TAG_PREFIX = "PIP_Vanity_Transmog_KeepAppearance_",
     INVISIBLE_TAG = "PIP_VANITY_INVISIBLE",
     KEEP_ICON_TAG = "PIP_VANITY_TRANSMOG_ICON_%s",
@@ -14,6 +15,12 @@ local Transmog = {
     Hooks = {},
 }
 Epip.RegisterFeature("Vanity_Transmog", Transmog)
+
+---------------------------------------------
+-- NET MESSAGES
+---------------------------------------------
+
+---@class Feature_Vanity_Transmog_NetMessage_IconOverrideRemoved : NetLib_Message_Item
 
 ---------------------------------------------
 -- METHODS

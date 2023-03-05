@@ -275,6 +275,15 @@ Net.RegisterListener("EPIPENCOUNTERS_ItemEquipped", function(payload)
     end
 end)
 
+-- Listen for icon overrides being removed - since the server does not have the property that handles these, it must be done on client.
+Net.RegisterListener(Transmog.NET_MSG_ICON_REMOVED, function (payload)
+    local item = Item.Get(payload.ItemNetID)
+
+    Transmog:DebugLog("Removing client icon override from", item.DisplayName)
+
+    item.Icon = ""
+end)
+
 GameState.Events.GameReady:Subscribe(function (e)
     Transmog.UpdateActiveCharacterTemplates()
 end)

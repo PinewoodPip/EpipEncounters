@@ -29,7 +29,7 @@ function Vanity.TransmogItem(char, item, newTemplate, dye, keepIcon)
     -- TODO still try to dye if template is the same
     if not newTemplate or not item or item.RootTemplate.Id == newTemplate or newTemplate == "" then return nil end
 
-    local _,originalTemplate = Osiris.DB_PIP_Vanity_OriginalTemplate:Get(item.MyGuid, nil)
+    local _, originalTemplate = Osiris.DB_PIP_Vanity_OriginalTemplate:Get(item.MyGuid, nil)
     if not originalTemplate then
         Osiris.DB_PIP_Vanity_OriginalTemplate:Set(item.MyGuid, item.RootTemplate.Id)
         Vanity:DebugLog("Saved original template of " .. item.DisplayName .. ": " .. item.RootTemplate.Id)
@@ -38,14 +38,7 @@ function Vanity.TransmogItem(char, item, newTemplate, dye, keepIcon)
 
     Vanity:Log("Transforming item " .. item.DisplayName .. " to " .. newTemplate)
 
-    local template = Ext.Template.GetTemplate(newTemplate) ---@type ItemTemplate
-    local _, _, _, artifactName = Osiris.DB_AMER_Artifacts:Get(template.Name .. "_" .. template.Id, nil, nil, nil)
-    local oldTemplate = item.RootTemplate
-    if originalTemplate then oldTemplate = Ext.Template.GetTemplate(originalTemplate) end
-
-    local _, _, _, oldArtifactName = Osiris.DB_AMER_Artifacts:Get(oldTemplate.Name .. "_" .. oldTemplate.Id, nil, nil, nil)
-
-    Osi.PROC_AMER_GEN_ObjectTransforming(item.RootTemplate.Name .. "_" .. item.MyGuid, template.Name .. "_" .. template.Id)
+    local template = Ext.Template.GetTemplate(newTemplate) ---@cast template ItemTemplate
 
     if keepIcon then
         local icon = Transmog.GetIconOverride(item)
@@ -68,12 +61,6 @@ function Vanity.TransmogItem(char, item, newTemplate, dye, keepIcon)
     -- Update parameter tag
     Entity.RemoveTagsByPattern(item, Transmog.TRANSMOGGED_TAG_PATTERN)
     Osiris.SetTag(item, Transmog.TRANSMOGGED_TAG:format(newTemplate))
-
-    -- Remove tag when going from normal item to artifact (not if going from artifact to artifact)
-    if artifactName and not oldArtifactName then
-        -- Osi.ClearTag(item.MyGuid, "AMER_UNI") -- Does not work.
-        Osi.SetTag(item.MyGuid, "PIP_FAKE_ARTIFACT")
-    end
     
     Vanity.RefreshAppearance(char, true)
 end
@@ -85,13 +72,25 @@ function Vanity.RevertAppearace(char, item)
     local _,originalTemplate = Osiris.DB_PIP_Vanity_OriginalTemplate:Get(item.MyGuid, nil)
 
     if originalTemplate then
-        Vanity.TransmogItem(char, item, originalTemplate, nil, false)
+        local itemHandle = item.Handle
+        local charHandle = char.Handle
+        local charUserID = char.ReservedUserID
+        
         Osi.ClearTag(item.MyGuid, "PIP_Vanity_Transmogged")
         Osiris.DB_PIP_Vanity_OriginalTemplate:Delete(item.MyGuid, nil)
+        
+        Entity.RemoveTagsByPattern(item, Transmog.TRANSMOGGED_TAG_PATTERN)
+        Entity.RemoveTagsByPattern(item, Transmog.KEEP_ICON_PATTERN)
 
         Ext.OnNextTick(function()
             Ext.OnNextTick(function()
-                Net.PostToUser(char.ReservedUserID, "EPIPENCOUNTERS_Vanity_SetTemplateOverride", {TemplateOverride = originalTemplate})
+                Net.PostToUser(charUserID, "EPIPENCOUNTERS_Vanity_SetTemplateOverride", {TemplateOverride = originalTemplate})
+
+                Net.Broadcast(Transmog.NET_MSG_ICON_REMOVED, {
+                    ItemNetID = Item.Get(itemHandle).NetID,
+                })
+
+                Vanity.RefreshAppearance(Character.Get(charHandle), true)
             end)
         end)
     end
