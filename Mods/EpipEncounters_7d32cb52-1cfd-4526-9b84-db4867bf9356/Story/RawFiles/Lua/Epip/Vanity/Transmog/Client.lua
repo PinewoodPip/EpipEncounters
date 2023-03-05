@@ -237,8 +237,10 @@ end
 Character.Hooks.CreateEquipmentVisuals:Subscribe(function (ev)
     local request = ev.Request
     local item = ev.Item
+    local invisible = item and item:IsTagged(Transmog.INVISIBLE_TAG)
+    invisible = invisible or (ev.Request.Slot == "Helmet" and ev.Character.PlayerData and ev.Character.PlayerData.HelmetOptionState == false) -- Respect helmet visibility choice
 
-    if item and item:IsTagged(Transmog.INVISIBLE_TAG) then
+    if invisible then
         request.VisualResourceID = ""
         request.EquipmentSlotMask = 0
         request.VisualSetSlotMask = 0
