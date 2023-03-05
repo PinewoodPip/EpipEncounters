@@ -202,7 +202,7 @@ function Menu._Setup()
     -- Render tab contents
     -- Defaults to first tab registered (if any!)
     if Menu.currentTabID or #Menu.TabRegistrationOrder > 0 then
-        local tab = Menu.GetTab(Menu.currentTabID or Menu.TabRegistrationOrder[1])
+        local tab = Menu.GetTab(Menu.currentTabID or Menu._GetDefaultTab())
 
         Menu.RenderSettings(tab)
     end
@@ -555,6 +555,24 @@ function Menu._ShowPendingChangesPrompt()
             {ID = 2, Text = "Exit"},
         }
     })
+end
+
+---Returns the default tab shown in the menu.
+---This will be the first tab that would normally be selectable.
+---@return string? `nil` if no valid tabs are registered.
+function Menu._GetDefaultTab()
+    local defaultTabID = nil
+
+    for _,tabID in ipairs(Menu.TabRegistrationOrder) do
+        local tab = Menu.GetTab(tabID)
+
+        if Menu.CanRenderTabButton(tab) then
+            defaultTabID = tabID
+            break
+        end
+    end
+
+    return defaultTabID
 end
 
 ---------------------------------------------
