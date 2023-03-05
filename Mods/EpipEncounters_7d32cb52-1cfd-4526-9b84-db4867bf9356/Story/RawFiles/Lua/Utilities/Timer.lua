@@ -114,7 +114,7 @@ end
 ---@param id string?
 ---@param seconds number
 ---@param handler fun(ev:TimerLib_Event_TimerCompleted)
----@param timerType "Normal"|"Tick"
+---@param timerType ("Normal"|"Tick")? Defaults to `"Normal"`
 ---@return TimerLib_Entry|TimerLib_TickTimerEntry
 function Timer.Start(id, seconds, handler, timerType)
     local timerTable = _TimerEntry
