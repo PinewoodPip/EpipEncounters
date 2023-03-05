@@ -6,6 +6,7 @@
 ---------------------------------------------
 
 ---@class Library : Class
+---@field _Classes table<string, Class> Subclasses registered for this library.
 ---@field protected __ModTable string
 ---@field protected __LoggingLevel Library_LoggingLevel
 ---@field protected __IsDebug boolean
@@ -68,6 +69,9 @@ function Library.Create(modTable, id, data)
         end
         PersistentVars.Features[data.__ModTable][data.__name] = {}
     end
+    
+    -- Create class holder
+    data._Classes = {}
 
     return lib
 end
@@ -207,6 +211,34 @@ if Ext.IsServer() then
 
         return tbl[key]
     end
+end
+
+---------------------------------------------
+-- OOP
+---------------------------------------------
+
+---Registers a class.
+---@generic T
+---@param className `T`
+---@param class table Class table.
+---@param parentClasses string[]? Classes this one inherits from.
+---@return `T`
+function Library:RegisterClass(className, class, parentClasses)
+    self._Classes[className] = class
+
+    return OOP.RegisterClass(className, class, parentClasses)
+end
+
+---Returns a class's base table.
+---@generic T
+---@param className `T`
+---@return `T`
+function Library:GetClass(className)
+    if self._Classes[className] == nil then
+        Library:Error("GetClass", "Attemped to fetch an unregistered class: ", className, "- Make sure the class is from this library.")
+    end
+
+    return OOP.GetClass(className)
 end
 
 ---------------------------------------------
