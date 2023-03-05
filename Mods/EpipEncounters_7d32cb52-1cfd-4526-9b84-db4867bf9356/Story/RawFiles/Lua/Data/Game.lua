@@ -588,7 +588,7 @@ Data.Game.EQUIPMENT_BASE_BOOST_TIERS = {
         },
     },
 
-    Platemail = {
+    Plate = {
         Tiers = 12,
         Boosts = {
             ["_Boost_Armor_Phys10"] = 1,
@@ -606,7 +606,7 @@ Data.Game.EQUIPMENT_BASE_BOOST_TIERS = {
         }
     },
 
-    Robes = {
+    Robe = {
         Tiers = 12,
         Boosts = {
             ["_Boost_Armor_Magic10"] = 1,
