@@ -193,6 +193,26 @@ function Client.GetViewportSize()
     return Vector.Create(Ext.UI.GetViewportSize())
 end
 
+---Translates world coordinates to screen position.
+---@param worldPosition Vector3
+---@param playerIndex integer? Defaults to `1`.
+---@return Vector2
+function Client.WorldPositionToScreen(worldPosition, playerIndex)
+    local camera = Client.Camera.GetPlayerCamera(playerIndex)
+    local proj = camera.Camera.ViewProjection
+    local clientViewport = Client.GetViewportSize()
+    local vp = Vector.Create(clientViewport[1], clientViewport[2], 0, 0) -- TODO include top/left offsets once available - necessary for editor
+    local pos = worldPosition
+    
+    local v11 = (pos[1] * proj[4]) + (pos[2] * proj[8]) + (pos[3] * proj[12]) + proj[16]
+    local v12 = 1 - ((pos[1] * proj[2]) + (pos[2] * proj[6]) + (pos[3] * proj[10]) + proj[14]) / v11
+
+    local screenX = (((((pos[1] * proj[1]) + (pos[2] * proj[5]) + (pos[3] * proj[9]) + proj[13]) / v11) + 1) * 0.5 * vp[1]) + vp[3]
+    local screenY = ((v12 * 0.5) * vp[2]) + vp[4]
+
+    return Vector.Create(screenX, screenY)
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
