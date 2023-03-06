@@ -201,20 +201,3 @@ Ext.RegisterUITypeCall(Client.UI.Data.UITypes.partyInventory, "startDragging", f
 
     Inv.draggedItemHandle = handle
 end)
-
----------------------------------------------
--- SETUP
----------------------------------------------
-
--- Open the game when a session is loaded so it contains data right from the start.
-Utilities.Hooks.RegisterListener("Game", "Loaded", function()
-    if not Client.IsUsingController() then
-        local ui = Inv:GetUI()
-
-        ui:Show()
-
-        Ext.OnNextTick(function()
-            ui:Hide()
-        end)
-    end
-end)
