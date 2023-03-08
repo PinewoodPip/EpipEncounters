@@ -1,5 +1,6 @@
 import os, pathlib, re
 from collections import defaultdict
+from typing import Optional
 
 ALIASES = {}
 
@@ -26,18 +27,20 @@ CONTEXT_SUFFIXES = {
     "RequireBothContexts": "Must be called on both contexts"
 }
 
-FUNCTION_REGEX = re.compile("^function (?P<Namespace>[^ .:]+)(?P<SyntacticSugar>\.|:)(?P<Signature>\S+\(.*\))( end)?$")
 ALIAS_REGEX = re.compile("^---@alias (\S*) (.*)$")
 EVENT_REGEX = re.compile("^---@class .*_(.*) : (.*)?$")
 CLASS_REGEX = re.compile("^---@class (.*)$")
 FIELD_REGEX = re.compile("^---@field (\S*) (.*)$")
 
-DOC_TEMPLATE_REGEX2 = re.compile('^<doc (\w*)="(.*)">')
 DOC_FIELDS_REGEX = re.compile('^<doc fields="(.*)">')
 EMPTY_LINE_REGEX = re.compile("^ *$")
 
 SUBCLASS_REGEX = re.compile("([^_]+)_.+")
 HOOKABLE_REGEX = re.compile("[^_]+_(?:Event|Hook)_.+")
+
+# -----------------
+# Lua file Class
+# -----------------
 
 class LuaFile:
     def __init__(self, path):
@@ -47,11 +50,83 @@ class LuaFile:
     def setContext(self, context:str):
         self.context = context
 
+class Style:
+    TAG_STYLE = {
+        "color": "#b04a6e",
+    }
+
+    def parse(style:dict[str, any]) -> str:
+        output = "".join(["{0}:{1};".format(param, value) for param,value in style.items()])
+
+        return f"style=\"{output}\""
+
+class HTML:
+    def paragraph(text, style):
+        return f"<p {Style.parse(style)}>{text}</p>"
+
+    def italics(text):
+        return f"<i>{text}</i>"
+
+    def bold(text):
+        return f"<b>{text}</b>"
+
+    def code(text):
+        return f"<code>{text}</code>"
+    
+    def bold_italics(text):
+        return HTML.bold(HTML.italics(text))
+
+    def span(text, style):
+        return f"<span {Style.parse(style)}>{text}</span>"
+
+# -----------------
+# Doc Section Class
+# -----------------
+
+class DocSection():
+    def __init__(self, header=None):
+        self.header:Optional[str] = header
+        self.header_prefix = "#"
+        self.infobox:Optional[str] = None
+        self.description:Optional[str] = None
+        self.subsections:list[DocSection] = []
+
+    def addSubSection(self, section):
+        self.subsections.append(section)
+
+    def export(self) -> str:
+        text = []
+
+        if self.header:
+            text.append(f"{self.header_prefix} {self.header}")
+
+        if self.description:
+            text.append(self.description)
+
+        if self.infobox:
+            text.append(f"\n!!! info \"{self.infobox}\"")
+
+        if len(self.subsections) > 0:
+            for subsection in self.subsections:
+                text.append(subsection.export())
+
+        return "\n\n".join(text)
+
+class DocLine(DocSection):
+    def __init__(self, text):
+        self.text = text
+
+    def export(self) -> str:
+        return f"\n\n{self.text}"
+
 # -----------------
 # Metadata Classes
 # -----------------
 
 class Data:
+    def export(self) -> str:
+        raise "Not implemented"
+
     def __str__(self):
         return ""
 
@@ -59,6 +134,9 @@ class Data:
 class Comment(Data):
     def __init__(self, groups):
         self.comment = groups["Comment"]
+
+    def getText(self) -> str:
+        return self.comment
 
     def __str__(self):
         return f"---{self.comment}"
@@ -86,10 +164,21 @@ class CommentedTag(Data):
 
 class TypedTag(Data):
     TAG = ""
+    PARAGRAPH_STYLE = {"margin-bottom": "0px"}
 
     def __init__(self, groups):
-        self.type = groups["Type"]
+        self.type = groups["Type"].replace("\n", "")
+        self.name = groups["Name"] if "Name" in groups else None
         self.comment = groups["Comment"] if "Comment" in groups else "" # Comment is optional
+
+    def getText(self) -> str:
+        return self.comment
+
+    def export(self) -> str:
+        if self.name:
+            return HTML.paragraph(f"{HTML.span(HTML.bold_italics('@' + self.TAG), Style.TAG_STYLE)} {HTML.bold(self.name)} {HTML.code(self.type)} {self.comment}", self.PARAGRAPH_STYLE)
+        else:
+            return HTML.paragraph(f"{HTML.span(HTML.bold_italics('@' + self.TAG), Style.TAG_STYLE)} {HTML.code(self.type)} {self.comment}", self.PARAGRAPH_STYLE)
 
     def __str__(self):
         return f"---@{self.TAG} {self.type} {self.comment}"
@@ -135,8 +224,11 @@ class Symbol:
     def setContext(self, context:str):
         self.context = context
 
-    def getLibraryID(self) -> str:
+    def getLibraryName(self) -> str:
         return "_none"
+    
+    def getLibraryID(self) -> str:
+        raise NotImplemented()
 
     # Returns the category this symbol belongs to,
     # used to group symbols while exporting.
@@ -169,20 +261,25 @@ class Function(Symbol):
     }
 
     def __init__(self, groups:list):
-        self.comments = []
-        self.parameters = []
-        self.returnType = None
+        self.comments:list[Comment] = []
+        self.parameters:list[Parameter] = []
+        self.returnType:Optional[Return] = None
         self.signature = groups["Signature"]
         self.nameSpace = groups["Namespace"]
         self.syntacticSugar = groups["SyntacticSugar"]
         self.metaTags = []
         self.overloads = []
+        self.parameters_signature:str = groups["Parameters"].replace("(", "").replace(")", "") # TODO bruh
+        self.class_name = aliasToLibraryID(self.nameSpace)
 
         # Parse data
         super().__init__(groups)
 
+    def getLibraryName(self) -> str:
+        return self.nameSpace
+    
     def getLibraryID(self) -> str:
-        return aliasToLibraryID(self.nameSpace)
+        return self.class_name
 
     def isPrivate(self) -> bool:
         return self.signature.startswith("_")
@@ -231,9 +328,32 @@ class Class(Symbol):
     def __init__(self, groups):
         self.className = groups["Class"]
         self.comment = None
+        self.subclasses:list[Class] = []
+        self.methods:list[Function] = []
+        self.events:list[Event] = []
+        self.hooks:list[Hook] = []
 
         super().__init__(groups)
+    
+    # Returns whether a symbol is a subclass of this one.
+    def isSubclass(self, symbol) -> bool:
+        regex = re.compile(f'({self.className})_(?P<SubClass>.+)')
 
+        return type(symbol) == Class and regex.match(symbol.className)
+
+    def addSymbol(self, symbol:Symbol):
+        if self.isSubclass(symbol): # TODO events, hooks, functions
+            self.subclasses.insert(symbol)
+        elif type(symbol) == Function:
+            self.methods.append(symbol)
+        elif type(symbol) == Event:
+            self.events.append(symbol)
+        elif type(symbol) == Hook:
+            self.hooks.append(symbol)
+
+    def getLibraryName(self) -> str:
+        return self.className
+    
     def getLibraryID(self) -> str:
         return self.className
 
@@ -284,8 +404,11 @@ class Listenable(Symbol):
             elif type(entry) == ClassField:
                 self.fields.append(entry)
 
+    def getLibraryName(self) -> str:
+        return self.className
+    
     def getLibraryID(self) -> str:
-        return aliasToLibraryID(self.className)
+        return self.className
 
     def getSymbolCategory(self) -> str:
         return "Listenable"
@@ -321,6 +444,9 @@ class NetMessage(Class):
 
         super().__init__(groups)
 
+    def getLibraryName(self) -> str:
+        return self.libraryID
+    
     def getLibraryID(self) -> str:
         return self.libraryID
 
@@ -343,6 +469,94 @@ class NetMessage(Class):
         return "\n".join(output)
 
 # ------------
+#   DOC EXPORTERS
+# ------------
+
+class Exporter():
+    def export(symbol):
+        raise "Not implemented"
+
+class FancyExporter(Exporter): # TODO consider @see tags
+    def __exportClass(symbol:Class):
+        section = DocSection() # TODO className var
+
+        # Insert events
+        if len(symbol.events) > 0 or len(symbol.hooks) > 0:
+            section.addSubSection(DocLine("## Events and Hooks"))
+            for event in symbol.events:
+                section.addSubSection(FancyExporter.export(event))
+            for hook in symbol.hooks:
+                section.addSubSection(FancyExporter.export(hook))
+
+        # Insert functions
+        if len(symbol.methods) > 0:
+            section.addSubSection(DocLine("## Methods"))
+            for method in symbol.methods:
+                if not method.isPrivate():
+                    section.addSubSection(FancyExporter.export(method))
+
+        # Insert subclasses
+        if len(symbol.subclasses) > 0:
+            section.addSubSection(DocLine("## Subclasses"))
+            for subclass in symbol.subclasses:
+                section.subsections.append(subclass.export(True))
+
+        return section
+
+    def __exportFunction(symbol:Function):
+        section = DocSection(symbol.signature)
+        section.header_prefix = "####"
+        # section.description = "".join([comment.getText() for comment in symbol.comments])
+
+        # Insert function signature
+        return_signature = ""
+        if symbol.returnType:
+            return_signature = f"\n   -> {symbol.returnType.type}"
+        section.addSubSection(DocLine(f"```lua\nfunction {symbol.getLibraryName()}{symbol.syntacticSugar}{symbol.signature}({symbol.parameters_signature}){return_signature}\n```"))
+
+        section.addSubSection(DocLine("\n".join([comment.getText() for comment in symbol.comments])))
+
+        for param in symbol.parameters:
+            section.addSubSection(FancyExporter.__exportMetadata(param))
+
+        if symbol.returnType:
+            section.addSubSection(FancyExporter.__exportMetadata(symbol.returnType))
+
+        return section
+
+    def __exportMetadata(data:Data) -> DocSection:
+        section = DocLine(data.export())
+
+        return section
+
+    def __exportListenable(symbol:Listenable) -> DocSection:
+        # TODO include snippet showing how to subscribe, using global path (if available) or classname as fallback
+        listenable_type = "event" if type(symbol) == Event else "hook"
+        section = DocSection(f"{symbol.event} ({listenable_type})")
+        section.header_prefix = "#####"
+        section.description = "".join([comment.getText() for comment in symbol.comments])
+
+        for field in symbol.fields:
+            section.addSubSection(FancyExporter.__exportMetadata(field))
+
+        return section
+
+    def export(symbol) -> DocSection:
+        SYMBOL_TO_FUNC = {
+            Class: FancyExporter.__exportClass,
+            Function: FancyExporter.__exportFunction,
+            Event: FancyExporter.__exportListenable,
+            Hook: FancyExporter.__exportListenable,
+            # TODO net event
+        }
+
+        if type(symbol) in SYMBOL_TO_FUNC:
+            return SYMBOL_TO_FUNC[type(symbol)](symbol)
+        else:
+            raise "Not implemented for type " + str(type(symbol))
+        
+
+# ------------
 #   MATCHERS
 # ------------
 
@@ -352,32 +566,33 @@ class Matcher():
         self.classType = classType
 
 DATA_MATCHERS = [
-    Matcher(re.compile("^---@param (?P<Type>\S*) (?P<Comment>.*)$"), Parameter),
+    Matcher(re.compile("^---@param (?P<Name>\S*) (?P<Type>\S*) ?(?P<Comment>.*)?$"), Parameter),
     Matcher(re.compile("^---@overload (?P<Type>.+)$"), Overload),
-    Matcher(re.compile("^---@return (?P<Type>\S*) ?(?P<Comment>.*)$"), Return),
-    Matcher(re.compile("^---@field (?P<Type>\S*) ?(?P<Comment>.*)$"), ClassField),
+    Matcher(re.compile("^---@return (?P<Type>[^-]*) ?(-- ?)?(?P<Comment>.*)?$"), Return),
+    Matcher(re.compile("^---@field (?P<Name>\S*) (?P<Type>\S*) ?(?P<Comment>.*)?$"), ClassField),
     Matcher(re.compile("^---@meta (?P<Comment>.*)$"), Meta),
     Matcher(re.compile("^---(?P<Comment>[^-@].+)$"), Comment),
     Matcher(re.compile("^(local )?(?P<Alias>\S+) = {"), ClassAlias),
-    Matcher(re.compile("^(local )?(?P<Alias>\S+) = \S+$"), ClassAlias),
+    Matcher(re.compile("^(local )?(?P<Alias>\S+) = .+$"), ClassAlias),
     Matcher(re.compile("^-- (?P<Region>[[:upper:]]+)$"), FileRegionHeader)
 ]
 
 # Symbol regex patterns, in order of priority.
 SYMBOL_MATCHERS = [
-    Matcher(FUNCTION_REGEX, Function),
-    Matcher(re.compile("^---@class (?P<Class>\S*)_Hook_(?P<Event>\S*)(?: : Event)?$"), Hook),
+    Matcher(re.compile("^function (?P<Namespace>[^ .:]+)(?P<SyntacticSugar>\.|:)(?P<Signature>\S+)(?P<Parameters>\(.*\))( end)?$"), Function),
+    Matcher(re.compile("^---@class (?P<Class>\S*)_Hook_(?P<Event>\S*)(?: : Event)?$"), Hook), # TODO this has a flaw: it will not pick up events that ex. re-use the Empty class
     Matcher(re.compile("^---@class (?P<Class>\S*)_Event_(?P<Event>\S*)(?: : Event)?$"), Event),
-    Matcher(re.compile("^---@class (?P<Signature>(?P<Class>EPIPENCOUNTERS_(?P<Library>\S*)_(?P<Event>\S*))(?: : .+))$"), NetMessage),
+    Matcher(re.compile("^---@class (?P<Signature>(?P<Class>EPIPENCOUNTERS_(?P<Library>\S*)_(?P<Event>\S*))(?: : .+))$"), NetMessage), # TODO check for NetLib_Message inheritance instead
 
     # Generic class should have the lowest priority
     Matcher(re.compile("^---@class (?P<Class>\S+)"), Class),
 ]
 
+DOC_PACKAGE_REGEX = re.compile('^<doc package="(.+)">$')
 DOC_TEMPLATE_REGEX = re.compile('^<doc class="(.+)" symbols="(.+)">')
 DOC_TEMPLATE_END_REGEX = re.compile('^<\/doc>')
 
-class Library:
+class Library_deprecated:
     SYMBOL_TYPE_EXPORT_ORDER = [
         "Shared",
         "Client",
@@ -386,9 +601,7 @@ class Library:
 
     def __init__(self, name):
         self.name = name
-        # self.context = context
         self.symbols = []
-        self.absolutePath = "TODO_AbsolutePath"
 
     def addSymbol(self, symbol:Symbol):
         self.symbols.append(symbol)
@@ -398,7 +611,7 @@ class Library:
 
         for symbol in self.symbols:
             output += "Symbol: " + type(symbol).__name__ + "\n"
-            output += "Library: " + symbol.getLibraryID() + "\n"
+            output += "Library: " + symbol.getLibraryName() + "\n"
             # output += "Context: " + self.context + "\n"
 
             output += str(symbol) + "\n\n"
@@ -437,7 +650,7 @@ class DocParser:
         self.lua_file = lua_file
         self.file = open(self.lua_file.path, "r")
         self.lines = self.file.readlines()
-        self.symbolsPerLibrary = defaultdict(list)
+        self.symbols:list[Symbol] = []
 
         self.Parse()
 
@@ -446,9 +659,7 @@ class DocParser:
             symbol = self.getSymbol()
 
             if symbol:
-                libraryID = symbol.getLibraryID()
-
-                self.symbolsPerLibrary[libraryID].append(symbol)
+                self.symbols.append(symbol)
 
     def getDataOnLine(self, line):
         data = None
@@ -525,12 +736,14 @@ class DocParser:
 class DocGenerator:
     LOAD_ORDER_SCRIPT_REGEX = re.compile("    \"(?P<Script>\S+\.lua)\",")
     SCRIPT_SET_REGEX = re.compile("\"(?P<Script>[^\.]+)\"")
-    libraries = {} # TODO don't make this static
 
     def __init__(self, mod_root_path:str, docs_root_path:str, annotation_directories:list[str]):
         self.mod_root_path = mod_root_path
         self.docs_root_path = docs_root_path
         self.annotation_directories = annotation_directories
+        self.classes:dict[str, Class] = {}
+        self.all_symbols:list[Symbol] = []
+        self.linked_symbols:set[Symbol] = set() # Symbols that have already been linked to their corresponding classes.
 
     def getLuaFiles(self) -> list:
         lua_files = {} # Maps path to LuaFile
@@ -582,6 +795,20 @@ class DocGenerator:
 
         return lua_files
 
+    def __linkSymbolsToClasses(self):
+        # Insert symbols into appropriate classes
+        for symbol in self.all_symbols:
+            if symbol not in self.linked_symbols:
+                classIdentifier = symbol.getLibraryID()
+
+                if classIdentifier in self.classes:
+                    classSymbol = self.classes[classIdentifier]
+                    classSymbol.addSymbol(symbol) # TODO make sure one class doesnt get added to itself?
+                else:
+                    print("Found symbol with no class: " + classIdentifier)
+
+                self.linked_symbols.add(symbol)
+
     def updateDocs(self) -> None:
         files = self.getLuaFiles()
 
@@ -590,29 +817,28 @@ class DocGenerator:
             print("Parsing", absolute_path)
             self.parseLuaFile(lua_file)
 
+        self.__linkSymbolsToClasses()
+
         # Update markdown docs
-        for root_path, dirs, files in os.walk(self.docs_root_path):
+        for root_path, _, files in os.walk(self.docs_root_path):
             for file_name in files:
                 if pathlib.Path(file_name).suffix == ".md" and file_name != "patchnotes.md":
                     self.updateDocFile(os.path.join(root_path, file_name))
 
-    def getLibrary(self, id:str) -> Library:
-        return self.libraries[id]
-
     # Gathers symbols from a lua file.
     def parseLuaFile(self, lua_file:LuaFile):
         parser = DocParser(lua_file)
-        library = None
         
-        for key in parser.symbolsPerLibrary:
-            if key not in self.libraries: # Create a library if it didn't already exist
-                library = Library(key)
-                self.libraries[key] = library
-            else: # Else append the symbols to the existing ones
-                library = self.libraries[key]
+        for symbol in parser.symbols:
+            classIdentifier = symbol.getLibraryID()
+            if type(symbol) == Class and classIdentifier not in self.classes:
+                self.classes[classIdentifier] = symbol
 
-            for symbol in parser.symbolsPerLibrary[key]:
-                library.addSymbol(symbol)
+                self.all_symbols.append(symbol)    
+            elif type(symbol) != Class:
+                self.all_symbols.append(symbol)  
+
+        self.__linkSymbolsToClasses()
     
     def updateDocFile(self, file_path:str):
         template = ""
@@ -621,37 +847,21 @@ class DocGenerator:
 
         with open(file_path, "r") as f:
             for line in f.readlines():
-                openMatch = DOC_TEMPLATE_REGEX.match(line)
                 closeMatch = DOC_TEMPLATE_END_REGEX.match(line)
+                packageMatch = DOC_PACKAGE_REGEX.match(line)
 
                 if closeMatch:
                     removing = False
-                elif openMatch:
+                    template += "\n"
+                elif packageMatch:
+                    package_name = packageMatch.groups()[0]
+                    class_symbol = self.classes[package_name]
+
                     removing = True
                     replacedSomething = True
                     template += line + "\n"
-
-                    # categories = openMatch.groups()[0].split(", ")
-                    libName = openMatch.groups()[0]
-                    symbolTypes = openMatch.groups()[1]
-                    symbolTypes = symbolTypes.split(",")
-
-                    # Export subclasses
-                    if "_SubClasses" in symbolTypes:
-                        libs_to_export = []
-
-                        for _,lib in self.libraries.items():
-                            regex = re.compile(f'({libName})_(?P<SubClass>.+)')
-                            match = regex.match(lib.name)
-                            is_hookable = HOOKABLE_REGEX.match(lib.name) != None # Do not consider listenables as subclasses.
-
-                            if match and match.groups()[0] == libName and not is_hookable and not "Events" in match.groupdict()["SubClass"]:
-                                libs_to_export.append(lib)
-
-                        for lib in libs_to_export:
-                            template += lib.export(["Class", "Function"])
-                    else:
-                        template += self.libraries[libName].export(symbolTypes)
+                    
+                    template += FancyExporter.export(class_symbol).export() # TODO inject factory
 
                 if not removing:
                     template += line
