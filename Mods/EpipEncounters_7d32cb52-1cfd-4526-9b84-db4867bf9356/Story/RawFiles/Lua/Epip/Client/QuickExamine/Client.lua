@@ -350,11 +350,14 @@ function QuickExamine.IsWidgetSetting(setting)
     return isWidgetSetting
 end
 
+---Sets the entity displayed on the UI and opens it, if it was closed.
+---The entity must pass `IsEligible()` and be different from the current entity.
+---@see Feature_QuickExamine.IsEligible
 ---@param entity Entity
----@param forceUpdate boolean? Defaults to false.
+---@param forceUpdate boolean? If `true`, the UI will be refreshed even if the entity passed is the same as current. Defaults to `false`.
 function QuickExamine.SetEntity(entity, forceUpdate)
     if entity and QuickExamine.IsEligible(entity) then
-        if entity.NetID ~= QuickExamine.entityNetID or forceUpdate then
+        if entity.NetID ~= QuickExamine.entityNetID or forceUpdate or not QuickExamine.UI:IsVisible() then
             local width = QuickExamine.GetWidth()
             local height = QuickExamine.GetHeight()
             local UI = QuickExamine.UI
@@ -416,7 +419,7 @@ Client.UI.OptionsInput.Events.ActionExecuted:RegisterListener(function(action, _
     if action == "EpipEncounters_QuickExamine" then
         local char = Pointer.GetCurrentCharacter(nil, true)
 
-        QuickExamine.SetEntity(char)
+        QuickExamine.SetEntity(char, true)
     end
 end)
 
@@ -547,7 +550,7 @@ local function Setup()
     UI.CloseButton = closeButton
 
     local lockButton = panel:AddChild("Lock", "GenericUI_Element_StateButton")
-    lockButton:SetType(Generic.ELEMENTS.StateButton.TYPES.LOCK)
+    lockButton:SetType("Lock")
     lockButton:SetActive(QuickExamine.IsLocked())
     lockButton.Events.StateChanged:Subscribe(function (ev)
         QuickExamine.lockCharacter = ev.Active
