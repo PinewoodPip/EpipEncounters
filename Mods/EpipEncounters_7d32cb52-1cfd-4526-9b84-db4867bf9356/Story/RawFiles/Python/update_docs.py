@@ -10,34 +10,6 @@ def aliasToLibraryID(alias):
 
     return alias
 
-LUA_IGNORE = {
-    "ExtIdeHelpers.lua": True,
-    "EpipIdeHelpers.lua": True,
-}
-
-EVENTS = {
-    "Event" : True,
-    "Hook" : True,
-}
-
-CONTEXT_SUFFIXES = {
-    "ContextClient": "Client-only",
-    "ContextServer": "Server-only",
-    "EE": "EE-related",
-    "RequireBothContexts": "Must be called on both contexts"
-}
-
-ALIAS_REGEX = re.compile("^---@alias (\S*) (.*)$")
-EVENT_REGEX = re.compile("^---@class .*_(.*) : (.*)?$")
-CLASS_REGEX = re.compile("^---@class (.*)$")
-FIELD_REGEX = re.compile("^---@field (\S*) (.*)$")
-
-DOC_FIELDS_REGEX = re.compile('^<doc fields="(.*)">')
-EMPTY_LINE_REGEX = re.compile("^ *$")
-
-SUBCLASS_REGEX = re.compile("([^_]+)_.+")
-HOOKABLE_REGEX = re.compile("[^_]+_(?:Event|Hook)_.+")
-
 # -----------------
 # Lua file Class
 # -----------------
@@ -87,12 +59,15 @@ class DocSection():
     def __init__(self, header=None):
         self.header:Optional[str] = header
         self.header_prefix = "#"
-        self.infobox:Optional[str] = None
+        self.infoboxes:list[InfoBox] = []
         self.description:Optional[str] = None
         self.subsections:list[DocSection] = []
 
     def addSubSection(self, section):
-        self.subsections.append(section)
+        if type(section) == InfoBox:
+            self.infoboxes.append(section)
+        else:
+            self.subsections.append(section)
 
     def export(self) -> str:
         text = []
@@ -103,8 +78,8 @@ class DocSection():
         if self.description:
             text.append(self.description)
 
-        if self.infobox:
-            text.append(f"\n!!! info \"{self.infobox}\"")
+        for infobox in self.infoboxes:
+            text.append(infobox.export())
 
         if len(self.subsections) > 0:
             for subsection in self.subsections:
@@ -118,6 +93,17 @@ class DocLine(DocSection):
 
     def export(self) -> str:
         return f"\n\n{self.text}"
+
+# Represents an infobox.
+class InfoBox(DocSection):
+    def __init__(self, header, text=None, box_type="info"):
+        self.box_type = box_type
+        self.text:Optional[str] = text
+
+        super().__init__(header)
+
+    def export(self) -> str:
+        return f"\n\n!!! {self.box_type} \"{self.header}\"\n    {self.text}"
 
 # -----------------
 # Metadata Classes
@@ -199,6 +185,9 @@ class ClassField(TypedTag):
 class Meta(CommentedTag):
     TAG = "meta"
 
+class CustomAttribute(TypedTag):
+    TAG = "meta"
+
 # -----------------
 # Symbol Classes
 # -----------------
@@ -241,6 +230,15 @@ class Symbol:
     def addData(self, data:list):
         for entry in data:
             self.data.append(entry)
+
+    def get_data(self, dataType:type) -> list[Data]:
+        data = []
+
+        for entry in self.data:
+            if type(entry) == dataType:
+                data.append(entry)
+
+        return data
 
     # Returns all of this symbol's metadata stringified,
     # in a list.
@@ -502,6 +500,19 @@ class FancyExporter(Exporter): # TODO consider @see tags
                 section.subsections.append(subclass.export(True))
 
         return section
+    
+    def __add_infoboxes(symbol:Symbol, section:DocSection):
+        infoboxes = []
+        tags:list[CustomAttribute] = symbol.get_data(CustomAttribute)
+
+        for tag in tags:
+            if tag.type == "EE":
+                infoboxes.append(InfoBox("EE-specific", "This symbol is relevant to Epic Encounters only."))
+            elif tag.type == "RequiresBothContexts":
+                infoboxes.append(InfoBox("Shared call", "Must be called on both contexts."))
+
+        for infobox in infoboxes:
+            section.addSubSection(infobox)
 
     def __exportFunction(symbol:Function):
         section = DocSection(symbol.signature)
@@ -551,7 +562,11 @@ class FancyExporter(Exporter): # TODO consider @see tags
         }
 
         if type(symbol) in SYMBOL_TO_FUNC:
-            return SYMBOL_TO_FUNC[type(symbol)](symbol)
+            section = SYMBOL_TO_FUNC[type(symbol)](symbol)
+            
+            FancyExporter.__add_infoboxes(symbol, section)
+
+            return section
         else:
             raise "Not implemented for type " + str(type(symbol))
         
@@ -574,7 +589,8 @@ DATA_MATCHERS = [
     Matcher(re.compile("^---(?P<Comment>[^-@].+)$"), Comment),
     Matcher(re.compile("^(local )?(?P<Alias>\S+) = {"), ClassAlias),
     Matcher(re.compile("^(local )?(?P<Alias>\S+) = .+$"), ClassAlias),
-    Matcher(re.compile("^-- (?P<Region>[[:upper:]]+)$"), FileRegionHeader)
+    Matcher(re.compile("^-- (?P<Region>[[:upper:]]+)$"), FileRegionHeader),
+    Matcher(re.compile("^---@tpwd (?P<Type>\S*) ?(?P<Comment>.*)?$"), CustomAttribute),
 ]
 
 # Symbol regex patterns, in order of priority.
