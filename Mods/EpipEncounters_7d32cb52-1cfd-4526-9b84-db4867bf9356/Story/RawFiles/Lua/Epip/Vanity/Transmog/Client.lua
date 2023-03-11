@@ -169,17 +169,13 @@ function Transmog.BelongsToCategory(templateData, category)
     end
 
     local matchingTagsCount = 0
-    local categoryTagCount = 0
-
-    for i,v in pairs(category.Tags) do
-        categoryTagCount = categoryTagCount + 1
-    end
+    local categoryTagCount = table.getKeyCount(category.Tags)
 
     -- 0-tag categories work too, accepting all templates
     local belongs = matchingTagsCount == categoryTagCount
 
     if not belongs then
-        for tag,bool in pairs(category.Tags) do
+        for tag,_ in pairs(category.Tags) do
             if templateData.Tags[tag] then
                 matchingTagsCount = matchingTagsCount + 1
     
@@ -200,11 +196,9 @@ end
 ---@param item EclItem
 ---@return table<string,VanityCategoryQuery>
 function Transmog.GetCategories(item)
-    -- Categories
-    local slot = Item.GetItemSlot(item)
     local categories = {}
 
-    for i,id in ipairs(Vanity.CATEGORY_ORDER) do
+    for _,id in ipairs(Vanity.CATEGORY_ORDER) do
         local categoryData = Vanity.CATEGORIES[id]
         local inserted = false
         local categoryQuery = {
@@ -285,14 +279,13 @@ Net.RegisterListener(Transmog.NET_MSG_ICON_REMOVED, function (payload)
     item.Icon = ""
 end)
 
-GameState.Events.GameReady:Subscribe(function (e)
+-- Update character templates upon game start, active character changing, and refreshing appearance.
+GameState.Events.GameReady:Subscribe(function (_)
     Transmog.UpdateActiveCharacterTemplates()
 end)
-
 Utilities.Hooks.RegisterListener("Client", "ActiveCharacterChanged", function()
     Transmog.UpdateActiveCharacterTemplates()
 end)
-
 Net.RegisterListener("EPIPENCOUNTERS_Vanity_RefreshSheetAppearance", function(_)
     Transmog.UpdateActiveCharacterTemplates()
 end)
@@ -341,7 +334,7 @@ Character.Hooks.CreateEquipmentVisuals:Subscribe(function (ev)
         local slot = ev.Request.Slot
 
         if transmoggedTemplate then
-            local template = Ext.Template.GetTemplate(transmoggedTemplate) ---@type ItemTemplate
+            local template = Ext.Template.GetTemplate(transmoggedTemplate) ---@cast template ItemTemplate
 
             if slot == "Weapon" or slot == "Shield" then
                 ev.Request.VisualResourceID = template.VisualTemplate
