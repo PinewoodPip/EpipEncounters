@@ -454,6 +454,13 @@ function Text.Dump(obj, opts)
     return Ext.Json.Stringify(obj, opts)
 end
 
+---Returns whether a TSK handle was registered **through the Text library.**
+---@param handle TranslatedStringHandle
+---@return boolean
+function Text.IsTranslatedStringRegistered(handle)
+    return Text._RegisteredTranslatedHandles[handle] ~= nil
+end
+
 ---Returns the string bound to a TranslatedStringHandle, or a key.
 ---@param handle TranslatedStringHandle|string|TextLib_TranslatedString Accepts handles or keys.
 ---@param fallBack string?
@@ -461,20 +468,27 @@ end
 function Text.GetTranslatedString(handle, fallBack)
     local str
 
-    -- Object overload.
-    if type(handle) == "table" then
-        str = handle:GetString()
+    -- TSKs cannot be loaded during LoadModule due to a bug with TSKs that have a handle but do not exist within an lsx.
+    -- Doing so causes them to be cleared.
+    if GameState.GetState() == "LoadModule" and not Text.IsTranslatedStringRegistered(handle) then
+        Text:LogWarning("Reading non-Epip TSKs during module load is not supported!")
+        str = ""
     else
-        str = Ext.L10N.GetTranslatedString(handle)
-    end
-
-    if not str or str == "" then
-        str = Ext.L10N.GetTranslatedStringFromKey(handle)
-    end
-
-    -- Consider empty strings invalid and use fallback.
-    if str == "" then
-        str = fallBack or handle ---@type string
+        -- Object overload.
+        if type(handle) == "table" then
+            str = handle:GetString()
+        else
+            str = Ext.L10N.GetTranslatedString(handle)
+        end
+    
+        if not str or str == "" then
+            str = Ext.L10N.GetTranslatedStringFromKey(handle)
+        end
+    
+        -- Consider empty strings invalid and use fallback.
+        if str == "" then
+            str = fallBack or handle ---@type string
+        end
     end
 
     return str
