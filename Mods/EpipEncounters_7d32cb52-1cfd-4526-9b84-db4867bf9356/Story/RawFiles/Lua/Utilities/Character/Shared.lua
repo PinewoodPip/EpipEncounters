@@ -476,10 +476,10 @@ end
 ---@return boolean
 function Character.HasMeleeWeapon(char)
     local weapon = char:GetItemBySlot("Weapon")
-    if weapon then weapon = Ext.Entity.GetItem(weapon) end
+    if weapon then weapon = Item.Get(weapon) end
     
     local offhand = char:GetItemBySlot("Shield")
-    if offhand then offhand = Ext.Entity.GetItem(offhand) end
+    if offhand then offhand = Item.Get(offhand) end
     
     return Item.IsMeleeWeapon(weapon) or Item.IsMeleeWeapon(offhand)
 end
@@ -489,7 +489,7 @@ end
 ---@return boolean
 function Character.HasRangedWeapon(char)
     local weapon = char:GetItemBySlot("Weapon")
-    if weapon then weapon = Ext.Entity.GetItem(weapon) end
+    if weapon then weapon = Item.Get(weapon) end
 
     return Item.IsRangedWeapon(weapon)
 end
@@ -509,7 +509,7 @@ end
 ---@return boolean
 function Character.HasShield(char)
     local offhand = char:GetItemBySlot("Shield")
-    if offhand then offhand = Ext.Entity.GetItem(offhand) end
+    if offhand then offhand = Item.Get(offhand) end
 
     return Item.IsShield(offhand)
 end
@@ -519,10 +519,10 @@ end
 ---@return boolean
 function Character.HasDagger(char)
     local weapon = char:GetItemBySlot("Weapon")
-    if weapon then weapon = Ext.Entity.GetItem(weapon) end
+    if weapon then weapon = Item.Get(weapon) end
     
     local offhand = char:GetItemBySlot("Shield")
-    if offhand then offhand = Ext.Entity.GetItem(offhand) end
+    if offhand then offhand = Item.Get(offhand) end
 
     return Item.IsDagger(weapon) or Item.IsDagger(offhand)
 end
