@@ -249,9 +249,10 @@ Character.Hooks.CreateEquipmentVisuals:Subscribe(function (ev)
     end
 end)
 
-Net.RegisterListener("EPIPENCOUNTERS_ItemEquipped", function(payload)
-    local char = Character.Get(payload.NetID)
-    local item = Item.Get(payload.ItemNetID)
+-- Listen for items being equipped to run bookkeeping routines and reapply appearance.
+Character.Events.ItemEquipped:Subscribe(function (ev)
+    local char = ev.Character
+    local item = ev.Item
 
     if char == Client.GetCharacter() then
         if not Vanity.IsOpen() and Transmog.ShouldKeepAppearance(item) then

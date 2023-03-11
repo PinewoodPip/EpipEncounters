@@ -72,6 +72,7 @@ Character = {
 
     Events = {
         StatusApplied = {}, ---@type Event<CharacterLib_Event_StatusApplied>
+        ItemEquipped = {}, ---@type Event<CharacterLib_Event_ItemEquipped>
     },
     Hooks = {
         CreateEquipmentVisuals = {}, ---@type Event<CharacterLib_Hook_CreateEquipmentVisuals> Client-only.
@@ -90,6 +91,11 @@ Epip.InitializeLibrary("Character", Character)
 ---@field Victim Character|Item
 ---@field Status EclStatus|EsvStatus
 
+---@class CharacterLib_Event_ItemEquipped
+---@field Character Character
+---@field Item Item
+---@field Slot ItemSlot
+
 ---------------------------------------------
 -- NET MESSAGES
 ---------------------------------------------
@@ -97,6 +103,8 @@ Epip.InitializeLibrary("Character", Character)
 ---@class EPIP_CharacterLib_StatusApplied : NetLib_Message
 ---@field OwnerNetID NetId
 ---@field StatusNetID NetId
+
+---@class EPIP_CharacterLib_ItemEquipped : NetLib_Message_Character, NetLib_Message_Item
 
 ---------------------------------------------
 -- CLASSES
@@ -637,4 +645,23 @@ function Character.GetStatusByNetID(char, netID)
     end
 
     return status
+end
+
+---Throws the ItemEquipped event.
+---@param character Character
+---@param item Item
+function Character._ThrowItemEquippedEvent(character, item)
+    local equippedSlot
+
+    if Ext.IsServer() then
+        equippedSlot = item.Slot
+    else
+        equippedSlot = item.CurrentSlot
+    end
+    
+    Character.Events.ItemEquipped:Throw({
+        Character = character,
+        Item = item,
+        Slot = Ext.Enums.ItemSlot[equippedSlot],
+    })
 end

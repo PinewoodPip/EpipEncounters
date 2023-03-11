@@ -49,3 +49,15 @@ Ext.Events.BeforeStatusApply:Subscribe(function (ev)
         })
     end)
 end, {Priority = -999999999})
+
+-- Forward item equipped events.
+Osiris.RegisterSymbolListener("ItemEquipped", 2, "after", function(itemGUID, charGUID)
+    local char, item = Character.Get(charGUID), Item.Get(itemGUID)
+    
+    Character._ThrowItemEquippedEvent(char, item)
+
+    Net.Broadcast("EPIP_CharacterLib_ItemEquipped", {
+        CharacterNetID = char.NetID,
+        ItemNetID = item.NetID,
+    })
+end)

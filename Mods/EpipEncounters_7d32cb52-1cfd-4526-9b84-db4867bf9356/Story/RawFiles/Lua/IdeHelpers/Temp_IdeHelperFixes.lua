@@ -161,7 +161,7 @@ function Ext_ClientVisual.CreateOnCharacter(position, char) end
 function Ext_ClientVisual.CreateOnItem(position, item) end
 
 ---------------------------------------------
--- Item
+-- ITEM
 ---------------------------------------------
 
 ---@class EsvItem
@@ -169,3 +169,10 @@ function Ext_ClientVisual.CreateOnItem(position, item) end
 
 ---@class CDivinityStatsItem
 ---@field Rarity ItemLib_Rarity
+
+---------------------------------------------
+-- OTHER
+---------------------------------------------
+
+---@type unknown
+Ext.Enums = {}

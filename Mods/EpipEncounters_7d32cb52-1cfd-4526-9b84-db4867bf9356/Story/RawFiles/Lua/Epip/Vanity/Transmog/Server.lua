@@ -300,18 +300,6 @@ Net.RegisterListener("EPIPENCOUNTERS_Vanity_RefreshAppearance", function (payloa
     Vanity.RefreshAppearance(char, payload.UseAltStatus)
 end)
 
--- Forward item equipped events.
-Osiris.RegisterSymbolListener("ItemEquipped", 2, "after", function(item, char)
-    if Osiris.DB_IsPlayer:Get(char) then
-        char = Ext.GetCharacter(char)
-        
-        Net.Broadcast("EPIPENCOUNTERS_ItemEquipped", {
-            NetID = char.NetID,
-            ItemNetID = Ext.GetItem(item).NetID,
-        })
-    end
-end)
-
 -- TODO better handling - this can break with multiple people equipping stuff at once
 Utilities.Hooks.RegisterListener("ContextMenus_Dyes", "ItemBeingDyed", function(item)
     Vanity.ignoreItemEquips = true

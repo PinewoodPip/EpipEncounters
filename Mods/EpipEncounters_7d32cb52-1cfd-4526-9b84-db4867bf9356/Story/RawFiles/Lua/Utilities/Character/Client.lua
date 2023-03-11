@@ -121,3 +121,10 @@ Net.RegisterListener("EPIP_CharacterLib_StatusApplied", function (payload)
         end
     end
 end)
+
+-- Forward item equip events.
+Net.RegisterListener("EPIP_CharacterLib_ItemEquipped", function (payload)
+    local char, item = Character.Get(payload.CharacterNetID), Item.Get(payload.ItemNetID)
+    
+    Character._ThrowItemEquippedEvent(char, item)
+end)
