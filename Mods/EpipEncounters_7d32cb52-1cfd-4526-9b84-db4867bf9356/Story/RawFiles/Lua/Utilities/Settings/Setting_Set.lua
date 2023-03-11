@@ -7,7 +7,7 @@ local SetDataStructure = DataStructures.Get("DataStructures_Set")
 local _Set = {
     Type = "Set",
 }
-Inherit(_Set, Settings._SettingClass)
+Settings:RegisterClass("SettingsLib_Setting_Set", _Set, {"SettingsLib_Setting"})
 Settings.RegisterSettingType("Set", _Set)
 
 function _Set:GetDefaultValue()

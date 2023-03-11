@@ -7,7 +7,7 @@ local _Map = {
     Type = "Map",
     DefaultValue = {},
 }
-Inherit(_Map, Settings._SettingClass)
+Settings:RegisterClass("SettingsLib_Setting_Map", _Map, {"SettingsLib_Setting"})
 Settings.RegisterSettingType("Map", _Map)
 
 function _Map:GetDefaultValue()

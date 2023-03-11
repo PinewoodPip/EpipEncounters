@@ -9,7 +9,7 @@ local _Choice = {
     Choices = {}, ---@type SettingsLib_Setting_Choice_Entry[]
     DefaultValue = "",
 }
-Inherit(_Choice, Settings._SettingClass)
+Settings:RegisterClass("SettingsLib_Setting_Choice", _Choice, {"SettingsLib_Setting"})
 Settings.RegisterSettingType("Choice", _Choice)
 
 ---@class SettingsLib_Setting_Choice_Entry

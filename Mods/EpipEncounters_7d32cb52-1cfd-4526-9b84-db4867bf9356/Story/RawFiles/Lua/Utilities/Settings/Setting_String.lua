@@ -7,7 +7,7 @@ local _String = {
     Type = "String",
     DefaultValue = "",
 }
-Inherit(_String, Settings._SettingClass)
+Settings:RegisterClass("SettingsLib_Setting_String", _String, {"SettingsLib_Setting"})
 Settings.RegisterSettingType("String", _String)
 
 ---------------------------------------------

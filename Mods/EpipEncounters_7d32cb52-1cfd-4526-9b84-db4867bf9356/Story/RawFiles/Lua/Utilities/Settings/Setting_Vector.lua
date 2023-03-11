@@ -7,7 +7,7 @@ local Settings = Settings
 local _Vector = {
     Type = "ClampedNumber",
 }
-Inherit(_Vector, Settings._SettingClass)
+Settings:RegisterClass("SettingsLib_Setting_Vector", _Vector, {"SettingsLib_Setting"})
 Settings.RegisterSettingType("Vector", _Vector)
 
 ---------------------------------------------

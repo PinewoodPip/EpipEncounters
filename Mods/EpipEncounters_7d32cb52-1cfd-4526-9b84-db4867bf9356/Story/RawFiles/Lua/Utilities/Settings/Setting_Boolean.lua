@@ -7,5 +7,5 @@ local _BooleanSetting = {
     Type = "Boolean",
     DefaultValue = false,
 }
-Inherit(_BooleanSetting, Settings._SettingClass)
+Settings:RegisterClass("SettingsLib_Setting_Boolean", _BooleanSetting, {"SettingsLib_Setting"})
 Settings.RegisterSettingType("Boolean", _BooleanSetting)

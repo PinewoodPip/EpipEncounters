@@ -10,6 +10,7 @@ OOP = {
 
 ---@class Class
 ---@field protected __name string
+---@field protected __ParentClasses string[]
 local Class = {}
 
 ---Creates a new table with the metatable of the class set.
@@ -17,7 +18,59 @@ local Class = {}
 ---@param data table?
 ---@return Class
 function Class:__Create(data)
-    OOP.SetMetatable(data or {}, self)
+    local classTable = self ---@cast classTable table|Class
+
+    setmetatable(data, {
+        __index = function (instance, key)
+            -- Check field presence in class definition
+            if classTable[key] ~= nil then
+                return classTable[key]
+            end
+
+            -- Check presence in parent classes
+            for _,tbl in ipairs(instance:GetParentClasses()) do
+                if tbl[key] ~= nil then
+                    return tbl[key]
+                end
+            end
+
+            -- Check dedicated __index method in class definition
+            if classTable.__index ~= nil then
+                return classTable.__index(instance, key)
+            end
+        end,
+        -- TODO support multiple inheritance for these
+        __newindex = classTable.__newindex,
+        __mode = classTable.__mode,
+        __call = classTable.__call,
+        __metatable = classTable.__metatable,
+        __tostring = classTable.__tostring,
+        __len = classTable.__len,
+        __pairs = classTable.__pairs,
+        __ipairs = classTable.__ipairs,
+        __name = classTable.__name,
+
+        __unm = classTable.__unm,
+        __add = classTable.__add,
+        __sub = classTable.__sub,
+        __mul = classTable.__mul,
+        __div = classTable.__div,
+        __idiv = classTable.__idiv,
+        __mod = classTable.__mod,
+        __pow = classTable.__pow,
+        __concat = classTable.__concat,
+
+        __band = classTable.__band,
+        __bor = classTable.__bor,
+        __bxor = classTable.__bxor,
+        __bnot = classTable.__bnot,
+        __shl = classTable.__shl,
+        __shr = classTable.__shr,
+
+        __eq = classTable.__eq,
+        __lt = classTable.__lt,
+        __le = classTable.__le,
+    })
 
     return data
 end
@@ -28,23 +81,81 @@ function Class:GetClassName()
     return self.__name
 end
 
+---Returns whether this class implements another.
+---Hierarchies are considered.
+---@param className string
+---@return boolean
+function Class:ImplementsClass(className)
+    local implements = false
+
+    for _,class in ipairs(self:GetParentClasses()) do
+        if class:GetClassName() == className or class:ImplementsClass(className) then
+            implements = true
+            break
+        end
+    end
+
+    return implements
+end
+
+---Returns the parent classes of the class.
+---@return Class[]
+function Class:GetParentClasses()
+    local classes = {}
+
+    for i,className in ipairs(self.__ParentClasses) do
+        classes[i] = OOP.GetClass(className)
+    end
+
+    return classes
+end
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
 ---Registers a class.
----@param className string
+---@generic T
+---@param className string|`T`
 ---@param class table
-function OOP.RegisterClass(className, class)
+---@param parentClasses string[]? Classes this one inherits from.
+---@return `T`
+function OOP.RegisterClass(className, class, parentClasses)
+    ---@cast class Class
+    
     for k,v in pairs(Class) do
         if type(v) == "function" then
-            class[k] = v -- TODO
+            class[k] = v -- TODO proper inheritance
         end
     end
 
+    ---@diagnostic disable invisible
+    class.__ParentClasses = parentClasses or {}
     class.__name = class.__name or className
 
     OOP._Classes[className] = class
+
+    local indexmethod = class.__index
+    
+    -- Set metatable for static access
+    setmetatable(class, {
+        __index = function (instance, key)
+            -- Check presence in parent classes
+            for _,tbl in ipairs(Class.GetParentClasses(class)) do
+                if tbl[key] ~= nil then
+                    return tbl[key]
+                end
+            end
+
+            if indexmethod ~= nil then
+                return indexmethod(instance, key)
+            end
+        end,
+    })
+
+    ---@diagnostic enable invisible
+
+    return class
 end
 
 ---Returns the base table for a class.
@@ -89,7 +200,7 @@ function OOP.SetMetatable(table, metatable)
     local indexTable = metatable
     if metatable.__index then
         indexTable = function(tbl, key) -- TODO cleaner declaration for classes
-            if metatable[key] ~= nil then
+            if metatable[key] ~= nil then -- TODO consider multiple inheritance
                 return metatable[key]
             else
                 return metatable.__index(tbl, key)

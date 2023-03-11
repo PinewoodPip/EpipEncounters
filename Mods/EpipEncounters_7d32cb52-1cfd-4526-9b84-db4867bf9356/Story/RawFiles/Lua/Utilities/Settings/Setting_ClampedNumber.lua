@@ -9,7 +9,7 @@ local Settings = Settings
 local _ClampedNumber = {
     Type = "ClampedNumber",
 }
-Inherit(_ClampedNumber, Settings._SettingClass)
+Settings:RegisterClass("SettingsLib_Setting_ClampedNumber", _ClampedNumber, {"SettingsLib_Setting"})
 Settings.RegisterSettingType("ClampedNumber", _ClampedNumber)
 
 ---------------------------------------------

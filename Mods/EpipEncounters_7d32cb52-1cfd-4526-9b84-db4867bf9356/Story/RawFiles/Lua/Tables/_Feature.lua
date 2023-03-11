@@ -42,8 +42,7 @@ local Feature = {
     _Tests = {}, ---@type Feature_Test[]
 }
 _Feature = Feature
-OOP.GetClass("Library").Create("EpipEncounters", "_Feature", Feature)
-OOP.RegisterClass("Feature", Feature)
+OOP.RegisterClass("Feature", Feature, {"Library"})
 
 ---@class Feature_Test
 ---@field Name string

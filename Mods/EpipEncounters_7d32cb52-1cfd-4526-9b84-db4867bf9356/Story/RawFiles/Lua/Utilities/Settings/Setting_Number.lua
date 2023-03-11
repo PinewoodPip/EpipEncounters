@@ -7,5 +7,5 @@ local _Number = {
     Type = "Number",
     DefaultValue = 0,
 }
-Inherit(_Number, Settings._SettingClass)
+Settings:RegisterClass("SettingsLib_Setting_Number", _Number, {"SettingsLib_Setting"})
 Settings.RegisterSettingType("Number", _Number)

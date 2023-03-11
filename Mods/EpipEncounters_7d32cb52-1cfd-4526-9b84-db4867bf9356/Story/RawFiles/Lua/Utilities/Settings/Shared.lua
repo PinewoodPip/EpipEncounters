@@ -45,19 +45,20 @@ Epip.InitializeLibrary("Settings", Settings)
 
 ---Represents a setting and holds its value.
 ---For serialization, you are expected to implement value getter/setters as functions that return only one value. Additional ones will be discarded.
----@class SettingsLib_Setting : I_Identifiable, I_Describable
+---@class SettingsLib_Setting : Class, I_Identifiable, I_Describable
 ---@field Type SettingsLib_SettingType
 ---@field Context "Client"|"Server"|"Host"
 ---@field ModTable string
 ---@field Value any
 ---@field DefaultValue any
 local _Setting = {}
+Settings:RegisterClass("SettingsLib_Setting", _Setting)
 Settings._SettingClass = _Setting
 
 ---Creates a new setting.
 ---@param data SettingsLib_Setting
 function _Setting:Create(data)
-    Inherit(data, self)
+    data = self:__Create(data)
     data.Value = data:GetDefaultValue()
 
     data:_Init()
