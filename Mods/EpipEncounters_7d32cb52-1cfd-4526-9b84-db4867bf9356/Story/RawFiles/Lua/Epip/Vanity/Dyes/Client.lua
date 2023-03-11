@@ -331,6 +331,9 @@ Character.Hooks.CreateEquipmentVisuals:Subscribe(function (ev)
                 request.Colors[5] = {dye.Color3:ToFloats()}
                 
                 Dyes.SetItemColorOverride(item, dye)
+
+                -- This flag will be false for slots that would normally be masked by others by vanilla logic.
+                ev.Request.ApplyColors = true
             end
         end
     end
