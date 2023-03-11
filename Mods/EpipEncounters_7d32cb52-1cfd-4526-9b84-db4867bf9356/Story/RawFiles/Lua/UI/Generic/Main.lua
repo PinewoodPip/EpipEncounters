@@ -34,6 +34,7 @@ Epip.InitializeLibrary("Generic", Generic)
 ---------------------------------------------
 
 ---@class GenericUI_Instance : UI
+---@field private ID string
 local _Instance = {
     ID = "UNKNOWN",
     CurrentTooltipElement = nil, -- Current element's ID and UI whose tooltip is being displayed.
@@ -48,6 +49,12 @@ Inherit(_Instance, Client.UI._BaseUITable)
 ---@class GenericUI_Event_ViewportChanged
 ---@field Width integer
 ---@field Height integer
+
+---Returns the string identifier of the UI.
+---@return string
+function _Instance:GetID()
+    return self.ID
+end
 
 ---@param id string
 ---@return GenericUI_Element?
@@ -319,10 +326,26 @@ function Generic.ExposeFunction(call)
     return fun
 end
 
----@param id integer
+---Returns the instance of a Generic UI by its identifier.
+---@param id string|integer
 ---@return GenericUI_Instance
 function Generic.GetInstance(id)
-    return Generic.INSTANCES[id]
+    local instance
+
+    if type(id) == "string" then
+        for _,inst in pairs(Generic.INSTANCES) do
+            if inst:GetID() == id then
+                instance = inst
+                break
+            end
+        end
+    elseif type(id) == "number" then
+        instance = Generic.INSTANCES[id]
+    else
+        Generic:Error("GetInstance", "Wrong parameter type", type(id))
+    end
+
+    return instance
 end
 
 ---Registers a prefab.
