@@ -1,6 +1,6 @@
 
 
----@class Net : Feature
+---@class NetLib : Library
 Net = {
     INVALID_USER_ID = -65536,
 
