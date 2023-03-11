@@ -971,7 +971,7 @@ end
 ---Returns the artifact power's description.
 ---@return string
 function _ArtifactDef:GetDescription()
-    return Ext.L10N.GetTranslatedString(self.DescriptionHandle, self.ID)
+    return Text.GetTranslatedString(self.DescriptionHandle, self.ID)
 end
 
 ---Returns a full tooltip showing the artifact's name and power.
