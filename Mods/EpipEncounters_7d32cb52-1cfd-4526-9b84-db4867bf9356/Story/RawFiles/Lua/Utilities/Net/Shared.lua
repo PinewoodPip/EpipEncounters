@@ -19,19 +19,69 @@ Game.Net = Net -- Backwards compatibility
 -- CLASSES
 ---------------------------------------------
 
----@class NetLib_Message
+---@class NetLib_Message : Class
+---@field Channel string
+local _Payload = {}
+Net:RegisterClass("NetLib_Payload", _Payload)
 
----@class NetLib_Message_Character
+---@package
+---@param data NetLib_Message
+---@return NetLib_Message
+function _Payload:___Create(data)
+    local instance = self:__Create(data) ---@cast instance NetLib_Message
+
+    -- Cast position field to vector.
+    local positionField = instance["Position"]
+    if positionField and type(positionField) == "table" then
+        instance["Position"] = Vector.Create(positionField)
+    end
+
+    return instance
+end
+
+---Checks whether the payload has a field;
+---throws an error if it doesn't.
+---@protected
+---@param funcName string
+---@param field string
+function _Payload:_CheckField(funcName, field)
+    if not self[field] then
+        Net:Error("Payload:" .. funcName, "Payload", self.Channel, "has no field", field)
+    end
+end
+
+---@class NetLib_Message_Character : NetLib_Message
 ---@field CharacterNetID NetId
+local _CharacterPayload = _Payload -- The inheritance here is a lie, there is technically no distinction between the payload classes - it's for IDE autocompletion only
 
----@class NetLib_Message_Item
+---Returns the character associated with the payload.
+---@return Character
+function _CharacterPayload:GetCharacter()
+    self:_CheckField("GetField", "CharacterNetID")
+
+    return Character.Get(self["CharacterNetID"])
+end
+
+---@class NetLib_Message_Item : NetLib_Message
 ---@field ItemNetID NetId
+local _ItemPayload = _Payload
 
----@class NetLib_Message_NetID
+---Returns the item associated with the payload.
+---@return Item
+function _ItemPayload:GetItem()
+    self:_CheckField("GetItem", "ItemNetID")
+
+    return Item.Get(self["ItemNetID"])
+end
+
+---@class NetLib_Message_NetID : NetLib_Message
 ---@field NetID NetId
 
----@class NetLib_Message_State
+---@class NetLib_Message_State : NetLib_Message
 ---@field State boolean
+
+---@class NetLib_Message_Position : NetLib_Message
+---@field Position Vector
 
 ---------------------------------------------
 -- EVENTS
@@ -130,8 +180,9 @@ end
 ---------------------------------------------
 
 -- Forward Net messages to corresponding events.
-Ext.Events.NetMessageReceived:Subscribe(function(ev)
-    local payload = Ext.Json.Parse(ev.Payload)
+Ext.Events.NetMessageReceived:Subscribe(function(ev) 
+    local payload = _Payload:___Create(Ext.Json.Parse(ev.Payload) or {})
+
     local event = {Message = payload, Channel = ev.Channel, UserID = ev.UserID} ---@type Net_Event_MessageReceived
 
     local subscribableEvent = Net._GetChannelMessageEvent(ev.Channel)
