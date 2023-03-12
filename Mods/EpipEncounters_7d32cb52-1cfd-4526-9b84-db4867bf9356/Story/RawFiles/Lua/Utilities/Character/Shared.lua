@@ -332,6 +332,21 @@ function Character.IsPlayer(char)
     return char.IsPlayer
 end
 
+---Returns whether char is a non-generic origin.
+---@param char Character
+---@return boolean
+function Character.IsOrigin(char)
+    local isOrigin = false
+
+    if char.PlayerCustomData then
+        local originName = char.PlayerCustomData.OriginName
+
+        isOrigin = string.match(originName, "Generic%d+") == nil
+    end
+
+    return isOrigin
+end
+
 ---Returns true if char is a summon.
 ---@param char Character
 ---@return boolean
