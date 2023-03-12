@@ -385,7 +385,9 @@ end
 ---@param item Item
 ---@return number
 function Item.GetIdentifyRequirement(item)
-    if not item.Stats then Utilities.LogError("Item", "Item has no stats; cannot get identify requirement.") return nil end
+    if not item.Stats then 
+        Item:Error("GetIdentifyRequirement", "Item has no stats; cannot get identify requirement.")
+    end
 
     local level = item.Stats.Level
     
@@ -428,10 +430,9 @@ end
 
 --- Alias for Item.Stats.ItemSlot
 ---@param item Item
----@return ItemSlot
+---@return ItemSlot? --Nil if the item has no stats.
 function Item.GetItemSlot(item)
-    if not item.Stats then return nil end
-    local slot = item.Stats.ItemSlot
+    local slot = item.Stats and item.Stats.ItemSlot or nil
 
     return slot
 end
@@ -723,8 +724,8 @@ end
 function Item.GetItemsInInventory(entity, predicate)
     local items = {}
 
-    for i,guid in pairs(entity:GetInventoryItems()) do
-        local item = Ext.GetItem(guid)
+    for _,guid in pairs(entity:GetInventoryItems()) do
+        local item = Item.Get(guid)
 
         if predicate == nil or predicate(item) then
             table.insert(items, item)

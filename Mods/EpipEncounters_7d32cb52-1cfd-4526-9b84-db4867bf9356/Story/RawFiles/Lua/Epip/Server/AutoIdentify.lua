@@ -38,7 +38,7 @@ function AutoIdentify.CanIdentify(item)
     local canIdentify = state == AutoIdentify.STATES.ALWAYS or AutoIdentify.forceEnable
 
     -- Check ability requirement
-    if not canIdentify and state == AutoIdentify.STATES.NEED_LOREMASTER then
+    if item.Stats and not canIdentify and state == AutoIdentify.STATES.NEED_LOREMASTER then
         local partyLeader = Character.Get(Osiris.CharacterGetHostCharacter()) -- We don't have a way of identifying to who is looting this item.
         local loremaster = Character.GetHighestPartyAbility(partyLeader, "Loremaster")
 
