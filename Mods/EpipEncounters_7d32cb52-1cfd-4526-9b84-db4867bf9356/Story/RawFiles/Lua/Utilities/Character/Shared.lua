@@ -323,6 +323,15 @@ function Character.IsIgnoredByAI(char)
     return char:HasTag(Character.AI_IGNORED_TAG)
 end
 
+---Returns whether char is a player.
+---A player is any character that is controllable by the users,
+---including summons and party followers.
+---@param char Character
+---@return boolean
+function Character.IsPlayer(char)
+    return char.IsPlayer
+end
+
 ---Returns true if char is a summon.
 ---@param char Character
 ---@return boolean
