@@ -151,8 +151,7 @@ OOP.RegisterClass("OsirisLib_UserQuery", UserQuery)
 ---@param data OsirisLib_UserQuery
 ---@return OsirisLib_UserQuery
 function UserQuery.Create(data)
-    ---@type OsirisLib_UserQuery
-    local instance = UserQuery:__Create(data) 
+    local instance = UserQuery:__Create(data) ---@cast instance OsirisLib_UserQuery
 
     return instance
 end
@@ -234,13 +233,25 @@ end
 ---Queries a database.
 ---@generic T
 ---@param name string|OsirisLib_DatabaseName|`T`
----@param ... OsirisLib_OsirisCompatibleLuaType
+---@param ... OsirisLib_CompatibleType
 ---@return OsirisLib_Tuple[] --TODO generic support
 function Osiris.QueryDatabase(name, ...)
     local paramCount = select("#", ...)
     local db = Osiris.GetDatabase(name, paramCount)
 
     return db:Query(...)
+end
+
+---Returns the first fact in a database that matches the query.
+---@generic T
+---@param dbName string|OsirisLib_DatabaseName|`T`
+---@param ... OsirisLib_CompatibleType
+---@return OsirisLib_Tuple
+function Osiris.GetFirstFact(dbName, ...)
+    local paramCount = select("#", ...)
+    local db = Osiris.GetDatabase(dbName, paramCount)
+
+    return db:Query(...)[1]
 end
 
 ---@class OsirisDatabase
