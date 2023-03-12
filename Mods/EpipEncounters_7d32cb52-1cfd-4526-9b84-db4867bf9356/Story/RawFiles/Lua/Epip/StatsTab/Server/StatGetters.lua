@@ -138,7 +138,7 @@ end)
 
 -- Damage taken
 Ext.RegisterOsirisListener("NRD_OnHit", 4, "after", function(target, source, amount, handle)
-    if Osiris.DB_IsPlayer(target) ~= nil then
+    if Character.IsPlayer(Character.Get(target)) then
         local _, oldAmount = Osiris.DB_PIP_EpicStats_DamageReceived(target, nil)
         oldAmount = oldAmount or 0
         amount = oldAmount + amount

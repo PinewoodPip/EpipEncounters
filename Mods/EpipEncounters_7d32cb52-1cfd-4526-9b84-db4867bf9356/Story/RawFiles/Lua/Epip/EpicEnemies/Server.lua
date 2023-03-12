@@ -369,12 +369,12 @@ EpicEnemies.Hooks.IsEligible:RegisterHook(function (eligible, char)
     end
 
     -- Players cannot be affected.
-    if Osiris.DB_IsPlayer:Get(char.MyGuid) then
+    if Character.IsPlayer(char) then
         eligible = false
     end
 
     -- Origins cannot be affected.
-    if Osiris.DB_Origins:Get(char.MyGuid) then
+    if Character.IsOrigin(char) then
         eligible = false
     end
 

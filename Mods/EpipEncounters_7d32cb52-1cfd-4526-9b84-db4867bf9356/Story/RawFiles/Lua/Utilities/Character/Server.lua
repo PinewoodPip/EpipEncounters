@@ -12,7 +12,7 @@ local Character = Character
 function Character.GetPartyMembers(char)
     local members = {}
 
-    local players = Osiris.DB_IsPlayer:GetTuples(nil)
+    local players = Osiris.QueryDatabase("DB_IsPlayer", nil)
 
     for _,tuple in ipairs(players) do
         local playerGUID = tuple[1]
