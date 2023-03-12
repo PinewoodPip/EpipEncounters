@@ -14,7 +14,10 @@ Epip.InitializeLibrary("Osiris", Osiris)
 
 ---@alias OsirisType "INTEGER"|"INTEGER64"|"REAL"|"STRING"|"REAL"|"GUIDSTRING"|"CHARACTERGUID"|"ITEMGUID"|"TRIGGERGUID"|"SPLINEGUID"|"LEVELTEMPLATEGUID"
 ---@alias OsirisLib_OsirisCompatibleLuaType string|number
+---@alias OsirisLib_CompatibleType OsirisLib_OsirisCompatibleLuaType|EsvCharacter|EsvItem
 ---@alias OsirisLib_DatabaseName "DB_AMER_BatteredHarried_BufferedDamage"
+---|"DB_IsPlayer"
+---|"DB_Origins"
 
 ---@class OsirisLib_Tuple : Class, {[string]: OsirisLib_OsirisCompatibleLuaType, [integer]: OsirisLib_OsirisCompatibleLuaType}
 ---@field Values OsirisLib_OsirisCompatibleLuaType[]
@@ -107,7 +110,7 @@ end
 function DB:Query(...)
     local tuples = {}
     local queryParams = table.pack(Osiris._ParseParameters(...))
-    local osiQuery = Osi[self.Name]:Get(table.unpack(queryParams, nil, queryParams.n)) or {}
+    local osiQuery = Osi[self.Name]:Get(table.unpack(queryParams, 1, queryParams.n)) or {}
 
     for _,returnedTuple in ipairs(osiQuery) do
         local tuple = Tuple.Create(self, returnedTuple)
@@ -382,6 +385,7 @@ setmetatable(Osiris, { -- Access is query by default
 })
 
 ---Query a database.
+---@deprecated
 ---@param name string
 ---@param unpack boolean If true, the first tuple found will be unpacked. The last value returned (arity + 1) will be the list of all tuples.
 ---@vararg any Query parameters.

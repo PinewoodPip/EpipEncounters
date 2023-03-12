@@ -170,6 +170,10 @@ function Ext_ClientVisual.CreateOnItem(position, item) end
 ---@class CDivinityStatsItem
 ---@field Rarity ItemLib_Rarity
 
+---@param identifier GUID|EntityHandle|ComponentHandle|NetId
+---@return EclItem
+function Ext_ClientEntity.GetItem(identifier) end
+
 ---------------------------------------------
 -- OTHER
 ---------------------------------------------
