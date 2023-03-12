@@ -6,8 +6,12 @@ local SpinnerPrefab = Generic.GetPrefab("GenericUI_Prefab_Spinner")
 ExampleUI = Generic.Create("PIP_ExampleUI")
 
 -- Adds a background element
-local background = ExampleUI:CreateElement("Background", "GenericUI_Element_TiledBackground")
+local background = ExampleUI:CreateElement("MyBackground", "GenericUI_Element_TiledBackground")
 background:SetBackground("RedPrompt", 400, 400) -- 400x400 panel size
+
+background.Events.MouseOver:Subscribe(function (_)
+    print("Mouse entered background")
+end)
 
 -- Adds a button
 local closeButton = background:AddChild("CloseButton", "GenericUI_Element_Button")
@@ -61,15 +65,16 @@ dropdown.Events.OptionSelected:Subscribe(function (ev)
     acceptButton:SetEnabled(ev.Option.ID == "Option2")
 end)
 
+-- Other modders can access your UI and elements by their string ID
+local myUI = Generic.GetInstance("PIP_ExampleUI")
+local myAcceptButton = myUI:GetElementByID("AcceptButton")
+
 -- Direct access to UIObject and MovieClip is available
 print(ExampleUI:GetUI())
 print(acceptButton:GetMovieClip())
 
 -- GenericUI instances inherit from the same class as built-in UIs in Epip
 print(ExampleUI:IsFlagged("OF_PlayerInput1"))
-
--- Elements can be referenced by their ID even if not explicitly exposed by original modder, and modified at any time
-print(ExampleUI:GetElementByID("AcceptButton"))
 
 Ext.Events.SessionLoaded:Subscribe(function (_)
     ExampleUI:Show()
