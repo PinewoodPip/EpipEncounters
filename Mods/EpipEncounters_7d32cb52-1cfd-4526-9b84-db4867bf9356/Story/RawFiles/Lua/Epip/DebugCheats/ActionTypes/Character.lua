@@ -13,6 +13,7 @@ DebugCheats:RegisterClass("Feature_DebugCheats_Action_Character", _CharacterActi
 
 ---@class Feature_DebugCheats_Action_Context_Character
 ---@field TargetCharacter Character
+---@field SourceCharacter Character
 
 ---@class Feature_DebugCheats_Event_ActionExecuted_Character : Feature_DebugCheats_Event_ActionExecuted
 ---@field Context Feature_DebugCheats_Action_Context_Character

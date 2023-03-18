@@ -1,7 +1,8 @@
 
----------------------------------------------
--- NET MESSAGES
----------------------------------------------
+---@class Feature_DebugCheats
+local DebugCheats = Epip.GetFeature("Feature_DebugCheats")
 
----@class EPIPENCOUNTERS_CHEATS_TeleportChar : NetLib_Message_Character, NetLib_Message_Position
----@field TeleportParty boolean
+local _ = DebugCheats.RegisterAction("TeleportTo", "Feature_DebugCheats_Action_CharacterPosition", {
+    Name = DebugCheats.TranslatedStrings.TeleportTo_Name,
+    Description = DebugCheats.TranslatedStrings.TeleportTo_Description,
+})

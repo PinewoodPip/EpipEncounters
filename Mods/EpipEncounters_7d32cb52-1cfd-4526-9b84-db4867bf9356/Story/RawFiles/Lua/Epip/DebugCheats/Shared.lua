@@ -41,6 +41,16 @@ local DebugCheats = {
            Text = "Copies the cursor's world position to clipboard.",
            ContextDescription = "Copy position action description",
         },
+        TeleportTo_Name = {
+           Handle = "ha6bf3f4cg6de4g4ac8gb706g3f39de8376c3",
+           Text = "Teleport to",
+           ContextDescription = "Teleport action name",
+        },
+        TeleportTo_Description = {
+           Handle = "h23e452c0g340fg4555g8034g753f003107bf",
+           Text = "TODO",
+           ContextDescription = "Teleport action description",
+        },
     },
 
     Events = {
@@ -81,7 +91,7 @@ Epip.RegisterFeature("DebugCheats", DebugCheats)
 
 ---@class Feature_DebugCheats_Action_Context
 
----@alias Feature_DebugCheats_ActionType "Feature_DebugCheats_Action_Character"|"Feature_DebugCheats_Action_Item"|"Feature_DebugCheats_Action_Position"|"Feature_DebugCheats_Action_Quantified"|"Feature_DebugCheats_Action_QuantifiedCharacter"|"Feature_DebugCheats_Action_String"|"Feature_DebugCheats_Action_ParametrizedCharacter"
+---@alias Feature_DebugCheats_ActionType "Feature_DebugCheats_Action_Character"|"Feature_DebugCheats_Action_Item"|"Feature_DebugCheats_Action_Position"|"Feature_DebugCheats_Action_Quantified"|"Feature_DebugCheats_Action_QuantifiedCharacter"|"Feature_DebugCheats_Action_String"|"Feature_DebugCheats_Action_ParametrizedCharacter"|"Feature_DebugCheats_Action_CharacterPosition"
 
 ---------------------------------------------
 -- METHODS
@@ -170,6 +180,7 @@ function DebugCheats._EncodeNetContext(context) -- TODO make this hookable
     local data = {}
 
     data.CharacterNetID = context.TargetCharacter and context.TargetCharacter.NetID
+    data.SourceCharacterNetID = context.SourceCharacter and context.SourceCharacter.NetID
     data.ItemNetID = context.TargetItem
     data.Position = context.Position
     data.Amount = context.Amount
@@ -186,6 +197,9 @@ function DebugCheats._ParseNetContext(data) -- TODO make this hookable
 
     if data.CharacterNetID then
         context.TargetCharacter = Character.Get(data.CharacterNetID)
+    end
+    if data.SourceCharacterNetID then
+        context.SourceCharacter = Character.Get(data.SourceCharacterNetID)
     end
     if data.ItemNetID then
         context.TargetItem = Item.Get(data.ItemNetID)
@@ -236,6 +250,7 @@ local CONTEXT_CLASSES = {
     }),
     ["Ground"] = Set.Create({
         "Feature_DebugCheats_Action_Position",
+        "Feature_DebugCheats_Action_CharacterPosition",
     }),
 }
 DebugCheats.Hooks.IsActionValidInContext:Subscribe(function (ev)

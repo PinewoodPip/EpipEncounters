@@ -608,6 +608,7 @@ LOAD_ORDER = {
             "Epip/DebugCheats/ActionTypes/Character.lua",
             "Epip/DebugCheats/ActionTypes/QuantifiedCharacter.lua",
             "Epip/DebugCheats/ActionTypes/ParametrizedCharacter.lua",
+            "Epip/DebugCheats/ActionTypes/CharacterPosition.lua",
             "Epip/DebugCheats/ActionTypes/Item.lua",
         },
     },

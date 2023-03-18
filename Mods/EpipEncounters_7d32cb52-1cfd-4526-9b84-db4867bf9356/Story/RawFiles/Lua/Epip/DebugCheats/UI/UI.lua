@@ -63,7 +63,7 @@ function UI.Setup(context, entityHandle)
 
     DebugCheatsUI._CurrentContext = context
     DebugCheatsUI._CurrentEntityHandle = entityHandle
-    DebugCheatsUI._CurrentPosition = Pointer.GetWorldPosition()
+    DebugCheatsUI._CurrentPosition = Pointer.GetWalkablePosition()
 
     DebugCheatsUI:DebugLog("Opening UI with context", context)
 
@@ -130,6 +130,7 @@ function DebugCheatsUI._ExecuteAction(action, contextData)
     local currentContext = DebugCheatsUI._CurrentContext
 
     contextData.Position = DebugCheatsUI._CurrentPosition
+    contextData.SourceCharacter = Client.GetCharacter()
 
     if currentContext == "Character" then
         local char = Character.Get(DebugCheatsUI._CurrentEntityHandle)
@@ -218,6 +219,8 @@ DebugCheatsUI.Events.RenderAction:Subscribe(function (ev)
     elseif actionType == "Feature_DebugCheats_Action_Item" then
         DebugCheatsUI._RenderButton(action)
     elseif actionType == "Feature_DebugCheats_Action_Position" then
+        DebugCheatsUI._RenderButton(action)
+    elseif actionType == "Feature_DebugCheats_Action_CharacterPosition" then
         DebugCheatsUI._RenderButton(action)
     elseif actionType == "Feature_DebugCheats_Action_ParametrizedCharacter" then
         DebugCheatsUI._RenderQuantifiedTextField(action)

@@ -1,22 +1,17 @@
 
--- Listen for requests to teleport.
-Net.RegisterListener("EPIPENCOUNTERS_CHEATS_TeleportChar", function(payload)
-    local char = payload:GetCharacter()
-    local pos = payload.Position
-    local teleportParty = payload.TeleportParty
-    local charsToTeleport = {}
+---@class Feature_DebugCheats
+local DebugCheats = Epip.GetFeature("Feature_DebugCheats")
 
-    if teleportParty then
-        local partyChars = Character.GetPartyMembers(char)
+local action = DebugCheats.GetAction("TeleportTo") ---@cast action Feature_DebugCheats_Action_CharacterPosition
 
-        for _,partyMember in ipairs(partyChars) do
-            table.insert(charsToTeleport, partyMember)
-        end
-    else
-        charsToTeleport = {char}
-    end
+---------------------------------------------
+-- EVENT LISTENERS
+---------------------------------------------
 
-    for _,charToTeleport in ipairs(charsToTeleport) do
-        Osiris.TeleportToPosition(charToTeleport, pos[1], pos[2], pos[3], "", 0)
-    end
+-- Listen for the action being executed.
+action:Subscribe(function (ev)
+    local char = ev.Context.SourceCharacter
+    local pos = ev.Context.Position
+    
+    Osiris.TeleportToPosition(char, pos[1], pos[2], pos[3], "", false, false)
 end)
