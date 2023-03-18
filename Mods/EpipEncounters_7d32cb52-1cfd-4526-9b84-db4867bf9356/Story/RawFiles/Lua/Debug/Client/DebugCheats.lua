@@ -478,98 +478,17 @@ MessageBox.RegisterMessageListener("epip_Cheats_SpecialLogic", MessageBox.Events
     Net.PostToServer("EPIP_CHEATS_SPECIALLOGIC", {NetID = data.NetID, SpecialLogic = text, Amount = amount})
 end)
 
--- Add item template.
-local templateAmount = 1
-ContextMenu.RegisterElementListener("epip_Cheats_Items_SpawnTemplate", "buttonPressed", function(character, params)
-    templateAmount = params._statAmount
-
-    MessageBox.Open({
-        ID = "epip_Cheats_Items_SpawnTemplate",
-        NetID = character.NetID,
-        Header = string.format("Add Item Template (%sx)", Text.RemoveTrailingZeros(params._statAmount)),
-        Message = "Enter the Template GUID.",
-        Type = "Input",
-        Buttons = {
-            {Type = 1, Text = "Spawn"},
-        }
-    })
-end)
-
-MessageBox.RegisterMessageListener("epip_Cheats_Items_SpawnTemplate", MessageBox.Events.InputSubmitted, function(text, id, data)
-    Net.PostToServer("EPIP_CHEATS_ITEMTEMPLATE", {NetID = data.NetID, TemplateGUID = text, Amount = templateAmount})
-end)
-
 -- Teleport to cursor.
 Client.UI.OptionsInput.Events.ActionExecuted:RegisterListener(function (action, _)
     if action == "EpipEncounters_DebugTeleport" or action == "EpipEncounters_DebugTeleport_Party" then
-        local pos = Ext.GetPickingState().WalkablePosition
+        local pos = Pointer.GetWalkablePosition()
         
         if pos then
             Net.PostToServer("EPIPENCOUNTERS_CHEATS_TeleportChar", {
-                NetID = Client.GetCharacter().NetID,
+                CharacterNetID = Client.GetCharacter().NetID,
                 Position = pos,
                 TeleportParty = action == "EpipEncounters_DebugTeleport_Party",
             })
-        end
-    end
-end)
-
----------------------------------------------
--- COPYING IDENTIFIERS TO CLIPBOARD
----------------------------------------------
-
-local lastTooltipSkillID = nil
-local lastItemTooltipHandle = nil
-
-Game.Tooltip.RegisterListener("Skill", function(char, skill, tooltip)
-    lastTooltipSkillID = skill
-    lastItemTooltipHandle = nil
-end)
-Game.Tooltip.RegisterListener("Item", function(item, tooltip)
-    lastItemTooltipHandle = item.MyGuid
-    lastTooltipSkillID = nil
-end)
-Ext.RegisterUINameCall("hideTooltip", function (_, _)
-    lastTooltipSkillID = nil
-    lastItemTooltipHandle = nil
-end)
-
--- Copy world position of pointer to clipboard.
-Client.UI.OptionsInput.Events.ActionExecuted:RegisterListener(function (action, _)
-    if action == "EpipEncounters_Debug_CopyPosition2D" then
-        local position = Pointer.GetWalkablePosition()
-        position = Vector.Create(position[1], position[3])
-        local text = Text.Format("%s, %s", {
-            FormatArgs = {position:unpack()}
-        })
-
-        Client.CopyToClipboard(text)
-        Client.UI.Notification.ShowNotification(text)
-    end
-end)
-
-Client.UI.OptionsInput.Events.ActionExecuted:RegisterListener(function (action, _)
-    if action == "EpipEncounters_Debug_CopyIdentifier" then
-        local text
-
-        if lastItemTooltipHandle then
-            local item = Item.Get(lastItemTooltipHandle)
-
-            text = item.MyGuid
-        elseif lastTooltipSkillID then
-            text = lastTooltipSkillID
-        else
-            local pointerChar = Pointer.GetCurrentCharacter(nil, true)
-
-            if pointerChar then
-                text = pointerChar.MyGuid
-            end
-        end
-
-        if text then
-            Client.UI.MessageBox.CopyToClipboard(text)
-
-            print("Copied " .. text .. " to clipboard.")
         end
     end
 end)

@@ -55,6 +55,14 @@ function Text:GetTextSize()
     return Vector.Create(txt.textWidth, txt.textHeight)
 end
 
+---Returns the text of the element.
+---@return string
+function Text:GetText()
+    local mc = self:GetMovieClip()
+
+    return mc.text_txt.htmlText
+end
+
 ---Sets whether text should wrap once it reaches the edge of the element's size.
 ---@param wrap boolean
 function Text:SetWordWrap(wrap)

@@ -164,40 +164,6 @@ Net.RegisterListener("EPIPENCOUNTERS_CHEATS_SPAWNARTIFACTSFOCI", function(payloa
     AutoIdentify.SetForceEnable(false)
 end)
 
--- Add item template.
-Net.RegisterListener("EPIP_CHEATS_ITEMTEMPLATE", function(payload)
-    local char = Ext.GetCharacter(payload.NetID)
-    local template = payload.TemplateGUID
-    
-    Osi.ItemTemplateAddTo(template, char.MyGuid, tonumber(payload.Amount), 1)
-end)
-
--- Toggle talents.
-Net.RegisterListener("EPIPENCOUNTERS_Cheats_AddTalent", function(payload)
-    local active = payload.State
-    local talent = payload.Params.ID
-    local char = Character.Get(payload.NetID)
-
-    if active then
-        Osi.CharacterAddTalent(char.MyGuid, talent)
-    else
-        Osi.CharacterRemoveTalent(char.MyGuid, talent)
-    end
-end)
-
--- Godmode/Pipmode: Infinite AP, resets cooldowns, RESISTDEATH.
-Net.RegisterListener("EPIP_CHEATS_INFINITEAP", function(payload)
-    local char = Ext.GetCharacter(payload.NetID)
-    
-    if not char:HasTag("PIP_DEBUGCHEATS_INFINITEAP") then
-        Osi.SetTag(char.MyGuid, "PIP_DEBUGCHEATS_INFINITEAP")
-        Osi.PROC_AMER_FlexStat_CharacterAddStat_BinaryStat(char.MyGuid, "RESISTDEATH", 1)
-    else
-        Osi.ClearTag(char.MyGuid, "PIP_DEBUGCHEATS_INFINITEAP")
-        Osi.PROC_AMER_FlexStat_CharacterAddStat_BinaryStat(char.MyGuid, "RESISTDEATH", -1)
-    end
-end)
-
 Ext.Osiris.RegisterListener("PROC_AMER_ActionPoints_Changed", 3, "after", function(char, old, new)
     if Osi.IsTagged(char, "PIP_DEBUGCHEATS_INFINITEAP") == 1 and Osi.CharacterIsPlayer(char) == 1 then
         -- Avoids an infinite loop
@@ -206,24 +172,4 @@ Ext.Osiris.RegisterListener("PROC_AMER_ActionPoints_Changed", 3, "after", functi
         end
         Osi.CharacterResetCooldowns(char)
     end
-end)
-
--- Teleport to cursor.
-Net.RegisterListener("EPIPENCOUNTERS_CHEATS_TeleportChar", function(payload)
-    local char = Ext.GetCharacter(payload.NetID)
-    local pos = payload.Position
-    local teleportParty = payload.TeleportParty
-
-    if teleportParty then
-        local _,tuples = Osiris.DB_IsPlayer:Get(nil)
-
-        for i,tuple in ipairs(tuples) do
-            local player = tuple[1]
-
-            TeleportToPosition(player, pos[1], pos[2], pos[3], "", 1)
-        end
-    else
-        TeleportToPosition(char.MyGuid, pos[1], pos[2], pos[3], "", 0)
-    end
-
 end)

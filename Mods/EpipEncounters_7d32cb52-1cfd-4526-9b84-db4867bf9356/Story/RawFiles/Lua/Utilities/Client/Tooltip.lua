@@ -35,6 +35,9 @@ local Tooltip = {
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
 
+    Events = {
+        TooltipHidden = {}, ---@type Event<EmptyEvent>
+    },
     Hooks = {
         RenderFormattedTooltip = {Preventable = true}, ---@type PreventableEvent<TooltipLib_Hook_RenderFormattedTooltip>
         RenderCustomFormattedTooltip = {Preventable = true}, ---@type PreventableEvent<TooltipLib_Hook_RenderCustomFormattedTooltip>
@@ -540,4 +543,6 @@ end)
 
 Ext.RegisterUINameCall("hideTooltip", function()
     Tooltip._currentTooltipData = nil
+
+    Tooltip.Events.TooltipHidden:Throw()
 end)

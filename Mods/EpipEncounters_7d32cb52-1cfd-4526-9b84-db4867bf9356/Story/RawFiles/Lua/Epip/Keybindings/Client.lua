@@ -13,6 +13,7 @@ Options.RegisterTab("EpipEncounters", {
         {Name = "Copy 2D Position", ID = "EpipEncounters_Debug_CopyPosition2D", DeveloperOnly = true, DefaultInput1 = {Keys = {"lshift", "t"}}},
         
         {Name = "Log RootTemplate", ID = "EpipEncounters_Debug_LogRootTemplate", DeveloperOnly = true},
+        {Name = "Open Cheats", ID = "EpipEncounters_DebugCheats_OpenUI", DeveloperOnly = true, DefaultInput1 = {Keys = {"g"}}},
 
         -- EE
         {Name = "Meditate", ID = "EpicEncounters_Meditate"},

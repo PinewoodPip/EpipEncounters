@@ -250,6 +250,25 @@ LOAD_ORDER = {
     {ScriptSet = "Epip/AnimationCancelling"},
 
     "Epip/OsirisIDEAnnotationGenerator.lua",
+
+    -- Debug Cheats
+    {
+        ScriptSet = "Epip/DebugCheats",
+        Scripts = {
+            "Epip/DebugCheats/ActionTypes/_Action.lua",
+            "Epip/DebugCheats/ActionTypes/Quantified.lua",
+            "Epip/DebugCheats/ActionTypes/String.lua",
+            "Epip/DebugCheats/ActionTypes/Position.lua",
+            "Epip/DebugCheats/ActionTypes/Character.lua",
+            "Epip/DebugCheats/ActionTypes/QuantifiedCharacter.lua",
+            "Epip/DebugCheats/ActionTypes/ParametrizedCharacter.lua",
+            "Epip/DebugCheats/ActionTypes/Item.lua",
+        },
+    },
+    {ScriptSet = "Epip/DebugCheats/Cheats/CopyIdentifier"},
+    {ScriptSet = "Epip/DebugCheats/Cheats/CopyPosition"},
+    {ScriptSet = "Epip/DebugCheats/Cheats/SpawnItemTemplate"},
+    {ScriptSet = "Epip/DebugCheats/Cheats/TeleportTo"},
 }
 
 Ext.Require(prefixedGUID, "Bootstrap.lua")
