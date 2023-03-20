@@ -285,7 +285,7 @@ end
 
 ---Returns the computed resistance value of char.
 ---@param char Character
----@param damageType StatsDamageType
+---@param damageType DamageType
 ---@param baseValuesOnly boolean? If `true`, base value will be returned. Defaults to `false`.
 ---@return integer
 function Character.GetResistance(char, damageType, baseValuesOnly)
@@ -669,6 +669,39 @@ function Character.GetStatusByNetID(char, netID)
     end
 
     return status
+end
+
+---Returns the current skill state of char.
+---@param char Character
+---@return EclSkillState|EsvSkillState
+function Character.GetSkillState(char)
+    local state
+
+    if Ext.IsClient() then
+        state = char.SkillManager.CurrentSkill
+    else
+        state = char.SkillManager.CurrentSkillState
+    end
+
+    return state
+end
+
+---Returns whether char is preparing a skill.
+---@param char Character
+---@return boolean
+function Character.IsPreparingSkill(char)
+    local state = Character.GetSkillState(char)
+
+    return state and state.State == 3
+end
+
+---Returns whether char is casting a skill.
+---@param char Character
+---@return boolean
+function Character.IsCastingSkill(char)
+    local state = Character.GetSkillState(char)
+
+    return state and state.State >= 5
 end
 
 ---Throws the ItemEquipped event.
