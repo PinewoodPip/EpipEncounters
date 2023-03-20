@@ -133,10 +133,6 @@ function MessageBox.Open(data)
     Inherit(data, MessageBoxData)
 
     local type = MessageBox.POPUP_TYPES[data.Type:upper()] or MessageBox.POPUP_TYPES.MESSAGE
-    if data:GetNumericType() == MessageBox.POPUP_TYPES.INPUT then
-        -- Set focus for input fields, since the normal tracking in Utilities.lua fails and the focusInputEnabled method seems to not be called by engine.
-        Client.Input._SetFocused(true)
-    end
 
     MessageBox.Cleanup(MessageBox:GetUI(), false)
 

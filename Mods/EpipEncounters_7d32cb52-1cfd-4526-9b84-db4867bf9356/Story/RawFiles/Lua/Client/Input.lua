@@ -912,10 +912,20 @@ function Input.IsTouchInput(rawID)
     return Input.TOUCH_RAW_EVENTS[rawID] == true
 end
 
----Returns true if the game is unpaused and there are no focused elements in Flash.
+---Returns whether the game is unpaused and there are no focused elements in Flash.
 ---@return boolean
 function Input.IsAcceptingInput()
-    return not GameState.IsPaused() and not Input.interfaceFocused
+    return not GameState.IsPaused() and not Input.IsTextFieldFocused()
+end
+
+---Returns whether a text field is focused within any UI.
+---@return true
+function Input.IsTextFieldFocused()
+    local manager = Ext.UI.GetUIObjectManager()
+    local flags = manager.TextInputAggregateFlags
+
+    ---@diagnostic disable-next-line: undefined-field
+    return flags.OF_PlayerTextInput1 or flags.OF_PlayerTextInput2 or flags.OF_PlayerTextInput3 or flags.OF_PlayerTextInput4
 end
 
 ---Returns whether a key is pressed.
@@ -953,18 +963,6 @@ end
 ---@return boolean
 function Input.AreModifierKeysPressed()
     return Input.IsShiftPressed() or Input.IsCtrlPressed() or Input.IsAltPressed() or Input.IsGUIPressed()
-end
-
----------------------------------------------
--- INTERNAL METHODS
----------------------------------------------
-
----Sets whether a UI is focused (capturing input)
----@param focused boolean
-function Input._SetFocused(focused)
-    Input.interfaceFocused = focused
-
-    Input:FireEvent("FocusChanged", focused)
 end
 
 ---------------------------------------------
@@ -1061,14 +1059,6 @@ Input.Events.KeyStateChanged:Subscribe(function (ev)
         ev:Prevent()
     end
 end, {Priority = -9999})
-
--- Track focus gain/loss in UI
-Ext.RegisterUINameCall("inputFocus", function(_) 
-    Input._SetFocused(true)
-end)
-Ext.RegisterUINameCall("inputFocusLost", function(_) 
-    Input._SetFocused(false)
-end)
 
 -- Listen for input events.
 Ext.Events.InputEvent:Subscribe(function(event)
