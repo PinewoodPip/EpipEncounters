@@ -1,6 +1,5 @@
 local Hotbar = {
-    ---@type table<PrefixedGUID, string>
-    preparedSkills = {},
+    
 }
 Epip.AddFeature("HotbarManager", "HotbarManager", Hotbar)
 Hotbar:Debug()
@@ -105,81 +104,6 @@ GameState.Events.ClientReady:Subscribe(function (ev)
     for _,char in ipairs(Character.GetPartyMembers(userChar)) do
         if char.ReservedUserID == userChar.ReservedUserID then
             Hotbar.SynchLayout(char)
-        end
-    end
-end)
-
-local casters = {}
-Osiris.RegisterSymbolListener("NRD_OnActionStateEnter", 2, "after", function(char, state)
-    -- print("enter", char, state)
-    local player = Osiris.DB_IsPlayer:Get(char)
-
-    if state == "UseSkill" and player then
-        char = Ext.Entity.GetCharacter(char)
-        local skillID = NRD_ActionStateGetString(char.MyGuid, "SkillId")
-
-        casters[char.MyGuid] = true
-
-        if Character.IsActive(char) then
-            Net.PostToOwner(char, "EPIPENCOUNTERS_Hotbar_SkillUseChanged", {
-                CharacterNetID = char.NetID,
-                SkillID = skillID,
-                Casting = true,
-            })
-        end
-    elseif state == "PrepareSkill" and player then
-        char = Ext.Entity.GetCharacter(char)
-        local skillID = NRD_ActionStateGetString(char.MyGuid, "SkillId")
-
-        Hotbar.preparedSkills[char.MyGuid] = skillID
-
-        if Character.IsActive(char) then
-            Net.PostToOwner(char, "EPIPENCOUNTERS_Hotbar_SkillUseChanged", {
-                CharacterNetID = char.NetID,
-                SkillID = skillID,
-                Casting = false,
-            })
-        end
-    end
-end)
-
-Ext.Events.Tick:Subscribe(function()
-    for caster,_ in pairs(casters) do
-        local state = NRD_CharacterGetCurrentAction(caster)
-        local char = Ext.Entity.GetCharacter(caster)
-
-        if state ~= "UseSkill" then
-            if Character.IsActive(char) then
-                Net.PostToOwner(char, "EPIPENCOUNTERS_Hotbar_SkillUseChanged", {
-                    CharacterNetID = char.NetID,
-                    SkillID = nil,
-                    Casting = false,
-                })
-            end
-
-            casters[caster] = nil
-        end
-    end
-
-    for charGUID,skill in pairs(Hotbar.preparedSkills) do
-        local state = NRD_CharacterGetCurrentAction(charGUID)
-
-        if state ~= "PrepareSkill" then
-            Ext.OnNextTick(function()
-                if NRD_CharacterGetCurrentAction(charGUID) ~= "UseSkill" then
-                    local char = Ext.Entity.GetCharacter(charGUID)
-
-                    Hotbar.preparedSkills[charGUID] = nil
-                    
-                    if Character.IsActive(char) then
-                        Net.PostToOwner(char, "EPIPENCOUNTERS_Hotbar_SkillUseChanged", {
-                            CharacterNetID = char.NetID,
-                            SkillID = nil,
-                            Casting = false,
-                        })
-                    end
-                end
-            end)
         end
     end
 end)

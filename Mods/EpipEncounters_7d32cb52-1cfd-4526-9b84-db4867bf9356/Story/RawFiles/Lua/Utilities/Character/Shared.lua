@@ -686,13 +686,23 @@ function Character.GetSkillState(char)
     return state
 end
 
+---Returns the ID of the skill that char is preparing or casting.
+---@param char Character
+---@return string
+function Character.GetCurrentSkill(char)
+    local state = Character.GetSkillState(char)
+    local skill = state.SkillId
+
+    return string.sub(skill, 0, #skill - 3)
+end
+
 ---Returns whether char is preparing a skill.
 ---@param char Character
 ---@return boolean
 function Character.IsPreparingSkill(char)
     local state = Character.GetSkillState(char)
 
-    return state and state.State == 3
+    return state and (state.State == 3 or state.State == 4)
 end
 
 ---Returns whether char is casting a skill.

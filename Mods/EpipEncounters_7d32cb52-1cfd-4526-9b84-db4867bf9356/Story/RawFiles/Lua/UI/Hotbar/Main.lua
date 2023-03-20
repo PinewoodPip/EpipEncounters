@@ -233,10 +233,6 @@ end
 ---@class EPIPENCOUNTERS_Hotbar_SetLayout : NetLib_Message_Character
 ---@field Layout HotbarState
 
----@class EPIPENCOUNTERS_Hotbar_SkillUseChanged : NetLib_Message_Character
----@field SkillID string
----@field Casting boolean
-
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
@@ -255,21 +251,6 @@ function Hotbar.GetSlotData(char, index)
     if not char then char = Client.GetCharacter() end
 
     return char.PlayerData.SkillBarItems[index]
-end
-
----Returns the skill currently being prepared by char.
----@param char EclCharacter?
----@return HotbarPreparedSkill?
-function Hotbar.GetPreparedSkill(char)
-    char = char or Client.GetCharacter()
-
-    return Hotbar.PreparedSkills[char.NetID]
-end
-
-function Hotbar.IsCasting(char)
-    local skill = Hotbar.GetPreparedSkill(char)
-
-    return skill and skill.Casting
 end
 
 ---Toggle visibility of the hotbar.
@@ -388,7 +369,7 @@ end
 ---The hotbar is unusable in combat if it is not the client char's turn, or while they are casting a skill.
 ---@return boolean
 function Hotbar.CanUseHotbar()
-    local isCasting = Hotbar.IsCasting()
+    local isCasting = Character.IsCastingSkill(Client.GetCharacter())
     local canUse = true
 
     if Client.IsInCombat() then
@@ -399,7 +380,7 @@ function Hotbar.CanUseHotbar()
         end
     end
 
-    if isCasting and Settings.GetSettingValue("Epip_Hotbar", "HotbarCastingGreyOut") then
+    if isCasting and Settings.GetSettingValue("Epip_Hotbar", "HotbarCastingGreyOut") == true then
         canUse = false
     end
 
@@ -651,11 +632,13 @@ end
 
 function Hotbar.UpdateActiveSkill()
     local char = Client.GetCharacter()
-    local preparedSkill = Hotbar.GetPreparedSkill(char)
+    local skillState = Character.GetSkillState(char)
     local slotHolder = Hotbar.GetSlotHolder()
     local index = -1
 
-    if preparedSkill and not preparedSkill.Casting then
+    if skillState and Character.IsPreparingSkill(char) then
+        local skillID = Character.GetCurrentSkill(char)
+
         -- A strange use of the predicate, but whatever.
         Hotbar.GetSkillBarItems(char, function (_, slot, slotIndex)
             local valid = false
@@ -663,7 +646,7 @@ function Hotbar.UpdateActiveSkill()
             -- If we clicked a slot recently, prioritize it.
             -- Otherwise use the last slot with the skill.
             -- A skill CAN be in multiple slots, mainly if you install the mod mid-playthrough.
-            if slot.SkillOrStatId == preparedSkill.SkillID and (index == -1 or slotIndex == Hotbar.lastClickedSlot) then
+            if slot.SkillOrStatId == skillID and (index == -1 or slotIndex == Hotbar.lastClickedSlot) then
                 index = slotIndex - 1 -- Subtract one because we're sending to flash.
                 valid = true
             end
@@ -954,10 +937,6 @@ Net.RegisterListener("EPIPENCOUNTERS_Hotbar_SetLayout", function(payload)
     Hotbar.SetState(Character.Get(payload.CharacterNetID), payload.Layout)
 end)
 
-Net.RegisterListener("EPIPENCOUNTERS_Hotbar_SkillUseChanged", function(payload)
-    Hotbar.SetPreparedSkill(Ext.Entity.GetCharacter(payload.CharacterNetID), payload.SkillID, payload.Casting)
-end)
-
 -- Reposition combat log button
 Hotbar:RegisterListener("Refreshed", function(barAmount)
     Hotbar:GetRoot().showLog_mc.y = 874 - (barAmount - 1) * (50 + 8)
@@ -1060,14 +1039,6 @@ GameState.Events.RunningTick:Subscribe(function (e)
 
         if Hotbar.tickCounter > math.maxinteger - 10 then
             Hotbar.tickCounter = 0
-        end
-    end
-
-    -- Failsafe for skill use greyout
-    local preparedSkill = Hotbar.GetPreparedSkill()
-    if preparedSkill and preparedSkill.Casting then
-        if Ext.MonotonicTime() - preparedSkill.StartTime > Hotbar.SKILL_USE_TIME then
-            Hotbar.SetPreparedSkill(nil, nil, false)
         end
     end
 end)
