@@ -216,6 +216,40 @@ function Client.WorldPositionToScreen(worldPosition, playerIndex)
     return Vector.Create(screenX, screenY)
 end
 
+---Returns whether the cursor is over any UIObject.
+---@param playerIndex integer? Defaults to `1`.
+---@return boolean
+function Client.IsCursorOverUI(playerIndex)
+    local playerState = Client._GetUIObjectManagerState(playerIndex)
+
+    return playerState.UIUnderMouseCursor
+end
+
+---Returns the last UIObject the player has interacted with.
+---@param playerIndex integer? Defaults to `1`.
+---@return UIObject?
+function Client.GetActiveUI(playerIndex)
+    local playerState = Client._GetUIObjectManagerState(playerIndex)
+    local handle = playerState.ActiveUIObjectHandle
+    local ui = nil
+
+    if Ext.Utils.IsValidHandle(handle) then
+        ui = Ext.UI.GetByHandle(handle)
+    end
+
+    return ui
+end
+
+---Returns the UIObjectManager state for a player.
+---@param playerIndex integer? Defaults to `1`.
+---@return UIObjectManagerPlayerState
+function Client._GetUIObjectManagerState(playerIndex)
+    playerIndex = playerIndex or 1
+    local playerState = Ext.UI.GetUIObjectManager().PlayerStates[playerIndex]
+
+    return playerState
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
