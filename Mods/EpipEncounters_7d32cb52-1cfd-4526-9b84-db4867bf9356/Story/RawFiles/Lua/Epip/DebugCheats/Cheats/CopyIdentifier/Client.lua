@@ -2,7 +2,7 @@
 ---@class Feature_DebugCheats
 local DebugCheats = Epip.GetFeature("Feature_DebugCheats")
 
-local action = DebugCheats.GetAction("CopyIdentifier") ---@cast action Feature_DebugCheats_Action_Character
+local action = DebugCheats.GetAction("CopyIdentifier")
 
 ---@type {Type: "Skill"|"Item"|"Character", Identifier: any}?
 local lastEntity = nil
@@ -77,7 +77,7 @@ end)
 
 -- Listen for the action being executed.
 action:Subscribe(function (ev) -- TODO remake into its own action type
-    local entity = GetEntity() or ev.Context.TargetCharacter
+    local entity = GetEntity() or ev.Context.TargetGameObject
     local text = entity.MyGuid
 
     Client.UI.MessageBox.CopyToClipboard(text)

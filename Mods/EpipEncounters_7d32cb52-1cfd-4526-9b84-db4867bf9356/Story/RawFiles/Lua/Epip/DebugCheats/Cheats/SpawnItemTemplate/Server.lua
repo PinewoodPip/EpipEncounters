@@ -2,7 +2,7 @@
 ---@class Feature_DebugCheats
 local DebugCheats = Epip.GetFeature("Feature_DebugCheats")
 
-local action = DebugCheats.GetAction("SpawnItemTemplate") ---@cast action Feature_DebugCheats_Action_ParametrizedCharacter
+local action = DebugCheats.GetAction("SpawnItemTemplate")
 
 ---------------------------------------------
 -- EVENT LISTENERS

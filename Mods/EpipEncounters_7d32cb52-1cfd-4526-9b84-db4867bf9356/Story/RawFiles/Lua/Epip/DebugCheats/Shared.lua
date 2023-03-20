@@ -1,6 +1,4 @@
 
-local Set = DataStructures.Get("DataStructures_Set")
-
 ---@class Feature_DebugCheats : Feature
 local DebugCheats = {
     _Actions = {}, ---@type table<string, Feature_DebugCheats_Action>
@@ -57,7 +55,7 @@ local DebugCheats = {
         ActionExecuted = {}, ---@type Event<Feature_DebugCheats_Event_ActionExecuted>
     },
     Hooks = {
-        IsActionValidInContext = {}, ---@type Event<Feature_DebugCheats_Hook_IsActionValidInContext>
+
     }
 }
 Epip.RegisterFeature("DebugCheats", DebugCheats)
@@ -68,12 +66,7 @@ Epip.RegisterFeature("DebugCheats", DebugCheats)
 
 ---@class Feature_DebugCheats_Event_ActionExecuted
 ---@field Action Feature_DebugCheats_Action
----@field Context Feature_DebugCheats_Action_Context
-
----@class Feature_DebugCheats_Hook_IsActionValidInContext
----@field Action Feature_DebugCheats_Action
----@field Context Feature_DebugCheats_Context
----@field IsValid boolean Hookable. Defaults to `false`.
+---@field Context Feature_DebugCheats_Action_ContextData
 
 ---------------------------------------------
 -- NET MESSAGES
@@ -87,11 +80,18 @@ Epip.RegisterFeature("DebugCheats", DebugCheats)
 -- CLASSES
 ---------------------------------------------
 
----@alias Feature_DebugCheats_Context "Character"|"Item"|"Ground"
+---@alias Feature_DebugCheats_Context "SourceCharacter"|"TargetCharacter"|"SourcePosition"|"TargetPosition"|"TargetItem"|"String"|"Amount"|"TargetGameObject"|"AffectParty"
 
----@class Feature_DebugCheats_Action_Context
-
----@alias Feature_DebugCheats_ActionType "Feature_DebugCheats_Action_Character"|"Feature_DebugCheats_Action_Item"|"Feature_DebugCheats_Action_Position"|"Feature_DebugCheats_Action_Quantified"|"Feature_DebugCheats_Action_QuantifiedCharacter"|"Feature_DebugCheats_Action_String"|"Feature_DebugCheats_Action_ParametrizedCharacter"|"Feature_DebugCheats_Action_CharacterPosition"
+---@class Feature_DebugCheats_Action_ContextData
+---@field SourceCharacter Character?
+---@field TargetCharacter Character?
+---@field SourcePosition Vector3?
+---@field TargetPosition Vector3?
+---@field TargetItem Item?
+---@field TargetGameObject (Character|Item)?
+---@field String string?
+---@field Amount integer?
+---@field AffectParty boolean?
 
 ---------------------------------------------
 -- METHODS
@@ -99,7 +99,7 @@ Epip.RegisterFeature("DebugCheats", DebugCheats)
 
 ---Executes an action.
 ---@param actionID string
----@param contextData Feature_DebugCheats_Action_Context
+---@param contextData Feature_DebugCheats_Action_ContextData
 function DebugCheats.ExecuteAction(actionID, contextData)
     local action = DebugCheats.GetAction(actionID)
     ---@type Feature_DebugCheats_Net_ActionExecuted
@@ -122,16 +122,11 @@ function DebugCheats.ExecuteAction(actionID, contextData)
 end
 
 ---Registers an action.
----@generic T
 ---@param id string
----@param actionType `T`|Feature_DebugCheats_ActionType
----@param data table
----@return Feature_DebugCheats_Action|`T` --Will call default constructor with only ID passed.
-function DebugCheats.RegisterAction(id, actionType, data)
-    local class = DebugCheats:GetClass(actionType)
-    if not (class and class:ImplementsClass("Feature_DebugCheats_Action")) then
-        DebugCheats:Error("RegisterAction", actionType, " does not implement Feature_DebugCheats_Action")
-    end
+---@param data Feature_DebugCheats_Action
+---@return Feature_DebugCheats_Action
+function DebugCheats.RegisterAction(id, data)
+    local class = DebugCheats:GetClass("Feature_DebugCheats_Action")
     data.ID = id
     local instance = class.Create(data)
 
@@ -152,20 +147,23 @@ function DebugCheats.GetAction(id)
     return action
 end
 
----Returns the actions that are valid for a context type.
----@param context Feature_DebugCheats_Context
+---Returns the actions that are valid for a context.
+---@param context Feature_DebugCheats_Action_ContextData
 ---@return Feature_DebugCheats_Action[]
 function DebugCheats.GetActions(context)
     local actions = {}
 
     for _,action in pairs(DebugCheats._Actions) do
-        local hook = DebugCheats.Hooks.IsActionValidInContext:Throw({
-            Action = action,
-            Context = context,
-            IsValid = false,
-        })
+        local isValid = true
 
-        if hook.IsValid then
+        -- Exclude actions that require more context than the table offers
+        for contextType in action.Contexts:Iterator() do
+            if context[contextType] == nil then
+                isValid = false
+            end
+        end
+
+        if isValid then
             table.insert(actions, action)
         end
     end
@@ -174,7 +172,7 @@ function DebugCheats.GetActions(context)
 end
 
 ---Encodes a context to be sent over the net.
----@param context Feature_DebugCheats_Action_Context|Feature_DebugCheats_Action_Context_Character|Feature_DebugCheats_Action_Context_Quantified|Feature_DebugCheats_Action_Context_String|Feature_DebugCheats_Action_Context_Position|Feature_DebugCheats_Action_Context_Item
+---@param context Feature_DebugCheats_Action_ContextData
 ---@return table
 function DebugCheats._EncodeNetContext(context) -- TODO make this hookable
     local data = {}
@@ -182,18 +180,21 @@ function DebugCheats._EncodeNetContext(context) -- TODO make this hookable
     data.CharacterNetID = context.TargetCharacter and context.TargetCharacter.NetID
     data.SourceCharacterNetID = context.SourceCharacter and context.SourceCharacter.NetID
     data.ItemNetID = context.TargetItem
-    data.Position = context.Position
+    data.TargetPosition = context.TargetPosition
+    data.SourcePosition = context.SourcePosition
+    data.TargetGameObjectNetID = context.TargetGameObject and context.TargetGameObject.NetID
     data.Amount = context.Amount
     data.String = context.String
+    data.AffectParty = context.AffectParty
 
     return data
 end
 
 ---Parses context data from a net message.
 ---@param data table
----@return Feature_DebugCheats_Action_Context
+---@return Feature_DebugCheats_Action_ContextData
 function DebugCheats._ParseNetContext(data) -- TODO make this hookable
-    local context = {} ---@type Feature_DebugCheats_Action_Context
+    local context = {} ---@type Feature_DebugCheats_Action_ContextData
 
     if data.CharacterNetID then
         context.TargetCharacter = Character.Get(data.CharacterNetID)
@@ -204,19 +205,26 @@ function DebugCheats._ParseNetContext(data) -- TODO make this hookable
     if data.ItemNetID then
         context.TargetItem = Item.Get(data.ItemNetID)
     end
-    if data.Position then
-        context.Position = Vector.Create(data.Position)
+    if data.TargetPosition then
+        context.TargetPosition = Vector.Create(data.TargetPosition)
+    end
+    if data.SourcePosition then
+        context.SourcePosition = Vector.Create(data.SourcePosition)
+    end
+    if data.TargetGameObjectNetID then
+        context.TargetGameObject = Ext.Entity.GetGameObject(data.TargetGameObjectNetID)
     end
 
     context.Amount = data.Amount
     context.String = data.String
+    context.AffectParty = data.AffectParty
 
     return context
 end
 
 ---Executes an action.
 ---@param action Feature_DebugCheats_Action
----@param contextData Feature_DebugCheats_Action_Context
+---@param contextData Feature_DebugCheats_Action_ContextData
 function DebugCheats._ThrowExecuteActionEvent(action, contextData)
     DebugCheats.Events.ActionExecuted:Throw({
         Action = action,
@@ -236,27 +244,4 @@ Net.RegisterListener(DebugCheats.NET_MSG_ACTION_EXECUTED, function (payload)
     DebugCheats:DebugLog("Received action from other context", action:GetID())
 
     DebugCheats._ThrowExecuteActionEvent(action, context)
-end)
-
--- Default implementation for IsActionValidInContext.
----@type table<Feature_DebugCheats_Context, DataStructures_Set<string>>
-local CONTEXT_CLASSES = {
-    ["Character"] = Set.Create({
-        "Feature_DebugCheats_Action_Character",
-        "Feature_DebugCheats_Action_ParametrizedCharacter",
-    }),
-    ["Item"] = Set.Create({
-        "Feature_DebugCheats_Action_Item",
-    }),
-    ["Ground"] = Set.Create({
-        "Feature_DebugCheats_Action_Position",
-        "Feature_DebugCheats_Action_CharacterPosition",
-    }),
-}
-DebugCheats.Hooks.IsActionValidInContext:Subscribe(function (ev)
-    local context = ev.Context
-
-    if CONTEXT_CLASSES[context]:Contains(ev.Action:GetClassName()) then
-        ev.IsValid = true
-    end
 end)

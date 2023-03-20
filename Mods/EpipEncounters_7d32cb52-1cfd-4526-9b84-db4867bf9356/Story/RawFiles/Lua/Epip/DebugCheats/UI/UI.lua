@@ -67,7 +67,7 @@ function UI.Setup(context, entityHandle)
 
     DebugCheatsUI:DebugLog("Opening UI with context", context)
 
-    local actions = DebugCheats.GetActions(context)
+    local actions = DebugCheats.GetActions(DebugCheatsUI._GetContext())
     UI._RenderActions(actions)
 
     UI._UpdateContextLabel()
@@ -123,24 +123,40 @@ function UI._Initialize()
     UI.ActionList:Clear()
 end
 
----Executes an action.
----@param action Feature_DebugCheats_Action
----@param contextData Feature_DebugCheats_Action_Context Fields related to the basic context (Character, Item) will be automatically filled out.
-function DebugCheatsUI._ExecuteAction(action, contextData)
+---Returns the context data currently available.
+---@param contextData Feature_DebugCheats_Action_ContextData? Used as a base.
+---@return Feature_DebugCheats_Action_ContextData
+function DebugCheatsUI._GetContext(contextData)
+    contextData = contextData or {}
     local currentContext = DebugCheatsUI._CurrentContext
+    local clientChar = Client.GetCharacter()
 
-    contextData.Position = DebugCheatsUI._CurrentPosition
-    contextData.SourceCharacter = Client.GetCharacter()
+    contextData.TargetPosition = DebugCheatsUI._CurrentPosition
+    contextData.SourceCharacter = clientChar
 
     if currentContext == "Character" then
         local char = Character.Get(DebugCheatsUI._CurrentEntityHandle)
+        contextData.SourcePosition = Vector.Create(clientChar.WorldPos)
         contextData.TargetCharacter = char
-        contextData.Position = Vector.Create(char.WorldPos)
+        contextData.TargetPosition = Vector.Create(char.WorldPos)
     elseif currentContext == "Item" then
-        local item = Character.Get(DebugCheatsUI._CurrentEntityHandle)
+        local item = Item.Get(DebugCheatsUI._CurrentEntityHandle)
         contextData.TargetItem = item
-        contextData.Position = Vector.Create(item.WorldPos)
+        contextData.TargetPosition = Vector.Create(item.WorldPos)
     end
+
+    contextData.TargetGameObject = contextData.TargetCharacter or contextData.TargetItem
+
+    contextData.AffectParty = Client.Input.IsShiftPressed() -- TODO explain this somewhere
+
+    return contextData
+end
+
+---Executes an action.
+---@param action Feature_DebugCheats_Action
+---@param contextData Feature_DebugCheats_Action_ContextData Fields related to the basic context (Character, Item) will be automatically filled out.
+function DebugCheatsUI._ExecuteAction(action, contextData)
+    contextData = DebugCheatsUI._GetContext(contextData)    
 
     DebugCheats.ExecuteAction(action:GetID(), contextData)
 end
@@ -211,20 +227,14 @@ end)
 
 -- Render built-in action types.
 DebugCheatsUI.Events.RenderAction:Subscribe(function (ev)
-    local actionType = ev.Action:GetClassName() ---@cast actionType Feature_DebugCheats_ActionType
     local action = ev.Action
 
-    if actionType == "Feature_DebugCheats_Action_Character" then
-        DebugCheatsUI._RenderButton(action)
-    elseif actionType == "Feature_DebugCheats_Action_Item" then
-        DebugCheatsUI._RenderButton(action)
-    elseif actionType == "Feature_DebugCheats_Action_Position" then
-        DebugCheatsUI._RenderButton(action)
-    elseif actionType == "Feature_DebugCheats_Action_CharacterPosition" then
-        DebugCheatsUI._RenderButton(action)
-    elseif actionType == "Feature_DebugCheats_Action_ParametrizedCharacter" then
+    if action:RequiresContext({"SourceCharacter", "Amount", "String"}) then
         DebugCheatsUI._RenderQuantifiedTextField(action)
+    elseif action:RequiresContext("SourceCharacter") or action:RequiresContext("TargetCharacter") or action:RequiresContext("TargetPosition") or action:RequiresContext("TargetItem") or action:RequiresContext("TargetGameObject") then
+        DebugCheatsUI._RenderButton(action)
     else
-        DebugCheatsUI:DebugLog("No built-in rendering for action type", actionType)
+        DebugCheatsUI:DebugLog("No built-in rendering for action context combination")
+        DebugCheatsUI:Dump(action.Contexts)
     end
 end)

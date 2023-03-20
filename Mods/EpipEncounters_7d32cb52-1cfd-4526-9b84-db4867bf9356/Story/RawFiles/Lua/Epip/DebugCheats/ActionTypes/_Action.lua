@@ -1,8 +1,10 @@
 
 ---@class Feature_DebugCheats
 local DebugCheats = Epip.GetFeature("Feature_DebugCheats")
+local Set = DataStructures.Get("DataStructures_Set")
 
 ---@class Feature_DebugCheats_Action : Class, I_Identifiable, I_Describable
+---@field Contexts DataStructures_Set<Feature_DebugCheats_Context> Can pass a normal table list for constructor.
 ---@field ID string
 local _Action = {}
 DebugCheats:RegisterClass("Feature_DebugCheats_Action", _Action)
@@ -17,9 +19,35 @@ Interfaces.Apply(_Action, "I_Describable")
 ---@param data Feature_DebugCheats_Action
 ---@return Feature_DebugCheats_Action
 function _Action.Create(data)
+    if table.isempty(data.Contexts or {}) then
+        DebugCheats:Error("Action.Create()", "Actions must define Contexts")
+    end
+    if not OOP.IsClass(data.Contexts, "DataStructures_Set") then
+        data.Contexts = Set.Create(data.Contexts)
+    end
     local instance = _Action:__Create(data) ---@cast instance Feature_DebugCheats_Action
 
     return instance
+end
+
+---Returns whether this action requires a certain context.
+---@param contextID Feature_DebugCheats_Context|Feature_DebugCheats_Context[] A single context of list. If a list is passed, all contexts will need to be required for the function to return true.
+---@return boolean
+function _Action:RequiresContext(contextID)
+    local requires = true
+
+    if type(contextID) == "table" then
+        for _,context in ipairs(contextID) do
+            if not self.Contexts:Contains(context) then
+                requires = false
+                break
+            end
+        end
+    else
+        requires = self.Contexts:Contains(contextID)
+    end
+
+    return requires
 end
 
 ---Registers a handler for the action.
