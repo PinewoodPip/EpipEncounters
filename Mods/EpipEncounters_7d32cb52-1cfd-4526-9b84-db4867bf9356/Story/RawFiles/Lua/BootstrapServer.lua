@@ -247,8 +247,6 @@ LOAD_ORDER = {
     "Debug/Shared.lua",
     "Debug/Server.lua",
 
-    {ScriptSet = "Epip/AnimationCancelling"},
-
     "Epip/OsirisIDEAnnotationGenerator.lua",
 
     -- Debug Cheats

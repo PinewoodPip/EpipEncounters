@@ -55,19 +55,14 @@ local AnimCancel = {
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
 
+    SupportedGameStates = _Feature.GAME_STATES.RUNNING_SESSION,
+
     Hooks = {
         GetDelay = {}, ---@type Event<Feature_AnimationCancelling_Hook_GetDelay>
         IsSkillEligible = {}, ---@type Event<Feature_AnimationCancelling_Hook_IsSkillEligible>
     }
 }
 Epip.RegisterFeature("AnimationCancelling", AnimCancel)
-
----------------------------------------------
--- NET MESSAGES
----------------------------------------------
-
----@class Epip_Feature_AnimationCancelling : NetMessage
----@field SkillID string
 
 ---------------------------------------------
 -- EVENTS/HOOKS
@@ -95,7 +90,7 @@ function AnimCancel.GetDelay(char, skillID)
     local hook = AnimCancel.Hooks.GetDelay:Throw({
         Character = char,
         SkillID = skillID,
-        Delay = 0,
+        Delay = 0.05,
     })
 
     return hook.Delay

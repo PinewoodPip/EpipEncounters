@@ -39,27 +39,49 @@ function AnimCancel:IsEnabled()
     return _Feature.IsEnabled(self) and self:GetSettingValue(AnimCancel.Settings.Enabled) == true
 end
 
+---Cancels the current animation of the client character.
+function AnimCancel:CancelAnimation()
+    local char = Client.GetCharacter()
+    local skill = Character.GetCurrentSkill(char)
+
+    if skill then
+        local delay = AnimCancel.GetDelay(char, skill)
+    
+        local func = function (_)
+            Minimap:ExternalInterfaceCall("pingButtonPressed")
+    
+            Timer.StartTickTimer(AnimCancel.DEFAULT_DELAY, function (_)
+                Minimap:ExternalInterfaceCall("pingButtonPressed")
+            end)
+        end
+
+        AnimCancel:DebugLog("Cancelling animation")
+    
+        Timer.Start(delay, func)
+    end
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
 
--- Listen for the server notifying us it's safe to cancel an animation.
-Net.RegisterListener(AnimCancel.NET_MESSAGE, function (payload)
-    local char = Client.GetCharacter()
+-- Listen for changes in the client character's skill state.
+Client.Events.SkillStateChanged:Subscribe(function (ev)
+    GameState.Events.RunningTick:Unsubscribe("Feature_AnimationCancelling_SkillState")
 
-    if AnimCancel:IsEnabled() and AnimCancel.IsEligible(char, payload.SkillID) then
-        local delay = AnimCancel.GetDelay(char, payload.SkillID)
+    AnimCancel:DebugLog("Skill state changed", ev.State)
 
-        local func = function (_)
-            Minimap:ExternalInterfaceCall("pingButtonPressed")
+    if ev.State then
+        GameState.Events.RunningTick:Subscribe(function (_)
+            local state = Character.GetSkillState(Client.GetCharacter())
 
-            Timer.StartTickTimer(AnimCancel.DEFAULT_DELAY, function (_)
-                Client.Input.Inject("Key", "escape", "Pressed")
-                Client.Input.Inject("Key", "escape", "Released")
-            end)
-        end
+            ---@diagnostic disable-next-line: undefined-field
+            if state and state.State.Value >= Ext.Enums.SkillStateType.CastFinished.Value then
+                AnimCancel:CancelAnimation()
 
-        Timer.Start(delay, func)
+                GameState.Events.RunningTick:Unsubscribe("Feature_AnimationCancelling_SkillState")
+            end
+        end, {StringID = "Feature_AnimationCancelling_SkillState"})
     end
 end)
 

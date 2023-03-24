@@ -32,7 +32,6 @@ if Ext.Utils.GameVersion() ~= "v3.6.51.9303" then
         
                     Ext.Require(prefixedGUID, script.ScriptSet .. "/Shared.lua")
                     Ext.Require(prefixedGUID, script.ScriptSet .. contextSpecificScript)
-    
                 elseif script.Script then
                     Ext.Require(prefixedGUID, script.Script)
                 end
