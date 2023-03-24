@@ -695,7 +695,7 @@ function Character.GetCurrentSkill(char)
 
     if state then
         skill = state.SkillId
-        string.sub(skill, 0, #skill - 3)
+        skill = string.sub(skill, 0, #skill - 3)
     end
 
     return skill
