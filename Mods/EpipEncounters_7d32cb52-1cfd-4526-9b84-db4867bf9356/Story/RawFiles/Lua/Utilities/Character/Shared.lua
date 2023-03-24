@@ -673,7 +673,7 @@ end
 
 ---Returns the current skill state of char.
 ---@param char Character
----@return EclSkillState|EsvSkillState
+---@return (EclSkillState|EsvSkillState)?
 function Character.GetSkillState(char)
     local state
 
@@ -688,12 +688,17 @@ end
 
 ---Returns the ID of the skill that char is preparing or casting.
 ---@param char Character
----@return string
+---@return string? --`nil` if the character has no active skill state.
 function Character.GetCurrentSkill(char)
     local state = Character.GetSkillState(char)
-    local skill = state.SkillId
+    local skill = nil
 
-    return string.sub(skill, 0, #skill - 3)
+    if state then
+        skill = state.SkillId
+        string.sub(skill, 0, #skill - 3)
+    end
+
+    return skill
 end
 
 ---Returns whether char is preparing a skill.
@@ -702,7 +707,8 @@ end
 function Character.IsPreparingSkill(char)
     local state = Character.GetSkillState(char)
 
-    return state and (state.State == 3 or state.State == 4)
+    ---@diagnostic disable-next-line: undefined-field
+    return state and (state.State.Value == Ext.Enums.SkillStateType.PickTargets.Value or state.State.Value == Ext.Enums.SkillStateType.Preparing.Value)
 end
 
 ---Returns whether char is casting a skill.
@@ -711,7 +717,8 @@ end
 function Character.IsCastingSkill(char)
     local state = Character.GetSkillState(char)
 
-    return state and state.State >= 5
+    ---@diagnostic disable-next-line: undefined-field
+    return state and state.State.Value >= Ext.Enums.SkillStateType.Casting.Value
 end
 
 ---Throws the ItemEquipped event.
@@ -720,15 +727,18 @@ end
 function Character._ThrowItemEquippedEvent(character, item)
     local equippedSlot
 
-    if Ext.IsServer() then
-        equippedSlot = item.Slot
-    else
-        equippedSlot = item.CurrentSlot
+    -- Prevent firing the event if the item was destroyed
+    if item then
+        if Ext.IsServer() then
+            equippedSlot = item.Slot
+        else
+            equippedSlot = item.CurrentSlot
+        end
+        
+        Character.Events.ItemEquipped:Throw({
+            Character = character,
+            Item = item,
+            Slot = Ext.Enums.ItemSlot[equippedSlot],
+        })
     end
-    
-    Character.Events.ItemEquipped:Throw({
-        Character = character,
-        Item = item,
-        Slot = Ext.Enums.ItemSlot[equippedSlot],
-    })
 end
