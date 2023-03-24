@@ -50,6 +50,7 @@ Client = {
 
     Events = {
         ActiveCharacterChanged = {}, ---@type Event<ClientLib_Event_ActiveCharacterChanged>
+        SkillStateChanged = {}, ---@type Event<ClientLib_Event_SkillStateChanged>
     }
 }
 Epip.InitializeLibrary("Client", Client)
@@ -61,6 +62,11 @@ Epip.InitializeLibrary("Client", Client)
 ---@class ClientLib_Event_ActiveCharacterChanged
 ---@field PreviousCharacter EclCharacter
 ---@field NewCharacter EclCharacter
+
+---Fired when the active client character enters or exits a skill state.
+---@class ClientLib_Event_SkillStateChanged
+---@field Character EclCharacter The active client character.
+---@field State EclSkillState?
 
 ---------------------------------------------
 -- METHODS
@@ -290,6 +296,32 @@ Ext.RegisterUITypeCall(119, "setPosition", function(ui, method, pos1, mode, pos2
     local viewport = Ext.UI.GetViewportSize()
     
     Client:FireEvent("ViewportChanged", viewport[1], viewport[2])
+end)
+
+-- Listen for the active character's skill state changing to fire events.
+local inSkillState = false
+GameState.Events.RunningTick:Subscribe(function (_)
+    local char = Client.GetCharacter()
+    
+    if char then
+        local state = Character.GetSkillState(char)
+
+        if inSkillState and state == nil then
+            Client.Events.SkillStateChanged:Throw({
+                Character = char,
+                State = nil,
+            })
+
+            inSkillState = false
+        elseif not inSkillState and state then
+            Client.Events.SkillStateChanged:Throw({
+                Character = char,
+                State = state,
+            })
+
+            inSkillState = true
+        end
+    end
 end)
 
 ---------------------------------------------
