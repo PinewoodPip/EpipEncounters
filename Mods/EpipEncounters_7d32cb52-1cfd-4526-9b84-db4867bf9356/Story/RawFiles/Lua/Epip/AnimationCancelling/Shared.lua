@@ -8,17 +8,14 @@ local AnimCancel = {
 
     ---@type table<string, number> Delay for specific skills - in seconds!.
     SKILL_DELAYS = {
-        ["Projectile_StaffOfMagus"] = 0.5,
-        ["Projectile_Multishot"] = 0.5,
+        
     },
     BANNED_ARCHETYPES = Set.Create({
-        "ProjectileStrike",
-        "MultiStrike",
         "Jump",
+        "Teleportation",
     }),
     BANNED_SKILLS = Set.Create({
         "Projectile_Flight",
-        "Projectile_ArrowSpray",
         "Target_DualWieldingAttack",
         "Target_Flurry",
         "Target_DaggersDrawn",

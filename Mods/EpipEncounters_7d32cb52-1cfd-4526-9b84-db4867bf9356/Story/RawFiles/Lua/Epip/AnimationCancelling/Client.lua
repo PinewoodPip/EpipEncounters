@@ -67,13 +67,16 @@ end
 
 -- Listen for changes in the client character's skill state.
 Client.Events.SkillStateChanged:Subscribe(function (ev)
+    local char = Client.GetCharacter()
+
     GameState.Events.RunningTick:Unsubscribe("Feature_AnimationCancelling_SkillState")
 
     AnimCancel:DebugLog("Skill state changed", ev.State)
 
-    if ev.State then
+    if AnimCancel:IsEnabled() and ev.State and AnimCancel.IsEligible(char, Character.GetCurrentSkill(char)) then
         GameState.Events.RunningTick:Subscribe(function (_)
-            local state = Character.GetSkillState(Client.GetCharacter())
+            char = Client.GetCharacter()
+            local state = Character.GetSkillState(char)
 
             ---@diagnostic disable-next-line: undefined-field
             if state and state.State.Value >= Ext.Enums.SkillStateType.CastFinished.Value then
