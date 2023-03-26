@@ -404,13 +404,13 @@ Hotbar.RegisterActionListener("UseArbitrarySkill", "ActionUsed", function(char, 
     end
 end)
 
-Hotbar.RegisterActionListener("UseArbitraryTemplate", "ActionUsed", function(char, data, buttonIndex)
+Hotbar.RegisterActionListener("UseArbitraryTemplate", "ActionUsed", function(char, _, buttonIndex)
     if buttonIndex then
         local template = boundItems[buttonIndex]
 
         if template then
             Net.PostToServer("EPIPENCOUNTERS_Hotbar_UseTemplate", {
-                NetID = char.NetID,
+                CharacterNetID = char.NetID,
                 Template = template
             })
         end

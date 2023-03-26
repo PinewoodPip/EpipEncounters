@@ -1,7 +1,7 @@
 local Hotbar = {
     
 }
-Epip.AddFeature("HotbarManager", "HotbarManager", Hotbar)
+Epip.RegisterFeature("HotbarManager", Hotbar)
 Hotbar:Debug()
 
 ---@param char EsvCharacter
@@ -15,9 +15,9 @@ end
 ---------------------------------------------
 
 Net.RegisterListener("EPIPENCOUNTERS_Hotbar_UseItem", function(payload)
-    Hotbar.UseItem(Character.Get(payload.CharNetID), Item.Get(payload.ItemNetID))
+    Hotbar.UseItem(payload:GetCharacter(), payload:GetItem())
 end)
 
 Net.RegisterListener("EPIPENCOUNTERS_Hotbar_UseTemplate", function(payload)
-    Osi.PROC_PIP_Hotbar_UseTemplate(Ext.GetCharacter(payload.NetID).MyGuid, payload.Template)
+    Osiris.PROC_PIP_Hotbar_UseTemplate(payload:GetCharacter(), payload.Template)
 end)

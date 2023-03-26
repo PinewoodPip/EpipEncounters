@@ -244,6 +244,11 @@ end
 ---@class EPIPENCOUNTERS_Hotbar_SetLayout : NetLib_Message_Character
 ---@field Layout HotbarState
 
+---@class EPIPENCOUNTERS_Hotbar_UseItem : NetLib_Message_Character, NetLib_Message_Item
+
+---@class EPIPENCOUNTERS_Hotbar_UseTemplate : NetLib_Message_Character
+---@field Template GUID
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
@@ -1399,7 +1404,7 @@ function Hotbar.UseSkill(skill)
     if GetExtType(skill) == "ecl::Item" then
         Net.PostToServer("EPIPENCOUNTERS_Hotbar_UseItem", {
             ItemNetID = skill.NetID,
-            CharNetID = char.NetID,
+            CharacterNetID = char.NetID,
         })
     else
         if slot.Type == "Skill" then
