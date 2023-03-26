@@ -246,6 +246,8 @@ LOAD_ORDER = {
 
     "Debug/Shared.lua",
     "Debug/Server.lua",
+    
+    {ScriptSet = "Epip/HotbarPersistence"},
 
     "Epip/OsirisIDEAnnotationGenerator.lua",
 

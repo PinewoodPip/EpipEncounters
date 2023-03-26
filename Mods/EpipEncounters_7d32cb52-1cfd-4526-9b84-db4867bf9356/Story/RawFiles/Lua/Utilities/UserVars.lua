@@ -38,13 +38,13 @@ function UserVars.Register(name, data)
     data.Name = name
     data.Client = data.Client ~= nil and data.Client or true
     data.Server = data.Server ~= nil and data.Server or true
-    data.WriteableOnServer = data.WriteableOnServer or true
-    data.WriteableOnClient = data.WriteableOnClient or false
+    data.WriteableOnServer = data.WriteableOnServer ~= nil and data.WriteableOnServer or true
+    data.WriteableOnClient = data.WriteableOnClient ~= nil and data.WriteableOnClient or false
     data.Persistent = data.Persistent or false
-    data.SyncToClient = data.SyncToClient or true
-    data.SyncToServer = data.SyncToServer or true
+    data.SyncToClient = data.SyncToClient ~= nil and data.SyncToClient or true
+    data.SyncToServer = data.SyncToServer ~= nil and data.SyncToServer or true
     data.SyncOnWrite = data.SyncOnWrite or false
-    data.SyncOnTick = data.SyncOnTick or true
+    data.SyncOnTick = data.SyncOnTick ~= nil and data.SyncOnTick or true
     data.DontCache = data.DontCache or false
 
     UserVars._RegisteredVariables[name] = data

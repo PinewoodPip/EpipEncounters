@@ -594,6 +594,8 @@ LOAD_ORDER = {
         },
         WIP = true,
     },
+
+    {ScriptSet = "Epip/HotbarPersistence"},
     
     "Epip/Client/EpipSettingsMenu.lua",
 

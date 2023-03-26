@@ -10,17 +10,6 @@ DB_PIP_IncompatibleModWarningSeen("", "")
 THEN
 DB_PIP_IncompatibleModWarningSeen("", "");
 
-// Compiler dummy.
-IF ItemSendToHomesteadEvent(_Char, _)
-AND
-DB_PIP_Hotbar_Enabled(2)
-AND
-DB_PIP_Hotbar_State(_Char, 0, 0, 0)
-THEN
-DB_PIP_Hotbar_Enabled(2);
-NOT DB_PIP_Hotbar_Enabled(2);
-DB_PIP_Hotbar_State(_Char, 0, 0, 0); // Char, bar, row, visible
-
 IF NRD_OnActionStateEnter(_Char, _State)
 THEN
 DB_NOOP();

@@ -155,12 +155,14 @@ local Hotbar = {
         BarPlusMinusButtonPressed = {}, ---@type Event<HotbarUI_Event_BarPlusMinusButtonPressed>
         SlotPressed = {}, ---@type Event<HotbarUI_Event_SlotPressed>
         ContentDraggedToHotkey = {Legacy = false}, ---@type Event<HotbarUI_Event_ContentDraggedToHotkey>
+        StateChanged = {Legacy = false}, ---@type Event<HotbarUI_Event_StateChanged>
     },
     Hooks = {
         IsBarVisible = {}, ---@type Event<HotbarUI_Hook_IsBarVisible>
         CanAddBar = {}, ---@type Event<HotbarUI_Hook_CanAddBar>
         CanRemoveBar = {}, ---@type Event<HotbarUI_Hook_CanRemoveBar>
         UpdateEngineActions = {}, ---@type Event<HotbarUI_Hook_UpdateEngineActions>
+        GetState = {Legacy = false}, ---@type Event<HotbarUI_Hook_GetState>
     },
 
     FILEPATH_OVERRIDES = {
@@ -225,6 +227,15 @@ end
 ---@class HotbarUI_Event_ContentDraggedToHotkey
 ---@field DragDrop DragDropManagerPlayerDragInfo
 ---@field Index integer
+
+---@class HotbarUI_Event_StateChanged
+---@field Character EclCharacter
+---@field State HotbarState
+
+---Thrown when a state is being initialized for a character that didn't have one instanced.
+---@class HotbarUI_Hook_GetState
+---@field Character EclCharacter
+---@field State HotbarState Hookable.
 
 ---------------------------------------------
 -- NET MESSAGES
@@ -321,6 +332,7 @@ function Hotbar.GetState(char)
     local guid = char.NetID
     local state = Hotbar.State[guid]
     
+    -- Create a new state
     if not state then
         Hotbar.State[guid] = {
             Bars = {
@@ -332,6 +344,11 @@ function Hotbar.GetState(char)
             },
         }
         state = Hotbar.State[guid]
+
+        state = Hotbar.Hooks.GetState:Throw({
+            Character = char,
+            State = state,
+        }).State
     end
 
     return state
@@ -348,6 +365,11 @@ function Hotbar.SetState(char, state)
     if char.Handle == Client.GetCharacter().Handle then
         Hotbar.Refresh()
     end
+
+    Hotbar.Events.StateChanged:Throw({
+        Character = char,
+        State = state,
+    })
 end
 
 ---Returns whether a row is visible for char.
@@ -661,6 +683,7 @@ end
 ---Adds an additional bar to char. Bars are added from bottom to top.
 ---@param char? EclCharacter
 function Hotbar.AddBar(char)
+    char = char or Client.GetCharacter()
     local count = Hotbar.GetBarCount(char)
     local state = Hotbar.GetState(char)
     local hook = {BarToAddIndex = count + 1, CanAdd = count < 5} ---@type HotbarUI_Hook_CanAddBar
@@ -678,11 +701,17 @@ function Hotbar.AddBar(char)
 
     Hotbar.Refresh()
     Hotbar.RenderSlots()
+
+    Hotbar.Events.StateChanged:Throw({
+        Character = char,
+        State = state,
+    })
 end
 
 ---Removes a bar from char. Bars are removed from top to bottom.
 ---@param char EclCharacter?
 function Hotbar.RemoveBar(char)
+    char = char or Client.GetCharacter()
     local count = Hotbar.GetBarCount(char)
     local state = Hotbar.GetState(char)
     local hook = {BarToRemoveIndex = count, CanRemove = count > 1} ---@type HotbarUI_Hook_CanRemoveBar
@@ -705,13 +734,19 @@ function Hotbar.RemoveBar(char)
     end
 
     Hotbar.Refresh()
+
+    Hotbar.Events.StateChanged:Throw({
+        Character = char,
+        State = state,
+    })
 end
 
 ---Cycles a bar's row.
 ---@param index integer Bar index.
 ---@param increment -1|1 Direction to cycle.
 function Hotbar.CycleBar(index, increment)
-    local state = Hotbar.GetState()
+    local char = Client.GetCharacter()
+    local state = Hotbar.GetState(char)
     local bar = state.Bars[index]
 
     -- Can only cycle visible bars.
@@ -736,6 +771,11 @@ function Hotbar.CycleBar(index, increment)
         bar.Row = nextRowIndex
 
         Hotbar:DebugLog("Cycled bar " .. index)
+
+        Hotbar.Events.StateChanged:Throw({
+            Character = char,
+            State = state,
+        })
     end
 end
 
@@ -951,8 +991,6 @@ end)
 Client.UI.GameMenu.Events.Opened:Subscribe(function (_)
     if GameState.IsInSession() then
         Hotbar.SaveData()
-    
-        Net.PostToServer("EPIPENCOUNTERS_Hotbar_SaveLayout", Hotbar.State)
     end
 end)
 
