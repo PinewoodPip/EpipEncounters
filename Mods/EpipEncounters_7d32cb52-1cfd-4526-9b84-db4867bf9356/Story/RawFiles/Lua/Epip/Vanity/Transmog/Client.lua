@@ -330,12 +330,17 @@ end)
 Character.Hooks.CreateEquipmentVisuals:Subscribe(function (ev)
     if ev.Item then
         local char = ev.Character
-        local transmoggedTemplate = Transmog.GetTransmoggedTemplate(ev.Item)
+        local transmoggedTemplateGUID = Transmog.GetTransmoggedTemplate(ev.Item)
         local slot = ev.Request.Slot
+        local template
 
-        if transmoggedTemplate then
-            local template = Ext.Template.GetTemplate(transmoggedTemplate) ---@cast template ItemTemplate
+        if transmoggedTemplateGUID then
+            template = Ext.Template.GetTemplate(transmoggedTemplateGUID) ---@cast template ItemTemplate
+        end
 
+        -- Only proceed if the item is transmogged into a template that
+        -- exists (ex. it won't if user removed the mod that it's from)
+        if template then
             if slot == "Weapon" or slot == "Shield" then
                 ev.Request.VisualResourceID = template.VisualTemplate
                 ev.Request.EquipmentSlotMask = 0
@@ -344,7 +349,7 @@ Character.Hooks.CreateEquipmentVisuals:Subscribe(function (ev)
                 -- Change the attachment point of weapons/offhands.
                 if not char.WeaponSheathed then
                     local bone
-                    local vanityData = Vanity.TEMPLATES[transmoggedTemplate]
+                    local vanityData = Vanity.TEMPLATES[transmoggedTemplateGUID]
 
                     if vanityData then
                         -- Set bone based on vanity tags.
@@ -367,7 +372,7 @@ Character.Hooks.CreateEquipmentVisuals:Subscribe(function (ev)
                         
                         ev.Request.AttachmentBoneName = bone
                     else
-                        Transmog:LogError("Vanity template data missing for " .. transmoggedTemplate)
+                        Transmog:LogError("Vanity template data missing for " .. transmoggedTemplateGUID)
                     end
                 end
             else
