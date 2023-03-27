@@ -205,12 +205,26 @@ end
 -- METHODS
 ---------------------------------------------
 
+function UI:Show()
+    local currentBoard = UI.Board
+
+    -- Create a new game if there was no board
+    if not currentBoard then
+        UI.Setup()
+    else -- Otherwise resume playing
+        currentBoard:SetPaused(false)
+    end
+
+    Client.UI._BaseUITable.Show(self)
+end
+
+-- Sets up a new game.
 function UI.Setup()
     local board = Bedazzled.CreateBoard()
+    local oldBoard = UI.Board
 
     -- Unsubscribe from previous board
-    if UI.Board then
-        local oldBoard = UI.Board
+    if oldBoard then
         oldBoard.Events.Updated:Unsubscribe("BedazzledUI_Updated")
         oldBoard.Events.MatchExecuted:Unsubscribe("BedazzledUI_MatchExecuted")
         oldBoard.Events.InvalidSwapPerformed:Unsubscribe("BedazzledUI_InvalidSwapPerformed")
@@ -261,8 +275,11 @@ function UI.Setup()
         local element = UI.GetGemElement(ev.Gem)
         element:UpdateIcon()
     end, {StringID = "BedazzledUI_GemTransformed"})
+end
 
-    UI:Show()
+function UI:Hide()
+    UI.Board:SetPaused(true)
+    Client.UI._BaseUITable.Hide(self)
 end
 
 ---@param gem Feature_Bedazzled_Board_Gem
@@ -646,6 +663,13 @@ function UI._Initialize(board)
         UI.GemContainer = gemContainer
         gemContainer:SetPosition(UI.BACKGROUND_SIZE[1]/2 - BOARD_WIDTH/2, 200)
 
+        local closeButton = bg:AddChild("CloseButton", "GenericUI_Element_Button")
+        closeButton:SetType("Close")
+        closeButton:SetPositionRelativeToParent("TopRight", -50, 50)
+        closeButton.Events.Pressed:Subscribe(function (_)
+            UI:Hide()
+        end)
+
         -- Create clickboxes for selecting gems
         local clickboxGrid = gemContainer:AddChild("ClickboxGrid", "GenericUI_Element_Grid")
         clickboxGrid:SetGridSize(board.Size:unpack())
@@ -892,7 +916,7 @@ end)
 
 -- Start the game when the context menu option is selected.
 Client.UI.ContextMenu.RegisterElementListener("epip_Feature_Bedazzled", "buttonPressed", function(_, _)
-    UI.Setup()
+    UI:Show()
 end)
 
 -- Cheat: middle-click pauses board updates.
