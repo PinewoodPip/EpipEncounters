@@ -473,6 +473,10 @@ function UI.OnGameOver()
         Function = "Cubic",
         Ease = "EaseOut",
     })
+
+    -- Clear gem selection
+    UI.ClearSelection()
+    UI.SecondarySelector:SetVisible(false)
 end
 
 ---@return boolean
@@ -498,9 +502,24 @@ function UI.GetSelectedGem()
     return gem
 end
 
+---Returns whether mouse swipes are possible in the current state.
+---Mouse swipes require a gem selection.
 ---@return boolean
 function UI.CanMouseSwipe()
-    return UI.GemSelection and UI.GemSelection.CanSwipe or false
+    local canSwipe = UI.GemSelection and UI.GemSelection.CanSwipe or false
+
+    canSwipe = canSwipe and UI.IsInteractable()
+
+    return canSwipe
+end
+
+---Returns whether the UI is in an interactable game state.
+---@return boolean?
+function UI.IsInteractable()
+    local board = UI.Board
+
+    -- Interaction in pause is still possible in debug (for setting up crazy matches)
+    return board and (not board:IsPaused() or Bedazzled:IsDebug()) and board:IsRunning()
 end
 
 function UI.ClearSelection()
@@ -510,23 +529,26 @@ function UI.ClearSelection()
     selector:SetVisible(false)
 end
 
+---Selects a gem.
 ---@param gem Feature_Bedazzled_Board_Gem
 function UI.SelectGem(gem)
     local element = UI.GetGemElement(gem)
     local selector = UI.Selector
     local visualPositionX, visualPositionY = element:GetGridPosition()
 
-    visualPositionX = visualPositionX - UI.CELL_SIZE[1]/2
-    visualPositionY = visualPositionY - UI.CELL_SIZE[2]/2
-
-    selector:SetPosition(visualPositionX, visualPositionY)
-    selector:SetVisible(true)
-
-    UI.GemSelection = {
-        Position = V(UI.Board:GetGemGridCoordinates(gem)),
-        InitialMousePosition = V(Client.GetMousePosition()),
-        CanSwipe = true,
-    }
+    if UI.IsInteractable() then
+        visualPositionX = visualPositionX - UI.CELL_SIZE[1]/2
+        visualPositionY = visualPositionY - UI.CELL_SIZE[2]/2
+    
+        selector:SetPosition(visualPositionX, visualPositionY)
+        selector:SetVisible(true)
+    
+        UI.GemSelection = {
+            Position = V(UI.Board:GetGemGridCoordinates(gem)),
+            InitialMousePosition = V(Client.GetMousePosition()),
+            CanSwipe = true,
+        }
+    end
 end
 
 ---@param pos1 Vector2
@@ -802,7 +824,7 @@ function UI.OnGemClickboxHovered(x, y)
     local element = UI.GetGemElement(gem)
     local selector = UI.SecondarySelector
 
-    if gem and element then
+    if gem and element and UI.IsInteractable() then
         local visualPositionX, visualPositionY = element:GetGridPosition()
 
         visualPositionX = visualPositionX - UI.CELL_SIZE[1]/2
