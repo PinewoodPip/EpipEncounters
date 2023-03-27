@@ -1,9 +1,12 @@
 
+local Set = DataStructures.Get("DataStructures_Set")
+
 ---@class Feature_Bedazzled : Feature
 local Bedazzled = {
     _Gems = {}, ---@type table<string, Feature_Bedazzled_Gem>
     _GemModifierDescriptors = {}, ---@type table<string, Feature_Bedazzled_GemModifier>
     _GemStateClasses = {}, ---@type table<string, Feature_Bedazzled_Board_Gem_State>>
+    _GameModes = Set.Create({}), ---@type DataStructures_Set<string> TODO
 
     TranslatedStrings = {
         GameTitle = {
@@ -12,7 +15,7 @@ local Bedazzled = {
         },
         Score = {
             Handle = "h4bc543cag5f19g4e91gbb76gc3a18177874b",
-            Text = "Score    %s",
+            Text = "Score             %s\nHigh-Score %s",
             ContextDescription = "Template string for displaying current score",
         },
         GameOver = {
@@ -23,10 +26,28 @@ local Bedazzled = {
             Handle = "h1b460fc0ge72dg4879g9886g1dc640a782cb",
             Text = "No more valid moves on the board!",
             ContextDescription = "Subtitle for game over text",
-        }
+        },
+        HighScore = {
+           Handle = "ha1afe7c2g4d97g43b6g823eg03bf25788dbd",
+           Text = "High-Score",
+           ContextDescription = "High score label in UI",
+        },
+        NewHighScore = {
+           Handle = "hf254ab01gbb16g4c83ga1e5gc415eaef1acf",
+           Text = "New high-score!",
+           ContextDescription = "Toast for setting a new highscore",
+        },
     },
-    DoNotExportTSKs = true,
+    Settings = {
+        HighScores = {
+            Type = "Map",
+            NameHandle = "ha1afe7c2g4d97g43b6g823eg03bf25788dbd",
+            Description = "",
+            Context = "Client",
+        },
+    },
 
+    MAX_HIGHSCORES_PER_GAMEMODE = 5,
     SPAWNED_GEM_INITIAL_VELOCITY = -4.5,
     GRAVITY = 5.5, -- Units per second squared
     MINIMUM_MATCH_GEMS = 3,
@@ -38,6 +59,13 @@ local Bedazzled = {
         GIANT_RUNE_DETONATION = 1337,
         PROTEAN_PER_GEM = 200, -- Rather high, but I think encouraging people to use hypercubes is good
     },
+
+    USE_LEGACY_EVENTS = false,
+    USE_LEGACY_HOOKS = false,
+
+    Events = {
+        NewHighScore = {}, ---@type Event<Feature_Bedazzled_Board_Event_GameOver>
+    }
 }
 Epip.RegisterFeature("Bedazzled", Bedazzled)
 
@@ -48,9 +76,22 @@ Epip.RegisterFeature("Bedazzled", Bedazzled)
 ---@alias Feature_Bedazzled_GemModifier_ID "Rune"|"LargeRune"|"GiantRune"
 ---@alias Feature_Bedazzled_GemDescriptor_ID "Bloodstone"|"Jade"|"Sapphire"|"Topaz"|"Onyx"|"Emerald"|"Lapis"|"TigersEye"|"Protean"
 
+---@alias Feature_Bedazzled_GameMode_ID "Classic"
+
+---@class Feature_Bedazzled_HighScore
+---@field GameMode Feature_Bedazzled_GameMode_ID
+---@field Score integer
+---@field Date string
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
+
+---Registers a gamemode.
+---@param id string
+function Bedazzled.RegisterGameMode(id)
+    Bedazzled._GameModes:Add(id)
+end
 
 ---@param data Feature_Bedazzled_Gem
 function Bedazzled.RegisterGem(data)
@@ -73,11 +114,35 @@ function Bedazzled.GetGemDescriptors()
     return Bedazzled._Gems
 end
 
+---@param gameMode Feature_Bedazzled_GameMode_ID
 ---@return Feature_Bedazzled_Board
-function Bedazzled.CreateBoard()
+function Bedazzled.CreateBoard(gameMode)
     local BoardClass = Bedazzled:GetClass("Feature_Bedazzled_Board")
 
-    local board = BoardClass.Create(Vector.Create(8, 8))
+    local board = BoardClass.Create(Vector.Create(8, 8), gameMode)
+
+    -- Update high score at the end, forward event
+    board.Events.GameOver:Subscribe(function (ev)
+        local currentBestScore = Bedazzled.GetHighScore(board.GameMode)
+        local isHighScore = false
+        if currentBestScore == nil or ev.Score > currentBestScore.Score then
+            isHighScore = true
+        end
+
+        Bedazzled.AddHighScore(board.GameMode, {
+            Score = ev.Score,
+            Date = Client.GetDateString(),
+            GameMode = board.GameMode,
+        })
+
+        -- Throw event for new high scores
+        if isHighScore then
+            Bedazzled.Events.NewHighScore:Throw({
+                Score = ev.Score,
+            })
+        end
+
+    end, {StringID = "GameOverHighScoreUpdate"})
 
     return board
 end
@@ -144,6 +209,51 @@ function Bedazzled.GetGemModifier(id)
     return Bedazzled._GemModifierDescriptors[id]
 end
 
+---Returns the high scores of the user.
+---@param gameMode Feature_Bedazzled_GameMode_ID
+---@return Feature_Bedazzled_HighScore[]
+function Bedazzled.GetHighScores(gameMode)
+    local scores = Bedazzled._GetHighScores()[gameMode] or {}
+
+    return scores
+end
+
+---Returns the highest score of the user.
+---@param gameMode Feature_Bedazzled_GameMode_ID
+---@return Feature_Bedazzled_HighScore? --`nil` if the user has not set any score.
+function Bedazzled.GetHighScore(gameMode)
+    local scores = Bedazzled.GetHighScores(gameMode)
+
+    return scores and scores[1] or nil
+end
+
+---Returns all high scores.
+---@return table<Feature_Bedazzled_GameMode_ID, Feature_Bedazzled_HighScore[]>
+function Bedazzled._GetHighScores()
+    return Bedazzled:GetSettingValue(Bedazzled.Settings.HighScores)
+end
+
+---Registers a highscore, automatically replacing any existing ones.
+---@param gameMode Feature_Bedazzled_GameMode_ID
+---@param score Feature_Bedazzled_HighScore
+function Bedazzled.AddHighScore(gameMode, score)
+    local allScores = Bedazzled._GetHighScores()
+    local scores = allScores[gameMode] or {}
+
+    table.insert(scores, score)
+
+    table.sortByProperty(scores, "Score", true)
+    
+    -- Remove scores past the limit
+    for i=Bedazzled.MAX_HIGHSCORES_PER_GAMEMODE+1,#scores,1 do
+        scores[i] = nil
+    end
+
+    allScores[gameMode] = scores
+
+    Bedazzled:SetSettingValue(Bedazzled.Settings.HighScores, allScores)
+end
+
 ---------------------------------------------
 -- SETUP
 ---------------------------------------------
@@ -206,3 +316,5 @@ GameState.Events.ClientReady:Subscribe(function (_)
         Bedazzled.RegisterGemModifier(id, data)
     end
 end)
+
+Bedazzled.RegisterGameMode("Classic")

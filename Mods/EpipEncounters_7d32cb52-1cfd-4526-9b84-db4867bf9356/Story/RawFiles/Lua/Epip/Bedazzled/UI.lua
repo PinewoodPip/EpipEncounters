@@ -15,7 +15,7 @@ UI.GemSelection = nil ---@type Feature_Bedazzled_UI_GemSelection
 
 UI.CELL_BACKGROUND = "Item_Epic"
 UI.CELL_SIZE = V(64, 64)
-UI.BACKGROUND_SIZE = V(900, 800)
+UI.BACKGROUND_SIZE = V(900, 1080)
 UI.MOUSE_SWIPE_DISTANCE_THRESHOLD = 30
 UI.CELL_BACKGROUND_COLOR = Color.Create(150, 131, 93)
 UI.MINIMUM_SCORE_DIGITS = 9
@@ -215,12 +215,14 @@ function UI:Show()
         currentBoard:SetPaused(false)
     end
 
+    self:SetPositionRelativeToViewport("center", "center")
+
     Client.UI._BaseUITable.Show(self)
 end
 
 -- Sets up a new game.
 function UI.Setup()
-    local board = Bedazzled.CreateBoard()
+    local board = Bedazzled.CreateBoard("Classic")
     local oldBoard = UI.Board
 
     -- Unsubscribe from previous board
@@ -613,10 +615,9 @@ function UI.CreateScoreFlyover(match)
     })
 end
 
-function UI.UpdateScore()
-    local text = UI.ScoreText
-    local pointsLabel = Text.AddPadding(tostring(UI.Board:GetScore()), UI.MINIMUM_SCORE_DIGITS, "0")
-
+function UI._FormatScoreNumber(score)
+    local pointsLabel = Text.AddPadding(tostring(score), UI.MINIMUM_SCORE_DIGITS, "0")
+    
     -- Add comma separators
     local newStr = ""
     for i=1,#pointsLabel,1 do
@@ -628,9 +629,21 @@ function UI.UpdateScore()
         end
     end
 
+    return newStr
+end
+
+---Updates the score displays.
+function UI.UpdateScore()
+    local highScore = Bedazzled.GetHighScore(UI.Board.GameMode)
+    local highScorePoints = highScore and highScore.Score or 0
+    local text = UI.ScoreText
+    local pointsLabel = UI._FormatScoreNumber(UI.Board:GetScore())
+    local highScorePointsLabel = UI._FormatScoreNumber(highScorePoints)
+
     text:SetText(Text.Format(Bedazzled.TranslatedStrings.Score:GetString(), {
         FormatArgs = {
-            newStr
+            pointsLabel,
+            highScorePointsLabel,
         }
     }))
 end
@@ -638,6 +651,10 @@ end
 ---@param board Feature_Bedazzled_Board
 function UI._Initialize(board)
     if not UI._Initialized then -- TODO support resizing the board
+        -- Set UI size
+        local uiObject = UI:GetUI()
+        uiObject.SysPanelSize = UI.BACKGROUND_SIZE
+
         -- UI background
         local bg = UI:CreateElement("Background", "GenericUI_Element_TiledBackground")
         UI.Background = bg
@@ -649,7 +666,7 @@ function UI._Initialize(board)
 
         UI.CreateText("TitleHeader", topContainer, Text.Format(Bedazzled.TranslatedStrings.GameTitle:GetString(), {Size = 42, Color = "7E72D6", FontType = Text.FONTS.ITALIC}), "Center", V(UI.BACKGROUND_SIZE[1], 50))
 
-        local scoreText = UI.CreateText("ScoreText", topContainer, "", "Center", V(UI.BACKGROUND_SIZE[1], 50))
+        local scoreText = UI.CreateText("ScoreText", topContainer, "", "Center", V(UI.BACKGROUND_SIZE[1], 100))
         UI.ScoreText = scoreText
 
         -- Draggable area
@@ -723,8 +740,8 @@ function UI._Initialize(board)
                     Size = 25,
                 },
             }
-        }), "Center", UI.BACKGROUND_SIZE)
-        gameOverText:SetPositionRelativeToParent("Center", 0, 100)
+        }), "Center", V(UI.BACKGROUND_SIZE[1], 150))
+        gameOverText:SetPositionRelativeToParent("Center", 0, -150)
         UI.GameOverText = gameOverText
     else -- Cleanup previous elements
         for _,gem in pairs(UI.Gems) do
@@ -989,6 +1006,13 @@ Input.Events.KeyPressed:Subscribe(function (ev)
             gem:AddModifier(modifier)
         end
     end
+end)
+
+-- Listen for new high scores being set to show a notification.
+Bedazzled.Events.NewHighScore:Subscribe(function (ev)
+    local randomGem = Bedazzled.GetRandomGemDescriptor()
+
+    Client.UI.Notification.ShowIconNotification(Bedazzled.TranslatedStrings.NewHighScore:GetString(), randomGem:GetIcon(), tostring(ev.Score))
 end)
 
 ---------------------------------------------

@@ -8,6 +8,7 @@ local V = Vector.Create
 
 ---@class Feature_Bedazzled_Board
 ---@field GUID GUID
+---@field GameMode Feature_Bedazzled_GameMode_ID
 ---@field _IsRunning boolean
 ---@field _Paused boolean
 ---@field Score integer
@@ -46,6 +47,7 @@ Bedazzled:RegisterClass("Feature_Bedazzled_Board", _Board)
 ---@field Gem2 Feature_Bedazzled_Board_Gem
 
 ---@class Feature_Bedazzled_Board_Event_GameOver
+---@field Score integer
 
 ---@class Feature_Bedazzled_Board_Event_GemTransformed
 ---@field Gem Feature_Bedazzled_Gem
@@ -57,11 +59,13 @@ Bedazzled:RegisterClass("Feature_Bedazzled_Board", _Board)
 ---------------------------------------------
 
 ---@param size Vector2
+---@param gameMode Feature_Bedazzled_GameMode_ID
 ---@return Feature_Bedazzled_Board
-function _Board.Create(size)
+function _Board.Create(size, gameMode)
     ---@type Feature_Bedazzled_Board
     local board = {
         GUID = Text.GenerateGUID(),
+        GameMode = gameMode,
         _IsRunning = true,
         _QueuedMatches = {},
         Score = 0,
@@ -168,8 +172,12 @@ function _Board:EndGame()
         Bedazzled:Error("Board:EndGame", "Attempted to end a board that is not running")
     end
 
+    local finalScore = self:GetScore()
+
     self._IsRunning = false
-    self.Events.GameOver:Throw({})
+    self.Events.GameOver:Throw({
+        Score = finalScore,
+    })
 
     -- Stop updates
     GameState.Events.RunningTick:Unsubscribe("Bedazzled_" .. self.GUID)
