@@ -1,4 +1,5 @@
 
+local Notification = Client.UI.Notification
 local Bedazzled = Epip.GetFeature("Feature_Bedazzled")
 local Generic = Client.UI.Generic
 local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
@@ -1011,8 +1012,13 @@ end)
 -- Listen for new high scores being set to show a notification.
 Bedazzled.Events.NewHighScore:Subscribe(function (ev)
     local randomGem = Bedazzled.GetRandomGemDescriptor()
+    local toastLabel = Text.Format(Bedazzled.TranslatedStrings.NewHighScore:GetString(), {
+        FormatArgs = {
+            ev.Score,
+        }
+    })
 
-    Client.UI.Notification.ShowIconNotification(Bedazzled.TranslatedStrings.NewHighScore:GetString(), randomGem:GetIcon(), tostring(ev.Score))
+    Notification.ShowIconNotification(toastLabel, randomGem:GetIcon())
 end)
 
 ---------------------------------------------

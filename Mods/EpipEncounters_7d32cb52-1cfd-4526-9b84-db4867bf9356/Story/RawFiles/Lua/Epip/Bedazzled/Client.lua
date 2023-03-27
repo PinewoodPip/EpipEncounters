@@ -34,7 +34,7 @@ local Bedazzled = {
         },
         NewHighScore = {
            Handle = "hf254ab01gbb16g4c83ga1e5gc415eaef1acf",
-           Text = "New high-score!",
+           Text = "New high-score! %s points",
            ContextDescription = "Toast for setting a new highscore",
         },
     },
