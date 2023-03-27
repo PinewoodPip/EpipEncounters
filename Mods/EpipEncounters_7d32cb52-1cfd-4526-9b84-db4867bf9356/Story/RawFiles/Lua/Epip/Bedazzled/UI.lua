@@ -686,6 +686,9 @@ function UI._Initialize(board)
                 clickbox.Events.MouseOver:Subscribe(function (_)
                     UI.OnGemClickboxHovered(j, board.Size[1] - i + 1)
                 end)
+                clickbox.Events.MouseOut:Subscribe(function (_)
+                    UI.OnGemClickboxMouseOut(j, board.Size[1] - i + 1)
+                end)
             end
         end
 
@@ -792,6 +795,14 @@ function UI.OnGemClickboxHovered(x, y)
     end
 
     UI.HoveredGridPosition = (gem and element) and V(x, y) or nil
+end
+
+---Handle mouse leaving clickboxes.
+---@param x integer
+---@param y integer
+---@diagnostic disable-next-line: unused-local
+function UI.OnGemClickboxMouseOut(x, y)
+    UI.HoveredGridPosition = nil
 end
 
 ---Returns the board being currently played.
