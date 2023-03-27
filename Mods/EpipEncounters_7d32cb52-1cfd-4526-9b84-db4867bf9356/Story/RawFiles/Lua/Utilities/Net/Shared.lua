@@ -90,7 +90,7 @@ end
 ---@generic T
 ---@class Net_Event_MessageReceived<T>
 ---@field Channel string
----@field Message `T`
+---@field Message `T`|any Will be a primitive if the payload sent wasn't a table.
 ---@field UserID UserId
 
 ---------------------------------------------
@@ -181,10 +181,18 @@ end
 
 -- Forward Net messages to corresponding events.
 Ext.Events.NetMessageReceived:Subscribe(function(ev) 
-    local payload = _Payload:___Create(Ext.Json.Parse(ev.Payload) or {})
+    -- Parse returns non-string for non-string primitives.
+    local rawPayload = ev.Payload and Ext.Json.Parse(ev.Payload) or {}
+    local payload
+
+    -- Only create a Payload instance if the message was a table.
+    if type(rawPayload) == "table" then
+        payload = _Payload:___Create(rawPayload)
+    else
+        payload = rawPayload
+    end
 
     local event = {Message = payload, Channel = ev.Channel, UserID = ev.UserID} ---@type Net_Event_MessageReceived
-
     local subscribableEvent = Net._GetChannelMessageEvent(ev.Channel)
 
     subscribableEvent:Throw(event)
