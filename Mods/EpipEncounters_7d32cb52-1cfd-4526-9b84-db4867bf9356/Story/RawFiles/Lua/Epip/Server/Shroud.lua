@@ -28,12 +28,12 @@ Settings.Events.SettingValueChanged:Subscribe(function (ev)
     if setting.ModTable == "EpipEncounters" and setting.ID == "RenderShroud" then
         Shroud.queriedState = ev.Value
         
-        Osi.ShroudRender(Shroud.queriedState)
+        Osiris.ShroudRender(Shroud.queriedState)
     end
 end)
 
-Ext.Osiris.RegisterListener("RegionStarted", 1, "after", function(level)
+GameState.Events.GameReady:Subscribe(function (_)
     if Shroud.queriedState ~= Shroud.STATE.UNSET then
-        Osi.ShroudRender(Shroud.queriedState)
+        Osiris.ShroudRender(Shroud.queriedState)
     end
 end)

@@ -342,7 +342,7 @@ function Osiris._ParseParameters(...)
         -- Convert parameter types.
         if GetExtType(v) then -- Convert entity references to their GUIDs.
             convertedParam = v.MyGuid -- TODO support prefixed GUIDs as well
-        elseif type(v) == "boolean" then -- Convert booleans to 0/1.
+        elseif type(v) == "boolean" then -- Convert booleans to 0/1. TODO remove once this is fixed in the extender.
             if v then
                 convertedParam = 1
             else
