@@ -180,3 +180,7 @@ function Ext_ClientEntity.GetItem(identifier) end
 
 ---@type unknown
 Ext.Enums = {}
+
+--- @class Ext_Utils
+--- @field RegisterModVariable fun(modGUID: FixedString, name: FixedString, data:table)
+--- @field GetModVariables fun(a1: FixedString):table

@@ -1,5 +1,7 @@
 
 local Mods = Mod.GUIDS
+
+---@type Feature
 local Warnings = {
     INCOMPATIBLE_MODS = {
         [Mods.EE_CORE] = {
@@ -33,7 +35,7 @@ Epip.RegisterFeature("IncompatibleModsWarning", Warnings)
 -- EVENT LISTENERS
 ---------------------------------------------
 
-GameState.Events.GameReady:Subscribe(function (ev)
+GameState.Events.GameReady:Subscribe(function (_)
     for baseModGuid,list in pairs(Warnings.INCOMPATIBLE_MODS) do
         if Mod.IsLoaded(baseModGuid) then
             for _,incompatibleModGUID in pairs(list) do

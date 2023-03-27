@@ -73,7 +73,7 @@ Epip.RegisterFeature("AnimationCancelling", AnimCancel)
 ---@class Feature_AnimationCancelling_Hook_IsSkillEligible
 ---@field Character Character
 ---@field SkillID string
----@field Stat StatsLib_Stat_Skill
+---@field Stat StatsLib_StatsEntry_SkillData
 ---@field Eligible boolean Hookable. Defaults to true.
 
 ---------------------------------------------
