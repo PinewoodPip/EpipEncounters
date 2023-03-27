@@ -98,7 +98,6 @@ local tabs = {
             "Minimap",
             "TreasureTableDisplay",
             {Type = "Setting", Module = "EpipEncounters_EnemyHealthBarExtraInfo", ID = "Mode"},
-            "CinematicCombat",
             "ESCClosesAmerUI",
             "RenderShroud",
             "Feature_WalkOnCorpses",

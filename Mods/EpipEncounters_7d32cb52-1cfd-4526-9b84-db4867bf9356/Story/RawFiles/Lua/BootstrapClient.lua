@@ -412,7 +412,6 @@ LOAD_ORDER = {
     "Epip/Client/ExitChatAfterMessage.lua",
     "Epip/Client/CameraZoom.lua",
     "Epip/Client/MinimapToggle.lua",
-    "UI/AprilFoolsOverlay.lua",
     "Epip/Client/ImmersiveMeditation.lua",
     -- "Epip/Client/ModMenuImprovements.lua",
 

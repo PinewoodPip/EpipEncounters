@@ -80,17 +80,6 @@ local EpipSettings = {
             ContextDescription = "Treasure table display setting tooltip",
         },
 
-        CinematicCombat_Name = {
-            Handle = "h69bb87a5ga063g464egae6cg4824e72bc36f",
-            Text = "Cinematic Combat",
-            ContextDescription = "Cinematic combat setting name",
-        },
-        CinematicCombat_Description = {
-            Handle = "h16796787gb05cg4a34gaaeegcbbcf22a4b88",
-            Text = "Adds visual improvements while it is not your turn to improve immersiveness.",
-            ContextDescription = "Cinematic combat setting tooltip",
-        },
-
         ESCClosesAmerUI_Name = {
             Handle = "h9172c74eg120fg4ea6gac99gf5f558433e70",
             Text = "Escape Key Closes EE UIs",
@@ -1286,13 +1275,6 @@ local newSettings = {
         Type = "Boolean",
         NameHandle = TSKs.TreasureTableDisplay_Name,
         DescriptionHandle = TSKs.TreasureTableDisplay_Description,
-        DefaultValue = false,
-    },
-    {
-        ID = "CinematicCombat",
-        Type = "Boolean",
-        NameHandle = TSKs.CinematicCombat_Name,
-        DescriptionHandle = TSKs.CinematicCombat_Description,
         DefaultValue = false,
     },
     {
