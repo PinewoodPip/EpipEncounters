@@ -20,6 +20,7 @@ local Warnings = {
             Mods.GREED,
             Mods.LET_THERE_BE_TOOLTIPS,
             Mods.ANIMATIONS_PLUS,
+            Mods.MAJORA_FASHION_SINS,
         },
         [Mods.EPIP_ENCOUNTERS] = {
             Mods.IMPROVED_HOTBAR,
