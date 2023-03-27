@@ -6,6 +6,8 @@ local Set = {
 DataStructures.Register("DataStructures_Set", Set)
 OOP.RegisterClass("DataStructures_Set", Set)
 
+---@class DataStructures_Set<T> : Class, {( Create:fun(elements:T[]?) ), ( Add:fun(self, element:T):boolean ), ( Contains:fun(self, element:T):boolean ), ( Remove:fun(self, element:T):boolean ), ( Iterator:fun(self):function )}
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
