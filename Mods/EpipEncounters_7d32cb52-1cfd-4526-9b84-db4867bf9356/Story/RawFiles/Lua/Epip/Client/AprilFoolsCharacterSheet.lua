@@ -1,8 +1,10 @@
 
 local AF = {
     sheetOpen = false,
+    MAX_ROTATION = 4,
+    MAX_INCREMENT = 1,
 }
-Epip.AddFeature("AprilFoolsCharacterSheet", "AprilFoolsCharacterSheet", AF)
+Epip.RegisterFeature("AprilFoolsCharacterSheet", AF)
 
 ---------------------------------------------
 -- EVENT LISTENERS
@@ -13,26 +15,21 @@ local function OnTick()
     local currentlyOpen = AF.sheetOpen
     AF.sheetOpen = sheet:IsVisible()
 
+    -- If the sheet was opened on this tick, rotate it
     if not currentlyOpen and AF.sheetOpen then
         local sheetRoot = sheet:GetRoot()
         local vanityRoot = Client.UI.Vanity:GetRoot()
-        local newRotation = sheetRoot.rotation + Ext.Random(1, 2) * math.randomSign()
+        local newRotation = sheetRoot.rotation + Ext.Random() * AF.MAX_INCREMENT * math.randomSign()
 
         -- Wrapping!
-        if newRotation < -6 then
-            newRotation = 6
-        elseif newRotation > 6 then
-            newRotation = -6
+        if newRotation < -(AF.MAX_ROTATION) then
+            newRotation = AF.MAX_ROTATION
+        elseif newRotation > AF.MAX_ROTATION then
+            newRotation = -(AF.MAX_ROTATION)
         end
 
         sheetRoot.rotation = newRotation
         vanityRoot.rotation = sheetRoot.rotation
-
-        -- local sheetPosition = sheet:GetUI():GetPosition()
-        -- sheet:GetUI():SetPosition(sheetPosition[1] + 20, sheetPosition[2])
-
-        -- local vanityPosition = Client.UI.Vanity:GetUI():GetPosition()
-        -- Client.UI.Vanity:GetUI():SetPosition(vanityPosition[1] + 20, vanityPosition[2])
     end
 end
 
@@ -41,7 +38,6 @@ end
 ---------------------------------------------
 
 function AF.__Setup()
--- Ext.Events.SessionLoaded:Subscribe(function()
     local sheet = Client.UI.CharacterSheet
 
     if Epip.IsAprilFools() then
