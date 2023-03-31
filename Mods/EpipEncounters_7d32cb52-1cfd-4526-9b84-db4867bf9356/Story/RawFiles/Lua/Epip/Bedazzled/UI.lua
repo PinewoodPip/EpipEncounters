@@ -1,5 +1,6 @@
 
 local Notification = Client.UI.Notification
+local MsgBox = Client.UI.MessageBox
 local Bedazzled = Epip.GetFeature("Feature_Bedazzled")
 local Generic = Client.UI.Generic
 local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
@@ -278,6 +279,8 @@ function UI.Setup()
         local element = UI.GetGemElement(ev.Gem)
         element:UpdateIcon()
     end, {StringID = "BedazzledUI_GemTransformed"})
+
+    UI.ResetButton:SetVisible(false)
 end
 
 function UI:Hide()
@@ -477,6 +480,9 @@ function UI.OnGameOver()
     -- Clear gem selection
     UI.ClearSelection()
     UI.SecondarySelector:SetVisible(false)
+
+    -- Show new game button
+    UI.ResetButton:SetVisible(true)
 end
 
 ---@return boolean
@@ -766,6 +772,17 @@ function UI._Initialize(board)
         }), "Center", V(UI.BACKGROUND_SIZE[1], 150))
         gameOverText:SetPositionRelativeToParent("Center", 0, -150)
         UI.GameOverText = gameOverText
+
+        -- Reset button
+        local resetButton = bg:AddChild("ResetButton", "GenericUI_Element_Button")
+        resetButton:SetType("RedBig")
+        resetButton:SetText(Text.CommonStrings.NewGame:GetString(), 15)
+        resetButton.Events.Pressed:Subscribe(function (_)
+            UI._OnNewGamePressed()
+        end)
+        resetButton:SetPositionRelativeToParent("Center", 0, 220)
+        resetButton:SetVisible(false)
+        UI.ResetButton = resetButton
     else -- Cleanup previous elements
         for _,gem in pairs(UI.Gems) do
             gem:Destroy()
@@ -894,6 +911,30 @@ function UI.OnMatchExecuted(ev)
 
     UI.CreateScoreFlyover(ev.Match)
 end
+
+---Fired when the new game button is pressed.
+function UI._OnNewGamePressed()
+    local isInGame = UI.Board and UI.Board:IsRunning()
+
+    if isInGame then
+        MsgBox.Open({
+            Header = Text.CommonStrings.NewGame:GetString(),
+            Message = Bedazzled.TranslatedStrings.NewGamePrompt:GetString(),
+            ID = "Feature_Bedazzled_NewGame",
+            Buttons = {
+                {ID = 1, Text = Text.CommonStrings.Confirm:GetString()},
+                {ID = 2, Text = Text.CommonStrings.Cancel:GetString()},
+            }
+        })
+    else
+        UI.Setup()
+    end
+end
+MsgBox.RegisterMessageListener("Feature_Bedazzled_NewGame", MsgBox.Events.ButtonPressed, function (buttonID)
+    if buttonID == 1 then
+        UI.Setup()
+    end
+end)
 
 -- Listen for mouse swipe gestures.
 Input.Events.MouseMoved:Subscribe(function (_)

@@ -37,6 +37,11 @@ local Bedazzled = {
            Text = "New high-score! %s points",
            ContextDescription = "Toast for setting a new highscore",
         },
+        NewGamePrompt = {
+           Handle = "h9f5438ffg5024g4264gaaa2gef122c54e518",
+           Text = "Are you sure you want to start a new game?",
+           ContextDescription = "Message box for new game button",
+        },
     },
     Settings = {
         HighScores = {
@@ -296,7 +301,7 @@ GameState.Events.ClientReady:Subscribe(function (_)
         },
         {
             Type = "Protean",
-            Icon = "AMER_UNI_ProteanArtifact",
+            Icon = "AMER_LOOT_CallistoAnomaly",
             Weight = 0,
         },
     }

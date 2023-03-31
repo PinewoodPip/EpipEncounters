@@ -67,6 +67,18 @@ Text.CommonStrings.Hidden = Text.RegisterTranslatedString({
    Handle = "h1a45624fgcbe1g48b8g9b4ag23e6f8cebe67",
    Text = "Hidden",
 })
+Text.CommonStrings.NewGame = Text.RegisterTranslatedString({
+   Handle = "h1aedd70egab23g4218gb9cdg04ff62ebdf60",
+   Text = "New Game",
+})
+Text.CommonStrings.Confirm = Text.RegisterTranslatedString({
+   Handle = "h1f0e8d31gc83cg47e5gb69ag9f133fc64dcd",
+   Text = "Confirm",
+})
+Text.CommonStrings.Cancel = Text.RegisterTranslatedString({
+   Handle = "h5a50b777gc16cg4106gbde8gf9dd48954c7f",
+   Text = "Cancel",
+})
 
 ---------------------------------------------
 -- WEAPON TYPES

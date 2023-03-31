@@ -160,7 +160,7 @@ function _Board:Update(dt)
     end
 end
 
----Returns whether the game is still running.
+---Returns whether the game is still alive (not in a game over state).
 ---@return boolean
 function _Board:IsRunning()
     return self._IsRunning
