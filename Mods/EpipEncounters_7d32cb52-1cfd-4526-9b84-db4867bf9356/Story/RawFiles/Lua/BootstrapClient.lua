@@ -591,7 +591,6 @@ LOAD_ORDER = {
             "Epip/Bedazzled/Model/Gem/States/Fusing.lua",
             "Epip/Bedazzled/Model/Gem/States/Transforming.lua",
         },
-        WIP = true,
     },
 
     {ScriptSet = "Epip/HotbarPersistence"},
