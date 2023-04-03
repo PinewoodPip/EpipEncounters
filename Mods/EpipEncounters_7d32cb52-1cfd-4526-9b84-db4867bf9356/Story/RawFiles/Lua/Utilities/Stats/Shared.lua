@@ -1,4 +1,6 @@
 
+local Set = DataStructures.Get("DataStructures_Set")
+
 ---@class StatsLib : Library
 Stats = {
     STATS_OBJECT_TYPES = {
@@ -12,6 +14,19 @@ Stats = {
         StatusData = true,
         Potion = true,
     },
+
+    HARDCODED_STATUS_ICONS = {
+        ADRENALINE = "statIcons_Adrenaline",
+        CHARMED = "statIcons_Charmed",
+        CLEAN = "statIcons_Clean",
+        DYING = "statIcons_Dead",
+        ENCUMBERED = "statIcons_Encumbered",
+        LEADERSHIP = "statIcons_Leadership", -- This one does have a potion entry, why doesn't our code pick it up? TODO investigate
+    },
+    HARDCODED_STATUSES_WITHOUT_ICONS = Set.Create({
+        "UNSHEATHED",
+        "COMBAT",
+    }),
 
     Enums = {
         ---@enum StatEntry_CastCheckType
@@ -304,38 +319,32 @@ function Stats.IsStatusVisible(status)
     return icon and icon ~= "unknown" and icon ~= "" 
 end
 
-local HARDCODED_STATUS_ICONS = {
-    ADRENALINE = "statIcons_Adrenaline",
-    CHARMED = "statIcons_Charmed",
-    CLEAN = "statIcons_Clean",
-    DYING = "statIcons_Dead",
-    ENCUMBERED = "statIcons_Encumbered",
-    LEADERSHIP = "statIcons_Leadership", -- This one does have a potion entry, why doesn't our code pick it up? TODO investigate
-}
-
 ---@param status EclStatus|EsvStatus
 function Stats.GetStatusIcon(status)
     local stat = Stats.Get("StatusData", status.StatusId)
+    local isInvisible = Stats.HARDCODED_STATUSES_WITHOUT_ICONS:Contains(status.StatusId)
     local icon
 
-    if stat then
-        icon = stat.Icon
-
-        if icon == "" then -- Fetch potion instead
-            local potion = Stats.Get("Potion", stat.StatsId)
-
-            if potion then
-                icon = potion.StatusIcon
+    if not isInvisible then
+        if stat then
+            icon = stat.Icon
+    
+            if icon == "" then -- Fetch potion instead
+                local potion = Stats.Get("Potion", stat.StatsId)
+    
+                if potion then
+                    icon = potion.StatusIcon
+                end
             end
         end
-    end
-
-    -- Use hardcoded icons for hardcoded status types.
-    icon = icon or HARDCODED_STATUS_ICONS[status.StatusId]
-
-    if not icon then
-        Stats:LogError("GetStatusIcon(): Could not find icon for " .. status.StatusId)
-        icon = "unknown"
+    
+        -- Use hardcoded icons for hardcoded status types.
+        icon = icon or Stats.HARDCODED_STATUS_ICONS[status.StatusId]
+    
+        if not icon then
+            Stats:LogError("GetStatusIcon(): Could not find icon for " .. status.StatusId)
+            icon = "unknown"
+        end
     end
 
     return icon
