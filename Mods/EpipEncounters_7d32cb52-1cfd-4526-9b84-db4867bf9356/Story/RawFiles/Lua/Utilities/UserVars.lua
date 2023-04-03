@@ -1,8 +1,12 @@
 
+local DefaultTable = DataStructures.Get("DataStructures_DefaultTable")
+
 ---@class UserVarsLib : Library
 UserVars = {
     ---@type table<string, UserVarsLib_UserVar>
     _RegisteredVariables = {},
+    ---@type table<GUID, table<string, UserVarsLib_ModVar>>
+    _RegisteredModVars = DefaultTable.Create({})
 }
 Epip.InitializeLibrary("UserVars", UserVars)
 
@@ -23,6 +27,9 @@ Epip.InitializeLibrary("UserVars", UserVars)
 ---@field SyncOnTick boolean Defaults to `true`.
 ---@field DontCache boolean Defaults to `false`
 
+---@class UserVarsLib_ModVar : UserVarsLib_UserVar
+---@field ModGUID GUID
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
@@ -34,22 +41,85 @@ Epip.InitializeLibrary("UserVars", UserVars)
 ---@param data UserVarsLib_UserVar? Defaults to default values (see class).
 ---@return UserVarsLib_UserVar
 function UserVars.Register(name, data)
-    data = data or {} ---@type UserVarsLib_UserVar
-    data.Name = name
-    data.Client = data.Client ~= nil and data.Client or true
-    data.Server = data.Server ~= nil and data.Server or true
-    data.WriteableOnServer = data.WriteableOnServer ~= nil and data.WriteableOnServer or true
-    data.WriteableOnClient = data.WriteableOnClient ~= nil and data.WriteableOnClient or false
-    data.Persistent = data.Persistent or false
-    data.SyncToClient = data.SyncToClient ~= nil and data.SyncToClient or true
-    data.SyncToServer = data.SyncToServer ~= nil and data.SyncToServer or true
-    data.SyncOnWrite = data.SyncOnWrite or false
-    data.SyncOnTick = data.SyncOnTick ~= nil and data.SyncOnTick or true
-    data.DontCache = data.DontCache or false
+    -- TODO investigate what causes synching issues
+    local options = {
+        Persistent = false,
+        Client = true,
+        Server = true,
+        SyncToClient = true,
+        SyncToServer = true,
+        SyncOnWrite = true,
+        SyncOnTick = true,
+        WriteableOnServer = true,
+        WriteableOnClient = true,
+    }
+    if data.Persistent then
+        options.Persistent = true
+    end
 
     UserVars._RegisteredVariables[name] = data
 
-    Ext.Utils.RegisterUserVariable(name, data)
+    Ext.Utils.RegisterUserVariable(name, options)
+
+    return data
+end
+
+---Registers a mod variable.
+---@param modGUID GUID
+---@param name string
+---@param data UserVarsLib_ModVar? Defaults to default values (see class).
+---@return UserVarsLib_ModVar
+function UserVars.RegisterModVariable(modGUID, name, data)
+    data = UserVars._ParseVarParameters(name, data) ---@cast data UserVarsLib_ModVar
+
+    UserVars._RegisteredModVars[modGUID][name] = data
+    data.ModGUID = modGUID
+
+    -- TODO investigate what causes synching issues
+    local options = {
+        Persistent = false,
+        Client = true,
+        Server = true,
+        SyncToClient = true,
+        SyncToServer = true,
+        SyncOnWrite = true,
+        SyncOnTick = true,
+        WriteableOnServer = true,
+        WriteableOnClient = false,
+    }
+    if data.Persistent then
+        options.Persistent = true
+    end
+
+    Ext.Utils.RegisterModVariable(modGUID, name, options)
+
+    return data
+end
+
+---Returns the mod variables of a mod.
+---@param modGUID GUID
+---@return table
+function UserVars.GetModVariables(modGUID)
+    return Ext.Utils.GetModVariables(modGUID)
+end
+
+---Parses the parameters for creating a variable.
+---@param name string
+---@param data UserVarsLib_UserVar? Defaults to default values (see class).
+---@return UserVarsLib_UserVar
+function UserVars._ParseVarParameters(name, data)
+    -- TODO fix
+    data = data or {} ---@type UserVarsLib_UserVar
+    data.Client = true
+    data.Server = true
+    data.WriteableOnServer = true
+    data.WriteableOnClient = true
+    data.Persistent = data.Persistent or false
+    data.SyncToClient = true
+    data.SyncToServer = true
+    data.SyncOnWrite = data.SyncOnWrite or false
+    data.SyncOnTick = true
+    data.DontCache = false
 
     return data
 end

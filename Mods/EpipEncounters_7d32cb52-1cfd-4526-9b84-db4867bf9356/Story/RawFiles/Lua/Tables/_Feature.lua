@@ -26,7 +26,6 @@ local Feature = {
     Logging = 0,
 
     TSK = {}, ---@type table<TranslatedStringHandle, string> Automatically managed.
-    UserVariables = {}, ---@type table<string, UserVarsLib_UserVar>
     _localTranslatedStringKeys = {}, ---@type table<string, TranslatedStringHandle>
 
     GAME_STATES = {
@@ -103,6 +102,9 @@ end
 ---@param feature Feature
 ---@return Feature
 function Feature.Create(modTable, id, feature)
+    feature.Settings = feature.Settings or {}
+    feature.TranslatedStrings = feature.TranslatedStrings or {}
+
     feature = OOP.GetClass("Library").Create(modTable, id, feature)
     feature = Feature:__Create(feature) ---@type Feature
     feature.MODULE_ID, feature.MOD_TABLE_ID = id, modTable -- TODO remove
@@ -155,14 +157,8 @@ function Feature.Create(modTable, id, feature)
     setmetatable(feature.TSK, TSKmetatable)
 
     -- Initialize settings
-    feature.Settings = feature.Settings or {}
     for settingID,setting in pairs(feature.Settings) do
         feature:RegisterSetting(settingID, setting)
-    end
-
-    -- Initialize user variables
-    for id,data in pairs(feature.UserVariables) do
-        feature:RegisterUserVariable(id, data)
     end
 
     return feature
@@ -270,12 +266,15 @@ end
 ---@param setting string|SettingsLib_Setting
 ---@param value any
 function Feature:SetSettingValue(setting, value)
+    local settingsModuleID = self:GetSettingsModuleID()
+
     -- Table overload.
     if type(setting) == "table" then
         setting = setting.ID
     end
 
-    Settings.SetValue(self:GetSettingsModuleID(), setting, value)
+    Settings.SetValue(settingsModuleID, setting, value)
+    Settings.Save(settingsModuleID)
 end
 
 ---@return string
@@ -295,45 +294,32 @@ end
 -- USERVARS METHODS
 ---------------------------------------------
 
----Registers a user variable.
+---Registers a mod variable.
+---@param modGUID GUID
 ---@param name string
----@param data UserVarsLib_UserVar?
-function Feature:RegisterUserVariable(name, data)
-    name = self:_GetUserVarsKey(name)
+---@param data UserVarsLib_ModVar
+function Feature:RegisterModVariable(modGUID, name, data)
+    local key = self:_GetUserVarsKey(name)
 
-    self.UserVariables[name] = UserVars.Register(name, data)
+    UserVars.RegisterModVariable(modGUID, key, data)
 end
 
----Gets the value of a user variable on an entity component.
----@param component EntityLib_Component
----@param variable string|UserVarsLib_UserVar
+---Returns the value of a mod variable.
+---@param modGUID GUID
+---@param name string
 ---@return any
-function Feature:GetUserVariable(component, variable)
-    if type(variable) == "table" then variable = variable.ID end
-    local userVarName = self:_GetUserVarsKey(variable)
-
-    return component.UserVars[userVarName]
+function Feature:GetModVariable(modGUID, name)
+    return UserVars.GetModVariables(modGUID)[self:_GetUserVarsKey(name)]
 end
 
----Sets the value of a user variable.
----@param component EntityLib_Component
----@param variable string|UserVarsLib_UserVar
+---Sets the value of a mod variable.
+---@param modGUID GUID
+---@param name string
 ---@param value any
-function Feature:SetUserVariable(component, variable, value)
-    if type(variable) == "table" then variable = variable.ID end
-    local userVarName = self:_GetUserVarsKey(variable)
+function Feature:SetModVariable(modGUID, name, value)
+    local vars = UserVars.GetModVariables(modGUID)
 
-    component.UserVars[userVarName] = value
-end
+    vars[self:_GetUserVarsKey(name)] = value
 
----@param suffix string?
----@return string
-function Feature:_GetUserVarsKey(suffix)
-    local key = self.MOD_TABLE_ID .. "_" .. self.MODULE_ID
-
-    if suffix then
-        key = key .. "_" .. suffix
-    end
-
-    return key
+    Ext.Utils.SyncModVariables()
 end

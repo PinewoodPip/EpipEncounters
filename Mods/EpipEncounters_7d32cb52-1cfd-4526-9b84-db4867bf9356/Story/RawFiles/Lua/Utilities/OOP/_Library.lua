@@ -6,6 +6,7 @@
 ---------------------------------------------
 
 ---@class Library : Class
+---@field UserVariables table<string, UserVarsLib_UserVar>
 ---@field _Classes table<string, Class> Subclasses registered for this library.
 ---@field protected __ModTable string
 ---@field protected __LoggingLevel Library_LoggingLevel
@@ -33,6 +34,7 @@ OOP.RegisterClass("Library", Library)
 ---@return Library
 function Library.Create(modTable, id, data)
     ---@diagnostic disable: invisible
+    data.UserVariables = data.UserVariables or {}
     data.__ModTable = modTable
     data.__name = id
     data.__IsDebug = false
@@ -73,6 +75,11 @@ function Library.Create(modTable, id, data)
     -- Create class holder
     data._Classes = {}
 
+    -- Initialize user variables
+    for userVarID,userVar in pairs(data.UserVariables) do
+        data:RegisterUserVariable(userVarID, userVar)
+    end
+
     return lib
 end
 
@@ -80,6 +87,53 @@ end
 ---@return string
 function Library:GetPackagePrefix()
     return string.format("%s_%s_", self.__ModTable, self.__name)
+end
+
+---------------------------------------------
+-- USERVARS
+---------------------------------------------
+
+---Registers a user variable.
+---@param name string
+---@param data UserVarsLib_UserVar?
+function Library:RegisterUserVariable(name, data)
+    name = self:_GetUserVarsKey(name)
+
+    self.UserVariables[name] = UserVars.Register(name, data)
+end
+
+---Gets the value of a user variable on an entity component.
+---@param component EntityLib_UserVarsCompatibleComponent
+---@param variable string|UserVarsLib_UserVar
+---@return any
+function Library:GetUserVariable(component, variable)
+    if type(variable) == "table" then variable = variable.ID end
+    local userVarName = self:_GetUserVarsKey(variable)
+
+    return component.UserVars[userVarName]
+end
+
+---Sets the value of a user variable.
+---@param component EntityLib_UserVarsCompatibleComponent
+---@param variable string|UserVarsLib_UserVar
+---@param value any
+function Library:SetUserVariable(component, variable, value)
+    if type(variable) == "table" then variable = variable.ID end
+    local userVarName = self:_GetUserVarsKey(variable)
+
+    component.UserVars[userVarName] = value
+end
+
+---@param suffix string?
+---@return string
+function Library:_GetUserVarsKey(suffix)
+    local key = self.__ModTable .. "_" .. self.__name
+
+    if suffix then
+        key = key .. "_" .. suffix
+    end
+
+    return key
 end
 
 ---------------------------------------------
