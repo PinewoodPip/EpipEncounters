@@ -75,6 +75,28 @@ function _Instance:GetMovieClipByID(id)
     return self:GetRoot().elements[id]
 end
 
+---Destroys the UI.
+function _Instance:Destroy()
+    local ui = self:GetUI()
+    local id = self.ID
+
+    -- Destroy UIObject
+    Ext.UI.Destroy(id)
+
+    -- Make the table unusable
+    for k,_ in pairs(self) do
+        self[k] = nil
+    end
+    setmetatable(self, {
+        __index = function (_, _)
+            error("Attempted to interface with a destroyed UI (" .. id .. ")")
+        end
+    })
+
+    -- Remove the UI from the manager
+    Generic.INSTANCES[ui:GetTypeId()] = nil
+end
+
 ---@generic T
 ---@param id string
 ---@param elementType `T`|GenericUI_ElementType
