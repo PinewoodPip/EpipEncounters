@@ -6,7 +6,9 @@
 ---------------------------------------------
 
 ---@class Library : Class
----@field UserVariables table<string, UserVarsLib_UserVar>
+---@field UserVariables table<string, UserVarsLib_UserVar> Initializable.
+---@field Events table<string, Event> Initializable.
+---@field Hooks table<string, Event> Initializable.
 ---@field _Classes table<string, Class> Subclasses registered for this library.
 ---@field protected __ModTable string
 ---@field protected __LoggingLevel Library_LoggingLevel
