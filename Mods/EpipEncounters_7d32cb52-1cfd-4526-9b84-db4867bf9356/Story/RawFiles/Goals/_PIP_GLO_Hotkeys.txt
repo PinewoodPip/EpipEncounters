@@ -78,14 +78,7 @@ QRY_AMER_GEN_Mutex()
 THEN
 CharacterUseItem(_Char, _Item, "GEN_PortableRespecMirror_FTJ_Event");
 
-// PROC PROC_DERBY_ProjectileLanded((STRING)_T, (CHARACTERGUID)_Char, (REAL)_X, (REAL)_Y, (REAL)_Z)
-// AND
-// PlayLoopEffectAtPosition("AMER_RS3_FX_AIWaiting", _X, _Y, _Z, _Eff)
-// THEN
-// DB_NOOP();
-// PlayEffectAtPosition("AMER_RS3_FX_AIWaiting", _X, _Y, _Z);
-
 EXITSECTION
 
 ENDEXITSECTION
-ParentTargetEdge "Start_AMER"
+ParentTargetEdge "Start"

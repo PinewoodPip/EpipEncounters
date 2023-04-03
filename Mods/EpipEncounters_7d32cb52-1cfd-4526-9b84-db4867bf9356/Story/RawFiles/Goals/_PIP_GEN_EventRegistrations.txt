@@ -60,4 +60,4 @@ EXITSECTION
 
 ENDEXITSECTION
 
-ParentTargetEdge "_AMER_GEN_Events"
+ParentTargetEdge "Start"

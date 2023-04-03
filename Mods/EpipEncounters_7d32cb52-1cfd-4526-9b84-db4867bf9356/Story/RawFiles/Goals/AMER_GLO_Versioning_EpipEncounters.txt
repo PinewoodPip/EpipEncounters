@@ -78,4 +78,4 @@ PROC_AMER_GEN_OpenQueuedMessageBox(_Player, "Choice", _Text, "Open Patch Notes",
 EXITSECTION
 
 ENDEXITSECTION
-ParentTargetEdge "Start_AMER"
+ParentTargetEdge "Start"

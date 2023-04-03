@@ -20,4 +20,4 @@ DB_NOOP();
 EXITSECTION
 
 ENDEXITSECTION
-ParentTargetEdge "Start_AMER"
+ParentTargetEdge "Start"

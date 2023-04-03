@@ -31,4 +31,4 @@ CharacterUseItem(_Char, _Item, "");
 EXITSECTION
 
 ENDEXITSECTION
-ParentTargetEdge "Start_AMER"
+ParentTargetEdge "Start"

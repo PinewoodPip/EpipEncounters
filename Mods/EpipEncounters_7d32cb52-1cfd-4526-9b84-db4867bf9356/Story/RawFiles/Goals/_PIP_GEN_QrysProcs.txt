@@ -5,15 +5,8 @@ INITSECTION
 KBSECTION
 
 PROC PROC_PIP_GrantTreasure((CHARACTERGUID)_Char, (STRING)_Treasure)
-AND
-QRY_AMER_GEN_GetHelperObjectAtPosition(1.0, 1.0, 1.0)
-AND
-DB_AMER_GEN_OUTPUT_Item(_Helper)
-AND
-CharacterGetLevel(_Char, _Level)
 THEN
-GenerateTreasure(_Helper, _Treasure, _Level, _Char);
-MoveAllItemsTo(_Helper, _Char);
+CharacterGiveReward(_Char, _Treasure);
 
 QRY QRY_PIP_StatusText((STRING)_Text)
 AND
@@ -70,4 +63,4 @@ NOT DB_PIP_ItemBeingReEquipped(_Char, _Item);
 EXITSECTION
 
 ENDEXITSECTION
-ParentTargetEdge "EEModWrapper"
+ParentTargetEdge "Start"

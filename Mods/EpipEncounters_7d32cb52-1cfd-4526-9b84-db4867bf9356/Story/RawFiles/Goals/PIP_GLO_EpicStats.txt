@@ -134,4 +134,4 @@ PROC_PIP_EpicStats_Update();
 EXITSECTION
 
 ENDEXITSECTION
-ParentTargetEdge "Start_AMER"
+ParentTargetEdge "Start"

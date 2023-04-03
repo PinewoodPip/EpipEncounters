@@ -1,0 +1,68 @@
+Version 1
+SubGoalCombiner SGC_AND
+INITSECTION
+
+GoalCompleted;
+
+KBSECTION
+
+// Dummy declarations of Epic Encounters symbols,
+// to allow compilation when EE is disabled.
+
+PROC PROC_AMER_TempStat_FlexStat_Add((CHARACTERGUID)_, (STRING)_, (STRING)_, (REAL)_, (INTEGER)_, (STRING)_)
+THEN
+DB_NOOP();
+
+PROC PROC_AMER_GEN_OpenQueuedMessageBox((CHARACTERGUID)_, (STRING)_)
+THEN
+DB_NOOP();
+
+PROC PROC_AMER_GEN_PlayerItemEquipped((ITEMGUID)_, (CHARACTERGUID)_, (STRING)_)
+THEN
+DB_NOOP();
+
+PROC PROC_AMER_GEN_PlayerItemUnequipped((ITEMGUID)_, (CHARACTERGUID)_, (STRING)_)
+THEN
+DB_NOOP();
+
+PROC PROC_AMER_Runes_RuneEquipped((CHARACTERGUID)_, (ITEMGUID)_, (STRING)_, (STRING)_, (STRING)_, (INTEGER)_)
+THEN
+DB_NOOP();
+
+PROC PROC_AMER_Runes_RuneRemoved((CHARACTERGUID)_, (ITEMGUID)_, (ITEMGUID)_, (INTEGER)_)
+THEN
+DB_NOOP();
+
+PROC PROC_AMER_UI_Ascension_ExitUI((INTEGER)_, (CHARACTERGUID)_)
+THEN
+DB_NOOP();
+
+QRY QRY_AMER_GEN_Mutex_Clear()
+AND
+1 != 1
+THEN
+DB_NOOP();
+
+QRY QRY_AMER_GEN_Mutex()
+AND
+1 != 1
+THEN
+DB_NOOP();
+
+QRY QRY_AMER_GEN_OnePerUser((CHARACTERGUID)_)
+AND
+1 != 1
+THEN
+DB_NOOP();
+
+QRY QRY_AMER_GEN_TSK_Get((STRING)_)
+AND
+1 != 1
+THEN
+DB_NOOP();
+
+EXITSECTION
+
+ENDEXITSECTION
+
+ParentTargetEdge "Start"
