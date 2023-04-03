@@ -97,6 +97,26 @@ function PlayerInfo.SetCombatBadgeVisibility(state)
     PlayerInfo:GetRoot().COMBAT_BADGE_ENABLED = state
 end
 
+---Returns the element that holds the data of a character.
+---@param char EclCharacter Must be a player (not summon or follower)
+---@return FlashMovieClip? --`nil` if the character is not in the UI.
+function PlayerInfo.GetPlayerElement(char)
+    local arr = PlayerInfo:GetRoot().player_array
+    local playerElement = nil
+
+    for i=0,#arr-1,1 do
+        local player = arr[i]
+        local handle = Ext.UI.HandleToDouble(char.Handle)
+
+        if player.characterHandle == handle then
+            playerElement = player
+            break
+        end
+    end
+
+    return playerElement
+end
+
 ---Returns the characters being shown in the UI.
 ---@param controlledOnly boolean? Defaults to `false`.
 ---@return EclCharacter[]
@@ -121,7 +141,9 @@ function PlayerInfo.ToggleStatuses(visible)
     local players = PlayerInfo.Root.player_array
 
     -- Default to inverting state
-    visible = visible or not PlayerInfo.GetStatusesVisibility()
+    if visible == nil then
+        visible = not PlayerInfo.GetStatusesVisibility()
+    end
 
     for i=0,#players-1,1 do
         local player = players[i]
