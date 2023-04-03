@@ -6,6 +6,8 @@ Entity = {}
 -- CLASSES
 ---------------------------------------------
 
+---@alias EntityLib_UserVarsCompatibleComponent Character|Item
+
 ---Return types of GetGameObject().
 ---@alias EntityLib_GetGameObjectFuntionReturnType "esv::Character"|"ecl::Character"|"ecl::Inventory"|"ecl::Scenery"|"ecl::Item"|"esv::Item"|"Trigger"|"esv::Projectile"|"ecl::Projectile"|"ecl::CombatComponent"
 

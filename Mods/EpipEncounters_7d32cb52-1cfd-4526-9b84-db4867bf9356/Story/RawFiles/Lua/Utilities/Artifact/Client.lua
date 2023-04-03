@@ -13,9 +13,10 @@ local Artifact = Artifact
 function Artifact.IsEquipped(char, artifact)
     local equipped = false
     local artifactID = artifact
+    local userVar = Artifact:GetUserVariable(char, Artifact.EQUIPPED_POWERS_USERVAR) or {}
     if type(artifact) == "table" then artifactID = artifact.ID end
 
-    equipped = char:HasTag(Artifact.EQUIPPED_TAG_PREFIX .. artifactID)
+    equipped = userVar[artifactID] == true
 
     return equipped
 end
@@ -24,20 +25,16 @@ end
 ---@param char EclCharacter
 ---@return ArtifactLib_ArtifactDefinition[]
 function Artifact.GetEquippedPowers(char)
-    local pattern = Artifact.EQUIPPED_TAG_PREFIX .. "(.+)$"
     local artifacts = {}
+    local userVar = Artifact:GetUserVariable(char, Artifact.EQUIPPED_POWERS_USERVAR) or {}
 
-    for _,tag in ipairs(char:GetTags()) do
-        local artifactID = tag:match(pattern)
+    for artifactID,_ in pairs(userVar) do
+        local def = Artifact.GetData(artifactID)
 
-        if artifactID then
-            local def = Artifact.GetData(artifactID)
-
-            if def then
-                table.insert(artifacts, def)
-            else
-                Artifact:LogError("Artifact has no definition: " .. artifactID)
-            end
+        if def then
+            table.insert(artifacts, def)
+        else
+            Artifact:LogWarning("Artifact has no definition: " .. artifactID)
         end
     end
 

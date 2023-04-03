@@ -1,7 +1,7 @@
 
 ---@class ArtifactLib : Feature
 Artifact = {
-    EQUIPPED_TAG_PREFIX = "ARTIFACTPOWER_",
+    EQUIPPED_POWERS_USERVAR = "EquippedArtifacts",
 
     ---@type table<string, ArtifactLib_ArtifactDefinition>
     ARTIFACTS = {
@@ -946,12 +946,21 @@ Artifact = {
 Epip.InitializeLibrary("Artifact", Artifact)
 
 ---------------------------------------------
+-- USER VARS
+---------------------------------------------
+
+-- Equipped powers
+Artifact:RegisterUserVariable(Artifact.EQUIPPED_POWERS_USERVAR, {
+    Persistent = true,
+})
+
+---------------------------------------------
 -- CLASSES
 ---------------------------------------------
 
 ---@class ArtifactLib_ArtifactDefinition
 ---@field ID string
----@field Slot StatsItemSlot
+---@field Slot ItemSlot
 ---@field ItemTemplate GUID
 ---@field RuneTemplate GUID
 ---@field DescriptionHandle TranslatedStringHandle
@@ -959,7 +968,7 @@ Epip.InitializeLibrary("Artifact", Artifact)
 ---@field KeywordMutators Keyword[]
 ---@field GetName fun(self):string
 ---@field GetDescription fun(self):string
----@field GetPowerTooltip fun(self):TooltipElement[]
+---@field GetPowerTooltip fun(self):TooltipLib_Element[]
 local _ArtifactDef = {}
 
 ---Returns the artifact's name.
@@ -1010,7 +1019,9 @@ end
 ---@param data ArtifactLib_ArtifactDefinition
 ---@return ArtifactLib_ArtifactDefinition
 function Artifact.RegisterArtifact(data)
-    if not data.ID then Artifact:LogError("Artifact is missing an ID.") return nil end
+    if not data.ID then
+        Artifact:Error("RegisterArtifact", "Artifact is missing an ID.")
+    end
 
     Inherit(data, _ArtifactDef)
     Artifact.ARTIFACTS[data.ID] = data

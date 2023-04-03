@@ -43,14 +43,42 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
-Osiris.RegisterSymbolListener("PROC_AMER_Artifacts_EquipEffects", 3, "after", function(char, artifactID, sourceType)
-    -- Apply tag.
-    Osi.SetTag(char, Artifact.EQUIPPED_TAG_PREFIX .. artifactID)
+Osiris.RegisterSymbolListener("PROC_AMER_Artifacts_EquipEffects", 3, "after", function(charGUID, artifactID, _)
+    local char = Character.Get(charGUID)
+
+    -- Update user var.
+    local userVar = Artifact:GetUserVariable(char, Artifact.EQUIPPED_POWERS_USERVAR) or {}
+    userVar[artifactID] = true
+    Artifact:SetUserVariable(char, Artifact.EQUIPPED_POWERS_USERVAR, userVar)
 end)
 
-Osiris.RegisterSymbolListener("PROC_AMER_Artifacts_UnequipEffects", 3, "after", function(char, artifactID, sourceType)
-    -- Remove tag.
-    if not Artifact.IsEquipped(Character.Get(char), artifactID) then
-        Osi.ClearTag(char, Artifact.EQUIPPED_TAG_PREFIX .. artifactID)
+Osiris.RegisterSymbolListener("PROC_AMER_Artifacts_UnequipEffects", 3, "after", function(charGUID, artifactID, _)
+    local char = Character.Get(charGUID)
+
+    if not Artifact.IsEquipped(char, artifactID) then
+        -- Update user var.
+        local userVar = Artifact:GetUserVariable(char, Artifact.EQUIPPED_POWERS_USERVAR) or {}
+        userVar[artifactID] = nil
+        Artifact:SetUserVariable(char, Artifact.EQUIPPED_POWERS_USERVAR, userVar)
+    end
+end)
+
+-- Update equipped artifacts user var upon load.
+-- This exists for (limited) backwards compatibility,
+-- and only checks for player characters.
+GameState.Events.GameReady:Subscribe(function (_)
+    local playerGUIDs = Osiris.QueryDatabase("DB_IsPlayer", nil)
+
+    for _,tuple in ipairs(playerGUIDs) do
+        local guid = tuple:Unpack()
+        local char = Character.Get(guid)
+        local powers = Artifact.GetEquippedPowers(char)
+        local powersVar = {}
+
+        for _,power in ipairs(powers) do
+            powersVar[power.ID] = true
+        end
+
+        Artifact:SetUserVariable(char, Artifact.EQUIPPED_POWERS_USERVAR, powersVar)
     end
 end)
