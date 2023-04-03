@@ -10,7 +10,7 @@ local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 ---@field DurationText GenericUI_Prefab_Text
 ---@field BorderDummy GenericUI_Element_Empty
 local Status = {
-    SIZE = Vector.Create(32, 32),
+    SIZE = Vector.Create(38, 38),
     ICON_SIZE = Vector.Create(28, 28),
     TEXT_SIZE = Vector.Create(32, 18),
     TEXT_FONT_SIZE = 12,
@@ -36,6 +36,10 @@ function Status.Create(ui, id, parent, entity, status)
     local root = element:CreateElement("Container", "GenericUI_Element_TiledBackground", parent)
     root:SetBackground("Black", element.SIZE:unpack())
     element.BorderDummy = element:CreateElement("Border", "GenericUI_Element_Empty", root)
+    root:SetSizeOverride(Vector.Create(
+        element.SIZE[1] + element.DURATION_BORDER_WIDTH,
+        element.SIZE[2] + element.DURATION_BORDER_WIDTH
+    ))
     
     local icon = element:CreateElement("Icon", "GenericUI_Element_IggyIcon", root)
     local text = TextPrefab.Create(ui, element:PrefixID("DurationText"), root, "", "Right", element.TEXT_SIZE)
