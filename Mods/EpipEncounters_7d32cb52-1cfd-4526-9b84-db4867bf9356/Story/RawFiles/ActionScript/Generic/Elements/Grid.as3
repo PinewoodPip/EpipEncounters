@@ -50,5 +50,10 @@ package Elements
         {
             this.gridList.clearElements();
         }
+
+        public function RepositionElements() : *
+        {
+            this.gridList.positionElements();
+        }
     }
 }

@@ -178,6 +178,8 @@ function Ext_ClientEntity.GetItem(identifier) end
 -- OTHER
 ---------------------------------------------
 
+---@alias FlashMainTimeline unknown
+
 ---@type unknown
 Ext.Enums = {}
 

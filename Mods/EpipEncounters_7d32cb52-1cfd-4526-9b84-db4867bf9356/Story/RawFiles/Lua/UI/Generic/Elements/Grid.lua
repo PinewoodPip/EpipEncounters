@@ -16,6 +16,7 @@ local _Grid = Grid ---@type GenericUI_Element_Grid Used to workaround an IDE iss
 _Grid.SetGridSize = Generic.ExposeFunction("SetGridSize")
 _Grid.ClearElements = Generic.ExposeFunction("ClearElements")
 _Grid.SetRepositionAfterAdding = Generic.ExposeFunction("SetRepositionAfterAdding")
+_Grid.RepositionElements = Generic.ExposeFunction("RepositionElements")
 
 ---Sets the spacing between elements.
 ---@param row number

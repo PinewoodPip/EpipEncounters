@@ -13,3 +13,6 @@ function Grid:SetGridSize(columns, rows) end
 ---Default behaviour is to do so; disabling it offers far better performance when bulk-adding elements.
 ---@param reposition boolean
 function Grid:SetRepositionAfterAdding(reposition) end
+
+---Repositions the elements of the grid.
+function Grid:RepositionElements() end
