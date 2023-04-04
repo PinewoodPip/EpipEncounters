@@ -1,4 +1,6 @@
 
+local Set = DataStructures.Get("DataStructures_Set")
+
 ---@class PointerLib : Library
 ---@field private CurrentHandles table
 Pointer = {
@@ -8,6 +10,7 @@ Pointer = {
         HoverItem = {EventName = "HoverItemChanged", EntityEventFieldName = "Item", CurrentHandle = nil},
         PlaceableEntity = {EventName = "HoverEntityChanged", EntityEventFieldName = "Entity", CurrentHandle = nil},
     },
+    _PlayersWithDragDrop = Set.Create(), ---@type DataStructures_Set<integer>
 
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS= false,
@@ -17,6 +20,7 @@ Pointer = {
         HoverCharacter2Changed = {}, ---@type Event<PointerLib_Event_HoverCharacter2Changed>
         HoverItemChanged = {}, ---@type Event<PointerLib_Event_HoverItemChanged>
         HoverEntityChanged = {}, ---@type Event<PointerLib_Event_HoverEntityChanged>
+        DragDropStateChanged = {}, ---@type Event<PointerLib_Event_DragDropStateChanged>
     },
 }
 Epip.InitializeLibrary("Pointer", Pointer)
@@ -52,6 +56,11 @@ Epip.InitializeLibrary("Pointer", Pointer)
 
 ---@class PointerLib_Event_HoverEntityChanged
 ---@field Entity Entity?
+
+---Fired when a player starts or ends a drag drop. 
+---@class PointerLib_Event_DragDropStateChanged
+---@field State DragDropManagerPlayerDragInfo? `nil` if the player stopped dragging.
+---@field PlayerIndex integer
 
 ---------------------------------------------
 -- METHODS
@@ -193,6 +202,31 @@ GameState.Events.RunningTick:Subscribe(function (_)
             Pointer.Events[data.EventName]:Throw(event)
 
             data.CurrentHandle = newHandle
+        end
+    end
+end)
+
+-- Listen for drag-drop states changing.
+GameState.Events.RunningTick:Subscribe(function (_)
+    local dragDrops = Ext.UI.GetDragDrop().PlayerDragDrops
+
+    for id,dragDrop in ipairs(dragDrops) do
+        local wasDragging = Pointer._PlayersWithDragDrop:Contains(id)
+
+        if wasDragging and not dragDrop.IsDragging then
+            Pointer.Events.DragDropStateChanged:Throw({
+                PlayerIndex = id,
+                State = nil,
+            })
+
+            Pointer._PlayersWithDragDrop:Remove(id)
+        elseif not wasDragging and dragDrop.IsDragging then
+            Pointer.Events.DragDropStateChanged:Throw({
+                PlayerIndex = id,
+                State = dragDrop,
+            })
+
+            Pointer._PlayersWithDragDrop:Add(id)
         end
     end
 end)
