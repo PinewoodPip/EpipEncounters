@@ -28,13 +28,6 @@ Mods = {}
 ---@alias Keyword "ViolentStrike" | "VitalityVoid" | "Predator" | "Elementalist" | "Prosperity" | "Paucity" | "IncarnateChampion" | "Defiance" | "Occultist" | "Disintegrate" | "Wither" | "Centurion" | "Abeyance" | "Benevolence" | "Presence" | "Ward" | "Celestial" | "Purity" | "VolatileArmor" | "Voracity"
 ---@alias KeywordBoonType "Activator" | "Mutator"
 
----@class ScriptDefinition
----@field WIP boolean If true, the script will only load in the "sudo" developer mode.
----@field Developer boolean If true, the script will only load in developer mode.
----@field ScriptSet string Folder to load a set of scripts from (Shared.lua, Client.lua and Server.lua)
----@field Script string Filename
----@field Scripts string[] Extra scripts to load after the main script or scriptset.
-
 ---@class NetMessage
 
 ---------------------------------------------
