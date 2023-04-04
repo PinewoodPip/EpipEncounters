@@ -4,7 +4,8 @@ local Set = DataStructures.Get("DataStructures_Set")
 ---@class Feature_AnimationCancelling : Feature
 local AnimCancel = {
     NET_MESSAGE = "Epip_Feature_AnimationCancelling",
-    DEFAULT_DELAY = 2, -- In ticks.
+    DEFAULT_DELAY = 0.2, -- In seconds.
+    PING_DELAY = 2, -- In ticks.
 
     ---@type table<string, number> Delay for specific skills - in seconds!.
     SKILL_DELAYS = {
@@ -87,7 +88,7 @@ function AnimCancel.GetDelay(char, skillID)
     local hook = AnimCancel.Hooks.GetDelay:Throw({
         Character = char,
         SkillID = skillID,
-        Delay = 0.05,
+        Delay = AnimCancel.DEFAULT_DELAY,
     })
 
     return hook.Delay
