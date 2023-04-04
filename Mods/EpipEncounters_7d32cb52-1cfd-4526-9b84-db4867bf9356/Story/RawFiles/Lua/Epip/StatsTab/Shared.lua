@@ -12,15 +12,11 @@
 -- We only keep track of equipped nodes that have a stat defined.
 ---------------------------------------------
 
----@meta Library: EpipStatsTab, ContextShared, Epip.Features.EpipStats
-
 ---@class EpipStats
 ---@field CATEGORIES table<string, EpipStatCategory> Category definitions.
 ---@field CATEGORIES_ORDER string[]
 ---@field STATS table<string, EpipStat>
 ---@field MISSING_REGEN_CAP number TODO move
----@field STAT_VALUE_TAG string Pattern for stat tags.
----@field STAT_VALUE_TAG_PREFIX string
 ---@field TOOLTIP_TALENT number TODO remove
 ---@field TOOLTIP_TALENT_NAME string TODO remove
 
@@ -43,8 +39,9 @@
 ---@field Behaviour EpipStatCategoryBehaviour Controls how default-value stats are shown. GreyOut greys out their label and value, hidden hides them - and the whole category - if no stats are owned.
 ---@field Stats string[] Stats displayed in the category, ordered.
 
----@class EpipStats
+---@class Feature_CustomStats : Feature
 local EpipStats = {
+    USERVAR_STATS = "Stats",
     CATEGORIES = {
         Embodiments = {
             Header = Text.Format("——— Embodiments ———", {Size = 21}),
@@ -451,13 +448,6 @@ local EpipStats = {
 
     MISSING_REGEN_CAP = 50,
 
-    -- We use tags to store stat values now,
-    -- instead of PersistentVars.
-    -- Hopefully this makes synching less janky.
-    -- Capture groups: Stat ID and amount
-    STAT_VALUE_TAG = "PIP_STATS_TAB_(.*)_(-?[0-9]*%.?[0-9]*)$",
-    STAT_VALUE_TAG_PREFIX = "PIP_STATS_TAB_",
-
     TOOLTIP_TALENT = 126,
     TOOLTIP_TALENT_NAME = "MasterThief",
 
@@ -472,7 +462,7 @@ local EpipStats = {
     },
     nextTooltipIsStat = false,
 }
-Epip.AddFeature("StatsTab", "EpipStats", EpipStats)
+Epip.RegisterFeature("CustomStats", EpipStats)
 
 ---@type EpipStatCategory
 local BaseCategory = {
@@ -483,11 +473,17 @@ local BaseCategory = {
 }
 
 ---------------------------------------------
+-- USER VARS
+---------------------------------------------
+
+EpipStats:RegisterUserVariable(EpipStats.USERVAR_STATS, {Persistent = true})
+
+---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
 ---Registers a stat bound to an Ascension node.
----@meta RequireBothContexts
+---@tpwd RequireBothContexts
 ---@param clusterId string
 ---@param nodeIndex number
 ---@param nodeSubIndex number
@@ -523,7 +519,7 @@ function EpipStats.AddNodeStat(clusterId, nodeIndex, nodeSubIndex, keyword, keyw
 end
 
 ---Register a stat.
----@meta RequireBothContexts
+---@tpwd RequireBothContexts
 ---@param id string
 ---@param data EpipStat
 function EpipStats.RegisterStat(id, data)
@@ -538,7 +534,7 @@ function EpipStats.RegisterStat(id, data)
 end
 
 ---Register a category.
----@meta RequireBothContexts
+---@tpwd RequireBothContexts
 ---@param id string
 ---@param data EpipStatCategory
 ---@param index? integer Order in the stats tab relative to other categories.
@@ -552,7 +548,7 @@ function EpipStats.RegisterCategory(id, data, index)
 end
 
 ---Add a stat to a category.
----@meta RequireBothContexts
+---@tpwd RequireBothContexts
 ---@param statID string
 ---@param categoryID string
 ---@param index? integer
@@ -585,14 +581,14 @@ table.simpleSort(EpipStats.CATEGORIES.Artifacts.Stats)
 
 Data.Game.ASPECT_NAMES = {}
 -- TODO cache
-for id,data in pairs(epicStatsKeywords) do
+for _,data in pairs(epicStatsKeywords) do
     if not Data.Game.ASPECT_NAMES[data.ClusterId] then
         Data.Game.ASPECT_NAMES[data.ClusterId] = data.SourceAspect
     end
 end
 
 -- Create Ascension stats from old data
-for id,data in pairs(epicStatsKeywords) do
+for _,data in pairs(epicStatsKeywords) do
     EpipStats.AddNodeStat(data.ClusterId, data.NodeIndex, data.SubNodeIndex, data.Keyword, data.Type, {
         Name = data.Display,
         Description = data.Description,

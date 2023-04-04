@@ -5,7 +5,7 @@
 ---------------------------------------------
 
 local CharacterSheet = Client.UI.CharacterSheet
-local EpipStats = Epip.Features.StatsTab
+local EpipStats = Epip.GetFeature("Feature_CustomStats")
 
 function EpipStats.GetCategory(statID)
     return EpipStats.CATEGORIES[statID]
@@ -86,12 +86,9 @@ function EpipStats.ParseStatsFromTags()
     
     EpipStats.cachedStats = {}
 
-    for i,tag in pairs(char:GetTags()) do
-        local stat,amount = tag:match(EpipStats.STAT_VALUE_TAG)
-        
-        if stat then
-            EpipStats.cachedStats[stat] = amount
-        end
+    local vars = EpipStats:GetUserVariable(char, EpipStats.USERVAR_STATS) or {}
+    for stat,value in pairs(vars) do
+        EpipStats.cachedStats[stat] = value
     end
 end
 

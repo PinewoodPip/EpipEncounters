@@ -1,5 +1,5 @@
 
-local EpipStats = Epip.Features.StatsTab
+local EpipStats = Epip.GetFeature("Feature_CustomStats")
 
 ---------------------------------------------
 -- KEYWORDS
@@ -11,7 +11,7 @@ function EpipStats.UpdateEmbodiment(char, embodiment)
     local statName = "Embodiment_" .. embodiment
     local value = Osiris.QRY_AMER_UI_Ascension_GetEmbodimentCount(char.MyGuid, embodiment)
 
-    EpipStats.UpdateTaggedStat(char, statName, value)
+    EpipStats.UpdateUserVarStat(char, statName, value)
 end
 
 EpipStats.RegisterListener("UpdateStat", function(char, id, _)
@@ -26,27 +26,27 @@ end)
 EpipStats.RegisterStatUpdateListener("Keyword_Celestial_Healing", function(char, data)
     local value = EpipStats.GetCelestialRestoration(char)
 
-    EpipStats.UpdateTaggedStat(char, "Keyword_Celestial_Healing", value)
+    EpipStats.UpdateUserVarStat(char, "Keyword_Celestial_Healing", value)
 end)
 
 -- Vitality Void.
 EpipStats.RegisterStatUpdateListener("Keyword_VitalityVoid_Power", function(char, data)
     local value = Osiris.QRY_AMER_KeywordStat_VitalityVoid_GetPower(char.MyGuid, 1) * 100
 
-    EpipStats.UpdateTaggedStat(char, "Keyword_VitalityVoid_Power", value)
+    EpipStats.UpdateUserVarStat(char, "Keyword_VitalityVoid_Power", value)
 end)
 
 EpipStats.RegisterStatUpdateListener("Keyword_VitalityVoid_Radius", function(char, data)
     local value = Osiris.QRY_AMER_KeywordStat_VitalityVoid_GetRadius(char.MyGuid, 1)
 
-    EpipStats.UpdateTaggedStat(char, "Keyword_VitalityVoid_Radius", value)
+    EpipStats.UpdateUserVarStat(char, "Keyword_VitalityVoid_Radius", value)
 end)
 
 -- Prosperity.
 EpipStats.RegisterStatUpdateListener("Keyword_Prosperity_Threshold", function(char, data)
     local value = Osiris.QRY_AMER_KeywordStat_Prosperity_GetThreshold(char.MyGuid)
 
-    EpipStats.UpdateTaggedStat(char, "Keyword_Prosperity_Threshold", value)
+    EpipStats.UpdateUserVarStat(char, "Keyword_Prosperity_Threshold", value)
 end)
 
 local function UpdateVoracity(char, voracityType, isSummon)
@@ -91,7 +91,7 @@ local function UpdateVoracity(char, voracityType, isSummon)
         stat = "Keyword_Voracity_" .. voracityType
     end
 
-    EpipStats.UpdateTaggedStat(char, stat, value)
+    EpipStats.UpdateUserVarStat(char, stat, value)
 end
 
 -- Voracity.
@@ -121,19 +121,19 @@ end)
 EpipStats.RegisterStatUpdateListener("CurrentCombat_DamageDealt", function(char, data)
     local _, value = Osiris.DB_PIP_EpicStats_DamageDealt(char.MyGuid, nil)
 
-    EpipStats.UpdateTaggedStat(char, "CurrentCombat_DamageDealt", value or 0)
+    EpipStats.UpdateUserVarStat(char, "CurrentCombat_DamageDealt", value or 0)
 end)
 
 EpipStats.RegisterStatUpdateListener("CurrentCombat_DamageReceived", function(char, data)
     local _, value = Osiris.DB_PIP_EpicStats_DamageReceived(char.MyGuid, nil)
 
-    EpipStats.UpdateTaggedStat(char, "CurrentCombat_DamageReceived", value or 0)
+    EpipStats.UpdateUserVarStat(char, "CurrentCombat_DamageReceived", value or 0)
 end)
 
 EpipStats.RegisterStatUpdateListener("CurrentCombat_HealingDone", function(char, data)
     local _, value = Osiris.DB_PIP_EpicStats_HealingDone(char.MyGuid, nil)
 
-    EpipStats.UpdateTaggedStat(char, "CurrentCombat_HealingDone", value or 0)
+    EpipStats.UpdateUserVarStat(char, "CurrentCombat_HealingDone", value or 0)
 end)
 
 -- Damage taken
@@ -194,7 +194,7 @@ EpipStats.RegisterStatUpdateListener("RegenLifeCalculated", function(char, data)
         value = EpipStats.MISSING_REGEN_CAP
     end
 
-    EpipStats.UpdateTaggedStat(char, "RegenLifeCalculated", value)
+    EpipStats.UpdateUserVarStat(char, "RegenLifeCalculated", value)
 end)
 
 EpipStats.RegisterStatUpdateListener("RegenPhysicalArmorCalculated", function(char, data)
@@ -206,7 +206,7 @@ EpipStats.RegisterStatUpdateListener("RegenPhysicalArmorCalculated", function(ch
         value = EpipStats.MISSING_REGEN_CAP
     end
 
-    EpipStats.UpdateTaggedStat(char, "RegenPhysicalArmorCalculated", value)
+    EpipStats.UpdateUserVarStat(char, "RegenPhysicalArmorCalculated", value)
 end)
 
 EpipStats.RegisterStatUpdateListener("RegenMagicArmorCalculated", function(char, data)
@@ -218,7 +218,7 @@ EpipStats.RegisterStatUpdateListener("RegenMagicArmorCalculated", function(char,
         value = EpipStats.MISSING_REGEN_CAP
     end
 
-    EpipStats.UpdateTaggedStat(char, "RegenMagicArmorCalculated", value)
+    EpipStats.UpdateUserVarStat(char, "RegenMagicArmorCalculated", value)
 end)
 
 ---------------------------------------------
@@ -229,8 +229,8 @@ function EpipStats.UpdateReactionCharges(char, stat, reaction)
     local charges = EpipStats.GetCurrentReactionCharges(char, reaction)
     local maxCharges = EpipStats.GetExtendedStat(char, "FreeReactionCharge", reaction)
 
-    EpipStats.UpdateTaggedStat(char, stat, charges)
-    EpipStats.UpdateTaggedStat(char, stat .. "_Max", maxCharges)
+    EpipStats.UpdateUserVarStat(char, stat, charges)
+    EpipStats.UpdateUserVarStat(char, stat .. "_Max", maxCharges)
 end
 
 EpipStats.RegisterStatUpdateListener("FreeReaction_Generic", function(char, data)

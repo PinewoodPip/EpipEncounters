@@ -3,8 +3,8 @@
 -- Server-side scripting for our custom stats tab stats.
 ---------------------------------------------
 
----@type EpipStats
-local EpipStats = Epip.Features.StatsTab
+---@class Feature_CustomStats
+local EpipStats = Epip.GetFeature("Feature_CustomStats")
 
 function EpipStats.GetCelestialRestoration(char)
     return Osiris.QRY_AMER_KeywordStat_Celestial_GetHeal(char.MyGuid)
@@ -37,7 +37,7 @@ function EpipStats.RecalculateNodeStats()
         local stat = cluster .. "_" .. node .. "." .. subNode
 
         if EpipStats.STATS[stat] then
-            EpipStats.UpdateTaggedStat(char, stat, 1)
+            EpipStats.UpdateUserVarStat(char, stat, 1)
         end
     end
 end
@@ -64,27 +64,12 @@ function UpdateCustomStatsForCharacter(char)
 end
 
 -- Update the tag storing a stat's value for a char.
-function EpipStats.UpdateTaggedStat(char, stat, newValue)
+function EpipStats.UpdateUserVarStat(char, stat, newValue)
+    EpipStats:DebugLog("User var stat updated: " .. stat)
 
-    -- TODO allow decimals
-    newValue = Ext.Utils.Round(newValue, 2)
-
-    -- remove previous tag
-    for i,tag in pairs(char:GetTags()) do
-
-        local statInTag,oldAmount = tag:match(EpipStats.STAT_VALUE_TAG)
-        if statInTag == stat then
-            Osi.ClearTag(char.MyGuid, tag)
-            break
-        end
-    end
-
-    EpipStats:DebugLog("Tag updated: " .. stat)
-
-    -- Tags are not added for values of 0.
-    if newValue ~= 0 then
-        Osi.SetTag(char.MyGuid, EpipStats.STAT_VALUE_TAG_PREFIX .. stat .. "_" .. Text.RemoveTrailingZeros(newValue))
-    end
+    local stats = EpipStats:GetUserVariable(char, EpipStats.USERVAR_STATS) or {}
+    stats[stat] = newValue
+    EpipStats:SetUserVariable(char, EpipStats.USERVAR_STATS, stats)
 end
 
 ---------------------------------------------
@@ -97,7 +82,7 @@ Ext.Osiris.RegisterListener("PROC_AMER_UI_Ascension_NodeAllocated", 3, "after", 
 
     -- Only add a tag for relevant stats, so as to reduce bloat
     if EpipStats.STATS[statID] then
-        EpipStats.UpdateTaggedStat(Ext.GetCharacter(char), statID, 1)
+        EpipStats.UpdateUserVarStat(Character.Get(char), statID, 1)
     else
         Net.PostToCharacter(char, "EPIPENCOUNTERS_RefreshStatsTab")
     end
@@ -109,7 +94,7 @@ Ext.Osiris.RegisterListener("PROC_AMER_UI_Ascension_NodeDeallocated", 3, "after"
 
     -- Only add a tag for relevant stats, so as to reduce bloat
     if EpipStats.STATS[statID] then
-        EpipStats.UpdateTaggedStat(Ext.GetCharacter(char), statID, 0)
+        EpipStats.UpdateUserVarStat(Character.Get(char), statID, 0)
     else
         Net.PostToCharacter(char, "EPIPENCOUNTERS_RefreshStatsTab")
     end

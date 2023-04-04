@@ -5,7 +5,7 @@
 
 local Tab = Client.UI.CharacterSheet.StatsTab
 local CharacterSheet = Client.UI.CharacterSheet
-local EpipStats = Epip.Features.StatsTab
+local EpipStats = Epip.GetFeature("Feature_CustomStats")
 
 ---------------------------------------------
 -- Vanilla Character stats
