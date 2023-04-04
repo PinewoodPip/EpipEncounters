@@ -21,11 +21,13 @@ Stats = {
         CLEAN = "statIcons_Clean",
         DYING = "statIcons_Dead",
         ENCUMBERED = "statIcons_Encumbered",
+        SNEAKING = "Action_Sneak",
         LEADERSHIP = "statIcons_Leadership", -- This one does have a potion entry, why doesn't our code pick it up? TODO investigate
     },
     HARDCODED_STATUSES_WITHOUT_ICONS = Set.Create({
         "UNSHEATHED",
         "COMBAT",
+        "INSURFACE",
     }),
 
     Enums = {
