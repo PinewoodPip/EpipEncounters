@@ -289,37 +289,3 @@ function Feature:SaveSettings()
         Settings.Save(self:GetSettingsModuleID())
     end
 end
-
----------------------------------------------
--- USERVARS METHODS
----------------------------------------------
-
----Registers a mod variable.
----@param modGUID GUID
----@param name string
----@param data UserVarsLib_ModVar
-function Feature:RegisterModVariable(modGUID, name, data)
-    local key = self:_GetUserVarsKey(name)
-
-    UserVars.RegisterModVariable(modGUID, key, data)
-end
-
----Returns the value of a mod variable.
----@param modGUID GUID
----@param name string
----@return any
-function Feature:GetModVariable(modGUID, name)
-    return UserVars.GetModVariables(modGUID)[self:_GetUserVarsKey(name)]
-end
-
----Sets the value of a mod variable.
----@param modGUID GUID
----@param name string
----@param value any
-function Feature:SetModVariable(modGUID, name, value)
-    local vars = UserVars.GetModVariables(modGUID)
-
-    vars[self:_GetUserVarsKey(name)] = value
-
-    Ext.Utils.SyncModVariables()
-end

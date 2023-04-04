@@ -138,6 +138,36 @@ function Library:_GetUserVarsKey(suffix)
     return key
 end
 
+---Registers a mod variable.
+---@param modGUID GUID
+---@param name string
+---@param data UserVarsLib_ModVar
+function Library:RegisterModVariable(modGUID, name, data)
+    local key = self:_GetUserVarsKey(name)
+
+    UserVars.RegisterModVariable(modGUID, key, data)
+end
+
+---Returns the value of a mod variable.
+---@param modGUID GUID
+---@param name string
+---@return any
+function Library:GetModVariable(modGUID, name)
+    return UserVars.GetModVariables(modGUID)[self:_GetUserVarsKey(name)]
+end
+
+---Sets the value of a mod variable.
+---@param modGUID GUID
+---@param name string
+---@param value any
+function Library:SetModVariable(modGUID, name, value)
+    local vars = UserVars.GetModVariables(modGUID)
+
+    vars[self:_GetUserVarsKey(name)] = value
+
+    Ext.Utils.SyncModVariables()
+end
+
 ---------------------------------------------
 -- DEBUGGING
 ---------------------------------------------
