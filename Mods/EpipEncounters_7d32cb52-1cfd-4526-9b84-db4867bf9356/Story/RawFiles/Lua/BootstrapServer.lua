@@ -138,6 +138,7 @@ LOAD_ORDER = {
     {ScriptSet = "Utilities/EpicEncounters"},
     {ScriptSet = "Utilities/EpicEncounters/SourceInfusion"},
     {ScriptSet = "Utilities/EpicEncounters/BatteredHarried"},
+    {ScriptSet = "Utilities/EpicEncounters/DeltaMods"},
 
     "Game/AMERUI/Shared.lua",
     "Game/AMERUI/Server.lua",

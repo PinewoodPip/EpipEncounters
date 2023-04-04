@@ -184,6 +184,7 @@ LOAD_ORDER = {
     {ScriptSet = "Utilities/EpicEncounters"},
     {ScriptSet = "Utilities/EpicEncounters/SourceInfusion"},
     {ScriptSet = "Utilities/EpicEncounters/BatteredHarried"},
+    {ScriptSet = "Utilities/EpicEncounters/DeltaMods"},
 
     "UI/OptionsSettings.lua",
 
