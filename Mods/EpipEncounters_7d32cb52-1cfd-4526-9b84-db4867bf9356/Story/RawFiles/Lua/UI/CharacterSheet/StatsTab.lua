@@ -127,6 +127,11 @@ end
 function StatsTab.RenderStat(id)
     local char = CharacterSheet.GetCharacter()
     local data = CustomStats.GetStat(id)
+    if not data then
+        StatsTab:LogWarning("Attempted to render non-existent stat " .. id)
+        return
+    end
+    
     local value = CustomStats.GetStatValue(char, id)
     local valueLabel = StatsTab.FormatStatValue(id, value)
     local label = data.Name

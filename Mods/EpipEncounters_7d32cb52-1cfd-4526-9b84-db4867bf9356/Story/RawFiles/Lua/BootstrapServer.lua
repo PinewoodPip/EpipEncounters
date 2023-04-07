@@ -222,6 +222,8 @@ LOAD_ORDER = {
             "Epip/StatsTab/Server/StatGetters.lua",
         },
     },
+    {Script = "Epip/StatsTab/Data/Categories_EpicEncounters.lua", RequiresEE = true},
+    {Script = "Epip/StatsTab/Data/Stats_EpicEncounters.lua", RequiresEE = true},
     {Script = "Epip/StatsTab/Data/Stats_Artifacts.lua", RequiresEE = true},
 
     {Script = "Epip/ContextMenus/Greatforge/Server.lua", RequiresEE = true},

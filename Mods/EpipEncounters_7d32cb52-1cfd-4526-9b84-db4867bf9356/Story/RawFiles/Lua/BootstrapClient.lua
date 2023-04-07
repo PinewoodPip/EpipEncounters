@@ -440,6 +440,8 @@ LOAD_ORDER = {
             "Epip/StatsTab/Client/StatGetters.lua",
         },
     },
+    {Script = "Epip/StatsTab/Data/Categories_EpicEncounters.lua", RequiresEE = true},
+    {Script = "Epip/StatsTab/Data/Stats_EpicEncounters.lua", RequiresEE = true},
     {Script = "Epip/StatsTab/Data/Stats_Artifacts.lua", RequiresEE = true},
 
     "Epip/Client/CharacterSheetResistances.lua",
