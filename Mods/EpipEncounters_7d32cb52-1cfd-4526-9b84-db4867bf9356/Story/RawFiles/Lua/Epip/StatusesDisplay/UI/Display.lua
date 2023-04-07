@@ -117,10 +117,12 @@ function Manager:_Update()
 
     -- Update the position of the widget every frame
     local playerInfoWidget = PlayerInfo.GetPlayerElement(char)
-    local playerInfoUI = PlayerInfo:GetUI()
-    local pos = Vector.Create(playerInfoUI:GetPosition())
-    pos[1] = pos[1] + math.floor(playerInfoWidget.x) + 113
-    pos[2] = pos[2] + math.floor(playerInfoWidget.y)
-
-    self.UI:SetPosition(pos)
+    if playerInfoWidget then -- TODO why is this nil on load?
+        local playerInfoUI = PlayerInfo:GetUI()
+        local pos = Vector.Create(playerInfoUI:GetPosition())
+        pos[1] = pos[1] + math.floor(playerInfoWidget.x) + 113
+        pos[2] = pos[2] + math.floor(playerInfoWidget.y)
+    
+        self.UI:SetPosition(pos)
+    end
 end

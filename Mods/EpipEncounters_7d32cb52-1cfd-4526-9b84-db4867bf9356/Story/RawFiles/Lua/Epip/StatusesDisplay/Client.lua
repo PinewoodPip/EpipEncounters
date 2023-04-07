@@ -96,7 +96,7 @@ end
 PlayerInfo:RegisterInvokeListener("addInfo", function (_, handle)
     local char = Character.Get(handle, true)
 
-    if StatusesDisplay.Get(char) == nil then
+    if StatusesDisplay.Get(char) == nil and StatusesDisplay:IsEnabled() then
         StatusesDisplay.Create(char)
     end
 end, "After")
