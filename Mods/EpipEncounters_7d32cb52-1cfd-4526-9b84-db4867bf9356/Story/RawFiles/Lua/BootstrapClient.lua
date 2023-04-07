@@ -207,7 +207,6 @@ LOAD_ORDER = {
     {
         Scripts = {
             "UI/CharacterSheet/CharacterSheet.lua",
-            "UI/CharacterSheet/StatsTab.lua",
         },
     },
     
@@ -430,6 +429,10 @@ LOAD_ORDER = {
 
     -- Stats tab
     "Epip/StatsTab/Shared.lua",
+    "Epip/StatsTab/Data/Categories.lua",
+    "Epip/StatsTab/Data/Stats.lua",
+    "Epip/StatsTab/Data/Stats_Artifacts.lua",
+    "UI/CharacterSheet/StatsTab.lua", -- UI for stats tab - very old tech
     "Epip/StatsTab/Client/Client.lua",
     "Epip/StatsTab/Client/StatGetters.lua",
 

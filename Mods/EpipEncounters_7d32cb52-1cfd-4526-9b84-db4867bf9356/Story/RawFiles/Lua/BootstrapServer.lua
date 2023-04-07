@@ -207,6 +207,9 @@ LOAD_ORDER = {
     "Epip/ShowConsumableEffects.lua",
 
     "Epip/StatsTab/Shared.lua",
+    "Epip/StatsTab/Data/Categories.lua",
+    "Epip/StatsTab/Data/Stats.lua",
+    "Epip/StatsTab/Data/Stats_Artifacts.lua",
     "Epip/StatsTab/Server/Server.lua",
     "Epip/StatsTab/Server/StatGetters.lua",
 

@@ -3,9 +3,10 @@
 -- Scripting for the custom stats tab.
 ---------------------------------------------
 
+local CustomStats = Epip.GetFeature("Feature_CustomStats")
+
 ---@class CharacterSheetUIStatsTab : Library
 ---@field Stats table<string, StatsTabStat>
----@field StatsOrder string[] Order in which stats are rendered.
 ---@field TOOLTIP_TALENT_ID number Enum of the talent ID we hijack the tooltip of.
 ---@field TOOLTIP_TALENT_NAME string String ID of the talent we hijack the tooltip of.
 ---@field DEFAULT_STAT_VALUE number
@@ -13,7 +14,6 @@
 ---@field nextNumericalID number Internal; do not set
 local StatsTab = {
     Stats = {},
-    StatsOrder = {},
 
     TOOLTIP_TALENT_ID = 126,
     TOOLTIP_TALENT_NAME = "MasterThief",
@@ -29,13 +29,6 @@ local StatsTab = {
 Client.UI.CharacterSheet.StatsTab = StatsTab
 Epip.InitializeLibrary("CharacterSheet.StatsTab", StatsTab)
 local CharacterSheet = Client.UI.CharacterSheet
-
----@class StatsTabStat
----@field ID string
----@field Name string
----@field Tooltip TooltipData
----@field Description string Fallback text tooltip is Tooltip is unspecified.
----@field DefaultValue number
 
 ---------------------------------------------
 -- EVENTS
@@ -89,36 +82,14 @@ local CharacterSheet = Client.UI.CharacterSheet
 -- METHODS
 ---------------------------------------------
 
----Get the data table of a stat.
----@param id string
----@return StatsTabStat
-function StatsTab.GetStatData(id)
-    return StatsTab.Stats[id]
-end
-
----Get the numerical value of a stat. Hookable.
----@param id string
----@param char EclCharacter?
----@return number
-function StatsTab.GetStatValue(id, char)
-    local data = StatsTab.GetStatData(id)
-    local value = data.DefaultValue or StatsTab.DEFAULT_STAT_VALUE
-    char = char or CharacterSheet.GetCharacter()
-
-    value = StatsTab:ReturnFromHooks("GetStatValue_" .. id, value, data, char)
-    value = StatsTab:ReturnFromHooks("GetStatValue", value, data, char)
-
-    return tonumber(value)
-end
-
 ---Get the text display for a stat's value.
 ---@param id string The stat ID.
 ---@param value number The value to format.
 ---@param char EclCharacter?
 ---@return string|number
 function StatsTab.FormatStatValue(id, value, char)
-    value = value or StatsTab.GetStatValue(id, char)
-    local data = StatsTab.GetStatData(id)
+    local data = CustomStats.GetStat(id)
+    value = value or CustomStats.GetStatValue(char, id)
     char = char or CharacterSheet.GetCharacter()
 
     value = StatsTab:ReturnFromHooks("FormatStatValue_" .. id, value, data, char)
@@ -127,19 +98,103 @@ function StatsTab.FormatStatValue(id, value, char)
     return value
 end
 
+---Formats the label for stat.
+---@param stat Feature_CustomStats_Stat
+---@param value any?
+---@return string
+function StatsTab._FormatLabel(stat, value) -- TODO make hookable
+    local label = stat.Name
+
+    -- Prefix keywords with ACT/MUTA
+    if stat.Keyword and stat.BoonType then
+        local prefix = "MUTA: "
+        if stat.BoonType == "Activator" then
+            prefix = "ACT: "
+        end
+        label = prefix .. label
+    end
+
+    -- Grey out stats at default value
+    if value == stat.DefaultValue then
+        label = "<font color='32302d'>" .. label .. "</font>"
+    end
+
+    return label
+end
+
 ---Render a stat onto the tab.
 ---@param id string
 function StatsTab.RenderStat(id)
-    local data = StatsTab.GetStatData(id)
-    local value = StatsTab.GetStatValue(id)
+    local char = CharacterSheet.GetCharacter()
+    local data = CustomStats.GetStat(id)
+    local value = CustomStats.GetStatValue(char, id)
     local valueLabel = StatsTab.FormatStatValue(id, value)
     local label = data.Name
 
-    label = StatsTab:ReturnFromHooks("FormatLabel", label, data, value)
+    label = StatsTab._FormatLabel(data, value)
 
     StatsTab.AddEntry(label, valueLabel, id)
 
     StatsTab:FireEvent("EntryAdded", data, value)
+end
+
+---Renders a category onto the tab.
+---@param id string
+function StatsTab.RenderCategory(id)
+    local data = CustomStats.GetCategory(id)
+    local label = data.Header
+
+    StatsTab.AddEntry(label, "", id)
+
+    -- Render category stats if the category is uncollapsed.
+    if CustomStats.CategoryIsOpen(id) then
+        StatsTab.RenderCategoryStats(id)
+    end
+end
+
+---Returns whether a stat can be rendered onto the UI.
+---@param char EclCharacter
+---@param category Feature_CustomStats_Category
+---@param stat Feature_CustomStats_Stat
+---@return boolean
+function StatsTab.CanRenderStat(char, category, stat)
+    local canRender = true
+
+    -- In Hidden categories stats do not display if they're at a default value.
+    if category.Behaviour == "Hidden" then
+        canRender = canRender and not CustomStats.StatIsAtDefaultValue(char, stat:GetID())
+    end
+
+    return canRender
+end
+
+function StatsTab.RenderCategories()
+    for _,id in pairs(CustomStats.CATEGORIES_ORDER) do
+        local category = CustomStats.GetCategory(id)
+
+        if category.Behaviour == "Hidden" then
+            if CustomStats.HasAnyStatFromCategory(category) then
+                StatsTab.RenderCategory(id)
+            end
+        else
+            StatsTab.RenderCategory(id)
+        end
+    end
+end
+
+function StatsTab.RenderCategoryStats(categoryID)
+    local category = CustomStats.GetCategory(categoryID)
+
+    CustomStats:DebugLog("Rendering category", category.Name)
+
+    for _,statID in pairs(category.Stats) do
+        local statData = CustomStats.GetStat(statID)
+        local canRender = StatsTab.CanRenderStat(Client.GetCharacter(), category, statData)
+
+        if canRender then
+            StatsTab.RenderStat(statID)
+        end
+    end
 end
 
 ---Call to perform a full re-render of the tab.
@@ -153,16 +208,9 @@ function StatsTab.RenderStats()
 
     StatsTab:DebugLog("Rendering Custom Stats")
 
-    StatsTab:FireEvent("PreRender")
-
     stats.clearCustomStatsOptions()
 
-    -- Render all stats in the order specified in StatsOrder.
-    for i,id in pairs(StatsTab.StatsOrder) do
-        StatsTab.RenderStat(id)
-    end
-
-    StatsTab:FireEvent("PostRender")
+    StatsTab.RenderCategories()
 
     StatsTab:DebugLog("Finished rendering")
 
@@ -176,14 +224,8 @@ end
 ---@param stat string
 ---@param handler function
 function StatsTab.RegisterStatValueFormatHook(stat, handler)
+    CustomStats:LogWarning("StatValueFormatHook is deprecated: " .. stat)
     StatsTab:RegisterHook("FormatStatValue_" .. stat, handler)
-end
-
----Register a GetStatValue hook for a specific stat.
----@param stat string
----@param handler function
-function StatsTab.RegisterStatValueHook(stat, handler)
-    StatsTab:RegisterHook("GetStatValue_" .. stat, handler)
 end
 
 ---------------------------------------------
@@ -244,7 +286,7 @@ end
 function OnStatTooltipRender(object, stat, tooltip)
     if not StatsTab.currentlySelectedStat or stat ~= StatsTab.TOOLTIP_TALENT_NAME then return nil end
 
-    local data = StatsTab.GetStatData(StatsTab.currentlySelectedStat)
+    local data = CustomStats.GetStat(StatsTab.currentlySelectedStat) or CustomStats.GetCategory(StatsTab.currentlySelectedStat)
 
     -- Construct generic tooltip if no special one is defined
     tooltip.Data = data.Tooltip

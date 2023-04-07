@@ -4,6 +4,7 @@
 -- Shared script, as these must exist on the server as well to update them.
 ---------------------------------------------
 
+-- TODO update this documentation lmao
 ---------------------------------------------
 -- To add new stats, define them in .STATS and insert them into a category in .CATEGORIES.
 -- See StatGetters.lua for actually setting them - for stats formatted in the same
@@ -20,442 +21,34 @@
 ---@field TOOLTIP_TALENT number TODO remove
 ---@field TOOLTIP_TALENT_NAME string TODO remove
 
----@class EpipStat
----@field Name string
----@field Description string Fallback description in case a formatted Tooltip isn't set.
----@field Tooltip TooltipData
----@field Footnote string Italic text after description, in new paragraph.
----@field Suffix string Suffix for value display.
----@field Prefix string Prefix for value display.
----@field Boolean boolean Boolean stats show no value label.
----@field MaxCharges string If specified, this stat will display as "{Value}/{Value of MaxCharges stat}"
----@field IgnoreForHiding boolean If true, this stat will not be considered as added when determining if a Hidden category should display.
-
 ---@alias EpipStatCategoryBehaviour "GreyOut" | "Hidden"
-
----@class EpipStatCategory
----@field Header string Name of the collapsable stat.
----@field Name string Name of the category in the tooltip.
----@field Behaviour EpipStatCategoryBehaviour Controls how default-value stats are shown. GreyOut greys out their label and value, hidden hides them - and the whole category - if no stats are owned.
----@field Stats string[] Stats displayed in the category, ordered.
 
 ---@class Feature_CustomStats : Feature
 local EpipStats = {
     USERVAR_STATS = "Stats",
-    CATEGORIES = {
-        Embodiments = {
-            Header = Text.Format("——— Embodiments ———", {Size = 21}),
-            Name = "Embodiments",
-            Stats = {
-                "Embodiment_Force",
-                "Embodiment_Entropy",
-                "Embodiment_Form",
-                "Embodiment_Inertia",
-                "Embodiment_Life",
-            },
-        },
-        Vitals = {
-            Header = "<font size='21'>————— Vitals —————</font>",
-            Name = "Vitals", -- Name in tooltip.
-            Behaviour = "GreyOut",
-            Stats = {
-                "RegenLifeCalculated",
-                "RegenPhysicalArmorCalculated",
-                "RegenMagicArmorCalculated",
-                "LifeSteal",
-            },
-        },
-        Reactions = {
-            Header = "<font size='21'>———— Reactions ————</font>",
-            Name = "Reactions",
-            Behaviour = "GreyOut",
-            Stats = {
-                "FreeReaction_Generic",
-                "FreeReaction_Predator",
-                "FreeReaction_Celestial",
-                "FreeReaction_Centurion",
-                "FreeReaction_Elementalist",
-                "FreeReaction_Occultist",
-            },
-        },
-        -- Entries are dynamically generated.
-        Artifacts = {
-            Header = Text.Format("———— Artifacts ————", {Size = 21}),
-            Name = "Artifacts",
-            Behaviour = "Hidden",
-            Stats = {},
-        },
-        Misc = {
-            Header = "<font size='21'>———— Misc ————</font>",
-            Name = "Miscellaneous",
-            Behaviour = "GreyOut",
-            Stats = {
-                "PartyFunds_Gold",
-                "PartyFunds_Splinters",
-            },
-        },
-        CurrentCombat = {
-            Header = "<font size='21'>———— Combat ————</font>",
-            Name = "Combat",
-            Behaviour = "GreyOut",
-            Stats = {
-                "CurrentCombat_DamageDealt",
-                "CurrentCombat_DamageReceived",
-                "CurrentCombat_HealingDone",
-            },
-        },
-
-        -- KEYWORDS
-        Keyword_Abeyance = {
-            Header = "<font size='21'>———— Abeyance ————</font>",
-            Name = "Abeyance",
-            Behaviour = "Hidden",
-            Stats = {},
-        },
-        Keyword_Adaptation = {
-            Header = "<font size='21'>———— Adaptation ————</font>",
-            Name = "Adaptation",
-            Behaviour = "Hidden",
-            Stats = {},
-        },
-        Keyword_Benevolence = {
-            Header = "<font size='21'>——— Benevolence ———</font>",
-            Name = "Benevolence",
-            Behaviour = "Hidden",
-            Stats = {},
-        },
-        Keyword_Celestial = {
-            Header = "<font size='21'>———— Celestial ————</font>",
-            Name = "Celestial",
-            Behaviour = "Hidden",
-            Stats = {
-                "Keyword_Celestial_Healing"
-            },
-        },
-        Keyword_Centurion = {
-            Header = "<font size='21'>———— Centurion ————</font>",
-            Name = "Centurion",
-            Behaviour = "Hidden",
-            Stats = {},
-        },
-        Keyword_Defiance = {
-            Header = "<font size='21'>———— Defiance ————</font>",
-            Name = "Defiance",
-            Behaviour = "Hidden",
-            Stats = {},
-        },
-        Keyword_Elementalist = {
-            Header = "<font size='21'>———— Elementalist ————</font>",
-            Name = "Elementalist",
-            Behaviour = "Hidden",
-            Stats = {},
-        },
-        Keyword_Occultist = {
-            Header = "<font size='21'>———— Occultist ————</font>",
-            Name = "Occultist",
-            Behaviour = "Hidden",
-            Stats = {},
-        },
-        Keyword_Paucity = {
-            Header = "<font size='21'>———— Paucity ————</font>",
-            Name = "Paucity",
-            Behaviour = "Hidden",
-            Stats = {},
-        },
-        Keyword_Predator = {
-            Header = "<font size='21'>———— Predator ————</font>",
-            Name = "Predator",
-            Behaviour = "Hidden",
-            Stats = {},
-        },
-        Keyword_Presence = {
-            Header = "<font size='21'>———— Presence ————</font>",
-            Name = "Presence",
-            Behaviour = "Hidden",
-            Stats = {},
-        },
-        Keyword_Prosperity = {
-            Header = "<font size='21'>———— Prosperity ————</font>",
-            Name = "Prosperity",
-            Behaviour = "Hidden",
-            Stats = {
-                "Keyword_Prosperity_Threshold",
-            },
-        },
-        Keyword_Purity = {
-            Header = "<font size='21'>————— Purity —————</font>",
-            Name = "Purity",
-            Behaviour = "Hidden",
-            Stats = {},
-        },
-        Keyword_ViolentStrike = {
-            Header = "<font size='21'>——— Violent Strikes ———</font>",
-            Name = "Violent Strikes",
-            Behaviour = "Hidden",
-            Stats = {},
-        },
-        Keyword_VitalityVoid = {
-            Header = "<font size='21'>———— Vitality Void ————</font>",
-            Name = "Vitality Void",
-            Behaviour = "Hidden",
-            Stats = {
-                "Keyword_VitalityVoid_Power",
-                "Keyword_VitalityVoid_Radius",
-            },
-        },
-        Keyword_Voracity = {
-            Header = Text.Format("———— Voracity ————", {Size = 21}),
-            Name = "Voracity",
-            Behaviour = "Hidden",
-            Stats = {
-                "Keyword_Voracity_Life",
-                "Keyword_Voracity_PhysArmor",
-                "Keyword_Voracity_MagicArmor",
-                "Keyword_Voracity_Summon_Life",
-                "Keyword_Voracity_Summon_PhysArmor",
-                "Keyword_Voracity_Summon_MagicArmor",
-            },
-        },
-        Keyword_Ward = {
-            Header = "<font size='21'>————— Ward —————</font>",
-            Name = "Ward",
-            Behaviour = "Hidden",
-            Stats = {},
-        },
-        Keyword_Wither = {
-            Header = "<font size='21'>————— Wither —————</font>",
-            Name = "Wither",
-            Behaviour = "Hidden",
-            Stats = {},
-        },
-        Keyword_IncarnateChampion = {
-            Header = "<font size='21'>—Incarnate Champion—</font>",
-            Name = "Incarnate Champion",
-            Behaviour = "Hidden",
-            Stats = {},
-        },
-    },
+    CATEGORIES = {},
     
     -- TODO rework as a hook
-    CATEGORIES_ORDER = {
-        "Embodiments",
-        "Vitals",
-        "Reactions",
-        "Artifacts",
+    CATEGORIES_ORDER = {},
 
-        -- Keywords
-        "Keyword_Abeyance",
-        "Keyword_Adaptation",
-        "Keyword_Benevolence",
-        "Keyword_Celestial",
-        "Keyword_Centurion",
-        "Keyword_Defiance",
-        "Keyword_Elementalist",
-        "Keyword_Occultist",
-        "Keyword_Paucity",
-        "Keyword_Predator",
-        "Keyword_Presence",
-        "Keyword_Prosperity",
-        "Keyword_Purity",
-        "Keyword_ViolentStrike",
-        "Keyword_VitalityVoid",
-        "Keyword_Voracity",
-        "Keyword_Ward",
-        "Keyword_Wither",
-
-        "CurrentCombat",
-        "Misc",
-    },
-
-    STATS = {
-        -- EMBODIMENTS
-        Embodiment_Force = {
-            Name = "Force",
-            Description = "Force embodied through your Ascensions.",
-            IgnoreForHiding = true,
-        },
-        Embodiment_Entropy = {
-            Name = "Entropy",
-            Description = "Entropy embodied through your Ascensions.",
-            IgnoreForHiding = true,
-        },
-        Embodiment_Form = {
-            Name = "Form",
-            Description = "Form embodied through your Ascensions.",
-            IgnoreForHiding = true,
-        },
-        Embodiment_Inertia = {
-            Name = "Inertia",
-            Description = "Inertia embodied through your Ascensions.",
-            IgnoreForHiding = true,
-        },
-        Embodiment_Life = {
-            Name = "Life",
-            Description = "Life embodied through your Ascensions.",
-            IgnoreForHiding = true,
-        },
-        -- CURRENT COMBAT
-        CurrentCombat_DamageDealt = {
-            Name = "Damage Dealt",
-            Description = "Damage dealt in the current combat, or the latest combat this character participated in.",
-        },
-        CurrentCombat_DamageReceived = {
-            Name = "Damage Received",
-            Description = "Damage received in the current combat, or the latest combat this character participated in.",
-        },
-        CurrentCombat_HealingDone = {
-            Name = "Healing Done",
-            Description = "Healing and armor restoration done in the current combat, or the latest combat this character participated in.",
-        },
-        -- VITALS
-        RegenLifeCalculated = {
-            Name = "Missing Life Regen",
-            Description = "Restores a percentage of your missing Vitality at the start of your turn.",
-
-            Footnote = "Missing Regeneration is capped at 50%.",
-            Suffix = "%",
-        },
-        RegenPhysicalArmorCalculated = {
-            Name = "Missing Phys. Armor Regen",
-            Description = "Restores a percentage of your missing Physical Armor at the start of your turn.",
-            Footnote = "Missing Regeneration is capped at 50%.",
-            Suffix = "%",
-        },
-        RegenMagicArmorCalculated = {
-            Name = "Missing Magic Armor Regen",
-            Description = "Restores a percentage of your missing Magic Armor at the start of your turn.",
-            Footnote = "Missing Regeneration is capped at 50%.",
-            Suffix = "%",
-        },
-        LifeSteal = {
-            Name = "Lifesteal",
-            Description = "Causes a percentage of the damage that you deal to Vitality to be restored to your own.",
-            Suffix = "%",
-        },
-
-        -- MISC
-        PartyFunds_Gold = {
-            Name = "Party Gold",
-            Description = "The gold currently in the party's possession.",
-        },
-        PartyFunds_Splinters = {
-            Name = "Party Splinters",
-            Description = "The Artificer's Splinters currently in the party's possession.",
-        },
-
-        -- KEYWORDS
-        Keyword_Celestial_Healing = {
-            Name = "Vitality Restoration",
-            Description = "The vitality restored by your Celestial reactions.",
-            Suffix = "%",
-            IgnoreForHiding = true,
-        },
-        Keyword_VitalityVoid_Power = {
-            Name = "Power",
-            Description = "The damage your Vitality Void deals, as a percentage of your maximum health.",
-            Suffix = "%",
-            IgnoreForHiding = true,
-        },
-        Keyword_VitalityVoid_Radius = {
-            Name = "Radius",
-            Description = "The radius of your Vitality Void activations.",
-            Suffix = "m",
-            IgnoreForHiding = true,
-        },
-        Keyword_Prosperity_Threshold = {
-            Name = "Threshold",
-            Description = "The vitality threshold of your basic Prosperity activator.",
-            Suffix = "%",
-            IgnoreForHiding = true,
-        },
-
-        -- Voracity
-        Keyword_Voracity_Life = {
-            Name = "Vitality Restoration",
-            Description = "Vitality restored upon activating Voracity.",
-            Suffix = "%",
-        },
-        Keyword_Voracity_PhysArmor = {
-            Name = "Phys. Armor Restoration",
-            Description = "Physical Armor restored upon activating Voracity.",
-            Suffix = "%",
-        },
-        Keyword_Voracity_MagicArmor = {
-            Name = "Magic Armor Restoration",
-            Description = "Magic Armor restored upon activating Voracity.",
-            Suffix = "%",
-        },
-        Keyword_Voracity_Summon_Life = {
-            Name = "Summon Life Restoration",
-            Description = "Summon vitality restored upon activating Voracity.",
-            Suffix = "%",
-        },
-        Keyword_Voracity_Summon_PhysArmor = {
-            Name = "Summon Phys. Armor Restoration",
-            Description = "Summon Physical Armor restored upon activating Voracity.",
-            Suffix = "%",
-        },
-        Keyword_Voracity_Summon_MagicArmor = {
-            Name = "Summon Magic Armor Restoration",
-            Description = "Summon Magic Armor restored upon activating Voracity.",
-            Suffix = "%",
-        },
-
-        -- REACTIONS
-        FreeReaction_Generic = {
-            Name = "Generic Charges",
-            Description = "Enables you to perform any reaction for 0 AP.<br><br>Generic Reaction Charges are only used when dedicated ones are depleted.",
-            Footnote = "You enter combat with all your Free Reaction Charges replenished, and regain them upon the start of your first turn in subsequent rounds.",
-            MaxCharges = "FreeReaction_Generic_Max",
-        },
-        FreeReaction_Generic_Max = {},
-        FreeReaction_Predator = {
-            Name = "Predator Charges",
-            Description = "Enables you to perform Predator Reactions for 0 AP.",
-            Footnote = "You enter combat with all your Free Reaction Charges replenished, and regain them upon the start of your first turn in subsequent rounds.",
-            MaxCharges = "FreeReaction_Predator_Max",
-        },
-        FreeReaction_Predator_Max = {},
-        FreeReaction_Celestial = {
-            Name = "Celestial Charges",
-            Description = "Enables you to perform Celestial Reactions for 0 AP.",
-            Footnote = "You enter combat with all your Free Reaction Charges replenished, and regain them upon the start of your first turn in subsequent rounds.",
-            MaxCharges = "FreeReaction_Celestial_Max",
-        },
-        FreeReaction_Celestial_Max = {},
-        FreeReaction_Centurion = {
-            Name = "Centurion Charges",
-            Description = "Enables you to perform Centurion Reactions for 0 AP.",
-            Footnote = "You enter combat with all your Free Reaction Charges replenished, and regain them upon the start of your first turn in subsequent rounds.",
-            MaxCharges = "FreeReaction_Centurion_Max",
-        },
-        FreeReaction_Centurion_Max = {},
-        FreeReaction_Elementalist = {
-            Name = "Elementalist Charges",
-            Description = "Enables you to perform Elementalist Reactions for 0 AP.",
-            Footnote = "You enter combat with all your Free Reaction Charges replenished, and regain them upon the start of your first turn in subsequent rounds.",
-            MaxCharges = "FreeReaction_Elementalist_Max",
-        },
-        FreeReaction_Elementalist_Max = {},
-        FreeReaction_Occultist = {
-            Name = "Occultist Charges",
-            Description = "Enables you to perform Occultist Reactions for 0 AP.",
-            Footnote = "You enter combat with all your Free Reaction Charges replenished, and regain them upon the start of your first turn in subsequent rounds.",
-            MaxCharges = "FreeReaction_Occultist_Max",
-        },
-        FreeReaction_Occultist_Max = {},
-    },
+    STATS = {},
 
     MISSING_REGEN_CAP = 50,
 
     TOOLTIP_TALENT = 126,
     TOOLTIP_TALENT_NAME = "MasterThief",
 
+    USE_LEGACY_EVENTS = false,
+    USE_LEGACY_HOOKS = false,
+
+    Hooks = {
+        GetStatValue = {}, ---@type Event<Feature_CustomStats_Hook_GetStatValue>
+    },
+
     ---------------------------------------------
     -- INTERNAL VARIABLES - DO NOT SET
     ---------------------------------------------
 
-    cachedStats = {},
     openCategories = {
         Vitals = true, -- Open by default.
         Reactions = true,
@@ -479,6 +72,50 @@ local BaseCategory = {
 EpipStats:RegisterUserVariable(EpipStats.USERVAR_STATS, {Persistent = true})
 
 ---------------------------------------------
+-- EVENTS/HOOKS
+---------------------------------------------
+
+---@class Feature_CustomStats_Hook_GetStatValue
+---@field Character Character
+---@field Stat Feature_CustomStats_Stat
+---@field Value any Hookable. Defaults to `nil`.
+
+---------------------------------------------
+-- CLASSES
+---------------------------------------------
+
+---@class Feature_CustomStats_Category
+---@field ID string
+---@field Header string Name of the collapsable stat.
+---@field Name string Name of the category in the tooltip.
+---@field Behaviour EpipStatCategoryBehaviour Controls how default-value stats are shown. GreyOut greys out their label and value, hidden hides them - and the whole category - if no stats are owned.
+---@field Stats string[] Stats displayed in the category, ordered.
+
+---@class Feature_CustomStats_Stat : Class, I_Identifiable
+---@field Name string
+---@field Description string Fallback description in case a formatted Tooltip isn't set.
+---@field Tooltip TooltipData
+---@field Footnote string Italic text after description, in new paragraph.
+---@field Suffix string Suffix for value display.
+---@field Prefix string Prefix for value display.
+---@field Boolean boolean Boolean stats show no value label.
+---@field MaxCharges string If specified, this stat will display as "{Value}/{Value of MaxCharges stat}"
+---@field IgnoreForHiding boolean If true, this stat will not be considered as added when determining if a Hidden category should display.
+---@field DefaultValue any?
+local _Stat = {}
+EpipStats:RegisterClass("Feature_CustomStats_Stat", _Stat)
+Interfaces.Apply(_Stat, "I_Identifiable")
+
+---Creates a new stat.
+---@param data Feature_CustomStats_Stat
+---@return Feature_CustomStats_Stat
+function _Stat.Create(data)
+    local instance = _Stat:__Create(data) ---@cast instance Feature_CustomStats_Stat
+
+    return instance
+end
+
+---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
@@ -489,25 +126,17 @@ EpipStats:RegisterUserVariable(EpipStats.USERVAR_STATS, {Persistent = true})
 ---@param nodeSubIndex number
 ---@param keyword Keyword
 ---@param keywordType KeywordBoonType
----@param statData EpipStat Stat metadata.
+---@param statData Feature_CustomStats_Stat Stat metadata.
 function EpipStats.AddNodeStat(clusterId, nodeIndex, nodeSubIndex, keyword, keywordType, statData)
     local statID = string.format("%s_Node_%d.%d", clusterId, nodeIndex, nodeSubIndex)
 
-    local stat = {
-        Name = statData.Name,
-        Description = statData.Description,
-        Boolean = true,
-
-        -- Extra metadata
-        Keyword = keyword,
-        BoonType = keywordType,
-        NodeIndex = nodeIndex + 1,
-        NodeSubIndex = nodeSubIndex + 1,
-        Cluster = clusterId
-    }
-
-    -- Add stat to list
-    EpipStats.STATS[statID] = stat
+    statData.Boolean = true
+    statData.Keyword = keyword
+    statData.BoonType = keywordType
+    statData.NodeIndex = nodeIndex + 1
+    statData.NodeSubIndex = nodeSubIndex + 1
+    statData.Cluster = clusterId
+    EpipStats.RegisterStat(statID, statData)
 
     -- Add stat to category
     local category = "Keyword_" .. keyword
@@ -521,30 +150,40 @@ end
 ---Register a stat.
 ---@tpwd RequireBothContexts
 ---@param id string
----@param data EpipStat
+---@param data Feature_CustomStats_Stat
 function EpipStats.RegisterStat(id, data)
-    ---@type EpipStat
-    local default = {
-        Name = id,
-        Description = "I'm a stat that needs a .Description!",
-    }
-    setmetatable(data, default)
+    data.ID = id
 
-    EpipStats.STATS[id] = data
+    EpipStats.STATS[id] = _Stat.Create(data)
 end
 
 ---Register a category.
 ---@tpwd RequireBothContexts
 ---@param id string
----@param data EpipStatCategory
+---@param data Feature_CustomStats_Category
 ---@param index? integer Order in the stats tab relative to other categories.
 function EpipStats.RegisterCategory(id, data, index)
+    data.ID = id
     setmetatable(data, BaseCategory)
     EpipStats.CATEGORIES[id] = data
     
     index = index or #EpipStats.CATEGORIES_ORDER + 1
 
     table.insert(EpipStats.CATEGORIES_ORDER, index, id)
+end
+
+---Returns a category by its ID.
+---@param id string
+---@return Feature_CustomStats_Category
+function EpipStats.GetCategory(id)
+    return EpipStats.CATEGORIES[id]
+end
+
+---Returns whether an ID corresponds to a category.
+---@param statID string
+---@return boolean
+function EpipStats.IsCategory(statID)
+    return EpipStats.GetCategory(statID) ~= nil
 end
 
 ---Add a stat to a category.
@@ -560,37 +199,80 @@ function EpipStats.AddStatToCategory(statID, categoryID, index)
     table.insert(category.Stats, index, statID)
 end
 
----------------------------------------------
--- SETUP (Ascension and artifact stats)
----------------------------------------------
-
--- Add artifact entries
-for id,artifact in pairs(Artifact.ARTIFACTS) do
-    ---@type EpipStat
-    local stat = {
-        ID = id,
-        Name = artifact:GetName(),
-        Description = artifact:GetDescription(),
-        Boolean = true,
-        Tooltip = artifact:GetPowerTooltip(),
-    }
-    EpipStats.STATS[id] = stat
-    EpipStats.AddStatToCategory(id, "Artifacts")
+---Returns the descriptor for a stat.
+---@param id string
+---@return Feature_CustomStats_Stat
+function EpipStats.GetStat(id)
+    return EpipStats.STATS[id]
 end
-table.simpleSort(EpipStats.CATEGORIES.Artifacts.Stats)
 
-Data.Game.ASPECT_NAMES = {}
--- TODO cache
-for _,data in pairs(epicStatsKeywords) do
-    if not Data.Game.ASPECT_NAMES[data.ClusterId] then
-        Data.Game.ASPECT_NAMES[data.ClusterId] = data.SourceAspect
+---Returns the value of a stat for a character.
+---@param char Character? Defaults to client character.
+---@param statID string
+---@return any?
+function EpipStats.GetStatValue(char, statID)
+    char = char or Client.GetCharacter()
+    local stat = EpipStats.GetStat(statID)
+    local value = EpipStats.Hooks.GetStatValue:Throw({
+        Character = char,
+        Stat = stat,
+        Value = stat.DefaultValue or nil,
+    }).Value
+
+    return value
+end
+
+---Returns whether a character has any non-hidden stat from a category
+---at a non-default value.
+---@param category Feature_CustomStats_Category
+---@return boolean
+function EpipStats.HasAnyStatFromCategory(category)
+    local hasAnyStat = false
+
+    for _,stat in pairs(category.Stats) do
+        local data = EpipStats.GetStat(stat)
+
+        if not data.IgnoreForHiding and not EpipStats.StatIsAtDefaultValue(Client.GetCharacter(), stat) then
+            hasAnyStat = true
+            break
+        end
     end
+
+    return hasAnyStat
 end
 
--- Create Ascension stats from old data
-for _,data in pairs(epicStatsKeywords) do
-    EpipStats.AddNodeStat(data.ClusterId, data.NodeIndex, data.SubNodeIndex, data.Keyword, data.Type, {
-        Name = data.Display,
-        Description = data.Description,
-    })
+---Returns whether a character has a stat at its default value.
+---@param char Character
+---@param statID string
+---@return boolean
+function EpipStats.StatIsAtDefaultValue(char, statID)
+    local data = EpipStats.GetStat(statID)
+
+    return data ~= nil and EpipStats.GetStatValue(char, statID) == data.DefaultValue
 end
+
+---Registers a value hook for a specific stat.
+---@param statID string
+---@param handler fun(ev:Feature_CustomStats_Hook_GetStatValue)
+---@param opts Event_Options?
+function EpipStats.RegisterStatValueHook(statID, handler, opts)
+    EpipStats.Hooks.GetStatValue:Subscribe(function (ev)
+        if ev.Stat:GetID() == statID then
+            handler(ev)
+        end
+    end, opts)
+end
+
+---------------------------------------------
+-- EVENT LISTENERS
+---------------------------------------------
+
+-- Look for stat values in the uservar.
+EpipStats.Hooks.GetStatValue:Subscribe(function (ev)
+    local vars = EpipStats:GetUserVariable(ev.Character, EpipStats.USERVAR_STATS) or {}
+    local value = vars[ev.Stat:GetID()]
+
+    if value then
+        ev.Value = value
+    end
+end)

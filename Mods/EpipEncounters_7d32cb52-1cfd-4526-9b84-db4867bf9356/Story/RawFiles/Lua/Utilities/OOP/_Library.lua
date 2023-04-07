@@ -7,12 +7,12 @@
 
 ---@class Library : Class
 ---@field UserVariables table<string, UserVarsLib_UserVar> Initializable.
----@field Events table<string, Event> Initializable.
----@field Hooks table<string, Event> Initializable.
 ---@field _Classes table<string, Class> Subclasses registered for this library.
 ---@field protected __ModTable string
 ---@field protected __LoggingLevel Library_LoggingLevel
 ---@field protected __IsDebug boolean
+----@field Events table<string, Event> Initializable. -- These 2 fields cannot be included as they break auto-complete.
+----@field Hooks table<string, Event> Initializable.
 local Library = {
     ---@enum Library_LoggingLevel
     LOGGING_LEVELS = {

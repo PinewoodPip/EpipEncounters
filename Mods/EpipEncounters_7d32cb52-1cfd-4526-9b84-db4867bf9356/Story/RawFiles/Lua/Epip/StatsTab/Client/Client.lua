@@ -7,14 +7,6 @@
 local CharacterSheet = Client.UI.CharacterSheet
 local EpipStats = Epip.GetFeature("Feature_CustomStats")
 
-function EpipStats.GetCategory(statID)
-    return EpipStats.CATEGORIES[statID]
-end
-
-function EpipStats.IsCategory(statID)
-    return EpipStats.GetCategory(statID) ~= nil
-end
-
 -- Special tooltips for Ascension node stats
 CharacterSheet.StatsTab:RegisterHook("GetStatTooltip", function(tooltip, stat, data)
     if data.Keyword then
@@ -47,88 +39,27 @@ CharacterSheet.StatsTab:RegisterHook("GetStatTooltip", function(tooltip, stat, d
     return tooltip
 end)
 
-function EpipStats.ToggleCategory(id, state)
-    if state ~= nil then -- Set
-        EpipStats.openCategories[id] = state
-    else -- Toggle
-        if EpipStats.openCategories[id] then
-            EpipStats.openCategories[id] = false
-        else
-            EpipStats.openCategories[id] = true
-        end
+---Toggles the open state of a category.
+---@param id string
+---@param state boolean? Defaults to toggling.
+function EpipStats.ToggleCategory(id, state) -- TODO move to UI
+    if state == nil then
+        state = not EpipStats.openCategories[id] == true
     end
+
+    EpipStats.openCategories[id] = state
 end
 
-function EpipStats.CategoryIsOpen(categoryID)
-    return EpipStats.openCategories[categoryID]
-end
-
-function EpipStats.RenderCategoryStats(categoryID)
-    local category = EpipStats.GetCategory(categoryID)
-
-    for _,statID in pairs(category.Stats) do
-        local canRender = true
-
-        -- Stats in Hidden categories only render if they have a value > 0        
-        if category.Behaviour == "Hidden" then
-            canRender = CharacterSheet.StatsTab.GetStatValue(statID, Client.GetCharacter()) > 0
-        end
-
-        if canRender then
-            CharacterSheet.StatsTab.RenderStat(statID)
-        end
-    end
-end
-
-function EpipStats.ParseStatsFromTags()
-    -- Client.GetCharacter() is erroneous here while switching AMER UIs! TODO why?
-    local char = CharacterSheet.GetCharacter() or Client.GetCharacter()
-    
-    EpipStats.cachedStats = {}
-
-    local vars = EpipStats:GetUserVariable(char, EpipStats.USERVAR_STATS) or {}
-    for stat,value in pairs(vars) do
-        EpipStats.cachedStats[stat] = value
-    end
-end
-
-function EpipStats.RenderCategories()
-    for i,id in pairs(EpipStats.CATEGORIES_ORDER) do
-        local category = EpipStats.CATEGORIES[id]
-
-        if category.Behaviour == "Hidden" then
-            if EpipStats.HasAnyStatFromCategory(category) then
-                CharacterSheet.StatsTab.RenderStat(id)
-            end
-        else
-            CharacterSheet.StatsTab.RenderStat(id)
-        end
-    end
-end
-
-function EpipStats.HasAnyStatFromCategory(category)
-    for i,stat in pairs(category.Stats) do
-        local data = CharacterSheet.StatsTab.GetStatData(stat)
-
-        if not data.IgnoreForHiding and CharacterSheet.StatsTab.GetStatValue(stat, Client.GetCharacter()) > 0 then
-            return true
-        end
-    end
-    return false
+---Returns whether a category is open.
+---@param categoryID string
+---@return boolean
+function EpipStats.CategoryIsOpen(categoryID) -- TODO move to UI
+    return EpipStats.openCategories[categoryID] == true
 end
 
 ---------------------------------------------
 -- LISTENERS
 ---------------------------------------------
-
--- Before rendering, get the stat values from tagged stats
-CharacterSheet.StatsTab:RegisterListener("PreRender", function()
-    EpipStats.ParseStatsFromTags()
-end)
-
-CharacterSheet.StatsTab:RegisterListener("PostRender", function()
-    EpipStats.RenderCategories()
-end)
 
 -- Center text on categories
 CharacterSheet.StatsTab:RegisterListener("EntryRendered", function(element, statID)
@@ -137,13 +68,6 @@ CharacterSheet.StatsTab:RegisterListener("EntryRendered", function(element, stat
         element.label_txt.autoSize = "center"
         element.label_txt.x = element.label_txt.x + 12
         element.label_txt.y = -1
-    end
-end)
-
--- Render category stats if the category is uncollapsed.
-CharacterSheet.StatsTab:RegisterListener("EntryAdded", function(statData, value)
-    if EpipStats.IsCategory(statData.ID) and EpipStats.CategoryIsOpen(statData.ID) then
-        EpipStats.RenderCategoryStats(statData.ID)
     end
 end)
 
