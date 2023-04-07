@@ -79,38 +79,47 @@ Text.CommonStrings.Cancel = Text.RegisterTranslatedString({
    Handle = "h5a50b777gc16cg4106gbde8gf9dd48954c7f",
    Text = "Cancel",
 })
+Text.CommonStrings.Miscellaneous = Text.RegisterTranslatedString({
+   Handle = "h4a4e92cagdaabg49a0g928dg5f01f8b44e80",
+   Text = "Miscellaneous",
+})
+Text.CommonStrings.Misc = Text.RegisterTranslatedString({
+   Handle = "h20175646g1124g48cag88ceg0b909cd717cd",
+   Text = "Misc.",
+   ContextDescription = "Short for 'miscellaneous'",
+})
 
 ---------------------------------------------
 -- WEAPON TYPES
 ---------------------------------------------
 
 Text.CommonStrings.Sword = Text.RegisterTranslatedString({
-    Handle = "h0f112ed1gcc18g470egaf01ga5cd65d1f22b",
-    Text = "Sword",
+   Handle = "h0f112ed1gcc18g470egaf01ga5cd65d1f22b",
+   Text = "Sword",
 })
 Text.CommonStrings.Club = Text.RegisterTranslatedString({
-    Handle = "h2eea4c8ag25e9g48c3gbe20g5c84eaf9243b",
-    Text = "Club",
+   Handle = "h2eea4c8ag25e9g48c3gbe20g5c84eaf9243b",
+   Text = "Club",
 })
 Text.CommonStrings.Knife = Text.RegisterTranslatedString({
-    Handle = "h7e55ac61g269fg4f0dgabf9g06cbe52d0d22",
-    Text = "Knife",
+   Handle = "h7e55ac61g269fg4f0dgabf9g06cbe52d0d22",
+   Text = "Knife",
 })
 Text.CommonStrings.Dagger = Text.RegisterTranslatedString({
-    Handle = "h82933829g4fd3g4dfeg9b84ga47e14020bd6",
-    Text = "Dagger",
+   Handle = "h82933829g4fd3g4dfeg9b84ga47e14020bd6",
+   Text = "Dagger",
 })
 Text.CommonStrings.Axe = Text.RegisterTranslatedString({
-    Handle = "h7f4d1a8egfe38g4a39gb104g57738c21fd93",
-    Text = "Axe",
+   Handle = "h7f4d1a8egfe38g4a39gb104g57738c21fd93",
+   Text = "Axe",
 })
 Text.CommonStrings.Spear = Text.RegisterTranslatedString({
-    Handle = "hefb45469g4aabg4a8ega8aagbed67af313e1",
-    Text = "Spear",
+   Handle = "hefb45469g4aabg4a8ega8aagbed67af313e1",
+   Text = "Spear",
 })
 Text.CommonStrings.Staff = Text.RegisterTranslatedString({
-    Handle = "h55519c1fgecd7g4c73gafb2gebf09ecf7168",
-    Text = "Staff",
+   Handle = "h55519c1fgecd7g4c73gafb2gebf09ecf7168",
+   Text = "Staff",
 })
 
 ---------------------------------------------
@@ -243,6 +252,87 @@ Text.CommonStrings.Polymorph = Text.RegisterTranslatedString({
 })
 
 ---------------------------------------------
+-- KEYWORDS
+---------------------------------------------
+
+Text.CommonStrings.Abeyance = Text.RegisterTranslatedString({
+   Handle = "h8069d8d4gbc27g47a0ga413g3c90f7b3a9ea",
+   Text = "Abeyance",
+})
+Text.CommonStrings.Adaptation = Text.RegisterTranslatedString({
+   Handle = "h124f507dge140g406egac22gcb4492950a6e",
+   Text = "Adaptation",
+})
+Text.CommonStrings.Benevolence = Text.RegisterTranslatedString({
+   Handle = "h4ec86ffdge0d0g426cgb3b4g6112e887b9d5",
+   Text = "Benevolence",
+})
+Text.CommonStrings.Celestial = Text.RegisterTranslatedString({
+   Handle = "h42bb0e3cgc574g4f49gbe27gbbba9ecd3ac1",
+   Text = "Celestial",
+})
+Text.CommonStrings.Centurion = Text.RegisterTranslatedString({
+   Handle = "h2e29d154g3de9g4a3fga340g6ac1ff21e1b3",
+   Text = "Centurion",
+})
+Text.CommonStrings.Defiance = Text.RegisterTranslatedString({
+   Handle = "ha01e7516ga580g4f00ga7f3gd59d23ca38c4",
+   Text = "Defiance",
+})
+Text.CommonStrings.Elementalist = Text.RegisterTranslatedString({
+   Handle = "h59386967gb899g4f18ga61bg168b8d91f04a",
+   Text = "Elementalist",
+})
+Text.CommonStrings.Occultist = Text.RegisterTranslatedString({
+   Handle = "h8fde1eb5g49cdg43d4g9a15g4e33a2847f23",
+   Text = "Occultist",
+})
+Text.CommonStrings.Paucity = Text.RegisterTranslatedString({
+   Handle = "h4e09e95aga08bg4250g821bg910ba2bef9ca",
+   Text = "Paucity",
+})
+Text.CommonStrings.Predator = Text.RegisterTranslatedString({
+   Handle = "h2db813e3g9cceg439agbdf6g1280e3902681",
+   Text = "Predator",
+})
+Text.CommonStrings.Presence = Text.RegisterTranslatedString({
+   Handle = "hb6171987gab82g4fdcgbff3gcc635d063926",
+   Text = "Presence",
+})
+Text.CommonStrings.Prosperity = Text.RegisterTranslatedString({
+   Handle = "ha53ef891g707cg4195g9c43g556d65e0e3e3",
+   Text = "Prosperity",
+})
+Text.CommonStrings.Purity = Text.RegisterTranslatedString({
+   Handle = "h4d7e7f36g5538g4195gbcd8g59db24ac7bc7",
+   Text = "Purity",
+})
+Text.CommonStrings.ViolentStrikes = Text.RegisterTranslatedString({
+   Handle = "h8f43167fge54bg419ag8b9agf80ad45e5c87",
+   Text = "Violent Strikes",
+})
+Text.CommonStrings.VitalityVoid = Text.RegisterTranslatedString({
+   Handle = "h25fa3d4fg6833g4bb5ga16eg33b2fa3d3d2e",
+   Text = "Vitality Void",
+})
+Text.CommonStrings.Voracity = Text.RegisterTranslatedString({
+   Handle = "h1fbb9977g36ffg4bc6g80f4gb3ce632a38f2",
+   Text = "Voracity",
+})
+Text.CommonStrings.Ward = Text.RegisterTranslatedString({
+   Handle = "h4a44e189g9952g4edagb5efg9d56cba381f4",
+   Text = "Ward",
+})
+Text.CommonStrings.Wither = Text.RegisterTranslatedString({
+   Handle = "hc9809692g2710g43e5g9e8ege3bd035472ac",
+   Text = "Wither",
+})
+Text.CommonStrings.IncarnateChampion = Text.RegisterTranslatedString({
+   Handle = "h429930a8g7b96g48cag8be4gc0bad3a2dc19",
+   Text = "Incarnate Champion",
+})
+
+---------------------------------------------
 -- GAME TERMS
 ---------------------------------------------
 
@@ -293,6 +383,26 @@ Text.CommonStrings.Inventory = Text.RegisterTranslatedString({
 Text.CommonStrings.CriticalChance = Text.RegisterTranslatedString({
    Handle = "h304b2c12g06dag4389gaa3bg0f28e9916d32",
    Text = "Critical Chance",
+})
+Text.CommonStrings.Embodiments = Text.RegisterTranslatedString({
+   Handle = "h0e0a45c4g77f2g4bbdga211gdae7cb9176b0",
+   Text = "Embodiments",
+})
+Text.CommonStrings.Vitals = Text.RegisterTranslatedString({
+   Handle = "haf5c4d50gd6c7g42f6g8ca3g43f30e6385d1",
+   Text = "Vitals",
+})
+Text.CommonStrings.Reactions = Text.RegisterTranslatedString({
+   Handle = "h8a290a77g93c2g4821g8019gc74551cb306a",
+   Text = "Reactions",
+})
+Text.CommonStrings.Artifacts = Text.RegisterTranslatedString({
+   Handle = "h29f2c933gb1a3g4f4ag89d4gcca71ffeba51",
+   Text = "Artifacts",
+})
+Text.CommonStrings.Combat = Text.RegisterTranslatedString({
+   Handle = "hfc9df4bcgd7deg4e05ga37ag1b739d2a9e2b",
+   Text = "Combat",
 })
 
 ---------------------------------------------

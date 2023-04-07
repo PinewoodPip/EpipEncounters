@@ -1,10 +1,25 @@
 
 local CustomStats = Epip.GetFeature("Feature_CustomStats")
+local CommonStrings = Text.CommonStrings
+local CATEGORY_HEADER_SIZE = 21
 
+---@param template string
+---@param tsk TextLib_TranslatedString
+---@return string
+local function FormatHeader(template, tsk)
+    return Text.Format(template, {
+        Size = CATEGORY_HEADER_SIZE, 
+        FormatArgs = {
+            tsk:GetString(),
+        },
+    })
+end
+
+---@type table<string, Feature_CustomStats_Category>
 local Categories = {
     Embodiments = {
-        Header = Text.Format("——— Embodiments ———", {Size = 21}),
-        Name = "Embodiments",
+        Header = FormatHeader("——— %s ———", CommonStrings.Embodiments),
+        Name = CommonStrings.Embodiments,
         Stats = {
             "Embodiment_Force",
             "Embodiment_Entropy",
@@ -14,8 +29,8 @@ local Categories = {
         },
     },
     Vitals = {
-        Header = "<font size='21'>————— Vitals —————</font>",
-        Name = "Vitals", -- Name in tooltip.
+        Header = FormatHeader("————— %s —————", CommonStrings.Vitals),
+        Name = CommonStrings.Vitals,
         Behaviour = "GreyOut",
         Stats = {
             "RegenLifeCalculated",
@@ -25,8 +40,8 @@ local Categories = {
         },
     },
     Reactions = {
-        Header = "<font size='21'>———— Reactions ————</font>",
-        Name = "Reactions",
+        Header = FormatHeader("———— %s ————", CommonStrings.Reactions),
+        Name = CommonStrings.Reactions,
         Behaviour = "GreyOut",
         Stats = {
             "FreeReaction_Generic",
@@ -39,14 +54,14 @@ local Categories = {
     },
     -- Entries are dynamically generated.
     Artifacts = {
-        Header = Text.Format("———— Artifacts ————", {Size = 21}),
-        Name = "Artifacts",
+        Header = FormatHeader("———— %s ————", CommonStrings.Artifacts),
+        Name = CommonStrings.Artifacts,
         Behaviour = "Hidden",
         Stats = {},
     },
     Misc = {
-        Header = "<font size='21'>———— Misc ————</font>",
-        Name = "Miscellaneous",
+        Header = FormatHeader("———— %s ————", CommonStrings.Misc),
+        Name = CommonStrings.Miscellaneous,
         Behaviour = "GreyOut",
         Stats = {
             "PartyFunds_Gold",
@@ -54,8 +69,8 @@ local Categories = {
         },
     },
     CurrentCombat = {
-        Header = "<font size='21'>———— Combat ————</font>",
-        Name = "Combat",
+        Header = FormatHeader("———— %s ————", CommonStrings.Combat),
+        Name = CommonStrings.Combat,
         Behaviour = "GreyOut",
         Stats = {
             "CurrentCombat_DamageDealt",
@@ -66,96 +81,96 @@ local Categories = {
 
     -- KEYWORDS
     Keyword_Abeyance = {
-        Header = "<font size='21'>———— Abeyance ————</font>",
-        Name = "Abeyance",
+        Header = FormatHeader("———— %s ————", CommonStrings.Abeyance),
+        Name = CommonStrings.Abeyance,
         Behaviour = "Hidden",
         Stats = {},
     },
     Keyword_Adaptation = {
-        Header = "<font size='21'>———— Adaptation ————</font>",
-        Name = "Adaptation",
+        Header = FormatHeader("———— %s ————", CommonStrings.Adaptation),
+        Name = CommonStrings.Adaptation,
         Behaviour = "Hidden",
         Stats = {},
     },
     Keyword_Benevolence = {
-        Header = "<font size='21'>——— Benevolence ———</font>",
-        Name = "Benevolence",
+        Header = FormatHeader("——— %s ———", CommonStrings.Benevolence),
+        Name = CommonStrings.Benevolence,
         Behaviour = "Hidden",
         Stats = {},
     },
     Keyword_Celestial = {
-        Header = "<font size='21'>———— Celestial ————</font>",
-        Name = "Celestial",
+        Header = FormatHeader("———— %s ————", CommonStrings.Celestial),
+        Name = CommonStrings.Celestial,
         Behaviour = "Hidden",
         Stats = {
             "Keyword_Celestial_Healing"
         },
     },
     Keyword_Centurion = {
-        Header = "<font size='21'>———— Centurion ————</font>",
-        Name = "Centurion",
+        Header = FormatHeader("———— %s ————", CommonStrings.Centurion),
+        Name = CommonStrings.Centurion,
         Behaviour = "Hidden",
         Stats = {},
     },
     Keyword_Defiance = {
-        Header = "<font size='21'>———— Defiance ————</font>",
-        Name = "Defiance",
+        Header = FormatHeader("———— %s ————", CommonStrings.Defiance),
+        Name = CommonStrings.Defiance,
         Behaviour = "Hidden",
         Stats = {},
     },
     Keyword_Elementalist = {
-        Header = "<font size='21'>———— Elementalist ————</font>",
-        Name = "Elementalist",
+        Header = FormatHeader("——— %s ———", CommonStrings.Elementalist),
+        Name = CommonStrings.Elementalist,
         Behaviour = "Hidden",
         Stats = {},
     },
     Keyword_Occultist = {
-        Header = "<font size='21'>———— Occultist ————</font>",
-        Name = "Occultist",
+        Header = FormatHeader("———— %s ————", CommonStrings.Occultist),
+        Name = CommonStrings.Occultist,
         Behaviour = "Hidden",
         Stats = {},
     },
     Keyword_Paucity = {
-        Header = "<font size='21'>———— Paucity ————</font>",
-        Name = "Paucity",
+        Header = FormatHeader("———— %s ————", CommonStrings.Paucity),
+        Name = CommonStrings.Paucity,
         Behaviour = "Hidden",
         Stats = {},
     },
     Keyword_Predator = {
-        Header = "<font size='21'>———— Predator ————</font>",
-        Name = "Predator",
+        Header = FormatHeader("———— %s ————", CommonStrings.Predator),
+        Name = CommonStrings.Predator,
         Behaviour = "Hidden",
         Stats = {},
     },
     Keyword_Presence = {
-        Header = "<font size='21'>———— Presence ————</font>",
-        Name = "Presence",
+        Header = FormatHeader("———— %s ————", CommonStrings.Presence),
+        Name = CommonStrings.Presence,
         Behaviour = "Hidden",
         Stats = {},
     },
     Keyword_Prosperity = {
-        Header = "<font size='21'>———— Prosperity ————</font>",
-        Name = "Prosperity",
+        Header = FormatHeader("———— %s ————", CommonStrings.Prosperity),
+        Name = CommonStrings.Prosperity,
         Behaviour = "Hidden",
         Stats = {
             "Keyword_Prosperity_Threshold",
         },
     },
     Keyword_Purity = {
-        Header = "<font size='21'>————— Purity —————</font>",
-        Name = "Purity",
+        Header = FormatHeader("————— %s —————", CommonStrings.Purity),
+        Name = CommonStrings.Purity,
         Behaviour = "Hidden",
         Stats = {},
     },
     Keyword_ViolentStrike = {
-        Header = "<font size='21'>——— Violent Strikes ———</font>",
-        Name = "Violent Strikes",
+        Header = FormatHeader("——— %s ———", CommonStrings.ViolentStrikes),
+        Name = CommonStrings.ViolentStrikes,
         Behaviour = "Hidden",
         Stats = {},
     },
     Keyword_VitalityVoid = {
-        Header = "<font size='21'>———— Vitality Void ————</font>",
-        Name = "Vitality Void",
+        Header = FormatHeader("——— %s ———", CommonStrings.VitalityVoid),
+        Name = CommonStrings.VitalityVoid,
         Behaviour = "Hidden",
         Stats = {
             "Keyword_VitalityVoid_Power",
@@ -163,8 +178,8 @@ local Categories = {
         },
     },
     Keyword_Voracity = {
-        Header = Text.Format("———— Voracity ————", {Size = 21}),
-        Name = "Voracity",
+        Header = FormatHeader("———— %s ————", CommonStrings.Voracity),
+        Name = CommonStrings.Voracity,
         Behaviour = "Hidden",
         Stats = {
             "Keyword_Voracity_Life",
@@ -176,20 +191,20 @@ local Categories = {
         },
     },
     Keyword_Ward = {
-        Header = "<font size='21'>————— Ward —————</font>",
-        Name = "Ward",
+        Header = FormatHeader("———— %s ————", CommonStrings.Ward),
+        Name = CommonStrings.Ward,
         Behaviour = "Hidden",
         Stats = {},
     },
     Keyword_Wither = {
-        Header = "<font size='21'>————— Wither —————</font>",
-        Name = "Wither",
+        Header = FormatHeader("———— %s ————", CommonStrings.Wither),
+        Name = CommonStrings.Wither,
         Behaviour = "Hidden",
         Stats = {},
     },
     Keyword_IncarnateChampion = {
-        Header = "<font size='21'>—Incarnate Champion—</font>",
-        Name = "Incarnate Champion",
+        Header = FormatHeader("——— %s ———", CommonStrings.IncarnateChampion),
+        Name = CommonStrings.IncarnateChampion,
         Behaviour = "Hidden",
         Stats = {},
     },

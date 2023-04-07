@@ -57,14 +57,6 @@ local EpipStats = {
 }
 Epip.RegisterFeature("CustomStats", EpipStats)
 
----@type EpipStatCategory
-local BaseCategory = {
-    Header = "Missing .Header",
-    Name = "Missing .Name",
-    Behaviour = "GreyOut",
-    Stats = {},
-}
-
 ---------------------------------------------
 -- USER VARS
 ---------------------------------------------
@@ -84,14 +76,30 @@ EpipStats:RegisterUserVariable(EpipStats.USERVAR_STATS, {Persistent = true})
 -- CLASSES
 ---------------------------------------------
 
----@class Feature_CustomStats_Category
----@field ID string
+---@class Feature_CustomStats_Category : Class, I_Identifiable, I_Describable
 ---@field Header string Name of the collapsable stat.
 ---@field Name string Name of the category in the tooltip.
 ---@field Behaviour EpipStatCategoryBehaviour Controls how default-value stats are shown. GreyOut greys out their label and value, hidden hides them - and the whole category - if no stats are owned.
 ---@field Stats string[] Stats displayed in the category, ordered.
+local _Category = {
+    Name = "Missing name",
+    Description = "Missing description",
+    Behaviour = "GreyOut",
+}
+Interfaces.Apply(_Category, "I_Identifiable")
+Interfaces.Apply(_Category, "I_Describable")
+EpipStats:RegisterClass("Feature_CustomStats_Category", _Category)
 
----@class Feature_CustomStats_Stat : Class, I_Identifiable
+---Creates a category.
+---@param data Feature_CustomStats_Category
+---@return Feature_CustomStats_Category
+function _Category.Create(data)
+    local instance = _Category:__Create(data) ---@cast instance Feature_CustomStats_Category
+
+    return instance
+end
+
+---@class Feature_CustomStats_Stat : Class, I_Identifiable, I_Describable
 ---@field Name string
 ---@field Description string Fallback description in case a formatted Tooltip isn't set.
 ---@field Tooltip TooltipData
@@ -105,6 +113,7 @@ EpipStats:RegisterUserVariable(EpipStats.USERVAR_STATS, {Persistent = true})
 local _Stat = {}
 EpipStats:RegisterClass("Feature_CustomStats_Stat", _Stat)
 Interfaces.Apply(_Stat, "I_Identifiable")
+Interfaces.Apply(_Stat, "I_Describable")
 
 ---Creates a new stat.
 ---@param data Feature_CustomStats_Stat
@@ -164,8 +173,9 @@ end
 ---@param index? integer Order in the stats tab relative to other categories.
 function EpipStats.RegisterCategory(id, data, index)
     data.ID = id
-    setmetatable(data, BaseCategory)
-    EpipStats.CATEGORIES[id] = data
+    local instance = _Category.Create(data)
+
+    EpipStats.CATEGORIES[id] = instance
     
     index = index or #EpipStats.CATEGORIES_ORDER + 1
 

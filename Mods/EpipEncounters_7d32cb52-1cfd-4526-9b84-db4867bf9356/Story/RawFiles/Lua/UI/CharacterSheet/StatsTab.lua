@@ -294,13 +294,18 @@ function OnStatTooltipRender(object, stat, tooltip)
         tooltip.Data = {
             {
                 Type = "StatName",
-                Label = data.Name,
-            },
-            {
-                Type = "StatsDescription",
-                Label = data.Description or "MISSING .Description",
+                Label = data:GetName() or "MISSING NAME",
             },
         }
+
+        -- TODO add descriptions to categories
+        if not CustomStats.IsCategory(StatsTab.currentlySelectedStat) then
+            table.insert(tooltip.Data, 
+            {
+                Type = "StatsDescription",
+                Label = data:GetDescription() or "MISSING .Description",
+            })
+        end
     end
 
     tooltip.Data = StatsTab:ReturnFromHooks("GetStatTooltip", tooltip.Data, StatsTab.currentlySelectedStat, data)
