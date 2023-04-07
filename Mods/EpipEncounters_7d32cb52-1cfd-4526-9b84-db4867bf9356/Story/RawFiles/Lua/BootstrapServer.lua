@@ -90,7 +90,7 @@ LOAD_ORDER = {
     {ScriptSet = "Utilities/GameState"},
 
     {ScriptSet = "Utilities/Combat"},
-    {ScriptSet = "Utilities/Artifact"},
+    {ScriptSet = "Utilities/Artifact", RequiresEE = true,},
 
     -- "Data/Game.lua",
 
@@ -135,10 +135,10 @@ LOAD_ORDER = {
     
     {ScriptSet = "Epip/DatabaseSync"},
 
-    {ScriptSet = "Utilities/EpicEncounters"},
-    {ScriptSet = "Utilities/EpicEncounters/SourceInfusion"},
-    {ScriptSet = "Utilities/EpicEncounters/BatteredHarried"},
-    {ScriptSet = "Utilities/EpicEncounters/DeltaMods"},
+    {ScriptSet = "Utilities/EpicEncounters"}, -- Core script needs to be present for now due to IsEnabled() - TODO move it out?
+    {ScriptSet = "Utilities/EpicEncounters/SourceInfusion", RequiresEE = true},
+    {ScriptSet = "Utilities/EpicEncounters/BatteredHarried", RequiresEE = true},
+    {ScriptSet = "Utilities/EpicEncounters/DeltaMods", RequiresEE = true},
 
     "Game/AMERUI/Shared.lua",
     "Game/AMERUI/Server.lua",
@@ -173,11 +173,17 @@ LOAD_ORDER = {
     "Epip/EmoteCommands.lua",
     "Debug/Commands/Server.lua",
 
-    "Epip/EpicEnemies/Shared.lua",
-    "Epip/EpicEnemies/EffectTemplates.lua",
-    "Epip/EpicEnemies/ActivationConditions.lua",
-    "Epip/EpicEnemies/Server.lua",
-    "Epip/EpicEnemies/Effects.lua",
+    -- Epic Enemies
+    {
+        Scripts = {
+            "Epip/EpicEnemies/Shared.lua",
+            "Epip/EpicEnemies/EffectTemplates.lua",
+            "Epip/EpicEnemies/ActivationConditions.lua",
+            "Epip/EpicEnemies/Server.lua",
+            "Epip/EpicEnemies/Effects.lua",
+        },
+        RequiresEE = true,
+    },
     
     {
         ScriptSet = "Epip/AscensionShortcuts",
@@ -206,14 +212,19 @@ LOAD_ORDER = {
 
     "Epip/ShowConsumableEffects.lua",
 
-    "Epip/StatsTab/Shared.lua",
-    "Epip/StatsTab/Data/Categories.lua",
-    "Epip/StatsTab/Data/Stats.lua",
-    "Epip/StatsTab/Data/Stats_Artifacts.lua",
-    "Epip/StatsTab/Server/Server.lua",
-    "Epip/StatsTab/Server/StatGetters.lua",
+    -- Stats tab
+    {
+        Scripts = {
+            "Epip/StatsTab/Shared.lua",
+            "Epip/StatsTab/Data/Categories.lua",
+            "Epip/StatsTab/Data/Stats.lua",
+            "Epip/StatsTab/Server/Server.lua",
+            "Epip/StatsTab/Server/StatGetters.lua",
+        },
+    },
+    {Script = "Epip/StatsTab/Data/Stats_Artifacts.lua", RequiresEE = true},
 
-    "Epip/ContextMenus/Greatforge/Server.lua",
+    {Script = "Epip/ContextMenus/Greatforge/Server.lua", RequiresEE = true},
     
     -- Vanity
     {

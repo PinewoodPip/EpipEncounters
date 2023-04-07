@@ -225,8 +225,8 @@ function PlayerInfo._UpdateBH(player)
         Character = char
     }).Visible
 
-    local battered = BH.GetStacks(char, "B")
-    local harried = BH.GetStacks(char, "H")
+    local battered = displaysVisible and BH.GetStacks(char, "B") or 0
+    local harried = displaysVisible and BH.GetStacks(char, "H") or 0
 
     local batteredDisplay = player.battered_mc
     local harriedDisplay = player.harried_mc

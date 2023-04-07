@@ -1,5 +1,6 @@
 
 local prefixedGUID = "EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356"
+local EE_CORE_GUID = "63bb9b65-2964-4c10-be5b-55a63ec02fa0"
 
 ---@class ScriptLoadRequest
 ---@field WIP boolean? If `true`, the script will only load in Pip dev mode.
@@ -7,6 +8,7 @@ local prefixedGUID = "EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356"
 ---@field ScriptSet path? Should be a folder. If present, its Shared.lua and Client.lua/Server.lua scripts will be loaded based on context.
 ---@field Script path?
 ---@field Scripts path[]? Will be loaded sequentially, after ScriptSet (if present).
+---@field RequiresEE boolean? If `true`, the scripts and script set will only be loaded if EE Core is enabled.
 
 -- Epip does not work in-editor.
 if Ext.Utils.GameVersion() ~= "v3.6.51.9303" then
@@ -23,6 +25,10 @@ if Ext.Utils.GameVersion() ~= "v3.6.51.9303" then
                 end
             else
                 canLoad = true
+            end
+
+            if script.RequiresEE then
+                canLoad = canLoad and Ext.Mod.IsModLoaded(EE_CORE_GUID)
             end
 
             if canLoad then

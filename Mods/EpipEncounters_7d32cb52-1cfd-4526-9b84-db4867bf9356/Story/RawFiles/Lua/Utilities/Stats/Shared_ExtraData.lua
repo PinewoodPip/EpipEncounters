@@ -35,6 +35,9 @@ function _ExtraDataEntry:GetDefaultValue(mod)
             end
         end
     end
+    if not mod then
+        mod = "Shared"
+    end
 
     local modData = Stats.EXTRA_DATA_DEFAULT_VALUES[mod]
     local value

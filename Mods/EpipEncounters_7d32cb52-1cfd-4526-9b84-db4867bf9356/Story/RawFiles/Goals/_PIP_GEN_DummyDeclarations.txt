@@ -9,11 +9,43 @@ KBSECTION
 // Dummy declarations of Epic Encounters symbols,
 // to allow compilation when EE is disabled.
 
+// Yeah fuck it the DBs go here
+IF ItemSendToHomesteadEvent(_, _)
+AND
+1 != 1
+THEN
+NOT DB_AMER_UI_UsersInUI(-999, "", NULL_00000000-0000-0000-0000-000000000000);
+NOT DB_AMER_UI_Greatforge_OUTPUT_Cost(-999.0);
+NOT DB_AMER_GEN_ItemRarity(-999, "");
+NOT DB_AMER_GEN_ItemGetItemLevel_Found(-1);
+NOT DB_AMER_UI_Greatforge_ReduceTable("", -1.0, -1.0, -1.0, -1.0);
+NOT DB_AMER_GEN_OUTPUT_Item((ITEMGUID)NULL_00000000-0000-0000-0000-000000000000);
+
+PROC PROC_AMER_Combat_TurnStarted((CHARACTERGUID)_, (INTEGER)_)
+THEN
+DB_NOOP();
+
+PROC PROC_AMER_GEN_TSK_Add((STRING)_, (STRING)_, (STRING)_)
+THEN
+DB_NOOP();
+
+PROC PROC_AMER_Versioning_CheckVersion()
+THEN
+DB_NOOP();
+
+PROC PROC_AMER_Versioning_CheckVersion((STRING)_, (INTEGER)_)
+THEN
+DB_NOOP();
+
 PROC PROC_AMER_TempStat_FlexStat_Add((CHARACTERGUID)_, (STRING)_, (STRING)_, (REAL)_, (INTEGER)_, (STRING)_)
 THEN
 DB_NOOP();
 
 PROC PROC_AMER_GEN_OpenQueuedMessageBox((CHARACTERGUID)_, (STRING)_)
+THEN
+DB_NOOP();
+
+PROC PROC_AMER_GEN_OpenQueuedMessageBox((CHARACTERGUID)_, (STRING)_, (STRING)_, (STRING)_, (STRING)_)
 THEN
 DB_NOOP();
 
@@ -33,7 +65,79 @@ PROC PROC_AMER_Runes_RuneRemoved((CHARACTERGUID)_, (ITEMGUID)_, (ITEMGUID)_, (IN
 THEN
 DB_NOOP();
 
+PROC PROC_AMER_GEN_ItemRemoveRunes((CHARACTERGUID)_, (ITEMGUID)_, (INTEGER)_, (INTEGER)_, (INTEGER)_)
+THEN
+DB_NOOP();
+
+PROC PROC_AMER_GEN_ItemGetItemType((ITEMGUID)_, (STRING)_)
+THEN
+DB_NOOP();
+
+PROC PROC_AMER_GEN_ItemGetItemType_Returned((INTEGER)_, (ITEMGUID)_, (STRING)_, (STRING)_)
+THEN
+DB_NOOP();
+
+PROC PROC_AMER_GEN_ItemGetItemLevel((ITEMGUID)_, (STRING)_)
+THEN
+DB_NOOP();
+
+PROC PROC_AMER_GEN_ItemGetItemLevel_Returned((INTEGER)_, (ITEMGUID)_, (INTEGER)_, (STRING)_)
+THEN
+DB_NOOP();
+
+PROC PROC_AMER_UI_Greatforge_Reduce_GrantTreasureTable((CHARACTERGUID)_, (ITEMGUID)_, (INTEGER)_, (REAL)_, (STRING)_)
+THEN
+DB_NOOP();
+
+PROC PROC_AMER_GEN_ItemRemoveRunes((CHARACTERGUID)_, (ITEMGUID)_, (INTEGER)_, (INTEGER)_)
+THEN
+DB_NOOP();
+
+PROC PROC_AMER_GEN_UnreserveHelperObject((ITEMGUID)_)
+THEN
+DB_NOOP();
+
+PROC PROC_AMER_GEN_UnequipAndRemoveItem((CHARACTERGUID)_, (ITEMGUID)_)
+THEN
+DB_NOOP();
+
 PROC PROC_AMER_UI_Ascension_ExitUI((INTEGER)_, (CHARACTERGUID)_)
+THEN
+DB_NOOP();
+
+PROC PROC_AMER_GEN_Goal_Activate((STRING)_)
+THEN
+DB_NOOP();
+
+PROC PROC_AMER_GEN_Goal_Complete((STRING)_)
+THEN
+DB_NOOP();
+
+PROC PROC_AMER_Hook_EventFailed((INTEGER)_, (INTEGER)_, (INTEGER)_, (STRING)_)
+THEN
+DB_NOOP();
+
+QRY QRY_AMER_GEN_ItemGetSocketedRunes((ITEMGUID)_, (INTEGER)_)
+AND
+1 != 1
+THEN
+DB_NOOP();
+
+QRY QRY_AMER_Artifact_ItemIsArtifact((ITEMGUID)_)
+AND
+1 != 1
+THEN
+DB_NOOP();
+ 
+QRY QRY_AMER_UI_Greatforge_GenerateCost_GetCustomMult((INTEGER)_, (STRING)_, (STRING)_, (REAL)_, (STRING)_, (STRING)_, (STRING)_, (INTEGER)_)
+AND
+1 != 1
+THEN
+DB_NOOP();
+
+QRY QRY_AMER_Deltamods_GenerateOnItem_GetItemSpecs_GetSubType((ITEMGUID)_, (STRING)_)
+AND
+1 != 1
 THEN
 DB_NOOP();
 
@@ -56,6 +160,42 @@ THEN
 DB_NOOP();
 
 QRY QRY_AMER_GEN_TSK_Get((STRING)_)
+AND
+1 != 1
+THEN
+DB_NOOP();
+
+QRY QRY_AMER_GEN_GetHelperObjectAtPosition((REAL)_, (REAL)_, (REAL)_, (INTEGER)_)
+AND
+1 != 1
+THEN
+DB_NOOP();
+
+QRY QRY_AMER_UI_Greatforge_Reduce_GetFragmentsAwarded((ITEMGUID)_, (REAL)_, (INTEGER)_, (STRING)_, (STRING)_, (INTEGER)_)
+AND
+1 != 1
+THEN
+DB_NOOP();
+
+QRY QRY_AMER_UI_Greatforge_GenerateCost((INTEGER)_, (STRING)_, (STRING)_, (REAL)_, (STRING)_, (STRING)_, (STRING)_, (INTEGER)_, (REAL)_, (REAL)_)
+AND
+1 != 1
+THEN
+DB_NOOP();
+
+QRY QRY_AMER_GEN_RealToString((REAL)_, (INTEGER)_)
+AND
+1 != 1
+THEN
+DB_NOOP();
+
+QRY QRY_AMER_GEN_GetItemSlot((ITEMGUID)_)
+AND
+1 != 1
+THEN
+DB_NOOP();
+
+QRY QRY_AMER_UI_Greatforge_InvalidSelection((CHARACTERGUID)_, (STRING)_)
 AND
 1 != 1
 THEN

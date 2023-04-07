@@ -19,13 +19,15 @@ end)
 -- ARTIFACTS
 ---------------------------------------------
 
-EpipStats.Hooks.GetStatValue:Subscribe(function (ev)
-    local isArtifact = Artifact.GetData(ev.Stat:GetID())
-
-    if isArtifact then
-        ev.Value = Artifact.IsEquipped(ev.Character, ev.Stat:GetID())
-    end
-end)
+if EpicEncounters.IsEnabled() then
+    EpipStats.Hooks.GetStatValue:Subscribe(function (ev)
+        local isArtifact = Artifact.GetData(ev.Stat:GetID())
+    
+        if isArtifact then
+            ev.Value = Artifact.IsEquipped(ev.Character, ev.Stat:GetID())
+        end
+    end)
+end
 
 ---------------------------------------------
 -- MISC

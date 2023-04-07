@@ -120,7 +120,8 @@ LOAD_ORDER = {
         },
     },
     
-    {ScriptSet = "Utilities/Artifact"},
+    -- Artifacts
+    {ScriptSet = "Utilities/Artifact", RequiresEE = true,},
 
     "Client/Client.lua",
     "Client/Server.lua",
@@ -181,10 +182,10 @@ LOAD_ORDER = {
     
     {ScriptSet = "Epip/DatabaseSync"},
 
-    {ScriptSet = "Utilities/EpicEncounters"},
-    {ScriptSet = "Utilities/EpicEncounters/SourceInfusion"},
-    {ScriptSet = "Utilities/EpicEncounters/BatteredHarried"},
-    {ScriptSet = "Utilities/EpicEncounters/DeltaMods"},
+    {ScriptSet = "Utilities/EpicEncounters"}, -- Core script needs to be present for now due to IsEnabled() - TODO move it out?
+    {ScriptSet = "Utilities/EpicEncounters/SourceInfusion", RequiresEE = true},
+    {ScriptSet = "Utilities/EpicEncounters/BatteredHarried", RequiresEE = true},
+    {ScriptSet = "Utilities/EpicEncounters/DeltaMods", RequiresEE = true},
 
     "UI/OptionsSettings.lua",
 
@@ -395,10 +396,11 @@ LOAD_ORDER = {
             "Epip/Client/QuickExamine/Widgets/Resistances.lua",
             "Epip/Client/QuickExamine/Widgets/Immunities.lua",
             "Epip/Client/QuickExamine/Widgets/Statuses.lua",
-            "Epip/Client/QuickExamine/Widgets/Artifacts.lua",
-            "Epip/Client/QuickExamine/Widgets/SkillsDisplay.lua",
         },
     },
+    {Script = "Epip/Client/QuickExamine/Widgets/Artifacts.lua", RequiresEE = true},
+    "Epip/Client/QuickExamine/Widgets/SkillsDisplay.lua",
+
     "Epip/Client/GenericUIs/SaveLoadOverlay.lua",
     "Epip/Client/GenericUIs/HotbarGroup.lua",
 
@@ -428,13 +430,17 @@ LOAD_ORDER = {
     "Epip/Client/EpipDocs.lua",
 
     -- Stats tab
-    "Epip/StatsTab/Shared.lua",
-    "Epip/StatsTab/Data/Categories.lua",
-    "Epip/StatsTab/Data/Stats.lua",
-    "Epip/StatsTab/Data/Stats_Artifacts.lua",
-    "UI/CharacterSheet/StatsTab.lua", -- UI for stats tab - very old tech
-    "Epip/StatsTab/Client/Client.lua",
-    "Epip/StatsTab/Client/StatGetters.lua",
+    {
+        Scripts = {
+            "Epip/StatsTab/Shared.lua",
+            "Epip/StatsTab/Data/Categories.lua",
+            "Epip/StatsTab/Data/Stats.lua",
+            "UI/CharacterSheet/StatsTab.lua", -- UI for stats tab - very old tech
+            "Epip/StatsTab/Client/Client.lua",
+            "Epip/StatsTab/Client/StatGetters.lua",
+        },
+    },
+    {Script = "Epip/StatsTab/Data/Stats_Artifacts.lua", RequiresEE = true},
 
     "Epip/Client/CharacterSheetResistances.lua",
     "Epip/Client/CharacterSheetLevelProgress.lua",
@@ -448,11 +454,16 @@ LOAD_ORDER = {
     -- "Epip/Client/LoadingScreenReplacement.lua",
 
     -- Epic Enemies
-    "Epip/EpicEnemies/Shared.lua",
-    "Epip/EpicEnemies/Client.lua",
-    "Epip/EpicEnemies/Effects.lua",
-    "Epip/EpicEnemies/ActivationConditionsClient.lua",
-    "Epip/EpicEnemies/QuickExamineWidget.lua",
+    {
+        Scripts = {
+            "Epip/EpicEnemies/Shared.lua",
+            "Epip/EpicEnemies/Client.lua",
+            "Epip/EpicEnemies/Effects.lua",
+            "Epip/EpicEnemies/ActivationConditionsClient.lua",
+            "Epip/EpicEnemies/QuickExamineWidget.lua",
+        },
+        RequiresEE = true,
+    },
 
     "Epip/StatusSorting.lua",
 
@@ -474,7 +485,7 @@ LOAD_ORDER = {
     -- "Epip/Client/AMERUI_Controller/Handlers/Ascension/Gateway.lua",
     -- "Epip/Client/AMERUI_Controller/Handlers/Ascension/Cluster.lua",
 
-    "Epip/ContextMenus/Greatforge/Client.lua",
+    {Script = "Epip/ContextMenus/Greatforge/Client.lua", RequiresEE = true},
     "Epip/ContextMenus/PlayerInfo.lua", 
 
     -- Vanity
@@ -545,7 +556,10 @@ LOAD_ORDER = {
         }
     },
 
-    "Epip/Client/EE_Dyes.lua",
+    {
+        Script = "Epip/Client/EE_Dyes.lua",
+        RequiresEE = true,
+    },
 
     "Epip/Compatibility/MajoraFashionSins/Client.lua",
     "Epip/Compatibility/PortableRespecMirror/Client.lua",

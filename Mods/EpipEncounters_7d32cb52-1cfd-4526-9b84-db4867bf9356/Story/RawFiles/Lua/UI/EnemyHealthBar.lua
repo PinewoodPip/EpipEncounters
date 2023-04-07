@@ -303,18 +303,22 @@ end)
 
 -- Set opacity for stack backgrounds based on if the amount if enough to inflict a T3.
 Bar.Hooks.GetStackOpacity:Subscribe(function (ev)
-    local threshold = BH.GetStacksNeededToInflictTier3(Client.GetCharacter())
+    local isEE = EpicEncounters.IsEnabled()
     local amount = ev.Amount
     local opacity
 
-    if not EpicEncounters.IsEnabled() then
-        opacity = 0
-    elseif amount >= threshold then
-        opacity = 1
-    elseif amount == 0 then
-        opacity = 0.5
+    if isEE then
+        local threshold = BH.GetStacksNeededToInflictTier3(Client.GetCharacter())
+
+        if amount >= threshold then
+            opacity = 1
+        elseif amount == 0 then
+            opacity = 0.5
+        else
+            opacity = 0.75
+        end
     else
-        opacity = 0.75
+        opacity = 0
     end
 
     ev.Opacity = opacity
