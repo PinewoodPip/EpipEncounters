@@ -11,6 +11,7 @@
 ---@field protected __ModTable string
 ---@field protected __LoggingLevel Library_LoggingLevel
 ---@field protected __IsDebug boolean
+---@field TranslatedStrings table<TranslatedStringHandle, Library_TranslatedString> Initializable.
 ----@field Events table<string, Event> Initializable. -- These 2 fields cannot be included as they break auto-complete.
 ----@field Hooks table<string, Event> Initializable.
 local Library = {
@@ -20,10 +21,21 @@ local Library = {
         WARN = 1,
         MUTED = 2, -- Errors only.
     },
+
+    TSK = {}, ---@type table<TranslatedStringHandle, string> Automatically managed.
+    _localTranslatedStringKeys = {}, ---@type table<string, TranslatedStringHandle>
+
     USE_LEGACY_EVENTS = true,
     USE_LEGACY_HOOKS = true,
 }
 OOP.RegisterClass("Library", Library)
+
+---------------------------------------------
+-- CLASSES
+---------------------------------------------
+
+---@class Library_TranslatedString : TextLib_TranslatedString
+---@field LocalKey string? Usable with Feature.TSK - but not globally. Use when you want TSK keys without needing to prefix them to avoid collisions.
 
 ---------------------------------------------
 -- METHODS
@@ -35,6 +47,8 @@ OOP.RegisterClass("Library", Library)
 ---@param data Library
 ---@return Library
 function Library.Create(modTable, id, data)
+    local library = data
+
     ---@diagnostic disable: invisible
     data.UserVariables = data.UserVariables or {}
     data.__ModTable = modTable
@@ -73,6 +87,50 @@ function Library.Create(modTable, id, data)
         end
         PersistentVars.Features[data.__ModTable][data.__name] = {}
     end
+
+    -- Initialize translated strings
+    library._localTranslatedStringKeys = {}
+    library.TranslatedStrings = library.TranslatedStrings or {}
+    for handle,tsk in pairs(library.TranslatedStrings) do
+        local localKey = tsk.Handle and handle or tsk.LocalKey -- If Handle is manually set, use table key as localKey
+
+        tsk.Handle = tsk.Handle or handle
+        tsk.ModTable = modTable
+        tsk.FeatureID = id
+
+        if localKey then
+            library._localTranslatedStringKeys[localKey] = handle
+        end
+
+        -- Make indexing via string key work as well
+        if tsk.StringKey then
+            library.TranslatedStrings[tsk.StringKey] = tsk
+        end
+
+        Text.RegisterTranslatedString(tsk)
+    end
+
+    -- Create TSK table
+    local TSKmetatable = {
+        __index = function (_, key)
+            local obj = library.TranslatedStrings[key]
+
+            -- Lookup using local key name instead
+            if not obj then
+                local handle = library._localTranslatedStringKeys[key]
+
+                obj = handle and library.TranslatedStrings[handle]
+            end
+
+            if not obj then
+                error("Tried to get TSK for handle not from this feature " .. key)
+            end
+
+            return obj:GetString()
+        end
+    }
+    library.TSK = {}
+    setmetatable(library.TSK, TSKmetatable)
     
     -- Create class holder
     data._Classes = {}
@@ -166,6 +224,16 @@ function Library:SetModVariable(modGUID, name, value)
     vars[self:_GetUserVarsKey(name)] = value
 
     Ext.Utils.SyncModVariables()
+end
+
+---------------------------------------------
+-- TSK METHODS
+---------------------------------------------
+
+---@param localKey string
+---@return TranslatedStringHandle?
+function Library:GetTranslatedStringHandleForKey(localKey)
+    return self._localTranslatedStringKeys[localKey]
 end
 
 ---------------------------------------------

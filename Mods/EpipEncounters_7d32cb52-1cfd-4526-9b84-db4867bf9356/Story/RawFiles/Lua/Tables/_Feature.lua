@@ -18,15 +18,11 @@
 ---@field FireGlobalEvent fun(self, event:string, ...:any)
 ---@field MOD_TABLE_ID string
 ---@field DoNotExportTSKs boolean? If `true`, TSKs will not be exported to localization templates.
----@field TranslatedStrings table<TranslatedStringHandle, Feature_TranslatedString>
 ---@field Settings table<string, SettingsLib_Setting>
 ---@field SupportedGameStates bitfield Defaults to all. See GAME_STATES.
 local Feature = {
     Disabled = false,
     Logging = 0,
-
-    TSK = {}, ---@type table<TranslatedStringHandle, string> Automatically managed.
-    _localTranslatedStringKeys = {}, ---@type table<string, TranslatedStringHandle>
 
     GAME_STATES = {
         MAIN_MENU = 1,
@@ -70,13 +66,6 @@ function _Test:IsFinished()
 end
 
 ---------------------------------------------
--- CLASSES
----------------------------------------------
-
----@class Feature_TranslatedString : TextLib_TranslatedString
----@field LocalKey string? Usable with Feature.TSK - but not globally. Use when you want TSK keys without needing to prefix them to avoid collisions.
-
----------------------------------------------
 -- EVENTS/HOOKS
 ---------------------------------------------
 
@@ -103,7 +92,6 @@ end
 ---@return Feature
 function Feature.Create(modTable, id, feature)
     feature.Settings = feature.Settings or {}
-    feature.TranslatedStrings = feature.TranslatedStrings or {}
 
     feature = OOP.GetClass("Library").Create(modTable, id, feature)
     feature = Feature:__Create(feature) ---@type Feature
@@ -111,50 +99,6 @@ function Feature.Create(modTable, id, feature)
 
     -- Defaults to all game states.
     feature.SupportedGameStates = feature.SupportedGameStates or Feature._GetAllSupportedGameStatesBitfield()
-
-    -- Initialize translated strings
-    feature._localTranslatedStringKeys = {}
-    feature.TranslatedStrings = feature.TranslatedStrings or {}
-    for handle,data in pairs(feature.TranslatedStrings) do
-        local localKey = data.Handle and handle or data.LocalKey -- If Handle is manually set, use table key as localKey
-
-        data.Handle = data.Handle or handle
-        data.ModTable = modTable
-        data.FeatureID = id
-
-        if localKey then
-            feature._localTranslatedStringKeys[localKey] = handle
-        end
-
-        -- Make indexing via string key work as well
-        if data.StringKey then
-            feature.TranslatedStrings[data.StringKey] = data
-        end
-
-        Text.RegisterTranslatedString(data)
-    end
-
-    -- Create TSK table
-    local TSKmetatable = {
-        __index = function (_, key)
-            local obj = feature.TranslatedStrings[key]
-
-            -- Lookup using local key name instead
-            if not obj then
-                local handle = feature._localTranslatedStringKeys[key]
-
-                obj = handle and feature.TranslatedStrings[handle]
-            end
-
-            if not obj then
-                error("Tried to get TSK for handle not from this feature " .. key)
-            end
-
-            return obj:GetString()
-        end
-    }
-    feature.TSK = {}
-    setmetatable(feature.TSK, TSKmetatable)
 
     -- Initialize settings
     for settingID,setting in pairs(feature.Settings) do
@@ -220,16 +164,6 @@ function Feature:OnFeatureInit() end
 ---@return integer
 function Feature._GetAllSupportedGameStatesBitfield()
     return 2^table.getKeyCount(Feature.GAME_STATES) - 1
-end
-
----------------------------------------------
--- TSK METHODS
----------------------------------------------
-
----@param localKey string
----@return TranslatedStringHandle?
-function Feature:GetTranslatedStringHandleForKey(localKey)
-    return self._localTranslatedStringKeys[localKey]
 end
 
 ---------------------------------------------
