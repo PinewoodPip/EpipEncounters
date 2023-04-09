@@ -5,12 +5,51 @@
 ---------------------------------------------
 
 local MinimapToggle = Epip.GetFeature("Feature_MinimapToggle")
+local Ascension = Game.Ascension
 
+---@type Feature
 local IM = {
     currentState = false,
+
+    REQUIRED_MODS = {
+        [Mod.GUIDS.EE_CORE] = "Epic Encounters Core",
+    },
+    TranslatedStrings = {
+        ImmersiveMeditation_Name = {
+            Handle = "ha970de96geaf5g483eg9996gac184c8fe843",
+            Text = "Immersive Meditation",
+            ContextDescription = "Immersive meditation setting name",
+        },
+        ImmersiveMeditation_Description = {
+            Handle = "h8f6b67aaga9fag4c62gbd92g0f4d43fd8855",
+            Text = "Hides the Hotbar and Minimap while within the Ascension and Greatforge UIs.",
+            ContextDescription = "Immersive meditation setting tooltip",
+        },
+    },
 }
-local Ascension = Game.Ascension
-Epip.AddFeature("ImmersiveMeditation", "ImmersiveMeditation", IM)
+Epip.RegisterFeature("ImmersiveMeditation", IM)
+
+---------------------------------------------
+-- SETTINGS
+---------------------------------------------
+
+IM:RegisterSetting("Enabled", 
+{
+    Type = "Boolean",
+    NameHandle = IM.TranslatedStrings.ImmersiveMeditation_Name,
+    DescriptionHandle = IM.TranslatedStrings.ImmersiveMeditation_Description,
+    RequiredMods = {Mod.GUIDS.EE_CORE},
+    DefaultValue = false,
+})
+
+---------------------------------------------
+-- METHODS
+---------------------------------------------
+
+---@override
+function IM:IsEnabled()
+    return IM:GetSettingValue(IM.Settings.Enabled) == true and _Feature.IsEnabled(self)
+end
 
 function IM.Update()
     if Client.IsUsingController() then return nil end
@@ -39,7 +78,7 @@ end
 
 -- Enable when we're in Ascension. Never enable immersive meditation if the option is off.
 IM:RegisterHook("GetState", function(enabled)
-    if not enabled and Game.AMERUI.ClientIsInUI() and Settings.GetSettingValue("EpipEncounters", "ImmersiveMeditation") and IM:IsEnabled() then
+    if not enabled and Game.AMERUI.ClientIsInUI() and IM:IsEnabled() then
         enabled = true
     end
 
@@ -47,7 +86,7 @@ IM:RegisterHook("GetState", function(enabled)
 end)
 
 -- Update state when client toggles meditation, the hotbar refreshes or the game is unpaused. The hotbar listener is needed for unpause
-Ascension:RegisterListener("ClientToggledMeditating", function(state)
+Ascension:RegisterListener("ClientToggledMeditating", function(_)
     IM.Update()
 end)
 

@@ -94,7 +94,7 @@ local tabs = {
             {Type = "Label", Label = Text.Format(TSK.SettingApplicationWarning:GetString(), {Size = 19})},
             "EpipLanguage",
             "AutoIdentify",
-            "ImmersiveMeditation",
+            {Type = "Setting", Module = "EpipEncounters_ImmersiveMeditation", ID = "Enabled"},
             "ExaminePosition",
             "Minimap",
             "TreasureTableDisplay",

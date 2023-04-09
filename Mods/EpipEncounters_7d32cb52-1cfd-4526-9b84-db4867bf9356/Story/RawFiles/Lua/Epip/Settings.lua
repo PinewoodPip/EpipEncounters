@@ -36,17 +36,6 @@ local EpipSettings = {
            ContextDescription = "Autoidentify option",
         },
 
-        ImmersiveMeditation_Name = {
-            Handle = "ha970de96geaf5g483eg9996gac184c8fe843",
-            Text = "Immersive Meditation",
-            ContextDescription = "Immersive meditation setting name",
-        },
-        ImmersiveMeditation_Description = {
-            Handle = "h8f6b67aaga9fag4c62gbd92g0f4d43fd8855",
-            Text = "Hides the Hotbar and Minimap while within the Ascension and Greatforge UIs.",
-            ContextDescription = "Immersive meditation setting tooltip",
-        },
-
         ExaminePosition_Name = {
             Handle = "h53b42eecg74ccg4164gbd64g0bda6052e6f1",
             Text = "Examine Menu Position",
@@ -1242,13 +1231,6 @@ local newSettings = {
             {ID = 2, NameHandle = TSKs.AutoIdentify_Option_WithLoremaster.Handle},
             {ID = 3, Name = "Always"},
         }
-    },
-    {
-        ID = "ImmersiveMeditation",
-        Type = "Boolean",
-        NameHandle = TSKs.ImmersiveMeditation_Name,
-        DescriptionHandle = TSKs.ImmersiveMeditation_Description,
-        DefaultValue = false,
     },
     {
         ID = "ExaminePosition",
