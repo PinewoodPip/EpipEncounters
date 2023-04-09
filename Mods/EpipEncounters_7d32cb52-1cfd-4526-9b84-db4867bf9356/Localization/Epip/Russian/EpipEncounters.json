@@ -4,15 +4,15 @@
   "TranslatedStrings": {
     "h0023bed4gd590g4375g80dcgf1e135f30b1e": {
       "ReferenceText": "If enabled, items with no use actions will show world tooltips.",
-      "TranslatedText": "Если включено, предметы без опции взаимодействия(ключи и пр.) будут отображаться в Подcказках к окружающим объектах"
+      "TranslatedText": "Если включено, предметы без опции взаимодействия(ключи и пр.) будут отображаться в подcказках к окружающим объектах"
     },
     "h00aa4e07g8833g4040g9355g6bed488f1237": {
       "ReferenceText": "Host-only setting. Toggles Fog of War, which hides unexplored areas. This setting applies to all players in the server and is non-destructive; re-enabling it will restore FoW to normal, and all your exploration progress with the setting off will apply.",
-      "TranslatedText": "Для хоста. Переключатель Тумана Войны, который скрывает неисследованые области. Эта настройка применяется ко всем игрокам на сервере и обратима; при ее повторном включении Туман Войны вернется в нормальное состояние и весь прогресс исследования сохранится."
+      "TranslatedText": "Для хоста. Переключатель тумана войны, который скрывает неисследованые области. Эта настройка применяется ко всем игрокам на сервере и обратима; при ее повторном включении туман войны вернется в нормальное состояние и весь прогресс исследования сохранится."
     },
     "h01f17781g7f5ag4113g9505g4cba31cd0d07": {
       "ReferenceText": "Improved Combat Log",
-      "TranslatedText": "Улучшенный Журнал"
+      "TranslatedText": "Улучшенный журнал"
     },
     "h058cdfb5g6b63g486bg9e05g413c1cf64d4a": {
       "ReferenceText": "Shows the Mastery button. If disabled, it remains accessible through hotbar actions.",
@@ -28,7 +28,7 @@
     },
     "h0838a5f5gb835g47dcg80d7g29807777a94a": {
       "ReferenceText": "Cherry Blossom",
-      "TranslatedText": "Цветение Вишни"
+      "TranslatedText": "Цветение вишни"
     },
     "h09f0f7e8gb224g4018g9301g1cf150d5bc20": {
       "ReferenceText": "If enabled, your characters's inventories in multiplayer will be automatically unlocked after a reload.",
@@ -36,7 +36,7 @@
     },
     "h0aacad96g933cg4888g9f70g832a231c6bad": {
       "ReferenceText": "Sorting Order",
-      "TranslatedText": "Порядок Сортировки"
+      "TranslatedText": "Порядок сортировки"
     },
     "h0e766045g43afg47d8gb307g97120772d1f6": {
       "ReferenceText": "Fog B",
@@ -48,7 +48,7 @@
     },
     "h1549cdd8gf0b8g4c64gb887ge3dc98ecf9e3": {
       "ReferenceText": "Poison Ring",
-      "TranslatedText": "Ядовитое Кольцо"
+      "TranslatedText": "Ядовитое кольцо"
     },
     "h15aafc75g75b8g47b1g94a5g354f7f168120": {
       "ReferenceText": "Midnight Oil",
@@ -72,7 +72,7 @@
     },
     "h19c9fc59g789ag4c24gb90ag4858f13e79df": {
       "ReferenceText": "Show Minimap",
-      "TranslatedText": "Показывать Миникарту"
+      "TranslatedText": "Показывать миникарту"
     },
     "h1afda15cgc951g46e6g8aa6g333bc56665ae": {
       "ReferenceText": "Determines the default tab for the crafting UI.",
@@ -80,7 +80,7 @@
     },
     "h1d9df2d8g34d0g44e2ga589g7c2366258b4e": {
       "ReferenceText": "Blood Waterfall",
-      "TranslatedText": "Кровавый Водопад"
+      "TranslatedText": "Кровавый водопад"
     },
     "h1e03cfb3g592dg4698ga246gdc1e34d9915a": {
       "ReferenceText": "Item Notifications",
@@ -88,7 +88,7 @@
     },
     "h1ec057edg09a1g413dgaefdgaf7942d579ce": {
       "ReferenceText": "Maximum Distance (tactical view)",
-      "TranslatedText": "Максимальное Расстояние (тактический режим)"
+      "TranslatedText": "Максимальное расстояние (тактический режим)"
     },
     "h21723370gb5acg4f7bg8628g6b7b3249808c": {
       "ReferenceText": "Show Character Sheet in Reward UI",
@@ -108,7 +108,7 @@
     },
     "h265f89a4g9e80g420egb7adgd27aced5697b": {
       "ReferenceText": "Field of View",
-      "TranslatedText": "Поле Зрения"
+      "TranslatedText": "Поле зрения"
     },
     "h28a24072g481eg4d1fgaac8gfacbe5243bdb": {
       "ReferenceText": "If enabled, the Escape key will close EE UIs rather than turning back a page.",
@@ -116,7 +116,7 @@
     },
     "h2afb4a12gfb71g47c5g9abdg87b5a642637c": {
       "ReferenceText": "Prince Darkness",
-      "TranslatedText": "Принц Тьмы"
+      "TranslatedText": "Принц тьмы"
     },
     "h2ce0c9f6gc6b1g4191g9901g7383f9dbe3ef": {
       "ReferenceText": "Display B/H on player portraits",
@@ -128,7 +128,7 @@
     },
     "h3315b640gf25bg45eag8afbgde0e87cba2f5": {
       "ReferenceText": "Message Sound",
-      "TranslatedText": "Звук Сообщения"
+      "TranslatedText": "Звук сообщения"
     },
     "h351cdabfg577fg45e8gbe9dg6a513e599d13": {
       "ReferenceText": "Changes the duration of the label that appears at the top of the screen when you change areas. Set to 0 to disable them entirely.<br><br>Default is 5 seconds.",
@@ -140,11 +140,11 @@
     },
     "h39d23b3bg188dg4cd8g9e94gd9697fe9130d": {
       "ReferenceText": "Purple Vortex",
-      "TranslatedText": "Фиолетовый Вихрь"
+      "TranslatedText": "Фиолетовый вихрь"
     },
     "h39e2d175g348eg4697g93a5gf28a9544e4ba": {
       "ReferenceText": "Emphasizes consumable items in world tooltips.",
-      "TranslatedText": "Подсвечивает расходуемые предметы в Подсказках к окружающим объектам"
+      "TranslatedText": "Подсвечивает расходуемые предметы в подсказках к окружающим объектам"
     },
     "h3a72d579gc132g43d8gb6f0g097bfdbf76fb": {
       "ReferenceText": "Force Story Patching",
@@ -152,7 +152,7 @@
     },
     "h3aca822bgfa26g4005ga288g20b6a22a48ec": {
       "ReferenceText": "Laser Focus",
-      "TranslatedText": "Лазерный Фокус"
+      "TranslatedText": "Лазерный фокус"
     },
     "h3af2fabcg24ffg4e29ga965g69180c641040": {
       "ReferenceText": "Controls the maximum distance the camera can zoom out while it is tracking an entity.<br>Default is 17.",
@@ -176,11 +176,11 @@
     },
     "h3eb881efg123fg449bg9718g65ba0891f5bc": {
       "ReferenceText": "Adds improvements to the combat log: custom filters (accessible through right-click), merging messages, and slight rewording to improve consistency.<br>You must reload the save after making changes to this setting.",
-      "TranslatedText": "Добавляет улучшения журнала: кастомные фильтры (ПКМ для доступа), слияние сообщений.<br>Требуется перезагрузка сохранения после включения."
+      "TranslatedText": "Добавляет улучшения журнала: настраиваемые фильтры (ПКМ для доступа), слияние сообщений.<br>Требуется перезагрузка сохранения."
     },
     "h3f4780c9g726bg43c3g8b59gd85d2a0aad07": {
       "ReferenceText": "Show Fog of War",
-      "TranslatedText": "Показывать Туман Войны"
+      "TranslatedText": "Показывать туман войны"
     },
     "h40a5107fg6bcdg41a4g8535ga841f2b6f199": {
       "ReferenceText": "Whirlwind",
@@ -204,11 +204,11 @@
     },
     "h49611d79g2ae8g47dcgb20bge13634676cad": {
       "ReferenceText": "Disables looting corpses in combat, unless shift is held. This allows you to easily move to their position.",
-      "TranslatedText": "Отключает возможность обыскивать трупы в бою пока не зажата клавиша SHIFT."
+      "TranslatedText": "Отключает возможность обыскивать трупы в бою пока не зажата клавиша Shift."
     },
     "h4b67c715g0d30g4015gba18ge8ea4f357448": {
       "ReferenceText": "Shows the Source Generation status while sorting/filtering is enabled.",
-      "TranslatedText": "Показывает статус Генерации Истока при включенных сортировке/фильтрах."
+      "TranslatedText": "Показывает статус генерации истока при включенных сортировке/фильтрах."
     },
     "h4bd4b3d7gf239g412dgb4e9g3421524ff330": {
       "ReferenceText": "Changes the loading screen into a family photoshoot!",
@@ -216,7 +216,7 @@
     },
     "h4e5e3786g9b22g4009gaf4egc680d28b83bd": {
       "ReferenceText": "Show Combat Log Button",
-      "TranslatedText": "Показывать кнопку Журнала"
+      "TranslatedText": "Показывать кнопку журнала"
     },
     "h50d46bf5ge806g4c7bg9780ga9627d9fc3f3": {
       "ReferenceText": "Intense Smoke",
@@ -240,15 +240,15 @@
     },
     "h58774ddfga909g4acfg95e1g9ba772b7be4a": {
       "ReferenceText": "Hotbar Buttons Area Sizing",
-      "TranslatedText": "Размер кнопок панели быстрого доступа"
+      "TranslatedText": "Отображение панели горячих клавиш"
     },
     "h5bef00c6g36deg4db0ga3d5gb006dbc5f601": {
       "ReferenceText": "Auto-unlock inventory (Multiplayer)",
-      "TranslatedText": "Авто-разблокировка инвентаря (Мультиплеер)"
+      "TranslatedText": "Авто-разблокировка инвентаря (мультиплеер)"
     },
     "h60bebbb6g771fg4fe8g8658g4b01db6b2d87": {
       "ReferenceText": "Controls whether tooltips are shown for empty containers and bodies.",
-      "TranslatedText": "Если включено, пустые контейнеры и тела будут отображаться в Подсказках к окружающим объектам."
+      "TranslatedText": "Если включено, пустые контейнеры и тела будут отображаться в подсказках к окружающим объектам."
     },
     "h6270c4d7g0531g453agbae3g2503fb8c3c59": {
       "ReferenceText": "Maximum Distance (locked-on)",
@@ -276,7 +276,7 @@
     },
     "h72991da3gbe87g41c2g8a34gab6e730f4c75": {
       "ReferenceText": "Wind Elemental",
-      "TranslatedText": "Элементаль Ветра"
+      "TranslatedText": "Элементаль ветра"
     },
     "h738fac7bg150bg4545g87a9ge3ae1ea94791": {
       "ReferenceText": "Voodoo",
@@ -288,7 +288,7 @@
     },
     "h799513e4g3995g4d45g8e0bg3ee08e6cd1db": {
       "ReferenceText": "Auto-Identify Items",
-      "TranslatedText": "Авто-Опознавать Предметы"
+      "TranslatedText": "Авто-опознавание предметов"
     },
     "h7c2f8512g3c4eg4dffg946aga4482de181ae": {
       "ReferenceText": "Toggles visibility of the minimap UI element.",
@@ -312,15 +312,15 @@
     },
     "h82c7e2e1g5de2g4389ga7c5g639c3d653b96": {
       "ReferenceText": "Show Source Generation Status",
-      "TranslatedText": "Показывать Статус Генерации Истока"
+      "TranslatedText": "Показывать статус Генерации истока"
     },
     "h8307bcc5gb35cg4277ga1d6gb9cc9d8d2eed": {
       "ReferenceText": "Show Action Hotkeys",
-      "TranslatedText": "Показывать Горячие Клавиши Действий"
+      "TranslatedText": "Показывать горячие клавиши"
     },
     "h831d1efeg7f97g4306g9f6fgf0ed6c97bc6f": {
       "ReferenceText": "Save/Load UI Improvements",
-      "TranslatedText": "Улучшения Меню Сохранения/Загрузки"
+      "TranslatedText": "Улучшения меню сохранения/загрузки"
     },
     "h832b19aege182g49acgb536gfa969d7669b3": {
       "ReferenceText": "Multiplies the duration of status overheads.<br><br>Default is 1.",
@@ -328,7 +328,7 @@
     },
     "h8403161cgb78fg453fg9676gd4c14f3afd29": {
       "ReferenceText": "Controls the maximum distance the camera can zoom out in regular gameplay.<br>Default is 19.",
-      "TranslatedText": "Задает максимальное расстояние, на которое камера может отдалиться во время нормального геймплея.<br>По умолчанию - 19."
+      "TranslatedText": "Задает максимальное расстояние, на которое камера может отдалиться в свободном режиме.<br>По умолчанию - 19."
     },
     "h854a85fegf878g45a3g98b6g0fff3d5496b7": {
       "ReferenceText": "Show items with no use actions",
@@ -336,7 +336,7 @@
     },
     "h868a6168gd10eg4340gb5f4gb35dc338c453": {
       "ReferenceText": "If enabled, doors will show world tooltips. Requires \"Show more items\" to be enabled, as these do not have tooltips by default.",
-      "TranslatedText": "Если включено, двери будут отображатся в Подсказках к окружающим объектам.Требуется опция \"Включить подсказки для всех предметов\"."
+      "TranslatedText": "Если включено, двери будут отображатся в подсказках к окружающим объектам.Требуется опция \"Включить подсказки для всех предметов\"."
     },
     "h86c94636gb954g4e3dg9679g477c7f889bb3": {
       "ReferenceText": "Allow walking to corpses in combat",
@@ -348,15 +348,15 @@
     },
     "h8e644d3dg9c33g4251g9674g48555ee9573b": {
       "ReferenceText": "Shows the combat log button on the right side of the hotbar.<br>If disabled, you can still toggle the combat log through hotbar actions.",
-      "TranslatedText": "Показывает кнопку Журнала с правой стороны панели быстрого доступа.<br>Если отключено, доступ к Журналу возможен через действия быстрого доступа."
+      "TranslatedText": "Показывает кнопку журнала боя с правой стороны панели быстрого доступа.<br>Если отключено, доступ к нему возможен через панель горячих клавиш."
     },
     "h8f6b67aaga9fag4c62gbd92g0f4d43fd8855": {
       "ReferenceText": "Hides the Hotbar and Minimap while within the Ascension and Greatforge UIs.",
-      "TranslatedText": "Скрывает Панель быстрого доступа и Миникарту во время использования интерфейсов Ascension и Greatforge"
+      "TranslatedText": "Скрывает панель быстрого доступа и миникарту во время использования интерфейсов Ascension и Greatforge"
     },
     "h8f7f66d4g1806g478agb229g3f36b527d44d": {
       "ReferenceText": "Simple Tooltip Delay (World)",
-      "TranslatedText": "Задержка простых подсказок(Окружающие объекты)"
+      "TranslatedText": "Задержка простых подсказок (окружающие объекты)"
     },
     "h9172c74eg120fg4ea6gac99gf5f558433e70": {
       "ReferenceText": "Escape Key Closes EE UIs",
@@ -380,11 +380,11 @@
     },
     "h9cd1245egdfdeg4cbbgbae7gfa179a954eac": {
       "ReferenceText": "If enabled, the health bar when you hover over characters and items will show their treasure table (if relevant) as well as the chance of getting an artifact. For characters, this requires holding the Show Sneak Cones key (shift by default)",
-      "TranslatedText": "Если включено, при наведении, под шкалой здоровья будет показываться вариант лута с шансом получения артефакта. Для отображения у персонажей требуется зажать SHIFT."
+      "TranslatedText": "Если включено, при наведении, под панелью здоровья будет показываться вариант лута с шансом получения артефакта. Для отображения у персонажей требуется зажать Shift."
     },
     "ha1146687g9261g49d4gad63g0269559fce2d": {
       "ReferenceText": "If enabled, chairs and ladders will show world tooltips. Requires \"Show more items\" to be enabled, as these do not have tooltips by default.",
-      "TranslatedText": "Если включено, стулья и лестницы будут отображатся в Подсказках к окружающим объектам.Требуется опция \"Включить подсказки для всех предметов\"."
+      "TranslatedText": "Если включено, стулья и лестницы будут отображатся в подсказках к окружающим объектам.Требуется опция \"Включить подсказки для всех предметов\"."
     },
     "ha13d577fg043ag4324g8d55gd5f2ba85efac": {
       "ReferenceText": "If enabled, Battered and Harried stacks will be shown beside player portraits on the left interface.",
@@ -392,7 +392,7 @@
     },
     "ha1fb1fb3g2796g4850gbdb0g727186aa7f71": {
       "ReferenceText": "Out of season April Fools jokes",
-      "TranslatedText": "Внесезонные шутки на Первое Апреля"
+      "TranslatedText": "Внесезонные шутки на первое апреля"
     },
     "ha3e9b3f3g2186g4cb3gb212g3938e0bb7779": {
       "ReferenceText": "Violent Strikes",
@@ -404,11 +404,11 @@
     },
     "ha970de96geaf5g483eg9996gac184c8fe843": {
       "ReferenceText": "Immersive Meditation",
-      "TranslatedText": "Иммерсивная Медитация"
+      "TranslatedText": "Иммерсивная медитация"
     },
     "haa0297d1ga978g4be1gb3b4g7295b9451b31": {
       "ReferenceText": "Maximum Distance",
-      "TranslatedText": "Максимальное Расстояние"
+      "TranslatedText": "Максимальное расстояние"
     },
     "haa0cd7a5g5950g4cceg8fe0gd343fc6db5e0": {
       "ReferenceText": "Show chairs and ladders",
@@ -420,19 +420,19 @@
     },
     "hae703884g68c4g44d1gb1d2g211f87e7309c": {
       "ReferenceText": "If enabled, clicking world tooltips will open containers rather than picking them up.",
-      "TranslatedText": "Если включено, открывает, а не поднимает контейнер при нажатии на текст Подсказки к окружающим объектам"
+      "TranslatedText": "Если включено, открывает, а не поднимает контейнер при нажатии на текст подсказки к окружающим объектам"
     },
     "hafbe381ag6da6g4760gb278g1b6c5a36f530": {
       "ReferenceText": "Save/Load Sorting",
-      "TranslatedText": "Сортировка Сохранения/Загрузки"
+      "TranslatedText": "Сортировка сохранения/загрузки"
     },
     "hafd62d05gc85eg434bg8f49g68214f14bb72": {
       "ReferenceText": "Debug Display",
-      "TranslatedText": "Дисплей Отладки"
+      "TranslatedText": "Дисплей отладки"
     },
     "hb461a9b1g4866g4bbdgb046gd478f7368fab": {
       "ReferenceText": "Emphasizes equipment items in world tooltips.",
-      "TranslatedText": "Подсвечивает предметы экипировки в Подсказках к окружающим объектам"
+      "TranslatedText": "Подсвечивает предметы экипировки в подсказках к окружающим объектам"
     },
     "hb53a9902g6a6fg4885ga47cg4329d6de565d": {
       "ReferenceText": "Controls the size of damage overheads.<br><br>Default is 24.",
@@ -456,15 +456,15 @@
     },
     "hb9e14744g4868g4e08gb3d7ga9bd57629d03": {
       "ReferenceText": "Shows the Battered/Harries statuses while sorting/filtering is enabled.<br>If you disable this, it is recommended to enable the B/H display on the portraits.",
-      "TranslatedText": "Показывает значения B/H если включена сортировка.<br>Если отключено, рекомендуется включить опцию \"Показывать B/H статусы\""
+      "TranslatedText": "Показывает значения B/H если включена сортировка.<br>Если отключено, рекомендуется включить опцию \"Показывать B/H на портретах игроков\""
     },
     "hbd18d9b1g7709g419agb8d6gdccf938dcaf3": {
       "ReferenceText": "Epic Loading Screen",
-      "TranslatedText": "Эпичный Экран Загрузки"
+      "TranslatedText": "Эпичный экран загрузки"
     },
     "hbd336157gc5fag442fgb2cfgb85f9e2c44fd": {
       "ReferenceText": "Overhead Damage Size",
-      "TranslatedText": "Размер цифр вспывающего урона"
+      "TranslatedText": "Размер цифр всплывающего урона"
     },
     "hca79eaccgc9c9g4a87g9f9egdbfa57800a5a": {
       "ReferenceText": "Controls whether notifications for characters casting skills show up in combat.",
@@ -472,7 +472,7 @@
     },
     "hcd9974f8g16cfg4cbfga08agbf28ee5b55eb": {
       "ReferenceText": "Show loot drops in health bar",
-      "TranslatedText": "Показывать выпадающий лут под шкалой здоровья"
+      "TranslatedText": "Показывать выпадающий лут под панелью здоровья"
     },
     "hcda03853g5322g48e6gb8d2g37a87a295fef": {
       "ReferenceText": "Shows the keyboard hotkeys for custom actions.",
@@ -504,7 +504,7 @@
     },
     "he0bb8817g7c40g4572g9170gce3d351dc753": {
       "ReferenceText": "Automatically and instantly identify items whenever they are generated.<br>'With enough Loremaster' uses the highest Loremaster of all player characters, regardless of party.",
-      "TranslatedText": "Автоматическое опознавание предметов при их получении.<br>При варианте \"С достаточным Знанием легенд\" используется наибольшее значение среди всех персонажей, вне зависимости от их группы."
+      "TranslatedText": "Автоматическое опознавание предметов при их получении.<br>При варианте \"С достаточным знанием легенд\" используется наибольшее значение среди всех персонажей, вне зависимости от их группы."
     },
     "he1ba8777g2269g40b6gb21cg353aea79fb9b": {
       "ReferenceText": "Logs AI scoring to the console.",
@@ -516,7 +516,7 @@
     },
     "he759cd00g404dg4731gb2a6g0ece913a327e": {
       "ReferenceText": "Emphasizes container items in world tooltips.",
-      "TranslatedText": "Подсвечивает контейнеры в Подcказках к окружающим объектам"
+      "TranslatedText": "Подсвечивает контейнеры в подcказках к окружающим объектам"
     },
     "hec25a517g9521g47e3g8f74gfa658861a320": {
       "ReferenceText": "Controls the FOV of the camera. Low/high values may cause issues with dynamic shadows.<br>Default is 45.",
@@ -660,7 +660,7 @@
     },
     "h6232b543g92dag4b65gac80g0d3f7e833f72": {
       "ReferenceText": "Quick Find is a UI that shows a customizable filtered view of the party inventory, opened using Ctrl+F by default.",
-      "TranslatedText": "Интерфейс Быстрого Поиска показывает настраивамое отображение инвентаря группы. По умолчанию открывается Ctrl+F."
+      "TranslatedText": "Интерфейс быстрого поиска показывает настраивамое отображение инвентаря группы. По умолчанию открывается Ctrl+F."
     },
     "h37985411gc95dg46a1g858bg021ed39e43cd": {
       "ReferenceText": "Hotbar",
@@ -680,7 +680,7 @@
     },
     "hc574348cg706eg4618g9629g6a08ad4aed70": {
       "ReferenceText": "Inventory UI",
-      "TranslatedText": "Интерфейс Снаряжения"
+      "TranslatedText": "Интерфейс снаряжения"
     },
     "he8c517d9gc48fg42f8ga501g35f9909946b9": {
       "ReferenceText": "Inventory",
@@ -704,7 +704,7 @@
     },
     "h5025c292g5fd8g46fegac5bgee45a7acc134": {
       "ReferenceText": "Ability School",
-      "TranslatedText": "Навыки"
+      "TranslatedText": "Навык"
     },
     "ha15ba540g2da4g4056g8174gcd25a3b1d343": {
       "ReferenceText": "Allows examining dead characters.",
@@ -720,7 +720,7 @@
     },
     "h9e8f2aecg2b81g4f48ga9bbg43dd8f593686": {
       "ReferenceText": "Saves the UI's current position and restores it upon reloading. Use to set the default position of the UI.",
-      "TranslatedText": "Сохраняет и задает текущее положение интерфейса по умолчанию."
+      "TranslatedText": "Сохраняет и задает по умолчанию текущее положение интерфейса."
     },
     "h3a060f85gad6dg4e73g8526ga0606d366478": {
       "ReferenceText": "Width",
@@ -736,7 +736,7 @@
     },
     "hee5bca62g5b34g4846g92fdgdaafaa1a5625": {
       "ReferenceText": "Sourcery",
-      "TranslatedText": "Магия Истока"
+      "TranslatedText": "Магия истока"
     },
     "ha8c99111g67d2g4321g8e8cg92282405ebe8": {
       "ReferenceText": "Boots",
@@ -760,7 +760,7 @@
     },
     "he0473fbcg6b57g48aegb3c0g7bb24b1e0393": {
       "ReferenceText": "Player Portraits",
-      "TranslatedText": "Портреты Персонажей"
+      "TranslatedText": "Портреты персонажей"
     },
     "h7ca5d696g5244g435eg887bg524f556990f6": {
       "ReferenceText": "Scoundrel",
@@ -768,7 +768,7 @@
     },
     "h5df736bfgcdc9g48e4ga09ag1967abc64832": {
       "ReferenceText": "Breast",
-      "TranslatedText": "Грудь"
+      "TranslatedText": "Нагрудник"
     },
     "h962807b6g8756g412dga48eg5a2c6a71e76f": {
       "ReferenceText": "Potions",
@@ -800,11 +800,11 @@
     },
     "h87e9e867gfd89g458eg850fga1129b558d59": {
       "ReferenceText": "Item Category",
-      "TranslatedText": "Категория предметов"
+      "TranslatedText": "Категория предмета"
     },
     "h00be848dgbfbfg404agabddg983860260ed4": {
       "ReferenceText": "With enough Loremaster",
-      "TranslatedText": "С достаточным Знанием легенд"
+      "TranslatedText": "С достаточным знанием легенд"
     },
     "h7afd19eegf79bg42f9g97e7g66f4ac3a51c6": {
       "ReferenceText": "Ring",
@@ -880,7 +880,7 @@
     },
     "haabd6906gee2dg4b39ga339gf5cdf1a2ee8b": {
       "ReferenceText": "Tooltip Adjustments",
-      "TranslatedText": "Корректировки подсказок"
+      "TranslatedText": "Разное"
     },
     "h7c16563egd7cdg471cga0c5g30aa3344eeda": {
       "ReferenceText": "Huntsman",

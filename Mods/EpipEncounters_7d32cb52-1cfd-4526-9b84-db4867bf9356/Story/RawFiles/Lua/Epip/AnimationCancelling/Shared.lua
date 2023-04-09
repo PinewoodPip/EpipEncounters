@@ -30,7 +30,7 @@ local AnimCancel = {
         },
         Setting_Tooltip = {
            Handle = "he5c3a752gd8bag48fagb611g35b5d23bef9d",
-           Text = "Cancels your controlled character's spell animations after their effects execute.\n\n%s",
+           Text = "Cancels your controlled character's spell animations after their effects execute.<br><br>%s",
            ContextDescription = "Setting tooltip",
         },
         Setting_Warning = {
