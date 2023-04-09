@@ -3,13 +3,6 @@ SubGoalCombiner SGC_AND
 INITSECTION
 KBSECTION
 
-// For whiny compiler. TODO move out
-IF ItemSendToHomesteadEvent(_, _)
-AND
-DB_PIP_IncompatibleModWarningSeen("", "")
-THEN
-DB_PIP_IncompatibleModWarningSeen("", "");
-
 PROC PROC_PIP_Hotbar_UseTemplate((CHARACTERGUID)_Char, (STRING)_Template)
 AND
 GetItemForItemTemplateInPartyInventory(_Char, _Template, _Item)

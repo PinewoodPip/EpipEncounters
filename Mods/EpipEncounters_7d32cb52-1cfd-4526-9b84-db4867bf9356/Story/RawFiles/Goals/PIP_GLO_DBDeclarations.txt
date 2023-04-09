@@ -14,6 +14,10 @@ NOT DB_PIP_Vanity_AppliedAura(NULL_00000000-0000-0000-0000-000000000000, "", (IN
 DB_PIP_PreferredTargetDisplay_Tagged(NULL_00000000-0000-0000-0000-000000000000, NULL_00000000-0000-0000-0000-000000000000);
 NOT DB_PIP_PreferredTargetDisplay_Tagged(NULL_00000000-0000-0000-0000-000000000000, NULL_00000000-0000-0000-0000-000000000000);
 
+NOT DB_PIP_IncompatibleModWarningSeen("", "");
+
+GoalCompleted;
+
 KBSECTION
 
 // Dummy rule to shut up the IDE warnings.
@@ -32,4 +36,4 @@ DB_NOOP();
 EXITSECTION
 
 ENDEXITSECTION
-ParentTargetEdge "Start_AMER"
+ParentTargetEdge "Start"

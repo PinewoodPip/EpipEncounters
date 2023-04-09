@@ -1,3 +1,4 @@
+DB_PIP_IncompatibleModWarningSeen 2
 DB_UndeadRacePresets 2
 DB_PIP_Setting_Integer 3
 DB_PIP_EpicEnemies_AppliedEffect 2
