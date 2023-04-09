@@ -3,6 +3,27 @@ local CustomStats = Epip.GetFeature("Feature_CustomStats")
 
 ---@type table<string, Feature_CustomStats_Stat>
 local EpicEncountersStats = {
+    -- Vitals
+    RegenLifeCalculated = {
+        Name = "Missing Life Regen",
+        Description = "Restores a percentage of your missing Vitality at the start of your turn.",
+
+        Footnote = "Missing Regeneration is capped at 50%.",
+        Suffix = "%",
+    },
+    RegenPhysicalArmorCalculated = {
+        Name = "Missing Phys. Armor Regen",
+        Description = "Restores a percentage of your missing Physical Armor at the start of your turn.",
+        Footnote = "Missing Regeneration is capped at 50%.",
+        Suffix = "%",
+    },
+    RegenMagicArmorCalculated = {
+        Name = "Missing Magic Armor Regen",
+        Description = "Restores a percentage of your missing Magic Armor at the start of your turn.",
+        Footnote = "Missing Regeneration is capped at 50%.",
+        Suffix = "%",
+    },
+
     -- Misc
     PartyFunds_Splinters = {
         Name = "Party Splinters",

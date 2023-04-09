@@ -17,26 +17,7 @@ local Stats = {
         Description = "Healing and armor restoration done in the current combat, or the latest combat this character participated in.",
     },
 
-    -- VITALS
-    RegenLifeCalculated = {
-        Name = "Missing Life Regen",
-        Description = "Restores a percentage of your missing Vitality at the start of your turn.",
-
-        Footnote = "Missing Regeneration is capped at 50%.",
-        Suffix = "%",
-    },
-    RegenPhysicalArmorCalculated = {
-        Name = "Missing Phys. Armor Regen",
-        Description = "Restores a percentage of your missing Physical Armor at the start of your turn.",
-        Footnote = "Missing Regeneration is capped at 50%.",
-        Suffix = "%",
-    },
-    RegenMagicArmorCalculated = {
-        Name = "Missing Magic Armor Regen",
-        Description = "Restores a percentage of your missing Magic Armor at the start of your turn.",
-        Footnote = "Missing Regeneration is capped at 50%.",
-        Suffix = "%",
-    },
+    -- Vitals
     LifeSteal = {
         Name = "Lifesteal",
         Description = "Causes a percentage of the damage that you deal to Vitality to be restored to your own.",
