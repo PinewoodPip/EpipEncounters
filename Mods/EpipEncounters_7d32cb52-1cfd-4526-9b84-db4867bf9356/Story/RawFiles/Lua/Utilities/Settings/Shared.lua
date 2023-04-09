@@ -58,8 +58,9 @@ Settings._SettingClass = _Setting
 ---Creates a new setting.
 ---@param data SettingsLib_Setting
 function _Setting:Create(data)
-    data = self:__Create(data)
+    data = self:__Create(data) ---@cast data SettingsLib_Setting
     data.Value = data:GetDefaultValue()
+    data.RequiredMods = data.RequiredMods or {}
 
     data:_Init()
     data:SetValue(data.DefaultValue or data:GetDefaultValue())
@@ -99,6 +100,12 @@ end
 ---@return any
 function _Setting.DeserializeValue(value)
     return value
+end
+
+---Returns the ID of the setting prefixed with its module ID.
+---@return string
+function _Setting:GetNamespacedID()
+    return string.format("%s_%s", self.ModTable, self.ID)
 end
 
 function _Setting:GetValue() return self.Value end

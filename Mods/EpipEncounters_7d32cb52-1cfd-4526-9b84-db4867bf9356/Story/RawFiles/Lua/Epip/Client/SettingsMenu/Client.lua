@@ -76,6 +76,7 @@ Epip.RegisterFeature("SettingsMenu", Menu)
 ---@class Feature_SettingsMenu_Setting : SettingsLib_Setting
 ---@field Visible boolean? Defaults to true.
 ---@field DeveloperOnly boolean? Defaults to false.
+---@field RequiredMods GUID[]?
 
 ---@class Feature_SettingsMenu_Setting_Set : SettingsLib_Setting_Set
 ---@field ElementsAreSkills boolean? If `true`, elements will show skill tooltips.
@@ -196,6 +197,22 @@ function Menu.ApplyPendingChanges()
     })
 
     Menu.pendingChanges = {}
+end
+
+---Returns whether all mods required for a setting are loaded.
+---@param setting Feature_SettingsMenu_Setting
+---@return boolean
+function Menu.AreRequiredModsEnabled(setting)
+    local enabled = true
+
+    for _,guid in ipairs(setting.RequiredMods or {}) do
+        if not Mod.IsLoaded(guid) then
+            enabled = false
+            break
+        end
+    end
+
+    return enabled
 end
 
 function Menu._Setup()

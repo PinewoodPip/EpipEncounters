@@ -143,7 +143,7 @@ end
 ---@param parent GenericUI_ParentIdentifier?
 ---@return GenericUI_Prefab_FormSet
 function UI._RenderSet(setting, parent)
-    local element = SetPrefab.Create(UI, setting.ID, parent, setting:GetName(), UI.FORM_ELEMENT_SIZE)
+    local element = SetPrefab.Create(UI, setting:GetNamespacedID(), parent, setting:GetName(), UI.FORM_ELEMENT_SIZE)
 
     -- Listen for add/remove events and update the setting.
     -- This is a little bit flawed as it does not set the changes as pending. TODO
@@ -189,7 +189,7 @@ function UI._RenderChoice(setting, parent)
         })
     end
 
-    local dropdown = DropdownPrefab.Create(UI, setting.ID, parent, setting:GetName(), options)
+    local dropdown = DropdownPrefab.Create(UI, setting:GetNamespacedID(), parent, setting:GetName(), options)
     dropdown:SetSize(UI.FORM_ELEMENT_SIZE:unpack())
     dropdown:SelectOption(setting:GetValue())
 
@@ -205,7 +205,7 @@ end
 ---@param parent GenericUI_ParentIdentifier?
 ---@return GenericUI_Prefab_LabelledCheckbox
 function UI._RenderCheckbox(setting, parent)
-    local element = CheckboxPrefab.Create(UI, setting.ID, parent, setting:GetName())
+    local element = CheckboxPrefab.Create(UI, setting:GetNamespacedID(), parent, setting:GetName())
 
     element:SetState(setting:GetValue() == true)
     element:SetSize(UI.FORM_ELEMENT_SIZE:unpack())
@@ -222,7 +222,7 @@ end
 ---@param parent GenericUI_ParentIdentifier?
 ---@return GenericUI_Prefab_LabelledSlider
 function UI._RenderClampedNumber(setting, parent)
-    local element = SliderPrefab.Create(UI, setting.ID, parent, UI.FORM_ELEMENT_SIZE, setting:GetName(), setting.Min, setting.Max, setting.Step or 1)
+    local element = SliderPrefab.Create(UI, setting:GetNamespacedID(), parent, UI.FORM_ELEMENT_SIZE, setting:GetName(), setting.Min, setting.Max, setting.Step or 1)
 
     element:SetValue(setting:GetValue())
 
@@ -349,6 +349,9 @@ Overlay.Hooks.CanRenderEntry:Subscribe(function (ev)
         if (setting.DeveloperOnly and not Epip.IsDeveloperMode()) or setting.Visible == false then
             ev.CanRender = false
         end
+
+        -- Don't render settings when their required mods are missing
+        ev.CanRender = ev.CanRender and SettingsMenu.AreRequiredModsEnabled(setting)
     end
 end)
 
