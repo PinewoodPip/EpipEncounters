@@ -38,7 +38,7 @@ function Client.UI.Hotbar.ApplyLoadout(char, loadout, row, replaceUsedSlots)
         end
 
         Hotbar:DebugLog("Applied loadout: " .. loadout .. ", on row " .. row)
-        UpdateSlotTextures()
+        Hotbar.UpdateSlotTextures()
     else
         Hotbar:LogError("Loadout does not exist: " .. loadout)
     end
@@ -96,6 +96,6 @@ Hotbar:RegisterCallListener("pipSlotRightClicked", function(ev, index)
         Hotbar.contextMenuSlot = index
 
         Hotbar.currentLoadoutRow = math.floor((index - 1) / Hotbar.GetSlotsPerRow()) + 1
-        ui:ExternalInterfaceCall("pipRequestContextMenu", "hotbarSlot", root.stage.mouseX + 10, root.stage.mouseY - 110)
+        ui:ExternalInterfaceCall("pipRequestContextMenu", "hotbarSlot", root.stage.mouseX + 10, root.stage.mouseY - 110, Ext.UI.HandleToDouble(Client.GetCharacter().Handle))
     end
 end)
