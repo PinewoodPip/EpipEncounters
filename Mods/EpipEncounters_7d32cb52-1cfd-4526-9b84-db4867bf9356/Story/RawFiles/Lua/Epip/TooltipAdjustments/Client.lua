@@ -276,7 +276,7 @@ end
 function TooltipAdjustments.ShowAbilityScoresForSI(char, skill, tooltip)
     char = char or Client.GetCharacter()
     local element = tooltip:GetElement("SkillDescription")
-    if not element or not skill then return nil end
+    if not element or not skill or not EpicEncounters.IsEnabled() then return nil end
 
     local school = Ext.Stats.Get(skill)
     if not school then return nil end
