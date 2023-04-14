@@ -453,6 +453,7 @@ LOAD_ORDER = {
     "Epip/Client/ToggleableWorldTooltips.lua",
     "Epip/Client/WorldTooltipFiltering.lua",
     "Epip/Client/HoverCharacterEffects.lua",
+    "Epip/Client/IncompatibleModsWarning.lua",
     -- "Epip/Client/LoadingScreenReplacement.lua",
 
     -- Epic Enemies

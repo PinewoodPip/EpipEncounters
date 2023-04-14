@@ -88,6 +88,10 @@ Text.CommonStrings.Misc = Text.RegisterTranslatedString({
    Text = "Misc.",
    ContextDescription = "Short for 'miscellaneous'",
 })
+Text.CommonStrings.Warning = Text.RegisterTranslatedString({
+   Handle = "h6504d954gcc4fg4008ga5d1g32d40eef13e0",
+   Text = "Warning",
+})
 
 ---------------------------------------------
 -- WEAPON TYPES

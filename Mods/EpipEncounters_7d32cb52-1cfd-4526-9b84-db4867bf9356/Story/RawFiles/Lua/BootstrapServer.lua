@@ -162,7 +162,6 @@ LOAD_ORDER = {
     "Epip/Server/ForceStoryPatching.lua",
     "Epip/Server/DefaultHotbarActions.lua",
     "Epip/Server/HotbarServer.lua",
-    "Epip/Server/IncompatibleModsWarning.lua",
     {ScriptSet = "Epip/TooltipAdjustments"},
     {ScriptSet = "Epip/WorldTooltipOpenContainers"},
 
