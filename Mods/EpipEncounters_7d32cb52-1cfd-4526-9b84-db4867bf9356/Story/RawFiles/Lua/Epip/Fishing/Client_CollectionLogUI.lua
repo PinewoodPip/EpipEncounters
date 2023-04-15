@@ -93,8 +93,8 @@ end
 ---------------------------------------------
 
 -- Toggle the UI when the keybind is used.
-Client.UI.OptionsInput.Events.ActionExecuted:RegisterListener(function (action, _)
-    if action == UI.KEYBIND then
+Client.Input.Events.ActionExecuted:Subscribe(function (ev)
+    if ev.Action.ID == UI.KEYBIND then
         if UI:IsVisible() then
             UI:Hide()
         else

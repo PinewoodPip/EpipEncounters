@@ -1,5 +1,4 @@
 
-local OptionsInput = Client.UI.OptionsInput
 local ContextMenu = Client.UI.ContextMenu
 
 ---@class Feature_ExamineKeybind : Feature
@@ -16,8 +15,8 @@ Epip.RegisterFeature("ExamineKeybind", ExamineKeybind)
 ---------------------------------------------
 
 -- Listen for the hotkey being pressed.
-OptionsInput.Events.ActionExecuted:RegisterListener(function (action, _)
-    if action == ExamineKeybind.ACTION_ID then
+Client.Input.Events.ActionExecuted:Subscribe(function (ev)
+    if ev.Action.ID == ExamineKeybind.ACTION_ID then
         ExamineKeybind:DebugLog("Opening examine context menu")
 
         ExamineKeybind._opening = true

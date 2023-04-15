@@ -54,7 +54,8 @@ Options.RegisterTab("EpipEncounters", {
     },
 })
 
-Options.Events.ActionExecuted:RegisterListener(function (action, _)
+Client.Input.Events.ActionExecuted:Subscribe(function (ev)
+    local action = ev.Action.ID
     if action == "EpicEncounters_Meditate" then
         Net.PostToServer("EPIPENCOUNTERS_Hotkey_Meditate", {
             NetID = Client.GetCharacter().NetID,

@@ -191,7 +191,7 @@ end
 ---Returns whether the UI is flagged as visible.
 ---@return boolean
 function BaseUI:IsVisible()
-    return self:IsFlagged(self.UI_FLAGS.VISIBLE)
+    return self:Exists() and self:IsFlagged(self.UI_FLAGS.VISIBLE)
 end
 
 ---Returns whether an UI flag is raised.

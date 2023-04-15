@@ -314,8 +314,8 @@ Fishing.Events.CharacterStartedFishing:Subscribe(function (ev)
 end, {StringID = "DefaultImplementation"})
 
 -- TODO remove once the start sequence is implemented.
-Client.UI.OptionsInput.Events.ActionExecuted:RegisterListener(function (action, _)
-    if action == "EpipEncounters_Debug_Generic" then
+Client.Input.Events.ActionExecuted:Subscribe(function (ev)
+    if ev.Action.ID == "EpipEncounters_Debug_Generic" then
         Fishing.Start(Client.GetCharacter())
     end
 end)

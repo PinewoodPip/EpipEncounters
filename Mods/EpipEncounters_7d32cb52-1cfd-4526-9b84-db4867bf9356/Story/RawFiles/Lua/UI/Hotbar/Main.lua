@@ -1038,9 +1038,9 @@ GameState.Events.GameReady:Subscribe(function ()
     Hotbar.Refresh()
 end)
 
-Client.UI.OptionsInput.Events.ActionExecuted:RegisterListener(function (action, _)
+Client.Input.Events.ActionExecuted:Subscribe(function (ev)
     local actionPattern = "EpipEncounters_Hotbar_(%d+)"
-    local index = action:match(actionPattern)
+    local index = ev.Action.ID:match(actionPattern)
 
     if index then
         Hotbar.PressHotkey(tonumber(index))

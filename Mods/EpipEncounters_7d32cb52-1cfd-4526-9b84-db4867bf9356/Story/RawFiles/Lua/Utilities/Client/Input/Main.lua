@@ -600,7 +600,12 @@ local Input = {
         KeyPressed = {}, ---@type Event<InputLib_Event_KeyPressed>
         KeyReleased = {}, ---@type Event<InputLib_Event_KeyReleased>
         MouseButtonPressed = {}, ---@type Event<InputLib_Event_MouseButtonPressed>
-    }
+
+        ActionExecuted = {}, ---@type Event<InputLib_Event_ActionExecuted>
+    },
+    Hooks = {
+        CanExecuteAction = {}, ---@type Event<InputLib_Hook_CanExecuteAction>  
+    },
 }
 Epip.InitializeLibrary("Input", Input)
 Client.Input = Input

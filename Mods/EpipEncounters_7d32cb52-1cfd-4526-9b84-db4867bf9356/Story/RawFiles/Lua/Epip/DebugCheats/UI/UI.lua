@@ -205,8 +205,8 @@ end
 ---------------------------------------------
 
 -- Listen for keybinds to open the UI.
-Client.UI.OptionsInput.Events.ActionExecuted:RegisterListener(function (action, _)
-    if action == "EpipEncounters_DebugCheats_OpenUI" then
+Client.Input.Events.ActionExecuted:Subscribe(function (ev)
+    if ev.Action.ID == "EpipEncounters_DebugCheats_OpenUI" then
         ---@type Feature_DebugCheats_Context
         local context = "Ground"
         local entityHandle = nil

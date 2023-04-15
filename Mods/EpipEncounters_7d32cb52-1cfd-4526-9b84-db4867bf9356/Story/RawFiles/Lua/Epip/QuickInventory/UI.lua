@@ -381,8 +381,8 @@ ContextMenu.RegisterElementListener("epip_Feature_QuickInventory", "buttonPresse
 end)
 
 -- Toggle the UI through a keybind.
-Client.UI.OptionsInput.Events.ActionExecuted:RegisterListener(function (action, _)
-    if action == "EpipEncounters_QuickFind" then
+Client.Input.Events.ActionExecuted:Subscribe(function (ev)
+    if ev.Action.ID == "EpipEncounters_QuickFind" then
         if UI:IsVisible() then
             UI.Close()
         else

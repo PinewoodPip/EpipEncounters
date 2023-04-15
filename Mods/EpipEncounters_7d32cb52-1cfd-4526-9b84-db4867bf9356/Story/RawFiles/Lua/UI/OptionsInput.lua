@@ -1,5 +1,7 @@
 
----@class OptionsInputUI : Feature
+local Input = Client.Input
+
+---@class OptionsInputUI : UI
 local Options = {
     nextCustomTabID = 20,
     ---@type table<integer, string>
@@ -13,37 +15,16 @@ local Options = {
 
     CUSTOM_TABS = {}, ---@type table<string, OptionsInputTab>
     TAB_ORDER = {},
-    ACTIONS = {}, ---@type table<string, OptionsInputAction>
-    BINDINGS = {}, ---@type table<string, OptionsInputSavedKeybind>
-    INPUT_MAP = {}, ---@type table<string, string[]> Maps keyboard inputs to a list of actions that are bound to it.
-
-    WHITELISTED_MOUSE_INPUTS = {
-        -- left2 = true, -- Causes an issue with pressing the accept button, lol
-        right2 = true,
-        middle = true,
-        wheel_xpos = true,
-        wheel_xneg = true,
-        wheel_ypos = true,
-        wheel_yneg = true,
-        x1 = true,
-        x2 = true,
-    },
 
     FILEPATH_OVERRIDES = {
         ["Public/Game/GUI/optionsInput.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/optionsInput.swf",
     },
-    SAVE_FORMAT = 1,
-    SAVE_FILENAME = "EpipEncounters_Input.json",
 
     Events = {
-        ---@type OptionsInput_Event_ActionExecuted
-        ActionExecuted = {},
     },
     Hooks = {
         ---@type OptionsInput_Hook_ShouldRenderEntry
         ShouldRenderEntry = {},
-        ---@type OptionsInput_Hook_CanExecuteAction
-        CanExecuteAction = {},
     },
 }
 Epip.InitializeUI(13, "OptionsInput", Options)
@@ -52,218 +33,26 @@ Epip.InitializeUI(13, "OptionsInput", Options)
 ---@field ID string
 ---@field Name string
 ---@field Label string?
----@field Keybinds OptionsInputAction[]
-
----@class OptionsInputKeybind
----@field Keys InputRawType[]
-
----@class OptionsInputAction
----@field Name string
----@field ID string
----@field DefaultInput1 OptionsInputKeybind?
----@field DefaultInput2 OptionsInputKeybind?
----@field DeveloperOnly boolean? If true, the binding will not be visible in the UI outside of developer mode (and won't function either)
-
----@class OptionsInputSavedKeybind
----@field ID string
----@field Input1 OptionsInputKeybind
----@field Input2 OptionsInputKeybind
+---@field Keybinds InputLib_Action[]
 
 ---------------------------------------------
 -- EVENTS/HOOKS
 ---------------------------------------------
 
----@class OptionsInput_Event_ActionExecuted : Event
----@field RegisterListener fun(self, listener:fun(action:string, binding:OptionsInputKeybind))
----@field Fire fun(self, action:string, binding:string)
-
 ---@class OptionsInput_Hook_ShouldRenderEntry : Hook
----@field RegisterHook fun(self, handler:fun(render:boolean, entry:OptionsInputAction))
----@field Return fun(self, render:boolean, entry:OptionsInputAction)
-
----@class OptionsInput_Hook_CanExecuteAction : Hook
----@field RegisterHook fun(self, handler:fun(execute:boolean, action:string, data:OptionsInputAction))
----@field Return fun(self, execute:boolean, action:string, data:OptionsInputAction)
+---@field RegisterHook fun(self, handler:fun(render:boolean, entry:InputLib_Action))
+---@field Return fun(self, render:boolean, entry:InputLib_Action)
 
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
----Saves the user's bindings to the disk.
-function Options.SaveBindings()
-    local save = {
-        Bindings = Options.BINDINGS,
-        SaveVersion = Options.SAVE_FORMAT,
-    }
-
-    IO.SaveFile(Options.SAVE_FILENAME, save)
-end
-
 ---Returns whether a keybind should show up in the UI.
----@param entry OptionsInputAction
+---@param entry InputLib_Action
 ---@return boolean
 function Options.ShouldRenderEntry(entry)
+    ---@diagnostic disable-next-line: missing-return-value
     return Options.Hooks.ShouldRenderEntry:Return(true, entry)
-end
-
----Returns whether an action can be currently executed.
----@param actionID string
----@return boolean
-function Options.CanExecuteAction(actionID)
-    local data = Options.GetActionData(actionID)
-    local canExecute = false
-
-    if data then
-        canExecute = Options.Hooks.CanExecuteAction:Return(true, actionID, data)
-    end
-
-    return canExecute
-end
-
----Loads the user's bindings from the disk.
-function Options.LoadBindings()
-    local save = IO.LoadFile(Options.SAVE_FILENAME)
-
-    if save and save.Bindings and save.SaveVersion > 0 then
-        Options.BINDINGS = save.Bindings
-    end
-end
-
----@param actionID string
----@param bindingIndex integer
----@param keybind OptionsInputKeybind
-function Options.SetKeybind(actionID, bindingIndex, keybind)
-    local savedBind = Options.GetKeybinds(actionID)
-
-    if keybind then
-        savedBind["Input" .. Text.RemoveTrailingZeros(bindingIndex)] = keybind
-    else
-        savedBind["Input" .. Text.RemoveTrailingZeros(bindingIndex)] = nil
-    end
-
-    Options.BINDINGS[actionID] = savedBind
-
-    Options.SaveBindings()
-end
-
----Stringifies an OptionsInputKeybind table. Use to compare binds for equality.
----@param binding OptionsInputKeybind
----@param useShortNames boolean? Defaults to false.
----@return string
-function Options.StringifyBinding(binding, useShortNames)
-    local keys = table.deepCopy(binding.Keys)
-    local order = {
-        lctrl = -1,
-        rctrl = 0,
-        lshift = 1,
-        rshift = 2,
-        lalt = 3,
-        ralt = 4,
-        lgui = 5,
-        rgui = 6,
-    }
-
-    -- Sort keys to have modifiers keys at the front, in the order the regular UI shows them (ctrl, shift, then alt)
-    table.sort(keys, function(a, b)
-        if order[a] and order[b] then
-            return order[a] < order[b]
-        elseif order[a] then
-            return true
-        elseif order[b] then
-            return false
-        else
-            return a < b
-        end
-    end)
-
-    for i,key in ipairs(keys) do
-        keys[i] = Client.Input.GetInputName(key, useShortNames or false)
-    end
-
-    return table.concat(keys, " + ")
-end
-
----Updates the input map. Call this every time after modifying the user's keybindings.
----@return table<string, string[]>
-function Options.UpdateInputMap()
-    local map = {}
-
-    ---@param binding OptionsInputKeybind
-    ---@param actionID string
-    local function addAction(binding, actionID)
-        local bindingStr = Options.StringifyBinding(binding)
-        
-        if not map[bindingStr] then
-            map[bindingStr] = {}
-        end
-
-        table.insert(map[bindingStr], actionID)
-    end
-
-    for id,_ in pairs(Options.ACTIONS) do
-        local keybind = Options.GetKeybinds(id)
-
-        if keybind.Input1 then
-            addAction(keybind.Input1, id)
-        end
-        if keybind.Input2 then
-            addAction(keybind.Input2, id)
-        end
-    end
-
-    Options.INPUT_MAP = map
-
-    return map
-end
-
----@class OptionsInputSavedKeybind
-local _SavedKeybind = {}
-
----@param index integer
-function _SavedKeybind:GetInputString(index)
-    local field = "Input" .. Text.RemoveTrailingZeros(index)
-    local input = self[field] ---@type OptionsInputKeybind
-    local str = ""
-
-    if input then
-        str = Options.StringifyBinding(input)
-    end
-
-    return str
-end
-
----Get the saved keybinds for an action.
----@param action string
----@return OptionsInputSavedKeybind
-function Options.GetKeybinds(action)
-    local keybind
-
-    if Options.BINDINGS[action] then
-        keybind = Options.BINDINGS[action]
-        Inherit(keybind, _SavedKeybind) -- TODO improve
-    else
-        local actionData = Options.GetActionData(action)
-        ---@type OptionsInputSavedKeybind
-        keybind = {
-            ID = action,
-            Input1 = actionData.DefaultInput1,
-            Input2 = actionData.DefaultInput2,
-        }
-        Inherit(keybind, _SavedKeybind)
-    end
-
-    return keybind
-end
-
----Get the data for a custom action.
----@return OptionsInputAction
-function Options.GetActionData(action)
-    return Options.ACTIONS[action]
-end
-
----@param action OptionsInputAction
-function Options.RegisterAction(action)
-    Options.ACTIONS[action.ID] = action
 end
 
 ---@param id string
@@ -275,18 +64,18 @@ function Options.RegisterTab(id, tab)
     table.insert(Options.TAB_ORDER, id)
 
     for _,bind in pairs(tab.Keybinds) do
-        Options.RegisterAction(bind)
+        Input.RegisterAction(bind.ID, bind)
     end
 end
 
 ---@param tabID string
----@param keybind OptionsInputAction
+---@param keybind InputLib_Action
 function Options.AddEntry(tabID, keybind)
     local tabIndex = Options.tabIndexes[tabID]
     local root = Options:GetRoot()
     local id = keybind.ID
     local label = keybind.Name
-    local savedBindings = Options.GetKeybinds(keybind.ID)
+    local savedBindings = Input.GetActionKeybinds(keybind.ID)
 
     root.addEntry(tabIndex, Options.nextEntryID, label, savedBindings:GetInputString(1) or "", savedBindings:GetInputString(2) or "")
 
@@ -321,7 +110,7 @@ function Options.IsBindingKey()
     return Options.keyBeingBound ~= nil
 end
 
----@param binding OptionsInputKeybind
+---@param binding InputLib_Action_KeyCombination
 function Options.SetPotentialBinding(binding)
     if not Options.IsBindingKey() then Options:LogError("SetPotentialBinding called out of context!!!") return nil end
 
@@ -329,7 +118,7 @@ function Options.SetPotentialBinding(binding)
 
     local root = Options:GetRoot()
 
-    root.changeOverlayText(Options.StringifyBinding(binding))
+    root.changeOverlayText(Input.StringifyBinding(binding))
 end
 
 local function BindingFinished()
@@ -337,7 +126,7 @@ local function BindingFinished()
     Options.potentialBinding = nil
     Options.indexBeingBound = nil
 
-    Options.UpdateInputMap()
+    Input._UpdateInputMap()
 
     Options:GetRoot().hideOverlay()
 end
@@ -346,18 +135,11 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
-Options.Hooks.ShouldRenderEntry:RegisterHook(function (render, entry)
-    if entry.DeveloperOnly and not Epip.IsDeveloperMode() then
-        render = false
-    end
-    return render
-end)
-
 local function GetPressedKeys()
     local dummyBinding = {Keys = {}}
 
-    for key,_ in pairs(Client.Input.pressedKeys) do
-        if (not Client.Input.IsMouseInput(key) and not Client.Input.IsTouchInput(key) or Options.WHITELISTED_MOUSE_INPUTS[key]) then
+    for key,_ in pairs(Input.pressedKeys) do
+        if (not Input.IsMouseInput(key) and not Input.IsTouchInput(key) or Input.ACTION_WHITELISTED_MOUSE_INPUTS[key]) then
             table.insert(dummyBinding.Keys, key)
         end
     end
@@ -366,61 +148,26 @@ local function GetPressedKeys()
 
     return dummyBinding
 end
-
-Client.Input.Events.KeyPressed:Subscribe(function (e)
+Input.Events.KeyPressed:Subscribe(function (_)
     local dummyBinding = GetPressedKeys()
-    if #dummyBinding.Keys == 0 then Options.lastMappingPressed = nil return nil end
-    local mapping = Options.StringifyBinding(dummyBinding)
-    if mapping == Options.lastMappingPressed then return nil end -- Prevents action spam from pressing excepted keys (ex. mouse) while holding others
+    if #dummyBinding.Keys == 0 then Input._lastActionMapping = nil return end
+    local mapping = Input.StringifyBinding(dummyBinding)
+    if mapping == Input._lastActionMapping then return end -- Prevents action spam from pressing excepted keys (ex. mouse) while holding others
 
-    Options:DebugLog("Mapping pressed: ", mapping)
+    Input:DebugLog("Mapping pressed: ", mapping)
 
-    if Options.IsBindingKey() then -- Set potention binding
+    print(Options:IsVisible())
+    if Options:IsVisible() then -- Set potention binding
         Options.SetPotentialBinding(dummyBinding)
-    else -- Fire action
-        local actions = Options.INPUT_MAP[mapping]
-        if actions then
-            for _,actionID in ipairs(actions) do
-                if Options.CanExecuteAction(actionID) then
-                    Options.Events.ActionExecuted:Fire(actionID, dummyBinding)
-                end
-            end
-        end
     end
-
-    Options.lastMappingPressed = mapping
 end)
 
-Client.Input.Events.KeyReleased:Subscribe(function (e)
-    local dummyBinding = GetPressedKeys()
-    local mapping = Options.StringifyBinding(dummyBinding)
-    Options.lastMappingPressed = mapping
-end)
-
--- Developer-only actions cannot be executed outside of developer mode.
--- Actions cannot be executed in dialogue.
-Options.Hooks.CanExecuteAction:RegisterHook(function (execute, action, data)
-    if data.DeveloperOnly and not Epip.IsDeveloperMode() then
-        execute = false
+Options.Hooks.ShouldRenderEntry:RegisterHook(function (render, entry)
+    if entry.DeveloperOnly and not Epip.IsDeveloperMode() then
+        render = false
     end
-
-    if execute then
-        execute = not Client.IsInDialogue() -- Cannot execute in dialogue.
-        execute = execute and not GameState.IsPaused() -- Cannot execute in pause.
-        execute = execute and Client.Input.IsAcceptingInput() -- Cannot execute while a UI is accepting text input.
-    end
-
-    return execute
-end)
-
--- Save data when the game is paused.
-Utilities.Hooks.RegisterListener("GameState", "GamePaused", function()
-    Options.SaveBindings()
-end)
-
-Ext.Events.SessionLoaded:Subscribe(function()
-    Options.LoadBindings()
-    Options.UpdateInputMap()
+    ---@diagnostic disable-next-line: redundant-return-value
+    return render
 end)
 
 Options:RegisterCallListener("changingKey", function(ev, key, binding)
@@ -435,16 +182,16 @@ Options:RegisterCallListener("inputAcceptPressed", function(ev)
     if Options.keyBeingBound then
         local actionID = Options.keyBeingBound
 
-        Options:DebugLog("Bound " .. Options.keyBeingBound .. " to " .. Options.StringifyBinding(Options.potentialBinding))
+        Options:DebugLog("Bound " .. Options.keyBeingBound .. " to " .. Input.StringifyBinding(Options.potentialBinding))
 
-        Options.SetKeybind(actionID, Options.indexBeingBound + 1, Options.potentialBinding)
+        Input.SetActionKeybind(actionID, Options.indexBeingBound + 1, Options.potentialBinding)
 
-        Options:GetRoot().setInput(table.reverseLookup(Options.entries, Options.keyBeingBound), Options.indexBeingBound, Options.StringifyBinding(Options.potentialBinding))
+        Options:GetRoot().setInput(table.reverseLookup(Options.entries, Options.keyBeingBound), Options.indexBeingBound, Input.StringifyBinding(Options.potentialBinding))
 
         BindingFinished()
         ev:PreventAction()
 
-        Options:Dump(Options.BINDINGS)
+        Options:Dump(Input._Bindings)
     end
 end)
 
@@ -463,7 +210,7 @@ Options:RegisterCallListener("inputClearPressed", function(ev)
 
         Options:DebugLog("Cleared binding")
 
-        Options.SetKeybind(actionID, Options.indexBeingBound + 1, nil)
+        Input.SetActionKeybind(actionID, Options.indexBeingBound + 1, nil)
         
         Options:GetRoot().setInput(table.reverseLookup(Options.entries, Options.keyBeingBound), Options.indexBeingBound, "")
 
@@ -473,7 +220,7 @@ Options:RegisterCallListener("inputClearPressed", function(ev)
     end
 end)
 
-Options:RegisterCallListener("pipCustomTabPressed", function(ev, buttonID)
+Options:RegisterCallListener("pipCustomTabPressed", function(_, buttonID)
     local tab = Options.CUSTOM_TABS[Options.renderedCustomTabs[buttonID]]
     local index = Options.tabIndexes[tab.ID]
 
@@ -493,7 +240,7 @@ Options:RegisterCallListener("switchMenu", function(ev, id)
     end
 end)
 
-Options:RegisterInvokeListener("initDone", function(ev)
+Options:RegisterInvokeListener("initDone", function(_)
     local root = Options:GetRoot()
 
     Options:DebugLog("Rendering custom tabs")
@@ -512,7 +259,7 @@ Options:RegisterInvokeListener("initDone", function(ev)
 
         local list = root.controlsMenu_mc.menuBtnList.content_array
         local element = list[#list - 1]
-        local previousElement = list[#list - 2]
+        --local previousElement = list[#list - 2]
 
         -- Can't get this to work smoothly for some unknown reason.
         Ext.OnNextTick(function()
@@ -535,7 +282,7 @@ Options:RegisterInvokeListener("initDone", function(ev)
             -- root.addEntry(i, 253, label, savedBindings.Input1 or "", savedBindings.Input2 or "")
 
             -- Render keybinds
-            for z,keybind in ipairs(tab.Keybinds) do
+            for _,keybind in ipairs(tab.Keybinds) do
 
                 if Options.ShouldRenderEntry(keybind) then
                     Options.AddEntry(tabID, keybind)

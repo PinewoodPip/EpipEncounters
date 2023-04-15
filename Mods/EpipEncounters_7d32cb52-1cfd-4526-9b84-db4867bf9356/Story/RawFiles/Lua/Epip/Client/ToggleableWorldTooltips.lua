@@ -21,8 +21,8 @@ end
 ---------------------------------------------
 
 -- Toggle the feature when the action is performed.
-Client.UI.OptionsInput.Events.ActionExecuted:RegisterListener(function (action, _)
-    if action == ToggleableWorldTooltips.INPUT_ACTION then
+Client.Input.Events.ActionExecuted:Subscribe(function (ev)
+    if ev.Action.ID == ToggleableWorldTooltips.INPUT_ACTION then
         ToggleableWorldTooltips.active = not ToggleableWorldTooltips.active
 
         -- Send an alt press/release when toggled.

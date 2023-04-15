@@ -415,8 +415,8 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
-Client.UI.OptionsInput.Events.ActionExecuted:RegisterListener(function(action, _)
-    if action == "EpipEncounters_QuickExamine" then
+Client.Input.Events.ActionExecuted:Subscribe(function (ev)
+    if ev.Action.ID == "EpipEncounters_QuickExamine" then
         local char = Pointer.GetCurrentCharacter(nil, true)
 
         QuickExamine.SetEntity(char, true)

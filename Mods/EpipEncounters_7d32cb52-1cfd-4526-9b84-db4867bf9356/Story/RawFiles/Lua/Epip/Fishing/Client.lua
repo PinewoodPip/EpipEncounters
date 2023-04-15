@@ -151,13 +151,13 @@ Fishing.Events.CharacterStoppedFishing:Subscribe(function (ev)
 
         -- Show a hint on how to open the collection log the first time you catch each type of fish.
         if Fishing.GetTimesCaught(ev.Fish:GetID()) == 1 then
-            local keybinds = Client.UI.OptionsInput.GetKeybinds(Fishing.OPEN_LOG_KEYBIND)
+            local keybinds = Client.Input.GetActionKeybinds(Fishing.OPEN_LOG_KEYBIND)
             local keybind = keybinds.Input1 or keybinds.Input2
 
             if keybind then
                 subTitle = Text.Format(Fishing.TSK["Toast_Success_Subtitle"], {
                     FormatArgs = {
-                        Client.UI.OptionsInput.StringifyBinding(keybind, true)
+                        Client.Input.StringifyBinding(keybind, true)
                     }
                 })
             end

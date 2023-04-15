@@ -54,8 +54,8 @@ Hotbar.Hooks.UpdateEngineActions:Subscribe(function (ev)
 end)
 
 -- Listen for keybind.
-OptionsInput.Events.ActionExecuted:RegisterListener(function (action, _)
-    if action == Tweaks.TOGGLE_BARS_KEYBIND then
+Client.Input.Events.ActionExecuted:Subscribe(function (ev)
+    if ev.Action.ID == Tweaks.TOGGLE_BARS_KEYBIND then
         Tweaks.barsVisible = not Tweaks.barsVisible
 
         Tweaks:DebugLog("Toggling bar visibility")

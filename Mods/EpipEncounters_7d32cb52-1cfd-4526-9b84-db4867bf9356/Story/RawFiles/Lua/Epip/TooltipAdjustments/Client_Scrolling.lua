@@ -94,8 +94,8 @@ TooltipUI:RegisterInvokeListener("removeTooltip", function (_)
     TooltipScrolling:DebugLog("Tooltip now removed")
 end)
 
-Client.UI.OptionsInput.Events.ActionExecuted:RegisterListener(function (action, _)
-    if action == TooltipScrolling.INPUT_ACTION and TooltipScrolling.tooltipExists and TooltipScrolling:IsEnabled() then
+Client.Input.Events.ActionExecuted:Subscribe(function (ev)
+    if ev.Action.ID == TooltipScrolling.INPUT_ACTION and TooltipScrolling.tooltipExists and TooltipScrolling:IsEnabled() then
         TooltipScrolling.Toggle(not TooltipScrolling.IsActive(), true)
     end
 end)

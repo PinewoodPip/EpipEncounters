@@ -127,7 +127,12 @@ LOAD_ORDER = {
     "Client/Server.lua",
     "Client/Sound.lua",
     "UI/Data.lua",
-    "Client/Input.lua",
+    {
+        Scripts = {
+            "Utilities/Client/Input/Main.lua",
+            "Utilities/Client/Input/CustomActions.lua",
+        },
+    },
     "Tables/_UI.lua",
 
     -- SettingsLib

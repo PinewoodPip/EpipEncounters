@@ -384,8 +384,8 @@ ContextMenu.RegisterElementListener("epip_Cheats_Teleport", "buttonPressed", fun
 end)
 
 -- Log RootTemplate GUID.
-Client.UI.OptionsInput.Events.ActionExecuted:RegisterListener(function (action, _)
-    if action == "EpipEncounters_Debug_LogRootTemplate" then
+Client.Input.Events.ActionExecuted:Subscribe(function (ev)
+    if ev.Action.ID == "EpipEncounters_Debug_LogRootTemplate" then
         local entity = Ext.UI.GetPickingState(1).HoverItem
         if entity then
             entity = Item.Get(entity)
@@ -479,16 +479,16 @@ MessageBox.RegisterMessageListener("epip_Cheats_SpecialLogic", MessageBox.Events
 end)
 
 -- Teleport to cursor.
-Client.UI.OptionsInput.Events.ActionExecuted:RegisterListener(function (action, _)
-    if action == "EpipEncounters_DebugTeleport" or action == "EpipEncounters_DebugTeleport_Party" then
-        local pos = Pointer.GetWalkablePosition()
+-- Client.UI.OptionsInput.Events.ActionExecuted:RegisterListener(function (action, _)
+--     if action == "EpipEncounters_DebugTeleport" or action == "EpipEncounters_DebugTeleport_Party" then
+--         local pos = Pointer.GetWalkablePosition()
         
-        if pos then
-            Net.PostToServer("EPIPENCOUNTERS_CHEATS_TeleportChar", {
-                CharacterNetID = Client.GetCharacter().NetID,
-                Position = pos,
-                TeleportParty = action == "EpipEncounters_DebugTeleport_Party",
-            })
-        end
-    end
-end)
+--         if pos then
+--             Net.PostToServer("EPIPENCOUNTERS_CHEATS_TeleportChar", {
+--                 CharacterNetID = Client.GetCharacter().NetID,
+--                 Position = pos,
+--                 TeleportParty = action == "EpipEncounters_DebugTeleport_Party",
+--             })
+--         end
+--     end
+-- end)

@@ -258,13 +258,13 @@ function Hotbar.GetKeyString(index, shortName)
         if actionData.InputEventID then
             key = Client.Input.GetBinding(actionData.InputEventID):Stringify(true)
         else -- Use the hotbar keybinds
-            local bindableAction = Client.UI.OptionsInput.GetKeybinds("EpipEncounters_Hotbar_" .. Text.RemoveTrailingZeros(index))
+            local bindableAction = Client.Input.GetActionKeybinds("EpipEncounters_Hotbar_" .. Text.RemoveTrailingZeros(index))
 
             if bindableAction then
                 if bindableAction.Input1 then
-                    key = Client.UI.OptionsInput.StringifyBinding(bindableAction.Input1, shortName)
+                    key = Client.Input.StringifyBinding(bindableAction.Input1, shortName)
                 elseif bindableAction.Input2 then
-                    key = Client.UI.OptionsInput.StringifyBinding(bindableAction.Input2, shortName)
+                    key = Client.Input.StringifyBinding(bindableAction.Input2, shortName)
                 end
             end
         end
