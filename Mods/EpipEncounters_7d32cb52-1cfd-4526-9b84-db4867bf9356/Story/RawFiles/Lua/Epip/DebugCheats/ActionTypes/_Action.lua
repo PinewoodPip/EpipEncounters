@@ -6,6 +6,7 @@ local Set = DataStructures.Get("DataStructures_Set")
 ---@class Feature_DebugCheats_Action : Class, I_Identifiable, I_Describable
 ---@field Contexts DataStructures_Set<Feature_DebugCheats_Context> Can pass a normal table list for constructor.
 ---@field ID string
+---@field InputActionID string? The ID of the InputLib action that will trigger this action.
 local _Action = {}
 DebugCheats:RegisterClass("Feature_DebugCheats_Action", _Action)
 Interfaces.Apply(_Action, "I_Identifiable")

@@ -55,7 +55,7 @@ local DebugCheats = {
         ActionExecuted = {}, ---@type Event<Feature_DebugCheats_Event_ActionExecuted>
     },
     Hooks = {
-
+        GetInputActionContext = {}, ---@type Event<Feature_DebugCheats_Hook_GetInputActionContext> **Client-only**.
     }
 }
 Epip.RegisterFeature("DebugCheats", DebugCheats)
