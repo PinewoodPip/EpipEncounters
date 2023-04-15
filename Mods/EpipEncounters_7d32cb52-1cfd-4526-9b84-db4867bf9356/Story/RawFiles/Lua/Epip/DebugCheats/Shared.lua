@@ -193,7 +193,7 @@ function DebugCheats._EncodeNetContext(context) -- TODO make this hookable
 
     data.CharacterNetID = context.TargetCharacter and context.TargetCharacter.NetID
     data.SourceCharacterNetID = context.SourceCharacter and context.SourceCharacter.NetID
-    data.ItemNetID = context.TargetItem
+    data.ItemNetID = context.TargetItem and context.TargetItem.NetID
     data.TargetPosition = context.TargetPosition
     data.SourcePosition = context.SourcePosition
     data.TargetGameObjectNetID = context.TargetGameObject and context.TargetGameObject.NetID
