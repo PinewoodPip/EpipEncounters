@@ -42,34 +42,6 @@ Client.Tooltip.Hooks.RenderItemTooltip:Subscribe(function (ev)
     }
 end)
 
--- Listen for characters being hovered.
-Pointer.Events.HoverCharacterChanged:Subscribe(function (ev)
-    if ev.Character then
-        lastEntity = {
-            Type = "Character",
-            Identifier = ev.Character.NetID,
-        }
-    end
-end)
-Pointer.Events.HoverCharacter2Changed:Subscribe(function (ev)
-    if ev.Character then
-        lastEntity = {
-            Type = "Character",
-            Identifier = ev.Character.NetID,
-        }
-    end
-end)
-
--- Listen for items being hovered.
-Pointer.Events.HoverItemChanged:Subscribe(function (ev)
-    if ev.Item then
-        lastEntity = {
-            Type = "Item",
-            Identifier = ev.Item.NetID,
-        }
-    end
-end)
-
 -- Clear entity data when tooltips disappear
 Client.Tooltip.Events.TooltipHidden:Subscribe(function (_)
     lastEntity = nil
@@ -77,10 +49,17 @@ end)
 
 -- Listen for the action being executed.
 action:Subscribe(function (ev) -- TODO remake into its own action type
-    local entity = GetEntity() or ev.Context.TargetGameObject
-    local text = entity.MyGuid
+    local text = nil
+    
+    if lastEntity then
+        text = lastEntity.Identifier
+    elseif ev.Context.TargetGameObject then
+        text = ev.Context.TargetGameObject.MyGuid
+    end
 
-    Client.UI.MessageBox.CopyToClipboard(text)
-
-    print("Copied " .. text .. " to clipboard.")
+    if text then
+        Client.UI.MessageBox.CopyToClipboard(text)
+    
+        print("Copied " .. text .. " to clipboard.")
+    end
 end)
