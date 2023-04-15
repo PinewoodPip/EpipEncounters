@@ -9,5 +9,6 @@ local _ = DebugCheats.RegisterAction("TeleportTo", {
         "TargetPosition",
         "SourceCharacter",
         "AffectParty",
-    }
+    },
+    InputActionID = "EpipEncounters_DebugTeleport",
 })

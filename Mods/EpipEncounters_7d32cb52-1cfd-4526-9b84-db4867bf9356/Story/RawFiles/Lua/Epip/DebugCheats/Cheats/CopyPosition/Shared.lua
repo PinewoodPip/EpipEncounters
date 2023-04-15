@@ -7,5 +7,6 @@ local _ = DebugCheats.RegisterAction("CopyPosition", {
     Description = DebugCheats.TranslatedStrings.CopyPosition_Description,
     Contexts = {
         "TargetPosition",
-    }
+    },
+    InputActionID = "EpipEncounters_Debug_CopyPosition",
 })

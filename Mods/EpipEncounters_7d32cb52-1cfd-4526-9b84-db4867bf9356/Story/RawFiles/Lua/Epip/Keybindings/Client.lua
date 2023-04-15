@@ -6,11 +6,10 @@ Options.RegisterTab("EpipEncounters", {
     Keybinds = {
         -- Developer
         {Name = "Debug Teleport", ID = "EpipEncounters_DebugTeleport", DeveloperOnly = true},
-        {Name = "Debug Teleport (Party)", ID = "EpipEncounters_DebugTeleport_Party", DeveloperOnly = true},
         {Name = "Debug Copy Identifier", ID = "EpipEncounters_Debug_CopyIdentifier", DeveloperOnly = true, DefaultInput1 = {Keys = {"lctrl", "c"}}},
         {Name = "Debug Open Features Menu", ID = "EpipEncounters_Debug_OpenDebugMenu", DeveloperOnly = true, DefaultInput1 = {Keys = {"lctrl", "b"}}},
         {Name = "Debug Generic Hookable Hotkey", ID = "EpipEncounters_Debug_Generic", DeveloperOnly = true, DefaultInput1 = {Keys = {"lctrl", "e"}}},
-        {Name = "Copy 2D Position", ID = "EpipEncounters_Debug_CopyPosition2D", DeveloperOnly = true, DefaultInput1 = {Keys = {"lshift", "t"}}},
+        {Name = "Copy Position", ID = "EpipEncounters_Debug_CopyPosition", DeveloperOnly = true, DefaultInput1 = {Keys = {"lshift", "t"}}},
         
         {Name = "Log RootTemplate", ID = "EpipEncounters_Debug_LogRootTemplate", DeveloperOnly = true},
         {Name = "Open Cheats", ID = "EpipEncounters_DebugCheats_OpenUI", DeveloperOnly = true, DefaultInput1 = {Keys = {"g"}}},

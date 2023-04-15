@@ -7,5 +7,6 @@ local _ = DebugCheats.RegisterAction("CopyIdentifier", {
     Description = DebugCheats.TranslatedStrings.CopyIdentifier_Description,
     Contexts = {
         "TargetGameObject",
-    }
+    },
+    InputActionID = "EpipEncounters_Debug_CopyIdentifier",
 })
