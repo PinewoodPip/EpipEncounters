@@ -108,16 +108,20 @@ function DebugCheats.ExecuteAction(actionID, contextData)
         Context = DebugCheats._EncodeNetContext(contextData),
     }
 
-    DebugCheats:DebugLog("Executing action", actionID)
+    if DebugCheats.IsActionValidForContext(action, contextData) then
+        DebugCheats:DebugLog("Executing action", actionID)
 
-    -- Execute locally
-    DebugCheats._ThrowExecuteActionEvent(action, contextData)
-
-    -- Forward to other context
-    if Ext.IsClient() then
-        Net.PostToServer(DebugCheats.NET_MSG_ACTION_EXECUTED, netPayload)
+        -- Execute locally
+        DebugCheats._ThrowExecuteActionEvent(action, contextData)
+    
+        -- Forward to other context
+        if Ext.IsClient() then
+            Net.PostToServer(DebugCheats.NET_MSG_ACTION_EXECUTED, netPayload)
+        else
+            Net.Broadcast(DebugCheats.NET_MSG_ACTION_EXECUTED, netPayload)
+        end
     else
-        Net.Broadcast(DebugCheats.NET_MSG_ACTION_EXECUTED, netPayload)
+        DebugCheats:LogWarning("Failed to execute " .. actionID .. " due to lacking context")
     end
 end
 
@@ -154,14 +158,7 @@ function DebugCheats.GetActions(context)
     local actions = {}
 
     for _,action in pairs(DebugCheats._Actions) do
-        local isValid = true
-
-        -- Exclude actions that require more context than the table offers
-        for contextType in action.Contexts:Iterator() do
-            if context[contextType] == nil then
-                isValid = false
-            end
-        end
+        local isValid = DebugCheats.IsActionValidForContext(action, context)
 
         if isValid then
             table.insert(actions, action)
@@ -169,6 +166,23 @@ function DebugCheats.GetActions(context)
     end
 
     return actions
+end
+
+---Returns whether an action can be executed in a context.
+---@param action Feature_DebugCheats_Action
+---@param context Feature_DebugCheats_Action_ContextData
+---@return boolean
+function DebugCheats.IsActionValidForContext(action, context)
+    local isValid = true
+
+    -- Exclude actions that require more context than the table offers
+    for contextType in action.Contexts:Iterator() do
+        if context[contextType] == nil then
+            isValid = false
+        end
+    end
+
+    return isValid
 end
 
 ---Encodes a context to be sent over the net.
