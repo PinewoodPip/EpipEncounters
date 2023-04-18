@@ -22,6 +22,17 @@ function Entity.GetLevel()
     return Ext.Entity.GetCurrentLevel()
 end
 
+---Returns the unique identifier of the level.
+---For GM maps, this will not be the editor ID of the map, since
+---it's possible to have multiple of the same map in a campaign.
+---@param level (EclLevel|EsvLevel)? Defaults to current level.
+---@return string
+function Entity.GetLevelID(level)
+    level = level or Entity.GetLevel()
+
+    return level.LevelDesc.UniqueKey
+end
+
 ---@param component EntityComponent
 function Entity.IsCharacter(component)
     local className = GetExtType(component)
