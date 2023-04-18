@@ -10,6 +10,10 @@ local BH = {
         BATTERED = "^BATTERED_(%d+)$",
         HARRIED = "^HARRIED_(%d+)$",
     },
+    STATUS_ICON_PREFIXES = {
+        BATTERED = "AMER_Icon_Status_Battered_",
+        HARRIED = "AMER_Icon_Status_Harried_",
+    },
 
     ---@type table<string, Feature_DatabaseSync_DatabaseDefinition>
     Databases = {
@@ -60,6 +64,22 @@ function BH.GetStacks(char, type)
     end
 
     return stacks,lifetime
+end
+
+---Returns the icon for a certain amount of a stack.
+---@param stack "Battered"|"Harried"
+---@param amount integer
+---@return string
+function BH.GetIcon(stack, amount)
+    local icon = "unknown"
+
+    if stack == "Battered" then
+        icon = BH.STATUS_ICON_PREFIXES.BATTERED .. tostring(amount)
+    elseif stack == "Harried" then
+        icon = BH.STATUS_ICON_PREFIXES.HARRIED .. tostring(amount)
+    end
+
+    return icon
 end
 
 ---Get the stack amount this character needs to apply a T3 to someone else under regular circumstances.
