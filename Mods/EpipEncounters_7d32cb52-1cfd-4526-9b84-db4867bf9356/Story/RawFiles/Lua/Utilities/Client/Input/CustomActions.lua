@@ -6,6 +6,7 @@ Input._Actions = {} ---@type table<string, InputLib_Action>
 Input._InputMap = {} ---@type table<string, string[]> Maps inputs to a list of actions that are bound to it.
 Input._lastActionMapping = nil
 Input._Bindings = {} ---@type table<string, InputLib_Action_Mapping>
+Input._CurrentAction = nil ---@type string? ID of the action whose mapping is currently being held.
 
 Input.ACTIONS_SAVE_FORMAT = 1
 Input.ACTIONS_SAVE_FILENAME = "EpipEncounters_Input.json"
@@ -248,6 +249,22 @@ function Input._LoadActionBindings()
     end
 end
 
+---Fires the event for actions being released.
+function Input._FireActionReleasedEvent()
+    local action = Input.GetAction(Input._CurrentAction)
+
+    if action then
+        Input.Events.ActionReleased:Throw({
+            Character = Client.GetCharacter(),
+            Action = action,
+        })
+    
+        Input._CurrentAction = nil
+    else
+        Input:LogWarning("_FireActionReleasedEvent() fired with no active action")
+    end
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
@@ -312,6 +329,12 @@ Input.Events.KeyPressed:Subscribe(function (_)
                     Character = Client.GetCharacter(),
                     Action = Input.GetAction(actionID),
                 })
+
+                if Input._CurrentAction then
+                    Input._FireActionReleasedEvent()
+                end
+
+                Input._CurrentAction = actionID
             end
         end
     end
@@ -321,5 +344,11 @@ end)
 Input.Events.KeyReleased:Subscribe(function (_)
     local dummyBinding = GetPressedKeys()
     local mapping = Input.StringifyBinding(dummyBinding)
+
+    -- Fire event for releasing action mappings
+    if #GetPressedKeys().Keys == 0 and Input._CurrentAction then
+        Input._FireActionReleasedEvent()
+    end
+
     Input._lastActionMapping = mapping
 end)

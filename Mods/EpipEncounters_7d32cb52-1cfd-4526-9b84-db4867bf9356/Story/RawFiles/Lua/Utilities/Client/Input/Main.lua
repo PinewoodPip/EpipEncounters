@@ -602,6 +602,7 @@ local Input = {
         MouseButtonPressed = {}, ---@type Event<InputLib_Event_MouseButtonPressed>
 
         ActionExecuted = {}, ---@type Event<InputLib_Event_ActionExecuted>
+        ActionReleased = {}, ---@type Event<InputLib_Event_ActionExecuted>
     },
     Hooks = {
         CanExecuteAction = {}, ---@type Event<InputLib_Hook_CanExecuteAction>  

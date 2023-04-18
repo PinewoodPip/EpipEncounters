@@ -156,7 +156,6 @@ Input.Events.KeyPressed:Subscribe(function (_)
 
     Input:DebugLog("Mapping pressed: ", mapping)
 
-    print(Options:IsVisible())
     if Options:IsVisible() then -- Set potention binding
         Options.SetPotentialBinding(dummyBinding)
     end
