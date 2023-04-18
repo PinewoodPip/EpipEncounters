@@ -620,6 +620,16 @@ LOAD_ORDER = {
         },
     },
 
+    -- BH Overheads
+    {
+        Scripts = {
+            "Epip/BHOverheads/Shared.lua",
+            "Epip/BHOverheads/Client.lua",
+            "Epip/BHOverheads/UI.lua",
+        },
+        RequiresEE = true,
+    },
+
     {ScriptSet = "Epip/HotbarPersistence"},
 
     -- Statuses display
