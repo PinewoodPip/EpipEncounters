@@ -4,7 +4,8 @@ local Set = DataStructures.Get("DataStructures_Set")
 ---@class Feature_AnimationCancelling : Feature
 local AnimCancel = {
     NET_MESSAGE = "Epip_Feature_AnimationCancelling",
-    DEFAULT_DELAY = 0.2, -- In seconds.
+    DEFAULT_DELAY_CLIENT_SIDE = 0.2, -- In seconds.
+    DEFAULT_DELAY_SERVER_SIDE = 0.05, -- In seconds.
     PING_DELAY = 2, -- In ticks.
 
     ---@type table<string, number> Delay for specific skills - in seconds!.
@@ -35,7 +36,7 @@ local AnimCancel = {
         },
         Setting_Warning = {
            Handle = "he9f82492g81f0g4e53g9eefg731a6f800db8",
-           Text = "Experimental! May cause issues with certain skills. Please report any!",
+           Text = "Experimental! May cause issues with certain skills. Please report any!<br>Server-side option is the most reliable at the moment.",
            ContextDescription = "Setting warning",
         },
         Blacklist_Name = {
@@ -78,6 +79,13 @@ Epip.RegisterFeature("AnimationCancelling", AnimCancel)
 ---@field Eligible boolean Hookable. Defaults to true.
 
 ---------------------------------------------
+-- NET MESSAGES
+---------------------------------------------
+
+---@class Epip_Feature_AnimationCancelling : NetLib_Message_Character
+---@field SkillID string
+
+---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
@@ -88,7 +96,7 @@ function AnimCancel.GetDelay(char, skillID)
     local hook = AnimCancel.Hooks.GetDelay:Throw({
         Character = char,
         SkillID = skillID,
-        Delay = AnimCancel.DEFAULT_DELAY,
+        Delay = AnimCancel:IsModeEnabled(AnimCancel.MODE.SERVER_SIDE) and AnimCancel.DEFAULT_DELAY_SERVER_SIDE or AnimCancel.DEFAULT_DELAY_CLIENT_SIDE, -- Client-side delay is fallback.
     })
 
     return hook.Delay

@@ -134,7 +134,7 @@ local tabs = {
             "PreferredTargetDisplay",
 
             CreateHeader(AnimationCancelling.TranslatedStrings.Setting_Name),
-            {Type = "Setting", Module = "EpipEncounters_AnimationCancelling", ID = "Enabled"},
+            {Type = "Setting", Module = "EpipEncounters_AnimationCancelling", ID = "Mode"},
             {Type = "Setting", Module = "EpipEncounters_AnimationCancelling", ID = "Blacklist"},
         }
     },

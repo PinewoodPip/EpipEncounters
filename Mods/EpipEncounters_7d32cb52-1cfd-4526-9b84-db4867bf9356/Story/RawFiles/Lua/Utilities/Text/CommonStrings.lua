@@ -92,6 +92,18 @@ Text.CommonStrings.Warning = Text.RegisterTranslatedString({
    Handle = "h6504d954gcc4fg4008ga5d1g32d40eef13e0",
    Text = "Warning",
 })
+Text.CommonStrings.Off = Text.RegisterTranslatedString({
+   Handle = "h540c1336g27b1g4382gb911g8adced234ee6",
+   Text = "Off",
+})
+Text.CommonStrings.ClientSide = Text.RegisterTranslatedString({
+   Handle = "ha8000c0eg67d5g4398g8890gaf8d98931d1b",
+   Text = "Client-side",
+})
+Text.CommonStrings.ServerSide = Text.RegisterTranslatedString({
+   Handle = "hafe6938fgde3dg45d3g8437g8dc15104fa65",
+   Text = "Server-side",
+})
 
 ---------------------------------------------
 -- BRANDING

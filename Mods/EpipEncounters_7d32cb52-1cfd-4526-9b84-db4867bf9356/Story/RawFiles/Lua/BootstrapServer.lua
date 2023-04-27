@@ -256,6 +256,8 @@ LOAD_ORDER = {
         }
     },
 
+    {ScriptSet = "Epip/AnimationCancelling",},
+
     {ScriptSet = "UI/Vanity/Tabs/Shapeshift", WIP = true},
 
     "Epip/AwesomeSoccer/Server.lua",
