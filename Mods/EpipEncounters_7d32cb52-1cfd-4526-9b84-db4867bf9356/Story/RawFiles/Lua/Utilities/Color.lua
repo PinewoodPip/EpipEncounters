@@ -36,6 +36,12 @@ Color = {
         BROWN = "B97A57",
         GOLD = "C7A758",
     },
+    TEAM_PINEWOOD = {
+        PIP_PURPLE = "7E72D6",
+        LOGO_PURPLE = "5456A5",
+        GREEN = "386900",
+        LIGHT_GREEN = "74B52D",
+    },
 
     TOOLTIPS = {
         MALUS = "DA2121",

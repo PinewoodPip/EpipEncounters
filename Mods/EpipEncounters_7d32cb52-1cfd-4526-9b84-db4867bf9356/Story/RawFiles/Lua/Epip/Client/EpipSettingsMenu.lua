@@ -4,7 +4,7 @@ local QuickExamine = Epip.GetFeature("Feature_QuickExamine")
 local QuickInventory = Epip.GetFeature("Feature_QuickInventory")
 local TooltipAdjustments = Epip.GetFeature("Feature_TooltipAdjustments")
 local AnimationCancelling = Epip.GetFeature("Feature_AnimationCancelling")
-local StatusesDisplay = Epip.GetFeature("Feature_StatusesDisplay")
+-- local StatusesDisplay = Epip.GetFeature("Feature_StatusesDisplay")
 local CommonStrings = Text.CommonStrings
 
 ---@class Feature_EpipSettingsMenu : Feature
@@ -15,14 +15,24 @@ local EpipSettingsMenu = {
             Text = "Warp to AMER_Test",
             ContextDescription = "Debug button to warp to test level",
         },
+        Subtitle = {
+           Handle = "h866e5a46g3002g4c1bgba33g4aaef5ca5413",
+           Text = "%s v%s by %s",
+           ContextDescription = "Shows in the default tab of the settings menu",
+        },
         SettingApplicationWarning = {
            Handle = "h4a3e28fag3595g4753gb507g4423068aeda8",
-           Text = "Most options require a reload for changes to apply.",
+           Text = "Some options may require a reload for changes to apply.",
            ContextDescription = "Warning at the top of the settings menu",
         },
-        TranslationCredits = {
+        TranslationCredits_Russian = {
            Handle = "hbce14cb2g1ed7g4076g95d1gb80c6085c3ad",
            Text = "Russian translation by Cathe & JoienReid",
+           ContextDescription = "Displayed at the bottom of the general Epip settings tab",
+        },
+        TranslationCredits_BrazilianPortuguese = {
+           Handle = "h0e034a16gd835g46bcga5bfgd44c3f88a36e",
+           Text = "Brazilian Portuguese translation by Ferocidade",
            ContextDescription = "Displayed at the bottom of the general Epip settings tab",
         },
         Tab_Hotbar = {
@@ -91,7 +101,25 @@ local tabs = {
         ButtonLabel = "General",
         HeaderLabel = "Epip Encounters",
         Entries = {
+            {Type = "Label", Label = Text.Format(TSK.Subtitle:GetString(), {
+                Size = 23,
+                FormatArgs = {
+                    {Text = CommonStrings.Epip:GetString(), Color = Color.TEAM_PINEWOOD.PIP_PURPLE},
+                    Epip.VERSION,
+                    {Text = CommonStrings.TeamPinewood:GetString(), Color = Color.TEAM_PINEWOOD.LIGHT_GREEN},
+                },
+            })},
             {Type = "Label", Label = Text.Format(TSK.SettingApplicationWarning:GetString(), {Size = 19})},
+            {Type = "Label", Label = Text.Format("——————————————————————————————", {
+                Size = 19,
+            })},
+            {Type = "Label", Label = Text.Format(TSK.TranslationCredits_Russian:GetString(), {
+                Size = 19,
+            })},
+            {Type = "Label", Label = Text.Format(TSK.TranslationCredits_BrazilianPortuguese:GetString(), {
+                Size = 19,
+            })},
+
             "EpipLanguage",
             "AutoIdentify",
             {Type = "Setting", Module = "EpipEncounters_ImmersiveMeditation", ID = "Enabled"},
@@ -108,13 +136,6 @@ local tabs = {
             CreateHeader(AnimationCancelling.TranslatedStrings.Setting_Name),
             {Type = "Setting", Module = "EpipEncounters_AnimationCancelling", ID = "Enabled"},
             {Type = "Setting", Module = "EpipEncounters_AnimationCancelling", ID = "Blacklist"},
-
-            {Type = "Label", Label = Text.Format("——————————————————————————————", {
-                Size = 19,
-            })},
-            {Type = "Label", Label = Text.Format(TSK.TranslationCredits:GetString(), {
-                Size = 19,
-            })},
         }
     },
     ["Epip_Hotbar"] = {
@@ -192,7 +213,7 @@ local tabs = {
             "PlayerInfo_SortingFunction",
             "PlayerInfo_Filter_SourceGen",
             "PlayerInfo_Filter_BatteredHarried",
-            {Module = StatusesDisplay:GetSettingsModuleID(), ID = StatusesDisplay.Settings.Enabled.ID},
+            -- {Module = StatusesDisplay:GetSettingsModuleID(), ID = StatusesDisplay.Settings.Enabled.ID},
         }
     },
     ["Epip_Inventory"] = {

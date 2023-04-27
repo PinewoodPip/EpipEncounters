@@ -4,1067 +4,1051 @@
   "TranslatedStrings": {
     "h0023bed4gd590g4375g80dcgf1e135f30b1e": {
       "ReferenceText": "If enabled, items with no use actions will show world tooltips.",
-      "TranslatedText": "Если включено, предметы без опции взаимодействия(ключи и пр.) будут отображаться в подcказках к окружающим объектах"
+      "TranslatedText": "Se ativado , Itens Globais Inultilizaveis irão mostrar Dicas "
     },
     "h00aa4e07g8833g4040g9355g6bed488f1237": {
       "ReferenceText": "Host-only setting. Toggles Fog of War, which hides unexplored areas. This setting applies to all players in the server and is non-destructive; re-enabling it will restore FoW to normal, and all your exploration progress with the setting off will apply.",
-      "TranslatedText": "Для хоста. Переключатель тумана войны, который скрывает неисследованые области. Эта настройка применяется ко всем игрокам на сервере и обратима; при ее повторном включении туман войны вернется в нормальное состояние и весь прогресс исследования сохранится."
+      "TranslatedText": "Apenas Hospedeiro . Habilita Nevoa de Guerra , Nas quais Esconde areas inexploradas . Esssa Configuração se aplica em todos os players do Servidor e não destrutiveis tambem;"
     },
     "h01f17781g7f5ag4113g9505g4cba31cd0d07": {
       "ReferenceText": "Improved Combat Log",
-      "TranslatedText": "Улучшенный журнал"
+      "TranslatedText": "Diario de combate Melhorado"
     },
     "h058cdfb5g6b63g486bg9e05g413c1cf64d4a": {
       "ReferenceText": "Shows the Mastery button. If disabled, it remains accessible through hotbar actions.",
-      "TranslatedText": "Показывает кнопку Мастерства. Если отключено, доступ к ней возможен через действия быстрого доступа."
+      "TranslatedText": "Mostrar Botão de Maestria . Se desabilitado , Ele continuara acessivel nas Barras de açoes "
     },
     "h05a930e2g0444g4cd3gacccg34cb46da59c9": {
       "ReferenceText": "Show Aggro Information",
-      "TranslatedText": "Показывать информацию об аггро"
-    },
-    "h063ae4cag4291g4352g88c4gefad4a2e9fe4": {
-      "ReferenceText": "Controls the behaviour of the hotbar custom buttons area. 'Automatic' will cause it to switch between the single-row and dual-row layouts based on how many slot rows you have visible. Other settings will make it stick to one layout.",
-      "TranslatedText": "Задает вариант отображения панели быстрого доступа с горячими клавишами. \"Automatic\" будет переключаться между режимами расположения в 1 и 2 ряда в зависимости от количества открытых панелей."
+      "TranslatedText": "Mostrar Informação de Agressão "
     },
     "h0838a5f5gb835g47dcg80d7g29807777a94a": {
       "ReferenceText": "Cherry Blossom",
-      "TranslatedText": "Цветение вишни"
+      "TranslatedText": "Flor de cerejeira\n"
     },
     "h09f0f7e8gb224g4018g9301g1cf150d5bc20": {
       "ReferenceText": "If enabled, your characters's inventories in multiplayer will be automatically unlocked after a reload.",
-      "TranslatedText": "Если включено, инвентарь ваших персонажей автоматически разблокируется после перезагрузки."
+      "TranslatedText": "Se ativo , Os inventarios de todos os jogadores no multiplayer automaticamente vão ser desbloqueados Apos recarregar."
     },
     "h0aacad96g933cg4888g9f70g832a231c6bad": {
       "ReferenceText": "Sorting Order",
-      "TranslatedText": "Порядок сортировки"
+      "TranslatedText": "Sortear Ordem"
     },
     "h0e766045g43afg47d8gb307g97120772d1f6": {
       "ReferenceText": "Fog B",
-      "TranslatedText": "Туман B"
+      "TranslatedText": "Nevoa B"
     },
     "h1437af42g72a6g49cegb64eg044a99447c10": {
       "ReferenceText": "Containers Emphasis",
-      "TranslatedText": "Подсветка контейнеров"
+      "TranslatedText": "Ênfase em Contêineres"
     },
     "h1549cdd8gf0b8g4c64gb887ge3dc98ecf9e3": {
       "ReferenceText": "Poison Ring",
-      "TranslatedText": "Ядовитое кольцо"
+      "TranslatedText": "Anel de veneno"
     },
     "h15aafc75g75b8g47b1g94a5g354f7f168120": {
       "ReferenceText": "Midnight Oil",
-      "TranslatedText": "Полуночное масло"
+      "TranslatedText": "Oleo da meia noite"
     },
     "h16796787gb05cg4a34gaaeegcbbcf22a4b88": {
       "ReferenceText": "Adds visual improvements while it is not your turn to improve immersiveness.",
-      "TranslatedText": "Добавляет визуальные иммерсивные улучшения вне вашего хода"
+      "TranslatedText": "Adiciona melhorias visuais enquanto não é Seu Turno para melhorar a imersão "
     },
     "h16a650aegefdeg4a47g8abbg044995f9147c": {
       "ReferenceText": "Unfocuses the UI after you send a message, restoring input to the rest of the game.",
-      "TranslatedText": "Убирает фокус с интерфейса сообщений, позволяя вернуться к игре."
+      "TranslatedText": "Desfoca a interface depois que você envia uma mensagem, restaurando a entrada para o resto do jogo."
     },
     "h17251a41gb5a5g412dgb36ag4cfca9cebe22": {
       "ReferenceText": "Status Opacity in Combat",
-      "TranslatedText": "Непрозрачность статусов в бою"
+      "TranslatedText": "opacidade dos Status em combate "
     },
     "h17cf934dg824dg4400g8380g495e3bef019d": {
       "ReferenceText": "Controls the size of regular text above characters talking.<br><br>Default is 19.",
-      "TranslatedText": "Задает размер текста над говорящими персонажами.<br><br>Значение по умолчанию - 19."
+      "TranslatedText": "Altera o tamanho do texto padrão acima dos caracteres conversando.<br><br>O padrão é 19."
     },
     "h19c9fc59g789ag4c24gb90ag4858f13e79df": {
       "ReferenceText": "Show Minimap",
-      "TranslatedText": "Показывать миникарту"
+      "TranslatedText": "Mostrar Minimapa"
     },
     "h1afda15cgc951g46e6g8aa6g333bc56665ae": {
       "ReferenceText": "Determines the default tab for the crafting UI.",
-      "TranslatedText": "Определяет вкладку по умолчанию в интерфейсе крафта."
+      "TranslatedText": "Determina a Aba padrão Para a interface de Criação"
     },
     "h1d9df2d8g34d0g44e2ga589g7c2366258b4e": {
       "ReferenceText": "Blood Waterfall",
-      "TranslatedText": "Кровавый водопад"
+      "TranslatedText": "Cachoeira de sangue"
     },
     "h1e03cfb3g592dg4698ga246gdc1e34d9915a": {
       "ReferenceText": "Item Notifications",
-      "TranslatedText": "Оповещения предметов"
+      "TranslatedText": "Notificações de Itens"
     },
     "h1ec057edg09a1g413dgaefdgaf7942d579ce": {
       "ReferenceText": "Maximum Distance (tactical view)",
-      "TranslatedText": "Максимальное расстояние (тактический режим)"
+      "TranslatedText": "Distancia maxima de visão (visão tatica)"
     },
     "h21723370gb5acg4f7bg8628g6b7b3249808c": {
       "ReferenceText": "Show Character Sheet in Reward UI",
-      "TranslatedText": "Показывать окно персонажа в интерфейсе выбора награды."
+      "TranslatedText": "Mostrar Ficha de Personagem durante a Interface de Recompensa"
     },
     "h22447dfage02dg4c93gbf2agded54810ce36": {
       "ReferenceText": "Controls the maximum distance the camera can zoom out in tactical view mode.<br>Default is 25.",
-      "TranslatedText": "Задает максимальное расстояние, на которое камера может отдалиться в тактическом режиме.<br>По умолчанию - 25."
+      "TranslatedText": "Controla a distância máxima que a câmera pode Diminuir no modo de visão tática.<br>O padrão é 25"
     },
     "h24797af2gde0ag48cdgb741gec2049e1c631": {
       "ReferenceText": "Restores the angle settings to default values.",
-      "TranslatedText": "Восстановить значение угла по умолчанию."
+      "TranslatedText": "Restaura as configuraçoes de angula para os valores Padrão"
     },
     "h262d04a1g16d3g4dabg8f01gd68a6b25efc7": {
       "ReferenceText": "Controls the default position of the Examine menu when it is opened.",
-      "TranslatedText": "Задает положение меню \"Осмотреть\"при открытии."
+      "TranslatedText": "Controla para o valor padrão a posição do Menu de Examinar quando aberto"
     },
     "h265f89a4g9e80g420egb7adgd27aced5697b": {
       "ReferenceText": "Field of View",
-      "TranslatedText": "Поле зрения"
+      "TranslatedText": "Campo de visão"
     },
     "h28a24072g481eg4d1fgaac8gfacbe5243bdb": {
       "ReferenceText": "If enabled, the Escape key will close EE UIs rather than turning back a page.",
-      "TranslatedText": "Если включено, кнопка Escape будет закрывать все интерфейсы EE, а не переходить на предыдущую страницу."
+      "TranslatedText": "Se ativo , o botão ESC vai fechar a interface do EE inves de voltar a pagiva "
     },
     "h2afb4a12gfb71g47c5g9abdg87b5a642637c": {
       "ReferenceText": "Prince Darkness",
-      "TranslatedText": "Принц тьмы"
+      "TranslatedText": "Principe das Trevas"
     },
     "h2ce0c9f6gc6b1g4191g9901g7383f9dbe3ef": {
       "ReferenceText": "Display B/H on player portraits",
-      "TranslatedText": "Показывать B/H на портретах игроков."
+      "TranslatedText": "Exibir B/H em retratos de jogadores\n"
     },
     "h315ae29bg868cg4eceg8cc6gebc6623df369": {
       "ReferenceText": "Unfocus after sending messages",
-      "TranslatedText": "Расфокусировка после отправки сообщений"
+      "TranslatedText": "Desfocar depois de enviar mensagens\n"
     },
     "h3315b640gf25bg45eag8afbgde0e87cba2f5": {
       "ReferenceText": "Message Sound",
-      "TranslatedText": "Звук сообщения"
+      "TranslatedText": "Som de Mensagem"
     },
     "h351cdabfg577fg45e8gbe9dg6a513e599d13": {
       "ReferenceText": "Changes the duration of the label that appears at the top of the screen when you change areas. Set to 0 to disable them entirely.<br><br>Default is 5 seconds.",
-      "TranslatedText": "Изменяет длительность отображения названия локации при переходе. Установите на 0 чтобы отключить."
+      "TranslatedText": "Altera a duração do rótulo que aparece na parte superior da tela quando você muda de área. Defina como 0 para desativá-los totalmente.<br><br>O padrão é 5 segundos."
     },
     "h37fadbc1g48acg4963gb243gd517a74d58b3": {
       "ReferenceText": "Overhead Status Duration Multiplier",
-      "TranslatedText": "Множитель длительности отображения текста над персонажами."
+      "TranslatedText": "Multiplicador de duração do status de sobrecarga\n"
     },
     "h39d23b3bg188dg4cd8g9e94gd9697fe9130d": {
       "ReferenceText": "Purple Vortex",
-      "TranslatedText": "Фиолетовый вихрь"
+      "TranslatedText": "Vortex Roxo"
     },
     "h39e2d175g348eg4697g93a5gf28a9544e4ba": {
       "ReferenceText": "Emphasizes consumable items in world tooltips.",
-      "TranslatedText": "Подсвечивает расходуемые предметы в подсказках к окружающим объектам"
+      "TranslatedText": "Enfatiza os itens consumíveis nas dicas do mundo.\n"
     },
     "h3a72d579gc132g43d8gb6f0g097bfdbf76fb": {
       "ReferenceText": "Force Story Patching",
-      "TranslatedText": "Force Story Patching"
+      "TranslatedText": "Forçar correção de história\n"
     },
     "h3aca822bgfa26g4005ga288g20b6a22a48ec": {
       "ReferenceText": "Laser Focus",
-      "TranslatedText": "Лазерный фокус"
+      "TranslatedText": "Foco Laser"
     },
     "h3af2fabcg24ffg4e29ga965g69180c641040": {
       "ReferenceText": "Controls the maximum distance the camera can zoom out while it is tracking an entity.<br>Default is 17.",
-      "TranslatedText": "Задает максимальную дистанцию, на которую может отдалиться камера, преследуя сущность.<br>По умолчанию - 17."
+      "TranslatedText": "Controla a distância máxima que a câmera pode reduzir enquanto rastreia uma entidade.<br>O padrão é 17."
     },
     "h3c77115cga69dg4c67g880bgd314b8072f7c": {
       "ReferenceText": "Camera Angles",
-      "TranslatedText": "Углы камеры"
+      "TranslatedText": "Angulos de Camera"
     },
     "h3da94ae0ge613g4331gb629gb467b74f7ca4": {
       "ReferenceText": "Disables the hotbar slots while a spell is being cast.",
-      "TranslatedText": "Затемняет панель быстрого доступа во время использования навыков."
+      "TranslatedText": "Desativa os espaços na barra de ação enquanto uma skill é Lançada"
     },
     "h3ddc3759g3f70g4ac5g9401g76ced6258d7a": {
       "ReferenceText": "Reset to defaults",
-      "TranslatedText": "Настройки по умолчанию"
+      "TranslatedText": "Reseta para o valor Padrão"
     },
     "h3e9e4282gb66cg4498g83e0g8b79a4cec500": {
       "ReferenceText": "Maximum Distance (controller mode)",
-      "TranslatedText": "Максимальное расстояние (режим контроллера)"
+      "TranslatedText": "Distancia Maxima ( modo controle )"
     },
     "h3eb881efg123fg449bg9718g65ba0891f5bc": {
       "ReferenceText": "Adds improvements to the combat log: custom filters (accessible through right-click), merging messages, and slight rewording to improve consistency.<br>You must reload the save after making changes to this setting.",
-      "TranslatedText": "Добавляет улучшения журнала: настраиваемые фильтры (ПКМ для доступа), слияние сообщений.<br>Требуется перезагрузка сохранения."
+      "TranslatedText": "Adiciona melhorias ao registro de combate: filtros personalizados (acessíveis com o botão direito do mouse), mesclagem de mensagens e pequenas reformulações para melhorar a consistência.<br>Você deve recarregar o salvamento após fazer alterações nesta configuração."
     },
     "h3f4780c9g726bg43c3g8b59gd85d2a0aad07": {
       "ReferenceText": "Show Fog of War",
-      "TranslatedText": "Показывать туман войны"
+      "TranslatedText": "Mostrar Névoa de Guerra\n"
     },
     "h40a5107fg6bcdg41a4g8535ga841f2b6f199": {
       "ReferenceText": "Whirlwind",
-      "TranslatedText": "Смерч"
+      "TranslatedText": "redemoinho"
     },
     "h44d539cdg17cag473dg98c3gcddc60e27f5b": {
       "ReferenceText": "Log AI Scoring",
-      "TranslatedText": "Log AI Scoring"
+      "TranslatedText": "Registrar pontuação de IA\n"
     },
     "h454a0cb5ga2edg439cga8fdg9dde0686c731": {
       "ReferenceText": "Determines sorting in the save/load UI, if improvements for it are enabled.",
-      "TranslatedText": "Определяет сортировку в меню сохранения/загрузки если включена опция их улучшений."
+      "TranslatedText": "Determina a Organização na Interface de salvar/carregar, se as melhorias para ela estiverem habilitadas"
     },
     "h46166b8cg4afbg4039g822dg00fab1a7db15": {
       "ReferenceText": "Show doors",
-      "TranslatedText": "Показывать двери"
+      "TranslatedText": "Mostrar Portas"
     },
     "h48bab667g8c0ag4263g8622g450aba3d0f94": {
       "ReferenceText": "Sandstorm B",
-      "TranslatedText": "Песчаная буря B"
+      "TranslatedText": "Tempestade de areia B\n"
     },
     "h49611d79g2ae8g47dcgb20bge13634676cad": {
       "ReferenceText": "Disables looting corpses in combat, unless shift is held. This allows you to easily move to their position.",
-      "TranslatedText": "Отключает возможность обыскивать трупы в бою пока не зажата клавиша Shift."
+      "TranslatedText": "Desativa a pilhagem de cadáveres em combate, a menos que o turno seja mantido. Isso permite que você se mova facilmente para a posição deles."
     },
     "h4b67c715g0d30g4015gba18ge8ea4f357448": {
       "ReferenceText": "Shows the Source Generation status while sorting/filtering is enabled.",
-      "TranslatedText": "Показывает статус генерации истока при включенных сортировке/фильтрах."
+      "TranslatedText": "Mostra o status da geração de origem enquanto a classificação/filtragem está habilitada."
     },
     "h4bd4b3d7gf239g412dgb4e9g3421524ff330": {
       "ReferenceText": "Changes the loading screen into a family photoshoot!",
-      "TranslatedText": "Меняет экран загрузки на семейное фото!"
+      "TranslatedText": "Muda a tela de carregamento para uma sessão de fotos de família!"
     },
     "h4e5e3786g9b22g4009gaf4egc680d28b83bd": {
       "ReferenceText": "Show Combat Log Button",
-      "TranslatedText": "Показывать кнопку журнала"
+      "TranslatedText": "botão de Mostrar Registro de Combate\n"
     },
     "h50d46bf5ge806g4c7bg9780ga9627d9fc3f3": {
       "ReferenceText": "Intense Smoke",
-      "TranslatedText": "Густой дым"
+      "TranslatedText": "Fumaça Intensa"
     },
     "h53b42eecg74ccg4164gbd64g0bda6052e6f1": {
       "ReferenceText": "Examine Menu Position",
-      "TranslatedText": "Расположение меню \"Осмотреть\""
+      "TranslatedText": "Examinar Posição do Menu\n"
     },
     "h54022e48gaecfg4b0ega332gd42d4ac64dd4": {
       "ReferenceText": "Show Mastery Button",
-      "TranslatedText": "Показывать кнопку Мастерства"
+      "TranslatedText": "Botão de Mostrar Maestria"
     },
     "h54361ee5gb59eg40d9g9915g8c47e5631ad9": {
       "ReferenceText": "Skill-casting Notifications",
-      "TranslatedText": "Оповещения о применении способностей"
+      "TranslatedText": "Notificações de lançamento de habilidade\n"
     },
     "h54d9066eg87bdg439fg92f9g7027970af6ca": {
       "ReferenceText": "Camera",
-      "TranslatedText": "Камера"
+      "TranslatedText": "Camera"
     },
     "h58774ddfga909g4acfg95e1g9ba772b7be4a": {
       "ReferenceText": "Hotbar Buttons Area Sizing",
-      "TranslatedText": "Отображение панели горячих клавиш"
+      "TranslatedText": "Dimensionamento da Área dos Botões da barra "
     },
     "h5bef00c6g36deg4db0ga3d5gb006dbc5f601": {
       "ReferenceText": "Auto-unlock inventory (Multiplayer)",
-      "TranslatedText": "Авто-разблокировка инвентаря (мультиплеер)"
+      "TranslatedText": "Desbloqueio Automatico de Inventario ( Multijogador )"
     },
     "h60bebbb6g771fg4fe8g8658g4b01db6b2d87": {
       "ReferenceText": "Controls whether tooltips are shown for empty containers and bodies.",
-      "TranslatedText": "Если включено, пустые контейнеры и тела будут отображаться в подсказках к окружающим объектам."
+      "TranslatedText": "Controla se as dicas de ferramenta são mostradas para contêineres e corpos vazios."
     },
     "h6270c4d7g0531g453agbae3g2503fb8c3c59": {
       "ReferenceText": "Maximum Distance (locked-on)",
-      "TranslatedText": "Максимальное расстояние (зафиксированное)"
+      "TranslatedText": "Distância máxima (Travado)\n"
     },
     "h63aee58dg36e4g411cg9dcbg541062d696f0": {
       "ReferenceText": "Consumables Emphasis",
-      "TranslatedText": "Подсветка расходуемых предметов"
+      "TranslatedText": "Ênfase em Consumíveis\n"
     },
     "h643da49ag6a17g4b0agbe26g7f416cc33c6f": {
       "ReferenceText": "Sandstorm A",
-      "TranslatedText": "Песчаная буря A"
+      "TranslatedText": "Tempestade de areia A\n"
     },
     "h643f5e4cg0c44g48f7ga003g253a087afa7e": {
       "ReferenceText": "Equipment Emphasis",
-      "TranslatedText": "Подсветка снаряжения"
+      "TranslatedText": "Ênfase de equipamento\n"
     },
     "h69bb87a5ga063g464egae6cg4824e72bc36f": {
       "ReferenceText": "Cinematic Combat",
-      "TranslatedText": "Кинематографичный бой "
+      "TranslatedText": "Combate Cinematográfico\n"
     },
     "h6e1d16e8g4adbg4df0g9169g2ceed7a9a8a1": {
       "ReferenceText": "Controls whether notifications for receiving items show.",
-      "TranslatedText": "Включает отображение оповещений о получении предметов."
+      "TranslatedText": "Controla se as notificações de recebimento de itens são exibidas."
     },
     "h72991da3gbe87g41c2g8a34gab6e730f4c75": {
       "ReferenceText": "Wind Elemental",
-      "TranslatedText": "Элементаль ветра"
+      "TranslatedText": "elemental do vento\n"
     },
     "h738fac7bg150bg4545g87a9ge3ae1ea94791": {
       "ReferenceText": "Voodoo",
-      "TranslatedText": "Вуду"
+      "TranslatedText": "vodu"
     },
     "h782c75b8g42c3g4aa0gb3d4g3bfb2a2ce067": {
       "ReferenceText": "Divine Blast",
-      "TranslatedText": "Божественный взрыв"
+      "TranslatedText": "explosão divina\n"
     },
     "h799513e4g3995g4d45g8e0bg3ee08e6cd1db": {
       "ReferenceText": "Auto-Identify Items",
-      "TranslatedText": "Авто-опознавание предметов"
+      "TranslatedText": "Auto Identifcar Itens"
     },
     "h7c2f8512g3c4eg4dffg946aga4482de181ae": {
       "ReferenceText": "Toggles visibility of the minimap UI element.",
-      "TranslatedText": "Переключает видимость миникарты"
+      "TranslatedText": "Alterna a visibilidade do elemento de interface do usuário do minimapa."
     },
     "h7d635871g9febg4ee3gbca9g2cedbf770d1e": {
       "ReferenceText": "Overhead Text Size",
-      "TranslatedText": "Размер всплывающего текста"
+      "TranslatedText": "Tamanho do texto da Sobrecarga"
     },
     "h7fe5f99dgae97g4586ga824g457d7c1322b5": {
       "ReferenceText": "Gives characters practically infinite carry weight.",
-      "TranslatedText": "Дает персонажам бесконечный переносимый вес."
+      "TranslatedText": "Dá aos personagens praticamente peso de carga infinito."
     },
     "h804e5cefgef0eg4351gb19cge60e92ca4297": {
       "ReferenceText": "General",
-      "TranslatedText": "Общее"
+      "TranslatedText": "Geral"
     },
     "h81b14740g9bb2g49c8ga4cfgbee3b5b383a8": {
       "ReferenceText": "Sparks",
-      "TranslatedText": "Искры"
+      "TranslatedText": "Faíscas"
     },
     "h82c7e2e1g5de2g4389ga7c5g639c3d653b96": {
       "ReferenceText": "Show Source Generation Status",
-      "TranslatedText": "Показывать статус Генерации истока"
+      "TranslatedText": "Mostrar status de geração de origem\n"
     },
     "h8307bcc5gb35cg4277ga1d6gb9cc9d8d2eed": {
       "ReferenceText": "Show Action Hotkeys",
-      "TranslatedText": "Показывать горячие клавиши"
+      "TranslatedText": "Mostrar teclas de atalho de ação\n"
     },
     "h831d1efeg7f97g4306g9f6fgf0ed6c97bc6f": {
       "ReferenceText": "Save/Load UI Improvements",
-      "TranslatedText": "Улучшения меню сохранения/загрузки"
+      "TranslatedText": "Salvar/carregar melhorias na interface."
     },
     "h832b19aege182g49acgb536gfa969d7669b3": {
       "ReferenceText": "Multiplies the duration of status overheads.<br><br>Default is 1.",
-      "TranslatedText": "Множитель длительности отображения всплывающего текста.<br><br>По умолчанию - 1."
+      "TranslatedText": "Multiplica a duração das sobrecargas de status.<br><br>O padrão é 1."
     },
     "h8403161cgb78fg453fg9676gd4c14f3afd29": {
       "ReferenceText": "Controls the maximum distance the camera can zoom out in regular gameplay.<br>Default is 19.",
-      "TranslatedText": "Задает максимальное расстояние, на которое камера может отдалиться в свободном режиме.<br>По умолчанию - 19."
+      "TranslatedText": "Controla a distância máxima que a câmera pode reduzir no jogo normal.<br>O padrão é 19.\n"
     },
     "h854a85fegf878g45a3g98b6g0fff3d5496b7": {
       "ReferenceText": "Show items with no use actions",
-      "TranslatedText": "Показывать неинтерактивные предметы"
+      "TranslatedText": "Mostrar Itens Inultilizaveis "
     },
     "h868a6168gd10eg4340gb5f4gb35dc338c453": {
       "ReferenceText": "If enabled, doors will show world tooltips. Requires \"Show more items\" to be enabled, as these do not have tooltips by default.",
-      "TranslatedText": "Если включено, двери будут отображатся в подсказках к окружающим объектам.Требуется опция \"Включить подсказки для всех предметов\"."
+      "TranslatedText": "Se ativado, as portas mostrarão dicas do mundo. Requer que a opção \"Mostrar mais itens\" esteja habilitada, pois eles não possuem dicas por padrão."
     },
     "h86c94636gb954g4e3dg9679g477c7f889bb3": {
       "ReferenceText": "Allow walking to corpses in combat",
-      "TranslatedText": "Позволять ходить по трупам в бою"
+      "TranslatedText": "Permitir caminhar até cadáveres em combate\n"
     },
     "h8945fbb1g7db8g42a8ga6c5g8db176a633ee": {
       "ReferenceText": "Allows you to check all your equipped items while in the quest rewards UI.",
-      "TranslatedText": "Позволяет осматривать экипированные предметы во время получения награды"
+      "TranslatedText": "Permite que você verifique todos os seus itens equipados enquanto estiver na IU de recompensas da missão"
     },
     "h8e644d3dg9c33g4251g9674g48555ee9573b": {
       "ReferenceText": "Shows the combat log button on the right side of the hotbar.<br>If disabled, you can still toggle the combat log through hotbar actions.",
-      "TranslatedText": "Показывает кнопку журнала боя с правой стороны панели быстрого доступа.<br>Если отключено, доступ к нему возможен через панель горячих клавиш."
+      "TranslatedText": "Mostra o botão de log de combate no lado direito da hotbar.<br>Se desativado, você ainda pode alternar o log de combate por meio das ações da hotbar.\n"
     },
     "h8f6b67aaga9fag4c62gbd92g0f4d43fd8855": {
       "ReferenceText": "Hides the Hotbar and Minimap while within the Ascension and Greatforge UIs.",
-      "TranslatedText": "Скрывает панель быстрого доступа и миникарту во время использования интерфейсов Ascension и Greatforge"
+      "TranslatedText": "Oculta a barra de acesso e o minimapa enquanto estiver nas interfaces de usuário Ascenção e Masterização."
     },
     "h8f7f66d4g1806g478agb229g3f36b527d44d": {
       "ReferenceText": "Simple Tooltip Delay (World)",
-      "TranslatedText": "Задержка простых подсказок (окружающие объекты)"
+      "TranslatedText": "Atraso de dica de ferramenta simples (mundo)\n"
     },
     "h9172c74eg120fg4ea6gac99gf5f558433e70": {
       "ReferenceText": "Escape Key Closes EE UIs",
-      "TranslatedText": "Кнопка Escape закрывает интерфейсы EE"
+      "TranslatedText": "A tecla ESC fecha as IUs do EE\n"
     },
     "h942bb08bg5e26g439eg8189ga3ece811436f": {
       "ReferenceText": "Default Tab",
-      "TranslatedText": "Вкладка по умолчанию"
+      "TranslatedText": "Aba padrão\n"
     },
     "h962abab4gaa4eg42c7gaa0eg3f0e83649f94": {
       "ReferenceText": "Smoke",
-      "TranslatedText": "Дым"
+      "TranslatedText": "Fumaça"
     },
     "h97ac5f1fg0ae8g490dg9050gb5f8fe4025a4": {
       "ReferenceText": "Controls the maximum distance the camera can zoom out in controller mode.<br>Default is 13.",
-      "TranslatedText": "Задает максимальное расстояние, на которое камера может отдалиться в режиме контроллера.<br>По умолчанию - 13."
+      "TranslatedText": "Controla a distância máxima que a câmera pode reduzir no modo controlador.<br>O padrão é 13."
     },
     "h99515a08gaa1fg4214g81fag15521e601583": {
       "ReferenceText": "Stat-sharing Notifications",
-      "TranslatedText": "Оповещения \"персонаж делится знанием\""
+      "TranslatedText": "Notificações de compartilhamento de Status"
     },
     "h9cd1245egdfdeg4cbbgbae7gfa179a954eac": {
       "ReferenceText": "If enabled, the health bar when you hover over characters and items will show their treasure table (if relevant) as well as the chance of getting an artifact. For characters, this requires holding the Show Sneak Cones key (shift by default)",
-      "TranslatedText": "Если включено, при наведении, под панелью здоровья будет показываться вариант лута с шансом получения артефакта. Для отображения у персонажей требуется зажать Shift."
+      "TranslatedText": "Se ativado, a barra de saúde ao passar o mouse sobre personagens e itens mostrará sua tabela de tesouros (se relevante), bem como a chance de obter um artefato. Para personagens, isso requer segurar a tecla Show Sneak Cones (shift por padrão)"
     },
     "ha1146687g9261g49d4gad63g0269559fce2d": {
       "ReferenceText": "If enabled, chairs and ladders will show world tooltips. Requires \"Show more items\" to be enabled, as these do not have tooltips by default.",
-      "TranslatedText": "Если включено, стулья и лестницы будут отображатся в подсказках к окружающим объектам.Требуется опция \"Включить подсказки для всех предметов\"."
+      "TranslatedText": "Se ativado, cadeiras e escadas mostrarão dicas do mundo. Requer que a opção \"Mostrar mais itens\" esteja habilitada, pois eles não possuem dicas de ferramentas por padrão."
     },
     "ha13d577fg043ag4324g8d55gd5f2ba85efac": {
       "ReferenceText": "If enabled, Battered and Harried stacks will be shown beside player portraits on the left interface.",
-      "TranslatedText": "Если включено, значения B/H будут отображаться в левой части портрета персонажа"
+      "TranslatedText": "Se ativado, as pilhas espancado e Atprdoado serão mostradas ao lado dos retratos dos jogadores na interface esquerda."
     },
     "ha1fb1fb3g2796g4850gbdb0g727186aa7f71": {
       "ReferenceText": "Out of season April Fools jokes",
-      "TranslatedText": "Внесезонные шутки на первое апреля"
+      "TranslatedText": "Piadas fora do Dia da Mentira\n"
     },
     "ha3e9b3f3g2186g4cb3gb212g3938e0bb7779": {
       "ReferenceText": "Violent Strikes",
-      "TranslatedText": "Violent Strikes"
+      "TranslatedText": "Porradas Violentas"
     },
     "ha9257a90g9b52g4277g83b2g74acf74f50a8": {
       "ReferenceText": "Waterfall",
-      "TranslatedText": "Водопад"
+      "TranslatedText": "Cachoeira"
     },
     "ha970de96geaf5g483eg9996gac184c8fe843": {
       "ReferenceText": "Immersive Meditation",
-      "TranslatedText": "Иммерсивная медитация"
+      "TranslatedText": "Meditação Imersiva\n"
     },
     "haa0297d1ga978g4be1gb3b4g7295b9451b31": {
       "ReferenceText": "Maximum Distance",
-      "TranslatedText": "Максимальное расстояние"
+      "TranslatedText": "Distancia Maxima"
     },
     "haa0cd7a5g5950g4cceg8fe0gd343fc6db5e0": {
       "ReferenceText": "Show chairs and ladders",
-      "TranslatedText": "Показывать стулья и лестницы"
+      "TranslatedText": "Mostrar cadeiras e escadas\n"
     },
     "haae0acc4gf8f6g4040g9038g52c50db75a38": {
       "ReferenceText": "Show Battered/Harried Statuses",
-      "TranslatedText": "Показывать B/H статусы"
+      "TranslatedText": "Mostrar status de espancado/atordoado\n"
     },
     "hae703884g68c4g44d1gb1d2g211f87e7309c": {
       "ReferenceText": "If enabled, clicking world tooltips will open containers rather than picking them up.",
-      "TranslatedText": "Если включено, открывает, а не поднимает контейнер при нажатии на текст подсказки к окружающим объектам"
+      "TranslatedText": "Se ativado, clicar nas dicas Globais abrirá contêineres em vez de pegá-los.\n"
     },
     "hafbe381ag6da6g4760gb278g1b6c5a36f530": {
       "ReferenceText": "Save/Load Sorting",
-      "TranslatedText": "Сортировка сохранения/загрузки"
+      "TranslatedText": "Organizar salvar/carregar"
     },
     "hafd62d05gc85eg434bg8f49g68214f14bb72": {
       "ReferenceText": "Debug Display",
-      "TranslatedText": "Дисплей отладки"
+      "TranslatedText": "Exibição de depuração\n"
     },
     "hb461a9b1g4866g4bbdgb046gd478f7368fab": {
       "ReferenceText": "Emphasizes equipment items in world tooltips.",
-      "TranslatedText": "Подсвечивает предметы экипировки в подсказках к окружающим объектам"
+      "TranslatedText": "Enfatiza os itens de equipamento nas dicas do mundo."
     },
     "hb53a9902g6a6fg4885ga47cg4329d6de565d": {
       "ReferenceText": "Controls the size of damage overheads.<br><br>Default is 24.",
-      "TranslatedText": "Задает размер цифр всплывающего урона .<br><br>По умолчанию - 24."
+      "TranslatedText": "Controla o tamanho das sobrecargas de dano.<br><br>O padrão é 24"
     },
     "hb62c4354g1648g4f0eg83e9g4c2783e5fc86": {
       "ReferenceText": "Controls the opacity of your character portraits's status bars in combat. Hovering over the statuses will always display them at full opacity.<br><br>Default is 1.",
-      "TranslatedText": "Задает непрозрачность отображения статусов персонажей в бою. При наведении значение непрозрачности всегда максимальное."
+      "TranslatedText": "Controla a opacidade das barras de status dos retratos de seu personagem em combate. Passar o mouse sobre os status sempre os exibirá com opacidade total.<br><br>O padrão é 1"
     },
     "hb733d1c1g7bc7g4fc5ga090ga2f662e9220d": {
       "ReferenceText": "Open containers",
-      "TranslatedText": "Открывать контейнеры"
+      "TranslatedText": "Abrir Conteiners"
     },
     "hb7ac349eg981eg4bdega605g533f9a7bea9c": {
       "ReferenceText": "Enables alternative sorting for the save/load UI, as well as searching.",
-      "TranslatedText": "Включает альтернативную сортировку и поиск для меню сохранения/загрузки "
+      "TranslatedText": "Ativa a organização alternativa para salvar/carregar interface do usuário, bem como pesquisar."
     },
     "hb8f2e390g2811g4df4gb9fdg3661092ef520": {
       "ReferenceText": "Controls the delay for simple tooltips to appear while hovering over objects in the world.<br><br>Default is 0.5s.",
-      "TranslatedText": "Задает задержку отображения подсказок при наведении на окружающие объекты.<br><br>По умолчанию - 0.5с."
+      "TranslatedText": "Controla o atraso para que dicas de ferramentas simples apareçam ao passar o mouse sobre objetos no mundo.<br><br>O padrão é 0,5s."
     },
     "hb9e14744g4868g4e08gb3d7ga9bd57629d03": {
       "ReferenceText": "Shows the Battered/Harries statuses while sorting/filtering is enabled.<br>If you disable this, it is recommended to enable the B/H display on the portraits.",
-      "TranslatedText": "Показывает значения B/H если включена сортировка.<br>Если отключено, рекомендуется включить опцию \"Показывать B/H на портретах игроков\""
+      "TranslatedText": "Mostra os status Espancado/Atordoado enquanto a classificação/filtragem está ativada.<br>Se você desativar isso, é recomendável ativar a exibição B/H nos retratos."
     },
     "hbd18d9b1g7709g419agb8d6gdccf938dcaf3": {
       "ReferenceText": "Epic Loading Screen",
-      "TranslatedText": "Эпичный экран загрузки"
+      "TranslatedText": "Tela de carregamento épico\n"
     },
     "hbd336157gc5fag442fgb2cfgb85f9e2c44fd": {
       "ReferenceText": "Overhead Damage Size",
-      "TranslatedText": "Размер цифр всплывающего урона"
+      "TranslatedText": "Tamanho do texto da Sobrecarga"
     },
     "hca79eaccgc9c9g4a87g9f9egdbfa57800a5a": {
       "ReferenceText": "Controls whether notifications for characters casting skills show up in combat.",
-      "TranslatedText": "Включает отображение оповещений о применении способностей в бою"
+      "TranslatedText": "Controla se as notificações para habilidades de conjuração de personagens que aparecem em combate."
     },
     "hcd9974f8g16cfg4cbfga08agbf28ee5b55eb": {
       "ReferenceText": "Show loot drops in health bar",
-      "TranslatedText": "Показывать выпадающий лут под панелью здоровья"
+      "TranslatedText": "Mostrar loot drops na barra de saúde\n"
     },
     "hcda03853g5322g48e6gb8d2g37a87a295fef": {
       "ReferenceText": "Shows the keyboard hotkeys for custom actions.",
-      "TranslatedText": "Показывает горячие клавиши для настраиваемых действий"
+      "TranslatedText": "Mostra as teclas de atalho do teclado para ações personalizadas."
     },
     "hce85d2d7g4957g4a29g8962gb4d42f693e1a": {
       "ReferenceText": "Plays a sound effect when a message is received, so as to make it easier to notice.",
-      "TranslatedText": "Проигрывает звук при получении сообщения, чтобы его проще было заметить."
+      "TranslatedText": "Reproduz um efeito sonoro quando uma mensagem é recebida, de modo a torná-la mais fácil de perceber."
     },
     "hd0e2b5b7geca4g4a5dgad60g1893680e319a": {
       "ReferenceText": "Disable Slots while Casting",
-      "TranslatedText": "Затемнять панель быстрого доступа при использовании навыков"
+      "TranslatedText": "Desabilitar Espaços enquanto estiver lançando"
     },
     "hd71aa49cgcb72g4cd1ga209g28e6a6159b95": {
       "ReferenceText": "Infinite Carry Weight",
-      "TranslatedText": "Бесконечный переносимый вес"
+      "TranslatedText": "Peso de Carga Infinito\n"
     },
     "hd90b74d9g5ae7g49fbg97cdg6b2e0d7fbee8": {
       "ReferenceText": "Determines the order of statuses, in order of importance.",
-      "TranslatedText": "Определяет порядок статусов, в порядке важности."
+      "TranslatedText": "Determina a ordem dos status, em ordem de importância."
     },
     "hdf91946ag8402g42ecgafc2g4f2a232b81ef": {
       "ReferenceText": "Adds aggro information to the health bar when hovering over enemies: AI preferred/unpreferred/ignored tag, as well as taunt source/target(s).",
-      "TranslatedText": "Добавляет информацию об аггро в health bar врагов: теги предпочитаемый/непредпочитаемый/игнорируемый, а также источник/цель провокации."
+      "TranslatedText": "Adiciona informações Agressividade à barra de saúde ao passar o mouse sobre os inimigos: marca preferida/não preferida/ignorada da IA, bem como origem/alvo(s) da provocação."
     },
     "he0105763gc21bg4f2ag995bg827864f3db23": {
       "ReferenceText": "Show empty containers/bodies",
-      "TranslatedText": "Показывать пустые контейнеры/трупы"
+      "TranslatedText": "Mostrar Conteiners/corpos vazios\n"
     },
     "he0bb8817g7c40g4572g9170gce3d351dc753": {
       "ReferenceText": "Automatically and instantly identify items whenever they are generated.<br>'With enough Loremaster' uses the highest Loremaster of all player characters, regardless of party.",
-      "TranslatedText": "Автоматическое опознавание предметов при их получении.<br>При варианте \"С достаточным знанием легенд\" используется наибольшее значение среди всех персонажей, вне зависимости от их группы."
+      "TranslatedText": "Identifique itens automaticamente e instantaneamente sempre que eles forem gerados.<br>'Com mestre de conhecimento suficiente' usa o maior Loremaster de todos os personagens do jogador, independentemente do grupo.\n"
     },
     "he1ba8777g2269g40b6gb21cg353aea79fb9b": {
       "ReferenceText": "Logs AI scoring to the console.",
-      "TranslatedText": "Logs AI scoring to the console."
+      "TranslatedText": "Registra a pontuação de IA no console.\n"
     },
     "he515233eg586eg44d4gb0bcg9d971e85e198": {
       "ReferenceText": "Encouraging",
-      "TranslatedText": "Воодушевляющий"
+      "TranslatedText": "Encourajar"
     },
     "he759cd00g404dg4731gb2a6g0ece913a327e": {
       "ReferenceText": "Emphasizes container items in world tooltips.",
-      "TranslatedText": "Подсвечивает контейнеры в подcказках к окружающим объектам"
+      "TranslatedText": "Enfatiza os itens de contêiner nas dicas do mundo."
     },
     "hec25a517g9521g47e3g8f74gfa658861a320": {
       "ReferenceText": "Controls the FOV of the camera. Low/high values may cause issues with dynamic shadows.<br>Default is 45.",
-      "TranslatedText": "Задает поле зрения камеры. Низкие/высокие значения могут вызывать проблемы с динамическими тенями.<br> По умолчанию - 45."
+      "TranslatedText": "Controla o FOV da câmera. Valores baixos/altos podem causar problemas com sombras dinâmicas.<br>O padrão é 45."
     },
     "hf008175bgcf6fg4232g9d11g99a45cf7be11": {
       "ReferenceText": "Fog A",
-      "TranslatedText": "Туман A"
+      "TranslatedText": "Nevoa A"
     },
     "hf288311dg0fccg47dcgbc6ag954c4d848835": {
       "ReferenceText": "Enable tooltips for all items",
-      "TranslatedText": "Включить подсказки для всех предметов"
+      "TranslatedText": "Habilitar Dicas para Todos os itens"
     },
     "hf3f1fedfg8c70g4342g95d7g64f3280f310a": {
       "ReferenceText": "Controls whether notifications for sharing stats (Loremaster, Lucky Charm) show.",
-      "TranslatedText": "Включает отображение оповещений \"персонаж делится знанием\"(Знание легенд, Везучесть)"
+      "TranslatedText": "Controla se as notificações para compartilhar estatísticas (Loremaster, Lucky Charm) são exibidas."
     },
     "hf61f1a35g7ee7g4b79g8728g9a278d2522b0": {
       "ReferenceText": "Area Transition Label Duration",
-      "TranslatedText": "Длительность отображения названия локации при переходе"
+      "TranslatedText": "Duração do rótulo de transição de área\n"
     },
     "hf72184f1g53fdg4103g81d3gc3cf433c3bfb": {
       "ReferenceText": "Arcane Mist",
-      "TranslatedText": "Мистический туман"
+      "TranslatedText": "Poeira arcana"
     },
     "hf7dbc203g640cg4c40g8fd3gdd2cf3545672": {
       "ReferenceText": "Enables a UI widget that displays framerate, server tickrate, and mod versions.",
-      "TranslatedText": "Отображает виджет со счетчиком кадров, тикрейтом сервера и версиями модов."
+      "TranslatedText": "Ativa um widget de interface do usuário que exibe framerate, tickrate do servidor e versões do mod."
     },
     "hfd959b44gc01bg403eg95ebg5b17cd08d1ff": {
       "ReferenceText": "Forces story patching on every session load.",
-      "TranslatedText": "Forces story patching on every session load."
+      "TranslatedText": "Força a correção da história em cada carregamento de sessão."
     },
     "hfff84bafgd93cg41bagb87fg582303ca13c9": {
       "ReferenceText": "Don't you guys have phones?",
-      "TranslatedText": "Ребят, у вас что, нет телефонов?"
+      "TranslatedText": "Vocês não têm telefones?\n"
     },
     "h2b23b849g0345g4d0dgb48dg15315ade1779": {
       "ReferenceText": "Epip Language",
-      "TranslatedText": "Язык Epip"
+      "TranslatedText": "Linguagem do Epip"
     },
     "hb74bc767gb91ag4a4cg9d9cg4c574397046c": {
       "ReferenceText": "Causes EpicEncounters.IsLoaded() call to return false even if EE Core is enabled.",
-      "TranslatedText": "Causes EpicEncounters.IsLoaded() call to return false even if EE Core is enabled."
+      "TranslatedText": "Faz com que a chamada EpicEncounters.IsLoaded() retorne false mesmo se o EE Core estiver habilitado."
     },
     "hbe066f75ge516g49f1g8f3cg328153a5d890": {
       "ReferenceText": "Simulate no EE",
-      "TranslatedText": "Simulate no EE"
+      "TranslatedText": "Simular sem EE"
     },
     "h2c6440beg71c6g45c3g8a8bg9f6c64454faf": {
       "ReferenceText": "Changes Epip's language to display in a language different than the one the game is running in.<br>Use to remedy current issues with running EE mods in languages other than English.",
-      "TranslatedText": "Меняет язык Epip. Используйте для устранения текущих проблем с модами EE, не поддерживающими языки отличные от английского."
+      "TranslatedText": "Altera o idioma do Epip para ser exibido em um idioma diferente daquele em que o jogo está sendo executado.<br>Use para solucionar problemas atuais com a execução de mods EE em idiomas diferentes do inglês."
     },
     "h68a80196g2a32g4e12g9757gc826f58efd20": {
       "ReferenceText": "Warp to AMER_Test",
-      "TranslatedText": "Warp to AMER_Test"
+      "TranslatedText": "Teleportar para AMER_Test\n"
     },
     "hb29270e7g6dc8g44c0g9391g21b25965aea6": {
       "ReferenceText": "Consumable Type",
-      "TranslatedText": "Тип расходуемого предмета"
+      "TranslatedText": "Tipo de Consumivel"
     },
     "h82933829g4fd3g4dfeg9b84ga47e14020bd6": {
       "ReferenceText": "Dagger",
-      "TranslatedText": "Кинжал"
+      "TranslatedText": "Adaga"
     },
     "he9f82492g81f0g4e53g9eefg731a6f800db8": {
       "ReferenceText": "Experimental! May cause issues with certain skills. Please report any!",
-      "TranslatedText": "Работает в тестовом режиме! Пожалуйста, сообщайте о возникающих проблемах с какими-либо навыками!"
+      "TranslatedText": "Experimental! Pode causar problemas com certas habilidades. Por favor, reporte!"
     },
     "h8de93e20gae0dg45cfg9695g478ba659f71a": {
       "ReferenceText": "If enabled, the UI will close after using an item.  You can hold shift while clicking an item to temporarily invert this setting.",
-      "TranslatedText": "Если включено, интерфейс будет закрываться после использования предмета. Зажатие клавиши Shift временно инвертирует эту настройку."
+      "TranslatedText": "Se ativado, a interface será fechada após o uso de um item. Você pode segurar a tecla shift enquanto clica em um item para inverter temporariamente essa configuração."
     },
     "h6cc76e3fg8d5cg466egb96agb780b490d0d5": {
       "ReferenceText": "Save Default Position",
-      "TranslatedText": "Сохранить позицию по умолчанию"
+      "TranslatedText": "Salvar posição padrão\n"
     },
     "h4fc7301egc609g4739g9752g7b0fae2e8c5b": {
       "ReferenceText": "Skillbooks",
-      "TranslatedText": "Книги навыков"
+      "TranslatedText": "livros de habilidades\n"
     },
     "h53ac110bgde75g4517ga5a6gdb5daf3abc88": {
       "ReferenceText": "Weapon Type",
-      "TranslatedText": "Тип оружия"
+      "TranslatedText": "Tipo de arma"
     },
     "hbd6a0da2gd153g40c7g972agb0d16bfe78d4": {
       "ReferenceText": "Settings",
-      "TranslatedText": "Настройки"
+      "TranslatedText": "Configuraçoes"
     },
     "hbb33eea8g0ce7g4bbcga719gc5c4e7811d4a": {
       "ReferenceText": "Overhead",
-      "TranslatedText": "Нимб"
+      "TranslatedText": "Sobrecarga"
     },
     "hf196badfg6c61g4bd5g91e8g7bfbf9874cbf": {
       "ReferenceText": "Quick Find",
-      "TranslatedText": "Быстрый поиск"
+      "TranslatedText": "Procura rapida"
     },
     "he58ba92dg936fg49fagac2bg61a9c20dd142": {
       "ReferenceText": "Enabled",
-      "TranslatedText": "Включено"
+      "TranslatedText": "Habilitado"
     },
     "hefb45469g4aabg4a8ega8aagbed67af313e1": {
       "ReferenceText": "Spear",
-      "TranslatedText": "Копье"
+      "TranslatedText": "Lança"
     },
     "h7f4d1a8egfe38g4a39gb104g57738c21fd93": {
       "ReferenceText": "Axe",
-      "TranslatedText": "Топор"
+      "TranslatedText": "Machado"
     },
     "hde49d383g961eg49d6gaa46gcc45ab299aa5": {
       "ReferenceText": "Miscellaneous UI",
-      "TranslatedText": "Прочее"
+      "TranslatedText": "Diversos UI\n"
     },
     "hd34a81ecg7b8eg4ad6g8fc4gf6310e5ae556": {
       "ReferenceText": "UI Tooltips",
-      "TranslatedText": "Отображение подсказок"
+      "TranslatedText": "Dicas de interface \n"
     },
     "h6108a8b5gd998g4138g9ce5g12cc0695be7f": {
       "ReferenceText": "Chat",
-      "TranslatedText": "Чат"
+      "TranslatedText": "Chat"
     },
     "had9e68fbgbd66g4141gab13gd1b41046c493": {
       "ReferenceText": "World Item Tooltips",
-      "TranslatedText": "Подсказки к окружающим объектам"
+      "TranslatedText": "Dicas de Itens Globais"
     },
     "h3985c604gd7a2g4e68gb817g4d1311259a13": {
       "ReferenceText": "Controls the opacity of the background panel.<br><br>Default is 80%.",
-      "TranslatedText": "Задает непрозрачность фона для окна<br><br>По умолчанию 80%."
+      "TranslatedText": "Controla a opacidade do painel de fundo.<br><br>O padrão é 80%."
     },
     "h0f112ed1gcc18g470egaf01ga5cd65d1f22b": {
       "ReferenceText": "Sword",
-      "TranslatedText": "Меч"
+      "TranslatedText": "Espada"
     },
     "h693e7865g63d9g402bgba37g2f627a59d4c6": {
       "ReferenceText": "Height",
-      "TranslatedText": "Высота"
+      "TranslatedText": "Altura"
     },
     "ha5ce3e75g6795g493bgbd94g5d7779a15deb": {
       "ReferenceText": "Equipment",
-      "TranslatedText": "Снаряжение"
+      "TranslatedText": "Equipamento"
     },
     "h6232b543g92dag4b65gac80g0d3f7e833f72": {
       "ReferenceText": "Quick Find is a UI that shows a customizable filtered view of the party inventory, opened using Ctrl+F by default.",
-      "TranslatedText": "Интерфейс быстрого поиска показывает настраивамое отображение инвентаря группы. По умолчанию открывается Ctrl+F."
+      "TranslatedText": "A Localização rápida é uma interface do usuário que mostra uma exibição filtrada personalizável do inventário do grupo, aberta usando Ctrl+F por padrão."
     },
     "h37985411gc95dg46a1g858bg021ed39e43cd": {
       "ReferenceText": "Hotbar",
-      "TranslatedText": "Панель быстрого доступа"
+      "TranslatedText": "Barra de ação"
     },
     "h8192e5abg5593g45ccgbcb9gd6b79952ed2d": {
       "ReferenceText": "Weapon",
-      "TranslatedText": "Оружие"
+      "TranslatedText": "Arma"
     },
     "hc9a05852g3523g4c85gad7cg49f293c2cd29": {
       "ReferenceText": "Scrolls and Grenades",
-      "TranslatedText": "Свитки и гранаты"
+      "TranslatedText": "Pergaminhos e Granadas"
     },
     "h543a5832g1c08g4c3eg9e21g9ee1414c9941": {
       "ReferenceText": "Item Slot",
-      "TranslatedText": "Слот предмета"
+      "TranslatedText": "Espaço de item"
     },
     "hc574348cg706eg4618g9629g6a08ad4aed70": {
       "ReferenceText": "Inventory UI",
-      "TranslatedText": "Интерфейс снаряжения"
+      "TranslatedText": "Interface de Inventario"
     },
     "he8c517d9gc48fg42f8ga501g35f9909946b9": {
       "ReferenceText": "Inventory",
-      "TranslatedText": "Снаряжение"
+      "TranslatedText": "Inventario"
     },
     "hd286ded2g4b06g4fedg923cg235ebaa1ae49": {
       "ReferenceText": "Developer",
-      "TranslatedText": "Разработчик"
+      "TranslatedText": "Desenvolvedor"
     },
     "hbcadc230g935eg4da1ga40dg153966dd04a2": {
       "ReferenceText": "Wings",
-      "TranslatedText": "Крылья"
+      "TranslatedText": "Asas"
     },
     "hc2b715dfgf2a2g4ea3g8691gbc66ca160a1d": {
       "ReferenceText": "Notifications",
-      "TranslatedText": "Оповещения"
+      "TranslatedText": "Notificaçoes"
     },
     "h4119cfcegbfc2g4045gbeecgfb1c96de38e2": {
       "ReferenceText": "Type",
-      "TranslatedText": "Тип"
+      "TranslatedText": "Tipo"
     },
     "h5025c292g5fd8g46fegac5bgee45a7acc134": {
       "ReferenceText": "Ability School",
-      "TranslatedText": "Навык"
+      "TranslatedText": "Habilidade"
     },
     "ha15ba540g2da4g4056g8174gcd25a3b1d343": {
       "ReferenceText": "Allows examining dead characters.",
-      "TranslatedText": "Позволяет осматривать мертвых персонажей."
+      "TranslatedText": "Permitir Examinar Personagens Mortos"
     },
     "h8d88a6c9gb72cg422fg8929g396e84f1e77b": {
       "ReferenceText": "Food and Drinks",
-      "TranslatedText": "Еда и напитки"
+      "TranslatedText": "Comidas e bebidas"
     },
     "h3bf7ae10g24e1g4f50gbc69g71a8b95b1a51": {
       "ReferenceText": "Animation Cancelling",
-      "TranslatedText": "Отмена анимаций"
+      "TranslatedText": "Cancelar Animação"
     },
     "h9e8f2aecg2b81g4f48ga9bbg43dd8f593686": {
       "ReferenceText": "Saves the UI's current position and restores it upon reloading. Use to set the default position of the UI.",
-      "TranslatedText": "Сохраняет и задает по умолчанию текущее положение интерфейса."
+      "TranslatedText": "Salva a posição atual da IU e a restaura ao recarregar. Use para definir a posição padrão da IU.\n"
     },
     "h3a060f85gad6dg4e73g8526ga0606d366478": {
       "ReferenceText": "Width",
-      "TranslatedText": "Ширина"
+      "TranslatedText": "Largura"
     },
     "hd6db0ca4g7edag4067g9635g88ad68b24784": {
       "ReferenceText": "Active",
-      "TranslatedText": "Активно"
+      "TranslatedText": "Ativo"
     },
     "h55519c1fgecd7g4c73gafb2gebf09ecf7168": {
       "ReferenceText": "Staff",
-      "TranslatedText": "Посох"
+      "TranslatedText": "Cajado"
     },
     "hee5bca62g5b34g4846g92fdgdaafaa1a5625": {
       "ReferenceText": "Sourcery",
-      "TranslatedText": "Магия истока"
+      "TranslatedText": "Origem"
     },
     "ha8c99111g67d2g4321g8e8cg92282405ebe8": {
       "ReferenceText": "Boots",
-      "TranslatedText": "Ботинки"
+      "TranslatedText": "Botas"
     },
     "h3140c19bgec23g4a62g8d4ag9703a6bf89f4": {
       "ReferenceText": "Horns",
-      "TranslatedText": "Рога"
+      "TranslatedText": "Chifres"
     },
     "hcb8d99d9g28aeg4310gba17g4561e98b4b8e": {
       "ReferenceText": "Any",
-      "TranslatedText": "Любой"
+      "TranslatedText": "Qualquer"
     },
     "haa78ab06gafaag4c9dg910bg9f5c8c81b22c": {
       "ReferenceText": "Polymorph",
-      "TranslatedText": "Превращение"
+      "TranslatedText": "Polimorfia"
     },
     "hb09a2fc1g7ad5g4caag8606g936398d62a3b": {
       "ReferenceText": "Necromancer",
-      "TranslatedText": "Некромантия"
+      "TranslatedText": "Necromancer"
     },
     "he0473fbcg6b57g48aegb3c0g7bb24b1e0393": {
       "ReferenceText": "Player Portraits",
-      "TranslatedText": "Портреты персонажей"
+      "TranslatedText": "Retrato de Personagem"
     },
     "h7ca5d696g5244g435eg887bg524f556990f6": {
       "ReferenceText": "Scoundrel",
-      "TranslatedText": "Искусство убийства"
+      "TranslatedText": "Canalha"
     },
     "h5df736bfgcdc9g48e4ga09ag1967abc64832": {
       "ReferenceText": "Breast",
-      "TranslatedText": "Нагрудник"
+      "TranslatedText": "Patife"
     },
     "h962807b6g8756g412dga48eg5a2c6a71e76f": {
       "ReferenceText": "Potions",
-      "TranslatedText": "Зелья"
+      "TranslatedText": "Poçoes"
     },
     "h1d691e43g71beg469ag8795g8f6fdf95be62": {
       "ReferenceText": "Close UI after using an item",
-      "TranslatedText": "Закрывать интерфейс после использования предмета"
+      "TranslatedText": "Fecha a interface Apos Usar um item"
     },
     "he5c3a752gd8bag48fagb611g35b5d23bef9d": {
       "ReferenceText": "Cancels your controlled character's spell animations after their effects execute.  %s",
-      "TranslatedText": "Отменяет анимации навыков контролируемого персонажа сразу после исполнения их эффектов. %s"
+      "TranslatedText": "Cancela as animações de feitiço do seu personagem controlado após o lançamento de seus efeitos. %s"
     },
     "h4f610121gdb42g4d2fg9a8ag61eeedb018cb": {
       "ReferenceText": "Controls the width of the user interface.<br><br>Default is 400.",
-      "TranslatedText": "Задает ширину интерфейса.<br><br>По умолчанию 400."
+      "TranslatedText": "Controla a largura da interface.<br><br>O padrão é 400."
     },
     "h06dec330gb7d7g49bcg89d5g0c7c6f737147": {
       "ReferenceText": "Warfare",
-      "TranslatedText": "Военное дело"
+      "TranslatedText": "Guerrilha"
     },
     "ha588e93ag94d4g4b21gbd50g4863aea40d21": {
       "ReferenceText": "Aerotheurge",
-      "TranslatedText": "Аэротеургия"
+      "TranslatedText": "Aeromancia"
     },
     "h3b607ec3gf978g48ccgbb02g96aba3dd1430": {
       "ReferenceText": "Amulet",
-      "TranslatedText": "Амулет"
+      "TranslatedText": "Amuleto"
     },
     "h87e9e867gfd89g458eg850fga1129b558d59": {
       "ReferenceText": "Item Category",
-      "TranslatedText": "Категория предмета"
+      "TranslatedText": "Categoria de Item"
     },
     "h00be848dgbfbfg404agabddg983860260ed4": {
       "ReferenceText": "With enough Loremaster",
-      "TranslatedText": "С достаточным знанием легенд"
+      "TranslatedText": "Com Loremaster suficiente\n"
     },
     "h7afd19eegf79bg42f9g97e7g66f4ac3a51c6": {
       "ReferenceText": "Ring",
-      "TranslatedText": "Кольцо"
+      "TranslatedText": "Anel"
     },
     "h2eea4c8ag25e9g48c3gbe20g5c84eaf9243b": {
       "ReferenceText": "Club",
-      "TranslatedText": "Палица"
+      "TranslatedText": "Clava"
     },
     "h67b0f5b2gce06g4eefgbc69g36069a35bb3c": {
       "ReferenceText": "Apply",
-      "TranslatedText": "Применить"
+      "TranslatedText": "Aplicar"
     },
     "h939f9996g8c0fg46dbg8d51g5816929f1387": {
       "ReferenceText": "Quick Examine",
-      "TranslatedText": "Досье"
+      "TranslatedText": "Examinar Rapido"
     },
     "hccad2bc4g7010g48e3gae5dg045ab5228de2": {
       "ReferenceText": "Controls the height of the user interface.<br><br>Default is 600.",
-      "TranslatedText": "Задает высоту интерфейса.<br><br>По умолчанию 400."
+      "TranslatedText": "Controla a altura da interface.<br><br>O padrão é 600."
     },
     "h421f56f3g378cg4dfaga0d1ge6e2ea2f17c4": {
       "ReferenceText": "Geomancer",
-      "TranslatedText": "Геомантия"
+      "TranslatedText": "Geomancia"
     },
     "h5837c5abg3931g4b5cgbffdgd634be631879": {
       "ReferenceText": "Hydrosophist",
-      "TranslatedText": "Гидрософистика"
+      "TranslatedText": "Hidrosofia"
     },
     "he1539138g972fg4dffg9026gb1624ae59da1": {
       "ReferenceText": "Save/Load UI",
-      "TranslatedText": "Интерфейс сохранения/загрузки"
+      "TranslatedText": "Salvar/Carregar interface"
     },
     "hd5a53bd8gdcaag4280ga76dg905f40bde45e": {
       "ReferenceText": "Show learned skills",
-      "TranslatedText": "Показывать изученные способности"
+      "TranslatedText": "Mostrar Habilidade Aprendidas"
     },
     "h6ba9c31fgd5d1g4563gb72eg32f83bcb1302": {
       "ReferenceText": "Overheads",
-      "TranslatedText": "Всплывающий текст"
+      "TranslatedText": "Texto pop-up"
     },
     "hb986b161gd6c3g459bga8f6gba07c8483103": {
       "ReferenceText": "Scrolls",
-      "TranslatedText": "Свитки"
+      "TranslatedText": "Pergaminhos"
     },
     "h3a0f5c0fg2207g403bg9c7fge9fae83627f9": {
       "ReferenceText": "Summoning",
-      "TranslatedText": "Призывание"
+      "TranslatedText": "Invocações"
     },
     "h2fef0484g1ad5g4422gafb7g5a277c035095": {
       "ReferenceText": "Consumables",
-      "TranslatedText": "Расходуемые предметы"
+      "TranslatedText": "Consumiveis"
     },
     "h921639b1g5656g4eafg9c4dg735bda9ba283": {
       "ReferenceText": "Tooltips",
-      "TranslatedText": "Подсказки"
+      "TranslatedText": "Dicas"
     },
     "h02f2946agf229g4398g8acfga7abe6a9bf0b": {
       "ReferenceText": "Pyrokinetic",
-      "TranslatedText": "Пирокинетика"
+      "TranslatedText": "pirocinético"
     },
     "hbce14cb2g1ed7g4076g95d1gb80c6085c3ad": {
-      "ReferenceText": "Russian translation by Cathe & JoienReid",
-      "TranslatedText": "Перевод на русский от Cathe&JoienReid"
+      "ReferenceText": "Brazilian translation by Ferocidade",
+      "TranslatedText": "Tradução Brazileira por ferocidade"
     },
     "h042a555bg1f1dg43efg97a8g0df8238a0eb5": {
       "ReferenceText": "Background Opacity",
-      "TranslatedText": "Непрозрачность фона"
+      "TranslatedText": "Opacidade de Fundo"
     },
     "h0212f2a7gcebag4eaag8641g64cfb7bfc0d2": {
       "ReferenceText": "Helmet",
-      "TranslatedText": "Шлем"
+      "TranslatedText": "Capacete"
     },
     "haabd6906gee2dg4b39ga339gf5cdf1a2ee8b": {
       "ReferenceText": "Tooltip Adjustments",
-      "TranslatedText": "Разное"
+      "TranslatedText": "Ajustes de dica"
     },
     "h7c16563egd7cdg471cga0c5g30aa3344eeda": {
       "ReferenceText": "Huntsman",
-      "TranslatedText": "Мастерство охоты"
+      "TranslatedText": "Caçador"
     },
     "h4a3e28fag3595g4753gb507g4423068aeda8": {
       "ReferenceText": "Most options require a reload for changes to apply.",
-      "TranslatedText": "Для применения большинства настроек требуется перезагрузка."
+      "TranslatedText": " maioria das opções requer um recarregamento para que as alterações sejam aplicadas."
     },
     "h7e55ac61g269fg4f0dgabf9g06cbe52d0d22": {
       "ReferenceText": "Knife",
-      "TranslatedText": "Нож"
+      "TranslatedText": "Faca"
     },
     "h0441f7fegeeebg4aedgb1a8ge5ef84a7b400": {
       "ReferenceText": "Belt",
-      "TranslatedText": "Пояс"
+      "TranslatedText": "Cinto"
     },
     "ha5227515g6663g4386gb3bcga4ffb2043b65": {
       "ReferenceText": "Enable",
-      "TranslatedText": "Включить"
+      "TranslatedText": "Habilitar Cadáveres\n"
     },
     "h30052af9g5fbag4abcg9a0eg1ee45676a79c": {
       "ReferenceText": "Enable Corpses",
-      "TranslatedText": "Осматривать трупы"
+      "TranslatedText": "Habilitar Cadáveres\n"
     },
     "h6b38d491gbeccg47d1gad43g5e56e7b19242": {
       "ReferenceText": "Gloves",
-      "TranslatedText": "Перчатки"
+      "TranslatedText": "Luvas"
     },
     "h3d0006a6g5449g47fdg91d6g2920c42ea0f3": {
       "ReferenceText": "Shield",
-      "TranslatedText": "Щит"
+      "TranslatedText": "Escudo"
     },
     "h16088a37gd5b2g4bf3g9f7fgc3477eda6c4d": {
       "ReferenceText": "Leggings",
-      "TranslatedText": "Поножи"
+      "TranslatedText": "perneiras"
     },
     "he043b9f9gfc52g4c39ga4f1gc53ea4fcd5ce": {
       "ReferenceText": "Add skill IDs to this setting to blacklist them from being animation-cancelled.",
-      "TranslatedText": "Добавить ID способности, для которой не будет применяться отмена анимации."
+      "TranslatedText": "Adicione IDs de habilidade a esta configuração para colocá-los na lista negra de serem cancelados por animação."
     },
     "h5bf72ea7ge22ag4ccag9c30g88d06bcd9cc6": {
       "ReferenceText": "Previous",
-      "TranslatedText": "Предыдущее"
+      "TranslatedText": "Anterior"
     },
     "h1aedd70egab23g4218gb9cdg04ff62ebdf60": {
       "ReferenceText": "New Game",
-      "TranslatedText": "Новая игра"
+      "TranslatedText": "Novo jogo"
     },
     "h4e09e95aga08bg4250g821bg910ba2bef9ca": {
       "ReferenceText": "Paucity",
-      "TranslatedText": "Paucity"
+      "TranslatedText": "Escassez"
     },
     "hc66b270egc5bcg4bc3gbc2bgdd8278522f62": {
       "ReferenceText": "Disable",
-      "TranslatedText": "Отключить"
+      "TranslatedText": "Incapacitar"
     },
     "h429930a8g7b96g48cag8be4gc0bad3a2dc19": {
       "ReferenceText": "Incarnate Champion",
-      "TranslatedText": "Инкарнат-воитель"
-    },
-    "ha8b96a59gace5g4aa5gba9cgc7567a58a8e8": {
-      "ReferenceText": "TODO",
-      "TranslatedText": "TODO"
+      "TranslatedText": "Campeão Encarnado\n"
     },
     "heb8e464cg6305g46aeg8fbag240af8560ebe": {
       "ReferenceText": "Release left-click to Greatforge this item.",
-      "TranslatedText": "Перенести с помощью ЛКМ в окно Greatforge."
+      "TranslatedText": "Solte o botão esquerdo para Masterizar este item."
     },
     "h1f0e8d31gc83cg47e5gb69ag9f133fc64dcd": {
       "ReferenceText": "Confirm",
-      "TranslatedText": "Подтвердить"
+      "TranslatedText": "Confirmar"
     },
     "hdba61afag2d17g4037g99b9g123d915c9b18": {
       "ReferenceText": "Copy Position",
-      "TranslatedText": "Скопировать позицию"
+      "TranslatedText": "Copiar posição"
     },
     "h905ae122g47e8g41caga162g68a68b6a88af": {
       "ReferenceText": "Disabled",
-      "TranslatedText": "Отключено"
-    },
-    "hfd4d8ec8g76e3g4defg9647gc28159eb38e5": {
-      "ReferenceText": "TODO",
-      "TranslatedText": "TODO"
-    },
-    "h23e452c0g340fg4555g8034g753f003107bf": {
-      "ReferenceText": "TODO",
-      "TranslatedText": "TODO"
+      "TranslatedText": "Desativado"
     },
     "h2a5a9fedg9c42g4f0ag9d54gb4098614b91b": {
       "ReferenceText": "Below Health Bar",
-      "TranslatedText": "Под панелью здоровья"
+      "TranslatedText": "Abaixo da barra de saude"
     },
     "h833e3d98g6e6bg4cfag9c23g1bcd1c8e9de1": {
       "ReferenceText": "Bedazzled",
-      "TranslatedText": "Bedazzled"
+      "TranslatedText": "deslumbrado"
     },
     "ha6bf3f4cg6de4g4ac8gb706g3f39de8376c3": {
       "ReferenceText": "Teleport to",
-      "TranslatedText": "Телепортировать"
+      "TranslatedText": "Teleportar Para"
     },
     "h20175646g1124g48cag88ceg0b909cd717cd": {
       "ReferenceText": "Misc.",
-      "TranslatedText": "Разное"
+      "TranslatedText": "Diversos."
     },
     "h39849f5cga570g43bcg9258gf0c20c6f7e75": {
       "ReferenceText": "Crafting UI",
-      "TranslatedText": "Интерфейс крафта"
+      "TranslatedText": "Interface de Criação"
     },
     "h52f49bccg59f7g4b72g8440g55847b964cde": {
       "ReferenceText": "Character Level Display",
-      "TranslatedText": "Отображение уровня персонажа"
+      "TranslatedText": "Mostrar Nivel de personagem"
     },
     "h4ec86ffdge0d0g426cgb3b4g6112e887b9d5": {
       "ReferenceText": "Benevolence",
-      "TranslatedText": "Benevolence"
+      "TranslatedText": "Benevolente"
     },
     "h5b9e7fc0g6bbcg4781gb9aag95c9189ad110": {
       "ReferenceText": "Debug Cheats",
-      "TranslatedText": "Debug Cheats"
+      "TranslatedText": "Cheats de depuração"
     },
     "hf254ab01gbb16g4c83ga1e5gc415eaef1acf": {
       "ReferenceText": "New high-score! %s points",
-      "TranslatedText": "Новый рекорд! %s points"
+      "TranslatedText": "Novo recorde! %s pontos"
     },
     "h2e29d154g3de9g4a3fga340g6ac1ff21e1b3": {
       "ReferenceText": "Centurion",
-      "TranslatedText": "Centurion"
+      "TranslatedText": "centurião\n"
     },
     "h1a45624fgcbe1g48b8g9b4ag23e6f8cebe67": {
       "ReferenceText": "Hidden",
-      "TranslatedText": "Скрытое"
+      "TranslatedText": "Escondido"
     },
     "h7fafa02fg8cfdg4ff0g8f14g51597db59549": {
       "ReferenceText": "Plate",
-      "TranslatedText": "Кираса"
+      "TranslatedText": "Placa"
     },
     "hc9809692g2710g43e5g9e8ege3bd035472ac": {
       "ReferenceText": "Wither",
-      "TranslatedText": "Wither"
+      "TranslatedText": "Murchar"
     },
     "h1a5fc697g8419g4d7cg87eagf9632537ff34": {
       "ReferenceText": "Robes",
-      "TranslatedText": "Плащи"
+      "TranslatedText": "Vestes"
     },
     "h25fa3d4fg6833g4bb5ga16eg33b2fa3d3d2e": {
       "ReferenceText": "Vitality Void",
-      "TranslatedText": "Vitality Void"
+      "TranslatedText": "Vitalidade do vazio"
     },
     "h37567161ge719g4466g96e1gb6fc29c40e6c": {
       "ReferenceText": "Armor Type",
-      "TranslatedText": "Тип брони"
+      "TranslatedText": "Tipo de armadura"
     },
     "h9f5438ffg5024g4264gaaa2gef122c54e518": {
       "ReferenceText": "Are you sure you want to start a new game?",
-      "TranslatedText": "Вы уверены, что хотите начать новую игру?"
+      "TranslatedText": "Tem certeza que quer começar um novo jogo?"
     },
     "h29f2c933gb1a3g4f4ag89d4gcca71ffeba51": {
       "ReferenceText": "Artifacts",
-      "TranslatedText": "Артефакты"
+      "TranslatedText": "Artefatos"
     },
     "h4d7e7f36g5538g4195gbcd8g59db24ac7bc7": {
       "ReferenceText": "Purity",
-      "TranslatedText": "Purity"
+      "TranslatedText": "Pureza"
     },
     "ha752b7e8g5211g424fg9350g7111ead5cbac": {
       "ReferenceText": "Next",
-      "TranslatedText": "Следующее"
+      "TranslatedText": "Proximo"
     },
     "hac78ff60gededg498agbb7eg97795fcd40fc": {
       "ReferenceText": "Copies the cursor's world position to clipboard.",
-      "TranslatedText": "Копирует положение курсора в буфер обмена."
+      "TranslatedText": "Copiar a Posição Do cursor Global Para a area de transferencia"
     },
     "h304b2c12g06dag4389gaa3bg0f28e9916d32": {
       "ReferenceText": "Critical Chance",
-      "TranslatedText": "Критический шанс"
+      "TranslatedText": "Chance Critica"
     },
     "hfa03d86cg9193g45efg966fg50e1f98ce39c": {
       "ReferenceText": "Copy GUID",
-      "TranslatedText": "Скопировать GUID"
+      "TranslatedText": "Copiar GUID"
     },
     "hb5e67864g87f1g4493gb758g47bdab2b69aa": {
       "ReferenceText": "Alternative Status Display",
-      "TranslatedText": "Альтернативное отображение статуса"
+      "TranslatedText": "Exibição Alternativa de Status"
     },
     "h42bb0e3cgc574g4f49gbe27gbbba9ecd3ac1": {
       "ReferenceText": "Celestial",
@@ -1072,131 +1056,123 @@
     },
     "ha50d50eag4185g4e10g82fdg19548a304b32": {
       "ReferenceText": "Blacklisted Skills",
-      "TranslatedText": "Исключаемые способности"
+      "TranslatedText": "Lista negra de habilidades"
     },
     "hb6171987gab82g4fdcgbff3gcc635d063926": {
       "ReferenceText": "Presence",
-      "TranslatedText": "Presence"
+      "TranslatedText": "Presença"
     },
     "h0e0a45c4g77f2g4bbdga211gdae7cb9176b0": {
       "ReferenceText": "Embodiments",
-      "TranslatedText": "Embodiments"
+      "TranslatedText": "personificação"
     },
     "h8a290a77g93c2g4821g8019gc74551cb306a": {
       "ReferenceText": "Reactions",
-      "TranslatedText": "Реакции"
+      "TranslatedText": "Reações"
     },
     "h59386967gb899g4f18ga61bg168b8d91f04a": {
       "ReferenceText": "Elementalist",
-      "TranslatedText": "Elementalist"
+      "TranslatedText": "Elementarista"
     },
     "h3c90f954gcf43g4f24gab42gca440c18cdda": {
       "ReferenceText": "Quick Swap...",
-      "TranslatedText": "Быстрая замена..."
+      "TranslatedText": "Trocar rapido..."
     },
     "h3166017ag50b9g4943g8ae9g5335c23c58e4": {
       "ReferenceText": "Game Over",
-      "TranslatedText": "Игра окончена"
+      "TranslatedText": "Fim de jogo"
     },
     "hd2e9ffeega495g4fdagb818gbc7b6275e9b3": {
       "ReferenceText": "After Name",
-      "TranslatedText": "После имени"
+      "TranslatedText": "Depois do nome"
     },
     "h8069d8d4gbc27g47a0ga413g3c90f7b3a9ea": {
       "ReferenceText": "Abeyance",
-      "TranslatedText": "Abeyance"
+      "TranslatedText": "Pendencia"
     },
     "haf5c4d50gd6c7g42f6g8ca3g43f30e6385d1": {
       "ReferenceText": "Vitals",
-      "TranslatedText": "Vitals"
+      "TranslatedText": "Vitais"
     },
     "h124f507dge140g406egac22gcb4492950a6e": {
       "ReferenceText": "Adaptation",
-      "TranslatedText": "Adaptation"
+      "TranslatedText": "Adaptação"
     },
     "ha53ef891g707cg4195g9c43g556d65e0e3e3": {
       "ReferenceText": "Prosperity",
-      "TranslatedText": "Prosperity"
+      "TranslatedText": "Prosperidade"
     },
     "h4a4e92cagdaabg49a0g928dg5f01f8b44e80": {
       "ReferenceText": "Miscellaneous",
-      "TranslatedText": "Разное"
+      "TranslatedText": "Diversos"
     },
     "h4a44e189g9952g4edagb5efg9d56cba381f4": {
       "ReferenceText": "Ward",
-      "TranslatedText": "Ward"
+      "TranslatedText": "Proteção"
     },
     "ha01e7516ga580g4f00ga7f3gd59d23ca38c4": {
       "ReferenceText": "Defiance",
-      "TranslatedText": "Defiance"
+      "TranslatedText": "Desafio"
     },
     "h1fbb9977g36ffg4bc6g80f4gb3ce632a38f2": {
       "ReferenceText": "Voracity",
-      "TranslatedText": "Voracity"
+      "TranslatedText": "Voracidade"
     },
     "hbef0236fga72cg4b4bg930ag44ba332514dd": {
       "ReferenceText": "Cloth",
-      "TranslatedText": "Одежда"
+      "TranslatedText": "Pano"
     },
     "h5a50b777gc16cg4106gbde8gf9dd48954c7f": {
       "ReferenceText": "Cancel",
-      "TranslatedText": "Отменить"
-    },
-    "h4e3b6a84g9de1g4723gb807ga808db3c9d70": {
-      "ReferenceText": "TODO",
-      "TranslatedText": "TODO"
+      "TranslatedText": "cancelar"
     },
     "h7038367dgd010g46fbg9b9fg7c5c40d7ef44": {
       "ReferenceText": "Leather",
-      "TranslatedText": "Кожаное"
+      "TranslatedText": "Couro"
     },
     "h8f43167fge54bg419ag8b9agf80ad45e5c87": {
       "ReferenceText": "Violent Strikes",
-      "TranslatedText": "Violent Strikes"
+      "TranslatedText": "Ataques Violentos"
     },
     "hfc9df4bcgd7deg4e05ga37ag1b739d2a9e2b": {
       "ReferenceText": "Combat",
-      "TranslatedText": "Бой"
-    },
-    "hedbf4e2fgb8e6g400cgb08bgd33f99bc101d": {
-      "ReferenceText": "Controls how character levels are displayed in the health bar UI.",
-      "TranslatedText": "Задает вариант отображения уровня персонажа на панели здоровья"
+      "TranslatedText": "Combate"
     },
     "hc53e69e8ge732g435dg84dcgfb0541f33326": {
       "ReferenceText": "Dismantle All",
-      "TranslatedText": "Dismantle All"
+      "TranslatedText": "Desmontar Tudo"
     },
     "h1b460fc0ge72dg4879g9886g1dc640a782cb": {
       "ReferenceText": "No more valid moves on the board!",
-      "TranslatedText": "Ходы закончились!"
+      "TranslatedText": "Não há mais movimentos válidos no tabuleiro!"
     },
     "h4f83fd0cg8556g4826gb76cg82ec728bef2b": {
       "ReferenceText": "Stat Boost",
-      "TranslatedText": "Бонус к параметру"
+      "TranslatedText": "Booster de Status"
     },
     "h2db813e3g9cceg439agbdf6g1280e3902681": {
       "ReferenceText": "Predator",
-      "TranslatedText": "Predator"
+      "TranslatedText": "Predador"
     },
     "h4bc543cag5f19g4e91gbb76gc3a18177874b": {
       "ReferenceText": "Score             %s High-Score %s",
-      "TranslatedText": "Очки            %s High-Score %s"
+      "TranslatedText": "Pontuação            %s High-Score %s"
     },
     "h7e532f24g51f1g439cg9851g8ff8f12a6b17": {
       "ReferenceText": "When holding Shift",
-      "TranslatedText": "При удержании Shift"
+      "TranslatedText": "Enquanto Segurar Shift"
     },
     "h8fde1eb5g49cdg43d4g9a15g4e33a2847f23": {
       "ReferenceText": "Occultist",
-      "TranslatedText": "Occultist"
+      "TranslatedText": "Ocultista"
     },
     "h0d296a7dgd716g475agb4c6g9b3de417c79f": {
       "ReferenceText": "Replaces the statuses container by your characters's portraits with a custom UI.",
-      "TranslatedText": "Заменяет отображение статусов рядом с портретом персонажа на альтернативное."
+      "TranslatedText": "Substitui o contêiner de status pelos retratos de seus personagens com uma interface do usuário personalizada"
     },
     "ha1afe7c2g4d97g43b6g823eg03bf25788dbd": {
       "ReferenceText": "High-Score",
-      "TranslatedText": "Рекорд"
+      "TranslatedText": "Pontuação máxima\n"
     }
   }
 }

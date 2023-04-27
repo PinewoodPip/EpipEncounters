@@ -94,6 +94,21 @@ Text.CommonStrings.Warning = Text.RegisterTranslatedString({
 })
 
 ---------------------------------------------
+-- BRANDING
+---------------------------------------------
+
+Text.CommonStrings.Epip = Text.RegisterTranslatedString({
+   Handle = "h3e8e86e9g661eg4a3dga574ged9d4b424610",
+   ContextDescription = "Do not translate",
+   Text = "Epip",
+})
+Text.CommonStrings.TeamPinewood = Text.RegisterTranslatedString({
+   Handle = "h48e0051bg2cc7g4ef2gbea8gbe8152ee6413",
+   ContextDescription = "Do not translate",
+   Text = "Team Pinewood",
+})
+
+---------------------------------------------
 -- WEAPON TYPES
 ---------------------------------------------
 

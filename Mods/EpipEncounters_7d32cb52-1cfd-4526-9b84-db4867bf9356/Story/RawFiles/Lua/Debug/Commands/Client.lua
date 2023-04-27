@@ -106,6 +106,7 @@ local function GenerateLocalizationTemplates()
         "Russian",
         "Traditional Chinese",
         "Simplified Chinese",
+        "Portuguesebrazil"
     }
 
     for _,language in ipairs(languages) do
