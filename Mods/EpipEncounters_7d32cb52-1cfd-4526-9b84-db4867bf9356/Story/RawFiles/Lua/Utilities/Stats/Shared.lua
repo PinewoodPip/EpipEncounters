@@ -28,6 +28,21 @@ Stats = {
         "UNSHEATHED",
         "COMBAT",
         "INSURFACE",
+        "HIT",
+        "THROWN",
+        "SHIELD",
+        "ATTACKOFOPP",
+        "STORY_FROZEN",
+        "UNLOCK",
+        "BOOST",
+        "SITTING",
+        "IDENTIFY",
+        "REPAIR",
+        "ROTATE",
+        "EXPLODE",
+        "CLIMBING",
+        "SPARK",
+        "TUTORIAL_BED",
     }),
 
     Enums = {
@@ -343,8 +358,8 @@ function Stats.GetStatusIcon(status)
         -- Use hardcoded icons for hardcoded status types.
         icon = icon or Stats.HARDCODED_STATUS_ICONS[status.StatusId]
     
-        if not icon then
-            Stats:LogError("GetStatusIcon(): Could not find icon for " .. status.StatusId)
+        if not icon and status.StatusId ~= "CONSUME" then
+            Stats:LogWarning("GetStatusIcon(): Could not find icon for " .. status.StatusId)
             icon = "unknown"
         end
     end
