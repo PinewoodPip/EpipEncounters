@@ -57,13 +57,13 @@ end
 ---If the mode is not `OFF`, the feature must be enabled as well for `true` to be returned.
 ---@param mode Feature_AnimationCancelling_Mode
 ---@return boolean
-function AnimCancel:IsModeEnabled(mode)
+function AnimCancel.IsModeEnabled(mode)
     local isInMode
 
     if mode == AnimCancel.MODE.OFF then -- Don't check feature enable in this case
-        isInMode = self:GetSettingValue(AnimCancel.Settings.Mode) == AnimCancel.MODE.OFF
+        isInMode = AnimCancel:GetSettingValue(AnimCancel.Settings.Mode) == AnimCancel.MODE.OFF
     else
-        isInMode = self:GetSettingValue(AnimCancel.Settings.Mode) == mode and self:IsEnabled()
+        isInMode = AnimCancel:GetSettingValue(AnimCancel.Settings.Mode) == mode and AnimCancel:IsEnabled()
     end
 
     return isInMode
@@ -103,7 +103,7 @@ Client.Events.SkillStateChanged:Subscribe(function (ev)
 
     AnimCancel:DebugLog("Skill state changed", ev.State)
 
-    if AnimCancel:IsModeEnabled(AnimCancel.MODE.CLIENT_SIDE) and ev.State and AnimCancel.IsEligible(char, Character.GetCurrentSkill(char)) then
+    if AnimCancel.IsModeEnabled(AnimCancel.MODE.CLIENT_SIDE) and ev.State and AnimCancel.IsEligible(char, Character.GetCurrentSkill(char)) then
         GameState.Events.RunningTick:Subscribe(function (_)
             char = Client.GetCharacter()
             local state = Character.GetSkillState(char)
@@ -120,11 +120,11 @@ end)
 
 -- Listen for skill cast notifications from the server, for "server-side" animation cancelling.
 Net.RegisterListener(AnimCancel.NET_MESSAGE, function (payload)
-    if AnimCancel:IsModeEnabled(AnimCancel.MODE.SERVER_SIDE) then
+    if AnimCancel.IsModeEnabled(AnimCancel.MODE.SERVER_SIDE) then
         local char = payload:GetCharacter()
 
         -- Only perform cancelling if the character matches - we don't want to try to cancel if the client character has been switched in the meantime.
-        if char == Client.GetCharacter() then
+        if char == Client.GetCharacter() and AnimCancel.IsEligible(char, payload.SkillID) then
             AnimCancel:CancelAnimation()
         end
     end
@@ -135,4 +135,11 @@ AnimCancel.Hooks.IsSkillEligible:Subscribe(function (ev)
     local blacklist = AnimCancel.Settings.Blacklist:GetValue() ---@type DataStructures_Set
 
     ev.Eligible = ev.Eligible and not blacklist:Contains(ev.SkillID)
+end)
+
+-- Certain skills are blacklisted in server-side mode only.
+AnimCancel.Hooks.IsSkillEligible:Subscribe(function (ev)
+    if AnimCancel.IsModeEnabled(AnimCancel.MODE.SERVER_SIDE) and AnimCancel.SERVERSIDE_BANNED_SKILLS:Contains(ev.SkillID) then
+        ev.Eligible = false
+    end
 end)

@@ -15,12 +15,16 @@ local AnimCancel = {
     BANNED_ARCHETYPES = Set.Create({
         "Jump",
         "Teleportation",
+        "MultiStrike",
     }),
     BANNED_SKILLS = Set.Create({
         "Projectile_Flight",
         "Target_DualWieldingAttack",
         "Target_Flurry",
         "Target_DaggersDrawn",
+    }),
+    SERVERSIDE_BANNED_SKILLS = Set.Create({
+        "Projectile_ArrowSpray",
     }),
 
     TranslatedStrings = {
@@ -96,7 +100,7 @@ function AnimCancel.GetDelay(char, skillID)
     local hook = AnimCancel.Hooks.GetDelay:Throw({
         Character = char,
         SkillID = skillID,
-        Delay = AnimCancel:IsModeEnabled(AnimCancel.MODE.SERVER_SIDE) and AnimCancel.DEFAULT_DELAY_SERVER_SIDE or AnimCancel.DEFAULT_DELAY_CLIENT_SIDE, -- Client-side delay is fallback.
+        Delay = AnimCancel.IsModeEnabled(AnimCancel.MODE.SERVER_SIDE) and AnimCancel.DEFAULT_DELAY_SERVER_SIDE or AnimCancel.DEFAULT_DELAY_CLIENT_SIDE, -- Client-side delay is fallback.
     })
 
     return hook.Delay
