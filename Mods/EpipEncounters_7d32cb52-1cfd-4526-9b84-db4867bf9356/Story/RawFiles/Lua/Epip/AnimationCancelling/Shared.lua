@@ -25,6 +25,8 @@ local AnimCancel = {
     }),
     SERVERSIDE_BANNED_SKILLS = Set.Create({
         "Projectile_ArrowSpray",
+        "Projectile_Multishot",
+        "Projectile_StaffOfMagus",
     }),
 
     TranslatedStrings = {
