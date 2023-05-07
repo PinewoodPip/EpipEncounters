@@ -24,7 +24,7 @@ local TooltipAdjustments = {
         AstrologerFix = {
             Type = "Boolean",
             Name = "Fix Astrologer's Gaze / Far Out Man range",
-            Description = "If enabled, zone and cone-type skills will display the correct range if the character has Atrologer's Gaze / Far Out Man.",
+            Description = "If enabled, zone and cone-type skills will display the correct range if the character has Astrologer's Gaze / Far Out Man.",
             DefaultValue = true,
         },
         DamageTypeDeltamods = {
