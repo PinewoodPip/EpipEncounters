@@ -1,0 +1,22 @@
+- Animation cancelling now has 2 modes: client-side (v1065 behaviour) and server-side (old behaviour). The server-side option uses the lower delay that was used previously.
+- Changed how hotbar row count and visibility is saved
+    - This might not work in multiplayer due to extender shenanigans
+- Custom status UI elements are now bigger (ex. in Quick Examine)
+- Added a new rune crafting system; simply right-click a rune material and select the new option in the dropdown menu to get started.
+- Reworked the stats tab; should be less prone to bugging out in multiplayer now
+    - Also fixed the gold & splinter stat
+- The incompatible mods warnings now show on every load, rather than once per playthrough
+- Updated localizations and added Brazilian Portuguese, translated by Ferocidade
+- Character sheet skew during anniversaries is now less extreme
+- Removed the "cinematic combat" option
+
+Fixes:
+
+- Fixed some log spam related to status icons
+- Fixed hotbar loadouts not working
+- Non-english languages should no longer have broken artifact descriptions
+    - The cause was fetching the TSKs during module load, which causes a bug that overwrites the string.
+- Fixed Quick Examine not being openable for the same character twice in a row
+- Fixed vanity dyes not applying to slots that vanilla armor (without transmog) would hide/mask
+- Fixed error if an item was transmogged into a template that no longer existed
+- Fixed a typo in the settings to fix Astrologer's Gaze tooltip
