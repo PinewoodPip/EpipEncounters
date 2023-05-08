@@ -153,6 +153,13 @@ function Slot.Create(ui, id, parent)
     return obj
 end
 
+function Slot:Destroy()
+    self.SlotElement:Destroy()
+    self.SlotIcon:Destroy()
+    self.RuneSlotsIcon:Destroy()
+    self.RarityIcon:Destroy()
+end
+
 ---@param obj GenericUI_Prefab_HotbarSlot_Object
 function Slot:SetObject(obj)
     if obj.Type == "Skill" then
