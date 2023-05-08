@@ -53,11 +53,9 @@ local HotbarGroup = {
 ---@param col integer
 ---@return GenericUI_Prefab_HotbarSlot
 function HotbarGroup:_AddSlot(row, col)
-    if row > self._Rows then
-        self._ElementRows[row] = {}
-    end
     local slot = HotbarSlot.Create(self.UI, "Row_" .. row .. "_Slot_" .. col, self._Container)
     slot:SetCanDragDrop(true)
+    slot.SlotElement:SetSizeOverride(self.SLOT_SIZE, self.SLOT_SIZE)
     self._ElementRows[row][col] = slot
     return slot
 end
@@ -88,17 +86,28 @@ end
 ---@param newRows integer
 ---@param newColumns integer
 function HotbarGroup:Resize(newRows, newColumns)
-    for i=math.max(1,math.min(self._Rows, newRows)),math.max(self._Rows, newRows),1 do
-        for j=math.max(1,math.min(self._Columns, newColumns)),math.max(self._Columns,newColumns),1 do
-            if (i > self._Rows or j > self._Columns) and (i <= newRows and j <= newColumns) then
-                self:_AddSlot(i, j)
+    --Delete excess rows first
+    if self._Rows > 0 then
+        for i=self._Rows,newRows+1,-1 do
+            for j=1,math.max(self._Columns,newColumns),1 do
+                if (i > newRows or j > newColumns) then
+                    self:_DeleteSlot(i, j)
+                end
             end
-            if (i > newRows or j > newColumns) then
+            self._ElementRows[i] = nil
+        end
+    end
+
+    for i=newRows,1,-1 do
+        if i > self._Rows then
+            self._ElementRows[i] = {}
+        end
+        for j=1,math.max(self._Columns,newColumns),1 do
+            if i > self._Rows or j > self._Columns then
+                self:_AddSlot(i, j)
+            else
                 self:_DeleteSlot(i, j)
             end
-        end
-        if i > newRows then
-            self._ElementRows[i] = nil
         end
     end
 
@@ -113,6 +122,7 @@ function HotbarGroup:Resize(newRows, newColumns)
     self._Container:SetGridSize(newColumns, newRows)
     self._Container:SetPosition(3, 3)
     self._Container:RepositionElements()
+    self._Container:SetSizeOverride(self:GetSlotAreaSize())
 
     -- Dragging area/handle
     local mcWidth, mcHeight = self._Container:GetMovieClip().width, self._Container:GetMovieClip().height
