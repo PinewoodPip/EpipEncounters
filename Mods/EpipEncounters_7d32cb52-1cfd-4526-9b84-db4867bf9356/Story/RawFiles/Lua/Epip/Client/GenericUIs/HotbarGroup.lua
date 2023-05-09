@@ -55,7 +55,7 @@ local HotbarGroup = {
 function HotbarGroup:_AddSlot(row, col)
     local slot = HotbarSlot.Create(self.UI, "Row_" .. row .. "_Slot_" .. col, self._Container)
     slot:SetCanDragDrop(true)
-    slot.SlotElement:SetSizeOverride(self.SLOT_SIZE, self.SLOT_SIZE)
+    slot.SlotElement:SetSizeOverride(self.SLOT_SIZE + 6, self.SLOT_SIZE + 6)
     self._ElementRows[row][col] = slot
     return slot
 end
