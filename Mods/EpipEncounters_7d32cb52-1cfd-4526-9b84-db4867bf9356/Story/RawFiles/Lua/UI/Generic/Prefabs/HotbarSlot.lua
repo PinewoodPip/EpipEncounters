@@ -114,7 +114,7 @@ function Slot.Create(ui, id, parent)
     obj._AutoUpdateRemainingDelay = obj._AutoUpdateDelay
     obj._Usable = true
 
-    obj.SlotElement = ui:CreateElement(id, "Slot", parent)
+    obj.SlotElement = ui:CreateElement(id, "GenericUI_Element_Slot", parent)
     local slot = obj.SlotElement
 
     local icon = obj:CreateElement("Icon", "GenericUI_Element_IggyIcon", slot)
@@ -153,11 +153,9 @@ function Slot.Create(ui, id, parent)
     return obj
 end
 
-function Slot:Destroy()
-    self.SlotElement:Destroy()
-    self.SlotIcon:Destroy()
-    self.RuneSlotsIcon:Destroy()
-    self.RarityIcon:Destroy()
+---@param ui GenericUI_Instance
+function Slot:Destroy(ui)
+    ui:DestroyElement(self.SlotElement)
 end
 
 ---@param obj GenericUI_Prefab_HotbarSlot_Object
