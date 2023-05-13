@@ -25,6 +25,39 @@ local GroupManager = {
     SAVE_VERSION = 0,
 
     CURRENT_GROUP_GUID = nil, ---@type string
+
+    TranslatedStrings = {
+        CreateGroupHeader = {
+            Handle = "h4179a16bg43a5g40bcg88ccg7870114fb6c0",
+            Text = "Create Hotbar Group",
+            ContextDescription = "Hotbar group creation menu header",
+        },
+        CreateGroupButton = {
+            Handle = "h874faf80g6c2eg4fe8gb908g60bb769b02eb",
+            Text = "Create",
+            ContextDescription = "Hotbar group creation menu confirm button text",
+        },
+        ResizeGroupHeader = {
+            Handle = "h36e32b84g5373g4711g920cg8d0cedd5fcff",
+            Text = "Resize Hotbar Group",
+            ContextDescription = "Hotbar group resize menu header",
+        },
+        ResizeGroupButton = {
+            Handle = "hf0192252g5d7ag429eg96a6g21be87bd88cd",
+            Text = "Resize",
+            ContextDescription = "Hotbar group resize menu confirm button text",
+        },
+        RowsSpinner = {
+            Handle = "h36ba40b2ge76bg4ea9g90ecgde3d4fc01945",
+            Text = "Rows",
+            ContextDescription = "Hotbar group create/resize menu rows spinner label",
+        },
+        ColumnsSpinner = {
+            Handle = "hb4ca31ecge2ecg44faga2dbg1e1c98c49d30",
+            Text = "Columns",
+            ContextDescription = "Hotbar group create/resize menu columns spinner label",
+        },
+    },
 }
 Epip.RegisterFeature("HotbarGroupManager", GroupManager)
 
@@ -97,7 +130,7 @@ function HotbarGroup:Resize(newRows, newColumns)
 
     self._Container:SetGridSize(newColumns, newRows)
     self._Container:RepositionElements()
-    self._Container:SetSizeOverride(self:GetSlotAreaSize())
+    self._Container:SetSizeOverride(width, height)
 
     -- Dragging area/handle
     local mcWidth, mcHeight = self._Container:GetMovieClip().width, self._Container:GetMovieClip().height
@@ -395,8 +428,8 @@ function GroupManager:__SetupUI(UIName, HeaderText, ButtonText)
     text:SetStroke(Color.Create(0, 0, 0), 1, 1, 1, 5)
     text:SetSize(GroupManager._Content_WIDTH, 50)
 
-    local rowSpinner = Spinner.Create(ui, "RowSpinner", content, "Rows", 1, 20, 1)
-    local columnSpinner = Spinner.Create(ui, "ColumnSpinner", content, "Columns", 1, 20, 1)
+    local rowSpinner = Spinner.Create(ui, "RowSpinner", content, GroupManager.TranslatedStrings.RowsSpinner:GetString(), 1, 20, 1)
+    local columnSpinner = Spinner.Create(ui, "ColumnSpinner", content, GroupManager.TranslatedStrings.ColumnsSpinner:GetString(), 1, 20, 1)
 
     rowSpinner:GetMainElement():SetCenterInLists(true)
     columnSpinner:GetMainElement():SetCenterInLists(true)
@@ -418,7 +451,8 @@ function GroupManager:__SetupUI(UIName, HeaderText, ButtonText)
 end
 
 function GroupManager:__Setup()
-    local ui, rowSpinner, columnSpinner, promptButton = GroupManager:__SetupUI("CreateGroup", "Create Hotbar Group", "Create")
+    local ui, rowSpinner, columnSpinner, promptButton = GroupManager:__SetupUI("CreateGroup",
+        GroupManager.TranslatedStrings.CreateGroupHeader:GetString(), GroupManager.TranslatedStrings.CreateGroupButton:GetString())
     GroupManager.CreateUI = ui
     GroupManager.CreateRowSpinner = rowSpinner
     GroupManager.CreateColSpinner = columnSpinner
@@ -427,7 +461,8 @@ function GroupManager:__Setup()
         GroupManager.CreateUI:Hide()
     end)
 
-    ui, rowSpinner, columnSpinner, promptButton = GroupManager:__SetupUI("ResizeGroup", "Resize Hotbar Group", "Resize")
+    ui, rowSpinner, columnSpinner, promptButton = GroupManager:__SetupUI("ResizeGroup",
+        GroupManager.TranslatedStrings.ResizeGroupHeader:GetString(), GroupManager.TranslatedStrings.ResizeGroupButton:GetString())
     GroupManager.ResizeUI = ui
     GroupManager.ResizeRowSpinner = rowSpinner
     GroupManager.ResizeColSpinner = columnSpinner
