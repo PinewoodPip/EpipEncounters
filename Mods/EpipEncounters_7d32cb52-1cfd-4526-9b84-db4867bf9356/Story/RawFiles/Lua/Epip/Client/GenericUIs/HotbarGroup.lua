@@ -6,7 +6,7 @@ local ContextMenu = Client.UI.ContextMenu
 
 ---@class Feature_HotbarGroupManager : Feature
 local GroupManager = {
-    CreateUI = nil, ---@type GenericUI_Instance
+    CreationUI = nil, ---@type GenericUI_Instance
     CreateRowSpinner = nil, ---@type GenericUI_Prefab_Spinner
     CreateColSpinner = nil, ---@type GenericUI_Prefab_Spinner
 
@@ -17,7 +17,7 @@ local GroupManager = {
     Groups = {}, ---@type table<GUID, HotbarGroup>
     SharedGroups = {}, ---@type table<GUID, true>
 
-    _Content_WIDTH = 450,
+    CONTENT_WIDTH = 450,
     UI_WIDTH = 500,
     UI_HEIGHT = 400,
 
@@ -82,7 +82,7 @@ Epip.RegisterFeature("HotbarGroupManager", GroupManager)
 ---@field _Container GenericUI_Element_Grid
 ---@field _DragArea GenericUI_Element_Divider
 local HotbarGroup = {
-    SLOT_SIZE = 56,
+    SLOT_SIZE = 58,
     SLOT_SPACING = 0,
 }
 
@@ -98,8 +98,8 @@ end
 
 ---@return number, number -- Width, height
 function HotbarGroup:GetSlotAreaSize()
-    local width = self._Columns * self.SLOT_SIZE + (self._Columns - 1) * self.SLOT_SPACING
-    local height = self._Rows * self.SLOT_SIZE + (self._Rows - 1) * self.SLOT_SPACING
+    local width = self._Columns * self.SLOT_SIZE + (self._Columns + 0) * self.SLOT_SPACING
+    local height = self._Rows * self.SLOT_SIZE + (self._Rows + 0) * self.SLOT_SPACING
 
     return width, height
 end
@@ -117,7 +117,7 @@ end
 ---@param newRows integer
 ---@param newColumns integer
 function HotbarGroup:Resize(newRows, newColumns)
-    for i=self._Rows * self._Columns + 1,newRows * newColumns,1 do
+    for _=self._Rows * self._Columns + 1,newRows * newColumns,1 do
         self:_AddSlot()
     end
 
@@ -207,7 +207,7 @@ end
 ---------------------------------------------
 
 function GroupManager.ShowCreateUI()
-    local ui = GroupManager.CreateUI
+    local ui = GroupManager.CreationUI
 
     ui:ExternalInterfaceCall("setPosition", "center", "screen", "center")
     ui:Show()
@@ -439,13 +439,13 @@ function GroupManager:__SetupUI(UIName, HeaderText, ButtonText)
 
     -- Content
     local content = bg:AddChild("Content", "GenericUI_Element_VerticalList")
-    content:SetSize(GroupManager._Content_WIDTH, GroupManager.UI_HEIGHT)
+    content:SetSize(GroupManager.CONTENT_WIDTH, GroupManager.UI_HEIGHT)
     content:SetPosition(27, 60)
 
     local text = content:AddChild("Header", "GenericUI_Element_Text")
     text:SetText(Text.Format(HeaderText, {Color = Color.WHITE, Size = 23}))
     text:SetStroke(Color.Create(0, 0, 0), 1, 1, 1, 5)
-    text:SetSize(GroupManager._Content_WIDTH, 50)
+    text:SetSize(GroupManager.CONTENT_WIDTH, 50)
 
     local rowSpinner = Spinner.Create(ui, "RowSpinner", content, GroupManager.TranslatedStrings.RowsSpinner:GetString(), 1, 20, 1)
     local columnSpinner = Spinner.Create(ui, "ColumnSpinner", content, GroupManager.TranslatedStrings.ColumnsSpinner:GetString(), 1, 20, 1)
@@ -472,12 +472,12 @@ end
 function GroupManager:__Setup()
     local ui, rowSpinner, columnSpinner, promptButton = GroupManager:__SetupUI("CreateGroup",
         GroupManager.TranslatedStrings.CreateGroupHeader:GetString(), GroupManager.TranslatedStrings.CreateGroupButton:GetString())
-    GroupManager.CreateUI = ui
+    GroupManager.CreationUI = ui
     GroupManager.CreateRowSpinner = rowSpinner
     GroupManager.CreateColSpinner = columnSpinner
     promptButton.Events.Pressed:Subscribe(function(_)
         GroupManager.Create(nil, GroupManager.CreateRowSpinner:GetValue(), GroupManager.CreateColSpinner:GetValue())
-        GroupManager.CreateUI:Hide()
+        GroupManager.CreationUI:Hide()
     end)
 
     ui, rowSpinner, columnSpinner, promptButton = GroupManager:__SetupUI("ResizeGroup",
