@@ -121,8 +121,27 @@ function HotbarGroup:Resize(newRows, newColumns)
         self:_AddSlot()
     end
 
+    local oldSlotObjects = {}
+    local oldRows, oldCols = self._Rows, self._Columns
+    for i=1,self._Rows,1 do
+        oldSlotObjects[i] = {}
+        for j=1,self._Columns,1 do
+            oldSlotObjects[i][j] = self:GetSlot(i, j).Object
+        end
+    end
+
     self._Rows = newRows
     self._Columns = newColumns
+
+    for i=1,math.max(newRows,oldRows),1 do
+        for j=1,math.max(newColumns,oldCols),1 do
+            if i <= oldRows and j <= oldCols then
+                self:GetSlot(i, j):SetObject(oldSlotObjects[i][j])
+            else
+                self:GetSlot(i, j):Clear()
+            end
+        end
+    end
 
     local width, height = self:GetSlotAreaSize()
 
