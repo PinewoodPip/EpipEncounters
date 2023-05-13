@@ -39,20 +39,18 @@ Epip.RegisterFeature("HotbarGroupManager", GroupManager)
 ---@field RelativePosition number[]
 
 ---@class HotbarGroup
+---@field UI GenericUI_Instance
+---@field GUID GUID
+---@field _Slots table<GenericUI_Prefab_HotbarSlot>
+---@field _SlotsAllocated integer
+---@field _Rows integer
+---@field _Columns integer
+---@field _Content  GenericUI_Element_TiledBackground
+---@field _Container GenericUI_Element_Grid
+---@field _DragArea GenericUI_Element_Divider
 local HotbarGroup = {
-    UI = nil, ---@type GenericUI_Instance
-    GUID = nil, ---@type GUID
     SLOT_SIZE = 50,
     SLOT_SPACING = 0,
-
-    _Slots = {}, ---@type table<GenericUI_Prefab_HotbarSlot>
-    _SlotsAllocated = 0,
-    _Rows = 0,
-    _Columns = 0,
-
-    _Content = nil, ---@type GenericUI_Element_TiledBackground
-    _Container = nil, ---@type GenericUI_Element_Grid
-    _DragArea = nil ---@type GenericUI_Element_Divider
 }
 
 ---@return GenericUI_Prefab_HotbarSlot
@@ -114,16 +112,17 @@ function HotbarGroup:Resize(newRows, newColumns)
         self._DragArea:SetSize(mcWidth + EXTRA_WIDTH)
         self._DragArea:SetPosition(-EXTRA_WIDTH/2, -25)
     end
-
-    for i=0,self._SlotsAllocated-1,1 do
-        _D(self:_GetSlot(i).Object)
-    end
 end
 
 ---@param id string
 ---@param rows integer
 ---@param columns integer
 function HotbarGroup:_Init(id, rows, columns)
+    self._Slots = {}
+    self._Rows = 0
+    self._Columns = 0
+    self._SlotsAllocated = 0
+
     self.GUID = id
     self.UI = Generic.Create("HotbarGroup_" .. self.GUID)
 
