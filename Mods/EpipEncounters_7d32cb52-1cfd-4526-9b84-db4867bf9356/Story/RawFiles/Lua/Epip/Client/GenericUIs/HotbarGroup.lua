@@ -82,7 +82,7 @@ Epip.RegisterFeature("HotbarGroupManager", GroupManager)
 ---@field _Container GenericUI_Element_Grid
 ---@field _DragArea GenericUI_Element_Divider
 local HotbarGroup = {
-    SLOT_SIZE = 50,
+    SLOT_SIZE = 56,
     SLOT_SPACING = 0,
 }
 
@@ -90,7 +90,7 @@ local HotbarGroup = {
 function HotbarGroup:_AddSlot()
     local slot = HotbarSlot.Create(self.UI, self.GUID .. "_Slot_" .. self._SlotsAllocated, self._Container)
     slot:SetCanDragDrop(true)
-    slot.SlotElement:SetSizeOverride(self.SLOT_SIZE + 6, self.SLOT_SIZE + 6)
+    slot.SlotElement:SetSizeOverride(self.SLOT_SIZE, self.SLOT_SIZE)
     self._Slots[self._SlotsAllocated] = slot
     self._SlotsAllocated = self._SlotsAllocated + 1
     return slot
@@ -133,7 +133,7 @@ function HotbarGroup:Resize(newRows, newColumns)
     self._Container:SetSizeOverride(width, height)
 
     -- Dragging area/handle
-    local mcWidth, mcHeight = self._Container:GetMovieClip().width, self._Container:GetMovieClip().height
+    local mcWidth, mcHeight = width, height
     local EXTRA_WIDTH = 15 * 2
     -- Show the handle on the longest side of the slot group
     if width < height then
