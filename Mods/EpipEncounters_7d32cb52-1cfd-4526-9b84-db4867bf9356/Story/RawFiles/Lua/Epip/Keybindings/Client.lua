@@ -28,7 +28,7 @@ Options.RegisterTab("EpipEncounters", {
         {Name = "Show B/H", ID = "EpipEncounters_Feature_BHOverheads"},
 
         -- Hotbar
-        {Name = "Hotbar Toggle Extra Bars Vibisility", ID = "EpipEncounters_Hotbar_ToggleVisibility"},
+        {Name = "Hotbar Toggle Extra Bars Visibility", ID = "EpipEncounters_Hotbar_ToggleVisibility"},
         {Name = "Hotbar Action 1 (bottom row)", ID = "EpipEncounters_Hotbar_1"},
         {Name = "Hotbar Action 2 (bottom row)", ID = "EpipEncounters_Hotbar_2"},
         {Name = "Hotbar Action 3 (bottom row)", ID = "EpipEncounters_Hotbar_3"},
