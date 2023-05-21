@@ -66,7 +66,7 @@ function _SlotObject.Create(type, data)
 end
 
 ---Returns the entity assigned to the slot.
----@return EclItem|StatsLib_SkillData|StatsLib_Action
+---@return EclItem|StatsLib_StatsEntry_SkillData|StatsLib_Action
 function _SlotObject:GetEntity()
     local entity
 
@@ -119,6 +119,7 @@ function Slot.Create(ui, id, parent)
 
     local icon = obj:CreateElement("Icon", "GenericUI_Element_IggyIcon", slot)
     obj.SlotIcon = icon
+    slot:SetChildIndex(icon, 1) -- Layer icon behind cooldown indicator
     local iconMC = icon:GetMovieClip()
     iconMC.iggy_mc.y = 1
     iconMC.iggy_mc.x = 1
@@ -399,12 +400,13 @@ function Slot:_OnTick(ev)
         local char = Client.GetCharacter()
         local slot = self.SlotElement
         local obj = self.Object
-        local isPreparingSkill = Character.IsPreparingSkill(char)
+        local isPreparingSkill = false
     
         if obj.Type == "Skill" then
             local skill = char.SkillManager.Skills[obj.StatsID]
             local cooldown = -1
             local enabled = false
+            isPreparingSkill = Character.GetCurrentSkill(char) == obj.StatsID and Character.IsPreparingSkill(char) -- Skill ID must match, and the slot only blinks during preparation phase
     
             if skill then
                 cooldown = skill.ActiveCooldown / 6
