@@ -257,6 +257,7 @@ LOAD_ORDER = {
     },
 
     {ScriptSet = "Epip/AnimationCancelling",},
+    {ScriptSet = "Epip/FlagsDisplay"},
 
     {ScriptSet = "UI/Vanity/Tabs/Shapeshift", WIP = true},
 

@@ -582,6 +582,7 @@ LOAD_ORDER = {
     "Epip/Client/HideIncons.lua",
 
     {ScriptSet = "Epip/AnimationCancelling"},
+    {ScriptSet = "Epip/FlagsDisplay"},
 
     {
         Scripts = {
