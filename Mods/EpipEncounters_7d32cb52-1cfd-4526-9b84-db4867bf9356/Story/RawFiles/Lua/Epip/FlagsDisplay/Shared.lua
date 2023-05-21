@@ -12,6 +12,16 @@ local FlagsDisplay = {
     USE_LEGACY_HOOKS = false,
 
     TranslatedStrings = {
+        Setting_Name = {
+           Handle = "h99292bbfg3f0eg413agac82g822201b81b42",
+           Text = "Display common flags",
+           ContextDescription = "Setting name",
+        },
+        Setting_Description = {
+           Handle = "h92547755gb161g4e13gbd37ga31d5101d177",
+           Text = "Displays certain common character flags in the health bar while holding shift, such as attack of opportunity availability. Works best on player characters and updating certain flags might be delayed.",
+           ContextDescription = "Setting tooltip",
+        },
         DeathResist = {
            Handle = "h75aa417egac92g4e00ga4b5g173f485c2f01",
            Text = "Comeback Kid Available",

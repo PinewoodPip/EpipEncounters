@@ -127,6 +127,7 @@ local tabs = {
             "Minimap",
             "TreasureTableDisplay",
             {Type = "Setting", Module = "EpipEncounters_EnemyHealthBarExtraInfo", ID = "Mode"},
+            {Type = "Setting", Module = "EpipEncounters_FlagsDisplay", ID = "Enabled"},
             "ESCClosesAmerUI",
             "RenderShroud",
             "Feature_WalkOnCorpses",

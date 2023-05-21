@@ -5,6 +5,19 @@ local EnemyHealthBar = Client.UI.EnemyHealthBar
 local FlagsDisplay = Epip.GetFeature("Feature_FlagsDisplay")
 
 ---------------------------------------------
+-- SETTINGS
+---------------------------------------------
+
+-- Setting to enable/disable the feature.
+FlagsDisplay.Settings.Enabled = FlagsDisplay:RegisterSetting("Enabled", {
+    Type = "Boolean",
+    Name = FlagsDisplay.TranslatedStrings.Setting_Name,
+    Description = FlagsDisplay.TranslatedStrings.Setting_Description,
+    Context = "Client",
+    DefaultValue = false,
+})
+
+---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
@@ -18,6 +31,11 @@ function FlagsDisplay.GetFlags(entity)
     })
 
     return hook.Flags
+end
+
+---@override
+function FlagsDisplay:IsEnabled()
+    return FlagsDisplay:GetSettingValue(FlagsDisplay.Settings.Enabled) == true and _Feature.IsEnabled(self)
 end
 
 ---------------------------------------------
