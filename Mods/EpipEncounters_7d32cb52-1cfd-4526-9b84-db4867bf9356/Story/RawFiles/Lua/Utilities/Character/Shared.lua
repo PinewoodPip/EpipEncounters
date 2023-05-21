@@ -672,6 +672,7 @@ function Character.GetStatusByNetID(char, netID)
 end
 
 ---Returns the current skill state of char.
+---**On the server, this can only return the state while using the skill. Preparation state cannot be accessed.**
 ---@param char Character
 ---@return (EclSkillState|EsvSkillState)?
 function Character.GetSkillState(char)
@@ -680,7 +681,13 @@ function Character.GetSkillState(char)
     if Ext.IsClient() then
         state = char.SkillManager.CurrentSkill
     else
-        state = char.SkillManager.CurrentSkillState
+        local layers = char.ActionMachine.Layers
+        local actionState = layers[1] and layers[1].State
+
+        if actionState and (actionState.Type == "UseSkill") then
+            ---@cast actionState EsvASUseSkill
+            state = actionState.Skill
+        end
     end
 
     return state
