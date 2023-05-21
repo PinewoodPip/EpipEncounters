@@ -79,6 +79,11 @@ function _Element:AddChild(id, elementType)
     return self.UI:CreateElement(id, elementType, self)
 end
 
+---@param element GenericUI_Element
+function _Element:RemoveChild(element)
+    self.UI:DestroyElement(element)
+end
+
 function _Element:_RegisterEvents()
     local _Templates = self.Events
     
