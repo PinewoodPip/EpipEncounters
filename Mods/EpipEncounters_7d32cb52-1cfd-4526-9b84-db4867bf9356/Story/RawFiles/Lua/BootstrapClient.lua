@@ -656,6 +656,8 @@ LOAD_ORDER = {
     {ScriptSet = "Epip/DebugCheats/Cheats/CopyPosition"},
     {ScriptSet = "Epip/DebugCheats/Cheats/SpawnItemTemplate"},
     {ScriptSet = "Epip/DebugCheats/Cheats/TeleportTo"},
+
+    {Script = "Epip/Client/OverlayColorsBruteForcer.lua", Developer = true},
 }
 
 Utilities = {}
