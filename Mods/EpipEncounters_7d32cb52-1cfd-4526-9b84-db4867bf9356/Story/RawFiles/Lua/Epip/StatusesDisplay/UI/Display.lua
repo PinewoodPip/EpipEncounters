@@ -120,9 +120,11 @@ function Manager:_Update()
     if playerInfoWidget then -- TODO why is this nil on load?
         local playerInfoUI = PlayerInfo:GetUI()
         local pos = Vector.Create(playerInfoUI:GetPosition())
-        pos[1] = pos[1] + math.floor(playerInfoWidget.x) + 113
-        pos[2] = pos[2] + math.floor(playerInfoWidget.y)
+        local root = self.UI:GetRoot()
     
         self.UI:SetPosition(pos)
+
+        root.x = math.floor(playerInfoWidget.x + 115)
+        root.y = math.floor(playerInfoWidget.y + 10)
     end
 end
