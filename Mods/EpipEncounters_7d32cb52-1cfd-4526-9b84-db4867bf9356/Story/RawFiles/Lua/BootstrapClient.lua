@@ -639,7 +639,6 @@ LOAD_ORDER = {
             "Epip/StatusesDisplay/Client.lua",
             "Epip/StatusesDisplay/UI/Display.lua",
         },
-        WIP = true,
     },
     
     "Epip/Client/EpipSettingsMenu.lua",

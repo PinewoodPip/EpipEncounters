@@ -4,7 +4,7 @@ local QuickExamine = Epip.GetFeature("Feature_QuickExamine")
 local QuickInventory = Epip.GetFeature("Feature_QuickInventory")
 local TooltipAdjustments = Epip.GetFeature("Feature_TooltipAdjustments")
 local AnimationCancelling = Epip.GetFeature("Feature_AnimationCancelling")
--- local StatusesDisplay = Epip.GetFeature("Feature_StatusesDisplay")
+local StatusesDisplay = Epip.GetFeature("Feature_StatusesDisplay")
 local CommonStrings = Text.CommonStrings
 
 ---@class Feature_EpipSettingsMenu : Feature
@@ -214,7 +214,7 @@ local tabs = {
             "PlayerInfo_SortingFunction",
             "PlayerInfo_Filter_SourceGen",
             "PlayerInfo_Filter_BatteredHarried",
-            -- {Module = StatusesDisplay:GetSettingsModuleID(), ID = StatusesDisplay.Settings.Enabled.ID},
+            {Module = StatusesDisplay:GetSettingsModuleID(), ID = StatusesDisplay.Settings.Enabled.ID},
         }
     },
     ["Epip_Inventory"] = {
