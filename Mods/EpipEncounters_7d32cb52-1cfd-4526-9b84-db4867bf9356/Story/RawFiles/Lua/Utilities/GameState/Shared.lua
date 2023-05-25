@@ -103,11 +103,12 @@ GameState = {
         GameUnpaused = {}, ---@type Event<GameStateLib_Event_GameUnpaused>
         StateChanged = {}, ---@type Event<GameStateLib_Event_StateChanged>        
         GameReady = {}, ---@type Event<GameStateLib_Event_GameReady>
+        Tick = {}, ---@type Event<GameStateLib_Event_Tick>
         RunningTick = {}, ---@type Event<GameStateLib_Event_RunningTick>
         LuaResetted = {}, ---@type Event<EmptyEvent>
         ClientReady = {}, ---@type Event<GameStateLib_Event_ClientReady>
-        RegionStarted = {} ---@type Event<GameStateLib_Event_RegionStarted> Server-only.
-    }
+        RegionStarted = {}, ---@type Event<GameStateLib_Event_RegionStarted> Server-only.
+    },
 }
 Epip.InitializeLibrary("GameState", GameState)
 
@@ -127,6 +128,10 @@ Epip.InitializeLibrary("GameState", GameState)
 ---Fires when the game transitions from PrepareRunning to Running (on the client)
 ---or when transitioning from Sync to Running (on the server)
 ---@class GameStateLib_Event_GameReady
+
+---Fired every tick.
+---@class GameStateLib_Event_Tick
+---@field DeltaTime integer Milliseconds elapsed since last tick
 
 ---Fired every tick while the game is not paused.
 ---@class GameStateLib_Event_RunningTick
@@ -198,17 +203,22 @@ Ext.Events.GameStateChanged:Subscribe(function(ev)
     end
 end)
 
+-- Forward tick events.
 Ext.Events.Tick:Subscribe(function()
     local now = Ext.Utils.MonotonicTime()
     local lastTickTime = GameState.lastTickTime or now
+    local deltaTime = now - lastTickTime
 
     if Ext.GetGameState() == GameState.CLIENT_STATES.RUNNING then
-        local deltaTime = now - lastTickTime
 
         GameState.Events.RunningTick:Throw({
             DeltaTime = deltaTime,
         })
     end
+
+    GameState.Events.Tick:Throw({
+        DeltaTime = deltaTime,
+    })
 
     GameState.lastTickTime = now
 end)
