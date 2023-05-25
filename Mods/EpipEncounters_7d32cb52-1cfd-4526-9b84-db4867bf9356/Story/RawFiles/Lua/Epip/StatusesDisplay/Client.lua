@@ -20,7 +20,14 @@ local StatusesDisplay = {
            Text = "Replaces the statuses container by your characters's portraits with a custom UI.",
            ContextDescription = "Setting tooltip",
         },
-    }
+    },
+
+    USE_LEGACY_EVENTS = false,
+    USE_LEGACY_HOOKS = false,
+
+    Hooks = {
+        GetStatuses = {}, ---@type Event<Feature_StatusesDisplay_Hook_GetStatuses>
+    },
 }
 Epip.RegisterFeature("StatusesDisplay", StatusesDisplay)
 
@@ -35,6 +42,14 @@ StatusesDisplay:RegisterSetting("Enabled", {
     Context = "Client",
     DefaultValue = false,
 })
+
+---------------------------------------------
+-- EVENTS/HOOKS
+---------------------------------------------
+
+---@class Feature_StatusesDisplay_Hook_GetStatuses
+---@field Character EclCharacter
+---@field Statuses EclStatus[] Hookable. Defaults to the visible statuses of the character.
 
 ---------------------------------------------
 -- METHODS
@@ -62,6 +77,28 @@ end
 ---@return Feature_StatusesDisplay_Manager?
 function StatusesDisplay.Get(char)
     return StatusesDisplay._Displays[char.Handle]
+end
+
+---Returns the visible statuses of char in a sorted order.
+---@param char EclCharacter
+---@return EclStatus[]
+function StatusesDisplay.GetStatuses(char)
+    local allStatuses = char:GetStatusObjects() ---@type EclStatus[]
+    local visibleStatuses = {} ---@type EclStatus[]
+
+    for _,status in ipairs(allStatuses) do
+        if Stats.IsStatusVisible(status) then
+            table.insert(visibleStatuses, status)
+        end
+    end
+
+    -- Invoke hook for filtering and sorting
+    visibleStatuses = StatusesDisplay.Hooks.GetStatuses:Throw({
+        Character = char,
+        Statuses = visibleStatuses,
+    }).Statuses
+
+    return visibleStatuses
 end
 
 ---Creates managers for all characters in PlayerInfo.

@@ -91,19 +91,15 @@ function Manager:_Update()
         self._Delay = self.UPDATE_DELAY
 
         local list = self:_GetListElement()
-        local statuses = char:GetStatusObjects() ---@type EclStatus[]
         local visibleStatusesCount = 0
 
         list:ClearElements()
 
-        for _,status in ipairs(statuses) do -- TODO pooling, icon optimization
-            if Stats.IsStatusVisible(status) then
-                ---@cast status EclStatus
-                
-                local _ = StatusPrefab.Create(self.UI, tostring(status.StatusHandle), list, char, status)
+        -- TODO pooling, icon optimization
+        for _,status in ipairs(StatusesDisplay.GetStatuses(char)) do
+            local _ = StatusPrefab.Create(self.UI, tostring(status.StatusHandle), list, char, status)
 
-                visibleStatusesCount = visibleStatusesCount + 1
-            end
+            visibleStatusesCount = visibleStatusesCount + 1
         end
 
         -- Resize grid as status count changes
