@@ -319,6 +319,7 @@ function Item.IsRangedWeapon(item)
     return item and item.Stats and Data.Game.RANGED_WEAPONS[item.Stats.WeaponType]
 end
 
+---Returns the base AP cost of using an item, independent of the character.
 ---@param item Item
 ---@return integer
 function Item.GetUseAPCost(item)
@@ -338,6 +339,7 @@ function Item.GetUseAPCost(item)
     return cost
 end
 
+---Returns whether char meets the requirements to use an item.
 ---@param char Character
 ---@param item Item
 ---@return boolean
@@ -352,6 +354,24 @@ function Item.CanUse(char, item)
     -- Item skills
     local apCost = Item.GetUseAPCost(item)
     apCost = apCost + Character.GetDynamicStat(char, "APCostBoost")
+
+    -- Grenade skills gain a reduction from Ambidextrous talent
+    -- TODO there is possibly another esv::Item::GetUseType() return value
+    -- that works for this; identify it.
+    local stat = Stats.Get("Object", item.StatsId)
+    if stat then
+        local action = Item.GetUseActions(item, "UseSkill")[1] ---@cast action UseSkillActionData
+
+        if action then
+            local skill = Stats.Get("SkillData", action.SkillID) ---@type StatsLib_StatsEntry_SkillData
+
+            if skill then
+                if skill.ProjectileType == "Grenade" and char.Stats.TALENT_Ambidextrous then
+                    apCost = apCost - 1
+                end
+            end
+        end
+    end
 
     canUse = canUse and ap >= apCost
 
