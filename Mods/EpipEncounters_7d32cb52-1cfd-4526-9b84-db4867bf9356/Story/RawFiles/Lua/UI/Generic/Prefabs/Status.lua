@@ -17,6 +17,10 @@ local Status = {
     DURATION_BORDER_WIDTH = 1,
     DURATION_BORDER_COLOR = Color.Create(255, 255, 255),
     DURATION_BORDER_INFINITE_COLOR = Color.Create(105, 105, 105),
+
+    Events = {
+        RightClicked = {}, ---@type Event<GenericUI_Element_Event_RightClick>
+    },
 }
 Generic.RegisterPrefab("GenericUI_Prefab_Status", Status)
 
@@ -59,6 +63,11 @@ function Status.Create(ui, id, parent, entity, status)
     end)
     root.Events.MouseOut:Subscribe(function (_)
         Client.Tooltip.HideTooltip()
+    end)
+
+    -- Forward right-click event
+    root.Events.RightClick:Subscribe(function (ev)
+        element.Events.RightClicked:Throw(ev)
     end)
 
     return element

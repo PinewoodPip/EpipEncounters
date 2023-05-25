@@ -104,6 +104,10 @@ Text.CommonStrings.ServerSide = Text.RegisterTranslatedString({
    Handle = "hafe6938fgde3dg45d3g8437g8dc15104fa65",
    Text = "Server-side",
 })
+Text.CommonStrings.Filtered = Text.RegisterTranslatedString({
+   Handle = "h715a684agc1e6g47eagb4d8g13944bc7ebe7",
+   Text = "Filtered",
+})
 
 ---------------------------------------------
 -- BRANDING

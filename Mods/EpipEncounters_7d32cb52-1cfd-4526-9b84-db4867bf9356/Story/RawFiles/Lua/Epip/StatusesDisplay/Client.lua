@@ -40,6 +40,16 @@ local StatusesDisplay = {
             Text = "Shows the Battered/Harries statuses while Alternative Status Display is enabled.<br>If you disable this, it is recommended to enable the B/H display on the portraits.",
             ContextDescription = "Portrait status BH filter setting tooltip",
         },
+        Setting_FilteredStatuses_Name = {
+           Handle = "h9e59177cgec69g4920g981bg8adee0d6600c",
+           Text = "Filtered Statuses",
+           ContextDescription = "Portrait status filtered statuses setting name",
+        },
+        Setting_FilteredStatuses_Description = {
+           Handle = "hca56dcd2gf7f6g4662g94cfga66262672545",
+           Text = "Statuses in this list will be filtered out and not shown in the status bar.",
+           ContextDescription = "Portrait status filtered statuses setting tooltip",
+        },
     },
 
     USE_LEGACY_EVENTS = false,
@@ -47,6 +57,7 @@ local StatusesDisplay = {
 
     Hooks = {
         GetStatuses = {}, ---@type Event<Feature_StatusesDisplay_Hook_GetStatuses>
+        IsStatusFiltered = {}, ---@type Event<Feature_StatusesDisplay_Hook_IsStatusFiltered>
     },
 }
 Epip.RegisterFeature("StatusesDisplay", StatusesDisplay)
@@ -76,6 +87,12 @@ StatusesDisplay:RegisterSetting("ShowBatteredHarried", {
     Context = "Client",
     DefaultValue = true,
 })
+StatusesDisplay:RegisterSetting("FilteredStatuses", {
+    Type = "Set",
+    Name = StatusesDisplay.TranslatedStrings.Setting_FilteredStatuses_Name,
+    Description = StatusesDisplay.TranslatedStrings.Setting_FilteredStatuses_Description,
+    Context = "Client",
+})
 
 ---------------------------------------------
 -- EVENTS/HOOKS
@@ -84,6 +101,10 @@ StatusesDisplay:RegisterSetting("ShowBatteredHarried", {
 ---@class Feature_StatusesDisplay_Hook_GetStatuses
 ---@field Character EclCharacter
 ---@field Statuses EclStatus[] Hookable. Defaults to the visible statuses of the character.
+
+---@class Feature_StatusesDisplay_Hook_IsStatusFiltered
+---@field Status EclStatus
+---@field Filtered boolean Hookable. Defaults to `false`.
 
 ---------------------------------------------
 -- METHODS
@@ -121,7 +142,7 @@ function StatusesDisplay.GetStatuses(char)
     local visibleStatuses = {} ---@type EclStatus[]
 
     for _,status in ipairs(allStatuses) do
-        if Stats.IsStatusVisible(status) then
+        if Stats.IsStatusVisible(status) and not StatusesDisplay.IsStatusFiltered(status) then
             table.insert(visibleStatuses, status)
         end
     end
@@ -133,6 +154,26 @@ function StatusesDisplay.GetStatuses(char)
     }).Statuses
 
     return visibleStatuses
+end
+
+---Returns whether a status is filtered out.
+---Assumes the status is a visible one.
+---@param status EclStatus
+---@return boolean
+function StatusesDisplay.IsStatusFiltered(status)
+    return StatusesDisplay.Hooks.IsStatusFiltered:Throw({
+        Status = status,
+        Filtered = false,
+    }).Filtered
+end
+
+---Returns whether a status is filtered out by the user-defined filter list setting.
+---@param status EclStatus
+---@return boolean
+function StatusesDisplay.IsStatusFilteredBySetting(status)
+    local filterSet = StatusesDisplay:GetSettingValue(StatusesDisplay.Settings.FilteredStatuses) ---@type DataStructures_Set
+
+    return filterSet:Contains(status.StatusId)
 end
 
 ---Creates managers for all characters in PlayerInfo.
@@ -185,7 +226,7 @@ Settings.Events.SettingValueChanged:Subscribe(function (ev)
     end
 end)
 
--- Create listeners on load.
+-- Create managers on load.
 GameState.Events.GameReady:Subscribe(function (_)
     if StatusesDisplay:IsEnabled() then
         StatusesDisplay._Initialize()
@@ -193,25 +234,15 @@ GameState.Events.GameReady:Subscribe(function (_)
 end)
 
 -- Default implementation for filtering statuses.
-StatusesDisplay.Hooks.GetStatuses:Subscribe(function (ev)
-    local statuses = ev.Statuses
-    local visibleStatuses = {}
+StatusesDisplay.Hooks.IsStatusFiltered:Subscribe(function (ev)
+    local id = ev.Status.StatusId
 
-    for _,status in ipairs(statuses) do
-        local id = status.StatusId
-        local filterOut = false
-
-        -- Filter Source Generation statuses
-        if table.reverseLookup(EpicEncounters.SourceInfusion.SOURCE_GENERATION_DISPLAY_STATUSES, id) and StatusesDisplay:GetSettingValue(StatusesDisplay.Settings.ShowSourceGeneration) == false then
-            filterOut = true
-        elseif EpicEncounters.BatteredHarried.IsDisplayStatus(id) and StatusesDisplay:GetSettingValue(StatusesDisplay.Settings.ShowBatteredHarried) == false then
-            filterOut = true
-        end
-
-        if not filterOut then
-            table.insert(visibleStatuses, status)
-        end
+    -- Filter out statuses based on user settings
+    if StatusesDisplay.IsStatusFilteredBySetting(ev.Status) then
+        ev.Filtered = true
+    elseif table.reverseLookup(EpicEncounters.SourceInfusion.SOURCE_GENERATION_DISPLAY_STATUSES, id) and StatusesDisplay:GetSettingValue(StatusesDisplay.Settings.ShowSourceGeneration) == false then -- Filter Source Generation statuses
+        ev.Filtered = true
+    elseif EpicEncounters.BatteredHarried.IsDisplayStatus(id) and StatusesDisplay:GetSettingValue(StatusesDisplay.Settings.ShowBatteredHarried) == false then -- Filter BH statuses
+        ev.Filtered = true
     end
-
-    ev.Statuses = visibleStatuses
 end, {StringID = "DefaultFilterImplementation"})

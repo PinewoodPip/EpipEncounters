@@ -215,6 +215,7 @@ local tabs = {
             {Module = StatusesDisplay:GetSettingsModuleID(), ID = StatusesDisplay.Settings.Enabled.ID},
             {Module = StatusesDisplay:GetSettingsModuleID(), ID = StatusesDisplay.Settings.ShowSourceGeneration.ID},
             {Module = StatusesDisplay:GetSettingsModuleID(), ID = StatusesDisplay.Settings.ShowBatteredHarried.ID},
+            {Module = StatusesDisplay:GetSettingsModuleID(), ID = StatusesDisplay.Settings.FilteredStatuses.ID},
         }
     },
     ["Epip_Inventory"] = {

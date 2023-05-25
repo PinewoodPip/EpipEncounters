@@ -3,6 +3,7 @@ local Generic = Client.UI.Generic
 local StatusPrefab = Generic.GetPrefab("GenericUI_Prefab_Status")
 local StatusesDisplay = Epip.GetFeature("Feature_StatusesDisplay")
 local PlayerInfo = Client.UI.PlayerInfo
+local ContextMenu = Client.UI.ContextMenu
 
 ---@class Feature_StatusesDisplay_Manager : Class
 ---@field UI GenericUI_Instance
@@ -97,7 +98,29 @@ function Manager:_Update()
 
         -- TODO pooling, icon optimization
         for _,status in ipairs(StatusesDisplay.GetStatuses(char)) do
-            local _ = StatusPrefab.Create(self.UI, tostring(status.StatusHandle), list, char, status)
+            local statusPrefab = StatusPrefab.Create(self.UI, tostring(status.StatusHandle), list, char, status)
+            local statusID = status.StatusId
+
+            statusPrefab.Events.RightClicked:Subscribe(function (_)
+                ContextMenu.Setup({
+                    menu = {
+                        id = "main",
+                        entries = {
+                            {id = "StatusesDisplay_StatusHeader", type = "header", text = Text.Format("— %s —", {FormatArgs = {statusID}})},
+                            {
+                                id = "StatusesDisplay_Checkbox_Filtered",
+                                text = Text.CommonStrings.Filtered:GetString(),
+                                type = "checkbox",
+                                checked = false,
+                                params = {
+                                    StatusID = statusID,
+                                }
+                            }
+                        }
+                    }
+                })
+                ContextMenu.Open(Vector.Create(Client.GetMousePosition()))
+            end)
 
             visibleStatusesCount = visibleStatusesCount + 1
         end
@@ -124,3 +147,21 @@ function Manager:_Update()
         root.y = math.floor(playerInfoWidget.y + 10)
     end
 end
+
+---------------------------------------------
+-- EVENT LISTENERS
+---------------------------------------------
+
+-- Listen for context menu filter clicks.
+Client.UI.ContextMenu.RegisterElementListener("StatusesDisplay_Checkbox_Filtered", "buttonPressed", function(_, params)
+    local set = StatusesDisplay:GetSettingValue(StatusesDisplay.Settings.FilteredStatuses) ---@type DataStructures_Set
+    local statusID = params.StatusID
+
+    if StatusesDisplay.IsStatusFilteredBySetting(statusID) then
+        set:Remove(statusID)
+    else
+        set:Add(statusID)
+    end
+
+    StatusesDisplay:SetSettingValue(StatusesDisplay.Settings.FilteredStatuses, set)
+end)

@@ -256,10 +256,14 @@ function ContextMenu.Setup(data)
     ContextMenu.AddElements(ContextMenu.UI, data.menu)
 end
 
-function ContextMenu.Open()
+---@param position Vector2?
+function ContextMenu.Open(position)
     local root = ContextMenu.Root
+    if type(position) ~= "table" then
+        position = Vector.Create(ContextMenu.position.x, ContextMenu.position.y)
+    end
 
-    ContextMenu.SetPosition(ContextMenu.UI, ContextMenu.position.x, ContextMenu.position.y)
+    ContextMenu.SetPosition(ContextMenu.UI, position[1], position[2])
 
     root.open()
     ContextMenu.UI:Show()
