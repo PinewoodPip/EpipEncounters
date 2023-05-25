@@ -96,6 +96,22 @@ function BH.GetStacksNeededToInflictTier3(char)
     return amount
 end
 
+---Returns whether a status is a BH display status.
+---@param statusID string
+---@return boolean
+function BH.IsDisplayStatus(statusID)
+    local isBH = false
+
+    for _,pattern in pairs(BH.STATUS_PATTERNS) do
+        if statusID:match(pattern) then
+            isBH = true
+            break
+        end
+    end
+
+    return isBH
+end
+
 ---------------------------------------------
 -- SETUP
 ---------------------------------------------
