@@ -34,7 +34,7 @@ function Manager.Create(char)
 
     instance:_CreateUI()
 
-    GameState.Events.RunningTick:Subscribe(function (_)
+    GameState.Events.Tick:Subscribe(function (_)
         ---@diagnostic disable-next-line: invisible
         instance:_Update()
     end, {StringID = instance.GUID}) -- TODO unsub
@@ -48,7 +48,7 @@ end
 function Manager:Destroy()
     self.UI:Destroy()
 
-    GameState.Events.RunningTick:Unsubscribe(self.GUID)
+    GameState.Events.Tick:Unsubscribe(self.GUID)
 end
 
 ---Creates the UI and its static components.
