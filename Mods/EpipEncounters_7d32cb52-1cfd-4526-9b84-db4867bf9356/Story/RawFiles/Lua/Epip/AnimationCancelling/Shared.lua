@@ -9,25 +9,21 @@ local AnimCancel = {
     PING_DELAY = 2, -- In ticks.
 
     ---@type table<string, number> Delay for specific skills - in seconds!.
-    SKILL_DELAYS = {
-        
-    },
-    BANNED_ARCHETYPES = Set.Create({
+    SKILL_DELAYS = {},
+    BANNED_ARCHETYPES = Set.Create({}),
+    CLIENT_BANNED_ARCHETYPES = Set.Create({
         "Jump",
         "Teleportation",
         "MultiStrike",
     }),
-    BANNED_SKILLS = Set.Create({
+    CLIENT_BANNED_SKILLS = Set.Create({
         "Projectile_Flight",
         "Target_DualWieldingAttack",
         "Target_Flurry",
         "Target_DaggersDrawn",
     }),
-    SERVERSIDE_BANNED_SKILLS = Set.Create({
-        "Projectile_ArrowSpray",
-        "Projectile_Multishot",
-        "Projectile_StaffOfMagus",
-    }),
+    BANNED_SKILLS = Set.Create({}),
+    SERVERSIDE_BANNED_SKILLS = Set.Create({}),
 
     TranslatedStrings = {
         Setting_Name = {
@@ -65,6 +61,7 @@ local AnimCancel = {
     Hooks = {
         GetDelay = {}, ---@type Event<Feature_AnimationCancelling_Hook_GetDelay>
         IsSkillEligible = {}, ---@type Event<Feature_AnimationCancelling_Hook_IsSkillEligible>
+        IsSkillStateFinished = {}, ---@type Event<Feature_AnimationCancelling_Hook_IsSkillStateFinished>
     }
 }
 Epip.RegisterFeature("AnimationCancelling", AnimCancel)
@@ -141,12 +138,16 @@ AnimCancel.Hooks.GetDelay:Subscribe(function (ev)
     end
 end)
 
--- Ban skills with certain keywords or archetypes.
+-- Ban skills or archetypes.
 AnimCancel.Hooks.IsSkillEligible:Subscribe(function (ev)
     local skillID = ev.SkillID
     local stat = ev.Stat
 
     if AnimCancel.BANNED_SKILLS:Contains(skillID) or AnimCancel.BANNED_ARCHETYPES:Contains(stat.SkillType) then
         ev.Eligible = false
+    elseif AnimCancel.IsModeEnabled(AnimCancel.MODE.CLIENT_SIDE) then
+        if AnimCancel.CLIENT_BANNED_SKILLS:Contains(skillID) or AnimCancel.CLIENT_BANNED_ARCHETYPES:Contains(stat.SkillType) then
+            ev.Eligible = false
+        end
     end
 end)
