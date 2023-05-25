@@ -212,9 +212,9 @@ local tabs = {
             "PlayerInfo_StatusHolderOpacity",
             "PlayerInfo_EnableSortingFiltering",
             "PlayerInfo_SortingFunction",
-            "PlayerInfo_Filter_SourceGen",
-            "PlayerInfo_Filter_BatteredHarried",
             {Module = StatusesDisplay:GetSettingsModuleID(), ID = StatusesDisplay.Settings.Enabled.ID},
+            {Module = StatusesDisplay:GetSettingsModuleID(), ID = StatusesDisplay.Settings.ShowSourceGeneration.ID},
+            {Module = StatusesDisplay:GetSettingsModuleID(), ID = StatusesDisplay.Settings.ShowBatteredHarried.ID},
         }
     },
     ["Epip_Inventory"] = {

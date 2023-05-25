@@ -329,27 +329,6 @@ local EpipSettings = {
             Text = "Determines the order of statuses, in order of importance.",
             ContextDescription = "Portrait status sorting setting tooltip",
         },
-        PlayerInfo_Filter_SourceGen_Name = {
-            Handle = "h82c7e2e1g5de2g4389ga7c5g639c3d653b96",
-            Text = "Show Source Generation Status",
-            ContextDescription = "Portrait status source gen filter setting name",
-        },
-        PlayerInfo_Filter_SourceGen_Description = {
-            Handle = "h4b67c715g0d30g4015gba18ge8ea4f357448",
-            Text = "Shows the Source Generation status while sorting/filtering is enabled.",
-            ContextDescription = "Portrait status source gen filter setting tooltip",
-        },
-        PlayerInfo_Filter_BatteredHarried_Name = {
-            Handle = "haae0acc4gf8f6g4040g9038g52c50db75a38",
-            Text = "Show Battered/Harried Statuses",
-            ContextDescription = "Portrait status BH filter setting name",
-        },
-        PlayerInfo_Filter_BatteredHarried_Description = {
-            Handle = "hb9e14744g4868g4e08gb3d7ga9bd57629d03",
-            Text = "Shows the Battered/Harries statuses while sorting/filtering is enabled.<br>If you disable this, it is recommended to enable the B/H display on the portraits.",
-            ContextDescription = "Portrait status BH filter setting tooltip",
-        },
-
         SaveLoadOverlay_Enabled_Name = {
             Handle = "h831d1efeg7f97g4306g9f6fgf0ed6c97bc6f",
             Text = "Save/Load UI Improvements",

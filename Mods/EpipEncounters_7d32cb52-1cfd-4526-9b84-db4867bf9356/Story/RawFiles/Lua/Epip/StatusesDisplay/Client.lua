@@ -17,8 +17,28 @@ local StatusesDisplay = {
         },
         Setting_Enabled_Description = {
            Handle = "h0d296a7dgd716g475agb4c6g9b3de417c79f",
-           Text = "Replaces the statuses container by your characters's portraits with a custom UI.",
+           Text = "Replaces the status bar by your characters's portraits with a custom UI that enables various sorting and filtering options.",
            ContextDescription = "Setting tooltip",
+        },
+        Setting_ShowSourceGeneration_Name = {
+            Handle = "h82c7e2e1g5de2g4389ga7c5g639c3d653b96",
+            Text = "Show Source Generation Status",
+            ContextDescription = "Portrait status source gen filter setting name",
+        },
+        Setting_ShowSourceGeneration_Description = {
+            Handle = "h4b67c715g0d30g4015gba18ge8ea4f357448",
+            Text = "Shows the Source Generation status while Alternative Status Display is enabled.",
+            ContextDescription = "Portrait status source gen filter setting tooltip",
+        },
+        Setting_ShowBatteredHarried_Name = {
+            Handle = "haae0acc4gf8f6g4040g9038g52c50db75a38",
+            Text = "Show Battered/Harried Statuses",
+            ContextDescription = "Portrait status BH filter setting name",
+        },
+        Setting_ShowBatteredHarried_Description = {
+            Handle = "hb9e14744g4868g4e08gb3d7ga9bd57629d03",
+            Text = "Shows the Battered/Harries statuses while Alternative Status Display is enabled.<br>If you disable this, it is recommended to enable the B/H display on the portraits.",
+            ContextDescription = "Portrait status BH filter setting tooltip",
         },
     },
 
@@ -41,6 +61,20 @@ StatusesDisplay:RegisterSetting("Enabled", {
     Description = StatusesDisplay.TranslatedStrings.Setting_Enabled_Description,
     Context = "Client",
     DefaultValue = false,
+})
+StatusesDisplay:RegisterSetting("ShowSourceGeneration", {
+    Type = "Boolean",
+    Name = StatusesDisplay.TranslatedStrings.Setting_ShowSourceGeneration_Name,
+    Description = StatusesDisplay.TranslatedStrings.Setting_ShowSourceGeneration_Description,
+    Context = "Client",
+    DefaultValue = true,
+})
+StatusesDisplay:RegisterSetting("ShowBatteredHarried", {
+    Type = "Boolean",
+    Name = StatusesDisplay.TranslatedStrings.Setting_ShowBatteredHarried_Name,
+    Description = StatusesDisplay.TranslatedStrings.Setting_ShowBatteredHarried_Description,
+    Context = "Client",
+    DefaultValue = true,
 })
 
 ---------------------------------------------
@@ -157,3 +191,27 @@ GameState.Events.GameReady:Subscribe(function (_)
         StatusesDisplay._Initialize()
     end
 end)
+
+-- Default implementation for filtering statuses.
+StatusesDisplay.Hooks.GetStatuses:Subscribe(function (ev)
+    local statuses = ev.Statuses
+    local visibleStatuses = {}
+
+    for _,status in ipairs(statuses) do
+        local id = status.StatusId
+        local filterOut = false
+
+        -- Filter Source Generation statuses
+        if table.reverseLookup(EpicEncounters.SourceInfusion.SOURCE_GENERATION_DISPLAY_STATUSES, id) and StatusesDisplay:GetSettingValue(StatusesDisplay.Settings.ShowSourceGeneration) == false then
+            filterOut = true
+        elseif EpicEncounters.BatteredHarried.IsDisplayStatus(id) and StatusesDisplay:GetSettingValue(StatusesDisplay.Settings.ShowBatteredHarried) == false then
+            filterOut = true
+        end
+
+        if not filterOut then
+            table.insert(visibleStatuses, status)
+        end
+    end
+
+    ev.Statuses = visibleStatuses
+end, {StringID = "DefaultFilterImplementation"})
