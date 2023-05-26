@@ -343,14 +343,23 @@ function Stats.GetStatusIcon(status)
     local icon
 
     if not isInvisible then
-        if stat then
+        if status.StatusType == "CONSUME" then
+            ---@cast status EclStatusConsumeBase
+            icon = status.Icon
+        elseif stat then
             icon = stat.Icon
     
             if icon == "" then -- Fetch potion instead
-                local potion = Stats.Get("Potion", stat.StatsId)
-    
+                local potion = Stats.Get("Potion", stat.StatsId) ---@type StatsLib_StatsEntry_Potion
+                
                 if potion then
                     icon = potion.StatusIcon
+
+                    if icon == "" then -- Use RootTemplate icon instead
+                        local template = Ext.Template.GetTemplate(potion.RootTemplate) ---@type ItemTemplate
+
+                        icon = template and template.Icon or icon
+                    end
                 end
             end
         end
