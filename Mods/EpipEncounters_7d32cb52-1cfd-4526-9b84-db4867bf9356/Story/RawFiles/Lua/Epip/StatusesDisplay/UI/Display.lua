@@ -114,8 +114,17 @@ function Manager:_Update()
                                 checked = false,
                                 params = {
                                     StatusID = statusID,
-                                }
-                            }
+                                },
+                            },
+                            {
+                                id = "StatusesDisplay_SortingIndex",
+                                type = "stat",
+                                selectable = false,
+                                text = StatusesDisplay.TranslatedStrings.ContextMenu_SortingIndex:GetString(),
+                                params = {
+                                    StatusID = statusID,
+                                },
+                            },
                         }
                     }
                 })
@@ -164,4 +173,24 @@ Client.UI.ContextMenu.RegisterElementListener("StatusesDisplay_Checkbox_Filtered
     end
 
     StatusesDisplay:SetSettingValue(StatusesDisplay.Settings.FilteredStatuses, set)
+end)
+
+-- Hook context menu to show sorting index.
+ContextMenu.RegisterStatDisplayHook("StatusesDisplay_SortingIndex", function(_, _, elementParams)
+    local priority = StatusesDisplay.GetStatusPriority(elementParams.StatusID)
+    
+    return priority
+end)
+
+-- Listen for priority changes coming from the context menu.
+ContextMenu.RegisterElementListener("StatusesDisplay_SortingIndex", "statButtonPressed", function(_, params, change)
+    local statID = params.StatusID
+    local priorityMap = StatusesDisplay:GetSettingValue(StatusesDisplay.Settings.SortingIndexes)
+    local amount = priorityMap[statID] or 0
+    amount = amount + change
+
+    priorityMap[statID] = amount
+
+    StatusesDisplay:SetSettingValue(StatusesDisplay.Settings.SortingIndexes, priorityMap)
+    StatusesDisplay:SaveSettings()
 end)

@@ -50,6 +50,21 @@ local StatusesDisplay = {
            Text = "Statuses in this list will be filtered out and not shown in the status bar.",
            ContextDescription = "Portrait status filtered statuses setting tooltip",
         },
+        Setting_SortingIndexes_Name = {
+           Handle = "h8ef5106dg4b12g413cg87adgce524dad4d1e",
+           Text = "Sorting Priority",
+           ContextDescription = "Status sorting setting name",
+        },
+        Setting_SortingIndexes_Description = {
+           Handle = "h4c594766g0190g4016gb7a5g0b99c3e2011a",
+           Text = "Sets the sorting order for statuses. Statuses with a higher priority show in the left-most position, statuses with a lower priority show in the right-most position.",
+           ContextDescription = "",
+        },
+        ContextMenu_SortingIndex = {
+           Handle = "h0e24fb6bg2c78g4dd3g995cg9d04ea62eaab",
+           Text = "Sorting Index",
+           ContextDescription = "Context menu option",
+        },
     },
 
     USE_LEGACY_EVENTS = false,
@@ -91,6 +106,12 @@ StatusesDisplay:RegisterSetting("FilteredStatuses", {
     Type = "Set",
     Name = StatusesDisplay.TranslatedStrings.Setting_FilteredStatuses_Name,
     Description = StatusesDisplay.TranslatedStrings.Setting_FilteredStatuses_Description,
+    Context = "Client",
+})
+StatusesDisplay:RegisterSetting("SortingIndexes", {
+    Type = "Map",
+    Name = StatusesDisplay.TranslatedStrings.Setting_SortingIndexes_Name,
+    Description = StatusesDisplay.TranslatedStrings.Setting_SortingIndexes_Description,
     Context = "Client",
 })
 
@@ -176,6 +197,19 @@ function StatusesDisplay.IsStatusFilteredBySetting(status)
     return filterSet:Contains(status.StatusId)
 end
 
+---Returns the priority of a status.
+---@param status string|EclStatus
+---@return integer --Default priority is `0`.
+function StatusesDisplay.GetStatusPriority(status)
+    local statusID = status ---@type string
+    if GetExtType(status) ~= nil then -- EclStatus overload
+        statusID = status.StatusId
+    end
+    local priority = StatusesDisplay:GetSettingValue(StatusesDisplay.Settings.SortingIndexes)[statusID] or 0
+
+    return priority
+end
+
 ---Creates managers for all characters in PlayerInfo.
 function StatusesDisplay._Initialize()
     -- Create managers for existing characters
@@ -246,3 +280,24 @@ StatusesDisplay.Hooks.IsStatusFiltered:Subscribe(function (ev)
         ev.Filtered = true
     end
 end, {StringID = "DefaultFilterImplementation"})
+
+-- Default implementation for sorting statuses.
+StatusesDisplay.Hooks.GetStatuses:Subscribe(function (ev)
+    local statuses = ev.Statuses
+    local newStatuses = {table.unpack(statuses)}
+
+    table.sort(newStatuses, function (status1, status2)
+        local status1ID = status1.StatusId
+        local status2ID = status2.StatusId
+        local status1Priority = StatusesDisplay.GetStatusPriority(status1ID)
+        local status2Priority = StatusesDisplay.GetStatusPriority(status2ID)
+
+        if status1Priority ~= status2Priority then
+            return status1Priority > status2Priority
+        else -- Use them positions within the original list as the tie-breaker. Statuses in the list appear to be in the order they were applied, thereby matching vanilla UI behaviour.
+            return table.reverseLookup(statuses, status1) < table.reverseLookup(statuses, status2)
+        end
+    end)
+
+    ev.Statuses = newStatuses
+end, {StringID = "DefaultSortingImplementation"})
