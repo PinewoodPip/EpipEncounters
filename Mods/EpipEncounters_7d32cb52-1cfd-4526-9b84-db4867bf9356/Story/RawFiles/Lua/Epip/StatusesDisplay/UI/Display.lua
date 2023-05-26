@@ -111,7 +111,7 @@ function Manager:_Update()
                                 id = "StatusesDisplay_Checkbox_Filtered",
                                 text = Text.CommonStrings.Filtered:GetString(),
                                 type = "checkbox",
-                                checked = false,
+                                checked = StatusesDisplay.IsStatusFilteredBySetting(statusID),
                                 params = {
                                     StatusID = statusID,
                                 },

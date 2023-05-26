@@ -47,7 +47,7 @@ local StatusesDisplay = {
         },
         Setting_FilteredStatuses_Description = {
            Handle = "hca56dcd2gf7f6g4662g94cfga66262672545",
-           Text = "Statuses in this list will be filtered out and not shown in the status bar.",
+           Text = "Statuses in this list will be filtered out and not shown in the status bar. Holding shift temporarily disables this filter.",
            ContextDescription = "Portrait status filtered statuses setting tooltip",
         },
         Setting_SortingIndexes_Name = {
@@ -189,12 +189,16 @@ function StatusesDisplay.IsStatusFiltered(status)
 end
 
 ---Returns whether a status is filtered out by the user-defined filter list setting.
----@param status EclStatus
+---@param status string|EclStatus
 ---@return boolean
 function StatusesDisplay.IsStatusFilteredBySetting(status)
+    local statusID = status
+    if GetExtType(status) ~= nil then -- EclStatus overload.
+        statusID = status.StatusId
+    end
     local filterSet = StatusesDisplay:GetSettingValue(StatusesDisplay.Settings.FilteredStatuses) ---@type DataStructures_Set
 
-    return filterSet:Contains(status.StatusId)
+    return filterSet:Contains(statusID)
 end
 
 ---Returns the priority of a status.
@@ -271,8 +275,8 @@ end)
 StatusesDisplay.Hooks.IsStatusFiltered:Subscribe(function (ev)
     local id = ev.Status.StatusId
 
-    -- Filter out statuses based on user settings
-    if StatusesDisplay.IsStatusFilteredBySetting(ev.Status) then
+    -- Filter out statuses based on user settings, except while shift is being held
+    if StatusesDisplay.IsStatusFilteredBySetting(ev.Status) and not Client.Input.IsShiftPressed() then
         ev.Filtered = true
     elseif table.reverseLookup(EpicEncounters.SourceInfusion.SOURCE_GENERATION_DISPLAY_STATUSES, id) and StatusesDisplay:GetSettingValue(StatusesDisplay.Settings.ShowSourceGeneration) == false then -- Filter Source Generation statuses
         ev.Filtered = true
