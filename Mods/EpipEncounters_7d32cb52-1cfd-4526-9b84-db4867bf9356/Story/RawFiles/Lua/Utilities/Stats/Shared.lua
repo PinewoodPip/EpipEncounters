@@ -259,23 +259,9 @@ function Stats.MeetsRequirements(char, statID, isItem, itemSource)
 
     if itemSource and itemSource.Stats then
         for _,req in ipairs(itemSource.Stats.Requirements) do
-            local reqMet = false
+            local customReqMet = Ext.Stats.Requirement.Evaluate(stats, req.Requirement, req.Param, req.Tag, req.Not)
 
-            if req.Requirement == "Combat" then
-                reqMet = Character.IsInCombat(char)
-            elseif req.Requirement == "Tag" then
-                reqMet = char:HasTag(req.Param)
-            elseif req.Requirement == "Immobile" then
-                reqMet = Character.GetMovement(char) <= 0
-            else
-                reqMet = Stats.MeetsRequirementsINT(char, req)
-            end
-
-            if req.Not then
-                reqMet = not reqMet
-            end
-
-            if not reqMet then
+            if not customReqMet then
                 return false
             end
         end
