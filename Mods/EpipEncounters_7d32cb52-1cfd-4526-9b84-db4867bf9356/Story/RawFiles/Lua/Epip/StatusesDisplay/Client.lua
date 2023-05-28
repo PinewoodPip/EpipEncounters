@@ -93,6 +93,7 @@ StatusesDisplay:RegisterSetting("ShowSourceGeneration", {
     Name = StatusesDisplay.TranslatedStrings.Setting_ShowSourceGeneration_Name,
     Description = StatusesDisplay.TranslatedStrings.Setting_ShowSourceGeneration_Description,
     Context = "Client",
+    RequiredMods = {Mod.GUIDS.EE_CORE},
     DefaultValue = true,
 })
 StatusesDisplay:RegisterSetting("ShowBatteredHarried", {
@@ -100,6 +101,7 @@ StatusesDisplay:RegisterSetting("ShowBatteredHarried", {
     Name = StatusesDisplay.TranslatedStrings.Setting_ShowBatteredHarried_Name,
     Description = StatusesDisplay.TranslatedStrings.Setting_ShowBatteredHarried_Description,
     Context = "Client",
+    RequiredMods = {Mod.GUIDS.EE_CORE},
     DefaultValue = true,
 })
 StatusesDisplay:RegisterSetting("FilteredStatuses", {
@@ -278,10 +280,12 @@ StatusesDisplay.Hooks.IsStatusFiltered:Subscribe(function (ev)
     -- Filter out statuses based on user settings, except while shift is being held
     if StatusesDisplay.IsStatusFilteredBySetting(ev.Status) and not Client.Input.IsShiftPressed() then
         ev.Filtered = true
-    elseif table.reverseLookup(EpicEncounters.SourceInfusion.SOURCE_GENERATION_DISPLAY_STATUSES, id) and StatusesDisplay:GetSettingValue(StatusesDisplay.Settings.ShowSourceGeneration) == false then -- Filter Source Generation statuses
-        ev.Filtered = true
-    elseif EpicEncounters.BatteredHarried.IsDisplayStatus(id) and StatusesDisplay:GetSettingValue(StatusesDisplay.Settings.ShowBatteredHarried) == false then -- Filter BH statuses
-        ev.Filtered = true
+    elseif EpicEncounters.IsEnabled() then
+        if table.reverseLookup(EpicEncounters.SourceInfusion.SOURCE_GENERATION_DISPLAY_STATUSES, id) and StatusesDisplay:GetSettingValue(StatusesDisplay.Settings.ShowSourceGeneration) == false then -- Filter Source Generation statuses
+            ev.Filtered = true
+        elseif EpicEncounters.BatteredHarried.IsDisplayStatus(id) and StatusesDisplay:GetSettingValue(StatusesDisplay.Settings.ShowBatteredHarried) == false then -- Filter BH statuses
+            ev.Filtered = true
+        end
     end
 end, {StringID = "DefaultFilterImplementation"})
 

@@ -76,7 +76,7 @@ Epip.RegisterFeature("SettingsMenu", Menu)
 ---@class Feature_SettingsMenu_Setting : SettingsLib_Setting
 ---@field Visible boolean? Defaults to true.
 ---@field DeveloperOnly boolean? Defaults to false.
----@field RequiredMods GUID[]?
+---@field RequiredMods GUID[]? If present, all mods will need to be loaded for the setting to be visible.
 
 ---@class Feature_SettingsMenu_Setting_Set : SettingsLib_Setting_Set
 ---@field ElementsAreSkills boolean? If `true`, elements will show skill tooltips.
