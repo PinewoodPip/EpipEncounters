@@ -100,13 +100,14 @@ function Manager:_Update()
         for _,status in ipairs(StatusesDisplay.GetStatuses(char)) do
             local statusPrefab = StatusPrefab.Create(self.UI, tostring(status.StatusHandle), list, char, status)
             local statusID = status.StatusId
+            local statusName = Stats.GetStatusName(status)
 
             statusPrefab.Events.RightClicked:Subscribe(function (_)
                 ContextMenu.Setup({
                     menu = {
                         id = "main",
                         entries = {
-                            {id = "StatusesDisplay_StatusHeader", type = "header", text = Text.Format("— %s —", {FormatArgs = {statusID}})},
+                            {id = "StatusesDisplay_StatusHeader", type = "header", text = Text.Format("— %s —", {FormatArgs = {statusName}})},
                             {
                                 id = "StatusesDisplay_Checkbox_Filtered",
                                 text = Text.CommonStrings.Filtered:GetString(),
