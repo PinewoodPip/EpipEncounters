@@ -15,6 +15,65 @@ Stats = {
         Potion = true,
     },
 
+    CONSUME_STATUS_SUBTYPES = Set.Create({
+        "ACTIVE_DEFENSE",
+        "ADRENALINE",
+        "DAMAGE",
+        "DAMAGE_ON_MOVE",
+        "CHALLENGE",
+        "CHARMED",
+        "ENCUMBERED",
+        "FLOATING",
+        "GUARDIAN_ANGEL",
+        "HEALING",
+        "INCAPACITATED",
+        "LEADERSHIP",
+        "POLYMORPHED",
+        "SPARK",
+    }),
+    STATUS_TYPES_WITH_STATS_DISPLAY_NAME = Set.Create({
+        "FEAR",
+        "HEALING",
+        "BLIND",
+        "KNOCKED_DOWN",
+        "MUTED",
+        "STANCE", -- Not tested
+        "DAMAGE_ON_MOVE",
+    }),
+    HARDCODED_STATUS_NAME_HANDLES = {
+        DYING = "h2e807311g8c4bg4141g85f3gcc88ee095888",
+        FLOATING = "h278121a7g2132g4efdgb151g9af722d670dc",
+        HEAL = "h069389c2gc635g4e5cga15fg28d1eae30e3e",
+        CHARMED = "h30fc0122g6378g408cgac6fg6e3bcb3c852b",
+        THROWN = "hfa754958gff75g4474g8cd5g508b4fb7a984",
+        SNEAKING = "h6bf7caf0g7756g443bg926dg1ee5975ee133",
+        SITTING = "h33b529f1g6fb3g4210g8b40ga41e4d05c0d0",
+        SMELLY = "h312fc6d0gd271g40ffg949dge80fba98335e",
+        CLEAN = "h8fb688afg29efg4804g9d68g955c3c463053",
+        INVISIBLE = "h7fa4cea8gf162g40a8g83cbg133d613ee6eb",
+        ENCUMBERED = "hdc2c6815g4c4fg4e81g94d5g299646e91500",
+        LEADERSHIP = "h7c65fe39g1526g427bg8a2dgab7e74c66202",
+        ADRENALINE = "h4c891442g3b79g4dbeg906fgf8eeffcf60df",
+        SHACKLES_OF_PAIN = "h36a82a09gc2dag46feg990cgf3807db54d54",
+        SHACKLES_OF_PAIN_CASTER = "h89ad2635gd8acg4dc1gb7f5g2287082b3733",
+        WIND_WALKER = "hc7566374g36afg4345gaf18gab4ba7d7c809",
+        DARK_AVENGER = "h64892b81g9543g4608ga303gcffa5055d869",
+        REMORSE = "h7e0fe51fg9df2g4854gb8f1g183251dcc25b",
+        DECAYING_TOUCH = "hbc2789fegb2deg4952ga436ga8a0aad070bf",
+        UNHEALABLE = "hc33f0ac7gc3f0g47b3gba3cg8c3ddb82508e",
+        FLANKED = "hd052e4cfg1a83g4ee5g886cgbf15dc656a0b",
+        DRAIN = "h9cf08d12gc1b8g4c7cg8662g40d03ca96df5",
+        LINGERING_WOUNDS = "h3924a821gdb1fg4d6fg920eg62ee3c4586ed",
+        INFUSED = "hae4ca8a4g56feg480eg95c8ge5761ab1eb2e",
+        SPIRIT = "h90cedca8g690cg4aabg8df0g98da27d72991",
+        SOURCE_MUTED = "h534aec4fgecc5g4b34gb0f5g8b08c3c4309e",
+        GUARDIAN_ANGEL = "hfe33ce6aged4fg4cb7g8bd8g47e3956c6ba7",
+        DISARMED = "h4904c1c3g1485g48a1g9084g13b821449d0f",
+        EXTRA_TURN = "h320c5fb3gca9dg4f13gb43ag5f41792b28b3",
+        PLAY_DEAD = "hb541d496g70efg45cbg84c9g07e626209303",
+        DEACTIVATED = "h134f5495g54ccg48a9g96bfgcdbdd31faec0",
+    },
+
     HARDCODED_STATUS_ICONS = {
         ADRENALINE = "statIcons_Adrenaline",
         CHARMED = "statIcons_Charmed",
@@ -23,6 +82,20 @@ Stats = {
         ENCUMBERED = "statIcons_Encumbered",
         SNEAKING = "Action_Sneak",
         LEADERSHIP = "statIcons_Leadership", -- This one does have a potion entry, why doesn't our code pick it up? TODO investigate
+        SHACKLES_OF_PAIN = "statIcons_ShacklesOfPain",
+        SHACKLES_OF_PAIN_CASTER = "statIcons_ShacklesOfPain",
+        SOURCE_MUTED = "statIcons_SourceMuted",
+        WIND_WALKER = "statIcons_WindWalker",
+        DARK_AVENGER = "statIcons_DarkAvenger_0", -- There's multiple tiers of this, not sure exactly how they behave
+        REMORSE = "statIcons_Remorse",
+        DECAYING_TOUCH = "statIcons_DecayingTouch",
+        UNHEALABLE = "statIcons_Unhealable",
+        FLANKED = "statIcons_Flanked",
+        DRAIN = "Skill_Vampirism_Source",
+        INFUSED = "Skill_Vampirism_Source",
+        SPIRIT = "statIcons_Spirit",
+        DISARMED = "statIcons_Disarmed",
+        EXTRA_TURN = "Skill_TimeWarp",
     },
     HARDCODED_STATUSES_WITHOUT_ICONS = Set.Create({
         "UNSHEATHED",
@@ -43,6 +116,15 @@ Stats = {
         "CLIMBING",
         "SPARK",
         "TUTORIAL_BED",
+        "TELEPORT_FALLING",
+        "LYING",
+        "FORCE_MOVE",
+        "OVERPOWER",
+        "COMBUSTION",
+        "CHANNELING",
+        "LINGERING_WOUNDS", -- statIcons_LingeringWounds exists but is unused.
+        "DEACTIVATED",
+        "CONSTRAINTED",
     }),
 
     Enums = {
@@ -322,6 +404,31 @@ function Stats.IsStatusVisible(status)
     return icon and icon ~= "unknown" and icon ~= "" 
 end
 
+---Returns the display name of a status.
+---@param status EclStatus|EsvStatus
+---@return string --Defaults to status ID.
+function Stats.GetStatusName(status)
+    local name = nil
+    local stat
+
+    if Stats.HARDCODED_STATUS_NAME_HANDLES[status.StatusId] ~= nil then
+        name = Ext.L10N.GetTranslatedString(Stats.HARDCODED_STATUS_NAME_HANDLES[status.StatusId], status.StatusId)
+    elseif (status.StatusType == "CONSUME" and status.StatusId ~= "CONSUME") or Stats.CONSUME_STATUS_SUBTYPES:Contains(status.StatusType) or Stats.STATUS_TYPES_WITH_STATS_DISPLAY_NAME:Contains(status.StatusType) then
+        ---@cast status EclStatusConsumeBase|EsvStatusConsume
+        local statsID = status.StatusId
+        stat = Stats.Get("StatusData", statsID)
+
+        if stat then
+            name = Ext.L10N.GetTranslatedStringFromKey(stat.DisplayName)
+        end
+    elseif status.StatusType == "CONSUME" and status.StatusId == "CONSUME" then
+        ---@cast status EclStatusConsumeBase|EsvStatusConsume
+        name = Ext.L10N.GetTranslatedStringFromKey(status.StatsId)
+    end
+
+    return name or status.StatusId
+end
+
 ---@param status EclStatus|EsvStatus
 function Stats.GetStatusIcon(status)
     local stat = Stats.Get("StatusData", status.StatusId)
@@ -330,7 +437,7 @@ function Stats.GetStatusIcon(status)
 
     if not isInvisible then
         if status.StatusType == "CONSUME" then
-            ---@cast status EclStatusConsumeBase
+            ---@cast status EclStatusConsumeBase|EsvStatusConsume
             icon = status.Icon
         elseif stat then
             icon = stat.Icon
