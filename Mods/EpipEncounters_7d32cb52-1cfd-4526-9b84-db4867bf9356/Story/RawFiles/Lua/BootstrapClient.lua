@@ -620,6 +620,7 @@ LOAD_ORDER = {
             "Epip/Bedazzled/Model/Gem/States/Transforming.lua",
         },
     },
+    {Script = "Epip/Client/RainbowOverlays.lua"},
 
     -- BH Overheads
     {
