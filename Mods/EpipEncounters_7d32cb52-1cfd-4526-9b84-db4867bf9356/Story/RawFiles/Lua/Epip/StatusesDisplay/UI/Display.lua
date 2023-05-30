@@ -57,6 +57,11 @@ end
 ---Creates the UI and its static components.
 function Manager:_CreateUI()
     local ui = Generic.Create("PIP_StatusDisplay_" .. Text.GenerateGUID())
+    local uiObject = ui:GetUI()
+    local playerInfoUI = PlayerInfo:GetUI()
+
+    uiObject.Layer = playerInfoUI.Layer
+    uiObject.RenderOrder = playerInfoUI.RenderOrder + 1
 
     local bg = ui:CreateElement("Background", "GenericUI_Element_TiledBackground")
     bg:SetAlpha(0)
