@@ -20,3 +20,13 @@ function math.randomSign()
         return -1
     end
 end
+
+---Linearly interpolates a value from a starting value to an end value.
+---@param startValue number
+---@param endValue number
+---@param progress number Expected values are from 0.0 to 1.0.
+function math.lerp(startValue, endValue, progress)
+    local interval = endValue - startValue
+
+    return startValue + (interval * progress)
+end

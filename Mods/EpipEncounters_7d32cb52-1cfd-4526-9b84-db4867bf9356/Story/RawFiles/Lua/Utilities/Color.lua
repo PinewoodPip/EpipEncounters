@@ -317,3 +317,16 @@ end
 function Color.Clone(color)
     return RGBColor.Clone(color)
 end
+
+---Creates a new color whose RGB components are linearly interpolated from one to another.
+---Uses the alpha of the target color.
+---@param startColor RGBColor
+---@param targetColor RGBColor
+---@param progress number Expected values are from 0.0 to 1.0.
+function Color.Lerp(startColor, targetColor, progress)
+    local r = math.lerp(startColor.Red, targetColor.Red, progress)
+    local g = math.lerp(startColor.Green, targetColor.Green, progress)
+    local b = math.lerp(startColor.Blue, targetColor.Blue, progress)
+
+    return Color.CreateFromRGB(r, g, b, targetColor.Alpha)
+end
