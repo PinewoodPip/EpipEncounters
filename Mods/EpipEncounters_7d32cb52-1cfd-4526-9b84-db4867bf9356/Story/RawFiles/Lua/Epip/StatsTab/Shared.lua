@@ -145,6 +145,7 @@ function EpipStats.AddNodeStat(clusterId, nodeIndex, nodeSubIndex, keyword, keyw
     statData.NodeIndex = nodeIndex + 1
     statData.NodeSubIndex = nodeSubIndex + 1
     statData.Cluster = clusterId
+    statData.DefaultValue = 0
     EpipStats.RegisterStat(statID, statData)
 
     -- Add stat to category
