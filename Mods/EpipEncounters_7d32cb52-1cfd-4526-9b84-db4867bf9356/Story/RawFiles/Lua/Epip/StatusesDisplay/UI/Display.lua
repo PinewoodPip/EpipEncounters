@@ -4,6 +4,7 @@ local StatusPrefab = Generic.GetPrefab("GenericUI_Prefab_Status")
 local StatusesDisplay = Epip.GetFeature("Feature_StatusesDisplay")
 local PlayerInfo = Client.UI.PlayerInfo
 local ContextMenu = Client.UI.ContextMenu
+local V = Vector.Create
 
 ---@class Feature_StatusesDisplay_Manager : Class
 ---@field UI GenericUI_Instance
@@ -15,6 +16,7 @@ local Manager = {
     UPDATE_DELAY = 20,
     MIN_STATUSES_PER_ROW = 6,
     ROWS = 2,
+    FLASH_POSITION = V(112, 2), -- Offset for the root within flash. Used to position the overlay UI properly regardless of resolution.
 }
 StatusesDisplay:RegisterClass("Feature_StatusesDisplay_Manager", Manager)
 
@@ -153,8 +155,8 @@ function Manager:_Update()
     
         self.UI:SetPosition(pos)
 
-        root.x = math.floor(playerInfoWidget.x + 115)
-        root.y = math.floor(playerInfoWidget.y + 10)
+        root.x = playerInfoWidget.x + self.FLASH_POSITION[1]
+        root.y = playerInfoWidget.y + self.FLASH_POSITION[2]
     end
 end
 
