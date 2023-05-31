@@ -94,6 +94,7 @@ Stats = {
         DRAIN = "Skill_Vampirism_Source",
         INFUSED = "Skill_Vampirism_Source",
         SPIRIT = "statIcons_Spirit",
+        SPIRIT_VISION = "Skill_Source_SpiritVision",
         DISARMED = "statIcons_Disarmed",
         EXTRA_TURN = "Skill_TimeWarp",
     },
