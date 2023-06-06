@@ -112,6 +112,10 @@ Text.CommonStrings.Filters = Text.RegisterTranslatedString({
    Handle = "hab6d5bf9gc96eg42f1ga095gaef050698dfc",
    Text = "Filters",
 })
+Text.CommonStrings.Furniture = Text.RegisterTranslatedString({
+   Handle = "hdb77af8agd827g4a54gb80ag4540ab23988d",
+   Text = "Furniture",
+})
 
 ---------------------------------------------
 -- BRANDING

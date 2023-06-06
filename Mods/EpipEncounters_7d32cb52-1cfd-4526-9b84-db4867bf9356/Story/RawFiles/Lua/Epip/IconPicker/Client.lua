@@ -20,6 +20,17 @@ local Picker = {
         },
     },
 
+    ICON_NAME_PATTERNS = {
+        MISCELLANEOUS = Set.Create({
+            "_QUEST_",
+            "_Quest_",
+            "_PUZ_",
+            "_NAT_",
+            "_TOOL_",
+            "_UNI_",
+        }),
+    },
+
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
 
@@ -37,7 +48,7 @@ Epip.RegisterFeature("IconPicker", Picker)
 ---------------------------------------------
 
 ---Default icon types implemented for GetIcons()
----@alias Feature_IconPicker_IconType "Armor"|"Weapon"|"Jewelry"
+---@alias Feature_IconPicker_IconType "Armor"|"Weapon"|"Jewelry"|"Consumables"|"Furniture"|"Miscellaneous"
 
 ---------------------------------------------
 -- EVENTS
@@ -66,6 +77,9 @@ Picker:RegisterSetting("IconType", {
         {ID = "Armor", NameHandle = CommonStrings.Armor.Handle},
         {ID = "Weapon", NameHandle = CommonStrings.Weapon.Handle},
         {ID = "Jewelry", NameHandle = CommonStrings.Jewelry.Handle},
+        {ID = "Consumables", NameHandle = CommonStrings.Consumables.Handle},
+        {ID = "Furniture", NameHandle = CommonStrings.Furniture.Handle},
+        {ID = "Miscellaneous", NameHandle = CommonStrings.Miscellaneous.Handle},
     },
 })
 
@@ -144,7 +158,7 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
--- Armor and weapons icon type filters.
+-- Implementations of default icon type filters.
 -- There really isn't a fool-proof way of filtering some of them,
 -- we rely on Larian being generally pretty consistent at their naming.
 Picker.Hooks.IsTemplateValid:Subscribe(function (ev)
@@ -163,6 +177,21 @@ Picker.Hooks.IsTemplateValid:Subscribe(function (ev)
     elseif ev.RequestedIconType == "Jewelry" then
         if icon:match("Ring_") or icon:match("Amulet") then
             ev.IsValid = true
+        end
+    elseif ev.RequestedIconType == "Consumables" then
+        if icon:match("CON_") then
+            ev.IsValid = true
+        end
+    elseif ev.RequestedIconType == "Furniture" then
+        if icon:match("_FUR_") then
+            ev.IsValid = true
+        end
+    elseif ev.RequestedIconType == "Miscellaneous" then
+        for pattern in Picker.ICON_NAME_PATTERNS.MISCELLANEOUS:Iterator() do
+            if icon:match(pattern) then
+                ev.IsValid = true
+                break
+            end
         end
     end
 end)
