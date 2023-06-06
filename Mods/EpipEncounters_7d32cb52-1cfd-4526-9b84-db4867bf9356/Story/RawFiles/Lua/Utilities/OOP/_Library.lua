@@ -92,22 +92,7 @@ function Library.Create(modTable, id, data)
     library._localTranslatedStringKeys = {}
     library.TranslatedStrings = library.TranslatedStrings or {}
     for handle,tsk in pairs(library.TranslatedStrings) do
-        local localKey = tsk.Handle and handle or tsk.LocalKey -- If Handle is manually set, use table key as localKey
-
-        tsk.Handle = tsk.Handle or handle
-        tsk.ModTable = modTable
-        tsk.FeatureID = id
-
-        if localKey then
-            library._localTranslatedStringKeys[localKey] = handle
-        end
-
-        -- Make indexing via string key work as well
-        if tsk.StringKey then
-            library.TranslatedStrings[tsk.StringKey] = tsk
-        end
-
-        Text.RegisterTranslatedString(tsk)
+        library:RegisterTranslatedString(handle, tsk)
     end
 
     -- Create TSK table
@@ -234,6 +219,28 @@ end
 ---@return TranslatedStringHandle?
 function Library:GetTranslatedStringHandleForKey(localKey)
     return self._localTranslatedStringKeys[localKey]
+end
+
+---Registers a TSK.
+---@param handle TranslatedStringHandle
+---@param tsk Library_TranslatedString ModTable, FeatureID and Handle fields are auto-initialized.
+function Library:RegisterTranslatedString(handle, tsk)
+    local localKey = tsk.Handle and handle or tsk.LocalKey -- If Handle is manually set, use table key as localKey
+
+    tsk.Handle = tsk.Handle or handle
+    tsk.ModTable = self.__ModTable
+    tsk.FeatureID = self.__name
+
+    if localKey then
+        self._localTranslatedStringKeys[localKey] = handle
+    end
+
+    -- Make indexing via string key work as well
+    if tsk.StringKey then
+        self.TranslatedStrings[tsk.StringKey] = tsk
+    end
+
+    Text.RegisterTranslatedString(tsk)
 end
 
 ---------------------------------------------
