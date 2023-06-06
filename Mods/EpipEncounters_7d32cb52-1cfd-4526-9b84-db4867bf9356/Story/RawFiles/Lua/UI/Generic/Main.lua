@@ -11,7 +11,7 @@ Client.UI.Generic = {
 local Generic = Client.UI.Generic ---@class GenericUI
 Epip.InitializeLibrary("Generic", Generic)
 
----@alias GenericUI_PrefabClass "GenericUI_Prefab_HotbarSlot"|"GenericUI_Prefab_Spinner"|"GenericUI_Prefab_Text"|"GenericUI_Prefab_LabelledDropdown"|"GenericUI_Prefab_LabelledCheckbox"|"GenericUI_Prefab_LabelledTextField"|"GenericUI_Prefab_FormHorizontalList"|"GenericUI_Prefab_LabelledIcon"|"GenericUI_Prefab_Status"|"GenericUI_Prefab_TooltipPanel"|"GenericUI_Prefab_FormElementBackground"|"GenericUI_Prefab_LabelledSlider"|"GenericUI_Prefab_FormSet"|"GenericUI_Prefab_FormElement"|"GenericUI_Prefab_FormSetEntry"|"GenericUI_Prefab_Selector"
+---@alias GenericUI_PrefabClass "GenericUI_Prefab_HotbarSlot"|"GenericUI_Prefab_Spinner"|"GenericUI_Prefab_Text"|"GenericUI_Prefab_LabelledDropdown"|"GenericUI_Prefab_LabelledCheckbox"|"GenericUI_Prefab_LabelledTextField"|"GenericUI_Prefab_FormHorizontalList"|"GenericUI_Prefab_LabelledIcon"|"GenericUI_Prefab_Status"|"GenericUI_Prefab_TooltipPanel"|"GenericUI_Prefab_FormElementBackground"|"GenericUI_Prefab_LabelledSlider"|"GenericUI_Prefab_FormSet"|"GenericUI_Prefab_FormElement"|"GenericUI_Prefab_FormSetEntry"|"GenericUI_Prefab_Selector"|"GenericUI_Prefab_CloseButton"
 
 ---@alias GenericUI_ParentIdentifier string|GenericUI_Element
 
