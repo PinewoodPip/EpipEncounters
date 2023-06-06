@@ -108,6 +108,10 @@ Text.CommonStrings.Filtered = Text.RegisterTranslatedString({
    Handle = "h715a684agc1e6g47eagb4d8g13944bc7ebe7",
    Text = "Filtered",
 })
+Text.CommonStrings.Filters = Text.RegisterTranslatedString({
+   Handle = "hab6d5bf9gc96eg42f1ga095gaef050698dfc",
+   Text = "Filters",
+})
 
 ---------------------------------------------
 -- BRANDING
@@ -438,6 +442,14 @@ Text.CommonStrings.Artifacts = Text.RegisterTranslatedString({
 Text.CommonStrings.Combat = Text.RegisterTranslatedString({
    Handle = "hfc9df4bcgd7deg4e05ga37ag1b739d2a9e2b",
    Text = "Combat",
+})
+Text.CommonStrings.Armor = Text.RegisterTranslatedString({
+   Handle = "hbcd07fa8gaaa1g4571gac0eg8a20d7955224",
+   Text = "Armor",
+})
+Text.CommonStrings.Jewelry = Text.RegisterTranslatedString({
+   Handle = "hf791f6e7g31cdg4e84gb349g383ad5b4409c",
+   Text = "Jewelry",
 })
 
 ---------------------------------------------

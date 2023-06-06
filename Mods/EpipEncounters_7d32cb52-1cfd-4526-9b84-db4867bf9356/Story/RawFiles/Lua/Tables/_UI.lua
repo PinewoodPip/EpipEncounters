@@ -143,6 +143,17 @@ function BaseUI:SetPosition(pos)
     self:GetUI():SetPosition(pos:unpack())
 end
 
+---Sets the panel size of the UI.
+---The panel size is used to determine the size of the UI
+---for purposes of positioning via `setPosition` call
+---and dragging.
+---@param size Vector2
+function BaseUI:SetPanelSize(size)
+    local uiObject = self:GetUI()
+
+    uiObject.SysPanelSize = size
+end
+
 ---Shorthand for UIObject:Hide()
 function BaseUI:Hide()
     local ui = self:GetUI()
