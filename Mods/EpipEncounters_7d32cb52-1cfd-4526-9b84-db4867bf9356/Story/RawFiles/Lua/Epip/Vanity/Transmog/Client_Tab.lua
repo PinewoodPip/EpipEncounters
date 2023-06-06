@@ -1,9 +1,16 @@
 
 local Vanity = Client.UI.Vanity
-local Hotbar = Client.UI.Hotbar
+local IconPicker = Epip.GetFeature("Feature_IconPicker")
 
 ---@class Feature_Vanity_Transmog
 local Transmog = Epip.GetFeature("Feature_Vanity_Transmog")
+Transmog.ICON_PICKER_REQUEST_ID = "Vanity_Transmog_SetIcon"
+
+Transmog:RegisterTranslatedString("h19773400g8de1g46d7g9901g779b750ebddd", {
+   Text = "Set Icon",
+   ContextDescription = "Override icon button",
+   StringKey = "Transmog_SetIcon",
+})
 
 ---@type CharacterSheetCustomTab
 local Tab = Vanity.CreateTab({
@@ -43,6 +50,7 @@ function Tab:Render()
 
         if canTransmog then
             Vanity.RenderCheckbox("Vanity_KeepIcon", Text.Format("Keep Icon", {Color = Color.BLACK}), Transmog.keepIcon, true)
+            Vanity.RenderButton("Transmog_SetIcon", Text.Format(Transmog.TranslatedStrings.Transmog_SetIcon:GetString(), {Color = Color.WHITE}), true)
 
             local categories = Transmog.GetCategories(item)
 
@@ -97,6 +105,8 @@ Tab:RegisterListener(Vanity.Events.ButtonPressed, function(id)
             CharNetID = Client.GetCharacter().NetID,
             ItemNetID = Vanity.GetCurrentItem().NetID,
         })
+    elseif id == "Transmog_SetIcon" then
+        IconPicker.Open(Transmog.ICON_PICKER_REQUEST_ID)
     end
 end)
 
@@ -126,4 +136,12 @@ end)
 
 Tab:RegisterListener(Vanity.Events.EntryClicked, function(id)
     Transmog.TransmogItem(nil, id)
+end)
+
+-- Listen for icon picker requests completing.
+IconPicker.Events.IconPicked:Subscribe(function (ev)
+    if ev.RequestID == Transmog.ICON_PICKER_REQUEST_ID then
+        Transmog:DebugLog("Setting icon", ev.Icon)
+        Transmog.SetItemIcon(Vanity.GetCurrentItem(), ev.Icon)
+    end
 end)

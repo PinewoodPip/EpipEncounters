@@ -43,14 +43,14 @@ function Vanity.TransmogItem(char, item, newTemplate, dye, keepIcon)
     if keepIcon then
         local icon = Transmog.GetIconOverride(item)
         if icon then
-            Entity.RemoveTagsByPattern(item, Transmog.KEEP_ICON_PATTERN)
-            Osiris.SetTag(item, Transmog.KEEP_ICON_TAG:format(icon))
+            Transmog.SetItemIcon(item, icon)
         end
     else
         local icon = template.Icon
         
-        Entity.RemoveTagsByPattern(item, Transmog.KEEP_ICON_PATTERN)
-        Osiris.SetTag(item, Transmog.KEEP_ICON_TAG:format(icon))
+        -- Still need to set an icon override in this case
+        -- as we are not transforming the item.
+        Transmog.SetItemIcon(item, icon)
     end
 
     -- Apply new dye if specified.
@@ -63,6 +63,14 @@ function Vanity.TransmogItem(char, item, newTemplate, dye, keepIcon)
     Osiris.SetTag(item, Transmog.TRANSMOGGED_TAG:format(newTemplate))
     
     Vanity.RefreshAppearance(char, true)
+end
+
+---Sets a persistent icon override for an item.
+---@param item EsvItem
+---@param icon icon
+function Transmog.SetItemIcon(item, icon)
+    Entity.RemoveTagsByPattern(item, Transmog.KEEP_ICON_PATTERN)
+    Osiris.SetTag(item, Transmog.KEEP_ICON_TAG:format(icon))
 end
 
 ---Reverts the appearance of an item to its original one.
@@ -239,6 +247,14 @@ Net.RegisterListener("EPIPENCOUNTERS_Vanity_RevertTemplate", function(payload)
     local item = Item.Get(payload.ItemNetID)
 
     Vanity.RevertAppearace(char, item)
+end)
+
+-- Listen for requests to set an icon override (separate from transmog).
+Net.RegisterListener(Transmog.NET_MSG_SET_ICON, function(payload)
+    local item = payload:GetItem()
+
+    Transmog.SetItemIcon(item, payload.Icon)
+    Vanity.RefreshAppearance(payload:GetCharacter(), false)
 end)
 
 -- Listen for toggling persistent outfit feature.

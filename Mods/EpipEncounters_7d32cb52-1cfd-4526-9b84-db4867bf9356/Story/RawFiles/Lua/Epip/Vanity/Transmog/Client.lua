@@ -7,12 +7,6 @@ local Transmog = Epip.GetFeature("Feature_Vanity_Transmog")
 Transmog.keepIcon = false
 
 ---------------------------------------------
--- CLASSES
----------------------------------------------
-
----@class EPIPENCOUNTERS_Vanity_Transmog_ToggleVisibility : NetLib_Message_State, NetLib_Message_Item, NetLib_Message_Character
-
----------------------------------------------
 -- EVENTS / HOOKS
 ---------------------------------------------
 
@@ -144,6 +138,17 @@ function Transmog.TransmogItem(item, template)
             Vanity.Refresh()
         end
     end
+end
+
+---Sets a persistent icon override for an item.
+---@param item EclItem
+---@param icon icon
+function Transmog.SetItemIcon(item, icon)
+    local char = Item.GetOwner(item) or Client.GetCharacter()
+    item.Icon = icon
+
+    Net.PostToServer(Transmog.NET_MSG_SET_ICON, {CharacterNetID = char.NetID, ItemNetID = item.NetID, Icon = icon})
+    Vanity.Refresh() -- Necessary for item icon to be immediately reflected, for some reason. TODO investigate?
 end
 
 ---Toggles visibility of an equipment item's visuals while it is equipped.
