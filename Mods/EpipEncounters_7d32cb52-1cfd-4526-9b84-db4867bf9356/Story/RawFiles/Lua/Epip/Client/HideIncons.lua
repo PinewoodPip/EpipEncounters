@@ -1,26 +1,26 @@
 
--- Temporary script to hide Incons (and LC in Derpy's).
-
-Client.UI.CharacterCreation.Hooks.UpdateTalents:Subscribe(function (ev)
-    for i,entry in ipairs(ev.Talents) do
-        if entry.TalentID == Character.Talents.Stench.NumericID then
-            table.remove(ev.Talents, i)
-            break
-        end
-    end
-end)
-
-Client.UI.CharacterSheet.Hooks.UpdateTalents:Subscribe(function (ev)
-    for i,entry in ipairs(ev.Stats) do
-        if entry.StatID == Character.Talents.Stench.NumericID then
-            table.remove(ev.Stats, i)
-            break
-        end
-    end
-end)
+-- Temporary script to hide Incons and LC in Derpy's.
 
 -- Hide Lucky Charm.
 if Mod.IsLoaded(Mod.GUIDS.EE_DERPY) then
+    Client.UI.CharacterCreation.Hooks.UpdateTalents:Subscribe(function (ev)
+        for i,entry in ipairs(ev.Talents) do
+            if entry.TalentID == Character.Talents.Stench.NumericID then
+                table.remove(ev.Talents, i)
+                break
+            end
+        end
+    end)
+    
+    Client.UI.CharacterSheet.Hooks.UpdateTalents:Subscribe(function (ev)
+        for i,entry in ipairs(ev.Stats) do
+            if entry.StatID == Character.Talents.Stench.NumericID then
+                table.remove(ev.Stats, i)
+                break
+            end
+        end
+    end)
+
     Client.UI.CharacterSheet.Hooks.UpdateAbilityStats:Subscribe(function (ev)
         for i,entry in ipairs(ev.Stats) do
             if entry.StatID == 33 then
