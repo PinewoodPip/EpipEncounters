@@ -137,6 +137,14 @@ local Dyes = {
     REQUIRED_MODS = {
         [Mod.GUIDS.EE_CORE] = "Epic Encounters Core",
     },
+
+    TranslatedStrings = {
+        Msg_Unobtained_Body = {
+           Handle = "h5a1af856ge6bbg46b0g8c00g98c676f04629",
+           Text = "We don't have that dye!<br>We shall shop for them at miscellaneous vendors.",
+           ContextDescription = "Message box for attempting to use a dye the party doesn't have",
+        },
+    }
 }
 Epip.RegisterFeature("EE_Dyes", Dyes)
 
@@ -162,8 +170,20 @@ end
 
 VanityDyes.Events.DyeUsed:RegisterListener(function (dye, item, _)
     if dye.Type == "EE" then
-        VanityDyes.ApplyCustomDye(dye, item)
-        VanityDyes.Tab:SetSliderColors(dye)
+        ---@cast dye DyeItem
+        local hasDye = Item.GetPartyTemplateCount(dye.Template) > 0
+
+        -- EE dyes require the template to be present in the inventory
+        if hasDye then
+            VanityDyes.ApplyCustomDye(dye, item)
+            VanityDyes.Tab:SetSliderColors(dye)
+        else
+            Client.UI.MessageBox.Open({
+                ID = "Feature_EE_Dyes_Unobtained",
+                Header = "",
+                Message = Dyes.TranslatedStrings.Msg_Unobtained_Body:GetString(),
+            })
+        end
     end
 end)
 
