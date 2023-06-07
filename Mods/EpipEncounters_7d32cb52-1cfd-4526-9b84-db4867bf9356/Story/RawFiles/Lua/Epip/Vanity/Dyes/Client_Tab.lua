@@ -25,7 +25,7 @@ function Tab:RenderCategories(categories)
         if isOpen then
             local dyes = category.Dyes
 
-            for i,dye in ipairs(dyes) do
+            for _,dye in ipairs(dyes) do
                 Vanity.RenderEntry(dye.ID, dye.Name or dye.ID, false, false, false, false, nil, category.ID == "CustomDyes", {
                     dye.Color1,
                     dye.Color2,

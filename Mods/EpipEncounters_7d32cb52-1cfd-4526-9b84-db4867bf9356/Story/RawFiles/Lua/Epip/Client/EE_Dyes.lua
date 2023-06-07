@@ -7,8 +7,6 @@
 ---@field Template string
 ---@field Deltamod string
 ---@field ItemColor string
-
----@type DyeItem
 local _DyeItem = {}
 
 function _DyeItem:Init()
@@ -19,7 +17,6 @@ function _DyeItem:Init()
     self.Color3 = Color.CreateFromDecimal(stat.Color3)
 end
 
-local DyeData = Data.Game.DYES
 local Dyes = {
     ---@type DyeItem[]
     DYES = {
@@ -141,9 +138,9 @@ local Dyes = {
         [Mod.GUIDS.EE_CORE] = "Epic Encounters Core",
     },
 }
-Epip.AddFeature("EE_Dyes", "EE_Dyes", Dyes)
+Epip.RegisterFeature("EE_Dyes", Dyes)
 
-for i,data in ipairs(Dyes.DYES) do
+for _,data in ipairs(Dyes.DYES) do
     Inherit(data, _DyeItem)
     data.ID = data.Deltamod
     data.Type = "EE"
@@ -153,7 +150,7 @@ for i,data in ipairs(Dyes.DYES) do
 end
 
 local Vanity = Client.UI.Vanity
-local VanityDyes = Epip.GetFeature("Vanity_Dyes")
+local VanityDyes = Epip.GetFeature("Feature_Vanity_Dyes")
 
 ---------------------------------------------
 -- EVENT LISTENERS
@@ -163,22 +160,15 @@ function Dyes.IsEEDye(id)
     return Dyes.DYE_DATA[id] ~= nil
 end
 
-VanityDyes.Events.DyeUsed:RegisterListener(function (dye, item, character)
+VanityDyes.Events.DyeUsed:RegisterListener(function (dye, item, _)
     if dye.Type == "EE" then
-
-        -- Net.PostToServer("EPIPENCOUNTERS_DYE", {
-        --     Character = character.NetID,
-        --     Item = item.NetID,
-        --     -- DyeID = dye.ID,
-        --     DyeData = dye,
-        -- })
         VanityDyes.ApplyCustomDye(dye, item)
         VanityDyes.Tab:SetSliderColors(dye)
     end
 end)
 
 -- Grey out text for EE dyes if we don't have them.
-Vanity.Hooks.GetLabelColor:RegisterHook(function (color, text, tab, entryID)
+Vanity.Hooks.GetLabelColor:RegisterHook(function (color, _, tab, entryID)
     if tab.ID == "PIP_Vanity_Dyes" and Dyes.IsEEDye(entryID) then
         local dye = Dyes.DYE_DATA[entryID]
         local hasDye = Item.GetPartyTemplateCount(dye.Template) > 0
@@ -200,7 +190,7 @@ function Dyes:__Setup()
         Name = "Epic Encounters Dyes",
     })
 
-    for i,dye in ipairs(Dyes.DYES) do
+    for _,dye in ipairs(Dyes.DYES) do
         VanityDyes.AddDye("EpicEncounters", dye)
     end
 

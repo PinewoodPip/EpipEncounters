@@ -42,35 +42,3 @@ Net.RegisterListener("EPIPENCOUNTERS_DyeItem", function(payload)
     
     Epip.GetFeature("Feature_Vanity").RefreshAppearance(char, true)
 end)
-
-Net.RegisterListener("EPIPENCOUNTERS_DYE", function(payload)
-    local item = Ext.GetItem(payload.Item)
-    local char = Ext.GetCharacter(payload.Character)
-    local dyeData = payload.DyeData
-    local dye = Osi.GetItemForItemTemplateInPartyInventory(char.MyGuid, dyeData.Template)
-
-
-    -- Can't craft in combat; thereby neither can we dye.
-    if Osi.CombatGetIDForCharacter(char.MyGuid) ~= 0 then
-        Osi.PROC_AMER_GEN_OpenQueuedMessageBox(char.MyGuid, "I shouldn't be thinking about these things while my life is at stake!")
-    else
-        if dye then
-            -- TODO make feature
-            Utilities.Hooks.FireEvent("ContextMenus_Dyes", "ItemBeingDyed", item)
-            
-            local deltamod = "Boost_" .. item.Stats.ItemType .. "_" .. dyeData.Deltamod
-    
-            Osi.ItemAddDeltaModifier(item.MyGuid, deltamod)
-    
-            Osi.QRY_AMER_GEN_GetEquippedItemSlot(char.MyGuid, item.MyGuid)
-    
-            -- TODO add this check to the proc instead
-            if Osi.DB_AMER_GEN_OUTPUT_String:Get(nil)[1][1] ~= "None" then
-                Osi.PROC_PIP_ReEquipItem(char.MyGuid, item.MyGuid)
-            end
-        else
-            -- This should no longer happen, since we added this check client-side.
-            Osi.PROC_AMER_GEN_OpenQueuedMessageBox(char.MyGuid, "We don't have that dye!<br>We shall shop for them at miscellaneous vendors.")
-        end
-    end
-end)
