@@ -3,7 +3,9 @@
 -- Shows treasure table and artifact chances on the EnemyHealthBar UI.
 ---------------------------------------------
 
----@class Feture_TreasureTableDisplay : Feature
+local Bar = Client.UI.EnemyHealthBar
+
+---@class Feature_TreasureTableDisplay : Feature
 local TTD = {
     -- Treasure tables checked and their display name. Use AddTreasureTable() to add more.
     ---@type table<string, TreasureTableDisplayEntry>
@@ -62,17 +64,27 @@ local TTD = {
             ProteanChance = 1,
         },
     },
+
+    USE_LEGACY_EVENTS = false,
+    USE_LEGACY_HOOKS = false,
+
     Hooks = {
-        ---@type TreasureTableDisplay_Hook_GetTreasureData
-        GetTreasureData = {},
+        GetTreasureData = {}, ---@type Event<Feature_TreasureTableDisplay_Hook_GetTreasureData>
     },
 }
-Epip.AddFeature("TreasureTableDisplay", "TreasureTableDisplay", TTD)
-Epip.Features.TreasureTableDisplay = TTD
+Epip.RegisterFeature("TreasureTableDisplay", TTD)
 
----@class TreasureTableDisplay_Hook_GetTreasureData : Hook
----@field RegisterHook fun(self, handler:fun(data:TreasureTableDisplayEntry, char:EclCharacter))
----@field Return fun(self, data:TreasureTableDisplayEntry, char:EclCharcter)
+---------------------------------------------
+-- EVENTS/HOOKS
+---------------------------------------------
+
+---@class Feature_TreasureTableDisplay_Hook_GetTreasureData
+---@field Data TreasureTableDisplayEntry
+---@field Entity Entity
+
+---------------------------------------------
+-- CLASSES
+---------------------------------------------
 
 ---@class TreasureTableDisplayEntry
 ---@field Name string
@@ -83,8 +95,11 @@ local _TreasureTableEntry = {
     GetProteanChance = function(self) return self.ProteanChance or 0 end,
 }
 
-local Bar = Client.UI.EnemyHealthBar
+---------------------------------------------
+-- METHODS
+---------------------------------------------
 
+---@override
 function TTD:IsEnabled()
     return not self.Disabled and Settings.GetSettingValue("EpipEncounters", "TreasureTableDisplay")
 end
@@ -93,13 +108,12 @@ end
 ---@param tableID string
 ---@param data TreasureTableDisplayEntry
 function TTD.AddTreasureTable(tableID, data)
-    setmetatable(data, {__index = _TreasureTableEntry})
+    Inherit(data, _TreasureTableEntry)
 
     data.Name = data.Name or tableID
 
     TTD.TREASURE_TABLES[tableID] = data
 end
-
 
 ---Get the display data for a treasure table, if it is tracked.
 ---@param entity Entity
@@ -109,14 +123,14 @@ function TTD.GetTreasureData(entity)
     local tableData
     
     if #treasures > 0 then
-        for i,treasureTableID in ipairs(treasures) do
+        for _,treasureTableID in ipairs(treasures) do
             tableData = TTD.TREASURE_TABLES[treasureTableID]
 
             -- Check subtables
             if not tableData then
                 local stat = Ext.GetTreasureTable(treasureTableID)
 
-                for z,subTable in ipairs(stat.SubTables) do
+                for _,subTable in ipairs(stat.SubTables) do
                     if tableData then
                         break
                     end
@@ -140,7 +154,7 @@ function TTD.GetTreasureData(entity)
         end
     end
 
-    return TTD.Hooks.GetTreasureData:Return(tableData, entity)
+    return TTD.Hooks.GetTreasureData:Throw({Data = tableData, Entity = entity}).Data
 end
 
 ---------------------------------------------
