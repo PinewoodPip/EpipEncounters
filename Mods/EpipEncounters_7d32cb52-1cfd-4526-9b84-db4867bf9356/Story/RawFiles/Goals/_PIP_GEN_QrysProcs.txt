@@ -42,24 +42,6 @@ DB_PIP_CharacterCombatRound(_Char, _Round)
 THEN
 NOT DB_PIP_CharacterCombatRound(_Char, _Round);
 
-PROC PROC_PIP_ReEquipItem((CHARACTERGUID)_Char, (ITEMGUID)_Item) // separate PROC so it can be reused in the future
-THEN
-PROC_AMER_TempStat_FlexStat_Add(_Char, "Attribute", "Strength", 10.0, 200, "");
-PROC_AMER_TempStat_FlexStat_Add(_Char, "Attribute", "Intelligence", 10.0, 200, "");
-PROC_AMER_TempStat_FlexStat_Add(_Char, "Attribute", "Finesse", 10.0, 200, "");
-PROC_AMER_TempStat_FlexStat_Add(_Char, "Attribute", "Memory", 10.0, 200, "");
-CharacterUnequipItem(_Char, _Item);
-DB_PIP_ItemBeingReEquipped(_Char, _Item);
-ProcObjectTimer(_Char, "PIP_ReEquipItem", 50); // everything in this engine is powered by timers
-
-PROC ProcObjectTimerFinished((CHARACTERGUID)_Char, "PIP_ReEquipItem")
-AND
-DB_PIP_ItemBeingReEquipped(_Char, _Item)
-THEN
-CharacterEquipItem(_Char, _Item);
-NOT DB_PIP_ItemBeingReEquipped(_Char, _Item);
-
-
 EXITSECTION
 
 ENDEXITSECTION
