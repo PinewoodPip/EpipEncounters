@@ -256,7 +256,8 @@ function Hotbar.GetKeyString(index, shortName)
 
         -- Manually-defined InputEvent takes priority
         if actionData.InputEventID then
-            key = Client.Input.GetBinding(actionData.InputEventID):Stringify(true)
+            local binding = Client.Input.GetBinding(actionData.InputEventID)
+            key = binding and binding:Stringify(true) or key
         else -- Use the hotbar keybinds
             local bindableAction = Client.Input.GetActionKeybinds("EpipEncounters_Hotbar_" .. Text.RemoveTrailingZeros(index))
 
@@ -352,9 +353,6 @@ Hotbar:RegisterCallListener("pipHotbarStopRearrange", function(_, index)
 
         -- Do nothing if button was dragged out of bounds
         if index > 0 then
-            local hotkeys = Hotbar.GetHotkeysHolder()
-            local finalButton = hotkeys.hotkeyButtons[index]
-
             local previousAction = Hotbar.ActionsState[index].ActionID -- Action that was on new button
 
             Hotbar:FireEvent("ActionsSwapped", {
