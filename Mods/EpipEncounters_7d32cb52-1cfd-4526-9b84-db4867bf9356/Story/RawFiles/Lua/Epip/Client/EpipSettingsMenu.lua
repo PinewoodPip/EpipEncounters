@@ -5,6 +5,7 @@ local QuickInventory = Epip.GetFeature("Feature_QuickInventory")
 local TooltipAdjustments = Epip.GetFeature("Feature_TooltipAdjustments")
 local AnimationCancelling = Epip.GetFeature("Feature_AnimationCancelling")
 local StatusesDisplay = Epip.GetFeature("Feature_StatusesDisplay")
+local CraftingFixes = Epip.GetFeature("Feature_CraftingFixes")
 local CommonStrings = Text.CommonStrings
 
 ---@class Feature_EpipSettingsMenu : Feature
@@ -233,7 +234,7 @@ local tabs = {
             {Module = QuickInventory:GetSettingsModuleID(), ID = QuickInventory.Settings.CloseAfterUsing.ID},
 
             CreateHeader(TSK.Section_CraftingUI),
-            {Module = "Epip_Crafting", ID = "Crafting_DefaultFilter"},
+            {Module = CraftingFixes:GetSettingsModuleID(), ID = CraftingFixes.Settings.DefaultFilter.ID},
         }
     },
     ["Epip_Notifications"] = {
