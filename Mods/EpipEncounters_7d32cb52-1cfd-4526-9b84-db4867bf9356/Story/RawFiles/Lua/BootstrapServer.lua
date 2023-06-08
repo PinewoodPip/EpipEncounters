@@ -184,6 +184,8 @@ LOAD_ORDER = {
         RequiresEE = true,
     },
     
+    {ScriptSet = "Epip/OverheadFixes"},
+    
     {
         ScriptSet = "Epip/AscensionShortcuts",
     },
@@ -284,33 +286,6 @@ LOAD_ORDER = {
 }
 
 Ext.Require(prefixedGUID, "Bootstrap.lua")
-
-Ext.Osiris.RegisterListener("CharacterStatusApplied", 3, "after", function(target, id, causee)
-    -- Disabled until a fix for clicking is found
-    if true then return nil end
-    target = Ext.GetCharacter(target)
-    local status = target:GetStatus(id)
-
-    if not status then return nil end
-    if not target.Stats.TALENT_Zombie then return nil end
-    if status.StatusType ~= "HEAL" and status.StatusType ~= "HEALING" then return nil end
-
-    local healType = ""
-
-    if status.StatusType == "HEALING" then
-        healType = status.HealStat
-    else
-        healType = status.HealType
-    end
-
-    if healType == "AllArmor" then
-        Net.Broadcast("EPIPENCOUNTERS_Overhead", {NetID = target.NetID, Amount = status.HealAmount, Type = "PhysicalArmor"})
-        Net.Broadcast("EPIPENCOUNTERS_Overhead", {NetID = target.NetID, Amount = status.HealAmount, Type = "MagicArmor"})
-
-    elseif healType == "PhysicalArmor" or healType == "MagicArmor" then
-        Net.Broadcast("EPIPENCOUNTERS_Overhead", {NetID = target.NetID, Amount = status.HealAmount, Type = healType})
-    end
-end)
 
 function GreatforgeGetItemData(char, item)
     char = Character.Get(char)

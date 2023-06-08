@@ -132,29 +132,6 @@ Ext.RegisterUITypeCall(Client.UI.Data.UITypes.overhead, "pipOverheadDialogAttemp
     Overhead:GetRoot().addADialog(handle, str, duration)
 end)
 
--- Overhead requests from server (used to fix the undead overhead healing issue)
-Net.RegisterListener("EPIPENCOUNTERS_Overhead", function(payload)
-    local data = payload
-    local char = Ext.GetCharacter(payload.NetID)
-    local color
-
-    if payload.Type == "MagicArmor" then
-        color = Color.MAGIC_ARMOR
-    else
-        color = Color.PHYSICAL_ARMOR
-    end
-
-    Overhead.ShowDamage(char, data.Amount, color)
-end)
-
----------------------------------------------
--- SETUP
----------------------------------------------
-
-Ext.Events.SessionLoaded:Subscribe(function()
-    Overhead:TogglePlayerInput(false)
-end)
-
 ---------------------------------------------
 -- TESTS AND LOGGING
 ---------------------------------------------

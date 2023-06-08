@@ -382,6 +382,8 @@ LOAD_ORDER = {
     "Epip/Client/EnemyHealthBarExtraInfo.lua",
     -- "Epip/Client/InventoryImprovements.lua",
 
+    {ScriptSet = "Epip/OverheadFixes"},
+
     {ScriptSet = "Epip/Greatforge/DrillSockets"},
     {ScriptSet = "Epip/Greatforge/Engrave"},
     {ScriptSet = "Epip/InfiniteCarryWeight"},
