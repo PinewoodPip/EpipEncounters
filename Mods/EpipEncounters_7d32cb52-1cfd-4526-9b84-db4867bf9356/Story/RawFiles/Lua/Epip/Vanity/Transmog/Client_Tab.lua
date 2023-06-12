@@ -62,7 +62,7 @@ function Tab:Render()
 
             Vanity.RenderButton("RevertTemplate", "Revert Appearance", true)
 
-            for i,data in ipairs(categories) do
+            for _,data in ipairs(categories) do
                 -- Render category collapse button
                 local categoryID = data.Data.ID
                 local isOpen = Vanity.IsCategoryOpen(categoryID)

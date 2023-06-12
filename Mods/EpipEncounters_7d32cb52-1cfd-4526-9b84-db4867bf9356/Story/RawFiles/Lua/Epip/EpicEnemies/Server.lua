@@ -60,7 +60,7 @@ EpicEnemies.Hooks.GetPointsForCharacter = EpicEnemies:AddHook("GetPointsForChara
 ---------------------------------------------
 
 ---@param char EsvCharacter|GUID
----@return bool
+---@return boolean
 function EpicEnemies.IsInitialized(char)
     return Osiris.IsTagged(char, EpicEnemies.INITIALIZED_TAG) == 1
 end

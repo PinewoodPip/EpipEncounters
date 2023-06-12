@@ -8,7 +8,6 @@
 ---@field REQUIRED_MODS table<GUID, string> The feature will be automatically disabled if any required mods are missing.
 ---@field FILEPATH_OVERRIDES table<string, string>
 ---@field IsEnabled fun(self):boolean
----@field __Setup fun(self)
 ---@field Disable fun(self)
 ---@field OnFeatureInit fun(self)
 ---@field RegisterListener fun(self, event:string, handler:function)
@@ -136,6 +135,7 @@ end
 
 ---Invoked on SessionLoaded if the feature is not disabled.
 ---Override to run initialization routines.
+---@protected
 function Feature:__Setup() end
 
 ---Invoked on a small delay after SessionLoaded if Epip.IsDeveloperMode(true) is true and the feature is being debugged.

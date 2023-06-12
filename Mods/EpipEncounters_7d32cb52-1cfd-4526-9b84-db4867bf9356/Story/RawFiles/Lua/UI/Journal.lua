@@ -95,7 +95,7 @@ function Journal.RenderEntry(entry, parent, depth)
     if parent then parentID = parent.LastFlashID end
 
     if depth > Journal.MAX_DEPTH then
-        Journal:LogError("Maximum depth exceeded when adding entries by " .. entry.Label or "UNLABELED")
+        Journal:LogError("Maximum depth exceeded when adding entries by " .. (entry.Label or "UNLABELED"))
         return nil
     end
 

@@ -1,5 +1,5 @@
 
----@type table<StatsTalentType, CharacterLib_Talent>
+---@type table<TalentType, CharacterLib_Talent>
 Character.Talents = {
     ItemMovement = {
         NameHandle = "hbe8305f4g2b31g431ega1ffgc3f0518503ed",

@@ -1,5 +1,8 @@
 ---@diagnostic disable
 
+---@class Osi : OsiCommonDatabases, OsiDynamic
+Osi = {}
+
 ---@class EclSkill
 ---@field ActiveCooldown number Cooldown remaining, in seconds.
 ---@field CanActivate boolean
@@ -161,8 +164,20 @@ function Ext_ClientVisual.CreateOnCharacter(position, char) end
 function Ext_ClientVisual.CreateOnItem(position, item) end
 
 ---------------------------------------------
--- ITEM
+-- Character
 ---------------------------------------------
+
+---@alias StatCharacter CDivinityStatsCharacter
+
+---------------------------------------------
+-- Item
+---------------------------------------------
+
+---@alias StatItem CDivinityStatsItem
+---@alias EclItemFlags ClientItemFlags
+---@alias EclItemFlags2 ClientItemFlags2
+---@alias EsvItemFlags ServerItemFlags
+---@alias EsvItemFlags2 ServerItemFlags2
 
 ---@class EsvItem
 ---@field Rarity ItemLib_Rarity

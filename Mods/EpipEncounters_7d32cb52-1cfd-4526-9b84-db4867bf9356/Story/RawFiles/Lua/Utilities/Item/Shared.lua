@@ -83,7 +83,7 @@ Item = {
 -- CLASSES
 ---------------------------------------------
 
----@alias ItemLib_EquipmentType StatsWeaponType|StatsArmorType
+---@alias ItemLib_EquipmentType WeaponType|ArmorType
 ---@alias ItemLib_Rarity "Common"|"Uncommon"|"Rare"|"Epic"|"Legendary"|"Divine"|"Unique"
 
 ---------------------------------------------

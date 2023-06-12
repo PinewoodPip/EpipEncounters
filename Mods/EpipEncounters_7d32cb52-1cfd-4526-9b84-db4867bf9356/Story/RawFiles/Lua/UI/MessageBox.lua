@@ -72,8 +72,6 @@ local MessageBoxButton = {
 ---@field Header string The title of the message.
 ---@field Message string Main text of the message.
 ---@field Buttons MessageBoxButton[] If omitted, default will be a "Close" button.
-
----@type MessageBoxData
 local MessageBoxData = {
     Type = "Message",
     ID = "",
@@ -105,7 +103,7 @@ end
 
 ---Fired when a message box with an input field is closed.
 ---@class MessageBoxUI_Event_InputSubmitted : Event
----@field RegisterListener fun(self, listener:fun(messageID:string, text:string, buttonID:number message:MessageBoxData))
+---@field RegisterListener fun(self, listener:fun(messageID:string, text:string, buttonID:number, message:MessageBoxData))
 ---@field Fire fun(self, messageID:string, text:string, buttonID:number, message:MessageBoxData)
 
 ---@class MessageBoxUI_Event_ClipboardTextRequestComplete : Event

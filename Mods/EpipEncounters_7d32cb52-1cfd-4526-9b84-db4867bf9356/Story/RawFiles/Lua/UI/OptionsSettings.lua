@@ -451,11 +451,11 @@ end
 function OptionsSettings.RenderDropdown(data, numID)
     OptionsSettings:GetRoot().mainMenu_mc.addMenuDropDown(numID, data.Label, data.Tooltip)
 
-    for i,option in ipairs(data.Options) do
+    for _,option in ipairs(data.Options) do
         OptionsSettings.RenderDropdownEntry(numID, option)
     end
 
-    OptionsSettings.SetElementEnabled(data.ID, OptionsSettings.IsElementEnabled(data.ID))
+    OptionsSettings.SetElementEnabled(data.ID, OptionsSettings.IsElementEnabled(data.ID), "Dropdown")
     OptionsSettings.SetElementState(data.ID, OptionsSettings.GetOptionValue(data.Mod, data.ID))
 end
 
