@@ -1,5 +1,6 @@
 
 local Vanity = Client.UI.Vanity
+local Transmog = Epip.GetFeature("Feature_Vanity_Transmog")
 
 ---@class Feature_Vanity_Dyes
 local Dyes = Epip.GetFeature("Feature_Vanity_Dyes")
@@ -339,8 +340,9 @@ Character.Hooks.CreateEquipmentVisuals:Subscribe(function (ev)
     end
 end)
 
-Epip.GetFeature("Feature_Vanity_Transmog").Events.AppearanceReapplied:RegisterListener(function (item, template)
-    Dyes.ReapplyAppearance(item)
+-- Reapply dyes when an item's appearaance is reapplied.
+Transmog.Events.AppearanceReapplied:Subscribe(function (ev)
+    Dyes.ReapplyAppearance(ev.Item)
 end)
 
 GameState.Events.GameReady:Subscribe(function ()

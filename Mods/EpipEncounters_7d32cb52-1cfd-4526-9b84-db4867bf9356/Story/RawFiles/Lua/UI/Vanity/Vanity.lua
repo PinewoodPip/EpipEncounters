@@ -57,7 +57,6 @@ local Vanity = {
         },
         Common = {
             Name = "Common",
-            Slots = ARMOR_SLOTS,
             Tags = {Common = true, Tool = true, Starter = true,}
         },
 

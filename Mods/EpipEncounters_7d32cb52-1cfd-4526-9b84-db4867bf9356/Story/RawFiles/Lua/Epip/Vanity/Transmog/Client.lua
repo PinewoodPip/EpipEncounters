@@ -10,31 +10,32 @@ Transmog.keepIcon = false
 -- EVENTS / HOOKS
 ---------------------------------------------
 
----@type VanityTransmog_Event_AppearanceReapplied
-Transmog.Events.AppearanceReapplied = Transmog:AddEvent("AppearanceReapplied")
+---@class VanityTransmog_Event_AppearanceReapplied
+---@field Item EclItem
+---@field Template ItemTemplate Template whose visual was reapplied to the item.
+---@type Event<VanityTransmog_Event_AppearanceReapplied>
+Transmog.Events.AppearanceReapplied = Transmog:AddSubscribableEvent("AppearanceReapplied")
 
----@type VanityTransmog_Hook_TemplateBelongsToCategory
-Transmog.Hooks.TemplateBelongsToCategory = Transmog:AddHook("TemplateBelongsToCategory")
----@type VanityTransmog_Hook_ShouldRenderEntry
-Transmog.Hooks.ShouldRenderEntry = Transmog:AddHook("ShouldRenderEntry")
----@type VanityTransmog_Hook_CanTransmog
-Transmog.Hooks.CanTransmog = Transmog:AddHook("CanTransmog")
+---@class VanityTransmog_Hook_TemplateBelongsToCategory
+---@field BelongsToCategory boolean Hookable. Defaults to `false`.
+---@field TemplateData VanityTemplate
+---@field Category VanityCategory
+---@type Event<VanityTransmog_Hook_TemplateBelongsToCategory>
+Transmog.Hooks.TemplateBelongsToCategory = Transmog:AddSubscribableHook("TemplateBelongsToCategory")
 
----@class VanityTransmog_Event_AppearanceReapplied : Event
----@field RegisterListener fun(self, listener:fun(item:EclItem, template:ItemTemplate))
----@field Fire fun(self, item:EclItem, template:ItemTemplate)
+---@class VanityTransmog_Hook_ShouldRenderEntry
+---@field ShouldRender boolean Hookable. Defaults to `false`.
+---@field TemplateGUID GUID
+---@field Category VanityCategory The category of the entry.
+---@field Item EclItem The currently-selected item.
+---@type Event<VanityTransmog_Hook_ShouldRenderEntry>
+Transmog.Hooks.ShouldRenderEntry = Transmog:AddSubscribableHook("ShouldRenderEntry")
 
----@class VanityTransmog_Hook_TemplateBelongsToCategory : Hook
----@field RegisterHook fun(self, handler:fun(belongs:boolean, templateData:VanityTemplate, category:VanityCategory))
----@field Return fun(self, belongs:boolean, templateData:VanityTemplate, category:VanityCategory)
-
----@class VanityTransmog_Hook_ShouldRenderEntry : Hook
----@field RegisterHook fun(self, handler:fun(render:boolean, templateGUID:GUID, category:VanityCategory, item:EclItem))
----@field Return fun(self, render:boolean, templateGUID:GUID, category:VanityCategory, item:EclItem)
-
----@class VanityTransmog_Hook_CanTransmog : Hook
----@field RegisterHook fun(self, handler:fun(canTransmog:boolean, item:EclItem))
----@field Return fun(self, canTransmog:boolean, item:EclItem)
+---@class VanityTransmog_Hook_CanTransmog
+---@field CanTransmog boolean Hookable. Defaults to `true`.
+---@field Item EclItem
+---@type Event<VanityTransmog_Hook_CanTransmog>
+Transmog.Hooks.CanTransmog = Transmog:AddSubscribableHook("CanTransmog")
 
 ---------------------------------------------
 -- METHODS
@@ -83,7 +84,10 @@ function Transmog.ReapplyAppearance(item)
 
     Transmog.TransmogItem(item, newTemplate)
 
-    Transmog.Events.AppearanceReapplied:Fire(item, newTemplate)
+    Transmog.Events.AppearanceReapplied:Throw({
+        Item = item,
+        Template = newTemplate,
+    })
 end
 
 function Transmog.UpdateActiveCharacterTemplates()
@@ -104,8 +108,15 @@ function Transmog.UpdateActiveCharacterTemplates()
     Transmog:DebugLog("Updated active character templates.")
 end
 
+---Returns whether an item supports being transmogged.
+---@see VanityTransmog_Hook_CanTransmog
+---@param item EclItem
+---@return boolean
 function Transmog.CanTransmogItem(item)
-    return Transmog.Hooks.CanTransmog:Return(true, item)
+    return Transmog.Hooks.CanTransmog:Throw({
+        CanTransmog = true,
+        Item = item,
+    }).CanTransmog
 end
 
 ---Request an item to be transmog'd into a template.
@@ -168,7 +179,7 @@ end
 ---Returns whether a template belongs to a category.
 ---@param templateData VanityTemplate
 ---@param category VanityCategory | string
-function Transmog.BelongsToCategory(templateData, category)
+function Transmog.BelongsToCategory(templateData, category) -- TODO extract default logic onto a hook
     if type(category) == "string" then
         category = Vanity.CATEGORIES[category]
     end
@@ -194,7 +205,11 @@ function Transmog.BelongsToCategory(templateData, category)
         end 
     end
 
-    return Transmog.Hooks.TemplateBelongsToCategory:Return(belongs, templateData, category)
+    return Transmog.Hooks.TemplateBelongsToCategory:Throw({
+        BelongsToCategory = belongs,
+        TemplateData = templateData,
+        Category = category,
+    }).BelongsToCategory
 end
 
 ---Get the categories that have templates suitable for this item.
@@ -212,8 +227,12 @@ function Transmog.GetCategories(item)
         }
 
         for guid,data in pairs(Vanity.TEMPLATES) do
-            -- local shouldRender = Vanity:ReturnFromHooks("ShouldRenderTemplateEntry", false, guid, categoryData, item)
-            local shouldRender = Transmog.Hooks.ShouldRenderEntry:Return(false, guid, categoryData, item)
+            local shouldRender = Transmog.Hooks.ShouldRenderEntry:Throw({
+                ShouldRender = false,
+                TemplateGUID = guid,
+                Category = categoryData,
+                Item = item,
+            }).ShouldRender
 
             if shouldRender then
                 if not inserted then
@@ -298,20 +317,16 @@ end)
 -- Render templates of the same slot as the item being transmog'd
 -- if they belong to the category.
 -- Items with "None" slot (which do not hide any armor visual handled by game) can render on any item, except breastplates, so as not to bloat their menu. TODO remove breastplate restriction
-Transmog.Hooks.ShouldRenderEntry:RegisterHook(function (render, templateGUID, category, item)
-    if not render then
-        render = Transmog.ShouldRenderEntry(templateGUID, category, item)
+Transmog.Hooks.ShouldRenderEntry:Subscribe(function (ev)
+    if not ev.ShouldRender then
+        ev.ShouldRender = Transmog.ShouldRenderEntry(ev.TemplateGUID, ev.Category, ev.Item)
     end
-    
-    return render
 end)
 
-Transmog.Hooks.TemplateBelongsToCategory:RegisterHook(function (belongs, templateData, category)
-    if category.ID == "Favorites" then
-        belongs = Transmog.favoritedTemplates[templateData.GUID] == true
+Transmog.Hooks.TemplateBelongsToCategory:Subscribe(function (ev)
+    if ev.Category.ID == "Favorites" then
+        ev.BelongsToCategory = Transmog.favoritedTemplates[ev.TemplateData.GUID] == true
     end
-
-    return belongs
 end)
 
 Vanity.Hooks.GetSaveData:RegisterHook(function (data)
