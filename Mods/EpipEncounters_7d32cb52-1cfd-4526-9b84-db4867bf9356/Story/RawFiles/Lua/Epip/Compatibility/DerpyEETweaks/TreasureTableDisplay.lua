@@ -24,7 +24,9 @@ local DerpyTreasures = {
         ["4014aee0-56f1-47e0-a8eb-89c4b5a1da83"] = TTD.TREASURE_TABLES.MiniBoss_ProteanAlways, -- S_FTJ_SW_Witch
     },
 
-    REQUIRED_MODS = {Mod.GUIDS.EE_DERPY},
+    REQUIRED_MODS = {
+        [Mod.GUIDS.EE_DERPY] = "Derpy's EE2 Tweaks",
+    },
 }
 Epip.RegisterFeature("DerpyTreasureDisplay", DerpyTreasures)
 
