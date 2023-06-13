@@ -26,6 +26,7 @@ Epip.InitializeLibrary("UserVars", UserVars)
 ---@field SyncOnWrite boolean Defaults to `false`.
 ---@field SyncOnTick boolean Defaults to `true`.
 ---@field DontCache boolean Defaults to `false`
+---@field DefaultValue any?
 
 ---@class UserVarsLib_ModVar : UserVarsLib_UserVar
 ---@field ModGUID GUID
@@ -101,6 +102,34 @@ end
 ---@return table
 function UserVars.GetModVariables(modGUID)
     return Ext.Utils.GetModVariables(modGUID)
+end
+
+---Returns the value of a mod var.
+---@param modGUID GUID
+---@param varName string
+---@return any?
+function UserVars.GetModVarValue(modGUID, varName)
+    local def = UserVars.GetModVarDefinition(modGUID, varName)
+    local modVars = UserVars.GetModVariables(modGUID)
+    local value = modVars[varName]
+
+    if value == nil then
+        if type(def.DefaultValue) == "table" then
+            value = table.deepCopy(def.DefaultValue)
+        else
+            value = def.DefaultValue
+        end
+    end
+
+    return value
+end
+
+---Returns the definition of a mod variable.
+---@param modGUID GUID
+---@param var string
+---@return UserVarsLib_ModVar
+function UserVars.GetModVarDefinition(modGUID, var)
+    return UserVars._RegisteredModVars[modGUID][var]
 end
 
 ---Parses the parameters for creating a variable.

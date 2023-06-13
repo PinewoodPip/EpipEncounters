@@ -3,7 +3,7 @@
 local DeltaMods = {
     MODVAR_DELTAMODS_DATA = "DeltaModsData",
     MODVAR_SPECIALPREFIXSLOT = "SpecialSlots",
-    MOODVAR_SPECIALSUBTYPE = "SpecialSubtypes",
+    MODVAR_SPECIALSUBTYPE = "SpecialSubtypes",
     _DeltaModGroups = {}, ---@type EpicEncounters_DeltaModsLib_DeltaModGroupDefinition[]
 }
 EpicEncounters.DeltaMods = DeltaMods
@@ -13,9 +13,9 @@ Epip.InitializeLibrary("EpicEncounters_DeltaMods", DeltaMods)
 -- USER VARS
 ---------------------------------------------
 
-DeltaMods:RegisterModVariable(Mod.GUIDS.EPIP_ENCOUNTERS, DeltaMods.MODVAR_DELTAMODS_DATA, {})
-DeltaMods:RegisterModVariable(Mod.GUIDS.EPIP_ENCOUNTERS, DeltaMods.MODVAR_SPECIALPREFIXSLOT, {})
-DeltaMods:RegisterModVariable(Mod.GUIDS.EPIP_ENCOUNTERS, DeltaMods.MOODVAR_SPECIALSUBTYPE, {})
+DeltaMods:RegisterModVariable(Mod.GUIDS.EPIP_ENCOUNTERS, DeltaMods.MODVAR_DELTAMODS_DATA, {DefaultValue = {}})
+DeltaMods:RegisterModVariable(Mod.GUIDS.EPIP_ENCOUNTERS, DeltaMods.MODVAR_SPECIALPREFIXSLOT, {DefaultValue = {}})
+DeltaMods:RegisterModVariable(Mod.GUIDS.EPIP_ENCOUNTERS, DeltaMods.MODVAR_SPECIALSUBTYPE, {DefaultValue = {}})
 
 ---------------------------------------------
 -- CLASSES
@@ -121,7 +121,7 @@ function DeltaMods.GetGroupDefinition(type, slot, subType, name)
 
     -- Search definitions in modvars
     if def == nil and Ext.IsClient() then
-        local vars = DeltaMods:GetModVariable(Mod.GUIDS.EPIP_ENCOUNTERS, DeltaMods.MODVAR_DELTAMODS_DATA) or {}
+        local vars = DeltaMods:GetModVariable(Mod.GUIDS.EPIP_ENCOUNTERS, DeltaMods.MODVAR_DELTAMODS_DATA)
 
         for _,definition in ipairs(vars) do
             if DeltaMods._IsDataValidForGroup(definition, type, slot, subType, name) then
@@ -166,7 +166,7 @@ end
 ---@param itemSlot ItemSlot
 ---@return boolean
 function DeltaMods._IsValidSlot(slot, itemSlot)
-    local vars = DeltaMods:GetModVariable(Mod.GUIDS.EPIP_ENCOUNTERS, DeltaMods.MODVAR_SPECIALPREFIXSLOT) or {}
+    local vars = DeltaMods:GetModVariable(Mod.GUIDS.EPIP_ENCOUNTERS, DeltaMods.MODVAR_SPECIALPREFIXSLOT)
 
     return slot == itemSlot or (vars[slot] ~= nil and vars[slot][itemSlot] == true)
 end
@@ -176,7 +176,7 @@ end
 ---@param itemSubType string TODO
 ---@return boolean
 function DeltaMods._IsValidSubType(subType, itemSubType)
-    local vars = DeltaMods:GetModVariable(Mod.GUIDS.EPIP_ENCOUNTERS, DeltaMods.MOODVAR_SPECIALSUBTYPE) or {}
+    local vars = DeltaMods:GetModVariable(Mod.GUIDS.EPIP_ENCOUNTERS, DeltaMods.MODVAR_SPECIALSUBTYPE)
     local SUBTYPE_CONVERSION = {
         Leather = "Light",
         Robe = "Mage",

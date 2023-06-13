@@ -66,7 +66,7 @@ GameState.Events.GameReady:Subscribe(function (_)
 
     DeltaMods:SetModVariable(Mod.GUIDS.EPIP_ENCOUNTERS, DeltaMods.MODVAR_DELTAMODS_DATA, DeltaMods._DeltaModGroups)
     DeltaMods:SetModVariable(Mod.GUIDS.EPIP_ENCOUNTERS, DeltaMods.MODVAR_SPECIALPREFIXSLOT, specialSlots)
-    DeltaMods:SetModVariable(Mod.GUIDS.EPIP_ENCOUNTERS, DeltaMods.MOODVAR_SPECIALSUBTYPE, subTypes)
+    DeltaMods:SetModVariable(Mod.GUIDS.EPIP_ENCOUNTERS, DeltaMods.MODVAR_SPECIALSUBTYPE, subTypes)
 end)
 
 ---------------------------------------------

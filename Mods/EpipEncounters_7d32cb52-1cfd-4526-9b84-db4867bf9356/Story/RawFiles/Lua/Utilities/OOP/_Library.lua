@@ -196,7 +196,7 @@ end
 ---@param name string
 ---@return any
 function Library:GetModVariable(modGUID, name)
-    return UserVars.GetModVariables(modGUID)[self:_GetUserVarsKey(name)]
+    return UserVars.GetModVarValue(modGUID, self:_GetUserVarsKey(name))
 end
 
 ---Sets the value of a mod variable.
