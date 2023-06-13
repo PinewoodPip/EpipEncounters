@@ -61,5 +61,6 @@ Epip.RegisterFeature("FlagsDisplay", FlagsDisplay)
 ---------------------------------------------
 
 FlagsDisplay:RegisterUserVariable(FlagsDisplay.USERVAR, {
-    Persistent = true,
+   Persistent = true,
+   DefaultValue = {},
 })

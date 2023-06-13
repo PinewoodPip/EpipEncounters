@@ -61,7 +61,10 @@ Epip.RegisterFeature("CustomStats", EpipStats)
 -- USER VARS
 ---------------------------------------------
 
-EpipStats:RegisterUserVariable(EpipStats.USERVAR_STATS, {Persistent = true})
+EpipStats:RegisterUserVariable(EpipStats.USERVAR_STATS, {
+    Persistent = true,
+    DefaultValue = {},
+})
 
 ---------------------------------------------
 -- EVENTS/HOOKS
@@ -280,7 +283,7 @@ end
 
 -- Look for stat values in the uservar.
 EpipStats.Hooks.GetStatValue:Subscribe(function (ev)
-    local vars = EpipStats:GetUserVariable(ev.Character, EpipStats.USERVAR_STATS) or {}
+    local vars = EpipStats:GetUserVariable(ev.Character, EpipStats.USERVAR_STATS)
     local value = vars[ev.Stat:GetID()]
 
     if value then

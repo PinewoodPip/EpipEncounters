@@ -144,22 +144,22 @@ end
 function Library:RegisterUserVariable(name, data)
     name = self:_GetUserVarsKey(name)
 
-    self.UserVariables[name] = UserVars.Register(name, data)
+    self.UserVariables[name] = UserVars.RegisterUserVariable(name, data)
 end
 
 ---Gets the value of a user variable on an entity component.
----@param component EntityLib_UserVarsCompatibleComponent
+---@param component UserVarsLib_CompatibleComponent
 ---@param variable string|UserVarsLib_UserVar
 ---@return any
 function Library:GetUserVariable(component, variable)
     if type(variable) == "table" then variable = variable.ID end
     local userVarName = self:_GetUserVarsKey(variable)
 
-    return component.UserVars[userVarName]
+    return UserVars.GetUserVarValue(component, userVarName)
 end
 
 ---Sets the value of a user variable.
----@param component EntityLib_UserVarsCompatibleComponent
+---@param component UserVarsLib_CompatibleComponent
 ---@param variable string|UserVarsLib_UserVar
 ---@param value any
 function Library:SetUserVariable(component, variable, value)

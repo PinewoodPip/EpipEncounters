@@ -952,6 +952,7 @@ Epip.InitializeLibrary("Artifact", Artifact)
 -- Equipped powers
 Artifact:RegisterUserVariable(Artifact.EQUIPPED_POWERS_USERVAR, {
     Persistent = true,
+    DefaultValue = {},
 })
 
 ---------------------------------------------

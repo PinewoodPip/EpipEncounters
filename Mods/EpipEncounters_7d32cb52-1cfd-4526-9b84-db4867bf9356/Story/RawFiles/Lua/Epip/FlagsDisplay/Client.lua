@@ -63,7 +63,7 @@ FlagsDisplay.Hooks.GetFlags:Subscribe(function (ev)
     if isChar then
         local char = ev.Entity ---@cast char EclCharacter
         local combatComponent = Ext.Entity.GetCombatComponent(char.Base.Entity:GetComponent("Combat"))
-        local flags = FlagsDisplay:GetUserVariable(char, FlagsDisplay.USERVAR) or {}
+        local flags = FlagsDisplay:GetUserVariable(char, FlagsDisplay.USERVAR)
 
         if not Character.IsDead(char) then
             if char.Stats.TALENT_ResistDead and flags.CanUseResistDeadTalent then

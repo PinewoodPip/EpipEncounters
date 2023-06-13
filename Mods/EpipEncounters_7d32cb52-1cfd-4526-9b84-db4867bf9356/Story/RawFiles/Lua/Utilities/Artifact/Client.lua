@@ -13,7 +13,7 @@ local Artifact = Artifact
 function Artifact.IsEquipped(char, artifact)
     local equipped = false
     local artifactID = artifact
-    local userVar = Artifact:GetUserVariable(char, Artifact.EQUIPPED_POWERS_USERVAR) or {}
+    local userVar = Artifact:GetUserVariable(char, Artifact.EQUIPPED_POWERS_USERVAR)
     if type(artifact) == "table" then artifactID = artifact.ID end
 
     equipped = userVar[artifactID] == true
@@ -26,7 +26,7 @@ end
 ---@return ArtifactLib_ArtifactDefinition[]
 function Artifact.GetEquippedPowers(char)
     local artifacts = {}
-    local userVar = Artifact:GetUserVariable(char, Artifact.EQUIPPED_POWERS_USERVAR) or {}
+    local userVar = Artifact:GetUserVariable(char, Artifact.EQUIPPED_POWERS_USERVAR)
 
     for artifactID,_ in pairs(userVar) do
         local def = Artifact.GetData(artifactID)

@@ -67,7 +67,7 @@ end
 function EpipStats.UpdateUserVarStat(char, stat, newValue)
     EpipStats:DebugLog("User var stat updated: " .. stat)
 
-    local stats = EpipStats:GetUserVariable(char, EpipStats.USERVAR_STATS) or {}
+    local stats = EpipStats:GetUserVariable(char, EpipStats.USERVAR_STATS)
     stats[stat] = newValue
     EpipStats:SetUserVariable(char, EpipStats.USERVAR_STATS, stats)
 end

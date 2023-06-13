@@ -14,6 +14,8 @@ Epip.InitializeLibrary("UserVars", UserVars)
 -- CLASSES
 ---------------------------------------------
 
+---@alias UserVarsLib_CompatibleComponent Character|Item
+
 ---@class UserVarsLib_UserVar
 ---@field ID string
 ---@field Client boolean
@@ -41,7 +43,7 @@ Epip.InitializeLibrary("UserVars", UserVars)
 ---@param name string
 ---@param data UserVarsLib_UserVar? Defaults to default values (see class).
 ---@return UserVarsLib_UserVar
-function UserVars.Register(name, data)
+function UserVars.RegisterUserVariable(name, data)
     -- TODO investigate what causes synching issues
     local options = {
         Persistent = false,
@@ -63,6 +65,28 @@ function UserVars.Register(name, data)
     Ext.Utils.RegisterUserVariable(name, options)
 
     return data
+end
+
+---Returns the definition of a user variable.
+---@param varName string
+---@return UserVarsLib_UserVar
+function UserVars.GetUserVarDefinition(varName)
+    return UserVars._RegisteredVariables[varName]
+end
+
+---Returns the value of a user variable for an entity.
+---@param component UserVarsLib_CompatibleComponent
+---@param varName string
+---@return any? -- Defaults to `DefaultValue`.
+function UserVars.GetUserVarValue(component, varName)
+    local def = UserVars.GetUserVarDefinition(varName)
+    local value = component.UserVars[varName]
+
+    if value == nil then
+        value = UserVars._GetVarDefaultValue(def)
+    end
+
+    return value
 end
 
 ---Registers a mod variable.
@@ -107,18 +131,14 @@ end
 ---Returns the value of a mod var.
 ---@param modGUID GUID
 ---@param varName string
----@return any?
+---@return any? -- Defaults to `DefaultValue`.
 function UserVars.GetModVarValue(modGUID, varName)
     local def = UserVars.GetModVarDefinition(modGUID, varName)
     local modVars = UserVars.GetModVariables(modGUID)
     local value = modVars[varName]
 
     if value == nil then
-        if type(def.DefaultValue) == "table" then
-            value = table.deepCopy(def.DefaultValue)
-        else
-            value = def.DefaultValue
-        end
+        value = UserVars._GetVarDefaultValue(def)
     end
 
     return value
@@ -151,4 +171,19 @@ function UserVars._ParseVarParameters(name, data)
     data.DontCache = false
 
     return data
+end
+
+---Returns the default value of a variable.
+---@param var UserVarsLib_UserVar|UserVarsLib_ModVar
+---@return any?
+function UserVars._GetVarDefaultValue(var)
+    local value
+
+    if type(var.DefaultValue) == "table" then
+        value = table.deepCopy(var.DefaultValue)
+    else
+        value = var.DefaultValue
+    end
+
+    return value
 end

@@ -47,7 +47,7 @@ Osiris.RegisterSymbolListener("PROC_AMER_Artifacts_EquipEffects", 3, "after", fu
     local char = Character.Get(charGUID)
 
     -- Update user var.
-    local userVar = Artifact:GetUserVariable(char, Artifact.EQUIPPED_POWERS_USERVAR) or {}
+    local userVar = Artifact:GetUserVariable(char, Artifact.EQUIPPED_POWERS_USERVAR)
     userVar[artifactID] = true
     Artifact:SetUserVariable(char, Artifact.EQUIPPED_POWERS_USERVAR, userVar)
 end)
@@ -57,7 +57,7 @@ Osiris.RegisterSymbolListener("PROC_AMER_Artifacts_UnequipEffects", 3, "after", 
 
     if not Artifact.IsEquipped(char, artifactID) then
         -- Update user var.
-        local userVar = Artifact:GetUserVariable(char, Artifact.EQUIPPED_POWERS_USERVAR) or {}
+        local userVar = Artifact:GetUserVariable(char, Artifact.EQUIPPED_POWERS_USERVAR)
         userVar[artifactID] = nil
         Artifact:SetUserVariable(char, Artifact.EQUIPPED_POWERS_USERVAR, userVar)
     end
