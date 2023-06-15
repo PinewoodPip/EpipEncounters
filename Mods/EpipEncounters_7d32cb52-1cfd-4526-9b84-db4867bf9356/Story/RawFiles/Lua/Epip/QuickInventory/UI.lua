@@ -28,6 +28,7 @@ UI.SCROLL_LIST_FRAME = UI.BACKGROUND_SIZE - V(40, 137)
 UI.ITEM_SIZE = V(58, 58)
 UI.ELEMENT_SPACING = 5
 UI.SETTINGS_PANEL_ELEMENT_SIZE = V(UI.SETTINGS_PANEL_SIZE[1] - 42.5, 50)
+UI.DRAGGABLE_AREA_SIZE = V(UI.BACKGROUND_SIZE[1] + UI.SETTINGS_PANEL_SIZE[1], 65)
 
 ---------------------------------------------
 -- METHODS
@@ -163,6 +164,11 @@ function UI._Initialize()
             UI._IsCursorOverUI = false
         end)
         UI.Background = bg
+
+        local draggableArea = bg:AddChild("DraggableArea", "GenericUI_Element_TiledBackground")
+        draggableArea:SetBackground("Black", UI.DRAGGABLE_AREA_SIZE:unpack())
+        draggableArea:SetAlpha(0)
+        draggableArea:SetAsDraggableArea()
 
         local closeButton = bg:AddChild("CloseButton", "GenericUI_Element_Button")
         closeButton:SetType("Close")
