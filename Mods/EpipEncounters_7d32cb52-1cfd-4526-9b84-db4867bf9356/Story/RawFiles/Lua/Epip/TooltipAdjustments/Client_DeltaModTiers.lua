@@ -17,40 +17,17 @@ local TooltipAdjustments = Epip.GetFeature("Feature_TooltipAdjustments")
 ---@param item EclItem
 ---@param tooltip TooltipLib_FormattedTooltip
 function TooltipAdjustments._AddDeltamodTiersToTooltip(item, tooltip)
-    local mods = item:GetDeltaMods()
-    local groups = {} ---@type table<string, {Group: EpicEncounters_DeltaModsLib_DeltaModGroupDefinition, ModifierName: string, Value: integer}>
-    for _,mod in ipairs(mods) do
-        local group, level = DeltaMods.GetGroupDefinitionForMod(item, mod)
-
-        if group then
-            local groupName = group.Name
-            for childMod,_ in pairs(group.ChildMods) do
-                if mod:match(childMod) then
-                    groupName = childMod
-                end
-            end
-            local entry = {
-                Group = group,
-                ModifierName = groupName,
-                Value = level,
-            }
-            
-            -- Override previous group if we found the same deltamod with a higher tier
-            if (groups[groupName] and level > groups[groupName].Value) or groups[groupName] == nil then
-                groups[groupName] = entry
-            end
-        end
-    end
+    local groups = DeltaMods.GetItemDeltaMods(item, "Any")
 
     -- Add tooltip entries for each deltamod
     for _,mod in pairs(groups) do
-        local groupTiersCount = mod.Group:GetTiersCount()
+        local groupTiersCount = mod.GroupDefinition:GetTiersCount()
         local label = Text.Format("%s +%s (Max %s; Tier %s/%s)", {
             FormatArgs = {
-                mod.ModifierName,
+                mod.ChildModID or mod.GroupDefinition.Name,
                 mod.Value,
-                mod.Group.Values[groupTiersCount],
-                mod.Group:GetTierForValue(mod.Value),
+                mod.GroupDefinition.Values[groupTiersCount],
+                mod.Tier,
                 groupTiersCount,
             }
         })
