@@ -17,6 +17,8 @@ local Status = {
     DURATION_BORDER_WIDTH = 1,
     DURATION_BORDER_COLOR = Color.Create(255, 255, 255),
     DURATION_BORDER_INFINITE_COLOR = Color.Create(105, 105, 105),
+    BACKGROUND_TEXTURE = "c8631624-a85d-42c4-8e22-08a44feada6d", -- pip_ui_icon_status_background
+    BACKGROUND_HIGHLIGHT_SIZE = Vector.Create(34, 34),
 
     Events = {
         RightClicked = {}, ---@type Event<GenericUI_Element_Event_RightClick>
@@ -39,7 +41,14 @@ function Status.Create(ui, id, parent, entity, status)
 
     local root = element:CreateElement("Container", "GenericUI_Element_TiledBackground", parent)
     root:SetBackground("Black", element.SIZE:unpack())
+
+    local backgroundHighlight = element:CreateElement("BackgroundHighlight", "GenericUI_Element_Texture", root)
+    backgroundHighlight:SetTexture(element.BACKGROUND_TEXTURE, element.BACKGROUND_HIGHLIGHT_SIZE)
+    backgroundHighlight:SetPositionRelativeToParent("Center")
+
     element.BorderDummy = element:CreateElement("Border", "GenericUI_Element_Empty", root)
+
+    -- Add border size to element size
     root:SetSizeOverride(Vector.Create(
         element.SIZE[1] + element.DURATION_BORDER_WIDTH,
         element.SIZE[2] + element.DURATION_BORDER_WIDTH
