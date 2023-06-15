@@ -26,6 +26,12 @@ DeltaMods:RegisterModVariable(Mod.GUIDS.EPIP_ENCOUNTERS, DeltaMods.MODVAR_SPECIA
 ---@alias EpicEncounters_DeltaModsLib_DeltaModType "Normal"|"Implicit"
 ---@alias EpicEncounters_DeltaModsLib_EquipmentSubType string TODO
 
+---Represents a rolled deltamod.
+---@class EpicEncounters_DeltaModsLib_DeltaMod
+---@field GroupDefinition EpicEncounters_DeltaModsLib_DeltaModGroupDefinition
+---@field ChildModID string? `nil` in case of groups with no child modifiers.
+---@field Tier integer
+
 ---@class EpicEncounters_DeltaModsLib_DeltaModGroupDefinition : Class
 ---@field Slot EpicEncounters_DeltaModsLib_Slot
 ---@field SubType EpicEncounters_DeltaModsLib_EquipmentSubType
@@ -133,6 +139,23 @@ function DeltaMods.GetGroupDefinition(type, slot, subType, name)
     end
 
     return def
+end
+
+---Returns the child mod ID for a deltamod within a group.
+---@param deltaMod string
+---@param group EpicEncounters_DeltaModsLib_DeltaModGroupDefinition
+---@return string? `nil` if no child mods match.
+function DeltaMods._GetChildModID(deltaMod, group)
+    local childModName = nil
+    
+    for childMod,_ in pairs(group.ChildMods) do
+        if deltaMod:match(childMod) then -- TOOD this isn't fool-proof. We should reconstruct the full name ourselves and compare that.
+            childModName = childMod
+            break
+        end
+    end
+
+    return childModName
 end
 
 ---Registers a deltamod group.
