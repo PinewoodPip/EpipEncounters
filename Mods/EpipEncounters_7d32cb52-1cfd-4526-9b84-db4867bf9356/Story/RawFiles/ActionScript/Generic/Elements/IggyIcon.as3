@@ -32,6 +32,18 @@ package Elements
             this.hit_mc.height = height;
         }
 
+        public override function SetAlpha(alpha:Number, affectChildren:Boolean = false) : *
+        {
+            if (!affectChildren)
+            {
+                this.iggy_mc.alpha = alpha;
+            }
+            else
+            {
+                this.alpha = alpha;
+            }
+        }
+
         private function frame1() : *
         {
             // Setup iggy icon
