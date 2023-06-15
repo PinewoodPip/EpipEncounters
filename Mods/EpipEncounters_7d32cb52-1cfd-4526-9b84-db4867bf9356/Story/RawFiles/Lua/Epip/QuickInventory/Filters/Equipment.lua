@@ -187,6 +187,13 @@ QuickInventory.Settings.DynamicStat = QuickInventory:RegisterSetting("DynamicSta
     DefaultValue = "",
 })
 
+-- Culled equipment filter
+QuickInventory.Settings.CulledOnly = QuickInventory:RegisterSetting("CulledOnly", {
+    Type = "Boolean",
+    Name = QuickInventory.TranslatedStrings.Setting_CulledOnly_Name,
+    DefaultValue = false,
+})
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
@@ -269,6 +276,7 @@ QuickInventory.Hooks.IsItemVisible:Subscribe(function (ev)
     if QuickInventory:GetSettingValue(QuickInventory.Settings.ItemCategory) == "Equipment" then
         local itemSlotSetting = QuickInventory:GetSettingValue(QuickInventory.Settings.ItemSlot)
         local statBoostSetting = QuickInventory:GetSettingValue(QuickInventory.Settings.DynamicStat)
+        local culledOnly = QuickInventory:GetSettingValue(QuickInventory.Settings.CulledOnly) and EpicEncounters.IsEnabled()
 
         visible = Item.IsEquipment(item)
 
@@ -296,6 +304,12 @@ QuickInventory.Hooks.IsItemVisible:Subscribe(function (ev)
         -- Filter by deltamod stat boosts.
         if statBoostSetting ~= "" then
             visible = visible and ItemMatchesStatBoostQuery(item, statBoostSetting)
+        end
+
+        -- Culled-only filter.
+        if culledOnly then
+            local deltaMods = EpicEncounters.DeltaMods.GetItemDeltaMods(item, "NonImplicit")
+            visible = visible and #deltaMods == 1
         end
     end
 
