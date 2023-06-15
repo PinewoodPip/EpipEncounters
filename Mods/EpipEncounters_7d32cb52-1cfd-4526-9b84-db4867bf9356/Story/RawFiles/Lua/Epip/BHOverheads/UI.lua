@@ -15,6 +15,7 @@ UIFactory.UI_ALPHA = 0
 UIFactory.CHARACTER_POS_OFFSET = V(0, 1.5, 0)
 UIFactory.UI_OFFSET = V(-40, -40)
 UIFactory.ICON_SIZE = V(40, 40)
+UIFactory.FADED_ICON_ALPHA = 0.75 -- Alpha for when stack requirement for T3 is not met
 
 ---------------------------------------------
 -- METHODS
@@ -39,6 +40,7 @@ function UIFactory.Create(char)
 
     GameState.Events.RunningTick:Subscribe(function (_)
         local uiObject = instance:GetUI()
+        local clientChar = Client.GetCharacter()
         local uiChar = Character.Get(instance._BHOverlayCharacterHandle)
         local pos = Vector.Create(uiChar.WorldPos)
         pos = pos + UIFactory.CHARACTER_POS_OFFSET
@@ -54,6 +56,11 @@ function UIFactory.Create(char)
 
         batteredIconElement:SetIcon(batteredIcon, UIFactory.ICON_SIZE:unpack())
         harriedIconElement:SetIcon(harriedIcon, UIFactory.ICON_SIZE:unpack())
+
+        -- Fade out icons if the stack count is not enough for applying T3
+        local stacksNeededForTier3 = BatteredHarried.GetStacksNeededToInflictTier3(clientChar)
+        batteredIconElement:SetAlpha(battered >= stacksNeededForTier3 and 1 or UIFactory.FADED_ICON_ALPHA)
+        harriedIconElement:SetAlpha(harried >= stacksNeededForTier3 and 1 or UIFactory.FADED_ICON_ALPHA)
     end, {StringID = instanceID})
 
     return instance
