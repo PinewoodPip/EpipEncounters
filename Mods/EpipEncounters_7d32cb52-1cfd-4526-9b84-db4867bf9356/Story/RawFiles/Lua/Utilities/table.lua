@@ -204,3 +204,20 @@ function table.join(t1, t2)
 
     return result
 end
+
+---Makes a table reference unusable,
+---by removing all its keys and setting
+---the metatable to throw an error on index.
+---@param tbl table
+---@param msg string? Error message to show upon attempting to index the table. Defaults to `"Attemped to index a destroyed table"`
+function table.destroy(tbl, msg)
+    setmetatable(tbl, nil) -- Required to avoid an error in C++ side
+    for k,_ in pairs(tbl) do -- Setting fields to nil while iterating *should* be fine according to next() documentation
+        tbl[k] = nil
+    end
+    setmetatable(tbl, {
+        __index = function (_, _)
+            error(msg or "Attemped to index a destroyed table")
+        end
+    })
+end
