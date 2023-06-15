@@ -31,6 +31,7 @@ DeltaMods:RegisterModVariable(Mod.GUIDS.EPIP_ENCOUNTERS, DeltaMods.MODVAR_SPECIA
 ---@field GroupDefinition EpicEncounters_DeltaModsLib_DeltaModGroupDefinition
 ---@field ChildModID string? `nil` in case of groups with no child modifiers.
 ---@field Tier integer
+---@field Value integer
 
 ---@class EpicEncounters_DeltaModsLib_DeltaModGroupDefinition : Class
 ---@field Slot EpicEncounters_DeltaModsLib_Slot
@@ -147,7 +148,7 @@ end
 ---@return string? `nil` if no child mods match.
 function DeltaMods._GetChildModID(deltaMod, group)
     local childModName = nil
-    
+
     for childMod,_ in pairs(group.ChildMods) do
         if deltaMod:match(childMod) then -- TOOD this isn't fool-proof. We should reconstruct the full name ourselves and compare that.
             childModName = childMod

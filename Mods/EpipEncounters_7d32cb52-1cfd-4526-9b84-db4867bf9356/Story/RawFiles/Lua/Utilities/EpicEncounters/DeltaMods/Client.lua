@@ -27,8 +27,9 @@ function DeltaMods.GetItemDeltaMods(item, modifierType)
                 ---@type EpicEncounters_DeltaModsLib_DeltaMod
                 local modEntry = {
                     GroupDefinition = group,
-                    Tier = level,
                     ChildModID = childModName,
+                    Tier = group:GetTierForValue(level),
+                    Value = level,
                 }
 
                 -- Override previous group if we found the same deltamod with a higher tier
