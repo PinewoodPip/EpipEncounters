@@ -156,3 +156,8 @@ function Status:SetStatus(entity, status)
         relativeDurationLeft = DrawWedge(self, graphics, relativeDurationLeft, TOP_WEDGE_LENGTH, self.SIZE[1]/2, color, "TopRight")
     end
 end
+
+---@param visible boolean
+function Status:SetVisible(visible)
+    self.Background:SetVisible(visible)
+end

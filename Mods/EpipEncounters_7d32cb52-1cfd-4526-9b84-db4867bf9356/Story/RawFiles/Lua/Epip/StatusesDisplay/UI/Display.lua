@@ -11,9 +11,10 @@ local V = Vector.Create
 ---@field CharacterHandle ComponentHandle
 ---@field _CurrentStatusesPerRow integer
 ---@field _Delay integer
+---@field _StatusPrefabInstances GenericUI_Prefab_Status[]
 ---@field GUID GUID
 local Manager = {
-    UPDATE_DELAY = 20,
+    UPDATE_DELAY = 10,
     MIN_STATUSES_PER_ROW = 6,
     ROWS = 2,
     FLASH_POSITION = V(112, 2), -- Offset for the root within flash. Used to position the overlay UI properly regardless of resolution.
@@ -34,6 +35,7 @@ function Manager.Create(char)
     instance._Delay = 0
     instance._CurrentStatusesPerRow = instance.MIN_STATUSES_PER_ROW
     instance.GUID = Text.GenerateGUID()
+    instance._StatusPrefabInstances = {}
 
     instance:_CreateUI()
 
@@ -90,54 +92,73 @@ function Manager:_GetListElement()
     return list
 end
 
+---Updates the prefab for a status at a certain index within the grid.
+---**Will create and initialize a new prefab if none is found at the index.**
+---@param index integer
+---@param status EclStatus
+function Manager:_UpdateStatusInstance(index, status)
+    local prefabInstance = self._StatusPrefabInstances[index]
+    local char = Character.Get(self.CharacterHandle)
+
+    -- Create a new instance if needed
+    if not prefabInstance then
+        local list = self:_GetListElement()
+
+        prefabInstance = StatusPrefab.Create(self.UI, "StatusDisplay_" .. tostring(index), list, char, status)
+        
+        self._StatusPrefabInstances[index] = prefabInstance
+    end
+
+    -- Update status displayed
+    prefabInstance:SetStatus(char, status)
+
+    -- Update right-click listener
+    local statusID = status.StatusId
+    local statusName = Stats.GetStatusName(status)
+    prefabInstance.Events.RightClicked:RemoveNodes()
+    prefabInstance.Events.RightClicked:Subscribe(function (_)
+        ContextMenu.Setup({
+            menu = {
+                id = "main",
+                entries = {
+                    {id = "StatusesDisplay_StatusHeader", type = "header", text = Text.Format("— %s —", {FormatArgs = {statusName}})},
+                    {
+                        id = "StatusesDisplay_Checkbox_Filtered",
+                        text = Text.CommonStrings.Filtered:GetString(),
+                        type = "checkbox",
+                        checked = StatusesDisplay.IsStatusFilteredBySetting(statusID),
+                        params = {
+                            StatusID = statusID,
+                        },
+                    },
+                    {
+                        id = "StatusesDisplay_SortingIndex",
+                        type = "stat",
+                        selectable = false,
+                        text = StatusesDisplay.TranslatedStrings.ContextMenu_SortingIndex:GetString(),
+                        params = {
+                            StatusID = statusID,
+                        },
+                    },
+                }
+            }
+        })
+        ContextMenu.Open(Vector.Create(Client.GetMousePosition()))
+    end)
+end
+
 ---Updates the statuses on the display.
 function Manager:_Update()
     local char = Character.Get(self.CharacterHandle)
 
     self._Delay = self._Delay - 1
     if self._Delay <= 0 then
-        self._Delay = self.UPDATE_DELAY
-
-        local list = self:_GetListElement()
         local visibleStatusesCount = 0
 
-        list:ClearElements()
+        self._Delay = self.UPDATE_DELAY
 
-        -- TODO pooling, icon optimization
-        for _,status in ipairs(StatusesDisplay.GetStatuses(char)) do
-            local statusPrefab = StatusPrefab.Create(self.UI, tostring(status.StatusHandle), list, char, status)
-            local statusID = status.StatusId
-            local statusName = Stats.GetStatusName(status)
-
-            statusPrefab.Events.RightClicked:Subscribe(function (_)
-                ContextMenu.Setup({
-                    menu = {
-                        id = "main",
-                        entries = {
-                            {id = "StatusesDisplay_StatusHeader", type = "header", text = Text.Format("— %s —", {FormatArgs = {statusName}})},
-                            {
-                                id = "StatusesDisplay_Checkbox_Filtered",
-                                text = Text.CommonStrings.Filtered:GetString(),
-                                type = "checkbox",
-                                checked = StatusesDisplay.IsStatusFilteredBySetting(statusID),
-                                params = {
-                                    StatusID = statusID,
-                                },
-                            },
-                            {
-                                id = "StatusesDisplay_SortingIndex",
-                                type = "stat",
-                                selectable = false,
-                                text = StatusesDisplay.TranslatedStrings.ContextMenu_SortingIndex:GetString(),
-                                params = {
-                                    StatusID = statusID,
-                                },
-                            },
-                        }
-                    }
-                })
-                ContextMenu.Open(Vector.Create(Client.GetMousePosition()))
-            end)
+        for i,status in ipairs(StatusesDisplay.GetStatuses(char)) do
+            self:_UpdateStatusInstance(i, status)
 
             visibleStatusesCount = visibleStatusesCount + 1
         end
@@ -147,7 +168,15 @@ function Manager:_Update()
             self._CurrentStatusesPerRow = math.ceil(visibleStatusesCount / self.ROWS)
             self._CurrentStatusesPerRow = math.max(self._CurrentStatusesPerRow, self.MIN_STATUSES_PER_ROW)
 
+            -- The grid RepositionElements call re-enables visibility for all elements.
             self:_UpdateGridProperties()
+
+            -- Hide leftover instances. Must be done after grid reposition
+            for i=visibleStatusesCount+1,#self._StatusPrefabInstances,1 do
+                local instance = self._StatusPrefabInstances[i]
+    
+                instance:SetVisible(false)
+            end
         end
     end
 
