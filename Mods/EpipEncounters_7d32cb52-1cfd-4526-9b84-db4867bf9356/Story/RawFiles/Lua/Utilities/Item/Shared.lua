@@ -551,11 +551,33 @@ function Item.GetNamedBoosts(item)
 end
 
 --- Returns true if item is equipped by char. Assumes the item cannot be equipped into an unintended slot. Rings and weapons are checked for both slots.
+---@overload fun(item:Item):boolean
 ---@param char Character
 ---@param item Item
 ---@return boolean
 function Item.IsEquipped(char, item)
-    return Item.GetEquippedSlot(item, char) ~= nil
+    local isEquipped = false
+
+    if item == nil then -- Item-only overload.
+        item = char ---@type Item
+
+        local inventoryHandle = Ext.IsClient() and item.InventoryParentHandle or item.ParentInventoryHandle
+        local inventory = Ext.Entity.GetInventory(inventoryHandle) ---@type EclInventory
+
+        if inventory then
+            for i=1,inventory.EquipmentSlots,1 do -- TODO verify if this property really is the amount of inventory slots
+                isEquipped = inventory.ItemsBySlot[i] == item.Handle
+
+                if isEquipped then
+                    break
+                end
+            end
+        end
+    else
+        isEquipped = Item.GetEquippedSlot(item, char) ~= nil
+    end
+
+    return isEquipped
 end
 
 ---Returns the slot that an item is equipped in, or nil if it is not.
