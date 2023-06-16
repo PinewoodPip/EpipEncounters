@@ -81,6 +81,11 @@ FlagsDisplay.Hooks.GetFlags:Subscribe(function (ev)
                     table.insert(ev.Flags, FlagsDisplay.TranslatedStrings.CannotFight:GetString())
                 end
             end
+
+            -- AI archetype.
+            if not Character.IsPlayer(char) then
+                table.insert(ev.Flags, string.format(FlagsDisplay.TranslatedStrings.AI_Archetype:GetString(), Text.Capitalize(char.Archetype)))
+            end
         end
     end
 end)

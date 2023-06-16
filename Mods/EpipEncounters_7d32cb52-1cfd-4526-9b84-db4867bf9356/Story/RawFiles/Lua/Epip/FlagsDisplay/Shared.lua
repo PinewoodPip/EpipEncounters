@@ -37,7 +37,10 @@ local FlagsDisplay = {
         Guarded = {
            Handle = "h4c2e34f9g7feeg4303g9dfegcc0c44cf6011",
            Text = "Turn Delayed",
-           ContextDescription = "",
+        },
+        AI_Archetype = {
+           Handle = "h3a8d983cg5a8cg4b33g954cg39581bd8a04b",
+           Text = "AI Type: %s",
         },
     },
 
