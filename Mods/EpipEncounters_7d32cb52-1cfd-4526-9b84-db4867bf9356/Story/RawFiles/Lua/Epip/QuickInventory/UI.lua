@@ -222,6 +222,8 @@ function UI._RenderSettingsPanel()
             UI.RenderSetting(QuickInventory.Settings.CulledOnly)
         end
 
+        UI.RenderSetting(QuickInventory.Settings.ShowEquippedItems)
+
         UI.RenderSetting(QuickInventory.Settings.DynamicStat)
     elseif itemCategory == "Skillbooks" then
         UI.RenderSetting(QuickInventory.Settings.LearntSkillbooks)

@@ -194,6 +194,13 @@ QuickInventory.Settings.CulledOnly = QuickInventory:RegisterSetting("CulledOnly"
     DefaultValue = false,
 })
 
+-- Equipped items filter
+QuickInventory.Settings.ShowEquippedItems = QuickInventory:RegisterSetting("ShowEquippedItems", {
+    Type = "Boolean",
+    Name = QuickInventory.TranslatedStrings.Setting_ShowEquippedItems_Name,
+    DefaultValue = false,
+})
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
@@ -277,6 +284,7 @@ QuickInventory.Hooks.IsItemVisible:Subscribe(function (ev)
         local itemSlotSetting = QuickInventory:GetSettingValue(QuickInventory.Settings.ItemSlot)
         local statBoostSetting = QuickInventory:GetSettingValue(QuickInventory.Settings.DynamicStat)
         local culledOnly = QuickInventory:GetSettingValue(QuickInventory.Settings.CulledOnly) and EpicEncounters.IsEnabled()
+        local showEquippedItems = QuickInventory:GetSettingValue(QuickInventory.Settings.ShowEquippedItems)
 
         visible = Item.IsEquipment(item)
 
@@ -310,6 +318,11 @@ QuickInventory.Hooks.IsItemVisible:Subscribe(function (ev)
         if culledOnly then
             local deltaMods = EpicEncounters.DeltaMods.GetItemDeltaMods(item, "NonImplicit")
             visible = visible and #deltaMods == 1
+        end
+
+        -- Equipped items filter.
+        if not showEquippedItems then
+            visible = visible and not Item.IsEquipped(item)
         end
     end
 

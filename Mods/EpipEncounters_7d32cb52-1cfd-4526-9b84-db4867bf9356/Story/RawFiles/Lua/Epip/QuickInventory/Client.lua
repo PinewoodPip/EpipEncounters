@@ -60,6 +60,11 @@ local QuickInventory = {
            Text = "Show Culled Only",
            ContextDescription = "Filter setting name",
         },
+        Setting_ShowEquippedItems_Name = {
+           Handle = "h16a45dc1g56e7g4bb0ga3f6g6f4cb7f66fae",
+           Text = "Show Equipped Items",
+           ContextDescription = "Filter setting name",
+        },
         DynamicStat_Name = {
            Handle = "h4f83fd0cg8556g4826gb76cg82ec728bef2b",
            Text = "Stat Boost",
