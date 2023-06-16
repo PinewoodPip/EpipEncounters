@@ -137,8 +137,9 @@ EpipStats.RegisterStatUpdateListener("CurrentCombat_HealingDone", function(char,
 end)
 
 -- Damage taken
-Ext.RegisterOsirisListener("NRD_OnHit", 4, "after", function(target, source, amount, handle)
-    if Character.IsPlayer(Character.Get(target)) then
+Ext.RegisterOsirisListener("NRD_OnHit", 4, "after", function(target, _, amount, _)
+    local sourceChar = Character.Get(target)
+    if sourceChar and Character.IsPlayer(sourceChar) then
         local _, oldAmount = Osiris.DB_PIP_EpicStats_DamageReceived(target, nil)
         oldAmount = oldAmount or 0
         amount = oldAmount + amount
