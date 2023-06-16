@@ -3,7 +3,7 @@
 -- Based on v56's event system.
 ---------------------------------------------
 
----@class Event<T>:{ (Subscribe:fun(self:Event, callback:fun(ev:T|Event_Params), opts:Event_Options|nil, stringID:string|nil):integer), Unsubscribe:fun(self:Event, index:integer|string), (Throw:fun(self:Event, event:T|Event_Params|nil):Event_Params|T), (RemoveNodes:fun(self:Event, predicate:fun(node:table):boolean))}
+---@class Event<T>:{ (Subscribe:fun(self:Event, callback:fun(ev:T|Event_Params), opts:Event_Options|nil, stringID:string|nil):integer), Unsubscribe:fun(self:Event, index:integer|string), (Throw:fun(self:Event, event:T|Event_Params|nil):Event_Params|T), (RemoveNodes:fun(self:Event, predicate:(fun(node:table):boolean)?))}
 ---@field Preventable false
 ---@field Name string
 local _SubscribableEvent = {}
@@ -141,11 +141,11 @@ function SubscribableEvent:RemoveNode(node)
 end
 
 ---Unsubscribe all listeners based on a predicate.
----@param fun fun(node:unknown):boolean Should return true for nodes to be removed.
+---@param fun (fun(node:unknown):boolean)? Should return `true` for nodes to be removed. If `nil`, all nodes will be removed.
 function SubscribableEvent:RemoveNodes(fun)
 	local node = self.First
 	while node do
-		if fun(node) then
+		if fun == nil or fun(node) then
 			local nextNode = node.Next
 
 			self:RemoveNode(node)
