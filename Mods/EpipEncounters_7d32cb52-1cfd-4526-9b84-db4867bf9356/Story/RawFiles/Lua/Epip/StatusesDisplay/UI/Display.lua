@@ -69,7 +69,7 @@ function Manager:_CreateUI()
     bg:SetAlpha(0)
     bg:SetBackground("Black", 3, 3)
     local list = ui:CreateElement("List", "GenericUI_Element_Grid")
-    list:SetElementSpacing(0, 0)
+    list:SetElementSpacing(-4, -4) -- TODO where is the empty space coming from?
     ui.List = list
 
     self.UI = ui

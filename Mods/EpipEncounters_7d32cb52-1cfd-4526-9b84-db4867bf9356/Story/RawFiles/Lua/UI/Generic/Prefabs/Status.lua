@@ -10,15 +10,15 @@ local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 ---@field DurationText GenericUI_Prefab_Text
 ---@field BorderDummy GenericUI_Element_Empty
 local Status = {
-    SIZE = Vector.Create(38, 38),
+    SIZE = Vector.Create(40, 40),
     ICON_SIZE = Vector.Create(28, 28),
-    TEXT_SIZE = Vector.Create(32, 18),
+    TEXT_SIZE = Vector.Create(18, 18),
     TEXT_FONT_SIZE = 12,
-    DURATION_BORDER_WIDTH = 1,
-    DURATION_BORDER_COLOR = Color.Create(255, 255, 255),
+    DURATION_BORDER_WIDTH = 2,
+    DURATION_BORDER_COLOR = Color.Create(240, 211, 185),
     DURATION_BORDER_INFINITE_COLOR = Color.Create(105, 105, 105),
     BACKGROUND_TEXTURE = "c8631624-a85d-42c4-8e22-08a44feada6d", -- pip_ui_icon_status_background
-    BACKGROUND_HIGHLIGHT_SIZE = Vector.Create(34, 34),
+    BACKGROUND_HIGHLIGHT_SIZE = Vector.Create(27, 27),
 
     Events = {
         RightClicked = {}, ---@type Event<GenericUI_Element_Event_RightClick>
@@ -54,8 +54,8 @@ function Status.Create(ui, id, parent, entity, status)
         element.SIZE[2] + element.DURATION_BORDER_WIDTH
     ))
     
-    local icon = element:CreateElement("Icon", "GenericUI_Element_IggyIcon", root)
-    local text = TextPrefab.Create(ui, element:PrefixID("DurationText"), root, "", "Right", element.TEXT_SIZE)
+    local icon = element:CreateElement("Icon", "GenericUI_Element_IggyIcon", backgroundHighlight)
+    local text = TextPrefab.Create(ui, element:PrefixID("DurationText"), backgroundHighlight, "", "Right", element.TEXT_SIZE)
 
     element.Background = root
     element.Icon = icon
@@ -86,17 +86,18 @@ local function DrawWedge(element, graphics, relativeDurationLeft, relativeWedgeL
     local wedgeLength = math.clamp(relativeDurationLeft / relativeWedgeLength, 0, 1) * wedgeMaxLength
     wedgeLength = Ext.Round(wedgeLength)
 
+    -- TODO yeet all these magic numbers
     graphics.beginFill(color:ToDecimal(), 1)
     if position == "TopLeft" then
         graphics.drawRect(element.SIZE[1]/2 - wedgeLength, 0, wedgeLength, element.DURATION_BORDER_WIDTH)
     elseif position == "Left" then
-        graphics.drawRect(0, 0, element.DURATION_BORDER_WIDTH, wedgeLength)
+        graphics.drawRect(0, 0, element.DURATION_BORDER_WIDTH, wedgeLength - 3)
     elseif position == "Bottom" then
-        graphics.drawRect(0, element.SIZE[2] - element.DURATION_BORDER_WIDTH, wedgeLength, element.DURATION_BORDER_WIDTH)
+        graphics.drawRect(0, element.SIZE[2] - element.DURATION_BORDER_WIDTH - 3, wedgeLength - 3, element.DURATION_BORDER_WIDTH)
     elseif position == "Right" then
-        graphics.drawRect(element.SIZE[1] - element.DURATION_BORDER_WIDTH, element.SIZE[2] - wedgeLength, element.DURATION_BORDER_WIDTH, wedgeLength)
+        graphics.drawRect(element.SIZE[1] - element.DURATION_BORDER_WIDTH - 2, element.SIZE[2] - wedgeLength, element.DURATION_BORDER_WIDTH, wedgeLength - 3)
     elseif position == "TopRight" then
-        graphics.drawRect(element.SIZE[1] - wedgeLength, 0, wedgeLength, element.DURATION_BORDER_WIDTH)
+        graphics.drawRect(element.SIZE[1] - wedgeLength, 0, wedgeLength - 3, element.DURATION_BORDER_WIDTH)
     else
         error("Unknown position " .. position)
     end
@@ -118,7 +119,7 @@ function Status:SetStatus(entity, status)
     self.StatusHandle = status.StatusHandle
 
     icon:SetIcon(Stats.GetStatusIcon(status), self.ICON_SIZE:unpack())
-    icon:SetPositionRelativeToParent("Center")
+    icon:SetPositionRelativeToParent("Center", -self.DURATION_BORDER_WIDTH/2, -self.DURATION_BORDER_WIDTH/2)
 
     self.DurationText:SetText(status.CurrentLifeTime > 0 and Text.Format("%s", {
         FormatArgs = {durationTurns},
@@ -126,7 +127,7 @@ function Status:SetStatus(entity, status)
         Color = Color.WHITE,
     }) or "")
     self.DurationText:SetStroke(Color.Create(0, 0, 0), 1, 1, 15, 1)
-    self.DurationText:SetPositionRelativeToParent("BottomRight", 2, 2)
+    self.DurationText:SetPositionRelativeToParent("BottomRight", 3, 3)
 
     -- Draw duration border
     local TOP_WEDGE_LENGTH = 1/8
