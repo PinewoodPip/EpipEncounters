@@ -15,8 +15,25 @@ local GreatforgeDragDrop = {
         },
     },
     SupportedGameStates = _Feature.GAME_STATES.RUNNING_SESSION,
+
+    USE_LEGACY_EVENTS = false,
+    USE_LEGACY_HOOKS = false,
+
+    Events = {
+        ItemDropped = {}, ---@type Event<Feature_GreatforgeDragDrop_Event_ItemDropped>
+    },
 }
 Epip.RegisterFeature("GreatforgeDragDrop", GreatforgeDragDrop)
+
+---------------------------------------------
+-- EVENTS/HOOKS
+---------------------------------------------
+
+---Fired when a character attemps to insert an item into the Greatforge socket via drag-drop. Does not consider whether the item is Greatforge-compatible.
+---**On the client, this is only ever fired for the client character**.
+---@class Feature_GreatforgeDragDrop_Event_ItemDropped
+---@field Character Character The character that dropped in the item.
+---@field Item Item
 
 ---------------------------------------------
 -- NET MESSAGES

@@ -16,6 +16,11 @@ function GreatforgeDragDrop._BenchItem(char, item)
     Osi.DB_AMER_GEN_OUTPUT_Item:Delete(nil)
     Osi.DB_AMER_GEN_OUTPUT_Item(item.MyGuid)
     Osi.PROC_AMER_UI_Greatforge_ProcessCombine(char.MyGuid, 1)
+
+    GreatforgeDragDrop.Events.ItemDropped:Throw({
+        Character = char,
+        Item = item,
+    })
 end
 
 ---------------------------------------------

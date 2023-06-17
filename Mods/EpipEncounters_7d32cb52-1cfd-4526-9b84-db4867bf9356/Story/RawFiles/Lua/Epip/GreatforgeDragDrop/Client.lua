@@ -41,11 +41,17 @@ end)
 Input.Events.KeyReleased:Subscribe(function (ev)
     if ev.InputID == "left2" and GreatforgeDragDrop._CanDrop() then
         local draggedItem = Pointer.GetDraggedItem()
+        local char = Client.GetCharacter()
 
         if draggedItem then
             Net.PostToServer(GreatforgeDragDrop.REQUEST_BENCH_NET_MSG, {
-                CharacterNetID = Client.GetCharacter().NetID,
+                CharacterNetID = char.NetID,
                 ItemNetID = draggedItem.NetID,
+            })
+
+            GreatforgeDragDrop.Events.ItemDropped:Throw({
+                Character = char,
+                Item = draggedItem,
             })
 
             TextDisplay.RemoveText()
