@@ -137,7 +137,7 @@ function _Match:ContainsGem(gem)
 end
 
 ---Returns whether a gem is set to be consumed by this match.
----@param gem Feature_Bedazzled_Board_Gem_State
+---@param gem Feature_Bedazzled_Board_Gem
 ---@return boolean
 function _Match:WillConsumeGem(gem)
     return table.contains(self.Gems, gem)

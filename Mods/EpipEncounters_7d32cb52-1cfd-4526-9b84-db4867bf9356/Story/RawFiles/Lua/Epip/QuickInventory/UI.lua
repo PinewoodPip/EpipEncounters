@@ -232,7 +232,7 @@ function UI._RenderSettingsPanel()
 end
 
 ---Renders a widget to the settings panel from a setting.
----@param setting SettingsLib_Setting_Choice|SettingsLib_Setting_Boolean
+---@param setting SettingsLib_Setting_Choice|SettingsLib_Setting_Boolean|SettingsLib_Setting_String
 function UI.RenderSetting(setting)
     if setting.Type == "Boolean" then
         UI._RenderCheckboxFromSetting(setting)
