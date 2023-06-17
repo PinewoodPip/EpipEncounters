@@ -107,3 +107,4 @@
 ---@field TickSFX string
 ---@field ForceStackOverwrite "Yes"|"No"
 ---@field FreezeCooldowns "Yes"|"No"
+---@field ShouldAttachToCaster "Yes"|"No"

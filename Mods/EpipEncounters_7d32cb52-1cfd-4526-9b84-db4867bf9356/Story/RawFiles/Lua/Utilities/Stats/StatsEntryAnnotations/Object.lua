@@ -5,7 +5,6 @@
 ---@class StatsLib_StatsEntry_Object
 ---@field ModifierType StatsLib_Enum_ModifierType
 ---@field Act 1
----@field Act_part StatsLib_Enum_ActPart
 ---@field UseAPCost integer
 ---@field Value integer
 ---@field ComboCategory string
@@ -43,3 +42,5 @@
 ---@field MaxLevel integer
 ---@field AddToBottomBar "Yes"|"No"
 ---@field IgnoredByAI "Yes"|"No"
+local Object = {}
+Object["Act part"] = nil ---@type StatsLib_Enum_ActPart

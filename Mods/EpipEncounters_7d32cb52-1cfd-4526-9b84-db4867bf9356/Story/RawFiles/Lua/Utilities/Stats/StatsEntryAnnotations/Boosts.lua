@@ -5,9 +5,7 @@
 ---@class StatsLib_StatsEntry_Weapon
 ---@field Handedness StatsLib_Enum_Handedness
 ---@field IsTwoHanded "Yes"|"No"
----@field Damage_Type StatsLib_Enum_DamageType
 ---@field Damage integer
----@field Damage_Range integer
 ---@field DamageBoost integer
 ---@field DamageFromBase integer
 ---@field CriticalDamage integer
@@ -25,7 +23,6 @@
 ---@field ModifierType StatsLib_Enum_ModifierType
 ---@field Projectile string
 ---@field Act 1
----@field Act_part StatsLib_Enum_ActPart
 ---@field StrengthBoost StatsLib_Enum_PenaltyQualifier
 ---@field FinesseBoost StatsLib_Enum_PenaltyQualifier
 ---@field IntelligenceBoost StatsLib_Enum_PenaltyQualifier
@@ -104,12 +101,14 @@
 ---@field Talents string
 ---@field IgnoreVisionBlock "Yes"|"No"
 ---@field Tags string
+local Weapon = {}
+Weapon["Damage Type"] = nil ---@type StatsLib_Enum_DamageType
+Weapon["Damage Range"] = nil ---@type integer
+Weapon["Act part"] = nil ---@type StatsLib_Enum_ActPart
 
 ---Annotates an Armor stats entry.
 ---@class StatsLib_StatsEntry_Armor
----@field Armor_Defense_Value integer
 ---@field ArmorBoost integer
----@field Magic_Armor_Value integer
 ---@field MagicArmorBoost integer
 ---@field Movement integer
 ---@field Initiative integer
@@ -120,7 +119,6 @@
 ---@field Value integer
 ---@field ModifierType StatsLib_Enum_ModifierType
 ---@field Act 1
----@field Act_part StatsLib_Enum_ActPart
 ---@field Fire integer
 ---@field Air integer
 ---@field Water integer
@@ -196,12 +194,14 @@
 ---@field MaxCharges integer
 ---@field Talents string
 ---@field Tags string
+local Armor = {}
+Armor["Armor Defense Value"] = nil ---@type integer
+Armor["Magic Armor Value"] = nil ---@type integer
+Armor["Act part"] = nil ---@type StatsLib_Enum_ActPart
 
 ---Annotates a Shield stats entry.
 ---@class StatsLib_StatsEntry_Shield
----@field Armor_Defense_Value integer
 ---@field ArmorBoost integer
----@field Magic_Armor_Value integer
 ---@field MagicArmorBoost integer
 ---@field Movement integer
 ---@field Initiative integer
@@ -212,7 +212,6 @@
 ---@field Value integer
 ---@field ModifierType StatsLib_Enum_ModifierType
 ---@field Act 1
----@field Act_part StatsLib_Enum_ActPart
 ---@field Fire integer
 ---@field Air integer
 ---@field Water integer
@@ -285,3 +284,7 @@
 ---@field NeedsIdentification "Yes"|"No"
 ---@field Talents string
 ---@field Tags string
+local Shield = {}
+Shield["Armor Defense Value"] = nil ---@type integer
+Shield["Magic Armor Value"] = nil ---@type integer
+Shield["Act part"] = nil ---@type StatsLib_Enum_ActPart

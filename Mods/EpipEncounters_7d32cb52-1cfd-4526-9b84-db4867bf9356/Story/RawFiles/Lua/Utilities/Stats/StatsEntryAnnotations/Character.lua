@@ -65,8 +65,6 @@
 ---@field Accuracy integer
 ---@field Dodge integer
 ---@field Act 1
----@field Act_part StatsLib_Enum_ActPart
----@field Act_strength StatsLib_Enum_PenaltyQualifier
 ---@field MaxResistance integer
 ---@field Weight integer
 ---@field Talents string
@@ -79,3 +77,6 @@
 ---@field MPStart integer
 ---@field DamageBoost integer
 ---@field DamageBoostGrowthPerLevel integer
+local Character = {}
+Character["Act part"] = nil ---@type StatsLib_Enum_ActPart
+Character["Act strength"] = nil ---@type StatsLib_Enum_PenaltyQualifier

@@ -69,7 +69,6 @@
 ---@field MagicArmorBoost integer
 ---@field CriticalChance integer
 ---@field Act 1
----@field Act_part StatsLib_Enum_ActPart
 ---@field Duration integer
 ---@field UseAPCost integer
 ---@field ComboCategory string
@@ -86,8 +85,6 @@
 ---@field UnknownBeforeConsume "Yes"|"No"
 ---@field Reflection string
 ---@field Damage StatsLib_Enum_Qualifier
----@field Damage_Multiplier integer
----@field Damage_Range integer
 ---@field DamageType StatsLib_Enum_DamageType
 ---@field AuraRadius integer
 ---@field AuraSelf string
@@ -119,3 +116,7 @@
 ---@field LifeSteal integer
 ---@field IsFood "Yes"|"No"
 ---@field IsConsumable "Yes"|"No"
+local Potion = {}
+Potion["Act part"] = nil ---@type StatsLib_Enum_ActPart
+Potion["Damage Multiplier"] = nil ---@type integer
+Potion["Damage Range"] = nil ---@type integer

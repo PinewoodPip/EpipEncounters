@@ -75,8 +75,6 @@
 ---@field AmountOfTargets integer
 ---@field AutoAim "Yes"|"No"
 ---@field AddWeaponRange "Yes"|"No"
----@field Memory_Cost integer
----@field Magic_Cost integer
 ---@field ActionPoints integer
 ---@field Cooldown integer
 ---@field CooldownReduction integer
@@ -97,13 +95,10 @@
 ---@field Acceleration integer
 ---@field Height integer
 ---@field Damage StatsLib_Enum_DamageSourceType
----@field Damage_Multiplier integer
----@field Damage_Range integer
 ---@field DamageType StatsLib_Enum_DamageType
 ---@field DamageMultiplier StatsLib_Enum_PreciseQualifier
 ---@field DeathType StatsLib_Enum_DeathType
 ---@field BonusDamage StatsLib_Enum_Qualifier
----@field Chance_To_Hit_Multiplier integer
 ---@field HitPointsPercent integer
 ---@field MinHitsPerTurn integer
 ---@field MaxHitsPerTurn integer
@@ -156,11 +151,8 @@
 ---@field StrikeDelay integer
 ---@field PreviewStrikeHits "Yes"|"No"
 ---@field SummonLevel integer
----@field Damage_On_Jump "Yes"|"No"
----@field Damage_On_Landing "Yes"|"No"
 ---@field StartTextEvent string
 ---@field StopTextEvent string
----@field Healing_Multiplier integer
 ---@field Atmosphere StatsLib_Enum_AtmosphereType
 ---@field ConsequencesStartTime integer
 ---@field ConsequencesDuration integer
@@ -191,8 +183,6 @@
 ---@field Distribution StatsLib_Enum_ProjectileDistribution
 ---@field Shuffle "Yes"|"No"
 ---@field PushPullEffect string
----@field Stealth_Damage_Multiplier integer
----@field Distance_Damage_Multiplier integer
 ---@field BackStart integer
 ---@field FrontOffset integer
 ---@field TargetGroundEffect string
@@ -222,3 +212,15 @@
 ---@field IsMelee "Yes"|"No"
 ---@field MemorizationRequirements table[] TODO
 ---@field IgnoreSilence "Yes"|"No"
+---@field IgnoreHeight "Yes"|"No"
+local SkillData = {}
+SkillData["Memory Cost"] = nil ---@type integer
+SkillData["Magic Cost"] = nil ---@type integer
+SkillData["Damage Multiplier"] = nil ---@type integer
+SkillData["Damage Range"] = nil ---@type integer
+SkillData["Chance To Hit Multiplier"] = nil ---@type integer
+SkillData["Damage On Jump"] = nil ---@type "Yes"|"No"
+SkillData["Damage On Landing"] = nil ---@type "Yes"|"No"
+SkillData["Healing Multiplier"] = nil ---@type integer
+SkillData["Stealth Damage Multiplier"] = nil ---@type integer
+SkillData["Distance Damage Multiplier"] = nil ---@type integer

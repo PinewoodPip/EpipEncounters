@@ -56,10 +56,13 @@ MODIFIER_FIELD_TYPE_TO_LUA = {
 class ModifierField:
     def __init__(self, modType:str, name:str):
         self.type = modType
-        self.name = name.replace(" ", "_") # TODO change these to be annotated within a table-style declaration
+        self.name = name
 
     def get_annotation_type(self)->str:
         return MODIFIER_FIELD_TYPE_TO_LUA[self.type] if self.type in MODIFIER_FIELD_TYPE_TO_LUA else self.type
+
+    def name_contains_spaces(self)->bool:
+        return " " in self.name
 
     def export(self)->str:
         return f"---@field {self.name} {self.get_annotation_type()}"
@@ -67,16 +70,27 @@ class ModifierField:
 class Modifier:
     def __init__(self, name):
         self.name = name
-        self.fields = []
+        self.fields:list[ModifierField] = []
 
     def add_field(self, field:ModifierField):
         self.fields.append(field)
 
     def export(self)->str:
         annotation = ["---@class StatsLib_StatsEntry_" + self.name]
+        fields_with_spaces:list[ModifierField] = []
 
         for field in self.fields:
-            annotation.append(field.export())
+            if field.name_contains_spaces():
+                fields_with_spaces.append(field)
+            else:
+                annotation.append(field.export())
+
+        # Create table declaration
+        annotation.append(f"local {self.name} = {{}}")
+
+        # Put fields with spaces into the table declaration
+        for field in fields_with_spaces:
+            annotation.append(f"{self.name}[\"{field.name}\"] = nil ---@type {field.get_annotation_type()}")
 
         return "\n".join(annotation)
 
