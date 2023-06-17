@@ -120,6 +120,8 @@ LOAD_ORDER = {
         },
     },
     
+    "Utilities/Damage/Shared.lua",
+    
     -- Artifacts
     {ScriptSet = "Utilities/Artifact", RequiresEE = true,},
 

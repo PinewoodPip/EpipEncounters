@@ -116,6 +116,8 @@ LOAD_ORDER = {
             "Utilities/Stats/Shared_SkillData.lua",
         },
     },
+    
+    "Utilities/Damage/Shared.lua",
 
     -- SettingsLib
     {
