@@ -400,3 +400,14 @@ Client.Input.Events.ActionExecuted:Subscribe(function (ev)
         end
     end
 end)
+
+-- Close the UI when an item is dragged into the Greatforge socket.
+if EpicEncounters.IsEnabled() then
+    local GreatforgeDragDrop = Epip.GetFeature("Feature_GreatforgeDragDrop")
+
+    GreatforgeDragDrop.Events.ItemDropped:Subscribe(function (ev)
+        if ev.Character == Client.GetCharacter() then -- Explicit character check in case the event is modified in the future to fire for all characters.
+            UI.Close()
+        end
+    end)
+end
