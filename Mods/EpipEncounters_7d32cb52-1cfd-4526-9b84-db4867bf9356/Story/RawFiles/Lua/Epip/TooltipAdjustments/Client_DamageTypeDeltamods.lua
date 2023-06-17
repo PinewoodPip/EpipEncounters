@@ -5,7 +5,12 @@
 
 ---@class Feature_TooltipAdjustments
 local TooltipAdjustments = Epip.GetFeature("Feature_TooltipAdjustments")
-TooltipAdjustments.WEAPON_DAMAGE_BOOST_PATTERN = "^Boost_Weapon_Damage_(.+)_(%d+)$"
+
+TooltipAdjustments:RegisterTranslatedString("h37cf1748g9dafg4d2ag9744g00e75e764ee5", {
+    Text = "+%s%% Weapon %s Damage",
+    StringKey = "DamageTypeDeltamods_WeaponDamage",
+    ContextDescription = "Tooltip for weapon elemental damage boost",
+})
 
 ---------------------------------------------
 -- EVENT LISTENERS
@@ -14,12 +19,23 @@ TooltipAdjustments.WEAPON_DAMAGE_BOOST_PATTERN = "^Boost_Weapon_Damage_(.+)_(%d+
 Client.Tooltip.Hooks.RenderItemTooltip:Subscribe(function (ev)
     local item = ev.Item
 
-    if TooltipAdjustments.IsAdjustmentEnabled(TooltipAdjustments.Settings.DamageTypeDeltamods) and item.Stats and item.Stats.IsIdentified then
+    if TooltipAdjustments.IsAdjustmentEnabled(TooltipAdjustments.Settings.DamageTypeDeltamods) and item.Stats and item.Stats.IsIdentified and Item.IsWeapon(item) then
         local damageBoosts = {} ---@type {Type:string, Value:number}[]
 
         -- Look for +damage deltamods.
         for _,deltamodID in ipairs(item:GetDeltaMods()) do
-            local dmgType, amount = deltamodID:match(TooltipAdjustments.WEAPON_DAMAGE_BOOST_PATTERN)
+            local deltamodStat = Stats.Get("DeltaModifier", deltamodID)
+            local dmgType, amount = nil, nil
+
+            for _,boost in ipairs(deltamodStat.Boosts) do
+                -- Not sure if Count field is used for anything.
+                local boostStat = Stats.Get("Boost", boost.Boost) ---@type StatsLib_StatsEntry_Weapon
+
+                if boostStat["Damage Type"] ~= "None" then
+                    dmgType = boostStat["Damage Type"]
+                    amount = boostStat.DamageFromBase
+                end
+            end
 
             if dmgType and amount then
                 local alreadyHadType = false
@@ -36,18 +52,25 @@ Client.Tooltip.Hooks.RenderItemTooltip:Subscribe(function (ev)
             end
         end
 
+        -- Insert tooltip elements for each damage type
         for _,boost in ipairs(damageBoosts) do
-            TooltipAdjustments:DebugLog("Inserting +damage tooltip")
-            TooltipAdjustments:Dump(boost)
+            local damageTypeDef = Damage.GetDamageTypeDefinition(boost.Type)
 
-            ev.Tooltip:InsertElement({
-                Type = "ExtraProperties",
-                Label = Text.Format("+%s%% Weapon %s Damage", {
-                    FormatArgs = {
-                        boost.Value, boost.Type -- TODO localize dmg type name
-                    }
+            if damageTypeDef then
+                TooltipAdjustments:DebugLog("Inserting +damage tooltip")
+                TooltipAdjustments:Dump(boost)
+    
+                ev.Tooltip:InsertElement({
+                    Type = "ExtraProperties",
+                    Label = Text.Format(TooltipAdjustments.TranslatedStrings.DamageTypeDeltamods_WeaponDamage:GetString(), {
+                        FormatArgs = {
+                            boost.Value, Text.GetTranslatedString(damageTypeDef.NameHandle, damageTypeDef.StringID)
+                        }
+                    })
                 })
-            })
+            else
+                TooltipAdjustments:LogWarning("Unknown damage type " .. boost.Type)
+            end
         end
     end
 end)
