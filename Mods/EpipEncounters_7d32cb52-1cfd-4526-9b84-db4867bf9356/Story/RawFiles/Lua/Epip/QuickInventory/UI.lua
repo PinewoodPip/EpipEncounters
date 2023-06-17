@@ -6,6 +6,7 @@ local TooltipPanelPrefab = Generic.GetPrefab("GenericUI_Prefab_TooltipPanel")
 local LabelledDropdownPrefab = Generic.GetPrefab("GenericUI_Prefab_LabelledDropdown")
 local LabelledCheckboxPrefab = Generic.GetPrefab("GenericUI_Prefab_LabelledCheckbox")
 local LabelledTextField = Generic.GetPrefab("GenericUI_Prefab_LabelledTextField")
+local DraggingAreaPrefab = Generic.GetPrefab("GenericUI_Prefab_DraggingArea")
 local Tooltip = Client.Tooltip
 local Input = Client.Input
 local V = Vector.Create
@@ -165,10 +166,7 @@ function UI._Initialize()
         end)
         UI.Background = bg
 
-        local draggableArea = bg:AddChild("DraggableArea", "GenericUI_Element_TiledBackground")
-        draggableArea:SetBackground("Black", UI.DRAGGABLE_AREA_SIZE:unpack())
-        draggableArea:SetAlpha(0)
-        draggableArea:SetAsDraggableArea()
+        DraggingAreaPrefab.Create(UI, "DraggableArea", bg.Background, UI.DRAGGABLE_AREA_SIZE)
 
         local closeButton = bg:AddChild("CloseButton", "GenericUI_Element_Button")
         closeButton:SetType("Close")

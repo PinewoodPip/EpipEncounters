@@ -2,6 +2,7 @@
 local Generic = Client.UI.Generic
 local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 local FormHorizontalList = Generic.GetPrefab("GenericUI_Prefab_FormHorizontalList")
+local DraggingAreaPrefab = Generic.GetPrefab("GenericUI_Prefab_DraggingArea")
 local DebugCheats = Epip.GetFeature("Feature_DebugCheats")
 local V = Vector.Create
 
@@ -103,10 +104,7 @@ function UI._Initialize()
 
         local contentList = bg:AddChild("ContentList", "GenericUI_Element_VerticalList")
 
-        local draggableArea = bg:AddChild("DraggableArea", "GenericUI_Element_TiledBackground")
-        draggableArea:SetBackground("Black", UI.DRAGGABLE_AREA_SIZE:unpack())
-        draggableArea:SetAlpha(UI.DRAGGABLE_AREA_ALPHA)
-        draggableArea:SetAsDraggableArea()
+        DraggingAreaPrefab.Create(UI, "DraggableArea", bg, UI.DRAGGABLE_AREA_SIZE, UI.DRAGGABLE_AREA_ALPHA)
 
         local _ = TextPrefab.Create(UI, "Header", contentList, DebugCheatsUI.TranslatedStrings.Header:GetString(), "Center", UI.HEADER_SIZE)
         local contextText = TextPrefab.Create(UI, "ContextLabel", contentList, "", "Center", UI.HEADER_SIZE)

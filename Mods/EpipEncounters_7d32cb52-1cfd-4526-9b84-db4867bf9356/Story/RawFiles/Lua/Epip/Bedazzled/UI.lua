@@ -4,6 +4,7 @@ local MsgBox = Client.UI.MessageBox
 local Bedazzled = Epip.GetFeature("Feature_Bedazzled")
 local Generic = Client.UI.Generic
 local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
+local DraggingAreaPrefab = Generic.GetPrefab("GenericUI_Prefab_DraggingArea")
 local Input = Client.Input
 local V = Vector.Create
 
@@ -699,10 +700,7 @@ function UI._Initialize(board)
         UI.ScoreText = scoreText
 
         -- Draggable area
-        local draggableArea = bg:AddChild("DraggableArea", "GenericUI_Element_TiledBackground")
-        draggableArea:SetBackground("Black", UI.BACKGROUND_SIZE:unpack())
-        draggableArea:SetAlpha(0)
-        draggableArea:SetAsDraggableArea()
+        DraggingAreaPrefab.Create(UI, "DraggableArea", bg, UI.BACKGROUND_SIZE)
 
         local gemContainer = bg:AddChild("GemContainer", "GenericUI_Element_Empty")
         local BOARD_WIDTH = board.Size[2] * UI.CELL_SIZE[1]

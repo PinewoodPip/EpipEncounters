@@ -119,7 +119,7 @@ LOAD_ORDER = {
             "Utilities/Stats/Shared_SkillData.lua",
         },
     },
-    
+
     "Utilities/Damage/Shared.lua",
     
     -- Artifacts
@@ -274,6 +274,7 @@ LOAD_ORDER = {
             "UI/Generic/Prefabs/FormSet.lua",
             "UI/Generic/Prefabs/Selector.lua",
             "UI/Generic/Prefabs/CloseButton.lua",
+            "UI/Generic/Prefabs/DraggingArea.lua",
         },
     },
     -- {Script = "UI/Generic/Test.lua", WIP = true}, -- TEST!

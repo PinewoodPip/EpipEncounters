@@ -1,5 +1,6 @@
 
 local Generic = Client.UI.Generic
+local DraggingAreaPrefab = Generic.GetPrefab("GenericUI_Prefab_DraggingArea")
 local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 
 ---@class Feature_DebugDisplay
@@ -155,10 +156,8 @@ function DebugDisplay:__Setup()
     bg:SetBackground("Black", DebugDisplay.BG_SIZE:unpack())
     bg:SetAlpha(0.4)
 
-    local dragArea = bg:AddChild("DragArea", "GenericUI_Element_TiledBackground") -- This is a bit ridiculous - even if children are not mouse enabled, they still extend the mouse range of the background, so we need to use a "hit_mc" instead of making BG the dragging area.
-    dragArea:SetBackground("Black", DebugDisplay.BG_SIZE:unpack())
-    dragArea:SetAlpha(0)
-    dragArea:SetAsDraggableArea()
+    -- This is a bit ridiculous - even if children are not mouse enabled, they still extend the mouse range of the background, so we need to use a "hit_mc" instead of making BG the dragging area.
+    DraggingAreaPrefab.Create(ui, "DragArea", bg, DebugDisplay.BG_SIZE)
 
     local container = bg:AddChild("Container", "GenericUI_Element_VerticalList")
     container:SetMouseEnabled(false) -- So the container does not block dragging (though its children already do not...)
