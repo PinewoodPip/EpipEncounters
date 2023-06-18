@@ -76,10 +76,10 @@ Epip.RegisterFeature("HotbarGroupManager", GroupManager)
 ---@field GUID GUID
 ---@field _Slots table<GenericUI_Prefab_HotbarSlot>
 ---@field _SlotsAllocated integer
----@field _Rows integer
----@field _Columns integer
----@field _Content  GenericUI_Element_TiledBackground
----@field _Container GenericUI_Element_Grid
+---@field package _Rows integer
+---@field package _Columns integer
+---@field package _Content  GenericUI_Element_TiledBackground
+---@field package _Container GenericUI_Element_Grid
 ---@field _DragArea GenericUI_Element_Divider
 local HotbarGroup = {
     SLOT_SIZE = 58,

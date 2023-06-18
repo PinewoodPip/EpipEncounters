@@ -444,7 +444,7 @@ function Character.GetRealRace(char)
 end
 
 ---Returns whether the character is in a combat.
----@param char EclCharacter
+---@param char Character
 ---@return boolean
 function Character.IsInCombat(char)
     return char:GetStatus("COMBAT") ~= nil

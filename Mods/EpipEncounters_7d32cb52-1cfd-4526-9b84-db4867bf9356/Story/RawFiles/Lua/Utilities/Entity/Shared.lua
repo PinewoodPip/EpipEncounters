@@ -9,7 +9,7 @@ Entity = {}
 ---Return types of GetGameObject().
 ---@alias EntityLib_GetGameObjectFuntionReturnType "esv::Character"|"ecl::Character"|"ecl::Inventory"|"ecl::Scenery"|"ecl::Item"|"esv::Item"|"Trigger"|"esv::Projectile"|"ecl::Projectile"|"ecl::CombatComponent"
 
----@alias EntityLib_EntityComponent string|EclCharacter|EsvCharacter|EclItem|EsvItem|EclScenery|EclProjectile|EclCombatComponent|EsvProjectile
+---@alias EntityLib_EntityComponent EclCharacter|EsvCharacter|EclItem|EsvItem|EclScenery|EclProjectile|EclCombatComponent|EsvProjectile
 
 ---------------------------------------------
 -- METHODS
@@ -31,14 +31,14 @@ function Entity.GetLevelID(level)
     return level.LevelDesc.UniqueKey
 end
 
----@param component EntityComponent
+---@param component EntityLib_EntityComponent
 function Entity.IsCharacter(component)
     local className = GetExtType(component)
 
     return className and className == "ecl::Character" or className == "esv::Character"
 end
 
----@param component EntityComponent
+---@param component EntityLib_EntityComponent
 function Entity.IsItem(component)
     local className = GetExtType(component)
 

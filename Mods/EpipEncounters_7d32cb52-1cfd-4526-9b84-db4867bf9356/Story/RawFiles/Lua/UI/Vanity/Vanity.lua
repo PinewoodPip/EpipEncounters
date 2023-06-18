@@ -465,7 +465,7 @@ function Vanity.Refresh()
     end
 end
 
----@param slot StatsItemSlot|EclItem
+---@param slot ItemSlot|EclItem
 function Vanity.SetSlot(slot)
     if type(slot) ~= "string" then slot = Item.GetEquippedSlot(slot) or Item.GetItemSlot(slot) end
 

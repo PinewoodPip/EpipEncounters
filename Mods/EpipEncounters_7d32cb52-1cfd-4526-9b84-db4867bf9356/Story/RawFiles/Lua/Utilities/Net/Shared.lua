@@ -121,6 +121,7 @@ function Net.PostToCharacter(char, channel, message)
 end
 
 ---Sends a message to a user.
+---@generic T
 ---@param user UserId
 ---@param channel `T`
 ---@param message T

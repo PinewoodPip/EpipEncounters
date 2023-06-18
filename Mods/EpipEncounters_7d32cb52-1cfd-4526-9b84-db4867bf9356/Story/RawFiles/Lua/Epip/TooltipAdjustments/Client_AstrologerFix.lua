@@ -22,7 +22,7 @@ Epip.RegisterFeature("TooltipAdjustments_AstrologerFix", AstrologerFix)
 ---------------------------------------------
 
 ---@param char EclCharacter
----@param skillData StatsLib_StatsObject_SkillData
+---@param skillData StatsLib_StatsEntry_SkillData
 ---@return boolean
 function AstrologerFix.IsAffected(char, skillData)
     local skillType = skillData.SkillType
