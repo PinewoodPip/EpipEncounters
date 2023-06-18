@@ -33,7 +33,8 @@ function _Payload:___Create(data)
     -- Cast position field to vector.
     local positionField = instance["Position"]
     if positionField and type(positionField) == "table" then
-        instance["Position"] = Vector.Create(positionField)
+        ---@cast instance NetLib_Message_Position
+        instance.Position = Vector.Create(positionField)
     end
 
     return instance
@@ -57,9 +58,9 @@ local _CharacterPayload = _Payload -- The inheritance here is a lie, there is te
 ---Returns the character associated with the payload.
 ---@return Character
 function _CharacterPayload:GetCharacter()
-    self:_CheckField("GetField", "CharacterNetID")
+    self:_CheckField("GetCharacter", "CharacterNetID")
 
-    return Character.Get(self["CharacterNetID"])
+    return Character.Get(self.CharacterNetID)
 end
 
 ---@class NetLib_Message_Item : NetLib_Message
@@ -71,7 +72,7 @@ local _ItemPayload = _Payload
 function _ItemPayload:GetItem()
     self:_CheckField("GetItem", "ItemNetID")
 
-    return Item.Get(self["ItemNetID"])
+    return Item.Get(self.ItemNetID)
 end
 
 ---@class NetLib_Message_NetID : NetLib_Message
