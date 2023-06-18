@@ -32,21 +32,19 @@ function Combat.GetTurnOrder(combatID)
         },
     } 
     local combat = Combat.GetCombat(combatID)
-
     if not combat then
-        Combat:LogError("No combat found with ID " .. combatID)
-        return nil
+        Combat:Error("GetTurnOrder", "No combat found with ID", combatID)
     end
 
     for _,team in ipairs(combat.CurrentRoundTeams) do
         local component = Ext.Entity.GetCombatComponent(team.Handle) ---@type EclCombatComponent
-        local gameObject = Entity.GetGameObjectComponent(component.Base.Entity)
+        local gameObject = Entity.GetGameObjectComponent(component.Entity)
 
         table.insert(info.CurrentRound.Participants, gameObject)
     end
     for _,team in ipairs(combat.NextRoundTeams) do
         local component = Ext.Entity.GetCombatComponent(team.Handle) ---@type EclCombatComponent
-        local gameObject = Entity.GetGameObjectComponent(component.Base.Entity)
+        local gameObject = Entity.GetGameObjectComponent(component.Entity)
 
         table.insert(info.NextRound.Participants, gameObject)
     end
