@@ -62,7 +62,7 @@ function Manager:_CreateUI()
     local uiObject = ui:GetUI()
     local playerInfoUI = PlayerInfo:GetUI()
 
-    uiObject.Layer = playerInfoUI.Layer
+    uiObject.Layer = playerInfoUI.Layer + 1
     uiObject.RenderOrder = playerInfoUI.RenderOrder + 1
 
     local bg = ui:CreateElement("Background", "GenericUI_Element_TiledBackground")
