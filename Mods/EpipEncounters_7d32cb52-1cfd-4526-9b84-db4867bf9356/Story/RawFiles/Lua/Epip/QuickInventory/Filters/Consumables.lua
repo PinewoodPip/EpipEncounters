@@ -14,12 +14,14 @@ QuickInventory.POTION_TAGS = Set.Create({
     "Potion", -- Yes, these are 2 different tags used interchangeably by Larian.
     "ORGANIZE_POTION",
 })
-QuickInventory.FOOD_AND_DRINK_TAGS = Set.Create({
+QuickInventory.FOOD_TAGS = Set.Create({
     "FOOD",
     "ORGANIZE_FOOD",
-
+})
+QuickInventory.DRINK_TAGS = Set.Create({
     "DRINK", -- Similar case to POTIONS and Potion.
     "BEVERAGES",
+    "ORGANIZE_DRINK",
 })
 QuickInventory.SCROLL_TAGS = Set.Create({
     "SCROLLS",
@@ -29,6 +31,20 @@ QuickInventory.GRENADE_TAGS = Set.Create({
     "GRENADES",
     "ORGANIZE_GRENADE",
 })
+QuickInventory.ARROW_TAGS = Set.Create({
+    "ARROWS",
+    "ORGANIZE_ARROW",
+})
+
+-- Sorting order from most important to least.
+QuickInventory.CONSUMABLES_SORT_ORDER = {
+    QuickInventory.SCROLL_TAGS,
+    QuickInventory.GRENADE_TAGS,
+    QuickInventory.ARROW_TAGS,
+    QuickInventory.POTION_TAGS,
+    QuickInventory.FOOD_TAGS,
+    QuickInventory.DRINK_TAGS,
+}
 
 ---------------------------------------------
 -- METHODS
@@ -85,10 +101,42 @@ QuickInventory.Hooks.IsItemVisible:Subscribe(function (ev)
             elseif subTypeSetting == "ScrollsAndGrenades" then
                 visible = visible and IsScrollOrGrenade(item)
             elseif subTypeSetting == "FoodAndDrinks" then
-                visible = visible and QuickInventory.ItemHasRelevantTag(item, QuickInventory.FOOD_AND_DRINK_TAGS) and not QuickInventory.ItemHasRelevantTag(item, QuickInventory.POTION_TAGS) -- Excludes potions.
+                local isFoodOrDrink = QuickInventory.ItemHasRelevantTag(item, QuickInventory.FOOD_TAGS) or QuickInventory.ItemHasRelevantTag(item, QuickInventory.DRINK_TAGS)
+
+                visible = visible and isFoodOrDrink and not QuickInventory.ItemHasRelevantTag(item, QuickInventory.POTION_TAGS) -- Excludes potions.
             end
         end
     end
     
     ev.Visible = visible
 end)
+
+-- Sorting order for Consumables:
+-- Scrolls, arrows, grenades, other items.
+QuickInventory.Hooks.SortItems:Subscribe(function (ev)
+    if QuickInventory:GetSettingValue(QuickInventory.Settings.ItemCategory) == "Consumables" then
+        local itemAPriority = nil
+        local itemBPriority = nil
+
+        -- Set priority based on tags.
+        for priority,tagSet in ipairs(QuickInventory.CONSUMABLES_SORT_ORDER) do
+            if itemAPriority == nil and QuickInventory.ItemHasRelevantTag(ev.ItemA, tagSet) then
+                itemAPriority = priority
+            end
+            if itemBPriority == nil and QuickInventory.ItemHasRelevantTag(ev.ItemB, tagSet) then
+                itemBPriority = priority
+            end
+
+            if itemAPriority ~= nil and itemBPriority ~= nil then
+                break
+            end
+        end
+
+        itemAPriority = itemAPriority or (#QuickInventory.CONSUMABLES_SORT_ORDER + 1)
+        itemBPriority = itemBPriority or (#QuickInventory.CONSUMABLES_SORT_ORDER + 1)
+
+        -- Lower priority appears first.
+        ev.Result = itemAPriority < itemBPriority
+        ev:StopPropagation()
+    end
+end, {StringID = "DefaultImplementation_Consumables"})
