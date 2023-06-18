@@ -164,6 +164,9 @@ QuickInventory.Settings.WeaponSubType = QuickInventory:RegisterSetting("WeaponSu
         {ID = "Staff", NameHandle = Text.CommonStrings.Staff.Handle},
         {ID = "Knife", NameHandle = Text.CommonStrings.Knife.Handle},
         {ID = "Spear", NameHandle = Text.CommonStrings.Spear.Handle},
+        {ID = "Bow", NameHandle = Text.CommonStrings.Bow.Handle},
+        {ID = "Crossbow", NameHandle = Text.CommonStrings.Crossbow.Handle},
+        {ID = "Wand", NameHandle = Text.CommonStrings.Wand.Handle},
     },
 })
 

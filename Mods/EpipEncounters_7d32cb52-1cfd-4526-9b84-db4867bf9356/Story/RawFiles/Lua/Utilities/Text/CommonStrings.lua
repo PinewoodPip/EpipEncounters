@@ -164,6 +164,18 @@ Text.CommonStrings.Staff = Text.RegisterTranslatedString({
    Handle = "h55519c1fgecd7g4c73gafb2gebf09ecf7168",
    Text = "Staff",
 })
+Text.CommonStrings.Bow = Text.RegisterTranslatedString({
+   Handle = "heb0326c2g21d3g43b6gbc73ge64a25c6a2b3",
+   Text = "Bow",
+})
+Text.CommonStrings.Crossbow = Text.RegisterTranslatedString({
+   Handle = "h7f53d9adg7fdeg4005gaa99g0ffde8a8b21f",
+   Text = "Crossbow",
+})
+Text.CommonStrings.Wand = Text.RegisterTranslatedString({
+   Handle = "he0847edfg24f4g4259ga31bg1f665425e26c",
+   Text = "Wand",
+})
 
 ---------------------------------------------
 -- ARMOR TYPES
