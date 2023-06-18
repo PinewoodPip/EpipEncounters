@@ -1,5 +1,5 @@
 {
-    "RequiredExtensionVersion": 59,
+    "RequiredExtensionVersion": 60,
     "ModTable": "EpipEncounters",
     "FeatureFlags": [
         "OsirisExtensions",
