@@ -4,18 +4,6 @@ INITSECTION
 
 KBSECTION
 
-PROC PROC_PIP_Hotkey_Infuse((CHARACTERGUID)_Char)
-AND
-CombatGetIDForCharacter(_Char, _Id)
-AND
-CombatGetActiveEntity(_Id, _Char)
-THEN
-CharacterUseSkill(_Char, "Shout_SourceInfusion", _Char, 0 ,0, 0);
-
-PROC PROC_PIP_Hotkey_Meditate((CHARACTERGUID)_Char)
-THEN
-CharacterUseSkill(_Char, "Shout_NexusMeditate", _Char, 0 ,0, 0);
-
 PROC PROC_PIP_Hotkey_UserRest((CHARACTERGUID)_Char)
 AND
 DB_PIP_Hotkey_UserRest(_Bool)

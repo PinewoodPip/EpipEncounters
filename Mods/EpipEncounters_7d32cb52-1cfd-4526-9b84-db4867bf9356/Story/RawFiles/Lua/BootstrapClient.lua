@@ -416,8 +416,6 @@ LOAD_ORDER = {
     "Epip/Client/GenericUIs/HotbarGroup.lua",
 
     "Epip/Client/AprilFoolsCharacterSheet.lua",
-    "Epip/Client/HotbarActions.lua",
-    "Epip/Client/EpicEncountersActions.lua",
     {
         ScriptSet = "Epip/AscensionShortcuts",
     },
@@ -473,6 +471,9 @@ LOAD_ORDER = {
     "Epip/Client/HoverCharacterEffects.lua",
     "Epip/Client/IncompatibleModsWarning.lua",
     -- "Epip/Client/LoadingScreenReplacement.lua",
+
+    -- Hotbar stuff
+    {ScriptSet = "Epip/Hotbar/Actions"},
 
     -- Epic Enemies
     {

@@ -150,7 +150,6 @@ LOAD_ORDER = {
     "EpicStatsKeywords.lua",
     "EpicStatsDefinitions.lua",
     "EpipEncountersServer.lua",
-    "HotkeysServer.lua",
 
     -- "GreatforgeExclude.lua",
 
@@ -173,6 +172,9 @@ LOAD_ORDER = {
     },
     "Epip/EmoteCommands.lua",
     "Debug/Commands/Server.lua",
+
+    -- Hotbar stuff
+    {ScriptSet = "Epip/Hotbar/Actions"},
 
     -- Epic Enemies
     {
@@ -285,7 +287,7 @@ LOAD_ORDER = {
     {ScriptSet = "Epip/DebugCheats/Cheats/CopyPosition"},
     {ScriptSet = "Epip/DebugCheats/Cheats/SpawnItemTemplate"},
     {ScriptSet = "Epip/DebugCheats/Cheats/TeleportTo"},
-    
+
     {Script = "Epip/PersonalScripts/Shared.lua", Developer = true},
 }
 
