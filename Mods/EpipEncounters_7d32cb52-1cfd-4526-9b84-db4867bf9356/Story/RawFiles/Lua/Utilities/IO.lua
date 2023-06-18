@@ -12,6 +12,12 @@ IO = {
 }
 
 ---------------------------------------------
+-- CLASSES
+---------------------------------------------
+
+---@alias InputOutputLib_UserFileContext "user"|"data"
+
+---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
@@ -31,7 +37,7 @@ end
 
 ---Loads a file.
 ---@param filename string
----@param context ("user"|"data")? Defaults to "user"
+---@param context (InputOutputLib_UserFileContext)? Defaults to "user"
 ---@param raw boolean? Defaults to false.
 ---@return any
 function IO.LoadFile(filename, context, raw)

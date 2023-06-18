@@ -671,6 +671,7 @@ LOAD_ORDER = {
     {ScriptSet = "Epip/DebugCheats/Cheats/TeleportTo"},
 
     {Script = "Epip/Client/OverlayColorsBruteForcer.lua", Developer = true},
+    {Script = "Epip/PersonalScripts/Shared.lua", Developer = true},
 }
 
 Utilities = {}

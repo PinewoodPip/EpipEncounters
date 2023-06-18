@@ -73,3 +73,9 @@ function TooltipData:AppendElement(ele) end
 ---@param ele table
 ---@param appendAfter table
 function TooltipData:AppendElementAfter(ele, appendAfter) end
+
+---------------------------------------------
+-- META
+---------------------------------------------
+
+---@alias ScriptContext "Shared"|"Client"|"Server"

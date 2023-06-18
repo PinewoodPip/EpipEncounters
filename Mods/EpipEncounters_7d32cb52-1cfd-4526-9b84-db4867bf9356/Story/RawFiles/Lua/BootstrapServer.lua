@@ -285,6 +285,8 @@ LOAD_ORDER = {
     {ScriptSet = "Epip/DebugCheats/Cheats/CopyPosition"},
     {ScriptSet = "Epip/DebugCheats/Cheats/SpawnItemTemplate"},
     {ScriptSet = "Epip/DebugCheats/Cheats/TeleportTo"},
+    
+    {Script = "Epip/PersonalScripts/Shared.lua", Developer = true},
 }
 
 Ext.Require(prefixedGUID, "Bootstrap.lua")
