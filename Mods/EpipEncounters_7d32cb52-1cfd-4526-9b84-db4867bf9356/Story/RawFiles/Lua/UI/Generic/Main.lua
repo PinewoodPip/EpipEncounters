@@ -148,6 +148,7 @@ local Prefab = {
     UI = nil, ---@type GenericUI_Instance
     Events = {},
 }
+Generic:RegisterClass("GenericUI_Prefab", Prefab)
 Generic._Prefab = Prefab
 
 ---@protected
