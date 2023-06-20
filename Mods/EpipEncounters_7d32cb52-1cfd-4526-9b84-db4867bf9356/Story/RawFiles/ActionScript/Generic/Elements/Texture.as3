@@ -12,10 +12,14 @@ package Elements
     public dynamic class Texture extends Element
     {
         private var customBitmap:Bitmap = null;
+        private var bitmapHolder:MovieClip = null; // Ensures that the bitmap stays in the same z-order.
 
         public function Texture()
         {
             super();
+
+            this.bitmapHolder = new MovieClip();
+            this.addChild(this.bitmapHolder);
         }
 
         public override function get elementType() : String
@@ -27,10 +31,10 @@ package Elements
         {
             if (this.customBitmap != null)
             {
-                this.removeChild(this.customBitmap);
+                this.bitmapHolder.removeChild(this.customBitmap);
             }
             this.customBitmap = new Bitmap(new BitmapData(1, 1));
-            this.addChild(this.customBitmap);
+            this.bitmapHolder.addChild(this.customBitmap);
             
             IggyFunctions.setTextureForBitmap(this.customBitmap, guid);
 
