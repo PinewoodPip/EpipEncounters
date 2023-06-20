@@ -49,17 +49,28 @@ end
 
 ---@param value integer|string Index or string ID.
 function _Choice:SetValue(value)
-    if type(value) ~= "string" then
+    if type(value) == "number" then
         local choice = self.Choices[value]
 
         if choice then
-            value = choice.ID
+            self.Value = choice.ID
         else
-            error("SetValue(): Invalid choice index " .. (tostring(value) or "nil"))
+            Settings:Error("Choice:SetValue", "Invalid choice index", value)
+        end
+    else
+        local isValid = false
+        for _,choice in ipairs(self.Choices) do
+            if choice.ID == value then
+                isValid = true
+            end
+        end
+
+        if isValid then
+            self.Value = value
+        else
+            Settings:Error("Choice:SetValue", "Invalid choice ID for", self.ID, value)
         end
     end
-
-    self.Value = value
 end
 
 ---@param choiceID string
