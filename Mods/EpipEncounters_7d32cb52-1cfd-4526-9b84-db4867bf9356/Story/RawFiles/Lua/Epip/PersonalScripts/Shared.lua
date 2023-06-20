@@ -1,6 +1,7 @@
 
 ---------------------------------------------
 -- Allows loading additional scripts defined in a json within the Osiris Data directory.
+-- Intended usage is to quickly run test/debug scripts without including them in any mod directory.
 ---------------------------------------------
 
 ---@type Feature
@@ -20,6 +21,7 @@ Epip.RegisterFeature("PersonalScripts", PersonalScripts)
 ---@field Context ScriptContext
 ---@field Path path Relative to the root directory.
 ---@field PathRoot InputOutputLib_UserFileContext
+---@field ModTable string Mod table to use as the environment.
 
 ---------------------------------------------
 -- METHODS
@@ -38,8 +40,13 @@ function PersonalScripts._LoadScripts(path)
 
         if canLoad then
             local script = IO.LoadFile(scriptDef.Path, scriptDef.PathRoot, true)
-            ---@diagnostic disable-next-line: deprecated
-            local chunk = loadstring(script)
+            local env = nil
+            if scriptDef.ModTable then
+                env = Mods[scriptDef.ModTable]
+            end
+            print("env", env, env.Client)
+
+            local chunk = load(script, scriptDef.Path, "t", env)
 
             chunk()
         end
