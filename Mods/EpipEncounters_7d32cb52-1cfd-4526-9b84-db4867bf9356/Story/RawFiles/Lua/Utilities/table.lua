@@ -39,7 +39,7 @@ end
 ---@param tbl table
 ---@param prop string Property name.
 ---@param reverse boolean? Defaults to false.
----@return table Same table as the one passed by parameter (mutates in-place).
+---@return table -- Same table as the one passed by parameter (mutates in-place).
 function table.sortByProperty(tbl, prop, reverse)
     local fun
 
