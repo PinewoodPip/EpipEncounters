@@ -77,6 +77,7 @@ Projects/PipEffects_a3eb2175-29b8-4e79-99a8-071beda29975
 Public/RunePatch_d46cb4bc-f7fa-4adb-850a-19122c8b2e71
 Mods/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/Story/RawFiles/Python/update_epip_docs.py
 Mods/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/Story/RawFiles/Python/__pycache__/update_docs.cpython-39.pyc
+Mods/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/Story/RawFiles/Python/__pycache__
 Mods/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/Story/RawFiles/Lua/IdeHelpers/Ext.lua
 Mods/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/Story/RawFiles/Python/__pycache__/localization.cpython-39.pyc
 Mods/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/Story/RawFiles/Python/generate_epip_localization_sheets.py
@@ -84,3 +85,6 @@ Mods/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/Story/RawFiles/Python/g
 Mods/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/Story/RawFiles/Python/extract_base_game.py
 
 Mods/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/Story/RawFiles/Lua/PersonalScripts
+/Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/Assets/Textures/UI
+Mods/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/Story/RawFiles/Python/generic_convert_to_dds.py
+Mods/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/Story/RawFiles/Python/pip_generic_convert_to_dds.py

@@ -79,6 +79,7 @@ LOAD_ORDER = {
     },
 
     {ScriptSet = "Utilities/Combat"},
+    "Utilities/Texture.lua",
     "Utilities/Client/Pointer.lua",
 
     "Data/Game.lua", -- TODO move stuff out of it into appropriate scripts
@@ -235,6 +236,7 @@ LOAD_ORDER = {
     "Utilities/Client/Tooltip.lua",
 
     -- GenericUI
+    "Epip/GenericUITextures.lua",
     {
         Scripts = {
             "UI/Generic/Main.lua",
