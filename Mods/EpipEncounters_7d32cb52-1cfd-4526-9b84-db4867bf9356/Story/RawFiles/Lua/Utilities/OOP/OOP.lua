@@ -11,6 +11,7 @@ OOP = {
 ---@class Class
 ---@field protected __name string
 ---@field protected __ParentClasses string[]
+---@field protected __ClassDefinition Class
 local Class = {}
 
 ---Creates a new table with the metatable of the class set.
@@ -19,6 +20,7 @@ local Class = {}
 ---@return Class
 function Class:__Create(data)
     local classTable = self ---@cast classTable table|Class
+    ---@cast data Class
 
     setmetatable(data, {
         __index = function (instance, key)
@@ -110,6 +112,12 @@ function Class:GetParentClasses()
     return classes
 end
 
+---Returns the main table that defines this class instance.
+---@return Class
+function Class:GetClassDefinition()
+    return self.__ClassDefinition
+end
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
@@ -123,6 +131,7 @@ end
 function OOP.RegisterClass(className, class, parentClasses)
     ---@cast class Class
     
+    -- Copy Class methods onto the class definition table
     for k,v in pairs(Class) do
         if type(v) == "function" then
             class[k] = v -- TODO proper inheritance
@@ -130,6 +139,7 @@ function OOP.RegisterClass(className, class, parentClasses)
     end
 
     ---@diagnostic disable invisible
+    class.__ClassDefinition = class
     class.__ParentClasses = parentClasses or {}
     class.__name = class.__name or className
 
