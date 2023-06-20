@@ -3,7 +3,7 @@ local Generic = Client.UI.Generic
 
 ---@class GenericUI_Element_Texture : GenericUI_Element
 local Texture = {
-    Events = {},
+    Events = {}, ---@type GenericUI_Element_Events
 }
 Generic.Inherit(Texture, Generic._Element)
 
@@ -12,14 +12,17 @@ Generic.Inherit(Texture, Generic._Element)
 ---------------------------------------------
 
 ---Sets the texture resource used.
----@param guid GUID
+---@param texture GUID|TextureLib_Texture
 ---@param size Vector2? Defaults to native size of the texture resource.
-function Texture:SetTexture(guid, size)
+function Texture:SetTexture(texture, size)
+    if type(texture) == "table" then -- TextureLib_Texture overload.
+        texture = texture.GUID ---@cast texture string
+    end
     local w, h = -1, -1
     if size then
         w, h = size:unpack()
     end
-    self:GetMovieClip().SetTexture(guid, w, h)
+    self:GetMovieClip().SetTexture(texture, w, h)
 end
 
 ---------------------------------------------
