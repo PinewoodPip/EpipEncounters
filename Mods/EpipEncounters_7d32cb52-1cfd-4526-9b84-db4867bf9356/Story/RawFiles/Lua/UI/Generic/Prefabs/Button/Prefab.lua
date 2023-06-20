@@ -8,6 +8,8 @@ local Generic = Client.UI.Generic
 ---@field _Disabled boolean
 ---@field Root GenericUI_Element_Texture
 local Button = {
+    DEFAULT_SOUND = "UI_Gen_XButton_Click",
+
     Events = {
         Pressed = {}, ---@type Event<EmptyEvent>
     },
@@ -30,6 +32,7 @@ Generic.RegisterPrefab("GenericUI_Prefab_Button", Button)
 ---@field PressedTexture TextureLib_Texture? If not present, `IdleTexture` will be used instead.
 ---@field DisabledTexture TextureLib_Texture? If not present, `IdleTexture` will be used instead.
 ---@field Size Vector2? Defaults to texture size.
+---@field Sound string? Sound effect to play when the button is pressed. Defaults to `DEFAULT_SOUND`.
 
 ---------------------------------------------
 -- METHODS
@@ -122,7 +125,9 @@ function Button:_SetupListeners()
     root.Events.MouseUp:Subscribe(function (ev)
         if self:IsEnabled() then
             self.Events.Pressed:Throw(ev)
+
             self:_SetState("Highlighted")
+            self.UI:PlaySound(self._Style.Sound or self.DEFAULT_SOUND)
         end
     end)
 
