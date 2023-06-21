@@ -8,7 +8,9 @@ local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 ---@field _State GenericUI_Prefab_Button_InteractionState
 ---@field _Style GenericUI_Prefab_Button_Style
 ---@field _Disabled boolean
+---@field _Activated boolean
 ---@field Root GenericUI_Element_Texture
+---@field ActivatedOverlay GenericUI_Element_Texture? Only present if using a style that is a state button.
 ---@field Label GenericUI_Prefab_Text
 local Button = {
     DEFAULT_SOUND = "UI_Gen_XButton_Click",
@@ -36,6 +38,7 @@ Generic.RegisterPrefab("GenericUI_Prefab_Button", Button)
 ---@field DisabledTexture TextureLib_Texture? If not present, `IdleTexture` will be used instead.
 ---@field Size Vector2? Defaults to texture size.
 ---@field Sound string? Sound effect to play when the button is pressed. Defaults to `DEFAULT_SOUND`.
+---@field ActiveOverlay TextureLib_Texture? If present, the button will be considered a state button. Used when the button is activated.
 
 ---------------------------------------------
 -- METHODS
@@ -50,6 +53,7 @@ function Button.Create(ui, id, parent, style)
     local instance = Button:_Create(ui, id) ---@type GenericUI_Prefab_Button
     instance._State = "Idle"
     instance._Disabled = false
+    instance._Activated = false
 
     local root = instance:CreateElement(id, "GenericUI_Element_Texture", parent)
     local label = TextPrefab.Create(ui, instance:PrefixID("Label"), root, "", "Center", Vector.Create(1, 1))
@@ -59,7 +63,7 @@ function Button.Create(ui, id, parent, style)
 
     instance:_SetupListeners()
 
-    -- This will implicitly call _UpdateTexture() due to __OnStyleChanged()
+    -- This will implicitly call _UpdateTextures() due to __OnStyleChanged()
     instance:SetStyle(style)
     instance:SetLabel("")
 
@@ -93,7 +97,7 @@ end
 ---@param enabled boolean
 function Button:SetEnabled(enabled)
     self._Disabled = not enabled
-    self:_UpdateTexture()
+    self:_UpdateTextures()
 end
 
 ---Returns whether the button is enabled.
@@ -103,8 +107,29 @@ function Button:IsEnabled()
     return not self._Disabled
 end
 
+---Returns whether the button is activated.
+---Will throw if the button is not a state button.
+---@return boolean
+function Button:IsActivated()
+    if not self:_IsStateButton() then
+        Generic:Error("Prefab_Button:IsActivated", "Button is not a state button")
+    end
+    return self._Activated
+end
+
+---Sets the activated state of the button.
+---Will throw if the button is not a state button.
+---@param activated any
+function Button:SetActivated(activated)
+    if not self:_IsStateButton() then
+        Generic:Error("Prefab_Button:SetActivated", "Button is not a state button")
+    end
+    self._Activated = activated
+    self:_UpdateActivatedOverlay()
+end
+
 ---Updates the texture of the button based on its state.
-function Button:_UpdateTexture()
+function Button:_UpdateTextures()
     local state = self._State
     local style = self._Style
     local texture = nil
@@ -119,18 +144,43 @@ function Button:_UpdateTexture()
         elseif state == "Pressed" then
             texture = style.PressedTexture or style.IdleTexture
         else
-            Generic:Error("Prefab_Button:_UpdateTexture()", "Invalid state", state)
+            Generic:Error("Prefab_Button:_UpdateTextures()", "Invalid state", state)
         end
     end
 
     self.Root:SetTexture(texture, style.Size)
+    self:_UpdateActivatedOverlay()
+end
+
+---Updates the activated texture overlay.
+function Button:_UpdateActivatedOverlay()
+    local overlay = self.ActivatedOverlay
+    if not overlay and self:_IsStateButton() then -- Create the overlay if necessary.
+        overlay = self:CreateElement("ActivatedOverlay", "GenericUI_Element_Texture", self.Root)
+        self.ActivatedOverlay = overlay
+        self.Root:SetChildIndex(overlay, 1)
+    end
+
+    if self:_IsStateButton() then
+        overlay:SetTexture(self._Style.ActiveOverlay)
+        overlay:SetPositionRelativeToParent("Center")
+        overlay:SetVisible(self._Activated)
+    elseif overlay then
+        overlay:SetVisible(false)
+    end
 end
 
 ---Sets the state of the button.
 ---@param state GenericUI_Prefab_Button_InteractionState
 function Button:_SetState(state)
     self._State = state
-    self:_UpdateTexture()
+    self:_UpdateTextures()
+end
+
+---Returns whether the button is a State Button.
+---@return boolean
+function Button:_IsStateButton()
+    return self._Style.ActiveOverlay ~= nil
 end
 
 ---------------------------------------------
@@ -139,7 +189,7 @@ end
 
 ---@override
 function Button:__OnStyleChanged()
-    self:_UpdateTexture()
+    self:_UpdateTextures()
 end
 
 ---------------------------------------------
@@ -157,6 +207,11 @@ function Button:_SetupListeners()
 
             self:_SetState("Highlighted")
             self.UI:PlaySound(self._Style.Sound or self.DEFAULT_SOUND)
+
+            -- Toggle activated state
+            if self:_IsStateButton() then
+                self:SetActivated(not self:IsActivated())
+            end
         end
     end)
 

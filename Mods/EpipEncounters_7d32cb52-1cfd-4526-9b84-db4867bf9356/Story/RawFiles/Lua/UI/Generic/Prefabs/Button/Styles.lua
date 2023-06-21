@@ -1,6 +1,7 @@
 
 local T = Epip.GetFeature("Feature_GenericUITextures")
 local ButtonTextures = T.TEXTURES.BUTTONS
+local StateButtonTextures = T.TEXTURES.STATE_BUTTONS
 local Generic = Client.UI.Generic
 
 local Button = Generic.GetPrefab("GenericUI_Prefab_Button")
@@ -88,6 +89,21 @@ local styles = {
         IdleTexture = ButtonTextures.RED.LARGE.IDLE,
         HighlightedTexture = ButtonTextures.RED.LARGE.HIGHLIGHTED,
         PressedTexture = ButtonTextures.RED.LARGE.PRESSED,
+    },
+    SmallRed = {
+        IdleTexture = ButtonTextures.RED.SMALL.IDLE,
+        HighlightedTexture = ButtonTextures.RED.SMALL.HIGHLIGHTED,
+        PressedTexture = ButtonTextures.RED.SMALL.PRESSED,
+    },
+
+    -- State Buttons
+    SimpleCheckbox = {
+        IdleTexture = StateButtonTextures.CHECKBOXES.SIMPLE.BACKGROUND,
+        ActiveOverlay = StateButtonTextures.CHECKBOXES.SIMPLE.CHECKMARK,
+    },
+    RoundCheckbox = {
+        IdleTexture = StateButtonTextures.CHECKBOXES.ROUND.BACKGROUND,
+        ActiveOverlay = StateButtonTextures.CHECKBOXES.ROUND.CHECKMARK,
     },
 }
 
