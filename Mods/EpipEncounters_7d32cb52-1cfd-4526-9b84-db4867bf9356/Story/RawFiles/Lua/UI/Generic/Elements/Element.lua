@@ -258,6 +258,11 @@ function _Element:GetScale()
     return Vector.Create(mc.scaleX, mc.scaleY)
 end
 
+---Gets the size of the element without considering its children.
+---@return Vector2
+function _Element:GetRawSize()
+    return Vector.Create(self:GetRawWidth(), self:GetRawHeight())
+end
 
 ---Sets the tooltip of the element.
 ---@param tooltipType TooltipLib_TooltipType
@@ -296,3 +301,5 @@ end
 
 _Element.SetPositionRelativeToParent = Generic.ExposeFunction("SetPositionRelativeToParent")
 _Element.Move = Generic.ExposeFunction("Move")
+_Element.GetRawWidth = Generic.ExposeFunction("GetRawWidth")
+_Element.GetRawHeight = Generic.ExposeFunction("GetRawHeight")

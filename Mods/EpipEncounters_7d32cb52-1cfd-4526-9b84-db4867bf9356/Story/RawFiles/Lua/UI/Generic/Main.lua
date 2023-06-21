@@ -331,10 +331,10 @@ function Generic.ExposeFunction(call)
     local fun = function(obj, ...)
         local mc = obj:GetMovieClip()
 
-        local success, error, result = pcall(mc[call], ...)
+        local success, result = pcall(mc[call], ...)
 
         if not success then
-            Generic:LogError("Error while calling exposed " .. call .. "() function on " .. obj.ID .. ": " .. error)
+            Generic:LogError("Error while calling exposed " .. call .. "() function on " .. obj.ID .. ": " .. result)
         end
 
         return result

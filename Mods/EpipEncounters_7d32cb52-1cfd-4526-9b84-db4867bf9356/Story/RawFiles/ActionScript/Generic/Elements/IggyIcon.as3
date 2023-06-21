@@ -44,6 +44,16 @@ package Elements
             }
         }
 
+        public override function GetRawWidth() : Number
+        {
+            return this.hit_mc.width;
+        }
+
+        public override function GetRawHeight() : Number
+        {
+            return this.hit_mc.height;
+        }
+
         private function frame1() : *
         {
             // Setup iggy icon

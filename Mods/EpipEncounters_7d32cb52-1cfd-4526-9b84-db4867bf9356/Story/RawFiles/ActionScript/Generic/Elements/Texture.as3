@@ -45,5 +45,15 @@ package Elements
                 this.customBitmap.height = height;
             }
         }
+        
+        public override function GetRawWidth() : Number
+        {
+            return this.bitmapHolder.width;
+        }
+
+        public override function GetRawHeight() : Number
+        {
+            return this.bitmapHolder.height;
+        }
     }
 }

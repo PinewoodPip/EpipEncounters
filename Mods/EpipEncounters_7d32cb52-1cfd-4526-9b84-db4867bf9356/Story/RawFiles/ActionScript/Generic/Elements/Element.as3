@@ -176,6 +176,20 @@ package Elements
             return this.y;
         }
 
+        public function GetRawWidth() : Number
+        {
+            this.Log("GetRawWidth() not implemented for this element", 2);
+
+            return this.width;
+        }
+
+        public function GetRawHeight() : Number
+        {
+            this.Log("GetRawHeight() not implemented for this element", 2);
+            
+            return this.height;
+        }
+
         public function SetPositionRelativeToParent(position:String, horizontalOffset:Number=0, verticalOffset:Number=0) : *
         {
             var parent:MovieClip = this.parent;
