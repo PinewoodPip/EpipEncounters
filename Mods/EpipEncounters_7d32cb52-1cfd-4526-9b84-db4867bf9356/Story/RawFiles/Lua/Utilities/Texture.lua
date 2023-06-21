@@ -11,6 +11,7 @@ Epip.InitializeLibrary("Texture", Texture)
 ---------------------------------------------
 
 ---@class TextureLib_Texture
+---@field Name string Resource name.
 ---@field GUID GUID
 
 ---------------------------------------------
@@ -19,10 +20,11 @@ Epip.InitializeLibrary("Texture", Texture)
 
 ---Registers a texture resource.
 ---@param name string
----@param data TextureLib_Texture
+---@param data TextureLib_Texture `Name` is auto-initialized.
 ---@return TextureLib_Texture
 function Texture.RegisterTexture(name, data)
     Texture._Textures[name] = data
+    data.Name = name
 
     return data
 end
