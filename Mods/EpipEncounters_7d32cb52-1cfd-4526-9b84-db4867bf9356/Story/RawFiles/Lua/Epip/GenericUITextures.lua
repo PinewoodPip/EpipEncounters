@@ -207,6 +207,37 @@ local Textures = {
                         GUID = "f98b5754-3e13-457b-9d3e-9f10604a5996",
                     }),
                 },
+                SMALL = {
+                    IDLE = T("PIP_UI_Button_Red_Small_Idle", {
+                        GUID = "e4a94a16-3037-4ea8-bd6d-31806f358127",
+                    }),
+                    HIGHLIGHTED = T("PIP_UI_Button_Red_Small_Highlighted", {
+                        GUID = "c88d47bf-7a54-4e1f-b390-02ab2a8019a8",
+                    }),
+                    PRESSED = T("PIP_UI_Button_Red_Small_Pressed", {
+                        GUID = "6d687541-bce6-4f6a-b1b2-953eb1465c52",
+                    }),
+                },
+            },
+        },
+        STATE_BUTTONS = {
+            CHECKBOXES = {
+                ROUND = {
+                    BACKGROUND = T("PIP_UI_StateButton_RoundCheckbox_Background", {
+                        GUID = "40aad2c2-d1e6-407f-a15d-1772fdae6be2",
+                    }),
+                    CHECKMARK = T("PIP_UI_StateButton_RoundCheckbox_Checkmark", {
+                        GUID = "48c0088b-6ecd-4636-826f-6e0c921a3c35",
+                    }),
+                },
+                SIMPLE = {
+                    BACKGROUND = T("PIP_UI_StateButton_SimpleCheckbox_Background", {
+                        GUID = "0e9af3d9-e5be-4bbe-85a6-4a4783efc4c5",
+                    }),
+                    CHECKMARK = T("PIP_UI_StateButton_SimpleCheckbox_Checkmark", {
+                        GUID = "9be5ac27-29c0-405c-91d7-a78c3105282e",
+                    }),
+                },
             },
         },
         FRAMES = {
@@ -217,11 +248,89 @@ local Textures = {
                 GOLDEN = T("PIP_UI_Frame_Portrait_Golden", {
                     GUID = "f77e3f35-314d-46cc-9440-500839a808dd",
                 }),
+                BEIGE = T("PIP_UI_Frame_Portrait_Beige", {
+                    GUID = "1ec759f8-c08e-49ae-b7cf-cacf01071542",
+                }),
+                WHITE = T("PIP_UI_Frame_Portrait_White", {
+                    GUID = "63bdce5b-41f5-4ea0-bd74-6fbc73b851f1",
+                }),
+            },
+            RARITY = {
+                UNCOMMON = T("PIP_UI_Frame_Rarity_Uncommon", {
+                    GUID = "02fb99a3-ffcf-4891-a2fa-00c335eeeb80",
+                }),
+                RARE = T("PIP_UI_Frame_Rarity_Rare", {
+                    GUID = "5e387734-26bf-4b0d-9205-e94d6657e82e",
+                }),
+                EPIC = T("PIP_UI_Frame_Rarity_Epic", {
+                    GUID = "885fbb5b-7b5d-48bf-9aeb-11521e1ef413",
+                }),
+                LEGENDARY = T("PIP_UI_Frame_Rarity_Legendary", {
+                    GUID = "6dc29d87-0522-4b7d-8244-ee87ab77ec0b",
+                }),
+                DIVINE = T("PIP_UI_Frame_Rarity_Divine", {
+                    GUID = "517ced0d-1545-471d-ba5c-9bf87f48c077",
+                }),
+                UNIQUE = T("PIP_UI_Frame_Rarity_Unique", {
+                    GUID = "ca088d7a-816b-4f42-87c7-62acd595a22c",
+                }),
             },
             WHITE_TATTERED = T("PIP_UI_Frame_White_Tattered", {
                 GUID = "aa2a1c49-b36f-4c59-b218-647e630e8763",
             }),
+            BROWN = T("PIP_UI_Frame_Brown", {
+                GUID = "e88f114a-ecd8-4560-960d-23d215977609",
+            }),
+            BROWN_SHADED = T("PIP_UI_Frame_Brown_Shaded", {
+                GUID = "0e7c442d-e811-46d7-8228-62cfcd5c6535",
+            }),
+            DITTERED_CELL = T("PIP_UI_Frame_DitteredCell", {
+                GUID = "7080d2ad-5f87-48fe-be08-5709a9498daa",
+            }),
+            TEAL_SHADED = T("PIP_UI_Frame_Teal_Shaded", {
+                GUID = "01b09bfe-f0f4-401b-a045-710dd48706bb",
+            }),
+            WHITE_SHADED = T("PIP_UI_Frame_White_Shaded", {
+                GUID = "495eb140-a594-4681-99f7-393a299d8eda",
+            }),
         },
+        PANELS = {
+            CLIPBOARD = T("PIP_UI_Panel_Clipboard", {
+                GUID = "de3756f6-4566-4be0-95b5-32f2b7706d68",
+            }),
+            CLIPBOARD_HEADERED = T("PIP_UI_Panel_Clipboard_Headered", {
+                GUID = "67f908d0-04bf-4718-9c43-543f9f8fe4cb",
+            }),
+            CLIPBOARD_LARGE = T("PIP_UI_Panel_Clipboard_Large", {
+                GUID = "c416e67c-339b-4527-937a-cc96cf9c93e8",
+            }),
+            DIALOGUE_CONTROLLER = T("PIP_UI_Panel_Dialogue_Controller", {
+                GUID = "3ec1cc16-61f4-4a55-a4cb-fb0b994d6ad4",
+            }),
+            NOTE_CONTROLLER = T("PIP_UI_Panel_Note_Controller", {
+                GUID = "6cc944eb-92e2-46d8-a360-f4454b0be1da",
+            }),
+            SKILLBOOK = T("PIP_UI_Panel_SkillBook", {
+                GUID = "e4214879-bc18-4e72-94eb-fb3617d8d212",
+            }),
+            ALERT_TALL_CONTROLLER = T("PIP_UI_Panel_TallAlert_Controller", {
+                GUID = "90fdb97a-38c2-4bfd-9eca-9df2ca866c19",
+            }),
+            ITEM_ALERT = T("PIP_UI_Panel_ItemAlert", {
+                GUID = "1273b752-6d9b-4648-aecf-6bea0e56d94e",
+            }),
+            ITEM_ALERT_CONTROLLER = T("PIP_UI_Panel_ItemAlert_Controller", {
+                GUID = "8269d380-5e4a-4f88-b375-e06f653d25c7",
+            }),
+            JOURNAL = T("PIP_UI_Panel_Journal", {
+                GUID = "e77791ae-26b5-483a-8a94-a2f1aa42fcdf",
+            }),
+        },
+        MISC = {
+            BOOKMARK = T("PIP_UI_Misc_Bookmark", {
+                GUID = "17729ed3-cf17-4654-978a-5c3e0ac8f7ed",
+            }),
+        }
     },
 }
 Epip.RegisterFeature("GenericUITextures", Textures)
