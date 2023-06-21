@@ -1,12 +1,15 @@
 
 local Generic = Client.UI.Generic
 
+local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
+
 ---Prefab for a button.
 ---@class GenericUI_Prefab_Button : GenericUI_Prefab, GenericUI_I_Stylable
 ---@field _State GenericUI_Prefab_Button_InteractionState
 ---@field _Style GenericUI_Prefab_Button_Style
 ---@field _Disabled boolean
 ---@field Root GenericUI_Element_Texture
+---@field Label GenericUI_Prefab_Text
 local Button = {
     DEFAULT_SOUND = "UI_Gen_XButton_Click",
 
@@ -49,15 +52,41 @@ function Button.Create(ui, id, parent, style)
     instance._Disabled = false
 
     local root = instance:CreateElement(id, "GenericUI_Element_Texture", parent)
+    local label = TextPrefab.Create(ui, instance:PrefixID("Label"), root, "", "Center", Vector.Create(1, 1))
 
     instance.Root = root
+    instance.Label = label
 
     instance:_SetupListeners()
 
     -- This will implicitly call _UpdateTexture() due to __OnStyleChanged()
     instance:SetStyle(style)
+    instance:SetLabel("")
 
     return instance
+end
+
+---Sets the label of the button.
+---@param label string Set to an empty string to hide the label.
+function Button:SetLabel(label)
+    local element = self.Label
+
+    if label ~= "" then
+        local textSize
+        local mc = element:GetMovieClip().text_txt
+        mc.multiline = false
+        mc.wordWrap = false -- Necessary.
+
+        element:SetText(label)
+
+        -- Set size of the text element to the minimum size of the text itself, and center it
+        textSize = element:GetTextSize()
+        textSize = Vector.Create(textSize[1], textSize[2] / 2) -- No idea why division by 2 is necessary; textHeight just seems to always report +1 line, while width is correct.
+        element:SetSize(textSize:unpack())
+        element:SetPositionRelativeToParent("Center", 0, 0)
+    end
+
+    element:SetVisible(label ~= "")
 end
 
 ---Sets the enabled state of the button.
