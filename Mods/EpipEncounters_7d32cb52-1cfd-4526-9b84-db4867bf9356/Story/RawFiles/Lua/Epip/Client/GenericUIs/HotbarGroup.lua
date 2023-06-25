@@ -3,6 +3,7 @@ local Generic = Client.UI.Generic
 local HotbarSlot = Generic.GetPrefab("GenericUI_Prefab_HotbarSlot")
 local Spinner = Generic.GetPrefab("GenericUI_Prefab_Spinner")
 local ContextMenu = Client.UI.ContextMenu
+local CommonStrings = Text.CommonStrings
 
 ---@class Feature_HotbarGroupManager : Feature
 local GroupManager = {
@@ -70,6 +71,7 @@ Epip.RegisterFeature("HotbarGroupManager", GroupManager)
 ---@field Columns integer
 ---@field SharedContents GenericUI_Prefab_HotbarSlot_Object[][]
 ---@field RelativePosition number[]
+---@field Layer integer Layer of the UIObject.
 
 ---@class HotbarGroup
 ---@field UI GenericUI_Instance
@@ -306,6 +308,8 @@ function GroupManager.GetGroupState(group)
     state.RelativePosition[1] = state.RelativePosition[1] / viewport[1]
     state.RelativePosition[2] = state.RelativePosition[2] / viewport[2]
 
+    state.Layer = uiObject.Layer
+
     if GroupManager.SharedGroups[group.GUID] == true then
         state.SharedContents = {}
 
@@ -344,7 +348,7 @@ end
 ---@param path string?
 function GroupManager.LoadData(path)
     path = path or GroupManager.SAVE_FILENAME
-    local save = IO.LoadFile(path)
+    local save = IO.LoadFile(path) ---@type {Groups: table<GUID, HotbarGroupState>, Version:integer}
 
     if save and save.Version == 0 then
         local groups = save.Groups
@@ -378,6 +382,8 @@ function GroupManager.LoadData(path)
                 end, {Once = true})
             end
             
+            -- Set layer
+            group.UI:GetUI().Layer = data.Layer
         end
     end
 end
@@ -394,13 +400,12 @@ Client.UI.Hotbar:RegisterListener("SaveDataSaved", function()
     GroupManager.SaveData()
 end)
 
----------------------------------------------
--- Listeners for context menus on HotbarGroup
-
+-- Listen for requests to create the context menu.
 ContextMenu.RegisterMenuHandler("HotbarGroup", function(char, guid)
     local contextMenu = {
-        {id = "HotbarGroup_Delete", type = "button", text = "Delete", params = {GUID = guid}},
-        {id = "HotbarGroup_Resize", type = "button", text = "Resize", params = {GUID = guid}}
+        {id = "HotbarGroup_Layer", type = "stat", text = CommonStrings.Layer:GetString(), value = 1, params = {GUID = guid}},
+        {id = "HotbarGroup_Resize", type = "button", text = CommonStrings.Resize:GetString(), params = {GUID = guid}},
+        {id = "HotbarGroup_Delete", type = "button", text = CommonStrings.Delete:GetString(), params = {GUID = guid}},
     }
 
     Client.UI.ContextMenu.Setup({
@@ -413,12 +418,26 @@ ContextMenu.RegisterMenuHandler("HotbarGroup", function(char, guid)
     Client.UI.ContextMenu.Open()
 end)
 
-ContextMenu.RegisterElementListener("HotbarGroup_Delete", "buttonPressed", function(_, params)
-    GroupManager.DeleteGroup(params.GUID)
+-- Format layer within context menu.
+ContextMenu.RegisterStatDisplayHook("HotbarGroup_Layer", function(_, _, params)
+    local group = GroupManager.Groups[params.GUID]
+    return group.UI:GetUI().Layer
 end)
 
+-- Listen for the layer being changed from the context menu.
+ContextMenu.RegisterElementListener("HotbarGroup_Layer", "statButtonPressed", function(_, params, change)
+    local group = GroupManager.Groups[params.GUID]
+    group.UI:GetUI().Layer = group.UI:GetUI().Layer + change
+end)
+
+-- Listen for requests to resize a group from the context menu.
 ContextMenu.RegisterElementListener("HotbarGroup_Resize", "buttonPressed", function(_, params)
     GroupManager.ShowResizeUI(params.GUID)
+end)
+
+-- Listen for requests to delete a group from the context menu.
+ContextMenu.RegisterElementListener("HotbarGroup_Delete", "buttonPressed", function(_, params)
+    GroupManager.DeleteGroup(params.GUID)
 end)
 
 ---------------------------------------------

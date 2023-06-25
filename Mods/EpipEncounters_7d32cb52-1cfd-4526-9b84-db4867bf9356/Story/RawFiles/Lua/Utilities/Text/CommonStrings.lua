@@ -116,6 +116,18 @@ Text.CommonStrings.Furniture = Text.RegisterTranslatedString({
    Handle = "hdb77af8agd827g4a54gb80ag4540ab23988d",
    Text = "Furniture",
 })
+Text.CommonStrings.Delete = Text.RegisterTranslatedString({
+   Handle = "hb2e1d20dgd3c2g45b9ga922gf19ea1a12691",
+   Text = "Delete",
+})
+Text.CommonStrings.Resize = Text.RegisterTranslatedString({
+   Handle = "hd15232f0gd82dg42a3g82ddg7597d3911122",
+   Text = "Resize",
+})
+Text.CommonStrings.Layer = Text.RegisterTranslatedString({
+   Handle = "hd790b2dcg7db3g478bg8fb6g96dfabe9dbd2",
+   Text = "Layer",
+})
 
 ---------------------------------------------
 -- BRANDING
