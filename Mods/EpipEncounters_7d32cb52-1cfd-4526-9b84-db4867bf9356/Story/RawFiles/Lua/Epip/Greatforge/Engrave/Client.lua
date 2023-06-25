@@ -1,14 +1,15 @@
 
----@class Feature_GreatforgeEngrave
-local Engrave = Epip.Features.GreatforgeEngrave
 local MessageBox = Client.UI.MessageBox
+
+---@class Feature_GreatforgeEngrave
+local Engrave = Epip.GetFeature("Feature_GreatforgeEngrave")
 
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
 
-Net.RegisterListener("EPIPENCOUNTERS_GreatforgeEngrave", function(payload)
-    local item = Item.Get(payload.ItemNetID)
+Net.RegisterListener(Engrave.NETMSG_ENGRAVE_START, function(payload)
+    local item = payload:GetItem()
 
     Engrave.currentItemHandle = item.Handle
 
@@ -16,10 +17,10 @@ Net.RegisterListener("EPIPENCOUNTERS_GreatforgeEngrave", function(payload)
         ID = "GreatforgeEngrave",
         Type = "Input",
         AcceptEmpty = false,
-        Header = "Engrave Item",
-        Message = Text.Format("Choose a name to engrave.", {}),
+        Header = Engrave.TranslatedStrings.MsgBox_Title:GetString(),
+        Message = Engrave.TranslatedStrings.MsgBox_Body:GetString(),
         Buttons = {
-            {ID = 1, Text = "Confirm"},
+            {ID = 1, Text = Text.CommonStrings.Confirm:GetString()},
         },
     })
 
@@ -32,9 +33,9 @@ MessageBox.RegisterMessageListener("GreatforgeEngrave", MessageBox.Events.InputS
     item.CustomDisplayName.Handle.Handle = Text.UNKNOWN_HANDLE
     item.CustomDisplayName.Handle.ReferenceString = text
 
-    Net.PostToServer("EPIPENCOUNTERS_GreatforgeEngrave_Confirm", {
+    Net.PostToServer(Engrave.NETMSG_ENGRAVE_CONFIRM, {
         ItemNetID = item.NetID,
-        Name = text,
+        NewItemName = text,
     })
 
     Engrave.currentItemHandle = nil

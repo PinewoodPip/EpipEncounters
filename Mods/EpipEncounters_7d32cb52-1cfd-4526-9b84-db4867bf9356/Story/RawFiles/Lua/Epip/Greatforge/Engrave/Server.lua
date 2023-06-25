@@ -1,6 +1,6 @@
 
 ---@class Feature_GreatforgeEngrave
-local Engrave = Epip.Features.GreatforgeEngrave
+local Engrave = Epip.GetFeature("Feature_GreatforgeEngrave")
 
 ---------------------------------------------
 -- EVENT LISTENERS
@@ -11,18 +11,18 @@ Osiris.RegisterSymbolListener('PROC_AMER_UI_Greatforge_DoCraft', 11, "after", fu
         item = Item.Get(item)
         char = Character.Get(char)
 
-        Net.PostToCharacter(char, "EPIPENCOUNTERS_GreatforgeEngrave", {
+        Net.PostToCharacter(char, Engrave.NETMSG_ENGRAVE_START, {
             ItemNetID = item.NetID,
-            CharNetID = char.NetID,
+            CharacterNetID = char.NetID,
         })
 
         Engrave:DebugLog("Sent engrave request to " .. char.DisplayName)
     end
 end)
 
-Net.RegisterListener("EPIPENCOUNTERS_GreatforgeEngrave_Confirm", function(payload)
-    local item = Item.Get(payload.ItemNetID)
-    local text = payload.Name
+Net.RegisterListener(Engrave.NETMSG_ENGRAVE_CONFIRM, function(payload)
+    local item = payload:GetItem()
+    local text = payload.NewItemName
 
     item.CustomDisplayName = text
 
