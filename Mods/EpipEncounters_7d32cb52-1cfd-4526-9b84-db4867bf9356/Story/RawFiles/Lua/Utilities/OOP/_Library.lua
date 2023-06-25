@@ -91,8 +91,17 @@ function Library.Create(modTable, id, data)
     -- Initialize translated strings
     library._localTranslatedStringKeys = {}
     library.TranslatedStrings = library.TranslatedStrings or {}
+    local tsksWithStringKey = {}
     for handle,tsk in pairs(library.TranslatedStrings) do
         library:RegisterTranslatedString(handle, tsk)
+
+        -- Make indexing via string key work as well.
+        if tsk.StringKey then
+            tsksWithStringKey[tsk.StringKey] = tsk
+        end
+    end
+    for key,tsk in pairs(tsksWithStringKey) do -- Needs to be done outside of table iteration to avoid re-registering keys
+        library.TranslatedStrings[key] = tsk
     end
 
     -- Create TSK table
@@ -233,11 +242,6 @@ function Library:RegisterTranslatedString(handle, tsk)
 
     if localKey then
         self._localTranslatedStringKeys[localKey] = handle
-    end
-
-    -- Make indexing via string key work as well
-    if tsk.StringKey then
-        self.TranslatedStrings[tsk.StringKey] = tsk
     end
 
     Text.RegisterTranslatedString(tsk)
