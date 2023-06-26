@@ -281,8 +281,9 @@ LOAD_ORDER = {
 
             "UI/Generic/Prefabs/Button/Prefab.lua",
             "UI/Generic/Prefabs/Button/Styles.lua",
-            
+
             "UI/Generic/Prefabs/CloseButton.lua",
+            "UI/Generic/Prefabs/SearchBar.lua",
         },
     },
     -- {Script = "UI/Generic/Test.lua", WIP = true}, -- TEST!
