@@ -5,7 +5,7 @@ local TextDisplay = Client.UI.TextDisplay
 local Tooltip = {
     nextTooltipData = nil, ---@type TooltipLib_TooltipSourceData
     _nextCustomTooltip = nil, ---@type TooltipLib_CustomFormattedTooltip
-    _nextSkillTooltip = nil,
+    _nextSkillTooltip = nil, ---@type TooltipLib_SkillTooltipRequest
     _currentTooltipData = nil, ---@type TooltipLib_TooltipSourceData
 
     _POSITION_OFFSET = -34,
@@ -155,6 +155,11 @@ end
 
 ---@class TooltipLib_CustomFormattedTooltip : TooltipLib_FormattedTooltip
 ---@field ID string
+---@field Position Vector2D
+
+---@class TooltipLib_SkillTooltipRequest
+---@field CharacterHandle ComponentHandle
+---@field SkillID string
 ---@field Position Vector2D
 
 ---------------------------------------------
@@ -389,10 +394,10 @@ end
 Ext.Events.UICall:Subscribe(function(ev)
     local param1, param2 = table.unpack(ev.Args)
 
-    if ev.Function == "showSkillTooltip" and not Tooltip._nextCustomTooltip and not Tooltip._nextSkillTooltip then
+    if ev.Function == "showSkillTooltip" and not Tooltip._nextCustomTooltip then
         Tooltip.nextTooltipData = {UIType = ev.UI:GetTypeId(), Type = "Skill", FlashCharacterHandle = param1, SkillID = param2, UICall = ev.Function, FlashParams = {table.unpack(ev.Args)}}
         Tooltip._currentTooltipData = Tooltip.nextTooltipData
-    elseif ev.Function == "showItemTooltip" and not Tooltip._nextItemTooltip then
+    elseif ev.Function == "showItemTooltip" then
         Tooltip.nextTooltipData = {UIType = ev.UI:GetTypeId(), Type = "Item", FlashItemHandle = param1, UICall = ev.Function, FlashParams = {table.unpack(ev.Args)}}
         Tooltip._currentTooltipData = Tooltip.nextTooltipData
     elseif ev.Function == "showStatusTooltip" then
