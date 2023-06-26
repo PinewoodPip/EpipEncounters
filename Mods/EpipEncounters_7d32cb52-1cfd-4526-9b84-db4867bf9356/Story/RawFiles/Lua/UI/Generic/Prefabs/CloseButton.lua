@@ -1,46 +1,33 @@
 
 local Generic = Client.UI.Generic
+local ButtonPrefab = Generic.GetPrefab("GenericUI_Prefab_Button")
 
 ---Prefab for a button that hides the UI.
----@class GenericUI_Prefab_CloseButton : GenericUI_Prefab
----@field Button GenericUI_Element_Button
+---@class GenericUI_Prefab_CloseButton : GenericUI_Prefab_Button
 local CloseButton = {
-    DEFAULT_SIZE = Vector.Create(32, 32),
-    Events = {
-        Pressed = {}, ---@type Event<GenericUI_Element_Button_Event_Pressed>
-    },
+    DEFAULT_STYLE = ButtonPrefab:GetStyle("Close"),
 }
-Generic.RegisterPrefab("GenericUI_Prefab_CloseButton", CloseButton)
+Generic.RegisterPrefab("GenericUI_Prefab_CloseButton", CloseButton) -- Not necessary to directly inherit from Button as Create() creates a Button
+
+---@diagnostic disable-next-line: duplicate-doc-alias
+---@alias GenericUI_PrefabClass "GenericUI_Prefab_CloseButton"
 
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
+---Creates a CloseButton.
 ---@param ui GenericUI_Instance
 ---@param id string
 ---@param parent GenericUI_Element|string
----@param size Vector2? Defaults to `DEFAULT_SIZE`.
+---@param style GenericUI_Prefab_Button_Style? Defaults to `DEFAULT_STYLE`.
 ---@return GenericUI_Prefab_CloseButton
-function CloseButton.Create(ui, id, parent, size)
-    local instance = CloseButton:_Create(ui, id) ---@type GenericUI_Prefab_CloseButton
-    size = size or CloseButton.DEFAULT_SIZE
+function CloseButton.Create(ui, id, parent, style)
+    local instance = ButtonPrefab.Create(ui, id, parent, style or CloseButton.DEFAULT_STYLE) ---@type GenericUI_Prefab_CloseButton
 
-    local button = instance:CreateElement(id, "GenericUI_Element_Button", parent)
-    button:SetType("Close")
-    button.Events.Pressed:Subscribe(function (ev) -- Forward Pressed event and hide UI
-        instance.Events.Pressed:Throw(ev)
+    instance.Events.Pressed:Subscribe(function (_) -- Hide UI
         ui:Hide()
     end)
 
-    instance.Button = button
-
     return instance
-end
-
----Sets the relative position of the button.
----@param position "Center"|"TopLeft"|"TopRight"|"Top"|"Left"|"Right"|"BottomLeft"|"Bottom"|"BottomRight" TODO extract alias
----@param horizontalOffset number?
----@param verticalOffset number?
-function CloseButton:SetPositionRelativeToParent(position, horizontalOffset, verticalOffset)
-    self.Button:SetPositionRelativeToParent(position, horizontalOffset or 0, verticalOffset or 0)
 end

@@ -277,11 +277,12 @@ LOAD_ORDER = {
             "UI/Generic/Prefabs/FormSetEntry.lua",
             "UI/Generic/Prefabs/FormSet.lua",
             "UI/Generic/Prefabs/Selector.lua",
-            "UI/Generic/Prefabs/CloseButton.lua",
             "UI/Generic/Prefabs/DraggingArea.lua",
 
             "UI/Generic/Prefabs/Button/Prefab.lua",
             "UI/Generic/Prefabs/Button/Styles.lua",
+            
+            "UI/Generic/Prefabs/CloseButton.lua",
         },
     },
     -- {Script = "UI/Generic/Test.lua", WIP = true}, -- TEST!
