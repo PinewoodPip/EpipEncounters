@@ -26,6 +26,17 @@ local Textures = {
                         GUID = "27a0910a-71f3-4902-96c4-13b734a7a578",
                     }),
                 },
+                DOWN_SLATE = {
+                    IDLE = T("PIP_UI_Button_Down_Slate_Idle", {
+                        GUID = "42537260-f580-4038-965e-fffe23a195e4",
+                    }),
+                    HIGHLIGHTED = T("PIP_UI_Button_Down_Slate_Highlighted", {
+                        GUID = "9b8c2f69-1f36-496b-9ad2-0b1a985fe2f3",
+                    }),
+                    PRESSED = T("PIP_UI_Button_Down_Slate_Pressed", {
+                        GUID = "adf42c0c-afb0-4b68-a671-6436accc7e05",
+                    }),
+                },
                 UP = {
                     IDLE = T("PIP_UI_Button_Up_Idle", {
                         GUID = "14385217-cb4b-4e9d-ad52-aa514f5a5cf4",
@@ -35,6 +46,39 @@ local Textures = {
                     }),
                     PRESSED = T("PIP_UI_Button_Up_Pressed", {
                         GUID = "872205af-df11-4fad-84e3-d96e6af3eeca",
+                    }),
+                },
+                UP_SLATE = {
+                    IDLE = T("PIP_UI_Button_Up_Slate_Idle", {
+                        GUID = "01e254aa-9377-4f90-b16c-407e10e6557e",
+                    }),
+                    HIGHLIGHTED = T("PIP_UI_Button_Up_Slate_Highlighted", {
+                        GUID = "db52e95c-677e-4f54-87c3-0467e3a0c4e6",
+                    }),
+                    PRESSED = T("PIP_UI_Button_Up_Slate_Pressed", {
+                        GUID = "99237b6a-ef9e-4a92-8896-12691cdfc110",
+                    }),
+                },
+                LEFT_TALL = {
+                    IDLE = T("PIP_UI_Button_Left_Tall_Idle", {
+                        GUID = "fc8546b9-d755-4871-97aa-1b89f10f256b",
+                    }),
+                    HIGHLIGHTED = T("PIP_UI_Button_Left_Tall_Highlighted", {
+                        GUID = "c7e00f44-0903-44d4-82e0-ef5e3d175514",
+                    }),
+                    PRESSED = T("PIP_UI_Button_Left_Tall_Pressed", {
+                        GUID = "2de4778f-ba52-4b5e-a3c3-fdbaec962226",
+                    }),
+                },
+                RIGHT_TALL = {
+                    IDLE = T("PIP_UI_Button_Right_Tall_Idle", {
+                        GUID = "8e4a4eae-988e-4c3c-af91-c31bd57189b9",
+                    }),
+                    HIGHLIGHTED = T("PIP_UI_Button_Right_Tall_Highlighted", {
+                        GUID = "ab6a14ea-5127-408a-a9d2-3870b50c4d91",
+                    }),
+                    PRESSED = T("PIP_UI_Button_Right_Tall_Pressed", {
+                        GUID = "c52f9fe3-d889-494f-9e2b-6e26dedc44a0",
                     }),
                 },
                 DIAMOND = {
@@ -83,6 +127,43 @@ local Textures = {
                             GUID = "8af7c414-19dd-496c-94ad-e9a0d50494b2",
                         }),
                     },
+                    DOWN = {
+                        IDLE = T("PIP_UI_Button_SquareDown_Idle", {
+                            GUID = "05dc9fee-0ba6-44ed-ac2f-b64037c14931",
+                        }),
+                        HIGHLIGHTED = T("PIP_UI_Button_SquareDown_Highlighted", {
+                            GUID = "de68367b-e9be-4eae-b559-a14e897ff0d1",
+                        }),
+                        PRESSED = T("PIP_UI_Button_SquareDown_Pressed", {
+                            GUID = "95ef3563-5b8b-483e-b0ab-0de2cdcd36ef",
+                        }),
+                    },
+                },
+            },
+            EDIT = {
+                GREEN = {
+                    IDLE = T("PIP_UI_Button_Edit_Green_Idle", {
+                        GUID = "126ab9c7-5717-46b8-b726-065b518df0e6",
+                    }),
+                    HIGHLIGHTED = T("PIP_UI_Button_Edit_Green_Highlighted", {
+                        GUID = "7e15aadc-ef13-4d8a-a37f-841de7fad035",
+                    }),
+                    PRESSED = T("PIP_UI_Button_Edit_Green_Pressed", {
+                        GUID = "c1319247-f81f-45c9-96ec-130e7eaad1bb",
+                    }),
+                },
+            },
+            SAVE = {
+                GREEN = {
+                    IDLE = T("PIP_UI_Button_Save_Green_Idle", {
+                        GUID = "8cac6c66-63c3-4743-bde8-a509414594fe",
+                    }),
+                    HIGHLIGHTED = T("PIP_UI_Button_Save_Green_Highlighted", {
+                        GUID = "a71733c0-6c38-406a-a058-f3c03ae55fe0",
+                    }),
+                    PRESSED = T("PIP_UI_Button_Save_Green_Pressed", {
+                        GUID = "5002baf8-dac8-45e6-88d8-795266b2e2d3",
+                    }),
                 },
             },
             BLUE = {
@@ -99,6 +180,38 @@ local Textures = {
                     GUID = "b3baf8d3-0421-4867-b126-974846e508bf",
                 }),
             },
+            GREEN = {
+                MEDIUM = {
+                    IDLE = T("PIP_UI_Button_Green_Medium_Idle", {
+                        GUID = "a388f257-880b-4a80-9293-fcca1d443e37",
+                    }),
+                    HIGHLIGHTED = T("PIP_UI_Button_Green_Medium_Highlighted", {
+                        GUID = "fdc40399-222d-4393-9b20-273b94170e5e",
+                    }),
+                    PRESSED = T("PIP_UI_Button_Green_Medium_Pressed", {
+                        GUID = "c637b928-73d7-4e5f-9978-f0f7d7449ae5",
+                    }),
+                    DISABLED = T("PIP_UI_Button_Green_Medium_Disabled", {
+                        GUID = "ce98d1cc-20e0-4256-9f52-953b9635678f",
+                    }),
+                }
+            },
+            SQUARE = {
+                STONE = {
+                    IDLE = T("PIP_UI_Button_Stone_Square_Idle", {
+                        GUID = "d799321b-e513-48c4-bef1-13b9fe40a123",
+                    }),
+                    HIGHLIGHTED = T("PIP_UI_Button_Stone_Square_Highlighted", {
+                        GUID = "3b19d309-1e72-4590-b7b8-812e6e95f0f3",
+                    }),
+                    PRESSED = T("PIP_UI_Button_Stone_Square_Pressed", {
+                        GUID = "ba9d1435-8e2b-4b93-a0df-e1af1d28c72e",
+                    }),
+                    DISABLED = T("PIP_UI_Button_Stone_Square_Disabled", {
+                        GUID = "a7944143-9a31-43b0-99a2-affd4cf13391",
+                    }),
+                },
+            },
             CLOSE = {
                 IDLE = T("PIP_UI_Button_Close_Idle", {
                     GUID = "08ce5ded-13cc-403c-a558-2abea90bd4dc",
@@ -108,6 +221,17 @@ local Textures = {
                 }),
                 PRESSED = T("PIP_UI_Button_Close_Pressed", {
                     GUID = "11960ecb-8a92-40d6-81ce-8d0aa0273a16",
+                }),
+            },
+            CLOSE_GREEN = {
+                IDLE = T("PIP_UI_Button_Close_Green_Idle", {
+                    GUID = "74be9fd3-88dd-4d38-a5ab-f93a04ba4dad",
+                }),
+                HIGHLIGHTED = T("PIP_UI_Button_Close_Green_Highlighted", {
+                    GUID = "58ad23f9-4556-45d6-9564-8dd45b7df5fc",
+                }),
+                PRESSED = T("PIP_UI_Button_Close_Green_Pressed", {
+                    GUID = "8c1d038d-dd8a-4029-83f5-859faf881961",
                 }),
             },
             BROWN = {
@@ -234,8 +358,14 @@ local Textures = {
                     BACKGROUND = T("PIP_UI_StateButton_SimpleCheckbox_Background", {
                         GUID = "0e9af3d9-e5be-4bbe-85a6-4a4783efc4c5",
                     }),
+                    BACKGROUND_HIGHLIGHTED = T("PIP_UI_StateButton_SimpleCheckbox_Background_Highlighted", {
+                        GUID = "d187a5d4-368d-496a-8cc1-3e5c87407b18",
+                    }),
                     CHECKMARK = T("PIP_UI_StateButton_SimpleCheckbox_Checkmark", {
                         GUID = "9be5ac27-29c0-405c-91d7-a78c3105282e",
+                    }),
+                    CHECKMARK_HIGHLIGHTED = T("PIP_UI_StateButton_SimpleCheckbox_Checkmark_Highlighted", {
+                        GUID = "74bae148-ef0d-4aaf-9115-45cf8cf5ceae",
                     }),
                 },
             },
@@ -254,6 +384,20 @@ local Textures = {
                 WHITE = T("PIP_UI_Frame_Portrait_White", {
                     GUID = "63bdce5b-41f5-4ea0-bd74-6fbc73b851f1",
                 }),
+                SMALL = {
+                    IDLE = T("PIP_UI_Frame_Portrait_Small_Idle", {
+                        GUID = "86b41e73-4a68-4f3f-bbb2-8446e17de963",
+                    }),
+                    HIGHLIGHTED = T("PIP_UI_Frame_Portrait_Small_Highlighted", {
+                        GUID = "e11194b4-0027-44a1-90eb-ed878389b725",
+                    }),
+                    PRESSED = T("PIP_UI_Frame_Portrait_Small_Pressed", {
+                        GUID = "8dd6f901-c11b-416c-b9db-232c917dcbe4",
+                    }),
+                    DISABLED = T("PIP_UI_Frame_Portrait_Small_Disabled", {
+                        GUID = "bf0b1a31-2f5c-42c9-8b9b-502f5a290c68",
+                    }),
+                },
             },
             RARITY = {
                 UNCOMMON = T("PIP_UI_Frame_Rarity_Uncommon", {
@@ -277,6 +421,9 @@ local Textures = {
             },
             WHITE_TATTERED = T("PIP_UI_Frame_White_Tattered", {
                 GUID = "aa2a1c49-b36f-4c59-b218-647e630e8763",
+            }),
+            WHITE_GLOWING = T("PIP_UI_Frame_White_Glowing", {
+                GUID = "7399d28f-cc22-494b-be9c-fb0843fd74c7",
             }),
             BROWN = T("PIP_UI_Frame_Brown", {
                 GUID = "e88f114a-ecd8-4560-960d-23d215977609",
@@ -329,6 +476,50 @@ local Textures = {
         MISC = {
             BOOKMARK = T("PIP_UI_Misc_Bookmark", {
                 GUID = "17729ed3-cf17-4654-978a-5c3e0ac8f7ed",
+            }),
+            BLACK_BLUR_DOT = T("PIP_UI_Misc_BlackBlurDot", {
+                GUID = "df749401-f928-4712-986a-4a57d91bf5f9",
+            }),
+            TEAM_FABRICS = {
+                LARGE = {
+                    IDLE = {
+                        BLACK = T("PIP_UI_Misc_Fabric_Team_Black_Large", {
+                            GUID = "0307d1b8-fba5-40b2-a277-2d9385126fd4",
+                        }),
+                        BLUE = T("PIP_UI_Misc_Fabric_Team_Blue_Large", {
+                            GUID = "8d7dc265-4376-4b65-926a-b91f2f0c055a",
+                        }),
+                        GREEN = T("PIP_UI_Misc_Fabric_Team_Green_Large", {
+                            GUID = "00b7f0d4-9519-4560-b4cf-c17b74233077",
+                        }),
+                        RED = T("PIP_UI_Misc_Fabric_Team_Red_Large", {
+                            GUID = "52df600c-efbc-429c-bb63-93ec1afd8efe",
+                        }),
+                        YELLOW = T("PIP_UI_Misc_Fabric_Team_Yellow_Large", {
+                            GUID = "ee58272d-4406-4f2e-9095-9acd12571934",
+                        }),
+                    },
+                    HIGHLIGHTED = {
+                        BLACK = T("PIP_UI_Misc_Fabric_Team_Black_Large_Highlighted", {
+                            GUID = "a412a2c4-4b3d-4138-a8d5-411b9c49521a",
+                        }),
+                        BLUE = T("PIP_UI_Misc_Fabric_Team_Blue_Large_Highlighted", {
+                            GUID = "dc2d9769-b750-4801-a044-986f43beb79b",
+                        }),
+                        GREEN = T("PIP_UI_Misc_Fabric_Team_Green_Large_Highlighted", {
+                            GUID = "660f2776-49cb-4856-9aae-55e442dd3d56",
+                        }),
+                        RED = T("PIP_UI_Misc_Fabric_Team_Red_Large_Highlighted", {
+                            GUID = "feb778e5-2cac-491c-b61f-5da3bbcee960",
+                        }),
+                        YELLOW = T("PIP_UI_Misc_Fabric_Team_Yellow_Large_Highlighted", {
+                            GUID = "7c48c84c-2201-44fc-9979-5a84d12f2844",
+                        }),
+                    },
+                },
+            },
+            ORANGE_HALO = T("PIP_UI_Misc_OrangeHalo", {
+                GUID = "c1eb5800-afd0-4345-8180-375d35cde8bb",
             }),
         },
     },
