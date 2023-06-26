@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<save>
+    <header version="2" />
+    <version major="3" minor="6" revision="6" build="0" />
+    <region id="IconUVList">
+        <node id="root">
+            <children>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_SkillSchool_Aerotheurge_Colored" type="22" />
+                    <attribute id="U1" value="0.000976563" type="6" />
+                    <attribute id="U2" value="0.0849609" type="6" />
+                    <attribute id="V1" value="0.000976563" type="6" />
+                    <attribute id="V2" value="0.0849609" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_SkillSchool_Aerotheurge_White" type="22" />
+                    <attribute id="U1" value="0.0869141" type="6" />
+                    <attribute id="U2" value="0.170898" type="6" />
+                    <attribute id="V1" value="0.000976563" type="6" />
+                    <attribute id="V2" value="0.0849609" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_SkillSchool_Geomancer_Colored" type="22" />
+                    <attribute id="U1" value="0.172852" type="6" />
+                    <attribute id="U2" value="0.256836" type="6" />
+                    <attribute id="V1" value="0.000976563" type="6" />
+                    <attribute id="V2" value="0.0849609" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_SkillSchool_Geomancer_White" type="22" />
+                    <attribute id="U1" value="0.258789" type="6" />
+                    <attribute id="U2" value="0.342773" type="6" />
+                    <attribute id="V1" value="0.000976563" type="6" />
+                    <attribute id="V2" value="0.0849609" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_SkillSchool_Huntsman_Colored" type="22" />
+                    <attribute id="U1" value="0.344727" type="6" />
+                    <attribute id="U2" value="0.428711" type="6" />
+                    <attribute id="V1" value="0.000976563" type="6" />
+                    <attribute id="V2" value="0.0849609" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_SkillSchool_Huntsman_White" type="22" />
+                    <attribute id="U1" value="0.430664" type="6" />
+                    <attribute id="U2" value="0.514648" type="6" />
+                    <attribute id="V1" value="0.000976563" type="6" />
+                    <attribute id="V2" value="0.0849609" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_SkillSchool_Hydrosophist_Colored" type="22" />
+                    <attribute id="U1" value="0.516602" type="6" />
+                    <attribute id="U2" value="0.600586" type="6" />
+                    <attribute id="V1" value="0.000976563" type="6" />
+                    <attribute id="V2" value="0.0849609" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_SkillSchool_Hydrosophist_White" type="22" />
+                    <attribute id="U1" value="0.602539" type="6" />
+                    <attribute id="U2" value="0.686523" type="6" />
+                    <attribute id="V1" value="0.000976563" type="6" />
+                    <attribute id="V2" value="0.0849609" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_SkillSchool_Kinetics_Colored" type="22" />
+                    <attribute id="U1" value="0.688477" type="6" />
+                    <attribute id="U2" value="0.772461" type="6" />
+                    <attribute id="V1" value="0.000976563" type="6" />
+                    <attribute id="V2" value="0.0849609" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_SkillSchool_Kinetics_White" type="22" />
+                    <attribute id="U1" value="0.774414" type="6" />
+                    <attribute id="U2" value="0.858398" type="6" />
+                    <attribute id="V1" value="0.000976563" type="6" />
+                    <attribute id="V2" value="0.0849609" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_SkillSchool_Necromancer_Colored" type="22" />
+                    <attribute id="U1" value="0.860352" type="6" />
+                    <attribute id="U2" value="0.944336" type="6" />
+                    <attribute id="V1" value="0.000976563" type="6" />
+                    <attribute id="V2" value="0.0849609" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_SkillSchool_Necromancer_White" type="22" />
+                    <attribute id="U1" value="0.000976563" type="6" />
+                    <attribute id="U2" value="0.0849609" type="6" />
+                    <attribute id="V1" value="0.0869141" type="6" />
+                    <attribute id="V2" value="0.170898" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_SkillSchool_Polymorph_Colored" type="22" />
+                    <attribute id="U1" value="0.0869141" type="6" />
+                    <attribute id="U2" value="0.170898" type="6" />
+                    <attribute id="V1" value="0.0869141" type="6" />
+                    <attribute id="V2" value="0.170898" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_SkillSchool_Polymorph_White" type="22" />
+                    <attribute id="U1" value="0.172852" type="6" />
+                    <attribute id="U2" value="0.256836" type="6" />
+                    <attribute id="V1" value="0.0869141" type="6" />
+                    <attribute id="V2" value="0.170898" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_SkillSchool_Pyrokinetic_Colored" type="22" />
+                    <attribute id="U1" value="0.258789" type="6" />
+                    <attribute id="U2" value="0.342773" type="6" />
+                    <attribute id="V1" value="0.0869141" type="6" />
+                    <attribute id="V2" value="0.170898" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_SkillSchool_Pyrokinetic_White" type="22" />
+                    <attribute id="U1" value="0.344727" type="6" />
+                    <attribute id="U2" value="0.428711" type="6" />
+                    <attribute id="V1" value="0.0869141" type="6" />
+                    <attribute id="V2" value="0.170898" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_SkillSchool_Scoundrel_Colored" type="22" />
+                    <attribute id="U1" value="0.430664" type="6" />
+                    <attribute id="U2" value="0.514648" type="6" />
+                    <attribute id="V1" value="0.0869141" type="6" />
+                    <attribute id="V2" value="0.170898" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_SkillSchool_Scoundrel_White" type="22" />
+                    <attribute id="U1" value="0.516602" type="6" />
+                    <attribute id="U2" value="0.600586" type="6" />
+                    <attribute id="V1" value="0.0869141" type="6" />
+                    <attribute id="V2" value="0.170898" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_SkillSchool_Sourcery_Colored" type="22" />
+                    <attribute id="U1" value="0.602539" type="6" />
+                    <attribute id="U2" value="0.686523" type="6" />
+                    <attribute id="V1" value="0.0869141" type="6" />
+                    <attribute id="V2" value="0.170898" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_SkillSchool_Sourcery_White" type="22" />
+                    <attribute id="U1" value="0.688477" type="6" />
+                    <attribute id="U2" value="0.772461" type="6" />
+                    <attribute id="V1" value="0.0869141" type="6" />
+                    <attribute id="V2" value="0.170898" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_SkillSchool_Special_Colored" type="22" />
+                    <attribute id="U1" value="0.774414" type="6" />
+                    <attribute id="U2" value="0.858398" type="6" />
+                    <attribute id="V1" value="0.0869141" type="6" />
+                    <attribute id="V2" value="0.170898" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_SkillSchool_Summoning_Colored" type="22" />
+                    <attribute id="U1" value="0.860352" type="6" />
+                    <attribute id="U2" value="0.944336" type="6" />
+                    <attribute id="V1" value="0.0869141" type="6" />
+                    <attribute id="V2" value="0.170898" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_SkillSchool_Summoning_White" type="22" />
+                    <attribute id="U1" value="0.000976563" type="6" />
+                    <attribute id="U2" value="0.0849609" type="6" />
+                    <attribute id="V1" value="0.172852" type="6" />
+                    <attribute id="V2" value="0.256836" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_SkillSchool_Warfare_Colored" type="22" />
+                    <attribute id="U1" value="0.0869141" type="6" />
+                    <attribute id="U2" value="0.170898" type="6" />
+                    <attribute id="V1" value="0.172852" type="6" />
+                    <attribute id="V2" value="0.256836" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_SkillSchool_Warfare_White" type="22" />
+                    <attribute id="U1" value="0.172852" type="6" />
+                    <attribute id="U2" value="0.256836" type="6" />
+                    <attribute id="V1" value="0.172852" type="6" />
+                    <attribute id="V2" value="0.256836" type="6" />
+                </node>
+            </children>
+        </node>
+    </region>
+    <region id="TextureAtlasInfo">
+        <node id="root">
+            <children>
+                <node id="TextureAtlasIconSize">
+                    <attribute id="Height" value="44" type="4" />
+                    <attribute id="Width" value="44" type="4" />
+                </node>
+                <node id="TextureAtlasPath">
+                    <attribute id="Path" value="Assets/Textures/Icons/PIP_UI_Icons_44x.dds" type="20" />
+                    <attribute id="UUID" value="aed20aeb-756c-457f-8d88-30020e413ef4" type="22" />
+                </node>
+                <node id="TextureAtlasTextureSize">
+                    <attribute id="Height" value="512" type="4" />
+                    <attribute id="Width" value="512" type="4" />
+                </node>
+            </children>
+        </node>
+    </region>
+</save>

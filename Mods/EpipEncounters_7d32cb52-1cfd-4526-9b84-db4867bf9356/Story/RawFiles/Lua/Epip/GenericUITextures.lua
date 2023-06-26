@@ -330,7 +330,11 @@ local Textures = {
             BOOKMARK = T("PIP_UI_Misc_Bookmark", {
                 GUID = "17729ed3-cf17-4654-978a-5c3e0ac8f7ed",
             }),
-        }
+        },
+    },
+    ICONS = {
+        SKILL_SCHOOL_WHITE_TEMPLATE = "PIP_UI_Icon_SkillSchool_%s_White", -- 44x
+        SKILL_SCHOOL_COLORED_TEMPLATE = "PIP_UI_Icon_SkillSchool_%s_Colored" -- 44x
     },
 }
 Epip.RegisterFeature("GenericUITextures", Textures)
