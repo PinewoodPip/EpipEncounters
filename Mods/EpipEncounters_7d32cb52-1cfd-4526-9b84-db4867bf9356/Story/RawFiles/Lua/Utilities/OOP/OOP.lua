@@ -88,12 +88,14 @@ end
 ---@param className string
 ---@return boolean
 function Class:ImplementsClass(className)
-    local implements = false
+    local implements = self:GetClassName() == className
 
-    for _,class in ipairs(self:GetParentClasses()) do
-        if class:GetClassName() == className or class:ImplementsClass(className) then
-            implements = true
-            break
+    if not implements then
+        for _,class in ipairs(self:GetParentClasses()) do
+            if class:GetClassName() == className or class:ImplementsClass(className) then
+                implements = true
+                break
+            end
         end
     end
 
