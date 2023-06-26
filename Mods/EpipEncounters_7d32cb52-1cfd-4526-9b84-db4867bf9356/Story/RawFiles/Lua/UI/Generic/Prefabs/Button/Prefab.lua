@@ -11,6 +11,7 @@ local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 ---@field _Activated boolean
 ---@field Root GenericUI_Element_Texture
 ---@field ActivatedOverlay GenericUI_Element_Texture? Only present if using a style that is a state button.
+---@field Icon GenericUI_Element_IggyIcon? Only present if an icon was set.
 ---@field Label GenericUI_Prefab_Text
 local Button = {
     DEFAULT_SOUND = "UI_Gen_XButton_Click",
@@ -91,6 +92,20 @@ function Button:SetLabel(label)
     end
 
     element:SetVisible(label ~= "")
+end
+
+---Sets an icon for the button.
+---@param icon icon
+---@param size Vector2
+function Button:SetIcon(icon, size)
+    local element = self.Icon
+    if not element then
+        element = self:CreateElement("Icon", "GenericUI_Element_IggyIcon", self.Root)
+        self.Icon = element
+    end
+
+    element:SetIcon(icon, size:unpack())
+    element:SetPositionRelativeToParent("Center", 0, 0)
 end
 
 ---Sets the enabled state of the button.
