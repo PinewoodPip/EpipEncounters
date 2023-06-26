@@ -7,6 +7,8 @@ local Text = {
 
     Events = {
         TextEdited = {}, ---@type Event<GenericUI_Element_Text_Event_Changed>
+        Focused = {}, ---@type Event<EmptyEvent>
+        Unfocused = {}, ---@type Event<EmptyEvent>
     }
 }
 Generic.RegisterPrefab("GenericUI_Prefab_Text", Text)
@@ -37,6 +39,12 @@ function Text.Create(ui, id, parent, text, alignType, size)
     -- Forward events
     textElement.Events.Changed:Subscribe(function (ev)
         obj.Events.TextEdited:Throw(ev)
+    end)
+    textElement.Events.Focused:Subscribe(function (ev)
+        obj.Events.Focused:Throw(ev)
+    end)
+    textElement.Events.Unfocused:Subscribe(function (ev)
+        obj.Events.Unfocused:Throw(ev)
     end)
 
     return obj

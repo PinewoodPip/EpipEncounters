@@ -183,6 +183,8 @@ package Elements
                 ExternalInterface.call("inputFocus");
 
                 base.focusedElement = this; // TODO remove?
+
+                ExternalInterface.call("Text_Focused", this.stringID);
             }
         }
         
@@ -190,6 +192,8 @@ package Elements
         {
             this.text_txt.removeEventListener(KeyboardEvent.KEY_DOWN, this.inputHandler);
             ExternalInterface.call("inputFocusLost");
+
+            ExternalInterface.call("Text_Unfocused", this.stringID);
         }
         
         private function strReplace(param1:String, param2:String, param3:String) : String

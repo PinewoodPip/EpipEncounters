@@ -20,6 +20,8 @@ local _Text = Text
 ---@class GenericUI_Element_Text_Events : GenericUI_Element_Events
 Text.Events = {
     Changed = {}, ---@type Event<GenericUI_Element_Text_Event_Changed>
+    Focused = {}, ---@type Event<EmptyEvent>
+    Unfocused = {}, ---@type Event<EmptyEvent>
 }
 Generic.Inherit(Text, Generic._Element)
 

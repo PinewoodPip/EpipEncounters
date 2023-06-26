@@ -262,6 +262,8 @@ function Generic.Create(id)
 
     -- Text
     Generic.ForwardUICall(ui, "Text_Changed", "Changed", {"Text"})
+    Generic.ForwardUICall(ui, "Text_Focused", "Focused")
+    Generic.ForwardUICall(ui, "Text_Unfocused", "Unfocused")
 
     -- Button
     Generic.ForwardUICall(ui, "Button_Pressed", "Pressed")
