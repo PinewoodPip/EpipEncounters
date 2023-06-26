@@ -128,6 +128,21 @@ function Button:SetActivated(activated)
     self:_UpdateActivatedOverlay()
 end
 
+---Sets the tooltip of the element.
+---@param type TooltipLib_TooltipType
+---@param tooltip any TODO document
+function Button:SetTooltip(type, tooltip)
+    self.Root:SetTooltip(type, tooltip)
+end
+
+---Sets the relative position of the button.
+---@param position "Center"|"TopLeft"|"TopRight"|"Top"|"Left"|"Right"|"BottomLeft"|"Bottom"|"BottomRight" TODO extract alias
+---@param horizontalOffset number?
+---@param verticalOffset number?
+function Button:SetPositionRelativeToParent(position, horizontalOffset, verticalOffset)
+    self.Root:SetPositionRelativeToParent(position, horizontalOffset, verticalOffset)
+end
+
 ---Updates the texture of the button based on its state.
 function Button:_UpdateTextures()
     local state = self._State
