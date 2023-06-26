@@ -40,6 +40,7 @@ Generic.RegisterPrefab("GenericUI_Prefab_Button", Button)
 ---@field Size Vector2? Defaults to texture size.
 ---@field Sound string? Sound effect to play when the button is pressed. Defaults to `DEFAULT_SOUND`.
 ---@field ActiveOverlay TextureLib_Texture? If present, the button will be considered a state button. Used when the button is activated.
+---@field HighlightedActiveOverlay TextureLib_Texture? Like ActiveOverlay, but used when the button is in the highlighted state.
 
 ---------------------------------------------
 -- METHODS
@@ -192,7 +193,9 @@ function Button:_UpdateActivatedOverlay()
     end
 
     if self:_IsStateButton() then
-        overlay:SetTexture(self._Style.ActiveOverlay)
+        local texture = self._State == "Highlighted" and self._Style.HighlightedActiveOverlay or self._Style.ActiveOverlay
+
+        overlay:SetTexture(texture)
         overlay:SetPositionRelativeToParent("Center")
         overlay:SetVisible(self._Activated)
     elseif overlay then

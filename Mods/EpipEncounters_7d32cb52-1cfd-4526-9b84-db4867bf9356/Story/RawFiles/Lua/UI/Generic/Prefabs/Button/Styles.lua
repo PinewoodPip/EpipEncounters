@@ -151,7 +151,9 @@ local styles = {
     -- State Buttons
     SimpleCheckbox = {
         IdleTexture = StateButtonTextures.CHECKBOXES.SIMPLE.BACKGROUND,
+        HighlightedTexture = StateButtonTextures.CHECKBOXES.SIMPLE.BACKGROUND_HIGHLIGHTED,
         ActiveOverlay = StateButtonTextures.CHECKBOXES.SIMPLE.CHECKMARK,
+        HighlightedActiveOverlay = StateButtonTextures.CHECKBOXES.SIMPLE.CHECKMARK_HIGHLIGHTED,
     },
     RoundCheckbox = {
         IdleTexture = StateButtonTextures.CHECKBOXES.ROUND.BACKGROUND,
