@@ -233,6 +233,7 @@ end
 ---Registers a TSK.
 ---@param handle TranslatedStringHandle
 ---@param tsk Library_TranslatedString ModTable, FeatureID and Handle fields are auto-initialized.
+---@return Library_TranslatedString
 function Library:RegisterTranslatedString(handle, tsk)
     local localKey = tsk.Handle and handle or tsk.LocalKey -- If Handle is manually set, use table key as localKey
 
@@ -244,7 +245,9 @@ function Library:RegisterTranslatedString(handle, tsk)
         self._localTranslatedStringKeys[localKey] = handle
     end
 
-    Text.RegisterTranslatedString(tsk)
+    local registeredTSK = Text.RegisterTranslatedString(tsk) ---@cast registeredTSK Library_TranslatedString
+
+    return registeredTSK
 end
 
 ---------------------------------------------
