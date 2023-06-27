@@ -7,21 +7,6 @@ local action = DebugCheats.GetAction("CopyIdentifier")
 ---@type {Type: "Skill"|"Item"|"Character", Identifier: any}?
 local lastEntity = nil
 
-local function GetEntity()
-    local data = lastEntity
-    local entity
-
-    if data then
-        local entityType = data.Type
-
-        if entityType == "Item" then
-            entity = Item.Get(data.Identifier)
-        end
-    end
-
-    return entity
-end
-
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
