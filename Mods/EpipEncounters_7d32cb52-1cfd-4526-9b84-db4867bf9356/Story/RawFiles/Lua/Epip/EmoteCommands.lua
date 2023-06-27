@@ -1,4 +1,5 @@
 
+---@type Feature
 local EmoteCommands = {
     EMOTES = {
         angry = "emotion_angry",
@@ -28,9 +29,9 @@ local EmoteCommands = {
         mental = "stillmental"
     },
 }
-Epip.AddFeature("EmoteCommands", "EmoteCommands", EmoteCommands)
+Epip.RegisterFeature("EmoteCommands", EmoteCommands)
 
-local Commands = Epip.Features.ChatCommands
+local Commands = Epip.GetFeature("Feature_ChatCommands")
 
 -- TODO use hook
 ---@return string
@@ -52,7 +53,7 @@ end
 
 local EmoteHandler = nil
 if Ext.IsClient() then
-    EmoteHandler = function (args, char)
+    EmoteHandler = function (args, _)
         local emote = args[1]
         local animation = EmoteCommands.EMOTES[emote]
 
@@ -66,7 +67,7 @@ else
         local animation = EmoteCommands.EMOTES[emote]
 
         if animation then
-            PlayAnimation(char.MyGuid, animation)
+            Osiris.PlayAnimation(char, animation)
         end
     end
 end

@@ -1,4 +1,5 @@
 
+---@class Feature_ChatCommands : Feature
 local Commands = {
     COMMANDS = {},
     Events = {
@@ -6,8 +7,11 @@ local Commands = {
         CommandSent = {},
     },
 }
-Epip.AddFeature("ChatCommands", "ChatCommands", Commands)
-Epip.Features.ChatCommands = Commands
+Epip.RegisterFeature("ChatCommands", Commands)
+
+---------------------------------------------
+-- CLASSES
+---------------------------------------------
 
 ---@class ChatCommand
 ---@field Name string

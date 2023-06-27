@@ -1,5 +1,5 @@
 
-local Commands = Epip.Features.ChatCommands
+local Commands = Epip.GetFeature("Feature_ChatCommands")
 
 ---------------------------------------------
 -- METHODS
@@ -31,6 +31,6 @@ Commands.RegisterCommand({Name = "rp", Description = "Say a message over your ch
     end
 
     if msg then
-        DisplayText(char.MyGuid, msg)
+        Osiris.DisplayText(char, msg)
     end
 end)

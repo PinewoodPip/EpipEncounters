@@ -1,5 +1,5 @@
 
-local Chat = Epip.Features.ChatCommands
+local Chat = Epip.GetFeature("Feature_ChatCommands")
 Chat.UI = Client.UI.ChatLog
 
 ---------------------------------------------
@@ -65,7 +65,7 @@ local function ListCommandHelp(command, useHelp)
 end
 
 -- Built-in help command.
-Chat.RegisterCommand({Name = "help", Description = "Show a list of commands.",}, function (args, char)
+Chat.RegisterCommand({Name = "help", Description = "Show a list of commands.",}, function (args, _)
 
     -- List all commands
     if #args == 0 then
