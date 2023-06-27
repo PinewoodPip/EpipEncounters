@@ -171,6 +171,7 @@ function OOP.RegisterClass(className, class, parentClasses)
 end
 
 ---Returns the base table for a class.
+---Throws if the class is not registered.
 ---@generic T
 ---@param className `T`
 ---@return `T`
@@ -189,20 +190,19 @@ end
 ---@param className string?
 ---@return boolean
 function OOP.IsClass(tbl, className)
-    local isClassed = false
+    local isClass = false
     
-    if type(tbl) == "table" then
-        if tbl.__name then
-            local class = OOP.GetClass(tbl.__name) ~= nil
+    if type(tbl) == "table" and tbl.__name then
+        local result, class = pcall(OOP.GetClass, tbl.__name)
+        if result then
             local isCorrectClass = className == nil or class.__name == className
-
             if isCorrectClass then
-                isClassed = true
+                isClass = true
             end
         end
     end
 
-    return isClassed
+    return isClass
 end
 
 ---Sets a table's metatable.
