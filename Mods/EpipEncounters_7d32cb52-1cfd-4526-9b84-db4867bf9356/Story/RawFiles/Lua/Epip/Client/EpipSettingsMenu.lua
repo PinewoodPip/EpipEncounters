@@ -275,6 +275,7 @@ local tabs = {
             {Module = "EpipEncounters_TooltipAdjustments", ID = "RuneCraftingHint"},
             {Module = "EpipEncounters_TooltipAdjustments", ID = "SurfaceTooltips"},
             {Module = "EpipEncounters_TooltipAdjustments", ID = "WeaponRangeDeltamods"},
+            {Module = "EpipEncounters_TooltipAdjustments", ID = "RemoveSetPrefixes"},
         }
     }
 }

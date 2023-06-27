@@ -683,33 +683,6 @@ function TooltipAdjustments.AddBaseDeltamodTierDisplay(item, tooltip)
     end
 end
 
--- The inconsistencies are killing me
-local SET_DELTAMOD_PATTERN = '(Set :)<font size="17"> '
-local SET_ALL_RES_PATTERN = '(Set )+[0-9]* to all'
-local SET_LIFESTEAL_PATTERN = '(Set )+[0-9]*%% Lifesteal'
-
--- Remove the word "Set" from scripted deltamods.
-function TooltipAdjustments.RemoveSetDeltamodsText(item, tooltip)
-
-    local elements = tooltip:GetElements("ExtraProperties")
-
-    for i,v in pairs(elements) do
-        local match = v.Label:match(SET_DELTAMOD_PATTERN) or v.Label:match(SET_ALL_RES_PATTERN) or v.Label:match(SET_LIFESTEAL_PATTERN)
-        
-        if match then
-            v.Label = v.Label:gsub(match, '')
-
-            -- remove trailing dot
-            -- local trailingDotMatch = v.Label:match("(.*)%.<font>")
-            
-            -- if trailingDotMatch then
-            --     v.Label = trailingDotMatch
-            -- end
-            
-        end
-    end
-end
-
 -- Show partial AP used while hovering on the ground to move.
 ---@param text string
 ---@return string
@@ -900,7 +873,6 @@ local function OnItemTooltipRender(item, tooltip)
     TooltipAdjustments.ChangeArtifactRarityDisplay(item, tooltip)
     TooltipAdjustments.AddBaseDeltamodTierDisplay(item, tooltip)
     TooltipAdjustments.AddDeltamodsHandledWarning(item, tooltip)
-    TooltipAdjustments.RemoveSetDeltamodsText(item, tooltip)
 
     -- TooltipAdjustments.TestElements(item, tooltip)
 end

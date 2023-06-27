@@ -370,6 +370,7 @@ LOAD_ORDER = {
             "Epip/TooltipAdjustments/Client_AstrologerFix.lua",
             "Epip/TooltipAdjustments/Client_SurfaceTooltips.lua",
             "Epip/TooltipAdjustments/Client_DeltaModTiers.lua",
+            "Epip/TooltipAdjustments/Client_RemoveSetPrefix.lua",
         },
     },
 
