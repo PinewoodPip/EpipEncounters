@@ -19,6 +19,7 @@ local Slot = {
     Object = nil, ---@type GenericUI_Prefab_HotbarSlot_Object
 
     ICON_SIZE = V(52, 52),
+    DRAG_SOUND = "UI_Game_PartyFormation_PickUp",
 
     Events = {
         ObjectDraggedIn = {}, ---@type Event<GenericUI_Prefab_HotbarSlot_Event_ObjectDraggedIn>
@@ -485,8 +486,10 @@ function Slot:_OnSlotDragStarted()
             Ext.UI.GetDragDrop():StartDraggingObject(1, item.Handle)
         end
     
-        -- Play dragging sound
-        self.UI:PlaySound("UI_Game_PartyFormation_PickUp")
+        -- Play dragging sound if there was an object slotted
+        if obj.Type ~= "None" then
+            self.UI:PlaySound(self.DRAG_SOUND)
+        end
     
         if self._ClearAfterDrag then
             self:Clear()
