@@ -8,6 +8,8 @@ local Tooltip = Client.Tooltip
 
 ---@alias GenericUI_ElementType "GenericUI_Element_Empty"|"GenericUI_Element_TiledBackground"|"GenericUI_Element_Text"|"GenericUI_Element_IggyIcon"|"GenericUI_Element_Button"|"GenericUI_Element_VerticalList"|"GenericUI_Element_HorizontalList"|"GenericUI_Element_ScrollList"|"GenericUI_Element_StateButton"|"GenericUI_Element_Divider"|"GenericUI_Element_Slot"|"GenericUI_Element_ComboBox"|"GenericUI_Element_Slider"|"GenericUI_Element_Grid"|"GenericUI_Element_Color"|"GenericUI_Element_Texture"
 
+---@alias GenericUI_Element_RelativePosition "Center"|"TopLeft"|"TopRight"|"Top"|"Left"|"Right"|"BottomLeft"|"Bottom"|"BottomRight"
+
 ---@class GenericUI_ContainerElement : GenericUI_Element
 ---@field ClearElements fun(self) Removes all elements from the container.
 
@@ -17,7 +19,7 @@ local Tooltip = Client.Tooltip
 ---@field ParentID string Empty string for elements in the root.
 ---@field Type string
 ---@field Tooltip (GenericUI_ElementTooltip|string)? Will be rendered upon the element being hovered. Strings are rendered as unformatted tooltips.
----@field SetPositionRelativeToParent fun(self:GenericUI_Element, position:"Center"|"TopLeft"|"TopRight"|"Top"|"Left"|"Right"|"BottomLeft"|"Bottom"|"BottomRight", horizontalOffset:number?, verticalOffset:number?)
+---@field SetPositionRelativeToParent fun(self:GenericUI_Element, position:GenericUI_Element_RelativePosition, horizontalOffset:number?, verticalOffset:number?)
 ---@field Move fun(self:GenericUI_Element, x:number, y:number) Moves the element a certain amount of pixels from its current position.
 ---@field Events GenericUI_Element_Events
 ---@field _Tooltip GenericUI_ElementTooltip

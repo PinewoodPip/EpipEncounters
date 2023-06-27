@@ -260,6 +260,7 @@ LOAD_ORDER = {
             "UI/Generic/Elements/Texture.lua",
 
             "UI/Generic/Interfaces/Stylable.lua",
+            "UI/Generic/Interfaces/Elementable.lua",
 
             "UI/Generic/Prefabs/HotbarSlot.lua",
             "UI/Generic/Prefabs/Spinner.lua",

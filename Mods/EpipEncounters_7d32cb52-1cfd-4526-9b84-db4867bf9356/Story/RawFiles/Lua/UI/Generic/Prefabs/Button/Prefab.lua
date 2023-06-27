@@ -4,7 +4,7 @@ local Generic = Client.UI.Generic
 local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 
 ---Prefab for a button.
----@class GenericUI_Prefab_Button : GenericUI_Prefab, GenericUI_I_Stylable
+---@class GenericUI_Prefab_Button : GenericUI_Prefab, GenericUI_I_Stylable, GenericUI_I_Elementable
 ---@field _State GenericUI_Prefab_Button_InteractionState
 ---@field _Style GenericUI_Prefab_Button_Style
 ---@field _Disabled boolean
@@ -20,7 +20,7 @@ local Button = {
         Pressed = {}, ---@type Event<EmptyEvent>
     },
 }
-Generic:RegisterClass("GenericUI_Prefab_Button", Button, {"GenericUI_Prefab", "GenericUI_I_Stylable"})
+Generic:RegisterClass("GenericUI_Prefab_Button", Button, {"GenericUI_Prefab", "GenericUI_I_Stylable", "GenericUI_I_Elementable"})
 Generic.RegisterPrefab("GenericUI_Prefab_Button", Button)
 
 ---------------------------------------------
@@ -151,12 +151,9 @@ function Button:SetTooltip(type, tooltip)
     self.Root:SetTooltip(type, tooltip)
 end
 
----Sets the relative position of the button.
----@param position "Center"|"TopLeft"|"TopRight"|"Top"|"Left"|"Right"|"BottomLeft"|"Bottom"|"BottomRight" TODO extract alias
----@param horizontalOffset number?
----@param verticalOffset number?
-function Button:SetPositionRelativeToParent(position, horizontalOffset, verticalOffset)
-    self.Root:SetPositionRelativeToParent(position, horizontalOffset, verticalOffset)
+---@override
+function Button:GetRootElement()
+    return self.Root
 end
 
 ---Updates the texture of the button based on its state.

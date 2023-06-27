@@ -143,7 +143,7 @@ end
 -- PREFAB
 ---------------------------------------------
 
----@class GenericUI_Prefab
+---@class GenericUI_Prefab : Class
 local Prefab = {
     ID = "None",
     UI = nil, ---@type GenericUI_Instance
@@ -158,7 +158,7 @@ Generic._Prefab = Prefab
 ---@return GenericUI_Prefab
 function Prefab:_Create(ui, id, ...)
     local obj = {UI = ui, ID = id}
-    Inherit(obj, self)
+    obj = self:__Create(obj) ---@cast obj GenericUI_Prefab
 
     obj:_SetupEvents()
     obj:_Setup(...)
