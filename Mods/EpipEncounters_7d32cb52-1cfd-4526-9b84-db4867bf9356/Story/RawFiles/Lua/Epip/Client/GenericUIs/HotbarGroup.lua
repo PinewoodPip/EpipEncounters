@@ -2,6 +2,7 @@
 local Generic = Client.UI.Generic
 local HotbarSlot = Generic.GetPrefab("GenericUI_Prefab_HotbarSlot")
 local Spinner = Generic.GetPrefab("GenericUI_Prefab_Spinner")
+local CloseButton = Generic.GetPrefab("GenericUI_Prefab_CloseButton")
 local ContextMenu = Client.UI.ContextMenu
 local CommonStrings = Text.CommonStrings
 
@@ -455,6 +456,9 @@ function GroupManager:__SetupUI(UIName, HeaderText, ButtonText)
     bg:SetBackground("RedPrompt", GroupManager.UI_WIDTH, GroupManager.UI_HEIGHT)
     local uiObject = ui:GetUI()
     uiObject.SysPanelSize = {GroupManager.UI_WIDTH, GroupManager.UI_HEIGHT}
+
+    local closeButton = CloseButton.Create(ui, "CloseButton", bg)
+    closeButton:SetPositionRelativeToParent("TopRight", -25, 25)
 
     -- Content
     local content = bg:AddChild("Content", "GenericUI_Element_VerticalList")
