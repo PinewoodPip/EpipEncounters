@@ -2,8 +2,6 @@ Version 1
 SubGoalCombiner SGC_AND
 INITSECTION
 
-DB_PIP_EpicStats_UpdateOnTemplateCountChange("LOOT_Gold_A_1c3c9c74-34a1-4685-989e-410dc080be6f");
-DB_PIP_EpicStats_UpdateOnTemplateCountChange("AMER_LOOT_GreatforgeFragment_A_a41f2a71-6ff1-4c60-a74a-20c96fb9c487");
 DB_PIP_EpicStats_DamageReceived(NULL_00000000-0000-0000-0000-000000000000, 0);
 DB_PIP_EpicStats_DamageDealt(NULL_00000000-0000-0000-0000-000000000000, 0);
 DB_PIP_EpicStats_HealingDone(NULL_00000000-0000-0000-0000-000000000000, 0);
@@ -63,14 +61,6 @@ String(_Player, _PlayerStr)
 THEN
 NRD_ModCall("EpipEncounters", "UpdateCustomStatsForCharacter", _PlayerStr);
 
-// TEMP
-IF SavegameLoaded(_, _, _, _)
-AND
-SysCount("DB_PIP_EpicStats_UpdateOnTemplateCountChange", 1, 0)
-THEN
-DB_PIP_EpicStats_UpdateOnTemplateCountChange("LOOT_Gold_A_1c3c9c74-34a1-4685-989e-410dc080be6f");
-DB_PIP_EpicStats_UpdateOnTemplateCountChange("AMER_LOOT_GreatforgeFragment_A_a41f2a71-6ff1-4c60-a74a-20c96fb9c487");
-
 //REGION Update triggers
 
 // regular triggers for updates: on reaction, turn start, item equipped, on combat leave/enter (to synch reaction charges), on UI exit, on ability change. The server lua script handles allocating nodes.
@@ -109,25 +99,6 @@ PROC_PIP_EpicStats_Update((CHARACTERGUID)_Obj);
 PROC PROC_AMER_UI_Ascension_ExitUI(_Instance, _Char)
 THEN
 PROC_PIP_EpicStats_Update(_Char);
-
-// MISC
-// These fire for all players, not just the one picking up the item,
-// as party inventories are shared.
-IF ItemTemplateAddedToCharacter(_Template, _, _Char)
-AND
-DB_IsPlayer(_Char)
-AND
-DB_PIP_EpicStats_UpdateOnTemplateCountChange((STRING)_Template)
-THEN
-PROC_PIP_EpicStats_Update();
-
-IF ItemTemplateRemovedFromCharacter(_Template, _, _Char)
-AND
-DB_IsPlayer(_Char)
-AND
-DB_PIP_EpicStats_UpdateOnTemplateCountChange(_Template)
-THEN
-PROC_PIP_EpicStats_Update();
 
 //END_REGION
 
