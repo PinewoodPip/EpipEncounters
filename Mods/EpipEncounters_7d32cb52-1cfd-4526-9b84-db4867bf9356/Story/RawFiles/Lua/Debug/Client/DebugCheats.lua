@@ -181,7 +181,7 @@ end)
 
 -- Talents submenu
 ContextMenu.RegisterMenuHandler("epip_Cheats_Stats_Talents", function()
-    local char = Client.GetCharacter()
+    local char = ContextMenu.GetCurrentCharacter()
 
     -- Refresh checked state
     for _,entry in ipairs(TalentMenu) do
