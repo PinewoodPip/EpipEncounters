@@ -217,7 +217,7 @@ function Library:SetModVariable(modGUID, name, value)
 
     vars[self:_GetUserVarsKey(name)] = value
 
-    Ext.Utils.SyncModVariables()
+    Ext.Vars.SyncModVariables()
 end
 
 ---------------------------------------------
@@ -420,6 +420,7 @@ end
 function Library:AddSubscribableEvent(evName, preventable)
     local event = SubscribableEvent:New(evName, preventable)
 
+    ---@diagnostic disable-next-line: undefined-field
     self.Events[evName] = event
 
     return event
@@ -432,6 +433,7 @@ end
 function Library:AddSubscribableHook(evName, preventable)
     local event = SubscribableEvent:New(evName, preventable)
 
+    ---@diagnostic disable-next-line: undefined-field
     self.Hooks[evName] = event
 
     return event
@@ -449,6 +451,7 @@ function Library:AddEvent(name, data)
 
     Inherit(event, _Event)
 
+    ---@diagnostic disable-next-line: undefined-field
     self.Events[name] = event
 
     return event
@@ -466,6 +469,7 @@ function Library:AddHook(name, data)
 
     Inherit(hook, _Hook)
 
+    ---@diagnostic disable-next-line: undefined-field
     self.Hooks[name] = hook
 
     return hook
