@@ -13,7 +13,19 @@ Stats = {
         Shield = true,
         StatusData = true,
         Potion = true,
+        Crime = true,
     },
+    _STAT_OBJECT_CLASSES = Set.Create({
+        "StatsLib_StatsEntry_Weapon",
+        "StatsLib_StatsEntry_Armor",
+        "StatsLib_StatsEntry_Shield",
+        "StatsLib_StatsEntry_Character",
+        "StatsLib_StatsEntry_Object",
+        "StatsLib_StatsEntry_Crime",
+        "StatsLib_StatsEntry_Potion",
+        "StatsLib_StatsEntry_SkillData",
+        "StatsLib_StatsEntry_StatusData"
+    }),
 
     CONSUME_STATUS_SUBTYPES = Set.Create({
         "ACTIVE_DEFENSE",
@@ -355,13 +367,15 @@ end
 
 ---@alias StatsObjectType "ItemColor"|"Boost"|"Armor"|"Weapon"|"SkillData"|"Object"|"Character"|"Data"|"ItemProgressionNames"|"ItemProgressionVisuals"|"Potion"|"Requirements"|"Shield"|"StatusData"|"CraftingStationsItemComboPreviewData"|"DeltaModifier"|"Equipment"|"ItemCombos"|"ItemTypes"|"ObjectCategoriesItemComboPreviewData"|"SkillSet"|"TreasureGroups"|"TreasureTable"|"DeltaMod"
 
----@param statType StatsObjectType
+---Returns a stat object by its ID.
+---@generic T
+---@param statType StatsObjectType|StatsLib_StatsEntryType|`T`
 ---@param id string
----@return unknown
+---@return T
 function Stats.Get(statType, id)
     local object
 
-    if Stats.STATS_OBJECT_TYPES[statType] then
+    if Stats.STATS_OBJECT_TYPES[statType] or Stats._STAT_OBJECT_CLASSES:Contains(statType) then
         object = Ext.Stats.Get(id, nil, false, false)  
     elseif statType == "ItemColor" then
         object = Ext.Stats.ItemColor.Get(id)
@@ -417,7 +431,7 @@ function Stats.GetStatusName(status)
     elseif (status.StatusType == "CONSUME" and status.StatusId ~= "CONSUME") or Stats.CONSUME_STATUS_SUBTYPES:Contains(status.StatusType) or Stats.STATUS_TYPES_WITH_STATS_DISPLAY_NAME:Contains(status.StatusType) then
         ---@cast status EclStatusConsumeBase|EsvStatusConsume
         local statsID = status.StatusId
-        stat = Stats.Get("StatusData", statsID)
+        stat = Stats.Get("StatsLib_StatsEntry_StatusData", statsID)
 
         if stat then
             name = Ext.L10N.GetTranslatedStringFromKey(stat.DisplayName)
@@ -432,7 +446,7 @@ end
 
 ---@param status EclStatus|EsvStatus
 function Stats.GetStatusIcon(status)
-    local stat = Stats.Get("StatusData", status.StatusId)
+    local stat = Stats.Get("StatsLib_StatsEntry_StatusData", status.StatusId)
     local isInvisible = Stats.HARDCODED_STATUSES_WITHOUT_ICONS:Contains(status.StatusId)
     local icon
 

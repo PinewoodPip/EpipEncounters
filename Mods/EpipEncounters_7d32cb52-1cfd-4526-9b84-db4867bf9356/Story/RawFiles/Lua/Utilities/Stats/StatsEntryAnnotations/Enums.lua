@@ -1,6 +1,8 @@
 
 ---@meta
 
+---@alias StatsLib_StatsEntryType "StatsLib_StatsEntry_Weapon"|"StatsLib_StatsEntry_Armor"|"StatsLib_StatsEntry_Shield"|"StatsLib_StatsEntry_Character"|"StatsLib_StatsEntry_Object"|"StatsLib_StatsEntry_Crime"|"StatsLib_StatsEntry_Potion"|"StatsLib_StatsEntry_SkillData"|"StatsLib_StatsEntry_StatusData"
+
 ---@alias StatsLib_Enum_DamageType "None"|"Physical"|"Piercing"|"Corrosive"|"Magic"|"Chaos"|"Fire"|"Air"|"Water"|"Earth"|"Poison"|"Shadow"
 
 ---@alias StatsLib_Enum_Handedness "Any"|1|2

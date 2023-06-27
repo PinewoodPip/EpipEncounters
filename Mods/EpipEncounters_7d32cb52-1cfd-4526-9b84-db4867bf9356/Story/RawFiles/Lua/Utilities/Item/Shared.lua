@@ -363,7 +363,7 @@ function Item.CanUse(char, item)
         local action = Item.GetUseActions(item, "UseSkill")[1] ---@cast action UseSkillActionData
 
         if action then
-            local skill = Stats.Get("SkillData", action.SkillID) ---@type StatsLib_StatsEntry_SkillData
+            local skill = Stats.Get("StatsLib_StatsEntry_SkillData", action.SkillID)
 
             if skill then
                 if skill.ProjectileType == "Grenade" and char.Stats.TALENT_Ambidextrous then
