@@ -68,7 +68,7 @@ end)
 
 -- Listen for entries being clicked.
 WorldTooltip:RegisterCallListener("tooltipClicked", function (ev, flashHandle)
-    if WorldTooltip._ignoreNextClick then WorldTooltip._ignoreNextClick = false return nil end
+    if WorldTooltip._ignoreNextClick then WorldTooltip._ignoreNextClick = false return end
 
     local entity = Ext.Entity.GetGameObject(Ext.UI.DoubleToHandle(flashHandle))
     local eventFieldName
@@ -79,7 +79,7 @@ WorldTooltip:RegisterCallListener("tooltipClicked", function (ev, flashHandle)
         eventFieldName = "Item"
     else
         WorldTooltip:LogError("Clicked an entry with an unknown entity type")
-        return nil
+        return
     end
 
     local eventParams = {}
