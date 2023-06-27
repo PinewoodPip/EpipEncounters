@@ -5,10 +5,10 @@
 
 ---@class Feature_TooltipAdjustments
 local TooltipAdjustments = Epip.GetFeature("Feature_TooltipAdjustments")
+local TSK = TooltipAdjustments.TranslatedStrings
 
-TooltipAdjustments:RegisterTranslatedString("h37cf1748g9dafg4d2ag9744g00e75e764ee5", {
+TSK.DamageTypeDeltamods_WeaponDamage = TooltipAdjustments:RegisterTranslatedString("h37cf1748g9dafg4d2ag9744g00e75e764ee5", {
     Text = "+%s%% Weapon %s Damage",
-    StringKey = "DamageTypeDeltamods_WeaponDamage",
     ContextDescription = "Tooltip for weapon elemental damage boost",
 })
 
