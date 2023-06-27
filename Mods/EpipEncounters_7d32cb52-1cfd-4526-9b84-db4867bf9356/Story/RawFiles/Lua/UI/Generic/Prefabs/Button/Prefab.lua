@@ -74,8 +74,10 @@ end
 
 ---Sets the label of the button.
 ---@param label string Set to an empty string to hide the label.
-function Button:SetLabel(label)
+---@param align GenericUI_Element_Text_Align? Defaults to `"Center"`.
+function Button:SetLabel(label, align)
     local element = self.Label
+    align = align or "Center"
 
     if label ~= "" then
         local textSize
@@ -83,13 +85,14 @@ function Button:SetLabel(label)
         mc.multiline = false
         mc.wordWrap = false -- Necessary.
 
+        element:SetType(align)
         element:SetText(label)
 
         -- Set size of the text element to the minimum size of the text itself, and center it
         textSize = element:GetTextSize()
         textSize = Vector.Create(textSize[1], textSize[2] / 2) -- No idea why division by 2 is necessary; textHeight just seems to always report +1 line, while width is correct.
         element:SetSize(textSize:unpack())
-        element:SetPositionRelativeToParent("Center", 0, 0)
+        element:SetPositionRelativeToParent(align, 0, 0)
     end
 
     element:SetVisible(label ~= "")
