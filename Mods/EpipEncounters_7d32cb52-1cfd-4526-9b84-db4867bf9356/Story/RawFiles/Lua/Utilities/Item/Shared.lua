@@ -360,13 +360,14 @@ function Item.CanUse(char, item)
     -- that works for this; identify it.
     local stat = Stats.Get("Object", item.StatsId)
     if stat then
+        -- Engine code looks as though only one is ever considered; TODO check IActionDataSet::GetActionWithId()
         local action = Item.GetUseActions(item, "UseSkill")[1] ---@cast action UseSkillActionData
 
         if action then
             local skill = Stats.Get("StatsLib_StatsEntry_SkillData", action.SkillID)
 
             if skill then
-                if skill.ProjectileType == "Grenade" and char.Stats.TALENT_Ambidextrous then
+                if skill.ProjectileType ~= "Arrow" and char.Stats.TALENT_Ambidextrous then
                     apCost = apCost - 1
                 end
             end
