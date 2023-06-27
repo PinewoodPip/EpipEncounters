@@ -6,10 +6,9 @@ local IconPicker = Epip.GetFeature("Feature_IconPicker")
 local Transmog = Epip.GetFeature("Feature_Vanity_Transmog")
 Transmog.ICON_PICKER_REQUEST_ID = "Vanity_Transmog_SetIcon"
 
-Transmog:RegisterTranslatedString("h19773400g8de1g46d7g9901g779b750ebddd", {
+Transmog.TranslatedStrings.Transmog_SetIcon = Transmog:RegisterTranslatedString("h19773400g8de1g46d7g9901g779b750ebddd", {
    Text = "Set Icon",
    ContextDescription = "Override icon button",
-   StringKey = "Transmog_SetIcon",
 })
 
 ---@type CharacterSheetCustomTab
