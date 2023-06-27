@@ -67,8 +67,10 @@ function Status.Create(ui, id, parent, entity, status)
     root.Events.MouseOver:Subscribe(function (_)
         local char = Character.Get(element.EntityHandle) -- TODO support items
         local statusObj = Character.GetStatusByHandle(char, element.StatusHandle)
-        
-        Client.Tooltip.ShowStatusTooltip(char, statusObj)
+
+        if statusObj then
+            Client.Tooltip.ShowStatusTooltip(char, statusObj)
+        end
     end)
     root.Events.MouseOut:Subscribe(function (_)
         Client.Tooltip.HideTooltip()
