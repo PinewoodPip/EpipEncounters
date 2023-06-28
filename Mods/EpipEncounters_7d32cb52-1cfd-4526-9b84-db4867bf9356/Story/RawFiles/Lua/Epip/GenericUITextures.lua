@@ -514,6 +514,54 @@ local Textures = {
                         GUID = "74bae148-ef0d-4aaf-9115-45cf8cf5ceae",
                     }),
                 },
+                SIMPLE_SMALL = {
+                    BACKGROUND_INACTIVE_IDLE = T("PIP_UI_StateButton_SimpleCheckbox_Small_Inactive_Idle", {
+                        GUID = "b466a7c2-384a-407c-a951-e252e0298b15",
+                    }),
+                    BACKGROUND_INACTIVE_HIGHLIGHTED = T("PIP_UI_StateButton_SimpleCheckbox_Small_Inactive_Highlighted", {
+                        GUID = "ca0441c2-24ec-4b10-88cb-2b6f7bb17c56",
+                    }),
+                    BACKGROUND_ACTIVE_IDLE = T("PIP_UI_StateButton_SimpleCheckbox_Small_Active_Idle", {
+                        GUID = "87cf7a87-ae08-4550-b3f0-2fe150953038",
+                    }),
+                    BACKGROUND_ACTIVE_HIGHLIGHTED = T("PIP_UI_StateButton_SimpleCheckbox_Small_Active_Highlighted", {
+                        GUID = "1f9d08ca-c0ed-401b-a331-eddcc2c79688",
+                    }),
+                },
+                STONE = {
+                    BACKGROUND_INACTIVE_IDLE = T("PIP_UI_StateButton_StoneCheckbox_Inactive_Idle", {
+                        GUID = "42e947b9-5faa-49af-b974-95890cc8473b",
+                    }),
+                    BACKGROUND_INACTIVE_HIGHLIGHTED = T("PIP_UI_StateButton_StoneCheckbox_Inactive_Highlighted", {
+                        GUID = "92539240-9417-4e5f-8e74-f18174cd1244",
+                    }),
+                    BACKGROUND_INACTIVE_PRESSED = T("PIP_UI_StateButton_StoneCheckbox_Inactive_Pressed", {
+                        GUID = "a4b78f82-19f2-4043-8bf7-e3776494b325",
+                    }),
+                    BACKGROUND_ACTIVE_IDLE = T("PIP_UI_StateButton_StoneCheckbox_Active_Idle", {
+                        GUID = "81dc95f2-7ceb-4511-9762-a9b07b8cde7c",
+                    }),
+                    BACKGROUND_ACTIVE_HIGHLIGHTED = T("PIP_UI_StateButton_StoneCheckbox_Active_Highlighted", {
+                        GUID = "958f51b1-b6d0-4159-93a5-056101b5caa0",
+                    }),
+                    BACKGROUND_ACTIVE_PRESSED = T("PIP_UI_StateButton_StoneCheckbox_Active_Pressed", {
+                        GUID = "2a8a4b8d-7994-4673-be0f-47b2201e4641",
+                    }),
+                },
+                FORM = {
+                    BACKGROUND_IDLE = T("PIP_UI_StateButton_FormCheckbox_Background_Idle", {
+                        GUID = "1daf0357-75cf-4dfe-a4f3-84bde1aee747",
+                    }),
+                    BACKGROUND_HIGHLIGHTED = T("PIP_UI_StateButton_FormCheckbox_Background_Highlighted", {
+                        GUID = "9aabc680-932d-4461-ad1a-83b5dd8a0db6",
+                    }),
+                    BACKGROUND_PRESSED = T("PIP_UI_StateButton_FormCheckbox_Background_Pressed", {
+                        GUID = "d1dce1a8-d5a9-4c11-a7b2-edbe8c89c845",
+                    }),
+                    CHECKMARK = T("PIP_UI_StateButton_FormCheckbox_Checkmark", {
+                        GUID = "f760fa05-a95d-4d72-be68-b2acb30b4d07",
+                    }),
+                },
             },
         },
         FRAMES = {

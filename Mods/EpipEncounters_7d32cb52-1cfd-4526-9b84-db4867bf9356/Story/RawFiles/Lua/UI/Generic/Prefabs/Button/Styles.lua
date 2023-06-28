@@ -209,15 +209,51 @@ local styles = {
     },
 
     -- State Buttons
-    SimpleCheckbox = {
+    SimpleCheckbox_Inactive = {
         IdleTexture = StateButtonTextures.CHECKBOXES.SIMPLE.BACKGROUND,
         HighlightedTexture = StateButtonTextures.CHECKBOXES.SIMPLE.BACKGROUND_HIGHLIGHTED,
-        ActiveOverlay = StateButtonTextures.CHECKBOXES.SIMPLE.CHECKMARK,
-        HighlightedActiveOverlay = StateButtonTextures.CHECKBOXES.SIMPLE.CHECKMARK_HIGHLIGHTED,
     },
-    RoundCheckbox = {
+    SimpleCheckbox_Active = {
+        IdleTexture = StateButtonTextures.CHECKBOXES.SIMPLE.BACKGROUND,
+        HighlightedTexture = StateButtonTextures.CHECKBOXES.SIMPLE.BACKGROUND_HIGHLIGHTED,
+        IdleOverlay = StateButtonTextures.CHECKBOXES.SIMPLE.CHECKMARK,
+        HighlightedOverlay = StateButtonTextures.CHECKBOXES.SIMPLE.CHECKMARK_HIGHLIGHTED,
+    },
+    RoundCheckbox_Inactive = {
         IdleTexture = StateButtonTextures.CHECKBOXES.ROUND.BACKGROUND,
-        ActiveOverlay = StateButtonTextures.CHECKBOXES.ROUND.CHECKMARK,
+    },
+    RoundCheckbox_Active = {
+        IdleTexture = StateButtonTextures.CHECKBOXES.ROUND.BACKGROUND,
+        IdleOverlay = StateButtonTextures.CHECKBOXES.ROUND.CHECKMARK,
+    },
+    SimpleCheckboxSmall_Inactive = {
+        IdleTexture = StateButtonTextures.CHECKBOXES.SIMPLE_SMALL.BACKGROUND_INACTIVE_IDLE,
+        HighlightedTexture = StateButtonTextures.CHECKBOXES.SIMPLE_SMALL.BACKGROUND_INACTIVE_HIGHLIGHTED,
+    },
+    SimpleCheckboxSmall_Active = {
+        IdleTexture = StateButtonTextures.CHECKBOXES.SIMPLE_SMALL.BACKGROUND_ACTIVE_IDLE,
+        HighlightedTexture = StateButtonTextures.CHECKBOXES.SIMPLE_SMALL.BACKGROUND_ACTIVE_HIGHLIGHTED,
+    },
+    StoneCheckbox_Inactive = {
+        IdleTexture = StateButtonTextures.CHECKBOXES.STONE.BACKGROUND_INACTIVE_IDLE,
+        HighlightedTexture = StateButtonTextures.CHECKBOXES.STONE.BACKGROUND_INACTIVE_HIGHLIGHTED,
+        PressedTexture = StateButtonTextures.CHECKBOXES.STONE.BACKGROUND_INACTIVE_PRESSED,
+    },
+    StoneCheckbox_Active = {
+        IdleTexture = StateButtonTextures.CHECKBOXES.STONE.BACKGROUND_ACTIVE_IDLE,
+        HighlightedTexture = StateButtonTextures.CHECKBOXES.STONE.BACKGROUND_ACTIVE_HIGHLIGHTED,
+        PressedTexture = StateButtonTextures.CHECKBOXES.STONE.BACKGROUND_ACTIVE_PRESSED,
+    },
+    FormCheckbox_Inactive = {
+        IdleTexture = StateButtonTextures.CHECKBOXES.FORM.BACKGROUND_IDLE,
+        HighlightedTexture = StateButtonTextures.CHECKBOXES.FORM.BACKGROUND_HIGHLIGHTED,
+        PressedTexture = StateButtonTextures.CHECKBOXES.FORM.BACKGROUND_PRESSED,
+    },
+    FormCheckbox_Active = {
+        IdleTexture = StateButtonTextures.CHECKBOXES.FORM.BACKGROUND_IDLE,
+        HighlightedTexture = StateButtonTextures.CHECKBOXES.FORM.BACKGROUND_HIGHLIGHTED,
+        PressedTexture = StateButtonTextures.CHECKBOXES.FORM.BACKGROUND_PRESSED,
+        IdleOverlay = StateButtonTextures.CHECKBOXES.FORM.CHECKMARK,
     },
 }
 
