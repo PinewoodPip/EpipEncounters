@@ -173,6 +173,18 @@ function Button:GetRootElement()
     return self.Root
 end
 
+---Returns the label element.
+---@return GenericUI_Prefab_Text
+function Button:GetLabelElement()
+    return self.Label
+end
+
+---Returns the icon element, if any.
+---@return GenericUI_Element_IggyIcon?
+function Button:GetIconElement()
+    return self.Icon
+end
+
 ---Updates the texture of the button based on its state.
 function Button:_UpdateTextures()
     local state = self._State
