@@ -18,6 +18,10 @@ local styles = {
         HighlightedTexture = ButtonTextures.ARROWS.UP.HIGHLIGHTED,
         PressedTexture = ButtonTextures.ARROWS.UP.PRESSED,
     },
+    AddSlot = {
+        IdleTexture = ButtonTextures.ADD.SLOT.IDLE,
+        HighlightedTexture = ButtonTextures.ADD.SLOT.HIGHLIGHTED,
+    },
     DiamondDown = {
         IdleTexture = ButtonTextures.ARROWS.DIAMOND.DOWN.IDLE,
         HighlightedTexture = ButtonTextures.ARROWS.DIAMOND.DOWN.HIGHLIGHTED,
@@ -39,6 +43,11 @@ local styles = {
         HighlightedTexture = ButtonTextures.ARROWS.DOWN_SLATE.HIGHLIGHTED,
         PressedTexture = ButtonTextures.ARROWS.DOWN_SLATE.PRESSED,
     },
+    DownSlateSmall = {
+        IdleTexture = ButtonTextures.ARROWS.DOWN_SLATE_SMALL.IDLE,
+        HighlightedTexture = ButtonTextures.ARROWS.DOWN_SLATE_SMALL.HIGHLIGHTED,
+        PressedTexture = ButtonTextures.ARROWS.DOWN_SLATE_SMALL.PRESSED,
+    },
     SquareUp = {
         IdleTexture = ButtonTextures.ARROWS.SQUARE.UP.IDLE,
         HighlightedTexture = ButtonTextures.ARROWS.SQUARE.UP.HIGHLIGHTED,
@@ -53,6 +62,11 @@ local styles = {
         IdleTexture = ButtonTextures.ARROWS.UP_SLATE.IDLE,
         HighlightedTexture = ButtonTextures.ARROWS.UP_SLATE.HIGHLIGHTED,
         PressedTexture = ButtonTextures.ARROWS.UP_SLATE.PRESSED,
+    },
+    UpSlateSmall = {
+        IdleTexture = ButtonTextures.ARROWS.UP_SLATE_SMALL.IDLE,
+        HighlightedTexture = ButtonTextures.ARROWS.UP_SLATE_SMALL.HIGHLIGHTED,
+        PressedTexture = ButtonTextures.ARROWS.UP_SLATE_SMALL.PRESSED,
     },
     LeftTall = {
         IdleTexture = ButtonTextures.ARROWS.LEFT_TALL.IDLE,
@@ -73,6 +87,26 @@ local styles = {
         IdleTexture = ButtonTextures.SAVE.GREEN.IDLE,
         HighlightedTexture = ButtonTextures.SAVE.GREEN.HIGHLIGHTED,
         PressedTexture = ButtonTextures.SAVE.GREEN.PRESSED,
+    },
+    InfoYellow = {
+        IdleTexture = ButtonTextures.INFO.YELLOW.IDLE,
+        HighlightedTexture = ButtonTextures.INFO.YELLOW.HIGHLIGHTED,
+    },
+    MenuSlate = {
+        IdleTexture = ButtonTextures.MENU.SLATE.IDLE,
+        HighlightedTexture = ButtonTextures.MENU.SLATE.HIGHLIGHTED,
+    },
+    MenuSlateTall = {
+        IdleTexture = ButtonTextures.MENU.SLATE_TALL.IDLE,
+        HighlightedTexture = ButtonTextures.MENU.SLATE_TALL.HIGHLIGHTED,
+    },
+    TradeLarge = {
+        IdleTexture = ButtonTextures.TRADE.LARGE.IDLE,
+        PressedTexture = ButtonTextures.TRADE.LARGE.PRESSED,
+    },
+    LabelPointy = {
+        IdleTexture = ButtonTextures.LABEL.POINTY.IDLE,
+        HighlightedTexture = ButtonTextures.LABEL.POINTY.HIGHLIGHTED,
     },
     Blue = {
         IdleTexture = ButtonTextures.BLUE.IDLE,
@@ -95,6 +129,26 @@ local styles = {
         IdleTexture = ButtonTextures.CLOSE_GREEN.IDLE,
         HighlightedTexture = ButtonTextures.CLOSE_GREEN.HIGHLIGHTED,
         PressedTexture = ButtonTextures.CLOSE_GREEN.PRESSED,
+    },
+    CloseBackgroundless = {
+        IdleTexture = ButtonTextures.CLOSE.BACKGROUNDLESS.IDLE,
+        HighlightedTexture = ButtonTextures.CLOSE.BACKGROUNDLESS.HIGHLIGHTED,
+        PressedTexture = ButtonTextures.CLOSE.BACKGROUNDLESS.PRESSED,
+    },
+    CloseDOS1Square = {
+        IdleTexture = ButtonTextures.CLOSE.DOS1_SQUARE.IDLE,
+        HighlightedTexture = ButtonTextures.CLOSE.DOS1_SQUARE.HIGHLIGHTED,
+        PressedTexture = ButtonTextures.CLOSE.DOS1_SQUARE.PRESSED,
+    },
+    CloseSlate = {
+        IdleTexture = ButtonTextures.CLOSE.SLATE.IDLE,
+        HighlightedTexture = ButtonTextures.CLOSE.SLATE.HIGHLIGHTED,
+        PressedTexture = ButtonTextures.CLOSE.SLATE.PRESSED,
+    },
+    CloseStone = {
+        IdleTexture = ButtonTextures.CLOSE.STONE.IDLE,
+        HighlightedTexture = ButtonTextures.CLOSE.STONE.HIGHLIGHTED,
+        PressedTexture = ButtonTextures.CLOSE.STONE.PRESSED,
     },
     LargeBrown = {
         IdleTexture = ButtonTextures.BROWN.LARGE.IDLE,
@@ -140,6 +194,12 @@ local styles = {
         IdleTexture = ButtonTextures.RED.SMALL.IDLE,
         HighlightedTexture = ButtonTextures.RED.SMALL.HIGHLIGHTED,
         PressedTexture = ButtonTextures.RED.SMALL.PRESSED,
+    },
+    RedDOS1 = {
+        IdleTexture = ButtonTextures.RED.DOS1.IDLE,
+        HighlightedTexture = ButtonTextures.RED.DOS1.HIGHLIGHTED,
+        PressedTexture = ButtonTextures.RED.DOS1.PRESSED,
+        DisabledTexture = ButtonTextures.RED.DOS1.DISABLED,
     },
     SquareStone = {
         IdleTexture = ButtonTextures.SQUARE.STONE.IDLE,
