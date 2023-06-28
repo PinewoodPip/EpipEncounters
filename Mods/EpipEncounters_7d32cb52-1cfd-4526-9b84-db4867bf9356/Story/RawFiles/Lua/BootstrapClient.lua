@@ -594,6 +594,16 @@ LOAD_ORDER = {
         RequiresEE = true,
     },
 
+    -- Codex
+    {
+        Scripts = {
+            "Epip/Codex/Client.lua",
+            "Epip/Codex/Client_UI.lua",
+
+            "Epip/Codex/Sections/Skills.lua",
+        },
+    },
+
     "Epip/Compatibility/MajoraFashionSins/Client.lua",
     "Epip/Compatibility/PortableRespecMirror/Client.lua",
     "Epip/Compatibility/RendalNPCArmor/Client.lua",

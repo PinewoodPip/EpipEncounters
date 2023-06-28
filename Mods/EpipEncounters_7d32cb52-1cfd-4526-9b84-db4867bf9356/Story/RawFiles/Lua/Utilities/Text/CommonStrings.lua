@@ -479,6 +479,10 @@ Text.CommonStrings.Jewelry = Text.RegisterTranslatedString({
    Handle = "hf791f6e7g31cdg4e84gb349g383ad5b4409c",
    Text = "Jewelry",
 })
+Text.CommonStrings.Skills = Text.RegisterTranslatedString({
+   Handle = "h14674f13g78c9g49ecgac6dgbf7a95039189",
+   Text = "Skills",
+})
 
 ---------------------------------------------
 -- SETUP
