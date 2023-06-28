@@ -95,7 +95,6 @@ function Button:SetLabel(label, align)
         mc.multiline = false
         mc.wordWrap = false -- Necessary.
 
-        element:SetType(align)
         element:SetText(label)
 
         -- Set size of the text element to the minimum size of the text itself, and center it
