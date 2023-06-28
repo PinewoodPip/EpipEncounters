@@ -111,15 +111,19 @@ end
 ---Sets an icon for the button.
 ---@param icon icon
 ---@param size Vector2
-function Button:SetIcon(icon, size)
+---@param relativePosition GenericUI_Element_RelativePosition? Defaults to `"Center"`.
+---@param offset Vector2? Defaults to `(0, 0)`.
+function Button:SetIcon(icon, size, relativePosition, offset)
     local element = self.Icon
     if not element then
         element = self:CreateElement("Icon", "GenericUI_Element_IggyIcon", self.Root)
         self.Icon = element
     end
+    relativePosition = relativePosition or "Center"
+    offset = offset or Vector.Create(0, 0)
 
     element:SetIcon(icon, size:unpack())
-    element:SetPositionRelativeToParent("Center", 0, 0)
+    element:SetPositionRelativeToParent(relativePosition, offset:unpack())
 end
 
 ---Sets the enabled state of the button.
