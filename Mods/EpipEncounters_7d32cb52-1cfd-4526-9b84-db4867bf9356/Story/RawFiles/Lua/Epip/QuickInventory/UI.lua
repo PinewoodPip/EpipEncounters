@@ -3,10 +3,8 @@ local ContextMenu = Client.UI.ContextMenu
 local Generic = Client.UI.Generic
 local HotbarSlot = Generic.GetPrefab("GenericUI_Prefab_HotbarSlot")
 local TooltipPanelPrefab = Generic.GetPrefab("GenericUI_Prefab_TooltipPanel")
-local LabelledDropdownPrefab = Generic.GetPrefab("GenericUI_Prefab_LabelledDropdown")
-local LabelledCheckboxPrefab = Generic.GetPrefab("GenericUI_Prefab_LabelledCheckbox")
-local LabelledTextField = Generic.GetPrefab("GenericUI_Prefab_LabelledTextField")
 local DraggingAreaPrefab = Generic.GetPrefab("GenericUI_Prefab_DraggingArea")
+local SettingWidgets = Epip.GetFeature("Features.SettingWidgets")
 local Tooltip = Client.Tooltip
 local Input = Client.Input
 local V = Vector.Create
@@ -232,15 +230,15 @@ function UI._RenderSettingsPanel()
 end
 
 ---Renders a widget to the settings panel from a setting.
----@param setting SettingsLib_Setting_Choice|SettingsLib_Setting_Boolean|SettingsLib_Setting_String
+---@param setting Features.SettingWidgets.SupportedSettingType
 function UI.RenderSetting(setting)
-    if setting.Type == "Boolean" then
-        UI._RenderCheckboxFromSetting(setting)
-    elseif setting.Type == "Choice" then
-        UI._RenderComboBoxFromSetting(setting)
-    elseif setting.Type == "String" then
-        UI._RenderTextFieldFromSetting(setting)
-    end
+    SettingWidgets.RenderSetting(UI, UI.SettingsPanelList, setting, UI.SETTINGS_PANEL_ELEMENT_SIZE, function (_)
+        if setting.Type == "String" then -- Do not re-render the whole settings panel in this case, as it causes the focus to break.
+            UI.RenderItems()
+        else
+            UI.Refresh()
+        end
+    end)
 end
 
 ---Returns the amount of items that fit per row.
@@ -254,71 +252,6 @@ end
 function UI.GetItemListWidth()
     local items = UI.GetItemsPerRow()
     return items * UI.ITEM_SIZE[1] + UI.SCROLLBAR_WIDTH + (items - 1) * UI.ELEMENT_SPACING
-end
-
----Renders a checkbox to the settings panel from a setting.
----@param setting SettingsLib_Setting_Choice
-function UI._RenderComboBoxFromSetting(setting)
-    local list = UI.SettingsPanelList
-
-    -- Generate combobox options from setting choices.
-    local options = {}
-    for _,choice in ipairs(setting.Choices) do
-        table.insert(options, {
-            ID = choice.ID,
-            Label = choice:GetName(),
-        })
-    end
-
-    local dropdown = LabelledDropdownPrefab.Create(UI, setting.ID, list, setting:GetName(), options)
-    dropdown:SetSize(UI.SETTINGS_PANEL_ELEMENT_SIZE:unpack())
-    dropdown:SelectOption(setting:GetValue())
-
-    -- Set setting value and refresh UI.
-    dropdown.Events.OptionSelected:Subscribe(function (ev)
-        QuickInventory:SetSettingValue(setting, ev.Option.ID)
-        UI.Refresh()
-    end)
-end
-
----Renders a combobox to the settings panel from a setting.
----@param setting SettingsLib_Setting_Boolean
-function UI._RenderCheckboxFromSetting(setting)
-    local list = UI.SettingsPanelList
-
-    local checkbox = LabelledCheckboxPrefab.Create(UI, setting.ID, list, setting:GetName())
-    checkbox:SetSize(UI.SETTINGS_PANEL_ELEMENT_SIZE:unpack())
-    checkbox:SetState(setting:GetValue())
-
-    -- Set setting value and refresh UI.
-    checkbox.Events.StateChanged:Subscribe(function (ev)
-        QuickInventory:SetSettingValue(setting, ev.Active)
-        UI.Refresh()
-    end)
-end
-
----Renders an editable text field to the settings panel from a setting.
----@param setting SettingsLib_Setting_String
-function UI._RenderTextFieldFromSetting(setting)
-    local list = UI.SettingsPanelList
-    local timerID = "Epip_QuickInventory_UI_" .. setting.ID
-
-    local field = LabelledTextField.Create(UI, setting.ID, list, setting:GetName())
-    field:SetText(setting:GetValue())
-    field:SetSize(UI.SETTINGS_PANEL_ELEMENT_SIZE:unpack())
-
-    -- Set setting value and refresh UI - this uses a delay to reduce lag from needless updates.
-    field.Events.TextEdited:Subscribe(function (ev)
-        local existingTimer = Timer.GetTimer(timerID)
-        if existingTimer then
-            existingTimer:Cancel()
-        end
-
-        Timer.Start(timerID, 0.6, function (_)
-            QuickInventory:SetSettingValue(setting, ev.Text)
-            UI.RenderItems()
-        end)
-    end)
 end
 
 ---------------------------------------------

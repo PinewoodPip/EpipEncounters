@@ -289,6 +289,8 @@ LOAD_ORDER = {
     },
     -- {Script = "UI/Generic/Test.lua", WIP = true}, -- TEST!
 
+    {Script = "Epip/SettingWidgets/Client.lua"},
+
     -- Hotbar
     {
         Scripts = {
