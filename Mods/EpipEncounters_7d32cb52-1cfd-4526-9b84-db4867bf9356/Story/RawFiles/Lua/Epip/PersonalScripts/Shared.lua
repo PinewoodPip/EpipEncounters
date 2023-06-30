@@ -44,7 +44,6 @@ function PersonalScripts._LoadScripts(path)
             if scriptDef.ModTable then
                 env = Mods[scriptDef.ModTable]
             end
-            print("env", env, env.Client)
 
             local chunk = load(script, scriptDef.Path, "t", env)
 
