@@ -59,6 +59,14 @@ end
 ---@diagnostic disable-next-line: unused-local
 function Section:Render(root) end
 
+---Called at various moments where it is appropriate to refresh the contents of the UI.
+---These moments include:
+---- After the UI being opened, if the section was active
+---- After the section is set as active (after Render(), if the section has not been initialized yet)
+---@param root GenericUI_Element_Empty Root element for your section. For correct bookkeeping, keep all of your section's hierarchy within this element.
+---@diagnostic disable-next-line: unused-local
+function Section:Update(root) end
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------

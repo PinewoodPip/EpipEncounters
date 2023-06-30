@@ -263,13 +263,18 @@ function Section:Render(root)
 
     Section.Grid = grid
     Section.GridScrollList = gridScrollList
+end
 
+---@override
+function Section:Update(_)
     Section:UpdateSkills()
 end
 
 ---Updates the skills grid.
 function Section:UpdateSkills()
     local skills = Skills.GetSkills()
+
+    Skills:DebugLog("Updating skills")
 
     for i=1,math.max(#self._SkillInstances, #skills),1 do
         self:_UpdateSkill(i, skills[i])

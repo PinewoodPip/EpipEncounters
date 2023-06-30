@@ -50,6 +50,7 @@ Codex.UI = UI
 function UI:Show()
     UI._Init()
     UI._UpdateIndex()
+    UI._UpdateSection()
     Client.UI._BaseUITable.Show(self)
 end
 
@@ -58,7 +59,7 @@ end
 function UI.SetSection(section)
     local contentContainer = UI.ContentContainer
     local sectionID = section:GetID()
-    local sectionRoot = UI._SectionContents[sectionID]
+    local sectionRoot = UI._GetSectionRoot(sectionID)
 
     Codex:DebugLog("Setting section to", sectionID)
 
@@ -70,12 +71,15 @@ function UI.SetSection(section)
         section:Render(sectionRoot)
     end
 
+    UI._CurrentSection = section
+
     -- Update header
     local header = UI.SectionHeader
     header:SetText(Text.Format(section:GetName(), {Size = UI.HEADER_FONT_SIZE}))
 
-    UI._CurrentSection = section
+    -- Update index and section
     UI:_UpdateIndex()
+    UI:_UpdateSection()
 end
 
 ---Updates the index, which shows all registered sections.
@@ -105,6 +109,22 @@ function UI._UpdateIndex()
     end
 
     list:RepositionElements()
+end
+
+---Updates the current section, if any.
+function UI._UpdateSection()
+    local section = UI._CurrentSection
+    if section then
+        local sectionRoot = UI._GetSectionRoot(section:GetID())
+        section:Update(sectionRoot)
+    end
+end
+
+---Returns the root element of a section.
+---@param id string
+---@return GenericUI_Element_Empty
+function UI._GetSectionRoot(id)
+    return UI._SectionContents[id]
 end
 
 ---Initializes header elements.
