@@ -25,8 +25,13 @@ UI.HEADER_SIZE = V(436, UI.HEADER_HEIGHT)
 UI.SECTION_HEADER_SIZE = V(875, UI.HEADER_HEIGHT)
 UI.CONTENT_CONTAINER_SIZE = V(812, 777)
 ---@type GenericUI_Prefab_Button_Style
-UI.INDEX_ENTRY_STYLE = {
+UI.INDEX_ENTRY_STYLE_INACTIVE = {
     IdleTexture = Textures.BUTTONS.LABEL.POINTY.IDLE,
+    HighlightedTexture = Textures.BUTTONS.LABEL.POINTY.HIGHLIGHTED,
+    Size = V(400, 32),
+}
+UI.INDEX_ENTRY_STYLE_ACTIVE = {
+    IdleTexture = Textures.BUTTONS.LABEL.POINTY.HIGHLIGHTED,
     HighlightedTexture = Textures.BUTTONS.LABEL.POINTY.HIGHLIGHTED,
     Size = V(400, 32),
 }
@@ -67,6 +72,9 @@ function UI.SetSection(section)
     -- Update header
     local header = UI.SectionHeader
     header:SetText(Text.Format(section:GetName(), {Size = UI.HEADER_FONT_SIZE}))
+
+    UI._CurrentSection = section
+    UI:_UpdateIndex()
 end
 
 ---Updates the index, which shows all registered sections.
@@ -78,7 +86,9 @@ function UI._UpdateIndex()
         local name = section:GetName()
         local description = section:GetTooltip()
 
-        local entry = ButtonPrefab.Create(UI, section:GetID(), list, UI.INDEX_ENTRY_STYLE)
+        local entry = ButtonPrefab.Create(UI, section:GetID(), list, UI.INDEX_ENTRY_STYLE_INACTIVE)
+        entry:SetActiveStyle(UI.INDEX_ENTRY_STYLE_ACTIVE)
+        entry:SetActivated(UI._CurrentSection == section) -- Current section shows as activated
         entry:SetLabel(name, "Left")
         entry.Label:Move(UI.INDEX_ENTRY_LABEL_OFFSET:unpack())
         entry:SetTooltip("Simple", description)
