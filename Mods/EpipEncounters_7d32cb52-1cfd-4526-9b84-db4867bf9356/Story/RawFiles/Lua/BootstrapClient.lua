@@ -609,8 +609,6 @@ LOAD_ORDER = {
     "Epip/Compatibility/RendalNPCArmor/Client.lua",
     "Epip/Compatibility/VisitorsFromCyseal/Client.lua",
 
-    "Epip/Keybindings/Client.lua",
-
     -- Should be loaded last
     {ScriptSet = "Epip/DebugMenu", Developer = true,},
 
@@ -678,6 +676,7 @@ LOAD_ORDER = {
     },
     
     "Epip/Client/EpipSettingsMenu.lua",
+    "Epip/Keybindings/Client.lua",
 
     -- Debug Cheats
     {

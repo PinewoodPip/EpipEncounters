@@ -88,11 +88,14 @@ end
 ---Registers an action.
 ---@param id string
 ---@param data InputLib_Action
+---@return InputLib_Action
 function Input.RegisterAction(id, data)
     data.ID = id
     local action = _Action.Create(data)
 
     Input._Actions[action.ID] = action
+    
+    return action
 end
 
 ---Returns an action by its ID.

@@ -1,5 +1,10 @@
 
+---------------------------------------------
+-- Temporary script to register keybindings until a better API exists to register them onto the UI.
+---------------------------------------------
+
 local Options = Client.UI.OptionsInput
+local Codex = Epip.GetFeature("Feature_Codex")
 
 Options.RegisterTab("EpipEncounters", {
     Name = "Epip Encounters",
@@ -19,6 +24,9 @@ Options.RegisterTab("EpipEncounters", {
         {Name = "Source Infuse", ID = "EpipEncounters_SourceInfuse"},
 
         {Name = "Open Quick Find", ID = "EpipEncounters_QuickFind", DefaultInput1 = {Keys = {"lctrl", "f"}}},
+
+        -- Features
+        Codex.InputActions.Open,
 
         -- Misc
         {Name = "Toggle Tooltip Scrolling", ID = "EpipEncounters_ScrollTooltip", DefaultInput1 = {Keys = {"middle"}}},

@@ -17,9 +17,19 @@ local Codex = {
            Text = "Codex",
            ContextDescription = "Shown at the top of the UI",
         },
+        InputAction_Open_Name = {
+           Handle = "h52c8465ag5bf7g4420g93b7ge555e6acb172",
+           Text = "Open Codex",
+           ContextDescription = "Keybind name",
+        },
     },
 }
 Epip.RegisterFeature("Codex", Codex)
+
+Codex.InputActions.Open = Codex:RegisterInputAction("Open", {
+    Name = Codex.TranslatedStrings.InputAction_Open_Name:GetString(),
+    DefaultInput1 = {Keys = {"lctrl", "g"}},
+})
 
 ---------------------------------------------
 -- CLASSES
@@ -90,3 +100,14 @@ function Codex.GetSections()
     end
     return sections
 end
+
+---------------------------------------------
+-- EVENT LISTENERS
+---------------------------------------------
+
+-- Toggle the UI when the input action is used.
+Client.Input.Events.ActionExecuted:Subscribe(function (ev)
+    if ev.Action == Codex.InputActions.Open and Codex.UI then
+        Codex.UI:ToggleVisibility()
+    end
+end)
