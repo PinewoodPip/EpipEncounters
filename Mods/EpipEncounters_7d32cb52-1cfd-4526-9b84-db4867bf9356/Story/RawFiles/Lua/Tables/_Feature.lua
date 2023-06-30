@@ -19,6 +19,7 @@
 ---@field DoNotExportTSKs boolean? If `true`, TSKs will not be exported to localization templates.
 ---@field Settings table<string, SettingsLib_Setting>
 ---@field SupportedGameStates bitfield Defaults to all. See GAME_STATES.
+---@field InputActions table<string, InputLib_Action> ID field is auto-initialized from key and prefixed. Only used in Client context.
 local Feature = {
     Disabled = false,
     Logging = 0,
@@ -91,6 +92,9 @@ end
 ---@return Feature
 function Feature.Create(modTable, id, feature)
     feature.Settings = feature.Settings or {}
+    if Ext.IsClient() then
+        feature.InputActions = feature.InputActions or {}
+    end
 
     feature = OOP.GetClass("Library").Create(modTable, id, feature)
     feature = Feature:__Create(feature) ---@type Feature
@@ -102,6 +106,13 @@ function Feature.Create(modTable, id, feature)
     -- Initialize settings
     for settingID,setting in pairs(feature.Settings) do
         feature:RegisterSetting(settingID, setting)
+    end
+
+    -- Initialize InputLib actions
+    if Ext.IsClient() then
+        for actionID,actionDef in pairs(feature.InputActions) do
+            feature:RegisterInputAction(actionID, actionDef)
+        end
     end
 
     return feature
@@ -166,6 +177,13 @@ function Feature._GetAllSupportedGameStatesBitfield()
     return 2^table.getKeyCount(Feature.GAME_STATES) - 1
 end
 
+---Returns a string containing the feature's mod table and ID.
+---Ex. `"MyModTable_MyFeature"`.
+---@return string
+function Feature:GetNamespace()
+    return self.MOD_TABLE_ID .. "_" .. self.MODULE_ID
+end 
+
 ---------------------------------------------
 -- SETTINGSLIB METHODS
 ---------------------------------------------
@@ -211,15 +229,37 @@ function Feature:SetSettingValue(setting, value)
     Settings.Save(settingsModuleID)
 end
 
+---@see Feature.GetNamespace
+---@deprecated
 ---@return string
 function Feature:GetSettingsModuleID()
-    return self.MOD_TABLE_ID .. "_" .. self.MODULE_ID
+    return self:GetNamespace()
 end
 
 function Feature:SaveSettings()
     if Ext.IsServer() then
         Feature:Error("SaveSettings", "SaveSettings() not implemented on server")
     else
-        Settings.Save(self:GetSettingsModuleID())
+        Settings.Save(self:GetNamespace())
     end
+end
+
+---------------------------------------------
+-- INPUTLIB METHODS
+---------------------------------------------
+
+---Registers an InputLib action.
+---@param id string Will be prefixed with the mod table and feature ID.
+---@param action InputLib_Action
+---@return InputLib_Action
+function Feature:RegisterInputAction(id, action)
+    if not Ext.IsClient() then
+        self:Error("RegisterInputAction", "Called outside of client context")
+    end
+    action.ID = self:GetNamespace() .. "_" .. id
+    action = Client.Input.RegisterAction(id, action)
+
+    self.InputActions[id] = action -- Uses non-prefixed ID.
+
+    return action
 end
