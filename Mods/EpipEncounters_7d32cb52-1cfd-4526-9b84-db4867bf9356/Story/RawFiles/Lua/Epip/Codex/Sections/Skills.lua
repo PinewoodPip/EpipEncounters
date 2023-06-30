@@ -127,16 +127,6 @@ local Skills = {
         "Sourcery",
     },
 
-    CONTAINER_OFFSET = V(35, 35),
-    GRID_OFFSET = V(0, 100),
-    GRID_LIST_FRAME = V(Codex.UI.CONTENT_CONTAINER_SIZE[1], 640),
-    SCHOOL_BUTTONS_OFFSET = V(170, 0),
-    SKILL_SIZE = V(64, 64),
-    SEARCH_BAR_SIZE = V(170, 43),
-    MAX_SKILLS = 400, -- Maximum amount of skills to show. Failsafe to prevent long freezes.
-    SEARCH_DELAY_TIMER_ID = "Feature_Codex_Skills_SearchDelay",
-    SEARCH_DELAY = 0.7, -- In seconds.
-
     TranslatedStrings = {
         Section_Description = {
             Handle = "ha5ab3810g9aa9g4168g89fdgbfd0ee2c4c01",
@@ -184,9 +174,6 @@ function Skills.GetSkills()
     for _,id in ipairs(allSkills) do
         if Skills.IsSkillValid(id) then
             table.insert(skills, {Stat = Stats.Get("SkillData", id), ID = id})
-            if skills[Skills.MAX_SKILLS] then
-                break
-            end
         end
     end
 
@@ -224,6 +211,16 @@ local Section = {
     Name = Text.CommonStrings.Skills,
     Description = Skills.TranslatedStrings.Section_Description,
     Icon = "hotbar_icon_skills", -- TODO find a cooler one
+
+    CONTAINER_OFFSET = V(35, 35),
+    GRID_OFFSET = V(0, 100),
+    GRID_LIST_FRAME = V(Codex.UI.CONTENT_CONTAINER_SIZE[1], 640),
+    SCHOOL_BUTTONS_OFFSET = V(170, 0),
+    SKILL_SIZE = V(64, 64),
+    SEARCH_BAR_SIZE = V(170, 43),
+    MAX_SKILLS = 400, -- Maximum amount of skills to show. Failsafe to prevent long freezes.
+    SEARCH_DELAY_TIMER_ID = "Feature_Codex_Skills_SearchDelay",
+    SEARCH_DELAY = 0.7, -- In seconds.
 }
 SectionClass.Create(Section)
 Codex.RegisterSection("Skills", Section)
@@ -232,30 +229,30 @@ Codex.RegisterSection("Skills", Section)
 ---@param root GenericUI_Element_Empty
 function Section:Render(root)
     Section.Root = root
-    root:Move(Skills.CONTAINER_OFFSET:unpack())
+    root:Move(self.CONTAINER_OFFSET:unpack())
 
-    local searchBar = SearchBarPrefab.Create(Codex.UI, "Skills_SearchBar", root, Skills.SEARCH_BAR_SIZE)
+    local searchBar = SearchBarPrefab.Create(Codex.UI, "Skills_SearchBar", root, self.SEARCH_BAR_SIZE)
     searchBar.Events.SearchChanged:Subscribe(function (ev)
         Skills._SearchTerm = ev.Text
 
         -- Update the grid only after a delay.
-        local existingTimer = Timer.GetTimer(Skills.SEARCH_DELAY_TIMER_ID)
+        local existingTimer = Timer.GetTimer(self.SEARCH_DELAY_TIMER_ID)
         if existingTimer then
             existingTimer:Cancel()
         end
-        Timer.Start(Skills.SEARCH_DELAY_TIMER_ID, Skills.SEARCH_DELAY, function (_)
+        Timer.Start(self.SEARCH_DELAY_TIMER_ID, self.SEARCH_DELAY, function (_)
             Section:UpdateSkills()
         end)
     end)
 
     local gridScrollList = root:AddChild("Skills_Grid_ScrollList", "GenericUI_Element_ScrollList")
-    gridScrollList:SetFrame(Skills.GRID_LIST_FRAME:unpack())
-    gridScrollList:Move(Skills.GRID_OFFSET:unpack())
+    gridScrollList:SetFrame(self.GRID_LIST_FRAME:unpack())
+    gridScrollList:Move(self.GRID_OFFSET:unpack())
     gridScrollList:SetMouseWheelEnabled(true)
     gridScrollList:SetScrollbarSpacing(-80)
 
     local grid = gridScrollList:AddChild("Skills_Grid", "GenericUI_Element_Grid")
-    local columns = math.floor(Codex.UI.CONTENT_CONTAINER_SIZE[1] / Skills.SKILL_SIZE[1])
+    local columns = math.floor(Codex.UI.CONTENT_CONTAINER_SIZE[1] / self.SKILL_SIZE[1])
     grid:SetRepositionAfterAdding(true) -- No noticeable performance impact
     grid:SetGridSize(columns, -1)
 
@@ -276,7 +273,9 @@ function Section:UpdateSkills()
 
     Skills:DebugLog("Updating skills")
 
-    for i=1,math.max(#self._SkillInstances, #skills),1 do
+    -- Update all slots; _UpdateSkill() will hide a slot if `nil` is passed.
+    -- Therefore excess slots are hidden and reusable as a form of pooling.
+    for i=1,math.clamp(#skills, #self._SkillInstances, self.MAX_SKILLS),1 do
         self:_UpdateSkill(i, skills[i])
     end
 
@@ -324,7 +323,7 @@ end
 ---Initializes the buttons for school filters.
 function Section:_SetupSchoolButtons()
     local list = Section.Root:AddChild("Skills_SchoolList", "GenericUI_Element_HorizontalList")
-    list:Move(Skills.SCHOOL_BUTTONS_OFFSET:unpack())
+    list:Move(self.SCHOOL_BUTTONS_OFFSET:unpack())
 
     for _,id in ipairs(Skills.SCHOOL_ORDER) do
         local button = ButtonPrefab.Create(Codex.UI, "Skills_" .. id, list, ButtonPrefab:GetStyle("SquareStone"))
