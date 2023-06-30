@@ -37,6 +37,7 @@ UI.INDEX_ENTRY_STYLE_ACTIVE = {
 }
 UI.INDEX_ENTRY_SIZE = V(200, 30)
 UI.INDEX_ENTRY_LABEL_OFFSET = V(40, 0)
+UI.INDEX_ICON_SIZE = V(24, 24)
 UI.INDEX_ENTRY_ICON_OFFSET = V(10, 0)
 
 Codex.UI = UI
@@ -92,7 +93,10 @@ function UI._UpdateIndex()
         entry:SetLabel(name, "Left")
         entry.Label:Move(UI.INDEX_ENTRY_LABEL_OFFSET:unpack())
         entry:SetTooltip("Simple", description)
-        entry:SetIcon("hotbar_icon_skills", V(24, 24), "Left", UI.INDEX_ENTRY_ICON_OFFSET) -- TODO TEMP
+
+        if section.Icon then
+            entry:SetIcon(section.Icon, UI.INDEX_ICON_SIZE, "Left", UI.INDEX_ENTRY_ICON_OFFSET)
+        end
 
         -- Select the section upon click.
         entry.Events.Pressed:Subscribe(function (_)

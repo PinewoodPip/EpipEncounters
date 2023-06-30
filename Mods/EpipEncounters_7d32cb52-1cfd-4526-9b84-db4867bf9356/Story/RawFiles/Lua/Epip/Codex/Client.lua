@@ -29,6 +29,7 @@ Epip.RegisterFeature("Codex", Codex)
 ---I_Describable is used to provide the name of the section for the index,
 ---as well as a description of the section shown in a tooltip.
 ---@class Feature_Codex_Section : I_Describable, I_Identifiable, Class
+---@field Icon icon? Shown on the index button.
 local Section = {}
 Interfaces.Apply(Section, "I_Identifiable")
 Interfaces.Apply(Section, "I_Describable")

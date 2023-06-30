@@ -223,6 +223,7 @@ local Section = {
 
     Name = Text.CommonStrings.Skills,
     Description = Skills.TranslatedStrings.Section_Description,
+    Icon = "hotbar_icon_skills", -- TODO find a cooler one
 }
 SectionClass.Create(Section)
 Codex.RegisterSection("Skills", Section)
