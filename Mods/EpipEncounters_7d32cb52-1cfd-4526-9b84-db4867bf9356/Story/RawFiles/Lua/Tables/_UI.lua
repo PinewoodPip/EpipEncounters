@@ -118,6 +118,17 @@ function BaseUI:Show()
     end
 end
 
+---Toggles the visibility of the UI.
+---@see UI.Show
+---@see UI.Hide
+function BaseUI:ToggleVisibility()
+    if self:IsVisible() then
+        self:Hide()
+    else
+        self:Show()
+    end
+end
+
 ---Sets the position of the UIObject relative to viewport.
 ---Equivalent to the `setPosition` UI call.
 ---@param anchor "center"|"topleft"|"topright"|"bottomleft"|"bottomright"
