@@ -4,7 +4,7 @@ local Generic = Client.UI.Generic
 local Tooltip = Client.Tooltip
 local V = Vector.Create
 
----@class GenericUI_Prefab_HotbarSlot : GenericUI_Prefab
+---@class GenericUI_Prefab_HotbarSlot : GenericUI_Prefab, GenericUI_I_Elementable
 ---@field SlotIcon GenericUI_Element_IggyIcon
 ---@field RarityIcon GenericUI_Element_IggyIcon
 ---@field RuneSlotsIcon GenericUI_Element_IggyIcon
@@ -29,6 +29,7 @@ local Slot = {
         GetTooltipData = {}, ---@type Event<GenericUI_Prefab_HotbarSlot_Hook_GetTooltipData>
     },
 }
+Generic:RegisterClass("GenericUI_Prefab_HotbarSlot", Slot, {"GenericUI_Prefab", "GenericUI_I_Elementable"})
 Generic.RegisterPrefab("GenericUI_Prefab_HotbarSlot", Slot)
 
 ---------------------------------------------
@@ -175,7 +176,7 @@ end
 
 ---@param skillID string
 function Slot:SetSkill(skillID)
-    local stat = Stats.Get("SkillData", skillID)
+    local stat = Stats.Get("StatsLib_StatsEntry_SkillData", skillID)
     local slot = self.SlotElement
 
     self:SetIcon(stat.Icon)
@@ -319,6 +320,11 @@ end
 ---@return boolean
 function Slot:IsEmpty()
     return self.Object == nil or self.Object.Type == "None"
+end
+
+---@override
+function Slot:GetRootElement()
+    return self.SlotElement
 end
 
 ---Shows the tooltip for the slot's held object.
