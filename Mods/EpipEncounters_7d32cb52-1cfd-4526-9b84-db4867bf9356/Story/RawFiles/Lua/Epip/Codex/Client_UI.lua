@@ -60,8 +60,15 @@ function UI.SetSection(section)
     local contentContainer = UI.ContentContainer
     local sectionID = section:GetID()
     local sectionRoot = UI._GetSectionRoot(sectionID)
+    local previousSection = UI._CurrentSection
 
     Codex:DebugLog("Setting section to", sectionID)
+
+    -- Hide previous section
+    if previousSection then
+        local previousSectionRoot = UI._GetSectionRoot(previousSection:GetID())
+        previousSectionRoot:SetVisible(false)
+    end
 
     -- Create root element if necessary
     if not sectionRoot then
@@ -80,6 +87,7 @@ function UI.SetSection(section)
     -- Update index and section
     UI:_UpdateIndex()
     UI:_UpdateSection()
+    sectionRoot:SetVisible(true)
 end
 
 ---Updates the index, which shows all registered sections.
