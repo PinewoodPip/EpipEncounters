@@ -40,6 +40,7 @@ local Skills = {
         "Shout_Shout_Toggle_Sprint",
         "Shout_LLSPRINT_ToggleSprint",
         "Shout_DEV06_ConsumeSpirits",
+        "Jump_DEV06_DevourerJump",
     }),
     -- Set of vanilla skills removed in EE.
     EE_SKILL_BLACKLIST = Set.Create({
@@ -154,6 +155,14 @@ local Skills = {
 Epip.RegisterFeature("Codex_Skills", Skills)
 
 ---------------------------------------------
+-- CLASSES
+---------------------------------------------
+
+---@class Feature_Codex_Skills_Skill
+---@field ID string
+---@field Stat StatsLib_StatsEntry_SkillData
+
+---------------------------------------------
 -- EVENTS AND HOOKS
 ---------------------------------------------
 
@@ -167,7 +176,7 @@ Epip.RegisterFeature("Codex_Skills", Skills)
 ---------------------------------------------
 
 ---Returns the skills to render.
----@return {Stat:StatsLib_StatsEntry_SkillData, ID:string}[]
+---@return Feature_Codex_Skills_Skill[]
 function Skills.GetSkills()
     local allSkills = Ext.Stats.GetStats("SkillData")
     local skills = {}
@@ -207,13 +216,16 @@ end
 -- SECTION
 ---------------------------------------------
 
-local Section = SectionClass.Create({
+---@class Feature_Codex_Skills_Section : Feature_Codex_Section
+local Section = {
+    _SchoolButtons = {}, ---@type table<string, GenericUI_Prefab_Button>
+    _SkillInstances = {}, ---@type GenericUI_Prefab_HotbarSlot[]
+
     Name = Text.CommonStrings.Skills,
     Description = Skills.TranslatedStrings.Section_Description,
-})
+}
+SectionClass.Create(Section)
 Codex.RegisterSection("Skills", Section)
-
-Section._SchoolButtons = {} ---@type table<string, GenericUI_Prefab_Button>
 
 ---@override
 ---@param root GenericUI_Element_Empty
@@ -243,7 +255,7 @@ function Section:Render(root)
 
     local grid = gridScrollList:AddChild("Skills_Grid", "GenericUI_Element_Grid")
     local columns = math.floor(Codex.UI.CONTENT_CONTAINER_SIZE[1] / Skills.SKILL_SIZE[1])
-    grid:SetRepositionAfterAdding(false)
+    grid:SetRepositionAfterAdding(true) -- No noticeable performance impact
     grid:SetGridSize(columns, -1)
 
     Section:_SetupSchoolButtons()
@@ -256,23 +268,35 @@ end
 
 ---Updates the skills grid.
 function Section:UpdateSkills()
-    local grid = Section.Grid
     local skills = Skills.GetSkills()
 
-    grid:ClearElements()
-
-    for _,skill in ipairs(skills) do
-        local slot = SlotPrefab.Create(Codex.UI, skill.ID, grid)
-        slot:SetSkill(skill.ID)
-        slot:SetCanDrop(false)
-        slot:SetCanDrag(true, false)
-        slot:SetUpdateDelay(-1)
-        slot:SetEnabled(true)
+    for i=1,math.max(#self._SkillInstances, #skills),1 do
+        self:_UpdateSkill(i, skills[i])
     end
 
-    grid:RepositionElements()
-
     Section.GridScrollList:RepositionElements()
+end
+
+---Updates a skill element.
+---@param index integer The element will be created if there isn't one at the index.
+---@param skill Feature_Codex_Skills_Skill? Use `nil` to hide the slot.
+function Section:_UpdateSkill(index, skill)
+    local instance = self._SkillInstances[index]
+    if not instance then
+        instance = SlotPrefab.Create(Codex.UI, skill and skill.ID or "", self.Grid)
+        instance:SetCanDrop(false)
+        instance:SetCanDrag(true, false)
+        instance:SetUpdateDelay(-1)
+        instance:SetEnabled(true)
+
+        self._SkillInstances[index] = instance
+    end
+
+    if skill then
+        instance:SetSkill(skill.ID)
+    end
+
+    instance:SetVisible(skill ~= nil)
 end
 
 ---Updates a skill school button.
