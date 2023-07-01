@@ -402,9 +402,9 @@ local function OnStatusGetDescription(event)
 end
 
 -- Replace "(before damage modifiers)" in status tooltips that we're fixing to show real damage.
-function OnStatusTooltipRender(char, status, tooltip)
+local function OnStatusTooltipRender(_, status, tooltip)
     if Data.Game.DAMAGING_STATUS_SKILLS[status.StatusId] then
-        for i,v in pairs(tooltip.Data) do
+        for _,v in pairs(tooltip.Data) do
             v.Label = v.Label:gsub(" %(before damage modifiers%)", "")
             v.Label = v.Label:gsub(" %(before modifiers%)", "")
         end

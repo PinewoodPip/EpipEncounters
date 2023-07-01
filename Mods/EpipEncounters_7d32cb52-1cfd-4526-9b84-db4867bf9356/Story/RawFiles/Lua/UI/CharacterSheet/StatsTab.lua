@@ -288,7 +288,7 @@ local function OnTabOpen(ui, method, tab)
     end
 end
 
-function OnStatTooltipRender(object, stat, tooltip)
+local function OnStatTooltipRender(_, stat, tooltip)
     if not StatsTab.currentlySelectedStat or stat ~= StatsTab.TOOLTIP_TALENT_NAME then return nil end
 
     local data = CustomStats.GetStat(StatsTab.currentlySelectedStat) or CustomStats.GetCategory(StatsTab.currentlySelectedStat)

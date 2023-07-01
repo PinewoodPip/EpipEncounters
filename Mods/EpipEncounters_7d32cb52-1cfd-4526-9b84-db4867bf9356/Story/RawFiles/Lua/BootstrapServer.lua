@@ -19,7 +19,7 @@
     I would prefer to release Epip publicly only when it meets my quality standards.
     Please understand.
 
-    If there is a particular feature in EE that you're interested in implementing in your own mod, contact me and I can guide you on how it was engineered. <3
+    If there is a particular feature in Epip that you're interested in implementing in your own mod, contact me and I can guide you on how it was engineered. <3
 
     Huge thanks to the EE community, without whom I would've never gotten this far into modding this game.
 

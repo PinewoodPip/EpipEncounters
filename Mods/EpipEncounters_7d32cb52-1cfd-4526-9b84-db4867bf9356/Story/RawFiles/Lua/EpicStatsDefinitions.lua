@@ -8,10 +8,6 @@ function GetCurrentCharges(char, reaction)
     return db[1][3]
 end
 
-function GetLifesteal(char)
-    return Ext.GetCharacter(char).Stats.LifeSteal
-end
-
 function GetExtendedStatDBValue(db)
     if #db == 0 then
         return 0
@@ -232,7 +228,9 @@ epicStats = {
         ["LifeSteal"] = {
             ["Display"] = "Lifesteal",
             ["Description"] = "Lifesteal causes a percentage of the damage that you deal to Vitality to be restored to your own.",
-            ["getter"] = GetLifesteal,
+            ["getter"] = function (char)
+                return char.Stats.LifeSteal
+            end,
         },
         -- ["BatteredHarriedThreshold_Calculated"] = {
         --     ["Display"] = "B/H Threshold",

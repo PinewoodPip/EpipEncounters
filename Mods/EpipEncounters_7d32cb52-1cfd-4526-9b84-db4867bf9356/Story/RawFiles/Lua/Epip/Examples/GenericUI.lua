@@ -3,7 +3,7 @@ local Generic = Client.UI.Generic
 local SpinnerPrefab = Generic.GetPrefab("GenericUI_Prefab_Spinner")
 
 -- Creates the UI
-ExampleUI = Generic.Create("PIP_ExampleUI")
+local ExampleUI = Generic.Create("PIP_ExampleUI")
 
 -- Adds a background element
 local background = ExampleUI:CreateElement("MyBackground", "GenericUI_Element_TiledBackground")
