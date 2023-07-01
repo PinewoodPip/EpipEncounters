@@ -40,6 +40,7 @@ Codex.InputActions.Open = Codex:RegisterInputAction("Open", {
 ---as well as a description of the section shown in a tooltip.
 ---@class Feature_Codex_Section : I_Describable, I_Identifiable, Class
 ---@field Icon icon? Shown on the index button.
+---@field Settings Features.SettingWidgets.SupportedSettingType[]? If present and not empty, the section will gain a configuration panel, set-up automatically.
 local Section = {}
 Interfaces.Apply(Section, "I_Identifiable")
 Interfaces.Apply(Section, "I_Describable")
@@ -55,6 +56,7 @@ end
 
 ---Called to render the core static elements of the section.
 ---Used to initialize the UI. **Only called once.**
+---@abstract
 ---@param root GenericUI_Element_Empty Root element for your section. For correct bookkeeping, keep all of your section's hierarchy within this element.
 ---@diagnostic disable-next-line: unused-local
 function Section:Render(root) end
@@ -63,6 +65,8 @@ function Section:Render(root) end
 ---These moments include:
 ---- After the UI being opened, if the section was active
 ---- After the section is set as active (after Render(), if the section has not been initialized yet)
+---- After any setting related to the section has its value changed via the config panel (see `Settings` field)
+---@abstract
 ---@param root GenericUI_Element_Empty Root element for your section. For correct bookkeeping, keep all of your section's hierarchy within this element.
 ---@diagnostic disable-next-line: unused-local
 function Section:Update(root) end

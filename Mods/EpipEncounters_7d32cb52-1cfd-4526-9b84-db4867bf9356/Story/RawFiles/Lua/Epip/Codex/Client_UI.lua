@@ -8,6 +8,7 @@ local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 local ButtonPrefab = Generic.GetPrefab("GenericUI_Prefab_Button")
 local CloseButtonPrefab = Generic.GetPrefab("GenericUI_Prefab_CloseButton")
 local Textures = Epip.GetFeature("Feature_GenericUITextures").TEXTURES
+local SettingWidgets = Epip.GetFeature("Features.SettingWidgets")
 local Codex = Epip.GetFeature("Feature_Codex")
 local TSK = Codex.TranslatedStrings
 local V = Vector.Create
@@ -24,21 +25,25 @@ UI.HEADER_HEIGHT = 50
 UI.HEADER_SIZE = V(436, UI.HEADER_HEIGHT)
 UI.SECTION_HEADER_SIZE = V(875, UI.HEADER_HEIGHT)
 UI.CONTENT_CONTAINER_SIZE = V(812, 777)
+
+UI.INDEX_CONTAINER_OFFSET = V(-630, -320)
+UI.INDEX_ENTRY_SIZE = V(400, 32)
 ---@type GenericUI_Prefab_Button_Style
 UI.INDEX_ENTRY_STYLE_INACTIVE = {
     IdleTexture = Textures.BUTTONS.LABEL.POINTY.IDLE,
     HighlightedTexture = Textures.BUTTONS.LABEL.POINTY.HIGHLIGHTED,
-    Size = V(400, 32),
+    Size = UI.INDEX_ENTRY_SIZE,
 }
 UI.INDEX_ENTRY_STYLE_ACTIVE = {
     IdleTexture = Textures.BUTTONS.LABEL.POINTY.HIGHLIGHTED,
     HighlightedTexture = Textures.BUTTONS.LABEL.POINTY.HIGHLIGHTED,
-    Size = V(400, 32),
+    Size = UI.INDEX_ENTRY_SIZE,
 }
-UI.INDEX_ENTRY_SIZE = V(200, 30)
 UI.INDEX_ENTRY_LABEL_OFFSET = V(40, 0)
 UI.INDEX_ICON_SIZE = V(24, 24)
 UI.INDEX_ENTRY_ICON_OFFSET = V(10, 0)
+
+UI.SETTING_ELEMENT_SIZE = V(UI.INDEX_ENTRY_SIZE[1] - 20, 50)
 
 Codex.UI = UI
 
@@ -90,6 +95,10 @@ function UI.SetSection(section)
     sectionRoot:SetVisible(true)
 end
 
+---------------------------------------------
+-- PRIVATE METHODS
+---------------------------------------------
+
 ---Updates the index, which shows all registered sections.
 function UI._UpdateIndex()
     local list = UI.IndexList
@@ -98,10 +107,11 @@ function UI._UpdateIndex()
     for _,section in ipairs(Codex.GetSections()) do
         local name = section:GetName()
         local description = section:GetTooltip()
+        local isActive = UI._CurrentSection == section
 
         local entry = ButtonPrefab.Create(UI, section:GetID(), list, UI.INDEX_ENTRY_STYLE_INACTIVE)
         entry:SetActiveStyle(UI.INDEX_ENTRY_STYLE_ACTIVE)
-        entry:SetActivated(UI._CurrentSection == section) -- Current section shows as activated
+        entry:SetActivated(isActive) -- Current section shows as activated
         entry:SetLabel(name, "Left")
         entry.Label:Move(UI.INDEX_ENTRY_LABEL_OFFSET:unpack())
         entry:SetTooltip("Simple", description)
@@ -114,6 +124,19 @@ function UI._UpdateIndex()
         entry.Events.Pressed:Subscribe(function (_)
             UI.SetSection(section)
         end)
+
+        -- Render section settings
+        if isActive then
+            local settingsList = list:AddChild(Text.GenerateGUID(), "GenericUI_Element_VerticalList")
+            settingsList:SetCenterInLists(true)
+
+            for _,setting in ipairs(section.Settings or {}) do
+                SettingWidgets.RenderSetting(UI, settingsList, setting, UI.SETTING_ELEMENT_SIZE, function (_)
+                    -- Update the section when a setting value changes from a widget
+                    section:Update(UI._GetSectionRoot(section:GetID()))
+                end)
+            end
+        end
     end
 
     list:RepositionElements()
@@ -177,7 +200,7 @@ function UI._Init()
         UI.ContentContainer = contentContainer
 
         local indexContainer = bg:AddChild("IndexContainer", "GenericUI_Element_Empty")
-        indexContainer:SetPositionRelativeToParent("Center", -630, -320)
+        indexContainer:SetPositionRelativeToParent("Center", UI.INDEX_CONTAINER_OFFSET:unpack())
         UI.IndexContainer = indexContainer
 
         local indexList = indexContainer:AddChild("IndexList", "GenericUI_Element_ScrollList")
