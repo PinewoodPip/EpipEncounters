@@ -33,13 +33,16 @@ function Stylable:RegisterStyle(id, style)
 end
 
 ---Returns a style by its ID.
+---Throws if the style is not registered.
 ---@param id string
 ---@return GenericUI_I_Stylable_Style
 function Stylable:GetStyle(id)
-    local def = self:GetClassDefinition()
-    ---@cast def GenericUI_I_Stylable
-    
-    return def._RegisteredStyles[id]
+    local def = self:GetClassDefinition() ---@cast def GenericUI_I_Stylable
+    local style = def._RegisteredStyles[id]
+    if not style then
+        Generic:Error("Stylable:GetStyle", "Style not registered", id)
+    end
+    return style
 end
 
 ---Sets the style.
