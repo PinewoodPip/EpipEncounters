@@ -12,6 +12,7 @@ local SearchBarPrefab = Generic.GetPrefab("GenericUI_Prefab_SearchBar")
 local SlotPrefab = Generic.GetPrefab("GenericUI_Prefab_HotbarSlot")
 local ButtonPrefab = Generic.GetPrefab("GenericUI_Prefab_Button")
 local Icons = Epip.GetFeature("Feature_GenericUITextures").ICONS
+local SkillbookTemplates = Epip.GetFeature("Features.SkillbookTemplates")
 local V = Vector.Create
 
 ---@type Feature
@@ -41,6 +42,7 @@ local Skills = {
         "Shout_LLSPRINT_ToggleSprint",
         "Shout_DEV06_ConsumeSpirits",
         "Jump_DEV06_DevourerJump",
+        "Projectile_CON00_SetBonus",
     }),
     -- Set of vanilla skills removed in EE.
     EE_SKILL_BLACKLIST = Set.Create({
@@ -127,11 +129,47 @@ local Skills = {
         "Sourcery",
     },
 
+    SKILLBOOK_FILTER_SETTING_VALUES = {
+        OFF = "Off",
+        HAS_SKILLBOOK = "HasSkillbook",
+        NO_SKILLBOOK = "NoSkillbook",
+    },
+
     TranslatedStrings = {
         Section_Description = {
             Handle = "ha5ab3810g9aa9g4168g89fdgbfd0ee2c4c01",
             Text = "Shows skills available to players.",
             ContextDescription = "Description for Skills section",
+        },
+        Setting_ShowLearnt_Name = {
+           Handle = "h7eaa3d1dg94a2g4136g969dg1ba9f6796fca",
+           Text = "Show Learnt",
+           ContextDescription = "Setting name",
+        },
+        Setting_ShowMemorized_Name = {
+           Handle = "hb1aa6659g9385g4966g9b9fga77082927a94",
+           Text = "Show Memorized",
+           ContextDescription = "Setting name",
+        },
+        Setting_ShowNotLearnt_Name = {
+           Handle = "h254f04a8gbaceg4970g97bdga522f285b929",
+           Text = "Show Not Learnt",
+           ContextDescription = "Setting name",
+        },
+        Setting_SkillbookFilter_Name = {
+           Handle = "he415fd76g51bfg4b25g955cg59c3165c73ba",
+           Text = "Skillbook",
+           ContextDescription = "Setting name",
+        },
+        Setting_SkillbookFilter_Option_HasSkillbook = {
+           Handle = "h5e83b5f4g33f8g45e6ga968gecd0cad8d465",
+           Text = "Has Skillbook",
+           ContextDescription = "Setting value",
+        },
+        Setting_SkillbookFilter_Option_NoSkillbook = {
+           Handle = "he6042694g235ag4c68gbcccgb1a4769ae7bd",
+           Text = "No Skillbook",
+           ContextDescription = "Setting value",
         },
     },
 
@@ -143,6 +181,7 @@ local Skills = {
     },
 }
 Epip.RegisterFeature("Codex_Skills", Skills)
+local TSK = Skills.TranslatedStrings
 
 ---------------------------------------------
 -- CLASSES
@@ -160,6 +199,39 @@ Epip.RegisterFeature("Codex_Skills", Skills)
 ---@field Stat StatsLib_StatsEntry_SkillData
 ---@field ID string
 ---@field Valid boolean Hookable. Defaults to `true`.
+
+---------------------------------------------
+-- SETTINGS
+---------------------------------------------
+
+-- Learnt/memorized filters
+Skills.Settings.ShowNotLearnt = Skills:RegisterSetting("ShowNotLearnt", {
+    Type = "Boolean",
+    Name = TSK.Setting_ShowNotLearnt_Name,
+    DefaultValue = true,
+})
+Skills.Settings.ShowLearnt = Skills:RegisterSetting("ShowLearnt", {
+    Type = "Boolean",
+    Name = TSK.Setting_ShowLearnt_Name,
+    DefaultValue = true,
+})
+Skills.Settings.ShowMemorized = Skills:RegisterSetting("ShowMemorized", {
+    Type = "Boolean",
+    Name = TSK.Setting_ShowMemorized_Name,
+    DefaultValue = true,
+})
+
+Skills.Settings.SkillbookFilter = Skills:RegisterSetting("SkillbookFilter", {
+    Type = "Choice",
+    NameHandle = TSK.Setting_SkillbookFilter_Name,
+    DefaultValue = Skills.SKILLBOOK_FILTER_SETTING_VALUES.OFF,
+    ---@type SettingsLib_Setting_Choice_Entry[]
+    Choices = {
+        {ID = Skills.SKILLBOOK_FILTER_SETTING_VALUES.OFF, NameHandle = Text.CommonStrings.NoFilter.Handle},
+        {ID = Skills.SKILLBOOK_FILTER_SETTING_VALUES.NO_SKILLBOOK, NameHandle = TSK.Setting_SkillbookFilter_Option_NoSkillbook.Handle},
+        {ID = Skills.SKILLBOOK_FILTER_SETTING_VALUES.HAS_SKILLBOOK, NameHandle = TSK.Setting_SkillbookFilter_Option_HasSkillbook.Handle},
+    }
+})
 
 ---------------------------------------------
 -- METHODS
@@ -209,14 +281,21 @@ local Section = {
     _SkillInstances = {}, ---@type GenericUI_Prefab_HotbarSlot[]
 
     Name = Text.CommonStrings.Skills,
-    Description = Skills.TranslatedStrings.Section_Description,
+    Description = TSK.Section_Description,
     Icon = "hotbar_icon_skills", -- TODO find a cooler one
+    Settings = {
+        Skills.Settings.ShowNotLearnt,
+        Skills.Settings.ShowLearnt,
+        Skills.Settings.ShowMemorized,
+
+        Skills.Settings.SkillbookFilter,
+    },
 
     CONTAINER_OFFSET = V(35, 35),
     GRID_OFFSET = V(0, 100),
     GRID_LIST_FRAME = V(Codex.UI.CONTENT_CONTAINER_SIZE[1], 640),
     SCHOOL_BUTTONS_OFFSET = V(170, 0),
-    SKILL_SIZE = V(64, 64),
+    SKILL_SIZE = V(58, 58),
     SEARCH_BAR_SIZE = V(170, 43),
     MAX_SKILLS = 400, -- Maximum amount of skills to show. Failsafe to prevent long freezes.
     SEARCH_DELAY_TIMER_ID = "Feature_Codex_Skills_SearchDelay",
@@ -252,7 +331,7 @@ function Section:Render(root)
     gridScrollList:SetScrollbarSpacing(-80)
 
     local grid = gridScrollList:AddChild("Skills_Grid", "GenericUI_Element_Grid")
-    local columns = math.floor(Codex.UI.CONTENT_CONTAINER_SIZE[1] / self.SKILL_SIZE[1])
+    local columns = math.floor(self.GRID_LIST_FRAME[1] / (self.SKILL_SIZE[1] + 5))
     grid:SetRepositionAfterAdding(true) -- No noticeable performance impact
     grid:SetGridSize(columns, -1)
 
@@ -280,6 +359,7 @@ function Section:UpdateSkills()
     end
 
     Section.GridScrollList:RepositionElements()
+    Section.GridScrollList:GetMovieClip().list.resetScroll() -- TODO public API
 end
 
 ---Updates a skill element.
@@ -288,7 +368,8 @@ end
 function Section:_UpdateSkill(index, skill)
     local instance = self._SkillInstances[index]
     if not instance then
-        instance = SlotPrefab.Create(Codex.UI, skill and skill.ID or "", self.Grid)
+        instance = SlotPrefab.Create(Codex.UI, "Skills_Skill_" .. index, self.Grid)
+        instance.SlotElement:SetSizeOverride(Section.SKILL_SIZE) -- Required to fix a positioning issue.
         instance:SetCanDrop(false)
         instance:SetCanDrag(true, false)
         instance:SetUpdateDelay(-1)
@@ -408,7 +489,36 @@ Skills.Hooks.IsSkillValid:Subscribe(function (ev)
             end
         end
 
-        -- Filter based on search term
+        -- Filter based on settings
+        local showNotLearnt = Skills:GetSettingValue(Skills.Settings.ShowNotLearnt)
+        local showMemorized = Skills:GetSettingValue(Skills.Settings.ShowMemorized)
+        local showLearnt = Skills:GetSettingValue(Skills.Settings.ShowLearnt)
+        local skillbookFilter = Skills:GetSettingValue(Skills.Settings.SkillbookFilter)
+        local char = Client.GetCharacter()
+
+        if not showNotLearnt and not Character.IsSkillLearnt(char, ev.ID) then
+            valid = false
+            goto End
+        end
+        if not showMemorized and (Character.IsSkillMemorized(char, ev.ID) and not Character.IsSkillInnate(char, ev.ID)) then
+            valid = false
+            goto End
+        end
+        if not showLearnt and (Character.IsSkillLearnt(char, ev.ID) and not Character.IsSkillMemorized(char, ev.ID)) then
+            valid = false
+            goto End
+        end
+
+        local hasSkillbook = #SkillbookTemplates.GetForSkill(ev.ID) > 0
+        if skillbookFilter == Skills.SKILLBOOK_FILTER_SETTING_VALUES.HAS_SKILLBOOK and not hasSkillbook then
+            valid = false
+            goto End
+        elseif skillbookFilter == Skills.SKILLBOOK_FILTER_SETTING_VALUES.NO_SKILLBOOK and hasSkillbook then
+            valid = false
+            goto End
+        end
+        
+        -- Filter based on search term - should be done last for performance reasons
         local searchTerm = Skills._SearchTerm:lower()
         if searchTerm ~= "" then
             local lowercaseName = (Ext.L10N.GetTranslatedStringFromKey(stat.DisplayName) or stat.DisplayNameRef):lower()

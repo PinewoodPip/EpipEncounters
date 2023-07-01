@@ -128,6 +128,14 @@ Text.CommonStrings.Layer = Text.RegisterTranslatedString({
    Handle = "hd790b2dcg7db3g478bg8fb6g96dfabe9dbd2",
    Text = "Layer",
 })
+Text.CommonStrings.Back = Text.RegisterTranslatedString({
+   Handle = "hbe579ebcg3585g4373g8d80g99de57eb1e7a",
+   Text = "Back",
+})
+Text.CommonStrings.NoFilter = Text.RegisterTranslatedString({
+   Handle = "h45a75b5agbe29g438dgbf17g6a9362cd7eed",
+   Text = "No Filter",
+})
 
 ---------------------------------------------
 -- BRANDING
