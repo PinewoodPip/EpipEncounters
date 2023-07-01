@@ -14,55 +14,64 @@ QuickInventory.SLOTS_WITH_ARMOR_SUBTYPES = Set.Create({
 })
 
 QuickInventory.DYNAMIC_STAT_FIELD_ALIASES = {
-    -- Resistances
+    -- Damage types
     ["Fire"] = Set.Create({
-        "Fire Resistance",
-        "Resistance",
-
         "Fire Damage",
         "Damage",
     }),
     ["Air"] = Set.Create({
-        "Air Resistance",
-        "Resistance",
-
         "Air Damage",
         "Damage",
     }),
     ["Water"] = Set.Create({
-        "Water Resistance",
-        "Resistance",
-
         "Water Damage",
         "Damage",
     }),
     ["Earth"] = Set.Create({
-        "Earth Resistance",
-        "Resistance",
-
         "Earth Damage",
         "Damage",
     }),
     ["Poison"] = Set.Create({
-        "Poison Resistance",
-        "Resistance",
-
         "Poison Damage",
         "Damage",
     }),
     ["Physical"] = Set.Create({
-        "Physical Resistance",
-        "Resistance",
-
         "Physical Damage",
         "Damage",
     }),
     ["Piercing"] = Set.Create({
-        "Piercing Resistance",
-        "Resistance",
-
         "Piercing Damage",
         "Damage",
+    }),
+
+    -- Resistances
+    ["FireResistance"] = Set.Create({
+        "Fire Resistance",
+        "Resistance",
+    }),
+    ["AirResistance"] = Set.Create({
+        "Air Resistance",
+        "Resistance",
+    }),
+    ["WaterResistance"] = Set.Create({
+        "Water Resistance",
+        "Resistance",
+    }),
+    ["EarthResistance"] = Set.Create({
+        "Earth Resistance",
+        "Resistance",
+    }),
+    ["PoisonResistance"] = Set.Create({
+        "Poison Resistance",
+        "Resistance",
+    }),
+    ["PhysicalResistance"] = Set.Create({
+        "Physical Resistance",
+        "Resistance",
+    }),
+    ["PiercingResistance"] = Set.Create({
+        "Piercing Resistance",
+        "Resistance",
     }),
 
     -- Abilities
@@ -116,6 +125,7 @@ QuickInventory.DYNAMIC_STAT_FIELD_ALIASES = {
         "Critical Chance",
     }),
 }
+
 -- Convert set elements to lowercase
 for k,aliasSet in pairs(QuickInventory.DYNAMIC_STAT_FIELD_ALIASES) do
     local newSet = Set.Create()
@@ -232,7 +242,7 @@ local function ItemMatchesStatBoostQuery(item, query)
 
     for i=1,#dynamicStats,1 do
         local dynStat = dynamicStats[i]
-        
+
         for field,value in pairs(dynStat) do
             local valueIsNotDefault = false
             local lowerCaseField = CACHED_STAT_FIELDS[field]
@@ -303,7 +313,7 @@ QuickInventory.Hooks.IsItemVisible:Subscribe(function (ev)
             if weaponSubTypeSetting ~= "Any" then
                 visible = visible and Item.GetEquipmentSubtype(item) == weaponSubTypeSetting
             end
-        elseif QuickInventory.SLOTS_WITH_ARMOR_SUBTYPES:Contains(itemSlotSetting) then 
+        elseif QuickInventory.SLOTS_WITH_ARMOR_SUBTYPES:Contains(itemSlotSetting) then
             local armorSubTypeSetting = QuickInventory:GetSettingValue(QuickInventory.Settings.ArmorSubType)
 
             -- Armor subtype restriction
