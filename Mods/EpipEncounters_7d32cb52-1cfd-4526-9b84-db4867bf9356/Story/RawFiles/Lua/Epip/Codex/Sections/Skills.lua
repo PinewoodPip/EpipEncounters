@@ -183,6 +183,13 @@ local Skills = {
 Epip.RegisterFeature("Codex_Skills", Skills)
 local TSK = Skills.TranslatedStrings
 
+-- Map for stat ability -> integer
+Skills._StatAbilityToIndex = {} ---@type table<StatsLib_Enum_SkillAbility, integer>
+for i,id in ipairs(Skills.SCHOOL_ORDER) do
+    local statAbility = table.reverseLookup(Skills.STATABILITY_TO_SCHOOL, id)
+    Skills._StatAbilityToIndex[statAbility] = i
+end
+
 ---------------------------------------------
 -- CLASSES
 ---------------------------------------------
@@ -241,13 +248,27 @@ Skills.Settings.SkillbookFilter = Skills:RegisterSetting("SkillbookFilter", {
 ---@return Feature_Codex_Skills_Skill[]
 function Skills.GetSkills()
     local allSkills = Ext.Stats.GetStats("SkillData")
-    local skills = {}
+    local skills = {} ---@type Feature_Codex_Skills_Skill[]
 
     for _,id in ipairs(allSkills) do
         if Skills.IsSkillValid(id) then
             table.insert(skills, {Stat = Stats.Get("SkillData", id), ID = id})
         end
     end
+
+    -- Sort skills by school and ID
+    table.sort(skills, function (a, b)
+        local schoolA = Skills._StatAbilityToIndex[a.Stat.Ability]
+        local schoolB = Skills._StatAbilityToIndex[b.Stat.Ability]
+
+        if schoolA ~= schoolB then -- Sort by school
+            return schoolA < schoolB
+        else -- Sort alphabetically by display name
+            local displayNameA = Skills._GetSkillDisplayName(a.Stat)
+            local displayNameB = Skills._GetSkillDisplayName(b.Stat)
+            return displayNameA < displayNameB
+        end
+    end)
 
     return skills
 end
@@ -269,6 +290,17 @@ end
 ---@return boolean
 function Skills.IsSchoolFiltered(schoolID)
     return Skills._HiddenSchools:Contains(schoolID)
+end
+
+---------------------------------------------
+-- PRIVATE METHODS
+---------------------------------------------
+
+---Returns the display name of a skill.
+---@param stat StatsLib_StatsEntry_SkillData
+---@return string
+function Skills._GetSkillDisplayName(stat) -- TODO move elsewhere
+    return Ext.L10N.GetTranslatedStringFromKey(stat.DisplayName) or stat.DisplayNameRef
 end
 
 ---------------------------------------------
@@ -521,7 +553,7 @@ Skills.Hooks.IsSkillValid:Subscribe(function (ev)
         -- Filter based on search term - should be done last for performance reasons
         local searchTerm = Skills._SearchTerm:lower()
         if searchTerm ~= "" then
-            local lowercaseName = (Ext.L10N.GetTranslatedStringFromKey(stat.DisplayName) or stat.DisplayNameRef):lower()
+            local lowercaseName = Skills._GetSkillDisplayName(ev.Stat):lower()
 
             if not lowercaseName:match(searchTerm) and not lowercaseID:match(searchTerm) then
                 valid = false
