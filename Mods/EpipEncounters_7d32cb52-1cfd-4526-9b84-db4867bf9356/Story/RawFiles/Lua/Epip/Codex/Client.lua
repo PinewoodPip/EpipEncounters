@@ -66,6 +66,7 @@ function Section:Render(root) end
 ---- After the UI being opened, if the section was active
 ---- After the section is set as active (after Render(), if the section has not been initialized yet)
 ---- After any setting related to the section has its value changed via the config panel (see `Settings` field)
+---- After the active client character is changed
 ---@abstract
 ---@param root GenericUI_Element_Empty Root element for your section. For correct bookkeeping, keep all of your section's hierarchy within this element.
 ---@diagnostic disable-next-line: unused-local

@@ -209,3 +209,12 @@ function UI._Init()
         UI._Initialized = true
     end
 end
+
+---------------------------------------------
+-- EVENT LISTENERS
+---------------------------------------------
+
+-- Update the section when the active client character changes.
+Client.Events.ActiveCharacterChanged:Subscribe(function (_)
+    UI._UpdateSection()
+end)
