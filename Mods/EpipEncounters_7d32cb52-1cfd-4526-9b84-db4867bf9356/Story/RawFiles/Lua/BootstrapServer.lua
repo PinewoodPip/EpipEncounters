@@ -143,6 +143,8 @@ LOAD_ORDER = {
     {ScriptSet = "Utilities/EpicEncounters/BatteredHarried", RequiresEE = true},
     {ScriptSet = "Utilities/EpicEncounters/DeltaMods", RequiresEE = true},
 
+    "Epip/SkillbookTemplates/Shared.lua",
+
     "Game/AMERUI/Shared.lua",
     "Game/AMERUI/Server.lua",
     "Game/Ascension/Shared.lua",

@@ -197,6 +197,8 @@ LOAD_ORDER = {
 
     "UI/OptionsSettings.lua",
 
+    "Epip/SkillbookTemplates/Shared.lua",
+
     -- Needs to be ordered after the above.
     "Epip/Settings.lua",
     "Epip/Client/SettingsRegistration.lua",

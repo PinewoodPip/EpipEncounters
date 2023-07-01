@@ -222,11 +222,17 @@ function Item.HasUseActions(item)
 end
 
 ---Returns the use actions of an item, optionally filtered by type.
----@param item Item
+---@param item Item|ItemTemplate
 ---@param actionType ActionDataType
 ---@return IActionData[]
 function Item.GetUseActions(item, actionType)
-    local allActions = item.RootTemplate.OnUsePeaceActions
+    local template
+    if GetExtType(item) == "ItemTemplate" then -- Template overload.
+        template = item
+    else
+        template = item.RootTemplate
+    end
+    local allActions = template.OnUsePeaceActions
     local actions = {}
 
     for _,action in ipairs(allActions) do
