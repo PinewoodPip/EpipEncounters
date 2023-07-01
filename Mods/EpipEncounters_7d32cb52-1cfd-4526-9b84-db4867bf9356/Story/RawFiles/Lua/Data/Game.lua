@@ -246,23 +246,6 @@ for id,data in pairs(Data.Game.DYES) do
     Data.Game.DYE_TEMPLATES[id] = true
 end
 
-Data.Game.DYES_ORDERED = {
-    Data.Game.DYES.ABYSS,
-    Data.Game.DYES.CLAY,
-    Data.Game.DYES.CORAL,
-    Data.Game.DYES.EARTH,
-    Data.Game.DYES.FOG,
-    Data.Game.DYES.LICHEN,
-    Data.Game.DYES.MIDNIGHT,
-    Data.Game.DYES.NEMESIS,
-    Data.Game.DYES.SAFFRON,
-    Data.Game.DYES.SEAFOAM,
-    Data.Game.DYES.SMOKE,
-    Data.Game.DYES.STEALTH,
-    Data.Game.DYES.VERDURE,
-    Data.Game.DYES.VOID,
-}
-
 Data.Game.ABILITIES = {
     WarriorLore = "Warfare",
     RangerLore = "Huntsman",
@@ -689,16 +672,6 @@ Data.Game.TORTURER_SKILL_OVERRIDES = {
 Data.Patterns.GUID = "%x%x%x%x%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%x%x%x%x%x%x%x%x"
 Data.Patterns.GUID_CAPTURE = "_(" .. Data.Patterns.GUID .. ")$"
 Data.Patterns.ARTIFACT_ROOTTEMPLATE_SUBTYPE = "^AMER_UNI_.*_(.*)_" .. Data.Patterns.GUID .. "$"
--- Data.Patterns.STAT_ADJUSTMENT_PATTERN = "From Stat Adjustment: (%+?-?%d*)%%*"
-Data.Patterns.STAT_ADJUSTMENT_PATTERN = "From Stat Adjustment: (%+?-?%d*%.?%d*)%%*"
-Data.Patterns.LW_BOOST_PATTERN = "(From Lone Wolf: %+0%%)"
-
-Data.Patterns.WeaponAbilityPatterns = {
-    ["Two%-Handed"] = "Two-Handed",
-    ["Single%-Handed"] = "Single-Handed",
-    ["Ranged"] = "Ranged",
-    ["Dual Wielding"] = "Dual Wielding",
-}
 
 Data.Game.ATTRIBUTE_STATS = {
     ["Strength"] = true,
@@ -707,12 +680,6 @@ Data.Game.ATTRIBUTE_STATS = {
     ["Constitution"] = true,
     ["Memory"] = true,
     ["Wits"] = true,
-}
-
-Data.Game.RANGED_WEAPONS = {
-    Bow = true,
-    Crossbow = true,
-    Rifle = true,
 }
 
 Data.Game.SLOTS_WITH_VISUALS = {
@@ -797,25 +764,6 @@ Data.Game.BASE_BOOST_TO_EQUIP_TYPE = {
     ["WPN_Wand_Earth"] = "Wand",
     ["WPN_Wand_Earth_ReqB"] = "Wand",
 }
-
-Data.Game.WEAPON_SUBTYPES = {
-    Sword = true,
-    Bow = true,
-    Crossbow = true,
-    Wand = true,
-    Staff = true,
-    Spear = true,
-    Mace = true,
-    Axe = true,
-    Dagger = true,
-    Shield = true, -- maybe ?
-}
-
--- Data.Game.SUBTYPE_TO_ARCHETYPE = {
---     Mace = "Sword",
---     Dagger = "Sword",
-
--- }
 
 -- Possible base boosts for each equipment type, for randomly generated items
 Data.Game.EQUIPMENT_TYPE_BASE_BOOST_TIERS = {

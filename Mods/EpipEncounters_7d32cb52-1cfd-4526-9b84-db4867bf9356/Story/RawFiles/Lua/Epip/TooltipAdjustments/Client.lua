@@ -5,6 +5,7 @@
 
 local TooltipLib = Client.Tooltip
 local SourceInfusion = EpicEncounters.SourceInfusion
+local Set = DataStructures.Get("DataStructures_Set")
 
 ---@class Feature_TooltipAdjustments : Feature
 local TooltipAdjustments = {
@@ -19,6 +20,16 @@ local TooltipAdjustments = {
     -- #9c561e
     -- #9e4b06
     -- #9c561e -- PoE color, iirc?
+
+    ---@type DataStructures_Set<pattern>
+    WEAPON_ABILITY_PATTERNS = Set.Create({
+        "Two%-Handed",
+        "Single%-Handed",
+        "Ranged",
+        "Dual Wielding",
+    }),
+    LW_BOOST_PATTERN = "(From Lone Wolf: %+0%%)",
+    STAT_ADJUSTMENT_PATTERN = "From Stat Adjustment: (%+?-?%d*%.?%d*)%%*",
 
     Settings = {
         AstrologerFix = {
@@ -107,7 +118,7 @@ end
 ---------------------------------------------
 
 -- Fix the mess that is the character sheet damage tooltip.
-function TooltipAdjustments.FixSheetDamageTooltip(char, stat, tooltip)
+function TooltipAdjustments.FixSheetDamageTooltip(_, _, tooltip)
     local header = tooltip:GetElement("StatName")
 
     if not header or header.Label ~= "Damage" then
@@ -120,7 +131,7 @@ function TooltipAdjustments.FixSheetDamageTooltip(char, stat, tooltip)
             tooltip.Data[i] = nil
 
         elseif v.Type == "StatsPercentageBoost" then
-            for ability,z in pairs(Data.Patterns.WeaponAbilityPatterns) do
+            for ability in TooltipAdjustments.WEAPON_ABILITY_PATTERNS:Iterator() do
                 if v.Label:match("(From " .. ability .. ": )") then
                     local amount = v.Label:match("From " .. ability .. ": (.*)%%")
 
@@ -134,10 +145,9 @@ function TooltipAdjustments.FixSheetDamageTooltip(char, stat, tooltip)
 end
 
 -- Remove misleading "+0% from LW" maluses.
-function TooltipAdjustments.RemoveDeprecatedLWBoosts(char, stat, tooltip)
-    for i,v in pairs(tooltip:GetElements("StatsPercentageMalus")) do
-
-        if v.Label:match(Data.Patterns.LW_BOOST_PATTERN) then
+function TooltipAdjustments.RemoveDeprecatedLWBoosts(_, _, tooltip)
+    for _,v in pairs(tooltip:GetElements("StatsPercentageMalus")) do
+        if v.Label:match(TooltipAdjustments.LW_BOOST_PATTERN) then
             tooltip:RemoveElement(v)
         end
     end
@@ -149,8 +159,8 @@ function TooltipAdjustments.MergeStatAdjustments(tooltip)
 
     -- count all stat adjustment status displays, and remove them
     for i,v in pairs(tooltip.Data) do
-        if (v.Type == "StatsPercentageBoost" or v.Type == "StatsTalentsBoost" or v.Type == "StatsPercentageMalus" or v.Type == "StatsTalentsMalus") and v.Label:match(Data.Patterns.STAT_ADJUSTMENT_PATTERN) then
-            local amount, _ = v.Label:match(Data.Patterns.STAT_ADJUSTMENT_PATTERN)
+        if (v.Type == "StatsPercentageBoost" or v.Type == "StatsTalentsBoost" or v.Type == "StatsPercentageMalus" or v.Type == "StatsTalentsMalus") and v.Label:match(TooltipAdjustments.STAT_ADJUSTMENT_PATTERN) then
+            local amount, _ = v.Label:match(TooltipAdjustments.STAT_ADJUSTMENT_PATTERN)
             amount = tonumber(amount)
 
             if amount then

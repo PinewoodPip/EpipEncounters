@@ -8,6 +8,7 @@ Item = {
         ARTIFACT = "a34114",
     },
 
+    ---@type DataStructures_Set<WeaponType>
     MELEE_WEAPON_TYPES = Set.Create({
         "Sword",
         "Club",
@@ -15,6 +16,13 @@ Item = {
         "Axe",
         "Spear",
         "Staff",
+    }),
+
+    ---@type DataStructures_Set<WeaponType>
+    RANGED_WEAPON_TYPES = Set.Create({
+        "Bow",
+        "Crossbow",
+        "Rifle",
     }),
 
     RUNE_SLOT_ICONS = {
@@ -322,7 +330,7 @@ end
 ---@param item Item
 ---@return boolean
 function Item.IsRangedWeapon(item)
-    return item and item.Stats and Data.Game.RANGED_WEAPONS[item.Stats.WeaponType]
+    return item and item.Stats and Item.RANGED_WEAPON_TYPES:Contains(item.Stats.WeaponType)
 end
 
 ---Returns the base AP cost of using an item, independent of the character.
