@@ -440,6 +440,21 @@ function Section:_UpdateSchoolButtons()
     end
 end
 
+---Returns whether all schools should be toggled back on after a school button press.
+---If so, toggles them back on.
+---@param id string School button that was pressed.
+---@return boolean
+function Section:_CheckToggleAllSchools(id)
+    -- If this is the only enabled school, toggle all schools on and update the UI.
+    local shouldToggle = #Skills._HiddenSchools == (#Skills.SCHOOL_ORDER - 1) and not Skills.IsSchoolFiltered(id)
+    if shouldToggle then
+        Skills._HiddenSchools:Clear()
+        Section:_UpdateSchoolButtons()
+        Section:UpdateSkills()
+    end
+    return shouldToggle
+end
+
 ---Initializes the buttons for school filters.
 function Section:_SetupSchoolButtons()
     local list = Section.Root:AddChild("Skills_SchoolList", "GenericUI_Element_HorizontalList")
@@ -448,30 +463,32 @@ function Section:_SetupSchoolButtons()
     for _,id in ipairs(Skills.SCHOOL_ORDER) do
         local button = ButtonPrefab.Create(Codex.UI, "Skills_" .. id, list, ButtonPrefab:GetStyle("SquareStone"))
 
-        -- Toggle filter and change icon upon click
+        -- Set this to be the only school if clicked (mimicking vanilla skillbook behaviour)
         button.Events.Pressed:Subscribe(function (_)
-            if Skills.IsSchoolFiltered(id) then
-                Skills._HiddenSchools:Remove(id)
-            else
-                Skills._HiddenSchools:Add(id)
+            if not Section:_CheckToggleAllSchools(id) then
+                local set = Skills._HiddenSchools
+                for _,otherSchoolID in ipairs(Skills.SCHOOL_ORDER) do
+                    set:Add(otherSchoolID)
+                end
+                set:Remove(id)
+
+                Section:_UpdateSchoolButtons()
+                Section:UpdateSkills()
             end
-
-            Section:_UpdateSchoolButton(id)
-
-            Section:UpdateSkills()
         end)
         
-        -- Set this to be the only school if right-clicked (mimicking vanilla skillbook behaviour)
+        -- Toggle filter upon right-click
         button.Events.RightClicked:Subscribe(function (_)
-            local set = Skills._HiddenSchools
-            for _,otherSchoolID in ipairs(Skills.SCHOOL_ORDER) do
-                set:Add(otherSchoolID)
+            if not Section:_CheckToggleAllSchools(id) then
+                if Skills.IsSchoolFiltered(id) then
+                    Skills._HiddenSchools:Remove(id)
+                else
+                    Skills._HiddenSchools:Add(id)
+                end
+
+                Section:_UpdateSchoolButton(id)
+                Section:UpdateSkills()
             end
-            set:Remove(id)
-
-            Section:_UpdateSchoolButtons()
-
-            Section:UpdateSkills()
         end)
 
         self._SchoolButtons[id] = button

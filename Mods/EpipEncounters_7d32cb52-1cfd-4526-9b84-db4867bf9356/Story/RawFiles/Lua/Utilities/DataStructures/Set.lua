@@ -63,6 +63,13 @@ function Set:Remove(element)
     return present
 end
 
+---Removes all elements from the set.
+function Set:Clear()
+    for element in self:Iterator() do
+        self:Remove(element)
+    end
+end
+
 ---@iterator
 function Set.Iterator(self)
     local key
