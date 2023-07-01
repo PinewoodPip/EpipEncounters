@@ -405,13 +405,20 @@ function Section:_UpdateSkill(index, skill)
         instance:SetCanDrop(false)
         instance:SetCanDrag(true, false)
         instance:SetUpdateDelay(-1)
-        instance:SetEnabled(true)
 
         self._SkillInstances[index] = instance
     end
 
     if skill then
         instance:SetSkill(skill.ID)
+        instance:SetEnabled(Character.IsSkillLearnt(Client.GetCharacter(), skill.ID))
+
+        -- Highlight memorized skills with a border
+        if Character.IsSkillMemorized(Client.GetCharacter(), skill.ID) then
+            instance:SetRarityIcon("Unique")
+        else
+            instance:SetRarityIcon("Common")
+        end
     end
 
     instance:SetVisible(skill ~= nil)
