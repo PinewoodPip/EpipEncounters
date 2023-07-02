@@ -36,6 +36,11 @@ local EpipSettingsMenu = {
            Text = "Brazilian Portuguese translation by Ferocidade",
            ContextDescription = "Displayed at the bottom of the general Epip settings tab",
         },
+        TranslationCredits_SimplifiedChinese = {
+           Handle = "h98c83d5fgd30dg41f6g825ag14707c6db182",
+           Text = "Simplified Chinese translation by Ainsky",
+           ContextDescription = "Displayed at the bottom of the general Epip settings tab",
+        },
         Tab_Hotbar = {
            Handle = "h37985411gc95dg46a1g858bg021ed39e43cd",
            Text = "Hotbar",
@@ -118,6 +123,9 @@ local tabs = {
                 Size = 19,
             })},
             {Type = "Label", Label = Text.Format(TSK.TranslationCredits_BrazilianPortuguese:GetString(), {
+                Size = 19,
+            })},
+            {Type = "Label", Label = Text.Format(TSK.TranslationCredits_SimplifiedChinese:GetString(), {
                 Size = 19,
             })},
 

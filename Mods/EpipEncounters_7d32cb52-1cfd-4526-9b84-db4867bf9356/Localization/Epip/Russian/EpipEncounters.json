@@ -207,8 +207,8 @@
       "TranslatedText": "Отключает возможность обыскивать трупы в бою пока не зажата клавиша Shift."
     },
     "h4b67c715g0d30g4015gba18ge8ea4f357448": {
-      "ReferenceText": "Shows the Source Generation status while sorting/filtering is enabled.",
-      "TranslatedText": "Показывает статус генерации истока при включенных сортировке/фильтрах."
+      "ReferenceText": "Shows the Source Generation status while Alternative Status Display is enabled.",
+      "TranslatedText": "Показывает статус генерации истока при включенном \"Альтернативном отображении статуса\"."
     },
     "h4bd4b3d7gf239g412dgb4e9g3421524ff330": {
       "ReferenceText": "Changes the loading screen into a family photoshoot!",
@@ -268,7 +268,7 @@
     },
     "h69bb87a5ga063g464egae6cg4824e72bc36f": {
       "ReferenceText": "Cinematic Combat",
-      "TranslatedText": "Кинематографичный бой "
+      "TranslatedText": "Кинематографичный бой"
     },
     "h6e1d16e8g4adbg4df0g9169g2ceed7a9a8a1": {
       "ReferenceText": "Controls whether notifications for receiving items show.",
@@ -448,15 +448,15 @@
     },
     "hb7ac349eg981eg4bdega605g533f9a7bea9c": {
       "ReferenceText": "Enables alternative sorting for the save/load UI, as well as searching.",
-      "TranslatedText": "Включает альтернативную сортировку и поиск для меню сохранения/загрузки "
+      "TranslatedText": "Включает альтернативную сортировку и поиск для меню сохранения/загрузки"
     },
     "hb8f2e390g2811g4df4gb9fdg3661092ef520": {
       "ReferenceText": "Controls the delay for simple tooltips to appear while hovering over objects in the world.<br><br>Default is 0.5s.",
       "TranslatedText": "Задает задержку отображения подсказок при наведении на окружающие объекты.<br><br>По умолчанию - 0.5с."
     },
     "hb9e14744g4868g4e08gb3d7ga9bd57629d03": {
-      "ReferenceText": "Shows the Battered/Harries statuses while sorting/filtering is enabled.<br>If you disable this, it is recommended to enable the B/H display on the portraits.",
-      "TranslatedText": "Показывает значения B/H если включена сортировка.<br>Если отключено, рекомендуется включить опцию \"Показывать B/H на портретах игроков\""
+      "ReferenceText": "Shows the Battered/Harries statuses while Alternative Status Display is enabled.<br>If you disable this, it is recommended to enable the B/H display on the portraits.",
+      "TranslatedText": "Показывает значения B/H если включена альтернативная сортировка.<br>Если отключено, рекомендуется включить опцию \"Показывать B/H на портретах игроков\""
     },
     "hbd18d9b1g7709g419agb8d6gdccf938dcaf3": {
       "ReferenceText": "Epic Loading Screen",
@@ -583,8 +583,8 @@
       "TranslatedText": "Кинжал"
     },
     "he9f82492g81f0g4e53g9eefg731a6f800db8": {
-      "ReferenceText": "Experimental! May cause issues with certain skills. Please report any!",
-      "TranslatedText": "Работает в тестовом режиме! Пожалуйста, сообщайте о возникающих проблемах с какими-либо навыками!"
+      "ReferenceText": "Experimental! May cause issues with certain skills. Please report any!<br>Server-side option is the most reliable at the moment.",
+      "TranslatedText": "Работает в тестовом режиме! Пожалуйста, сообщайте о возникающих проблемах с какими-либо навыками! Опция \"Server-side\" является более стабильной."
     },
     "h8de93e20gae0dg45cfg9695g478ba659f71a": {
       "ReferenceText": "If enabled, the UI will close after using an item.  You can hold shift while clicking an item to temporarily invert this setting.",
@@ -779,7 +779,7 @@
       "TranslatedText": "Закрывать интерфейс после использования предмета"
     },
     "he5c3a752gd8bag48fagb611g35b5d23bef9d": {
-      "ReferenceText": "Cancels your controlled character's spell animations after their effects execute.  %s",
+      "ReferenceText": "Cancels your controlled character's spell animations after their effects execute.<br><br>%s",
       "TranslatedText": "Отменяет анимации навыков контролируемого персонажа сразу после исполнения их эффектов. %s"
     },
     "h4f610121gdb42g4d2fg9a8ag61eeedb018cb": {
@@ -887,7 +887,7 @@
       "TranslatedText": "Мастерство охоты"
     },
     "h4a3e28fag3595g4753gb507g4423068aeda8": {
-      "ReferenceText": "Most options require a reload for changes to apply.",
+      "ReferenceText": "Some options may require a reload for changes to apply.",
       "TranslatedText": "Для применения большинства настроек требуется перезагрузка."
     },
     "h7e55ac61g269fg4f0dgabf9g06cbe52d0d22": {
@@ -942,10 +942,6 @@
       "ReferenceText": "Incarnate Champion",
       "TranslatedText": "Инкарнат-воитель"
     },
-    "ha8b96a59gace5g4aa5gba9cgc7567a58a8e8": {
-      "ReferenceText": "TODO",
-      "TranslatedText": "TODO"
-    },
     "heb8e464cg6305g46aeg8fbag240af8560ebe": {
       "ReferenceText": "Release left-click to Greatforge this item.",
       "TranslatedText": "Перенести с помощью ЛКМ в окно Greatforge."
@@ -961,14 +957,6 @@
     "h905ae122g47e8g41caga162g68a68b6a88af": {
       "ReferenceText": "Disabled",
       "TranslatedText": "Отключено"
-    },
-    "hfd4d8ec8g76e3g4defg9647gc28159eb38e5": {
-      "ReferenceText": "TODO",
-      "TranslatedText": "TODO"
-    },
-    "h23e452c0g340fg4555g8034g753f003107bf": {
-      "ReferenceText": "TODO",
-      "TranslatedText": "TODO"
     },
     "h2a5a9fedg9c42g4f0ag9d54gb4098614b91b": {
       "ReferenceText": "Below Health Bar",
@@ -1056,7 +1044,7 @@
     },
     "h304b2c12g06dag4389gaa3bg0f28e9916d32": {
       "ReferenceText": "Critical Chance",
-      "TranslatedText": "Критический шанс"
+      "TranslatedText": "Шанс крит. удара"
     },
     "hfa03d86cg9193g45efg966fg50e1f98ce39c": {
       "ReferenceText": "Copy GUID",
@@ -1064,7 +1052,7 @@
     },
     "hb5e67864g87f1g4493gb758g47bdab2b69aa": {
       "ReferenceText": "Alternative Status Display",
-      "TranslatedText": "Альтернативное отображение статуса"
+      "TranslatedText": "Альтернативное отображение статусов"
     },
     "h42bb0e3cgc574g4f49gbe27gbbba9ecd3ac1": {
       "ReferenceText": "Celestial",
@@ -1080,7 +1068,7 @@
     },
     "h0e0a45c4g77f2g4bbdga211gdae7cb9176b0": {
       "ReferenceText": "Embodiments",
-      "TranslatedText": "Embodiments"
+      "TranslatedText": "Воплощения"
     },
     "h8a290a77g93c2g4821g8019gc74551cb306a": {
       "ReferenceText": "Reactions",
@@ -1108,7 +1096,7 @@
     },
     "haf5c4d50gd6c7g42f6g8ca3g43f30e6385d1": {
       "ReferenceText": "Vitals",
-      "TranslatedText": "Vitals"
+      "TranslatedText": "Показатели"
     },
     "h124f507dge140g406egac22gcb4492950a6e": {
       "ReferenceText": "Adaptation",
@@ -1141,10 +1129,6 @@
     "h5a50b777gc16cg4106gbde8gf9dd48954c7f": {
       "ReferenceText": "Cancel",
       "TranslatedText": "Отменить"
-    },
-    "h4e3b6a84g9de1g4723gb807ga808db3c9d70": {
-      "ReferenceText": "TODO",
-      "TranslatedText": "TODO"
     },
     "h7038367dgd010g46fbg9b9fg7c5c40d7ef44": {
       "ReferenceText": "Leather",
@@ -1191,12 +1175,276 @@
       "TranslatedText": "Occultist"
     },
     "h0d296a7dgd716g475agb4c6g9b3de417c79f": {
-      "ReferenceText": "Replaces the statuses container by your characters's portraits with a custom UI.",
-      "TranslatedText": "Заменяет отображение статусов рядом с портретом персонажа на альтернативное."
+      "ReferenceText": "Replaces the status bar by your characters's portraits with a custom UI that enables various sorting and filtering options.",
+      "TranslatedText": "Заменяет отображение статусов рядом с портретом персонажа на альтернативное, с возможностью использования сортировки и фильтрации."
     },
     "ha1afe7c2g4d97g43b6g823eg03bf25788dbd": {
       "ReferenceText": "High-Score",
       "TranslatedText": "Рекорд"
+    },
+    "h4c2e34f9g7feeg4303g9dfegcc0c44cf6011": {
+      "ReferenceText": "Turn Delayed",
+      "TranslatedText": "Ход отложен"
+    },
+    "h5a1af856ge6bbg46b0g8c00g98c676f04629": {
+      "ReferenceText": "We don't have that dye!<br>We shall shop for them at miscellaneous vendors.",
+      "TranslatedText": "У нас нет этой краски!<br>Надо бы закупиться."
+    },
+    "h84ec181aga466g41e0g9f8bg9af1de57d37a": {
+      "ReferenceText": "Show Culled Only",
+      "TranslatedText": "Только предметы после \"Cull\""
+    },
+    "ha8000c0eg67d5g4398g8890gaf8d98931d1b": {
+      "ReferenceText": "Client-side",
+      "TranslatedText": "Client-side"
+    },
+    "he42675fag827ag4189g9c55g0af27feb5fc2": {
+      "ReferenceText": "Attack Of Opportunity Available",
+      "TranslatedText": "Доступна атака по возможности"
+    },
+    "he415fd76g51bfg4b25g955cg59c3165c73ba": {
+      "ReferenceText": "Skillbook",
+      "TranslatedText": "Книга навыков"
+    },
+    "hdb77af8agd827g4a54gb80ag4540ab23988d": {
+      "ReferenceText": "Furniture",
+      "TranslatedText": "Мебель"
+    },
+    "h5e83b5f4g33f8g45e6ga968gecd0cad8d465": {
+      "ReferenceText": "Has Skillbook",
+      "TranslatedText": "Есть книга навыков"
+    },
+    "h92547755gb161g4e13gbd37ga31d5101d177": {
+      "ReferenceText": "Displays certain common character flags in the health bar while holding shift, such as attack of opportunity availability. Works best on player characters and updating certain flags might be delayed.",
+      "TranslatedText": "Отображает common character flags на панели здоровья при удержании клавиши Shift (доступность атаки по возможности и пр.). Некоторые flags обновляются с задержкой"
+    },
+    "h14674f13g78c9g49ecgac6dgbf7a95039189": {
+      "ReferenceText": "Skills",
+      "TranslatedText": "Способности"
+    },
+    "hf791f6e7g31cdg4e84gb349g383ad5b4409c": {
+      "ReferenceText": "Jewelry",
+      "TranslatedText": "Украшения"
+    },
+    "he0847edfg24f4g4259ga31bg1f665425e26c": {
+      "ReferenceText": "Wand",
+      "TranslatedText": "Жезл"
+    },
+    "h99292bbfg3f0eg413agac82g822201b81b42": {
+      "ReferenceText": "Display common flags",
+      "TranslatedText": "Отображать common flags"
+    },
+    "h5a14d928gf5d6g48e6ga90egfdf2311276db": {
+      "ReferenceText": "Cannot fight",
+      "TranslatedText": "Не может сражаться"
+    },
+    "h16a45dc1g56e7g4bb0ga3f6g6f4cb7f66fae": {
+      "ReferenceText": "Show Equipped Items",
+      "TranslatedText": "Показывать экипированные предметы"
+    },
+    "ha5ab3810g9aa9g4168g89fdgbfd0ee2c4c01": {
+      "ReferenceText": "Shows skills available to players.",
+      "TranslatedText": "Показывать доступные игрокам способности"
+    },
+    "h9f6cbb29ge1f5g4b74g9e19ge7a83138bbf5": {
+      "ReferenceText": "Mod '%s' is incompatible with '%s' and it is not recommended to use them together.",
+      "TranslatedText": "Мод '%s' не совместим с '%s' и не рекомендован к использованию."
+    },
+    "h45a75b5agbe29g438dgbf17g6a9362cd7eed": {
+      "ReferenceText": "No Filter",
+      "TranslatedText": "Без фильтра"
+    },
+    "h48e0051bg2cc7g4ef2gbea8gbe8152ee6413": {
+      "ReferenceText": "Team Pinewood",
+      "TranslatedText": "Team Pinewood"
+    },
+    "h254f04a8gbaceg4970g97bdga522f285b929": {
+      "ReferenceText": "Show Not Learnt",
+      "TranslatedText": "Показывать неизученные"
+    },
+    "hbcd07fa8gaaa1g4571gac0eg8a20d7955224": {
+      "ReferenceText": "Armor",
+      "TranslatedText": "Броня"
+    },
+    "h979a8059g2ea7g436fg863bgf6b008ad3072": {
+      "ReferenceText": "Removes the redundant 'Set :' prefix that appears in deltamod names and rune effects.",
+      "TranslatedText": "Убирает приставку 'Set :' из описаний deltamod и рун. (При игре с переводом эта приставка и так отсутствует)"
+    },
+    "h7eaa3d1dg94a2g4136g969dg1ba9f6796fca": {
+      "ReferenceText": "Show Learnt",
+      "TranslatedText": "Показывать изученные"
+    },
+    "hb4ca31ecge2ecg44faga2dbg1e1c98c49d30": {
+      "ReferenceText": "Columns",
+      "TranslatedText": "Столбцы"
+    },
+    "h36ba40b2ge76bg4ea9g90ecgde3d4fc01945": {
+      "ReferenceText": "Rows",
+      "TranslatedText": "Ряды"
+    },
+    "h866e5a46g3002g4c1bgba33g4aaef5ca5413": {
+      "ReferenceText": "%s v%s by %s",
+      "TranslatedText": "%s v%s от %s"
+    },
+    "h540c1336g27b1g4382gb911g8adced234ee6": {
+      "ReferenceText": "Off",
+      "TranslatedText": "Отключить"
+    },
+    "hd790b2dcg7db3g478bg8fb6g96dfabe9dbd2": {
+      "ReferenceText": "Layer",
+      "TranslatedText": "Слой"
+    },
+    "h75aa417egac92g4e00ga4b5g173f485c2f01": {
+      "ReferenceText": "Comeback Kid Available",
+      "TranslatedText": "Живчик доступен"
+    },
+    "hea8fd41ag8885g40b0g8466gb6a63d91863a": {
+      "ReferenceText": "Default Tab",
+      "TranslatedText": "Раздел по умолчанию"
+    },
+    "hd8218bb5gcf00g4051g90f2g05388601ab51": {
+      "ReferenceText": "Determines the default tab for the crafting UI.",
+      "TranslatedText": "Определяет окно по умолчанию для интерфейса крафта (Greatforge)"
+    },
+    "he6042694g235ag4c68gbcccgb1a4769ae7bd": {
+      "ReferenceText": "No Skillbook",
+      "TranslatedText": "Нет книги навыков"
+    },
+    "hd15232f0gd82dg42a3g82ddg7597d3911122": {
+      "ReferenceText": "Resize",
+      "TranslatedText": "Изменить размер"
+    },
+    "h42920f03g276eg49e3gbe24gee444973feef": {
+      "ReferenceText": "Search...",
+      "TranslatedText": "Поиск...."
+    },
+    "h3a8d983cg5a8cg4b33g954cg39581bd8a04b": {
+      "ReferenceText": "AI Type: %s",
+      "TranslatedText": "Тип ИИ: %s"
+    },
+    "h0e24fb6bg2c78g4dd3g995cg9d04ea62eaab": {
+      "ReferenceText": "Sorting Index",
+      "TranslatedText": "Индекс сортировки"
+    },
+    "h7f53d9adg7fdeg4005gaa99g0ffde8a8b21f": {
+      "ReferenceText": "Crossbow",
+      "TranslatedText": "Арбалет"
+    },
+    "hbe579ebcg3585g4373g8d80g99de57eb1e7a": {
+      "ReferenceText": "Back",
+      "TranslatedText": "Назад"
+    },
+    "h9e59177cgec69g4920g981bg8adee0d6600c": {
+      "ReferenceText": "Filtered Statuses",
+      "TranslatedText": "Отфильтрованные статусы"
+    },
+    "heb0326c2g21d3g43b6gbc73ge64a25c6a2b3": {
+      "ReferenceText": "Bow",
+      "TranslatedText": "Лук"
+    },
+    "h5e7095b6ga182g4dc0gadfbg198413b93310": {
+      "ReferenceText": "Remove 'Set :' Prefixes",
+      "TranslatedText": "Убрать приставку 'Set :'"
+    },
+    "hafe6938fgde3dg45d3g8437g8dc15104fa65": {
+      "ReferenceText": "Server-side",
+      "TranslatedText": "Server-side"
+    },
+    "h3e8e86e9g661eg4a3dga574ged9d4b424610": {
+      "ReferenceText": "Epip",
+      "TranslatedText": "Epip"
+    },
+    "hf0192252g5d7ag429eg96a6g21be87bd88cd": {
+      "ReferenceText": "Resize",
+      "TranslatedText": "Изменить"
+    },
+    "h083f5e98g18e2g4708gae54g82b7697923b0": {
+      "ReferenceText": "Choose a name to engrave.",
+      "TranslatedText": "Выберите наименование"
+    },
+    "h19773400g8de1g46d7g9901g779b750ebddd": {
+      "ReferenceText": "Set Icon",
+      "TranslatedText": "Установить иконку"
+    },
+    "h3a1fa582g7217g4722gbcc5gc835c482d94a": {
+      "ReferenceText": "Carve a name onto the item to signify the special bond between yourself and it.<br><font color=\"a8a8a8\" size=\"21\" face=\"Averia Serif\">Purely cosmetic.</font>",
+      "TranslatedText": "Переименуйте предмет.<br><font color=\"a8a8a8\" size=\"21\" face=\"Averia Serif\">Косметика.</font>"
+    },
+    "h0e034a16gd835g46bcga5bfgd44c3f88a36e": {
+      "ReferenceText": "Brazilian Portuguese translation by Ferocidade",
+      "TranslatedText": "Перевод на бразильский-португальский от Ferocidade"
+    },
+    "hab6d5bf9gc96eg42f1ga095gaef050698dfc": {
+      "ReferenceText": "Filters",
+      "TranslatedText": "Фильтры"
+    },
+    "hbe7cf1d7g91cfg4b67g8c53g5b15843eaf46": {
+      "ReferenceText": "Engrave Item",
+      "TranslatedText": "Переименовать предмет"
+    },
+    "h36e32b84g5373g4711g920cg8d0cedd5fcff": {
+      "ReferenceText": "Resize Hotbar Group",
+      "TranslatedText": "Расширить панель"
+    },
+    "hca56dcd2gf7f6g4662g94cfga66262672545": {
+      "ReferenceText": "Statuses in this list will be filtered out and not shown in the status bar. Holding shift temporarily disables this filter.",
+      "TranslatedText": "Статусы из этого списка будут отфильтрованы и не станут отображаться, пока не зажата клавиша Shift."
+    },
+    "h6504d954gcc4fg4008ga5d1g32d40eef13e0": {
+      "ReferenceText": "Warning",
+      "TranslatedText": "Предупреждение"
+    },
+    "h37cf1748g9dafg4d2ag9744g00e75e764ee5": {
+      "ReferenceText": "+%s%% Weapon %s Damage",
+      "TranslatedText": "+%s%% оружейного урона %s"
+    },
+    "h874faf80g6c2eg4fe8gb908g60bb769b02eb": {
+      "ReferenceText": "Create",
+      "TranslatedText": "Создать"
+    },
+    "hb2e1d20dgd3c2g45b9ga922gf19ea1a12691": {
+      "ReferenceText": "Delete",
+      "TranslatedText": "Удалить"
+    },
+    "h4179a16bg43a5g40bcg88ccg7870114fb6c0": {
+      "ReferenceText": "Create Hotbar Group",
+      "TranslatedText": "Создать панель"
+    },
+    "hb1aa6659g9385g4966g9b9fga77082927a94": {
+      "ReferenceText": "Show Memorized",
+      "TranslatedText": "Способности \"в памяти\""
+    },
+    "h66c830b8geefbg42afgb501g0942d3a13036": {
+      "ReferenceText": "<font color='ebc808' size='30'>Engrave</font>",
+      "TranslatedText": "<font color='ebc808' size='30'>Переименовать</font>"
+    },
+    "h8ef5106dg4b12g413cg87adgce524dad4d1e": {
+      "ReferenceText": "Sorting Priority",
+      "TranslatedText": "Приоритет сортировки"
+    },
+    "hc31a7649g3a59g4595gbfecg3fdc812c0c1f": {
+      "ReferenceText": "Codex",
+      "TranslatedText": "Кодекс"
+    },
+    "h52c8465ag5bf7g4420g93b7ge555e6acb172": {
+      "ReferenceText": "Open Codex",
+      "TranslatedText": "Открыть кодекс"
+    },
+    "hcb827408g8ce1g41ffg8145gca288912cfb1": {
+      "ReferenceText": "Icon Type",
+      "TranslatedText": "Тип иконки"
+    },
+    "h94b55185g6055g42b9gac5bgc6bedbffdfef": {
+      "ReferenceText": "Choose an icon...",
+      "TranslatedText": "Выберите иконку..."
+    },
+    "h715a684agc1e6g47eagb4d8g13944bc7ebe7": {
+      "ReferenceText": "Filtered",
+      "TranslatedText": "Отфильтрованные"
+    },
+    "h4c594766g0190g4016gb7a5g0b99c3e2011a": {
+      "ReferenceText": "Sets the sorting order for statuses. Statuses with a higher priority show in the left-most position, statuses with a lower priority show in the right-most position.",
+      "TranslatedText": "Устанавливает порядок сортировки для статусов. Статусы с большим приоритетом отображаются слева, с низким - справа."
     }
   }
 }

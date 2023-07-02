@@ -1,5 +1,1442 @@
 {
   "FileFormatVersion": 0,
   "ModTable": "EpipEncounters",
-  "TranslatedStrings": {}
+  "TranslatedStrings": {
+    "h0023bed4gd590g4375g80dcgf1e135f30b1e": {
+      "ReferenceText": "If enabled, items with no use actions will show world tooltips.",
+      "TranslatedText": "启用后, 开启环境提示时, 会显示无法使用的物品"
+    },
+    "h00aa4e07g8833g4040g9355g6bed488f1237": {
+      "ReferenceText": "Host-only setting. Toggles Fog of War, which hides unexplored areas. This setting applies to all players in the server and is non-destructive; re-enabling it will restore FoW to normal, and all your exploration progress with the setting off will apply.",
+      "TranslatedText": "主机设置, 该设置对所有客机一同生效. 开启战争迷雾会隐藏未探索区域. 关闭后再启用会将战争迷雾区域重置回关闭前的范围"
+    },
+    "h01f17781g7f5ag4113g9505g4cba31cd0d07": {
+      "ReferenceText": "Improved Combat Log",
+      "TranslatedText": "优化战斗记录"
+    },
+    "h058cdfb5g6b63g486bg9e05g413c1cf64d4a": {
+      "ReferenceText": "Shows the Mastery button. If disabled, it remains accessible through hotbar actions.",
+      "TranslatedText": "显示武器拓展mod的专精按钮. 关闭后, 依然可以通过快捷栏使用"
+    },
+    "h05a930e2g0444g4cd3gacccg34cb46da59c9": {
+      "ReferenceText": "Show Aggro Information",
+      "TranslatedText": "显示仇恨信息"
+    },
+    "h063ae4cag4291g4352g88c4gefad4a2e9fe4": {
+      "ReferenceText": "Controls the behaviour of the hotbar custom buttons area. 'Automatic' will cause it to switch between the single-row and dual-row layouts based on how many slot rows you have visible. Other settings will make it stick to one layout.",
+      "TranslatedText": "快捷栏左侧的按钮栏行数.  选择 '自动' 会随快捷栏扩充至最多2行, 或缩减至1行. 其他选项会固定1行或2行"
+    },
+    "h0838a5f5gb835g47dcg80d7g29807777a94a": {
+      "ReferenceText": "Cherry Blossom",
+      "TranslatedText": "樱花"
+    },
+    "h09f0f7e8gb224g4018g9301g1cf150d5bc20": {
+      "ReferenceText": "If enabled, your characters's inventories in multiplayer will be automatically unlocked after a reload.",
+      "TranslatedText": "启用后, 多人模式下, 角色背包将会自动解锁"
+    },
+    "h0aacad96g933cg4888g9f70g832a231c6bad": {
+      "ReferenceText": "Sorting Order",
+      "TranslatedText": "排序顺序"
+    },
+    "h0e766045g43afg47d8gb307g97120772d1f6": {
+      "ReferenceText": "Fog B",
+      "TranslatedText": "雾 B"
+    },
+    "h1437af42g72a6g49cegb64eg044a99447c10": {
+      "ReferenceText": "Containers Emphasis",
+      "TranslatedText": "高亮容器"
+    },
+    "h1549cdd8gf0b8g4c64gb887ge3dc98ecf9e3": {
+      "ReferenceText": "Poison Ring",
+      "TranslatedText": "毒戒指"
+    },
+    "h15aafc75g75b8g47b1g94a5g354f7f168120": {
+      "ReferenceText": "Midnight Oil",
+      "TranslatedText": "午夜之油"
+    },
+    "h16796787gb05cg4a34gaaeegcbbcf22a4b88": {
+      "ReferenceText": "Adds visual improvements while it is not your turn to improve immersiveness.",
+      "TranslatedText": "当不处于你的回合时, 优化视觉效果, 提升沉浸感"
+    },
+    "h16a650aegefdeg4a47g8abbg044995f9147c": {
+      "ReferenceText": "Unfocuses the UI after you send a message, restoring input to the rest of the game.",
+      "TranslatedText": "发送聊天消息后, 输入焦点自动转移到游戏中"
+    },
+    "h17251a41gb5a5g412dgb36ag4cfca9cebe22": {
+      "ReferenceText": "Status Opacity in Combat",
+      "TranslatedText": "战斗状态透明度"
+    },
+    "h17cf934dg824dg4400g8380g495e3bef019d": {
+      "ReferenceText": "Controls the size of regular text above characters talking.<br><br>Default is 19.",
+      "TranslatedText": "显示在角色头上的普通文本字号<br><br>默认是19"
+    },
+    "h19c9fc59g789ag4c24gb90ag4858f13e79df": {
+      "ReferenceText": "Show Minimap",
+      "TranslatedText": "显示迷你地图"
+    },
+    "h1afda15cgc951g46e6g8aa6g333bc56665ae": {
+      "ReferenceText": "Determines the default tab for the crafting UI.",
+      "TranslatedText": "制造面板的默认显示页面"
+    },
+    "h1d9df2d8g34d0g44e2ga589g7c2366258b4e": {
+      "ReferenceText": "Blood Waterfall",
+      "TranslatedText": "鲜血瀑布"
+    },
+    "h1e03cfb3g592dg4698ga246gdc1e34d9915a": {
+      "ReferenceText": "Item Notifications",
+      "TranslatedText": "物品通告"
+    },
+    "h1ec057edg09a1g413dgaefdgaf7942d579ce": {
+      "ReferenceText": "Maximum Distance (tactical view)",
+      "TranslatedText": "最大距离 (战术视角)"
+    },
+    "h21723370gb5acg4f7bg8628g6b7b3249808c": {
+      "ReferenceText": "Show Character Sheet in Reward UI",
+      "TranslatedText": "物品奖励页面可以检查装备"
+    },
+    "h22447dfage02dg4c93gbf2agded54810ce36": {
+      "ReferenceText": "Controls the maximum distance the camera can zoom out in tactical view mode.<br>Default is 25.",
+      "TranslatedText": "战术视角镜头最大缩小距离<br>默认是25."
+    },
+    "h24797af2gde0ag48cdgb741gec2049e1c631": {
+      "ReferenceText": "Restores the angle settings to default values.",
+      "TranslatedText": "视角设置恢复默认值"
+    },
+    "h262d04a1g16d3g4dabg8f01gd68a6b25efc7": {
+      "ReferenceText": "Controls the default position of the Examine menu when it is opened.",
+      "TranslatedText": "调查界面的默认位置"
+    },
+    "h265f89a4g9e80g420egb7adgd27aced5697b": {
+      "ReferenceText": "Field of View",
+      "TranslatedText": "视野"
+    },
+    "h28a24072g481eg4d1fgaac8gfacbe5243bdb": {
+      "ReferenceText": "If enabled, the Escape key will close EE UIs rather than turning back a page.",
+      "TranslatedText": "启用后, ESC键会关闭Epic Encounters的页面而不是返回前一页面"
+    },
+    "h2afb4a12gfb71g47c5g9abdg87b5a642637c": {
+      "ReferenceText": "Prince Darkness",
+      "TranslatedText": "暗影王子"
+    },
+    "h2ce0c9f6gc6b1g4191g9901g7383f9dbe3ef": {
+      "ReferenceText": "Display B/H on player portraits",
+      "TranslatedText": "玩家肖像显示重创/蹂躏"
+    },
+    "h315ae29bg868cg4eceg8cc6gebc6623df369": {
+      "ReferenceText": "Unfocus after sending messages",
+      "TranslatedText": "发送消息后转移输入焦点"
+    },
+    "h3315b640gf25bg45eag8afbgde0e87cba2f5": {
+      "ReferenceText": "Message Sound",
+      "TranslatedText": "消息声效"
+    },
+    "h351cdabfg577fg45e8gbe9dg6a513e599d13": {
+      "ReferenceText": "Changes the duration of the label that appears at the top of the screen when you change areas. Set to 0 to disable them entirely.<br><br>Default is 5 seconds.",
+      "TranslatedText": "所在区域改变时, 弹出的提示的持续时间. 设置0为禁止显示<br><br>默认5秒"
+    },
+    "h37fadbc1g48acg4963gb243gd517a74d58b3": {
+      "ReferenceText": "Overhead Status Duration Multiplier",
+      "TranslatedText": "头顶状态持续时间倍数"
+    },
+    "h39d23b3bg188dg4cd8g9e94gd9697fe9130d": {
+      "ReferenceText": "Purple Vortex",
+      "TranslatedText": "紫色漩涡"
+    },
+    "h39e2d175g348eg4697g93a5gf28a9544e4ba": {
+      "ReferenceText": "Emphasizes consumable items in world tooltips.",
+      "TranslatedText": "在环境提示中, 高亮显示消耗品"
+    },
+    "h3a72d579gc132g43d8gb6f0g097bfdbf76fb": {
+      "ReferenceText": "Force Story Patching",
+      "TranslatedText": "强制使用故事模式修复"
+    },
+    "h3aca822bgfa26g4005ga288g20b6a22a48ec": {
+      "ReferenceText": "Laser Focus",
+      "TranslatedText": "上个焦点"
+    },
+    "h3af2fabcg24ffg4e29ga965g69180c641040": {
+      "ReferenceText": "Controls the maximum distance the camera can zoom out while it is tracking an entity.<br>Default is 17.",
+      "TranslatedText": "跟踪一个实体时, 镜头的最大缩小距离<br>默认17"
+    },
+    "h3c77115cga69dg4c67g880bgd314b8072f7c": {
+      "ReferenceText": "Camera Angles",
+      "TranslatedText": "摄像机角度"
+    },
+    "h3da94ae0ge613g4331gb629gb467b74f7ca4": {
+      "ReferenceText": "Disables the hotbar slots while a spell is being cast.",
+      "TranslatedText": "在施放法术时禁用快捷键槽位"
+    },
+    "h3ddc3759g3f70g4ac5g9401g76ced6258d7a": {
+      "ReferenceText": "Reset to defaults",
+      "TranslatedText": "恢复默认值"
+    },
+    "h3e9e4282gb66cg4498g83e0g8b79a4cec500": {
+      "ReferenceText": "Maximum Distance (controller mode)",
+      "TranslatedText": "最大距离 (手柄模式)"
+    },
+    "h3eb881efg123fg449bg9718g65ba0891f5bc": {
+      "ReferenceText": "Adds improvements to the combat log: custom filters (accessible through right-click), merging messages, and slight rewording to improve consistency.<br>You must reload the save after making changes to this setting.",
+      "TranslatedText": "优化战斗记录: 自定义过滤器(右键打开), 合并信息,  措辞优化<br>该设置必须存档, 然后读档才生效"
+    },
+    "h3f4780c9g726bg43c3g8b59gd85d2a0aad07": {
+      "ReferenceText": "Show Fog of War",
+      "TranslatedText": "显示战争迷雾"
+    },
+    "h40a5107fg6bcdg41a4g8535ga841f2b6f199": {
+      "ReferenceText": "Whirlwind",
+      "TranslatedText": "旋风斩"
+    },
+    "h44d539cdg17cag473dg98c3gcddc60e27f5b": {
+      "ReferenceText": "Log AI Scoring",
+      "TranslatedText": "记录AI得分"
+    },
+    "h454a0cb5ga2edg439cga8fdg9dde0686c731": {
+      "ReferenceText": "Determines sorting in the save/load UI, if improvements for it are enabled.",
+      "TranslatedText": "存档的排序规则, 前提打开了保存/载入界面优化"
+    },
+    "h46166b8cg4afbg4039g822dg00fab1a7db15": {
+      "ReferenceText": "Show doors",
+      "TranslatedText": "显示门"
+    },
+    "h48bab667g8c0ag4263g8622g450aba3d0f94": {
+      "ReferenceText": "Sandstorm B",
+      "TranslatedText": "沙暴 B"
+    },
+    "h49611d79g2ae8g47dcgb20bge13634676cad": {
+      "ReferenceText": "Disables looting corpses in combat, unless shift is held. This allows you to easily move to their position.",
+      "TranslatedText": "禁用战斗搜尸, 除非按住shift. 这样允许你轻松走到尸体位置上"
+    },
+    "h4b67c715g0d30g4015gba18ge8ea4f357448": {
+      "ReferenceText": "Shows the Source Generation status while Alternative Status Display is enabled.",
+      "TranslatedText": "排序/过滤启用后, 显示秘源再生状态"
+    },
+    "h4bd4b3d7gf239g412dgb4e9g3421524ff330": {
+      "ReferenceText": "Changes the loading screen into a family photoshoot!",
+      "TranslatedText": "载入界面变为一张家庭照片!"
+    },
+    "h4e5e3786g9b22g4009gaf4egc680d28b83bd": {
+      "ReferenceText": "Show Combat Log Button",
+      "TranslatedText": "显示战斗几率按钮"
+    },
+    "h50d46bf5ge806g4c7bg9780ga9627d9fc3f3": {
+      "ReferenceText": "Intense Smoke",
+      "TranslatedText": "浓烟"
+    },
+    "h53b42eecg74ccg4164gbd64g0bda6052e6f1": {
+      "ReferenceText": "Examine Menu Position",
+      "TranslatedText": "调查界面位置"
+    },
+    "h54022e48gaecfg4b0ega332gd42d4ac64dd4": {
+      "ReferenceText": "Show Mastery Button",
+      "TranslatedText": "显示专精按钮"
+    },
+    "h54361ee5gb59eg40d9g9915g8c47e5631ad9": {
+      "ReferenceText": "Skill-casting Notifications",
+      "TranslatedText": "技能释放通告"
+    },
+    "h54d9066eg87bdg439fg92f9g7027970af6ca": {
+      "ReferenceText": "Camera",
+      "TranslatedText": "镜头"
+    },
+    "h58774ddfga909g4acfg95e1g9ba772b7be4a": {
+      "ReferenceText": "Hotbar Buttons Area Sizing",
+      "TranslatedText": "快捷栏按钮区行数"
+    },
+    "h5bef00c6g36deg4db0ga3d5gb006dbc5f601": {
+      "ReferenceText": "Auto-unlock inventory (Multiplayer)",
+      "TranslatedText": "自动解锁背包 (多人模式)"
+    },
+    "h60bebbb6g771fg4fe8g8658g4b01db6b2d87": {
+      "ReferenceText": "Controls whether tooltips are shown for empty containers and bodies.",
+      "TranslatedText": "环境提示会显示空容器和空尸体"
+    },
+    "h6270c4d7g0531g453agbae3g2503fb8c3c59": {
+      "ReferenceText": "Maximum Distance (locked-on)",
+      "TranslatedText": "最大距离 (锁定)"
+    },
+    "h63aee58dg36e4g411cg9dcbg541062d696f0": {
+      "ReferenceText": "Consumables Emphasis",
+      "TranslatedText": "高亮消耗品"
+    },
+    "h643da49ag6a17g4b0agbe26g7f416cc33c6f": {
+      "ReferenceText": "Sandstorm A",
+      "TranslatedText": "沙暴 A"
+    },
+    "h643f5e4cg0c44g48f7ga003g253a087afa7e": {
+      "ReferenceText": "Equipment Emphasis",
+      "TranslatedText": "高亮装备"
+    },
+    "h69bb87a5ga063g464egae6cg4824e72bc36f": {
+      "ReferenceText": "Cinematic Combat",
+      "TranslatedText": "电影化战斗"
+    },
+    "h6e1d16e8g4adbg4df0g9169g2ceed7a9a8a1": {
+      "ReferenceText": "Controls whether notifications for receiving items show.",
+      "TranslatedText": "显示获得物品时, 弹出的通告"
+    },
+    "h72991da3gbe87g41c2g8a34gab6e730f4c75": {
+      "ReferenceText": "Wind Elemental",
+      "TranslatedText": "风元素"
+    },
+    "h738fac7bg150bg4545g87a9ge3ae1ea94791": {
+      "ReferenceText": "Voodoo",
+      "TranslatedText": "巫毒"
+    },
+    "h782c75b8g42c3g4aa0gb3d4g3bfb2a2ce067": {
+      "ReferenceText": "Divine Blast",
+      "TranslatedText": "神力爆炸"
+    },
+    "h799513e4g3995g4d45g8e0bg3ee08e6cd1db": {
+      "ReferenceText": "Auto-Identify Items",
+      "TranslatedText": "自动鉴定物品"
+    },
+    "h7c2f8512g3c4eg4dffg946aga4482de181ae": {
+      "ReferenceText": "Toggles visibility of the minimap UI element.",
+      "TranslatedText": "显示小地图及其组件"
+    },
+    "h7d635871g9febg4ee3gbca9g2cedbf770d1e": {
+      "ReferenceText": "Overhead Text Size",
+      "TranslatedText": "头顶文本字号"
+    },
+    "h7fe5f99dgae97g4586ga824g457d7c1322b5": {
+      "ReferenceText": "Gives characters practically infinite carry weight.",
+      "TranslatedText": "给予角色几乎无限的负重"
+    },
+    "h804e5cefgef0eg4351gb19cge60e92ca4297": {
+      "ReferenceText": "General",
+      "TranslatedText": "通用"
+    },
+    "h81b14740g9bb2g49c8ga4cfgbee3b5b383a8": {
+      "ReferenceText": "Sparks",
+      "TranslatedText": "火星"
+    },
+    "h82c7e2e1g5de2g4389ga7c5g639c3d653b96": {
+      "ReferenceText": "Show Source Generation Status",
+      "TranslatedText": "显示秘源再生状态"
+    },
+    "h8307bcc5gb35cg4277ga1d6gb9cc9d8d2eed": {
+      "ReferenceText": "Show Action Hotkeys",
+      "TranslatedText": "显示按钮快捷键"
+    },
+    "h831d1efeg7f97g4306g9f6fgf0ed6c97bc6f": {
+      "ReferenceText": "Save/Load UI Improvements",
+      "TranslatedText": "保存/载入界面优化"
+    },
+    "h832b19aege182g49acgb536gfa969d7669b3": {
+      "ReferenceText": "Multiplies the duration of status overheads.<br><br>Default is 1.",
+      "TranslatedText": "在角色头上显示的状态文本 持续时间倍数<br><br>默认1"
+    },
+    "h8403161cgb78fg453fg9676gd4c14f3afd29": {
+      "ReferenceText": "Controls the maximum distance the camera can zoom out in regular gameplay.<br>Default is 19.",
+      "TranslatedText": "在通常镜头模式下, 镜头的最大收缩距离<br>默认19"
+    },
+    "h854a85fegf878g45a3g98b6g0fff3d5496b7": {
+      "ReferenceText": "Show items with no use actions",
+      "TranslatedText": "显示无法使用的物品"
+    },
+    "h868a6168gd10eg4340gb5f4gb35dc338c453": {
+      "ReferenceText": "If enabled, doors will show world tooltips. Requires \"Show more items\" to be enabled, as these do not have tooltips by default.",
+      "TranslatedText": "开启后, 环境提示中会显示门. 需要启用 '显示所有物品' , 因为默认不会显示这类物品"
+    },
+    "h86c94636gb954g4e3dg9679g477c7f889bb3": {
+      "ReferenceText": "Allow walking to corpses in combat",
+      "TranslatedText": "允许战斗中走到尸体上"
+    },
+    "h8945fbb1g7db8g42a8ga6c5g8db176a633ee": {
+      "ReferenceText": "Allows you to check all your equipped items while in the quest rewards UI.",
+      "TranslatedText": "在弹出物品奖励页面时, 开启角色装备面板"
+    },
+    "h8e644d3dg9c33g4251g9674g48555ee9573b": {
+      "ReferenceText": "Shows the combat log button on the right side of the hotbar.<br>If disabled, you can still toggle the combat log through hotbar actions.",
+      "TranslatedText": "战斗日志按钮放在快捷栏右边<br>禁用后, 你依然可以使用快捷栏按钮打开战斗日志"
+    },
+    "h8f6b67aaga9fag4c62gbd92g0f4d43fd8855": {
+      "ReferenceText": "Hides the Hotbar and Minimap while within the Ascension and Greatforge UIs.",
+      "TranslatedText": "打开飞升和伟大熔炉页面时, 隐藏快捷栏和小地图"
+    },
+    "h8f7f66d4g1806g478agb229g3f36b527d44d": {
+      "ReferenceText": "Simple Tooltip Delay (World)",
+      "TranslatedText": "提示延迟 (世界)"
+    },
+    "h9172c74eg120fg4ea6gac99gf5f558433e70": {
+      "ReferenceText": "Escape Key Closes EE UIs",
+      "TranslatedText": "ESC键关闭Epip Encounters的页面"
+    },
+    "h942bb08bg5e26g439eg8189ga3ece811436f": {
+      "ReferenceText": "Default Tab",
+      "TranslatedText": "默认页面"
+    },
+    "h962abab4gaa4eg42c7gaa0eg3f0e83649f94": {
+      "ReferenceText": "Smoke",
+      "TranslatedText": "烟雾"
+    },
+    "h97ac5f1fg0ae8g490dg9050gb5f8fe4025a4": {
+      "ReferenceText": "Controls the maximum distance the camera can zoom out in controller mode.<br>Default is 13.",
+      "TranslatedText": "手柄模式最大收缩距离<br>默认13"
+    },
+    "h99515a08gaa1fg4214g81fag15521e601583": {
+      "ReferenceText": "Stat-sharing Notifications",
+      "TranslatedText": "状态分享通告"
+    },
+    "h9cd1245egdfdeg4cbbgbae7gfa179a954eac": {
+      "ReferenceText": "If enabled, the health bar when you hover over characters and items will show their treasure table (if relevant) as well as the chance of getting an artifact. For characters, this requires holding the Show Sneak Cones key (shift by default)",
+      "TranslatedText": "启用后, 指向角色和物品时, 生命栏下方会显示掉落物(如果可行). 指向角色时需要按住显示视野信息的按键 (默认是shift))"
+    },
+    "ha1146687g9261g49d4gad63g0269559fce2d": {
+      "ReferenceText": "If enabled, chairs and ladders will show world tooltips. Requires \"Show more items\" to be enabled, as these do not have tooltips by default.",
+      "TranslatedText": "启用后, 环境提示中会显示椅子和梯子. 需要启用 '显示所有物品' , 因为默认不会显示这类物品"
+    },
+    "ha13d577fg043ag4324g8d55gd5f2ba85efac": {
+      "ReferenceText": "If enabled, Battered and Harried stacks will be shown beside player portraits on the left interface.",
+      "TranslatedText": "启用后, 玩家角色肖像左侧会显示重创和蹂躏层数"
+    },
+    "ha1fb1fb3g2796g4850gbdb0g727186aa7f71": {
+      "ReferenceText": "Out of season April Fools jokes",
+      "TranslatedText": "过时的愚人节笑话"
+    },
+    "ha3e9b3f3g2186g4cb3gb212g3938e0bb7779": {
+      "ReferenceText": "Violent Strikes",
+      "TranslatedText": "巨力重击"
+    },
+    "ha9257a90g9b52g4277g83b2g74acf74f50a8": {
+      "ReferenceText": "Waterfall",
+      "TranslatedText": "瀑布"
+    },
+    "ha970de96geaf5g483eg9996gac184c8fe843": {
+      "ReferenceText": "Immersive Meditation",
+      "TranslatedText": "立刻冥想"
+    },
+    "haa0297d1ga978g4be1gb3b4g7295b9451b31": {
+      "ReferenceText": "Maximum Distance",
+      "TranslatedText": "最大距离"
+    },
+    "haa0cd7a5g5950g4cceg8fe0gd343fc6db5e0": {
+      "ReferenceText": "Show chairs and ladders",
+      "TranslatedText": "显示椅子和梯子"
+    },
+    "haae0acc4gf8f6g4040g9038g52c50db75a38": {
+      "ReferenceText": "Show Battered/Harried Statuses",
+      "TranslatedText": "显示重创和蹂躏状态"
+    },
+    "hae703884g68c4g44d1gb1d2g211f87e7309c": {
+      "ReferenceText": "If enabled, clicking world tooltips will open containers rather than picking them up.",
+      "TranslatedText": "启用后, 点击环境提示会打开容器而不是捡起来"
+    },
+    "hafbe381ag6da6g4760gb278g1b6c5a36f530": {
+      "ReferenceText": "Save/Load Sorting",
+      "TranslatedText": "存档排序"
+    },
+    "hafd62d05gc85eg434bg8f49g68214f14bb72": {
+      "ReferenceText": "Debug Display",
+      "TranslatedText": "Debug显示"
+    },
+    "hb461a9b1g4866g4bbdgb046gd478f7368fab": {
+      "ReferenceText": "Emphasizes equipment items in world tooltips.",
+      "TranslatedText": "在环境提示中, 高亮显示装备"
+    },
+    "hb53a9902g6a6fg4885ga47cg4329d6de565d": {
+      "ReferenceText": "Controls the size of damage overheads.<br><br>Default is 24.",
+      "TranslatedText": "头顶伤害文本字号<br><br>默认24"
+    },
+    "hb62c4354g1648g4f0eg83e9g4c2783e5fc86": {
+      "ReferenceText": "Controls the opacity of your character portraits's status bars in combat. Hovering over the statuses will always display them at full opacity.<br><br>Default is 1.",
+      "TranslatedText": "战斗中角色肖像旁边的状态栏透明度. 指向状态时会永远保持不透明."
+    },
+    "hb733d1c1g7bc7g4fc5ga090ga2f662e9220d": {
+      "ReferenceText": "Open containers",
+      "TranslatedText": "打开容器"
+    },
+    "hb7ac349eg981eg4bdega605g533f9a7bea9c": {
+      "ReferenceText": "Enables alternative sorting for the save/load UI, as well as searching.",
+      "TranslatedText": "启用保存/载入界面的存档排序和搜索"
+    },
+    "hb8f2e390g2811g4df4gb9fdg3661092ef520": {
+      "ReferenceText": "Controls the delay for simple tooltips to appear while hovering over objects in the world.<br><br>Default is 0.5s.",
+      "TranslatedText": "指向物体时, 提示显示前的延迟时间<br><br>默认0.5秒"
+    },
+    "hb9e14744g4868g4e08gb3d7ga9bd57629d03": {
+      "ReferenceText": "Shows the Battered/Harries statuses while Alternative Status Display is enabled.<br>If you disable this, it is recommended to enable the B/H display on the portraits.",
+      "TranslatedText": "当排序/过滤启用时, 显示重创和蹂躏状态<br>如果你禁用了本选项, 推荐启用角色肖像显示重创和蹂躏状态的选项"
+    },
+    "hbd18d9b1g7709g419agb8d6gdccf938dcaf3": {
+      "ReferenceText": "Epic Loading Screen",
+      "TranslatedText": "Epic加载页面"
+    },
+    "hbd336157gc5fag442fgb2cfgb85f9e2c44fd": {
+      "ReferenceText": "Overhead Damage Size",
+      "TranslatedText": "头顶伤害文本字号"
+    },
+    "hca79eaccgc9c9g4a87g9f9egdbfa57800a5a": {
+      "ReferenceText": "Controls whether notifications for characters casting skills show up in combat.",
+      "TranslatedText": "战斗中是否显示角色释放技能的通告"
+    },
+    "hcd9974f8g16cfg4cbfga08agbf28ee5b55eb": {
+      "ReferenceText": "Show loot drops in health bar",
+      "TranslatedText": "生命栏显示掉落"
+    },
+    "hcda03853g5322g48e6gb8d2g37a87a295fef": {
+      "ReferenceText": "Shows the keyboard hotkeys for custom actions.",
+      "TranslatedText": "显示快捷栏按钮的快捷键 (在控制->EPIP ENCOUNTERS中设置)"
+    },
+    "hce85d2d7g4957g4a29g8962gb4d42f693e1a": {
+      "ReferenceText": "Plays a sound effect when a message is received, so as to make it easier to notice.",
+      "TranslatedText": "收到信息时, 播放一段声音, 避免玩家没注意到"
+    },
+    "hd0e2b5b7geca4g4a5dgad60g1893680e319a": {
+      "ReferenceText": "Disable Slots while Casting",
+      "TranslatedText": "施法时禁用快捷栏槽位"
+    },
+    "hd71aa49cgcb72g4cd1ga209g28e6a6159b95": {
+      "ReferenceText": "Infinite Carry Weight",
+      "TranslatedText": "无限负重"
+    },
+    "hd90b74d9g5ae7g49fbg97cdg6b2e0d7fbee8": {
+      "ReferenceText": "Determines the order of statuses, in order of importance.",
+      "TranslatedText": "按照重要性的顺序, 决定状态排序"
+    },
+    "hdf91946ag8402g42ecgafc2g4f2a232b81ef": {
+      "ReferenceText": "Adds aggro information to the health bar when hovering over enemies: AI preferred/unpreferred/ignored tag, as well as taunt source/target(s).",
+      "TranslatedText": "指向角色时, 生命栏下方显示AI仇恨信息: AI重视/轻视/无视, 还会显示嘲讽来源/目标"
+    },
+    "he0105763gc21bg4f2ag995bg827864f3db23": {
+      "ReferenceText": "Show empty containers/bodies",
+      "TranslatedText": "显示空容器和空尸体"
+    },
+    "he0bb8817g7c40g4572g9170gce3d351dc753": {
+      "ReferenceText": "Automatically and instantly identify items whenever they are generated.<br>'With enough Loremaster' uses the highest Loremaster of all player characters, regardless of party.",
+      "TranslatedText": "自动并立刻鉴定获得的物品<br>选择 '足够的博学' 则是由队伍中博学最高的队员来自动鉴定"
+    },
+    "he1ba8777g2269g40b6gb21cg353aea79fb9b": {
+      "ReferenceText": "Logs AI scoring to the console.",
+      "TranslatedText": "在控制台记录AI得分"
+    },
+    "he515233eg586eg44d4gb0bcg9d971e85e198": {
+      "ReferenceText": "Encouraging",
+      "TranslatedText": "鼓舞"
+    },
+    "he759cd00g404dg4731gb2a6g0ece913a327e": {
+      "ReferenceText": "Emphasizes container items in world tooltips.",
+      "TranslatedText": "在环境提示中, 高亮显示容器"
+    },
+    "hec25a517g9521g47e3g8f74gfa658861a320": {
+      "ReferenceText": "Controls the FOV of the camera. Low/high values may cause issues with dynamic shadows.<br>Default is 45.",
+      "TranslatedText": "镜头视野. 过高或过低可能会导致动态阴影出问题<br>默认45"
+    },
+    "hf008175bgcf6fg4232g9d11g99a45cf7be11": {
+      "ReferenceText": "Fog A",
+      "TranslatedText": "雾 A"
+    },
+    "hf288311dg0fccg47dcgbc6ag954c4d848835": {
+      "ReferenceText": "Enable tooltips for all items",
+      "TranslatedText": "显示所有物品"
+    },
+    "hf3f1fedfg8c70g4342g95d7g64f3280f310a": {
+      "ReferenceText": "Controls whether notifications for sharing stats (Loremaster, Lucky Charm) show.",
+      "TranslatedText": "显示状态分享的通告, 比如分享了调查敌人时分享的博学, 搜东西时分享的幸运"
+    },
+    "hf61f1a35g7ee7g4b79g8728g9a278d2522b0": {
+      "ReferenceText": "Area Transition Label Duration",
+      "TranslatedText": "区域转移标签持续时间"
+    },
+    "hf72184f1g53fdg4103g81d3gc3cf433c3bfb": {
+      "ReferenceText": "Arcane Mist",
+      "TranslatedText": "秘法雾"
+    },
+    "hf7dbc203g640cg4c40g8fd3gdd2cf3545672": {
+      "ReferenceText": "Enables a UI widget that displays framerate, server tickrate, and mod versions.",
+      "TranslatedText": "启用显示帧率, 服务器时钟频率和mod版本"
+    },
+    "hfd959b44gc01bg403eg95ebg5b17cd08d1ff": {
+      "ReferenceText": "Forces story patching on every session load.",
+      "TranslatedText": "每次加载场景时, 强制使用故事模式修复"
+    },
+    "hfff84bafgd93cg41bagb87fg582303ca13c9": {
+      "ReferenceText": "Don't you guys have phones?",
+      "TranslatedText": "你们没有手机吗?"
+    },
+    "h2b23b849g0345g4d0dgb48dg15315ade1779": {
+      "ReferenceText": "Epip Language",
+      "TranslatedText": "Epip语言"
+    },
+    "hb74bc767gb91ag4a4cg9d9cg4c574397046c": {
+      "ReferenceText": "Causes EpicEncounters.IsLoaded() call to return false even if EE Core is enabled.",
+      "TranslatedText": "原因是调用EpicEncounters.IsLoaded() 返回false, 即使启用了EE Core"
+    },
+    "hbe066f75ge516g49f1g8f3cg328153a5d890": {
+      "ReferenceText": "Simulate no EE",
+      "TranslatedText": "模拟没有EE"
+    },
+    "h2c6440beg71c6g45c3g8a8bg9f6c64454faf": {
+      "ReferenceText": "Changes Epip's language to display in a language different than the one the game is running in.<br>Use to remedy current issues with running EE mods in languages other than English.",
+      "TranslatedText": "将Epip语言调整为非游戏所用语言<br>如果当前语言有问题的话"
+    },
+    "h68a80196g2a32g4e12g9757gc826f58efd20": {
+      "ReferenceText": "Warp to AMER_Test",
+      "TranslatedText": "穿梭至AMER_Test"
+    },
+    "hb29270e7g6dc8g44c0g9391g21b25965aea6": {
+      "ReferenceText": "Consumable Type",
+      "TranslatedText": "消耗品类型"
+    },
+    "h82933829g4fd3g4dfeg9b84ga47e14020bd6": {
+      "ReferenceText": "Dagger",
+      "TranslatedText": "匕首"
+    },
+    "he9f82492g81f0g4e53g9eefg731a6f800db8": {
+      "ReferenceText": "Experimental! May cause issues with certain skills. Please report any!<br>Server-side option is the most reliable at the moment.",
+      "TranslatedText": "试验功能! 部分技能可能出问题. 请反馈给作者<br>主机端 是目前最可靠的选项"
+    },
+    "h8de93e20gae0dg45cfg9695g478ba659f71a": {
+      "ReferenceText": "If enabled, the UI will close after using an item.  You can hold shift while clicking an item to temporarily invert this setting.",
+      "TranslatedText": "启用后, 使用物品后会自动关闭页面. 你可以按住shift点击物品暂时反转该选项"
+    },
+    "h6cc76e3fg8d5cg466egb96agb780b490d0d5": {
+      "ReferenceText": "Save Default Position",
+      "TranslatedText": "保存默认位置"
+    },
+    "h4fc7301egc609g4739g9752g7b0fae2e8c5b": {
+      "ReferenceText": "Skillbooks",
+      "TranslatedText": "技能书"
+    },
+    "h53ac110bgde75g4517ga5a6gdb5daf3abc88": {
+      "ReferenceText": "Weapon Type",
+      "TranslatedText": "武器类型"
+    },
+    "hbd6a0da2gd153g40c7g972agb0d16bfe78d4": {
+      "ReferenceText": "Settings",
+      "TranslatedText": "设置"
+    },
+    "hbb33eea8g0ce7g4bbcga719gc5c4e7811d4a": {
+      "ReferenceText": "Overhead",
+      "TranslatedText": "神圣槽位"
+    },
+    "hf196badfg6c61g4bd5g91e8g7bfbf9874cbf": {
+      "ReferenceText": "Quick Find",
+      "TranslatedText": "快速搜索"
+    },
+    "he58ba92dg936fg49fagac2bg61a9c20dd142": {
+      "ReferenceText": "Enabled",
+      "TranslatedText": "启用"
+    },
+    "hefb45469g4aabg4a8ega8aagbed67af313e1": {
+      "ReferenceText": "Spear",
+      "TranslatedText": "矛"
+    },
+    "h7f4d1a8egfe38g4a39gb104g57738c21fd93": {
+      "ReferenceText": "Axe",
+      "TranslatedText": "斧"
+    },
+    "hde49d383g961eg49d6gaa46gcc45ab299aa5": {
+      "ReferenceText": "Miscellaneous UI",
+      "TranslatedText": "其他页面"
+    },
+    "hd34a81ecg7b8eg4ad6g8fc4gf6310e5ae556": {
+      "ReferenceText": "UI Tooltips",
+      "TranslatedText": "UI提示"
+    },
+    "h6108a8b5gd998g4138g9ce5g12cc0695be7f": {
+      "ReferenceText": "Chat",
+      "TranslatedText": "聊天"
+    },
+    "had9e68fbgbd66g4141gab13gd1b41046c493": {
+      "ReferenceText": "World Item Tooltips",
+      "TranslatedText": "环境提示"
+    },
+    "h3985c604gd7a2g4e68gb817g4d1311259a13": {
+      "ReferenceText": "Controls the opacity of the background panel.<br><br>Default is 80%.",
+      "TranslatedText": "面板背景透明度<br><br>默认80%"
+    },
+    "h0f112ed1gcc18g470egaf01ga5cd65d1f22b": {
+      "ReferenceText": "Sword",
+      "TranslatedText": "剑"
+    },
+    "h693e7865g63d9g402bgba37g2f627a59d4c6": {
+      "ReferenceText": "Height",
+      "TranslatedText": "高度"
+    },
+    "ha5ce3e75g6795g493bgbd94g5d7779a15deb": {
+      "ReferenceText": "Equipment",
+      "TranslatedText": "装备"
+    },
+    "h6232b543g92dag4b65gac80g0d3f7e833f72": {
+      "ReferenceText": "Quick Find is a UI that shows a customizable filtered view of the party inventory, opened using Ctrl+F by default.",
+      "TranslatedText": "快速搜索可以过滤并显示队伍背包的物品. 默认按Ctrl+F打开快速搜索面板"
+    },
+    "h37985411gc95dg46a1g858bg021ed39e43cd": {
+      "ReferenceText": "Hotbar",
+      "TranslatedText": "快捷栏"
+    },
+    "h8192e5abg5593g45ccgbcb9gd6b79952ed2d": {
+      "ReferenceText": "Weapon",
+      "TranslatedText": "武器类型"
+    },
+    "hc9a05852g3523g4c85gad7cg49f293c2cd29": {
+      "ReferenceText": "Scrolls and Grenades",
+      "TranslatedText": "卷轴与手雷"
+    },
+    "h543a5832g1c08g4c3eg9e21g9ee1414c9941": {
+      "ReferenceText": "Item Slot",
+      "TranslatedText": "装备孔位"
+    },
+    "hc574348cg706eg4618g9629g6a08ad4aed70": {
+      "ReferenceText": "Inventory UI",
+      "TranslatedText": "背包UI"
+    },
+    "he8c517d9gc48fg42f8ga501g35f9909946b9": {
+      "ReferenceText": "Inventory",
+      "TranslatedText": "背包"
+    },
+    "hd286ded2g4b06g4fedg923cg235ebaa1ae49": {
+      "ReferenceText": "Developer",
+      "TranslatedText": "开发者"
+    },
+    "hbcadc230g935eg4da1ga40dg153966dd04a2": {
+      "ReferenceText": "Wings",
+      "TranslatedText": "翅膀"
+    },
+    "hc2b715dfgf2a2g4ea3g8691gbc66ca160a1d": {
+      "ReferenceText": "Notifications",
+      "TranslatedText": "通告"
+    },
+    "h4119cfcegbfc2g4045gbeecgfb1c96de38e2": {
+      "ReferenceText": "Type",
+      "TranslatedText": "类型"
+    },
+    "h5025c292g5fd8g46fegac5bgee45a7acc134": {
+      "ReferenceText": "Ability School",
+      "TranslatedText": "学派"
+    },
+    "ha15ba540g2da4g4056g8174gcd25a3b1d343": {
+      "ReferenceText": "Allows examining dead characters.",
+      "TranslatedText": "允许调查尸体"
+    },
+    "h8d88a6c9gb72cg422fg8929g396e84f1e77b": {
+      "ReferenceText": "Food and Drinks",
+      "TranslatedText": "食物与饮料"
+    },
+    "h3bf7ae10g24e1g4f50gbc69g71a8b95b1a51": {
+      "ReferenceText": "Animation Cancelling",
+      "TranslatedText": "动作取消"
+    },
+    "h9e8f2aecg2b81g4f48ga9bbg43dd8f593686": {
+      "ReferenceText": "Saves the UI's current position and restores it upon reloading. Use to set the default position of the UI.",
+      "TranslatedText": "保存UI当前位置, 读档后恢复. 目的是设置UI默认位置"
+    },
+    "h3a060f85gad6dg4e73g8526ga0606d366478": {
+      "ReferenceText": "Width",
+      "TranslatedText": "宽度"
+    },
+    "hd6db0ca4g7edag4067g9635g88ad68b24784": {
+      "ReferenceText": "Active",
+      "TranslatedText": "激活"
+    },
+    "h55519c1fgecd7g4c73gafb2gebf09ecf7168": {
+      "ReferenceText": "Staff",
+      "TranslatedText": "法杖"
+    },
+    "hee5bca62g5b34g4846g92fdgdaafaa1a5625": {
+      "ReferenceText": "Sourcery",
+      "TranslatedText": "秘源"
+    },
+    "ha8c99111g67d2g4321g8e8cg92282405ebe8": {
+      "ReferenceText": "Boots",
+      "TranslatedText": "鞋子"
+    },
+    "h3140c19bgec23g4a62g8d4ag9703a6bf89f4": {
+      "ReferenceText": "Horns",
+      "TranslatedText": "角"
+    },
+    "hcb8d99d9g28aeg4310gba17g4561e98b4b8e": {
+      "ReferenceText": "Any",
+      "TranslatedText": "任何"
+    },
+    "haa78ab06gafaag4c9dg910bg9f5c8c81b22c": {
+      "ReferenceText": "Polymorph",
+      "TranslatedText": "变形学派"
+    },
+    "hb09a2fc1g7ad5g4caag8606g936398d62a3b": {
+      "ReferenceText": "Necromancer",
+      "TranslatedText": "死灵学派"
+    },
+    "he0473fbcg6b57g48aegb3c0g7bb24b1e0393": {
+      "ReferenceText": "Player Portraits",
+      "TranslatedText": "玩家肖像"
+    },
+    "h7ca5d696g5244g435eg887bg524f556990f6": {
+      "ReferenceText": "Scoundrel",
+      "TranslatedText": "刺杀学派"
+    },
+    "h5df736bfgcdc9g48e4ga09ag1967abc64832": {
+      "ReferenceText": "Breast",
+      "TranslatedText": "内心"
+    },
+    "h962807b6g8756g412dga48eg5a2c6a71e76f": {
+      "ReferenceText": "Potions",
+      "TranslatedText": "药水"
+    },
+    "h1d691e43g71beg469ag8795g8f6fdf95be62": {
+      "ReferenceText": "Close UI after using an item",
+      "TranslatedText": "使用物品后关闭页面"
+    },
+    "he5c3a752gd8bag48fagb611g35b5d23bef9d": {
+      "ReferenceText": "Cancels your controlled character's spell animations after their effects execute.<br><br>%s",
+      "TranslatedText": "技能效果发生后, 取消角色后续施法动作, 目的是加快回合速度<br><br>%s"
+    },
+    "h4f610121gdb42g4d2fg9a8ag61eeedb018cb": {
+      "ReferenceText": "Controls the width of the user interface.<br><br>Default is 400.",
+      "TranslatedText": "用户界面宽度<br><br>默认400"
+    },
+    "h06dec330gb7d7g49bcg89d5g0c7c6f737147": {
+      "ReferenceText": "Warfare",
+      "TranslatedText": "战场技艺"
+    },
+    "ha588e93ag94d4g4b21gbd50g4863aea40d21": {
+      "ReferenceText": "Aerotheurge",
+      "TranslatedText": "大气学派"
+    },
+    "h3b607ec3gf978g48ccgbb02g96aba3dd1430": {
+      "ReferenceText": "Amulet",
+      "TranslatedText": "护符"
+    },
+    "h87e9e867gfd89g458eg850fga1129b558d59": {
+      "ReferenceText": "Item Category",
+      "TranslatedText": "物品分类"
+    },
+    "h00be848dgbfbfg404agabddg983860260ed4": {
+      "ReferenceText": "With enough Loremaster",
+      "TranslatedText": "足够的博学"
+    },
+    "h7afd19eegf79bg42f9g97e7g66f4ac3a51c6": {
+      "ReferenceText": "Ring",
+      "TranslatedText": "戒指"
+    },
+    "h2eea4c8ag25e9g48c3gbe20g5c84eaf9243b": {
+      "ReferenceText": "Club",
+      "TranslatedText": "棍棒"
+    },
+    "h67b0f5b2gce06g4eefgbc69g36069a35bb3c": {
+      "ReferenceText": "Apply",
+      "TranslatedText": "应用"
+    },
+    "h939f9996g8c0fg46dbg8d51g5816929f1387": {
+      "ReferenceText": "Quick Examine",
+      "TranslatedText": "快速调查"
+    },
+    "hccad2bc4g7010g48e3gae5dg045ab5228de2": {
+      "ReferenceText": "Controls the height of the user interface.<br><br>Default is 600.",
+      "TranslatedText": "用户界面高度<br><br>默认600"
+    },
+    "h421f56f3g378cg4dfaga0d1ge6e2ea2f17c4": {
+      "ReferenceText": "Geomancer",
+      "TranslatedText": "地卜学派"
+    },
+    "h5837c5abg3931g4b5cgbffdgd634be631879": {
+      "ReferenceText": "Hydrosophist",
+      "TranslatedText": "水占学派"
+    },
+    "he1539138g972fg4dffg9026gb1624ae59da1": {
+      "ReferenceText": "Save/Load UI",
+      "TranslatedText": "保存/载入界面"
+    },
+    "hd5a53bd8gdcaag4280ga76dg905f40bde45e": {
+      "ReferenceText": "Show learned skills",
+      "TranslatedText": "显示已学的技能"
+    },
+    "h6ba9c31fgd5d1g4563gb72eg32f83bcb1302": {
+      "ReferenceText": "Overheads",
+      "TranslatedText": "头顶文字"
+    },
+    "hb986b161gd6c3g459bga8f6gba07c8483103": {
+      "ReferenceText": "Scrolls",
+      "TranslatedText": "卷轴"
+    },
+    "h3a0f5c0fg2207g403bg9c7fge9fae83627f9": {
+      "ReferenceText": "Summoning",
+      "TranslatedText": "召唤学派"
+    },
+    "h2fef0484g1ad5g4422gafb7g5a277c035095": {
+      "ReferenceText": "Consumables",
+      "TranslatedText": "消耗品"
+    },
+    "h921639b1g5656g4eafg9c4dg735bda9ba283": {
+      "ReferenceText": "Tooltips",
+      "TranslatedText": "提示"
+    },
+    "h02f2946agf229g4398g8acfga7abe6a9bf0b": {
+      "ReferenceText": "Pyrokinetic",
+      "TranslatedText": "烈火学派"
+    },
+    "hbce14cb2g1ed7g4076g95d1gb80c6085c3ad": {
+      "ReferenceText": "Russian translation by Cathe & JoienReid",
+      "TranslatedText": "俄语翻译: Cathe & JoienReid"
+    },
+    "h042a555bg1f1dg43efg97a8g0df8238a0eb5": {
+      "ReferenceText": "Background Opacity",
+      "TranslatedText": "背景透明度"
+    },
+    "h0212f2a7gcebag4eaag8641g64cfb7bfc0d2": {
+      "ReferenceText": "Helmet",
+      "TranslatedText": "头盔"
+    },
+    "haabd6906gee2dg4b39ga339gf5cdf1a2ee8b": {
+      "ReferenceText": "Tooltip Adjustments",
+      "TranslatedText": "提示调整"
+    },
+    "h7c16563egd7cdg471cga0c5g30aa3344eeda": {
+      "ReferenceText": "Huntsman",
+      "TranslatedText": "神射技艺"
+    },
+    "h4a3e28fag3595g4753gb507g4423068aeda8": {
+      "ReferenceText": "Some options may require a reload for changes to apply.",
+      "TranslatedText": "大多数选项需要存档然后读档才能生效"
+    },
+    "h7e55ac61g269fg4f0dgabf9g06cbe52d0d22": {
+      "ReferenceText": "Knife",
+      "TranslatedText": "小刀"
+    },
+    "h0441f7fegeeebg4aedgb1a8ge5ef84a7b400": {
+      "ReferenceText": "Belt",
+      "TranslatedText": "腰带"
+    },
+    "ha5227515g6663g4386gb3bcga4ffb2043b65": {
+      "ReferenceText": "Enable",
+      "TranslatedText": "启用"
+    },
+    "h30052af9g5fbag4abcg9a0eg1ee45676a79c": {
+      "ReferenceText": "Enable Corpses",
+      "TranslatedText": "启用尸体"
+    },
+    "h6b38d491gbeccg47d1gad43g5e56e7b19242": {
+      "ReferenceText": "Gloves",
+      "TranslatedText": "手套"
+    },
+    "h3d0006a6g5449g47fdg91d6g2920c42ea0f3": {
+      "ReferenceText": "Shield",
+      "TranslatedText": "盾牌"
+    },
+    "h16088a37gd5b2g4bf3g9f7fgc3477eda6c4d": {
+      "ReferenceText": "Leggings",
+      "TranslatedText": "绑腿"
+    },
+    "he043b9f9gfc52g4c39ga4f1gc53ea4fcd5ce": {
+      "ReferenceText": "Add skill IDs to this setting to blacklist them from being animation-cancelled.",
+      "TranslatedText": "添加不需要取消动作的技能ID"
+    },
+    "h5bf72ea7ge22ag4ccag9c30g88d06bcd9cc6": {
+      "ReferenceText": "Previous",
+      "TranslatedText": "上一个"
+    },
+    "h1aedd70egab23g4218gb9cdg04ff62ebdf60": {
+      "ReferenceText": "New Game",
+      "TranslatedText": "新游戏"
+    },
+    "h4e09e95aga08bg4250g821bg910ba2bef9ca": {
+      "ReferenceText": "Paucity",
+      "TranslatedText": "缺乏"
+    },
+    "hc66b270egc5bcg4bc3gbc2bgdd8278522f62": {
+      "ReferenceText": "Disable",
+      "TranslatedText": "禁用"
+    },
+    "h429930a8g7b96g48cag8be4gc0bad3a2dc19": {
+      "ReferenceText": "Incarnate Champion",
+      "TranslatedText": "冠军魔妖"
+    },
+    "heb8e464cg6305g46aeg8fbag240af8560ebe": {
+      "ReferenceText": "Release left-click to Greatforge this item.",
+      "TranslatedText": "释放左键, 让伟大熔炉锻造该物品"
+    },
+    "h1f0e8d31gc83cg47e5gb69ag9f133fc64dcd": {
+      "ReferenceText": "Confirm",
+      "TranslatedText": "确认"
+    },
+    "hdba61afag2d17g4037g99b9g123d915c9b18": {
+      "ReferenceText": "Copy Position",
+      "TranslatedText": "复制位置"
+    },
+    "h905ae122g47e8g41caga162g68a68b6a88af": {
+      "ReferenceText": "Disabled",
+      "TranslatedText": "禁用"
+    },
+    "h2a5a9fedg9c42g4f0ag9d54gb4098614b91b": {
+      "ReferenceText": "Below Health Bar",
+      "TranslatedText": "生命栏下方"
+    },
+    "h833e3d98g6e6bg4cfag9c23g1bcd1c8e9de1": {
+      "ReferenceText": "Bedazzled",
+      "TranslatedText": "困惑"
+    },
+    "ha6bf3f4cg6de4g4ac8gb706g3f39de8376c3": {
+      "ReferenceText": "Teleport to",
+      "TranslatedText": "传送到"
+    },
+    "h20175646g1124g48cag88ceg0b909cd717cd": {
+      "ReferenceText": "Misc.",
+      "TranslatedText": "其他"
+    },
+    "h39849f5cga570g43bcg9258gf0c20c6f7e75": {
+      "ReferenceText": "Crafting UI",
+      "TranslatedText": "锻造页面"
+    },
+    "h52f49bccg59f7g4b72g8440g55847b964cde": {
+      "ReferenceText": "Character Level Display",
+      "TranslatedText": "显示角色等级"
+    },
+    "h4ec86ffdge0d0g426cgb3b4g6112e887b9d5": {
+      "ReferenceText": "Benevolence",
+      "TranslatedText": "仁慈"
+    },
+    "h5b9e7fc0g6bbcg4781gb9aag95c9189ad110": {
+      "ReferenceText": "Debug Cheats",
+      "TranslatedText": "Debug 作弊"
+    },
+    "hf254ab01gbb16g4c83ga1e5gc415eaef1acf": {
+      "ReferenceText": "New high-score! %s points",
+      "TranslatedText": "新高峰! %s points"
+    },
+    "h2e29d154g3de9g4a3fga340g6ac1ff21e1b3": {
+      "ReferenceText": "Centurion",
+      "TranslatedText": "百夫长"
+    },
+    "h1a45624fgcbe1g48b8g9b4ag23e6f8cebe67": {
+      "ReferenceText": "Hidden",
+      "TranslatedText": "隐藏"
+    },
+    "h7fafa02fg8cfdg4ff0g8f14g51597db59549": {
+      "ReferenceText": "Plate",
+      "TranslatedText": "金属片"
+    },
+    "hc9809692g2710g43e5g9e8ege3bd035472ac": {
+      "ReferenceText": "Wither",
+      "TranslatedText": "枯萎"
+    },
+    "h1a5fc697g8419g4d7cg87eagf9632537ff34": {
+      "ReferenceText": "Robes",
+      "TranslatedText": "布袍"
+    },
+    "h25fa3d4fg6833g4bb5ga16eg33b2fa3d3d2e": {
+      "ReferenceText": "Vitality Void",
+      "TranslatedText": "活力无效"
+    },
+    "h37567161ge719g4466g96e1gb6fc29c40e6c": {
+      "ReferenceText": "Armor Type",
+      "TranslatedText": "护甲类型"
+    },
+    "h9f5438ffg5024g4264gaaa2gef122c54e518": {
+      "ReferenceText": "Are you sure you want to start a new game?",
+      "TranslatedText": "你确定要开始新游戏吗?"
+    },
+    "h29f2c933gb1a3g4f4ag89d4gcca71ffeba51": {
+      "ReferenceText": "Artifacts",
+      "TranslatedText": "神器"
+    },
+    "h4d7e7f36g5538g4195gbcd8g59db24ac7bc7": {
+      "ReferenceText": "Purity",
+      "TranslatedText": "纯净"
+    },
+    "ha752b7e8g5211g424fg9350g7111ead5cbac": {
+      "ReferenceText": "Next",
+      "TranslatedText": "下一个"
+    },
+    "hac78ff60gededg498agbb7eg97795fcd40fc": {
+      "ReferenceText": "Copies the cursor's world position to clipboard.",
+      "TranslatedText": "将光标的世界位置复制到剪贴板"
+    },
+    "h304b2c12g06dag4389gaa3bg0f28e9916d32": {
+      "ReferenceText": "Critical Chance",
+      "TranslatedText": "暴击率"
+    },
+    "hfa03d86cg9193g45efg966fg50e1f98ce39c": {
+      "ReferenceText": "Copy GUID",
+      "TranslatedText": "复制 GUID"
+    },
+    "hb5e67864g87f1g4493gb758g47bdab2b69aa": {
+      "ReferenceText": "Alternative Status Display",
+      "TranslatedText": "显示可选状态"
+    },
+    "h42bb0e3cgc574g4f49gbe27gbbba9ecd3ac1": {
+      "ReferenceText": "Celestial",
+      "TranslatedText": "天上"
+    },
+    "ha50d50eag4185g4e10g82fdg19548a304b32": {
+      "ReferenceText": "Blacklisted Skills",
+      "TranslatedText": "技能黑名单"
+    },
+    "hb6171987gab82g4fdcgbff3gcc635d063926": {
+      "ReferenceText": "Presence",
+      "TranslatedText": "存在"
+    },
+    "h0e0a45c4g77f2g4bbdga211gdae7cb9176b0": {
+      "ReferenceText": "Embodiments",
+      "TranslatedText": "体现"
+    },
+    "h8a290a77g93c2g4821g8019gc74551cb306a": {
+      "ReferenceText": "Reactions",
+      "TranslatedText": "反应"
+    },
+    "h59386967gb899g4f18ga61bg168b8d91f04a": {
+      "ReferenceText": "Elementalist",
+      "TranslatedText": "元素使"
+    },
+    "h3c90f954gcf43g4f24gab42gca440c18cdda": {
+      "ReferenceText": "Quick Swap...",
+      "TranslatedText": "快速切换"
+    },
+    "h3166017ag50b9g4943g8ae9g5335c23c58e4": {
+      "ReferenceText": "Game Over",
+      "TranslatedText": "游戏结束"
+    },
+    "hd2e9ffeega495g4fdagb818gbc7b6275e9b3": {
+      "ReferenceText": "After Name",
+      "TranslatedText": "名字后面"
+    },
+    "h8069d8d4gbc27g47a0ga413g3c90f7b3a9ea": {
+      "ReferenceText": "Abeyance",
+      "TranslatedText": "中止"
+    },
+    "haf5c4d50gd6c7g42f6g8ca3g43f30e6385d1": {
+      "ReferenceText": "Vitals",
+      "TranslatedText": "核心"
+    },
+    "h124f507dge140g406egac22gcb4492950a6e": {
+      "ReferenceText": "Adaptation",
+      "TranslatedText": "适应"
+    },
+    "ha53ef891g707cg4195g9c43g556d65e0e3e3": {
+      "ReferenceText": "Prosperity",
+      "TranslatedText": "繁荣"
+    },
+    "h4a4e92cagdaabg49a0g928dg5f01f8b44e80": {
+      "ReferenceText": "Miscellaneous",
+      "TranslatedText": "其他"
+    },
+    "h4a44e189g9952g4edagb5efg9d56cba381f4": {
+      "ReferenceText": "Ward",
+      "TranslatedText": "监视"
+    },
+    "ha01e7516ga580g4f00ga7f3gd59d23ca38c4": {
+      "ReferenceText": "Defiance",
+      "TranslatedText": "抗争"
+    },
+    "h1fbb9977g36ffg4bc6g80f4gb3ce632a38f2": {
+      "ReferenceText": "Voracity",
+      "TranslatedText": "贪婪"
+    },
+    "hbef0236fga72cg4b4bg930ag44ba332514dd": {
+      "ReferenceText": "Cloth",
+      "TranslatedText": "牧师"
+    },
+    "h5a50b777gc16cg4106gbde8gf9dd48954c7f": {
+      "ReferenceText": "Cancel",
+      "TranslatedText": "取消"
+    },
+    "h7038367dgd010g46fbg9b9fg7c5c40d7ef44": {
+      "ReferenceText": "Leather",
+      "TranslatedText": "皮革"
+    },
+    "h8f43167fge54bg419ag8b9agf80ad45e5c87": {
+      "ReferenceText": "Violent Strikes",
+      "TranslatedText": "巨力重击"
+    },
+    "hfc9df4bcgd7deg4e05ga37ag1b739d2a9e2b": {
+      "ReferenceText": "Combat",
+      "TranslatedText": "战斗"
+    },
+    "hedbf4e2fgb8e6g400cgb08bgd33f99bc101d": {
+      "ReferenceText": "Controls how character levels are displayed in the health bar UI.",
+      "TranslatedText": "在生命栏附近显示角色等级"
+    },
+    "hc53e69e8ge732g435dg84dcgfb0541f33326": {
+      "ReferenceText": "Dismantle All",
+      "TranslatedText": "全部取消"
+    },
+    "h1b460fc0ge72dg4879g9886g1dc640a782cb": {
+      "ReferenceText": "No more valid moves on the board!",
+      "TranslatedText": "棋差一着, 满盘皆输"
+    },
+    "h4f83fd0cg8556g4826gb76cg82ec728bef2b": {
+      "ReferenceText": "Stat Boost",
+      "TranslatedText": "(英文)属性过滤"
+    },
+    "h2db813e3g9cceg439agbdf6g1280e3902681": {
+      "ReferenceText": "Predator",
+      "TranslatedText": "捕食者"
+    },
+    "h4bc543cag5f19g4e91gbb76gc3a18177874b": {
+      "ReferenceText": "Score             %s High-Score %s",
+      "TranslatedText": "分数             %s High-Score %s"
+    },
+    "h7e532f24g51f1g439cg9851g8ff8f12a6b17": {
+      "ReferenceText": "When holding Shift",
+      "TranslatedText": "按住shift"
+    },
+    "h8fde1eb5g49cdg43d4g9a15g4e33a2847f23": {
+      "ReferenceText": "Occultist",
+      "TranslatedText": "术士"
+    },
+    "h0d296a7dgd716g475agb4c6g9b3de417c79f": {
+      "ReferenceText": "Replaces the status bar by your characters's portraits with a custom UI that enables various sorting and filtering options.",
+      "TranslatedText": "用自定义UI替换角色肖像的状态容器。"
+    },
+    "ha1afe7c2g4d97g43b6g823eg03bf25788dbd": {
+      "ReferenceText": "High-Score",
+      "TranslatedText": "高分"
+    },
+    "h4c2e34f9g7feeg4303g9dfegcc0c44cf6011": {
+      "ReferenceText": "Turn Delayed",
+      "TranslatedText": "回合延后"
+    },
+    "h5a1af856ge6bbg46b0g8c00g98c676f04629": {
+      "ReferenceText": "We don't have that dye!<br>We shall shop for them at miscellaneous vendors.",
+      "TranslatedText": "我们没有这个染料!<br>染料可以从材料商人购买"
+    },
+    "h84ec181aga466g41e0g9f8bg9af1de57d37a": {
+      "ReferenceText": "Show Culled Only",
+      "TranslatedText": "仅显示已过滤的"
+    },
+    "ha8000c0eg67d5g4398g8890gaf8d98931d1b": {
+      "ReferenceText": "Client-side",
+      "TranslatedText": "客机端"
+    },
+    "he42675fag827ag4189g9c55g0af27feb5fc2": {
+      "ReferenceText": "Attack Of Opportunity Available",
+      "TranslatedText": "借机攻击可用"
+    },
+    "he415fd76g51bfg4b25g955cg59c3165c73ba": {
+      "ReferenceText": "Skillbook",
+      "TranslatedText": "技能书"
+    },
+    "hdb77af8agd827g4a54gb80ag4540ab23988d": {
+      "ReferenceText": "Furniture",
+      "TranslatedText": "装置"
+    },
+    "h5e83b5f4g33f8g45e6ga968gecd0cad8d465": {
+      "ReferenceText": "Has Skillbook",
+      "TranslatedText": "有技能书"
+    },
+    "h92547755gb161g4e13gbd37ga31d5101d177": {
+      "ReferenceText": "Displays certain common character flags in the health bar while holding shift, such as attack of opportunity availability. Works best on player characters and updating certain flags might be delayed.",
+      "TranslatedText": "鼠标悬停角色且按住shift时, 在生命栏处显示特定常见角色标记. 比如 可用借机攻击. 在玩家角色上效果明显, 部分标记刷新可能会有延迟"
+    },
+    "h14674f13g78c9g49ecgac6dgbf7a95039189": {
+      "ReferenceText": "Skills",
+      "TranslatedText": "技能"
+    },
+    "hf791f6e7g31cdg4e84gb349g383ad5b4409c": {
+      "ReferenceText": "Jewelry",
+      "TranslatedText": "珠宝"
+    },
+    "he0847edfg24f4g4259ga31bg1f665425e26c": {
+      "ReferenceText": "Wand",
+      "TranslatedText": "魔杖"
+    },
+    "h99292bbfg3f0eg413agac82g822201b81b42": {
+      "ReferenceText": "Display common flags",
+      "TranslatedText": "显示常见标记"
+    },
+    "h5a14d928gf5d6g48e6ga90egfdf2311276db": {
+      "ReferenceText": "Cannot fight",
+      "TranslatedText": "无法飞行"
+    },
+    "h16a45dc1g56e7g4bb0ga3f6g6f4cb7f66fae": {
+      "ReferenceText": "Show Equipped Items",
+      "TranslatedText": "显示已装备物品"
+    },
+    "ha5ab3810g9aa9g4168g89fdgbfd0ee2c4c01": {
+      "ReferenceText": "Shows skills available to players.",
+      "TranslatedText": "显示玩家可用的技能"
+    },
+    "h9f6cbb29ge1f5g4b74g9e19ge7a83138bbf5": {
+      "ReferenceText": "Mod '%s' is incompatible with '%s' and it is not recommended to use them together.",
+      "TranslatedText": "Mod '%s' 与 '%s' 冲突, 不推荐一起使用"
+    },
+    "h45a75b5agbe29g438dgbf17g6a9362cd7eed": {
+      "ReferenceText": "No Filter",
+      "TranslatedText": "无过滤"
+    },
+    "h254f04a8gbaceg4970g97bdga522f285b929": {
+      "ReferenceText": "Show Not Learnt",
+      "TranslatedText": "显示未学习的"
+    },
+    "hbcd07fa8gaaa1g4571gac0eg8a20d7955224": {
+      "ReferenceText": "Armor",
+      "TranslatedText": "胸甲"
+    },
+    "h979a8059g2ea7g436fg863bgf6b008ad3072": {
+      "ReferenceText": "Removes the redundant 'Set :' prefix that appears in deltamod names and rune effects.",
+      "TranslatedText": "删除出现在deltamod和符文效果中的冗余前缀'Set :'"
+    },
+    "h7eaa3d1dg94a2g4136g969dg1ba9f6796fca": {
+      "ReferenceText": "Show Learnt",
+      "TranslatedText": "显示已学习的"
+    },
+    "hb4ca31ecge2ecg44faga2dbg1e1c98c49d30": {
+      "ReferenceText": "Columns",
+      "TranslatedText": "列"
+    },
+    "h36ba40b2ge76bg4ea9g90ecgde3d4fc01945": {
+      "ReferenceText": "Rows",
+      "TranslatedText": "行"
+    },
+    "h866e5a46g3002g4c1bgba33g4aaef5ca5413": {
+      "ReferenceText": "%s v%s by %s",
+      "TranslatedText": "%s v%s 来自 %s"
+    },
+    "h540c1336g27b1g4382gb911g8adced234ee6": {
+      "ReferenceText": "Off",
+      "TranslatedText": "关闭"
+    },
+    "hd790b2dcg7db3g478bg8fb6g96dfabe9dbd2": {
+      "ReferenceText": "Layer",
+      "TranslatedText": "层次"
+    },
+    "h75aa417egac92g4e00ga4b5g173f485c2f01": {
+      "ReferenceText": "Comeback Kid Available",
+      "TranslatedText": "命不该绝可用"
+    },
+    "hea8fd41ag8885g40b0g8466gb6a63d91863a": {
+      "ReferenceText": "Default Tab",
+      "TranslatedText": "默认页面"
+    },
+    "hd8218bb5gcf00g4051g90f2g05388601ab51": {
+      "ReferenceText": "Determines the default tab for the crafting UI.",
+      "TranslatedText": "决定合成面板默认显示的页面"
+    },
+    "he6042694g235ag4c68gbcccgb1a4769ae7bd": {
+      "ReferenceText": "No Skillbook",
+      "TranslatedText": "没有技能书"
+    },
+    "hd15232f0gd82dg42a3g82ddg7597d3911122": {
+      "ReferenceText": "Resize",
+      "TranslatedText": "调整大小"
+    },
+    "h42920f03g276eg49e3gbe24gee444973feef": {
+      "ReferenceText": "Search...",
+      "TranslatedText": "搜索"
+    },
+    "h3a8d983cg5a8cg4b33g954cg39581bd8a04b": {
+      "ReferenceText": "AI Type: %s",
+      "TranslatedText": "AI 类型: %s"
+    },
+    "h0e24fb6bg2c78g4dd3g995cg9d04ea62eaab": {
+      "ReferenceText": "Sorting Index",
+      "TranslatedText": "排序索引"
+    },
+    "h7f53d9adg7fdeg4005gaa99g0ffde8a8b21f": {
+      "ReferenceText": "Crossbow",
+      "TranslatedText": "弩"
+    },
+    "hbe579ebcg3585g4373g8d80g99de57eb1e7a": {
+      "ReferenceText": "Back",
+      "TranslatedText": "后退"
+    },
+    "h9e59177cgec69g4920g981bg8adee0d6600c": {
+      "ReferenceText": "Filtered Statuses",
+      "TranslatedText": "过滤的状态"
+    },
+    "heb0326c2g21d3g43b6gbc73ge64a25c6a2b3": {
+      "ReferenceText": "Bow",
+      "TranslatedText": "弓"
+    },
+    "h5e7095b6ga182g4dc0gadfbg198413b93310": {
+      "ReferenceText": "Remove 'Set :' Prefixes",
+      "TranslatedText": "删除前缀'Set :'"
+    },
+    "hafe6938fgde3dg45d3g8437g8dc15104fa65": {
+      "ReferenceText": "Server-side",
+      "TranslatedText": "主机端"
+    },
+    "hf0192252g5d7ag429eg96a6g21be87bd88cd": {
+      "ReferenceText": "Resize",
+      "TranslatedText": "调整大小"
+    },
+    "h083f5e98g18e2g4708gae54g82b7697923b0": {
+      "ReferenceText": "Choose a name to engrave.",
+      "TranslatedText": "刻上一个名字"
+    },
+    "h19773400g8de1g46d7g9901g779b750ebddd": {
+      "ReferenceText": "Set Icon",
+      "TranslatedText": "设置图标"
+    },
+    "h3a1fa582g7217g4722gbcc5gc835c482d94a": {
+      "ReferenceText": "Carve a name onto the item to signify the special bond between yourself and it.<br><font color=\"a8a8a8\" size=\"21\" face=\"Averia Serif\">Purely cosmetic.</font>",
+      "TranslatedText": "在物品上刻上名字, 表显示你和它之间的特殊联系<br><font color=\"a8a8a8\" size=\"21\" face=\"Averia Serif\">只是装饰</font>"
+    },
+    "h0e034a16gd835g46bcga5bfgd44c3f88a36e": {
+      "ReferenceText": "Brazilian Portuguese translation by Ferocidade",
+      "TranslatedText": "巴西葡萄牙语翻译: Ferocidade"
+    },
+    "hab6d5bf9gc96eg42f1ga095gaef050698dfc": {
+      "ReferenceText": "Filters",
+      "TranslatedText": "过滤"
+    },
+    "hbe7cf1d7g91cfg4b67g8c53g5b15843eaf46": {
+      "ReferenceText": "Engrave Item",
+      "TranslatedText": "物品铭刻"
+    },
+    "h36e32b84g5373g4711g920cg8d0cedd5fcff": {
+      "ReferenceText": "Resize Hotbar Group",
+      "TranslatedText": "调整快捷栏大小"
+    },
+    "hca56dcd2gf7f6g4662g94cfga66262672545": {
+      "ReferenceText": "Statuses in this list will be filtered out and not shown in the status bar. Holding shift temporarily disables this filter.",
+      "TranslatedText": "该列表的状态会被过滤掉, 不会显示在状态栏上. 按住shift可以暂时禁用过滤"
+    },
+    "h6504d954gcc4fg4008ga5d1g32d40eef13e0": {
+      "ReferenceText": "Warning",
+      "TranslatedText": "警告"
+    },
+    "h37cf1748g9dafg4d2ag9744g00e75e764ee5": {
+      "ReferenceText": "=+%s%% Weapon %s Damage",
+      "TranslatedText": "+%s%% 武器 %s 伤害"
+    },
+    "h874faf80g6c2eg4fe8gb908g60bb769b02eb": {
+      "ReferenceText": "Create",
+      "TranslatedText": "创建"
+    },
+    "hb2e1d20dgd3c2g45b9ga922gf19ea1a12691": {
+      "ReferenceText": "Delete",
+      "TranslatedText": "删除"
+    },
+    "h4179a16bg43a5g40bcg88ccg7870114fb6c0": {
+      "ReferenceText": "Create Hotbar Group",
+      "TranslatedText": "创建快捷栏组"
+    },
+    "hb1aa6659g9385g4966g9b9fga77082927a94": {
+      "ReferenceText": "Show Memorized",
+      "TranslatedText": "显示已记忆的"
+    },
+    "h66c830b8geefbg42afgb501g0942d3a13036": {
+      "ReferenceText": "<font color='ebc808' size='30'>Engrave</font>",
+      "TranslatedText": "<font color='ebc808' size='30'>铭刻</font>"
+    },
+    "h8ef5106dg4b12g413cg87adgce524dad4d1e": {
+      "ReferenceText": "Sorting Priority",
+      "TranslatedText": "排序顺序"
+    },
+    "hc31a7649g3a59g4595gbfecg3fdc812c0c1f": {
+      "ReferenceText": "Codex",
+      "TranslatedText": "法典"
+    },
+    "h52c8465ag5bf7g4420g93b7ge555e6acb172": {
+      "ReferenceText": "Open Codex",
+      "TranslatedText": "打开法典"
+    },
+    "hcb827408g8ce1g41ffg8145gca288912cfb1": {
+      "ReferenceText": "Icon Type",
+      "TranslatedText": "图标类型"
+    },
+    "h94b55185g6055g42b9gac5bgc6bedbffdfef": {
+      "ReferenceText": "Choose an icon...",
+      "TranslatedText": "选择一个图标"
+    },
+    "h715a684agc1e6g47eagb4d8g13944bc7ebe7": {
+      "ReferenceText": "Filtered",
+      "TranslatedText": "已过滤"
+    },
+    "h4c594766g0190g4016gb7a5g0b99c3e2011a": {
+      "ReferenceText": "Sets the sorting order for statuses. Statuses with a higher priority show in the left-most position, statuses with a lower priority show in the right-most position.",
+      "TranslatedText": "设置状态排序顺序. 高优先级的状态会显示在最左边的位置, 最低优先级则在最右边."
+    }
+  }
 }

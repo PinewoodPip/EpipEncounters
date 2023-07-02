@@ -4,7 +4,7 @@
   "TranslatedStrings": {
     "h0023bed4gd590g4375g80dcgf1e135f30b1e": {
       "ReferenceText": "If enabled, items with no use actions will show world tooltips.",
-      "TranslatedText": "Se ativado , Itens Globais Inultilizaveis irão mostrar Dicas "
+      "TranslatedText": "Se ativado , Itens Globais Inultilizaveis irão mostrar Dicas"
     },
     "h00aa4e07g8833g4040g9355g6bed488f1237": {
       "ReferenceText": "Host-only setting. Toggles Fog of War, which hides unexplored areas. This setting applies to all players in the server and is non-destructive; re-enabling it will restore FoW to normal, and all your exploration progress with the setting off will apply.",
@@ -12,19 +12,23 @@
     },
     "h01f17781g7f5ag4113g9505g4cba31cd0d07": {
       "ReferenceText": "Improved Combat Log",
-      "TranslatedText": "Diario de combate Melhorado"
+      "TranslatedText": "Registro de combate Melhorado"
     },
     "h058cdfb5g6b63g486bg9e05g413c1cf64d4a": {
       "ReferenceText": "Shows the Mastery button. If disabled, it remains accessible through hotbar actions.",
-      "TranslatedText": "Mostrar Botão de Maestria . Se desabilitado , Ele continuara acessivel nas Barras de açoes "
+      "TranslatedText": "Mostrar Botão de Maestria . Se desabilitado , Ele continuara acessivel nas Barras de açoes"
     },
     "h05a930e2g0444g4cd3gacccg34cb46da59c9": {
       "ReferenceText": "Show Aggro Information",
-      "TranslatedText": "Mostrar Informação de Agressão "
+      "TranslatedText": "Mostrar Informação de Agressão"
+    },
+    "h063ae4cag4291g4352g88c4gefad4a2e9fe4": {
+      "ReferenceText": "Controls the behaviour of the hotbar custom buttons area. 'Automatic' will cause it to switch between the single-row and dual-row layouts based on how many slot rows you have visible. Other settings will make it stick to one layout.",
+      "TranslatedText": "Controla o comportamento da área de botões personalizados da hotbar. 'Automático' fará com que ele alterne entre os layouts de linha única e linha dupla com base em quantas linhas de slot você tem visíveis. Outras configurações o farão aderir a um layout."
     },
     "h0838a5f5gb835g47dcg80d7g29807777a94a": {
       "ReferenceText": "Cherry Blossom",
-      "TranslatedText": "Flor de cerejeira\n"
+      "TranslatedText": "Flor de cerejeira"
     },
     "h09f0f7e8gb224g4018g9301g1cf150d5bc20": {
       "ReferenceText": "If enabled, your characters's inventories in multiplayer will be automatically unlocked after a reload.",
@@ -40,7 +44,7 @@
     },
     "h1437af42g72a6g49cegb64eg044a99447c10": {
       "ReferenceText": "Containers Emphasis",
-      "TranslatedText": "Ênfase em Contêineres"
+      "TranslatedText": "Contêineres Em destaque"
     },
     "h1549cdd8gf0b8g4c64gb887ge3dc98ecf9e3": {
       "ReferenceText": "Poison Ring",
@@ -52,7 +56,7 @@
     },
     "h16796787gb05cg4a34gaaeegcbbcf22a4b88": {
       "ReferenceText": "Adds visual improvements while it is not your turn to improve immersiveness.",
-      "TranslatedText": "Adiciona melhorias visuais enquanto não é Seu Turno para melhorar a imersão "
+      "TranslatedText": "Adiciona melhorias visuais enquanto não é Seu Turno para melhorar a imersão"
     },
     "h16a650aegefdeg4a47g8abbg044995f9147c": {
       "ReferenceText": "Unfocuses the UI after you send a message, restoring input to the rest of the game.",
@@ -60,7 +64,7 @@
     },
     "h17251a41gb5a5g412dgb36ag4cfca9cebe22": {
       "ReferenceText": "Status Opacity in Combat",
-      "TranslatedText": "opacidade dos Status em combate "
+      "TranslatedText": "opacidade dos Status em combate"
     },
     "h17cf934dg824dg4400g8380g495e3bef019d": {
       "ReferenceText": "Controls the size of regular text above characters talking.<br><br>Default is 19.",
@@ -80,7 +84,7 @@
     },
     "h1e03cfb3g592dg4698ga246gdc1e34d9915a": {
       "ReferenceText": "Item Notifications",
-      "TranslatedText": "Notificações de Itens"
+      "TranslatedText": "Avisos de Items"
     },
     "h1ec057edg09a1g413dgaefdgaf7942d579ce": {
       "ReferenceText": "Maximum Distance (tactical view)",
@@ -96,11 +100,11 @@
     },
     "h24797af2gde0ag48cdgb741gec2049e1c631": {
       "ReferenceText": "Restores the angle settings to default values.",
-      "TranslatedText": "Restaura as configuraçoes de angula para os valores Padrão"
+      "TranslatedText": "Restaura as configuraçoes de ângulo para os valores Padrão"
     },
     "h262d04a1g16d3g4dabg8f01gd68a6b25efc7": {
       "ReferenceText": "Controls the default position of the Examine menu when it is opened.",
-      "TranslatedText": "Controla para o valor padrão a posição do Menu de Examinar quando aberto"
+      "TranslatedText": "Controla para o valor padrão a posição do Menu de Investigação quando aberto"
     },
     "h265f89a4g9e80g420egb7adgd27aced5697b": {
       "ReferenceText": "Field of View",
@@ -108,7 +112,7 @@
     },
     "h28a24072g481eg4d1fgaac8gfacbe5243bdb": {
       "ReferenceText": "If enabled, the Escape key will close EE UIs rather than turning back a page.",
-      "TranslatedText": "Se ativo , o botão ESC vai fechar a interface do EE inves de voltar a pagiva "
+      "TranslatedText": "Se ativo , o botão ESC vai fechar a interface do EE inves de voltar a pagina"
     },
     "h2afb4a12gfb71g47c5g9abdg87b5a642637c": {
       "ReferenceText": "Prince Darkness",
@@ -116,11 +120,11 @@
     },
     "h2ce0c9f6gc6b1g4191g9901g7383f9dbe3ef": {
       "ReferenceText": "Display B/H on player portraits",
-      "TranslatedText": "Exibir B/H em retratos de jogadores\n"
+      "TranslatedText": "Exibir B/H em retratos de jogadores"
     },
     "h315ae29bg868cg4eceg8cc6gebc6623df369": {
       "ReferenceText": "Unfocus after sending messages",
-      "TranslatedText": "Desfocar depois de enviar mensagens\n"
+      "TranslatedText": "Desfocar depois de enviar mensagens"
     },
     "h3315b640gf25bg45eag8afbgde0e87cba2f5": {
       "ReferenceText": "Message Sound",
@@ -132,7 +136,7 @@
     },
     "h37fadbc1g48acg4963gb243gd517a74d58b3": {
       "ReferenceText": "Overhead Status Duration Multiplier",
-      "TranslatedText": "Multiplicador de duração do status de sobrecarga\n"
+      "TranslatedText": "Multiplicador de duração para textos acima da cabeça"
     },
     "h39d23b3bg188dg4cd8g9e94gd9697fe9130d": {
       "ReferenceText": "Purple Vortex",
@@ -140,11 +144,11 @@
     },
     "h39e2d175g348eg4697g93a5gf28a9544e4ba": {
       "ReferenceText": "Emphasizes consumable items in world tooltips.",
-      "TranslatedText": "Enfatiza os itens consumíveis nas dicas do mundo.\n"
+      "TranslatedText": "Enfatiza os itens consumíveis nas dicas do mundo."
     },
     "h3a72d579gc132g43d8gb6f0g097bfdbf76fb": {
       "ReferenceText": "Force Story Patching",
-      "TranslatedText": "Forçar correção de história\n"
+      "TranslatedText": "Forçar correção de história"
     },
     "h3aca822bgfa26g4005ga288g20b6a22a48ec": {
       "ReferenceText": "Laser Focus",
@@ -160,7 +164,7 @@
     },
     "h3da94ae0ge613g4331gb629gb467b74f7ca4": {
       "ReferenceText": "Disables the hotbar slots while a spell is being cast.",
-      "TranslatedText": "Desativa os espaços na barra de ação enquanto uma skill é Lançada"
+      "TranslatedText": "Desativa a barra de ação enquanto uma skill é lançada"
     },
     "h3ddc3759g3f70g4ac5g9401g76ced6258d7a": {
       "ReferenceText": "Reset to defaults",
@@ -176,7 +180,7 @@
     },
     "h3f4780c9g726bg43c3g8b59gd85d2a0aad07": {
       "ReferenceText": "Show Fog of War",
-      "TranslatedText": "Mostrar Névoa de Guerra\n"
+      "TranslatedText": "Mostrar Névoa de Guerra"
     },
     "h40a5107fg6bcdg41a4g8535ga841f2b6f199": {
       "ReferenceText": "Whirlwind",
@@ -184,7 +188,7 @@
     },
     "h44d539cdg17cag473dg98c3gcddc60e27f5b": {
       "ReferenceText": "Log AI Scoring",
-      "TranslatedText": "Registrar pontuação de IA\n"
+      "TranslatedText": "Registrar pontuação de IA"
     },
     "h454a0cb5ga2edg439cga8fdg9dde0686c731": {
       "ReferenceText": "Determines sorting in the save/load UI, if improvements for it are enabled.",
@@ -196,14 +200,14 @@
     },
     "h48bab667g8c0ag4263g8622g450aba3d0f94": {
       "ReferenceText": "Sandstorm B",
-      "TranslatedText": "Tempestade de areia B\n"
+      "TranslatedText": "Tempestade de areia B"
     },
     "h49611d79g2ae8g47dcgb20bge13634676cad": {
       "ReferenceText": "Disables looting corpses in combat, unless shift is held. This allows you to easily move to their position.",
       "TranslatedText": "Desativa a pilhagem de cadáveres em combate, a menos que o turno seja mantido. Isso permite que você se mova facilmente para a posição deles."
     },
     "h4b67c715g0d30g4015gba18ge8ea4f357448": {
-      "ReferenceText": "Shows the Source Generation status while sorting/filtering is enabled.",
+      "ReferenceText": "Shows the Source Generation status while Alternative Status Display is enabled.",
       "TranslatedText": "Mostra o status da geração de origem enquanto a classificação/filtragem está habilitada."
     },
     "h4bd4b3d7gf239g412dgb4e9g3421524ff330": {
@@ -212,7 +216,7 @@
     },
     "h4e5e3786g9b22g4009gaf4egc680d28b83bd": {
       "ReferenceText": "Show Combat Log Button",
-      "TranslatedText": "botão de Mostrar Registro de Combate\n"
+      "TranslatedText": "Mostrar Registro de Combate"
     },
     "h50d46bf5ge806g4c7bg9780ga9627d9fc3f3": {
       "ReferenceText": "Intense Smoke",
@@ -220,7 +224,7 @@
     },
     "h53b42eecg74ccg4164gbd64g0bda6052e6f1": {
       "ReferenceText": "Examine Menu Position",
-      "TranslatedText": "Examinar Posição do Menu\n"
+      "TranslatedText": "Configuraçoes de posição de Investigação"
     },
     "h54022e48gaecfg4b0ega332gd42d4ac64dd4": {
       "ReferenceText": "Show Mastery Button",
@@ -228,7 +232,7 @@
     },
     "h54361ee5gb59eg40d9g9915g8c47e5631ad9": {
       "ReferenceText": "Skill-casting Notifications",
-      "TranslatedText": "Notificações de lançamento de habilidade\n"
+      "TranslatedText": "Avisos de lançamentos de Habilidades"
     },
     "h54d9066eg87bdg439fg92f9g7027970af6ca": {
       "ReferenceText": "Camera",
@@ -236,7 +240,7 @@
     },
     "h58774ddfga909g4acfg95e1g9ba772b7be4a": {
       "ReferenceText": "Hotbar Buttons Area Sizing",
-      "TranslatedText": "Dimensionamento da Área dos Botões da barra "
+      "TranslatedText": "Dimensionamento da Área dos Botões da barra"
     },
     "h5bef00c6g36deg4db0ga3d5gb006dbc5f601": {
       "ReferenceText": "Auto-unlock inventory (Multiplayer)",
@@ -248,31 +252,31 @@
     },
     "h6270c4d7g0531g453agbae3g2503fb8c3c59": {
       "ReferenceText": "Maximum Distance (locked-on)",
-      "TranslatedText": "Distância máxima (Travado)\n"
+      "TranslatedText": "Distância máxima (Travado)"
     },
     "h63aee58dg36e4g411cg9dcbg541062d696f0": {
       "ReferenceText": "Consumables Emphasis",
-      "TranslatedText": "Ênfase em Consumíveis\n"
+      "TranslatedText": "Consumiveis em destaque"
     },
     "h643da49ag6a17g4b0agbe26g7f416cc33c6f": {
       "ReferenceText": "Sandstorm A",
-      "TranslatedText": "Tempestade de areia A\n"
+      "TranslatedText": "Tempestade de areia A"
     },
     "h643f5e4cg0c44g48f7ga003g253a087afa7e": {
       "ReferenceText": "Equipment Emphasis",
-      "TranslatedText": "Ênfase de equipamento\n"
+      "TranslatedText": "Equipamentos em Destaque"
     },
     "h69bb87a5ga063g464egae6cg4824e72bc36f": {
       "ReferenceText": "Cinematic Combat",
-      "TranslatedText": "Combate Cinematográfico\n"
+      "TranslatedText": "Combate Cinematográfico"
     },
     "h6e1d16e8g4adbg4df0g9169g2ceed7a9a8a1": {
       "ReferenceText": "Controls whether notifications for receiving items show.",
-      "TranslatedText": "Controla se as notificações de recebimento de itens são exibidas."
+      "TranslatedText": "Permite se aparecerá um aviso para itens que ganhar"
     },
     "h72991da3gbe87g41c2g8a34gab6e730f4c75": {
       "ReferenceText": "Wind Elemental",
-      "TranslatedText": "elemental do vento\n"
+      "TranslatedText": "elemental do vento"
     },
     "h738fac7bg150bg4545g87a9ge3ae1ea94791": {
       "ReferenceText": "Voodoo",
@@ -280,7 +284,7 @@
     },
     "h782c75b8g42c3g4aa0gb3d4g3bfb2a2ce067": {
       "ReferenceText": "Divine Blast",
-      "TranslatedText": "explosão divina\n"
+      "TranslatedText": "explosão divina"
     },
     "h799513e4g3995g4d45g8e0bg3ee08e6cd1db": {
       "ReferenceText": "Auto-Identify Items",
@@ -292,7 +296,7 @@
     },
     "h7d635871g9febg4ee3gbca9g2cedbf770d1e": {
       "ReferenceText": "Overhead Text Size",
-      "TranslatedText": "Tamanho do texto da Sobrecarga"
+      "TranslatedText": "Tamanho do texto acima da cabeça"
     },
     "h7fe5f99dgae97g4586ga824g457d7c1322b5": {
       "ReferenceText": "Gives characters practically infinite carry weight.",
@@ -308,11 +312,11 @@
     },
     "h82c7e2e1g5de2g4389ga7c5g639c3d653b96": {
       "ReferenceText": "Show Source Generation Status",
-      "TranslatedText": "Mostrar status de geração de origem\n"
+      "TranslatedText": "Mostrar status de geração de origem"
     },
     "h8307bcc5gb35cg4277ga1d6gb9cc9d8d2eed": {
       "ReferenceText": "Show Action Hotkeys",
-      "TranslatedText": "Mostrar teclas de atalho de ação\n"
+      "TranslatedText": "Mostrar teclas de atalho de ação"
     },
     "h831d1efeg7f97g4306g9f6fgf0ed6c97bc6f": {
       "ReferenceText": "Save/Load UI Improvements",
@@ -320,15 +324,15 @@
     },
     "h832b19aege182g49acgb536gfa969d7669b3": {
       "ReferenceText": "Multiplies the duration of status overheads.<br><br>Default is 1.",
-      "TranslatedText": "Multiplica a duração das sobrecargas de status.<br><br>O padrão é 1."
+      "TranslatedText": "Multiplica a duração das Mensagems acima da cabeça de status.<br><br>O padrão é 1."
     },
     "h8403161cgb78fg453fg9676gd4c14f3afd29": {
       "ReferenceText": "Controls the maximum distance the camera can zoom out in regular gameplay.<br>Default is 19.",
-      "TranslatedText": "Controla a distância máxima que a câmera pode reduzir no jogo normal.<br>O padrão é 19.\n"
+      "TranslatedText": "Controla a distância máxima que a câmera pode reduzir no jogo normal.<br>O padrão é 19."
     },
     "h854a85fegf878g45a3g98b6g0fff3d5496b7": {
       "ReferenceText": "Show items with no use actions",
-      "TranslatedText": "Mostrar Itens Inultilizaveis "
+      "TranslatedText": "Mostrar Itens Inultilizaveis"
     },
     "h868a6168gd10eg4340gb5f4gb35dc338c453": {
       "ReferenceText": "If enabled, doors will show world tooltips. Requires \"Show more items\" to be enabled, as these do not have tooltips by default.",
@@ -336,7 +340,7 @@
     },
     "h86c94636gb954g4e3dg9679g477c7f889bb3": {
       "ReferenceText": "Allow walking to corpses in combat",
-      "TranslatedText": "Permitir caminhar até cadáveres em combate\n"
+      "TranslatedText": "Permitir saquear Cadáveres mortos"
     },
     "h8945fbb1g7db8g42a8ga6c5g8db176a633ee": {
       "ReferenceText": "Allows you to check all your equipped items while in the quest rewards UI.",
@@ -344,7 +348,7 @@
     },
     "h8e644d3dg9c33g4251g9674g48555ee9573b": {
       "ReferenceText": "Shows the combat log button on the right side of the hotbar.<br>If disabled, you can still toggle the combat log through hotbar actions.",
-      "TranslatedText": "Mostra o botão de log de combate no lado direito da hotbar.<br>Se desativado, você ainda pode alternar o log de combate por meio das ações da hotbar.\n"
+      "TranslatedText": "Mostra o botão de log de combate no lado direito da hotbar.<br>Se desativado, você ainda pode alternar o log de combate por meio das ações da hotbar."
     },
     "h8f6b67aaga9fag4c62gbd92g0f4d43fd8855": {
       "ReferenceText": "Hides the Hotbar and Minimap while within the Ascension and Greatforge UIs.",
@@ -352,15 +356,15 @@
     },
     "h8f7f66d4g1806g478agb229g3f36b527d44d": {
       "ReferenceText": "Simple Tooltip Delay (World)",
-      "TranslatedText": "Atraso de dica de ferramenta simples (mundo)\n"
+      "TranslatedText": "Atraso de dica de ferramenta simples (mundo)"
     },
     "h9172c74eg120fg4ea6gac99gf5f558433e70": {
       "ReferenceText": "Escape Key Closes EE UIs",
-      "TranslatedText": "A tecla ESC fecha as IUs do EE\n"
+      "TranslatedText": "ESC para fechar Interface"
     },
     "h942bb08bg5e26g439eg8189ga3ece811436f": {
       "ReferenceText": "Default Tab",
-      "TranslatedText": "Aba padrão\n"
+      "TranslatedText": "Aba padrão"
     },
     "h962abab4gaa4eg42c7gaa0eg3f0e83649f94": {
       "ReferenceText": "Smoke",
@@ -372,23 +376,23 @@
     },
     "h99515a08gaa1fg4214g81fag15521e601583": {
       "ReferenceText": "Stat-sharing Notifications",
-      "TranslatedText": "Notificações de compartilhamento de Status"
+      "TranslatedText": "Aviso de compartilhamento de Habilidades"
     },
     "h9cd1245egdfdeg4cbbgbae7gfa179a954eac": {
       "ReferenceText": "If enabled, the health bar when you hover over characters and items will show their treasure table (if relevant) as well as the chance of getting an artifact. For characters, this requires holding the Show Sneak Cones key (shift by default)",
-      "TranslatedText": "Se ativado, a barra de saúde ao passar o mouse sobre personagens e itens mostrará sua tabela de tesouros (se relevante), bem como a chance de obter um artefato. Para personagens, isso requer segurar a tecla Show Sneak Cones (shift por padrão)"
+      "TranslatedText": "Se ativado, a barra de saúde ao passar o mouse sobre personagens e itens mostrará seu estoque de tesouros (se relevante), bem como a chance de obter um artefato. Para personagens, isso requer segurar a tecla Show Sneak Cones (shift por padrão)"
     },
     "ha1146687g9261g49d4gad63g0269559fce2d": {
       "ReferenceText": "If enabled, chairs and ladders will show world tooltips. Requires \"Show more items\" to be enabled, as these do not have tooltips by default.",
-      "TranslatedText": "Se ativado, cadeiras e escadas mostrarão dicas do mundo. Requer que a opção \"Mostrar mais itens\" esteja habilitada, pois eles não possuem dicas de ferramentas por padrão."
+      "TranslatedText": "Se ativado, cadeiras e escadas mostrarão dicas do mundo. Requer que a opção \"Mostrar mais itens\" esteja habilitada, pois eles não possuem dicas por padrão."
     },
     "ha13d577fg043ag4324g8d55gd5f2ba85efac": {
       "ReferenceText": "If enabled, Battered and Harried stacks will be shown beside player portraits on the left interface.",
-      "TranslatedText": "Se ativado, as pilhas espancado e Atprdoado serão mostradas ao lado dos retratos dos jogadores na interface esquerda."
+      "TranslatedText": "Se ativado, os Stacks de Espancado e Atordoado serão mostradas ao lado dos retratos dos jogadores na interface esquerda."
     },
     "ha1fb1fb3g2796g4850gbdb0g727186aa7f71": {
       "ReferenceText": "Out of season April Fools jokes",
-      "TranslatedText": "Piadas fora do Dia da Mentira\n"
+      "TranslatedText": "Dia da mentira"
     },
     "ha3e9b3f3g2186g4cb3gb212g3938e0bb7779": {
       "ReferenceText": "Violent Strikes",
@@ -400,7 +404,7 @@
     },
     "ha970de96geaf5g483eg9996gac184c8fe843": {
       "ReferenceText": "Immersive Meditation",
-      "TranslatedText": "Meditação Imersiva\n"
+      "TranslatedText": "Meditação Imersiva"
     },
     "haa0297d1ga978g4be1gb3b4g7295b9451b31": {
       "ReferenceText": "Maximum Distance",
@@ -408,23 +412,23 @@
     },
     "haa0cd7a5g5950g4cceg8fe0gd343fc6db5e0": {
       "ReferenceText": "Show chairs and ladders",
-      "TranslatedText": "Mostrar cadeiras e escadas\n"
+      "TranslatedText": "Mostrar cadeiras e escadas"
     },
     "haae0acc4gf8f6g4040g9038g52c50db75a38": {
       "ReferenceText": "Show Battered/Harried Statuses",
-      "TranslatedText": "Mostrar status de espancado/atordoado\n"
+      "TranslatedText": "Mostrar status de espancado/atordoado"
     },
     "hae703884g68c4g44d1gb1d2g211f87e7309c": {
       "ReferenceText": "If enabled, clicking world tooltips will open containers rather than picking them up.",
-      "TranslatedText": "Se ativado, clicar nas dicas Globais abrirá contêineres em vez de pegá-los.\n"
+      "TranslatedText": "Se ativado, Clicar na Dica de um Container Ira abri-lo ao inves de Guardar"
     },
     "hafbe381ag6da6g4760gb278g1b6c5a36f530": {
       "ReferenceText": "Save/Load Sorting",
-      "TranslatedText": "Organizar salvar/carregar"
+      "TranslatedText": "Organizar aba de salvar/carregar"
     },
     "hafd62d05gc85eg434bg8f49g68214f14bb72": {
       "ReferenceText": "Debug Display",
-      "TranslatedText": "Exibição de depuração\n"
+      "TranslatedText": "Detalhes de depuração"
     },
     "hb461a9b1g4866g4bbdgb046gd478f7368fab": {
       "ReferenceText": "Emphasizes equipment items in world tooltips.",
@@ -432,7 +436,7 @@
     },
     "hb53a9902g6a6fg4885ga47cg4329d6de565d": {
       "ReferenceText": "Controls the size of damage overheads.<br><br>Default is 24.",
-      "TranslatedText": "Controla o tamanho das sobrecargas de dano.<br><br>O padrão é 24"
+      "TranslatedText": "Controla o tamanho das letras acima da cabeça de dano.<br><br>O padrão é 24"
     },
     "hb62c4354g1648g4f0eg83e9g4c2783e5fc86": {
       "ReferenceText": "Controls the opacity of your character portraits's status bars in combat. Hovering over the statuses will always display them at full opacity.<br><br>Default is 1.",
@@ -448,27 +452,27 @@
     },
     "hb8f2e390g2811g4df4gb9fdg3661092ef520": {
       "ReferenceText": "Controls the delay for simple tooltips to appear while hovering over objects in the world.<br><br>Default is 0.5s.",
-      "TranslatedText": "Controla o atraso para que dicas de ferramentas simples apareçam ao passar o mouse sobre objetos no mundo.<br><br>O padrão é 0,5s."
+      "TranslatedText": "Controla o atraso para que dicas apareçam ao passar o mouse sobre objetos no mundo.<br><br>O padrão é 0,5s."
     },
     "hb9e14744g4868g4e08gb3d7ga9bd57629d03": {
-      "ReferenceText": "Shows the Battered/Harries statuses while sorting/filtering is enabled.<br>If you disable this, it is recommended to enable the B/H display on the portraits.",
+      "ReferenceText": "Shows the Battered/Harries statuses while Alternative Status Display is enabled.<br>If you disable this, it is recommended to enable the B/H display on the portraits.",
       "TranslatedText": "Mostra os status Espancado/Atordoado enquanto a classificação/filtragem está ativada.<br>Se você desativar isso, é recomendável ativar a exibição B/H nos retratos."
     },
     "hbd18d9b1g7709g419agb8d6gdccf938dcaf3": {
       "ReferenceText": "Epic Loading Screen",
-      "TranslatedText": "Tela de carregamento épico\n"
+      "TranslatedText": "Tela de carregamento épico"
     },
     "hbd336157gc5fag442fgb2cfgb85f9e2c44fd": {
       "ReferenceText": "Overhead Damage Size",
-      "TranslatedText": "Tamanho do texto da Sobrecarga"
+      "TranslatedText": "Tamanho do Texto acima da cabeça"
     },
     "hca79eaccgc9c9g4a87g9f9egdbfa57800a5a": {
       "ReferenceText": "Controls whether notifications for characters casting skills show up in combat.",
-      "TranslatedText": "Controla se as notificações para habilidades de conjuração de personagens que aparecem em combate."
+      "TranslatedText": "Permite se os avisos para habilidades de conjuração de personagens que aparecem em combate."
     },
     "hcd9974f8g16cfg4cbfga08agbf28ee5b55eb": {
       "ReferenceText": "Show loot drops in health bar",
-      "TranslatedText": "Mostrar loot drops na barra de saúde\n"
+      "TranslatedText": "Mostrar loot drops na barra de saúde"
     },
     "hcda03853g5322g48e6gb8d2g37a87a295fef": {
       "ReferenceText": "Shows the keyboard hotkeys for custom actions.",
@@ -480,11 +484,11 @@
     },
     "hd0e2b5b7geca4g4a5dgad60g1893680e319a": {
       "ReferenceText": "Disable Slots while Casting",
-      "TranslatedText": "Desabilitar Espaços enquanto estiver lançando"
+      "TranslatedText": "Desativar Barra de ação enquanto estiver lançando"
     },
     "hd71aa49cgcb72g4cd1ga209g28e6a6159b95": {
       "ReferenceText": "Infinite Carry Weight",
-      "TranslatedText": "Peso de Carga Infinito\n"
+      "TranslatedText": "Peso de Carga Infinito"
     },
     "hd90b74d9g5ae7g49fbg97cdg6b2e0d7fbee8": {
       "ReferenceText": "Determines the order of statuses, in order of importance.",
@@ -496,15 +500,15 @@
     },
     "he0105763gc21bg4f2ag995bg827864f3db23": {
       "ReferenceText": "Show empty containers/bodies",
-      "TranslatedText": "Mostrar Conteiners/corpos vazios\n"
+      "TranslatedText": "Mostrar Conteiners/corpos vazios"
     },
     "he0bb8817g7c40g4572g9170gce3d351dc753": {
       "ReferenceText": "Automatically and instantly identify items whenever they are generated.<br>'With enough Loremaster' uses the highest Loremaster of all player characters, regardless of party.",
-      "TranslatedText": "Identifique itens automaticamente e instantaneamente sempre que eles forem gerados.<br>'Com mestre de conhecimento suficiente' usa o maior Loremaster de todos os personagens do jogador, independentemente do grupo.\n"
+      "TranslatedText": "Identifique itens automaticamente e instantaneamente sempre que eles forem gerados.<br>'Com mestre de conhecimento suficiente' usa o maior Loremaster de todos os personagens do jogador, independentemente do grupo."
     },
     "he1ba8777g2269g40b6gb21cg353aea79fb9b": {
       "ReferenceText": "Logs AI scoring to the console.",
-      "TranslatedText": "Registra a pontuação de IA no console.\n"
+      "TranslatedText": "Registra a pontuação de IA no console."
     },
     "he515233eg586eg44d4gb0bcg9d971e85e198": {
       "ReferenceText": "Encouraging",
@@ -528,11 +532,11 @@
     },
     "hf3f1fedfg8c70g4342g95d7g64f3280f310a": {
       "ReferenceText": "Controls whether notifications for sharing stats (Loremaster, Lucky Charm) show.",
-      "TranslatedText": "Controla se as notificações para compartilhar estatísticas (Loremaster, Lucky Charm) são exibidas."
+      "TranslatedText": "Permite se o Aviso para compartilhar estatísticas (Loremaster, Lucky Charm) são exibidas."
     },
     "hf61f1a35g7ee7g4b79g8728g9a278d2522b0": {
       "ReferenceText": "Area Transition Label Duration",
-      "TranslatedText": "Duração do rótulo de transição de área\n"
+      "TranslatedText": "Duração do rótulo de transição de área"
     },
     "hf72184f1g53fdg4103g81d3gc3cf433c3bfb": {
       "ReferenceText": "Arcane Mist",
@@ -548,11 +552,11 @@
     },
     "hfff84bafgd93cg41bagb87fg582303ca13c9": {
       "ReferenceText": "Don't you guys have phones?",
-      "TranslatedText": "Vocês não têm telefones?\n"
+      "TranslatedText": "Vocês não têm telefones?"
     },
     "h2b23b849g0345g4d0dgb48dg15315ade1779": {
       "ReferenceText": "Epip Language",
-      "TranslatedText": "Linguagem do Epip"
+      "TranslatedText": "IDIOMA"
     },
     "hb74bc767gb91ag4a4cg9d9cg4c574397046c": {
       "ReferenceText": "Causes EpicEncounters.IsLoaded() call to return false even if EE Core is enabled.",
@@ -568,7 +572,7 @@
     },
     "h68a80196g2a32g4e12g9757gc826f58efd20": {
       "ReferenceText": "Warp to AMER_Test",
-      "TranslatedText": "Teleportar para AMER_Test\n"
+      "TranslatedText": "Teleportar para AMER_Test"
     },
     "hb29270e7g6dc8g44c0g9391g21b25965aea6": {
       "ReferenceText": "Consumable Type",
@@ -579,7 +583,7 @@
       "TranslatedText": "Adaga"
     },
     "he9f82492g81f0g4e53g9eefg731a6f800db8": {
-      "ReferenceText": "Experimental! May cause issues with certain skills. Please report any!",
+      "ReferenceText": "Experimental! May cause issues with certain skills. Please report any!<br>Server-side option is the most reliable at the moment.",
       "TranslatedText": "Experimental! Pode causar problemas com certas habilidades. Por favor, reporte!"
     },
     "h8de93e20gae0dg45cfg9695g478ba659f71a": {
@@ -588,11 +592,11 @@
     },
     "h6cc76e3fg8d5cg466egb96agb780b490d0d5": {
       "ReferenceText": "Save Default Position",
-      "TranslatedText": "Salvar posição padrão\n"
+      "TranslatedText": "Salvar posição padrão"
     },
     "h4fc7301egc609g4739g9752g7b0fae2e8c5b": {
       "ReferenceText": "Skillbooks",
-      "TranslatedText": "livros de habilidades\n"
+      "TranslatedText": "livros de habilidades"
     },
     "h53ac110bgde75g4517ga5a6gdb5daf3abc88": {
       "ReferenceText": "Weapon Type",
@@ -604,7 +608,7 @@
     },
     "hbb33eea8g0ce7g4bbcga719gc5c4e7811d4a": {
       "ReferenceText": "Overhead",
-      "TranslatedText": "Sobrecarga"
+      "TranslatedText": "Nimbus"
     },
     "hf196badfg6c61g4bd5g91e8g7bfbf9874cbf": {
       "ReferenceText": "Quick Find",
@@ -624,11 +628,11 @@
     },
     "hde49d383g961eg49d6gaa46gcc45ab299aa5": {
       "ReferenceText": "Miscellaneous UI",
-      "TranslatedText": "Diversos UI\n"
+      "TranslatedText": "Diversos UI"
     },
     "hd34a81ecg7b8eg4ad6g8fc4gf6310e5ae556": {
       "ReferenceText": "UI Tooltips",
-      "TranslatedText": "Dicas de interface \n"
+      "TranslatedText": "Dicas de interface"
     },
     "h6108a8b5gd998g4138g9ce5g12cc0695be7f": {
       "ReferenceText": "Chat",
@@ -692,7 +696,7 @@
     },
     "hc2b715dfgf2a2g4ea3g8691gbc66ca160a1d": {
       "ReferenceText": "Notifications",
-      "TranslatedText": "Notificaçoes"
+      "TranslatedText": "Avisos"
     },
     "h4119cfcegbfc2g4045gbeecgfb1c96de38e2": {
       "ReferenceText": "Type",
@@ -704,7 +708,7 @@
     },
     "ha15ba540g2da4g4056g8174gcd25a3b1d343": {
       "ReferenceText": "Allows examining dead characters.",
-      "TranslatedText": "Permitir Examinar Personagens Mortos"
+      "TranslatedText": "Permite investigar Personagens Mortos"
     },
     "h8d88a6c9gb72cg422fg8929g396e84f1e77b": {
       "ReferenceText": "Food and Drinks",
@@ -716,7 +720,7 @@
     },
     "h9e8f2aecg2b81g4f48ga9bbg43dd8f593686": {
       "ReferenceText": "Saves the UI's current position and restores it upon reloading. Use to set the default position of the UI.",
-      "TranslatedText": "Salva a posição atual da IU e a restaura ao recarregar. Use para definir a posição padrão da IU.\n"
+      "TranslatedText": "Salva a posição atual da IU e a restaura ao recarregar. Use para definir a posição padrão da IU."
     },
     "h3a060f85gad6dg4e73g8526ga0606d366478": {
       "ReferenceText": "Width",
@@ -752,7 +756,7 @@
     },
     "hb09a2fc1g7ad5g4caag8606g936398d62a3b": {
       "ReferenceText": "Necromancer",
-      "TranslatedText": "Necromancer"
+      "TranslatedText": "Necromancia"
     },
     "he0473fbcg6b57g48aegb3c0g7bb24b1e0393": {
       "ReferenceText": "Player Portraits",
@@ -775,7 +779,7 @@
       "TranslatedText": "Fecha a interface Apos Usar um item"
     },
     "he5c3a752gd8bag48fagb611g35b5d23bef9d": {
-      "ReferenceText": "Cancels your controlled character's spell animations after their effects execute.  %s",
+      "ReferenceText": "Cancels your controlled character's spell animations after their effects execute.<br><br>%s",
       "TranslatedText": "Cancela as animações de feitiço do seu personagem controlado após o lançamento de seus efeitos. %s"
     },
     "h4f610121gdb42g4d2fg9a8ag61eeedb018cb": {
@@ -800,7 +804,7 @@
     },
     "h00be848dgbfbfg404agabddg983860260ed4": {
       "ReferenceText": "With enough Loremaster",
-      "TranslatedText": "Com Loremaster suficiente\n"
+      "TranslatedText": "Usando Loremaster"
     },
     "h7afd19eegf79bg42f9g97e7g66f4ac3a51c6": {
       "ReferenceText": "Ring",
@@ -816,7 +820,7 @@
     },
     "h939f9996g8c0fg46dbg8d51g5816929f1387": {
       "ReferenceText": "Quick Examine",
-      "TranslatedText": "Examinar Rapido"
+      "TranslatedText": "Investigação"
     },
     "hccad2bc4g7010g48e3gae5dg045ab5228de2": {
       "ReferenceText": "Controls the height of the user interface.<br><br>Default is 600.",
@@ -863,8 +867,8 @@
       "TranslatedText": "pirocinético"
     },
     "hbce14cb2g1ed7g4076g95d1gb80c6085c3ad": {
-      "ReferenceText": "Brazilian translation by Ferocidade",
-      "TranslatedText": "Tradução Brazileira por ferocidade"
+      "ReferenceText": "Russian translation by Cathe & JoienReid",
+      "TranslatedText": "Tradução Brasileira por ferocidade"
     },
     "h042a555bg1f1dg43efg97a8g0df8238a0eb5": {
       "ReferenceText": "Background Opacity",
@@ -883,8 +887,8 @@
       "TranslatedText": "Caçador"
     },
     "h4a3e28fag3595g4753gb507g4423068aeda8": {
-      "ReferenceText": "Most options require a reload for changes to apply.",
-      "TranslatedText": " maioria das opções requer um recarregamento para que as alterações sejam aplicadas."
+      "ReferenceText": "Some options may require a reload for changes to apply.",
+      "TranslatedText": "Maioria das opções requer um recarregamento para que as alterações sejam aplicadas."
     },
     "h7e55ac61g269fg4f0dgabf9g06cbe52d0d22": {
       "ReferenceText": "Knife",
@@ -896,11 +900,11 @@
     },
     "ha5227515g6663g4386gb3bcga4ffb2043b65": {
       "ReferenceText": "Enable",
-      "TranslatedText": "Habilitar Cadáveres\n"
+      "TranslatedText": "Ativar"
     },
     "h30052af9g5fbag4abcg9a0eg1ee45676a79c": {
       "ReferenceText": "Enable Corpses",
-      "TranslatedText": "Habilitar Cadáveres\n"
+      "TranslatedText": "Investigar Mortos"
     },
     "h6b38d491gbeccg47d1gad43g5e56e7b19242": {
       "ReferenceText": "Gloves",
@@ -936,7 +940,7 @@
     },
     "h429930a8g7b96g48cag8be4gc0bad3a2dc19": {
       "ReferenceText": "Incarnate Champion",
-      "TranslatedText": "Campeão Encarnado\n"
+      "TranslatedText": "Campeão Encarnado"
     },
     "heb8e464cg6305g46aeg8fbag240af8560ebe": {
       "ReferenceText": "Release left-click to Greatforge this item.",
@@ -992,7 +996,7 @@
     },
     "h2e29d154g3de9g4a3fga340g6ac1ff21e1b3": {
       "ReferenceText": "Centurion",
-      "TranslatedText": "centurião\n"
+      "TranslatedText": "centurião"
     },
     "h1a45624fgcbe1g48b8g9b4ag23e6f8cebe67": {
       "ReferenceText": "Hidden",
@@ -1167,12 +1171,252 @@
       "TranslatedText": "Ocultista"
     },
     "h0d296a7dgd716g475agb4c6g9b3de417c79f": {
-      "ReferenceText": "Replaces the statuses container by your characters's portraits with a custom UI.",
+      "ReferenceText": "Replaces the status bar by your characters's portraits with a custom UI that enables various sorting and filtering options.",
       "TranslatedText": "Substitui o contêiner de status pelos retratos de seus personagens com uma interface do usuário personalizada"
     },
     "ha1afe7c2g4d97g43b6g823eg03bf25788dbd": {
       "ReferenceText": "High-Score",
-      "TranslatedText": "Pontuação máxima\n"
+      "TranslatedText": "Pontuação máxima"
+    },
+    "h5a1af856ge6bbg46b0g8c00g98c676f04629": {
+      "ReferenceText": "We don't have that dye!<br>We shall shop for them at miscellaneous vendors.",
+      "TranslatedText": "Não temos esse corante!<br>Podemos Comprar em Diversos vendedores"
+    },
+    "h84ec181aga466g41e0g9f8bg9af1de57d37a": {
+      "ReferenceText": "Show Culled Only",
+      "TranslatedText": "Mostrar apenas selecionados"
+    },
+    "ha8000c0eg67d5g4398g8890gaf8d98931d1b": {
+      "ReferenceText": "Client-side",
+      "TranslatedText": "Client-side"
+    },
+    "he42675fag827ag4189g9c55g0af27feb5fc2": {
+      "ReferenceText": "Attack Of Opportunity Available",
+      "TranslatedText": "Ataque de oportunidade disponível"
+    },
+    "he415fd76g51bfg4b25g955cg59c3165c73ba": {
+      "ReferenceText": "Skillbook",
+      "TranslatedText": "livro de habilidades"
+    },
+    "hdb77af8agd827g4a54gb80ag4540ab23988d": {
+      "ReferenceText": "Furniture",
+      "TranslatedText": "Mobília"
+    },
+    "h5e83b5f4g33f8g45e6ga968gecd0cad8d465": {
+      "ReferenceText": "Has Skillbook",
+      "TranslatedText": "Tem Livro de Habilidades"
+    },
+    "h14674f13g78c9g49ecgac6dgbf7a95039189": {
+      "ReferenceText": "Skills",
+      "TranslatedText": "Habilidades"
+    },
+    "hf791f6e7g31cdg4e84gb349g383ad5b4409c": {
+      "ReferenceText": "Jewelry",
+      "TranslatedText": "Joias"
+    },
+    "he0847edfg24f4g4259ga31bg1f665425e26c": {
+      "ReferenceText": "Wand",
+      "TranslatedText": "Varinha"
+    },
+    "h5a14d928gf5d6g48e6ga90egfdf2311276db": {
+      "ReferenceText": "Cannot fight",
+      "TranslatedText": "não pode lutar"
+    },
+    "h16a45dc1g56e7g4bb0ga3f6g6f4cb7f66fae": {
+      "ReferenceText": "Show Equipped Items",
+      "TranslatedText": "Mostrar itens equipados"
+    },
+    "ha5ab3810g9aa9g4168g89fdgbfd0ee2c4c01": {
+      "ReferenceText": "Shows skills available to players.",
+      "TranslatedText": "Mostra as habilidades disponíveis para os jogadores."
+    },
+    "h9f6cbb29ge1f5g4b74g9e19ge7a83138bbf5": {
+      "ReferenceText": "Mod '%s' is incompatible with '%s' and it is not recommended to use them together.",
+      "TranslatedText": "O mod '%s' é incompatível com '%s' e não é recomendado usá-los juntos."
+    },
+    "h45a75b5agbe29g438dgbf17g6a9362cd7eed": {
+      "ReferenceText": "No Filter",
+      "TranslatedText": "Sem filtro"
+    },
+    "h254f04a8gbaceg4970g97bdga522f285b929": {
+      "ReferenceText": "Show Not Learnt",
+      "TranslatedText": "Mostrar não aprendido"
+    },
+    "hbcd07fa8gaaa1g4571gac0eg8a20d7955224": {
+      "ReferenceText": "Armor",
+      "TranslatedText": "Armadura"
+    },
+    "h979a8059g2ea7g436fg863bgf6b008ad3072": {
+      "ReferenceText": "Removes the redundant 'Set :' prefix that appears in deltamod names and rune effects.",
+      "TranslatedText": "Remove o prefixo redundante 'Set:' que aparece em nomes deltamod e efeitos de runa."
+    },
+    "h7eaa3d1dg94a2g4136g969dg1ba9f6796fca": {
+      "ReferenceText": "Show Learnt",
+      "TranslatedText": "Mostrar aprendido"
+    },
+    "hb4ca31ecge2ecg44faga2dbg1e1c98c49d30": {
+      "ReferenceText": "Columns",
+      "TranslatedText": "colunas"
+    },
+    "h36ba40b2ge76bg4ea9g90ecgde3d4fc01945": {
+      "ReferenceText": "Rows",
+      "TranslatedText": "Linhas"
+    },
+    "h866e5a46g3002g4c1bgba33g4aaef5ca5413": {
+      "ReferenceText": "%s v%s by %s",
+      "TranslatedText": "%s v%s por %s"
+    },
+    "h540c1336g27b1g4382gb911g8adced234ee6": {
+      "ReferenceText": "Off",
+      "TranslatedText": "Desligado"
+    },
+    "hd790b2dcg7db3g478bg8fb6g96dfabe9dbd2": {
+      "ReferenceText": "Layer",
+      "TranslatedText": "Camada"
+    },
+    "h75aa417egac92g4e00ga4b5g173f485c2f01": {
+      "ReferenceText": "Comeback Kid Available",
+      "TranslatedText": "Comeback Kid disponível"
+    },
+    "hea8fd41ag8885g40b0g8466gb6a63d91863a": {
+      "ReferenceText": "Default Tab",
+      "TranslatedText": "Aba padrão"
+    },
+    "hd8218bb5gcf00g4051g90f2g05388601ab51": {
+      "ReferenceText": "Determines the default tab for the crafting UI.",
+      "TranslatedText": "Determina a Aba padrão para a interface do usuário de criação."
+    },
+    "he6042694g235ag4c68gbcccgb1a4769ae7bd": {
+      "ReferenceText": "No Skillbook",
+      "TranslatedText": "Sem livro de habilidades"
+    },
+    "hd15232f0gd82dg42a3g82ddg7597d3911122": {
+      "ReferenceText": "Resize",
+      "TranslatedText": "Redimensionar"
+    },
+    "h42920f03g276eg49e3gbe24gee444973feef": {
+      "ReferenceText": "Search...",
+      "TranslatedText": "Procurar..."
+    },
+    "h3a8d983cg5a8cg4b33g954cg39581bd8a04b": {
+      "ReferenceText": "AI Type: %s",
+      "TranslatedText": "Tipo de IA: %s"
+    },
+    "h0e24fb6bg2c78g4dd3g995cg9d04ea62eaab": {
+      "ReferenceText": "Sorting Index",
+      "TranslatedText": "Índice de classificação"
+    },
+    "h7f53d9adg7fdeg4005gaa99g0ffde8a8b21f": {
+      "ReferenceText": "Crossbow",
+      "TranslatedText": "Besta"
+    },
+    "hbe579ebcg3585g4373g8d80g99de57eb1e7a": {
+      "ReferenceText": "Back",
+      "TranslatedText": "Voltar"
+    },
+    "h9e59177cgec69g4920g981bg8adee0d6600c": {
+      "ReferenceText": "Filtered Statuses",
+      "TranslatedText": "Status filtrados"
+    },
+    "heb0326c2g21d3g43b6gbc73ge64a25c6a2b3": {
+      "ReferenceText": "Bow",
+      "TranslatedText": "Arco"
+    },
+    "h5e7095b6ga182g4dc0gadfbg198413b93310": {
+      "ReferenceText": "Remove 'Set :' Prefixes",
+      "TranslatedText": "Remover prefixos 'Definir :'"
+    },
+    "hf0192252g5d7ag429eg96a6g21be87bd88cd": {
+      "ReferenceText": "Resize",
+      "TranslatedText": "Redimensionar"
+    },
+    "h083f5e98g18e2g4708gae54g82b7697923b0": {
+      "ReferenceText": "Choose a name to engrave.",
+      "TranslatedText": "Escolha um nome para gravar."
+    },
+    "h19773400g8de1g46d7g9901g779b750ebddd": {
+      "ReferenceText": "Set Icon",
+      "TranslatedText": "Definir ícone"
+    },
+    "h3a1fa582g7217g4722gbcc5gc835c482d94a": {
+      "ReferenceText": "Carve a name onto the item to signify the special bond between yourself and it.<br><font color=\"a8a8a8\" size=\"21\" face=\"Averia Serif\">Purely cosmetic.</font>",
+      "TranslatedText": "Grave um nome no item para indicar o vínculo especial entre você e ele.<br><font color=\"a8a8a8\" size=\"21\" face=\"Averia Serif\">Puramente cosmético.</font>"
+    },
+    "h0e034a16gd835g46bcga5bfgd44c3f88a36e": {
+      "ReferenceText": "Brazilian Portuguese translation by Ferocidade",
+      "TranslatedText": "Tradução para o português brasileiro por Ferocidade"
+    },
+    "hab6d5bf9gc96eg42f1ga095gaef050698dfc": {
+      "ReferenceText": "Filters",
+      "TranslatedText": "Filtros"
+    },
+    "hbe7cf1d7g91cfg4b67g8c53g5b15843eaf46": {
+      "ReferenceText": "Engrave Item",
+      "TranslatedText": "esculpir item"
+    },
+    "h36e32b84g5373g4711g920cg8d0cedd5fcff": {
+      "ReferenceText": "Resize Hotbar Group",
+      "TranslatedText": "Redimensionar Barra do Grupo"
+    },
+    "hca56dcd2gf7f6g4662g94cfga66262672545": {
+      "ReferenceText": "Statuses in this list will be filtered out and not shown in the status bar. Holding shift temporarily disables this filter.",
+      "TranslatedText": "Os status nesta lista serão filtrados e não exibidos na barra de status. Manter a tecla shift desativa temporariamente esse filtro."
+    },
+    "h6504d954gcc4fg4008ga5d1g32d40eef13e0": {
+      "ReferenceText": "Warning",
+      "TranslatedText": "Aviso"
+    },
+    "h37cf1748g9dafg4d2ag9744g00e75e764ee5": {
+      "ReferenceText": "+%s%% Weapon %s Damage",
+      "TranslatedText": " +%s%% Do Dano De %s na Arma "
+    },
+    "h874faf80g6c2eg4fe8gb908g60bb769b02eb": {
+      "ReferenceText": "Create",
+      "TranslatedText": "Criar"
+    },
+    "hb2e1d20dgd3c2g45b9ga922gf19ea1a12691": {
+      "ReferenceText": "Delete",
+      "TranslatedText": "Deletar"
+    },
+    "h4179a16bg43a5g40bcg88ccg7870114fb6c0": {
+      "ReferenceText": "Create Hotbar Group",
+      "TranslatedText": "Criar Barra de Grupo"
+    },
+    "hb1aa6659g9385g4966g9b9fga77082927a94": {
+      "ReferenceText": "Show Memorized",
+      "TranslatedText": "Mostrar memorizado"
+    },
+    "h66c830b8geefbg42afgb501g0942d3a13036": {
+      "ReferenceText": "<font color='ebc808' size='30'>Engrave</font>",
+      "TranslatedText": "<font color='ebc808' size='30'>insculpir</font>"
+    },
+    "h8ef5106dg4b12g413cg87adgce524dad4d1e": {
+      "ReferenceText": "Sorting Priority",
+      "TranslatedText": "Prioridade de classificação"
+    },
+    "hc31a7649g3a59g4595gbfecg3fdc812c0c1f": {
+      "ReferenceText": "Codex",
+      "TranslatedText": "Codice"
+    },
+    "h52c8465ag5bf7g4420g93b7ge555e6acb172": {
+      "ReferenceText": "Open Codex",
+      "TranslatedText": "Abrir Codice"
+    },
+    "hcb827408g8ce1g41ffg8145gca288912cfb1": {
+      "ReferenceText": "Icon Type",
+      "TranslatedText": "Tipo de ícone"
+    },
+    "h94b55185g6055g42b9gac5bgc6bedbffdfef": {
+      "ReferenceText": "Choose an icon...",
+      "TranslatedText": "Escolha um ícone..."
+    },
+    "h715a684agc1e6g47eagb4d8g13944bc7ebe7": {
+      "ReferenceText": "Filtered",
+      "TranslatedText": "Filtrado"
+    },
+    "h4c594766g0190g4016gb7a5g0b99c3e2011a": {
+      "ReferenceText": "Sets the sorting order for statuses. Statuses with a higher priority show in the left-most position, statuses with a lower priority show in the right-most position.",
+      "TranslatedText": "Define a ordem de classificação dos status. Os status com prioridade mais alta são exibidos na posição mais à esquerda, os status com prioridade mais baixa são exibidos na posição mais à direita."
     }
   }
 }

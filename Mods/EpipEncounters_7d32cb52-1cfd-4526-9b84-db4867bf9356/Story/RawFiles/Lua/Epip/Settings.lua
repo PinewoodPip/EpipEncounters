@@ -1196,6 +1196,7 @@ local newSettings = {
             {ID = "", Name = "Game Language"},
             {ID = "Russian", Name = "Russian"},
             {ID = "Portuguesebrazil", Name = "Brazilian Portuguese"},
+            {ID = "Simplified Chinese", Name = "Simplified Chinese"},
         }
     },
     {

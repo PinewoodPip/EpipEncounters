@@ -689,7 +689,7 @@ Text.Hooks.GetTranslationTemplateEntry:Subscribe(function (ev)
     local entry, tsk = ev.Entry, ev.TranslatedString
 
     ---@diagnostic disable undefined-field
-    if tsk.FeatureID and tsk.FeatureID ~= "CommonStrings" then
+    if tsk.FeatureID and (tsk.FeatureID ~= "CommonStrings" and tsk.FeatureID ~= "Generic") then
         local feature = Epip.GetFeature(tsk.ModTable, tsk.FeatureID)
 
         if feature.DoNotExportTSKs then
@@ -697,7 +697,7 @@ Text.Hooks.GetTranslationTemplateEntry:Subscribe(function (ev)
         else
             entry.FeatureID = tsk.FeatureID
         end
-    elseif tsk.FeatureID == "CommonStrings" then
+    elseif tsk.FeatureID == "CommonStrings" or tsk.FeatureID == "Generic" then
         entry.FeatureID = tsk.FeatureID
     end
     ---@diagnostic enable undefined-field
