@@ -22,14 +22,22 @@ class TranslatedString:
         self.handle = handle
         self.featureID = obj["FeatureID"] if "FeatureID" in obj else ""
 
+        self.TranslationNotes = ""
+        self.TranslationAuthors = ""
+        self.outdated_translation = False
+
+    def has_translation(self)->bool:
+        return self.translation != ""
+
 class SheetColumn:
-    def __init__(self, name, width, locked:bool=True, wrap_text:bool=True, font=None, json_key:str=None):
+    def __init__(self, name, width, tsk_field:str, locked:bool=True, wrap_text:bool=True, font=None, json_key:str=None):
         self.name = name
         self.width = width
         self.locked = locked
         self.wrap_text = wrap_text
         self.font = font
         self.json_key = json_key
+        self.tsk_field = tsk_field
 
 def addSheetRow(column_defs, i, sheet, row, content:str):
     column_def = column_defs[i]
@@ -114,13 +122,13 @@ class Workbook:
 
 class Module:
     COLUMN_DEFINITIONS = [
-        SheetColumn("Handle", 10, wrap_text=False, font=Font(color="999999")),
-        SheetColumn("Script", 20, wrap_text=False),
-        SheetColumn("Original Text", 65, json_key="ReferenceText"),
-        SheetColumn("Contextual Info", 40),
-        SheetColumn("Translation", 65, locked=False, json_key="TranslatedText"),
-        SheetColumn("Translation Notes", 30, locked=False),
-        SheetColumn("Translation Author", 30, locked=False),
+        SheetColumn("Handle", 10, "handle", wrap_text=False, font=Font(color="999999")),
+        SheetColumn("Script", 20, "featureID", wrap_text=False),
+        SheetColumn("Original Text", 65, "text", json_key="ReferenceText"),
+        SheetColumn("Contextual Info", 40, "description"),
+        SheetColumn("Translation", 65, "translation", locked=False, json_key="TranslatedText"),
+        SheetColumn("Translation Notes", 30, "TranslationNotes", locked=False),
+        SheetColumn("Translation Author", 30, "TranslationAuthors", locked=False),
     ]
 
     def __init__(self, name):
@@ -130,7 +138,40 @@ class Module:
     def addTSK(self, tsk):
         self.translated_strings[tsk.handle] = tsk
 
-    def export(self, book:Workbook, oldBook:openpyxl.Workbook=None, oldSheetName:str=None, oldBookPath:str=None):
+    def get_tsk(self, handle)->TranslatedString:
+        return self.translated_strings[handle]
+
+    def update_tsk_row(self, handle, sheet, row_index):
+        tskData = self.get_tsk(handle)
+        translation_cell = sheet.cell(row=row_index, column=5)
+
+        # Setup row properties
+        sheet.row_dimensions[row_index].height = Sheet.ROW_HEIGHT
+
+        # Setup properties of each cell within the row
+        for i in range(len(Module.COLUMN_DEFINITIONS)):
+            column_def = Module.COLUMN_DEFINITIONS[i]
+            cell = sheet.cell(row=row_index, column=i+1)
+
+            cell.font = column_def.font
+            if column_def.wrap_text:
+                cell.alignment = Alignment(wrap_text=True)
+            cell.protection = Protection(locked=column_def.locked)
+
+        # Recolor cells as a warning when the old original text doesn't match new one
+        if tskData.outdated_translation and tskData.has_translation():
+            print("Outdated translation for " + tskData.handle)
+
+            translation_cell.fill = PatternFill(start_color=OUTDATED_TRANSLATION_FILL, end_color=OUTDATED_TRANSLATION_FILL, fill_type='solid')
+
+        # Update all columns
+        for i in range(len(Module.COLUMN_DEFINITIONS)):
+            column = Module.COLUMN_DEFINITIONS[i]
+            cell = sheet.cell(row=row_index, column=i+1)
+
+            cell.value = getattr(tskData, column.tsk_field)
+
+    def export(self, book:Workbook, oldBook:openpyxl.Workbook=None, language_sheet:str=None, oldBookPath:str=None):
         if oldBook == None:
             sheet = book.addSheet(self.name)
 
@@ -148,14 +189,13 @@ class Module:
                     "", # Translation notes - same case as author
                 ])
         else:
-            print("Parsing existing sheet")
+            print("Parsing sheet", language_sheet)
 
-            oldSheet:worksheet = oldBook.get_sheet_by_name(oldSheetName)
+            oldSheet:worksheet = oldBook.get_sheet_by_name(language_sheet)
 
             existingTSKs = set()
             for rowIndex in range(2, oldSheet.max_row + 1): # Ignore first row (header)
                 handleCell = oldSheet.cell(row=rowIndex, column=1)
-                originalTextCell = oldSheet.cell(row=rowIndex, column=3)
                 handle = handleCell.value
 
                 if handle != None:
@@ -163,45 +203,25 @@ class Module:
 
                     existingTSKs.add(handle)
 
+                    # Retrieve extra TSK data from sheet
                     if tskExists:
-                        tskData = self.translated_strings[handle]
-                        translationCell = oldSheet.cell(row=rowIndex, column=5)
+                        tsk = self.get_tsk(handle)
+                        tsk.TranslationNotes = oldSheet.cell(row=rowIndex, column=6).value
+                        tsk.TranslationAuthors = oldSheet.cell(row=rowIndex, column=7).value
+                        tsk.outdated_translation = oldSheet.cell(row=rowIndex, column=3).value != tsk.text
 
-                        # Recolor cells as a warning when the old original text doesn't match new one
-                        if tskData.text != originalTextCell.value:
-                            print("Outdated translation for " + tskData.handle)
+            # Sort and update all rows, including new ones
+            sorted_tsks:list[TranslatedString] = list(self.translated_strings.values())
+            sorted_tsks.sort(key=lambda x: x.featureID + "_" + x.text)
 
-                            translationCell.fill = PatternFill(start_color=OUTDATED_TRANSLATION_FILL, end_color=OUTDATED_TRANSLATION_FILL, fill_type='solid')
+            for i in range(0, len(sorted_tsks)):
+                tsk = sorted_tsks[i]
+                self.update_tsk_row(tsk.handle, oldSheet, i + 2)
 
-                        originalTextCell.value = tskData.text
-
-                    else: # Can happen when TSKs get removed
-                        print("Found TSK that is no longer used:", handle)
-
-            # Add new rows
-            newRowIndex = len(existingTSKs) + 2
-            for key,data in self.translated_strings.items():
-                if key not in existingTSKs:
-                    print("Adding new TSK " + key)
-                    rowData = [
-                        data.handle,
-                        data.featureID,
-                        data.text,
-                        data.description,
-                        data.translation, # Translation
-                        "", # Translation author - these are not kept within the json, cannot import
-                        "", # Translation notes - same case as author
-                    ]
-                    for i in range(len(rowData)):
-                        addSheetRow(Module.COLUMN_DEFINITIONS, i, oldSheet, newRowIndex, rowData[i])
-
-                    newRowIndex += 1
             oldBook.save(oldBookPath)
 
-def createSpreadsheet(file_name, existing_sheet_file_name=None, oldSheetName:str=None):
-    file = open(file_name, "r")
-    localization = json.load(file)
-
+def createSpreadsheet(file_name, existing_sheet_file_name=None, language_sheet:str=None):
+    localization = json.load(open(file_name, "r"))
     module = Module(localization["ModTable"])
 
     for handle,data in localization["TranslatedStrings"].items():
@@ -215,7 +235,7 @@ def createSpreadsheet(file_name, existing_sheet_file_name=None, oldSheetName:str
     book = Workbook()
 
     print("Saving workbook")
-    module.export(book, oldBook, oldSheetName, existing_sheet_file_name)
+    module.export(book, oldBook, language_sheet, existing_sheet_file_name)
 
 def createTranslationJSON(file_name:str, modTable:str, sheet_name:str, output_filename:str):
     book = openpyxl.load_workbook(file_name)
