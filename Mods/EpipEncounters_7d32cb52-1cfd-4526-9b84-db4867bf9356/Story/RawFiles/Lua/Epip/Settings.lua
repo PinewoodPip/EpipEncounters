@@ -57,7 +57,7 @@ local EpipSettings = {
             Text = "Toggles visibility of the minimap UI element.",
             ContextDescription = "Minimap setting tooltip",
         },
-        
+
         TreasureTableDisplay_Name = {
             Handle = "hcd9974f8g16cfg4cbfga08agbf28ee5b55eb",
             Text = "Show loot drops in health bar",
@@ -443,7 +443,7 @@ local EpipSettings = {
             Text = "Controls the delay for simple tooltips to appear while hovering over objects in the world.<br><br>Default is 0.5s.",
             ContextDescription = "Simple world tooltip delay setting tooltip",
         },
-        
+
         WorldTooltip_OpenContainers_Name = {
             Handle = "hb733d1c1g7bc7g4fc5ga090ga2f662e9220d",
             Text = "Open containers",
@@ -501,7 +501,7 @@ local EpipSettings = {
         },
         WorldTooltip_ShowSittableAndLadders_Description = {
             Handle = "ha1146687g9261g49d4gad63g0269559fce2d",
-            Text = "If enabled, chairs and ladders will show world tooltips. Requires \"Show more items\" to be enabled, as these do not have tooltips by default.",
+            Text = "If enabled, chairs and ladders will show world tooltips. Requires \"Enable tooltips for all items\" to be enabled, as these do not have tooltips by default.",
             ContextDescription = "World tooltip shows chairs and ladders setting tooltip",
         },
         WorldTooltip_ShowDoors_Name = {
@@ -511,7 +511,7 @@ local EpipSettings = {
         },
         WorldTooltip_ShowDoors_Description = {
             Handle = "h868a6168gd10eg4340gb5f4gb35dc338c453",
-            Text = "If enabled, doors will show world tooltips. Requires \"Show more items\" to be enabled, as these do not have tooltips by default.",
+            Text = "If enabled, doors will show world tooltips. Requires \"Enable tooltips for all items\" to be enabled, as these do not have tooltips by default.",
             ContextDescription = "World tooltip show doors setting tooltip",
         },
         WorldTooltip_ShowInactionable_Name = {
@@ -528,7 +528,7 @@ local EpipSettings = {
         WorldTooltip_MoreTooltips_Name = {
             Handle = "hf288311dg0fccg47dcgbc6ag954c4d848835",
             Text = "Enable tooltips for all items",
-            ContextDescription = "World tooltip show more items setting name",
+            ContextDescription = "World tooltip 'enable tooltips for all items' setting name",
         },
     },
 }
@@ -1123,14 +1123,14 @@ local WorldTooltips = {
         ID = "WorldTooltip_ShowSittableAndLadders",
         Type = "Checkbox",
         Label = "Show chairs and ladders",
-        Tooltip = "If enabled, chairs and ladders will show world tooltips. Requires \"Show more items\" to be enabled, as these do not have tooltips by default.",
+        Tooltip = "If enabled, chairs and ladders will show world tooltips. Requires \"Enable tooltips for all items\" to be enabled, as these do not have tooltips by default.",
         DefaultValue = true,
     },
     {
         ID = "WorldTooltip_ShowDoors",
         Type = "Checkbox",
         Label = "Show doors",
-        Tooltip = "If enabled, doors will show world tooltips. Requires \"Show more items\" to be enabled, as these do not have tooltips by default.",
+        Tooltip = "If enabled, doors will show world tooltips. Requires \"Enable tooltips for all items\" to be enabled, as these do not have tooltips by default.",
         DefaultValue = true,
     },
     {
