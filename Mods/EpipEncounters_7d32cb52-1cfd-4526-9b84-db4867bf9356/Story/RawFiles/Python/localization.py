@@ -1,12 +1,13 @@
-import re,os,xml, json
+import re, os, xml, json
 import openpyxl
 from openpyxl.utils import get_column_letter
 from openpyxl.utils import *
 from openpyxl.styles import *
-from openpyxl.styles import Alignment
 from openpyxl.worksheet import worksheet
 
 TEXTLIB_TRANSLATION_FILE_FORMAT_VERSION = 0
+
+OUTDATED_TRANSLATION_FILL = 'FFF03A3A'
 
 # -----------------
 # CLASSES
@@ -130,7 +131,6 @@ class Module:
         self.translated_strings[tsk.handle] = tsk
 
     def export(self, book:Workbook, oldBook:openpyxl.Workbook=None, oldSheetName:str=None, oldBookPath:str=None):
-
         if oldBook == None:
             sheet = book.addSheet(self.name)
 
@@ -153,7 +153,7 @@ class Module:
             oldSheet:worksheet = oldBook.get_sheet_by_name(oldSheetName)
 
             existingTSKs = set()
-            for rowIndex in range(2, oldSheet.max_row + 1):
+            for rowIndex in range(2, oldSheet.max_row + 1): # Ignore first row (header)
                 handleCell = oldSheet.cell(row=rowIndex, column=1)
                 originalTextCell = oldSheet.cell(row=rowIndex, column=3)
                 handle = handleCell.value
@@ -167,15 +167,16 @@ class Module:
                         tskData = self.translated_strings[handle]
                         translationCell = oldSheet.cell(row=rowIndex, column=5)
 
-                        # Clear translation if original text doesnt match
+                        # Recolor cells as a warning when the old original text doesn't match new one
                         if tskData.text != originalTextCell.value:
-                            print("Removed outdated translation for " + tskData.handle)
-                            translationCell.value = ""
+                            print("Outdated translation for " + tskData.handle)
+
+                            translationCell.fill = PatternFill(start_color=OUTDATED_TRANSLATION_FILL, end_color=OUTDATED_TRANSLATION_FILL, fill_type='solid')
 
                         originalTextCell.value = tskData.text
 
                     else: # Can happen when TSKs get removed
-                        print("TSK not present:", handle)
+                        print("Found TSK that is no longer used:", handle)
 
             # Add new rows
             newRowIndex = len(existingTSKs) + 2
@@ -195,11 +196,9 @@ class Module:
                         addSheetRow(Module.COLUMN_DEFINITIONS, i, oldSheet, newRowIndex, rowData[i])
 
                     newRowIndex += 1
-
             oldBook.save(oldBookPath)
 
-
-def createSpreadsheet(file_name, output_file_name, existing_sheet_file_name=None, oldSheetName:str=None):
+def createSpreadsheet(file_name, existing_sheet_file_name=None, oldSheetName:str=None):
     file = open(file_name, "r")
     localization = json.load(file)
 
@@ -214,17 +213,13 @@ def createSpreadsheet(file_name, output_file_name, existing_sheet_file_name=None
     if existing_sheet_file_name != None:
         oldBook = openpyxl.open(existing_sheet_file_name)
     book = Workbook()
-    module.export(book, oldBook, oldSheetName, existing_sheet_file_name)
-    
+
     print("Saving workbook")
-    if existing_sheet_file_name == None:
-        book.save(output_file_name)
+    module.export(book, oldBook, oldSheetName, existing_sheet_file_name)
 
 def createTranslationJSON(file_name:str, modTable:str, sheet_name:str, output_filename:str):
     book = openpyxl.load_workbook(file_name)
     sheet = book[sheet_name]
-
-    # module = Module(sheet_name)
 
     output = {
         "FileFormatVersion": TEXTLIB_TRANSLATION_FILE_FORMAT_VERSION,
