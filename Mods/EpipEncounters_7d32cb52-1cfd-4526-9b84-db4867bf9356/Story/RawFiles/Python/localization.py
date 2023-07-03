@@ -160,7 +160,7 @@ class Module:
 
         # Recolor cells as a warning when the old original text doesn't match new one
         if tskData.outdated_translation and tskData.has_translation():
-            print("Outdated translation for " + tskData.handle)
+            print("Outdated translation for", tskData.handle, tskData.text)
 
             translation_cell.fill = PatternFill(start_color=OUTDATED_TRANSLATION_FILL, end_color=OUTDATED_TRANSLATION_FILL, fill_type='solid')
 
@@ -209,6 +209,8 @@ class Module:
                         tsk.TranslationNotes = oldSheet.cell(row=rowIndex, column=6).value
                         tsk.TranslationAuthors = oldSheet.cell(row=rowIndex, column=7).value
                         tsk.outdated_translation = oldSheet.cell(row=rowIndex, column=3).value != tsk.text
+                    else:
+                        print("Found removed TSK", handle, oldSheet.cell(row=rowIndex, column=3).value)
 
             # Sort and update all rows, including new ones
             sorted_tsks:list[TranslatedString] = list(self.translated_strings.values())
