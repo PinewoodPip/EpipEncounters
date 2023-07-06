@@ -14,12 +14,13 @@ OOP = {
 ---@field protected __ClassDefinition Class
 local Class = {}
 
----Creates a new table with the metatable of the class set.
+---Creates a new instance of the class.
 ---@protected
----@param data table?
+---@param data table? Table with the initial fields of the instance.
 ---@return Class
 function Class:__Create(data)
     local classTable = self ---@cast classTable table|Class
+    data = data or {}
     ---@cast data Class
 
     setmetatable(data, {
@@ -132,7 +133,7 @@ end
 ---@return `T`
 function OOP.RegisterClass(className, class, parentClasses)
     ---@cast class Class
-    
+
     -- Copy Class methods onto the class definition table
     for k,v in pairs(Class) do
         if type(v) == "function" then
@@ -177,21 +178,18 @@ end
 ---@return `T`
 function OOP.GetClass(className)
     local class = OOP._Classes[className]
-
     if not class then
         error("Class is not registered: " .. className)
     end
-
-    return class 
+    return class
 end
 
 ---Returns whether a table is a class table or instance.
 ---@param tbl table
----@param className string?
+---@param className string? If present, `true` will only be returned if the table *is* the requested class.
 ---@return boolean
 function OOP.IsClass(tbl, className)
     local isClass = false
-    
     if type(tbl) == "table" and tbl.__name then
         local result, class = pcall(OOP.GetClass, tbl.__name)
         if result then
@@ -201,11 +199,10 @@ function OOP.IsClass(tbl, className)
             end
         end
     end
-
     return isClass
 end
 
----Sets a table's metatable.
+---Sets a table's metatable. __index is set to index the metatable itself, using the metatable's __index as a fallback.
 ---@param table table Mutated.
 ---@param metatable table
 function OOP.SetMetatable(table, metatable)
