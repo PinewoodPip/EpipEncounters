@@ -23,3 +23,8 @@ function Text:SetEditable(editable) end
 ---@see GenericUI_Element_Text.SetEditable
 ---@param restriction string
 function Text:SetRestrictedCharacters(restriction) end
+
+---Returns the height of a line.
+---@param lineIndex integer 1-based.
+---@return number
+function Text:GetLineHeight(lineIndex) end

@@ -53,8 +53,14 @@ end
 function Text:GetTextSize()
     local mc = self:GetMovieClip()
     local txt = mc.text_txt
+    local width = txt.textWidth
+    local height = 0 -- txt.textHeight is not accurate; it looks like it considers an additional line, which is difficult to undo if the lines have mixed height.
 
-    return Vector.Create(txt.textWidth, txt.textHeight)
+    for i=1,txt.numLines,1 do
+        height = height + self:GetLineHeight(i)
+    end
+
+    return Vector.Create(width, math.ceil(height))
 end
 
 ---Returns the text of the element.
@@ -75,6 +81,7 @@ _Text.SetText = Generic.ExposeFunction("SetText")
 _Text.SetType = Generic.ExposeFunction("SetType")
 _Text.SetEditable = Generic.ExposeFunction("SetEditable")
 _Text.SetRestrictedCharacters = Generic.ExposeFunction("SetRestrictedCharacters")
+_Text.GetLineHeight = Generic.ExposeFunction("GetLineHeight")
 
 ---------------------------------------------
 -- SETUP

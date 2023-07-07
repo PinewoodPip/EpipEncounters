@@ -100,7 +100,6 @@ function Button:SetLabel(label, align)
 
         -- Set size of the text element to the minimum size of the text itself, and center it
         textSize = element:GetTextSize()
-        textSize = Vector.Create(textSize[1], textSize[2] / 2) -- No idea why division by 2 is necessary; textHeight just seems to always report +1 line, while width is correct.
         element:SetSize(textSize:unpack())
         element:SetPositionRelativeToParent(align, 0, 0)
     end
