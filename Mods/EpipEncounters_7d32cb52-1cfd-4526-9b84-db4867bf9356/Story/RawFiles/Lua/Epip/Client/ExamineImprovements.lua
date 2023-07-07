@@ -26,7 +26,7 @@ Examine.Events.Opened:Subscribe(function (_)
     if ExamineImprovements:IsEnabled() then
         local ui = Examine:GetUI()
         local position = Settings.GetSettingValue("EpipEncounters", "ExaminePosition")
-    
+
         if position == ExamineImprovements.POSITION_SETTING.MIDDLE_RIGHT then
             ui:ExternalInterfaceCall("setPosition", "right", "screen", "right")
         elseif position == ExamineImprovements.POSITION_SETTING.MIDDLE_LEFT then
@@ -40,7 +40,7 @@ Examine.Hooks.GetUpdateData:Subscribe(function (ev)
     if ExamineImprovements:IsEnabled() then
         local char = Examine.GetCharacter()
         local data = ev.Data
-    
+
         -- Only do this for characters being examined
         if char then
             ---@type ExamineUI_UpdateData_Entry
@@ -51,10 +51,10 @@ Examine.Hooks.GetUpdateData:Subscribe(function (ev)
                 ValueLabel = string.format("%d%%", char.Stats.CriticalChance),
                 EntryType = Examine.ENTRY_TYPES.STAT,
             }
-        
+
             -- Insert crit chance after damage
-            local _, damageCategoryID, damageIndex = data:GetEntry(6)
-            data:AddEntry(damageCategoryID, critEntry, damageIndex + 1)
+            local _, _, damageIndex = data:GetEntry(6, Examine.CATEGORIES.STATS)
+            data:AddEntry(Examine.CATEGORIES.STATS, critEntry, damageIndex + 1)
         end
     end
 end)

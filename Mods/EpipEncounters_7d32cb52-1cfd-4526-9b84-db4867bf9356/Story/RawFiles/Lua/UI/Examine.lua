@@ -203,7 +203,7 @@ end
 function _ExamineData:GetEntry(statID, category)
     local foundEntry = nil
     local categoryID, categoryIndex = nil, nil
-    
+
     for _,searchCategory in ipairs(self.Categories) do
         if not category or searchCategory.ID == category then
             for entryIndex,entry in pairs(searchCategory.Entries) do
