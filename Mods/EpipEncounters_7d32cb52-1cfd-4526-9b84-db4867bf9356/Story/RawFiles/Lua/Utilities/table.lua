@@ -155,9 +155,10 @@ function table.getKeyCount(t)
 end
 
 ---Returns a new list with entries filtered based on a predicate.
----@param list any[]
----@param predicate fun(item:any):boolean Should return true for items to be included in the new list.
----@return any[]
+---@generic T
+---@param list T[]
+---@param predicate fun(item:T):boolean Should return true for items to be included in the new list.
+---@return T[]
 function table.filter(list, predicate)
     local newList = {}
 

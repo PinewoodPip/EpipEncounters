@@ -52,7 +52,7 @@ end
 ---@return CharacterLib_StatusFromItem[]
 function Character.GetStatusesFromItems(char)
     local items = Character.GetEquippedItems(char)
-    local statuses = {}
+    local statuses = {} ---@type CharacterLib_StatusFromItem[]
 
     for _,item in pairs(items) do
         local props = item.Stats.PropertyLists
@@ -60,23 +60,11 @@ function Character.GetStatusesFromItems(char)
 
         -- Check SelfOnEquip properties
         if extraProps and table.contains(extraProps.AllPropertyContexts, "SelfOnEquip") then
-            local name = extraProps.Name
-            name = string.sub(name, 1, string.len(name)//2)
-            name = name:gsub("_ExtraProperties$", "") -- Boost name
-
-            -- Examine boost stat to find the status name
-            local stat = Stats.Get("Boost", name)
-            if stat then
-                local statProps = stat.ExtraProperties
-
-                for _,statProp in ipairs(statProps) do
-                    if statProp.Type == "Status" then
-                        local status = char:GetStatus(statProp.Action)
-    
-                        if status then
-                            table.insert(statuses, {Status = status, ItemSource = item})
-                        end
-                    end
+            for _,prop in ipairs(extraProps.Properties.Elements) do
+                if prop.TypeId == "Status" then
+                    ---@cast prop StatsPropertyStatus
+                    local statusID = prop.Status
+                    table.insert(statuses, {Status = char:GetStatus(statusID), ItemSource = item})
                 end
             end
         end
