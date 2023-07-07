@@ -58,6 +58,7 @@ Epip.InitializeLibrary("Mods", Mod)
 -- METHODS
 ---------------------------------------------
 
+---Returns whether a mod is loaded.
 ---@param guid GUID
 function Mod.IsLoaded(guid)
     return Ext.Mod.IsModLoaded(guid)
@@ -82,6 +83,7 @@ function Mod.GetLoadOrder()
     return mods
 end
 
+---Returns the story version of a mod.
 ---@param guid GUID
 ---@return integer?, integer?, integer?, integer? --Major, minor, revision, build version. Fails if the mod is not loaded.
 function Mod.GetStoryVersion(guid)
@@ -106,11 +108,5 @@ end
 ---Returns the context the caller script is running in.
 ---@return "Client"|"Server"
 function Mod.GetCurrentContext()
-    local ctx = "Client"
-
-    if Ext.IsServer() then
-        ctx = "Server"
-    end
-
-    return ctx
+    return Ext.IsClient() and "Client" or "Server"
 end

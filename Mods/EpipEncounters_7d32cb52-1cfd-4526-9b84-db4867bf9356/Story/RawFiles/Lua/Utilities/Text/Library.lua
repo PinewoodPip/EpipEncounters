@@ -5,11 +5,12 @@ local DefaultTable = DataStructures.Get("DataStructures_DefaultTable")
 Text = {
     _RegisteredTranslatedHandles = {}, ---@type table<TranslatedStringHandle, TextLib_TranslatedString> Maps handle to original text.
     _TranslatedStrings = DefaultTable.Create({}), ---@type table<string, table<TranslatedStringHandle, string>> -- Maps language to table of TSK translations.
-    ---@enum TextLib_Font
 
     CommonStrings = {},
 
     LOCALIZATION_FILE_FORMAT_VERSION = 0,
+
+    ---@enum TextLib_Font
     FONTS = {
         BOLD = "Ubuntu Mono",
         ITALIC = "Averia Serif",
@@ -207,6 +208,10 @@ function Text.Join(str1, str2, separator)
     return newString
 end
 
+---Joins two strings inserting a line break between them.
+---@param str1 string The line break is not added if this string is empty.
+---@param str2 string
+---@return string
 function Text.AppendLine(str1, str2)
     local separator = "\n"
 
@@ -250,6 +255,7 @@ function Text.EscapePatternCharacters(str)
     return (str:gsub(".", Text.LUA_PATTERN_CHARACTERS))
 end
 
+---Returns whether str contains the pattern.
 ---@param str string
 ---@param pattern pattern
 function Text.Contains(str, pattern)

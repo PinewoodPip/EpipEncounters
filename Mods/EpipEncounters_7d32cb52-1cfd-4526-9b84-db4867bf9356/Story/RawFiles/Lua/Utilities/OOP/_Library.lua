@@ -11,7 +11,7 @@
 ---@field protected __ModTable string
 ---@field protected __LoggingLevel Library_LoggingLevel
 ---@field protected __IsDebug boolean
----@field TranslatedStrings table<TranslatedStringHandle, Library_TranslatedString> Initializable.
+----@field TranslatedStrings table<TranslatedStringHandle, Library_TranslatedString> Initializable.
 ----@field Events table<string, Event> Initializable. -- These 2 fields cannot be included as they break auto-complete.
 ----@field Hooks table<string, Event> Initializable.
 local Library = {
@@ -57,9 +57,8 @@ function Library.Create(modTable, id, data)
     data.__LoggingLevel = Library.LOGGING_LEVELS.ALL
     ---@diagnostic enable: invisible
 
-    ---@type Library
-    local lib = OOP.GetClass("Library"):__Create(data)
-    
+    local lib = OOP.GetClass("Library"):__Create(data) ---@cast lib Library
+
     -- Initialize events and hooks.
     data.Events = data.Events or {}
     for ev,opts in pairs(data.Events) do
@@ -255,14 +254,14 @@ end
 ---------------------------------------------
 
 ---Show debug-level logging from this library.
----Only work in Developer mode.
+---Only works in Developer mode.
 function Library:Debug()
     if Epip.IsDeveloperMode() then
         self.IS_DEBUG = true
     end
 end
 
----Returns whether :Debug() has been ran successfully.
+---Returns whether `:Debug()` has been ran successfully.
 ---@return boolean
 function Library:IsDebug()
     return self.IS_DEBUG
@@ -316,7 +315,7 @@ function Library:Log(msg)
 end
 
 ---Log values without any prefixing.
----@vararg any
+---@param ... any
 function Library:RawLog(...)
     if self.__LoggingLevel <= self.LOGGING_LEVELS.ALL then
         print(...)
@@ -343,7 +342,7 @@ function Library:LogError(msg)
     Utilities.LogError(self.__name, msg)
 end
 
----Throws an error.
+---Throws an error prefixed by the thrower method name.
 ---@param method string
 function Library:Error(method, ...)
     local params = {...}
