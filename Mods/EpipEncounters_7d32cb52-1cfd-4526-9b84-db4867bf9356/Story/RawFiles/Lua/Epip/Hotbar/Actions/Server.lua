@@ -24,7 +24,7 @@ end)
 
 -- Listen for Toggle Party Link action.
 Actions.Events.ActionUsed:Subscribe(function (ev)
-    if ev.Action.ID == "PIP_TogglePartyLink" then
+    if ev.Action.ID == "EPIP_TogglePartyLink" then
         Osiris.PROC_PIP_Hotkey_TogglePartyLink(ev.Character)
     end
 end)
