@@ -76,17 +76,17 @@ function AnimCancel:CancelAnimation()
 
     if skill then
         local delay = AnimCancel.GetDelay(char, skill)
-    
+
         local func = function (_)
             Minimap:ExternalInterfaceCall("pingButtonPressed")
-    
+
             Timer.StartTickTimer(AnimCancel.PING_DELAY, function (_)
                 Minimap:ExternalInterfaceCall("pingButtonPressed")
             end)
         end
 
         AnimCancel:DebugLog("Cancelling animation")
-    
+
         Timer.Start(delay, func)
     end
 end

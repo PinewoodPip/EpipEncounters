@@ -94,7 +94,7 @@ LOAD_ORDER = {
             "Utilities/Net/Client.lua",
         },
     },
-    
+
     -- CharacterLib
     {
         ScriptSet = "Utilities/Character",
@@ -122,7 +122,7 @@ LOAD_ORDER = {
     },
 
     "Utilities/Damage/Shared.lua",
-    
+
     -- Artifacts
     {ScriptSet = "Utilities/Artifact", RequiresEE = true,},
 
@@ -187,7 +187,7 @@ LOAD_ORDER = {
     },
 
     "Game/SkillDamageCalculation.lua",
-    
+
     {ScriptSet = "Epip/DatabaseSync"},
 
     {ScriptSet = "Utilities/EpicEncounters"}, -- Core script needs to be present for now due to IsEnabled() - TODO move it out?
@@ -209,7 +209,7 @@ LOAD_ORDER = {
     "EpicStatsDefinitions.lua",
 
     "UI/EnemyHealthBar.lua",
-    
+
     "UI/Input.lua",
     "UI/OptionsInput.lua",
     "UI/Time.lua",
@@ -220,7 +220,7 @@ LOAD_ORDER = {
             "UI/CharacterSheet/CharacterSheet.lua",
         },
     },
-    
+
     -- UIs
     "UI/ContextMenu.lua",
     "UI/CharacterCreation.lua",
@@ -234,7 +234,7 @@ LOAD_ORDER = {
     "UI/Tooltip.lua",
     "UI/LoadingScreen.lua",
     "UI/Skills.lua",
-    
+
     "Utilities/Client/Tooltip.lua",
 
     -- GenericUI
@@ -302,7 +302,7 @@ LOAD_ORDER = {
             "UI/Hotbar/Loadouts.lua",
         },
     },
-    
+
     "UI/Notification.lua",
     "UI/Minimap.lua",
     "UI/VanillaActions.lua",
@@ -388,7 +388,7 @@ LOAD_ORDER = {
     "Debug/Shared.lua",
     "Debug/Client.lua",
     "Debug/Commands/Client.lua",
-    
+
     "Epip/Client/TreasureTableDisplay.lua",
     "Epip/Client/SummonControlFix.lua",
     "Epip/Client/Notifications.lua",
@@ -523,14 +523,11 @@ LOAD_ORDER = {
     -- "Epip/Client/AMERUI_Controller/Handlers/Ascension/Cluster.lua",
 
     {Script = "Epip/ContextMenus/Greatforge/Client.lua", RequiresEE = true},
-    "Epip/ContextMenus/PlayerInfo.lua", 
+    "Epip/ContextMenus/PlayerInfo.lua",
 
     -- Vanity
     {
         ScriptSet = "Epip/Vanity",
-        Scripts = {
-            
-        },
     },
     -- Vanity Transmog
     {
@@ -678,7 +675,7 @@ LOAD_ORDER = {
             "Epip/StatusesDisplay/UI/Display.lua",
         },
     },
-    
+
     "Epip/Client/EpipSettingsMenu.lua",
     "Epip/Keybindings/Client.lua",
 

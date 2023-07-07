@@ -71,7 +71,7 @@ Epip.InitializeLibrary("Pointer", Pointer)
 ---@return EclCharacter?
 function Pointer.GetCurrentCharacter(playerIndex, includeDead)
     local char = Pointer._GetCurrentEntity(playerIndex, "HoverCharacter") ---@type EclCharacter
-    
+
     -- Check HoverCharacter2 for corpses.
     if not char and includeDead then
         char = Pointer._GetCurrentEntity(playerIndex, "HoverCharacter2") ---@type EclCharacter
@@ -98,7 +98,7 @@ end
 function Pointer.GetWalkablePosition(playerIndex)
     local state = Ext.UI.GetPickingState(playerIndex or 1)
     local position
-    
+
     if state then
         position = Vector.Create(table.unpack(state.WalkablePosition))
     end
@@ -111,7 +111,7 @@ end
 function Pointer.GetWorldPosition(playerIndex)
     local state = Ext.UI.GetPickingState(playerIndex or 1)
     local position
-    
+
     if state then
         position = Vector.Create(state.WorldPosition)
     end

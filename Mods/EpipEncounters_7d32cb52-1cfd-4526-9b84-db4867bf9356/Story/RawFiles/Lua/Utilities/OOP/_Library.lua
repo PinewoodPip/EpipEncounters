@@ -125,7 +125,7 @@ function Library.Create(modTable, id, data)
     }
     library.TSK = {}
     setmetatable(library.TSK, TSKmetatable)
-    
+
     -- Create class holder
     data._Classes = {}
 

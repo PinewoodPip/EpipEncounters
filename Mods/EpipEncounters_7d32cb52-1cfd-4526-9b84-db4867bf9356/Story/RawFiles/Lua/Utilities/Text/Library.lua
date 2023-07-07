@@ -127,7 +127,7 @@ local _TextFormatData = {
 function Text.Round(value, decimals)
     value = tostring(value)
     decimals = decimals or 0
-    
+
     local pattern = "^(%d*)%.?(%d*)$"
     local wholeText, decimalsText = value:match(pattern)
     local output = wholeText
@@ -222,7 +222,7 @@ end
 ---@param str string
 ---@return string
 function Text.SeparatePascalCase(str)
-    str = str:gsub("(%l)(%u%a*)", "%1 %2") 
+    str = str:gsub("(%l)(%u%a*)", "%1 %2")
 
     if str:find("(%l)(%u%a*)") then
         str = Text.SeparatePascalCase(str)
@@ -275,9 +275,9 @@ end
 ---@param inputstr string
 ---@param sep string
 ---@return string[]
-function Text.Split(inputstr, sep) 
+function Text.Split(inputstr, sep)
     sep=sep or '%s'
-    local t={} 
+    local t={}
 
     local pattern = "([^"..sep.."]*)("..sep.."?)"
 
@@ -291,10 +291,10 @@ function Text.Split(inputstr, sep)
         end
     end
 
-    for field,_ in string.gmatch(inputstr, "([^"..sep.."]*)("..sep.."?)") do 
-        table.insert(t,field) 
+    for field,_ in string.gmatch(inputstr, "([^"..sep.."]*)("..sep.."?)") do
+        table.insert(t,field)
     end
-    
+
     return t
 end
 
@@ -334,16 +334,6 @@ function Text.Capitalize(str)
 
     return str
 end
-
--- function Text.Split(s, sep)
---     local fields = {}
-    
---     local sep = sep or " "
---     local pattern = string.format("([^%s]+)", sep)
---     string.gsub(s, pattern, function(c) fields[#fields + 1] = c end)
-    
---     return fields
--- end
 
 ---Format a string.
 ---@param str string
@@ -389,7 +379,7 @@ function Text.Format(str, formatData)
     if formatData.Align then
         align = string.format(" align='%s'", formatData.Align)
     end
-    
+
     local color = ""
     if formatData.Color then
         color = string.format(" color='%s'", formatData.Color)
@@ -430,7 +420,7 @@ function Text.StripFontTags(str)
             end
         elseif char == ">" then
             inTag = inTag - 1
-        elseif inTag == 0 then 
+        elseif inTag == 0 then
             newStr = newStr .. char
         end
     end
@@ -480,11 +470,11 @@ function Text.GetTranslatedString(handle, fallBack)
         else
             str = Ext.L10N.GetTranslatedString(handle)
         end
-    
+
         if not str or str == "" then
             str = Ext.L10N.GetTranslatedStringFromKey(handle)
         end
-    
+
         -- Consider empty strings invalid and use fallback.
         if str == "" then
             str = fallBack or handle ---@type string
@@ -603,7 +593,7 @@ function Text.GenerateLocalizationTemplate(modTable, existingTemplate)
             -- Also do not patch strings with outdated ReferenceText.
             if templateEntry then
                 table.remove(newStrings, table.reverseLookup(newStrings, handle))
-                
+
                 if data.ReferenceText == templateEntry.ReferenceText then
                     template.TranslatedStrings[handle].TranslatedText = data.TranslatedText
                 else

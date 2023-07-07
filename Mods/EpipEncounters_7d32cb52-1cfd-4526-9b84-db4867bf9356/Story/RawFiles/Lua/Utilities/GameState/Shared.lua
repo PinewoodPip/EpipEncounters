@@ -39,7 +39,7 @@ GameState = {
     ---@type table<string, GameState>
     SERVER_STATES = {
         UNKNOWN = "Unknown",
-        UNINITIALIZED = "Uninitialized",
+        UNINITIALIZED = "Unitialized",
         INIT = "Init",
         IDLE = "Idle",
         EXIT = "Exit",

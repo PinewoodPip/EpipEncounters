@@ -141,7 +141,7 @@ function RGBColor:ToDecimal(addAlpha)
         value = self.Blue + self.Green * 256 + self.Red * 256 ^ 2
     end
 
-    return value  
+    return value
 end
 
 ---Unpacks the color's RGB values, alpha included.
@@ -156,7 +156,7 @@ end
 ---@return string
 function RGBColor:ToHex(prefix, addAlpha)
     local valStr = string.format("%x", self:ToDecimal(addAlpha))
-    
+
     while string.len(valStr) < 6 do
         valStr = "0" .. valStr
     end
@@ -213,7 +213,7 @@ function RGBColor.Create(r, g, b, a)
 
     local color = {Red = r, Green = g, Blue = b, Alpha = a}
     Inherit(color, RGBColor)
-    
+
     return color
 end
 
@@ -232,7 +232,7 @@ function RGBColor:Equals(color)
     return self.Red == color.Red and self.Green == color.Green and self.Blue == color.Blue and self.Alpha == color.Alpha
 end
 
----__eq overload. Equivalent to calling RGBColor.Equals()
+---__eq overload. Equivalent to calling RGBColor:Equals()
 ---@param color1 RGBColor
 ---@param color2 RGBColor
 ---@return boolean

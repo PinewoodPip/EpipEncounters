@@ -20,9 +20,8 @@ Epip = {
 ---------------------------------------------
 
 ---@deprecated Legacy call.
-function Epip.AddFeature(id, name, feature)
+function Epip.AddFeature(id, _, feature)
     Epip.RegisterFeature(id, feature)
-    
     Epip.Features[id] = feature
 end
 
@@ -33,7 +32,7 @@ end
 ---@overload fun(id:string, feature:Feature)
 function Epip.RegisterFeature(modTable, id, feature)
     -- Overload for Epip's built-in features
-    if not feature and type(id) == "table" then 
+    if not feature and type(id) == "table" then
         ---@diagnostic disable-next-line: cast-local-type
         modTable, id, feature = "EpipEncounters", modTable, id
     end
@@ -123,7 +122,7 @@ function Epip.InitializeFeature(modTable, id, feature)
     feature._Tests = {}
     feature.MODULE_ID = id
 
-    feature.NAME = name or id
+    feature.NAME = id
     feature.REQUIRED_MODS = feature.REQUIRED_MODS or {}
     feature.FILEPATH_OVERRIDES = feature.FILEPATH_OVERRIDES or {}
 
@@ -179,16 +178,16 @@ if Ext.IsClient() then
     function Epip.InitializeUI(type, id, ui)
         Epip.InitializeFeature("EpipEncounters", id, ui)
         setmetatable(ui, {__index = Client.UI._BaseUITable})
-    
+
         ui.UITypeID = type
         ui.TypeID = type
-    
+
         if ui.INPUT_DEVICE == "Controller" and not Client.IsUsingController() then
             ui:Disable()
         elseif ui.INPUT_DEVICE == "KeyboardMouse" and Client.IsUsingController() then
             ui:Disable()
         end
-    
+
         Client.UI[id] = ui
     end
 
@@ -199,7 +198,6 @@ if Ext.IsClient() then
             Epip.cachedAprilFoolsState = (date.Day == 1 and date.Month == 4)
         end
 
-        -- Hotbar mod gets no festivities.
         return Epip.cachedAprilFoolsState or Settings.GetSettingValue("Epip_Developer", "DEBUG_AprilFools")
     end
 end

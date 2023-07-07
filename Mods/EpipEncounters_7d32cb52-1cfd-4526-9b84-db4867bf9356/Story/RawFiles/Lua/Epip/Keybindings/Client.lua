@@ -15,7 +15,7 @@ Options.RegisterTab("EpipEncounters", {
         {Name = "Debug Open Features Menu", ID = "EpipEncounters_Debug_OpenDebugMenu", DeveloperOnly = true, DefaultInput1 = {Keys = {"lctrl", "b"}}},
         {Name = "Debug Generic Hookable Hotkey", ID = "EpipEncounters_Debug_Generic", DeveloperOnly = true, DefaultInput1 = {Keys = {"lctrl", "e"}}},
         {Name = "Copy Position", ID = "EpipEncounters_Debug_CopyPosition", DeveloperOnly = true, DefaultInput1 = {Keys = {"lshift", "t"}}},
-        
+
         {Name = "Log RootTemplate", ID = "EpipEncounters_Debug_LogRootTemplate", DeveloperOnly = true},
         {Name = "Open Cheats", ID = "EpipEncounters_DebugCheats_OpenUI", DeveloperOnly = true, DefaultInput1 = {Keys = {"g"}}},
 

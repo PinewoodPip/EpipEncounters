@@ -29,7 +29,7 @@ StatusesDisplay:RegisterClass("Feature_StatusesDisplay_Manager", Manager)
 ---@param char EclCharacter
 ---@return Feature_StatusesDisplay_Manager
 function Manager.Create(char)
-    local instance = Manager:__Create({}) ---@type Feature_StatusesDisplay_Manager
+    local instance = Manager:__Create() ---@type Feature_StatusesDisplay_Manager
 
     instance.CharacterHandle = char.Handle
     instance._Delay = 0
