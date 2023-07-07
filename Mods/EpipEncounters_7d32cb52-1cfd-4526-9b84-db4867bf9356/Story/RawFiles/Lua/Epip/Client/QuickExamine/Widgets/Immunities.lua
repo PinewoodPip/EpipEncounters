@@ -21,7 +21,7 @@ function Widget:Render(entity)
     local char = entity ---@type EclCharacter
     local container = QuickExamine.GetContainer()
     local immunities = {}
-    
+
     -- Get a list of all immunities's names on the char.
     for id,immunity in pairs(Stats.Immunities) do
         if Character.HasImmunity(char, id) then
@@ -38,6 +38,8 @@ function Widget:Render(entity)
         immunityLabel = "Immune to " .. Text.Join(immunities, ", ")
         immunityLabel = Text.Format(immunityLabel, {Size = 13})
 
-        TextPrefab.Create(QuickExamine.UI, "Resources_Immunities", verticalList, immunityLabel, "Center", Vector.Create(QuickExamine.GetContainerWidth(), 30))
+        local element = TextPrefab.Create(QuickExamine.UI, "Resources_Immunities", verticalList, immunityLabel, "Center", Vector.Create(QuickExamine.GetContainerWidth(), 30))
+        local textHeight = element:GetTextSize()[2]
+        element:SetSize(QuickExamine.GetContainerWidth(), textHeight) -- Ensure text fits.
     end
 end
