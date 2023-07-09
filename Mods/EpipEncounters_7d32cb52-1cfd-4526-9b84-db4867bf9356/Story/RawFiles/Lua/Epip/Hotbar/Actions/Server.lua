@@ -1,4 +1,6 @@
 
+local SourceInfusion, Meditate = EpicEncounters.SourceInfusion, EpicEncounters.Meditate
+
 ---@class Feature_HotbarActions
 local Actions = Epip.GetFeature("Feature_HotbarActions")
 
@@ -11,14 +13,9 @@ Actions.Events.ActionUsed:Subscribe(function (ev)
     local char = ev.Character
 
     if ev.Action.ID == "EE_Meditate" then
-        Osiris.CharacterUseSkill(char, "Shout_NexusMeditate", char, 0 ,0, 0);
+        Meditate.RequestMeditate(char)
     elseif ev.Action.ID == "EE_SourceInfuse" then
-        if Character.IsInCombat(char) then -- Character must be in combat and be the active combatant
-            local combatID = Combat.GetCombatID(char)
-            if combatID and Combat.GetActiveCombatant(combatID) == char then
-                Osiris.CharacterUseSkill(char, "Shout_SourceInfusion", char, 0 ,0, 0);
-            end
-        end
+        SourceInfusion.RequestInfusion(ev.Character)
     end
 end)
 

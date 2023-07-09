@@ -8,6 +8,35 @@ local Actions = Epip.GetFeature("Feature_HotbarActions")
 -- METHODS
 ---------------------------------------------
 
+---Attempts to execute an action.
+---@param char EclCharacter
+---@param action string|Feature_HotbarActions_Action
+function Actions.TryExecuteAction(char, action)
+    if type(action) == "string" then -- String overload.
+        action = Actions.GetAction(action)
+    end
+
+    -- Forward the event if the action is not on cooldown.
+    if not Actions.IsActionOnCooldown(action) then
+        -- Forward event to server
+        Net.PostToServer(Actions.NET_MSG_ACTION_USED, {
+            CharacterNetID = char.NetID,
+            ActionID = action.ID,
+        })
+
+        Actions:DebugLog("Forwarding action event", action.ID)
+
+        Actions.Events.ActionUsed:Throw({
+            Action = action,
+            Character = char,
+        })
+
+        if action.Cooldown then
+            Actions.SetActionCooldown(action, action.Cooldown)
+        end
+    end
+end
+
 ---Sets the cooldown for a hotkey.
 ---@param action string|Feature_HotbarActions_Action
 ---@param cooldown number In seconds.
@@ -54,6 +83,16 @@ Actions.Events.ActionUsed:Subscribe(function (ev)
     end
 end)
 
+-- Listen for respective Input actions.
+Client.Input.Events.ActionExecuted:Subscribe(function (ev)
+    local action = ev.Action.ID
+    if action == "EpicEncounters_Meditate" then
+        Actions.TryExecuteAction(ev.Character, "EE_Meditate")
+    elseif action == "EpipEncounters_SourceInfuse" then
+        Actions.TryExecuteAction(ev.Character, "EE_SourceInfuse")
+    end
+end)
+
 ---------------------------------------------
 -- SETUP
 ---------------------------------------------
@@ -62,32 +101,14 @@ end)
 for _,action in ipairs(Actions.ACTIONS) do
     if not action.RequiresEE or EpicEncounters.IsEnabled() then
         Hotbar.RegisterAction(action.ID, action)
-    
+
         -- Place the action at a default index
         if action.DefaultIndex then
             Hotbar.SetHotkeyAction(action.DefaultIndex, action.ID)
         end
-        
+
         Hotbar.RegisterActionListener(action.ID, "ActionUsed", function (char, _)
-            -- Forward the event if the action is not on cooldown.
-            if not Actions.IsActionOnCooldown(action) then
-                -- Forward event to server
-                Net.PostToServer(Actions.NET_MSG_ACTION_USED, {
-                    CharacterNetID = char.NetID,
-                    ActionID = action.ID,
-                })
-
-                Actions:DebugLog("Forwarding action event", action.ID)
-
-                Actions.Events.ActionUsed:Throw({
-                    Action = action,
-                    Character = char,
-                })
-
-                if action.Cooldown then
-                    Actions.SetActionCooldown(action, action.Cooldown)
-                end
-            end
+            Actions.TryExecuteAction(char, action)
         end)
     end
 end

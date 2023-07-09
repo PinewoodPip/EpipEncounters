@@ -73,7 +73,7 @@ end
 
 ---Fired when an action is successfully used. On the server, this only fires for actions with NetMessageChannel set.
 ---@class Feature_HotbarActions_Event_ActionUsed
----@field Character EsvCharacter
+---@field Character Character
 ---@field Action Feature_HotbarActions_Action
 
 ---------------------------------------------
