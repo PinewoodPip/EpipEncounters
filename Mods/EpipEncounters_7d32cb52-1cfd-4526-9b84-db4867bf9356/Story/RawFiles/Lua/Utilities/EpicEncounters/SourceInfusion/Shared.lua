@@ -2,8 +2,11 @@
 ---@class EpicEncountersLib
 local EpicEncounters = EpicEncounters
 
----@class EpicEncountersLib_SourceInfusionLib : Library
+---@class EpicEncounters_SourceInfusionLib : Library
 local SourceInfusion = {
+    NETMSG_REQUEST_INFUSE = "EpicEncounters.SourceInfusionLib.NetMsg.RequestInfuse",
+
+    SOURCE_INFUSE_SKILL_ID = "Shout_SourceInfusion",
     PATTERNS = {
         INFUSING_STATUS = "AMER_SOURCEINFUSION_(%d+)",
     },
@@ -26,6 +29,12 @@ local SourceInfusion = {
 }
 Epip.InitializeLibrary("EpicEncounters_SourceInfusion", SourceInfusion)
 EpicEncounters.SourceInfusion = SourceInfusion
+
+---------------------------------------------
+-- NET MESSAGES
+---------------------------------------------
+
+---@class EpicEncounters.SourceInfusionLib.NetMsg.RequestInfuse : NetLib_Message_Character
 
 ---------------------------------------------
 -- METHODS
