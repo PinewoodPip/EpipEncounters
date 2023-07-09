@@ -779,8 +779,179 @@ local Textures = {
         },
     },
     ICONS = {
+        ACTION_POINTS = {
+            -- 24x
+            COST = {
+                IDLE = "PIP_UI_Icon_Resource_AP_Cost",
+                HIGHLIGHTED = "PIP_UI_Icon_Resource_AP_Cost_Highlighted",
+            },
+            -- 24x
+            IDLE = {
+                IDLE = "PIP_UI_Icon_Resource_AP_Idle",
+                HIGHLIGHTED = "PIP_UI_Icon_Resource_AP_Highlighted",
+            },
+            BORDERED = "PIP_UI_Icon_ActionPoint_Bordered", -- 28x
+            SIMPLE_EMPTY = "PIP_UI_Icon_AP_Simple_Empty", -- 28x
+            SIMPLE = "PIP_UI_Icon_AP_Simple", -- 32x
+        },
+        ARMOR_TYPES = {
+            MAGIC = "PIP_UI_Icon_Armor_Magic", -- 28x
+            PHYSICAL = "PIP_UI_Icon_Armor_Physical", -- 28x
+        },
+        ATTRIBUTES = {
+            STRENGTH = {
+                DARK = "PIP_UI_Icon_Attribute_Strength_Dark", -- 48x
+            },
+            FINESSE = {
+                DARK = "PIP_UI_Icon_Attribute_Finesse_Dark", -- 48x
+            },
+            INTELLIGENCE = {
+                DARK = "PIP_UI_Icon_Attribute_Intelligence_Dark", -- 48x
+            },
+            CONSTITUTION = {
+                DARK = "PIP_UI_Icon_Attribute_Constitution_Dark", -- 48x
+            },
+            MEMORY = {
+                DARK = "PIP_UI_Icon_Attribute_Memory_Dark", -- 48x
+            },
+            WITS = {
+                DARK = "PIP_UI_Icon_Attribute_Wits_Dark", -- 48x
+            },
+        },
+        CHECKMARKS = {
+            PINK = "PIP_UI_Icon_Checkmark_Pink", -- 16x
+            -- 36x
+            TEAM = {
+                BLUE = "PIP_UI_Icon_TeamCheckmark_Blue",
+                GREEN = "PIP_UI_Icon_TeamCheckmark_Green",
+                RED = "PIP_UI_Icon_TeamCheckmark_Red",
+                WHITE = "PIP_UI_Icon_TeamCheckmark_White",
+                YELLOW = "PIP_UI_Icon_TeamCheckmark_Yellow",
+            }
+        },
+        COINS = {
+            SMALL = "PIP_UI_Icon_Coin_Small", -- 16x
+        },
+        -- 32x
+        COMBAT_LOG_FILTERS = {
+            ANNOUNCEMENTS = "PIP_UI_Icon_CombatLogFilter_Announcements",
+            COMBAT = "PIP_UI_Icon_CombatLogFilter_Combat",
+            DIALOG = "PIP_UI_Icon_CombatLogFilter_Dialogue",
+            ITEMS = "PIP_UI_Icon_CombatLogFilter_Items",
+            ROLLS = "PIP_UI_Icon_CombatLogFilter_Rolls",
+        },
+        CROSSES = {
+            RED_SMALL = "PIP_UI_Icon_RedX_Small", -- 20x
+        },
+        CROWNS = {
+            WHITE = "PIP_UI_Icon_Crown_White", -- 24x
+            GOLD = "PIP_UI_Icon_Crown_Gold", -- 32x
+        },
+        DIAMOND_MINUS_X = {
+            BLACK = "PIP_UI_Icon_BlackDiamondMinusWhiteX", -- 16x
+            BLUE = "PIP_UI_Icon_BlueDiamondMinusWhiteX", -- 16x
+            GREEN = "PIP_UI_Icon_GreenDiamondMinusWhiteX", -- 16x
+        },
+        -- 80x
+        DIFFICULTIES = {
+            STORY = "PIP_UI_Icon_Difficulty_Story",
+            EXPLORER = "PIP_UI_Icon_Difficulty_Explorer",
+            CLASSIC = "PIP_UI_Icon_Difficulty_Classic",
+            HONOUR = "PIP_UI_Icon_Difficulty_Honour",
+            TACTICIAN = "PIP_UI_Icon_Difficulty_Tactician",
+        },
+        EQUIPMENT_SLOTS = {
+            WEAPON = "PIP_UI_Icon_Weapon_Bordered", -- 28x
+            ARMOR = "PIP_UI_Icon_Armor_Bordered", -- 28x
+            JEWELRY = "PIP_UI_Icon_Jewelry_Bordered", -- 28x
+        },
+        -- 40x
+        FRAMED_GEMS = {
+            BLUE = "PIP_UI_Icon_FramedGem_Blue",
+            GREEN = "PIP_UI_Icon_FramedGem_Green",
+            RED = "PIP_UI_Icon_FramedGem_Red",
+            YELLOW = "PIP_UI_Icon_FramedGem_Yellow",
+        },
+        -- 64x
+        INSTRUMENTS = {
+            BANSURI = "PIP_UI_Icon_Instrument_Bansuri",
+            CELLO = "PIP_UI_Icon_Instrument_Cello",
+            OUD = "PIP_UI_Icon_Instrument_Oud",
+            TAMBURA = "PIP_UI_Icon_Instrument_Tambura",
+        },
+        INTERFACES = {
+            CRAFT = {
+                SHADED = "PIP_UI_Icon_Interface_Craft_Shaded", -- 32x
+                WHITE = "PIP_UI_Icon_Interface_Craft_White", -- 32x
+            },
+        },
+        JOURNAL = {
+            MINUS = "PIP_UI_Icon_Journal_MinusSign", -- 24x
+            PLUS = "PIP_UI_Icon_Journal_PlusSign", -- 24x
+            DIAMOND_1 = "PIP_UI_Icon_JournalDiamond_1", -- 24x
+            DIAMOND_2 = "PIP_UI_Icon_JournalDiamond_2", -- 24x
+            DIAMOND_EMPTY = "PIP_UI_Icon_JournalDiamond_Empty", -- 24x
+            FLAGS = {
+                BLACK = "PIP_UI_Icon_JournalFlag_Black", -- 32x
+                BLUE = "PIP_UI_Icon_JournalFlag_Blue", -- 44x
+            }
+        },
+        LOCKS = {
+            SMALL = "PIP_UI_Icon_Lock_Small", -- 16x
+        },
+        MISC = {
+            TREASURE_CHEST = "PIP_UI_Icon_TreasureChest", -- 48x
+            GOLD_HELMET = "PIP_UI_Icon_GoldHelmet", -- 24x
+            FAST_TRAVEL = "PIP_UI_Icon_FastTravel", -- 48x
+        },
+        RUNES = {
+            SLOT = "PIP_UI_Icon_Rune_Bordered", -- 28x
+        },
+        SOURCE_POINT = {
+            IDLE = "PIP_UI_Icon_SourcePoint_Idle", -- 20x
+            HIGHLIGHTED = "PIP_UI_Icon_SourcePoint_Highlighted", -- 20x
+            BORDERED = "PIP_UI_Icon_SourcePoint_Bordered",
+        },
         SKILL_SCHOOL_WHITE_TEMPLATE = "PIP_UI_Icon_SkillSchool_%s_White", -- 44x
-        SKILL_SCHOOL_COLORED_TEMPLATE = "PIP_UI_Icon_SkillSchool_%s_Colored" -- 44x
+        SKILL_SCHOOL_COLORED_TEMPLATE = "PIP_UI_Icon_SkillSchool_%s_Colored", -- 44x
+        STARS = {
+            BLUE = "PIP_UI_Icon_BlueStar", -- 24x
+            YELLOW_LARGE = "PIP_UI_Icon_Star_Large", -- 36x
+        },
+        STATS = {
+            CRITICAL_CHANCE = "PIP_UI_Icon_CriticalChance", -- 24x
+            -- 24x
+            MEMORY_COST = {
+                "PIP_UI_Icon_MemoryCost_1",
+                "PIP_UI_Icon_MemoryCost_2",
+                "PIP_UI_Icon_MemoryCost_3",
+                "PIP_UI_Icon_MemoryCost_4",
+            },
+            VITALITY = "PIP_UI_Icon_Resource_Health", -- 24x
+        },
+        TABS = {
+            BOOKS_AND_KEYS = {
+                SHADED = "PIP_UI_Icon_Tab_BooksAndKeys_Trade", -- 32x
+            },
+            EQUIPMENT = {
+                SHADED = "PIP_UI_Icon_Tab_Equipment_Trade", -- 32x
+            },
+            MAGICAL = {
+                WHITE = "PIP_UI_Icon_Tab_Magical", -- 32x
+            },
+            POTIONS = {
+                WHITE = "PIP_UI_Icon_Tab_Potions", -- 32x
+            },
+            WARES = {
+                WHITE = "PIP_UI_Icon_Tab_Wares", -- 32x
+            },
+            BUY_BACK = "PIP_UI_Icon_Tab_Buyback", -- 32x
+        },
+        QUEST_FLAGS = {
+            BLUE = "PIP_UI_Icon_Flag_Blue", -- 48x
+            RED = "PIP_UI_Icon_Flag_Red", -- 48x
+            YELLOW = "PIP_UI_Icon_Flag_Yellow", -- 48x
+        }
     },
 }
 Epip.RegisterFeature("GenericUITextures", Textures)

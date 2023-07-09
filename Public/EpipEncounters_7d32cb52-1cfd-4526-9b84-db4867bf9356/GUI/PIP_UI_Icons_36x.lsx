@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<save>
+    <header version="2" />
+    <version major="3" minor="6" revision="6" build="0" />
+    <region id="IconUVList">
+        <node id="root">
+            <children>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_Star_Large" type="22" />
+                    <attribute id="U1" value="0.00195313" type="6" />
+                    <attribute id="U2" value="0.138672" type="6" />
+                    <attribute id="V1" value="0.00195313" type="6" />
+                    <attribute id="V2" value="0.138672" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_TeamCheckmark_Blue" type="22" />
+                    <attribute id="U1" value="0.142578" type="6" />
+                    <attribute id="U2" value="0.279297" type="6" />
+                    <attribute id="V1" value="0.00195313" type="6" />
+                    <attribute id="V2" value="0.138672" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_TeamCheckmark_Green" type="22" />
+                    <attribute id="U1" value="0.283203" type="6" />
+                    <attribute id="U2" value="0.419922" type="6" />
+                    <attribute id="V1" value="0.00195313" type="6" />
+                    <attribute id="V2" value="0.138672" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_TeamCheckmark_Red" type="22" />
+                    <attribute id="U1" value="0.423828" type="6" />
+                    <attribute id="U2" value="0.560547" type="6" />
+                    <attribute id="V1" value="0.00195313" type="6" />
+                    <attribute id="V2" value="0.138672" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_TeamCheckmark_White" type="22" />
+                    <attribute id="U1" value="0.564453" type="6" />
+                    <attribute id="U2" value="0.701172" type="6" />
+                    <attribute id="V1" value="0.00195313" type="6" />
+                    <attribute id="V2" value="0.138672" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_TeamCheckmark_Yellow" type="22" />
+                    <attribute id="U1" value="0.705078" type="6" />
+                    <attribute id="U2" value="0.841797" type="6" />
+                    <attribute id="V1" value="0.00195313" type="6" />
+                    <attribute id="V2" value="0.138672" type="6" />
+                </node>
+            </children>
+        </node>
+    </region>
+    <region id="TextureAtlasInfo">
+        <node id="root">
+            <children>
+                <node id="TextureAtlasIconSize">
+                    <attribute id="Height" value="36" type="4" />
+                    <attribute id="Width" value="36" type="4" />
+                </node>
+                <node id="TextureAtlasPath">
+                    <attribute id="Path" value="Assets/Textures/Icons/PIP_UI_Icons_36x.dds" type="20" />
+                    <attribute id="UUID" value="641f84d8-1407-4597-a256-c23985891c7e" type="22" />
+                </node>
+                <node id="TextureAtlasTextureSize">
+                    <attribute id="Height" value="256" type="4" />
+                    <attribute id="Width" value="256" type="4" />
+                </node>
+            </children>
+        </node>
+    </region>
+</save>

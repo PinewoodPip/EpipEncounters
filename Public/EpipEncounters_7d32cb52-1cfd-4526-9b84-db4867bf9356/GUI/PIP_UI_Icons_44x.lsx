@@ -6,6 +6,13 @@
         <node id="root">
             <children>
                 <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_JournalFlag_Blue" type="22" />
+                    <attribute id="U1" value="0.258789" type="6" />
+                    <attribute id="U2" value="0.342773" type="6" />
+                    <attribute id="V1" value="0.172852" type="6" />
+                    <attribute id="V2" value="0.256836" type="6" />
+                </node>
+                <node id="IconUV">
                     <attribute id="MapKey" value="PIP_UI_Icon_SkillSchool_Aerotheurge_Colored" type="22" />
                     <attribute id="U1" value="0.000976563" type="6" />
                     <attribute id="U2" value="0.0849609" type="6" />

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<save>
+    <header version="2" />
+    <version major="3" minor="6" revision="6" build="0" />
+    <region id="IconUVList">
+        <node id="root">
+            <children>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_Attribute_Constitution_Dark" type="22" />
+                    <attribute id="U1" value="0.000976563" type="6" />
+                    <attribute id="U2" value="0.0927734" type="6" />
+                    <attribute id="V1" value="0.000976563" type="6" />
+                    <attribute id="V2" value="0.0927734" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_Attribute_Finesse_Dark" type="22" />
+                    <attribute id="U1" value="0.0947266" type="6" />
+                    <attribute id="U2" value="0.186523" type="6" />
+                    <attribute id="V1" value="0.000976563" type="6" />
+                    <attribute id="V2" value="0.0927734" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_Attribute_Intelligence_Dark" type="22" />
+                    <attribute id="U1" value="0.188477" type="6" />
+                    <attribute id="U2" value="0.280273" type="6" />
+                    <attribute id="V1" value="0.000976563" type="6" />
+                    <attribute id="V2" value="0.0927734" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_Attribute_Memory_Dark" type="22" />
+                    <attribute id="U1" value="0.282227" type="6" />
+                    <attribute id="U2" value="0.374023" type="6" />
+                    <attribute id="V1" value="0.000976563" type="6" />
+                    <attribute id="V2" value="0.0927734" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_Attribute_Strength_Dark" type="22" />
+                    <attribute id="U1" value="0.375977" type="6" />
+                    <attribute id="U2" value="0.467773" type="6" />
+                    <attribute id="V1" value="0.000976563" type="6" />
+                    <attribute id="V2" value="0.0927734" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_Attribute_Wits_Dark" type="22" />
+                    <attribute id="U1" value="0.469727" type="6" />
+                    <attribute id="U2" value="0.561523" type="6" />
+                    <attribute id="V1" value="0.000976563" type="6" />
+                    <attribute id="V2" value="0.0927734" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_FastTravel" type="22" />
+                    <attribute id="U1" value="0.563477" type="6" />
+                    <attribute id="U2" value="0.655273" type="6" />
+                    <attribute id="V1" value="0.000976563" type="6" />
+                    <attribute id="V2" value="0.0927734" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_Flag_Blue" type="22" />
+                    <attribute id="U1" value="0.657227" type="6" />
+                    <attribute id="U2" value="0.749023" type="6" />
+                    <attribute id="V1" value="0.000976563" type="6" />
+                    <attribute id="V2" value="0.0927734" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_Flag_Red" type="22" />
+                    <attribute id="U1" value="0.750977" type="6" />
+                    <attribute id="U2" value="0.842773" type="6" />
+                    <attribute id="V1" value="0.000976563" type="6" />
+                    <attribute id="V2" value="0.0927734" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_Flag_Yellow" type="22" />
+                    <attribute id="U1" value="0.844727" type="6" />
+                    <attribute id="U2" value="0.936523" type="6" />
+                    <attribute id="V1" value="0.000976563" type="6" />
+                    <attribute id="V2" value="0.0927734" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_TreasureChest" type="22" />
+                    <attribute id="U1" value="0.000976563" type="6" />
+                    <attribute id="U2" value="0.0927734" type="6" />
+                    <attribute id="V1" value="0.0947266" type="6" />
+                    <attribute id="V2" value="0.186523" type="6" />
+                </node>
+            </children>
+        </node>
+    </region>
+    <region id="TextureAtlasInfo">
+        <node id="root">
+            <children>
+                <node id="TextureAtlasIconSize">
+                    <attribute id="Height" value="48" type="4" />
+                    <attribute id="Width" value="48" type="4" />
+                </node>
+                <node id="TextureAtlasPath">
+                    <attribute id="Path" value="Assets/Textures/Icons/PIP_UI_Icons_48x.dds" type="20" />
+                    <attribute id="UUID" value="3f97c3f3-cb51-4983-acc0-72f3baff9480" type="22" />
+                </node>
+                <node id="TextureAtlasTextureSize">
+                    <attribute id="Height" value="512" type="4" />
+                    <attribute id="Width" value="512" type="4" />
+                </node>
+            </children>
+        </node>
+    </region>
+</save>

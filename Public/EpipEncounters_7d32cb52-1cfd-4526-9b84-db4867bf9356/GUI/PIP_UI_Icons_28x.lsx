@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<save>
+    <header version="2" />
+    <version major="3" minor="6" revision="6" build="0" />
+    <region id="IconUVList">
+        <node id="root">
+            <children>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_AP_Simple_Empty" type="22" />
+                    <attribute id="U1" value="0.111328" type="6" />
+                    <attribute id="U2" value="0.216797" type="6" />
+                    <attribute id="V1" value="0.00195313" type="6" />
+                    <attribute id="V2" value="0.107422" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_ActionPoint_Bordered" type="22" />
+                    <attribute id="U1" value="0.00195313" type="6" />
+                    <attribute id="U2" value="0.107422" type="6" />
+                    <attribute id="V1" value="0.00195313" type="6" />
+                    <attribute id="V2" value="0.107422" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_Armor_Bordered" type="22" />
+                    <attribute id="U1" value="0.220703" type="6" />
+                    <attribute id="U2" value="0.326172" type="6" />
+                    <attribute id="V1" value="0.00195313" type="6" />
+                    <attribute id="V2" value="0.107422" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_Armor_Magic" type="22" />
+                    <attribute id="U1" value="0.330078" type="6" />
+                    <attribute id="U2" value="0.435547" type="6" />
+                    <attribute id="V1" value="0.00195313" type="6" />
+                    <attribute id="V2" value="0.107422" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_Armor_Physical" type="22" />
+                    <attribute id="U1" value="0.439453" type="6" />
+                    <attribute id="U2" value="0.544922" type="6" />
+                    <attribute id="V1" value="0.00195313" type="6" />
+                    <attribute id="V2" value="0.107422" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_Jewelry_Bordered" type="22" />
+                    <attribute id="U1" value="0.548828" type="6" />
+                    <attribute id="U2" value="0.654297" type="6" />
+                    <attribute id="V1" value="0.00195313" type="6" />
+                    <attribute id="V2" value="0.107422" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_Rune_Bordered" type="22" />
+                    <attribute id="U1" value="0.658203" type="6" />
+                    <attribute id="U2" value="0.763672" type="6" />
+                    <attribute id="V1" value="0.00195313" type="6" />
+                    <attribute id="V2" value="0.107422" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_SourcePoint_Bordered" type="22" />
+                    <attribute id="U1" value="0.767578" type="6" />
+                    <attribute id="U2" value="0.873047" type="6" />
+                    <attribute id="V1" value="0.00195313" type="6" />
+                    <attribute id="V2" value="0.107422" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_Weapon_Bordered" type="22" />
+                    <attribute id="U1" value="0.876953" type="6" />
+                    <attribute id="U2" value="0.982422" type="6" />
+                    <attribute id="V1" value="0.00195313" type="6" />
+                    <attribute id="V2" value="0.107422" type="6" />
+                </node>
+            </children>
+        </node>
+    </region>
+    <region id="TextureAtlasInfo">
+        <node id="root">
+            <children>
+                <node id="TextureAtlasIconSize">
+                    <attribute id="Height" value="28" type="4" />
+                    <attribute id="Width" value="28" type="4" />
+                </node>
+                <node id="TextureAtlasPath">
+                    <attribute id="Path" value="Assets/Textures/Icons/PIP_UI_Icons_28x.dds" type="20" />
+                    <attribute id="UUID" value="06f50ce6-2066-4c8c-8977-78f4ebf40d82" type="22" />
+                </node>
+                <node id="TextureAtlasTextureSize">
+                    <attribute id="Height" value="256" type="4" />
+                    <attribute id="Width" value="256" type="4" />
+                </node>
+            </children>
+        </node>
+    </region>
+</save>

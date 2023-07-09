@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<save>
+    <header version="2" />
+    <version major="3" minor="6" revision="6" build="0" />
+    <region id="IconUVList">
+        <node id="root">
+            <children>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_FramedGem_Blue" type="22" />
+                    <attribute id="U1" value="0.00195313" type="6" />
+                    <attribute id="U2" value="0.154297" type="6" />
+                    <attribute id="V1" value="0.00195313" type="6" />
+                    <attribute id="V2" value="0.154297" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_FramedGem_Green" type="22" />
+                    <attribute id="U1" value="0.158203" type="6" />
+                    <attribute id="U2" value="0.310547" type="6" />
+                    <attribute id="V1" value="0.00195313" type="6" />
+                    <attribute id="V2" value="0.154297" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_FramedGem_Red" type="22" />
+                    <attribute id="U1" value="0.314453" type="6" />
+                    <attribute id="U2" value="0.466797" type="6" />
+                    <attribute id="V1" value="0.00195313" type="6" />
+                    <attribute id="V2" value="0.154297" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_FramedGem_Yellow" type="22" />
+                    <attribute id="U1" value="0.470703" type="6" />
+                    <attribute id="U2" value="0.623047" type="6" />
+                    <attribute id="V1" value="0.00195313" type="6" />
+                    <attribute id="V2" value="0.154297" type="6" />
+                </node>
+            </children>
+        </node>
+    </region>
+    <region id="TextureAtlasInfo">
+        <node id="root">
+            <children>
+                <node id="TextureAtlasIconSize">
+                    <attribute id="Height" value="40" type="4" />
+                    <attribute id="Width" value="40" type="4" />
+                </node>
+                <node id="TextureAtlasPath">
+                    <attribute id="Path" value="Assets/Textures/Icons/PIP_UI_Icons_40x.dds" type="20" />
+                    <attribute id="UUID" value="7d2bf512-7c48-435d-879d-7b7a35692dc5" type="22" />
+                </node>
+                <node id="TextureAtlasTextureSize">
+                    <attribute id="Height" value="256" type="4" />
+                    <attribute id="Width" value="256" type="4" />
+                </node>
+            </children>
+        </node>
+    </region>
+</save>
