@@ -140,13 +140,15 @@ end
 
 ---Returns the combat ID and team ID of char, if any.
 ---@param char Character
----@return integer?, integer? -- The combat ID and team ID. Nil if the character is not in combat. This is different from the osi query, which returns a reserved value.
+---@return integer?, integer? -- The combat ID and team ID. `nil` if the character is not in combat. This is different from the osi query, which returns a reserved value.
 function Character.GetCombatID(char)
-    local status = char:GetStatusByType("COMBAT") ---@type EclStatusCombat
+    local status = char:GetStatusByType("COMBAT") ---@cast status EclStatusCombat|EsvStatusCombat
     local id, teamID
 
     if status then
-        id, teamID = status.CombatTeamId.CombatId, status.CombatTeamId.CombinedId
+        local teamInfo = Ext.IsClient() and status.CombatTeamId or status.OwnerTeamId
+
+        id, teamID = teamInfo.CombatId, teamInfo.CombinedId
     end
 
     return id, teamID
