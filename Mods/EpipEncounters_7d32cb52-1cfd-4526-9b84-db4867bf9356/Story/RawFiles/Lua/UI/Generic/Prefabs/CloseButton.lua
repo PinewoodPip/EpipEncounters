@@ -26,7 +26,9 @@ function CloseButton.Create(ui, id, parent, style)
     local instance = ButtonPrefab.Create(ui, id, parent, style or CloseButton.DEFAULT_STYLE) ---@type GenericUI_Prefab_CloseButton
 
     instance.Events.Pressed:Subscribe(function (_) -- Hide UI
-        ui:Hide()
+        Ext.OnNextTick(function (_)
+            ui:Hide()
+        end)
     end)
 
     return instance
