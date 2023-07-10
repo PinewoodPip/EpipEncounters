@@ -146,7 +146,7 @@ function Character.GetCombatID(char)
     local id, teamID
 
     if status then
-        local teamInfo = Ext.IsClient() and status.CombatTeamId or status.OwnerTeamId
+        local teamInfo = status.OwnerTeamId
 
         id, teamID = teamInfo.CombatId, teamInfo.CombinedId
     end
