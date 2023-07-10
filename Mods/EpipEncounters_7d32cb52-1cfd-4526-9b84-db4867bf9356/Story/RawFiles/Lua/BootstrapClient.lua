@@ -362,6 +362,7 @@ LOAD_ORDER = {
 
     "Epip/Client/NameTypoFixes.lua",
     "Epip/Client/ExamineImprovements.lua",
+    "Epip/Client/ControllerMouse.lua",
 
     {
         ScriptSet = "Epip/TooltipAdjustments",
