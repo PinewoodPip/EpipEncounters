@@ -356,6 +356,27 @@ function Character.IsSummon(char)
     return char:HasTag("SUMMON") -- Summon flag does not do what's expected.
 end
 
+---Returns whether char is sneaking.
+---@param char Character
+---@return boolean
+function Character.IsSneaking(char)
+    return char:GetStatus("SNEAKING") ~= nil
+end
+
+---Returns whether char is invisible - as in, has the INVISIBLE status.
+---@param char Character
+---@return boolean
+function Character.IsInvisible(char)
+    return char:GetStatus("INVISIBLE") ~= nil
+end
+
+---Returns whether char is sneaking or invisible.
+---@param char Character
+---@return boolean
+function Character.IsInStealth(char)
+    return Character.IsSneaking(char) or Character.IsInvisible(char)
+end
+
 ---Returns true if the character is dead.
 ---@param char Character
 ---@return boolean

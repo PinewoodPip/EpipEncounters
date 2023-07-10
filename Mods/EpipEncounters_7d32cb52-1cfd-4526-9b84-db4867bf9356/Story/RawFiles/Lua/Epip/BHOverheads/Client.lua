@@ -61,7 +61,7 @@ function BHOverheads._GetCharacters()
         if hook.IsEligible then
             local pos = Vector.Create(char.WorldPos)
             local dist = pos - originPos
-    
+
             if Vector.GetLength(dist) <= BHOverheads.SEARCH_RADIUS then
                 table.insert(chars, char)
             end
@@ -100,6 +100,11 @@ BHOverheads.Hooks.IsEligible:Subscribe(function (ev)
 
     eligible = eligible and not Character.IsDead(char)
     eligible = eligible and Character.IsInCombat(char)
+
+    -- Stealthed non-player characters are ineligible.
+    if not Character.IsPlayer(char) then
+        eligible = eligible and not Character.IsInStealth(char)
+    end
 
     ev.IsEligible = eligible
 end, {StringID = "DefaultImplementation"})
