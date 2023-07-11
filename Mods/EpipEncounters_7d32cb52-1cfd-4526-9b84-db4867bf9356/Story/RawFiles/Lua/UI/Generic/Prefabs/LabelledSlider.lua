@@ -3,12 +3,14 @@ local Generic = Client.UI.Generic
 local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 
 ---@class GenericUI_Prefab_LabelledSlider : GenericUI_Prefab_FormElement
+---@field _MaxDecimals integer
 ---@field Slider GenericUI_Element_Slider
 ---@field LeftValueLabel GenericUI_Prefab_Text
 ---@field RightValueLabel GenericUI_Prefab_Text
 ---@field CurrentValueLabel GenericUI_Prefab_Text
 local Slider = {
     VALUE_LABEL_SIZE = Vector.Create(50, 30),
+    DEFAULT_MAX_DECIMALS = 2,
 
     Events = {
         HandleReleased = {}, ---@type Event<GenericUI_Element_Slider_Event_HandleReleased>
@@ -55,6 +57,7 @@ function Slider.Create(ui, id, parent, size, label, min, max, step)
     end)
 
     local currentValueLabel = TextPrefab.Create(ui, instance:PrefixID("CurrentValueLabel"), slider, "", "Center", instance.VALUE_LABEL_SIZE)
+    currentValueLabel:SetWordWrap(false)
 
     instance.Slider = slider
     instance.LeftValueLabel, instance.RightValueLabel = leftValueLabel, rightValueLabel
@@ -63,6 +66,7 @@ function Slider.Create(ui, id, parent, size, label, min, max, step)
     instance:SetMin(min)
     instance:SetMax(max)
     slider:SetStep(step)
+    instance:SetMaxDecimals(instance.DEFAULT_MAX_DECIMALS)
 
     sliderList:SetPositionRelativeToParent("Right")
 
@@ -92,12 +96,21 @@ function Slider:SetValue(value)
     self:_UpdateValueLabel()
 end
 
+---Sets the maximum amount of decimal digits to display within the value label.
+---Does not affect the possible range of values that can be set.
+---@param decimals integer
+function Slider:SetMaxDecimals(decimals)
+    self._MaxDecimals = decimals
+    self:_UpdateValueLabel()
+end
+
 ---Updates the label showing the current value, repositioning it to stay above the handle, like in vanilla OptionsSettings UI.
 function Slider:_UpdateValueLabel()
     local label = self.CurrentValueLabel
     local value = self.Slider:GetValue()
     local referenceElement = self.Slider:GetMovieClip().m_handle_mc
 
-    label:SetText(Text.RemoveTrailingZeros(value))
-    label:SetPosition(referenceElement.x - 7, referenceElement.y - 25)
+    label:SetText(Text.Round(value, self._MaxDecimals))
+    label:SetSize(label:GetTextSize():unpack())
+    label:SetPosition(referenceElement.x + 17 - (label:GetTextSize()[1] / 2), referenceElement.y - 25)
 end
