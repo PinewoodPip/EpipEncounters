@@ -129,7 +129,7 @@ function Text.Round(value, decimals)
     value = tostring(value)
     decimals = decimals or 0
 
-    local pattern = "^(%d*)%.?(%d*)$"
+    local pattern = "^(-?%d*)%.?(%d*)$"
     local wholeText, decimalsText = value:match(pattern)
     local output = wholeText
 
@@ -137,7 +137,7 @@ function Text.Round(value, decimals)
         decimalsText = string.sub(decimalsText, 1, decimals)
         output = output .. "." .. decimalsText
 
-        output = Text.RemoveTrailingZeros(output)
+        output = Text.RemoveTrailingZeros(tonumber(output))
     end
 
     return output
