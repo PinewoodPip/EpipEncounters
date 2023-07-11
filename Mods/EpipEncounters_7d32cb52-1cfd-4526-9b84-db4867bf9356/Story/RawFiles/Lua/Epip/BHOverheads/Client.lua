@@ -6,13 +6,13 @@ local BHOverheads = Epip.GetFeature("Feature_BHOverheads")
 BHOverheads._CurrentUIs = {} ---@type table<ComponentHandle, GenericUI_Instance>
 
 BHOverheads.INPUT_ACTION = "EpipEncounters_Feature_BHOverheads"
-BHOverheads.SEARCH_RADIUS = 20 -- Search radius for characters, centered on client character.
+BHOverheads.SEARCH_RADIUS = 20 -- Search radius for characters, centered on the camera position.
 
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
----Shows overheads for characters near the client character.
+---Shows overheads for characters near the camera.
 function BHOverheads.Show()
     local factory = BHOverheads._GetUIFactory()
     local chars = BHOverheads._GetCharacters()
@@ -46,8 +46,8 @@ end
 ---Returns the characters eligible for BH overheads.
 ---@return EclCharacter[]
 function BHOverheads._GetCharacters()
-    local clientChar = Client.GetCharacter()
-    local originPos = Vector.Create(clientChar.WorldPos)
+    local camera = Client.Camera.GetPlayerCamera() ---@cast camera EclGameCamera
+    local originPos = Vector.Create(camera.LookAt)
     local level = Entity.GetLevel()
     local levelID = Entity.GetLevelID(level)
     local chars = {}
