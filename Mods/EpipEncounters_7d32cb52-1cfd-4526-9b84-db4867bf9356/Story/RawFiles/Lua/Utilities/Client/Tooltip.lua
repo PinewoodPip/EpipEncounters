@@ -250,8 +250,8 @@ end
 
 ---@param tooltip TooltipLib_CustomFormattedTooltip
 function Tooltip.ShowCustomFormattedTooltip(tooltip)
-    local ui = Client.UI.Hotbar -- TODO replace once a better option becomes available.
-    local characterHandle = Client.UI.Hotbar:GetRoot().hotbar_mc.characterHandle
+    local ui = Tooltip._GetDefaultCustomTooltipUI()
+    local characterHandle = Ext.UI.HandleToDouble(Client.GetCharacter().Handle)
     local mouseX, mouseY = Client.GetMousePosition()
 
     tooltip.Position = tooltip.Position or Vector.Create(mouseX, mouseY)
@@ -265,7 +265,7 @@ end
 ---@param skillID string
 ---@param position Vector2D? Defaults to mouse position.
 function Tooltip.ShowSkillTooltip(char, skillID, position)
-    local ui = Client.UI.Hotbar -- TODO replace once a better option becomes available.
+    local ui = Tooltip._GetDefaultCustomTooltipUI()
     local mouseX, mouseY = Client.GetMousePosition()
 
     Tooltip._nextSkillTooltip = {
@@ -281,7 +281,7 @@ end
 ---@param item EclItem
 ---@param position Vector2D? Defaults to mouse position.
 function Tooltip.ShowItemTooltip(item, position)
-    local ui = Client.UI.Hotbar -- TODO replace once a better option becomes available.
+    local ui = Tooltip._GetDefaultCustomTooltipUI()
     local mouseX, mouseY = Client.GetMousePosition()
 
     Tooltip._nextItemTooltip = {
@@ -296,7 +296,7 @@ end
 ---@param status EclStatus
 ---@param position Vector2D? Defaults to mouse position.
 function Tooltip.ShowStatusTooltip(char, status, position)
-    local ui = Client.UI.Hotbar -- TODO replace once a better option becomes available.
+    local ui = Tooltip._GetDefaultCustomTooltipUI()
     local mouseX, mouseY = Client.GetMousePosition()
 
     Tooltip._nextTooltipPosition = position or Vector.Create(mouseX, mouseY)
@@ -306,13 +306,19 @@ function Tooltip.ShowStatusTooltip(char, status, position)
 end
 
 function Tooltip.HideTooltip()
-    local ui = Client.UI.Hotbar
+    local ui = Tooltip._GetDefaultCustomTooltipUI()
 
     ui:ExternalInterfaceCall("hideTooltip")
 
     Client.UI.Tooltip:GetRoot().removeTooltip()
 
     Tooltip._currentTooltipData = nil
+end
+
+---Returns the default UI to be used for displaying custom tooltips.
+---@return UIObject
+function Tooltip._GetDefaultCustomTooltipUI()
+    return Ext.UI.GetByType(Ext.UI.TypeID.containerInventory.Default)
 end
 
 ---@param ui UIObject
