@@ -174,7 +174,7 @@ function Manager:_Update()
             -- Hide leftover instances. Must be done after grid reposition
             for i=visibleStatusesCount+1,#self._StatusPrefabInstances,1 do
                 local instance = self._StatusPrefabInstances[i]
-    
+
                 instance:SetVisible(false)
             end
         end
@@ -186,11 +186,16 @@ function Manager:_Update()
         local playerInfoUI = PlayerInfo:GetUI()
         local pos = Vector.Create(playerInfoUI:GetPosition())
         local root = self.UI:GetRoot()
-    
-        self.UI:SetPosition(pos)
 
+        self.UI:SetPosition(pos)
         root.x = playerInfoWidget.x + self.FLASH_POSITION[1]
         root.y = playerInfoWidget.y + self.FLASH_POSITION[2]
+
+        -- Controller UI needs an offset for unknown reasons.
+        if Client.IsUsingController() then
+            root.x = root.x + 51
+            root.y = root.y + 30
+        end
     end
 end
 
