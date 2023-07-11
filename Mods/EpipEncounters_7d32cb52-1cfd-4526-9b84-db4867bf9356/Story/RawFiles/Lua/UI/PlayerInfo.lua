@@ -79,7 +79,8 @@ Epip.InitializeUI(Ext.UI.TypeID.playerInfo, "PlayerInfo", PlayerInfo)
 -- METHODS
 ---------------------------------------------
 
--- ID for this UI is different on controller, despite using the same swf.
+---ID for this UI is different on controller, despite using the same swf.
+---@override
 function PlayerInfo:GetUI()
     local isController = Client.IsUsingController()
     local id = Ext.UI.TypeID.playerInfo
@@ -138,7 +139,7 @@ end
 ---Toggles the visibility of status holders.
 ---@param visible boolean? Defaults to toggling.
 function PlayerInfo.ToggleStatuses(visible)
-    local players = PlayerInfo.Root.player_array
+    local players = PlayerInfo:GetRoot().player_array
 
     -- Default to inverting state
     if visible == nil then
@@ -155,7 +156,7 @@ end
 ---Toggles the visibility of summons.
 ---@param visible boolean? Defaults to toggling.
 function PlayerInfo.ToggleSummons(visible)
-    local players = PlayerInfo.Root.player_array
+    local players = PlayerInfo:GetRoot().player_array
 
     -- Default to inverting state
     visible = visible or not PlayerInfo.GetSummonsVisibility()
@@ -173,7 +174,7 @@ end
 ---TODO support disabling per player
 ---@return boolean
 function PlayerInfo.GetStatusesVisibility()
-    local players = PlayerInfo.Root.player_array
+    local players = PlayerInfo:GetRoot().player_array
 
     return players[0].statusHolder_mc.visible
 end
@@ -181,7 +182,7 @@ end
 ---Returns whether summons are visible.
 ---@return boolean
 function PlayerInfo.GetSummonsVisibility()
-    local players = PlayerInfo.Root.player_array
+    local players = PlayerInfo:GetRoot().player_array
 
     return players[0].summonContainer_mc.visible
 end
@@ -401,7 +402,7 @@ PlayerInfo:RegisterInvokeListener("updateStatuses", function (event, createIfDoe
     event.UI:GetRoot().ENABLE_SORTING = settingEnabled
     if not settingEnabled then return nil end
 
-    local root = PlayerInfo.Root
+    local root = PlayerInfo:GetRoot()
     local array = root.status_array
     local ascendingSort = Settings.GetSettingValue("Epip_PlayerInfo", "PlayerInfo_SortingFunction") == 2
 
@@ -516,8 +517,9 @@ end, "Before")
 
 -- Set some values on playerInfo for summon stretching to work
 Ext.Events.SessionLoaded:Subscribe(function()
-    PlayerInfo.UI = Ext.UI.GetByType(Client.UI.Data.UITypes.playerInfo)
-    PlayerInfo.Root = PlayerInfo.UI:GetRoot()
+    -- UI, Root fields are for backwards compatibility
+    PlayerInfo.UI = PlayerInfo:GetUI()
+    PlayerInfo.Root = PlayerInfo:GetRoot()
 
     PlayerInfo.Root.summonIconHeight = 60
     PlayerInfo.Root.summonIconWidth = 80
