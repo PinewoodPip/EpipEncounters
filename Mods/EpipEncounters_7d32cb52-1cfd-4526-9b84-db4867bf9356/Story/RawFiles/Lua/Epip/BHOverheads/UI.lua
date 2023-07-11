@@ -7,7 +7,9 @@ local V = Vector.Create
 local BHOverheads = Epip.GetFeature("Feature_BHOverheads")
 
 ---@class Feature_BHOverheads_UIFactory : Class
-local UIFactory = {}
+local UIFactory = {
+    _AvailableInstances = {}, ---@type table<string, boolean> Key is Generic UI instance ID. Value is `true` if the UI is not being used.
+}
 BHOverheads:RegisterClass("Feature_BHOverheads_UIFactory", UIFactory)
 
 UIFactory.UI_SIZE = V(100, 50)
@@ -18,16 +20,51 @@ UIFactory.ICON_SIZE = V(40, 40)
 UIFactory.FADED_ICON_ALPHA = 0.75 -- Alpha for when stack requirement for T3 is not met
 
 ---------------------------------------------
+-- CLASSES
+---------------------------------------------
+
+---@class Features.BHOverheads.UIFactory.Instance : GenericUI_Instance
+---@field BatteredIcon GenericUI_Element_IggyIcon
+---@field HarriedIcon GenericUI_Element_IggyIcon
+---@field CharacterHandle ComponentHandle? `nil` if the UI has no character set.
+
+---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
 ---Creates an overlay for a character.
 ---@param char EclCharacter
----@return GenericUI_Instance
+---@return Features.BHOverheads.UIFactory.Instance
 function UIFactory.Create(char)
-    local instanceID = "Epip_Feature_BHOverheads_" .. char.MyGuid .. "_" .. Text.GenerateGUID()
-    local instance = Generic.Create(instanceID)
-    instance._BHOverlayCharacterHandle = char.Handle
+    local instance = UIFactory._GetAvailableInstance() or UIFactory._Create()
+
+    BHOverheads:DebugLog("Assigning a UI to", char.DisplayName)
+    UIFactory._SetCharacter(instance, char)
+
+    return instance
+end
+
+---Disposes of a BH overhead UI.
+---@param ui Features.BHOverheads.UIFactory.Instance
+function UIFactory.Dispose(ui)
+    local instanceID = ui:GetID()
+
+    -- Stop the update loop and hide the UI
+    GameState.Events.RunningTick:Unsubscribe(instanceID)
+    ui:Hide()
+
+    UIFactory._AvailableInstances[instanceID] = true
+end
+
+---------------------------------------------
+-- PRIVATE METHODS
+---------------------------------------------
+
+---Creates a new instance of the UI.
+---@return Features.BHOverheads.UIFactory.Instance
+function UIFactory._Create()
+    local instanceID = "Epip_Feature_BHOverheads_" .. Text.GenerateGUID()
+    local instance = Generic.Create(instanceID) ---@cast instance Features.BHOverheads.UIFactory.Instance
     instance:TogglePlayerInput(false)
 
     local bg = instance:CreateElement("BG", "GenericUI_Element_TiledBackground")
@@ -38,10 +75,25 @@ function UIFactory.Create(char)
     local batteredIconElement = iconList:AddChild("Battered", "GenericUI_Element_IggyIcon")
     local harriedIconElement = iconList:AddChild("Harried", "GenericUI_Element_IggyIcon")
 
+    instance.BatteredIcon = batteredIconElement
+    instance.HarriedIcon = harriedIconElement
+
+    UIFactory._AvailableInstances[instanceID] = false
+
+    return instance
+end
+
+---Sets the character bound to an instance.
+---@param instance Features.BHOverheads.UIFactory.Instance
+---@param char EclCharacter
+function UIFactory._SetCharacter(instance, char)
+    instance.CharacterHandle = char.Handle
+
+    -- Start the update loop.
     GameState.Events.RunningTick:Subscribe(function (_)
         local uiObject = instance:GetUI()
         local clientChar = Client.GetCharacter()
-        local uiChar = Character.Get(instance._BHOverlayCharacterHandle)
+        local uiChar = Character.Get(instance.CharacterHandle)
         local pos = Vector.Create(uiChar.WorldPos)
         pos = pos + UIFactory.CHARACTER_POS_OFFSET
 
@@ -53,6 +105,8 @@ function UIFactory.Create(char)
         local harried = BatteredHarried.GetStacks(uiChar, "Harried")
         local batteredIcon = BatteredHarried.GetIcon("Battered", battered)
         local harriedIcon = BatteredHarried.GetIcon("Harried", harried)
+        local batteredIconElement = instance.BatteredIcon
+        local harriedIconElement = instance.HarriedIcon
 
         batteredIconElement:SetIcon(batteredIcon, UIFactory.ICON_SIZE:unpack())
         harriedIconElement:SetIcon(harriedIcon, UIFactory.ICON_SIZE:unpack())
@@ -61,14 +115,21 @@ function UIFactory.Create(char)
         local stacksNeededForTier3 = BatteredHarried.GetStacksNeededToInflictTier3(clientChar)
         batteredIconElement:SetAlpha(battered >= stacksNeededForTier3 and 1 or UIFactory.FADED_ICON_ALPHA)
         harriedIconElement:SetAlpha(harried >= stacksNeededForTier3 and 1 or UIFactory.FADED_ICON_ALPHA)
-    end, {StringID = instanceID})
-
-    return instance
+    end, {StringID = instance:GetID()})
 end
 
----Unitializes and destroys a BH overhead UI.
----@param ui GenericUI_Instance
-function UIFactory.Destroy(ui)
-    GameState.Events.RunningTick:Unsubscribe(ui:GetID())
-    ui:Destroy()
+---Returns an available instance from the pool, if any.
+---@return Features.BHOverheads.UIFactory.Instance?
+function UIFactory._GetAvailableInstance()
+    local instance = nil
+
+    for id,available in pairs(UIFactory._AvailableInstances) do
+        if available then
+            instance = Generic.GetInstance(id)
+            UIFactory._AvailableInstances[instance:GetID()] = false
+            break
+        end
+    end
+
+    return instance
 end

@@ -3,7 +3,7 @@ local Input = Client.Input
 
 ---@class Feature_BHOverheads
 local BHOverheads = Epip.GetFeature("Feature_BHOverheads")
-BHOverheads._CurrentUIs = {} ---@type table<ComponentHandle, GenericUI_Instance>
+BHOverheads._CurrentUIs = {} ---@type table<ComponentHandle, Features.BHOverheads.UIFactory.Instance>
 
 BHOverheads.INPUT_ACTION = "EpipEncounters_Feature_BHOverheads"
 BHOverheads.SEARCH_RADIUS = 20 -- Search radius for characters, centered on the camera position.
@@ -33,14 +33,27 @@ function BHOverheads.Show()
     BHOverheads:DebugLog(string.format("%s characters eligible", table.getKeyCount(BHOverheads._CurrentUIs)))
 end
 
----Destroys all related UIs.
+---Diposes of all related UIs.
 function BHOverheads.Hide()
     local factory = BHOverheads._GetUIFactory()
 
     for _,ui in pairs(BHOverheads._CurrentUIs) do
-        factory.Destroy(ui)
+        factory.Dispose(ui)
     end
+
     BHOverheads._CurrentUIs = {}
+end
+
+---Returns whether a character is eligible to have its B/H shown.
+---@see Feature_BHOverheads_Hook_IsEligible
+---@param char EclCharacter
+---@return boolean
+function BHOverheads.IsCharacterEligible(char)
+    local hook = BHOverheads.Hooks.IsEligible:Throw({
+        Character = char,
+        IsEligible = true,
+    })
+    return hook.IsEligible
 end
 
 ---Returns the characters eligible for BH overheads.
@@ -53,18 +66,11 @@ function BHOverheads._GetCharacters()
     local chars = {}
 
     for _,char in pairs(level.EntityManager.CharacterConversionHelpers.ActivatedCharacters[levelID]) do
-        local hook = BHOverheads.Hooks.IsEligible:Throw({
-            Character = char,
-            IsEligible = true,
-        })
+        local pos = Vector.Create(char.WorldPos)
+        local dist = pos - originPos
 
-        if hook.IsEligible then
-            local pos = Vector.Create(char.WorldPos)
-            local dist = pos - originPos
-
-            if Vector.GetLength(dist) <= BHOverheads.SEARCH_RADIUS then
-                table.insert(chars, char)
-            end
+        if Vector.GetLength(dist) <= BHOverheads.SEARCH_RADIUS and BHOverheads.IsCharacterEligible(char) then
+            table.insert(chars, char)
         end
     end
 
