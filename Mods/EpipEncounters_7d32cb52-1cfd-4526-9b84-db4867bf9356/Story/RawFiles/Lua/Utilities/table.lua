@@ -171,6 +171,25 @@ function table.filter(list, predicate)
     return newList
 end
 
+---Returns the first key-value pair that matches a predicate.
+---@generic K, V
+---@param tbl table<K, V>
+---@param predicate fun(k:K, v:V):boolean Should return `true` for the first pair to be returned.
+---@return K, V
+function table.getFirst(tbl, predicate)
+    local firstK, firstV = nil, nil
+
+    for k,v in pairs(tbl) do
+        if predicate(k, v) then
+            firstK = k
+            firstV = v
+            break
+        end
+    end
+
+    return firstK, firstV
+end
+
 ---Recursively copies the table onto a new one calling pairs() to get all values,
 ---without metatables nor keys that are skipped by any custom __pairs() or __ipairs() implementation.
 ---@param t table

@@ -55,6 +55,7 @@ LOAD_ORDER = {
             "Utilities/DataStructures/Main.lua",
             "Utilities/DataStructures/DefaultTable.lua",
             "Utilities/DataStructures/Set.lua",
+            "Utilities/DataStructures/ObjectPool.lua",
         },
     },
     {ScriptSet = "Utilities/Entity"},

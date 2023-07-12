@@ -1,5 +1,6 @@
 
 local BatteredHarried = EpicEncounters.BatteredHarried
+local ObjectPool = DataStructures.Get("ObjectPool")
 local Generic = Client.UI.Generic
 local V = Vector.Create
 
@@ -8,7 +9,7 @@ local BHOverheads = Epip.GetFeature("Feature_BHOverheads")
 
 ---@class Feature_BHOverheads_UIFactory : Class
 local UIFactory = {
-    _AvailableInstances = {}, ---@type table<string, boolean> Key is Generic UI instance ID. Value is `true` if the UI is not being used.
+    _InstancePool = ObjectPool.Create(), ---@type ObjectPool<Features.BHOverheads.UIFactory.Instance>
 }
 BHOverheads:RegisterClass("Feature_BHOverheads_UIFactory", UIFactory)
 
@@ -53,7 +54,7 @@ function UIFactory.Dispose(ui)
     GameState.Events.RunningTick:Unsubscribe(instanceID)
     ui:Hide()
 
-    UIFactory._AvailableInstances[instanceID] = true
+    UIFactory._InstancePool:Dispose(ui)
 end
 
 ---------------------------------------------
@@ -77,8 +78,6 @@ function UIFactory._Create()
 
     instance.BatteredIcon = batteredIconElement
     instance.HarriedIcon = harriedIconElement
-
-    UIFactory._AvailableInstances[instanceID] = false
 
     return instance
 end
@@ -121,15 +120,5 @@ end
 ---Returns an available instance from the pool, if any.
 ---@return Features.BHOverheads.UIFactory.Instance?
 function UIFactory._GetAvailableInstance()
-    local instance = nil
-
-    for id,available in pairs(UIFactory._AvailableInstances) do
-        if available then
-            instance = Generic.GetInstance(id)
-            UIFactory._AvailableInstances[instance:GetID()] = false
-            break
-        end
-    end
-
-    return instance
+    return UIFactory._InstancePool:Get()
 end
