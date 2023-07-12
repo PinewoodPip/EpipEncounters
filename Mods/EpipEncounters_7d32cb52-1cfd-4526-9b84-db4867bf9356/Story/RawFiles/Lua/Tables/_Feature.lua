@@ -4,6 +4,7 @@
 ---------------------------------------------
 
 ---@class Feature : Library
+---@field _EnabledFunctor (fun():boolean)?
 ---@field Disabled boolean
 ---@field REQUIRED_MODS table<GUID, string> The feature will be automatically disabled if any required mods are missing.
 ---@field FILEPATH_OVERRIDES table<string, string>
@@ -166,6 +167,16 @@ function Feature:Disable()
     end
 end
 
+---Returns a function that takes no parameters and returns whether the feature is enabled.
+---Intended for use with Event options.
+---@see Event_Options
+---@return fun():boolean
+function Feature:GetEnabledFunctor()
+    self._EnabledFunctor = self._EnabledFunctor or function () return self:IsEnabled() end
+
+    return self._EnabledFunctor
+end
+
 ---Called after a feature is initialized with Epip.AddFeature(),
 ---if it is not disabled.
 ---Override to run initialization routines.
@@ -182,7 +193,7 @@ end
 ---@return string
 function Feature:GetNamespace()
     return self.MOD_TABLE_ID .. "_" .. self.MODULE_ID
-end 
+end
 
 ---------------------------------------------
 -- SETTINGSLIB METHODS
