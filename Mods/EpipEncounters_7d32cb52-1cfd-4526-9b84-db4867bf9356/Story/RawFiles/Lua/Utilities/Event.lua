@@ -12,6 +12,8 @@ SubscribableEvent = {}
 ---@class Event_Options
 ---@field Priority number? Defaults to 100.
 ---@field Once boolean? If true, the listener will only fire once, then be unsubscribed.
+---@field StringID string Identifier for this listener. For use with `:Unsubscribe()`. 
+---@field EnabledFunctor (fun():boolean)? If present, the listener will only run if the functor returns `true`.
 
 ---@class Event_Params
 ---@field StopPropagation fun(self:Event_Params) Stop the event from continuing on to other registered listeners.
@@ -81,6 +83,7 @@ function SubscribableEvent:Subscribe(handler, opts, stringID)
 		Once = opts.Once or false,
 		Options = opts,
         StringID = stringID or opts.StringID,
+		EnabledFunctor = opts.EnabledFunctor,
 	}
 
 	self:DoSubscribe(sub)
@@ -90,7 +93,7 @@ end
 function SubscribableEvent:DoSubscribeBefore(node, sub)
 	sub.Prev = node.Prev
 	sub.Next = node
-	
+
 	if node.Prev ~= nil then
 		node.Prev.Next = sub
 	else
@@ -177,7 +180,7 @@ function SubscribableEvent:Unsubscribe(handlerIndex) -- TODO string ID
 
 		cur = cur.Next
 	end
-	
+
 	return false
 end
 
@@ -198,15 +201,19 @@ function SubscribableEvent:Throw(event)
 			break
 		end
 
-        local ok, result = xpcall(cur.Handler, debug.traceback, event)
-        if not ok then
-            Ext.PrintError("Error while dispatching event " .. self.Name .. ": ", result)
-        end
+		if cur.EnabledFunctor == nil or cur.EnabledFunctor() then
+			local ok, result = xpcall(cur.Handler, debug.traceback, event)
+			if not ok then
+				Ext.PrintError("Error while dispatching event " .. self.Name .. ": ", result)
+			end
 
-		if cur.Once then
-			local last = cur
-			cur = last.Next
-			self:RemoveNode(last)
+			if cur.Once then
+				local last = cur
+				cur = last.Next
+				self:RemoveNode(last)
+			else
+				cur = cur.Next
+			end
 		else
 			cur = cur.Next
 		end
