@@ -145,6 +145,7 @@ end
 
 function _Element:Destroy()
     self.UI:DestroyElement(self)
+    table.destroy(self)
 end
 
 ---@param eventType string

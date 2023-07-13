@@ -256,7 +256,7 @@ function Generic.Create(id)
     ui:RegisterCallListener("elementMouseOut", Generic.OnElementMouseOut)
     Generic.ForwardUICall(ui, "elementRightClick", "RightClick")
     Generic.ForwardUICall(ui, "elementTweenCompleted", "TweenCompleted", {"EventID"})
-    
+
     ui:RegisterCallListener("ShowElementTooltip", Generic.OnElementShowTooltip)
     -- ui:RegisterCallListener("viewportChanged", Generic.OnViewportChanged)
 

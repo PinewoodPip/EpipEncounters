@@ -35,6 +35,12 @@ package Elements
             this.list.addElement(mc, this.respositionAfterAdding);
         }
 
+        public override function OnChildRemoved(element:MovieClip) : *
+        {
+            delete this.childElements[element.stringID];
+            this.list.removeElement(this.list.content_array.indexOf(element));
+        }
+
         public function SetRepositionAfterAdding(reposition:Boolean) : *
         {
             this.respositionAfterAdding = reposition;

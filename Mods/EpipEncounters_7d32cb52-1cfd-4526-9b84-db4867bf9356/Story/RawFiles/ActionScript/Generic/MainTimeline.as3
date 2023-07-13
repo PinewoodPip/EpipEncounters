@@ -92,10 +92,7 @@ package arenaResult_fla
                 RecursivelyDestroyElement(element.childElements[key]);
             }
 
-            if (element.HasParent())
-            {
-                element.parentElement.RemoveChildElement(element);
-            }
+            element.CleanUp();
         }
 
         public function GetElementByID(id:String) : MovieClip

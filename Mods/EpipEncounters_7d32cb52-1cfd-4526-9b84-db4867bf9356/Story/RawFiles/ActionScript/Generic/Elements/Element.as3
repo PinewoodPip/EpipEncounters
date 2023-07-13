@@ -50,6 +50,8 @@ package Elements
             this.addEventListener(MouseEvent.ROLL_OUT, this.onElementMouseOut);
             this.addEventListener(MouseEvent.RIGHT_CLICK, this.onElementRightClick);
 
+            this.addEventListener(Event.REMOVED_FROM_STAGE, this.onRemovedFromStage);
+
             this._nextTweenToProperties = {};
         }
 
@@ -58,6 +60,23 @@ package Elements
             this.childElements[mc.stringID] = mc;
             this[mc.stringID] = mc;
             this.addChild(mc);
+        }
+
+        public function CleanUp() : *
+        {
+            ExternalInterface.call("elementDestroyed", this.stringID);
+
+            if (this.HasParent())
+            {
+                this.parentElement.OnChildRemoved(this);
+            }
+
+            this.removeEventListener(MouseEvent.MOUSE_DOWN, this.onElementMouseDown);
+            this.removeEventListener(MouseEvent.MOUSE_UP, this.onElementMouseUp);
+            this.removeEventListener(MouseEvent.ROLL_OVER, this.onElementMouseOver);
+            this.removeEventListener(MouseEvent.ROLL_OUT, this.onElementMouseOut);
+            this.removeEventListener(MouseEvent.RIGHT_CLICK, this.onElementRightClick);
+            this.removeEventListener(Event.REMOVED_FROM_STAGE, this.onRemovedFromStage);
         }
 
         public function SetChildIndex(childID:String, index:Number) : *
@@ -80,18 +99,11 @@ package Elements
                 this.setChildIndex(childElement, index);
             }
         }
-
-        public function RemoveChildElement(mc:MovieClip) : *
+        
+        public function OnChildRemoved(element:MovieClip) : *
         {
-            delete this.childElements[mc.stringID];
-            try // TODO investigate what the issue is with lists
-            {
-                this.removeChild(mc);
-            }
-            catch (error:Error)
-            {
-                
-            }
+            delete this.childElements[element.stringID];
+            this.removeChild(element);
         }
 
         public function HasParent() : Boolean
@@ -373,6 +385,11 @@ package Elements
         public function onElementRightClick(e:MouseEvent) : *
         {
             ExternalInterface.call("elementRightClick", this.stringID);
+        }
+
+        public function onRemovedFromStage(e:Event) : *
+        {
+            ExternalInterface.call("elementRemovedFromStage", this.stringID);
         }
 
         public function SetScrollRect(x:Number, y:Number, width:Number, height:Number) : *
