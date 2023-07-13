@@ -81,14 +81,23 @@ function _Element:AddChild(id, elementType)
     return self.UI:CreateElement(id, elementType, self)
 end
 
+---Returns the parent element.
+---@return GenericUI_Element
+function _Element:GetParent()
+    return self.UI:GetElementByID(self.ParentID)
+end
+
 ---@param element GenericUI_Element
 function _Element:RemoveChild(element)
+    if not element:GetParent() == self then
+        Generic:LogWarning("Attempted to remove child from wrong parent. " .. element.ID .. " from wrong parent " .. self.ID)
+    end
     self.UI:DestroyElement(element)
 end
 
 function _Element:_RegisterEvents()
     local _Templates = self.Events
-    
+
     self.Events = {}
 
     for id,tbl in pairs(_Templates) do
