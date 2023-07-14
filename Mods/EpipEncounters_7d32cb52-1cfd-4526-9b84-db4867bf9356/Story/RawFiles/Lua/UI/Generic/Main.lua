@@ -66,6 +66,12 @@ end
 ---@param element GenericUI_Element
 function _Instance:DestroyElement(element)
     local root = self:GetRoot()
+    local parent = element:GetParent()
+
+    if parent then
+        ---@diagnostic disable-next-line: invisible
+        parent:_UnregisterChild(element)
+    end
 
     root.DestroyElement(element.ID)
 end
@@ -117,14 +123,22 @@ function _Instance:CreateElement(id, elementType, parentID)
         ID = id,
         Type = elementType,
         ParentID = parentID or "",
+        _Children = {},
     }
     Inherit(element, elementTable)
 
     -- Map ID to lua element
     self.Elements[id] = element
 
+    ---@diagnostic disable: invisible
+    if parentID then
+        local parentElement = self:GetElementByID(parentID)
+        parentElement:_RegisterChild(element)
+    end
+
     element:_RegisterEvents()
     element:_OnCreation()
+    ---@diagnostic enable: invisible
 
     return element
 end

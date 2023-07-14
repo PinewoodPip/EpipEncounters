@@ -17,6 +17,7 @@ local Tooltip = Client.Tooltip
 ---@field UI GenericUI_Instance
 ---@field ID string
 ---@field ParentID string Empty string for elements in the root.
+---@field _Children GenericUI_Element[]
 ---@field Type string
 ---@field Tooltip (GenericUI_ElementTooltip|string)? Will be rendered upon the element being hovered. Strings are rendered as unformatted tooltips.
 ---@field SetPositionRelativeToParent fun(self:GenericUI_Element, position:GenericUI_Element_RelativePosition, horizontalOffset:number?, verticalOffset:number?)
@@ -33,6 +34,7 @@ _Element.Events = {
     MouseOut = {}, ---@type Event<GenericUI_Element_Event_MouseOut>
     RightClick = {}, ---@type Event<GenericUI_Element_Event_RightClick>
     TweenCompleted = {}, ---@type Event<GenericUI_Element_Event_TweenCompleted>
+    ChildAdded = {}, ---@type Event<GenericUI.Element.Events.ChildAdded>
 }
 
 ---TODO!
@@ -63,6 +65,9 @@ _Element.Events = {
 ---@class GenericUI_Element_Event_TweenCompleted
 ---@field EventID string
 
+---@class GenericUI.Element.Events.ChildAdded
+---@field Child GenericUI_Element
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
@@ -87,6 +92,12 @@ function _Element:GetParent()
     return self.UI:GetElementByID(self.ParentID)
 end
 
+---Returns the children of the element.
+---@return GenericUI_Element[]
+function _Element:GetChildren()
+    return self._Children
+end
+
 ---@param element GenericUI_Element
 function _Element:RemoveChild(element)
     if not element:GetParent() == self then
@@ -107,6 +118,26 @@ end
 
 ---Called after the element is created in flash. Override to run initialization routines.
 function _Element:_OnCreation() end
+
+---Adds a child element to track.
+---@package
+---@param child GenericUI_Element
+function _Element:_RegisterChild(child)
+    table.insert(self._Children, child)
+    self.Events.ChildAdded:Throw({
+        Child = child,
+    })
+end
+
+---Removes a child element to track.
+---@package
+---@param child GenericUI_Element
+function _Element:_UnregisterChild(child)
+    local index, _ = table.getFirst(self._Children, function (_, v)
+        return v == child
+    end)
+    table.remove(self._Children, index)
+end
 
 ---Sets whether the element should be horizontally centered in VerticalList and ScrollList.
 ---@param center boolean
