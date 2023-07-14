@@ -265,6 +265,7 @@ LOAD_ORDER = {
 
             "UI/Generic/Interfaces/Stylable.lua",
             "UI/Generic/Interfaces/Elementable.lua",
+            "UI/Generic/Interfaces/Container.lua",
 
             "UI/Generic/Prefabs/HotbarSlot.lua",
             "UI/Generic/Prefabs/Spinner.lua",
@@ -289,6 +290,8 @@ LOAD_ORDER = {
 
             "UI/Generic/Prefabs/CloseButton.lua",
             "UI/Generic/Prefabs/SearchBar.lua",
+
+            "UI/Generic/Prefabs/Containers/VerticalList.lua",
         },
     },
     -- {Script = "UI/Generic/Test.lua", WIP = true}, -- TEST!
