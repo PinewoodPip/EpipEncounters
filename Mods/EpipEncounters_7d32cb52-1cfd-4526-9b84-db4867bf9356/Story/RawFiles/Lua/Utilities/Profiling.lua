@@ -236,6 +236,34 @@ function Profiling.Report(id)
             table.insert(report, Text.Join(line, " "))
         end
 
+        -- Report subsessions
+        if session.SubSessions[1] then
+            local subSessionTypes = DefaultTable.Create({Amount = 0, TotalTime = 0}) ---@type table<string, {Amount:integer, TotalTime:integer}>
+
+            table.insert(report, Profiling._REPORT_DIVIDER)
+            table.insert(report, string.format("%d Subsessions", #session.SubSessions))
+
+            for _,subSession in ipairs(session.SubSessions) do
+                local record = subSessionTypes[subSession.ID]
+
+                record.Amount = record.Amount + 1
+                record.TotalTime = record.TotalTime + subSession:GetTotalTime()
+            end
+
+            for subSessionID,subSessionReport in pairs(subSessionTypes) do
+                local reportValues = {
+                    Text.AddPadding(subSessionID, 50, nil, "back"),
+                    string.format("Amount %d", subSessionReport.Amount),
+                    string.format("Total %dms", subSessionReport.TotalTime),
+                    string.format("Avg %0.2fms", subSessionReport.TotalTime / subSessionReport.Amount),
+                }
+                local line = {"     "}
+                for _,value in ipairs(reportValues) do
+                    table.insert(line, Text.AddPadding(value, 15, nil, "back"))
+                end
+                table.insert(report, Text.Join(line, " "))
+            end
+        end
         table.insert(report, Profiling._REPORT_DIVIDER)
     end
 
