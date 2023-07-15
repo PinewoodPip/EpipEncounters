@@ -531,6 +531,36 @@ Ext.RegisterNetListener("EPIPFeature_GlobalEvent", function(_, payload)
 end)
 
 ---------------------------------------------
+-- PROFILING
+---------------------------------------------
+
+---Starts a profiling session.
+---**Does nothing outside of Debug mode.**
+---@param id string Session ID.
+function Library:StartProfiling(id)
+    if self.IS_DEBUG then
+        Profiling.Start(self:GetPackagePrefix() .. id)
+    end
+end
+
+---Adds a step to the current profiling session.
+---**Does nothing outside of Debug mode.**
+---@param stepID string
+function Library:AddProfilingStep(stepID)
+    if self.IS_DEBUG then
+        Profiling.Step(stepID) -- No prefix necessary
+    end
+end
+
+---Ends the current profiling session.
+---**Does nothing outside of Debug mode.**
+function Library:EndProfiling()
+    if self.IS_DEBUG then
+        Profiling.End()
+    end
+end
+
+---------------------------------------------
 -- SETUP
 ---------------------------------------------
 
