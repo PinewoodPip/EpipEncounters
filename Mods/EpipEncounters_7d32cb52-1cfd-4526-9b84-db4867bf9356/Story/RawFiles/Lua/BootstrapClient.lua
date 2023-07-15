@@ -612,6 +612,7 @@ LOAD_ORDER = {
             "Epip/Codex/Sections/Skills.lua",
         },
     },
+    {Script = "Epip/Codex/Sections/Artifacts.lua", RequiresEE = true},
 
     "Epip/Compatibility/MajoraFashionSins/Client.lua",
     "Epip/Compatibility/PortableRespecMirror/Client.lua",

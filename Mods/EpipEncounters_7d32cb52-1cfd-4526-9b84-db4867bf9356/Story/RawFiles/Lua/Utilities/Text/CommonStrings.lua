@@ -330,6 +330,11 @@ Text.CommonStrings.Polymorph = Text.RegisterTranslatedString({
 -- KEYWORDS
 ---------------------------------------------
 
+Text.CommonStrings.Keyword = Text.RegisterTranslatedString({
+   Handle = "hae4f0f05geeb8g4aaagabc1gb990717dd33e",
+   Text = "Keyword",
+})
+
 Text.CommonStrings.Abeyance = Text.RegisterTranslatedString({
    Handle = "h8069d8d4gbc27g47a0ga413g3c90f7b3a9ea",
    Text = "Abeyance",
@@ -362,6 +367,10 @@ Text.CommonStrings.Occultist = Text.RegisterTranslatedString({
    Handle = "h8fde1eb5g49cdg43d4g9a15g4e33a2847f23",
    Text = "Occultist",
 })
+Text.CommonStrings.Disintegrate = Text.RegisterTranslatedString({
+   Handle = "h6eb4b775gdf93g4701g92b7g0ec21ed88442",
+   Text = "Disintegrate",
+})
 Text.CommonStrings.Paucity = Text.RegisterTranslatedString({
    Handle = "h4e09e95aga08bg4250g821bg910ba2bef9ca",
    Text = "Paucity",
@@ -389,6 +398,10 @@ Text.CommonStrings.ViolentStrikes = Text.RegisterTranslatedString({
 Text.CommonStrings.VitalityVoid = Text.RegisterTranslatedString({
    Handle = "h25fa3d4fg6833g4bb5ga16eg33b2fa3d3d2e",
    Text = "Vitality Void",
+})
+Text.CommonStrings.VolatileArmor = Text.RegisterTranslatedString({
+   Handle = "h921878e4ge51ag4c8bg9485g0eb1e2f211fb",
+   Text = "Volatile Armor",
 })
 Text.CommonStrings.Voracity = Text.RegisterTranslatedString({
    Handle = "h1fbb9977g36ffg4bc6g80f4gb3ce632a38f2",
