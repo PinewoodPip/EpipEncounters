@@ -81,6 +81,7 @@ LOAD_ORDER = {
 
     {ScriptSet = "Utilities/Combat"},
     "Utilities/Texture.lua",
+    "Utilities/Profiling.lua",
     "Utilities/Client/Pointer.lua",
 
     "Data/Game.lua", -- TODO move stuff out of it into appropriate scripts

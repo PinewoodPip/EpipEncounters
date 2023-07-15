@@ -11,6 +11,9 @@
 ---@alias bitfield integer
 ---@alias TranslatedStringHandle string
 ---@alias ModTableID string|"EpipEncounters"
+---@alias monotonictimestamp integer
+
+---@alias UIObjectHandle ComponentHandle
 
 ---@alias ClientGameObject EclCharacter|EclItem
 

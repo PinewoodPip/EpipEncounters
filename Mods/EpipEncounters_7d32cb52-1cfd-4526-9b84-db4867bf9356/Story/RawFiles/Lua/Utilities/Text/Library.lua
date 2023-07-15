@@ -262,16 +262,22 @@ function Text.Contains(str, pattern)
     return str:find(pattern) ~= nil
 end
 
----Adds padding characters to the front of a string to meet a minimum length.
+---Adds padding characters to a string to meet a minimum length.
 ---@param str string
 ---@param minLength integer
----@param paddingCharacter string? Defaults to `""`
+---@param paddingCharacter string? Defaults to `" "`
+---@param direction ("front"|"back")? Defaults to `"front"`.
 ---@return string
-function Text.AddPadding(str, minLength, paddingCharacter)
-    paddingCharacter = paddingCharacter or ""
+function Text.AddPadding(str, minLength, paddingCharacter, direction)
+    paddingCharacter = paddingCharacter or " "
+    direction = direction or "front"
 
     while #str < minLength do
-        str = paddingCharacter .. str
+        if direction == "front" then
+            str = paddingCharacter .. str
+        else
+            str = str .. paddingCharacter
+        end
     end
 
     return str

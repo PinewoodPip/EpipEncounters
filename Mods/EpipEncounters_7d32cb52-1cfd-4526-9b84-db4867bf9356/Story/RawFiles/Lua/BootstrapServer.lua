@@ -92,6 +92,7 @@ LOAD_ORDER = {
 
     {ScriptSet = "Utilities/Combat"},
     "Utilities/Texture.lua",
+    "Utilities/Profiling.lua",
     {ScriptSet = "Utilities/Artifact", RequiresEE = true,},
 
     -- "Data/Game.lua",
