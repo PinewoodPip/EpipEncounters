@@ -1,7 +1,24 @@
 
+local Set = DataStructures.Get("DataStructures_Set")
+
 ---@class ArtifactLib : Feature
 Artifact = {
+    _ItemTemplateGUIDMap = {}, ---@type table<GUID, string> Maps non-prefixed template GUID to artifact ID.
+    _RuneTemplateGUIDMap = {}, ---@type table<GUID, string> Maps non-prefixed template GUID to artifact ID.
+
     EQUIPPED_POWERS_USERVAR = "EquippedArtifacts",
+
+    -- Item slots that have artifacts.
+    ---@type DataStructures_Set<Enum>
+    ITEM_SLOTS = Set.Create({
+        Ext.Enums.ItemSlot.Amulet,
+        Ext.Enums.ItemSlot.Boots,
+        Ext.Enums.ItemSlot.Breast,
+        Ext.Enums.ItemSlot.Gloves,
+        Ext.Enums.ItemSlot.Ring,
+        Ext.Enums.ItemSlot.Shield,
+        Ext.Enums.ItemSlot.Weapon,
+    }),
 
     ---@type table<string, ArtifactLib_ArtifactDefinition>
     ARTIFACTS = {
@@ -397,7 +414,7 @@ Artifact = {
             Slot = "Weapon",
             ItemTemplate = "AMER_UNI_Goldforge_Mace_2H_40cce3a4-dd7f-4992-a0d9-3b0a27246a4d",
             RuneTemplate = "AMER_UNI_Goldforge_Rune_8bc09d16-75c7-4e5a-830d-fab9acfa1a11",
-            KeywordActivators = {},
+            KeywordActivators = {"VolatileArmor"},
             KeywordMutators = {"Prosperity"},
             DescriptionHandle = "h360ae6d8g7f28g468dg884dg503b0b498ada",
         },
@@ -730,7 +747,7 @@ Artifact = {
             Slot = "Weapon",
             ItemTemplate = "AMER_UNI_RodOfAbeyance_Wand_dccb9e34-1c3c-4faa-99e6-1e7fdceded1d",
             RuneTemplate = "AMER_UNI_RodOfAbeyance_Rune_fc2de115-7044-4424-8eea-6b26895e0dd5",
-            KeywordActivators = {},
+            KeywordActivators = {"VolatileArmor"},
             KeywordMutators = {"Abeyance"},
             DescriptionHandle = "h84bc4e85g2fa4g4728gb6f5g60bb321473f6",
         },
@@ -967,9 +984,6 @@ Artifact:RegisterUserVariable(Artifact.EQUIPPED_POWERS_USERVAR, {
 ---@field DescriptionHandle TranslatedStringHandle
 ---@field KeywordActivators Keyword[]
 ---@field KeywordMutators Keyword[]
----@field GetName fun(self):string
----@field GetDescription fun(self):string
----@field GetPowerTooltip fun(self):TooltipLib_Element[]
 local _ArtifactDef = {}
 
 ---Returns the artifact's name.
@@ -985,7 +999,7 @@ function _ArtifactDef:GetDescription()
 end
 
 ---Returns a full tooltip showing the artifact's name and power.
----@return string
+---@return TooltipLib_Element[]
 function _ArtifactDef:GetPowerTooltip()
     local tooltip = {
         {
@@ -1000,9 +1014,15 @@ function _ArtifactDef:GetPowerTooltip()
         {
             Type = "ItemRarity",
             Label = Text.Format("Artifact Power", {Color = Item.RARITY_COLORS.ARTIFACT})
-        }
+        },
     }
     return tooltip
+end
+
+---Returns whether the artifact has a keyword activator or mutator.
+---@param keyword Keyword
+function _ArtifactDef:HasKeyword(keyword)
+    return table.contains(self.KeywordActivators, keyword) or table.contains(self.KeywordMutators, keyword)
 end
 
 ---------------------------------------------
@@ -1026,8 +1046,36 @@ function Artifact.RegisterArtifact(data)
 
     Inherit(data, _ArtifactDef)
     Artifact.ARTIFACTS[data.ID] = data
+    Artifact._RuneTemplateGUIDMap[Text.RemoveGUIDPrefix(data.RuneTemplate)] = data.ID
+    Artifact._ItemTemplateGUIDMap[Text.RemoveGUIDPrefix(data.ItemTemplate)] = data.ID
 
     return data
+end
+
+---Returns whether the party owns an artifact.
+---@param id string
+function Artifact.IsOwnedByParty(id)
+    local sourceChar = Ext.IsClient() and Client.GetCharacter() or Character.Get(Osiris.CharacterGetHostCharacter())
+    local members = Character.GetPartyMembers(sourceChar)
+    local owned = false
+
+    for _,member in ipairs(members) do
+        if Artifact.IsEquipped(member, id) then
+            owned = true
+            goto End
+        end
+
+        for _,itemGUID in ipairs(member:GetInventoryItems()) do
+            local item = Item.Get(itemGUID)
+            if Artifact._RuneTemplateGUIDMap[item.RootTemplate.Id] == id then
+                owned = true
+                goto End
+            end
+        end
+    end
+    ::End::
+
+    return owned
 end
 
 ---------------------------------------------
