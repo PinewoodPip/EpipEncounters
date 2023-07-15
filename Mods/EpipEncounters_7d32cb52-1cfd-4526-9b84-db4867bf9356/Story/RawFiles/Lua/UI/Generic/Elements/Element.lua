@@ -328,11 +328,15 @@ function _Element:SetTooltip(tooltipType, tooltip)
 
         targetElement.Events.MouseOver:Subscribe(function (_)
             Tooltip.ShowSimpleTooltip(tooltip)
-        end)
+        end, {StringID = "_Tooltip"})
     elseif tooltipType == "Skill" then
         targetElement.Events.MouseOver:Subscribe(function (_)
             Tooltip.ShowSkillTooltip(Client.GetCharacter(), tooltip)
-        end)
+        end, {StringID = "_Tooltip"})
+    elseif tooltipType == "Custom" then
+        targetElement.Events.MouseOver:Subscribe(function (_)
+            Tooltip.ShowCustomFormattedTooltip(tooltip)
+        end, {StringID = "_Tooltip"})
     else
         Generic:LogError("FormElement:SetTooltip: unsupported tooltip type " .. tooltipType)
     end
