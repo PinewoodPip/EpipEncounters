@@ -13,6 +13,7 @@ local V = Vector.Create
 ---@field _ClearAfterDrag boolean
 ---@field _AutoUpdateDelay number In seconds.
 ---@field _AutoUpdateRemainingDelay number In seconds.
+---@field _RequiredFeatures GenericUI.Prefabs.HotbarSlot.RequiredFeatures
 local Slot = {
     ID = nil, ---@type string
     SlotElement = nil, ---@type GenericUI_Element_Slot
@@ -46,6 +47,10 @@ Generic.RegisterPrefab("GenericUI_Prefab_HotbarSlot", Slot)
 ---------------------------------------------
 -- CLASSES
 ---------------------------------------------
+
+---@class GenericUI.Prefabs.HotbarSlot.RequiredFeatures
+---@field CooldownAnimations boolean? Defaults to `false`.
+---@field ActiveAnimation boolean? Defaults to `false`.
 
 ---@alias GenericUI_Prefab_HotbarSlot_Object_Type "None"|"Skill"|"Item"|"Action"|"Template"
 
@@ -105,8 +110,10 @@ end
 ---@param ui GenericUI_Instance
 ---@param id string
 ---@param parent GenericUI_Element
+---@param requiredFeatures GenericUI.Prefabs.HotbarSlot.RequiredFeatures? Defaults to empty table.
 ---@return GenericUI_Prefab_HotbarSlot
-function Slot.Create(ui, id, parent)
+function Slot.Create(ui, id, parent, requiredFeatures)
+    requiredFeatures = requiredFeatures or {}
     ---@type GenericUI_Prefab_HotbarSlot
     local obj = Slot:_Create(ui, id)
     obj._CanDrag = false
@@ -115,6 +122,7 @@ function Slot.Create(ui, id, parent)
     obj._AutoUpdateDelay = 0.1
     obj._AutoUpdateRemainingDelay = obj._AutoUpdateDelay
     obj._Usable = true
+    obj._RequiredFeatures = requiredFeatures
 
     obj.SlotElement = ui:CreateElement(id, "GenericUI_Element_Slot", parent)
     local slot = obj.SlotElement
@@ -262,12 +270,22 @@ function Slot:SetEnabled(enabled)
 end
 
 ---Sets the cooldown displayed on the slot.
+---Requires `CooldownAnimations` to be enabled.
 ---@param cooldown number In turns.
 ---@param playRefreshAnimation boolean? Defaults to `false`.
 function Slot:SetCooldown(cooldown, playRefreshAnimation)
-    local slot = self.SlotElement
+    if self._RequiredFeatures.CooldownAnimations then
+        self.SlotElement:SetCooldown(cooldown, playRefreshAnimation)
+    end
+end
 
-    slot:SetCooldown(cooldown, playRefreshAnimation)
+---Sets whether the slot is active.
+---Requires `ActiveAnimation` to be enabled.
+---@param active boolean
+function Slot:SetActive(active)
+    if self._RequiredFeatures.ActiveAnimation then
+        self.SlotElement:SetActive(active)
+    end
 end
 
 ---Sets whether the slot can be interacted with to use its object.
@@ -456,7 +474,7 @@ function Slot:_OnTick(ev)
             end
         end
     
-        slot:SetActive(isPreparingSkill)
+        self:SetActive(isPreparingSkill)
     end
 end
 

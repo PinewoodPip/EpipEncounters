@@ -91,7 +91,7 @@ local HotbarGroup = {
 
 ---@return GenericUI_Prefab_HotbarSlot
 function HotbarGroup:_AddSlot()
-    local slot = HotbarSlot.Create(self.UI, self.GUID .. "_Slot_" .. self._SlotsAllocated, self._Container)
+    local slot = HotbarSlot.Create(self.UI, self.GUID .. "_Slot_" .. self._SlotsAllocated, self._Container, {CooldownAnimations = true, ActiveAnimation = true})
     slot:SetCanDragDrop(true)
     slot.SlotElement:SetSizeOverride(self.SLOT_SIZE, self.SLOT_SIZE)
     self._Slots[self._SlotsAllocated] = slot

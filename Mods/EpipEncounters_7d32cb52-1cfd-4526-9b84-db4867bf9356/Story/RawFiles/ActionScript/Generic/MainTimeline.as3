@@ -6,6 +6,7 @@ package arenaResult_fla
     import flash.text.TextField;
     import flash.utils.Dictionary;
     import flash.utils.getDefinitionByName;
+    import flash.utils.Dictionary;
     
     public dynamic class MainTimeline extends MovieClip
     {
@@ -14,6 +15,7 @@ package arenaResult_fla
         public var isDragging:Boolean;
         public var hasTooltip:Boolean;
         public var curTooltip:Number;
+        public var elementClasses:Dictionary;
         public const keepCustomInScreen:Boolean = true;
 
         // -----------------
@@ -27,6 +29,7 @@ package arenaResult_fla
             addFrameScript(0,this.frame1);
 
             this.elements = new Dictionary();
+            this.elementClasses = new Dictionary();
             this.AddElement("Root", "Empty", "");
         }
 
@@ -38,11 +41,27 @@ package arenaResult_fla
 
         public function AddElement(id:String, elementType:String, parentID:String = "") : *
         {
-            var elementClass:Class = getDefinitionByName("Elements." + elementType) as Class;
+            // trace("creating");
+            // var startDate:Date = new Date();
+            // var date:Date = null;
+            var elementClass:Class = this.elementClasses[elementType];
+            if (elementClass == null)
+            {
+                elementClass = getDefinitionByName("Elements." + elementType) as Class;
+                this.elementClasses[elementType] = elementClass;
+                
+                if (elementClass == null)
+                {
+                    trace("AddElement: Invalid elementType: " + elementType);
+                    return;
+                }
+            }
 
-            if (elementClass == null) {trace("AddElement: Invalid elementType: " + elementType); return;}
-
+            // date = new Date();
+            // trace(date.getTime() - startDate.getTime());
             var mc:MovieClip = new elementClass();
+            // date = new Date();
+            // trace(date.getTime() - startDate.getTime());
             var parent:MovieClip = this.GetElementByID(parentID);
 
             if (mc && parent)
@@ -62,6 +81,8 @@ package arenaResult_fla
             {
                 trace("AddElement: element creation or parent fetch failed");
             }
+            // date = new Date();
+            // trace(date.getTime() - startDate.getTime());
         }
 
         public function AddChildElement(mc:MovieClip) : *

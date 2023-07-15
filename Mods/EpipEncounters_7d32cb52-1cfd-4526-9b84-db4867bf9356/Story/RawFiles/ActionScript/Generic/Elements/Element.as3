@@ -58,7 +58,6 @@ package Elements
         public function AddChildElement(mc:MovieClip) : *
         {
             this.childElements[mc.stringID] = mc;
-            this[mc.stringID] = mc;
             this.addChild(mc);
         }
 

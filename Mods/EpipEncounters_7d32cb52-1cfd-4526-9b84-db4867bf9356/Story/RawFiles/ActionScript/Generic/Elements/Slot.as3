@@ -19,8 +19,10 @@ package Elements
         // public var unavailable_mc:MovieClip;
         // public var frame_mc:MovieClip;
         // public var source_frame_mc:Shape;
-        public var activeHighlight_mc:MovieClip;
         public var highlight_mc:MovieClip;
+        public var refreshSlot_mc:MovieClip = null;
+        public var cd_mc:MovieClip = null;
+        public var activeHighlight_mc:MovieClip = null;
 
         public var oldCD:Number = 0;
         private var _dragStartX:Number = 0;
@@ -40,29 +42,14 @@ package Elements
             this.SetLabel("");
             this.SetSourceBorder(false);
             this.SetWarning(false);
-            this.SetActive(false);
             this.SetHighlighted(false);
-
-            this.cd_mc.rot = -90;
-            this.cd_mc.cellSize = 50;
-            this.cd_mc.visible = false;
-
-            this.refreshSlot_mc.stop();
-            this.refreshSlot_mc.visible = false;
-            this.refreshSlot_mc.addFrameScript(73, this.onRefreshSlotEnd);
 
             this.unavailable_mc.visible = false;
 
             this.addEventListener(MouseEvent.MOUSE_DOWN, this.onMouseDown);
             this.addEventListener(MouseEvent.MOUSE_UP, this.onMouseUp);
-
-            this.SetCooldown(0);
             
-            this.amount_mc.amount_txt.filters = textEffect.createStrokeFilter(1050888,1.4,1,1.8,3);
-
-            this.addFrameScript(0, this.frame1);
-
-            // TODO highlight on hover
+            //this.amount_mc.amount_txt.filters = textEffect.createStrokeFilter(1050888,1.4,1,1.8,3);
         }
 
         public override function get elementType() : String
@@ -72,6 +59,15 @@ package Elements
 
         public function SetActive(active:Boolean) : *
         {
+            // Create the animation on demand
+            if (this.activeHighlight_mc == null)
+            {
+                this.activeHighlight_mc = new ActiveSlotAnimation();
+                this.addChild(this.activeHighlight_mc);
+                this.activeHighlight_mc.x = 26;
+                this.activeHighlight_mc.y = 26;
+            }
+
             this.activeHighlight_mc.visible = active;
         }
 
@@ -96,6 +92,12 @@ package Elements
 
         public function SetCooldown(cooldown:Number, param2:Boolean = true) : *
         {
+            // Enable animation on demand
+            if (this.cd_mc == null)
+            {
+                this.EnableCooldownAnimation();
+            }
+
             if(cooldown == -1) // Set oldCD to 0 so the refresh animation doesn't play.
             {
                 this.oldCD = 0;
@@ -167,6 +169,35 @@ package Elements
         {
             // Changing icon size does not affect click area. TODO center it
         }
+        
+        public function EnableCooldownAnimation() : *
+        {
+            if (this.cd_mc != null)
+            {
+                return;
+            }
+            this.cd_mc = new SlotCooldown();
+            this.addChild(this.cd_mc);
+            this.setChildIndex(this.cd_mc, 2);
+            this.cd_mc.x = 2;
+            this.cd_mc.y = 2;
+
+            this.refreshSlot_mc = new RefreshSlotAnimation();
+            this.addChild(this.refreshSlot_mc);
+            this.setChildIndex(this.cd_mc, 9); // TODO doublecheck
+            this.refreshSlot_mc.x = 27;
+            this.refreshSlot_mc.y = 27;
+
+            this.cd_mc.rot = -90;
+            this.cd_mc.cellSize = 50;
+            this.cd_mc.visible = false;
+
+            this.refreshSlot_mc.stop();
+            this.refreshSlot_mc.visible = false;
+            this.refreshSlot_mc.addFrameScript(73, this.onRefreshSlotEnd);
+
+            this.SetCooldown(0);
+        }
 
         public override function onElementMouseUp(e:MouseEvent) : *
         {
@@ -207,11 +238,6 @@ package Elements
         {
             this.refreshSlot_mc.stop();
             this.refreshSlot_mc.visible = false;
-        }
-        
-        private function frame1() : *
-        {
-            
         }
     }
 }

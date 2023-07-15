@@ -1,0 +1,11 @@
+package
+{
+    import flash.display.MovieClip;
+    public dynamic class RefreshSlotAnimation extends MovieClip
+    {
+        public function RefreshSlotAnimation()
+        {
+            super();
+        }
+    }
+}
