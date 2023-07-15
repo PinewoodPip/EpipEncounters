@@ -47,14 +47,18 @@ end
 
 ---Re-renders items onto the UI.
 function UI.RenderItems()
+    QuickInventory:StartProfiling("RenderItems")
+
     -- Cleanup previous state.
     UI._CurrentItemCount = 0
     UI.ItemsList:GetMovieClip().list.m_scrollbar_mc.resetHandle()
 
     local items = QuickInventory.GetItems()
+    QuickInventory:AddProfilingStep("GetItems")
 
     for _,item in ipairs(items) do
         UI._RenderItem(item)
+        QuickInventory:AddProfilingStep("ItemRender")
     end
 
     for i=UI._CurrentItemCount+1,UI._GetTotalSlots(),1 do
@@ -62,6 +66,8 @@ function UI.RenderItems()
 
         slot.SlotElement:SetVisible(false)
     end
+    QuickInventory:AddProfilingStep("SetVisibility")
+    QuickInventory:EndProfiling()
 end
 
 ---Returns the total amount of slot objects available.
@@ -86,11 +92,14 @@ end
 ---@param item EclItem
 function UI._RenderItem(item)
     local element = UI._GetHotbarSlot(UI._CurrentItemCount + 1)
+    QuickInventory:AddProfilingStep("GetElement")
     local meetsRequirements = Stats.MeetsRequirements(Client.GetCharacter(), item.StatsId, true, item)
+    QuickInventory:AddProfilingStep("MeetsRequirements")
     element:SetItem(item)
     element:SetUpdateDelay(-1)
     element:SetEnabled(meetsRequirements)
     element.SlotElement:SetVisible(true)
+    QuickInventory:AddProfilingStep("UpdateElement")
 
     UI._CurrentItemCount = UI._CurrentItemCount + 1
 end
@@ -101,10 +110,11 @@ end
 ---@param itemIndex integer
 ---@return GenericUI_Prefab_HotbarSlot
 function UI._GetHotbarSlot(listIndex, itemIndex)
+    local itemsPerRow = UI.GetItemsPerRow()
     if itemIndex == nil then
         local globalItemIndex = listIndex
-        listIndex = ((globalItemIndex - 1) // UI.GetItemsPerRow()) + 1
-        itemIndex = globalItemIndex - (listIndex - 1) * UI.GetItemsPerRow()
+        listIndex = ((globalItemIndex - 1) // itemsPerRow) + 1
+        itemIndex = globalItemIndex - (listIndex - 1) * itemsPerRow
     end
 
     local hasAddedLists = false
@@ -115,10 +125,10 @@ function UI._GetHotbarSlot(listIndex, itemIndex)
 
         table.insert(UI._Lists, newList)
         local list = UI._Lists[#UI._Lists]
-        list:SetSizeOverride(V(UI.ITEM_SIZE[1] * UI.GetItemsPerRow() + (UI.GetItemsPerRow() - 1) * UI.ELEMENT_SPACING, UI.ITEM_SIZE[2]))
+        list:SetSizeOverride(V(UI.ITEM_SIZE[1] * itemsPerRow + (itemsPerRow - 1) * UI.ELEMENT_SPACING, UI.ITEM_SIZE[2]))
 
         -- Insert hotbar slots to the new list
-        for i=1,UI.GetItemsPerRow(),1 do
+        for i=1,itemsPerRow,1 do
             local element = HotbarSlot.Create(UI, string.format("%s_%s", #UI._Lists, i), list)
             element:SetCanDrag(true, false) -- Can drag items out of the slot, without removing them from it.
         
@@ -133,6 +143,7 @@ function UI._GetHotbarSlot(listIndex, itemIndex)
             UI._Slots[#UI._Lists][i] = element
 
             element.SlotElement:SetSizeOverride(UI.ITEM_SIZE)
+            QuickInventory:AddProfilingStep("Create Slot")
         end
 
         hasAddedLists = true
@@ -143,6 +154,7 @@ function UI._GetHotbarSlot(listIndex, itemIndex)
             list:RepositionElements()
         end
         UI.ItemsList:RepositionElements()
+        QuickInventory:AddProfilingStep("RepositionElements")
     end
 
     return UI._Slots[listIndex][itemIndex]
