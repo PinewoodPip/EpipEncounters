@@ -459,12 +459,12 @@ Game.Tooltip.RegisterListener("Status", nil, function(char, status, tooltip)
 end)
 
 -- Show skill IDs.
-Game.Tooltip.RegisterListener("Skill", nil, function(char, skill, tooltip)
+TooltipLib.Hooks.RenderSkillTooltip:Subscribe(function (ev)
     if Epip.IsDeveloperMode() then
-        tooltip:AppendElement({
+        ev.Tooltip:InsertElement({
             Type = "Engraving",
             Label = Text.Format("StatsId: %s", {
-                FormatArgs = {skill},
+                FormatArgs = {ev.SkillID},
                 Color = Color.LARIAN.GREEN,
             })
         })
