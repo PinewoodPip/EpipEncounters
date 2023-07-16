@@ -12,7 +12,7 @@ local Set = DataStructures.Get("DataStructures_Set")
 local CommonStrings = Text.CommonStrings
 local V = Vector.Create
 
----@type Feature
+---@class Features.Codex.Artifacts : Feature
 local Artifacts = {
     ARTIFACT_BLACKLIST = Set.Create({
         "Artifact_Deck",
@@ -34,7 +34,7 @@ local Artifacts = {
         IsArtifactValid = {}, ---@type Event<Features.Codex.Artifacts.Hooks.IsArtifactValid>
     },
 }
-Epip.RegisterFeature("Codex_Artifacts", Artifacts)
+Epip.RegisterFeature("Codex.Artifacts", Artifacts)
 local TSK = Artifacts.TranslatedStrings
 
 ---------------------------------------------
@@ -55,7 +55,7 @@ Artifacts.Settings.SlotFilter = Artifacts:RegisterSetting("SlotFilter", {
     DefaultValue = "Any",
     ---@type SettingsLib_Setting_Choice_Entry[]
     Choices = {
-        {ID = "Any", NameHandle = Text.CommonStrings.Any.Handle},
+        {ID = "Any", NameHandle = CommonStrings.Any.Handle},
         {ID = "Helmet", NameHandle = CommonStrings.Helmet.Handle},
         {ID = "Breast", NameHandle = CommonStrings.Breast.Handle},
         {ID = "Gloves", NameHandle = CommonStrings.Gloves.Handle},
@@ -181,7 +181,7 @@ end
 function Section:_SetArtifact(index, artifact)
     local slot = self._Slots[index]
     if not slot then
-        slot = HotbarSlot.Create(Codex.UI, artifact.ID, self.Grid)
+        slot = HotbarSlot.Create(Codex.UI, "Artifacts_Slot_" .. tostring(index), self.Grid)
         self._Slots[index] = slot
     end
 
