@@ -1067,7 +1067,7 @@ function Artifact.IsOwnedByParty(id)
 
         for _,itemGUID in ipairs(member:GetInventoryItems()) do
             local item = Item.Get(itemGUID)
-            if Artifact._RuneTemplateGUIDMap[item.RootTemplate.Id] == id then
+            if Artifact._RuneTemplateGUIDMap[item.RootTemplate.Id] == id or Artifact._ItemTemplateGUIDMap[item.RootTemplate.Id] == id then
                 owned = true
                 goto End
             end
