@@ -136,6 +136,16 @@ Text.CommonStrings.NoFilter = Text.RegisterTranslatedString({
    Handle = "h45a75b5agbe29g438dgbf17g6a9362cd7eed",
    Text = "No Filter",
 })
+Text.CommonStrings.LevelRange = Text.RegisterTranslatedString({
+   Handle = "h45ce9d99gf8b6g4d3dgb6dagdbc9c03d3287",
+   Text = "Level %d-%d",
+   ContextDescription = "Ex. 'Level 10-15' (levels from 10 to 15)",
+})
+Text.CommonStrings.LevelFloor = Text.RegisterTranslatedString({
+   Handle = "h7d163e38ga9d5g410fg814agcafb2e2844ec",
+   Text = "Level %d+",
+   ContextDescription = "Ex. 'Level 10+'",
+})
 
 ---------------------------------------------
 -- BRANDING

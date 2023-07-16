@@ -618,6 +618,7 @@ LOAD_ORDER = {
     "Epip/Compatibility/PortableRespecMirror/Client.lua",
     "Epip/Compatibility/RendalNPCArmor/Client.lua",
     "Epip/Compatibility/VisitorsFromCyseal/Client.lua",
+    "Epip/Compatibility/DerpysArtifactTiers/Client.lua",
 
     -- Should be loaded last
     {ScriptSet = "Epip/DebugMenu", Developer = true,},

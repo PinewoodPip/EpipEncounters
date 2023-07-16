@@ -6,6 +6,7 @@ Mod = {
         EE_ORIGINS = "d2d724e6-13c2-47c3-b356-19c3ff8bc622",
         EPIP_ENCOUNTERS = "7d32cb52-1cfd-4526-9b84-db4867bf9356",
         EE_DERPY = "0701303b-719f-40e6-b554-3f6515b08268",
+        EE_DERPY_ARTIFACT_TIERS = "4d81ef20-b01a-4e2a-b504-a76d77451e5e",
 
         GB_8AP = "9b45f7e5-d4e2-4fc2-8ef7-3b8e90a5256c",
         GB_SPRINT = "ec27251d-acc0-4ab8-920e-dbc851e79bb4",
