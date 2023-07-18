@@ -13,44 +13,8 @@ local Actions = {
 
     NET_MSG_ACTION_USED = "Feature_HotbarActions_NetMsg_ActionUsed",
 
-    -- TODO extract TSKs
     ---@type Feature_HotbarActions_Action[]
-    ACTIONS = {
-        {
-            ID = "EPIP_Journal",
-            Name = "Journal",
-            Icon = "hotbar_icon_announcement",
-        },
-        {
-            ID = "EPIP_UserRest",
-            Name = "Bedroll Rest",
-            Icon = "hotbar_icon_laureate",
-            DefaultIndex = 9,
-        },
-        {
-            ID = "EPIP_TogglePartyLink",
-            Name = "Chain/Unchain",
-            Icon = "hotbar_icon_infinity",
-            DefaultIndex = 10,
-            Cooldown = 1,
-        },
-        {
-            ID = "EE_Meditate",
-            Name = "Meditate",
-            Icon = "hotbar_icon_nongachatransmute",
-            DefaultIndex = 11,
-            RequiresEE = true,
-            Cooldown = 3,
-        },
-        {
-            ID = "EE_SourceInfuse",
-            Name = "Source Infuse",
-            Icon = "hotbar_icon_sp",
-            DefaultIndex = 12,
-            RequiresEE = true,
-            Cooldown = 1,
-        },
-    },
+    ACTIONS = {},
 
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
@@ -61,11 +25,6 @@ local Actions = {
     Hooks = {},
 }
 Epip.RegisterFeature("HotbarActions", Actions)
-
--- Generate string ID -> action map
-for _,action in ipairs(Actions.ACTIONS) do
-    Actions._ActionsByID[action.ID] = action
-end
 
 ---------------------------------------------
 -- EVENTS/HOOKS
@@ -101,4 +60,78 @@ end
 ---@return Feature_HotbarActions_Action
 function Actions.GetAction(id)
     return Actions._ActionsByID[id]
+end
+
+---Registers an action.
+---@param action Feature_HotbarActions_Action
+function Actions.RegisterAction(action)
+    Actions.ACTIONS[action.ID] = action
+    -- Update string ID -> action map
+    Actions._ActionsByID[action.ID] = action
+
+    -- Register the action into the Hotbar API
+    if Ext.IsClient() then
+        local Hotbar = Client.UI.Hotbar
+
+        if not action.RequiresEE or EpicEncounters.IsEnabled() then
+            Hotbar.RegisterAction(action.ID, action)
+
+            -- Place the action at a default index
+            if action.DefaultIndex then
+                Hotbar.SetHotkeyAction(action.DefaultIndex, action.ID)
+            end
+
+            -- Wrap the execute event
+            Hotbar.RegisterActionListener(action.ID, "ActionUsed", function (char, _)
+                Actions.TryExecuteAction(char, action)
+            end)
+        end
+    end
+end
+
+---------------------------------------------
+-- SETUP
+---------------------------------------------
+
+-- Register default actions
+-- TODO extract TSKs
+local actions = {
+    {
+        ID = "EPIP_Journal",
+        Name = "Journal",
+        Icon = "hotbar_icon_announcement",
+    },
+    {
+        ID = "EPIP_UserRest",
+        Name = "Bedroll Rest",
+        Icon = "hotbar_icon_laureate",
+        DefaultIndex = 9,
+    },
+    {
+        ID = "EPIP_TogglePartyLink",
+        Name = "Chain/Unchain",
+        Icon = "hotbar_icon_infinity",
+        DefaultIndex = 10,
+        Cooldown = 1,
+    },
+    {
+        ID = "EE_Meditate",
+        Name = "Meditate",
+        Icon = "hotbar_icon_nongachatransmute",
+        DefaultIndex = 11,
+        RequiresEE = true,
+        Cooldown = 3,
+    },
+    {
+        ID = "EE_SourceInfuse",
+        Name = "Source Infuse",
+        Icon = "hotbar_icon_sp",
+        DefaultIndex = 12,
+        RequiresEE = true,
+        Cooldown = 1,
+    },
+}
+
+for _,action in ipairs(actions) do
+    Actions.RegisterAction(action)
 end

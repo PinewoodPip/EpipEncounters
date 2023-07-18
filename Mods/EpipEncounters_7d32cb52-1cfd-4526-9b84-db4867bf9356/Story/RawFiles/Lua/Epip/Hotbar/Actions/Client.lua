@@ -1,6 +1,4 @@
 
-local Hotbar = Client.UI.Hotbar
-
 ---@class Feature_HotbarActions
 local Actions = Epip.GetFeature("Feature_HotbarActions")
 
@@ -92,23 +90,3 @@ Client.Input.Events.ActionExecuted:Subscribe(function (ev)
         Actions.TryExecuteAction(ev.Character, "EE_SourceInfuse")
     end
 end)
-
----------------------------------------------
--- SETUP
----------------------------------------------
-
--- Register actions.
-for _,action in ipairs(Actions.ACTIONS) do
-    if not action.RequiresEE or EpicEncounters.IsEnabled() then
-        Hotbar.RegisterAction(action.ID, action)
-
-        -- Place the action at a default index
-        if action.DefaultIndex then
-            Hotbar.SetHotkeyAction(action.DefaultIndex, action.ID)
-        end
-
-        Hotbar.RegisterActionListener(action.ID, "ActionUsed", function (char, _)
-            Actions.TryExecuteAction(char, action)
-        end)
-    end
-end
