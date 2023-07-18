@@ -147,8 +147,21 @@ function Manager:_UpdateStatusInstance(index, status)
     end)
 end
 
+---Returns whether the display should be visible.
+---@return boolean
+function Manager:_IsVisible()
+    return PlayerInfo:IsVisible()
+end
+
 ---Updates the statuses on the display.
 function Manager:_Update()
+    local visible = self:_IsVisible()
+    if visible then
+        self.UI:Show()
+    else
+        self.UI:Hide()
+        return -- Do not perform an update in this case
+    end
     local char = Character.Get(self.CharacterHandle)
 
     self._Delay = self._Delay - 1
