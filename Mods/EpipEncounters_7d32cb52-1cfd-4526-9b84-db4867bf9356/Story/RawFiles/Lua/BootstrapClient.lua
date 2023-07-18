@@ -615,7 +615,7 @@ LOAD_ORDER = {
     {Script = "Epip/Codex/Sections/Artifacts.lua", RequiresEE = true},
 
     "Epip/Compatibility/MajoraFashionSins/Client.lua",
-    "Epip/Compatibility/PortableRespecMirror/Client.lua",
+    "Epip/Compatibility/PortableRespecMirror/Shared.lua",
     "Epip/Compatibility/RendalNPCArmor/Client.lua",
     "Epip/Compatibility/VisitorsFromCyseal/Client.lua",
     "Epip/Compatibility/DerpysArtifactTiers/Client.lua",

@@ -195,7 +195,6 @@ LOAD_ORDER = {
     },
     
     {ScriptSet = "Epip/OverheadFixes"},
-    
     {
         ScriptSet = "Epip/AscensionShortcuts",
     },
@@ -293,6 +292,9 @@ LOAD_ORDER = {
     {ScriptSet = "Epip/DebugCheats/Cheats/CopyPosition"},
     {ScriptSet = "Epip/DebugCheats/Cheats/SpawnItemTemplate"},
     {ScriptSet = "Epip/DebugCheats/Cheats/TeleportTo"},
+
+    -- Compatibility
+    "Epip/Compatibility/PortableRespecMirror/Shared.lua",
 
     {Script = "Epip/PersonalScripts/Shared.lua", Developer = true},
 }
