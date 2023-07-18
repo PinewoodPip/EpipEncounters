@@ -9,6 +9,20 @@ local Overhead = {
     UI = nil,
     Root = nil,
 
+    ---@enum UI.Overhead.Type
+    FLASH_OVERHEAD_TYPES = {
+        OVERHEAD = 0, -- Used for CharacterStatusText.
+        DAMAGE = 1,
+        DIALOG = 2,
+        CHARHOLDER = 3,
+    },
+    FLASH_ADDOH_ARRAY_TEMPLATE = {
+        "Type",
+        "CharacterHandle",
+        "Label",
+        "Duration",
+    },
+
     DEFAULT_OVERHEADS_SIZE = 19, -- TODO implement in swf
     DEFAULT_DAMAGE_OVERHEADS_SIZE = 24,
     OVERHEAD_DAMAGE_TEMPLATE = "<font size=\"%d\" color=\"%s\">+</font><font size=\"%d\" color=\"%s\">%d</font>",
@@ -27,9 +41,37 @@ local Overhead = {
         StatusOverheadsDurationMultiplier = true,
         DamageOverheadsSize = true,
         OverheadsSize = true,
-    }
+    },
+
+    USE_LEGACY_EVENTS = false,
+    USE_LEGACY_HOOKS = false,
+
+    Hooks = {
+        RequestOverheads = {}, ---@type Event<UI.Overhead.Hooks.RequestOverheads>
+    },
 }
 Epip.InitializeUI(Client.UI.Data.UITypes.overhead, "Overhead", Overhead)
+
+---------------------------------------------
+-- CLASSES
+---------------------------------------------
+
+---@class UI.Overhead.OverheadRequest
+---@field Type UI.Overhead.Type
+---@field CharacterHandle integer
+---@field Label string
+---@field Duration integer Has different meaning for CHARHOLDER. TODO
+
+---------------------------------------------
+-- EVENTS/HOOKS
+---------------------------------------------
+
+---@class UI.Overhead.Hooks.RequestOverheads
+---@field Overheads UI.Overhead.OverheadRequest[] Hookable.
+
+---------------------------------------------
+-- METHODS
+---------------------------------------------
 
 -- TODO call for normal overhead
 
@@ -90,6 +132,18 @@ end
 ---------------------------------------------
 -- LISTENERS
 ---------------------------------------------
+
+-- Hook overhead requests.
+Overhead:RegisterInvokeListener("updateOHs", function (ev)
+    local array = ev.UI:GetRoot().addOH_array
+    local contents = Client.Flash.ParseArray(array, Overhead.FLASH_ADDOH_ARRAY_TEMPLATE, false) ---@type UI.Overhead.OverheadRequest[]
+
+    contents = Overhead.Hooks.RequestOverheads:Throw({
+        Overheads = contents,
+    }).Overheads
+
+    Client.Flash.EncodeArray(array, Overhead.FLASH_ADDOH_ARRAY_TEMPLATE, contents)
+end, "Before")
 
 Settings.Events.SettingValueChanged:Subscribe(function (ev)
     if ev.Setting.ModTable == "Epip_Overheads" and Overhead.SETTINGS[ev.Setting.ID] then
