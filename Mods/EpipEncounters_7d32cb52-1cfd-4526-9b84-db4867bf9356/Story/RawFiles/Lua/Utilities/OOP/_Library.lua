@@ -1,16 +1,20 @@
 
-
 ---------------------------------------------
 -- Utility class for libraries.
 -- Provides logging and Observer implementations.
 ---------------------------------------------
 
+local Print = Ext.Utils.Print
+local PrintWarning = Ext.Utils.PrintWarning
+local PrintError = Ext.Utils.PrintError
+
 ---@class Library : Class
 ---@field UserVariables table<string, UserVarsLib_UserVar> Initializable.
 ---@field _Classes table<string, Class> Subclasses registered for this library.
----@field protected __ModTable string
----@field protected __LoggingLevel Library_LoggingLevel
----@field protected __IsDebug boolean
+---@field __ID string
+---@field __ModTable string
+---@field __LoggingLevel Library_LoggingLevel
+---@field __IsDebug boolean
 ----@field TranslatedStrings table<TranslatedStringHandle, Library_TranslatedString> Initializable.
 ----@field Events table<string, Event> Initializable. -- These 2 fields cannot be included as they break auto-complete.
 ----@field Hooks table<string, Event> Initializable.
@@ -49,13 +53,12 @@ OOP.RegisterClass("Library", Library)
 function Library.Create(modTable, id, data)
     local library = data
 
-    ---@diagnostic disable: invisible
     data.UserVariables = data.UserVariables or {}
+    data.__ID = id
     data.__ModTable = modTable
-    data.__name = id
+    data.__name = id -- DEPRECATED! TODO
     data.__IsDebug = false
     data.__LoggingLevel = Library.LOGGING_LEVELS.ALL
-    ---@diagnostic enable: invisible
 
     local lib = OOP.GetClass("Library"):__Create(data) ---@cast lib Library
 
@@ -285,7 +288,7 @@ end
 ---@vararg any
 function Library:DebugLog(...)
     if self:IsDebug() then
-        Utilities._Log(self.__name, "", ...)
+        Print(self:_GetLoggingPrefix(), ...)
     end
 end
 
@@ -294,7 +297,7 @@ end
 ---@param ... any
 function Library:LogMethod(method, ...)
     if self:IsDebug() then
-        Utilities._Log(self.__name, string.format("%s():", method), ...)
+        Print(self:_GetLoggingPrefix(), string.format("%s():", method), ...)
     end
 end
 
@@ -307,10 +310,10 @@ function Library:Dump(msg)
 end
 
 ---Log a value.
----@param msg any
-function Library:Log(msg)
+---@param ... any
+function Library:Log(...)
     if self.__LoggingLevel <= self.LOGGING_LEVELS.ALL then
-        Utilities.Log(self.__name, msg)
+        Print(self:_GetLoggingPrefix(), ...)
     end
 end
 
@@ -318,15 +321,16 @@ end
 ---@param ... any
 function Library:RawLog(...)
     if self.__LoggingLevel <= self.LOGGING_LEVELS.ALL then
-        print(...)
+        Print(...)
     end
 end
 
 ---Log a warning.
----@param msg any
-function Library:LogWarning(msg)
+---Requires logging level to be set to WARN or lower.
+---@param ... any
+function Library:LogWarning(...)
     if self.__LoggingLevel <= self.LOGGING_LEVELS.WARN then
-        Utilities.LogWarning(self.__name, msg)
+        PrintWarning(self:_GetLoggingPrefix(), ...)
     end
 end
 
@@ -336,10 +340,16 @@ function Library:LogNotImplemented(methodName)
     self:LogWarning("Not implemented: " .. methodName)
 end
 
+---Throws a "Not implemented" error. Use as a placeholder.
+---@param methodName string
+function Library:ThrowNotImplemented(methodName)
+    self:Error(methodName, "Not implemented")
+end
+
 ---Log an error.
----@param msg any
-function Library:LogError(msg)
-    Utilities.LogError(self.__name, msg)
+---@param ... any
+function Library:LogError(...)
+    PrintError(self:_GetLoggingPrefix(), ...)
 end
 
 ---Throws an error prefixed by the thrower method name.
@@ -347,7 +357,17 @@ end
 function Library:Error(method, ...)
     local params = {...}
     local str = Text.Join(params, " ")
-    error(Text.Format("%s(): %s", {FormatArgs = {method, str}}))
+    error(string.format("%s %s(): %s", {
+        self:_GetLoggingPrefix(),
+        method,
+        str
+    }))
+end
+
+---Returns the prefix to use for logging messages.
+---@return string
+function Library:_GetLoggingPrefix()
+    return " [" .. self.__ID:upper() .. "]" -- Extra space at start to quickly tell Epip logging apart from others
 end
 
 ---------------------------------------------
