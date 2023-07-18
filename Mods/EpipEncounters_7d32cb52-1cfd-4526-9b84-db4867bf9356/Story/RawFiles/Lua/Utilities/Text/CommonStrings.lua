@@ -514,6 +514,23 @@ Text.CommonStrings.Skills = Text.RegisterTranslatedString({
    Handle = "h14674f13g78c9g49ecgac6dgbf7a95039189",
    Text = "Skills",
 })
+Text.CommonStrings.Journal = Text.RegisterTranslatedString({
+   Handle = "h64beeb05g019ag4a0agb151g974864cc5625",
+   Text = "Journal",
+})
+
+---------------------------------------------
+-- EPIC ENCOUNTERS
+---------------------------------------------
+
+Text.CommonStrings.Meditate = Text.RegisterTranslatedString({
+   Handle = "h6ac3a705g41f6g43d9g9d45ge53900932b94",
+   Text = "Meditate",
+})
+Text.CommonStrings.SourceInfuse = Text.RegisterTranslatedString({
+   Handle = "h3a1d4228ga393g44d8g8588ga5a2d81ca956",
+   Text = "Source Infuse",
+})
 
 ---------------------------------------------
 -- SETUP

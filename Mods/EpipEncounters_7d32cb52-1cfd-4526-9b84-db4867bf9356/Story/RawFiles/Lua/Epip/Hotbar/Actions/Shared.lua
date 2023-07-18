@@ -4,6 +4,8 @@
 -- Supports forwarding action events to the server as well as cooldowns.
 ---------------------------------------------
 
+local CommonStrings = Text.CommonStrings
+
 ---@class Feature_HotbarActions : Feature
 local Actions = {
     -- Cooldowns for hotkeys. Stores the last time the hotkey was ran at and the requested cooldown.
@@ -15,6 +17,19 @@ local Actions = {
 
     ---@type Feature_HotbarActions_Action[]
     ACTIONS = {},
+
+    TranslatedStrings = {
+        HotbarAction_TogglePartyLink = {
+           Handle = "hd15285dag87d6g450cg8f17gd663d87a474e",
+           Text = "Chain/Unchain",
+           ContextDescription = "Hotbar action name",
+        },
+        HotbarAction_UserRest = {
+           Handle = "ha314a4bag7349g4ec0g9e7eg122821cef234",
+           Text = "Bedroll Rest",
+           ContextDescription = "Hotbar action name",
+        },
+    },
 
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
@@ -98,25 +113,25 @@ end
 local actions = {
     {
         ID = "EPIP_Journal",
-        Name = "Journal",
+        Name = CommonStrings.Journal:GetString(),
         Icon = "hotbar_icon_announcement",
     },
     {
         ID = "EPIP_UserRest",
-        Name = "Bedroll Rest",
+        Name = Actions.TranslatedStrings.HotbarAction_UserRest:GetString(),
         Icon = "hotbar_icon_laureate",
         DefaultIndex = 9,
     },
     {
         ID = "EPIP_TogglePartyLink",
-        Name = "Chain/Unchain",
+        Name = Actions.TranslatedStrings.HotbarAction_TogglePartyLink:GetString(),
         Icon = "hotbar_icon_infinity",
         DefaultIndex = 10,
         Cooldown = 1,
     },
     {
         ID = "EE_Meditate",
-        Name = "Meditate",
+        Name = CommonStrings.Meditate:GetString(),
         Icon = "hotbar_icon_nongachatransmute",
         DefaultIndex = 11,
         RequiresEE = true,
@@ -124,7 +139,7 @@ local actions = {
     },
     {
         ID = "EE_SourceInfuse",
-        Name = "Source Infuse",
+        Name = CommonStrings.SourceInfuse:GetString(),
         Icon = "hotbar_icon_sp",
         DefaultIndex = 12,
         RequiresEE = true,
