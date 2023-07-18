@@ -10,7 +10,6 @@
 ---@field FILEPATH_OVERRIDES table<string, string>
 ---@field IsEnabled fun(self):boolean
 ---@field Disable fun(self)
----@field OnFeatureInit fun(self)
 ---@field RegisterListener fun(self, event:string, handler:function)
 ---@field FireEvent fun(self, event:string, ...:any)
 ---@field RegisterHook fun(self, event:string, handler:function)
@@ -18,7 +17,7 @@
 ---@field FireGlobalEvent fun(self, event:string, ...:any)
 ---@field MOD_TABLE_ID string
 ---@field DoNotExportTSKs boolean? If `true`, TSKs will not be exported to localization templates.
----@field Settings table<string, SettingsLib_Setting>
+----@field Settings table<string, SettingsLib_Setting>
 ---@field SupportedGameStates bitfield Defaults to all. See GAME_STATES.
 ---@field InputActions table<string, InputLib_Action> ID field is auto-initialized from key and prefixed. Only used in Client context.
 local Feature = {
@@ -167,6 +166,18 @@ function Feature:Disable()
     end
 end
 
+---Returns the mod table of the feature.
+---@return modtable
+function Feature:GetModTable()
+    return self.__ModTable
+end
+
+---Returns the ID of the feature.
+---@return string
+function Feature:GetFeatureID()
+    return self.__ID
+end
+
 ---Returns a function that takes no parameters and returns whether the feature is enabled.
 ---Intended for use with Event options.
 ---@see Event_Options
@@ -177,10 +188,11 @@ function Feature:GetEnabledFunctor()
     return self._EnabledFunctor
 end
 
----Called after a feature is initialized with Epip.AddFeature(),
----if it is not disabled.
----Override to run initialization routines.
-function Feature:OnFeatureInit() end
+---Called after the feature is registered.
+---Override to run initialization routines - this is preferable over initializing things at the root of your script, as it is hookable.
+---@see Epip.Events.FeatureInitialization
+---@virtual
+function Feature:__Initialize() end
 
 ---Returns the bitfield that supports all game states.
 ---@return integer

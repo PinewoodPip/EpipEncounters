@@ -12,10 +12,15 @@
 ---@alias TranslatedStringHandle string
 ---@alias ModTableID string|"EpipEncounters"
 ---@alias monotonictimestamp integer
+---@alias modtable string
 
 ---@alias UIObjectHandle ComponentHandle
 
 ---@alias ClientGameObject EclCharacter|EclItem
+
+---@class Enum
+---@field Label string
+---@field Value string
 
 Mods = {}
 

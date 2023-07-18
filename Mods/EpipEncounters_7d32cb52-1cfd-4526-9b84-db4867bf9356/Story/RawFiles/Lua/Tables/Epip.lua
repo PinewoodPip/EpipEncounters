@@ -13,7 +13,20 @@ Epip = {
     ---@type table<string, OptionsSettingsOption>
     SETTINGS = {},
     SETTINGS_CATEGORIES = {},
+
+    Events = {
+        BeforeFeatureInitialization = SubscribableEvent:New("BeforeFeatureInitialization"), ---@type Event<Epip.Events.FeatureInitialization>
+        AfterFeatureInitialization = SubscribableEvent:New("AfterFeatureInitialization"), ---@type Event<Epip.Events.FeatureInitialization>
+    }
 }
+
+---------------------------------------------
+-- EVENTS/HOOKS
+---------------------------------------------
+
+---Fired during feature initialization.
+---@class Epip.Events.FeatureInitialization
+---@field Feature Feature
 
 ---------------------------------------------
 -- METHODS
@@ -54,12 +67,22 @@ function Epip.RegisterFeature(modTable, id, feature)
     end
 
     modData.Features[id] = feature
+
+    -- Throw initialization events
+    -- These are delayed by tick to give later scripts a chance to subscribe
+    Ext.OnNextTick(function (_)
+        Epip.Events.BeforeFeatureInitialization:Throw({Feature = feature})
+        ---@diagnostic disable-next-line: invisible
+        feature:__Initialize()
+        Epip.Events.AfterFeatureInitialization:Throw({Feature = feature})
+    end)
 end
 
 ---Overload for fetching features defined in EpipEncounters.
 ---@generic T
 ---@param id `T`
 ---@return Feature|`T`
+---@diagnostic disable-next-line: missing-return, unused-local
 function Epip.GetFeature(id) end -- IDE dummy
 
 ---@generic T
@@ -151,11 +174,6 @@ function Epip.InitializeFeature(modTable, id, feature)
         end
 
         feature._initialized = true
-
-        -- Run init routine
-        if feature.OnFeatureInit then
-            feature:OnFeatureInit()
-        end
     end
 
     table.insert(Epip._FeatureRegistrationOrder, feature)
@@ -172,6 +190,24 @@ function Epip.SaveDump(obj, opts, fileName)
         AvoidRecursion = true,
         LimitDepth = 6,
     }), true)
+end
+
+---Registers a `FeatureInitialization` listener for a specific feature.
+---@param modTable modtable
+---@param featureID string
+---@param timing "Before"|"After"
+---@param listener fun(ev:Epip.Events.FeatureInitialization)
+function Epip.RegisterFeatureInitializationListener(modTable, featureID, timing, listener)
+    if timing ~= "Before" and timing ~= "After" then
+        error("Invalid timing option " .. timing)
+    end
+    local event = timing == "Before" and Epip.Events.BeforeFeatureInitialization or Epip.Events.AfterFeatureInitialization
+
+    event:Subscribe(function (ev)
+        if ev.Feature:GetModTable() == modTable and ev.Feature:GetFeatureID() == featureID then
+            listener(ev)
+        end
+    end)
 end
 
 if Ext.IsClient() then
