@@ -473,8 +473,7 @@ function Text.GetTranslatedString(handle, fallBack)
     -- TSKs cannot be loaded during LoadModule due to a bug with TSKs that have a handle but do not exist within an lsx.
     -- Doing so causes them to be cleared.
     if GameState.GetState() == "LoadModule" and not Text.IsTranslatedStringRegistered(handle) then
-        Text:LogWarning("Reading non-Epip TSKs during module load is not supported!")
-        str = ""
+        Text:Error("GetTranslatedString", "Reading non-Epip TSKs during module load is not supported!", handle)
     else
         -- Object overload.
         if type(handle) == "table" then

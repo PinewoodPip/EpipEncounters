@@ -474,45 +474,47 @@ local EpicEnemies = Epip.Features.EpicEnemies
 -- SETUP
 ---------------------------------------------
 
--- Generate Artifact options
-for id,artifact in pairs(Artifact.ARTIFACTS) do
-    if id ~= "Artifact_Deck" then
-        local description = artifact:GetDescription()
-        local keyword = nil ---@type EpicEnemiesKeywordData
+-- Generate Artifact options and register categories
+Ext.Events.SessionLoading:Subscribe(function (_)
+    for id,artifact in pairs(Artifact.ARTIFACTS) do
+        if id ~= "Artifact_Deck" then
+            local description = artifact:GetDescription()
+            local keyword = nil ---@type EpicEnemiesKeywordData
 
-        if #artifact.KeywordActivators > 0 then
-            keyword = {
-                Keyword = artifact.KeywordActivators[1],
-                BoonType = "Activator",
+            if #artifact.KeywordActivators > 0 then
+                keyword = {
+                    Keyword = artifact.KeywordActivators[1],
+                    BoonType = "Activator",
+                }
+            elseif #artifact.KeywordMutators > 0 then
+                keyword = {
+                    Keyword = artifact.KeywordMutators[1],
+                    BoonType = "Mutator",
+                }
+            end
+
+            ---@type EpicEnemiesEffect
+            local effect = {
+                ID = id,
+                Name = Text.Format("Artifact: %s", {FormatArgs = {
+                    artifact:GetName()
+                }}),
+                DefaultCost = 15,
+                DefaultWeight = artifactWeights[id] or 0,
+                Description = description,
+                Artifact = artifact.ID,
+                Keyword = keyword,
             }
-        elseif #artifact.KeywordMutators > 0 then
-            keyword = {
-                Keyword = artifact.KeywordMutators[1],
-                BoonType = "Mutator",
-            }
+            table.insert(ArtifactsCategory.Effects, effect)
         end
-
-        ---@type EpicEnemiesEffect
-        local effect = {
-            ID = id,
-            Name = Text.Format("Artifact: %s", {FormatArgs = {
-                artifact:GetName()
-            }}),
-            DefaultCost = 15,
-            DefaultWeight = artifactWeights[id] or 0,
-            Description = description,
-            Artifact = artifact.ID,
-            Keyword = keyword,
-        }
-        table.insert(ArtifactsCategory.Effects, effect)
     end
-end
-table.sort(ArtifactsCategory.Effects, function(a, b) return a.Name < b.Name end)
+    table.sort(ArtifactsCategory.Effects, function(a, b) return a.Name < b.Name end)
 
--- Initialize effects
-for _,category in pairs(Effects.Categories) do
-    EpicEnemies.RegisterEffectCategory(category)
-end
+    -- Initialize effects
+    for _,category in pairs(Effects.Categories) do
+        EpicEnemies.RegisterEffectCategory(category)
+    end
+end)
 
 if Epip.IsDeveloperMode(true) then
     EpicEnemies.RegisterEffectCategory(TestEffects)
@@ -539,7 +541,7 @@ local forcedEffect = {
 EpicEnemies.RegisterEffect(forcedEffect.ID, forcedEffect)
 
 if Ext.IsServer() then
-    EpicEnemies.Events.CharacterInitialized:RegisterListener(function(char, effects)
+    EpicEnemies.Events.CharacterInitialized:RegisterListener(function(char, _)
         EpicEnemies.ApplyEffect(char, forcedEffect)
     end)
 end
