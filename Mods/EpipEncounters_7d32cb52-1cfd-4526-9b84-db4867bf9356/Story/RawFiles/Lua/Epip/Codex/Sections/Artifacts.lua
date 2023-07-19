@@ -5,12 +5,11 @@
 
 local Generic = Client.UI.Generic
 local Codex = Epip.GetFeature("Feature_Codex")
-local SectionClass = Codex:GetClass("Feature_Codex_Section")
+local GridSectionClass = Codex:GetClass("Features.Codex.Sections.Grid")
 local HotbarSlot = Generic.GetPrefab("GenericUI_Prefab_HotbarSlot")
 local Icons = Epip.GetFeature("Feature_GenericUITextures").ICONS
 local Set = DataStructures.Get("DataStructures_Set")
 local CommonStrings = Text.CommonStrings
-local V = Vector.Create
 
 ---@class Features.Codex.Artifacts : Feature
 local Artifacts = {
@@ -128,10 +127,8 @@ end
 -- SECTION
 ---------------------------------------------
 
----@class Features.Codex.Skills.Section : Feature_Codex_Section
+---@class Features.Codex.Skills.Section : Features.Codex.Sections.Grid
 local Section = {
-    _Slots = {}, ---@type GenericUI_Prefab_HotbarSlot[]
-
     Name = Text.CommonStrings.Artifacts,
     Description = TSK.Section_Description,
     Icon = Icons.TABS.MAGICAL.WHITE,
@@ -139,86 +136,47 @@ local Section = {
         Artifacts.Settings.SlotFilter,
         Artifacts.Settings.KeywordFilter,
     },
-
-    CONTAINER_OFFSET = V(35, 35),
-    GRID_LIST_FRAME = V(Codex.UI.CONTENT_CONTAINER_SIZE[1], 640),
-    GRID_OFFSET = V(0, 100),
-    ICON_SIZE = V(58, 58),
 }
-SectionClass.Create(Section)
+Codex:RegisterClass("Features.Codex.Skills.Section", Section, {"Features.Codex.Sections.Grid"})
 Codex.RegisterSection("Artifacts", Section)
 
 ---@override
 ---@param root GenericUI_Element_Empty
 function Section:Render(root)
-    root:Move(Section.CONTAINER_OFFSET:unpack())
-
-    local gridScrollList = root:AddChild("Artifacts_Grid_ScrollList", "GenericUI_Element_ScrollList")
-    gridScrollList:SetFrame(self.GRID_LIST_FRAME:unpack())
-    gridScrollList:Move(self.GRID_OFFSET:unpack())
-    gridScrollList:SetMouseWheelEnabled(true)
-    gridScrollList:SetScrollbarSpacing(-80)
-
-    local grid = gridScrollList:AddChild("Artifact_Grid", "GenericUI_Element_Grid")
-    local columns = math.floor(self.GRID_LIST_FRAME[1] / (self.ICON_SIZE[1] + 5))
-    grid:SetRepositionAfterAdding(false)
-    grid:SetGridSize(columns, -1)
-
-    self.Root = root
-    self.Grid = grid
-    self.GridScrollList = gridScrollList
+    GridSectionClass.Render(self, root)
 end
 
 ---@override
 function Section:Update(_)
-    self:_RenderArtifacts()
-end
-
----Sets the artifact displayed in a slot.
----The slot will be created if it doesn't exist.
----@param index integer
----@param artifact ArtifactLib_ArtifactDefinition? Use `nil` to hide the slot.
-function Section:_SetArtifact(index, artifact)
-    local slot = self._Slots[index]
-    if not slot then
-        slot = HotbarSlot.Create(Codex.UI, "Artifacts_Slot_" .. tostring(index), self.Grid)
-        self._Slots[index] = slot
-    end
-
-    if artifact then
-        local template = Ext.Template.GetRootTemplate(Text.RemoveGUIDPrefix(artifact.ItemTemplate)) ---@cast template ItemTemplate
-
-        slot:SetIcon(template.Icon)
-        slot:SetCanDragDrop(false)
-        slot:SetRarityIcon(Item.GetRarityIcon("Unique"))
-        slot:SetTooltip("Custom", {
-            ID = artifact.ID,
-            Elements = artifact:GetPowerTooltip(),
-        })
-
-        -- Set slot to be enabled if the party owns the artifact
-        slot:SetEnabled(Artifact.IsOwnedByParty(artifact.ID))
-    end
-
-    slot:SetVisible(artifact ~= nil)
-end
-
----Renders artifacts onto the grid.
-function Section:_RenderArtifacts()
     local artifacts = Artifacts.GetArtifacts()
+    self:__Update(artifacts)
+end
 
-    local previousSlotsCount = #self._Slots
-    for i=1,#artifacts,1 do
-        self:_SetArtifact(i, artifacts[i])
-    end
-    if previousSlotsCount ~= #self._Slots then
-        self.Grid:RepositionElements()
-    end
-    for i=#artifacts+1,#self._Slots,1 do
-        self._Slots[i]:SetVisible(false)
-    end
+---@override
+---@param index integer
+---@return GenericUI_Prefab_HotbarSlot
+function Section:__CreateElement(index)
+    local slot = HotbarSlot.Create(Codex.UI, "Artifacts_Slot_" .. tostring(index), self.Grid)
+    return slot
+end
 
-    self.GridScrollList:RepositionElements()
+---@override
+---@param _ integer
+---@param slot GenericUI_Prefab_HotbarSlot
+---@param artifact ArtifactLib_ArtifactDefinition
+function Section:__UpdateElement(_, slot, artifact)
+    local template = Ext.Template.GetRootTemplate(Text.RemoveGUIDPrefix(artifact.ItemTemplate)) ---@cast template ItemTemplate
+
+    slot:SetIcon(template.Icon)
+    slot:SetCanDragDrop(false)
+    slot:SetRarityIcon(Item.GetRarityIcon("Unique"))
+    slot:SetTooltip("Custom", {
+        ID = artifact.ID,
+        Elements = artifact:GetPowerTooltip(),
+    })
+
+    -- Set slot to be enabled if the party owns the artifact
+    slot:SetEnabled(Artifact.IsOwnedByParty(artifact.ID))
 end
 
 ---------------------------------------------

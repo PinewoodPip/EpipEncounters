@@ -7,7 +7,7 @@
 local Set = DataStructures.Get("DataStructures_Set")
 local Generic = Client.UI.Generic
 local Codex = Epip.GetFeature("Feature_Codex")
-local SectionClass = Codex:GetClass("Feature_Codex_Section")
+local GridSectionClass = Codex:GetClass("Features.Codex.Sections.Grid")
 local SearchBarPrefab = Generic.GetPrefab("GenericUI_Prefab_SearchBar")
 local SlotPrefab = Generic.GetPrefab("GenericUI_Prefab_HotbarSlot")
 local ButtonPrefab = Generic.GetPrefab("GenericUI_Prefab_Button")
@@ -135,6 +135,7 @@ local Skills = {
         NO_SKILLBOOK = "NoSkillbook",
     },
 
+    Settings = {},
     TranslatedStrings = {
         Section_Description = {
             Handle = "ha5ab3810g9aa9g4168g89fdgbfd0ee2c4c01",
@@ -307,10 +308,9 @@ end
 -- SECTION
 ---------------------------------------------
 
----@class Feature_Codex_Skills_Section : Feature_Codex_Section
+---@class Feature_Codex_Skills_Section : Features.Codex.Sections.Grid
 local Section = {
     _SchoolButtons = {}, ---@type table<string, GenericUI_Prefab_Button>
-    _SkillInstances = {}, ---@type GenericUI_Prefab_HotbarSlot[]
 
     Name = Text.CommonStrings.Skills,
     Description = TSK.Section_Description,
@@ -323,9 +323,6 @@ local Section = {
         Skills.Settings.SkillbookFilter,
     },
 
-    CONTAINER_OFFSET = V(35, 35),
-    GRID_OFFSET = V(0, 100),
-    GRID_LIST_FRAME = V(Codex.UI.CONTENT_CONTAINER_SIZE[1], 640),
     SCHOOL_BUTTONS_OFFSET = V(170, 0),
     SKILL_SIZE = V(58, 58),
     SEARCH_BAR_SIZE = V(170, 43),
@@ -333,15 +330,15 @@ local Section = {
     SEARCH_DELAY_TIMER_ID = "Feature_Codex_Skills_SearchDelay",
     SEARCH_DELAY = 0.7, -- In seconds.
 }
-SectionClass.Create(Section)
+Codex:RegisterClass("Feature_Codex_Skills_Section", Section, {"Features.Codex.Sections.Grid"})
 Codex.RegisterSection("Skills", Section)
 
 ---@override
 ---@param root GenericUI_Element_Empty
 function Section:Render(root)
-    Section.Root = root
-    root:Move(self.CONTAINER_OFFSET:unpack())
+    GridSectionClass.Render(self, root)
 
+    -- Set up search bar
     local searchBar = SearchBarPrefab.Create(Codex.UI, "Skills_SearchBar", root, self.SEARCH_BAR_SIZE)
     searchBar.Events.SearchChanged:Subscribe(function (ev)
         Skills._SearchTerm = ev.Text
@@ -356,21 +353,8 @@ function Section:Render(root)
         end)
     end)
 
-    local gridScrollList = root:AddChild("Skills_Grid_ScrollList", "GenericUI_Element_ScrollList")
-    gridScrollList:SetFrame(self.GRID_LIST_FRAME:unpack())
-    gridScrollList:Move(self.GRID_OFFSET:unpack())
-    gridScrollList:SetMouseWheelEnabled(true)
-    gridScrollList:SetScrollbarSpacing(-80)
-
-    local grid = gridScrollList:AddChild("Skills_Grid", "GenericUI_Element_Grid")
-    local columns = math.floor(self.GRID_LIST_FRAME[1] / (self.SKILL_SIZE[1] + 5))
-    grid:SetRepositionAfterAdding(true) -- No noticeable performance impact
-    grid:SetGridSize(columns, -1)
-
+    -- Set up school buttons
     Section:_SetupSchoolButtons()
-
-    Section.Grid = grid
-    Section.GridScrollList = gridScrollList
 end
 
 ---@override
@@ -384,44 +368,39 @@ function Section:UpdateSkills()
 
     Skills:DebugLog("Updating skills")
 
-    -- Update all slots; _UpdateSkill() will hide a slot if `nil` is passed.
-    -- Therefore excess slots are hidden and reusable as a form of pooling.
-    for i=1,math.clamp(#skills, #self._SkillInstances, self.MAX_SKILLS),1 do
-        self:_UpdateSkill(i, skills[i])
-    end
-
-    Section.GridScrollList:RepositionElements()
-    Section.GridScrollList:GetMovieClip().list.resetScroll() -- TODO public API
+    self:__Update(skills)
 end
 
+---@override
+---@param index integer
+---@return GenericUI_Prefab_HotbarSlot
+function Section:__CreateElement(index)
+    local instance = SlotPrefab.Create(Codex.UI, "Skills_Skill_" .. index, self.Grid)
+
+    instance.SlotElement:SetSizeOverride(Section.SKILL_SIZE) -- Required to fix a positioning issue.
+    instance:SetCanDrop(false)
+    instance:SetCanDrag(true, false)
+    instance:SetUpdateDelay(-1)
+
+    return instance
+end
+
+
 ---Updates a skill element.
----@param index integer The element will be created if there isn't one at the index.
----@param skill Feature_Codex_Skills_Skill? Use `nil` to hide the slot.
-function Section:_UpdateSkill(index, skill)
-    local instance = self._SkillInstances[index]
-    if not instance then
-        instance = SlotPrefab.Create(Codex.UI, "Skills_Skill_" .. index, self.Grid)
-        instance.SlotElement:SetSizeOverride(Section.SKILL_SIZE) -- Required to fix a positioning issue.
-        instance:SetCanDrop(false)
-        instance:SetCanDrag(true, false)
-        instance:SetUpdateDelay(-1)
+---@override
+---@param _ integer
+---@param instance GenericUI_Prefab_HotbarSlot
+---@param skill Feature_Codex_Skills_Skill
+function Section:__UpdateElement(_, instance, skill)
+    instance:SetSkill(skill.ID)
+    instance:SetEnabled(Character.IsSkillLearnt(Client.GetCharacter(), skill.ID))
 
-        self._SkillInstances[index] = instance
+    -- Highlight memorized skills with a border
+    if Character.IsSkillMemorized(Client.GetCharacter(), skill.ID) then
+        instance:SetRarityIcon("Unique")
+    else
+        instance:SetRarityIcon("Common")
     end
-
-    if skill then
-        instance:SetSkill(skill.ID)
-        instance:SetEnabled(Character.IsSkillLearnt(Client.GetCharacter(), skill.ID))
-
-        -- Highlight memorized skills with a border
-        if Character.IsSkillMemorized(Client.GetCharacter(), skill.ID) then
-            instance:SetRarityIcon("Unique")
-        else
-            instance:SetRarityIcon("Common")
-        end
-    end
-
-    instance:SetVisible(skill ~= nil)
 end
 
 ---Updates a skill school button.
@@ -476,7 +455,7 @@ function Section:_SetupSchoolButtons()
                 Section:UpdateSkills()
             end
         end)
-        
+
         -- Toggle filter upon right-click
         button.Events.RightClicked:Subscribe(function (_)
             if not Section:_CheckToggleAllSchools(id) then
@@ -573,7 +552,7 @@ Skills.Hooks.IsSkillValid:Subscribe(function (ev)
             valid = false
             goto End
         end
-        
+
         -- Filter based on search term - should be done last for performance reasons
         local searchTerm = Skills._SearchTerm:lower()
         if searchTerm ~= "" then

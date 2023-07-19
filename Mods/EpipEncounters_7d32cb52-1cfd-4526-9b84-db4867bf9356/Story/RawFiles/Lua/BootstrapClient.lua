@@ -609,6 +609,7 @@ LOAD_ORDER = {
             "Epip/Codex/Client.lua",
             "Epip/Codex/Client_UI.lua",
 
+            "Epip/Codex/Sections/__Grid.lua",
             "Epip/Codex/Sections/Skills.lua",
         },
     },
