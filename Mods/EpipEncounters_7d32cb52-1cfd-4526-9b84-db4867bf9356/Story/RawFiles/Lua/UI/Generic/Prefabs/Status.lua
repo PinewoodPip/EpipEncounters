@@ -26,6 +26,9 @@ local Status = {
 }
 Generic.RegisterPrefab("GenericUI_Prefab_Status", Status)
 
+---@diagnostic disable-next-line: duplicate-doc-alias
+---@alias GenericUI_PrefabClass "GenericUI_Prefab_Status"
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
@@ -37,7 +40,7 @@ Generic.RegisterPrefab("GenericUI_Prefab_Status", Status)
 ---@param status EclStatus
 ---@return GenericUI_Prefab_Status
 function Status.Create(ui, id, parent, entity, status)
-    local element = Status:_Create(ui, id) ---@type GenericUI_Prefab_Status
+    local element = Status:_Create(ui, id) ---@cast element GenericUI_Prefab_Status
 
     local root = element:CreateElement("Container", "GenericUI_Element_TiledBackground", parent)
     root:SetBackground("Black", element.SIZE:unpack())
@@ -53,7 +56,7 @@ function Status.Create(ui, id, parent, entity, status)
         element.SIZE[1] + element.DURATION_BORDER_WIDTH,
         element.SIZE[2] + element.DURATION_BORDER_WIDTH
     ))
-    
+
     local icon = element:CreateElement("Icon", "GenericUI_Element_IggyIcon", backgroundHighlight)
     local text = TextPrefab.Create(ui, element:PrefixID("DurationText"), backgroundHighlight, "", "Right", element.TEXT_SIZE)
 
@@ -135,14 +138,14 @@ function Status:SetStatus(entity, status)
     local TOP_WEDGE_LENGTH = 1/8
     local SIDE_WEDGE_LENGTH = 1/4
     local color = status.LifeTime > 0 and self.DURATION_BORDER_COLOR or self.DURATION_BORDER_INFINITE_COLOR
-    
+
     local graphics = self.BorderDummy:GetMovieClip().graphics
     local relativeDurationLeft = status.CurrentLifeTime / status.LifeTime
     graphics.clear()
     if status.LifeTime < 0 then -- Draw the whole rect for infinite statuses
         relativeDurationLeft = 1
     end
-    
+
     if relativeDurationLeft >= 0 then
         relativeDurationLeft = DrawWedge(self, graphics, relativeDurationLeft, TOP_WEDGE_LENGTH, self.SIZE[1]/2, color, "TopLeft")
     end

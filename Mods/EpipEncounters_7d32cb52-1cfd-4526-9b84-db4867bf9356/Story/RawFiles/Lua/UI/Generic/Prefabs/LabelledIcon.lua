@@ -10,6 +10,9 @@ local Icon = {
 }
 Generic.RegisterPrefab("GenericUI_Prefab_LabelledIcon", Icon)
 
+---@diagnostic disable-next-line: duplicate-doc-alias
+---@alias GenericUI_PrefabClass "GenericUI_Prefab_LabelledIcon"
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
@@ -37,6 +40,6 @@ function Icon.Create(ui, id, parent, icon, text, iconSize, textSize)
     obj.Text = textElement
 
     list:RepositionElements()
-    
+
     return obj
 end

@@ -12,6 +12,9 @@ local Checkbox = {
 OOP.SetMetatable(Checkbox, Generic.GetPrefab("GenericUI_Prefab_FormElement"))
 Generic.RegisterPrefab("GenericUI_Prefab_LabelledCheckbox", Checkbox)
 
+---@diagnostic disable-next-line: duplicate-doc-alias
+---@alias GenericUI_PrefabClass "GenericUI_Prefab_LabelledCheckbox"
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
@@ -24,7 +27,7 @@ Generic.RegisterPrefab("GenericUI_Prefab_LabelledCheckbox", Checkbox)
 ---@return GenericUI_Prefab_LabelledCheckbox
 function Checkbox.Create(ui, id, parent, label, size)
     size = size or Checkbox.DEFAULT_SIZE
-    local obj = Checkbox:_Create(ui, id) ---@type GenericUI_Prefab_LabelledCheckbox
+    local obj = Checkbox:_Create(ui, id) ---@cast obj GenericUI_Prefab_LabelledCheckbox
     obj._Style = "Right-aligned"
     obj:__SetupBackground(parent, size)
     obj:SetLabel(label)
@@ -83,5 +86,4 @@ function Checkbox:Render()
     else
         Generic:Error("GenericUI_Prefab_LabelledCheckbox:Render", "Invalid style value")
     end
-    
 end

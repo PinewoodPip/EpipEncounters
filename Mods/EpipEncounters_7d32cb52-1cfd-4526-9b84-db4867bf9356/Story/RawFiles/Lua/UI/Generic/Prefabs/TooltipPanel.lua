@@ -12,6 +12,13 @@ local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 local TooltipPanelPrefab = {}
 Generic.RegisterPrefab("GenericUI_Prefab_TooltipPanel", TooltipPanelPrefab)
 
+---@diagnostic disable-next-line: duplicate-doc-alias
+---@alias GenericUI_PrefabClass "GenericUI_Prefab_TooltipPanel"
+
+---------------------------------------------
+-- METHODS
+---------------------------------------------
+
 ---Creates a tooltip panel.
 ---@param ui GenericUI_Instance
 ---@param id string
@@ -21,7 +28,7 @@ Generic.RegisterPrefab("GenericUI_Prefab_TooltipPanel", TooltipPanelPrefab)
 ---@param headerSize Vector2
 ---@return GenericUI_Prefab_TooltipPanel
 function TooltipPanelPrefab.Create(ui, id, parent, size, header, headerSize)
-    local panel = TooltipPanelPrefab:_Create(ui, id) ---@type GenericUI_Prefab_TooltipPanel
+    local panel = TooltipPanelPrefab:_Create(ui, id) ---@cast panel GenericUI_Prefab_TooltipPanel
 
     local bg = panel:CreateElement("Background", "GenericUI_Element_TiledBackground", parent)
     bg:SetBackground("FormattedTooltip", size:unpack())
@@ -45,6 +52,6 @@ end
 
 function TooltipPanelPrefab:Destroy()
     self.UI:DestroyElement(self.Background)
-    
+
     self.Background, self.HeaderText = nil, nil
 end

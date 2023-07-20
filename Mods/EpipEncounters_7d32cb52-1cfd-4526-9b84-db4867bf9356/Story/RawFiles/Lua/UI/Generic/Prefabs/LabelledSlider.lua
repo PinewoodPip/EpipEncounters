@@ -20,6 +20,9 @@ local Slider = {
 OOP.SetMetatable(Slider, Generic.GetPrefab("GenericUI_Prefab_FormElement"))
 Generic.RegisterPrefab("GenericUI_Prefab_LabelledSlider", Slider)
 
+---@diagnostic disable-next-line: duplicate-doc-alias
+---@alias GenericUI_PrefabClass "GenericUI_Prefab_LabelledSlider"
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
@@ -34,7 +37,7 @@ Generic.RegisterPrefab("GenericUI_Prefab_LabelledSlider", Slider)
 ---@param step number
 ---@return GenericUI_Prefab_LabelledSlider
 function Slider.Create(ui, id, parent, size, label, min, max, step)
-    local instance = Slider:_Create(ui, id) ---@type GenericUI_Prefab_LabelledSlider
+    local instance = Slider:_Create(ui, id) ---@cast instance GenericUI_Prefab_LabelledSlider
     instance:__SetupBackground(parent, size)
 
     instance:SetLabel(label)

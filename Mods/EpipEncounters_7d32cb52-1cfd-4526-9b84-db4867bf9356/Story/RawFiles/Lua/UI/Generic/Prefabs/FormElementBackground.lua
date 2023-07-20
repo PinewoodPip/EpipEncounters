@@ -7,6 +7,9 @@ local Generic = Client.UI.Generic
 local BG = {}
 Generic.RegisterPrefab("GenericUI_Prefab_FormElementBackground", BG)
 
+---@diagnostic disable-next-line: duplicate-doc-alias
+---@alias GenericUI_PrefabClass "GenericUI_Prefab_FormElementBackground"
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
@@ -18,7 +21,7 @@ Generic.RegisterPrefab("GenericUI_Prefab_FormElementBackground", BG)
 ---@return GenericUI_Prefab_FormElementBackground
 function BG.Create(ui, id, parent, size)
     local instance = BG:_Create(ui, id) ---@type GenericUI_Prefab_FormElementBackground
-    
+
     local bg = instance:CreateElement("BG", "GenericUI_Element_TiledBackground", parent)
     bg:SetBackground("Black", size:unpack())
     bg:SetAlpha(0.2)

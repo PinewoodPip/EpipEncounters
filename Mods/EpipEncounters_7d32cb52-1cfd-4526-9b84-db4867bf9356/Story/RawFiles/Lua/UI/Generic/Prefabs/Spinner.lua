@@ -19,6 +19,9 @@ local Spinner = {
 }
 Generic.RegisterPrefab("GenericUI_Prefab_Spinner", Spinner)
 
+---@diagnostic disable-next-line: duplicate-doc-alias
+---@alias GenericUI_PrefabClass "GenericUI_Prefab_Spinner"
+
 ---------------------------------------------
 -- EVENTS
 ---------------------------------------------
@@ -44,8 +47,7 @@ function Spinner.Create(ui, id, parent, label, min, max, step)
     max = max or math.maxinteger
     step = step or 1
 
-    ---@type GenericUI_Prefab_Spinner
-    local spinner = Spinner:_Create(ui, id, ui, parent, label)
+    local spinner = Spinner:_Create(ui, id, ui, parent, label) ---@cast spinner GenericUI_Prefab_Spinner
 
     spinner.currentValue = min
 
@@ -169,7 +171,7 @@ function Spinner:SetBounds(min, max, step)
     self.minValue = min
     self.maxValue = max
     self.step = step
-    
+
     self:SetValue(Ext.Math.Clamp(self.currentValue, min, max))
 end
 

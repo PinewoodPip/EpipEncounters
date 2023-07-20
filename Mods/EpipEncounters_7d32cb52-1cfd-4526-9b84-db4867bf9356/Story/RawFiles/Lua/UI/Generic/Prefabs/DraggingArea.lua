@@ -11,6 +11,9 @@ local Generic = Client.UI.Generic
 local DraggingArea = {}
 Generic.RegisterPrefab("GenericUI_Prefab_DraggingArea", DraggingArea)
 
+---@diagnostic disable-next-line: duplicate-doc-alias
+---@alias GenericUI_PrefabClass "GenericUI_Prefab_DraggingArea"
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------

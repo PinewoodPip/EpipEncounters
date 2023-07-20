@@ -1,7 +1,6 @@
 
 local Generic = Client.UI.Generic
 local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
-local Tooltip = Client.Tooltip
 
 ---Base class for prefabs styled as a form element.
 ---@class GenericUI_Prefab_FormElement : GenericUI_Prefab
@@ -11,6 +10,9 @@ local Prefab = {
     DEFAULT_SIZE = Vector.Create(600, 50),
 }
 Generic.RegisterPrefab("GenericUI_Prefab_FormElement", Prefab)
+
+---@diagnostic disable-next-line: duplicate-doc-alias
+---@alias GenericUI_PrefabClass "GenericUI_Prefab_FormElement"
 
 ---------------------------------------------
 -- METHODS
@@ -22,7 +24,7 @@ Generic.RegisterPrefab("GenericUI_Prefab_FormElement", Prefab)
 ---@param size Vector2
 ---@return GenericUI_Prefab_FormElement
 function Prefab.Create(ui, id, parent, size)
-    local instance = Prefab:_Create(ui, id) ---@type GenericUI_Prefab_FormElement
+    local instance = Prefab:_Create(ui, id) ---@cast instance GenericUI_Prefab_FormElement
 
     instance:__SetupBackground(parent, size)
 

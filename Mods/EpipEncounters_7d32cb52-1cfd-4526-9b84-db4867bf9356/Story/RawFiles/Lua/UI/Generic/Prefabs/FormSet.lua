@@ -17,6 +17,9 @@ local Prefab = {
 Inherit(Prefab, Generic.GetPrefab("GenericUI_Prefab_FormElement"))
 Generic.RegisterPrefab("GenericUI_Prefab_FormSet", Prefab)
 
+---@diagnostic disable-next-line: duplicate-doc-alias
+---@alias GenericUI_PrefabClass "GenericUI_Prefab_FormSet"
+
 ---------------------------------------------
 -- EVENTS
 ---------------------------------------------
@@ -124,7 +127,7 @@ end
 MessageBox.RegisterMessageListener("Epip_GenericUI_FormSet_AddEntry", MessageBox.Events.InputSubmitted, function (text, buttonID, params)
     if buttonID == 1 then
         local prefab = params._Prefab ---@type GenericUI_Prefab_FormSet
-    
+
         prefab.Events.EntryAdded:Throw({
             Value = text,
         })

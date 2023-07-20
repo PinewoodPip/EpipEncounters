@@ -12,6 +12,9 @@ local Text = {
 OOP.SetMetatable(Text, Generic.GetPrefab("GenericUI_Prefab_FormElement"))
 Generic.RegisterPrefab("GenericUI_Prefab_LabelledTextField", Text)
 
+---@diagnostic disable-next-line: duplicate-doc-alias
+---@alias GenericUI_PrefabClass "GenericUI_Prefab_LabelledTextField"
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
@@ -24,7 +27,7 @@ Generic.RegisterPrefab("GenericUI_Prefab_LabelledTextField", Text)
 ---@return GenericUI_Prefab_LabelledTextField
 function Text.Create(ui, id, parent, label, size)
     size = size or Text.DEFAULT_SIZE
-    local obj = Text:_Create(ui, id) ---@type GenericUI_Prefab_LabelledTextField
+    local obj = Text:_Create(ui, id) ---@cast obj GenericUI_Prefab_LabelledTextField
     obj:__SetupBackground(parent, size)
     obj:SetLabel(label)
 
@@ -39,7 +42,7 @@ function Text.Create(ui, id, parent, label, size)
     obj.Text = text
 
     obj:SetSize(size:unpack())
-    
+
     return obj
 end
 

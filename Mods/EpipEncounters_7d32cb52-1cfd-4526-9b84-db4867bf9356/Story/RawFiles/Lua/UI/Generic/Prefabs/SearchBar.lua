@@ -35,7 +35,6 @@ Generic.RegisterPrefab("GenericUI_Prefab_SearchBar", SearchBar)
 ---@return GenericUI_Prefab_SearchBar
 function SearchBar.Create(ui, id, parent, size, hintLabel)
     local instance = SearchBar:_Create(ui, id) ---@type GenericUI_Prefab_SearchBar
-    alpha = alpha or 0
 
     local root = instance:CreateElement("Background", "GenericUI_Element_TiledBackground", parent)
     root:SetBackground("Black", size:unpack())

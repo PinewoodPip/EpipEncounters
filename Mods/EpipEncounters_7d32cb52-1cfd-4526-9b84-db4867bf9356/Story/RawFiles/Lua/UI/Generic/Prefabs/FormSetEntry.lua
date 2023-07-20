@@ -11,6 +11,9 @@ local Prefab = {
 Inherit(Prefab, Generic.GetPrefab("GenericUI_Prefab_FormElement"))
 Generic.RegisterPrefab("GenericUI_Prefab_FormSetEntry", Prefab)
 
+---@diagnostic disable-next-line: duplicate-doc-alias
+---@alias GenericUI_PrefabClass "GenericUI_Prefab_FormSetEntry"
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------

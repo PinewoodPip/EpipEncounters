@@ -16,6 +16,9 @@ local Form = {
 }
 Generic.RegisterPrefab("GenericUI_Prefab_FormHorizontalList", Form)
 
+---@diagnostic disable-next-line: duplicate-doc-alias
+---@alias GenericUI_PrefabClass "GenericUI_Prefab_FormHorizontalList"
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
@@ -48,10 +51,10 @@ function Form:_Setup(parent, label, size, labelSize)
     end
 
     -- Setup highlight upon hovering
-    bg.Events.MouseOver:Subscribe(function (ev)
+    bg.Events.MouseOver:Subscribe(function (_)
         bg:SetAlpha(self.SELECTED_BG_ALPHA)
     end)
-    bg.Events.MouseOut:Subscribe(function (ev)
+    bg.Events.MouseOut:Subscribe(function (_)
         bg:SetAlpha(0)
     end)
 

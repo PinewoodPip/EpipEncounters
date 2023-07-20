@@ -21,6 +21,9 @@ local Selector = {
 OOP.SetMetatable(Selector, FormElement)
 Generic.RegisterPrefab("GenericUI_Prefab_Selector", Selector)
 
+---@diagnostic disable-next-line: duplicate-doc-alias
+---@alias GenericUI_PrefabClass "GenericUI_Prefab_Selector"
+
 ---------------------------------------------
 -- EVENTS
 ---------------------------------------------
@@ -41,7 +44,7 @@ Generic.RegisterPrefab("GenericUI_Prefab_Selector", Selector)
 ---@param options string[]
 ---@return GenericUI_Prefab_Selector
 function Selector.Create(ui, id, parent, label, size, options)
-    local instance = Selector:_Create(ui, id) ---@type GenericUI_Prefab_Selector
+    local instance = Selector:_Create(ui, id) ---@cast instance GenericUI_Prefab_Selector
     instance:__SetupBackground(parent, size)
     instance.Label:SetType("Center")
     instance.Label:SetSize(size[1], 30)
@@ -74,7 +77,7 @@ function Selector:GetSubElementContainer(index)
 end
 
 ---Changes the selector's value to the previous or next one.
----@param direction "Left"|"Right"
+---@param direction "Left"|"Right"|-1|1
 function Selector:Scroll(direction)
     local offset = direction == "Left" and -1 or 1
     local newIndex = self._CurrentOptionIndex + offset
@@ -151,7 +154,7 @@ function Selector:_SetupSubElementsContainers()
     for i=1,#self.Options,1 do
         local container = self:CreateElement("SubElementsList_" .. i, "GenericUI_Element_VerticalList", self.Background)
         container:SetPosition(0, self.Background:GetHeight())
-    
+
         self.SubElementsLists[i] = container
     end
 end

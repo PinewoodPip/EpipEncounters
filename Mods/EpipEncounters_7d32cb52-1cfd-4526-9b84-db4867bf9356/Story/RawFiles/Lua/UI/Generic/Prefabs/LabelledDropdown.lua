@@ -11,6 +11,9 @@ local Dropdown = {
 OOP.SetMetatable(Dropdown, Generic.GetPrefab("GenericUI_Prefab_FormElement"))
 Generic.RegisterPrefab("GenericUI_Prefab_LabelledDropdown", Dropdown)
 
+---@diagnostic disable-next-line: duplicate-doc-alias
+---@alias GenericUI_PrefabClass "GenericUI_Prefab_LabelledDropdown"
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
@@ -25,7 +28,7 @@ Generic.RegisterPrefab("GenericUI_Prefab_LabelledDropdown", Dropdown)
 function Dropdown.Create(ui, id, parent, label, opts, size)
     opts = opts or {}
     size = size or Dropdown.DEFAULT_SIZE
-    local obj = Dropdown:_Create(ui, id) ---@type GenericUI_Prefab_LabelledDropdown
+    local obj = Dropdown:_Create(ui, id) ---@cast obj GenericUI_Prefab_LabelledDropdown
     obj:__SetupBackground(parent, size)
     obj:SetLabel(label)
 
