@@ -246,6 +246,7 @@ LOAD_ORDER = {
         Scripts = {
             "UI/Generic/Main.lua",
             "UI/Generic/Instance.lua",
+            "UI/Generic/Prefab.lua",
 
             "UI/Generic/Elements/Element.lua",
             "UI/Generic/Elements/Empty.lua",

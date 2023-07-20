@@ -31,71 +31,6 @@ Epip.InitializeLibrary("Generic", Generic)
 ---@field Fire fun(self, stringID:string, active:boolean)
 
 ---------------------------------------------
--- PREFAB
----------------------------------------------
-
----@class GenericUI_Prefab : Class
-local Prefab = {
-    ID = "None",
-    UI = nil, ---@type GenericUI_Instance
-    Events = {},
-}
-Generic:RegisterClass("GenericUI_Prefab", Prefab)
-Generic._Prefab = Prefab
-
----@protected
----@param ui GenericUI_Instance
----@param id string
----@return GenericUI_Prefab
-function Prefab:_Create(ui, id, ...)
-    local obj = {UI = ui, ID = id}
-    obj = self:__Create(obj) ---@cast obj GenericUI_Prefab
-
-    obj:_SetupEvents()
-    obj:_Setup(...)
-
-    return obj
-end
-
----@generic T
----@param id string Automatically prefixed.
----@param elementType `T`|GenericUI_ElementType
----@param parent (GenericUI_Element|string)?
----@return T
-function Prefab:CreateElement(id, elementType, parent)
-    return self.UI:CreateElement(self:PrefixID(id), elementType, parent)
-end
-
-function Prefab:_Setup() end
-
-function Prefab:PrefixID(id)
-    return self.ID .. "_" .. id
-end
-
----@deprecated
-function Prefab:GetMainElement()
-    return self.UI:GetElementByID(self:PrefixID("Container"))
-end
-
-function Prefab:_SetupEvents()
-    local eventTemplates = self.Events
-    local hookTemplates = self.Hooks
-    
-    self.Events = {}
-    self.Hooks = {}
-    for id,_ in pairs(eventTemplates or {}) do
-        self.Events[id] = SubscribableEvent:New(id)
-    end
-    for id,_ in pairs(hookTemplates or {}) do
-        self.Hooks[id] = SubscribableEvent:New(id)
-    end
-end
-
-function Prefab:Destroy()
-    Generic:Error("Prefab:Destroy", "Not implemented for this prefab")
-end
-
----------------------------------------------
 -- METHODS
 ---------------------------------------------
 
@@ -131,7 +66,7 @@ function Generic.Create(id)
     }
     local uiOBject = Ext.UI.Create(id, Generic.SWF_PATH, Generic.DEFAULT_LAYER)
     Epip.InitializeUI(uiOBject:GetTypeId(), id, ui)
-    Inherit(ui, _Instance)
+    ui = Generic:GetClass("GenericUI_Instance").Create(ui)
 
     Generic.INSTANCES[uiOBject:GetTypeId()] = ui
 
