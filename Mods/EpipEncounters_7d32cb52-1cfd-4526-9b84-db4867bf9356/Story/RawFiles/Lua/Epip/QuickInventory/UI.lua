@@ -131,11 +131,11 @@ function UI._GetHotbarSlot(listIndex, itemIndex)
         for i=1,itemsPerRow,1 do
             local element = HotbarSlot.Create(UI, string.format("%s_%s", #UI._Lists, i), list)
             element:SetCanDrag(true, false) -- Can drag items out of the slot, without removing them from it.
-        
+
             element.Events.Clicked:Subscribe(function (_)
                 UI._OnSlotClicked(element)
             end)
-        
+
             element.Hooks.GetTooltipData:Subscribe(function (ev)
                 ev.Position = V(UI:GetPosition()) + V(UI.BACKGROUND_SIZE[1], 0)
             end)
@@ -219,6 +219,7 @@ function UI._RenderSettingsPanel()
         local itemSlot = QuickInventory:GetSettingValue(QuickInventory.Settings.ItemSlot)
 
         UI.RenderSetting(QuickInventory.Settings.ItemSlot) -- Equipment slot
+        UI.RenderSetting(QuickInventory.Settings.Rarity) -- Rarity
 
         if itemSlot == "Weapon" then
             UI.RenderSetting(QuickInventory.Settings.WeaponSubType) -- Equipment subtype
@@ -331,7 +332,7 @@ ContextMenu.RegisterElementListener("epip_Feature_QuickInventory", "buttonPresse
     QuickInventory:SetSettingValue(QuickInventory.Settings.ItemSlot, tostring(Item.GetItemSlot(item)))
     QuickInventory:SetSettingValue(QuickInventory.Settings.WeaponSubType, "Any")
     QuickInventory:SetSettingValue(QuickInventory.Settings.DynamicStat, "")
-    
+
     UI.Setup()
 end)
 

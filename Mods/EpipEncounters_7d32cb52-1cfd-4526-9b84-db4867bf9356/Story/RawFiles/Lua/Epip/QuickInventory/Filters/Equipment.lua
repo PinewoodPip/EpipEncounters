@@ -194,6 +194,24 @@ QuickInventory.Settings.ArmorSubType = QuickInventory:RegisterSetting("ArmorSubT
     },
 })
 
+QuickInventory.Settings.Rarity = QuickInventory:RegisterSetting("Rarity", {
+    Type = "Choice",
+    Name = CommonStrings.Rarity,
+    DefaultValue = "Any",
+    ---@type SettingsLib_Setting_Choice_Entry[]
+    Choices = {
+        {ID = "Any", NameHandle = Text.CommonStrings.Any.Handle},
+        {ID = "Common", NameHandle = Item.RARITY_HANDLES.COMMON},
+        {ID = "Uncommon", NameHandle = Item.RARITY_HANDLES.UNCOMMON},
+        {ID = "Rare", NameHandle = Item.RARITY_HANDLES.RARE},
+        {ID = "Epic", NameHandle = Item.RARITY_HANDLES.EPIC},
+        {ID = "Legendary", NameHandle = Item.RARITY_HANDLES.LEGENDARY},
+        {ID = "Divine", NameHandle = Item.RARITY_HANDLES.DIVINE},
+        {ID = "Unique", NameHandle = Item.RARITY_HANDLES.UNIQUE},
+        {ID = "Artifact", NameHandle = CommonStrings.Artifact.Handle}, -- TODO hide outside of EE
+    },
+})
+
 QuickInventory.Settings.DynamicStat = QuickInventory:RegisterSetting("DynamicStat", {
     Type = "String",
     Name = QuickInventory.TranslatedStrings.DynamicStat_Name,
@@ -298,11 +316,22 @@ QuickInventory.Hooks.IsItemVisible:Subscribe(function (ev)
         local statBoostSetting = QuickInventory:GetSettingValue(QuickInventory.Settings.DynamicStat)
         local culledOnly = QuickInventory:GetSettingValue(QuickInventory.Settings.CulledOnly) and EpicEncounters.IsEnabled()
         local showEquippedItems = QuickInventory:GetSettingValue(QuickInventory.Settings.ShowEquippedItems)
+        local raritySetting = QuickInventory:GetSettingValue(QuickInventory.Settings.Rarity)
 
         visible = Item.IsEquipment(item)
 
         if itemSlotSetting ~= "Any" then
             visible = visible and Item.GetItemSlot(item) == itemSlotSetting
+        end
+
+        if raritySetting ~= "Any" then
+            if raritySetting == "Unique" then
+                visible = visible and item.Stats.Rarity == "Unique" and not Item.IsArtifact(item)
+            elseif raritySetting == "Artifact" then
+                visible = visible and Item.IsArtifact(item)
+            else
+                visible = visible and item.Stats.Rarity == raritySetting
+            end
         end
 
         -- Slot restriction

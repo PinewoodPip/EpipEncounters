@@ -74,6 +74,16 @@ Item = {
         Dummy_ProjectileFX = true,
     },
 
+    RARITY_HANDLES = {
+        COMMON = "h5c0f3da4g83a2g4f3fg9944gc80920bcb4df",
+        UNCOMMON = "h7682e16bg7c69g4a72g8f1fg1b32519665f3",
+        RARE = "heb7ba0d5g7f4cg49e9g9ce2g86cf5e5bd277",
+        EPIC = "hd75b2771g8abag49b5g9b8egb608d51b9ddf",
+        LEGENDARY = "h97227897g1345g4046gbb62g842dcc292db1",
+        DIVINE = "h09d00ab3g7edbg4569ga4d7gf37b9b7b04cb",
+        UNIQUE = "h04685fd1g024ag4641gaed6g0ffb2d0ff103",
+    },
+
     ---@type table<ItemLib_Rarity, icon>
     _ITEM_RARITY_ICONS = {
         Uncommon = "Item_Uncommon",
@@ -747,6 +757,16 @@ end
 ---@return integer? --`nil` if the item has no stats.
 function Item.GetLevel(item)
     return item.Stats and item.Stats.Level or nil
+end
+
+---Returns the name of a rarity.
+---@param rarity Item|ItemLib_Rarity
+function Item.GetRarityName(rarity)
+    if Entity.IsItem(rarity) then -- Item overload.
+        rarity = rarity.Stats.Rarity
+    end
+
+    return Text.GetTranslatedString(Item.RARITY_HANDLES[rarity:upper()])
 end
 
 ---Returns the icon frame for a rarity, if any.

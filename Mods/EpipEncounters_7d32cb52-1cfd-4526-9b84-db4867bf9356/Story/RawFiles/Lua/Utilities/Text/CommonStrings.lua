@@ -494,6 +494,10 @@ Text.CommonStrings.Reactions = Text.RegisterTranslatedString({
    Handle = "h8a290a77g93c2g4821g8019gc74551cb306a",
    Text = "Reactions",
 })
+Text.CommonStrings.Artifact = Text.RegisterTranslatedString({
+   Handle = "h09ce9aebgd1fbg4e42gadc9gacb2ce6383f6",
+   Text = "Artifact",
+})
 Text.CommonStrings.Artifacts = Text.RegisterTranslatedString({
    Handle = "h29f2c933gb1a3g4f4ag89d4gcca71ffeba51",
    Text = "Artifacts",
@@ -517,6 +521,10 @@ Text.CommonStrings.Skills = Text.RegisterTranslatedString({
 Text.CommonStrings.Journal = Text.RegisterTranslatedString({
    Handle = "h64beeb05g019ag4a0agb151g974864cc5625",
    Text = "Journal",
+})
+Text.CommonStrings.Rarity = Text.RegisterTranslatedString({
+   Handle = "hce1fce1ega375g4e85g8adcg22da632e1097",
+   Text = "Rarity",
 })
 
 ---------------------------------------------
