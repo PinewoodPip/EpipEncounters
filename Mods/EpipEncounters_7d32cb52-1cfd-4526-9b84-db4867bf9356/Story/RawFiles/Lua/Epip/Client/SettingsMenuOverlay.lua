@@ -89,6 +89,7 @@ end
 ---Closes the overlay.
 function Overlay.Close()
     SettingsMenu:GetUI():SetFlag("OF_PlayerModal1", true)
+    Client.Tooltip.HideTooltip()
     UI:Hide()
 end
 
