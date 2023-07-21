@@ -5,8 +5,8 @@ local Input = Client.Input
 Input._Actions = {} ---@type table<string, InputLib_Action>
 Input._InputMap = {} ---@type table<string, string[]> Maps inputs to a list of actions that are bound to it.
 Input._lastActionMapping = nil
-Input._Bindings = {} ---@type table<string, InputLib_Action_Mapping>
 Input._CurrentAction = nil ---@type string? ID of the action whose mapping is currently being held.
+Input._ActionBindingSettingPrefix = "InputLib_Binding_"
 
 Input.ACTIONS_SAVE_FORMAT = 1
 Input.ACTIONS_SAVE_FILENAME = "EpipEncounters_Input.json"
@@ -59,25 +59,6 @@ function _Action.Create(data)
     return instance
 end
 
----@class InputLib_Action_Mapping
----@field ID string Action ID.
----@field Input1 InputLib_Action_KeyCombination
----@field Input2 InputLib_Action_KeyCombination
-local _SavedKeybind = {}
-
----@param index integer
-function _SavedKeybind:GetInputString(index)
-    local field = "Input" .. Text.RemoveTrailingZeros(index)
-    local input = self[field] ---@type InputLib_Action_KeyCombination
-    local str = ""
-
-    if input then
-        str = Input.StringifyBinding(input)
-    end
-
-    return str
-end
-
 ---@class InputLib_Action_KeyCombination
 ---@field Keys InputRawType[]
 
@@ -94,7 +75,17 @@ function Input.RegisterAction(id, data)
     local action = _Action.Create(data)
 
     Input._Actions[action.ID] = action
-    
+
+    Settings.RegisterSetting({
+        ID = Input._ActionBindingSettingPrefix .. id,
+        ModTable = "InputLib",
+        Type = "InputBinding",
+        Context = "Client",
+        Name = data.Name,
+        Description = "TODO",
+        DefaultValue = {data.DefaultInput1, data.DefaultInput2},
+    })
+
     return action
 end
 
@@ -105,44 +96,19 @@ function Input.GetAction(id)
     return Input._Actions[id]
 end
 
----Get the saved keybinds for an action.
----@param action string
----@return InputLib_Action_Mapping
-function Input.GetActionKeybinds(action)
-    local keybind
-
-    if Input._Bindings[action] then
-        keybind = Input._Bindings[action]
-        Inherit(keybind, _SavedKeybind) -- TODO improve
-    else
-        local actionData = Input.GetAction(action)
-        ---@type InputLib_Action_Mapping
-        keybind = {
-            ID = action,
-            Input1 = actionData.DefaultInput1,
-            Input2 = actionData.DefaultInput2,
-        }
-        Inherit(keybind, _SavedKeybind)
-    end
-
-    return keybind
+---Returns the bindings of an action.
+---@return InputLib_Action_KeyCombination[]
+function Input.GetActionBindings(actionID)
+    return Settings.GetSettingValue("InputLib", Input._ActionBindingSettingPrefix .. actionID)
 end
 
+---Sets the bindings for an action.
 ---@param actionID string
----@param bindingIndex integer
----@param keybind InputLib_Action_KeyCombination?
-function Input.SetActionKeybind(actionID, bindingIndex, keybind)
-    local savedBind = Input.GetActionKeybinds(actionID)
-
-    if keybind then
-        savedBind["Input" .. Text.RemoveTrailingZeros(bindingIndex)] = keybind
-    else
-        savedBind["Input" .. Text.RemoveTrailingZeros(bindingIndex)] = nil
-    end
-
-    Input._Bindings[actionID] = savedBind
-
+---@param bindings InputLib_Action_KeyCombination[]
+function Input.SetActionBindings(actionID, bindings)
+    Settings.SetValue("InputLib", Input._ActionBindingSettingPrefix .. actionID, bindings)
     Input._SaveActionBindings()
+    Input._UpdateInputMap()
 end
 
 ---Returns whether an action can be currently executed.
@@ -209,7 +175,6 @@ function Input._UpdateInputMap()
     ---@param actionID string
     local function addAction(binding, actionID)
         local bindingStr = Input.StringifyBinding(binding)
-        
         if not map[bindingStr] then
             map[bindingStr] = {}
         end
@@ -218,13 +183,10 @@ function Input._UpdateInputMap()
     end
 
     for id,_ in pairs(Input._Actions) do
-        local keybind = Input.GetActionKeybinds(id)
+        local keybinds = Input.GetActionBindings(id)
 
-        if keybind.Input1 then
-            addAction(keybind.Input1, id)
-        end
-        if keybind.Input2 then
-            addAction(keybind.Input2, id)
+        for _,keybind in ipairs(keybinds) do
+            addAction(keybind, id)
         end
     end
 
@@ -235,21 +197,7 @@ end
 
 ---Saves the user's bindings to the disk.
 function Input._SaveActionBindings()
-    local save = {
-        Bindings = Input._Bindings,
-        SaveVersion = Input.ACTIONS_SAVE_FORMAT,
-    }
-
-    IO.SaveFile(Input.ACTIONS_SAVE_FILENAME, save)
-end
-
----Loads the user's bindings from the disk.
-function Input._LoadActionBindings()
-    local save = IO.LoadFile(Input.ACTIONS_SAVE_FILENAME)
-
-    if save and save.Bindings and save.SaveVersion > 0 then
-        Input._Bindings = save.Bindings
-    end
+    Settings.Save("InputLib")
 end
 
 ---Fires the event for actions being released.
@@ -261,7 +209,7 @@ function Input._FireActionReleasedEvent()
             Character = Client.GetCharacter(),
             Action = action,
         })
-    
+
         Input._CurrentAction = nil
     else
         Input:LogWarning("_FireActionReleasedEvent() fired with no active action")
@@ -279,7 +227,6 @@ end)
 
 -- Load saved keybinds when the session loads.
 Ext.Events.SessionLoaded:Subscribe(function()
-    Input._LoadActionBindings()
     Input._UpdateInputMap()
 end)
 

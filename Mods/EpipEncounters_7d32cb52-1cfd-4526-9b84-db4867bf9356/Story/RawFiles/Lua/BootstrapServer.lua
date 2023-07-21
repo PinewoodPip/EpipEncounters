@@ -136,6 +136,7 @@ local coreLibraries = {
             "Utilities/Settings/Setting_Map.lua",
             "Utilities/Settings/Setting_Vector.lua",
             "Utilities/Settings/Setting_String.lua",
+            "Utilities/Settings/Setting_InputBinding.lua",
         },
     },
 }

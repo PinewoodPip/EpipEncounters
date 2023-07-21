@@ -75,9 +75,9 @@ function Options.AddEntry(tabID, keybind)
     local root = Options:GetRoot()
     local id = keybind.ID
     local label = keybind.Name
-    local savedBindings = Input.GetActionKeybinds(keybind.ID)
+    local savedBindings = Input.GetActionBindings(keybind.ID)
 
-    root.addEntry(tabIndex, Options.nextEntryID, label, savedBindings:GetInputString(1) or "", savedBindings:GetInputString(2) or "")
+    root.addEntry(tabIndex, Options.nextEntryID, label, savedBindings[1] and Input.StringifyBinding(savedBindings[1]) or "", savedBindings[2] and Input.StringifyBinding(savedBindings[2]) or "")
 
     Options.entries[Options.nextEntryID] = id
     Options.nextEntryID = Options.nextEntryID + 1
@@ -125,8 +125,6 @@ local function BindingFinished()
     Options.keyBeingBound = nil
     Options.potentialBinding = nil
     Options.indexBeingBound = nil
-
-    Input._UpdateInputMap()
 
     Options:GetRoot().hideOverlay()
 end
@@ -183,14 +181,19 @@ Options:RegisterCallListener("inputAcceptPressed", function(ev)
 
         Options:DebugLog("Bound " .. Options.keyBeingBound .. " to " .. Input.StringifyBinding(Options.potentialBinding))
 
-        Input.SetActionKeybind(actionID, Options.indexBeingBound + 1, Options.potentialBinding)
+        local bindings = Input.GetActionBindings(actionID)
+        if bindings[1] == nil then
+            bindings[1] = Options.potentialBinding
+        else
+            bindings[Options.indexBeingBound + 1] = Options.potentialBinding
+        end
+
+        Input.SetActionBindings(actionID, bindings)
 
         Options:GetRoot().setInput(table.reverseLookup(Options.entries, Options.keyBeingBound), Options.indexBeingBound, Input.StringifyBinding(Options.potentialBinding))
 
         BindingFinished()
         ev:PreventAction()
-
-        Options:Dump(Input._Bindings)
     end
 end)
 
@@ -209,8 +212,10 @@ Options:RegisterCallListener("inputClearPressed", function(ev)
 
         Options:DebugLog("Cleared binding")
 
-        Input.SetActionKeybind(actionID, Options.indexBeingBound + 1, nil)
-        
+        local bindings = Input.GetActionBindings(actionID)
+        table.remove(bindings, Options.indexBeingBound + 1)
+        Input.SetActionBindings(actionID, bindings)
+
         Options:GetRoot().setInput(table.reverseLookup(Options.entries, Options.keyBeingBound), Options.indexBeingBound, "")
 
         BindingFinished()
