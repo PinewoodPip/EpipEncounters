@@ -78,7 +78,7 @@ function Utilities.IsClientControlled(character)
 end
 
 function Utilities.IsEditor()
-    return Ext.Utils.GameVersion() == Game.EDITOR_VERSION
+    return Ext.Utils.GameVersion() == "v3.6.51.9303"
 end
 
 function Utilities.Log(module, message, type)

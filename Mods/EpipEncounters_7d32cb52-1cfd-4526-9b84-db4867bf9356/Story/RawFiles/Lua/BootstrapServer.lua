@@ -25,25 +25,27 @@
 
     Sick/epic/awesome ASCII header is from https://patorjk.com/software/taag/
 ]]
-
+Ext.Require("BootstrapBefore.lua")
 Utilities = {}
 
 PersistentVars = PersistentVars or {}
 
 local prefixedGUID = "EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356"
 
----@type (string|ScriptLoadRequest)[]
-LOAD_ORDER = {
+local coreLibraries = {
+    -- OOP
     {
         Scripts = {
             "Utilities/OOP/OOP.lua",
             "Utilities/OOP/_Library.lua",
         },
     },
+
     "Utilities/Event.lua",
     "Tables/Epip.lua",
     "Tables/_Events.lua",
     "Tables/_Feature.lua",
+
     "Utilities/Hooks.lua",
     "Utilities.lua",
 
@@ -55,6 +57,8 @@ LOAD_ORDER = {
     "Utilities/IO.lua",
     "Utilities/Vector.lua",
     "Utilities/Color.lua",
+
+    -- Data structures
     {
         Scripts = {
             "Utilities/DataStructures/Main.lua",
@@ -69,6 +73,8 @@ LOAD_ORDER = {
         },
     },
     {ScriptSet = "Utilities/Entity"},
+
+    -- Text
     {
         Scripts = {
             "Utilities/Text/Library.lua",
@@ -95,10 +101,6 @@ LOAD_ORDER = {
     "Utilities/Profiling.lua",
     {ScriptSet = "Utilities/Artifact", RequiresEE = true,},
 
-    -- "Data/Game.lua",
-
-    "Game.lua",
-
     {ScriptSet = "Utilities/Character"},
     "Utilities/Character/Shared_Talents.lua",
 
@@ -119,7 +121,7 @@ LOAD_ORDER = {
             "Utilities/Stats/Shared_SkillData.lua",
         },
     },
-    
+
     "Utilities/Damage/Shared.lua",
 
     -- SettingsLib
@@ -136,6 +138,13 @@ LOAD_ORDER = {
             "Utilities/Settings/Setting_String.lua",
         },
     },
+}
+for _,lib in ipairs(coreLibraries) do
+    RequestScriptLoad(lib)
+end
+
+---@type (string|ScriptLoadRequest)[]
+LOAD_ORDER = {
     "Epip/Settings.lua",
     
     {ScriptSet = "Epip/DatabaseSync"},

@@ -25,25 +25,27 @@
 
     Sick/epic/awesome ASCII header is from https://patorjk.com/software/taag/
 ]]
+Ext.Require("BootstrapBefore.lua")
+Utilities = {}
 
 local prefixedGUID = "EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356"
 
----@type (string|ScriptLoadRequest)[]
-LOAD_ORDER = {
+local coreLibraries = {
+    -- OOP
     {
         Scripts = {
             "Utilities/OOP/OOP.lua",
             "Utilities/OOP/_Library.lua",
         },
     },
+
     "Utilities/Event.lua",
     "Tables/Epip.lua",
     "Tables/_Events.lua",
     "Tables/_Feature.lua",
+
     "Utilities/Hooks.lua",
     "Utilities.lua",
-
-    -- Utilities
     "Utils.lua",
     "Utilities/table.lua",
     "Utilities/math.lua",
@@ -64,6 +66,8 @@ LOAD_ORDER = {
     "Utilities/Timer.lua",
     "Utilities/Coroutine.lua",
     "Utilities/UserVars.lua",
+
+    -- Text
     {
         Scripts = {
             "Utilities/Text/Library.lua",
@@ -71,6 +75,7 @@ LOAD_ORDER = {
             "Utilities/Text/Localization.lua",
         },
     },
+
     {
         Scripts = {
             "Utilities/Interfaces/Main.lua",
@@ -85,9 +90,6 @@ LOAD_ORDER = {
     "Utilities/Client/Pointer.lua",
 
     "Data/Game.lua", -- TODO move stuff out of it into appropriate scripts
-
-    -- Static libraries
-    "Game.lua",
 
     -- Net
     {
@@ -154,7 +156,13 @@ LOAD_ORDER = {
             "Utilities/Settings/Setting_String.lua",
         },
     },
+}
+for _,lib in ipairs(coreLibraries) do
+    RequestScriptLoad(lib)
+end
 
+---@type (string|ScriptLoadRequest)[]
+LOAD_ORDER = {
     "UI/TextDisplay.lua",
 
     "Client/Client.lua",
@@ -204,7 +212,6 @@ LOAD_ORDER = {
 
     -- Needs to be ordered after the above.
     "Epip/Settings.lua",
-    "Epip/Client/SettingsRegistration.lua",
 
     "UI/StatusConsole.lua",
 
@@ -708,8 +715,6 @@ LOAD_ORDER = {
     {Script = "Epip/Client/OverlayColorsBruteForcer.lua", Developer = true},
     {Script = "Epip/PersonalScripts/Shared.lua", Developer = true},
 }
-
-Utilities = {}
 
 Ext.Require(prefixedGUID, "Bootstrap.lua")
 Ext.Require(prefixedGUID, "_LastScript.lua")

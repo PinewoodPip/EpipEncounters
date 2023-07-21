@@ -10,10 +10,6 @@ Epip = {
     cachedAprilFoolsState = nil,
     _devMode = nil,
 
-    ---@type table<string, OptionsSettingsOption>
-    SETTINGS = {},
-    SETTINGS_CATEGORIES = {},
-
     Events = {
         BeforeFeatureInitialization = SubscribableEvent:New("BeforeFeatureInitialization"), ---@type Event<Epip.Events.FeatureInitialization>
         AfterFeatureInitialization = SubscribableEvent:New("AfterFeatureInitialization"), ---@type Event<Epip.Events.FeatureInitialization>
