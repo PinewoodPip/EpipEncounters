@@ -64,7 +64,11 @@ function Character.GetStatusesFromItems(char)
                 if prop.TypeId == "Status" then
                     ---@cast prop StatsPropertyStatus
                     local statusID = prop.Status
-                    table.insert(statuses, {Status = char:GetStatus(statusID), ItemSource = item})
+                    local status = char:GetStatus(statusID)
+
+                    if status then
+                        table.insert(statuses, {Status = status, ItemSource = item})
+                    end
                 end
             end
         end
