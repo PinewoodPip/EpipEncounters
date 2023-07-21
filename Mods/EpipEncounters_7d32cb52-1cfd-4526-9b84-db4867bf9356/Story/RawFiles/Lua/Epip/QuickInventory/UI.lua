@@ -4,6 +4,7 @@ local Generic = Client.UI.Generic
 local HotbarSlot = Generic.GetPrefab("GenericUI_Prefab_HotbarSlot")
 local TooltipPanelPrefab = Generic.GetPrefab("GenericUI_Prefab_TooltipPanel")
 local DraggingAreaPrefab = Generic.GetPrefab("GenericUI_Prefab_DraggingArea")
+local CloseButtonPrefab = Generic.GetPrefab("GenericUI_Prefab_CloseButton")
 local SettingWidgets = Epip.GetFeature("Features.SettingWidgets")
 local Tooltip = Client.Tooltip
 local Input = Client.Input
@@ -178,12 +179,8 @@ function UI._Initialize()
 
         DraggingAreaPrefab.Create(UI, "DraggableArea", bg.Background, UI.DRAGGABLE_AREA_SIZE)
 
-        local closeButton = bg:AddChild("CloseButton", "GenericUI_Element_Button")
-        closeButton:SetType("Close")
+        local closeButton = CloseButtonPrefab.Create(UI, "CloseButton", bg.Background)
         closeButton:SetPositionRelativeToParent("TopLeft", 9, 9)
-        closeButton.Events.Pressed:Subscribe(function (_)
-            UI:Hide()
-        end)
 
         local scrollList = bg:AddChild("Items", "GenericUI_Element_ScrollList")
         scrollList:SetFrame(UI.SCROLL_LIST_FRAME:unpack())
