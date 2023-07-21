@@ -240,6 +240,7 @@ local tabs = {
             CreateHeader(QuickInventory.TranslatedStrings.Header:GetString()),
             {Type = "Label", Label = Text.Format(QuickInventory.TranslatedStrings.SettingsMenuInfo:GetString(), {Size = 19})},
             {Module = QuickInventory:GetSettingsModuleID(), ID = QuickInventory.Settings.CloseAfterUsing.ID},
+            {Module = QuickInventory:GetSettingsModuleID(), ID = QuickInventory.Settings.CloseOnClickOutOfBounds.ID},
 
             CreateHeader(TSK.Section_CraftingUI),
             {Module = CraftingFixes:GetSettingsModuleID(), ID = CraftingFixes.Settings.DefaultFilter.ID},

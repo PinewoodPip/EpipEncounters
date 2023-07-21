@@ -15,6 +15,13 @@ QuickInventory.Settings.CloseAfterUsing = QuickInventory:RegisterSetting("CloseA
     DefaultValue = true,
 })
 
+QuickInventory.Settings.CloseOnClickOutOfBounds = QuickInventory:RegisterSetting("CloseOnClickOutOfBounds", {
+    Type = "Boolean",
+    Name = QuickInventory.TranslatedStrings.Setting_CloseOnClickOutOfBounds_Name,
+    Description = QuickInventory.TranslatedStrings.Setting_CloseOnClickOutOfBounds_Description,
+    DefaultValue = false,
+})
+
 QuickInventory.Settings.ItemCategory = QuickInventory:RegisterSetting("ItemCategory", {
     Type = "Choice",
     Name = QuickInventory.TranslatedStrings.ItemCategory_Name,

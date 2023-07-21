@@ -300,19 +300,20 @@ Client.Events.ActiveCharacterChanged:Subscribe(function (_)
     end
 end)
 
--- Close the UI when escape is pressed, or when a mouse press occurs outside the UI.
+-- Close the UI when escape is pressed.
 Input.Events.KeyStateChanged:Subscribe(function (ev)
     if ev.InputID == "escape" and UI:IsVisible() then
         UI.Close()
         ev:Prevent()
     end
 end)
--- Temporarily disabled due to issues with dropdowns.
--- Input.Events.MouseButtonPressed:Subscribe(function (_)
---     if UI:IsVisible() and not UI._IsCursorOverUI then
---         UI.Close()
---     end
--- end)
+
+-- Listen for clicks that get sent to the world to optionally close the UI.
+Input.Events.MouseButtonPressed:Subscribe(function (_)
+    if UI:IsVisible() and QuickInventory:GetSettingValue(QuickInventory.Settings.CloseOnClickOutOfBounds) == true and not Client.IsCursorOverUI() then
+        UI.Close()
+    end
+end)
 
 -- Add option to equipment context menus.
 ContextMenu.RegisterVanillaMenuHandler("Item", function(item)

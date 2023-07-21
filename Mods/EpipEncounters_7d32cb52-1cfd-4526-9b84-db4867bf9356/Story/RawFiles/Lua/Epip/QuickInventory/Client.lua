@@ -55,6 +55,16 @@ local QuickInventory = {
            Text = "If enabled, the UI will close after using an item.\n\nYou can hold shift while clicking an item to temporarily invert this setting.",
            ContextDescription = "Tooltip for 'close after using' setting",
         },
+        Setting_CloseOnClickOutOfBounds_Name = {
+           Handle = "h14aad639gb9c4g456bgb7fcg48e9cd5fef17",
+           Text = "Close upon world interaction",
+           ContextDescription = "Setting name",
+        },
+        Setting_CloseOnClickOutOfBounds_Description = {
+           Handle = "h8b035113g39eag49e6gae13g9a1de5375471",
+           Text = "If enabled, the UI will be closed if you click anything in the world.",
+           ContextDescription = "Setting tooltip for 'Close upon world interaction'",
+        },
         Setting_CulledOnly_Name = {
            Handle = "h84ec181aga466g41e0g9f8bg9af1de57d37a",
            Text = "Show Culled Only",
