@@ -34,6 +34,31 @@ package Elements
             
             this.gridList.addElement(mc, this.respositionAfterAdding);
         }
+
+        // Use content width/height instead of flash calculated sizes
+        // Invisible elements do not contribute to the content size.
+        public override function GetWidth(considerOverrides:Boolean=true) : Number
+        {
+            if (considerOverrides && this.widthOverride)
+            {
+                return this.widthOverride;
+            }
+            else
+            {
+                return this.gridList.contentWidth;
+            }
+        }
+        public override function GetHeight(considerOverrides:Boolean=true) : Number
+        {
+            if (considerOverrides && this.heightOverride)
+            {
+                return this.heightOverride;
+            }
+            else
+            {
+                return this.gridList.contentHeight;
+            }
+        }
         
         public function SetRepositionAfterAdding(reposition:Boolean) : *
         {

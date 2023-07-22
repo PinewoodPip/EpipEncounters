@@ -445,30 +445,20 @@ package
         
         public function getElementWidth(param1:MovieClip) : Number
         {
-            var _loc2_:* = param1.width;
-            if(param1.widthOverride != undefined && !isNaN(param1.widthOverride))
+            if (this.m_customElementWidth != -1)
             {
-                _loc2_ = param1.widthOverride;
+                return this.m_customElementWidth;
             }
-            else if(this.m_customElementWidth != -1)
-            {
-                _loc2_ = this.m_customElementWidth;
-            }
-            return _loc2_;
+            return param1.GetWidth();
         }
         
         public function getElementHeight(param1:MovieClip) : Number
         {
-            var _loc2_:* = param1.height;
-            if(param1.heightOverride != undefined && !isNaN(param1.heightOverride))
+            if (this.m_customElementHeight != -1)
             {
-                _loc2_ = param1.heightOverride;
+                return this.m_customElementHeight;
             }
-            else if(this.m_customElementHeight != -1)
-            {
-                _loc2_ = this.m_customElementHeight;
-            }
-            return _loc2_;
+            return param1.GetHeight();
         }
         
         public function getContentHeight() : Number
