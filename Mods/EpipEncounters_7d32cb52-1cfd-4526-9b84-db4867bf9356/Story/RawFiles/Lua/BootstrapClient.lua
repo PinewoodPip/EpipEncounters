@@ -293,6 +293,7 @@ LOAD_ORDER = {
             "UI/Generic/Prefabs/LabelledTextField.lua",
             "UI/Generic/Prefabs/FormSetEntry.lua",
             "UI/Generic/Prefabs/FormSet.lua",
+            "UI/Generic/Prefabs/FormTextHolder.lua",
             "UI/Generic/Prefabs/Selector.lua",
             "UI/Generic/Prefabs/DraggingArea.lua",
 
@@ -306,8 +307,6 @@ LOAD_ORDER = {
         },
     },
     -- {Script = "UI/Generic/Test.lua", WIP = true}, -- TEST!
-
-    {Script = "Epip/SettingWidgets/Client.lua"},
 
     -- Hotbar
     {
@@ -335,6 +334,21 @@ LOAD_ORDER = {
 
     -- Title screen UIs
     "UI/Mods.lua",
+
+    -- Utility features
+    {
+        Scripts = {
+            "Epip/IconPicker/Client.lua",
+            "Epip/IconPicker/UI.lua",
+        },
+    },
+    {
+        Scripts = {
+            "Epip/InputBinder/Client.lua",
+            "Epip/InputBinder/UI.lua",
+        },
+    },
+    {Script = "Epip/SettingWidgets/Client.lua"},
 
     -- Vanity
     {
@@ -485,13 +499,6 @@ LOAD_ORDER = {
     {Script = "Epip/StatsTab/Data/Categories_EpicEncounters.lua", RequiresEE = true},
     {Script = "Epip/StatsTab/Data/Stats_EpicEncounters.lua", RequiresEE = true},
     {Script = "Epip/StatsTab/Data/Stats_Artifacts.lua", RequiresEE = true},
-
-    {
-        Scripts = {
-            "Epip/IconPicker/Client.lua",
-            "Epip/IconPicker/UI.lua",
-        },
-    },
 
     "Epip/Client/CharacterSheetResistances.lua",
     "Epip/Client/CharacterSheetLevelProgress.lua",
@@ -652,6 +659,7 @@ LOAD_ORDER = {
 
     "Epip/Client/ImageViewer.lua",
     "Epip/Client/SettingsMenuOverlay.lua",
+    "Epip/InputSettingsMenu/Client.lua",
 
     {
         Scripts = {

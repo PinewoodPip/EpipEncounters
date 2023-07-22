@@ -8,6 +8,7 @@ local SliderPrefab = Generic.GetPrefab("GenericUI_Prefab_LabelledSlider")
 local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 local SetPrefab = Generic.GetPrefab("GenericUI_Prefab_FormSet")
 local SelectorPrefab = Generic.GetPrefab("GenericUI_Prefab_Selector")
+local SettingWidgets = Epip.GetFeature("Features.SettingWidgets")
 local V = Vector.Create
 
 ---@class Feature_SettingsMenuOverlay : Feature
@@ -234,6 +235,18 @@ function UI._RenderClampedNumber(setting, parent)
     return element
 end
 
+---Renders a InputBinding setting.
+---@param setting SettingsLib.Settings.InputBinding
+---@param parent GenericUI_ParentIdentifier?
+---@return GenericUI.Prefabs.FormTextHolder
+function UI._RenderInputBinding(setting, parent)
+    local instance = SettingWidgets.RenderSetting(UI, parent, setting, UI.FORM_ELEMENT_SIZE, function (value)
+        SettingsMenu.SetPendingChange(setting, value)
+    end)
+    ---@cast instance GenericUI.Prefabs.FormTextHolder
+    return instance
+end
+
 ---Renders a label entry.
 ---@param data Feature_SettingsMenuOverlay_Event_RenderEntry
 ---@return GenericUI_Prefab_Text
@@ -317,6 +330,8 @@ function UI._RenderSetting(data)
         element = UI._RenderChoice(setting, parent)
     elseif settingType == "ClampedNumber" then
         element = UI._RenderClampedNumber(setting, parent)
+    elseif settingType == "InputBinding" then
+        element = UI._RenderInputBinding(setting, parent)
     else
         Overlay:LogWarning("Unsupported setting type: " .. settingType)
     end

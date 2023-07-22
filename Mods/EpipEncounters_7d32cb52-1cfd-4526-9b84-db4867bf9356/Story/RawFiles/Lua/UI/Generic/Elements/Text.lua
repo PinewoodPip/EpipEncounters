@@ -60,7 +60,7 @@ function Text:GetTextSize()
         height = height + self:GetLineHeight(i)
     end
 
-    return Vector.Create(width, math.ceil(height))
+    return Vector.Create(math.max(0, width), math.ceil(height)) -- Empty text fields have -infinity width.
 end
 
 ---Returns the text of the element.

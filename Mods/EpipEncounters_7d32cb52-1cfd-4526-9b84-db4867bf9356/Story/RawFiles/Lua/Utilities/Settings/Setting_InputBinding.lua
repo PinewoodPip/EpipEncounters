@@ -3,6 +3,7 @@ local Settings = Settings
 
 ---A setting that accepts multiple keybindings.
 ---@class SettingsLib.Settings.InputBinding : SettingsLib_Setting
+---@field TargetActionID string?
 ---@field Value InputLib_Action_KeyCombination[]
 local _InputBinding = {
     Type = "InputBinding",

@@ -8,12 +8,15 @@ local Generic = Client.UI.Generic
 local LabelledDropdownPrefab = Generic.GetPrefab("GenericUI_Prefab_LabelledDropdown")
 local LabelledCheckboxPrefab = Generic.GetPrefab("GenericUI_Prefab_LabelledCheckbox")
 local LabelledTextField = Generic.GetPrefab("GenericUI_Prefab_LabelledTextField")
+local FormTextHolder = Generic.GetPrefab("GenericUI.Prefabs.FormTextHolder")
+local InputBinder = Epip.GetFeature("Features.InputBinder")
 local V = Vector.Create
 
 ---@class Features.SettingWidgets : Feature
 local Widgets = {
     DEFAULT_SIZE = V(400, 50), -- Default size used if no override is specified.
     TEXTFIELD_DELAY = 0.6, -- Delay in seconds between text edits and the respective String setting being updated.
+    MAX_INPUT_BINDINGS = 2, -- Not a hard limit; the Input library supports infinite bindings per action, however displaying that in an elegant manner is difficult!
 
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
@@ -28,7 +31,7 @@ Epip.RegisterFeature("SettingWidgets", Widgets)
 -- CLASSES
 ---------------------------------------------
 
----@alias Features.SettingWidgets.SupportedSettingType SettingsLib_Setting_Choice|SettingsLib_Setting_Boolean|SettingsLib_Setting_String
+---@alias Features.SettingWidgets.SupportedSettingType SettingsLib_Setting_Choice|SettingsLib_Setting_Boolean|SettingsLib_Setting_String|SettingsLib.Settings.InputBinding
 
 ---------------------------------------------
 -- EVENTS/HOOKS
@@ -145,6 +148,55 @@ function Widgets._RenderTextFieldFromSetting(request)
     return field
 end
 
+---Renders a list of bindings from an InputBinding setting.
+---@param request Features.SettingWidgets.Hooks.RenderSetting
+---@return GenericUI.Prefabs.FormTextHolder
+function Widgets._RenderInputBindingSetting(request)
+    local setting = request.Setting ---@cast setting SettingsLib.Settings.InputBinding
+    local ui, parent, size = request.UI, request.Parent, request.Size
+
+    local form = FormTextHolder.Create(ui, Widgets._GetPrefixedID(setting:GetID()), parent, setting:GetName(), size)
+    local action = setting.TargetActionID
+
+    if action then
+        local function UpdateFields()
+            local bindings = Client.Input.GetActionBindings(action)
+            local bindingNames = {} ---@type string[]
+            for i,binding in ipairs(bindings) do
+                bindingNames[i] = Client.Input.StringifyBinding(binding)
+            end
+            for i=#bindingNames+1,Widgets.MAX_INPUT_BINDINGS,1 do -- Add extra empty fields, until reaching max
+                bindingNames[i] = ""
+            end
+
+            form:SetFields(bindingNames)
+        end
+
+        UpdateFields()
+
+        -- Request binding when clicked, and listen for the request being completed/cancelled to update the view
+        form.Events.FieldClicked:Subscribe(function (ev)
+            InputBinder.Events.RequestCompleted:Subscribe(function (_)
+                UpdateFields()
+
+                InputBinder.Events.RequestCompleted:Unsubscribe("Features.SettingWidgets") -- Unsubscribe to prevent leaks
+                InputBinder.Events.RequestCancelled:Unsubscribe("Features.SettingWidgets")
+            end, {StringID = "Features.SettingWidgets"})
+            InputBinder.Events.RequestCancelled:Subscribe(function (_)
+                InputBinder.Events.RequestCompleted:Unsubscribe("Features.SettingWidgets") -- Unsubscribe to prevent leaks
+                InputBinder.Events.RequestCancelled:Unsubscribe("Features.SettingWidgets")
+            end, {StringID = "Features.SettingWidgets"})
+
+            -- Should be ordered after event registration in case the request is resolved synchronously
+            InputBinder.RequestBinding(Client.Input.GetAction(action), ev.Index)
+        end)
+    else
+        Widgets:LogWarning("Using InputBinding settings without a target action is not supported!")
+    end
+
+    return form
+end
+
 ---Sets the value of a setting and runs the ValueChanged callback.
 ---@param setting Features.SettingWidgets.SupportedSettingType
 ---@param value any
@@ -173,10 +225,12 @@ end
 Widgets.Hooks.RenderSetting:Subscribe(function (ev)
     local setting = ev.Setting
     if setting.Type == "Boolean" then
-        Widgets._RenderCheckboxFromSetting(ev)
+        ev.Instance = Widgets._RenderCheckboxFromSetting(ev)
     elseif setting.Type == "Choice" then
-        Widgets._RenderComboBoxFromSetting(ev)
+        ev.Instance = Widgets._RenderComboBoxFromSetting(ev)
     elseif setting.Type == "String" then
-        Widgets._RenderTextFieldFromSetting(ev)
+        ev.Instance = Widgets._RenderTextFieldFromSetting(ev)
+    elseif setting.Type == "InputBinding" then
+        ev.Instance = Widgets._RenderInputBindingSetting(ev)
     end
 end, {StringID = "DefaultImplementation"})

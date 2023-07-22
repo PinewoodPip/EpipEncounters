@@ -59,6 +59,12 @@ function _Action.Create(data)
     return instance
 end
 
+---Returns the name of the action.
+---@return string
+function _Action:GetName()
+    return self.Name -- TODO switch to handles
+end
+
 ---@class InputLib_Action_KeyCombination
 ---@field Keys InputRawType[]
 
@@ -84,6 +90,7 @@ function Input.RegisterAction(id, data)
         Name = data.Name,
         Description = "TODO",
         DefaultValue = {data.DefaultInput1, data.DefaultInput2},
+        TargetActionID = id,
     })
 
     return action
@@ -94,6 +101,24 @@ end
 ---@return InputLib_Action
 function Input.GetAction(id)
     return Input._Actions[id]
+end
+
+---Returns all registered actions.
+---@return table<string, InputLib_Action>
+function Input.GetActions()
+    local actions = {}
+    for k,v in pairs(Input._Actions) do
+        actions[k] = v
+    end
+    return actions
+end
+
+---Returns the setting that stores an action's bindings.
+---@param actionID string
+---@return SettingsLib.Settings.InputBinding
+function Input.GetActionBindingSetting(actionID)
+    local setting = Settings.GetSetting("InputLib", Input._ActionBindingSettingPrefix .. actionID) ---@cast setting SettingsLib.Settings.InputBinding
+    return setting
 end
 
 ---Returns the bindings of an action.

@@ -146,6 +146,18 @@ Text.CommonStrings.LevelFloor = Text.RegisterTranslatedString({
    Text = "Level %d+",
    ContextDescription = "Ex. 'Level 10+'",
 })
+Text.CommonStrings.Keybinds = Text.RegisterTranslatedString({
+   Handle = "hebad38dcg58c3g4a03gb44eg02833543ba38",
+   Text = "Keybinds",
+})
+Text.CommonStrings.Accept = Text.RegisterTranslatedString({
+   Handle = "hce2c434eg0377g425eg82ceg3948a01e8ee4",
+   Text = "Accept",
+})
+Text.CommonStrings.Clear = Text.RegisterTranslatedString({
+   Handle = "h5f73023dg23f4g4b43g90e6gb2e91b6a20f1",
+   Text = "Clear",
+})
 
 ---------------------------------------------
 -- BRANDING

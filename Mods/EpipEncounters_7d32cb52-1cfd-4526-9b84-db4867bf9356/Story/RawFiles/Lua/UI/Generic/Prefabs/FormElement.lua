@@ -9,6 +9,7 @@ local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 local Prefab = {
     DEFAULT_SIZE = Vector.Create(600, 50),
 }
+Generic:RegisterClass("GenericUI_Prefab_FormElement", Prefab, {"GenericUI_Prefab"})
 Generic.RegisterPrefab("GenericUI_Prefab_FormElement", Prefab)
 
 ---@diagnostic disable-next-line: duplicate-doc-alias
