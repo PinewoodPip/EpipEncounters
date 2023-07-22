@@ -137,7 +137,7 @@ local function GetPressedKeys()
 end
 Input.Events.KeyPressed:Subscribe(function (ev)
     if UI:IsVisible() then
-        if Input.IsMouseInput(ev.InputID) then return end
+        if Input.IsMouseInput(ev.InputID) and not Input.ACTION_WHITELISTED_MOUSE_INPUTS[ev.InputID] then return end
         local dummyBinding = GetPressedKeys()
         if #dummyBinding.Keys == 0 then return end
         local mapping = Input.StringifyBinding(dummyBinding)
