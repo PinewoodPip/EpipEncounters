@@ -19,12 +19,11 @@ local Tooltip = Client.Tooltip
 ---@field ParentID string Empty string for elements in the root.
 ---@field _Children GenericUI_Element[]
 ---@field Type string
----@field Tooltip (GenericUI_ElementTooltip|string)? Will be rendered upon the element being hovered. Strings are rendered as unformatted tooltips.
----@field SetPositionRelativeToParent fun(self:GenericUI_Element, position:GenericUI_Element_RelativePosition, horizontalOffset:number?, verticalOffset:number?)
----@field Move fun(self:GenericUI_Element, x:number, y:number) Moves the element a certain amount of pixels from its current position.
+---@field Tooltip (GenericUI_ElementTooltip|string)? DEPRECATED! Will be rendered upon the element being hovered. Strings are rendered as unformatted tooltips.
 ---@field Events GenericUI_Element_Events
 ---@field _Tooltip GenericUI_ElementTooltip
 local _Element = Generic._Element
+local __Element = _Element
 
 ---@class GenericUI_Element_Events
 _Element.Events = {
@@ -354,9 +353,9 @@ function _Element:SetTooltip(tooltipType, tooltip)
     end)
 end
 
-_Element.SetPositionRelativeToParent = Generic.ExposeFunction("SetPositionRelativeToParent")
-_Element.Move = Generic.ExposeFunction("Move")
-_Element.GetWidth = Generic.ExposeFunction("GetWidth")
-_Element.GetHeight = Generic.ExposeFunction("GetHeight")
-_Element.GetRawWidth = Generic.ExposeFunction("GetRawWidth")
-_Element.GetRawHeight = Generic.ExposeFunction("GetRawHeight")
+__Element.SetPositionRelativeToParent = Generic.ExposeFunction("SetPositionRelativeToParent")
+__Element.Move = Generic.ExposeFunction("Move")
+__Element.GetWidth = Generic.ExposeFunction("GetWidth")
+__Element.GetHeight = Generic.ExposeFunction("GetHeight")
+__Element.GetRawWidth = Generic.ExposeFunction("GetRawWidth")
+__Element.GetRawHeight = Generic.ExposeFunction("GetRawHeight")
