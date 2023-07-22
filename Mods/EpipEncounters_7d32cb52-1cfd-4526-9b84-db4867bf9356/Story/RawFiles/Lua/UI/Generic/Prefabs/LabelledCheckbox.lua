@@ -77,11 +77,11 @@ end
 ---Re-renders the element with the current style.
 function Checkbox:Render()
     if self._Style == "Right-aligned" then
-        self.Label:SetPositionRelativeToParent("Left")
+        self.Label:SetPositionRelativeToParent("Left", self.LABEL_SIDE_MARGIN, 0)
         self.Checkbox:SetPositionRelativeToParent("Right")
 
     elseif self._Style == "Left-aligned" then
-        self.Label:SetPositionRelativeToParent("Right")
+        self.Label:SetPositionRelativeToParent("Right", -self.LABEL_SIDE_MARGIN, 0)
         self.Checkbox:SetPositionRelativeToParent("Left")
     else
         Generic:Error("GenericUI_Prefab_LabelledCheckbox:Render", "Invalid style value")

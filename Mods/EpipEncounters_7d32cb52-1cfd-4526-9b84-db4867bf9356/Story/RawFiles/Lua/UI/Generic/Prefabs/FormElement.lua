@@ -8,6 +8,7 @@ local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 ---@field Label GenericUI_Prefab_Text
 local Prefab = {
     DEFAULT_SIZE = Vector.Create(600, 50),
+    LABEL_SIDE_MARGIN = 5,
 }
 Generic:RegisterClass("GenericUI_Prefab_FormElement", Prefab, {"GenericUI_Prefab"})
 Generic.RegisterPrefab("GenericUI_Prefab_FormElement", Prefab)
@@ -45,7 +46,7 @@ function Prefab:__SetupBackground(parent, size)
     self.Label = text
 
     Prefab.SetBackgroundSize(self, size) -- Ignore overrides
-    text:SetPositionRelativeToParent("Left")
+    text:SetPositionRelativeToParent("Left", self.LABEL_SIDE_MARGIN, 0)
 end
 
 ---@return GenericUI_Element_TiledBackground

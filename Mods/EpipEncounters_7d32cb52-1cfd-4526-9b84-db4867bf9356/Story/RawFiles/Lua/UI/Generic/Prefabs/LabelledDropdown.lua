@@ -57,7 +57,7 @@ function Dropdown:SetSize(width, height)
     self:SetBackgroundSize(Vector.Create(width, height))
 
     labelElement:SetSize(width, 30)
-    labelElement:SetPositionRelativeToParent("Left")
+    labelElement:SetPositionRelativeToParent("Left", self.LABEL_SIDE_MARGIN, 0)
 
     combo:SetPositionRelativeToParent("Right")
 end
