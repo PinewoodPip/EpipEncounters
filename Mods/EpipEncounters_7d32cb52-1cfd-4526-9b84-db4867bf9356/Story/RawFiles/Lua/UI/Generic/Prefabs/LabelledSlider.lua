@@ -43,9 +43,15 @@ function Slider.Create(ui, id, parent, size, label, min, max, step)
     instance:SetLabel(label)
 
     local sliderList = instance:CreateElement("SliderList", "GenericUI_Element_HorizontalList", instance:GetRootElement())
+
     local leftValueLabel = TextPrefab.Create(ui, instance:PrefixID("LeftValueLabel"), sliderList, "", "Right", instance.VALUE_LABEL_SIZE)
     local slider = instance:CreateElement("Slider", "GenericUI_Element_Slider", sliderList)
     local rightValueLabel = TextPrefab.Create(ui, instance:PrefixID("RightValueLabel"), sliderList, "", "Left", instance.VALUE_LABEL_SIZE)
+
+    leftValueLabel:SetCenterInLists(true)
+    slider:SetCenterInLists(true)
+    slider:SetSizeOverride(slider:GetWidth(), 30)
+    rightValueLabel:SetCenterInLists(true)
 
     -- Forward events.
     slider.Events.HandleReleased:Subscribe(function (ev)
@@ -71,7 +77,11 @@ function Slider.Create(ui, id, parent, size, label, min, max, step)
     slider:SetStep(step)
     instance:SetMaxDecimals(instance.DEFAULT_MAX_DECIMALS)
 
-    sliderList:SetPositionRelativeToParent("Right")
+    -- Not sure why both are necessary to get the centering right
+    sliderList:SetSize(Vector.Create(sliderList:GetWidth(), size[2]):unpack())
+    sliderList:SetSizeOverride(Vector.Create(sliderList:GetWidth(), size[2]):unpack()) -- If we don't set this, reposition elements will use calculated flash height
+    sliderList:RepositionElements()
+    sliderList:SetPositionRelativeToParent("Right", 0, 0)
 
     return instance
 end

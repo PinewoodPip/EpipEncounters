@@ -45,7 +45,7 @@ function Prefab:__SetupBackground(parent, size)
     self.Background = bg
     self.Label = text
 
-    Prefab.SetBackgroundSize(self, size) -- Ignore overrides
+    Prefab.SetBackgroundSize(self, size) -- Use base class method
     text:SetPositionRelativeToParent("Left", self.LABEL_SIDE_MARGIN, 0)
 end
 
@@ -61,6 +61,7 @@ function Prefab:SetBackgroundSize(size)
 
     root:SetBackground("Black", size:unpack())
     root:SetAlpha(0.2)
+    root:SetSizeOverride(size) -- Prevent overflowing elements from altering the size of the prefab (for containers)
 end
 
 ---Returns the label of the element.
