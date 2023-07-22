@@ -248,6 +248,19 @@ function _Element:SetSizeOverride(width, height)
     self:GetMovieClip().SetSizeOverride(width, height)
 end
 
+---Returns the size override of the element, if any.
+---@return Vector2?
+function _Element:GetSizeOverride()
+    local mc = self:GetMovieClip()
+    local override = nil
+
+    if mc.widthOverride or mc.heightOverride then
+        override = Vector.Create(self:GetWidth(), self:GetHeight())
+    end
+
+    return override
+end
+
 ---Sets the scroll rect of the element.
 ---@param position Vector2
 ---@param size Vector2
@@ -273,24 +286,19 @@ function _Element:SetChildIndex(child, index)
     self:GetMovieClip().SetChildIndex(child, index)
 end
 
----Returns the calculated width of the element.
----@return number
-function _Element:GetWidth()
-    return self:GetMovieClip().width
-end
-
----Returns the calculated height of the element.
----@return number
-function _Element:GetHeight()
-    return self:GetMovieClip().height
-end
-
 ---Sets the scale of the element.
 ---@param scale Vector2
 function _Element:SetScale(scale)
     local mc = self:GetMovieClip()
 
     mc.scaleX, mc.scaleY = scale[1], scale[2]
+end
+
+---Returns the size of the element.
+---@param considerOverrides boolean? If `true`, width/height overrides will be considered. Defaults to `true`.
+---@return Vector2
+function _Element:GetSize(considerOverrides)
+    return Vector.Create(self:GetWidth(considerOverrides), self:GetHeight(considerOverrides))
 end
 
 ---Returns the scale of the element.
@@ -348,5 +356,7 @@ end
 
 _Element.SetPositionRelativeToParent = Generic.ExposeFunction("SetPositionRelativeToParent")
 _Element.Move = Generic.ExposeFunction("Move")
+_Element.GetWidth = Generic.ExposeFunction("GetWidth")
+_Element.GetHeight = Generic.ExposeFunction("GetHeight")
 _Element.GetRawWidth = Generic.ExposeFunction("GetRawWidth")
 _Element.GetRawHeight = Generic.ExposeFunction("GetRawHeight")

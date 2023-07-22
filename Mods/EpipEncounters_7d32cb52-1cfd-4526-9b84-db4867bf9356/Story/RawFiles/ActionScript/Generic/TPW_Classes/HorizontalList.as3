@@ -82,7 +82,7 @@ package TPW_Classes
 
                     if (content_array[_loc6_].CENTER_IN_LIST) // TODO multirow support
                     {
-                        content_array[_loc6_].y = this.frameHeight / 2 - content_array[_loc6_].height / 2;
+                        content_array[_loc6_].y = this.frameHeight / 2 - getElementHeight(content_array[_loc6_]) / 2;
                     }
                 }
                 else
