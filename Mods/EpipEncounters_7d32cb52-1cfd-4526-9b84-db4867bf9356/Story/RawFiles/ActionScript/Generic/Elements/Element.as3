@@ -203,7 +203,6 @@ package Elements
         {
             if (considerOverrides && this.heightOverride)
             {
-                trace("override");
                 return this.heightOverride;
             }
             else

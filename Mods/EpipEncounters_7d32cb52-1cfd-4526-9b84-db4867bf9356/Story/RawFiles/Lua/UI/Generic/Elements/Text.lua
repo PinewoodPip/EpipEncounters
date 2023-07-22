@@ -53,11 +53,12 @@ end
 function Text:GetTextSize()
     local mc = self:GetMovieClip()
     local txt = mc.text_txt
-    local width = txt.textWidth
+    local width = txt.textWidth + 2 -- Flash docs mention a "2-pixel gutter" which is possibly misimplemented in Iggy
     local height = 0 -- txt.textHeight is not accurate; it looks like it considers an additional line, which is difficult to undo if the lines have mixed height.
 
     for i=1,txt.numLines,1 do
         height = height + self:GetLineHeight(i)
+        width = math.max(width, self:GetLineWidth(i)) -- Not 100% if necessary
     end
 
     return Vector.Create(math.max(0, width), math.ceil(height)) -- Empty text fields have -infinity width.
@@ -81,6 +82,7 @@ _Text.SetText = Generic.ExposeFunction("SetText")
 _Text.SetType = Generic.ExposeFunction("SetType")
 _Text.SetEditable = Generic.ExposeFunction("SetEditable")
 _Text.SetRestrictedCharacters = Generic.ExposeFunction("SetRestrictedCharacters")
+_Text.GetLineWidth = Generic.ExposeFunction("GetLineWidth")
 _Text.GetLineHeight = Generic.ExposeFunction("GetLineHeight")
 
 ---------------------------------------------

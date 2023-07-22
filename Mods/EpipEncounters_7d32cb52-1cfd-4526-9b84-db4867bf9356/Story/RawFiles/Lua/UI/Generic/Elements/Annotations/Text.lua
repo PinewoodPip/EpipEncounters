@@ -24,6 +24,11 @@ function Text:SetEditable(editable) end
 ---@param restriction string
 function Text:SetRestrictedCharacters(restriction) end
 
+---Returns the width of a line.
+---@param lineIndex integer 1-based.
+---@return number
+function Text:GetLineWidth(lineIndex) end
+
 ---Returns the height of a line.
 ---@param lineIndex integer 1-based.
 ---@return number

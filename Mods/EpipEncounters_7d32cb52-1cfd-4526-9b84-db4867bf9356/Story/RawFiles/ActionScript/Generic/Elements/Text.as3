@@ -154,6 +154,12 @@ package Elements
             return this.text_txt.getLineMetrics(lineIndex - 1).height;
         }
 
+        // lineIndex param is 1-based.
+        public function GetLineWidth(lineIndex:uint) : Number
+        {
+            return this.text_txt.getLineMetrics(lineIndex - 1).width;
+        }
+
         private function acceptSave() : *
         {
             var _loc1_:String = this.text_txt.text;
