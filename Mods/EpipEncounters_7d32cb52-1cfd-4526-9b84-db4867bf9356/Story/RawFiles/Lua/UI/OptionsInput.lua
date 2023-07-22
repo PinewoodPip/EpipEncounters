@@ -55,6 +55,7 @@ function Options.ShouldRenderEntry(entry)
     return Options.Hooks.ShouldRenderEntry:Return(true, entry)
 end
 
+---@deprecated
 ---@param id string
 ---@param tab OptionsInputTab
 function Options.RegisterTab(id, tab)

@@ -3,7 +3,6 @@
 -- Temporary script to register keybindings until a better API exists to register them onto the UI.
 ---------------------------------------------
 
-local Options = Client.UI.OptionsInput
 local Codex = Epip.GetFeature("Feature_Codex")
 
 ---@type InputLib_Action[]
@@ -68,7 +67,6 @@ if EpicEncounters.IsEnabled() then
     })
 end
 
-Options.RegisterTab("EpipEncounters", {
-    Name = "Epip Encounters",
-    Keybinds = keybinds,
-})
+for _,binding in ipairs(keybinds) do
+    Client.Input.RegisterAction(binding.ID, binding)
+end
