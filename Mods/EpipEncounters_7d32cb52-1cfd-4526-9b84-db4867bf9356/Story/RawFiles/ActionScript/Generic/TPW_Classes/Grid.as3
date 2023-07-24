@@ -53,6 +53,7 @@ package TPW_Classes
             var rowIndex:uint = 0;
             var usedPagesCount:uint = 1;
             var maxRowWidth:Number = 0;
+            var maxHeight:Number = 0;
             if(this.m_gridAlign == 0)
             {
                 index = 0;
@@ -65,6 +66,7 @@ package TPW_Classes
                         content_array[index].y = nextY;
                         nextX = nextX + Math.round(getElementWidth(content_array[index]) + EL_SPACING);
                         maxRowWidth = Math.max(maxRowWidth, nextX); // Should be checked before the wrap-to-next-row check
+                        maxHeight = Math.max(maxHeight, nextY + getElementHeight(content_array[index]));
                         if(!this.m_hasScrollRect)
                         {
                             if(this.m_currpage == usedPagesCount)
@@ -110,7 +112,7 @@ package TPW_Classes
 
                 // Update content width and height
                 this.contentWidth = maxRowWidth;
-                this.contentHeight = nextY;
+                this.contentHeight = maxHeight;
             }
             else // Unused logic
             {
