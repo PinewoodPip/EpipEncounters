@@ -14,20 +14,6 @@ Epip.InitializeLibrary("Generic", Generic)
 ---@alias GenericUI_ParentIdentifier string|GenericUI_Element
 
 ---------------------------------------------
--- EVENTS/HOOKS
----------------------------------------------
-
--- Note that these are bound to each UI! They are not "global" events - you can't listen for an event happening across all instances.
-
----@class GenericUI_Event_Button_Pressed : Event
----@field RegisterListener fun(self, listener:fun(stringID:string))
----@field Fire fun(self, stringID:string)
-
----@class GenericUI_Event_StateButton_StateChanged : Event
----@field RegisterListener fun(self, listener:fun(stringID:string, active:boolean))
----@field Fire fun(self, stringID:string, active:boolean)
-
----------------------------------------------
 -- METHODS
 ---------------------------------------------
 
@@ -44,8 +30,9 @@ function Generic.OnElementUICall(ev, elementID, eventName, eventObj)
 end
 
 ---@param id string
+---@param layer integer? Defaults to `DEFAULT_LAYER`.
 ---@return GenericUI_Instance
-function Generic.Create(id)
+function Generic.Create(id, layer)
     ---@type GenericUI_Instance
     local ui = {
         ID = id,
@@ -53,52 +40,48 @@ function Generic.Create(id)
         Elements = {},
         Events = {
             -- TODO remove
-            ---@type GenericUI_Event_Button_Pressed
-            Button_Pressed = {},
-            ---@type GenericUI_Event_StateButton_StateChanged
-            StateButton_StateChanged = {},
             ---@type Event<GenericUI_Event_ViewportChanged>
             ViewportChanged = {Legacy = false},
         },
     }
-    local uiOBject = Ext.UI.Create(id, Generic.SWF_PATH, Generic.DEFAULT_LAYER)
+    local uiOBject = Ext.UI.Create(id, Generic.SWF_PATH, layer or Generic.DEFAULT_LAYER)
     Epip.InitializeUI(uiOBject:GetTypeId(), id, ui)
     ui = Generic:GetClass("GenericUI_Instance").Create(ui)
 
     Generic.INSTANCES[uiOBject:GetTypeId()] = ui
 
     -- Basic element events
-    Generic.ForwardUICall(ui, "elementMouseUp", "MouseUp")
-    Generic.ForwardUICall(ui, "elementMouseDown", "MouseDown")
-    ui:RegisterCallListener("elementMouseOver", Generic.OnElementMouseOver)
-    ui:RegisterCallListener("elementMouseOut", Generic.OnElementMouseOut)
-    Generic.ForwardUICall(ui, "elementRightClick", "RightClick")
-    Generic.ForwardUICall(ui, "elementTweenCompleted", "TweenCompleted", {"EventID"})
+    Generic._ForwardUICall(ui, "elementMouseUp", "MouseUp")
+    Generic._ForwardUICall(ui, "elementMouseDown", "MouseDown")
+    ui:RegisterCallListener("elementMouseOver", Generic._OnElementMouseOver)
+    ui:RegisterCallListener("elementMouseOut", Generic._OnElementMouseOut)
+    Generic._ForwardUICall(ui, "elementRightClick", "RightClick")
+    Generic._ForwardUICall(ui, "elementTweenCompleted", "TweenCompleted", {"EventID"})
 
-    ui:RegisterCallListener("ShowElementTooltip", Generic.OnElementShowTooltip)
+    ui:RegisterCallListener("ShowElementTooltip", Generic._OnElementShowTooltip)
     -- ui:RegisterCallListener("viewportChanged", Generic.OnViewportChanged)
 
     -- Text
-    Generic.ForwardUICall(ui, "Text_Changed", "Changed", {"Text"})
-    Generic.ForwardUICall(ui, "Text_Focused", "Focused")
-    Generic.ForwardUICall(ui, "Text_Unfocused", "Unfocused")
+    Generic._ForwardUICall(ui, "Text_Changed", "Changed", {"Text"})
+    Generic._ForwardUICall(ui, "Text_Focused", "Focused")
+    Generic._ForwardUICall(ui, "Text_Unfocused", "Unfocused")
 
     -- Button
-    Generic.ForwardUICall(ui, "Button_Pressed", "Pressed")
+    Generic._ForwardUICall(ui, "Button_Pressed", "Pressed")
 
     -- StateButton
-    Generic.ForwardUICall(ui, "StateButton_StateChanged", "StateChanged", {"Active"})
+    Generic._ForwardUICall(ui, "StateButton_StateChanged", "StateChanged", {"Active"})
 
     -- Slot
-    Generic.ForwardUICall(ui, "Slot_DragStarted", "DragStarted")
-    Generic.ForwardUICall(ui, "Slot_Clicked", "Clicked")
+    Generic._ForwardUICall(ui, "Slot_DragStarted", "DragStarted")
+    Generic._ForwardUICall(ui, "Slot_Clicked", "Clicked")
 
     -- ComboBox
-    ui:RegisterCallListener("ComboBox_ItemSelected", Generic.OnComboBoxItemSelected)
+    ui:RegisterCallListener("ComboBox_ItemSelected", Generic._OnComboBoxItemSelected)
 
     -- Slider
-    Generic.ForwardUICall(ui, "Slider_HandleReleased", "HandleReleased", {"Value"})
-    Generic.ForwardUICall(ui, "Slider_HandleMoved", "HandleMoved", {"Value"})
+    Generic._ForwardUICall(ui, "Slider_HandleReleased", "HandleReleased", {"Value"})
+    Generic._ForwardUICall(ui, "Slider_HandleMoved", "HandleMoved", {"Value"})
 
     -- Logging
     ui:RegisterCallListener("GenericLog", function(_, elementID, elementType, msg, msgType)
@@ -116,7 +99,7 @@ function Generic.Create(id)
     if ui:Exists() then
         ui:Hide()
     end
-    
+
     return ui
 end
 
@@ -202,7 +185,7 @@ end
 ---@param call string
 ---@param eventName string
 ---@param fields string[]?
-function Generic.ForwardUICall(ui, call, eventName, fields)
+function Generic._ForwardUICall(ui, call, eventName, fields)
     fields = fields or {}
     ui:RegisterCallListener(call, function(_, id, ...)
         local element = ui:GetElementByID(id)
@@ -223,25 +206,12 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
-Generic.OnElementMouseUp = function(ev, id)
+---Handles a MouseOver event.
+---@param ev EclLuaUICallEvent
+---@param id string Element ID.
+function Generic._OnElementMouseOver(ev, id)
     local element = Generic.GetInstance(ev.UI:GetTypeId()):GetElementByID(id)
-    if not element then return nil end
-    Generic:DebugLog("CALL onElementMouseUp: ", id)
-
-    element.Events.MouseUp:Throw({})
-end
-
-Generic.OnElementMouseDown = function(ev, id)
-    local element = Generic.GetInstance(ev.UI:GetTypeId()):GetElementByID(id)
-    if not element then return nil end
-    Generic:DebugLog("CALL onElementMouseDown: ", id)
-
-    element.Events.MouseDown:Throw({})
-end
-
-Generic.OnElementMouseOver = function(ev, id)
-    local element = Generic.GetInstance(ev.UI:GetTypeId()):GetElementByID(id)
-    if not element then return nil end
+    if not element then return end
     Generic:DebugLog("CALL onElementMouseOver: ", id)
 
     element.Events.MouseOver:Throw({})
@@ -251,7 +221,16 @@ Generic.OnElementMouseOver = function(ev, id)
     end
 end
 
-Generic.OnElementShowTooltip = function(ev, id, x, y, width, height, _, align)
+---Handles a ShowTooltip event.
+---@param ev EclLuaUICallEvent
+---@param id string
+---@param x number
+---@param y number
+---@param width number
+---@param height number
+---@param _ unknown
+---@param align unknown
+function Generic._OnElementShowTooltip(ev, id, x, y, width, height, _, align)
     local ui = Generic.GetInstance(ev.UI:GetTypeId())
     local mouseX, mouseY = ui:GetMousePosition()
     local element = ui:GetElementByID(id)
@@ -287,7 +266,11 @@ Generic.OnElementShowTooltip = function(ev, id, x, y, width, height, _, align)
     end
 end
 
-Generic.OnTooltip = function(char, skill, tooltip)
+---Handles a Game.Tooltip event invoked from a Generic element.
+---@param char EclCharacter
+---@param skill string
+---@param tooltip any
+function Generic._OnTooltip(char, skill, tooltip)
     if Generic.CurrentTooltipElement then
         local element = Generic.CurrentTooltipElement.UI:GetElementByID(Generic.CurrentTooltipElement.ID)
 
@@ -296,8 +279,9 @@ Generic.OnTooltip = function(char, skill, tooltip)
         end
     end
 end
-Game.Tooltip.RegisterListener("Skill", nil, Generic.OnTooltip)
+Game.Tooltip.RegisterListener("Skill", nil, Generic._OnTooltip)
 
+-- Listen for tooltips being ready to position
 Ext.RegisterUINameInvokeListener("showFormattedTooltipAfterPos", function(ui)
     if Generic.CurrentTooltipElement then
         local pos = Generic.CurrentTooltipElement.Position
@@ -306,13 +290,17 @@ Ext.RegisterUINameInvokeListener("showFormattedTooltipAfterPos", function(ui)
     end
 end, "After")
 
-Generic.OnElementMouseOut = function(ev, id)
+---Handles a MouseOut event.
+---@param ev EclLuaUICallEvent
+---@param id string
+function Generic._OnElementMouseOut(ev, id)
     local element = Generic.GetInstance(ev.UI:GetTypeId()):GetElementByID(id)
     if not element then return nil end
     Generic:DebugLog("CALL onElementMouseOut: ", id)
 
     element.Events.MouseOut:Throw({})
 
+    -- Hide tooltip
     if element and element.Tooltip and Generic.CurrentTooltipElement and Generic.CurrentTooltipElement.ID == id then -- TODO ui check
         Client.UI.Hotbar:HideTooltip()
         Generic.CurrentTooltipElement.UI:ExternalInterfaceCall("hideTooltip")
@@ -320,44 +308,13 @@ Generic.OnElementMouseOut = function(ev, id)
     end
 end
 
-Generic.OnButtonPressed = function(ev, id)
-    ---@type GenericUI_Element_Button
-    local element = Generic.GetInstance(ev.UI:GetTypeId()):GetElementByID(id)
-    Generic:DebugLog("CALL Button_Pressed: ", id)
-    local ui = Generic.GetInstance(ev.UI:GetTypeId())
-
-    ui.Events.Button_Pressed:Fire(id)
-    element.Events.Pressed:Throw({})
-end
-
-Generic.OnStateButtonStateChanged = function(ev, id, active)
-    Generic:DebugLog("CALL StateButton_StateChanged: ", id, active)
-    local ui = Generic.GetInstance(ev.UI:GetTypeId())
-
-    ui.Events.StateButton_StateChanged:Fire(id, active)
-end
-
-Generic.OnSlotDragStarted = function(ev, id)
-    ---@type GenericUI_Element_Slot
-    local element = Generic.GetInstance(ev.UI:GetTypeId()):GetElementByID(id)
-    if not element then return nil end
-    Generic:DebugLog("CALL Slot_DragStarted: ", id)
-
-    element.Events.DragStarted:Throw({})
-end
-
-Generic.OnSlotClicked = function(ev, id)
-    ---@type GenericUI_Element_Slot
-    local element = Generic.GetInstance(ev.UI:GetTypeId()):GetElementByID(id)
-    if not element then return nil end
-    Generic:DebugLog("CALL Slot_Clicked: ", id)
-
-    element.Events.Clicked:Throw({})
-end
-
-Generic.OnComboBoxItemSelected = function(ev, id, index, optionID)
-    ---@type GenericUI_Element_ComboBox
-    local element = Generic.GetInstance(ev.UI:GetTypeId()):GetElementByID(id)
+---Handles ComboBox items being selected.
+---@param ev EclLuaUICallEvent
+---@param id string
+---@param index integer
+---@param optionID string
+function Generic._OnComboBoxItemSelected(ev, id, index, optionID)
+    local element = Generic.GetInstance(ev.UI:GetTypeId()):GetElementByID(id) ---@cast element GenericUI_Element_ComboBox
     if not element then return nil end
     Generic:DebugLog("CALL ComboBox_ItemSelected: ", id)
 
@@ -379,7 +336,7 @@ end
 
 -- Listen for viewport changes
 local oldViewport = {0, 0}
-Ext.Events.Tick:Subscribe(function (e)
+Ext.Events.Tick:Subscribe(function (_)
     local viewport = Ext.UI.GetViewportSize()
     local width, height = viewport[1], viewport[2]
 
