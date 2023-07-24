@@ -63,7 +63,6 @@ function GridSection:__UpdateElement(index, element, data) end
 ---@see Features.Codex.Sections.Grid.__UpdateElement
 ---@param data any[]
 function GridSection:__Update(data)
-    local previousSlotsCount = #self._GridElements
     for i=1,#data,1 do
         local element = self._GridElements[i]
         if not element then -- Create element if necessary
@@ -73,12 +72,10 @@ function GridSection:__Update(data)
         self:__UpdateElement(i, element, data[i])
         self._GridElements[i]:SetVisible(true)
     end
-    if previousSlotsCount ~= #self._GridElements then
-        self.Grid:RepositionElements()
-    end
     for i=#data+1,#self._GridElements,1 do
         self._GridElements[i]:SetVisible(false)
     end
+    self.Grid:RepositionElements()
 
     self.GridScrollList:RepositionElements()
     self.GridScrollList:GetMovieClip().list.resetScroll() -- TODO public API
