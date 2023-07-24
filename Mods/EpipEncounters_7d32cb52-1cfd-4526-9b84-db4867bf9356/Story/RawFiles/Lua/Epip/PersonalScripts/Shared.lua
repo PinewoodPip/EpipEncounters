@@ -32,7 +32,7 @@ Epip.RegisterFeature("PersonalScripts", PersonalScripts)
 function PersonalScripts._LoadScripts(path)
     local def = IO.LoadFile(path or PersonalScripts.DEFINITION_PATH) ---@type Feature_PersonalScripts_ScriptSet
 
-    for _,scriptDef in ipairs(def.Scripts) do
+    for _,scriptDef in ipairs(def and def.Scripts or {}) do
         local canLoad = scriptDef.Context == "Shared"
         if not canLoad then
             canLoad = (Ext.IsClient() and scriptDef.Context == "Client") or (Ext.IsServer() and scriptDef.Context == "Server")
