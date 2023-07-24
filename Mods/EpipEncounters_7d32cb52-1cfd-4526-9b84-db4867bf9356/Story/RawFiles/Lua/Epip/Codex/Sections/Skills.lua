@@ -49,6 +49,7 @@ local Skills = {
         "Projectile_DeployMassTraps",
         "Projectile_PyroclasticEruption",
         "Target_FireInfusion",
+        "Target_WaterInfusion",
         "Target_IceInfusion",
         "Target_ElectricInfusion",
         "Target_PoisonInfusion",
@@ -385,7 +386,6 @@ function Section:__CreateElement(index)
     return instance
 end
 
-
 ---Updates a skill element.
 ---@override
 ---@param _ integer
@@ -553,11 +553,20 @@ Skills.Hooks.IsSkillValid:Subscribe(function (ev)
             goto End
         end
 
+        local lowercaseName = Skills._GetSkillDisplayName(ev.Stat):lower()
+
+        -- Filter out skills with no display name or icon - these tend to be unobtainable skills that are not properly marked as such by the developer.
+        if lowercaseName == "" then
+            valid = false
+            goto End
+        elseif stat.Icon == "unknown" or stat.Icon == "" then
+            valid = false
+            goto End
+        end
+
         -- Filter based on search term - should be done last for performance reasons
         local searchTerm = Skills._SearchTerm:lower()
         if searchTerm ~= "" then
-            local lowercaseName = Skills._GetSkillDisplayName(ev.Stat):lower()
-
             if not lowercaseName:match(searchTerm) and not lowercaseID:match(searchTerm) then
                 valid = false
                 goto End
