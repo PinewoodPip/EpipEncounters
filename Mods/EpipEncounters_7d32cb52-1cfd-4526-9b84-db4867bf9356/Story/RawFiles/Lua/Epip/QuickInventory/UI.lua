@@ -14,8 +14,7 @@ local V = Vector.Create
 local QuickInventory = Epip.GetFeature("Feature_QuickInventory")
 local UI = Generic.Create("Epip_EquipmentSwap")
 UI._Initialized = false
-UI._Lists = {} ---@type GenericUI_Element_HorizontalList[]
-UI._Slots = DataStructures.Get("DataStructures_DefaultTable").Create({}) -- Pooling for HotbarSlots, since they are expensive to create.
+UI._Slots = {} ---@type GenericUI_Prefab_HotbarSlot[] Pooling for HotbarSlots, since they are expensive to create.
 UI._CurrentItemCount = 0
 UI._IsCursorOverUI = false
 
@@ -62,19 +61,21 @@ function UI.RenderItems()
         QuickInventory:AddProfilingStep("ItemRender")
     end
 
-    for i=UI._CurrentItemCount+1,UI._GetTotalSlots(),1 do
+    for i=UI._CurrentItemCount+1,UI._GetTotalSlots(),1 do -- Hide excess slots
         local slot = UI._GetHotbarSlot(i)
 
         slot.SlotElement:SetVisible(false)
     end
     QuickInventory:AddProfilingStep("SetVisibility")
+    UI.ItemGrid:RepositionElements()
+    UI.ItemsList:RepositionElements()
     QuickInventory:EndProfiling()
 end
 
 ---Returns the total amount of slot objects available.
 ---@return integer
 function UI._GetTotalSlots()
-    return #UI._Lists * UI.GetItemsPerRow()
+    return #UI._Slots
 end
 
 ---Refreshes the contents of the UI.
@@ -106,59 +107,30 @@ function UI._RenderItem(item)
 end
 
 ---Returns a pooled HotbarSlot.
----@overload fun(globalItemIndex:integer):GenericUI_Prefab_HotbarSlot
----@param listIndex integer
 ---@param itemIndex integer
 ---@return GenericUI_Prefab_HotbarSlot
-function UI._GetHotbarSlot(listIndex, itemIndex)
-    local itemsPerRow = UI.GetItemsPerRow()
-    if itemIndex == nil then
-        local globalItemIndex = listIndex
-        listIndex = ((globalItemIndex - 1) // itemsPerRow) + 1
-        itemIndex = globalItemIndex - (listIndex - 1) * itemsPerRow
+function UI._GetHotbarSlot(itemIndex)
+    local grid = UI.ItemGrid
+    local slot = UI._Slots[itemIndex]
+    if not slot then -- Create extra slots on demand.
+        slot = HotbarSlot.Create(UI, string.format("ItemSlot_%s", itemIndex), grid)
+        slot:SetCanDrag(true, false) -- Can drag items out of the slot, without clearing the slot.
+
+        slot.Events.Clicked:Subscribe(function (_)
+            UI._OnSlotClicked(slot)
+        end)
+
+        slot.Hooks.GetTooltipData:Subscribe(function (ev)
+            ev.Position = V(UI:GetPosition()) + V(UI.BACKGROUND_SIZE[1], 0)
+        end)
+
+        slot.SlotElement:SetSizeOverride(UI.ITEM_SIZE)
+        QuickInventory:AddProfilingStep("Create Slot")
+
+        UI._Slots[itemIndex] = slot
     end
 
-    local hasAddedLists = false
-    while listIndex > #UI._Lists do
-        local newList = UI.ItemsList:AddChild("List_" .. #UI._Lists + 1, "GenericUI_Element_HorizontalList")
-        newList:SetElementSpacing(UI.ELEMENT_SPACING)
-        newList:SetRepositionAfterAdding(false)
-
-        table.insert(UI._Lists, newList)
-        local list = UI._Lists[#UI._Lists]
-        list:SetSizeOverride(V(UI.ITEM_SIZE[1] * itemsPerRow + (itemsPerRow - 1) * UI.ELEMENT_SPACING, UI.ITEM_SIZE[2]))
-
-        -- Insert hotbar slots to the new list
-        for i=1,itemsPerRow,1 do
-            local element = HotbarSlot.Create(UI, string.format("%s_%s", #UI._Lists, i), list)
-            element:SetCanDrag(true, false) -- Can drag items out of the slot, without removing them from it.
-
-            element.Events.Clicked:Subscribe(function (_)
-                UI._OnSlotClicked(element)
-            end)
-
-            element.Hooks.GetTooltipData:Subscribe(function (ev)
-                ev.Position = V(UI:GetPosition()) + V(UI.BACKGROUND_SIZE[1], 0)
-            end)
-
-            UI._Slots[#UI._Lists][i] = element
-
-            element.SlotElement:SetSizeOverride(UI.ITEM_SIZE)
-            QuickInventory:AddProfilingStep("Create Slot")
-        end
-
-        hasAddedLists = true
-    end
-
-    if hasAddedLists then
-        for _,list in ipairs(UI._Lists) do
-            list:RepositionElements()
-        end
-        UI.ItemsList:RepositionElements()
-        QuickInventory:AddProfilingStep("RepositionElements")
-    end
-
-    return UI._Slots[listIndex][itemIndex]
+    return slot
 end
 
 ---Creates the core elements of the UI.
@@ -188,6 +160,11 @@ function UI._Initialize()
         scrollList:SetPosition(UI.BACKGROUND_SIZE[1]/2 - UI.GetItemListWidth()/2, 80)
         scrollList:SetScrollbarSpacing(-22)
         UI.ItemsList = scrollList
+
+        local slotGrid = scrollList:AddChild("ItemGrid", "GenericUI_Element_Grid")
+        slotGrid:SetRepositionAfterAdding(false)
+        slotGrid:SetGridSize(UI.GetItemsPerRow(), -1)
+        UI.ItemGrid = slotGrid
     end
 
     UI._Initialized = true
