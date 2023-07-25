@@ -6,8 +6,8 @@ local V = Vector.Create
 
 ---@class GenericUI_Prefab_HotbarSlot : GenericUI_Prefab, GenericUI_I_Elementable
 ---@field SlotIcon GenericUI_Element_IggyIcon
----@field RarityIcon GenericUI_Element_IggyIcon
----@field RuneSlotsIcon GenericUI_Element_IggyIcon
+---@field RarityIcon GenericUI_Element_IggyIcon? Created on demand.
+---@field RuneSlotsIcon GenericUI_Element_IggyIcon? Created on demand.
 ---@field _CanDrag boolean
 ---@field _CanDrop boolean
 ---@field _ClearAfterDrag boolean
@@ -136,14 +136,6 @@ function Slot.Create(ui, id, parent, requiredFeatures)
     iconMC.iggy_mc.y = 1
     iconMC.iggy_mc.x = 1
 
-    local runeSlotsIcon = obj:CreateElement("RuneSlotsIcon", "GenericUI_Element_IggyIcon", slot)
-    runeSlotsIcon:SetPosition(1, 1)
-    obj.RuneSlotsIcon = runeSlotsIcon
-
-    local rarityIcon = obj:CreateElement("RarityIcon", "GenericUI_Element_IggyIcon", slot)
-    rarityIcon:SetPosition(1, 1)
-    obj.RarityIcon = rarityIcon
-
     ---@diagnostic disable invisible
     slot.Events.MouseUp:Subscribe(function (e) obj:_OnElementMouseUp(e) end)
     slot.Events.Clicked:Subscribe(function (e) obj:_OnSlotClicked(e) end)
@@ -205,9 +197,17 @@ function Slot:SetItem(item)
 
     local runeSlotsIcon = Item.IsEquipment(item) and Item.GetRuneSlotsIcon(item) or nil
     if runeSlotsIcon then
-        self.RuneSlotsIcon:SetIcon(runeSlotsIcon, Slot.ICON_SIZE:unpack())
-        self.RuneSlotsIcon:SetVisible(true)
-    else
+        local runeSlotsElement = self.RuneSlotsIcon
+        if not runeSlotsElement then -- This element is only created on demand. The order in which these overlays are created should not matter, as they do not overlap.
+            runeSlotsElement = self:CreateElement("RuneSlotsIcon", "GenericUI_Element_IggyIcon", slot)
+            runeSlotsElement:SetPosition(1, 1)
+
+            self.RuneSlotsIcon = runeSlotsElement
+        end
+
+        runeSlotsElement:SetIcon(runeSlotsIcon, Slot.ICON_SIZE:unpack())
+        runeSlotsElement:SetVisible(true)
+    elseif self.RuneSlotsIcon then
         self.RuneSlotsIcon:SetVisible(false)
     end
 
@@ -238,6 +238,14 @@ end
 function Slot:SetRarityIcon(rarity)
     local element = self.RarityIcon
     local icon = Item.GetRarityIcon(rarity)
+
+    -- This element is only created on demand. The order in which these overlays are created should not matter, as they do not overlap.
+    if not element then
+        element = self:CreateElement("RarityIcon", "GenericUI_Element_IggyIcon", self.SlotElement)
+        element:SetPosition(1, 1)
+
+        self.RarityIcon = element
+    end
 
     if icon then
         element:SetIcon(icon, Slot.ICON_SIZE:unpack())

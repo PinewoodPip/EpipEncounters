@@ -721,12 +721,12 @@ end
 
 ---Returns the icon displaying the state of item's rune slots.
 ---@param item Item
----@return icon
+---@return icon? --`nil` if the item has no rune slots.
 function Item.GetRuneSlotsIcon(item)
-    local icon
     local runes = Item.GetRunes(item)
     local slots = Item.GetRuneSlots(item)
     local filledSlots = 0
+    local icon = nil
     local key = ""
 
     for _,_ in pairs(runes) do
