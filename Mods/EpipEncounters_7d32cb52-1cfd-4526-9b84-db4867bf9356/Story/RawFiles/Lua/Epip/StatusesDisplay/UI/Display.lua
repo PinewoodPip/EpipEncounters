@@ -111,6 +111,7 @@ function Manager:_UpdateStatusInstance(index, status)
 
     -- Update status displayed
     prefabInstance:SetStatus(char, status)
+    prefabInstance:SetVisible(true)
 
     -- Update right-click listener
     local statusID = status.StatusId
@@ -181,7 +182,6 @@ function Manager:_Update()
             self._CurrentStatusesPerRow = math.ceil(visibleStatusesCount / self.ROWS)
             self._CurrentStatusesPerRow = math.max(self._CurrentStatusesPerRow, self.MIN_STATUSES_PER_ROW)
 
-            -- The grid RepositionElements call re-enables visibility for all elements.
             self:_UpdateGridProperties()
 
             -- Hide leftover instances. Must be done after grid reposition
