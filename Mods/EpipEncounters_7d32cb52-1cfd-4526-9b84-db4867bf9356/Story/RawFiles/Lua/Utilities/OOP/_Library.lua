@@ -479,8 +479,8 @@ end
 ---Add a hook to the Hooks field.
 ---@deprecated Use `AddSubscribableHook()` instead.
 ---@param name string
----@param data? Hook
----@return Hook
+---@param data? LegacyHook
+---@return LegacyHook
 function Library:AddHook(name, data)
     local hook = data or {Module = self.__name, Event = name}
     hook.Module = self.__name

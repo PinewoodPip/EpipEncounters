@@ -29,12 +29,12 @@ end
 -- HOOKS
 ---------------------------------------------
 
----@class Hook
+---Deprecated.
+---@see Hook
+---@class LegacyHook
 ---@field Module string
 ---@field Event string
 ---@field Options any TODO document
-
----@class Hook
 _Hook = {
     Module = "",
     Event = "",

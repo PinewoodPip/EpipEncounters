@@ -17,7 +17,7 @@ Dyes.Hooks.GetCategories = Dyes:AddHook("GetCategories") ---@type VanityDyes_Hoo
 ---@field RegisterListener fun(self, listener:fun(dye:VanityDye, item:EclItem, character:EclCharacter))
 ---@field Fire fun(self, dye:VanityDye, item:EclItem, character:EclCharacter)
 
----@class VanityDyes_Hook_GetCategories : Hook
+---@class VanityDyes_Hook_GetCategories : LegacyHook
 ---@field RegisterHook fun(self, handler:fun(categories:VanityDyeCategory[]))
 ---@field Return fun(self, categories:VanityDyeCategory[])
 

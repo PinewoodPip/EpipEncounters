@@ -61,19 +61,19 @@ local CharacterSheet = Client.UI.CharacterSheet
 ---@field tooltip TooltipData The default tooltip, using Tooltip from the stat data, or Description as a fallback.
 
 ---Hook to change the calculated value of a stat.
----@class CharacterSheetUIStatsTab_GetStatValue : Hook
+---@class CharacterSheetUIStatsTab_GetStatValue : LegacyHook
 ---@field value number
 ---@field data StatsTabStat
 ---@field char EclCharacter
 
 ---Hook to manipulate the string display of a stat's value.
----@class CharacterSheetUIStatsTab_FormatStatValue : Hook
+---@class CharacterSheetUIStatsTab_FormatStatValue : LegacyHook
 ---@field value number
 ---@field data StatsTabStat
 ---@field char EclCharacter
 
 ---Hook to manipulate the label display of a stat.
----@class CharacterSheetUIStatsTab_FormatLabel : Hook
+---@class CharacterSheetUIStatsTab_FormatLabel : LegacyHook
 ---@field label string
 ---@field data StatsTabStat
 ---@field value number

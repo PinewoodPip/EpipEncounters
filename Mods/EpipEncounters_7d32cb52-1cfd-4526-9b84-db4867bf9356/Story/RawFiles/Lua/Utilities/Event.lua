@@ -9,6 +9,8 @@
 local _SubscribableEvent = {}
 SubscribableEvent = {}
 
+---@alias Hook<T> Event<T>
+
 ---@class Event_Options
 ---@field Priority number? Defaults to 100.
 ---@field Once boolean? If true, the listener will only fire once, then be unsubscribed.

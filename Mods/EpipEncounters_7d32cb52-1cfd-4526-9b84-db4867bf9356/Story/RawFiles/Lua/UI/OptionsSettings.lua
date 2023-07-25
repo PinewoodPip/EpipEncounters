@@ -145,25 +145,25 @@ end
 ---@field value any
 
 ---Hook to manipulate if an element should be interactable in the UI. Can be used, for example, to make a setting require another to be toggled on first.
----@class OptionsSettingsUI_IsElementEnabled : Hook
+---@class OptionsSettingsUI_IsElementEnabled : LegacyHook
 ---@field enabled boolean Defaults to true.
 ---@field data OptionsSettingsOption
 
 ---Hook to manipulate a custom option's value. Can be used, for example, to disable a setting based on another's value.
----@class OptionsSettingsUI_GetOptionValue : Hook
+---@class OptionsSettingsUI_GetOptionValue : LegacyHook
 ---@field value any Defaults to the stored value.
 ---@field data OptionsSettingsOption
 
 ---Fired while `baseUpdate_Array` is being parsed in Flash. Hook to manipulate the parsed array.
----@class OptionsSettingsUI_BaseUpdate : Hook
+---@class OptionsSettingsUI_BaseUpdate : LegacyHook
 ---@field elements table[] TODO document fields
 
 ---Hook to manipulate the label of tab buttons for mods.
----@class OptionsSettingsUI_GetSideButtonLabel : Hook
+---@class OptionsSettingsUI_GetSideButtonLabel : LegacyHook
 ---@field label string Defaults to OptionsSettingsOption.SideButtonLabel or OptionsSettingsOption.Mod
 
 ---Hook to manipulate the header of mod setting menus.
----@class OptionsSettingsUI_GetTabHeader : Hook
+---@class OptionsSettingsUI_GetTabHeader : LegacyHook
 ---@field label string Defaults to OptionsSettingsOption.TabHeader or OptionsSettingsOption.Mod
 
 ---------------------------------------------

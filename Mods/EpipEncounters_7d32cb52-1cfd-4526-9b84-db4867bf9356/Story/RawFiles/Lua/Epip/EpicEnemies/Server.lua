@@ -15,11 +15,11 @@ local Settings = Settings
 ---@field RegisterListener fun(self, listener:fun(char:EsvCharacter, effect:EpicEnemiesEffect))
 ---@field Fire fun(self, char:EsvCharacter, effect:EpicEnemiesEffect)
 
----@class EpicEnemies_Hook_IsEligible : Hook
+---@class EpicEnemies_Hook_IsEligible : LegacyHook
 ---@field RegisterHook fun(self, handler:fun(eligible:boolean, char:EsvCharacter))
 ---@field Return fun(self, eligible:boolean, char:EsvCharacter)
 
----@class EpicEnemies_Hook_IsEffectApplicable : Hook
+---@class EpicEnemies_Hook_IsEffectApplicable : LegacyHook
 ---@field RegisterHook fun(self, handler:fun(applicable:boolean, effect:EpicEnemiesEffect, char:EsvCharacter, activeEffects:EpicEnemiesEffect[]))
 ---@field Return fun(self, applicable:boolean, effect:EpicEnemiesEffect, char:EsvCharacter, activeEffects:EpicEnemiesEffect[])
 
@@ -31,11 +31,11 @@ local Settings = Settings
 ---@field RegisterListener fun(self, listener:fun(char:EsvCharacter, effect:EpicEnemiesEffect))
 ---@field Fire fun(self, char:EsvCharacter, effect:EpicEnemiesEffect)
 
----@class EpicEnemies_Hook_CanActivateEffect : Hook
+---@class EpicEnemies_Hook_CanActivateEffect : LegacyHook
 ---@field RegisterHook fun(self, handler:fun(activate:boolean, char:EsvCharacter, effect:EpicEnemiesEffect, params:any))
 ---@field Return fun(self, activate:boolean, char:EsvCharacter, effect:EpicEnemiesEffect, params:any)
 
----@class EpicEnemies_Hook_GetPointsForCharacter : Hook
+---@class EpicEnemies_Hook_GetPointsForCharacter : LegacyHook
 ---@field RegisterHook fun(self, handler:fun(points:integer, char:EsvCharacter))
 ---@field Return fun(self, points:integer, char:EsvCharacter)
 

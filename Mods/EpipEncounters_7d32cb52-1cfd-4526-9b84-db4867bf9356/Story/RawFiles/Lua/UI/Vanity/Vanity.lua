@@ -391,15 +391,15 @@ Epip.InitializeUI(nil, "Vanity", Vanity)
 ---@field RegisterListener fun(self, listener:fun(tab:CharacterSheetCustomTab, id:string))
 ---@field Fire fun(self, tab:CharacterSheetCustomTab, id:string)
 
----@class VanityUI_Hook_GetSaveData : Hook
+---@class VanityUI_Hook_GetSaveData : LegacyHook
 ---@field RegisterHook fun(self, handler:fun(data:table))
 ---@field Return fun(self, data:table)
 
----@class VanityUI_Hook_GetEntryLabel : Hook
+---@class VanityUI_Hook_GetEntryLabel : LegacyHook
 ---@field RegisterHook fun(self, handler:fun(text:string, tab:CharacterSheetCustomTab, entryID:string))
 ---@field Return fun(self, text:string, tab:CharacterSheetCustomTab, entryID:string)
 
----@class VanityUI_Hook_GetLabelColor : Hook
+---@class VanityUI_Hook_GetLabelColor : LegacyHook
 ---@field RegisterHook fun(self, handler:fun(color:string, label:string, tab:CharacterSheetCustomTab, entryID:string))
 ---@field Return fun(self, color:string, label:string, tab:CharacterSheetCustomTab, entryID:string)
 

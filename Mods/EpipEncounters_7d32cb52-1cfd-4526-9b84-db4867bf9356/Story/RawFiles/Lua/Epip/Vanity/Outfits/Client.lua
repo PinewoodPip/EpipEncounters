@@ -24,7 +24,7 @@ Outfits.Hooks.GetOutfitSaveData = Outfits:AddHook("GetOutfitSaveData")
 ---@field RegisterListener fun(self, listener:fun(outfit:VanityOutfit))
 ---@field Fire fun(self, outfit:VanityOutfit)
 
----@class VanityOutfits_Hook_GetOutfitSaveData : Hook
+---@class VanityOutfits_Hook_GetOutfitSaveData : LegacyHook
 ---@field RegisterHook fun(self, handler:fun(data:VanityOutfit, char:EclCharacter))
 ---@field Return fun(self, data:VanityOutfit, char:EclCharacter)
 

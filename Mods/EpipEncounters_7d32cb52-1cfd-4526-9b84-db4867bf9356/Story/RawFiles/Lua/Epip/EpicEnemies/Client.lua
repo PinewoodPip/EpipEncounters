@@ -53,7 +53,7 @@ end
 -- EVENTS/HOOKS
 ---------------------------------------------
 
----@class EpicEnemies_Hook_GetActivationConditionDescription : Hook
+---@class EpicEnemies_Hook_GetActivationConditionDescription : LegacyHook
 ---@field RegisterHook fun(self, handler:fun(text:string, condition:EpicEnemiesActivationCondition, char:EclCharacter))
 ---@field Return fun(self, text:string, condition:EpicEnemiesActivationCondition, char:EclCharacter)
 

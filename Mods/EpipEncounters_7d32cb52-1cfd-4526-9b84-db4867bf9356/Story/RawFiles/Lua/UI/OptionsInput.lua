@@ -39,7 +39,7 @@ Epip.InitializeUI(13, "OptionsInput", Options)
 -- EVENTS/HOOKS
 ---------------------------------------------
 
----@class OptionsInput_Hook_ShouldRenderEntry : Hook
+---@class OptionsInput_Hook_ShouldRenderEntry : LegacyHook
 ---@field RegisterHook fun(self, handler:fun(render:boolean, entry:InputLib_Action))
 ---@field Return fun(self, render:boolean, entry:InputLib_Action)
 

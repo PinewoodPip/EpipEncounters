@@ -43,7 +43,7 @@ local GB = {
 ---@field Fire fun(self, content:GiftBagContentUIEntry[])
 
 ---Fired when the content of the UI needs to be updated.
----@class GiftBagContentUI_Hook_GetContent : Hook
+---@class GiftBagContentUI_Hook_GetContent : LegacyHook
 ---@field RegisterHook fun(self, handler:fun(content:GiftBagContentUIEntry[]))
 ---@field Return fun(self, content:GiftBagContentUIEntry[])
 
