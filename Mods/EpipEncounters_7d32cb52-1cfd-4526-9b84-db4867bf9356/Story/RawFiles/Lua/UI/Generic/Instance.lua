@@ -17,16 +17,29 @@ local _Instance = {
     },
 
     USE_LEGACY_EVENTS = false,
+    USE_LEGACY_HOOKS = false,
 
     Events = {
+        IggyEventCaptured = {}, ---@type Event<GenericUI.Instance.Events.IggyEventCaptured>
     },
 }
 Generic:RegisterClass("GenericUI_Instance", _Instance, {})
 Inherit(_Instance, Client.UI._BaseUITable)
 
+---------------------------------------------
+-- CLASSES
+---------------------------------------------
+
 ---@class GenericUI_Event_ViewportChanged
 ---@field Width integer
 ---@field Height integer
+
+---@class GenericUI.Instance.Events.IggyEventCaptured
+---@field EventID string Without "IE " prefix.
+
+---------------------------------------------
+-- METHODS
+---------------------------------------------
 
 ---Creates an instance out of a UI table.
 ---@param ui UI Must be an initialized instance of the UI class.
@@ -45,6 +58,14 @@ end
 ---@return GenericUI_Element?
 function _Instance:GetElementByID(id)
     return self.Elements[id]
+end
+
+---Sets whether an iggy event should be captured.
+---@param eventID string Unprefixed name; ex. "UICancel"
+---@param capture boolean All events are uncaptured by default.
+function _Instance:SetIggyEventCapture(eventID, capture)
+    local root = self:GetRoot()
+    root.SetIggyEventCapture("IE " .. eventID, capture)
 end
 
 ---@param element GenericUI_Element

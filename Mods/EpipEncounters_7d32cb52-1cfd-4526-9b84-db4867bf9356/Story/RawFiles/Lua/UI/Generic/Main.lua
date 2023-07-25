@@ -39,9 +39,10 @@ function Generic.Create(id, layer)
         Name = id,
         Elements = {},
         Events = {
-            -- TODO remove
+            -- TODO remove, also fix code duplication (IggyEventCaptured is also in the IDE annotation version)
             ---@type Event<GenericUI_Event_ViewportChanged>
             ViewportChanged = {Legacy = false},
+            IggyEventCaptured = {Legacy = false}, ---@type Event<GenericUI.Instance.Events.IggyEventCaptured>
         },
     }
     local uiOBject = Ext.UI.Create(id, Generic.SWF_PATH, layer or Generic.DEFAULT_LAYER)
@@ -82,6 +83,9 @@ function Generic.Create(id, layer)
     -- Slider
     Generic._ForwardUICall(ui, "Slider_HandleReleased", "HandleReleased", {"Value"})
     Generic._ForwardUICall(ui, "Slider_HandleMoved", "HandleMoved", {"Value"})
+
+    -- IggyEvent forwarding
+    ui:RegisterCallListener("IggyEventCaptured", Generic._OnIggyEventCaptured)
 
     -- Logging
     ui:RegisterCallListener("GenericLog", function(_, elementID, elementType, msg, msgType)
@@ -322,6 +326,19 @@ function Generic._OnComboBoxItemSelected(ev, id, index, optionID)
         Index = index + 1,
         ---@diagnostic disable-next-line: invisible
         Option = element._Options[index + 1]
+    })
+end
+
+---Handles IggyEvents being captured.
+---@param ev EclLuaUICallEvent
+---@param _ integer Event index, from the events array. Arbitrary, not very relevant.
+---@param eventID string
+function Generic._OnIggyEventCaptured(ev, _, eventID)
+    local instance = Generic.GetInstance(ev.UI:GetTypeId())
+    Generic:DebugLog("CALL IggyEventCaptured: ", eventID)
+
+    instance.Events.IggyEventCaptured:Throw({
+        EventID = eventID:gsub("^IE ", ""),
     })
 end
 

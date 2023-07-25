@@ -22,6 +22,8 @@ package arenaResult_fla
 
         public var Root:MovieClip = null;
         public var elements:Dictionary;
+
+        public var capturedEvents:Dictionary;
         
         public function MainTimeline()
         {
@@ -31,6 +33,8 @@ package arenaResult_fla
             this.elements = new Dictionary();
             this.elementClasses = new Dictionary();
             this.AddElement("Root", "Empty", "");
+
+            this.capturedEvents = new Dictionary();
         }
 
         // Can't get this to fire.
@@ -141,15 +145,22 @@ package arenaResult_fla
 
         // ---------------
         
-        public function onEventUp(param1:Number) : *
+        public function onEventUp(param1:Number) : Boolean
         {
-            // TODO port code form input.swf
             return false;
         }
 
-        public function onEventDown(param1:Number) : *
+        public function onEventDown(ev:Number) : Boolean
         {
-            return false;
+            var captured:Boolean = this.capturedEvents[this.events[ev]] == true;
+
+            if (captured)
+            {
+                trace(captured);
+                ExternalInterface.call("IggyEventCaptured", ev, this.events[ev]);
+            }
+
+            return captured;
         }
 
         // Always set stage to be fullscreen.
@@ -211,14 +222,23 @@ package arenaResult_fla
                 ExternalInterface.call("showTooltip",param1.type,param2,_loc4_.x,_loc4_.y + _loc6_,_loc5_,param1.height,"right");
             }
         }
-        
+
+        // ---------------
+
+        // ev must be the complete string, ex. "IE UICancel"
+        public function SetIggyEventCapture(ev:String, capture:Boolean) : *
+        {
+            this.capturedEvents[ev] = capture;
+        }
         function frame1() : *
         {
-            this.events = new Array("IE UICancel");
             this.layout = "fitVertical";
             this.isDragging = false;
             this.hasTooltip = false;
             this.curTooltip = -1;
+
+            // Automatically generated. See interface_events.py (not in repo)
+            this.events = new Array("IE Unknown","IE FlashLeftMouse","IE ControllerUnlinkedY","IE FlashEnd","IE FlashCtrl","IE FlashAlt","IE FlashScrollUp","IE FlashScrollDown","IE FlashCancel","IE FlashMouseMoveLeft","IE FlashMouseMoveRight","IE FlashMouseMoveUp","IE FlashMouseMoveDown","IE KeyboardAny","IE ActionMenu","IE CameraCenter","IE CameraToggleMouseRotate","IE CameraBackward","IE CameraForward","IE CameraLeft","IE CameraRight","IE CameraZoomIn","IE CameraZoomOut","IE CameraRotateLeft","IE ToggleFullscreen","IE CameraRotateRight","IE CameraRotateMouseLeft","IE CameraRotateMouseRight","IE FreeCameraToggleMouseRotate","IE FreeCameraMoveForward","IE FreeCameraMoveBackward","IE FreeCameraMoveLeft","IE FreeCameraMoveRight","IE FreeCameraFoVInc","IE FreeCameraFoVDec","IE ReloadInputConfig","IE FreeCameraSpeedInc","IE FreeCameraSpeedDec","IE FreeCameraSpeedReset","IE FreeCameraRotSpeedInc","IE FreeCameraRotSpeedDec","IE FreeCameraRotateControllerLeft","IE FreeCameraRotateControllerRight","IE FreeCameraRotateControllerUp","IE FreeCameraRotateControllerDown","IE FreeCameraRotateMouseLeft","IE Screenshot","IE FreeCameraRotateMouseRight","IE FreeCameraRotateMouseUp","IE FreeCameraRotateMouseDown","IE FreeCameraHeightInc","IE FreeCameraHeightDec","IE FreeCameraSlowdown","IE FreeCameraFreezeGameTime","IE CharacterCreationRotateLeft","IE CharacterCreationRotateRight","IE CharacterCreationAccept","IE Benchmark","IE CharacterMoveForward","IE CharacterMoveBackward","IE CharacterMoveLeft","IE CharacterMoveRight","IE ClearSurface","IE CreateWaterSurface","IE CreateFrozenWaterSurface","IE CreateBloodSurface","IE CreatePoisonSurface","IE CreateOilSurface","IE CloseApplication","IE CreateFireSurface","IE CreateSourceSurface","IE CreateLavaSurface","IE CreateWaterCloud","IE CreateBloodCloud","IE CreatePoisonCloud","IE CreateSmokeCloud","IE CreateFireCloud","IE BlessSurface","IE CurseSurface","IE DefaultCameraPanCamera","IE ElectrifySurface","IE FreezeSurface","IE MeltSurface","IE CondenseSurface","IE VaporizeSurface","IE IncreaseSurfaceBrush","IE DecreaseSurfaceBrush","IE DebugViewHide","IE DebugViewScrollUp","IE DebugViewScrollDown","IE DefaultCameraSpecialPanCamera1","IE DebugAIGridTakeStep","IE DebugToggleCharacter","IE DebugLevelUp","IE DebugTogglePartyEdit","IE DebugKillCombat","IE ToggleFlyCam","IE DebugSelectCharacter","IE DebugDeselectCharacter","IE DebugToggleUseWorkerThreads","IE DebugToggleThreadedServer","IE DefaultCameraSpecialPanCamera2","IE SwitchDebugParty","IE ShowSoundDebugWindow","IE ForceKillApp","IE TelemetryStart","IE TelemetryStop","IE ForceEndDialog","IE JoinLocalLobby","IE ForceKillObject","IE ForceRemoveObject","IE ForceKillParty","IE FlashRightMouse","IE DefaultCameraToggleMouseRotation","IE GiveSomeGold","IE Revive","IE ShowWayPointMenu","IE EnableController","IE IggyExplorerNext","IE IggyExplorerPrev","IE ForceEndTurn","IE ToggleAiGrid","IE TogglePhysics","IE ToggleAIBounds","IE DefaultCameraCaptureInput","IE ToggleDecalBounds","IE ToggleBlindToCriminals","IE ForceAnimation","IE DragSingleToggle","IE TogglePresentation","IE PartyManagement","IE MoveCharacterUpInGroup","IE PanelSelect","IE CycleCharactersNext","IE CycleCharactersPrev","IE DefaultCameraLeft","IE DestructionToggle","IE HighlightCharacters","IE Interact","IE ActionCancel","IE NextObject","IE Pause","IE PrevObject","IE QueueCommand","IE QuickLoad","IE QuickSave","IE DefaultCameraRight","IE ShowChat","IE SkipVideo","IE SplitItemToggle","IE RotateItemLeft","IE RotateItemRight","IE TeleportPlayer","IE TeleportParty","IE ToggleCombatMode","IE ToggleSplitscreen","IE ToggleEquipment","IE DefaultCameraForward","IE ToggleHomestead","IE ToggleInGameMenu","IE ToggleInfo","IE ToggleInputMode","IE CancelSelectorMode","IE ToggleCharacterPane","IE ToggleInventory","IE ToggleCraft","IE ToggleRecipes","IE ToggleJournal","IE DefaultCameraBackward","IE ToggleMap","IE ToggleSkills","IE ToggleSneak","IE ToggleStats","IE AreaPickup","IE ToggleMonsterSelect","IE ToggleSetStartPoint","IE ToggleSurfacePainter","IE ToggleOverviewMap","IE ToggleVignette","IE DefaultCameraZoomIn","IE ToggleGMPause","IE ToggleGMShroud","IE ToggleRollPanel","IE ToggleGMInventory","IE ToggleManageTarget","IE ToggleGMMiniMap","IE GMKillResurrect","IE GMSetHealth","IE SwitchGMMode","IE GMNormalAlignMode","IE DefaultCameraZoomOut","IE ToggleGMRewardPanel","IE ToggleGMItemGeneratorPane","IE ToggleGMMoodPanel","IE ToggleStatusPanel","IE ToggleReputationPanel","IE TogglePartyManagement","IE ContextMenu","IE ControllerContextMenu","IE Combine","IE ToggleTacticalCamera","IE DefaultCameraRotateLeft","IE ShowWorldTooltips","IE SelectorMoveBackward","IE SelectorMoveForward","IE SelectorMoveLeft","IE SelectorMoveRight","IE ShowSneakCones","IE UIDelete","IE UIAccept","IE UIBack","IE UICancel","IE DefaultCameraRotateRight","IE UITakeAll","IE UIEndTurn","IE UIHotBarNext","IE UIHotBarPrev","IE UIRadialLeft","IE UIRadialRight","IE UIRadialUp","IE UIRadialDown","IE UILeft","IE UIRight","IE FlashMiddleMouse","IE DefaultCameraRotateUp","IE UIUp","IE UIDown","IE UIContextMenuModifier","IE UISelectChar1","IE UISelectChar2","IE UISelectChar3","IE UISelectChar4","IE UISelectSlot0","IE UISelectSlot1","IE UISelectSlot2","IE DefaultCameraRotateDown","IE UISelectSlot3","IE UISelectSlot4","IE UISelectSlot5","IE UISelectSlot6","IE UISelectSlot7","IE UISelectSlot8","IE UISelectSlot9","IE UISelectSlot11","IE UISelectSlot12","IE UIToggleEquipment","IE DefaultCameraMouseLeft","IE CCZoomIn","IE CCZoomOut","IE UIRefresh","IE UITabPrev","IE UITabNext","IE UIShowTooltip","IE UICompareItems","IE UITooltipUp","IE UITooltipDown","IE UIDialogTextUp","IE DefaultCameraMouseRight","IE UIDialogTextDown","IE UIRequestTrade","IE UIAddPoints","IE UIRemovePoints","IE UIDialogRPSRock","IE UIDialogRPSPaper","IE UIDialogRPSScissors","IE UICreateProfile","IE UIDeleteProfile","IE UISetSlot","IE DefaultCameraMouseUp","IE UICreationPrev","IE UICreationNext","IE UICreationEditClassPrev","IE UICreationEditClassNext","IE UICreationTabPrev","IE UICreationTabNext","IE UIStartGame","IE UIEditCharacter","IE UIPortraitPrev","IE UIPortraitNext","IE DefaultCameraMouseDown","IE UIShowInfo","IE UIRename","IE UIFilter","IE UIMapDown","IE UIMapUp","IE UIMapLeft","IE UIMapRight","IE UIMapZoomIn","IE UIMapZoomOut","IE UIMapReset","IE DefaultCameraTopView","IE UIMapRemoveMarker","IE UITradeSwitchWindow","IE UITradeRemoveOffer","IE UITradeBalance","IE UIRemoveItemSelection","IE UIMessageBoxA","IE UIMessageBoxB","IE UIMessageBoxX","IE UIMessageBoxY","IE UIInvite","IE DefaultCameraLeftView","IE UIToggleTutorials","IE UICreationAddSkill","IE UICreationRemoveSkill","IE UIModPrev","IE UIModNext","IE UIAddonUp","IE UIAddonDown","IE Ping","IE UICopy","IE UICut","IE DefaultCameraFrontView","IE UIPaste","IE UIMarkWares","IE UIToggleMultiselection","IE UIToggleActions","IE UIToggleHelmet","IE CopyVersionToClipboard","IE UISend","IE ConnectivityMenu","IE UISwitchLeft","IE UISwitchRight","IE DefaultCameraSlow","IE UISwitchUp","IE UISwitchDown","IE Action1","IE DefaultCameraFast","IE WidgetToggleOutput","IE WidgetToggleEffectStats","IE WidgetScreenshot","IE WidgetScreenshotVideo","IE WidgetToggleOptions","IE WidgetToggleHierarchicalProfiler","IE WidgetToggleStats","IE WidgetToggleDebugConsole","IE WidgetToggleGraphicsDebug","IE ControllerUnlinkedBack","IE WidgetToggleDevComments","IE WidgetButtonTab","IE WidgetButtonLeft","IE WidgetButtonRight","IE WidgetButtonUp","IE WidgetButtonDown","IE WidgetButtonHome","IE WidgetButtonEnd","IE WidgetButtonDelete","IE WidgetButtonBackSpace","IE ControllerUnlinkedStart","IE WidgetButtonEnter","IE WidgetButtonEscape","IE WidgetButtonPageUp","IE WidgetButtonPageDown","IE WidgetButtonSpace","IE WidgetButtonA","IE WidgetButtonC","IE WidgetButtonV","IE WidgetButtonX","IE WidgetButtonY","IE ControllerUnlinkedA","IE WidgetButtonZ","IE WidgetScrollUp","IE WidgetScrollDown","IE WidgetMouseMotion","IE WidgetMouseLeft","IE WidgetMouseRight","IE FlashPerfmonUp","IE FlashPerfmonDown","IE FlashPerfmonLeft","IE FlashPerfmonRight","IE ControllerUnlinkedB","IE FlashPerfmonLShoulder","IE FlashPerfmonRShoulder","IE FlashPerfmonRTrigger","IE FlashPerfmonLTrigger","IE FlashPerfmonButton1","IE FlashPerfmonButton2","IE FlashPerfmonButton3","IE FlashPerfmonButton4","IE FlashMouseMove","IE FlashArrowUp","IE ControllerUnlinkedX","IE FlashArrowLeft","IE FlashArrowRight","IE FlashArrowDown","IE FlashEnter","IE FlashPgUp","IE FlashPgDn","IE FlashBackspace","IE FlashTab","IE FlashDelete","IE FlashHome");
         }
     }
 }
