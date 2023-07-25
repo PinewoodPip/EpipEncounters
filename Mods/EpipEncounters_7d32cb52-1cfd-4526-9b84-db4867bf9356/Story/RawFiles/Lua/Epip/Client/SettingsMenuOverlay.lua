@@ -66,23 +66,16 @@ function Overlay.Setup(entries)
         UI.RenderEntry(entry)
     end
 
-    -- What the fuck? Why does the engine keep wanting to crop it?
-    local subscriberID = Ext.Events.Tick:Subscribe(function (_)
-        UI:ExternalInterfaceCall("setMcSize", 1920, 1080)
-    end)
-
     UI.List:RepositionElements()
     UI:GetUI().Layer = SettingsMenu:GetUI():GetUI().Layer + 1
     SettingsMenu:GetUI():SetFlag("OF_PlayerModal1", false)
     UI:Show()
-    
+
     GameState.Events.RunningTick:Subscribe(function (_)
         if not SettingsMenu:GetUI():IsVisible() then
 
             Overlay.Close()
             GameState.Events.RunningTick:Unsubscribe("SettingsMenuOverlay")
-
-            Ext.Events.Tick:Unsubscribe(subscriberID)
         end
     end, {StringID = "SettingsMenuOverlay"})
 end
@@ -122,7 +115,6 @@ function Overlay._Initialize()
         local settingsUIObject = SettingsMenu:GetUI():GetUI()
         local UIObject = UI:GetUI()
         UIObject.SysPanelSize = settingsUIObject.SysPanelSize
-        UIObject.MovieLayout = settingsUIObject.MovieLayout
 
         local root = UI:CreateElement("UIRoot", "GenericUI_Element_Empty")
         root:SetPosition(665, 145) -- Needs to be done in UI space.
