@@ -54,7 +54,7 @@ function Text:SetSize(width, height)
     self.Label:SetSize(width, 30)
     self.Text:SetSize(width, 30)
 
-    self.Label:SetPositionRelativeToParent("Left")
+    self.Label:SetPositionRelativeToParent("Left", self.LABEL_SIDE_MARGIN, 0)
     self.Text:SetPositionRelativeToParent("Right")
 end
 
