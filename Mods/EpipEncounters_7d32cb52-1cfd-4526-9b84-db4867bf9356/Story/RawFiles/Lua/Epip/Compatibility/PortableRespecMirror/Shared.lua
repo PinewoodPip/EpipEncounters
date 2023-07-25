@@ -16,10 +16,6 @@ local Mirror = {
            ContextDescription = "Hotbar action name",
         },
     },
-
-    REQUIRED_MODS = {
-        [Mod.GUIDS.PORTABLE_RESPEC_MIRROR] = "Portable Respec Mirror (FJ Edition)",
-    },
 }
 Epip.RegisterFeature("PortableRespecMirrorCompatibility", Mirror)
 

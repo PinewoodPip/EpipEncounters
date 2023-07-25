@@ -142,28 +142,13 @@ function Epip.InitializeFeature(modTable, id, feature)
     feature.MODULE_ID = id
 
     feature.NAME = id
-    feature.REQUIRED_MODS = feature.REQUIRED_MODS or {}
     feature.FILEPATH_OVERRIDES = feature.FILEPATH_OVERRIDES or {}
-
-    -- Check required mods
-    local missingMods = {}
-    for guid,modName in pairs(feature.REQUIRED_MODS) do
-        if not Mod.IsLoaded(guid) then
-            table.insert(missingMods, string.format("%s (%s)", guid, modName))
-        end
-    end
 
     if feature.DEVELOPER_ONLY and not Epip.IsDeveloperMode() then
         feature:Disable("NotDeveloper")
     end
 
-    -- Disable the feature if required mods are missing.
-    if #missingMods > 0 then
-        Ext.PrintWarning("[EPIP] Feature '" .. feature.NAME .. "' has been disabled as some required mods are missing:")
-        Ext.Dump(missingMods)
-
-        feature:Disable("MISSING_MODS")
-    elseif feature:IsEnabled() then
+    if feature:IsEnabled() then
         -- Add filepath overrides.
         for old,new in pairs(feature.FILEPATH_OVERRIDES) do
             Ext.IO.AddPathOverride(old, new)

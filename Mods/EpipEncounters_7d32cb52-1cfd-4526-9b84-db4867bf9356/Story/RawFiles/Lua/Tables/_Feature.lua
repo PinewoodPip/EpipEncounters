@@ -6,7 +6,6 @@
 ---@class Feature : Library
 ---@field _EnabledFunctor (fun():boolean)?
 ---@field Disabled boolean
----@field REQUIRED_MODS table<GUID, string> The feature will be automatically disabled if any required mods are missing.
 ---@field FILEPATH_OVERRIDES table<string, string>
 ---@field IsEnabled fun(self):boolean
 ---@field Disable fun(self)
@@ -30,7 +29,6 @@ local Feature = {
         PAUSED_SESSION = 4,
         RUNNING_SESSION = 8,
     },
-    REQUIRED_MODS = {},
     FILEPATH_OVERRIDES = {},
     DEVELOPER_ONLY = false,
 

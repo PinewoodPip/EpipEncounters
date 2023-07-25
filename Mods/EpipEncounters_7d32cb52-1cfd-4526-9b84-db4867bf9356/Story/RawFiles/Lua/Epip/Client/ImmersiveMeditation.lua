@@ -11,9 +11,6 @@ local Ascension = Game.Ascension
 local IM = {
     currentState = false,
 
-    REQUIRED_MODS = {
-        [Mod.GUIDS.EE_CORE] = "Epic Encounters Core",
-    },
     TranslatedStrings = {
         ImmersiveMeditation_Name = {
             Handle = "ha970de96geaf5g483eg9996gac184c8fe843",

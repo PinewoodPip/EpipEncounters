@@ -144,6 +144,8 @@ for _,lib in ipairs(coreLibraries) do
     RequestScriptLoad(lib)
 end
 
+local MODS = Mod.GUIDS
+
 ---@type (string|ScriptLoadRequest)[]
 LOAD_ORDER = {
     "Epip/Settings.lua",
@@ -304,7 +306,7 @@ LOAD_ORDER = {
     {ScriptSet = "Epip/DebugCheats/Cheats/TeleportTo"},
 
     -- Compatibility
-    "Epip/Compatibility/PortableRespecMirror/Shared.lua",
+    {Script = "Epip/Compatibility/PortableRespecMirror/Shared.lua", RequiredMods = {MODS.PORTABLE_RESPEC_MIRROR}},
 
     {Script = "Epip/PersonalScripts/Shared.lua", Developer = true},
 }

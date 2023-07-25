@@ -134,9 +134,6 @@ local Dyes = {
         -- DyeData.VOID,
     },
     DYE_DATA = {},
-    REQUIRED_MODS = {
-        [Mod.GUIDS.EE_CORE] = "Epic Encounters Core",
-    },
 
     TranslatedStrings = {
         Msg_Unobtained_Body = {

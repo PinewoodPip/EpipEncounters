@@ -162,6 +162,8 @@ for _,lib in ipairs(coreLibraries) do
     RequestScriptLoad(lib)
 end
 
+local MODS = Mod.GUIDS
+
 ---@type (string|ScriptLoadRequest)[]
 LOAD_ORDER = {
     "UI/TextDisplay.lua",
@@ -471,7 +473,7 @@ LOAD_ORDER = {
     "Epip/Client/ExitChatAfterMessage.lua",
     "Epip/Client/CameraZoom.lua",
     "Epip/Client/MinimapToggle.lua",
-    "Epip/Client/ImmersiveMeditation.lua",
+    {Script = "Epip/Client/ImmersiveMeditation.lua", RequiresEE = true},
     -- "Epip/Client/ModMenuImprovements.lua",
 
     -- Chat Commands
@@ -480,8 +482,8 @@ LOAD_ORDER = {
     },
     "Epip/EmoteCommands.lua",
 
-    "Epip/Compatibility/WeaponExpansion/Client.lua",
-    "Epip/Compatibility/DerpyEETweaks/TreasureTableDisplay.lua",
+    {Script = "Epip/Compatibility/WeaponExpansion/Client.lua", RequiredMods = {MODS.WEAPON_EXPANSION}},
+    {Script = "Epip/Compatibility/DerpyEETweaks/TreasureTableDisplay.lua", RequiredMods = {MODS.EE_DERPY}},
 
     "Epip/Client/EpipDocs.lua",
 
@@ -632,11 +634,11 @@ LOAD_ORDER = {
     },
     {Script = "Epip/Codex/Sections/Artifacts.lua", RequiresEE = true},
 
-    "Epip/Compatibility/MajoraFashionSins/Client.lua",
-    "Epip/Compatibility/PortableRespecMirror/Shared.lua",
-    "Epip/Compatibility/RendalNPCArmor/Client.lua",
-    "Epip/Compatibility/VisitorsFromCyseal/Client.lua",
-    "Epip/Compatibility/DerpysArtifactTiers/Client.lua",
+    {Script = "Epip/Compatibility/MajoraFashionSins/Client.lua", RequiredMods = {MODS.MAJORA_FASHION_SINS}},
+    {Script = "Epip/Compatibility/PortableRespecMirror/Shared.lua", RequiredMods = {MODS.PORTABLE_RESPEC_MIRROR}},
+    {Script = "Epip/Compatibility/RendalNPCArmor/Client.lua", RequiredMods = {MODS.RENDAL_NPC_ARMOR}},
+    {Script = "Epip/Compatibility/VisitorsFromCyseal/Client.lua", RequiredMods = {MODS.VISITORS_FROM_CYSEAL}},
+    {Script = "Epip/Compatibility/DerpysArtifactTiers/Client.lua", RequiredMods = {MODS.EE_DERPY_ARTIFACT_TIERS}},
 
     -- Should be loaded last
     {ScriptSet = "Epip/DebugMenu", Developer = true,},

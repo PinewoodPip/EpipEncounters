@@ -23,10 +23,6 @@ local DerpyTreasures = {
         ["69b951dc-55a4-44b8-a2d5-5efedbd7d572"] = TTD.TREASURE_TABLES.MegaBoss, -- S_GLO_Dallis
         ["4014aee0-56f1-47e0-a8eb-89c4b5a1da83"] = TTD.TREASURE_TABLES.MiniBoss_ProteanAlways, -- S_FTJ_SW_Witch
     },
-
-    REQUIRED_MODS = {
-        [Mod.GUIDS.EE_DERPY] = "Derpy's EE2 Tweaks",
-    },
 }
 Epip.RegisterFeature("DerpyTreasureDisplay", DerpyTreasures)
 

@@ -1,11 +1,13 @@
 
+---------------------------------------------
+-- Adds templates from Rendal's NPC Armor mod to the vanity feature.
+---------------------------------------------
+
+---@type Feature
 local Rendal = {
     DATA_PATH = "Mods/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/Story/RawFiles/Lua/Epip/ContextMenus/Vanity/Data/Templates_RendalNPCArmor.json",
-    REQUIRED_MODS = {
-        [Mod.GUIDS.RENDAL_NPC_ARMOR] = "Rendal's NPC Armor",
-    }
 }
-Epip.AddFeature("RendalNPCArmorCompatibility", "RendalNPCArmorCompatibility", Rendal)
+Epip.RegisterFeature("RendalNPCArmorCompatibility", Rendal)
 
 ---------------------------------------------
 -- EVENT LISTENERS

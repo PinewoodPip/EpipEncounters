@@ -22,10 +22,6 @@ local ArtifactTiers = {
            ContextDescription = "Setting name for Derpy' Artifact Tiers support within the Codex",
         },
     },
-
-    REQUIRED_MODS = {
-        [Mod.GUIDS.EE_DERPY_ARTIFACT_TIERS] = "Derpy's Artifact Tiers",
-    },
 }
 Epip.RegisterFeature("Compatibility_DerpysArtifactTiers", ArtifactTiers)
 

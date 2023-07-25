@@ -4,15 +4,13 @@
 -- Mainly changes related to the hotbar.
 ---------------------------------------------
 
+---@type Feature
 local WEX = {
     Menu = nil,
     ModTable = "WeaponExpansion",
-    REQUIRED_MODS = {
-        [Mod.GUIDS.WEAPON_EXPANSION] = "LL's Weapon Expansion",
-    }
 }
 local Hotbar = Client.UI.Hotbar
-Epip.AddFeature("WeaponExpansionCompatibility", "WeaponExpansionCompatibility", WEX)
+Epip.RegisterFeature("WeaponExpansionCompatibility", WEX)
 
 function WEX.RepositionButton()
     local button = WEX.Menu.ToggleButtonInstance:GetRoot()
