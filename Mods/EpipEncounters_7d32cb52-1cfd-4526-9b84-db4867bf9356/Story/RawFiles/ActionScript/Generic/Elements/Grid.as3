@@ -35,6 +35,12 @@ package Elements
             this.gridList.addElement(mc, this.respositionAfterAdding);
         }
 
+        public override function OnChildRemoved(element:MovieClip) : *
+        {
+            delete this.childElements[element.stringID];
+            this.gridList.removeElement(this.gridList.content_array.indexOf(element));
+        }
+
         // Use content width/height instead of flash calculated sizes
         // Invisible elements do not contribute to the content size.
         public override function GetWidth(considerOverrides:Boolean=true) : Number

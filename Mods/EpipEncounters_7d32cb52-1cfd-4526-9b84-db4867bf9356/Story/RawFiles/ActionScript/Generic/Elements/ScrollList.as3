@@ -32,5 +32,11 @@ package Elements
         {
             this.list.SB_SPACING = spacing;
         }
+
+        public override function OnChildRemoved(element:MovieClip) : *
+        {
+            delete this.childElements[element.stringID];
+            this.list.removeElement(this.list.content_array.indexOf(element));
+        }
     }
 }

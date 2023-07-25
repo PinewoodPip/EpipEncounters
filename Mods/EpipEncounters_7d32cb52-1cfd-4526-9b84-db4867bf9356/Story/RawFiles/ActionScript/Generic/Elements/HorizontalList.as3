@@ -23,5 +23,11 @@ package Elements
         {
             return "HorizontalList";
         }
+
+        public override function OnChildRemoved(element:MovieClip) : *
+        {
+            delete this.childElements[element.stringID];
+            this.list.removeElement(this.list.content_array.indexOf(element));
+        }
     }
 }
