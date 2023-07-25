@@ -215,7 +215,7 @@ package arenaResult_fla
         function frame1() : *
         {
             this.events = new Array("IE UICancel");
-            this.layout = "fixed";
+            this.layout = "fitVertical";
             this.isDragging = false;
             this.hasTooltip = false;
             this.curTooltip = -1;
