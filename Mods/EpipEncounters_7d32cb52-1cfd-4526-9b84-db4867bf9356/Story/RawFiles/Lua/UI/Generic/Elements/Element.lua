@@ -22,6 +22,7 @@ local Tooltip = Client.Tooltip
 ---@field Tooltip (GenericUI_ElementTooltip|string)? DEPRECATED! Will be rendered upon the element being hovered. Strings are rendered as unformatted tooltips.
 ---@field Events GenericUI_Element_Events
 ---@field _Tooltip GenericUI_ElementTooltip
+---@field _MovieClip FlashMovieClip? Cached reference to the element's movie clip.
 local _Element = Generic._Element
 local __Element = _Element
 
@@ -74,7 +75,12 @@ _Element.Events = {
 ---Get the movie clip of this element.
 ---@return FlashMovieClip
 function _Element:GetMovieClip()
-    return self.UI:GetMovieClipByID(self.ID)
+    local mc = self._MovieClip -- Use cached reference
+    if not mc then
+        mc = self.UI:GetMovieClipByID(self.ID)
+        self._MovieClip = mc
+    end
+    return mc
 end
 
 ---@generic T
