@@ -79,14 +79,10 @@ end
 
 function Overlay.Position()
     local ui = Overlay.UI
+    local saveLoadUI = Ext.UI.GetByType(Ext.UI.TypeID.saveLoad)
 
-    ui:ExternalInterfaceCall("setMcSize", 723, 1010)
+    ui:SetPanelSize(saveLoadUI.SysPanelSize)
     ui:ExternalInterfaceCall("setPosition", "top", "screen", "top")
-
-    -- God I hate positioning. Not very good at it just yet
-    local vp = Ext.UI.GetViewportSize()
-    local pos = ui:GetUI():GetPosition()
-    ui:GetUI():SetPosition(pos[1] - (260), pos[2] + (360 * vp[2]//1080))
 end
 
 ---------------------------------------------
@@ -146,7 +142,7 @@ local function SetupUI()
 
     local panel = ui:CreateElement("Panel", "GenericUI_Element_TiledBackground")
     panel:SetAlpha(0)
-    panel:SetPosition(0, 600)
+    panel:SetPosition(60, 957)
 
     local sorting = panel:AddChild("Sorting", "GenericUI_Element_ComboBox")
     sorting:SetOptions({
@@ -173,14 +169,12 @@ local function SetupUI()
 
     local uiObject = ui:GetUI()
 
-    uiObject.SysPanelPosition = {0, 19}
-    uiObject.SysPanelSize = {1083, 1013}
-    uiObject.FlashMovieSize = {1920, 1080}
-    ui:ExternalInterfaceCall("setPosition", "top", "screen", "top")
     uiObject:Hide()
 
     Client.Events.ViewportChanged:Subscribe(function (_)
-        Overlay.Position()
+        if ui:IsVisible() then
+            Overlay.Position()
+        end
     end)
 
     ui:Hide()
