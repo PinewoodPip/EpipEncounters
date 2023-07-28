@@ -51,6 +51,7 @@ Client = {
     Events = {
         ActiveCharacterChanged = {}, ---@type Event<ClientLib_Event_ActiveCharacterChanged>
         SkillStateChanged = {}, ---@type Event<ClientLib_Event_SkillStateChanged>
+        ViewportChanged = {}, ---@type Event<ClientLib_Event_ViewportChanged>
     }
 }
 Epip.InitializeLibrary("Client", Client)
@@ -67,6 +68,11 @@ Epip.InitializeLibrary("Client", Client)
 ---@class ClientLib_Event_SkillStateChanged
 ---@field Character EclCharacter The active client character.
 ---@field State EclSkillState?
+
+---Fired when the size of the viewport changes.
+---@class ClientLib_Event_ViewportChanged
+---@field NewSize Vector2
+---@field OldSize Vector2
 
 ---------------------------------------------
 -- METHODS
@@ -277,14 +283,6 @@ Utilities.Hooks.RegisterListener("Saving", "SavingFinished", function()
     Client:FireEvent("SavingFinished")
 end)
 
--- Fire event on resizes
--- TODO does this fail if sheet hasnt been opened yet?
-Ext.RegisterUITypeCall(119, "setPosition", function(ui, method, pos1, mode, pos2)
-    local viewport = Ext.UI.GetViewportSize()
-    
-    Client:FireEvent("ViewportChanged", viewport[1], viewport[2])
-end)
-
 -- Listen for the active character's skill state changing to fire events.
 local inSkillState = false
 GameState.Events.RunningTick:Subscribe(function (_)
@@ -308,6 +306,22 @@ GameState.Events.RunningTick:Subscribe(function (_)
 
             inSkillState = true
         end
+    end
+end)
+
+-- Listen for viewport size changing to fire events.
+local oldViewport = Vector.Create(0, 0)
+Ext.Events.Tick:Subscribe(function (_)
+    local viewport = Ext.UI.GetViewportSize()
+    local width, height = viewport[1], viewport[2]
+
+    if oldViewport[1] ~= width or oldViewport[2] ~= height then
+        Client.Events.ViewportChanged:Throw({
+            OldSize = oldViewport,
+            NewSize = Vector.Create(width, height),
+        })
+
+        oldViewport = viewport
     end
 end)
 

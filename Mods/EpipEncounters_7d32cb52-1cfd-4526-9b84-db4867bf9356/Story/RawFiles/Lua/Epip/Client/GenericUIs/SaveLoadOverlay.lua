@@ -179,7 +179,7 @@ local function SetupUI()
     ui:ExternalInterfaceCall("setPosition", "top", "screen", "top")
     uiObject:Hide()
 
-    ui.Events.ViewportChanged:Subscribe(function (_)
+    Client.Events.ViewportChanged:Subscribe(function (_)
         Overlay.Position()
     end)
 

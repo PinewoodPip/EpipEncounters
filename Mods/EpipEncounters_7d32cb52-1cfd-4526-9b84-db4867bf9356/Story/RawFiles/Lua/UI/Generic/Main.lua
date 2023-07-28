@@ -39,9 +39,7 @@ function Generic.Create(id, layer)
         Name = id,
         Elements = {},
         Events = {
-            -- TODO remove, also fix code duplication (IggyEventCaptured is also in the IDE annotation version)
-            ---@type Event<GenericUI_Event_ViewportChanged>
-            ViewportChanged = {Legacy = false},
+            -- TODO fix code duplication (IggyEventCaptured is also in the IDE annotation version)
             IggyEventCaptured = {Legacy = false}, ---@type Event<GenericUI.Instance.Events.IggyEventCaptured>
         },
     }
@@ -60,7 +58,6 @@ function Generic.Create(id, layer)
     Generic._ForwardUICall(ui, "elementTweenCompleted", "TweenCompleted", {"EventID"})
 
     ui:RegisterCallListener("ShowElementTooltip", Generic._OnElementShowTooltip)
-    -- ui:RegisterCallListener("viewportChanged", Generic.OnViewportChanged)
 
     -- Text
     Generic._ForwardUICall(ui, "Text_Changed", "Changed", {"Text"})
@@ -341,30 +338,3 @@ function Generic._OnIggyEventCaptured(ev, _, eventID)
         EventID = eventID:gsub("^IE ", ""),
     })
 end
-
--- Generic.OnViewportChanged = function(ui)
---     local viewport = Ext.UI.GetViewportSize()
-
---     ui.Events.ViewportChanged:Throw({
---         Width = viewport[1],
---         Height = viewport[2],
---     })
--- end
-
--- Listen for viewport changes
-local oldViewport = {0, 0}
-Ext.Events.Tick:Subscribe(function (_)
-    local viewport = Ext.UI.GetViewportSize()
-    local width, height = viewport[1], viewport[2]
-
-    if oldViewport[1] ~= width or oldViewport[2] ~= height then
-        for _,ui in pairs(Generic.INSTANCES) do
-            ui.Events.ViewportChanged:Throw({
-                Width = width,
-                Height = height,
-            })
-        end
-
-        oldViewport = viewport
-    end
-end)
