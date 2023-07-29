@@ -640,6 +640,8 @@ LOAD_ORDER = {
     {Script = "Epip/Compatibility/VisitorsFromCyseal/Client.lua", RequiredMods = {MODS.VISITORS_FROM_CYSEAL}},
     {Script = "Epip/Compatibility/DerpysArtifactTiers/Client.lua", RequiredMods = {MODS.EE_DERPY_ARTIFACT_TIERS}},
 
+    {ScriptSet = "Epip/PunisherVoiceActing", RequiredMods = {MODS.EE_DERPY}},
+
     -- Should be loaded last
     {ScriptSet = "Epip/DebugMenu", Developer = true,},
 

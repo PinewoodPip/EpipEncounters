@@ -308,6 +308,8 @@ LOAD_ORDER = {
     -- Compatibility
     {Script = "Epip/Compatibility/PortableRespecMirror/Shared.lua", RequiredMods = {MODS.PORTABLE_RESPEC_MIRROR}},
 
+    {ScriptSet = "Epip/PunisherVoiceActing", RequiredMods = {MODS.EE_DERPY}},
+
     {Script = "Epip/PersonalScripts/Shared.lua", Developer = true},
 }
 
