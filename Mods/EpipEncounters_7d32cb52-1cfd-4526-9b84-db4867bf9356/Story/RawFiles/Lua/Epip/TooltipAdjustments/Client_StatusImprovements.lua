@@ -18,11 +18,11 @@ TSK.StatusImprovements_FromItem = TooltipAdjustments:RegisterTranslatedString("h
     ContextDescription = "Tooltip for statuses from an equipped item",
 })
 
-TSK.Adjustment_StatusImprovements_Name = TooltipLib:RegisterTranslatedString("h0ef05becgc584g447agaa9cg797786d46dcf", {
+TSK.Adjustment_StatusImprovements_Name = TooltipAdjustments:RegisterTranslatedString("h0ef05becgc584g447agaa9cg797786d46dcf", {
     Text = "Show status source",
     ContextDescription = "Setting name",
 })
-TSK.Adjustment_StatusImprovements_Description = TooltipLib:RegisterTranslatedString("h2095b033g942eg400agb596g45d9ba3294c7", {
+TSK.Adjustment_StatusImprovements_Description = TooltipAdjustments:RegisterTranslatedString("h2095b033g942eg400agb596g45d9ba3294c7", {
     Text = "If enabled, status tooltips will show the name of the character that applied the status, if any. Also allows you to click statuses to center the camera on the source character.",
     ContextDescription = "Setting tooltip",
 })
