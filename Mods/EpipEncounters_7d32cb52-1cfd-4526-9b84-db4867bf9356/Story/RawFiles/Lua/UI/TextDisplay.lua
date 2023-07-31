@@ -6,6 +6,8 @@
 
 ---@class TextDisplayUI : UI
 local TextDisplay = {
+    DEFAULT_LAYER = 9,
+
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
 

@@ -107,7 +107,7 @@ Epip.RegisterFeature("TooltipAdjustments", TooltipAdjustments)
 -- METHODS
 ---------------------------------------------
 
----@param setting SettingsLib_Setting
+---@param setting SettingsLib_Setting_Boolean
 ---@return boolean
 function TooltipAdjustments.IsAdjustmentEnabled(setting)
     return TooltipAdjustments:IsEnabled() and TooltipAdjustments:GetSettingValue(setting) == true
