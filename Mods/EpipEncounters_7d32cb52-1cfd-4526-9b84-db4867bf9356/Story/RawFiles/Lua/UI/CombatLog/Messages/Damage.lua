@@ -3,8 +3,6 @@ local Log = Client.UI.CombatLog
 
 ---@class CombatLogDamageMessage : CombatLogCharacterMessage
 ---@field Damage DamageInstance[]
-
----@type CombatLogDamageMessage
 local _DamageMessage = {}
 setmetatable(_DamageMessage, {__index = Client.UI.CombatLog.MessageTypes.Character})
 Client.UI.CombatLog.MessageTypes.Damage = _DamageMessage

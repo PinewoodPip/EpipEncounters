@@ -2,8 +2,6 @@
 local Log = Client.UI.CombatLog
 
 ---@class CombatLogReflectedDamageMessage : CombatLogDamageMessage
-
----@type CombatLogReflectedDamageMessage
 local _Reflect = {
     PATTERN = '<font color="#DBDBDB"><font color="#(%x%x%x%x%x%x)">(.+)</font> was hit for <font color="#(%x%x%x%x%x%x)">(%d+) (.+) Damage%(reflected%)</font></font>',
     Type = "ReflectedDamage",

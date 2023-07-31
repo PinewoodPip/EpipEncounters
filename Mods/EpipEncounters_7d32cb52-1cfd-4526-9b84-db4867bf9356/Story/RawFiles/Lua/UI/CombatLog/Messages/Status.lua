@@ -1,15 +1,13 @@
 
 local Log = Client.UI.CombatLog
 
----@class CombatLogStatusMessage : CombatLogCharacterMessage
----@field Statuses CombatLogStatus[]
----@field LosingStatuses boolean
-
 ---@class CombatLogStatus
 ---@field Name string
 ---@field Color string
 
----@type CombatLogStatusMessage
+---@class CombatLogStatusMessage : CombatLogCharacterMessage
+---@field Statuses CombatLogStatus[]
+---@field LosingStatuses boolean
 local _StatusMessage = {}
 setmetatable(_StatusMessage, {__index = Log.MessageTypes.Character})
 Log.MessageTypes.Status = _StatusMessage

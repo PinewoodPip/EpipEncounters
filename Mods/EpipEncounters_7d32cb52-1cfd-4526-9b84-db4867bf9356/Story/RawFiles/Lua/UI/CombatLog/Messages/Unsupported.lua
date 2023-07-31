@@ -3,8 +3,6 @@ local Log = Client.UI.CombatLog
 
 ---@class CombatLogUnsupportedMessage : CombatLogMessage
 ---@field Text string
-
----@type CombatLogUnsupportedMessage
 local _CombatLogUnsupportedMessage = {}
 setmetatable(_CombatLogUnsupportedMessage, {__index = Client.UI.CombatLog.MessageTypes.Base})
 Client.UI.CombatLog.MessageTypes.Unsupported = _CombatLogUnsupportedMessage

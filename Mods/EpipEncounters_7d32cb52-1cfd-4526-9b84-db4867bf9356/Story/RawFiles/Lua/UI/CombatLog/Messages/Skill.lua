@@ -9,8 +9,6 @@ local Log = Client.UI.CombatLog
 ---@field Target SkillTargetType
 ---@field TargetCharacter string?
 ---@field TargetCharacterColor string?
-
----@type CombatLogSkillMessage
 local _Skill = {
     PATTERN = '<font color="#DBDBDB"><font color="#(%x%x%x%x%x%x)">(.+)</font> u?s?e?d?c?a?s?t? <font color="#(%x%x%x%x%x%x)">(.+)</font></font>',
     PATTERN_CHARACTER = '<font color="#DBDBDB"><font color="#(%x%x%x%x%x%x)">(.+)</font> used <font color="#(%x%x%x%x%x%x)">(.+)</font> on <font color="#(%x%x%x%x%x%x)">(.+)</font></font>',

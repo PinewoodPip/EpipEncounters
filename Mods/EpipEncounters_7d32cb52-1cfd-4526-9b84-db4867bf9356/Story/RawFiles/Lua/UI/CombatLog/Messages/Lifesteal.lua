@@ -2,8 +2,6 @@
 local Log = Client.UI.CombatLog
 
 ---@class CombatLogLifestealMessage : CombatLogDamageMessage
-
----@type CombatLogLifestealMessage
 local _LifestealMessage = {
     Type = "Lifesteal",
 }

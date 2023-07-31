@@ -4,8 +4,6 @@ local Log = Client.UI.CombatLog
 ---@class CombatLogCharacterMessage : CombatLogMessage
 ---@field CharacterName string
 ---@field CharacterColor string
-
----@type CombatLogCharacterMessage
 local _CharacterMessage = {}
 setmetatable(_CharacterMessage, Log.MessageTypes.Base)
 Log.MessageTypes.Character = _CharacterMessage

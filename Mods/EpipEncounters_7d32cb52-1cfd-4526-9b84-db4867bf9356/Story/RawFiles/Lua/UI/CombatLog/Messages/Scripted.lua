@@ -5,8 +5,6 @@ local Log = Client.UI.CombatLog
 ---@field PATTERN pattern
 ---@field Text string
 ---@field Color string
-
----@type CombatLogScriptedMessage
 local _ScriptedMessage = {
     PATTERN = '<font color="#(%x%x%x%x%x%x)">(.+)</font>: <font color="(%x%x%x%x%x%x)">(.+)</font>',
     PATTERN_ALT = '<font color="#(%x%x%x%x%x%x)">(.+)</font>: (.+)',

@@ -4,8 +4,6 @@ local Log = Client.UI.CombatLog
 ---@class CombatLogAttackMessage : CombatLogDamageMessage
 ---@field TargetCharacter string
 ---@field TargetCharacterColor string
-
----@type CombatLogAttackMessage
 local _Attack = {
     PATTERN = '<font color="#DBDBDB"><font color="#(%x%x%x%x%x%x)">(.+)</font> attacked <font color="#(%x%x%x%x%x%x)">(.+)</font>, for <font color="#(%x%x%x%x%x%x)">(%d+) (.+) Damage</font></font>',
     Type = "Attack",

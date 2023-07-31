@@ -8,7 +8,7 @@
 -- Add more message types
 -- Some utility method for concatenating with commas
 
----@class CombatLogUI
+---@class CombatLogUI : UI
 ---@field Messages CombatLogSentMessage[]
 ---@field COLORS table<string, string>
 ---@field MAX_MESSAGES integer
@@ -16,8 +16,6 @@
 ---@field MessageTypes table<string, CombatLogMessage> Templtes for creating messages.
 ---@field FILTERS table<string, CombatLogFilter>
 ---@field EnabledFilters table<string, boolean>
-
----@type CombatLogUI
 local Log = {
     Messages = {},
     COLORS = {
@@ -52,7 +50,6 @@ local Log = {
     SAVE_FORMAT = 0,
 }
 Epip.InitializeUI(Client.UI.Data.UITypes.combatLog, "CombatLog", Log)
--- Log:Debug()
 
 ---@class CombatLogSentMessage
 ---@field Filter integer
@@ -67,7 +64,7 @@ Epip.InitializeUI(Client.UI.Data.UITypes.combatLog, "CombatLog", Log)
 -- EVENTS/HOOKS
 ---------------------------------------------
 
----@class CombatLogUI_Hook_GetMessageObject : Hook
+---@class CombatLogUI_Hook_GetMessageObject : LegacyHook
 ---@field RegisterHook fun(self, handler:fun(obj:CombatLogMessage, message:string))
 ---@field Return fun(self, obj:CombatLogMessage, message:string)
 
@@ -76,11 +73,11 @@ Epip.InitializeUI(Client.UI.Data.UITypes.combatLog, "CombatLog", Log)
 ---@field Fire fun(self, msg:CombatLogSentMessage)
 
 ---Fired when 2 messages of the same type are attempted to be sent one after another. You're expected to return true if you've edited msg1 to append to its message. If combined is true, msg1 will be re-rendered and msg2 will not be sent to the UI.
----@class CombatLogUI_Hook_CombineMessage : Hook
+---@class CombatLogUI_Hook_CombineMessage : LegacyHook
 ---@field RegisterHook fun(self, handler:fun(combined:boolean, msg1:CombatLogSentMessage, msg2:CombatLogSentMessage))
 ---@field Return fun(self, combined:boolean, msg1:CombatLogSentMessage, msg2:CombatLogSentMessage)
 
----@class CombatLogUI_Hook_MessageCanMerge : Hook
+---@class CombatLogUI_Hook_MessageCanMerge : LegacyHook
 ---@field RegisterHook fun(self, handler:fun(canMerge:boolean, msg1:CombatLogSentMessage, msg2:CombatLogSentMessage))
 ---@field Return fun(self, canMerge:boolean, msg1:CombatLogSentMessage, msg2:CombatLogSentMessage)
 
@@ -140,13 +137,13 @@ function Log.RefreshFilters(filter)
                 Log:GetRoot().log_mc.toggleFilter(msgType, not Log.IsMessageTypeFiltered(msgType))
             end
         else
-            for id,f in pairs(Log.FILTERS) do
+            for _,f in pairs(Log.FILTERS) do
                 for msgType,_ in pairs(f.MessageTypes) do
                     Log:GetRoot().log_mc.toggleFilter(msgType, not Log.IsMessageTypeFiltered(msgType))
                 end
             end
         end
-    
+
         Log:GetRoot().log_mc.refreshText()
 
         Log:GetRoot().log_mc.textList.m_scrollbar_mc.resetHandleToBottom()
@@ -271,7 +268,7 @@ Log.Hooks.MessageCanMerge:RegisterHook(function (canMerge, msg1, msg2)
 end)
 
 -- Force hardcoded filters to always be enabled.
-Log:RegisterInvokeListener("setFilterSelection", function(ev, filter, enabled)
+Log:RegisterInvokeListener("setFilterSelection", function(ev, filter, _)
     Log:GetRoot().setFilterSelection(filter, true)
     ev:PreventAction()
 end)
@@ -303,12 +300,12 @@ Log:RegisterCallListener("selectFilter", function(ev, id)
     end
 end)
 
-Client.UI.ContextMenu.RegisterElementListener("combatLog_Filters_Toggle", "buttonPressed", function(character, params)
+Client.UI.ContextMenu.RegisterElementListener("combatLog_Filters_Toggle", "buttonPressed", function(_, params)
     Log.ToggleFilter(params.FilterID)
     Log.SaveConfig()
 end)
 
-Client.UI.ContextMenu.RegisterElementListener("combatLog_Clear", "buttonPressed", function(character, params)
+Client.UI.ContextMenu.RegisterElementListener("combatLog_Clear", "buttonPressed", function(_, _)
     Log.Clear()
 end)
 
@@ -330,7 +327,7 @@ Client.UI.ContextMenu.RegisterMenuHandler("combatLog", function()
         return nil
     end
 
-    for i,id in ipairs(Log.FilterOrder) do
+    for _,id in ipairs(Log.FilterOrder) do
         local filter = Log.FILTERS[id]
 
         table.insert(filters, {
@@ -471,6 +468,6 @@ local DefaultFilters = {
     },
 }
 
-for i,filter in pairs(DefaultFilters) do
+for _,filter in pairs(DefaultFilters) do
     Log.RegisterFilter(filter.ID, filter)
 end

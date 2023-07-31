@@ -2,8 +2,6 @@
 local Log = Client.UI.CombatLog
 
 ---@class CombatLogHealingMessage : CombatLogDamageMessage
-
----@type CombatLogHealingMessage
 local _HealingMessage = {}
 setmetatable(_HealingMessage, {__index = Log.MessageTypes.Damage})
 Client.UI.CombatLog.MessageTypes.Healing = _HealingMessage

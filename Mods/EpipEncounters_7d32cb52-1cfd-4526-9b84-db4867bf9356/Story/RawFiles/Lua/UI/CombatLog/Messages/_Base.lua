@@ -14,8 +14,6 @@ local Log = Client.UI.CombatLog
 
 ---@class CombatLogMessage
 ---@field Type string
-
----@type CombatLogMessage
 local _CombatLogMessage = {}
 Client.UI.CombatLog.MessageTypes.Base = _CombatLogMessage
 

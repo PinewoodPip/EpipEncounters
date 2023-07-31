@@ -5,8 +5,6 @@ local Log = Client.UI.CombatLog
 ---@field PATTERN_NEXT_ROUND pattern
 ---@field Text string
 ---@field Color string
-
----@type CombatLogSourceGenerationMessage
 local _SourceGenMessage = {
     PATTERN_NEXT_ROUND = '<font color="#(%x%x%x%x%x%x)">(.+)</font>: <font color="(%x%x%x%x%x%x)">(.+)</font>',
     Type = "SourceGeneration",

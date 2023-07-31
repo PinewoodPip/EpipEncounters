@@ -4,8 +4,6 @@ local Log = Client.UI.CombatLog
 ---@class CombatLogCharacterInteractionMessage : CombatLogCharacterMessage
 ---@field TargetName string
 ---@field TargetColor string
-
----@type CombatLogCharacterInteractionMessage
 local _CharacterInteractionMessage = {
     Type = "CharacterInteraction",
 }

@@ -5,8 +5,6 @@ local Log = Client.UI.CombatLog
 ---@field PATTERN pattern
 ---@field COLOR string
 ---@field AP integer
-
----@type CombatLogAPPreservationMessage
 local _APPreservation = {
     PATTERN = '<font color="#FFAB00">(.+): (%d+) Action Points preserved</font>',
     COLOR = "FFAB00",

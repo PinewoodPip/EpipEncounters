@@ -7,8 +7,6 @@ local Log = Client.UI.CombatLog
 
 ---@class CombatLogReactionChargesMessage : CombatLogScriptedMessage
 ---@field Reactions CombatLogReactionChargesData[]
-
----@type CombatLogReactionChargesMessage
 local _Charges = {
     PATTERN_ALT = '<font color="#(%x%x%x%x%x%x)">(.+)</font>: has free reaction charges:<br>(.+)', -- TODO
     PATTERN = '<font color="#(%x%x%x%x%x%x)">(.+)</font>: (.+) free reaction charges remaining: (%d+)',

@@ -2,8 +2,6 @@
 local Log = Client.UI.CombatLog
 
 ---@class CombatLogSurfaceDamage : CombatLogDamageMessage
-
----@type CombatLogSurfaceDamage
 local _Surface = {
     PATTERN = '<font color="#DBDBDB"><font color="#(%x%x%x%x%x%x)">(.+)</font> was hit for <font color="#(%x%x%x%x%x%x)">(%d+) (.+) Damage</font> by a surface</font>',
     Type = "SurfaceDamage",
