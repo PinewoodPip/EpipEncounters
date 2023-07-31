@@ -90,8 +90,8 @@ Artifact = {
             Slot = "Amulet",
             ItemTemplate = "AMER_UNI_Arcturus_129a3b30-c934-49fb-ba9f-76d8d9bf815e",
             RuneTemplate = "AMER_UNI_Arcturus_Rune_0fdf74c2-d66a-4940-b58c-ca740f30af0c",
-            KeywordActivators = {},
-            KeywordMutators = {},
+            KeywordActivators = {"Ward"},
+            KeywordMutators = {"Centurion", "Ward"},
             DescriptionHandle = "h74f09946g8653g4186gb56fg41d4bb301d73",
         },
         Artifact_Austerity = {
@@ -99,8 +99,8 @@ Artifact = {
             Slot = "Ring",
             ItemTemplate = "AMER_UNI_Austerity_9fceb5ad-e02d-4eb4-8098-cdf795d51adf",
             RuneTemplate = "AMER_UNI_Austerity_Rune_3b401786-032d-4e66-9352-100322c8e6fd",
-            KeywordActivators = {"Ward"},
-            KeywordMutators = {"Centurion", "Ward"},
+            KeywordActivators = {},
+            KeywordMutators = {},
             DescriptionHandle = "hdd5d5bedg109dg4372gb776g421cd79be8cc",
         },
         Artifact_BlackglassBrand = {
@@ -109,7 +109,7 @@ Artifact = {
             ItemTemplate = "AMER_UNI_BlackglassBrand_Sword_1H_6b8aefdb-13f5-4cf3-8ea2-d9e0760b3eea",
             RuneTemplate = "AMER_UNI_BlackglassBrand_Rune_3355fb9f-2bd6-4d89-9e05-d4aa64a81b84",
             KeywordActivators = {},
-            KeywordMutators = {},
+            KeywordMutators = {"Centurion"},
             DescriptionHandle = "h8c435d5cg6379g49e1ga613gf1468018469e",
         },
         Artifact_Bloodforge = {
@@ -307,7 +307,7 @@ Artifact = {
             ItemTemplate = "AMER_UNI_Exaltation_8ce4fe8a-41cb-479a-b1ab-c2305bd3f840",
             RuneTemplate = "AMER_UNI_Exaltation_Rune_cefc217c-7f79-44a4-ad57-bd10587f8297",
             KeywordActivators = {},
-            KeywordMutators = {},
+            KeywordMutators = {"ViolentStrike"},
             DescriptionHandle = "h3f1554fdg2390g4c40g82a4g4d527b85d7e9",
         },
         Artifact_Expedition = {
