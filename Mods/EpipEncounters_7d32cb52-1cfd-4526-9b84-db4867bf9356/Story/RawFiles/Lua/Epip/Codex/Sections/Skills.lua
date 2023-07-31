@@ -556,7 +556,7 @@ Skills.Hooks.IsSkillValid:Subscribe(function (ev)
         local lowercaseName = Skills._GetSkillDisplayName(ev.Stat):lower()
 
         -- Filter out skills with no display name or icon - these tend to be unobtainable skills that are not properly marked as such by the developer.
-        if lowercaseName == "" then
+        if ev.Stat.DisplayName == "" then -- We cannot check for valid handles here as there are mods like Derpy's which set the text directly to this field.
             valid = false
             goto End
         elseif stat.Icon == "unknown" or stat.Icon == "" then
