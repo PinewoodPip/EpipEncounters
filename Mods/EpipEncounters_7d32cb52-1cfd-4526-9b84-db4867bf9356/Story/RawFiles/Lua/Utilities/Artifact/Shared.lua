@@ -541,7 +541,7 @@ Artifact = {
             ItemTemplate = "AMER_UNI_TheLocustCrown_Robes_f75b90f0-b2f9-4a19-aca2-1fe9458fbe9d",
             RuneTemplate = "AMER_UNI_TheLocustCrown_Rune_45fff2b1-4a44-4d30-af4f-78ba63f6f2a8",
             KeywordActivators = {},
-            KeywordMutators = {},
+            KeywordMutators = {"Wither"},
             DescriptionHandle = "h381e3c72gf72cg4950gb168gd9ab150b5ddf",
         },
         Artifact_Malice = {
@@ -604,7 +604,7 @@ Artifact = {
             ItemTemplate = "AMER_UNI_NecromancersRaiment_Robes_e96386e8-db7f-4267-aa92-6caff9ae2f7b",
             RuneTemplate = "AMER_UNI_NecromancersRaiment_Rune_705f612a-9109-41ca-88c4-60c24be802b0",
             KeywordActivators = {},
-            KeywordMutators = {},
+            KeywordMutators = {"Wither"},
             DescriptionHandle = "h78550f18g084fg4efbga48fg8b04f6ad6932",
         },
         Artifact_Nemesis = {
@@ -612,7 +612,7 @@ Artifact = {
             Slot = "Breast",
             ItemTemplate = "AMER_UNI_Nemesis_Leather_0339fe72-2c9c-404f-9499-7083985dfaac",
             RuneTemplate = "AMER_UNI_Nemesis_Rune_9d0e48c4-fa53-484c-8ee9-616094ed18ca",
-            KeywordActivators = {},
+            KeywordActivators = {"ViolentStrike"},
             KeywordMutators = {},
             DescriptionHandle = "h049cb32bg2cf2g434eg8f82g7d7508db0102",
         },
@@ -676,7 +676,7 @@ Artifact = {
             ItemTemplate = "AMER_UNI_Paragon_Robes_ddbd0267-2770-43d0-b5cf-f5a2f935ae9c",
             RuneTemplate = "AMER_UNI_Paragon_Rune_f9acc87d-c30c-4071-8748-6efe0ae5f33a",
             KeywordActivators = {"VitalityVoid"},
-            KeywordMutators = {"VitalityVoid"},
+            KeywordMutators = {"VitalityVoid", "Benevolence"},
             DescriptionHandle = "hd38441ceg6e88g4c7eg9806gd1467a77082f",
         },
         Artifact_Pariah = {
@@ -739,7 +739,7 @@ Artifact = {
             ItemTemplate = "AMER_UNI_RedOrison_Leather_48f6188d-6e85-4526-a8bb-58eb1fd3c7ef",
             RuneTemplate = "AMER_UNI_RedOrison_Rune_6673424d-88ae-4323-84a9-186739ff13d8",
             KeywordActivators = {},
-            KeywordMutators = {},
+            KeywordMutators = {"Celestial", "Occultist"},
             DescriptionHandle = "h874898d5gbf93g437eg9c74ge0b28c82d1d6",
         },
         Artifact_RodOfAbeyance = {
@@ -783,7 +783,7 @@ Artifact = {
             Slot = "Weapon",
             ItemTemplate = "AMER_UNI_SanguineHarvest_Wand_6cfa99c4-85d2-450b-9f44-aa56f1997921",
             RuneTemplate = "AMER_UNI_SanguineHarvest_Rune_e41172c1-4bbf-4125-886e-b28a0d5a05aa",
-            KeywordActivators = {},
+            KeywordActivators = {"ViolentStrike"},
             KeywordMutators = {},
             DescriptionHandle = "h0413b6fdg3e93g4347ga1b0gaa8e14d10a3a",
         },
