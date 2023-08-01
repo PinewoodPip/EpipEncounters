@@ -38,6 +38,11 @@ local styles = {
         IdleTexture = ButtonTextures.ARROWS.DIAMOND.DOUBLE.IDLE,
         HighlightedTexture = ButtonTextures.ARROWS.DIAMOND.DOUBLE.HIGHLIGHTED,
     },
+    DoubleUp = {
+        IdleTexture = ButtonTextures.ARROWS.DIAMOND.UP_DOUBLE.IDLE,
+        HighlightedTexture = ButtonTextures.ARROWS.DIAMOND.UP_DOUBLE.HIGHLIGHTED,
+        PressedTexture = ButtonTextures.ARROWS.DIAMOND.UP_DOUBLE.PRESSED,
+    },
     DownSlate = {
         IdleTexture = ButtonTextures.ARROWS.DOWN_SLATE.IDLE,
         HighlightedTexture = ButtonTextures.ARROWS.DOWN_SLATE.HIGHLIGHTED,
@@ -47,6 +52,11 @@ local styles = {
         IdleTexture = ButtonTextures.ARROWS.DOWN_SLATE_SMALL.IDLE,
         HighlightedTexture = ButtonTextures.ARROWS.DOWN_SLATE_SMALL.HIGHLIGHTED,
         PressedTexture = ButtonTextures.ARROWS.DOWN_SLATE_SMALL.PRESSED,
+    },
+    DownGreen = {
+        IdleTexture = ButtonTextures.ARROWS.DOWN_GREEN.IDLE,
+        HighlightedTexture = ButtonTextures.ARROWS.DOWN_GREEN.HIGHLIGHTED,
+        PressedTexture = ButtonTextures.ARROWS.DOWN_GREEN.PRESSED,
     },
     SquareUp = {
         IdleTexture = ButtonTextures.ARROWS.SQUARE.UP.IDLE,
@@ -73,15 +83,45 @@ local styles = {
         HighlightedTexture = ButtonTextures.ARROWS.LEFT_TALL.HIGHLIGHTED,
         PressedTexture = ButtonTextures.ARROWS.LEFT_TALL.PRESSED,
     },
+    LeftcharacterSheet = {
+        IdleTexture = ButtonTextures.ARROWS.LEFT_CHARACTER_SHEET.IDLE,
+        HighlightedTexture = ButtonTextures.ARROWS.LEFT_CHARACTER_SHEET.HIGHLIGHTED,
+        PressedTexture = ButtonTextures.ARROWS.LEFT_CHARACTER_SHEET.PRESSED,
+    },
+    LeftDecorated = {
+        IdleTexture = ButtonTextures.ARROWS.LEFT_DECORATED.IDLE,
+        HighlightedTexture = ButtonTextures.ARROWS.LEFT_DECORATED.HIGHLIGHTED,
+        PressedTexture = ButtonTextures.ARROWS.LEFT_DECORATED.PRESSED,
+    },
     RightTall = {
         IdleTexture = ButtonTextures.ARROWS.RIGHT_TALL.IDLE,
         HighlightedTexture = ButtonTextures.ARROWS.RIGHT_TALL.HIGHLIGHTED,
         PressedTexture = ButtonTextures.ARROWS.RIGHT_TALL.PRESSED,
     },
+    RightCharacterSheet = {
+        IdleTexture = ButtonTextures.ARROWS.RIGHT_CHARACTER_SHEET.IDLE,
+        HighlightedTexture = ButtonTextures.ARROWS.RIGHT_CHARACTER_SHEET.HIGHLIGHTED,
+        PressedTexture = ButtonTextures.ARROWS.RIGHT_CHARACTER_SHEET.PRESSED,
+    },
+    RightDecorated = {
+        IdleTexture = ButtonTextures.ARROWS.RIGHT_DECORATED.IDLE,
+        HighlightedTexture = ButtonTextures.ARROWS.RIGHT_DECORATED.HIGHLIGHTED,
+        PressedTexture = ButtonTextures.ARROWS.RIGHT_DECORATED.PRESSED,
+    },
     EditGreen = {
         IdleTexture = ButtonTextures.EDIT.GREEN.IDLE,
         HighlightedTexture = ButtonTextures.EDIT.GREEN.HIGHLIGHTED,
         PressedTexture = ButtonTextures.EDIT.GREEN.PRESSED,
+    },
+    EditWide = {
+        IdleTexture = ButtonTextures.EDIT_WIDE.IDLE,
+        HighlightedTexture = ButtonTextures.EDIT_WIDE.HIGHLIGHTED,
+        PressedTexture = ButtonTextures.EDIT_WIDE.PRESSED,
+    },
+    StopRed = {
+        IdleTexture = ButtonTextures.STOP.RED.IDLE,
+        HighlightedTexture = ButtonTextures.STOP.RED.HIGHLIGHTED,
+        PressedTexture = ButtonTextures.STOP.RED.PRESSED,
     },
     SaveGreen = {
         IdleTexture = ButtonTextures.SAVE.GREEN.IDLE,
@@ -120,10 +160,31 @@ local styles = {
         PressedTexture = ButtonTextures.GREEN.MEDIUM.PRESSED,
         DisabledTexture = ButtonTextures.GREEN.MEDIUM.DISABLED,
     },
+    GreenMediumTextured = {
+        IdleTexture = ButtonTextures.GREEN.MEDIUM_TEXTURED.IDLE,
+        HighlightedTexture = ButtonTextures.GREEN.MEDIUM_TEXTURED.HIGHLIGHTED,
+        PressedTexture = ButtonTextures.GREEN.MEDIUM_TEXTURED.PRESSED,
+        DisabledTexture = ButtonTextures.GREEN.MEDIUM_TEXTURED.DISABLED,
+    },
+    GreenSmallTextured = {
+        IdleTexture = ButtonTextures.GREEN.SMALL_TEXTURED.IDLE,
+        HighlightedTexture = ButtonTextures.GREEN.SMALL_TEXTURED.HIGHLIGHTED,
+        PressedTexture = ButtonTextures.GREEN.SMALL_TEXTURED.PRESSED,
+        DisabledTexture = ButtonTextures.GREEN.SMALL_TEXTURED.DISABLED,
+    },
+    ComboBox = {
+        IdleTexture = ButtonTextures.COMBO_BOX.IDLE,
+        HighlightedTexture = ButtonTextures.COMBO_BOX.HIGHLIGHTED,
+    },
     Close = {
         IdleTexture = ButtonTextures.CLOSE.IDLE,
         HighlightedTexture = ButtonTextures.CLOSE.HIGHLIGHTED,
         PressedTexture = ButtonTextures.CLOSE.PRESSED,
+    },
+    CloseSimple = {
+        IdleTexture = ButtonTextures.CLOSE.SIMPLE.IDLE,
+        HighlightedTexture = ButtonTextures.CLOSE.SIMPLE.HIGHLIGHTED,
+        PressedTexture = ButtonTextures.CLOSE.SIMPLE.PRESSED,
     },
     CloseGreen = {
         IdleTexture = ButtonTextures.CLOSE_GREEN.IDLE,
@@ -171,6 +232,26 @@ local styles = {
         HighlightedTexture = ButtonTextures.COUNTER.DOS1.INCREMENT.HIGHLIGHTED,
         PressedTexture = ButtonTextures.COUNTER.DOS1.INCREMENT.PRESSED,
     },
+    IncrementSmallStone = {
+        IdleTexture = ButtonTextures.COUNTER.SMALL_STONE.INCREMENT.IDLE,
+        HighlightedTexture = ButtonTextures.COUNTER.SMALL_STONE.INCREMENT.HIGHLIGHTED,
+        PressedTexture = ButtonTextures.COUNTER.SMALL_STONE.INCREMENT.PRESSED,
+    },
+    DecrementSmallStone = {
+        IdleTexture = ButtonTextures.COUNTER.SMALL_STONE.DECREMENT.IDLE,
+        HighlightedTexture = ButtonTextures.COUNTER.SMALL_STONE.DECREMENT.HIGHLIGHTED,
+        PressedTexture = ButtonTextures.COUNTER.SMALL_STONE.DECREMENT.PRESSED,
+    },
+    IncrementCharacterSheet = {
+        IdleTexture = ButtonTextures.COUNTER.CHARACTER_SHEET.INCREMENT.IDLE,
+        HighlightedTexture = ButtonTextures.COUNTER.CHARACTER_SHEET.INCREMENT.HIGHLIGHTED,
+        PressedTexture = ButtonTextures.COUNTER.CHARACTER_SHEET.INCREMENT.PRESSED,
+    },
+    DecrementCharacterSheet = {
+        IdleTexture = ButtonTextures.COUNTER.CHARACTER_SHEET.DECREMENT.IDLE,
+        HighlightedTexture = ButtonTextures.COUNTER.CHARACTER_SHEET.DECREMENT.HIGHLIGHTED,
+        PressedTexture = ButtonTextures.COUNTER.CHARACTER_SHEET.DECREMENT.PRESSED,
+    },
     LargeNotch = {
         IdleTexture = ButtonTextures.NOTCHES.LARGE.IDLE,
         HighlightedTexture = ButtonTextures.NOTCHES.LARGE.HIGHLIGHTED,
@@ -180,10 +261,25 @@ local styles = {
         HighlightedTexture = ButtonTextures.NOTCHES.SMALL.HIGHLIGHTED,
         PressedTexture = ButtonTextures.NOTCHES.SMALL.PRESSED,
     },
+    TabCharacterSheet = {
+        IdleTexture = ButtonTextures.TABS.CHARACTER_SHEET.IDLE,
+        HighlightedTexture = ButtonTextures.TABS.CHARACTER_SHEET.HIGHLIGHTED,
+        PressedTexture = ButtonTextures.TABS.CHARACTER_SHEET.PRESSED,
+    },
+    TabCharacterSheetWide = {
+        IdleTexture = ButtonTextures.TABS.CHARACTER_SHEET_WIDE.IDLE,
+        HighlightedTexture = ButtonTextures.TABS.CHARACTER_SHEET_WIDE.HIGHLIGHTED,
+        PressedTexture = ButtonTextures.TABS.CHARACTER_SHEET_WIDE.PRESSED,
+    },
     Transparent = {
         IdleTexture = ButtonTextures.TRANSPARENT.IDLE,
         HighlightedTexture = ButtonTextures.TRANSPARENT.HIGHLIGHTED,
         PressedTexture = ButtonTextures.TRANSPARENT.PRESSED,
+    },
+    TransparentMedium = {
+        IdleTexture = ButtonTextures.TRANSPARENT_MEDIUM.IDLE,
+        HighlightedTexture = ButtonTextures.TRANSPARENT_MEDIUM.HIGHLIGHTED,
+        PressedTexture = ButtonTextures.TRANSPARENT_MEDIUM.PRESSED,
     },
     LargeRed = {
         IdleTexture = ButtonTextures.RED.LARGE.IDLE,
@@ -207,8 +303,35 @@ local styles = {
         PressedTexture = ButtonTextures.SQUARE.STONE.PRESSED,
         DisabledTexture = ButtonTextures.SQUARE.STONE.DISABLED,
     },
+    YellowDecorated = {
+        IdleTexture = ButtonTextures.YELLOW.DECORATED.IDLE,
+        HighlightedTexture = ButtonTextures.YELLOW.DECORATED.HIGHLIGHTED,
+        PressedTexture = ButtonTextures.YELLOW.DECORATED.PRESSED,
+        DisabledTexture = ButtonTextures.YELLOW.DECORATED.DISABLED,
+    },
+    WhiteMedium = {
+        IdleTexture = ButtonTextures.WHITE.MEDIUM.IDLE,
+        HighlightedTexture = ButtonTextures.WHITE.MEDIUM.HIGHLIGHTED,
+        PressedTexture = ButtonTextures.WHITE.MEDIUM.PRESSED,
+    },
 
     -- State Buttons
+    Armor_Inactive = {
+        IdleTexture = StateButtonTextures.ARMOR.INACTIVE_IDLE,
+    },
+    Armor_Active = {
+        IdleTexture = StateButtonTextures.ARMOR.ACTIVE_IDLE,
+    },
+    Helmet_Inactive = {
+        IdleTexture = StateButtonTextures.HELMET.INACTIVE_IDLE,
+        HighlightedTexture = StateButtonTextures.HELMET.INACTIVE_HIGHLIGHTED,
+        PressedTexture = StateButtonTextures.HELMET.INACTIVE_PRESSED,
+    },
+    Helmet_Active = {
+        IdleTexture = StateButtonTextures.HELMET.ACTIVE_IDLE,
+        HighlightedTexture = StateButtonTextures.HELMET.ACTIVE_HIGHLIGHTED,
+        PressedTexture = StateButtonTextures.HELMET.ACTIVE_PRESSED,
+    },
     SimpleCheckbox_Inactive = {
         IdleTexture = StateButtonTextures.CHECKBOXES.SIMPLE.BACKGROUND,
         HighlightedTexture = StateButtonTextures.CHECKBOXES.SIMPLE.BACKGROUND_HIGHLIGHTED,
