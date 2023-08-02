@@ -17,18 +17,6 @@ Epip.InitializeLibrary("Generic", Generic)
 -- METHODS
 ---------------------------------------------
 
----@param ev EclLuaUICallEvent
----@param elementID string
----@param eventName string
----@param eventObj table?
-function Generic.OnElementUICall(ev, elementID, eventName, eventObj)
-    local element = Generic.GetInstance(ev.UI:GetTypeId()):GetElementByID(elementID)
-    if not element then return nil end
-    Generic:DebugLog("CALL " .. eventName, elementID)
-
-    element.Events[eventName]:Throw(eventObj)
-end
-
 ---@param id string
 ---@param layer integer? Defaults to `DEFAULT_LAYER`.
 ---@return GenericUI_Instance
@@ -129,6 +117,7 @@ function Generic.RegisterElementType(elementType, elementTable)
     Generic.ELEMENTS[elementType] = elementTable
 end
 
+---@private
 ---@param call string
 ---@vararg LuaFlashCompatibleType
 ---@return fun(self:GenericUI_Element, ...):any?
@@ -149,7 +138,7 @@ function Generic.ExposeFunction(call)
 end
 
 ---Returns the instance of a Generic UI by its identifier.
----@param id string|integer
+---@param id string|integer String ID of the UI or its TypeID.
 ---@return GenericUI_Instance
 function Generic.GetInstance(id)
     local instance
