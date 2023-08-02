@@ -39,4 +39,5 @@ function Widget:Render(entity)
             local _ = StatusPrefab.Create(QuickExamine.UI, status.StatusId .. "_" .. tostring(i), grid, char, status)
         end
     end
+    grid:RepositionElements()
 end
