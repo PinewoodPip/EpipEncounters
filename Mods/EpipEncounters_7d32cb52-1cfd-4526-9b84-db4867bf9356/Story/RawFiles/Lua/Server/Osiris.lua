@@ -13,13 +13,13 @@ Epip.InitializeLibrary("Osiris", Osiris)
 ---------------------------------------------
 
 ---@alias OsirisType "INTEGER"|"INTEGER64"|"REAL"|"STRING"|"REAL"|"GUIDSTRING"|"CHARACTERGUID"|"ITEMGUID"|"TRIGGERGUID"|"SPLINEGUID"|"LEVELTEMPLATEGUID"
----@alias OsirisLib_OsirisCompatibleLuaType string|number
+---@alias OsirisLib_OsirisCompatibleLuaType string|number|boolean
 ---@alias OsirisLib_CompatibleType OsirisLib_OsirisCompatibleLuaType|EsvCharacter|EsvItem
 ---@alias OsirisLib_DatabaseName "DB_AMER_BatteredHarried_BufferedDamage"
 ---|"DB_IsPlayer"
 ---|"DB_Origins"
 
----@class OsirisLib_Tuple : Class, {[string]: OsirisLib_OsirisCompatibleLuaType, [integer]: OsirisLib_OsirisCompatibleLuaType}
+---@class OsirisLib_Tuple : Class, {[string]:OsirisLib_OsirisCompatibleLuaType, [integer]:OsirisLib_OsirisCompatibleLuaType}
 ---@field Values OsirisLib_OsirisCompatibleLuaType[]
 ---@field DatabaseDescriptor OsirisLib_Database
 local Tuple = {}
@@ -36,7 +36,7 @@ function Tuple.Create(database, values)
         DatabaseDescriptor = database,
     })
 
-    -- Allow indexing via index
+    -- Allow indexing via index (assumes immutability)
     for i,value in ipairs(values) do
         instance[i] = value
     end
@@ -46,9 +46,10 @@ end
 
 -- Allow accessing values by their field names, if registered
 function Tuple.__index(self, key)
-    local index = self.DatabaseDescriptor:GetFieldIndex(key)
-
-    return self.Values[index]
+    if type(key) == "string" then -- Only do this for string indexing. Integer indexing is setup within constructor (assumes immutability).
+        local index = self.DatabaseDescriptor:GetFieldIndex(key)
+        return self.Values[index]
+    end
 end
 
 ---Returns whether a query matches this tuple's values.
@@ -119,6 +120,20 @@ function DB:Query(...)
     end
 
     return tuples
+end
+
+---Writes a fact to the DB.
+---@param ... OsirisLib_CompatibleType
+function DB:Set(...)
+    local params = table.pack(Osiris._ParseParameters(...))
+    Osi[self.Name](table.unpackSelect(params))
+end
+
+---Deletes a fact from the DB.
+---@param ... OsirisLib_CompatibleType
+function DB:Delete(...)
+    local params = table.pack(Osiris._ParseParameters(...))
+    Osi[self.Name]:Delete(table.unpackSelect(params))
 end
 
 ---Returns the index of a field by its name.
@@ -245,7 +260,22 @@ function Osiris.QueryDatabase(name, ...)
     return db:Query(...)
 end
 
+---Writes a fact to a database.
+---@param name string
+---@param ... OsirisLib_CompatibleType
+function Osiris.Set(name, ...)
+    Osiris.GetDatabase(name, select("#", ...)):Set(...)
+end
+
+---Deletes a fact from a database.
+---@param name string
+---@param ... OsirisLib_CompatibleType
+function Osiris.Delete(name, ...)
+    Osiris.GetDatabase(name, select("#", ...)):Delete(...)
+end
+
 ---Returns the first fact in a database that matches the query.
+---@see Osiris.GetFirstFactOrEmpty
 ---@generic T
 ---@param dbName string|OsirisLib_DatabaseName|`T`
 ---@param ... OsirisLib_CompatibleType
@@ -255,6 +285,19 @@ function Osiris.GetFirstFact(dbName, ...)
     local db = Osiris.GetDatabase(dbName, paramCount)
 
     return db:Query(...)[1]
+end
+
+---Returns the first fact in a database that matches the query.
+---If no facts exist, returns a dummy tuple with no values.
+---Useful for cleaner nil checks.
+---@see Osiris.GetFirstFact
+---@generic T
+---@param dbName string|OsirisLib_DatabaseName|`T`
+---@param ... OsirisLib_CompatibleType
+---@return OsirisLib_Tuple
+function Osiris.GetFirstFactOrEmpty(dbName, ...)
+    local tuples = Osiris.GetFirstFact(dbName, ...) or Tuple.Create(Osiris.GetDatabase(dbName, select("#", ...)), {})
+    return tuples
 end
 
 ---@class OsirisDatabase
