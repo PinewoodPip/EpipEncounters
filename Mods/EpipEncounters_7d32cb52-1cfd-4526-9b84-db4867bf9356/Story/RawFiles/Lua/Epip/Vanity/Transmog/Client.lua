@@ -348,7 +348,7 @@ end)
 
 -- Show transmog'd visuals instead of the item's real ones.
 Character.Hooks.CreateEquipmentVisuals:Subscribe(function (ev)
-    if ev.Item then
+    if ev.Item and ev.Request.VisualResourceID ~= "" then -- Do not create visuals if engine does not want to (ex. if corpse is exploded).
         local char = ev.Character
         local transmoggedTemplateGUID = Transmog.GetTransmoggedTemplate(ev.Item)
         local slot = ev.Request.Slot
@@ -389,7 +389,7 @@ Character.Hooks.CreateEquipmentVisuals:Subscribe(function (ev)
                         else
                             bone = slot == "Weapon" and BONES.ONE_HANDED or BONES.OFF_HAND
                         end
-                        
+
                         ev.Request.AttachmentBoneName = bone
                     else
                         Transmog:LogError("Vanity template data missing for " .. transmoggedTemplateGUID)
