@@ -54,33 +54,17 @@ local function UpdateVoracity(char, voracityType, isSummon)
     local value = 0
 
     if isSummon then
-        local _, _, _, _, _, amount = Osiris.DB_AMER_ExtendedStat_AddedStat:Get(char.MyGuid, "SummonStat_ExtendedStat", extendedStatName, nil, nil, nil)
-
-        if amount ~= nil then
-            value = value + amount
-        end
+        value = value + EpipStats.GetExtendedStat(char, "SummonStat_ExtendedStat", extendedStatName)
     else
-        local _, _, _, _, _, amount = Osiris.DB_AMER_ExtendedStat_AddedStat:Get(char.MyGuid, extendedStatName, nil, nil, nil, nil)
-
-        if amount ~= nil then
-            value = value + amount
-        end
+        value = value + EpipStats.GetExtendedStat(char, extendedStatName)
     end
 
     -- Add BothArmor
     if voracityType == "PhysArmor" or voracityType == "MagicArmor" then
         if isSummon then
-            local _, _, _, _, _, amount = Osiris.DB_AMER_ExtendedStat_AddedStat:Get(char.MyGuid, "SummonStat_ExtendedStat", "Voracity_BothArmor", nil, nil, nil)
-
-            if amount ~= nil then
-                value = value + amount
-            end
+            value = value + EpipStats.GetExtendedStat(char, "SummonStat_ExtendedStat", "Voracity_BothArmor")
         else
-            local _, _, _, _, _, amount = Osiris.DB_AMER_ExtendedStat_AddedStat:Get(char.MyGuid, "Voracity_BothArmor", nil, nil, nil, nil)
-    
-            if amount ~= nil then
-                value = value + amount
-            end
+            value = value + EpipStats.GetExtendedStat(char, "Voracity_BothArmor")
         end
     end
 
@@ -118,66 +102,62 @@ end)
 -- CURRENT COMBAT STATS
 ---------------------------------------------
 
-EpipStats.RegisterStatUpdateListener("CurrentCombat_DamageDealt", function(char, data)
-    local _, value = Osiris.DB_PIP_EpicStats_DamageDealt(char.MyGuid, nil)
+EpipStats.RegisterStatUpdateListener("CurrentCombat_DamageDealt", function(char, _)
+    local value = Osiris.GetFirstFactOrEmpty("DB_PIP_EpicStats_DamageDealt", char.MyGuid, nil)[2] or 0
 
-    EpipStats.UpdateUserVarStat(char, "CurrentCombat_DamageDealt", value or 0)
+    EpipStats.UpdateUserVarStat(char, "CurrentCombat_DamageDealt", value)
 end)
 
-EpipStats.RegisterStatUpdateListener("CurrentCombat_DamageReceived", function(char, data)
-    local _, value = Osiris.DB_PIP_EpicStats_DamageReceived(char.MyGuid, nil)
-
-    EpipStats.UpdateUserVarStat(char, "CurrentCombat_DamageReceived", value or 0)
+EpipStats.RegisterStatUpdateListener("CurrentCombat_DamageReceived", function(char, _)
+    local value = Osiris.GetFirstFactOrEmpty("DB_PIP_EpicStats_DamageReceived", char.MyGuid, nil)[2] or 0
+    EpipStats.UpdateUserVarStat(char, "CurrentCombat_DamageReceived", value)
 end)
 
-EpipStats.RegisterStatUpdateListener("CurrentCombat_HealingDone", function(char, data)
-    local _, value = Osiris.DB_PIP_EpicStats_HealingDone(char.MyGuid, nil)
-
-    EpipStats.UpdateUserVarStat(char, "CurrentCombat_HealingDone", value or 0)
+EpipStats.RegisterStatUpdateListener("CurrentCombat_HealingDone", function(char, _)
+    local value = Osiris.GetFirstFactOrEmpty("DB_PIP_EpicStats_HealingDone", char.MyGuid, nil)[2] or 0
+    EpipStats.UpdateUserVarStat(char, "CurrentCombat_HealingDone", value)
 end)
 
 -- Damage taken
 Ext.RegisterOsirisListener("NRD_OnHit", 4, "after", function(target, _, amount, _)
     local sourceChar = Character.Get(target)
     if sourceChar and Character.IsPlayer(sourceChar) then
-        local _, oldAmount = Osiris.DB_PIP_EpicStats_DamageReceived(target, nil)
-        oldAmount = oldAmount or 0
+        local oldAmount = Osiris.GetFirstFactOrEmpty("DB_PIP_EpicStats_DamageReceived", target, nil)[2] or 0
         amount = oldAmount + amount
 
-        Osiris.DB_PIP_EpicStats_DamageReceived:Delete(target, nil)
-        Osiris.DB_PIP_EpicStats_DamageReceived:Set(target, amount)
+        Osiris.Delete("DB_PIP_EpicStats_DamageReceived", target, nil)
+        Osiris.Set("DB_PIP_EpicStats_DamageReceived", target, amount)
     end
 end)
 
 -- Healing
-Osiris.RegisterSymbolListener("NRD_OnHeal", 4, "after", function(target, source, amount, statusHandle)
-    source = CharacterGetOwner(source) or source
+Osiris.RegisterSymbolListener("NRD_OnHeal", 4, "after", function(target, source, amount, _)
+    source = Osiris.CharacterGetOwner(source) or source
 
-    if Osiris.DB_IsPlayer(source) ~= nil and CharacterIsPlayer(target) == 1 then
-        local _, oldAmount = Osiris.DB_PIP_EpicStats_HealingDone(source, nil)
-        oldAmount = oldAmount or 0
+    if Osiris.GetFirstFact("DB_IsPlayer", source) ~= nil and Osiris.CharacterIsPlayer(target) == 1 then
+        local oldAmount = Osiris.GetFirstFactOrEmpty("DB_PIP_EpicStats_HealingDone", source, nil)[2] or 0
         amount = oldAmount + amount
 
-        Osiris.DB_PIP_EpicStats_HealingDone:Delete(source, nil)
-        Osiris.DB_PIP_EpicStats_HealingDone:Set(source, amount)
+        Osiris.Delete("DB_PIP_EpicStats_HealingDone", source, nil)
+        Osiris.Set("DB_PIP_EpicStats_HealingDone", source, amount)
     end
 end)
 
 -- Damage dealt
 Ext.RegisterOsirisListener("NRD_OnHit", 4, "after", function(target, source, amount, handle)
-    source = CharacterGetOwner(source) or source
-    
-    if Osiris.DB_IsPlayer(source) ~= nil then
-        local _, oldAmount = Osiris.DB_PIP_EpicStats_DamageDealt(source, nil)
-        oldAmount = oldAmount or 0
+    source = Osiris.CharacterGetOwner(source) or source
+
+    if Osiris.GetFirstFact("DB_IsPlayer", source) ~= nil then
+        local oldAmount = Osiris.GetFirstFactOrEmpty("DB_PIP_EpicStats_DamageDealt", source, nil)[2] or 0
         amount = oldAmount + amount
 
-        Osiris.DB_PIP_EpicStats_DamageDealt:Delete(source, nil)
-        Osiris.DB_PIP_EpicStats_DamageDealt:Set(source, amount)
+        Osiris.Delete("DB_PIP_EpicStats_DamageDealt", source, nil)
+        Osiris.Set("DB_PIP_EpicStats_DamageDealt", source, amount)
     end
 end)
 
-Ext.RegisterOsirisListener("ObjectEnteredCombat", 2, "after", function(obj, combat)
+-- Reset combat stats upon entering combat.
+Ext.RegisterOsirisListener("ObjectEnteredCombat", 2, "after", function(obj, _)
     Osi.PROC_PIP_ResetCombatStats(obj)
 end)
 

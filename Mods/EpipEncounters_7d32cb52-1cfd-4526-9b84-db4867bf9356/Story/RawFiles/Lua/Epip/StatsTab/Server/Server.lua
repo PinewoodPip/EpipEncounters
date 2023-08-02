@@ -10,28 +10,30 @@ function EpipStats.GetCelestialRestoration(char)
     return Osiris.QRY_AMER_KeywordStat_Celestial_GetHeal(char.MyGuid)
 end
 
+---Queries the amount of an ExtendedStat.
+---@param char EsvCharacter
+---@param type string
+---@param param1 string?
+---@param param2 string?
+---@param param3 string?
+---@return integer --Defaults to 0 for absent stats.
 function EpipStats.GetExtendedStat(char, type, param1, param2, param3)
-    local _, _, _, _, _, amount = Osiris.DB_AMER_ExtendedStat_AddedStat(char.MyGuid, type, param1, param2, param3, nil)
-
-    amount = amount or 0
-    
-    return amount
+    return Osiris.GetFirstFactOrEmpty("DB_AMER_ExtendedStat_AddedStat", char.MyGuid, type, param1, param2, param3, nil)[6] or 0
 end
 
+---Queries the amount of remaining free reaction charges.
+---@param char EsvCharacter
+---@param reaction string
+---@return integer --Defaults to 0 for absent stats.
 function EpipStats.GetCurrentReactionCharges(char, reaction)
-    local guid, reaction, amount = Osiris.DB_AMER_Reaction_FreeCount_Remaining(char.MyGuid, reaction, nil)
-
-    amount = amount or 0
-
-    return amount
+    return Osiris.GetFirstFactOrEmpty("DB_AMER_Reaction_FreeCount_Remaining", char.MyGuid, reaction, nil)[3] or 0
 end
 
--- Refresh the tagged stats for all ascension stats, for all characters.
+---Refreshes the tracked stats for all ascension stats, for all characters.
 function EpipStats.RecalculateNodeStats()
-    -- Char, UI, Cluster, Node, SubNode
-    local db = Osiris.DatabaseQuery("DB_AMER_UI_ElementChain_Node_ChildNode_StateData", false, nil, "AMER_UI_Ascension", nil, nil, nil)
-
-    for i,entry in pairs(db) do
+    -- Params: Char, UI, Cluster, Node, SubNode
+    local tuples = Osiris.QueryDatabase("DB_AMER_UI_ElementChain_Node_ChildNode_StateData", nil, "AMER_UI_Ascension", nil, nil, nil)
+    for _,entry in pairs(tuples) do
         local charGUID, _, cluster, node, subNode = table.unpack(entry)
         local char = Ext.GetCharacter(charGUID)
         local stat = cluster .. "_" .. node .. "." .. subNode
@@ -45,22 +47,22 @@ end
 function PerformFullStatsUpdate()
     EpipStats.RecalculateNodeStats()
 
-    for i,entry in pairs(Osi.DB_IsPlayer:Get(nil)) do
+    for _,entry in pairs(Osi.DB_IsPlayer:Get(nil)) do
         UpdateCustomStatsForCharacter(entry[1])
     end
 end
 
 -- Called from Osisirs. Sends events for each stat registered.
-function UpdateCustomStatsForCharacter(char)
-    EpipStats:Log("Updating stats of " .. char)
-    char = Ext.GetCharacter(char)
+function UpdateCustomStatsForCharacter(charGUID)
+    EpipStats:Log("Updating stats of " .. charGUID)
+    local char = Character.Get(charGUID)
 
     for id,data in pairs(EpipStats.STATS) do
         Utilities.Hooks.FireEvent("Epip_StatsTab", "UpdateStat", char, id, data)
         Utilities.Hooks.FireEvent("Epip_StatsTab", "UpdateStat_" .. id, char, data)
     end
 
-    Net.PostToUser(char, "EPIPENCOUNTERS_RefreshStatsTab")
+    Net.PostToUser(char.UserID, "EPIPENCOUNTERS_RefreshStatsTab")
 end
 
 -- Update the tag storing a stat's value for a char.
