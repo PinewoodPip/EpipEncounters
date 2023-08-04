@@ -1,12 +1,10 @@
 
 local Generic = Client.UI.Generic
-
 local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 
 ---Prefab for a button.
 ---@class GenericUI_Prefab_Button : GenericUI_Prefab, GenericUI_I_Stylable, GenericUI_I_Elementable
 ---@field _State GenericUI_Prefab_Button_InteractionState
----@field _Style GenericUI_Prefab_Button_Style
 ---@field _ActivatedStyle GenericUI_Prefab_Button_Style If present, the button will be considered a state button.
 ---@field _Disabled boolean
 ---@field _Activated boolean
@@ -211,7 +209,7 @@ end
 ---Returns the style to use for the current state.
 ---@return GenericUI_Prefab_Button_Style
 function Button:_GetCurrentStyle()
-    return self._Activated and self._ActivatedStyle or self._Style
+    return self._Activated and self._ActivatedStyle or self.__Style
 end
 
 ---Returns the overlay texture to use, if any.

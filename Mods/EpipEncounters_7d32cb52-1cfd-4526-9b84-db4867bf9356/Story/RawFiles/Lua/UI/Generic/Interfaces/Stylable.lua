@@ -2,7 +2,7 @@
 local Generic = Client.UI.Generic
 
 ---@class GenericUI_I_Stylable : Class
----@field _Style GenericUI_I_Stylable_Style
+---@field __Style GenericUI_I_Stylable_Style
 ---@field _RegisteredStyles table<string, GenericUI_I_Stylable_Style>
 local Stylable = {}
 Generic:RegisterClass("GenericUI_I_Stylable", Stylable)
@@ -45,10 +45,19 @@ function Stylable:GetStyle(id)
     return style
 end
 
+---Returns the registered styles for the class.
+---@return table<string, GenericUI_I_Stylable_Style>
+function Stylable:GetStyles()
+    local def = self:GetClassDefinition() ---@cast def GenericUI_I_Stylable
+    local styles = {}
+    for k,v in pairs(def._RegisteredStyles) do styles[k] = v end
+    return styles
+end
+
 ---Sets the style.
 ---@param style GenericUI_I_Stylable_Style
 function Stylable:SetStyle(style)
-    self._Style = style
+    self.__Style = style
     self:__OnStyleChanged()
 end
 
