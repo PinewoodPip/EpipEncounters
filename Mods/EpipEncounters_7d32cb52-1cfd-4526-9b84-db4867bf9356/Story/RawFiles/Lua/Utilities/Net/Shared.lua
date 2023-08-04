@@ -116,7 +116,7 @@ end
 ---@param message T?
 function Net.PostToCharacter(char, channel, message)
     if GetExtType(char) ~= nil then char = char.MyGuid end
-    
+
     Ext.Net.PostMessageToClient(char, channel, Utilities.Stringify(message or {}))
 end
 
@@ -124,11 +124,11 @@ end
 ---@generic T
 ---@param user UserId
 ---@param channel `T`
----@param message T
+---@param message T?
 ---@param excludedChar GUID?
 function Net.PostToUser(user, channel, message, excludedChar)
     if type(user) == "userdata" then user = user.ReservedUserID end
-    
+
     Ext.Net.PostMessageToUser(user, channel, Utilities.Stringify(message), excludedChar)
 end
 
@@ -158,7 +158,7 @@ function Net.RegisterListener(channel, func)
     local event = Net._GetChannelMessageEvent(channel)
 
     event:Subscribe(function (ev)
-        ---@diagnostic disable-next-line: redundant-parameter
+        ---@diagnostic disable-next-line: redundant-parameter, undefined-field
         func(ev.Message, ev.Message) -- Second param is for backwards compatibility with listeners that expected the first param to be the channel name.
     end)
 end
@@ -182,7 +182,7 @@ end
 ---------------------------------------------
 
 -- Forward Net messages to corresponding events.
-Ext.Events.NetMessageReceived:Subscribe(function(ev) 
+Ext.Events.NetMessageReceived:Subscribe(function(ev)
     -- Parse returns non-string for non-string primitives.
     local rawPayload = ev.Payload and Ext.Json.Parse(ev.Payload) or {}
     local payload
