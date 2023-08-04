@@ -27,7 +27,7 @@ package Elements
             return "Texture";
         }
 
-        public function SetTexture(guid:String, width:Number, height:Number) : *
+        public function SetTexture(guid:String, width:Number=-1, height:Number=-1) : *
         {
             if (this.customBitmap != null)
             {
@@ -38,10 +38,13 @@ package Elements
             
             IggyFunctions.setTextureForBitmap(this.customBitmap, guid);
 
-            // Must be done setTextureForBitmap(); initial values for BitmapData constructor are disregarded
-            if (width != -1 && height != 1)
+            // Must be done setTextureForBitmap(); initial values for BitmapData constructor and IggyFunctions call are disregarded(?)
+            if (width != -1)
             {
                 this.customBitmap.width = width;
+            }
+            if (height != -1)
+            {
                 this.customBitmap.height = height;
             }
         }
