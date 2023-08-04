@@ -305,6 +305,9 @@ LOAD_ORDER = {
             "UI/Generic/Prefabs/CloseButton.lua",
             "UI/Generic/Prefabs/SearchBar.lua",
 
+            "UI/Generic/Prefabs/SlicedTexture/Prefab.lua",
+            "UI/Generic/Prefabs/SlicedTexture/Styles.lua",
+
             "UI/Generic/Prefabs/Containers/VerticalList.lua",
         },
     },

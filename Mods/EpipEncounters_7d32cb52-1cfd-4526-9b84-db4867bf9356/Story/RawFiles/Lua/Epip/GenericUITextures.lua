@@ -1099,6 +1099,72 @@ local Textures = {
                 GUID = "3a5647b6-9e61-451e-a80b-4a6ea3ffbc21",
             }),
         },
+        SLICED = {
+            CONTEXT_MENU = {
+                TOP = T("PIP_UI_Sliced_ContextMenu_Top", {
+                    GUID = "8172ba51-9d43-4972-9d98-5d8deb79dbc0",
+                }),
+                CENTER = T("PIP_UI_Sliced_ContextMenu_Center", {
+                    GUID = "033c7b00-cf5a-43c3-ab80-3312d7e6e9bc",
+                }),
+                BOTTOM = T("PIP_UI_Sliced_ContextMenu_Bottom", {
+                    GUID = "169b776a-a91c-452f-a8f6-c150ef34ca7d",
+                }),
+            },
+            MESSAGES = {
+                BLACK = {
+                    LEFT = T("PIP_UI_Sliced_Message_Black_Left", {
+                        GUID = "3ff77668-16f1-410e-8617-452d83b94734",
+                    }),
+                    CENTER = T("PIP_UI_Sliced_Message_Black_Center", {
+                        GUID = "94d24937-5f27-4338-81cc-b784d9cbc265",
+                    }),
+                    RIGHT = T("PIP_UI_Sliced_Message_Black_Right", {
+                        GUID = "ec89795b-5a76-48c1-a95d-49786091cdee",
+                    }),
+                },
+                WHITE = {
+                    LEFT = T("PIP_UI_Sliced_Message_White_Left", {
+                        GUID = "3e227be3-bb19-4c95-870e-c5a94a907fa5",
+                    }),
+                    CENTER = T("PIP_UI_Sliced_Message_White_Center", {
+                        GUID = "99988cc0-9637-4eb1-8fc1-480efea6d47c",
+                    }),
+                    RIGHT = T("PIP_UI_Sliced_Message_White_Right", {
+                        GUID = "e6e65926-67bc-4833-97d0-8ce194d00d84",
+                    }),
+                },
+            },
+            AZTEC_SQUIGGLES = {
+                BOTTOM = T("PIP_UI_Sliced_Squiggles_Bottom", {
+                    GUID = "ea14dccf-2637-4a54-a665-88961ad25188",
+                }),
+                BOTTOM_LEFT = T("PIP_UI_Sliced_Squiggles_BottomLeft", {
+                    GUID = "a44a488c-28e3-4995-8d90-012dbc319256",
+                }),
+                BOTTOM_RIGHT = T("PIP_UI_Sliced_Squiggles_BottomRight", {
+                    GUID = "1c6e6a53-d9b3-4acc-8916-b32ad07f9c97",
+                }),
+                CENTER = T("PIP_UI_Sliced_Squiggles_Center", {
+                    GUID = "de88e8ed-5047-4acc-af2c-db82ed497aec",
+                }),
+                LEFT = T("PIP_UI_Sliced_Squiggles_Left", {
+                    GUID = "09844d91-2178-496a-82ff-afb4c8331989",
+                }),
+                RIGHT = T("PIP_UI_Sliced_Squiggles_Right", {
+                    GUID = "52f8335f-7ff4-47c6-bfca-c91dcc372a44",
+                }),
+                TOP = T("PIP_UI_Sliced_Squiggles_Top", {
+                    GUID = "9fd930db-da28-4148-8381-0c1c01570d06",
+                }),
+                TOP_LEFT = T("PIP_UI_Sliced_Squiggles_TopLeft", {
+                    GUID = "a3825428-6cc4-4e06-aaef-c5fce44068e8",
+                }),
+                TOP_RIGHT = T("PIP_UI_Sliced_Squiggles_TopRight", {
+                    GUID = "99f32503-af5a-4c54-af49-265863778a05",
+                }),
+            },
+        },
         MISC = {
             BOOKMARK = T("PIP_UI_Misc_Bookmark", {
                 GUID = "17729ed3-cf17-4654-978a-5c3e0ac8f7ed",
