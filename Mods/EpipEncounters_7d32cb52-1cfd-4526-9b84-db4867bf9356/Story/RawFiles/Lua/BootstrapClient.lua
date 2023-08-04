@@ -360,7 +360,6 @@ LOAD_ORDER = {
         Scripts = {
             "UI/Vanity/Vanity.lua",
             "UI/Vanity/Tabs/_Tab.lua",
-            -- "UI/Vanity/Tabs/Auras.lua",
         },
     },
     {ScriptSet = "UI/Vanity/Tabs/Shapeshift", WIP = true},
@@ -440,8 +439,8 @@ LOAD_ORDER = {
 
     {ScriptSet = "Epip/OverheadFixes"},
 
-    {ScriptSet = "Epip/Greatforge/DrillSockets"},
-    {ScriptSet = "Epip/Greatforge/Engrave"},
+    {ScriptSet = "Epip/Greatforge/DrillSockets", RequiresEE = true},
+    {ScriptSet = "Epip/Greatforge/Engrave", RequiresEE = true},
     {ScriptSet = "Epip/InfiniteCarryWeight"},
     {ScriptSet = "Epip/DebugDisplay", Developer = true,},
     {ScriptSet = "Epip/UnlearnSkills"},
@@ -469,9 +468,7 @@ LOAD_ORDER = {
     "Epip/Client/GenericUIs/HotbarGroup.lua",
 
     "Epip/Client/AprilFoolsCharacterSheet.lua",
-    {
-        ScriptSet = "Epip/AscensionShortcuts",
-    },
+    {ScriptSet = "Epip/AscensionShortcuts", RequiresEE = true},
     "Epip/Client/ModDocs.lua",
     "Epip/Client/JournalChangelog.lua",
     "Epip/Client/ExitChatAfterMessage.lua",
@@ -510,7 +507,7 @@ LOAD_ORDER = {
     "Epip/Client/CharacterSheetLevelProgress.lua",
     "Epip/Client/DifficultyToggle.lua",
     -- "Epip/AwesomeSoccer/Client.lua",
-    "Epip/Client/GiftbagLocker.lua",
+    {Script = "Epip/Client/GiftbagLocker.lua", RequiresEE = true},
     "Epip/Client/ChatNotificationSound.lua",
     "Epip/Client/ToggleableWorldTooltips.lua",
     "Epip/Client/WorldTooltipFiltering.lua",
@@ -544,8 +541,8 @@ LOAD_ORDER = {
     -- {Script = "Epip/Housing/Shared_Furniture.lua", WIP = true},
     {ScriptSet = "Epip/StatsEditor", WIP = true,},
     {ScriptSet = "Epip/APCostBoostFix"},
-    {ScriptSet = "Epip/GreatforgeDragDrop"},
-    {ScriptSet = "Epip/Greatforge/MassDismantle"},
+    {ScriptSet = "Epip/GreatforgeDragDrop", RequiresEE = true},
+    {ScriptSet = "Epip/Greatforge/MassDismantle", RequiresEE = true},
 
     -- AMER UI controller support
     -- "Epip/Client/AMERUI_Controller/AMERUI_Controller.lua",

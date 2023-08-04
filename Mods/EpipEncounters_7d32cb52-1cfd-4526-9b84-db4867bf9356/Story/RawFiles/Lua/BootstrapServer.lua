@@ -149,7 +149,7 @@ local MODS = Mod.GUIDS
 ---@type (string|ScriptLoadRequest)[]
 LOAD_ORDER = {
     "Epip/Settings.lua",
-    
+
     {ScriptSet = "Epip/DatabaseSync"},
 
     {ScriptSet = "Utilities/EpicEncounters"}, -- Core script needs to be present for now due to IsEnabled() - TODO move it out?
@@ -205,18 +205,16 @@ LOAD_ORDER = {
         },
         RequiresEE = true,
     },
-    
+
     {ScriptSet = "Epip/OverheadFixes"},
-    {
-        ScriptSet = "Epip/AscensionShortcuts",
-    },
-    {ScriptSet = "Epip/Greatforge/DrillSockets"},
-    {ScriptSet = "Epip/Greatforge/Engrave"},
-    "Epip/Greatforge/Empower/Server.lua",
+    {ScriptSet = "Epip/AscensionShortcuts", RequiresEE = true},
+    {ScriptSet = "Epip/Greatforge/DrillSockets", RequiresEE = true},
+    {ScriptSet = "Epip/Greatforge/Engrave", RequiresEE = true},
+    {Script = "Epip/Greatforge/Empower/Server.lua", RequiresEE = true},
 
     "Epip/PreferredTargetDisplay/Shared.lua",
     "Epip/PreferredTargetDisplay/Server.lua",
-    
+
     {ScriptSet = "Epip/ItemTagging"},
     {ScriptSet = "Epip/ExtraDataConfig", Developer = true,},
     {ScriptSet = "Epip/InfiniteCarryWeight",},
@@ -224,9 +222,9 @@ LOAD_ORDER = {
     {Script = "Epip/Housing/Shared_Furniture.lua", WIP = true},
     {ScriptSet = "Epip/StatsEditor", WIP = true,},
     {ScriptSet = "Epip/APCostBoostFix"},
-    {ScriptSet = "Epip/GreatforgeDragDrop"},
-    {ScriptSet = "Epip/Greatforge/MassDismantle"},
-    
+    {ScriptSet = "Epip/GreatforgeDragDrop", RequiresEE = true},
+    {ScriptSet = "Epip/Greatforge/MassDismantle", RequiresEE = true},
+
     {ScriptSet = "Epip/DebugDisplay", Developer = true,},
     {ScriptSet = "Epip/UnlearnSkills"},
     {ScriptSet = "Epip/DebugMenu", Developer = true,},
@@ -249,7 +247,7 @@ LOAD_ORDER = {
     {Script = "Epip/StatsTab/Data/Stats_Artifacts.lua", RequiresEE = true},
 
     {Script = "Epip/ContextMenus/Greatforge/Server.lua", RequiresEE = true},
-    
+
     -- Vanity
     {
         ScriptSet = "Epip/Vanity",
@@ -288,7 +286,7 @@ LOAD_ORDER = {
 
     "Debug/Shared.lua",
     "Debug/Server.lua",
-    
+
     {ScriptSet = "Epip/HotbarPersistence"},
 
     "Epip/OsirisIDEAnnotationGenerator.lua",
