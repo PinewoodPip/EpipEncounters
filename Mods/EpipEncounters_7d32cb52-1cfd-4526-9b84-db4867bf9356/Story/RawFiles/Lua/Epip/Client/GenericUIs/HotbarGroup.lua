@@ -470,8 +470,8 @@ function GroupManager:__SetupUI(UIName, HeaderText, ButtonText)
     text:SetStroke(Color.Create(0, 0, 0), 1, 1, 1, 5)
     text:SetSize(GroupManager.CONTENT_WIDTH, 50)
 
-    local rowSpinner = Spinner.Create(ui, "RowSpinner", content, GroupManager.TranslatedStrings.RowsSpinner:GetString(), 1, 20, 1)
-    local columnSpinner = Spinner.Create(ui, "ColumnSpinner", content, GroupManager.TranslatedStrings.ColumnsSpinner:GetString(), 1, 20, 1)
+    local rowSpinner = Spinner.Create(ui, "RowSpinner", content, Text.Format(GroupManager.TranslatedStrings.RowsSpinner:GetString(), {Color = Color.BLACK}), 1, 20, 1)
+    local columnSpinner = Spinner.Create(ui, "ColumnSpinner", content, Text.Format(GroupManager.TranslatedStrings.ColumnsSpinner:GetString(), {Color = Color.BLACK}), 1, 20, 1)
 
     rowSpinner:GetMainElement():SetCenterInLists(true)
     columnSpinner:GetMainElement():SetCenterInLists(true)
