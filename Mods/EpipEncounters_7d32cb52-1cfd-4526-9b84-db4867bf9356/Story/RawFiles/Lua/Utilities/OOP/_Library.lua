@@ -357,11 +357,11 @@ end
 function Library:Error(method, ...)
     local params = {...}
     local str = Text.Join(params, " ")
-    error(string.format("%s %s(): %s", {
+    error(string.format("%s %s(): %s",
         self:_GetLoggingPrefix(),
         method,
         str
-    }))
+    ))
 end
 
 ---Returns the prefix to use for logging messages.
