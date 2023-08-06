@@ -494,7 +494,7 @@ Game.Tooltip.RegisterListener("Status", nil, function(char, status, tooltip)
     status = status ---@type EclStatusActiveDefense
 
     if status.StatusType == "ACTIVE_DEFENSE" then
-        local stat = Stats.Get("StatusData", status.StatusId)
+        local stat = Stats.Get("StatsLib_StatsEntry_StatusData", status.StatusId)
         local maxCharges = stat.Charges
         local charges = status.Charges
 
@@ -623,22 +623,17 @@ local function GetExpandedMovementCostText(text)
         local char = Client.GetCharacter()
         local movement = Character.GetMovement(char) / 100
         local apCost = tonumber(distance) / movement
+        local partialAP = char.RemainingMoveDistance
+        local freeMovementLabel = Text.Round(partialAP * movement, 1)
         if apCost < 0.1 then
             apCost = Text.Round(apCost, 2)
         else
             apCost = Text.Round(apCost, 1)
         end
 
-        -- At the moment we cannot keep track of The Pawn.
-        if not char.Stats.TALENT_QuickStep then
-            newText = Text.Format("%s AP (%s AP)<br><font color=\"#DBDBDB\">%sm</font><br><font color=\"#C80030\">%s</font>", {
-                FormatArgs = {shownAPCost, apCost, distance, extraText}
-            })
-        else
-            newText = Text.Format("%s AP (Cannot check precise cost with Pawn)<br><font color=\"#DBDBDB\">%sm</font><br><font color=\"#C80030\">%s</font>", {
-                FormatArgs = {shownAPCost, distance, extraText}
-            })
-        end
+        newText = Text.Format("%s AP (%s AP; %sm free movement remaining)<br><font color=\"#DBDBDB\">%sm</font><br><font color=\"#C80030\">%s</font>", {
+            FormatArgs = {shownAPCost, apCost, freeMovementLabel, distance, extraText}
+        })
 
     elseif distance then -- Add a space between the amount of AP and the text anyways, cuz it's prettier that way.
         newText = Text.Format("%s AP<br><font color=\"#DBDBDB\">%sm</font><br><font color=\"#C80030\">%s</font>", {
