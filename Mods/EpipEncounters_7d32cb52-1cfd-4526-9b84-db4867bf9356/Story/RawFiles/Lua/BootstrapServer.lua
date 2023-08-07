@@ -174,7 +174,6 @@ LOAD_ORDER = {
     "Epip/Server/Shroud.lua",
     "Epip/Server/AMERUI_Controller.lua",
 
-    "JournalServer.lua",
     "Epip/Server/AutoIdentify.lua",
     "Epip/Server/DebugCheats.lua",
     "Epip/Server/AI.lua",
@@ -288,6 +287,7 @@ LOAD_ORDER = {
     "Debug/Server.lua",
 
     {ScriptSet = "Epip/HotbarPersistence"},
+    {ScriptSet = "Epip/EpipInfoCodex"},
 
     "Epip/OsirisIDEAnnotationGenerator.lua",
 

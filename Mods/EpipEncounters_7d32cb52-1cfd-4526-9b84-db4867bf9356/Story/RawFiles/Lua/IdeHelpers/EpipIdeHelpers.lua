@@ -13,6 +13,7 @@
 ---@alias ModTableID string|"EpipEncounters"
 ---@alias monotonictimestamp integer
 ---@alias modtable string
+---@alias date string
 
 ---@alias UIObjectHandle ComponentHandle
 

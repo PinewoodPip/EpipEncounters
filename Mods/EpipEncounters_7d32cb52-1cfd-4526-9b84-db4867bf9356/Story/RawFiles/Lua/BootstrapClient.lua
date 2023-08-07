@@ -486,8 +486,6 @@ LOAD_ORDER = {
     {Script = "Epip/Compatibility/WeaponExpansion/Client.lua", RequiredMods = {MODS.WEAPON_EXPANSION}},
     {Script = "Epip/Compatibility/DerpyEETweaks/TreasureTableDisplay.lua", RequiredMods = {MODS.EE_DERPY}},
 
-    "Epip/Client/EpipDocs.lua",
-
     -- Stats tab
     {
         Scripts = {
@@ -631,9 +629,12 @@ LOAD_ORDER = {
 
             "Epip/Codex/Sections/__Grid.lua",
             "Epip/Codex/Sections/Skills.lua",
+            "Epip/Codex/Sections/Info/Main.lua",
         },
     },
     {Script = "Epip/Codex/Sections/Artifacts.lua", RequiresEE = true},
+
+    {ScriptSet = "Epip/EpipInfoCodex"},
 
     {Script = "Epip/Compatibility/MajoraFashionSins/Client.lua", RequiredMods = {MODS.MAJORA_FASHION_SINS}},
     {Script = "Epip/Compatibility/PortableRespecMirror/Shared.lua", RequiredMods = {MODS.PORTABLE_RESPEC_MIRROR}},

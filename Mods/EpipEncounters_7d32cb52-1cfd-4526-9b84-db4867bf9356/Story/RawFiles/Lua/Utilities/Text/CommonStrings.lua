@@ -158,6 +158,10 @@ Text.CommonStrings.Clear = Text.RegisterTranslatedString({
    Handle = "h5f73023dg23f4g4b43g90e6gb2e91b6a20f1",
    Text = "Clear",
 })
+Text.CommonStrings.Info = Text.RegisterTranslatedString({
+   Handle = "h829886b0g20a7g4185gb5c8g84ac8ce1402a",
+   Text = "Info",
+})
 
 ---------------------------------------------
 -- BRANDING
