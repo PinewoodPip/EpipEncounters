@@ -281,8 +281,6 @@ function Button:_SetupListeners()
     -- Pressed event
     root.Events.MouseUp:Subscribe(function (ev)
         if self:IsEnabled() then
-            self.Events.Pressed:Throw(ev)
-
             self:_SetState("Highlighted")
             self.UI:PlaySound(self:_GetCurrentStyle().Sound or self.DEFAULT_SOUND)
 
@@ -290,6 +288,8 @@ function Button:_SetupListeners()
             if self:_IsStateButton() then
                 self:SetActivated(not self:IsActivated())
             end
+
+            self.Events.Pressed:Throw(ev) -- Should happen last to reflect activation state changes.
         end
     end)
 
