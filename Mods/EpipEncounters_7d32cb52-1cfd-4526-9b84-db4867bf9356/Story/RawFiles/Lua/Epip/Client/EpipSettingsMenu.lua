@@ -274,6 +274,7 @@ local tabs = {
             "WorldTooltip_EmptyContainers",
             "WorldTooltip_ShowSittableAndLadders",
             "WorldTooltip_ShowDoors",
+            {Module = "EpipEncounters_WorldTooltipFiltering", ID = "ShowLights"},
             "WorldTooltip_ShowInactionable",
             "WorldTooltip_MoreTooltips",
 

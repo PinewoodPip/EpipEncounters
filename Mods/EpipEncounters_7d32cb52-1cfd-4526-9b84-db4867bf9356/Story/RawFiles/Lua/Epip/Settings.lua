@@ -496,12 +496,12 @@ local EpipSettings = {
         },
         WorldTooltip_ShowSittableAndLadders_Name = {
             Handle = "haa0cd7a5g5950g4cceg8fe0gd343fc6db5e0",
-            Text = "Show chairs and ladders",
-            ContextDescription = "World tooltip shows chairs and ladders setting name",
+            Text = "Show chairs, ladders and beds",
+            ContextDescription = "World tooltip show chairs/ladders/beds setting name",
         },
         WorldTooltip_ShowSittableAndLadders_Description = {
             Handle = "ha1146687g9261g49d4gad63g0269559fce2d",
-            Text = "If enabled, chairs and ladders will show world tooltips. Requires \"Enable tooltips for all items\" to be enabled, as these do not have tooltips by default.",
+            Text = "If enabled, chairs, ladders and beds will show world tooltips. Requires \"Enable tooltips for all items\" to be enabled, as these do not have tooltips by default.",
             ContextDescription = "World tooltip shows chairs and ladders setting tooltip",
         },
         WorldTooltip_ShowDoors_Name = {

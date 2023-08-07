@@ -14,6 +14,20 @@ local Filtering = {
         Color.LARIAN.YELLOW,
         Color.LARIAN.ORANGE,
     },
+
+    TranslatedStrings = {
+        Setting_ShowLights_Name = {
+           Handle = "h8605ee5agf02ag4f24g9bf2g60906ab5ef57",
+           Text = "Show Lights",
+           ContextDescription = "Setting name",
+        },
+        Setting_ShowLights_Description = {
+           Handle = "h0d38d9a9gd416g4815gabc7gf9d8d901d40a",
+           Text = "If enabled, light items such as torches, candles and braziers will show world tooltips.",
+           ContextDescription = "Setting tooltip",
+        },
+    },
+    Settings = {},
 }
 Epip.RegisterFeature("WorldTooltipFiltering", Filtering)
 
@@ -28,11 +42,23 @@ Epip.RegisterFeature("WorldTooltipFiltering", Filtering)
 ---@field GetLabel (fun(entry:WorldTooltipUI_Entry, entity:Entity):string)? Allows you to add "post-processing" to world tooltip labels.
 
 ---------------------------------------------
+-- SETTINGS
+---------------------------------------------
+
+Filtering.Settings.ShowLights = Filtering:RegisterSetting("ShowLights", {
+    ID = "ShowLights",
+    Type = "Boolean",
+    NameHandle = Filtering.TranslatedStrings.Setting_ShowLights_Name,
+    DescriptionHandle = Filtering.TranslatedStrings.Setting_ShowLights_Description,
+    DefaultValue = false,
+})
+
+---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
 ---@param setting Feature_WorldTooltipFiltering_Setting
-function Filtering.RegisterSetting(setting)
+function Filtering.RegisterFilter(setting)
     table.insert(Filtering.SETTINGS, setting)
 end
 
@@ -152,7 +178,7 @@ local settings = {
         ModTableID = "Epip_Tooltips",
         FilterPredicate = function (_, entity)
             if GetExtType(entity) == "ecl::Item" then
-                return Item.HasUseAction(entity, "Sit") or Item.HasUseAction(entity, "Ladder")
+                return Item.HasUseAction(entity, "Sit") or Item.HasUseAction(entity, "Ladder") or Item.HasUseAction(entity, "Lying")
             else
                 return false
             end
@@ -164,6 +190,24 @@ local settings = {
         FilterPredicate = function (_, entity)
             if GetExtType(entity) == "ecl::Item" then
                 return Item.HasUseAction(entity, "Door")
+            else
+                return false
+            end
+        end
+    },
+    {
+        SettingID = Filtering.Settings.ShowLights.ID,
+        ModTableID = Filtering.Settings.ShowLights.ModTable,
+        FilterPredicate = function (_, entity)
+            if GetExtType(entity) == "ecl::Item" then
+                ---@cast entity EclItem
+
+                -- Filter out based on stats ID
+                if entity.StatsFromName and table.contains(entity.StatsFromName.StatsEntry.Flags, "Torch") then -- -1 vitality items have no dynamic stats (Stats field).
+                    return true
+                end
+
+                return false
             else
                 return false
             end
@@ -228,5 +272,5 @@ local settings = {
 }
 
 for _,setting in ipairs(settings) do
-    Filtering.RegisterSetting(setting)
+    Filtering.RegisterFilter(setting)
 end
