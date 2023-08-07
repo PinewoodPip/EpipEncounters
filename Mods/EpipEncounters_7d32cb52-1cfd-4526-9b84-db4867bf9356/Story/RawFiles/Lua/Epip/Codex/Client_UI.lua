@@ -42,6 +42,8 @@ UI.INDEX_ENTRY_STYLE_ACTIVE = {
 UI.INDEX_ENTRY_LABEL_OFFSET = V(40, 0)
 UI.INDEX_ICON_SIZE = V(24, 24)
 UI.INDEX_ENTRY_ICON_OFFSET = V(10, 0)
+UI.INDEX_FRAME_SIZE = V(400, 700)
+UI.INDEX_FRAME_SCROLLBAR_SPACING = -13
 
 UI.SETTING_ELEMENT_SIZE = V(UI.INDEX_ENTRY_SIZE[1] - 20, 50)
 
@@ -54,7 +56,7 @@ Codex.UI = UI
 ---@override
 function UI:Show()
     UI._Init()
-    UI._UpdateIndex()
+    UI.UpdateIndex()
     UI._UpdateSection()
     Client.UI._BaseUITable.Show(self)
 end
@@ -90,7 +92,7 @@ function UI.SetSection(section)
     header:SetText(Text.Format(section:GetName(), {Size = UI.HEADER_FONT_SIZE}))
 
     -- Update index and section
-    UI:_UpdateIndex()
+    UI:UpdateIndex()
     UI:_UpdateSection()
     sectionRoot:SetVisible(true)
 end
@@ -100,7 +102,7 @@ end
 ---------------------------------------------
 
 ---Updates the index, which shows all registered sections.
-function UI._UpdateIndex()
+function UI.UpdateIndex()
     local list = UI.IndexList
     list:Clear()
 
@@ -136,6 +138,9 @@ function UI._UpdateIndex()
                     section:Update(UI._GetSectionRoot(section:GetID()))
                 end)
             end
+
+            section:RenderSidebar(settingsList)
+            settingsList:RepositionElements()
         end
     end
 
@@ -204,6 +209,9 @@ function UI._Init()
         UI.IndexContainer = indexContainer
 
         local indexList = indexContainer:AddChild("IndexList", "GenericUI_Element_ScrollList")
+        indexList:SetMouseWheelEnabled(true)
+        indexList:SetFrame(UI.INDEX_FRAME_SIZE:unpack())
+        indexList:SetScrollbarSpacing(UI.INDEX_FRAME_SCROLLBAR_SPACING)
         UI.IndexList = indexList
 
         UI._Initialized = true

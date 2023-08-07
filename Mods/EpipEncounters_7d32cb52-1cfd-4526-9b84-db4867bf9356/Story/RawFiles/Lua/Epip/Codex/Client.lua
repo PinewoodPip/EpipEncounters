@@ -72,6 +72,13 @@ function Section:Render(root) end
 ---@diagnostic disable-next-line: unused-local
 function Section:Update(root) end
 
+---Called to update the section's sidebar, where settings are rendered by default.
+---Invoked when the section is selected from the sidebar.
+---@virtual
+---@param root GenericUI_Element_VerticalList
+---@diagnostic disable-next-line: unused-local
+function Section:RenderSidebar(root) end
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
