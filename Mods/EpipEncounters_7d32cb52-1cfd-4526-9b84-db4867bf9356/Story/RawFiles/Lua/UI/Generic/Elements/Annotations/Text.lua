@@ -33,3 +33,10 @@ function Text:GetLineWidth(lineIndex) end
 ---@param lineIndex integer 1-based.
 ---@return number
 function Text:GetLineHeight(lineIndex) end
+
+---Returns whether the mouse is currently hovering over a keyword within the text.
+---Ignores HTML tags.
+---@param keyword string
+---@param startIndex integer? Starting index to search for keyword from. 1-based. Defaults to `1`.
+---@return boolean
+function Text:IsMouseWithinKeyword(keyword, startIndex) end

@@ -11,6 +11,7 @@ package Elements
     import flash.events.FocusEvent;
     import flash.events.KeyboardEvent;
     import flash.text.TextFormat;
+    import flash.geom.Rectangle;
 
     public dynamic class Text extends Element
     {
@@ -77,6 +78,50 @@ package Elements
             {
                 this.SetMouseEnabled(true);
             }
+        }
+
+        public function IsMouseWithinRange(startIndex:int, length:int) : Boolean
+        {
+            var mouseX:Number = this.text_txt.mouseX;
+            var mouseY:Number = this.text_txt.mouseY;
+
+            for (var i:int = startIndex; i < startIndex + length; i++)
+            {
+                var rect:Rectangle = this.text_txt.getCharBoundaries(i);
+
+                if (mouseX >= rect.x && mouseX <= rect.x + rect.width && mouseY >= rect.y && mouseY <= rect.y + rect.height)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public function IsMouseWithinKeyword(keyword:String, startIndex:int=-1) : Boolean
+        {
+            var text:String = this.text_txt.htmlText;
+            if (startIndex < 0)
+            {
+                startIndex = text.indexOf(keyword);
+            }
+            else
+            {
+                startIndex = text.indexOf(keyword, startIndex - 1); // Parameter is 1-based.
+            }
+            var endIndex:int = startIndex + keyword.length;
+
+            while (startIndex >= 0)
+            {
+                if (IsMouseWithinRange(startIndex, keyword.length))
+                {
+                    return true;
+                }
+
+                startIndex = text.indexOf(keyword, endIndex);
+                endIndex = startIndex + keyword.length;
+            }
+            
+            return false;
         }
 
         public function SetRestrictedCharacters(restriction:String) : *
