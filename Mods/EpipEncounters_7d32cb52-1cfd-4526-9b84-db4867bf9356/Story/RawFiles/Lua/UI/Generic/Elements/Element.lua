@@ -33,6 +33,7 @@ _Element.Events = {
     MouseOver = {}, ---@type Event<GenericUI_Element_Event_MouseOver>
     MouseOut = {}, ---@type Event<GenericUI_Element_Event_MouseOut>
     RightClick = {}, ---@type Event<GenericUI_Element_Event_RightClick>
+    MouseMove = {}, ---@type Event<GenericUI_Element_Event_MouseMove>
     TweenCompleted = {}, ---@type Event<GenericUI_Element_Event_TweenCompleted>
     ChildAdded = {}, ---@type Event<GenericUI.Element.Events.ChildAdded>
 }
@@ -61,6 +62,10 @@ _Element.Events = {
 ---@class GenericUI_Element_Event_MouseUp
 ---@class GenericUI_Element_Event_MouseDown
 ---@class GenericUI_Element_Event_RightClick
+
+---@class GenericUI_Element_Event_MouseMove
+---@field LocalPos Vector2
+---@field StagePos Vector2
 
 ---@class GenericUI_Element_Event_TweenCompleted
 ---@field EventID string
@@ -359,9 +364,12 @@ function _Element:SetTooltip(tooltipType, tooltip)
     end)
 end
 
+---@diagnostic disable: invisible
 __Element.SetPositionRelativeToParent = Generic.ExposeFunction("SetPositionRelativeToParent")
 __Element.Move = Generic.ExposeFunction("Move")
 __Element.GetWidth = Generic.ExposeFunction("GetWidth")
 __Element.GetHeight = Generic.ExposeFunction("GetHeight")
 __Element.GetRawWidth = Generic.ExposeFunction("GetRawWidth")
 __Element.GetRawHeight = Generic.ExposeFunction("GetRawHeight")
+__Element.SetMouseMoveEventEnabled = Generic.ExposeFunction("SetMouseMoveEventEnabled")
+---@diagnostic enable: invisible

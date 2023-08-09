@@ -43,6 +43,13 @@ function Generic.Create(id, layer)
     ui:RegisterCallListener("elementMouseOver", Generic._OnElementMouseOver)
     ui:RegisterCallListener("elementMouseOut", Generic._OnElementMouseOut)
     Generic._ForwardUICall(ui, "elementRightClick", "RightClick")
+    ui:RegisterCallListener("elementMouseMove", function (_, elementID, localX, localY, stageX, stageY)
+        local element = ui:GetElementByID(elementID)
+        element.Events.MouseMove:Throw({
+            LocalPos = Vector.Create(localX, localY),
+            StagePos = Vector.Create(stageX, stageY),
+        })
+    end)
     Generic._ForwardUICall(ui, "elementTweenCompleted", "TweenCompleted", {"EventID"})
 
     ui:RegisterCallListener("ShowElementTooltip", Generic._OnElementShowTooltip)

@@ -76,6 +76,7 @@ package Elements
             this.removeEventListener(MouseEvent.ROLL_OUT, this.onElementMouseOut);
             this.removeEventListener(MouseEvent.RIGHT_CLICK, this.onElementRightClick);
             this.removeEventListener(Event.REMOVED_FROM_STAGE, this.onRemovedFromStage);
+            this.removeEventListener(MouseEvent.MOUSE_MOVE, this.onElementMouseMove);
         }
 
         public function SetChildIndex(childID:String, index:Number) : *
@@ -373,6 +374,15 @@ package Elements
             this.y = y;
         }
 
+        public function SetMouseMoveEventEnabled(enabled:Boolean) : *
+        {
+            this.removeEventListener(MouseEvent.MOUSE_MOVE, this.onElementMouseMove);
+            if (enabled)
+            {
+                this.addEventListener(MouseEvent.MOUSE_MOVE, this.onElementMouseMove);
+            }
+        }
+
         // EVENT LISTENERS
 
         public function onElementMouseUp(e:MouseEvent) : *
@@ -407,6 +417,11 @@ package Elements
         public function onElementRightClick(e:MouseEvent) : *
         {
             ExternalInterface.call("elementRightClick", this.stringID);
+        }
+
+        private function onElementMouseMove(e:MouseEvent) : *
+        {
+            ExternalInterface.call("elementMouseMove", this.stringID, e.localX, e.localY, e.stageX, e.stageY);
         }
 
         public function onRemovedFromStage(e:Event) : *

@@ -32,3 +32,8 @@ function Element:GetRawWidth() end
 ---Returns the height of the element without considering its children.
 ---@return number
 function Element:GetRawHeight() end
+
+---Sets whether the element can throw MouseMove events.
+---These are disabled by default.
+---@param enabled boolean
+function Element:SetMouseMoveEventEnabled(enabled) end
