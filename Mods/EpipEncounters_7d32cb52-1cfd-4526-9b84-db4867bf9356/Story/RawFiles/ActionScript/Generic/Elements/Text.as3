@@ -16,29 +16,19 @@ package Elements
     {
         public var text_txt:TextField;
 
-        public var _txt_Left:TextField;
-        public var _txt_Center:TextField;
-        public var _txt_Right:TextField;
-
         public var _cachedText:String = "";
         private var _editable:Boolean = false;
-        private var _mouseEnabled:Boolean = false;
-
-        private var visualTypes:Object = null;
 
         public function Text()
         {
             super();
-            this.visualTypes = new Object();
 
-            this.RegisterTextType("Left", this._txt_Left);
-            this.RegisterTextType("Center", this._txt_Center);
-            this.RegisterTextType("Right", this._txt_Right);
-
-            this.SetType("Center");
-            this.SetMouseEnabled(this._mouseEnabled);
-
+            this.SetMouseEnabled(false);
             this.SetEditable(false);
+
+            this.text_txt.addEventListener(Event.CHANGE,this.onChange);
+            this.text_txt.addEventListener(FocusEvent.FOCUS_IN,this.onFocus, false, 0, true);
+            this.text_txt.addEventListener(FocusEvent.FOCUS_OUT,this.onFocusLost, false, 0, true);
         }
 
         public override function get elementType() : String
@@ -48,61 +38,18 @@ package Elements
 
         public override function SetMouseEnabled(enabled) : *
         {
-            this._mouseEnabled = enabled;
-
             this.mouseEnabled = enabled;
             this.text_txt.mouseEnabled = enabled;
         }
 
-        private function RegisterTextType(stringID:String, txt:TextField) : *
-        {
-            var obj:Object = new Object();
-
-            obj.TextField = txt;
-
-            this.visualTypes[stringID] = obj;
-            
-            txt.visible = false;
-            txt.width = 0;
-            txt.height = 0;
-
-            txt.addEventListener(Event.CHANGE,this.onChange);
-            txt.addEventListener(FocusEvent.FOCUS_IN,this.onFocus, false, 0, true);
-            txt.addEventListener(FocusEvent.FOCUS_OUT,this.onFocusLost, false, 0, true);
-
-            var format:TextFormat = new TextFormat();
-            format.color = 0xffffff
-            txt.defaultTextFormat = format;
-
-            this.removeChild(txt);
-        }
-
         public function SetType(txtType:String) : *
         {
-            var data:Object = this.visualTypes[txtType];
+            var format:TextFormat = this.text_txt.defaultTextFormat;
+            txtType = txtType.toLowerCase();
 
-            if (data)
-            {
-                if (this.text_txt)
-                {
-                    this.removeChild(this.text_txt);
-                }
+            format.align = txtType;
 
-                this.text_txt = data.TextField;
-                this.addChild(this.text_txt);
-
-                this.text_txt.visible = true;
-
-                this.SetText(this._cachedText);
-                this.SetEditable(this._editable);
-                this.SetMouseEnabled(this._mouseEnabled);
-            }
-            else
-            {
-                this.Log("SetType(): invalid type " + txtType, 2);
-
-                this.SetType("Center");
-            }
+            this.text_txt.defaultTextFormat = format;
         }
 
         public function SetText(text:String, setSize:Boolean=false) : *
@@ -110,7 +57,7 @@ package Elements
             this.text_txt.htmlText = text;
             this._cachedText = text;
 
-            if (setSize)
+            if (setSize) // TODO move to lua
             {
                 this.SetSize(this.text_txt.textWidth, this.text_txt.textHeight);
             }

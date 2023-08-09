@@ -89,10 +89,9 @@ package arenaResult_fla
             // trace(date.getTime() - startDate.getTime());
         }
 
+        // Called from AddElement when parent is the root.
         public function AddChildElement(mc:MovieClip) : *
         {
-            this.elements[mc.stringID] = mc; // TODO use childElements
-            this[mc.stringID] = mc;
             this.addChild(mc);
         }
 
@@ -118,6 +117,7 @@ package arenaResult_fla
             }
 
             element.CleanUp();
+            delete this.elements[element.stringID];
         }
 
         public function GetElementByID(id:String) : MovieClip
@@ -156,7 +156,6 @@ package arenaResult_fla
 
             if (captured)
             {
-                trace(captured);
                 ExternalInterface.call("IggyEventCaptured", ev, this.events[ev]);
             }
 
@@ -177,14 +176,6 @@ package arenaResult_fla
         public function onEventInit() : *
         {
             ExternalInterface.call("setPosition","center","screen","center");
-        }
-        
-        public function addBtnHint(param1:Number, param2:String, param3:Number) : *
-        {
-        }
-        
-        public function clearBtnHints() : *
-        {
         }
         
         public function getGlobalPositionOfMC(param1:MovieClip) : Point
@@ -230,6 +221,7 @@ package arenaResult_fla
         {
             this.capturedEvents[ev] = capture;
         }
+
         function frame1() : *
         {
             this.layout = "fitVertical";
