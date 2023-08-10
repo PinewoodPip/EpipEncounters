@@ -212,18 +212,18 @@ package Elements
             }
         }
 
-        public function GetRawWidth() : Number
+        public function GetRawWidth(considerOverrides:Boolean=true) : Number
         {
             this.Log("GetRawWidth() not implemented for this element", 2);
 
-            return this.width;
+            return this.GetWidth(considerOverrides);
         }
 
-        public function GetRawHeight() : Number
+        public function GetRawHeight(considerOverrides:Boolean=true) : Number
         {
             this.Log("GetRawHeight() not implemented for this element", 2);
             
-            return this.height;
+            return this.GetHeight(considerOverrides);
         }
 
         // Will use overrides if available

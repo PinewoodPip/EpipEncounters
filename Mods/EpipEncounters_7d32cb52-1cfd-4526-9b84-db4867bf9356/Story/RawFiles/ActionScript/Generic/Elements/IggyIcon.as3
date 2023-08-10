@@ -44,13 +44,21 @@ package Elements
             }
         }
 
-        public override function GetRawWidth() : Number
+        public override function GetRawWidth(considerOverrides:Boolean=true) : Number
         {
+            if (considerOverrides && this.widthOverride)
+            {
+                return this.widthOverride;
+            }
             return this.hit_mc.width;
         }
 
-        public override function GetRawHeight() : Number
+        public override function GetRawHeight(considerOverrides:Boolean=true) : Number
         {
+            if (considerOverrides && this.heightOverride)
+            {
+                return this.heightOverride;
+            }
             return this.hit_mc.height;
         }
 
