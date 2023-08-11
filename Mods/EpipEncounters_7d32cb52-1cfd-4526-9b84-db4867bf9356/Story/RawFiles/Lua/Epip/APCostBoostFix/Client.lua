@@ -47,7 +47,7 @@ end)
 -- Handle using items from inventory via double-click.
 Inventory:RegisterCallListener("doubleClickItem", function(_, itemHandle)
     local item = Item.Get(itemHandle, true)
-    
+
     Fix.CheckItemUseAttempt(item)
 end)
 

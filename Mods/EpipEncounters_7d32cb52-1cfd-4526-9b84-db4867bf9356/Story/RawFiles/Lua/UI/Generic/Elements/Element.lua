@@ -63,6 +63,9 @@ _Element.Events = {
 ---@class GenericUI_Element_Event_MouseDown
 ---@class GenericUI_Element_Event_RightClick
 
+---Thrown when the mouse is moved while within the element.
+---Only thrown if explicitly enabled, due to performance concerns.
+---@see GenericUI_Element.SetMouseMoveEventEnabled
 ---@class GenericUI_Element_Event_MouseMove
 ---@field LocalPos Vector2
 ---@field StagePos Vector2
@@ -198,6 +201,7 @@ function _Element:Destroy()
     table.destroy(self)
 end
 
+---@deprecated
 ---@param eventType string
 ---@param handler function
 function _Element:RegisterListener(eventType, handler)

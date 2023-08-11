@@ -84,7 +84,7 @@ end
 
 -- Checks if restoring previous tab works, and whether it is kept while switching chars.
 Fixes:RegisterTest("Test1", function(inst)
-    Fixes._PreviousFilter = "Equipment" 
+    Fixes._PreviousFilter = "Equipment"
 
     Client.UI.Hotbar.UseAction("Crafting", 1)
 
@@ -92,5 +92,5 @@ Fixes:RegisterTest("Test1", function(inst)
 
     local button = Craft:GetRoot().craftPanel_mc.experimentPanel_mc.filterTabList.content_array[Craft.FILTERS[Craft.FILTER_IDS.EQUIPMENT].ID - 1] -- Need to shift the index down since the "unknown" tab (index 1) is not rendered in the UI
 
-    assert(button.select_mc.visible, "Equipment tab was not selected upon opening the UI") 
+    assert(button.select_mc.visible, "Equipment tab was not selected upon opening the UI")
 end)
