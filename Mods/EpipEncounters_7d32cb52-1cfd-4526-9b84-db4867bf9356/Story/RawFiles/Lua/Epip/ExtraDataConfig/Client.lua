@@ -54,7 +54,7 @@ SettingsMenu.RegisterTab(tab)
 
 local entries = {}
 for _,entry in pairs(Stats.ExtraData) do
-    table.insert(entries, entry) 
+    table.insert(entries, entry)
 end
 table.sort(entries, function (a, b) return a:GetName() < b:GetName() end)
 

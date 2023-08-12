@@ -229,14 +229,12 @@ root.focusTextField()
 root.keyboard_txt.visible = false
 
 function Input:__Setup()
-    Input:Debug()
-
     if Client.IsUsingController() then
         Input:GetUI().Layer = 0
     end
 
     Input:GetRoot().handleSpecialKeys = false
-    
+
     -- Input:GetRoot().keyboard_txt.htmlText = "TESTING2!!!!"
     -- Input.ToggleEventCapture(UI_EVENTS.SELECT_SLOT_1, true, "Test")
     -- Input.ToggleEventCapture(UI_EVENTS.SELECT_SLOT_1, true, "Test")
