@@ -254,8 +254,6 @@ function Tooltip.ShowCustomFormattedTooltip(tooltip)
     local characterHandle = Ext.UI.HandleToDouble(Client.GetCharacter().Handle)
     local mouseX, mouseY = Client.GetMousePosition()
 
-    tooltip.Position = tooltip.Position or Vector.Create(mouseX, mouseY)
-
     Tooltip._nextCustomTooltip = tooltip
 
     ui:ExternalInterfaceCall("showSkillTooltip", characterHandle, "Teleportation_FreeFall", mouseX, mouseY, 100, 100, "left")
@@ -434,7 +432,7 @@ end)
 -- Position custom formatted tooltips after rendering.
 Ext.RegisterUINameInvokeListener("showFormattedTooltipAfterPos", function(ui)
     if Tooltip._nextCustomTooltip then
-        local pos = Tooltip._nextCustomTooltip.Position
+        local pos = Tooltip._nextCustomTooltip.Position or Vector.Create(Client.GetMousePosition())
 
         -- Tooltips are offset vertically so the position matches up with the top left corner.
         ui:SetPosition(math.floor(pos[1]), math.floor(pos[2]) + Tooltip._POSITION_OFFSET)
@@ -447,7 +445,7 @@ end, "After")
 Ext.RegisterUINameInvokeListener("showFormattedTooltipAfterPos", function(ui)
     local customTooltip = Tooltip._nextSkillTooltip or Tooltip._nextItemTooltip
     if customTooltip then
-        local pos = customTooltip.Position
+        local pos = customTooltip.Position or Vector.Create(Client.GetMousePosition())
 
         -- Tooltips are offset vertically so the position matches up with the top left corner.
         ui:SetPosition(math.floor(pos[1]), math.floor(pos[2]) + Tooltip._POSITION_OFFSET)
