@@ -331,12 +331,15 @@ end
 
 ---Sets the tooltip of the element.
 ---@param tooltipType TooltipLib_TooltipType
----@param tooltip any TODO document
+---@param tooltip any? TODO document
 function _Element:SetTooltip(tooltipType, tooltip)
     local targetElement = self
 
+    -- Cleanup previous listeners
     targetElement.Events.MouseOver:Unsubscribe("_Tooltip")
     targetElement.Events.MouseOut:Unsubscribe("_Tooltip")
+
+    if tooltip == nil then return end
 
     if tooltipType == "Simple" then
         if type(tooltip) == "string" then -- String overload
