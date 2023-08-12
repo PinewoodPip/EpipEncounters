@@ -109,13 +109,7 @@ end
 ---------------------------------------------
 
 -- Register default actions
--- TODO extract TSKs
 local actions = {
-    {
-        ID = "EPIP_Journal",
-        Name = CommonStrings.Journal:GetString(),
-        Icon = "hotbar_icon_announcement",
-    },
     {
         ID = "EPIP_UserRest",
         Name = Actions.TranslatedStrings.HotbarAction_UserRest:GetString(),

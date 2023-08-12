@@ -328,7 +328,6 @@ LOAD_ORDER = {
     "UI/Notification.lua",
     "UI/Minimap.lua",
     "UI/VanillaActions.lua",
-    "UI/Journal.lua",
     "UI/Saving.lua",
     "UI/GiftBagContent.lua",
     "UI/ChatLog.lua",
@@ -471,8 +470,6 @@ LOAD_ORDER = {
 
     "Epip/Client/AprilFoolsCharacterSheet.lua",
     {ScriptSet = "Epip/AscensionShortcuts", RequiresEE = true},
-    "Epip/Client/ModDocs.lua",
-    "Epip/Client/JournalChangelog.lua",
     "Epip/Client/ExitChatAfterMessage.lua",
     "Epip/Client/CameraZoom.lua",
     "Epip/Client/MinimapToggle.lua",

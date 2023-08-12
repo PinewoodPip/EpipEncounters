@@ -74,13 +74,6 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
--- Listen for the action to open the custom journal.
-Actions.Events.ActionUsed:Subscribe(function (ev)
-    if ev.Action.ID == "EPIP_Journal" then
-        Client.UI.Journal.Setup()
-    end
-end)
-
 -- Listen for respective Input actions.
 Client.Input.Events.ActionExecuted:Subscribe(function (ev)
     local action = ev.Action.ID
