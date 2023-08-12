@@ -170,13 +170,6 @@ Stats = {
     },
 
     ModifierLists = {},
-
-    ---@type table<GUID, table<string, number>> Default values, per mod.
-    EXTRA_DATA_DEFAULT_VALUES = nil, -- See Shared_ExtraData.lua
-
-    ---@type table<string, ExtraDataEntry>
-    ExtraData = {
-    },
 }
 Game.Stats = Stats
 Epip.InitializeLibrary("Stats", Stats)
