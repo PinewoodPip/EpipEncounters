@@ -98,6 +98,13 @@ Osiris.RegisterSymbolListener("NRD_OnActionStateEnter", 2, "after", function (ch
     end
 end)
 
+-- Broadcast item pick up state being entered.
+Osiris.RegisterSymbolListener("NRD_OnActionStateEnter", 2, "before", function (charGUID, action)
+    if action == "PickUp" and Osiris.GetFirstFact("DB_IsPlayer", charGUID) ~= nil then
+        Net.PostToCharacter(charGUID, AnimCancel.NETMSG_ITEM_PICKUP)
+    end
+end)
+
 ---------------------------------------------
 -- Default implementations of IsSkillStateFinished hook.
 ---------------------------------------------

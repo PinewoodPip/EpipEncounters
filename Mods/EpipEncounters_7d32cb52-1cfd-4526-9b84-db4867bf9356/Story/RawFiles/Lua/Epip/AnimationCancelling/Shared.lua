@@ -4,6 +4,7 @@ local Set = DataStructures.Get("DataStructures_Set")
 ---@class Feature_AnimationCancelling : Feature
 local AnimCancel = {
     NET_MESSAGE = "Epip_Feature_AnimationCancelling",
+    NETMSG_ITEM_PICKUP = "Epip_Feature_AnimationCancelling_ItemPickUpEntered", -- Empty message.
     DEFAULT_DELAY_CLIENT_SIDE = 0.2, -- In seconds.
     DEFAULT_DELAY_SERVER_SIDE = 0.05, -- In seconds.
     PING_DELAY = 2, -- In ticks.
@@ -50,6 +51,16 @@ local AnimCancel = {
            Handle = "he043b9f9gfc52g4c39ga4f1gc53ea4fcd5ce",
            Text = "Add skill IDs to this setting to blacklist them from being animation-cancelled.",
            ContextDescription = "Tooltip for blacklist setting",
+        },
+        Setting_CancelWorldTooltipItemPickups_Name = {
+           Handle = "hf832b7ceg2e16g454dg8b5cg2ac87a0f7681",
+           Text = "Speed up world tooltip item pick-ups",
+           ContextDescription = "Setting name",
+        },
+        Setting_CancelWorldTooltipItemPickups_Description = {
+           Handle = "h8277c4cdg8990g406fga0b5gef3f0d386620",
+           Text = "If enabled, the animation for picking up items through their world tooltip will be cancelled, allowing multiple items to be picked up faster.",
+           ContextDescription = "Setting tooltip",
         },
     },
 

@@ -1,9 +1,11 @@
 
 local CommonStrings = Text.CommonStrings
 local Minimap = Client.UI.Minimap
+local WorldTooltip = Client.UI.WorldTooltip
 
 ---@class Feature_AnimationCancelling
 local AnimCancel = Epip.GetFeature("Feature_AnimationCancelling")
+AnimCancel.ITEM_PICKUP_CANCEL_DELAY = 0.1 -- In seconds.
 
 ---@enum Feature_AnimationCancelling_Mode
 AnimCancel.MODE = {
@@ -43,6 +45,13 @@ AnimCancel:RegisterSetting("Blacklist", {
     Context = "Client",
     ElementsAreSkills = true, -- For settings menu.
 })
+AnimCancel.Settings.CancelWorldTooltipItemPickups = AnimCancel:RegisterSetting("CancelWorldTooltipItemPickups", {
+    Type = "Boolean",
+    Context = "Client",
+    Name = AnimCancel.TranslatedStrings.Setting_CancelWorldTooltipItemPickups_Name,
+    Description = AnimCancel.TranslatedStrings.Setting_CancelWorldTooltipItemPickups_Description,
+    DefaultValue = false,
+})
 
 ---------------------------------------------
 -- METHODS
@@ -69,26 +78,27 @@ function AnimCancel.IsModeEnabled(mode)
     return isInMode
 end
 
----Cancels the current animation of the client character.
-function AnimCancel:CancelAnimation()
+---Cancels the current skill animation of the client character.
+---Does nothing if a skill is not being used.
+function AnimCancel.CancelSkillAnimation()
     local char = Client.GetCharacter()
     local skill = Character.GetCurrentSkill(char)
 
     if skill then
         local delay = AnimCancel.GetDelay(char, skill)
 
-        local func = function (_)
-            Minimap:ExternalInterfaceCall("pingButtonPressed")
-
-            Timer.StartTickTimer(AnimCancel.PING_DELAY, function (_)
-                Minimap:ExternalInterfaceCall("pingButtonPressed")
-            end)
-        end
-
         AnimCancel:DebugLog("Cancelling animation")
 
-        Timer.Start(delay, func)
+        Timer.Start(delay, AnimCancel.CancelAnimation)
     end
+end
+
+---Cancels the current animation of the client character.
+function AnimCancel.CancelAnimation()
+    Minimap:ExternalInterfaceCall("pingButtonPressed")
+    Timer.StartTickTimer(AnimCancel.PING_DELAY, function (_) -- Must be delayed.
+        Minimap:ExternalInterfaceCall("pingButtonPressed")
+    end)
 end
 
 ---------------------------------------------
@@ -110,7 +120,7 @@ Client.Events.SkillStateChanged:Subscribe(function (ev)
 
             ---@diagnostic disable-next-line: undefined-field
             if state and state.State.Value >= Ext.Enums.SkillStateType.CastFinished.Value then
-                AnimCancel:CancelAnimation()
+                AnimCancel.CancelSkillAnimation()
 
                 GameState.Events.RunningTick:Unsubscribe("Feature_AnimationCancelling_SkillState")
             end
@@ -125,7 +135,7 @@ Net.RegisterListener(AnimCancel.NET_MESSAGE, function (payload)
 
         -- Only perform cancelling if the character matches - we don't want to try to cancel if the client character has been switched in the meantime.
         if char == Client.GetCharacter() and AnimCancel.IsEligible(char, payload.SkillID) then
-            AnimCancel:CancelAnimation()
+            AnimCancel.CancelSkillAnimation()
         end
     end
 end)
@@ -141,5 +151,16 @@ end)
 AnimCancel.Hooks.IsSkillEligible:Subscribe(function (ev)
     if AnimCancel.IsModeEnabled(AnimCancel.MODE.SERVER_SIDE) and AnimCancel.SERVERSIDE_BANNED_SKILLS:Contains(ev.SkillID) then
         ev.Eligible = false
+    end
+end)
+
+-- Cancel item pickup animations from world tooltips;
+-- this allows the user to pick up items this way at a much faster rate.
+-- Regular item pickups do not have a forced cooldown.
+Net.RegisterListener(AnimCancel.NETMSG_ITEM_PICKUP, function (_)
+    if WorldTooltip:IsVisible() and AnimCancel:GetSettingValue(AnimCancel.Settings.CancelWorldTooltipItemPickups) == true then
+        Timer.Start(AnimCancel.ITEM_PICKUP_CANCEL_DELAY, function (_)
+            AnimCancel.CancelAnimation()
+        end)
     end
 end)

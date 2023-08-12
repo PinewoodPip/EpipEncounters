@@ -146,6 +146,7 @@ local tabs = {
             CreateHeader(AnimationCancelling.TranslatedStrings.Setting_Name),
             {Type = "Setting", Module = "EpipEncounters_AnimationCancelling", ID = "Mode"},
             {Type = "Setting", Module = "EpipEncounters_AnimationCancelling", ID = "Blacklist"},
+            {Type = "Setting", Module = "EpipEncounters_AnimationCancelling", ID = "CancelWorldTooltipItemPickups"},
         }
     },
     ["Epip_Hotbar"] = {
