@@ -89,6 +89,8 @@ function Widgets._RenderCheckboxFromSetting(request)
         Widgets._SetSettingValue(setting, ev.Active, request)
     end)
 
+    checkbox:SetTooltip("Custom", Widgets._GetSettingTooltip(setting))
+
     return checkbox
 end
 
@@ -117,6 +119,8 @@ function Widgets._RenderComboBoxFromSetting(request)
         Widgets._SetSettingValue(setting, ev.Option.ID, request)
     end)
 
+    dropdown:SetTooltip("Custom", Widgets._GetSettingTooltip(setting))
+
     return dropdown
 end
 
@@ -144,6 +148,8 @@ function Widgets._RenderTextFieldFromSetting(request)
             Widgets._SetSettingValue(setting, ev.Text, request)
         end)
     end)
+
+    field:SetTooltip("Custom", Widgets._GetSettingTooltip(setting))
 
     return field
 end
@@ -190,6 +196,8 @@ function Widgets._RenderInputBindingSetting(request)
             -- Should be ordered after event registration in case the request is resolved synchronously
             InputBinder.RequestBinding(Client.Input.GetAction(action), ev.Index)
         end)
+
+        form:SetTooltip("Custom", Widgets._GetSettingTooltip(setting))
     else
         Widgets:LogWarning("Using InputBinding settings without a target action is not supported!")
     end
@@ -208,6 +216,33 @@ function Widgets._SetSettingValue(setting, value, request)
     if request.ValueChangedCallback then
         request.ValueChangedCallback(value)
     end
+end
+
+---Generates a tooltip for a setting.
+---@param setting SettingsLib_Setting
+---@return TooltipLib_CustomFormattedTooltip?
+function Widgets._GetSettingTooltip(setting)
+    local description = setting:GetDescription()
+    if description == "MISSING DESCRIPTION" then return nil end -- Do not create a tooltip for settings with no description.
+
+    ---@type TooltipLib_CustomFormattedTooltip
+    local tooltip = {
+        Elements = {
+            {
+                Type = "ItemName",
+                Label = setting:GetName(),
+            },
+            {
+                Type = "ItemDescription",
+                Label = description,
+            },
+            {
+                Type = "ItemRarity",
+                Label = "", -- Necessary to properly clean up the previous tooltip.
+            },
+        },
+    }
+    return tooltip
 end
 
 ---Returns a prefixed ID, for use with elements.
