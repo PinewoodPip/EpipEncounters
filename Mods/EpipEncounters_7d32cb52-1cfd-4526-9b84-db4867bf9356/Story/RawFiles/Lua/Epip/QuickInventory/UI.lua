@@ -215,6 +215,10 @@ function UI._RenderSettingsPanel()
         UI.RenderSetting(QuickInventory.Settings.ConsumablesCategory)
     elseif itemCategory == "Miscellaneous" then
         UI.RenderSetting(QuickInventory.Settings.MiscellaneousItemType)
+
+        if Epip.GetFeature("Features.ItemTagging") then
+            UI.RenderSetting(QuickInventory.Settings.ShowUsedMiscellaneousItems)
+        end
     end
 end
 

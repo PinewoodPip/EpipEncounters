@@ -1,19 +1,20 @@
 
+---@class Features.ItemTagging
 local ItemTagging = Epip.Features.ItemTagging
 
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
----@param tooltip TooltipData
+---Appends a notice to a tooltip.
+---@param tooltip TooltipLib_FormattedTooltip
 ---@param text string
 function ItemTagging.AddTooltipFootnote(tooltip, text)
-    local desc = tooltip:GetElement("ItemDescription")
-
-    if desc then
+    local desc = tooltip:GetFirstElement("ItemDescription")
+    if desc then -- Use ItemDescription if available.
         desc.Label = desc.Label .. "<br><br>" .. text
     else
-        tooltip:AppendElement({
+        tooltip:InsertElement({
             Type = "WeaponDamagePenalty",
             Label = text,
         })
@@ -24,7 +25,9 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
-Game.Tooltip.RegisterListener("Item", nil, function(item, tooltip)
+-- Append tag-related notices to tagged items's tooltips.
+Client.Tooltip.Hooks.RenderItemTooltip:Subscribe(function (ev)
+    local item = ev.Item
     local bookRead = item:HasTag(ItemTagging.BOOK_READ_TAG)
     local keyUsed = item:HasTag(ItemTagging.KEY_USED_TAG)
     local text
@@ -40,6 +43,6 @@ Game.Tooltip.RegisterListener("Item", nil, function(item, tooltip)
     end
 
     if text then
-        ItemTagging.AddTooltipFootnote(tooltip, text)
+        ItemTagging.AddTooltipFootnote(ev.Tooltip, text)
     end
 end)

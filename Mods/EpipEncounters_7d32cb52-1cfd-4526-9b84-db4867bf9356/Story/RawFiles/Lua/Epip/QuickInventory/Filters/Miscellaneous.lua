@@ -1,6 +1,7 @@
 
 local CommonStrings = Text.CommonStrings
 local Set = DataStructures.Get("DataStructures_Set")
+local ItemTagging = Epip.GetFeature("Features.ItemTagging")
 
 ---@class Feature_QuickInventory
 local QuickInventory = Epip.GetFeature("Feature_QuickInventory")
@@ -22,6 +23,19 @@ QuickInventory.MISCELLANEOUS_SUBCATEGORIES = {
 }
 
 ---------------------------------------------
+-- TSKS
+---------------------------------------------
+
+QuickInventory.TranslatedStrings.Setting_ShowUsedMiscellaneousItems_Name = QuickInventory:RegisterTranslatedString("h50e08a06gb022g457fg9f6ag83565deb610f", {
+    Text = "Show Used Items",
+    ContextDescription = "Setting name",
+})
+QuickInventory.TranslatedStrings.Setting_ShowUsedMiscellaneousItems_Description = QuickInventory:RegisterTranslatedString("h13d1cd67ga1e8g4d7cg813bg3c01187b10ce", {
+    Text = "If enabled, books that have been read and keys that have been used will be shown.",
+    ContextDescription = "Setting tooltip",
+})
+
+---------------------------------------------
 -- SETTINGS
 ---------------------------------------------
 
@@ -35,6 +49,12 @@ QuickInventory.Settings.MiscellaneousItemType = QuickInventory:RegisterSetting("
         {ID = "Books", NameHandle = CommonStrings.Books.Handle},
         {ID = "Keys", NameHandle = CommonStrings.Keys.Handle},
     },
+})
+QuickInventory.Settings.ShowUsedMiscellaneousItems = QuickInventory:RegisterSetting("ShowUsedMiscellaneousItems", {
+    Type = "Boolean",
+    Name = QuickInventory.TranslatedStrings.Setting_ShowUsedMiscellaneousItems_Name,
+    Description = QuickInventory.TranslatedStrings.Setting_ShowUsedMiscellaneousItems_Description,
+    DefaultValue = true,
 })
 
 ---------------------------------------------
@@ -58,6 +78,11 @@ QuickInventory.Hooks.IsItemVisible:Subscribe(function (ev)
         ::EndTagChecks::
 
         visible = visible and not Item.IsSkillbook(ev.Item) -- Exclude skillbooks
+
+        if visible and ItemTagging then -- Check used item tags. We do not assume the feature exists.
+            local showUsed = QuickInventory:GetSettingValue(QuickInventory.Settings.ShowUsedMiscellaneousItems)
+            visible = visible and (showUsed or not ItemTagging.IsItemUsed(ev.Item))
+        end
 
         ev.Visible = visible
     end
