@@ -343,6 +343,13 @@ function Item.IsRangedWeapon(item)
     return item and item.Stats and Item.RANGED_WEAPON_TYPES:Contains(item.Stats.WeaponType)
 end
 
+---Returns whether item is a skillbook.
+---@param item Item
+---@return boolean
+function Item.IsSkillbook(item)
+    return Item.HasUseAction(item, "SkillBook")
+end
+
 ---Returns the base AP cost of using an item, independent of the character.
 ---@param item Item
 ---@return integer

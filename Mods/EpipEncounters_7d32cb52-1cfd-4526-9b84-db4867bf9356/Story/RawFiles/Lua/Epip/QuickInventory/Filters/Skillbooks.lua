@@ -52,34 +52,34 @@ QuickInventory.Hooks.IsItemVisible:Subscribe(function (ev)
         local showLearntSkills = QuickInventory:GetSettingValue(QuickInventory.Settings.LearntSkillbooks) == true
         local school = QuickInventory:GetSettingValue(QuickInventory.Settings.SkillbookSchool)
 
-        visible = visible and Item.HasUseAction(item, "SkillBook")
-        
+        visible = visible and Item.IsSkillbook(item)
+
         if visible then
             if not showLearntSkills then
                 local skillBookActions = Item.GetUseActions(item, "SkillBook") ---@type SkillBookActionData[]
                 local knowsAllSkills = true
-    
+
                 for _,action in ipairs(skillBookActions) do
                     if not Character.IsSkillLearnt(Client.GetCharacter(), action.SkillID) then
                         knowsAllSkills = false
                         break
                     end
                 end
-    
+
                 -- Only filter out the item if all skills from the book are learnt.
                 visible = visible and not knowsAllSkills
             end
-    
+
             if school ~= "Any" then
                 -- Only checks first skill
                 local action = Item.GetUseActions(item, "SkillBook")[1] ---@type SkillBookActionData
-                local skillStat = Stats.Get("SkillData", action.SkillID)
+                local skillStat = Stats.Get("StatsLib_StatsEntry_SkillData", action.SkillID)
 
                 visible = visible and skillStat.Ability == school
             end
         end
     end
-    
+
     ev.Visible = visible
 end)
 
@@ -90,7 +90,7 @@ QuickInventory.Hooks.SortItems:Subscribe(function (ev)
         local action2 = Item.GetUseActions(ev.ItemB, "SkillBook")[1] ---@type SkillBookActionData
 
         if action1 and action2 then
-            local stat1, stat2 = Stats.Get("SkillData", action1.SkillID), Stats.Get("SkillData", action2.SkillID)
+            local stat1, stat2 = Stats.Get("StatsLib_StatsEntry_SkillData", action1.SkillID), Stats.Get("StatsLib_StatsEntry_SkillData", action2.SkillID)
 
             ev.Result = (SCHOOL_TO_PRIORITY[stat1.Ability] or -1) < (SCHOOL_TO_PRIORITY[stat2.Ability] or -1)
             ev:StopPropagation()
