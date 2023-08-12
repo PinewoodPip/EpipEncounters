@@ -32,6 +32,7 @@ end
 -- METHODS
 ---------------------------------------------
 
+---@override
 function _Choice:_Init()
     for i,choice in ipairs(self.Choices) do
         _Entry.Create(choice)
@@ -68,7 +69,7 @@ function _Choice:SetValue(value)
         if isValid then
             self.Value = value
         else
-            Settings:Error("Choice:SetValue", "Invalid choice ID for", self.ID, value)
+            Settings:LogWarning("Choice:SetValue", "Invalid choice ID for", self.ID, value)
         end
     end
 end
