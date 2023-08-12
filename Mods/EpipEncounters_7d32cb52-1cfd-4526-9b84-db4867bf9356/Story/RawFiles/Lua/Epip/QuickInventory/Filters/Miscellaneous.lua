@@ -5,6 +5,7 @@ local ItemTagging = Epip.GetFeature("Features.ItemTagging")
 
 ---@class Feature_QuickInventory
 local QuickInventory = Epip.GetFeature("Feature_QuickInventory")
+local UI = QuickInventory.UI
 
 QuickInventory.BOOK_TAGS = Set.Create({
     "BOOK",
@@ -61,6 +62,7 @@ QuickInventory.Settings.ShowUsedMiscellaneousItems = QuickInventory:RegisterSett
 -- EVENT LISTENERS
 ---------------------------------------------
 
+-- Apply filters.
 QuickInventory.Hooks.IsItemVisible:Subscribe(function (ev)
     if QuickInventory:GetSettingValue(QuickInventory.Settings.ItemCategory) == "Miscellaneous" and ev.Visible then
         local subcategory = QuickInventory:GetSettingValue(QuickInventory.Settings.MiscellaneousItemType)
@@ -85,5 +87,16 @@ QuickInventory.Hooks.IsItemVisible:Subscribe(function (ev)
         end
 
         ev.Visible = visible
+    end
+end)
+
+-- Render category settings.
+UI.Events.RenderSettings:Subscribe(function (ev)
+    if ev.ItemCategory == "Miscellaneous" then
+        UI.RenderSetting(QuickInventory.Settings.MiscellaneousItemType)
+
+        if Epip.GetFeature("Features.ItemTagging") then
+            UI.RenderSetting(QuickInventory.Settings.ShowUsedMiscellaneousItems)
+        end
     end
 end)

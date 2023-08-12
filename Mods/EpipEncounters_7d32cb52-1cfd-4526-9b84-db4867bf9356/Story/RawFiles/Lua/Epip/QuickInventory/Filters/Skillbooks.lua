@@ -3,6 +3,7 @@ local CommonStrings = Text.CommonStrings
 
 ---@class Feature_QuickInventory
 local QuickInventory = Epip.GetFeature("Feature_QuickInventory")
+local UI = QuickInventory.UI
 
 ---------------------------------------------
 -- SETTINGS
@@ -95,5 +96,13 @@ QuickInventory.Hooks.SortItems:Subscribe(function (ev)
             ev.Result = (SCHOOL_TO_PRIORITY[stat1.Ability] or -1) < (SCHOOL_TO_PRIORITY[stat2.Ability] or -1)
             ev:StopPropagation()
         end
+    end
+end)
+
+-- Render category settings.
+UI.Events.RenderSettings:Subscribe(function (ev)
+    if ev.ItemCategory == "Skillbooks" then
+        UI.RenderSetting(QuickInventory.Settings.LearntSkillbooks)
+        UI.RenderSetting(QuickInventory.Settings.SkillbookSchool)
     end
 end)

@@ -12,7 +12,11 @@ local V = Vector.Create
 
 ---@class Feature_QuickInventory
 local QuickInventory = Epip.GetFeature("Feature_QuickInventory")
+
+---@class Features.QuickInventory.UI : GenericUI_Instance
 local UI = Generic.Create("Epip_EquipmentSwap")
+QuickInventory.UI = UI
+
 UI._Initialized = false
 UI._Slots = {} ---@type GenericUI_Prefab_HotbarSlot[] Pooling for HotbarSlots, since they are expensive to create.
 UI._CurrentItemCount = 0
@@ -28,6 +32,10 @@ UI.ITEM_SIZE = V(58, 58)
 UI.ELEMENT_SPACING = 5
 UI.SETTINGS_PANEL_ELEMENT_SIZE = V(UI.SETTINGS_PANEL_SIZE[1] - 42.5, 50)
 UI.DRAGGABLE_AREA_SIZE = V(UI.BACKGROUND_SIZE[1] + UI.SETTINGS_PANEL_SIZE[1], 65)
+
+UI.Events = {
+    RenderSettings = SubscribableEvent:New("RenderSettings"), ---@type Event<{ItemCategory:string}>
+}
 
 ---------------------------------------------
 -- METHODS
@@ -189,37 +197,9 @@ function UI._RenderSettingsPanel()
     UI.RenderSetting(QuickInventory.Settings.ItemCategory)
 
     local itemCategory = QuickInventory:GetSettingValue(QuickInventory.Settings.ItemCategory)
-    if itemCategory == "Equipment" then
-        local itemSlot = QuickInventory:GetSettingValue(QuickInventory.Settings.ItemSlot)
-
-        UI.RenderSetting(QuickInventory.Settings.ItemSlot) -- Equipment slot
-        UI.RenderSetting(QuickInventory.Settings.Rarity) -- Rarity
-
-        if itemSlot == "Weapon" then
-            UI.RenderSetting(QuickInventory.Settings.WeaponSubType) -- Equipment subtype
-        elseif QuickInventory.SLOTS_WITH_ARMOR_SUBTYPES:Contains(itemSlot) then
-            UI.RenderSetting(QuickInventory.Settings.ArmorSubType) -- Armor subtype
-        end
-
-        if EpicEncounters.IsEnabled() then
-            UI.RenderSetting(QuickInventory.Settings.CulledOnly)
-        end
-
-        UI.RenderSetting(QuickInventory.Settings.ShowEquippedItems)
-
-        UI.RenderSetting(QuickInventory.Settings.DynamicStat)
-    elseif itemCategory == "Skillbooks" then
-        UI.RenderSetting(QuickInventory.Settings.LearntSkillbooks)
-        UI.RenderSetting(QuickInventory.Settings.SkillbookSchool)
-    elseif itemCategory == "Consumables" then
-        UI.RenderSetting(QuickInventory.Settings.ConsumablesCategory)
-    elseif itemCategory == "Miscellaneous" then
-        UI.RenderSetting(QuickInventory.Settings.MiscellaneousItemType)
-
-        if Epip.GetFeature("Features.ItemTagging") then
-            UI.RenderSetting(QuickInventory.Settings.ShowUsedMiscellaneousItems)
-        end
-    end
+    UI.Events.RenderSettings:Throw({
+        ItemCategory = itemCategory,
+    })
 end
 
 ---Renders a widget to the settings panel from a setting.

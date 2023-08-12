@@ -4,6 +4,7 @@ local Set = DataStructures.Get("DataStructures_Set")
 
 ---@class Feature_QuickInventory
 local QuickInventory = Epip.GetFeature("Feature_QuickInventory")
+local UI = QuickInventory.UI
 
 QuickInventory.SLOTS_WITH_ARMOR_SUBTYPES = Set.Create({
     "Helmet",
@@ -388,5 +389,29 @@ QuickInventory.Hooks.SortItems:Subscribe(function (ev)
 
         ev.Result = scoreA > scoreB
         ev:StopPropagation()
+    end
+end)
+
+-- Render category settings.
+UI.Events.RenderSettings:Subscribe(function (ev)
+    if ev.ItemCategory == "Equipment" then
+        local itemSlot = QuickInventory:GetSettingValue(QuickInventory.Settings.ItemSlot)
+
+        UI.RenderSetting(QuickInventory.Settings.ItemSlot) -- Equipment slot
+        UI.RenderSetting(QuickInventory.Settings.Rarity) -- Rarity
+
+        if itemSlot == "Weapon" then
+            UI.RenderSetting(QuickInventory.Settings.WeaponSubType) -- Equipment subtype
+        elseif QuickInventory.SLOTS_WITH_ARMOR_SUBTYPES:Contains(itemSlot) then
+            UI.RenderSetting(QuickInventory.Settings.ArmorSubType) -- Armor subtype
+        end
+
+        if EpicEncounters.IsEnabled() then
+            UI.RenderSetting(QuickInventory.Settings.CulledOnly)
+        end
+
+        UI.RenderSetting(QuickInventory.Settings.ShowEquippedItems)
+
+        UI.RenderSetting(QuickInventory.Settings.DynamicStat)
     end
 end)

@@ -4,6 +4,7 @@ local Set = DataStructures.Get("DataStructures_Set")
 
 ---@class Feature_QuickInventory
 local QuickInventory = Epip.GetFeature("Feature_QuickInventory")
+local UI = QuickInventory.UI
 
 QuickInventory.CONSUMABLE_ACTIONS = Set.Create({
     "Consume",
@@ -107,7 +108,7 @@ QuickInventory.Hooks.IsItemVisible:Subscribe(function (ev)
             end
         end
     end
-    
+
     ev.Visible = visible
 end)
 
@@ -140,3 +141,10 @@ QuickInventory.Hooks.SortItems:Subscribe(function (ev)
         ev:StopPropagation()
     end
 end, {StringID = "DefaultImplementation_Consumables"})
+
+-- Render category settings.
+UI.Events.RenderSettings:Subscribe(function (ev)
+    if ev.ItemCategory == "Consumables" then
+        UI.RenderSetting(QuickInventory.Settings.ConsumablesCategory)
+    end
+end)
