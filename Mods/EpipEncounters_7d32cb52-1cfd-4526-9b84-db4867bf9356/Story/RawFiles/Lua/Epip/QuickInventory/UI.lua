@@ -213,6 +213,8 @@ function UI._RenderSettingsPanel()
         UI.RenderSetting(QuickInventory.Settings.SkillbookSchool)
     elseif itemCategory == "Consumables" then
         UI.RenderSetting(QuickInventory.Settings.ConsumablesCategory)
+    elseif itemCategory == "Miscellaneous" then
+        UI.RenderSetting(QuickInventory.Settings.MiscellaneousItemType)
     end
 end
 

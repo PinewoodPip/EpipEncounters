@@ -542,6 +542,14 @@ Text.CommonStrings.Rarity = Text.RegisterTranslatedString({
    Handle = "hce1fce1ega375g4e85g8adcg22da632e1097",
    Text = "Rarity",
 })
+Text.CommonStrings.Books = Text.RegisterTranslatedString({
+   Handle = "ha9646fd9ge69fg46d2g9fc2gc9442c28041c",
+   Text = "Books",
+})
+Text.CommonStrings.Keys = Text.RegisterTranslatedString({
+   Handle = "h2f44a9c7ge634g4630gae76g62a133475f12",
+   Text = "Keys",
+})
 
 ---------------------------------------------
 -- EPIC ENCOUNTERS
