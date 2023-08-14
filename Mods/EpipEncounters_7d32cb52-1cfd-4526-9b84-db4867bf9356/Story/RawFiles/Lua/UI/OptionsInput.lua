@@ -16,10 +16,6 @@ local Options = {
     CUSTOM_TABS = {}, ---@type table<string, OptionsInputTab>
     TAB_ORDER = {},
 
-    FILEPATH_OVERRIDES = {
-        ["Public/Game/GUI/optionsInput.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/optionsInput.swf",
-    },
-
     Events = {
     },
     Hooks = {

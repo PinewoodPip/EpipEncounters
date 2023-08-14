@@ -19,9 +19,6 @@ local Inv = {
     Hooks = {
         GetUpdate = {}, ---@type Event<PartyInventoryUI_Hooks_GetUpdate>
     },
-    FILEPATH_OVERRIDES = {
-        -- ["Public/Game/GUI/partyInventory.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/partyInventory.swf",
-    }
 }
 Epip.InitializeUI(Client.UI.Data.UITypes.partyInventory, "PartyInventory", Inv)
 
@@ -52,7 +49,7 @@ Epip.InitializeUI(Client.UI.Data.UITypes.partyInventory, "PartyInventory", Inv)
 -- METHODS
 ---------------------------------------------
 
--- Update the data on the UI. Item uses this to query item amounts from this UI, as Amount is not mapped on client.
+---Updates the data on the UI.
 function Inv.Refresh()
     Ext.UI.SetDirty(Client.GetCharacter().Handle, 16777216)
 end
