@@ -165,10 +165,10 @@ function Item.GetIcon(item)
             local statObject = Ext.Stats.Get(item.Stats.Name)
             local itemGroup = Ext.Stats.ItemGroup.GetLegacy(statObject.ItemGroup)
 
-            if itemGroup and item.LevelGroupIndex < #itemGroup.LevelGroups then
-                local levelGroup = itemGroup.LevelGroups[item.LevelGroupIndex + 1]
-                local rootGroup = levelGroup.RootGroups[item.RootGroupIndex + 1]
-                local nameGroupLink = rootGroup.NameGroupLinks[item.NameGroupIndex + 1]
+            if itemGroup and item.Stats.LevelGroupIndex < #itemGroup.LevelGroups then
+                local levelGroup = itemGroup.LevelGroups[item.Stats.LevelGroupIndex + 1]
+                local rootGroup = levelGroup.RootGroups[item.Stats.RootGroupIndex + 1]
+                local nameGroupLink = rootGroup.NameGroupLinks[item.Stats.NameGroupIndex + 1]
 
                 if nameGroupLink.ItemName ~= "" then
                     icon = nameGroupLink.ItemName
@@ -361,7 +361,7 @@ function Item.GetUseAPCost(item)
         -- if action.Type == "UseSkill" then
         --     cost = Stats.Get("SkillData", action.SkillID).ActionPoints-- Pretty sure items ignore Elemental Affinity? Not 100% sure, TODO
         if action.Type == "Consume" or action.Type == "UseSkill" then -- Item object costs override skill AP costs.
-            local stat = Stats.Get("Potion", item.StatsId) or Stats.Get("Object", item.StatsId)
+            local stat = Stats.Get("StatsLib_StatsEntry_Potion", item.StatsId) or Stats.Get("StatsLib_StatsEntry_Object", item.StatsId)
 
             cost = stat.UseAPCost
         end
@@ -516,23 +516,24 @@ function Item.GetEquipmentSubtype(item)
     if Item.IsWeapon(item) then
         itemType = tostring(item.Stats.WeaponType)
     elseif Item.IsEquipment(item) then
-        itemType = Stats.Get("Armor", item.StatsId).ArmorType
+        itemType = Stats.Get("StatsLib_StatsEntry_Armor", item.StatsId).ArmorType
     end
 
     return itemType
 end
 
---- Applies a dye to the item.
+---Applies a dye to the item.
+---@deprecated
 ---@param item Item
 ---@param dye Dye
 ---@return boolean False if item is already dyed with the same dye, or if dye is ``nil``.
 function Item.ApplyDye(item, dye)
-    local oldDye,data = Item.GetCurrentDye(item)
+    local oldDye, _ = Item.GetCurrentDye(item)
     local applied = false
 
     if oldDye ~= dye and dye then
         local deltamod = "Boost_" .. item.Stats.ItemType .. "_" .. Data.Game.DYES[dye].Deltamod
-    
+
         Osi.ItemAddDeltaModifier(item.MyGuid, deltamod)
 
         applied = true
@@ -541,14 +542,14 @@ function Item.ApplyDye(item, dye)
     return applied
 end
 
---- Returns the ID and data for the most recently-applied dye deltamod on the item.
+---Returns the ID and data for the most recently-applied dye deltamod on the item.
 ---@param item Item
 ---@return string,Dye The dye ID and data table.
 function Item.GetCurrentDye(item)
     local pattern = ".*_(Dye_.*)$"
     local dye = nil
 
-    for i,mod in ipairs(item:GetDeltaMods()) do
+    for _,mod in ipairs(item:GetDeltaMods()) do
         dye = mod:match(pattern) or dye
     end
 
@@ -570,7 +571,7 @@ end
 function Item.GetNamedBoosts(item)
     local boosts = {}
 
-    for i,v in pairs(item.Stats.DynamicStats) do
+    for _,v in pairs(item.Stats.DynamicStats) do
 
         local boostName = v.ObjectInstanceName
 
@@ -683,18 +684,17 @@ end
 -- REGION Runes.
 ---------------------------------------------
 
---- Gets the stats object of the rune inserted at rune index ``index`` on item.
+---Gets the stats object of the rune inserted at rune index ``index`` on item.
 ---@param item Item
 ---@param index integer **0-based.**
----@return StatItem
+---@return StatItem? --`nil` if no rune is inserted at the index.
 function Item.GetRune(item, index)
     if index < 0 or index > 2 then
-        Ext.PrintError("Cannot fetch runes with out-of-range index: " .. index)
-        return nil
+        Item:Error("GetRune", "Cannot fetch runes with out-of-range index: " .. index)
+        return
     end
 
     local slottedObject = item.Stats.DynamicStats[index + 3].BoostName
-    
     if slottedObject == "" then
         return nil
     end
