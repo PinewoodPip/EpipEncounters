@@ -61,17 +61,70 @@ end
 ---@param text string
 ---@param setSize boolean? Defaults to `false`. If `true`, the element will be automatically resized to fit the new text.
 function AnchoredText:SetText(text, setSize)
-    self._HTMLText = text
+    local parsedText = text
+    local startIndex = 1
+    local start, endIndex, content = parsedText:find("<a .->(.-)</a>", startIndex)
+    local count = 1
+    while start do -- Add an index attribute to each anchor tag.
+        local attributes = Text.HTML.GetAttributes(parsedText:sub(start, endIndex))
+        table.insert(attributes, {ID = "anchorindex", Param = count})
+        parsedText = parsedText:sub(1, start - 1) .. Text.HTML.Tag(content, "a", attributes) .. parsedText:sub(endIndex + 1) -- Replace <a> tag with new one
 
-    TextPrefab.SetText(self, text, setSize)
+        startIndex = endIndex
+        count = count + 1
+        start, endIndex, content = parsedText:find("<a .->(.-)</a>", startIndex)
+    end
+
+    self._OriginalText = text
+    self._HTMLText = parsedText
+    local colorizedText = self:_ColorizeText(parsedText)
+    TextPrefab.SetText(self, colorizedText, setSize)
+end
+
+---Parses text and highlights selected anchors in a color specified by an `inactivecolor={hex color}` and `activecolor={hex color}` attributes in the anchor tag.
+---The active color will be used if the tag is being hovered over; the inactive color will be used otherwise.
+---Recursive; will search all tags and subtags.
+---@param text string
+---@return string
+function AnchoredText:_ColorizeText(text)
+    local currentSelection = self._CurrentHoveredAnchor
+    local tags = Text.HTML.GetTags(text)
+
+    for _,tag in ipairs(tags) do
+        if tag.TagType == "a" then
+            local eventID
+            for _,attr in ipairs(tag.Attributes) do
+                if attr.ID == "href" then
+                    eventID = attr.Param:match("^event:(.*)$")
+                end
+            end
+
+            if eventID then
+                for _,attr in ipairs(tag.Attributes) do
+                    if attr.ID == "inactivecolor" and (not currentSelection or currentSelection.ID ~= eventID) then -- TODO consider anchor indexes
+                        text = Text.Replace(text, tag.Tag, Text.Format(tag.Tag, {Color = attr.Param}))
+                    elseif attr.ID == "activecolor" and currentSelection and currentSelection.ID == eventID then -- TODO consider anchor indexes
+                        text = Text.Replace(text, tag.Tag, Text.Format(tag.Tag, {Color = attr.Param}))
+                    end
+                end
+            end
+        end
+
+        -- Colorize recursively
+        local newTag = Text.HTML.Tag(self:_ColorizeText(tag.Content), tag.TagType, tag.Attributes)
+
+        text = Text.Replace(text, tag.Tag, newTag)
+    end
+
+    return text
 end
 
 ---Returns the starting and end indexes of anchors within the text.
----@return {Event:string, Text:string, StartIndex:integer, Length:integer}[]
+---@return {Event:string, Text:string, StartIndex:integer, Length:integer, AnchorIndex:integer}[]
 function AnchoredText:_GetAnchorIndexes()
     local htmlText = self._HTMLText
-    local tag = "<a href=\"event:(.-)\">(.-)</a>"
-    local startIndex, endIndex, eventName, capturedText = htmlText:find(tag)
+    local tag = "<a href=\"event:(.-)\".-anchorindex=\"(.-)\".->(.-)</a>"
+    local startIndex, endIndex, eventName, anchorIndex, capturedText = htmlText:find(tag)
     local indexes = {} ---@type {Event:string, Text:string, StartIndex:integer, Length:integer}[]
 
     while startIndex do
@@ -79,7 +132,6 @@ function AnchoredText:_GetAnchorIndexes()
         local tagCount = 0
         for i=1,startIndex,1 do
             local char = htmlText:sub(i, i)
-            -- print(char)
             if char == "<" then
                 tagCount = tagCount + 1
             elseif char == ">" then
@@ -94,9 +146,10 @@ function AnchoredText:_GetAnchorIndexes()
             StartIndex = realTextStartIndex,
             Length = #capturedText,
             Text = capturedText,
+            AnchorIndex = tonumber(anchorIndex),
         })
 
-        startIndex, endIndex, eventName, capturedText = htmlText:find(tag, endIndex)
+        startIndex, endIndex, eventName, anchorIndex, capturedText = htmlText:find(tag, endIndex)
     end
 
     return indexes
@@ -135,10 +188,12 @@ function AnchoredText:_SetupListeners()
 
         if tagEvent and (self._CurrentHoveredAnchor == nil or self._CurrentHoveredAnchor.ID ~= tagEvent.ID) then -- Only throw event if previous hovered tag was nil, or different.
             self._CurrentHoveredAnchor = tagEvent
+            self:SetText(self._OriginalText)
             self.Events.AnchorMouseOver:Throw(tagEvent)
         elseif not tagEvent and self._CurrentHoveredAnchor then -- Only throw event if hovering out of a tag.
             self.Events.AnchorMouseOut:Throw(self._CurrentHoveredAnchor)
             self._CurrentHoveredAnchor = nil
+            self:SetText(self._OriginalText)
         end
     end)
 
@@ -146,8 +201,9 @@ function AnchoredText:_SetupListeners()
     -- as in this case MouseMove does not fire.
     self.Element.Events.MouseOut:Subscribe(function (_)
         if self._CurrentHoveredAnchor then
-            self.Events.AnchorMouseOut:Throw(self._CurrentHoveredAnchor)
             self._CurrentHoveredAnchor = nil
+            self:SetText(self._OriginalText)
+            self.Events.AnchorMouseOut:Throw(self._CurrentHoveredAnchor)
         end
     end)
 end
