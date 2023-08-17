@@ -1,11 +1,10 @@
 
+---@class GenericUI
 local Generic = Client.UI.Generic
 
 ---@class GenericUI_Element_Slot : GenericUI_Element
 ---@field Events GenericUI_Element_Slot_Events
-local Slot = {
-    
-}
+local Slot = {}
 
 ---------------------------------------------
 -- EVENTS

@@ -1,4 +1,5 @@
 
+---@class GenericUI
 local Generic = Client.UI.Generic
 
 ---@class GenericUI_Element_Color : GenericUI_Element

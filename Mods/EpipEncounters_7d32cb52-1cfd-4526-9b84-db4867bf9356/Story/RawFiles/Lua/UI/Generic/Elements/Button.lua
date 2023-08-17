@@ -1,4 +1,5 @@
 
+---@class GenericUI
 local Generic = Client.UI.Generic
 
 ---@class GenericUI_Element_Button : GenericUI_Element

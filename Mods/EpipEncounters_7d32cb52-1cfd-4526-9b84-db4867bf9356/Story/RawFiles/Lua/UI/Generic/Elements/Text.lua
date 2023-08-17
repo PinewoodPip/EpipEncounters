@@ -1,4 +1,5 @@
 
+---@class GenericUI
 local Generic = Client.UI.Generic
 
 ---@class GenericUI_Element_Text : GenericUI_Element
@@ -87,7 +88,6 @@ function Text:IsMouseWithinRange(startIndex, length)
     return self:GetMovieClip().IsMouseWithinRange(startIndex - 1, length)
 end
 
----@diagnostic disable: invisible
 _Text.SetText = Generic.ExposeFunction("SetText")
 _Text.SetType = Generic.ExposeFunction("SetType")
 _Text.SetEditable = Generic.ExposeFunction("SetEditable")
@@ -95,7 +95,6 @@ _Text.SetRestrictedCharacters = Generic.ExposeFunction("SetRestrictedCharacters"
 _Text.GetLineWidth = Generic.ExposeFunction("GetLineWidth")
 _Text.GetLineHeight = Generic.ExposeFunction("GetLineHeight")
 _Text.IsMouseWithinKeyword = Generic.ExposeFunction("IsMouseWithinKeyword")
----@diagnostic enable: invisible
 
 ---------------------------------------------
 -- SETUP

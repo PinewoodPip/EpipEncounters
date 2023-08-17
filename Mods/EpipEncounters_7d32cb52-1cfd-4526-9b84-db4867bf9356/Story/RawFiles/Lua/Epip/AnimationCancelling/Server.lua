@@ -66,7 +66,7 @@ end
 -- Listen for SkillCast event to cancel non-problematic skill types.
 Osiris.RegisterSymbolListener("SkillCast", 4, "after", function(charGUID, skillID, _, _)
     local char = Character.Get(charGUID)
-    local skill = Stats.Get("SkillData", skillID)
+    local skill = Stats.Get("StatsLib_StatsEntry_SkillData", skillID)
 
     if AnimCancel.SAFE_SKILL_TYPES:Contains(skill.SkillType) then
         AnimCancel.CancelAnimation(char, skillID)

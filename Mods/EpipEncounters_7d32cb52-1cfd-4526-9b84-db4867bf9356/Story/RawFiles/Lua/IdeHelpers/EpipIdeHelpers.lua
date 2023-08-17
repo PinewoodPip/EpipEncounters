@@ -1,4 +1,6 @@
 
+---@meta
+
 ---@alias Entity EclCharacter|EsvCharacter|EclItem|EsvItem
 ---@alias Character EsvCharacter|EclCharacter
 ---@alias Item EclItem|EsvItem

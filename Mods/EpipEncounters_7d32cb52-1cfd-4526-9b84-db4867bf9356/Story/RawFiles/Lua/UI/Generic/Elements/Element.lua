@@ -1,4 +1,5 @@
 
+---@class GenericUI
 local Generic = Client.UI.Generic
 local Tooltip = Client.Tooltip
 
@@ -371,7 +372,6 @@ function _Element:SetTooltip(tooltipType, tooltip)
     end)
 end
 
----@diagnostic disable: invisible
 __Element.SetPositionRelativeToParent = Generic.ExposeFunction("SetPositionRelativeToParent")
 __Element.Move = Generic.ExposeFunction("Move")
 __Element.GetWidth = Generic.ExposeFunction("GetWidth")
@@ -379,4 +379,3 @@ __Element.GetHeight = Generic.ExposeFunction("GetHeight")
 __Element.GetRawWidth = Generic.ExposeFunction("GetRawWidth")
 __Element.GetRawHeight = Generic.ExposeFunction("GetRawHeight")
 __Element.SetMouseMoveEventEnabled = Generic.ExposeFunction("SetMouseMoveEventEnabled")
----@diagnostic enable: invisible
