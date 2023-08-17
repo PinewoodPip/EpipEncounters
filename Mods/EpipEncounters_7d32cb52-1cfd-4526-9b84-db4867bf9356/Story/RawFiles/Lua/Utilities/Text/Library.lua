@@ -283,6 +283,19 @@ function Text.AddPadding(str, minLength, paddingCharacter, direction)
     return str
 end
 
+---Replaces a plain string within text.
+---@param text string
+---@param str string
+---@param replacement string
+---@return string
+function Text.Replace(text, str, replacement)
+    local startIndex, endIndex = text:find(str, nil, true)
+    if startIndex then
+        text = text:sub(1, startIndex - 1) .. replacement .. text:sub(endIndex + 1)
+    end
+    return text
+end
+
 ---Split a string by delimiter. Source: https://stackoverflow.com/questions/1426954/split-string-in-lua
 ---@param inputstr string
 ---@param sep string

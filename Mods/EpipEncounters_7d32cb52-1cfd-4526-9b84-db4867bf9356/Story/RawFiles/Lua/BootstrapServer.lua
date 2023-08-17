@@ -78,6 +78,7 @@ local coreLibraries = {
     {
         Scripts = {
             "Utilities/Text/Library.lua",
+            "Utilities/Text/HTML.lua",
             "Utilities/Text/CommonStrings.lua",
             "Utilities/Text/Localization.lua",
         },
