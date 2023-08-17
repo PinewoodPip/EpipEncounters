@@ -429,6 +429,8 @@ end
 function Generator._GetClassName(typeInfo)
     local typeName = type(typeInfo) == "string" and typeInfo or typeInfo.TypeName
     local name, _ = string.gsub(typeName, "::", "")
+    name = name:gsub("^ecllua", "EclLua")
+    name = name:gsub("^esvlua", "EsvLua")
     name = name:sub(1, 1):upper() .. name:sub(2)
     -- Consider generic types as separate classes
     if typeName:match("<.+>") then
