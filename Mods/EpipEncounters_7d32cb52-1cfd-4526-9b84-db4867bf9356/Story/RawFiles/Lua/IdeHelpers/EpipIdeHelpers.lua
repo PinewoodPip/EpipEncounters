@@ -88,3 +88,10 @@ function TooltipData:AppendElementAfter(ele, appendAfter) end
 ---------------------------------------------
 
 ---@alias ScriptContext "Shared"|"Client"|"Server"
+
+---------------------------------------------
+-- FROM OLD ExtIdeHelpers
+---------------------------------------------
+
+---@alias StatsPropertyContext string|"Self"|"SelfOnHit"|"SelfOnEquip"|"AoE"|"Target"
+---@alias EsvGameState string|"Idle"|"Sync"|"Running"|"Unknown"|"Save"|"Uninitialized"|"LoadLevel"|"ReloadStory"|"LoadModule"|"LoadSession"|"Init"|"LoadGMCampaign"|"UnloadLevel"|"UnloadModule"|"UnloadSession"|"Disconnect"|"Installation"|"GameMasterPause"|"Exit"|"Paused"|"BuildStory"

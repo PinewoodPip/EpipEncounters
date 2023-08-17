@@ -356,6 +356,7 @@ LOAD_ORDER = {
         },
     },
     {Script = "Epip/SettingWidgets/Client.lua"},
+    "Epip/IDEAnnotations/Client.lua",
 
     -- Vanity
     {

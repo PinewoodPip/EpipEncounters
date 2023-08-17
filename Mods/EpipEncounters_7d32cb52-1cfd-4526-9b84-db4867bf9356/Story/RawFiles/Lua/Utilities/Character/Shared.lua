@@ -5,7 +5,7 @@ Character = {
     AI_UNPREFERRED_TAG = "AI_UNPREFERRED_TARGET",
     AI_IGNORED_TAG = "AI_IGNORED_TARGET",
 
-    ---@enum ItemSlot
+    ---@type table<string, ItemSlot>
     EQUIPMENT_SLOTS = {
         HELMET = "Helmet",
         BREAST = "Breast",
