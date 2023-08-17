@@ -131,6 +131,7 @@ function Generator.Generate(filename)
     IO.SaveFile("Native.json", nativeData)
 
     Generator._FunctionFixes = Ext.Utils.Include(nil, "builtin://Libs/HelpersGenerator/FunctionFixes.lua").Regular
+    Generator._FunctionOverrides = RequestScriptLoad("Epip/IDEAnnotations/Overrides/Functions.lua")
 
     Generator._NativeData = nativeData
     Generator._ExtModules = {}
@@ -325,26 +326,27 @@ local function GetFunctionData(module, type, methodName)
         data.Comment = data.Comment:gsub("\r", "<br>")
     end
 
+    -- Parse params
     if type.Params[1] then
         for i,param in ipairs(type.Params) do
             local paramName = funcData and funcData.params[i] and funcData.params[i].name or "param" .. tostring(i)
             local paramType = Generator._GetTypeName(param)
             table.insert(data.Params, {Name = paramName, Type = paramType}) -- TODO comments
         end
-
     elseif funcData then
         for i,param in ipairs(funcData.params) do
             table.insert(data.Params, {Name = funcData and funcData.params[i].name or "param" .. tostring(i), Type = Generator._GetTypeName(param.type or "")}) -- TODO comments
         end
     end
 
+    -- Parse return values
     for i,val in ipairs(type.ReturnValues) do
         data.ReturnValues[i] = {Name = "ret" .. tostring(i), Type = Generator._GetTypeName(val.TypeName)}
     end
 
     -- Apply overrides
     local moduleName = Generator._GetLocalName(Generator._GetClassName(module))
-    local moduleOverrides = Generator._FunctionFixes[moduleName]
+    local moduleOverrides = Generator._FunctionOverrides[moduleName] or Generator._FunctionFixes[moduleName]
     local funcOverrides = moduleOverrides and moduleOverrides[methodName] or nil
 
     if funcOverrides then
@@ -368,6 +370,20 @@ local function GetFunctionData(module, type, methodName)
                 }
             end
         end
+    end
+
+    -- Parse varargs
+    if type.VarargsReturn or (funcOverrides and funcOverrides.VarargReturn) then
+        table.insert(data.ReturnValues, {
+            Name = "...",
+            Type = "any", -- TODO?
+        })
+    end
+    if type.VarargParams or (funcOverrides and funcOverrides.VarargParams) then
+        table.insert(data.Params, {
+            Name = "...",
+            Type = "any", -- TODO?
+        })
     end
 
     return data
