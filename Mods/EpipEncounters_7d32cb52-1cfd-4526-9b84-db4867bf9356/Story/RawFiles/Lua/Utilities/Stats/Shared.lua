@@ -369,7 +369,7 @@ function Stats.Get(statType, id)
     local object
 
     if Stats.STATS_OBJECT_TYPES[statType] or Stats._STAT_OBJECT_CLASSES:Contains(statType) then
-        object = Ext.Stats.Get(id, nil, false, false)  
+        object = Ext.Stats.Get(id, nil, false, false)
     elseif statType == "ItemColor" then
         object = Ext.Stats.ItemColor.Get(id)
     elseif statType == "DeltaModifier" or statType == "DeltaMod" then

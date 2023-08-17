@@ -437,12 +437,12 @@ end
 ---@param item Item
 ---@return number
 function Item.GetIdentifyRequirement(item)
-    if not item.Stats then 
+    if not item.Stats then
         Item:Error("GetIdentifyRequirement", "Item has no stats; cannot get identify requirement.")
     end
 
     local level = item.Stats.Level
-    
+
     if level >= 18 then return 5 end
     if level >= 15 then return 4 end
     if level >= 11 then return 3 end
@@ -458,7 +458,7 @@ function Item.Get(identifier, isFlashHandle)
     if isFlashHandle then
         identifier = Ext.UI.DoubleToHandle(identifier)
     end
-    
+
     return Ext.Entity.GetItem(identifier)
 end
 

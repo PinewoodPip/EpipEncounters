@@ -326,7 +326,7 @@ function _OsirisDatabase:__call(...)
         return table.unpack(returnValues)
     else
         return nil
-    end 
+    end
 end
 
 ---Query a database. The first tuple will be unpacked;
@@ -344,7 +344,7 @@ function _OsirisDatabase:Get(...)
         return table.unpack(returnValues)
     else
         return nil
-    end 
+    end
 end
 
 ---Returns a list of tuples matching the query.

@@ -110,11 +110,11 @@ SettingsMenu.Hooks.GetTabEntries:Subscribe(function (ev)
                     {Type = "Setting", Module = EpicEnemies.SETTINGS_MODULE_ID, ID = "EpicEnemies_CategoryWeight_" .. category.ID,}
                 },
             }
-        
+
             for _,effectID in ipairs(category.Effects) do
                 table.insert(optionEntry.SubEntries, {Type = "Setting", Module = EpicEnemies.SETTINGS_MODULE_ID, ID = effectID})
             end
-        
+
             table.insert(option.Options, optionEntry)
         end
 
