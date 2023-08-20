@@ -3,8 +3,27 @@
 -- Displays surface ownership, and hints regarding damage scaling.
 ---------------------------------------------
 
+---@class Feature_TooltipAdjustments
 local TooltipAdjustments = Epip.GetFeature("Feature_TooltipAdjustments")
+local TSK = TooltipAdjustments.TranslatedStrings
 local TooltipLib = Client.Tooltip
+
+---------------------------------------------
+-- TSKS
+---------------------------------------------
+
+TSK.SurfaceTooltips_ScalingHint = TooltipAdjustments:RegisterTranslatedString("h6d7395dbgd11eg4fc2g8859gb3a903853b1c", {
+    Text = "Damage scales only with character level.",
+    ContextDescription = "Hint for surface tooltips",
+})
+TSK.SurfaceTooltips_OwnedBy = TooltipAdjustments:RegisterTranslatedString("h61ee7e1ag46beg4da5g9ba9g8763560995b6", {
+    Text = "Owned by %s",
+    ContextDescription = "Used in surface tooltips",
+})
+
+---------------------------------------------
+-- EVENT LISTENERS
+---------------------------------------------
 
 ---@type TooltipLib_FormattedTooltip
 local pendingSurfaceTooltip = nil
@@ -48,17 +67,17 @@ Net.RegisterListener("EPIPENCOUNTERS_ReturnSurfaceData", function(payload)
         end
 
         if groundOwner then
-            pendingSurfaceTooltip:InsertElement({Type = "Duration", Label = Text.Format("Owned by %s", {FormatArgs = {groundOwner.DisplayName}})}, 3)
+            pendingSurfaceTooltip:InsertElement({Type = "Duration", Label = Text.Format(TSK.SurfaceTooltips_OwnedBy:GetString(), {FormatArgs = {groundOwner.DisplayName}})}, 3)
         end
         if cloudOwner then
-            pendingSurfaceTooltip:InsertElement({Type = "Duration", Label = Text.Format("Owned by %s", {FormatArgs = {cloudOwner.DisplayName}})}, #pendingSurfaceTooltip.Elements)
+            pendingSurfaceTooltip:InsertElement({Type = "Duration", Label = Text.Format(TSK.SurfaceTooltips_OwnedBy:GetString(), {FormatArgs = {cloudOwner.DisplayName}})}, #pendingSurfaceTooltip.Elements)
         end
 
-        -- Also add a hint on how surface damage scales
-        if (groundOwner or cloudOwner) and dealsDamage then
+        -- Also add a hint on how surface damage scales, only for surfaces that deal damage
+        if (groundOwner or cloudOwner) and dealsDamage and EpicEncounters.IsEnabled() then
             pendingSurfaceTooltip:InsertBefore("Duration", {
                 Type = "SurfaceDescription",
-                Label = Text.Format("Damage scales only with character level.", {FontType = Text.FONTS.ITALIC, Color = Color.LARIAN.LIGHT_GRAY})
+                Label = Text.Format(TSK.SurfaceTooltips_ScalingHint:GetString(), {FontType = Text.FONTS.ITALIC, Color = Color.LARIAN.LIGHT_GRAY})
             })
         end
 
