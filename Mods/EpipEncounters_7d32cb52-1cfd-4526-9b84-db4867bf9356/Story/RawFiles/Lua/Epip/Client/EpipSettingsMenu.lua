@@ -159,6 +159,7 @@ local tabs = {
             "HotbarHotkeysText",
             "HotbarHotkeysLayout",
             "HotbarCastingGreyOut",
+            {Type = "Setting", Module = "EpipEncounters_HotbarTweaks", ID = "AllowDraggingUnlearntSkills"},
         }
     },
     ["Epip_QuickExamine"] = {
