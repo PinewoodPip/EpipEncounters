@@ -75,6 +75,16 @@ local QuickInventory = {
            Text = "Show Equipped Items",
            ContextDescription = "Filter setting name",
         },
+        Setting_ShowWares_Name = {
+            Handle = "hf97f3dfegd102g443cg8416ga0c854b499b8",
+            Text = "Show Wares",
+            ContextDescription = "Filter setting name",
+        },
+        Setting_ShowWares_Description = {
+            Handle = "h05a441a6gbe67g46adg9053g4e553bbf229c",
+            Text = "If enabled, items marked as wares will be shown.",
+            ContextDescription = "Filter setting tooltip",
+        },
         DynamicStat_Name = {
            Handle = "h4f83fd0cg8556g4826gb76cg82ec728bef2b",
            Text = "Stat Boost",

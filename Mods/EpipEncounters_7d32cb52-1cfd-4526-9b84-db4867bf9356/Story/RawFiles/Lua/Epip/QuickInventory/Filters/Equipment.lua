@@ -233,6 +233,14 @@ QuickInventory.Settings.ShowEquippedItems = QuickInventory:RegisterSetting("Show
     DefaultValue = false,
 })
 
+-- Wares filter
+QuickInventory.Settings.ShowWares = QuickInventory:RegisterSetting("ShowWares", {
+    Type = "Boolean",
+    Name = QuickInventory.TranslatedStrings.Setting_ShowWares_Name,
+    Description = QuickInventory.TranslatedStrings.Setting_ShowWares_Description,
+    DefaultValue = false,
+})
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
@@ -367,6 +375,11 @@ QuickInventory.Hooks.IsItemVisible:Subscribe(function (ev)
         if not showEquippedItems then
             visible = visible and not Item.IsEquipped(item)
         end
+
+        -- Wares filter. Only applies to equipment by design.
+        if not QuickInventory:GetSettingValue(QuickInventory.Settings.ShowWares) then
+            visible = visible and not Item.IsMarkedAsWares(item)
+        end
     end
 
     ev.Visible = visible
@@ -411,6 +424,7 @@ UI.Events.RenderSettings:Subscribe(function (ev)
         end
 
         UI.RenderSetting(QuickInventory.Settings.ShowEquippedItems)
+        UI.RenderSetting(QuickInventory.Settings.ShowWares)
 
         UI.RenderSetting(QuickInventory.Settings.DynamicStat)
     end
