@@ -30,6 +30,7 @@ local TooltipAdjustments = {
     }),
     LW_BOOST_PATTERN = "(From Lone Wolf: %+0%%)",
     STAT_ADJUSTMENT_PATTERN = "From Stat Adjustment: (%+?-?%d*%.?%d*)%%*",
+    BOOST_AP_COST_TSKHANDLE = "h228e474ag396ag4dc9g837egd8d05d15bbb2", -- "AP Cost", used in boost tooltips
 
     Settings = {
         AstrologerFix = {
@@ -77,6 +78,11 @@ local TooltipAdjustments = {
            Handle = "haabd6906gee2dg4b39ga339gf5cdf1a2ee8b",
            Text = "Tooltip Adjustments",
            ContextDescription = "Feature name",
+        },
+        Override_APCosts = {
+           Handle = "hc28e1c17g7862g402bgabc7gaab851087be4",
+           Text = "AP Costs",
+           ContextDescription = "Override for Larian string 'AP Cost' to make it plural, used in tooltips. Original handle h228e474ag396ag4dc9g837egd8d05d15bbb2",
         },
     },
 }
@@ -412,7 +418,7 @@ local function OnStatusTooltipRender(_, status, tooltip)
 end
 
 -- Make +AP Costs red, since it's a negative effect.
-Game.Tooltip.RegisterListener("Status", nil, function(char, status, tooltip)
+Game.Tooltip.RegisterListener("Status", nil, function(_, _, tooltip)
     local statusBonuses = tooltip:GetElements("StatusBonus")
     local statusMaluses = tooltip:GetElements("StatusMalus")
 
@@ -423,8 +429,9 @@ Game.Tooltip.RegisterListener("Status", nil, function(char, status, tooltip)
     end
 
     if statusBonuses then
+        local vanillaAPCostLabel = Text.GetTranslatedString(TooltipAdjustments.BOOST_AP_COST_TSKHANDLE, "AP Cost")
         for _,entry in ipairs(statusBonuses) do
-            local amount = entry.Label:match("AP Cost: (%+?%-?%d+)")
+            local amount = entry.Label:match(vanillaAPCostLabel .. ": (%+?%-?%d+)")
             if amount then
                 amount = tonumber(amount)
                 local color = Color.TOOLTIPS.MALUS
@@ -436,9 +443,10 @@ Game.Tooltip.RegisterListener("Status", nil, function(char, status, tooltip)
                     sign = ""
                 end
 
-                entry.Label = Text.Format("AP Costs: %s%s", {
+                entry.Label = Text.Format("%s: %s%s", {
                     Color = color,
                     FormatArgs = {
+                        TooltipAdjustments.TranslatedStrings.Override_APCosts:GetString(),
                         sign,
                         amount
                     }
