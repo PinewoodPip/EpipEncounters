@@ -23,14 +23,15 @@ UI._CurrentItemCount = 0
 UI._IsCursorOverUI = false
 
 UI.BACKGROUND_SIZE = V(420, 500) -- For main panel only.
-UI.SETTINGS_PANEL_SIZE = V(480, 500)
+UI.SETTINGS_PANEL_SIZE = V(500, 500)
 UI.HEADER_SIZE = V(400, 50)
 UI.SCROLLBAR_WIDTH = 10
 UI.SCROLL_LIST_AREA = UI.BACKGROUND_SIZE - V(40 + UI.SCROLLBAR_WIDTH, 140)
 UI.SCROLL_LIST_FRAME = UI.BACKGROUND_SIZE - V(40, 137)
 UI.ITEM_SIZE = V(58, 58)
 UI.ELEMENT_SPACING = 5
-UI.SETTINGS_PANEL_ELEMENT_SIZE = V(UI.SETTINGS_PANEL_SIZE[1] - 42.5, 50)
+UI.SETTINGS_PANEL_ELEMENT_SIZE = V(UI.SETTINGS_PANEL_SIZE[1] - 55, 50)
+UI.SETTINGS_PANEL_SCROLLLIST_FRAME = UI.SETTINGS_PANEL_SIZE - V(20, 150)
 UI.DRAGGABLE_AREA_SIZE = V(UI.BACKGROUND_SIZE[1] + UI.SETTINGS_PANEL_SIZE[1], 65)
 
 UI.Events = {
@@ -191,8 +192,12 @@ function UI._RenderSettingsPanel()
     UI.Background.Background:SetChildIndex(settingsPanel.Background.ID, 0)
     UI.SettingsPanel = settingsPanel
 
-    local list = settingsPanel:AddChild("List", "GenericUI_Element_VerticalList")
-    list:SetPosition(25, 80)
+    local list = settingsPanel:AddChild("List", "GenericUI_Element_ScrollList")
+    list:SetFrame(UI.SETTINGS_PANEL_SCROLLLIST_FRAME:unpack())
+    list:SetRepositionAfterAdding(false)
+    list:SetScrollbarSpacing(-50)
+    list:SetMouseWheelEnabled(true)
+    list:SetPosition(20, 80)
     UI.SettingsPanelList = list
 
     -- Item category
@@ -202,6 +207,8 @@ function UI._RenderSettingsPanel()
     UI.Events.RenderSettings:Throw({
         ItemCategory = itemCategory,
     })
+
+    list:RepositionElements()
 end
 
 ---Renders a widget to the settings panel from a setting.
