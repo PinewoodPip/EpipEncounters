@@ -153,7 +153,8 @@ local Hotbar = {
 
     Events = {
         BarPlusMinusButtonPressed = {}, ---@type Event<HotbarUI_Event_BarPlusMinusButtonPressed>
-        SlotPressed = {}, ---@type Event<HotbarUI_Event_SlotPressed>
+        SlotPressed = {}, ---@type Event<UI.Hotbar.Events.SlotEvent>
+        SlotHovered = {}, ---@type Event<UI.Hotbar.Events.SlotEvent>
         ContentDraggedToHotkey = {Legacy = false}, ---@type Event<HotbarUI_Event_ContentDraggedToHotkey>
         StateChanged = {Legacy = false}, ---@type Event<HotbarUI_Event_StateChanged>
     },
@@ -214,10 +215,10 @@ end
 ---@field BarToRemoveIndex integer
 ---@field CanRemove boolean Hookable.
 
----@class HotbarUI_Event_SlotPressed
+---@class UI.Hotbar.Events.SlotEvent
 ---@field SlotData EocSkillBarItem
 ---@field IsEnabled boolean
----@field Index integer Starts at 1.
+---@field Index integer 1-based.
 
 ---Invoked when the engine updates the vanilla action holder.
 ---@class HotbarUI_Hook_UpdateEngineActions
@@ -828,6 +829,29 @@ function Hotbar.SetPreparedSkill(char, skillID, casting)
     Hotbar.RenderSlots()
 end
 
+---Returns whether a slot is enabled.
+---Enabled slots hold currently usable objects.
+---Disabled slots appear greyed out.
+---@param index integer 1-based.
+---@return boolean
+function Hotbar.IsSlotEnabled(index)
+    return Hotbar.GetSlotHolder().slot_array[index].isEnabled
+end
+
+---Returns the slots currently being hovered.
+---@return integer?, EocSkillBarItem? --Both `nil` if no slot is being hovered. Index is 1-based.
+function Hotbar.GetHoveredSlot()
+    local index = Hotbar.GetSlotHolder().currentHLSlot
+    local slotData = nil
+    if index >= 0 then
+        slotData = Hotbar.GetSlotData(nil, index + 1)
+        index = index + 1
+    else
+        index = nil
+    end
+    return index, slotData
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
@@ -861,8 +885,15 @@ end)
 -- Listen for slots being hovered.
 Hotbar:RegisterCallListener("SlotHover", function (_, index)
     local slotHolder = Hotbar.GetSlotHolder()
+    local slotData = Hotbar.GetSlotData(nil, index + 1)
 
     slotHolder.setHighlightedSlot(index)
+
+    Hotbar.Events.SlotHovered:Throw({
+        SlotData = slotData,
+        Index = index + 1,
+        IsEnabled = Hotbar.IsSlotEnabled(index + 1),
+    })
 end)
 
 -- Listen for the UI requesting a slots update.
@@ -1276,7 +1307,7 @@ function Hotbar.GetIconForSlot(index)
     local icon
 
     if slot.Type == "Skill" then
-        local stat = Stats.Get("SkillData", slot.SkillOrStatId)
+        local stat = Stats.Get("StatsLib_StatsEntry_SkillData", slot.SkillOrStatId)
 
         if stat then
             icon = stat.Icon
