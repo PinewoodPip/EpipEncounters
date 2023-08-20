@@ -13,6 +13,7 @@ package Elements
     {
         private var customBitmap:Bitmap = null;
         private var bitmapHolder:MovieClip = null; // Ensures that the bitmap stays in the same z-order.
+        private var _alpha:Number = 1; // Alpha used by SetAlpha() if affectChildren is disabled.
 
         public function Texture()
         {
@@ -46,6 +47,27 @@ package Elements
             if (height != -1)
             {
                 this.customBitmap.height = height;
+            }
+
+            this.bitmapHolder.alpha = _alpha;
+        }
+
+        public override function SetAlpha(alpha:Number, affectChildren:Boolean = false) : *
+        {
+            if (!affectChildren)
+            {
+                this.alpha = 1;
+                this._alpha = alpha;
+            }
+            else
+            {
+                this.alpha = alpha;
+                this._alpha = 1; // Let MC alpha control the bitmap opacity.
+            }
+
+            if (this.bitmapHolder != null)
+            {
+                this.bitmapHolder.alpha = this._alpha;
             }
         }
         
