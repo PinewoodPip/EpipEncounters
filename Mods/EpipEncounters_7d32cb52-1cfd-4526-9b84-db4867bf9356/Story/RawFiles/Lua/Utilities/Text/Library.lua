@@ -87,7 +87,7 @@ end
 
 ---@class TextFormatData
 ---@field FontType TextLib_Font
----@field Size number
+---@field Size number|string "+X" and "-X" are supported for relative sizes.
 ---@field Color string
 ---@field Align FontAlign
 ---@field FormatArgs (any|TextFormatData)[]
@@ -400,11 +400,6 @@ function Text.Format(str, formatData)
         fontType = string.format(" face='%s'", formatData.FontType)
     end
 
-    local align = ""
-    if formatData.Align then
-        align = string.format(" align='%s'", formatData.Align)
-    end
-
     local color = ""
     if formatData.Color then
         color = string.format(" color='%s'", formatData.Color)
@@ -415,8 +410,18 @@ function Text.Format(str, formatData)
         size = string.format(" size='%s'", formatData.Size)
     end
 
-    if fontType ~= "" or align ~= "" or color ~= "" or size ~= "" then
-        str = string.format("<font%s%s%s%s>%s</font>", fontType, color, size, align, str)
+    if fontType ~= "" or color ~= "" or size ~= "" then
+        str = string.format("<font%s%s%s>%s</font>", fontType, color, size, str)
+    end
+
+    -- Alignment requires <p> tag.
+    if formatData.Align then
+        str = Text.HTML.Tag(str, "p", {
+            {
+                ID = "align",
+                Param = formatData.Align
+            },
+        })
     end
 
     return str
