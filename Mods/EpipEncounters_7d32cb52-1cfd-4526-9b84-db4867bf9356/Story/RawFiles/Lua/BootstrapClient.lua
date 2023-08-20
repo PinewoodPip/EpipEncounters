@@ -405,7 +405,7 @@ LOAD_ORDER = {
         Scripts = {
             "Epip/TooltipAdjustments/Client_Scrolling.lua",
             "Epip/TooltipAdjustments/Client_RuneCraftingHint.lua",
-            "Epip/TooltipAdjustments/Client_RewardGenerationWarning.lua",
+            {Script = "Epip/TooltipAdjustments/Client_RewardGenerationWarning.lua", RequiresEE = true},
             "Epip/TooltipAdjustments/Client_WeaponRangeDeltamod.lua",
             "Epip/TooltipAdjustments/Client_DamageTypeDeltamods.lua",
             "Epip/TooltipAdjustments/Client_SimpleTooltips.lua",

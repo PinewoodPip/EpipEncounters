@@ -48,16 +48,6 @@ local TooltipAdjustments = {
             }),
             DefaultValue = true,
         },
-        RewardGenerationWarning = {
-            Type = "Boolean",
-            Name = "Display quest reward deltamod generation warning",
-            Description = Text.Format("If enabled, the quest rewards screen will warn about deltamod generation only occuring afterwards.<br>%s", {
-                FormatArgs = {
-                    {Text = "Applies only to EE.", Color = Color.LARIAN.YELLOW},
-                },
-            }),
-            DefaultValue = true,
-        },
         RuneCraftingHint = {
             Type = "Boolean",
             Name = "Display rune crafting hint",
