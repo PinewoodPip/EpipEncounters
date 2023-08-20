@@ -86,13 +86,13 @@ end
 ---@alias FontAlign "center" | "right" | "left"
 
 ---@class TextFormatData
----@field FontType TextLib_Font
----@field Size number|string "+X" and "-X" are supported for relative sizes.
----@field Color string
----@field Align FontAlign
----@field FormatArgs (any|TextFormatData)[]
----@field Text? string Used for formatting strings with recursive Text.Format calls.
----@field RemovePreviousFormatting boolean Defaults to false.
+---@field FontType TextLib_Font?
+---@field Size (number|string)? "+X" and "-X" are supported for relative sizes.
+---@field Color string?
+---@field Align FontAlign?
+---@field FormatArgs (any|TextFormatData)[]?
+---@field Text string? Used for formatting strings with recursive Text.Format calls.
+---@field RemovePreviousFormatting boolean? Defaults to `false`.
 local _TextFormatData = {
     FormatArgs = {},
     RemovePreviousFormatting = false,
