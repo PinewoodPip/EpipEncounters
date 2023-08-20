@@ -49,7 +49,6 @@ function UI.Setup()
 
     UI._RenderSettingsPanel()
 
-    UI:SetPositionRelativeToViewport("center", "center")
     UI:Show()
 end
 
@@ -173,6 +172,9 @@ function UI._Initialize()
         slotGrid:SetRepositionAfterAdding(false)
         slotGrid:SetGridSize(UI.GetItemsPerRow(), -1)
         UI.ItemGrid = slotGrid
+
+        -- Only set relative position the first time the UI is used in a session.
+        UI:SetPositionRelativeToViewport("center", "center")
     end
 
     UI._Initialized = true
