@@ -23,6 +23,17 @@ local Generator = {
         ["float"] = "number",
     },
 
+    -- Maps parsed event name to real Event table index(es).
+    ---@type table<string, string|string[]>
+    EVENT_NAME_OVERRIDES = {
+        ["NetMessage"] = "NetMessageReceived",
+        ["Input"] = "InputEvent",
+        ["StatusDelete"] = {"BeforeStatusDelete", "StatusDelete"},
+        ["AiRequestSort"] = {"OnBeforeSortAiActions", "OnAfterSortAiActions"},
+        ["UICall"] = {"UIInvoke", "UICall", "AfterUIInvoke", "AfterUICall"},
+        ["EmptyEvent"] = {}, -- Do not show EmptyEvent as an event.
+    },
+
     BASIC_ALIASES = {
         ["ComponentHandle"] = "userdata",
         ["EntityHandle"] = "userdata",
@@ -136,10 +147,11 @@ function Generator.Generate(filename)
     Generator._NativeData = nativeData
     Generator._ExtModules = {}
     Generator._FieldOverrides = RequestScriptLoad("Epip/IDEAnnotations/Overrides/Fields.lua")
+    Generator._Events = {} ---@type table<string, {SourceClassName:string, Context:"lua"|"esv"|"ecl", EventName:string}>
 
     -- Header and globals
     writer:AddLine("---@meta\n")
-    writer:AddLine("Ext = {}")
+    writer:AddLine("---@class Ext\nExt = {}")
     writer:AddLine("Game = {}\n")
 
     -- Write aliases
@@ -161,6 +173,9 @@ function Generator.Generate(filename)
         end
     end
 
+    -- Write events
+    Generator._AnnotateEvents(writer)
+
     local customTypeEntries = Ext.Utils.Include(nil, "builtin://Libs/HelpersGenerator/CustomTypeEntries.lua")
     customTypeEntries.Trigger.After = nil -- Bruh
     for _,v in pairs(customTypeEntries) do
@@ -174,6 +189,64 @@ function Generator.Generate(filename)
 
     local output = tostring(writer)
     IO.SaveFile(filename, output, true)
+end
+
+---Returns the list of event names from a parsed event name.
+---@param evName string
+---@return string[]
+local function GetEventNames(evName)
+    local eventNames
+    local eventNameOverrides = Generator.EVENT_NAME_OVERRIDES[evName]
+    if eventNameOverrides then
+        if type(eventNameOverrides) == "string" then
+            eventNames = {eventNameOverrides}
+        else
+            eventNames = eventNameOverrides
+        end
+    else
+        eventNames = {evName}
+    end
+    return eventNames
+end
+
+---Annotates Extender events.
+---@param writer DocGenerator.Writer
+function Generator._AnnotateEvents(writer)
+    writer:AddLine("---@class SubscribableEvent<T>:{ (Subscribe:fun(self, callback:fun(ev:T|Event_Params), opts:Event_Options|nil, stringID:string|nil):integer), Unsubscribe:fun(self, index:integer), (Throw:fun(self, event:T|Event_Params|nil):Event_Params|T), (RemoveNodes:fun(self:Event, predicate:(fun(node:table):boolean)?))}\n") -- Extender Event table does not have some features of the Epip one (ex. unsubcribe by string ID) TODO distinguish the rest of the param types (Event_Options)
+    writer:AddLine("Ext.Events = {}")
+
+    local eventAnnotations = {} ---@type string[]
+
+    -- Add shared empty events.
+    ---@diagnostic disable-next-line: undefined-field
+    for _,eventName in ipairs(Ext._Internal._PublishedSharedEvents) do
+        local eventNames = GetEventNames(eventName)
+        for _,evName in ipairs(eventNames) do
+            if not Generator._Events[eventName] then
+                Generator._Events[eventName] = {
+                    SourceClassName = "lua::EmptyEvent",
+                    EventName = evName,
+                    Context = "lua",
+                }
+            end
+        end
+    end
+
+    for eventName,data in pairs(Generator._Events) do
+        local className = Generator._GetClassName(data.SourceClassName)
+        local eventNames = GetEventNames(eventName)
+        for _,evName in ipairs(eventNames) do
+            local contextHint = ""
+            if data.Context ~= "lua" then
+                contextHint = data.Context == "ecl" and " Client-only." or " Server-only."
+            end
+            table.insert(eventAnnotations, string.format("Ext.Events.%s = {} ---@type SubscribableEvent<%s>%s", evName, className, contextHint))
+        end
+    end
+
+    table.sort(eventAnnotations)
+    writer:AddLines(eventAnnotations)
+    writer:AddLine()
 end
 
 ---Annotates a module.
@@ -219,6 +292,20 @@ function Generator._AnnotateObject(writer, object)
 
         for name,method in pairs(object.Methods) do
             Generator._AnnotateMethod(writer, object.TypeName, name, method, object)
+        end
+    end
+
+    -- Store information about Ext.Event parameter classes.
+    if className:match("Event$") then
+        local context = object.TypeName:match("^(.-)::")
+        local eventName = object.TypeName:match("::([^:]+)Event$")
+
+        if eventName and (context == "ecl" or context == "esv" or context == "lua") and eventName ~= "Empty" then
+            Generator._Events[eventName] = {
+                SourceClassName = object.TypeName,
+                Context = context,
+                EventName = eventName,
+            }
         end
     end
 
