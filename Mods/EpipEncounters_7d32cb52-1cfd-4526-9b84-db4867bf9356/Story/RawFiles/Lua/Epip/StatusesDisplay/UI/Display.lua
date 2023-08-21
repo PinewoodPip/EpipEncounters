@@ -39,11 +39,6 @@ function Manager.Create(char)
 
     instance:_CreateUI()
 
-    GameState.Events.Tick:Subscribe(function (_)
-        ---@diagnostic disable-next-line: invisible
-        instance:_Update()
-    end, {StringID = instance.GUID}) -- TODO unsub
-
     instance.UI:Show()
 
     return instance
@@ -52,8 +47,6 @@ end
 ---Destroys the manager and its UI.
 function Manager:Destroy()
     self.UI:Destroy()
-
-    GameState.Events.Tick:Unsubscribe(self.GUID)
 end
 
 ---Creates the UI and its static components.
@@ -74,7 +67,7 @@ function Manager:_CreateUI()
 
     self.UI = ui
     self:_UpdateGridProperties()
-    self:_Update()
+    self:Update()
 end
 
 ---Updates the configuration of the grid element.
@@ -155,7 +148,7 @@ function Manager:_IsVisible()
 end
 
 ---Updates the statuses on the display.
-function Manager:_Update()
+function Manager:Update()
     local visible = self:_IsVisible()
     if visible then
         self.UI:Show()

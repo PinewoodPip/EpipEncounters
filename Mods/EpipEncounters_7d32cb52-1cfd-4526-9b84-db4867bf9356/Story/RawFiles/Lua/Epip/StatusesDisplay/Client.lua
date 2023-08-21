@@ -147,6 +147,16 @@ function StatusesDisplay.Create(char)
     local class = StatusesDisplay:GetClass("Feature_StatusesDisplay_Manager")
     local instance = class.Create(char)
 
+    -- Update the UI every tick, and destroy it if the character is removed from the party.
+    GameState.Events.Tick:Subscribe(function (_)
+        local uiChar = Character.Get(instance.CharacterHandle)
+        if uiChar.IsPlayer then
+            instance:Update()
+        else
+            StatusesDisplay.Destroy(instance)
+        end
+    end, {StringID = instance.GUID})
+
     StatusesDisplay._Displays[char.Handle] = instance
 end
 
@@ -233,11 +243,19 @@ end
 ---Destroys all status managers.
 function StatusesDisplay._Destroy()
     for _,manager in pairs(StatusesDisplay._Displays) do
-        manager:Destroy()
+        StatusesDisplay.Destroy(manager)
     end
     StatusesDisplay._Displays = {}
 
     PlayerInfo.ToggleStatuses(true)
+end
+
+---Destroys the UI for a character.
+---@param ui Feature_StatusesDisplay_Manager
+function StatusesDisplay.Destroy(ui)
+    GameState.Events.Tick:Unsubscribe(ui.GUID)
+    StatusesDisplay._Displays[ui.CharacterHandle] = nil
+    ui:Destroy()
 end
 
 ---------------------------------------------
