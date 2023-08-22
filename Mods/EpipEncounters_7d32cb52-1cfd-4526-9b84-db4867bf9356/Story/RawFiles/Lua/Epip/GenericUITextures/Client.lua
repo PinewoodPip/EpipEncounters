@@ -1396,5 +1396,6 @@ local Textures = {
             YELLOW = "PIP_UI_Icon_Flag_Yellow", -- 48x
         }
     },
+    TranslatedStrings = {},
 }
 Epip.RegisterFeature("GenericUITextures", Textures)

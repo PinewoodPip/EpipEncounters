@@ -252,7 +252,7 @@ LOAD_ORDER = {
     "Utilities/Client/Tooltip.lua",
 
     -- GenericUI
-    "Epip/GenericUITextures.lua",
+    "Epip/GenericUITextures/Client.lua", -- Should be loaded before Generic itself
     {
         Scripts = {
             "UI/Generic/Main.lua",
@@ -314,7 +314,7 @@ LOAD_ORDER = {
             "UI/Generic/Prefabs/Containers/VerticalList.lua",
         },
     },
-    -- {Script = "UI/Generic/Test.lua", WIP = true}, -- TEST!
+    "Epip/GenericUITextures/Client_TestUI.lua", -- Should be loaded after Generic itself
 
     -- Hotbar
     {
