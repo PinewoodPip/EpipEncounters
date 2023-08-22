@@ -13,7 +13,7 @@ Interfaces.RegisterInterface("I_Describable", _Describable)
 
 ---@return string
 function _Describable:GetName()
-    local name = "MISSING NAME"
+    local name = ""
 
     if type(self.Name) == "table" then
         name = self.Name:GetString()
@@ -27,7 +27,7 @@ end
 
 ---@return string
 function _Describable:GetDescription()
-    local desc = "MISSING DESCRIPTION"
+    local desc = ""
 
     if type(self.Description) == "table" then
         desc = self.Description:GetString()

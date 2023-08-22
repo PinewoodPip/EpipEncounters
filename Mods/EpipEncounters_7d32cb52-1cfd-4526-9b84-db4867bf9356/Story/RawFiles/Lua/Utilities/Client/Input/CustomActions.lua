@@ -40,14 +40,14 @@ Input.ACTION_WHITELISTED_MOUSE_INPUTS = {
 -- CLASSES
 ---------------------------------------------
 
----@class InputLib_Action : Class, I_Identifiable
----@field Name string
+---@class InputLib_Action : Class, I_Identifiable, I_Describable
 ---@field ID string
 ---@field DefaultInput1 InputLib_Action_KeyCombination?
 ---@field DefaultInput2 InputLib_Action_KeyCombination?
 ---@field DeveloperOnly boolean? If true, the action will only be usable in developer mode.
 local _Action = {}
 Interfaces.Apply(_Action, "I_Identifiable")
+Interfaces.Apply(_Action, "I_Describable")
 Input:RegisterClass("InputLib_Action", _Action)
 
 ---Creates an action.
@@ -57,12 +57,6 @@ function _Action.Create(data)
     local instance = _Action:__Create(data) ---@cast instance InputLib_Action
 
     return instance
-end
-
----Returns the name of the action.
----@return string
-function _Action:GetName()
-    return self.Name -- TODO switch to handles
 end
 
 ---@class InputLib_Action_KeyCombination
@@ -87,8 +81,8 @@ function Input.RegisterAction(id, data)
         ModTable = "InputLib",
         Type = "InputBinding",
         Context = "Client",
-        Name = data.Name,
-        Description = "TODO",
+        Name = data.Name or data.NameHandle,
+        Description = data.Description or data.DescriptionHandle,
         DefaultValue = {data.DefaultInput1, data.DefaultInput2},
         TargetActionID = id,
     })
