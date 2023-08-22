@@ -223,7 +223,7 @@ end
 ---@return TooltipLib_CustomFormattedTooltip?
 function Widgets._GetSettingTooltip(setting)
     local description = setting:GetDescription()
-    if description == "MISSING DESCRIPTION" then return nil end -- Do not create a tooltip for settings with no description.
+    if description == "" then return nil end -- Do not create a tooltip for settings with no description.
 
     ---@type TooltipLib_CustomFormattedTooltip
     local tooltip = {
