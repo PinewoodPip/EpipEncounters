@@ -27,7 +27,6 @@ local keybinds = {
     {Name = "Toggle World Item Tooltips", ID = "EpipEncounters_ToggleWorldTooltips"},
     {Name = "Quick Examine", ID = "EpipEncounters_QuickExamine", DefaultInput1 = {Keys = {"v"}}},
     {Name = "Examine", ID = "EpipEncounters_Examine"},
-    {Name = "Show B/H", ID = "EpipEncounters_Feature_BHOverheads"},
 
     -- Hotbar
     {Name = "Hotbar Toggle Extra Bars Visibility", ID = "EpipEncounters_Hotbar_ToggleVisibility"},

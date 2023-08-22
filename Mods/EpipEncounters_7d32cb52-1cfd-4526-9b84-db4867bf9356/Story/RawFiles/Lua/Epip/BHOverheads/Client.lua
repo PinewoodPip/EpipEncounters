@@ -5,8 +5,16 @@ local Input = Client.Input
 local BHOverheads = Epip.GetFeature("Feature_BHOverheads")
 BHOverheads._CurrentUIs = {} ---@type table<ComponentHandle, Features.BHOverheads.UIFactory.Instance>
 
-BHOverheads.INPUT_ACTION = "EpipEncounters_Feature_BHOverheads"
 BHOverheads.SEARCH_RADIUS = 20 -- Search radius for characters, centered on the camera position.
+
+---------------------------------------------
+-- INPUT ACTIONS
+---------------------------------------------
+
+BHOverheads.InputActions.Show = BHOverheads:RegisterInputAction("Show", {
+    Name = BHOverheads.TranslatedStrings.InputAction_Show_Name,
+    Description = BHOverheads.TranslatedStrings.InputAction_Show_Description,
+})
 
 ---------------------------------------------
 -- METHODS
@@ -89,12 +97,12 @@ end
 
 -- Show or hide the overheads when the input action is toggled.
 Input.Events.ActionExecuted:Subscribe(function (ev)
-    if ev.Action:GetID() == BHOverheads.INPUT_ACTION and BHOverheads:IsEnabled() then
+    if ev.Action == BHOverheads.InputActions.Show and BHOverheads:IsEnabled() then
         BHOverheads.Show()
     end
 end)
 Input.Events.ActionReleased:Subscribe(function (ev)
-    if ev.Action:GetID() == BHOverheads.INPUT_ACTION then
+    if ev.Action == BHOverheads.InputActions.Show then
         BHOverheads.Hide()
     end
 end)
