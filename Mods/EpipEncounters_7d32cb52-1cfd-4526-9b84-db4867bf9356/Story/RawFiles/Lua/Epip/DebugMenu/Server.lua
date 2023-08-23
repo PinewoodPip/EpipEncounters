@@ -6,14 +6,14 @@ local DebugMenu = Epip.GetFeature("Feature_DebugMenu")
 -- EVENT LISTENERS
 ---------------------------------------------
 
-Net.RegisterListener("Feature_DebugMenu_Net_FeatureStateChanged", function (payload)
-    local feature = pcall(Epip.GetFeature, payload.ModTableID, payload.FeatureID)
+Net.RegisterListener(DebugMenu.NETMSG_LIBRARY_STATE_CHANGED, function (payload)
+    local feature = pcall(Epip.GetFeature, payload.ModTableID, payload.ID)
 
     if feature then
         if payload.Property == "Debug" then
-            DebugMenu.SetDebugState(payload.ModTableID, payload.FeatureID, payload.Value)
+            DebugMenu.SetDebugState(payload.ModTableID, payload.ID, payload.Value)
         elseif payload.Property == "Enabled" then
-            DebugMenu.SetEnabledState(payload.ModTableID, payload.FeatureID, payload.Value)
+            DebugMenu.SetEnabledState(payload.ModTableID, payload.ID, payload.Value)
         end
     else
         DebugMenu:DebugLog("Received request to change state of a feature with no server table; doing nothing.")

@@ -1,8 +1,10 @@
 
 ---@class Feature_DebugMenu : Feature
 local DebugMenu = {
+    NETMSG_LIBRARY_STATE_CHANGED = "Features.ControlPanel.NetMsg.LibraryStateChanged",
+
     SAVE_FILENAME = "Epip_DebugMenu.json",
-    SAVE_VERSION = 1,
+    SAVE_VERSION = 2,
 
     ---@type table<string, table<string, DebugMenu_State>>
     State = {},
@@ -13,8 +15,8 @@ Epip.RegisterFeature("DebugMenu", DebugMenu)
 -- NET MESSAGES
 ---------------------------------------------
 
----@class Feature_DebugMenu_Net_FeatureStateChanged
----@field FeatureID string
+---@class Features.ControlPanel.NetMsg.LibraryStateChanged
+---@field ID string
 ---@field ModTableID string
 ---@field Property "Debug"|"Enabled"|"Logging"
 ---@field Value any
@@ -25,14 +27,14 @@ Epip.RegisterFeature("DebugMenu", DebugMenu)
 
 ---@class DebugMenu_State
 ---@field ModTable string
----@field FeatureID string
+---@field ID string
 ---@field Library Library
 ---@field Debug boolean
----@field LoggingLevel Feature_LoggingLevel
+---@field LoggingLevel Library_LoggingLevel
 ---@field Enabled boolean
 ---@field DateTested string
 ---@field VersionTested integer
----@field TestsPassed table<string, boolean>
+---@field TestsPassed integer
 local _State = {TEST_CHECK_DELAY = 2}
 
 ---@return Feature
@@ -42,18 +44,19 @@ function _State:GetFeature()
     if not feature then
         local s
 
-        s, feature = pcall(Epip.GetFeature, self.ModTable, self.FeatureID)
+        s, feature = pcall(Epip.GetFeature, self.ModTable, self.ID)
         if not s then feature = nil end
     end
 
-    return feature 
+    return feature
 end
 
+---Returns a table representing the state.
 ---@return table
 function _State:GetSaveData()
     return {
         ModTable = self.ModTable,
-        FeatureID = self.FeatureID,
+        ID = self.ID,
         Debug = self.Debug,
         LoggingLevel = self.LoggingLevel,
         Enabled = self.Enabled,
@@ -66,8 +69,8 @@ end
 function _State:RunTests()
     self.DateTested = Client.GetDateString()
     self.VersionTested = Epip.VERSION
-    self.TestsPassed = {}
-    
+    self.TestsPassed = 0
+
     for _,test in ipairs(self:GetFeature()._Tests) do
         test:Run()
     end
@@ -98,7 +101,7 @@ function _State:GetTestingLabel()
         if testCount > 0 then
             local passed = 0
             local ran = 0
-    
+
             if self.DateTested ~= "Never" then -- Use cached results
                 for _,result in pairs(self.TestsPassed) do
                     if result then passed = passed + 1 end
@@ -110,13 +113,13 @@ function _State:GetTestingLabel()
                     if test.State == "Passed" then
                         passed = passed + 1
                     end
-        
+
                     if test.State ~= "NotRun" then
                         ran = ran + 1
                     end
                 end
             end
-    
+
             if testCount == 0 then
                 label = Text.Format("None available", formatting)
             elseif self.DateTested == "Never" then
@@ -125,10 +128,10 @@ function _State:GetTestingLabel()
             else
                 local color = Color.LARIAN.DARK_BLUE
                 if passed < ran then color = Color.RED end
-    
+
                 formatting.Color = color
                 formatting.FormatArgs = {passed, ran, testCount, self.VersionTested}
-    
+
                 label = Text.Format("%s/%s Passed (total %s) on v%s", formatting)
             end
         end
@@ -151,14 +154,14 @@ end
 ---@param featureID string
 function DebugMenu.GetState(modTable, featureID)
     local allStates = DebugMenu.State
-    local state
+    local state ---@type DebugMenu_State
 
     if not allStates[modTable] then allStates[modTable] = {} end
 
     if allStates[modTable][featureID] then
         state = allStates[modTable][featureID]
     else -- Initialize state
-        state = {Debug = false, ShutUp = false, Enabled = true, DateTested = "Never", VersionTested = -1, TestsPassed = 0, ModTable = modTable, FeatureID = featureID} ---@type DebugMenu_State
+        state = {Debug = false, ShutUp = false, Enabled = true, DateTested = "Never", VersionTested = -1, TestsPassed = 0, ModTable = modTable, ID = featureID} ---@type DebugMenu_State
 
         if modTable == "_Client" and Ext.IsClient() then
             state.Library = Client.UI[featureID]
@@ -236,9 +239,9 @@ function DebugMenu.SetEnabledState(modTable, featureID, enabled)
     state:GetFeature().Disabled = not enabled
 
     if Ext.IsClient() then
-        Net.PostToServer("Feature_DebugMenu_Net_FeatureStateChanged", {
+        Net.PostToServer(DebugMenu.NETMSG_LIBRARY_STATE_CHANGED, {
             ModTableID = modTable,
-            FeatureID = featureID,
+            ID = featureID,
             Property = "Enabled",
             Value = enabled,
         })
@@ -255,9 +258,9 @@ function DebugMenu.SetDebugState(modTable, featureID, enabled)
     state:GetFeature().IS_DEBUG = enabled
 
     if Ext.IsClient() then
-        Net.PostToServer("Feature_DebugMenu_Net_FeatureStateChanged", {
+        Net.PostToServer(DebugMenu.NETMSG_LIBRARY_STATE_CHANGED, {
             ModTableID = modTable,
-            FeatureID = featureID,
+            ID = featureID,
             Property = "Debug",
             Value = enabled,
         })
@@ -266,7 +269,7 @@ end
 
 ---@param modTable string
 ---@param featureID string
----@param level Feature_LoggingLevel
+---@param level Library_LoggingLevel
 function DebugMenu.SetLoggingState(modTable, featureID, level)
     local state = DebugMenu.GetState(modTable, featureID)
     state.LoggingLevel = level
@@ -274,9 +277,9 @@ function DebugMenu.SetLoggingState(modTable, featureID, level)
     state:GetFeature().Logging = level
 
     if Ext.IsClient() then
-        Net.PostToServer("Feature_DebugMenu_Net_FeatureStateChanged", {
+        Net.PostToServer(DebugMenu.NETMSG_LIBRARY_STATE_CHANGED, {
             ModTableID = modTable,
-            FeatureID = featureID,
+            ID = featureID,
             Property = "Logging",
             Value = level,
         })
@@ -287,6 +290,6 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
-Ext.Events.SessionLoaded:Subscribe(function (ev)
+Ext.Events.SessionLoaded:Subscribe(function (_)
     DebugMenu.LoadConfig()
 end)

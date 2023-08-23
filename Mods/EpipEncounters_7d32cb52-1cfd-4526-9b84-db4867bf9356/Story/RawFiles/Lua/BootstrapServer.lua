@@ -227,7 +227,6 @@ LOAD_ORDER = {
 
     {ScriptSet = "Epip/DebugDisplay", Developer = true,},
     {ScriptSet = "Epip/UnlearnSkills"},
-    {ScriptSet = "Epip/DebugMenu", Developer = true,},
     {ScriptSet = "Epip/AutoUnlockInventory"},
 
     "Epip/ShowConsumableEffects.lua",
@@ -310,6 +309,9 @@ LOAD_ORDER = {
     {ScriptSet = "Epip/PunisherVoiceActing", RequiredMods = {MODS.EE_DERPY}},
 
     {Script = "Epip/PersonalScripts/Shared.lua", Developer = true},
+
+    -- Should be loaded last
+    {ScriptSet = "Epip/DebugMenu", Developer = true,},
 }
 
 Ext.Require(prefixedGUID, "Bootstrap.lua")

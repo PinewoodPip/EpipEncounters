@@ -36,12 +36,12 @@ function DebugMenu._RenderFeatures(features)
     for _,featureData in pairs(features) do
         local feature = featureData.Feature
         local mod = featureData.Source
-        local featureID = feature.MODULE_ID
+        local featureID = feature:GetFeatureID()
         local state = DebugMenu.GetState(mod, featureID)
         feature = feature ---@type Feature
 
         local labelText = Text.Format("%s", {
-            FormatArgs = {feature.MODULE_ID},
+            FormatArgs = {featureID},
             Color = Color.BLACK,
         })
         local sourceLabel = Text.Format("(%s)", {
@@ -76,13 +76,13 @@ function DebugMenu._RenderFeatures(features)
         -- Logging dropdown
         local combo = formList:AddChild("LoggingCombo", "GenericUI_Element_ComboBox")
         combo:SetOptions({
-            {ID = 0, Label = "Normal"},
-            {ID = 1, Label = "Warnings & Errors Only"},
-            {ID = 2, Label = "Errors Only"},
+            {ID = "0", Label = "Normal"},
+            {ID = "1", Label = "Warnings & Errors Only"},
+            {ID = "2", Label = "Errors Only"},
         })
-        combo:SelectOption(feature.Logging)
+        combo:SelectOption(tostring(feature.Logging))
         combo.Events.OptionSelected:Subscribe(function (ev)
-            DebugMenu.SetLoggingState(mod, featureID, ev.Option.ID)
+            DebugMenu.SetLoggingState(mod, featureID, tonumber(ev.Option.ID))
         end)
 
         -- Testing status
@@ -140,13 +140,13 @@ function DebugMenu._PopulateFeatureList()
 
     -- Setup header
     local header = FormEntry.Create(ui, "Header", list, Text.Format("Feature & Source Mod", headerFormatting), DebugMenu.FORM_ENTRY_SIZE, DebugMenu.FORM_ENTRY_LABEL_SIZE)
-    header.SELECTED_BG_ALPHA = 0 -- Do not highlight this entry upon hover
-    -- header.Label:SetType("Center") -- TODO fix
+    header.SELECTED_BG_ALPHA = 0 -- Do not highlight the header entry upon hover
+
     TextPrefab.Create(ui, "DebugHeader", header.List, Text.Format("Debug", headerFormatting), "Center", DebugMenu.CHECKBOX_SIZE)
     TextPrefab.Create(ui, "EnabledHeader", header.List, Text.Format("Enabled", headerFormatting), "Center", DebugMenu.CHECKBOX_SIZE)
     TextPrefab.Create(ui, "LoggingHeader", header.List, Text.Format("Logging", headerFormatting), "Center", DebugMenu.DROPDOWN_SIZE)
-    TextPrefab.Create(ui, "LoggingHeader", header.List, Text.Format("Test Status", headerFormatting), "Center", DebugMenu.INFO_SIZE)
-    TextPrefab.Create(ui, "LoggingHeader", header.List, Text.Format("Test", headerFormatting), "Center", DebugMenu.BUTTON_SIZE)
+    TextPrefab.Create(ui, "TestStatusHeader", header.List, Text.Format("Test Status", headerFormatting), "Center", DebugMenu.INFO_SIZE)
+    TextPrefab.Create(ui, "TestButtonHeader", header.List, Text.Format("Test", headerFormatting), "Center", DebugMenu.BUTTON_SIZE)
 
     local divider = list:AddChild("HeaderDivider", "GenericUI_Element_Divider")
     divider:SetType("Line")
@@ -179,11 +179,11 @@ function DebugMenu:__Setup()
     local uiObject = ui:GetUI()
     local bg = ui:CreateElement("BG", "GenericUI_Element_TiledBackground")
     bg:SetBackground("Note", DebugMenu.BG_SIZE:unpack())
-    -- bg:SetAsDraggableArea()
 
     local content = bg:AddChild("Content", "GenericUI_Element_ScrollList")
     content:SetSize(DebugMenu.CONTENT_SIZE:unpack())
     content:SetPositionRelativeToParent("Top", 0, 80)
+    content:SetRepositionAfterAdding(false)
     content:SetMouseWheelEnabled(true)
     content:SetElementSpacing(0)
 
@@ -191,6 +191,7 @@ function DebugMenu:__Setup()
     closeButton:SetType("Close")
     closeButton:SetPositionRelativeToParent("TopRight", -60, 60)
     closeButton.Events.Pressed:Subscribe(function (_)
+        DebugMenu.SaveConfig() -- Save on close.
         DebugMenu.UI:Hide()
     end)
 
@@ -199,7 +200,6 @@ function DebugMenu:__Setup()
 
     ui.Show = function()
         DebugMenu._PopulateFeatureList()
-    
         Client.UI._BaseUITable.Show(ui)
     end
 
@@ -207,7 +207,6 @@ function DebugMenu:__Setup()
     uiObject.SysPanelSize = DebugMenu.BG_SIZE
     ui:ExternalInterfaceCall("registerAnchorId", "PIP_DebugMenu")
     ui:ExternalInterfaceCall("setAnchor", "center", "screen", "center")
-    -- ui:SetPosition("center", "center")
 
     DebugMenu.UI:Hide()
 end

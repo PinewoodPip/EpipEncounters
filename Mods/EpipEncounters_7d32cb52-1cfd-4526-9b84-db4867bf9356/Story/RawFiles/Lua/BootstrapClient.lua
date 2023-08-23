@@ -646,9 +646,6 @@ LOAD_ORDER = {
 
     {ScriptSet = "Epip/PunisherVoiceActing", RequiredMods = {MODS.EE_DERPY}},
 
-    -- Should be loaded last
-    {ScriptSet = "Epip/DebugMenu", Developer = true,},
-
     "Epip/Client/HideIncons.lua",
 
     {ScriptSet = "Epip/AnimationCancelling"},
@@ -731,6 +728,9 @@ LOAD_ORDER = {
 
     {Script = "Epip/Client/OverlayColorsBruteForcer.lua", Developer = true},
     {Script = "Epip/PersonalScripts/Shared.lua", Developer = true},
+
+    -- Should be loaded last
+    {ScriptSet = "Epip/DebugMenu", Developer = true,},
 }
 
 Ext.Require(prefixedGUID, "Bootstrap.lua")
