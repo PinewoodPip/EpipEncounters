@@ -415,17 +415,18 @@ local function GetFunctionData(module, type, methodName)
     end
 
     -- Parse params
-    if type.Params[1] then
+    if type.Params[1] or true then -- See commented section below.
         for i,param in ipairs(type.Params) do
             local paramName = funcData and funcData.params[i] and funcData.params[i].name or "param" .. tostring(i)
             local paramType = Generator._GetTypeName(param)
             table.insert(data.Params, {Name = paramName, Type = paramType}) -- TODO comments
         end
-    elseif funcData then
-        for i,param in ipairs(funcData.params) do
-            table.insert(data.Params, {Name = funcData and funcData.params[i].name or "param" .. tostring(i), Type = Generator._GetTypeName(param.type or "")}) -- TODO comments
-        end
     end
+    -- In some cases, such as IGameObject:GetTags(), native data can contain by-ref parameters that are not used from client code.
+    -- elseif funcData then
+    --     for i,param in ipairs(funcData.params) do
+    --         table.insert(data.Params, {Name = funcData and funcData.params[i].name or "param" .. tostring(i), Type = Generator._GetTypeName(param.type or "")}) -- TODO comments
+    --     end
 
     -- Parse return values
     for i,val in ipairs(type.ReturnValues) do
