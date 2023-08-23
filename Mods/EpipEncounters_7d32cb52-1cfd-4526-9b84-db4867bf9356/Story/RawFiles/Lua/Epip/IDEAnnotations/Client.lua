@@ -177,6 +177,7 @@ function Generator.Generate(filename)
     Generator._AnnotateEvents(writer)
 
     local customTypeEntries = Ext.Utils.Include(nil, "builtin://Libs/HelpersGenerator/CustomTypeEntries.lua")
+    customTypeEntries.Ext_ClientUI.After = Text.Replace(customTypeEntries.Ext_ClientUI.After, "--- @overload fun(string:BuiltinUISWFName):integer\n", "---@class Ext.UI.TypeIDTable\n---@overload fun(id:string): integer\n") -- @overload breaks the set if used outside a class
     customTypeEntries.Trigger.After = nil -- Bruh
     for _,v in pairs(customTypeEntries) do
         if v.Before then
