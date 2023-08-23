@@ -167,6 +167,8 @@ function Section:RenderSidebar(root)
     local parent = root:AddChild("Info_Sidebar_Container", "GenericUI_Element_Empty")
     local entries = Info.GetEntries()
 
+    -- Must unsubscribe previous button listeners to avoid a leak
+    self.Events.EntrySelected:Unsubscribe("UpdateButtonFromEntrySelected")
     for _,entry in ipairs(entries) do
         self:_RenderEntry(parent, entry)
     end
@@ -202,7 +204,7 @@ function Section:_RenderEntry(root, entry, depth)
     -- Update active state when an entry is selected.
     self.Events.EntrySelected:Subscribe(function (ev)
         button:SetActivated(ev.Entry == entry)
-    end)
+    end, {StringID = "UpdateButtonFromEntrySelected"})
 
     self._TotalEntries = self._TotalEntries + 1
 
@@ -257,6 +259,6 @@ Section.Events.RenderEntryLine:Subscribe(function (ev)
     })
 
     -- Create text element
-    local text = TextPrefab.Create(Codex.UI, ev.Entry.ID, ev.Root, label, "Left", V(Section.CONTAINER_FRAME[1], 50))
+    local text = TextPrefab.Create(Codex.UI, ev.Entry.ID .. "_" .. Text.GenerateGUID(), ev.Root, label, "Left", V(Section.CONTAINER_FRAME[1], 50))
     text:SetSize(text:GetTextSize():unpack())
 end, {StringID = "DefaultImplementation"})
