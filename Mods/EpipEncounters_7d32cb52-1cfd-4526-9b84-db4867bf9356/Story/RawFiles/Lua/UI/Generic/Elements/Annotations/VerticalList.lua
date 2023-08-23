@@ -4,9 +4,6 @@
 ---@class GenericUI_Element_VerticalList : GenericUI_Element
 local VerticalList = {}
 
----Removes all elements from the container.
-function VerticalList:Clear() end
-
 ---Repositions all the elements within the container.
 ---Does not recursively reposition parented containers. TODO
 function VerticalList:RepositionElements() end

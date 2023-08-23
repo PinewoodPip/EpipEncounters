@@ -13,7 +13,15 @@ local _VerticalList = VerticalList
 -- METHODS
 ---------------------------------------------
 
-_VerticalList.Clear = Generic.ExposeFunction("Clear")
+---Removes all elements from the container.
+function VerticalList:Clear()
+    local children = self:GetChildren()
+    for i=#children,1,-1 do
+        children[i]:Destroy()
+    end
+    self:GetMovieClip().Clear() -- TODO is this necessary?
+end
+
 _VerticalList.RepositionElements = Generic.ExposeFunction("Reposition")
 _VerticalList.SetTopSpacing = Generic.ExposeFunction("SetTopSpacing")
 _VerticalList.SetElementSpacing = Generic.ExposeFunction("SetElementSpacing")

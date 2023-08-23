@@ -22,6 +22,7 @@ package arenaResult_fla
 
         public var Root:MovieClip = null;
         public var elements:Dictionary;
+        public var elementPool:Dictionary;
 
         public var capturedEvents:Dictionary;
         
@@ -32,6 +33,7 @@ package arenaResult_fla
 
             this.elements = new Dictionary();
             this.elementClasses = new Dictionary();
+            this.elementPool = new Dictionary();
             this.AddElement("Root", "Empty", "");
 
             this.capturedEvents = new Dictionary();
@@ -63,7 +65,16 @@ package arenaResult_fla
 
             // date = new Date();
             // trace(date.getTime() - startDate.getTime());
-            var mc:MovieClip = new elementClass();
+            var mc:MovieClip = this.GetPooledElement(elementType);
+            if (mc == null)
+            {
+                mc = new elementClass();
+            }
+            else
+            {
+                mc.RevertPropertiesToDefault(); // Pooled elements must have their properties reset.
+                mc.Initialize();
+            }
             // date = new Date();
             // trace(date.getTime() - startDate.getTime());
             var parent:MovieClip = this.GetElementByID(parentID);
@@ -118,6 +129,26 @@ package arenaResult_fla
 
             element.CleanUp();
             delete this.elements[element.stringID];
+            if (element.SupportsPooling())
+            {
+                if (this.elementPool[element.elementType] == null)
+                {
+                    this.elementPool[element.elementType] = new Array();
+                }
+                this.elementPool[element.elementType].push(element);
+            }
+        }
+
+        private function GetPooledElement(elementType:String) : *
+        {
+            var element:MovieClip = null;
+            var pool:Array = this.elementPool[elementType];
+            if (pool != null && pool.length > 0)
+            {
+                element = pool[0];
+                pool.splice(0, 1);
+            }
+            return element;
         }
 
         public function GetElementByID(id:String) : MovieClip

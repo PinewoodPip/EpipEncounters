@@ -23,7 +23,14 @@ package Elements
         public function Text()
         {
             super();
+            Initialize();
+        }
 
+        public override function Initialize() : *
+        {
+            super.Initialize();
+
+            // Text elements are not mouse enabled by default.
             this.SetMouseEnabled(false);
             this.SetEditable(false);
 
@@ -35,6 +42,11 @@ package Elements
         public override function get elementType() : String
         {
             return "Text";
+        }
+
+        public override function SupportsPooling() : Boolean
+        {
+            return true;
         }
 
         public override function SetMouseEnabled(enabled) : *

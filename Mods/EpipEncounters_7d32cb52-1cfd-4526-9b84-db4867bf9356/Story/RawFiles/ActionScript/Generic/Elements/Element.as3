@@ -41,7 +41,11 @@ package Elements
         public function Element()
         {
             super();
+            Initialize();
+        }
 
+        public function Initialize() : *
+        {
             this.childElements = new Dictionary();
 
             this.addEventListener(MouseEvent.MOUSE_DOWN, this.onElementMouseDown);
@@ -53,6 +57,23 @@ package Elements
             this.addEventListener(Event.REMOVED_FROM_STAGE, this.onRemovedFromStage);
 
             this._nextTweenToProperties = {};
+        }
+
+        // Revert properties to default values; relevant for pooled elements
+        // This is called by Main when a pooled element is retrieved; any newly-added
+        // setters should have their values reverted here.
+        public function RevertPropertiesToDefault()
+        {
+            this.SetPosition(0, 0);
+            this.SetScale(1, 1);
+            this.SetMouseChildren(true);
+            this.SetCenterInLists(false);
+            this.SetAlpha(1, true);
+            this.SetRotation(0);
+            this.SetVisible(true);
+            this.SetMouseEnabled(true);
+            this.SetMouseMoveEventEnabled(false);
+            this.RemoveScrollRect();
         }
 
         public function AddChildElement(mc:MovieClip) : *
@@ -115,6 +136,11 @@ package Elements
         {
             this.Log("Attempted to get elementType of base Element class!", 2);
             return "Element";
+        }
+
+        public function SupportsPooling() : Boolean
+        {
+            return false;
         }
 
         // UTILITY

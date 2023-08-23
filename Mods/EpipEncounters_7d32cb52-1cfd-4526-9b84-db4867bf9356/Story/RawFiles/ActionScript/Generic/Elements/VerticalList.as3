@@ -38,7 +38,7 @@ package Elements
         public override function OnChildRemoved(element:MovieClip) : *
         {
             delete this.childElements[element.stringID];
-            this.list.removeElement(this.list.content_array.indexOf(element));
+            this.list.removeElement(this.list.content_array.indexOf(element), false); // Do not reposition the list.
         }
 
         public function SetRepositionAfterAdding(reposition:Boolean) : *

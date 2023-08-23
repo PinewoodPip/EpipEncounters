@@ -79,6 +79,7 @@ function _Instance:DestroyElement(element)
     end
 
     root.DestroyElement(element.ID)
+    self.Elements[element.ID] = nil
 end
 
 ---@param id string
