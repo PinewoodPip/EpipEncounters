@@ -162,7 +162,7 @@ function SubscribableEvent:RemoveNodes(fun)
 	end
 end
 
-function SubscribableEvent:Unsubscribe(handlerIndex) -- TODO string ID
+function SubscribableEvent:Unsubscribe(handlerIndex) -- TODO allow unsubcribing only 1?
 	local cur = self.First
     local useStringIDs = type(handlerIndex) == "string"
 
@@ -176,11 +176,12 @@ function SubscribableEvent:Unsubscribe(handlerIndex) -- TODO string ID
         end
 
 		if shouldRemove then
-			self:RemoveNode(cur)
-			return true
+			local node = cur
+			cur = node.Next
+			self:RemoveNode(node)
+		else
+			cur = cur.Next
 		end
-
-		cur = cur.Next
 	end
 
 	return false
