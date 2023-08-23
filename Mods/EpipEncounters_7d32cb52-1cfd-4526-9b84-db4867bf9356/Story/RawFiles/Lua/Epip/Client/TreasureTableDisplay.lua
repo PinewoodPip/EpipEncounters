@@ -101,7 +101,7 @@ local _TreasureTableEntry = {
 
 ---@override
 function TTD:IsEnabled()
-    return not self.Disabled and Settings.GetSettingValue("EpipEncounters", "TreasureTableDisplay")
+    return _Feature.IsEnabled(self) and Settings.GetSettingValue("EpipEncounters", "TreasureTableDisplay")
 end
 
 ---Add a treasure table to display in the UI.

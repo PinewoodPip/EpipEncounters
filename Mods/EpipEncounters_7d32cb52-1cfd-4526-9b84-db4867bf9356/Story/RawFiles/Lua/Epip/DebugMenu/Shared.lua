@@ -199,8 +199,8 @@ function DebugMenu.LoadConfig(path)
 
                     feature.Logging = state.LoggingLevel
 
-                    if not state.Enabled then -- TODO improve
-                        feature:Disable("DebugMenu")
+                    if not state.Enabled then
+                        feature:SetEnabled("DebugMenu", false)
                     end
 
                     feature.IS_DEBUG = state.Debug
@@ -236,7 +236,7 @@ function DebugMenu.SetEnabledState(modTable, featureID, enabled)
 
     state.Enabled = enabled
 
-    state:GetFeature().Disabled = not enabled
+    state:GetFeature():SetEnabled("DebugMenu", enabled)
 
     if Ext.IsClient() then
         Net.PostToServer(DebugMenu.NETMSG_LIBRARY_STATE_CHANGED, {

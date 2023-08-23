@@ -145,7 +145,7 @@ function Epip.InitializeFeature(modTable, id, feature)
     feature.FILEPATH_OVERRIDES = feature.FILEPATH_OVERRIDES or {}
 
     if feature.DEVELOPER_ONLY and not Epip.IsDeveloperMode() then
-        feature:Disable("NotDeveloper")
+        feature:SetEnabled("NotDeveloper", false)
     end
 
     if feature:IsEnabled() then
@@ -200,9 +200,9 @@ if Ext.IsClient() then
         ui.TypeID = type
 
         if ui.INPUT_DEVICE == "Controller" and not Client.IsUsingController() then
-            ui:Disable()
+            ui:SetEnabled("WrongInputDevice", false)
         elseif ui.INPUT_DEVICE == "KeyboardMouse" and Client.IsUsingController() then
-            ui:Disable()
+            ui:SetEnabled("WrongInputDevice", false)
         end
 
         Client.UI[id] = ui

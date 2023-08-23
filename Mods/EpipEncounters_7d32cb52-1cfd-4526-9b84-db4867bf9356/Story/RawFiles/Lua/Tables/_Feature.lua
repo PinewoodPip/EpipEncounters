@@ -7,8 +7,6 @@
 ---@field _EnabledFunctor (fun():boolean)?
 ---@field Disabled boolean
 ---@field FILEPATH_OVERRIDES table<string, string>
----@field IsEnabled fun(self):boolean
----@field Disable fun(self)
 ---@field RegisterListener fun(self, event:string, handler:function)
 ---@field FireEvent fun(self, event:string, ...:any)
 ---@field RegisterHook fun(self, event:string, handler:function)
@@ -19,6 +17,7 @@
 ----@field Settings table<string, SettingsLib_Setting>
 ---@field SupportedGameStates bitfield Defaults to all. See GAME_STATES.
 ---@field InputActions table<string, InputLib_Action> ID field is auto-initialized from key and prefixed. Only used in Client context.
+---@field _DisableRequests table<string, true> Table of requests to keep the feature disabled.
 local Feature = {
     Disabled = false,
     Logging = 0,
@@ -98,6 +97,8 @@ function Feature.Create(modTable, id, feature)
     feature = Feature:__Create(feature) ---@type Feature
     feature.MODULE_ID, feature.MOD_TABLE_ID = id, modTable -- TODO remove
 
+    feature._DisableRequests = {}
+
     -- Defaults to all game states.
     feature.SupportedGameStates = feature.SupportedGameStates or Feature._GetAllSupportedGameStatesBitfield()
 
@@ -119,7 +120,7 @@ end
 ---Returns whether the feature has *not* been disabled. Use to condition your feature's logic.
 ---@return boolean
 function Feature:IsEnabled()
-    local isEnabled = not self.Disabled
+    local isEnabled = not next(self._DisableRequests)
 
     if self.SupportedGameStates ~= Feature._GetAllSupportedGameStatesBitfield() then
         local featureStates = self.SupportedGameStates
@@ -150,18 +151,13 @@ function Feature:__Setup() end
 ---Invoked on a small delay after SessionLoaded if Epip.IsDeveloperMode(true) is true and the feature is being debugged.
 function Feature:__Test() end
 
----Sets the Disabled flag.
-function Feature:Disable()
-    -- TODO fix
-    self.Disabled = true
-    if self._initialized then
-        for old,new in pairs(self.FILEPATH_OVERRIDES) do
-            self:LogError(self.NAME .. " cannot be disabled post-startup as it uses FILEPATH_OVERRIDES!")
-            break
-        end
-    else
-        self.Disabled = true
-    end
+---Requests the feature to be enabled or disabled.
+---Features are enabled by default, and stay disabled so long
+---as at there stays at least one request to disable them.
+---@param requestID string
+---@param enabled boolean
+function Feature:SetEnabled(requestID, enabled)
+    self._DisableRequests[requestID] = (not enabled) or nil
 end
 
 ---Returns the mod table of the feature.

@@ -49,7 +49,7 @@ end
 
 -- This feature is disabled if TooltipAdjustments is disabled.
 function TooltipScrolling:IsEnabled()
-    return not self.Disabled and Epip.GetFeature("EpipEncounters", "TooltipAdjustments"):IsEnabled()
+    return _Feature.IsEnabled(self) and Epip.GetFeature("EpipEncounters", "TooltipAdjustments"):IsEnabled()
 end
 
 ---------------------------------------------

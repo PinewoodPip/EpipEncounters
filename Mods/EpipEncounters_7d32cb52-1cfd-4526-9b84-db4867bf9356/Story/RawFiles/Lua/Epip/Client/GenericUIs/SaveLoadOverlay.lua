@@ -183,7 +183,7 @@ end
 -- We don't use __Setup so as to allow the setting to be toggled at any time.
 Ext.Events.SessionLoaded:Subscribe(function (_)
     if Client.IsUsingController() then
-        Overlay:Disable()
+        Overlay:SetEnabled("IsUsingController", false)
     else
         Overlay.UI = Generic.Create("PIP_Overlay")
         SetupUI()
