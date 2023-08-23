@@ -1,18 +1,13 @@
 
-function GetRuneSlots(item)
-    local itemData = Ext.GetItem(item)
+local function GetRuneSlots(item)
+    local itemData = Item.Get(item)
 
     local runeSlots = 0
-    for i,v in pairs(itemData.Stats.DynamicStats) do
+    for _,v in pairs(itemData.Stats.DynamicStats) do
         runeSlots = runeSlots + v.RuneSlots
     end
 
     return runeSlots
-end
-
-function Test()
-    Ext.Print("test2")
-    return true
 end
 
 function ItemHasMaxSockets(char, mode)
@@ -43,5 +38,3 @@ function ItemHasMaxSockets(char, mode)
     end
     return false
 end
-
-Ext.Print("Loaded Epip Encounters Lua")

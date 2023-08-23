@@ -92,7 +92,7 @@ function _State:GetTestingLabel()
     local label = Text.Format("None available", formatting)
     local feature = self:GetFeature()
 
-    if feature._Tests then
+    if feature and feature._Tests then -- UIs have no _Tests field. TODO support tests on Library as a whole?
         local testCount = #feature._Tests
 
         if testCount > 0 then

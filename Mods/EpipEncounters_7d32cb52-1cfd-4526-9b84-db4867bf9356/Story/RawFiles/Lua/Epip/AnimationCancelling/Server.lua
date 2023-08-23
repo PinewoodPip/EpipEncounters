@@ -172,8 +172,6 @@ hook:Subscribe(function (ev)
     local state = ev.State
     if state.Type == "Target" then
         ---@cast state EsvSkillStateTarget
-
-        -- Larian shrinks this list down as they fire the projectiles. Yup.
         ev.Finished = state.CastTextKeyTimeRemaining <= 0
     end
 end)

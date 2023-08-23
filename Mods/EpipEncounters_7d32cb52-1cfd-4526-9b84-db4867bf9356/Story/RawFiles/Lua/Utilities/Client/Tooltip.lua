@@ -10,6 +10,7 @@ local Tooltip = {
 
     _POSITION_OFFSET = -34,
 
+    -- Damage type IDs used in surface tooltips.
     SURFACE_DAMAGE_ELEMENT_TYPES = {
         Fire = true,
         Water = true,
