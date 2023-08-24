@@ -108,6 +108,18 @@ QuickInventory.DYNAMIC_STAT_FIELD_ALIASES = {
     ["Luck"] = Set.Create({
         "Lucky Charm",
     }),
+    ["SingleHanded"] = Set.Create({
+        "Single Wielding",
+        "Single-Wielding",
+    }),
+    ["DualWielding"] = Set.Create({
+        "Dual Wielding",
+        "Dual-Wielding",
+    }),
+    ["TwoHanded"] = Set.Create({
+        "Two Handed",
+        "Two-Handed",
+    }),
     ["PainReflection"] = Set.Create({
         "Retribution",
         "Reflect",
@@ -215,7 +227,8 @@ QuickInventory.Settings.Rarity = QuickInventory:RegisterSetting("Rarity", {
 
 QuickInventory.Settings.DynamicStat = QuickInventory:RegisterSetting("DynamicStat", {
     Type = "String",
-    Name = QuickInventory.TranslatedStrings.DynamicStat_Name,
+    Name = QuickInventory.TranslatedStrings.Setting_DynamicStat_Name,
+    Description = QuickInventory.TranslatedStrings.Setting_DynamicStat_Description,
     DefaultValue = "",
 })
 

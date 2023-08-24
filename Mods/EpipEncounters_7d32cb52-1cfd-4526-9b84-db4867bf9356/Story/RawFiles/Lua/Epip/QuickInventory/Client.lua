@@ -85,10 +85,15 @@ local QuickInventory = {
             Text = "If enabled, items marked as wares will be shown.",
             ContextDescription = "Filter setting tooltip",
         },
-        DynamicStat_Name = {
+        Setting_DynamicStat_Name = {
            Handle = "h4f83fd0cg8556g4826gb76cg82ec728bef2b",
            Text = "Stat Boost",
            ContextDescription = "Text field for filtering equipment by stat boost",
+        },
+        Setting_DynamicStat_Description = {
+           Handle = "h54323161g125cg4289gb934g2d9fc803c92c",
+           Text = "Filters items by stat boost, such as attribute or ability boosts.\nEx. 'Summoning' will show items that increase the Summoning ability. Queries need not be whole words.",
+           ContextDescription = "Stat filter text field tooltip",
         },
         ContextMenuButtonLabel = {
            Handle = "h3c90f954gcf43g4f24gab42gca440c18cdda",
