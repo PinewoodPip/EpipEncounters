@@ -103,21 +103,13 @@ package Elements
         public function SetChildIndex(childID:String, index:Number) : *
         {
             var childElement:MovieClip = this.childElements[childID];
-            for each(var value:Object in this.childElements)
-            {
-                if (value == childID)
-                {
-                    childElement = this.childElement[value]; // BUG?
-                }
-            }
-
             if (childElement == null)
             {
                 this.Log(childID + " is not a child of " + this.stringID, 2);
             }
             else
             {
-                this.setChildIndex(childElement, index);
+                childElement.parent.setChildIndex(childElement, Math.min(index, childElement.parent.numChildren - 1)); // TODO also maximize to 0? Though that's clearly a non-sensical param
             }
         }
         
