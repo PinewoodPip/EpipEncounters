@@ -27,6 +27,7 @@ _VerticalList.SetTopSpacing = Generic.ExposeFunction("SetTopSpacing")
 _VerticalList.SetElementSpacing = Generic.ExposeFunction("SetElementSpacing")
 _VerticalList.SetSideSpacing = Generic.ExposeFunction("SetSideSpacing")
 _VerticalList.SetRepositionAfterAdding = Generic.ExposeFunction("SetRepositionAfterAdding")
+_VerticalList.SortByChildIndex = Generic.ExposeFunction("SortByChildIndex")
 
 ---------------------------------------------
 -- SETUP

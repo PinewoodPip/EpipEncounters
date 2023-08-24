@@ -80,5 +80,17 @@ package Elements
         {
             this.list.positionElements();
         }
+
+        public function SortByChildIndex()
+        {
+            var arr:Array = this.list.content_array;
+            for (var i:int = 0; i < arr.length; i++)
+            {
+                var mc:MovieClip = arr[i];
+                mc.___childIndex = mc.parent.getChildIndex(mc);
+            }
+            this.list.content_array.sortOn(["___childIndex"], Array.NUMERIC)
+            this.Reposition();
+        }
     }
 }

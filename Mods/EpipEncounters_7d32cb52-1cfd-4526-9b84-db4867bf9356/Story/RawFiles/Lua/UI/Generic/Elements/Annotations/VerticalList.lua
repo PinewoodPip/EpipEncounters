@@ -24,3 +24,7 @@ function VerticalList:SetSideSpacing(spacing) end
 ---Default behaviour is to do so; disabling it offers far better performance when bulk-adding elements.
 ---@param reposition boolean
 function VerticalList:SetRepositionAfterAdding(reposition) end
+
+---Sorts the elements of the list by child index and repositions them.
+---**Order of :GetChildren() is unaffected.**
+function VerticalList:SortByChildIndex() end
