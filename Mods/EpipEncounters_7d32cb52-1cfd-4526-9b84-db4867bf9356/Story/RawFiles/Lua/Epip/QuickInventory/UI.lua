@@ -21,6 +21,7 @@ UI._Initialized = false
 UI._Slots = {} ---@type GenericUI_Prefab_HotbarSlot[] Pooling for HotbarSlots, since they are expensive to create.
 UI._CurrentItemCount = 0
 UI._IsCursorOverUI = false
+UI._SettingPrefabInstances = {} ---@type table<string, GenericUI_Prefab|GenericUI_I_Elementable> Maps setting full IDs to prefab instance.
 
 UI.BACKGROUND_SIZE = V(420, 500) -- For main panel only.
 UI.SETTINGS_PANEL_SIZE = V(500, 500)
@@ -35,7 +36,7 @@ UI.SETTINGS_PANEL_SCROLLLIST_FRAME = UI.SETTINGS_PANEL_SIZE - V(20, 150)
 UI.DRAGGABLE_AREA_SIZE = V(UI.BACKGROUND_SIZE[1] + UI.SETTINGS_PANEL_SIZE[1], 65)
 
 UI.Events = {
-    RenderSettings = SubscribableEvent:New("RenderSettings"), ---@type Event<{ItemCategory:string}>
+    RenderSettings = SubscribableEvent:New("RenderSettings"), ---@type Event<{ItemCategory:string}> Children of the list are set to invisible before invoking; you're expected to pool the setting elements. See `UI.RenderSetting()`.
 }
 
 ---------------------------------------------
@@ -72,7 +73,11 @@ function UI.RenderItems()
     for i=UI._CurrentItemCount+1,UI._GetTotalSlots(),1 do -- Hide excess slots
         local slot = UI._GetHotbarSlot(i)
 
-        slot.SlotElement:SetVisible(false)
+        if slot.SlotElement:IsVisible() then
+            slot.SlotElement:SetVisible(false)
+        else -- Exit after finding the first invisible element; performance gain is very, very minimal.
+            break
+        end
     end
     QuickInventory:AddProfilingStep("SetVisibility")
     UI.ItemGrid:RepositionElements()
@@ -118,9 +123,10 @@ end
 ---@param itemIndex integer
 ---@return GenericUI_Prefab_HotbarSlot
 function UI._GetHotbarSlot(itemIndex)
-    local grid = UI.ItemGrid
     local slot = UI._Slots[itemIndex]
     if not slot then -- Create extra slots on demand.
+        local grid = UI.ItemGrid
+
         slot = HotbarSlot.Create(UI, string.format("ItemSlot_%s", itemIndex), grid)
         slot:SetCanDrag(true, false) -- Can drag items out of the slot, without clearing the slot.
 
@@ -174,6 +180,8 @@ function UI._Initialize()
         slotGrid:SetGridSize(UI.GetItemsPerRow(), -1)
         UI.ItemGrid = slotGrid
 
+        UI._InitalizeSettingsPanel()
+
         -- Only set relative position the first time the UI is used in a session.
         UI:SetPositionRelativeToViewport("center", "center")
     end
@@ -182,45 +190,44 @@ function UI._Initialize()
 end
 
 function UI._RenderSettingsPanel()
-    -- Destroy previous settings panel
-    if UI.SettingsPanel then
-        UI.SettingsPanel:Destroy()
+    local itemCategory = QuickInventory:GetSettingValue(QuickInventory.Settings.ItemCategory)
+
+    -- Set children as invisible instead of clearing the list;
+    -- elements are intended to be pooled for performance.
+    for _,child in ipairs(UI.SettingsPanelList:GetChildren()) do
+        child:SetVisible(false)
     end
 
-    local settingsPanel = TooltipPanelPrefab.Create(UI, "Settings", UI.Background.Background, UI.SETTINGS_PANEL_SIZE, Text.Format(Text.CommonStrings.Settings:GetString(), {Size = 23}), UI.HEADER_SIZE)
-    settingsPanel.Background:SetPosition(UI.BACKGROUND_SIZE[1] - 15, 0)
-    UI.Background.Background:SetChildIndex(settingsPanel.Background.ID, 0)
-    UI.SettingsPanel = settingsPanel
-
-    local list = settingsPanel:AddChild("List", "GenericUI_Element_ScrollList")
-    list:SetFrame(UI.SETTINGS_PANEL_SCROLLLIST_FRAME:unpack())
-    list:SetRepositionAfterAdding(false)
-    list:SetScrollbarSpacing(-50)
-    list:SetMouseWheelEnabled(true)
-    list:SetPosition(20, 80)
-    UI.SettingsPanelList = list
-
-    -- Item category
+    -- Render item category setting
     UI.RenderSetting(QuickInventory.Settings.ItemCategory)
 
-    local itemCategory = QuickInventory:GetSettingValue(QuickInventory.Settings.ItemCategory)
     UI.Events.RenderSettings:Throw({
         ItemCategory = itemCategory,
     })
 
-    list:RepositionElements()
+    UI.SettingsPanelList:SortByChildIndex()
 end
 
----Renders a widget to the settings panel from a setting.
+---Renders a widget to the settings panel for a setting.
+---This method supports pooling and will return the existing prefab instance for the setting if one exists, as well as set it to visible.
 ---@param setting Features.SettingWidgets.SupportedSettingType
+---@return GenericUI_Prefab|GenericUI_I_Elementable
 function UI.RenderSetting(setting)
-    SettingWidgets.RenderSetting(UI, UI.SettingsPanelList, setting, UI.SETTINGS_PANEL_ELEMENT_SIZE, function (_)
-        if setting.Type == "String" then -- Do not re-render the whole settings panel in this case, as it causes the focus to break.
-            UI.RenderItems()
-        else
-            UI.Refresh()
-        end
-    end)
+    local instance = UI._GetPooledSettingPrefab(setting)
+    if not instance then
+        instance = SettingWidgets.RenderSetting(UI, UI.SettingsPanelList, setting, UI.SETTINGS_PANEL_ELEMENT_SIZE, function (_)
+            if setting.Type == "String" then -- Do not re-render the whole settings panel in this case, as it causes the focus to break.
+                UI.RenderItems()
+            else
+                UI.Refresh()
+            end
+        end)
+        UI._SettingPrefabInstances[setting:GetNamespacedID()] = instance
+    else
+        instance:SetVisible(true) -- Auto-set visibility.
+        UI.SettingsPanelList:SetChildIndex(instance:GetRootElement().ID, 9999) -- Place the instance at the bottom of the list; scripts expect elements to appear in order of invocation of RenderSetting().
+    end
+    return instance
 end
 
 ---Returns the amount of items that fit per row.
@@ -234,6 +241,30 @@ end
 function UI.GetItemListWidth()
     local items = UI.GetItemsPerRow()
     return items * UI.ITEM_SIZE[1] + UI.SCROLLBAR_WIDTH + (items - 1) * UI.ELEMENT_SPACING
+end
+
+---Returns the prefab instance of a setting, if one exists.
+---@see Features.QuickInventory.UI.RenderSetting
+---@param setting SettingsLib_Setting
+---@return (GenericUI_Prefab|GenericUI_I_Elementable)?
+function UI._GetPooledSettingPrefab(setting)
+    return UI._SettingPrefabInstances[setting:GetNamespacedID()]
+end
+
+---Initializes the settings panel.
+function UI._InitalizeSettingsPanel()
+    local settingsPanel = TooltipPanelPrefab.Create(UI, "Settings", UI.Background.Background, UI.SETTINGS_PANEL_SIZE, Text.Format(Text.CommonStrings.Settings:GetString(), {Size = 23}), UI.HEADER_SIZE)
+    settingsPanel.Background:SetPosition(UI.BACKGROUND_SIZE[1] - 15, 0)
+    UI.Background.Background:SetChildIndex(settingsPanel.Background.ID, 0)
+    UI.SettingsPanel = settingsPanel
+
+    local list = settingsPanel:AddChild("List", "GenericUI_Element_ScrollList")
+    list:SetFrame(UI.SETTINGS_PANEL_SCROLLLIST_FRAME:unpack())
+    list:SetRepositionAfterAdding(false)
+    list:SetScrollbarSpacing(-50)
+    list:SetMouseWheelEnabled(true)
+    list:SetPosition(20, 80)
+    UI.SettingsPanelList = list
 end
 
 ---------------------------------------------

@@ -221,6 +221,12 @@ function _Element:GetPosition()
     return mc.GetPositionX(), mc.GetPositionY()
 end
 
+---Returns whether the element is visible.
+---@return boolean
+function _Element:IsVisible()
+    return self:GetMovieClip().visible -- This would need to be changed if any overrides are ever used for SetVisible()
+end
+
 ---@param visible boolean
 function _Element:SetVisible(visible)
     self:GetMovieClip().SetVisible(visible)
