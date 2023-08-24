@@ -43,7 +43,7 @@ Epip.RegisterFeature("SettingWidgets", Widgets)
 ---@field Setting Features.SettingWidgets.SupportedSettingType
 ---@field Size Vector2 If not set by caller, defaults to `DEFAULT_SIZE`.
 ---@field ValueChangedCallback fun(value:any)? Callback for when the setting's value changes **through the widget**.
----@field Instance GenericUI_Prefab? Hookable. Defaults to `nil`.
+---@field Instance (GenericUI_Prefab|GenericUI_I_Elementable)? Hookable. Defaults to `nil`.
 
 ---------------------------------------------
 -- METHODS
@@ -56,7 +56,7 @@ Epip.RegisterFeature("SettingWidgets", Widgets)
 ---@param setting Features.SettingWidgets.SupportedSettingType
 ---@param size Vector2?
 ---@param callback fun(value:any)?
----@return GenericUI_Prefab
+---@return GenericUI_Prefab|GenericUI_I_Elementable
 function Widgets.RenderSetting(ui, parent, setting, size, callback)
     return Widgets.Hooks.RenderSetting:Throw({
         UI = ui,

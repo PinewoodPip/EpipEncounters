@@ -3,14 +3,14 @@ local Generic = Client.UI.Generic
 local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 
 ---Base class for prefabs styled as a form element.
----@class GenericUI_Prefab_FormElement : GenericUI_Prefab
+---@class GenericUI_Prefab_FormElement : GenericUI_Prefab, GenericUI_I_Elementable
 ---@field Background GenericUI_Element_TiledBackground
 ---@field Label GenericUI_Prefab_Text
 local Prefab = {
     DEFAULT_SIZE = Vector.Create(600, 50),
     LABEL_SIDE_MARGIN = 5,
 }
-Generic:RegisterClass("GenericUI_Prefab_FormElement", Prefab, {"GenericUI_Prefab"})
+Generic:RegisterClass("GenericUI_Prefab_FormElement", Prefab, {"GenericUI_Prefab", "GenericUI_I_Elementable"})
 Generic.RegisterPrefab("GenericUI_Prefab_FormElement", Prefab)
 
 ---@diagnostic disable-next-line: duplicate-doc-alias
@@ -49,11 +49,6 @@ function Prefab:__SetupBackground(parent, size)
     text:SetPositionRelativeToParent("Left", self.LABEL_SIDE_MARGIN, 0)
 end
 
----@return GenericUI_Element_TiledBackground
-function Prefab:GetRootElement()
-    return self.Background
-end
-
 ---Sets the size of the background.
 ---@param size Vector2
 function Prefab:SetBackgroundSize(size)
@@ -87,4 +82,10 @@ end
 ---@param tooltip any TODO document
 function Prefab:SetTooltip(type, tooltip)
     self:GetRootElement():SetTooltip(type, tooltip)
+end
+
+---@override
+---@return GenericUI_Element_TiledBackground
+function Prefab:GetRootElement()
+    return self.Background
 end

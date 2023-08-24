@@ -9,7 +9,7 @@ local Checkbox = {
         StateChanged = {}, ---@type Event<GenericUI_Element_StateButton_Event_StateChanged>
     }
 }
-OOP.SetMetatable(Checkbox, Generic.GetPrefab("GenericUI_Prefab_FormElement"))
+OOP.RegisterClass("GenericUI_Prefab_LabelledCheckbox", Checkbox, {"GenericUI_Prefab_FormElement"})
 Generic.RegisterPrefab("GenericUI_Prefab_LabelledCheckbox", Checkbox)
 
 ---@diagnostic disable-next-line: duplicate-doc-alias
