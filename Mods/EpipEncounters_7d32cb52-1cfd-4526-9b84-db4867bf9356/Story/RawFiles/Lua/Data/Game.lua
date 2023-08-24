@@ -322,7 +322,7 @@ Data.Game.DamageTypes = {
     },
     Corrosive = {
         Name = "Physical Armour",
-        Color = "#88A25B"
+        Color = "#797980"
     },
     Magic = {
         Name = "Magic Armour",
