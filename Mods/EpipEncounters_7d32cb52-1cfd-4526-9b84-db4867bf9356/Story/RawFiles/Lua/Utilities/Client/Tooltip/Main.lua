@@ -1,7 +1,7 @@
 
 local TextDisplay = Client.UI.TextDisplay
 
----@class TooltipLib : Feature
+---@class TooltipLib : Library
 local Tooltip = {
     nextTooltipData = nil, ---@type TooltipLib_TooltipSourceData
     _nextCustomTooltip = nil, ---@type TooltipLib_CustomFormattedTooltip
@@ -202,7 +202,7 @@ function Tooltip.ShowFormattedTooltip(ui, tooltipType, tooltip)
     local root = ui:GetRoot()
 
     if tooltipType == "Surface" then
-        local originalTbl = Game.Tooltip.ParseTooltipArray(Game.Tooltip.TableFromFlash(ui, "tooltipArray"))
+        local originalTbl = Tooltip._ParseTooltipArray(Game.Tooltip.TableFromFlash(ui, "tooltipArray"))
         local newTable = Game.Tooltip.EncodeTooltipArray(tooltip.Elements)
 
         Game.Tooltip.ReplaceTooltipArray(ui, "tooltipArray", newTable, originalTbl)
@@ -373,7 +373,7 @@ end
 ---@param fieldName string
 ---@return table
 local function ParseArray(ui, fieldName)
-    return Game.Tooltip.ParseTooltipArray(Game.Tooltip.TableFromFlash(ui, fieldName))
+    return Tooltip._ParseTooltipArray(Game.Tooltip.TableFromFlash(ui, fieldName))
 end
 
 local function HandleFormattedTooltip(ev, arrayFieldName, sourceData, tooltipData)
@@ -463,7 +463,7 @@ TextDisplay:RegisterInvokeListener("displaySurfaceText", function(ev, _, _)
 
     Tooltip.nextTooltipData = {UIType = ev.UI:GetTypeId(), Type = "Surface"}
 
-    local tbl = Game.Tooltip.ParseTooltipArray(Game.Tooltip.TableFromFlash(ui, arrayFieldName))
+    local tbl = Tooltip._ParseTooltipArray(Game.Tooltip.TableFromFlash(ui, arrayFieldName))
 
     local hook = Tooltip._SendFormattedTooltipHook(ui, "Surface", tbl, Tooltip.nextTooltipData)
 

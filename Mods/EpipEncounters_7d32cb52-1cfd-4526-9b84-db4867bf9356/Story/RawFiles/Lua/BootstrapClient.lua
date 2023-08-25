@@ -249,7 +249,13 @@ LOAD_ORDER = {
     "UI/LoadingScreen.lua",
     "UI/Skills.lua",
 
-    "Utilities/Client/Tooltip.lua",
+    -- TooltipLib
+    {
+        Scripts = {
+            "Utilities/Client/Tooltip/Main.lua",
+            "Utilities/Client/Tooltip/Parser.lua",
+        },
+    },
 
     -- GenericUI
     "Epip/GenericUITextures/Client.lua", -- Should be loaded before Generic itself
