@@ -33,7 +33,7 @@ local Warnings = {
         },
         [Mods.EPIP_ENCOUNTERS] = {
             Mods.IMPROVED_HOTBAR,
-            Mods.LEADERLIB,
+            -- Mods.LEADERLIB, -- Appears to work as of late v1066
             Mods.MULTIHOTBARS,
             Mods.CUSTOM_DAMAGE_TYPES,
         },
@@ -52,6 +52,7 @@ Epip.RegisterFeature("IncompatibleModsWarning", Warnings)
 -- METHODS
 ---------------------------------------------
 
+---Shows the next queued incompatibility message.
 function Warnings._ShowNextWarningInQueue()
     local msg = Warnings._messageQueue[1]
 
@@ -79,7 +80,7 @@ GameState.Events.GameReady:Subscribe(function (_)
                     local mod = Ext.Mod.GetModInfo(incompatibleModGUID)
                     local baseMod = Ext.Mod.GetModInfo(baseModGuid)
                     local message = string.format(Warnings.TranslatedStrings.MessageBoxBody:GetString(), mod.Name, baseMod.Name)
-            
+
                     table.insert(Warnings._messageQueue, message)
                 end
             end
@@ -95,6 +96,6 @@ end)
 -- Show the next waning queued upon one being dismissed.
 MessageBox.RegisterMessageListener(Warnings.MSG_BOX_ID, MessageBox.Events.ButtonPressed, function ()
     Timer.StartTickTimer(3, function (_)
-        Warnings._ShowNextWarningInQueue()        
+        Warnings._ShowNextWarningInQueue()
     end)
 end)
