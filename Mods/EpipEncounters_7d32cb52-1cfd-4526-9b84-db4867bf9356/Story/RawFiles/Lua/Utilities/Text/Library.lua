@@ -458,6 +458,30 @@ function Text.StripFontTags(str)
     return newStr
 end
 
+---Replaces Larian placeholders (ex. "[1]", "[2]") within str.
+---@param str string
+---@param replacement (string|string[])? Defaults to empty string. If a list is passed and it's length is shorter than the amount of placeholders, the last placeholder will be used for the remaining replacements.
+---@return string
+function Text.ReplaceLarianPlaceholders(str, replacement)
+    replacement = replacement or ""
+    local replacements
+    if type(replacement) ~= "table" then -- String overload.
+        replacements = {replacement}
+    else
+        replacements = replacement
+    end
+
+    local replacementIndex = 1
+    local placeholder = "[" .. tostring(replacementIndex) .. "]"
+    while str:find(placeholder) do
+        str = Text.Replace(str, placeholder, replacements[replacementIndex] or replacements[#replacements]) -- Use last replacement available as fallback.
+        replacementIndex = replacementIndex + 1
+        placeholder = "[" .. tostring(replacementIndex) .. "]"
+    end
+
+    return str
+end
+
 ---Shorthand for Ext.DumpExport() which does not require you to explicitly define the default options (Beautify, StringifyInternalTypes, etc.)
 ---@param obj any
 ---@param opts unknown? TODO specify type

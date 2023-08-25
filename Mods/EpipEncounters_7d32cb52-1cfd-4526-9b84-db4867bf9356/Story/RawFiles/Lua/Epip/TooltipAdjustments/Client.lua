@@ -610,54 +610,6 @@ function TooltipAdjustments.AddBaseDeltamodTierDisplay(item, tooltip)
     end
 end
 
--- Show partial AP used while hovering on the ground to move.
----@param text string
----@return string
-local function GetExpandedMovementCostText(text)
-    local shownAPCost, distance, extraText = text:match("(%d+)AP<br><font color=\"#DBDBDB\">(.+)m</font><br><font color=\"#C80030\">(.*)</font>")
-    local newText = nil
-
-    if distance and Client.Input.IsShiftPressed() then
-        local char = Client.GetCharacter()
-        local movement = Character.GetMovement(char) / 100
-        local apCost = tonumber(distance) / movement
-        local partialAP = char.RemainingMoveDistance
-        local freeMovementLabel = Text.Round(partialAP * movement, 1)
-        if apCost < 0.1 then
-            apCost = Text.Round(apCost, 2)
-        else
-            apCost = Text.Round(apCost, 1)
-        end
-
-        newText = Text.Format("%s AP (%s AP; %sm free movement remaining)<br><font color=\"#DBDBDB\">%sm</font><br><font color=\"#C80030\">%s</font>", {
-            FormatArgs = {shownAPCost, apCost, freeMovementLabel, distance, extraText}
-        })
-
-    elseif distance then -- Add a space between the amount of AP and the text anyways, cuz it's prettier that way.
-        newText = Text.Format("%s AP<br><font color=\"#DBDBDB\">%sm</font><br><font color=\"#C80030\">%s</font>", {
-            FormatArgs = {shownAPCost, distance, extraText}
-        })
-    end
-
-    return newText
-end
-
--- Keep track of the current mouse text, for instant re-rendering when shift is toggled.
-local currentMouseText = nil
-Client.Tooltip.Hooks.RenderMouseTextTooltip:Subscribe(function (ev)
-    currentMouseText = ev.Text
-
-    ev.Text = GetExpandedMovementCostText(ev.Text) or ev.Text
-end)
-Client.Input.Events.KeyStateChanged:Subscribe(function (ev)
-    if ev.InputID == "lshift" and currentMouseText then
-        Client.Tooltip.ShowMouseTextTooltip(GetExpandedMovementCostText(currentMouseText) or currentMouseText)
-    end
-end)
-Client.UI.TextDisplay.Events.TextRemoved:Subscribe(function (ev)
-    currentMouseText = nil
-end)
-
 -- Show talent IDs in Talent tooltips.
 Game.Tooltip.RegisterListener("Talent", nil, function(_, talentID, tooltip)
     if Epip.IsDeveloperMode() then
