@@ -32,7 +32,7 @@ end
 ---@param arr FlashArray
 ---@param entryTemplate (string|FlashArrayEntryTemplate|FlashArrayMultiElementEntryTemplate)[] Parameter names/templates, in order.
 ---@param multipleElementTypes boolean?
----@param forcedElementCount integer?
+---@param forcedElementCount integer? If present, should include the type ID.
 ---@param startingIndex integer? 0-based. Defaults to 0.
 ---@return table<string, any>[]
 function Flash.ParseArray(arr, entryTemplate, multipleElementTypes, forcedElementCount, startingIndex)
@@ -47,7 +47,7 @@ function Flash.ParseArray(arr, entryTemplate, multipleElementTypes, forcedElemen
         local entry = {}
         local startingIndex = 0
         local entryFlashID
-        
+
         if multipleElementTypes then
             local typeValue = arr[i]
 
@@ -58,7 +58,7 @@ function Flash.ParseArray(arr, entryTemplate, multipleElementTypes, forcedElemen
 
             entryFlashID = typeValue
         end
-        
+
         for z=1,paramCount,1 do
             local value = arr[i + z - 1 + startingIndex]
 
@@ -81,7 +81,7 @@ function Flash.ParseArray(arr, entryTemplate, multipleElementTypes, forcedElemen
             entry.EntryTypeFlashID = entryFlashID
         end
 
-        i = i + (forcedElementCount or #template)
+        i = i + (forcedElementCount or (#template + startingIndex))
 
         table.insert(entries, entry)
     end
