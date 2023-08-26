@@ -1,6 +1,6 @@
 
 ---------------------------------------------
--- Makes Region transition notifications's duration configurable, or lets you disable them entirely. Also controls item notifications appearing as well as casting notifications.
+-- Makes Region transition notifications's duration configurable, or lets you disable them entirely. Also controls item and ability shared notifications appearing as well as casting notifications.
 ---------------------------------------------
 
 local NotificationUI = Client.UI.Notification
@@ -8,7 +8,9 @@ local EnemyHealthBar = Client.UI.EnemyHealthBar
 local Hotbar = Client.UI.Hotbar
 
 ---@type Feature
-local Notifs = {}
+local Notifs = {
+    TSKHANDLE_LOREMASTER_SHARED = "h78e14d0fg27adg462cg9807gf5832c2133bd", -- "[1] shares lore with [2]"
+}
 Epip.RegisterFeature("Notifications", Notifs)
 
 ---------------------------------------------
@@ -40,8 +42,13 @@ end)
 
 -- Hide "X has shared Z stat" notifications.
 NotificationUI.Events.TextNotificationShown:Subscribe(function (ev)
-    if not ev.IsScripted and ev.Label:match(" shares ") and not Settings.GetSettingValue("Epip_Notifications", "Notification_StatSharing") then
-        ev:Prevent()
+    if not ev.IsScripted and Settings.GetSettingValue("Epip_Notifications", "Notification_StatSharing") == false then
+        local sharedLabel = Text.GetTranslatedString(Notifs.TSKHANDLE_LOREMASTER_SHARED)
+        sharedLabel = Text.ReplaceLarianPlaceholders(sharedLabel)
+
+        if ev.Label:find(sharedLabel, nil, true) then
+            ev:Prevent()
+        end
     end
 end)
 
