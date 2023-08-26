@@ -33,12 +33,6 @@ local TooltipAdjustments = {
     BOOST_AP_COST_TSKHANDLE = "h228e474ag396ag4dc9g837egd8d05d15bbb2", -- "AP Cost", used in boost tooltips
 
     Settings = {
-        AstrologerFix = {
-            Type = "Boolean",
-            Name = "Fix Astrologer's Gaze / Far Out Man range",
-            Description = "If enabled, zone and cone-type skills will display the correct range if the character has Astrologer's Gaze / Far Out Man.",
-            DefaultValue = true,
-        },
         DamageTypeDeltamods = {
             Type = "Boolean",
             Name = "Display +Elemental damage deltamods",

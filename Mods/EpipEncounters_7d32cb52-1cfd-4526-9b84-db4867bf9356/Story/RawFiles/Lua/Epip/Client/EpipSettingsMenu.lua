@@ -281,7 +281,7 @@ local tabs = {
             "WorldTooltip_MoreTooltips",
 
             CreateHeader(TooltipAdjustments.TranslatedStrings.Name),
-            {Module = "EpipEncounters_TooltipAdjustments", ID = "AstrologerFix"},
+            {Module = "EpipEncounters_TooltipAdjustments.AstrologerFix", ID = "Enabled"},
             {Module = "EpipEncounters_TooltipAdjustments", ID = "DamageTypeDeltamods"},
             {Module = "EpipEncounters_TooltipAdjustments", ID = "RewardGenerationWarning"},
             {Module = "EpipEncounters_TooltipAdjustments", ID = "RuneCraftingHint"},

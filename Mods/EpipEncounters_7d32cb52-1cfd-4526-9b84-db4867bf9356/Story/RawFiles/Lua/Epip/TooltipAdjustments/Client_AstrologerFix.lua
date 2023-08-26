@@ -4,9 +4,9 @@
 -- is affected by Astrologer's Gaze (it is not!)
 ---------------------------------------------
 
-local TooltipAdjustments = Epip.GetFeature("Feature_TooltipAdjustments")
 local Tooltip = Client.Tooltip
 
+---@type Feature
 local AstrologerFix = {
     ---@type table<string, true> Skill archetypes affected by the bug.
     AFFECTED_ARCHETYPES = {
@@ -14,13 +14,44 @@ local AstrologerFix = {
         Zone = true,
     },
     RANGE_BONUS = 200, -- Range bonus from the talent, in centimeters.
+
+    Settings = {},
+    TranslatedStrings = {
+        Setting_Enabled_Name = {
+           Handle = "h6dcae9c5gcbfcg4f06g9329gac12ad711d18",
+           Text = "Fix Astrologer's Gaze / Far Out Man range",
+           ContextDescription = "Setting name",
+        },
+        Setting_Enabled_Description = {
+           Handle = "hba6d14b0gdbb9g4b00g8036ga14b329a1960",
+           Text = "If enabled, zone and cone-type skills will display the correct range if the character has Astrologer's Gaze / Far Out Man.",
+           ContextDescription = "Setting tooltip",
+        },
+    }
 }
-Epip.RegisterFeature("TooltipAdjustments_AstrologerFix", AstrologerFix)
+Epip.RegisterFeature("TooltipAdjustments.AstrologerFix", AstrologerFix)
+
+---------------------------------------------
+-- SETTINGS
+---------------------------------------------
+
+AstrologerFix.Settings.Enabled = AstrologerFix:RegisterSetting("Enabled", {
+    Type = "Boolean",
+    Name = AstrologerFix.TranslatedStrings.Setting_Enabled_Name,
+    Description = AstrologerFix.TranslatedStrings.Setting_Enabled_Description,
+    DefaultValue = true,
+})
 
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
+---@override
+function AstrologerFix:IsEnabled()
+    return self:GetSettingValue(AstrologerFix.Settings.Enabled) == true and _Feature.IsEnabled(self)
+end
+
+---Returns whether a character and skill are affected by the bug.
 ---@param char EclCharacter
 ---@param skillData StatsLib_StatsEntry_SkillData
 ---@return boolean
@@ -36,12 +67,12 @@ end
 
 -- Listen for skill tooltips to check if they're affected.
 Tooltip.Hooks.RenderSkillTooltip:Subscribe(function (ev)
-    local skill = Stats.Get("SkillData", ev.SkillID)
+    local skill = Stats.Get("StatsLib_StatsEntry_SkillData", ev.SkillID)
     local char = Client.GetCharacter()
 
-    if TooltipAdjustments.IsAdjustmentEnabled(TooltipAdjustments.Settings.AstrologerFix) and skill and AstrologerFix.IsAffected(char, skill) and AstrologerFix:IsEnabled() then
+    if AstrologerFix:IsEnabled() and skill and AstrologerFix.IsAffected(char, skill) and AstrologerFix:IsEnabled() then
         local element = ev.Tooltip:GetFirstElement("SkillRange")
-        local range = element.Value:match("(%d+%.?%d*)m$")
+        local range = element.Value:match("(%d+%.?%d*)m$") -- TODO make usable in other languages
 
         if range then
             local newRange = tonumber(range) - AstrologerFix.RANGE_BONUS/100
