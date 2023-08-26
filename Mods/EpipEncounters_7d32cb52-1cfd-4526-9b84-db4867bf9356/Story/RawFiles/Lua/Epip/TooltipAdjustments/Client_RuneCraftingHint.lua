@@ -1,7 +1,7 @@
 
-local TooltipAdjustments = Epip.GetFeature("Feature_TooltipAdjustments")
 local TooltipLib = Client.Tooltip
 
+---@type Feature
 local RuneCraftingHint = {
     ---@type table<string, StatsLib_Rune_Material>
     RUNE_MATERIAL_STATS = {
@@ -31,12 +31,59 @@ local RuneCraftingHint = {
     --     -- Gold = "Gold",
     --     -- Pearl = "Pearl",
     -- },
+
+    Settings = {},
+    TranslatedStrings = {
+        Setting_Enabled_Name = {
+           Handle = "h2b831dbcg0141g444fg86bcg9f2224602030",
+           Text = "Display rune crafting hint",
+           ContextDescription = "Setting name",
+        },
+        Setting_Enabled_Description = {
+           Handle = "hdd0f768aged04g4450g8259g62763d810f2f",
+           Text = "If enabled, items whose only purpose is to be crafted into runes will display how to do so in their tooltip.<br>%s",
+           ContextDescription = "Setting tooltip. Param is the 'Applies only to EE' warning.",
+        },
+        Label_Header = {
+           Handle = "h562b6c73geee1g4d27gb3c3g027f92916d0a",
+           Text = "Rune crafting material<br>%s",
+           ContextDescription = "Top part of tooltip. Param is lower half ('combine with...')",
+        },
+        Label_Details = {
+           Handle = "h8ed2ccd3g2e36g48bdg98dcg3cbf09c78464",
+           Text = "Combine with Pixie Dust to create a small rune of the respective material.",
+           ContextDescription = "Second half of tooltip",
+        },
+    },
 }
+Epip.RegisterFeature("TooltipAdjustments.RuneCraftingHint", RuneCraftingHint)
+local TSK = RuneCraftingHint.TranslatedStrings
+
+---------------------------------------------
+-- SETTINGS
+---------------------------------------------
+
+RuneCraftingHint.Settings.Enabled = RuneCraftingHint:RegisterSetting("Enabled", {
+    Type = "Boolean",
+    Name = TSK.Setting_Enabled_Name,
+    Description = Text.Format(TSK.Setting_Enabled_Description:GetString(), {
+        FormatArgs = {
+            {Text = Text.CommonStrings.AppliesOnlyToEE:GetString(), Color = Color.LARIAN.YELLOW},
+        },
+    }),
+    DefaultValue = true,
+})
 
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
+---@override
+function RuneCraftingHint:IsEnabled()
+    return self:GetSettingValue(RuneCraftingHint.Settings.Enabled) == true and _Feature.IsEnabled(self)
+end
+
+---Returns whether an item is a rune crafting material.
 ---@param item EclItem
 ---@return boolean
 function RuneCraftingHint.IsRuneCraftingMaterial(item)
@@ -57,12 +104,12 @@ end
 TooltipLib.Hooks.RenderItemTooltip:Subscribe(function (ev)
     local item = ev.Item
 
-    if TooltipAdjustments.IsAdjustmentEnabled(TooltipAdjustments.Settings.RuneCraftingHint) and RuneCraftingHint.IsRuneCraftingMaterial(item) then
+    if RuneCraftingHint:IsEnabled() and RuneCraftingHint.IsRuneCraftingMaterial(item) then
         ev.Tooltip:InsertElement({
             Type = "ExtraProperties",
-            Label = Text.Format("Rune crafting material<br>%s", {
+            Label = Text.Format(TSK.Label_Header:GetString(), {
                 FormatArgs = {
-                    {Text = "Combine with Pixie Dust to create a small rune of the respective material.", Size = 16}
+                    {Text = TSK.Label_Details:GetString(), Size = 16}
                 }
             })
         })

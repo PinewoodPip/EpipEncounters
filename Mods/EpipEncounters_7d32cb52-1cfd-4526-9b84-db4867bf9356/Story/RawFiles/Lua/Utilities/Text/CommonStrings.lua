@@ -567,6 +567,10 @@ Text.CommonStrings.SourceInfuse = Text.RegisterTranslatedString({
    Handle = "h3a1d4228ga393g44d8g8588ga5a2d81ca956",
    Text = "Source Infuse",
 })
+Text.CommonStrings.AppliesOnlyToEE = Text.RegisterTranslatedString({
+    Handle = "h67f7cc80g5e7eg4e4eg85e4gb451cc2cab48",
+    Text = "Applies only to EE.",
+})
 
 ---------------------------------------------
 -- SETUP

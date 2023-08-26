@@ -284,7 +284,7 @@ local tabs = {
             {Module = "EpipEncounters_TooltipAdjustments.AstrologerFix", ID = "Enabled"},
             {Module = "EpipEncounters_TooltipAdjustments", ID = "DamageTypeDeltamods"},
             {Module = "EpipEncounters_TooltipAdjustments", ID = "RewardGenerationWarning"},
-            {Module = "EpipEncounters_TooltipAdjustments", ID = "RuneCraftingHint"},
+            {Module = "EpipEncounters_TooltipAdjustments.RuneCraftingHint", ID = "Enabled"},
             {Module = "EpipEncounters_TooltipAdjustments", ID = "SurfaceTooltips"},
             {Module = "EpipEncounters_TooltipAdjustments", ID = "WeaponRangeDeltamods"},
             {Module = "EpipEncounters_TooltipAdjustments", ID = "RemoveSetPrefixes"},

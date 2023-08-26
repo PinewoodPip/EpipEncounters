@@ -43,16 +43,6 @@ local TooltipAdjustments = {
             }),
             DefaultValue = true,
         },
-        RuneCraftingHint = {
-            Type = "Boolean",
-            Name = "Display rune crafting hint",
-            Description = Text.Format("If enabled, items whose only purpose is to be crafted into runes will display how to do so in their tooltip.<br>%s", {
-                FormatArgs = {
-                    {Text = "Applies only to EE.", Color = Color.LARIAN.YELLOW},
-                },
-            }),
-            DefaultValue = true,
-        },
         SurfaceTooltips = {
             Type = "Boolean",
             Name = "Show surface tooltip ownership and scaling",
