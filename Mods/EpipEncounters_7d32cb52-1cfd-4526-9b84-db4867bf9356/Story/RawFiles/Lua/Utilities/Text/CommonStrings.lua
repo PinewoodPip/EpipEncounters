@@ -162,6 +162,10 @@ Text.CommonStrings.Info = Text.RegisterTranslatedString({
    Handle = "h829886b0g20a7g4185gb5c8g84ac8ce1402a",
    Text = "Info",
 })
+Text.CommonStrings.Camera = Text.RegisterTranslatedString({
+    Handle = "hea4b1852geca7g46f0ga067g33ca3ec8159c",
+    Text = "Camera",
+})
 
 ---------------------------------------------
 -- BRANDING

@@ -22,6 +22,14 @@ local Menu = {
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
 
+    TranslatedStrings = {
+        MenuButton = {
+           Handle = "h41dc13afg2becg4758g8212g5e71b34df083",
+           Text = "Epip Settings",
+           ContextDescription = "Menu button text",
+        },
+    },
+
     Events = {
         RenderSetting = {}, ---@type Event<Feature_SettingsMenu_Event_RenderSetting>
         ChangesApplied = {}, ---@type Event<Feature_SettingsMenu_Event_ChangesApplied>
@@ -676,8 +684,8 @@ OptionsSettings:RegisterInvokeListener("parseBaseUpdateArray", function(ev)
     -- Don't show the button in the main menu.
     if GameState.IsInSession() then
         local root = ev.UI:GetRoot()
-    
-        root.mainMenu_mc.addOptionButton("Epip Settings", "EPIP_OpenSettingsMenu", Menu.TAB_BUTTON_ID, false)
+
+        root.mainMenu_mc.addOptionButton(Menu.TranslatedStrings.MenuButton:GetString(), "EPIP_OpenSettingsMenu", Menu.TAB_BUTTON_ID, false)
     end
 end, "After")
 

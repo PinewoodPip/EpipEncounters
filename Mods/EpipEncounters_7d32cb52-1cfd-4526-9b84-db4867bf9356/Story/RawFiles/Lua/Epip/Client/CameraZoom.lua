@@ -8,7 +8,7 @@ local CameraZoom = {
     POSITIONS_REGISTRATION_ORDER = {}, ---@type string[]
 
     SETTINGS_MODULE_ID = "Feature_CameraZoom",
-    
+
     TranslatedStrings = {
         ["h54d9066eg87bdg439fg92f9g7027970af6ca"] = {
             Text = "Camera",
@@ -310,8 +310,8 @@ local positions = {
 -- Register settings.
 SettingsMenu.RegisterTab({
     ID = CameraZoom.SETTINGS_MODULE_ID,
-    ButtonLabel = "Camera",
-    HeaderLabel = "Camera",
+    ButtonLabel = Text.CommonStrings.Camera:GetString(),
+    HeaderLabel = Text.CommonStrings.Camera:GetString(),
     Entries = { -- Position settings are dynamically generated and appended.
         {Type = "Label", Label = Text.Format(CameraZoom.TSK["h804e5cefgef0eg4351gb19cge60e92ca4297"], {Color = "7E72D6", Size = 23})},
         {Type = "Setting", Module = CameraZoom.SETTINGS_MODULE_ID, ID = "Camera_NormalModeZoomLimit"},
