@@ -647,12 +647,13 @@ function Text.GenerateLocalizationTemplate(modTable, existingTemplate)
             if templateEntry then
                 table.remove(newStrings, table.reverseLookup(newStrings, handle))
 
-                if data.ReferenceText == templateEntry.ReferenceText then
-                    template.TranslatedStrings[handle].TranslatedText = data.TranslatedText
-                else
+                -- Track outdated translations
+                if data.ReferenceText ~= templateEntry.ReferenceText then
                     table.insert(outdatedStrings, handle)
                 end
-            else
+
+                template.TranslatedStrings[handle].TranslatedText = data.TranslatedText
+            else -- Track removed strings
                 table.insert(outdatedStrings, handle)
             end
         end
