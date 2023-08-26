@@ -46,6 +46,10 @@
       "ReferenceText": "No more valid moves on the board!",
       "TranslatedText": "棋差一着, 满盘皆输"
     },
+    "h4bc543cag5f19g4e91gbb76gc3a18177874b": {
+      "ReferenceText": "Score             %s\nHigh-Score %s",
+      "TranslatedText": "分数             %s\nHigh-Score %s"
+    },
     "h54d9066eg87bdg439fg92f9g7027970af6ca": {
       "ReferenceText": "Camera",
       "TranslatedText": "镜头"
@@ -106,6 +110,10 @@
       "ReferenceText": "Restores the angle settings to default values.",
       "TranslatedText": "视角设置恢复默认值"
     },
+    "h1900a04ag7611g4d34g8975g89a0dac84c56": {
+      "ReferenceText": "Displays all Epic Encounters Artifacts.",
+      "TranslatedText": "显示所有史诗遭遇mod中的神器"
+    },
     "hc31a7649g3a59g4595gbfecg3fdc812c0c1f": {
       "ReferenceText": "Codex",
       "TranslatedText": "法典"
@@ -150,6 +158,10 @@
       "ReferenceText": "Ability School",
       "TranslatedText": "学派"
     },
+    "hce2c434eg0377g425eg82ceg3948a01e8ee4": {
+      "ReferenceText": "Accept",
+      "TranslatedText": "接受"
+    },
     "hd6db0ca4g7edag4067g9635g88ad68b24784": {
       "ReferenceText": "Active",
       "TranslatedText": "激活"
@@ -181,6 +193,10 @@
     "h37567161ge719g4466g96e1gb6fc29c40e6c": {
       "ReferenceText": "Armor Type",
       "TranslatedText": "护甲类型"
+    },
+    "h09ce9aebgd1fbg4e42gadc9gacb2ce6383f6": {
+      "ReferenceText": "Artifact",
+      "TranslatedText": "神器"
     },
     "h29f2c933gb1a3g4f4ag89d4gcca71ffeba51": {
       "ReferenceText": "Artifacts",
@@ -229,6 +245,10 @@
     "h6108a8b5gd998g4138g9ce5g12cc0695be7f": {
       "ReferenceText": "Chat",
       "TranslatedText": "聊天"
+    },
+    "h5f73023dg23f4g4b43g90e6gb2e91b6a20f1": {
+      "ReferenceText": "Clear",
+      "TranslatedText": "清空"
     },
     "ha8000c0eg67d5g4398g8890gaf8d98931d1b": {
       "ReferenceText": "Client-side",
@@ -284,7 +304,11 @@
     },
     "h905ae122g47e8g41caga162g68a68b6a88af": {
       "ReferenceText": "Disabled",
-      "TranslatedText": "禁用"
+      "TranslatedText": "已禁用"
+    },
+    "h6eb4b775gdf93g4701g92b7g0ec21ed88442": {
+      "ReferenceText": "Disintegrate",
+      "TranslatedText": "分解"
     },
     "h59386967gb899g4f18ga61bg168b8d91f04a": {
       "ReferenceText": "Elementalist",
@@ -300,7 +324,7 @@
     },
     "he58ba92dg936fg49fagac2bg61a9c20dd142": {
       "ReferenceText": "Enabled",
-      "TranslatedText": "启用"
+      "TranslatedText": "已启用"
     },
     "ha5ce3e75g6795g493bgbd94g5d7779a15deb": {
       "ReferenceText": "Equipment",
@@ -366,6 +390,18 @@
       "ReferenceText": "Jewelry",
       "TranslatedText": "珠宝"
     },
+    "h64beeb05g019ag4a0agb151g974864cc5625": {
+      "ReferenceText": "Journal",
+      "TranslatedText": "日志"
+    },
+    "hebad38dcg58c3g4a03gb44eg02833543ba38": {
+      "ReferenceText": "Keybinds",
+      "TranslatedText": "按键绑定"
+    },
+    "hae4f0f05geeb8g4aaagabc1gb990717dd33e": {
+      "ReferenceText": "Keyword",
+      "TranslatedText": "关键词"
+    },
     "h7e55ac61g269fg4f0dgabf9g06cbe52d0d22": {
       "ReferenceText": "Knife",
       "TranslatedText": "小刀"
@@ -381,6 +417,18 @@
     "h16088a37gd5b2g4bf3g9f7fgc3477eda6c4d": {
       "ReferenceText": "Leggings",
       "TranslatedText": "绑腿"
+    },
+    "h7d163e38ga9d5g410fg814agcafb2e2844ec": {
+      "ReferenceText": "Level %d+",
+      "TranslatedText": "等级 %d+"
+    },
+    "h45ce9d99gf8b6g4d3dgb6dagdbc9c03d3287": {
+      "ReferenceText": "Level %d-%d",
+      "TranslatedText": "等级 %d-%d"
+    },
+    "h6ac3a705g41f6g43d9g9d45ge53900932b94": {
+      "ReferenceText": "Meditate",
+      "TranslatedText": "冥想"
     },
     "h20175646g1124g48cag88ceg0b909cd717cd": {
       "ReferenceText": "Misc.",
@@ -462,6 +510,10 @@
       "ReferenceText": "Pyrokinetic",
       "TranslatedText": "烈火学派"
     },
+    "hce1fce1ega375g4e85g8adcg22da632e1097": {
+      "ReferenceText": "Rarity",
+      "TranslatedText": "稀有度"
+    },
     "h8a290a77g93c2g4821g8019gc74551cb306a": {
       "ReferenceText": "Reactions",
       "TranslatedText": "反应"
@@ -506,6 +558,10 @@
       "ReferenceText": "Skills",
       "TranslatedText": "技能"
     },
+    "h3a1d4228ga393g44d8g8588ga5a2d81ca956": {
+      "ReferenceText": "Source Infuse",
+      "TranslatedText": "秘源注入"
+    },
     "hee5bca62g5b34g4846g92fdgdaafaa1a5625": {
       "ReferenceText": "Sourcery",
       "TranslatedText": "秘源"
@@ -545,6 +601,10 @@
     "haf5c4d50gd6c7g42f6g8ca3g43f30e6385d1": {
       "ReferenceText": "Vitals",
       "TranslatedText": "核心"
+    },
+    "h921878e4ge51ag4c8bg9485g0eb1e2f211fb": {
+      "ReferenceText": "Volatile Armor",
+      "TranslatedText": "不稳定的盔甲"
     },
     "h1fbb9977g36ffg4bc6g80f4gb3ce632a38f2": {
       "ReferenceText": "Voracity",
@@ -761,6 +821,10 @@
     "he1539138g972fg4dffg9026gb1624ae59da1": {
       "ReferenceText": "Save/Load UI",
       "TranslatedText": "保存/载入界面"
+    },
+    "h98c83d5fgd30dg41f6g825ag14707c6db182": {
+      "ReferenceText": "Simplified Chinese translation by Ainsky",
+      "TranslatedText": "简体中文翻译: Ainsky"
     },
     "h4a3e28fag3595g4753gb507g4423068aeda8": {
       "ReferenceText": "Some options may require a reload for changes to apply.",
@@ -982,9 +1046,17 @@
       "ReferenceText": "If enabled, Battered and Harried stacks will be shown beside player portraits on the left interface.",
       "TranslatedText": "启用后, 玩家角色肖像左侧会显示重创和蹂躏层数"
     },
+    "ha1146687g9261g49d4gad63g0269559fce2d": {
+      "ReferenceText": "If enabled, chairs and ladders will show world tooltips. Requires \"Enable tooltips for all items\" to be enabled, as these do not have tooltips by default.",
+      "TranslatedText": "启用后, 环境提示中会显示椅子和梯子. 需要启用 '显示所有物品' , 因为默认不会显示这类物品"
+    },
     "hae703884g68c4g44d1gb1d2g211f87e7309c": {
       "ReferenceText": "If enabled, clicking world tooltips will open containers rather than picking them up.",
       "TranslatedText": "启用后, 点击环境提示会打开容器而不是捡起来"
+    },
+    "h868a6168gd10eg4340gb5f4gb35dc338c453": {
+      "ReferenceText": "If enabled, doors will show world tooltips. Requires \"Enable tooltips for all items\" to be enabled, as these do not have tooltips by default.",
+      "TranslatedText": "开启后, 环境提示中会显示门. 需要启用 '显示所有物品' , 因为默认不会显示这类物品"
     },
     "h0023bed4gd590g4375g80dcgf1e135f30b1e": {
       "ReferenceText": "If enabled, items with no use actions will show world tooltips.",
@@ -1214,6 +1286,14 @@
       "ReferenceText": "Engrave Item",
       "TranslatedText": "物品铭刻"
     },
+    "ha314a4bag7349g4ec0g9e7eg122821cef234": {
+      "ReferenceText": "Bedroll Rest",
+      "TranslatedText": "睡袋"
+    },
+    "hd15285dag87d6g450cg8f17gd663d87a474e": {
+      "ReferenceText": "Chain/Unchain",
+      "TranslatedText": "全队加锁/解锁"
+    },
     "hb4ca31ecge2ecg44faga2dbg1e1c98c49d30": {
       "ReferenceText": "Columns",
       "TranslatedText": "列"
@@ -1258,9 +1338,21 @@
       "ReferenceText": "Mod '%s' is incompatible with '%s' and it is not recommended to use them together.",
       "TranslatedText": "Mod '%s' 与 '%s' 冲突, 不推荐一起使用"
     },
+    "h40211dabgcdfdg4c44gab1fgec11d398b801": {
+      "ReferenceText": "Bind '%s'",
+      "TranslatedText": "绑定 '%s'"
+    },
+    "he0a23e3cgbf9cg4f6eg8aecg454ee29fe9d7": {
+      "ReferenceText": "Press a key combination...",
+      "TranslatedText": "按一个组合键"
+    },
     "hc53e69e8ge732g435dg84dcgfb0541f33326": {
       "ReferenceText": "Dismantle All",
       "TranslatedText": "全部取消"
+    },
+    "h11ffdfdbg98d0g41afgb4e4g7242c71f6a2d": {
+      "ReferenceText": "Respec",
+      "TranslatedText": "角色重置"
     },
     "ha15ba540g2da4g4056g8174gcd25a3b1d343": {
       "ReferenceText": "Allows examining dead characters.",
@@ -1310,9 +1402,21 @@
       "ReferenceText": "Close UI after using an item",
       "TranslatedText": "使用物品后关闭页面"
     },
+    "h14aad639gb9c4g456bgb7fcg48e9cd5fef17": {
+      "ReferenceText": "Close upon world interaction",
+      "TranslatedText": "世界交互时关闭页面"
+    },
     "hb29270e7g6dc8g44c0g9391g21b25965aea6": {
       "ReferenceText": "Consumable Type",
       "TranslatedText": "消耗品类型"
+    },
+    "h8b035113g39eag49e6gae13g9a1de5375471": {
+      "ReferenceText": "If enabled, the UI will be closed if you click anything in the world.",
+      "TranslatedText": "启用后, 如果在游戏世界任意点击, 会关闭页面"
+    },
+    "h8de93e20gae0dg45cfg9695g478ba659f71a": {
+      "ReferenceText": "If enabled, the UI will close after using an item.\n\nYou can hold shift while clicking an item to temporarily invert this setting.",
+      "TranslatedText": "启用后, 使用物品后会关闭页面"
     },
     "h87e9e867gfd89g458eg850fga1129b558d59": {
       "ReferenceText": "Item Category",
@@ -1394,6 +1498,22 @@
       "ReferenceText": "Statuses in this list will be filtered out and not shown in the status bar. Holding shift temporarily disables this filter.",
       "TranslatedText": "该列表的状态会被过滤掉, 不会显示在状态栏上. 按住shift可以暂时禁用过滤"
     },
+    "h37cf1748g9dafg4d2ag9744g00e75e764ee5": {
+      "ReferenceText": "+%s%% Weapon %s Damage",
+      "TranslatedText": "附加%s%% 武器 %s 伤害"
+    },
+    "h35bb3fefg60e1g4498gba12g4b44112b6239": {
+      "ReferenceText": "Applied by %s",
+      "TranslatedText": "来自 %s"
+    },
+    "h688e725agb3f5g4adega349g0df981cfab97": {
+      "ReferenceText": "From item: %s",
+      "TranslatedText": "来自物品 %s"
+    },
+    "h2095b033g942eg400agb596g45d9ba3294c7": {
+      "ReferenceText": "If enabled, status tooltips will show the name of the character that applied the status, if any. Also allows you to click statuses to center the camera on the source character.",
+      "TranslatedText": "启用后, 状态提示会显示来源角色的名字. 如果点击状态, 镜头会移动到来源角色上"
+    },
     "h5e7095b6ga182g4dc0gadfbg198413b93310": {
       "ReferenceText": "Remove 'Set :' Prefixes",
       "TranslatedText": "删除前缀'Set :'"
@@ -1401,6 +1521,10 @@
     "h979a8059g2ea7g436fg863bgf6b008ad3072": {
       "ReferenceText": "Removes the redundant 'Set :' prefix that appears in deltamod names and rune effects.",
       "TranslatedText": "删除出现在装备增强和符文效果中的冗余前缀'Set :'"
+    },
+    "h0ef05becgc584g447agaa9cg797786d46dcf": {
+      "ReferenceText": "Show status source",
+      "TranslatedText": "显示状态来源"
     },
     "haabd6906gee2dg4b39ga339gf5cdf1a2ee8b": {
       "ReferenceText": "Tooltip Adjustments",

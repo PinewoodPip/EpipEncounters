@@ -46,6 +46,10 @@
       "ReferenceText": "No more valid moves on the board!",
       "TranslatedText": "Não há mais movimentos válidos no tabuleiro!"
     },
+    "h4bc543cag5f19g4e91gbb76gc3a18177874b": {
+      "ReferenceText": "Score             %s\nHigh-Score %s",
+      "TranslatedText": "Очки            %s\nHigh-Score %s"
+    },
     "h54d9066eg87bdg439fg92f9g7027970af6ca": {
       "ReferenceText": "Camera",
       "TranslatedText": "Camera"
@@ -974,9 +978,17 @@
       "ReferenceText": "If enabled, Battered and Harried stacks will be shown beside player portraits on the left interface.",
       "TranslatedText": "Se ativado, os Stacks de Espancado e Atordoado serão mostradas ao lado dos retratos dos jogadores na interface esquerda."
     },
+    "ha1146687g9261g49d4gad63g0269559fce2d": {
+      "ReferenceText": "If enabled, chairs and ladders will show world tooltips. Requires \"Enable tooltips for all items\" to be enabled, as these do not have tooltips by default.",
+      "TranslatedText": "Se ativado, cadeiras e escadas mostrarão dicas do mundo. Requer que a opção \"Mostrar mais itens\" esteja habilitada, pois eles não possuem dicas por padrão."
+    },
     "hae703884g68c4g44d1gb1d2g211f87e7309c": {
       "ReferenceText": "If enabled, clicking world tooltips will open containers rather than picking them up.",
       "TranslatedText": "Se ativado, Clicar na Dica de um Container Ira abri-lo ao inves de Guardar"
+    },
+    "h868a6168gd10eg4340gb5f4gb35dc338c453": {
+      "ReferenceText": "If enabled, doors will show world tooltips. Requires \"Enable tooltips for all items\" to be enabled, as these do not have tooltips by default.",
+      "TranslatedText": "Se ativado, as portas mostrarão dicas do mundo. Requer que a opção \"Mostrar mais itens\" esteja habilitada, pois eles não possuem dicas por padrão."
     },
     "h0023bed4gd590g4375g80dcgf1e135f30b1e": {
       "ReferenceText": "If enabled, items with no use actions will show world tooltips.",

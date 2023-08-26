@@ -48,7 +48,7 @@
     },
     "h4bc543cag5f19g4e91gbb76gc3a18177874b": {
       "ReferenceText": "Score             %s\nHigh-Score %s",
-      "TranslatedText": "Очки            %s High-Score %s"
+      "TranslatedText": "Очки             %s\nHigh-Score %s"
     },
     "h54d9066eg87bdg439fg92f9g7027970af6ca": {
       "ReferenceText": "Camera",
@@ -110,6 +110,10 @@
       "ReferenceText": "Restores the angle settings to default values.",
       "TranslatedText": "Восстановить значение угла по умолчанию."
     },
+    "h1900a04ag7611g4d34g8975g89a0dac84c56": {
+      "ReferenceText": "Displays all Epic Encounters Artifacts.",
+      "TranslatedText": "Отображает все Артефакты Epic Encounters"
+    },
     "hc31a7649g3a59g4595gbfecg3fdc812c0c1f": {
       "ReferenceText": "Codex",
       "TranslatedText": "Кодекс"
@@ -154,6 +158,10 @@
       "ReferenceText": "Ability School",
       "TranslatedText": "Навык"
     },
+    "hce2c434eg0377g425eg82ceg3948a01e8ee4": {
+      "ReferenceText": "Accept",
+      "TranslatedText": "Принять"
+    },
     "hd6db0ca4g7edag4067g9635g88ad68b24784": {
       "ReferenceText": "Active",
       "TranslatedText": "Активно"
@@ -185,6 +193,10 @@
     "h37567161ge719g4466g96e1gb6fc29c40e6c": {
       "ReferenceText": "Armor Type",
       "TranslatedText": "Тип брони"
+    },
+    "h09ce9aebgd1fbg4e42gadc9gacb2ce6383f6": {
+      "ReferenceText": "Artifact",
+      "TranslatedText": "Артефакт"
     },
     "h29f2c933gb1a3g4f4ag89d4gcca71ffeba51": {
       "ReferenceText": "Artifacts",
@@ -233,6 +245,10 @@
     "h6108a8b5gd998g4138g9ce5g12cc0695be7f": {
       "ReferenceText": "Chat",
       "TranslatedText": "Чат"
+    },
+    "h5f73023dg23f4g4b43g90e6gb2e91b6a20f1": {
+      "ReferenceText": "Clear",
+      "TranslatedText": "Очистить"
     },
     "ha8000c0eg67d5g4398g8890gaf8d98931d1b": {
       "ReferenceText": "Client-side",
@@ -289,6 +305,10 @@
     "h905ae122g47e8g41caga162g68a68b6a88af": {
       "ReferenceText": "Disabled",
       "TranslatedText": "Отключено"
+    },
+    "h6eb4b775gdf93g4701g92b7g0ec21ed88442": {
+      "ReferenceText": "Disintegrate",
+      "TranslatedText": "Disintegrate"
     },
     "h59386967gb899g4f18ga61bg168b8d91f04a": {
       "ReferenceText": "Elementalist",
@@ -374,6 +394,18 @@
       "ReferenceText": "Jewelry",
       "TranslatedText": "Украшения"
     },
+    "h64beeb05g019ag4a0agb151g974864cc5625": {
+      "ReferenceText": "Journal",
+      "TranslatedText": "Дневник"
+    },
+    "hebad38dcg58c3g4a03gb44eg02833543ba38": {
+      "ReferenceText": "Keybinds",
+      "TranslatedText": "Клавиши"
+    },
+    "hae4f0f05geeb8g4aaagabc1gb990717dd33e": {
+      "ReferenceText": "Keyword",
+      "TranslatedText": "Keyword"
+    },
     "h7e55ac61g269fg4f0dgabf9g06cbe52d0d22": {
       "ReferenceText": "Knife",
       "TranslatedText": "Нож"
@@ -389,6 +421,18 @@
     "h16088a37gd5b2g4bf3g9f7fgc3477eda6c4d": {
       "ReferenceText": "Leggings",
       "TranslatedText": "Поножи"
+    },
+    "h7d163e38ga9d5g410fg814agcafb2e2844ec": {
+      "ReferenceText": "Level %d+",
+      "TranslatedText": "Уровень %d+"
+    },
+    "h45ce9d99gf8b6g4d3dgb6dagdbc9c03d3287": {
+      "ReferenceText": "Level %d-%d",
+      "TranslatedText": "Уровень %d-%d"
+    },
+    "h6ac3a705g41f6g43d9g9d45ge53900932b94": {
+      "ReferenceText": "Meditate",
+      "TranslatedText": "Медитация"
     },
     "h20175646g1124g48cag88ceg0b909cd717cd": {
       "ReferenceText": "Misc.",
@@ -408,7 +452,7 @@
     },
     "ha752b7e8g5211g424fg9350g7111ead5cbac": {
       "ReferenceText": "Next",
-      "TranslatedText": "Следующее"
+      "TranslatedText": "След."
     },
     "h45a75b5agbe29g438dgbf17g6a9362cd7eed": {
       "ReferenceText": "No Filter",
@@ -470,6 +514,10 @@
       "ReferenceText": "Pyrokinetic",
       "TranslatedText": "Пирокинетика"
     },
+    "hce1fce1ega375g4e85g8adcg22da632e1097": {
+      "ReferenceText": "Rarity",
+      "TranslatedText": "Редкость"
+    },
     "h8a290a77g93c2g4821g8019gc74551cb306a": {
       "ReferenceText": "Reactions",
       "TranslatedText": "Реакции"
@@ -514,6 +562,10 @@
       "ReferenceText": "Skills",
       "TranslatedText": "Способности"
     },
+    "h3a1d4228ga393g44d8g8588ga5a2d81ca956": {
+      "ReferenceText": "Source Infuse",
+      "TranslatedText": "Насыщение истоком"
+    },
     "hee5bca62g5b34g4846g92fdgdaafaa1a5625": {
       "ReferenceText": "Sourcery",
       "TranslatedText": "Магия истока"
@@ -557,6 +609,10 @@
     "haf5c4d50gd6c7g42f6g8ca3g43f30e6385d1": {
       "ReferenceText": "Vitals",
       "TranslatedText": "Показатели"
+    },
+    "h921878e4ge51ag4c8bg9485g0eb1e2f211fb": {
+      "ReferenceText": "Volatile Armor",
+      "TranslatedText": "Volatile Armor"
     },
     "h1fbb9977g36ffg4bc6g80f4gb3ce632a38f2": {
       "ReferenceText": "Voracity",
@@ -773,6 +829,10 @@
     "he1539138g972fg4dffg9026gb1624ae59da1": {
       "ReferenceText": "Save/Load UI",
       "TranslatedText": "Интерфейс сохранения/загрузки"
+    },
+    "h98c83d5fgd30dg41f6g825ag14707c6db182": {
+      "ReferenceText": "Simplified Chinese translation by Ainsky",
+      "TranslatedText": "Перевод на упр. китайский от Ainsky"
     },
     "h4a3e28fag3595g4753gb507g4423068aeda8": {
       "ReferenceText": "Some options may require a reload for changes to apply.",
@@ -1234,6 +1294,14 @@
       "ReferenceText": "Engrave Item",
       "TranslatedText": "Переименовать предмет"
     },
+    "ha314a4bag7349g4ec0g9e7eg122821cef234": {
+      "ReferenceText": "Bedroll Rest",
+      "TranslatedText": "Лежанка"
+    },
+    "hd15285dag87d6g450cg8f17gd663d87a474e": {
+      "ReferenceText": "Chain/Unchain",
+      "TranslatedText": "Соединить/разъединить отряд"
+    },
     "hb4ca31ecge2ecg44faga2dbg1e1c98c49d30": {
       "ReferenceText": "Columns",
       "TranslatedText": "Столбцы"
@@ -1278,9 +1346,21 @@
       "ReferenceText": "Mod '%s' is incompatible with '%s' and it is not recommended to use them together.",
       "TranslatedText": "Мод '%s' не совместим с '%s' и не рекомендован к использованию."
     },
+    "h40211dabgcdfdg4c44gab1fgec11d398b801": {
+      "ReferenceText": "Bind '%s'",
+      "TranslatedText": "Бинд '%s'"
+    },
+    "he0a23e3cgbf9cg4f6eg8aecg454ee29fe9d7": {
+      "ReferenceText": "Press a key combination...",
+      "TranslatedText": "Введите комбинацию клавиш..."
+    },
     "hc53e69e8ge732g435dg84dcgfb0541f33326": {
       "ReferenceText": "Dismantle All",
       "TranslatedText": "Dismantle All"
+    },
+    "h11ffdfdbg98d0g41afgb4e4g7242c71f6a2d": {
+      "ReferenceText": "Respec",
+      "TranslatedText": "Зеркало"
     },
     "ha15ba540g2da4g4056g8174gcd25a3b1d343": {
       "ReferenceText": "Allows examining dead characters.",
@@ -1292,7 +1372,7 @@
     },
     "hccad2bc4g7010g48e3gae5dg045ab5228de2": {
       "ReferenceText": "Controls the height of the user interface.<br><br>Default is 600.",
-      "TranslatedText": "Задает высоту интерфейса.<br><br>По умолчанию 400."
+      "TranslatedText": "Задает высоту интерфейса.<br><br>По умолчанию 600."
     },
     "h3985c604gd7a2g4e68gb817g4d1311259a13": {
       "ReferenceText": "Controls the opacity of the background panel.<br><br>Default is 80%.",
@@ -1330,9 +1410,21 @@
       "ReferenceText": "Close UI after using an item",
       "TranslatedText": "Закрывать интерфейс после использования предмета"
     },
+    "h14aad639gb9c4g456bgb7fcg48e9cd5fef17": {
+      "ReferenceText": "Close upon world interaction",
+      "TranslatedText": "Закрывать интерфейс при взаимодействии"
+    },
     "hb29270e7g6dc8g44c0g9391g21b25965aea6": {
       "ReferenceText": "Consumable Type",
       "TranslatedText": "Тип расходуемого предмета"
+    },
+    "h8b035113g39eag49e6gae13g9a1de5375471": {
+      "ReferenceText": "If enabled, the UI will be closed if you click anything in the world.",
+      "TranslatedText": "Если включено, интерфейс будет закрываться при любом вашем взаимодействии в игровом мире."
+    },
+    "h8de93e20gae0dg45cfg9695g478ba659f71a": {
+      "ReferenceText": "If enabled, the UI will close after using an item.\n\nYou can hold shift while clicking an item to temporarily invert this setting.",
+      "TranslatedText": "Если включено, интерфейс будет закрываться после использовании предмета."
     },
     "h87e9e867gfd89g458eg850fga1129b558d59": {
       "ReferenceText": "Item Category",
@@ -1418,6 +1510,18 @@
       "ReferenceText": "+%s%% Weapon %s Damage",
       "TranslatedText": "+%s%% урона оружия (%s)"
     },
+    "h35bb3fefg60e1g4498gba12g4b44112b6239": {
+      "ReferenceText": "Applied by %s",
+      "TranslatedText": "От персонажа: %s"
+    },
+    "h688e725agb3f5g4adega349g0df981cfab97": {
+      "ReferenceText": "From item: %s",
+      "TranslatedText": "От предмета: %s"
+    },
+    "h2095b033g942eg400agb596g45d9ba3294c7": {
+      "ReferenceText": "If enabled, status tooltips will show the name of the character that applied the status, if any. Also allows you to click statuses to center the camera on the source character.",
+      "TranslatedText": "Если включено, в описании статуса будет отображаться его владелец (при наличии). Также при нажатии ЛКМ на статус ваша камера будет переноситься на его владельца."
+    },
     "h5e7095b6ga182g4dc0gadfbg198413b93310": {
       "ReferenceText": "Remove 'Set :' Prefixes",
       "TranslatedText": "Убрать приставку 'Set :'"
@@ -1425,6 +1529,10 @@
     "h979a8059g2ea7g436fg863bgf6b008ad3072": {
       "ReferenceText": "Removes the redundant 'Set :' prefix that appears in deltamod names and rune effects.",
       "TranslatedText": "Убирает приставку 'Set :' из описаний deltamod и рун. (При игре с переводом эта приставка уже отсутствует)"
+    },
+    "h0ef05becgc584g447agaa9cg797786d46dcf": {
+      "ReferenceText": "Show status source",
+      "TranslatedText": "Показывать владельца статуса"
     },
     "haabd6906gee2dg4b39ga339gf5cdf1a2ee8b": {
       "ReferenceText": "Tooltip Adjustments",
