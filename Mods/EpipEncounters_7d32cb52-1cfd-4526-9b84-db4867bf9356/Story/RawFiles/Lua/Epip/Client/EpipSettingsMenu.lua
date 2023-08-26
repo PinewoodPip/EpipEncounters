@@ -290,6 +290,7 @@ local tabs = {
             {Module = "EpipEncounters_TooltipAdjustments", ID = "RemoveSetPrefixes"},
             {Module = "EpipEncounters_TooltipAdjustments", ID = "StatusImprovements"},
             {Module = "EpipEncounters_TooltipAdjustments", ID = "TooltipLayer"},
+            {Module = "EpipEncounters_TooltipAdjustments.MasterworkedHint", ID = "Enabled"},
         }
     }
 }

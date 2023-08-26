@@ -301,12 +301,6 @@ Data.Game.SLOTS_WITH_SUBTYPES = {
 
 Data.NULLGUID = "NULL_00000000-0000-0000-0000-000000000000"
 
-Data.Game.MASTERWORK_HANDLED_TAGS = {
-    ["Boost_Weapon_Masterwork"] = true,
-    ["Boost_Armor_Masterwork"] = true,
-    ["Boost_Shield_Masterwork"] = true,
-}
-
 Data.Game.DamageTypes = {
     None = {
         Name = "Pure",

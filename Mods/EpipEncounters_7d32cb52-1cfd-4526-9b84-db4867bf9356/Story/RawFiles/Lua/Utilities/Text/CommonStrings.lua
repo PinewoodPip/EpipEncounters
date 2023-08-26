@@ -571,6 +571,10 @@ Text.CommonStrings.AppliesOnlyToEE = Text.RegisterTranslatedString({
     Handle = "h67f7cc80g5e7eg4e4eg85e4gb451cc2cab48",
     Text = "Applies only to EE.",
 })
+Text.CommonStrings.Masterworked = Text.RegisterTranslatedString({
+    Handle = "h1b456c73gd007g49acgab1eg66475ca108d2",
+    Text = "Masterworked",
+})
 
 ---------------------------------------------
 -- SETUP

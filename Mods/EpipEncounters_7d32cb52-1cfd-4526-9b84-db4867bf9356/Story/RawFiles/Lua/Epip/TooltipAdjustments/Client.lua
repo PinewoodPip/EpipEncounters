@@ -244,24 +244,6 @@ function TooltipAdjustments.ChangeArtifactRarityDisplay(item, tooltip, a, b)
     end
 end
 
--- Show a warning in tooltip for Masterworked items
-function TooltipAdjustments.AddDeltamodsHandledWarning(item, tooltip)
-    if not item.Stats then return nil end
-
-    local tags = item:GetTags()
-    local isMasterworked = false
-
-    for _,v in pairs(item:GetDeltaMods()) do
-        if Data.Game.MASTERWORK_HANDLED_TAGS[v] then
-            isMasterworked = true
-        end
-    end
-
-    if not isMasterworked then return nil end
-
-    table.insert(tooltip.Data, {Label = "Masterworked", Type = "StatsTalentsMalus"})
-end
-
 -- todo split up
 function TooltipAdjustments.ShowAbilityScoresForSI(char, skill, tooltip)
     char = char or Client.GetCharacter()
@@ -730,7 +712,6 @@ local function OnItemTooltipRender(item, tooltip)
     TooltipAdjustments.FixTooltipAPCosts(tooltip)
     TooltipAdjustments.ChangeArtifactRarityDisplay(item, tooltip)
     TooltipAdjustments.AddBaseDeltamodTierDisplay(item, tooltip)
-    TooltipAdjustments.AddDeltamodsHandledWarning(item, tooltip)
 
     -- TooltipAdjustments.TestElements(item, tooltip)
 end
