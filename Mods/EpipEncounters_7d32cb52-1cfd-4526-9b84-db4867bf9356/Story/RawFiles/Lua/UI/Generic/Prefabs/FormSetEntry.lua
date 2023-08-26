@@ -8,7 +8,7 @@ local Prefab = {
         RemovePressed = {}, ---@type Event<EmptyEvent>
     }
 }
-Inherit(Prefab, Generic.GetPrefab("GenericUI_Prefab_FormElement"))
+Generic:RegisterClass("GenericUI_Prefab_FormSetEntry", Prefab, {"GenericUI_Prefab_FormElement"})
 Generic.RegisterPrefab("GenericUI_Prefab_FormSetEntry", Prefab)
 
 ---@diagnostic disable-next-line: duplicate-doc-alias

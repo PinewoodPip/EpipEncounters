@@ -14,7 +14,7 @@ local Prefab = {
         EntryElementCreated = {}, ---@type Event<GenericUI_Prefab_FormSet_Event_EntryElementCreated>
     }
 }
-Inherit(Prefab, Generic.GetPrefab("GenericUI_Prefab_FormElement"))
+Generic:RegisterClass("GenericUI_Prefab_FormSet", Prefab, {"GenericUI_Prefab_FormElement"})
 Generic.RegisterPrefab("GenericUI_Prefab_FormSet", Prefab)
 
 ---@diagnostic disable-next-line: duplicate-doc-alias
