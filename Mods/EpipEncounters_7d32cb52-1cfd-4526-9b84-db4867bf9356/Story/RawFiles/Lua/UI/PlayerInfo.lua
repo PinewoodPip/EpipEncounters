@@ -102,7 +102,7 @@ end
 ---@param char EclCharacter Must be a player (not summon or follower)
 ---@return FlashMovieClip? --`nil` if the character is not in the UI.
 function PlayerInfo.GetPlayerElement(char)
-    local arr = PlayerInfo:GetRoot().player_array
+    local arr = PlayerInfo.GetPlayerElements()
     local playerElement = nil
 
     for i=0,#arr-1,1 do
@@ -118,12 +118,18 @@ function PlayerInfo.GetPlayerElement(char)
     return playerElement
 end
 
+---Returns the array of player elements.
+---@return FlashArray
+function PlayerInfo.GetPlayerElements()
+    return PlayerInfo:GetRoot().player_array
+end
+
 ---Returns the characters being shown in the UI.
 ---@param controlledOnly boolean? Defaults to `false`.
 ---@return EclCharacter[]
 function PlayerInfo.GetCharacters(controlledOnly)
     local chars = {}
-    local arr = PlayerInfo:GetRoot().player_array
+    local arr = PlayerInfo.GetPlayerElements()
 
     for i=0,#arr-1,1 do
         local player = arr[i]
@@ -139,7 +145,7 @@ end
 ---Toggles the visibility of status holders.
 ---@param visible boolean? Defaults to toggling.
 function PlayerInfo.ToggleStatuses(visible)
-    local players = PlayerInfo:GetRoot().player_array
+    local players = PlayerInfo.GetPlayerElements()
 
     -- Default to inverting state
     if visible == nil then
@@ -156,7 +162,7 @@ end
 ---Toggles the visibility of summons.
 ---@param visible boolean? Defaults to toggling.
 function PlayerInfo.ToggleSummons(visible)
-    local players = PlayerInfo:GetRoot().player_array
+    local players = PlayerInfo.GetPlayerElements()
 
     -- Default to inverting state
     visible = visible or not PlayerInfo.GetSummonsVisibility()
