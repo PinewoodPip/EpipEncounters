@@ -36,6 +36,7 @@ local PlayerInfo = {
     },
     Hooks = {
         GetBHVisibility = {}, ---@type Event<PlayerInfoUI_Hook_GetBHVisibility>
+        UpdateInfos = {}, ---@type Event<UI.PlayerInfo.Hooks.UpdateInfos>
     }
 }
 Epip.InitializeUI(Ext.UI.TypeID.playerInfo, "PlayerInfo", PlayerInfo)
@@ -59,6 +60,9 @@ Epip.InitializeUI(Ext.UI.TypeID.playerInfo, "PlayerInfo", PlayerInfo)
 ---@class PlayerInfoUI_Hook_GetBHVisibility
 ---@field Character EclCharacter
 ---@field Visible boolean Hookable.
+
+---@class UI.PlayerInfo.Hooks.UpdateInfos
+---@field Entries UI.PlayerInfo.Entries.Base[] Hookable.
 
 ---------------------------------------------
 -- CLASSES
@@ -515,6 +519,18 @@ PlayerInfo:RegisterInvokeListener("updateStatuses", function (event, createIfDoe
 
     root.ClearStatusArray()
     root.cleanupAllStatuses(cleanupAll)
+end, "Before")
+
+-- Hook the updateInfos array.
+PlayerInfo:RegisterInvokeListener("updateInfos", function (ev)
+    local array = ev.UI:GetRoot().infoUpdate
+    local data = Client.Flash.ParseArray(array, PlayerInfo.UPDATE_INFOS_FLASH_ARRAY_TEMPLATE, true) ---@type UI.PlayerInfo.Entries.Base[]
+
+    data = PlayerInfo.Hooks.UpdateInfos:Throw({
+        Entries = data,
+    }).Entries
+
+    Client.Flash.EncodeArray(array, PlayerInfo.UPDATE_INFOS_FLASH_ARRAY_TEMPLATE, data, true)
 end, "Before")
 
 ---------------------------------------------

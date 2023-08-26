@@ -240,7 +240,12 @@ LOAD_ORDER = {
     "UI/CharacterCreation.lua",
     "UI/Overhead.lua",
     "UI/MessageBox.lua",
-    "UI/PlayerInfo.lua",
+    {
+        Scripts = {
+            "UI/PlayerInfo/Main.lua",
+            "UI/PlayerInfo/FlashArrayTemplates.lua",
+        },
+    },
     "UI/PartyInventory.lua",
     "UI/GameMenu.lua",
     "UI/TutorialBox.lua",
