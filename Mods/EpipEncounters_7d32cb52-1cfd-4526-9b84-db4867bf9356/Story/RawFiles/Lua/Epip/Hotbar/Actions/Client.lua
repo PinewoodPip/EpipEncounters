@@ -93,3 +93,15 @@ Net.RegisterListener(Actions.NET_MSG_USERREST_NOBEDROLL, function (_)
         Message = Actions.TranslatedStrings.HotbarAction_UserRest_NoBedroll:GetString(),
     })
 end)
+
+-- Disable pyramids action is there are fewer than 2 pyramids available.
+Client.UI.Hotbar.RegisterActionHook("EPIP_UsePyramid", "IsActionEnabled", function(enabled, _, _, _)
+    local availablePyramidsCount = 0
+    for guid,_ in pairs(Actions.TELEPORTER_PYRAMID_GUIDS) do
+        local item = Item.Get(guid)
+        if item and not item:HasTag(Actions.PYRAMID_DISABLED_TAG) then
+            availablePyramidsCount = availablePyramidsCount + 1
+        end
+    end
+    return enabled and availablePyramidsCount >= 2
+end)

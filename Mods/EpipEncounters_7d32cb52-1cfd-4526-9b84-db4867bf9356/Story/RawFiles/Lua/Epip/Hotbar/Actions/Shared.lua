@@ -22,6 +22,7 @@ local Actions = {
         ["74f7068e-d388-4ffe-9e68-89406a6049d1"] = true,
         ["e90a55e7-973e-4c77-b4b3-65f87808791c"] = true,
     },
+    PYRAMID_DISABLED_TAG = "PYRAMID_DISABLED",
 
     ---@type Feature_HotbarActions_Action[]
     ACTIONS = {},
