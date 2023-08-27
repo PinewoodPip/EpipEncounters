@@ -83,3 +83,13 @@ Client.Input.Events.ActionExecuted:Subscribe(function (ev)
         Actions.TryExecuteAction(ev.Character, "EE_SourceInfuse")
     end
 end)
+
+-- Listen for requests to show "bedroll missing" message.
+-- Necessary on the client as the server as of v1066 doesn't have language support.
+Net.RegisterListener(Actions.NET_MSG_USERREST_NOBEDROLL, function (_)
+    Client.UI.MessageBox.Open({
+        ID = "Features.HotbarActions.NetMsg.NoBedroll",
+        Header = "",
+        Message = Actions.TranslatedStrings.HotbarAction_UserRest_NoBedroll:GetString(),
+    })
+end)

@@ -4,36 +4,6 @@ INITSECTION
 
 KBSECTION
 
-PROC PROC_PIP_Hotkey_UserRest((CHARACTERGUID)_Char)
-AND
-DB_PIP_Hotkey_UserRest(_Bool)
-THEN
-NOT DB_PIP_Hotkey_UserRest(_Bool);
-
-PROC PROC_PIP_Hotkey_UserRest((CHARACTERGUID)_Char)
-AND
-DB_RestTemplates(_Template, _Consume, _Radius, _SafeRadius)
-AND
-ItemTemplateIsInPartyInventory(_Char, _Template, 0, _Count)
-AND
-_Count > 0
-AND
-QRY_AMER_GEN_Mutex_Clear()
-AND
-GetItemForItemTemplateInPartyInventory(_Char, _Template, _Item)
-AND
-QRY_AMER_GEN_Mutex()
-THEN
-// UserRest(_Char, _Consume, _Radius, _SafeRadius);
-CharacterUseItem(_Char, _Item, "GEN_PIP_Hotkeys_Rest_Event");
-DB_PIP_Hotkey_UserRest(1);
-
-PROC PROC_PIP_Hotkey_UserRest((CHARACTERGUID)_Char)
-AND
-NOT DB_PIP_Hotkey_UserRest(1)
-THEN
-PROC_AMER_GEN_OpenQueuedMessageBox(_Char, "We do not have a bedroll to rest on!");
-
 // REGION Instant toggle party link. Copied from the original script.
 PROC PROC_PIP_Hotkey_TogglePartyLink((CHARACTERGUID)_Char)
 AND

@@ -14,6 +14,7 @@ local Actions = {
     _ActionsByID = {}, ---@type table<string, Feature_HotbarActions_Action>
 
     NET_MSG_ACTION_USED = "Feature_HotbarActions_NetMsg_ActionUsed",
+    NET_MSG_USERREST_NOBEDROLL = "Features.HotbarActions.NetMsg.NoBedroll", -- Empty message.
 
     ---@type Feature_HotbarActions_Action[]
     ACTIONS = {},
@@ -28,6 +29,11 @@ local Actions = {
            Handle = "ha314a4bag7349g4ec0g9e7eg122821cef234",
            Text = "Bedroll Rest",
            ContextDescription = "Hotbar action name",
+        },
+        HotbarAction_UserRest_NoBedroll = {
+           Handle = "hac06b15egc508g40b1gb729gf0951d875d5f",
+           Text = "We do not have a bedroll to rest on!",
+           ContextDescription = "Error message for bedroll rest",
         },
     },
 

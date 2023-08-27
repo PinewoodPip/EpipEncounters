@@ -30,7 +30,17 @@ end)
 -- Requires only one bedroll, anywhere in the party inventory.
 Actions.Events.ActionUsed:Subscribe(function (ev)
     if ev.Action.ID == "EPIP_UserRest" then
-        Osiris.PROC_PIP_Hotkey_UserRest(ev.Character)
+        local restItems = Osiris.QueryDatabase("DB_RestTemplates", nil, nil, nil, nil)
+        for _,tuple in ipairs(restItems) do
+            local template = tuple[1]
+            local itemCount = Osiris.ItemTemplateIsInPartyInventory(ev.Character, template, 0)
+            if itemCount > 0 then
+                local itemGUID = Osiris.GetItemForItemTemplateInPartyInventory(ev.Character, template)
+                Osiris.CharacterUseItem(ev.Character, itemGUID, "")
+            else
+                Net.PostToCharacter(ev.Character, Actions.NET_MSG_USERREST_NOBEDROLL)
+            end
+        end
     end
 end)
 
