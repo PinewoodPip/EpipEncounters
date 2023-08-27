@@ -9,18 +9,6 @@ GetItemForItemTemplateInPartyInventory(_Char, _Template, _Item)
 THEN
 CharacterUseItem(_Char, _Item, "");
 
-PROC PROC_PIP_UseTeleporterPyramid((CHARACTERGUID)_Char)
-AND
-QRY_AMER_GEN_Mutex_Clear() // We only want to interact with one pyramid.
-AND
-DB_TeleporterPyramid(_Item)
-AND
-ItemIsInPartyInventory(_Item, _Char, 0, 1)
-AND
-QRY_AMER_GEN_Mutex()
-THEN
-CharacterUseItem(_Char, _Item, "");
-
 EXITSECTION
 
 ENDEXITSECTION

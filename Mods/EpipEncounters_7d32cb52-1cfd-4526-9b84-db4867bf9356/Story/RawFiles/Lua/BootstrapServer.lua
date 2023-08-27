@@ -179,7 +179,6 @@ LOAD_ORDER = {
     "Epip/Server/DebugCheats.lua",
     "Epip/Server/AI.lua",
     "Epip/Server/ForceStoryPatching.lua",
-    "Epip/Server/DefaultHotbarActions.lua",
     "Epip/Server/HotbarServer.lua",
     {ScriptSet = "Epip/TooltipAdjustments"},
     {ScriptSet = "Epip/WorldTooltipOpenContainers"},

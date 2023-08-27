@@ -5,6 +5,25 @@ local SourceInfusion, Meditate = EpicEncounters.SourceInfusion, EpicEncounters.M
 local Actions = Epip.GetFeature("Feature_HotbarActions")
 
 ---------------------------------------------
+-- METHODS
+---------------------------------------------
+
+---Returns a teleporter pyramid in char's inventory.
+---@param char EsvCharacter
+---@return GUID? --`nil` if the character has no pyramid.
+function Actions._GetTeleporterPyramidInInventory(char)
+    local pyramidGUID = nil
+    for guid,_ in pairs(Actions.TELEPORTER_PYRAMID_GUIDS) do
+        local isInCharacterInventory = Osi.GetInventoryOwner(guid) == char.MyGuid
+        if isInCharacterInventory then
+            pyramidGUID = guid
+            break
+        end
+    end
+    return pyramidGUID
+end
+
+---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
 
@@ -49,6 +68,41 @@ end)
 Actions.Events.ActionUsed:Subscribe(function (ev)
     if ev.Action.ID == "PIP_Respec" then
         Osiris.PROC_PIP_Hotkey_Respec(ev.Character)
+    end
+end)
+
+-- Listen for use pyramid action.
+Actions.Events.ActionUsed:Subscribe(function (ev)
+    if ev.Action.ID == "EPIP_UsePyramid" then
+        local userID = ev.Character.ReservedUserID
+        local partyMembers = Character.GetPartyMembers(ev.Character)
+        local pyramidGUID = Actions._GetTeleporterPyramidInInventory(ev.Character) -- Check if the source character has a pyramid first
+
+        -- Check other party members
+        if not pyramidGUID then
+            -- Prioritize characters controlled by the same user.
+            table.sort(partyMembers, function (a, b)
+                local scoreA, scoreB = a.NetID, b.NetID
+                if a.ReservedUserID == userID then
+                    scoreB = -scoreB
+                end
+                if b.ReservedUserID == userID then
+                    scoreA = -scoreA
+                end
+                return scoreA > scoreB
+            end)
+
+            for _,member in ipairs(partyMembers) do
+                if member ~= ev.Character then
+                    pyramidGUID = Actions._GetTeleporterPyramidInInventory(member)
+                    if pyramidGUID then break end
+                end
+            end
+        end
+
+        if pyramidGUID then
+            Osiris.CharacterUseItem(ev.Character, pyramidGUID, "")
+        end
     end
 end)
 

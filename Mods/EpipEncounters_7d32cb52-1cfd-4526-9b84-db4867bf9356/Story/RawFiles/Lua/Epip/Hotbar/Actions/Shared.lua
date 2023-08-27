@@ -16,6 +16,13 @@ local Actions = {
     NET_MSG_ACTION_USED = "Feature_HotbarActions_NetMsg_ActionUsed",
     NET_MSG_USERREST_NOBEDROLL = "Features.HotbarActions.NetMsg.NoBedroll", -- Empty message.
 
+    TELEPORTER_PYRAMID_GUIDS = {
+        ["fd45268f-5953-47c4-ba2f-255a05e2ce0e"] = true,
+        ["34810bdd-1185-468b-a5af-3298d0a861cf"] = true,
+        ["74f7068e-d388-4ffe-9e68-89406a6049d1"] = true,
+        ["e90a55e7-973e-4c77-b4b3-65f87808791c"] = true,
+    },
+
     ---@type Feature_HotbarActions_Action[]
     ACTIONS = {},
 
@@ -34,6 +41,11 @@ local Actions = {
            Handle = "hac06b15egc508g40b1gb729gf0951d875d5f",
            Text = "We do not have a bedroll to rest on!",
            ContextDescription = "Error message for bedroll rest",
+        },
+        HotbarAction_UsePyramid_Name = {
+           Handle = "h4ac91ab1gcde9g4cd5gb8a3gc19b15f3dd4b",
+           Text = "Pyramids",
+           ContextDescription = "Hotbar action name",
         },
     },
 
@@ -143,6 +155,12 @@ local actions = {
         Icon = "hotbar_icon_sp",
         DefaultIndex = 12,
         RequiresEE = true,
+        Cooldown = 1,
+    },
+    {
+        ID = "EPIP_UsePyramid",
+        Name = Actions.TranslatedStrings.HotbarAction_UsePyramid_Name:GetString(),
+        Icon = "hotbar_icon_bag",
         Cooldown = 1,
     },
 }
