@@ -63,6 +63,7 @@ package Elements
             format.align = txtType;
 
             this.text_txt.defaultTextFormat = format;
+            this.SetText(this._cachedText, false); // Required to update text format
         }
 
         public function SetText(text:String, setSize:Boolean=false) : *
