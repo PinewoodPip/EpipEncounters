@@ -5,6 +5,7 @@ local Generic = Client.UI.Generic
 ---Represents a Generic UI instance. Allows interfacing with the UI from lua.
 ---@class GenericUI_Instance : UI
 ---@field private ID string
+---@field Hooks table
 local _Instance = {
     ID = "UNKNOWN",
     CurrentTooltipElement = nil, -- Current element's ID and UI whose tooltip is being displayed.

@@ -30,6 +30,7 @@ function Generic.Create(id, layer)
             -- TODO fix code duplication (IggyEventCaptured is also in the IDE annotation version)
             IggyEventCaptured = {Legacy = false}, ---@type Event<GenericUI.Instance.Events.IggyEventCaptured>
         },
+        Hooks = {},
     }
     local uiOBject = Ext.UI.Create(id, Generic.SWF_PATH, layer or Generic.DEFAULT_LAYER)
     Epip.InitializeUI(uiOBject:GetTypeId(), id, ui)
