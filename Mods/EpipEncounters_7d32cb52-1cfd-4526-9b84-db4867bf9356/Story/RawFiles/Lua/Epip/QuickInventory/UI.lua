@@ -13,7 +13,6 @@ local V = Vector.Create
 ---@class Feature_QuickInventory
 local QuickInventory = Epip.GetFeature("Feature_QuickInventory")
 
----@class Features.QuickInventory.UI : GenericUI_Instance
 local UI = Generic.Create("Epip_EquipmentSwap")
 QuickInventory.UI = UI
 
@@ -35,9 +34,7 @@ UI.SETTINGS_PANEL_ELEMENT_SIZE = V(UI.SETTINGS_PANEL_SIZE[1] - 55, 50)
 UI.SETTINGS_PANEL_SCROLLLIST_FRAME = UI.SETTINGS_PANEL_SIZE - V(20, 150)
 UI.DRAGGABLE_AREA_SIZE = V(UI.BACKGROUND_SIZE[1] + UI.SETTINGS_PANEL_SIZE[1], 65)
 
-UI.Events = {
-    RenderSettings = SubscribableEvent:New("RenderSettings"), ---@type Event<{ItemCategory:string}> Children of the list are set to invisible before invoking; you're expected to pool the setting elements. See `UI.RenderSetting()`.
-}
+UI.Events.RenderSettings = SubscribableEvent:New("RenderSettings") ---@type Event<{ItemCategory:string}> Children of the list are set to invisible before invoking; you're expected to pool the setting elements. See `UI.RenderSetting()`.
 
 ---------------------------------------------
 -- METHODS
