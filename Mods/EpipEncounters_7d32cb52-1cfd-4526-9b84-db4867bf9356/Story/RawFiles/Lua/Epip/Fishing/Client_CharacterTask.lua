@@ -2,7 +2,7 @@
 ---@class Feature_Fishing
 local Fishing = Epip.GetFeature("Feature_Fishing")
 
----@class Feature_Fishing_CharacterTask : UserClass_EclCharacterTask
+---@class Feature_Fishing_CharacterTask : UserspaceCharacterTaskCallbacks
 local _Task = {
     _Previewing = false,
     CharacterHandle = nil, ---@type ComponentHandle
@@ -61,7 +61,6 @@ function _Task:CanExit2()
     return true
 end
 
-
 -- Called when the task loses top priority or is cancelled.
 function _Task:ExitPreview()
     self._Previewing = false
@@ -69,9 +68,7 @@ function _Task:ExitPreview()
     Client.Tooltip.HideMouseTextTooltip()
 end
 
-function _Task:Exit()
-    
-end
+function _Task:Exit() end
 
 function _Task:MeetsRequirements()
     local char = self:GetCharacter()
@@ -103,9 +100,7 @@ function _Task:Start()
 end
 
 -- Called when right-click is pressed.
-function _Task:Stop()
-    
-end
+function _Task:Stop() end
 
 function _Task:HasValidTargetPos() -- TODO make it require looking at the water
     local char = Character.Get(self.CharacterHandle)
@@ -119,9 +114,7 @@ function _Task:HasValidTarget()
     return false
 end
 
-function _Task:UpdatePreview()
-    
-end
+function _Task:UpdatePreview() end
 
 _Task.GetError = function (self)
     if not self:HasValidTargetPos() then
@@ -135,7 +128,7 @@ function _Task:EnterPreview() -- Called when the task has high enough priority
     self._Previewing = true
 end
 
-function _Task:HandleInputEvent(ev, state)
+function _Task:HandleInputEvent(ev, _)
     local evDesc = Ext.Input.GetInputManager().InputDefinitions[ev.EventId]
 
     -- Start fishing when Action1 is pressed.
@@ -153,7 +146,7 @@ local attached = DataStructures.Get("DataStructures_Set").Create()
 Client.Events.ActiveCharacterChanged:Subscribe(function (ev)
     local char = ev.NewCharacter
     if not attached:Contains(char.Handle) then
-        Ext.ClientBehavior.AttachCharacterTask(char, _Task.ID)
+        Ext.Behavior.AttachCharacterTask(char, _Task.ID)
         attached:Add(char.Handle)
     end
 end)

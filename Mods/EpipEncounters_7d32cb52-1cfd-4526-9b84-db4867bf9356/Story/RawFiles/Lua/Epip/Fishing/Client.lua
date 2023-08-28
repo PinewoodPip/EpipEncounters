@@ -75,6 +75,7 @@ function Fishing.IsNearWater(char, searchRadius)
     return Fishing.IsPositionNearWater(Vector.Create(position), searchRadius)
 end
 
+---Returns whether a position is near a Deepwater surface.
 ---@param position Vector3D
 ---@param searchRadius number? Defaults to WATER_SEARCH_RADIUS.
 ---@return boolean
@@ -152,7 +153,7 @@ Fishing.Events.CharacterStoppedFishing:Subscribe(function (ev)
         -- Show a hint on how to open the collection log the first time you catch each type of fish.
         if Fishing.GetTimesCaught(ev.Fish:GetID()) == 1 then
             local keybinds = Client.Input.GetActionBindings(Fishing.OPEN_LOG_KEYBIND)
-            local keybind = keybinds.Input1 or keybinds.Input2
+            local keybind = keybinds[1]
 
             if keybind then
                 subTitle = Text.Format(Fishing.TSK["Toast_Success_Subtitle"], {
@@ -163,7 +164,7 @@ Fishing.Events.CharacterStoppedFishing:Subscribe(function (ev)
             end
         end
 
-        NotificationUI.ShowIconNotification(ev.Fish:GetName(), ev.Fish:GetIcon(), nil, Fishing.TSK["Toast_Success"], subTitle, "UI_Notification_ReceiveAbility") -- TODO notify about new catches and show how to open the journal
+        NotificationUI.ShowIconNotification(ev.Fish:GetName(), ev.Fish:GetIcon(), nil, Fishing.TSK["Toast_Success"], subTitle, "UI_Notification_ReceiveAbility")
     elseif ev.Reason == "Failure" then
         NotificationUI.ShowWarning("The fish got away...")
     end
