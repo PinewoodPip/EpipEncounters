@@ -521,6 +521,7 @@ LOAD_ORDER = {
     -- "Epip/AwesomeSoccer/Client.lua",
     {Script = "Epip/Client/GiftbagLocker.lua", RequiresEE = true},
     "Epip/Client/ChatNotificationSound.lua",
+    "Epip/DialogueTweaks/Client.lua",
     "Epip/Client/ToggleableWorldTooltips.lua",
     "Epip/Client/WorldTooltipFiltering.lua",
     "Epip/Client/HoverCharacterEffects.lua",

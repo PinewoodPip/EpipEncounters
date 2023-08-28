@@ -257,6 +257,7 @@ local tabs = {
             "CastingNotifications",
             "Notification_ItemReceival",
             "Notification_StatSharing",
+            {Type = "Setting", Module = "EpipEncounters_DialogueTweaks", ID = "Enabled"},
         }
     },
     ["Epip_Tooltips"] = {
