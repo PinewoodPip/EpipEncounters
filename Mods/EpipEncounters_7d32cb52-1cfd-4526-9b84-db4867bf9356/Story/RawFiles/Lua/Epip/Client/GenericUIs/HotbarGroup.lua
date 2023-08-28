@@ -169,6 +169,7 @@ function HotbarGroup:Resize(newRows, newColumns)
     end
 end
 
+---Initializes the UI for a hotbar group.
 ---@param id string
 ---@param rows integer
 ---@param columns integer
@@ -248,14 +249,14 @@ function GroupManager.Create(id, rows, columns)
 
     local width, height = group:GetSlotAreaSize()
     local uiObject = group.UI:GetUI()
-    
+
     uiObject.SysPanelSize = {width, height}
     uiObject.Left = width
 
     uiObject:ExternalInterfaceCall("setPosition", "center", "screen", "center")
 
     local container = group._Container
-    container.Events.RightClick:Subscribe(function (e)
+    container.Events.RightClick:Subscribe(function (_)
         local x, y = Client.GetMousePosition()
         ContextMenu.RequestMenu(x, y, "HotbarGroup", nil, group.GUID)
     end)
@@ -346,7 +347,8 @@ function GroupManager.SaveData(path)
     IO.SaveFile(path, save)
 end
 
----@param path string?
+---Restores groups from saved data.
+---@param path string? Defaults to `SAVE_FILENAME`
 function GroupManager.LoadData(path)
     path = path or GroupManager.SAVE_FILENAME
     local save = IO.LoadFile(path) ---@type {Groups: table<GUID, HotbarGroupState>, Version:integer}
@@ -372,17 +374,19 @@ function GroupManager.LoadData(path)
             -- Set position
             local position = data.RelativePosition
             local viewport = Ext.UI.GetViewportSize()
-
-            if GameState.GetState() == "Running" then
+            local setPosFunc = function ()
+                group.UI:GetUI():SetPosition(Ext.Round(position[1] * viewport[1]), Ext.Round(position[2] * viewport[2]))
+            end
+            if GameState.GetState() == "Running" then -- Set position immediately if we're initializing after a lua reset
                 Timer.Start(0.1, function ()
-                    group.UI:GetUI():SetPosition(Ext.Round(position[1] * viewport[1]), Ext.Round(position[2] * viewport[2]))
+                    setPosFunc()
                 end)
-            else
-                GameState.Events.GameReady:Subscribe(function (e)
-                    group.UI:GetUI():SetPosition(Ext.Round(position[1] * viewport[1]), Ext.Round(position[2] * viewport[2]))
+            else -- Otherwise wait for GameReady
+                GameState.Events.GameReady:Subscribe(function (_)
+                    setPosFunc()
                 end, {Once = true})
             end
-            
+
             -- Set layer
             group.UI:GetUI().Layer = data.Layer
         end
@@ -393,16 +397,18 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
+-- Listen for requests to open the creation UI from the context menu.
 Client.UI.ContextMenu.RegisterElementListener("hotBarRow_CreateGroup", "buttonPressed", function(_)
     GroupManager.ShowCreateUI()
 end)
 
+-- Save groups whenever hotbar data is saved.
 Client.UI.Hotbar:RegisterListener("SaveDataSaved", function()
     GroupManager.SaveData()
 end)
 
 -- Listen for requests to create the context menu.
-ContextMenu.RegisterMenuHandler("HotbarGroup", function(char, guid)
+ContextMenu.RegisterMenuHandler("HotbarGroup", function(_, guid)
     local contextMenu = {
         {id = "HotbarGroup_Layer", type = "stat", text = CommonStrings.Layer:GetString(), value = 1, params = {GUID = guid}},
         {id = "HotbarGroup_Resize", type = "button", text = CommonStrings.Resize:GetString(), params = {GUID = guid}},
@@ -515,13 +521,3 @@ function GroupManager:__Setup()
 
     GroupManager.LoadData()
 end
-
----------------------------------------------
--- TESTS
----------------------------------------------
-
--- Ext.Events.SessionLoaded:Subscribe(function (e)
---     if Epip.IsDeveloperMode(true) then
---         local group = GroupManager.Create("test")
---     end
--- end)
