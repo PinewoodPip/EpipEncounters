@@ -292,9 +292,9 @@ LOAD_ORDER = {
             "UI/Generic/Interfaces/Elementable.lua",
             "UI/Generic/Interfaces/Container.lua",
 
+            "UI/Generic/Prefabs/Text.lua",
             "UI/Generic/Prefabs/HotbarSlot.lua",
             "UI/Generic/Prefabs/Spinner.lua",
-            "UI/Generic/Prefabs/Text.lua",
             "UI/Generic/Prefabs/FormHorizontalList.lua",
             "UI/Generic/Prefabs/LabelledIcon.lua",
             "UI/Generic/Prefabs/Status.lua",

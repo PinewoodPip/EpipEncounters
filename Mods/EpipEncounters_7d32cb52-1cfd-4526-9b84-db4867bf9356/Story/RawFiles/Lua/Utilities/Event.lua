@@ -42,6 +42,10 @@ local PreventableEventParams = {
 }
 setmetatable(PreventableEventParams, {__index = SubscribableEventParams})
 
+---------------------------------------------
+-- COMMON EVENT PARAMETER CLASSES
+---------------------------------------------
+
 ---An event object with no parameters.
 ---@class EmptyEvent
 
@@ -53,6 +57,9 @@ setmetatable(PreventableEventParams, {__index = SubscribableEventParams})
 
 ---@class Event_EntityEventParams
 ---@field Entity Entity
+
+---@class Events.ValueEvent
+---@field Value number
 
 ---------------------------------------------
 -- METHODS
