@@ -72,7 +72,7 @@ function Status.Create(ui, id, parent, entity, status)
         local statusObj = Character.GetStatusByHandle(char, element.StatusHandle)
 
         if statusObj then
-            Client.Tooltip.ShowStatusTooltip(char, statusObj)
+            Client.Tooltip.ShowStatusTooltip(statusObj)
         end
     end)
     root.Events.MouseOut:Subscribe(function (_)

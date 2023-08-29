@@ -259,6 +259,7 @@ LOAD_ORDER = {
         Scripts = {
             "Utilities/Client/Tooltip/Main.lua",
             "Utilities/Client/Tooltip/Parser.lua",
+            "Utilities/Client/Tooltip/Status.lua",
         },
     },
 

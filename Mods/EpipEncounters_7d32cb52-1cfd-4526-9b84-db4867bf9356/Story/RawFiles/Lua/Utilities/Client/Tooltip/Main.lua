@@ -291,19 +291,6 @@ function Tooltip.ShowItemTooltip(item, position)
     ui:ExternalInterfaceCall("showItemTooltip", Ext.UI.HandleToDouble(item.Handle), mouseX, mouseY, 100, 100, -1, "left") -- TODO customize align
 end
 
----@param char EclCharacter
----@param status EclStatus
----@param position Vector2D? Defaults to mouse position.
-function Tooltip.ShowStatusTooltip(char, status, position)
-    local ui = Tooltip._GetDefaultCustomTooltipUI()
-    local mouseX, mouseY = Client.GetMousePosition()
-
-    Tooltip._nextTooltipPosition = position or Vector.Create(mouseX, mouseY)
-    position = Tooltip._nextTooltipPosition
-
-    ui:ExternalInterfaceCall("showStatusTooltip", Client.Flash.ToFlashHandle(char.Handle), Client.Flash.ToFlashHandle(status.StatusHandle), position[1], position[2], 100, 100, "right") -- TODO
-end
-
 function Tooltip.HideTooltip()
     local ui = Tooltip._GetDefaultCustomTooltipUI()
 
