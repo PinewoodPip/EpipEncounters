@@ -257,7 +257,7 @@ end
 SettingsMenu.Events.ButtonPressed:Subscribe(function (ev)
     if ev.Tab.ID == CameraZoom.SETTINGS_MODULE_ID and ev.ButtonID == "Feature_CameraZoom_Reset" then
         CameraZoom:DebugLog("Resetting position settings")
-        
+
         for _,position in ipairs(CameraZoom.GetPositions()) do
             for i=1,3,1 do
                 Settings.SetValue(CameraZoom.SETTINGS_MODULE_ID, position:GetSettingID("ZoomedIn", i), position.DefaultPositionZoomedIn[i])
@@ -265,6 +265,7 @@ SettingsMenu.Events.ButtonPressed:Subscribe(function (ev)
             end
         end
 
+        Settings.Save(CameraZoom.SETTINGS_MODULE_ID)
         CameraZoom.LoadSettings()
     end
 end)
