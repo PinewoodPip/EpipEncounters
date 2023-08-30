@@ -346,22 +346,40 @@ function Library:ThrowNotImplemented(methodName)
     self:Error(methodName, "Not implemented")
 end
 
----Log an error.
+---Logs an error without halting execution.
 ---@param ... any
 function Library:LogError(...)
     PrintError(self:_GetLoggingPrefix(), ...)
 end
 
----Throws an error prefixed by the thrower method name.
+---Throws an error prefixed with the library and method name, blaming the third-level function in the stack - usually user code.
+---@protected
+---@param ... any
 ---@param method string
 function Library:Error(method, ...)
+    -- This code duplication is intentional to reduce impact on the call stack, offering a larger traceback.
     local params = {...}
     local str = Text.Join(params, " ")
     error(string.format("%s %s(): %s",
         self:_GetLoggingPrefix(),
         method,
         str
-    ))
+    ), 3)
+end
+
+---Throws an error prefixed with the library and method name caused at the callee function.
+---@protected
+---@param method string
+---@param ... any
+function Library:InternalError(method, ...)
+    -- This code duplication is intentional to reduce impact on the call stack, offering a larger traceback.
+    local params = {...}
+    local str = Text.Join(params, " ")
+    error(string.format("%s %s(): %s",
+        self:_GetLoggingPrefix(),
+        method,
+        str
+    ), 2)
 end
 
 ---Returns the prefix to use for logging messages.
