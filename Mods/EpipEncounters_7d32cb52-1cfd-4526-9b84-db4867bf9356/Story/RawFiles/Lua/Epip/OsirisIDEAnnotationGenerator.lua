@@ -58,13 +58,20 @@ function _Parameter.Create(type, name)
     }
     OOP.SetMetatable(param, _Parameter)
 
+    -- Prevent reserved keywords from being used as parameter names
+    -- They become problematic only after being lowercased
+    if name == "In" then
+        param.Name = "input"
+    end
+
     return param
 end
 
 function _Parameter.__tostring(self)
     local luaType = Generator.GetLuaTypeForOsirisType(self.OsirisType)
+    local lowercasedName = Text.Uncapitalize(self.Name)
 
-    return string.format("---@param %s %s", self.Name, luaType)
+    return string.format("---@param %s %s", lowercasedName, luaType)
 end
 
 ---@class Feature_OsirisIDEAnnotationGenerator_Annotation
@@ -90,6 +97,17 @@ function _Annotation.Create(symbolType, name, params, returnTypes)
     }
     OOP.SetMetatable(annotation, _Annotation)
 
+    -- Prevent duplicate parameter names
+    local paramNameCounts = {} ---@type table<string, integer>
+    for _,param in ipairs(annotation.Parameters) do
+        local count = paramNameCounts[param.Name] or 1
+        paramNameCounts[param.Name] = count and (count + 1) or 1
+
+        if count > 1 then
+            param.Name = param.Name .. count
+        end
+    end
+
     return annotation
 end
 
@@ -102,7 +120,7 @@ function _Annotation.__tostring(self)
 
     -- Add params
     for _,param in ipairs(self.Parameters) do
-        table.insert(paramNames, param.Name)
+        table.insert(paramNames, Text.Uncapitalize(param.Name))
         table.insert(lines, tostring(param))
     end
 

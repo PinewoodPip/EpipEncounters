@@ -360,6 +360,14 @@ function Text.Capitalize(str)
     return str
 end
 
+---Turns the first letter of a string into lowercase.
+---@param str string
+---@return string
+function Text.Uncapitalize(str)
+    local result, _ = str:gsub("^%L", string.lower)
+    return result
+end
+
 ---Format a string.
 ---@param str string
 ---@param formatData TextFormatData
