@@ -6,15 +6,15 @@
 
 ---@class Feature_OsirisIDEAnnotationGenerator : Feature
 local Generator = {
-    ---@type table<OsirisType, string>
+    ---@type table<OsirisType, string|{Extender:string, Epip:string}>
     OSIRIS_TYPE_TO_LUA_TYPE = {
         INTEGER = "integer",
         INTEGER64 = "integer",
         REAL = "number",
         STRING = "string",
         GUIDSTRING = "Guid",
-        CHARACTERGUID = "Guid",
-        ITEMGUID = "Guid",
+        CHARACTERGUID = {Extender = "Guid", Epip = "EsvCharacter|Guid"},
+        ITEMGUID = {Extender = "Guid", Epip = "EsvItem|Guid"},
         TRIGGERGUID = "Guid",
         SPLINEGUID = "Guid",
         LEVELTEMPLATEGUID = "Guid",
@@ -24,6 +24,8 @@ local Generator = {
     OUT_PARAMETER_PATTERN = "%[out%]",
     DEFAULT_OUTPUT_PATH = "IDEHelpers/Osiris.lua",
     DEFAULT_HEADER_PATH = "Mods/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/Story/story_header.div",
+
+    _CurrentRequest = nil, ---@type Features.OsirisIDEAnnotationGenerator.Request
 }
 Epip.RegisterFeature("OsirisIDEAnnotationGenerator", Generator)
 
@@ -37,6 +39,7 @@ Epip.RegisterFeature("OsirisIDEAnnotationGenerator", Generator)
 ---@field OutputPath path? Defaults to `DEFAULT_OUTPUT_PATH`.
 ---@field HeaderPath path? Relative to data directory. Defaults to `DEFAULT_HEADER_PATH`.
 ---@field IncludeEvents boolean? Defaults to `false`.
+---@field UseEpipOsirisLibrary boolean? If enabled, annotations will be generated with the `Osiris` library in mind. Defaults to `true`.
 
 ---@class Feature_OsirisIDEAnnotationGenerator_Annotation_Parameter
 ---@field Name string
@@ -106,7 +109,7 @@ function _Annotation.__tostring(self)
     -- Add return values
     for _,returnType in ipairs(self.ReturnTypes) do
         table.insert(returnNames, returnType.Name)
-        table.insert(returnTypes, Generator.GetLuaTypeForOsirisType(returnType.OsirisType))
+        table.insert(returnTypes, Generator.GetLuaTypeForOsirisType(returnType.OsirisType, true)) -- Return types cannot be objects (ex. EsvCharacter).
     end
 
     if self.ReturnTypes[1] then
@@ -114,7 +117,7 @@ function _Annotation.__tostring(self)
     end
 
     -- Add signature
-    signature = string.format("function Osi.%s(%s) end", self.Name, Text.Join(paramNames, ", "))
+    signature = string.format("function %s.%s(%s) end", (Generator._CurrentRequest.UseEpipOsirisLibrary and "Osiris" or "Osi"), self.Name, Text.Join(paramNames, ", "))
     table.insert(lines, signature)
 
     return Text.Join(lines, "\n")
@@ -126,9 +129,18 @@ end
 
 ---Returns the lua annotation type for an Osiris type.
 ---@param typeName string
+---@param rawTypesOnly boolean? If `true`, only primitive types will be used. Defaults to `false`.
 ---@return string
-function Generator.GetLuaTypeForOsirisType(typeName)
-    return Generator.OSIRIS_TYPE_TO_LUA_TYPE[typeName]
+function Generator.GetLuaTypeForOsirisType(typeName, rawTypesOnly)
+    local useEpip = Generator._CurrentRequest.UseEpipOsirisLibrary
+    local names = Generator.OSIRIS_TYPE_TO_LUA_TYPE[typeName]
+    local name ---@type string
+    if type(names) == "table" then
+        name = (useEpip and not rawTypesOnly) and names.Epip or names.Extender
+    else
+        name = names
+    end
+    return name
 end
 
 ---Generates event annotations.
@@ -136,6 +148,9 @@ end
 function Generator.GenerateEventAnnotations(request)
     request.HeaderPath = request.HeaderPath or Generator.DEFAULT_HEADER_PATH
     request.OutputPath = request.OutputPath or Generator.DEFAULT_OUTPUT_PATH
+    if request.UseEpipOsirisLibrary == nil then request.UseEpipOsirisLibrary = true end
+
+    Generator._CurrentRequest = request
 
     local file = IO.LoadFile(request.HeaderPath, "data", true)
     if not file then Generator:Error("GenerateEventAnnotations", "File not found") end
@@ -173,6 +188,8 @@ function Generator.GenerateEventAnnotations(request)
         outputFile = outputFile .. tostring(annotation) .. "\n\n"
     end
     IO.SaveFile(request.OutputPath, outputFile, true)
+
+    Generator._CurrentRequest = nil
 end
 
 ---------------------------------------------
@@ -180,12 +197,13 @@ end
 ---------------------------------------------
 
 -- Listen for console command to generate annotations.
-Ext.RegisterConsoleCommand("osirisannotations", function (_, outputPath, includeEvents, headerPath)
+Ext.RegisterConsoleCommand("osirisannotations", function (_, outputPath, includeEvents, headerPath, useEpip)
     ---@type Features.OsirisIDEAnnotationGenerator.Request
     local request = {
         IncludeEvents = includeEvents,
         OutputPath = outputPath,
         HeaderPath = headerPath,
+        UseEpipOsirisLibrary = useEpip ~= "false",
     }
     Generator.GenerateEventAnnotations(request)
     print("Generated annotations")
