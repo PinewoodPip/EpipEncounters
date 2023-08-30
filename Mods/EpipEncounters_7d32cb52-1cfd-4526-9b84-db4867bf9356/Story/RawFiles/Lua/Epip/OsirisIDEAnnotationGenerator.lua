@@ -21,6 +21,9 @@ local Generator = {
     },
     SYMBOL_PATTERN = "^([^ ]+) ([^(]+)%((.+)%) %(.+", -- Captures symbol type, event name and parameter list.
     PARAMETER_PATTERN = "%((.+)%)_(.+)", -- Captures parameter type and name.
+    OUT_PARAMETER_PATTERN = "%[out%]",
+    DEFAULT_OUTPUT_PATH = "IDEHelpers/Osiris.lua",
+    DEFAULT_HEADER_PATH = "Mods/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/Story/story_header.div",
 }
 Epip.RegisterFeature("OsirisIDEAnnotationGenerator", Generator)
 
@@ -29,6 +32,11 @@ Epip.RegisterFeature("OsirisIDEAnnotationGenerator", Generator)
 ---------------------------------------------
 
 ---@alias OsirisBuiltInType "syscall"|"sysquery"|"query"|"event"|"call"
+
+---@class Features.OsirisIDEAnnotationGenerator.Request
+---@field OutputPath path? Defaults to `DEFAULT_OUTPUT_PATH`.
+---@field HeaderPath path? Relative to data directory. Defaults to `DEFAULT_HEADER_PATH`.
+---@field IncludeEvents boolean? Defaults to `false`.
 
 ---@class Feature_OsirisIDEAnnotationGenerator_Annotation_Parameter
 ---@field Name string
@@ -53,32 +61,31 @@ end
 function _Parameter.__tostring(self)
     local luaType = Generator.GetLuaTypeForOsirisType(self.OsirisType)
 
-    return string.format("--- @param %s %s", self.Name, luaType)
+    return string.format("---@param %s %s", self.Name, luaType)
 end
 
 ---@class Feature_OsirisIDEAnnotationGenerator_Annotation
 ---@field SymbolType OsirisBuiltInType
 ---@field Name string
 ---@field Parameters Feature_OsirisIDEAnnotationGenerator_Annotation_Parameter[]
+---@field ReturnTypes Feature_OsirisIDEAnnotationGenerator_Annotation_Parameter[]
 local _Annotation = {}
 
 ---Creates an annotation object.
 ---@param symbolType OsirisBuiltInType
 ---@param name string
 ---@param params Feature_OsirisIDEAnnotationGenerator_Annotation_Parameter[]
+---@param returnTypes Feature_OsirisIDEAnnotationGenerator_Annotation_Parameter[]?
 ---@return Feature_OsirisIDEAnnotationGenerator_Annotation
-function _Annotation.Create(symbolType, name, params)
+function _Annotation.Create(symbolType, name, params, returnTypes)
     ---@type Feature_OsirisIDEAnnotationGenerator_Annotation
     local annotation = {
         SymbolType = symbolType,
         Name = name,
-        Parameters = {},
+        Parameters = params,
+        ReturnTypes = returnTypes or {},
     }
     OOP.SetMetatable(annotation, _Annotation)
-
-    for i,param in ipairs(params) do
-        annotation.Parameters[i] = _Parameter.Create(param.OsirisType, param.Name)
-    end
 
     return annotation
 end
@@ -87,11 +94,23 @@ function _Annotation.__tostring(self)
     local lines = {}
     local paramNames = {}
     local signature
+    local returnNames = {} ---@type string[]
+    local returnTypes = {} ---@type string[]
 
     -- Add params
     for _,param in ipairs(self.Parameters) do
         table.insert(paramNames, param.Name)
         table.insert(lines, tostring(param))
+    end
+
+    -- Add return values
+    for _,returnType in ipairs(self.ReturnTypes) do
+        table.insert(returnNames, returnType.Name)
+        table.insert(returnTypes, Generator.GetLuaTypeForOsirisType(returnType.OsirisType))
+    end
+
+    if self.ReturnTypes[1] then
+        table.insert(lines, string.format("---@return %s -- %s", Text.Join(returnTypes, ", "), Text.Join(returnNames, ", ")))
     end
 
     -- Add signature
@@ -113,34 +132,61 @@ function Generator.GetLuaTypeForOsirisType(typeName)
 end
 
 ---Generates event annotations.
----@param storyHeaderPath path
----@param outputPath path? Defaults to `osi.lua`
-function Generator.GenerateEventAnnotations(storyHeaderPath, outputPath)
-    local file = IO.LoadFile(storyHeaderPath, "data", true)
+---@param request Features.OsirisIDEAnnotationGenerator.Request
+function Generator.GenerateEventAnnotations(request)
+    request.HeaderPath = request.HeaderPath or Generator.DEFAULT_HEADER_PATH
+    request.OutputPath = request.OutputPath or Generator.DEFAULT_OUTPUT_PATH
+
+    local file = IO.LoadFile(request.HeaderPath, "data", true)
     if not file then Generator:Error("GenerateEventAnnotations", "File not found") end
+
     local lines = Text.Split(file, "\n")
     local annotations = {}
-
     for _,line in ipairs(lines) do
         local symbolType, symbol, params = line:match(Generator.SYMBOL_PATTERN)
 
-        if symbolType and symbolType == "event" then
+        if symbolType then
             local paramObjects = {}
             params = string.gsub(params, ",", "")
             params = Text.Split(params, " ")
 
+            local returnTypes = {} ---@type Feature_OsirisIDEAnnotationGenerator_Annotation_Parameter[]
+
             for _,param in ipairs(params) do
                 local paramType, paramName = param:match(Generator.PARAMETER_PATTERN)
-                table.insert(paramObjects, _Parameter.Create(paramType, paramName))
+                local isReturn = param:match(Generator.OUT_PARAMETER_PATTERN)
+                local paramObject = _Parameter.Create(paramType, paramName)
+
+                if isReturn then
+                    table.insert(returnTypes, paramObject)
+                else
+                    table.insert(paramObjects, paramObject)
+                end
             end
 
-            table.insert(annotations, _Annotation.Create(symbolType, symbol, paramObjects))
+            table.insert(annotations, _Annotation.Create(symbolType, symbol, paramObjects, returnTypes))
         end
     end
 
-    local outputFile = ""
+    local outputFile = "---@meta\n\n"
     for _,annotation in ipairs(annotations) do
         outputFile = outputFile .. tostring(annotation) .. "\n\n"
     end
-    IO.SaveFile(outputPath or "osi.lua", outputFile, true)
+    IO.SaveFile(request.OutputPath, outputFile, true)
 end
+
+---------------------------------------------
+-- EVENT LISTENERS
+---------------------------------------------
+
+-- Listen for console command to generate annotations.
+Ext.RegisterConsoleCommand("osirisannotations", function (_, outputPath, includeEvents, headerPath)
+    ---@type Features.OsirisIDEAnnotationGenerator.Request
+    local request = {
+        IncludeEvents = includeEvents,
+        OutputPath = outputPath,
+        HeaderPath = headerPath,
+    }
+    Generator.GenerateEventAnnotations(request)
+    print("Generated annotations")
+end)

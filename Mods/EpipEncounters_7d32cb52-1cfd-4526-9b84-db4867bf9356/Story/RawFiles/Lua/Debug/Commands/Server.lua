@@ -1,8 +1,4 @@
 
-local function GenerateOsiEventIDEHelpers(_, outputPath)
-    Epip.GetFeature("Feature_OsirisIDEAnnotationGenerator").GenerateEventAnnotations("Mods/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/Story/story_header.div", outputPath)
-end
-
 local function FixDyeStats()
     local char = Osiris.CharacterGetHostCharacter()
 
@@ -25,7 +21,6 @@ local function FixDyeStats()
 end
 
 local commands = {
-    ["generateosieventidehelpers"] = GenerateOsiEventIDEHelpers,
     ["fixdyestats"] = FixDyeStats,
 }
 
