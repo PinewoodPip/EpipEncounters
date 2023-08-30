@@ -353,7 +353,6 @@ function Library:LogError(...)
 end
 
 ---Throws an error prefixed with the library and method name, blaming the third-level function in the stack - usually user code.
----@protected
 ---@param ... any
 ---@param method string
 function Library:Error(method, ...)
@@ -368,7 +367,6 @@ function Library:Error(method, ...)
 end
 
 ---Throws an error prefixed with the library and method name caused at the callee function.
----@protected
 ---@param method string
 ---@param ... any
 function Library:InternalError(method, ...)
