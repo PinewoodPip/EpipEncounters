@@ -329,7 +329,7 @@ function Generator._AnnotateEnum(writer, enum)
     end)
     local aliasAnnotations = {} ---@type string
     for _,alias in ipairs(aliases) do
-        table.insert(aliasAnnotations, string.format("---|\"%s\" -- %s", alias.Name, alias.Index))
+        table.insert(aliasAnnotations, string.format("---|\"%s\" # %s", alias.Name, alias.Index))
     end
 
     writer:AddLine(string.format("---@alias %s string|integer\n%s\n", enum.TypeName, Text.Join(aliasAnnotations, "\n")))
