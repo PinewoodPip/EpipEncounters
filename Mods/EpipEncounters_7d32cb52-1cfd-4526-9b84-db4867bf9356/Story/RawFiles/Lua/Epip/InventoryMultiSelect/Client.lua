@@ -39,7 +39,9 @@ function MultiSelect.SetItemSelected(item, selected)
     -- Find the cell of the item within the UI
     local cell, cellIndex = MultiSelect._GetItemCell(item)
     if not cell then
-        MultiSelect:InternalError("SelectItem", "Cell not found for", item.DisplayName)
+        -- This may happen if the item was equipped or moved out by external shenanigans
+        -- MultiSelect:InternalError("SelectItem", "Cell not found for", item.DisplayName)
+        return
     end
 
     if selected then
@@ -153,6 +155,17 @@ function MultiSelect._SetSlotHighlight(slot, highlighted)
         graphics.beginFill(MultiSelect.SELECTED_COLOR:ToDecimal(), MultiSelect.SELECTED_COLOR.Alpha / 255)
         graphics.drawRect(0, 0, cellSize[1], cellSize[2])
     end
+end
+
+---Creates a list of NetIDs from selections.
+---@param selections Features.InventoryMultiSelect.Selection[]
+---@return NetId[]
+function MultiSelect._SelectionsToNetIDList(selections)
+    local itemsNetIDs = {} ---@type NetId[]
+    for _,selection in ipairs(selections) do
+        table.insert(itemsNetIDs, Item.Get(selection.ItemHandle).NetID)
+    end
+    return itemsNetIDs
 end
 
 ---Returns the movie clips of all inventories.
