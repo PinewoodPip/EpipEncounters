@@ -205,6 +205,24 @@ function MultiSelect._GetItemCell(item)
     return cell, cellIndex
 end
 
+---Returns the character whose inventory header is being hovered over.
+---@return EclCharacter?
+function MultiSelect._GetSelectedInventoryHeader()
+    local root = PartyInventory:GetRoot()
+    local invMC = root.inventory_mc
+    local char = nil
+
+    for i=0,#invMC.list.content_array-1,1 do
+        local playerInventory = invMC.list.content_array[i]
+        if playerInventory.frame_mc.playerheader.currentFrame == 2 then
+            char = Character.Get(playerInventory.id, true)
+            break
+        end
+    end
+
+    return char
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------

@@ -6,6 +6,7 @@
 ---@class Features.InventoryMultiSelect : Feature
 local MultiSelect = {
     NETMSG_SEND_TO_CONTAINER = "Features.InventoryMultiSelect.NetMsg.SendToContainer",
+    NETMSG_SEND_TO_CHARACTER = "Features.InventoryMultiSelect.NetMsg.SendToCharacter",
 
     TranslatedStrings = {},
     Events = {
@@ -34,3 +35,7 @@ Epip.RegisterFeature("InventoryMultiSelect", MultiSelect)
 ---@class Features.InventoryMultiSelect.NetMsg.SendToContainer : NetMessage
 ---@field ItemNetIDs NetId[]
 ---@field TargetContainerNetID NetId
+
+---@class Features.InventoryMultiSelect.NetMsg.SendToCharacter : NetMessage
+---@field ItemNetIDs NetId[]
+---@field CharacterNetID NetId
