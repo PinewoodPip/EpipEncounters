@@ -277,6 +277,12 @@ LOAD_ORDER = {
 
     {ScriptSet = "Epip/AnimationCancelling",},
     {ScriptSet = "Epip/FlagsDisplay"},
+    {
+        ScriptSet = "Epip/InventoryMultiSelect",
+        Scripts = {
+            "Epip/InventoryMultiSelect/MultiDragHandlers/Server.lua",
+        }
+    },
 
     {ScriptSet = "UI/Vanity/Tabs/Shapeshift", WIP = true},
 

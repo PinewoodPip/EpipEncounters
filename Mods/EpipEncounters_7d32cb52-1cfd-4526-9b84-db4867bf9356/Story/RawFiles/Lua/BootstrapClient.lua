@@ -665,6 +665,13 @@ LOAD_ORDER = {
 
     {ScriptSet = "Epip/AnimationCancelling"},
     {ScriptSet = "Epip/FlagsDisplay"},
+    {
+        ScriptSet = "Epip/InventoryMultiSelect",
+        Scripts = {
+            "Epip/InventoryMultiSelect/Client_UI.lua",
+            "Epip/InventoryMultiSelect/MultiDragHandlers/Client.lua",
+        },
+    },
 
     {
         Scripts = {
