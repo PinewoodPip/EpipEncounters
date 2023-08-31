@@ -32,32 +32,14 @@ MultiSelect._MultiDragActive = false
 ---@param selected boolean? Defaults to toggling.
 function MultiSelect.SetItemSelected(item, selected)
     local set = MultiSelect._SelectedItems
-    local inventories = MultiSelect._GetInventoryMovieClips()
     if selected == nil then
         selected = not MultiSelect.IsSelected(item)
     end
 
     -- Find the cell of the item within the UI
-    local itemFlashHandle = Ext.UI.HandleToDouble(item.Handle)
-    local owner = Character.Get(item:GetOwnerCharacter())
-    local cell, cellIndex
-    for _,inv in ipairs(inventories) do
-        local handle = Ext.UI.DoubleToHandle(inv.id)
-        if handle == owner.Handle then
-            for i=0,#inv.content_array-1,1 do
-                local slot = inv.content_array[i]
-                if slot._itemHandle == itemFlashHandle then
-                    cell = slot
-                    cellIndex = i + 1 -- 1-based.
-                    goto CellFound
-                end
-            end
-        end
-    end
-    ::CellFound::
-
+    local cell, cellIndex = MultiSelect._GetItemCell(item)
     if not cell then
-        MultiSelect:InternalError("SelectItem", "Cell not found for", item.DisplayName, "in", owner.DisplayName)
+        MultiSelect:InternalError("SelectItem", "Cell not found for", item.DisplayName)
     end
 
     if selected then
@@ -185,6 +167,44 @@ function MultiSelect._GetInventoryMovieClips()
     return mcs
 end
 
+---Returns the inventory movie clip of a character.
+---@param owner EclCharacter
+---@return FlashMovieClip
+function MultiSelect._GetInventoryMovieClip(owner)
+    local clips = MultiSelect._GetInventoryMovieClips()
+    for _,mc in ipairs(clips) do
+        if mc.id == Ext.UI.HandleToDouble(owner.Handle) then
+            return mc
+        end
+    end
+    return nil
+end
+
+---Returns the inventory cell that contains an item.
+---@param item EclItem
+---@return FlashMovieClip?, integer? -- Cell, cell index (1-based). `nil` if the item was not found within the inventory.
+function MultiSelect._GetItemCell(item)
+    local inventories = MultiSelect._GetInventoryMovieClips()
+    local itemFlashHandle = Ext.UI.HandleToDouble(item.Handle)
+    local owner = Character.Get(item:GetOwnerCharacter())
+    local cell, cellIndex = nil, nil
+    for _,inv in ipairs(inventories) do
+        local handle = Ext.UI.DoubleToHandle(inv.id)
+        if handle == owner.Handle then
+            for i=0,#inv.content_array-1,1 do
+                local slot = inv.content_array[i]
+                if slot._itemHandle == itemFlashHandle then
+                    cell = slot
+                    cellIndex = i + 1 -- 1-based.
+                    goto CellFound
+                end
+            end
+        end
+    end
+    ::CellFound::
+    return cell, cellIndex
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
@@ -216,16 +236,37 @@ PartyInventory:RegisterCallListener("showItemTooltip", function (ev)
 end)
 
 -- Clear selections when an item is clicked.
-PartyInventory:RegisterCallListener("slotUp", function (_)
-    if not Input.IsCtrlPressed() then
+PartyInventory:RegisterCallListener("slotUp", function (ev)
+    if not Input.AreModifierKeysPressed() then
         MultiSelect.ClearSelections()
+    elseif Input.IsShiftPressed() and MultiSelect.HasSelection() then -- Only prevent shift-click if we already have a selection. Otherwise, use vanilla behaviour (toggle wares)
+        ev:PreventAction()
     end
 end)
 
 -- Listen for keys being pressed that should select/deselect items.
 Input.Events.KeyPressed:Subscribe(function (ev)
-    if ev.InputID == "left2" and Input.IsCtrlPressed() and MultiSelect._CurrentHoveredItemHandle then
+    if MultiSelect._CurrentHoveredItemHandle and ev.InputID == "left2" then
         local item = Item.Get(MultiSelect._CurrentHoveredItemHandle)
-        MultiSelect.SetItemSelected(item)
+
+        if Input.IsCtrlPressed() then -- Toggle selection of the item
+            MultiSelect.SetItemSelected(item)
+        elseif Input.IsShiftPressed() and MultiSelect.HasSelection() then -- Select range
+            local orderedSelections = MultiSelect.GetOrderedSelections()
+            local firstSelection = orderedSelections[1]
+            local _, cellIndex = MultiSelect._GetItemCell(item)
+            local inv = MultiSelect._GetInventoryMovieClip(Character.Get(item:GetOwnerCharacter()))
+
+            -- Range selection works in either direction; can select ranges before or after the first item.
+            local startIndex = math.min(firstSelection.CellIndex, cellIndex)
+            local endIndex = math.max(firstSelection.CellIndex, cellIndex)
+            for i=startIndex,endIndex,1 do
+                local itemFlashHandle = inv.content_array[i - 1]._itemHandle
+                if itemFlashHandle ~= 0 then
+                    local cellItem = Item.Get(itemFlashHandle, true)
+                    MultiSelect.SetItemSelected(cellItem, true)
+                end
+            end
+        end
     end
 end)
