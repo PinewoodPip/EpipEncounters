@@ -452,7 +452,6 @@ LOAD_ORDER = {
     "Epip/Client/ExamineKeybind.lua",
     "Epip/Client/MoreWorldTooltips.lua",
     "Epip/Client/EnemyHealthBarExtraInfo.lua",
-    -- "Epip/Client/InventoryImprovements.lua",
 
     {ScriptSet = "Epip/OverheadFixes"},
 

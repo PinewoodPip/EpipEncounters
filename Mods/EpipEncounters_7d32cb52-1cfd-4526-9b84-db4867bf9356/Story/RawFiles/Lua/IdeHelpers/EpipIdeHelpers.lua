@@ -21,6 +21,9 @@
 
 ---@alias ClientGameObject EclCharacter|EclItem
 
+---@alias FlashCharacterHandle FlashObjectHandle
+---@alias FlashItemHandle FlashObjectHandle
+
 ---@class Enum
 ---@field Label string
 ---@field Value string
