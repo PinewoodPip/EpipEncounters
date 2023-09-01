@@ -282,7 +282,7 @@ PartyInventory:RegisterCallListener("slotUp", function (ev)
 end)
 
 -- Listen for keys being pressed that should select/deselect items.
-Input.Events.KeyPressed:Subscribe(function (ev)
+Input.Events.KeyReleased:Subscribe(function (ev)
     if MultiSelect._CurrentHoveredItemHandle and ev.InputID == "left2" and MultiSelect:IsEnabled() then
         local item = Item.Get(MultiSelect._CurrentHoveredItemHandle)
 
