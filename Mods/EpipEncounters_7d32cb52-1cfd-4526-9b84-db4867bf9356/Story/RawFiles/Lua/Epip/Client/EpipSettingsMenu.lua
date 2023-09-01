@@ -6,6 +6,7 @@ local TooltipAdjustments = Epip.GetFeature("Feature_TooltipAdjustments")
 local AnimationCancelling = Epip.GetFeature("Feature_AnimationCancelling")
 local StatusesDisplay = Epip.GetFeature("Feature_StatusesDisplay")
 local CraftingFixes = Epip.GetFeature("Feature_CraftingFixes")
+local InventoryMultiSelect = Epip.GetFeature("Features.InventoryMultiSelect")
 local CommonStrings = Text.CommonStrings
 
 ---@class Feature_EpipSettingsMenu : Feature
@@ -235,6 +236,7 @@ local tabs = {
         HeaderLabel = CommonStrings.Inventory:GetString(),
         Entries = {
             CreateHeader(TSK.Section_InventoryUI),
+            {Module = InventoryMultiSelect:GetNamespace(), ID = InventoryMultiSelect.Settings.Enabled.ID},
             "Inventory_AutoUnlockInventory",
             "Inventory_InfiniteCarryWeight",
             "Inventory_RewardItemComparison",

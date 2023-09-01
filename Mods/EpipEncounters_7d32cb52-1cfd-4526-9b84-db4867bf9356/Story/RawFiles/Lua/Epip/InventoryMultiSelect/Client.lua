@@ -142,6 +142,12 @@ function MultiSelect.EndMultiDrag()
     MultiSelect._MultiDragActive = false
 end
 
+---Client-only override. Checks setting.
+---@override
+function MultiSelect:IsEnabled()
+    return MultiSelect:GetSettingValue(MultiSelect.Settings.Enabled) == true and _Feature.IsEnabled(self)
+end
+
 ---Sets or removes a highlight from an inventory cell.
 ---@param slot FlashMovieClip
 ---@param highlighted boolean
@@ -277,7 +283,7 @@ end)
 
 -- Listen for keys being pressed that should select/deselect items.
 Input.Events.KeyPressed:Subscribe(function (ev)
-    if MultiSelect._CurrentHoveredItemHandle and ev.InputID == "left2" then
+    if MultiSelect._CurrentHoveredItemHandle and ev.InputID == "left2" and MultiSelect:IsEnabled() then
         local item = Item.Get(MultiSelect._CurrentHoveredItemHandle)
 
         if Input.IsCtrlPressed() then -- Toggle selection of the item
