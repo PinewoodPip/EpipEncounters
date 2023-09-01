@@ -96,6 +96,7 @@ Item = {
 
     MAX_RUNE_SLOTS = 3,
 }
+Epip.InitializeLibrary("Item", Item)
 
 ---------------------------------------------
 -- CLASSES
@@ -263,20 +264,14 @@ function Item.GetUseActions(item, actionType)
 end
 
 ---Returns the current owner of the item.
----The owner will be nil if the character who owned the item died.
+---This refers to the character that has legal ownership of the item; player characters will trigger crimes by attempting most interactions with owned items.
+---This character might be a player.
+---The owner will be `nil` if the character who owned the item died, except for player-owned items.
 ---@param item Item
 ---@return Character?
-function Item.GetOwner(item)
-    local ownerHandle
+function Item.GetOwner(item) -- TODO is this for red items?
+    local ownerHandle = item.OwnerCharacterHandle
     local owner
-
-    -- Unfortunate naming inconsistency
-    if Ext.IsServer() then
-        ownerHandle = item.OwnerHandle
-    else
-        ownerHandle = item.OwnerCharacterHandle
-    end
-
     if Ext.Utils.IsValidHandle(ownerHandle) then
         owner = Character.Get(ownerHandle)
     end
