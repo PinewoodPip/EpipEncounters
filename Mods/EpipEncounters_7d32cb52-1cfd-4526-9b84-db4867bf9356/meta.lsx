@@ -59,6 +59,9 @@
                                 <node id="Target">
                                     <attribute id="Object" value="Story" type="22" />
                                 </node>
+                                <node id="Target">
+                                    <attribute id="Object" value="GM" type="22" />
+                                </node>
                             </children>
                         </node>
                     </children>

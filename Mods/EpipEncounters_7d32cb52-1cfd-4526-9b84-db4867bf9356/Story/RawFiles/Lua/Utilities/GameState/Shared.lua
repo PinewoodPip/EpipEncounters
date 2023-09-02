@@ -7,10 +7,12 @@ local Set = DataStructures.Get("DataStructures_Set")
 GameState = {
     lastTickTime = nil,
 
+    ---@type table<GameState, true>
     IN_SESSION_STATES = {
         Running = true,
         Paused = true,
         PrepareRunning = true,
+        GameMasterPause = true,
     },
     LOADING_STATES = Set.Create({
         "LoadLevel",

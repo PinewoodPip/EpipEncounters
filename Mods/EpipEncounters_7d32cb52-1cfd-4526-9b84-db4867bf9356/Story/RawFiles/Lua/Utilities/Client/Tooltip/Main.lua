@@ -304,7 +304,8 @@ end
 ---Returns the default UI to be used for displaying custom tooltips.
 ---@return UIObject
 function Tooltip._GetDefaultCustomTooltipUI()
-    return Ext.UI.GetByType(Ext.UI.TypeID.containerInventory.Default)
+    -- In GM mode, the container UI appears to only exist when needed.
+    return Ext.UI.GetByType(Ext.UI.TypeID.containerInventory.Default) or Ext.UI.GetByType(Ext.UI.TypeID.gmInventory)
 end
 
 ---@param ui UIObject

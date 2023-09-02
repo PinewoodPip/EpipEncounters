@@ -1,17 +1,23 @@
 
 ---@class GameMenuUI : UI
 local Menu = {
+    ---@enum UI.GameMenu.ButtonID
     BUTTON_IDS = {
         RESUME = 0,
         FORMATION = 1,
-        WAYPOINTS = 2,
+        PARTY_FORMATION = 2,
         INVITE_PLAYERS = 3,
         WAYPOINTS = 4,
         SAVE = 5,
         LOAD = 8,
         OPTIONS = 10,
         MAIN_MENU = 12,
+        QUIT_GAME = 14,
         CONNECTIVITY = 15,
+        GM_EDIT_CAMPAIGN_METADATA = 18,
+        GM_SAVE_CAMPAIGN = 19,
+        GM_SAVE_CAMPAIGN_AS = 20,
+        GM_RELOAD_ASSETS = 21,
         GIFT_BAGS = 24,
     },
 
@@ -76,6 +82,9 @@ end
 
 local function OnGameMenuButtonAdd(ui, method, id, name, enabled)
     Menu:FireEvent("ButtonAdded", id, name, enabled)
+    if not table.reverseLookup(Menu.BUTTON_IDS, id) then
+        Menu:LogWarning("Unmapped button ID:", id, name)
+    end
 end
 
 -- Intercept vanilla button requests - TODO

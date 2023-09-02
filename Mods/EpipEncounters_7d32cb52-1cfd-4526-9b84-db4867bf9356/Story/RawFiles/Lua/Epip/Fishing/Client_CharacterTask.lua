@@ -145,7 +145,7 @@ end
 local attached = DataStructures.Get("DataStructures_Set").Create()
 Client.Events.ActiveCharacterChanged:Subscribe(function (ev)
     local char = ev.NewCharacter
-    if not attached:Contains(char.Handle) then
+    if char and not attached:Contains(char.Handle) then
         Ext.Behavior.AttachCharacterTask(char, _Task.ID)
         attached:Add(char.Handle)
     end

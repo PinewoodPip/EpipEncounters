@@ -62,7 +62,7 @@ Epip.InitializeLibrary("Client", Client)
 
 ---@class ClientLib_Event_ActiveCharacterChanged
 ---@field PreviousCharacter EclCharacter
----@field NewCharacter EclCharacter
+---@field NewCharacter EclCharacter? Can be `nil` in GM mode.
 
 ---Fired when the active client character enters or exits a skill state.
 ---@class ClientLib_Event_SkillStateChanged
@@ -261,12 +261,12 @@ GameState.Events.ClientReady:Subscribe(function (_)
     end)
 end)
 
--- Listen for the save/load buttons being added to the pause menu to
+-- Listen for the certain buttons being added to the pause menu to
 -- determine if this client is the host.
-Utilities.Hooks.RegisterListener("GameMenu", "ButtonAdded", function(id, name, enabled)
+Utilities.Hooks.RegisterListener("GameMenu", "ButtonAdded", function(id, _, _)
     -- only the host has load/save buttons, so we know this client is hosting if these are present
-    if id == Client.UI.GameMenu.BUTTON_IDS.LOAD then
-        if not Client.IS_HOST then -- don't spam the message
+    if id == Client.UI.GameMenu.BUTTON_IDS.LOAD or id == Client.UI.GameMenu.BUTTON_IDS.GM_RELOAD_ASSETS then
+        if not Client.IS_HOST then -- Only show message and fire event once.
             Client.IS_HOST = true
             Client:Log("Client is hosting.")
             Client:FireEvent("DeterminedAsHost")

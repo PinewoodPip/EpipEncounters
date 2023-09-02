@@ -1756,9 +1756,10 @@ end
 
 -----------
 
+---Refreshes the visuals of the UI, as well as hotkeys.
 function Hotbar.Refresh()
-    if Ext.Client.GetGameState() ~= "Running" then
-        return nil
+    if not GameState.IsInSession() then
+        return
     end
 
     local slotHolder = Hotbar.GetSlotHolder()
