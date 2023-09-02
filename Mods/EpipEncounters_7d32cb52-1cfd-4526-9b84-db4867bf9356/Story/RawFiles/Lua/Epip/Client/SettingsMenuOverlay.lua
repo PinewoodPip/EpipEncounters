@@ -37,7 +37,7 @@ local UI = Generic.Create("PIP_SettingsMenuOverlay")
 UI._Initialized = false
 UI.LIST_SIZE = V(950, 770)
 UI.FORM_ELEMENT_SIZE = V(800, 60)
-UI.DEFAULT_LABEL_SIZE = V(800, 50)
+UI.DEFAULT_LABEL_SIZE = V(800, 999) -- Labels are afterwards resized to text height.
 
 ---------------------------------------------
 -- EVENTS
@@ -243,8 +243,9 @@ end
 ---@param data Feature_SettingsMenuOverlay_Event_RenderEntry
 ---@return GenericUI_Prefab_Text
 function UI._RenderLabel(data)
-    local entry = data.Entry ---@type Feature_SettingsMenu_Entry_Label
+    local entry = data.Entry ---@cast entry Feature_SettingsMenu_Entry_Label
     local element = TextPrefab.Create(UI, Text.GenerateGUID(), data.Parent, entry.Label, "Center", UI.DEFAULT_LABEL_SIZE)
+    element:SetSize(UI.DEFAULT_LABEL_SIZE[1], element:GetTextSize()[2]) -- Resize to text height.
 
     return element
 end
