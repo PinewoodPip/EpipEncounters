@@ -309,3 +309,8 @@ Input.Events.KeyReleased:Subscribe(function (ev)
         end
     end
 end)
+
+-- Hide tooltips when a multi-drag starts.
+MultiSelect.Events.MultiDragStarted:Subscribe(function (_)
+    Client.Tooltip.HideTooltip()
+end)
