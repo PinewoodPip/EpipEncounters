@@ -17,6 +17,10 @@ MultiSelect.TranslatedStrings.ContextMenu_UnmarkAsWares = MultiSelect:RegisterTr
     Text = "Unmark as wares",
     ContextDescription = "Context menu option",
 })
+MultiSelect.TranslatedStrings.ContextMenu_SendTo = MultiSelect:RegisterTranslatedString("hc1f05532ga3a6g4b02gb837g77d3267b8f18", {
+    Text = "Send to %s",
+    ContextDescription = "Context menu option. Param is character name",
+})
 MultiSelect.TranslatedStrings.ContextMenu_SendToHomestead = MultiSelect:RegisterTranslatedString("h51a61f00g9350g4a6eg943bg340d01c6b8a4", { -- TODO allow overriding in custom campaigns?
     Text = "Store on Lady Vengeance",
     ContextDescription = "Context menu option",
@@ -56,15 +60,37 @@ end)
 -- Listen for requests to create the context menu.
 ContextMenu.RegisterMenuHandler("Features.InventoryMultiSelect", function(_)
     local waresLabel = MultiSelect._AreAllSelectionsWares() and MultiSelect.TranslatedStrings.ContextMenu_UnmarkAsWares:GetString() or MultiSelect.TranslatedStrings.ContextMenu_MarkAsWares:GetString()
-    local contextMenu = {
+    ---@type table[]
+    local entries = {
         {id = "Features.InventoryMultiSelect.ToggleWares", type = "button", text = waresLabel},
-        {id = "Features.InventoryMultiSelect.SendToHomestead", type = "button", text = MultiSelect.TranslatedStrings.ContextMenu_SendToHomestead:GetString()},
     }
+
+    -- Add "send to character" entries
+    local clientChar = Client.GetCharacter()
+    local selections = MultiSelect.GetOrderedSelections()
+    local excludedCharacterHandle = nil ---@type ComponentHandle?
+    for _,selection in ipairs(selections) do
+        if excludedCharacterHandle == nil then
+            excludedCharacterHandle = selection.OwnerCharacterHandle
+        elseif excludedCharacterHandle ~= selection.OwnerCharacterHandle then
+            excludedCharacterHandle = nil
+            break
+        end
+    end
+    for _,member in ipairs(Character.GetPartyMembers(clientChar)) do
+        -- Only insert option if all the selections do not come from this member.
+        -- This prevents the option to send all items to the character that owns them from appearing.
+        if not excludedCharacterHandle or member.Handle ~= excludedCharacterHandle then
+            table.insert(entries, {id = "Features.InventoryMultiSelect.SendToCharacter." .. member.NetID, type = "button", text = string.format(MultiSelect.TranslatedStrings.ContextMenu_SendTo:GetString(), member.DisplayName), params = {NetID = member.NetID}, eventIDOverride = "Features.InventoryMultiSelect.SendToCharacter"})
+        end
+    end
+
+    table.insert(entries, {id = "Features.InventoryMultiSelect.SendToHomestead", type = "button", text = MultiSelect.TranslatedStrings.ContextMenu_SendToHomestead:GetString()})
 
     ContextMenu.Setup({
         menu = {
             id = "main",
-            entries = contextMenu,
+            entries = entries,
         }
     })
 
@@ -83,6 +109,16 @@ ContextMenu.RegisterElementListener("Features.InventoryMultiSelect.ToggleWares",
         MultiSelect:DebugLog("Refreshed UI")
         PartyInventory:Show()
     end)
+    MultiSelect.ClearSelections()
+end)
+
+-- Listen for requests to send items to a character.
+ContextMenu.RegisterElementListener("Features.InventoryMultiSelect.SendToCharacter", "buttonPressed", function(_, params)
+    local selections = MultiSelect._SelectionsToNetIDList(MultiSelect.GetOrderedSelections())
+    Net.PostToServer(MultiSelect.NETMSG_SEND_TO_CHARACTER, {
+        ItemNetIDs = selections,
+        CharacterNetID = params.NetID,
+    })
     MultiSelect.ClearSelections()
 end)
 

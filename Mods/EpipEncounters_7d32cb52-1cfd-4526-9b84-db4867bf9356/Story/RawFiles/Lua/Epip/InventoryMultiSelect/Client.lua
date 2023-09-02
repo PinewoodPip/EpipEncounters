@@ -20,6 +20,7 @@ MultiSelect._MultiDragActive = false
 
 ---@class Features.InventoryMultiSelect.Selection
 ---@field ItemHandle ComponentHandle
+---@field OwnerCharacterHandle ComponentHandle
 ---@field InventoryCell FlashMovieClip
 ---@field CellIndex integer 1-based.
 
@@ -49,6 +50,7 @@ function MultiSelect.SetItemSelected(item, selected)
             ItemHandle = item.Handle,
             InventoryCell = cell,
             CellIndex = cellIndex,
+            OwnerCharacterHandle = Character.Get(item:GetOwnerCharacter()).Handle,
         }
     else
         set[item.Handle] = nil
