@@ -4,6 +4,8 @@ local PartyInventory = Client.UI.PartyInventory
 ---@class Features.InventoryMultiSelect
 local MultiSelect = Epip.GetFeature("Features.InventoryMultiSelect")
 
+MultiSelect.SOUND_DRAG_TO_SLOT = "UI_Game_Inventory_Click"
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
@@ -23,6 +25,7 @@ MultiSelect.Events.MultiDragEnded:Subscribe(function (ev)
             })
 
             ev:StopPropagation()
+            PartyInventory:PlaySound(MultiSelect.SOUND_DRAG_TO_SLOT)
         end
     else
         local hoveredPlayerTabCharacter = MultiSelect._GetSelectedInventoryHeader()
@@ -34,6 +37,7 @@ MultiSelect.Events.MultiDragEnded:Subscribe(function (ev)
                 CharacterNetID = hoveredPlayerTabCharacter.NetID,
             })
             ev:StopPropagation()
+            PartyInventory:PlaySound(MultiSelect.SOUND_DRAG_TO_SLOT)
         else -- Put items into hovered slot and subsequent available ones
             -- Must be done next tick, or emulating startDragging will throw "Already multi-dragging" error
             Ext.OnNextTick(function ()
@@ -67,6 +71,7 @@ MultiSelect.Events.MultiDragEnded:Subscribe(function (ev)
                     end
                 end
             end)
+            PartyInventory:PlaySound(MultiSelect.SOUND_DRAG_TO_SLOT)
             ev:StopPropagation()
         end
     end

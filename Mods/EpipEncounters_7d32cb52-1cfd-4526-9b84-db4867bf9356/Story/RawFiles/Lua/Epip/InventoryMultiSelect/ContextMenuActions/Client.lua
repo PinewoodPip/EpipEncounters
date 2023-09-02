@@ -5,6 +5,9 @@ local PartyInventory = Client.UI.PartyInventory
 ---@class Features.InventoryMultiSelect
 local MultiSelect = Epip.GetFeature("Features.InventoryMultiSelect")
 
+MultiSelect.SOUND_SEND_TO_HOMESTEAD = "UI_Game_Inventory_StoreOnLV"
+MultiSelect.SOUND_TOGGLE_WARES = "UI_Game_PartyFormation_PickUp"
+
 ---------------------------------------------
 -- TSKS
 ---------------------------------------------
@@ -110,6 +113,7 @@ ContextMenu.RegisterElementListener("Features.InventoryMultiSelect.ToggleWares",
         PartyInventory:Show()
     end)
     MultiSelect.ClearSelections()
+    ContextMenu:PlaySound(MultiSelect.SOUND_TOGGLE_WARES)
 end)
 
 -- Listen for requests to send items to a character.
@@ -120,6 +124,7 @@ ContextMenu.RegisterElementListener("Features.InventoryMultiSelect.SendToCharact
         CharacterNetID = params.NetID,
     })
     MultiSelect.ClearSelections()
+    -- Doesn't need any special sound to play, the vanilla game doesn't use any (other than the context menu click)
 end)
 
 -- Listen for requests to send items to homestead chest.
@@ -130,4 +135,5 @@ ContextMenu.RegisterElementListener("Features.InventoryMultiSelect.SendToHomeste
         CharacterNetID = Client.GetCharacter().NetID,
     })
     MultiSelect.ClearSelections()
+    ContextMenu:PlaySound(MultiSelect.SOUND_SEND_TO_HOMESTEAD)
 end)
