@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<save>
+	<version major="3" minor="6" revision="6" build="0" />
+	<region id="TextureBank">
+		<node id="TextureBank">
+			<children>
+				<node id="Resource">
+					<attribute id="ID" type="22" value="{0}" />
+					<attribute id="Localized" type="19" value="False" />
+					<attribute id="Streaming" type="19" value="True" />
+					<attribute id="Type" type="4" value="0" />
+					<attribute id="SourceFile" type="30" value="Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/{1}" />
+					<attribute id="Template" type="22" value="{2}" />
+					<attribute id="Name" type="23" value="{2}" />
+					<attribute id="SRGB" type="19" value="False" />
+				</node>
+			</children>
+		</node>
+	</region>
+</save>
