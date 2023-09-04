@@ -429,6 +429,7 @@ LOAD_ORDER = {
             "Epip/TooltipAdjustments/Client_TooltipLayer.lua",
             "Epip/TooltipAdjustments/Client_MovementCosts.lua",
             "Epip/TooltipAdjustments/Client_MasterworkedHint.lua",
+            "Epip/TooltipAdjustments/Client_ContainerPreview.lua",
         },
     },
 

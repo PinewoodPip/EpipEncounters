@@ -670,7 +670,9 @@ function Item.GetContainedItems(container, predicate)
         items[i] = Item.Get(item)
     end
 
-    items = table.filter(items, predicate)
+    if predicate then
+        items = table.filter(items, predicate)
+    end
 
     return items
 end
