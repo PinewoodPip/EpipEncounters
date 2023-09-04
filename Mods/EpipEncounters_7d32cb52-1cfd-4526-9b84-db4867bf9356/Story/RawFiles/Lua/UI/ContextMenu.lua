@@ -138,9 +138,12 @@ function ContextMenu:RegisterInvokeListener(method, handler, uiInstance, when)
     end, when)
 end
 
+---Sets the position of a context menu.
+---@param ui UIObject? Defaults to active context menu.
+---@param x number? Defaults to current X.
+---@param y number? Defaults to current Y.
 function ContextMenu.SetPosition(ui, x, y)
     ui = ui or ContextMenu.GetActiveUI()
-    -- TODO pushback near edges
     x = x or ContextMenu.position.x
     y = y or ContextMenu.position.y
 
@@ -150,26 +153,25 @@ function ContextMenu.SetPosition(ui, x, y)
 
     ContextMenu.position = {x = x, y = y}
 
+    local width = 0 -- Combined width of all menus.
+    local screenPos = ui:GetPosition()
     for i=0,#root.contextMenusList.content_array-1,1 do
         local menu = root.contextMenusList.content_array[i]
 
         menu.x = x + (i * 265)
         menu.y = y
 
-        -- TEMP!!!
-        -- TODO pushback (keepInScreen)
-        -- if i == 0 then
-        --     menu.x = 0
-        --     menu.y = 0
-        -- end
+        width = width + menu.width
+    end
 
-        -- local bottom = menu.y + menu.height
-        -- local stageHeight = ContextMenu.Root.stage.fullScreenHeight
-
-        -- Ext.Print(bottom, stageHeight)
-        -- if bottom > stageHeight then
-        --     menu.y = menu.y - (menu.y + menu.height - stageHeight)
-        -- end
+    -- Push all menus to the left if they were to overflow
+    local rightEdgeX = screenPos[1] + width + x
+    local pushLeft = rightEdgeX - Client.GetViewportSize()[1]
+    if pushLeft > 0 and x >= 0 then
+        for i=0,#root.contextMenusList.content_array-1,1 do
+            local menu = root.contextMenusList.content_array[i]
+            menu.x = menu.x - pushLeft
+        end
     end
 end
 
