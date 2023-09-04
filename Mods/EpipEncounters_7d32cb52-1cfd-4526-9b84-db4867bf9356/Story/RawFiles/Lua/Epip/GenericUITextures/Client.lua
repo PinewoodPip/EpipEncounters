@@ -914,6 +914,15 @@ local Textures = {
                     YELLOW = T("PIP_UI_Frame_Portrait_Combat_Yellow", {
                         GUID = "befa5351-98ac-4879-b7c4-b5570d9f1572",
                     }),
+                    DARK_RED = T("PIP_UI_Frame_Portrait_Combat_DarkRed", {
+                        GUID = "1e108c6a-6d16-49ab-896e-8e6f1df65169",
+                    }),
+                    GRAY = T("PIP_UI_Frame_Portrait_Combat_Gray", {
+                        GUID = "88912b8e-0094-4c3d-ba50-96df2b83b6a9",
+                    }),
+                    RED = T("PIP_UI_Frame_Portrait_Combat_Red", {
+                        GUID = "6c86877b-6d7d-4b9b-897d-f6854aa8c1d4",
+                    }),
                 },
                 HEX = {
                     BRONZE = T("PIP_UI_Frame_HexPortrait_Bronze", {
@@ -923,6 +932,19 @@ local Textures = {
                         GUID = "c3c4cf5c-3cba-4f34-8955-d46a639388c8",
                     }),
                 },
+            },
+            COLORED_NOTIFICATION = {
+                DARK_RED = T("PIP_UI_Frame_ColoredNotification_DarkRed", {
+                    GUID = "affdec4f-4775-4bae-b4dd-4d3858681db1",
+                }),
+            },
+            ENTRIES = {
+                DARK = T("PIP_UI_Frame_Entry_Dark", {
+                    GUID = "de09b187-935c-44d1-8b0b-81979519b106",
+                }),
+                GRAY = T("PIP_UI_Frame_Entry_Transparent_WithRightMargin", {
+                    GUID = "f4a62d9d-0d0a-4306-a77e-0c445fbae54e",
+                }),
             },
             EQUIPMENT_SLOTS = {
                 AMULET = T("PIP_UI_Frame_Slot_Amulet", {
@@ -972,6 +994,9 @@ local Textures = {
                     BLUE = T("PIP_UI_Slot_Add_Blue", { -- TODO fix name; missing frame prefix
                         GUID = "9160c159-7085-41ab-9b87-3a22c038de61",
                     }),
+                    SIMPLE = T("PIP_UI_Frame_Slot_Add_Simple", {
+                        GUID = "75af7dda-8564-4af8-b791-ba0a91939058",
+                    }),
                 },
                 FANCY_LARGE = T("PIP_UI_Frame_Slot_Fancy_Large", {
                     GUID = "12db1336-372c-4272-a422-c3fc99add409",
@@ -998,6 +1023,11 @@ local Textures = {
                 }),
                 UNIQUE = T("PIP_UI_Frame_Rarity_Unique", {
                     GUID = "ca088d7a-816b-4f42-87c7-62acd595a22c",
+                }),
+            },
+            RECTANGLES = {
+                TINY = T("PIP_UI_Frame_Rectangle_Tiny", {
+                    GUID = "79d6065f-316a-4f63-9fd1-a13dd3483841",
                 }),
             },
             WHITE_TATTERED = T("PIP_UI_Frame_White_Tattered", {
@@ -1037,6 +1067,9 @@ local Textures = {
             }),
             CLIPBOARD_HEADERED = T("PIP_UI_Panel_Clipboard_Headered", {
                 GUID = "67f908d0-04bf-4718-9c43-543f9f8fe4cb",
+            }),
+            CLIPBOARD_HEADERED_WITH_ICON_NO_PAPER = T("PIP_UI_Panel_Clipboard_Headered_WithIcon_NoPaper", {
+                GUID = "b5a70373-276d-496f-bdd3-5b3744698add",
             }),
             CLIPBOARD_LARGE = T("PIP_UI_Panel_Clipboard_Large", {
                 GUID = "c416e67c-339b-4527-937a-cc96cf9c93e8",

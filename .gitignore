@@ -89,3 +89,6 @@ Mods/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/Story/RawFiles/Lua/Pers
 Mods/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/Story/RawFiles/Python/generic_convert_to_dds.py
 Mods/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/Story/RawFiles/Python/pip_generic_convert_to_dds.py
 *.wav
+
+# UI textures
+Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/Content/\[PAK\]_UI
