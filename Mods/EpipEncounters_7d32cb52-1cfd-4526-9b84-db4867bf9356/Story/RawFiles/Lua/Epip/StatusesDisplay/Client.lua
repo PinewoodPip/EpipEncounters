@@ -150,9 +150,9 @@ function StatusesDisplay.Create(char)
     -- Update the UI every tick, and destroy it if the character is removed from the party.
     GameState.Events.Tick:Subscribe(function (_)
         local uiChar = Character.Get(instance.CharacterHandle)
-        if uiChar.IsPlayer then
+        if uiChar and uiChar.IsPlayer and GameState.IsInSession() then -- Do not update during level swap
             instance:Update()
-        else
+        elseif not uiChar or not uiChar.IsPlayer then -- Destroy instance if character was removed or became non-player
             StatusesDisplay.Destroy(instance)
         end
     end, {StringID = instance.GUID})
