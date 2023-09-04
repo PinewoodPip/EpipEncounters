@@ -22,6 +22,22 @@
       "ReferenceText": "Experimental! May cause issues with certain skills. Please report any!<br>Server-side option is the most reliable at the moment.",
       "TranslatedText": "试验功能! 部分技能可能出问题. 请反馈给作者<br>主机端 是目前最可靠的选项"
     },
+    "h8277c4cdg8990g406fga0b5gef3f0d386620": {
+      "ReferenceText": "If enabled, the animation for picking up items through their world tooltip will be cancelled, allowing multiple items to be picked up faster.",
+      "TranslatedText": "启用后, 通过环境提示拾取物品的动画将被取消. 从而可以更快地拾取多个物品"
+    },
+    "hf832b7ceg2e16g454dg8b5cg2ac87a0f7681": {
+      "ReferenceText": "Speed up world tooltip item pick-ups",
+      "TranslatedText": "加快环境提示中的物品拾取"
+    },
+    "hb98d5bd4g800cg4d76gb941g7c3c59bd9553": {
+      "ReferenceText": "Show B/H",
+      "TranslatedText": "显示重创/蹂躏"
+    },
+    "he085d18bge863g4bf2ga811g562dcc358d76": {
+      "ReferenceText": "Shows B/H amounts over the heads of characters in combat.",
+      "TranslatedText": "战斗中, 角色头上显示重创/蹂躏数值<br><font color='FFFF00'>只适用于史诗遭遇mod</font>"
+    },
     "h9f5438ffg5024g4264gaaa2gef122c54e518": {
       "ReferenceText": "Are you sure you want to start a new game?",
       "TranslatedText": "你确定要开始新游戏吗?"
@@ -114,6 +130,10 @@
       "ReferenceText": "Displays all Epic Encounters Artifacts.",
       "TranslatedText": "显示所有史诗遭遇mod中的神器"
     },
+    "hde789445g157eg4ecbg962bg1cb03cdfdc80": {
+      "ReferenceText": "View all sort of information from enabled mods.",
+      "TranslatedText": "从mod中查看整理好的信息"
+    },
     "hc31a7649g3a59g4595gbfecg3fdc812c0c1f": {
       "ReferenceText": "Codex",
       "TranslatedText": "法典"
@@ -182,6 +202,10 @@
       "ReferenceText": "Any",
       "TranslatedText": "任何"
     },
+    "h67f7cc80g5e7eg4e4eg85e4gb451cc2cab48": {
+      "ReferenceText": "Applies only to EE.",
+      "TranslatedText": "只适用于史诗遭遇mod"
+    },
     "h67b0f5b2gce06g4eefgbc69g36069a35bb3c": {
       "ReferenceText": "Apply",
       "TranslatedText": "应用"
@@ -218,6 +242,10 @@
       "ReferenceText": "Benevolence",
       "TranslatedText": "仁慈"
     },
+    "ha9646fd9ge69fg46d2g9fc2gc9442c28041c": {
+      "ReferenceText": "Books",
+      "TranslatedText": "书籍"
+    },
     "ha8c99111g67d2g4321g8e8cg92282405ebe8": {
       "ReferenceText": "Boots",
       "TranslatedText": "鞋子"
@@ -229,6 +257,10 @@
     "h5df736bfgcdc9g48e4ga09ag1967abc64832": {
       "ReferenceText": "Breast",
       "TranslatedText": "内心"
+    },
+    "hea4b1852geca7g46f0ga067g33ca3ec8159c": {
+      "ReferenceText": "Camera",
+      "TranslatedText": "相机"
     },
     "h5a50b777gc16cg4106gbde8gf9dd48954c7f": {
       "ReferenceText": "Cancel",
@@ -378,6 +410,10 @@
       "ReferenceText": "Incarnate Champion",
       "TranslatedText": "冠军魔妖"
     },
+    "h829886b0g20a7g4185gb5c8g84ac8ce1402a": {
+      "ReferenceText": "Info",
+      "TranslatedText": "信息"
+    },
     "he8c517d9gc48fg42f8ga501g35f9909946b9": {
       "ReferenceText": "Inventory",
       "TranslatedText": "背包"
@@ -397,6 +433,10 @@
     "hebad38dcg58c3g4a03gb44eg02833543ba38": {
       "ReferenceText": "Keybinds",
       "TranslatedText": "按键绑定"
+    },
+    "h2f44a9c7ge634g4630gae76g62a133475f12": {
+      "ReferenceText": "Keys",
+      "TranslatedText": "钥匙"
     },
     "hae4f0f05geeb8g4aaagabc1gb990717dd33e": {
       "ReferenceText": "Keyword",
@@ -425,6 +465,10 @@
     "h45ce9d99gf8b6g4d3dgb6dagdbc9c03d3287": {
       "ReferenceText": "Level %d-%d",
       "TranslatedText": "等级 %d-%d"
+    },
+    "h1b456c73gd007g49acgab1eg66475ca108d2": {
+      "ReferenceText": "Masterworked",
+      "TranslatedText": "杰作"
     },
     "h6ac3a705g41f6g43d9g9d45ge53900932b94": {
       "ReferenceText": "Meditate",
@@ -782,6 +826,10 @@
       "ReferenceText": "Wind Elemental",
       "TranslatedText": "风元素"
     },
+    "h8e3df1d3g4284g4630ga169g58c1191b1f18": {
+      "ReferenceText": "Epip Patch Notes",
+      "TranslatedText": "EPIP补丁记录"
+    },
     "h866e5a46g3002g4c1bgba33g4aaef5ca5413": {
       "ReferenceText": "%s v%s by %s",
       "TranslatedText": "%s v%s 来自 %s"
@@ -1000,7 +1048,7 @@
     },
     "hb7ac349eg981eg4bdega605g533f9a7bea9c": {
       "ReferenceText": "Enables alternative sorting for the save/load UI, as well as searching.",
-      "TranslatedText": "启用保存/载入界面的存档排序和搜索"
+      "TranslatedText": "启用保存/载入界面的存档排序, 也适用于搜索中"
     },
     "hbd18d9b1g7709g419agb8d6gdccf938dcaf3": {
       "ReferenceText": "Epic Loading Screen",
@@ -1047,8 +1095,8 @@
       "TranslatedText": "启用后, 玩家角色肖像左侧会显示重创和蹂躏层数"
     },
     "ha1146687g9261g49d4gad63g0269559fce2d": {
-      "ReferenceText": "If enabled, chairs and ladders will show world tooltips. Requires \"Enable tooltips for all items\" to be enabled, as these do not have tooltips by default.",
-      "TranslatedText": "启用后, 环境提示中会显示椅子和梯子. 需要启用 '显示所有物品' , 因为默认不会显示这类物品"
+      "ReferenceText": "If enabled, chairs, ladders and beds will show world tooltips. Requires \"Enable tooltips for all items\" to be enabled, as these do not have tooltips by default.",
+      "TranslatedText": "启用后, 环境提示中会显示椅子, 梯子和床. 需要启用 '显示所有物品' , 因为默认不会显示这类物品"
     },
     "hae703884g68c4g44d1gb1d2g211f87e7309c": {
       "ReferenceText": "If enabled, clicking world tooltips will open containers rather than picking them up.",
@@ -1163,8 +1211,8 @@
       "TranslatedText": "显示迷你地图"
     },
     "haa0cd7a5g5950g4cceg8fe0gd343fc6db5e0": {
-      "ReferenceText": "Show chairs and ladders",
-      "TranslatedText": "显示椅子和梯子"
+      "ReferenceText": "Show chairs, ladders and beds",
+      "TranslatedText": "显示椅子, 梯子和床"
     },
     "h46166b8cg4afbg4039g822dg00fab1a7db15": {
       "ReferenceText": "Show doors",
@@ -1262,6 +1310,10 @@
       "ReferenceText": "Turn Delayed",
       "TranslatedText": "回合延后"
     },
+    "h8db61443g39bfg45f1g8c0cga6ab56bb12b7": {
+      "ReferenceText": "Open Generic UI Texture Test UI",
+      "TranslatedText": "打开通用UI材质测试UI"
+    },
     "h42920f03g276eg49e3gbe24gee444973feef": {
       "ReferenceText": "Search...",
       "TranslatedText": "搜索"
@@ -1317,6 +1369,14 @@
     "h36ba40b2ge76bg4ea9g90ecgde3d4fc01945": {
       "ReferenceText": "Rows",
       "TranslatedText": "行"
+    },
+    "h1608e07agf046g4d0dg8298gcfd263df903e": {
+      "ReferenceText": "Allow dragging in unlearnt skills",
+      "TranslatedText": "允许拖拽未学习的技能"
+    },
+    "hfcebd9e1g7fa9g4176g81b4g7cb089ba65ba": {
+      "ReferenceText": "If enabled, you will be able to drag skills the character doesn't know onto the hotbar.\nThis does not allow the skills to be used, but is useful for creating placeholders.",
+      "TranslatedText": "启用后, 你可以拖拽角色不知道的技能到快捷栏上"
     },
     "h94b55185g6055g42b9gac5bgc6bedbffdfef": {
       "ReferenceText": "Choose an icon...",
@@ -1410,6 +1470,18 @@
       "ReferenceText": "Consumable Type",
       "TranslatedText": "消耗品类型"
     },
+    "h54323161g125cg4289gb934g2d9fc803c92c": {
+      "ReferenceText": "Filters items by stat boost, such as attribute or ability boosts.\nEx. 'Summoning' will show items that increase the Summoning ability. Queries need not be whole words.",
+      "TranslatedText": "按属性增强过滤物品, 例如属性或技能提增强.\n例如, \"召唤学派” 将显示增加召唤学派的物品. 查询关键词可以用不完整的单词"
+    },
+    "h13d1cd67ga1e8g4d7cg813bg3c01187b10ce": {
+      "ReferenceText": "If enabled, books that have been read and keys that have been used will be shown.",
+      "TranslatedText": "启用后, 阅读过的书籍和使用过的钥匙会被标识出来"
+    },
+    "h05a441a6gbe67g46adg9053g4e553bbf229c": {
+      "ReferenceText": "If enabled, items marked as wares will be shown.",
+      "TranslatedText": "启用后, 显示标记为杂物的物品"
+    },
     "h8b035113g39eag49e6gae13g9a1de5375471": {
       "ReferenceText": "If enabled, the UI will be closed if you click anything in the world.",
       "TranslatedText": "启用后, 如果在游戏世界任意点击, 会关闭页面"
@@ -1446,6 +1518,14 @@
       "ReferenceText": "Show Equipped Items",
       "TranslatedText": "显示已装备物品"
     },
+    "h50e08a06gb022g457fg9f6ag83565deb610f": {
+      "ReferenceText": "Show Used Items",
+      "TranslatedText": "显示使用过的物品"
+    },
+    "hf97f3dfegd102g443cg8416ga0c854b499b8": {
+      "ReferenceText": "Show Wares",
+      "TranslatedText": "显示杂物"
+    },
     "hd5a53bd8gdcaag4280ga76dg905f40bde45e": {
       "ReferenceText": "Show learned skills",
       "TranslatedText": "显示已学的技能"
@@ -1453,6 +1533,10 @@
     "h4f83fd0cg8556g4826gb76cg82ec728bef2b": {
       "ReferenceText": "Stat Boost",
       "TranslatedText": "属性过滤"
+    },
+    "h41dc13afg2becg4758g8212g5e71b34df083": {
+      "ReferenceText": "Epip Settings",
+      "TranslatedText": "EPIP设置"
     },
     "hb5e67864g87f1g4493gb758g47bdab2b69aa": {
       "ReferenceText": "Alternative Status Display",
@@ -1498,21 +1582,85 @@
       "ReferenceText": "Statuses in this list will be filtered out and not shown in the status bar. Holding shift temporarily disables this filter.",
       "TranslatedText": "该列表的状态会被过滤掉, 不会显示在状态栏上. 按住shift可以暂时禁用过滤"
     },
+    "h6dcae9c5gcbfcg4f06g9329gac12ad711d18": {
+      "ReferenceText": "Fix Astrologer's Gaze / Far Out Man range",
+      "TranslatedText": "修复占星师视觉/天才法师范围"
+    },
+    "hba6d14b0gdbb9g4b00g8036ga14b329a1960": {
+      "ReferenceText": "If enabled, zone and cone-type skills will display the correct range if the character has Astrologer's Gaze / Far Out Man.",
+      "TranslatedText": "启用后, 如果角色拥有占星师视觉或天才法师, 射线以及扇形技能会正确地显示范围<br><font color='FFFF00'>只适用于史诗遭遇mod</font>"
+    },
+    "h420215fegeaecg4ccdg9e74gf68ed7bd72b9": {
+      "ReferenceText": "If enabled, item tooltips will show a hint if the item has been Masterworked.",
+      "TranslatedText": "启用后, 物品提示会显示该物品是否是杰作"
+    },
+    "h5018b6b9g7897g429fg9440gb60d076ace93": {
+      "ReferenceText": "Show Masterworked hint",
+      "TranslatedText": "显示杰作提示"
+    },
+    "hb7eede78gae41g4816g8ddeg08502b5e2e77": {
+      "ReferenceText": "%s%s free movement remaining",
+      "TranslatedText": "%s%s 剩余免费移动距离"
+    },
+    "h8ed2ccd3g2e36g48bdg98dcg3cbf09c78464": {
+      "ReferenceText": "Combine with Pixie Dust to create a small rune of the respective material.",
+      "TranslatedText": "和仙尘组合成材料对应的小型符文"
+    },
+    "h2b831dbcg0141g444fg86bcg9f2224602030": {
+      "ReferenceText": "Display rune crafting hint",
+      "TranslatedText": "显示符文合成提示"
+    },
+    "hdd0f768aged04g4450g8259g62763d810f2f": {
+      "ReferenceText": "If enabled, items whose only purpose is to be crafted into runes will display how to do so in their tooltip.<br>%s",
+      "TranslatedText": "启用后, 只能用来合成符文的材料会显示合成提示<br>%s"
+    },
+    "h562b6c73geee1g4d27gb3c3g027f92916d0a": {
+      "ReferenceText": "Rune crafting material<br>%s",
+      "TranslatedText": "符文合成材料<br>%s"
+    },
     "h37cf1748g9dafg4d2ag9744g00e75e764ee5": {
       "ReferenceText": "+%s%% Weapon %s Damage",
       "TranslatedText": "附加%s%% 武器 %s 伤害"
+    },
+    "hc28e1c17g7862g402bgabc7gaab851087be4": {
+      "ReferenceText": "AP Costs",
+      "TranslatedText": "行动点消耗"
     },
     "h35bb3fefg60e1g4498gba12g4b44112b6239": {
       "ReferenceText": "Applied by %s",
       "TranslatedText": "来自 %s"
     },
+    "h6d7395dbgd11eg4fc2g8859gb3a903853b1c": {
+      "ReferenceText": "Damage scales only with character level.",
+      "TranslatedText": "伤害只受到角色等级影响"
+    },
+    "ha0a0a085g359ag4f0dga54bgcf40d0f6af9d": {
+      "ReferenceText": "Display quest reward deltamod generation warning",
+      "TranslatedText": "显示任务奖励增强生成提醒"
+    },
     "h688e725agb3f5g4adega349g0df981cfab97": {
       "ReferenceText": "From item: %s",
       "TranslatedText": "来自物品 %s"
     },
+    "h3e92415fg1242g4d2dg8297g4f4ed3d3d413": {
+      "ReferenceText": "If enabled, increases the layer of the surface tooltip UI, which makes surface tooltips render over the hotbar instead of underneath it.",
+      "TranslatedText": "启用后, 提高地表提示的UI显示层级, 也就是说地表提示不会被快捷栏挡住"
+    },
     "h2095b033g942eg400agb596g45d9ba3294c7": {
       "ReferenceText": "If enabled, status tooltips will show the name of the character that applied the status, if any. Also allows you to click statuses to center the camera on the source character.",
       "TranslatedText": "启用后, 状态提示会显示来源角色的名字. 如果点击状态, 镜头会移动到来源角色上"
+    },
+    "h72d280e5gde61g49bdgbbdbg7c6e6eec9dde": {
+      "ReferenceText": "If enabled, the quest rewards screen will warn about deltamod generation only occuring afterwards.<br><font color='FFFF00'>Applies only to EE.</font>",
+      "TranslatedText": "启用后, 任务奖励窗口只会在发生后提醒增强生成<br><font color='FFFF00'>只适用于史诗遭遇mod</font>"
+    },
+    "hcc271c27g1f31g42f9gafd3g989f2fc5dccd": {
+      "ReferenceText": "Increase Surface Tooltip UI Layer",
+      "TranslatedText": "提高地表提示的UI显示层级"
+    },
+    "h61ee7e1ag46beg4da5g9ba9g8763560995b6": {
+      "ReferenceText": "Owned by %s",
+      "TranslatedText": "属于 %s"
     },
     "h5e7095b6ga182g4dc0gadfbg198413b93310": {
       "ReferenceText": "Remove 'Set :' Prefixes",
@@ -1533,6 +1681,14 @@
     "h19773400g8de1g46d7g9901g779b750ebddd": {
       "ReferenceText": "Set Icon",
       "TranslatedText": "设置图标"
+    },
+    "h0d38d9a9gd416g4815gabc7gf9d8d901d40a": {
+      "ReferenceText": "If enabled, light items such as torches, candles and braziers will show world tooltips.",
+      "TranslatedText": "启用后, 环境提示中会显示光源物品, 比如火炬, 蜡烛, 火盆"
+    },
+    "h8605ee5agf02ag4f24g9bf2g60906ab5ef57": {
+      "ReferenceText": "Show Lights",
+      "TranslatedText": "显示光源"
     }
   }
 }
