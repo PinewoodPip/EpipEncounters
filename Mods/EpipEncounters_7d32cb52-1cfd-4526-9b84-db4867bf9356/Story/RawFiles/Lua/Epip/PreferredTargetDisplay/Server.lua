@@ -1,12 +1,12 @@
 
-local PreferredTargetDisplay = Epip.Features.PreferredTargetDisplay
+---@class Features.PreferredTargetDisplay
+local PreferredTargetDisplay = Epip.GetFeature("Features.PreferredTargetDisplay")
 
 ---@param target EsvCharacter
 ---@param source EsvCharacter
 ---@param enabled boolean
 function PreferredTargetDisplay.SetTag(target, source, enabled)
     if not target or not source then return nil end
-    print(target.DisplayName, source.DisplayName)
 
     local tauntedTag = PreferredTargetDisplay.TAUNTED_TAG_PREFIX .. source.MyGuid
     local tauntingTag = PreferredTargetDisplay.TAUNTING_TAG_PREFIX .. target.MyGuid
@@ -15,12 +15,12 @@ function PreferredTargetDisplay.SetTag(target, source, enabled)
         Osi.SetTag(target.MyGuid, tauntedTag)
         Osi.SetTag(source.MyGuid, tauntingTag)
 
-        Osiris.DB_PIP_PreferredTargetDisplay_Tagged:Set(source.MyGuid, target.MyGuid)
+        Osiris.GetDatabase("DB_PIP_PreferredTargetDisplay_Tagged", 2):Set(source, target)
     else
         Osi.ClearTag(target.MyGuid, tauntedTag)
         Osi.ClearTag(source.MyGuid, tauntingTag)
 
-        Osiris.DB_PIP_PreferredTargetDisplay_Tagged:Delete(source.MyGuid, target.MyGuid)
+        Osiris.GetDatabase("DB_PIP_PreferredTargetDisplay_Tagged", 2):Delete(source, target)
     end
 end
 
@@ -51,33 +51,28 @@ Ext.Events.BeforeStatusDelete:Subscribe(function(ev)
     RemoveTags(ev.Status)
 end)
 
-Osiris.RegisterSymbolListener("CharacterDied", 1, "after", function(char)
-    char = Ext.GetCharacter(char)
+Osiris.RegisterSymbolListener("CharacterDied", 1, "after", function(targetCharGUID)
+    local targetChar = Character.Get(targetCharGUID)
 
-    local _, _, tuples = Osiris.DB_PIP_PreferredTargetDisplay_Tagged:Get(nil, char.MyGuid)
-    tuples = tuples or {}
-
+    local tuples = Osiris.GetDatabase("DB_PIP_PreferredTargetDisplay_Tagged", 2):Query(nil, targetCharGUID)
     for _,tuple in ipairs(tuples) do
-        PreferredTargetDisplay.SetTag(char, Ext.GetCharacter(tuple[1]), false)
+        local sourceChar = Character.Get(tuple[1])
+        PreferredTargetDisplay.SetTag(targetChar, sourceChar, false)
     end
 end)
 
-Osiris.RegisterSymbolListener("CharacterStatusRemoved", 3, "after", function(char, status, _)
+Osiris.RegisterSymbolListener("CharacterStatusRemoved", 3, "after", function(targetCharGUID, status, _)
     if status == "TAUNTED" then
-        char = Ext.GetCharacter(char)
-
-        local _, _, tuples = Osiris.DB_PIP_PreferredTargetDisplay_Tagged:Get(nil, char.MyGuid)
-        tuples = tuples or {}
-
+        local char = Character.Get(targetCharGUID)
+        local tuples = Osiris.GetDatabase("DB_PIP_PreferredTargetDisplay_Tagged", 2):Query(nil, char)
         for _,tuple in ipairs(tuples) do
-            PreferredTargetDisplay.SetTag(char, Ext.GetCharacter(tuple[1]), false)
+            PreferredTargetDisplay.SetTag(char, Character.Get(tuple[1]), false)
         end
     end
 end)
 
 Ext.Events.BeforeStatusApply:Subscribe(function(ev)
-    local status = ev.Status ---@type EsvStatusConsume
-    
+    local status = ev.Status ---@cast status EsvStatusConsume We only check TAUNTED.
     if status.StatusId == "TAUNTED" then
         local source = Character.Get(status.StatusSourceHandle) ---@type EsvCharacter
         local target = Character.Get(status.OwnerHandle) ---@type EsvCharacter

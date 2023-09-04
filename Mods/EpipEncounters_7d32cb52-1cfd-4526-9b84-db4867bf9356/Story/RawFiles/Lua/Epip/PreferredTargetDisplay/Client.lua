@@ -1,10 +1,11 @@
 
-local PreferredTargetDisplay = Epip.Features.PreferredTargetDisplay
+---@class Features.PreferredTargetDisplay
+local PreferredTargetDisplay = Epip.GetFeature("Features.PreferredTargetDisplay")
 
 ---@param char EclCharacter
 ---@return boolean
 function PreferredTargetDisplay.IsPreferred(char)
-    return char:HasTag(PreferredTargetDisplay.AI_PREFERRED_TAG)
+    return char:HasTag(Character.AI_PREFERRED_TAG)
 end
 
 ---@param char EclCharacter

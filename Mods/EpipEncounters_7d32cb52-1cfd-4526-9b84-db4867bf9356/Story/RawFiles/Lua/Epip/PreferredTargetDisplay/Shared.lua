@@ -1,7 +1,11 @@
 
-Epip.Features.PreferredTargetDisplay = {
+---------------------------------------------
+-- Tracks and displays aggro-related information for characters.
+---------------------------------------------
+
+---@class Features.PreferredTargetDisplay : Feature
+local PreferredTargetDisplay = {
     TAUNTING_TAG_PREFIX = "PIP_PreferredTargetDisplay_Taunting_",
     TAUNTED_TAG_PREFIX = "PIP_PreferredTargetDisplay_TauntedBy_",
 }
-local PreferredTargetDisplay = Epip.Features.PreferredTargetDisplay
-Epip.AddFeature("PreferredTargetDisplay", "PreferredTargetDisplay", PreferredTargetDisplay)
+Epip.RegisterFeature("PreferredTargetDisplay", PreferredTargetDisplay)
