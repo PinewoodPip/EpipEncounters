@@ -16,14 +16,11 @@
 -- recenter amount text upon change
 
 ---@class ContextMenuUI : UI
+---@field _LatestHoveredCharacterHandle CharacterHandle
+---@field _LatestHoveredItemHandle ItemHandle
 local ContextMenu = {
-    Root = nil,
-    UI = nil,
-
-    _LatestHoveredCharacterHandle = nil, ---@type ComponentHandle
-    _LatestHoveredItemHandle = nil, ---@type ComponentHandle
-
     VANILLA_ACTIONS = {
+        SIT = 2,
         LOOT_CHARACTER = 3,
         PICK_UP = 4,
         ATTACK = 6,
@@ -71,7 +68,15 @@ local ContextMenu = {
         ["Public/Game/GUI/contextMenu.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/contextMenu.swf",
     },
 }
-Epip.InitializeUI(Client.UI.Data.UITypes.contextMenu, "ContextMenu", ContextMenu)
+Epip.InitializeUI(Ext.UI.TypeID.contextMenu.Object, "ContextMenu", ContextMenu)
+
+---@type table<integer, true>
+ContextMenu.ITEM_ACTIONS = {
+    [ContextMenu.VANILLA_ACTIONS.SEND_TO_CHARACTER] = true,
+    [ContextMenu.VANILLA_ACTIONS.DROP] = true,
+    [ContextMenu.VANILLA_ACTIONS.PICK_UP] = true,
+    [ContextMenu.VANILLA_ACTIONS.SIT] = true,
+}
 
 ---------------------------------------------
 -- CLASSES
@@ -95,11 +100,9 @@ Epip.InitializeUI(Client.UI.Data.UITypes.contextMenu, "ContextMenu", ContextMenu
 ---@return EclCharacter?
 function ContextMenu.GetCurrentCharacter(force)
     local char = nil
-
     if ContextMenu.IsOpen() or force then
-        char = Character.Get(ContextMenu._LatestHoveredCharacterHandle) ---@cast char EclCharacter
+        char = Character.Get(ContextMenu._LatestHoveredCharacterHandle)
     end
-
     return char
 end
 
@@ -296,6 +299,7 @@ local function UpdateLatestHoveredCharacter()
     -- Do not update the char is a context menu is already open.
     if char and not ContextMenu.IsOpen() then
         ContextMenu._LatestHoveredCharacterHandle = char.Handle
+        ContextMenu._LatestHoveredItemHandle = nil
     end
 end
 local function UpdateLatestHoveredItem()
@@ -303,6 +307,7 @@ local function UpdateLatestHoveredItem()
 
     if item and not ContextMenu.IsOpen() then
         ContextMenu._LatestHoveredItemHandle = item.Handle
+        ContextMenu._LatestHoveredCharacterHandle = nil
     end
 end
 
@@ -408,7 +413,7 @@ function ContextMenu.GetActiveUI()
     local ui = ContextMenu.UI
 
     if not ContextMenu.Root.visible then
-        ui = Ext.UI.GetByType(Ext.UI.TypeID.contextMenu.Object)
+        ui = Ext.UI.GetByType(Ext.UI.TypeID.contextMenu.Object) or Ext.UI.GetByType(Ext.UI.TypeID.contextMenu.Default)
     end
 
     return ui
@@ -693,23 +698,16 @@ ContextMenu:RegisterCallListener("pipVanillaContextMenuOpened", function (ev)
 
     ContextMenu.elementsCount = #vanillaElements
 
-    -- Scan elements to check if we're examining an item
-    -- If this context menu is from an item, the UICall listener will have already caught it.
-    local isFromItem = false
-    for _,data in pairs(vanillaElements) do
-        local action = data.ActionID
-
-        -- TODO apparently the open option is the same for both corpses and items... how to distinguish without checking string?
-
-        -- TODO reverse logic - assume it's a char until we find an option that proves it's an item. Since the issue are items; right-clicking them from inventory does not pull up the health bar so we cannot rely on it to know that an item was context'd
-
-        if action == ContextMenu.VANILLA_ACTIONS.SEND_TO_CHARACTER or action == ContextMenu.VANILLA_ACTIONS.DROP or action == ContextMenu.VANILLA_ACTIONS.PICK_UP then
-            isFromItem = true
-            break
+    -- Log unmapped action IDs.
+    if ContextMenu:IsDebug() then
+        for _,data in pairs(vanillaElements) do
+            if not table.reverseLookup(ContextMenu.VANILLA_ACTIONS, data.ActionID) then
+                ContextMenu:LogWarning("Unmapped action:", data.ActionID, data.Index)
+            end
         end
     end
 
-    if isFromItem then
+    if item then
         ContextMenu._LatestHoveredCharacterHandle = nil
         Utilities.Hooks.FireEvent("PIP_ContextMenu", "VanillaMenu_Item", Item.Get(ContextMenu.itemHandle))
     else
