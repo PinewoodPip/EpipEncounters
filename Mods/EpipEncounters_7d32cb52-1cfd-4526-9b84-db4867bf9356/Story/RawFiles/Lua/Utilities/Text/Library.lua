@@ -78,6 +78,19 @@ function _TranslatedString.Create(data)
     return data
 end
 
+---Resolves and formats the string.
+---@param ... any|TextFormatData If using TextFormatData, only the first parameter will be used.
+---@return string
+function _TranslatedString:Format(...)
+    local resolvedString = self:GetString()
+    local param1 = ...
+    if type(param1) == "table" then
+        return Text.Format(resolvedString, param1)
+    else
+        return string.format(resolvedString, ...)
+    end
+end
+
 ---@return string
 function _TranslatedString:GetString()
     return Text.GetTranslatedString(self.Handle, self.Handle)
