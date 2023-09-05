@@ -158,6 +158,9 @@ function StatusesDisplay.Create(char)
     end, {StringID = instance.GUID})
 
     StatusesDisplay._Displays[char.Handle] = instance
+
+    -- Required to handle buggy level swaps and recruitment(?).
+    PlayerInfo.ToggleStatuses(false)
 end
 
 ---Returns the manager for a character, if any.
@@ -228,8 +231,8 @@ end
 
 ---Creates managers for all characters in PlayerInfo.
 function StatusesDisplay._Initialize()
-    -- Create managers for existing characters
-    local chars = Character.GetPartyMembers(Client.GetCharacter())
+    -- Create managers for existing characters within the UI
+    local chars = PlayerInfo.GetCharacters()
     for _,char in ipairs(chars) do
         if StatusesDisplay.Get(char) == nil then
             StatusesDisplay.Create(char)
