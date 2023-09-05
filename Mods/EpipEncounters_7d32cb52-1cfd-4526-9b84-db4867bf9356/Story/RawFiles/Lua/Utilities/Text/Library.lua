@@ -466,6 +466,13 @@ function Text.StripFontTags(str)
     return newStr
 end
 
+---Resolves and formats a TSK that uses Larian's placeholder format ("[1]", "[2]" etc.).
+---@param handle TranslatedStringHandle
+---@param ... any
+function Text.FormatLarianTranslatedString(handle, ...)
+    return Text.ReplaceLarianPlaceholders(Text.GetTranslatedString(handle), {...})
+end
+
 ---Replaces Larian placeholders (ex. "[1]", "[2]") within str.
 ---@param str string
 ---@param replacement (string|string[])? Defaults to empty string. If a list is passed and it's length is shorter than the amount of placeholders, the last placeholder will be used for the remaining replacements.

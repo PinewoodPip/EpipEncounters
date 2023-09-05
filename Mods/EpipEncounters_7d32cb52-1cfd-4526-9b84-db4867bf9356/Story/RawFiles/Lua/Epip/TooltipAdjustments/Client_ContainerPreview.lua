@@ -74,7 +74,7 @@ function ContainerPreview.GetInfo(container)
     local previewedItemsCount = ContainerPreview:GetSettingValue(ContainerPreview.Settings.DetailedItemsAmount)
     for i=1,math.clamp(previewedItemsCount, 0, #items),1 do
         local item = items[i]
-        info.PreviewedItemNames[i] = item.DisplayName
+        info.PreviewedItemNames[i] = Item.GetDisplayName(item)
     end
 
     info.RemainingItems = math.max(0, #items - previewedItemsCount)

@@ -84,6 +84,27 @@ Item = {
         UNIQUE = "h04685fd1g024ag4641gaed6g0ffb2d0ff103",
     },
 
+    UNIDENTIFIED_ITEM_TSKHANDLE = "hf9d034e1gf819g4c6cga36fg7afd009b5827", --- "Unidentified [1]"
+
+    ---Does not include weapon types. See `WEAPON_TYPE_TSKHANDLES`.
+    ---@type table<ItemSlot, TranslatedStringHandle>
+    ITEM_SLOT_TSKHANDLES = {
+        ["Helmet"] = "hd4b98ff5g33a8g44e0ga6a9gdb1ab7d70bf3",
+        ["Breast"] = "hb5c52d20g6855g4929ga78ege3fe776a1f2e",
+        ["Leggings"] = "he7042b52g54d7g4f46g8f69g509460dfe595",
+        -- ["Weapon"] = "", -- See `WEAPON_TYPE_TSKHANDLES`
+        ["Shield"] = "h77557ac7g4f6fg49bdga76cg404de43d92f5",
+        ["Ring"] = "h970199f8ge650g4fa3ga0deg5995696569b6",
+        ["Belt"] = "h2a76a9ecg2982g4c7bgb66fgbe707db0ac9e",
+        ["Boots"] = "h9b65aab2gf4c4g4b81g96e6g1dcf7ffa8306",
+        ["Gloves"] = "h185545eagdaf0g4286ga411gd50cbdcabc8b",
+        ["Amulet"] = "hb9d79ca5g59afg4255g9cdbgf614b894be68",
+        ["Ring2"] = "h970199f8ge650g4fa3ga0deg5995696569b6", -- Copy of Ring just in case.
+        ["Wings"] = "hd716a074gd36ag4dfcgbf79g53bd390dd202",
+        ["Horns"] = "hff459609g099bg4cfcg885fg87c3d9e54f59", -- "Head"
+        ["Overhead"] = "hda749a3fg52c0g48d5gae3bgd522dd34f65c",
+    },
+
     ---@type table<ItemLib_Rarity, icon>
     _ITEM_RARITY_ICONS = {
         Uncommon = "Item_Uncommon",
@@ -137,6 +158,26 @@ end
 ---@return boolean
 function Item.IsMeleeWeapon(item)
     return item and item.Stats and (Item.MELEE_WEAPON_TYPES:Contains(item.Stats.WeaponType) or item.Stats.WeaponType == "None")
+end
+
+---Returns the display name of the item.
+---Considers overrides and identification status.
+---@param item Item
+---@return string
+function Item.GetDisplayName(item)
+    local name = item.DisplayName
+    local customDisplayName = item.CustomDisplayName
+    if Ext.IsServer() and customDisplayName ~= "" then
+        name = item.CustomDisplayName
+    elseif Ext.IsClient() and customDisplayName and customDisplayName.Handle.ReferenceString ~= "" then
+        name = customDisplayName.Handle.ReferenceString
+    else
+        if item.Stats and not Item.IsIdentified(item) then -- "Unidentified X"
+            local itemTypeHandle = Item.ITEM_SLOT_TSKHANDLES[Item.GetItemSlot(item)] or "Item" -- TODO! Map weapons
+            name = Text.FormatLarianTranslatedString(Item.UNIDENTIFIED_ITEM_TSKHANDLE, Text.GetTranslatedString(itemTypeHandle))
+        end
+    end
+    return name
 end
 
 ---Returns the icon of the item.
@@ -425,6 +466,33 @@ function Item.GetItemsInPartyInventory(char, predicate)
     end
 
     return items
+end
+
+---Returns whether an item is identified.
+---@param item Item
+---@return boolean
+function Item.IsIdentified(item)
+    if not item.Stats then return true end
+
+    -- Following code is a CDivinityStats_Item::NeedsIdentification() transcript, but with return values flipped to match our name (IsIdentified)
+    -- GlobalSwitches.AutoIdentifyItems is checked at beginning but is is editor-only - and not accessible
+    local globalSwitches = Ext.Utils.GetGlobalSwitches()
+    local needsIdentification = item.ItemType ~= "Undefined" and item.Stats.IsIdentified == 0
+
+    if globalSwitches.GameMode == 1 then -- GM mode?
+        return not needsIdentification
+    end
+
+    ---@diagnostic disable-next-line: assign-type-mismatch
+    local stat = item.StatsFromName ---@type StatsLib_StatsEntry_Weapon|StatsLib_StatsEntry_Armor
+    if stat.NeedsIdentification == "No" then
+        local rarity = item.Stats.Rarity
+        if rarity == "Common" or rarity == "Uncommon" or rarity == "Unique" then
+            needsIdentification = false
+        end
+    end
+
+    return not needsIdentification
 end
 
 --- Gets the amount of Loremaster necessary to identify an item.  
