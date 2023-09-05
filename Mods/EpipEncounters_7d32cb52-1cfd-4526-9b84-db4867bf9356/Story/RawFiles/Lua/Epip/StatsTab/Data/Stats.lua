@@ -32,5 +32,6 @@ local Stats = {
 }
 
 for id,stat in pairs(Stats) do
+    stat.DefaultValue = 0
     CustomStats.RegisterStat(id, stat)
 end

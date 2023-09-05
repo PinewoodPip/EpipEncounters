@@ -29,7 +29,7 @@ local EpicEncountersStats = {
         Name = "Party Splinters",
         Description = "The Artificer's Splinters currently in the party's possession.",
     },
-    
+
     -- EMBODIMENTS
     Embodiment_Force = {
         Name = "Force",
@@ -161,6 +161,7 @@ local EpicEncountersStats = {
 }
 
 for id,stat in pairs(EpicEncountersStats) do
+    stat.DefaultValue = 0
     CustomStats.RegisterStat(id, stat)
 end
 

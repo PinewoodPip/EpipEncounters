@@ -261,8 +261,8 @@ end
 ---@return boolean
 function EpipStats.StatIsAtDefaultValue(char, statID)
     local data = EpipStats.GetStat(statID)
-
-    return data ~= nil and EpipStats.GetStatValue(char, statID) == data.DefaultValue
+    local value = EpipStats.GetStatValue(char, statID)
+    return data == nil or value == nil or value == data.DefaultValue
 end
 
 ---Registers a value hook for a specific stat.

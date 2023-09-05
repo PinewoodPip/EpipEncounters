@@ -4,7 +4,10 @@
 ---------------------------------------------
 
 local CharacterSheet = Client.UI.CharacterSheet
+
+---@class Feature_CustomStats
 local EpipStats = Epip.GetFeature("Feature_CustomStats")
+EpipStats.DEFAULT_VALUE_COLOR = "32302D"
 
 ---------------------------------------------
 -- Vanilla Character stats
@@ -48,7 +51,8 @@ end)
 ---------------------------------------------
 
 CharacterSheet.StatsTab:RegisterHook("FormatStatValue", function(value, data, char)
-    local valueStr = value or ""
+    -- Value is `nil` for unset stats.
+    local valueStr = value and Text.Round(value, 2) or ""
 
     -- Boolean stats show no value
     if data.Boolean or EpipStats.IsCategory(data.ID) then
@@ -57,18 +61,18 @@ CharacterSheet.StatsTab:RegisterHook("FormatStatValue", function(value, data, ch
         if data.MaxCharges then
             valueStr = string.format("%d/%d", valueStr, EpipStats.GetStatValue(char, data.MaxCharges) or 0)
         end
-    
+
+        -- Suffix and prefix
         if data.Suffix then
             valueStr = valueStr .. data.Suffix
         end
-    
         if data.Prefix then
             valueStr = data.Prefix .. valueStr
         end
 
-        -- Grey out
-        if value == 0 then
-            valueStr = "<font color='32302d'>" .. valueStr .. "</font>"
+        -- Grey out absent stats
+        if EpipStats.StatIsAtDefaultValue(char, data.ID) then
+            valueStr = Text.Format(valueStr, {Color = EpipStats.DEFAULT_VALUE_COLOR})
         end
     end
 
