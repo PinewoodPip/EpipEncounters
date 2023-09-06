@@ -107,6 +107,18 @@ function Input.GetActions()
     return actions
 end
 
+---Returns all actions currently bound to the key combination.
+---@param keyCombination InputLib_Action_KeyCombination
+---@return InputLib_Action[] -- Empty if no actions are bound to the combination.
+function Input.GetBoundActions(keyCombination)
+    local actionIDs = Input._InputMap[Input.StringifyBinding(keyCombination)] or {}
+    local actions = {}
+    for i,id in ipairs(actionIDs) do
+        actions[i] = Input.GetAction(id)
+    end
+    return actions
+end
+
 ---Returns the setting that stores an action's bindings.
 ---@param actionID string
 ---@return SettingsLib.Settings.InputBinding
@@ -290,21 +302,19 @@ Input.Events.KeyPressed:Subscribe(function (_)
 
     Input:DebugLog("Mapping pressed: ", mapping)
 
-    local actions = Input._InputMap[mapping]
-    if actions then
-        for _,actionID in ipairs(actions) do
-            if Input.CanExecuteAction(actionID) then
-                Input.Events.ActionExecuted:Throw({
-                    Character = Client.GetCharacter(),
-                    Action = Input.GetAction(actionID),
-                })
+    local actions = Input.GetBoundActions(dummyBinding)
+    for _,action in ipairs(actions) do
+        if Input.CanExecuteAction(action:GetID()) then
+            Input.Events.ActionExecuted:Throw({
+                Character = Client.GetCharacter(),
+                Action = action,
+            })
 
-                if Input._CurrentAction then
-                    Input._FireActionReleasedEvent()
-                end
-
-                Input._CurrentAction = actionID
+            if Input._CurrentAction then
+                Input._FireActionReleasedEvent()
             end
+
+            Input._CurrentAction = action:GetID()
         end
     end
 
