@@ -20,7 +20,7 @@
 ---@field _LatestHoveredItemHandle ItemHandle
 local ContextMenu = {
     VANILLA_ACTIONS = {
-        SIT = 2,
+        USE = 2, -- May have other names such as "Sit" based on an item's peace use actions
         LOOT_CHARACTER = 3,
         PICK_UP = 4,
         ATTACK = 6,
@@ -67,6 +67,13 @@ local ContextMenu = {
     FILEPATH_OVERRIDES = {
         ["Public/Game/GUI/contextMenu.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/contextMenu.swf",
     },
+
+    USE_LEGACY_EVENTS = false,
+    USE_LEGACY_HOOKS = false,
+
+    Events = {
+        EntryPressed = {}, ---@type Event<UI.ContextMenu.Events.EntryPressed>
+    }
 }
 Epip.InitializeUI(Ext.UI.TypeID.contextMenu.Object, "ContextMenu", ContextMenu)
 
@@ -75,7 +82,7 @@ ContextMenu.ITEM_ACTIONS = {
     [ContextMenu.VANILLA_ACTIONS.SEND_TO_CHARACTER] = true,
     [ContextMenu.VANILLA_ACTIONS.DROP] = true,
     [ContextMenu.VANILLA_ACTIONS.PICK_UP] = true,
-    [ContextMenu.VANILLA_ACTIONS.SIT] = true,
+    [ContextMenu.VANILLA_ACTIONS.USE] = true,
 }
 
 ---------------------------------------------
@@ -90,6 +97,13 @@ ContextMenu.ITEM_ACTIONS = {
 ---@field Label string
 ---@field Disabled boolean
 ---@field Legal boolean
+
+---------------------------------------------
+-- EVENTS/HOOKS
+---------------------------------------------
+
+---@class UI.ContextMenu.Events.EntryPressed
+---@field ID string|integer Will be integer for vanilla entries.
 
 ---------------------------------------------
 -- METHODS
@@ -110,32 +124,42 @@ end
 ---@override Necessary to distinguish between the 2 instances.
 ---@param method string ExternalInterface call name.
 ---@param handler fun(ev:EclLuaUICallEvent)
----@param uiInstance "Vanilla"|"Custom"
+---@param uiInstance ("Vanilla"|"Custom")? If `nil`, will be registered for both.
 ---@param when? "Before"|"After"
 function ContextMenu:RegisterCallListener(method, handler, uiInstance, when)
-    Client.UI._BaseUITable.RegisterCallListener(self, method, function (ev)
-        if ev.UI:GetTypeId() < 1000 and uiInstance == "Vanilla" then
-            handler(ev)
-        elseif uiInstance == "Custom" then
-            handler(ev)
-        end
-    end, when)
+    if uiInstance ~= nil then
+        Client.UI._BaseUITable.RegisterCallListener(self, method, function (ev)
+            if ev.UI:GetTypeId() < 1000 and uiInstance == "Vanilla" then
+                handler(ev)
+            elseif uiInstance == "Custom" then
+                handler(ev)
+            end
+        end, when)
+    else -- Register listener for both UIs
+        ContextMenu:RegisterCallListener(method, handler, "Vanilla", when)
+        ContextMenu:RegisterCallListener(method, handler, "Custom", when)
+    end
 end
 
 ---Register a listener for a UI Invoke raw event.
 ---@override Necessary to distinguish between the 2 instances.
 ---@param method string ExternalInterface call name.
 ---@param handler fun(ev:EclLuaUICallEvent)
----@param uiInstance "Vanilla"|"Custom"
+---@param uiInstance ("Vanilla"|"Custom")? If `nil`, will be registered for both.
 ---@param when? "Before"|"After"
 function ContextMenu:RegisterInvokeListener(method, handler, uiInstance, when)
-    Client.UI._BaseUITable.RegisterInvokeListener(self, method, function (ev)
-        if ev.UI:GetTypeId() < 1000 and uiInstance == "Vanilla" then
-            handler(ev)
-        elseif uiInstance == "Custom" then
-            handler(ev)
-        end
-    end, when)
+    if uiInstance ~= nil then
+        Client.UI._BaseUITable.RegisterInvokeListener(self, method, function (ev)
+            if ev.UI:GetTypeId() < 1000 and uiInstance == "Vanilla" then
+                handler(ev)
+            elseif uiInstance == "Custom" then
+                handler(ev)
+            end
+        end, when)
+    else -- Register listener for both UIs
+        ContextMenu:RegisterInvokeListener(method, handler, "Vanilla", when)
+        ContextMenu:RegisterInvokeListener(method, handler, "Custom", when)
+    end
 end
 
 ---Sets the position of a context menu.
@@ -634,14 +658,19 @@ Client.UI.ContextMenu.RegisterElementListener("vanilla_button", "buttonPressed",
     ui:ExternalInterfaceCall("buttonPressed", params.ID, params.actionID)
 end)
 
--- Handle param is unused by the game, always 0
-local function OnButtonPressed(ui, method, id, elementID, handle, amountTxt)
+-- 4th UICall param ("handle") is unused by the game; always 0
+local function OnButtonPressed(ui, _, id, elementID, _, amountTxt)
     Utilities.Log("ContextMenu", "Button pressed: " .. elementID)
 
     local elementData = ContextMenu.GetElementData(elementID)
 
-    -- Vanilla buttons give no events
-    if not elementData then return nil end
+    -- Vanilla buttons have simplified logic
+    if not elementData then
+        ContextMenu.Events.EntryPressed:Throw({
+            ID = tonumber(elementID),
+        })
+        return
+    end
 
     elementID = ContextMenu.GetEventID(elementData)
 
@@ -667,6 +696,9 @@ local function OnButtonPressed(ui, method, id, elementID, handle, amountTxt)
         end
 
         Utilities.Hooks.FireEvent("PIP_ContextMenu", "buttonPressed" .. "_" .. elementID, ContextMenu.GetCurrentEntity(), params)
+        ContextMenu.Events.EntryPressed:Throw({
+            ID = elementID,
+        })
 
         -- Can specify a net msg to auto-post, eliminating the need to create handlers for simple commands
         if elementData.netMsg then

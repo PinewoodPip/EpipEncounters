@@ -34,10 +34,9 @@ end
 ---------------------------------------------
 
 -- Handle using items from vanilla context menus.
-ContextMenu:RegisterCallListener("buttonPressed", function(_, _, actionID)
-    if actionID == "2" then -- "Use" action ID, TODO make an enum of these
+ContextMenu.Events.EntryPressed:Subscribe(function (ev)
+    if ev.ID == ContextMenu.VANILLA_ACTIONS.USE then
         local item = ContextMenu.GetCurrentEntity()
-
         if item and GetExtType(item) == "ecl::Item" then
             Fix.CheckItemUseAttempt(item)
         end
