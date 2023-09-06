@@ -98,14 +98,15 @@ function Epip.GetFeature(modTable, id)
     if id == nil then
         modTable, id = "EpipEncounters", modTable
     end
-    -- Strip the "Feature(s)" prefix as it is only used for IDE type capture.
-    id = id:gsub("^Feature_", "", 1)
-    id = id:gsub("^Features%.", "", 1) -- New naming convention
+
+    -- Also attempt to fetch the feature using an ID with the "Feature(s)" prefix stripped as in many old Epip features it is only part of the IDE class and not in the feature ID.
+    local strippedID = id:gsub("^Feature_", "", 1)
+    strippedID = strippedID:gsub("^Features%.", "", 1) -- New naming convention
     local modData = Epip._Features[modTable]
     local feature
 
     if modData then
-        feature = modData.Features[id]
+        feature = modData.Features[id] or modData.Features[strippedID]
     end
 
     if not feature then
