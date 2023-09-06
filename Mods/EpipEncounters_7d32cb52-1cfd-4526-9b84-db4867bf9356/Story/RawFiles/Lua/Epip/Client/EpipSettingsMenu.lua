@@ -135,7 +135,7 @@ local tabs = {
             {Type = "Setting", Module = "EpipEncounters_ImmersiveMeditation", ID = "Enabled"},
             "ExaminePosition",
             "Minimap",
-            "TreasureTableDisplay",
+            {Type = "Setting", Module = "EpipEncounters_TreasureTableDisplay", ID = "Enabled"},
             {Type = "Setting", Module = "EpipEncounters_EnemyHealthBarExtraInfo", ID = "Mode"},
             {Type = "Setting", Module = "EpipEncounters_FlagsDisplay", ID = "Enabled"},
             "ESCClosesAmerUI",

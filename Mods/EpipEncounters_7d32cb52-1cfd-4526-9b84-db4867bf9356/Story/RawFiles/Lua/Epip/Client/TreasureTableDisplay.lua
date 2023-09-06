@@ -65,6 +65,20 @@ local TTD = {
         },
     },
 
+    TranslatedStrings = {
+        Setting_Enabled_Name = {
+            Handle = "hcd9974f8g16cfg4cbfga08agbf28ee5b55eb",
+            Text = "Show loot drops in health bar",
+            ContextDescription = "Treasure table display setting name",
+        },
+        Setting_Enabled_Description = {
+            Handle = "h9cd1245egdfdeg4cbbgbae7gfa179a954eac",
+            Text = "If enabled, the health bar when you hover over characters and items will show their treasure table (if relevant) as well as the chance of getting an artifact. For characters, this requires holding the Show Sneak Cones key (shift by default)",
+            ContextDescription = "Treasure table display setting tooltip",
+        },
+    },
+    Settings = {},
+
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
 
@@ -73,6 +87,7 @@ local TTD = {
     },
 }
 Epip.RegisterFeature("TreasureTableDisplay", TTD)
+local TSK = TTD.TranslatedStrings
 
 ---------------------------------------------
 -- EVENTS/HOOKS
@@ -96,12 +111,24 @@ local _TreasureTableEntry = {
 }
 
 ---------------------------------------------
+-- SETTINGS
+---------------------------------------------
+
+TTD.Settings.Enabled = TTD:RegisterSetting("Enabled", {
+    Type = "Boolean",
+    NameHandle = TSK.Setting_Enabled_Name,
+    DescriptionHandle = TSK.Setting_Enabled_Description,
+    RequiredMods = {Mod.GUIDS.EE_CORE}, -- TODO would be nice to have this work in vanilla somehow.
+    DefaultValue = false,
+})
+
+---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
 ---@override
 function TTD:IsEnabled()
-    return _Feature.IsEnabled(self) and Settings.GetSettingValue("EpipEncounters", "TreasureTableDisplay")
+    return TTD:GetSettingValue(TTD.Settings.Enabled) == true and _Feature.IsEnabled(self)
 end
 
 ---Add a treasure table to display in the UI.

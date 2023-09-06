@@ -58,17 +58,6 @@ local EpipSettings = {
             ContextDescription = "Minimap setting tooltip",
         },
 
-        TreasureTableDisplay_Name = {
-            Handle = "hcd9974f8g16cfg4cbfga08agbf28ee5b55eb",
-            Text = "Show loot drops in health bar",
-            ContextDescription = "Treasure table display setting name",
-        },
-        TreasureTableDisplay_Description = {
-            Handle = "h9cd1245egdfdeg4cbbgbae7gfa179a954eac",
-            Text = "If enabled, the health bar when you hover over characters and items will show their treasure table (if relevant) as well as the chance of getting an artifact. For characters, this requires holding the Show Sneak Cones key (shift by default)",
-            ContextDescription = "Treasure table display setting tooltip",
-        },
-
         ESCClosesAmerUI_Name = {
             Handle = "h9172c74eg120fg4ea6gac99gf5f558433e70",
             Text = "Escape Key Closes EE UIs",
@@ -596,13 +585,6 @@ local newSettings = {
         NameHandle = TSKs.Minimap_Name,
         DescriptionHandle = TSKs.Minimap_Description,
         DefaultValue = true,
-    },
-    {
-        ID = "TreasureTableDisplay",
-        Type = "Boolean",
-        NameHandle = TSKs.TreasureTableDisplay_Name,
-        DescriptionHandle = TSKs.TreasureTableDisplay_Description,
-        DefaultValue = false,
     },
     {
         ID = "ESCClosesAmerUI",
