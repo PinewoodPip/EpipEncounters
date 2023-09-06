@@ -515,7 +515,6 @@ local Input = {
         ITEM_11 = 172,
     },
 
-    
     INPUT_EVENTS = {}, ---@type table<integer, InputLib_InputEventDefinition> Automatically generated. See Setup region.
     INPUT_EVENT_STRING_ID_MAP = {}, ---@type table<InputLib_InputEventStringID, integer> Automatically generated. See Setup region.
 
@@ -665,7 +664,15 @@ end
 ---@field Ctrl boolean
 ---@field Alt boolean
 ---@field GUI boolean
-local _GameBinding = {}
+local _GameBinding = {
+    ---@type {TableKey:string, Modifier:string}[]
+    MODIFIERS = {
+        {TableKey = "Shift", Modifier = "Shift"},
+        {TableKey = "Alt", Modifier = "Alt"},
+        {TableKey = "Ctrl", Modifier = "Ctrl"},
+        {TableKey = "GUI", Modifier = "Gui"},
+    }
+}
 Inherit(_GameBinding, _Binding)
 
 ---@param data InputLib_InputEventBinding
@@ -680,12 +687,7 @@ end
 ---@return string
 function _GameBinding:Stringify(useShortNames)
     local modifierNames = {}
-    local modifierProperties = {
-        {TableKey = "Shift", Modifier = "Shift"},
-        {TableKey = "Alt", Modifier = "Alt"},
-        {TableKey = "Ctrl", Modifier = "Ctrl"},
-        {TableKey = "GUI", Modifier = "Gui"},
-    }
+    local modifierProperties = self.MODIFIERS
 
     for _,mod in ipairs(modifierProperties) do
         if self[mod.TableKey] then
@@ -698,6 +700,22 @@ function _GameBinding:Stringify(useShortNames)
     table.insert(modifierNames, Input.GetInputName(self.InputID, useShortNames))
 
     return string.concat(modifierNames, useShortNames and "+" or " + ")
+end
+
+---Returns the equivalent KeyCombination representation of the binding.
+---@param modifierType ("Left"|"Right")? Defaults to `"Left"`. Mixed types not currently supported.
+---@return InputLib_Action_KeyCombination
+function _GameBinding:ToKeyCombination(modifierType)
+    local combo = {Keys = {}} ---@type InputLib_Action_KeyCombination
+    modifierType = modifierType or "Left"
+    local modifierPrefix = modifierType == "Left" and "l" or "r"
+    for _,mod in ipairs(self.MODIFIERS) do
+        if self[mod.TableKey] then
+            table.insert(combo.Keys, modifierPrefix .. mod.Modifier:lower())
+        end
+    end
+    table.insert(combo.Keys, self.InputID)
+    return combo
 end
 
 function _GameBinding.__tostring(self)
@@ -769,11 +787,12 @@ function Input.GetGameEvent(id)
     return event
 end
 
+---Returns the binding for an InputEvent.
 ---@param eventID string|integer
 ---@param deviceType RawInputDevice? Defaults to "Key"
 ---@param bindingIndex (1|2)? Defaults to 1.
 ---@param playerIndex integer? Defaults to 1 (player index 0 in engine).
----@return InputLib_Binding?
+---@return InputLib_InputEventBinding?
 function Input.GetBinding(eventID, deviceType, bindingIndex, playerIndex)
     if type(eventID) == "string" then eventID = Input.GetGameEventNumID(eventID) end
     local manager = Input.GetManager()
