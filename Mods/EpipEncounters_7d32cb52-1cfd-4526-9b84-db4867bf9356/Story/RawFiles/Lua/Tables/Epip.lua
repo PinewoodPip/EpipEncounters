@@ -6,7 +6,6 @@ Epip = {
     _FeatureRegistrationOrder = {},
 
     PREFIXED_GUID = "EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356",
-    VERSION = 1066, -- Also the story version.
     cachedAprilFoolsState = nil,
     _devMode = nil,
 
@@ -15,6 +14,14 @@ Epip = {
         AfterFeatureInitialization = SubscribableEvent:New("AfterFeatureInitialization"), ---@type Event<Epip.Events.FeatureInitialization>
     }
 }
+setmetatable(Epip, {
+    __index = function (_, k)
+        if k == "VERSION" then -- Backwards compatibility. This field used to be static.
+            local major, minor, revision, build = Mod.GetStoryVersion(Mod.GUIDS.EPIP_ENCOUNTERS)
+            return (major * 10^3) + (minor * 10^2) + (revision * 10) + build -- Epip's version always uses one digit for each component.
+        end
+    end
+})
 
 ---------------------------------------------
 -- CLASSES
@@ -67,7 +74,7 @@ function Epip.RegisterFeature(modTable, id, feature)
     modData.Features[id] = feature
 
     -- Throw initialization events
-    -- These are delayed by tick to give later scripts a chance to subscribe
+    -- These are delayed by 1 tick to give later scripts a chance to subscribe
     Ext.OnNextTick(function (_)
         Epip.Events.BeforeFeatureInitialization:Throw({Feature = feature})
         ---@diagnostic disable-next-line: invisible
