@@ -8,7 +8,7 @@
 local Conditions = {
 
 }
-Epip.AddFeature("EpicEnemiesEffectConditions", "EpicEnemiesEffectConditions", Conditions)
+Epip.RegisterFeature("EpicEnemiesEffectConditions", Conditions)
 
 local EpicEnemies = Epip.Features.EpicEnemies
 

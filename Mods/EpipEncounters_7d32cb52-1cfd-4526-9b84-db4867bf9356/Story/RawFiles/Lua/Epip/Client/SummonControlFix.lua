@@ -13,7 +13,7 @@ local Fix = {
         [219] = true,
     }
 }
-Epip.AddFeature("SummonControlFix", "SummonControlFix", Fix)
+Epip.RegisterFeature("SummonControlFix", Fix)
 
 ---------------------------------------------
 -- EVENT LISTENERS
@@ -54,7 +54,7 @@ PlayerInfo.Events.ActiveCharacterChanged:Subscribe(function (e)
             if Client.IsInCombat() and not Client.IsActiveCombatant() and not prevChar.HasOwner then
                 local prevCharHandle = prevChar.Handle
                 local newCharHandle = newChar.Handle
-    
+
                 Fix:DebugLog("Restoring control to previous character", prevChar.DisplayName)
 
                 Fix.currentTimer = Timer.Start(0.4, function (_)

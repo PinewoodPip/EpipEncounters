@@ -6,7 +6,7 @@ local Shapeshift = {
     ---@type table<GUID, VanityShapeshiftForm>
     FORMS = {},
 }
-Epip.AddFeature("VanityShapeshift", "VanityShapeshift", Shapeshift)
+Epip.RegisterFeature("VanityShapeshift", Shapeshift)
 Epip.Features.VanityShapeshift = Shapeshift
 
 ---@class VanityShapeshiftForm

@@ -8,7 +8,7 @@ local Controller = {
         }
     },
 }
-Epip.AddFeature("AMERUI_Controller", "AMERUI_Controller", Controller)
+Epip.RegisterFeature("AMERUI_Controller", Controller)
 
 ---@class AMERUI_ControllerServer_Event_CommandReceived : Event
 ---@field RegisterListener fun(self, listener:fun(command:string, char:EsvCharacter))

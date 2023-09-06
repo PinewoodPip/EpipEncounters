@@ -15,7 +15,7 @@ local Templates = {
         Voracity = true,
     },
 }
-Epip.AddFeature("EpicEnemiesEffectTemplates", "EpicEnemiesEffectTemplates", Templates)
+Epip.RegisterFeature("EpicEnemiesEffectTemplates", Templates)
 Epip.Features.EpicEnemiesEffectTemplates = Templates
 
 local EpicEnemies = Epip.Features.EpicEnemies

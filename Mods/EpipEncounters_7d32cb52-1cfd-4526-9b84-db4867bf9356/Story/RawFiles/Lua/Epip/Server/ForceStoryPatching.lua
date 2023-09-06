@@ -1,6 +1,6 @@
 
 local ForceStoryPatching = {}
-Epip.AddFeature("ForceStoryPatching", "ForceStoryPatching", ForceStoryPatching)
+Epip.RegisterFeature("ForceStoryPatching", ForceStoryPatching)
 
 function ForceStoryPatching.Toggle(state)
     local switches = Ext.Utils.GetGlobalSwitches()

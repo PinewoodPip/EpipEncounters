@@ -6,7 +6,7 @@
 local Resistances = {
     
 }
-Epip.AddFeature("CharacterSheetResistances", nil, Resistances)
+Epip.RegisterFeature("CharacterSheetResistances", Resistances)
 
 local CharacterSheet = Client.UI.CharacterSheet
 

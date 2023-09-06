@@ -44,7 +44,7 @@ local StatusSorting = {
         ShouldFilterStatus = {},
     },
 }
-Epip.AddFeature("StatusSorting", "StatusSorting", StatusSorting)
+Epip.RegisterFeature("StatusSorting", StatusSorting)
 
 ---------------------------------------------
 -- METHODS

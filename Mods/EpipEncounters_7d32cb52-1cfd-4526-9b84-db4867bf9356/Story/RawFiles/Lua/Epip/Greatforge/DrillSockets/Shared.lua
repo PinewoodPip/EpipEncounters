@@ -1,3 +1,3 @@
 
 local Drill = {}
-Epip.AddFeature("DrillSockets", "DrillSockets", Drill)
+Epip.RegisterFeature("DrillSockets", Drill)

@@ -6,7 +6,7 @@ local DataConfig = {
     SAVE_FILENAME = "EpipEncounters_ExtraData.json",
     SETTINGS_MODULE_ID = "ExtraDataConfig",
 }
-Epip.AddFeature("ExtraDataConfig", "ExtraDataConfig", DataConfig)
+Epip.RegisterFeature("ExtraDataConfig", DataConfig)
 
 ---------------------------------------------
 -- NET MESSAGES

@@ -47,7 +47,7 @@ Epip.Features.AMERUI_Controller = Controller
 ---@field StickAxisX number
 ---@field StickAxisY number
 
-Epip.AddFeature("AMERUI_Controller", "AMERUI_Controller", Controller)
+Epip.RegisterFeature("AMERUI_Controller", Controller)
 
 ---------------------------------------------
 -- EVENTS/HOOKS

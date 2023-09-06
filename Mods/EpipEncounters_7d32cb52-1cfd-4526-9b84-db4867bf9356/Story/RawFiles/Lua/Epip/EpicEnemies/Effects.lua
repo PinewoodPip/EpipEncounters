@@ -466,7 +466,7 @@ local Effects = {
         },
     },
 }
-Epip.AddFeature("EpicEnemiesEffects", "EpicEnemiesEffects", Effects)
+Epip.RegisterFeature("EpicEnemiesEffects", Effects)
 
 local EpicEnemies = Epip.Features.EpicEnemies
 

@@ -22,7 +22,7 @@ local Soccer = {
     SAVE_VERSION = 0,
     SAVE_FILENAME = "PIP_AwesomeSoccer.json",
 }
-Epip.AddFeature("AwesomeSoccer", "AwesomeSoccer", Soccer)
+Epip.RegisterFeature("AwesomeSoccer", Soccer)
 
 function Soccer.SaveStats()
     local save = {

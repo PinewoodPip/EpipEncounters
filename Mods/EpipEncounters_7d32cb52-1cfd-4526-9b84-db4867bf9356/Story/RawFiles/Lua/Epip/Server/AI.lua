@@ -23,7 +23,7 @@ local AI = {
 
     enabled = false,
 }
-Epip.AddFeature("AI", "AI", AI)
+Epip.RegisterFeature("AI", AI)
 
 local function EqualizeSpace(str1, str2, space)
     local normalLength = #str1 + #str2 - 1

@@ -36,12 +36,6 @@ Epip = {
 -- METHODS
 ---------------------------------------------
 
----@deprecated Legacy call.
-function Epip.AddFeature(id, _, feature)
-    Epip.RegisterFeature(id, feature)
-    Epip.Features[id] = feature
-end
-
 ---Registers a feature, initializing its utility metatable and exposing it to other mods via GetFeature(). Should be called outside of any listener, as soon as the table is defined. This will also check for required path overrides and disable the feature if the required mods are not enabled.
 ---@param modTable string
 ---@param id string
@@ -236,4 +230,11 @@ if Ext.IsClient() then
 
         return Epip.cachedAprilFoolsState or Settings.GetSettingValue("Epip_Developer", "DEBUG_AprilFools")
     end
+end
+
+---@deprecated Legacy call. Use RegisterFeature() instead.
+function Epip.AddFeature(id, _, feature)
+    Ext.Utils.PrintWarning("[EPIP] Registering Features with AddFeature() is deprecated.", id)
+    Epip.RegisterFeature(id, feature)
+    Epip.Features[id] = feature
 end
