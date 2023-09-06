@@ -443,9 +443,10 @@ local function GetFunctionData(module, type, methodName)
             data.Params = {}
             for i,param in ipairs(funcOverrides.Params) do
                 data.Params[i] = {
-                    Name = param.name,
-                    Type = param.arg,
-                    Comment = param.description,
+                    -- Multiple naming styles are supported for backwards compatibility with old function fixes file
+                    Name = param.name or param.Name,
+                    Type = param.arg or param.Type,
+                    Comment = param.description or param.Description,
                 }
             end
         end
