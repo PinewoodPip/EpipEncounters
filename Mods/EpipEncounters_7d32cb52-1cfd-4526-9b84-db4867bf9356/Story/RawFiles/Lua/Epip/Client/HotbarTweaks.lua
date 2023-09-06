@@ -21,6 +21,16 @@ local Tweaks = {
             Text = "If enabled, you will be able to drag skills the character doesn't know onto the hotbar.\nThis does not allow the skills to be used, but is useful for creating placeholders.",
             ContextDescription = "Setting tooltip",
         },
+        Setting_SlotKeyboardModifiers_Name = {
+           Handle = "had42db79gf12cg4376g970bg0b9e0276a5d2",
+           Text = "Select upper bars with modifier keys",
+           ContextDescription = "Setting name",
+        },
+        Setting_SlotKeyboardModifiers_Description = {
+           Handle = "h3be3b775gcd1ag4340g8bb2g53aff8a65aaa",
+           Text = "If enabled, holding shift, ctrl, alt or GUI while using keybinds for slots will attempt to use slots from the 2nd, 3rd, 4th and 5th visible bars respectively.",
+           ContextDescription = "Setting tooltip",
+        },
     },
     Settings = {},
 }
@@ -34,6 +44,12 @@ Tweaks.Settings.AllowDraggingUnlearntSkills = Tweaks:RegisterSetting("AllowDragg
     Type = "Boolean",
     NameHandle = Tweaks.TranslatedStrings.Setting_AllowDraggingUnlearntSkills_Name,
     DescriptionHandle = Tweaks.TranslatedStrings.Setting_AllowDraggingUnlearntSkills_Description,
+    DefaultValue = false,
+})
+Tweaks.Settings.SlotKeyboardModifiers = Tweaks:RegisterSetting("SlotKeyboardModifiers", {
+    Type = "Boolean",
+    NameHandle = Tweaks.TranslatedStrings.Setting_SlotKeyboardModifiers_Name,
+    DescriptionHandle = Tweaks.TranslatedStrings.Setting_SlotKeyboardModifiers_Description,
     DefaultValue = false,
 })
 
@@ -146,5 +162,28 @@ Client.UI.Notification.Events.TextNotificationShown:Subscribe(function (ev)
     if ev.Label:match(skillUnknownMsg) and Tweaks:GetSettingValue(Tweaks.Settings.AllowDraggingUnlearntSkills) == true then
         Tweaks:DebugLog("Prevented skill unknown notification")
         ev:Prevent()
+    end
+end)
+
+-- Redirect slot keybind presses to upper visible bars, if modifier keys are held and the setting is enabled.
+Hotbar.Hooks.GetSlotForIggyEvent:Subscribe(function (ev)
+    if Tweaks:GetSettingValue(Tweaks.Settings.SlotKeyboardModifiers) == true then
+        local barIndex = nil
+        if Client.Input.IsShiftPressed() then
+            barIndex = 2
+        elseif Client.Input.IsCtrlPressed() then
+            barIndex = 3
+        elseif Client.Input.IsAltPressed() then
+            barIndex = 4
+        elseif Client.Input.IsGUIPressed() then
+            barIndex = 5
+        end
+
+        if barIndex then
+            local bar = Hotbar.GetState().Bars[barIndex]
+            if bar.Visible then -- Can only redirect to visible bars.
+                ev.SlotIndex = ev.SlotKeyIndex + (Hotbar.GetSlotsPerRow() * (bar.Row - 1))
+            end
+        end
     end
 end)

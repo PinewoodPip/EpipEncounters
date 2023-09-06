@@ -164,6 +164,7 @@ local Hotbar = {
         CanRemoveBar = {}, ---@type Event<HotbarUI_Hook_CanRemoveBar>
         UpdateEngineActions = {}, ---@type Event<HotbarUI_Hook_UpdateEngineActions>
         GetState = {Legacy = false}, ---@type Event<HotbarUI_Hook_GetState>
+        GetSlotForIggyEvent = {Legacy = false}, ---@type Event<UI.Hotbar.Hooks.GetSlotForIggyEvent>
     },
 
     FILEPATH_OVERRIDES = {
@@ -237,6 +238,10 @@ end
 ---@class HotbarUI_Hook_GetState
 ---@field Character EclCharacter
 ---@field State HotbarState Hookable.
+
+---@class UI.Hotbar.Hooks.GetSlotForIggyEvent
+---@field SlotKeyIndex integer 1-based. Index of the slot keybind used.
+---@field SlotIndex integer? Hookable. 1-based. If `nil`, no slot will be used.
 
 ---------------------------------------------
 -- NET MESSAGES
@@ -1049,16 +1054,28 @@ Hotbar:RegisterCallListener("pipRemoveHotbar", function(_)
 end)
 
 -- Redirect keyboard hotkeys to point to the expected slot.
-Hotbar:RegisterCallListener("pipSlotKeyAttempted", function(_, id)
+Hotbar:RegisterCallListener("pipSlotKeyAttempted", function(_, index)
     local state = Hotbar.GetState()
     local firstBarRow = state.Bars[1].Row
+    local keyIndex = index + 1
+    index = index + 1
 
+    -- Do not use slots by default if modifier keys are held, as
+    -- they will likely conflict with Input action bindings. 
     if not Client.Input.AreModifierKeysPressed() then
-        id = id + (firstBarRow - 1) * Hotbar.GetSlotsPerRow()
+        index = index + (firstBarRow - 1) * Hotbar.GetSlotsPerRow()
+    else
+        index = nil
+    end
 
-        Hotbar:DebugLog("Used slot from keyboard: " .. id .. " redirected to row " .. firstBarRow)
-        
-        Hotbar:GetRoot().useSlotFromKey(id)
+    index = Hotbar.Hooks.GetSlotForIggyEvent:Throw({
+        SlotKeyIndex = keyIndex,
+        SlotIndex = index,
+    }).SlotIndex
+
+    if index then
+        Hotbar:DebugLog("Used slot from keyboard: " .. index .. " redirected to index " .. index)
+        Hotbar:GetRoot().useSlotFromKey(index - 1) -- Uses 0-based indexing.
     end
 end)
 

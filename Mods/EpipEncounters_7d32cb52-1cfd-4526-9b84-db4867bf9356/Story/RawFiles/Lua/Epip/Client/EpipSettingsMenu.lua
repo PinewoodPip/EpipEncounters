@@ -161,6 +161,7 @@ local tabs = {
             "HotbarHotkeysLayout",
             "HotbarCastingGreyOut",
             {Type = "Setting", Module = "EpipEncounters_HotbarTweaks", ID = "AllowDraggingUnlearntSkills"},
+            {Type = "Setting", Module = "EpipEncounters_HotbarTweaks", ID = "SlotKeyboardModifiers"},
         }
     },
     ["Epip_QuickExamine"] = {
