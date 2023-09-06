@@ -2,7 +2,7 @@
 ---@class Epip
 Epip = {
     Features = {}, ---@type table<string, Feature> Legacy table.
-    _Features = {}, ---@type table<string, table<string, Feature>>
+    _Features = {}, ---@type table<string, Epip.ModTable>
     _FeatureRegistrationOrder = {},
 
     PREFIXED_GUID = "EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356",
@@ -15,6 +15,14 @@ Epip = {
         AfterFeatureInitialization = SubscribableEvent:New("AfterFeatureInitialization"), ---@type Event<Epip.Events.FeatureInitialization>
     }
 }
+
+---------------------------------------------
+-- CLASSES
+---------------------------------------------
+
+---Holds data for a mod and its registered Epip content.
+---@class Epip.ModTable
+---@field Features table<string, Feature>
 
 ---------------------------------------------
 -- EVENTS/HOOKS
@@ -129,6 +137,16 @@ function Epip.IsDeveloperMode(requirePipPoem)
     end
 
     return devMode
+end
+
+---Silences logging from all features of a mod.
+---@param modTable modtable? Defaults to `"EpipEncounters"`
+function Epip.ShutUp(modTable)
+    modTable = modTable or "EpipEncounters"
+    local modData = Epip._Features[modTable] or {}
+    for _,feature in pairs(modData.Features) do
+        feature:ShutUp()
+    end
 end
 
 ---TODO move to Feature
