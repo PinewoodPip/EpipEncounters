@@ -93,8 +93,9 @@ function Epip.GetFeature(id) end -- IDE dummy
 ---@generic T
 ---@param modTable string
 ---@param id `T`
+---@param required boolean? If `true`, an error will be thrown if the feature could not be fetched.
 ---@return Feature|`T`
-function Epip.GetFeature(modTable, id)
+function Epip.GetFeature(modTable, id, required)
     -- Overload to get features built-in into Epip.
     if id == nil then
         modTable, id = "EpipEncounters", modTable
@@ -110,8 +111,8 @@ function Epip.GetFeature(modTable, id)
         feature = modData.Features[id] or modData.Features[strippedID]
     end
 
-    if not feature then
-        error("[EPIP] Attempted to fetch feature that does not exist: " .. id .. " from " .. modTable)
+    if not feature and required then
+        error("[EPIP] Attempted to fetch feature that does not exist: " .. id .. " from " .. modTable, 2)
     end
 
     return feature
