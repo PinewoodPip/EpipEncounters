@@ -554,6 +554,11 @@ Text.CommonStrings.Keys = Text.RegisterTranslatedString({
    Handle = "h2f44a9c7ge634g4630gae76g62a133475f12",
    Text = "Keys",
 })
+Text.CommonStrings.Containers = Text.RegisterTranslatedString({
+    Handle = "h80897d5bg5b2cg4261gbd85gafc7482541fd",
+    Text = "Containers",
+    ContextDescription = "Refers to item containers (ex. a backpack)",
+})
 
 ---------------------------------------------
 -- EPIC ENCOUNTERS

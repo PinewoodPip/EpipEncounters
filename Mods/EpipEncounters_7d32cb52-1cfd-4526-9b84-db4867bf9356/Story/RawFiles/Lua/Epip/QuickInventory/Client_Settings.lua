@@ -56,10 +56,11 @@ QuickInventory.Settings.ItemCategory = QuickInventory:RegisterSetting("ItemCateg
     Name = QuickInventory.TranslatedStrings.ItemCategory_Name,
     DefaultValue = "Equipment",
     ---@type SettingsLib_Setting_Choice_Entry[]
-    Choices = {
+    Choices = { -- TODO have the subscripts insert their choices instead of declaring them here
         {ID = "Equipment", NameHandle = CommonStrings.Equipment.Handle},
         {ID = "Consumables", NameHandle = CommonStrings.Consumables.Handle},
         {ID = "Skillbooks", NameHandle = CommonStrings.Skillbooks.Handle},
+        {ID = "Containers", NameHandle = CommonStrings.Containers.Handle},
         {ID = "Miscellaneous", NameHandle = CommonStrings.Miscellaneous.Handle},
     },
 })
