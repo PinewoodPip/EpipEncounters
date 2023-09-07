@@ -68,6 +68,7 @@ Epip.InitializeLibrary("Text", Text)
 ---@field ModTable ModTableID?
 ---@field StringKey string?
 ---@field ContextDescription string?
+---@field FormatOptions TextFormatData? If present, after resolving, the string will be formatted. May be used to avoid formatting tags from being visible to translators.
 local _TranslatedString = {}
 
 ---@param data TextLib_TranslatedString
@@ -79,6 +80,7 @@ function _TranslatedString.Create(data)
 end
 
 ---Resolves and formats the string.
+---Note that resolving the string already runs formatting via `FormatOptions`; this method will run afterwards and is intended for dynamic placeholder replacement.
 ---@param ... any|TextFormatData If using TextFormatData, only the first parameter will be used.
 ---@return string
 function _TranslatedString:Format(...)
@@ -93,7 +95,11 @@ end
 
 ---@return string
 function _TranslatedString:GetString()
-    return Text.GetTranslatedString(self.Handle, self.Handle)
+    local resolvedStr = Text.GetTranslatedString(self.Handle, self.Handle)
+    if self.FormatOptions then
+        resolvedStr = Text.Format(resolvedStr, self.FormatOptions)
+    end
+    return resolvedStr
 end
 
 ---@alias FontAlign "center" | "right" | "left"
