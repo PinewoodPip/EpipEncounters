@@ -247,6 +247,7 @@ LOAD_ORDER = {
         },
     },
     "UI/PartyInventory.lua",
+    "UI/ContainerInventory.lua",
     "UI/GameMenu.lua",
     "UI/TutorialBox.lua",
     "UI/Examine.lua",
@@ -630,6 +631,7 @@ LOAD_ORDER = {
             "Epip/QuickInventory/Filters/Consumables.lua",
             "Epip/QuickInventory/Filters/Skillbooks.lua",
             "Epip/QuickInventory/Filters/Miscellaneous.lua",
+            "Epip/QuickInventory/Filters/Containers.lua",
         }
     },
 
