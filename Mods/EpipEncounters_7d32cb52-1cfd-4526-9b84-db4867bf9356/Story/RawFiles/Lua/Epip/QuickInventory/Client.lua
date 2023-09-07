@@ -106,6 +106,7 @@ local QuickInventory = {
     USE_LEGACY_HOOKS = false,
 
     Hooks = {
+        GetPartyItems = {}, ---@type Hook<Features.QuickInventory.Hooks.GetPartyItems>
         IsItemVisible = {}, ---@type Event<Feature_QuickInventory_Hook_IsItemVisible>
         SortItems = {}, ---@type Event<Feature_QuickInventory_Hook_SortItems>
     }
@@ -115,6 +116,9 @@ Epip.RegisterFeature("QuickInventory", QuickInventory)
 ---------------------------------------------
 -- EVENTS
 ---------------------------------------------
+
+---@class Features.QuickInventory.Hooks.GetPartyItems
+---@field Items EclItem[] Hookable.
 
 ---@class Feature_QuickInventory_Hook_IsItemVisible
 ---@field Item EclItem
@@ -130,10 +134,14 @@ Epip.RegisterFeature("QuickInventory", QuickInventory)
 ---------------------------------------------
 
 ---Returns the items from the party's inventory that match the filters set by hooks.
+---@see Features.QuickInventory.Hooks.GetPartyItems
+---@see Feature_QuickInventory_Hook_IsItemVisible
 ---@return EclItem[]
 function QuickInventory.GetItems()
     local char = Client.GetCharacter()
-    local allItems = Item.GetItemsInPartyInventory(char)
+    local allItems = QuickInventory.Hooks.GetPartyItems:Throw({
+        Items = Item.GetItemsInPartyInventory(char, nil, QuickInventory:GetSettingValue(QuickInventory.Settings.RecursiveSearch) == true),
+    }).Items
     local items = {} ---@type EclItem[]
 
     for _,item in ipairs(allItems) do
