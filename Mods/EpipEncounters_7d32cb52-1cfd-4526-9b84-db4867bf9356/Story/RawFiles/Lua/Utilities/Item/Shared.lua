@@ -448,8 +448,9 @@ end
 
 ---Returns all items in the party inventory of char matching the predicate, or all if no predicate is passed.
 ---@param char Character
----@param predicate? fun(item:Item):boolean
-function Item.GetItemsInPartyInventory(char, predicate)
+---@param predicate (fun(item:Item):boolean)?
+---@param recursive boolean? Defaults to `false`.
+function Item.GetItemsInPartyInventory(char, predicate, recursive)
     local items = {}
     local partyCharacters = Character.GetPartyMembers(char)
 
@@ -462,6 +463,23 @@ function Item.GetItemsInPartyInventory(char, predicate)
             if predicate == nil or predicate(item) then
                 table.insert(items, item)
             end
+        end
+    end
+
+    -- Recrusive search is performed afterwards.
+    if recursive then
+        local len = #items
+        local i = 1
+        while i <= len do
+            local item = items[i]
+            if Item.IsContainer(item) then
+                local contents = item:GetInventoryItems()
+                for _,guid in ipairs(contents) do
+                    items[len+1] = Item.Get(guid)
+                    len = len + 1
+                end
+            end
+            i = i + 1
         end
     end
 
