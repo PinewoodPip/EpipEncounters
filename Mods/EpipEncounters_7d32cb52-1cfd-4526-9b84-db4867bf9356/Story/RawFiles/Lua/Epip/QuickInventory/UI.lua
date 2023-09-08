@@ -13,6 +13,7 @@ local V = Vector.Create
 ---@class Feature_QuickInventory
 local QuickInventory = Epip.GetFeature("Feature_QuickInventory")
 
+---@class Features.QuickInventory.UI : GenericUI_Instance
 local UI = Generic.Create("Epip_EquipmentSwap")
 QuickInventory.UI = UI
 
@@ -201,6 +202,8 @@ function UI._RenderSettingsPanel()
     UI.Events.RenderSettings:Throw({
         ItemCategory = itemCategory,
     })
+
+    UI.RenderSetting(QuickInventory.Settings.RecursiveSearch)
 
     UI.SettingsPanelList:SortByChildIndex()
 end
