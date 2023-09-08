@@ -162,21 +162,47 @@ end
 
 ---Returns the display name of the item.
 ---Considers overrides and identification status.
+---Does not append item amount.
 ---@param item Item
 ---@return string
 function Item.GetDisplayName(item)
+    -- This uses a transcript of ecl::Item::GetDisplayName, but also includes cases that are handled elsewhere in UI, such as showing "Unidentified X". The intention is to be consistent with how names are displayed in UIs.
     local name = item.DisplayName
-    local customDisplayName = item.CustomDisplayName
-    if Ext.IsServer() and customDisplayName ~= "" then
-        name = item.CustomDisplayName
-    elseif Ext.IsClient() and customDisplayName and customDisplayName.Handle.ReferenceString ~= "" then
-        name = customDisplayName.Handle.ReferenceString
-    else
-        if item.Stats and not Item.IsIdentified(item) then -- "Unidentified X"
-            local itemTypeHandle = Item.ITEM_SLOT_TSKHANDLES[Item.GetItemSlot(item)] or "Item" -- TODO! Map weapons
-            name = Text.FormatLarianTranslatedString(Item.UNIDENTIFIED_ITEM_TSKHANDLE, Text.GetTranslatedString(itemTypeHandle))
+    local template = item.RootTemplate ---@cast template ItemTemplate
+    ---@diagnostic disable-next-line: param-type-mismatch
+    local templateDisplayName = Text.GetTranslatedString(template.DisplayName, "")
+
+    if item.Known or templateDisplayName == "" then
+        local customDisplayName = item.CustomDisplayName
+        if Ext.IsServer() and customDisplayName ~= "" then
+            name = item.CustomDisplayName
+        elseif Ext.IsClient() and customDisplayName and customDisplayName.Handle.ReferenceString ~= "" then
+            name = Text.GetTranslatedString(customDisplayName.Handle.Handle) -- Not sure if translating these is actually ever necessary.
+        else
+            if templateDisplayName ~= "" then -- A bit confusing considering the first if check, but not unused.
+                name = templateDisplayName
+            else
+                if item.Stats then
+                    if not Item.IsIdentified(item) then -- "Unidentified X". Deviation for engine method.
+                        local itemTypeHandle = Item.ITEM_SLOT_TSKHANDLES[Item.GetItemSlot(item)] or "Item" -- TODO! Map weapons
+                        name = Text.FormatLarianTranslatedString(Item.UNIDENTIFIED_ITEM_TSKHANDLE, Text.GetTranslatedString(itemTypeHandle))
+                    else
+                        local statsName = Text.GetTranslatedString(item.Stats.DisplayName.Handle.Handle, "")
+                        if statsName ~= "" then
+                            name = statsName
+                        end
+                    end
+                    goto End
+                end
+                if item.StatsId ~= "" then
+                    local nameFromStatsId = Text.GetTranslatedString(item.StatsId)
+                    name = nameFromStatsId ~= "" and nameFromStatsId or name
+                end
+            end
         end
     end
+
+    ::End::
     return name
 end
 
