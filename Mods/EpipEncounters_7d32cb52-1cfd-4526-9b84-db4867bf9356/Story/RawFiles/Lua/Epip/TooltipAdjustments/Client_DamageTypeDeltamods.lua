@@ -19,7 +19,7 @@ TSK.DamageTypeDeltamods_WeaponDamage = TooltipAdjustments:RegisterTranslatedStri
 Client.Tooltip.Hooks.RenderItemTooltip:Subscribe(function (ev)
     local item = ev.Item
 
-    if TooltipAdjustments.IsAdjustmentEnabled(TooltipAdjustments.Settings.DamageTypeDeltamods) and item.Stats and item.Stats.IsIdentified and Item.IsWeapon(item) then
+    if TooltipAdjustments.IsAdjustmentEnabled(TooltipAdjustments.Settings.DamageTypeDeltamods) and item.Stats and Item.IsIdentified(item) and Item.IsWeapon(item) then
         local damageBoosts = {} ---@type {Type:string, Value:number}[]
 
         -- Look for +damage deltamods.

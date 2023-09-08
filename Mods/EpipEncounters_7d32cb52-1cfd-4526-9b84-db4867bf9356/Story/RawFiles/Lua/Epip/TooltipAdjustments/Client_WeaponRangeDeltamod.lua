@@ -15,7 +15,7 @@ TooltipAdjustments.WEAPON_RANGE_DELTAMOD_PATTERN = "Boost_Weapon_Range_(.*)$"
 Client.Tooltip.Hooks.RenderItemTooltip:Subscribe(function (ev)
     local item = ev.Item
 
-    if TooltipAdjustments.IsAdjustmentEnabled(TooltipAdjustments.Settings.WeaponRangeDeltamods) and item.Stats and item.Stats.IsIdentified then
+    if TooltipAdjustments.IsAdjustmentEnabled(TooltipAdjustments.Settings.WeaponRangeDeltamods) and item.Stats and Item.IsIdentified(item) then
         local weaponRangeBoostValue = 0;
 
         for _,deltaModName in pairs(item:GetDeltaMods()) do
