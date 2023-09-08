@@ -40,7 +40,7 @@ end
 function AI.StringifyAction(action)
     local str = "    "
 
-    for i,prop in ipairs(AI.LOGGED_PROPERTIES) do
+    for _,prop in ipairs(AI.LOGGED_PROPERTIES) do
         local nextStr = AI.StringifyActionProperty(action, prop)
 
         if nextStr ~= "" then
@@ -59,10 +59,10 @@ function AI.StringifyActionProperty(action, prop)
     return str
 end
 
-AI:RegisterHook("StringifyProperty", function(str, action, prop)
+AI:RegisterHook("StringifyProperty", function(_, action, prop)
     if prop == "_Target" then
         local name = "NONE"
-        local char = Ext.GetCharacter(action.TargetHandle)
+        local char = Character.Get(action.TargetHandle)
 
         if char then
             name = char.DisplayName
@@ -97,10 +97,9 @@ Settings.Events.SettingValueChanged:Subscribe(function (ev)
 end)
 
 Ext.Events.OnPeekAiAction:Subscribe(function(ev)
-    -- _D(ev)
-    if not AI.enabled then return nil end
-    
-    local char = Ext.GetCharacter(ev.CharacterHandle)
+    if not AI.enabled then return end
+
+    local char = Character.Get(ev.CharacterHandle)
     local actionType = ev.ActionType or "UNKNOWN"
     local request = ev.Request
     local finalActionIndex = request.AiActionToExecute
@@ -108,12 +107,8 @@ Ext.Events.OnPeekAiAction:Subscribe(function(ev)
 
     local bestActions = {}
 
-    for i,action in pairs(request.AiActions) do
+    for _,action in pairs(request.AiActions) do
         local canLog = #bestActions < AI.ACTIONS_LOGGED_COUNT
-
-        -- if not canLog then
-
-        -- end
 
         if canLog then
             table.insert(bestActions, action)

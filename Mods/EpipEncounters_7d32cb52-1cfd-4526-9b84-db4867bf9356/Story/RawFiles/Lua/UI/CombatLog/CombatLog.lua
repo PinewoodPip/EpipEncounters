@@ -65,8 +65,8 @@ Epip.InitializeUI(Client.UI.Data.UITypes.combatLog, "CombatLog", Log)
 ---------------------------------------------
 
 ---@class CombatLogUI_Hook_GetMessageObject : LegacyHook
----@field RegisterHook fun(self, handler:fun(obj:CombatLogMessage, message:string))
----@field Return fun(self, obj:CombatLogMessage, message:string)
+---@field RegisterHook fun(self, handler:fun(obj:CombatLogMessage, message:string):CombatLogMessage)
+---@field Return fun(self, obj:CombatLogMessage, message:string):CombatLogMessage
 
 ---@class CombatLogUI_Event_MessageAdded : Event
 ---@field RegisterListener fun(self, listener:fun(msg:CombatLogSentMessage))
@@ -74,12 +74,12 @@ Epip.InitializeUI(Client.UI.Data.UITypes.combatLog, "CombatLog", Log)
 
 ---Fired when 2 messages of the same type are attempted to be sent one after another. You're expected to return true if you've edited msg1 to append to its message. If combined is true, msg1 will be re-rendered and msg2 will not be sent to the UI.
 ---@class CombatLogUI_Hook_CombineMessage : LegacyHook
----@field RegisterHook fun(self, handler:fun(combined:boolean, msg1:CombatLogSentMessage, msg2:CombatLogSentMessage))
----@field Return fun(self, combined:boolean, msg1:CombatLogSentMessage, msg2:CombatLogSentMessage)
+---@field RegisterHook fun(self, handler:fun(combined:boolean, msg1:CombatLogSentMessage, msg2:CombatLogSentMessage):boolean)
+---@field Return fun(self, combined:boolean, msg1:CombatLogSentMessage, msg2:CombatLogSentMessage):boolean
 
 ---@class CombatLogUI_Hook_MessageCanMerge : LegacyHook
----@field RegisterHook fun(self, handler:fun(canMerge:boolean, msg1:CombatLogSentMessage, msg2:CombatLogSentMessage))
----@field Return fun(self, canMerge:boolean, msg1:CombatLogSentMessage, msg2:CombatLogSentMessage)
+---@field RegisterHook fun(self, handler:fun(canMerge:boolean, msg1:CombatLogSentMessage, msg2:CombatLogSentMessage):boolean)
+---@field Return fun(self, canMerge:boolean, msg1:CombatLogSentMessage, msg2:CombatLogSentMessage):boolean
 
 ---------------------------------------------
 -- METHODS

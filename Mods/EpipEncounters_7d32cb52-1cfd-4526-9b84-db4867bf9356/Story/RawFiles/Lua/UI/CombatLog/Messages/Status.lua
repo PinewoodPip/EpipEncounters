@@ -77,7 +77,7 @@ function _StatusMessage:ToString()
 end
 
 function _StatusMessage:CombineWith(msg)
-    for i,status in ipairs(msg.Statuses) do
+    for _,status in ipairs(msg.Statuses) do
         -- TODO make sure they dont repeat
         table.insert(self.Statuses, status)
     end

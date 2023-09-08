@@ -37,13 +37,11 @@ function _Charges.Create(charName, charColor, reactions, fallbackText)
 
     -- Start with a line break for multi-reaction messages
     if reactions and #reactions > 1 then
+        local addendum = ""
         for i,reaction in ipairs(reactions) do
-            _D(reaction)
-            local addendum = ""
-
             addendum = addendum .. Text.Format("%s: %s", {
                 FormatArgs = {
-                    reactions[1].Reaction, reactions[1].Amount
+                    reaction.Reaction, reaction.Amount
                 }
             })
 

@@ -38,7 +38,7 @@ end
 
 function _MovementTask:Update()
     self:SetCursor()
-    return self._RequestStop
+    return true
 end
 
 function _MovementTask:CanEnter()

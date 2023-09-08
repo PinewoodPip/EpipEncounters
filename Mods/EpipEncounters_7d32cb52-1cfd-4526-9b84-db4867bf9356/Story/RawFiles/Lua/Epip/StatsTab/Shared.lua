@@ -13,25 +13,14 @@
 -- We only keep track of equipped nodes that have a stat defined.
 ---------------------------------------------
 
----@class EpipStats
----@field CATEGORIES table<string, EpipStatCategory> Category definitions.
----@field CATEGORIES_ORDER string[]
----@field STATS table<string, EpipStat>
----@field MISSING_REGEN_CAP number TODO move
----@field TOOLTIP_TALENT number TODO remove
----@field TOOLTIP_TALENT_NAME string TODO remove
-
----@alias EpipStatCategoryBehaviour "GreyOut" | "Hidden"
-
 ---@class Feature_CustomStats : Feature
 local EpipStats = {
     USERVAR_STATS = "Stats",
-    CATEGORIES = {},
-    
-    -- TODO rework as a hook
-    CATEGORIES_ORDER = {},
+    CATEGORIES = {}, ---@type table<string, Feature_CustomStats_Category> Category definitions.
+    STATS = {}, ---@type table<string, Feature_CustomStats_Stat>
 
-    STATS = {},
+    -- TODO rework as a hook
+    CATEGORIES_ORDER = {}, ---@type string[]
 
     MISSING_REGEN_CAP = 50,
 
@@ -79,10 +68,12 @@ EpipStats:RegisterUserVariable(EpipStats.USERVAR_STATS, {
 -- CLASSES
 ---------------------------------------------
 
+---@alias Features.CustomStats.Category.DisplayBehaviour "GreyOut"|"Hidden"
+
 ---@class Feature_CustomStats_Category : Class, I_Identifiable, I_Describable
 ---@field Header string Name of the collapsable stat.
 ---@field Name string Name of the category in the tooltip.
----@field Behaviour EpipStatCategoryBehaviour Controls how default-value stats are shown. GreyOut greys out their label and value, hidden hides them - and the whole category - if no stats are owned.
+---@field Behaviour Features.CustomStats.Category.DisplayBehaviour Controls how default-value stats are shown. GreyOut greys out their label and value, hidden hides them - and the whole category - if no stats are owned.
 ---@field Stats string[] Stats displayed in the category, ordered.
 local _Category = {
     Name = "Missing name",
@@ -180,7 +171,7 @@ function EpipStats.RegisterCategory(id, data, index)
     local instance = _Category.Create(data)
 
     EpipStats.CATEGORIES[id] = instance
-    
+
     index = index or #EpipStats.CATEGORIES_ORDER + 1
 
     table.insert(EpipStats.CATEGORIES_ORDER, index, id)

@@ -1290,7 +1290,6 @@ function Vanity.Init()
     -- Initial position
     Vanity.SnapToCharacterSheet()
 
-    Ext.RegisterUICall(ui, "entryClicked", OnEntryClicked)
     Ext.RegisterUICall(ui, "pipComboElementSelected", OnComboSelected)
 
     Ext.Events.Tick:Subscribe(OnTick)

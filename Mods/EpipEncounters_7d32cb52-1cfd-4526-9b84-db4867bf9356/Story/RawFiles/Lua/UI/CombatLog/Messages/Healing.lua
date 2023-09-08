@@ -34,7 +34,7 @@ function _HealingMessage:ToString()
         end
     end
 
-    for i,v in ipairs(heals) do
+    for _,v in ipairs(heals) do
         healStr = healStr .. v
     end
 
@@ -82,5 +82,5 @@ Log.Hooks.CombineMessage:RegisterHook(function (combined, msg1, msg2)
         return true
     end
 
-    return combine
+    return combined
 end)

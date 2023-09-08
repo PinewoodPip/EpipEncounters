@@ -25,7 +25,7 @@ function _APPreservation.Create(charName, ap)
     return obj
 end
 
-function _APPreservation:CanMerge(msg) return false end
+function _APPreservation:CanMerge(_) return false end
 
 function _APPreservation:ToString()
     local msg = Text.Format("%s: %s Action Points unspent", {

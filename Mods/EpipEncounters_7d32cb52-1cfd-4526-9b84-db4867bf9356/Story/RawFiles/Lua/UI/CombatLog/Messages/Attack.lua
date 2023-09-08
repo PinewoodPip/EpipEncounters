@@ -41,7 +41,7 @@ function _Attack:ToString()
     return msg
 end
 
-function _Attack:CanMerge(msg)
+function _Attack:CanMerge(_)
     -- Merging these might be confusing. Let's not.
     -- return self.CharacterName == msg.CharacterName and self.TargetCharacter == msg.TargetCharacter
     return false

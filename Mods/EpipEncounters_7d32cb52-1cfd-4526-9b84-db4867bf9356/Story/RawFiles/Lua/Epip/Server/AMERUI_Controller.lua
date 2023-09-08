@@ -38,7 +38,7 @@ function Controller.GetState(char)
     ---@type AMERUI_CharacterState
     local state = {}
     local instance, ui, _ = Osiris.DB_AMER_UI_UsersInUI:Get(nil, nil, Utilities.GetPrefixedGUID(char))
-    local _, _, page, _ = Osiris.DB_AMER_UI_CurrentPage:Get(instace, ui, nil, nil)
+    local _, _, page, _ = Osiris.DB_AMER_UI_CurrentPage:Get(instance, ui, nil, nil)
 
     state.Instance = instance
     state.Interface = ui

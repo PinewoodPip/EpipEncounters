@@ -427,6 +427,7 @@ MessageBox.RegisterMessageListener("epip_Cheats_Teleport", MessageBox.Events.Inp
 end)
 
 -- Grant treasure table.
+local templateAmount = 1
 ContextMenu.RegisterElementListener("epip_Cheats_Items_SpawnTreasure", "buttonPressed", function(character, params)
     templateAmount = params._statAmount
 
@@ -442,12 +443,12 @@ ContextMenu.RegisterElementListener("epip_Cheats_Items_SpawnTreasure", "buttonPr
     })
 end)
 
-MessageBox.RegisterMessageListener("epip_Cheats_Items_SpawnTreasure", MessageBox.Events.InputSubmitted, function(text, id, data)
+MessageBox.RegisterMessageListener("epip_Cheats_Items_SpawnTreasure", MessageBox.Events.InputSubmitted, function(text, _, data)
     Net.PostToServer("EPIP_CHEATS_GRANTTREASURE", {NetID = data.NetID, Treasure = text, Amount = templateAmount})
 end)
 
 -- Print Char GUID.
-ContextMenu.RegisterElementListener("epip_Cheats_CopyGUID", "buttonPressed", function(character, params)
+ContextMenu.RegisterElementListener("epip_Cheats_CopyGUID", "buttonPressed", function(character, _)
     local prefixedGUID = character.RootTemplate.Name .. "_" .. character.MyGuid
 
     Client.CopyToClipboard(prefixedGUID)
