@@ -1,6 +1,6 @@
 
-local OptionsInput = Client.UI.OptionsInput
 local Vanity = Client.UI.Vanity
+local Input = Client.Input
 
 ---@class Feature_Housing : Feature
 local Housing = Epip.Features.Housing
@@ -9,151 +9,108 @@ Housing.selectedFurniture = nil ---@type Feature_Housing_SelectedFurniture
 Housing.furnitureYAxisStep = 0.5
 Housing.FURNITURE_ROTATION_STEP = 0.1
 
-local _MovementTask = {}
+---@type UserspaceCharacterTaskCallbacks
+local _MovementTask = {
+    TASK_ID = "Epip.Features.Housing.CharacterTasks.MoveFurniture",
+}
 
-function _MovementTask:Enter()
-    print("entering...")
-    if not self:HasValidTarget() then return false end
-    
-    local pointer = Ext.UI.GetPickingState(1)
-        local handle = pointer.HoverItem or pointer.PlaceableEntity
-        
-        if handle then
-            local obj = Ext.Entity.GetGameObject(handle)
-
-            if obj then
-                Housing.SelectFurniture(obj, handle)
-                self.Running = true
-                print("entered!")
-                return true
-            end
-        end
-
-    return false
+---Creates a furniture movement task.
+---@return UserspaceCharacterTaskCallbacks
+function _MovementTask.Create()
+    local inst = {}
+    Inherit(inst, _MovementTask)
+    return inst
 end
 
 function _MovementTask:SetCursor()
     local cc = Ext.UI.GetCursorControl()
 
-    if self.Running then
+    if self.Previewing then
         cc.MouseCursor = "CursorItemMove"
-
         cc.RequestedFlags = 0x30
-        SetCursorText(Text.Format("Left-click to place.<br>Ctrl+Mouse Wheel to lower/raise", {
+        self:_SetCursorText(Text.Format("Left-click to place.<br>Ctrl+Mouse Wheel to lower/raise", {
             Color = Color.LARIAN.GREEN,
         }))
-    elseif self.Previewing then
-        cc.MouseCursor = "CursorItemMove"
     else
         cc.MouseCursor = "CursorSystem"
     end
 end
 
 function _MovementTask:Update()
-    print("updating")
     self:SetCursor()
-
     return self._RequestStop
 end
 
-function _MovementTask:CanEnter() -- Necessary for preview to be entered. Called when the priority is highest
-    -- print("canenter")
-    return self:HasValidTarget() and Client.Input.IsAltPressed()
-end
-
-function _MovementTask:CanExit()
-    Ext.Print("CanExit")
-    return not Client.Input.IsAltPressed()
-end
-
-function _MovementTask:CanExit2()
-    Ext.Print("CanExit2")
-    return not Client.Input.IsAltPressed()
+function _MovementTask:CanEnter()
+    return true
 end
 
 function _MovementTask:ExitPreview()
-    Ext.Print("ExitPreview")
     self.Previewing = false
 end
 
 function _MovementTask:Exit()
-    self.Running = false
     Housing.PlaceMovingFurniture()
 end
 
-function _MovementTask:GetPriority(previousPriority)
-    -- print(self)
-    if previousPriority < 9999 and self:HasValidTarget() then
-        -- print("high prio")
-        return 9999
-    end
+function _MovementTask:GetPriority(_)
+    return Housing.GetSelectedFurniture() and 9999 or 0
+end
 
+function _MovementTask:GetExecutePriority(_)
     return 0
 end
 
-function _MovementTask:GetDescription()
-    return "asdasd"
-end
+function _MovementTask:Start() end
 
-function _MovementTask:GetExecutePriority(previousPriority)
-    return self:GetPriority(previousPriority)
-end
-
-function _MovementTask:Start() -- When left clicked
-    print("start")
-    self._RequestStop = false
-end
-
-function _MovementTask:Stop() -- When cancelled by right-click
-    print("stop")
-    self._RequestStop = false
-    Housing.PlaceMovingFurniture()
-end
+function _MovementTask:Stop() end
 
 function _MovementTask:HasValidTargetPos()
-    return (Ext.UI.GetPickingHelper().WalkableAiFlags & 1) == 0
-end
-
-function _MovementTask:HasValidTarget()
-    local pointer = Ext.UI.GetPickingState(1)
-    local handle = pointer.HoverItem or pointer.PlaceableEntity
-    
-    if handle then
-        local obj = Ext.Entity.GetGameObject(handle)
-
-        if obj then
-            return true
-        end
-    end
-
-    return false
+    return true
 end
 
 function _MovementTask:UpdatePreview()
-    -- print("updating preview")
-end
-
-_MovementTask.GetError = function (self)
-    if self.Running and not _MovementTask:HasValidTargetPos() then
-       return 4
-    else
-       return 0
-    end
- end
-
-function _MovementTask:EnterPreview() -- Called when the task has high enough priority
-    Ext.Print("EnterPreview")
     self.Previewing = true
 end
 
-function _MovementTask:HandleInputEvent(ev, state)
-    local evDesc = Ext.Input.GetInputManager().InputDefinitions[ev.EventId]
-    if evDesc.EventName == "Action1" and ev.OldValue.State == "Pressed" and Client.Input.IsAltPressed() and not _MovementTask.Running and self.Previewing and self:HasValidTarget() then
-        state.RequestRun = true
-        print(Text.Dump(state))
-    elseif _MovementTask.Running and evDesc.EventName == "Action1" and ev.OldValue.State == "Pressed" then
-        -- Housing.PlaceMovingFurniture()
-        -- _MovementTask:Exit()
+function _MovementTask:EnterPreview() -- Called when the task has high enough priority
+    self.Previewing = true
+end
+
+function _MovementTask:ExitPreview()
+    self:_ClearCursorText()
+end
+
+function _MovementTask:GetError()
+    return 0
+end
+
+---@diagnostic disable-next-line: redundant-parameter
+function _MovementTask:HandleInputEvent(_, _) end
+
+
+function _MovementTask:_SetCursorText(text)
+    local cc = Ext.UI.GetCursorControl()
+    local ui = Ext.UI.GetByHandle(cc.TextDisplayUIHandle) ---@cast ui EclUICursorInfo
+    local pos = Ext.UI.GetMouseFlashPos(ui)
+    if ui.Text ~= text then
+       ui:GetRoot().addText(text, pos[1], pos[2])
+       ui.Text = text
+    elseif (ui.WorldScreenPositionX ~= pos[1] or ui.WorldScreenPositionY ~= pos[2]) then
+       ui:GetRoot().moveText(pos[1], pos[2])
+    end
+    cc.HasTextDisplay = true
+end
+
+function _MovementTask:_ClearCursorText()
+    local cc = Ext.UI.GetCursorControl()
+    if cc.HasTextDisplay then
+       local ui = Ext.UI.GetByHandle(cc.TextDisplayUIHandle)
+       if ui.Text ~= "" then
+          ui:GetRoot().removeText()
+          ui.Text = ""
+       end
+       cc.HasTextDisplay = false
     end
 end
 
@@ -166,6 +123,7 @@ local _SelectedFurniture = {}
 
 ---@return EclItem|EclScenery
 function _SelectedFurniture:GetEntity()
+    ---@diagnostic disable-next-line: return-type-mismatch
     return Ext.Entity.GetGameObject(self.Handle)
 end
 
@@ -174,7 +132,7 @@ end
 function _SelectedFurniture:SetPosition(pos, addOffset)
     pos = table.deepCopy(pos)
     local obj = self:GetEntity()
-    
+
     if addOffset then
         for i,v in ipairs(pos) do
             pos[i] = v + self.PositionOffset[i]
@@ -242,7 +200,7 @@ function Housing.SelectFurniture(obj, handle)
         local pos = Ext.UI.GetPickingState(1).WalkablePosition
         -- local pos = Ext.UI.GetPickingState(1).PlaceablePosition
 
-        if pos then
+        if pos and Housing.selectedFurniture then
             Housing.selectedFurniture:SetPosition(pos, true)
         end
     end, {StringID = "Housing_MoveFurniture"})
@@ -258,6 +216,7 @@ function Housing.SelectFurniture(obj, handle)
 end
 
 function Housing.PlaceMovingFurniture()
+    if not Housing.GetSelectedFurniture() then return nil end
     local obj = Housing.GetSelectedFurniture():GetEntity()
 
     -- Sync item positions to server
@@ -342,12 +301,13 @@ end)
 ---------------------------------------------
 
 -- Interacting with furniture.
-OptionsInput.Events.ActionExecuted:RegisterListener(function (action, binding)
+Client.Input.Events.ActionExecuted:Subscribe(function (ev)
+    local action = ev.Action.ID
     if action == "EpipEncounters_Housing_MoveFurniture" then
         local pointer = Ext.UI.GetPickingState(1)
         local handle = pointer.HoverItem or pointer.PlaceableEntity
         -- local handle = pointer.HoverItem
-        
+
         if Housing.IsMovingFurniture() then
             Housing.PlaceMovingFurniture()
         elseif handle then
@@ -359,7 +319,7 @@ OptionsInput.Events.ActionExecuted:RegisterListener(function (action, binding)
         end
     elseif Housing.IsMovingFurniture() then
         local obj = Housing.GetSelectedFurniture()
-        local entity = obj:GetEntity()
+        -- local entity = obj:GetEntity()
 
         if action == "EpipEncounters_Housing_RaiseFurniture" or action == "EpipEncounters_Housing_LowerFurniture" then -- Raise/lower furniture.
             local offset = Housing.furnitureYAxisStep
@@ -370,17 +330,17 @@ OptionsInput.Events.ActionExecuted:RegisterListener(function (action, binding)
             obj.PositionOffset = {obj.PositionOffset[1], obj.PositionOffset[2] + offset, obj.PositionOffset[3]}
         elseif action == "EpipEncounters_Housing_RotateFurniture_Plus" or action == "EpipEncounters_Housing_RotateFurniture_Minus" then
             -- TODO
-            local rotation = entity.Rotation
-            local offset = Housing.FURNITURE_ROTATION_STEP
-            if action == "EpipEncounters_Housing_RotateFurniture_Minus" then
-                offset = -offset
-            end
+            -- local rotation = entity.Rotation
+            -- local offset = Housing.FURNITURE_ROTATION_STEP
+            -- if action == "EpipEncounters_Housing_RotateFurniture_Minus" then
+            --     offset = -offset
+            -- end
 
-            local angles = Ext.Math.ExtractEulerAngles(rotation)
-            local rotationMatrix = Ext.Math.BuildRotation3({1, 0, 0}, 10)
-            rotation = Ext.Math.BuildFromEulerAngles3(angles)
+            -- local angles = Ext.Math.ExtractEulerAngles(rotation)
+            -- local rotationMatrix = Ext.Math.BuildRotation3({1, 0, 0}, 10)
+            -- rotation = Ext.Math.BuildFromEulerAngles3(angles)
             
-            entity.Rotation = Ext.Math.Rotate(rotation, 90, {1, 0, 0})
+            -- entity.Rotation = Ext.Math.Rotate(rotation, 90, {1, 0, 0})
 
             -- _D(rotation)
         end
@@ -388,75 +348,24 @@ OptionsInput.Events.ActionExecuted:RegisterListener(function (action, binding)
 end)
 
 -- Place down moving furniture.
-Client.Input.Events.MouseButtonPressed:Subscribe(function (e)
-    if Housing.IsMovingFurniture() and (e.InputID == "left2" or e.InputID == "right2") then
-        -- Housing.PlaceMovingFurniture()
-        _MovementTask._RequestStop = true
+Input.Events.KeyStateChanged:Subscribe(function (ev)
+    if (ev.InputID == "left2" or ev.InputID == "right2") and Housing.GetSelectedFurniture() then
+        Housing.PlaceMovingFurniture()
+        ev:Prevent()
     end
 end)
 
--- userAction.HandleInputEvent = function (self, ev, state)
---     local evDesc = Ext.Input.GetInputManager().InputDefinitions[ev.EventId]
---     if evDesc.EventName == "Action1" and ev.OldValue.State == "Pressed" and ev.NewValue.State == "Released" then
---        if not self.Running and self.Previewing and self:HasValidTarget() then
---           Ext.Print("RequestRun")
---           state.RequestRun = true
---        end
-       
---        if self.Running and self:HasValidTargetPos() then
---           Ext.PrintWarning("HIT!!!!!")
---           local pos = Ext.UI.GetPickingHelper().WalkablePos.Position
---           Ext.PrintWarning("Move " .. tostring(self.Target) .. " to " .. pos[1] .. "," .. pos[2] .. "," .. pos[3])
---        end
---     end
---  end
+---------------------------------------------
+-- SETUP
+---------------------------------------------
 
-function ClearCursorText()
-    local cc = Ext.UI.GetCursorControl()
-    if cc.HasTextDisplay then
-       local ui = Ext.UI.GetByHandle(cc.TextDisplayUIHandle)
-       if ui.Text ~= "" then
-          ui:GetRoot().removeText()
-          ui.Text = ""
-       end
-       cc.HasTextDisplay = false
+-- Setup character task.
+local attached = DataStructures.Get("DataStructures_Set").Create() ---@type DataStructures_Set<CharacterHandle>
+Ext.Behavior.RegisterCharacterTask(_MovementTask.TASK_ID, _MovementTask.Create)
+Client.Events.ActiveCharacterChanged:Subscribe(function (ev)
+    local char = ev.NewCharacter
+    if char and not attached:Contains(char.Handle) then
+        Ext.Behavior.AttachCharacterTask(char, _MovementTask.TASK_ID)
+        attached:Add(char.Handle)
     end
-end
- 
-function SetCursorText(text)
-    local cc = Ext.UI.GetCursorControl()
-    local ui = Ext.UI.GetByHandle(cc.TextDisplayUIHandle)
-    local pos = Ext.UI.GetMouseFlashPos(ui)
-    if ui.Text ~= text then
-       ui:GetRoot().addText(text, pos[1], pos[2])
-       ui.Text = text
-    elseif (ui.WorldScreenPositionX ~= pos[1] or ui.WorldScreenPositionY ~= pos[2]) then
-       ui:GetRoot().moveText(pos[1], pos[2])
-    end
-    cc.HasTextDisplay = true
- end
- 
--- local userAction = {
---     Running = false,
---     Previewing = false,
---     Target = nil
--- }
-
--- userAction.HandleInputEvent = function (self, ev, state)
---    if evDesc.EventName == "Action1" and ev.OldValue.State == "Pressed" and ev.NewValue.State == "Released" then
---       if not self.Running and self.Previewing and self:HasValidTarget() then
---          Ext.Print("RequestRun")
---          state.RequestRun = true
---       end
-      
---       if self.Running and self:HasValidTargetPos() then
---          Ext.PrintWarning("HIT!!!!!")
---          local pos = Ext.UI.GetPickingHelper().WalkablePos.Position
---          Ext.PrintWarning("Move " .. tostring(self.Target) .. " to " .. pos[1] .. "," .. pos[2] .. "," .. pos[3])
---       end
---    end
--- end
-
-Ext.Events.SessionLoaded:Subscribe(function (e)
-    Ext.UI.RegisterCharacterTask(Client.GetCharacter(), _MovementTask)
 end)
