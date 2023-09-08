@@ -21,6 +21,8 @@
 
 ---@alias ClientGameObject EclCharacter|EclItem
 
+---@alias CharacterHandle ComponentHandle
+---@alias ItemHandle ComponentHandle
 ---@alias FlashCharacterHandle FlashObjectHandle
 ---@alias FlashItemHandle FlashObjectHandle
 

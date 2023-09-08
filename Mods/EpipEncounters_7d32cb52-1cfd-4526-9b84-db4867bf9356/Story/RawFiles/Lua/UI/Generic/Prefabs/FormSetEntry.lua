@@ -25,7 +25,7 @@ Generic.RegisterPrefab("GenericUI_Prefab_FormSetEntry", Prefab)
 ---@param minimumSize Vector2
 ---@return GenericUI_Prefab_FormSetEntry
 function Prefab.Create(ui, id, parent, label, minimumSize)
-    local instance = Prefab:_Create(ui, id) ---@type GenericUI_Prefab_FormSetEntry
+    local instance = Prefab:_Create(ui, id) ---@cast instance GenericUI_Prefab_FormSetEntry
 
     instance:__SetupBackground(parent, minimumSize)
     instance:SetLabel(label)

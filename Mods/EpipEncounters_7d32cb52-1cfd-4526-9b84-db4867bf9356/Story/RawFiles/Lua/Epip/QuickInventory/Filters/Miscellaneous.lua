@@ -95,7 +95,8 @@ UI.Events.RenderSettings:Subscribe(function (ev)
     if ev.ItemCategory == "Miscellaneous" then
         UI.RenderSetting(QuickInventory.Settings.MiscellaneousItemType)
 
-        if Epip.GetFeature("Features.ItemTagging") then
+        -- Only show "Show used items" if the feature is available.
+        if ItemTagging then
             UI.RenderSetting(QuickInventory.Settings.ShowUsedMiscellaneousItems)
         end
     end
