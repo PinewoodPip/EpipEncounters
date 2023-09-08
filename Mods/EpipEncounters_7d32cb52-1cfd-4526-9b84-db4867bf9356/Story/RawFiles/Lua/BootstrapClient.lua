@@ -431,6 +431,7 @@ LOAD_ORDER = {
             "Epip/TooltipAdjustments/Client_MovementCosts.lua",
             "Epip/TooltipAdjustments/Client_MasterworkedHint.lua",
             "Epip/TooltipAdjustments/Client_ContainerPreview.lua",
+            "Epip/TooltipAdjustments/Client_EmptyItemRequirementFix.lua",
         },
     },
 

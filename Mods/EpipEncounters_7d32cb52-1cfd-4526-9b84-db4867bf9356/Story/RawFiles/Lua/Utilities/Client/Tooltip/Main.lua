@@ -154,6 +154,27 @@ function _FormattedTooltip:InsertBefore(target, element)
     end
 end
 
+---Removes an element.
+---@param element integer|TooltipLib_Element integer option refers to element index.
+function _FormattedTooltip:RemoveElement(element)
+    local index = nil ---@type integer?
+    if type(element) == "number" then
+        index = element
+    else
+        for i,existingElement in ipairs(self.Elements) do
+            if existingElement == element then
+                index = i
+                break
+            end
+        end
+    end
+    if index then
+        table.remove(self.Elements, index)
+    else
+        Tooltip:Error("FormattedTooltip:RemoveElement", "Element not found")
+    end
+end
+
 ---@class TooltipLib_CustomFormattedTooltip : TooltipLib_FormattedTooltip
 ---@field ID string
 ---@field Position Vector2D
