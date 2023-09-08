@@ -152,6 +152,15 @@ function Epip.ShutUp(modTable)
     end
 end
 
+---Copies Epip's globals into a table.
+---Intended usage is to copy into another mod's `_ENV`.
+---@param tbl table
+function Epip.ImportGlobals(tbl)
+    for k,v in pairs(_G) do
+        tbl[k] = v
+    end
+end
+
 ---TODO move to Feature
 ---@param modTable string
 ---@param id string
