@@ -79,7 +79,10 @@ end
 ---Changes the selector's value to the previous or next one.
 ---@param direction "Left"|"Right"|-1|1
 function Selector:Scroll(direction)
-    local offset = direction == "Left" and -1 or 1
+    local offset = direction
+    if type(direction) == "string" then
+        offset = "Left" and -1 or 1
+    end
     local newIndex = self._CurrentOptionIndex + offset
 
     if newIndex < 1 then
