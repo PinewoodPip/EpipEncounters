@@ -1,4 +1,6 @@
 
+local Input = Client.Input
+
 ---@class HotbarUI : UI
 ---@field Actions table<string, HotbarAction>
 ---@field ActionsState HotbarActionState[]
@@ -913,13 +915,13 @@ end, "After")
 local function CycleHotbar(barIndex, increment)
     -- Use modifier keys to select higher hotbars
     -- Yes this is slightly ridiculous
-    if Client.Input.IsGUIPressed() then -- Cycle 5th bar
+    if Input.IsGUIPressed() then -- Cycle 5th bar
         barIndex = barIndex + 4
-    elseif Client.Input.IsAltPressed() then -- Cycle 4th bar
+    elseif Input.IsAltPressed() then -- Cycle 4th bar
         barIndex = barIndex + 3
-    elseif Client.Input.IsCtrlPressed() then -- Cycle 3rd bar
+    elseif Input.IsCtrlPressed() then -- Cycle 3rd bar
         barIndex = barIndex + 2
-    elseif Client.Input.IsShiftPressed() then -- Cycle 2nd bar
+    elseif Input.IsShiftPressed() then -- Cycle 2nd bar
         barIndex = barIndex + 1
     end
 
@@ -1062,7 +1064,7 @@ Hotbar:RegisterCallListener("pipSlotKeyAttempted", function(_, index)
 
     -- Do not use slots by default if modifier keys are held, as
     -- they will likely conflict with Input action bindings. 
-    if not Client.Input.AreModifierKeysPressed() then
+    if not Input.AreModifierKeysPressed() then
         index = index + (firstBarRow - 1) * Hotbar.GetSlotsPerRow()
     else
         index = nil
@@ -1166,7 +1168,6 @@ function Hotbar.RenderHotkey(i, state)
         element.setHighlighted(Hotbar.IsActionHighlighted(actionID))
 
         if hasAction then
-            
             -- Icon
             local icon = Hotbar.GetActionIcon(actionID, i)
             Hotbar:GetUI():SetCustomIcon("pip_hotkey_" .. (i - 1), icon, 32, 32)
@@ -1174,15 +1175,16 @@ function Hotbar.RenderHotkey(i, state)
             -- Keybind text
             keyString = Hotbar.GetKeyString(i)
 
-            if keyString and Settings.GetSettingValue("Epip_Hotbar", "HotbarHotkeysText") then
+            if keyString ~= "" and Settings.GetSettingValue("Epip_Hotbar", "HotbarHotkeysText") then
                 element.text_mc.htmlText = "<font size='14.5' align='center'>" .. keyString .. "</font>" -- TODO
+                element.icon_mc.y = 4
             else
                 element.text_mc.htmlText = ""
+                CenterElement(element.icon_mc, element, "y", 32)
             end
 
             local tooltipKeyString = Hotbar.GetKeyString(i, false)
             local tooltip = Hotbar.GetActionName(actionData.ID, i)
-            
             if tooltipKeyString ~= "" then
                 tooltip = Text.Format("%s (%s)", {
                     FormatArgs = {
@@ -1209,11 +1211,6 @@ function Hotbar.RenderHotkey(i, state)
             element.x = 72 + (index * 34) + (3 * index)
         end
 
-        if hasAction and keyString ~= "" then
-            element.icon_mc.y = 4
-        else
-            CenterElement(element.icon_mc, element, "y", 32)
-        end
         element.iconY = element.icon_mc.y
 
         element.y = 64.5

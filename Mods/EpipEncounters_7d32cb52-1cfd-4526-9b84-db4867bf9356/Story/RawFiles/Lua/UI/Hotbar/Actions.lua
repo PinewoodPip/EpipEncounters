@@ -1,4 +1,6 @@
 
+local Input = Client.Input
+
 ---@class HotbarUI
 local Hotbar = Client.UI.Hotbar
 
@@ -107,12 +109,12 @@ end
 
 ---Activates an action from a hotkey.
 ---@param index integer Index of the hotkey button.
----@return boolean #Whether the action was executed.
+---@return boolean -- Whether the action was executed.
 function Hotbar.PressHotkey(index) -- TODO distinguish mouse/kb
     local hotkeyState = Hotbar.ActionsState[index]
     local usedAction = false
 
-    if Hotbar.HasBoundAction(index) and Client.Input.IsAcceptingInput() then
+    if Hotbar.HasBoundAction(index) and Input.IsAcceptingInput() then
         local enabled = Hotbar.IsActionEnabled(hotkeyState.ActionID, index)
 
         if enabled then
@@ -245,7 +247,7 @@ end
 ---Gets the string display for an action button's keybinding.
 ---@param index integer Index of the action hotkey button.
 ---@param shortName boolean? Whether to use short names. Defaults to true.
----@return string Empty if the button is unbound.
+---@return string -- Empty if the button is unbound.
 function Hotbar.GetKeyString(index, shortName)
     if shortName == nil then shortName = true end
     local state = Hotbar.ActionsState[index]
@@ -256,17 +258,12 @@ function Hotbar.GetKeyString(index, shortName)
 
         -- Manually-defined InputEvent takes priority
         if actionData.InputEventID then
-            local binding = Client.Input.GetBinding(actionData.InputEventID)
+            local binding = Input.GetBinding(actionData.InputEventID)
             key = binding and binding:Stringify(true) or key
         else -- Use the hotbar keybinds
-            local bindableAction = Client.Input.GetActionBindings("EpipEncounters_Hotbar_" .. Text.RemoveTrailingZeros(index))
-
+            local bindableAction = Input.GetActionBindings("EpipEncounters_Hotbar_" .. Text.RemoveTrailingZeros(index))[1] -- Only consider first binding.
             if bindableAction then
-                if bindableAction.Input1 then
-                    key = Client.Input.StringifyBinding(bindableAction.Input1, shortName)
-                elseif bindableAction.Input2 then
-                    key = Client.Input.StringifyBinding(bindableAction.Input2, shortName)
-                end
+                key = Input.StringifyBinding(bindableAction, shortName)
             end
         end
 
