@@ -170,6 +170,7 @@ function ContextMenu.SetPosition(ui, x, y)
     ui = ui or ContextMenu.GetActiveUI()
     x = x or ContextMenu.position.x
     y = y or ContextMenu.position.y
+    local uiPos = Vector.Create(x, y)
 
     local root = ui:GetRoot()
 
@@ -178,25 +179,24 @@ function ContextMenu.SetPosition(ui, x, y)
     ContextMenu.position = {x = x, y = y}
 
     local width = 0 -- Combined width of all menus.
-    local screenPos = ui:GetPosition()
     for i=0,#root.contextMenusList.content_array-1,1 do
         local menu = root.contextMenusList.content_array[i]
 
-        menu.x = x + (i * 265)
-        menu.y = y
+        menu.x = (i * 265)
+        menu.y = 0
 
         width = width + menu.width
     end
 
     -- Push all menus to the left if they were to overflow
-    local rightEdgeX = screenPos[1] + width + x
+    local rightEdgeX = width + uiPos[1]
     local pushLeft = rightEdgeX - Client.GetViewportSize()[1]
     if pushLeft > 0 and x >= 0 then
-        for i=0,#root.contextMenusList.content_array-1,1 do
-            local menu = root.contextMenusList.content_array[i]
-            menu.x = menu.x - pushLeft
-        end
+        uiPos[1] = uiPos[1] - pushLeft
     end
+
+    -- Only mess with position for the custom instance.
+    ContextMenu.UI:SetPosition(math.floor(uiPos[1]), math.floor(uiPos[2]))
 end
 
 -- Adds a single entry to a menu, "main" by default.
