@@ -150,10 +150,10 @@ end
 ---Updates the statuses on the display.
 function Manager:Update()
     local visible = self:_IsVisible()
-    if visible then
-        self.UI:Show()
+    if visible then -- Calling Show() unnecessarily leads to mouse event issues with different layers!
+        self.UI:TryShow()
     else
-        self.UI:Hide()
+        self.UI:TryHide()
         return -- Do not perform an update in this case
     end
     local char = Character.Get(self.CharacterHandle)

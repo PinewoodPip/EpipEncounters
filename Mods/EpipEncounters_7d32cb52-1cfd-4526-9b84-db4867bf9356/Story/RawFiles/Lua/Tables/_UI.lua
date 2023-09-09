@@ -108,6 +108,7 @@ function BaseUI:Exists()
 end
 
 ---Shorthand for UIObject:Show()
+---In most Larian UIs, this will trigger an update of the UI's data.
 function BaseUI:Show()
     local ui = self:GetUI()
 
@@ -115,6 +116,14 @@ function BaseUI:Show()
         ui:Show()
     else
         self:LogError("Show(): UI does not currently exist!")
+    end
+end
+
+---Invokes `UIObject:Show()`, but only if the UI is invisible.
+---Use to avoid quirks that stem from calling `Show()` on already visible UIs.
+function BaseUI:TryShow()
+    if not self:IsVisible() then
+        self:Show()
     end
 end
 
@@ -173,6 +182,14 @@ function BaseUI:Hide()
         ui:Hide()
     else
         self:LogError("Hide(): UI does not currently exist!")
+    end
+end
+
+---Invokes `UIObject:Hide()`, but only if the UI is invisible.
+---Use to avoid quirks that stem from calling `Hide()` on already invisible UIs.
+function BaseUI:TryHide()
+    if self:IsVisible() then
+        self:Hide()
     end
 end
 
