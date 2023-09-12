@@ -304,7 +304,7 @@ end
 function BaseUI:GetPath()
     local path = self.PATH
     if self:Exists() then
-        path = self:GetUI().Path
+        path = Client._AbsoluteUIPathToDataPath(self:GetUI().Path)
     end
     return path
 end

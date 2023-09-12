@@ -248,7 +248,7 @@ function Client.GetUI(ui)
     if type(ui) == "number" then -- Type ID overload.
         ui = Ext.UI.GetByType(ui)
     end
-    return Client._PathToUI[ui.Path]
+    return Client._PathToUI[Client._AbsoluteUIPathToDataPath(ui.Path)]
 end
 
 ---Returns the UIObjectManager state for a player.
@@ -259,6 +259,13 @@ function Client._GetUIObjectManagerState(playerIndex)
     local playerState = Ext.UI.GetUIObjectManager().PlayerStates[playerIndex]
 
     return playerState
+end
+
+---Converts an absolute UI swf path to one relative to the Data directory.
+---@param path path
+---@return path
+function Client._AbsoluteUIPathToDataPath(path)
+    return string.match(path, ".*(Public/.+)$")
 end
 
 ---------------------------------------------
@@ -350,4 +357,17 @@ Ext.Events.SessionLoaded:Subscribe(function (_)
             PreviousCharacter = ev.PreviousCharacter,
         })
     end)
+end)
+
+-- Map swf paths to UI tables when the client is ready.
+-- This will not cover all cases, such as UIs that are only created afterwards (ex. settings menu). TODO?
+GameState.Events.ClientReady:Subscribe(function (_)
+    for _,ui in pairs(Client.UI) do
+        if ui.GetPath then
+            local path = ui:GetPath()
+            if path then
+                Client._PathToUI[path] = ui
+            end
+        end
+    end
 end)
