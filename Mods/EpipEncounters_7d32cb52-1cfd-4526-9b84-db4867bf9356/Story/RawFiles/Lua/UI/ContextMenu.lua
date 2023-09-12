@@ -837,7 +837,7 @@ local function OnStatButtonPressed(ui, method, currentAmount, addition, elementI
     end
 end
 
-local function OnRequestContextMenu(ui, method, id, x, y, entityHandle, ...)
+local function OnRequestContextMenu(ui, _, id, x, y, entityHandle, ...)
     -- The passed character handle, if any, becomes the associated character with this context menu. Otherwise, we default to client-controlled char.
     if entityHandle then
         entityHandle = Ext.UI.DoubleToHandle(entityHandle)
@@ -848,9 +848,13 @@ local function OnRequestContextMenu(ui, method, id, x, y, entityHandle, ...)
             ContextMenu.itemHandle = entityHandle
         end
     end
-    
+
+    -- Convert stage coordinates to global screen ones
+    local pos = Vector.Create(x, y)
+    pos = Client.GetUI(ui):FlashPositionToScreen(pos)
+
     -- Always use our instance for user-made context menus
-    ContextMenu.RequestMenu(x, y, id, ContextMenu.UI, ...)
+    ContextMenu.RequestMenu(pos[1], pos[2], id, ContextMenu.UI, ...)
 end
 
 -- Parses updateButtons() from vanilla context menu to keep track of vanilla context menu elements.

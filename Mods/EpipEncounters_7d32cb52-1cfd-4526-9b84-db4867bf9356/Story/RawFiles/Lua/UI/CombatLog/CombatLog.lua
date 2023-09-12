@@ -356,9 +356,6 @@ Client.UI.ContextMenu.RegisterMenuHandler("combatLog", function()
     })
 
     Client.UI.ContextMenu.Open()
-    local root = Log:GetRoot()
-    local pos = Log:GetUI():GetPosition()
-    Client.UI.ContextMenu.SetPosition(Client.UI.ContextMenu.GetActiveUI(), root.stage.mouseX + pos[1], root.stage.mouseY)
 end)
 
 ---------------------------------------------
