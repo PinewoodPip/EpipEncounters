@@ -50,6 +50,8 @@ local ContextMenu = {
     elementsCount = 0,
     vanillaContextData = nil,
 
+    _MaxSize = nil, ---@type Vector2? Maximum flash size of the current context menu. Removing submenus will not shrink it.
+
     ARRAY_ENTRY_TEMPLATES = {
         BUTTON = {
             "Index",
@@ -178,7 +180,7 @@ function ContextMenu.SetPosition(ui, x, y)
 
     ContextMenu.position = {x = x, y = y}
 
-    local width = 0 -- Combined width of all menus.
+    local width, height = 0, 0 -- Size of the menu area (including submenus).
     for i=0,#root.contextMenusList.content_array-1,1 do
         local menu = root.contextMenusList.content_array[i]
 
@@ -186,13 +188,31 @@ function ContextMenu.SetPosition(ui, x, y)
         menu.y = 0
 
         width = width + menu.width
+
+        if menu.visible then
+            height = math.clamp(menu.height, height, root.MAX_HEIGHT + 10) -- MAX_HEIGHT doesn't consider height of start/end pieces
+        end
     end
 
-    -- Push all menus to the left if they were to overflow
-    local rightEdgeX = width + uiPos[1]
-    local pushLeft = rightEdgeX - Client.GetViewportSize()[1]
+    -- Use max size of the context menu to avoid jitter when submenus are removed/readded
+    local currentMaxSize = ContextMenu._MaxSize
+    local uiScale = ui:GetUIScaleMultiplier()
+    ContextMenu._MaxSize = currentMaxSize and Vector.Create(math.max(currentMaxSize[1], width), math.max(currentMaxSize[2], height)) or Vector.Create(width, height)
+    width, height = ContextMenu._MaxSize[1], ContextMenu._MaxSize[2]
+
+    -- Push all menus to the left if they were to overflow through the right edge of the screen.
+    local viewport = Client.GetViewportSize()
+    local rightEdgeX = width * uiScale + uiPos[1]
+    local pushLeft = rightEdgeX - viewport[1]
     if pushLeft > 0 and x >= 0 then
         uiPos[1] = uiPos[1] - pushLeft
+    end
+
+    -- Push all menus upwards if they were to overflow through the bottom edge of the screen.
+    local bottomY = height * uiScale + uiPos[2]
+    local pushUp = bottomY - viewport[2]
+    if pushUp > 0 then
+        uiPos[2] = uiPos[2] - pushUp
     end
 
     -- Only mess with position for the custom instance.
@@ -292,17 +312,12 @@ function ContextMenu.Open(position)
         position = Vector.Create(ContextMenu.position.x, ContextMenu.position.y)
     end
 
-    ContextMenu.SetPosition(ContextMenu.UI, position[1], position[2])
-
     root.open()
     ContextMenu.UI:Show()
 
     ContextMenu.Root.windowsMenu_mc.updateDone()
 
-    -- TODO!
-    -- if tryPushBack and ContextMenu.GetActiveUI():GetRoot().isCustomInstance then
-
-    -- end
+    ContextMenu.SetPosition(ContextMenu.UI, position[1], position[2])
 end
 
 function ContextMenu.Close(ui)
@@ -359,7 +374,9 @@ function ContextMenu.Cleanup(ui)
         ui:Hide()
         ContextMenu.SetPosition(ui, -999, -999)
         root.contextMenusList.height = 0
-    end   
+    end
+
+    ContextMenu._MaxSize = nil
 end
 
 function ContextMenu.RegisterElementListener(elementID, type, callback)
@@ -460,6 +477,7 @@ end
 
 function ContextMenu.RequestMenu(x, y, id, ui, requestingElementData, ...)
     if not ui then ui = ContextMenu.UI end
+    ContextMenu._MaxSize = nil
     ContextMenu.SetPosition(ui, x, y)
 
     -- track submenus
