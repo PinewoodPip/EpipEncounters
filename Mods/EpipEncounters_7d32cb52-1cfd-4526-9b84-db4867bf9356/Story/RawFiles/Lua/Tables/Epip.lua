@@ -222,6 +222,10 @@ function Epip.RegisterFeatureInitializationListener(modTable, featureID, timing,
 end
 
 if Ext.IsClient() then
+    ---Initializes a UI table.
+    ---@param type integer
+    ---@param id string
+    ---@param ui UI Will be initialized.
     function Epip.InitializeUI(type, id, ui)
         Epip.InitializeFeature("EpipEncounters", id, ui)
         setmetatable(ui, {__index = Client.UI._BaseUITable})
@@ -236,6 +240,11 @@ if Ext.IsClient() then
         end
 
         Client.UI[id] = ui
+
+        local path = ui:GetPath()
+        if path then -- Not all UIs have this pre-set, and the UI might not exist at this time.
+            Client._PathToUI[path] = ui
+        end
     end
 
     function Epip.IsAprilFools()

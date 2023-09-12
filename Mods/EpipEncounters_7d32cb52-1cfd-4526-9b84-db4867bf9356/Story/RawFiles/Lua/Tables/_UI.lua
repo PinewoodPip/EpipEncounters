@@ -298,6 +298,38 @@ function BaseUI:GetPosition()
     return x, y
 end
 
+---Returns the path of the UI's swf.
+---Requires the UI to exist or the path to have been set in the table.
+---@return string
+function BaseUI:GetPath()
+    local path = self.PATH
+    if self:Exists() then
+        path = self:GetUI().Path
+    end
+    return path
+end
+
+---Converts flash coordinates to screen position.
+---@param pos Vector2
+---@param floor boolean? If `true`, final coordinates will be floored. Defaults to `true`.
+---@return Vector2
+function BaseUI:FlashPositionToScreen(pos, floor)
+    local ui = self:GetUI()
+    pos = Vector.Clone(pos)
+
+    pos = Vector.ScalarProduct(pos, ui:GetUIScaleMultiplier()) -- Apply scale
+
+    -- Apply UIObject offset
+    local uiPos = ui:GetPosition()
+    pos = pos + Vector.Create(math.max(0, uiPos[1]), math.max(0, uiPos[2])) -- Don't shift position if UI pos is <0
+
+    if floor then
+        pos[1], pos[2] = math.floor(pos[1]), math.floor(pos[2])
+    end
+
+    return pos
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------

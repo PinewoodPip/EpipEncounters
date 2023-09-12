@@ -11,6 +11,8 @@ Client = {
     -- Internal variables - do not set
     ---------------------------------------------
 
+    _PathToUI = {}, ---@type table<integer, UI>
+
     IS_HOST = false,
     GAME_STATES = {
         UNKNOWN = "Unknown",
@@ -237,6 +239,16 @@ function Client.GetActiveUI(playerIndex)
     end
 
     return ui
+end
+
+---Returns the Epip UI table for a UI, if registered.
+---@param ui UIObject|integer UI or type ID.
+---@return UI
+function Client.GetUI(ui)
+    if type(ui) == "number" then -- Type ID overload.
+        ui = Ext.UI.GetByType(ui)
+    end
+    return Client._PathToUI[ui.Path]
 end
 
 ---Returns the UIObjectManager state for a player.
