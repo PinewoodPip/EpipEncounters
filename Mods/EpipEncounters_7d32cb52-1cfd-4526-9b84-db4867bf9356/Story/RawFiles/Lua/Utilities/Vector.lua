@@ -104,7 +104,7 @@ function Vector.ScalarProduct(v, scalar)
     local output = Vector.Clone(v)
 
     for i=1,#v,1 do
-        output[i] = v[1] * scalar
+        output[i] = v[i] * scalar
     end
 
     return output
