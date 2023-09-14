@@ -159,8 +159,11 @@ function StatusesDisplay.Create(char)
 
     StatusesDisplay._Displays[char.Handle] = instance
 
-    -- Required to handle buggy level swaps and recruitment(?).
-    PlayerInfo.ToggleStatuses(false)
+    -- Required to handle buggy level swaps and recruitment.
+    -- In the case of recruitment, the array does not have its size updated after addInfo until one tick later. The reason for this is unknown.
+    Ext.OnNextTick(function ()
+        PlayerInfo.ToggleStatuses(false)
+    end)
 end
 
 ---Returns the manager for a character, if any.
