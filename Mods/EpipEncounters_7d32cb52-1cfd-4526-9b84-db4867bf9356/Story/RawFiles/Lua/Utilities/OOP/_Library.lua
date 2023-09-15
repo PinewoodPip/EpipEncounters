@@ -438,7 +438,7 @@ end
 ---@return `T`
 function Library:GetClass(className)
     if self._Classes[className] == nil then
-        Library:Error("GetClass", "Attemped to fetch an unregistered class: ", className, "- Make sure the class is from this library.")
+        self:Error("GetClass", "Attemped to fetch an unregistered class: ", className, "- Make sure the class is from this library.")
     end
 
     return OOP.GetClass(className)
