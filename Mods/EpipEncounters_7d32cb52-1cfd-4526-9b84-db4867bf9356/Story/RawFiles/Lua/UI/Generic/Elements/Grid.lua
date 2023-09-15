@@ -29,6 +29,17 @@ function Grid:SetElementSpacing(row, column)
     mc.gridList.ROW_SPACING = row
 end
 
+---Returns the dimensions of the grid.
+---@return integer, integer -- Rows, columns. `-1` indicates no restriction.
+function Grid:GetGridSize()
+    local mc = self:GetMovieClip()
+    local rows, columns = mc.gridList.row, mc.gridList.col
+    local undefined = 2^32 - 1 -- uint shenanigans lmao
+    if columns >= undefined then columns = -1 end
+    if rows >= undefined then rows = -1 end
+    return rows, columns
+end
+
 ---------------------------------------------
 -- SETUP
 ---------------------------------------------
