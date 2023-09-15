@@ -84,6 +84,12 @@ function Component:IsFocused()
     return self._IsFocused
 end
 
+---Returns whether the target for this component still exists (as in, has not been destroyed).
+---@return boolean
+function Component:IsAlive()
+    return not table.isdestroyed(self.__Target)
+end
+
 ---Sets whether the component is focused by its parent.
 ---@package
 ---@param focused boolean

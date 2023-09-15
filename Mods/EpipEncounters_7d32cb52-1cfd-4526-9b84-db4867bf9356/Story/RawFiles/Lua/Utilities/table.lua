@@ -3,6 +3,14 @@
 -- Extensions to the table table.
 ---------------------------------------------
 
+local _DestroyedMetatableMsg = function(self, _)
+    error(self.___Message or "Attemped to index a destroyed table")
+end
+local _DestroyedMetatable = {
+    __index = _DestroyedMetatableMsg,
+    __newindex = _DestroyedMetatableMsg,
+}
+
 ---Sorts a table using the comparison operators on all values.
 ---@param tbl table Will be mutated.
 ---@param reverse boolean? Defaults to false.
@@ -247,9 +255,13 @@ function table.destroy(tbl, msg)
     for k,_ in pairs(tbl) do -- Setting fields to nil while iterating *should* be fine according to next() documentation
         tbl[k] = nil
     end
-    setmetatable(tbl, {
-        __index = function (_, _)
-            error(msg or "Attemped to index a destroyed table")
-        end
-    })
+    tbl.___Message = msg
+    setmetatable(tbl, _DestroyedMetatable)
+end
+
+---Returns whether `table.destroy()` has been run on a table.
+---@param tbl table
+---@return boolean
+function table.isdestroyed(tbl)
+    return getmetatable(tbl) == _DestroyedMetatable
 end
