@@ -114,6 +114,7 @@ end
 ---@return `T`
 function _Instance:CreateElement(id, elementType, parentID)
     elementType = elementType:gsub("GenericUI_Element_", "")
+    local elementClassName = "GenericUI_Element_" .. elementType
     local element = nil ---@type GenericUI_Element
     local elementTable = Generic.ELEMENTS[elementType]
     local root = self:GetRoot()
@@ -133,7 +134,7 @@ function _Instance:CreateElement(id, elementType, parentID)
     element = {
         UI = self,
         ID = id,
-        Type = elementType,
+        Type = elementClassName,
         ParentID = parentID or "",
         _Children = {},
     }

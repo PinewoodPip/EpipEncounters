@@ -19,7 +19,7 @@ local Tooltip = Client.Tooltip
 ---@field ID string
 ---@field ParentID string Empty string for elements in the root.
 ---@field _Children GenericUI_Element[]
----@field Type string
+---@field Type GenericUI_ElementType
 ---@field Tooltip (GenericUI_ElementTooltip|string)? DEPRECATED! Will be rendered upon the element being hovered. Strings are rendered as unformatted tooltips.
 ---@field Events GenericUI_Element_Events
 ---@field _Tooltip GenericUI_ElementTooltip
