@@ -17,14 +17,24 @@ Generic:RegisterClass("GenericUI.Navigation.Components.Generic", GenericComponen
 -- METHODS
 ---------------------------------------------
 
+---@override
 function GenericComponent:OnIggyEvent(event)
     -- Emulate clicks.
     if event.EventID == "UIAccept" and event.Timing == "Up" then
-        self.__Target.Events.MouseDown:Throw()
-        self.__Target.Events.MouseUp:Throw()
+        local target = self.__Target
+        target.Events.MouseDown:Throw()
+        target.Events.MouseUp:Throw()
+
+        if target.Type == "GenericUI_Element_Slot" then
+            ---@cast target GenericUI_Element_Slot
+            target.Events.Clicked:Throw()
+        end
+
+        return true
     end
 end
 
+---@override
 function GenericComponent:OnFocusChanged(focused)
     -- Emulate mouse over/out.
     if focused then
