@@ -299,6 +299,7 @@ LOAD_ORDER = {
             "UI/Generic/Navigation/Component.lua",
             "UI/Generic/Navigation/Components/Generic.lua",
             "UI/Generic/Navigation/Components/List.lua",
+            "UI/Generic/Navigation/Components/Grid.lua",
 
             "UI/Generic/Prefabs/Text.lua",
             "UI/Generic/Prefabs/HotbarSlot.lua",
