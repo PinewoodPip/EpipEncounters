@@ -30,3 +30,14 @@ function math.lerp(startValue, endValue, progress)
 
     return startValue + (interval * progress)
 end
+
+function math.indexmodulo(index, divisor)
+    local overshoot = index // divisor
+    index = index - overshoot * divisor
+    if index > divisor then
+        index = index - divisor
+    elseif index <= 0 then
+        index = index + divisor
+    end
+    return index
+end

@@ -26,6 +26,8 @@
 ---@alias FlashCharacterHandle FlashObjectHandle
 ---@alias FlashItemHandle FlashObjectHandle
 
+---@alias iggyevent string -- In the format "IE EventName"
+
 ---@class Enum
 ---@field Label string
 ---@field Value string

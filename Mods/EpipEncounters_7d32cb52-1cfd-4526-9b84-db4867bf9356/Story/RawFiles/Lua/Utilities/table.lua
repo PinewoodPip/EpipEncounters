@@ -171,6 +171,18 @@ function table.filter(list, predicate)
     return newList
 end
 
+---Converts a list of elements to a set-like table.
+---@generic T
+---@param list T[]
+---@return table<T, true>
+function table.listtoset(list)
+    local set = {}
+    for _,id in ipairs(list) do
+        set[id] = true
+    end
+    return set
+end
+
 ---Returns the first key-value pair that matches a predicate.
 ---@generic K, V
 ---@param tbl table<K, V>

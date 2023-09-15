@@ -37,7 +37,7 @@ Inherit(_Instance, Client.UI._BaseUITable)
 ---@field Height integer
 
 ---@class GenericUI.Instance.Events.IggyEventCaptured
----@field EventID string Without "IE " prefix.
+---@field EventID InputLib_InputEventStringID Without "IE " prefix.
 ---@field Timing "Up"|"Down"
 
 ---------------------------------------------
