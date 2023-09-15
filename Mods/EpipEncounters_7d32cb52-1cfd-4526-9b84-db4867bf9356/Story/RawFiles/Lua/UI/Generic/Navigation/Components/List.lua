@@ -31,22 +31,29 @@ function ListComponent.Create(target)
 end
 
 function ListComponent:OnIggyEvent(event)
-    -- Scroll the focus of the list.
     if event.Timing == "Up" then
-        Navigation:DebugLog("List", "Scroling")
-        local direction = event.EventID == "UIDown" and 1 or -1 -- TODO check other keys explicitly
-        local children = self:GetChildren()
-        local newIndex
-        if self._Index then
-            newIndex = self._Index + direction
-        else
-            newIndex = 1 -- Start at 0 by default. TODO have up start from bottom?
+        local scrollDirection = nil
+        if event.EventID == "UIDown" then
+            scrollDirection = 1
+        elseif event.EventID == "UIUp" then
+            scrollDirection = -1
         end
-        newIndex = math.indexmodulo(newIndex, #children)
+        -- Scroll the focus of the list.
+        if scrollDirection then
+            Navigation:DebugLog("List", "Scroling")
+            local children = self:GetChildren()
+            local newIndex
+            if self._Index then
+                newIndex = self._Index + scrollDirection
+            else
+                newIndex = event.EventID == "UIDown" and 1 or #children -- Starting index is based on direction pressed
+            end
+            newIndex = math.indexmodulo(newIndex, #children)
 
-        self._Index = newIndex
-        self:SetFocus(children[newIndex])
-        Navigation:DebugLog("List", "New focus", children[newIndex].__Target.ID)
+            self._Index = newIndex
+            self:SetFocus(children[newIndex])
+            Navigation:DebugLog("List", "New focus", children[newIndex].__Target.ID)
+        end
     end
 end
 
