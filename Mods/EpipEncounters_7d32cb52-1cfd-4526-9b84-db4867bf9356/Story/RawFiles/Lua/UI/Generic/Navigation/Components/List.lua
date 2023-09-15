@@ -1,6 +1,7 @@
 
 ---------------------------------------------
--- Implements a navigation component for list-like elements that allows navigating their children in order.
+-- Implements a navigation component that allows navigating the target's children in order.
+-- Target does not need to be a container.
 ---------------------------------------------
 
 local Generic = Client.UI.Generic
@@ -8,11 +9,16 @@ local Navigation = Generic.Navigation
 local Component = Generic:GetClass("GenericUI.Navigation.Component")
 
 ---@class GenericUI.Navigation.Components.List : GenericUI.Navigation.Component
----@field _Index integer? Index of the current focus. `nil` if there is no focus (ex. upon creation, if list is empty).
----@field _ScrollForwardEvents table<InputLib_InputEventStringID, true>
----@field _ScrollBackwardEvents table<InputLib_InputEventStringID, true>
----@field _Wrap boolean
-local ListComponent = {}
+---@field __Index integer? Index of the current focus. `nil` if there is no focus (ex. upon creation, if list is empty).
+---@field __ScrollForwardEvents table<InputLib_InputEventStringID, true>
+---@field __ScrollBackwardEvents table<InputLib_InputEventStringID, true>
+---@field __Wrap boolean
+---@field __ChildrenOverride GenericUI.Navigation.Component[]
+local ListComponent = {
+    Events = {
+        ChildAdded = {}, ---@type Event<GenericUI.Element.Events.ChildAdded> Use to create components for new children.
+    },
+}
 Generic:RegisterClass("GenericUI.Navigation.Components.List", ListComponent, {"GenericUI.Navigation.Component"})
 
 ---------------------------------------------
@@ -38,18 +44,19 @@ ListComponent.DEFAULT_CONFIG = _DefaultConfig
 ---@param target GenericUI.Navigation.Component.Target
 ---@param config GenericUI.Navigation.Components.List.Configuration?
 ---@return GenericUI.Navigation.Components.List
-function ListComponent.Create(target, config)
+function ListComponent:Create(target, config)
     if config == nil then -- Use default config by default.
         config = _DefaultConfig
     else
         Inherit(config, _DefaultConfig)
     end
-    local instance = Component.Create(ListComponent, target) ---@cast instance GenericUI.Navigation.Components.List
-    instance._Index = nil
+    local instance = Component.Create(self, target) ---@cast instance GenericUI.Navigation.Components.List
+    instance.Events = SubscribableEvent.CreateEventsTable(ListComponent.Events)
 
-    instance._ScrollBackwardEvents = table.listtoset(config.ScrollBackwardEvents)
-    instance._ScrollForwardEvents = table.listtoset(config.ScrollForwardEvents)
-    instance._Wrap = config.Wrap
+    instance.__ScrollBackwardEvents = table.listtoset(config.ScrollBackwardEvents)
+    instance.__ScrollForwardEvents = table.listtoset(config.ScrollForwardEvents)
+    instance.__Wrap = config.Wrap
+    instance.__Index = nil
 
     -- Register events as consumable
     instance.CONSUMED_IGGY_EVENTS = {}
@@ -60,62 +67,81 @@ function ListComponent.Create(target, config)
         table.insert(instance.CONSUMED_IGGY_EVENTS, id)
     end
 
+    -- Forward events
+    target.Events.ChildAdded:Subscribe(function (ev)
+        instance.Events.ChildAdded:Throw(ev)
+    end)
+
     return instance
 end
 
+---@override
 function ListComponent:OnIggyEvent(event)
-    if event.Timing == "Up" then
+    if event.Timing == "Down" then -- Down is used to allow key repeat
         local scrollDirection = nil
-        if self._ScrollForwardEvents[event.EventID] then
+        if self.__ScrollForwardEvents[event.EventID] then
             scrollDirection = 1
-        elseif self._ScrollBackwardEvents[event.EventID] then
+        elseif self.__ScrollBackwardEvents[event.EventID] then
             scrollDirection = -1
         end
         -- Scroll the focus of the list.
         if scrollDirection then
-            Navigation:DebugLog("List", "Scroling")
             local children = self:GetChildren()
             local newIndex
-            if self._Index then
-                newIndex = self._Index + scrollDirection
+            if self.__Index then
+                newIndex = self.__Index + scrollDirection
             else
-                newIndex = event.EventID == "UIDown" and 1 or #children -- Starting index is based on direction pressed
+                newIndex = self.__ScrollForwardEvents[event.EventID] and 1 or #children -- Starting index is based on direction pressed
             end
 
-            if self._Wrap then
+            if self.__Wrap then
                 newIndex = math.indexmodulo(newIndex, #children)
             else
                 newIndex = math.clamp(newIndex, 1, #children)
             end
 
-            self:_FocusByIndex(newIndex)
+            self:__FocusByIndex(newIndex)
+
+            return true
         end
     end
 end
 
 ---Focuses the child with a specific index.
 ---@param index integer
-function ListComponent:_FocusByIndex(index)
+function ListComponent:__FocusByIndex(index)
     local children = self:GetChildren()
     local child = children[index]
 
-    self._Index = index
+    self.__Index = index
     self:SetFocus(child)
 
-    Navigation:DebugLog("List", "New focus", child.__Target.ID)
+    -- Navigation:DebugLog("List", self.__Target.ID, "New focus", child and child.__Target.ID or "nil")
 end
 
 ---Returns the child components.
 ---@return GenericUI.Navigation.Component[]
 function ListComponent:GetChildren()
-    local components = {} ---@type GenericUI.Navigation.Component[]
+    local components ---@type GenericUI.Navigation.Component[]
 
-    for _,child in ipairs(self.__Target:GetChildren()) do
-        ---@cast child GenericUI.Navigation.Component.Target
-        if child.___Component then -- Ignore elements with no component
-            table.insert(components, child.___Component)
+    if self.__ChildrenOverride then
+        components = self.__ChildrenOverride
+    else
+        components = {}
+        for _,child in ipairs(self.__Target:GetChildren()) do
+            ---@cast child GenericUI.Navigation.Component.Target
+            if child.___Component and child:IsVisible() then -- Ignore elements with no component as well as invisible elements
+                table.insert(components, child.___Component)
+            end
         end
     end
 
     return components
+end
+
+---Sets the child components.
+---If `nil` (default), children will be searched from the target's child elements.
+---@param children GenericUI.Navigation.Component[]?
+function ListComponent:SetChildren(children)
+    self.__ChildrenOverride = children
 end

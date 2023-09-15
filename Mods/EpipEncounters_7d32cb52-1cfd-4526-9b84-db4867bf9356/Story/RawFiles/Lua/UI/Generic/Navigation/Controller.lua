@@ -59,7 +59,7 @@ end
 function Controller:SetFocus(component, focused)
     component:___SetFocused(focused)
 
-    Navigation:DebugLog("Component focus changed", component:GetClassName(), focused)
+    -- Navigation:DebugLog("Component focus changed", component:GetClassName(), focused)
 
     for _,iggyEvent in ipairs(component.CONSUMED_IGGY_EVENTS) do
         iggyEvent = iggyEvent:gsub("^IE ", "")
@@ -101,6 +101,7 @@ function Controller:_ProcessIggyEvent(event)
         if component:___CanConsumeIggyEvent(iggyEvent) then
             local consumed = component:OnIggyEvent(event)
             if consumed then
+                Navigation:DebugLog(event.EventID, "consumed by", component.__Target.ID)
                 break
             end
         end

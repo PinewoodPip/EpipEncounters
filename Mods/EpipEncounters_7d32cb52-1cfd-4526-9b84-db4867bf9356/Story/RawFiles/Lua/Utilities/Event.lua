@@ -80,6 +80,17 @@ function SubscribableEvent:New(name, preventable)
     return o
 end
 
+---Creates a table filled with events from a template.
+---@param template table<string, {Preventable:boolean?}>
+---@return table<string, Event>
+function SubscribableEvent.CreateEventsTable(template)
+	local events = {}
+	for id,opts in pairs(template) do
+		events[id] = SubscribableEvent:New(id, opts.Preventable)
+	end
+	return events
+end
+
 function SubscribableEvent:Subscribe(handler, opts, stringID)
 	opts = opts or {}
 	local index = self.NextIndex
