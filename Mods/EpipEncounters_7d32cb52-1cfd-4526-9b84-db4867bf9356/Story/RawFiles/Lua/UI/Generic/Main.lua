@@ -28,7 +28,8 @@ function Generic.Create(id, layer)
         Elements = {},
         Events = {
             -- TODO fix code duplication (IggyEventCaptured is also in the IDE annotation version)
-            IggyEventCaptured = {Legacy = false}, ---@type Event<GenericUI.Instance.Events.IggyEventCaptured>
+            IggyEventUpCaptured = {Legacy = false}, ---@type Event<GenericUI.Instance.Events.IggyEventCaptured>
+            IggyEventDownCaptured = {Legacy = false}, ---@type Event<GenericUI.Instance.Events.IggyEventCaptured>
         },
         Hooks = {},
     }
@@ -327,11 +328,14 @@ end
 ---@param ev EclLuaUICallEvent
 ---@param _ integer Event index, from the events array. Arbitrary, not very relevant.
 ---@param eventID string
-function Generic._OnIggyEventCaptured(ev, _, eventID)
+---@param timing "Up"|"Down"
+function Generic._OnIggyEventCaptured(ev, _, eventID, timing)
     local instance = Generic.GetInstance(ev.UI:GetTypeId())
     Generic:DebugLog("CALL IggyEventCaptured: ", eventID)
 
-    instance.Events.IggyEventCaptured:Throw({
+    local event = timing == "Up" and instance.Events.IggyEventUpCaptured or instance.Events.IggyEventDownCaptured
+    event:Throw({
         EventID = eventID:gsub("^IE ", ""),
+        Timing = timing,
     })
 end

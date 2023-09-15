@@ -128,7 +128,7 @@ function UI._Initialize()
     UI:SetIggyEventCapture("UICancel", true)
 
     -- Close the UI through IggyEvents
-    UI.Events.IggyEventCaptured:Subscribe(function (ev)
+    UI.Events.IggyEventUpCaptured:Subscribe(function (ev)
         if ev.EventID == "UICancel" then
             UI:SetIggyEventCapture("UICancel", false)
             UI:Hide()

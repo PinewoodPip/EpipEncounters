@@ -21,7 +21,8 @@ local _Instance = {
     USE_LEGACY_HOOKS = false,
 
     Events = {
-        IggyEventCaptured = {}, ---@type Event<GenericUI.Instance.Events.IggyEventCaptured>
+        IggyEventUpCaptured = {}, ---@type Event<GenericUI.Instance.Events.IggyEventCaptured>
+        IggyEventDownCaptured = {}, ---@type Event<GenericUI.Instance.Events.IggyEventCaptured>
     },
 }
 Generic:RegisterClass("GenericUI_Instance", _Instance, {})
@@ -37,6 +38,7 @@ Inherit(_Instance, Client.UI._BaseUITable)
 
 ---@class GenericUI.Instance.Events.IggyEventCaptured
 ---@field EventID string Without "IE " prefix.
+---@field Timing "Up"|"Down"
 
 ---------------------------------------------
 -- METHODS

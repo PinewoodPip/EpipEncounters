@@ -176,20 +176,23 @@ package arenaResult_fla
 
         // ---------------
         
-        public function onEventUp(param1:Number) : Boolean
+        public function onEventUp(ev:Number) : Boolean
         {
-            return false;
+            var captured:Boolean = this.capturedEvents[this.events[ev]] == true;
+            if (captured)
+            {
+                ExternalInterface.call("IggyEventCaptured", ev, this.events[ev], "Up");
+            }
+            return captured;
         }
 
         public function onEventDown(ev:Number) : Boolean
         {
             var captured:Boolean = this.capturedEvents[this.events[ev]] == true;
-
             if (captured)
             {
-                ExternalInterface.call("IggyEventCaptured", ev, this.events[ev]);
+                ExternalInterface.call("IggyEventCaptured", ev, this.events[ev], "Down");
             }
-
             return captured;
         }
 
