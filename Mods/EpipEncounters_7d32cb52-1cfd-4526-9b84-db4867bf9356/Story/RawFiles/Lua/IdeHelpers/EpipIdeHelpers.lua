@@ -16,6 +16,8 @@
 ---@alias monotonictimestamp integer
 ---@alias modtable string
 ---@alias date string
+---@alias skill string Skill ID.
+---@alias tag string
 
 ---@alias UIObjectHandle ComponentHandle
 

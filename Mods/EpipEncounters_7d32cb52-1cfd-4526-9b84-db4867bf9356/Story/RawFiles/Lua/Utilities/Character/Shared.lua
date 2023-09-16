@@ -34,7 +34,7 @@ Character = {
         LIZARD_FEMALE = 8,
 
         NONE = 9,
-        
+
         UNDEAD_HUMAN_MALE = 10,
         UNDEAD_HUMAN_FEMALE = 11,
         UNDEAD_DWARF_MALE = 12,
@@ -43,7 +43,6 @@ Character = {
         UNDEAD_ELF_FEMALE = 15,
         UNDEAD_LIZARD_MALE = 16,
         UNDEAD_LIZARD_FEMALE = 17,
-
     },
 
     ---@enum CharacterLib_EquipmentVisualMask
@@ -65,6 +64,23 @@ Character = {
         OVERHEAD = 8192,
         SENTINEL = 16384,
         -- Unknown if more exist
+    },
+
+    ---@type table<tag, Race>
+    RACIAL_TAGS = {
+        HUMAN = "Human",
+        ELF = "Elf",
+        DWARF = "Dwarf",
+        LIZARD = "Lizard",
+    },
+
+    -- Unfortunate, but we do not currently know how exactly the game keeps track of these.
+    ---@type table<Race, skill[]>
+    _RACIAL_SKILLS = {
+        Human = {"Shout_InspireStart"},
+        Elf = {"Shout_FleshSacrifice"},
+        Dwarf = {"Target_PetrifyingTouch"},
+        Lizard = {"Cone_Flamebreath"},
     },
 
     USE_LEGACY_EVENTS = false,
@@ -136,6 +152,15 @@ function Character.IsSkillLearnt(char, skillID)
     local state = char.SkillManager.Skills[skillID]
 
     return state and state.IsActivated or Character.IsSkillInnate(char, skillID)
+end
+
+---Returns the record for a skill.
+---@param char Character
+---@param skillID skill
+---@return (EclSkill|EsvSkill)? -- `nil` if the character does not have the skill in any way.
+function Character.GetSkill(char, skillID)
+    local manager = char.SkillManager
+    return manager.Skills[skillID]
 end
 
 ---Returns the combat ID and team ID of char, if any.
@@ -420,35 +445,26 @@ function Character.IsUndead(char)
 end
 
 ---Returns the current race of char.
+---Checks racial tags.
 ---@param char Character
----@return Race
+---@return Race?
 function Character.GetRace(char)
-    local racialTags = {
-        HUMAN = "Human",
-        ELF = "Elf",
-        DWARF = "Dwarf",
-        LIZARD = "Lizard",
-    }
-
     local characterRace = nil
-
-    for tag,race in pairs(racialTags) do
+    for tag,race in pairs(Character.RACIAL_TAGS) do
         if char:HasTag(tag) then
             characterRace = race
             break
         end
     end
-
     return characterRace
 end
 
 ---Returns the original race of a player char, before any transforms.
 ---@param char Character Must be tagged with "REALLY_{Race}"
----@return Race
+---@return Race?
 function Character.GetRealRace(char)
     local pattern = "^REALLY_(.+)$"
     local race = nil
-
     for _,tag in ipairs(char:GetTags()) do
         local match = tag:match(pattern)
 
@@ -457,12 +473,10 @@ function Character.GetRealRace(char)
             break
         end
     end
-
     if race then
         race = race:lower()
         race = race:sub(1, 1):upper() .. race:sub(2)
     end
-
     return race
 end
 
