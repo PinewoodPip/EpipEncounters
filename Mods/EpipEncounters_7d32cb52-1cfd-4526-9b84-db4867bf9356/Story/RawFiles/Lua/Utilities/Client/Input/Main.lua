@@ -937,14 +937,21 @@ function Input.IsTouchInput(rawID)
     return Input.TOUCH_RAW_EVENTS[rawID] == true
 end
 
----Returns whether the game is unpaused and there are no focused elements in Flash.
+---Returns whether the game is accepting regular input events.
+---Checks whether there are any modal UIs or UIs with a focused text field.
 ---@return boolean
 function Input.IsAcceptingInput()
-    return not GameState.IsPaused() and not Input.IsTextFieldFocused()
+    local manager = Ext.UI.GetUIObjectManager()
+    local modalFlags = manager.ModalAggregateFlags
+    ---@diagnostic disable-next-line: undefined-field
+    local isModal = modalFlags.OF_PlayerModal1 or modalFlags.OF_PlayerModal2 or modalFlags.OF_PlayerModal3 or modalFlags.OF_PlayerModal4
+
+    return not isModal and not Input.IsTextFieldFocused()
 end
 
 ---Returns whether a text field is focused within any UI.
----@return true
+---Note that it is possible for a text field to be focused at the flash level with the game being unaware of it; this is not checked for.
+---@return boolean
 function Input.IsTextFieldFocused()
     local manager = Ext.UI.GetUIObjectManager()
     local flags = manager.TextInputAggregateFlags
