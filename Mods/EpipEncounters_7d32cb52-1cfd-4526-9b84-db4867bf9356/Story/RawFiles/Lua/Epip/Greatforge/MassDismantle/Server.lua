@@ -1,7 +1,7 @@
 
 ---@class Feature_MassDismantle
 local MassDismantle = Epip.GetFeature("Feature_MassDismantle")
-MassDismantle.DELAY = 0.8 -- In seconds.
+MassDismantle.DELAY = 0.4 -- In seconds.
 
 MassDismantle._CurrentCharacterHandle = nil ---@type EntityHandle
 MassDismantle._CurrentQueue = nil ---@type EntityHandle[]
@@ -24,7 +24,7 @@ function MassDismantle.DismantleContainerItems(char, container)
         MassDismantle:Error("DismantleContainerItems", "Cannot run multiple mass-dismantles at a time.")
     end
 
-    local items = MassDismantle.GetEligibleItems(container) ---@cast items EntityHandle[]
+    local items = MassDismantle.GetEligibleItems(container) ---@cast items +EntityHandle[] -- We reuse this table to store the handles.
     for i,item in ipairs(items) do
         items[i] = item.Handle
     end
