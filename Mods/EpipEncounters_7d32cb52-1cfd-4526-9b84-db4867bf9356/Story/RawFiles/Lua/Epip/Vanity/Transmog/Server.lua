@@ -191,13 +191,29 @@ end
 ---@param useAlternativeStatus boolean?
 function Vanity.RefreshAppearance(char, useAlternativeStatus)
     local status = "PIP_Vanity_Refresh"
-    local guid = char.MyGuid
+    local charGUID = char.MyGuid
     if useAlternativeStatus then status = "PIP_Vanity_Refresh_Alt" end
 
-    Osi.ApplyStatus(guid, status, 0, 1, NULLGUID)
+    -- Transforming removes racial skills and as a result their cooldown is reset afterwards;
+    -- we need to restore the cooldowns afterwards.
+    local race = Character.GetRace(char)
+    local racialSkills = race and Character._RACIAL_SKILLS[race]
+    local skillCooldowns = {} ---@type table<skill, number>
+    if racialSkills then
+        for _,skillID in ipairs(racialSkills) do
+            skillCooldowns[skillID] = Character.GetSkill(char, skillID).ActiveCooldown
+        end
+    end
+
+    Osi.ApplyStatus(charGUID, status, 0, 1, NULLGUID)
 
     Timer.Start(0.2, function()
-        Net.PostToCharacter(guid, "EPIPENCOUNTERS_Vanity_RefreshSheetAppearance")
+        Net.PostToCharacter(charGUID, "EPIPENCOUNTERS_Vanity_RefreshSheetAppearance")
+    end)
+    Timer.Start(0.6, function (_) -- Restore racial skill cooldowns. It's unknown how many ticks this requires. Unfortunately will not stop the client from being able to cast the skill if they're fast enough.
+        for skillID,cooldown in pairs(skillCooldowns) do
+            Osi.NRD_SkillSetCooldown(charGUID, skillID, cooldown)
+        end
     end)
 end
 
