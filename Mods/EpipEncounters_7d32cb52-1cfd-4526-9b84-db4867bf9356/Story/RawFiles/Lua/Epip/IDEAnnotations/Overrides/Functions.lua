@@ -5,6 +5,13 @@ local functions = {
             VarargParams = true,
         },
     },
+    ["Ext_ClientUI"] = {
+        ["GetMouseFlashPos"] = {
+            Params = {
+                {Name = "ui", Type = "UIObject?", Comment = "If passed, returned coordinates will be floats. Otherwise, global pixel coordinates will be returned."},
+            },
+        },
+    },
     ["Ext_ServerOsiris"] = {
         ["RegisterListener"] = {
             Params = {

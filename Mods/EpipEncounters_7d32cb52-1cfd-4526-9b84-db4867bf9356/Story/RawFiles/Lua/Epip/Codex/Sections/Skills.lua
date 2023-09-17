@@ -15,7 +15,7 @@ local Icons = Epip.GetFeature("Feature_GenericUITextures").ICONS
 local SkillbookTemplates = Epip.GetFeature("Features.SkillbookTemplates")
 local V = Vector.Create
 
----@type Feature
+---@class Features.Codex.Skills
 local Skills = {
     _SearchTerm = "",
     _HiddenSchools = Set.Create({}),

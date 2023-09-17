@@ -149,7 +149,7 @@ Net.RegisterListener("EPIPENCOUNTERS_CHEATS_SPAWNARTIFACTSFOCI", function(payloa
 
     AutoIdentify.SetForceEnable(true)
 
-    for i,tuple in pairs(Osi.DB_AMER_Artifacts:Get(nil, nil, nil, nil)) do
+    for _,tuple in pairs(Osi.DB_AMER_Artifacts:Get(nil, nil, nil, nil)) do
         local root,runeRoot,slot,id = tuple[1],tuple[2],tuple[3],tuple[4]
 
         if root ~= "AMER_UNI_Deck_94902e34-3693-460c-a7a4-81f27cfc5ec7" then
