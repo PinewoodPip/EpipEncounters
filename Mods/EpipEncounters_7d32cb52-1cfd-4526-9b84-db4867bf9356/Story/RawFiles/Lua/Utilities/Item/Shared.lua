@@ -104,6 +104,24 @@ Item = {
         ["Horns"] = "hff459609g099bg4cfcg885fg87c3d9e54f59", -- "Head"
         ["Overhead"] = "hda749a3fg52c0g48d5gae3bgd522dd34f65c",
     },
+    -- Handles used in item tooltips for equipment types that support both handedness types.
+    ITEM_TYPE_TOOLTIP_TSKHANDLES = {
+        ONE_HANDED = { -- "One-Handed X"
+            ["Sword"] = "h657cfe58g240bg43c6g9129gf3a6a75d6ca4",
+            ["Mace"] = "h17a906aeg8f00g4f9dga784g93b8e4ad26b2",
+            ["Axe"] = "h2c89d4e0g529bg4e4agbae9ge3119ee32cc9",
+        },
+        TWO_HANDED = { -- "Two-Handed X"
+            ["Sword"] = "h57099d1cg88ccg44f5g9ba7gc1acedf94335",
+            ["Mace"] = "h7b586984gd7abg42fcg84a4ge354c937ec07",
+            ["Axe"] = "h2fdeda9fgd07ag489bgab68g872500b23ea2",
+        },
+    },
+    WEAPONS_WITH_BOTH_HANDEDNESS_TYPES = {
+        ["Sword"] = true,
+        ["Mace"] = true,
+        ["Axe"] = true,
+    },
 
     ---@type table<ItemLib_Rarity, icon>
     _ITEM_RARITY_ICONS = {
@@ -158,6 +176,17 @@ end
 ---@return boolean
 function Item.IsMeleeWeapon(item)
     return item and item.Stats and (Item.MELEE_WEAPON_TYPES:Contains(item.Stats.WeaponType) or item.Stats.WeaponType == "None")
+end
+
+---Returns the handedness of a weapon item.
+---@param item Item
+---@return ("One-Handed"|"Two-Handed")? -- `nil` if the item has no handedness.
+function Item.GetHandedness(item)
+    local handedness = nil ---@type ("One-Handed"|"Two-Handed")?
+    if item.Stats then
+        handedness = item.Stats.IsTwoHanded and "Two-Handed" or "One-Handed"
+    end
+    return handedness
 end
 
 ---Returns the display name of the item.

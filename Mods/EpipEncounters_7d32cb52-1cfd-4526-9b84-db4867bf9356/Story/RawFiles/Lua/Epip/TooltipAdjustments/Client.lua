@@ -492,90 +492,6 @@ Game.Tooltip.RegisterListener("Status", nil, function(char, status, tooltip)
     end
 end)
 
-function TooltipAdjustments.AddBaseDeltamodTierDisplay(item, tooltip)
-    local elementsToTry = {
-        -- "WarningText", -- red X
-        "AbilityTitle", -- header of tooltip
-        -- "StatsGearBoostNormal", -- does not work
-        -- "StatsBaseValue",
-        -- "Sulfur", -- does not work on items
-        -- "StatusImmunity", -- yellow text, bottom
-        -- "TagDescription", -- white text
-        -- "SurfaceDescription",
-        -- "ExtraProperties", -- blue text with star
-        -- "WeaponDamagePenalty", -- nothing
-        -- "NeedsIdentifyLevel", -- needs identif overlay
-        "ArmorSlotType", -- slot type, above dmg/armors
-        -- "PriceToIdentify", -- white text
-        -- "PriceToRepair", -- white text
-        -- "PickpocketInfo", -- white text
-        -- "Tags", -- tag small icon, bottom
-        -- "Engraving", -- separate text tab at top
-        -- "Reflection",
-        -- "StatName", -- nothing?
-        "StatsPointValue",
-        -- "StatMEMSlot", -- bookmark, top middle panel
-        -- "StatusBonus", -- green text bottom?
-    }
-
-    if not item.Stats then return nil end
-
-    local tier = 0
-    local itemType = Item.GetItemSlot(item)
-    local tiers = Data.Game.EQUIPMENT_BASE_BOOST_TIERS
-
-    -- use subtypes for armor only
-    if itemType ~= "Weapon" and Data.Game.SLOTS_WITH_SUBTYPES[itemType] then
-        itemType = Item.GetEquipmentSubtype(item)
-    end
-
-    -- happens with the starting tattered robes
-    if not tiers[itemType] then return nil end
-
-    -- find the "tier" of the item based on boosts
-    local boost = nil
-    for i,v in pairs(item.Stats.DynamicStats) do
-
-        local boostName = v.ObjectInstanceName
-
-        if tiers[itemType].Boosts[boostName] ~= nil then
-            tier = tiers[itemType].Boosts[boostName]
-            break
-        end
-    end
-
-    -- do nothing for items with no generated stats
-    if tier == 0 then return nil end
-
-    local slotType = tooltip:GetElement("ArmorSlotType")
-    local tierDisplay = 0
-    local totalTiers = tiers[itemType].Tiers
-    local tierCutoff = math.max(0, totalTiers - 10)
-
-    if tier >= tierCutoff then -- 55% to 100%, 10 tiers
-        tierDisplay = ((tier - tierCutoff) * 0.05) + 0.5
-    else -- 20% to 50%, 4 tiers
-        tierDisplay = (tier * 0.1) + 0.1
-    end
-
-    tierDisplay = tierDisplay * 100
-
-    tierDisplay = math.floor(tierDisplay)
-    tierDisplay = math.max(0, tierDisplay)
-
-    if tierDisplay == 100 then
-        tierDisplay = "Max Quality" -- fancy display for fancy items!
-    else
-        tierDisplay = string.format("Quality %s%%", tierDisplay)
-    end
-
-    if slotType then
-        slotType.Label = slotType.Label .. string.format("  -  %s", tierDisplay)
-        slotType.Label = slotType.Label:gsub("Two%-Handed", "2Handed")
-        slotType.Label = slotType.Label:gsub("One%-Handed", "1Handed")
-    end
-end
-
 -- Show talent IDs in Talent tooltips.
 Game.Tooltip.RegisterListener("Talent", nil, function(_, talentID, tooltip)
     if Epip.IsDeveloperMode() then
@@ -711,7 +627,6 @@ local function OnItemTooltipRender(item, tooltip)
     -- TooltipAdjustments.ShowAbilityScoresForSI(nil, skill, tooltip) -- TODO
     TooltipAdjustments.FixTooltipAPCosts(tooltip)
     TooltipAdjustments.ChangeArtifactRarityDisplay(item, tooltip)
-    TooltipAdjustments.AddBaseDeltamodTierDisplay(item, tooltip)
 
     -- TooltipAdjustments.TestElements(item, tooltip)
 end

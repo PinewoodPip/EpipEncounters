@@ -204,10 +204,17 @@ LOAD_ORDER = {
 
     {ScriptSet = "Epip/DatabaseSync"},
 
+    -- Epic Encounters libraries
     {ScriptSet = "Utilities/EpicEncounters"}, -- Core script needs to be present for now due to IsEnabled() - TODO move it out?
     {ScriptSet = "Utilities/EpicEncounters/SourceInfusion", RequiresEE = true},
     {ScriptSet = "Utilities/EpicEncounters/BatteredHarried", RequiresEE = true},
-    {ScriptSet = "Utilities/EpicEncounters/DeltaMods", RequiresEE = true},
+    {
+        ScriptSet = "Utilities/EpicEncounters/DeltaMods",
+        Scripts = {
+            "Utilities/EpicEncounters/DeltaMods/Shared_BaseDeltamodTiers.lua",
+        },
+        RequiresEE = true
+    },
     {ScriptSet = "Utilities/EpicEncounters/Meditate", RequiresEE = true},
 
     "UI/OptionsSettings.lua",
@@ -439,6 +446,7 @@ LOAD_ORDER = {
             "Epip/TooltipAdjustments/Client_MasterworkedHint.lua",
             "Epip/TooltipAdjustments/Client_ContainerPreview.lua",
             "Epip/TooltipAdjustments/Client_EmptyItemRequirementFix.lua",
+            {Script = "Epip/TooltipAdjustments/Client_BaseDeltamodTiers.lua", RequiresEE = true},
         },
     },
 

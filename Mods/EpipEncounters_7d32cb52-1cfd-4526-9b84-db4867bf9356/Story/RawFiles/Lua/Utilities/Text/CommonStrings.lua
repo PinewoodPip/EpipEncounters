@@ -194,6 +194,10 @@ Text.CommonStrings.Club = Text.RegisterTranslatedString({
    Handle = "h2eea4c8ag25e9g48c3gbe20g5c84eaf9243b",
    Text = "Club",
 })
+Text.CommonStrings.Mace = Text.RegisterTranslatedString({
+    Handle = "hb2c6a1a0gbac4g45e2gb2dcg12010a8fa2c8",
+    Text = "Mace",
+})
 Text.CommonStrings.Knife = Text.RegisterTranslatedString({
    Handle = "h7e55ac61g269fg4f0dgabf9g06cbe52d0d22",
    Text = "Knife",
