@@ -20,6 +20,14 @@ TSK.Setting_RewardGenerationWarning_Description = TooltipAdjustments:RegisterTra
     ContextDescription = "Setting tooltip",
 })
 
+TSK.Label_Hint = TooltipAdjustments:RegisterTranslatedString("h36b35885g9f60g40b1ga77fg0c501ab76654", {
+    Text = "Modifiers are added after you choose your reward.",
+    ContextDescription = "Warning shown in tooltip",
+    FormatOptions = {
+        FontType = Text.FONTS.ITALIC,
+    },
+})
+
 ---------------------------------------------
 -- SETTINGS
 ---------------------------------------------
@@ -40,7 +48,7 @@ Client.Tooltip.Hooks.RenderItemTooltip:Subscribe(function (ev)
     if TooltipAdjustments.IsAdjustmentEnabled(TooltipAdjustments.Settings.RewardGenerationWarning) and ev.UI:GetTypeId() == Ext.UI.TypeID.reward then
         ev.Tooltip:InsertAfter("ItemLevel", {
             Type = "PickpocketInfo",
-            Label = Text.Format("Modifiers are added after you choose your reward.", {FontType = Text.FONTS.ITALIC})
+            Label = TSK.Label_Hint:Format(),
         })
     end
 end)
