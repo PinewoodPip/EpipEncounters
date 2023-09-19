@@ -221,6 +221,31 @@ function _Element:GetPosition()
     return mc.GetPositionX(), mc.GetPositionY()
 end
 
+---Returns the global position of the element within the UI.
+---@return Vector2
+function _Element:GetGlobalPosition()
+    local pos = Vector.Create(self:GetPosition())
+    local parent = self:GetParent()
+    while parent do
+        pos = pos + Vector.Create(parent:GetPosition())
+        parent = parent:GetParent()
+    end
+    return pos
+end
+
+---Returns the position of the element in screen-space.
+---@param floor boolean? If `true`, values returned will be floored. Defaults to `true`.
+---@return Vector2 -- With decimals.
+function _Element:GetScreenPosition(floor)
+    if floor == nil then floor = true end
+    local pos = self:GetGlobalPosition()
+    pos = Vector.ScalarProduct(pos, self.UI:GetUI():GetUIScaleMultiplier())
+    if floor then
+        pos[1], pos[2] = math.floor(pos[1]), math.floor(pos[2])
+    end
+    return pos
+end
+
 ---Returns whether the element is visible.
 ---@return boolean
 function _Element:IsVisible()
