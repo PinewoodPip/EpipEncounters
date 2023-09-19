@@ -447,6 +447,7 @@ LOAD_ORDER = {
             "Epip/TooltipAdjustments/Client_ContainerPreview.lua",
             "Epip/TooltipAdjustments/Client_EmptyItemRequirementFix.lua",
             {Script = "Epip/TooltipAdjustments/Client_BaseDeltamodTiers.lua", RequiresEE = true},
+            "Epip/TooltipAdjustments/Client_OpaqueBackground.lua",
         },
     },
 

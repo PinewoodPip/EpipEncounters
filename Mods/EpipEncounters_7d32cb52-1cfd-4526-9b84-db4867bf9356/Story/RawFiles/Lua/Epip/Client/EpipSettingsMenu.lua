@@ -296,6 +296,7 @@ local tabs = {
             {Module = "EpipEncounters_TooltipAdjustments", ID = "TooltipLayer"},
             {Module = "EpipEncounters_TooltipAdjustments.MasterworkedHint", ID = "Enabled"},
             {Module = "EpipEncounters_TooltipAdjustments.ContainerPreview", ID = "DetailedItemsAmount"},
+            {Module = "EpipEncounters_TooltipAdjustments.OpaqueBackground", ID = "Enabled"},
         }
     }
 }
