@@ -15,7 +15,7 @@ local Icons = Epip.GetFeature("Feature_GenericUITextures").ICONS
 local SkillbookTemplates = Epip.GetFeature("Features.SkillbookTemplates")
 local V = Vector.Create
 
----@class Features.Codex.Skills
+---@class Features.Codex.Skills : Feature
 local Skills = {
     _SearchTerm = "",
     _HiddenSchools = Set.Create({}),
@@ -135,6 +135,10 @@ local Skills = {
         HAS_SKILLBOOK = "HasSkillbook",
         NO_SKILLBOOK = "NoSkillbook",
     },
+    SETTING_TOOLTIP_POSITION_CHOICES = {
+        BY_CURSOR = "ByCursor",
+        LEFT_SIDE = "LeftSide",
+    },
 
     Settings = {},
     TranslatedStrings = {
@@ -172,6 +176,21 @@ local Skills = {
            Handle = "he6042694g235ag4c68gbcccgb1a4769ae7bd",
            Text = "No Skillbook",
            ContextDescription = "Setting value",
+        },
+        Setting_TooltipPosition_Description = {
+            Handle = "hcf8d7869gc200g463bgb0dbg81c686990462",
+            Text = "Determines the position of skill tooltips within the UI.",
+            ContextDescription = "Setting name",
+        },
+        Setting_TooltipPosition_Option_ByCursor = {
+            Handle = "he5fd06c2gba4dg4ec0g9c66gc6d0847cc6d9",
+            Text = "By Cursor",
+            ContextDescription = "Setting option for tooltip position",
+        },
+        Setting_TooltipPosition_Option_OnLeft = {
+            Handle = "hf2fe60ffgd37bg4808g9f2dgad70b0ccffdd",
+            Text = "On Left Side",
+            ContextDescription = "Setting option for tooltip position",
         },
     },
 
@@ -239,6 +258,17 @@ Skills.Settings.SkillbookFilter = Skills:RegisterSetting("SkillbookFilter", {
         {ID = Skills.SKILLBOOK_FILTER_SETTING_VALUES.OFF, NameHandle = Text.CommonStrings.NoFilter.Handle},
         {ID = Skills.SKILLBOOK_FILTER_SETTING_VALUES.NO_SKILLBOOK, NameHandle = TSK.Setting_SkillbookFilter_Option_NoSkillbook.Handle},
         {ID = Skills.SKILLBOOK_FILTER_SETTING_VALUES.HAS_SKILLBOOK, NameHandle = TSK.Setting_SkillbookFilter_Option_HasSkillbook.Handle},
+    }
+})
+
+Skills.Settings.TooltipPosition = Skills:RegisterSetting("SkiTooltipPositionllbookFilter", {
+    Type = "Choice",
+    Name = Text.CommonStrings.Tooltips,
+    DefaultValue = Skills.SETTING_TOOLTIP_POSITION_CHOICES.BY_CURSOR,
+    ---@type SettingsLib_Setting_Choice_Entry[]
+    Choices = {
+        {ID = Skills.SETTING_TOOLTIP_POSITION_CHOICES.BY_CURSOR, NameHandle = TSK.Setting_TooltipPosition_Option_ByCursor.Handle},
+        {ID = Skills.SETTING_TOOLTIP_POSITION_CHOICES.LEFT_SIDE, NameHandle = TSK.Setting_TooltipPosition_Option_OnLeft.Handle},
     }
 })
 
@@ -322,6 +352,8 @@ local Section = {
         Skills.Settings.ShowMemorized,
 
         Skills.Settings.SkillbookFilter,
+
+        Skills.Settings.TooltipPosition,
     },
 
     SCHOOL_BUTTONS_OFFSET = V(170, 0),
@@ -330,6 +362,7 @@ local Section = {
     MAX_SKILLS = 400, -- Maximum amount of skills to show. Failsafe to prevent long freezes.
     SEARCH_DELAY_TIMER_ID = "Feature_Codex_Skills_SearchDelay",
     SEARCH_DELAY = 0.7, -- In seconds.
+    LEFT_SIDE_SKILL_TOOLTIP_OFFSET = V(15, 25), -- Offset used for skill tooltips on the left side.
 }
 Codex:RegisterClass("Feature_Codex_Skills_Section", Section, {"Features.Codex.Sections.Grid"})
 Codex.RegisterSection("Skills", Section)
@@ -382,6 +415,24 @@ function Section:__CreateElement(index)
     instance:SetCanDrop(false)
     instance:SetCanDrag(true, false)
     instance:SetUpdateDelay(-1)
+
+    -- Hook tooltip position as it is configurable via section setting
+    instance.Hooks.GetTooltipData:Subscribe(function (ev)
+        local position = nil
+        local positionSetting = Skills:GetSettingValue(Skills.Settings.TooltipPosition)
+        if positionSetting == Skills.SETTING_TOOLTIP_POSITION_CHOICES.BY_CURSOR then
+            position = V(Client.GetMousePosition())
+        elseif positionSetting == Skills.SETTING_TOOLTIP_POSITION_CHOICES.LEFT_SIDE then
+            position = V(Codex.UI:GetPosition())
+            local headerElement = Codex.UI.IndexHeader
+            local indexPosition = headerElement:GetScreenPosition()
+
+            -- Set position to be below the index header
+            position = position + indexPosition + V(0, headerElement:GetHeight()) + self.LEFT_SIDE_SKILL_TOOLTIP_OFFSET
+        end
+
+        ev.Position = position or ev.Position
+    end, {StringID = "Features.Codex.Skills.TooltipPosition"})
 
     return instance
 end
