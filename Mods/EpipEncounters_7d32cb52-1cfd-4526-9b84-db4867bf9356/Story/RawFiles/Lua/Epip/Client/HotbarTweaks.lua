@@ -33,6 +33,8 @@ local Tweaks = {
         },
     },
     Settings = {},
+
+    SupportedGameStates = _Feature.GAME_STATES.RUNNING_SESSION,
 }
 Epip.RegisterFeature("HotbarTweaks", Tweaks)
 
@@ -138,19 +140,21 @@ Hotbar.Hooks.CanRemoveBar:Subscribe(CanModifyBarCount)
 
 -- Force-set skills unlearnt skills onto the hotbar, if enabled.
 Client.Input.Events.KeyReleased:Subscribe(function (ev)
-    local draggedSkill = Pointer.GetDraggedSkill()
-    if ev.InputID == "left2" and draggedSkill and Tweaks:GetSettingValue(Tweaks.Settings.AllowDraggingUnlearntSkills) == true then
-        local hoveredSlotIndex, _ = Hotbar.GetHoveredSlot()
-        local char = Client.GetCharacter()
-        if hoveredSlotIndex and not Character.IsSkillLearnt(char, draggedSkill) then -- Only do this for unlearnt skills.
-            local slot = char.PlayerData.SkillBarItems[hoveredSlotIndex]
+    if ev.InputID == "left2" and Tweaks:IsEnabled() then
+        local draggedSkill = Pointer.GetDraggedSkill()
+        if draggedSkill and Tweaks:GetSettingValue(Tweaks.Settings.AllowDraggingUnlearntSkills) == true then
+            local hoveredSlotIndex, _ = Hotbar.GetHoveredSlot()
+            local char = Client.GetCharacter()
+            if hoveredSlotIndex and not Character.IsSkillLearnt(char, draggedSkill) then -- Only do this for unlearnt skills; learnt skills are handled by engine.
+                local slot = char.PlayerData.SkillBarItems[hoveredSlotIndex]
 
-            slot.Type = "Skill"
-            slot.SkillOrStatId = draggedSkill
-            slot.ItemHandle = Ext.Entity.NullHandle()
+                slot.Type = "Skill"
+                slot.SkillOrStatId = draggedSkill
+                slot.ItemHandle = Ext.Entity.NullHandle()
 
-            Hotbar.Refresh()
-            Hotbar.RenderSlot(char, Hotbar.CanUseHotbar(), hoveredSlotIndex)
+                Hotbar.Refresh()
+                Hotbar.RenderSlot(char, Hotbar.CanUseHotbar(), hoveredSlotIndex)
+            end
         end
     end
 end)
