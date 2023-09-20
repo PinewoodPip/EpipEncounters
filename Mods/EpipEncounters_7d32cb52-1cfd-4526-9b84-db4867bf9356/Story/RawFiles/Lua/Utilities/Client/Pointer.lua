@@ -21,6 +21,8 @@ Pointer = {
         HoverItemChanged = {}, ---@type Event<PointerLib_Event_HoverItemChanged>
         HoverEntityChanged = {}, ---@type Event<PointerLib_Event_HoverEntityChanged>
         DragDropStateChanged = {}, ---@type Event<PointerLib_Event_DragDropStateChanged>
+        UIDragStarted = {}, ---@type Event<PointerLib.Events.UIDrag>
+        UIDragEnded = {}, ---@type Event<PointerLib.Events.UIDrag>
     },
 }
 Epip.InitializeLibrary("Pointer", Pointer)
@@ -61,6 +63,9 @@ Epip.InitializeLibrary("Pointer", Pointer)
 ---@class PointerLib_Event_DragDropStateChanged
 ---@field State DragDropManagerPlayerDragInfo? `nil` if the player stopped dragging.
 ---@field PlayerIndex integer
+
+---@class PointerLib.Events.UIDrag
+---@field UI UIObject
 
 ---------------------------------------------
 -- METHODS
@@ -227,6 +232,21 @@ GameState.Events.RunningTick:Subscribe(function (_)
             })
 
             Pointer._PlayersWithDragDrop:Add(id)
+        end
+    end
+end)
+
+-- Listen for UI drag-drops starting and ending.
+Ext.Events.UICall:Subscribe(function (ev)
+    if ev.When == "After" then
+        if ev.Function == "startMoveWindow" then
+            Pointer.Events.UIDragStarted:Throw({
+                UI = ev.UI,
+            })
+        elseif ev.Function == "cancelMoveWindow" then
+            Pointer.Events.UIDragEnded:Throw({
+                UI = ev.UI,
+            })
         end
     end
 end)
