@@ -166,6 +166,11 @@ Text.CommonStrings.Camera = Text.RegisterTranslatedString({
     Handle = "hea4b1852geca7g46f0ga067g33ca3ec8159c",
     Text = "Camera",
 })
+Text.CommonStrings.General = Text.RegisterTranslatedString({
+    Handle = "h9c53529bg5bc1g4005g9143g216bc58b959e",
+    Text = "General",
+    ContextDescription = "As in, 'general things', or 'general settings'",
+})
 
 ---------------------------------------------
 -- BRANDING

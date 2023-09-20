@@ -185,6 +185,9 @@ local tabs = {
         ButtonLabel = TSK.Tab_MiscUI:GetString(),
         HeaderLabel = TSK.Tab_MiscUI:GetString(),
         Entries = {
+            CreateHeader(CommonStrings.General),
+            {Module = "EpipEncounters_Features.UILayout", ID = "Enabled"},
+
             CreateHeader(TSK.Section_Overheads),
             {Module = "Epip_Overheads", ID = "OverheadsSize"},
             {Module = "Epip_Overheads", ID = "DamageOverheadsSize"},
