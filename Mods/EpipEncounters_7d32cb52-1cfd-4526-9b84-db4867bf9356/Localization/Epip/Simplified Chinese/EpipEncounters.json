@@ -306,6 +306,10 @@
       "ReferenceText": "Consumables",
       "TranslatedText": "消耗品"
     },
+    "h80897d5bg5b2cg4261gbd85gafc7482541fd": {
+      "ReferenceText": "Containers",
+      "TranslatedText": "容器"
+    },
     "h304b2c12g06dag4389gaa3bg0f28e9916d32": {
       "ReferenceText": "Critical Chance",
       "TranslatedText": "暴击率"
@@ -465,6 +469,10 @@
     "h45ce9d99gf8b6g4d3dgb6dagdbc9c03d3287": {
       "ReferenceText": "Level %d-%d",
       "TranslatedText": "等级 %d-%d"
+    },
+    "hb2c6a1a0gbac4g45e2gb2dcg12010a8fa2c8": {
+      "ReferenceText": "Mace",
+      "TranslatedText": "锤子"
     },
     "h1b456c73gd007g49acgab1eg66475ca108d2": {
       "ReferenceText": "Masterworked",
@@ -713,6 +721,18 @@
     "ha6bf3f4cg6de4g4ac8gb706g3f39de8376c3": {
       "ReferenceText": "Teleport to",
       "TranslatedText": "传送到"
+    },
+    "hde6129e2g7b78g4b15gb1d1g2ef3dc9a4a47": {
+      "ReferenceText": "%s has entered dialogue.",
+      "TranslatedText": "%s 进入聊天对话中"
+    },
+    "h6b736d31gc985g48b6g8752g9137186f3703": {
+      "ReferenceText": "Dialogue Notifications",
+      "TranslatedText": "对话通告"
+    },
+    "haa1fa94dg26f6g4de2g9aa5g3223510da178": {
+      "ReferenceText": "If enabled, a notification will be shown when characters controlled by other players join dialogues, to make them harder to miss.",
+      "TranslatedText": "启用后, 会通告队友参与对话聊天中, 这样不容易错过"
     },
     "h5a1af856ge6bbg46b0g8c00g98c676f04629": {
       "ReferenceText": "We don't have that dye!<br>We shall shop for them at miscellaneous vendors.",
@@ -1114,10 +1134,6 @@
       "ReferenceText": "If enabled, the Escape key will close EE UIs rather than turning back a page.",
       "TranslatedText": "启用后, ESC键会关闭Epic Encounters的页面而不是返回前一页面"
     },
-    "h9cd1245egdfdeg4cbbgbae7gfa179a954eac": {
-      "ReferenceText": "If enabled, the health bar when you hover over characters and items will show their treasure table (if relevant) as well as the chance of getting an artifact. For characters, this requires holding the Show Sneak Cones key (shift by default)",
-      "TranslatedText": "启用后, 指向角色和物品时, 生命栏下方会显示掉落物(如果可行). 指向角色时需要按住显示视野信息的按键 (默认是shift))"
-    },
     "h09f0f7e8gb224g4018g9301g1cf150d5bc20": {
       "ReferenceText": "If enabled, your characters's inventories in multiplayer will be automatically unlocked after a reload.",
       "TranslatedText": "启用后, 多人模式下, 角色背包将会自动解锁"
@@ -1225,10 +1241,6 @@
     "h854a85fegf878g45a3g98b6g0fff3d5496b7": {
       "ReferenceText": "Show items with no use actions",
       "TranslatedText": "显示无法使用的物品"
-    },
-    "hcd9974f8g16cfg4cbfga08agbf28ee5b55eb": {
-      "ReferenceText": "Show loot drops in health bar",
-      "TranslatedText": "生命栏显示掉落"
     },
     "h058cdfb5g6b63g486bg9e05g413c1cf64d4a": {
       "ReferenceText": "Shows the Mastery button. If disabled, it remains accessible through hotbar actions.",
@@ -1346,6 +1358,14 @@
       "ReferenceText": "Chain/Unchain",
       "TranslatedText": "全队加锁/解锁"
     },
+    "h4ac91ab1gcde9g4cd5gb8a3gc19b15f3dd4b": {
+      "ReferenceText": "Pyramids",
+      "TranslatedText": "金字塔"
+    },
+    "hac06b15egc508g40b1gb729gf0951d875d5f": {
+      "ReferenceText": "We do not have a bedroll to rest on!",
+      "TranslatedText": "缺少休息用的睡袋"
+    },
     "hb4ca31ecge2ecg44faga2dbg1e1c98c49d30": {
       "ReferenceText": "Columns",
       "TranslatedText": "列"
@@ -1374,9 +1394,17 @@
       "ReferenceText": "Allow dragging in unlearnt skills",
       "TranslatedText": "允许拖拽未学习的技能"
     },
+    "h3be3b775gcd1ag4340g8bb2g53aff8a65aaa": {
+      "ReferenceText": "If enabled, holding shift, ctrl, alt or GUI while using keybinds for slots will attempt to use slots from the 2nd, 3rd, 4th and 5th visible bars respectively.",
+      "TranslatedText": "启用后，按住shift，ctrl，alt或者GUI，可以使用2号，3号，4号 或5号快捷栏上的技能，物品等"
+    },
     "hfcebd9e1g7fa9g4176g81b4g7cb089ba65ba": {
       "ReferenceText": "If enabled, you will be able to drag skills the character doesn't know onto the hotbar.\nThis does not allow the skills to be used, but is useful for creating placeholders.",
       "TranslatedText": "启用后, 你可以拖拽角色不知道的技能到快捷栏上"
+    },
+    "had42db79gf12cg4376g970bg0b9e0276a5d2": {
+      "ReferenceText": "Select upper bars with modifier keys",
+      "TranslatedText": "使用快捷键选择其他快捷栏的选项"
     },
     "h94b55185g6055g42b9gac5bgc6bedbffdfef": {
       "ReferenceText": "Choose an icon...",
@@ -1405,6 +1433,34 @@
     "he0a23e3cgbf9cg4f6eg8aecg454ee29fe9d7": {
       "ReferenceText": "Press a key combination...",
       "TranslatedText": "按一个组合键"
+    },
+    "h7807c88fg2c24g4d2dg8015ga1666bcfa0b1": {
+      "ReferenceText": "Dragging %s items",
+      "TranslatedText": "拖拽 %s 物品"
+    },
+    "h9582c7b8geff7g40cbg9276g6afac3ab2ee3": {
+      "ReferenceText": "If enabled, multi-select controls will be available for the party inventory UI.\n\nUse Ctrl+Click to select/deselect items. If at least one item is selected, Shift+Click will select a range of items.\n\nRight-click selected items to access a context menu with operations, or drag and drop them to inventory slots, player inventory tabs, or container items to move them.",
+      "TranslatedText": "启用后, 可以在队伍背包中多选物品"
+    },
+    "h74611874g72f2g4e23g8ae3g0200019466fe": {
+      "ReferenceText": "Mark as wares",
+      "TranslatedText": "标记为待售品"
+    },
+    "he2f705dbg1127g4f97gaceeg1dc7e9de1129": {
+      "ReferenceText": "Multi-select controls",
+      "TranslatedText": "多选物品"
+    },
+    "hc1f05532ga3a6g4b02gb837g77d3267b8f18": {
+      "ReferenceText": "Send to %s",
+      "TranslatedText": "送给 %s"
+    },
+    "h51a61f00g9350g4a6eg943bg340d01c6b8a4": {
+      "ReferenceText": "Store on Lady Vengeance",
+      "TranslatedText": "储存至复仇女神号"
+    },
+    "h98751807g9fe2g40d6g9ca4gc0ddd1f2da3d": {
+      "ReferenceText": "Unmark as wares",
+      "TranslatedText": "从待售品中移除"
     },
     "hc53e69e8ge732g435dg84dcgfb0541f33326": {
       "ReferenceText": "Dismantle All",
@@ -1478,9 +1534,17 @@
       "ReferenceText": "If enabled, books that have been read and keys that have been used will be shown.",
       "TranslatedText": "启用后, 阅读过的书籍和使用过的钥匙会被标识出来"
     },
+    "h39e10fefg8a83g4390gad94g1dc051c2f943": {
+      "ReferenceText": "If enabled, containers with no items will shown.",
+      "TranslatedText": "启用后，显示空容器"
+    },
     "h05a441a6gbe67g46adg9053g4e553bbf229c": {
       "ReferenceText": "If enabled, items marked as wares will be shown.",
-      "TranslatedText": "启用后, 显示标记为杂物的物品"
+      "TranslatedText": "启用后, 显示标记为待售品的物品"
+    },
+    "hda7ece02g6e5dg41a7gb4f7g62de6a4b3c1f": {
+      "ReferenceText": "If enabled, items will also be searched recursively within containers.<br>%s",
+      "TranslatedText": "启用后， 递归搜索容器中的物品。<br>%s"
     },
     "h8b035113g39eag49e6gae13g9a1de5375471": {
       "ReferenceText": "If enabled, the UI will be closed if you click anything in the world.",
@@ -1506,6 +1570,10 @@
       "ReferenceText": "Quick Swap...",
       "TranslatedText": "快速切换"
     },
+    "h3201d71eg90b3g4068gba08ga89e00180089": {
+      "ReferenceText": "Recursive Search",
+      "TranslatedText": "递归搜索"
+    },
     "hc9a05852g3523g4c85gad7cg49f293c2cd29": {
       "ReferenceText": "Scrolls and Grenades",
       "TranslatedText": "卷轴与手雷"
@@ -1513,6 +1581,10 @@
     "h84ec181aga466g41e0g9f8bg9af1de57d37a": {
       "ReferenceText": "Show Culled Only",
       "TranslatedText": "仅显示已过滤的"
+    },
+    "had445364gfe3dg43c1ga8a3g855bc9d11c27": {
+      "ReferenceText": "Show Empty",
+      "TranslatedText": "显示空容器"
     },
     "h16a45dc1g56e7g4bb0ga3f6g6f4cb7f66fae": {
       "ReferenceText": "Show Equipped Items",
@@ -1524,7 +1596,7 @@
     },
     "hf97f3dfegd102g443cg8416ga0c854b499b8": {
       "ReferenceText": "Show Wares",
-      "TranslatedText": "显示杂物"
+      "TranslatedText": "显示待售品"
     },
     "hd5a53bd8gdcaag4280ga76dg905f40bde45e": {
       "ReferenceText": "Show learned skills",
@@ -1533,6 +1605,10 @@
     "h4f83fd0cg8556g4826gb76cg82ec728bef2b": {
       "ReferenceText": "Stat Boost",
       "TranslatedText": "属性过滤"
+    },
+    "h1110db28g66a0g4f73gb67fgdc8d32c3af40": {
+      "ReferenceText": "Warning: can be very slow!",
+      "TranslatedText": "警告：速度非常慢"
     },
     "h41dc13afg2becg4758g8212g5e71b34df083": {
       "ReferenceText": "Epip Settings",
@@ -1589,6 +1665,38 @@
     "hba6d14b0gdbb9g4b00g8036ga14b329a1960": {
       "ReferenceText": "If enabled, zone and cone-type skills will display the correct range if the character has Astrologer's Gaze / Far Out Man.",
       "TranslatedText": "启用后, 如果角色拥有占星师视觉或天才法师, 射线以及扇形技能会正确地显示范围<br><font color='FFFF00'>只适用于史诗遭遇mod</font>"
+    },
+    "hc7cfbfcdgc4b2g4ac3g92b3gbb6856d5b361": {
+      "ReferenceText": "1Handed",
+      "TranslatedText": "单手"
+    },
+    "hf9059123gbc1cg4092gb6dag0e85a8175300": {
+      "ReferenceText": "2Handed",
+      "TranslatedText": "双手"
+    },
+    "he442b301g5534g421egbd7bg890c9f507e4c": {
+      "ReferenceText": "Max Quality",
+      "TranslatedText": "最高品质"
+    },
+    "h9d15a9d1gffb2g4d67g8a4fg06b96367fd81": {
+      "ReferenceText": "Quality %s%%",
+      "TranslatedText": "品质 %s%%"
+    },
+    "hba2e720bg358cg4f56g93ecgea7847f1cea3": {
+      "ReferenceText": "Contains %s.",
+      "TranslatedText": "容器 %s."
+    },
+    "h524c03d2g797cg4038g98d4gbc36024b7649": {
+      "ReferenceText": "Displays the names of the first few items in containers within their tooltips. Set to 0 to disable.",
+      "TranslatedText": "在提示中，显示容器中前几个物品，设置成 0 可以禁用此功能"
+    },
+    "hb6fcd193g708cg460bg88d6gd0cfb64de8ea": {
+      "ReferenceText": "Preview Container Items",
+      "TranslatedText": "预览容器内物品"
+    },
+    "h5cb6c524ge5a5g4184g8354g9386bbfdc00c": {
+      "ReferenceText": "and %d more items",
+      "TranslatedText": "还有 %d 件物品"
     },
     "h420215fegeaecg4ccdg9e74gf68ed7bd72b9": {
       "ReferenceText": "If enabled, item tooltips will show a hint if the item has been Masterworked.",
@@ -1658,6 +1766,10 @@
       "ReferenceText": "Increase Surface Tooltip UI Layer",
       "TranslatedText": "提高地表提示的UI显示层级"
     },
+    "h36b35885g9f60g40b1ga77fg0c501ab76654": {
+      "ReferenceText": "Modifiers are added after you choose your reward.",
+      "TranslatedText": "选择奖励后加入修改"
+    },
     "h61ee7e1ag46beg4da5g9ba9g8763560995b6": {
       "ReferenceText": "Owned by %s",
       "TranslatedText": "属于 %s"
@@ -1677,6 +1789,70 @@
     "haabd6906gee2dg4b39ga339gf5cdf1a2ee8b": {
       "ReferenceText": "Tooltip Adjustments",
       "TranslatedText": "提示调整"
+    },
+    "h53c5d893gb6f2g4e4bg94aega9462369df7d": {
+      "ReferenceText": "Tooltip scrolling disabled.",
+      "TranslatedText": "禁止提示滚动"
+    },
+    "h89b8939cga077g4a2egb700g3d22e477c3f6": {
+      "ReferenceText": "Tooltip scrolling enabled.",
+      "TranslatedText": "启用提示滚动"
+    },
+    "h9cd1245egdfdeg4cbbgbae7gfa179a954eac": {
+      "ReferenceText": "If enabled, the health bar when you hover over characters and items will show their treasure table (if relevant) as well as the chance of getting an artifact. For characters, this requires holding the Show Sneak Cones key (shift by default)",
+      "TranslatedText": "启用后, 指向角色和物品时, 生命栏下方会显示掉落物(如果可行). 指向角色时需要按住显示视野信息的按键 (默认是shift))"
+    },
+    "hcd9974f8g16cfg4cbfga08agbf28ee5b55eb": {
+      "ReferenceText": "Show loot drops in health bar",
+      "TranslatedText": "生命栏显示掉落"
+    },
+    "hc8131fa1g3bf9g4773gb244gcdf8b1b45f7c": {
+      "ReferenceText": "%s is an innate skill; it might be unwise to rid myself of it.",
+      "TranslatedText": "%s 是一个天赋技能，去除它可能并不明智"
+    },
+    "h663a33aeg894cg428eg8d9eg799a8bd07386": {
+      "ReferenceText": "Are you sure you want to unlearn %s?",
+      "TranslatedText": "你确定遗忘 %s 吗?"
+    },
+    "hcc3ddb27g8770g4d1bg9964gb2387308d99c": {
+      "ReferenceText": "I cannot unlearn skills granted by external sources.",
+      "TranslatedText": "我无法遗忘来自外部的技能"
+    },
+    "hb931ea77g4e56g47c3g9a69g923b8f76482b": {
+      "ReferenceText": "I cannot unlearn skills that do not exist.",
+      "TranslatedText": "我无法遗忘不存在的技能"
+    },
+    "h616fdab7g67c9g4db0g80f4gc04d25dc0e4e": {
+      "ReferenceText": "I cannot unlearn skills that take up no memory.",
+      "TranslatedText": "我不能遗忘不占用记忆的技能"
+    },
+    "h651ef6a9gf376g47b7gb230gb73521021f74": {
+      "ReferenceText": "I cannot unlearn skills while in combat.",
+      "TranslatedText": "我无法在战斗遗忘技能"
+    },
+    "hf29be376g590ag4cd8gac23gc527f2c7a610": {
+      "ReferenceText": "I cannot unlearn this skill.",
+      "TranslatedText": "我无法遗忘该技能"
+    },
+    "h9b5014e1gb9d4g4dc8g8c47g11f06fe3e576": {
+      "ReferenceText": "I would lose my special spark if I were to give that up.",
+      "TranslatedText": "如果我放弃这个，我会失去特别充能"
+    },
+    "hc2778b10ge61fg46bfga656g1bac3d5b44ec": {
+      "ReferenceText": "Right-click to unlearn.",
+      "TranslatedText": "右键遗忘"
+    },
+    "ha58ca030gdf7bg42ffga616gcda9d8f3b753": {
+      "ReferenceText": "Sourcery is an innate part of who I am; I cannot get rid of it.",
+      "TranslatedText": "秘源是我的一部分，无法去除"
+    },
+    "h27591100g7b7dg4d6ag8c2eg3597762db593": {
+      "ReferenceText": "Unlearn",
+      "TranslatedText": "遗忘"
+    },
+    "h88ea1fb2g6f70g445ag9aa3ga209b6ed7feb": {
+      "ReferenceText": "Unlearn Skill",
+      "TranslatedText": "遗忘技能"
     },
     "h19773400g8de1g46d7g9901g779b750ebddd": {
       "ReferenceText": "Set Icon",

@@ -20,7 +20,7 @@
     },
     "he9f82492g81f0g4e53g9eefg731a6f800db8": {
       "ReferenceText": "Experimental! May cause issues with certain skills. Please report any!<br>Server-side option is the most reliable at the moment.",
-      "TranslatedText": "Работает в тестовом режиме! Пожалуйста, сообщайте о возникающих проблемах с какими-либо навыками! Опция \"Server-side\" является более стабильной."
+      "TranslatedText": "Работает в тестовом режиме! Пожалуйста, сообщайте о возникающих проблемах с какими-либо навыками! Опция \"Серверн.\" является более стабильной."
     },
     "h8277c4cdg8990g406fga0b5gef3f0d386620": {
       "ReferenceText": "If enabled, the animation for picking up items through their world tooltip will be cancelled, allowing multiple items to be picked up faster.",
@@ -64,7 +64,7 @@
     },
     "h4bc543cag5f19g4e91gbb76gc3a18177874b": {
       "ReferenceText": "Score             %s\nHigh-Score %s",
-      "TranslatedText": "Очки             %s\nHigh-Score %s"
+      "TranslatedText": "Очки             %s\nРекорд %s"
     },
     "h54d9066eg87bdg439fg92f9g7027970af6ca": {
       "ReferenceText": "Camera",
@@ -284,7 +284,7 @@
     },
     "ha8000c0eg67d5g4398g8890gaf8d98931d1b": {
       "ReferenceText": "Client-side",
-      "TranslatedText": "Client-side"
+      "TranslatedText": "Клиентск."
     },
     "hbef0236fga72cg4b4bg930ag44ba332514dd": {
       "ReferenceText": "Cloth",
@@ -305,6 +305,10 @@
     "h2fef0484g1ad5g4422gafb7g5a277c035095": {
       "ReferenceText": "Consumables",
       "TranslatedText": "Расходуемые предметы"
+    },
+    "h80897d5bg5b2cg4261gbd85gafc7482541fd": {
+      "ReferenceText": "Containers",
+      "TranslatedText": "Контейнеры"
     },
     "h304b2c12g06dag4389gaa3bg0f28e9916d32": {
       "ReferenceText": "Critical Chance",
@@ -340,7 +344,7 @@
     },
     "h6eb4b775gdf93g4701g92b7g0ec21ed88442": {
       "ReferenceText": "Disintegrate",
-      "TranslatedText": "Disintegrate"
+      "TranslatedText": "Дезинтегр."
     },
     "h59386967gb899g4f18ga61bg168b8d91f04a": {
       "ReferenceText": "Elementalist",
@@ -470,6 +474,10 @@
       "ReferenceText": "Level %d-%d",
       "TranslatedText": "Уровень %d-%d"
     },
+    "hb2c6a1a0gbac4g45e2gb2dcg12010a8fa2c8": {
+      "ReferenceText": "Mace",
+      "TranslatedText": "Булава"
+    },
     "h1b456c73gd007g49acgab1eg66475ca108d2": {
       "ReferenceText": "Masterworked",
       "TranslatedText": "Masterworked"
@@ -588,7 +596,7 @@
     },
     "hafe6938fgde3dg45d3g8437g8dc15104fa65": {
       "ReferenceText": "Server-side",
-      "TranslatedText": "Server-side"
+      "TranslatedText": "Серверн."
     },
     "hbd6a0da2gd153g40c7g972agb0d16bfe78d4": {
       "ReferenceText": "Settings",
@@ -700,7 +708,7 @@
     },
     "hd8218bb5gcf00g4051g90f2g05388601ab51": {
       "ReferenceText": "Determines the default tab for the crafting UI.",
-      "TranslatedText": "Определяет окно по умолчанию для интерфейса крафта."
+      "TranslatedText": "Определяет раздел по умолчанию при открытии интерфейса крафта."
     },
     "h5b9e7fc0g6bbcg4781gb9aag95c9189ad110": {
       "ReferenceText": "Debug Cheats",
@@ -776,7 +784,7 @@
     },
     "he515233eg586eg44d4gb0bcg9d971e85e198": {
       "ReferenceText": "Encouraging",
-      "TranslatedText": "Воодушевляющий"
+      "TranslatedText": "Воодушевление"
     },
     "hf008175bgcf6fg4232g9d11g99a45cf7be11": {
       "ReferenceText": "Fog A",
@@ -924,7 +932,7 @@
     },
     "h8945fbb1g7db8g42a8ga6c5g8db176a633ee": {
       "ReferenceText": "Allows you to check all your equipped items while in the quest rewards UI.",
-      "TranslatedText": "Позволяет осматривать экипированные предметы во время получения награды"
+      "TranslatedText": "Позволяет осматривать экипированные предметы во время получения награды."
     },
     "hf61f1a35g7ee7g4b79g8728g9a278d2522b0": {
       "ReferenceText": "Area Transition Label Duration",
@@ -992,7 +1000,7 @@
     },
     "hca79eaccgc9c9g4a87g9f9egdbfa57800a5a": {
       "ReferenceText": "Controls whether notifications for characters casting skills show up in combat.",
-      "TranslatedText": "Включает отображение оповещений о применении способностей в бою"
+      "TranslatedText": "Включает отображение оповещений о применении способностей в бою."
     },
     "h6e1d16e8g4adbg4df0g9169g2ceed7a9a8a1": {
       "ReferenceText": "Controls whether notifications for receiving items show.",
@@ -1048,15 +1056,15 @@
     },
     "h39e2d175g348eg4697g93a5gf28a9544e4ba": {
       "ReferenceText": "Emphasizes consumable items in world tooltips.",
-      "TranslatedText": "Подсвечивает расходуемые предметы в подсказках к окружающим объектам"
+      "TranslatedText": "Подсвечивает расходуемые предметы в подсказках к окружающим объектам."
     },
     "he759cd00g404dg4731gb2a6g0ece913a327e": {
       "ReferenceText": "Emphasizes container items in world tooltips.",
-      "TranslatedText": "Подсвечивает контейнеры в подcказках к окружающим объектам"
+      "TranslatedText": "Подсвечивает контейнеры в подcказках к окружающим объектам."
     },
     "hb461a9b1g4866g4bbdgb046gd478f7368fab": {
       "ReferenceText": "Emphasizes equipment items in world tooltips.",
-      "TranslatedText": "Подсвечивает предметы экипировки в подсказках к окружающим объектам"
+      "TranslatedText": "Подсвечивает предметы экипировки в подсказках к окружающим объектам."
     },
     "hf288311dg0fccg47dcgbc6ag954c4d848835": {
       "ReferenceText": "Enable tooltips for all items",
@@ -1112,7 +1120,7 @@
     },
     "ha13d577fg043ag4324g8d55gd5f2ba85efac": {
       "ReferenceText": "If enabled, Battered and Harried stacks will be shown beside player portraits on the left interface.",
-      "TranslatedText": "Если включено, значения B/H будут отображаться в левой части портрета персонажа"
+      "TranslatedText": "Если включено, значения B/H будут отображаться в левой части портрета персонажа."
     },
     "ha1146687g9261g49d4gad63g0269559fce2d": {
       "ReferenceText": "If enabled, chairs, ladders and beds will show world tooltips. Requires \"Enable tooltips for all items\" to be enabled, as these do not have tooltips by default.",
@@ -1120,7 +1128,7 @@
     },
     "hae703884g68c4g44d1gb1d2g211f87e7309c": {
       "ReferenceText": "If enabled, clicking world tooltips will open containers rather than picking them up.",
-      "TranslatedText": "Если включено, открывает, а не поднимает контейнер при нажатии на текст подсказки к окружающим объектам"
+      "TranslatedText": "Если включено, открывает, а не поднимает контейнер при нажатии на текст подсказки к окружающим объектам."
     },
     "h868a6168gd10eg4340gb5f4gb35dc338c453": {
       "ReferenceText": "If enabled, doors will show world tooltips. Requires \"Enable tooltips for all items\" to be enabled, as these do not have tooltips by default.",
@@ -1128,19 +1136,15 @@
     },
     "h0023bed4gd590g4375g80dcgf1e135f30b1e": {
       "ReferenceText": "If enabled, items with no use actions will show world tooltips.",
-      "TranslatedText": "Если включено, предметы без опции взаимодействия(ключи и пр.) будут отображаться в подcказках к окружающим объектах"
+      "TranslatedText": "Если включено, предметы без опции взаимодействия(ключи и пр.) будут отображаться в подcказках к окружающим объектах."
     },
     "h28a24072g481eg4d1fgaac8gfacbe5243bdb": {
       "ReferenceText": "If enabled, the Escape key will close EE UIs rather than turning back a page.",
       "TranslatedText": "Если включено, кнопка Escape будет закрывать все интерфейсы EE, а не переходить на предыдущую страницу."
     },
-    "h9cd1245egdfdeg4cbbgbae7gfa179a954eac": {
-      "ReferenceText": "If enabled, the health bar when you hover over characters and items will show their treasure table (if relevant) as well as the chance of getting an artifact. For characters, this requires holding the Show Sneak Cones key (shift by default)",
-      "TranslatedText": "Если включено, при наведении, под панелью здоровья будет показываться вариант лута с шансом получения артефакта. Для отображения у персонажей требуется зажать Shift."
-    },
     "h09f0f7e8gb224g4018g9301g1cf150d5bc20": {
       "ReferenceText": "If enabled, your characters's inventories in multiplayer will be automatically unlocked after a reload.",
-      "TranslatedText": "Если включено, инвентарь ваших персонажей автоматически разблокируется после перезагрузки."
+      "TranslatedText": "Если включено, инвентари ваших персонажей в мультиплеере автоматически разблокируются после перезагрузки."
     },
     "h01f17781g7f5ag4113g9505g4cba31cd0d07": {
       "ReferenceText": "Improved Combat Log",
@@ -1246,10 +1250,6 @@
       "ReferenceText": "Show items with no use actions",
       "TranslatedText": "Показывать неинтерактивные предметы"
     },
-    "hcd9974f8g16cfg4cbfga08agbf28ee5b55eb": {
-      "ReferenceText": "Show loot drops in health bar",
-      "TranslatedText": "Показывать выпадающий лут под панелью здоровья"
-    },
     "h058cdfb5g6b63g486bg9e05g413c1cf64d4a": {
       "ReferenceText": "Shows the Mastery button. If disabled, it remains accessible through hotbar actions.",
       "TranslatedText": "Показывает кнопку Мастерства. Если отключено, доступ к ней возможен через действия быстрого доступа."
@@ -1260,7 +1260,7 @@
     },
     "hcda03853g5322g48e6gb8d2g37a87a295fef": {
       "ReferenceText": "Shows the keyboard hotkeys for custom actions.",
-      "TranslatedText": "Показывает горячие клавиши для настраиваемых действий"
+      "TranslatedText": "Показывает горячие клавиши для настраиваемых действий."
     },
     "h8f7f66d4g1806g478agb229g3f36b527d44d": {
       "ReferenceText": "Simple Tooltip Delay (World)",
@@ -1288,7 +1288,7 @@
     },
     "h7c2f8512g3c4eg4dffg946aga4482de181ae": {
       "ReferenceText": "Toggles visibility of the minimap UI element.",
-      "TranslatedText": "Переключает видимость миникарты"
+      "TranslatedText": "Переключает видимость миникарты."
     },
     "h315ae29bg868cg4eceg8cc6gebc6623df369": {
       "ReferenceText": "Unfocus after sending messages",
@@ -1324,7 +1324,7 @@
     },
     "h92547755gb161g4e13gbd37ga31d5101d177": {
       "ReferenceText": "Displays certain common character flags in the health bar while holding shift, such as attack of opportunity availability. Works best on player characters and updating certain flags might be delayed.",
-      "TranslatedText": "Отображает \"флаги\"(доступность атаки по возможности, талантов и прочего) на панели здоровья при удержании клавиши Shift. Некоторые флаги обновляются с задержкой"
+      "TranslatedText": "Отображает \"флаги\"(доступность атаки по возможности, талантов и прочего) на панели здоровья при удержании клавиши Shift. Некоторые флаги обновляются с задержкой."
     },
     "h4c2e34f9g7feeg4303g9dfegcc0c44cf6011": {
       "ReferenceText": "Turn Delayed",
@@ -1402,9 +1402,17 @@
       "ReferenceText": "Allow dragging in unlearnt skills",
       "TranslatedText": "Позволять перемещать неизученные способности"
     },
+    "h3be3b775gcd1ag4340g8bb2g53aff8a65aaa": {
+      "ReferenceText": "If enabled, holding shift, ctrl, alt or GUI while using keybinds for slots will attempt to use slots from the 2nd, 3rd, 4th and 5th visible bars respectively.",
+      "TranslatedText": "Если включено, удерживая shift, ctrl, alt или GUI при нажатии на горячие клавиши способностей вы будете применять способности, соответственно, из 2,3,4 или 5 доп. панели (видимой)."
+    },
     "hfcebd9e1g7fa9g4176g81b4g7cb089ba65ba": {
       "ReferenceText": "If enabled, you will be able to drag skills the character doesn't know onto the hotbar.\nThis does not allow the skills to be used, but is useful for creating placeholders.",
       "TranslatedText": "Если включено, вы сможете перемещать на панель даже неизученные способности.\nМожно использовать для удобного создания шаблонов способностей."
+    },
+    "had42db79gf12cg4376g970bg0b9e0276a5d2": {
+      "ReferenceText": "Select upper bars with modifier keys",
+      "TranslatedText": "Комбинации клавиш для дополнительных панелей "
     },
     "h94b55185g6055g42b9gac5bgc6bedbffdfef": {
       "ReferenceText": "Choose an icon...",
@@ -1416,7 +1424,7 @@
     },
     "h8f6b67aaga9fag4c62gbd92g0f4d43fd8855": {
       "ReferenceText": "Hides the Hotbar and Minimap while within the Ascension and Greatforge UIs.",
-      "TranslatedText": "Скрывает панель быстрого доступа и миникарту во время использования интерфейсов Вознесения и Великой кузни."
+      "TranslatedText": "Скрывает панель быстрого доступа и миникарту во время использования интерфейсов Вознесения и Кузни."
     },
     "ha970de96geaf5g483eg9996gac184c8fe843": {
       "ReferenceText": "Immersive Meditation",
@@ -1436,15 +1444,15 @@
     },
     "h7807c88fg2c24g4d2dg8015ga1666bcfa0b1": {
       "ReferenceText": "Dragging %s items",
-      "TranslatedText": "Переносится %s предметов"
+      "TranslatedText": "Переносится %s предм."
     },
     "h9582c7b8geff7g40cbg9276g6afac3ab2ee3": {
       "ReferenceText": "If enabled, multi-select controls will be available for the party inventory UI.\n\nUse Ctrl+Click to select/deselect items. If at least one item is selected, Shift+Click will select a range of items.\n\nRight-click selected items to access a context menu with operations, or drag and drop them to inventory slots, player inventory tabs, or container items to move them.",
-      "TranslatedText": "Если включено, вам будет доступен множественный выбор в инвентаре.\n\nИспользуйте Ctrl+клик чтобы отмечать предметы. Если выбран как минимум один предмет, сочетанием Shift+клик можно выбрать все предметы в диапазоне.\n\nВ ПКМ меню появятся новые функции для быстрой работы с предметами и также вы можете просто перемещать отмеченные предметы с помощью мыши в контейнеры, рюкзаки и на панель персонажа."
+      "TranslatedText": "Если включено, вам будет доступен множественный выбор в инвентаре.\n\nИспользуйте Ctrl+клик чтобы отмечать предметы. Если выбран как минимум один предмет, сочетанием Shift+клик можно выбрать все предметы в диапазоне.\n\nВ ПКМ меню появятся новые функции для быстрой работы с предметами и также вы можете просто перемещать отмеченные предметы с помощью мыши в контейнеры, рюкзаки."
     },
     "h74611874g72f2g4e23g8ae3g0200019466fe": {
       "ReferenceText": "Mark as wares",
-      "TranslatedText": "Отметить как \"товары\""
+      "TranslatedText": "Добавить в товары"
     },
     "he2f705dbg1127g4f97gaceeg1dc7e9de1129": {
       "ReferenceText": "Multi-select controls",
@@ -1452,7 +1460,7 @@
     },
     "hc1f05532ga3a6g4b02gb837g77d3267b8f18": {
       "ReferenceText": "Send to %s",
-      "TranslatedText": "Передать персонажу %s"
+      "TranslatedText": "Дать: %s"
     },
     "h51a61f00g9350g4a6eg943bg340d01c6b8a4": {
       "ReferenceText": "Store on Lady Vengeance",
@@ -1484,7 +1492,7 @@
     },
     "h3985c604gd7a2g4e68gb817g4d1311259a13": {
       "ReferenceText": "Controls the opacity of the background panel.<br><br>Default is 80%.",
-      "TranslatedText": "Задает непрозрачность фона для окна<br><br>По умолчанию 80%."
+      "TranslatedText": "Задает непрозрачность фона для окна.<br><br>По умолчанию 80%."
     },
     "h4f610121gdb42g4d2fg9a8ag61eeedb018cb": {
       "ReferenceText": "Controls the width of the user interface.<br><br>Default is 400.",
@@ -1534,9 +1542,17 @@
       "ReferenceText": "If enabled, books that have been read and keys that have been used will be shown.",
       "TranslatedText": "Если включено, прочтенные книги и использованные ключи будут отображаться."
     },
+    "h39e10fefg8a83g4390gad94g1dc051c2f943": {
+      "ReferenceText": "If enabled, containers with no items will shown.",
+      "TranslatedText": "Если включено, пустые контейнеры будут отображаться."
+    },
     "h05a441a6gbe67g46adg9053g4e553bbf229c": {
       "ReferenceText": "If enabled, items marked as wares will be shown.",
       "TranslatedText": "Если включено, отмеченные \"товарами\" предметы будут отображаться."
+    },
+    "hda7ece02g6e5dg41a7gb4f7g62de6a4b3c1f": {
+      "ReferenceText": "If enabled, items will also be searched recursively within containers.<br>%s",
+      "TranslatedText": "Если включено, поиск будет затрагивать и предметы в контейнерах.<br>%s"
     },
     "h8b035113g39eag49e6gae13g9a1de5375471": {
       "ReferenceText": "If enabled, the UI will be closed if you click anything in the world.",
@@ -1562,6 +1578,10 @@
       "ReferenceText": "Quick Swap...",
       "TranslatedText": "Быстрая замена..."
     },
+    "h3201d71eg90b3g4068gba08ga89e00180089": {
+      "ReferenceText": "Recursive Search",
+      "TranslatedText": "Рекурсивный поиск"
+    },
     "hc9a05852g3523g4c85gad7cg49f293c2cd29": {
       "ReferenceText": "Scrolls and Grenades",
       "TranslatedText": "Свитки и гранаты"
@@ -1569,6 +1589,10 @@
     "h84ec181aga466g41e0g9f8bg9af1de57d37a": {
       "ReferenceText": "Show Culled Only",
       "TranslatedText": "Только предметы после Cull"
+    },
+    "had445364gfe3dg43c1ga8a3g855bc9d11c27": {
+      "ReferenceText": "Show Empty",
+      "TranslatedText": "Показывать пустые"
     },
     "h16a45dc1g56e7g4bb0ga3f6g6f4cb7f66fae": {
       "ReferenceText": "Show Equipped Items",
@@ -1589,6 +1613,10 @@
     "h4f83fd0cg8556g4826gb76cg82ec728bef2b": {
       "ReferenceText": "Stat Boost",
       "TranslatedText": "Бонус к параметру"
+    },
+    "h1110db28g66a0g4f73gb67fgdc8d32c3af40": {
+      "ReferenceText": "Warning: can be very slow!",
+      "TranslatedText": "Предупреждение: может быть очень медленным!"
     },
     "h41dc13afg2becg4758g8212g5e71b34df083": {
       "ReferenceText": "Epip Settings",
@@ -1620,7 +1648,7 @@
     },
     "hb9e14744g4868g4e08gb3d7ga9bd57629d03": {
       "ReferenceText": "Shows the Battered/Harries statuses while Alternative Status Display is enabled.<br>If you disable this, it is recommended to enable the B/H display on the portraits.",
-      "TranslatedText": "Показывает значения B/H если включена альтернативная сортировка.<br>Если отключено, рекомендуется включить опцию \"Показывать B/H на портретах игроков\""
+      "TranslatedText": "Показывает значения B/H если включена альтернативная сортировка.<br>Если отключено, рекомендуется включить опцию \"Показывать B/H на портретах игроков\"."
     },
     "h4b67c715g0d30g4015gba18ge8ea4f357448": {
       "ReferenceText": "Shows the Source Generation status while Alternative Status Display is enabled.",
@@ -1645,6 +1673,38 @@
     "hba6d14b0gdbb9g4b00g8036ga14b329a1960": {
       "ReferenceText": "If enabled, zone and cone-type skills will display the correct range if the character has Astrologer's Gaze / Far Out Man.",
       "TranslatedText": "Если включено, у персонажей с талантом \"Дальнобойность\" будут корректно отображаться радиусы способностей."
+    },
+    "hc7cfbfcdgc4b2g4ac3g92b3gbb6856d5b361": {
+      "ReferenceText": "1Handed",
+      "TranslatedText": "Одноруч."
+    },
+    "hf9059123gbc1cg4092gb6dag0e85a8175300": {
+      "ReferenceText": "2Handed",
+      "TranslatedText": "Двуруч."
+    },
+    "he442b301g5534g421egbd7bg890c9f507e4c": {
+      "ReferenceText": "Max Quality",
+      "TranslatedText": "Макс. качество"
+    },
+    "h9d15a9d1gffb2g4d67g8a4fg06b96367fd81": {
+      "ReferenceText": "Quality %s%%",
+      "TranslatedText": "Качество %s%%"
+    },
+    "hba2e720bg358cg4f56g93ecgea7847f1cea3": {
+      "ReferenceText": "Contains %s.",
+      "TranslatedText": "Содержит %s."
+    },
+    "h524c03d2g797cg4038g98d4gbc36024b7649": {
+      "ReferenceText": "Displays the names of the first few items in containers within their tooltips. Set to 0 to disable.",
+      "TranslatedText": "Отображает названия нескольких предметов в контейнере. Поставьте 0, чтобы отключить."
+    },
+    "hb6fcd193g708cg460bg88d6gd0cfb64de8ea": {
+      "ReferenceText": "Preview Container Items",
+      "TranslatedText": "Предпросмотр предметов в контейнерах"
+    },
+    "h5cb6c524ge5a5g4184g8354g9386bbfdc00c": {
+      "ReferenceText": "and %d more items",
+      "TranslatedText": "и еще %d предм."
     },
     "h420215fegeaecg4ccdg9e74gf68ed7bd72b9": {
       "ReferenceText": "If enabled, item tooltips will show a hint if the item has been Masterworked.",
@@ -1714,6 +1774,10 @@
       "ReferenceText": "Increase Surface Tooltip UI Layer",
       "TranslatedText": "Повысить приоритет описаний поверхностей"
     },
+    "h36b35885g9f60g40b1ga77fg0c501ab76654": {
+      "ReferenceText": "Modifiers are added after you choose your reward.",
+      "TranslatedText": "Параметры предмета определяются после выбора награды."
+    },
     "h61ee7e1ag46beg4da5g9ba9g8763560995b6": {
       "ReferenceText": "Owned by %s",
       "TranslatedText": "Владелец:  %s"
@@ -1734,13 +1798,77 @@
       "ReferenceText": "Tooltip Adjustments",
       "TranslatedText": "Разное"
     },
+    "h53c5d893gb6f2g4e4bg94aega9462369df7d": {
+      "ReferenceText": "Tooltip scrolling disabled.",
+      "TranslatedText": "Прокрутка описаний выкл."
+    },
+    "h89b8939cga077g4a2egb700g3d22e477c3f6": {
+      "ReferenceText": "Tooltip scrolling enabled.",
+      "TranslatedText": "Прокрутка описаний вкл."
+    },
+    "h9cd1245egdfdeg4cbbgbae7gfa179a954eac": {
+      "ReferenceText": "If enabled, the health bar when you hover over characters and items will show their treasure table (if relevant) as well as the chance of getting an artifact. For characters, this requires holding the Show Sneak Cones key (shift by default)",
+      "TranslatedText": "Если включено, при наведении, под панелью здоровья будет показываться вариант лута с шансом получения артефакта. Для отображения у персонажей требуется зажать Shift."
+    },
+    "hcd9974f8g16cfg4cbfga08agbf28ee5b55eb": {
+      "ReferenceText": "Show loot drops in health bar",
+      "TranslatedText": "Показывать выпадающий лут под панелью здоровья"
+    },
+    "hc8131fa1g3bf9g4773gb244gcdf8b1b45f7c": {
+      "ReferenceText": "%s is an innate skill; it might be unwise to rid myself of it.",
+      "TranslatedText": "%s расовая способность."
+    },
+    "h663a33aeg894cg428eg8d9eg799a8bd07386": {
+      "ReferenceText": "Are you sure you want to unlearn %s?",
+      "TranslatedText": "Вы уверены, что хотите забыть %s?"
+    },
+    "hcc3ddb27g8770g4d1bg9964gb2387308d99c": {
+      "ReferenceText": "I cannot unlearn skills granted by external sources.",
+      "TranslatedText": "Я не могу забывать такие способности."
+    },
+    "hb931ea77g4e56g47c3g9a69g923b8f76482b": {
+      "ReferenceText": "I cannot unlearn skills that do not exist.",
+      "TranslatedText": "Я не могу забывать такие способности."
+    },
+    "h616fdab7g67c9g4db0g80f4gc04d25dc0e4e": {
+      "ReferenceText": "I cannot unlearn skills that take up no memory.",
+      "TranslatedText": "Я не могу забывать способности без требований памяти."
+    },
+    "h651ef6a9gf376g47b7gb230gb73521021f74": {
+      "ReferenceText": "I cannot unlearn skills while in combat.",
+      "TranslatedText": "Я не могу забывать способности в бою."
+    },
+    "hf29be376g590ag4cd8gac23gc527f2c7a610": {
+      "ReferenceText": "I cannot unlearn this skill.",
+      "TranslatedText": "Я не могу забывать такие способности."
+    },
+    "h9b5014e1gb9d4g4dc8g8c47g11f06fe3e576": {
+      "ReferenceText": "I would lose my special spark if I were to give that up.",
+      "TranslatedText": "Я не могу забывать такие способности."
+    },
+    "hc2778b10ge61fg46bfga656g1bac3d5b44ec": {
+      "ReferenceText": "Right-click to unlearn.",
+      "TranslatedText": "Правый клик, чтобы забыть."
+    },
+    "ha58ca030gdf7bg42ffga616gcda9d8f3b753": {
+      "ReferenceText": "Sourcery is an innate part of who I am; I cannot get rid of it.",
+      "TranslatedText": "Я не могу забывать такие способности."
+    },
+    "h27591100g7b7dg4d6ag8c2eg3597762db593": {
+      "ReferenceText": "Unlearn",
+      "TranslatedText": "Забыть"
+    },
+    "h88ea1fb2g6f70g445ag9aa3ga209b6ed7feb": {
+      "ReferenceText": "Unlearn Skill",
+      "TranslatedText": "Забыть способность"
+    },
     "h19773400g8de1g46d7g9901g779b750ebddd": {
       "ReferenceText": "Set Icon",
       "TranslatedText": "Установить иконку"
     },
     "h0d38d9a9gd416g4815gabc7gf9d8d901d40a": {
       "ReferenceText": "If enabled, light items such as torches, candles and braziers will show world tooltips.",
-      "TranslatedText": "Если включено, факелы, свечи и прочие источники света будут отображаться в подсказках к окружающим объектам"
+      "TranslatedText": "Если включено, факелы, свечи и прочие источники света будут отображаться в подсказках к окружающим объектам."
     },
     "h8605ee5agf02ag4f24g9bf2g60906ab5ef57": {
       "ReferenceText": "Show Lights",

@@ -702,6 +702,10 @@
       "ReferenceText": "Copy Position",
       "TranslatedText": "Copiar posição"
     },
+    "h4e3b6a84g9de1g4723gb807ga808db3c9d70": {
+      "ReferenceText": "TODO",
+      "TranslatedText": "Spawna um item a sua escolha "
+    },
     "h23e452c0g340fg4555g8034g753f003107bf": {
       "ReferenceText": "TODO",
       "TranslatedText": "Te teleporta para a localização X"
@@ -713,10 +717,6 @@
     "ha8b96a59gace5g4aa5gba9cgc7567a58a8e8": {
       "ReferenceText": "TODO",
       "TranslatedText": "Copia a GUID de um objeto "
-    },
-    "h4e3b6a84g9de1g4723gb807ga808db3c9d70": {
-      "ReferenceText": "TODO",
-      "TranslatedText": "Spawna um item a sua escolha "
     },
     "ha6bf3f4cg6de4g4ac8gb706g3f39de8376c3": {
       "ReferenceText": "Teleport to",
@@ -1134,10 +1134,6 @@
       "ReferenceText": "If enabled, the Escape key will close EE UIs rather than turning back a page.",
       "TranslatedText": "Se ativo , o botão ESC vai fechar a interface do EE inves de voltar a pagina"
     },
-    "h9cd1245egdfdeg4cbbgbae7gfa179a954eac": {
-      "ReferenceText": "If enabled, the health bar when you hover over characters and items will show their treasure table (if relevant) as well as the chance of getting an artifact. For characters, this requires holding the Show Sneak Cones key (shift by default)",
-      "TranslatedText": "Se ativado, a barra de saúde ao passar o mouse sobre personagens e itens mostrará seu estoque de tesouros (se relevante), bem como a chance de obter um artefato. Para personagens, isso requer segurar a tecla Show Sneak Cones (shift por padrão)"
-    },
     "h09f0f7e8gb224g4018g9301g1cf150d5bc20": {
       "ReferenceText": "If enabled, your characters's inventories in multiplayer will be automatically unlocked after a reload.",
       "TranslatedText": "Se ativo , Os inventarios de todos os jogadores no multiplayer automaticamente vão ser desbloqueados Apos recarregar."
@@ -1245,10 +1241,6 @@
     "h854a85fegf878g45a3g98b6g0fff3d5496b7": {
       "ReferenceText": "Show items with no use actions",
       "TranslatedText": "Mostrar Itens Inultilizaveis"
-    },
-    "hcd9974f8g16cfg4cbfga08agbf28ee5b55eb": {
-      "ReferenceText": "Show loot drops in health bar",
-      "TranslatedText": "Mostrar loot drops na barra de saúde"
     },
     "h058cdfb5g6b63g486bg9e05g413c1cf64d4a": {
       "ReferenceText": "Shows the Mastery button. If disabled, it remains accessible through hotbar actions.",
@@ -1729,6 +1721,14 @@
     "haabd6906gee2dg4b39ga339gf5cdf1a2ee8b": {
       "ReferenceText": "Tooltip Adjustments",
       "TranslatedText": "Ajustes de dica"
+    },
+    "h9cd1245egdfdeg4cbbgbae7gfa179a954eac": {
+      "ReferenceText": "If enabled, the health bar when you hover over characters and items will show their treasure table (if relevant) as well as the chance of getting an artifact. For characters, this requires holding the Show Sneak Cones key (shift by default)",
+      "TranslatedText": "Se ativado, a barra de saúde ao passar o mouse sobre personagens e itens mostrará seu estoque de tesouros (se relevante), bem como a chance de obter um artefato. Para personagens, isso requer segurar a tecla Show Sneak Cones (shift por padrão)"
+    },
+    "hcd9974f8g16cfg4cbfga08agbf28ee5b55eb": {
+      "ReferenceText": "Show loot drops in health bar",
+      "TranslatedText": "Mostrar loot drops na barra de saúde"
     },
     "h19773400g8de1g46d7g9901g779b750ebddd": {
       "ReferenceText": "Set Icon",
