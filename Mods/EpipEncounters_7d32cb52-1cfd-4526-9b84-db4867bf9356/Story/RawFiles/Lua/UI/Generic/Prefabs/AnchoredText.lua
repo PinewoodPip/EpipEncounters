@@ -102,9 +102,9 @@ function AnchoredText:_ColorizeText(text)
             if eventID then
                 for _,attr in ipairs(tag.Attributes) do
                     if attr.ID == "inactivecolor" and (not currentSelection or currentSelection.ID ~= eventID) then -- TODO consider anchor indexes
-                        text = Text.Replace(text, tag.Tag, Text.Format(tag.Tag, {Color = attr.Param}))
+                        text = Text.Replace(text, tag.Tag, Text.Format(tag.Tag, {Color = attr.Param}), 1)
                     elseif attr.ID == "activecolor" and currentSelection and currentSelection.ID == eventID then -- TODO consider anchor indexes
-                        text = Text.Replace(text, tag.Tag, Text.Format(tag.Tag, {Color = attr.Param}))
+                        text = Text.Replace(text, tag.Tag, Text.Format(tag.Tag, {Color = attr.Param}), 1)
                     end
                 end
             end
@@ -113,7 +113,7 @@ function AnchoredText:_ColorizeText(text)
         -- Colorize recursively
         local newTag = Text.HTML.Tag(self:_ColorizeText(tag.Content), tag.TagType, tag.Attributes)
 
-        text = Text.Replace(text, tag.Tag, newTag)
+        text = Text.Replace(text, tag.Tag, newTag, 1)
     end
 
     return text

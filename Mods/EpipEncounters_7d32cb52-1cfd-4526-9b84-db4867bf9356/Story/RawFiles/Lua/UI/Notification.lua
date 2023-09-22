@@ -3,7 +3,7 @@
 local Notification = {
 
     SOUNDS = {
-        RECEIVE_ABILITY = "UI_Notification_ReceiveAbility",
+        RECEIVE_ABILITY = "UI_Notification_ReceiveAbility", -- Used for receiving items.
         RECEIVE_SKILL = "UI_Notification_ReceiveSkill",
     },
 

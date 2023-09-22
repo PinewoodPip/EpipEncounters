@@ -306,11 +306,16 @@ end
 ---@param text string
 ---@param str string
 ---@param replacement string
+---@param count integer? Amount of ocurrences to replace. Defaults to `math.maxinteger`.
 ---@return string
-function Text.Replace(text, str, replacement)
+function Text.Replace(text, str, replacement, count)
+    count = count or math.maxinteger
     local startIndex, endIndex = text:find(str, nil, true)
-    if startIndex then
+    local replacedCount = 0
+    while startIndex and replacedCount < count do
         text = text:sub(1, startIndex - 1) .. replacement .. text:sub(endIndex + 1)
+        startIndex, endIndex = text:find(str, nil, true)
+        replacedCount = replacedCount + 1
     end
     return text
 end

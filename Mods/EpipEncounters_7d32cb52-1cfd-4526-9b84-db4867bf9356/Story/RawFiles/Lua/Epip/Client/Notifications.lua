@@ -44,9 +44,14 @@ end)
 NotificationUI.Events.TextNotificationShown:Subscribe(function (ev)
     if not ev.IsScripted and Settings.GetSettingValue("Epip_Notifications", "Notification_StatSharing") == false then
         local sharedLabel = Text.GetTranslatedString(Notifs.TSKHANDLE_LOREMASTER_SHARED)
-        sharedLabel = Text.ReplaceLarianPlaceholders(sharedLabel)
 
-        if ev.Label:find(sharedLabel, nil, true) then
+        -- In some languages the character names are not at the start & end;
+        -- we must replace them with .- to do a pattern search, rather than merely removing them
+        sharedLabel = Text.ReplaceLarianPlaceholders(sharedLabel, ".-")
+        sharedLabel = Text.EscapePatternCharacters(sharedLabel) -- Certain languages (ex. Korean) use parenthesis within the string.
+        sharedLabel = Text.Replace(sharedLabel, "%.%-", ".-") -- Undo our pattern being escaped
+
+        if ev.Label:find(sharedLabel) then
             ev:Prevent()
         end
     end
