@@ -14,6 +14,7 @@ local Filtering = {
         Color.LARIAN.YELLOW,
         Color.LARIAN.ORANGE,
     },
+    TSKHANDLE_EMPTY = "h823595e6g550fg4614gb1ddgdcd323bb4c69", -- "(empty)"
 
     TranslatedStrings = {
         Setting_ShowLights_Name = {
@@ -166,7 +167,8 @@ local settings = {
         SettingID = "WorldTooltip_EmptyContainers",
         ModTableID = "Epip_Tooltips",
         FilterPredicate = function (entry, _)
-            if entry.Label:match("%(empty%)") then
+            local emptyLabel = Text.GetTranslatedString(Filtering.TSKHANDLE_EMPTY)
+            if entry.Label:find(emptyLabel, nil, true) then
                 return true
             else
                 return false
