@@ -3,7 +3,7 @@ local Generic = Client.UI.Generic
 local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 
 -- Prefab for a text search bar.
----@class GenericUI_Prefab_SearchBar : GenericUI_Prefab
+---@class GenericUI_Prefab_SearchBar : GenericUI_Prefab, GenericUI_I_Elementable
 ---@field Background GenericUI_Element_TiledBackground
 ---@field SearchText GenericUI_Prefab_Text
 ---@field HintLabel GenericUI_Prefab_Text
@@ -18,6 +18,7 @@ local SearchBar = {
         SearchChanged = {}, ---@type Event<GenericUI_Element_Text_Event_Changed>
     },
 }
+Generic:RegisterClass("GenericUI_Prefab_SearchBar", SearchBar, {"GenericUI_Prefab", "GenericUI_I_Elementable"})
 Generic.RegisterPrefab("GenericUI_Prefab_SearchBar", SearchBar)
 
 ---@diagnostic disable-next-line: duplicate-doc-alias
@@ -58,6 +59,18 @@ function SearchBar.Create(ui, id, parent, size, hintLabel)
 
     instance.Background = root
     instance.SearchText = searchText
+    instance.HintLabel = hintText
 
     return instance
+end
+
+---Clears the search term and re-sets the hint label.
+function SearchBar:Reset()
+    self.HintLabel:SetVisible(true)
+    self.SearchText:SetText("")
+end
+
+---@override
+function SearchBar:GetRootElement()
+    return self.Background
 end

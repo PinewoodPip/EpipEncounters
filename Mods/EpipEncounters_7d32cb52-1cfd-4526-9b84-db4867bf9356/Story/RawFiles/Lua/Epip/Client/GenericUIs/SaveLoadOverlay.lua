@@ -1,6 +1,8 @@
 
 local Generic = Client.UI.Generic
+local SearchBarPrefab = Generic.GetPrefab("GenericUI_Prefab_SearchBar")
 local SaveLoad = Client.UI.SaveLoad
+local V = Vector.Create
 
 ---@type Feature|table
 local Overlay = {
@@ -18,6 +20,8 @@ local Overlay = {
         "Sort_Date",
         "Sort_Alphabetic",
     },
+
+    SEARCH_BAR_SIZE = V(190, 40),
 }
 Epip.RegisterFeature("SaveLoadOverlay", Overlay)
 
@@ -25,6 +29,7 @@ Epip.RegisterFeature("SaveLoadOverlay", Overlay)
 -- METHODS
 ---------------------------------------------
 
+---@override
 function Overlay:IsEnabled()
     return Settings.GetSettingValue("Epip_SaveLoad", "SaveLoad_Overlay") and not Client.IsUsingController()
 end
@@ -109,12 +114,11 @@ SaveLoad.Events.GetContent:Subscribe(function (e)
         SaveLoad:SetFlag("OF_PlayerModal1", false)
 
         if Overlay.searchTerm == nil then
-            local searchBox = Overlay.UI:GetElementByID("SearchText") ---@type GenericUI_Element_Text
             local sortingCombobox = Overlay.UI:GetElementByID("Sorting") ---@type GenericUI_Element_ComboBox
+            local searchBar = Overlay.UI.SearchBar
 
-            searchBox:SetText("Enter to search...")
-            searchBox:SetSize(200, 50)
             sortingCombobox:SelectOption(Overlay.GetSortingMode())
+            searchBar:Reset()
         end
 
         -- Sort and filter content
@@ -156,13 +160,9 @@ local function SetupUI()
     end)
     sorting:SetOpenUpwards(true)
 
-    local searchBar = panel:AddChild("SearchBar", "GenericUI_Element_TiledBackground")
-    searchBar:SetBackground("Black", 180, 40)
-    searchBar:SetAlpha(0.3)
-    local searchText = searchBar:AddChild("SearchText", "GenericUI_Element_Text")
-    searchText:SetEditable(true)
+    local searchBar = SearchBarPrefab.Create(ui, "SearchBar", panel, Overlay.SEARCH_BAR_SIZE)
     searchBar:SetPosition(280, 6)
-    searchText.Events.Changed:Subscribe(function (e)
+    searchBar.Events.SearchChanged:Subscribe(function (e)
         Overlay.searchTerm = e.Text
         SaveLoad.RenderContent()
     end)
@@ -176,6 +176,8 @@ local function SetupUI()
             Overlay.Position()
         end
     end)
+
+    Overlay.UI.SearchBar = searchBar
 
     ui:Hide()
 end
