@@ -216,7 +216,9 @@ function Item.GetDisplayName(item)
                         local itemTypeHandle = Item.ITEM_SLOT_TSKHANDLES[Item.GetItemSlot(item)] or "Item" -- TODO! Map weapons
                         name = Text.FormatLarianTranslatedString(Item.UNIDENTIFIED_ITEM_TSKHANDLE, Text.GetTranslatedString(itemTypeHandle))
                     else
-                        local statsName = Text.GetTranslatedString(item.Stats.DisplayName.Handle.Handle, "")
+                        -- Accessing the TSK before the game itself does it will break it.
+                        -- local statsName = Text.GetTranslatedString(item.Stats.DisplayName.Handle.Handle, "")
+                        local statsName = item.Stats.DisplayName.Handle.ReferenceString
                         if statsName ~= "" then
                             name = statsName
                         end
