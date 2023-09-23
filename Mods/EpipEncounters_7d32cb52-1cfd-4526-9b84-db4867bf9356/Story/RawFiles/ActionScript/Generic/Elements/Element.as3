@@ -112,6 +112,12 @@ package Elements
                 childElement.parent.setChildIndex(childElement, Math.min(index, childElement.parent.numChildren - 1)); // TODO also maximize to 0? Though that's clearly a non-sensical param
             }
         }
+
+        // Returns the child index of this element within its parent.
+        public function GetChildIndex() : int
+        {
+            return this.parent.getChildIndex(this);
+        }
         
         public function OnChildRemoved(element:MovieClip) : *
         {

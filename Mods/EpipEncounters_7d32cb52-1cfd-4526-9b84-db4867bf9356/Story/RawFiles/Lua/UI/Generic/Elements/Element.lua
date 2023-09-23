@@ -153,6 +153,14 @@ function _Element:_UnregisterChild(child)
     table.remove(self._Children, index)
 end
 
+---Updates the order of the internal children table by MC child index.
+function _Element:__UpdateChildOrder()
+    -- Update internal table
+    table.sort(self._Children, function (a, b)
+        return a:GetChildIndex() < b:GetChildIndex()
+    end)
+end
+
 ---Sets whether the element should be horizontally centered in VerticalList and ScrollList.
 ---@param center boolean
 function _Element:SetCenterInLists(center)
@@ -330,6 +338,13 @@ function _Element:SetChildIndex(child, index)
         child = child.ID
     end
     self:GetMovieClip().SetChildIndex(child, index)
+    self:__UpdateChildOrder()
+end
+
+---Returns the child index of this element within its parent.
+---@return integer -- 1-based.
+function _Element:GetChildIndex()
+    return self:GetMovieClip().GetChildIndex() + 1
 end
 
 ---Sets the scale of the element.

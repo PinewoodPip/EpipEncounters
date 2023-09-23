@@ -22,12 +22,18 @@ function VerticalList:Clear()
     self:GetMovieClip().Clear() -- TODO is this necessary?
 end
 
+---Sorts the elements of the list by child index and repositions them.
+function VerticalList:SortByChildIndex()
+    local mc = self:GetMovieClip()
+    mc.SortByChildIndex()
+    self:__UpdateChildOrder()
+end
+
 _VerticalList.RepositionElements = Generic.ExposeFunction("Reposition")
 _VerticalList.SetTopSpacing = Generic.ExposeFunction("SetTopSpacing")
 _VerticalList.SetElementSpacing = Generic.ExposeFunction("SetElementSpacing")
 _VerticalList.SetSideSpacing = Generic.ExposeFunction("SetSideSpacing")
 _VerticalList.SetRepositionAfterAdding = Generic.ExposeFunction("SetRepositionAfterAdding")
-_VerticalList.SortByChildIndex = Generic.ExposeFunction("SortByChildIndex")
 
 ---------------------------------------------
 -- SETUP
