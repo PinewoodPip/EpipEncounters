@@ -42,6 +42,7 @@ function MovementCosts._GetExpandedMovementCostText(text)
         else
             apCost = Text.Round(apCost, 1)
         end
+        apLabel = apLabel:gsub("^ ", "") -- Remove the leading space if there already was one (ex. in languages such as Polish)
 
         newText = Text.Format("%s %s (%s %s; %s)<br><font color=\"#DBDBDB\">%s%s</font><br><font color=\"#C80030\">%s</font>", {
             FormatArgs = {shownAPCost, apLabel, apCost, apLabel, freeMovementLabel, distance, movementLabel, extraText}
