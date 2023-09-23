@@ -62,6 +62,18 @@ function ComboBox:AddOption(id, label)
     self:GetMovieClip().AddOption(id, label)
 end
 
+---Returns the available options.
+---@return GenericUI_Element_ComboBox_Option[]
+function ComboBox:GetOptions()
+    return self._Options
+end
+
+---Returns whether the combobox is open.
+---@return boolean
+function ComboBox:IsOpen()
+    return self:GetMovieClip().m_isOpen
+end
+
 ---------------------------------------------
 -- SETUP
 ---------------------------------------------
