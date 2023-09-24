@@ -560,7 +560,13 @@ Client.Input.Events.KeyStateChanged:Subscribe(function (ev)
     end
 end)
 
+-- Throw events for tooltips being removed.
 Ext.RegisterUINameCall("hideTooltip", function()
+    Tooltip._currentTooltipData = nil
+
+    Tooltip.Events.TooltipHidden:Throw()
+end)
+TextDisplay.Events.FormattedTooltipRemoved:Subscribe(function (_) -- In TextDisplay this is being done via an engine invoke, not a UI call.
     Tooltip._currentTooltipData = nil
 
     Tooltip.Events.TooltipHidden:Throw()

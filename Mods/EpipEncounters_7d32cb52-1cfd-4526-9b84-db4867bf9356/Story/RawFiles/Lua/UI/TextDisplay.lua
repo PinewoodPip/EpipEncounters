@@ -13,6 +13,7 @@ local TextDisplay = {
 
     Events = {
         TextRemoved = {}, ---@type Event<EmptyEvent>
+        FormattedTooltipRemoved = {}, ---@type Event<EmptyEvent> Thrown when a surface tooltip is removed.
     },
     Hooks = {
         GetText = {}, ---@type PreventableEvent<TextDisplayUI_Hook_GetText>
@@ -70,3 +71,8 @@ end)
 TextDisplay:RegisterInvokeListener("removeText", function(_)
     TextDisplay.Events.TextRemoved:Throw()
 end)
+
+-- Throw events for formatted tooltips being removed.
+TextDisplay:RegisterInvokeListener("clearTooltipText", function (_)
+    TextDisplay.Events.FormattedTooltipRemoved:Throw()
+end, "After")

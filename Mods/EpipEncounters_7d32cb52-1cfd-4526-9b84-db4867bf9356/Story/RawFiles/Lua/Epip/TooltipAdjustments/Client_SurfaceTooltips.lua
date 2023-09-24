@@ -34,12 +34,11 @@ Client.Tooltip.Hooks.RenderSurfaceTooltip:Subscribe(function (ev)
 
     if TooltipAdjustments.IsAdjustmentEnabled(TooltipAdjustments.Settings.SurfaceTooltips) then
         pendingSurfaceTooltip = ev.Tooltip
-        
+
         Net.PostToServer("EPIPENCOUNTERS_GetSurfaceData", {
             Position = position,
             CharacterNetID = Client.GetCharacter().NetID,
         })
-    
         ev:Prevent()
     end
 end)
@@ -85,4 +84,11 @@ Net.RegisterListener("EPIPENCOUNTERS_ReturnSurfaceData", function(payload)
 
         pendingSurfaceTooltip = nil
     end
+end)
+
+-- Remove the pending tooltip data when the tooltip is removed,
+-- to prevent it from being rendered if the mouse was moved outside the surface
+-- while the request was still being processed.
+TooltipLib.Events.TooltipHidden:Subscribe(function (_)
+    pendingSurfaceTooltip = nil
 end)
