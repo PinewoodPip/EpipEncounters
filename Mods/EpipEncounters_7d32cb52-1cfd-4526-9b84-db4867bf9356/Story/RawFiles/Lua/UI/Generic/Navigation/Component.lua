@@ -30,9 +30,7 @@ function Component:Create(target)
     }) ---@cast instance GenericUI.Navigation.Component
 
     -- Track the component for the target
-    if instance.__Target.___Component then
-        Navigation:Error("Component:Create", instance.__Target.ID, "already has a component")
-    end
+    -- Preventing component replacement is not necessary, and anti-modding.
     instance.__Target.___Component = instance
 
     return instance
@@ -63,18 +61,17 @@ end
 ---Sets the focused subcomponent.
 ---@param focus GenericUI.Navigation.Component?
 function Component:SetFocus(focus)
-    if self._Focus == focus then return end
     local previousFocus = self._Focus
     self._Focus = focus
     local controller = self:_GetController() -- TODO nil check? Using components without a controller is atm undefined behaviour.
 
     if previousFocus then
-        previousFocus:OnFocusChanged(false)
         controller:SetFocus(previousFocus, false)
+        previousFocus:OnFocusChanged(false)
     end
     if focus then
-        focus:OnFocusChanged(true)
         controller:SetFocus(focus, true)
+        focus:OnFocusChanged(true)
     end
 end
 
