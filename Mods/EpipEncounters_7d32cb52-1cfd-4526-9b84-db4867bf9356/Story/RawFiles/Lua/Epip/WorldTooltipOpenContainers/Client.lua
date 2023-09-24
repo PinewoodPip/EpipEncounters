@@ -33,11 +33,11 @@ WorldTooltip.Events.TooltipClicked:Subscribe(function (ev)
     end
 end)
 
--- Request the move-and-use tasks to be cancelled when 
+-- Request the move-and-use tasks to be cancelled when pressing right-click or escape.
 Input.Events.KeyStateChanged:Subscribe(function (ev)
     if (ev.State == "Released" and ev.InputID == "right2") or (ev.InputID == "escape") then -- For right-click, the timing the game uses for cancelling regular movement is on-release.
         local char = Client.GetCharacter()
-        if not char.InputController.IsActive then
+        if OpenContainers.IsTaskRunning(char) then
             Net.PostToServer(OpenContainers.NETMSG_REQUEST_CANCEL, {CharacterNetID = char.NetID})
 
             -- Prevent pause menu from being brought up.
