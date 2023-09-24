@@ -57,7 +57,17 @@ end
 ---@param component GenericUI.Navigation.Component
 ---@param focused boolean
 function Controller:SetFocus(component, focused)
+    if component:IsFocused() == focused then return end
+
     component:___SetFocused(focused)
+
+    -- Recursively unfocus elements
+    if not focused then
+        local focus = component:GetFocus()
+        if focus then
+            self:SetFocus(focus, false)
+        end
+    end
 
     -- Navigation:DebugLog("Component focus changed", component:GetClassName(), focused)
 
@@ -70,16 +80,6 @@ function Controller:SetFocus(component, focused)
         end
 
         self.UI:SetIggyEventCapture(iggyEvent, self._ConsumedIggyEventCounts[iggyEvent] > 0)
-    end
-
-    -- Recursively unfocus elements
-    if not focused then
-        local focus = component:GetFocus()
-        while focus do
-            local current = focus
-            focus = current:GetFocus()
-            current:___SetFocused(focused)
-        end
     end
 end
 
