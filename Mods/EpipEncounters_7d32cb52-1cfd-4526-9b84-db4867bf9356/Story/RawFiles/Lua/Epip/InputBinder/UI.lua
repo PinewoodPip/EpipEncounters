@@ -9,8 +9,7 @@ local Input = Client.Input
 local Generic = Client.UI.Generic
 local Button = Generic.GetPrefab("GenericUI_Prefab_Button")
 local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
-local GenericUITextures = Epip.GetFeature("Feature_GenericUITextures")
-local Textures = GenericUITextures.TEXTURES
+local SlicedTexture = Generic.GetPrefab("GenericUI.Prefabs.SlicedTexture")
 local CommonStrings = Text.CommonStrings
 local V = Vector.Create
 
@@ -18,8 +17,9 @@ local UI = Generic.Create("Features.InputBinder.UI", 999)
 UI._Initialized = false
 UI._CurrentBinding = nil ---@type InputLib_Action_KeyCombination?
 
-UI.HEADER_SIZE = V(300, 50)
-UI.BINDING_LABEL_SIZE = V(300, 75)
+UI.PANEL_SIZE = V(600, 200)
+UI.HEADER_SIZE = V(UI.PANEL_SIZE[1], 50)
+UI.BINDING_LABEL_SIZE = V(UI.PANEL_SIZE[1], 75)
 
 ---------------------------------------------
 -- METHODS
@@ -34,14 +34,15 @@ end
 ---Initializes the elements of the UI.
 function UI._Initialize()
     if not UI._Initialized then
-        local bg = UI:CreateElement("BG", "GenericUI_Element_Texture")
-        bg:SetTexture(Textures.PANELS.ITEM_ALERT)
+        local root = UI:CreateElement("Root", "GenericUI_Element_Empty")
+        local bg = root:AddChild("BG", "GenericUI_Element_TiledBackground")
+        bg:SetBackground("Black", UI.PANEL_SIZE:unpack())
 
         -- Set up header and binding label
-        local header = TextPrefab.Create(UI, "Header", bg, InputBinder.TranslatedStrings.Header:GetString(), "Center", UI.HEADER_SIZE)
-        header:SetPositionRelativeToParent("Top", 0, 17)
+        local header = TextPrefab.Create(UI, "Header", root, "", "Center", UI.HEADER_SIZE)
+        header:SetPositionRelativeToParent("Top", 0, 40)
 
-        local bindingLabel = TextPrefab.Create(UI, "BindingLabel", bg, "", "Center", UI.BINDING_LABEL_SIZE)
+        local bindingLabel = TextPrefab.Create(UI, "BindingLabel", root, "", "Center", UI.BINDING_LABEL_SIZE)
         bindingLabel:SetPositionRelativeToParent("Center", 0, 20)
 
         -- Set up buttons
@@ -69,7 +70,7 @@ function UI._Initialize()
         end)
 
         buttonList:RepositionElements()
-        buttonList:SetPositionRelativeToParent("Bottom", 0, -90)
+        buttonList:SetPositionRelativeToParent("Bottom", 0, -40)
 
         UI.Background = bg
         UI.Header = header
@@ -87,7 +88,7 @@ function UI._Initialize()
     end
 
     -- Update header
-    UI.Header:SetText(Text.Format(InputBinder.TranslatedStrings.Header:GetString(), {
+    UI.Header:SetText(Text.Format(InputBinder.TranslatedStrings.Header:Format({Size = 21, Color = Color.WHITE}), {
         FormatArgs = {
             action:GetName(),
         },
@@ -107,6 +108,7 @@ function UI._UpdateBindingLabel()
     else
         label = InputBinder.TranslatedStrings.Hint:GetString()
     end
+    label = Text.Format(label, {Color = Color.WHITE})
 
     element:SetText(label)
 end
