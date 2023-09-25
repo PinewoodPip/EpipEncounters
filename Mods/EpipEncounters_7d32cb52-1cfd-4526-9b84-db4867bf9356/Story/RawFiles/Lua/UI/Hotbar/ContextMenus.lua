@@ -101,14 +101,6 @@ Client.UI.ContextMenu.RegisterMenuHandler("hotBarLoadoutsMenu", function()
             entries = entries,
         }
     })
-
-    -- Shift the menu up - TODO do automatically.
-    local root = Client.UI.ContextMenu.GetActiveUI():GetRoot()
-    local menu = root.contextMenusList.content_array[1]
-
-    if #loadoutEntries > 6 then
-        menu.y = menu.y - (math.min(#loadoutEntries, 6) * 50)
-    end
 end)
 
 -- Remove a loadout.
