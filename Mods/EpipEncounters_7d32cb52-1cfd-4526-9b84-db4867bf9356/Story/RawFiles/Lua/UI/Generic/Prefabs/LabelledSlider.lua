@@ -127,3 +127,8 @@ function Slider:_UpdateValueLabel()
     label:SetSize(label:GetTextSize():unpack())
     label:SetPosition(referenceElement.x + 17 - (label:GetTextSize()[1] / 2), referenceElement.y - 25)
 end
+
+---@override
+function Slider:GetInteractableElement()
+    return self.Slider
+end

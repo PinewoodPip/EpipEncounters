@@ -62,3 +62,8 @@ end
 function Text:SetText(text)
     self.Text:SetText(text)
 end
+
+---@override
+function Text:GetInteractableElement()
+    return self.Text.Element
+end

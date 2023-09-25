@@ -87,3 +87,8 @@ function Checkbox:Render()
         Generic:Error("GenericUI_Prefab_LabelledCheckbox:Render", "Invalid style value")
     end
 end
+
+---@override
+function Checkbox:GetInteractableElement()
+    return self.Checkbox
+end

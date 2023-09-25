@@ -66,3 +66,8 @@ end
 function Dropdown:SelectOption(id)
     self.ComboBox:SelectOption(id)
 end
+
+---@override
+function Dropdown:GetInteractableElement()
+    return self.ComboBox
+end
