@@ -205,6 +205,7 @@ end
 
 ---@class TooltipLib_Hook_RenderSkillTooltip : TooltipLib_Hook_RenderFormattedTooltip
 ---@field SkillID string
+---@field Character EclCharacter
 
 ---@class TooltipLib_Hook_RenderMouseTextTooltip : PreventableEventParams
 ---@field Text string Hookable.
@@ -294,7 +295,7 @@ function Tooltip.ShowSkillTooltip(char, skillID, position)
         Position = position or Vector.Create(mouseX, mouseY)
     }
 
-    ui:ExternalInterfaceCall("showSkillTooltip", Ext.UI.HandleToDouble(char.Handle), skillID, mouseX, mouseY, 100, 100, "left")
+    ui:ExternalInterfaceCall("showSkillTooltip", Ext.UI.HandleToDouble(char.Handle), skillID, mouseX, mouseY, 20, 0, "left")
 end
 
 ---Renders an item tooltip.
@@ -409,7 +410,8 @@ Ext.Events.UICall:Subscribe(function(ev)
     local param1, param2 = table.unpack(ev.Args)
 
     if ev.Function == "showSkillTooltip" and not Tooltip._nextCustomTooltip then
-        Tooltip.nextTooltipData = {UIType = ev.UI:GetTypeId(), Type = "Skill", FlashCharacterHandle = param1, SkillID = param2, UICall = ev.Function, FlashParams = {table.unpack(ev.Args)}}
+        local char = Character.Get(param1, true)
+        Tooltip.nextTooltipData = {UIType = ev.UI:GetTypeId(), Type = "Skill", FlashCharacterHandle = param1, SkillID = param2, UICall = ev.Function, FlashParams = {table.unpack(ev.Args)}, Character = char}
         Tooltip._currentTooltipData = Tooltip.nextTooltipData
     elseif ev.Function == "showItemTooltip" then
         Tooltip.nextTooltipData = {UIType = ev.UI:GetTypeId(), Type = "Item", FlashItemHandle = param1, UICall = ev.Function, FlashParams = {table.unpack(ev.Args)}}

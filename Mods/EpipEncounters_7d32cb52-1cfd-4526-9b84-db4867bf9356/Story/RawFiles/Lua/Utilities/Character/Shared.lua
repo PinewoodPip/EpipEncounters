@@ -74,6 +74,66 @@ Character = {
         LIZARD = "Lizard",
     },
 
+    -- TODO Shield, Reflexes, PhysicalArmorMastery, MagicArmorMastery, VitalityMaster, Crafting, Charm, Intimidate, Reason, Wand, Runecrafting, Brewmaster, Sulfurology
+    ---@type table<AbilityType, TranslatedStringHandle>
+    ABILITY_TSKHANDLES = {
+        ["WarriorLore"] = "h8e4bebcbg21c7g43dag8b05gd3b13c1be651",
+        ["RangerLore"] = "h3d3dc89dgd286g418eg8134g2eb65d063514",
+        ["RogueLore"] = "hed591025g5c39g48ccga899gc9b1569716c1",
+        ["SingleHanded"] = "ha74334b1gd56bg49c2g8738g44da4decd00a",
+        ["TwoHanded"] = "h3fb5cd5ag9ec8g4746g8f9cg03100b26bd3a",
+        ["PainReflection"] = "h591d7502gb8c3g443cg86ebga0b3a903155a",
+        ["Ranged"] = "hdda30cb9g17adg433ag9071g867e97c09c3a",
+        ["Sourcery"] = "ha8b343fbg4ebbg4e72gb58fg633850ad0580",
+        ["FireSpecialist"] = "hf0a5a77dg132ag4517g8701g9d2ca3057a28",
+        ["WaterSpecialist"] = "h21354580g6870g411dgbef4g52f34942686a",
+        ["AirSpecialist"] = "hf8056089g5b06g4a54g8dd5gf1fb9a796b53",
+        ["EarthSpecialist"] = "h814e6bb5g3f51g4549gb3e4ge99e1d0017e1",
+        ["Necromancy"] = "hb7ea4cc5g2a18g416bg9b95g51d928a60398",
+        ["Summoning"] = "hac10f374gf9dbg4ee5gb5d0g7b1d3cb6d1fe",
+        ["Polymorph"] = "h70714d89g196eg4affga165gaa9d72a61368",
+        ["Telekinesis"] = "h455eb073g28abg4f3bgae9dga8a592a30cdb",
+        ["Sneaking"] = "h6bf7caf0g7756g443bg926dg1ee5975ee133",
+        ["Pickpocket"] = "h1ae6ac78gb2d3g4232g8910g2f26c76e5d62",
+        ["Thievery"] = "h1633e511g35e3g4e22gb999gbbf3b0d5ce5e",
+        ["Loremaster"] = "hb8aa942egbeaag4452gbfbcg31b493bead6e",
+        ["Barter"] = "hcc404653ga10ag4f56g8119g11162e60f81d",
+        ["Persuasion"] = "h257372d3g6f98g4450g813bg190e19aecce4",
+        ["Luck"] = "h2f9ec5acgbcbeg45b8g8058gee363e6875d5",
+        ["DualWielding"] = "h03d68693g35e7g4721ga1b3g9f9882f08b12",
+        ["Perseverance"] = "h5b61fccfg5d2ag4a81g9cacg068403d61b5c",
+    },
+    -- Don't use these without a good reason! See the `ABILITY_TSKHANDLES` table instead.
+    -- TODO Shield, Reflexes, PhysicalArmorMastery, MagicArmorMastery, VitalityMaster, Crafting, Charm, Intimidate, Reason, Wand, Runecrafting, Brewmaster, Sulfurology
+    ---@type table<AbilityType, string>
+    ABILITY_ENGLISH_NAMES = {
+        ["WarriorLore"] = "Warfare",
+        ["RangerLore"] = "Huntsman",
+        ["RogueLore"] = "Scoundrel",
+        ["SingleHanded"] = "Single-Handed",
+        ["TwoHanded"] = "Two-Handed",
+        ["PainReflection"] = "Retribution",
+        ["Ranged"] = "Ranged",
+        ["Sourcery"] = "Sourcery",
+        ["FireSpecialist"] = "Pyrokinetic",
+        ["WaterSpecialist"] = "Hydrosophist",
+        ["AirSpecialist"] = "Aerotheurge",
+        ["EarthSpecialist"] = "Geomancer",
+        ["Necromancy"] = "Necromancer",
+        ["Summoning"] = "Summoning",
+        ["Polymorph"] = "Polymorph",
+        ["Telekinesis"] = "Telekinesis",
+        ["Sneaking"] = "Sneaking",
+        ["Pickpocket"] = "Pickpocket",
+        ["Thievery"] = "Thievery",
+        ["Loremaster"] = "Loremaster",
+        ["Barter"] = "Bartering",
+        ["Persuasion"] = "Persuasion",
+        ["Luck"] = "Lucky Charm",
+        ["DualWielding"] = "Dual Wielding",
+        ["Perseverance"] = "Perseverance",
+    },
+
     -- Unfortunate, but we do not currently know how exactly the game keeps track of these.
     ---@type table<Race, skill[]>
     _RACIAL_SKILLS = {

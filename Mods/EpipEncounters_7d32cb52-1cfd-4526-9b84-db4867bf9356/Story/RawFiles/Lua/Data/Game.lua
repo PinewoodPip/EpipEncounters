@@ -275,21 +275,6 @@ Data.Game.ABILITIES = {
     PainReflection = "Retribution",
 }
 
--- translate skill requirements from Stats objects to actual field name
-Data.Game.StatObjectAbilities = {
-    Warrior = "WarriorLore",
-    Earth = "EarthSpecialist",
-    Water = "WaterSpecialist",
-    Air = "AirSpecialist",
-    Summoning = "Summoning",
-    Death = "Necromancy",
-    Rogue = "RogueLore",
-    Ranger = "RangerLore",
-    Polymorph = "Polymorph",
-    Source = "Sourcery",
-    Fire = "FireSpecialist",
-}
-
 Data.Game.SLOTS_WITH_SUBTYPES = {
     ["Gloves"] = true,
     ["Breast"] = true,

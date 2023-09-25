@@ -4,7 +4,6 @@
 ---------------------------------------------
 
 local TooltipLib = Client.Tooltip
-local SourceInfusion = EpicEncounters.SourceInfusion
 local Set = DataStructures.Get("DataStructures_Set")
 
 ---@class Feature_TooltipAdjustments : Feature
@@ -242,52 +241,6 @@ function TooltipAdjustments.ChangeArtifactRarityDisplay(item, tooltip, a, b)
             end
         end
     end
-end
-
--- todo split up
-function TooltipAdjustments.ShowAbilityScoresForSI(char, skill, tooltip)
-    char = char or Client.GetCharacter()
-    local element = tooltip:GetElement("SkillDescription")
-    if not element or not skill or not EpicEncounters.IsEnabled() then return nil end
-
-    local school = Ext.Stats.Get(skill)
-    if not school then return nil end
-    school = school["Ability"]
-    if not school or school == "None" then return nil end
-
-    school = Data.Game.StatObjectAbilities[school]
-    local schoolName = Data.Game.ABILITIES[school]
-
-    local score = char.Stats[school]
-
-    -- highlight unmet infusion requirements.
-    -- Only do this when infusing or holding shift.
-    for _,req in pairs(SourceInfusion.INFUSION_ABILITY_REQUIREMENTS) do
-        if score < req and (Client.Input.IsShiftPressed() or Client.IsPreparingInfusion()) then
-            local reqStr = string.format("(requires %d %s):", req, schoolName)
-            local startPos, endPos = element.Label:find(Text.EscapePatternCharacters(reqStr))
-
-            if startPos and endPos then
-                element.Label = element.Label:insert("</font>", endPos)
-                element.Label = element.Label:insert(string.format("<font color='%s'>", Color.ILLEGAL_ACTION), startPos - 1)
-
-                -- local text = element.Label:sub(1, startPost)
-                -- Ext.Print(reqStr)
-                -- text = text .. element.Label:sub(endPos, #element.Label)
-                -- Ext.Print(text)
-            end
-        end
-    end
-
-    -- Show current score next to SI text
-    if not Client.Input.IsShiftPressed() then return nil end
-
-    local _, position = element.Label:find("Source Infusions:")
-
-    if not position then return nil end
-
-    -- element.Label = element.Label:insert(string.format("<font size='17'><br>Your score: %d</font>", score), position)
-    element.Label = element.Label:insert(string.format(" <font size='17'>(current: %d %s)</font>", score, schoolName), position)
 end
 
 -- Fix tooltips when char has increased AP costs (ex. Slowed III in old Epip)
@@ -633,7 +586,6 @@ end
 
 local function OnSkillAPTooltipRender(char, skill, tooltip)
     if not TooltipAdjustments:IsEnabled() then return nil end
-    TooltipAdjustments.ShowAbilityScoresForSI(char, skill, tooltip)
     TooltipAdjustments.FixTooltipAPCosts(tooltip)
 end
 

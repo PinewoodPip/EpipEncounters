@@ -140,6 +140,23 @@ Stats = {
         "CONSTRAINTED",
     }),
 
+    -- Translates SkillData abilities to Character stat fields.
+    ---@type table<StatsLib_Enum_SkillAbility, string>
+    SKILL_ABILITY_TO_STATISTIC = {
+        Warrior = "WarriorLore",
+        Earth = "EarthSpecialist",
+        Water = "WaterSpecialist",
+        Air = "AirSpecialist",
+        Summoning = "Summoning",
+        Death = "Necromancy",
+        Rogue = "RogueLore",
+        Ranger = "RangerLore",
+        Polymorph = "Polymorph",
+        Source = "Sourcery",
+        Fire = "FireSpecialist",
+        -- Unsure if Sulforology exists here; it is not in Enumerations.xml
+    },
+
     Enums = {
         ---@enum StatEntry_CastCheckType
         CastCheckType = {
