@@ -4,6 +4,22 @@ local OpenContainers = Epip.GetFeature("WorldTooltipOpenContainers")
 OpenContainers.EVENTID_TASK_FINISHED = "Features.WorldTooltipOpenContainers.EventID.TaskFinished"
 
 ---------------------------------------------
+-- METHODS
+---------------------------------------------
+
+---Cancels the move-to task for a character.
+---@param char EsvCharacter
+---@param failed boolean? If `true`, the client will show a "Can't reach" notification. Defaults to `false`.
+function OpenContainers.CancelTask(char, failed)
+    Osiris.CharacterPurgeQueue(char)
+    Osiris.ClearTag(char, OpenContainers.TAG_TASK_RUNNING)
+
+    if failed then
+        Net.PostToCharacter(char, OpenContainers.NETMSG_TASK_FAILED)
+    end
+end
+
+---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
 
@@ -19,6 +35,18 @@ Net.RegisterListener("EPIPENCOUNTERS_Feature_WorldTooltipOpenContainers_OpenCont
         Osiris.CharacterMoveTo(char, item, 1, OpenContainers.EVENTID_TASK_FINISHED, 0)
         Osiris.CharacterUseItem(char, item, "")
         Osiris.SetTag(char, OpenContainers.TAG_TASK_RUNNING)
+
+        -- We need to cancel the task if pathing is impossible, lest the character will teleport to target.
+        local characterHandle = char.Handle
+        Timer.StartTickTimer(3, function ()
+            char = Character.Get(characterHandle)
+            local movement = char.MovementMachine.Layers[2]
+
+            -- If pathing failed, there will be no movement state.
+            if not movement then
+                OpenContainers.CancelTask(char, true)
+            end
+        end)
     end
 end)
 

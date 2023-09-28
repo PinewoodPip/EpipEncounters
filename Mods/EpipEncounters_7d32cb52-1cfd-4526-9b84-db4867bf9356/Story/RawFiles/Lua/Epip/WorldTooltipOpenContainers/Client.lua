@@ -1,10 +1,12 @@
 
 local WorldTooltip = Client.UI.WorldTooltip
+local Notification = Client.UI.Notification
 local Input = Client.Input
 
 ---@class Feature_WorldTooltipOpenContainers
 local OpenContainers = Epip.GetFeature("WorldTooltipOpenContainers")
 OpenContainers.SETTING_ID = "WorldTooltip_OpenContainers"
+OpenContainers.TASK_FAILED_SOUND = "UI_Notification_ReceiveAbility"
 
 ---------------------------------------------
 -- METHODS
@@ -46,4 +48,9 @@ Input.Events.KeyStateChanged:Subscribe(function (ev)
             end
         end
     end
+end)
+
+-- Listen for the task failing on the server.
+Net.RegisterListener(OpenContainers.NETMSG_TASK_FAILED, function (_)
+    Notification.ShowNotification(Text.GetTranslatedString(Notification.TSKHANDLES.CANT_REACH), nil, nil, OpenContainers.TASK_FAILED_SOUND)
 end)

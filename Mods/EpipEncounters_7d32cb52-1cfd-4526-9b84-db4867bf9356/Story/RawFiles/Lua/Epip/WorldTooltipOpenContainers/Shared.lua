@@ -2,6 +2,7 @@
 ---@class Feature_WorldTooltipOpenContainers : Feature
 local OpenContainers = {
     NETMSG_REQUEST_CANCEL = "Features.WorldTooltipOpenContainers.NetMsg.RequestCancel",
+    NETMSG_TASK_FAILED = "Features.WorldTooltipOpenContainers.NetMsg.TaskFailed", -- Empty message, sent from server to client.
     TAG_TASK_RUNNING = "Features.WorldTooltipOpenContainers.Tag.TaskRunning",
 }
 Epip.RegisterFeature("WorldTooltipOpenContainers", OpenContainers)

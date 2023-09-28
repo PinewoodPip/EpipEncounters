@@ -1,10 +1,12 @@
 
 ---@class NotificationUI : UI
 local Notification = {
-
     SOUNDS = {
         RECEIVE_ABILITY = "UI_Notification_ReceiveAbility", -- Used for receiving items.
         RECEIVE_SKILL = "UI_Notification_ReceiveSkill",
+    },
+    TSKHANDLES = {
+        CANT_REACH = "h6f80ca7dg8166g4e3eg88aegdf4130f8ad9c", -- "Can't reach"
     },
 
     USE_LEGACY_EVENTS = false,
