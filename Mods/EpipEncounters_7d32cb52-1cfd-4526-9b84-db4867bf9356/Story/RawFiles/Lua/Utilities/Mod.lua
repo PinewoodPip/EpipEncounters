@@ -1,5 +1,5 @@
 
----@class ModLib
+---@class ModLib : Library
 Mod = {
     GUIDS = {
         EE_CORE = "63bb9b65-2964-4c10-be5b-55a63ec02fa0",
@@ -51,9 +51,24 @@ Mod = {
         MULTIHOTBARS = "c14438b8-b988-44c6-ac12-563f2b87c853",
         UNLEASHED = "e844229e-b744-4294-9102-a7362a926f71",
         GREED = "d1ba8097-dba1-d74b-7efe-8fca3ef71fe5",
+        VANILLA_PLUS = "3ff156e2-289e-4dac-81f5-a44e3e304163",
+        FARANDOLE = "98a2a913-3f9f-42be-9cfb-5c1cb881f578",
+        DIVINE_WAR = "ea101dc5-4492-4d96-9b1f-0920ba5431f6",
     },
 }
 Epip.InitializeLibrary("Mods", Mod)
+
+---Lookup table of common game overhaul mods.
+---There is no implicit meaning to a mod being considered an overhaul.
+---@type table<GUID, true>
+Mod.GAME_OVERHAULS = {
+    [Mod.GUIDS.EE_CORE] = true,
+    [Mod.GUIDS.CONFLUX] = true,
+    [Mod.GUIDS.VANILLA_PLUS] = true,
+    [Mod.GUIDS.FARANDOLE] = true,
+    [Mod.GUIDS.DIVINE_WAR] = true,
+    [Mod.GUIDS.UNLEASHED] = true,
+}
 
 ---------------------------------------------
 -- METHODS
@@ -82,6 +97,22 @@ function Mod.GetLoadOrder()
     end
 
     return mods
+end
+
+---Returns the game overhaul being played.
+---In the case of there being multiple active, default behaviour is to return the first one loaded. The hook is fired afterwards and its module may be non-nil.
+---See the `GAME_OVERHAULS` table for extending.
+---@return Module? -- `nil` if no overhaul is being played.
+function Mod.GetOverhaul()
+    local mods = Mod.GetLoadOrder()
+    local overhaul = nil ---@type Module?
+    for _,mod in ipairs(mods) do
+        if Mod.GAME_OVERHAULS[mod.Info.ModuleUUID] then
+            overhaul = mod
+            break
+        end
+    end
+    return overhaul
 end
 
 ---Returns the story version of a mod.

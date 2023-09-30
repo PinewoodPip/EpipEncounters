@@ -7,6 +7,7 @@ local AnimationCancelling = Epip.GetFeature("Feature_AnimationCancelling")
 local StatusesDisplay = Epip.GetFeature("Feature_StatusesDisplay")
 local CraftingFixes = Epip.GetFeature("Feature_CraftingFixes")
 local InventoryMultiSelect = Epip.GetFeature("Features.InventoryMultiSelect")
+local DiscordRichPresence = Epip.GetFeature("Features.DiscordRichPresence")
 local CommonStrings = Text.CommonStrings
 
 ---@class Feature_EpipSettingsMenu : Feature
@@ -201,6 +202,11 @@ local tabs = {
             CreateHeader(TSK.Section_SaveLoadUI),
             {Module = "Epip_SaveLoad", ID = "SaveLoad_Overlay"},
             {Module = "Epip_SaveLoad", ID = "SaveLoad_Sorting"},
+
+            CreateHeader(DiscordRichPresence.TranslatedStrings.Label_RichPresence),
+            {Module = DiscordRichPresence:GetNamespace(), ID = DiscordRichPresence.Settings.Mode:GetID()},
+            {Module = DiscordRichPresence:GetNamespace(), ID = DiscordRichPresence.Settings.CustomLine1:GetID()},
+            {Module = DiscordRichPresence:GetNamespace(), ID = DiscordRichPresence.Settings.CustomLine2:GetID()},
         }
     },
     ["Epip_Developer"] = {

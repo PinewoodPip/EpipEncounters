@@ -239,6 +239,18 @@ function UI._RenderInputBinding(setting, parent)
     return instance
 end
 
+---Renders a Text setting.
+---@param setting SettingsLib.Settings.InputBinding
+---@param parent GenericUI_ParentIdentifier?
+---@return GenericUI_Prefab_LabelledTextField
+function UI._RenderStringSetting(setting, parent)
+    local instance = SettingWidgets.RenderSetting(UI, parent, setting, UI.FORM_ELEMENT_SIZE, function (value)
+        SettingsMenu.SetPendingChange(setting, value)
+    end)
+    ---@cast instance GenericUI_Prefab_LabelledTextField
+    return instance
+end
+
 ---Renders a label entry.
 ---@param data Feature_SettingsMenuOverlay_Event_RenderEntry
 ---@return GenericUI_Prefab_Text
@@ -325,6 +337,8 @@ function UI._RenderSetting(data)
         element = UI._RenderClampedNumber(setting, parent)
     elseif settingType == "InputBinding" then
         element = UI._RenderInputBinding(setting, parent)
+    elseif settingType == "String" then
+        element = UI._RenderStringSetting(setting, parent)
     else
         Overlay:LogWarning("Unsupported setting type: " .. settingType)
     end

@@ -484,6 +484,7 @@ LOAD_ORDER = {
     {ScriptSet = "Epip/UnlearnSkills"},
     {ScriptSet = "Epip/WorldTooltipOpenContainers"},
     {ScriptSet = "Epip/AutoUnlockInventory"},
+    {ScriptSet = "Epip/DiscordRichPresence"},
 
     "Epip/ShowConsumableEffects.lua",
     "Epip/WalkOnCorpses.lua",

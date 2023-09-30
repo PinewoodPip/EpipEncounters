@@ -171,6 +171,20 @@ Text.CommonStrings.General = Text.RegisterTranslatedString({
     Text = "General",
     ContextDescription = "As in, 'general things', or 'general settings'",
 })
+Text.CommonStrings.Vanilla = Text.RegisterTranslatedString({
+    Handle = "h6a473ba0g726bg4188g811fgfa83c0b3def2",
+    Text = "Vanilla",
+    ContextDescription = "As in, 'unmodded game'",
+})
+Text.CommonStrings.Custom = Text.RegisterTranslatedString({
+    Handle = "h17d882b6g83acg411dgbe52g3ed32443774a",
+    Text = "Custom",
+})
+Text.CommonStrings.Overhaul = Text.RegisterTranslatedString({
+    Handle = "h3e13ea04gcd9bg4630gabeagbc5f5095f684",
+    Text = "Overhaul",
+    ContextDescription = "As in, 'game overhaul'",
+})
 
 ---------------------------------------------
 -- BRANDING
