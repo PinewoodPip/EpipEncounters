@@ -244,13 +244,19 @@ Section.Events.RenderEntryLine:Subscribe(function (ev)
     local label = ev.Line
     local fontSizeOverride = nil
 
+    if label:match("^#+ ") then -- Use bigger font size for headers. Pattern should be checked against unformatted line.
+        fontSizeOverride = 25
+        label = label:gsub("^#+ ", "")
+    elseif label:match("^%-%-%-") then -- Convert HR markers to a long line.
+        label = "-------------------------------------"
+    elseif label:match("^!%[") then -- Ignore image markers.
+        return
+    end
+
     -- Format certain Markdown syntax.
     label = label:gsub("`([^`]*)`", Text.Format("%1", {FontType = Text.FONTS.ITALIC})) -- Code
     label = label:gsub("%*%*([^*]*)%*%*", Text.Format("%1", {FontType = Text.FONTS.BOLD})) -- Bold
     label = label:gsub("%*([^*]*)%*", Text.Format("%1", {FontType = Text.FONTS.ITALIC})) -- Italics
-    if ev.Line:match("^#") then -- Use bigger font size for headers. Pattern should be checked against unformatted line.
-        fontSizeOverride = 25
-    end
 
     -- Use black font color
     label = Text.Format(label, {
