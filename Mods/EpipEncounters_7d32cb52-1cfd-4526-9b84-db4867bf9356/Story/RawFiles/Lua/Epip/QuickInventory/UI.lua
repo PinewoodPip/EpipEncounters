@@ -14,7 +14,7 @@ local V = Vector.Create
 local QuickInventory = Epip.GetFeature("Feature_QuickInventory")
 
 ---@class Features.QuickInventory.UI : GenericUI_Instance
-local UI = Generic.Create("Epip_EquipmentSwap")
+local UI = Generic.Create("Features.QuickInventory.UI", 13) -- Placed below book.swf, which can be accessed from it.
 QuickInventory.UI = UI
 
 UI._Initialized = false
@@ -258,7 +258,7 @@ function UI._InitalizeSettingsPanel()
     UI.Background.Background:SetChildIndex(settingsPanel.Background.ID, 0)
     UI.SettingsPanel = settingsPanel
 
-    local list = settingsPanel:AddChild("List", "GenericUI_Element_ScrollList")
+    local list = settingsPanel:AddChild("SettingsList", "GenericUI_Element_ScrollList")
     list:SetFrame(UI.SETTINGS_PANEL_SCROLLLIST_FRAME:unpack())
     list:SetRepositionAfterAdding(false)
     list:SetScrollbarSpacing(-50)
