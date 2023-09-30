@@ -64,7 +64,7 @@
     },
     "h4bc543cag5f19g4e91gbb76gc3a18177874b": {
       "ReferenceText": "Score             %s\nHigh-Score %s",
-      "TranslatedText": "Очки             %s\nРекорд %s"
+      "TranslatedText": "Очки             %s\nРекорд       %s"
     },
     "h54d9066eg87bdg439fg92f9g7027970af6ca": {
       "ReferenceText": "Camera",
@@ -142,6 +142,14 @@
       "ReferenceText": "Open Codex",
       "TranslatedText": "Открыть кодекс"
     },
+    "he5fd06c2gba4dg4ec0g9c66gc6d0847cc6d9": {
+      "ReferenceText": "By Cursor",
+      "TranslatedText": "Под курсором"
+    },
+    "hcf8d7869gc200g463bgb0dbg81c686990462": {
+      "ReferenceText": "Determines the position of skill tooltips within the UI.",
+      "TranslatedText": "Определяет положение описания способности."
+    },
     "h5e83b5f4g33f8g45e6ga968gecd0cad8d465": {
       "ReferenceText": "Has Skillbook",
       "TranslatedText": "Есть книга навыков"
@@ -149,6 +157,10 @@
     "he6042694g235ag4c68gbcccgb1a4769ae7bd": {
       "ReferenceText": "No Skillbook",
       "TranslatedText": "Нет книги навыков"
+    },
+    "hf2fe60ffgd37bg4808g9f2dgad70b0ccffdd": {
+      "ReferenceText": "On Left Side",
+      "TranslatedText": "С левой стороны"
     },
     "h7eaa3d1dg94a2g4136g969dg1ba9f6796fca": {
       "ReferenceText": "Show Learnt",
@@ -176,7 +188,7 @@
     },
     "h5025c292g5fd8g46fegac5bgee45a7acc134": {
       "ReferenceText": "Ability School",
-      "TranslatedText": "Навык"
+      "TranslatedText": "Школа магии"
     },
     "hce2c434eg0377g425eg82ceg3948a01e8ee4": {
       "ReferenceText": "Accept",
@@ -386,6 +398,10 @@
       "ReferenceText": "Furniture",
       "TranslatedText": "Мебель"
     },
+    "h9c53529bg5bc1g4005g9143g216bc58b959e": {
+      "ReferenceText": "General",
+      "TranslatedText": "Общее"
+    },
     "h421f56f3g378cg4dfaga0d1ge6e2ea2f17c4": {
       "ReferenceText": "Geomancer",
       "TranslatedText": "Геомантия"
@@ -400,7 +416,7 @@
     },
     "h1a45624fgcbe1g48b8g9b4ag23e6f8cebe67": {
       "ReferenceText": "Hidden",
-      "TranslatedText": "Скрытое"
+      "TranslatedText": "Скрыто"
     },
     "h3140c19bgec23g4a62g8d4ag9703a6bf89f4": {
       "ReferenceText": "Horns",
@@ -701,6 +717,10 @@
     "hc9809692g2710g43e5g9e8ege3bd035472ac": {
       "ReferenceText": "Wither",
       "TranslatedText": "Wither"
+    },
+    "h97f62f62gcd0fg4addg9db9g5504788bcb50": {
+      "ReferenceText": "Tier",
+      "TranslatedText": "Tier"
     },
     "hea8fd41ag8885g40b0g8466gb6a63d91863a": {
       "ReferenceText": "Default Tab",
@@ -1302,6 +1322,14 @@
       "ReferenceText": "With enough Loremaster",
       "TranslatedText": "С достаточным знанием легенд"
     },
+    "h4025c1c4g6527g4b6ag8369g49c0b1949dea": {
+      "ReferenceText": "If enabled, the positions of the character sheet and party inventory UIs will be remembered across sessions.",
+      "TranslatedText": "Если включено, положение окна персонажа и инвентаря группы будет запоминаться и не сбрасываться при смене игровой сессии."
+    },
+    "h626e6a30gaf91g438aga001g799e54be1477": {
+      "ReferenceText": "Remember Panel Positions",
+      "TranslatedText": "Запоминать положение окон"
+    },
     "h3a8d983cg5a8cg4b33g954cg39581bd8a04b": {
       "ReferenceText": "AI Type: %s",
       "TranslatedText": "Тип ИИ: %s"
@@ -1718,6 +1746,14 @@
       "ReferenceText": "%s%s free movement remaining",
       "TranslatedText": "осталось %s%s беспл. движения"
     },
+    "h176a0a5cgce9dg4cd7gbf2bg053624c85791": {
+      "ReferenceText": "If enabled, skill, item, status and custom tooltips will use an opaque background.",
+      "TranslatedText": "Если включено, способности, предметы, статусы и прочие описания будут использовать непрозрачный фон."
+    },
+    "h8f54bda9g54cdg4390gb819g7d0af8b9d0ef": {
+      "ReferenceText": "Opaque Background",
+      "TranslatedText": "Непрозрачный фон"
+    },
     "h8ed2ccd3g2e36g48bdg98dcg3cbf09c78464": {
       "ReferenceText": "Combine with Pixie Dust to create a small rune of the respective material.",
       "TranslatedText": "Объедините с пыльцой пикси, чтобы смастерить малую руну соответствующего типа."
@@ -1733,6 +1769,18 @@
     "h562b6c73geee1g4d27gb3c3g027f92916d0a": {
       "ReferenceText": "Rune crafting material<br>%s",
       "TranslatedText": "Материал для руны<br>%s"
+    },
+    "he6db6611g97f8g45d3g97afg280b3007ba8d": {
+      "ReferenceText": " (current: %d %s)",
+      "TranslatedText": " (текущее: %d %s)"
+    },
+    "hdbbcab04g7b36g441egb0fbgbe739effaa33": {
+      "ReferenceText": "(requires %d %s):",
+      "TranslatedText": "(требование: %d %s):"
+    },
+    "h68c538dbgf229g40b5ga826gb23b92c4f5c7": {
+      "ReferenceText": "Source Infusions:",
+      "TranslatedText": "Насыщения истоком:"
     },
     "h37cf1748g9dafg4d2ag9744g00e75e764ee5": {
       "ReferenceText": "+%s%% Weapon %s Damage",
