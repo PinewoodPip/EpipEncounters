@@ -100,7 +100,7 @@ GameState = {
     },
 
     USE_LEGACY_EVENTS = false,
-    Events = {        
+    Events = {
         GamePaused = {}, ---@type Event<GameStateLib_Event_GamePaused>
         GameUnpaused = {}, ---@type Event<GameStateLib_Event_GameUnpaused>
         StateChanged = {}, ---@type Event<GameStateLib_Event_StateChanged>        

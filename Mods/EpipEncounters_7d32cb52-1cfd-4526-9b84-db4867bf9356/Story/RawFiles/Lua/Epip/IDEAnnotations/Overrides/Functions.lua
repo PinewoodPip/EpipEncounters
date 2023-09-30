@@ -22,5 +22,13 @@ local functions = {
             },
         },
     },
+    ["Ext_L10N"] = {
+        ["GetTranslatedStringFromKey"] = {
+            ReturnValues = {
+                {Type = "string"},
+                {Type = "TranslatedStringHandle?"},
+            },
+        },
+    },
 }
 return functions

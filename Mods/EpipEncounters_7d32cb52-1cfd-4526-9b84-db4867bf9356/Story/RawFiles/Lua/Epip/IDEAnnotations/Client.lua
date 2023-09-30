@@ -459,6 +459,11 @@ local function GetFunctionData(module, type, methodName)
                     Type = returnType or returnValue,
                 }
             end
+        elseif funcOverrides.ReturnValues then
+            data.ReturnValues = {}
+            for i,returnValue in ipairs(funcOverrides.ReturnValues) do
+                data.ReturnValues[i] = returnValue
+            end
         end
     end
 
