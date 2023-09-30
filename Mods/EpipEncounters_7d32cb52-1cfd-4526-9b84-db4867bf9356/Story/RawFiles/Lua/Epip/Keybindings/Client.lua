@@ -15,7 +15,7 @@ local keybinds = {
     {Name = "Copy Position", ID = "EpipEncounters_Debug_CopyPosition", DeveloperOnly = true, DefaultInput1 = {Keys = {"lshift", "t"}}},
 
     {Name = "Log RootTemplate", ID = "EpipEncounters_Debug_LogRootTemplate", DeveloperOnly = true},
-    {Name = "Open Cheats", ID = "EpipEncounters_DebugCheats_OpenUI", DeveloperOnly = true, DefaultInput1 = {Keys = {"g"}}},
+    -- {Name = "Open Cheats", ID = "EpipEncounters_DebugCheats_OpenUI", DeveloperOnly = true, DefaultInput1 = {Keys = {"g"}}}, -- Removed until the feature is more finished.
 
     {Name = "Open Quick Find", ID = "EpipEncounters_QuickFind", DefaultInput1 = {Keys = {"lctrl", "f"}}},
 
