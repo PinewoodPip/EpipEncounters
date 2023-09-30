@@ -5,20 +5,6 @@
 ---@operator call:Vector Equivalent to Vector.Create()
 Vector = {}
 Epip.InitializeLibrary("Vector", Vector)
-setmetatable(Vector, {
-    __index = function(self, key)
-        if key == "zero2" then
-            return Vector.Create(0, 0)
-        elseif key == "zero3" then
-            return Vector.Create(0, 0, 0)
-        else
-            return getmetatable(self)[key]
-        end
-    end,
-    __call = function(...) -- Shorthand for creating vectors.
-        return Vector.Create(...)
-    end,
-})
 
 ---------------------------------------------
 -- VECTOR TABLE
@@ -205,3 +191,11 @@ function Vector.GetLength(vector)
 
     return length
 end
+
+---------------------------------------------
+-- SETUP
+---------------------------------------------
+
+-- TODO make these be created on __index again
+Vector.zero2 = Vector.Create(0, 0)
+Vector.zero3 = Vector.Create(0, 0, 0)

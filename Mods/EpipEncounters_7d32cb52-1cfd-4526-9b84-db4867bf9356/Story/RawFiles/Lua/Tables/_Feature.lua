@@ -122,7 +122,7 @@ end
 function Feature:IsEnabled()
     local isEnabled = not next(self._DisableRequests)
 
-    if self.SupportedGameStates ~= Feature._GetAllSupportedGameStatesBitfield() then
+    if isEnabled and self.SupportedGameStates ~= Feature._GetAllSupportedGameStatesBitfield() then
         local featureStates = self.SupportedGameStates
         local STATES = Feature.GAME_STATES
 
@@ -142,14 +142,6 @@ function Feature:IsEnabled()
 
     return isEnabled
 end
-
----Invoked on SessionLoaded if the feature is not disabled.
----Override to run initialization routines.
----@protected
-function Feature:__Setup() end
-
----Invoked on a small delay after SessionLoaded if Epip.IsDeveloperMode(true) is true and the feature is being debugged.
-function Feature:__Test() end
 
 ---Requests the feature to be enabled or disabled.
 ---Features are enabled by default, and stay disabled so long

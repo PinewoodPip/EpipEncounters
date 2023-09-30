@@ -224,23 +224,31 @@ end
 
 if Ext.IsClient() then
     ---Initializes a UI table.
-    ---@param type integer
+    ---@param type integer?
     ---@param id string
     ---@param ui UI Will be initialized.
     function Epip.InitializeUI(type, id, ui)
-        Epip.InitializeFeature("EpipEncounters", id, ui)
-        setmetatable(ui, {__index = Client.UI._BaseUITable})
-
-        ui.UITypeID = type
-        ui.TypeID = type
-
-        if ui.INPUT_DEVICE == "Controller" and not Client.IsUsingController() then
-            ui:SetEnabled("WrongInputDevice", false)
-        elseif ui.INPUT_DEVICE == "KeyboardMouse" and Client.IsUsingController() then
-            ui:SetEnabled("WrongInputDevice", false)
-        end
+        local instance = Client.UI._BaseUITable.Create(id, type, ui)
 
         Client.UI[id] = ui
+
+        -- TODO fix code duplication; and some of these aspects UIs never should've had
+        xpcall(function ()
+            instance._Tests = {}
+            instance.MODULE_ID = id
+
+            instance.NAME = id
+            instance.FILEPATH_OVERRIDES = instance.FILEPATH_OVERRIDES or {}
+
+            -- Add filepath overrides.
+            for old,new in pairs(instance.FILEPATH_OVERRIDES) do
+                Ext.IO.AddPathOverride(old, new)
+            end
+
+            instance._initialized = true
+        end, function (msg)
+            Ext.Utils.PrintError(msg)
+        end)
 
         local path = ui:GetPath()
         if path then -- Not all UIs have this pre-set, and the UI might not exist at this time.

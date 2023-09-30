@@ -5,10 +5,10 @@
 
 ---@alias LuaFlashCompatibleType string|number|integer
 
----@class UI : Feature
+---@class UI : Library
 ---@field UITypeID integer? Use only for built-in UIs.
 ---@field PATH string? Path to the SWF. Use only for custom UIs.
----@field INPUT_DEVICE UI_InputDevice
+---@field INPUT_DEVICE UI_InputDevice Deprecated field.
 ---@field UI_FLAGS table<string, UIObjectFlags> Flags for UIObject.
 local BaseUI = {
     UI = nil, -- Deprecated
@@ -47,7 +47,24 @@ local BaseUI = {
     },
 } 
 Client.UI._BaseUITable = BaseUI
-OOP.RegisterClass("UI", BaseUI, {"Feature"})
+OOP.RegisterClass("UI", BaseUI, {"Library"})
+
+---------------------------------------------
+-- METHODS
+---------------------------------------------
+
+---Creates a UI table.
+---@param id string Arbitrary string identifier for the library.
+---@param typeID integer? Primary type ID.
+---@param tbl table
+---@return UI
+function BaseUI.Create(id, typeID, tbl)
+    tbl = OOP.GetClass("Library").Create("EpipEncounters", id, tbl) -- TODO allow overwriting modtable?
+    local instance = BaseUI:__Create(tbl) ---@cast instance UI
+    instance.UITypeID = typeID
+    instance.TypeID = typeID -- Legacy
+    return instance
+end
 
 ---Returns the UIObject for this UI.
 ---Note that some UIs are destroyed after use (ex. OptionsSettings)

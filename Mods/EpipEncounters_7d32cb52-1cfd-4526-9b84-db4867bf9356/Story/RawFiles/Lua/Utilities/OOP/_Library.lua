@@ -136,6 +136,24 @@ function Library.Create(modTable, id, data)
         data:RegisterUserVariable(userVarID, userVar)
     end
 
+    -- Run Setup() and Test() methods when session loads
+    Ext.Events.SessionLoaded:Subscribe(function (_)
+        local success, msg = pcall(function ()
+            ---@diagnostic disable-next-line: invisible
+            lib:__Setup()
+
+            if lib:IsDebug() and Epip.IsDeveloperMode(true) then
+                Timer.Start(2, function (_)
+                    ---@diagnostic disable-next-line: invisible
+                    lib:__Test()
+                end)
+            end
+        end)
+        if not success then
+            Ext.Utils.PrintError("Error during Library SessionLoaded:", msg)
+        end
+    end, {Priority = -9999})
+
     return lib
 end
 
@@ -144,6 +162,15 @@ end
 function Library:GetPackagePrefix()
     return string.format("%s_%s_", self.__ModTable, self.__name)
 end
+
+---Invoked on SessionLoaded if the feature is not disabled.
+---Override to run initialization routines.
+---@virtual
+function Library:__Setup() end
+
+---Invoked on a small delay after SessionLoaded if Epip.IsDeveloperMode(true) is true and the feature is being debugged.
+---@virtual
+function Library:__Test() end
 
 ---------------------------------------------
 -- USERVARS
