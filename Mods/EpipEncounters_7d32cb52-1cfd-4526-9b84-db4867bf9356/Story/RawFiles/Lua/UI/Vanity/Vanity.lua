@@ -300,7 +300,6 @@ local Vanity = {
     ENTRY_WIDTH = 250,
     HEADER_ENTRY_WIDTH = 240,
     ID = "PIP_Vanity",
-    INPUT_DEVICE = "KeyboardMouse",
     PATH = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/Vanity.swf",
     CURRENT_SAVE_VERSION = 4,
     SAVE_FILENAME = "EPIP_VanityOutfits.json",
@@ -1279,6 +1278,7 @@ Ext.Events.SessionLoaded:Subscribe(function()
 end)
 
 function Vanity.Init()
+    if Client.IsUsingController() then return end
     Ext.UI.Create(Vanity.ID, Vanity.PATH, 100)
 
     local ui = Vanity:GetUI()
