@@ -77,6 +77,11 @@ QuickInventory.Hooks.IsItemVisible:Subscribe(function (ev)
             end
         end
 
+        -- Some books in Origins (ex. Meistr's note) have no book tags; we check the use action as fallback.
+        if (subcategory == "Any" or subcategory == "Books") and Item.HasUseAction(ev.Item, "Book") then
+            visible = true
+        end
+
         ::EndTagChecks::
 
         visible = visible and not Item.IsSkillbook(ev.Item) -- Exclude skillbooks
