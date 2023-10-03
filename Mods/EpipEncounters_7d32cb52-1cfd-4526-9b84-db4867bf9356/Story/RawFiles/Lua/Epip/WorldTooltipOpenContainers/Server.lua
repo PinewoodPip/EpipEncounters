@@ -1,7 +1,10 @@
 
+local V = Vector.Create
+
 ---@class Feature_WorldTooltipOpenContainers
 local OpenContainers = Epip.GetFeature("WorldTooltipOpenContainers")
 OpenContainers.EVENTID_TASK_FINISHED = "Features.WorldTooltipOpenContainers.EventID.TaskFinished"
+OpenContainers.CHARACTER_INTERACTION_RANGE = 3 -- Max range for characters to interact with containers, in meters. We currently do not have a way to calculate this accurately(?)
 
 ---------------------------------------------
 -- METHODS
@@ -27,6 +30,7 @@ end
 Net.RegisterListener("EPIPENCOUNTERS_Feature_WorldTooltipOpenContainers_OpenContainer", function (payload)
     local char = Character.Get(payload.CharacterNetID)
     local item = Item.Get(payload.ItemNetID)
+    local itemHandle = item.Handle
 
     -- Only queue the task if no others are running.
     -- Otherwise we cannot tell precisely whether ours ran immediately or got queued - would require a per-tick check.
@@ -41,9 +45,12 @@ Net.RegisterListener("EPIPENCOUNTERS_Feature_WorldTooltipOpenContainers_OpenCont
         Timer.StartTickTimer(3, function ()
             char = Character.Get(characterHandle)
             local movement = char.MovementMachine.Layers[2]
+            item = Item.Get(itemHandle)
+            local distanceToTarget = Vector.GetLength(V(item.WorldPos) - V(char.WorldPos))
 
             -- If pathing failed, there will be no movement state.
-            if not movement then
+            -- We have to also keep in mind that there will be no movement if the character was already close enough to the container.
+            if not movement and distanceToTarget > OpenContainers.CHARACTER_INTERACTION_RANGE then
                 OpenContainers.CancelTask(char, true)
             end
         end)
