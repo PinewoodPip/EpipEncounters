@@ -29,6 +29,11 @@ local DRP = {
             Text = "%s - Lvl %d",
             ContextDescription = "Rich Presence message. Params are region name and  character level.",
         },
+        Label_UnknownSubRegion = {
+            Handle = "h8dbe0f11g045dg4abbg9c90ge35a40efe4e9",
+            Text = "Unknown Region",
+            ContextDescription = "Displayed in overhaul mode if the place the character is at has no name",
+        },
         Setting_Mode_Name = {
             Handle = "hdb9a40e2g4713g40e0g8885gd6e1b75512c3",
             Text = "Discord Rich Presence",

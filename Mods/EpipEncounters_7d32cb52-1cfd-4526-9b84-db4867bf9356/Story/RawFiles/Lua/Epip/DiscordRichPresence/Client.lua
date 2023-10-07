@@ -142,6 +142,9 @@ DRP.Hooks.GetPresence:Subscribe(function (ev)
         local char = Client.GetCharacter()
         if char then
             local regionName = Text.GetTranslatedString(char.PlayerData.Region)
+            if regionName == "" then -- Happens in ex. Tomb of Lucian. TODO fallback to level name?
+                regionName = TSK.Label_UnknownSubRegion:GetString()
+            end
             local level = char.Stats.Level -- Initially we considered using max of party level, but it was deemed unnecessary.
 
             ev.Line1 = TSK.Label_PartyLevel:Format(regionName, level)
