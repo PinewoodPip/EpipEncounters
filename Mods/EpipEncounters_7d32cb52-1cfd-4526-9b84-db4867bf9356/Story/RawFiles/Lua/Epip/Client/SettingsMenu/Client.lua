@@ -85,6 +85,7 @@ Epip.RegisterFeature("SettingsMenu", Menu)
 ---@field Visible boolean? Defaults to true.
 ---@field DeveloperOnly boolean? Defaults to false.
 ---@field RequiredMods GUID[]? If present, all mods will need to be loaded for the setting to be visible.
+---@field RequiresPipFork boolean? If `true`, the setting will only be visible if the Pip fork of the extender is installed. Defaults to `false`.
 
 ---@class Feature_SettingsMenu_Setting_Set : SettingsLib_Setting_Set
 ---@field ElementsAreSkills boolean? If `true`, elements will show skill tooltips.
@@ -760,6 +761,7 @@ Menu.Hooks.GetTabEntries:Subscribe(function (ev)
                 local canRender = setting.Visible or setting.Visible == nil
     
                 canRender = canRender and (not setting.DeveloperOnly or Epip.IsDeveloperMode())
+                canRender = canRender and (not setting.RequiresPipFork or Epip.IsPipFork())
 
                 if canRender then
                     table.insert(filteredEntries, entry)

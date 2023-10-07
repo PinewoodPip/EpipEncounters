@@ -143,6 +143,11 @@ function Epip.IsDeveloperMode(requirePipPoem)
     return devMode
 end
 
+---Returns whether the game is using Pip's Script Extender fork.
+function Epip.IsPipFork()
+    return Ext.IsPipFork == true
+end
+
 ---Silences logging from all features of a mod.
 ---@param modTable modtable? Defaults to `"EpipEncounters"`
 function Epip.ShutUp(modTable)
