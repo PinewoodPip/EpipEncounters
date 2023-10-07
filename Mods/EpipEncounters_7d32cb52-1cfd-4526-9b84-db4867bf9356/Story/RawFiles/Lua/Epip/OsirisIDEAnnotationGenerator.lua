@@ -68,7 +68,7 @@ function _Parameter.Create(type, name)
 end
 
 function _Parameter.__tostring(self)
-    local luaType = Generator.GetLuaTypeForOsirisType(self.OsirisType)
+    local luaType = Generator.GetLuaTypeForOsirisType(self)
     local lowercasedName = Text.Uncapitalize(self.Name)
 
     return string.format("---@param %s %s", lowercasedName, luaType)
@@ -127,7 +127,7 @@ function _Annotation.__tostring(self)
     -- Add return values
     for _,returnType in ipairs(self.ReturnTypes) do
         table.insert(returnNames, returnType.Name)
-        table.insert(returnTypes, Generator.GetLuaTypeForOsirisType(returnType.OsirisType, true)) -- Return types cannot be objects (ex. EsvCharacter).
+        table.insert(returnTypes, Generator.GetLuaTypeForOsirisType(returnType, true)) -- Return types cannot be objects (ex. EsvCharacter).
     end
 
     if self.ReturnTypes[1] then
@@ -146,24 +146,30 @@ end
 ---------------------------------------------
 
 ---Returns the lua annotation type for an Osiris type.
----@param typeName string
+---@param param Feature_OsirisIDEAnnotationGenerator_Annotation_Parameter?
 ---@param rawTypesOnly boolean? If `true`, only primitive types will be used. Defaults to `false`.
 ---@return string
-function Generator.GetLuaTypeForOsirisType(typeName, rawTypesOnly)
+function Generator.GetLuaTypeForOsirisType(param, rawTypesOnly)
     local useEpip = Generator._CurrentRequest.UseEpipOsirisLibrary
-    local names = Generator.OSIRIS_TYPE_TO_LUA_TYPE[typeName]
+    local names = Generator.OSIRIS_TYPE_TO_LUA_TYPE[param.OsirisType]
     local name ---@type string
-    if type(names) == "table" then
-        name = (useEpip and not rawTypesOnly) and names.Epip or names.Extender
+
+    -- Convert "Bool" params to integer|boolean union.
+    if param and param.Name == "Bool" and param.OsirisType == "INTEGER" then
+        name = "integer|boolean"
     else
-        name = names
+        if type(names) == "table" then
+            name = (useEpip and not rawTypesOnly) and names.Epip or names.Extender
+        else
+            name = names
+        end
     end
     return name
 end
 
 ---Generates event annotations.
 ---@param request Features.OsirisIDEAnnotationGenerator.Request
-function Generator.GenerateEventAnnotations(request)
+function Generator.GenerateAnnotations(request)
     request.HeaderPath = request.HeaderPath or Generator.DEFAULT_HEADER_PATH
     request.OutputPath = request.OutputPath or Generator.DEFAULT_OUTPUT_PATH
     if request.UseEpipOsirisLibrary == nil then request.UseEpipOsirisLibrary = true end
@@ -171,7 +177,7 @@ function Generator.GenerateEventAnnotations(request)
     Generator._CurrentRequest = request
 
     local file = IO.LoadFile(request.HeaderPath, "data", true)
-    if not file then Generator:Error("GenerateEventAnnotations", "File not found") end
+    if not file then Generator:Error("GenerateAnnotations", "File not found") end
 
     local lines = Text.Split(file, "\n")
     local annotations = {}
@@ -193,6 +199,7 @@ function Generator.GenerateEventAnnotations(request)
                 if isReturn then
                     table.insert(returnTypes, paramObject)
                 else
+
                     table.insert(paramObjects, paramObject)
                 end
             end
@@ -223,6 +230,6 @@ Ext.RegisterConsoleCommand("osirisannotations", function (_, outputPath, include
         HeaderPath = headerPath,
         UseEpipOsirisLibrary = useEpip ~= "false",
     }
-    Generator.GenerateEventAnnotations(request)
+    Generator.GenerateAnnotations(request)
     print("Generated annotations")
 end)
