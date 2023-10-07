@@ -270,6 +270,8 @@ local tabs = {
             "Notification_ItemReceival",
             "Notification_StatSharing",
             {Type = "Setting", Module = "EpipEncounters_DialogueTweaks", ID = "Enabled"},
+            {Type = "Setting", Module = "EpipEncounters_DialogueTweaks", ID = "AutoListen"},
+            {Type = "Setting", Module = "EpipEncounters_DialogueTweaks", ID = "AutoListenRangeLimit"},
         }
     },
     ["Epip_Tooltips"] = {
