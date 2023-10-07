@@ -56,12 +56,7 @@ MultiSelect.Events.MultiDragEnded:Subscribe(function (ev)
                                 end
                             end
 
-                            -- Needs M1 held beforehand, or the client will stop the drag immediately
-                            Client.Input.Inject("Mouse", "left2", "Pressed")
-                            local itemFlashHandle = Ext.UI.HandleToDouble(selection.ItemHandle)
-                            PartyInventory:ExternalInterfaceCall("startDragging", itemFlashHandle)
-                            PartyInventory:ExternalInterfaceCall("stopDragging", inv.id, nextSlotIndex)
-                            Client.Input.Inject("Mouse", "left2", "Released")
+                            MultiSelect._MoveItemToPartyInventorySlot(selection.ItemHandle, inv.id, nextSlotIndex)
 
                             nextSlotIndex = nextSlotIndex + 1
                         end

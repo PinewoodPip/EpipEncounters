@@ -31,6 +31,7 @@ local ContextMenu = {
         SEND_TO_CHARACTER = 18,
         DROP = 20,
         EXAMINE = 22,
+        ADD_TO_WARES = 50,
     },
 
     ---------------------------------------------

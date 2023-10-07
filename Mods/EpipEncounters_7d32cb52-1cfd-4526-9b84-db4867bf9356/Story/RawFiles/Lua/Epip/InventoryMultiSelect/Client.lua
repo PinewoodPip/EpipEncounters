@@ -203,12 +203,12 @@ end
 
 ---Returns the inventory cell that contains an item.
 ---@param item EclItem
----@return FlashMovieClip?, integer? -- Cell, cell index (1-based). `nil` if the item was not found within the inventory.
+---@return FlashMovieClip?, integer?, integer? -- Cell, cell index (1-based), inventory ID. `nil` if the item was not found within the inventory.
 function MultiSelect._GetItemCell(item)
     local inventories = MultiSelect._GetInventoryMovieClips()
     local itemFlashHandle = Ext.UI.HandleToDouble(item.Handle)
     local owner = Character.Get(item:GetOwnerCharacter())
-    local cell, cellIndex = nil, nil
+    local cell, cellIndex, inventoryID = nil, nil, nil
     for _,inv in ipairs(inventories) do
         local handle = Ext.UI.DoubleToHandle(inv.id)
         if handle == owner.Handle then
@@ -217,13 +217,14 @@ function MultiSelect._GetItemCell(item)
                 if slot._itemHandle == itemFlashHandle then
                     cell = slot
                     cellIndex = i + 1 -- 1-based.
+                    inventoryID = inv.id
                     goto CellFound
                 end
             end
         end
     end
     ::CellFound::
-    return cell, cellIndex
+    return cell, cellIndex, inventoryID
 end
 
 ---Returns the character whose inventory header is being hovered over.
@@ -242,6 +243,23 @@ function MultiSelect._GetSelectedInventoryHeader()
     end
 
     return char
+end
+
+---Moves an item within the party inventory.
+---@param item EclItem|ItemHandle
+---@param inventoryID integer
+---@param slotIndex integer
+function MultiSelect._MoveItemToPartyInventorySlot(item, inventoryID, slotIndex)
+    local itemHandle = item
+    if GetExtType(item) == "ecl::Item" then
+        itemHandle = item.Handle
+    end
+    -- Needs M1 held beforehand, or the client will stop the drag immediately
+    Client.Input.Inject("Mouse", "left2", "Pressed")
+    local itemFlashHandle = Ext.UI.HandleToDouble(itemHandle)
+    PartyInventory:ExternalInterfaceCall("startDragging", itemFlashHandle)
+    PartyInventory:ExternalInterfaceCall("stopDragging", inventoryID, slotIndex)
+    Client.Input.Inject("Mouse", "left2", "Released")
 end
 
 ---------------------------------------------
