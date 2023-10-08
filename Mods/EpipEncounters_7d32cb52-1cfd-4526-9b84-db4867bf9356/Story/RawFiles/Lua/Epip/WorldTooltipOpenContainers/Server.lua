@@ -27,10 +27,15 @@ end
 ---------------------------------------------
 
 -- Listen for requests to open containers.
-Net.RegisterListener("EPIPENCOUNTERS_Feature_WorldTooltipOpenContainers_OpenContainer", function (payload)
+Net.RegisterListener(OpenContainers.NETMSG_OPEN_CONTAINER, function (payload)
     local char = Character.Get(payload.CharacterNetID)
     local item = Item.Get(payload.ItemNetID)
     local itemHandle = item.Handle
+
+    -- Cancel previous task if there was any, mimicking vanilla behaviour of clicking on the items themselves.
+    if OpenContainers.IsTaskRunning(char) then
+        OpenContainers.CancelTask(char)
+    end
 
     -- Only queue the task if no others are running.
     -- Otherwise we cannot tell precisely whether ours ran immediately or got queued - would require a per-tick check.

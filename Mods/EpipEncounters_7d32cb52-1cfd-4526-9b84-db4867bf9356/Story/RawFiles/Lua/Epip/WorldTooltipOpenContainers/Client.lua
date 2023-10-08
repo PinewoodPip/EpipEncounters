@@ -26,7 +26,7 @@ WorldTooltip.Events.TooltipClicked:Subscribe(function (ev)
     if ev.Item and Item.IsContainer(ev.Item) and OpenContainers:IsEnabled() then
         OpenContainers:DebugLog("Attempting to use", ev.Item.DisplayName)
 
-        Net.PostToServer("EPIPENCOUNTERS_Feature_WorldTooltipOpenContainers_OpenContainer", {
+        Net.PostToServer(OpenContainers.NETMSG_OPEN_CONTAINER, {
             CharacterNetID = Client.GetCharacter().NetID,
             ItemNetID = ev.Item.NetID,
         })
