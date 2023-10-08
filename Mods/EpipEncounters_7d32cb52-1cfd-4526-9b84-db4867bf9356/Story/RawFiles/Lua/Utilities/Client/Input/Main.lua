@@ -1,5 +1,5 @@
 
----@class InputLib : Feature
+---@class InputLib : Library
 local Input = {
 
     HeldKeys = {},
@@ -263,78 +263,6 @@ local Input = {
         ["middle"] = {Name = "Middle Click", ShortName = "M3"},
         ["lefttrigger"] = {Name = "Left Trigger", ShortName = "LT"},
         ["item7"] = {Name = "Item 7", ShortName = "I7"},
-    },
-
-    NORBYTE_ENUM_NAMES = {
-        NUM0 = "NUM_0",
-        NUM1 = "NUM_1",
-        RIGHT2 = "RIGHT_2",
-        NUM2 = "NUM_2",
-        NUM3 = "NUM_3",
-        NUM4 = "NUM_4",
-        NUM5 = "NUM_5",
-        NUM6 = "NUM_6",
-        NUM7 = "NUM_7",
-        NUM8 = "NUM_8",
-        NUM9 = "NUM_9",
-        KP_DIVIDE = "KEYPAD_DIVIDE",
-        KP_MULTIPLY = "KEYPAD_MULTIPLY",
-        KP_MINUS = "KEYPAD_MINUS",
-        KP_PLUS = "KEYPAD_PLUS",
-        KP_ENTER = "KEYPAD_ENTER",
-        KP_1 = "KEYPAD_1",
-        KP_2 = "KEYPAD_2",
-        KP_3 = "KEYPAD_3",
-        KP_4 = "KEYPAD_4",
-        KP_5 = "KEYPAD_5",
-        KP_6 = "KEYPAD_6",
-        KP_7 = "KEYPAD_7",
-        KP_8 = "KEYPAD_8",
-        KP_9 = "KEYPAD_9",
-        KP_10 = "KEYPAD_0",
-        KP_PERIOD = "KEYPAD_PERIOD",
-        LCTRL = "LEFT_CTRL",
-        LALT = "LEFT_ALT",
-        LSHIFT = "LEFT_SHIT",
-        LGUI = "LEFT_GUI",
-        RCTRL = "RIGHT_CTRL",
-        RSHIFT = "RIGHT_SHIFT",
-        RALT = "RIGHT_ALT",
-        RGUI = "RIGHT_GUI",
-        LEFT2 = "LEFT_2",
-        MOTION_XNEG = "MOTION_X_NEGATIVE",
-        MOTION_YPOS = "MOTION_Y_POSITIVE",
-        MOTION_XPOS = "MOTION_X_POSITIVE",
-        MOTION_YNEG = "MOTION_Y_NEGATIVE",
-        WHEEL_XPOS = "WHEEL_X_POSITIVE",
-        WHEEL_XNEG = "WHEEL_X_NEGATIVE",
-        WHEEL_YPOS = "WHEEL_Y_POSITIVE",
-        WHEEL_YNEG = "WHEEL_Y_NEGATIVE",
-        LEFTSTICK_XNEG = "LEFT_STICK_X_NEGATIVE",
-        LEFTSTICK_YPOS = "LEFT_STICK_Y_POSITIVE",
-        LEFTSTICK_XPOS = "LEFT_STICK_X_POSITIVE",
-        LEFTSTICK_YNEG = "LEFT_STICK_Y_NEGATIVE",
-        LEFTRIGGER = "LEFT_TRIGGER",
-        RIGHTTRIGGER = "RIGHT_TRIGGER",
-        LEFTSTICK = "LEFT_STICK",
-        RIGHTSTICK = "RIGHT_STICK",
-        LEFTSHOULDER = "LEFT_SHOULDER",
-        RIGHTSHOULDER = "RIGHT_SHOULDER",
-        LEFTBRACKET = "LEFT_BRACKET",
-        RIGHTBRACKET = "RIGHT_BRACKET",
-        PAGEUP = "PAGE_UP",
-        PAGEDOWN = "PAGE_DOWN",
-        ITEM1 = "ITEM_1",
-        ITEM2 = "ITEM_2",
-        ITEM3 = "ITEM_3",
-        ITEM4 = "ITEM_4",
-        ITEM5 = "ITEM_5",
-        ITEM6 = "ITEM_6",
-        ITEM7 = "ITEM_7",
-        ITEM8 = "ITEM_8",
-        ITEM9 = "ITEM_9",
-        ITEM10 = "ITEM_10",
-        ITEM11 = "ITEM_11",
     },
 
     RAW_INPUT_EVENTS_ENUM = {}, ---@type table<integer, string> Automatically generated.
@@ -609,7 +537,6 @@ local Input = {
 }
 Epip.InitializeLibrary("Input", Input)
 Client.Input = Input
--- Input:Debug()
 
 -- Generate enum table.
 for name,index in pairs(Input.RAW_INPUT_EVENTS) do
@@ -647,8 +574,10 @@ end
 ---@class InputLib_Binding
 local _Binding = {}
 
+---@abstract
 ---@param useShortNames boolean? Defaults to false.
 ---@return string
+---@diagnostic disable-next-line: unused-local
 function _Binding:Stringify(useShortNames)
     return ""
 end
@@ -844,7 +773,7 @@ end
 ---@return InputLib_InputEventDefinition
 function Input.GetInputEventDefinition(id)
     if type(id) == "string" then
-        id = Input.INPUT_EVENT_STRING_ID_MAP[id] 
+        id = Input.INPUT_EVENT_STRING_ID_MAP[id]
     end
 
     return Input.INPUT_EVENTS[id]
@@ -897,16 +826,7 @@ end
 ---@param name InputRawType
 ---@return integer?
 function Input.GetRawInputNumericID(name)
-    local id
-
-    name = name:upper()
-    if Input.NORBYTE_ENUM_NAMES[name] then
-        name = Input.NORBYTE_ENUM_NAMES[name]
-    end
-
-    id = Input.RAW_INPUT_EVENTS[name]
-
-    return id
+    return Ext.Enums.InputRawType[name].Value
 end
 
 ---Returns a list of pressed *keyboard* keys.
@@ -1005,7 +925,7 @@ Ext.Events.RawInput:Subscribe(function(e)
     local inputEventData = e.Input
     local id = tostring(inputEventData.Input.InputId)
     local deviceType = tostring(inputEventData.Input.DeviceId)
-    if id == "" then return nil end -- Happens for unsupported keys, ex. media keys.
+    if id == "" then return end -- Happens for unsupported keys, ex. media keys.
 
     -- Update pressed state tracking
     if inputEventData.Value.State == "Pressed" then
@@ -1075,7 +995,7 @@ Ext.Events.RawInput:Subscribe(function(e)
 end)
 
 -- Fire MouseMoved events
-Ext.Events.Tick:Subscribe(function (e)
+Ext.Events.Tick:Subscribe(function (_)
     if Input.mouseState and Input.mouseState.Moving then
         Input.Events.MouseMoved:Throw({
             Vector = Input.mouseState.MoveVector,
