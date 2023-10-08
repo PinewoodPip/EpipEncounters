@@ -1,7 +1,8 @@
 
 ---@class WorldTooltipUI : UI
 local WorldTooltip = {
-    _ignoreNextClick = false,
+    _IgnoreNextClick = false,
+    _LastTooltipClickWasPrevented = false,
 
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
@@ -68,7 +69,14 @@ end)
 
 -- Listen for entries being clicked.
 WorldTooltip:RegisterCallListener("tooltipClicked", function (ev, flashHandle)
-    if WorldTooltip._ignoreNextClick then WorldTooltip._ignoreNextClick = false return end
+    if WorldTooltip._IgnoreNextClick then -- This UI has an issue with the click events being fired twice due to quirks with Iggy mouse up events. We track this to avoid issuing events twice.
+        WorldTooltip._IgnoreNextClick = false
+        if WorldTooltip._LastTooltipClickWasPrevented then -- If the first event was prevented, prevent the repeated one as well.
+            WorldTooltip._LastTooltipClickWasPrevented = false
+            ev:PreventAction()
+        end
+        return
+    end
 
     local entity = Ext.Entity.GetGameObject(Ext.UI.DoubleToHandle(flashHandle))
     local eventFieldName
@@ -91,6 +99,7 @@ WorldTooltip:RegisterCallListener("tooltipClicked", function (ev, flashHandle)
         ev:PreventAction()
     end
 
-    -- This UI has an issue with the click events being fired twice.
-    WorldTooltip._ignoreNextClick = true
+    -- Track events being fired twice.
+    WorldTooltip._IgnoreNextClick = true
+    WorldTooltip._LastTooltipClickWasPrevented = event.Prevented
 end)
