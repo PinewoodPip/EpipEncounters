@@ -1,7 +1,6 @@
 
 function CloneItemWithDeltaMods(item, deltamods)
-    local constructor = Ext.CreateItemConstructor(item)
-    ---@type ItemDefinition
+    local constructor = Ext.CreateItemConstructor(item) ---@type EocItemDefinition[]
     local props = constructor[1]
     -- props.GMFolding = false
     Ext.Print(props.GenerationStatsId)

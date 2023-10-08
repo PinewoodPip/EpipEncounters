@@ -2,7 +2,7 @@
 -- Copied from Game.Math, with noRandomization param fixed
 
 --- @param skill StatEntrySkillData
---- @param attacker CDivinityStatsCharacter
+--- @param attacker CDivinityStats_Character
 --- @param isFromItem boolean
 --- @param stealthed boolean
 --- @param attackerPos number[]
@@ -11,6 +11,7 @@
 --- @param noRandomization boolean
 --- @param mainWeapon CDivinityStatsItem Optional mainhand weapon to use in place of the attacker's.
 --- @param offHandWeapon CDivinityStatsItem Optional offhand weapon to use in place of the attacker's.
+---@diagnostic disable-next-line: unused-local
 function GetSkillDamage(skill, attacker, isFromItem, stealthed, attackerPos, targetPos, level, noRandomization, mainWeapon, offHandWeapon)
     if attacker ~= nil and level < 0 then
         level = attacker.Level

@@ -838,7 +838,7 @@ function Character._ThrowItemEquippedEvent(character, item)
         else
             equippedSlot = item.CurrentSlot
         end
-        
+
         Character.Events.ItemEquipped:Throw({
             Character = character,
             Item = item,

@@ -30,5 +30,12 @@ local functions = {
             },
         },
     },
+    ["EsvItem"] = {
+        ["SetDeltaMods"] = {
+            Params = {
+                {Name = "deltaMods", Type = "string[]"},
+            },
+        },
+    },
 }
 return functions

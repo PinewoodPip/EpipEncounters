@@ -896,7 +896,7 @@ local function OnContextMenu(ui, method, param3, handle)
 end
 
 Ext.Events.SessionLoaded:Subscribe(function()
-    if Client.IsUsingController() then return nil end
+    if Client.IsUsingController() then return end
 
     local vanillaUI = Ext.UI.GetByType(Ext.UI.TypeID.contextMenu.Object)
     

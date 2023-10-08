@@ -184,7 +184,7 @@ end
 -- INTERNAL METHODS - DO NOT CALL
 ---------------------------------------------
 
----@param UI UIObject
+---@param ui UIObject
 ---@return SecondaryStatBase[]
 function CharacterSheet.DecodeSecondaryStats(ui)
     local root = ui:GetRoot()

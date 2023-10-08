@@ -122,14 +122,13 @@ end
 
 ---Sends a message to a user.
 ---@generic T
----@param user UserId
+---@param user UserId|Character
 ---@param channel `T`
 ---@param message T?
----@param excludedChar GUID?
-function Net.PostToUser(user, channel, message, excludedChar)
-    if type(user) == "userdata" then user = user.ReservedUserID end
+function Net.PostToUser(user, channel, message)
+    if GetExtType(user) ~= nil then user = user.ReservedUserID end
 
-    Ext.Net.PostMessageToUser(user, channel, Utilities.Stringify(message), excludedChar)
+    Ext.Net.PostMessageToUser(user, channel, Utilities.Stringify(message))
 end
 
 ---Sends a message to the owner of char. Use if you suspect the char might be a summon.

@@ -8,6 +8,7 @@ DataStructures = {
 -- CLASSES
 ---------------------------------------------
 
+---@diagnostic disable-next-line: duplicate-doc-alias
 ---@alias DataStructures_DataStructureClassName "DataStructures_DefaultTable"|"DataStructures_Set"
 
 ---------------------------------------------
