@@ -30,10 +30,6 @@
 
 ---@alias iggyevent string -- In the format "IE EventName"
 
----@class Enum
----@field Label string
----@field Value string
-
 Mods = {}
 
 ---@alias EquipSlot "Helmet" | "Breast" | "Leggings" | "Weapon" | "Shield" | "Ring" | "Belt" | "Boots" | "Gloves" | "Amulet" | "Ring" | "Ring2" | "Horns" | "Overhead"

@@ -153,6 +153,11 @@ function Generator.Generate(filename)
     writer:AddLine("---@meta\n")
     writer:AddLine("---@class Ext\nExt = {}")
     writer:AddLine("Game = {}\n")
+    writer:AddLine("Ext.Enums = {}")
+    writer:AddLine(
+[[---Extender enum/bitfield class.
+---@class Enum<T> : {Label:T, Value:integer, EnumName:string, __Labels:T[], __Value:integer, __EnumName:string} 
+]])
 
     -- Write aliases
     Generator._WriteBasicAliases(writer)
@@ -332,7 +337,10 @@ function Generator._AnnotateEnum(writer, enum)
         table.insert(aliasAnnotations, string.format("---|\"%s\" # %s", alias.Name, alias.Index))
     end
 
-    writer:AddLine(string.format("---@alias %s string|integer\n%s\n", enum.TypeName, Text.Join(aliasAnnotations, "\n")))
+    writer:AddLine(string.format("---@alias %s string|integer\n%s", enum.TypeName, Text.Join(aliasAnnotations, "\n")))
+
+    writer:AddLine(string.format("Ext.Enums.%s = {} ---@type table<%s, Enum<%s>>", enum.TypeName, enum.TypeName, enum.TypeName))
+    writer:AddLine()
 end
 
 ---Annotates fields of a class.
