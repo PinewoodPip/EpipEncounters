@@ -6,7 +6,7 @@ local CommonStrings = Text.CommonStrings
 local DRP = Epip.GetFeature("Features.DiscordRichPresence")
 local TSK = DRP.TranslatedStrings
 
-DRP.UPDATE_DELAY = 120 -- In seconds.
+-- DRP.UPDATE_DELAY = 120 -- In seconds.
 
 DRP._SECOND_LINE_HANDLES = {
     DRP.TSKHANDLES.LONE_ADVENTURER,
@@ -157,7 +157,7 @@ DRP.Hooks.GetPresence:Subscribe(function (ev)
     end -- Do nothing for Vanilla mode; changes to TSKs are undone before this hook.
 end)
 
--- Update the presence when setting are changed.
+-- Update the presence when settings are changed.
 Settings.Events.SettingValueChanged:Subscribe(function (ev)
     if DRP.Settings[ev.Setting:GetID()] ~= nil and GameState.IsInSession() then
         DRP.UpdatePresence()
@@ -166,11 +166,12 @@ end)
 
 -- Update the presence regularly if it is in overhaul mode.
 -- AFAIK there is no event for characters changing subregions.
-GameState.Events.ClientReady:Subscribe(function (_)
-    local updateTimer = Timer.Start(DRP.UPDATE_DELAY, function (_)
-        if DRP:GetSettingValue(DRP.Settings.Mode) == DRP.MODES.OVERHAUL then
-            DRP:UpdatePresence()
-        end
-    end)
-    updateTimer:SetRepeatCount(-1)
-end)
+-- 12/10/23: disabled due to side-effects of closing UIs such as CharacterSheet.
+-- GameState.Events.ClientReady:Subscribe(function (_)
+--     local updateTimer = Timer.Start(DRP.UPDATE_DELAY, function (_)
+--         if DRP:GetSettingValue(DRP.Settings.Mode) == DRP.MODES.OVERHAUL then
+--             DRP:UpdatePresence()
+--         end
+--     end)
+--     updateTimer:SetRepeatCount(-1)
+-- end)
