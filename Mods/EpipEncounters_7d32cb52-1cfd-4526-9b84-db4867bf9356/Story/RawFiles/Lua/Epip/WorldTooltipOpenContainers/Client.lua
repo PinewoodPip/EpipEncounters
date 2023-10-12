@@ -53,7 +53,7 @@ Input.Events.KeyStateChanged:Subscribe(function (ev)
         end
     end
 end, {EnabledFunctor = function ()
-    return OpenContainers.IsTaskRunning(Client.GetCharacter())
+    return GameState.IsInRunningSession() and OpenContainers.IsTaskRunning(Client.GetCharacter())
 end})
 
 -- Listen for the task failing on the server.
