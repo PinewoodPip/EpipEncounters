@@ -80,6 +80,28 @@ local CharacterSheet = {
         TALENTS = 3,
         CUSTOM_STATS = 8,
     },
+    STAT_ICONS = {
+        VITALITY = 1,
+        ACTION_POINTS = 2,
+        SOURCE_POINTS = 3,
+        TENEBRIUM_RESISTANCE = 4, -- DOS1 leftover.
+        FIRE_RESISTANCE = 5,
+        WATER_RESISTANCE = 6,
+        EARTH_RESISTANCE = 7,
+        AIR_RESISTANCE = 8,
+        POISON_RESISTANCE = 9,
+        PHYSICAL_ARMOR = 10,
+        MAGIC_ARMOR = 11,
+        -- Frame 12 is empty (RemoveObject tag)
+        ACCURACY = 13,
+        DAMAGE = 14, -- 2 crossed swords.
+        DODGE = 15,
+        INITIATIVE = 16,
+        NEXT_LEVEL = 17,
+        MOVEMENT = 18,
+        EXPERIENCE = 19,
+    },
+
     FILEPATH_OVERRIDES = {
         ["Public/Game/GUI/characterSheet.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/characterSheet.swf",
     },
