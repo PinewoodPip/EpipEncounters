@@ -62,7 +62,7 @@ CharacterSheet.Hooks.UpdateSecondaryStats:Subscribe(function (ev)
             Label = physLabel,
             ValueLabel = physValueLabel,
             StatID = 24,
-            IconID = 21,
+            IconID = 21, -- From UI override.
             BoostValue = 20,
         }
 
@@ -73,7 +73,7 @@ CharacterSheet.Hooks.UpdateSecondaryStats:Subscribe(function (ev)
             Label = pierceLabel,
             ValueLabel = pierceValueLabel,
             StatID = 23,
-            IconID = 22,
+            IconID = 22, -- From UI override.
             BoostValue = 17,
         }
 

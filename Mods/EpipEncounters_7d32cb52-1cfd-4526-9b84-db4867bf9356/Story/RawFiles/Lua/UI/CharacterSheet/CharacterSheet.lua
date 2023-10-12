@@ -218,42 +218,49 @@ end, "After")
 -- Listen for array system updates.
 CharacterSheet:RegisterInvokeListener("updateArraySystem", function (ev)
     local char = CharacterSheet.GetCharacter()
-    local stats = CharacterSheet.DecodeSecondaryStats(ev.UI)
-    
-    local hook = CharacterSheet.Hooks.UpdateSecondaryStats:Throw({
-        Character = char,
-        Stats = stats,
-    })
-
-    CharacterSheet.EncodeSecondaryStats(ev.UI, hook.Stats)
+    local root = ev.UI:GetRoot()
 
     -- Primary stats
-    local root = ev.UI:GetRoot()
     local primaryStatsArray = root.primStat_array
     local primaryStats = Client.Flash.ParseArray(primaryStatsArray, CharacterSheet.ARRAY_ENTRY_TEMPLATES.PRIMARY_STAT)
 
-    local primaryStatsHook = CharacterSheet.Hooks.UpdatePrimaryStats:Throw({
-        Character = char,
-        Stats = primaryStats,
-    })
-    Client.Flash.EncodeArray(primaryStatsArray, CharacterSheet.ARRAY_ENTRY_TEMPLATES.PRIMARY_STAT, primaryStatsHook.Stats)
+    -- Only fire this hook if the engine is re-rendeing stats. It is possible for this array to be empty and the primary stats is cleared by engine and does not support replacing info on existing entries, thus firing this when there is no update can lead to unexpected behaviour if a script is adding a new stat through the hook.
+    if primaryStats[1] then
+        local primaryStatsHook = CharacterSheet.Hooks.UpdatePrimaryStats:Throw({
+            Character = char,
+            Stats = primaryStats,
+        })
+        Client.Flash.EncodeArray(primaryStatsArray, CharacterSheet.ARRAY_ENTRY_TEMPLATES.PRIMARY_STAT, primaryStatsHook.Stats)
+    end
+
+    local secondaryStats = CharacterSheet.DecodeSecondaryStats(ev.UI)
+    if secondaryStats[1] then -- Fired only when changes occur, same reasoning as with primary stats.
+        local hook = CharacterSheet.Hooks.UpdateSecondaryStats:Throw({
+            Character = char,
+            Stats = secondaryStats,
+        })
+        CharacterSheet.EncodeSecondaryStats(ev.UI, hook.Stats)
+    end
 
     -- Ability stats
     local abilityStatsArray = root.ability_array
     local abilityStats = Client.Flash.ParseArray(abilityStatsArray, CharacterSheet.ARRAY_ENTRY_TEMPLATES.ABILITY_STAT)
-
-    local abilityStatsHook = CharacterSheet.Hooks.UpdateAbilityStats:Throw({
-        Character = char,
-        Stats = abilityStats,
-    })
-    Client.Flash.EncodeArray(abilityStatsArray, CharacterSheet.ARRAY_ENTRY_TEMPLATES.ABILITY_STAT, abilityStatsHook.Stats)
+    if abilityStats[1] then -- Fired only when changes occur, same reasoning as with primary stats.
+        local abilityStatsHook = CharacterSheet.Hooks.UpdateAbilityStats:Throw({
+            Character = char,
+            Stats = abilityStats,
+        })
+        Client.Flash.EncodeArray(abilityStatsArray, CharacterSheet.ARRAY_ENTRY_TEMPLATES.ABILITY_STAT, abilityStatsHook.Stats)
+    end
 
     -- Talents
     local talentsArray = root.talent_array
     local talents = Client.Flash.ParseArray(talentsArray, CharacterSheet.ARRAY_ENTRY_TEMPLATES.TALENT)
-    local talentsHook = CharacterSheet.Hooks.UpdateTalents:Throw({
-        Character = char,
-        Stats = talents,
-    })
-    Client.Flash.EncodeArray(talentsArray, CharacterSheet.ARRAY_ENTRY_TEMPLATES.TALENT, talentsHook.Stats)
+    if talents[1] then -- Fired only when changes occur, same reasoning as with primary stats.
+        local talentsHook = CharacterSheet.Hooks.UpdateTalents:Throw({
+            Character = char,
+            Stats = talents,
+        })
+        Client.Flash.EncodeArray(talentsArray, CharacterSheet.ARRAY_ENTRY_TEMPLATES.TALENT, talentsHook.Stats)
+    end
 end, "Before")
