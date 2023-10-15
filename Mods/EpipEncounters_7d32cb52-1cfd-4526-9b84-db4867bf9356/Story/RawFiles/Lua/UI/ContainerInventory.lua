@@ -19,11 +19,13 @@ local Inventory = {
     Events = {
         TakeAllPressed = {}, ---@type Event<EmptyEvent>
         DragStarted = {Preventable = true}, ---@type PreventableEvent<{ItemFlashHandle:FlashItemHandle}>
+        HoveredItemChanged = {}, ---@type Event<UI.ContainerInventory.Events.HoveredItemChanged>
     },
     Hooks = {
         UpdateItems = {}, ---@type Hook<UI.ContainerInventory.Hooks.UpdateItems>
     }
 }
+Client.UI.ContainerInventory = Inventory
 Epip.InitializeUI(Ext.UI.TypeID.containerInventory.Default, "ContainerInventory", Inventory)
 
 ---------------------------------------------
@@ -41,6 +43,10 @@ Epip.InitializeUI(Ext.UI.TypeID.containerInventory.Default, "ContainerInventory"
 -- EVENTS/HOOKS
 ---------------------------------------------
 
+---@class UI.ContainerInventory.Events.HoveredItemChanged
+---@field Item EclItem? `nil` if an item was hovered out.
+---@field Index integer? `nil` if an item was hovered out.
+
 ---@class UI.ContainerInventory.Hooks.UpdateItems
 ---@field Entries UI.ContainerInventory.Entries.ItemUpdate[] Hookable.
 
@@ -51,16 +57,12 @@ Epip.InitializeUI(Ext.UI.TypeID.containerInventory.Default, "ContainerInventory"
 ---Returns the item currently being hovered.
 ---@return EclItem?, integer?, FlashMovieClip? -- Item (if any), slot index (1-based), cell. Slot index and cell may be returned even if no item is within the cell.
 function Inventory.GetSelectedItem()
-    local inv = Inventory:GetRoot().inv_mc
-    local selectedIndex = inv.currentHLSlot
     local item, slotIndex, cell = nil, nil, nil
-
-    if selectedIndex >= 0 then
-        slotIndex = selectedIndex + 1
-        cell = inv.slot_array[selectedIndex]
-        if cell.itemHandle > 0 then
-            item = Item.Get(cell.itemHandle, true)
-        end
+    cell, slotIndex = Inventory.GetSelectedCell()
+    if cell and cell.itemHandle > 0 then
+        item = Item.Get(cell.itemHandle, true)
+    else
+        cell, slotIndex = nil, nil
     end
 
     return item, slotIndex, cell
@@ -78,6 +80,36 @@ function Inventory.GetCells()
     end
 
     return cells, width, height
+end
+
+---Returns the cell being hovered over.
+---@return FlashMovieClip?, integer? -- Cell, index (1-based). `nil` if no cell is being hovered.
+function Inventory.GetSelectedCell()
+    local inv = Inventory:GetRoot().inv_mc
+    local selectedIndex = inv.currentHLSlot
+    local cell, cellIndex = nil, nil
+    if selectedIndex >= 0 then
+        cell = inv.slot_array[selectedIndex]
+        cellIndex = selectedIndex + 1
+    end
+    return cell, cellIndex
+end
+
+---Returns the cell of an item.
+---@param item EclItem
+---@return FlashMovieClip?, integer? -- `nil` if no cell with the item was found.
+function Inventory.GetItemCell(item)
+    local cells = Inventory.GetCells()
+    local itemFlashHandle = Ext.UI.HandleToDouble(item.Handle)
+    local cellIndex, itemCell = nil, nil
+    for i,cell in ipairs(cells) do
+        if cell.itemHandle == itemFlashHandle then
+            cellIndex = i
+            itemCell = cell
+            break
+        end
+    end
+    return itemCell, cellIndex
 end
 
 ---@override
@@ -117,4 +149,17 @@ end)
 -- Forward take-all event.
 Inventory:RegisterCallListener("takeAll", function (_)
     Inventory.Events.TakeAllPressed:Throw()
+end)
+
+-- Forward item hover events.
+Inventory:RegisterCallListener("slotOver", function (_, itemFlashHandle, index)
+    Inventory.Events.HoveredItemChanged:Throw({
+        Item = Item.Get(itemFlashHandle, true),
+        Index = index + 1,
+    })
+end)
+Inventory:RegisterCallListener("slotOut", function (_)
+    Inventory.Events.HoveredItemChanged:Throw({
+        Item = nil,
+    })
 end)
