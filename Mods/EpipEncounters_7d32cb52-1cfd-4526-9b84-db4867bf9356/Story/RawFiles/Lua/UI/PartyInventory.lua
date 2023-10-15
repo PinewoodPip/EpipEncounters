@@ -24,6 +24,16 @@ local Inv = {
             "Unused5",
         }
     },
+    ---@enum UI.PartyInventory.FilterTab
+    FILTER_TABS = {
+        EQUIPMENT = 2,
+        CONSUMABLES = 3,
+        MAGICAL = 4,
+        INGREDIENTS = 5,
+        MISCELLANEOUS = 6,
+        BOOKS_AND_KEYS = 7,
+        WARES = 8,
+    },
 
     initialized = false,
     _inventoryIDs = {}, ---@type table<FlashObjectHandle, integer>
@@ -76,6 +86,25 @@ Epip.InitializeUI(Client.UI.Data.UITypes.partyInventory, "PartyInventory", Inv)
 ---Updates the data on the UI.
 function Inv.Refresh()
     Ext.UI.SetDirty(Client.GetCharacter().Handle, "CharacterInventoryView")
+end
+
+---Returns whether a tab filter is active.
+---@param tab UI.PartyInventory.FilterTab
+---@return boolean
+function Inv.IsTabFilterActive(tab)
+    local list = Inv:GetRoot().inventory_mc.tabList
+    local tabs = list.content_array
+    local tabMC
+    for i=0,#tabs-1,1 do
+        if tabs[i].id == tab then
+            tabMC = tabs[i]
+            break
+        end
+    end
+    if not tabMC then
+        Inv:Error("IsTabFilterActive", "Tab not found", tab)
+    end
+    return tabMC.isSelected()
 end
 
 ---------------------------------------------
