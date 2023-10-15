@@ -21,10 +21,14 @@ local MultiSelect = {
         },
     },
     Settings = {},
+
+    ---@class Features.InventoryMultiSelect.Events
     Events = {
         MultiDragStarted = {}, ---@type Event<EmptyEvent> Client-only.
         MultiDragEnded = {}, ---@type Event<Features.InventoryMultiSelect.Events.MultiDragEnded> Client-only. Prevent propagation if handled.
     },
+    ---@class Features.InventoryMultiSelect.Hooks
+    Hooks = {},
 
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,

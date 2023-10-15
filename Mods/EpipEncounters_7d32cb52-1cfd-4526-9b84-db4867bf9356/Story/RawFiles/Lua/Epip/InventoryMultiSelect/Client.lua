@@ -1,25 +1,46 @@
 
-local PartyInventory = Client.UI.PartyInventory
-local Input = Client.Input
-local V = Vector.Create
-
 ---@class Features.InventoryMultiSelect
 local MultiSelect = Epip.GetFeature("Features.InventoryMultiSelect")
+local Events = MultiSelect.Events ---@class Features.InventoryMultiSelect.Events
+local Hooks = MultiSelect.Hooks ---@class Features.InventoryMultiSelect.Hooks
 
 MultiSelect.SELECTED_COLOR = Color.Create(255, 255, 255, 80)
-MultiSelect.CELL_SIZE =  V(50, 50)
-MultiSelect._UI_INVISIBLE_LISTENER = "Features.InventoryMultiSelect.IsUIVisible"
 
-MultiSelect._CurrentHoveredItemHandle = nil ---@type ComponentHandle?
 MultiSelect._SelectedItems = {} ---@type table<ComponentHandle, Features.InventoryMultiSelect.Selection>
 MultiSelect._MultiDragActive = false
+
+---------------------------------------------
+-- EVENTS/HOOKS
+---------------------------------------------
+
+---Fired when an item is selected or unselected.
+---Client-only.
+---@class Features.InventoryMultiSelect.Events.ItemSelectionChanged
+---@field Selection Features.InventoryMultiSelect.Selection
+---@field Selected boolean
+---@type Event<Features.InventoryMultiSelect.Events.ItemSelectionChanged>
+Events.ItemSelectionChanged = MultiSelect:AddSubscribableEvent("ItemSelectionChanged")
+
+---Fired when requesting a sorted list of selections.
+---Client-only.
+---@class Features.InventoryMultiSelect.Hooks.SortSelection
+---@field SelectionA Features.InventoryMultiSelect.Selection
+---@field SelectionB Features.InventoryMultiSelect.Selection
+---@field SortResult boolean Hookable.
+---@type Hook<Features.InventoryMultiSelect.Hooks.SortSelection>
+Hooks.SortSelection = MultiSelect:AddSubscribableEvent("SortSelection")
 
 ---------------------------------------------
 -- CLASSES
 ---------------------------------------------
 
+---@alias Features.InventoryMultiSelect.Selection.Type "PartyInventory"
+
 ---@class Features.InventoryMultiSelect.Selection
+---@field Type Features.InventoryMultiSelect.Selection.Type
 ---@field ItemHandle ComponentHandle
+
+---@class Features.InventoryMultiSelect.Selection.PartyInventory : Features.InventoryMultiSelect.Selection
 ---@field OwnerCharacterHandle ComponentHandle
 ---@field InventoryCell FlashMovieClip
 ---@field CellIndex integer 1-based.
@@ -30,43 +51,25 @@ MultiSelect._MultiDragActive = false
 
 ---Sets the selection state of an item.
 ---@param item EclItem
----@param selected boolean? Defaults to toggling.
-function MultiSelect.SetItemSelected(item, selected)
+---@param data Features.InventoryMultiSelect.Selection|false If `false`, will unselect the item. If a table is passed, it will be used as the base for the Selection entry.
+function MultiSelect.SetItemSelected(item, data)
     local set = MultiSelect._SelectedItems
-    if selected == nil then
-        selected = not MultiSelect.IsSelected(item)
-    end
-
-    -- Find the cell of the item within the UI
-    local cell, cellIndex = MultiSelect._GetItemCell(item)
-    if not cell then
-        -- This may happen if the item was equipped or moved out by external shenanigans
-        -- MultiSelect:InternalError("SelectItem", "Cell not found for", item.DisplayName)
-        return
-    end
+    local selected = data ~= false
 
     if selected then
-        set[item.Handle] = {
-            ItemHandle = item.Handle,
-            InventoryCell = cell,
-            CellIndex = cellIndex,
-            OwnerCharacterHandle = Character.Get(item:GetOwnerCharacter()).Handle,
-        }
+        set[item.Handle] = data
     else
+        data = set[item.Handle]
         set[item.Handle] = nil
     end
 
-    MultiSelect._SetSlotHighlight(cell, selected)
-
-    -- Listen for the UI closing to clear selection
-    GameState.Events.RunningTick:Unsubscribe(MultiSelect._UI_INVISIBLE_LISTENER)
-    GameState.Events.RunningTick:Subscribe(function (_)
-        -- Clear selections if the UI is closed and we are not multi-dragging
-        if not PartyInventory:IsVisible() and not MultiSelect.IsMultiDragActive() then
-            MultiSelect.ClearSelections()
-            GameState.Events.RunningTick:Unsubscribe(MultiSelect._UI_INVISIBLE_LISTENER)
-        end
-    end, {StringID = MultiSelect._UI_INVISIBLE_LISTENER})
+    -- Do not fire the event if requesting to unselect an item that was not previously selected.
+    if data then
+        MultiSelect.Events.ItemSelectionChanged:Throw({
+            Selection = data,
+            Selected = selected,
+        })
+    end
 end
 
 ---Removes all item selections.
@@ -90,15 +93,22 @@ function MultiSelect.GetSelections()
 end
 
 ---Returns the items selected, ordered by inventory cell index.
+---@see Features.InventoryMultiSelect.Hooks.SortSelection
+---@param type Features.InventoryMultiSelect.Selection.Type? If set, only selections of that type will be returned.
 ---@return Features.InventoryMultiSelect.Selection[]
-function MultiSelect.GetOrderedSelections()
+function MultiSelect.GetOrderedSelections(type)
     local selections = MultiSelect.GetSelections()
     local orderedSelections = {} ---@type Features.InventoryMultiSelect.Selection[]
     for _,selection in pairs(selections) do
-        table.insert(orderedSelections, selection)
+        if not type or selection.Type == type then
+            table.insert(orderedSelections, selection)
+        end
     end
     table.sort(orderedSelections, function (a, b)
-        return a.CellIndex < b.CellIndex
+        return MultiSelect.Hooks.SortSelection:Throw({
+            SelectionA = a,
+            SelectionB = b,
+        }).SortResult
     end)
     return orderedSelections
 end
@@ -150,18 +160,17 @@ function MultiSelect:IsEnabled()
     return MultiSelect:GetSettingValue(MultiSelect.Settings.Enabled) == true and _Feature.IsEnabled(self)
 end
 
----Sets or removes a highlight from an inventory cell.
+---Sets or removes a highlight from an inventory-cell-like movie clip.
 ---@param slot FlashMovieClip
+---@param slotSize Vector2
 ---@param highlighted boolean
-function MultiSelect._SetSlotHighlight(slot, highlighted)
+function MultiSelect.SetSlotHighlight(slot, slotSize, highlighted)
     local graphics = slot.graphics
     graphics.clear()
 
     if highlighted then
-        local cellSize = MultiSelect.CELL_SIZE
-
         graphics.beginFill(MultiSelect.SELECTED_COLOR:ToDecimal(), MultiSelect.SELECTED_COLOR.Alpha / 255)
-        graphics.drawRect(0, 0, cellSize[1], cellSize[2])
+        graphics.drawRect(0, 0, slotSize[1], slotSize[2])
     end
 end
 
@@ -176,155 +185,14 @@ function MultiSelect._SelectionsToNetIDList(selections)
     return itemsNetIDs
 end
 
----Returns the movie clips of all inventories.
----@return FlashMovieClip[]
-function MultiSelect._GetInventoryMovieClips()
-    local root = PartyInventory:GetRoot()
-    local mcs = {} ---@type FlashMovieClip[]
-    local invMC = root.inventory_mc
-    for i=0,#invMC.list.content_array-1,1 do
-        mcs[i + 1] = invMC.list.content_array[i].inv
-    end
-    return mcs
-end
-
----Returns the inventory movie clip of a character.
----@param owner EclCharacter
----@return FlashMovieClip
-function MultiSelect._GetInventoryMovieClip(owner)
-    local clips = MultiSelect._GetInventoryMovieClips()
-    for _,mc in ipairs(clips) do
-        if mc.id == Ext.UI.HandleToDouble(owner.Handle) then
-            return mc
-        end
-    end
-    return nil
-end
-
----Returns the inventory cell that contains an item.
----@param item EclItem
----@return FlashMovieClip?, integer?, integer? -- Cell, cell index (1-based), inventory ID. `nil` if the item was not found within the inventory.
-function MultiSelect._GetItemCell(item)
-    local inventories = MultiSelect._GetInventoryMovieClips()
-    local itemFlashHandle = Ext.UI.HandleToDouble(item.Handle)
-    local owner = Character.Get(item:GetOwnerCharacter())
-    local cell, cellIndex, inventoryID = nil, nil, nil
-    for _,inv in ipairs(inventories) do
-        local handle = Ext.UI.DoubleToHandle(inv.id)
-        if handle == owner.Handle then
-            for i=0,#inv.content_array-1,1 do
-                local slot = inv.content_array[i]
-                if slot._itemHandle == itemFlashHandle then
-                    cell = slot
-                    cellIndex = i + 1 -- 1-based.
-                    inventoryID = inv.id
-                    goto CellFound
-                end
-            end
-        end
-    end
-    ::CellFound::
-    return cell, cellIndex, inventoryID
-end
-
----Returns the character whose inventory header is being hovered over.
----@return EclCharacter?
-function MultiSelect._GetSelectedInventoryHeader()
-    local root = PartyInventory:GetRoot()
-    local invMC = root.inventory_mc
-    local char = nil
-
-    for i=0,#invMC.list.content_array-1,1 do
-        local playerInventory = invMC.list.content_array[i]
-        if playerInventory.frame_mc.playerheader.currentFrame == 2 then
-            char = Character.Get(playerInventory.id, true)
-            break
-        end
-    end
-
-    return char
-end
-
----Moves an item within the party inventory.
----@param item EclItem|ItemHandle
----@param inventoryID integer
----@param slotIndex integer
-function MultiSelect._MoveItemToPartyInventorySlot(item, inventoryID, slotIndex)
-    local itemHandle = item
-    if GetExtType(item) == "ecl::Item" then
-        itemHandle = item.Handle
-    end
-    -- Needs M1 held beforehand, or the client will stop the drag immediately
-    Client.Input.Inject("Mouse", "left2", "Pressed")
-    local itemFlashHandle = Ext.UI.HandleToDouble(itemHandle)
-    PartyInventory:ExternalInterfaceCall("startDragging", itemFlashHandle)
-    PartyInventory:ExternalInterfaceCall("stopDragging", inventoryID, slotIndex)
-    Client.Input.Inject("Mouse", "left2", "Released")
-end
-
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
 
--- Listen for slots being hovered over or out to track the hovered item.
-PartyInventory:RegisterCallListener("slotOver", function (_, flashItemHandle)
-    if flashItemHandle ~= 0 then
-        MultiSelect._CurrentHoveredItemHandle = Ext.UI.DoubleToHandle(flashItemHandle)
-    end
-end)
-PartyInventory:RegisterCallListener("slotOut", function (_, _)
-    MultiSelect._CurrentHoveredItemHandle = nil
-end)
-
--- Listen for item drags being started, to prevent them if they were to start a multi-drag.
-PartyInventory:RegisterCallListener("startDragging", function (ev, itemHandle)
-    local item = Item.Get(itemHandle, true)
-    if MultiSelect.IsSelected(item) then -- Can only start multi-drag from a selected item.
-        MultiSelect.StartMultiDrag()
-        ev:PreventAction()
-    end
-end)
-
--- Prevent item tooltips while a multi-drag is active.
-PartyInventory:RegisterCallListener("showItemTooltip", function (ev)
-    if MultiSelect.IsMultiDragActive() then
-        ev:PreventAction()
-    end
-end)
-
--- Clear selections when an item is clicked.
-PartyInventory:RegisterCallListener("slotUp", function (ev)
-    if not Input.AreModifierKeysPressed() then
-        MultiSelect.ClearSelections()
-    elseif Input.IsShiftPressed() and MultiSelect.HasSelection() then -- Only prevent shift-click if we already have a selection. Otherwise, use vanilla behaviour (toggle wares)
-        ev:PreventAction()
-    end
-end)
-
--- Listen for keys being pressed that should select/deselect items.
-Input.Events.KeyReleased:Subscribe(function (ev)
-    if MultiSelect._CurrentHoveredItemHandle and ev.InputID == "left2" and MultiSelect:IsEnabled() then
-        local item = Item.Get(MultiSelect._CurrentHoveredItemHandle)
-
-        if Input.IsCtrlPressed() then -- Toggle selection of the item
-            MultiSelect.SetItemSelected(item)
-        elseif Input.IsShiftPressed() and MultiSelect.HasSelection() then -- Select range
-            local orderedSelections = MultiSelect.GetOrderedSelections()
-            local firstSelection = orderedSelections[1]
-            local _, cellIndex = MultiSelect._GetItemCell(item)
-            local inv = MultiSelect._GetInventoryMovieClip(Character.Get(item:GetOwnerCharacter()))
-
-            -- Range selection works in either direction; can select ranges before or after the first item.
-            local startIndex = math.min(firstSelection.CellIndex, cellIndex)
-            local endIndex = math.max(firstSelection.CellIndex, cellIndex)
-            for i=startIndex,endIndex,1 do
-                local itemFlashHandle = inv.content_array[i - 1]._itemHandle
-                if itemFlashHandle ~= 0 then
-                    local cellItem = Item.Get(itemFlashHandle, true)
-                    MultiSelect.SetItemSelected(cellItem, true)
-                end
-            end
-        end
+-- Sort selections of different types.
+MultiSelect.Hooks.SortSelection:Subscribe(function (ev)
+    if ev.SelectionA.Type ~= ev.SelectionB.Type then
+        ev.SortResult = ev.SelectionA.Type < ev.SelectionB.Type
     end
 end)
 

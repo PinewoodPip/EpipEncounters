@@ -692,6 +692,7 @@ LOAD_ORDER = {
         ScriptSet = "Epip/InventoryMultiSelect",
         Scripts = {
             "Epip/InventoryMultiSelect/Client_UI.lua",
+            "Epip/InventoryMultiSelect/SelectionHandlers/PartyInventory.lua",
             "Epip/InventoryMultiSelect/MultiDragHandlers/Client.lua",
             {ScriptSet = "Epip/InventoryMultiSelect/ContextMenuActions"},
         },
