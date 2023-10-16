@@ -10,6 +10,11 @@ local InventoryMultiSelect = Epip.GetFeature("Features.InventoryMultiSelect")
 local DiscordRichPresence = Epip.GetFeature("Features.DiscordRichPresence")
 local CommonStrings = Text.CommonStrings
 
+local InventoryMultiSelectInputActionSettings = {
+    ToggleSelection = Client.Input.GetActionBindingSetting(InventoryMultiSelect.InputActions.ToggleSelection),
+    SelectRange = Client.Input.GetActionBindingSetting(InventoryMultiSelect.InputActions.SelectRange),
+}
+
 ---@class Feature_EpipSettingsMenu : Feature
 local EpipSettingsMenu = {
     TranslatedStrings = {
@@ -247,6 +252,9 @@ local tabs = {
         Entries = {
             CreateHeader(TSK.Section_InventoryUI),
             {Module = InventoryMultiSelect:GetNamespace(), ID = InventoryMultiSelect.Settings.Enabled.ID},
+            {Module = InventoryMultiSelectInputActionSettings.ToggleSelection.ModTable, ID = InventoryMultiSelectInputActionSettings.ToggleSelection:GetID()},
+            {Module = InventoryMultiSelectInputActionSettings.SelectRange.ModTable, ID = InventoryMultiSelectInputActionSettings.SelectRange:GetID()},
+
             "Inventory_AutoUnlockInventory",
             "Inventory_InfiniteCarryWeight",
             "Inventory_RewardItemComparison",

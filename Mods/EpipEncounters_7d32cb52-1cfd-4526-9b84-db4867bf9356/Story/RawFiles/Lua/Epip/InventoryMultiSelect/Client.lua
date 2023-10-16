@@ -9,6 +9,18 @@ MultiSelect.SELECTED_COLOR = Color.Create(255, 255, 255, 80)
 MultiSelect._SelectedItems = {} ---@type table<ComponentHandle, Features.InventoryMultiSelect.Selection>
 MultiSelect._MultiDragActive = false
 
+-- Register input actions
+MultiSelect.InputActions.ToggleSelection = MultiSelect:RegisterInputAction("ToggleSelection", {
+    Name = MultiSelect.TranslatedStrings.InputAction_ToggleSelection_Name,
+    Description = MultiSelect.TranslatedStrings.InputAction_ToggleSelection_Description,
+    DefaultInput1 = {Keys = {"lctrl", "left2"}},
+})
+MultiSelect.InputActions.SelectRange = MultiSelect:RegisterInputAction("SelectRange", {
+    Name = MultiSelect.TranslatedStrings.InputAction_SelectRange_Name,
+    Description = MultiSelect.TranslatedStrings.InputAction_SelectRange_Description,
+    DefaultInput1 = {Keys = {"lshift", "left2"}},
+})
+
 ---------------------------------------------
 -- EVENTS/HOOKS
 ---------------------------------------------
@@ -34,6 +46,7 @@ Hooks.SortSelection = MultiSelect:AddSubscribableEvent("SortSelection")
 -- CLASSES
 ---------------------------------------------
 
+---@diagnostic disable-next-line: duplicate-doc-alias
 ---@alias Features.InventoryMultiSelect.Selection.Type "PartyInventory"
 
 ---@class Features.InventoryMultiSelect.Selection
@@ -152,6 +165,13 @@ function MultiSelect.EndMultiDrag()
 
     MultiSelect.ClearSelections()
     MultiSelect._MultiDragActive = false
+end
+
+---Returns whether any of the multi-select input actions are being held.
+---@return boolean
+function MultiSelect.IsUsingMultiSelectActions()
+    local action = Client.Input.GetCurrentAction()
+    return action == MultiSelect.InputActions.ToggleSelection or action == MultiSelect.InputActions.SelectRange
 end
 
 ---Client-only override. Checks setting.

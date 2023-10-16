@@ -82,32 +82,31 @@ end
 ---------------------------------------------
 
 -- Listen for keys being pressed that should select/deselect items.
-Input.Events.KeyReleased:Subscribe(function (ev)
-    if ContainerSelections._CurrentHoveredItemHandle and ev.InputID == "left2" and MultiSelect:IsEnabled() then
-        local item = Item.Get(ContainerSelections._CurrentHoveredItemHandle)
+Input.Events.ActionExecuted:Subscribe(function (ev)
+    local item = Item.Get(ContainerSelections._CurrentHoveredItemHandle)
+    if ev.Action == MultiSelect.InputActions.ToggleSelection then
+        ContainerSelections.ToggleItemSelection(item)
+    elseif ev.Action == MultiSelect.InputActions.SelectRange and MultiSelect.HasSelection() then
+        local orderedSelections = MultiSelect.GetOrderedSelections("ContainerInventory") ---@cast orderedSelections Features.InventoryMultiSelect.Selection.PartyInventory[]
+        local firstSelection = orderedSelections[1]
+        local _, cellIndex = ContainerInventory.GetItemCell(item)
+        local cells = ContainerInventory.GetCells()
 
-        if Input.IsCtrlPressed() then -- Toggle selection of the item
-            ContainerSelections.ToggleItemSelection(item)
-        elseif Input.IsShiftPressed() and MultiSelect.HasSelection() then -- Select range
-            local orderedSelections = MultiSelect.GetOrderedSelections("ContainerInventory") ---@cast orderedSelections Features.InventoryMultiSelect.Selection.PartyInventory[]
-            local firstSelection = orderedSelections[1]
-            local _, cellIndex = ContainerInventory.GetItemCell(item)
-            local cells = ContainerInventory.GetCells()
-
-            -- Range selection works in either direction; can select ranges before or after the first item.
-            local startIndex = math.min(firstSelection.CellIndex, cellIndex)
-            local endIndex = math.max(firstSelection.CellIndex, cellIndex)
-            for i=startIndex,endIndex,1 do -- Select all cells in the range that have an item.
-                local cell = cells[i]
-                if cell.itemHandle ~= 0 then
-                    ContainerSelections.ToggleItemSelection(Item.Get(cell.itemHandle, true), true)
-                end
+        -- Range selection works in either direction; can select ranges before or after the first item.
+        local startIndex = math.min(firstSelection.CellIndex, cellIndex)
+        local endIndex = math.max(firstSelection.CellIndex, cellIndex)
+        for i=startIndex,endIndex,1 do -- Select all cells in the range that have an item.
+            local cell = cells[i]
+            if cell.itemHandle ~= 0 then
+                ContainerSelections.ToggleItemSelection(Item.Get(cell.itemHandle, true), true)
             end
-
-            ContainerSelections:DebugLog("It's not quite as thrilling the second time around, yet at the same time, I'm far more impressed by the multi-select feature now that container inventories work - and simultaneously with selections in the party inventory too!")
         end
+
+        ContainerSelections:DebugLog("It's not quite as thrilling the second time around, yet at the same time, I'm far more impressed by the multi-select feature now that container inventories work - and simultaneously with selections in the party inventory too!")
     end
-end)
+end, {EnabledFunctor = function ()
+    return ContainerSelections._CurrentHoveredItemHandle and MultiSelect:IsEnabled()
+end})
 
 -- Listen for item drags being started, to prevent them if they were to start a multi-drag.
 ContainerInventory:RegisterCallListener("startDragging", function (ev, itemHandle)
@@ -187,9 +186,9 @@ ContainerInventory.Events.HoveredItemChanged:Subscribe(function (ev)
     ContainerSelections._CurrentHoveredItemHandle = item and item.Handle or nil
 end)
 
--- Prevent slot clicks while multi-selecting items
+-- Prevent slot clicks while multi-selecting items.
 local PreventCallWhileMultiSelecting = function (ev)
-    if Input.IsCtrlPressed() or (MultiSelect.HasSelection() and Input.IsShiftPressed()) then
+    if Input.GetCurrentAction() == MultiSelect.InputActions.ToggleSelection or (MultiSelect.HasSelection() and MultiSelect.IsUsingMultiSelectActions()) then
        ev:PreventAction()
        ev:StopPropagation()
    end

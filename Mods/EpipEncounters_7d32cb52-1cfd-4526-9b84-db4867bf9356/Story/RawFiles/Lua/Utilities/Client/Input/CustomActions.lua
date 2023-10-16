@@ -120,10 +120,13 @@ function Input.GetBoundActions(keyCombination)
 end
 
 ---Returns the setting that stores an action's bindings.
----@param actionID string
+---@param action InputLib_Action|string
 ---@return SettingsLib.Settings.InputBinding
-function Input.GetActionBindingSetting(actionID)
-    local setting = Settings.GetSetting("InputLib", Input._ActionBindingSettingPrefix .. actionID) ---@cast setting SettingsLib.Settings.InputBinding
+function Input.GetActionBindingSetting(action)
+    if type(action) == "string" then
+        action = Input.GetAction(action)
+    end
+    local setting = Settings.GetSetting("InputLib", Input._ActionBindingSettingPrefix .. action:GetID()) ---@cast setting SettingsLib.Settings.InputBinding
     return setting
 end
 

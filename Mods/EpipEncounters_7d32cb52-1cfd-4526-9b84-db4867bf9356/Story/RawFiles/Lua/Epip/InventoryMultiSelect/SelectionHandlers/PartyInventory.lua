@@ -142,32 +142,31 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
--- Listen for keys being pressed that should select/deselect items.
-Input.Events.KeyReleased:Subscribe(function (ev)
-    if MultiSelect._CurrentHoveredItemHandle and ev.InputID == "left2" and MultiSelect:IsEnabled() then
-        local item = Item.Get(MultiSelect._CurrentHoveredItemHandle)
+-- Listen for input actions to select/deselect items.
+Input.Events.ActionExecuted:Subscribe(function (ev)
+    local item = Item.Get(MultiSelect._CurrentHoveredItemHandle)
+    if ev.Action == MultiSelect.InputActions.ToggleSelection then
+        MultiSelect._TogglePartyInventorySelection(item)
+    elseif ev.Action == MultiSelect.InputActions.SelectRange and MultiSelect.HasSelection() then
+        local orderedSelections = MultiSelect.GetOrderedSelections("PartyInventory") ---@cast orderedSelections Features.InventoryMultiSelect.Selection.PartyInventory[]
+        local firstSelection = orderedSelections[1]
+        local _, cellIndex = MultiSelect._GetItemCell(item)
+        local inv = MultiSelect._GetInventoryMovieClip(Character.Get(item:GetOwnerCharacter()))
 
-        if Input.IsCtrlPressed() then -- Toggle selection of the item
-            MultiSelect._TogglePartyInventorySelection(item)
-        elseif Input.IsShiftPressed() and MultiSelect.HasSelection() then -- Select range
-            local orderedSelections = MultiSelect.GetOrderedSelections("PartyInventory") ---@cast orderedSelections Features.InventoryMultiSelect.Selection.PartyInventory[]
-            local firstSelection = orderedSelections[1]
-            local _, cellIndex = MultiSelect._GetItemCell(item)
-            local inv = MultiSelect._GetInventoryMovieClip(Character.Get(item:GetOwnerCharacter()))
-
-            -- Range selection works in either direction; can select ranges before or after the first item.
-            local startIndex = math.min(firstSelection.CellIndex, cellIndex)
-            local endIndex = math.max(firstSelection.CellIndex, cellIndex)
-            for i=startIndex,endIndex,1 do
-                local itemFlashHandle = inv.content_array[i - 1]._itemHandle
-                if itemFlashHandle ~= 0 then
-                    local cellItem = Item.Get(itemFlashHandle, true)
-                    MultiSelect._TogglePartyInventorySelection(cellItem, true)
-                end
+        -- Range selection works in either direction; can select ranges before or after the first item.
+        local startIndex = math.min(firstSelection.CellIndex, cellIndex)
+        local endIndex = math.max(firstSelection.CellIndex, cellIndex)
+        for i=startIndex,endIndex,1 do
+            local itemFlashHandle = inv.content_array[i - 1]._itemHandle
+            if itemFlashHandle ~= 0 then
+                local cellItem = Item.Get(itemFlashHandle, true)
+                MultiSelect._TogglePartyInventorySelection(cellItem, true)
             end
         end
     end
-end)
+end, {EnabledFunctor = function ()
+    return MultiSelect._CurrentHoveredItemHandle ~= nil and MultiSelect:IsEnabled()
+end})
 
 -- Add/clear selection visuals.
 MultiSelect.Events.ItemSelectionChanged:Subscribe(function (ev)
@@ -195,6 +194,8 @@ PartyInventory:RegisterCallListener("startDragging", function (ev, itemHandle)
     if MultiSelect.IsSelected(item) then -- Can only start multi-drag from a selected item.
         MultiSelect.StartMultiDrag()
         ev:PreventAction()
+    else
+        MultiSelect.ClearSelections()
     end
 end)
 
@@ -207,10 +208,10 @@ end)
 
 -- Clear selections when an item is clicked.
 PartyInventory:RegisterCallListener("slotUp", function (ev)
-    if not Input.AreModifierKeysPressed() then
-        MultiSelect.ClearSelections()
-    elseif Input.IsShiftPressed() and MultiSelect.HasSelection() then -- Only prevent shift-click if we already have a selection. Otherwise, use vanilla behaviour (toggle wares)
+    if MultiSelect.HasSelection() and Input.GetCurrentAction() == MultiSelect.InputActions.SelectRange then -- Only prevent shift-click if we already have a selection. Otherwise, use vanilla behaviour (toggle wares)
         ev:PreventAction()
+    elseif not MultiSelect.IsUsingMultiSelectActions() then
+        MultiSelect.ClearSelections()
     end
 end)
 

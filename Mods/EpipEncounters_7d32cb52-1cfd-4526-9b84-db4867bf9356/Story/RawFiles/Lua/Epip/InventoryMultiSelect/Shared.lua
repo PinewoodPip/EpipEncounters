@@ -19,6 +19,26 @@ local MultiSelect = {
            Text = "If enabled, multi-select controls will be available for the party inventory UI.\n\nUse Ctrl+Click to select/deselect items. If at least one item is selected, Shift+Click will select a range of items.\n\nRight-click selected items to access a context menu with operations, or drag and drop them to inventory slots, player inventory tabs, or container items to move them.",
            ContextDescription = "Setting tooltip",
         },
+        InputAction_ToggleSelection_Name = {
+            Handle = "h44c561a7g4b32g4e52ga47fg00e32a6f82fc",
+            Text = "Toggle Item Selection",
+            ContextDescription = "Keybind name",
+        },
+        InputAction_ToggleSelection_Description = {
+            Handle = "h8af4098fga9b6g4981g8338g8c4008d54f8a",
+            Text = "Toggles multi-select on the hovered item, if 'Multi-select controls' are enabled.",
+            ContextDescription = "Keybind description",
+        },
+        InputAction_SelectRange_Name = {
+            Handle = "h6b5b9ed9g85f0g421bga071g409b1e4491ca",
+            Text = "Select Range",
+            ContextDescription = "Keybind name",
+        },
+        InputAction_SelectRange_Description = {
+            Handle = "h4a828b3egc70fg4ce9g8d81gd46b307b9366",
+            Text = "Selects a range of items starting from the first selected item and ending with the hovered one, if 'Multi-Select controls' are enabled and at least one item is selected.",
+            ContextDescription = "Keybind description",
+        },
     },
     Settings = {},
 
