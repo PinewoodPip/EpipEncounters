@@ -9,7 +9,6 @@ local Input = Client.Input
 local Generic = Client.UI.Generic
 local Button = Generic.GetPrefab("GenericUI_Prefab_Button")
 local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
-local SlicedTexture = Generic.GetPrefab("GenericUI.Prefabs.SlicedTexture")
 local CommonStrings = Text.CommonStrings
 local V = Vector.Create
 
@@ -133,6 +132,11 @@ local function GetPressedKeys()
         end
     end
 
+    -- Allow left2 to be used in a button chord.
+    if Input.IsKeyPressed("left2") and dummyBinding.Keys[1] then
+        table.insert(dummyBinding.Keys, "left2")
+    end
+
     table.simpleSort(dummyBinding.Keys)
 
     return dummyBinding
@@ -140,8 +144,8 @@ end
 GameState.Events.ClientReady:Subscribe(function (_)
     Input.Events.KeyPressed:Subscribe(function (ev)
         if UI:IsVisible() and InputBinder.GetCurrentRequest() then -- IsVisible() returns true in main menu as well on first session load for some reason - TODO investigate
-            if Input.IsMouseInput(ev.InputID) and not Input.ACTION_WHITELISTED_MOUSE_INPUTS[ev.InputID] then return end
             local dummyBinding = GetPressedKeys()
+            if Input.IsMouseInput(ev.InputID) and (not Input.ACTION_WHITELISTED_MOUSE_INPUTS[ev.InputID] and not ev.InputID == "left2") then return end
             if #dummyBinding.Keys == 0 then return end
             local mapping = Input.StringifyBinding(dummyBinding)
             if mapping == UI._CurrentBinding then return end -- Prevents action spam from pressing excepted keys (ex. mouse) while holding others

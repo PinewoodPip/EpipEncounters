@@ -160,6 +160,16 @@ function Input.CanExecuteAction(actionID)
     return canExecute
 end
 
+---Returns the action currently being held.
+---@return InputLib_Action? -- `nil` if no action is being held.
+function Input.GetCurrentAction()
+    local action = nil
+    if Input._CurrentAction then
+        action = Input.GetAction(Input._CurrentAction)
+    end
+    return action
+end
+
 ---Stringifies a mapping. Use to compare binds for equality.
 ---@param binding InputLib_Action_KeyCombination
 ---@param useShortNames boolean? Defaults to false.
@@ -287,6 +297,11 @@ local function GetPressedKeys()
         if (not Input.IsMouseInput(key) and not Input.IsTouchInput(key) or Input.ACTION_WHITELISTED_MOUSE_INPUTS[key]) then
             table.insert(dummyBinding.Keys, key)
         end
+    end
+
+    -- Allow left2 to be used in a button chord.
+    if Input.IsKeyPressed("left2") and dummyBinding.Keys[1] then
+        table.insert(dummyBinding.Keys, "left2")
     end
 
     table.simpleSort(dummyBinding.Keys)
