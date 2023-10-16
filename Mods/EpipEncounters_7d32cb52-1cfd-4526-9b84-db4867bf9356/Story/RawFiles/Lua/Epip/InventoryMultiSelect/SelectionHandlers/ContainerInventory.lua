@@ -4,6 +4,7 @@
 ---------------------------------------------
 
 local MultiSelect = Epip.GetFeature("Features.InventoryMultiSelect")
+local ContainerInventoryTweaks = Epip.GetFeature("Features.ContainerInventoryTweaks")
 local ContainerInventory = Client.UI.ContainerInventory
 local ContextMenu = Client.UI.ContextMenu
 local Input = Client.Input
@@ -184,6 +185,13 @@ end, {StringID = "DefaultImplementation"})
 ContainerInventory.Events.HoveredItemChanged:Subscribe(function (ev)
     local item = ev.Item
     ContainerSelections._CurrentHoveredItemHandle = item and item.Handle or nil
+
+    -- If we're in a multi-drag, highlight the slot to stay consistent with vanilla behaviour (where the slot is highlighted while dragging)
+    if MultiSelect.IsMultiDragActive() and ev.Index then
+        local cellIndex = ev.Index
+        local cell = ContainerInventory.GetCells()[cellIndex]
+        ContainerInventoryTweaks.HighlightCell(cell)
+    end
 end)
 
 -- Prevent slot clicks while multi-selecting items.
