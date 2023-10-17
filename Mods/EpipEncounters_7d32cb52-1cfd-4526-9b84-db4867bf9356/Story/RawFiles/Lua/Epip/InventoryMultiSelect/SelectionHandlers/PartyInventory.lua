@@ -214,6 +214,11 @@ PartyInventory:RegisterCallListener("slotUp", function (ev)
         MultiSelect.ClearSelections()
     end
 end)
+PartyInventory:RegisterCallListener("doubleClickItem", function (ev, _)
+    if MultiSelect.HasSelection() or Input.GetCurrentAction() == MultiSelect.InputActions.ToggleSelection then -- Kinda surprised the second check works and I'm not 100% sure why
+        ev:PreventAction()
+    end
+end)
 
 -- Sort selections from the party inventory.
 MultiSelect.Hooks.SortSelection:Subscribe(function (ev)
