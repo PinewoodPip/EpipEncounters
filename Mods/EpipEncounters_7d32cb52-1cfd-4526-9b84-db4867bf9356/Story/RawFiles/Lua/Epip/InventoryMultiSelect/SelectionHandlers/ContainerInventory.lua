@@ -162,7 +162,7 @@ MultiSelect.Events.MultiDragEnded:Subscribe(function (ev)
                 for _,selection in ipairs(ev.OrderedSelections) do
                     item = Item.Get(selection.ItemHandle)
                     local slot = cells[nextSlotIndex]
-                    while slot.itemHandle ~= 0 do -- Search next empty slot
+                    while slot and slot.itemHandle ~= 0 do -- Search next empty slot. Cells that do not exist are surely empty.
                         nextSlotIndex = nextSlotIndex + 1
                         slot = cells[nextSlotIndex]
                         if nextSlotIndex > 999 then -- TODO check whether we've run out of slots

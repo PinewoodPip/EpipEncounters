@@ -48,7 +48,7 @@ MultiSelect.Events.MultiDragEnded:Subscribe(function (ev)
                         -- Move each selection to the next available slot starting from hovered one
                         for _,selection in ipairs(ev.OrderedSelections) do
                             local slot = inv.content_array[nextSlotIndex]
-                            while slot._itemHandle ~= 0 do -- Search next empty slot
+                            while slot and slot._itemHandle ~= 0 do -- Search next empty slot. Cells that don't exist are surely empty.
                                 nextSlotIndex = nextSlotIndex + 1
                                 slot = inv.content_array[nextSlotIndex]
                                 if nextSlotIndex > 999 then
