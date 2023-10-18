@@ -32,7 +32,7 @@ local Warnings = {
             Mods.MAJORA_FASHION_SINS,
         },
         [Mods.EPIP_ENCOUNTERS] = {
-            Mods.IMPROVED_HOTBAR,
+            -- Mods.IMPROVED_HOTBAR, -- Not necessary, newer versions do nothing if ran together with Epip.
             -- Mods.LEADERLIB, -- Appears to work as of late v1066
             Mods.MULTIHOTBARS,
             Mods.CUSTOM_DAMAGE_TYPES,

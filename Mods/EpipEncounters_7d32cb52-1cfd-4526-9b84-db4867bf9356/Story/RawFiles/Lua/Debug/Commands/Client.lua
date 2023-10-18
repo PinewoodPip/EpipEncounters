@@ -48,11 +48,16 @@ local function GenerateLocalizationTemplate(_, modTable, existingLocalization, f
     -- Write the JSON manually to get around encoding limitations
     local rawStrings = {}
     for handle,data in pairs(template.TranslatedStrings) do
-        local context = data.ContextDescription and string.format([["ContextDescription" : "%s",]], data.ContextDescription) or ""
+        local context = ""
         ---@diagnostic disable-next-line: undefined-field
         local featureID = data.FeatureID and string.format([["FeatureID" : "%s",]], data.FeatureID) or ""
         local referenceText = data.ReferenceText:gsub("\"", "\\\""):gsub("\n", "\\n")
         local translatedText = data.TranslatedText:gsub("\"", "\\\""):gsub("\n", "\\n")
+        if data.ContextDescription then
+            local desc = data.ContextDescription
+            desc = desc:gsub("\"", "\\\""):gsub("\n", "\\n")
+            context = string.format([["ContextDescription" : "%s",]], desc)
+        end
         table.insert(rawStrings, string.format([[
 "%s" : 
 {

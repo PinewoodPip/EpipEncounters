@@ -330,6 +330,10 @@
       "ReferenceText": "Crossbow",
       "TranslatedText": "Арбалет"
     },
+    "h17d882b6g83acg411dgbe52g3ed32443774a": {
+      "ReferenceText": "Custom",
+      "TranslatedText": "Пользовательский"
+    },
     "h82933829g4fd3g4dfeg9b84ga47e14020bd6": {
       "ReferenceText": "Dagger",
       "TranslatedText": "Кинжал"
@@ -538,6 +542,10 @@
       "ReferenceText": "Off",
       "TranslatedText": "Откл."
     },
+    "h3e13ea04gcd9bg4630gabeagbc5f5095f684": {
+      "ReferenceText": "Overhaul",
+      "TranslatedText": "Overhaul"
+    },
     "hbb33eea8g0ce7g4bbcga719gc5c4e7811d4a": {
       "ReferenceText": "Overhead",
       "TranslatedText": "Нимб"
@@ -665,6 +673,10 @@
     "h4119cfcegbfc2g4045gbeecgfb1c96de38e2": {
       "ReferenceText": "Type",
       "TranslatedText": "Тип"
+    },
+    "h6a473ba0g726bg4188g811fgfa83c0b3def2": {
+      "ReferenceText": "Vanilla",
+      "TranslatedText": "Ванилла"
     },
     "h8f43167fge54bg419ag8b9agf80ad45e5c87": {
       "ReferenceText": "Violent Strikes",
@@ -1322,6 +1334,34 @@
       "ReferenceText": "With enough Loremaster",
       "TranslatedText": "С достаточным знанием легенд"
     },
+    "h20643acfg8b9fg46ccg8039g253dd6e02788": {
+      "ReferenceText": "%s - Lvl %d",
+      "TranslatedText": "%s - Ур %d"
+    },
+    "h08dbc3efgf409g4a96g9d3bge907e2638a9a": {
+      "ReferenceText": "Controls your Discord Rich Presence.<br><br>- Vanilla: unmodified; shows current map name and multiplayer status.<br>- Overhaul: displays the major overhaul being used (ex. \"Epic Encounters 2\") and party level.<br>- Custom: allows you to freely set both lines using the text boxes below.",
+      "TranslatedText": "Настройка детализированного статуса в Discord.<br><br>- Ванилла: по умолчанию, отображает текущую локацию и статус мультиплеера.<br>- Overhaul: отображает используемый глобальный мод (например, \"Epic Encounters 2\") и уровень группы.<br>- Пользовательский: позволяет вам самостоятельно настроить отображаемый текст (Строка 1, 2)."
+    },
+    "hed5f3515g0bcdg4e22ga774gb2221e6b308f": {
+      "ReferenceText": "Custom Line 1",
+      "TranslatedText": "Строка 1"
+    },
+    "h37705f99g9f5cg4f74g9751g3302acb7c87b": {
+      "ReferenceText": "Custom Line 2",
+      "TranslatedText": "Строка 2"
+    },
+    "hd1eed9f3g8a0bg4098g9369g0ba5549b947f": {
+      "ReferenceText": "Discord Rich Presence",
+      "TranslatedText": "Детализированный статус в Discord"
+    },
+    "hdb9a40e2g4713g40e0g8885gd6e1b75512c3": {
+      "ReferenceText": "Discord Rich Presence",
+      "TranslatedText": "Детализированный статус в Discord"
+    },
+    "h3a4e8fc6ga604g45f6gbff7g549e349fbe7d": {
+      "ReferenceText": "Rich Presence message to be used if the Rich Presence setting is set to \"Custom\".",
+      "TranslatedText": "Отображаемое сообщение в детализированном статусе в Discord при использовании настройки \"Пользовательский\"."
+    },
     "h4025c1c4g6527g4b6ag8369g49c0b1949dea": {
       "ReferenceText": "If enabled, the positions of the character sheet and party inventory UIs will be remembered across sessions.",
       "TranslatedText": "Если включено, положение окна персонажа и инвентаря группы будет запоминаться и не сбрасываться при смене игровой сессии."
@@ -1496,7 +1536,7 @@
     },
     "h98751807g9fe2g40d6g9ca4gc0ddd1f2da3d": {
       "ReferenceText": "Unmark as wares",
-      "TranslatedText": "Убрать из \"товаров\""
+      "TranslatedText": "Убрать из товаров"
     },
     "hc53e69e8ge732g435dg84dcgfb0541f33326": {
       "ReferenceText": "Dismantle All",
@@ -1732,7 +1772,7 @@
     },
     "h5cb6c524ge5a5g4184g8354g9386bbfdc00c": {
       "ReferenceText": "and %d more items",
-      "TranslatedText": "и еще %d предм."
+      "TranslatedText": "и еще %d предм"
     },
     "h420215fegeaecg4ccdg9e74gf68ed7bd72b9": {
       "ReferenceText": "If enabled, item tooltips will show a hint if the item has been Masterworked.",

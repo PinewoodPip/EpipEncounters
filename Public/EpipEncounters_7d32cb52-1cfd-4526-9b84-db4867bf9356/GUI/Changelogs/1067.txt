@@ -1,0 +1,27 @@
+### Inventory Multi-Select
+- The container inventory UI is now supported, with the same functionality as the party inventory one
+- The keybinds can now be rebound, either from the keybinds tab or directly from the "Inventory" settings tab
+- Dragging multiple items to the bottom slots of an inventory now works as expected, rather than stopping once visible slots are exhausted
+- Fixed selecting items very quickly in the party inventory causing you to use the item
+- Fixed items not being filtered properly when marked/unmarked as wares
+    - Unfortunately, this requires them to be re-added to the character inventory, which will move them to the first available slot.
+
+### World Tooltip "Open Containers" Setting
+- Fixed opening containers not working when characters were close enough to the container to open it without moving
+- You may now switch to a different container or cancel with left-click while moving to open one, simulating vanilla behaviour
+
+### Other changes and additions
+- Added an option to auto-listen to nearby dialogues, enabled from the "Notifications" tab (*"Auto-Listen Dialogues"* and *"Auto-Listen Range Limit"*)
+    - Due to limitations with the extender, these options are only available when using [the custom build](extender.md).
+- The "Toggle World Tooltips" keybind now works if the vanilla keybinding is changed, and is now possibly less janky
+- Epip keybinds now support binding left-click in button chords
+- Added a setting to highlight empty slots in the container inventory UI upon hovering over them, for consistency with the party inventory. Can be enabled from the "Inventory" settings tab (*"Highlight Empty Container Slots"*)
+
+### Fixes
+- Fixed Meistr's note (and other items not tagged as books) not being considered a book for the respective Quick Find filter
+- Fixed "Book read."/"Key used." tooltips having an inconsistent appearance
+- Fixed Discord Rich Presence overhaul mode when within subregions that have no name
+- Fixed "Toggle World Tooltips" not re-enabling tooltips after exiting dialogue
+- Fixed Physical and Piercing resistances in the character sheet appearing multiple times and having the wrong icons
+- Fixed Discord Rich Presence periodically closing some UIs when it was set to the overhaul mode
+- Fixed the difficulty dropdown in vanilla gameplay settings not using translated strings, as well as being unlocked in Honour mode
