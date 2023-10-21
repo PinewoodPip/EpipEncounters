@@ -592,6 +592,7 @@ local newSettings = {
         NameHandle = TSKs.ESCClosesAmerUI_Name,
         DescriptionHandle = TSKs.ESCClosesAmerUI_Description,
         DefaultValue = false,
+        RequiredMods = {Mod.GUIDS.EE_CORE},
     },
     {
         ID = "RenderShroud",
@@ -813,6 +814,7 @@ local newSettings = {
         NameHandle = TSKs.PlayerInfo_BH_Name,
         DescriptionHandle = TSKs.PlayerInfo_BH_Description,
         DefaultValue = false,
+        RequiredMods = {Mod.GUIDS.EE_CORE},
     },
     {
         ID = "PlayerInfo_StatusHolderOpacity",
