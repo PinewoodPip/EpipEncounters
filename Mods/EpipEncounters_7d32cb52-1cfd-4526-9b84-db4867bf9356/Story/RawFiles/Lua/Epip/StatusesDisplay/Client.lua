@@ -47,7 +47,7 @@ local StatusesDisplay = {
         },
         Setting_FilteredStatuses_Description = {
            Handle = "hca56dcd2gf7f6g4662g94cfga66262672545",
-           Text = "Statuses in this list will be filtered out and not shown in the status bar. Holding shift temporarily disables this filter.",
+           Text = "Statuses in this list will be filtered out and not shown in the status bar if \"Alternative Status Display\" is enabled. Holding shift temporarily disables this filter.",
            ContextDescription = "Portrait status filtered statuses setting tooltip",
         },
         Setting_SortingIndexes_Name = {
@@ -66,6 +66,7 @@ local StatusesDisplay = {
            ContextDescription = "Context menu option",
         },
     },
+    Settings = {},
 
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
