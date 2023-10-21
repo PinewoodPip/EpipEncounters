@@ -7,7 +7,7 @@
 
 local EnemyHealthBar = Client.UI.EnemyHealthBar
 
----@type Feature
+---@class Features.EnemyHealthBarExtraInfo : Feature
 local ExtraInfo = {
     -- These are not the 'official' colors,
     -- they're lightly modified for readability.
@@ -60,7 +60,7 @@ local ExtraInfo = {
         },
     },
 }
-Epip.RegisterFeature("EnemyHealthBarExtraInfo", ExtraInfo)
+Epip.RegisterFeature("Features.EnemyHealthBarExtraInfo", ExtraInfo)
 
 ---------------------------------------------
 -- SETTINGS
