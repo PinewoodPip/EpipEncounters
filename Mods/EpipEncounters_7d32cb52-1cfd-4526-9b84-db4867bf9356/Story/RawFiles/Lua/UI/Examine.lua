@@ -133,7 +133,7 @@ function _Category:Create(id, label, entryType)
         EntryType = entryType,
     }
     self:__Create(instance)
-    
+
     return instance
 end
 
@@ -253,10 +253,30 @@ end
 ---------------------------------------------
 
 ---Returns the character currently being examined.
----@return EclCharacter
+---@return EclCharacter? -- `nil` if no character is being examined, such as when an item is being examined or the UI is hidden.
 function Examine.GetCharacter()
-    ---@diagnostic disable-next-line: return-type-mismatch
-    return Character.Get(Examine:GetUI():GetPlayerHandle())
+    local char = nil
+    if Examine:IsVisible() and not Examine._IsExaminingItem() then
+        char = Character.Get(Examine:GetUI():GetPlayerHandle())
+    end
+    return char
+end
+
+---Returns the item currently being examined.
+---@return EclItem? -- `nil` if no item is being examined, such as when a character is being examined or the UI is hidden.
+function Examine.GetItem()
+    local item = nil
+    if Examine:IsVisible() and Examine._IsExaminingItem() then
+        item = Item.Get(Examine:GetUI():GetPlayerHandle()) -- Yes. You're reading this right.
+    end
+    return item
+end
+
+---Returns whether the UI is currently setup to examine an item.
+---@return boolean
+function Examine._IsExaminingItem()
+    local root = Examine:GetRoot()
+    return root.examine_mc.portrait_mc.itemFrame_mc.visible
 end
 
 ---Parses the current contents of the Flash update arrays.
@@ -273,7 +293,7 @@ function Examine._ParseEntries()
         if entry.EntryType == 5 then
             updateData:AddCategory(_Category:Create(entry.StatID, entry.Label, entry.EntryType))
         else
-            updateData.Categories[#updateData.Categories]:AddEntry(entry) 
+            updateData.Categories[#updateData.Categories]:AddEntry(entry)
         end
     end
 
