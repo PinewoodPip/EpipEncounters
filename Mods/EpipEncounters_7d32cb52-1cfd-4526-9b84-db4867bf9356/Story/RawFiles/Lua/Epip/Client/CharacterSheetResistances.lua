@@ -1,19 +1,13 @@
 
 ---------------------------------------------
--- Display Physical and Piercing resistance in character sheet.
+-- Display Physical and Piercing resistances in character sheet.
 ---------------------------------------------
 
-local Resistances = {
-    
-}
+---@type Feature
+local Resistances = {}
 Epip.RegisterFeature("CharacterSheetResistances", Resistances)
 
 local CharacterSheet = Client.UI.CharacterSheet
-
--- TODO move elsewhere - maybe a whole util lib for strings.
-local function Colorize(str, color)
-    return '<font color="' .. color .. '">' .. str .. "</font>"
-end
 
 CharacterSheet.Hooks.UpdateSecondaryStats:Subscribe(function (ev)
     if Resistances:IsEnabled() then
@@ -26,8 +20,8 @@ CharacterSheet.Hooks.UpdateSecondaryStats:Subscribe(function (ev)
         local physColor = nil
         local pierceColor = nil
 
-        -- Mimicking vanilla behaviour of colorizing boosted stats
-        if physRes > 0 then 
+        -- Mimick vanilla behaviour of colorizing boosted stats
+        if physRes > 0 then
             physColor = Color.TOOLTIPS.STAT_BLUE
         elseif physRes < 0 then
             physColor = Color.TOOLTIPS.STAT_RED

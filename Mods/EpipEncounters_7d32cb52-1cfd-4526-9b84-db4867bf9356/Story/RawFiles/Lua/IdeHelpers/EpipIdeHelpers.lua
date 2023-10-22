@@ -18,6 +18,7 @@
 ---@alias date string
 ---@alias skill string Skill ID.
 ---@alias tag string
+---@alias htmlcolor string
 
 ---@alias UIObjectHandle ComponentHandle
 

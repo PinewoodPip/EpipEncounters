@@ -66,7 +66,7 @@ local CharacterSheet = {
         }
     },
 
-    ---@type SecondaryStatGroup
+    ---@enum UI.CharacterSheet.SecondaryStatGroup
     SECONDARY_STAT_GROUPS = {
         BELOW_CHARACTER = 0,
         SECONDARY = 1,
@@ -119,13 +119,11 @@ local CharacterSheet = {
 }
 Epip.InitializeUI(Client.UI.Data.UITypes.characterSheet, "CharacterSheet", CharacterSheet)
 
----@alias SecondaryStatGroup table<string, number>
-
 ---@class SecondaryStatBase
 
 ---@class SecondaryStat : SecondaryStatBase
 ---@field EntryTypeID "Stat"
----@field Type SecondaryStatGroup Determines where the stat is rendered.
+---@field Type UI.CharacterSheet.SecondaryStatGroup Determines where the stat is rendered.
 ---@field Label string Text on the left.
 ---@field ValueLabel string Text on the right.
 ---@field StatID number Used for the tooltip.
@@ -189,15 +187,15 @@ Epip.InitializeUI(Client.UI.Data.UITypes.characterSheet, "CharacterSheet", Chara
 -- METHODS
 ---------------------------------------------
 
----Get the current character on the sheet.  
+---Gets the currently selected character on the character sheet.  
 ---Defaults to client character if the sheet is uninitialized.
 ---@return EclCharacter
 function CharacterSheet.GetCharacter()
     local handle = CharacterSheet:GetUI():GetPlayerHandle()
 
     if handle then
-        return Ext.GetCharacter(handle)
-    else -- fallback to client char - can happen when sheet hasn't been opened yet in a session
+        return Character.Get(handle)
+    else -- Fallback to client char - can happen when sheet hasn't been opened yet in a session.
         return Client.GetCharacter()
     end
 end
@@ -208,7 +206,7 @@ end
 
 ---@param ui UIObject
 ---@return SecondaryStatBase[]
-function CharacterSheet.DecodeSecondaryStats(ui)
+function CharacterSheet._DecodeSecondaryStats(ui)
     local root = ui:GetRoot()
     local arr = root.secStat_array
 
@@ -217,7 +215,7 @@ end
 
 ---@param ui UIObject
 ---@param stats SecondaryStatBase[]
-function CharacterSheet.EncodeSecondaryStats(ui, stats)
+function CharacterSheet._EncodeSecondaryStats(ui, stats)
     Client.Flash.EncodeArray(ui:GetRoot().secStat_array, CharacterSheet.ARRAY_ENTRY_TEMPLATES.SECONDARY_STAT, stats, true, 7)
 end
 
@@ -255,13 +253,13 @@ CharacterSheet:RegisterInvokeListener("updateArraySystem", function (ev)
         Client.Flash.EncodeArray(primaryStatsArray, CharacterSheet.ARRAY_ENTRY_TEMPLATES.PRIMARY_STAT, primaryStatsHook.Stats)
     end
 
-    local secondaryStats = CharacterSheet.DecodeSecondaryStats(ev.UI)
+    local secondaryStats = CharacterSheet._DecodeSecondaryStats(ev.UI)
     if secondaryStats[1] then -- Fired only when changes occur, same reasoning as with primary stats.
         local hook = CharacterSheet.Hooks.UpdateSecondaryStats:Throw({
             Character = char,
             Stats = secondaryStats,
         })
-        CharacterSheet.EncodeSecondaryStats(ev.UI, hook.Stats)
+        CharacterSheet._EncodeSecondaryStats(ev.UI, hook.Stats)
     end
 
     -- Ability stats
