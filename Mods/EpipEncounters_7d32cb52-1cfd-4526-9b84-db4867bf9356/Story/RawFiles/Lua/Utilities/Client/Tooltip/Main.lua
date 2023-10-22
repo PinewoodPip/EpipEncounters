@@ -1,5 +1,6 @@
 
 local TextDisplay = Client.UI.TextDisplay
+local Examine = Client.UI.Examine
 
 ---@class TooltipLib : Library
 local Tooltip = {
@@ -573,3 +574,10 @@ TextDisplay.Events.FormattedTooltipRemoved:Subscribe(function (_) -- In TextDisp
 
     Tooltip.Events.TooltipHidden:Throw()
 end)
+
+-- Hide custom tooltips from the Examine UI,
+-- as the game does not appear to do this properly when hovering out of stats with custom IDs.
+Examine:RegisterCallListener("hideTooltip", function (_)
+    local ui = Tooltip._GetDefaultCustomTooltipUI()
+    ui:Hide()
+end, "After")
