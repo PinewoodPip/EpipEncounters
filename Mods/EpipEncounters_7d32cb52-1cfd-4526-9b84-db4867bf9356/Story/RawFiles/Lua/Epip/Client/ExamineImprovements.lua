@@ -49,7 +49,7 @@ Examine.Hooks.GetUpdateData:Subscribe(function (ev)
                 Label = Text.CommonStrings.CriticalChance:GetString(),
                 IconID = Examine.ICONS.CRITICAL_CHANCE,
                 ValueLabel = string.format("%d%%", char.Stats.CriticalChance),
-                EntryType = Examine.ENTRY_TYPES.STAT,
+                EntryType = Examine.ENTRY_TYPES.PRIMARY_STAT,
             }
 
             -- Insert crit chance after damage

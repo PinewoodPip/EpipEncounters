@@ -3,6 +3,8 @@
 -- Hooks for the Examine UI.
 ---------------------------------------------
 
+local V = Vector.Create
+
 ---@class ExamineUI : UI
 local Examine = {
 
@@ -20,10 +22,13 @@ local Examine = {
         STATS = 4, -- Entry type 2
     },
 
+    ---@enum UI.Examine.Entry.Type
     ENTRY_TYPES = {
-        STAT = 1, -- TODO is this only res?
+        PRIMARY_STAT = 1,
+        SECONDARY_STAT = 2,
         TALENT = 3,
-        -- STAT = 2,
+        STATUS = 7,
+        IMMUNITY = 8,
     },
 
     -- IDs for embedded icons. Named after what they're used for in Character Sheet, if they appear there; otherwise they're named after appearance/DOS1 usage.
@@ -83,6 +88,7 @@ local Examine = {
 
     Events = {
         Opened = {}, ---@type Event<ExamineUI_Event_Opened>
+        TooltipRequested = {}, ---@type Event<UI.Examine.Events.TooltipRequested>
     },
     Hooks = {
         GetUpdateData = {}, ---@type Event<ExamineUI_Hook_GetUpdateData>
@@ -101,12 +107,19 @@ Epip.InitializeUI(Ext.UI.TypeID.examine, "Examine", Examine)
 ---@class ExamineUI_Hook_GetUpdateData
 ---@field Data ExamineUI_UpdateData Hookable.
 
+---@class UI.Examine.Events.TooltipRequested
+---@field TooltipType UI.Examine.Entry.Type
+---@field StatOrHandle number
+---@field Position Vector2
+---@field Size Vector2
+---@field Alignment "right"
+
 ---------------------------------------------
 -- CLASSES
 ---------------------------------------------
 
 ---@class ExamineUI_UpdateData_Entry
----@field EntryType integer
+---@field EntryType UI.Examine.Entry.Type
 ---@field StatID integer
 ---@field IconID integer
 ---@field Label string
@@ -337,4 +350,17 @@ Examine:RegisterInvokeListener("update", function (_)
     })
 
     Examine._IsUpdatingArray = false
+end)
+
+-- Forward events for tooltips being requested; useful to handle custom stat entries.
+Examine:RegisterCallListener("showTooltip", function (ev, tooltipType, statID, x, y, w, h, alignment)
+    if #ev.Args > 1 then -- Arg count of 1 is used for user tooltip.
+        Examine.Events.TooltipRequested:Throw({
+            TooltipType = tooltipType,
+            StatOrHandle = statID,
+            Position = V(x, y),
+            Size = V(w, h),
+            Alignment = alignment,
+        })
+    end
 end)
