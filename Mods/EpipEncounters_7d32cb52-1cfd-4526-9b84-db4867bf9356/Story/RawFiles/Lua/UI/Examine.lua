@@ -76,6 +76,8 @@ local Examine = {
         SOURCERY = 49,
     },
 
+    _IsUpdatingArray = false,
+
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
 
@@ -256,8 +258,11 @@ end
 ---@return EclCharacter? -- `nil` if no character is being examined, such as when an item is being examined or the UI is hidden.
 function Examine.GetCharacter()
     local char = nil
-    if Examine:IsVisible() and not Examine._IsExaminingItem() then
-        char = Character.Get(Examine:GetUI():GetPlayerHandle())
+    if Examine:IsVisible() or Examine._IsUpdatingArray then
+        char = Ext.Entity.GetGameObject(Examine:GetUI():GetPlayerHandle()) ---@cast char EclCharacter|EclItem
+        if not Entity.IsCharacter(char) then
+            char = nil
+        end
     end
     return char
 end
@@ -266,17 +271,14 @@ end
 ---@return EclItem? -- `nil` if no item is being examined, such as when a character is being examined or the UI is hidden.
 function Examine.GetItem()
     local item = nil
-    if Examine:IsVisible() and Examine._IsExaminingItem() then
-        item = Item.Get(Examine:GetUI():GetPlayerHandle()) -- Yes. You're reading this right.
+    if Examine:IsVisible() or Examine._IsUpdatingArray then
+        -- Yes. You're reading this right.
+        item = Ext.Entity.GetGameObject(Examine:GetUI():GetPlayerHandle())  ---@cast item EclCharacter|EclItem
+        if not Entity.IsItem(item) then
+            item = nil
+        end
     end
     return item
-end
-
----Returns whether the UI is currently setup to examine an item.
----@return boolean
-function Examine._IsExaminingItem()
-    local root = Examine:GetRoot()
-    return root.examine_mc.portrait_mc.itemFrame_mc.visible
 end
 
 ---Parses the current contents of the Flash update arrays.
@@ -319,13 +321,20 @@ end
 -- Hook the update method.
 Examine:RegisterInvokeListener("update", function (_)
     local updateData = Examine._ParseEntries()
+
+    -- Necessary flag for GetCharacter() and GetItem() to work as intended, since at this point the UI might not be visible, but the player handle is already set - and stays even after the UI is closed.
+    Examine._IsUpdatingArray = true
+
     updateData = Examine.Hooks.GetUpdateData:Throw({
         Data = updateData,
     }).Data
+
 
     Examine._EncodeEntries(updateData)
 
     Examine.Events.Opened:Throw({
         Data = updateData
     })
+
+    Examine._IsUpdatingArray = false
 end)
