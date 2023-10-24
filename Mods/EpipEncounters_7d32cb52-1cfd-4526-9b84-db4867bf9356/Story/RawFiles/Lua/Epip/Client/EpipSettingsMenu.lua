@@ -144,6 +144,7 @@ local tabs = {
             "Minimap",
             {Type = "Setting", Module = "EpipEncounters_TreasureTableDisplay", ID = "Enabled"},
             {Type = "Setting", Module = "EpipEncounters_Features.EnemyHealthBarExtraInfo", ID = "Mode"},
+            {Type = "Setting", Module = "EpipEncounters_Features.EnemyHealthBarExtraInfo", ID = "ResistancesDisplay"},
             {Type = "Setting", Module = "EpipEncounters_FlagsDisplay", ID = "Enabled"},
             "ESCClosesAmerUI",
             "RenderShroud",

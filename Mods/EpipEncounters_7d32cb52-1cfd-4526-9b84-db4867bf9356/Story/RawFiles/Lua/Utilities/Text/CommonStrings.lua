@@ -185,6 +185,14 @@ Text.CommonStrings.Overhaul = Text.RegisterTranslatedString({
     Text = "Overhaul",
     ContextDescription = "As in, 'game overhaul'",
 })
+Text.CommonStrings.Never = Text.RegisterTranslatedString({
+    Handle = "hdf3c7f54g8619g408fgb6bfgb716b7902125",
+    Text = "Never",
+})
+Text.CommonStrings.Always = Text.RegisterTranslatedString({
+    Handle = "hff7beb36g46fbg40d9gb13cg2f8680af5b06",
+    Text = "Always",
+})
 
 ---------------------------------------------
 -- BRANDING

@@ -6,6 +6,7 @@
 ---------------------------------------------
 
 local EnemyHealthBar = Client.UI.EnemyHealthBar
+local CommonStrings = Text.CommonStrings
 
 ---@class Features.EnemyHealthBarExtraInfo : Feature
 local ExtraInfo = {
@@ -29,6 +30,12 @@ local ExtraInfo = {
         NEAR_NAME = 2,
         BELOW_BAR = 3,
         IN_ALT_INFO = 4,
+    },
+    RESISTANCES_DISPLAY_MODES = {
+        NEVER = 1,
+        ONLY_NONZERO = 2,
+        IF_ANY_NONZERO = 3,
+        ALWAYS = 4,
     },
     TEXT_SIZE = 14.5,
 
@@ -58,26 +65,87 @@ local ExtraInfo = {
            Text = "When holding Shift",
            ContextDescription = "Option for 'show enemy level in hp bar' setting",
         },
+        Setting_ResistancesDisplay_Name = {
+            Handle = "h33af8f80g537eg4f1fga457gf02894f0d762",
+            Text = "Resistances Display",
+            ContextDescription = "Setting name",
+        },
+        Setting_ResistancesDisplay_Description = {
+            Handle = "h71cef3e3g71bag4da1gb743g56dc62daf7ac",
+            Text = "Controls how resistances are shown in the health bar UI.<br><br>- Never: resistances are never shown under the health bar.<br>- Only non-zero: only resistances that are not at 0 are displayed.<br>- If any non-zero: all resistances are displayed if the character has a non-zero amount of any of them; otherwise none are shown.<br>- Always: all resistances are shown.",
+            ContextDescription = "Setting tooltip",
+        },
+        Setting_ResistancesDisplay_Choice_OnlyNonZero = {
+            Handle = "h6493dca2g23e2g43d9g8cd4gfa10a05faedd",
+            Text = "Only non-zero",
+            ContextDescription = "Option for resistances display setting",
+        },
+        Setting_ResistancesDisplay_Choice_IfNonZero = {
+            Handle = "h14408a2cgee5fg4f6agb7f8g33c364419f75",
+            Text = "If any non-zero",
+            ContextDescription = "Option for resistances display setting",
+        },
     },
+    Settings = {},
+
+    USE_LEGACY_EVENTS = false,
+    USE_LEGACY_HOOKS = false,
+
+    Hooks = {
+        GetResistances = {}, ---@type Hook<Features.EnemyHealthBarExtraInfo.Hooks.GetResistances>
+    }
 }
 Epip.RegisterFeature("Features.EnemyHealthBarExtraInfo", ExtraInfo)
+local TSK = ExtraInfo.TranslatedStrings
+
+---------------------------------------------
+-- CLASSES
+---------------------------------------------
+
+---@class Features.EnemyHealthBarExtraInfo.Resistance
+---@field Color htmlcolor
+---@field Amount number As percentage.
+
+---------------------------------------------
+-- EVENTS/HOOKS
+---------------------------------------------
+
+---Display mode setting is handled by the feature; you're intended to return all resistances that exist or are applicable to the character.
+---@class Features.EnemyHealthBarExtraInfo.Hooks.GetResistances
+---@field Character EclCharacter
+---@field Resistances Features.EnemyHealthBarExtraInfo.Resistance[] Hookable.
 
 ---------------------------------------------
 -- SETTINGS
 ---------------------------------------------
 
-ExtraInfo:RegisterSetting("Mode", {
+ExtraInfo.Settings.Mode = ExtraInfo:RegisterSetting("Mode", {
     Type = "Choice",
     Context = "Client",
     NameHandle = ExtraInfo.TranslatedStrings.SettingName,
     DescriptionHandle = ExtraInfo.TranslatedStrings.SettingDescription,
-    DefaultValue = 4,
+    DefaultValue = ExtraInfo.CHARACTER_LEVEL_MODES.IN_ALT_INFO,
     ---@type SettingsLib_Setting_Choice_Entry[]
     Choices = {
         {ID = ExtraInfo.CHARACTER_LEVEL_MODES.HIDDEN, NameHandle = Text.CommonStrings.Hidden.Handle},
         {ID = ExtraInfo.CHARACTER_LEVEL_MODES.NEAR_NAME, NameHandle = ExtraInfo.TranslatedStrings.NearName.Handle},
         {ID = ExtraInfo.CHARACTER_LEVEL_MODES.BELOW_BAR, NameHandle = ExtraInfo.TranslatedStrings.BelowBar.Handle},
         {ID = ExtraInfo.CHARACTER_LEVEL_MODES.IN_ALT_INFO, NameHandle = ExtraInfo.TranslatedStrings.NearAltInfo.Handle},
+    },
+})
+
+ExtraInfo.Settings.ResistancesDisplay = ExtraInfo:RegisterSetting("ResistancesDisplay", {
+    Type = "Choice",
+    Context = "Client",
+    NameHandle = ExtraInfo.TranslatedStrings.Setting_ResistancesDisplay_Name,
+    DescriptionHandle = ExtraInfo.TranslatedStrings.Setting_ResistancesDisplay_Description,
+    DefaultValue = ExtraInfo.RESISTANCES_DISPLAY_MODES.ALWAYS,
+    ---@type SettingsLib_Setting_Choice_Entry[]
+    Choices = {
+        {ID = ExtraInfo.RESISTANCES_DISPLAY_MODES.NEVER, NameHandle = CommonStrings.Never.Handle},
+        {ID = ExtraInfo.RESISTANCES_DISPLAY_MODES.ONLY_NONZERO, NameHandle = TSK.Setting_ResistancesDisplay_Choice_OnlyNonZero.Handle},
+        {ID = ExtraInfo.RESISTANCES_DISPLAY_MODES.IF_ANY_NONZERO, NameHandle = TSK.Setting_ResistancesDisplay_Choice_IfNonZero.Handle},
+        {ID = ExtraInfo.RESISTANCES_DISPLAY_MODES.ALWAYS, NameHandle = CommonStrings.Always.Handle},
     },
 })
 
@@ -112,38 +180,76 @@ EnemyHealthBar.Hooks.GetBottomLabel:Subscribe(function (ev)
 
                     table.insert(texts, 1, string.format("Level %s", level))
                 end
-    
+
                 text = Text.Join(texts, "  ")
             else -- Show resistances.
-                local resistances = {}
-    
-                for _,resistanceId in ipairs(ExtraInfo.RESISTANCES_DISPLAYED) do
-                    local amount = Character.GetResistance(char, resistanceId)
-                    local color = ExtraInfo.RESISTANCE_COLORS[resistanceId]
-                    local display = Text.Format("%s%%", {
-                        Color = color,
-                        FormatArgs = {
-                            amount,
-                        },
-                    })
-    
-                    table.insert(resistances, display)
-                end
+                local displayMode = ExtraInfo:GetSettingValue(ExtraInfo.Settings.ResistancesDisplay)
 
-                -- Insert some padding at the start
-                text = " " .. Text.Join(resistances, "  ")
+                if displayMode ~= ExtraInfo.RESISTANCES_DISPLAY_MODES.NEVER then
+                    local resistances = ExtraInfo.Hooks.GetResistances:Throw({
+                        Character = char,
+                        Resistances = {},
+                    }).Resistances
+
+                    local resistanceLabels = {}
+                    local hasResistances = false
+                    for _,entry in ipairs(resistances) do
+                        if entry.Amount ~= 0 then
+                            hasResistances = true
+                            break
+                        end
+                    end
+                    for _,entry in ipairs(resistances) do
+                        local label = Text.Format("%d%%", {
+                            Color = entry.Color,
+                            FormatArgs = {
+                                entry.Amount,
+                            },
+                        })
+                        local canDisplay = displayMode == ExtraInfo.RESISTANCES_DISPLAY_MODES.ALWAYS
+                        if displayMode == ExtraInfo.RESISTANCES_DISPLAY_MODES.IF_ANY_NONZERO then
+                            canDisplay = hasResistances
+                        elseif displayMode == ExtraInfo.RESISTANCES_DISPLAY_MODES.ONLY_NONZERO then
+                            canDisplay = entry.Amount ~= 0
+                        end
+
+                        if canDisplay then
+                            table.insert(resistanceLabels, label)
+                        end
+                    end
+
+                    -- Insert some padding at the start
+                    if resistanceLabels[1] then
+                        text = " " .. Text.Join(resistanceLabels, "  ")
+                    end
+                end
             end
         elseif item and item.Stats then -- Show item level.
             text = string.format("Level %s", item.Stats.Level)
         end
-    
-        -- Make text smaller.
-        text = Text.Format(text, {Size = ExtraInfo.TEXT_SIZE})
-    
-        table.insert(ev.Labels, text)
+
+        if text ~= "" then
+            -- Make text smaller.
+            text = Text.Format(text, {Size = ExtraInfo.TEXT_SIZE})
+            table.insert(ev.Labels, text)
+        end
     end
 end)
 
+-- Default implementation of GetResistances; retrieves all resistances used in vanilla and EE.
+ExtraInfo.Hooks.GetResistances:Subscribe(function (ev)
+    for _,resistanceId in ipairs(ExtraInfo.RESISTANCES_DISPLAYED) do
+        local amount = Character.GetResistance(ev.Character, resistanceId)
+        local color = ExtraInfo.RESISTANCE_COLORS[resistanceId]
+        ---@type Features.EnemyHealthBarExtraInfo.Resistance
+        local entry = {
+            Color = color,
+            Amount = amount
+        }
+
+        table.insert(ev.Resistances, entry)
+    end
+end, {StringID = "DefaultImplementation"})
 
 -- Display level by character name and hide it from the footer,
 -- depending on user settings.
@@ -153,7 +259,7 @@ EnemyHealthBar.Hooks.GetHeader:Subscribe(function (ev)
     if ExtraInfo:IsEnabled() and setting == ExtraInfo.CHARACTER_LEVEL_MODES.NEAR_NAME then
         local char, item = ev.Character, ev.Item
         local level = (char and Character.GetLevel(char)) or (item and Item.GetLevel(item))
-    
+
         if level then
             ev.Header = string.format("%s - Lvl %s", ev.Header, level)
         end
