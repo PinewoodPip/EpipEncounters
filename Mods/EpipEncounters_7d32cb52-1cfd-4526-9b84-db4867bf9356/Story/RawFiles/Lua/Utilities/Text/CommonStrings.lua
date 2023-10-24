@@ -151,6 +151,21 @@ Text.CommonStrings.Level = Text.RegisterTranslatedString({
     Text = "Level",
     ContextDescription = "As in, \"character level\""
 })
+Text.CommonStrings.AP = Text.RegisterTranslatedString({
+    Handle = "h4b557dbeg4eefg4284gba11gef2cf523830f",
+    Text = "AP",
+    ContextDescription = "Acronym for \"Action Points\""
+})
+Text.CommonStrings.SP = Text.RegisterTranslatedString({
+    Handle = "he007d2e4gc918g475cgbca9g7edc91ad34ab",
+    Text = "SP",
+    ContextDescription = "Acronym for \"Source Points\"",
+})
+Text.CommonStrings.INIT = Text.RegisterTranslatedString({
+    Handle = "hd4148b10gb4e1g4550gbe4dgcdf246c626f1",
+    Text = "INIT",
+    ContextDescription = "Acronym for \"Initiative\"",
+})
 Text.CommonStrings.Keybinds = Text.RegisterTranslatedString({
    Handle = "hebad38dcg58c3g4a03gb44eg02833543ba38",
    Text = "Keybinds",

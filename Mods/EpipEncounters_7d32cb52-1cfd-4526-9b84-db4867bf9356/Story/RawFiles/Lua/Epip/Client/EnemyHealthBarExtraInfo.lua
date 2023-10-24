@@ -214,9 +214,9 @@ function ExtraInfo.GetAlternativeDisplayLabel(char)
         maxSp = 3
     end
     local texts = {
-        string.format("%s/%s AP", ap, maxAp),
-        string.format("%s/%s SP", sp, maxSp),
-        string.format("%s INIT", init),
+        string.format("%s/%s %s", ap, maxAp, CommonStrings.AP:GetString()),
+        string.format("%s/%s %s", sp, maxSp, CommonStrings.SP:GetString()),
+        string.format("%s %s", init, CommonStrings.INIT:GetString()),
     }
 
     -- Insert level, based on user setting
