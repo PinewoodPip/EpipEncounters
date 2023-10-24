@@ -146,6 +146,11 @@ Text.CommonStrings.LevelFloor = Text.RegisterTranslatedString({
    Text = "Level %d+",
    ContextDescription = "Ex. 'Level 10+'",
 })
+Text.CommonStrings.Level = Text.RegisterTranslatedString({
+    Handle = "h43d39739g75fbg4205g9a45g75447dd59aae",
+    Text = "Level",
+    ContextDescription = "As in, \"character level\""
+})
 Text.CommonStrings.Keybinds = Text.RegisterTranslatedString({
    Handle = "hebad38dcg58c3g4a03gb44eg02833543ba38",
    Text = "Keybinds",

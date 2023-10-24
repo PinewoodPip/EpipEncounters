@@ -150,6 +150,86 @@ ExtraInfo.Settings.ResistancesDisplay = ExtraInfo:RegisterSetting("ResistancesDi
 })
 
 ---------------------------------------------
+-- METHODS
+---------------------------------------------
+
+---Returns the resistances label for a character.
+---@see Features.EnemyHealthBarExtraInfo.Hooks.GetResistances
+---@param char EclCharacter
+---@return string? -- `nil` if no resistances are applicable, either due to no hook returns or user setting.
+function ExtraInfo.GetResistancesLabel(char)
+    local displayMode = ExtraInfo:GetSettingValue(ExtraInfo.Settings.ResistancesDisplay)
+    local label = nil
+
+    if displayMode ~= ExtraInfo.RESISTANCES_DISPLAY_MODES.NEVER then
+        local resistances = ExtraInfo.Hooks.GetResistances:Throw({
+            Character = char,
+            Resistances = {},
+        }).Resistances
+
+        local resistanceLabels = {}
+        local hasResistances = false
+        for _,entry in ipairs(resistances) do
+            if entry.Amount ~= 0 then
+                hasResistances = true
+                break
+            end
+        end
+        for _,entry in ipairs(resistances) do
+            local resistanceLabel = Text.Format("%d%%", {
+                Color = entry.Color,
+                FormatArgs = {
+                    entry.Amount,
+                },
+            })
+
+            local canDisplay = displayMode == ExtraInfo.RESISTANCES_DISPLAY_MODES.ALWAYS
+            if displayMode == ExtraInfo.RESISTANCES_DISPLAY_MODES.IF_ANY_NONZERO then
+                canDisplay = hasResistances
+            elseif displayMode == ExtraInfo.RESISTANCES_DISPLAY_MODES.ONLY_NONZERO then
+                canDisplay = entry.Amount ~= 0
+            end
+            if canDisplay then
+                table.insert(resistanceLabels, resistanceLabel)
+            end
+        end
+
+        if resistanceLabels[1] then
+            -- Insert some padding at the start
+            label = " " .. Text.Join(resistanceLabels, "  ")
+        end
+    end
+
+    return label
+end
+
+---Returns the alternative display label for a character.
+---@param char EclCharacter
+---@return string
+function ExtraInfo.GetAlternativeDisplayLabel(char)
+    local sp, maxSp = Character.GetSourcePoints(char)
+    local ap, maxAp = Character.GetActionPoints(char)
+    local init = Character.GetInitiative(char)
+    if maxSp == -1 then
+        maxSp = 3
+    end
+    local texts = {
+        string.format("%s/%s AP", ap, maxAp),
+        string.format("%s/%s SP", sp, maxSp),
+        string.format("%s INIT", init),
+    }
+
+    -- Insert level, based on user setting
+    if ExtraInfo:GetSettingValue(ExtraInfo.Settings.Mode) == ExtraInfo.CHARACTER_LEVEL_MODES.IN_ALT_INFO then
+        local level = Character.GetLevel(char)
+
+        table.insert(texts, 1, string.format("%s %s", CommonStrings.Level:GetString(), level))
+    end
+
+    return Text.Join(texts, "  ")
+end
+
+---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
 
@@ -158,77 +238,19 @@ EnemyHealthBar.Hooks.GetBottomLabel:Subscribe(function (ev)
     if ExtraInfo:IsEnabled() then
         -- Show resistances for chars, or alternative info if shift is being held.
         local char, item = ev.Character, ev.Item
-        local text = ""
+        local text = nil
 
         if char then
             if Client.Input.IsShiftPressed() then -- Show alternate info.
-                local sp, maxSp = Character.GetSourcePoints(char)
-                local ap, maxAp = Character.GetActionPoints(char)
-                local init = Character.GetInitiative(char)
-                if maxSp == -1 then
-                    maxSp = 3
-                end
-                local texts = {
-                    string.format("%s/%s AP", ap, maxAp),
-                    string.format("%s/%s SP", sp, maxSp),
-                    string.format("%s INIT", init),
-                }
-
-                -- Insert level, based on user setting
-                if ExtraInfo:GetSettingValue(ExtraInfo.Settings.Mode) == ExtraInfo.CHARACTER_LEVEL_MODES.IN_ALT_INFO then
-                    local level = Character.GetLevel(char)
-
-                    table.insert(texts, 1, string.format("Level %s", level))
-                end
-
-                text = Text.Join(texts, "  ")
+                text = ExtraInfo.GetAlternativeDisplayLabel(char)
             else -- Show resistances.
-                local displayMode = ExtraInfo:GetSettingValue(ExtraInfo.Settings.ResistancesDisplay)
-
-                if displayMode ~= ExtraInfo.RESISTANCES_DISPLAY_MODES.NEVER then
-                    local resistances = ExtraInfo.Hooks.GetResistances:Throw({
-                        Character = char,
-                        Resistances = {},
-                    }).Resistances
-
-                    local resistanceLabels = {}
-                    local hasResistances = false
-                    for _,entry in ipairs(resistances) do
-                        if entry.Amount ~= 0 then
-                            hasResistances = true
-                            break
-                        end
-                    end
-                    for _,entry in ipairs(resistances) do
-                        local label = Text.Format("%d%%", {
-                            Color = entry.Color,
-                            FormatArgs = {
-                                entry.Amount,
-                            },
-                        })
-                        local canDisplay = displayMode == ExtraInfo.RESISTANCES_DISPLAY_MODES.ALWAYS
-                        if displayMode == ExtraInfo.RESISTANCES_DISPLAY_MODES.IF_ANY_NONZERO then
-                            canDisplay = hasResistances
-                        elseif displayMode == ExtraInfo.RESISTANCES_DISPLAY_MODES.ONLY_NONZERO then
-                            canDisplay = entry.Amount ~= 0
-                        end
-
-                        if canDisplay then
-                            table.insert(resistanceLabels, label)
-                        end
-                    end
-
-                    -- Insert some padding at the start
-                    if resistanceLabels[1] then
-                        text = " " .. Text.Join(resistanceLabels, "  ")
-                    end
-                end
+                text = ExtraInfo.GetResistancesLabel(char)
             end
         elseif item and item.Stats then -- Show item level.
-            text = string.format("Level %s", item.Stats.Level)
+            text = string.format("%s %s", CommonStrings.Level:GetString(), item.Stats.Level)
         end
 
-        if text ~= "" then
+        if text and text ~= "" then
             -- Make text smaller.
             text = Text.Format(text, {Size = ExtraInfo.TEXT_SIZE})
             table.insert(ev.Labels, text)
