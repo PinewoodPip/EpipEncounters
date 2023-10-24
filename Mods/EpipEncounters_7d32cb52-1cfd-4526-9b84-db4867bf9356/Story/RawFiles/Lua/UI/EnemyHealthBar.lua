@@ -362,6 +362,11 @@ Bar.Hooks.GetStatusHolderPosition:Subscribe(function (ev)
 
     offset = offset + element.height
 
+    -- If no bottom text is showing, ensure statuses do not clip into B/H display
+    if element.height < 10 and EpicEncounters.IsEnabled() then
+        offset = offset + 18
+    end
+
     ev.PositionY = ev.PositionY + offset
 end)
 
