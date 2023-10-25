@@ -1,29 +1,26 @@
 
 ---@class Features.PreferredTargetDisplay
 local PreferredTargetDisplay = Epip.GetFeature("Features.PreferredTargetDisplay")
+local TSK = PreferredTargetDisplay.TranslatedStrings
 
+---Returns a label showing the AI preference of a character.
 ---@param char EclCharacter
----@return boolean
-function PreferredTargetDisplay.IsPreferred(char)
-    return char:HasTag(Character.AI_PREFERRED_TAG)
-end
-
----@param char EclCharacter
----@return string?
+---@return string? -- `nil` if the character has no special general consideration to the AI.
 function PreferredTargetDisplay.GetPreferredString(char)
-    local str
+    local str = nil
 
     if Character.IsPreferredByAI(char) then
-        str = "Preferred by enemies"
+        str = TSK.AggroEffect_Preferred:GetString()
     elseif Character.IsUnpreferredByAI(char) then
-        str = "Unpreferred by enemies"
+        str = TSK.AggroEffect_Unpreferred:GetString()
     elseif Character.IsIgnoredByAI(char) then
-        str = "Ignored by enemies"
+        str = TSK.AggroEffect_Ignored:GetString()
     end
 
     return str
 end
 
+---Returns a label indicating taunted/taunting status of a character.
 ---@param char EclCharacter
 ---@return string?
 function PreferredTargetDisplay.GetTauntString(char)
@@ -36,15 +33,15 @@ function PreferredTargetDisplay.GetTauntString(char)
         if tauntSourceGUID then
             local enemy = Character.Get(tauntSourceGUID)
 
-            str = str .. "Taunted by " .. enemy.DisplayName
+            str = str .. TSK.AggroEffect_TauntedBy:Format(enemy.DisplayName)
         end
 
         if tauntTargetGUID then
             local enemy = Character.Get(tauntTargetGUID)
 
             if str ~= "" then str = str .. "<br>" end
-            
-            str = str .. "Taunting " .. enemy.DisplayName
+
+            str = str .. TSK.AggroEffect_Taunting:Format(enemy.DisplayName)
         end
     end
 
