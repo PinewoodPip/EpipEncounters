@@ -490,6 +490,21 @@ function Text.StripFontTags(str)
     return newStr
 end
 
+---Splits up a pascal-case (ex. "PascalCase") string into words.
+---Will split up consecutive uppercase characters.
+---@param str string First letter will be automatically capitalized.
+---@return string[]
+function Text.SplitPascalCase(str)
+    local words = {} ---@type string[]
+    str = Text.Capitalize(str)
+
+    for word in str:gmatch("(%u%l*)") do
+        table.insert(words, word)
+    end
+
+    return words
+end
+
 ---Resolves and formats a TSK that uses Larian's placeholder format ("[1]", "[2]" etc.).
 ---@param handle TranslatedStringHandle
 ---@param ... any
@@ -574,6 +589,14 @@ function Text.GetTranslatedString(handle, fallBack)
     end
 
     return str
+end
+
+---Returns the handle for a string key.
+---@param stringKey string
+---@return TranslatedStringHandle?
+function Text.GetStringKeyHandle(stringKey)
+    local _, handle = Ext.L10N.GetTranslatedStringFromKey(stringKey)
+    return handle
 end
 
 ---Registers a translated string.

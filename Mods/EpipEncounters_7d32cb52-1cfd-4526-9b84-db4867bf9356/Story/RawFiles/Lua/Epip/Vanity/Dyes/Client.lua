@@ -531,7 +531,7 @@ function Dyes:__Setup()
     local i = 1
     for id,colorStat in pairs(Ext.Stats.ItemColor.GetAll()) do
         local dye = {
-            Name = id,
+            Name = Text.Join(Text.SplitPascalCase(id)), -- Make name more human-readable.
             ID = id,
             Color1 = Color.CreateFromDecimal(colorStat.Color1),
             Color2 = Color.CreateFromDecimal(colorStat.Color2),
