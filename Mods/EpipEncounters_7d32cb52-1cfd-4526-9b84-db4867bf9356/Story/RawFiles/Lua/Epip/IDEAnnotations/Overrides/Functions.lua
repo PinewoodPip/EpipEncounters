@@ -37,5 +37,12 @@ local functions = {
             },
         },
     },
+    ["Ext_Stats_ItemColor"] = {
+        ["GetAll"] = {
+            ReturnValues = {
+                {Type = "table<string, StatsItemColorDefinition>"},
+            },
+        },
+    },
 }
 return functions

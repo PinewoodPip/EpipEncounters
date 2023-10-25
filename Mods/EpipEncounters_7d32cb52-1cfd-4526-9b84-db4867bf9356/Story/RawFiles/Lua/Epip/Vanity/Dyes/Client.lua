@@ -526,26 +526,29 @@ function Dyes:__Setup()
 
     Dyes.AddDyeCategory(category.ID, category)
 
-    for _,statID in ipairs(Ext.Stats.GetStats("Armor")) do
-        local stat = Ext.Stats.Get(statID)
+    ---@type VanityDye[]
+    local dyes = {}
+    local i = 1
+    for id,colorStat in pairs(Ext.Stats.ItemColor.GetAll()) do
+        local dye = {
+            Name = id,
+            ID = id,
+            Color1 = Color.CreateFromDecimal(colorStat.Color1),
+            Color2 = Color.CreateFromDecimal(colorStat.Color2),
+            Color3 = Color.CreateFromDecimal(colorStat.Color3),
+            Type = "Custom",
+        }
+        dyes[i] = dye
+        i = i + 1
+    end
+    -- Sort alphabetically
+    table.sort(dyes, function (a, b)
+        return a.Name < b.Name
+    end)
 
-        if stat.ItemColor ~= "" and string.find(statID, "GENCOLOR") == nil then
-            local colorStat = Ext.Stats.ItemColor.Get(stat.ItemColor)
-
-            if colorStat then
-                local dye = {
-                    Name = stat.ItemColor,
-                    ID = stat.ItemColor,
-                    Color1 = Color.CreateFromDecimal(colorStat.Color1),
-                    Color2 = Color.CreateFromDecimal(colorStat.Color2),
-                    Color3 = Color.CreateFromDecimal(colorStat.Color3),
-                    Type = "Custom",
-                }
-    
-                if not Dyes.DYE_DATA[dye.ID] then
-                    Dyes.AddDye(category.ID, dye)
-                end
-            end
+    for _,dye in ipairs(dyes) do
+        if not Dyes.DYE_DATA[dye.ID] and not string.find(dye.ID, "PIP_GENCOLOR", nil, true) and not string.find(dye.ID, "PIP_DYE", nil, true) then -- Do not include stats for custom dyes.
+            Dyes.AddDye(category.ID, dye)
         end
     end
 end
