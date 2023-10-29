@@ -7,6 +7,15 @@
 local TooltipAdjustments = Epip.GetFeature("Feature_TooltipAdjustments")
 TooltipAdjustments.WEAPON_RANGE_DELTAMOD_PATTERN = "Boost_Weapon_Range_(.*)$"
 
+local WeaponRangeBoostTSK = TooltipAdjustments:RegisterTranslatedString("h56298a9agd232g45d3ga079g28bedb59e95d", {
+    Text = "+%sm Weapon Range",
+    ContextDescription = "Tooltip for boost. First parameter is range in meters",
+})
+local TotalWeaponRangeTSK = TooltipAdjustments:RegisterTranslatedString("hb7c72307g365dg4b59g9cf2gf9c9093d2ec3", {
+    Text = "%sm + %sm",
+    ContextDescription = "Range indicator at the bottom of the tooltip. Params are base weapon range and boosted range from the deltamod",
+})
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
@@ -40,7 +49,7 @@ Client.Tooltip.Hooks.RenderItemTooltip:Subscribe(function (ev)
             -- Add Extra Properties display
             ev.Tooltip:InsertElement({
                 Type = "ExtraProperties",
-                Label = string.format("+%sm Weapon Range", weaponBoostString) 
+                Label = WeaponRangeBoostTSK:Format(weaponBoostString)
             })
 
             -- Reflect the addition in the weapon range label
@@ -51,8 +60,8 @@ Client.Tooltip.Hooks.RenderItemTooltip:Subscribe(function (ev)
                 amount = tonumber(amount)
                 amount = amount - (weaponRangeBoostValue / 100)
                 ---@diagnostic enable cast-local-type
-    
-                element.Value = string.format("%sm + %sm", Text.RemoveTrailingZeros(amount), weaponBoostString)
+
+                element.Value = TotalWeaponRangeTSK:Format(Text.RemoveTrailingZeros(amount), weaponBoostString)
             end
         end
     end
