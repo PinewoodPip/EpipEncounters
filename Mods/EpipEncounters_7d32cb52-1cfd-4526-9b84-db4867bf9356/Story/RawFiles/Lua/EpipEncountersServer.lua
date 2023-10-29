@@ -22,8 +22,6 @@ function ItemHasMaxSockets(char, mode)
             limit = 2
         end
 
-        local isTransmogged = itemData:HasTag("PIP_Vanity_Transmogged")
-
         local isMaxed = GetRuneSlots(itemId) >= limit
         if isMaxed then
             if limit == 3 then
@@ -31,10 +29,8 @@ function ItemHasMaxSockets(char, mode)
             else
                 Osi.OpenMessageBox(char, "AMER_UI_Greatforge_AddSockets_InvalidSelection2Sockets")
             end
-        elseif isTransmogged then
-            Osi.OpenMessageBox(char, "I must first restore the item to its original appearance - I cannot do this with transmogrified equipment.")
         end
-        return isMaxed or isTransmogged
+        return isMaxed
     end
     return false
 end
