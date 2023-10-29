@@ -5,7 +5,6 @@
 
 ---@class Feature_TooltipAdjustments
 local TooltipAdjustments = Epip.GetFeature("Feature_TooltipAdjustments")
-TooltipAdjustments.WEAPON_RANGE_DELTAMOD_PATTERN = "Boost_Weapon_Range_(.*)$"
 
 local WeaponRangeBoostTSK = TooltipAdjustments:RegisterTranslatedString("h56298a9agd232g45d3ga079g28bedb59e95d", {
     Text = "+%sm Weapon Range",
@@ -28,19 +27,18 @@ Client.Tooltip.Hooks.RenderItemTooltip:Subscribe(function (ev)
         local weaponRangeBoostValue = 0;
 
         for _,deltaModName in pairs(item:GetDeltaMods()) do
-            local match = deltaModName:match(TooltipAdjustments.WEAPON_RANGE_DELTAMOD_PATTERN)
+            local deltamod = Ext.Stats.DeltaMod.GetLegacy(deltaModName, "Weapon")
+            if deltamod then
+                for _,boost in ipairs(deltamod.Boosts) do
+                    local stat = Stats.Get("StatsLib_StatsEntry_Weapon", boost.Boost) -- Not sure if Count field needs to be considered, TODO?
 
-            if match then
-                local value = tonumber(match)
-
-                -- We keep the highest value, as per deltamod behaviour of max(a, b)
-                if value > weaponRangeBoostValue then
-                    weaponRangeBoostValue = value
+                    -- We keep the highest value, as per deltamod behaviour of max(a, b)
+                    weaponRangeBoostValue = math.max(weaponRangeBoostValue, stat.WeaponRange)
                 end
             end
         end
 
-        if weaponRangeBoostValue > 0 then
+        if weaponRangeBoostValue > 0 then -- TODO are negative boosts functional?
             TooltipAdjustments:DebugLog("Found item with boosted weapon range")
 
             -- weapon range is in centimeters within stats
@@ -55,7 +53,7 @@ Client.Tooltip.Hooks.RenderItemTooltip:Subscribe(function (ev)
             -- Reflect the addition in the weapon range label
             local element = ev.Tooltip:GetFirstElement("WeaponRange")
             if element then
-                local amount = element.Value:gsub("m", "")
+                local amount = element.Value:gsub("m", "") -- TODO remove all non-numeric characters? might be different in other languages
                 ---@diagnostic disable cast-local-type
                 amount = tonumber(amount)
                 amount = amount - (weaponRangeBoostValue / 100)

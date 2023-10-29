@@ -51,5 +51,16 @@ local functions = {
             },
         },
     },
+    ["Ext_Stats_DeltaMod"] = {
+        ["GetLegacy"] = {
+            Params = {
+                {Name = "statID", Type = "string"},
+                {Name = "modifierType", Type = "\"Weapon\"|\"Armor\"|\"Shield\""}
+            },
+            ReturnValues = {
+                {Type = "DeltaMod"},
+            },
+        },
+    },
 }
 return functions
