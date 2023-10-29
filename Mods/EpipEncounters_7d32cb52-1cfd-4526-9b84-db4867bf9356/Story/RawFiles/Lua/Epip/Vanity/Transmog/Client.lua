@@ -77,17 +77,20 @@ function Transmog.ShouldKeepAppearance(item)
     return keepAppearance
 end
 
-function Transmog.ReapplyAppearance(item)
-    local slot = Item.GetItemSlot(item)
+---Transmogs an item to the persistent outfit of a character.
+---@param char EclCharacter
+---@param item EclItem Must be equipped by the character.
+function Transmog.ReapplyAppearance(char, item)
+    local slot = Item.GetEquippedSlot(item, char)
     local newTemplate = Transmog.activeCharacterTemplates[slot]
-    if not newTemplate then return nil end
+    if newTemplate then
+        Transmog.TransmogItem(item, newTemplate)
 
-    Transmog.TransmogItem(item, newTemplate)
-
-    Transmog.Events.AppearanceReapplied:Throw({
-        Item = item,
-        Template = newTemplate,
-    })
+        Transmog.Events.AppearanceReapplied:Throw({
+            Item = item,
+            Template = newTemplate,
+        })
+    end
 end
 
 function Transmog.UpdateActiveCharacterTemplates()
@@ -276,7 +279,7 @@ Character.Events.ItemEquipped:Subscribe(function (ev)
         if not Vanity.IsOpen() and Transmog.ShouldKeepAppearance(item) then
             Transmog:DebugLog("Reapplying appearance.")
 
-            Transmog.ReapplyAppearance(item)
+            Transmog.ReapplyAppearance(char, item)
 
             Timer.Start("", 0.4, function()
                 Transmog.UpdateActiveCharacterTemplates()
