@@ -519,6 +519,24 @@ function Character.GetRace(char)
     return characterRace
 end
 
+---Returns the race preset ID of a character.
+---@param char Character Should be a player.
+---@return Character_creationRaceDesc? -- `nil` if the character has no PlayerData.
+function Character.GetRacePreset(char)
+    local characterCreation = Ext.Stats.GetCharacterCreation()
+    local race = nil
+    if char.PlayerData then
+        local racePresetID = char.PlayerData.CustomData.Race
+        for _,preset in ipairs(characterCreation.RacePresets) do
+            if preset.RaceName == racePresetID then
+                race = preset
+                break
+            end
+        end
+    end
+    return race
+end
+
 ---Returns the original race of a player char, before any transforms.
 ---@param char Character Must be tagged with "REALLY_{Race}"
 ---@return Race?

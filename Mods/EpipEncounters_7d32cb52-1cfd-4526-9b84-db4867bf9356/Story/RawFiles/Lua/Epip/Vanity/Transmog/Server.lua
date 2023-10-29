@@ -196,13 +196,17 @@ function Vanity.RefreshAppearance(char, useAlternativeStatus)
 
     -- Transforming removes racial skills and as a result their cooldown is reset afterwards;
     -- we need to restore the cooldowns afterwards.
-    local race = Character.GetRace(char)
-    local racialSkills = race and Character._RACIAL_SKILLS[race]
+    local race = Character.GetRacePreset(char)
     local skillCooldowns = {} ---@type table<skill, number>
-    if racialSkills then
-        for _,skillID in ipairs(racialSkills) do
-            skillCooldowns[skillID] = Character.GetSkill(char, skillID).ActiveCooldown
+    if race then
+        local skillSet = Ext.Stats.SkillSet.GetLegacy(race.SkillSet)
+        for _,skillID in ipairs(skillSet.Skills) do
+            local skillRecord = Character.GetSkill(char, skillID)
+            if skillRecord then
+                skillCooldowns[skillID] = skillRecord.ActiveCooldown
+            end
         end
+
     end
 
     Osi.ApplyStatus(charGUID, status, 0, 1, NULLGUID)

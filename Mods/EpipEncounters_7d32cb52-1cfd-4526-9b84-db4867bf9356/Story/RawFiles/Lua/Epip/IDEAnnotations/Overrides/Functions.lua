@@ -44,5 +44,12 @@ local functions = {
             },
         },
     },
+    ["Ext_Stats_SkillSet"] = {
+        ["GetLegacy"] = {
+            ReturnValues = {
+                {Type = "StatSkillSet"},
+            },
+        },
+    },
 }
 return functions
