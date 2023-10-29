@@ -7,7 +7,7 @@
 
 local Craft = Client.UI.Craft
 
----@type Feature
+---@class Features.CraftingFixes : Feature
 local Fixes = {
     _PreviousFilter = "All", ---@type CraftUI_Filter_Type
 
@@ -23,8 +23,9 @@ local Fixes = {
            ContextDescription = "Default filter setting tooltip",
         },
     },
+    Settings = {},
 }
-Epip.RegisterFeature("CraftingFixes", Fixes)
+Epip.RegisterFeature("Features.CraftingFixes", Fixes)
 
 
 ---------------------------------------------

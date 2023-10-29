@@ -5,7 +5,7 @@ local QuickInventory = Epip.GetFeature("Feature_QuickInventory")
 local TooltipAdjustments = Epip.GetFeature("Feature_TooltipAdjustments")
 local AnimationCancelling = Epip.GetFeature("Feature_AnimationCancelling")
 local StatusesDisplay = Epip.GetFeature("Feature_StatusesDisplay")
-local CraftingFixes = Epip.GetFeature("Feature_CraftingFixes")
+local CraftingFixes = Epip.GetFeature("Features.CraftingFixes")
 local InventoryMultiSelect = Epip.GetFeature("Features.InventoryMultiSelect")
 local DiscordRichPresence = Epip.GetFeature("Features.DiscordRichPresence")
 local ContainerInventoryTweaks = Epip.GetFeature("Features.ContainerInventoryTweaks")
@@ -268,7 +268,7 @@ local tabs = {
             {Module = QuickInventory:GetSettingsModuleID(), ID = QuickInventory.Settings.CloseOnClickOutOfBounds.ID},
 
             CreateHeader(TSK.Section_CraftingUI),
-            {Module = CraftingFixes:GetSettingsModuleID(), ID = CraftingFixes.Settings.DefaultFilter.ID},
+            {Module = CraftingFixes:GetNamespace(), ID = CraftingFixes.Settings.DefaultFilter.ID},
         }
     },
     ["Epip_Notifications"] = {
