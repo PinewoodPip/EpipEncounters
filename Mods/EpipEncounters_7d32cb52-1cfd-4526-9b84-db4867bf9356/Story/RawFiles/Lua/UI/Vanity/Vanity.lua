@@ -1105,13 +1105,10 @@ Client.UI.CharacterSheet:RegisterCallListener("showTalentTooltip", PreventToolti
 
 Net.RegisterListener("EPIPENCOUNTERS_Vanity_RefreshSheetAppearance", function(_)
     local sheet = Client.UI.CharacterSheet
-    local char = Client.GetCharacter()
-    local hasHelm = char.PlayerData.HelmetOptionState
-    if hasHelm then hasHelm = 0 else hasHelm = 1 end
-
-    sheet:ExternalInterfaceCall("setHelmetOption", hasHelm)
-    if hasHelm == 0 then hasHelm = 1 else hasHelm = 0 end
-    sheet:ExternalInterfaceCall("setHelmetOption", hasHelm)
+    if sheet:IsVisible() then
+        -- Re-show the UI to update paperdoll and icons.
+        CharacterSheet:Show()
+    end
 end)
 
 Vanity:RegisterCallListener("copyFromElement", function(ev, id)
