@@ -160,6 +160,13 @@ function Pointer.GetDraggedItem(playerIndex)
     return item
 end
 
+---Stops a drag-drop.
+---@param playerIndex integer? Defaults to `1`.
+function Pointer.StopDragging(playerIndex)
+    playerIndex = playerIndex or 1
+    Ext.UI.GetDragDrop():StopDragging(playerIndex)
+end
+
 ---Returns whether the player's cursor is dragging anything.
 ---@param playerIndex integer? Defaults to 1.
 ---@return boolean

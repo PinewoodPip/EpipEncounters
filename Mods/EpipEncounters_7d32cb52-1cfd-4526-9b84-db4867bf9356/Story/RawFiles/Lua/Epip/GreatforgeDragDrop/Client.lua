@@ -55,6 +55,10 @@ Input.Events.KeyReleased:Subscribe(function (ev)
             })
 
             TextDisplay.RemoveText()
+
+            -- Prevent dragged items from being unequipped.
+            -- Dropping items is already impossible.
+            Pointer.StopDragging()
         end
     end
 end)
