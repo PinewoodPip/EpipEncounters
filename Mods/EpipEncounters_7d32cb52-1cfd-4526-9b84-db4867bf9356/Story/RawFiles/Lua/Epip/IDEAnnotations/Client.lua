@@ -339,7 +339,7 @@ function Generator._AnnotateEnum(writer, enum)
 
     writer:AddLine(string.format("---@alias %s string|integer\n%s", enum.TypeName, Text.Join(aliasAnnotations, "\n")))
 
-    writer:AddLine(string.format("Ext.Enums.%s = {} ---@type table<%s, Enum<%s>>", enum.TypeName, enum.TypeName, enum.TypeName))
+    writer:AddLine(string.format("Ext.Enums.%s = {} ---@type table<%s, Enum<%s>|%s>", enum.TypeName, enum.TypeName, enum.TypeName, enum.TypeName))
     writer:AddLine()
 end
 
