@@ -422,7 +422,7 @@ LOAD_ORDER = {
         },
     },
 
-    "UI/Controller/PanelSelect.lua",
+    -- "UI/Controller/PanelSelect.lua",
 
     "Epip/Client/NameTypoFixes.lua",
     "Epip/Client/ExamineImprovements.lua",
