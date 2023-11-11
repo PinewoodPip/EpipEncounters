@@ -402,6 +402,8 @@ function Menu.Open()
         Client.UI.Fade.FadeIn(0)
     end)
 
+    ui:SetPositionRelativeToViewport("center", "center", "screen")
+
     ui:Show()
 end
 

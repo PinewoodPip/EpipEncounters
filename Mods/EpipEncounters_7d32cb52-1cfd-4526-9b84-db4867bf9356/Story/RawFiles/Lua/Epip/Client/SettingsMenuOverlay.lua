@@ -59,6 +59,14 @@ UI.DEFAULT_LABEL_SIZE = V(800, 999) -- Labels are afterwards resized to text hei
 ---@param entries Feature_SettingsMenu_Entry[]
 function Overlay.Setup(entries)
     Overlay._Initialize()
+
+    -- Resize and reposition the overlay to match the regular menu
+    local settingsUIObject = SettingsMenu:GetUI():GetUI()
+    local uiObject = UI:GetUI()
+    uiObject:Resize(settingsUIObject.FlashMovieSize[1], settingsUIObject.FlashMovieSize[2], settingsUIObject:GetUIScaleMultiplier())
+    uiObject.SysPanelSize = settingsUIObject.SysPanelSize
+    UI:SetPositionRelativeToViewport("center", "center", "screen")
+
     local list = UI.List
     list:Clear()
 
@@ -112,10 +120,6 @@ end
 ---Creates the core elements of the UI, if not already initialized.
 function Overlay._Initialize()
     if not UI._Initialized then
-        local settingsUIObject = SettingsMenu:GetUI():GetUI()
-        local UIObject = UI:GetUI()
-        UIObject.SysPanelSize = settingsUIObject.SysPanelSize
-
         local root = UI:CreateElement("UIRoot", "GenericUI_Element_Empty")
         root:SetPosition(665, 145) -- Needs to be done in UI space.
         -- root:SetColor(Color.Create(120, 0, 0))

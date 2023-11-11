@@ -194,6 +194,13 @@ function Client.GetViewportSize()
     return Vector.Create(Ext.UI.GetViewportSize())
 end
 
+---Returns the UI scale preference of the user.
+---This refers to the UIScaling setting; it is unaffected by resolution.
+---@return number
+function Client.GetGlobalUIScale()
+    return Ext.Utils.GetGlobalSwitches().UIScaling
+end
+
 ---Translates world coordinates to screen position.
 ---@param worldPosition Vector3
 ---@param playerIndex integer? Defaults to `1`.
