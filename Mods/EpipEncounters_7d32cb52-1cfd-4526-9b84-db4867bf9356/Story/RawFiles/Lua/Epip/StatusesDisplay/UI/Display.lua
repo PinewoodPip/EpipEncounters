@@ -189,9 +189,14 @@ function Manager:Update()
     -- Update the position of the widget every frame
     local playerInfoWidget = PlayerInfo.GetPlayerElement(char)
     if playerInfoWidget then -- TODO why is this nil on load?
+        local uiObject = self.UI:GetUI()
         local playerInfoUI = PlayerInfo:GetUI()
         local pos = Vector.Create(playerInfoUI:GetPosition())
         local root = self.UI:GetRoot()
+
+        -- Use same scale as the PlayerInfo UI.
+        -- This is only necessary to support UIScaling; otherwise the UI already scales properly.
+        uiObject:Resize(playerInfoUI.FlashMovieSize[1], playerInfoUI.FlashMovieSize[2], playerInfoUI:GetUIScaleMultiplier())
 
         self.UI:SetPosition(pos)
         root.x = playerInfoWidget.x + self.FLASH_POSITION[1]
