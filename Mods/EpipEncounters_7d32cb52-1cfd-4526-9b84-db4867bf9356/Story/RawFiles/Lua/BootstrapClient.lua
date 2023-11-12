@@ -468,6 +468,7 @@ LOAD_ORDER = {
     "Epip/Client/SummonControlFix.lua",
     "Epip/Client/Notifications.lua",
     "Epip/Client/CraftingFixes.lua",
+    "Epip/UserVarsGUIDSyncWorkaround/Client.lua",
     "Epip/Client/RewardItemComparison.lua",
     "Epip/Client/HotbarTweaks.lua",
     "Epip/Client/ExamineKeybind.lua",
