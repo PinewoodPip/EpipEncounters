@@ -49,6 +49,21 @@ Color = {
 
         STAT_BLUE = "00547F",
         STAT_RED = "C80030",
+
+        -- Colors used in SkillSchool tooltip elements (the footer in skill tooltips)
+        SKILL_SCHOOLS = {
+            WARFARE = "DA2512",
+            HUNTSMAN = "81AB00",
+            SCOUNDREL = "639594",
+            PYROKINETIC = "FE6E27",
+            HYDROSOPHIST = "4197E2",
+            AEROTHEURGE = "7D71D9",
+            GEOMANCER = "7F3D00",
+            NECROMANCER = "B823CB",
+            SUMMONING = "7F25D4",
+            SPECIAL = "C9AA58",
+            SOURCERY = "46B195",
+        },
     },
 
     AREA_INTERACT = "FFD400",
