@@ -249,6 +249,17 @@ Ext.Osiris.RegisterListener("ItemEquipped", 2, "after", function(item, char)
     end
 end)
 
+-- Refresh visuals when an item is unequipped.
+-- Necessary to handle the case of unequipping an item that the engine would've masked -
+-- doing so will not cause the body visuals of that region to be updated otherwise.
+Osiris.RegisterSymbolListener("ItemUnequipped", 2, "after", function (_, charGUID)
+    if not Osi.ObjectExists(charGUID) then return end
+    local char = Character.Get(charGUID)
+    if char and Character.IsPlayer(char) then
+        Vanity.RefreshAppearance(char, true)
+    end
+end)
+
 -- Listen for "keep appearance" being toggled for a character's item slot.
 Net.RegisterListener("EPIPENCOUNTERS_Vanity_Transmog_KeepAppearance", function(payload)
     local char = Ext.GetCharacter(payload.NetID)

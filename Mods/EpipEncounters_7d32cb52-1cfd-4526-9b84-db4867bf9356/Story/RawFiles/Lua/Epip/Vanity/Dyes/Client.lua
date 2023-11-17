@@ -65,9 +65,11 @@ function Dyes.AddDye(categoryID, data)
     Dyes.DYE_DATA[data.ID] = data
 end
 
----@param item EclItem
-function Dyes.ReapplyAppearance(item)
-    local slot = Item.GetItemSlot(item)
+---Reapplies a character's persistent dye to an item.
+---@param char EclCharacter
+---@param item EclItem Must be equipped.
+function Dyes.ReapplyAppearance(char, item)
+    local slot = Item.GetEquippedSlot(item, char)
     local dye = Dyes.activeCharacterDyes[slot]
 
     if dye then
@@ -324,14 +326,14 @@ Character.Hooks.CreateEquipmentVisuals:Subscribe(function (ev)
         end
 
         if item then
-            local dye = Dyes.GetCurrentCustomDye(item, false, false)
-
+            -- We need to apply the color even if the item is not dyed, as it could've been a slot that the game would've normally masked - in which case the color fields will not have been set correctly.
+            local dye = Dyes.GetCurrentCustomDye(item, false, true)
             if dye then
                 request.Colors[3] = {dye.Color1:ToFloats()}
                 request.Colors[4] = {dye.Color2:ToFloats()}
                 request.Colors[5] = {dye.Color3:ToFloats()}
-                
-                Dyes.SetItemColorOverride(item, dye)
+
+                Dyes.SetItemColorOverride(item, dye) -- TODO custom color check?
 
                 -- This flag will be false for slots that would normally be masked by others by vanilla logic.
                 ev.Request.ApplyColors = true
@@ -342,7 +344,7 @@ end)
 
 -- Reapply dyes when an item's appearaance is reapplied.
 Transmog.Events.AppearanceReapplied:Subscribe(function (ev)
-    Dyes.ReapplyAppearance(ev.Item)
+    Dyes.ReapplyAppearance(ev.Character, ev.Item)
 end)
 
 GameState.Events.GameReady:Subscribe(function ()

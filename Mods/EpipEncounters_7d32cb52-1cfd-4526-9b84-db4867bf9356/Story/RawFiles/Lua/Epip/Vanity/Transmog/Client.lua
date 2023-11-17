@@ -6,11 +6,41 @@ local Hotbar = Client.UI.Hotbar
 local Transmog = Epip.GetFeature("Feature_Vanity_Transmog")
 Transmog.keepIcon = false
 
+---@type table<CharacterHandle, number[]>
+Transmog._SkinColors = {}
+
+Transmog._ItemSlotToEquipmentMask = {
+    Helmet = 1,
+    Breast = 2,
+    Leggings = 4,
+    Weapon = 8,
+    Shield = 16,
+    Ring = 32,
+    Belt = 64,
+    Boots = 128,
+    Gloves = 256,
+    Amulet = 512,
+    Ring2 = 1014,
+    Wings = 2048,
+    Horns = 4096,
+    Overhead = 8192,
+}
+
+Transmog._BlacklistedSlots = {
+    [Ext.Enums.ItemSlot32.Ring] = true,
+    [Ext.Enums.ItemSlot32.Ring2] = true,
+    [Ext.Enums.ItemSlot32.Amulet] = true,
+    [Ext.Enums.ItemSlot32.Wings] = true,
+    [Ext.Enums.ItemSlot32.Horns] = true,
+    [Ext.Enums.ItemSlot32.Overhead] = true,
+}
+
 ---------------------------------------------
 -- EVENTS / HOOKS
 ---------------------------------------------
 
 ---@class VanityTransmog_Event_AppearanceReapplied
+---@field Character EclCharacter
 ---@field Item EclItem
 ---@field Template ItemTemplate Template whose visual was reapplied to the item.
 ---@type Event<VanityTransmog_Event_AppearanceReapplied>
@@ -87,6 +117,7 @@ function Transmog.ReapplyAppearance(char, item)
         Transmog.TransmogItem(item, newTemplate)
 
         Transmog.Events.AppearanceReapplied:Throw({
+            Character = char,
             Item = item,
             Template = newTemplate,
         })
@@ -138,13 +169,13 @@ function Transmog.TransmogItem(item, template)
 
         -- Set icon override.
         if not Transmog.keepIcon then
-            local itemTemplate = Ext.Template.GetTemplate(template) ---@type ItemTemplate
+            local itemTemplate = Ext.Template.GetTemplate(template) ---@cast itemTemplate ItemTemplate
 
             item.Icon = itemTemplate.Icon
         else
             item.Icon = Item.GetIcon(item)
         end
-    
+
         -- Refresh UI
         if Vanity.currentTab ~= nil then
             -- We track this to update the UI immediately, without needing to wait for server.
@@ -197,7 +228,7 @@ function Transmog.BelongsToCategory(templateData, category) -- TODO extract defa
         for tag,_ in pairs(category.Tags) do
             if templateData.Tags[tag] then
                 matchingTagsCount = matchingTagsCount + 1
-    
+
                 -- Return true if the category doesnt need all tags to match
                 -- or if all tags matched
                 if not category.RequireAllTags or matchingTagsCount == categoryTagCount then
@@ -205,7 +236,7 @@ function Transmog.BelongsToCategory(templateData, category) -- TODO extract defa
                     break
                 end
             end
-        end 
+        end
     end
 
     return Transmog.Hooks.TemplateBelongsToCategory:Throw({
@@ -250,6 +281,76 @@ function Transmog.GetCategories(item)
     return categories
 end
 
+---Returns whether an item slot's masks should be applicable to the character.
+---@param char EclCharacter
+---@param slot ItemSlot32
+---@return boolean
+function Transmog._CanApplyMasks(char, slot)
+    local applyMasks = slot ~= "Helmet" or char.PlayerData.HelmetOptionState
+
+    -- Consider invisible transmogs
+    local equippedItem = char:GetItemObjectBySlot(slot)
+    if equippedItem then
+        applyMasks = applyMasks and not Transmog.IsItemInvisible(equippedItem, char)
+    end
+
+    return applyMasks
+end
+
+---Returns the equipment and visual set masks for a character's equipped items.
+---@param char EclCharacter
+---@return integer, integer -- Equipment slot mask and visual set slot mask.
+function Transmog._GetEquipmentMasks(char)
+    local equipmentMask = 0
+    local visualSetMask = 0
+
+    -- Gather equipment masks
+    for _,slot in pairs(Ext.Enums.ItemSlot32) do
+        local item = char:GetItemObjectBySlot(slot)
+        if item then
+            local transmoggedTemplateGUID = Transmog.GetTransmoggedTemplate(item)
+            local template = transmoggedTemplateGUID and Ext.Template.GetTemplate(transmoggedTemplateGUID) or item.CurrentTemplate
+
+            if Transmog._CanApplyMasks(char, slot) then
+                equipmentMask = equipmentMask | template.Equipment.EquipmentSlots
+            end
+        end
+    end
+
+    -- Gather visual slot masks *only* from items whose equipment hasn't been masked
+    for _,slot in pairs(Ext.Enums.ItemSlot32) do
+        local item = char:GetItemObjectBySlot(slot)
+        if item then
+            local transmoggedTemplateGUID = Transmog.GetTransmoggedTemplate(item)
+            local template = transmoggedTemplateGUID and Ext.Template.GetTemplate(transmoggedTemplateGUID) or item.CurrentTemplate
+
+            if Transmog._CanApplyMasks(char, slot) and (equipmentMask & Transmog._ItemSlotToEquipmentMask[slot] == 0) then
+                visualSetMask = visualSetMask | template.Equipment.VisualSetSlots
+            end
+        end
+    end
+
+    return equipmentMask, visualSetMask
+end
+
+---Returns whether an item is set to not show equipment visuals for a character.
+---@param item EclItem
+---@param char Character? If present, the character's helmet state will be considered.
+---@return boolean
+function Transmog.IsItemInvisible(item, char)
+    local invisible = item and item:IsTagged(Transmog.INVISIBLE_TAG)
+
+    -- Respect helmet visibility choice of the character
+    if char then
+        local equippedSlot = Item.GetEquippedSlot(item, char)
+        if equippedSlot then
+            invisible = invisible or (equippedSlot == "Helmet" and char.PlayerData and char.PlayerData.HelmetOptionState == false)
+        end
+    end
+
+    return invisible
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
@@ -258,14 +359,12 @@ end
 Character.Hooks.CreateEquipmentVisuals:Subscribe(function (ev)
     local request = ev.Request
     local item = ev.Item
-    local invisible = item and item:IsTagged(Transmog.INVISIBLE_TAG)
-    invisible = invisible or (ev.Request.Slot == "Helmet" and ev.Character.PlayerData and ev.Character.PlayerData.HelmetOptionState == false) -- Respect helmet visibility choice
 
-    if invisible then
+    if item and Transmog.IsItemInvisible(item, ev.Character) then
         request.VisualResourceID = ""
         request.EquipmentSlotMask = 0
         request.VisualSetSlotMask = 0
-        
+
         ev:StopPropagation()
     end
 end)
@@ -351,14 +450,37 @@ end)
 
 -- Show transmog'd visuals instead of the item's real ones.
 Character.Hooks.CreateEquipmentVisuals:Subscribe(function (ev)
-    if ev.Item and ev.Request.VisualResourceID ~= "" then -- Do not create visuals if engine does not want to (ex. if corpse is exploded).
-        local char = ev.Character
+    -- Do nothing for blacklisted slots or non-players.
+    if Transmog._BlacklistedSlots[ev.Request.Slot] or not ev.Character.PlayerData then
+        return
+    end
+
+    local char = ev.Character
+    local equipmentSlotMask, visualSetSlotMask = Transmog._GetEquipmentMasks(char)
+
+    -- Update skin color tracking - we cannot calculate the exact color ourselves
+    if ev.Request.ApplyColors then
+        Transmog._SkinColors[char.Handle] = ev.Request.Colors[1]
+    end
+
+    if ev.Item then
+        -- Check if the character's body is present, if they're dead
+        local dyingStatus = char:GetStatus("DYING") ---@cast dyingStatus EclStatusDying
+        local canShowTransmog = true
+        if dyingStatus then
+            local deathReason = dyingStatus.DeathType
+            canShowTransmog = not Character.CORPSELESS_DEATH_TYPES[deathReason]
+        end
+        if not canShowTransmog then return end -- Do not render equipment visuals if the character's body is gone.
+
         local transmoggedTemplateGUID = Transmog.GetTransmoggedTemplate(ev.Item)
         local slot = ev.Request.Slot
         local template
 
         if transmoggedTemplateGUID then
             template = Ext.Template.GetTemplate(transmoggedTemplateGUID) ---@cast template ItemTemplate
+        elseif slot ~= "Weapon" and slot ~= "Shield" then -- Render the original item anyways; this is necessary for correct behaviour when other item slots have an item with masks that has been transmogged into one with fewer masks.
+            template = ev.Item.CurrentTemplate
         end
 
         -- Only proceed if the item is transmogged into a template that
@@ -402,16 +524,48 @@ Character.Hooks.CreateEquipmentVisuals:Subscribe(function (ev)
                 -- If the slot is not weapon/shield, we need to fetch the correct visual from the template's Equipment.
                 local equipmentClassIndex = Character.EQUIPMENT_VISUAL_CLASS.NONE
                 local gender = Character.IsMale(char) and "MALE" or "FEMALE"
-                local race = Character.GetRace(char):upper()
+                local race = Character.GetRace(char)
+                if not race then return end -- Do nothing for characters transformed into non-racial characters.
+                race = race:upper()
                 local isUndead = Character.IsUndead(char) and "UNDEAD_" or ""
 
                 equipmentClassIndex = Character.EQUIPMENT_VISUAL_CLASS[string.format("%s%s_%s", isUndead, race, gender)]
 
                 ev.Request.VisualResourceID = template.Equipment.VisualResources[equipmentClassIndex]
-                ev.Request.EquipmentSlotMask = template.Equipment.EquipmentSlots
-                ev.Request.VisualSetSlotMask = template.Equipment.VisualSetSlots
+
+                ev.Request.EquipmentSlotMask = equipmentSlotMask
+
+                -- Do not mess with the head mask for non-helmet slots,
+                -- as doing so appears to cause issues where the head is rendered
+                -- when it shouldn't be.
+                if slot ~= "Helmet" then
+                    visualSetSlotMask = visualSetSlotMask & ~(2)
+                end
+                ev.Request.VisualSetSlotMask = visualSetSlotMask
+
+                -- Hide masked slots
+                local slotMask = Transmog._ItemSlotToEquipmentMask[slot]
+                if slotMask and slotMask & equipmentSlotMask ~= 0 then
+                    ev.Request.VisualResourceID = ""
+                end
+
+                -- Apply skin color and other missing parameters to slots that the engine would normally mask
+                if char.PlayerData and not ev.Request.Armor then
+                    local skinColor = Transmog._SkinColors[char.Handle]
+                    if skinColor then
+                        ev.Request.Colors[1] = skinColor -- Second color is hair color
+                    end
+                    ev.Request.AllowTPose = true
+                    ev.Request.ApplyColors = true
+                    ev.Request.Armor = true
+                    ev.Request.SomeWeaponFlag = true
+                    ev.Request.AttachFlags = "Armor"
+                end
             end
         end
+    else
+        -- Apply visual set slot mask nonetheless, to handle the case of unequipping an item that *would've* been masked by the engine, if the user hadn't transmogged the item that was masking it.
+        ev.Request.VisualSetSlotMask = visualSetSlotMask
     end
 end)
 
@@ -429,13 +583,13 @@ GameState.Events.GameReady:Subscribe(function (_)
 
             if Item.IsEquipment(item) then
                 local icon = Transmog.GetIconOverride(item)
-    
+
                 if icon then
                     Transmog:DebugLog("Found icon override for", item.DisplayName)
-    
+
                     item.Icon = icon
                 end
-            end       
+            end
         end
     end
 end)
