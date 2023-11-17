@@ -317,7 +317,8 @@ end)
 
 -- Add option to equipment context menus.
 ContextMenu.RegisterVanillaMenuHandler("Item", function(item)
-    if Item.IsEquipment(item) and Item.IsEquipped(Client.GetCharacter(), item) then
+    -- Only display the option for equipped items that can be unequipped.
+    if Item.IsEquipment(item) and Item.IsEquipped(Client.GetCharacter(), item) and not item.UnEquipLocked then
         ContextMenu.AddElement({
             {id = "epip_Feature_QuickInventory", type = "button", text = QuickInventory.TranslatedStrings.ContextMenuButtonLabel:GetString()},
         })
