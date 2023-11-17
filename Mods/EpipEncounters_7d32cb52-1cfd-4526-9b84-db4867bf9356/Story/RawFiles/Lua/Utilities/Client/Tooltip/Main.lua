@@ -438,6 +438,9 @@ Client.UI.Tooltip:RegisterInvokeListener("addFormattedTooltip", function(ev, _, 
     if Tooltip._nextCustomTooltip then
         local tooltipData = Tooltip._nextCustomTooltip
 
+        -- Clear the previous tooltip data
+        Client.UI.Tooltip:GetRoot().tooltip_array.length = 0
+
         HandleFormattedTooltip(ev, "tooltip_array", {UIType = Ext.UI.TypeID.hotBar, Type = "Custom", FlashCharacterHandle = Ext.UI.HandleToDouble(Client.GetCharacter().Handle)}, tooltipData.Elements)
     end
 end)
