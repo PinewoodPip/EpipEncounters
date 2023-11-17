@@ -1,4 +1,6 @@
 
+local DeathType = Ext.Enums.DeathType
+
 ---@class CharacterLib : Library
 Character = {
     AI_PREFERRED_TAG = "AI_PREFERRED_TARGET",
@@ -72,6 +74,15 @@ Character = {
         ELF = "Elf",
         DWARF = "Dwarf",
         LIZARD = "Lizard",
+    },
+
+    ---Death types that cause the character's corpse to be destroyed.
+    ---@type table<DeathType, true>
+    CORPSELESS_DEATH_TYPES = {
+        [DeathType.Explode] = true,
+        [DeathType.FrozenShatter] = true,
+        [DeathType.PetrifiedShatter] = true,
+        [DeathType.Lifetime] = true,
     },
 
     -- TODO Shield, Reflexes, PhysicalArmorMastery, MagicArmorMastery, VitalityMaster, Crafting, Charm, Intimidate, Reason, Wand, Runecrafting, Brewmaster, Sulfurology
