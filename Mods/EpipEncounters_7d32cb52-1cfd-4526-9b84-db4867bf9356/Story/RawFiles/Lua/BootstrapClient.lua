@@ -450,6 +450,7 @@ LOAD_ORDER = {
             {Script = "Epip/TooltipAdjustments/Client_BaseDeltamodTiers.lua", RequiresEE = true},
             "Epip/TooltipAdjustments/Client_OpaqueBackground.lua",
             {Script = "Epip/TooltipAdjustments/Client_SourceInfusions.lua", RequiresEE = true},
+            "Epip/TooltipAdjustments/InventoryTooltipsRepositioning/Client.lua",
         },
     },
 

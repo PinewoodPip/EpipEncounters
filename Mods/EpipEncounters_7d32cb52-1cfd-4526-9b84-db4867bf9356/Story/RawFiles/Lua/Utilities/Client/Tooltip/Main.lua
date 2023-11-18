@@ -39,6 +39,7 @@ local Tooltip = {
 
     Events = {
         TooltipHidden = {}, ---@type Event<EmptyEvent>
+        TooltipPositioned = {}, ---@type Event<EmptyEvent>
     },
     Hooks = {
         RenderFormattedTooltip = {Preventable = true}, ---@type PreventableEvent<TooltipLib_Hook_RenderFormattedTooltip>
@@ -469,6 +470,12 @@ Ext.RegisterUINameInvokeListener("showFormattedTooltipAfterPos", function(ui)
         Tooltip._nextSkillTooltip = nil
         Tooltip._nextItemTooltip = nil
     end
+end, "After")
+
+-- Fire events for tooltips having finished positioning.
+-- TODO world and surface tooltips
+Ext.RegisterUINameInvokeListener("showFormattedTooltipAfterPos", function(_)
+    Tooltip.Events.TooltipPositioned:Throw()
 end, "After")
 
 -- Listen for surface tooltips from TextDisplay.

@@ -9,6 +9,7 @@ local CraftingFixes = Epip.GetFeature("Features.CraftingFixes")
 local InventoryMultiSelect = Epip.GetFeature("Features.InventoryMultiSelect")
 local DiscordRichPresence = Epip.GetFeature("Features.DiscordRichPresence")
 local ContainerInventoryTweaks = Epip.GetFeature("Features.ContainerInventoryTweaks")
+local TooltipRepositioning = Epip.GetFeature("Features.TooltipAdjustments.InventoryTooltipsRepositioning")
 local CommonStrings = Text.CommonStrings
 
 local InventoryMultiSelectInputActionSettings = {
@@ -261,6 +262,7 @@ local tabs = {
             "Inventory_InfiniteCarryWeight",
             "Inventory_RewardItemComparison",
             {Module = ContainerInventoryTweaks:GetNamespace(), ID = ContainerInventoryTweaks.Settings.HighlightEmptySlots:GetID()},
+            {Module = TooltipRepositioning:GetNamespace(), ID = TooltipRepositioning.Settings.Position:GetID()},
 
             CreateHeader(QuickInventory.TranslatedStrings.Header:GetString()),
             {Type = "Label", Label = Text.Format(QuickInventory.TranslatedStrings.SettingsMenuInfo:GetString(), {Size = 19})},
