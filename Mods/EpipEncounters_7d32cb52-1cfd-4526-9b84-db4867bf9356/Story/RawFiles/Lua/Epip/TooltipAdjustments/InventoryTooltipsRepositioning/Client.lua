@@ -1,5 +1,6 @@
 
 local PartyInventory = Client.UI.PartyInventory
+local ContainerInventory = Client.UI.ContainerInventory
 local TooltipLib = Client.Tooltip
 local TooltipUI = Client.UI.Tooltip
 local V = Vector.Create
@@ -23,7 +24,7 @@ local TooltipRepositioning = {
         },
         Setting_Position_Description = {
             Handle = "h2f7ed974g4184g404fga2abg640d32f6f7aa",
-            Text = "Controls the position of item tooltips within the Party Inventory UI.<br><br>- Near cursor: vanilla behaviour; tooltips appear near the cursor.<br>- On UI sides: tooltips will be positioned on the left side of the UIs if possible, or on the right otherwise.",
+            Text = "Controls the position of item tooltips within the Party Inventory and Container Inventory UIs.<br><br>- Near cursor: vanilla behaviour; tooltips appear near the cursor.<br>- On UI sides: tooltips will be positioned on the left side of the source UI if possible, or on the right otherwise.",
             ContextDescription = "Setting tooltip",
         },
         Setting_Position_Choice_NearCursor = {
@@ -74,11 +75,11 @@ TooltipRepositioning.Settings.Position = TooltipRepositioning:RegisterSetting("P
 ---------------------------------------------
 
 ---Positions a tooltip on the left or right side of a UI.
----@param ui UI
+---@param ui TooltipUI
 ---@param leftUIPos Vector2
 ---@param rightUIPos Vector2
----@param tooltipWidth number
-function TooltipRepositioning._PositionTooltip(ui, leftUIPos, rightUIPos, tooltipWidth)
+function TooltipRepositioning._PositionTooltip(ui, leftUIPos, rightUIPos)
+    local tooltipWidth = TooltipRepositioning._GetTooltipWidth(ui)
     local uiScale = ui:GetUI():GetUIScaleMultiplier()
     local pos = leftUIPos
     if pos[1] < tooltipWidth then -- Position the tooltip on the right if there is no space on the left.
@@ -90,6 +91,22 @@ function TooltipRepositioning._PositionTooltip(ui, leftUIPos, rightUIPos, toolti
 
     pos[1], pos[2] = math.floor(pos[1]), math.floor(pos[2])
     ui:SetPosition(pos)
+end
+
+---Returns the width of the tooltip UI, in pixels.
+---@param ui TooltipUI
+---@return integer
+function TooltipRepositioning._GetTooltipWidth(ui)
+    local tooltipRoot = ui:GetRoot()
+    local tooltipMC = tooltipRoot.formatTooltip
+    local compareTooltipMC = tooltipRoot.ctf
+    local tooltipWidth = tooltipMC.tooltip_mc.width
+    if compareTooltipMC then -- Add the width of the compare tooltip, if there is one.
+        tooltipWidth = tooltipWidth + compareTooltipMC.tooltip_mc.width - 30
+    end
+    tooltipWidth = tooltipWidth * TooltipUI:GetUI():GetUIScaleMultiplier()
+
+    return tooltipWidth
 end
 
 ---------------------------------------------
@@ -109,19 +126,49 @@ end)
 -- Reposition item tooltips from the PartyInventory UI.
 TooltipRepositioning.Events.OffsetRequested:Subscribe(function (ev)
     if ev.TooltipData.UIType == PartyInventory:GetUI():GetTypeId() and ev.TooltipData.Type == "Item" then
-        local tooltipRoot = TooltipUI:GetRoot()
         local inventoryUIObj = PartyInventory:GetUI()
         local pos = V(inventoryUIObj:GetPosition())
         local topRightCorner = pos + V(inventoryUIObj.FlashSize[1], 0)
-        local tooltipMC = tooltipRoot.formatTooltip
-        local compareTooltipMC = tooltipRoot.ctf
-        local tooltipWidth = tooltipMC.tooltip_mc.width
-        if compareTooltipMC then -- Add the width of the compare tooltip, if there is one.
-            tooltipWidth = tooltipWidth + compareTooltipMC.tooltip_mc.width - 30
-        end
-        tooltipWidth = tooltipWidth * TooltipUI:GetUI():GetUIScaleMultiplier()
 
-        TooltipRepositioning._PositionTooltip(TooltipUI, pos, topRightCorner, tooltipWidth)
+        TooltipRepositioning._PositionTooltip(TooltipUI, pos, topRightCorner)
+    end
+end, {EnabledFunctor = function ()
+    return TooltipRepositioning:GetSettingValue(TooltipRepositioning.Settings.Position) == TooltipRepositioning.POSITIONS.ON_UI_SIDES
+end})
+
+-- Reposition item tooltips from the PartyInventory UI.
+TooltipRepositioning.Events.OffsetRequested:Subscribe(function (ev)
+    if ev.TooltipData.UIType == ContainerInventory:GetUI():GetTypeId() and ev.TooltipData.Type == "Item" then
+        local inventoryUIObj = ContainerInventory:GetUI()
+        local inventoryMC = inventoryUIObj:GetRoot().inv_mc
+        local uiScale = inventoryUIObj:GetUIScaleMultiplier()
+        local parent = inventoryMC.parent
+        local posX = inventoryMC.x
+        while parent do -- Fetch global position of the inventory.
+            posX = posX + parent.x
+            parent = parent.parent
+        end
+        posX = posX + 250
+        posX = posX * uiScale
+
+        local pos = V(inventoryUIObj:GetPosition())
+        local uiObjectPositionWasNegative = pos[1] < 0
+        if uiObjectPositionWasNegative then -- If the UIObject position is negative, the X position of the MCs is different.
+            pos[1] = pos[1] - 230 * uiScale
+        else
+            pos[1] = pos[1] + posX
+        end
+        pos[2] = pos[2] + 250 * uiScale
+
+        -- Yes the differences between these 2 situations are hilariously annoying and I don't know how to handle them better.
+        local topRightCorner = pos
+        if uiObjectPositionWasNegative then
+            topRightCorner = topRightCorner + V(1120 * uiScale, 0)
+        else
+            topRightCorner = topRightCorner + V(315 * uiScale, 0)
+        end
+
+        TooltipRepositioning._PositionTooltip(TooltipUI, pos, topRightCorner)
     end
 end, {EnabledFunctor = function ()
     return TooltipRepositioning:GetSettingValue(TooltipRepositioning.Settings.Position) == TooltipRepositioning.POSITIONS.ON_UI_SIDES
