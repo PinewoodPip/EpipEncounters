@@ -263,7 +263,6 @@ local tabs = {
             "Inventory_InfiniteCarryWeight",
             "Inventory_RewardItemComparison",
             {Module = ContainerInventoryTweaks:GetNamespace(), ID = ContainerInventoryTweaks.Settings.HighlightEmptySlots:GetID()},
-            {Module = TooltipRepositioning:GetNamespace(), ID = TooltipRepositioning.Settings.Position:GetID()},
 
             CreateHeader(QuickInventory.TranslatedStrings.Header:GetString()),
             {Type = "Label", Label = Text.Format(QuickInventory.TranslatedStrings.SettingsMenuInfo:GetString(), {Size = 19})},
@@ -296,6 +295,7 @@ local tabs = {
             CreateHeader(TSK.Section_UITooltips),
             "Tooltip_SimpleTooltipDelay_World",
             "Tooltip_SimpleTooltipDelay_UI",
+            {Module = TooltipRepositioning:GetNamespace(), ID = TooltipRepositioning.Settings.Position:GetID()},
             {Module = TooltipDelay:GetNamespace(), ID = TooltipDelay.Settings.ItemTooltipDelay:GetID()},
             {Module = TooltipDelay:GetNamespace(), ID = TooltipDelay.Settings.CompareTooltipDelay:GetID()},
 
