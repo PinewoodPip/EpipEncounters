@@ -451,6 +451,7 @@ LOAD_ORDER = {
             "Epip/TooltipAdjustments/Client_OpaqueBackground.lua",
             {Script = "Epip/TooltipAdjustments/Client_SourceInfusions.lua", RequiresEE = true},
             "Epip/TooltipAdjustments/InventoryTooltipsRepositioning/Client.lua",
+            "Epip/TooltipAdjustments/TooltipDelay/Client.lua",
         },
     },
 

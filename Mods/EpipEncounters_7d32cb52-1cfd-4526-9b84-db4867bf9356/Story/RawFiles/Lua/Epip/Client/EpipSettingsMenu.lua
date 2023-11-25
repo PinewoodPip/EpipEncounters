@@ -10,6 +10,7 @@ local InventoryMultiSelect = Epip.GetFeature("Features.InventoryMultiSelect")
 local DiscordRichPresence = Epip.GetFeature("Features.DiscordRichPresence")
 local ContainerInventoryTweaks = Epip.GetFeature("Features.ContainerInventoryTweaks")
 local TooltipRepositioning = Epip.GetFeature("Features.TooltipAdjustments.InventoryTooltipsRepositioning")
+local TooltipDelay = Epip.GetFeature("Features.TooltipAdjustments.TooltipDelay")
 local CommonStrings = Text.CommonStrings
 
 local InventoryMultiSelectInputActionSettings = {
@@ -295,6 +296,8 @@ local tabs = {
             CreateHeader(TSK.Section_UITooltips),
             "Tooltip_SimpleTooltipDelay_World",
             "Tooltip_SimpleTooltipDelay_UI",
+            {Module = TooltipDelay:GetNamespace(), ID = TooltipDelay.Settings.ItemTooltipDelay:GetID()},
+            {Module = TooltipDelay:GetNamespace(), ID = TooltipDelay.Settings.CompareTooltipDelay:GetID()},
 
             CreateHeader(TSK.Section_WorldItemTooltips),
             "WorldTooltip_OpenContainers",
