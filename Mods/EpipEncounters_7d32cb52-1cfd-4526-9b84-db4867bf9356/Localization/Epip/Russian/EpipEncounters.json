@@ -36,7 +36,7 @@
     },
     "he085d18bge863g4bf2ga811g562dcc358d76": {
       "ReferenceText": "Shows B/H amounts over the heads of characters in combat.",
-      "TranslatedText": "При удержании, показывает количество B/H стаков над персонажами в бою."
+      "TranslatedText": "При удержании, показывает количество Battered/Harried стаков над персонажами в бою."
     },
     "h9f5438ffg5024g4264gaaa2gef122c54e518": {
       "ReferenceText": "Are you sure you want to start a new game?",
@@ -182,6 +182,10 @@
       "ReferenceText": "Skillbook",
       "TranslatedText": "Книга навыков"
     },
+    "h4b557dbeg4eefg4284gba11gef2cf523830f": {
+      "ReferenceText": "AP",
+      "TranslatedText": "ОД"
+    },
     "h8069d8d4gbc27g47a0ga413g3c90f7b3a9ea": {
       "ReferenceText": "Abeyance",
       "TranslatedText": "Abeyance"
@@ -205,6 +209,10 @@
     "ha588e93ag94d4g4b21gbd50g4863aea40d21": {
       "ReferenceText": "Aerotheurge",
       "TranslatedText": "Аэротеургия"
+    },
+    "hff7beb36g46fbg40d9gb13cg2f8680af5b06": {
+      "ReferenceText": "Always",
+      "TranslatedText": "Всегда"
     },
     "h3b607ec3gf978g48ccgbb02g96aba3dd1430": {
       "ReferenceText": "Amulet",
@@ -434,6 +442,10 @@
       "ReferenceText": "Hydrosophist",
       "TranslatedText": "Гидрософистика"
     },
+    "hd4148b10gb4e1g4550gbe4dgcdf246c626f1": {
+      "ReferenceText": "INIT",
+      "TranslatedText": "ИНИЦ"
+    },
     "h429930a8g7b96g48cag8be4gc0bad3a2dc19": {
       "ReferenceText": "Incarnate Champion",
       "TranslatedText": "Инкарнат-воитель"
@@ -486,6 +498,10 @@
       "ReferenceText": "Leggings",
       "TranslatedText": "Поножи"
     },
+    "h43d39739g75fbg4205g9a45g75447dd59aae": {
+      "ReferenceText": "Level",
+      "TranslatedText": "Уровень"
+    },
     "h7d163e38ga9d5g410fg814agcafb2e2844ec": {
       "ReferenceText": "Level %d+",
       "TranslatedText": "Уровень %d+"
@@ -517,6 +533,10 @@
     "hb09a2fc1g7ad5g4caag8606g936398d62a3b": {
       "ReferenceText": "Necromancer",
       "TranslatedText": "Некромантия"
+    },
+    "hdf3c7f54g8619g408fgb6bfgb716b7902125": {
+      "ReferenceText": "Never",
+      "TranslatedText": "Никогда"
     },
     "h1aedd70egab23g4218gb9cdg04ff62ebdf60": {
       "ReferenceText": "New Game",
@@ -609,6 +629,10 @@
     "h1a5fc697g8419g4d7cg87eagf9632537ff34": {
       "ReferenceText": "Robes",
       "TranslatedText": "Плащи"
+    },
+    "he007d2e4gc918g475cgbca9g7edc91ad34ab": {
+      "ReferenceText": "SP",
+      "TranslatedText": "ОИ"
     },
     "h7ca5d696g5244g435eg887bg524f556990f6": {
       "ReferenceText": "Scoundrel",
@@ -732,15 +756,7 @@
     },
     "h97f62f62gcd0fg4addg9db9g5504788bcb50": {
       "ReferenceText": "Tier",
-      "TranslatedText": "Tier"
-    },
-    "hea8fd41ag8885g40b0g8466gb6a63d91863a": {
-      "ReferenceText": "Default Tab",
-      "TranslatedText": "Раздел по умолчанию"
-    },
-    "hd8218bb5gcf00g4051g90f2g05388601ab51": {
-      "ReferenceText": "Determines the default tab for the crafting UI.",
-      "TranslatedText": "Определяет раздел по умолчанию при открытии интерфейса крафта."
+      "TranslatedText": "Разряд"
     },
     "h5b9e7fc0g6bbcg4781gb9aag95c9189ad110": {
       "ReferenceText": "Debug Cheats",
@@ -766,6 +782,22 @@
       "ReferenceText": "%s has entered dialogue.",
       "TranslatedText": "%s вступает в диалог."
     },
+    "h079a4fc9g48b4g4bc6gbf71gad47fa4acb61": {
+      "ReferenceText": "Auto-Listen Dialogues",
+      "TranslatedText": "Авто-прослушивание диалогов"
+    },
+    "hd8095efage554g41b7gafedg33447556533e": {
+      "ReferenceText": "Auto-Listen Range Limit",
+      "TranslatedText": "Дальность авто-прослушивания диалогов"
+    },
+    "h81560a4dg3324g4c62g971cg75855b8a1672": {
+      "ReferenceText": "Auto-listening to %s's dialogue.",
+      "TranslatedText": "Прослушиваем диалог %s."
+    },
+    "h5efb42cag481bg466dg9089g55793976612a": {
+      "ReferenceText": "Determines the maximum distance (in meters) that other players's characters can be at for their dialogues to be auto-listened to, if \"Auto-Listen Range Limit\" is enabled.",
+      "TranslatedText": "Определяет максимальную дистанцию (в метрах), на которой другие игроки могут автоматически вступить в  диалог (если \"Дальность авто-прослушивания диаголов\"включена)"
+    },
     "h6b736d31gc985g48b6g8752g9137186f3703": {
       "ReferenceText": "Dialogue Notifications",
       "TranslatedText": "Оповещения диалогов"
@@ -774,29 +806,13 @@
       "ReferenceText": "If enabled, a notification will be shown when characters controlled by other players join dialogues, to make them harder to miss.",
       "TranslatedText": "Если включено, у вас будет появляться оповещение, когда другие игроки входят в диалог."
     },
+    "ha6a00a9ag10b2g4ac0g9be8gfc8bac919cf1": {
+      "ReferenceText": "If enabled, your character will automatically listen in on dialogues that other players enter, if they are within the range limit.",
+      "TranslatedText": "Если включено, ваши персонажи будут автоматически вступать в диалоги, начинаемые другими игроками (если они в допустимом пределе дальности)"
+    },
     "h5a1af856ge6bbg46b0g8c00g98c676f04629": {
       "ReferenceText": "We don't have that dye!<br>We shall shop for them at miscellaneous vendors.",
       "TranslatedText": "У нас нет этой краски!<br>Надо бы закупиться."
-    },
-    "hd2e9ffeega495g4fdagb818gbc7b6275e9b3": {
-      "ReferenceText": "After Name",
-      "TranslatedText": "После имени"
-    },
-    "h2a5a9fedg9c42g4f0ag9d54gb4098614b91b": {
-      "ReferenceText": "Below Health Bar",
-      "TranslatedText": "Под панелью здоровья"
-    },
-    "h52f49bccg59f7g4b72g8440g55847b964cde": {
-      "ReferenceText": "Character Level Display",
-      "TranslatedText": "Отображение уровня персонажа"
-    },
-    "hedbf4e2fgb8e6g400cgb08bgd33f99bc101d": {
-      "ReferenceText": "Controls how character levels are displayed in the health bar UI.",
-      "TranslatedText": "Задает вариант отображения уровня персонажа на панели здоровья."
-    },
-    "h7e532f24g51f1g439cg9851g8ff8f12a6b17": {
-      "ReferenceText": "When holding Shift",
-      "TranslatedText": "При удержании Shift"
     },
     "hf72184f1g53fdg4103g81d3gc3cf433c3bfb": {
       "ReferenceText": "Arcane Mist",
@@ -1152,7 +1168,7 @@
     },
     "ha13d577fg043ag4324g8d55gd5f2ba85efac": {
       "ReferenceText": "If enabled, Battered and Harried stacks will be shown beside player portraits on the left interface.",
-      "TranslatedText": "Если включено, значения B/H будут отображаться в левой части портрета персонажа."
+      "TranslatedText": "Если включено, значения Battered/Harried будут отображаться в левой части портрета персонажа."
     },
     "ha1146687g9261g49d4gad63g0269559fce2d": {
       "ReferenceText": "If enabled, chairs, ladders and beds will show world tooltips. Requires \"Enable tooltips for all items\" to be enabled, as these do not have tooltips by default.",
@@ -1334,6 +1350,22 @@
       "ReferenceText": "With enough Loremaster",
       "TranslatedText": "С достаточным знанием легенд"
     },
+    "h86148d3fg72feg42b1gacc8g8f1b57d5f975": {
+      "ReferenceText": "Highlight Empty Container Slots",
+      "TranslatedText": "Подсвечивать пустые ячейки контейнеров"
+    },
+    "h9f74c097g9888g4f33gb296gd6286d108329": {
+      "ReferenceText": "If enabled, hovering over empty slots in the container inventory UI will highlight them. This setting is purely cosmetic, and is intended to make the container UI consistent with how the party inventory UI behaves.",
+      "TranslatedText": "Если включено, пустые ячейки контейнеров в инвентаре группы будут подсвечиваться при наведении мышкой. Исключительно косметический эффект для соответствия поведения инвентаря группы и контейнеров."
+    },
+    "hea8fd41ag8885g40b0g8466gb6a63d91863a": {
+      "ReferenceText": "Default Tab",
+      "TranslatedText": "Раздел по умолчанию"
+    },
+    "hd8218bb5gcf00g4051g90f2g05388601ab51": {
+      "ReferenceText": "Determines the default tab for the crafting UI.",
+      "TranslatedText": "Определяет раздел по умолчанию при открытии интерфейса крафта."
+    },
     "h20643acfg8b9fg46ccg8039g253dd6e02788": {
       "ReferenceText": "%s - Lvl %d",
       "TranslatedText": "%s - Ур %d"
@@ -1350,17 +1382,89 @@
       "ReferenceText": "Custom Line 2",
       "TranslatedText": "Строка 2"
     },
-    "hd1eed9f3g8a0bg4098g9369g0ba5549b947f": {
+    "hdb9a40e2g4713g40e0g8885gd6e1b75512c3": {
       "ReferenceText": "Discord Rich Presence",
       "TranslatedText": "Детализированный статус в Discord"
     },
-    "hdb9a40e2g4713g40e0g8885gd6e1b75512c3": {
+    "hd1eed9f3g8a0bg4098g9369g0ba5549b947f": {
       "ReferenceText": "Discord Rich Presence",
       "TranslatedText": "Детализированный статус в Discord"
     },
     "h3a4e8fc6ga604g45f6gbff7g549e349fbe7d": {
       "ReferenceText": "Rich Presence message to be used if the Rich Presence setting is set to \"Custom\".",
       "TranslatedText": "Отображаемое сообщение в детализированном статусе в Discord при использовании настройки \"Пользовательский\"."
+    },
+    "h8dbe0f11g045dg4abbg9c90ge35a40efe4e9": {
+      "ReferenceText": "Unknown Region",
+      "TranslatedText": "Неизвестная область"
+    },
+    "hd2e9ffeega495g4fdagb818gbc7b6275e9b3": {
+      "ReferenceText": "After Name",
+      "TranslatedText": "После имени"
+    },
+    "h2a5a9fedg9c42g4f0ag9d54gb4098614b91b": {
+      "ReferenceText": "Below Health Bar",
+      "TranslatedText": "Под панелью здоровья"
+    },
+    "h52f49bccg59f7g4b72g8440g55847b964cde": {
+      "ReferenceText": "Character Level Display",
+      "TranslatedText": "Отображение уровня персонажа"
+    },
+    "hedbf4e2fgb8e6g400cgb08bgd33f99bc101d": {
+      "ReferenceText": "Controls how character levels are displayed in the health bar UI.",
+      "TranslatedText": "Задает вариант отображения уровня персонажа на панели здоровья."
+    },
+    "h71cef3e3g71bag4da1gb743g56dc62daf7ac": {
+      "ReferenceText": "Controls how resistances are shown in the health bar UI.<br><br>- Never: resistances are never shown under the health bar.<br>- Only non-zero: only resistances that are not at 0 are displayed.<br>- If any non-zero: all resistances are displayed if the character has a non-zero amount of any of them; otherwise none are shown.<br>- Always: all resistances are shown.",
+      "TranslatedText": "Задает вариант отображение сопротивлений на панели здоровья.<br><br>- Никогда: сопротивления не отображаются.<br>- Только не нулевые: отображает только сопротивления с не нулевым значением.<br>- Если не нулевые: все сопротивления отображаются, если хотя бы один имеет не нулевое значение.<br>- Всегда: постоянно отображаются."
+    },
+    "h14408a2cgee5fg4f6agb7f8g33c364419f75": {
+      "ReferenceText": "If any non-zero",
+      "TranslatedText": "Если не нулевые"
+    },
+    "h6493dca2g23e2g43d9g8cd4gfa10a05faedd": {
+      "ReferenceText": "Only non-zero",
+      "TranslatedText": "Только не нулевые"
+    },
+    "h33af8f80g537eg4f1fga457gf02894f0d762": {
+      "ReferenceText": "Resistances Display",
+      "TranslatedText": "Отображение сопротивлений"
+    },
+    "h7e532f24g51f1g439cg9851g8ff8f12a6b17": {
+      "ReferenceText": "When holding Shift",
+      "TranslatedText": "При удержании Shift"
+    },
+    "h2f7ed974g4184g404fga2abg640d32f6f7aa": {
+      "ReferenceText": "Controls the position of item tooltips within the Party Inventory and Container Inventory UIs.<br><br>- Near cursor: vanilla behaviour; tooltips appear near the cursor.<br>- On UI sides: tooltips will be positioned on the left side of the source UI if possible, or on the right otherwise.",
+      "TranslatedText": "Задает положение описаний предметов в интерфейсе инвентаря и контейнеров .<br><br>- Под курсором: как в ванилле, описание отображается под курсором.<br>- Сбоку интерфейса: описание отображается слева от интерфейса или справа, если нет свободного места."
+    },
+    "h9035058dg4e1ag41a5g9209gccee07be7808": {
+      "ReferenceText": "Inventory Item Tooltips Position",
+      "TranslatedText": "Положение описаний предметов в инвентаре"
+    },
+    "h6bf580c5gf8feg44b5ga13egfca29ae88c6d": {
+      "ReferenceText": "Near Cursor",
+      "TranslatedText": "Под курсором"
+    },
+    "h5f55f283g3f47g4d04g9f4eg44d2617254a4": {
+      "ReferenceText": "On UI Sides",
+      "TranslatedText": "Сбоку интерфейса"
+    },
+    "hbed9b7bcgbbebg428cgbbf2g566a6033f281": {
+      "ReferenceText": "Controls the delay in seconds before item comparison tooltips are shown. This delay is additive with the \"Inventory Item Tooltip Delay\" setting.<br><br>Default value is %s seconds.",
+      "TranslatedText": "Задает задержку в секундах для описаний сравниваемых предметов. Эта задержка складывается с \"Задержкой описаний предметов в инвентаре\".<br><br>Значение по умолчанию - %s секунд."
+    },
+    "he421bb33gea54g44b3ga90bg5fff2fae3383": {
+      "ReferenceText": "Controls the delay in seconds before item tooltips display upon hovering over items in the Party Inventory and Container Inventory UIs.",
+      "TranslatedText": "Задает задержку в секундах для описаний предметов при наведении мыши в интерфейсах инвентаря и контейнеров."
+    },
+    "h1da3e55cg3534g4e65gb5f1g66d514505862": {
+      "ReferenceText": "Inventory Item Tooltip Delay",
+      "TranslatedText": "Задержка описаний предметов в инвентаре"
+    },
+    "h4a54f1a3gad5eg4855g9b9cge11cad401d59": {
+      "ReferenceText": "Item Comparison Tooltip Delay",
+      "TranslatedText": "Задержка описаний сравниваемых предметов"
     },
     "h4025c1c4g6527g4b6ag8369g49c0b1949dea": {
       "ReferenceText": "If enabled, the positions of the character sheet and party inventory UIs will be remembered across sessions.",
@@ -1504,7 +1608,7 @@
     },
     "h40211dabgcdfdg4c44gab1fgec11d398b801": {
       "ReferenceText": "Bind '%s'",
-      "TranslatedText": "Бинд '%s'"
+      "TranslatedText": "Назначить '%s'"
     },
     "he0a23e3cgbf9cg4f6eg8aecg454ee29fe9d7": {
       "ReferenceText": "Press a key combination...",
@@ -1526,6 +1630,14 @@
       "ReferenceText": "Multi-select controls",
       "TranslatedText": "Функция множественного выбора"
     },
+    "h6b5b9ed9g85f0g421bga071g409b1e4491ca": {
+      "ReferenceText": "Select Range",
+      "TranslatedText": "Выбрать диапазон"
+    },
+    "h4a828b3egc70fg4ce9g8d81gd46b307b9366": {
+      "ReferenceText": "Selects a range of items starting from the first selected item and ending with the hovered one, if 'Multi-Select controls' are enabled and at least one item is selected.",
+      "TranslatedText": "Выбирает все предметы в диапазоне от первого до последнего выбранного (если включена 'Функция множественного выбора' или выбран как минимум один предмет)"
+    },
     "hc1f05532ga3a6g4b02gb837g77d3267b8f18": {
       "ReferenceText": "Send to %s",
       "TranslatedText": "Дать: %s"
@@ -1534,9 +1646,25 @@
       "ReferenceText": "Store on Lady Vengeance",
       "TranslatedText": "Отправить на Госпожу Месть"
     },
+    "h44c561a7g4b32g4e52ga47fg00e32a6f82fc": {
+      "ReferenceText": "Toggle Item Selection",
+      "TranslatedText": "Выделить предмет"
+    },
+    "h8af4098fga9b6g4981g8338g8c4008d54f8a": {
+      "ReferenceText": "Toggles multi-select on the hovered item, if 'Multi-select controls' are enabled.",
+      "TranslatedText": "Выделяет предмет при нажатии (если включена 'Функция множественного выбора')"
+    },
     "h98751807g9fe2g40d6g9ca4gc0ddd1f2da3d": {
       "ReferenceText": "Unmark as wares",
       "TranslatedText": "Убрать из товаров"
+    },
+    "h47312526g9ce5g4deeg8e67gde4e20811748": {
+      "ReferenceText": "Book read.",
+      "TranslatedText": "Прочтенная книга."
+    },
+    "he782b845g749cg4c62g9095g0164424ed054": {
+      "ReferenceText": "Key used.",
+      "TranslatedText": "Использованный ключ."
     },
     "hc53e69e8ge732g435dg84dcgfb0541f33326": {
       "ReferenceText": "Dismantle All",
@@ -1545,6 +1673,26 @@
     "h11ffdfdbg98d0g41afgb4e4g7242c71f6a2d": {
       "ReferenceText": "Respec",
       "TranslatedText": "Зеркало"
+    },
+    "ha69d5b19g97b2g4465gab85g9fbd86817303": {
+      "ReferenceText": "Ignored by enemies",
+      "TranslatedText": "Игнорируется противниками"
+    },
+    "hd72e9e3age9b3g4c47g8009gf7daca531c13": {
+      "ReferenceText": "Preferred by enemies",
+      "TranslatedText": "Предпочитается противниками"
+    },
+    "h2400de7fg95e3g49b3g9a75g136e8d4303e5": {
+      "ReferenceText": "Taunted by %s",
+      "TranslatedText": "Спровоцирован персонажем %s"
+    },
+    "hbc425a35g7325g4a39g89c8g4f53a12292c9": {
+      "ReferenceText": "Taunting %s",
+      "TranslatedText": "Провоцирует персонажа %s"
+    },
+    "h5fa60300g587ag423cg8f3fg903b327fb9ba": {
+      "ReferenceText": "Unpreferred by enemies",
+      "TranslatedText": "Не предпочитается противниками"
     },
     "ha15ba540g2da4g4056g8174gcd25a3b1d343": {
       "ReferenceText": "Allows examining dead characters.",
@@ -1716,11 +1864,11 @@
     },
     "hb9e14744g4868g4e08gb3d7ga9bd57629d03": {
       "ReferenceText": "Shows the Battered/Harries statuses while Alternative Status Display is enabled.<br>If you disable this, it is recommended to enable the B/H display on the portraits.",
-      "TranslatedText": "Показывает значения B/H если включена альтернативная сортировка.<br>Если отключено, рекомендуется включить опцию \"Показывать B/H на портретах игроков\"."
+      "TranslatedText": "Показывает значения Battered/Harried если включена альтернативная сортировка.<br>Если отключено, рекомендуется включить опцию \"Показывать B/H на портретах игроков\"."
     },
     "h4b67c715g0d30g4015gba18ge8ea4f357448": {
       "ReferenceText": "Shows the Source Generation status while Alternative Status Display is enabled.",
-      "TranslatedText": "Показывает статус генерации истока при включенном \"Альтернативном отображении статуса\"."
+      "TranslatedText": "Показывает статус генерации истока при включенном \"Альтернативном отображении статусов\"."
     },
     "h0e24fb6bg2c78g4dd3g995cg9d04ea62eaab": {
       "ReferenceText": "Sorting Index",
@@ -1731,8 +1879,12 @@
       "TranslatedText": "Приоритет сортировки"
     },
     "hca56dcd2gf7f6g4662g94cfga66262672545": {
-      "ReferenceText": "Statuses in this list will be filtered out and not shown in the status bar. Holding shift temporarily disables this filter.",
-      "TranslatedText": "Статусы из этого списка будут отфильтрованы и не станут отображаться, пока не зажата клавиша Shift."
+      "ReferenceText": "Statuses in this list will be filtered out and not shown in the status bar if \"Alternative Status Display\" is enabled. Holding shift temporarily disables this filter.",
+      "TranslatedText": "Статусы из этого списка будут отфильтрованы и не станут отображаться, пока не зажата клавиша Shift (при включенном \"Альтернативном отображении статусоа\")."
+    },
+    "hdaeb81edg863bg492cgab09ged3a5d2470d7": {
+      "ReferenceText": "Using toggleable world tooltips requires binding the vanilla key for them.",
+      "TranslatedText": "Использование переключаемых подсказок к окружающим объектам требует наличие горячей клавиши в ванильных настройках управления."
     },
     "h6dcae9c5gcbfcg4f06g9329gac12ad711d18": {
       "ReferenceText": "Fix Astrologer's Gaze / Far Out Man range",
@@ -1822,9 +1974,17 @@
       "ReferenceText": "Source Infusions:",
       "TranslatedText": "Насыщения истоком:"
     },
+    "hb7c72307g365dg4b59g9cf2gf9c9093d2ec3": {
+      "ReferenceText": "%sm + %sm",
+      "TranslatedText": "%sм + %sм"
+    },
     "h37cf1748g9dafg4d2ag9744g00e75e764ee5": {
       "ReferenceText": "+%s%% Weapon %s Damage",
       "TranslatedText": "+%s%% урона оружия (%s)"
+    },
+    "h56298a9agd232g45d3ga079g28bedb59e95d": {
+      "ReferenceText": "+%sm Weapon Range",
+      "TranslatedText": " +%sм Дальность оружия"
     },
     "hc28e1c17g7862g402bgabc7gaab851087be4": {
       "ReferenceText": "AP Costs",

@@ -164,6 +164,10 @@ local EpipInfo = {
             Version = 1067,
             Date = "18/10/23",
         },
+        {
+            Version = 1068,
+            Date = "26/11/23",
+        },
     },
 
     TranslatedStrings = {

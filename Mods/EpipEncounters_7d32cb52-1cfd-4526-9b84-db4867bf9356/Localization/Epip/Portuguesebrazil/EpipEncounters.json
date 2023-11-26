@@ -678,14 +678,6 @@
       "ReferenceText": "Wither",
       "TranslatedText": "Murchar"
     },
-    "hea8fd41ag8885g40b0g8466gb6a63d91863a": {
-      "ReferenceText": "Default Tab",
-      "TranslatedText": "Aba padrão"
-    },
-    "hd8218bb5gcf00g4051g90f2g05388601ab51": {
-      "ReferenceText": "Determines the default tab for the crafting UI.",
-      "TranslatedText": "Determina a Aba padrão para a interface do usuário de criação."
-    },
     "h5b9e7fc0g6bbcg4781gb9aag95c9189ad110": {
       "ReferenceText": "Debug Cheats",
       "TranslatedText": "Cheats de depuração"
@@ -702,21 +694,21 @@
       "ReferenceText": "Copy Position",
       "TranslatedText": "Copiar posição"
     },
-    "ha8b96a59gace5g4aa5gba9cgc7567a58a8e8": {
-      "ReferenceText": "TODO",
-      "TranslatedText": "Copia a GUID de um objeto "
-    },
-    "h23e452c0g340fg4555g8034g753f003107bf": {
-      "ReferenceText": "TODO",
-      "TranslatedText": "Te teleporta para a localização X"
-    },
     "hfd4d8ec8g76e3g4defg9647gc28159eb38e5": {
       "ReferenceText": "TODO",
       "TranslatedText": "Spawnar item"
     },
+    "ha8b96a59gace5g4aa5gba9cgc7567a58a8e8": {
+      "ReferenceText": "TODO",
+      "TranslatedText": "Copia a GUID de um objeto "
+    },
     "h4e3b6a84g9de1g4723gb807ga808db3c9d70": {
       "ReferenceText": "TODO",
       "TranslatedText": "Spawna um item a sua escolha "
+    },
+    "h23e452c0g340fg4555g8034g753f003107bf": {
+      "ReferenceText": "TODO",
+      "TranslatedText": "Te teleporta para a localização X"
     },
     "ha6bf3f4cg6de4g4ac8gb706g3f39de8376c3": {
       "ReferenceText": "Teleport to",
@@ -737,26 +729,6 @@
     "h5a1af856ge6bbg46b0g8c00g98c676f04629": {
       "ReferenceText": "We don't have that dye!<br>We shall shop for them at miscellaneous vendors.",
       "TranslatedText": "Não temos esse corante!<br>Podemos Comprar em Diversos vendedores"
-    },
-    "hd2e9ffeega495g4fdagb818gbc7b6275e9b3": {
-      "ReferenceText": "After Name",
-      "TranslatedText": "Depois do nome"
-    },
-    "h2a5a9fedg9c42g4f0ag9d54gb4098614b91b": {
-      "ReferenceText": "Below Health Bar",
-      "TranslatedText": "Abaixo da barra de saude"
-    },
-    "h52f49bccg59f7g4b72g8440g55847b964cde": {
-      "ReferenceText": "Character Level Display",
-      "TranslatedText": "Mostrar Nivel de personagem"
-    },
-    "hedbf4e2fgb8e6g400cgb08bgd33f99bc101d": {
-      "ReferenceText": "Controls how character levels are displayed in the health bar UI.",
-      "TranslatedText": "Controla como os níveis dos personagens são exibidos na interface da barra de Vida\n"
-    },
-    "h7e532f24g51f1g439cg9851g8ff8f12a6b17": {
-      "ReferenceText": "When holding Shift",
-      "TranslatedText": "Enquanto Segurar Shift"
     },
     "hf72184f1g53fdg4103g81d3gc3cf433c3bfb": {
       "ReferenceText": "Arcane Mist",
@@ -1294,6 +1266,34 @@
       "ReferenceText": "With enough Loremaster",
       "TranslatedText": "Usando Loremaster"
     },
+    "hea8fd41ag8885g40b0g8466gb6a63d91863a": {
+      "ReferenceText": "Default Tab",
+      "TranslatedText": "Aba padrão"
+    },
+    "hd8218bb5gcf00g4051g90f2g05388601ab51": {
+      "ReferenceText": "Determines the default tab for the crafting UI.",
+      "TranslatedText": "Determina a Aba padrão para a interface do usuário de criação."
+    },
+    "hd2e9ffeega495g4fdagb818gbc7b6275e9b3": {
+      "ReferenceText": "After Name",
+      "TranslatedText": "Depois do nome"
+    },
+    "h2a5a9fedg9c42g4f0ag9d54gb4098614b91b": {
+      "ReferenceText": "Below Health Bar",
+      "TranslatedText": "Abaixo da barra de saude"
+    },
+    "h52f49bccg59f7g4b72g8440g55847b964cde": {
+      "ReferenceText": "Character Level Display",
+      "TranslatedText": "Mostrar Nivel de personagem"
+    },
+    "hedbf4e2fgb8e6g400cgb08bgd33f99bc101d": {
+      "ReferenceText": "Controls how character levels are displayed in the health bar UI.",
+      "TranslatedText": "Controla como os níveis dos personagens são exibidos na interface da barra de Vida\n"
+    },
+    "h7e532f24g51f1g439cg9851g8ff8f12a6b17": {
+      "ReferenceText": "When holding Shift",
+      "TranslatedText": "Enquanto Segurar Shift"
+    },
     "h3a8d983cg5a8cg4b33g954cg39581bd8a04b": {
       "ReferenceText": "AI Type: %s",
       "TranslatedText": "Tipo de IA: %s"
@@ -1623,7 +1623,7 @@
       "TranslatedText": "Prioridade de classificação"
     },
     "hca56dcd2gf7f6g4662g94cfga66262672545": {
-      "ReferenceText": "Statuses in this list will be filtered out and not shown in the status bar. Holding shift temporarily disables this filter.",
+      "ReferenceText": "Statuses in this list will be filtered out and not shown in the status bar if \"Alternative Status Display\" is enabled. Holding shift temporarily disables this filter.",
       "TranslatedText": "Os status nesta lista serão filtrados e não exibidos na barra de status. Manter a tecla shift desativa temporariamente esse filtro."
     },
     "h6dcae9c5gcbfcg4f06g9329gac12ad711d18": {

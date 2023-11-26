@@ -142,6 +142,14 @@
       "ReferenceText": "Open Codex",
       "TranslatedText": "打开法典"
     },
+    "he5fd06c2gba4dg4ec0g9c66gc6d0847cc6d9": {
+      "ReferenceText": "By Cursor",
+      "TranslatedText": "来自 Cursor"
+    },
+    "hcf8d7869gc200g463bgb0dbg81c686990462": {
+      "ReferenceText": "Determines the position of skill tooltips within the UI.",
+      "TranslatedText": "界面里技能提示的位置"
+    },
     "h5e83b5f4g33f8g45e6ga968gecd0cad8d465": {
       "ReferenceText": "Has Skillbook",
       "TranslatedText": "有技能书"
@@ -149,6 +157,10 @@
     "he6042694g235ag4c68gbcccgb1a4769ae7bd": {
       "ReferenceText": "No Skillbook",
       "TranslatedText": "没有技能书"
+    },
+    "hf2fe60ffgd37bg4808g9f2dgad70b0ccffdd": {
+      "ReferenceText": "On Left Side",
+      "TranslatedText": "靠左"
     },
     "h7eaa3d1dg94a2g4136g969dg1ba9f6796fca": {
       "ReferenceText": "Show Learnt",
@@ -169,6 +181,10 @@
     "he415fd76g51bfg4b25g955cg59c3165c73ba": {
       "ReferenceText": "Skillbook",
       "TranslatedText": "技能书"
+    },
+    "h4b557dbeg4eefg4284gba11gef2cf523830f": {
+      "ReferenceText": "AP",
+      "TranslatedText": "AP"
     },
     "h8069d8d4gbc27g47a0ga413g3c90f7b3a9ea": {
       "ReferenceText": "Abeyance",
@@ -193,6 +209,10 @@
     "ha588e93ag94d4g4b21gbd50g4863aea40d21": {
       "ReferenceText": "Aerotheurge",
       "TranslatedText": "大气学派"
+    },
+    "hff7beb36g46fbg40d9gb13cg2f8680af5b06": {
+      "ReferenceText": "Always",
+      "TranslatedText": "总是"
     },
     "h3b607ec3gf978g48ccgbb02g96aba3dd1430": {
       "ReferenceText": "Amulet",
@@ -318,6 +338,10 @@
       "ReferenceText": "Crossbow",
       "TranslatedText": "弩"
     },
+    "h17d882b6g83acg411dgbe52g3ed32443774a": {
+      "ReferenceText": "Custom",
+      "TranslatedText": "自定义"
+    },
     "h82933829g4fd3g4dfeg9b84ga47e14020bd6": {
       "ReferenceText": "Dagger",
       "TranslatedText": "匕首"
@@ -382,6 +406,10 @@
       "ReferenceText": "Furniture",
       "TranslatedText": "装置"
     },
+    "h9c53529bg5bc1g4005g9143g216bc58b959e": {
+      "ReferenceText": "General",
+      "TranslatedText": "通常"
+    },
     "h421f56f3g378cg4dfaga0d1ge6e2ea2f17c4": {
       "ReferenceText": "Geomancer",
       "TranslatedText": "地卜学派"
@@ -409,6 +437,10 @@
     "h5837c5abg3931g4b5cgbffdgd634be631879": {
       "ReferenceText": "Hydrosophist",
       "TranslatedText": "水占学派"
+    },
+    "hd4148b10gb4e1g4550gbe4dgcdf246c626f1": {
+      "ReferenceText": "INIT",
+      "TranslatedText": "先攻"
     },
     "h429930a8g7b96g48cag8be4gc0bad3a2dc19": {
       "ReferenceText": "Incarnate Champion",
@@ -462,6 +494,10 @@
       "ReferenceText": "Leggings",
       "TranslatedText": "绑腿"
     },
+    "h43d39739g75fbg4205g9a45g75447dd59aae": {
+      "ReferenceText": "Level",
+      "TranslatedText": "等级"
+    },
     "h7d163e38ga9d5g410fg814agcafb2e2844ec": {
       "ReferenceText": "Level %d+",
       "TranslatedText": "等级 %d+"
@@ -494,6 +530,10 @@
       "ReferenceText": "Necromancer",
       "TranslatedText": "死灵学派"
     },
+    "hdf3c7f54g8619g408fgb6bfgb716b7902125": {
+      "ReferenceText": "Never",
+      "TranslatedText": "从不"
+    },
     "h1aedd70egab23g4218gb9cdg04ff62ebdf60": {
       "ReferenceText": "New Game",
       "TranslatedText": "新游戏"
@@ -517,6 +557,10 @@
     "h540c1336g27b1g4382gb911g8adced234ee6": {
       "ReferenceText": "Off",
       "TranslatedText": "关闭"
+    },
+    "h3e13ea04gcd9bg4630gabeagbc5f5095f684": {
+      "ReferenceText": "Overhaul",
+      "TranslatedText": "大修"
     },
     "hbb33eea8g0ce7g4bbcga719gc5c4e7811d4a": {
       "ReferenceText": "Overhead",
@@ -582,6 +626,10 @@
       "ReferenceText": "Robes",
       "TranslatedText": "布袍"
     },
+    "he007d2e4gc918g475cgbca9g7edc91ad34ab": {
+      "ReferenceText": "SP",
+      "TranslatedText": "SP"
+    },
     "h7ca5d696g5244g435eg887bg524f556990f6": {
       "ReferenceText": "Scoundrel",
       "TranslatedText": "刺杀学派"
@@ -642,6 +690,10 @@
       "ReferenceText": "Type",
       "TranslatedText": "类型"
     },
+    "h6a473ba0g726bg4188g811fgfa83c0b3def2": {
+      "ReferenceText": "Vanilla",
+      "TranslatedText": "原版"
+    },
     "h8f43167fge54bg419ag8b9agf80ad45e5c87": {
       "ReferenceText": "Violent Strikes",
       "TranslatedText": "巨力重击"
@@ -694,13 +746,9 @@
       "ReferenceText": "Wither",
       "TranslatedText": "枯萎"
     },
-    "hea8fd41ag8885g40b0g8466gb6a63d91863a": {
-      "ReferenceText": "Default Tab",
-      "TranslatedText": "默认页面"
-    },
-    "hd8218bb5gcf00g4051g90f2g05388601ab51": {
-      "ReferenceText": "Determines the default tab for the crafting UI.",
-      "TranslatedText": "决定合成面板默认显示的页面"
+    "h97f62f62gcd0fg4addg9db9g5504788bcb50": {
+      "ReferenceText": "Tier",
+      "TranslatedText": "等级"
     },
     "h5b9e7fc0g6bbcg4781gb9aag95c9189ad110": {
       "ReferenceText": "Debug Cheats",
@@ -726,6 +774,22 @@
       "ReferenceText": "%s has entered dialogue.",
       "TranslatedText": "%s 进入聊天对话中"
     },
+    "h079a4fc9g48b4g4bc6gbf71gad47fa4acb61": {
+      "ReferenceText": "Auto-Listen Dialogues",
+      "TranslatedText": "自动倾听对话"
+    },
+    "hd8095efage554g41b7gafedg33447556533e": {
+      "ReferenceText": "Auto-Listen Range Limit",
+      "TranslatedText": "自动倾听对话范围"
+    },
+    "h81560a4dg3324g4c62g971cg75855b8a1672": {
+      "ReferenceText": "Auto-listening to %s's dialogue.",
+      "TranslatedText": "自动倾听 %s 的对话"
+    },
+    "h5efb42cag481bg466dg9089g55793976612a": {
+      "ReferenceText": "Determines the maximum distance (in meters) that other players's characters can be at for their dialogues to be auto-listened to, if \"Auto-Listen Range Limit\" is enabled.",
+      "TranslatedText": "自动倾听其他玩家角色对话的最大距离，需要设置范围。"
+    },
     "h6b736d31gc985g48b6g8752g9137186f3703": {
       "ReferenceText": "Dialogue Notifications",
       "TranslatedText": "对话通告"
@@ -734,29 +798,13 @@
       "ReferenceText": "If enabled, a notification will be shown when characters controlled by other players join dialogues, to make them harder to miss.",
       "TranslatedText": "启用后, 会通告队友参与对话聊天中, 这样不容易错过"
     },
+    "ha6a00a9ag10b2g4ac0g9be8gfc8bac919cf1": {
+      "ReferenceText": "If enabled, your character will automatically listen in on dialogues that other players enter, if they are within the range limit.",
+      "TranslatedText": "启用后，会自动倾听一定范围内其他玩家开启的对话"
+    },
     "h5a1af856ge6bbg46b0g8c00g98c676f04629": {
       "ReferenceText": "We don't have that dye!<br>We shall shop for them at miscellaneous vendors.",
       "TranslatedText": "我们没有这个染料!<br>染料可以从材料商人购买"
-    },
-    "hd2e9ffeega495g4fdagb818gbc7b6275e9b3": {
-      "ReferenceText": "After Name",
-      "TranslatedText": "名字后面"
-    },
-    "h2a5a9fedg9c42g4f0ag9d54gb4098614b91b": {
-      "ReferenceText": "Below Health Bar",
-      "TranslatedText": "生命栏下方"
-    },
-    "h52f49bccg59f7g4b72g8440g55847b964cde": {
-      "ReferenceText": "Character Level Display",
-      "TranslatedText": "显示角色等级"
-    },
-    "hedbf4e2fgb8e6g400cgb08bgd33f99bc101d": {
-      "ReferenceText": "Controls how character levels are displayed in the health bar UI.",
-      "TranslatedText": "在生命栏附近显示角色等级"
-    },
-    "h7e532f24g51f1g439cg9851g8ff8f12a6b17": {
-      "ReferenceText": "When holding Shift",
-      "TranslatedText": "按住shift"
     },
     "hf72184f1g53fdg4103g81d3gc3cf433c3bfb": {
       "ReferenceText": "Arcane Mist",
@@ -1294,6 +1342,130 @@
       "ReferenceText": "With enough Loremaster",
       "TranslatedText": "足够的博学"
     },
+    "h86148d3fg72feg42b1gacc8g8f1b57d5f975": {
+      "ReferenceText": "Highlight Empty Container Slots",
+      "TranslatedText": "高亮空容器格子"
+    },
+    "h9f74c097g9888g4f33gb296gd6286d108329": {
+      "ReferenceText": "If enabled, hovering over empty slots in the container inventory UI will highlight them. This setting is purely cosmetic, and is intended to make the container UI consistent with how the party inventory UI behaves.",
+      "TranslatedText": "启用后，将突出显示鼠标悬停的容器空槽。这个设置是纯粹装饰性的，目的是使容器UI与队伍背包UI的一致。"
+    },
+    "hea8fd41ag8885g40b0g8466gb6a63d91863a": {
+      "ReferenceText": "Default Tab",
+      "TranslatedText": "默认页面"
+    },
+    "hd8218bb5gcf00g4051g90f2g05388601ab51": {
+      "ReferenceText": "Determines the default tab for the crafting UI.",
+      "TranslatedText": "决定合成面板默认显示的页面"
+    },
+    "h20643acfg8b9fg46ccg8039g253dd6e02788": {
+      "ReferenceText": "%s - Lvl %d",
+      "TranslatedText": "%s - 等级 %d"
+    },
+    "h08dbc3efgf409g4a96g9d3bge907e2638a9a": {
+      "ReferenceText": "Controls your Discord Rich Presence.<br><br>- Vanilla: unmodified; shows current map name and multiplayer status.<br>- Overhaul: displays the major overhaul being used (ex. \"Epic Encounters 2\") and party level.<br>- Custom: allows you to freely set both lines using the text boxes below.",
+      "TranslatedText": "显示Discord 游戏状态.<br><br>- 原版: 未修改; 显示当前地图名和多人状态.<br>- 覆盖: 显示主要使用的模组和队伍等级.<br>- 自定义: 允许自由设置自定义行."
+    },
+    "hed5f3515g0bcdg4e22ga774gb2221e6b308f": {
+      "ReferenceText": "Custom Line 1",
+      "TranslatedText": "自定义行1"
+    },
+    "h37705f99g9f5cg4f74g9751g3302acb7c87b": {
+      "ReferenceText": "Custom Line 2",
+      "TranslatedText": "自定义行2"
+    },
+    "hdb9a40e2g4713g40e0g8885gd6e1b75512c3": {
+      "ReferenceText": "Discord Rich Presence",
+      "TranslatedText": "Discord 游戏状态"
+    },
+    "hd1eed9f3g8a0bg4098g9369g0ba5549b947f": {
+      "ReferenceText": "Discord Rich Presence",
+      "TranslatedText": "Discord 游戏状态"
+    },
+    "h3a4e8fc6ga604g45f6gbff7g549e349fbe7d": {
+      "ReferenceText": "Rich Presence message to be used if the Rich Presence setting is set to \"Custom\".",
+      "TranslatedText": " 自定义'时显示的Discord 游戏状态信息"
+    },
+    "h8dbe0f11g045dg4abbg9c90ge35a40efe4e9": {
+      "ReferenceText": "Unknown Region",
+      "TranslatedText": "未知领域"
+    },
+    "hd2e9ffeega495g4fdagb818gbc7b6275e9b3": {
+      "ReferenceText": "After Name",
+      "TranslatedText": "名字后面"
+    },
+    "h2a5a9fedg9c42g4f0ag9d54gb4098614b91b": {
+      "ReferenceText": "Below Health Bar",
+      "TranslatedText": "生命栏下方"
+    },
+    "h52f49bccg59f7g4b72g8440g55847b964cde": {
+      "ReferenceText": "Character Level Display",
+      "TranslatedText": "显示角色等级"
+    },
+    "hedbf4e2fgb8e6g400cgb08bgd33f99bc101d": {
+      "ReferenceText": "Controls how character levels are displayed in the health bar UI.",
+      "TranslatedText": "在生命栏附近显示角色等级"
+    },
+    "h71cef3e3g71bag4da1gb743g56dc62daf7ac": {
+      "ReferenceText": "Controls how resistances are shown in the health bar UI.<br><br>- Never: resistances are never shown under the health bar.<br>- Only non-zero: only resistances that are not at 0 are displayed.<br>- If any non-zero: all resistances are displayed if the character has a non-zero amount of any of them; otherwise none are shown.<br>- Always: all resistances are shown.",
+      "TranslatedText": "如何在血条UI显示抗性.<br><br>- 从不: 不显示抗性.<br>- 只有非零: 只显示不为0的抗性.<br>- 任意非零: 只要角色有抗性不为0, 就显示全部抗性, 否则全部隐藏.<br>- 总是: 一直显示所有抗性."
+    },
+    "h14408a2cgee5fg4f6agb7f8g33c364419f75": {
+      "ReferenceText": "If any non-zero",
+      "TranslatedText": "任意非零"
+    },
+    "h6493dca2g23e2g43d9g8cd4gfa10a05faedd": {
+      "ReferenceText": "Only non-zero",
+      "TranslatedText": "只有非零"
+    },
+    "h33af8f80g537eg4f1fga457gf02894f0d762": {
+      "ReferenceText": "Resistances Display",
+      "TranslatedText": "抗性显示"
+    },
+    "h7e532f24g51f1g439cg9851g8ff8f12a6b17": {
+      "ReferenceText": "When holding Shift",
+      "TranslatedText": "按住shift"
+    },
+    "h2f7ed974g4184g404fga2abg640d32f6f7aa": {
+      "ReferenceText": "Controls the position of item tooltips within the Party Inventory and Container Inventory UIs.<br><br>- Near cursor: vanilla behaviour; tooltips appear near the cursor.<br>- On UI sides: tooltips will be positioned on the left side of the source UI if possible, or on the right otherwise.",
+      "TranslatedText": "背包和容器物品提示显示的位置.<br><br>- 指针附近: 同原版, 提示显示在指针附近.<br>-界面边缘: 提示会显示在界面左边或右边."
+    },
+    "h9035058dg4e1ag41a5g9209gccee07be7808": {
+      "ReferenceText": "Inventory Item Tooltips Position",
+      "TranslatedText": "背包物品提示位置"
+    },
+    "h6bf580c5gf8feg44b5ga13egfca29ae88c6d": {
+      "ReferenceText": "Near Cursor",
+      "TranslatedText": "指针附近"
+    },
+    "h5f55f283g3f47g4d04g9f4eg44d2617254a4": {
+      "ReferenceText": "On UI Sides",
+      "TranslatedText": "界面边缘"
+    },
+    "hbed9b7bcgbbebg428cgbbf2g566a6033f281": {
+      "ReferenceText": "Controls the delay in seconds before item comparison tooltips are shown. This delay is additive with the \"Inventory Item Tooltip Delay\" setting.<br><br>Default value is %s seconds.",
+      "TranslatedText": "物品比较提示显示前的延迟. 该延迟和\"背包物品提示延迟\"叠加.<br><br>默认值为 %s 秒."
+    },
+    "he421bb33gea54g44b3ga90bg5fff2fae3383": {
+      "ReferenceText": "Controls the delay in seconds before item tooltips display upon hovering over items in the Party Inventory and Container Inventory UIs.",
+      "TranslatedText": "指向背包和容器中的物品时, 物品提示显示前的延迟"
+    },
+    "h1da3e55cg3534g4e65gb5f1g66d514505862": {
+      "ReferenceText": "Inventory Item Tooltip Delay",
+      "TranslatedText": "背包物品提示延迟"
+    },
+    "h4a54f1a3gad5eg4855g9b9cge11cad401d59": {
+      "ReferenceText": "Item Comparison Tooltip Delay",
+      "TranslatedText": "物品比较提示延迟"
+    },
+    "h4025c1c4g6527g4b6ag8369g49c0b1949dea": {
+      "ReferenceText": "If enabled, the positions of the character sheet and party inventory UIs will be remembered across sessions.",
+      "TranslatedText": "启用后，"
+    },
+    "h626e6a30gaf91g438aga001g799e54be1477": {
+      "ReferenceText": "Remember Panel Positions",
+      "TranslatedText": "记住面板位置"
+    },
     "h3a8d983cg5a8cg4b33g954cg39581bd8a04b": {
       "ReferenceText": "AI Type: %s",
       "TranslatedText": "AI类型: %s"
@@ -1450,6 +1622,14 @@
       "ReferenceText": "Multi-select controls",
       "TranslatedText": "多选物品"
     },
+    "h6b5b9ed9g85f0g421bga071g409b1e4491ca": {
+      "ReferenceText": "Select Range",
+      "TranslatedText": "选择范围"
+    },
+    "h4a828b3egc70fg4ce9g8d81gd46b307b9366": {
+      "ReferenceText": "Selects a range of items starting from the first selected item and ending with the hovered one, if 'Multi-Select controls' are enabled and at least one item is selected.",
+      "TranslatedText": "选择从第一个选定物品和指向的物品之间的一系列物品。需要启用“多选物品”并且至少选择了一个物品。"
+    },
     "hc1f05532ga3a6g4b02gb837g77d3267b8f18": {
       "ReferenceText": "Send to %s",
       "TranslatedText": "送给 %s"
@@ -1458,9 +1638,25 @@
       "ReferenceText": "Store on Lady Vengeance",
       "TranslatedText": "储存至复仇女神号"
     },
+    "h44c561a7g4b32g4e52ga47fg00e32a6f82fc": {
+      "ReferenceText": "Toggle Item Selection",
+      "TranslatedText": "开启物品选择"
+    },
+    "h8af4098fga9b6g4981g8338g8c4008d54f8a": {
+      "ReferenceText": "Toggles multi-select on the hovered item, if 'Multi-select controls' are enabled.",
+      "TranslatedText": "开启指向物品的多选，需要先启用“多选物品”"
+    },
     "h98751807g9fe2g40d6g9ca4gc0ddd1f2da3d": {
       "ReferenceText": "Unmark as wares",
       "TranslatedText": "从待售品中移除"
+    },
+    "h47312526g9ce5g4deeg8e67gde4e20811748": {
+      "ReferenceText": "Book read.",
+      "TranslatedText": "已阅读"
+    },
+    "he782b845g749cg4c62g9095g0164424ed054": {
+      "ReferenceText": "Key used.",
+      "TranslatedText": "已使用"
     },
     "hc53e69e8ge732g435dg84dcgfb0541f33326": {
       "ReferenceText": "Dismantle All",
@@ -1469,6 +1665,26 @@
     "h11ffdfdbg98d0g41afgb4e4g7242c71f6a2d": {
       "ReferenceText": "Respec",
       "TranslatedText": "角色重置"
+    },
+    "ha69d5b19g97b2g4465gab85g9fbd86817303": {
+      "ReferenceText": "Ignored by enemies",
+      "TranslatedText": "被敌人无视"
+    },
+    "hd72e9e3age9b3g4c47g8009gf7daca531c13": {
+      "ReferenceText": "Preferred by enemies",
+      "TranslatedText": "被敌人重视"
+    },
+    "h2400de7fg95e3g49b3g9a75g136e8d4303e5": {
+      "ReferenceText": "Taunted by %s",
+      "TranslatedText": "被 %s 嘲讽"
+    },
+    "hbc425a35g7325g4a39g89c8g4f53a12292c9": {
+      "ReferenceText": "Taunting %s",
+      "TranslatedText": "被 %s 嘲讽"
+    },
+    "h5fa60300g587ag423cg8f3fg903b327fb9ba": {
+      "ReferenceText": "Unpreferred by enemies",
+      "TranslatedText": "被敌人轻视"
     },
     "ha15ba540g2da4g4056g8174gcd25a3b1d343": {
       "ReferenceText": "Allows examining dead characters.",
@@ -1655,8 +1871,12 @@
       "TranslatedText": "排序顺序"
     },
     "hca56dcd2gf7f6g4662g94cfga66262672545": {
-      "ReferenceText": "Statuses in this list will be filtered out and not shown in the status bar. Holding shift temporarily disables this filter.",
+      "ReferenceText": "Statuses in this list will be filtered out and not shown in the status bar if \"Alternative Status Display\" is enabled. Holding shift temporarily disables this filter.",
       "TranslatedText": "该列表的状态会被过滤掉, 不会显示在状态栏上. 按住shift可以暂时禁用过滤"
+    },
+    "hdaeb81edg863bg492cgab09ged3a5d2470d7": {
+      "ReferenceText": "Using toggleable world tooltips requires binding the vanilla key for them.",
+      "TranslatedText": "使用切换环境提示需要先绑定原版的显示环境提示按键"
     },
     "h6dcae9c5gcbfcg4f06g9329gac12ad711d18": {
       "ReferenceText": "Fix Astrologer's Gaze / Far Out Man range",
@@ -1710,6 +1930,14 @@
       "ReferenceText": "%s%s free movement remaining",
       "TranslatedText": "%s%s 剩余免费移动距离"
     },
+    "h176a0a5cgce9dg4cd7gbf2bg053624c85791": {
+      "ReferenceText": "If enabled, skill, item, status and custom tooltips will use an opaque background.",
+      "TranslatedText": "启用后，技能，物品，状态和自定义提示使用不透明背景"
+    },
+    "h8f54bda9g54cdg4390gb819g7d0af8b9d0ef": {
+      "ReferenceText": "Opaque Background",
+      "TranslatedText": "不透明背景"
+    },
     "h8ed2ccd3g2e36g48bdg98dcg3cbf09c78464": {
       "ReferenceText": "Combine with Pixie Dust to create a small rune of the respective material.",
       "TranslatedText": "和仙尘组合成材料对应的小型符文"
@@ -1726,9 +1954,29 @@
       "ReferenceText": "Rune crafting material<br>%s",
       "TranslatedText": "符文合成材料<br>%s"
     },
+    "he6db6611g97f8g45d3g97afg280b3007ba8d": {
+      "ReferenceText": " (current: %d %s)",
+      "TranslatedText": "(当前： %d %s)"
+    },
+    "hdbbcab04g7b36g441egb0fbgbe739effaa33": {
+      "ReferenceText": "(requires %d %s):",
+      "TranslatedText": "(需要 %d %s):"
+    },
+    "h68c538dbgf229g40b5ga826gb23b92c4f5c7": {
+      "ReferenceText": "Source Infusions:",
+      "TranslatedText": "秘源注入"
+    },
+    "hb7c72307g365dg4b59g9cf2gf9c9093d2ec3": {
+      "ReferenceText": "%sm + %sm",
+      "TranslatedText": "%sm + %sm"
+    },
     "h37cf1748g9dafg4d2ag9744g00e75e764ee5": {
       "ReferenceText": "+%s%% Weapon %s Damage",
-      "TranslatedText": "附加%s%% 武器 %s 伤害"
+      "TranslatedText": "附加%s%%武器%s伤害"
+    },
+    "h56298a9agd232g45d3ga079g28bedb59e95d": {
+      "ReferenceText": "+%sm Weapon Range",
+      "TranslatedText": "附加%s米武器范围"
     },
     "hc28e1c17g7862g402bgabc7gaab851087be4": {
       "ReferenceText": "AP Costs",
