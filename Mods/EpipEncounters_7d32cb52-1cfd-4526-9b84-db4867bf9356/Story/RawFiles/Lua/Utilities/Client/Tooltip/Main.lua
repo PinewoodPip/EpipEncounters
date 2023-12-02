@@ -8,6 +8,7 @@ local Tooltip = {
     _nextCustomTooltip = nil, ---@type TooltipLib_CustomFormattedTooltip
     _nextSkillTooltip = nil, ---@type TooltipLib_SkillTooltipRequest
     _currentTooltipData = nil, ---@type TooltipLib_TooltipSourceData
+    _PartyInventoryUIInitialized = false,
 
     _POSITION_OFFSET = -34,
 
@@ -73,6 +74,7 @@ Epip.InitializeLibrary("TooltipLib", Tooltip)
 ---@field SkillID string?
 ---@field FlashParams LuaFlashCompatibleType[]?
 ---@field UICall string?
+---@field IsFromGame boolean `false` if the tooltip originated from this library.
 
 ---@class TooltipLib_SimpleTooltip
 ---@field Label string Supports <bp>, <line> and <shortline>
@@ -328,8 +330,27 @@ end
 ---Returns the default UI to be used for displaying custom tooltips.
 ---@return UIObject
 function Tooltip._GetDefaultCustomTooltipUI()
-    -- In GM mode, the container UI appears to only exist when needed.
-    return Ext.UI.GetByType(Ext.UI.TypeID.containerInventory.Default) or Ext.UI.GetByType(Ext.UI.TypeID.gmInventory)
+    if Client.IsUsingController() then
+        -- These are guaranteed to exist in both input modes, however the ContainerInventory item tooltips use the owner character of items to show compare tooltips, instead of the client character.
+        -- In GM mode, the container UI appears to only exist when needed.
+        return Ext.UI.GetByType(Ext.UI.TypeID.containerInventory.Default) or Ext.UI.GetByType(Ext.UI.TypeID.gmInventory)
+    else
+        local ui = Ext.UI.GetByType(Ext.UI.TypeID.partyInventory)
+        if ui and not Tooltip._PartyInventoryUIInitialized then -- The UI must've been shown at least once in the session for the tooltips to work properly.
+            if not ui.OF_Visible then
+                ui:Show()
+
+                -- To make things even more complicated, it needs to stay visible for at least a tick.
+                ui:GetRoot().visible = false -- Set root to be invisible so the user doesn't see the UI flashing
+                Timer.StartTickTimer(2, function (_)
+                    ui:Hide()
+                    ui:GetRoot().visible = true
+                end)
+            end
+            Tooltip._PartyInventoryUIInitialized = true
+        end
+        return ui
+    end
 end
 
 ---@param ui UIObject
@@ -413,13 +434,13 @@ Ext.Events.UICall:Subscribe(function(ev)
 
     if ev.Function == "showSkillTooltip" and not Tooltip._nextCustomTooltip then
         local char = Character.Get(param1, true)
-        Tooltip.nextTooltipData = {UIType = ev.UI:GetTypeId(), Type = "Skill", FlashCharacterHandle = param1, SkillID = param2, UICall = ev.Function, FlashParams = {table.unpack(ev.Args)}, Character = char}
+        Tooltip.nextTooltipData = {UIType = ev.UI:GetTypeId(), Type = "Skill", FlashCharacterHandle = param1, SkillID = param2, UICall = ev.Function, FlashParams = {table.unpack(ev.Args)}, Character = char, IsFromGame = Tooltip._nextSkillTooltip == nil}
         Tooltip._currentTooltipData = Tooltip.nextTooltipData
     elseif ev.Function == "showItemTooltip" then
-        Tooltip.nextTooltipData = {UIType = ev.UI:GetTypeId(), Type = "Item", FlashItemHandle = param1, UICall = ev.Function, FlashParams = {table.unpack(ev.Args)}}
+        Tooltip.nextTooltipData = {UIType = ev.UI:GetTypeId(), Type = "Item", FlashItemHandle = param1, UICall = ev.Function, FlashParams = {table.unpack(ev.Args)}, IsFromGame = Tooltip._nextItemTooltip == nil}
         Tooltip._currentTooltipData = Tooltip.nextTooltipData
     elseif ev.Function == "showStatusTooltip" then
-        Tooltip.nextTooltipData = {UIType = ev.UI:GetTypeId(), Type = "Status", FlashStatusHandle = param2, FlashCharacterHandle = param1}
+        Tooltip.nextTooltipData = {UIType = ev.UI:GetTypeId(), Type = "Status", FlashStatusHandle = param2, FlashCharacterHandle = param1, IsFromGame = true}
         Tooltip._currentTooltipData = Tooltip.nextTooltipData
     end
 end)
@@ -483,7 +504,7 @@ TextDisplay:RegisterInvokeListener("displaySurfaceText", function(ev, _, _)
     local ui = ev.UI
     local arrayFieldName = "tooltipArray"
 
-    Tooltip.nextTooltipData = {UIType = ev.UI:GetTypeId(), Type = "Surface"}
+    Tooltip.nextTooltipData = {UIType = ev.UI:GetTypeId(), Type = "Surface", IsFromGame = true}
 
     local tbl = Tooltip._ParseTooltipArray(Game.Tooltip.TableFromFlash(ui, arrayFieldName))
 
@@ -589,5 +610,5 @@ end)
 -- as the game does not appear to do this properly when hovering out of stats with custom IDs.
 Examine:RegisterCallListener("hideTooltip", function (_)
     local ui = Tooltip._GetDefaultCustomTooltipUI()
-    ui:Hide()
+    ui:ExternalInterfaceCall("hideTooltip")
 end, "After")

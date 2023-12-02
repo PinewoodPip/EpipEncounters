@@ -125,7 +125,7 @@ end)
 
 -- Reposition item tooltips from the PartyInventory UI.
 TooltipRepositioning.Events.OffsetRequested:Subscribe(function (ev)
-    if ev.TooltipData.UIType == PartyInventory:GetUI():GetTypeId() and ev.TooltipData.Type == "Item" then
+    if ev.TooltipData.UIType == PartyInventory:GetUI():GetTypeId() and ev.TooltipData.Type == "Item" and ev.TooltipData.IsFromGame then -- The PartyInventory UI is used for custom tooltips by TooltipLib; we must avoid repositioning those.
         local inventoryUIObj = PartyInventory:GetUI()
         local pos = V(inventoryUIObj:GetPosition())
         local topRightCorner = pos + V(inventoryUIObj.FlashSize[1], 0)
