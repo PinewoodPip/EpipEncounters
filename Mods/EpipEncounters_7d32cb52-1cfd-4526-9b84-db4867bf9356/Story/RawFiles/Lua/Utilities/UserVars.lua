@@ -3,6 +3,8 @@ local DefaultTable = DataStructures.Get("DataStructures_DefaultTable")
 
 ---@class UserVarsLib : Library
 UserVars = {
+    NETMSG_REQUEST_SYNC = "UserVarsLib.NetMsg.RequestSync", -- Empty message.
+
     ---@type table<string, UserVarsLib_UserVar>
     _RegisteredVariables = {},
     ---@type table<GUID, table<string, UserVarsLib_ModVar>>
@@ -62,7 +64,7 @@ function UserVars.RegisterUserVariable(name, data)
 
     UserVars._RegisteredVariables[name] = data
 
-    Ext.Utils.RegisterUserVariable(name, options)
+    Ext.Vars.RegisterUserVariable(name, options)
 
     return data
 end
@@ -116,7 +118,7 @@ function UserVars.RegisterModVariable(modGUID, name, data)
         options.Persistent = true
     end
 
-    Ext.Utils.RegisterModVariable(modGUID, name, options)
+    Ext.Vars.RegisterModVariable(modGUID, name, options)
 
     return data
 end
@@ -125,7 +127,7 @@ end
 ---@param modGUID GUID
 ---@return table
 function UserVars.GetModVariables(modGUID)
-    return Ext.Utils.GetModVariables(modGUID)
+    return Ext.Vars.GetModVariables(modGUID)
 end
 
 ---Returns the value of a mod var.
@@ -186,4 +188,26 @@ function UserVars._GetVarDefaultValue(var)
     end
 
     return value
+end
+
+---------------------------------------------
+-- EVENT LISTENERS
+---------------------------------------------
+
+-- Request all variables to be synched when joining a session as a non-host.
+-- This is a workaround for a flaw in the extender that causes variables to not be synched when joining a session mid-way.
+if Ext.IsClient() then
+    GameState.Events.ClientReady:Subscribe(function (ev)
+        if not Client.IsHost() and not ev.FromReset then -- Not necessary to do this from a lua reset.
+            UserVars:DebugLog("Connecting as non-host; requesting all variables to be synched")
+            Net.PostToServer(UserVars.NETMSG_REQUEST_SYNC)
+        end
+    end)
+else -- Dirtying must be done on the server side due to another flaw where client-to-server syncs are not propagated to other clients.
+    Net.RegisterListener(UserVars.NETMSG_REQUEST_SYNC, function (_)
+        UserVars:DebugLog("Synching all variables")
+
+        Ext.Vars.DirtyUserVariables()
+        Ext.Vars.DirtyModVariables()
+    end)
 end

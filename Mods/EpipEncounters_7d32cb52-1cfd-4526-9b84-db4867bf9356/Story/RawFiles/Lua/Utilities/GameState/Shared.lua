@@ -148,6 +148,7 @@ Epip.InitializeLibrary("GameState", GameState)
 ---@class GameStateLib_Event_ClientReady
 ---@field CharacterNetID NetId
 ---@field ProfileGUID GUID
+---@field FromReset boolean `true` if the event was fired from a lua reset.
 
 ---------------------------------------------
 -- METHODS

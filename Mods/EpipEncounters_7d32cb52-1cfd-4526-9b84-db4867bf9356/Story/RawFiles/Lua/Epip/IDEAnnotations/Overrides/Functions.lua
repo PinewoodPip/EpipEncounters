@@ -62,5 +62,20 @@ local functions = {
             },
         },
     },
+    ["Ext_Vars"] = {
+        ["RegisterUserVariable"] = {
+            Params = {
+                {Name = "id", Type = "string"},
+                {Name = "options", Type = "table"}, -- TODO!
+            },
+        },
+        ["RegisterModVariable"] = {
+            Params = {
+                {Name = "modGUID", Type = "GUID"},
+                {Name = "id", Type = "string"},
+                {Name = "options", Type = "table"}, -- TODO!
+            },
+        },
+    },
 }
 return functions

@@ -93,7 +93,6 @@ local coreLibraries = {
     "Utilities/Mod.lua",
     "Utilities/Timer.lua",
     "Utilities/Coroutine.lua",
-    "Utilities/UserVars.lua",
     {
         Scripts = {
             "Server/Osiris/Osiris.lua",
@@ -101,6 +100,7 @@ local coreLibraries = {
         },
     },
     {ScriptSet = "Utilities/GameState"},
+    "Utilities/UserVars.lua",
 
     {ScriptSet = "Utilities/Combat"},
     "Utilities/Texture.lua",

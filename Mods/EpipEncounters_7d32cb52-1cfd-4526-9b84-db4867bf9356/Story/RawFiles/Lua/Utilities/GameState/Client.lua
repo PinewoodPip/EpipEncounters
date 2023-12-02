@@ -16,10 +16,14 @@ function GameState.GetState()
     return Ext.Client.GetGameState()
 end
 
-function GameState._ThrowClientReadyEvent()
+---Fires the ClientReady event.
+---@param fromReset boolean?
+function GameState._ThrowClientReadyEvent(fromReset)
+    ---@type GameStateLib_Event_ClientReady
     local event = {
         CharacterNetID = Client.GetCharacter().NetID,
-        ProfileGUID = Client.GetProfileGUID()
+        ProfileGUID = Client.GetProfileGUID(),
+        FromReset = fromReset or false,
     }
 
     GameState.Events.ClientReady:Throw(event)
@@ -32,5 +36,5 @@ end
 
 -- Re-throw ClientReady after a reset.
 GameState.Events.LuaResetted:Subscribe(function (_)
-    GameState._ThrowClientReadyEvent()
+    GameState._ThrowClientReadyEvent(true)
 end)
