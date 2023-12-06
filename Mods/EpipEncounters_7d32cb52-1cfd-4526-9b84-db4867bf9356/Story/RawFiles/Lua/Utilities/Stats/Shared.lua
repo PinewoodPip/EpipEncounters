@@ -262,7 +262,7 @@ function Stats.MeetsRequirements(char, statID, isItem, itemSource)
     elseif itemSource and itemSource.StatsId then
         apCost = Item.GetUseAPCost(itemSource)
     else
-        apCost, _ = Game.Math.GetSkillAPCost(data, char.Stats, Ext.Entity.GetAiGrid(), char.Translate, 1)
+        apCost = Character.GetSkillAPCost(char, statID)
     end
 
     apCost = apCost or 0
@@ -420,6 +420,13 @@ function Stats.Update(statType, data, ...)
     else
         Stats:LogError("Attempted to update unsupported stat type: " .. statType)
     end
+end
+
+---Returns an ItemColor stat by ID.
+---@param statID string
+---@return StatsItemColorDefinition
+function Stats.GetItemColor(statID)
+    return Ext.Stats.ItemColor.Get(statID)
 end
 
 ---@param status EclStatus|EsvStatus
