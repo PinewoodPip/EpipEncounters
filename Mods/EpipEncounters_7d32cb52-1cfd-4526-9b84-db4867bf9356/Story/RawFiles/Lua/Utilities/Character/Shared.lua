@@ -797,6 +797,23 @@ function Character.GetStatusByNetID(char, netID)
     return status
 end
 
+---Returns the character's AP cost to cast a skill.
+---@param char Character
+---@param skillID skill
+---@return integer, boolean -- AP cost and whether elemental affinity was applied.
+function Character.GetSkillAPCost(char, skillID)
+    local apCost, elementalAffinity
+
+    -- Use the extender method if available, which will respect any hooks other mods might've made for this function.
+    if Epip.IsPipFork() then
+        apCost, elementalAffinity = Ext.Stats.Math.GetSkillAPCost(char.Stats, skillID, char.WorldPos, char.AI.AIBoundsSize)
+    else
+        apCost, elementalAffinity = Game.Math.GetSkillAPCost(Stats.GetSkillData(skillID), char.Stats, Ext.Entity.GetAiGrid(), char.WorldPos, char.AI.AIBoundsSize)
+    end
+
+    return apCost, elementalAffinity
+end
+
 ---Returns the current skill state of char.
 ---**On the server, this can only return the state while using the skill. Preparation state cannot be accessed.**
 ---@param char Character
