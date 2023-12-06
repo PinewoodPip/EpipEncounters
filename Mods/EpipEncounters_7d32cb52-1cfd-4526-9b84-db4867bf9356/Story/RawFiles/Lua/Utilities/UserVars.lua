@@ -211,3 +211,18 @@ else -- Dirtying must be done on the server side due to another flaw where clien
         Ext.Vars.DirtyModVariables()
     end)
 end
+
+-- Clear UserVars of dying summons to reduce savefile bloat.
+-- TODO store a copy in case a mod tries to access them at this same point?
+if Ext.IsServer() then
+    Osiris.RegisterSymbolListener("CharacterDied", 1, "after", function (charGUID)
+        local char = Character.Get(charGUID)
+        if Character.IsSummon(char) then
+            for id, var in pairs(UserVars._RegisteredVariables) do
+                if var.WriteableOnServer and char.UserVars[id] ~= nil then -- Need to check whether the character has the var to avoid the annoying "repaired GUID" message on the client if it didn't have any.
+                    char.UserVars[id] = nil
+                end
+            end
+        end
+    end)
+end
