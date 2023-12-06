@@ -163,6 +163,7 @@ Character = {
     },
     Hooks = {
         CreateEquipmentVisuals = {}, ---@type Event<CharacterLib_Hook_CreateEquipmentVisuals> Client-only.
+        GetSkillAPCost = {}, ---@type Hook<CharacterLib.Hooks.GetSkillAPCost>
     },
 }
 Game.Character = Character -- Legacy alias.
@@ -182,6 +183,16 @@ Epip.InitializeLibrary("Character", Character)
 ---@field Character Character
 ---@field Item Item
 ---@field Slot ItemSlot
+
+---Fired from `Character.GetSkillAPCost()` if `Ext.Stats.Math.GetSkillAPCost()` is unavailable.
+---@class CharacterLib.Hooks.GetSkillAPCost
+---@field Character CDivinityStats_Character
+---@field Skill StatsLib_StatsEntry_SkillData
+---@field AiGrid EocAiGrid
+---@field Position vec3 WorldPos of the character.
+---@field Radius number AI bounds size of the character.
+---@field AP integer Hookable. Defaults to the value from `Game.Math.GetSkillAPCost()`
+---@field ElementalAffinity boolean Hookable. Defaults to the value from `Game.Math.GetSkillAPCost()`
 
 ---------------------------------------------
 -- NET MESSAGES
@@ -798,6 +809,7 @@ function Character.GetStatusByNetID(char, netID)
 end
 
 ---Returns the character's AP cost to cast a skill.
+---@see CharacterLib.Hooks.GetSkillAPCost
 ---@param char Character
 ---@param skillID skill
 ---@return integer, boolean -- AP cost and whether elemental affinity was applied.
@@ -809,6 +821,20 @@ function Character.GetSkillAPCost(char, skillID)
         apCost, elementalAffinity = Ext.Stats.Math.GetSkillAPCost(char.Stats, skillID, char.WorldPos, char.AI.AIBoundsSize)
     else
         apCost, elementalAffinity = Game.Math.GetSkillAPCost(Stats.GetSkillData(skillID), char.Stats, Ext.Entity.GetAiGrid(), char.WorldPos, char.AI.AIBoundsSize)
+
+        -- Throw hook to allow mods to reflect any changes they apply on the respective extender event.
+        -- This is a workaround for StatsSkillPrototype not being fetchable, making the event hard to accurately spoof.
+        local hook = Character.Hooks.GetSkillAPCost:Throw({
+            Character = char.Stats,
+            Skill = Stats.GetSkillData(skillID),
+            AiGrid = Ext.Entity.GetAiGrid(),
+            Position = char.WorldPos,
+            Radius = char.AI.AIBoundsSize,
+            AP = apCost,
+            ElementalAffinity = elementalAffinity,
+        })
+
+        apCost, elementalAffinity = hook.AP, hook.ElementalAffinity
     end
 
     return apCost, elementalAffinity
