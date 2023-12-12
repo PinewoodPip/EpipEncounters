@@ -351,6 +351,22 @@ function Transmog.IsItemInvisible(item, char)
     return invisible
 end
 
+---Returns whether equipment can be shown for a character.
+---@param char EclCharacter
+---@return boolean
+function Transmog._CanShowEquipment(char)
+    local canShow = true
+
+    -- Check if the character's body is present, if they're dead
+    local dyingStatus = char:GetStatus("DYING") ---@cast dyingStatus EclStatusDying
+    if dyingStatus then
+        local deathReason = dyingStatus.DeathType
+        canShow = canShow and not Character.CORPSELESS_DEATH_TYPES[deathReason]
+    end
+
+    return canShow
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
@@ -450,12 +466,13 @@ end)
 
 -- Show transmog'd visuals instead of the item's real ones.
 Character.Hooks.CreateEquipmentVisuals:Subscribe(function (ev)
+    local char = ev.Character
+
     -- Do nothing for blacklisted slots or non-players.
-    if Transmog._BlacklistedSlots[ev.Request.Slot] or not ev.Character.PlayerData then
+    if Transmog._BlacklistedSlots[ev.Request.Slot] or not char.PlayerData or not Transmog._CanShowEquipment(char) then
         return
     end
 
-    local char = ev.Character
     local equipmentSlotMask, visualSetSlotMask = Transmog._GetEquipmentMasks(char)
 
     -- Update skin color tracking - we cannot calculate the exact color ourselves
@@ -464,15 +481,6 @@ Character.Hooks.CreateEquipmentVisuals:Subscribe(function (ev)
     end
 
     if ev.Item then
-        -- Check if the character's body is present, if they're dead
-        local dyingStatus = char:GetStatus("DYING") ---@cast dyingStatus EclStatusDying
-        local canShowTransmog = true
-        if dyingStatus then
-            local deathReason = dyingStatus.DeathType
-            canShowTransmog = not Character.CORPSELESS_DEATH_TYPES[deathReason]
-        end
-        if not canShowTransmog then return end -- Do not render equipment visuals if the character's body is gone.
-
         local transmoggedTemplateGUID = Transmog.GetTransmoggedTemplate(ev.Item)
         local slot = ev.Request.Slot
         local template
@@ -522,14 +530,7 @@ Character.Hooks.CreateEquipmentVisuals:Subscribe(function (ev)
                 end
             else
                 -- If the slot is not weapon/shield, we need to fetch the correct visual from the template's Equipment.
-                local equipmentClassIndex = Character.EQUIPMENT_VISUAL_CLASS.NONE
-                local gender = Character.IsMale(char) and "MALE" or "FEMALE"
-                local race = Character.GetRace(char)
-                if not race then return end -- Do nothing for characters transformed into non-racial characters.
-                race = race:upper()
-                local isUndead = Character.IsUndead(char) and "UNDEAD_" or ""
-
-                equipmentClassIndex = Character.EQUIPMENT_VISUAL_CLASS[string.format("%s%s_%s", isUndead, race, gender)]
+                local equipmentClassIndex = char.CurrentTemplate.EquipmentClass + 1 -- Needs to be converted from 0-based to 1-based.
 
                 ev.Request.VisualResourceID = template.Equipment.VisualResources[equipmentClassIndex]
 
