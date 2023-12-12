@@ -290,8 +290,11 @@ function Stats.MeetsRequirements(char, statID, isItem, itemSource)
     -- Source cost
     if not isItem and data["Magic Cost"] > 0 then
         local mpCost = data["Magic Cost"]
+        local mp = char.Stats.MPStart
 
-        if char.Stats.MPStart < mpCost or char:GetStatus("SOURCE_MUTED") ~= nil then
+        mpCost = mpCost + Stats.CountStat(char.Stats, "SPCostBoost")
+
+        if mp < mpCost or char:GetStatus("SOURCE_MUTED") ~= nil then
             return false
         end
     end
@@ -313,7 +316,7 @@ function Stats.MeetsRequirements(char, statID, isItem, itemSource)
     if charSkillData and (not charSkillData.IsLearned and not grantedByExternalSource) then
         return false
     end
-    
+
     -- Weapon requirements
     if not isItem and data.Requirement ~= "None" then
         if data.Requirement == "MeleeWeapon" and not Game.Character.HasMeleeWeapon(char) then
