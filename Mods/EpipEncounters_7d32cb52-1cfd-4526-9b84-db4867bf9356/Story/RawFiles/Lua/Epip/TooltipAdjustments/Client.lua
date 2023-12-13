@@ -243,25 +243,6 @@ function TooltipAdjustments.ChangeArtifactRarityDisplay(item, tooltip, a, b)
     end
 end
 
--- Fix tooltips when char has increased AP costs (ex. Slowed III in old Epip)
-function TooltipAdjustments.FixTooltipAPCosts(tooltip)
-    local char = Client.GetCharacter()
-    if not char then return nil end
-    
-    local increasedActionCosts = 0
-
-    for i,v in pairs(char.Stats.DynamicStats) do
-        increasedActionCosts = increasedActionCosts + v.APCostBoost
-    end
-    
-    for i,v in pairs(tooltip.Data) do
-        if (v.Type == "SkillAPCost" or v.Type == "ItemUseAPCost") and v.Value > 0 then -- 0 AP skills are not affected by AP cost boost
-            v.Value = v.Value + increasedActionCosts
-            break
-        end
-    end
-end
-
 local function OnStatusGetDescription(event)
     local status = event.Status
     local char = event.Owner
@@ -578,15 +559,9 @@ end
 local function OnItemTooltipRender(item, tooltip)
     if not TooltipAdjustments:IsEnabled() then return nil end
     -- TooltipAdjustments.ShowAbilityScoresForSI(nil, skill, tooltip) -- TODO
-    TooltipAdjustments.FixTooltipAPCosts(tooltip)
     TooltipAdjustments.ChangeArtifactRarityDisplay(item, tooltip)
 
     -- TooltipAdjustments.TestElements(item, tooltip)
-end
-
-local function OnSkillAPTooltipRender(char, skill, tooltip)
-    if not TooltipAdjustments:IsEnabled() then return nil end
-    TooltipAdjustments.FixTooltipAPCosts(tooltip)
 end
 
 Ext.Events.StatusGetDescriptionParam:Subscribe(OnStatusGetDescription)
@@ -594,7 +569,6 @@ Ext.Events.SkillGetDescriptionParam:Subscribe(OnSkillGetDescription)
 Ext.Events.SessionLoaded:Subscribe(function()
     Game.Tooltip.RegisterListener("Stat", nil, OnGenericStatTooltipRender)
     Game.Tooltip.RegisterListener("Ability", nil, OnGenericStatTooltipRender)
-    Game.Tooltip.RegisterListener("Skill", nil, OnSkillAPTooltipRender)
     Game.Tooltip.RegisterListener("Item", nil, OnItemTooltipRender)
     Game.Tooltip.RegisterListener("Status", nil, OnStatusTooltipRender)
 end)

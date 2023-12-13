@@ -452,6 +452,7 @@ LOAD_ORDER = {
             {Script = "Epip/TooltipAdjustments/Client_SourceInfusions.lua", RequiresEE = true},
             "Epip/TooltipAdjustments/InventoryTooltipsRepositioning/Client.lua",
             "Epip/TooltipAdjustments/TooltipDelay/Client.lua",
+            "Epip/TooltipAdjustments/ResourceCostBoostsFix/Client.lua",
         },
     },
 
