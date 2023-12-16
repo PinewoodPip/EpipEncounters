@@ -337,8 +337,26 @@ local tabOrder = {
     tabs.Epip_Inventory,
     tabs.Epip_Notifications,
     tabs.Epip_Tooltips,
-    tabs.Epip_Other
+    tabs.Epip_Other,
 }
+
+-- GM tab is only visible in the corresponding game mode
+if Ext.GetGameMode() == "GameMaster" then
+    -- TODO extract this string to somewhere, maybe TextLib?
+    local gameMasterModeName = Text.GetTranslatedString("h808cea4bg2b0eg45fcgb176g61b44335e4e8", "Game Master")
+    local AutomaticRollBonus = Epip.GetFeature("Features.GM.AutomaticRollBonuses")
+    tabs.Epip_GameMaster = {
+        ID = "Epip_GameMaster",
+        ButtonLabel = gameMasterModeName,
+        HeaderLabel = gameMasterModeName,
+        Entries = {
+            CreateHeader(gameMasterModeName),
+            {Module = AutomaticRollBonus:GetNamespace(), ID = AutomaticRollBonus.Settings.AutomaticBonus:GetID()},
+        },
+    }
+
+    table.insert(tabOrder, tabs.Epip_GameMaster)
+end
 
 for tabIndex,tab in ipairs(tabOrder) do
     for i,entry in ipairs(tab.Entries) do

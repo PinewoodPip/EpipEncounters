@@ -213,6 +213,10 @@ Text.CommonStrings.Always = Text.RegisterTranslatedString({
     Handle = "hff7beb36g46fbg40d9gb13cg2f8680af5b06",
     Text = "Always",
 })
+Text.CommonStrings.None = Text.RegisterTranslatedString({
+    Handle = "h22852a75g8a17g410cgbd3fg5f0c5a8ced5e",
+    Text = "None",
+})
 
 ---------------------------------------------
 -- BRANDING
