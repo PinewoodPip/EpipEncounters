@@ -1,7 +1,7 @@
 
 ---@class ClientLib : Library
 Client = {
-    UI = {},
+    UI = {GM = {}},
     Input = {}, -- See Input.lua
 
     USE_LEGACY_EVENTS = false,

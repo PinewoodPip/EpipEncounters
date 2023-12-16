@@ -232,10 +232,14 @@ if Ext.IsClient() then
     ---@param type integer?
     ---@param id string
     ---@param ui UI Will be initialized.
-    function Epip.InitializeUI(type, id, ui)
+    ---@param assignToUINamespace boolean?
+    function Epip.InitializeUI(type, id, ui, assignToUINamespace)
+        if assignToUINamespace == nil then assignToUINamespace = true end
         local instance = Client.UI._BaseUITable.Create(id, type, ui)
 
-        Client.UI[id] = ui
+        if assignToUINamespace then
+            Client.UI[id] = ui
+        end
 
         -- TODO fix code duplication; and some of these aspects UIs never should've had
         xpcall(function ()

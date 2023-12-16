@@ -18,6 +18,7 @@ local Menu = {
         GM_SAVE_CAMPAIGN = 19,
         GM_SAVE_CAMPAIGN_AS = 20,
         GM_RELOAD_ASSETS = 21,
+        GM_PARTY_REROLL = 22,
         GIFT_BAGS = 24,
     },
 

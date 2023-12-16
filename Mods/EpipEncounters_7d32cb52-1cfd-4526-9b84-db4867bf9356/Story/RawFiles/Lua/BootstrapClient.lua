@@ -262,6 +262,9 @@ LOAD_ORDER = {
     "UI/LoadingScreen.lua",
     "UI/Skills.lua",
 
+    -- GM UIs
+    {Script = "UI/GM/Roll.lua", GameModes = GAMEMODE_MASK.GameMaster},
+
     -- TooltipLib
     {
         Scripts = {
