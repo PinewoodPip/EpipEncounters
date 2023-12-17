@@ -769,6 +769,8 @@ LOAD_ORDER = {
         },
     },
 
+    {Script = "Epip/StatusConsoleDividers/Client.lua"},
+
     "Epip/Client/EpipSettingsMenu.lua",
     "Epip/Keybindings/Client.lua",
 

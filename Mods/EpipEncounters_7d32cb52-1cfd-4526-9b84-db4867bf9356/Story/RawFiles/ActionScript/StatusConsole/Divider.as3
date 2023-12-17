@@ -9,12 +9,5 @@ package
             super();
             this.stop();
         }
-
-        public function setSpecialSprite(enabled:Boolean) : *
-        {
-            this.gotoAndStop(enabled ? 2 : 1);
-
-            this.y = enabled ? -10 : 0;
-        }
     }
 }

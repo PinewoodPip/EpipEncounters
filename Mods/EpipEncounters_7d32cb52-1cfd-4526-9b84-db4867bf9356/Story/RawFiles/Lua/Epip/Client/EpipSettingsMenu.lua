@@ -11,6 +11,7 @@ local DiscordRichPresence = Epip.GetFeature("Features.DiscordRichPresence")
 local ContainerInventoryTweaks = Epip.GetFeature("Features.ContainerInventoryTweaks")
 local TooltipRepositioning = Epip.GetFeature("Features.TooltipAdjustments.InventoryTooltipsRepositioning")
 local TooltipDelay = Epip.GetFeature("Features.TooltipAdjustments.TooltipDelay")
+local StatusConsoleDividers = Epip.GetFeature("Features.StatusConsoleDividers")
 local CommonStrings = Text.CommonStrings
 
 local InventoryMultiSelectInputActionSettings = {
@@ -172,6 +173,7 @@ local tabs = {
             "HotbarCastingGreyOut",
             {Type = "Setting", Module = "EpipEncounters_HotbarTweaks", ID = "AllowDraggingUnlearntSkills"},
             {Type = "Setting", Module = "EpipEncounters_HotbarTweaks", ID = "SlotKeyboardModifiers"},
+            {Type = "Setting", Module = StatusConsoleDividers:GetNamespace(), ID = StatusConsoleDividers.Settings.DividerInterval:GetID()},
         }
     },
     ["Epip_QuickExamine"] = {

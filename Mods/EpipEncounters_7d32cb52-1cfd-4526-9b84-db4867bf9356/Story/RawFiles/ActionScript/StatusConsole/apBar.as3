@@ -98,11 +98,6 @@ package statusConsole_fla
                     // Add dividers and shadows
                     var divider:MovieClip = new Divider();
 
-                    // don't set special sprite for the last divider
-                    if (counter != 0 && counter != param1)
-                    {
-                        divider.setSpecialSprite(counter % 4 == 0);
-                    }
                     this.dividerList.addElement(divider);
 
                     var shadow:SimpleSprite = new SimpleSprite(); // TODO rename class
@@ -151,8 +146,6 @@ package statusConsole_fla
             this.shadowList.visible = param1 > 0;
             this.dividerList.visible = param1 > 0;
             this.shadowList.positionElements();
-
-            ExternalInterface.call("pipMaxAPUpdated", param1);
         }
         
         public function calculateBarOffset() : *

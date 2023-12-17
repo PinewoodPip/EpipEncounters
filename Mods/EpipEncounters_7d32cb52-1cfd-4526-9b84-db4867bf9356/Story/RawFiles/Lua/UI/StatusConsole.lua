@@ -5,9 +5,6 @@
 
 ---@class StatusConsoleUI : UI
 local StatusConsole = {
-    UI = nil,
-    Root = nil,
-    
     visible = true,
     modulesRequestingHide = {},
 
@@ -101,62 +98,6 @@ StatusConsole:RegisterCallListener("EndButtonPressed", function (ev)
     end
 end)
 
-StatusConsole:RegisterCallListener("pipMaxAPUpdated", function(ev, amount)
-    amount = math.min(amount, 21)
-    local character = Client.GetCharacter()
-    local root = ev.UI:GetRoot()
-    local apHolder = root.console_mc.ap_mc
-    local list = apHolder.dividerList
-    local listWidth = amount * 22
-
-    list.EL_SPACING = -10
-    list.x = -14.5
-    list.y = -2
-    list.positionElements()
-
-    apHolder.x = (-7) - math.floor(listWidth / 2)
-    apHolder.y = -92 + 6
-
-    local apList = apHolder.apList
-    local extraX = 0
-    local SPACING = 2
-    local SPACING_AFTER_DIVIDER = 1
-
-    apList.positionElements()
-
-    for i=0,#apList.content_array-1,1 do
-        if i % 4 == 0 and i > 0 then
-            extraX = extraX + SPACING 
-        end
-
-        local orb = apList.content_array[i]
-        local divider = list.content_array[i]
-
-        divider.x = divider.x + extraX
-        if i % 4 == 0 and i > 0 then
-            extraX = extraX + SPACING + SPACING_AFTER_DIVIDER
-        end
-        orb.x = orb.x + extraX
-
-        if i == #apList.content_array-1 then
-            divider = list.content_array[i + 1]
-            divider.x = divider.x + extraX
-        end
-
-    end
-    apHolder.x = apHolder.x - extraX // 2
-    apHolder.apGlow_mc.visible = false
-    apHolder.apOverflow_mc.x = 503
-    apHolder.apOverflow_mc.y = -7
-    apHolder.apOverflow_mc.overflow_txt.x = -15
-    apHolder.apOverflow_mc.visible = character and character.Stats.CurrentAP > 20
-
-    local shadowList = apHolder.shadowList
-    shadowList.positionElements()
-    shadowList.x = -7
-    shadowList.y = -13
-end)
-
 StatusConsole:RegisterInvokeListener("setSourcePoints", function(ev, available)
     local max = 0
     local char = Client.GetCharacter()
@@ -192,7 +133,6 @@ local function OnHealthBarUpdate(uiObj, method, param3, num1, str1, bool1)
     root.turnNotice_mc.x = 8000
 
     StatusConsole.Toggle(true, "VanillaBehaviour")
-
 end
 
 ---------------------------------------------
