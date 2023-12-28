@@ -943,7 +943,7 @@ Ext.Events.RawInput:Subscribe(function(e)
         local axis = Input.MOTION_AXIS[id]
         if not Input.mouseState then
             Input.mouseState = {
-                MoveVector = {x = 0, y = 0},
+                MoveVector = Vector.Create(0, 0),
                 Moving = false,
             }
         end
@@ -951,11 +951,10 @@ Ext.Events.RawInput:Subscribe(function(e)
 
         if axis then
             local value = inputEventData.Value.Value2
-
             if value ~= 0 then
+                local index = axis == "x" and 1 or 2
+                state.MoveVector[index] = state.MoveVector[index] + value
                 state.Moving = true
-                
-                state.MoveVector[axis] = state.MoveVector[axis] + value
             end
         end
     end
@@ -972,7 +971,7 @@ Ext.Events.RawInput:Subscribe(function(e)
                 Position = {x = x, y = y},
                 InputID = id,
             })
-        end 
+        end
     end
 
     local event = {InputID = id, State = state,} ---@type InputLib_Event_KeyStateChanged
