@@ -517,6 +517,7 @@ LOAD_ORDER = {
     {ScriptSet = "Epip/AscensionShortcuts", RequiresEE = true},
     "Epip/Client/ExitChatAfterMessage.lua",
     "Epip/Client/CameraZoom.lua",
+    "Epip/CameraControls/Client.lua",
     "Epip/Client/MinimapToggle.lua",
     {Script = "Epip/Client/ImmersiveMeditation.lua", RequiresEE = true},
     -- "Epip/Client/ModMenuImprovements.lua",
