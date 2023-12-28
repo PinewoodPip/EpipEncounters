@@ -529,23 +529,31 @@ function Stats.CountStat(stats, stat)
     return count
 end
 
+---@param char Character
+---@param req StatsRequirement
+---@return boolean
 function Stats.MeetsRequirementsINT(char, req)
     local reqMet = false
 
-    if req.Requirement == "None" then
+    -- Possessed GM mode characters bypass ability requirements.
+    if char.IsPossessed and Ext.Enums.AbilityType[req.Requirement] ~= nil then
         reqMet = true
-    elseif req.Requirement == "Tag" then
-        reqMet = char:HasTag(req.Param)
-    elseif type(char.Stats[req.Requirement]) == "boolean" then
-        reqMet = char.Stats[req.Requirement]
     else
-        local amount = char.Stats[req.Requirement]
+        if req.Requirement == "None" then
+            reqMet = true
+        elseif req.Requirement == "Tag" then
+            reqMet = char:HasTag(req.Param)
+        elseif type(char.Stats[req.Requirement]) == "boolean" then
+            reqMet = char.Stats[req.Requirement]
+        else
+            local amount = char.Stats[req.Requirement]
 
-        reqMet = amount >= req.Param
-    end
+            reqMet = amount >= req.Param
+        end
 
-    if req.Not then
-        reqMet = not reqMet
+        if req.Not then
+            reqMet = not reqMet
+        end
     end
 
     return reqMet
