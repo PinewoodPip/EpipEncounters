@@ -255,6 +255,7 @@ function Input._FireActionReleasedEvent()
         })
 
         Input._CurrentAction = nil
+        Input._CurrentActionKeys = nil
     else
         Input:LogWarning("_FireActionReleasedEvent() fired with no active action")
     end
@@ -292,7 +293,7 @@ Input.Hooks.CanExecuteAction:Subscribe(function (ev)
     ev.CanExecute = execute
 end)
 
--- Listen for inputs and check if they should execute an action.
+-- TODO clean this up - this is still a remnant from the time this was coupled to OptionsInput
 local function GetPressedKeys()
     local dummyBinding = {Keys = {}}
 
@@ -311,6 +312,8 @@ local function GetPressedKeys()
 
     return dummyBinding
 end
+
+-- Listen for inputs and check if they should execute an action or release one.
 Input.Events.KeyPressed:Subscribe(function (_)
     if Client.UI.OptionsInput:IsVisible() then return end -- TODO temp
     local dummyBinding = GetPressedKeys()
@@ -333,18 +336,24 @@ Input.Events.KeyPressed:Subscribe(function (_)
             end
 
             Input._CurrentAction = action:GetID()
+            Input._CurrentActionKeys = dummyBinding
         end
     end
 
     Input._lastActionMapping = mapping
 end)
 Input.Events.KeyReleased:Subscribe(function (_)
-    local dummyBinding = GetPressedKeys()
-    local mapping = Input.StringifyBinding(dummyBinding)
+    local pressedKeys = GetPressedKeys()
+    local mapping = Input.StringifyBinding(pressedKeys)
 
-    -- Fire event for releasing action mappings
-    if #GetPressedKeys().Keys == 0 and Input._CurrentAction then
-        Input._FireActionReleasedEvent()
+    -- Fire event for releasing action mappings when any of the action's keys are no longer pressed
+    if Input._CurrentAction then
+        for _,key in ipairs(Input._CurrentActionKeys.Keys) do
+            if table.reverseLookup(pressedKeys.Keys, key) == nil then
+                Input._FireActionReleasedEvent()
+                break
+            end
+        end
     end
 
     Input._lastActionMapping = mapping
