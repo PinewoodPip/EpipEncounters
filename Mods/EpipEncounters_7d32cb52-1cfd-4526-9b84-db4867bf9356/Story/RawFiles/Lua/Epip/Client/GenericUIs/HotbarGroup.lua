@@ -28,6 +28,8 @@ local GroupManager = {
 
     CURRENT_GROUP_GUID = nil, ---@type string
 
+    _SetupCompleted = false,
+
     TranslatedStrings = {
         CreateGroupHeader = {
             Handle = "h4179a16bg43a5g40bcg88ccg7870114fb6c0",
@@ -59,9 +61,15 @@ local GroupManager = {
             Text = "Columns",
             ContextDescription = "Hotbar group create/resize menu columns spinner label",
         },
+        HotbarGroup_DragHandle_Tooltip = {
+            Handle = "h3edeba4cg45a9g46f9g8c02g85e9ff956909",
+            Text = "Click and hold to drag.",
+            ContextDescription = "Tooltip for hotbar group drag area",
+        },
     },
 }
 Epip.RegisterFeature("HotbarGroupManager", GroupManager)
+local TSK = GroupManager.TranslatedStrings
 
 ---------------------------------------------
 -- HOTBAR GROUP
@@ -173,37 +181,44 @@ end
 ---@param id string
 ---@param rows integer
 ---@param columns integer
-function HotbarGroup:_Init(id, rows, columns)
-    self._Slots = {}
-    self._Rows = 0
-    self._Columns = 0
-    self._SlotsAllocated = 0
+---@return HotbarGroup
+function HotbarGroup.___Create(id, rows, columns)
+    ---@type HotbarGroup
+    local group = {
+        GUID = id,
+        _Slots = {},
+        _Rows = 0,
+        _Columns = 0,
+        _SlotsAllocated = 0,
+    }
+    Inherit(group, HotbarGroup)
 
-    self.GUID = id
-    self.UI = Generic.Create("HotbarGroup_" .. self.GUID)
+    group.UI = Generic.Create("HotbarGroup_" .. group.GUID)
 
-    local content = self.UI:CreateElement("ContentContainer" .. self.GUID, "GenericUI_Element_TiledBackground")
+    local content = group.UI:CreateElement("ContentContainer" .. group.GUID, "GenericUI_Element_TiledBackground")
     content:SetAlpha(0)
-    self._Content = content
-    self._Content:SetPosition(25, 25)
+    group._Content = content
+    group._Content:SetPosition(25, 25)
 
-    local container = content:AddChild("container" .. self.GUID, "GenericUI_Element_Grid")
+    local container = content:AddChild("container" .. group.GUID, "GenericUI_Element_Grid")
     container:SetElementSpacing(HotbarGroup.SLOT_SPACING - 4, HotbarGroup.SLOT_SPACING)
     container:SetPosition(3, 3)
     container:SetRepositionAfterAdding(false)
-    container:SetGridSize(self._Columns, self._Rows)
-    self._Container = container
-    self._Container:SetPosition(3, 3)
+    container:SetGridSize(group._Columns, group._Rows)
+    group._Container = container
+    group._Container:SetPosition(3, 3)
 
     local dragArea = content:AddChild("DragArea", "GenericUI_Element_Divider")
     dragArea:SetAsDraggableArea()
     dragArea:SetType("Border")
-    dragArea.Tooltip = "Click and hold to drag."
-    self._DragArea = dragArea
+    dragArea.Tooltip = TSK.HotbarGroup_DragHandle_Tooltip:GetString()
+    group._DragArea = dragArea
 
-    self:Resize(rows, columns)
+    group:Resize(rows, columns)
 
-    self.UI:Show()
+    group.UI:Show()
+
+    return group
 end
 
 ---------------------------------------------
@@ -239,14 +254,7 @@ end
 ---@param id string? Defaults to random GUID.
 ---@return HotbarGroup
 function GroupManager.Create(id, rows, columns)
-    ---@type HotbarGroup
-    local group = {
-    }
-    Inherit(group, HotbarGroup)
-
-    id = id or Text.GenerateGUID()
-    group:_Init(id, rows, columns)
-
+    local group = HotbarGroup.___Create(id or Text.GenerateGUID(), rows, columns)
     local width, height = group:GetSlotAreaSize()
     local uiObject = group.UI:GetUI()
 
@@ -404,7 +412,11 @@ end)
 
 -- Save groups whenever hotbar data is saved.
 Client.UI.Hotbar:RegisterListener("SaveDataSaved", function()
-    GroupManager.SaveData()
+    -- Don't save data before Setup() finishes; during lua resets this occurs before loading the saved data first
+    -- TODO find a better time to save groups
+    if GroupManager._SetupCompleted then
+        GroupManager.SaveData()
+    end
 end)
 
 -- Listen for requests to create the context menu.
@@ -476,8 +488,8 @@ function GroupManager:__SetupUI(UIName, HeaderText, ButtonText)
     text:SetStroke(Color.Create(0, 0, 0), 1, 1, 1, 5)
     text:SetSize(GroupManager.CONTENT_WIDTH, 50)
 
-    local rowSpinner = Spinner.Create(ui, "RowSpinner", content, GroupManager.TranslatedStrings.RowsSpinner:GetString(), 1, 20, 1)
-    local columnSpinner = Spinner.Create(ui, "ColumnSpinner", content, GroupManager.TranslatedStrings.ColumnsSpinner:GetString(), 1, 20, 1)
+    local rowSpinner = Spinner.Create(ui, "RowSpinner", content, TSK.RowsSpinner:GetString(), 1, 20, 1)
+    local columnSpinner = Spinner.Create(ui, "ColumnSpinner", content, TSK.ColumnsSpinner:GetString(), 1, 20, 1)
 
     rowSpinner:SetCenterInLists(true)
     columnSpinner:SetCenterInLists(true)
@@ -500,7 +512,7 @@ end
 
 function GroupManager:__Setup()
     local ui, rowSpinner, columnSpinner, promptButton = GroupManager:__SetupUI("CreateGroup",
-        GroupManager.TranslatedStrings.CreateGroupHeader:GetString(), GroupManager.TranslatedStrings.CreateGroupButton:GetString())
+        TSK.CreateGroupHeader:GetString(), TSK.CreateGroupButton:GetString())
     GroupManager.CreationUI = ui
     GroupManager.CreateRowSpinner = rowSpinner
     GroupManager.CreateColSpinner = columnSpinner
@@ -510,7 +522,7 @@ function GroupManager:__Setup()
     end)
 
     ui, rowSpinner, columnSpinner, promptButton = GroupManager:__SetupUI("ResizeGroup",
-        GroupManager.TranslatedStrings.ResizeGroupHeader:GetString(), GroupManager.TranslatedStrings.ResizeGroupButton:GetString())
+        TSK.ResizeGroupHeader:GetString(), TSK.ResizeGroupButton:GetString())
     GroupManager.ResizeUI = ui
     GroupManager.ResizeRowSpinner = rowSpinner
     GroupManager.ResizeColSpinner = columnSpinner
@@ -520,4 +532,5 @@ function GroupManager:__Setup()
     end)
 
     GroupManager.LoadData()
+    GroupManager._SetupCompleted = true
 end
