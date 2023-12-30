@@ -4,7 +4,14 @@
 ---------------------------------------------
 
 ---@type Feature
-local Resistances = {}
+local Resistances = {
+    -- I'm not 100% sure where these are used, but they align with our needs, hopefully across all languages.
+    -- The examine UI uses different strings (ex. "Physical Resistance")
+    RESISTANCE_TSKHANDLES = {
+        PHYSICAL = "ha6c38456g4c6ag47b2gae87g60a26cf4bf7b", -- "Physical"
+        PIERCING = "h22f6b7bcgc548g49cbgbc04g9532e893fb55", -- "Piercing"
+    },
+}
 Epip.RegisterFeature("CharacterSheetResistances", Resistances)
 
 local CharacterSheet = Client.UI.CharacterSheet
@@ -33,10 +40,10 @@ CharacterSheet.Hooks.UpdateSecondaryStats:Subscribe(function (ev)
             pierceColor = Color.TOOLTIPS.STAT_RED
         end
 
-        local physLabel = Text.Format("Physical", {
+        local physLabel = Text.Format(Text.GetTranslatedString(Resistances.RESISTANCE_TSKHANDLES.PHYSICAL, "Physical"), {
             Color = physColor,
         })
-        local pierceLabel = Text.Format("Pierce", {
+        local pierceLabel = Text.Format(Text.GetTranslatedString(Resistances.RESISTANCE_TSKHANDLES.PIERCING, "Piercing"), {
             Color = physColor,
         })
 
