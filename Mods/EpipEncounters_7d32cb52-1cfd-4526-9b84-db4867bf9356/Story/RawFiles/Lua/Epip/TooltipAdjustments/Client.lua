@@ -433,25 +433,6 @@ Game.Tooltip.RegisterListener("Talent", nil, function(_, talentID, tooltip)
     end
 end)
 
--- Replace damage paramater with the damage multiplier if the modifier key is being held.
-function TooltipAdjustments.TranslateSkillMultipliers(event)
-    local params = event.Params
-    local skill = event.Skill
-
-    if params["1"] ~= "Damage" or not Client.Input.IsShiftPressed() then return nil end
-
-    local isWeapon = skill["UseWeaponDamage"] == "Yes"
-
-    local type = skill["DamageType"]
-    if isWeapon then -- weapons not fully supported.
-        type = {Name = "weapon-based damage", Color = "#a8a8a8"}
-    else
-        type = Data.Game.DamageTypes[type]
-    end
-
-    event.Description = string.format("<font color='%s'>%s%% %s</font>", type.Color, skill["Damage Multiplier"], type.Name)
-end
-
 function TooltipAdjustments.TestElements(item, tooltip)
     local LABEL_ELEMENTS = {
         "ItemName",
@@ -545,10 +526,6 @@ function TooltipAdjustments.TestElements(item, tooltip)
     end
 end
 
-local function OnSkillGetDescription(event)
-    TooltipAdjustments.TranslateSkillMultipliers(event)
-end
-
 local function OnGenericStatTooltipRender(char, stat, tooltip)
     if not tooltip or not TooltipAdjustments:IsEnabled() then return nil end -- TODO why does this happen with item examine tooltips?
     TooltipAdjustments.MergeStatAdjustments(tooltip)
@@ -565,7 +542,6 @@ local function OnItemTooltipRender(item, tooltip)
 end
 
 Ext.Events.StatusGetDescriptionParam:Subscribe(OnStatusGetDescription)
-Ext.Events.SkillGetDescriptionParam:Subscribe(OnSkillGetDescription)
 Ext.Events.SessionLoaded:Subscribe(function()
     Game.Tooltip.RegisterListener("Stat", nil, OnGenericStatTooltipRender)
     Game.Tooltip.RegisterListener("Ability", nil, OnGenericStatTooltipRender)

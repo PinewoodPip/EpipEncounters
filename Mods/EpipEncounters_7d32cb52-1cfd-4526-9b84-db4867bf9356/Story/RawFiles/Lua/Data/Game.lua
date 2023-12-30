@@ -286,65 +286,6 @@ Data.Game.SLOTS_WITH_SUBTYPES = {
 
 Data.NULLGUID = "NULL_00000000-0000-0000-0000-000000000000"
 
-Data.Game.DamageTypes = {
-    None = {
-        Name = "Pure",
-        Color = "#a8a8a8"
-    },
-    Physical = {
-        Name = "physical damage",
-        Color = "#a8a8a8"
-    },
-    Piercing = {
-        Name = "piercing damage",
-        Color = "#CD1F1F"
-    },
-    Corrosive = {
-        Name = "Physical Armour",
-        Color = "#797980"
-    },
-    Magic = {
-        Name = "Magic Armour",
-        Color = "#7F00FF"
-    },
-    Chaos = {
-        Name = "damage",
-        Color = "#13D177"
-    },
-    Fire = {
-        Name = "fire damage",
-        Color = "#FE6E27"
-    },
-    Air = {
-        Name = "air damage",
-        Color = "#7D71D9"
-    },
-    Water = {
-        Name = "water damage",
-        Color = "#4197E2"
-    },
-    Earth = {
-        Name = "earth damage",
-        Color = "#763900"
-    },
-    Poison = {
-        Name = "poison damage",
-        Color = "#65C900"
-    },
-    Shadow = {
-        Name = "tenebrium damage", -- wrong?
-        Color = "#797980"
-    },
-    Sulfuric = {
-        Name = "sulfuric damage", -- wrong?
-        Color = "#13D177"
-    },
-    Sentinel = {
-        Name = "sentinel damage", -- is this even usable or just a "Total" enum?
-        Color = "#13D177"
-    },
-}
-
 Data.Game.KEYWORD_NAMES = { -- TODO fill out
     ViolentStrike = "Violent Strikes",
     ViolentStrikes = "Violent Strikes",

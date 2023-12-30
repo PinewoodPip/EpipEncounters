@@ -456,6 +456,7 @@ LOAD_ORDER = {
             "Epip/TooltipAdjustments/InventoryTooltipsRepositioning/Client.lua",
             "Epip/TooltipAdjustments/TooltipDelay/Client.lua",
             "Epip/TooltipAdjustments/ResourceCostBoostsFix/Client.lua",
+            "Epip/TooltipAdjustments/SkillDamageMultipliers/Client.lua",
         },
     },
 
