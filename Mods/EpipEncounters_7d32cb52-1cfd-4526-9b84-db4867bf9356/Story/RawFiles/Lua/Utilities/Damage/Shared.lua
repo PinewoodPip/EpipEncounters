@@ -18,6 +18,7 @@ Damage = {
             StringID = "None",
             NameHandle = "h37e16e2cgb2c7g46a6g942egb35eb0a825f1",
             LowercaseNameHandle = "hed58f57eg7b16g4b63g812ega842be8f1953",
+            TooltipNameHandle = "h8a070775gc251g4f34g9086gb1772f7e2cff",
             Color = "C80030",
         },
         Physical = {
@@ -25,6 +26,7 @@ Damage = {
             StringID = "Physical",
             NameHandle = "ha6c38456g4c6ag47b2gae87g60a26cf4bf7b",
             LowercaseNameHandle = "h666fff63g3033g4063gb364g72c7b70c0969",
+            TooltipNameHandle = "h40782d69gbfaeg40cegbe3cg370ef44e3980",
             Color = "A8A8A8",
         },
         Piercing = {
@@ -32,6 +34,7 @@ Damage = {
             StringID = "Piercing",
             NameHandle = "h22f6b7bcgc548g49cbgbc04g9532e893fb55",
             LowercaseNameHandle = "h5022bb08ge403g4110gb272g043a6b5fcd05",
+            TooltipNameHandle = "hd05581a1g83a7g4d95gb59fgfa5ef68f5c90",
             Color = "C80030",
         },
         Corrosive = {
@@ -39,6 +42,7 @@ Damage = {
             StringID = "Corrosive",
             NameHandle = "hcbe11fb4g22adg4b10g938bg467f8c41107c", -- "Physical Armour reduction"
             LowercaseNameHandle = nil,
+            TooltipNameHandle = "h161d5479g06d6g408egade2g37a203e3361f",
             Color = "797980",
         },
         Magic = {
@@ -46,6 +50,7 @@ Damage = {
             StringID = "Magic",
             NameHandle = "hd01e5f46g36d4g48f5g8550gabdc4bef1f04", -- "Magic Armour reduction"
             LowercaseNameHandle = nil,
+            TooltipNameHandle = "hdb4307b4g1a6fg4c05g9602g6a4a6e7a29d9",
             Color = "7F00FF",
         },
         Chaos = {
@@ -53,6 +58,7 @@ Damage = {
             StringID = "Chaos",
             NameHandle = "hf43ec8a1gb6c4g421dg983cg01535ee1bcdf",
             LowercaseNameHandle = nil,
+            TooltipNameHandle = nil,
             Color = "C80030",
         },
         Fire = {
@@ -60,6 +66,7 @@ Damage = {
             StringID = "Fire",
             NameHandle = "h051b2501g091ag4c93ga699g407cd2b29cdc",
             LowercaseNameHandle = "h72d4ba14gd1c7g4878ga2d6g940925b0332c",
+            TooltipNameHandle = "hc4d062edgd8e6g4048gaa44g160fe3c7b018",
             Color = "FE6E27",
         },
         Air = {
@@ -67,6 +74,7 @@ Damage = {
             StringID = "Air",
             NameHandle = "h1cea7e28gc8f1g4915ga268g31f90767522c",
             LowercaseNameHandle = "he90b8313g9f8dg4dddg871ag3deb9dfeeb10",
+            TooltipNameHandle = "hdd80e44fg9585g48b8ga34dgab20dc18f077",
             Color = "7D71D9",
         },
         Water = {
@@ -74,6 +82,7 @@ Damage = {
             StringID = "Water",
             NameHandle = "hd30196cdg0253g434dga42ag12be43dac4ec",
             LowercaseNameHandle = "h67923c72gd6f7g4430gab14gd893c772d522",
+            TooltipNameHandle = "h8cdcfeedg357eg4877ga69egc05dbe9c68a4",
             Color = "4197E2",
         },
         Earth = {
@@ -81,6 +90,7 @@ Damage = {
             StringID = "Earth",
             NameHandle = "h85fee3f4g0226g41c6g9d38g83b7b5bf96ba",
             LowercaseNameHandle = "h0d765ef8gca43g4e90ga3cegbb41065861cb",
+            TooltipNameHandle = "h68b77a37g9c43g4436gb360gd651af08d7bb",
             Color = "7F3D00",
         },
         Poison = {
@@ -88,6 +98,7 @@ Damage = {
             StringID = "Poison",
             NameHandle = "haa64cdb8g22d6g40d6g9918g61961514f70f",
             LowercaseNameHandle = "h7ecb0492g363fg4b80gb9e2gdb068327e2f8",
+            TooltipNameHandle = "ha77d36b3ge969g4461g9b30gfff624024b18",
             Color = "65C900",
         },
         Shadow = {
@@ -95,6 +106,7 @@ Damage = {
             StringID = "Shadow",
             NameHandle = "hf4632a8fg42a7g4d53gbe26gd203f28e3d5e", -- "Rot"
             LowercaseNameHandle = "h168f52b6g342ag42e0g99d0g47d94b7363c8", -- "rot"
+            TooltipNameHandle = "h256557fbg1d49g45d9g8690gb86b39d2a135", -- "rot damage"
             Color = "797980",
         },
         Sulfuric = {
@@ -102,14 +114,16 @@ Damage = {
             StringID = "Sulfuric",
             NameHandle = nil,
             LowercaseNameHandle = nil,
+            TooltipNameHandle = nil,
             Color = "C7A758",
         },
         -- TODO is this one even usable?
         Sentinel = {
             ID = 13,
             StringID = "Sentinel",
-            NameHandle = "h37e16e2cgb2c7g46a6g942egb35eb0a825f1",
-            LowercaseNameHandle = "hed58f57eg7b16g4b63g812ega842be8f1953",
+            NameHandle = nil,
+            LowercaseNameHandle = nil,
+            TooltipNameHandle = nil,
             Color = "C80030",
         },
     },
@@ -130,6 +144,7 @@ end
 ---@field StringID DamageType
 ---@field NameHandle TranslatedStringHandle?
 ---@field LowercaseNameHandle TranslatedStringHandle?
+---@field TooltipNameHandle TranslatedStringHandle? Name used for Damage parameters in skill tooltips. 
 ---@field Color htmlcolor Color used in tooltips. TODO is this the same color for combat log, etc.?
 
 ---------------------------------------------

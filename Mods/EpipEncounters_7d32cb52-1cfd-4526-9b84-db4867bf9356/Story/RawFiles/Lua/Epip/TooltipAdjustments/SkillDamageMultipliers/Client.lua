@@ -22,7 +22,7 @@ local TSK = SkillDamageMultipliers.TranslatedStrings
 ---------------------------------------------
 
 -- Replace damage paramater with the damage multiplier if the modifier key is being held.
-function SkillDamageMultipliers.TranslateSkillMultipliers(event)
+function SkillDamageMultipliers.TranslateSkillMultiplier(event)
     local params = event.Params
     local targetSkill
     if #params == 1 then -- The skill itself
@@ -30,7 +30,7 @@ function SkillDamageMultipliers.TranslateSkillMultipliers(event)
     elseif #params == 3 then -- Referenced skill
         targetSkill = Stats.GetSkillData(params[2])
     else
-        SkillDamageMultipliers:Error("TranslateSkillMultipliers", "Wrong parameters amount in event")
+        SkillDamageMultipliers:Error("TranslateSkillMultiplier", "Wrong parameters amount in event")
     end
 
     local isWeaponBased = targetSkill["UseWeaponDamage"] == "Yes"
@@ -43,10 +43,12 @@ function SkillDamageMultipliers.TranslateSkillMultipliers(event)
             Color = damageType.Color,
         })
     else
-        local baseLabel = Text.GetTranslatedString(Damage.TSKHANDLES.DAMAGE_TYPE_TEMPLATE, "[1] damage")
-        local damageTypeName = Text.GetTranslatedString(damageType.LowercaseNameHandle or damageType.NameHandle, damageType.StringID) -- Prefer lower-case names, as that's what the tooltips normally use - except for types that don't have them.
+        local damageTypeName = damageType.TooltipNameHandle and Text.GetTranslatedString(damageType.TooltipNameHandle, damageType.StringID) or "" -- Use lower-case names, as that's what the tooltips normally use - except for types that don't have them. Empty strings will cause an extra space in the tooltip; this is consistent with the game's behaviour. 
 
-        event.Description = Text.Format(Text.ReplaceLarianPlaceholders(baseLabel, Text.Format("%s%% %s", {FormatArgs = {damageMultiplier, damageTypeName}})), {Color = damageType.Color})
+        event.Description = Text.Format("%s%% %s", {
+            FormatArgs = {damageMultiplier, damageTypeName},
+            Color = damageType.Color,
+        })
     end
 end
 
@@ -73,6 +75,6 @@ end
 -- Show Damage skill params as %-based if shift is held
 Ext.Events.SkillGetDescriptionParam:Subscribe(function (ev)
     if Client.Input.IsShiftPressed() and SkillDamageMultipliers._IsDamageParam(ev) then
-        SkillDamageMultipliers.TranslateSkillMultipliers(ev)
+        SkillDamageMultipliers.TranslateSkillMultiplier(ev)
     end
 end, {EnabledFunctor = SkillDamageMultipliers:GetEnabledFunctor()})
