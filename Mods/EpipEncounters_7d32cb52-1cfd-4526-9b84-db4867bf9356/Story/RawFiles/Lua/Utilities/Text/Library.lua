@@ -81,7 +81,7 @@ end
 
 ---Resolves and formats the string.
 ---Note that resolving the string already runs formatting via `FormatOptions`; this method will run afterwards and is intended for dynamic placeholder replacement.
----@param ... any|TextFormatData If using TextFormatData, only the first parameter will be used.
+---@param ... any|TextFormatData If using TextFormatData, only the first parameter will be used. Otherwise behaves as `string.format()`.
 ---@return string
 function _TranslatedString:Format(...)
     local resolvedString = self:GetString()
@@ -569,7 +569,8 @@ function Text.GetTranslatedString(handle, fallBack)
     -- TSKs cannot be loaded during LoadModule due to a bug with TSKs that have a handle but do not exist within an lsx.
     -- Doing so causes them to be cleared.
     if GameState.GetState() == "LoadModule" and not Text.IsTranslatedStringRegistered(handle) then
-        Text:Error("GetTranslatedString", "Reading non-Epip TSKs during module load is not supported!", handle)
+        Text:LogError("GetTranslatedString", "Reading non-Epip TSKs during module load is not supported!", handle)
+        return fallBack
     else
         -- Object overload.
         if type(handle) == "table" then

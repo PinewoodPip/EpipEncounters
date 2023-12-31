@@ -14,7 +14,7 @@ Osiris.RegisterSymbolListener("ObjectTurnStarted", 1, "after", function (guid)
     -- Only update flags for main player characters, to reduce savegame bloat.
     if char and Character.IsPlayer(char) and not Character.HasOwner(char) then
         local vars = FlagsDisplay:GetUserVariable(char, FlagsDisplay.USERVAR)
-        local combatComponent = Ext.Entity.GetCombatComponent(char.Base.Entity:GetComponent("Combat"))
+        local combatComponent = Combat.GetCombatComponent(char)
 
         -- CanUseResistDeadTalent only seems to be set on server.
         if combatComponent then
@@ -22,7 +22,7 @@ Osiris.RegisterSymbolListener("ObjectTurnStarted", 1, "after", function (guid)
         end
 
         FlagsDisplay:SetUserVariable(char, "Flags", vars)
-        
+
         FlagsDisplay:DebugLog("Updated user vars for", char.DisplayName)
         FlagsDisplay:Dump(vars)
     end

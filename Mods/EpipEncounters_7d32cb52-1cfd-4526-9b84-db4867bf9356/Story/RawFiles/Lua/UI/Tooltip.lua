@@ -5,12 +5,3 @@ local Tooltip = {
     ALPHA_TWEEN_IN_TIME = 0.09, -- Hardcoded tween time for tooltip panel alpha.
 }
 Epip.InitializeUI(44, "Tooltip", Tooltip)
-
----------------------------------------------
--- METHODS
----------------------------------------------
-
----------------------------------------------
--- EVENT LISTENERS
----------------------------------------------
-

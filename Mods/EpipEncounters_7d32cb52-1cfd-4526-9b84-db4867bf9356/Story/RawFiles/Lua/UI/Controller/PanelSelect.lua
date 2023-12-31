@@ -1,14 +1,14 @@
 
----@meta ContextClient, UIPanelSelect
+---------------------------------------------
+-- NOT CURRENTLY USED! Needs a rewrite.
+---------------------------------------------
 
----@class UIPanelSelect
----@field VANILLA_PANEL_STATES table<number, PanelSelectVanillaPanelState>
-
----@type UIPanelSelect
+---@class UI.PanelSelect : UI
 local Wheel = {
     hidden = true,
     PANELS = {},
     RENDER_ORDER = {},
+    ---@type table<number, PanelSelectVanillaPanelState>
     VANILLA_PANEL_STATES = {},
     VANILLA_PANEL_IDS = {
         -- TODO

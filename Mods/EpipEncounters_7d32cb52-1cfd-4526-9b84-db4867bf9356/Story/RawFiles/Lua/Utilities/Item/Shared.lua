@@ -757,7 +757,7 @@ end
 ---@return EquipSlot?
 function Item.GetEquippedSlot(item, char)
     local slot = Item.GetItemSlot(item)
-    char = char or Ext.GetCharacter(item:GetOwnerCharacter())
+    char = char or Character.Get(item:GetOwnerCharacter())
     if not char then return nil end
     local isEquipped = false
 

@@ -70,7 +70,7 @@ TooltipDelay.Settings.CompareTooltipDelay = TooltipDelay:RegisterSetting("Compar
     Max = 1.5,
     Step = 0.1,
     HideNumbers = false,
-    DefaultValue = 0.6,
+    DefaultValue = TooltipUI.COMPARE_TOOLTIP_DELAY,
 })
 
 ---------------------------------------------

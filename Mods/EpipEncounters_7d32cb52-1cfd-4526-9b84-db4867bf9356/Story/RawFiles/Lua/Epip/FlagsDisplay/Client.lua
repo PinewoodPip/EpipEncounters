@@ -58,24 +58,22 @@ end)
 
 -- Default implementation of GetFlags.
 FlagsDisplay.Hooks.GetFlags:Subscribe(function (ev)
-    local isChar = Entity.IsCharacter(ev.Entity)
-
-    if isChar then
+    if Entity.IsCharacter(ev.Entity) then
         local char = ev.Entity ---@cast char EclCharacter
-        local combatComponent = Ext.Entity.GetCombatComponent(char.Base.Entity:GetComponent("Combat"))
+        local combatComponent = Combat.GetCombatComponent(char)
         local flags = FlagsDisplay:GetUserVariable(char, FlagsDisplay.USERVAR)
 
         if not Character.IsDead(char) then
             if char.Stats.TALENT_ResistDead and flags.CanUseResistDeadTalent then
                 table.insert(ev.Flags, FlagsDisplay.TranslatedStrings.DeathResist:GetString())
             end
-    
+
             if combatComponent then
                 -- Attack of opportunity
                 if char.Stats.TALENT_AttackOfOpportunity and combatComponent.HasAttackOfOpportunity > 0 then
                     table.insert(ev.Flags, FlagsDisplay.TranslatedStrings.AttackOfOpportunity:GetString())
                 end
-    
+
                 -- Cannot fight.
                 if not combatComponent.CanFight then
                     table.insert(ev.Flags, FlagsDisplay.TranslatedStrings.CannotFight:GetString())
