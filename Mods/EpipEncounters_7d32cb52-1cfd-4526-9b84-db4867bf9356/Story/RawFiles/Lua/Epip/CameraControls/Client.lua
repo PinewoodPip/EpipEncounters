@@ -10,6 +10,7 @@ local V = Vector.Create
 ---@class Features.CameraControls : Feature
 local CameraControls = {
     SENSITIVITY_SCALE_FACTOR = 1 / 400, -- Sensitivty setting is multiplied by this value before being applied. Intended to make the setting value range look more natural within the settings menu.
+    REFERENCE_RESOLUTION = 1080, -- Reference vertical resolution (in pixels) for determining the change in pitch per mouse pixel moved.
     MIN_PITCH = 0.1, -- Minimum pitch for when "Limit Pitch" is enabled.
 
     TranslatedStrings = {
@@ -103,6 +104,10 @@ Input.Events.MouseMoved:Subscribe(function (ev)
         if positionMode then
             local pos1, pos2 = Camera.GetPositionSwitches(nil, positionMode)
             local delta = Vector.ScalarProduct(V(0, ev.Vector[2], 0), CameraControls.Settings.Sensitivity:GetValue() * CameraControls.SENSITIVITY_SCALE_FACTOR) -- The setting's value is rescaled. See comment on the constant.
+            local viewportHeight = Client.GetViewportSize()[2]
+
+            -- Normalize pitch change based on vertical resolution
+            delta = Vector.ScalarProduct(delta, CameraControls.REFERENCE_RESOLUTION / viewportHeight)
 
             -- Invert the pitch change if the setting is enabled.
             if CameraControls.Settings.InvertControls:GetValue() then
