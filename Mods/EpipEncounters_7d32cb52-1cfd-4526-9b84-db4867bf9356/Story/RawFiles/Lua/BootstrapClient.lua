@@ -477,7 +477,7 @@ LOAD_ORDER = {
     "Epip/Client/CraftingFixes.lua",
     "Epip/UserVarsGUIDSyncWorkaround/Client.lua",
     "Epip/Client/RewardItemComparison.lua",
-    "Epip/Client/HotbarTweaks.lua",
+    {ScriptSet = "Epip/HotbarTweaks"},
     "Epip/Client/ExamineKeybind.lua",
     "Epip/Client/MoreWorldTooltips.lua",
     "Epip/Client/EnemyHealthBarExtraInfo.lua",

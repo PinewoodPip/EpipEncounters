@@ -12,6 +12,7 @@ local ContainerInventoryTweaks = Epip.GetFeature("Features.ContainerInventoryTwe
 local TooltipRepositioning = Epip.GetFeature("Features.TooltipAdjustments.InventoryTooltipsRepositioning")
 local TooltipDelay = Epip.GetFeature("Features.TooltipAdjustments.TooltipDelay")
 local StatusConsoleDividers = Epip.GetFeature("Features.StatusConsoleDividers")
+local HotbarTweaks = Epip.GetFeature("Features.HotbarTweaks")
 local CommonStrings = Text.CommonStrings
 
 local InventoryMultiSelectInputActionSettings = {
@@ -171,8 +172,8 @@ local tabs = {
             "HotbarHotkeysText",
             "HotbarHotkeysLayout",
             "HotbarCastingGreyOut",
-            {Type = "Setting", Module = "EpipEncounters_HotbarTweaks", ID = "AllowDraggingUnlearntSkills"},
-            {Type = "Setting", Module = "EpipEncounters_HotbarTweaks", ID = "SlotKeyboardModifiers"},
+            {Type = "Setting", Module = HotbarTweaks:GetNamespace(), ID = HotbarTweaks.Settings.AllowDraggingUnlearntSkills:GetID()},
+            {Type = "Setting", Module = HotbarTweaks:GetNamespace(), ID = HotbarTweaks.Settings.SlotKeyboardModifiers:GetID()},
             {Type = "Setting", Module = StatusConsoleDividers:GetNamespace(), ID = StatusConsoleDividers.Settings.DividerInterval:GetID()},
         }
     },
