@@ -23,6 +23,16 @@ local CameraControls = {
             Text = [[Determines how rapidly the camera pitch changes as you move the mouse with the "Adjust Camera Pitch" keybind active.]],
             ContextDescription = "Setting tooltip",
         },
+        Setting_InvertControls_Name = {
+            Handle = "h018412b6gd498g4fc9ga20egbfce71d5a5b8",
+            Text = [[Invert "Adjust Camera Pitch" Controls]],
+            ContextDescription = [[Setting name, related to "Adjust Camera Pitch"]],
+        },
+        Setting_InvertControls_Description = {
+            Handle = "h5484362egdb21g4770g8261g9317f2c365c7",
+            Text = [[If enabled, moving the mouse down while the "Adjust Camera Pitch" keybind is active will decrease the pitch instead of increasing it.]],
+            ContextDescription = "Setting tooltip",
+        },
         Setting_LimitPitch_Name = {
             Handle = "he2feffa4g625dg486fgbcafgd43f6bc7af72",
             Text = "Limit Pitch",
@@ -70,6 +80,12 @@ CameraControls.Settings.Sensitivity = CameraControls:RegisterSetting("Sensitivit
     HideNumbers = false,
     DefaultValue = 1,
 })
+CameraControls.Settings.InvertControls = CameraControls:RegisterSetting("InvertControls", {
+    Type = "Boolean",
+    Name = TSK.Setting_InvertControls_Name,
+    Description = TSK.Setting_InvertControls_Description,
+    DefaultValue = false,
+})
 CameraControls.Settings.LimitPitch = CameraControls:RegisterSetting("LimitPitch", {
     Type = "Boolean",
     NameHandle = TSK.Setting_LimitPitch_Name,
@@ -87,6 +103,11 @@ Input.Events.MouseMoved:Subscribe(function (ev)
         if positionMode then
             local pos1, pos2 = Camera.GetPositionSwitches(nil, positionMode)
             local delta = Vector.ScalarProduct(V(0, ev.Vector[2], 0), CameraControls.Settings.Sensitivity:GetValue() * CameraControls.SENSITIVITY_SCALE_FACTOR) -- The setting's value is rescaled. See comment on the constant.
+
+            -- Invert the pitch change if the setting is enabled.
+            if CameraControls.Settings.InvertControls:GetValue() then
+                delta = Vector.ScalarProduct(delta, -1)
+            end
 
             pos1 = pos1 + delta
             pos2 = pos2 + delta
@@ -115,4 +136,5 @@ local adjustPitchSetting = Input.GetActionBindingSetting(CameraControls.InputAct
 
 table.insert(tab.Entries, 7, {Type = "Setting", Module = adjustPitchSetting.ModTable, ID = adjustPitchSetting:GetID()})
 table.insert(tab.Entries, 8, {Type = "Setting", Module = CameraControls:GetNamespace(), ID = CameraControls.Settings.Sensitivity:GetID()})
-table.insert(tab.Entries, 9, {Type = "Setting", Module = CameraControls:GetNamespace(), ID = CameraControls.Settings.LimitPitch:GetID()})
+table.insert(tab.Entries, 9, {Type = "Setting", Module = CameraControls:GetNamespace(), ID = CameraControls.Settings.InvertControls:GetID()})
+table.insert(tab.Entries, 10, {Type = "Setting", Module = CameraControls:GetNamespace(), ID = CameraControls.Settings.LimitPitch:GetID()})
