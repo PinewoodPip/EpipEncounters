@@ -104,10 +104,12 @@ function Dividers.Update()
     end
 
     -- Center the AP bar
-    local lastDivider = list.content_array[#list.content_array - 1]
-    if lastDivider then
-        apHolder.x = -3 -((lastDivider.x + lastDivider.width) / 2)
+    -- Length check is necessary as accessing negative indexes on a FlashArray appears to be bugged and returns a reference to the same array.
+    local dividersAmount = #list.content_array
+    if dividersAmount > 0 then
+        local lastDivider = list.content_array[dividersAmount - 1]
 
+        apHolder.x = -3 - ((lastDivider.x + lastDivider.width) / 2)
         apHolder.apGlow_mc.visible = false
         apHolder.apOverflow_mc.x = 503
         apHolder.apOverflow_mc.y = -7
