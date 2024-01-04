@@ -61,6 +61,7 @@ local CharacterCreation = {
         SelectorScrolled = {}, ---@type Event<CharacterCreationUI_Event_SelectorScrolled>
         OriginChanged = {}, ---@type Event<CharacterCreationUI_Event_OriginChanged>
         PresetChanged = {}, ---@type Event<CharacterCreationUI_Event_PresetChanged>
+        Opened = {}, ---@type Event<EmptyEvent>
     },
     Hooks = {
         UpdateTalents = {}, ---@type Event<CharacterCreationUI_Hook_UpdateTalents>
@@ -150,12 +151,14 @@ CharacterCreation:RegisterCallListener("creationDone", function (_)
         Cancelled = false,
     })
 end, "After")
-CharacterCreation:RegisterCallListener("mainMenu", function (_)
+local function _OnConfirmPressed(_)
     CharacterCreation.Events.Finished:Throw({
         Character = Client.GetCharacter(),
         Cancelled = true,
     })
-end, "After")
+end
+CharacterCreation:RegisterCallListener("mainMenu", _OnConfirmPressed, "After") -- Button in actual character *creation*.
+CharacterCreation:RegisterCallListener("startGame", _OnConfirmPressed, "After") -- Button in respec.
 
 -- Listen for selectors being scrolled.
 CharacterCreation:RegisterCallListener("selectOption", function (_, selectorID, optionID, scrollingRight)
@@ -208,4 +211,9 @@ CharacterCreation:RegisterInvokeListener("updateAbilities", function (ev)
     })
 
     Client.Flash.EncodeArray(array, CharacterCreation.ARRAY_ENTRY_TEMPLATES.ABILITY, hook.Abilities)
+end)
+
+-- Listen for the UI being initialized and forward the event.
+CharacterCreation:RegisterCallListener("setAnchor", function (_, _, _, _)
+    CharacterCreation.Events.Opened:Throw()
 end)

@@ -1,4 +1,5 @@
 
+local CharacterCreation = Client.UI.CharacterCreation
 local ContextMenu = Client.UI.ContextMenu
 local CommonStrings = Text.CommonStrings
 
@@ -13,8 +14,11 @@ GroupManager.SharedGroups = {} ---@type table<GUID, true>
 GroupManager.CONTENT_WIDTH = 450
 GroupManager.UI_WIDTH = 500
 GroupManager.UI_HEIGHT = 400
+GroupManager._REQUESTID_HIDE_IN_CHARACTER_CREATION = "Features.HotbarGroups.HideInCharacterCreation"
+GroupManager._EVENTID_TOGGLE_VISIBILITY_AFTER_CC = "Features.HotbarGroups.ShowAfterCharacterCreation"
 GroupManager._CurrentGroupGUID = nil ---@type GUID? ID of the currently-selected group, for purposes such as resizing.
 GroupManager._SetupCompleted = false
+GroupManager._HideGroupsRequests = {} ---@type table<string, true>
 
 ---------------------------------------------
 -- HOTBAR GROUP
@@ -85,6 +89,15 @@ end
 ---@return Features.HotbarGroups.UI.Group
 function GroupManager.GetGroup(guid)
     return GroupManager.Groups[guid]
+end
+
+---Requests a change to the visibility of all groups.
+---All groups will be hidden if there is at least one request to hide them.
+---@param requestID string
+---@param visible boolean
+function GroupManager.RequestVisibility(requestID, visible)
+    GroupManager._HideGroupsRequests[requestID] = visible == false and true or nil
+    GroupManager._UpdateVisibility()
 end
 
 function GroupManager.ResizeGroup(guid)
@@ -215,6 +228,18 @@ function GroupManager.LoadData(path)
     end
 end
 
+---Updates the visibility of all groups.
+function GroupManager._UpdateVisibility()
+    local visible = not next(GroupManager._HideGroupsRequests)
+    for _,group in pairs(GroupManager.Groups) do
+        if visible then
+            group:TryShow()
+        else
+            group:TryHide()
+        end
+    end
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
@@ -271,6 +296,21 @@ end)
 -- Listen for requests to delete a group from the context menu.
 ContextMenu.RegisterElementListener("HotbarGroup_Delete", "buttonPressed", function(_, params)
     GroupManager.DeleteGroup(params.GUID)
+end)
+
+-- Hide groups during character creation.
+CharacterCreation.Events.Opened:Subscribe(function (_)
+    GroupManager.RequestVisibility(GroupManager._REQUESTID_HIDE_IN_CHARACTER_CREATION, false)
+end)
+CharacterCreation.Events.Finished:Subscribe(function (_)
+    -- Show the UIs after the Character Creation UI is destroyed; this is guaranteed to happen while the fadeout is hiding the screen.
+    -- This cannot be a simple timer as the fade duration varies.
+    GameState.Events.RunningTick:Subscribe(function (_)
+        if not CharacterCreation:Exists() then
+            GroupManager.RequestVisibility(GroupManager._REQUESTID_HIDE_IN_CHARACTER_CREATION, true)
+            GameState.Events.RunningTick:Unsubscribe(GroupManager._EVENTID_TOGGLE_VISIBILITY_AFTER_CC)
+        end
+    end, {StringID = GroupManager._EVENTID_TOGGLE_VISIBILITY_AFTER_CC})
 end)
 
 ---------------------------------------------
