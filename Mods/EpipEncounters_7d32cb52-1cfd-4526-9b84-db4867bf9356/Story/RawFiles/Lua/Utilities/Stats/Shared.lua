@@ -111,6 +111,7 @@ Stats = {
         EXTRA_TURN = "Skill_TimeWarp",
     },
     HARDCODED_STATUSES_WITHOUT_ICONS = Set.Create({
+        "AOO",
         "UNSHEATHED",
         "COMBAT",
         "INSURFACE",
@@ -476,10 +477,8 @@ function Stats.GetStatusIcon(status)
             icon = status.Icon
         elseif stat then
             icon = stat.Icon
-    
             if icon == "" then -- Fetch potion instead
                 local potion = Stats.Get("Potion", stat.StatsId) ---@type StatsLib_StatsEntry_Potion
-                
                 if potion then
                     icon = potion.StatusIcon
 
@@ -491,10 +490,10 @@ function Stats.GetStatusIcon(status)
                 end
             end
         end
-    
+
         -- Use hardcoded icons for hardcoded status types.
         icon = icon or Stats.HARDCODED_STATUS_ICONS[status.StatusId]
-    
+
         if not icon and status.StatusId ~= "CONSUME" then
             Stats:LogWarning("GetStatusIcon(): Could not find icon for " .. status.StatusId)
             icon = "unknown"
