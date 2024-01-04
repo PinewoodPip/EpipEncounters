@@ -9,8 +9,7 @@ local TSK = GroupManager.TranslatedStrings
 -- CLASSES
 ---------------------------------------------
 
----@class Features.HotbarGroups.UI.Group
----@field UI GenericUI_Instance
+---@class Features.HotbarGroups.UI.Group : GenericUI_Instance
 ---@field GUID GUID
 ---@field _Slots table<GenericUI_Prefab_HotbarSlot>
 ---@field _SlotsAllocated integer
@@ -23,11 +22,11 @@ local HotbarGroup = {
     SLOT_SIZE = 58,
     SLOT_SPACING = 0,
 }
-GroupManager:RegisterClass("Features.HotbarGroups.UI.Group", HotbarGroup)
+GroupManager:RegisterClass("Features.HotbarGroups.UI.Group", HotbarGroup, {"GenericUI_Instance"})
 
 ---@return GenericUI_Prefab_HotbarSlot
 function HotbarGroup:_AddSlot()
-    local slot = HotbarSlot.Create(self.UI, self.GUID .. "_Slot_" .. self._SlotsAllocated, self._Container, {CooldownAnimations = true, ActiveAnimation = true})
+    local slot = HotbarSlot.Create(self, self.GUID .. "_Slot_" .. self._SlotsAllocated, self._Container, {CooldownAnimations = true, ActiveAnimation = true})
     slot:SetCanDragDrop(true)
     slot.SlotElement:SetSizeOverride(self.SLOT_SIZE, self.SLOT_SIZE)
     self._Slots[self._SlotsAllocated] = slot
@@ -123,19 +122,16 @@ end
 ---@param columns integer
 ---@return Features.HotbarGroups.UI.Group
 function HotbarGroup.___Create(id, rows, columns)
-    ---@type Features.HotbarGroups.UI.Group
-    local group = {
-        GUID = id,
-        _Slots = {},
-        _Rows = 0,
-        _Columns = 0,
-        _SlotsAllocated = 0,
-    }
-    Inherit(group, HotbarGroup)
+    local group = Generic.Create("Features.HotbarGroups.UI.Group." .. id)
+    group = HotbarGroup:__Create(group) ---@cast group Features.HotbarGroups.UI.Group
 
-    group.UI = Generic.Create("HotbarGroup_" .. group.GUID)
+    group.GUID = id
+    group._Slots = {}
+    group._Rows = 0
+    group._Columns = 0
+    group._SlotsAllocated = 0
 
-    local content = group.UI:CreateElement("ContentContainer" .. group.GUID, "GenericUI_Element_TiledBackground")
+    local content = group:CreateElement("ContentContainer" .. group.GUID, "GenericUI_Element_TiledBackground")
     content:SetAlpha(0)
     group._Content = content
     group._Content:SetPosition(25, 25)
@@ -156,7 +152,7 @@ function HotbarGroup.___Create(id, rows, columns)
 
     group:Resize(rows, columns)
 
-    group.UI:Show()
+    group:Show()
 
     return group
 end

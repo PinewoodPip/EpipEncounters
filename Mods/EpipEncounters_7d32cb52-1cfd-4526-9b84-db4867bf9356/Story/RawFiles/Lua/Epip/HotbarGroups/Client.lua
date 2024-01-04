@@ -61,7 +61,7 @@ function GroupManager.Create(id, rows, columns)
     local HotbarGroup = GroupManager:GetClass("Features.HotbarGroups.UI.Group")
     local group = HotbarGroup.___Create(id or Text.GenerateGUID(), rows, columns)
     local width, height = group:GetSlotAreaSize()
-    local uiObject = group.UI:GetUI()
+    local uiObject = group:GetUI()
 
     uiObject.SysPanelSize = {width, height}
     uiObject.Left = width
@@ -107,7 +107,7 @@ function GroupManager.DeleteGroup(group)
     if group then
         -- TODO truly delete
         -- Ext.UI.Destroy(group.UI.Name)
-        group.UI:Hide()
+        group:Hide()
 
         GroupManager.Groups[group.GUID] = nil
     else
@@ -126,7 +126,7 @@ function GroupManager.GetGroupState(group)
     }
 
     -- Store position relative to viewport edges
-    local uiObject = group.UI:GetUI()
+    local uiObject = group:GetUI()
     local viewport = Ext.UI.GetViewportSize()
     state.RelativePosition = uiObject:GetPosition()
     state.RelativePosition[1] = state.RelativePosition[1] / viewport[1]
@@ -197,7 +197,7 @@ function GroupManager.LoadData(path)
             local position = data.RelativePosition
             local viewport = Ext.UI.GetViewportSize()
             local setPosFunc = function ()
-                group.UI:GetUI():SetPosition(Ext.Round(position[1] * viewport[1]), Ext.Round(position[2] * viewport[2]))
+                group:GetUI():SetPosition(Ext.Round(position[1] * viewport[1]), Ext.Round(position[2] * viewport[2]))
             end
             if GameState.GetState() == "Running" then -- Set position immediately if we're initializing after a lua reset
                 Timer.Start(0.1, function ()
@@ -210,7 +210,7 @@ function GroupManager.LoadData(path)
             end
 
             -- Set layer
-            group.UI:GetUI().Layer = data.Layer
+            group:GetUI().Layer = data.Layer
         end
     end
 end
@@ -254,13 +254,13 @@ end)
 -- Format layer within context menu.
 ContextMenu.RegisterStatDisplayHook("HotbarGroup_Layer", function(_, _, params)
     local group = GroupManager.GetGroup(params.GUID)
-    return group.UI:GetUI().Layer
+    return group:GetUI().Layer
 end)
 
 -- Listen for the layer being changed from the context menu.
 ContextMenu.RegisterElementListener("HotbarGroup_Layer", "statButtonPressed", function(_, params, change)
     local group = GroupManager.GetGroup(params.GUID)
-    group.UI:GetUI().Layer = group.UI:GetUI().Layer + change
+    group:GetUI().Layer = group:GetUI().Layer + change
 end)
 
 -- Listen for requests to resize a group from the context menu.
