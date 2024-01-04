@@ -1,28 +1,19 @@
 
-local Generic = Client.UI.Generic
-local HotbarSlot = Generic.GetPrefab("GenericUI_Prefab_HotbarSlot")
-local Spinner = Generic.GetPrefab("GenericUI_Prefab_Spinner")
-local CloseButton = Generic.GetPrefab("GenericUI_Prefab_CloseButton")
 local ContextMenu = Client.UI.ContextMenu
 local CommonStrings = Text.CommonStrings
 
 ---@class Features.HotbarGroups.Client : Features.HotbarGroups
----@field CreationUI GenericUI_Instance
----@field CreateRowSpinner GenericUI_Prefab_Spinner
----@field CreateColSpinner GenericUI_Prefab_Spinner
----@field ResizeUI GenericUI_Instance
----@field ResizeRowSpinner GenericUI_Prefab_Spinner
----@field ResizeColSpinner GenericUI_Prefab_Spinner
+---@field CreationUI Features.HotbarGroups.UI.Editor
+---@field ResizeUI Features.HotbarGroups.UI.Editor
 local GroupManager = Epip.GetFeature("Features.HotbarGroups")
-local TSK = GroupManager.TranslatedStrings
 
-GroupManager.Groups = {} ---@type table<GUID, HotbarGroup>
+GroupManager.Groups = {} ---@type table<GUID, Features.HotbarGroups.UI.Group>
 GroupManager.SharedGroups = {} ---@type table<GUID, true>
 
 GroupManager.CONTENT_WIDTH = 450
 GroupManager.UI_WIDTH = 500
 GroupManager.UI_HEIGHT = 400
-GroupManager.CURRENT_GROUP_GUID = nil ---@type string?
+GroupManager._CurrentGroupGUID = nil ---@type GUID? ID of the currently-selected group, for purposes such as resizing.
 GroupManager._SetupCompleted = false
 
 ---------------------------------------------
@@ -35,145 +26,6 @@ GroupManager._SetupCompleted = false
 ---@field SharedContents GenericUI_Prefab_HotbarSlot_Object[][]
 ---@field RelativePosition number[]
 ---@field Layer integer Layer of the UIObject.
-
----@class HotbarGroup
----@field UI GenericUI_Instance
----@field GUID GUID
----@field _Slots table<GenericUI_Prefab_HotbarSlot>
----@field _SlotsAllocated integer
----@field package _Rows integer
----@field package _Columns integer
----@field package _Content  GenericUI_Element_TiledBackground
----@field package _Container GenericUI_Element_Grid
----@field _DragArea GenericUI_Element_Divider
-local HotbarGroup = {
-    SLOT_SIZE = 58,
-    SLOT_SPACING = 0,
-}
-
----@return GenericUI_Prefab_HotbarSlot
-function HotbarGroup:_AddSlot()
-    local slot = HotbarSlot.Create(self.UI, self.GUID .. "_Slot_" .. self._SlotsAllocated, self._Container, {CooldownAnimations = true, ActiveAnimation = true})
-    slot:SetCanDragDrop(true)
-    slot.SlotElement:SetSizeOverride(self.SLOT_SIZE, self.SLOT_SIZE)
-    self._Slots[self._SlotsAllocated] = slot
-    self._SlotsAllocated = self._SlotsAllocated + 1
-    return slot
-end
-
----@return number, number -- Width, height
-function HotbarGroup:GetSlotAreaSize()
-    local width = self._Columns * self.SLOT_SIZE + (self._Columns + 0) * self.SLOT_SPACING
-    local height = self._Rows * self.SLOT_SIZE + (self._Rows + 0) * self.SLOT_SPACING
-
-    return width, height
-end
-
----@return GenericUI_Prefab_HotbarSlot
-function HotbarGroup:_GetSlot(index)
-    return self._Slots[index]
-end
-
----@return GenericUI_Prefab_HotbarSlot
-function HotbarGroup:GetSlot(row, column)
-    return self._Slots[(row - 1) * self._Columns + column - 1]
-end
-
----@param newRows integer
----@param newColumns integer
-function HotbarGroup:Resize(newRows, newColumns)
-    for _=self._Rows * self._Columns + 1,newRows * newColumns,1 do
-        self:_AddSlot()
-    end
-
-    local oldSlotObjects = {}
-    local oldRows, oldCols = self._Rows, self._Columns
-    for i=1,self._Rows,1 do
-        oldSlotObjects[i] = {}
-        for j=1,self._Columns,1 do
-            oldSlotObjects[i][j] = self:GetSlot(i, j).Object
-        end
-    end
-
-    self._Rows = newRows
-    self._Columns = newColumns
-
-    for i=1,math.max(newRows,oldRows),1 do
-        for j=1,math.max(newColumns,oldCols),1 do
-            if i <= oldRows and j <= oldCols then
-                self:GetSlot(i, j):SetObject(oldSlotObjects[i][j])
-            else
-                self:GetSlot(i, j):Clear()
-            end
-        end
-    end
-
-    local width, height = self:GetSlotAreaSize()
-
-    self._Content:SetBackground("Black", width, height)
-
-    self._Container:SetGridSize(newColumns, newRows)
-    self._Container:RepositionElements()
-    self._Container:SetSizeOverride(width, height)
-
-    -- Dragging area/handle
-    local mcWidth, mcHeight = width, height
-    local EXTRA_WIDTH = 15 * 2
-    -- Show the handle on the longest side of the slot group
-    if width < height then
-        self._DragArea:SetRotation(90)
-        self._DragArea:SetSize(mcHeight + EXTRA_WIDTH)
-        self._DragArea:SetPosition(0, -EXTRA_WIDTH/2)
-    else
-        self._DragArea:SetRotation(0)
-        self._DragArea:SetSize(mcWidth + EXTRA_WIDTH)
-        self._DragArea:SetPosition(-EXTRA_WIDTH/2, -25)
-    end
-end
-
----Initializes the UI for a hotbar group.
----@param id string
----@param rows integer
----@param columns integer
----@return HotbarGroup
-function HotbarGroup.___Create(id, rows, columns)
-    ---@type HotbarGroup
-    local group = {
-        GUID = id,
-        _Slots = {},
-        _Rows = 0,
-        _Columns = 0,
-        _SlotsAllocated = 0,
-    }
-    Inherit(group, HotbarGroup)
-
-    group.UI = Generic.Create("HotbarGroup_" .. group.GUID)
-
-    local content = group.UI:CreateElement("ContentContainer" .. group.GUID, "GenericUI_Element_TiledBackground")
-    content:SetAlpha(0)
-    group._Content = content
-    group._Content:SetPosition(25, 25)
-
-    local container = content:AddChild("container" .. group.GUID, "GenericUI_Element_Grid")
-    container:SetElementSpacing(HotbarGroup.SLOT_SPACING - 4, HotbarGroup.SLOT_SPACING)
-    container:SetPosition(3, 3)
-    container:SetRepositionAfterAdding(false)
-    container:SetGridSize(group._Columns, group._Rows)
-    group._Container = container
-    group._Container:SetPosition(3, 3)
-
-    local dragArea = content:AddChild("DragArea", "GenericUI_Element_Divider")
-    dragArea:SetAsDraggableArea()
-    dragArea:SetType("Border")
-    dragArea.Tooltip = TSK.HotbarGroup_DragHandle_Tooltip:GetString()
-    group._DragArea = dragArea
-
-    group:Resize(rows, columns)
-
-    group.UI:Show()
-
-    return group
-end
 
 ---------------------------------------------
 -- METHODS
@@ -188,17 +40,15 @@ end
 
 ---@param guid string
 function GroupManager.ShowResizeUI(guid)
-    GroupManager.CURRENT_GROUP_GUID = guid
-
-    local group = nil
-    if type(guid) == "string" then group = GroupManager.Groups[guid] end
-
-    if group then
-        GroupManager.ResizeRowSpinner:SetValue(group._Rows)
-        GroupManager.ResizeColSpinner:SetValue(group._Columns)
-    end
-
+    local editor = GroupManager.ResizeUI
+    local group = GroupManager.GetGroup(guid)
+    local rows, columns = group:GetSize()
     local ui = GroupManager.ResizeUI
+
+    editor.RowSpinner:SetValue(rows)
+    editor.ColumnSpinner:SetValue(columns)
+
+    GroupManager._CurrentGroupGUID = guid
 
     ui:ExternalInterfaceCall("setPosition", "center", "screen", "center")
     ui:Show()
@@ -206,8 +56,9 @@ end
 
 ---Creates a hotbar group.
 ---@param id string? Defaults to random GUID.
----@return HotbarGroup
+---@return Features.HotbarGroups.UI.Group
 function GroupManager.Create(id, rows, columns)
+    local HotbarGroup = GroupManager:GetClass("Features.HotbarGroups.UI.Group")
     local group = HotbarGroup.___Create(id or Text.GenerateGUID(), rows, columns)
     local width, height = group:GetSlotAreaSize()
     local uiObject = group.UI:GetUI()
@@ -217,7 +68,7 @@ function GroupManager.Create(id, rows, columns)
 
     uiObject:ExternalInterfaceCall("setPosition", "center", "screen", "center")
 
-    local container = group._Container
+    local container = group:GetGrid()
     container.Events.RightClick:Subscribe(function (_)
         local x, y = Client.GetMousePosition()
         ContextMenu.RequestMenu(x, y, "HotbarGroup", nil, group.GUID)
@@ -229,21 +80,29 @@ function GroupManager.Create(id, rows, columns)
     return group
 end
 
+---Returns the UI for a group.
+---@param guid GUID
+---@return Features.HotbarGroups.UI.Group
+function GroupManager.GetGroup(guid)
+    return GroupManager.Groups[guid]
+end
+
 function GroupManager.ResizeGroup(guid)
-    ---@type HotbarGroup
-    local group = nil
-    if type(guid) == "string" then group = GroupManager.Groups[guid] end
+    local editor = GroupManager.ResizeUI
+    local group = GroupManager.GetGroup(guid)
 
     if group then
-        group:Resize(GroupManager.ResizeRowSpinner:GetValue(), GroupManager.ResizeColSpinner:GetValue())
+        group:Resize(editor.RowSpinner:GetValue(), editor.ColumnSpinner:GetValue())
     else
         GroupManager:LogError("Tried to resize group that doesn't exist")
     end
 end
 
----@param group HotbarGroup|GUID
+---@param group Features.HotbarGroups.UI.Group|GUID
 function GroupManager.DeleteGroup(group)
-    if type(group) == "string" then group = GroupManager.Groups[group] end
+    if type(group) == "string" then -- GUID overload.
+        group = GroupManager.GetGroup(group)
+    end
 
     if group then
         -- TODO truly delete
@@ -252,17 +111,18 @@ function GroupManager.DeleteGroup(group)
 
         GroupManager.Groups[group.GUID] = nil
     else
-        GroupManager:LogError("Tried to delete group that doesn't exist")
+        GroupManager:Error("Tried to delete group that doesn't exist")
     end
 end
 
----@param group HotbarGroup
+---@param group Features.HotbarGroups.UI.Group
 ---@return HotbarGroupState
 function GroupManager.GetGroupState(group)
+    local rows, columns = group:GetSize()
     ---@type HotbarGroupState
     local state = {
-        Rows = group._Rows,
-        Columns = group._Columns,
+        Rows = rows,
+        Columns = columns,
     }
 
     -- Store position relative to viewport edges
@@ -393,13 +253,13 @@ end)
 
 -- Format layer within context menu.
 ContextMenu.RegisterStatDisplayHook("HotbarGroup_Layer", function(_, _, params)
-    local group = GroupManager.Groups[params.GUID]
+    local group = GroupManager.GetGroup(params.GUID)
     return group.UI:GetUI().Layer
 end)
 
 -- Listen for the layer being changed from the context menu.
 ContextMenu.RegisterElementListener("HotbarGroup_Layer", "statButtonPressed", function(_, params, change)
-    local group = GroupManager.Groups[params.GUID]
+    local group = GroupManager.GetGroup(params.GUID)
     group.UI:GetUI().Layer = group.UI:GetUI().Layer + change
 end)
 
@@ -417,74 +277,7 @@ end)
 -- SETUP
 ---------------------------------------------
 
----@param UIName string
----@param HeaderText string
----@param ButtonText string
----@return GenericUI_Instance, GenericUI_Prefab_Spinner, GenericUI_Prefab_Spinner, GenericUI_Element_Button
-function GroupManager:__SetupUI(UIName, HeaderText, ButtonText)
-    local ui = Generic.Create("PIP_HotbarGroup_" .. UIName) ---@type GenericUI_Instance
-
-    local bg = ui:CreateElement("BG", "GenericUI_Element_TiledBackground")
-    bg:SetBackground("RedPrompt", GroupManager.UI_WIDTH, GroupManager.UI_HEIGHT)
-    local uiObject = ui:GetUI()
-    uiObject.SysPanelSize = {GroupManager.UI_WIDTH, GroupManager.UI_HEIGHT}
-
-    local closeButton = CloseButton.Create(ui, "CloseButton", bg)
-    closeButton:SetPositionRelativeToParent("TopRight", -25, 25)
-
-    -- Content
-    local content = bg:AddChild("Content", "GenericUI_Element_VerticalList")
-    content:SetSize(GroupManager.CONTENT_WIDTH, GroupManager.UI_HEIGHT)
-    content:SetPosition(27, 60)
-
-    local text = content:AddChild("Header", "GenericUI_Element_Text")
-    text:SetText(Text.Format(HeaderText, {Color = Color.WHITE, Size = 23}))
-    text:SetStroke(Color.Create(0, 0, 0), 1, 1, 1, 5)
-    text:SetSize(GroupManager.CONTENT_WIDTH, 50)
-
-    local rowSpinner = Spinner.Create(ui, "RowSpinner", content, TSK.RowsSpinner:GetString(), 1, 20, 1)
-    local columnSpinner = Spinner.Create(ui, "ColumnSpinner", content, TSK.ColumnsSpinner:GetString(), 1, 20, 1)
-
-    rowSpinner:SetCenterInLists(true)
-    columnSpinner:SetCenterInLists(true)
-
-    content:AddChild("Filler", "GenericUI_Element_Empty"):GetMovieClip().heightOverride = 175
-
-    local createButton = content:AddChild("Confirm", "GenericUI_Element_Button")
-    createButton:SetCenterInLists(true)
-    createButton:SetType("Red")
-    createButton:SetText(ButtonText, 4)
-
-    content:SetElementSpacing(0)
-
-    content:RepositionElements()
-
-    ui:Hide()
-
-    return ui, rowSpinner, columnSpinner, createButton
-end
-
 function GroupManager:__Setup()
-    local ui, rowSpinner, columnSpinner, promptButton = GroupManager:__SetupUI("CreateGroup",
-        TSK.CreateGroupHeader:GetString(), TSK.CreateGroupButton:GetString())
-    GroupManager.CreationUI = ui
-    GroupManager.CreateRowSpinner = rowSpinner
-    GroupManager.CreateColSpinner = columnSpinner
-    promptButton.Events.Pressed:Subscribe(function(_)
-        GroupManager.Create(nil, GroupManager.CreateRowSpinner:GetValue(), GroupManager.CreateColSpinner:GetValue())
-        GroupManager.CreationUI:Hide()
-    end)
-
-    ui, rowSpinner, columnSpinner, promptButton = GroupManager:__SetupUI("ResizeGroup",
-        TSK.ResizeGroupHeader:GetString(), TSK.ResizeGroupButton:GetString())
-    GroupManager.ResizeUI = ui
-    GroupManager.ResizeRowSpinner = rowSpinner
-    GroupManager.ResizeColSpinner = columnSpinner
-    promptButton.Events.Pressed:Subscribe(function(_)
-        GroupManager.ResizeGroup(GroupManager.CURRENT_GROUP_GUID)
-        GroupManager.ResizeUI:Hide()
-    end)
-
     GroupManager.LoadData()
     GroupManager._SetupCompleted = true
 end
