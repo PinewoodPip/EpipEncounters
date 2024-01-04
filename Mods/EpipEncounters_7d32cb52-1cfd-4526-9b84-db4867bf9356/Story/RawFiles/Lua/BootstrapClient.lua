@@ -512,7 +512,7 @@ LOAD_ORDER = {
     "Epip/Client/QuickExamine/Widgets/SkillsDisplay.lua",
 
     "Epip/Client/GenericUIs/SaveLoadOverlay.lua",
-    "Epip/Client/GenericUIs/HotbarGroup.lua",
+    {ScriptSet = "Epip/HotbarGroups"},
 
     "Epip/Client/AprilFoolsCharacterSheet.lua",
     {ScriptSet = "Epip/AscensionShortcuts", RequiresEE = true},
