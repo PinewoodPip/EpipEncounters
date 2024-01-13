@@ -259,11 +259,21 @@ function Library:GetTranslatedStringHandleForKey(localKey)
     return self._localTranslatedStringKeys[localKey]
 end
 
+---Table-only overload.
+---@param tsk Library_TranslatedString ModTable, FeatureID and Handle fields are auto-initialized.
+---@return Library_TranslatedString
+---@diagnostic disable-next-line
+function Library:RegisterTranslatedString(tsk) end
+
 ---Registers a TSK.
 ---@param handle TranslatedStringHandle
 ---@param tsk Library_TranslatedString ModTable, FeatureID and Handle fields are auto-initialized.
 ---@return Library_TranslatedString
+---@diagnostic disable-next-line: duplicate-set-field
 function Library:RegisterTranslatedString(handle, tsk)
+    if type(handle) == "table" then -- Table overload.
+        handle, tsk = handle.Handle, handle
+    end
     local localKey = tsk.Handle and handle or tsk.LocalKey -- If Handle is manually set, use table key as localKey
 
     tsk.Handle = tsk.Handle or handle

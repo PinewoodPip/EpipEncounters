@@ -217,6 +217,18 @@ Text.CommonStrings.None = Text.RegisterTranslatedString({
     Handle = "h22852a75g8a17g410cgbd3fg5f0c5a8ced5e",
     Text = "None",
 })
+Text.CommonStrings.Radius = Text.RegisterTranslatedString({
+    Handle = "h4e1defceg6104g42adg8da7g5d484b8e589f",
+    Text = "Radius",
+})
+Text.CommonStrings.Duration = Text.RegisterTranslatedString({
+    Handle = "h136f2ef7g80ebg49acgbc4cgfd0a2cbc7250",
+    Text = "Duration",
+})
+Text.CommonStrings.Modifier = Text.RegisterTranslatedString({
+    Handle = "h1e8ef1aeg06dag4d82gba3bg7e4cfd31f36f",
+    Text = "Modifier",
+})
 
 ---------------------------------------------
 -- BRANDING
@@ -613,6 +625,28 @@ Text.CommonStrings.Containers = Text.RegisterTranslatedString({
     Handle = "h80897d5bg5b2cg4261gbd85gafc7482541fd",
     Text = "Containers",
     ContextDescription = "Refers to item containers (ex. a backpack)",
+})
+Text.CommonStrings.Ground = Text.RegisterTranslatedString({
+    Handle = "h7f208716g53a7g4f87ga23eg57dd190a5372",
+    Text = "Ground",
+    ContextDescription = "As in, the floor.",
+})
+Text.CommonStrings.Cloud = Text.RegisterTranslatedString({
+    Handle = "h6481bf87g4965g4959g992egc150ee720449",
+    Text = "Cloud",
+    ContextDescription = "As in, a cloud surface (ex. steam).",
+})
+Text.CommonStrings.Blessed = Text.RegisterTranslatedString({
+    Handle = "hbeff45e1gc8d3g4d5fg86a6g4fb41036410a",
+    Text = "Blessed",
+})
+Text.CommonStrings.Cursed = Text.RegisterTranslatedString({
+    Handle = "h7a7863ecg913dg4decg83efg7b3d5b3827da",
+    Text = "Cursed",
+})
+Text.CommonStrings.Purified = Text.RegisterTranslatedString({
+    Handle = "he817378ege243g4985gaf21g502181dcf2e6",
+    Text = "Purified",
 })
 
 ---------------------------------------------

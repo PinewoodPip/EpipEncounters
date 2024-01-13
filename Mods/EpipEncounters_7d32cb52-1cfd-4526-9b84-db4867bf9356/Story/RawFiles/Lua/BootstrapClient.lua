@@ -795,6 +795,14 @@ LOAD_ORDER = {
     {ScriptSet = "Epip/DebugCheats/Cheats/SpawnItemTemplate"},
     {ScriptSet = "Epip/DebugCheats/Cheats/TeleportTo"},
 
+    {
+        ScriptSet = "Epip/SurfacePainter",
+        Scripts = {
+            "Epip/SurfacePainter/Client_UI.lua",
+        },
+        Developer = true,
+    },
+
     {Script = "Epip/Client/OverlayColorsBruteForcer.lua", Developer = true},
     {Script = "Epip/PersonalScripts/Shared.lua", Developer = true},
 

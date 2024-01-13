@@ -321,6 +321,8 @@ LOAD_ORDER = {
     {ScriptSet = "Epip/DebugCheats/Cheats/SpawnItemTemplate"},
     {ScriptSet = "Epip/DebugCheats/Cheats/TeleportTo"},
 
+    {ScriptSet = "Epip/SurfacePainter", Developer = true},
+
     -- Compatibility
     {Script = "Epip/Compatibility/PortableRespecMirror/Shared.lua", RequiredMods = {MODS.PORTABLE_RESPEC_MIRROR}},
 
