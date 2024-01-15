@@ -18,11 +18,11 @@ Epip.RegisterFeature("QuickExamine_SkillsDisplay", Skills)
 ---@param char EclCharacter
 ---@param skillID string
 function Skills._RenderSkill(container, char, skillID)
-    local skill = Stats.Get("SkillData", skillID)
+    local skill = Stats.Get("StatsLib_StatsEntry_SkillData", skillID)
     local state = char.SkillManager.Skills[skillID]
 
     if state and Character.IsSkillMemorized(char, skillID) then
-        local element = HotbarSlot.Create(QuickExamine.UI, skillID, container)
+        local element = HotbarSlot.Create(QuickExamine.UI, skillID, container, {CooldownAnimations = true})
         local movieClip = element.SlotElement:GetMovieClip()
         local cooldown = state.ActiveCooldown
         local handle = char.Handle
@@ -35,7 +35,7 @@ function Skills._RenderSkill(container, char, skillID)
         element:SetIcon(skill.Icon)
         movieClip.width = Skills.SKILL_ICON_SIZE
         movieClip.height = Skills.SKILL_ICON_SIZE
-    
+
         element.Hooks.GetTooltipData:Subscribe(function (ev)
             local position = V(QuickExamine.UI:GetUI():GetPosition())
 
