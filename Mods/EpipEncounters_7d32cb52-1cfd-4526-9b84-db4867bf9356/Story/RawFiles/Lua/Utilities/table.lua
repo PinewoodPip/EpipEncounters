@@ -62,6 +62,17 @@ function table.sortByProperty(tbl, prop, reverse)
     return tbl
 end
 
+---Returns a new table with the keys and values swapped.
+---@param tbl table
+---@return table
+function table.swap(tbl)
+    local newTable = {}
+    for k,v in pairs(tbl) do
+        newTable[v] = k
+    end
+    return newTable
+end
+
 ---Sorts an array of Describables by their name. TODO move to a static method of the interface
 ---@param tbl I_Describable[]
 function table.sortByName(tbl)

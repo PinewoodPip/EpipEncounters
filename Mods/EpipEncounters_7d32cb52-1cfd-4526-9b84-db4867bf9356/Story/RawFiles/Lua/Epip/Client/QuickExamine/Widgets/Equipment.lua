@@ -7,25 +7,12 @@ local V = Vector.Create
 
 ---@class Features.QuickExamine.Widgets.Equipment : Feature
 local Equipment = {
-    ---Values should be unique.
-    ---Slot to integer map is initialized after feature registration.
-    ---@type table<ItemSlot, integer>|table<integer, ItemSlot>
-    SLOT_ORDER = {
-        "Helmet",
-        "Breast",
-        "Leggings",
-        "Boots",
-        "Gloves",
-        "Belt",
-
-        "Weapon",
-        "Shield",
-        "Ring",
-        "Ring2",
-        "Amulet",
-    },
     SKILL_ICON_SIZE = 40,
     MAX_COLUMNS = 6, -- Maximum amount of columns in the grid.
+    SLOT_ORDER_SETTING_VALUES = {
+        WEAPONS_AND_TRINKETS_FIRST = "WeaponsAndTrinketsFirst",
+        ARMOR_FIRST = "ArmorFirst",
+    },
 
     TranslatedStrings = {
         Setting_Enabled_Name = {
@@ -38,16 +25,38 @@ local Equipment = {
             Text = "If enabled, the target character's equipped items will be shown on the Quick Examine UI.",
             ContextDescription = "Setting tooltip for equipped items widget",
         },
+        Setting_SlotOrder_Name = {
+            Handle = "h614e84c5g5e03g4672g8b1cga7a8455f4a5a",
+            Text = "Equipment Slots Order",
+            ContextDescription = "Setting name",
+        },
+        Setting_SlotOrder_Description = {
+            Handle = "h405ae4b4g1499g463fgbe98ge384c0eaac2e",
+            Text = "Determines the order in which equipment slots are shown in Quick Examine's equipment widget.",
+            ContextDescription = "Setting tooltip",
+        },
+        Setting_SlotOrder_Choice_WeaponAndTrinketsFirst = {
+            Handle = "h7b5b3f77gecb7g400cgafedg1be1b2227264",
+            Text = "Weapons & Accessories First",
+            ContextDescription = [[Option name for "Equipment Slots Order" setting.]],
+        },
+        Setting_SlotOrder_Choice_ArmorFirst = {
+            Handle = "he518f8b3gac8eg4855gb7b3gfd6217a94fde",
+            Text = "Armor First",
+            ContextDescription = [[Option name for "Equipment Slots Order" setting.]],
+        },
     },
     Settings = {},
+
+    USE_LEGACY_EVENTS = false,
+    USE_LEGACY_HOOKS = false,
+
+    Hooks = {
+        GetSlots = {}, ---@type Hook<Features.QuickExamine.Widgets.Equipment.Hooks.GetSlots>
+    },
 }
 Epip.RegisterFeature("Features.QuickExamine.Widgets.Equipment", Equipment)
 local TSK = Equipment.TranslatedStrings
-
--- Setup the slot -> order index map.
-for i,slot in ipairs(Equipment.SLOT_ORDER) do
-    Equipment.SLOT_ORDER[slot] = i
-end
 
 ---------------------------------------------
 -- SETTINGS
@@ -59,10 +68,38 @@ Equipment.Settings.Enabled = Equipment:RegisterSetting("Enabled", {
     Description = TSK.Setting_Enabled_Description,
     DefaultValue = true,
 })
+Equipment.Settings.SlotOrder = Equipment:RegisterSetting("SlotOrder", {
+    Type = "Choice",
+    Context = "Client",
+    NameHandle = TSK.Setting_SlotOrder_Name,
+    DescriptionHandle = TSK.Setting_SlotOrder_Description,
+    DefaultValue = Equipment.SLOT_ORDER_SETTING_VALUES.WEAPONS_AND_TRINKETS_FIRST,
+    ---@type SettingsLib_Setting_Choice_Entry[]
+    Choices = {
+        {ID = Equipment.SLOT_ORDER_SETTING_VALUES.WEAPONS_AND_TRINKETS_FIRST, NameHandle = TSK.Setting_SlotOrder_Choice_WeaponAndTrinketsFirst.Handle},
+        {ID = Equipment.SLOT_ORDER_SETTING_VALUES.ARMOR_FIRST, NameHandle = TSK.Setting_SlotOrder_Choice_ArmorFirst.Handle},
+    },
+})
+
+---------------------------------------------
+-- EVENTS/HOOKS
+---------------------------------------------
+
+---@class Features.QuickExamine.Widgets.Equipment.Hooks.GetSlots
+---@field Slots ItemSlot[] Hookable. Slots to display as well as their order. Defaults to empty list.
 
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
+
+---Returns the slots to show as well as their order.
+---@see Features.QuickExamine.Widgets.Equipment.Hooks.GetSlots
+---@return ItemSlot[]
+function Equipment.GetSlots()
+    return Equipment.Hooks.GetSlots:Throw({
+        Slots = {},
+    }).Slots
+end
 
 ---Renders an item onto a container.
 ---@param container GenericUI_Element_Grid
@@ -108,8 +145,9 @@ function Widget:CanRender(entity)
     end
 
     -- Only show the widget for characters with any items equipped in visible slots.
+    local visibleSlots = table.swap(Equipment.GetSlots())
     return Equipment:IsEnabled() and table.getFirst(equippedItems, function (slot, _)
-        return Equipment.SLOT_ORDER[slot] ~= nil
+        return visibleSlots[slot] ~= nil
     end) ~= nil
 end
 
@@ -132,9 +170,10 @@ function Widget:Render(entity)
     for _,item in pairs(items) do
         table.insert(orderedItems, item)
     end
+    local slotOrder = table.swap(Equipment.GetSlots())
     table.sort(orderedItems, function (a, b)
         local slotA, slotB = Ext.Enums.ItemSlot[Item.GetEquippedSlot(a)], Ext.Enums.ItemSlot[Item.GetEquippedSlot(b)]
-        return Equipment.SLOT_ORDER[slotA] < Equipment.SLOT_ORDER[slotB]
+        return slotOrder[slotA] < slotOrder[slotB]
     end)
     for _,item in ipairs(orderedItems) do
         Equipment._RenderItem(grid, entity, item)
@@ -153,3 +192,43 @@ function Widget:Render(entity)
 
     self:CreateDivider("EquipmentDivider", container)
 end
+
+---------------------------------------------
+-- EVENT LISTENERS
+---------------------------------------------
+
+-- Set slot order based on settings.
+Equipment.Hooks.GetSlots:Subscribe(function (ev)
+    local slotOrderSetting = Equipment.Settings.SlotOrder:GetValue()
+    if slotOrderSetting == Equipment.SLOT_ORDER_SETTING_VALUES.WEAPONS_AND_TRINKETS_FIRST then
+        ev.Slots = {
+            "Weapon",
+            "Shield",
+            "Ring",
+            "Ring2",
+            "Amulet",
+            "Belt",
+
+            "Helmet",
+            "Breast",
+            "Leggings",
+            "Boots",
+            "Gloves",
+        }
+    elseif slotOrderSetting == Equipment.SLOT_ORDER_SETTING_VALUES.ARMOR_FIRST then
+        ev.Slots = {
+            "Helmet",
+            "Breast",
+            "Leggings",
+            "Boots",
+            "Gloves",
+            "Belt",
+
+            "Weapon",
+            "Shield",
+            "Ring",
+            "Ring2",
+            "Amulet",
+        }
+    end
+end, {StringID = "DefaultImplementation"})

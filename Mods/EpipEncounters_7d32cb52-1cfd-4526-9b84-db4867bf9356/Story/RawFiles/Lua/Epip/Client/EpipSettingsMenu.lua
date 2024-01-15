@@ -192,6 +192,7 @@ local tabs = {
             {Module = "EpipEncounters_QuickExamine", ID = "Widget_Statuses"},
             {Module = "EpipEncounters_QuickExamine", ID = "Widget_Skills"},
             {Module = QuickExamineEquipmentWidget:GetNamespace(), ID = QuickExamineEquipmentWidget.Settings.Enabled:GetID()},
+            {Module = QuickExamineEquipmentWidget:GetNamespace(), ID = QuickExamineEquipmentWidget.Settings.SlotOrder:GetID()},
             {Type = "Button", ID = "QuickExamine_SaveDefaultPosition", Label = QuickExamine.TranslatedStrings.SavePosition:GetString(), Tooltip = QuickExamine.TranslatedStrings.SavePositionTooltip:GetString()},
         }
     },
