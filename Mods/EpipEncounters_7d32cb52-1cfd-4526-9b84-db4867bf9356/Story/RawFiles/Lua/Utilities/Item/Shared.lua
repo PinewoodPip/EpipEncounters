@@ -754,7 +754,7 @@ end
 ---Returns the slot that an item is equipped in, or nil if it is not.
 ---@param item Item
 ---@param char Character? Defaults to item's owner.
----@return EquipSlot?
+---@return EquipSlot? -- As string.
 function Item.GetEquippedSlot(item, char)
     local slot = Item.GetItemSlot(item)
     char = char or Character.Get(item:GetOwnerCharacter())
@@ -783,7 +783,7 @@ function Item.GetEquippedSlot(item, char)
 
     if not isEquipped then slot = nil end
 
-    return slot
+    return Ext.Enums.ItemSlot[slot].Label
 end
 
 --- Count the items in an entity's inventory that match a predicate function.  
