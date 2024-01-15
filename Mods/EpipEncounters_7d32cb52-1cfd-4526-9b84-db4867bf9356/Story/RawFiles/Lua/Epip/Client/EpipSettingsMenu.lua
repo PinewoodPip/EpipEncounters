@@ -13,6 +13,7 @@ local TooltipRepositioning = Epip.GetFeature("Features.TooltipAdjustments.Invent
 local TooltipDelay = Epip.GetFeature("Features.TooltipAdjustments.TooltipDelay")
 local StatusConsoleDividers = Epip.GetFeature("Features.StatusConsoleDividers")
 local HotbarTweaks = Epip.GetFeature("Features.HotbarTweaks")
+local QuickExamineEquipmentWidget = Epip.GetFeature("Features.QuickExamine.Widgets.Equipment")
 local CommonStrings = Text.CommonStrings
 
 local InventoryMultiSelectInputActionSettings = {
@@ -190,6 +191,7 @@ local tabs = {
             {Module = "EpipEncounters_QuickExamine", ID = "Widget_Artifacts"},
             {Module = "EpipEncounters_QuickExamine", ID = "Widget_Statuses"},
             {Module = "EpipEncounters_QuickExamine", ID = "Widget_Skills"},
+            {Module = QuickExamineEquipmentWidget:GetNamespace(), ID = QuickExamineEquipmentWidget.Settings.Enabled:GetID()},
             {Type = "Button", ID = "QuickExamine_SaveDefaultPosition", Label = QuickExamine.TranslatedStrings.SavePosition:GetString(), Tooltip = QuickExamine.TranslatedStrings.SavePositionTooltip:GetString()},
         }
     },
