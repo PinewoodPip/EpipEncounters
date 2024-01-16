@@ -196,7 +196,7 @@ end)
 
 -- Prevent slot clicks while multi-selecting items.
 local PreventCallWhileMultiSelecting = function (ev)
-    if Input.GetCurrentAction() == MultiSelect.InputActions.ToggleSelection or (MultiSelect.HasSelection() and MultiSelect.IsUsingMultiSelectActions()) then
+    if MultiSelect.IsTogglingSelection() or (MultiSelect.HasSelection() and MultiSelect.IsUsingMultiSelectActions()) then
        ev:PreventAction()
        ev:StopPropagation()
    end

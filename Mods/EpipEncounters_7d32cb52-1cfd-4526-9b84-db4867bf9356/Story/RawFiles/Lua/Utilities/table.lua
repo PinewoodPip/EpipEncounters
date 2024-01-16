@@ -73,6 +73,22 @@ function table.swap(tbl)
     return newTable
 end
 
+---Returns whether any element in the table satisfies a predicate.
+---@generic K, V
+---@param tbl table<K, V>
+---@param predicate fun(k:K, v:V):boolean Should return `true` for `any()` to return `true`.
+---@return boolean
+function table.any(tbl, predicate)
+    local fullfilled = false
+    for k,v in pairs(tbl) do
+        if predicate(k, v) then
+            fullfilled = true
+            break
+        end
+    end
+    return fullfilled
+end
+
 ---Sorts an array of Describables by their name. TODO move to a static method of the interface
 ---@param tbl I_Describable[]
 function table.sortByName(tbl)

@@ -1,4 +1,6 @@
 
+local Input = Client.Input
+
 ---@class Features.InventoryMultiSelect
 local MultiSelect = Epip.GetFeature("Features.InventoryMultiSelect")
 local Events = MultiSelect.Events ---@class Features.InventoryMultiSelect.Events
@@ -8,6 +10,9 @@ MultiSelect.SELECTED_COLOR = Color.Create(255, 255, 255, 80)
 
 MultiSelect._SelectedItems = {} ---@type table<ComponentHandle, Features.InventoryMultiSelect.Selection>
 MultiSelect._MultiDragActive = false
+MultiSelect._LatestInputAction = nil ---@type InputLib_Action
+MultiSelect._LATEST_INPUT_ACTION_REMOVE_TIME = 2 -- In ticks.
+MultiSelect._RemoveLatestInputActionTimer = nil ---@type TimerLib_TickTimerEntry
 
 -- Register input actions
 MultiSelect.InputActions.ToggleSelection = MultiSelect:RegisterInputAction("ToggleSelection", {
@@ -170,8 +175,24 @@ end
 ---Returns whether any of the multi-select input actions are being held.
 ---@return boolean
 function MultiSelect.IsUsingMultiSelectActions()
-    local action = Client.Input.GetCurrentAction()
-    return action == MultiSelect.InputActions.ToggleSelection or action == MultiSelect.InputActions.SelectRange
+    local isUsingActions = MultiSelect._LatestInputAction ~= nil or table.any(MultiSelect.InputActions, function (_, action)
+        return Input.GetCurrentAction() == action
+    end)
+    return isUsingActions
+end
+
+---Returns whether the "Toggle Selection" action is being used, with a certain grace timer after releasing.
+---@return boolean
+function MultiSelect.IsTogglingSelection()
+    local action = MultiSelect.InputActions.ToggleSelection
+    return MultiSelect._LatestInputAction == action or Input.GetCurrentAction() == action
+end
+
+---Returns whether the "Select Range" action is being used, with a certain grace timer after releasing.
+---@return boolean
+function MultiSelect.IsSelectingRange()
+    local action = MultiSelect.InputActions.SelectRange
+    return MultiSelect._LatestInputAction == action or Input.GetCurrentAction() == action
 end
 
 ---Client-only override. Checks setting.
@@ -219,4 +240,28 @@ end)
 -- Hide tooltips when a multi-drag starts.
 MultiSelect.Events.MultiDragStarted:Subscribe(function (_)
     Client.Tooltip.HideTooltip()
+end)
+
+-- Track the last MultiSelect input action in the last few ticks.
+-- This is necessary to resolve a race condition:
+-- the input action is released before the various UIs's "slotUp"-like events
+-- can fire. 
+Client.Input.Events.ActionExecuted:Subscribe(function (ev)
+    if ev.Action == MultiSelect.InputActions.ToggleSelection or ev.Action == MultiSelect.InputActions.SelectRange then
+        MultiSelect._LatestInputAction = ev.Action
+    end
+end)
+Client.Input.Events.ActionReleased:Subscribe(function (ev)
+    if ev.Action == MultiSelect.InputActions.ToggleSelection or ev.Action == MultiSelect.InputActions.SelectRange then
+        MultiSelect._LatestInputAction = ev.Action
+
+        local previousTimer = MultiSelect._RemoveLatestInputActionTimer
+        if previousTimer and not previousTimer:IsFinished() then
+            previousTimer:Cancel()
+            MultiSelect._RemoveLatestInputActionTimer = nil
+        end
+        MultiSelect._RemoveLatestInputActionTimer = Timer.StartTickTimer(MultiSelect._LATEST_INPUT_ACTION_REMOVE_TIME, function (_)
+            MultiSelect._LatestInputAction = nil
+        end)
+    end
 end)

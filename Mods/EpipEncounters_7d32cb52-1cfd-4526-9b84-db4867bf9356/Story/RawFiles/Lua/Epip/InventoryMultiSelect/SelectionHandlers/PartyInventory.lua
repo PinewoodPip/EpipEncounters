@@ -208,14 +208,14 @@ end)
 
 -- Clear selections when an item is clicked.
 PartyInventory:RegisterCallListener("slotUp", function (ev)
-    if MultiSelect.HasSelection() and Input.GetCurrentAction() == MultiSelect.InputActions.SelectRange then -- Only prevent shift-click if we already have a selection. Otherwise, use vanilla behaviour (toggle wares)
+    if MultiSelect.HasSelection() and MultiSelect.IsSelectingRange() then -- Only prevent shift-click if we already have a selection. Otherwise, use vanilla behaviour (toggle wares)
         ev:PreventAction()
     elseif not MultiSelect.IsUsingMultiSelectActions() then
         MultiSelect.ClearSelections()
     end
 end)
 PartyInventory:RegisterCallListener("doubleClickItem", function (ev, _)
-    if MultiSelect.HasSelection() or Input.GetCurrentAction() == MultiSelect.InputActions.ToggleSelection then -- Kinda surprised the second check works and I'm not 100% sure why
+    if MultiSelect.HasSelection() or MultiSelect.IsTogglingSelection() then
         ev:PreventAction()
     end
 end)
