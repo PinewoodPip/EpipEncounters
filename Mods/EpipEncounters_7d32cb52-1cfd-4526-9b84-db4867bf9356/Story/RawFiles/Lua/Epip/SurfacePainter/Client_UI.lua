@@ -19,16 +19,16 @@ local TSK = {
         Text = "Surface Type",
         ContextDescription = "Dropdown name",
     }),
-    InputAction_ToggleUI_Name = {
+    InputAction_ToggleUI_Name = SurfacePainter:RegisterTranslatedString({
         Handle = "hfafda83bg44a1g4985g890eg761c814db0c8",
         Text = "Toggle Surface Painter",
         ContextDescription = "Keybind name; used in developer mode only",
-    },
-    InputAction_ToggleUI_Description = {
+    }),
+    InputAction_ToggleUI_Description = SurfacePainter:RegisterTranslatedString({
         Handle = "h5cb514c6g75c3g4309g95e6g4fb71e5ba1f3",
         Text = "Toggles the Surface Painter UI.",
         ContextDescription = "Keybind tooltip; used in developer mode only",
-    },
+    }),
     Header = SurfacePainter:RegisterTranslatedString({
         Handle = "hc55a2a98g37ddg4140gacc9gf4b048f7180f",
         Text = "Surface Painter",
