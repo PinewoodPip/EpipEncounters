@@ -94,12 +94,15 @@ Hotbar.Hooks.CanRemoveBar:Subscribe(CanModifyBarCount)
 Client.Input.Events.KeyReleased:Subscribe(function (ev)
     if ev.InputID == "left2" and Tweaks:IsEnabled() then
         local draggedSkill = Pointer.GetDraggedSkill()
-        if draggedSkill and Tweaks:GetSettingValue(Tweaks.Settings.AllowDraggingUnlearntSkills) == true then
-            local hoveredSlotIndex, _ = Hotbar.GetHoveredSlot()
-            local char = Client.GetCharacter()
-            if hoveredSlotIndex and not Character.IsSkillLearnt(char, draggedSkill) then -- Only do this for unlearnt skills; learnt skills are handled by engine.
-                local slot = char.PlayerData.SkillBarItems[hoveredSlotIndex]
+        local hoveredSlotIndex, _ = Hotbar.GetHoveredSlot()
 
+        if hoveredSlotIndex then
+            local char = Client.GetCharacter()
+            local slot = char.PlayerData.SkillBarItems[hoveredSlotIndex]
+
+            -- Allow dragging unlearnt skills if the setting is enabled.
+            -- Only do this for unlearnt skills; learnt skills are handled by engine.
+            if draggedSkill and Tweaks:GetSettingValue(Tweaks.Settings.AllowDraggingUnlearntSkills) == true and not Character.IsSkillLearnt(char, draggedSkill) then
                 slot.Type = "Skill"
                 slot.SkillOrStatId = draggedSkill
                 slot.ItemHandle = Ext.Entity.NullHandle()
