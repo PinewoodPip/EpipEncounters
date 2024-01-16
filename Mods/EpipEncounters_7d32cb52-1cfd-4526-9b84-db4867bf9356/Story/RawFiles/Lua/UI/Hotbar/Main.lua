@@ -1827,3 +1827,10 @@ Ext.Events.SessionLoaded:Subscribe(function()
 
     Hotbar.initialized = true
 end)
+
+-- Hide the vanilla endpiece when vanilla logic tries to show it: when the resolution changes and upon showSkillBar() invoke.
+local function HideEndPiece()
+    Hotbar:GetRoot().endPiece_mc.visible = false
+end
+Client.Events.ViewportChanged:Subscribe(HideEndPiece, {EnabledFunctor = function () return Hotbar:Exists() end})
+Hotbar:RegisterInvokeListener("showSkillBar", HideEndPiece, "After")
