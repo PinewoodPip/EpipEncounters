@@ -320,12 +320,15 @@ end
 ---@param index integer
 ---@return boolean
 function Hotbar.IsBarVisible(index)
-    local bar = Hotbar.GetState().Bars[index]
-    local event = {BarIndex = index, Visible = bar.Visible} ---@type HotbarUI_Hook_IsBarVisible
-
-    Hotbar.Hooks.IsBarVisible:Throw(event)
-
-    return event.Visible
+    local visible = index == 1 -- First bar is always considered visible.
+    if index ~= 1 then
+        local bar = Hotbar.GetState().Bars[index]
+        visible = Hotbar.Hooks.IsBarVisible:Throw({
+            BarIndex = index,
+            Visible = bar.Visible
+        }).Visible
+    end
+    return visible
 end
 
 function Hotbar.UpdateSlotTextures()
