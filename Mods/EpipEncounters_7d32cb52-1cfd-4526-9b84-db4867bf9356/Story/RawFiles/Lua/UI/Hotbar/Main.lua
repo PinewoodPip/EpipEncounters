@@ -981,7 +981,6 @@ Hotbar:RegisterInvokeListener("showSkillBar", function (_, enabled)
     end
 
     Hotbar.elementsToggled = enabled
-    
 end, "After")
 
 -- Listen for engine requests to refresh slots.
@@ -1021,11 +1020,6 @@ end)
 
 Net.RegisterListener("EPIPENCOUNTERS_Hotbar_SetLayout", function(payload)
     Hotbar.SetState(Character.Get(payload.CharacterNetID), payload.Layout)
-end)
-
--- Reposition combat log button
-Hotbar:RegisterListener("Refreshed", function(barAmount)
-    Hotbar:GetRoot().showLog_mc.y = 874 - (barAmount - 1) * (50 + 8)
 end)
 
 -- Save when the game is saved
@@ -1115,6 +1109,8 @@ GameState.Events.RunningTick:Subscribe(function (e)
                 Hotbar.RenderSlots()
             end)
         end
+
+        Hotbar.PositionCombatLogButton()
     end
 
     if Hotbar.initialized then
@@ -1673,7 +1669,12 @@ function Hotbar.HideBar(index, row)
 end
 
 function Hotbar.PositionCombatLogButton()
-    Hotbar:GetRoot().showLog_mc.visible = Settings.GetSettingValue("Epip_Hotbar", "HotbarCombatLogButton") and Hotbar.IsVisible()
+    local logButton = Hotbar:GetRoot().showLog_mc
+    local barAmount = Hotbar.GetBarCount()
+    local offset = barAmount > 1 and 0 or -4
+
+    logButton.visible = Settings.GetSettingValue("Epip_Hotbar", "HotbarCombatLogButton") and Hotbar.IsVisible()
+    logButton.y = 878 - (barAmount - 1) * 58 + offset -- Likely not worth it performance-wise to use an if-then here.
 end
 
 -- Reposition combat log button when the hotbar updates.
