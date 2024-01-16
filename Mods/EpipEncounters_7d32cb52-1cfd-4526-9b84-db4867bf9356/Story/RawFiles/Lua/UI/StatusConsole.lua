@@ -79,7 +79,19 @@ end
 
 ---Updates position based on hotbar bar count.
 function StatusConsole.UpdatePosition()
-    StatusConsole:GetRoot().y = -55 * (Client.UI.Hotbar.GetBarCount() - 1)
+    local ui = StatusConsole:GetUI()
+    local root = StatusConsole:GetRoot()
+    local scaleMultiplier = ui:GetUIScaleMultiplier()
+    local extraBars = Client.UI.Hotbar.GetBarCount() - 1
+    local hotbarRowHeight = 57
+    local offset = extraBars > 0 and -2 or 0
+
+    root.y = (-hotbarRowHeight * 1) * (extraBars) - offset
+
+    -- If UIScaling (the global switch only!) is not 1, the UIObject position on the Y axis is not 0; we need to compensate for this.
+    if Ext.Utils.GetGlobalSwitches().UIScaling > 1 then
+        root.y = StatusConsole:GetRoot().y + (ui:GetPosition()[2] / scaleMultiplier)
+    end
 end
 
 ---------------------------------------------
