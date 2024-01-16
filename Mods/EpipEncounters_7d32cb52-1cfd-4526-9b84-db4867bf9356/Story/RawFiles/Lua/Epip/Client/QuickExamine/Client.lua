@@ -221,8 +221,9 @@ function QuickExamine.RegisterWidget(name, data)
 
     table.insert(QuickExamine._Widgets, widget)
 
+    -- Register the setting if necessary
     local setting = widget.Setting
-    if setting then
+    if setting and (not setting.ModTable or Settings.GetSetting(setting.ModTable, setting.ID) == nil) then
         setting.ModTable = setting.ModTable or QuickExamine:GetSettingsModuleID()
         setting.ID = setting.ID or ("Widget_" .. name)
         Settings.RegisterSetting(widget.Setting)
