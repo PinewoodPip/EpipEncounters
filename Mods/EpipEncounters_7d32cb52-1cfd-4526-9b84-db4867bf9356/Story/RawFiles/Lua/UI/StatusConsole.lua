@@ -159,7 +159,14 @@ Ext.Events.SessionLoaded:Subscribe(function()
     Ext.RegisterUICall(StatusConsole.UI, "pipStatusConsoleHealthUpdate", OnHealthBarUpdate)
     Ext.RegisterUICall(StatusConsole.UI, "pipStatusConsoleArmorUpdate", OnHealthBarUpdate)
 
+    -- Update the position of the UI whenever the hotbar or viewport is updated.
     Client.UI.Hotbar:RegisterListener("Refreshed", function(_)
         StatusConsole.UpdatePosition()
+    end)
+    Client.Events.ViewportChanged:Subscribe(function (_)
+        -- Needs to be a TickTimer of 1 rather than OnNextTick() - TODO where does the timing difference come from?
+        Timer.StartTickTimer(1, function (_)
+            StatusConsole.UpdatePosition()
+        end)
     end)
 end)
