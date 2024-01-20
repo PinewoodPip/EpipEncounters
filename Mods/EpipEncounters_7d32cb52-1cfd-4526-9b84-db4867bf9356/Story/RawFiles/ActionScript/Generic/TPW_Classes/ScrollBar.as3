@@ -34,7 +34,7 @@ package
       
       public var m_handle_mc:MovieClip;
       
-      public var m_bg_mc:MovieClip;
+      public var m_bg_mc:MovieClip = null;
       
       public var m_scrolledY:Number = 0;
       
@@ -96,7 +96,7 @@ package
       
       protected var m_scrollerDiff:Number = 0;
       
-      private var m_scaleBG:Boolean = false;
+      private var m_scaleBG:Boolean = true;
       
       private var m_customPaneHeight:Number = -1;
       
@@ -162,9 +162,14 @@ package
          this.m_down_mc = new _loc7_();
          this.m_up_mc = new _loc8_();
          this.m_handle_mc = new _loc9_();
-         this.m_bg_mc = new _loc10_();
+
+         if (param4 != "")
+         {
+            this.m_bg_mc = new _loc10_();
+            this.addChild(this.m_bg_mc);
+         }
+
          this.m_scrollWheelTimer.addEventListener(TimerEvent.TIMER,this.onScrollWheelTimer);
-         addChild(this.m_bg_mc);
          this.m_frameHit_mc = new MovieClip();
          (_loc11_ = new Sprite()).graphics.lineStyle(0,16777215);
          _loc11_.graphics.beginFill(16777215);
@@ -176,9 +181,11 @@ package
          addChild(this.m_handle_mc);
          addChild(this.m_up_mc);
          addChild(this.m_down_mc);
-         if((_loc12_ = this.m_bg_mc.width) < this.m_up_mc.width)
+
+         _loc12_ = this.m_up_mc.width
+         if (this.m_bg_mc != null && this.m_bg_mc.width > _loc12_) // Use the BG width if it's bigger
          {
-            _loc12_ = this.m_up_mc.width;
+            _loc12_ = this.m_bg_mc.width
          }
          if(_loc12_ < this.m_down_mc.width)
          {
@@ -188,7 +195,11 @@ package
          {
             _loc12_ = this.m_handle_mc.width;
          }
-         this.m_bg_mc.x = Math.round((_loc12_ - this.m_bg_mc.width) * 0.5);
+
+         if (this.m_bg_mc != null)
+         {
+            this.m_bg_mc.x = Math.round((_loc12_ - this.m_bg_mc.width) * 0.5);
+         }
          this.m_up_mc.x = Math.round((_loc12_ - this.m_up_mc.width) * 0.5);
          this.m_down_mc.x = Math.round((_loc12_ - this.m_down_mc.width) * 0.5);
          this.m_handle_mc.x = Math.round((_loc12_ - this.m_handle_mc.width) * 0.5);
@@ -364,12 +375,12 @@ package
             {
                this.setLength(!!this.m_FullSizeBG ? Number(this.m_down_mc.y - this.m_up_mc.y + this.m_down_mc.height) : Number(this.m_down_mc.y - this.m_up_mc.y - this.m_up_mc.height));
             }
-            else if(this.m_scrollLength > 0)
+            else if(this.m_bg_mc != null && this.m_scrollLength > 0)
             {
                this.m_bg_mc.height = this.m_scrollLength;
             }
          }
-         else
+         else if (this.m_bg_mc != null)
          {
             this.m_bg_mc.scaleY = 1;
          }
@@ -765,7 +776,7 @@ package
                this.m_FFdown_mc.y = param1 - this.m_FFdown_mc.height;
             }
             this.m_down_mc.y = param1 - this.m_down_mc.height - this.m_ffDownH;
-            if(this.m_scaleBG)
+            if(this.m_scaleBG && this.m_bg_mc != null)
             {
                this.m_bg_mc.height = param1 - (!this.m_FullSizeBG ? this.m_down_mc.height + this.m_up_mc.height : 0);
                if(this.m_FFup_mc)
