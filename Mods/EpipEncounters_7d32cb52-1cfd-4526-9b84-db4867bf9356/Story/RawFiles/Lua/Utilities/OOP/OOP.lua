@@ -86,14 +86,16 @@ end
 
 ---Returns whether this class implements another.
 ---Hierarchies are considered.
----@param className string
+---Will return `true` if this class is the queried one.
+---@param class string|Class
 ---@return boolean
-function Class:ImplementsClass(className)
+function Class:ImplementsClass(class)
+    local className = type(class) == "table" and class:GetClassName() or class -- Class overload.
     local implements = self:GetClassName() == className
 
     if not implements then
-        for _,class in ipairs(self:GetParentClasses()) do
-            if class:GetClassName() == className or class:ImplementsClass(className) then
+        for _,parentClass in ipairs(self:GetParentClasses()) do
+            if parentClass:GetClassName() == className or parentClass:ImplementsClass(className) then
                 implements = true
                 break
             end
@@ -185,21 +187,31 @@ function OOP.GetClass(className)
 end
 
 ---Returns whether a table is a class table or instance.
----@param tbl table
----@param className string? If present, `true` will only be returned if the table *is* the requested class.
+---@param tbl table|Class
+---@param class (string|Class)? If present, `true` will only be returned if the table *is* the exact requested class.
 ---@return boolean
-function OOP.IsClass(tbl, className)
+function OOP.IsClass(tbl, class)
+    local className = type(class) == "table" and class:GetClassName() or class -- Class overload.
     local isClass = false
+    ---@diagnostic disable: invisible
     if type(tbl) == "table" and tbl.__name then
-        local result, class = pcall(OOP.GetClass, tbl.__name)
+        local result, tableClass = pcall(OOP.GetClass, tbl.__name)
         if result then
-            local isCorrectClass = className == nil or class.__name == className
+            local isCorrectClass = className == nil or tableClass.__name == className
             if isCorrectClass then
                 isClass = true
             end
         end
     end
+    ---@diagnostic enable: invisible
     return isClass
+end
+
+---Returns whether a table implements a class.
+---@param tbl table|Class
+---@param class string|Class
+function OOP.ImplementsClass(tbl, class)
+    return OOP.IsClass(tbl) and tbl:ImplementsClass(class)
 end
 
 ---Sets a table's metatable. __index is set to index the metatable itself, using the metatable's __index as a fallback.
