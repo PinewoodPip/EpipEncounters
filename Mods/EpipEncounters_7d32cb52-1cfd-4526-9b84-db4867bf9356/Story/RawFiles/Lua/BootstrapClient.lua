@@ -502,14 +502,14 @@ LOAD_ORDER = {
         Scripts = {
             "Epip/Client/QuickExamine/Client.lua",
 
-            "Epip/Client/QuickExamine/Widgets/BasicInfo.lua",
+            "Epip/Client/QuickExamine/Widgets/Resources.lua",
             "Epip/Client/QuickExamine/Widgets/Resistances.lua",
             "Epip/Client/QuickExamine/Widgets/Immunities.lua",
             "Epip/Client/QuickExamine/Widgets/Statuses.lua",
         },
     },
     {Script = "Epip/Client/QuickExamine/Widgets/Artifacts.lua", RequiresEE = true},
-    "Epip/Client/QuickExamine/Widgets/SkillsDisplay.lua",
+    "Epip/Client/QuickExamine/Widgets/Skills.lua",
     "Epip/Client/QuickExamine/Widgets/Equipment.lua",
 
     "Epip/Client/GenericUIs/SaveLoadOverlay.lua",

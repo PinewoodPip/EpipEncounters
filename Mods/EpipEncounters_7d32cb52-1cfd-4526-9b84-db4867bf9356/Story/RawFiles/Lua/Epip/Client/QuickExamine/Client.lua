@@ -8,7 +8,7 @@ local QuickExamine = {
     entityNetID = nil,
     lockCharacter = false,
 
-    _Widgets = {}, ---@type Feature_QuickExamine_Widget[]
+    _Widgets = {}, ---@type Features.QuickExamine.Widget[] In order of registration and rendering.
 
     UI = nil, ---@type Feature_QuickExamine_UI
     CONTAINER_PADDING = 5,
@@ -82,6 +82,7 @@ local QuickExamine = {
            ContextDescription = "Setting tooltip",
         },
     },
+    Settings = {},
 
     USE_LEGACY_HOOKS = false,
 
@@ -153,17 +154,19 @@ QuickExamine:RegisterSetting("Position", {
 
 ---@class Feature_QuickExamine_UI : GenericUI_Instance
 
----@class Feature_QuickExamine_Widget
----@field Name string
+---Base abstract class for a widget.
+---@class Features.QuickExamine.Widget : Class
+---@field Setting SettingsLib_Setting_Boolean If defined, the widget will not render if the setting is not enabled. Must be pre-registered.
 local _Widget = {
-    Setting = nil, ---@type SettingsLib_Setting_Boolean If defined, the widget will not render if the setting is not enabled.
+    HEADER_HEIGHT = 30,
 }
+QuickExamine:RegisterClass("Features.QuickExamine.Widget", _Widget)
 
 ---@param entity Feature_QuickExamine_Entity
 ---@return GenericUI_Element
 ---@diagnostic disable
 function _Widget:Render(entity)
-    QuickExamine:Error("Widget:Construct", "Not implemented for ", self.Name)
+    QuickExamine:Error("Widget:Render", "Not implemented for ", self:GetClassName())
 end
 
 ---@param entity Feature_QuickExamine_Entity
@@ -178,7 +181,7 @@ end
 ---@param label string
 ---@return GenericUI_Prefab_Text
 function _Widget:CreateHeader(id, parentElement, label)
-    return TextPrefab.Create(QuickExamine.UI, id, parentElement, label, "Center", Vector.Create(QuickExamine.GetContainerWidth(), 30))
+    return TextPrefab.Create(QuickExamine.UI, id, parentElement, label, "Center", Vector.Create(QuickExamine.GetContainerWidth(), self.HEADER_HEIGHT))
 end
 
 ---@param id string
@@ -210,29 +213,15 @@ end
 -- METHODS
 ---------------------------------------------
 
----@param name string
----@param data Feature_QuickExamine_Widget?
----@return Feature_QuickExamine_Widget
-function QuickExamine.RegisterWidget(name, data)
-    ---@type Feature_QuickExamine_Widget
-    local widget = data or {}
-    widget.Name = name
-    Inherit(widget, _Widget)
-
-    table.insert(QuickExamine._Widgets, widget)
-
-    -- Register the setting if necessary
-    local setting = widget.Setting
-    if setting and (not setting.ModTable or Settings.GetSetting(setting.ModTable, setting.ID) == nil) then
-        setting.ModTable = setting.ModTable or QuickExamine:GetSettingsModuleID()
-        setting.ID = setting.ID or ("Widget_" .. name)
-        Settings.RegisterSetting(widget.Setting)
+---@param widget Features.QuickExamine.Widget
+function QuickExamine.RegisterWidget(widget)
+    if not OOP.ImplementsClass(widget, _Widget) then
+        QuickExamine:Error("RegisterWidget", "Widget must inherit from Features.QuickExamine.Widget")
     end
-
-    return widget
+    table.insert(QuickExamine._Widgets, widget)
 end
 
----@param widget Feature_QuickExamine_Widget
+---@param widget Features.QuickExamine.Widget
 ---@param entity Entity
 ---@return boolean
 function QuickExamine.CanRenderWidget(widget, entity)
@@ -301,7 +290,7 @@ function QuickExamine.IsEligible(entity)
     return hook.Eligible
 end
 
----@return Feature_QuickExamine_Widget[]
+---@return Features.QuickExamine.Widget[]
 function QuickExamine.GetWidgets()
     return QuickExamine._Widgets
 end
@@ -447,7 +436,7 @@ QuickExamine.Events.EntityChanged:RegisterListener(function (entity)
     for _,widget in ipairs(QuickExamine._Widgets) do
         if QuickExamine.CanRenderWidget(widget, entity) then
             local success, msg = pcall(widget.Render, widget, entity)
-            
+
             if not success then
                 QuickExamine:LogError("Error while rendering widget: " .. msg)
             end
@@ -542,7 +531,7 @@ local function Setup()
     content:Move(QuickExamine.CONTAINER_PADDING, 0)
     QuickExamine.ContentContainer = content
     UI.ContentContainer = content
-    
+
     local closeButton = panel:AddChild("Close", "GenericUI_Element_Button")
     closeButton:SetType("Close")
     closeButton.Events.Pressed:Subscribe(function (_)

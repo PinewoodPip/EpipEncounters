@@ -3,28 +3,53 @@ local QuickExamine = Epip.GetFeature("Feature_QuickExamine")
 local Generic = Client.UI.Generic
 local StatusPrefab = Generic.GetPrefab("GenericUI_Prefab_Status")
 
----@class Feature_QuickExamine_Widget_Statuses : Feature
-local Statuses = {}
-Epip.RegisterFeature("QuickExamine_Widget_Statuses", Statuses)
+---@class Features.QuickExamine.Widgets.Statuses : Feature
+local Statuses = {
+    TranslatedStrings = {
+        Setting_Enabled_Name = {
+            Handle = "h781196b1g2672g4814gba9cg909abae01815",
+            Text = "Show Statuses",
+            ContextDescription = "Setting name",
+        },
+        Setting_Enabled_Description = {
+            Handle = "h70e80784gadb9g4d5agae96gc219142a7d43",
+            Text = "Shows the active, visible statuses of characters.",
+            ContextDescription = "Setting tooltip",
+        },
+    },
+    Settings = {},
+}
+Epip.RegisterFeature("Features.QuickExamine.Widgets.Statuses", Statuses)
+local TSK = Statuses.TranslatedStrings
+
+---------------------------------------------
+-- SETTINGS
+---------------------------------------------
+
+Statuses.Settings.Enabled = Statuses:RegisterSetting("Enabled", {
+    Type = "Boolean",
+    Name = TSK.Setting_Enabled_Name,
+    Description = TSK.Setting_Enabled_Description,
+    DefaultValue = true,
+})
 
 ---------------------------------------------
 -- WIDGET
 ---------------------------------------------
 
-local Widget = QuickExamine.RegisterWidget("Statuses", {
-    Setting = {
-        ID = "Widget_Statuses",
-        Type = "Boolean",
-        Name = "Show Statuses",
-        Description = "Shows the active, visible statuses of characters.",
-        DefaultValue = true,
-    },
-})
+---@type Features.QuickExamine.Widget
+local Widget = {
+    Setting = Statuses.Settings.Enabled,
+}
+Statuses:RegisterClass("Features.QuickExamine.Widgets.Statuses.Widget", Widget, {"Features.QuickExamine.Widget"})
+QuickExamine.RegisterWidget(Widget)
 
+---@override
 function Widget:CanRender(entity)
     return Statuses:IsEnabled() and Entity.IsCharacter(entity)
 end
 
+---@override
 function Widget:Render(entity)
     local char = entity ---@type EclCharacter
     local container = QuickExamine.GetContainer()

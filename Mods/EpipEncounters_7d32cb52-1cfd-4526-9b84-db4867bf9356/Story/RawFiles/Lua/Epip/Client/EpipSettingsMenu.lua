@@ -13,8 +13,14 @@ local TooltipRepositioning = Epip.GetFeature("Features.TooltipAdjustments.Invent
 local TooltipDelay = Epip.GetFeature("Features.TooltipAdjustments.TooltipDelay")
 local StatusConsoleDividers = Epip.GetFeature("Features.StatusConsoleDividers")
 local HotbarTweaks = Epip.GetFeature("Features.HotbarTweaks")
-local QuickExamineEquipmentWidget = Epip.GetFeature("Features.QuickExamine.Widgets.Equipment")
 local CommonStrings = Text.CommonStrings
+
+local QuickExamineWidgets = {
+    Statuses = Epip.GetFeature("Features.QuickExamine.Widgets.Statuses"),
+    Artifacts = Epip.GetFeature("Features.QuickExamine.Widgets.Artifacts"),
+    Skills = Epip.GetFeature("Features.QuickExamine.Widgets.Skills"),
+    Equipment = Epip.GetFeature("Features.QuickExamine.Widgets.Equipment"),
+}
 
 local InventoryMultiSelectInputActionSettings = {
     ToggleSelection = Client.Input.GetActionBindingSetting(InventoryMultiSelect.InputActions.ToggleSelection),
@@ -113,6 +119,13 @@ local function CreateHeader(name)
     return {Type = "Label", Label = Text.Format(name, {Color = "7E72D6", Size = 23})}
 end
 
+---Creates an entry for a setting.
+---@param setting SettingsLib_Setting
+---@return Feature_SettingsMenu_Entry_Setting
+local function CreateSettingEntry(setting)
+    return {Type = "Setting", Module = setting.ModTable, ID = setting:GetID()}
+end
+
 ---@type table<string, Feature_SettingsMenu_Tab>
 local tabs = {
     ["EpipEncounters"] = {
@@ -188,11 +201,11 @@ local tabs = {
             {Module = "EpipEncounters_QuickExamine", ID = "Opacity"},
             {Module = "EpipEncounters_QuickExamine", ID = "Width"},
             {Module = "EpipEncounters_QuickExamine", ID = "Height"},
-            {Module = "EpipEncounters_QuickExamine", ID = "Widget_Artifacts"},
-            {Module = "EpipEncounters_QuickExamine", ID = "Widget_Statuses"},
-            {Module = "EpipEncounters_QuickExamine", ID = "Widget_Skills"},
-            {Module = QuickExamineEquipmentWidget:GetNamespace(), ID = QuickExamineEquipmentWidget.Settings.Enabled:GetID()},
-            {Module = QuickExamineEquipmentWidget:GetNamespace(), ID = QuickExamineEquipmentWidget.Settings.SlotOrder:GetID()},
+            CreateSettingEntry(QuickExamineWidgets.Artifacts.Settings.Enabled),
+            CreateSettingEntry(QuickExamineWidgets.Statuses.Settings.Enabled),
+            CreateSettingEntry(QuickExamineWidgets.Skills.Settings.Enabled),
+            CreateSettingEntry(QuickExamineWidgets.Equipment.Settings.Enabled),
+            CreateSettingEntry(QuickExamineWidgets.Equipment.Settings.SlotOrder),
             {Type = "Button", ID = "QuickExamine_SaveDefaultPosition", Label = QuickExamine.TranslatedStrings.SavePosition:GetString(), Tooltip = QuickExamine.TranslatedStrings.SavePositionTooltip:GetString()},
         }
     },

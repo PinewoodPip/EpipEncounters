@@ -131,7 +131,12 @@ end
 -- WIDGET
 ---------------------------------------------
 
-local Widget = QuickExamine.RegisterWidget("Features.QuickExamine.Widgets.Equipment", {Setting = Equipment.Settings.Enabled})
+---@type Features.QuickExamine.Widget
+local Widget = {
+    Setting = Equipment.Settings.Enabled,
+}
+Equipment:RegisterClass("Features.QuickExamine.Widgets.Equipment.Widget", Widget, {"Features.QuickExamine.Widget"})
+QuickExamine.RegisterWidget(Widget)
 
 ---@override
 function Widget:CanRender(entity)

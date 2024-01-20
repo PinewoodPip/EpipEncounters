@@ -9,12 +9,18 @@ local Generic = Client.UI.Generic
 local _T = Generic.ELEMENTS.Text
 
 local QuickExamine = Epip.GetFeature("Feature_QuickExamine")
-local Widget = QuickExamine.RegisterWidget("EpicEnemies")
 
+---@type Features.QuickExamine.Widget
+local Widget = {}
+EpicEnemies:RegisterClass("Features.EpicEnemies.QuickExamineWidget", Widget, {"Features.QuickExamine.Widget"})
+QuickExamine.RegisterWidget(Widget)
+
+---@override
 function Widget:CanRender(entity)
     return #EpicEnemies.GetAppliedEffects(entity, true) > 0
 end
 
+---@override
 function Widget:Render(entity)
     local container = QuickExamine.GetContainer()
 

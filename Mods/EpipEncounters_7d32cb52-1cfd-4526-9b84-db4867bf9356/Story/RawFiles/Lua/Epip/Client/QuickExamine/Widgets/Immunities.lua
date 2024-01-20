@@ -5,18 +5,23 @@ local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 
 ---@type Feature
 local Immunities = {}
-Epip.RegisterFeature("QuickExamine_Widget_Immunities", Immunities)
+Epip.RegisterFeature("Features.QuickExamine.Widgets.Immunities", Immunities)
 
 ---------------------------------------------
 -- WIDGET
 ---------------------------------------------
 
-local Widget = QuickExamine.RegisterWidget("Immunities")
+---@type Features.QuickExamine.Widget
+local Widget = {}
+Immunities:RegisterClass("Features.QuickExamine.Widgets.Immunities.Widget", Widget, {"Features.QuickExamine.Widget"})
+QuickExamine.RegisterWidget(Widget)
 
+---@override
 function Widget:CanRender(_)
     return Immunities:IsEnabled()
 end
 
+---@override
 function Widget:Render(entity)
     local char = entity ---@type EclCharacter
     local container = QuickExamine.GetContainer()

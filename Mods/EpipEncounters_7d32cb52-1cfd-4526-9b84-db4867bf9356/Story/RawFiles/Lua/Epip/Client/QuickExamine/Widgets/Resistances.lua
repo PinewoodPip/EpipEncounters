@@ -19,18 +19,23 @@ local Resistances = {
         "Fire", "Water", "Earth", "Air", "Poison", "Physical", "Piercing",
     },
 }
-Epip.RegisterFeature("QuickExamine_Widget_Resistances", Resistances)
+Epip.RegisterFeature("Features.QuickExamine.Widgets.Resistances", Resistances)
 
 ---------------------------------------------
 -- WIDGET
 ---------------------------------------------
 
-local Widget = QuickExamine.RegisterWidget("Resistances")
+---@type Features.QuickExamine.Widget
+local Widget = {}
+Resistances:RegisterClass("Features.QuickExamine.Widgets.Resistances.Widget", Widget, {"Features.QuickExamine.Widget"})
+QuickExamine.RegisterWidget(Widget)
 
+---@override
 function Widget:CanRender(_)
     return Resistances:IsEnabled()
 end
 
+---@override
 function Widget:Render(entity)
     local char = entity ---@type EclCharacter
     local container = QuickExamine.GetContainer()

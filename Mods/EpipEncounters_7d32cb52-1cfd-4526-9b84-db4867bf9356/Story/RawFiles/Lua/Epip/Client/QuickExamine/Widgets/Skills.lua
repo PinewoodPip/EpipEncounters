@@ -4,11 +4,37 @@ local Generic = Client.UI.Generic
 local HotbarSlot = Generic.GetPrefab("GenericUI_Prefab_HotbarSlot")
 local V = Vector.Create
 
----@class Feature_QuickExamine_SkillsDisplay : Feature
+---@class Features.QuickExamine.Widgets.Skills : Feature
 local Skills = {
     SKILL_ICON_SIZE = 32,
+
+    TranslatedStrings = {
+        Setting_Enabled_Name = {
+            Handle = "h186d9f82g7ad6g4113gb261g2a5eb62cf612",
+            Text = "Show Skills",
+            ContextDescription = "Setting name",
+        },
+        Setting_Enabled_Description = {
+            Handle = "h41f3c758g87e9g4caegb1eeg5e324bd1564a",
+            Text = "Shows the skills of player characters and their cooldowns. Does not apply to non-player characters.",
+            ContextDescription = "Setting tooltip",
+        },
+    },
+    Settings = {},
 }
-Epip.RegisterFeature("QuickExamine_SkillsDisplay", Skills)
+Epip.RegisterFeature("Features.QuickExamine.Widgets.Skills", Skills)
+local TSK = Skills.TranslatedStrings
+
+---------------------------------------------
+-- SETTINGS
+---------------------------------------------
+
+Skills.Settings.Enabled = Skills:RegisterSetting("Enabled", {
+    Type = "Boolean",
+    Name = TSK.Setting_Enabled_Name,
+    Description = TSK.Setting_Enabled_Description,
+    DefaultValue = true,
+})
 
 ---------------------------------------------
 -- METHODS
@@ -49,18 +75,19 @@ end
 -- WIDGET
 ---------------------------------------------
 
-local Widget = QuickExamine.RegisterWidget("SkillsDisplay", {Setting = {
-    ID = "Widget_Skills",
-    Type = "Boolean",
-    Name = "Show Skills",
-    Description = "Shows the skills of player characters and their cooldowns. Does not apply to non-player characters.",
-    DefaultValue = true,
-}})
+---@type Features.QuickExamine.Widget
+local Widget = {
+    Setting = Skills.Settings.Enabled,
+}
+Skills:RegisterClass("Features.QuickExamine.Widgets.Skills.Widget", Widget, {"Features.QuickExamine.Widget"})
+QuickExamine.RegisterWidget(Widget)
 
+---@override
 function Widget:CanRender(entity)
     return Skills:IsEnabled() and Entity.IsCharacter(entity) and not table.isempty(entity.SkillManager.Skills)
 end
 
+---@override
 function Widget:Render(entity)
     local container = QuickExamine.GetContainer()
 
