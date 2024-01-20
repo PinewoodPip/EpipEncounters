@@ -131,11 +131,12 @@ end
 -- WIDGET
 ---------------------------------------------
 
----@type Features.QuickExamine.Widget
+---@type Features.QuickExamine.Widgets.Grid
 local Widget = {
+    HEADER_LABEL = CommonStrings.Equipment,
     Setting = Equipment.Settings.Enabled,
 }
-Equipment:RegisterClass("Features.QuickExamine.Widgets.Equipment.Widget", Widget, {"Features.QuickExamine.Widget"})
+Equipment:RegisterClass("Features.QuickExamine.Widgets.Equipment.Widget", Widget, {"Features.QuickExamine.Widgets.Grid"})
 QuickExamine.RegisterWidget(Widget)
 
 ---@override
@@ -157,18 +158,10 @@ function Widget:CanRender(entity)
 end
 
 ---@override
-function Widget:Render(entity)
+function Widget:RenderGridElements(entity)
     ---@cast entity EclCharacter
-    local container = QuickExamine.GetContainer()
-
-    self:CreateHeader("Equipment_Header", container, CommonStrings.Equipment:GetString())
-
-    local grid = container:AddChild("Equipment_Grid", "GenericUI_Element_Grid")
-    grid:SetGridSize(6, -1)
-
-    local columns = math.min(QuickExamine.GetContainerWidth() / Equipment.SKILL_ICON_SIZE - 2, Equipment.MAX_COLUMNS)
-    grid:SetCenterInLists(true)
-    grid:SetGridSize(columns, -1) -- Prefer the set amount of columns, use container size as fallback.
+    local columns = self:GetGridSize()[1]
+    local grid = self.Grid
 
     local items = Character.GetEquippedItems(entity)
     local orderedItems = {} -- Order items by slot enum value.
@@ -194,8 +187,12 @@ function Widget:Render(entity)
         local x, y = slot:GetPosition()
         slot:SetPosition(x + missingSlots * slotWidth / 2, y)
     end
+end
 
-    self:CreateDivider("EquipmentDivider", container)
+---@override
+function Widget:GetGridSize()
+    -- Prefer the set amount of columns, and use container size as fallback.
+    return V(math.min(QuickExamine.GetContainerWidth() / Equipment.SKILL_ICON_SIZE - 2, Equipment.MAX_COLUMNS), -1)
 end
 
 ---------------------------------------------

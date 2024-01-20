@@ -592,6 +592,13 @@ function Text.GetTranslatedString(handle, fallBack)
     return str
 end
 
+---Resolves a translated string, or returns the string itself if the passed parameter is already of string type.
+---Useful to reduce verbosity in situations where a text variable might be a TSK or a raw lua string.
+---@param str TextLib_TranslatedString|string
+function Text.Resolve(str)
+    return type(str) == "table" and str:GetString() or str
+end
+
 ---Returns the handle for a string key.
 ---@param stringKey string
 ---@return TranslatedStringHandle?
