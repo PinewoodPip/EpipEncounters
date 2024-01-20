@@ -66,7 +66,7 @@ function UI._SetupFishGrid()
 
         -- TODO rework Generic to use new tooltip lib
         -- icon.Tooltip = {
-        --     Type = "Formatted",
+        --     Type = "Custom",
         --     Data = fish:GetTooltip(),
         -- }
         icon.Events.MouseOver:Subscribe(function (_)

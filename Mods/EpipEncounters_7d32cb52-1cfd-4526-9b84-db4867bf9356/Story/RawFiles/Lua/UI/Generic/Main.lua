@@ -256,7 +256,7 @@ function Generic._OnElementShowTooltip(ev, id, x, y, width, height, _, align)
     if type(element.Tooltip) == "string" then
         ui:ExternalInterfaceCall("showTooltip", element.Tooltip, mouseX, mouseY, width, height, "left") -- TODO custom align
     else
-        if element.Tooltip.Type == "Formatted" then
+        if element.Tooltip.Type == "Custom" then
             -- TODO workaround for Character Creation context
             Client.UI.Hotbar:ExternalInterfaceCall("showSkillTooltip", Client.UI.Hotbar:GetRoot().hotbar_mc.characterHandle, "Teleportation_FreeFall", mouseX, mouseY, width, height)
         elseif element.Tooltip.Type == "Skill" then
@@ -273,7 +273,7 @@ function Generic._OnTooltip(char, skill, tooltip)
     if Generic.CurrentTooltipElement then
         local element = Generic.CurrentTooltipElement.UI:GetElementByID(Generic.CurrentTooltipElement.ID)
 
-        if element.Tooltip.Type == "Formatted" then
+        if element.Tooltip.Type == "Custom" then
             tooltip.Data = table.deepCopy(element.Tooltip.Data) or {}
         end
     end

@@ -38,7 +38,7 @@ function Widget:Render(entity)
         local icon = artifactContainer:AddChild(artifact.ID .. "icon", "GenericUI_Element_IggyIcon")
         icon:SetIcon(template.Icon, 32, 32)
         icon.Tooltip = {
-            Type = "Formatted",
+            Type = "Custom",
             Data = artifact:GetPowerTooltip(),
         }
     end
