@@ -17,7 +17,7 @@ local ArtifactsDisplay = {
         },
         Setting_Enabled_Description = {
             Handle = "h92f5ec36g9d74g4eccg951eg9d9620dda934",
-            Text = "Shows the equipped artifacts of characters.",
+            Text = "If enabled, the Quick Examine UI will show the equipped artifacts of characters.",
             ContextDescription = "Setting tooltip",
         },
     },

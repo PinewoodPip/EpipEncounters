@@ -22,7 +22,7 @@ local Equipment = {
         },
         Setting_Enabled_Description = {
             Handle = "h130006d8gccb5g4164g87aeged4685812627",
-            Text = "If enabled, the target character's equipped items will be shown on the Quick Examine UI.",
+            Text = "If enabled, the Quick Examine UI will show the equipped items of player characters.",
             ContextDescription = "Setting tooltip for equipped items widget",
         },
         Setting_SlotOrder_Name = {

@@ -13,7 +13,7 @@ local Statuses = {
         },
         Setting_Enabled_Description = {
             Handle = "h70e80784gadb9g4d5agae96gc219142a7d43",
-            Text = "Shows the active, visible statuses of characters.",
+            Text = "If enabled, the Quick Examine UI will show the active and visible statuses of characters.",
             ContextDescription = "Setting tooltip",
         },
     },

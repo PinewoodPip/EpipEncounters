@@ -16,7 +16,7 @@ local Skills = {
         },
         Setting_Enabled_Description = {
             Handle = "h41f3c758g87e9g4caegb1eeg5e324bd1564a",
-            Text = "Shows the skills of player characters and their cooldowns. Does not apply to non-player characters.",
+            Text = "If enabled, the Quick Examine UI will show the skills of player characters and their cooldowns.",
             ContextDescription = "Setting tooltip",
         },
     },
