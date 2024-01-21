@@ -18,18 +18,25 @@ local AstrologerFix = {
     Settings = {},
     TranslatedStrings = {
         Setting_Enabled_Name = {
-           Handle = "h6dcae9c5gcbfcg4f06g9329gac12ad711d18",
-           Text = "Fix Astrologer's Gaze / Far Out Man range",
-           ContextDescription = "Setting name",
+            Handle = "h6dcae9c5gcbfcg4f06g9329gac12ad711d18",
+            Text = "Fix %s range",
+            ContextDescription = [[Setting name; param is name of the Far Out Dude talent (Astrologer's Gaze in EE)]],
+            FormatOptions = {
+                FormatArgs = {Character.Talents.FaroutDude:GetName()},
+            },
         },
         Setting_Enabled_Description = {
-           Handle = "hba6d14b0gdbb9g4b00g8036ga14b329a1960",
-           Text = "If enabled, zone and cone-type skills will display the correct range if the character has Astrologer's Gaze / Far Out Man.",
-           ContextDescription = "Setting tooltip",
+            Handle = "hba6d14b0gdbb9g4b00g8036ga14b329a1960",
+            Text = "If enabled, zone and cone-type skills will display the correct range if the character has %s.",
+            ContextDescription = [[Setting tooltip; param is name of the Far Out Dude talent (Astrologer's Gaze in EE)]],
+            FormatOptions = {
+                FormatArgs = {Character.Talents.FaroutDude:GetName()},
+            },
         },
     }
 }
 Epip.RegisterFeature("TooltipAdjustments.AstrologerFix", AstrologerFix)
+local TSK = AstrologerFix.TranslatedStrings
 
 ---------------------------------------------
 -- SETTINGS
@@ -37,8 +44,8 @@ Epip.RegisterFeature("TooltipAdjustments.AstrologerFix", AstrologerFix)
 
 AstrologerFix.Settings.Enabled = AstrologerFix:RegisterSetting("Enabled", {
     Type = "Boolean",
-    Name = AstrologerFix.TranslatedStrings.Setting_Enabled_Name,
-    Description = AstrologerFix.TranslatedStrings.Setting_Enabled_Description,
+    Name = TSK.Setting_Enabled_Name,
+    Description = TSK.Setting_Enabled_Description,
     DefaultValue = true,
 })
 
