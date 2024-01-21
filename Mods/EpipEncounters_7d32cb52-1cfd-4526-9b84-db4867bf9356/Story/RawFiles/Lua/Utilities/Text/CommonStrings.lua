@@ -229,6 +229,10 @@ Text.CommonStrings.Modifier = Text.RegisterTranslatedString({
     Handle = "h1e8ef1aeg06dag4d82gba3bg7e4cfd31f36f",
     Text = "Modifier",
 })
+Text.CommonStrings.Statuses = Text.RegisterTranslatedString({
+    Handle = "h7187736egcc52g416dga221gc4f17ca41160",
+    Text = "Statuses",
+})
 
 ---------------------------------------------
 -- BRANDING

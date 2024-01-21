@@ -8,7 +8,10 @@ local QuickExamine = Epip.GetFeature("Feature_QuickExamine")
 ---@class Features.QuickExamine.Widgets.Grid : Features.QuickExamine.Widget
 ---@field HEADER_LABEL TextLib_TranslatedString|string
 ---@field Grid GenericUI_Element_Grid Created automatically.
-local Widget = {}
+local Widget = {
+    GRID_MARGIN = 22, -- Margin used for the default `GetGridSize()` implementation.
+    ELEMENT_SIZE = 40, -- No implicit use; provides a baseline size for the grid's elements for consistency across widgets.
+}
 QuickExamine:RegisterClass("Features.QuickExamine.Widgets.Grid", Widget, {"Features.QuickExamine.Widget"})
 
 ---------------------------------------------
@@ -16,10 +19,11 @@ QuickExamine:RegisterClass("Features.QuickExamine.Widgets.Grid", Widget, {"Featu
 ---------------------------------------------
 
 ---Returns the size of the grid to use.
----@abstract
+---@virtual
 ---@return Vector2
----@diagnostic disable-next-line: missing-return
-function Widget:GetGridSize() QuickExamine:Error("Widgets.Grid:GetGridSize", "Not implemented") end
+function Widget:GetGridSize()
+    return Vector.Create((QuickExamine.GetContainerWidth() - self.GRID_MARGIN * 1) // self.ELEMENT_SIZE, -1)
+end
 
 ---Renders the elements onto the grid.
 ---Called after initializing the header and grid of the widget.

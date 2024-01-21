@@ -41,12 +41,12 @@ ArtifactsDisplay.Settings.Enabled = ArtifactsDisplay:RegisterSetting("Enabled", 
 -- WIDGET
 ---------------------------------------------
 
----@type Features.QuickExamine.Widget
+---@type Features.QuickExamine.Widgets.Grid
 local Widget = {
-    ID = "ArtifactsDisplay",
+    HEADER_LABEL = TSK.Header,
     Setting = ArtifactsDisplay.Settings.Enabled,
 }
-ArtifactsDisplay:RegisterClass("Features.QuickExamine.Widgets.Artifacts.Widget", Widget, {"Features.QuickExamine.Widget"})
+ArtifactsDisplay:RegisterClass("Features.QuickExamine.Widgets.Artifacts.Widget", Widget, {"Features.QuickExamine.Widgets.Grid"})
 QuickExamine.RegisterWidget(Widget)
 
 ---@override
@@ -55,26 +55,18 @@ function Widget:CanRender(entity)
 end
 
 ---@override
-function Widget:Render(entity)
-    local container = QuickExamine.GetContainer()
+function Widget:RenderGridElements(entity)
     local artifacts = Artifact.GetEquippedPowers(entity)
-
-    self:CreateHeader("QuickExamine_Artifacts_Header", container, TSK.Header:GetString())
-
-    local artifactContainer = container:AddChild("QuickExamine_Artifacts", "GenericUI_Element_HorizontalList")
-    artifactContainer:SetSize(QuickExamine.GetContainerWidth(), 35)
-    artifactContainer:SetCenterInLists(true)
+    local grid = self.Grid
 
     for _,artifact in ipairs(artifacts) do
         local template = Ext.Template.GetTemplate(string.match(artifact.ItemTemplate, Data.Patterns.GUID)) ---@cast template ItemTemplate
 
-        local icon = artifactContainer:AddChild(artifact.ID .. "icon", "GenericUI_Element_IggyIcon")
-        icon:SetIcon(template.Icon, 32, 32)
+        local icon = grid:AddChild(artifact.ID .. "icon", "GenericUI_Element_IggyIcon")
+        icon:SetIcon(template.Icon, self.ELEMENT_SIZE, self.ELEMENT_SIZE)
         icon.Tooltip = {
             Type = "Custom",
             Data = artifact:GetPowerTooltip(),
         }
     end
-
-    self:CreateDivider("ArtifactsDivider", container)
 end

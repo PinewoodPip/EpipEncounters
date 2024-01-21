@@ -7,7 +7,6 @@ local V = Vector.Create
 
 ---@class Features.QuickExamine.Widgets.Equipment : Feature
 local Equipment = {
-    SKILL_ICON_SIZE = 40,
     MAX_COLUMNS = 6, -- Maximum amount of columns in the grid.
     SLOT_ORDER_SETTING_VALUES = {
         WEAPONS_AND_TRINKETS_FIRST = "WeaponsAndTrinketsFirst",
@@ -101,32 +100,6 @@ function Equipment.GetSlots()
     }).Slots
 end
 
----Renders an item onto a container.
----@param container GenericUI_Element_Grid
----@param char EclCharacter
----@param item EclItem Must be equipped.
-function Equipment._RenderItem(container, char, item)
-    local element = HotbarSlot.Create(QuickExamine.UI, "ItemSlot_" .. tostring(Item.GetEquippedSlot(item)), container)
-    local movieClip = element.SlotElement:GetMovieClip()
-    local ownerHandle = char.Handle
-
-    element:SetUpdateDelay(-1)
-    element:SetUsable(false)
-    element:SetItem(item)
-    element:SetEnabled(true)
-    element:SetCooldown(0)
-    element:SetIcon(Item.GetIcon(item))
-    movieClip.width = Equipment.SKILL_ICON_SIZE
-    movieClip.height = Equipment.SKILL_ICON_SIZE
-
-    element.Hooks.GetTooltipData:Subscribe(function (ev)
-        local position = V(QuickExamine.UI:GetUI():GetPosition())
-
-        ev.Owner = Character.Get(ownerHandle)
-        ev.Position = position - V(420, 0) -- Rough width of tooltip UI
-    end)
-end
-
 ---------------------------------------------
 -- WIDGET
 ---------------------------------------------
@@ -157,6 +130,30 @@ function Widget:CanRender(entity)
     end) ~= nil
 end
 
+---Renders an item onto the grid.
+---@param char EclCharacter
+---@param item EclItem Must be equipped.
+function Widget:RenderItem(char, item)
+    local grid = self.Grid
+    local element = HotbarSlot.Create(QuickExamine.UI, "ItemSlot_" .. tostring(Item.GetEquippedSlot(item)), grid)
+    local ownerHandle = char.Handle
+
+    element:SetUpdateDelay(-1)
+    element:SetUsable(false)
+    element:SetItem(item)
+    element:SetEnabled(true)
+    element:SetCooldown(0)
+    element:SetIcon(Item.GetIcon(item))
+    element:SetSize(self.ELEMENT_SIZE, self.ELEMENT_SIZE)
+
+    element.Hooks.GetTooltipData:Subscribe(function (ev)
+        local position = V(QuickExamine.UI:GetUI():GetPosition())
+
+        ev.Owner = Character.Get(ownerHandle)
+        ev.Position = position - V(420, 0) -- Rough width of tooltip UI
+    end)
+end
+
 ---@override
 function Widget:RenderGridElements(entity)
     ---@cast entity EclCharacter
@@ -174,7 +171,7 @@ function Widget:RenderGridElements(entity)
         return slotOrder[slotA] < slotOrder[slotB]
     end)
     for _,item in ipairs(orderedItems) do
-        Equipment._RenderItem(grid, entity, item)
+        self:RenderItem(entity, item)
     end
 
     -- Center the second row if not all columns are filled
@@ -192,7 +189,7 @@ end
 ---@override
 function Widget:GetGridSize()
     -- Prefer the set amount of columns, and use container size as fallback.
-    return V(math.min(QuickExamine.GetContainerWidth() / Equipment.SKILL_ICON_SIZE - 2, Equipment.MAX_COLUMNS), -1)
+    return V(math.min(QuickExamine.GetContainerWidth() / self.ELEMENT_SIZE - 2, Equipment.MAX_COLUMNS), -1)
 end
 
 ---------------------------------------------

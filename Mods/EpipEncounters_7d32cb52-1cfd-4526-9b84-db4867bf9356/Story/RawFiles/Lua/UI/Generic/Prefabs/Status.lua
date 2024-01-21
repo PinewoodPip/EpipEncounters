@@ -38,9 +38,11 @@ Generic.RegisterPrefab("GenericUI_Prefab_Status", Status)
 ---@param parent (GenericUI_Element|string)?
 ---@param entity EclCharacter|EclItem
 ---@param status EclStatus
+---@param size Vector2? Defaults to `SIZE`.
 ---@return GenericUI_Prefab_Status
-function Status.Create(ui, id, parent, entity, status)
+function Status.Create(ui, id, parent, entity, status, size)
     local element = Status:_Create(ui, id) ---@cast element GenericUI_Prefab_Status
+    element.SIZE = size or Status.SIZE
 
     local root = element:CreateElement("Container", "GenericUI_Element_TiledBackground", parent)
     root:SetBackground("Black", element.SIZE:unpack())
@@ -72,7 +74,7 @@ function Status.Create(ui, id, parent, entity, status)
         local statusObj = Character.GetStatusByHandle(char, element.StatusHandle)
 
         if statusObj then
-            Client.Tooltip.ShowStatusTooltip(statusObj)
+            Client.Tooltip.ShowStatusTooltip(statusObj) -- TODO allow setting options
         end
     end)
     root.Events.MouseOut:Subscribe(function (_)

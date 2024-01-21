@@ -37,11 +37,12 @@ Statuses.Settings.Enabled = Statuses:RegisterSetting("Enabled", {
 -- WIDGET
 ---------------------------------------------
 
----@type Features.QuickExamine.Widget
+---@type Features.QuickExamine.Widgets.Grid
 local Widget = {
+    HEADER_LABEL = Text.CommonStrings.Statuses,
     Setting = Statuses.Settings.Enabled,
 }
-Statuses:RegisterClass("Features.QuickExamine.Widgets.Statuses.Widget", Widget, {"Features.QuickExamine.Widget"})
+Statuses:RegisterClass("Features.QuickExamine.Widgets.Statuses.Widget", Widget, {"Features.QuickExamine.Widgets.Grid"})
 QuickExamine.RegisterWidget(Widget)
 
 ---@override
@@ -50,19 +51,14 @@ function Widget:CanRender(entity)
 end
 
 ---@override
-function Widget:Render(entity)
+function Widget:RenderGridElements(entity)
     local char = entity ---@type EclCharacter
-    local container = QuickExamine.GetContainer()
-
-    local grid = container:AddChild("Statuses_Grid", "GenericUI_Element_Grid")
-    grid:SetGridSize(QuickExamine.GetContainerWidth() // StatusPrefab.SIZE[1] - 1, -1)
-    grid:SetCenterInLists(true)
 
     local statuses = char:GetStatusObjects() ---@type EclStatus[]
     for i,status in ipairs(statuses) do
         if Stats.IsStatusVisible(status) then
-            local _ = StatusPrefab.Create(QuickExamine.UI, status.StatusId .. "_" .. tostring(i), grid, char, status)
+            local _ = StatusPrefab.Create(QuickExamine.UI, status.StatusId .. "_" .. tostring(i), self.Grid, char, status, Vector.Create(self.ELEMENT_SIZE, self.ELEMENT_SIZE))
         end
     end
-    grid:RepositionElements()
+    self.Grid:RepositionElements() -- Necessary due to how Statuses initialize.
 end

@@ -355,6 +355,12 @@ function Slot:GetRootElement()
     return self.SlotElement
 end
 
+---@override
+function Slot:SetSize(width, height)
+    local mc = self.SlotElement:GetMovieClip()
+    mc.width, mc.height = width, height -- TODO support this within the element
+end
+
 ---Shows the tooltip for the slot's held object.
 function Slot:_ShowTooltip()
     local data = self.Hooks.GetTooltipData:Throw({
