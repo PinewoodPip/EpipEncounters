@@ -1,4 +1,12 @@
 
+---------------------------------------------
+-- Displays extra information within status tooltips:
+-- - Status source (including from items)
+-- - Flanker count for FLANKED
+-- - Status Type (in developer mode)
+-- Additionally, allows centering the camera to the status source by left-clicking while a status tooltip is visible.
+---------------------------------------------
+
 local TooltipLib = Client.Tooltip
 local Input = Client.Input
 
@@ -25,6 +33,11 @@ TSK.Adjustment_StatusImprovements_Name = TooltipAdjustments:RegisterTranslatedSt
 TSK.Adjustment_StatusImprovements_Description = TooltipAdjustments:RegisterTranslatedString("h2095b033g942eg400agb596g45d9ba3294c7", {
     Text = "If enabled, status tooltips will show the name of the character that applied the status, if any. Also allows you to click statuses to center the camera on the source character.",
     ContextDescription = "Setting tooltip",
+})
+
+TSK.Adjustment_StatusImprovements_FlankedEnemyCount = TooltipAdjustments:RegisterTranslatedString("hd2f56e74gcb60g4d26g9243g0a44a26672c2", {
+    Text = "Flanked by %s enemies.",
+    ContextDescription = "Tooltip for Flanked status",
 })
 
 ---------------------------------------------
@@ -107,6 +120,17 @@ Input.Events.MouseButtonPressed:Subscribe(function (ev)
                 Client.UI.PlayerInfo:ExternalInterfaceCall("centerCamOnCharacter", Ext.UI.HandleToDouble(sourceChar.Handle))
             end
         end
+    end
+end)
+
+-- Show amount of flankers for the FLANKED status.
+TooltipLib.Hooks.RenderStatusTooltip:Subscribe(function (ev)
+    if ev.Status.StatusType == "FLANKED" then
+        local char = ev.Character
+        ev.Tooltip:InsertElement({
+            Type = "StatusDescription",
+            Label = TSK.Adjustment_StatusImprovements_FlankedEnemyCount:Format(char.Stats.Flanked)
+        })
     end
 end)
 
