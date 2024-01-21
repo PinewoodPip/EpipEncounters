@@ -60,6 +60,11 @@ local EpipSettingsMenu = {
            Text = "Simplified Chinese translation by Ainsky",
            ContextDescription = "Displayed at the bottom of the general Epip settings tab",
         },
+        TranslationCredits_French = {
+            Handle = "h5b1b94ebg3d90g47e5g8b29g9f75c0aa6cd6",
+            Text = "French translation by Drayander",
+            ContextDescription = "Displayed at the bottom of the general Epip settings tab",
+        },
         Tab_Hotbar = {
            Handle = "h37985411gc95dg46a1g858bg021ed39e43cd",
            Text = "Hotbar",
@@ -152,6 +157,9 @@ local tabs = {
                 Size = 19,
             })},
             {Type = "Label", Label = Text.Format(TSK.TranslationCredits_SimplifiedChinese:GetString(), {
+                Size = 19,
+            })},
+            {Type = "Label", Label = Text.Format(TSK.TranslationCredits_French:GetString(), {
                 Size = 19,
             })},
 

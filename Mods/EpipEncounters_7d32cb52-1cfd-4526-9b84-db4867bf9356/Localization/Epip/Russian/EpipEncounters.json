@@ -1536,7 +1536,7 @@
     },
     "hd15285dag87d6g450cg8f17gd663d87a474e": {
       "ReferenceText": "Chain/Unchain",
-      "TranslatedText": "Соединить/разъединить отряд"
+      "TranslatedText": "Соед/разъед. отряд"
     },
     "h4ac91ab1gcde9g4cd5gb8a3gc19b15f3dd4b": {
       "ReferenceText": "Pyramids",
@@ -2056,11 +2056,11 @@
     },
     "h9cd1245egdfdeg4cbbgbae7gfa179a954eac": {
       "ReferenceText": "If enabled, the health bar when you hover over characters and items will show their treasure table (if relevant) as well as the chance of getting an artifact. For characters, this requires holding the Show Sneak Cones key (shift by default)",
-      "TranslatedText": "Если включено, при наведении, под панелью здоровья будет показываться вариант лута с шансом получения артефакта. Для отображения у персонажей требуется зажать Shift."
+      "TranslatedText": "Если включено, при наведении, под панелью здоровья будет показываться вариант добычи (treasure table) с шансом получения артефакта. Для отображения у персонажей требуется зажать Shift."
     },
     "hcd9974f8g16cfg4cbfga08agbf28ee5b55eb": {
       "ReferenceText": "Show loot drops in health bar",
-      "TranslatedText": "Показывать выпадающий лут под панелью здоровья"
+      "TranslatedText": "Показывать вариант добычи под панелью здоровья"
     },
     "hc8131fa1g3bf9g4773gb244gcdf8b1b45f7c": {
       "ReferenceText": "%s is an innate skill; it might be unwise to rid myself of it.",

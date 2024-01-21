@@ -1,0 +1,690 @@
+{
+  "FileFormatVersion": 0,
+  "ModTable": "EpipEncounters",
+  "TranslatedStrings": {
+    "he043b9f9gfc52g4c39ga4f1gc53ea4fcd5ce": {
+      "ReferenceText": "Add skill IDs to this setting to blacklist them from being animation-cancelled.",
+      "TranslatedText": "Ajouter des compétences à cette option les excluera de l'annulation d'animation"
+    },
+    "h3bf7ae10g24e1g4f50gbc69g71a8b95b1a51": {
+      "ReferenceText": "Animation Cancelling",
+      "TranslatedText": "Annulation d'animation"
+    },
+    "ha50d50eag4185g4e10g82fdg19548a304b32": {
+      "ReferenceText": "Blacklisted Skills",
+      "TranslatedText": "Compétences exclues"
+    },
+    "he5c3a752gd8bag48fagb611g35b5d23bef9d": {
+      "ReferenceText": "Cancels your controlled character's spell animations after their effects execute.<br><br>%s",
+      "TranslatedText": "Annule l'animation des sorts de votre personnage après que les effets aient été appliqués"
+    },
+    "he9f82492g81f0g4e53g9eefg731a6f800db8": {
+      "ReferenceText": "Experimental! May cause issues with certain skills. Please report any!<br>Server-side option is the most reliable at the moment.",
+      "TranslatedText": "Expérimental ! Peut provoquer des problèmes avec certaines compétences. Merci de faire remonter tout problème rencontré !"
+    },
+    "h8277c4cdg8990g406fga0b5gef3f0d386620": {
+      "ReferenceText": "If enabled, the animation for picking up items through their world tooltip will be cancelled, allowing multiple items to be picked up faster.",
+      "TranslatedText": "Si activée, cette option annulera l'animation de ramassage des objet via leur infobulle, permettant de ramasser plus d'objet plus rapidement"
+    },
+    "hf832b7ceg2e16g454dg8b5cg2ac87a0f7681": {
+      "ReferenceText": "Speed up world tooltip item pick-ups",
+      "TranslatedText": "Accélération du ramassage des objets via infobulle"
+    },
+    "hb98d5bd4g800cg4d76gb941g7c3c59bd9553": {
+      "ReferenceText": "Show B/H",
+      "TranslatedText": "Afficher B/H"
+    },
+    "he085d18bge863g4bf2ga811g562dcc358d76": {
+      "ReferenceText": "Shows B/H amounts over the heads of characters in combat.",
+      "TranslatedText": "Afficher le niveau de B/H au dessus des personnages en combat"
+    },
+    "h9f5438ffg5024g4264gaaa2gef122c54e518": {
+      "ReferenceText": "Are you sure you want to start a new game?",
+      "TranslatedText": "Es-tu sûr de vouloir commencer une nouvelle partie ?"
+    },
+    "h833e3d98g6e6bg4cfag9c23g1bcd1c8e9de1": {
+      "ReferenceText": "Bedazzled",
+      "TranslatedText": "Ébloui"
+    },
+    "h3166017ag50b9g4943g8ae9g5335c23c58e4": {
+      "ReferenceText": "Game Over",
+      "TranslatedText": "Fin de la partie"
+    },
+    "ha1afe7c2g4d97g43b6g823eg03bf25788dbd": {
+      "ReferenceText": "High-Score",
+      "TranslatedText": "Meilleurs scores"
+    },
+    "hf254ab01gbb16g4c83ga1e5gc415eaef1acf": {
+      "ReferenceText": "New high-score! %s points",
+      "TranslatedText": "Nouveau meilleur score ! %s points"
+    },
+    "h1b460fc0ge72dg4879g9886g1dc640a782cb": {
+      "ReferenceText": "No more valid moves on the board!",
+      "TranslatedText": "Aucun mouvement possible sur le plateau !"
+    },
+    "h4bc543cag5f19g4e91gbb76gc3a18177874b": {
+      "ReferenceText": "Score             %s\nHigh-Score %s",
+      "TranslatedText": "Score             %s\nMeilleur score %s"
+    },
+    "h54d9066eg87bdg439fg92f9g7027970af6ca": {
+      "ReferenceText": "Camera",
+      "TranslatedText": "Caméra"
+    },
+    "h3c77115cga69dg4c67g880bgd314b8072f7c": {
+      "ReferenceText": "Camera Angles",
+      "TranslatedText": "Orientation de la caméra"
+    },
+    "hec25a517g9521g47e3g8f74gfa658861a320": {
+      "ReferenceText": "Controls the FOV of the camera. Low/high values may cause issues with dynamic shadows.<br>Default is 45.",
+      "TranslatedText": "Contrôle le champ de vision de la caméra. Des valeurs trop hautes ou trop basses peuvent provoquer des problèmes d'ombres. <br> Valeur par défaut : 45"
+    },
+    "h97ac5f1fg0ae8g490dg9050gb5f8fe4025a4": {
+      "ReferenceText": "Controls the maximum distance the camera can zoom out in controller mode.<br>Default is 13.",
+      "TranslatedText": "Contrôle la distance maximale de recul pour la caméra en mode manette. <br> Valeur par défaut : 13"
+    },
+    "h8403161cgb78fg453fg9676gd4c14f3afd29": {
+      "ReferenceText": "Controls the maximum distance the camera can zoom out in regular gameplay.<br>Default is 19.",
+      "TranslatedText": "Contrôle la distance maximale de recul pour la caméra en vue normale. <br> Valeur par défaut : 19"
+    },
+    "h22447dfage02dg4c93gbf2agded54810ce36": {
+      "ReferenceText": "Controls the maximum distance the camera can zoom out in tactical view mode.<br>Default is 25.",
+      "TranslatedText": "Contrôle la distance maximale de recul pour la caméra en vue tactique. <br> Valeur par défaut : 25"
+    },
+    "h3af2fabcg24ffg4e29ga965g69180c641040": {
+      "ReferenceText": "Controls the maximum distance the camera can zoom out while it is tracking an entity.<br>Default is 17.",
+      "TranslatedText": "Contrôle la distance maximale de recul pour la caméra lorsque qu'un personnage est suivi. <br> Valeur par défaut : 17"
+    },
+    "h265f89a4g9e80g420egb7adgd27aced5697b": {
+      "ReferenceText": "Field of View",
+      "TranslatedText": "Champ de vision"
+    },
+    "h804e5cefgef0eg4351gb19cge60e92ca4297": {
+      "ReferenceText": "General",
+      "TranslatedText": "Général"
+    },
+    "haa0297d1ga978g4be1gb3b4g7295b9451b31": {
+      "ReferenceText": "Maximum Distance",
+      "TranslatedText": "Distance maximale"
+    },
+    "h3e9e4282gb66cg4498g83e0g8b79a4cec500": {
+      "ReferenceText": "Maximum Distance (controller mode)",
+      "TranslatedText": "Distance maximale (mode manette)"
+    },
+    "h6270c4d7g0531g453agbae3g2503fb8c3c59": {
+      "ReferenceText": "Maximum Distance (locked-on)",
+      "TranslatedText": "Distance maximale (mode suivi de personnage)"
+    },
+    "h1ec057edg09a1g413dgaefdgaf7942d579ce": {
+      "ReferenceText": "Maximum Distance (tactical view)",
+      "TranslatedText": "Distance maximale (vue tactique)"
+    },
+    "h3ddc3759g3f70g4ac5g9401g76ced6258d7a": {
+      "ReferenceText": "Reset to defaults",
+      "TranslatedText": "Réinitialiser aux paramètres par défaut"
+    },
+    "h24797af2gde0ag48cdgb741gec2049e1c631": {
+      "ReferenceText": "Restores the angle settings to default values.",
+      "TranslatedText": "Réinitialiser le paramètre d'orientation de la caméra par défaut"
+    },
+    "h1900a04ag7611g4d34g8975g89a0dac84c56": {
+      "ReferenceText": "Displays all Epic Encounters Artifacts.",
+      "TranslatedText": "Afficher tous les artéfacts du mod \"Epic Encounters\""
+    },
+    "hde789445g157eg4ecbg962bg1cb03cdfdc80": {
+      "ReferenceText": "View all sort of information from enabled mods.",
+      "TranslatedText": "Afficher diverses informations sur les mods activés"
+    },
+    "he5fd06c2gba4dg4ec0g9c66gc6d0847cc6d9": {
+      "ReferenceText": "By Cursor",
+      "TranslatedText": "A coté du curseur"
+    },
+    "hcf8d7869gc200g463bgb0dbg81c686990462": {
+      "ReferenceText": "Determines the position of skill tooltips within the UI.",
+      "TranslatedText": "Détermine la position de l'infobulle dans l'interface"
+    },
+    "h5e83b5f4g33f8g45e6ga968gecd0cad8d465": {
+      "ReferenceText": "Has Skillbook",
+      "TranslatedText": "Il existe un livre de compétence"
+    },
+    "he6042694g235ag4c68gbcccgb1a4769ae7bd": {
+      "ReferenceText": "No Skillbook",
+      "TranslatedText": "Pas de livre de compétence"
+    },
+    "hf2fe60ffgd37bg4808g9f2dgad70b0ccffdd": {
+      "ReferenceText": "On Left Side",
+      "TranslatedText": "Coté gauche"
+    },
+    "h7eaa3d1dg94a2g4136g969dg1ba9f6796fca": {
+      "ReferenceText": "Show Learnt",
+      "TranslatedText": "Montrer les compétences apprises"
+    },
+    "hb1aa6659g9385g4966g9b9fga77082927a94": {
+      "ReferenceText": "Show Memorized",
+      "TranslatedText": "Montrer les compétences mémorisées"
+    },
+    "h254f04a8gbaceg4970g97bdga522f285b929": {
+      "ReferenceText": "Show Not Learnt",
+      "TranslatedText": "Montrer les compétences non apprises"
+    },
+    "ha5ab3810g9aa9g4168g89fdgbfd0ee2c4c01": {
+      "ReferenceText": "Shows skills available to players.",
+      "TranslatedText": "Montrer les compétences disponibles aux joueurs"
+    },
+    "he415fd76g51bfg4b25g955cg59c3165c73ba": {
+      "ReferenceText": "Skillbook",
+      "TranslatedText": "Livre de compétence"
+    },
+    "h4b557dbeg4eefg4284gba11gef2cf523830f": {
+      "ReferenceText": "AP",
+      "TranslatedText": "PA"
+    },
+    "h5025c292g5fd8g46fegac5bgee45a7acc134": {
+      "ReferenceText": "Ability School",
+      "TranslatedText": "École de magie"
+    },
+    "hce2c434eg0377g425eg82ceg3948a01e8ee4": {
+      "ReferenceText": "Accept",
+      "TranslatedText": "Accepter"
+    },
+    "hd6db0ca4g7edag4067g9635g88ad68b24784": {
+      "ReferenceText": "Active",
+      "TranslatedText": "Actif"
+    },
+    "h124f507dge140g406egac22gcb4492950a6e": {
+      "ReferenceText": "Adaptation",
+      "TranslatedText": "Adaptation"
+    },
+    "ha588e93ag94d4g4b21gbd50g4863aea40d21": {
+      "ReferenceText": "Aerotheurge",
+      "TranslatedText": "Aéromancien"
+    },
+    "hff7beb36g46fbg40d9gb13cg2f8680af5b06": {
+      "ReferenceText": "Always",
+      "TranslatedText": "Toujours"
+    },
+    "h3b607ec3gf978g48ccgbb02g96aba3dd1430": {
+      "ReferenceText": "Amulet",
+      "TranslatedText": "Amulette"
+    },
+    "hcb8d99d9g28aeg4310gba17g4561e98b4b8e": {
+      "ReferenceText": "Any",
+      "TranslatedText": "Tous/Toutes"
+    },
+    "h67f7cc80g5e7eg4e4eg85e4gb451cc2cab48": {
+      "ReferenceText": "Applies only to EE.",
+      "TranslatedText": "S'applique seulement au mod \"EE\""
+    },
+    "h67b0f5b2gce06g4eefgbc69g36069a35bb3c": {
+      "ReferenceText": "Apply",
+      "TranslatedText": "Appliquer"
+    },
+    "hbcd07fa8gaaa1g4571gac0eg8a20d7955224": {
+      "ReferenceText": "Armor",
+      "TranslatedText": "Armure"
+    },
+    "h37567161ge719g4466g96e1gb6fc29c40e6c": {
+      "ReferenceText": "Armor Type",
+      "TranslatedText": "Type d'armure"
+    },
+    "h09ce9aebgd1fbg4e42gadc9gacb2ce6383f6": {
+      "ReferenceText": "Artifact",
+      "TranslatedText": "Artéfact"
+    },
+    "h29f2c933gb1a3g4f4ag89d4gcca71ffeba51": {
+      "ReferenceText": "Artifacts",
+      "TranslatedText": "Artéfacts"
+    },
+    "h7f4d1a8egfe38g4a39gb104g57738c21fd93": {
+      "ReferenceText": "Axe",
+      "TranslatedText": "Hache"
+    },
+    "hbe579ebcg3585g4373g8d80g99de57eb1e7a": {
+      "ReferenceText": "Back",
+      "TranslatedText": "Dos"
+    },
+    "h0441f7fegeeebg4aedgb1a8ge5ef84a7b400": {
+      "ReferenceText": "Belt",
+      "TranslatedText": "Ceinture"
+    },
+    "h4ec86ffdge0d0g426cgb3b4g6112e887b9d5": {
+      "ReferenceText": "Benevolence",
+      "TranslatedText": "Bienveillance"
+    },
+    "ha9646fd9ge69fg46d2g9fc2gc9442c28041c": {
+      "ReferenceText": "Books",
+      "TranslatedText": "Livres"
+    },
+    "ha8c99111g67d2g4321g8e8cg92282405ebe8": {
+      "ReferenceText": "Boots",
+      "TranslatedText": "Bottes"
+    },
+    "heb0326c2g21d3g43b6gbc73ge64a25c6a2b3": {
+      "ReferenceText": "Bow",
+      "TranslatedText": "Arc"
+    },
+    "h5df736bfgcdc9g48e4ga09ag1967abc64832": {
+      "ReferenceText": "Breast",
+      "TranslatedText": "Torse"
+    },
+    "hea4b1852geca7g46f0ga067g33ca3ec8159c": {
+      "ReferenceText": "Camera",
+      "TranslatedText": "Caméra"
+    },
+    "h5a50b777gc16cg4106gbde8gf9dd48954c7f": {
+      "ReferenceText": "Cancel",
+      "TranslatedText": "Annuler"
+    },
+    "h42bb0e3cgc574g4f49gbe27gbbba9ecd3ac1": {
+      "ReferenceText": "Celestial",
+      "TranslatedText": "Céleste"
+    },
+    "h2e29d154g3de9g4a3fga340g6ac1ff21e1b3": {
+      "ReferenceText": "Centurion",
+      "TranslatedText": "Centurion"
+    },
+    "h6108a8b5gd998g4138g9ce5g12cc0695be7f": {
+      "ReferenceText": "Chat",
+      "TranslatedText": "Chat"
+    },
+    "h5f73023dg23f4g4b43g90e6gb2e91b6a20f1": {
+      "ReferenceText": "Clear",
+      "TranslatedText": "Vider"
+    },
+    "ha8000c0eg67d5g4398g8890gaf8d98931d1b": {
+      "ReferenceText": "Client-side",
+      "TranslatedText": "Coté-client"
+    },
+    "hbef0236fga72cg4b4bg930ag44ba332514dd": {
+      "ReferenceText": "Cloth",
+      "TranslatedText": "Vêtement"
+    },
+    "hfc9df4bcgd7deg4e05ga37ag1b739d2a9e2b": {
+      "ReferenceText": "Combat",
+      "TranslatedText": "Combat"
+    },
+    "h1f0e8d31gc83cg47e5gb69ag9f133fc64dcd": {
+      "ReferenceText": "Confirm",
+      "TranslatedText": "Confirmer"
+    },
+    "h2fef0484g1ad5g4422gafb7g5a277c035095": {
+      "ReferenceText": "Consumables",
+      "TranslatedText": "Consommables"
+    },
+    "h80897d5bg5b2cg4261gbd85gafc7482541fd": {
+      "ReferenceText": "Containers",
+      "TranslatedText": "Conteneurs"
+    },
+    "h304b2c12g06dag4389gaa3bg0f28e9916d32": {
+      "ReferenceText": "Critical Chance",
+      "TranslatedText": "Chance de critique"
+    },
+    "h7f53d9adg7fdeg4005gaa99g0ffde8a8b21f": {
+      "ReferenceText": "Crossbow",
+      "TranslatedText": "Arbalète"
+    },
+    "h17d882b6g83acg411dgbe52g3ed32443774a": {
+      "ReferenceText": "Custom",
+      "TranslatedText": "Personalisé"
+    },
+    "h82933829g4fd3g4dfeg9b84ga47e14020bd6": {
+      "ReferenceText": "Dagger",
+      "TranslatedText": "Dague"
+    },
+    "ha01e7516ga580g4f00ga7f3gd59d23ca38c4": {
+      "ReferenceText": "Defiance",
+      "TranslatedText": "Défi"
+    },
+    "hb2e1d20dgd3c2g45b9ga922gf19ea1a12691": {
+      "ReferenceText": "Delete",
+      "TranslatedText": "Supprimer"
+    },
+    "hd286ded2g4b06g4fedg923cg235ebaa1ae49": {
+      "ReferenceText": "Developer",
+      "TranslatedText": "Développeur"
+    },
+    "hc66b270egc5bcg4bc3gbc2bgdd8278522f62": {
+      "ReferenceText": "Disable",
+      "TranslatedText": "Désactiver"
+    },
+    "h905ae122g47e8g41caga162g68a68b6a88af": {
+      "ReferenceText": "Disabled",
+      "TranslatedText": "Désactivé"
+    },
+    "h6eb4b775gdf93g4701g92b7g0ec21ed88442": {
+      "ReferenceText": "Disintegrate",
+      "TranslatedText": "Désintégrer"
+    },
+    "h59386967gb899g4f18ga61bg168b8d91f04a": {
+      "ReferenceText": "Elementalist",
+      "TranslatedText": "Élémentaliste"
+    },
+    "ha5227515g6663g4386gb3bcga4ffb2043b65": {
+      "ReferenceText": "Enable",
+      "TranslatedText": "Activer"
+    },
+    "he58ba92dg936fg49fagac2bg61a9c20dd142": {
+      "ReferenceText": "Enabled",
+      "TranslatedText": "Activé"
+    },
+    "ha5ce3e75g6795g493bgbd94g5d7779a15deb": {
+      "ReferenceText": "Equipment",
+      "TranslatedText": "Équipement"
+    },
+    "h715a684agc1e6g47eagb4d8g13944bc7ebe7": {
+      "ReferenceText": "Filtered",
+      "TranslatedText": "Filtré"
+    },
+    "hab6d5bf9gc96eg42f1ga095gaef050698dfc": {
+      "ReferenceText": "Filters",
+      "TranslatedText": "Filtres"
+    },
+    "h8d88a6c9gb72cg422fg8929g396e84f1e77b": {
+      "ReferenceText": "Food and Drinks",
+      "TranslatedText": "Nourriture et boissons"
+    },
+    "h9c53529bg5bc1g4005g9143g216bc58b959e": {
+      "ReferenceText": "General",
+      "TranslatedText": "Général"
+    },
+    "h421f56f3g378cg4dfaga0d1ge6e2ea2f17c4": {
+      "ReferenceText": "Geomancer",
+      "TranslatedText": "Géomancien"
+    },
+    "h6b38d491gbeccg47d1gad43g5e56e7b19242": {
+      "ReferenceText": "Gloves",
+      "TranslatedText": "Gants"
+    },
+    "h0212f2a7gcebag4eaag8641g64cfb7bfc0d2": {
+      "ReferenceText": "Helmet",
+      "TranslatedText": "Casque"
+    },
+    "h1a45624fgcbe1g48b8g9b4ag23e6f8cebe67": {
+      "ReferenceText": "Hidden",
+      "TranslatedText": "Caché"
+    },
+    "h3140c19bgec23g4a62g8d4ag9703a6bf89f4": {
+      "ReferenceText": "Horns",
+      "TranslatedText": "Cornes"
+    },
+    "h7c16563egd7cdg471cga0c5g30aa3344eeda": {
+      "ReferenceText": "Huntsman",
+      "TranslatedText": "Chasseur"
+    },
+    "h5837c5abg3931g4b5cgbffdgd634be631879": {
+      "ReferenceText": "Hydrosophist",
+      "TranslatedText": "Hydrophysicien"
+    },
+    "hd4148b10gb4e1g4550gbe4dgcdf246c626f1": {
+      "ReferenceText": "INIT",
+      "TranslatedText": "INIT"
+    },
+    "h429930a8g7b96g48cag8be4gc0bad3a2dc19": {
+      "ReferenceText": "Incarnate Champion",
+      "TranslatedText": "Champion exalté"
+    },
+    "h829886b0g20a7g4185gb5c8g84ac8ce1402a": {
+      "ReferenceText": "Info",
+      "TranslatedText": "Information"
+    },
+    "he8c517d9gc48fg42f8ga501g35f9909946b9": {
+      "ReferenceText": "Inventory",
+      "TranslatedText": "Inventaire"
+    },
+    "h543a5832g1c08g4c3eg9e21g9ee1414c9941": {
+      "ReferenceText": "Item Slot",
+      "TranslatedText": "Emplacement d'objet"
+    },
+    "hf791f6e7g31cdg4e84gb349g383ad5b4409c": {
+      "ReferenceText": "Jewelry",
+      "TranslatedText": "Bijoux"
+    },
+    "h64beeb05g019ag4a0agb151g974864cc5625": {
+      "ReferenceText": "Journal",
+      "TranslatedText": "Journal"
+    },
+    "hebad38dcg58c3g4a03gb44eg02833543ba38": {
+      "ReferenceText": "Keybinds",
+      "TranslatedText": "Raccourcis clavier"
+    },
+    "h2f44a9c7ge634g4630gae76g62a133475f12": {
+      "ReferenceText": "Keys",
+      "TranslatedText": "Clés"
+    },
+    "hae4f0f05geeb8g4aaagabc1gb990717dd33e": {
+      "ReferenceText": "Keyword",
+      "TranslatedText": "Mot clef"
+    },
+    "h7e55ac61g269fg4f0dgabf9g06cbe52d0d22": {
+      "ReferenceText": "Knife",
+      "TranslatedText": "Couteau"
+    },
+    "h7038367dgd010g46fbg9b9fg7c5c40d7ef44": {
+      "ReferenceText": "Leather",
+      "TranslatedText": "Cuir"
+    },
+    "h16088a37gd5b2g4bf3g9f7fgc3477eda6c4d": {
+      "ReferenceText": "Leggings",
+      "TranslatedText": "Pantalon"
+    },
+    "h43d39739g75fbg4205g9a45g75447dd59aae": {
+      "ReferenceText": "Level",
+      "TranslatedText": "Niveau"
+    },
+    "h7d163e38ga9d5g410fg814agcafb2e2844ec": {
+      "ReferenceText": "Level %d+",
+      "TranslatedText": "Niveau %d+"
+    },
+    "h45ce9d99gf8b6g4d3dgb6dagdbc9c03d3287": {
+      "ReferenceText": "Level %d-%d",
+      "TranslatedText": "Niveau %d-%d"
+    },
+    "hb2c6a1a0gbac4g45e2gb2dcg12010a8fa2c8": {
+      "ReferenceText": "Mace",
+      "TranslatedText": "Masse"
+    },
+    "h1b456c73gd007g49acgab1eg66475ca108d2": {
+      "ReferenceText": "Masterworked",
+      "TranslatedText": "Chef d'oeuvre"
+    },
+    "h6ac3a705g41f6g43d9g9d45ge53900932b94": {
+      "ReferenceText": "Meditate",
+      "TranslatedText": "Méditer"
+    },
+    "h20175646g1124g48cag88ceg0b909cd717cd": {
+      "ReferenceText": "Misc.",
+      "TranslatedText": "Divers"
+    },
+    "h4a4e92cagdaabg49a0g928dg5f01f8b44e80": {
+      "ReferenceText": "Miscellaneous",
+      "TranslatedText": "Divers"
+    },
+    "hb09a2fc1g7ad5g4caag8606g936398d62a3b": {
+      "ReferenceText": "Necromancer",
+      "TranslatedText": "Nécromancien"
+    },
+    "hdf3c7f54g8619g408fgb6bfgb716b7902125": {
+      "ReferenceText": "Never",
+      "TranslatedText": "Jamais"
+    },
+    "h1aedd70egab23g4218gb9cdg04ff62ebdf60": {
+      "ReferenceText": "New Game",
+      "TranslatedText": "Nouvelle partie"
+    },
+    "ha752b7e8g5211g424fg9350g7111ead5cbac": {
+      "ReferenceText": "Next",
+      "TranslatedText": "Suivant"
+    },
+    "h45a75b5agbe29g438dgbf17g6a9362cd7eed": {
+      "ReferenceText": "No Filter",
+      "TranslatedText": "Aucun filtre"
+    },
+    "hc2b715dfgf2a2g4ea3g8691gbc66ca160a1d": {
+      "ReferenceText": "Notifications",
+      "TranslatedText": "Notifications"
+    },
+    "h8fde1eb5g49cdg43d4g9a15g4e33a2847f23": {
+      "ReferenceText": "Occultist",
+      "TranslatedText": "Occultiste"
+    },
+    "h540c1336g27b1g4382gb911g8adced234ee6": {
+      "ReferenceText": "Off",
+      "TranslatedText": "Off"
+    },
+    "h7fafa02fg8cfdg4ff0g8f14g51597db59549": {
+      "ReferenceText": "Plate",
+      "TranslatedText": "Plaque"
+    },
+    "haa78ab06gafaag4c9dg910bg9f5c8c81b22c": {
+      "ReferenceText": "Polymorph",
+      "TranslatedText": "Polymorphe"
+    },
+    "h962807b6g8756g412dga48eg5a2c6a71e76f": {
+      "ReferenceText": "Potions",
+      "TranslatedText": "Potions"
+    },
+    "h2db813e3g9cceg439agbdf6g1280e3902681": {
+      "ReferenceText": "Predator",
+      "TranslatedText": "Prédateur"
+    },
+    "hb6171987gab82g4fdcgbff3gcc635d063926": {
+      "ReferenceText": "Presence",
+      "TranslatedText": "Présence"
+    },
+    "h5bf72ea7ge22ag4ccag9c30g88d06bcd9cc6": {
+      "ReferenceText": "Previous",
+      "TranslatedText": "Précédent"
+    },
+    "ha53ef891g707cg4195g9c43g556d65e0e3e3": {
+      "ReferenceText": "Prosperity",
+      "TranslatedText": "Prospérité"
+    },
+    "h4d7e7f36g5538g4195gbcd8g59db24ac7bc7": {
+      "ReferenceText": "Purity",
+      "TranslatedText": "Pureté"
+    },
+    "h02f2946agf229g4398g8acfga7abe6a9bf0b": {
+      "ReferenceText": "Pyrokinetic",
+      "TranslatedText": "Pyrokinésie"
+    },
+    "hce1fce1ega375g4e85g8adcg22da632e1097": {
+      "ReferenceText": "Rarity",
+      "TranslatedText": "Rareté"
+    },
+    "h8a290a77g93c2g4821g8019gc74551cb306a": {
+      "ReferenceText": "Reactions",
+      "TranslatedText": "Réactions"
+    },
+    "hd15232f0gd82dg42a3g82ddg7597d3911122": {
+      "ReferenceText": "Resize",
+      "TranslatedText": "Redimensionner"
+    },
+    "h7afd19eegf79bg42f9g97e7g66f4ac3a51c6": {
+      "ReferenceText": "Ring",
+      "TranslatedText": "Anneau"
+    },
+    "h1a5fc697g8419g4d7cg87eagf9632537ff34": {
+      "ReferenceText": "Robes",
+      "TranslatedText": "Robes"
+    },
+    "he007d2e4gc918g475cgbca9g7edc91ad34ab": {
+      "ReferenceText": "SP",
+      "TranslatedText": "PS"
+    },
+    "hb986b161gd6c3g459bga8f6gba07c8483103": {
+      "ReferenceText": "Scrolls",
+      "TranslatedText": "Parchemins"
+    },
+    "hafe6938fgde3dg45d3g8437g8dc15104fa65": {
+      "ReferenceText": "Server-side",
+      "TranslatedText": "Coté-Serveur"
+    },
+    "hbd6a0da2gd153g40c7g972agb0d16bfe78d4": {
+      "ReferenceText": "Settings",
+      "TranslatedText": "Paramètres"
+    },
+    "h3d0006a6g5449g47fdg91d6g2920c42ea0f3": {
+      "ReferenceText": "Shield",
+      "TranslatedText": "Bouclier"
+    },
+    "h4fc7301egc609g4739g9752g7b0fae2e8c5b": {
+      "ReferenceText": "Skillbooks",
+      "TranslatedText": "Livres de compétence"
+    },
+    "h14674f13g78c9g49ecgac6dgbf7a95039189": {
+      "ReferenceText": "Skills",
+      "TranslatedText": "Compétences"
+    },
+    "h3a1d4228ga393g44d8g8588ga5a2d81ca956": {
+      "ReferenceText": "Source Infuse",
+      "TranslatedText": "Infusé de source"
+    },
+    "hefb45469g4aabg4a8ega8aagbed67af313e1": {
+      "ReferenceText": "Spear",
+      "TranslatedText": "Lance"
+    },
+    "h55519c1fgecd7g4c73gafb2gebf09ecf7168": {
+      "ReferenceText": "Staff",
+      "TranslatedText": "Bâton"
+    },
+    "h3a0f5c0fg2207g403bg9c7fge9fae83627f9": {
+      "ReferenceText": "Summoning",
+      "TranslatedText": "Invocation"
+    },
+    "h0f112ed1gcc18g470egaf01ga5cd65d1f22b": {
+      "ReferenceText": "Sword",
+      "TranslatedText": "Épée"
+    },
+    "h921639b1g5656g4eafg9c4dg735bda9ba283": {
+      "ReferenceText": "Tooltips",
+      "TranslatedText": "Infobulles"
+    },
+    "h4119cfcegbfc2g4045gbeecgfb1c96de38e2": {
+      "ReferenceText": "Type",
+      "TranslatedText": "Type"
+    },
+    "h6a473ba0g726bg4188g811fgfa83c0b3def2": {
+      "ReferenceText": "Vanilla",
+      "TranslatedText": "Vanilla"
+    },
+    "h1fbb9977g36ffg4bc6g80f4gb3ce632a38f2": {
+      "ReferenceText": "Voracity",
+      "TranslatedText": "Voracité"
+    },
+    "he0847edfg24f4g4259ga31bg1f665425e26c": {
+      "ReferenceText": "Wand",
+      "TranslatedText": "Baguette"
+    },
+    "h06dec330gb7d7g49bcg89d5g0c7c6f737147": {
+      "ReferenceText": "Warfare",
+      "TranslatedText": "Art de la guerre"
+    },
+    "h6504d954gcc4fg4008ga5d1g32d40eef13e0": {
+      "ReferenceText": "Warning",
+      "TranslatedText": "Avertissement"
+    },
+    "h8192e5abg5593g45ccgbcb9gd6b79952ed2d": {
+      "ReferenceText": "Weapon",
+      "TranslatedText": "Arme"
+    },
+    "h53ac110bgde75g4517ga5a6gdb5daf3abc88": {
+      "ReferenceText": "Weapon Type",
+      "TranslatedText": "Type d'arme"
+    },
+    "hbcadc230g935eg4da1ga40dg153966dd04a2": {
+      "ReferenceText": "Wings",
+      "TranslatedText": "Ailes"
+    },
+    "h97f62f62gcd0fg4addg9db9g5504788bcb50": {
+      "ReferenceText": "Tier",
+      "TranslatedText": "Tier"
+    },
+    "hac78ff60gededg498agbb7eg97795fcd40fc": {
+      "ReferenceText": "Copies the cursor's world position to clipboard.",
+      "TranslatedText": "Copier la position du curseur dans le presse-papiers"
+    },
+    "ha6bf3f4cg6de4g4ac8gb706g3f39de8376c3": {
+      "ReferenceText": "Teleport to",
+      "TranslatedText": "Téléporter"
+    }
+  }
+}
