@@ -88,6 +88,7 @@ StatusesDisplay:RegisterSetting("Enabled", {
     Description = StatusesDisplay.TranslatedStrings.Setting_Enabled_Description,
     Context = "Client",
     DefaultValue = false,
+    RequiresReload = true,
 })
 StatusesDisplay:RegisterSetting("ShowSourceGeneration", {
     Type = "Boolean",

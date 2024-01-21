@@ -1,6 +1,7 @@
 
 local Settings = Settings
 local OptionsSettings = Client.UI.OptionsSettings
+local MsgBox = Client.UI.MessageBox
 
 ---@class Feature_SettingsMenu : Feature
 local Menu = {
@@ -28,6 +29,16 @@ local Menu = {
            Text = "Epip Settings",
            ContextDescription = "Menu button text",
         },
+        MsgBox_ReloadNecessary_Header = {
+            Handle = "he02fa608gae26g4160ga899gf19ad20429f8",
+            Text = "Reload Required",
+            ContextDescription = "Header for message box instructing the user to reload the save to apply settings",
+        },
+        MsgBox_ReloadNecessary_Body = {
+            Handle = "h489ece91g926dg48dfg85e7g7802206d217a",
+            Text = "One or more of the settings changed require the game to be saved and reloaded to take effect.",
+            ContextDescription = "Text for message box instructing the user to reload the save to apply settings",
+        },
     },
 
     Events = {
@@ -41,6 +52,7 @@ local Menu = {
     }
 }
 Epip.RegisterFeature("SettingsMenu", Menu)
+local TSK = Menu.TranslatedStrings
 
 ---------------------------------------------
 -- CLASSES
@@ -86,6 +98,7 @@ Epip.RegisterFeature("SettingsMenu", Menu)
 ---@field DeveloperOnly boolean? Defaults to false.
 ---@field RequiredMods GUID[]? If present, all mods will need to be loaded for the setting to be visible.
 ---@field RequiresPipFork boolean? If `true`, the setting will only be visible if the Pip fork of the extender is installed. Defaults to `false`.
+---@field RequiresReload boolean? If `true`, a message box will be shown after applying changes to the setting, hinting the user that they need to reload the session for changes to take effect.
 
 ---@class Feature_SettingsMenu_Setting_Set : SettingsLib_Setting_Set
 ---@field ElementsAreSkills boolean? If `true`, elements will show skill tooltips.
@@ -190,12 +203,17 @@ function Menu.SetPendingChange(setting, value)
 end
 
 function Menu.ApplyPendingChanges()
-    Menu:DebugLog("Applying pending changes")
+    local changesRequireReload = false
 
+    Menu:DebugLog("Applying pending changes")
     for moduleID,changes in pairs(Menu.pendingChanges) do
         for settingID,value in pairs(changes) do
-            Menu:DebugLog("Set value of", settingID, "to", value)
+            local setting = Settings.GetSetting(moduleID, settingID) ---@cast setting Feature_SettingsMenu_Setting
+
+            Menu:DebugLog("Setting value of", settingID, "to", value)
             Settings.SetValue(moduleID, settingID, value)
+
+            changesRequireReload = changesRequireReload or (setting.RequiresReload == true)
         end
 
         Settings.Save(moduleID)
@@ -206,6 +224,14 @@ function Menu.ApplyPendingChanges()
     })
 
     Menu.pendingChanges = {}
+
+    -- Show a message box hint if any of the settings changed require a session load.
+    if changesRequireReload then
+        MsgBox.Open({
+            Header = TSK.MsgBox_ReloadNecessary_Header:GetString(),
+            Message = TSK.MsgBox_ReloadNecessary_Body:GetString(),
+        })
+    end
 end
 
 ---Returns whether all mods required for a setting are loaded.

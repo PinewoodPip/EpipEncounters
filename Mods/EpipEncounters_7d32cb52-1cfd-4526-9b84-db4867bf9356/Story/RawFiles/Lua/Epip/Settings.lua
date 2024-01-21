@@ -617,6 +617,7 @@ local newSettings = {
         NameHandle = TSKs.ImprovedCombatLog_Name,
         DescriptionHandle = TSKs.ImprovedCombatLog_Description,
         DefaultValue = true,
+        RequiresReload = true,
     },
     {
         ID = "PreferredTargetDisplay",
@@ -1084,6 +1085,7 @@ local newSettings = {
         NameHandle = TSKs.WorldTooltip_MoreTooltips_Name,
         Description = "If enabled, world tooltips will be shown for all items. This includes clutter like doors.<br>" .. Text.Format("Requires a reload.", {Color = Color.LARIAN.YELLOW}),
         DefaultValue = false,
+        RequiresReload = true,
     },
 }
 for _,setting in ipairs(newSettings) do
