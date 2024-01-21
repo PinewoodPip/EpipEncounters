@@ -547,6 +547,7 @@ local newSettings = {
         ---@type SettingsLib_Setting_Choice_Entry[]
         Choices = {
             {ID = "", Name = "Game Language"},
+            {ID = "English", Name = "English"},
             {ID = "Russian", Name = "Russian"},
             {ID = "Portuguesebrazil", Name = "Brazilian Portuguese"},
             {ID = "Simplified Chinese", Name = "Simplified Chinese"},
