@@ -107,7 +107,7 @@ GameState = {
         GameReady = {}, ---@type Event<GameStateLib_Event_GameReady>
         Tick = {}, ---@type Event<GameStateLib_Event_Tick>
         RunningTick = {}, ---@type Event<GameStateLib_Event_RunningTick>
-        LuaResetted = {}, ---@type Event<EmptyEvent>
+        LuaResetted = {}, ---@type Event<Empty>
         ClientReady = {}, ---@type Event<GameStateLib_Event_ClientReady>
         RegionStarted = {}, ---@type Event<GameStateLib_Event_RegionStarted> Server-only.
     },

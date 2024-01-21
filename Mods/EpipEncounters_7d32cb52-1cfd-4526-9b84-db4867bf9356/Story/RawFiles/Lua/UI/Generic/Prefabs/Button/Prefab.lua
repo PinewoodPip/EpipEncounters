@@ -16,8 +16,8 @@ local Button = {
     DEFAULT_SOUND = "UI_Gen_XButton_Click",
 
     Events = {
-        Pressed = {}, ---@type Event<EmptyEvent> Fires only if the button is enabled.
-        RightClicked = {}, ---@type Event<EmptyEvent> Fires even if the button is disabled.
+        Pressed = {}, ---@type Event<Empty> Fires only if the button is enabled.
+        RightClicked = {}, ---@type Event<Empty> Fires even if the button is disabled.
     },
 }
 Generic:RegisterClass("GenericUI_Prefab_Button", Button, {"GenericUI_Prefab", "GenericUI_I_Stylable", "GenericUI_I_Elementable"})

@@ -24,7 +24,7 @@ local Slot = {
 
     Events = {
         ObjectDraggedIn = {}, ---@type Event<GenericUI_Prefab_HotbarSlot_Event_ObjectDraggedIn>
-        Clicked = {}, ---@type Event<EmptyEvent>
+        Clicked = {}, ---@type Event<Empty>
     },
     Hooks = {
         GetTooltipData = {}, ---@type Event<GenericUI_Prefab_HotbarSlot_Hook_GetTooltipData>

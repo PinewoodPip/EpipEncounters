@@ -9,8 +9,8 @@ local Text = {
     ---@class GenericUI.Prefabs.Text.Events : GenericUI_Element_Text_Events
     Events = {
         TextEdited = {}, ---@type Event<GenericUI_Element_Text_Event_Changed>
-        Focused = {}, ---@type Event<EmptyEvent>
-        Unfocused = {}, ---@type Event<EmptyEvent>
+        Focused = {}, ---@type Event<Empty>
+        Unfocused = {}, ---@type Event<Empty>
     }
 }
 Generic.RegisterPrefab("GenericUI_Prefab_Text", Text)

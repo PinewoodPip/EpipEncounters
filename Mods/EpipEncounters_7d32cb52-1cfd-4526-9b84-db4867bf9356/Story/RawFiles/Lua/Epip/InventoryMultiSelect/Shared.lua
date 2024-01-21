@@ -44,7 +44,7 @@ local MultiSelect = {
 
     ---@class Features.InventoryMultiSelect.Events
     Events = {
-        MultiDragStarted = {}, ---@type Event<EmptyEvent> Client-only.
+        MultiDragStarted = {}, ---@type Event<Empty> Client-only.
         MultiDragEnded = {}, ---@type Event<Features.InventoryMultiSelect.Events.MultiDragEnded> Client-only. Prevent propagation if handled.
     },
     ---@class Features.InventoryMultiSelect.Hooks

@@ -46,9 +46,6 @@ setmetatable(PreventableEventParams, {__index = SubscribableEventParams})
 -- COMMON EVENT PARAMETER CLASSES
 ---------------------------------------------
 
----An event object with no parameters.
----@class EmptyEvent
-
 ---@class Event_CharacterEventParams
 ---@field Character Character
 

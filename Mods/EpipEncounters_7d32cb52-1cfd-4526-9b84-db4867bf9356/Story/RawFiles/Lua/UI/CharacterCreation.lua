@@ -61,7 +61,7 @@ local CharacterCreation = {
         SelectorScrolled = {}, ---@type Event<CharacterCreationUI_Event_SelectorScrolled>
         OriginChanged = {}, ---@type Event<CharacterCreationUI_Event_OriginChanged>
         PresetChanged = {}, ---@type Event<CharacterCreationUI_Event_PresetChanged>
-        Opened = {}, ---@type Event<EmptyEvent>
+        Opened = {}, ---@type Event<Empty>
     },
     Hooks = {
         UpdateTalents = {}, ---@type Event<CharacterCreationUI_Hook_UpdateTalents>

@@ -26,7 +26,7 @@ local Menu = {
     USE_LEGACY_HOOKS = false,
 
     Events = {
-        Opened = {}, ---@type Event<EmptyEvent>
+        Opened = {}, ---@type Event<Empty>
         ButtonPressed = {}, ---@type Event<GameMenuUI_Event_ButtonPressed>
     },
 }

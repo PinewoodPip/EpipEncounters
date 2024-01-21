@@ -27,7 +27,7 @@ local InputBinder = {
 
     Events = {
         BindingRequested = {}, ---@type Event<{Action:InputLib_Action}>
-        RequestCancelled = {}, ---@type Event<EmptyEvent>
+        RequestCancelled = {}, ---@type Event<Empty>
         RequestCompleted = {}, ---@type Event<{Action:InputLib_Action, Binding:InputLib_Action_KeyCombination, Index:integer}>
     }
 }

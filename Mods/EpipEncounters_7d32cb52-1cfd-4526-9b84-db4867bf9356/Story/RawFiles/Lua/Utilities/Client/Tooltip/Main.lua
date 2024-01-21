@@ -39,8 +39,8 @@ local Tooltip = {
     USE_LEGACY_HOOKS = false,
 
     Events = {
-        TooltipHidden = {}, ---@type Event<EmptyEvent>
-        TooltipPositioned = {}, ---@type Event<EmptyEvent>
+        TooltipHidden = {}, ---@type Event<Empty>
+        TooltipPositioned = {}, ---@type Event<Empty>
     },
     Hooks = {
         RenderFormattedTooltip = {Preventable = true}, ---@type PreventableEvent<TooltipLib_Hook_RenderFormattedTooltip>

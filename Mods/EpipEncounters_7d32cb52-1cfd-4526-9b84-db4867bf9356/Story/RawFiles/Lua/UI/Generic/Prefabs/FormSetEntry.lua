@@ -5,7 +5,7 @@ local Generic = Client.UI.Generic
 ---@field RemoveButton GenericUI_Element_Button
 local Prefab = {
     Events = {
-        RemovePressed = {}, ---@type Event<EmptyEvent>
+        RemovePressed = {}, ---@type Event<Empty>
     }
 }
 Generic:RegisterClass("GenericUI_Prefab_FormSetEntry", Prefab, {"GenericUI_Prefab_FormElement"})

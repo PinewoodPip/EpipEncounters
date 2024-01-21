@@ -12,8 +12,8 @@ local TextDisplay = {
     USE_LEGACY_HOOKS = false,
 
     Events = {
-        TextRemoved = {}, ---@type Event<EmptyEvent>
-        FormattedTooltipRemoved = {}, ---@type Event<EmptyEvent> Thrown when a surface tooltip is removed.
+        TextRemoved = {}, ---@type Event<Empty>
+        FormattedTooltipRemoved = {}, ---@type Event<Empty> Thrown when a surface tooltip is removed.
     },
     Hooks = {
         GetText = {}, ---@type PreventableEvent<TextDisplayUI_Hook_GetText>

@@ -17,7 +17,7 @@ local Inventory = {
     USE_LEGACY_HOOKS = false,
 
     Events = {
-        TakeAllPressed = {}, ---@type Event<EmptyEvent>
+        TakeAllPressed = {}, ---@type Event<Empty>
         DragStarted = {Preventable = true}, ---@type PreventableEvent<{ItemFlashHandle:FlashItemHandle}>
         HoveredItemChanged = {}, ---@type Event<UI.ContainerInventory.Events.HoveredItemChanged>
     },
