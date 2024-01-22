@@ -75,6 +75,13 @@ end
 function _Instance:DestroyElement(element)
     local root = self:GetRoot()
     local parent = element:GetParent()
+    local children = element:GetChildren()
+
+    -- Recursively destroy children elements
+    for i=#children,1,-1 do
+        local child = children[i]
+        child:Destroy()
+    end
 
     if parent then
         ---@diagnostic disable-next-line: invisible
