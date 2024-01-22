@@ -327,6 +327,7 @@ local tabs = {
             {Module = TooltipDelay:GetNamespace(), ID = TooltipDelay.Settings.CompareTooltipDelay:GetID()},
 
             CreateHeader(TSK.Section_WorldItemTooltips),
+            "WorldTooltip_MoreTooltips",
             "WorldTooltip_OpenContainers",
             "WorldTooltip_HighlightContainers",
             "WorldTooltip_HighlightConsumables",
@@ -336,7 +337,6 @@ local tabs = {
             "WorldTooltip_ShowDoors",
             {Module = "EpipEncounters_WorldTooltipFiltering", ID = "ShowLights"},
             "WorldTooltip_ShowInactionable",
-            "WorldTooltip_MoreTooltips",
 
             CreateHeader(TooltipAdjustments.TranslatedStrings.Name),
             {Module = "EpipEncounters_TooltipAdjustments.AstrologerFix", ID = "Enabled"},
