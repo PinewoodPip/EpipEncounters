@@ -13,6 +13,11 @@ local SurfacePainter = Epip.GetFeature("Features.SurfacePainter")
 local UI = Generic.Create("Features.SurfacePainter")
 SurfacePainter.UI = UI
 
+UI.PANEL_SIZE = V(600, 300)
+UI.DRAG_AREA_SIZE = V(UI.PANEL_SIZE[1], 50)
+UI.HEADER_SIZE = Vector.Clone(UI.DRAG_AREA_SIZE)
+UI.SETTING_SIZE = V(UI.PANEL_SIZE[1] - 20, 50)
+
 local TSK = {
     Setting_SurfaceType_Name = SurfacePainter:RegisterTranslatedString({
         Handle = "h3ffa6f44g1a2bg400ega4a1gcd72590aa73f",
@@ -105,11 +110,6 @@ local Settings = {
     }),
 }
 surfaceTypeChoices = nil -- Dispose of the local.
-
-UI.PANEL_SIZE = V(500, 600)
-UI.DRAG_AREA_SIZE = V(UI.PANEL_SIZE[1], 50)
-UI.HEADER_SIZE = Vector.Clone(UI.DRAG_AREA_SIZE)
-UI.SETTING_SIZE = V(UI.PANEL_SIZE[1] - 20, 50)
 
 ---------------------------------------------
 -- METHODS
