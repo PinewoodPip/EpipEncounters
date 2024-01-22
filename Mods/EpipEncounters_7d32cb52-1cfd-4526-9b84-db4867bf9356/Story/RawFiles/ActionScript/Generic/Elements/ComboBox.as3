@@ -71,6 +71,8 @@ package Elements
 
         private var _openUpwards:Boolean = false;
 
+        private var ignoreNextMouseUp:Boolean = false;
+
         public function ComboBox(param1:String = "comboElement", param2:String = "comboDDBG")
         {
             var _loc4_:MovieClip = null;
@@ -659,7 +661,7 @@ package Elements
         private function elUp(param1:MouseEvent) : *
         {
             var _loc2_:MovieClip = param1.currentTarget as MovieClip;
-            if(_loc2_)
+            if(_loc2_ && !this.ignoreNextMouseUp)
             {
                 ExternalInterface.call("PlaySound",this.SND_Click);
 
@@ -673,6 +675,7 @@ package Elements
                 }
                 this.close();
             }
+            this.ignoreNextMouseUp = !this.ignoreNextMouseUp;
         }
         
         private function elOver(param1:MouseEvent) : *
