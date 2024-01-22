@@ -6,6 +6,10 @@ local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 ---@field FieldList GenericUI_Element_HorizontalList
 local FormTextHolder = {
     FIELD_SIZE = Vector.Create(250, 50),
+    FIELD_ALPHA = {
+        FOCUSED = 0.9,
+        UNFOCUSED = 0.5,
+    },
 
     Events = {
         FieldClicked = {}, ---@type Event<GenericUI.Prefabs.FormTextHolder.Events.FieldClicked>
@@ -57,7 +61,7 @@ function FormTextHolder:SetFields(fields)
     for i,field in ipairs(fields) do
         local bg = self:CreateElement("Field_" .. tostring(i), "GenericUI_Element_TiledBackground", list)
         bg:SetBackground("Black", self.FIELD_SIZE:unpack())
-        bg:SetAlpha(0.5)
+        bg:SetAlpha(self.FIELD_ALPHA.UNFOCUSED)
         local label = TextPrefab.Create(self.UI, self:PrefixID("Field_" .. tostring(i) .. "_Label"), bg, field, "Center", self.FIELD_SIZE)
         label:SetSize(self.FIELD_SIZE[1], label:GetTextSize()[2])
         label:SetPositionRelativeToParent("Center")
@@ -68,6 +72,14 @@ function FormTextHolder:SetFields(fields)
                 Index = i,
                 CurrentText = field,
             })
+        end)
+
+        -- Highlight the field when hovered
+        bg.Events.MouseOver:Subscribe(function (_)
+            bg:SetAlpha(self.FIELD_ALPHA.FOCUSED)
+        end)
+        bg.Events.MouseOut:Subscribe(function (_)
+            bg:SetAlpha(self.FIELD_ALPHA.UNFOCUSED)
         end)
     end
 
