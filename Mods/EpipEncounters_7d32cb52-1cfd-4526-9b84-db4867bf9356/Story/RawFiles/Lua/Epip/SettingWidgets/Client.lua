@@ -5,6 +5,7 @@
 ---------------------------------------------
 
 local Generic = Client.UI.Generic
+local ContextMenu = Client.UI.ContextMenu
 local LabelledDropdownPrefab = Generic.GetPrefab("GenericUI_Prefab_LabelledDropdown")
 local LabelledCheckboxPrefab = Generic.GetPrefab("GenericUI_Prefab_LabelledCheckbox")
 local LabelledTextField = Generic.GetPrefab("GenericUI_Prefab_LabelledTextField")
@@ -18,6 +19,10 @@ local Widgets = {
     DEFAULT_SIZE = V(400, 50), -- Default size used if no override is specified.
     TEXTFIELD_DELAY = 0.6, -- Delay in seconds between text edits and the respective String setting being updated.
     MAX_INPUT_BINDINGS = 2, -- Not a hard limit; the Input library supports infinite bindings per action, however displaying that in an elegant manner is difficult!
+
+    CONTEXT_MENU_ENTRIES = {
+        RESET = "Features.SettingWidgets.Reset",
+    },
 
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
@@ -87,10 +92,15 @@ function Widgets._RenderCheckboxFromSetting(request)
 
     -- Set setting value and run callback.
     checkbox.Events.StateChanged:Subscribe(function (ev)
-        Widgets._SetSettingValue(setting, ev.Active, request)
+        Widgets._SetSettingValue(setting, ev.Active)
     end)
 
     checkbox:SetTooltip("Custom", Widgets._GetSettingTooltip(setting))
+
+    -- Update the checkbox when the setting is changed.
+    Widgets._RegisterValueChangedListener(checkbox, request, function (ev)
+        checkbox:SetState(ev.Value)
+    end)
 
     return checkbox
 end
@@ -117,10 +127,15 @@ function Widgets._RenderComboBoxFromSetting(request)
 
     -- Set setting value and run callback.
     dropdown.Events.OptionSelected:Subscribe(function (ev)
-        Widgets._SetSettingValue(setting, ev.Option.ID, request)
+        Widgets._SetSettingValue(setting, ev.Option.ID)
     end)
 
     dropdown:SetTooltip("Custom", Widgets._GetSettingTooltip(setting))
+
+    -- Update the combobox when the setting is changed.
+    Widgets._RegisterValueChangedListener(dropdown, request, function (ev)
+        dropdown:SelectOption(ev.Value)
+    end)
 
     return dropdown
 end
@@ -146,11 +161,16 @@ function Widgets._RenderTextFieldFromSetting(request)
         end
 
         Timer.Start(timerID, Widgets.TEXTFIELD_DELAY, function (_)
-            Widgets._SetSettingValue(setting, ev.Text, request)
+            Widgets._SetSettingValue(setting, ev.Text)
         end)
     end)
 
     field:SetTooltip("Custom", Widgets._GetSettingTooltip(setting))
+
+    -- Update the text when the setting is changed.
+    Widgets._RegisterValueChangedListener(field, request, function (ev)
+        field:SetText(ev.Value)
+    end)
 
     return field
 end
@@ -199,6 +219,11 @@ function Widgets._RenderInputBindingSetting(request)
         end)
 
         form:SetTooltip("Custom", Widgets._GetSettingTooltip(setting))
+
+        -- Update the fields when the setting is changed.
+        Widgets._RegisterValueChangedListener(form, request, function (_)
+            UpdateFields()
+        end)
     else
         Widgets:LogWarning("Using InputBinding settings without a target action is not supported!")
     end
@@ -217,23 +242,44 @@ function Widgets._RenderClampedNumberSetting(request)
     -- Handle the slider being interacted with.
     ---@param ev GenericUI_Element_Slider_Event_HandleMoved|GenericUI_Element_Slider_Event_HandleReleased
     local function OnValueChanged(ev)
-        Widgets._SetSettingValue(setting, ev.Value, request)
+        Widgets._SetSettingValue(setting, ev.Value)
     end
     instance.Events.HandleMoved:Subscribe(OnValueChanged)
     instance.Events.HandleReleased:Subscribe(OnValueChanged)
 
+    -- Update the slider when the setting is changed.
+    Widgets._RegisterValueChangedListener(instance, request, function (ev)
+        instance:SetValue(ev.Value)
+    end)
+
     return instance
+end
+
+---Registers a callback for a setting value changing.
+---@param instance GenericUI_I_Elementable
+---@param request Features.SettingWidgets.Hooks.RenderSetting The request's callback will also be invoked.
+---@param callback fun(ev:SettingsLib_Event_SettingValueChanged) Callback intended to update the widget instance.
+function Widgets._RegisterValueChangedListener(instance, request, callback)
+    local subscriberID = "Features.SettingWidgets." .. Text.GenerateGUID()
+    Settings.Events.SettingValueChanged:Subscribe(function (ev)
+        if instance:IsDestroyed() then -- Remove the listener once the instance has been destroyed.
+            Settings.Events.SettingValueChanged:Unsubscribe(subscriberID)
+        elseif ev.Setting == request.Setting then
+            callback(ev)
+            request.ValueChangedCallback(ev.Value) -- Also invoke the callback from the request.
+        end
+    end, {StringID = subscriberID})
 end
 
 ---Sets the value of a setting and runs the ValueChanged callback.
 ---@param setting Features.SettingWidgets.SupportedSettingType
 ---@param value any
----@param request any
+---@param request Features.SettingWidgets.Hooks.RenderSetting?
 function Widgets._SetSettingValue(setting, value, request)
     Settings.SetValue(setting.ModTable, setting:GetID(), value)
     Settings.Save(setting.ModTable)
 
-    if request.ValueChangedCallback then
+    if request and request.ValueChangedCallback then
         request.ValueChangedCallback(value)
     end
 end
@@ -265,6 +311,21 @@ function Widgets._GetSettingTooltip(setting)
     return tooltip
 end
 
+---Opens the context menu for a setting.
+---@param setting Features.SettingWidgets.SupportedSettingType
+function Widgets._SetupSettingContextMenu(setting)
+    ContextMenu.Setup({
+        menu = {
+            id = "main",
+            entries = {
+                {id = Widgets.CONTEXT_MENU_ENTRIES.RESET, type = "button", text = Text.CommonStrings.ResetToDefault:GetString(), params = {Setting = setting}},
+            }
+        }
+    })
+
+    ContextMenu.Open(V(Client.GetMousePosition()))
+end
+
 ---Returns a prefixed ID, for use with elements.
 ---@param id string
 ---@return string
@@ -290,4 +351,21 @@ Widgets.Hooks.RenderSetting:Subscribe(function (ev)
     elseif setting.Type == "ClampedNumber" then
         ev.Instance = Widgets._RenderClampedNumberSetting(ev)
     end
+
+    -- Add listeners for opening the context menu.
+    -- TODO extract to a separate listener so this works on other implementations of RenderSetting as well?
+    if ev.Instance then
+        local root = ev.Instance:GetRootElement()
+        root.Events.RightClick:Subscribe(function (_)
+            Widgets._SetupSettingContextMenu(setting)
+        end)
+    end
 end, {StringID = "DefaultImplementation"})
+
+-- Listen for requests to reset setting values from the context menu.
+ContextMenu.RegisterElementListener(Widgets.CONTEXT_MENU_ENTRIES.RESET, "buttonPressed", function(_, params)
+    local setting = params.Setting ---@type Features.SettingWidgets.SupportedSettingType
+
+    -- Widgets will be updated using their regular SettingsLib listeners; no need to track requests here.
+    Widgets._SetSettingValue(setting, setting:GetDefaultValue())
+end)

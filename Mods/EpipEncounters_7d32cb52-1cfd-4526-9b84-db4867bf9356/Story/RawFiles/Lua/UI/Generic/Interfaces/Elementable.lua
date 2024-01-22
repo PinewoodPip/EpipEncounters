@@ -24,6 +24,12 @@ function Elementable:GetRootElement()
     Generic:Error("Elementable:GetRootElement", "Not implemented for", self:GetClassName())
 end
 
+---Returns whether the root element of the prefab has been destroyed.
+---@return boolean
+function Elementable:IsDestroyed()
+    return table.isdestroyed(self:GetRootElement())
+end
+
 ---Index function will defer to Element **methods**.
 function Elementable.__index(_, key)
     local elementTable = Generic._Element
