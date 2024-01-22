@@ -519,6 +519,11 @@ local EpipSettings = {
             Text = "Enable tooltips for all items",
             ContextDescription = "World tooltip 'enable tooltips for all items' setting name",
         },
+        WorldTooltip_MoreTooltips_Description = {
+            Handle = "hca849069g389dg4bb0g8b59g40ea8b48c2db",
+            Text = "If enabled, world tooltips will be shown for all items.<br>This includes clutter like doors, which you may filter out through the other world tooltip settings.",
+            ContextDescription = [[Setting tooltip for "Enable tooltips for all items"]],
+        },
     },
 }
 Epip.RegisterFeature("EpipSettings", EpipSettings)
@@ -1083,7 +1088,7 @@ local newSettings = {
         Type = "Boolean",
         ModTable = "Epip_Tooltips",
         NameHandle = TSKs.WorldTooltip_MoreTooltips_Name,
-        Description = "If enabled, world tooltips will be shown for all items. This includes clutter like doors.<br>" .. Text.Format("Requires a reload.", {Color = Color.LARIAN.YELLOW}),
+        Description = TSKs.WorldTooltip_MoreTooltips_Description,
         DefaultValue = false,
         RequiresReload = true,
     },
