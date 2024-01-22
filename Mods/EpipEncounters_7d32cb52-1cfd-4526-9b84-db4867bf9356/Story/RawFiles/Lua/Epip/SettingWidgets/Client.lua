@@ -8,6 +8,7 @@ local Generic = Client.UI.Generic
 local LabelledDropdownPrefab = Generic.GetPrefab("GenericUI_Prefab_LabelledDropdown")
 local LabelledCheckboxPrefab = Generic.GetPrefab("GenericUI_Prefab_LabelledCheckbox")
 local LabelledTextField = Generic.GetPrefab("GenericUI_Prefab_LabelledTextField")
+local LabelledSlider = Generic.GetPrefab("GenericUI_Prefab_LabelledSlider")
 local FormTextHolder = Generic.GetPrefab("GenericUI.Prefabs.FormTextHolder")
 local InputBinder = Epip.GetFeature("Features.InputBinder")
 local V = Vector.Create
@@ -31,7 +32,7 @@ Epip.RegisterFeature("SettingWidgets", Widgets)
 -- CLASSES
 ---------------------------------------------
 
----@alias Features.SettingWidgets.SupportedSettingType SettingsLib_Setting_Choice|SettingsLib_Setting_Boolean|SettingsLib_Setting_String|SettingsLib.Settings.InputBinding
+---@alias Features.SettingWidgets.SupportedSettingType SettingsLib_Setting_Choice|SettingsLib_Setting_Boolean|SettingsLib_Setting_String|SettingsLib.Settings.InputBinding|SettingsLib_Setting_ClampedNumber
 
 ---------------------------------------------
 -- EVENTS/HOOKS
@@ -205,6 +206,25 @@ function Widgets._RenderInputBindingSetting(request)
     return form
 end
 
+---Renders a slider for a ClampedNumber setting.
+---@param request Features.SettingWidgets.Hooks.RenderSetting
+---@return GenericUI_Prefab_LabelledSlider
+function Widgets._RenderClampedNumberSetting(request)
+    local setting = request.Setting ---@cast setting Feature_SettingsMenu_Setting_Slider
+    local ui, parent, size = request.UI, request.Parent, request.Size
+    local instance = LabelledSlider.Create(ui, Widgets._GetPrefixedID(setting:GetID()), parent, size, setting:GetName(), setting.Min, setting.Max, setting.Step or 0.1) -- Default to 0.1 step for settings that use the base class.
+
+    -- Handle the slider being interacted with.
+    ---@param ev GenericUI_Element_Slider_Event_HandleMoved|GenericUI_Element_Slider_Event_HandleReleased
+    local function OnValueChanged(ev)
+        Widgets._SetSettingValue(setting, ev.Value, request)
+    end
+    instance.Events.HandleMoved:Subscribe(OnValueChanged)
+    instance.Events.HandleReleased:Subscribe(OnValueChanged)
+
+    return instance
+end
+
 ---Sets the value of a setting and runs the ValueChanged callback.
 ---@param setting Features.SettingWidgets.SupportedSettingType
 ---@param value any
@@ -267,5 +287,7 @@ Widgets.Hooks.RenderSetting:Subscribe(function (ev)
         ev.Instance = Widgets._RenderTextFieldFromSetting(ev)
     elseif setting.Type == "InputBinding" then
         ev.Instance = Widgets._RenderInputBindingSetting(ev)
+    elseif setting.Type == "ClampedNumber" then
+        ev.Instance = Widgets._RenderClampedNumberSetting(ev)
     end
 end, {StringID = "DefaultImplementation"})
