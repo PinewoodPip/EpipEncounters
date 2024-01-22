@@ -241,6 +241,10 @@ Text.CommonStrings.ResetToDefault = Text.RegisterTranslatedString({
     Handle = "h2b13dd3bg4c83g4613g8884g746775c96afa",
     Text = "Reset to default",
 })
+Text.CommonStrings.Unbound = Text.RegisterTranslatedString({
+    Handle = "h0879c1f1gc016g460egba26gd81e2cca18a2",
+    Text = "Unbound",
+})
 
 ---------------------------------------------
 -- BRANDING

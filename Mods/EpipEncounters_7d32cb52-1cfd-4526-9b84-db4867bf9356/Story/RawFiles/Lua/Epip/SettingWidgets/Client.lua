@@ -193,7 +193,7 @@ function Widgets._RenderInputBindingSetting(request)
                 bindingNames[i] = Client.Input.StringifyBinding(binding)
             end
             for i=#bindingNames+1,Widgets.MAX_INPUT_BINDINGS,1 do -- Add extra empty fields, until reaching max
-                bindingNames[i] = ""
+                bindingNames[i] = Text.CommonStrings.Unbound:Format({Color = Color.LARIAN.DARK_GRAY})
             end
 
             form:SetFields(bindingNames)
