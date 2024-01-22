@@ -4,7 +4,7 @@
 ---------------------------------------------
 
 local _DestroyedMetatableMsg = function(self, _)
-    error(self.___Message or "Attemped to index a destroyed table")
+    error(self.___Message)
 end
 local _DestroyedMetatable = {
     __index = _DestroyedMetatableMsg,
@@ -282,7 +282,7 @@ function table.destroy(tbl, msg)
     for k,_ in pairs(tbl) do -- Setting fields to nil while iterating *should* be fine according to next() documentation
         tbl[k] = nil
     end
-    tbl.___Message = msg
+    tbl.___Message = msg or "Attemped to index a destroyed table"
     setmetatable(tbl, _DestroyedMetatable)
 end
 
