@@ -233,6 +233,14 @@ Text.CommonStrings.Statuses = Text.RegisterTranslatedString({
     Handle = "h7187736egcc52g416dga221gc4f17ca41160",
     Text = "Statuses",
 })
+Text.CommonStrings.Reset = Text.RegisterTranslatedString({
+    Handle = "h797b8a3ag4b10g4549g8731g7ec3e775b896",
+    Text = "Reset",
+})
+Text.CommonStrings.ResetToDefault = Text.RegisterTranslatedString({
+    Handle = "h2b13dd3bg4c83g4613g8884g746775c96afa",
+    Text = "Reset to default",
+})
 
 ---------------------------------------------
 -- BRANDING

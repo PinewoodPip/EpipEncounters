@@ -157,7 +157,7 @@ local CACHED_STAT_FIELDS = nil ---@type table<string, string>
 QuickInventory.Settings.ItemSlot = QuickInventory:RegisterSetting("ItemSlot", {
     Type = "Choice",
     Name = CommonStrings.ItemSlot,
-    DefaultValue = "Helmet",
+    DefaultValue = "Any",
     ---@type SettingsLib_Setting_Choice_Entry[]
     Choices = {
         {ID = "Any", NameHandle = CommonStrings.Any.Handle},
