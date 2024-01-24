@@ -277,10 +277,7 @@ function Widgets._RegisterValueChangedListener(instance, request, callback)
     local subscriberID = "Features.SettingWidgets." .. Text.GenerateGUID()
     Widgets.Events.SettingUpdated:Subscribe(function (ev)
         if instance:IsDestroyed() then -- Remove the listener once the instance has been destroyed.
-            -- Unsubscribe on the next tick so as not to screw up the currently-executing linked list of subscribers.
-            Ext.OnNextTick(function ()
-                Widgets.Events.SettingUpdated:Unsubscribe(subscriberID)
-            end)
+            Widgets.Events.SettingUpdated:Unsubscribe(subscriberID)
         elseif ev.Request.Setting == request.Setting then
             callback(ev)
             if request.ValueChangedCallback then

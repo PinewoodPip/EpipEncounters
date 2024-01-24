@@ -6,7 +6,6 @@
 ---@class Event<T>:{ (Subscribe:fun(self:Event, callback:fun(ev:T|Event_Params), opts:Event_Options|nil, stringID:string|nil):integer), Unsubscribe:fun(self:Event, index:integer|string), (Throw:fun(self:Event, event:T|Event_Params|nil):Event_Params|T), (RemoveNodes:fun(self:Event, predicate:(fun(node:table):boolean)?))}
 ---@field Preventable false
 ---@field Name string
-local _SubscribableEvent = {}
 SubscribableEvent = {}
 
 ---@alias Hook<T> Event<T>
@@ -66,6 +65,7 @@ setmetatable(PreventableEventParams, {__index = SubscribableEventParams})
 ---@param preventable boolean? Defaults to false.
 ---@return Event
 function SubscribableEvent:New(name, preventable)
+	---@type Event
 	local o = {
 		First = nil,
 		NextIndex = 1,
@@ -157,7 +157,8 @@ function SubscribableEvent:RemoveNode(node)
 	end
 
 	node.Prev = nil
-	node.Next = nil
+	-- Needs not be removed in order for Throw() to work properly when a listener unsubscribes itself while running.
+	-- node.Next = nil
 end
 
 ---Unsubscribe all listeners based on a predicate.
