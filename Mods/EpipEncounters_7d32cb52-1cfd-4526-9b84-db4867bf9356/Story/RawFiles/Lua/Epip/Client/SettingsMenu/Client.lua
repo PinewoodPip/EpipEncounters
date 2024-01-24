@@ -39,6 +39,16 @@ local Menu = {
             Text = "One or more of the settings changed require the game to be saved and reloaded to take effect.",
             ContextDescription = "Text for message box instructing the user to reload the save to apply settings",
         },
+        MsgBox_ConfirmPendingChanges_Header = {
+            Handle = "hae99eb29g1020g4242g9386g4b187b20cfd6",
+            Text = "Unsaved Changes",
+            ContextDescription = "Message box header for setting change confirmation prompt",
+        },
+        MsgBox_ConfirmPendingChanges_Body = {
+            Handle = "hb1f871fbg6572g4325gbd1fgebd218bf97a9",
+            Text = "You have unsaved changes. Do you wish to apply them?",
+            ContextDescription = "Message box for confirming changes to settings",
+        },
     },
 
     Events = {
@@ -258,9 +268,6 @@ function Menu._Setup()
 
         Menu.RenderSettings(tab)
     end
-
-    -- Render tab buttons
-    Menu.RenderTabButtons()
 end
 
 ---@param tab Feature_SettingsMenu_Tab
@@ -431,6 +438,7 @@ function Menu.Open()
     ui:SetPositionRelativeToViewport("center", "center", "screen")
 
     ui:Show()
+    ui:GetRoot().visible = false
 end
 
 function Menu.Close()
@@ -599,18 +607,6 @@ function Menu._RenderComboBox(setting, elementID)
     Menu.SetSettingElementState(elementID, setting, setting:GetChoiceIndex(setting:GetValue()))
 end
 
-function Menu._ShowPendingChangesPrompt()
-    Client.UI.MessageBox.Open({
-        Header = "Unsaved Changes",
-        Message = "You have unsaved changes. Do you wish to apply them?",
-        ID = "Feature_SettingsMenu_UnsavedChanges",
-        Buttons = {
-            {ID = 1, Text = "Save"},
-            {ID = 2, Text = "Exit"},
-        }
-    })
-end
-
 ---Returns the default tab shown in the menu.
 ---This will be the first tab that would normally be selectable.
 ---@return string? `nil` if no valid tabs are registered.
@@ -737,34 +733,6 @@ Client.Input.Events.KeyReleased:Subscribe(function (ev)
     if Menu.GetUI():IsVisible() and ev.InputID == "escape" then
         Menu.Close()
     end
-end)
-
--- Do not destroy the UI - instead hide it.
-UI:RegisterCallListener("requestCloseUI", function (ev)
-    if Menu.HasPendingChanges() then
-        Menu._ShowPendingChangesPrompt()
-    else
-        Menu.Close()
-    end
-
-    ev:PreventAction()
-end)
-
--- Listen for the accept button being pressed.
-UI:RegisterCallListener("acceptPressed", function (_)
-    if Menu.HasPendingChanges() then
-        Menu._ShowPendingChangesPrompt()
-    else
-        Menu.Close()
-    end
-end)
-
-Client.UI.MessageBox.RegisterMessageListener("Feature_SettingsMenu_UnsavedChanges", Client.UI.MessageBox.Events.ButtonPressed, function (buttonID, _)
-    if buttonID == 1 then
-        Menu.ApplyPendingChanges()
-    end
-
-    Menu.Close()
 end)
 
 -- Make developer settings return their default value if dev mode is off.

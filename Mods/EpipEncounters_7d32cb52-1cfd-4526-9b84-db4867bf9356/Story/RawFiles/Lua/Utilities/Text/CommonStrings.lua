@@ -245,6 +245,15 @@ Text.CommonStrings.Unbound = Text.RegisterTranslatedString({
     Handle = "h0879c1f1gc016g460egba26gd81e2cca18a2",
     Text = "Unbound",
 })
+Text.CommonStrings.Exit = Text.RegisterTranslatedString({
+    Handle = "h4b779123g7e18g4655g81e3ga5a0dfcc5d34",
+    Text = "Exit",
+})
+Text.CommonStrings.Save = Text.RegisterTranslatedString({
+    Handle = "hadee236cg225ag440fgb2fcg7da77645bc67",
+    Text = "Save",
+    ContextDescription = [[As in, "save settings"]],
+})
 
 ---------------------------------------------
 -- BRANDING

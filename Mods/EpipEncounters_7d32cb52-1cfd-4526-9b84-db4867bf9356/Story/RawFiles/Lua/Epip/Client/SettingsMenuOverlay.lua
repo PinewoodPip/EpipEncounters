@@ -1,14 +1,16 @@
 
 local SettingsMenu = Epip.GetFeature("Feature_SettingsMenu")
 local Generic = Client.UI.Generic
+local MsgBox = Client.UI.MessageBox
 local Set = DataStructures.Get("DataStructures_Set")
-local CheckboxPrefab = Generic.GetPrefab("GenericUI_Prefab_LabelledCheckbox")
-local DropdownPrefab = Generic.GetPrefab("GenericUI_Prefab_LabelledDropdown")
-local SliderPrefab = Generic.GetPrefab("GenericUI_Prefab_LabelledSlider")
+local ButtonPrefab = Generic.GetPrefab("GenericUI_Prefab_Button")
 local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 local SetPrefab = Generic.GetPrefab("GenericUI_Prefab_FormSet")
 local SelectorPrefab = Generic.GetPrefab("GenericUI_Prefab_Selector")
+local CloseButton = Generic.GetPrefab("GenericUI_Prefab_CloseButton")
 local SettingWidgets = Epip.GetFeature("Features.SettingWidgets")
+local Textures = Epip.GetFeature("Feature_GenericUITextures").TEXTURES
+local CommonStrings = Text.CommonStrings
 local V = Vector.Create
 
 ---@class Feature_SettingsMenuOverlay : Feature
@@ -38,6 +40,7 @@ UI._Initialized = false
 UI.LIST_SIZE = V(950, 770)
 UI.FORM_ELEMENT_SIZE = V(800, 60)
 UI.DEFAULT_LABEL_SIZE = V(800, 999) -- Labels are afterwards resized to text height.
+UI.PANELS_Y = 37
 
 ---------------------------------------------
 -- EVENTS
@@ -56,8 +59,9 @@ UI.DEFAULT_LABEL_SIZE = V(800, 999) -- Labels are afterwards resized to text hei
 ---------------------------------------------
 
 ---Sets up the UI to render a list of entries.
+---@param tab Feature_SettingsMenu_Tab
 ---@param entries Feature_SettingsMenu_Entry[]
-function Overlay.Setup(entries)
+function Overlay.Setup(tab, entries)
     Overlay._Initialize()
 
     -- Resize and reposition the overlay to match the regular menu
@@ -70,9 +74,31 @@ function Overlay.Setup(entries)
     local list = UI.List
     list:Clear()
 
+    -- Render tab buttons
+    local tabButtonsList = UI.TabButtonsList
+    tabButtonsList:Clear()
+    for i,id in ipairs(SettingsMenu.TabRegistrationOrder) do
+        local registeredTab = SettingsMenu.GetTab(id)
+        if SettingsMenu.CanRenderTabButton(tab) then
+            local button = ButtonPrefab.Create(UI, "TabButton." .. registeredTab.ID, tabButtonsList, ButtonPrefab:GetStyle("LargeBrown")) -- TODO more consistency?
+            button:SetActiveStyle(ButtonPrefab:GetStyle("LargeRed"))
+            button:SetActivated(SettingsMenu.IsTabOpen(id))
+            button:SetLabel(registeredTab.ButtonLabel)
+
+            -- Switch the tab when the button is pressed.
+            button.Events.Pressed:Subscribe(function (_)
+                SettingsMenu.SetActiveTab(id)
+            end)
+
+            SettingsMenu.tabButtonToTabID[i] = id -- TODO remove
+        end
+    end
+
     for _,entry in ipairs(entries) do
         UI.RenderEntry(entry)
     end
+
+    UI.TabHeader:SetText(Text.Format(tab.HeaderLabel:upper(), {Size = 22, FontType = Text.FONTS.BOLD}))
 
     UI.List:RepositionElements()
     UI:GetUI().Layer = SettingsMenu:GetUI():GetUI().Layer + 1
@@ -120,12 +146,77 @@ end
 ---Creates the core elements of the UI, if not already initialized.
 function Overlay._Initialize()
     if not UI._Initialized then
-        local root = UI:CreateElement("UIRoot", "GenericUI_Element_Empty")
-        root:SetPosition(665, 145) -- Needs to be done in UI space.
+        local root = UI:CreateElement("Root", "GenericUI_Element_Empty")
+
+        local leftPanel = root:AddChild("LeftPanel", "GenericUI_Element_Texture")
+        leftPanel:SetTexture(Textures.PANELS.SETTINGS_LEFT)
+        leftPanel:SetPosition(291, UI.PANELS_Y)
+
+        local tabButtonsList = leftPanel:AddChild("TabButtonsList", "GenericUI_Element_ScrollList")
+        tabButtonsList:SetFrame(310, 900)
+        tabButtonsList:SetMouseWheelEnabled(true)
+        tabButtonsList:SetScrollbarSpacing(-345)
+        tabButtonsList:SetPosition(25, 120)
+        UI.TabButtonsList = tabButtonsList
+
+        -- Hide the scrollbar background
+        local tabButtonstListScrollBg = tabButtonsList:GetMovieClip().list.m_scrollbar_mc.m_bg_mc
+        if tabButtonstListScrollBg then
+            tabButtonstListScrollBg.visible = false
+        end
+
+        local rightPanel = root:AddChild("RightPanel", "GenericUI_Element_Texture")
+        rightPanel:SetTexture(Textures.PANELS.SETTINGS_RIGHT)
+        rightPanel:SetPosition(641, UI.PANELS_Y)
+
+        local tabButtonsHeader = TextPrefab.Create(UI, "TabButtonsHeader", leftPanel, Text.Format(SettingsMenu.TranslatedStrings.MenuButton:GetString():upper(), {Size = 22, FontType = Text.FONTS.BOLD}), "Center", V(200, 50))
+        tabButtonsHeader:SetPositionRelativeToParent("Top", 0, 40)
+
+        local tabHeader = TextPrefab.Create(UI, "TabHeader", rightPanel, "", "Center", V(200, 50))
+        tabHeader:SetPositionRelativeToParent("Top", 0, 40)
+        UI.TabHeader = tabHeader
+
+        -- Create buttons at the bottom of the right panel
+        local bottomButtonsList = rightPanel:AddChild("BottomButtonsList", "GenericUI_Element_HorizontalList")
+        bottomButtonsList:SetElementSpacing(10)
+
+        -- TODO use the same sounds as vanilla settings menu
+        local acceptButton = ButtonPrefab.Create(UI, "AcceptButton", bottomButtonsList, ButtonPrefab:GetStyle("LargeRed"))
+        acceptButton:SetLabel(CommonStrings.Accept:GetString():upper())
+        acceptButton.Events.Pressed:Subscribe(function (_)
+            if SettingsMenu.HasPendingChanges() then
+                Overlay._ShowPendingChangesPrompt()
+            else
+                SettingsMenu.Close()
+            end
+        end)
+
+        local applyButton = ButtonPrefab.Create(UI, "ApplyButton", bottomButtonsList, ButtonPrefab:GetStyle("LargeRed"))
+        applyButton:SetLabel(CommonStrings.Apply:GetString():upper())
+        applyButton.Events.Pressed:Subscribe(function (_)
+            SettingsMenu.ApplyPendingChanges()
+        end)
+
+        bottomButtonsList:SetPositionRelativeToParent("Bottom", 0, -44)
+
+        local closeButton = CloseButton.Create(UI, "CloseButton", rightPanel)
+        closeButton:SetPositionRelativeToParent("TopRight", -20, 22)
+        closeButton.Events.Pressed:Subscribe(function (_)
+            -- Show the pending changes prompt if there are any
+            -- TODO prevent closing in this case
+            if SettingsMenu.HasPendingChanges() then
+                Overlay._ShowPendingChangesPrompt()
+            else -- Otherwise close the UI
+                SettingsMenu.Close()
+            end
+        end)
+
+        local settingsRoot = root:AddChild("SettingsRoot", "GenericUI_Element_Empty")
+        settingsRoot:SetPosition(665, 145) -- Needs to be done in UI space.
         -- root:SetColor(Color.Create(120, 0, 0))
         -- root:SetSize(UI.LIST_SIZE:unpack())
 
-        local list = root:AddChild("ScrollList", "GenericUI_Element_ScrollList")
+        local list = settingsRoot:AddChild("ScrollList", "GenericUI_Element_ScrollList")
         list:SetFrame(UI.LIST_SIZE:unpack())
         list:SetScrollbarSpacing(-30)
         list:SetMouseWheelEnabled(true)
@@ -176,41 +267,23 @@ end
 ---Renders a Choice setting.
 ---@param setting SettingsLib_Setting_Choice
 ---@param parent GenericUI_ParentIdentifier?
----@return GenericUI_Prefab_LabelledDropdown
+---@return GenericUI_I_Elementable
 function UI._RenderChoice(setting, parent)
-    -- Generate combobox options from setting choices.
-    local options = {}
-    for _,choice in ipairs(setting.Choices) do
-        table.insert(options, {
-            ID = choice.ID,
-            Label = choice:GetName(),
-        })
-    end
+    local element = SettingWidgets.RenderSetting(UI, parent, setting, UI.FORM_ELEMENT_SIZE, function (value)
+        SettingsMenu.SetPendingChange(setting, value)
+    end, false)
 
-    local dropdown = DropdownPrefab.Create(UI, setting:GetNamespacedID(), parent, setting:GetName(), options)
-    dropdown:SetSize(UI.FORM_ELEMENT_SIZE:unpack())
-    dropdown:SelectOption(setting:GetValue())
-
-    dropdown.Events.OptionSelected:Subscribe(function (ev)
-        SettingsMenu.SetPendingChange(setting, ev.Option.ID)
-    end)
-
-    return dropdown
+    return element
 end
 
 ---Renders a Boolean setting.
 ---@param setting SettingsLib_Setting_Boolean
 ---@param parent GenericUI_ParentIdentifier?
----@return GenericUI_Prefab_LabelledCheckbox
+---@return GenericUI_I_Elementable
 function UI._RenderCheckbox(setting, parent)
-    local element = CheckboxPrefab.Create(UI, setting:GetNamespacedID(), parent, setting:GetName())
-
-    element:SetState(setting:GetValue() == true)
-    element:SetSize(UI.FORM_ELEMENT_SIZE:unpack())
-
-    element.Events.StateChanged:Subscribe(function (ev)
-        SettingsMenu.SetPendingChange(setting, ev.Active)
-    end)
+    local element = SettingWidgets.RenderSetting(UI, parent, setting, UI.FORM_ELEMENT_SIZE, function (value)
+        SettingsMenu.SetPendingChange(setting, value)
+    end, false)
 
     return element
 end
@@ -218,15 +291,11 @@ end
 ---Renders a ClampedNumber setting.
 ---@param setting Feature_SettingsMenu_Setting_Slider
 ---@param parent GenericUI_ParentIdentifier?
----@return GenericUI_Prefab_LabelledSlider
+---@return GenericUI_I_Elementable
 function UI._RenderClampedNumber(setting, parent)
-    local element = SliderPrefab.Create(UI, setting:GetNamespacedID(), parent, UI.FORM_ELEMENT_SIZE, setting:GetName(), setting.Min, setting.Max, setting.Step or 1)
-
-    element:SetValue(setting:GetValue())
-
-    element.Events.HandleReleased:Subscribe(function (ev)
-        SettingsMenu.SetPendingChange(setting, ev.Value)
-    end)
+    local element = SettingWidgets.RenderSetting(UI, parent, setting, UI.FORM_ELEMENT_SIZE, function (value)
+        SettingsMenu.SetPendingChange(setting, value)
+    end, false)
 
     return element
 end
@@ -238,7 +307,7 @@ end
 function UI._RenderInputBinding(setting, parent)
     local instance = SettingWidgets.RenderSetting(UI, parent, setting, UI.FORM_ELEMENT_SIZE, function (value)
         SettingsMenu.SetPendingChange(setting, value)
-    end)
+    end, false)
     ---@cast instance GenericUI.Prefabs.FormTextHolder
     return instance
 end
@@ -250,7 +319,7 @@ end
 function UI._RenderStringSetting(setting, parent)
     local instance = SettingWidgets.RenderSetting(UI, parent, setting, UI.FORM_ELEMENT_SIZE, function (value)
         SettingsMenu.SetPendingChange(setting, value)
-    end)
+    end, false)
     ---@cast instance GenericUI_Prefab_LabelledTextField
     return instance
 end
@@ -362,6 +431,19 @@ function UI._RenderSetting(data)
     return element
 end
 
+---Shows a prompt requesting the user to confirm changes made to settings.
+function Overlay._ShowPendingChangesPrompt()
+    MsgBox.Open({
+        Header = SettingsMenu.TranslatedStrings.MsgBox_ConfirmPendingChanges_Header:GetString(),
+        Message = SettingsMenu.TranslatedStrings.MsgBox_ConfirmPendingChanges_Body:GetString(),
+        ID = "Feature_SettingsMenu_UnsavedChanges",
+        Buttons = {
+            {ID = 1, Text = CommonStrings.Save:GetString()},
+            {ID = 2, Text = CommonStrings.Exit:GetString()},
+        }
+    })
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
@@ -423,9 +505,18 @@ SettingsMenu.Hooks.GetTabEntries:Subscribe(function (ev)
 
     Overlay:DebugLog("Tab has custom entries:", hasCustomElements)
     if hasCustomElements or Overlay._ALWAYS_USE then
-        Overlay.Setup(ev.Entries)
+        Overlay.Setup(ev.Tab, ev.Entries)
         ev.Entries = {}
     else
         Overlay.Close()
     end
+end)
+
+-- Listen for the "Save pending changes?" prompt being confirmed.
+MsgBox.RegisterMessageListener("Feature_SettingsMenu_UnsavedChanges", MsgBox.Events.ButtonPressed, function (buttonID, _)
+    if buttonID == 1 then
+        SettingsMenu.ApplyPendingChanges()
+    end
+
+    SettingsMenu.Close()
 end)
