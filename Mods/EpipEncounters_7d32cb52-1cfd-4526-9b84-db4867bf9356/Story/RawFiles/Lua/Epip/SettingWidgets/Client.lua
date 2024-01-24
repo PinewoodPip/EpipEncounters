@@ -97,7 +97,7 @@ function Widgets._RenderCheckboxFromSetting(request)
     local setting = request.Setting ---@cast setting SettingsLib_Setting_Boolean
     local ui, parent, size = request.UI, request.Parent, request.Size
 
-    local checkbox = LabelledCheckboxPrefab.Create(ui, Widgets._GetPrefixedID(setting:GetID()), parent, setting:GetName())
+    local checkbox = LabelledCheckboxPrefab.Create(ui, Widgets._GetPrefixedID(setting), parent, setting:GetName())
 
     checkbox:SetSize(size:unpack())
     checkbox:SetState(setting:GetValue())
@@ -133,7 +133,7 @@ function Widgets._RenderComboBoxFromSetting(request)
         })
     end
 
-    local dropdown = LabelledDropdownPrefab.Create(ui, Widgets._GetPrefixedID(setting:GetID()), parent, setting:GetName(), options)
+    local dropdown = LabelledDropdownPrefab.Create(ui, Widgets._GetPrefixedID(setting), parent, setting:GetName(), options)
     dropdown:SetSize(size:unpack())
     dropdown:SelectOption(setting:GetValue())
 
@@ -157,10 +157,10 @@ end
 ---@return GenericUI_Prefab_LabelledTextField
 function Widgets._RenderTextFieldFromSetting(request)
     local setting = request.Setting ---@cast setting SettingsLib_Setting_String
-    local timerID = Widgets._GetPrefixedID("Timer_" .. setting:GetID())
+    local timerID = Widgets._GetPrefixedID(setting) .. ".Timer"
     local ui, parent, size = request.UI, request.Parent, request.Size
 
-    local field = LabelledTextField.Create(ui, Widgets._GetPrefixedID(setting:GetID()), parent, setting:GetName())
+    local field = LabelledTextField.Create(ui, Widgets._GetPrefixedID(setting), parent, setting:GetName())
     field:SetText(setting:GetValue())
     field:SetSize(size:unpack())
 
@@ -194,7 +194,7 @@ function Widgets._RenderInputBindingSetting(request)
     local setting = request.Setting ---@cast setting SettingsLib.Settings.InputBinding
     local ui, parent, size = request.UI, request.Parent, request.Size
 
-    local form = FormTextHolder.Create(ui, Widgets._GetPrefixedID(setting:GetID()), parent, setting:GetName(), size)
+    local form = FormTextHolder.Create(ui, Widgets._GetPrefixedID(setting), parent, setting:GetName(), size)
     local action = setting.TargetActionID
 
     if action then
@@ -249,7 +249,9 @@ end
 function Widgets._RenderClampedNumberSetting(request)
     local setting = request.Setting ---@cast setting Feature_SettingsMenu_Setting_Slider
     local ui, parent, size = request.UI, request.Parent, request.Size
-    local instance = LabelledSlider.Create(ui, Widgets._GetPrefixedID(setting:GetID()), parent, size, setting:GetName(), setting.Min, setting.Max, setting.Step or 0.1) -- Default to 0.1 step for settings that use the base class.
+    local instance = LabelledSlider.Create(ui, Widgets._GetPrefixedID(setting), parent, size, setting:GetName(), setting.Min, setting.Max, setting.Step or 0.1) -- Default to 0.1 step for settings that use the base class.
+
+    instance:SetValue(setting:GetValue())
 
     -- Handle the slider being interacted with.
     ---@param ev GenericUI_Element_Slider_Event_HandleMoved|GenericUI_Element_Slider_Event_HandleReleased
@@ -275,7 +277,10 @@ function Widgets._RegisterValueChangedListener(instance, request, callback)
     local subscriberID = "Features.SettingWidgets." .. Text.GenerateGUID()
     Widgets.Events.SettingUpdated:Subscribe(function (ev)
         if instance:IsDestroyed() then -- Remove the listener once the instance has been destroyed.
-            Widgets.Events.SettingUpdated:Unsubscribe(subscriberID)
+            -- Unsubscribe on the next tick so as not to screw up the currently-executing linked list of subscribers.
+            Ext.OnNextTick(function ()
+                Widgets.Events.SettingUpdated:Unsubscribe(subscriberID)
+            end)
         elseif ev.Request.Setting == request.Setting then
             callback(ev)
             if request.ValueChangedCallback then
@@ -343,10 +348,10 @@ function Widgets._SetupSettingContextMenu(request)
 end
 
 ---Returns a prefixed ID, for use with elements.
----@param id string
+---@param setting Features.SettingWidgets.SupportedSettingType
 ---@return string
-function Widgets._GetPrefixedID(id)
-    return "Feature_SettingWidgets_Setting_" .. id
+function Widgets._GetPrefixedID(setting)
+    return "Features.SettingWidgets.RenderedSetting." .. setting.ModTable .. "." .. setting.ID
 end
 
 ---------------------------------------------
