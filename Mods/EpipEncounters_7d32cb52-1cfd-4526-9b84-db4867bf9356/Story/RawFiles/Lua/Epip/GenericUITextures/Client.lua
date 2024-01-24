@@ -15,6 +15,9 @@ local Textures = {
             HIGHLIGHT = T("PIP_UI_Background_Highlight", {
                 GUID = "028e7d3c-0aad-4fff-b3ea-886984c2ffc9",
             }),
+            DOS1_EXAMINE = T("PIP_UI_Background_Page_DOS1_Examine", {
+                GUID = "1743ce49-7909-4954-a1dd-dc81353530a7",
+            }),
         },
         BUTTONS = {
             ADD = {
@@ -672,6 +675,9 @@ local Textures = {
                     PRESSED = T("PIP_UI_Button_Notch_Pressed", {
                         GUID = "1b14cfa1-26b0-41b5-b9ea-fd497174f5eb",
                     }),
+                    DISABLED = T("PIP_UI_Button_Notch_Disabled", {
+                        GUID = "911e0d6b-9432-4c02-a14c-26b0d217d96d",
+                    }),
                 }
             },
             TRANSPARENT = {
@@ -706,6 +712,9 @@ local Textures = {
                     }),
                     PRESSED = T("PIP_UI_Button_Red_Large_Pressed", {
                         GUID = "f98b5754-3e13-457b-9d3e-9f10604a5996",
+                    }),
+                    DISABLED = T("PIP_UI_Button_Red_Large_Disabled", {
+                        GUID = "634b1104-dbdf-46a8-9023-a12ee6c97624",
                     }),
                 },
                 SMALL = {
@@ -935,9 +944,12 @@ local Textures = {
             },
             COLORED_NOTIFICATION = {
                 DARK_RED = T("PIP_UI_Frame_ColoredNotification_DarkRed", {
-                    GUID = "affdec4f-4775-4bae-b4dd-4d3858681db1",
+                    GUID = "929c08ab-1682-4f8c-b17a-4da1fc24db29",
                 }),
             },
+            DARK_LABEL = T("PIP_UI_Frame_DarkLabel", {
+                GUID = "9261ce84-4254-4c36-bef9-504a876f4b81",
+            }),
             ENTRIES = {
                 DARK = T("PIP_UI_Frame_Entry_Dark", {
                     GUID = "de09b187-935c-44d1-8b0b-81979519b106",
@@ -1027,7 +1039,7 @@ local Textures = {
             },
             RECTANGLES = {
                 TINY = T("PIP_UI_Frame_Rectangle_Tiny", {
-                    GUID = "79d6065f-316a-4f63-9fd1-a13dd3483841",
+                    GUID = "e0a47972-cbfa-4329-82bb-6c8bebb3ae19",
                 }),
             },
             WHITE_TATTERED = T("PIP_UI_Frame_White_Tattered", {
@@ -1080,6 +1092,9 @@ local Textures = {
             DIALOGUE_CONTROLLER = T("PIP_UI_Panel_Dialogue_Controller", {
                 GUID = "3ec1cc16-61f4-4a55-a4cb-fb0b994d6ad4",
             }),
+            DOS1_EXAMINE = T("PIP_UI_Panel_Examine_DOS1", {
+                GUID = "d1bd56a1-faed-45b4-870c-4310cbfd7672",
+            }),
             FLIPBOOK = T("PIP_UI_Panel_Flipbook", {
                 GUID = "274e6019-38b3-4616-bbe1-f92b654978ff",
             }),
@@ -1091,6 +1106,12 @@ local Textures = {
             }),
             SKILLBOOK_KBM = T("PIP_UI_Panel_SkillBook_KBM", {
                 GUID = "c7d39a28-c306-4d33-bbb1-0be6b2f53733",
+            }),
+            SETTINGS_LEFT = T("PIP_UI_Panel_Settings_Left", {
+                GUID = "61e915dd-0a76-4496-ae30-864ff029bd98",
+            }),
+            SETTINGS_RIGHT = T("PIP_UI_Panel_Settings_Right", {
+                GUID = "dfcaa132-be0d-4f01-9c0e-4a35abcbe5e6",
             }),
             LIST = T("PIP_UI_Panel_List", {
                 GUID = "f3e1f7d5-bb6e-464f-b51d-ebe4adfd247a",
@@ -1199,6 +1220,9 @@ local Textures = {
             },
         },
         MISC = {
+            BACKLIGHT = T("PIP_UI_Misc_Backlight", {
+                GUID = "94a54564-ba49-4c4c-97ef-c843bc9f15c9",
+            }),
             BOOKMARK = T("PIP_UI_Misc_Bookmark", {
                 GUID = "17729ed3-cf17-4654-978a-5c3e0ac8f7ed",
             }),
@@ -1252,6 +1276,14 @@ local Textures = {
             SWIRLING_STAR = T("PIP_UI_Misc_SwirlingStar", {
                 GUID = "df081eac-306b-46fe-b9d8-47cd33248f05",
             }),
+            LOADING_FLOWER = {
+                CARDINAL = T("PIP_UI_Misc_LoadingFlower_Cardinal", {
+                    GUID = "018a1540-7cfa-418e-877a-e187f84a786c",
+                }),
+                DIAGONAL = T("PIP_UI_Misc_LoadingFlower_Diagonal", {
+                    GUID = "d28c9893-db80-48e2-b425-b226374bc7a8",
+                }),
+            },
         },
     },
     ICONS = {
