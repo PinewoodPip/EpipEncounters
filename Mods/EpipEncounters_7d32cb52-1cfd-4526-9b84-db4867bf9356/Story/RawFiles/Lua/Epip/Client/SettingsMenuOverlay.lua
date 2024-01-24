@@ -203,12 +203,15 @@ function Overlay._Initialize()
         closeButton:SetPositionRelativeToParent("TopRight", -20, 22)
         closeButton.Events.Pressed:Subscribe(function (_)
             -- Show the pending changes prompt if there are any
-            -- TODO prevent closing in this case
             if SettingsMenu.HasPendingChanges() then
                 Overlay._ShowPendingChangesPrompt()
             else -- Otherwise close the UI
                 SettingsMenu.Close()
             end
+        end)
+        -- Prevent the close button from hiding the UI if there are pending changes
+        closeButton.Hooks.CanClose:Subscribe(function (ev)
+            ev.CanClose = not SettingsMenu.HasPendingChanges()
         end)
 
         local settingsRoot = root:AddChild("SettingsRoot", "GenericUI_Element_Empty")

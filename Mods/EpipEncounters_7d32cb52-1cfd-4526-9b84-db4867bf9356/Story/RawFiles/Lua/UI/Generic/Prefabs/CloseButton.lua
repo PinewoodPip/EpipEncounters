@@ -6,6 +6,9 @@ local ButtonPrefab = Generic.GetPrefab("GenericUI_Prefab_Button")
 ---@class GenericUI_Prefab_CloseButton : GenericUI_Prefab_Button
 local CloseButton = {
     DEFAULT_STYLE = ButtonPrefab:GetStyle("Close"),
+    Hooks = {
+        CanClose = {}, ---@type Hook<{CanClose:boolean}> -- Defaults to `true`.
+    },
 }
 Generic.RegisterPrefab("GenericUI_Prefab_CloseButton", CloseButton) -- Not necessary to directly inherit from Button as Create() creates a Button
 
@@ -25,11 +28,20 @@ Generic.RegisterPrefab("GenericUI_Prefab_CloseButton", CloseButton) -- Not neces
 function CloseButton.Create(ui, id, parent, style)
     local instance = ButtonPrefab.Create(ui, id, parent, style or CloseButton.DEFAULT_STYLE) ---@type GenericUI_Prefab_CloseButton
 
-    instance.Events.Pressed:Subscribe(function (_) -- Hide UI
-        Ext.OnNextTick(function (_)
-            ui:Hide()
-        end)
+    -- Hide the UI when the button is pressed.
+    instance.Events.Pressed:Subscribe(function (_)
+        local canClose = instance.Hooks.CanClose:Throw({
+            CanClose = true,
+        }).CanClose
+        if canClose then
+            Ext.OnNextTick(function (_)
+                ui:Hide()
+            end)
+        end
     end)
+
+    -- TODO do this through inheritance
+    instance.Hooks = {CanClose = SubscribableEvent:New("CanClose")}
 
     return instance
 end
