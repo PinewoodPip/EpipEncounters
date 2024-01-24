@@ -27,8 +27,11 @@ local Widgets = {
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
 
+    Events = {
+        SettingUpdated = {}, ---@type Event<Features.SettingWidgets.Events.SettingUpdated>
+    },
     Hooks = {
-        RenderSetting = {}, ---@type Event<Features.SettingWidgets.Hooks.RenderSetting>
+        RenderSetting = {}, ---@type Hook<Features.SettingWidgets.Hooks.RenderSetting>
     },
 }
 Epip.RegisterFeature("SettingWidgets", Widgets)
@@ -43,13 +46,19 @@ Epip.RegisterFeature("SettingWidgets", Widgets)
 -- EVENTS/HOOKS
 ---------------------------------------------
 
----@class Features.SettingWidgets.Hooks.RenderSetting -- TODO make this a hook instead
+---Thrown when a rendered setting has been interacted with.
+---@class Features.SettingWidgets.Events.SettingUpdated
+---@field Request Features.SettingWidgets.Hooks.RenderSetting
+---@field Value any Hookable. Defaults to setting value.
+
+---@class Features.SettingWidgets.Hooks.RenderSetting
 ---@field UI GenericUI_Instance
 ---@field Parent GenericUI_ParentIdentifier?
 ---@field Setting Features.SettingWidgets.SupportedSettingType
 ---@field Size Vector2 If not set by caller, defaults to `DEFAULT_SIZE`.
 ---@field ValueChangedCallback fun(value:any)? Callback for when the setting's value changes **through the widget**.
 ---@field Instance (GenericUI_Prefab|GenericUI_I_Elementable)? Hookable. Defaults to `nil`.
+---@field UpdateSettingValue boolean
 
 ---------------------------------------------
 -- METHODS
@@ -62,8 +71,10 @@ Epip.RegisterFeature("SettingWidgets", Widgets)
 ---@param setting Features.SettingWidgets.SupportedSettingType
 ---@param size Vector2?
 ---@param callback fun(value:any)?
+---@param updateSettingValue boolean? If `true`, interactions with the element will automatically apply changes to the setting. Defaults to `true`.
 ---@return GenericUI_Prefab|GenericUI_I_Elementable
-function Widgets.RenderSetting(ui, parent, setting, size, callback)
+function Widgets.RenderSetting(ui, parent, setting, size, callback, updateSettingValue)
+    updateSettingValue = updateSettingValue == nil and true or updateSettingValue
     return Widgets.Hooks.RenderSetting:Throw({
         UI = ui,
         Parent = parent,
@@ -71,6 +82,7 @@ function Widgets.RenderSetting(ui, parent, setting, size, callback)
         Size = size,
         ValueChangedCallback = callback,
         Instance = nil,
+        UpdateSettingValue = updateSettingValue,
     }).Instance
 end
 
@@ -92,7 +104,7 @@ function Widgets._RenderCheckboxFromSetting(request)
 
     -- Set setting value and run callback.
     checkbox.Events.StateChanged:Subscribe(function (ev)
-        Widgets._SetSettingValue(setting, ev.Active)
+        Widgets._SetSettingValue(setting, ev.Active, request)
     end)
 
     checkbox:SetTooltip("Custom", Widgets._GetSettingTooltip(setting))
@@ -127,7 +139,7 @@ function Widgets._RenderComboBoxFromSetting(request)
 
     -- Set setting value and run callback.
     dropdown.Events.OptionSelected:Subscribe(function (ev)
-        Widgets._SetSettingValue(setting, ev.Option.ID)
+        Widgets._SetSettingValue(setting, ev.Option.ID, request)
     end)
 
     dropdown:SetTooltip("Custom", Widgets._GetSettingTooltip(setting))
@@ -161,7 +173,7 @@ function Widgets._RenderTextFieldFromSetting(request)
         end
 
         Timer.Start(timerID, Widgets.TEXTFIELD_DELAY, function (_)
-            Widgets._SetSettingValue(setting, ev.Text)
+            Widgets._SetSettingValue(setting, ev.Text, request)
         end)
     end)
 
@@ -242,7 +254,7 @@ function Widgets._RenderClampedNumberSetting(request)
     -- Handle the slider being interacted with.
     ---@param ev GenericUI_Element_Slider_Event_HandleMoved|GenericUI_Element_Slider_Event_HandleReleased
     local function OnValueChanged(ev)
-        Widgets._SetSettingValue(setting, ev.Value)
+        Widgets._SetSettingValue(setting, ev.Value, request)
     end
     instance.Events.HandleMoved:Subscribe(OnValueChanged)
     instance.Events.HandleReleased:Subscribe(OnValueChanged)
@@ -258,30 +270,34 @@ end
 ---Registers a callback for a setting value changing.
 ---@param instance GenericUI_I_Elementable
 ---@param request Features.SettingWidgets.Hooks.RenderSetting The request's callback will also be invoked.
----@param callback fun(ev:SettingsLib_Event_SettingValueChanged) Callback intended to update the widget instance.
+---@param callback fun(ev:Features.SettingWidgets.Events.SettingUpdated) Callback intended to update the widget instance.
 function Widgets._RegisterValueChangedListener(instance, request, callback)
     local subscriberID = "Features.SettingWidgets." .. Text.GenerateGUID()
-    Settings.Events.SettingValueChanged:Subscribe(function (ev)
+    Widgets.Events.SettingUpdated:Subscribe(function (ev)
         if instance:IsDestroyed() then -- Remove the listener once the instance has been destroyed.
-            Settings.Events.SettingValueChanged:Unsubscribe(subscriberID)
-        elseif ev.Setting == request.Setting then
+            Widgets.Events.SettingUpdated:Unsubscribe(subscriberID)
+        elseif ev.Request.Setting == request.Setting then
             callback(ev)
-            request.ValueChangedCallback(ev.Value) -- Also invoke the callback from the request.
+            if request.ValueChangedCallback then
+                request.ValueChangedCallback(ev.Value) -- Also invoke the callback from the request.
+            end
         end
     end, {StringID = subscriberID})
 end
 
----Sets the value of a setting and runs the ValueChanged callback.
+---Attempts to the value of a setting.
 ---@param setting Features.SettingWidgets.SupportedSettingType
 ---@param value any
----@param request Features.SettingWidgets.Hooks.RenderSetting?
+---@param request Features.SettingWidgets.Hooks.RenderSetting
 function Widgets._SetSettingValue(setting, value, request)
-    Settings.SetValue(setting.ModTable, setting:GetID(), value)
-    Settings.Save(setting.ModTable)
-
-    if request and request.ValueChangedCallback then
-        request.ValueChangedCallback(value)
+    if request.UpdateSettingValue then
+        Settings.SetValue(setting.ModTable, setting:GetID(), value)
+        Settings.Save(setting.ModTable)
     end
+    Widgets.Events.SettingUpdated:Throw({
+        Request = request,
+        Value = value,
+    })
 end
 
 ---Generates a tooltip for a setting.
@@ -312,13 +328,13 @@ function Widgets._GetSettingTooltip(setting)
 end
 
 ---Opens the context menu for a setting.
----@param setting Features.SettingWidgets.SupportedSettingType
-function Widgets._SetupSettingContextMenu(setting)
+---@param request Features.SettingWidgets.Hooks.RenderSetting
+function Widgets._SetupSettingContextMenu(request)
     ContextMenu.Setup({
         menu = {
             id = "main",
             entries = {
-                {id = Widgets.CONTEXT_MENU_ENTRIES.RESET, type = "button", text = Text.CommonStrings.ResetToDefault:GetString(), params = {Setting = setting}},
+                {id = Widgets.CONTEXT_MENU_ENTRIES.RESET, type = "button", text = Text.CommonStrings.ResetToDefault:GetString(), params = {Request = request}},
             }
         }
     })
@@ -357,15 +373,16 @@ Widgets.Hooks.RenderSetting:Subscribe(function (ev)
     if ev.Instance then
         local root = ev.Instance:GetRootElement()
         root.Events.RightClick:Subscribe(function (_)
-            Widgets._SetupSettingContextMenu(setting)
+            Widgets._SetupSettingContextMenu(ev)
         end)
     end
 end, {StringID = "DefaultImplementation"})
 
 -- Listen for requests to reset setting values from the context menu.
 ContextMenu.RegisterElementListener(Widgets.CONTEXT_MENU_ENTRIES.RESET, "buttonPressed", function(_, params)
-    local setting = params.Setting ---@type Features.SettingWidgets.SupportedSettingType
+    local request = params.Request ---@type Features.SettingWidgets.Hooks.RenderSetting
+    local setting = request.Setting
 
     -- Widgets will be updated using their regular SettingsLib listeners; no need to track requests here.
-    Widgets._SetSettingValue(setting, setting:GetDefaultValue())
+    Widgets._SetSettingValue(setting, setting:GetDefaultValue(), request)
 end)
