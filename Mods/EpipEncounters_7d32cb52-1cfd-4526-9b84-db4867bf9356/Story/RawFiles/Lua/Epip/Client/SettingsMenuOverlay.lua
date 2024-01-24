@@ -43,6 +43,23 @@ UI.DEFAULT_LABEL_SIZE = V(800, 999) -- Labels are afterwards resized to text hei
 UI.PANELS_Y = 37
 
 ---------------------------------------------
+-- STYLES
+---------------------------------------------
+
+---@type GenericUI_Prefab_Button_Style
+UI.LARGE_BUTTON_STYLE = table.shallowCopy(ButtonPrefab:GetStyle("LargeRed"))
+UI.LARGE_BUTTON_STYLE.Sound = "UI_Gen_Accept" -- UI_Gen_Apply maps to the same sound.
+
+-- TODO more consistency with the textures of vanilla UI?
+---@type GenericUI_Prefab_Button_Style
+UI.TAB_BUTTON_STYLE_INACTIVE = table.shallowCopy(ButtonPrefab:GetStyle("LargeBrown"))
+UI.TAB_BUTTON_STYLE_INACTIVE.Sound = "UI_Gen_BigButton_Click"
+
+---@type GenericUI_Prefab_Button_Style
+UI.TAB_BUTTON_STYLE_ACTIVE = table.shallowCopy(ButtonPrefab:GetStyle("LargeRed"))
+UI.TAB_BUTTON_STYLE_ACTIVE.Sound = "UI_Gen_BigButton_Click"
+
+---------------------------------------------
 -- EVENTS
 ---------------------------------------------
 
@@ -80,8 +97,8 @@ function Overlay.Setup(tab, entries)
     for i,id in ipairs(SettingsMenu.TabRegistrationOrder) do
         local registeredTab = SettingsMenu.GetTab(id)
         if SettingsMenu.CanRenderTabButton(tab) then
-            local button = ButtonPrefab.Create(UI, "TabButton." .. registeredTab.ID, tabButtonsList, ButtonPrefab:GetStyle("LargeBrown")) -- TODO more consistency?
-            button:SetActiveStyle(ButtonPrefab:GetStyle("LargeRed"))
+            local button = ButtonPrefab.Create(UI, "TabButton." .. registeredTab.ID, tabButtonsList, UI.TAB_BUTTON_STYLE_INACTIVE)
+            button:SetActiveStyle(UI.TAB_BUTTON_STYLE_ACTIVE)
             button:SetActivated(SettingsMenu.IsTabOpen(id))
             button:SetLabel(registeredTab.ButtonLabel)
 
@@ -180,8 +197,7 @@ function Overlay._Initialize()
         local bottomButtonsList = rightPanel:AddChild("BottomButtonsList", "GenericUI_Element_HorizontalList")
         bottomButtonsList:SetElementSpacing(10)
 
-        -- TODO use the same sounds as vanilla settings menu
-        local acceptButton = ButtonPrefab.Create(UI, "AcceptButton", bottomButtonsList, ButtonPrefab:GetStyle("LargeRed"))
+        local acceptButton = ButtonPrefab.Create(UI, "AcceptButton", bottomButtonsList, UI.LARGE_BUTTON_STYLE)
         acceptButton:SetLabel(CommonStrings.Accept:GetString():upper())
         acceptButton.Events.Pressed:Subscribe(function (_)
             if SettingsMenu.HasPendingChanges() then
@@ -191,7 +207,7 @@ function Overlay._Initialize()
             end
         end)
 
-        local applyButton = ButtonPrefab.Create(UI, "ApplyButton", bottomButtonsList, ButtonPrefab:GetStyle("LargeRed"))
+        local applyButton = ButtonPrefab.Create(UI, "ApplyButton", bottomButtonsList, UI.LARGE_BUTTON_STYLE)
         applyButton:SetLabel(CommonStrings.Apply:GetString():upper())
         applyButton.Events.Pressed:Subscribe(function (_)
             SettingsMenu.ApplyPendingChanges()
