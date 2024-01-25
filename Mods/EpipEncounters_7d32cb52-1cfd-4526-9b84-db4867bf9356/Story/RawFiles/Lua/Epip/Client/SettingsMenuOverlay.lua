@@ -167,6 +167,7 @@ function Overlay._Initialize()
         local leftPanel = root:AddChild("LeftPanel", "GenericUI_Element_Texture")
         leftPanel:SetTexture(Textures.PANELS.SETTINGS_LEFT)
         leftPanel:SetPosition(291, UI.PANELS_Y)
+        UI.LeftPanel = leftPanel
 
         local tabButtonsList = leftPanel:AddChild("TabButtonsList", "GenericUI_Element_ScrollList")
         tabButtonsList:SetFrame(360, 900)
@@ -184,6 +185,7 @@ function Overlay._Initialize()
         local rightPanel = root:AddChild("RightPanel", "GenericUI_Element_Texture")
         rightPanel:SetTexture(Textures.PANELS.SETTINGS_RIGHT)
         rightPanel:SetPosition(641, UI.PANELS_Y)
+        UI.RightPanel = rightPanel
 
         local tabButtonsHeader = TextPrefab.Create(UI, "TabButtonsHeader", leftPanel, Text.Format(SettingsMenu.TranslatedStrings.MenuButton:GetString():upper(), {Size = 22, FontType = Text.FONTS.BOLD}), "Center", V(200, 50))
         tabButtonsHeader:SetPositionRelativeToParent("Top", 0, 40)
@@ -240,6 +242,8 @@ function Overlay._Initialize()
         list:SetMouseWheelEnabled(true)
         list:SetRepositionAfterAdding(false)
         UI.List = list
+
+        UI._SetupBuildLabel()
 
         UI._Initialized = true
     end
@@ -447,6 +451,18 @@ function UI._RenderSetting(data)
     end
 
     return element
+end
+
+---Creates the build info label, showing the version and build date.
+function UI._SetupBuildLabel()
+    local buildInfo = IO.LoadFile("Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/buildmeta.json", "data")
+    if buildInfo then
+        local text = Text.Format("Epip v%s\n@ %s UTC+1", {
+            FormatArgs = {Epip.VERSION, buildInfo.Date}
+        })
+        local buildLabel = TextPrefab.Create(UI, "BuildLabel", UI.LeftPanel, text, "Center", V(250, 100))
+        buildLabel:SetPositionRelativeToParent("Bottom", 0, -10)
+    end
 end
 
 ---Shows a prompt requesting the user to confirm changes made to settings.
