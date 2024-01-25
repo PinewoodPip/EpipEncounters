@@ -299,25 +299,6 @@ local EpipSettings = {
             Text = "Controls the opacity of your character portraits's status bars in combat. Hovering over the statuses will always display them at full opacity.<br><br>Default is 1.",
             ContextDescription = "Portrait status opacity setting tooltip",
         },
-        -- TODO
-        -- PlayerInfo_EnableSortingFiltering_Name = {
-        --     Text = "",
-        --     ContextDescription = "Portrait status sorting/filtering setting name",
-        -- },
-        -- PlayerInfo_EnableSortingFiltering_Description = {
-        --     Text = "",
-        --     ContextDescription = "Portrait status sorting/filtering setting tooltip",
-        -- },
-        PlayerInfo_SortingFunction_Name = {
-            Handle = "h0aacad96g933cg4888g9f70g832a231c6bad",
-            Text = "Sorting Order",
-            ContextDescription = "Portrait status sorting setting name",
-        },
-        PlayerInfo_SortingFunction_Description = {
-            Handle = "hd90b74d9g5ae7g49fbg97cdg6b2e0d7fbee8",
-            Text = "Determines the order of statuses, in order of importance.",
-            ContextDescription = "Portrait status sorting setting tooltip",
-        },
         SaveLoadOverlay_Enabled_Name = {
             Handle = "h831d1efeg7f97g4306g9f6fgf0ed6c97bc6f",
             Text = "Save/Load UI Improvements",
@@ -862,24 +843,6 @@ local newSettings = {
             {ID = 1, Name = "Descending (important first)"},
             {ID = 2, Name = "Ascending (important last)"},
         },
-    },
-    {
-        ID = "PlayerInfo_Filter_SourceGen",
-        Type = "Boolean",
-        ModTable = "Epip_PlayerInfo",
-        NameHandle = TSKs.PlayerInfo_Filter_SourceGen_Name,
-        DescriptionHandle = TSKs.PlayerInfo_Filter_SourceGen_Description,
-        DefaultValue = true,
-        DeveloperOnly = true,
-    },
-    {
-        ID = "PlayerInfo_Filter_BatteredHarried",
-        Type = "Boolean",
-        ModTable = "Epip_PlayerInfo",
-        NameHandle = TSKs.PlayerInfo_Filter_BatteredHarried_Name,
-        DescriptionHandle = TSKs.PlayerInfo_Filter_BatteredHarried_Description,
-        DefaultValue = true,
-        DeveloperOnly = true,
     },
 
     -- Save/Load settings

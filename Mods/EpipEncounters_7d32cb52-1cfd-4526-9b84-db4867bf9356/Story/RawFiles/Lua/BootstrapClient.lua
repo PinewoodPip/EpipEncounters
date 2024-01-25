@@ -585,8 +585,6 @@ LOAD_ORDER = {
         RequiresEE = true,
     },
 
-    "Epip/StatusSorting.lua",
-
     "Epip/PreferredTargetDisplay/Shared.lua",
     "Epip/PreferredTargetDisplay/Client.lua",
 

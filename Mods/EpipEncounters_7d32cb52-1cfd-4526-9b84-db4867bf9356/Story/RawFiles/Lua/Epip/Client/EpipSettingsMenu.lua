@@ -268,8 +268,6 @@ local tabs = {
             CreateHeader(TSK.Section_PlayerInfo),
             "PlayerInfoBH",
             "PlayerInfo_StatusHolderOpacity",
-            "PlayerInfo_EnableSortingFiltering",
-            "PlayerInfo_SortingFunction",
             {Module = StatusesDisplay:GetSettingsModuleID(), ID = StatusesDisplay.Settings.Enabled.ID},
             {Module = StatusesDisplay:GetSettingsModuleID(), ID = StatusesDisplay.Settings.ShowSourceGeneration.ID},
             {Module = StatusesDisplay:GetSettingsModuleID(), ID = StatusesDisplay.Settings.ShowBatteredHarried.ID},
