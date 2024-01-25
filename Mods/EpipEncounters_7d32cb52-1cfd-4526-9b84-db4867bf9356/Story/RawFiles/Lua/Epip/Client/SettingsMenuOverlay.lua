@@ -50,13 +50,12 @@ UI.PANELS_Y = 37
 UI.LARGE_BUTTON_STYLE = table.shallowCopy(ButtonPrefab:GetStyle("LargeRed"))
 UI.LARGE_BUTTON_STYLE.Sound = "UI_Gen_Accept" -- UI_Gen_Apply maps to the same sound.
 
--- TODO more consistency with the textures of vanilla UI?
 ---@type GenericUI_Prefab_Button_Style
-UI.TAB_BUTTON_STYLE_INACTIVE = table.shallowCopy(ButtonPrefab:GetStyle("LargeBrown"))
+UI.TAB_BUTTON_STYLE_INACTIVE = table.shallowCopy(ButtonPrefab:GetStyle("TransparentLargeDark"))
 UI.TAB_BUTTON_STYLE_INACTIVE.Sound = "UI_Gen_BigButton_Click"
 
 ---@type GenericUI_Prefab_Button_Style
-UI.TAB_BUTTON_STYLE_ACTIVE = table.shallowCopy(ButtonPrefab:GetStyle("LargeRed"))
+UI.TAB_BUTTON_STYLE_ACTIVE = table.shallowCopy(ButtonPrefab:GetStyle("LargeRedWithArrows"))
 UI.TAB_BUTTON_STYLE_ACTIVE.Sound = "UI_Gen_BigButton_Click"
 
 ---------------------------------------------
@@ -170,10 +169,10 @@ function Overlay._Initialize()
         leftPanel:SetPosition(291, UI.PANELS_Y)
 
         local tabButtonsList = leftPanel:AddChild("TabButtonsList", "GenericUI_Element_ScrollList")
-        tabButtonsList:SetFrame(310, 900)
+        tabButtonsList:SetFrame(360, 900)
         tabButtonsList:SetMouseWheelEnabled(true)
-        tabButtonsList:SetScrollbarSpacing(-345)
-        tabButtonsList:SetPosition(25, 120)
+        tabButtonsList:SetScrollbarSpacing(-371)
+        tabButtonsList:SetPosition(0, 120)
         UI.TabButtonsList = tabButtonsList
 
         -- Hide the scrollbar background
