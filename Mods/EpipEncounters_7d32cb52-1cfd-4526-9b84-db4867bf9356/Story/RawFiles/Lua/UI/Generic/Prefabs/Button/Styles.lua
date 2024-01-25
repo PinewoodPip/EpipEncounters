@@ -8,15 +8,15 @@ local Button = Generic.GetPrefab("GenericUI_Prefab_Button")
 
 ---Creates a Button styles from a table of textures with keys `IDLE`, `HIGHLIGHTED`, `PRESSED` and `DISABLED`.
 ---@param textures {IDLE:TextureLib_Texture?, HIGHLIGHTED:TextureLib_Texture?, PRESSED:TextureLib_Texture?, DISABLED:TextureLib_Texture?}
+---@param otherFields GenericUI_Prefab_Button_Style? Will be merged.
 ---@return GenericUI_Prefab_Button_Style
-local function CreateStyle(textures)
+local function CreateStyle(textures, otherFields)
     ---@type GenericUI_Prefab_Button_Style
-    local style = {
-        IdleTexture = textures.IDLE,
-        HighlightedTexture = textures.HIGHLIGHTED,
-        PressedTexture = textures.PRESSED,
-        DisabledTexture = textures.DISABLED,
-    }
+    local style = otherFields or {}
+    style.IdleTexture = textures.IDLE
+    style.HighlightedTexture = textures.HIGHLIGHTED
+    style.PressedTexture = textures.PRESSED
+    style.DisabledTexture = textures.DISABLED
     return style
 end
 
@@ -332,14 +332,9 @@ local styles = {
         HighlightedTexture = ButtonTextures.TRANSPARENT_LONG.HIGHLIGHTED,
         PressedTexture = ButtonTextures.TRANSPARENT_LONG.PRESSED,
     },
-    TransparentLargeDark = CreateStyle(ButtonTextures.TRANSPARENT_LARGE_DARK),
-    LargeRed = {
-        IdleTexture = ButtonTextures.RED.LARGE.IDLE,
-        HighlightedTexture = ButtonTextures.RED.LARGE.HIGHLIGHTED,
-        PressedTexture = ButtonTextures.RED.LARGE.PRESSED,
-        DisabledTexture = ButtonTextures.RED.LARGE.DISABLED,
-    },
-    LargeRedWithArrows = CreateStyle(ButtonTextures.RED.LARGE_WITH_ARROWS),
+    TransparentLargeDark = CreateStyle(ButtonTextures.TRANSPARENT_LARGE_DARK, {PressedLabelYOffset = 2}),
+    LargeRed = CreateStyle(ButtonTextures.RED.LARGE, {PressedLabelYOffset = 2}),
+    LargeRedWithArrows = CreateStyle(ButtonTextures.RED.LARGE_WITH_ARROWS, {PressedLabelYOffset = 2}),
     MediumRed = CreateStyle(ButtonTextures.RED.MEDIUM),
     SmallRed = {
         IdleTexture = ButtonTextures.RED.SMALL.IDLE,

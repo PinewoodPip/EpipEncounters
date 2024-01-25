@@ -42,6 +42,7 @@ Generic.RegisterPrefab("GenericUI_Prefab_Button", Button)
 ---@field IdleOverlay TextureLib_Texture?
 ---@field HighlightedOverlay TextureLib_Texture? If not present, `IdleOverlay` will be used instead.
 ---@field PressedOverlay TextureLib_Texture? If not present, `IdleOverlay` will be used instead.
+---@field PressedLabelYOffset number? Position offset to apply to the label while in the pressed state.
 
 ---------------------------------------------
 -- METHODS
@@ -251,8 +252,23 @@ end
 ---Sets the state of the button.
 ---@param state GenericUI_Prefab_Button_InteractionState
 function Button:_SetState(state)
+    local prevState = self._State
+    if state == prevState then return end -- Do nothing if state has not changed.
+
     self._State = state
     self:_UpdateTextures()
+
+    -- Update offset of the label
+    local label = self.Label
+    local offset = self:_GetCurrentStyle().PressedLabelYOffset
+    if offset and prevState ~= state then
+        local x, y = label:GetPosition()
+        if prevState == "Pressed" then
+            label:SetPosition(x, y - offset)
+        elseif state == "Pressed" then
+            label:SetPosition(x, y + offset)
+        end
+    end
 end
 
 ---Returns whether the button is a State Button.
