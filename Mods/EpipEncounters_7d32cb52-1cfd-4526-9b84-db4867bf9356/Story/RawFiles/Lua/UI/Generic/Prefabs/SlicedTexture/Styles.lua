@@ -24,6 +24,18 @@ local styles = {
         Center = T.CONTEXT_MENU.CENTER,
         Bottom = T.CONTEXT_MENU.BOTTOM,
     },
+    SimpleTooltip = {
+        Type = "9-Sliced",
+        Bottom = T.SIMPLE_TOOLTIP.BOTTOM,
+        BottomLeft = T.SIMPLE_TOOLTIP.BOTTOM_LEFT,
+        BottomRight = T.SIMPLE_TOOLTIP.BOTTOM_RIGHT,
+        TopLeft = T.SIMPLE_TOOLTIP.TOP_LEFT,
+        Top = T.SIMPLE_TOOLTIP.TOP,
+        TopRight = T.SIMPLE_TOOLTIP.TOP_RIGHT,
+        Left = T.SIMPLE_TOOLTIP.LEFT,
+        Center = T.SIMPLE_TOOLTIP.CENTER,
+        Right = T.SIMPLE_TOOLTIP.RIGHT,
+    },
     WhiteMessage = {
         Type = "3-Sliced Horizontal",
         Left = T.MESSAGES.WHITE.LEFT,

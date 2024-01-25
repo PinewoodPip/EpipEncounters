@@ -18,6 +18,14 @@ local Textures = {
             DOS1_EXAMINE = T("PIP_UI_Background_Page_DOS1_Examine", {
                 GUID = "1743ce49-7909-4954-a1dd-dc81353530a7",
             }),
+            NOTEBOOK = T("PIP_UI_Background_Notebook", {
+                GUID = "6b99397a-46bc-4de8-90c0-31658cb7aaed",
+            }),
+        },
+        BARS = {
+            LOADING_SCREEN = T("PIP_UI_Bar_LoadingScreen", {
+                GUID = "7403b92e-0439-4a70-9c35-c7f9bf4fb0ad",
+            }),
         },
         BUTTONS = {
             ADD = {
@@ -74,6 +82,28 @@ local Textures = {
                     PRESSED = T("PIP_UI_Button_Down_Slate_Small_Pressed", {
                         GUID = "5fe2e940-6824-4ee3-b449-c562bbb63f19",
                     }), 
+                },
+                UP_BROWN_SMALL = {
+                    IDLE = T("PIP_UI_Button_Up_BrownSmall_Idle", {
+                        GUID = "8be56f38-a7a4-4e33-b846-83b56d80b86b",
+                    }),
+                    HIGHLIGHTED = T("PIP_UI_Button_Up_BrownSmall_Highlighted", {
+                        GUID = "8a495747-0aa9-44ff-a10c-e3a4b82268d4",
+                    }),
+                    PRESSED = T("PIP_UI_Button_Up_BrownSmall_Pressed", {
+                        GUID = "4b2816bb-ab88-4262-b151-fb72cebbf650",
+                    }),
+                },
+                DOWN_BROWN_SMALL = {
+                    IDLE = T("PIP_UI_Button_Down_BrownSmall_Idle", {
+                        GUID = "d0993808-bd4b-4da4-b951-9267fe21b3ac",
+                    }),
+                    HIGHLIGHTED = T("PIP_UI_Button_Down_BrownSmall_Highlighted", {
+                        GUID = "c36bc852-c7c5-4c6f-b34e-5a4da3b71283",
+                    }),
+                    PRESSED = T("PIP_UI_Button_Down_BrownSmall_Pressed", {
+                        GUID = "509e6dfa-9371-4f36-a94b-5e090cef1f6d",
+                    }),
                 },
                 UP = {
                     IDLE = T("PIP_UI_Button_Up_Idle", {
@@ -274,6 +304,20 @@ local Textures = {
                     GUID = "c1a7b065-06e1-4bd0-8116-bba5562a5ebd",
                 }),
             },
+            SETTINGS = {
+                RED = {
+                    IDLE = T("PIP_UI_Button_Settings_Red_Idle", {
+                        GUID = "592dd6e8-ee24-4d31-aa0b-85e18cf503e2",
+                    }),
+                    HIGHLIGHTED = T("PIP_UI_Button_Settings_Red_Highlighted", {
+                        GUID = "f5cfc635-300e-4d91-95e5-e9c3b8816666",
+                    }),
+                    -- TODO rename texture file
+                    PRESSED = T("PIP_UI_Button_Settings_Red_Disabled", {
+                        GUID = "2289750b-e8da-4570-bed3-7a99c5fc2d99",
+                    }),
+                },
+            },
             STOP = {
                 RED = {
                     IDLE = T("PIP_UI_Button_Stop_Idle", {
@@ -355,6 +399,17 @@ local Textures = {
                     GUID = "b3baf8d3-0421-4867-b126-974846e508bf",
                 }),
             },
+            BLUE_DOS1 = {
+                IDLE = T("PIP_UI_Button_Blue_DOS1_Idle", {
+                    GUID = "86d9bf96-cc3c-4ade-8f9d-3ff57461b176",
+                }),
+                HIGHLIGHTED = T("PIP_UI_Button_Blue_DOS1_Highlighted", {
+                    GUID = "7e31e43e-0fa1-4cbe-b5b2-0684d65f90eb",
+                }),
+                PRESSED = T("PIP_UI_Button_Blue_DOS1_Pressed", {
+                    GUID = "f04a8483-19df-42ca-929b-45265e3c04aa",
+                }),
+            },
             GREEN = {
                 MEDIUM = {
                     IDLE = T("PIP_UI_Button_Green_Medium_Idle", {
@@ -397,7 +452,13 @@ local Textures = {
                     DISABLED = T("PIP_UI_Button_Green_Small_Textured_Disabled", {
                         GUID = "6396e49f-063d-408d-b6d4-5224697ca917",
                     }),
-                }
+                },
+                -- TODO import the rest of its textures
+                MICRO_SMOOTH = {
+                    IDLE = T("PIP_UI_Button_Green_MicroSmooth_Idle", {
+                        GUID = "7b1aa5dc-1c48-4fa0-9fca-5ff90bac4927",
+                    }),
+                },
             },
             YELLOW = {
                 DECORATED = {
@@ -551,6 +612,34 @@ local Textures = {
                         GUID = "5665179f-80f8-4b2a-b353-8c30349a98b0",
                     }),
                 },
+                LONG = {
+                    IDLE = T("PIP_UI_Button_Brown_Long_Idle", {
+                        GUID = "40f576d8-877a-447c-9bda-1f6ae0e80a33",
+                    }),
+                    HIGHLIGHTED = T("PIP_UI_Button_Brown_Long_Highlighted", {
+                        GUID = "5e7b41eb-1aed-4d36-a505-3ab164fcfccd",
+                    }),
+                    PRESSED = T("PIP_UI_Button_Brown_Long_Pressed", {
+                        GUID = "203a0a4a-f7fa-4860-9c13-70c472e1b67c",
+                    }),
+                    DISABLED = T("PIP_UI_Button_Brown_Long_Disabled", {
+                        GUID = "b77fcc92-e21f-4974-9a3f-8250105bd126",
+                    }),
+                },
+                MICRO = {
+                    IDLE = T("PIP_UI_Button_Brown_Micro_Idle", {
+                        GUID = "1328e64c-9dbe-4dfc-b2da-6726db5b35d4",
+                    }),
+                    HIGHLIGHTED = T("PIP_UI_Button_Brown_Micro_Highlighted", {
+                        GUID = "87a14c13-2907-47a0-bcb9-f631098fa160",
+                    }),
+                    PRESSED = T("PIP_UI_Button_Brown_Micro_Pressed", {
+                        GUID = "0a72e8d9-41e2-4914-84ba-afd35a816694",
+                    }),
+                    DISABLED = T("PIP_UI_Button_Brown_Micro_Disabled", {
+                        GUID = "4e79c7c1-03ee-48de-af50-e1607a2ece98",
+                    }),
+                },
             },
             COUNTER = {
                 DOS1 = {
@@ -690,6 +779,9 @@ local Textures = {
                 PRESSED = T("PIP_UI_Button_Transparent_Pressed", {
                     GUID = "aa18593e-c725-421d-9bfc-7fec6bcfc30d",
                 }),
+                DISABLED = T("PIP_UI_Button_Transparent_Disabled", {
+                    GUID = "9ff15069-4dcc-42c3-9e48-7ef1342f8cbe",
+                }),
             },
             TRANSPARENT_MEDIUM = {
                 IDLE = T("PIP_UI_Button_Transparent_Medium_Idle", {
@@ -700,6 +792,31 @@ local Textures = {
                 }),
                 PRESSED = T("PIP_UI_Button_Transparent_Medium_Pressed", {
                     GUID = "2baa3fa3-d41e-4ac3-87d3-ee207fdfd1e5",
+                }),
+            },
+            TRANSPARENT_LONG = {
+                DISABLED = T("PIP_UI_Button_Transparent_Long_Disabled", {
+                    GUID = "9ad78cbd-877c-4f22-8864-83e786293b53",
+                }),
+                HIGHLIGHTED = T("PIP_UI_Button_Transparent_Long_Highlighted", {
+                    GUID = "9a56f5c2-0715-45cc-904c-65a431dd1c87",
+                }),
+                IDLE = T("PIP_UI_Button_Transparent_Long_Idle", {
+                    GUID = "089bf0fe-db86-4e79-8ef5-7be53779776c",
+                }),
+                PRESSED = T("PIP_UI_Button_Transparent_Long_Pressed", {
+                    GUID = "f0a9af65-25ab-4b16-a3ba-84c5a0235b52",
+                }),
+            },
+            TRANSPARENT_LARGE_DARK = {
+                HIGHLIGHTED = T("PIP_UI_Button_Transparent_LargeDark_Highlighted", {
+                    GUID = "e05a9d73-426f-4d3e-8c7c-f934ffbb8fae",
+                }),
+                IDLE = T("PIP_UI_Button_Transparent_LargeDark_Idle", {
+                    GUID = "5e45d73b-f5b2-459d-a229-cc8c753ea37a",
+                }),
+                PRESSED = T("PIP_UI_Button_Transparent_LargeDark_Pressed", {
+                    GUID = "1f27d74e-9d9b-45ce-9ed4-4edb62329a1c",
                 }),
             },
             RED = {
@@ -715,6 +832,31 @@ local Textures = {
                     }),
                     DISABLED = T("PIP_UI_Button_Red_Large_Disabled", {
                         GUID = "634b1104-dbdf-46a8-9023-a12ee6c97624",
+                    }),
+                },
+                LARGE_WITH_ARROWS = {
+                    IDLE = T("PIP_UI_Button_Red_LargeWithArrows_Idle", {
+                        GUID = "9f68b093-6e36-4202-8a54-6d314161916b",
+                    }),
+                    HIGHLIGHTED = T("PIP_UI_Button_Red_LargeWithArrows_Highlighted", {
+                        GUID = "01319879-c5ea-40e7-acb5-9c807abcf1fb",
+                    }),
+                    PRESSED = T("PIP_UI_Button_Red_LargeWithArrows_Pressed", {
+                        GUID = "d7313550-fe78-4f09-ac59-1c717e3850b5",
+                    }),
+                    DISABLED = T("PIP_UI_Button_Red_LargeWithArrows_Disabled", {
+                        GUID = "4c240309-2003-41bf-a19a-d0d5c7f8232c",
+                    }),
+                },
+                MEDIUM = {
+                    IDLE = T("PIP_UI_Button_Red_Medium_Idle", {
+                        GUID = "67c374cf-d058-4088-8e17-b7fe40c8c9ea",
+                    }),
+                    HIGHLIGHTED = T("PIP_UI_Button_Red_Medium_Highlighted", {
+                        GUID = "40b918d6-e2a2-4bb1-8c54-8535e2006dc4",
+                    }),
+                    PRESSED = T("PIP_UI_Button_Red_Medium_Pressed", {
+                        GUID = "01443586-4456-4116-be58-02651890ee40",
                     }),
                 },
                 SMALL = {
@@ -785,6 +927,30 @@ local Textures = {
                 INACTIVE_PRESSED = T("PIP_UI_StateButton_Helmet_Inactive_Pressed", {
                     GUID = "bb98f623-6b42-4b9b-8e84-716c4531f88c",
                 }),
+            },
+            BROWN_SIMPLE = {
+                INACTIVE = {
+                    IDLE = T("PIP_UI_StateButton_Brown_Inactive_Idle", {
+                        GUID = "b7f6e1d0-a44e-4fb7-aad1-6794afcf52e9",
+                    }),
+                    HIGHLIGHTED = T("PIP_UI_StateButton_Brown_Inactive_Highlighted", {
+                        GUID = "5246c4fa-9054-4f8c-ba02-fe4c91c5d056",
+                    }),
+                    PRESSED = T("PIP_UI_StateButton_Brown_Inactive_Pressed", {
+                        GUID = "cc4abf3f-ae7f-47f0-8f4f-2a883325bbcc",
+                    }),
+                },
+                ACTIVE = {
+                    IDLE = T("PIP_UI_StateButton_Brown_Active_Idle", {
+                        GUID = "e6bc7323-b18c-4599-91d4-7b34da0c94d3",
+                    }),
+                    HIGHLIGHTED = T("PIP_UI_StateButton_Brown_Active_Highlighted", {
+                        GUID = "31cd6106-a8e8-4be0-bd32-751d8ee2e4e2",
+                    }),
+                    PRESSED = T("PIP_UI_StateButton_Brown_Active_Pressed", {
+                        GUID = "8a75c6b6-56a9-4f88-a554-78d684bb1191",
+                    }),
+                },
             },
             CHECKBOXES = {
                 ROUND = {
@@ -1092,11 +1258,35 @@ local Textures = {
             DIALOGUE_CONTROLLER = T("PIP_UI_Panel_Dialogue_Controller", {
                 GUID = "3ec1cc16-61f4-4a55-a4cb-fb0b994d6ad4",
             }),
+            DIPLOMACY = T("PIP_UI_Panel_Diplomacy", {
+                GUID = "bc439685-4da4-4e38-b1d3-745840f6dd96",
+            }),
             DOS1_EXAMINE = T("PIP_UI_Panel_Examine_DOS1", {
                 GUID = "d1bd56a1-faed-45b4-870c-4310cbfd7672",
             }),
             FLIPBOOK = T("PIP_UI_Panel_Flipbook", {
                 GUID = "274e6019-38b3-4616-bbe1-f92b654978ff",
+            }),
+            GAME_MENU = T("PIP_UI_Panel_GameMenu", {
+                GUID = "1efd93d3-0a2b-4af9-ae71-7809907a5ac0",
+            }),
+            LEGEND = T("PIP_UI_Panel_Legend", {
+                GUID = "696b5050-16ff-4d7a-a151-f80d3a8065f5",
+            }),
+            LEGEND_SMALL = T("PIP_UI_Panel_Legend_Small", {
+                GUID = "77ca66a4-b593-4383-b69e-3a937f6152ac",
+            }),
+            LOAD = T("PIP_UI_Panel_Load", {
+                GUID = "a0a41f2c-4c87-438d-b5f7-ce82e0b1abfb",
+            }),
+            MODS = T("PIP_UI_Panel_Mods", {
+                GUID = "2f3f8d74-c893-43ec-8af7-23131a028ab6",
+            }),
+            MODS_CONTROLLER = T("PIP_UI_Panel_Mods_Controller", {
+                GUID = "d8bc3ed7-4564-4759-90b8-f92c2d864adc",
+            }),
+            REWARDS_CONTROLLER = T("PIP_UI_Panel_Reward_Controller", {
+                GUID = "16ed65db-3642-4671-bcc4-f67d00f4f026",
             }),
             NOTE_CONTROLLER = T("PIP_UI_Panel_Note_Controller", {
                 GUID = "6cc944eb-92e2-46d8-a360-f4454b0be1da",
@@ -1218,8 +1408,160 @@ local Textures = {
                     GUID = "99f32503-af5a-4c54-af49-265863778a05",
                 }),
             },
+            SIMPLE_TOOLTIP = {
+                BOTTOM = T("PIP_UI_Sliced_SimpleTooltip_Bottom", {
+                    GUID = "44cf82fc-990b-44b1-97e1-77e4923b0a44",
+                }),
+                BOTTOM_LEFT = T("PIP_UI_Sliced_SimpleTooltip_BottomLeft", {
+                    GUID = "3557faba-23d6-4dc9-96b8-ba8c4d90f011",
+                }),
+                BOTTOM_RIGHT = T("PIP_UI_Sliced_SimpleTooltip_BottomRight", {
+                    GUID = "dd629681-b964-48eb-a2d0-35ee9aed30a3",
+                }),
+                CENTER = T("PIP_UI_Sliced_SimpleTooltip_Center", {
+                    GUID = "a80255df-10de-4750-9d70-13917a0011d8",
+                }),
+                LEFT = T("PIP_UI_Sliced_SimpleTooltip_Left", {
+                    GUID = "ce7d00a2-215b-4801-934a-5d54baaf5220",
+                }),
+                RIGHT = T("PIP_UI_Sliced_SimpleTooltip_Right", {
+                    GUID = "35fc76ff-9a5b-4da1-a5c4-762f85def456",
+                }),
+                TOP = T("PIP_UI_Sliced_SimpleTooltip_Top", {
+                    GUID = "99632658-1002-4603-b793-0b639f80fae3",
+                }),
+                TOP_LEFT = T("PIP_UI_Sliced_SimpleTooltip_TopLeft", {
+                    GUID = "28629f1e-a275-40f9-b529-920ee4d88f3e",
+                }),
+                TOP_RIGHT = T("PIP_UI_Sliced_SimpleTooltip_TopRight", {
+                    GUID = "adab85eb-3708-4fe4-9ca0-3ad4c5a57877",
+                }),
+            },
+        },
+        INPUT = {
+            CONTROLLER = {
+                XBOX = {
+                    A_BUTTON = T("PIP_UI_Input_Controller_A", {
+                        GUID = "ebc7f23d-8701-4fe0-840a-d2d4d1f4928d",
+                    }),
+                    B_BUTTON = T("PIP_UI_Input_Controller_B", {
+                        GUID = "02f7d859-8187-4737-8368-9765e8c20103",
+                    }),
+                    LEFT_BUTTON = T("PIP_UI_Input_Controller_LeftButton", {
+                        GUID = "583eb3b6-e33b-45b4-b518-b226bfeafa98",
+                    }),
+                    LEFT_TRIGGER = T("PIP_UI_Input_Controller_LeftTrigger", {
+                        GUID = "56f03ad1-901c-4bb1-b720-484de829844b",
+                    }),
+                    RIGHT_BUTTON = T("PIP_UI_Input_Controller_RightButton", {
+                        GUID = "9a8a9db7-13f1-49ef-ba47-36b22fed0de0",
+                    }),
+                    RIGHT_TRIGGER = T("PIP_UI_Input_Controller_RightTrigger", {
+                        GUID = "ede1cb73-049f-47a9-8e57-22e07092faef",
+                    }),
+                    SELECT = T("PIP_UI_Input_Controller_Select", {
+                        GUID = "e9f64ac9-9601-4050-a0b9-3ea21b1f95a8",
+                    }),
+                    X_BUTTON = T("PIP_UI_Input_Controller_X", {
+                        GUID = "e8c2aecf-c29f-46b4-80ad-977cd8e15382",
+                    }),
+                    Y_BUTTON = T("PIP_UI_Input_Controller_Y", {
+                        GUID = "417f1f7d-66bc-4efc-b059-fd5a1fac5710",
+                    }),
+                    START = T("PIP_UI_Input_Controller_Start", {
+                        GUID = "889e8257-a18e-4307-b0f3-a4fbf23d1d69",
+                    }),
+                    RIGHT_STICK = {
+                        NEUTRAL = T("PIP_UI_Input_Controller_RightStick", {
+                            GUID = "9ba0b9ae-6980-4756-baa2-bc80fda060fc",
+                        }),
+                        DOWN = T("PIP_UI_Input_Controller_RightStick_Down", {
+                            GUID = "35cc44ba-c8fd-4d05-b692-17a36a5f30ff",
+                        }),
+                        HORIZONTAL = T("PIP_UI_Input_Controller_RightStick_Horizontal", {
+                            GUID = "e17a547d-051b-4945-8403-828775c807f2",
+                        }),
+                        LEFT = T("PIP_UI_Input_Controller_RightStick_Left", {
+                            GUID = "e0f9f2b8-40cf-4fdf-8803-46e1b573cee9",
+                        }),
+                        PRESSED = T("PIP_UI_Input_Controller_RightStick_Press", {
+                            GUID = "109a38d6-d7db-495e-81e0-3b7df77869d0",
+                        }),
+                        RIGHT = T("PIP_UI_Input_Controller_RightStick_Right", {
+                            GUID = "76963b60-cc1c-4ba7-a061-a6cb41b3a98c",
+                        }),
+                        UP = T("PIP_UI_Input_Controller_RightStick_Up", {
+                            GUID = "b25e78ea-1dcb-47e9-ba42-d753cd2cc2c3",
+                        }),
+                        VERTICAL = T("PIP_UI_Input_Controller_RightStick_Vertical", {
+                            GUID = "878c59bc-98c9-4a26-a366-2bef7db5cbc7",
+                        }),
+                    },
+                    LEFT_STICK = {
+                        NEUTRAL = T("PIP_UI_Input_Controller_LeftStick", {
+                            GUID = "0010c412-5f85-4d32-ba33-f29d8a832bf4",
+                        }),
+                        DOWN = T("PIP_UI_Input_Controller_LeftStick_Down", {
+                            GUID = "3234d9df-188b-4967-b498-b3295f713e6f",
+                        }),
+                        HORIZONTAL = T("PIP_UI_Input_Controller_LeftStick_Horizontal", {
+                            GUID = "e7ea1214-783a-4967-8d78-7d0c1db95683",
+                        }),
+                        LEFT = T("PIP_UI_Input_Controller_LeftStick_Left", {
+                            GUID = "3239d57c-ee63-4931-94b7-5fd2c6155120",
+                        }),
+                        PRESS = T("PIP_UI_Input_Controller_LeftStick_Press", {
+                            GUID = "3ec1ee37-3641-43df-96c1-9dcca6c174ea",
+                        }),
+                        RIGHT = T("PIP_UI_Input_Controller_LeftStick_Right", {
+                            GUID = "703067f4-8211-48fd-8233-2a7d6f2c9f76",
+                        }),
+                        UP = T("PIP_UI_Input_Controller_LeftStick_Up", {
+                            GUID = "616e7298-2532-49e3-8ffb-5a1c05f02052",
+                        }),
+                        VERTICAL = T("PIP_UI_Input_Controller_LeftStick_Vertical", {
+                            GUID = "4fb70643-bb3c-4d44-b6df-3174ef670c6f",
+                        }),
+                    },
+                    DPAD = {
+                        NEUTRAL = T("PIP_UI_Input_Controller_DPad", {
+                            GUID = "9c7e7d8d-5055-4d8a-9c62-5762a5189564",
+                        }),
+                        DOWN = T("PIP_UI_Input_Controller_DPad_Down", {
+                            GUID = "95edafa3-a9e2-4389-8512-0e5b0a0be4ca",
+                        }),
+                        HORIZONTAL = T("PIP_UI_Input_Controller_DPad_Horizontal", {
+                            GUID = "27051165-d22d-4967-8c6a-256efd35f763",
+                        }),
+                        LEFT = T("PIP_UI_Input_Controller_DPad_Left", {
+                            GUID = "dc3c6dae-ecec-4118-b59e-ef9e243ce455",
+                        }),
+                        RIGHT = T("PIP_UI_Input_Controller_DPad_Right", {
+                            GUID = "bbef708b-7bba-4608-94d2-d49a9c9d1672",
+                        }),
+                        UP = T("PIP_UI_Input_Controller_DPad_Up", {
+                            GUID = "8cf19060-d0e1-4fa2-8178-1916a507dfb8",
+                        }),
+                        VERTICAL = T("PIP_UI_Input_Controller_DPad_Vertical", {
+                            GUID = "e9df2c03-5384-4163-9012-56750efc5116",
+                        }),
+                    },
+                },
+            },
         },
         MISC = {
+            ARROW_WHITE = T("PIP_UI_Misc_Arrow_White", {
+                GUID = "d2e6126c-7a3d-41d7-92e0-fd45296692f3",
+            }),
+            GLOW_BEIGE = T("PIP_UI_Misc_Glow_Beige", {
+                GUID = "6acd5391-65db-4042-a3e7-61c0eac8684f",
+            }),
+            GLOW_ORANGE = T("PIP_UI_Misc_Glow_Orange", {
+                GUID = "93e01819-35a1-4d4c-8b16-947fe331355c",
+            }),
+            GLOW_WHITE = T("PIP_UI_Misc_White", {
+                GUID = "c3473e90-30b2-47a1-b424-93a1464a72c5",
+            }),
             BACKLIGHT = T("PIP_UI_Misc_Backlight", {
                 GUID = "94a54564-ba49-4c4c-97ef-c843bc9f15c9",
             }),

@@ -66,6 +66,7 @@ function UI._Initialize()
 
     UI._SetupButtonList()
     UI._SetupFrameList()
+    UI._SetupInputIconList()
     UI._SetupIconList()
     UI._SetupSlicedTextureList()
 
@@ -78,6 +79,10 @@ function UI._Initialize()
         {
             Element = UI.FrameList,
             Name = "Frames",
+        },
+        {
+            Element = UI.InputIconsList,
+            Name = "Input Icons",
         },
         {
             Element = UI.IconList,
@@ -159,6 +164,14 @@ function UI._SetupFrameList()
     UI.FrameList = frameList
     frameList:RepositionElements()
     frameList:SetVisible(false)
+end
+
+---Creates the list of input icons.
+function UI._SetupInputIconList()
+    local list = UI._SetupScrollList("InputIconsList")
+    local textures = UI._FindTexturesRecursively(Textures.INPUT)
+    UI._RenderTextures(list, textures)
+    UI.InputIconsList = list
 end
 
 ---Creates the list of buttons.
@@ -263,6 +276,22 @@ function UI._SetupScrollList(id)
     list:SetVisible(false)
 
     return list
+end
+
+---Renders textures onto a list.
+---@param list GenericUI_ContainerElement
+---@param textures TextureLib_Texture[]
+function UI._RenderTextures(list, textures)
+    for _,texture in ipairs(textures) do
+        local element = list:AddChild(texture.GUID, "GenericUI_Element_Texture")
+        element:SetTexture(texture)
+
+        -- Show texture name and GUID on click and copy to clipboard
+        element.Events.MouseUp:Subscribe(function (_)
+            print(texture.Name, texture.GUID)
+            Client.CopyToClipboard(texture.Name)
+        end)
+    end
 end
 
 ---Returns a list of textures found recursively within a table.

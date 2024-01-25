@@ -6,6 +6,20 @@ local Generic = Client.UI.Generic
 
 local Button = Generic.GetPrefab("GenericUI_Prefab_Button")
 
+---Creates a Button styles from a table of textures with keys `IDLE`, `HIGHLIGHTED`, `PRESSED` and `DISABLED`.
+---@param textures {IDLE:TextureLib_Texture?, HIGHLIGHTED:TextureLib_Texture?, PRESSED:TextureLib_Texture?, DISABLED:TextureLib_Texture?}
+---@return GenericUI_Prefab_Button_Style
+local function CreateStyle(textures)
+    ---@type GenericUI_Prefab_Button_Style
+    local style = {
+        IdleTexture = textures.IDLE,
+        HighlightedTexture = textures.HIGHLIGHTED,
+        PressedTexture = textures.PRESSED,
+        DisabledTexture = textures.DISABLED,
+    }
+    return style
+end
+
 ---@type table<string, GenericUI_Prefab_Button_Style>
 local styles = {
     ArrowDown = {
@@ -21,6 +35,21 @@ local styles = {
     AddSlot = {
         IdleTexture = ButtonTextures.ADD.SLOT.IDLE,
         HighlightedTexture = ButtonTextures.ADD.SLOT.HIGHLIGHTED,
+    },
+    BrownLong = {
+        IdleTexture = ButtonTextures.BROWN.LONG.IDLE,
+        HighlightedTexture =  ButtonTextures.BROWN.LONG.HIGHLIGHTED,
+        PressedTexture =  ButtonTextures.BROWN.LONG.PRESSED,
+    },
+    BrownMicro = {
+        IdleTexture = ButtonTextures.BROWN.MICRO.IDLE,
+        HighlightedTexture =  ButtonTextures.BROWN.MICRO.HIGHLIGHTED,
+        PressedTexture =  ButtonTextures.BROWN.MICRO.PRESSED,
+    },
+    DOS1Blue = {
+        IdleTexture = ButtonTextures.BLUE_DOS1.IDLE,
+        HighlightedTexture =  ButtonTextures.BLUE_DOS1.HIGHLIGHTED,
+        PressedTexture =  ButtonTextures.BLUE_DOS1.PRESSED,
     },
     DiamondDown = {
         IdleTexture = ButtonTextures.ARROWS.DIAMOND.DOWN.IDLE,
@@ -77,6 +106,21 @@ local styles = {
         IdleTexture = ButtonTextures.ARROWS.UP_SLATE_SMALL.IDLE,
         HighlightedTexture = ButtonTextures.ARROWS.UP_SLATE_SMALL.HIGHLIGHTED,
         PressedTexture = ButtonTextures.ARROWS.UP_SLATE_SMALL.PRESSED,
+    },
+    UpBrownSmall = {
+        IdleTexture = ButtonTextures.ARROWS.UP_BROWN_SMALL.IDLE,
+        HighlightedTexture = ButtonTextures.ARROWS.UP_BROWN_SMALL.HIGHLIGHTED,
+        PressedTexture = ButtonTextures.ARROWS.UP_BROWN_SMALL.PRESSED,
+    },
+    DownBrownSmall = {
+        IdleTexture = ButtonTextures.ARROWS.DOWN_BROWN_SMALL.IDLE,
+        HighlightedTexture = ButtonTextures.ARROWS.DOWN_BROWN_SMALL.HIGHLIGHTED,
+        PressedTexture = ButtonTextures.ARROWS.DOWN_BROWN_SMALL.PRESSED,
+    },
+    SettingsRed = {
+        IdleTexture = ButtonTextures.SETTINGS.RED.IDLE,
+        HighlightedTexture = ButtonTextures.SETTINGS.RED.HIGHLIGHTED,
+        PressedTexture = ButtonTextures.SETTINGS.RED.PRESSED,
     },
     LeftTall = {
         IdleTexture = ButtonTextures.ARROWS.LEFT_TALL.IDLE,
@@ -260,6 +304,7 @@ local styles = {
         IdleTexture = ButtonTextures.NOTCHES.SMALL.IDLE,
         HighlightedTexture = ButtonTextures.NOTCHES.SMALL.HIGHLIGHTED,
         PressedTexture = ButtonTextures.NOTCHES.SMALL.PRESSED,
+        DisabledTexture = ButtonTextures.NOTCHES.SMALL.DISABLED,
     },
     TabCharacterSheet = {
         IdleTexture = ButtonTextures.TABS.CHARACTER_SHEET.IDLE,
@@ -275,17 +320,27 @@ local styles = {
         IdleTexture = ButtonTextures.TRANSPARENT.IDLE,
         HighlightedTexture = ButtonTextures.TRANSPARENT.HIGHLIGHTED,
         PressedTexture = ButtonTextures.TRANSPARENT.PRESSED,
+        DisabledTexture = ButtonTextures.TRANSPARENT.DISABLED,
     },
     TransparentMedium = {
         IdleTexture = ButtonTextures.TRANSPARENT_MEDIUM.IDLE,
         HighlightedTexture = ButtonTextures.TRANSPARENT_MEDIUM.HIGHLIGHTED,
         PressedTexture = ButtonTextures.TRANSPARENT_MEDIUM.PRESSED,
     },
+    TransparentLong = {
+        IdleTexture = ButtonTextures.TRANSPARENT_LONG.IDLE,
+        HighlightedTexture = ButtonTextures.TRANSPARENT_LONG.HIGHLIGHTED,
+        PressedTexture = ButtonTextures.TRANSPARENT_LONG.PRESSED,
+    },
+    TransparentLargeDark = CreateStyle(ButtonTextures.TRANSPARENT_LARGE_DARK),
     LargeRed = {
         IdleTexture = ButtonTextures.RED.LARGE.IDLE,
         HighlightedTexture = ButtonTextures.RED.LARGE.HIGHLIGHTED,
         PressedTexture = ButtonTextures.RED.LARGE.PRESSED,
+        DisabledTexture = ButtonTextures.RED.LARGE.DISABLED,
     },
+    LargeRedWithArrows = CreateStyle(ButtonTextures.RED.LARGE_WITH_ARROWS),
+    MediumRed = CreateStyle(ButtonTextures.RED.MEDIUM),
     SmallRed = {
         IdleTexture = ButtonTextures.RED.SMALL.IDLE,
         HighlightedTexture = ButtonTextures.RED.SMALL.HIGHLIGHTED,
@@ -322,6 +377,8 @@ local styles = {
     Armor_Active = {
         IdleTexture = StateButtonTextures.ARMOR.ACTIVE_IDLE,
     },
+    BrownSimple_Inactive = CreateStyle(StateButtonTextures.BROWN_SIMPLE.INACTIVE),
+    BrownSimple_Active = CreateStyle(StateButtonTextures.BROWN_SIMPLE.ACTIVE),
     Helmet_Inactive = {
         IdleTexture = StateButtonTextures.HELMET.INACTIVE_IDLE,
         HighlightedTexture = StateButtonTextures.HELMET.INACTIVE_HIGHLIGHTED,
