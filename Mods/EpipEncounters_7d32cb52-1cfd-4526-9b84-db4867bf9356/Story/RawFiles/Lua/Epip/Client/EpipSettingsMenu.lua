@@ -178,10 +178,10 @@ local tabs = {
             "CombatLogImprovements",
             "PreferredTargetDisplay",
 
-            CreateHeader(AnimationCancelling.TranslatedStrings.Setting_Name),
-            {Type = "Setting", Module = "EpipEncounters_AnimationCancelling", ID = "Mode"},
-            {Type = "Setting", Module = "EpipEncounters_AnimationCancelling", ID = "Blacklist"},
-            {Type = "Setting", Module = "EpipEncounters_AnimationCancelling", ID = "CancelWorldTooltipItemPickups"},
+            CreateHeader(AnimationCancelling.TranslatedStrings.Setting_Enabled_Name),
+            CreateSettingEntry(AnimationCancelling.Settings.Enabled),
+            CreateSettingEntry(AnimationCancelling.Settings.Blacklist),
+            CreateSettingEntry(AnimationCancelling.Settings.CancelWorldTooltipItemPickups),
         }
     },
     ["Epip_Hotbar"] = {
