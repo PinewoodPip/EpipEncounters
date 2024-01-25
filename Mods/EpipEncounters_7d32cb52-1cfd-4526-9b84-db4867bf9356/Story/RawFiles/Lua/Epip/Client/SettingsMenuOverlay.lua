@@ -187,7 +187,7 @@ function Overlay._Initialize()
         rightPanel:SetPosition(641, UI.PANELS_Y)
         UI.RightPanel = rightPanel
 
-        local tabButtonsHeader = TextPrefab.Create(UI, "TabButtonsHeader", leftPanel, Text.Format(SettingsMenu.TranslatedStrings.MenuButton:GetString():upper(), {Size = 22, FontType = Text.FONTS.BOLD}), "Center", V(200, 50))
+        local tabButtonsHeader = TextPrefab.Create(UI, "TabButtonsHeader", leftPanel, SettingsMenu.TranslatedStrings.MenuButton:Format({Size = 22, FontType = Text.FONTS.BOLD, Casing = "Uppercase"}), "Center", V(200, 50))
         tabButtonsHeader:SetPositionRelativeToParent("Top", 0, 40)
 
         local tabHeader = TextPrefab.Create(UI, "TabHeader", rightPanel, "", "Center", V(200, 50))
@@ -199,7 +199,7 @@ function Overlay._Initialize()
         bottomButtonsList:SetElementSpacing(10)
 
         local acceptButton = ButtonPrefab.Create(UI, "AcceptButton", bottomButtonsList, UI.LARGE_BUTTON_STYLE)
-        acceptButton:SetLabel(CommonStrings.Accept:GetString():upper())
+        acceptButton:SetLabel(CommonStrings.Accept:Format({Casing = "Uppercase"}))
         acceptButton.Events.Pressed:Subscribe(function (_)
             if SettingsMenu.HasPendingChanges() then
                 Overlay._ShowPendingChangesPrompt()
@@ -209,7 +209,7 @@ function Overlay._Initialize()
         end)
 
         local applyButton = ButtonPrefab.Create(UI, "ApplyButton", bottomButtonsList, UI.LARGE_BUTTON_STYLE)
-        applyButton:SetLabel(CommonStrings.Apply:GetString():upper())
+        applyButton:SetLabel(CommonStrings.Apply:Format({Casing = "Uppercase"}))
         applyButton.Events.Pressed:Subscribe(function (_)
             SettingsMenu.ApplyPendingChanges()
         end)

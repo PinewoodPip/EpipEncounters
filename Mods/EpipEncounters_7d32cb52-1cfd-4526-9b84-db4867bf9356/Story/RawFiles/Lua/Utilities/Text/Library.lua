@@ -114,6 +114,7 @@ end
 ---@field FormatArgs (any|TextFormatData)[]?
 ---@field Text string? Used for formatting strings with recursive Text.Format calls.
 ---@field RemovePreviousFormatting boolean? Defaults to `false`.
+---@field Casing ("Unmodified"|"Lowercase"|"Uppercase")? Defaults to `"Unmodified"`. If using other options, be sure to first strip any formatting from the string.
 local _TextFormatData = {
     FormatArgs = {},
     RemovePreviousFormatting = false,
@@ -408,6 +409,17 @@ function Text.Format(str, formatData)
 
     if formatData.RemovePreviousFormatting then
         str = Text.StripFontTags(str)
+    end
+
+    -- Apply casing changes
+    -- This will break prior formatting of the string;
+    -- there is no easy solution other than parsing the whole HTML tree (overkill, left up to the user).
+    if formatData.Casing then
+        if formatData.Casing == "Lowercase" then
+            str = str:lower()
+        elseif formatData.Casing == "Uppercase" then
+            str = str:upper()
+        end
     end
 
     -- Parse args, which can be a TextFormatData as well.
