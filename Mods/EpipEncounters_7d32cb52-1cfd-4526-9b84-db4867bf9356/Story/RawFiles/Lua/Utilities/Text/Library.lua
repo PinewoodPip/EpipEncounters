@@ -62,6 +62,8 @@ Epip.InitializeLibrary("Text", Text)
 -- CLASSES
 ---------------------------------------------
 
+---@alias TextLib_String TextLib_TranslatedString|string
+
 ---@class TextLib_TranslatedString
 ---@field Handle TranslatedStringHandle
 ---@field Text string

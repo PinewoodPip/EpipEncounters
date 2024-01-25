@@ -83,11 +83,12 @@ function Button:SetActiveStyle(style)
 end
 
 ---Sets the label of the button.
----@param label string Set to an empty string to hide the label.
+---@param label TextLib_String Set to an empty string to hide the label.
 ---@param align GenericUI_Element_Text_Align? Defaults to `"Center"`.
 function Button:SetLabel(label, align)
     local element = self.Label
     align = align or "Center"
+    label = Text.Resolve(label)
 
     if label ~= "" then
         local textSize
