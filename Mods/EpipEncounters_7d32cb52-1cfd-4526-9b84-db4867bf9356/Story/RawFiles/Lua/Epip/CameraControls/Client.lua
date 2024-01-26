@@ -41,7 +41,7 @@ local CameraControls = {
         },
         Setting_LimitPitch_Description = {
             Handle = "h6902de2eg38f8g4893ga0feged6f278f7ffa",
-            Text = [[If enabled, the "Adjust Camera Pitch" keybind will not be able to lower the pitch below a certain threshold, reducing the likelyhood of the camera clipping through the ground while using it.]],
+            Text = [[If enabled, the "Adjust Camera Pitch" keybind will not be able to lower the pitch below a certain threshold, reducing the likelihood of the camera clipping through the ground while using it.]],
             ContextDescription = "Setting tooltip",
         },
         InputAction_AdjustPitch_Name = {

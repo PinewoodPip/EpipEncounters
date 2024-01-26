@@ -52,7 +52,7 @@ local DialogueTweaks = {
         },
         Setting_AutoListenRangeLimi_Description = {
             Handle = "h5efb42cag481bg466dg9089g55793976612a",
-            Text = "Determines the maximum distance (in meters) that other players's characters can be at for their dialogues to be auto-listened to, if \"Auto-Listen Range Limit\" is enabled.",
+            Text = "Determines the maximum distance (in meters) that other players's characters can be at for their dialogues to be auto-listened to, if \"Auto-Listen Dialogues\" is enabled.",
             ContextDescription = "Setting tooltip",
         },
     },
