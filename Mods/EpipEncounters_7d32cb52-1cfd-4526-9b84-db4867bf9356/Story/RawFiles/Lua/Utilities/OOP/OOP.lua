@@ -1,6 +1,16 @@
 
+local Print = Ext.Utils.Print
+local PrintWarning = Ext.Utils.PrintWarning
+local PrintError = Ext.Utils.PrintError
+
 ---@class OOPLib
 OOP = {
+    ---@enum OOPLib.LoggingLevel
+    LOGGING_LEVELS = {
+        ALL = 0,
+        WARN = 1,
+        MUTED = 2, -- Errors only.
+    },
     _Classes = {}, ---@type table<string, table>
 }
 
@@ -9,9 +19,10 @@ OOP = {
 ---------------------------------------------
 
 ---@class Class
----@field protected __name string
----@field protected __ParentClasses string[]
----@field protected __ClassDefinition Class
+---@field __name string
+---@field __ParentClasses string[]
+---@field __ClassDefinition Class
+---@field __LoggingLevel OOPLib.LoggingLevel
 local Class = {}
 
 ---Creates a new instance of the class.
@@ -123,6 +134,75 @@ function Class:GetClassDefinition()
     return self.__ClassDefinition
 end
 
+---Logs a message.
+---@param ... any
+function Class:__Log(...)
+    if self.__LoggingLevel <= OOP.LOGGING_LEVELS.ALL then
+        Print(self:__GetLoggingPrefix(), ...)
+    end
+end
+
+---Logs a warning.
+---Requires logging level to be set to WARN or lower.
+---@param ... any
+function Class:__LogWarning(...)
+    if self.__LoggingLevel <= OOP.LOGGING_LEVELS.WARN then
+        PrintWarning(self:__GetLoggingPrefix(), ...)
+    end
+end
+
+---Logs a "Not implemented" warning. Use as a placeholder.
+---@param methodName string
+function Class:__LogNotImplemented(methodName)
+    self:__LogWarning("Not implemented: " .. methodName)
+end
+
+---Throws a "Not implemented" error. Use as a placeholder.
+---@param methodName string
+function Class:__ThrowNotImplemented(methodName)
+    self:__Error(methodName, "Not implemented")
+end
+
+---Logs an error without halting execution.
+---@param ... any
+function Class:__LogError(...)
+    PrintError(self:__GetLoggingPrefix(), ...)
+end
+
+---Throws an error prefixed with the class and method name, blaming the third-level function in the stack - usually user code.
+---@param ... any
+---@param method string
+function Class:__Error(method, ...)
+    -- This code duplication is intentional to reduce impact on the call stack, offering a larger traceback.
+    local params = {...}
+    local str = Text.Join(params, " ")
+    error(string.format("%s %s(): %s",
+        self:__GetLoggingPrefix(),
+        method,
+        str
+    ), 3)
+end
+
+---Throws an error prefixed with the class and method name caused at the callee function.
+---@param method string
+---@param ... any
+function Class:__InternalError(method, ...)
+    -- This code duplication is intentional to reduce impact on the call stack, offering a larger traceback.
+    local params = {...}
+    local str = Text.Join(params, " ")
+    error(string.format("%s %s(): %s",
+        self:__GetLoggingPrefix(),
+        method,
+        str
+    ), 2)
+end
+
+---Returns the prefix to use for logging messages.
+---@return string
+function Class:__GetLoggingPrefix()
+    return " [" .. self:GetClassName():upper() .. "]" -- Extra space at start to quickly tell Epip logging apart from others
+end
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
@@ -146,6 +226,7 @@ function OOP.RegisterClass(className, class, parentClasses)
     ---@diagnostic disable invisible
     class.__ClassDefinition = class
     class.__ParentClasses = parentClasses or {}
+    class.__LoggingLevel = OOP.LOGGING_LEVELS.ALL
     class.__name = class.__name or className
 
     OOP._Classes[className] = class

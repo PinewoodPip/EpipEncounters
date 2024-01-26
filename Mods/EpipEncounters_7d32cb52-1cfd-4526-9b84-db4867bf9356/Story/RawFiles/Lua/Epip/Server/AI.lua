@@ -120,13 +120,13 @@ Ext.Events.OnPeekAiAction:Subscribe(function(ev)
         end
     end
 
-    AI:RawLog("----------------------------------")
-    AI:RawLog("Finished scoring for " .. char.DisplayName)
-    AI:RawLog("Actions Count: " .. request.ActionCount)
-    AI:RawLog("Top " .. #bestActions .. " actions:")
+    print("----------------------------------")
+    print("Finished scoring for " .. char.DisplayName)
+    print("Actions Count: " .. request.ActionCount)
+    print("Top " .. #bestActions .. " actions:")
 
     for i,action in ipairs(bestActions) do
-        AI:RawLog("  " .. i .. ".\n" .. AI.StringifyAction(action))
+        print("  " .. i .. ".\n" .. AI.StringifyAction(action))
 
         -- _D(action.Score1.Score.DamageAmounts) -- Empty
         -- _D(action.Score1.Score.Flags1)

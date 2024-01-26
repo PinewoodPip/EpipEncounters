@@ -30,7 +30,7 @@ Epip.RegisterFeature("DebugMenu", DebugMenu)
 ---@field ID string
 ---@field Library Library
 ---@field Debug boolean
----@field LoggingLevel Library_LoggingLevel
+---@field LoggingLevel OOPLib.LoggingLevel
 ---@field Enabled boolean
 ---@field DateTested string
 ---@field VersionTested integer
@@ -269,7 +269,7 @@ end
 
 ---@param modTable string
 ---@param featureID string
----@param level Library_LoggingLevel
+---@param level OOPLib.LoggingLevel
 function DebugMenu.SetLoggingState(modTable, featureID, level)
     local state = DebugMenu.GetState(modTable, featureID)
     state.LoggingLevel = level

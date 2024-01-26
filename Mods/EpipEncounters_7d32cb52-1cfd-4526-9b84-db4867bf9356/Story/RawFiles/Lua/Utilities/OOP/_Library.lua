@@ -5,27 +5,17 @@
 ---------------------------------------------
 
 local Print = Ext.Utils.Print
-local PrintWarning = Ext.Utils.PrintWarning
-local PrintError = Ext.Utils.PrintError
 
 ---@class Library : Class
 ---@field UserVariables table<string, UserVarsLib_UserVar> Initializable.
 ---@field _Classes table<string, Class> Subclasses registered for this library.
 ---@field __ID string
 ---@field __ModTable string
----@field __LoggingLevel Library_LoggingLevel
 ---@field __IsDebug boolean
 ----@field TranslatedStrings table<TranslatedStringHandle, Library_TranslatedString> Initializable.
 ----@field Events table<string, Event> Initializable. -- These 2 fields cannot be included as they break auto-complete.
 ----@field Hooks table<string, Event> Initializable.
 local Library = {
-    ---@enum Library_LoggingLevel
-    LOGGING_LEVELS = {
-        ALL = 0,
-        WARN = 1,
-        MUTED = 2, -- Errors only.
-    },
-
     TSK = {}, ---@type table<TranslatedStringHandle, string> Automatically managed.
     _localTranslatedStringKeys = {}, ---@type table<string, TranslatedStringHandle>
 
@@ -58,7 +48,6 @@ function Library.Create(modTable, id, data)
     data.__ModTable = modTable
     data.__name = id -- DEPRECATED! TODO
     data.__IsDebug = false
-    data.__LoggingLevel = Library.LOGGING_LEVELS.ALL
 
     local lib = OOP.GetClass("Library"):__Create(data) ---@cast lib Library
 
@@ -313,19 +302,19 @@ end
 
 ---Stop all non-error, non-warning logging from this feature.
 function Library:Mute()
-    self.__LoggingLevel = self.LOGGING_LEVELS.WARN
+    self.__LoggingLevel = OOP.LOGGING_LEVELS.WARN
 end
 
 ---Stop all non-error logging.
 function Library:ShutUp()
-    self.__LoggingLevel = self.LOGGING_LEVELS.MUTED
+    self.__LoggingLevel = OOP.LOGGING_LEVELS.MUTED
 end
 
 ---Log a value in Debug mode.
 ---@vararg any
 function Library:DebugLog(...)
     if self:IsDebug() then
-        Print(self:_GetLoggingPrefix(), ...)
+        Print(self:__GetLoggingPrefix(), ...)
     end
 end
 
@@ -334,7 +323,7 @@ end
 ---@param ... any
 function Library:LogMethod(method, ...)
     if self:IsDebug() then
-        Print(self:_GetLoggingPrefix(), string.format("%s():", method), ...)
+        Print(self:__GetLoggingPrefix(), string.format("%s():", method), ...)
     end
 end
 
@@ -347,80 +336,55 @@ function Library:Dump(msg)
 end
 
 ---Log a value.
+---@deprecated Use `Class:__Log()`.
 ---@param ... any
 function Library:Log(...)
-    if self.__LoggingLevel <= self.LOGGING_LEVELS.ALL then
-        Print(self:_GetLoggingPrefix(), ...)
-    end
-end
-
----Log values without any prefixing.
----@param ... any
-function Library:RawLog(...)
-    if self.__LoggingLevel <= self.LOGGING_LEVELS.ALL then
-        Print(...)
-    end
+    self:__Log(...)
 end
 
 ---Log a warning.
 ---Requires logging level to be set to WARN or lower.
+---@deprecated Use `Class:__LogWarning()`.
 ---@param ... any
 function Library:LogWarning(...)
-    if self.__LoggingLevel <= self.LOGGING_LEVELS.WARN then
-        PrintWarning(self:_GetLoggingPrefix(), ...)
-    end
+    self:__LogWarning(...)
 end
 
 ---Logs a "Not implemented" warning. Use as a placeholder.
+---@deprecated Use `Class:__LogNotImplemented()`.
 ---@param methodName string
 function Library:LogNotImplemented(methodName)
-    self:LogWarning("Not implemented: " .. methodName)
+    self:__LogNotImplemented(methodName)
 end
 
 ---Throws a "Not implemented" error. Use as a placeholder.
+---@deprecated Use `Class:__ThrowNotImplemented()`.
 ---@param methodName string
 function Library:ThrowNotImplemented(methodName)
-    self:Error(methodName, "Not implemented")
+    self:__ThrowNotImplemented(methodName)
 end
 
 ---Logs an error without halting execution.
+---@deprecated Use `Class:__LogError()`.
 ---@param ... any
 function Library:LogError(...)
-    PrintError(self:_GetLoggingPrefix(), ...)
+    self:__LogError(...)
 end
 
 ---Throws an error prefixed with the library and method name, blaming the third-level function in the stack - usually user code.
+---@deprecated Use `Class:__Error()`.
 ---@param ... any
 ---@param method string
 function Library:Error(method, ...)
-    -- This code duplication is intentional to reduce impact on the call stack, offering a larger traceback.
-    local params = {...}
-    local str = Text.Join(params, " ")
-    error(string.format("%s %s(): %s",
-        self:_GetLoggingPrefix(),
-        method,
-        str
-    ), 3)
+    self:__Error(method, ...)
 end
 
 ---Throws an error prefixed with the library and method name caused at the callee function.
+---@deprecated Use `Class:__InternalError()`.
 ---@param method string
 ---@param ... any
 function Library:InternalError(method, ...)
-    -- This code duplication is intentional to reduce impact on the call stack, offering a larger traceback.
-    local params = {...}
-    local str = Text.Join(params, " ")
-    error(string.format("%s %s(): %s",
-        self:_GetLoggingPrefix(),
-        method,
-        str
-    ), 2)
-end
-
----Returns the prefix to use for logging messages.
----@return string
-function Library:_GetLoggingPrefix()
-    return " [" .. self.__ID:upper() .. "]" -- Extra space at start to quickly tell Epip logging apart from others
+    self:__InternalError(method, ...)
 end
 
 ---------------------------------------------
