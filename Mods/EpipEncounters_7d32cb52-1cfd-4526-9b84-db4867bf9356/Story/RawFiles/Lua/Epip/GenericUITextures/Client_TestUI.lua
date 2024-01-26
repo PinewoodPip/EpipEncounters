@@ -144,12 +144,8 @@ end
 
 function UI._SetupFrameList()
     local frameList = UI._SetupScrollList("FrameList")
-    frameList:SetFrame(UI.SCROLLLIST_FRAME_SIZE:unpack())
-    frameList:SetMouseWheelEnabled(true)
 
-    frameList:SetPositionRelativeToParent("TopLeft", UI.CONTAINER_OFFSET:unpack())
     local frameTextures = UI._FindTexturesRecursively(Textures.FRAMES)
-
     for _,texture in ipairs(frameTextures) do
         local element = frameList:AddChild(texture.GUID, "GenericUI_Element_Texture")
         element:SetTexture(texture)
@@ -177,15 +173,11 @@ end
 ---Creates the list of buttons.
 function UI._SetupButtonList()
     local list = UI._SetupScrollList("ButtonList")
-
     local stateButtonStyles = DefaultTable.Create({}) ---@type table<string, {InactiveStyle: GenericUI_Prefab_Button_Style, ActiveStyle: GenericUI_Prefab_Button_Style}>
 
-    list:SetPositionRelativeToParent("TopLeft", UI.CONTAINER_OFFSET:unpack())
-
     local styles = {} ---@type GenericUI_I_Stylable_Style[]
-
-    ---@diagnostic disable-next-line: invisible
-    for id,style in pairs(Button._RegisteredStyles) do
+    for id,style in pairs(Button:GetStyles()) do
+        ---@cast style GenericUI_Prefab_Button_Style
         local activeStyleMatch = id:match("(.+)_Active$")
         local inactiveStyleMatch = id:match("(.+)_Inactive$")
         style.___ID = id
