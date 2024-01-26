@@ -225,6 +225,7 @@ function RGBColor.Create(r, g, b, a)
     g = math.clamp(g or 0, 0, 255)
     b = math.clamp(b or 0, 0, 255)
     a = math.clamp(a or 255, 0, 255)
+    r, g, b, a = math.floor(r), math.floor(g), math.floor(b), math.floor(a)
 
     local color = {Red = r, Green = g, Blue = b, Alpha = a}
     Inherit(color, RGBColor)
@@ -285,19 +286,30 @@ end
 
 ---Alias for creating an RGBColor from RGBA values.
 ---@overload fun(color:RGBColor):RGBColor
+---@overload fun(color:htmlcolor):RGBColor
+---@overload fun(color:integer):RGBColor
 ---@param red integer?
 ---@param green integer?
 ---@param blue integer?
 ---@param alpha integer?
 ---@return RGBColor
 function Color.Create(red, green, blue, alpha)
+    local color ---@type RGBColor
+
     -- Table overload.
     if type(red) == "table" then
         local tbl = red
         red, green, blue, alpha = tbl.Red, tbl.Green, tbl.Blue, tbl.Alpha
+        color = Color.CreateFromRGB(red, green, blue, alpha)
+    elseif type(red) == "string" then -- HTML color string overload.
+        color = Color.CreateFromHex(red)
+    elseif type(red) == "number" and green == nil then -- Decimal overload.
+        color = Color.CreateFromDecimal(red)
+    else
+        color = Color.CreateFromRGB(red, green, blue, alpha)
     end
 
-    return Color.CreateFromRGB(red, green, blue, alpha)
+    return color
 end
 
 ---Creates a color from RGBA values. Expected range of values is [0-255].
