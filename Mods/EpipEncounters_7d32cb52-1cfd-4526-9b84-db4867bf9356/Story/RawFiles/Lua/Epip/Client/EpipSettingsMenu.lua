@@ -209,7 +209,6 @@ local tabs = {
             {Module = "EpipEncounters_QuickExamine", ID = "Opacity"},
             {Module = "EpipEncounters_QuickExamine", ID = "Width"},
             {Module = "EpipEncounters_QuickExamine", ID = "Height"},
-            CreateSettingEntry(QuickExamineWidgets.Artifacts.Settings.Enabled),
             CreateSettingEntry(QuickExamineWidgets.Statuses.Settings.Enabled),
             CreateSettingEntry(QuickExamineWidgets.Skills.Settings.Enabled),
             CreateSettingEntry(QuickExamineWidgets.Equipment.Settings.Enabled),
@@ -352,6 +351,15 @@ local tabs = {
         }
     }
 }
+
+-- Insert EE-only settings
+if EpicEncounters.IsEnabled() then
+    local index, _ = table.getFirst(tabs.Epip_QuickExamine.Entries, function (_, v)
+        ---@cast v Feature_SettingsMenu_Entry_Setting Type is not checked as it is not yet initialized for most old entries.
+        return v.Module == "EpipEncounters_QuickExamine" and v.ID == "Height"
+    end)
+    table.insert(tabs.Epip_QuickExamine.Entries, index + 1, CreateSettingEntry(QuickExamineWidgets.Artifacts.Settings.Enabled))
+end
 
 local tabOrder = {
     tabs.Epip_Developer,
