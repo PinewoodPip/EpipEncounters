@@ -82,6 +82,11 @@ function Epip.RegisterFeature(modTable, id, feature)
         feature:__Initialize()
         Epip.Events.AfterFeatureInitialization:Throw({Feature = feature})
     end)
+
+    -- Auto-mute Epip features if Epip developer mode is not enabled
+    if not Epip.IsDeveloperMode(true) then
+        feature:Mute()
+    end
 end
 
 ---Overload for fetching features defined in EpipEncounters.
@@ -124,7 +129,8 @@ function Epip.InitializeLibrary(id, lib)
     OOP.GetClass("Library").Create("EpipEncounters", id, lib)
 end
 
----@param requirePipPoem boolean? Whether a poem to Pip is required for this call to succeed. Defaults to false (which checks Extender dev mode instead)
+---Returns whether developer mode is enabled.
+---@param requirePipPoem boolean? Whether a poem to Pip is required for `true` to be returned. Defaults to `false`, which checks for Extender developer mode instead.
 ---@return boolean
 function Epip.IsDeveloperMode(requirePipPoem)
     local devMode = false
