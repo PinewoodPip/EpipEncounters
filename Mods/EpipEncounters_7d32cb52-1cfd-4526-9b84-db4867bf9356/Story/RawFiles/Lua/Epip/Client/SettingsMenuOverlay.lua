@@ -41,6 +41,17 @@ UI.LIST_SIZE = V(950, 770)
 UI.FORM_ELEMENT_SIZE = V(800, 60)
 UI.DEFAULT_LABEL_SIZE = V(800, 999) -- Labels are afterwards resized to text height.
 UI.PANELS_Y = 37
+-- Different from the vibgyor rainbow for contrast reasons.
+UI._RAINBOW_COLORS = {
+    "DB5ED3",
+    "B956E3",
+    "5171BD",
+    Color.VIBGYOR_RAINBOW[4],
+    Color.VIBGYOR_RAINBOW[5],
+    Color.VIBGYOR_RAINBOW[6],
+    "DE3E3E",
+}
+UI._RAINBOW_TEXT_CYCLE_TIME = 3.5 -- In seconds.
 
 ---------------------------------------------
 -- STYLES
@@ -462,6 +473,30 @@ function UI._SetupBuildLabel()
         })
         local buildLabel = TextPrefab.Create(UI, "BuildLabel", UI.LeftPanel, text, "Center", V(250, 100))
         buildLabel:SetPositionRelativeToParent("Bottom", 0, -10)
+
+        -- Animate text color into a rainbow when it is Pip's birthday
+        if Epip.IsPipBirthday() then
+            local currentTime = 0
+            local colors = UI._RAINBOW_COLORS
+            local colorStages = #colors
+            local stageTime = UI._RAINBOW_TEXT_CYCLE_TIME / colorStages
+
+            GameState.Events.Tick:Subscribe(function (ev)
+                local currentStage = math.indexmodulo((math.floor(currentTime / stageTime) + 1), colorStages)
+                local currentStageTime = currentTime % stageTime
+                local currentColor = colors[currentStage]
+                local nextColor = colors[math.indexmodulo(currentStage + 1, colorStages)]
+                local interpolatedColor = Color.Lerp(Color.Create(currentColor), Color.Create(nextColor), currentStageTime / stageTime)
+
+                currentTime = currentTime + ev.DeltaTime / 1000
+
+                buildLabel:SetText(Text.Format(text, {
+                    Color = interpolatedColor:ToHex(),
+                }))
+            end, {EnabledFunctor = function ()
+                return UI:IsVisible()
+            end})
+        end
     end
 end
 

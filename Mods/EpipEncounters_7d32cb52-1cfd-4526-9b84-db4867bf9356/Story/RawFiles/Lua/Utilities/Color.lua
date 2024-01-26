@@ -18,6 +18,18 @@ Color = {
     BLUE = "0000FF",
     WHITE = "FFFFFF",
 
+    -- Source: https://www.krishnamani.in/color-codes-for-rainbow-vibgyor-colours/
+    ---@type htmlcolor[]
+    VIBGYOR_RAINBOW = {
+        "9400D3", -- Purple
+        "4B0082", -- Dark purple
+        "0000FF", -- Deep blue
+        "00FF00", -- Deep green
+        "FFFF00", -- Yellow
+        "FF7F00", -- Orange
+        "FF0000", -- Deep red
+    },
+
     -- From https://docs.larian.game/UI_Colors_Reference_Sheet
     LARIAN = {
         BLUE = "0078FF",

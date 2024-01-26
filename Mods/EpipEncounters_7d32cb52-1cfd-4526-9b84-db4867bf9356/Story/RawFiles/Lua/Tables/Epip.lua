@@ -265,6 +265,8 @@ if Ext.IsClient() then
         end
     end
 
+    ---Returns whether it is currently 1st of April or the "Out of season April Fools jokes" setting is enabled.
+    ---@return boolean
     function Epip.IsAprilFools()
         -- Minor optimisation
         if Epip.cachedAprilFoolsState == nil then
@@ -273,6 +275,13 @@ if Ext.IsClient() then
         end
 
         return Epip.cachedAprilFoolsState or Settings.GetSettingValue("Epip_Developer", "DEBUG_AprilFools")
+    end
+
+    ---Returns whether it is currently Pip's birthday.
+    ---@return boolean
+    function Epip.IsPipBirthday()
+        local date = Client.GetDate()
+        return date.Day == 26 and date.Month == 1
     end
 end
 

@@ -5,32 +5,28 @@
 
 local Set = DataStructures.Get("DataStructures_Set")
 local OVERLAY_COLOR_INDEXES = Color.OVERLAY_COLOR_INDEXES
-local C = Color.CreateFromRGB
+local C = Color.Create
 
 ---@type Feature
 local RainbowOverlays = {
     _Enabled = false,
     _CurrentTime = 0,
 
-    -- Source: https://www.krishnamani.in/color-codes-for-rainbow-vibgyor-colours/
-    ---@type RGBColor[]
-    COLORS = {
-        C(148, 0, 211),
-        C(75, 0, 130),
-        C(0, 0, 255),
-        C(0, 255, 0),
-        C(255, 255, 0),
-        C(255, 127, 0),
-        C(255, 0 , 0),
-    },
     CYCLE_TIME = 3.5, -- In seconds.
     OVERLAYS = Set.Create({ -- Overlay colors affected.
         OVERLAY_COLOR_INDEXES.SELECTOR_DOTS,
         OVERLAY_COLOR_INDEXES.SELECTOR_OUTER_CIRCLE,
         OVERLAY_COLOR_INDEXES.SELECTOR_INNER_CROSS,
+        OVERLAY_COLOR_INDEXES.SELECTOR_FORCE_ATTACK,
+        OVERLAY_COLOR_INDEXES.OUTLINE_CORPSE,
+        OVERLAY_COLOR_INDEXES.OUTLINE_ITEM,
 
+        -- Enemies and neutrals purposefully excluded for readability reasons.
         OVERLAY_COLOR_INDEXES.TACTICAL_HIGHLIGHTS_ACTIVE_CHARACTER,
         OVERLAY_COLOR_INDEXES.TACTICAL_HIGHLIGHTS_CONTROLLED_ALLY,
+
+        OVERLAY_COLOR_INDEXES.OUTLINE_SKILL_PREPARE_CHARACTER_IN_RANGE,
+        OVERLAY_COLOR_INDEXES.OUTLINE_ATTACK_TARGET,
 
         OVERLAY_COLOR_INDEXES.SKILL_PREPARE_SPECIAL,
         OVERLAY_COLOR_INDEXES.SKILL_PREPARE_AEROTHEURGE,
@@ -64,7 +60,8 @@ end
 ---@param dt number Deltatime, in seconds.
 function RainbowOverlays._Update(dt)
     local overlayColors = Ext.Utils.GetGlobalSwitches().OverlayColors
-    local colorStages = #RainbowOverlays.COLORS
+    local colors = Color.VIBGYOR_RAINBOW
+    local colorStages = #colors
     local stageTime = RainbowOverlays.CYCLE_TIME / colorStages
     local currentStage ---@type integer
     local currentStageTime ---@type number
@@ -72,18 +69,19 @@ function RainbowOverlays._Update(dt)
     RainbowOverlays._CurrentTime = RainbowOverlays._CurrentTime + dt
 
     currentStage = (math.floor(RainbowOverlays._CurrentTime / stageTime) + 1) % colorStages
-    if currentStage == 0 then 
+    if currentStage == 0 then
         currentStage = colorStages
     end
     currentStageTime = RainbowOverlays._CurrentTime % stageTime
 
     for index in RainbowOverlays.OVERLAYS:Iterator() do
-        local currentColor = RainbowOverlays.COLORS[currentStage]
-        local nextColor = RainbowOverlays.COLORS[currentStage + 1]
+        currentStage = math.indexmodulo(currentStage + math.indexmodulo(index, colorStages), colorStages) -- Use a different stage for each overlay, in order.
+        local currentColor = colors[currentStage]
+        local nextColor = colors[currentStage + 1]
         if not nextColor then -- Wrap around
-            nextColor = RainbowOverlays.COLORS[1]
+            nextColor = colors[1]
         end
-        local interpolatedColor = Color.Lerp(currentColor, nextColor, currentStageTime / stageTime)
+        local interpolatedColor = Color.Lerp(C(currentColor), C(nextColor), currentStageTime / stageTime)
         local r, g, b = interpolatedColor:ToFloats()
 
         overlayColors[index] = {
@@ -102,4 +100,11 @@ end
 -- Enable the feature through a console command.
 Ext.RegisterConsoleCommand("rainbowoverlays", function (_, _)
     RainbowOverlays.Start()
+end)
+
+-- Celebrate Pip's birthday by enabling the feature.
+GameState.Events.ClientReady:Subscribe(function (_)
+    if Epip.IsPipBirthday() then
+        RainbowOverlays.Start()
+    end
 end)
