@@ -112,7 +112,7 @@ end
 ---@field Color string?
 ---@field Align FontAlign?
 ---@field FormatArgs (any|TextFormatData)[]?
----@field Text string? Used for formatting strings with recursive Text.Format calls.
+---@field Text (string|TextLib_TranslatedString)? Used for formatting strings with recursive `Text.Format()` calls.
 ---@field RemovePreviousFormatting boolean? Defaults to `false`.
 ---@field Casing ("Unmodified"|"Lowercase"|"Uppercase")? Defaults to `"Unmodified"`. If using other options, be sure to first strip any formatting from the string.
 local _TextFormatData = {
@@ -404,7 +404,7 @@ function Text.Format(str, formatData)
     setmetatable(formatData, {__index = _TextFormatData})
 
     if type(str) == "table" then
-        str, formatData = str.Text, str
+        str, formatData = Text.Resolve(str.Text), str
     end
 
     if formatData.RemovePreviousFormatting then
@@ -427,7 +427,7 @@ function Text.Format(str, formatData)
     if formatData.FormatArgs then
         for _,arg in ipairs(formatData.FormatArgs) do
             if type(arg) == "table" then
-                table.insert(finalArgs, Text.Format(arg.Text, arg))
+                table.insert(finalArgs, Text.Format(Text.Resolve(arg.Text), arg))
             elseif type(arg) == "number" then
                 table.insert(finalArgs, Text.RemoveTrailingZeros(arg))
             else
