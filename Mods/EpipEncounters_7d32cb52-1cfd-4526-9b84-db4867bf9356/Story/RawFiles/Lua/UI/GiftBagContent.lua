@@ -1,13 +1,7 @@
 
----@meta Library: GiftBagContentUI, ContextClient, Client.UI.GiftBagContent
-
 local MODS = Mod.GUIDS
 
--- TODO annotation
-
----@class GiftBagContentUI : Feature
-
----@type GiftBagContentUI
+---@class GiftBagContentUI : UI
 local GB = {
     ID_TO_MOD = {
         [0] = MODS.GB_8AP,
@@ -36,6 +30,11 @@ local GB = {
         GetContent = {},
     },
 }
+Epip.InitializeUI(Client.UI.Data.UITypes.giftBagContent, "GiftBagContent", GB)
+
+---------------------------------------------
+-- EVENTS/HOOKS
+---------------------------------------------
 
 ---Fired after the UI's content is updated, upon opening the UI.
 ---@class GiftBagContentUI_Event_ContentUpdated : Event
@@ -47,8 +46,9 @@ local GB = {
 ---@field RegisterHook fun(self, handler:fun(content:GiftBagContentUIEntry[]))
 ---@field Return fun(self, content:GiftBagContentUIEntry[])
 
-Epip.InitializeUI(Client.UI.Data.UITypes.giftBagContent, "GiftBagContent", GB)
-GB:Debug()
+---------------------------------------------
+-- CLASSES
+---------------------------------------------
 
 ---Represents a mod entry in the UI.
 ---@class GiftBagContentUIEntry
@@ -58,6 +58,10 @@ GB:Debug()
 ---@field Enabled boolean
 ---@field Locked boolean Locked giftbags cannot be toggled.
 ---@field Mod string GUID of giftbag mod.
+
+---------------------------------------------
+-- METHODS
+---------------------------------------------
 
 ---Returns a giftbag mod by its numerical ID.
 ---@param id number
@@ -86,7 +90,7 @@ function GB.RenderContent()
 
     content = GB:ReturnFromHooks("GetContent", content)
 
-    for i,entry in ipairs(content) do
+    for _,entry in ipairs(content) do
         root.giftContent_mc.addItem(entry.ID, entry.Name, entry.Description, entry.Enabled, entry.Locked)
     end
 
@@ -98,6 +102,7 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
+-- Hook content updates.
 GB:RegisterInvokeListener("refreshContent", function(ev)
     GB.RenderContent()
     ev:PreventAction()
