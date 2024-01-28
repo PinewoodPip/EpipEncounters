@@ -129,6 +129,13 @@ function Dyes.ApplyCustomDye(dye, item)
     Timer.Start(0.8, function(_) Dyes.UpdateActiveCharacterDyes() end)
 end
 
+---Requests dyes to be removed from an item.
+---@param char EclCharacter The character making the request.
+---@param item EclItem
+function Dyes.RemoveDye(char, item)
+    Net.PostToServer(Dyes.NETMSG_REMOVE_DYE, {CharacterNetID = char.NetID, ItemNetID = item.NetID})
+end
+
 ---Deletes a saved custom dye.
 ---@param dyeID string
 function Dyes.DeleteCustomDye(dyeID)

@@ -1,6 +1,8 @@
 
 ---@class Feature_Vanity_Dyes : Feature
 local Dyes = {
+    NETMSG_REMOVE_DYE = "Features.Vanity.Dyes.NetMsg.Remove",
+
     Tab = nil,
     CustomDyes = {},
     DyeHistory = {}, ---@type VanityDye[]
@@ -23,6 +25,8 @@ local Dyes = {
     DYED_ITEM_TAG = "^PIP_DYE_(%x+)_(%x+)_(%x+)$",
 
     activeCharacterDyes = {},
+
+    TranslatedStrings = {},
 
     Events = {},
     Hooks = {},
@@ -49,3 +53,10 @@ Epip.RegisterFeature("Vanity_Dyes", Dyes)
 ---@field ID string
 ---@field Name string
 ---@field Dyes VanityDye[]
+
+---------------------------------------------
+-- NET MESSAGES
+---------------------------------------------
+
+---Client-to-server.
+---@class Features.Vanity.Dyes.NetMsg.Remove : NetLib_Message_Character, NetLib_Message_Item

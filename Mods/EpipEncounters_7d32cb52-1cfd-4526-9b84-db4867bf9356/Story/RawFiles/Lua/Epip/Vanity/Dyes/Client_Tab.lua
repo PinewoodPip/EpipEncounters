@@ -3,13 +3,23 @@ local Vanity = Client.UI.Vanity
 
 ---@class Feature_Vanity_Dyes
 local Dyes = Epip.GetFeature("Feature_Vanity_Dyes")
+local TSK = {
+    Button_RemoveDye = Dyes:RegisterTranslatedString("hbb910187g05dag4c1fgb07cg3f1c6515de8f", {
+        Text = "Remove Dye",
+        ContextDescription = "Button for removing item dyes",
+    })
+}
 
----@type CharacterSheetCustomTab
-local Tab = Vanity.CreateTab({
+---@class Features.Vanity.Dyes.Tab : CharacterSheetCustomTab
+local Tab = {
     Name = "Dyes",
     ID = "PIP_Vanity_Dyes",
     Icon = "hotbar_icon_dye",
-})
+    BUTTONS = {
+        REMOVE = "Dye_Remove",
+    },
+}
+Tab = Vanity.CreateTab(Tab)
 Dyes.Tab = Tab
 
 ---------------------------------------------
@@ -43,7 +53,7 @@ function Tab:SetSliderColors(dye)
         Color2 = Color.Clone(dye.Color2),
         Color3 = Color.Clone(dye.Color3),
     }
-    
+
     for i=1,3,1 do
         ---@type RGBColor
         local color = "Color" .. i
@@ -104,6 +114,7 @@ function Tab:Render()
 
         Vanity.RenderButtonPair("Dye_Apply", "Apply Dye", true, "Dye_Save", "Save Dye", true)
         Vanity.RenderButtonPair("Dye_Import", "Import Dye", true, "Dye_Export", "Export Dye", true)
+        Vanity.RenderButton(Tab.BUTTONS.REMOVE, TSK.Button_RemoveDye:GetString(), true)
 
         Vanity.RenderCheckbox("Dye_DefaultToItemColor", Text.Format("Lock Color Sliders", {Color = "000000"}), Dyes.lockColorSlider, true)
 
@@ -137,7 +148,7 @@ Tab:RegisterListener(Vanity.Events.ButtonPressed, function(id)
                 "#" .. Dyes.currentSliderColor.Color3:ToHex(),
             }
         })
-        
+
         export = string.gsub(export, "<font>", "")
         export = string.gsub(export, "</font>", "")
 
@@ -151,6 +162,8 @@ Tab:RegisterListener(Vanity.Events.ButtonPressed, function(id)
         end)
     elseif id == "Dye_Import" then
         Client.UI.MessageBox.RequestClipboardText("PIP_Vanity_Dyes_Import")
+    elseif id == Tab.BUTTONS.REMOVE then
+        Dyes.RemoveDye(Client.GetCharacter(), Vanity.GetCurrentItem())
     end
 end)
 
