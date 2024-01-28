@@ -46,7 +46,7 @@ SettingsMenu.RegisterTab(tab)
 function InputSettingsMenu.IsActionVisible(action)
     return InputSettingsMenu.Hooks.IsActionVisible:Throw({
         Action = action,
-        Visible = true,
+        Visible = not action.DeveloperOnly or Epip.IsDeveloperMode(),
     }).Visible
 end
 
