@@ -106,7 +106,7 @@ function Overlay.Setup(tab, entries)
     tabButtonsList:Clear()
     for i,id in ipairs(SettingsMenu.TabRegistrationOrder) do
         local registeredTab = SettingsMenu.GetTab(id)
-        if SettingsMenu.CanRenderTabButton(tab) then
+        if SettingsMenu.CanRenderTabButton(registeredTab) then
             local button = ButtonPrefab.Create(UI, "TabButton." .. registeredTab.ID, tabButtonsList, UI.TAB_BUTTON_STYLE_INACTIVE)
             button:SetActiveStyle(UI.TAB_BUTTON_STYLE_ACTIVE)
             button:SetActivated(SettingsMenu.IsTabOpen(id))
