@@ -1,15 +1,16 @@
 
 local Notification = Client.UI.Notification
 local MsgBox = Client.UI.MessageBox
-local Bedazzled = Epip.GetFeature("Feature_Bedazzled")
+local Bedazzled = Epip.GetFeature("Feature_Bedazzled") ---@class Feature_Bedazzled
 local Generic = Client.UI.Generic
 local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 local DraggingAreaPrefab = Generic.GetPrefab("GenericUI_Prefab_DraggingArea")
 local Input = Client.Input
 local V = Vector.Create
 
+---@class Features.Bedazzled.UI.Game : GenericUI_Instance
 local UI = Generic.Create("Feature_Bedazzled")
-UI:Hide()
+Bedazzled.GameUI = UI
 
 UI._Initialized = false
 UI.Board = nil ---@type Feature_Bedazzled_Board?
@@ -225,7 +226,7 @@ end
 
 -- Sets up a new game.
 function UI.Setup()
-    local board = Bedazzled.CreateBoard("Classic")
+    local board = Bedazzled.CreateGame("Classic")
     local oldBoard = UI.Board
 
     -- Unsubscribe from previous board
@@ -282,6 +283,8 @@ function UI.Setup()
     end, {StringID = "BedazzledUI_GemTransformed"})
 
     UI.ResetButton:SetVisible(false)
+
+    UI:Show()
 end
 
 function UI:Hide()
@@ -970,43 +973,6 @@ Input.Events.KeyStateChanged:Subscribe(function (ev)
             UI.GemSelection.CanSwipe = false
         end
     end
-end)
-
--- Add Bedazzled option to gem context menus.
-local function IsRuneCraftingMaterial(item) -- TODO move
-    local RUNE_MATERIAL_STATS = {
-        LOOT_Bloodstone_A = "Bloodstone",
-        TOOL_Pouch_Dust_Bone_A = "Bone",
-        LOOT_Clay_A = "Clay",
-        LOOT_Emerald_A = "Emerald",
-        LOOT_Granite_A = "Granite",
-        LOOT_OreBar_A_Iron_A = "Iron",
-        LOOT_Jade_A = "Jade",
-        LOOT_Lapis_A = "Lapis",
-        LOOT_Malachite_A = "Malachite",
-        LOOT_Obsidian_A = "Obsidian",
-        LOOT_Onyx_A = "Onyx",
-        LOOT_Ruby_A = "Ruby",
-        LOOT_Sapphire_A = "Sapphire",
-        LOOT_OreBar_A_Silver_A = "Silver",
-        LOOT_OreBar_A_Steel_A = "Steel",
-        LOOT_Tigerseye_A = "TigersEye",
-        LOOT_Topaz_A = "Topaz",
-    }
-
-    return RUNE_MATERIAL_STATS[item.StatsId] ~= nil
-end
-Client.UI.ContextMenu.RegisterVanillaMenuHandler("Item", function(item)
-    if IsRuneCraftingMaterial(item) then
-        Client.UI.ContextMenu.AddElement({
-            {id = "epip_Feature_Bedazzled", type = "button", text = "Bedazzle"},
-        })
-    end
-end)
-
--- Start the game when the context menu option is selected.
-Client.UI.ContextMenu.RegisterElementListener("epip_Feature_Bedazzled", "buttonPressed", function(_, _)
-    UI:Show()
 end)
 
 -- Cheat: middle-click pauses board updates.

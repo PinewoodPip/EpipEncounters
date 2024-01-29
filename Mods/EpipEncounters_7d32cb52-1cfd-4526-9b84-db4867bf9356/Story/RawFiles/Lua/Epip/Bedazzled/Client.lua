@@ -119,11 +119,11 @@ function Bedazzled.GetGemDescriptors()
     return Bedazzled._Gems
 end
 
+---Creates a new game.
 ---@param gameMode Feature_Bedazzled_GameMode_ID
 ---@return Feature_Bedazzled_Board
-function Bedazzled.CreateBoard(gameMode)
+function Bedazzled.CreateGame(gameMode)
     local BoardClass = Bedazzled:GetClass("Feature_Bedazzled_Board")
-
     local board = BoardClass.Create(Vector.Create(8, 8), gameMode)
 
     -- Update high score at the end, forward event
