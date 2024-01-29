@@ -22,7 +22,7 @@ local Bedazzled = {
             Handle = "h3166017ag50b9g4943g8ae9g5335c23c58e4",
             Text = "Game Over",
         },
-        GameOverSubTitle = {
+        GameOver_Reason_NoMoreMoves = {
             Handle = "h1b460fc0ge72dg4879g9886g1dc640a782cb",
             Text = "No more valid moves on the board!",
             ContextDescription = "Subtitle for game over text",
@@ -121,10 +121,17 @@ end
 
 ---Creates a new game.
 ---@param gameMode Feature_Bedazzled_GameMode_ID
+---@param modifiers Features.Bedazzled.Board.Modifier[]? Defaults to empty list.
 ---@return Feature_Bedazzled_Board
-function Bedazzled.CreateGame(gameMode)
+function Bedazzled.CreateGame(gameMode, modifiers)
+    modifiers = modifiers or {}
     local BoardClass = Bedazzled:GetClass("Feature_Bedazzled_Board")
     local board = BoardClass.Create(Vector.Create(8, 8), gameMode)
+
+    -- Apply modifiers
+    for _,mod in ipairs(modifiers) do
+        board:ApplyModifier(mod)
+    end
 
     -- Update high score at the end, forward event
     board.Events.GameOver:Subscribe(function (ev)

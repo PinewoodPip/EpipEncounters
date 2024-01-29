@@ -766,6 +766,9 @@ LOAD_ORDER = {
             "Epip/Bedazzled/Model/Gem/States/Fusing.lua",
             "Epip/Bedazzled/Model/Gem/States/Transforming.lua",
 
+            "Epip/Bedazzled/Model/Modifiers/_Modifier.lua",
+            "Epip/Bedazzled/Model/Modifiers/TimeLimit.lua",
+
             "Epip/Bedazzled/UI/Menu.lua",
         },
     },

@@ -52,6 +52,10 @@ UI.FUSION_TRANSFORM_SOUNDS = {
     Protean = "UI_Game_Persuasion_Success",
 }
 
+UI.Events = {
+    NewGameRequested = SubscribableEvent:New("NewGameRequested", true), ---@type PreventableEvent<Empty>
+}
+
 ---------------------------------------------
 -- CLASSES
 ---------------------------------------------
@@ -212,9 +216,9 @@ end
 function UI:Show()
     local currentBoard = UI.Board
 
-    -- Create a new game if there was no board
+    -- A board must be set to show the UI.
     if not currentBoard then
-        UI.Setup()
+        UI:__Error("Show", "A board must be set before showing the UI; use Setup()")
     else -- Otherwise resume playing
         currentBoard:SetPaused(false)
     end
@@ -224,9 +228,9 @@ function UI:Show()
     Client.UI._BaseUITable.Show(self)
 end
 
--- Sets up a new game.
-function UI.Setup()
-    local board = Bedazzled.CreateGame("Classic")
+---Sets up a new game.
+---@param board Feature_Bedazzled_Board
+function UI.Setup(board)
     local oldBoard = UI.Board
 
     -- Unsubscribe from previous board
@@ -271,8 +275,8 @@ function UI.Setup()
         UI.Gems[guid] = element
     end, {StringID = "BedazzledUI_GemAdded"})
 
-    board.Events.GameOver:Subscribe(function (_)
-        UI.OnGameOver()
+    board.Events.GameOver:Subscribe(function (ev)
+        UI.OnGameOver(ev)
     end, {StringID = "BedazzledUI_GameOver"})
 
     -- Update gem visuals immediately when a gem transforms.
@@ -463,11 +467,25 @@ function UI.OnGemStateChanged(gem, newState, oldState)
 end
 
 ---Shows the game over text.
-function UI.OnGameOver()
+---@param ev Feature_Bedazzled_Board_Event_GameOver
+function UI.OnGameOver(ev)
     local text = UI.GameOverText
 
+    -- Update the game over text and fade it in 
+    text:SetText(Text.Format("%s\n%s", {
+        FormatArgs = {
+            {
+                Text = Bedazzled.TranslatedStrings.GameOver:GetString(),
+                Size = 45,
+                Color = Color.CreateFromHex(Color.LARIAN.RED):ToHex(),
+            },
+            {
+                Text = ev.Reason,
+                Size = 25,
+            },
+        }
+    }))
     text:SetVisible(true)
-
     text:Tween({
         EventID = "FadeIn",
         Duration = 0.8,
@@ -529,7 +547,7 @@ function UI.IsInteractable()
     local board = UI.Board
 
     -- Interaction in pause is still possible in debug (for setting up crazy matches)
-    return board and (not board:IsPaused() or Bedazzled:IsDebug()) and board:IsRunning()
+    return board and (not board:IsPaused() or Bedazzled:IsDebug()) and board:IsRunning() and board:IsInteractable()
 end
 
 function UI.ClearSelection()
@@ -756,21 +774,9 @@ function UI._Initialize(board)
         selector:SetVisible(false)
         selector:SetMouseEnabled(false)
         UI.Selector = selector
-        
+
         -- Game Over text
-        local gameOverText = UI.CreateText("GameOverText", bg, Text.Format("%s\n%s", {
-            FormatArgs = {
-                {
-                    Text = Bedazzled.TranslatedStrings.GameOver:GetString(),
-                    Size = 45,
-                    Color = Color.CreateFromHex(Color.LARIAN.RED):ToHex(),
-                },
-                {
-                    Text = Bedazzled.TranslatedStrings.GameOverSubTitle:GetString(),
-                    Size = 25,
-                },
-            }
-        }), "Center", V(UI.BACKGROUND_SIZE[1], 150))
+        local gameOverText = UI.CreateText("GameOverText", bg, "", "Center", V(UI.BACKGROUND_SIZE[1], 150))
         gameOverText:SetPositionRelativeToParent("Center", 0, -150)
         UI.GameOverText = gameOverText
 
@@ -913,6 +919,11 @@ function UI.OnMatchExecuted(ev)
     UI.CreateScoreFlyover(ev.Match)
 end
 
+---Forwards event to request a new game.
+function UI._RequestNewGame()
+    UI.Events.NewGameRequested:Throw()
+end
+
 ---Fired when the new game button is pressed.
 function UI._OnNewGamePressed()
     local isInGame = UI.Board and UI.Board:IsRunning()
@@ -928,12 +939,12 @@ function UI._OnNewGamePressed()
             }
         })
     else
-        UI.Setup()
+        UI._RequestNewGame()
     end
 end
 MsgBox.RegisterMessageListener("Feature_Bedazzled_NewGame", MsgBox.Events.ButtonPressed, function (buttonID)
     if buttonID == 1 then
-        UI.Setup()
+        UI._RequestNewGame()
     end
 end)
 
@@ -1052,14 +1063,9 @@ end)
 -- COMMANDS
 ---------------------------------------------
 
--- Start the game from a console command.
-Ext.RegisterConsoleCommand("bedazzled", function (_)
-    UI.Setup()
-end)
-
 -- Force a game over.
 Ext.RegisterConsoleCommand("bedazzledgameover", function (_)
     if UI.Board and UI.Board:IsRunning() then
-        UI.Board:EndGame()
+        UI.Board:EndGame("Forced game-over from commands.")
     end
 end)

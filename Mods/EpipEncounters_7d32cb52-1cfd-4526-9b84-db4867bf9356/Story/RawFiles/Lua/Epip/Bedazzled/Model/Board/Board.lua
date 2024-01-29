@@ -6,7 +6,7 @@ local Match = Bedazzled:GetClass("Feature_Bedazzled_Match")
 local Fusion = Bedazzled:GetClass("Feature_Bedazzled_Match_Fusion")
 local V = Vector.Create
 
----@class Feature_Bedazzled_Board
+---@class Feature_Bedazzled_Board : Class
 ---@field GUID GUID
 ---@field GameMode Feature_Bedazzled_GameMode_ID
 ---@field _IsRunning boolean
@@ -16,6 +16,7 @@ local V = Vector.Create
 ---@field Size Vector2
 ---@field Columns Feature_Bedazzled_Board_Column[]
 ---@field _QueuedMatches Feature_Bedazzled_Match[]
+---@field _Modifiers Features.Bedazzled.Board.Modifier
 local _Board = {
     Events = {
         Updated = {}, ---@type Event<Feature_Bedazzled_Board_Event_Updated>
@@ -24,7 +25,10 @@ local _Board = {
         InvalidSwapPerformed = {}, ---@type Event<Feature_Bedazzled_Board_Event_InvalidSwapPerformed>
         GameOver = {}, ---@type Event<Feature_Bedazzled_Board_Event_GameOver>
         GemTransformed = {}, ---@type Event<Feature_Bedazzled_Board_Event_GemTransformed>
-    }
+    },
+    Hooks = {
+        IsInteractable = {}, ---@type Hook<Features.Bedazzled.Board.Hooks.IsInteractable>
+    },
 }
 Bedazzled:RegisterClass("Feature_Bedazzled_Board", _Board)
 
@@ -48,11 +52,15 @@ Bedazzled:RegisterClass("Feature_Bedazzled_Board", _Board)
 
 ---@class Feature_Bedazzled_Board_Event_GameOver
 ---@field Score integer
+---@field Reason string
 
 ---@class Feature_Bedazzled_Board_Event_GemTransformed
 ---@field Gem Feature_Bedazzled_Gem
 ---@field OldType string
 ---@field NewType string
+
+---@class Features.Bedazzled.Board.Hooks.IsInteractable
+---@field Interactable boolean Hookable. Defaults to `true`.
 
 ---------------------------------------------
 -- METHODS
@@ -62,8 +70,7 @@ Bedazzled:RegisterClass("Feature_Bedazzled_Board", _Board)
 ---@param gameMode Feature_Bedazzled_GameMode_ID
 ---@return Feature_Bedazzled_Board
 function _Board.Create(size, gameMode)
-    ---@type Feature_Bedazzled_Board
-    local board = {
+    local board = _Board:__Create({
         GUID = Text.GenerateGUID(),
         GameMode = gameMode,
         _IsRunning = true,
@@ -73,12 +80,15 @@ function _Board.Create(size, gameMode)
         Size = size,
         Columns = {},
         Events = {},
-    }
-    Inherit(board, _Board)
+        _Modifiers = {},
+    }) ---@cast board Feature_Bedazzled_Board
 
-    -- Initialize events
+    -- Initialize events and hooks
     for k,_ in pairs(_Board.Events) do
         board.Events[k] = SubscribableEvent:New(k)
+    end
+    for k,_ in pairs(_Board.Hooks) do
+        board.Hooks[k] = SubscribableEvent:New(k)
     end
 
     -- Initialize columns
@@ -96,6 +106,19 @@ function _Board.Create(size, gameMode)
     end, {StringID = "Bedazzled_" .. board.GUID})
 
     return board
+end
+
+---Applies a game modifier.
+---@param modifier Features.Bedazzled.Board.Modifier
+function _Board:ApplyModifier(modifier)
+    table.insert(self._Modifiers, modifier)
+    modifier:Apply(self)
+end
+
+---Returns the active modifiers.
+---@return Features.Bedazzled.Board.Modifier[]
+function _Board:GetModifiers()
+    return self._Modifiers
 end
 
 ---@return integer
@@ -156,7 +179,7 @@ function _Board:Update(dt)
 
     -- Game over if all gems are idling with no moves available.
     if self:IsIdle() and not self:HasMovesAvailable() then
-        self:EndGame()
+        self:EndGame(Bedazzled.TranslatedStrings.GameOver_Reason_NoMoreMoves)
     end
 end
 
@@ -166,10 +189,18 @@ function _Board:IsRunning()
     return self._IsRunning
 end
 
+---Returns whether the user can currently interact with the board.
+---@see Features.Bedazzled.Board.Hooks.IsInteractable
+---@return boolean
+function _Board:IsInteractable()
+    return self.Hooks.IsInteractable:Throw({Interactable = true}).Interactable
+end
+
 ---Ends the game and stops the update loop.
-function _Board:EndGame()
+---@param reason TextLib_String Description of why the game ended.
+function _Board:EndGame(reason)
     if not self._IsRunning then
-        Bedazzled:Error("Board:EndGame", "Attempted to end a board that is not running")
+        self:__Error("EndGame", "Attempted to end a board that is not running")
     end
 
     local finalScore = self:GetScore()
@@ -177,6 +208,7 @@ function _Board:EndGame()
     self._IsRunning = false
     self.Events.GameOver:Throw({
         Score = finalScore,
+        Reason = Text.Resolve(reason),
     })
 
     -- Stop updates
