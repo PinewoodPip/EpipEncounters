@@ -266,6 +266,9 @@ function Widgets._RenderClampedNumberSetting(request)
         instance:SetValue(ev.Value)
     end)
 
+    -- Setup tooltips on hover
+    instance:SetTooltip("Custom", Widgets._GetSettingTooltip(setting))
+
     return instance
 end
 
