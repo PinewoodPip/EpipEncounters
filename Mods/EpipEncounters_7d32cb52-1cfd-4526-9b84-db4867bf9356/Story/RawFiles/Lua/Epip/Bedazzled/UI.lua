@@ -994,7 +994,7 @@ Input.Events.KeyPressed:Subscribe(function (ev)
         local board = UI.Board
 
         if pos then
-            local descriptors = table.deepCopy(Bedazzled.GetGemDescriptors()) ---@type table<string, Feature_Bedazzled_Gem>
+            local descriptors = Bedazzled.GetGemDescriptors() ---@type table<string, Feature_Bedazzled_Gem>
             local list = {} ---@type Feature_Bedazzled_Gem[]
             for _,v in pairs(descriptors) do
                 table.insert(list, v.Type)
