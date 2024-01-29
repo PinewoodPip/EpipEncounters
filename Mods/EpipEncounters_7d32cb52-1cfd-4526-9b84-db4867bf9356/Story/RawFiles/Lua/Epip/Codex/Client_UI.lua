@@ -177,6 +177,7 @@ function UI._SetupHeaders()
     sectionHeader:SetStroke(0, 2, 1, 20, 10)
     sectionHeader:SetPositionRelativeToParent("Top", 223, 20)
 
+    UI.IndexHeader = header
     UI.SectionHeader = sectionHeader
 end
 
