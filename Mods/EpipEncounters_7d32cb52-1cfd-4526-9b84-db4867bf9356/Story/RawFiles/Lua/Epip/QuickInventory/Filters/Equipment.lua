@@ -333,30 +333,34 @@ QuickInventory.Hooks.IsItemVisible:Subscribe(function (ev)
     local item = ev.Item
     local visible = ev.Visible
 
-    if QuickInventory:GetSettingValue(QuickInventory.Settings.ItemCategory) == "Equipment" then
+    if visible and QuickInventory:GetSettingValue(QuickInventory.Settings.ItemCategory) == "Equipment" then
         local itemSlotSetting = QuickInventory:GetSettingValue(QuickInventory.Settings.ItemSlot)
         local statBoostSetting = QuickInventory:GetSettingValue(QuickInventory.Settings.DynamicStat)
         local culledOnly = QuickInventory:GetSettingValue(QuickInventory.Settings.CulledOnly) and EpicEncounters.IsEnabled()
         local showEquippedItems = QuickInventory:GetSettingValue(QuickInventory.Settings.ShowEquippedItems)
         local raritySetting = QuickInventory:GetSettingValue(QuickInventory.Settings.Rarity)
 
-        visible = Item.IsEquipment(item)
+        -- Skip all further checks for items that are not equipment.
+        if not Item.IsEquipment(item) then goto Invisible end
 
+        -- Check slot setting.
         if itemSlotSetting ~= "Any" then
-            visible = visible and Item.GetItemSlot(item) == itemSlotSetting
+            if Item.GetItemSlot(item) ~= itemSlotSetting then goto Invisible end
         end
 
+        -- Check rarity setting.
         if raritySetting ~= "Any" then
-            if raritySetting == "Unique" then
+            if raritySetting == "Unique" then -- Excludes Artifacts.
                 visible = visible and item.Stats.Rarity == "Unique" and not Item.IsArtifact(item)
             elseif raritySetting == "Artifact" then
                 visible = visible and Item.IsArtifact(item)
             else
                 visible = visible and item.Stats.Rarity == raritySetting
             end
+            if not visible then goto End end
         end
 
-        -- Slot restriction
+        -- Check item subtype settings.
         if itemSlotSetting == "Weapon" then
             local weaponSubTypeSetting = QuickInventory:GetSettingValue(QuickInventory.Settings.WeaponSubType)
 
@@ -372,6 +376,7 @@ QuickInventory.Hooks.IsItemVisible:Subscribe(function (ev)
                 visible = visible and Item.GetEquipmentSubtype(item) == armorSubTypeSetting
             end
         end
+        if not visible then goto End end
 
         -- Filter by deltamod stat boosts.
         if statBoostSetting ~= "" then
@@ -393,8 +398,13 @@ QuickInventory.Hooks.IsItemVisible:Subscribe(function (ev)
         if not QuickInventory:GetSettingValue(QuickInventory.Settings.ShowWares) then
             visible = visible and not Item.IsMarkedAsWares(item)
         end
+
+        goto End
+        ::Invisible::
+        visible = false
     end
 
+    ::End::
     ev.Visible = visible
 end)
 
