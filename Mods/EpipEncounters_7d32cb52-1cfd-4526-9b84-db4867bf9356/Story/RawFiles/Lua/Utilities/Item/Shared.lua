@@ -86,13 +86,13 @@ Item = {
 
     UNIDENTIFIED_ITEM_TSKHANDLE = "hf9d034e1gf819g4c6cga36fg7afd009b5827", --- "Unidentified [1]"
 
-    ---Does not include weapon types. See `WEAPON_TYPE_TSKHANDLES`.
+    ---Does not include weapon types.
     ---@type table<ItemSlot, TranslatedStringHandle>
     ITEM_SLOT_TSKHANDLES = {
         ["Helmet"] = "hd4b98ff5g33a8g44e0ga6a9gdb1ab7d70bf3",
         ["Breast"] = "hb5c52d20g6855g4929ga78ege3fe776a1f2e",
         ["Leggings"] = "he7042b52g54d7g4f46g8f69g509460dfe595",
-        -- ["Weapon"] = "", -- See `WEAPON_TYPE_TSKHANDLES`
+        -- ["Weapon"] = "", -- TODO!
         ["Shield"] = "h77557ac7g4f6fg49bdga76cg404de43d92f5",
         ["Ring"] = "h970199f8ge650g4fa3ga0deg5995696569b6",
         ["Belt"] = "h2a76a9ecg2982g4c7bgb66fgbe707db0ac9e",
@@ -645,7 +645,7 @@ function Item.GetEquippedItem(char, slot)
 end
 
 ---Returns the subtype of item (ex. "Knife" or "Platemail").  
----Returns ItemSlot for items with no subtypes.
+---Returns `"None"` for armor items with no subtypes (ex. `Amulet`).
 ---@param item Item
 ---@return ItemLib_EquipmentType|ItemSlot
 function Item.GetEquipmentSubtype(item)

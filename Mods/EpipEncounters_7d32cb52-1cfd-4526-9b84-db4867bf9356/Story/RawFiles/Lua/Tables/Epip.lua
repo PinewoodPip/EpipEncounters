@@ -151,6 +151,7 @@ end
 
 ---Returns whether the game is using Pip's Script Extender fork.
 function Epip.IsPipFork()
+    ---@diagnostic disable-next-line: undefined-field
     return Ext.IsPipFork == true
 end
 

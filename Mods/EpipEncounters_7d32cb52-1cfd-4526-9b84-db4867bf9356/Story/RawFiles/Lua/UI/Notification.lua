@@ -175,7 +175,6 @@ Notification:RegisterInvokeListener("showNewSkill", function(ev, name, descripti
     -- Prevent action.
     if event.Prevent then
         ev:PreventAction()
-        
         Notification._ClearEngineQueue()
     end
 end)
