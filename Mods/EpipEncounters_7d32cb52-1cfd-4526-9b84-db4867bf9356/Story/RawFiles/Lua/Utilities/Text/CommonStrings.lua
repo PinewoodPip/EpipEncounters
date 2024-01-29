@@ -254,6 +254,10 @@ Text.CommonStrings.Save = Text.RegisterTranslatedString({
     Text = "Save",
     ContextDescription = [[As in, "save settings"]],
 })
+Text.CommonStrings.Start = Text.RegisterTranslatedString({
+    Handle = "h807e1cacgfe65g4153gb4dfg2ca7fa75dd28",
+    Text = "Start",
+})
 
 ---------------------------------------------
 -- BRANDING
