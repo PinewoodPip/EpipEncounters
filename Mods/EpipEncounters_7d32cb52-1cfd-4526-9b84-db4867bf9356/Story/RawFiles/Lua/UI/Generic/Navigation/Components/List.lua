@@ -76,6 +76,13 @@ function ListComponent:Create(target, config)
 end
 
 ---@override
+function ListComponent:OnFocusChanged(focused)
+    if focused and self.__Index then
+        self:__FocusByIndex(self.__Index)
+    end
+end
+
+---@override
 function ListComponent:OnIggyEvent(event)
     if event.Timing == "Down" then -- Down is used to allow key repeat
         local scrollDirection = nil
