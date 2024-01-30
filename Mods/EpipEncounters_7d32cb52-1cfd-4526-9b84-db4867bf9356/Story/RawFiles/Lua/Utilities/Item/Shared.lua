@@ -781,9 +781,10 @@ function Item.GetEquippedSlot(item, char)
         if isEquipped then slot = "Shield" end
     end
 
-    if not isEquipped then slot = nil end
-
-    return Ext.Enums.ItemSlot[slot].Label
+    if not isEquipped then
+        slot = nil
+    end
+    return slot and Ext.Enums.ItemSlot[slot].Label
 end
 
 --- Count the items in an entity's inventory that match a predicate function.  
