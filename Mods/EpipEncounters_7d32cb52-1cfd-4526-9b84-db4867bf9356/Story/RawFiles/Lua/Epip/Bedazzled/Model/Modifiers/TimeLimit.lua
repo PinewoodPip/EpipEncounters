@@ -2,7 +2,7 @@
 local Bedazzled = Epip.GetFeature("Feature_Bedazzled")
 
 ---@class Features.Bedazzled.Board.Modifiers.TimeLimit : Features.Bedazzled.Board.Modifier
----@field Settings Features.Bedazzled.Board.Modifiers.TimeLimit.Settings
+---@field Settings Features.Bedazzled.Board.Modifiers.TimeLimit.Config
 ---@field RemainingTime number In seconds.
 local TimeLimit = {
     Name = Bedazzled:RegisterTranslatedString("he8f917c8g97fag44e2g9e7ag38bd6d8ac1a5", {
@@ -26,7 +26,7 @@ local TSK = {
 -- CLASSES
 ---------------------------------------------
 
----@class Features.Bedazzled.Board.Modifiers.TimeLimit.Settings
+---@class Features.Bedazzled.Board.Modifiers.TimeLimit.Config : Features.Bedazzled.Board.Modifier.Configuration
 ---@field TimeLimit number In seconds.
 
 ---------------------------------------------
@@ -34,11 +34,12 @@ local TSK = {
 ---------------------------------------------
 
 ---Creates a TimeLimit modifier.
----@param settings Features.Bedazzled.Board.Modifiers.TimeLimit.Settings
+---@override
+---@param config Features.Bedazzled.Board.Modifiers.TimeLimit.Config
 ---@return Features.Bedazzled.Board.Modifiers.TimeLimit
-function TimeLimit.Create(settings)
+function TimeLimit:Create(config)
     local mod = TimeLimit:__Create({
-        Settings = settings,
+        Settings = config,
     }) ---@cast mod Features.Bedazzled.Board.Modifiers.TimeLimit
     return mod
 end
@@ -69,4 +70,18 @@ end
 ---@override
 function TimeLimit:GetConfigurationSchema()
     return self.Settings
+end
+---@override
+---@param config1 Features.Bedazzled.Board.Modifiers.TimeLimit.Config
+---@param config2 Features.Bedazzled.Board.Modifiers.TimeLimit.Config
+---@return boolean
+function TimeLimit.ConfigurationEquals(config1, config2)
+    return config1.TimeLimit == config2.TimeLimit
+end
+
+---@override
+---@param config Features.Bedazzled.Board.Modifiers.TimeLimit.Config
+---@return boolean
+function TimeLimit.IsConfigurationValid(config)
+    return config.TimeLimit > 0
 end
