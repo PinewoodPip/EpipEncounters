@@ -29,14 +29,19 @@ package Elements
         public override function Initialize() : *
         {
             super.Initialize();
+            this._cachedText = "";
 
             // Text elements are not mouse enabled by default.
             this.SetMouseEnabled(false);
             this.SetEditable(false);
+            this.SetType("Center");
 
             this.text_txt.addEventListener(Event.CHANGE,this.onChange);
             this.text_txt.addEventListener(FocusEvent.FOCUS_IN,this.onFocus, false, 0, true);
             this.text_txt.addEventListener(FocusEvent.FOCUS_OUT,this.onFocusLost, false, 0, true);
+
+            // Remove filters
+            this.text_txt.filters = [];
         }
 
         public override function get elementType() : String
@@ -64,6 +69,7 @@ package Elements
 
             this.text_txt.defaultTextFormat = format;
             this.SetText(this._cachedText, false); // Required to update text format
+            this.text_txt.wordWrap = true; // This gets unset at some unknown time, at least from pooling.
         }
 
         public function SetText(text:String, setSize:Boolean=false) : *

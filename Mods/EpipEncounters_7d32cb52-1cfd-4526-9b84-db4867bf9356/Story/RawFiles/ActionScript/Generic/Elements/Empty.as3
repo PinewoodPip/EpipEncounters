@@ -18,5 +18,10 @@ package Elements
         {
             return "Empty";
         }
+
+        public override function SetMouseEnabled(enabled:Boolean) : *
+        {
+            this.mouseEnabled = enabled;
+        }
     }
 }

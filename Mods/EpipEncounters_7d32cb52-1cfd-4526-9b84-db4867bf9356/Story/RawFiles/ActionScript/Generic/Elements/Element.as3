@@ -56,6 +56,9 @@ package Elements
 
             this.addEventListener(Event.REMOVED_FROM_STAGE, this.onRemovedFromStage);
 
+            this.widthOverride = null;
+            this.heightOverride = null;
+
             this._nextTweenToProperties = {};
         }
 
