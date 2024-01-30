@@ -6,7 +6,14 @@ local UI = Bedazzled.GameUI
 local V = Vector.Create
 
 local Overlays = {
-    LABEL_SIZE = V(UI.BACKGROUND_SIZE[1] * 0.8, 50)
+    LABEL_SIZE = V(UI.BACKGROUND_SIZE[1] * 0.8, 30)
+}
+
+local TSK = {
+    Label_MovesLeft = Bedazzled:RegisterTranslatedString("h9692b408ge89fg4f6cgb5d6gc0554e9fdd0c", {
+        Text = "%d Moves Left",
+        ContextDescription = "Label for move limit; first parameter is amount of moves left",
+    })
 }
 
 ---------------------------------------------
@@ -34,6 +41,13 @@ function Overlays.Setup()
         ---@cast timeLimitMod Features.Bedazzled.Board.Modifiers.TimeLimit
         Overlays._SetupTimeLimitDisplay(timeLimitMod)
     end
+
+    -- Setup move limit display
+    local moveLimitMod = modifiersSet["Features.Bedazzled.Board.Modifiers.MoveLimit"]
+    if moveLimitMod then
+        ---@cast moveLimitMod Features.Bedazzled.Board.Modifiers.MoveLimit
+        Overlays._SetupMoveLimitDisplay(moveLimitMod)
+    end
 end
 
 ---Sets up the time limit label.
@@ -46,6 +60,10 @@ function Overlays._SetupTimeLimitDisplay(modifier)
     UI.Board.Events.Updated:Subscribe(function (_)
         local minutes = modifier.RemainingTime // 60
         local seconds = math.ceil(modifier.RemainingTime % 60)
+        if seconds == 60 then -- Round up to a whole minute.
+            minutes = minutes + 1
+            seconds = 0
+        end
         local color = minutes > 0 and Color.WHITE or Color.LARIAN.RED -- Show time left below a minute in red.
 
         minutes, seconds = Text.RemoveTrailingZeros(minutes), tostring(seconds) -- RemoveTrailingZeros is necessary as even an integer division afterwards can produce ex. "1.0"
@@ -56,7 +74,29 @@ function Overlays._SetupTimeLimitDisplay(modifier)
             },
             Color = color,
         }))
-    end)
+    end, {Priority = -1}) -- Not strictly necessary as the modifier should've been applied prior to this.
+end
+
+---Sets up the move limit label.
+---@param modifier Features.Bedazzled.Board.Modifiers.MoveLimit
+function Overlays._SetupMoveLimitDisplay(modifier)
+    local list = Overlays.LabelList
+    local label = TextPrefab.Create(UI, "Modifiers.MoveLimit.Label", list, "", "Center", Overlays.LABEL_SIZE)
+    local function UpdateLabel()
+        local color = modifier.RemainingMoves > 10 and Color.WHITE or Color.LARIAN.RED -- Show remaining moves below a certain threshold in red.
+        label:SetText(TSK.Label_MovesLeft:Format({
+            FormatArgs = {modifier.RemainingMoves},
+            Color = color,
+        }))
+    end
+
+    -- Update label immediately upon starting the game.
+    UpdateLabel()
+
+    -- Update the label after successful moves.
+    UI.Board.Events.SwapPerformed:Subscribe(function (_)
+        UpdateLabel()
+    end, {Priority = -1}) -- Not strictly necessary as the modifier should've been applied prior to this.
 end
 
 function Overlays._Initialize()
