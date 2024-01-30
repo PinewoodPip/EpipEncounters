@@ -23,17 +23,11 @@ local TSK = {
 ---Initializes the overlays based on the current board.
 function Overlays.Setup()
     local board = UI.Board
+    local modifiersSet = board:GetModifiers()
 
     -- Cleanup should be run first due to the _Initialized check.
     Overlays._Cleanup()
     Overlays._Initialize()
-
-    -- Create a map of modifiers for quicker lookups
-    local modifiers = board:GetModifiers()
-    local modifiersSet = {} ---@type table<string, Features.Bedazzled.Board.Modifier>
-    for _,mod in ipairs(modifiers) do
-        modifiersSet[mod:GetClassName()] = mod
-    end
 
     -- Setup time limit display
     local timeLimitMod = modifiersSet["Features.Bedazzled.Board.Modifiers.TimeLimit"]

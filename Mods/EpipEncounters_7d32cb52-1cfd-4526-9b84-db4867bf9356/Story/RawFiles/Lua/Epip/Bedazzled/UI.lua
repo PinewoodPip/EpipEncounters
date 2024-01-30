@@ -688,7 +688,7 @@ end
 
 ---Updates the score displays.
 function UI.UpdateScore()
-    local highScore = Bedazzled.GetHighScore(UI.Board.GameMode)
+    local highScore = Bedazzled.GetHighScore(UI.Board.GameMode, UI.Board:GetModifierConfigs())
     local highScorePoints = highScore and highScore.Score or 0
     local text = UI.ScoreText
     local pointsLabel = UI._FormatScoreNumber(UI.Board:GetScore())
