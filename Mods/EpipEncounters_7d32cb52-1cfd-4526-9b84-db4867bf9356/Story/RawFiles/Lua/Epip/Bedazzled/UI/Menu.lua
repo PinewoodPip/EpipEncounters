@@ -23,6 +23,7 @@ local TSK = {
 
 local Modifiers = {
     TimeLimit = Bedazzled:GetClass("Features.Bedazzled.Board.Modifiers.TimeLimit"),
+    MoveLimit = Bedazzled:GetClass("Features.Bedazzled.Board.Modifiers.MoveLimit"),
 }
 
 ---@type table<string, Features.Bedazzled.UI.Menu.Modifier>
@@ -40,12 +41,26 @@ local ModifierEntries = {
             DefaultValue = 0,
         }),
     },
+    MoveLimit = {
+        Modifier = Modifiers.MoveLimit,
+        Setting = Bedazzled:RegisterSetting("Modifiers.MoveLimit.Moves", {
+            Type = "ClampedNumber",
+            Name = Modifiers.MoveLimit.Name,
+            Description = Modifiers.MoveLimit.Description,
+            Min = 0,
+            Max = 100,
+            Step = 1,
+            HideNumbers = false,
+            DefaultValue = 0,
+        }),
+    },
 }
 
 ---TODO expose
 ---@type Features.Bedazzled.UI.Menu.Modifier[]
 local ModifierSettings = {
     ModifierEntries.TimeLimit,
+    ModifierEntries.MoveLimit,
 }
 
 ---------------------------------------------
@@ -76,6 +91,14 @@ function UI.StartGame()
     if timeLimit > 0 then
         table.insert(modifiers, Modifiers.TimeLimit.Create({
             TimeLimit = timeLimit,
+        }))
+    end
+
+    -- Move limit modifier
+    local moveLimit = ModifierEntries.MoveLimit.Setting:GetValue()
+    if moveLimit > 0 then
+        table.insert(modifiers, Modifiers.MoveLimit.Create({
+            MoveLimit = moveLimit,
         }))
     end
 
