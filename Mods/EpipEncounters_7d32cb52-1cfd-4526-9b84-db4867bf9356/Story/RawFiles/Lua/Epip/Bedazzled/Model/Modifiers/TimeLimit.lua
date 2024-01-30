@@ -3,7 +3,7 @@ local Bedazzled = Epip.GetFeature("Feature_Bedazzled")
 
 ---@class Features.Bedazzled.Board.Modifiers.TimeLimit : Features.Bedazzled.Board.Modifier
 ---@field Settings Features.Bedazzled.Board.Modifiers.TimeLimit.Settings
----@field _RemainingTime number In seconds.
+---@field RemainingTime number In seconds.
 local TimeLimit = {
     Name = Bedazzled:RegisterTranslatedString("he8f917c8g97fag44e2g9e7ag38bd6d8ac1a5", {
         Text = "Time Limit",
@@ -46,14 +46,14 @@ end
 ---@override
 ---@param board Feature_Bedazzled_Board
 function TimeLimit:Apply(board)
-    self._RemainingTime = self.Settings.TimeLimit
+    self.RemainingTime = self.Settings.TimeLimit
 
     -- Tick down the timer each update.
     board.Events.Updated:Subscribe(function (ev)
-        self._RemainingTime = self._RemainingTime - ev.DeltaTime
+        self.RemainingTime = math.max(0, self.RemainingTime - ev.DeltaTime)
 
         -- Stop the game when the time runs out.
-        if self._RemainingTime < 0 and board:IsIdle() then
+        if self.RemainingTime <= 0 and board:IsIdle() then
             board:EndGame(TSK.GameOver_Reason)
         end
     end)
@@ -62,7 +62,7 @@ function TimeLimit:Apply(board)
     -- This is so that no additional moves can be made while
     -- gems are settling after the time limit has expired.
     board.Hooks.IsInteractable:Subscribe(function (ev)
-        ev.Interactable = ev.Interactable and self._RemainingTime > 0
+        ev.Interactable = ev.Interactable and self.RemainingTime > 0
     end)
 end
 
