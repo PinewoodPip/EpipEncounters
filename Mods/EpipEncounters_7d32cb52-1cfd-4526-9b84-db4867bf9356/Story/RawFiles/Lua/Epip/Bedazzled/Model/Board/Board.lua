@@ -16,7 +16,7 @@ local V = Vector.Create
 ---@field Size Vector2
 ---@field Columns Feature_Bedazzled_Board_Column[]
 ---@field _QueuedMatches Feature_Bedazzled_Match[]
----@field _Modifiers Features.Bedazzled.Board.Modifier
+---@field _Modifiers table<classname, Features.Bedazzled.Board.Modifier>
 local _Board = {
     Events = {
         Updated = {}, ---@type Event<Feature_Bedazzled_Board_Event_Updated>
@@ -116,14 +116,30 @@ end
 ---Applies a game modifier.
 ---@param modifier Features.Bedazzled.Board.Modifier
 function _Board:ApplyModifier(modifier)
-    table.insert(self._Modifiers, modifier)
+    local modClassName = modifier:GetClassName()
+    if self._Modifiers[modClassName] then
+        self:__Error("ApplyModifier", "Modifier already applied:", modClassName)
+    end
+
+    self._Modifiers[modClassName] = modifier
+
     modifier:Apply(self)
 end
 
 ---Returns the active modifiers.
----@return Features.Bedazzled.Board.Modifier[]
+---@return table<classname, Features.Bedazzled.Board.Modifier>
 function _Board:GetModifiers()
     return self._Modifiers
+end
+
+---Returns the active modifier configs.
+---@return Features.Bedazzled.ModifierSet
+function _Board:GetModifierConfigs()
+    local set = {} ---@type Features.Bedazzled.ModifierSet
+    for className,mod in pairs(self._Modifiers) do
+        set[className] = mod:GetConfigurationSchema()
+    end
+    return set
 end
 
 ---@return integer

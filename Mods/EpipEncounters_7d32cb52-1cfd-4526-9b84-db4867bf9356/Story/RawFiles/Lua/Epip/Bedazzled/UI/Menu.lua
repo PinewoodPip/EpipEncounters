@@ -64,9 +64,9 @@ function UI.StartGame()
 end
 
 ---Returns the configs for the current chosen modifiers.
----@return table<classname, Features.Bedazzled.Board.Modifier.Configuration>
+---@return Features.Bedazzled.ModifierSet
 function UI.GetModifierConfigs()
-    local configs = {} ---@type table<classname, Features.Bedazzled.Board.Modifier.Configuration>
+    local configs = {} ---@type Features.Bedazzled.ModifierSet
     for _,mod in pairs(UI._RegisteredModifiers) do
         local config = UI.Hooks.GetModifierConfiguration:Throw({
             Modifier = mod,
