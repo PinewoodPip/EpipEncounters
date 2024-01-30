@@ -466,7 +466,17 @@ end)
 
 -- Show transmog'd visuals instead of the item's real ones.
 Character.Hooks.CreateEquipmentVisuals:Subscribe(function (ev)
+    local characterCreation = Ext.UI.GetCharacterCreationWizard()
     local char = ev.Character
+
+    -- Don't render visuals for character creation characters with armor toggled off.
+    if characterCreation and characterCreation.CharacterHandle == char.Handle then
+        for _,cust in pairs(characterCreation.CharacterCreationManager.Customizations) do
+            if cust.CharacterHandle == char.Handle and cust.ArmorState == 0 then
+                return
+            end
+        end
+    end
 
     -- Do nothing for blacklisted slots or non-players.
     if Transmog._BlacklistedSlots[ev.Request.Slot] or not char.PlayerData or not Transmog._CanShowEquipment(char) then
