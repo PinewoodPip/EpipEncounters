@@ -68,7 +68,10 @@ end)
 
 -- Auto-identify items moved to inventories.
 Osiris.RegisterSymbolListener("ItemTemplateAddedToCharacter", 3, "after", function(_, itemGUID, _)
-    AutoIdentify.ProcessItem(Item.Get(itemGUID))
+    local item = Item.Get(itemGUID)
+    if item then -- Is frequently nil within character creation.
+        AutoIdentify.ProcessItem(item)
+    end
 end)
 
 Settings.Events.SettingValueChanged:Subscribe(function (ev)
