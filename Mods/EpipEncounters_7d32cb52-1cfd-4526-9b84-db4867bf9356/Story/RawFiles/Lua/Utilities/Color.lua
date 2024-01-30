@@ -138,6 +138,8 @@ Color = {
 -- RGBCOLOR INSTANCE
 ---------------------------------------------
 
+---@alias Color RGBColor
+
 ---@class RGBColor
 ---@field Red integer In integer range [0-255]
 ---@field Green integer In integer range [0-255]

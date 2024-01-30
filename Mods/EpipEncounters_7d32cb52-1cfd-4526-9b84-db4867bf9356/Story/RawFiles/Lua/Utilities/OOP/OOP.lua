@@ -18,6 +18,8 @@ OOP = {
 -- CLASSES
 ---------------------------------------------
 
+---@alias classname string
+
 ---@class Class
 ---@field __name string
 ---@field __ParentClasses string[]
