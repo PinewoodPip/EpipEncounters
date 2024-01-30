@@ -21,6 +21,7 @@ local _Board = {
     Events = {
         Updated = {}, ---@type Event<Feature_Bedazzled_Board_Event_Updated>
         GemAdded = {}, ---@type Event<Feature_Bedazzled_Board_Event_GemAdded>
+        SwapPerformed = {}, ---@type Event<Features.Bedazzled.Board.Events.SwapPerformed>
         MatchExecuted = {}, ---@type Event<Feature_Bedazzled_Board_Event_MatchExecuted>
         InvalidSwapPerformed = {}, ---@type Event<Feature_Bedazzled_Board_Event_InvalidSwapPerformed>
         GameOver = {}, ---@type Event<Feature_Bedazzled_Board_Event_GameOver>
@@ -45,6 +46,10 @@ Bedazzled:RegisterClass("Feature_Bedazzled_Board", _Board)
 
 ---@class Feature_Bedazzled_Board_Event_MatchExecuted
 ---@field Match Feature_Bedazzled_Match
+
+---@class Features.Bedazzled.Board.Events.SwapPerformed
+---@field Gem1 Feature_Bedazzled_Board_Gem
+---@field Gem2 Feature_Bedazzled_Board_Gem
 
 ---@class Feature_Bedazzled_Board_Event_InvalidSwapPerformed
 ---@field Gem1 Feature_Bedazzled_Board_Gem
@@ -255,34 +260,34 @@ function _Board:ConsumeMatch(match)
                 local explosion = Match.Create(coords, Match.REASONS.EXPLOSION)
                 explosion:SetScore(self:ApplyScoreMultiplier(Bedazzled.BASE_SCORING.MEDIUM_RUNE_DETONATION))
                 gem:RemoveModifier("Rune")
-    
+
                 -- Add gems in a 3x3 area
                 explosion:AddGems(self:_GetGemsInArea(V(coords[1] - 1, coords[2] + 1), V(coords[1] + 1, coords[2] - 1)))
-    
+
                 self:QueueMatch(explosion)
             elseif gem:HasModifier("LargeRune") then
                 local lightning = Match.Create(coords, Match.REASONS.EXPLOSION)
                 lightning:SetScore(self:ApplyScoreMultiplier(Bedazzled.BASE_SCORING.LARGE_RUNE_DETONATION))
                 gem:RemoveModifier("LargeRune")
-    
+
                 -- Add gems in row
                 lightning:AddGems(self:_GetGemsInArea(V(1, coords[2]), V(self.Size[2], coords[2])))
-    
+
                 -- Add gems in column
                 lightning:AddGems(self:_GetGemsInArea(V(coords[1], self.Size[1]), V(coords[1], 1)))
-    
+
                 self:QueueMatch(lightning)
             elseif gem:HasModifier("GiantRune") then
                 local supernova = Match.Create(coords, Match.REASONS.EXPLOSION)
                 supernova:SetScore(self:ApplyScoreMultiplier(Bedazzled.BASE_SCORING.GIANT_RUNE_DETONATION))
                 gem:RemoveModifier("GiantRune")
-    
+
                 -- Add gems in rows
                 supernova:AddGems(self:_GetGemsInArea(V(1, coords[2] + 1), V(self.Size[2], coords[2] - 1)))
-    
+
                 -- Add gems in columns
                 supernova:AddGems(self:_GetGemsInArea(V(coords[1] - 1, self.Size[1]), V(coords[1] + 1, 1)))
-    
+
                 self:QueueMatch(supernova)
             end
         end
@@ -404,17 +409,22 @@ function _Board:Swap(position1, position2)
             -- Swap occurs instantly, but the gems cannot
             -- be matched until the Swapping state ends
             self:_SwapGems(gem1, gem2)
-    
+
             local swappingState = Bedazzled.GetGemStateClass("Feature_Bedazzled_Board_Gem_State_Swapping")
-    
+
             gem1:SetState(swappingState:Create(gem2))
             gem2:SetState(swappingState:Create(gem1))
 
             -- Reset cascade counter
             self.MatchesSinceLastMove = 0
+
+            self.Events.SwapPerformed:Throw({
+                Gem1 = gem1,
+                Gem2 = gem2,
+            })
         elseif gem1:IsAdjacentTo(gem2) and gem1:IsIdle() and gem2:IsIdle() then -- Enter invalid swap busy state - only if gems are adjacent and idle
             local invalidSwapState = Bedazzled.GetGemStateClass("Feature_Bedazzled_Board_Gem_State_InvalidSwap")
-    
+
             gem1:SetState(invalidSwapState:Create(gem2))
             gem2:SetState(invalidSwapState:Create(gem1))
 

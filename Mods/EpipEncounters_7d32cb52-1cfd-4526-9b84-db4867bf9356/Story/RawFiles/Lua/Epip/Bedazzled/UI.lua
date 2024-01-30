@@ -53,7 +53,8 @@ UI.FUSION_TRANSFORM_SOUNDS = {
 }
 
 UI.Events = {
-    NewGameRequested = SubscribableEvent:New("NewGameRequested", true), ---@type PreventableEvent<Empty>
+    GameStarted = SubscribableEvent:New("GameStarted"), ---@type Event<Empty>
+    NewGameRequested = SubscribableEvent:New("NewGameRequested"), ---@type Event<Empty>
 }
 
 ---------------------------------------------
@@ -287,6 +288,8 @@ function UI.Setup(board)
     end, {StringID = "BedazzledUI_GemTransformed"})
 
     UI.ResetButton:SetVisible(false)
+
+    UI.Events.GameStarted:Throw()
 
     UI:Show()
 end
@@ -726,7 +729,7 @@ function UI._Initialize(board)
         local gemContainer = bg:AddChild("GemContainer", "GenericUI_Element_Empty")
         local BOARD_WIDTH = board.Size[2] * UI.CELL_SIZE[1]
         UI.GemContainer = gemContainer
-        gemContainer:SetPosition(UI.BACKGROUND_SIZE[1]/2 - BOARD_WIDTH/2, 200)
+        gemContainer:SetPosition(UI.BACKGROUND_SIZE[1]/2 - BOARD_WIDTH/2, 300)
 
         local closeButton = bg:AddChild("CloseButton", "GenericUI_Element_Button")
         closeButton:SetType("Close")
@@ -777,7 +780,7 @@ function UI._Initialize(board)
 
         -- Game Over text
         local gameOverText = UI.CreateText("GameOverText", bg, "", "Center", V(UI.BACKGROUND_SIZE[1], 150))
-        gameOverText:SetPositionRelativeToParent("Center", 0, -150)
+        gameOverText:SetPositionRelativeToParent("Center", 0, -50)
         UI.GameOverText = gameOverText
 
         -- Reset button
@@ -787,7 +790,7 @@ function UI._Initialize(board)
         resetButton.Events.Pressed:Subscribe(function (_)
             UI._OnNewGamePressed()
         end)
-        resetButton:SetPositionRelativeToParent("Center", 0, 220)
+        resetButton:SetPositionRelativeToParent("Center", 0, 320)
         resetButton:SetVisible(false)
         UI.ResetButton = resetButton
     else -- Cleanup previous elements

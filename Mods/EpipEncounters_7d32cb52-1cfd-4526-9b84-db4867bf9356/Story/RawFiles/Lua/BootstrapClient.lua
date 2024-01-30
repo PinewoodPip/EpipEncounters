@@ -770,6 +770,7 @@ LOAD_ORDER = {
             "Epip/Bedazzled/Model/Modifiers/TimeLimit.lua",
 
             "Epip/Bedazzled/UI/Menu.lua",
+            "Epip/Bedazzled/UI/ModifierOverlays.lua",
         },
     },
     {Script = "Epip/Client/RainbowOverlays.lua"},
