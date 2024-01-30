@@ -2,7 +2,7 @@
 local Bedazzled = Epip.GetFeature("Feature_Bedazzled")
 
 ---@class Features.Bedazzled.Board.Modifiers.MoveLimit : Features.Bedazzled.Board.Modifier
----@field Settings Features.Bedazzled.Board.Modifiers.MoveLimit.Settings
+---@field Settings Features.Bedazzled.Board.Modifiers.MoveLimit.Config
 ---@field RemainingMoves integer
 local MoveLimit = {
     Name = Bedazzled:RegisterTranslatedString("h10cca036g0467g4d94g98acg704e38548857", {
@@ -26,7 +26,7 @@ local TSK = {
 -- CLASSES
 ---------------------------------------------
 
----@class Features.Bedazzled.Board.Modifiers.MoveLimit.Settings
+---@class Features.Bedazzled.Board.Modifiers.MoveLimit.Config
 ---@field MoveLimit integer
 
 ---------------------------------------------
@@ -34,11 +34,12 @@ local TSK = {
 ---------------------------------------------
 
 ---Creates a MoveLimit modifier.
----@param settings Features.Bedazzled.Board.Modifiers.MoveLimit.Settings
+---@override
+---@param config Features.Bedazzled.Board.Modifiers.MoveLimit.Config
 ---@return Features.Bedazzled.Board.Modifiers.MoveLimit
-function MoveLimit.Create(settings)
+function MoveLimit:Create(config)
     local mod = MoveLimit:__Create({
-        Settings = settings,
+        Settings = config,
     }) ---@cast mod Features.Bedazzled.Board.Modifiers.MoveLimit
     return mod
 end
@@ -72,4 +73,19 @@ end
 ---@override
 function MoveLimit:GetConfigurationSchema()
     return self.Settings
+end
+
+---@override
+---@param config1 Features.Bedazzled.Board.Modifiers.MoveLimit.Config
+---@param config2 Features.Bedazzled.Board.Modifiers.MoveLimit.Config
+---@return boolean
+function MoveLimit.ConfigurationEquals(config1, config2)
+    return config1.MoveLimit == config2.MoveLimit
+end
+
+---@override
+---@param config Features.Bedazzled.Board.Modifiers.MoveLimit.Config
+---@return boolean
+function MoveLimit.IsConfigurationValid(config)
+    return config.MoveLimit > 0
 end

@@ -2,14 +2,18 @@
 local Bedazzled = Epip.GetFeature("Feature_Bedazzled")
 local Generic = Client.UI.Generic
 local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
-local DraggingAreaPrefab = Generic.GetPrefab("GenericUI_Prefab_DraggingArea")
 local Textures = Epip.GetFeature("Feature_GenericUITextures").TEXTURES
 local Button = Generic.GetPrefab("GenericUI_Prefab_Button")
 local SettingWidgets = Epip.GetFeature("Features.SettingWidgets")
 local CommonStrings = Text.CommonStrings
 local V = Vector.Create
 
+---@class Features.Bedazzled.UI.Menu : GenericUI_Instance
 local UI = Generic.Create("Features.Bedazzled.UI.Menu")
+
+---@type table<string, Features.Bedazzled.Board.Modifier>
+UI._RegisteredModifiers = {}
+
 local TSK = {
     Label_Bedazzle = Bedazzled:RegisterTranslatedString("h4f32f5d3g1149g4401gadc5g056b31b49f87", {
         Text = "Bedazzle",
@@ -17,51 +21,8 @@ local TSK = {
     })
 }
 
----@class Features.Bedazzled.UI.Menu.Modifier
----@field Modifier Features.Bedazzled.Board.Modifier
----@field Setting Features.SettingWidgets.SupportedSettingType
-
-local Modifiers = {
-    TimeLimit = Bedazzled:GetClass("Features.Bedazzled.Board.Modifiers.TimeLimit"),
-    MoveLimit = Bedazzled:GetClass("Features.Bedazzled.Board.Modifiers.MoveLimit"),
-}
-
----@type table<string, Features.Bedazzled.UI.Menu.Modifier>
-local ModifierEntries = {
-    TimeLimit = {
-        Modifier = Modifiers.TimeLimit,
-        Setting = Bedazzled:RegisterSetting("Modifiers.TimeLimit.Time", {
-            Type = "ClampedNumber",
-            Name = Modifiers.TimeLimit.Name,
-            Description = Modifiers.TimeLimit.Description,
-            Min = 0,
-            Max = 60 * 30, -- 30 minutes.
-            Step = 1,
-            HideNumbers = false,
-            DefaultValue = 0,
-        }),
-    },
-    MoveLimit = {
-        Modifier = Modifiers.MoveLimit,
-        Setting = Bedazzled:RegisterSetting("Modifiers.MoveLimit.Moves", {
-            Type = "ClampedNumber",
-            Name = Modifiers.MoveLimit.Name,
-            Description = Modifiers.MoveLimit.Description,
-            Min = 0,
-            Max = 100,
-            Step = 1,
-            HideNumbers = false,
-            DefaultValue = 0,
-        }),
-    },
-}
-
----TODO expose
----@type Features.Bedazzled.UI.Menu.Modifier[]
-local ModifierSettings = {
-    ModifierEntries.TimeLimit,
-    ModifierEntries.MoveLimit,
-}
+UI.Events.RenderSettings = SubscribableEvent:New("RenderSettings") ---@type Event<Empty>
+UI.Hooks.GetModifierConfiguration = SubscribableEvent:New("GetModifierConfiguration") ---@type Hook<{Modifier:Features.Bedazzled.Board.Modifier, Config:Features.Bedazzled.Board.Modifier.Configuration?}>
 
 ---------------------------------------------
 -- METHODS
@@ -74,6 +35,12 @@ function UI:Show()
     Client.UI._BaseUITable.Show(self)
 end
 
+---Registers a game modifier.
+---@param mod Features.Bedazzled.Board.Modifier
+function UI.RegisterModifier(mod)
+    UI._RegisteredModifiers[mod:GetClassName()] = mod
+end
+
 -- TODO remove code duplication
 function UI.CreateText(id, parent, label, align, size)
     local text = TextPrefab.Create(UI, id, parent, label, align, size)
@@ -84,28 +51,32 @@ end
 
 ---Starts a game with the current settings.
 function UI.StartGame()
+    -- Fetch modifiers to use for the new game
     local modifiers = {} ---@type Features.Bedazzled.Board.Modifier[]
-
-    -- Time limit modifier
-    local timeLimit = ModifierEntries.TimeLimit.Setting:GetValue()
-    if timeLimit > 0 then
-        table.insert(modifiers, Modifiers.TimeLimit.Create({
-            TimeLimit = timeLimit,
-        }))
-    end
-
-    -- Move limit modifier
-    local moveLimit = ModifierEntries.MoveLimit.Setting:GetValue()
-    if moveLimit > 0 then
-        table.insert(modifiers, Modifiers.MoveLimit.Create({
-            MoveLimit = moveLimit,
-        }))
+    for className,config in pairs(UI.GetModifierConfigs()) do
+        table.insert(modifiers, Bedazzled:GetClass(className):Create(config))
     end
 
     -- Start the game and hide the menu
     local board = Bedazzled.CreateGame("Classic", modifiers)
     Bedazzled.GameUI.Setup(board)
     UI:Hide()
+end
+
+---Returns the configs for the current chosen modifiers.
+---@return table<classname, Features.Bedazzled.Board.Modifier.Configuration>
+function UI.GetModifierConfigs()
+    local configs = {} ---@type table<classname, Features.Bedazzled.Board.Modifier.Configuration>
+    for _,mod in pairs(UI._RegisteredModifiers) do
+        local config = UI.Hooks.GetModifierConfiguration:Throw({
+            Modifier = mod,
+            Config = nil,
+        }).Config
+        if config and mod.IsConfigurationValid(config) then
+            configs[mod:GetClassName()] = config
+        end
+    end
+    return configs
 end
 
 function UI:_Initialize()
@@ -127,11 +98,10 @@ function UI:_Initialize()
     local settingsList = panel:AddChild("SettingsList", "GenericUI_Element_ScrollList")
     settingsList:SetFrame(self.FRAME_SIZE:unpack())
     settingsList:SetMouseWheelEnabled(true)
+    UI.SettingsList = settingsList
 
-    -- Render settings
-    for _,entry in ipairs(ModifierSettings) do
-        SettingWidgets.RenderSetting(UI, settingsList, entry.Setting, self.SETTING_SIZE)
-    end
+    -- Render settings - TODO redo this on every Show()?
+    UI.Events.RenderSettings:Throw()
     settingsList:SetPositionRelativeToParent("Top", 0, 200)
 
     local startButton = Button.Create(UI, "StartButton", panel, Button:GetStyle("GreenMedium"))
@@ -188,6 +158,69 @@ Client.UI.ContextMenu.RegisterVanillaMenuHandler("Item", function(item)
         })
     end
 end)
+
+-- Register modifiers and render/fetch their settings.
+local Modifiers = {
+    TimeLimit = Bedazzled:GetClass("Features.Bedazzled.Board.Modifiers.TimeLimit"),
+    MoveLimit = Bedazzled:GetClass("Features.Bedazzled.Board.Modifiers.MoveLimit"),
+}
+local ModifierSettings = {
+    TimeLimit_Time = Bedazzled:RegisterSetting("Modifiers.TimeLimit.Time", {
+        Type = "ClampedNumber",
+        Name = Modifiers.TimeLimit.Name,
+        Description = Modifiers.TimeLimit.Description,
+        Min = 0,
+        Max = 60 * 30, -- 30 minutes.
+        Step = 1,
+        HideNumbers = false,
+        DefaultValue = 0,
+    }),
+    MoveLimit_Moves = Bedazzled:RegisterSetting("Modifiers.MoveLimit.Moves", {
+        Type = "ClampedNumber",
+        Name = Modifiers.MoveLimit.Name,
+        Description = Modifiers.MoveLimit.Description,
+        Min = 0,
+        Max = 100,
+        Step = 1,
+        HideNumbers = false,
+        DefaultValue = 0,
+    }),
+}
+-- In order of rendering.
+local SettingsOrder = {
+    ModifierSettings.TimeLimit_Time,
+    ModifierSettings.MoveLimit_Moves,
+}
+UI.Events.RenderSettings:Subscribe(function (_)
+    for _,setting in ipairs(SettingsOrder) do
+        SettingWidgets.RenderSetting(UI, UI.SettingsList, setting, UI.SETTING_SIZE)
+    end
+end)
+UI.Hooks.GetModifierConfiguration:Subscribe(function (ev)
+    local mod = ev.Modifier
+    local modClassName = mod:GetClassName()
+    if modClassName == Modifiers.TimeLimit:GetClassName() then -- Time limit modifier
+        local timeLimit = ModifierSettings.TimeLimit_Time:GetValue()
+        if timeLimit > 0 then
+            ---@type Features.Bedazzled.Board.Modifiers.TimeLimit.Config
+            ev.Config = {
+                TimeLimit = timeLimit,
+            }
+        end
+
+    elseif modClassName == Modifiers.MoveLimit:GetClassName() then -- Move limit modifier
+        local moveLimit = ModifierSettings.MoveLimit_Moves:GetValue()
+        if moveLimit > 0 then
+            ---@type Features.Bedazzled.Board.Modifiers.MoveLimit.Config
+            ev.Config = {
+                MoveLimit = moveLimit,
+            }
+        end
+    end
+end)
+for _,mod in pairs(Modifiers) do
+    UI.RegisterModifier(mod)
+end
 
 -- Start the game when the context menu option is selected.
 Client.UI.ContextMenu.RegisterElementListener("epip_Feature_Bedazzled", "buttonPressed", function(_, _)
