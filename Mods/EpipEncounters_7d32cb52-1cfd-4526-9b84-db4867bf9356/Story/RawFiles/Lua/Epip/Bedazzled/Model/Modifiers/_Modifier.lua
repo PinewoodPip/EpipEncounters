@@ -41,6 +41,16 @@ function Modifier:GetConfigurationSchema()
     self:__ThrowNotImplemented("GetConfigurationSchema")
 end
 
+---Returns a string representation of a configuration.
+---@abstract
+---@param config Features.Bedazzled.Board.Modifier.Configuration
+---@return string
+---@diagnostic disable-next-line: unused-local
+function Modifier.StringifyConfiguration(config)
+    ---@diagnostic disable-next-line: missing-return
+    Modifier:__ThrowNotImplemented("StringifyConfiguration")
+end
+
 ---Returns whether 2 configurations are equal.
 ---@param config1 Features.Bedazzled.Board.Modifier.Configuration
 ---@param config2 Features.Bedazzled.Board.Modifier.Configuration

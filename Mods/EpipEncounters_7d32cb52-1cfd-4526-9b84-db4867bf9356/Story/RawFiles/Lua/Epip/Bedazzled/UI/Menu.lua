@@ -15,9 +15,15 @@ local UI = Generic.Create("Features.Bedazzled.UI.Menu")
 UI._RegisteredModifiers = {}
 
 local TSK = {
-    Label_Bedazzle = Bedazzled:RegisterTranslatedString("h4f32f5d3g1149g4401gadc5g056b31b49f87", {
+    Label_Bedazzle = Bedazzled:RegisterTranslatedString({
+        Handle = "h4f32f5d3g1149g4401gadc5g056b31b49f87",
         Text = "Bedazzle",
         ContextDescription = "Context menu option for opening Bedazzled minigame",
+    }),
+    Label_HighScores = Bedazzled:RegisterTranslatedString({
+        Handle = "he49de766g758eg4360g8000g0a8e5eb1885a",
+        Text = "High-Scores",
+        ContextDescription = "Label for highscores panel",
     })
 }
 
@@ -63,6 +69,48 @@ function UI.StartGame()
     UI:Hide()
 end
 
+---Updates the highscores panel.
+---**Should only be called while the UI is visible.**
+function UI.UpdateHighScoresPanel()
+    local gamemodeLabel = UI.GameModeLabel
+    local gamemodeDescription = Text.Format(UI._GetCurrentGameDescription(), {
+        Color = Color.BLACK,
+        Size = 15,
+    })
+    gamemodeLabel:SetText(gamemodeDescription)
+
+    -- Gather game mode information and scores
+    local gamemode = UI._GetCurrentGameMode()
+    local mods = UI.GetModifierConfigs()
+    local scores = Bedazzled.GetHighScores(gamemode, mods)
+    local list = UI.HighScoresList
+    list:Clear()
+    for i,score in ipairs(scores) do -- Render scores
+        local label = Text.Format("%d. %s", {
+            FormatArgs = {
+                i,
+                Text.AddPadding(tostring(score.Score), 50, " ", "front")
+            },
+            Color = Color.BLACK,
+        })
+        local text = TextPrefab.Create(UI, "HighScores_" .. tostring(i), list, label, "Left", V(300, 32))
+        text:SetMouseEnabled(true) -- Required for tooltips.
+
+        -- Show date of the score as tooltip
+        local date = Client.UI.Time.GetDateFromString(score.Date)
+        local dateLabel = Text.Format("%s/%s/%s @ %s:%s", {
+            FormatArgs = {
+                date.Day,
+                date.Month,
+                date.Year,
+                Text.AddPadding(tostring(date.Hour), 2, "0"),
+                Text.AddPadding(tostring(date.Minute), 2, "0"),
+            },
+        })
+        text:SetTooltip("Simple", dateLabel)
+    end
+end
+
 ---Returns the configs for the current chosen modifiers.
 ---@return Features.Bedazzled.ModifierSet
 function UI.GetModifierConfigs()
@@ -84,13 +132,17 @@ function UI:_Initialize()
 
     local uiObject = self:GetUI()
 
-    local panel = self:CreateElement("BG", "GenericUI_Element_Texture")
+    local panelList = self:CreateElement("PanelList", "GenericUI_Element_HorizontalList")
+    panelList:SetElementSpacing(-50)
+    UI.PanelList = panelList
+
+    local panel = panelList:AddChild("BG", "GenericUI_Element_Texture")
     panel:SetTexture(Textures.PANELS.CLIPBOARD_LARGE)
+    UI.MainPanel = panel
 
     self.BACKGROUND_SIZE = panel:GetSize()
     self.FRAME_SIZE = V(self.BACKGROUND_SIZE[1] - 200, 500) -- Size of the settings list frame.
     self.SETTING_SIZE = V(self.FRAME_SIZE[1], 70)
-    uiObject.SysPanelSize = self.BACKGROUND_SIZE
 
     local headerLabel = UI.CreateText("TitleHeader", panel, Text.Format(Bedazzled.TranslatedStrings.GameTitle:GetString(), {Size = 42, Color = "7E72D6", FontType = Text.FONTS.ITALIC}), "Center", V(self.BACKGROUND_SIZE[1], 50))
     headerLabel:SetPositionRelativeToParent("Top", 0, 60)
@@ -113,7 +165,64 @@ function UI:_Initialize()
         UI.StartGame()
     end)
 
+    UI._SetupHighScores()
+
+    panelList:RepositionElements()
+    uiObject.SysPanelSize = panelList:GetSize()
+
     self._Initialized = true
+end
+
+---Sets up the highscores panel.
+function UI._SetupHighScores()
+    local panel = UI.PanelList:AddChild("HighScoresPanel", "GenericUI_Element_Texture")
+    panel:SetTexture(Textures.PANELS.LIST)
+    panel:SetCenterInLists(true)
+
+    local highscoresHeader = UI.CreateText("HighScoresHeader", panel, TSK.Label_HighScores:Format({Size = 23}), "Center", V(400, 50))
+    highscoresHeader:SetPositionRelativeToParent("Top", 0, 100)
+
+    local gamemodeLabel = TextPrefab.Create(UI, "HighScoresGamemodeSubtitle", panel, "", "Center", V(400, 50))
+    gamemodeLabel:SetPositionRelativeToParent("Top", 0, 155)
+    UI.GameModeLabel = gamemodeLabel
+
+    local scoresList = panel:AddChild("HighScoresList", "GenericUI_Element_ScrollList")
+    scoresList:SetFrame(300, 400)
+    scoresList:SetElementSpacing(0)
+    scoresList:SetPositionRelativeToParent("Top", 30, 215)
+    UI.HighScoresList = scoresList
+
+    UI.UpdateHighScoresPanel()
+end
+
+---Returns a string description of the currently-chosen gamemode and modifiers.
+function UI._GetCurrentGameDescription()
+    local gamemode = UI._GetCurrentGameMode()
+    local modifierLabels = {} ---@type {ClassName:classname, Label:string}[]
+    local mods = UI.GetModifierConfigs()
+    for className,config in pairs(mods) do
+        local class = Bedazzled:GetClass(className) ---@type Features.Bedazzled.Board.Modifier
+        local description = class.StringifyConfiguration(config)
+        table.insert(modifierLabels, {ClassName = className, Label = description})
+    end
+
+    -- Sort by class name
+    table.sort(modifierLabels, function (a, b)
+        return a.ClassName < b.ClassName
+    end)
+
+    -- Keep just the labels and concatenate them
+    local labels = {gamemode} ---@type string[]
+    for _,v in ipairs(modifierLabels) do
+        table.insert(labels, v.Label)
+    end
+    return Text.Join(labels, ", ")
+end
+
+---Returns the currently-selected gamemode.
+---@return Feature_Bedazzled_GameMode_ID
+function UI._GetCurrentGameMode()
+    return "Classic" -- TODO
 end
 
 ---------------------------------------------
@@ -193,7 +302,10 @@ local SettingsOrder = {
 }
 UI.Events.RenderSettings:Subscribe(function (_)
     for _,setting in ipairs(SettingsOrder) do
-        SettingWidgets.RenderSetting(UI, UI.SettingsList, setting, UI.SETTING_SIZE)
+        SettingWidgets.RenderSetting(UI, UI.SettingsList, setting, UI.SETTING_SIZE, function (_)
+            -- Update the highscores panel anytime modifiers are changed.
+            UI.UpdateHighScoresPanel()
+        end)
     end
 end)
 UI.Hooks.GetModifierConfiguration:Subscribe(function (ev)

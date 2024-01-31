@@ -132,7 +132,7 @@ function GemPrefab.Create(ui, id, parent, gem)
     -- Offset the icon so its anchor is at the center, for when we tween the scale of the root element.
     icon:SetPosition(-UI.CELL_SIZE[1] / 2, -UI.CELL_SIZE[2]/2)
 
-    root:SetMouseEnabled(false)
+    root:SetMouseEnabled(false) -- Must disable mouse on root as well else it will consume clicks due to its children, even if those are mouse disabled as well.
     root:SetMouseChildren(false)
 
     element:UpdateIcon()
