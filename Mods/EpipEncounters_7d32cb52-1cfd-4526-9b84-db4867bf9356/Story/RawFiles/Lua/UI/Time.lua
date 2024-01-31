@@ -50,7 +50,15 @@ Epip.InitializeUI(nil, "Time", Time)
 ---@return DateTime
 function Time.GetDate(utc)
     local str = Time.GetDateString(utc)
-    local weekDay,month,day,hour,minute,second,year = str:match(Time.DATE_PATTERN)
+    local date = Time.GetDateFromString(str)
+    return date
+end
+
+---Returns a date table from a string date representation.
+---@param str string
+---@return DateTime
+function Time.GetDateFromString(str)
+    local weekDay, month, day, hour, minute, second, year = str:match(Time.DATE_PATTERN)
     local date = {
         WeekDay = Time.FLASH_WEEKDAYS[weekDay],
         Month = Time.FLASH_MONTHS[month],
