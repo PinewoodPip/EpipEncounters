@@ -231,13 +231,13 @@ function Bedazzled.GetGemModifier(id)
     return Bedazzled._GemModifierDescriptors[id]
 end
 
----Returns the high scores of the user for a gamemode.
+---Returns the high scores of the user for a gamemode and modifier set.
 ---@param gameMode Feature_Bedazzled_GameMode_ID
----@return Features.Bedazzled.GameModeHighScores[]
-function Bedazzled.GetHighScores(gameMode)
-    local scores = Bedazzled._GetHighScores()[gameMode] or {}
-
-    return scores
+---@param modifiers Features.Bedazzled.ModifierSet
+---@return Feature_Bedazzled_HighScore[]
+function Bedazzled.GetHighScores(gameMode, modifiers)
+    local entry = Bedazzled._GetHighScoreEntries(gameMode, modifiers)
+    return entry.HighScores
 end
 
 ---Returns the highest score of the user.
@@ -349,6 +349,7 @@ end
 ---Returns the highscore entries for a gamemode and modifier set.
 ---@param gameMode Feature_Bedazzled_GameMode_ID
 ---@param modifiers Features.Bedazzled.ModifierSet
+---@return Features.Bedazzled.GameModeHighScores
 function Bedazzled._GetHighScoreEntries(gameMode, modifiers)
     local setting = Bedazzled:GetSettingValue(Bedazzled.Settings.HighScores) ---@type Features.Bedazzled.Settings.HighScores
     local scores = setting.Scores[gameMode] or {}

@@ -19,6 +19,10 @@ local TSK = {
     GameOver_Reason = Bedazzled:RegisterTranslatedString("h243c4e8fg02cag48e2ga5f0g4a39d365d481", {
         Text = "Time's up!",
         ContextDescription = "Game over reason for time limit expiring",
+    }),
+    Label_Config_Time = Bedazzled:RegisterTranslatedString("ha3b2f0f0g7d77g4ce6ga6ffgeff2650f143d", {
+        Text = "%d Seconds",
+        ContextDescription = "Short description for time limit; parameter is duration in seconds",
     })
 }
 
@@ -71,6 +75,15 @@ end
 function TimeLimit:GetConfigurationSchema()
     return self.Settings
 end
+
+---@override
+---@param config Features.Bedazzled.Board.Modifiers.TimeLimit.Config
+function TimeLimit.StringifyConfiguration(config)
+    return TSK.Label_Config_Time:Format({
+        FormatArgs = {config.TimeLimit},
+    })
+end
+
 ---@override
 ---@param config1 Features.Bedazzled.Board.Modifiers.TimeLimit.Config
 ---@param config2 Features.Bedazzled.Board.Modifiers.TimeLimit.Config

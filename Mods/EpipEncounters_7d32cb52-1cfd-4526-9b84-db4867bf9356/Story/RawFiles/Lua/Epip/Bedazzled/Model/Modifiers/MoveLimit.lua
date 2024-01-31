@@ -20,6 +20,10 @@ local TSK = {
         Text = "Out of moves!",
         ContextDescription = "Game over reason for move limit expiring",
     }),
+    Label_Config_Moves = Bedazzled:RegisterTranslatedString("h91bfdf8fg7b3bg44a7g83a4g488252d774b8", {
+        Text = "%d Moves",
+        ContextDescription = "Short description for a move limit restriction; first parameter is amount of moves",
+    })
 }
 
 ---------------------------------------------
@@ -73,6 +77,14 @@ end
 ---@override
 function MoveLimit:GetConfigurationSchema()
     return self.Settings
+end
+
+---@override
+---@param config Features.Bedazzled.Board.Modifiers.MoveLimit.Config
+function MoveLimit.StringifyConfiguration(config)
+    return TSK.Label_Config_Moves:Format({
+        FormatArgs = {config.MoveLimit},
+    })
 end
 
 ---@override
