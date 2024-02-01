@@ -314,7 +314,6 @@ LOAD_ORDER = {
 
             "UI/Generic/Prefabs/Text.lua",
             "UI/Generic/Prefabs/HotbarSlot.lua",
-            "UI/Generic/Prefabs/Spinner.lua",
             "UI/Generic/Prefabs/FormHorizontalList.lua",
             "UI/Generic/Prefabs/LabelledIcon.lua",
             "UI/Generic/Prefabs/Status.lua",
@@ -334,6 +333,8 @@ LOAD_ORDER = {
 
             "UI/Generic/Prefabs/Button/Prefab.lua",
             "UI/Generic/Prefabs/Button/Styles.lua",
+
+            "UI/Generic/Prefabs/Spinner.lua",
 
             "UI/Generic/Prefabs/CloseButton.lua",
             "UI/Generic/Prefabs/SearchBar.lua",

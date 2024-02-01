@@ -6,19 +6,22 @@
 
 local Generic = Client.UI.Generic
 local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
+local ButtonPrefab = Generic.GetPrefab("GenericUI_Prefab_Button")
 local V = Vector.Create
 
----@class GenericUI_Prefab_Spinner : GenericUI_Prefab, GenericUI_I_Elementable
+---@class GenericUI_Prefab_Spinner : GenericUI_Prefab_FormElement, GenericUI_I_Stylable
 ---@field Background GenericUI_Element_TiledBackground
 ---@field Label GenericUI_Element_Text
 ---@field CounterText GenericUI_Element_Text
----@field PlusButton GenericUI_Element_Button
----@field MinusButton GenericUI_Element_Button
+---@field PlusButton GenericUI_Prefab_Button
+---@field MinusButton GenericUI_Prefab_Button
 ---@field Size Vector2
+---@field __Style GenericUI.Prefabs.Spinner.Style
 local Spinner = {
     DEFAULT_SIZE = V(200, 30),
     LIST_SIZE = V(100, 30),
     COUNTER_TEXT_SIZE = V(50, 30),
+    LABEL_HEIGHT = 30,
 
     minValue = 0,
     maxValue = math.maxinteger,
@@ -29,11 +32,27 @@ local Spinner = {
         ValueChanged = {}, ---@type Event<Events.ValueEvent> Thrown when the value is changed **by the user**.
     }
 }
-Generic:RegisterClass("GenericUI_Prefab_Spinner", Spinner, {"GenericUI_Prefab", "GenericUI_I_Elementable"})
+Generic:RegisterClass("GenericUI_Prefab_Spinner", Spinner, {"GenericUI_Prefab_FormElement", "GenericUI_I_Stylable"})
 Generic.RegisterPrefab("GenericUI_Prefab_Spinner", Spinner)
+
+-- TODO extract to separate script
+---@type GenericUI.Prefabs.Spinner.Style
+Spinner.DEFAULT_STYLE = {
+    PlusButtonStyle = ButtonPrefab:GetStyle("IncrementCharacterSheet"),
+    MinusButtonStyle = ButtonPrefab:GetStyle("DecrementCharacterSheet"),
+}
+Spinner:RegisterStyle("Default", Spinner.DEFAULT_STYLE)
+Spinner:RegisterStyle("DOS1Large", {
+    PlusButtonStyle = ButtonPrefab:GetStyle("DOS1IncrementLarge"),
+    MinusButtonStyle = ButtonPrefab:GetStyle("DOS1DecrementLarge"),
+})
 
 ---@diagnostic disable-next-line: duplicate-doc-alias
 ---@alias GenericUI_PrefabClass "GenericUI_Prefab_Spinner"
+
+---@class GenericUI.Prefabs.Spinner.Style : GenericUI_I_Stylable_Style
+---@field MinusButtonStyle GenericUI_Prefab_Button_Style
+---@field PlusButtonStyle GenericUI_Prefab_Button_Style
 
 ---------------------------------------------
 -- METHODS
@@ -48,18 +67,23 @@ Generic.RegisterPrefab("GenericUI_Prefab_Spinner", Spinner)
 ---@param max number? Defaults to math.maxinteger.
 ---@param step number? Defaults to 1.
 ---@param size Vector2? Defaults to `DEFAULT_SIZE`.
+---@param style GenericUI.Prefabs.Spinner.Style? Defaults to `DEFAULT_STYLE`
 ---@return GenericUI_Prefab_Spinner
-function Spinner.Create(ui, id, parent, label, min, max, step, size)
+function Spinner.Create(ui, id, parent, label, min, max, step, size, style)
     min = min or 0
     max = max or math.maxinteger
     step = step or 1
+    size = size or Spinner.DEFAULT_SIZE
+    style = style or Spinner.DEFAULT_STYLE
 
     local spinner = Spinner:_Create(ui, id, ui, parent, label) ---@cast spinner GenericUI_Prefab_Spinner
-
-    spinner.Size = size or Spinner.DEFAULT_SIZE
+    spinner.Size = size
     spinner.currentValue = min
+    spinner.__Style = style -- Should be set before running Init().
 
-    spinner:_Init(ui, parent, label)
+    spinner:__SetupBackground(parent, size)
+    spinner:_Init(ui)
+    spinner:SetLabel(label)
     spinner:SetBounds(min, max, step)
 
     return spinner
@@ -115,25 +139,17 @@ function Spinner:Decrement()
 end
 
 ---@param ui GenericUI_Instance
----@param parent (GenericUI_Element|string)?
----@param label string
-function Spinner:_Init(ui, parent, label)
-    local container = ui:CreateElement(self:PrefixID("Container"), "GenericUI_Element_TiledBackground", parent)
-    container:SetAlpha(0.4) -- TODO use FormElement
-
+function Spinner:_Init(ui)
+    local container = self.Background
     local list = container:AddChild(self:PrefixID("List"), "GenericUI_Element_HorizontalList")
-    list:SetSize(self.LIST_SIZE:unpack())
 
-    local text = TextPrefab.Create(ui, self:PrefixID("Label"), container, Text.Format(label, {Color = Color.WHITE}), "Left", self.Size)
-
-    local minusButton = list:AddChild(self:PrefixID("Minus"), "GenericUI_Element_Button")
-    minusButton:SetType("StatMinus")
+    local minusButton = ButtonPrefab.Create(self.UI, self:PrefixID("Minus"), list, self.__Style.MinusButtonStyle)
     minusButton:SetCenterInLists(true)
 
     local amountText = TextPrefab.Create(ui, self:PrefixID("CounterText"), list, "", "Center", self.COUNTER_TEXT_SIZE)
+    amountText:SetCenterInLists(true)
 
-    local plusButton = list:AddChild(self:PrefixID("Plus"), "GenericUI_Element_Button")
-    plusButton:SetType("StatPlus")
+    local plusButton = ButtonPrefab.Create(self.UI, self:PrefixID("Plus"), list, self.__Style.PlusButtonStyle)
     plusButton:SetCenterInLists(true)
 
     list:RepositionElements()
@@ -148,7 +164,6 @@ function Spinner:_Init(ui, parent, label)
     end)
 
     self.Background = container
-    self.Label = text
     self.CounterText = amountText
     self.PlusButton = plusButton
     self.MinusButton = minusButton
@@ -176,12 +191,8 @@ end
 ---@param width number
 ---@param height number
 function Spinner:SetSize(width, height)
-    local bg = self.Background
-    bg:SetBackground("Black", width, height)
-
-    self.Label:SetSize(width, 30) -- TODO extrct
-    self.Label:SetPositionRelativeToParent("Left")
-    self.ButtonList:SetPositionRelativeToParent("Right")
+    self:SetBackgroundSize(Vector.Create(width, height))
+    self:_UpdateList()
 end
 
 ---Updates the counter label.
@@ -195,11 +206,26 @@ function Spinner:_UpdateCounter()
     text:SetText(Text.Format(tostring(value), {Color = Color.WHITE}))
 end
 
+---Updates appearances of buttons based on set style.
+function Spinner:_UpdateButtons()
+    local style = self.__Style
+    self.PlusButton:SetStyle(style.PlusButtonStyle)
+    self.MinusButton:SetStyle(style.MinusButtonStyle)
+    self:_UpdateList()
+end
+
+---Updates the positioning of the spinner button & value label list.
+function Spinner:_UpdateList()
+    self.ButtonList:RepositionElements()
+    self.ButtonList:SetPositionRelativeToParent("Right", -self.LABEL_SIDE_MARGIN)
+end
+
 ---@override
 function Spinner:GetRootElement()
     return self.Background
 end
 
----------------------------------------------
--- EVENT LISTENERS
----------------------------------------------
+---@override
+function Spinner:__OnStyleChanged()
+    self:_UpdateButtons()
+end
