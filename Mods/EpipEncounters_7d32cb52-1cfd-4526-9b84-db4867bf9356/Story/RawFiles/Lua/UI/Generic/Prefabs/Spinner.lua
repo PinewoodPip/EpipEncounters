@@ -20,7 +20,6 @@ local V = Vector.Create
 local Spinner = {
     DEFAULT_SIZE = V(200, 30),
     LIST_SIZE = V(100, 30),
-    COUNTER_TEXT_SIZE = V(50, 30),
     LABEL_HEIGHT = 30,
 
     minValue = 0,
@@ -30,7 +29,10 @@ local Spinner = {
 
     Events = {
         ValueChanged = {}, ---@type Event<Events.ValueEvent> Thrown when the value is changed **by the user**.
-    }
+    },
+    Hooks = {
+        GetValueLabel = {}, ---@type Hook<GenericUI.Prefabs.Spinner.Hooks.GetValueLabel>
+    },
 }
 Generic:RegisterClass("GenericUI_Prefab_Spinner", Spinner, {"GenericUI_Prefab_FormElement", "GenericUI_I_Stylable"})
 Generic.RegisterPrefab("GenericUI_Prefab_Spinner", Spinner)
@@ -40,11 +42,13 @@ Generic.RegisterPrefab("GenericUI_Prefab_Spinner", Spinner)
 Spinner.DEFAULT_STYLE = {
     PlusButtonStyle = ButtonPrefab:GetStyle("IncrementCharacterSheet"),
     MinusButtonStyle = ButtonPrefab:GetStyle("DecrementCharacterSheet"),
+    AmountLabelSize = V(50, 30),
 }
 Spinner:RegisterStyle("Default", Spinner.DEFAULT_STYLE)
 Spinner:RegisterStyle("DOS1Large", {
     PlusButtonStyle = ButtonPrefab:GetStyle("DOS1IncrementLarge"),
     MinusButtonStyle = ButtonPrefab:GetStyle("DOS1DecrementLarge"),
+    AmountLabelSize = V(75, 30),
 })
 
 ---@diagnostic disable-next-line: duplicate-doc-alias
@@ -53,6 +57,16 @@ Spinner:RegisterStyle("DOS1Large", {
 ---@class GenericUI.Prefabs.Spinner.Style : GenericUI_I_Stylable_Style
 ---@field MinusButtonStyle GenericUI_Prefab_Button_Style
 ---@field PlusButtonStyle GenericUI_Prefab_Button_Style
+---@field AmountLabelSize Vector2
+
+---------------------------------------------
+-- EVENTS/HOOKS
+---------------------------------------------
+
+---@class GenericUI.Prefabs.Spinner.Hooks.GetValueLabel
+---@field Label string Hookable. Defaults to stringified value with trailing zeros removed and white color applied.
+---@field Color htmlcolor? Hookable. Will be applied afterwards. Defaults to white.
+---@field Value number
 
 ---------------------------------------------
 -- METHODS
@@ -146,7 +160,7 @@ function Spinner:_Init(ui)
     local minusButton = ButtonPrefab.Create(self.UI, self:PrefixID("Minus"), list, self.__Style.MinusButtonStyle)
     minusButton:SetCenterInLists(true)
 
-    local amountText = TextPrefab.Create(ui, self:PrefixID("CounterText"), list, "", "Center", self.COUNTER_TEXT_SIZE)
+    local amountText = TextPrefab.Create(ui, self:PrefixID("CounterText"), list, "", "Center", self.__Style.AmountLabelSize)
     amountText:SetCenterInLists(true)
 
     local plusButton = ButtonPrefab.Create(self.UI, self:PrefixID("Plus"), list, self.__Style.PlusButtonStyle)
@@ -198,12 +212,26 @@ end
 ---Updates the counter label.
 function Spinner:_UpdateCounter()
     local value = self:GetValue() ---@type number|string
+    local valueLabel = tostring(value)
     local text = self.CounterText
+
+    -- Remove trailing zeros for integer-only spinners
+    -- TODO this assumes min/max is an integer as well.
     if self.step == 1 then
         value = Text.RemoveTrailingZeros(value)
     end
 
-    text:SetText(Text.Format(tostring(value), {Color = Color.WHITE}))
+    -- Get final label and text color from hooks.
+    local hook = self.Hooks.GetValueLabel:Throw({
+        Label = valueLabel,
+        Color = Color.WHITE,
+        Value = value,
+    })
+    valueLabel = Text.Format(hook.Label, {
+        Color = hook.Color,
+    })
+
+    text:SetText(valueLabel)
 end
 
 ---Updates appearances of buttons based on set style.
