@@ -52,20 +52,9 @@ function Overlays._SetupTimeLimitDisplay(modifier)
 
     -- Update the label when the board updates.
     UI.Board.Events.Updated:Subscribe(function (_)
-        local minutes = modifier.RemainingTime // 60
-        local seconds = math.ceil(modifier.RemainingTime % 60)
-        if seconds == 60 then -- Round up to a whole minute.
-            minutes = minutes + 1
-            seconds = 0
-        end
-        local color = minutes > 0 and Color.WHITE or Color.LARIAN.RED -- Show time left below a minute in red.
+        local color = modifier.RemainingTime >= 60 and Color.WHITE or Color.LARIAN.RED -- Show time left below a minute in red.
 
-        minutes, seconds = Text.RemoveTrailingZeros(minutes), tostring(seconds) -- RemoveTrailingZeros is necessary as even an integer division afterwards can produce ex. "1.0"
-        label:SetText(Text.Format("%s:%s", {
-            FormatArgs = {
-                Text.AddPadding(minutes, 2, "0", "front"),
-                Text.AddPadding(seconds, 2, "0", "front"),
-            },
+        label:SetText(Text.Format(Text.FormatTime(modifier.RemainingTime), {
             Color = color,
         }))
     end, {Priority = -1}) -- Not strictly necessary as the modifier should've been applied prior to this.
