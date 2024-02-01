@@ -10,6 +10,7 @@ local LabelledDropdownPrefab = Generic.GetPrefab("GenericUI_Prefab_LabelledDropd
 local LabelledCheckboxPrefab = Generic.GetPrefab("GenericUI_Prefab_LabelledCheckbox")
 local LabelledTextField = Generic.GetPrefab("GenericUI_Prefab_LabelledTextField")
 local LabelledSlider = Generic.GetPrefab("GenericUI_Prefab_LabelledSlider")
+local Spinner = Generic.GetPrefab("GenericUI_Prefab_Spinner")
 local FormTextHolder = Generic.GetPrefab("GenericUI.Prefabs.FormTextHolder")
 local InputBinder = Epip.GetFeature("Features.InputBinder")
 local V = Vector.Create
@@ -41,6 +42,13 @@ Epip.RegisterFeature("SettingWidgets", Widgets)
 ---------------------------------------------
 
 ---@alias Features.SettingWidgets.SupportedSettingType SettingsLib_Setting_Choice|SettingsLib_Setting_Boolean|SettingsLib_Setting_String|SettingsLib.Settings.InputBinding|SettingsLib_Setting_ClampedNumber
+
+---@alias Features.SettingWidgets.PreferredRepresentation.ClampedNumber "Slider"|"Spinner"
+---@alias Features.SettingWidgets.ValueFormatting "Default"|"Time"
+
+---@class Features.SettingWidgets.Setting.Slider : Feature_SettingsMenu_Setting_Slider
+---@field PreferredRepresentation Features.SettingWidgets.PreferredRepresentation.ClampedNumber
+---@field ValueFormatting Features.SettingWidgets.ValueFormatting
 
 ---------------------------------------------
 -- EVENTS/HOOKS
@@ -247,19 +255,41 @@ end
 ---@param request Features.SettingWidgets.Hooks.RenderSetting
 ---@return GenericUI_Prefab_LabelledSlider
 function Widgets._RenderClampedNumberSetting(request)
-    local setting = request.Setting ---@cast setting Feature_SettingsMenu_Setting_Slider
+    local setting = request.Setting ---@cast setting Features.SettingWidgets.Setting.Slider
     local ui, parent, size = request.UI, request.Parent, request.Size
-    local instance = LabelledSlider.Create(ui, Widgets._GetPrefixedID(setting), parent, size, setting:GetName(), setting.Min, setting.Max, setting.Step or 0.1) -- Default to 0.1 step for settings that use the base class.
+
+    local instance
+    local preferredRepresentation = setting.PreferredRepresentation or "Slider"
+    local settingID = Widgets._GetPrefixedID(setting)
+    local step = setting.Step or 0.1 -- Default to 0.1 step for settings that use the base class.
+    if preferredRepresentation == "Slider" then
+        instance = LabelledSlider.Create(ui, settingID, parent, size, setting:GetName(), setting.Min, setting.Max, step)
+
+        -- Handle the slider being interacted with.
+        ---@param ev GenericUI_Element_Slider_Event_HandleMoved|GenericUI_Element_Slider_Event_HandleReleased
+        local function OnValueChanged(ev)
+            Widgets._SetSettingValue(setting, ev.Value, request)
+        end
+        instance.Events.HandleMoved:Subscribe(OnValueChanged)
+        instance.Events.HandleReleased:Subscribe(OnValueChanged)
+    elseif preferredRepresentation == "Spinner" then
+        instance = Spinner.Create(ui, settingID, parent, setting:GetName(), setting.Min, setting.Max, step, size, Spinner:GetStyle("DOS1Large"))
+
+        instance.Events.ValueChanged:Subscribe(function (ev)
+            Widgets._SetSettingValue(setting, ev.Value, request)
+        end)
+
+        -- Format values per setting preference.
+        -- "Default" needs no special consideration.
+        if setting.ValueFormatting == "Time" then
+            -- Format as MM:SS.
+            instance.Hooks.GetValueLabel:Subscribe(function (ev)
+                ev.Label = Text.FormatTime(ev.Value)
+            end)
+        end
+    end
 
     instance:SetValue(setting:GetValue())
-
-    -- Handle the slider being interacted with.
-    ---@param ev GenericUI_Element_Slider_Event_HandleMoved|GenericUI_Element_Slider_Event_HandleReleased
-    local function OnValueChanged(ev)
-        Widgets._SetSettingValue(setting, ev.Value, request)
-    end
-    instance.Events.HandleMoved:Subscribe(OnValueChanged)
-    instance.Events.HandleReleased:Subscribe(OnValueChanged)
 
     -- Update the slider when the setting is changed.
     Widgets._RegisterValueChangedListener(instance, request, function (ev)

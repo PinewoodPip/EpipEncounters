@@ -807,6 +807,25 @@ function Text.RemoveGUIDPrefix(guid)
     return guid:match(Text.PATTERNS.GUID)
 end
 
+---Formats a time in the format MM:SS, where M is minutes and S is seconds.
+---@param time integer In seconds.
+---@return string
+function Text.FormatTime(time)
+    local minutes = time // 60
+    local seconds = math.ceil(time % 60)
+    if seconds == 60 then -- Round up to a whole minute.
+        minutes = minutes + 1
+        seconds = 0
+    end
+    minutes, seconds = Text.RemoveTrailingZeros(minutes), tostring(seconds) -- RemoveTrailingZeros is necessary as even an integer division afterwards can produce ex. "1.0"
+    return Text.Format("%s:%s", {
+        FormatArgs = {
+            Text.AddPadding(minutes, 2, "0", "front"),
+            Text.AddPadding(seconds, 2, "0", "front"),
+        },
+    })
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
