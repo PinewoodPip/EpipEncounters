@@ -5,6 +5,7 @@
 ---------------------------------------------
 
 local Generic = Client.UI.Generic
+local Input = Client.Input
 local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 local ButtonPrefab = Generic.GetPrefab("GenericUI_Prefab_Button")
 local V = Vector.Create
@@ -21,6 +22,7 @@ local Spinner = {
     DEFAULT_SIZE = V(200, 30),
     LIST_SIZE = V(100, 30),
     LABEL_HEIGHT = 30,
+    SHIFT_VALUE_CHANGE_MULTIPLIER = 5, -- Multiplier for incrementing/decrementing while shift is held.
 
     minValue = 0,
     maxValue = math.maxinteger,
@@ -141,15 +143,19 @@ function Spinner:AddValue(val)
 end
 
 ---Increments the value on the spinner by the step. **Throws the ValueChanged event.**
+---@param multiplier integer? Defaults to `1`.
 ---@return number
-function Spinner:Increment()
-    return self:AddValue(self.step)
+function Spinner:Increment(multiplier)
+    multiplier = multiplier or 1
+    return self:AddValue(self.step * multiplier)
 end
 
 ---Decrements the value on the spinner by the step. **Throws the ValueChanged event.**
+---@param multiplier integer? Defaults to `1`.
 ---@return number
-function Spinner:Decrement()
-    return self:AddValue(-self.step)
+function Spinner:Decrement(multiplier)
+    multiplier = multiplier or 1
+    return self:AddValue(-self.step * multiplier)
 end
 
 ---@param ui GenericUI_Instance
@@ -169,11 +175,11 @@ function Spinner:_Init(ui)
     list:RepositionElements()
 
     minusButton.Events.Pressed:Subscribe(function(_)
-        self:Decrement()
+        self:Decrement(Input.IsShiftPressed() and self.SHIFT_VALUE_CHANGE_MULTIPLIER or 1)
         list:RepositionElements()
     end)
     plusButton.Events.Pressed:Subscribe(function(_)
-        self:Increment()
+        self:Increment(Input.IsShiftPressed() and self.SHIFT_VALUE_CHANGE_MULTIPLIER or 1)
         list:RepositionElements()
     end)
 
