@@ -99,6 +99,7 @@ function Overlays._Initialize()
     local labelList = UI.Background:AddChild("ModifiersLabelList", "GenericUI_Element_VerticalList")
     labelList:SetSizeOverride(V(Overlays.LABEL_SIZE[1], 200))
     labelList:SetPositionRelativeToParent("Top", 0, 200)
+    UI.Background:SetChildIndex(labelList, 2)
     Overlays.LabelList = labelList
 
     Overlays._Initialized = true
