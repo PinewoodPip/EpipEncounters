@@ -14,17 +14,13 @@
       "ReferenceText": "Blacklisted Skills",
       "TranslatedText": "技能黑名单"
     },
-    "he5c3a752gd8bag48fagb611g35b5d23bef9d": {
-      "ReferenceText": "Cancels your controlled character's spell animations after their effects execute.<br><br>%s",
-      "TranslatedText": "技能效果发生后, 取消角色后续施法动作, 目的是加快回合速度<br><br>%s"
-    },
-    "he9f82492g81f0g4e53g9eefg731a6f800db8": {
-      "ReferenceText": "Experimental! May cause issues with certain skills. Please report any!<br>Server-side option is the most reliable at the moment.",
-      "TranslatedText": "试验功能! 部分技能可能出问题. 请反馈给作者<br>主机端 是目前最可靠的选项"
-    },
     "h8277c4cdg8990g406fga0b5gef3f0d386620": {
       "ReferenceText": "If enabled, the animation for picking up items through their world tooltip will be cancelled, allowing multiple items to be picked up faster.",
       "TranslatedText": "启用后, 通过环境提示拾取物品的动画将被取消. 从而可以更快地拾取多个物品"
+    },
+    "he5c3a752gd8bag48fagb611g35b5d23bef9d": {
+      "ReferenceText": "If enabled, your controlled character's skill animations will be cancelled after their effects execute, allowing you to perform consecutive actions quicker.",
+      "TranslatedText": "技能效果发生后, 取消角色后续施法动作, 目的是加快回合速度<br><br>%s"
     },
     "hf832b7ceg2e16g454dg8b5cg2ac87a0f7681": {
       "ReferenceText": "Speed up world tooltip item pick-ups",
@@ -787,7 +783,7 @@
       "TranslatedText": "自动倾听 %s 的对话"
     },
     "h5efb42cag481bg466dg9089g55793976612a": {
-      "ReferenceText": "Determines the maximum distance (in meters) that other players's characters can be at for their dialogues to be auto-listened to, if \"Auto-Listen Range Limit\" is enabled.",
+      "ReferenceText": "Determines the maximum distance (in meters) that other players's characters can be at for their dialogues to be auto-listened to, if \"Auto-Listen Dialogues\" is enabled.",
       "TranslatedText": "自动倾听其他玩家角色对话的最大距离，需要设置范围。"
     },
     "h6b736d31gc985g48b6g8752g9137186f3703": {
@@ -1070,10 +1066,6 @@
       "ReferenceText": "Determines the default tab for the crafting UI.",
       "TranslatedText": "制造面板的默认显示页面"
     },
-    "hd90b74d9g5ae7g49fbg97cdg6b2e0d7fbee8": {
-      "ReferenceText": "Determines the order of statuses, in order of importance.",
-      "TranslatedText": "按照重要性的顺序, 决定状态排序"
-    },
     "hd0e2b5b7geca4g4a5dgad60g1893680e319a": {
       "ReferenceText": "Disable Slots while Casting",
       "TranslatedText": "施法时禁用快捷栏槽位"
@@ -1314,10 +1306,6 @@
       "ReferenceText": "Skill-casting Notifications",
       "TranslatedText": "技能释放通告"
     },
-    "h0aacad96g933cg4888g9f70g832a231c6bad": {
-      "ReferenceText": "Sorting Order",
-      "TranslatedText": "排序顺序"
-    },
     "h99515a08gaa1fg4214g81fag15521e601583": {
       "ReferenceText": "Stat-sharing Notifications",
       "TranslatedText": "状态分享通告"
@@ -1425,6 +1413,46 @@
     "h7e532f24g51f1g439cg9851g8ff8f12a6b17": {
       "ReferenceText": "When holding Shift",
       "TranslatedText": "按住shift"
+    },
+    "hb4ca31ecge2ecg44faga2dbg1e1c98c49d30": {
+      "ReferenceText": "Columns",
+      "TranslatedText": "列"
+    },
+    "h874faf80g6c2eg4fe8gb908g60bb769b02eb": {
+      "ReferenceText": "Create",
+      "TranslatedText": "创建"
+    },
+    "h4179a16bg43a5g40bcg88ccg7870114fb6c0": {
+      "ReferenceText": "Create Hotbar Group",
+      "TranslatedText": "创建快捷栏组"
+    },
+    "hf0192252g5d7ag429eg96a6g21be87bd88cd": {
+      "ReferenceText": "Resize",
+      "TranslatedText": "调整大小"
+    },
+    "h36e32b84g5373g4711g920cg8d0cedd5fcff": {
+      "ReferenceText": "Resize Hotbar Group",
+      "TranslatedText": "调整快捷栏大小"
+    },
+    "h36ba40b2ge76bg4ea9g90ecgde3d4fc01945": {
+      "ReferenceText": "Rows",
+      "TranslatedText": "行"
+    },
+    "h1608e07agf046g4d0dg8298gcfd263df903e": {
+      "ReferenceText": "Allow dragging in unlearnt skills",
+      "TranslatedText": "允许拖拽未学习的技能"
+    },
+    "h3be3b775gcd1ag4340g8bb2g53aff8a65aaa": {
+      "ReferenceText": "If enabled, holding shift, ctrl, alt or GUI while using keybinds for slots will attempt to use slots from the 2nd, 3rd, 4th and 5th visible bars respectively.",
+      "TranslatedText": "启用后，按住shift，ctrl，alt或者GUI，可以使用2号，3号，4号 或5号快捷栏上的技能，物品等"
+    },
+    "hfcebd9e1g7fa9g4176g81b4g7cb089ba65ba": {
+      "ReferenceText": "If enabled, you will be able to drag skills the character doesn't know onto the hotbar.\nThis does not allow the skills to be used, but is useful for creating placeholders.",
+      "TranslatedText": "启用后, 你可以拖拽角色不知道的技能到快捷栏上"
+    },
+    "had42db79gf12cg4376g970bg0b9e0276a5d2": {
+      "ReferenceText": "Select upper bars with modifier keys",
+      "TranslatedText": "使用快捷键选择其他快捷栏的选项"
     },
     "h2f7ed974g4184g404fga2abg640d32f6f7aa": {
       "ReferenceText": "Controls the position of item tooltips within the Party Inventory and Container Inventory UIs.<br><br>- Near cursor: vanilla behaviour; tooltips appear near the cursor.<br>- On UI sides: tooltips will be positioned on the left side of the source UI if possible, or on the right otherwise.",
@@ -1537,46 +1565,6 @@
     "hac06b15egc508g40b1gb729gf0951d875d5f": {
       "ReferenceText": "We do not have a bedroll to rest on!",
       "TranslatedText": "缺少休息用的睡袋"
-    },
-    "hb4ca31ecge2ecg44faga2dbg1e1c98c49d30": {
-      "ReferenceText": "Columns",
-      "TranslatedText": "列"
-    },
-    "h874faf80g6c2eg4fe8gb908g60bb769b02eb": {
-      "ReferenceText": "Create",
-      "TranslatedText": "创建"
-    },
-    "h4179a16bg43a5g40bcg88ccg7870114fb6c0": {
-      "ReferenceText": "Create Hotbar Group",
-      "TranslatedText": "创建快捷栏组"
-    },
-    "hf0192252g5d7ag429eg96a6g21be87bd88cd": {
-      "ReferenceText": "Resize",
-      "TranslatedText": "调整大小"
-    },
-    "h36e32b84g5373g4711g920cg8d0cedd5fcff": {
-      "ReferenceText": "Resize Hotbar Group",
-      "TranslatedText": "调整快捷栏大小"
-    },
-    "h36ba40b2ge76bg4ea9g90ecgde3d4fc01945": {
-      "ReferenceText": "Rows",
-      "TranslatedText": "行"
-    },
-    "h1608e07agf046g4d0dg8298gcfd263df903e": {
-      "ReferenceText": "Allow dragging in unlearnt skills",
-      "TranslatedText": "允许拖拽未学习的技能"
-    },
-    "h3be3b775gcd1ag4340g8bb2g53aff8a65aaa": {
-      "ReferenceText": "If enabled, holding shift, ctrl, alt or GUI while using keybinds for slots will attempt to use slots from the 2nd, 3rd, 4th and 5th visible bars respectively.",
-      "TranslatedText": "启用后，按住shift，ctrl，alt或者GUI，可以使用2号，3号，4号 或5号快捷栏上的技能，物品等"
-    },
-    "hfcebd9e1g7fa9g4176g81b4g7cb089ba65ba": {
-      "ReferenceText": "If enabled, you will be able to drag skills the character doesn't know onto the hotbar.\nThis does not allow the skills to be used, but is useful for creating placeholders.",
-      "TranslatedText": "启用后, 你可以拖拽角色不知道的技能到快捷栏上"
-    },
-    "had42db79gf12cg4376g970bg0b9e0276a5d2": {
-      "ReferenceText": "Select upper bars with modifier keys",
-      "TranslatedText": "使用快捷键选择其他快捷栏的选项"
     },
     "h94b55185g6055g42b9gac5bgc6bedbffdfef": {
       "ReferenceText": "Choose an icon...",
@@ -1879,11 +1867,11 @@
       "TranslatedText": "使用切换环境提示需要先绑定原版的显示环境提示按键"
     },
     "h6dcae9c5gcbfcg4f06g9329gac12ad711d18": {
-      "ReferenceText": "Fix Astrologer's Gaze / Far Out Man range",
+      "ReferenceText": "Fix %s range",
       "TranslatedText": "修复占星师视觉/天才法师范围"
     },
     "hba6d14b0gdbb9g4b00g8036ga14b329a1960": {
-      "ReferenceText": "If enabled, zone and cone-type skills will display the correct range if the character has Astrologer's Gaze / Far Out Man.",
+      "ReferenceText": "If enabled, zone and cone-type skills will display the correct range if the character has %s.",
       "TranslatedText": "启用后, 如果角色拥有占星师视觉或天才法师, 射线以及扇形技能会正确地显示范围<br><font color='FFFF00'>只适用于史诗遭遇mod</font>"
     },
     "hc7cfbfcdgc4b2g4ac3g92b3gbb6856d5b361": {

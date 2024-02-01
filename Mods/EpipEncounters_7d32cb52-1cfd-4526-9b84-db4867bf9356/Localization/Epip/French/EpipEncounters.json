@@ -14,17 +14,13 @@
       "ReferenceText": "Blacklisted Skills",
       "TranslatedText": "Compétences exclues"
     },
-    "he5c3a752gd8bag48fagb611g35b5d23bef9d": {
-      "ReferenceText": "Cancels your controlled character's spell animations after their effects execute.<br><br>%s",
-      "TranslatedText": "Annule l'animation des sorts de votre personnage après que les effets aient été appliqués"
-    },
-    "he9f82492g81f0g4e53g9eefg731a6f800db8": {
-      "ReferenceText": "Experimental! May cause issues with certain skills. Please report any!<br>Server-side option is the most reliable at the moment.",
-      "TranslatedText": "Expérimental ! Peut provoquer des problèmes avec certaines compétences. Merci de faire remonter tout problème rencontré !"
-    },
     "h8277c4cdg8990g406fga0b5gef3f0d386620": {
       "ReferenceText": "If enabled, the animation for picking up items through their world tooltip will be cancelled, allowing multiple items to be picked up faster.",
       "TranslatedText": "Si activée, cette option annulera l'animation de ramassage des objet via leur infobulle, permettant de ramasser plus d'objet plus rapidement"
+    },
+    "he5c3a752gd8bag48fagb611g35b5d23bef9d": {
+      "ReferenceText": "If enabled, your controlled character's skill animations will be cancelled after their effects execute, allowing you to perform consecutive actions quicker.",
+      "TranslatedText": "Annule l'animation des sorts de votre personnage après que les effets aient été appliqués"
     },
     "hf832b7ceg2e16g454dg8b5cg2ac87a0f7681": {
       "ReferenceText": "Speed up world tooltip item pick-ups",
@@ -250,6 +246,10 @@
       "ReferenceText": "Benevolence",
       "TranslatedText": "Bienveillance"
     },
+    "hbeff45e1gc8d3g4d5fg86a6g4fb41036410a": {
+      "ReferenceText": "Blessed",
+      "TranslatedText": "Béni"
+    },
     "ha9646fd9ge69fg46d2g9fc2gc9442c28041c": {
       "ReferenceText": "Books",
       "TranslatedText": "Livres"
@@ -298,6 +298,10 @@
       "ReferenceText": "Cloth",
       "TranslatedText": "Vêtement"
     },
+    "h6481bf87g4965g4959g992egc150ee720449": {
+      "ReferenceText": "Cloud",
+      "TranslatedText": "Nuage"
+    },
     "hfc9df4bcgd7deg4e05ga37ag1b739d2a9e2b": {
       "ReferenceText": "Combat",
       "TranslatedText": "Combat"
@@ -321,6 +325,10 @@
     "h7f53d9adg7fdeg4005gaa99g0ffde8a8b21f": {
       "ReferenceText": "Crossbow",
       "TranslatedText": "Arbalète"
+    },
+    "h7a7863ecg913dg4decg83efg7b3d5b3827da": {
+      "ReferenceText": "Cursed",
+      "TranslatedText": "Maudit"
     },
     "h17d882b6g83acg411dgbe52g3ed32443774a": {
       "ReferenceText": "Custom",
@@ -353,6 +361,10 @@
     "h6eb4b775gdf93g4701g92b7g0ec21ed88442": {
       "ReferenceText": "Disintegrate",
       "TranslatedText": "Désintégrer"
+    },
+    "h136f2ef7g80ebg49acgbc4cgfd0a2cbc7250": {
+      "ReferenceText": "Duration",
+      "TranslatedText": "Durée"
     },
     "h59386967gb899g4f18ga61bg168b8d91f04a": {
       "ReferenceText": "Elementalist",
@@ -393,6 +405,10 @@
     "h6b38d491gbeccg47d1gad43g5e56e7b19242": {
       "ReferenceText": "Gloves",
       "TranslatedText": "Gants"
+    },
+    "h7f208716g53a7g4f87ga23eg57dd190a5372": {
+      "ReferenceText": "Ground",
+      "TranslatedText": "Sol"
     },
     "h0212f2a7gcebag4eaag8641g64cfb7bfc0d2": {
       "ReferenceText": "Helmet",
@@ -458,6 +474,10 @@
       "ReferenceText": "Knife",
       "TranslatedText": "Couteau"
     },
+    "hd790b2dcg7db3g478bg8fb6g96dfabe9dbd2": {
+      "ReferenceText": "Layer",
+      "TranslatedText": "Niveau"
+    },
     "h7038367dgd010g46fbg9b9fg7c5c40d7ef44": {
       "ReferenceText": "Leather",
       "TranslatedText": "Cuir"
@@ -498,6 +518,10 @@
       "ReferenceText": "Miscellaneous",
       "TranslatedText": "Divers"
     },
+    "h1e8ef1aeg06dag4d82gba3bg7e4cfd31f36f": {
+      "ReferenceText": "Modifier",
+      "TranslatedText": "Modificateur"
+    },
     "hb09a2fc1g7ad5g4caag8606g936398d62a3b": {
       "ReferenceText": "Necromancer",
       "TranslatedText": "Nécromancien"
@@ -517,6 +541,10 @@
     "h45a75b5agbe29g438dgbf17g6a9362cd7eed": {
       "ReferenceText": "No Filter",
       "TranslatedText": "Aucun filtre"
+    },
+    "h22852a75g8a17g410cgbd3fg5f0c5a8ced5e": {
+      "ReferenceText": "None",
+      "TranslatedText": "Aucun"
     },
     "hc2b715dfgf2a2g4ea3g8691gbc66ca160a1d": {
       "ReferenceText": "Notifications",
@@ -558,6 +586,10 @@
       "ReferenceText": "Prosperity",
       "TranslatedText": "Prospérité"
     },
+    "he817378ege243g4985gaf21g502181dcf2e6": {
+      "ReferenceText": "Purified",
+      "TranslatedText": "Purifié"
+    },
     "h4d7e7f36g5538g4195gbcd8g59db24ac7bc7": {
       "ReferenceText": "Purity",
       "TranslatedText": "Pureté"
@@ -565,6 +597,10 @@
     "h02f2946agf229g4398g8acfga7abe6a9bf0b": {
       "ReferenceText": "Pyrokinetic",
       "TranslatedText": "Pyrokinésie"
+    },
+    "h4e1defceg6104g42adg8da7g5d484b8e589f": {
+      "ReferenceText": "Radius",
+      "TranslatedText": "Rayon"
     },
     "hce1fce1ega375g4e85g8adcg22da632e1097": {
       "ReferenceText": "Rarity",
@@ -626,6 +662,10 @@
       "ReferenceText": "Staff",
       "TranslatedText": "Bâton"
     },
+    "h7187736egcc52g416dga221gc4f17ca41160": {
+      "ReferenceText": "Statuses",
+      "TranslatedText": "Statuts"
+    },
     "h3a0f5c0fg2207g403bg9c7fge9fae83627f9": {
       "ReferenceText": "Summoning",
       "TranslatedText": "Invocation"
@@ -645,6 +685,14 @@
     "h6a473ba0g726bg4188g811fgfa83c0b3def2": {
       "ReferenceText": "Vanilla",
       "TranslatedText": "Vanilla"
+    },
+    "h8f43167fge54bg419ag8b9agf80ad45e5c87": {
+      "ReferenceText": "Violent Strikes",
+      "TranslatedText": "Coups violents"
+    },
+    "haf5c4d50gd6c7g42f6g8ca3g43f30e6385d1": {
+      "ReferenceText": "Vitals",
+      "TranslatedText": "Vitaux"
     },
     "h1fbb9977g36ffg4bc6g80f4gb3ce632a38f2": {
       "ReferenceText": "Voracity",
@@ -682,9 +730,21 @@
       "ReferenceText": "Copies the cursor's world position to clipboard.",
       "TranslatedText": "Copier la position du curseur dans le presse-papiers"
     },
+    "hdba61afag2d17g4037g99b9g123d915c9b18": {
+      "ReferenceText": "Copy Position",
+      "TranslatedText": "Copier la position"
+    },
     "ha6bf3f4cg6de4g4ac8gb706g3f39de8376c3": {
       "ReferenceText": "Teleport to",
       "TranslatedText": "Téléporter"
+    },
+    "hde6129e2g7b78g4b15gb1d1g2ef3dc9a4a47": {
+      "ReferenceText": "%s has entered dialogue.",
+      "TranslatedText": "%s a rejoint la conversation"
+    },
+    "h5a1af856ge6bbg46b0g8c00g98c676f04629": {
+      "ReferenceText": "We don't have that dye!<br>We shall shop for them at miscellaneous vendors.",
+      "TranslatedText": "Nous n'avons pas cette teinture ! <br>Nous devrions l'acheter à un vendeur de founitures diverses"
     }
   }
 }

@@ -14,17 +14,13 @@
       "ReferenceText": "Blacklisted Skills",
       "TranslatedText": "Исключенные способности"
     },
-    "he5c3a752gd8bag48fagb611g35b5d23bef9d": {
-      "ReferenceText": "Cancels your controlled character's spell animations after their effects execute.<br><br>%s",
-      "TranslatedText": "Отменяет анимации навыков контролируемого персонажа сразу после исполнения их эффектов.<br><br>%s"
-    },
-    "he9f82492g81f0g4e53g9eefg731a6f800db8": {
-      "ReferenceText": "Experimental! May cause issues with certain skills. Please report any!<br>Server-side option is the most reliable at the moment.",
-      "TranslatedText": "Работает в тестовом режиме! Пожалуйста, сообщайте о возникающих проблемах с какими-либо навыками! Опция \"Серверн.\" является более стабильной."
-    },
     "h8277c4cdg8990g406fga0b5gef3f0d386620": {
       "ReferenceText": "If enabled, the animation for picking up items through their world tooltip will be cancelled, allowing multiple items to be picked up faster.",
       "TranslatedText": "Если включено, анимация подбирания предметов через нажатие на их подсказку будет ускорена, позволяя вам быстрее подбирать несколько предметов подряд."
+    },
+    "he5c3a752gd8bag48fagb611g35b5d23bef9d": {
+      "ReferenceText": "If enabled, your controlled character's skill animations will be cancelled after their effects execute, allowing you to perform consecutive actions quicker.",
+      "TranslatedText": "Если включено, (пост)анимация применения способностей у контролируемого персонажа будет отменяться сразу после исполнения ее эффекта."
     },
     "hf832b7ceg2e16g454dg8b5cg2ac87a0f7681": {
       "ReferenceText": "Speed up world tooltip item pick-ups",
@@ -262,6 +258,10 @@
       "ReferenceText": "Benevolence",
       "TranslatedText": "Benevolence"
     },
+    "hbeff45e1gc8d3g4d5fg86a6g4fb41036410a": {
+      "ReferenceText": "Blessed",
+      "TranslatedText": "Благословлен."
+    },
     "ha9646fd9ge69fg46d2g9fc2gc9442c28041c": {
       "ReferenceText": "Books",
       "TranslatedText": "Книги"
@@ -310,6 +310,10 @@
       "ReferenceText": "Cloth",
       "TranslatedText": "Одежда"
     },
+    "h6481bf87g4965g4959g992egc150ee720449": {
+      "ReferenceText": "Cloud",
+      "TranslatedText": "Облако"
+    },
     "h2eea4c8ag25e9g48c3gbe20g5c84eaf9243b": {
       "ReferenceText": "Club",
       "TranslatedText": "Палица"
@@ -337,6 +341,10 @@
     "h7f53d9adg7fdeg4005gaa99g0ffde8a8b21f": {
       "ReferenceText": "Crossbow",
       "TranslatedText": "Арбалет"
+    },
+    "h7a7863ecg913dg4decg83efg7b3d5b3827da": {
+      "ReferenceText": "Cursed",
+      "TranslatedText": "Проклят."
     },
     "h17d882b6g83acg411dgbe52g3ed32443774a": {
       "ReferenceText": "Custom",
@@ -370,6 +378,10 @@
       "ReferenceText": "Disintegrate",
       "TranslatedText": "Дезинтегр."
     },
+    "h136f2ef7g80ebg49acgbc4cgfd0a2cbc7250": {
+      "ReferenceText": "Duration",
+      "TranslatedText": "Длительность"
+    },
     "h59386967gb899g4f18ga61bg168b8d91f04a": {
       "ReferenceText": "Elementalist",
       "TranslatedText": "Elementalist"
@@ -393,6 +405,10 @@
     "ha5ce3e75g6795g493bgbd94g5d7779a15deb": {
       "ReferenceText": "Equipment",
       "TranslatedText": "Снаряжение"
+    },
+    "h4b779123g7e18g4655g81e3ga5a0dfcc5d34": {
+      "ReferenceText": "Exit",
+      "TranslatedText": "Выход"
     },
     "h715a684agc1e6g47eagb4d8g13944bc7ebe7": {
       "ReferenceText": "Filtered",
@@ -421,6 +437,10 @@
     "h6b38d491gbeccg47d1gad43g5e56e7b19242": {
       "ReferenceText": "Gloves",
       "TranslatedText": "Перчатки"
+    },
+    "h7f208716g53a7g4f87ga23eg57dd190a5372": {
+      "ReferenceText": "Ground",
+      "TranslatedText": "Поверхность"
     },
     "h0212f2a7gcebag4eaag8641g64cfb7bfc0d2": {
       "ReferenceText": "Helmet",
@@ -530,6 +550,10 @@
       "ReferenceText": "Miscellaneous",
       "TranslatedText": "Разное"
     },
+    "h1e8ef1aeg06dag4d82gba3bg7e4cfd31f36f": {
+      "ReferenceText": "Modifier",
+      "TranslatedText": "Модификатор"
+    },
     "hb09a2fc1g7ad5g4caag8606g936398d62a3b": {
       "ReferenceText": "Necromancer",
       "TranslatedText": "Некромантия"
@@ -549,6 +573,10 @@
     "h45a75b5agbe29g438dgbf17g6a9362cd7eed": {
       "ReferenceText": "No Filter",
       "TranslatedText": "Без фильтра"
+    },
+    "h22852a75g8a17g410cgbd3fg5f0c5a8ced5e": {
+      "ReferenceText": "None",
+      "TranslatedText": "Никакой"
     },
     "hc2b715dfgf2a2g4ea3g8691gbc66ca160a1d": {
       "ReferenceText": "Notifications",
@@ -602,6 +630,10 @@
       "ReferenceText": "Prosperity",
       "TranslatedText": "Prosperity"
     },
+    "he817378ege243g4985gaf21g502181dcf2e6": {
+      "ReferenceText": "Purified",
+      "TranslatedText": "Очищ."
+    },
     "h4d7e7f36g5538g4195gbcd8g59db24ac7bc7": {
       "ReferenceText": "Purity",
       "TranslatedText": "Purity"
@@ -610,6 +642,10 @@
       "ReferenceText": "Pyrokinetic",
       "TranslatedText": "Пирокинетика"
     },
+    "h4e1defceg6104g42adg8da7g5d484b8e589f": {
+      "ReferenceText": "Radius",
+      "TranslatedText": "Радиус"
+    },
     "hce1fce1ega375g4e85g8adcg22da632e1097": {
       "ReferenceText": "Rarity",
       "TranslatedText": "Редкость"
@@ -617,6 +653,14 @@
     "h8a290a77g93c2g4821g8019gc74551cb306a": {
       "ReferenceText": "Reactions",
       "TranslatedText": "Реакции"
+    },
+    "h797b8a3ag4b10g4549g8731g7ec3e775b896": {
+      "ReferenceText": "Reset",
+      "TranslatedText": "Сбросить"
+    },
+    "h2b13dd3bg4c83g4613g8884g746775c96afa": {
+      "ReferenceText": "Reset to default",
+      "TranslatedText": "Настройки по умолчанию"
     },
     "hd15232f0gd82dg42a3g82ddg7597d3911122": {
       "ReferenceText": "Resize",
@@ -633,6 +677,10 @@
     "he007d2e4gc918g475cgbca9g7edc91ad34ab": {
       "ReferenceText": "SP",
       "TranslatedText": "ОИ"
+    },
+    "hadee236cg225ag440fgb2fcg7da77645bc67": {
+      "ReferenceText": "Save",
+      "TranslatedText": "Сохранить"
     },
     "h7ca5d696g5244g435eg887bg524f556990f6": {
       "ReferenceText": "Scoundrel",
@@ -678,6 +726,10 @@
       "ReferenceText": "Staff",
       "TranslatedText": "Посох"
     },
+    "h7187736egcc52g416dga221gc4f17ca41160": {
+      "ReferenceText": "Statuses",
+      "TranslatedText": "Статусы"
+    },
     "h3a0f5c0fg2207g403bg9c7fge9fae83627f9": {
       "ReferenceText": "Summoning",
       "TranslatedText": "Призывание"
@@ -697,6 +749,10 @@
     "h4119cfcegbfc2g4045gbeecgfb1c96de38e2": {
       "ReferenceText": "Type",
       "TranslatedText": "Тип"
+    },
+    "h0879c1f1gc016g460egba26gd81e2cca18a2": {
+      "ReferenceText": "Unbound",
+      "TranslatedText": "Не назначено"
     },
     "h6a473ba0g726bg4188g811fgfa83c0b3def2": {
       "ReferenceText": "Vanilla",
@@ -795,8 +851,8 @@
       "TranslatedText": "Прослушиваем диалог %s."
     },
     "h5efb42cag481bg466dg9089g55793976612a": {
-      "ReferenceText": "Determines the maximum distance (in meters) that other players's characters can be at for their dialogues to be auto-listened to, if \"Auto-Listen Range Limit\" is enabled.",
-      "TranslatedText": "Определяет максимальную дистанцию (в метрах), на которой другие игроки могут автоматически вступить в  диалог (если \"Дальность авто-прослушивания диаголов\"включена)"
+      "ReferenceText": "Determines the maximum distance (in meters) that other players's characters can be at for their dialogues to be auto-listened to, if \"Auto-Listen Dialogues\" is enabled.",
+      "TranslatedText": "Определяет максимальную дистанцию (в метрах), на которой персонажи других игроков могут автоматически вступить в диалог (если включена \"Дальность авто-прослушивания диаголов\")"
     },
     "h6b736d31gc985g48b6g8752g9137186f3703": {
       "ReferenceText": "Dialogue Notifications",
@@ -917,6 +973,10 @@
     "h39849f5cga570g43bcg9258gf0c20c6f7e75": {
       "ReferenceText": "Crafting UI",
       "TranslatedText": "Интерфейс крафта"
+    },
+    "h5b1b94ebg3d90g47e5g8b29g9f75c0aa6cd6": {
+      "ReferenceText": "French translation by Drayander",
+      "TranslatedText": "Перевод на французский от Drayander"
     },
     "h37985411gc95dg46a1g858bg021ed39e43cd": {
       "ReferenceText": "Hotbar",
@@ -1078,10 +1138,6 @@
       "ReferenceText": "Determines the default tab for the crafting UI.",
       "TranslatedText": "Определяет вкладку по умолчанию в интерфейсе крафта."
     },
-    "hd90b74d9g5ae7g49fbg97cdg6b2e0d7fbee8": {
-      "ReferenceText": "Determines the order of statuses, in order of importance.",
-      "TranslatedText": "Определяет порядок статусов, в порядке важности."
-    },
     "hd0e2b5b7geca4g4a5dgad60g1893680e319a": {
       "ReferenceText": "Disable Slots while Casting",
       "TranslatedText": "Затемнять панель быстрого доступа при использовании навыков"
@@ -1189,6 +1245,10 @@
     "h28a24072g481eg4d1fgaac8gfacbe5243bdb": {
       "ReferenceText": "If enabled, the Escape key will close EE UIs rather than turning back a page.",
       "TranslatedText": "Если включено, кнопка Escape будет закрывать все интерфейсы EE, а не переходить на предыдущую страницу."
+    },
+    "hca849069g389dg4bb0g8b59g40ea8b48c2db": {
+      "ReferenceText": "If enabled, world tooltips will be shown for all items.<br>This includes clutter like doors, which you may filter out through the other world tooltip settings.",
+      "TranslatedText": "Если включено, \"подсказки к окружающим объектам\" будут отображаться для всех предметов.<br>В эти предметы включены и, например, двери, которые можно отфильтровать с помощью прочих настроек."
     },
     "h09f0f7e8gb224g4018g9301g1cf150d5bc20": {
       "ReferenceText": "If enabled, your characters's inventories in multiplayer will be automatically unlocked after a reload.",
@@ -1322,10 +1382,6 @@
       "ReferenceText": "Skill-casting Notifications",
       "TranslatedText": "Оповещения о применении способностей"
     },
-    "h0aacad96g933cg4888g9f70g832a231c6bad": {
-      "ReferenceText": "Sorting Order",
-      "TranslatedText": "Порядок сортировки"
-    },
     "h99515a08gaa1fg4214g81fag15521e601583": {
       "ReferenceText": "Stat-sharing Notifications",
       "TranslatedText": "Оповещения \"персонаж делится знанием\""
@@ -1349,6 +1405,38 @@
     "h00be848dgbfbfg404agabddg983860260ed4": {
       "ReferenceText": "With enough Loremaster",
       "TranslatedText": "С достаточным знанием легенд"
+    },
+    "h812ece0eg34adg44eag8c8bg50030a7e66d0": {
+      "ReferenceText": "Adjust Camera Pitch",
+      "TranslatedText": "Отрегулировать угол наклона камеры"
+    },
+    "h1563a7b9g0998g4e06g82eag75097d9a7b79": {
+      "ReferenceText": "Camera Pitch Adjust Sensitivity",
+      "TranslatedText": "Чувствительность регулировки угла наклона камеры"
+    },
+    "h991ec3d1g0162g4b29g8778gc986b7e3be6d": {
+      "ReferenceText": "Determines how rapidly the camera pitch changes as you move the mouse with the \"Adjust Camera Pitch\" keybind active.",
+      "TranslatedText": "Определяет скорость регулировки наклона камеры при движении мыши при зажатии клавиши \"Отрегулировать угол наклона камеры\"."
+    },
+    "h5484362egdb21g4770g8261g9317f2c365c7": {
+      "ReferenceText": "If enabled, moving the mouse down while the \"Adjust Camera Pitch\" keybind is active will decrease the pitch instead of increasing it.",
+      "TranslatedText": "Если включено, наклон камеры будет инвертирован при зажатии клавиши \"Отрегулировать угол наклона камеры\"."
+    },
+    "h6902de2eg38f8g4893ga0feged6f278f7ffa": {
+      "ReferenceText": "If enabled, the \"Adjust Camera Pitch\" keybind will not be able to lower the pitch below a certain threshold, reducing the likelihood of the camera clipping through the ground while using it.",
+      "TranslatedText": "Если включено, при зажатии клавиши \"Отрегулировать угол наклона камеры\" камера не будет опускаться ниже определенного порога, не позволяя вам выходить сквозь текстуры пола."
+    },
+    "h018412b6gd498g4fc9ga20egbfce71d5a5b8": {
+      "ReferenceText": "Invert \"Adjust Camera Pitch\" Controls",
+      "TranslatedText": "Инвертировать \"Отрегулировать угол наклона камеры\""
+    },
+    "he2feffa4g625dg486fgbcafgd43f6bc7af72": {
+      "ReferenceText": "Limit Pitch",
+      "TranslatedText": "Ограничить угол наклона"
+    },
+    "hfbdd1288g3c74g4d2cgb072gceee4bf1f9a0": {
+      "ReferenceText": "While held, vertical mouse movement will adjust the pitch (vertical angle) of the game camera.<br><br>Does not affect your default camera angle settings and any changes to the angle from the keybind will not persist across sessions.",
+      "TranslatedText": "При удержании, вертикальное движение мыши будет регулировать наклон игровой камеры.<br><br>Наклон не влияет на ваши настройки камеры и также не распространяется на прочие игровые сессии."
     },
     "h86148d3fg72feg42b1gacc8g8f1b57d5f975": {
       "ReferenceText": "Highlight Empty Container Slots",
@@ -1434,6 +1522,206 @@
       "ReferenceText": "When holding Shift",
       "TranslatedText": "При удержании Shift"
     },
+    "h2883c225g0406g48ffg8c39g1439bdf66f38": {
+      "ReferenceText": "%s<br>Reason:<br>%s<br><br>%s",
+      "TranslatedText": "%s<br>Причина:<br>%s<br><br>%s"
+    },
+    "h05eeb4f1gee14g43ddgb1ddg44ac6112f92b": {
+      "ReferenceText": "Breaks dual-wielding AP cost and reintroduces removed gear perks.",
+      "TranslatedText": "Ломает стоимость действий с экипированными двумя оружиями и некоторые оружейные параметры."
+    },
+    "h757b89dbg52a1g401cgb040gc6a0489ac60b": {
+      "ReferenceText": "Breaks item statistics and is unnecessary due to the Greatforge already having a way to level up items.",
+      "TranslatedText": "Ломает параметры предметов и нецелесообразен к использованию, так как Кузня превносит отдельную возможность повышения уровня экипировки."
+    },
+    "hf1e6fd47gefadg47b9ga523gd997e9e33e0d": {
+      "ReferenceText": "Buggy in multiplayer, prevents trading.",
+      "TranslatedText": "Вызывает проблемы при торговле в мультиплеерной игре."
+    },
+    "hc14509ffgb0cdg4ef3g80a5gf6490f287073": {
+      "ReferenceText": "Epic Encounters Warning",
+      "TranslatedText": "Предупреждение Epic Encounters"
+    },
+    "hf7564e88g6db5g4f04g9471g668f0f2902a1": {
+      "ReferenceText": "Incompatible with Epic Encounters.",
+      "TranslatedText": "Несовместимо с Epic Encounters"
+    },
+    "h5cd299ccg2753g4c7fgbb43g33ec950e8954": {
+      "ReferenceText": "Not designed for EE, and is buggy, bestowing permanent resistance boosts to your characters.",
+      "TranslatedText": "Не предназначен для игры с Epic Encouners и также вызывает проблемы с бонусами на перманентные сопротивления."
+    },
+    "hb7d3ca9eg7516g4af3g9616g98aa4db5947d": {
+      "ReferenceText": "Pet Pal is already innate in EE.",
+      "TranslatedText": "Друг животных уже является врожденным талантом при игре с EE."
+    },
+    "hefaa5c7cga265g4789gb95ag974dd3365ea0": {
+      "ReferenceText": "Poorly implemented, creates a lot of tedium and inconvenience.",
+      "TranslatedText": "Это кал"
+    },
+    "h9e2fea9age009g42ccg8828g5ea0bfa6fb0f": {
+      "ReferenceText": "Prevents you from choosing Glass Cannon. The new talents are unsupported.",
+      "TranslatedText": "Не позволяет выбирать Стеклянную пушку, новые таланты не поддерживаются EE."
+    },
+    "h0fa608ccgd3d8g4af1ga48agd1a51e1a4d95": {
+      "ReferenceText": "Reverts EE's changes to summoning.",
+      "TranslatedText": "Отменяет вносимые EE изменения в систему призывания."
+    },
+    "h653f684ag7015g46b0ga945ge473bea2fc04": {
+      "ReferenceText": "Spirit Vision is already infinite by default in EE.",
+      "TranslatedText": "Спиритизм уже обладает бесконечной длительностью при игре с EE."
+    },
+    "he5cba61ag9a66g44d3gaf5cg43c1f5dbf53a": {
+      "ReferenceText": "The value of an action point has been halved, meaning characters have a maximum of 12 AP by default.",
+      "TranslatedText": "В EE количество ОД по умолчанию уже равно 12."
+    },
+    "hdcc2ff83gd864g4895gb15cg8101b9e83eed": {
+      "ReferenceText": "This giftbag has been marked as unnecessary or potentially undesirable and may negatively affect the EE experience. See the Discord FAQ channel for more information.",
+      "TranslatedText": "Этот мешок с подарками отмечен как потенциально неподдерживаемый и может негативно повлиять на игровой опыт при игре с Epic Encounters."
+    },
+    "h799a3ec0g65bdg4b30ga240gf12d6aca29c2": {
+      "ReferenceText": "Undesirable with Epic Encounters.",
+      "TranslatedText": "Не рекомендуется при игре с Epic Encounters."
+    },
+    "h5d55674cg8400g4039gb640ga7498b5b8e09": {
+      "ReferenceText": "Unnecessary due to the new Source system.",
+      "TranslatedText": "Несовместимо с Epic Encounters по причине изменения системы взаимодействия с Истоком."
+    },
+    "h3edeba4cg45a9g46f9g8c02g85e9ff956909": {
+      "ReferenceText": "Click and hold to drag.",
+      "TranslatedText": "Нажмите и удерживайте для переноса."
+    },
+    "hb4ca31ecge2ecg44faga2dbg1e1c98c49d30": {
+      "ReferenceText": "Columns",
+      "TranslatedText": "Столбцы"
+    },
+    "h874faf80g6c2eg4fe8gb908g60bb769b02eb": {
+      "ReferenceText": "Create",
+      "TranslatedText": "Создать"
+    },
+    "h4179a16bg43a5g40bcg88ccg7870114fb6c0": {
+      "ReferenceText": "Create Hotbar Group",
+      "TranslatedText": "Создать панель"
+    },
+    "hf0192252g5d7ag429eg96a6g21be87bd88cd": {
+      "ReferenceText": "Resize",
+      "TranslatedText": "Изменить размер"
+    },
+    "h36e32b84g5373g4711g920cg8d0cedd5fcff": {
+      "ReferenceText": "Resize Hotbar Group",
+      "TranslatedText": "Изменить размер панели"
+    },
+    "h36ba40b2ge76bg4ea9g90ecgde3d4fc01945": {
+      "ReferenceText": "Rows",
+      "TranslatedText": "Строки"
+    },
+    "h1608e07agf046g4d0dg8298gcfd263df903e": {
+      "ReferenceText": "Allow dragging in unlearnt skills",
+      "TranslatedText": "Позволять перемещать неизученные способности"
+    },
+    "h3be3b775gcd1ag4340g8bb2g53aff8a65aaa": {
+      "ReferenceText": "If enabled, holding shift, ctrl, alt or GUI while using keybinds for slots will attempt to use slots from the 2nd, 3rd, 4th and 5th visible bars respectively.",
+      "TranslatedText": "Если включено, удерживая shift, ctrl, alt или GUI при нажатии на горячие клавиши способностей вы будете применять способности, соответственно, из 2,3,4 или 5 доп. панели (видимой)."
+    },
+    "hfcebd9e1g7fa9g4176g81b4g7cb089ba65ba": {
+      "ReferenceText": "If enabled, you will be able to drag skills the character doesn't know onto the hotbar.\nThis does not allow the skills to be used, but is useful for creating placeholders.",
+      "TranslatedText": "Если включено, вы сможете перемещать на панель даже неизученные способности.\nМожно использовать для удобного создания шаблонов способностей."
+    },
+    "had42db79gf12cg4376g970bg0b9e0276a5d2": {
+      "ReferenceText": "Select upper bars with modifier keys",
+      "TranslatedText": "Комбинации клавиш для дополнительных панелей "
+    },
+    "he6c5280dgedd4g413cgb5a3gd80c63000fbb": {
+      "ReferenceText": "Toggled extra bars visibility off.",
+      "TranslatedText": "Видимость дополнительных панелей откл."
+    },
+    "h75631deegfe03g4b5bgafd8g16871fb83e77": {
+      "ReferenceText": "Toggled extra bars visibility on.",
+      "TranslatedText": "Видимость дополнительных панелей вкл."
+    },
+    "h10e9e7c4g9c41g4cf2ga7f5g59052b73ae8d": {
+      "ReferenceText": "Artifact Powers",
+      "TranslatedText": "Силы Артефактов"
+    },
+    "h92f5ec36g9d74g4eccg951eg9d9620dda934": {
+      "ReferenceText": "If enabled, the Quick Examine UI will show the equipped artifacts of characters.",
+      "TranslatedText": "Если включено, в Досье будут отображаться экипированные персонажем Артефакты."
+    },
+    "h8dfa476cg4121g429dga2cdgd6b3de72ee98": {
+      "ReferenceText": "Show Artifacts",
+      "TranslatedText": "Показывать Артефакты"
+    },
+    "he518f8b3gac8eg4855gb7b3gfd6217a94fde": {
+      "ReferenceText": "Armor First",
+      "TranslatedText": "Сначала броня"
+    },
+    "h405ae4b4g1499g463fgbe98ge384c0eaac2e": {
+      "ReferenceText": "Determines the order in which equipment slots are shown in Quick Examine's equipment widget.",
+      "TranslatedText": "Определяет порядок отображение экипировки в Досье."
+    },
+    "h614e84c5g5e03g4672g8b1cga7a8455f4a5a": {
+      "ReferenceText": "Equipment Slots Order",
+      "TranslatedText": "Порядок слотов экипировки"
+    },
+    "h130006d8gccb5g4164g87aeged4685812627": {
+      "ReferenceText": "If enabled, the Quick Examine UI will show the equipped items of player characters.",
+      "TranslatedText": "Если включено, в Досье будут отображаться экипированные персонажем предметы."
+    },
+    "h0cd1bcdcgdf0cg4740gaa47g6c551697f31a": {
+      "ReferenceText": "Show Equipped Items",
+      "TranslatedText": "Показывать экипированные предметы"
+    },
+    "h7b5b3f77gecb7g400cgafedg1be1b2227264": {
+      "ReferenceText": "Weapons & Accessories First",
+      "TranslatedText": "Сначала оружие и аксессуары"
+    },
+    "h41f3c758g87e9g4caegb1eeg5e324bd1564a": {
+      "ReferenceText": "If enabled, the Quick Examine UI will show the skills of player characters and their cooldowns.",
+      "TranslatedText": "Если включено, в Досье будут отображаться способности персонажей (в памяти, с отображением перезарядки)."
+    },
+    "h186d9f82g7ad6g4113gb261g2a5eb62cf612": {
+      "ReferenceText": "Show Skills",
+      "TranslatedText": "Показывать способности"
+    },
+    "h70e80784gadb9g4d5agae96gc219142a7d43": {
+      "ReferenceText": "If enabled, the Quick Examine UI will show the active and visible statuses of characters.",
+      "TranslatedText": "Если включено, в Досье будут отображаться статусы персонажей."
+    },
+    "h781196b1g2672g4814gba9cg909abae01815": {
+      "ReferenceText": "Show Statuses",
+      "TranslatedText": "Показывать статусы"
+    },
+    "hd74d99b1gf914g4cb2gb3bfg832230e4cf0f": {
+      "ReferenceText": "AP Divider Interval",
+      "TranslatedText": "Интервал разделения ОД"
+    },
+    "h9d0d399dg626eg48f9ga7cag91bc0899906d": {
+      "ReferenceText": "Determines the amount of action points between which a larger divider graphic is shown on the AP bar. May help with readability of remaining \"actions\".<br><br>Set to '20' to effectively disable them.",
+      "TranslatedText": "Определяет положение \"разделителя\" ОД, отображаемого на панели.<br><br>Установите на  '20' чтобы отключить разделитель."
+    },
+    "h2bbdd581g5f42g436fgafbbg923568599545": {
+      "ReferenceText": "Creates a surface at the cursor's world position, if the Surface Painter UI is open.",
+      "TranslatedText": "Создает поверхность в положении курсора (только если открыто окно Создания поверхностей)."
+    },
+    "hea5cb90ag194cg4fcag8100gbfa79d33b150": {
+      "ReferenceText": "Paint Surface",
+      "TranslatedText": "Создать поверхность"
+    },
+    "hc55a2a98g37ddg4140gacc9gf4b048f7180f": {
+      "ReferenceText": "Surface Painter",
+      "TranslatedText": "Создание поверхностей"
+    },
+    "h3ffa6f44g1a2bg400ega4a1gcd72590aa73f": {
+      "ReferenceText": "Surface Type",
+      "TranslatedText": "Тип поверхности"
+    },
+    "hfafda83bg44a1g4985g890eg761c814db0c8": {
+      "ReferenceText": "Toggle Surface Painter",
+      "TranslatedText": "Переключить Создание поверхностей"
+    },
+    "h5cb514c6g75c3g4309g95e6g4fb71e5ba1f3": {
+      "ReferenceText": "Toggles the Surface Painter UI.",
+      "TranslatedText": "Открыть окно Создания поверхностей"
+    },
     "h2f7ed974g4184g404fga2abg640d32f6f7aa": {
       "ReferenceText": "Controls the position of item tooltips within the Party Inventory and Container Inventory UIs.<br><br>- Near cursor: vanilla behaviour; tooltips appear near the cursor.<br>- On UI sides: tooltips will be positioned on the left side of the source UI if possible, or on the right otherwise.",
       "TranslatedText": "Задает положение описаний предметов в интерфейсе инвентаря и контейнеров .<br><br>- Под курсором: как в ванилле, описание отображается под курсором.<br>- Сбоку интерфейса: описание отображается слева от интерфейса или справа, если нет свободного места."
@@ -1449,6 +1737,10 @@
     "h5f55f283g3f47g4d04g9f4eg44d2617254a4": {
       "ReferenceText": "On UI Sides",
       "TranslatedText": "Сбоку интерфейса"
+    },
+    "hf2848d52g9abbg4567g89e7gec23e4573bf2": {
+      "ReferenceText": "%s%% weapon-based damage",
+      "TranslatedText": "%s%% оружейного урона"
     },
     "hbed9b7bcgbbebg428cgbbf2g566a6033f281": {
       "ReferenceText": "Controls the delay in seconds before item comparison tooltips are shown. This delay is additive with the \"Inventory Item Tooltip Delay\" setting.<br><br>Default value is %s seconds.",
@@ -1545,46 +1837,6 @@
     "hac06b15egc508g40b1gb729gf0951d875d5f": {
       "ReferenceText": "We do not have a bedroll to rest on!",
       "TranslatedText": "Нет лежанки!"
-    },
-    "hb4ca31ecge2ecg44faga2dbg1e1c98c49d30": {
-      "ReferenceText": "Columns",
-      "TranslatedText": "Столбцы"
-    },
-    "h874faf80g6c2eg4fe8gb908g60bb769b02eb": {
-      "ReferenceText": "Create",
-      "TranslatedText": "Создать"
-    },
-    "h4179a16bg43a5g40bcg88ccg7870114fb6c0": {
-      "ReferenceText": "Create Hotbar Group",
-      "TranslatedText": "Создать панель"
-    },
-    "hf0192252g5d7ag429eg96a6g21be87bd88cd": {
-      "ReferenceText": "Resize",
-      "TranslatedText": "Изменить размер"
-    },
-    "h36e32b84g5373g4711g920cg8d0cedd5fcff": {
-      "ReferenceText": "Resize Hotbar Group",
-      "TranslatedText": "Изменить размер панели"
-    },
-    "h36ba40b2ge76bg4ea9g90ecgde3d4fc01945": {
-      "ReferenceText": "Rows",
-      "TranslatedText": "Строки"
-    },
-    "h1608e07agf046g4d0dg8298gcfd263df903e": {
-      "ReferenceText": "Allow dragging in unlearnt skills",
-      "TranslatedText": "Позволять перемещать неизученные способности"
-    },
-    "h3be3b775gcd1ag4340g8bb2g53aff8a65aaa": {
-      "ReferenceText": "If enabled, holding shift, ctrl, alt or GUI while using keybinds for slots will attempt to use slots from the 2nd, 3rd, 4th and 5th visible bars respectively.",
-      "TranslatedText": "Если включено, удерживая shift, ctrl, alt или GUI при нажатии на горячие клавиши способностей вы будете применять способности, соответственно, из 2,3,4 или 5 доп. панели (видимой)."
-    },
-    "hfcebd9e1g7fa9g4176g81b4g7cb089ba65ba": {
-      "ReferenceText": "If enabled, you will be able to drag skills the character doesn't know onto the hotbar.\nThis does not allow the skills to be used, but is useful for creating placeholders.",
-      "TranslatedText": "Если включено, вы сможете перемещать на панель даже неизученные способности.\nМожно использовать для удобного создания шаблонов способностей."
-    },
-    "had42db79gf12cg4376g970bg0b9e0276a5d2": {
-      "ReferenceText": "Select upper bars with modifier keys",
-      "TranslatedText": "Комбинации клавиш для дополнительных панелей "
     },
     "h94b55185g6055g42b9gac5bgc6bedbffdfef": {
       "ReferenceText": "Choose an icon...",
@@ -1832,11 +2084,27 @@
     },
     "h1110db28g66a0g4f73gb67fgdc8d32c3af40": {
       "ReferenceText": "Warning: can be very slow!",
-      "TranslatedText": "Предупреждение: может быть очень медленным!"
+      "TranslatedText": "Такой поиск может быть очень медленным!"
     },
     "h41dc13afg2becg4758g8212g5e71b34df083": {
       "ReferenceText": "Epip Settings",
       "TranslatedText": "Настройки Epip"
+    },
+    "h489ece91g926dg48dfg85e7g7802206d217a": {
+      "ReferenceText": "One or more of the settings changed require the game to be saved and reloaded to take effect.",
+      "TranslatedText": "Некоторые настройки требуют перезагрузки игры (F5 - F8)."
+    },
+    "he02fa608gae26g4160ga899gf19ad20429f8": {
+      "ReferenceText": "Reload Required",
+      "TranslatedText": "Требуется перезагрузка"
+    },
+    "hae99eb29g1020g4242g9386g4b187b20cfd6": {
+      "ReferenceText": "Unsaved Changes",
+      "TranslatedText": "Несохраненные изменения"
+    },
+    "hb1f871fbg6572g4325gbd1fgebd218bf97a9": {
+      "ReferenceText": "You have unsaved changes. Do you wish to apply them?",
+      "TranslatedText": "У вас есть несохраненные изменения. Вы хотите их принять?"
     },
     "hb5e67864g87f1g4493gb758g47bdab2b69aa": {
       "ReferenceText": "Alternative Status Display",
@@ -1887,12 +2155,12 @@
       "TranslatedText": "Использование переключаемых подсказок к окружающим объектам требует наличие горячей клавиши в ванильных настройках управления."
     },
     "h6dcae9c5gcbfcg4f06g9329gac12ad711d18": {
-      "ReferenceText": "Fix Astrologer's Gaze / Far Out Man range",
-      "TranslatedText": "Исправление отображения с \"Дальнобойностью\""
+      "ReferenceText": "Fix %s range",
+      "TranslatedText": "Исправление таланта %s"
     },
     "hba6d14b0gdbb9g4b00g8036ga14b329a1960": {
-      "ReferenceText": "If enabled, zone and cone-type skills will display the correct range if the character has Astrologer's Gaze / Far Out Man.",
-      "TranslatedText": "Если включено, у персонажей с талантом \"Дальнобойность\" будут корректно отображаться радиусы способностей."
+      "ReferenceText": "If enabled, zone and cone-type skills will display the correct range if the character has %s.",
+      "TranslatedText": "Если включено, у персонажей с талантом %s будут корректно отображаться радиусы способностей."
     },
     "hc7cfbfcdgc4b2g4ac3g92b3gbb6856d5b361": {
       "ReferenceText": "1Handed",
@@ -2002,6 +2270,10 @@
       "ReferenceText": "Display quest reward deltamod generation warning",
       "TranslatedText": "Отображать deltamod предупреждение при выборе награды"
     },
+    "hd2f56e74gcb60g4d26g9243g0a44a26672c2": {
+      "ReferenceText": "Flanked by %s enemies.",
+      "TranslatedText": "Окружают %s противника(ов)."
+    },
     "h688e725agb3f5g4adega349g0df981cfab97": {
       "ReferenceText": "From item: %s",
       "TranslatedText": "От предмета: %s"
@@ -2109,6 +2381,10 @@
     "h88ea1fb2g6f70g445ag9aa3ga209b6ed7feb": {
       "ReferenceText": "Unlearn Skill",
       "TranslatedText": "Забыть способность"
+    },
+    "hbb910187g05dag4c1fgb07cg3f1c6515de8f": {
+      "ReferenceText": "Remove Dye",
+      "TranslatedText": "Убрать краску"
     },
     "h19773400g8de1g46d7g9901g779b750ebddd": {
       "ReferenceText": "Set Icon",

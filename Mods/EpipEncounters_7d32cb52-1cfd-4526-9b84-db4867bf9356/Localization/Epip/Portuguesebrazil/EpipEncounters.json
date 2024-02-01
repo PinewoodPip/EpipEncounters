@@ -14,17 +14,13 @@
       "ReferenceText": "Blacklisted Skills",
       "TranslatedText": "Lista negra de habilidades"
     },
-    "he5c3a752gd8bag48fagb611g35b5d23bef9d": {
-      "ReferenceText": "Cancels your controlled character's spell animations after their effects execute.<br><br>%s",
-      "TranslatedText": "Cancela as animações de feitiço do seu personagem controlado após o lançamento de seus efeitos. %s"
-    },
-    "he9f82492g81f0g4e53g9eefg731a6f800db8": {
-      "ReferenceText": "Experimental! May cause issues with certain skills. Please report any!<br>Server-side option is the most reliable at the moment.",
-      "TranslatedText": "Experimental! Pode causar problemas com certas habilidades. Por favor, reporte!"
-    },
     "h8277c4cdg8990g406fga0b5gef3f0d386620": {
       "ReferenceText": "If enabled, the animation for picking up items through their world tooltip will be cancelled, allowing multiple items to be picked up faster.",
       "TranslatedText": "Se ativado, a animação para coletar itens por meio da dica de mundo será cancelada, permitindo que vários itens sejam coletados mais rapidamente."
+    },
+    "he5c3a752gd8bag48fagb611g35b5d23bef9d": {
+      "ReferenceText": "If enabled, your controlled character's skill animations will be cancelled after their effects execute, allowing you to perform consecutive actions quicker.",
+      "TranslatedText": "Cancela as animações de feitiço do seu personagem controlado após o lançamento de seus efeitos. %s"
     },
     "hf832b7ceg2e16g454dg8b5cg2ac87a0f7681": {
       "ReferenceText": "Speed up world tooltip item pick-ups",
@@ -702,13 +698,13 @@
       "ReferenceText": "TODO",
       "TranslatedText": "Copia a GUID de um objeto "
     },
-    "h4e3b6a84g9de1g4723gb807ga808db3c9d70": {
-      "ReferenceText": "TODO",
-      "TranslatedText": "Spawna um item a sua escolha "
-    },
     "h23e452c0g340fg4555g8034g753f003107bf": {
       "ReferenceText": "TODO",
       "TranslatedText": "Te teleporta para a localização X"
+    },
+    "h4e3b6a84g9de1g4723gb807ga808db3c9d70": {
+      "ReferenceText": "TODO",
+      "TranslatedText": "Spawna um item a sua escolha "
     },
     "ha6bf3f4cg6de4g4ac8gb706g3f39de8376c3": {
       "ReferenceText": "Teleport to",
@@ -994,10 +990,6 @@
       "ReferenceText": "Determines the default tab for the crafting UI.",
       "TranslatedText": "Determina a Aba padrão Para a interface de Criação"
     },
-    "hd90b74d9g5ae7g49fbg97cdg6b2e0d7fbee8": {
-      "ReferenceText": "Determines the order of statuses, in order of importance.",
-      "TranslatedText": "Determina a ordem dos status, em ordem de importância."
-    },
     "hd0e2b5b7geca4g4a5dgad60g1893680e319a": {
       "ReferenceText": "Disable Slots while Casting",
       "TranslatedText": "Desativar Barra de ação enquanto estiver lançando"
@@ -1238,10 +1230,6 @@
       "ReferenceText": "Skill-casting Notifications",
       "TranslatedText": "Avisos de lançamentos de Habilidades"
     },
-    "h0aacad96g933cg4888g9f70g832a231c6bad": {
-      "ReferenceText": "Sorting Order",
-      "TranslatedText": "Sortear Ordem"
-    },
     "h99515a08gaa1fg4214g81fag15521e601583": {
       "ReferenceText": "Stat-sharing Notifications",
       "TranslatedText": "Aviso de compartilhamento de Habilidades"
@@ -1293,6 +1281,38 @@
     "h7e532f24g51f1g439cg9851g8ff8f12a6b17": {
       "ReferenceText": "When holding Shift",
       "TranslatedText": "Enquanto Segurar Shift"
+    },
+    "hb4ca31ecge2ecg44faga2dbg1e1c98c49d30": {
+      "ReferenceText": "Columns",
+      "TranslatedText": "colunas"
+    },
+    "h874faf80g6c2eg4fe8gb908g60bb769b02eb": {
+      "ReferenceText": "Create",
+      "TranslatedText": "Criar"
+    },
+    "h4179a16bg43a5g40bcg88ccg7870114fb6c0": {
+      "ReferenceText": "Create Hotbar Group",
+      "TranslatedText": "Criar Barra de Grupo"
+    },
+    "hf0192252g5d7ag429eg96a6g21be87bd88cd": {
+      "ReferenceText": "Resize",
+      "TranslatedText": "Redimensionar"
+    },
+    "h36e32b84g5373g4711g920cg8d0cedd5fcff": {
+      "ReferenceText": "Resize Hotbar Group",
+      "TranslatedText": "Redimensionar Barra do Grupo"
+    },
+    "h36ba40b2ge76bg4ea9g90ecgde3d4fc01945": {
+      "ReferenceText": "Rows",
+      "TranslatedText": "Linhas"
+    },
+    "h1608e07agf046g4d0dg8298gcfd263df903e": {
+      "ReferenceText": "Allow dragging in unlearnt skills",
+      "TranslatedText": "Permitir arrastar habilidades não aprendidas"
+    },
+    "hfcebd9e1g7fa9g4176g81b4g7cb089ba65ba": {
+      "ReferenceText": "If enabled, you will be able to drag skills the character doesn't know onto the hotbar.\nThis does not allow the skills to be used, but is useful for creating placeholders.",
+      "TranslatedText": "Se ativado, você poderá arrastar habilidades que o personagem não conhece para a barra de atalho. Isso não permite que as habilidades sejam usadas, mas é útil para criar espaços reservados.\""
     },
     "h3a8d983cg5a8cg4b33g954cg39581bd8a04b": {
       "ReferenceText": "AI Type: %s",
@@ -1361,38 +1381,6 @@
     "hac06b15egc508g40b1gb729gf0951d875d5f": {
       "ReferenceText": "We do not have a bedroll to rest on!",
       "TranslatedText": "Não temos saco de dormir para descansar!"
-    },
-    "hb4ca31ecge2ecg44faga2dbg1e1c98c49d30": {
-      "ReferenceText": "Columns",
-      "TranslatedText": "colunas"
-    },
-    "h874faf80g6c2eg4fe8gb908g60bb769b02eb": {
-      "ReferenceText": "Create",
-      "TranslatedText": "Criar"
-    },
-    "h4179a16bg43a5g40bcg88ccg7870114fb6c0": {
-      "ReferenceText": "Create Hotbar Group",
-      "TranslatedText": "Criar Barra de Grupo"
-    },
-    "hf0192252g5d7ag429eg96a6g21be87bd88cd": {
-      "ReferenceText": "Resize",
-      "TranslatedText": "Redimensionar"
-    },
-    "h36e32b84g5373g4711g920cg8d0cedd5fcff": {
-      "ReferenceText": "Resize Hotbar Group",
-      "TranslatedText": "Redimensionar Barra do Grupo"
-    },
-    "h36ba40b2ge76bg4ea9g90ecgde3d4fc01945": {
-      "ReferenceText": "Rows",
-      "TranslatedText": "Linhas"
-    },
-    "h1608e07agf046g4d0dg8298gcfd263df903e": {
-      "ReferenceText": "Allow dragging in unlearnt skills",
-      "TranslatedText": "Permitir arrastar habilidades não aprendidas"
-    },
-    "hfcebd9e1g7fa9g4176g81b4g7cb089ba65ba": {
-      "ReferenceText": "If enabled, you will be able to drag skills the character doesn't know onto the hotbar.\nThis does not allow the skills to be used, but is useful for creating placeholders.",
-      "TranslatedText": "Se ativado, você poderá arrastar habilidades que o personagem não conhece para a barra de atalho. Isso não permite que as habilidades sejam usadas, mas é útil para criar espaços reservados.\""
     },
     "h94b55185g6055g42b9gac5bgc6bedbffdfef": {
       "ReferenceText": "Choose an icon...",
@@ -1627,11 +1615,11 @@
       "TranslatedText": "Os status nesta lista serão filtrados e não exibidos na barra de status. Manter a tecla shift desativa temporariamente esse filtro."
     },
     "h6dcae9c5gcbfcg4f06g9329gac12ad711d18": {
-      "ReferenceText": "Fix Astrologer's Gaze / Far Out Man range",
+      "ReferenceText": "Fix %s range",
       "TranslatedText": "Corrigir Astrologer's Gaze / Far Out Man range"
     },
     "hba6d14b0gdbb9g4b00g8036ga14b329a1960": {
-      "ReferenceText": "If enabled, zone and cone-type skills will display the correct range if the character has Astrologer's Gaze / Far Out Man.",
+      "ReferenceText": "If enabled, zone and cone-type skills will display the correct range if the character has %s.",
       "TranslatedText": "Se habilitadas, as habilidades do tipo zona e cone exibirão o alcance correto se o personagem tiver Astrologer's Gaze / Far Out Man."
     },
     "h420215fegeaecg4ccdg9e74gf68ed7bd72b9": {
