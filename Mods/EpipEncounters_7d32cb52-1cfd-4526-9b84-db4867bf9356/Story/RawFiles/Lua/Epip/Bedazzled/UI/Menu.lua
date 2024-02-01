@@ -281,20 +281,23 @@ local ModifierSettings = {
         Name = Modifiers.TimeLimit.Name,
         Description = Modifiers.TimeLimit.Description,
         Min = 0,
-        Max = 60 * 30, -- 30 minutes.
-        Step = 1,
+        Max = 60 * 60, -- 1 hour.
+        Step = 60, -- 1 minute.
         HideNumbers = false,
         DefaultValue = 0,
+        PreferredRepresentation = "Spinner", ---@type Features.SettingWidgets.PreferredRepresentation.ClampedNumber
+        ValueFormatting = "Time", ---@type Features.SettingWidgets.ValueFormatting
     }),
     MoveLimit_Moves = Bedazzled:RegisterSetting("Modifiers.MoveLimit.Moves", {
         Type = "ClampedNumber",
         Name = Modifiers.MoveLimit.Name,
         Description = Modifiers.MoveLimit.Description,
         Min = 0,
-        Max = 100,
-        Step = 1,
+        Max = 1000,
+        Step = 10,
         HideNumbers = false,
         DefaultValue = 0,
+        PreferredRepresentation = "Spinner", ---@type Features.SettingWidgets.PreferredRepresentation.ClampedNumber
     }),
 }
 -- In order of rendering.
