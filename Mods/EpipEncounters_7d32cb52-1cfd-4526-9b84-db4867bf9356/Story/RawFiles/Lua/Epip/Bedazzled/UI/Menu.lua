@@ -37,6 +37,10 @@ UI.Hooks.GetModifierConfiguration = SubscribableEvent:New("GetModifierConfigurat
 ---@override
 function UI:Show()
     self:_Initialize()
+
+    -- Update the highscores panel; necessary for when player returns from a game with a new score set.
+    UI.UpdateHighScoresPanel()
+
     self:SetPositionRelativeToViewport("center", "center")
     Client.UI._BaseUITable.Show(self)
 end
@@ -191,8 +195,6 @@ function UI._SetupHighScores()
     scoresList:SetElementSpacing(0)
     scoresList:SetPositionRelativeToParent("Top", 30, 215)
     UI.HighScoresList = scoresList
-
-    UI.UpdateHighScoresPanel()
 end
 
 ---Returns a string description of the currently-chosen gamemode and modifiers.
