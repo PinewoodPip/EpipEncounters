@@ -4,9 +4,13 @@ local Generic = Client.UI.Generic
 local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 local Textures = Epip.GetFeature("Feature_GenericUITextures").TEXTURES
 local Button = Generic.GetPrefab("GenericUI_Prefab_Button")
+local CloseButton = Generic.GetPrefab("GenericUI_Prefab_CloseButton")
 local SettingWidgets = Epip.GetFeature("Features.SettingWidgets")
 local CommonStrings = Text.CommonStrings
 local V = Vector.Create
+local GameModes = {
+    Classic = Bedazzled:GetClass("Features.Bedazzled.GameModes.Classic"),
+}
 
 ---@class Features.Bedazzled.UI.Menu : GenericUI_Instance
 local UI = Generic.Create("Features.Bedazzled.UI.Menu")
@@ -24,11 +28,37 @@ local TSK = {
         Handle = "he49de766g758eg4360g8000g0a8e5eb1885a",
         Text = "High-Scores",
         ContextDescription = "Label for highscores panel",
-    })
+    }),
+    Setting_GameMode_Name = Bedazzled:RegisterTranslatedString({
+        Handle = "hc514c6a1g4fccg4d58g8d43g95ab5885182a",
+        Text = "Game Mode",
+        ContextDescription = "Setting name",
+    }),
+    Setting_GameMode_Description = Bedazzled:RegisterTranslatedString({
+        Handle = "h79eeb20cg10b4g4b59ga41dg4e94623fd506",
+        Text = "TODO",
+        ContextDescription = "Tooltip for game mode setting",
+    }),
 }
 
 UI.Events.RenderSettings = SubscribableEvent:New("RenderSettings") ---@type Event<Empty>
 UI.Hooks.GetModifierConfiguration = SubscribableEvent:New("GetModifierConfiguration") ---@type Hook<{Modifier:Features.Bedazzled.Board.Modifier, Config:Features.Bedazzled.Board.Modifier.Configuration?}>
+
+---------------------------------------------
+-- SETTINGS
+---------------------------------------------
+
+Bedazzled.Settings.GameMode = Bedazzled:RegisterSetting("GameMode", {
+    Type = "Choice",
+    Context = "Client",
+    NameHandle = TSK.Setting_GameMode_Name,
+    DescriptionHandle = TSK.Setting_GameMode_Description,
+    DefaultValue = GameModes.Classic:GetClassName(),
+    ---@type SettingsLib_Setting_Choice_Entry[]
+    Choices = {
+        {ID = GameModes.Classic:GetClassName(), Name = GameModes.Classic:GetName()},
+    },
+})
 
 ---------------------------------------------
 -- METHODS
@@ -68,8 +98,9 @@ function UI.StartGame()
     end
 
     -- Start the game and hide the menu
-    local board = Bedazzled.CreateGame("Classic", modifiers)
-    Bedazzled.GameUI.Setup(board)
+    local gameClass = Bedazzled:GetClass(UI._GetCurrentGameMode()) ---@cast gameClass Features.Bedazzled.GameMode
+    local game = Bedazzled.CreateGame(gameClass:Create(V(8, 8)), modifiers) -- TODO extract
+    Bedazzled.GameUI.Setup(game)
     UI:Hide()
 end
 
@@ -131,6 +162,7 @@ function UI.GetModifierConfigs()
     return configs
 end
 
+---Creates the static elements of the UI.
 function UI:_Initialize()
     if self._Initialized then return end
 
@@ -141,24 +173,30 @@ function UI:_Initialize()
     UI.PanelList = panelList
 
     local panel = panelList:AddChild("BG", "GenericUI_Element_Texture")
-    panel:SetTexture(Textures.PANELS.CLIPBOARD_LARGE)
+    panel:SetTexture(Textures.PANELS.CLIPBOARD)
     UI.MainPanel = panel
 
     self.BACKGROUND_SIZE = panel:GetSize()
-    self.FRAME_SIZE = V(self.BACKGROUND_SIZE[1] - 200, 500) -- Size of the settings list frame.
+    self.FRAME_SIZE = V(self.BACKGROUND_SIZE[1] - 160, 700) -- Size of the settings list frame.
     self.SETTING_SIZE = V(self.FRAME_SIZE[1], 70)
 
-    local headerLabel = UI.CreateText("TitleHeader", panel, Text.Format(Bedazzled.TranslatedStrings.GameTitle:GetString(), {Size = 42, Color = "7E72D6", FontType = Text.FONTS.ITALIC}), "Center", V(self.BACKGROUND_SIZE[1], 50))
-    headerLabel:SetPositionRelativeToParent("Top", 0, 60)
+    local headerLabel = UI.CreateText("TitleHeader", panel, Text.Format(Bedazzled.TranslatedStrings.GameTitle:GetString(), {Size = 42, Color = Bedazzled.LOGO_COLOR, FontType = Text.FONTS.ITALIC}), "Center", V(self.BACKGROUND_SIZE[1], 50))
+    headerLabel:SetPositionRelativeToParent("Top", 0, 70)
 
     local settingsList = panel:AddChild("SettingsList", "GenericUI_Element_ScrollList")
     settingsList:SetFrame(self.FRAME_SIZE:unpack())
     settingsList:SetMouseWheelEnabled(true)
+    settingsList:SetScrollbarSpacing(-10)
     UI.SettingsList = settingsList
 
-    -- Render settings - TODO redo this on every Show()?
+    -- Render gamemode setting
+    SettingWidgets.RenderSetting(UI, settingsList, Bedazzled.Settings.GameMode, self.SETTING_SIZE, function (_)
+        UI.UpdateHighScoresPanel()
+    end)
+
+    -- Render modifier settings - TODO redo this on every Show()?
     UI.Events.RenderSettings:Throw()
-    settingsList:SetPositionRelativeToParent("Top", 0, 200)
+    settingsList:SetPositionRelativeToParent("Top", 10, 160)
 
     local startButton = Button.Create(UI, "StartButton", panel, Button:GetStyle("GreenMedium"))
     startButton:SetLabel(CommonStrings.Start)
@@ -168,6 +206,9 @@ function UI:_Initialize()
     startButton.Events.Pressed:Subscribe(function (_)
         UI.StartGame()
     end)
+
+    local closeButton = CloseButton.Create(UI, "CloseButton", panel)
+    closeButton:SetPositionRelativeToParent("TopLeft", 51, 45)
 
     UI._SetupHighScores()
 
@@ -183,7 +224,7 @@ function UI._SetupHighScores()
     panel:SetTexture(Textures.PANELS.LIST)
     panel:SetCenterInLists(true)
 
-    local highscoresHeader = UI.CreateText("HighScoresHeader", panel, TSK.Label_HighScores:Format({Size = 23}), "Center", V(400, 50))
+    local highscoresHeader = UI.CreateText("HighScoresHeader", panel, TSK.Label_HighScores:Format({Size = 23, Color = Bedazzled.LOGO_COLOR}), "Center", V(400, 50))
     highscoresHeader:SetPositionRelativeToParent("Top", 0, 100)
 
     local gamemodeLabel = TextPrefab.Create(UI, "HighScoresGamemodeSubtitle", panel, "", "Center", V(400, 50))
@@ -199,7 +240,7 @@ end
 
 ---Returns a string description of the currently-chosen gamemode and modifiers.
 function UI._GetCurrentGameDescription()
-    local gamemode = UI._GetCurrentGameMode()
+    local gamemode = UI._GetCurrentGameModeClass()
     local modifierLabels = {} ---@type {ClassName:classname, Label:string}[]
     local mods = UI.GetModifierConfigs()
     for className,config in pairs(mods) do
@@ -214,7 +255,7 @@ function UI._GetCurrentGameDescription()
     end)
 
     -- Keep just the labels and concatenate them
-    local labels = {gamemode} ---@type string[]
+    local labels = {gamemode:GetName()} ---@type string[]
     for _,v in ipairs(modifierLabels) do
         table.insert(labels, v.Label)
     end
@@ -224,7 +265,13 @@ end
 ---Returns the currently-selected gamemode.
 ---@return Feature_Bedazzled_GameMode_ID
 function UI._GetCurrentGameMode()
-    return "Classic" -- TODO
+    return Bedazzled.Settings.GameMode:GetValue()
+end
+
+---Returns the class of the currently-selected gamemode.
+---@return Features.Bedazzled.GameMode
+function UI._GetCurrentGameModeClass()
+    return Bedazzled:GetClass(UI._GetCurrentGameMode())
 end
 
 ---------------------------------------------

@@ -757,6 +757,9 @@ LOAD_ORDER = {
             "Epip/Bedazzled/Model/Board/GemModifierDescriptor.lua",
             "Epip/Bedazzled/Model/Board/Board.lua",
 
+            "Epip/Bedazzled/Model/GameModes/_GameMode.lua",
+            "Epip/Bedazzled/Model/GameModes/Classic.lua",
+
             "Epip/Bedazzled/Model/Gem/States/_State.lua",
             "Epip/Bedazzled/Model/Gem/States/Idle.lua",
             "Epip/Bedazzled/Model/Gem/States/Falling.lua",
@@ -772,6 +775,7 @@ LOAD_ORDER = {
 
             "Epip/Bedazzled/UI/Menu.lua",
             "Epip/Bedazzled/UI/ModifierOverlays.lua",
+            "Epip/Bedazzled/UI/Game/Classic.lua",
         },
     },
     {Script = "Epip/Client/RainbowOverlays.lua"},

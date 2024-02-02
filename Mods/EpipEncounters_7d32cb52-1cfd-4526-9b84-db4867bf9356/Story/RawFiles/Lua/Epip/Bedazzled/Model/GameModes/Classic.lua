@@ -1,0 +1,125 @@
+
+local Bedazzled = Epip.GetFeature("Feature_Bedazzled")
+local V = Vector.Create
+
+---@class Features.Bedazzled.GameModes.Classic : Features.Bedazzled.GameMode
+local Game = {
+    Name = Bedazzled:RegisterTranslatedString({
+        Handle = "h40000864gc468g40a3g92d2g6f50c437f596",
+        Text = "Classic",
+        ContextDescription = "Game mode name",
+    }),
+    Name_Long = Bedazzled:RegisterTranslatedString({
+        Handle = "hd58e1335gb503g49abg9c68g413cf2118d20",
+        Text = "Bedazzled Classic",
+        ContextDescription = "Long game mode name",
+    }),
+    Description = Bedazzled:RegisterTranslatedString({
+        Handle = "hc076bb5dgc710g4bcagab45g7340fc67096e",
+        Text = "Match gems by swapping adjacent ones around.",
+        ContextDescription = [["Classic" game mode tooltip]],
+    }),
+}
+Bedazzled:RegisterClass("Features.Bedazzled.GameModes.Classic", Game, {"Features.Bedazzled.GameMode"})
+
+---------------------------------------------
+-- METHODS
+---------------------------------------------
+
+---@param position1 Vector2
+---@param position2 Vector2
+function Game:Swap(position1, position2)
+    local gem1 = self:GetGemAt(position1:unpack())
+    local gem2 = self:GetGemAt(position2:unpack())
+
+    if gem1 and gem2 then
+        if self:CanSwap(gem1, gem2) then -- Swap gems
+            -- Swap occurs instantly, but the gems cannot
+            -- be matched until the Swapping state ends
+            self:_SwapGems(gem1, gem2)
+
+            local swappingState = Bedazzled.GetGemStateClass("Feature_Bedazzled_Board_Gem_State_Swapping")
+
+            gem1:SetState(swappingState:Create(gem2))
+            gem2:SetState(swappingState:Create(gem1))
+
+            -- Reset cascade counter
+            self.MatchesSinceLastMove = 0
+
+            self.Events.SwapPerformed:Throw({
+                Gem1 = gem1,
+                Gem2 = gem2,
+            })
+        elseif gem1:IsAdjacentTo(gem2) and gem1:IsIdle() and gem2:IsIdle() then -- Enter invalid swap busy state - only if gems are adjacent and idle
+            local invalidSwapState = Bedazzled.GetGemStateClass("Feature_Bedazzled_Board_Gem_State_InvalidSwap")
+
+            gem1:SetState(invalidSwapState:Create(gem2))
+            gem2:SetState(invalidSwapState:Create(gem1))
+
+            self.Events.InvalidSwapPerformed:Throw({
+                Gem1 = gem1,
+                Gem2 = gem2,
+            })
+        end
+    end
+end
+
+---@param gem1 Feature_Bedazzled_Board_Gem
+---@param gem2 Feature_Bedazzled_Board_Gem
+function Game:CanSwap(gem1, gem2)
+    local canSwap = true
+
+    canSwap = canSwap and gem1 ~= gem2
+    canSwap = canSwap and gem1:IsAdjacentTo(gem2)
+    canSwap = canSwap and gem1:IsMatchable() and gem2:IsMatchable()
+
+    -- Can only swap if it were to result in a valid move
+    -- TODO consider falling gems
+    -- Possible solution: have a method that returns a memento of the board including fall gems (but not busy ones) - and check matches there instead
+    self:_SwapGems(gem1, gem2)
+    local match1, match2 = self:GetMatchAt(self:GetGemGridCoordinates(gem1):unpack()), self:GetMatchAt(self:GetGemGridCoordinates(gem2):unpack())
+    canSwap = canSwap and (match1 ~= nil or match2 ~= nil)
+
+    -- Undo the swap
+    self:_SwapGems(gem1, gem2)
+
+    -- Can always swap hypercubes
+    canSwap = canSwap or (gem1:GetDescriptor().Type == "Protean" or gem2:GetDescriptor().Type == "Protean")
+
+    return canSwap
+end
+
+---@override
+---@return boolean
+function Game:HasMovesAvailable()
+    local hasMoves = false
+    local moveDirections = {
+        V(-1, 0),
+        V(1, 0),
+        V(0, -1),
+        V(0, 1),
+    }
+
+    for x=1,self.Size[2],1 do
+        for y=1,self.Size[1],1 do
+            for _,v in ipairs(moveDirections) do
+                local pos = V(x, y)
+                local gem1, gem2 = self:GetGemAt(pos:unpack()), self:GetGemAt((pos + v):unpack())
+
+                if gem1 and gem2 and self:CanSwap(gem1, gem2) then
+                    return true
+                end
+            end
+        end
+    end
+
+    return hasMoves
+end
+
+---Swaps the type and data of 2 gems.
+---@param gem1 Feature_Bedazzled_Board_Gem
+---@param gem2 Feature_Bedazzled_Board_Gem
+function Game:_SwapGems(gem1, gem2)
+    gem1.Type, gem2.Type = gem2.Type, gem1.Type
+    gem1.Modifiers, gem2.Modifiers = gem2.Modifiers, gem1.Modifiers
+end

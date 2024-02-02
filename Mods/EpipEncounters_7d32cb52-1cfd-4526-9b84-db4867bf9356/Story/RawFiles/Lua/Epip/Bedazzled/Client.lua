@@ -1,12 +1,11 @@
 
-local Set = DataStructures.Get("DataStructures_Set")
-
 ---@class Feature_Bedazzled : Feature
 local Bedazzled = {
+    LOGO_COLOR = "7E72D6",
+
     _Gems = {}, ---@type table<string, Feature_Bedazzled_Gem>
     _GemModifierDescriptors = {}, ---@type table<string, Feature_Bedazzled_GemModifier>
     _GemStateClasses = {}, ---@type table<string, Feature_Bedazzled_Board_Gem_State>>
-    _GameModes = Set.Create({}), ---@type DataStructures_Set<string> TODO
 
     TranslatedStrings = {
         GameTitle = {
@@ -82,7 +81,7 @@ Epip.RegisterFeature("Bedazzled", Bedazzled)
 ---@alias Feature_Bedazzled_GemModifier_ID "Rune"|"LargeRune"|"GiantRune"
 ---@alias Feature_Bedazzled_GemDescriptor_ID "Bloodstone"|"Jade"|"Sapphire"|"Topaz"|"Onyx"|"Emerald"|"Lapis"|"TigersEye"|"Protean"
 
----@alias Feature_Bedazzled_GameMode_ID "Classic"
+---@alias Feature_Bedazzled_GameMode_ID "Features.Bedazzled.GameModes.Classic"
 
 ---@alias Features.Bedazzled.ModifierSet table<classname, Features.Bedazzled.Board.Modifier.Configuration>
 
@@ -101,12 +100,6 @@ Epip.RegisterFeature("Bedazzled", Bedazzled)
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
-
----Registers a gamemode.
----@param id string
-function Bedazzled.RegisterGameMode(id)
-    Bedazzled._GameModes:Add(id)
-end
 
 ---@param data Feature_Bedazzled_Gem
 function Bedazzled.RegisterGem(data)
@@ -130,31 +123,28 @@ function Bedazzled.GetGemDescriptors()
 end
 
 ---Creates a new game.
----@param gameMode Feature_Bedazzled_GameMode_ID
+---@param game Features.Bedazzled.GameMode
 ---@param modifiers Features.Bedazzled.Board.Modifier[]? Defaults to empty list.
 ---@return Feature_Bedazzled_Board
-function Bedazzled.CreateGame(gameMode, modifiers)
+function Bedazzled.CreateGame(game, modifiers)
     modifiers = modifiers or {}
-    local BoardClass = Bedazzled:GetClass("Feature_Bedazzled_Board")
-    local board = BoardClass.Create(Vector.Create(8, 8), gameMode)
 
     -- Apply modifiers
     for _,mod in ipairs(modifiers) do
-        board:ApplyModifier(mod)
+        game:ApplyModifier(mod)
     end
 
     -- Update high score at the end, forward event
-    board.Events.GameOver:Subscribe(function (ev)
-        local currentBestScore = Bedazzled.GetHighScore(board.GameMode, board:GetModifierConfigs())
+    game.Events.GameOver:Subscribe(function (ev)
+        local currentBestScore = Bedazzled.GetHighScore(game.GameMode, game:GetModifierConfigs())
         local isHighScore = false
         if currentBestScore == nil or ev.Score > currentBestScore.Score then
             isHighScore = true
         end
 
-        Bedazzled.AddHighScore(board.GameMode, board:GetModifierConfigs(), {
+        Bedazzled.AddHighScore(game.GameMode, game:GetModifierConfigs(), {
             Score = ev.Score,
             Date = Client.GetDateString(),
-            GameMode = board.GameMode,
         })
 
         -- Throw event for new high scores
@@ -166,7 +156,7 @@ function Bedazzled.CreateGame(gameMode, modifiers)
 
     end, {StringID = "GameOverHighScoreUpdate"})
 
-    return board
+    return game
 end
 
 ---@return Feature_Bedazzled_Gem
@@ -254,8 +244,7 @@ end
 ---@param modifiers Features.Bedazzled.ModifierSet
 ---@param score Feature_Bedazzled_HighScore
 function Bedazzled.AddHighScore(gameMode, modifiers, score)
-    local setting = Bedazzled:GetSettingValue(Bedazzled.Settings.HighScores) ---@type Features.Bedazzled.Settings.HighScores
-    -- setting = table.deepCopy(setting)
+    local setting = Bedazzled._GetHighScores()
     local scores = setting.Scores[gameMode] or {}
     local entry = Bedazzled._GetHighScoreEntries(gameMode, modifiers)
 
@@ -276,26 +265,31 @@ function Bedazzled.AddHighScore(gameMode, modifiers, score)
     table.insert(scores, entry)
     ::EntryUpdated::
 
+    setting.Scores[gameMode] = scores
+
     Bedazzled:SetSettingValue(Bedazzled.Settings.HighScores, setting)
 end
 
 ---Returns all high scores.
----@return table<Feature_Bedazzled_GameMode_ID, Features.Bedazzled.GameModeHighScores[]>
+---@return Features.Bedazzled.Settings.HighScores
 function Bedazzled._GetHighScores()
     local setting = Bedazzled:GetSettingValue(Bedazzled.Settings.HighScores) ---@type Features.Bedazzled.Settings.HighScores
 
     -- Update save data from before the 3rd Anniversary expansion
     if not setting.Protocol then
-        local scores = {} ---@type table<Feature_Bedazzled_GameMode_ID, Features.Bedazzled.GameModeHighScores[]>
-        for mode,oldScores in pairs(setting) do
-            if not scores[mode] then
-                -- Modifiers did not exist before this point;
-                -- scores are converted to no-mod ones.
-                scores[mode] = {{
+        local mode = "Features.Bedazzled.GameModes.Classic"
+        ---@type table<Feature_Bedazzled_GameMode_ID, Features.Bedazzled.GameModeHighScores[]>
+        local scores = {
+            -- Modifiers did not exist before this point;
+            -- scores are converted to no-mod ones.
+            [mode] = {
+                {
                     ModifierConfigs = {},
                     HighScores = {},
-                }}
-            end
+                },
+            }
+        }
+        for _,oldScores in pairs(setting) do
             for _,oldScore in ipairs(oldScores) do
                 ---@type Feature_Bedazzled_HighScore
                 local newScore = {
@@ -351,7 +345,7 @@ end
 ---@param modifiers Features.Bedazzled.ModifierSet
 ---@return Features.Bedazzled.GameModeHighScores
 function Bedazzled._GetHighScoreEntries(gameMode, modifiers)
-    local setting = Bedazzled:GetSettingValue(Bedazzled.Settings.HighScores) ---@type Features.Bedazzled.Settings.HighScores
+    local setting = Bedazzled._GetHighScores()
     local scores = setting.Scores[gameMode] or {}
 
     -- Find the first entry that matches the modifiers used, if any
@@ -434,5 +428,3 @@ GameState.Events.ClientReady:Subscribe(function (_)
         Bedazzled.RegisterGemModifier(id, data)
     end
 end)
-
-Bedazzled.RegisterGameMode("Classic")

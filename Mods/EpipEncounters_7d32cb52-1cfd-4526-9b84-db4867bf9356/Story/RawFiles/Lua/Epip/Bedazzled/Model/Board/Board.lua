@@ -71,13 +71,12 @@ Bedazzled:RegisterClass("Feature_Bedazzled_Board", _Board)
 -- METHODS
 ---------------------------------------------
 
+---Creates a board.
 ---@param size Vector2
----@param gameMode Feature_Bedazzled_GameMode_ID
 ---@return Feature_Bedazzled_Board
-function _Board.Create(size, gameMode)
-    local board = _Board:__Create({
+function _Board:Create(size)
+    local board = self:__Create({
         GUID = Text.GenerateGUID(),
-        GameMode = gameMode,
         _IsRunning = true,
         _QueuedMatches = {},
         Score = 0,
@@ -88,11 +87,13 @@ function _Board.Create(size, gameMode)
         _Modifiers = {},
     }) ---@cast board Feature_Bedazzled_Board
 
+    board.GameMode = board:GetClassName() -- Legacy field. TODO remove?
+
     -- Initialize events and hooks
-    for k,_ in pairs(_Board.Events) do
+    for k,_ in pairs(self.Events) do
         board.Events[k] = SubscribableEvent:New(k)
     end
-    for k,_ in pairs(_Board.Hooks) do
+    for k,_ in pairs(self.Hooks) do
         board.Hooks[k] = SubscribableEvent:New(k)
     end
 
@@ -199,7 +200,8 @@ function _Board:Update(dt)
     self.Events.Updated:Throw({DeltaTime = dt})
 
     -- Game over if all gems are idling with no moves available.
-    if self:IsIdle() and not self:HasMovesAvailable() then
+    -- IsRunning() check is necessary in case the game ended during the Updated event.
+    if self:IsRunning() and self:IsIdle() and not self:HasMovesAvailable() then
         self:EndGame(Bedazzled.TranslatedStrings.GameOver_Reason_NoMoreMoves)
     end
 end
@@ -380,103 +382,12 @@ function _Board:GetGemGridCoordinates(gem)
     return position
 end
 
----Swaps the type and data of 2 gems.
----@param gem1 Feature_Bedazzled_Board_Gem
----@param gem2 Feature_Bedazzled_Board_Gem
-function _Board:_SwapGems(gem1, gem2)
-    -- TODO use memento pattern
-    gem1.Type, gem2.Type = gem2.Type, gem1.Type
-    gem1.Modifiers, gem2.Modifiers = gem2.Modifiers, gem1.Modifiers
-end
-
----@param gem1 Feature_Bedazzled_Board_Gem
----@param gem2 Feature_Bedazzled_Board_Gem
-function _Board:CanSwap(gem1, gem2)
-    local canSwap = true
-
-    canSwap = canSwap and gem1 ~= gem2
-    canSwap = canSwap and gem1:IsAdjacentTo(gem2)
-    canSwap = canSwap and gem1:IsMatchable() and gem2:IsMatchable()
-
-    -- Can only swap if it were to result in a valid move
-    -- TODO consider falling gems
-    -- Possible solution: have a method that returns a memento of the board including fall gems (but not busy ones) - and check matches there instead
-    self:_SwapGems(gem1, gem2)
-    local match1, match2 = self:GetMatchAt(self:GetGemGridCoordinates(gem1):unpack()), self:GetMatchAt(self:GetGemGridCoordinates(gem2):unpack())
-    canSwap = canSwap and (match1 ~= nil or match2 ~= nil)
-
-    -- Undo the swap
-    self:_SwapGems(gem1, gem2)
-
-    -- Can always swap hypercubes
-    canSwap = canSwap or (gem1:GetDescriptor().Type == "Protean" or gem2:GetDescriptor().Type == "Protean")
-
-    return canSwap
-end
-
----@param position1 Vector2
----@param position2 Vector2
-function _Board:Swap(position1, position2)
-    local gem1 = self:GetGemAt(position1:unpack())
-    local gem2 = self:GetGemAt(position2:unpack())
-
-    if gem1 and gem2 then
-        if self:CanSwap(gem1, gem2) then -- Swap gems
-            -- Swap occurs instantly, but the gems cannot
-            -- be matched until the Swapping state ends
-            self:_SwapGems(gem1, gem2)
-
-            local swappingState = Bedazzled.GetGemStateClass("Feature_Bedazzled_Board_Gem_State_Swapping")
-
-            gem1:SetState(swappingState:Create(gem2))
-            gem2:SetState(swappingState:Create(gem1))
-
-            -- Reset cascade counter
-            self.MatchesSinceLastMove = 0
-
-            self.Events.SwapPerformed:Throw({
-                Gem1 = gem1,
-                Gem2 = gem2,
-            })
-        elseif gem1:IsAdjacentTo(gem2) and gem1:IsIdle() and gem2:IsIdle() then -- Enter invalid swap busy state - only if gems are adjacent and idle
-            local invalidSwapState = Bedazzled.GetGemStateClass("Feature_Bedazzled_Board_Gem_State_InvalidSwap")
-
-            gem1:SetState(invalidSwapState:Create(gem2))
-            gem2:SetState(invalidSwapState:Create(gem1))
-
-            self.Events.InvalidSwapPerformed:Throw({
-                Gem1 = gem1,
-                Gem2 = gem2,
-            })
-        end
-    end
-end
-
 ---Returns whether the board has any valid moves remaining.
+---@abstract
 ---@return boolean
 function _Board:HasMovesAvailable()
-    local hasMoves = false
-    local moveDirections = {
-        V(-1, 0),
-        V(1, 0),
-        V(0, -1),
-        V(0, 1),
-    }
-
-    for x=1,self.Size[2],1 do
-        for y=1,self.Size[1],1 do
-            for _,v in ipairs(moveDirections) do
-                local pos = V(x, y)
-                local gem1, gem2 = self:GetGemAt(pos:unpack()), self:GetGemAt((pos + v):unpack())
-
-                if gem1 and gem2 and self:CanSwap(gem1, gem2) then
-                    return true
-                end
-            end
-        end
-    end
-
-    return hasMoves
+    ---@diagnostic disable-next-line: missing-return
+    self:__ThrowNotImplemented("HasMovesAvailable")
 end
 
 ---Returns whether all gems on the board are idle.
