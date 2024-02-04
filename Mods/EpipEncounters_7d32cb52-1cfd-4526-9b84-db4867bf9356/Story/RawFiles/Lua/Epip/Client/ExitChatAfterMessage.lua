@@ -1,11 +1,11 @@
 
 local Chat = Client.UI.ChatLog
 
----@class Feature_ExitChatAfterMessage : Feature
+---@class Features.ExitChatAfterMessage : Feature
 local Exit = {
     SETTING_ID = "Chat_ExitAfterSendingMessage",
 }
-Epip.RegisterFeature("ExitChatAfterMessage", Exit)
+Epip.RegisterFeature("Features.ExitChatAfterMessage", Exit)
 
 ---------------------------------------------
 -- METHODS

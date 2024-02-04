@@ -154,7 +154,11 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
+-- Listen for requests to send messages.
 Chat:RegisterCallListener("inputString", function(ev, text)
+    -- Only fire the event if the text field was focused, as this call can also fire when the user clicks the button while the field is unfocused and empty.
+    if not Chat:IsTextFocused() then return end
+
     local char = Client.GetCharacter()
     local event = Chat.Events.MessageSent:Throw({
         Character = char,

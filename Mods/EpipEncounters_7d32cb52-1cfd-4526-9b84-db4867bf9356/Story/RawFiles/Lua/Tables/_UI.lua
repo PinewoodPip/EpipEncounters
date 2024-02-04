@@ -266,6 +266,13 @@ function BaseUI:IsFlagged(flag)
     return flagged
 end
 
+---Returns whether the UI has any of the TextInput flags set.
+---@return boolean -- `false` if the UI doesn't exist.
+function BaseUI:IsTextFocused()
+    local obj = self:GetUI()
+    return obj and (obj.OF_PlayerTextInput1 or obj.OF_PlayerTextInput2 or obj.OF_PlayerTextInput3 or obj.OF_PlayerTextInput4)
+end
+
 ---Changes the state of a flag.
 ---@param flag UIObjectFlags
 ---@param enabled? boolean Defaults to toggling to complimentary state.
