@@ -14,7 +14,7 @@ local _Instance = {
     sleepFunctionCheckInterval = 0.2,
 
     Events = {
-        Finished = SubscribableEvent:New("Finished"), ---@type Event<Empty>
+        Finished = {}, ---@type Event<Empty>
     },
 }
 
@@ -40,14 +40,11 @@ function _Instance:Continue(...)
 
             return table.unpack(result)
         else
-            local error = result[2]
-
-            Ext.PrintError("Error in coroutine: " .. error)
-
-            return nil
+            local errorMsg = result[2]
+            error(errorMsg, 2)
         end
     else
-        Coroutine:LogWarning("Attempted to yield from sleeping coroutine") -- TODO cancel sleeping and yield
+        Coroutine:__LogWarning("Attempted to yield from sleeping coroutine") -- TODO cancel sleeping and yield
         return nil
     end
 end
@@ -94,10 +91,14 @@ end
 ---@param fun fun(inst:CoroutineInstance, ...)
 ---@return CoroutineInstance
 function Coroutine.Create(fun)
-    local instance = {} ---@type CoroutineInstance
-    local thread = coroutine.create(fun)
+    ---@type CoroutineInstance
+    local instance = {
+        Events = SubscribableEvent.InitializeEventTable(_Instance.Events)
+    }
     Inherit(instance, _Instance)
 
+    -- Create the thread
+    local thread = coroutine.create(fun)
     instance.thread = thread
 
     return instance

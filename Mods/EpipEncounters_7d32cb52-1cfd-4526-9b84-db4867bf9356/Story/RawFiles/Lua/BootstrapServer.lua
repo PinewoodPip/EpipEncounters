@@ -48,6 +48,12 @@ local coreLibraries = {
 
     "Utilities/Hooks.lua",
     "Utilities.lua",
+    {
+        Scripts = {
+            "Utilities/Testing/Shared.lua",
+            "Utilities/Testing/_Test.lua",
+        },
+    },
 
     "Data/Game.lua",
 

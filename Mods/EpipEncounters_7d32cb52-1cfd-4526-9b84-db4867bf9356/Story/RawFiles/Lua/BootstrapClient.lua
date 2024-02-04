@@ -47,6 +47,12 @@ local coreLibraries = {
     "Utilities/Hooks.lua",
     "Utilities.lua",
     "Utils.lua",
+    {
+        Scripts = {
+            "Utilities/Testing/Shared.lua",
+            "Utilities/Testing/_Test.lua",
+        },
+    },
     "Utilities/table.lua",
     "Utilities/math.lua",
     "Utilities/IO.lua",

@@ -28,7 +28,7 @@ end
 function Sound.PlaySound(sound)
     if Sound:IsEnabled() then
         sound = sound or Sound.SOUNDS[Settings.GetSettingValue("Epip_Chat", Sound.SETTING_ID) - 1]
-    
+
         Chat:PlaySound(sound)
     end
 end
@@ -53,10 +53,13 @@ end)
 -- TESTS
 ---------------------------------------------
 
-Sound:RegisterTest("UserMessage", function (_)
-    local dummyMessage = "<font size=16 color=#bbbbbb>Pip:</font> <font size=16 color=#ffffff>Hello</font>"
-    assert(Sound.IsUserMessage(dummyMessage), "User message check failed")
-    
-    dummyMessage = "Welcome to party chat"
-    assert(not Sound.IsUserMessage(dummyMessage), "User message check faulty")
-end)
+Testing.RegisterTest(Sound, {
+    ID = "IsUserMessage",
+    Function = function (_)
+        local dummyMessage = "<font size=16 color=#bbbbbb>Pip:</font> <font size=16 color=#ffffff>Hello</font>"
+        assert(Sound.IsUserMessage(dummyMessage), "User message check failed")
+
+        dummyMessage = "Welcome to party chat"
+        assert(not Sound.IsUserMessage(dummyMessage), "User message check failed")
+    end
+})

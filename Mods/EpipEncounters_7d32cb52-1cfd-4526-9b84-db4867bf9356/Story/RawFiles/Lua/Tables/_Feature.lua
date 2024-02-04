@@ -30,53 +30,9 @@ local Feature = {
     },
     FILEPATH_OVERRIDES = {},
     DEVELOPER_ONLY = false,
-
-    _Tests = {}, ---@type Feature_Test[]
 }
 _Feature = Feature
 OOP.RegisterClass("Feature", Feature, {"Library"})
-
----@class Feature_Test
----@field Name string
----@field Function function Can be coroutinable, but may only sleep, not yield.
----@field State "NotRun"|"Failed"|"Passed"
----@field Coroutine CoroutineInstance
-local _Test = {}
-
----@return boolean, string -- Success, message
-function _Test:Run()
-    local coro = Coroutine.Create(self.Function)
-    coro.Events.Finished:Subscribe(function (_)
-        self.State = "Passed"
-    end)
-    self.State = "Failed"
-    self.Coroutine = coro
-
-    local success, msg = pcall(coro.Continue, coro)
-
-    return success, msg
-end
-
----@return boolean
-function _Test:IsFinished()
-    return self.Coroutine and self.Coroutine:IsDead()
-end
-
----------------------------------------------
--- EVENTS/HOOKS
----------------------------------------------
-
----@param name string
----@param func fun(inst:CoroutineInstance)
----@return Feature_Test
-function Feature:RegisterTest(name, func)
-    local test = {Name = name, Function = func, State = "NotRun", Coroutine = nil} ---@type Feature_Test
-    Inherit(test, _Test)
-
-    table.insert(self._Tests, test)
-
-    return test
-end
 
 ---------------------------------------------
 -- METHODS

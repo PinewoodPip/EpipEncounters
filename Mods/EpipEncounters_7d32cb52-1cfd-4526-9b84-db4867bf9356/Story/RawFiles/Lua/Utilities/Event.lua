@@ -77,6 +77,17 @@ function SubscribableEvent:New(name, preventable)
     return o
 end
 
+---Initializes a `table<string, Event>` table.
+---@param tbl table<string, table> TODO option annotations
+---@return table<string, Event>
+function SubscribableEvent.InitializeEventTable(tbl)
+	local events = {}
+	for k,v in pairs(tbl) do
+		events[k] = SubscribableEvent:New(k, v.Preventable)
+	end
+	return events
+end
+
 ---Creates a table filled with events from a template.
 ---@param template table<string, {Preventable:boolean?}>
 ---@return table<string, Event>
