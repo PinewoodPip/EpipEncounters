@@ -390,41 +390,6 @@ Data.Game.ATTRIBUTES = {
     Wits = "Wits",
 }
 
--- Links a status to a projectile skill.
-Data.Game.DAMAGING_STATUS_SKILLS = {
-    AMER_ENTHRALLED_1 = "Projectile_AMER_SCRIPT_StatusDamage_Enthralled_1",
-    AMER_ENTHRALLED_2 = "Projectile_AMER_SCRIPT_StatusDamage_Enthralled_1",
-    AMER_ENTHRALLED_3 = "Projectile_AMER_SCRIPT_StatusDamage_Enthralled_1",
-    AMER_SCORCHED = "Projectile_AMER_SCRIPT_StatusDamage_Burning",
-    AMER_CALCIFYING = "Projectile_AMER_SCRIPT_StatusDamage_Calcifying",
-    POISONED = "Projectile_AMER_SCRIPT_StatusDamage_Poisoned",
-    BLEEDING = "Projectile_AMER_SCRIPT_StatusDamage_Bleeding",
-    AMER_HEMORRHAGE = "Projectile_AMER_SCRIPT_StatusDamage_Bleeding",
-    AMER_CORRODING = "Projectile_AMER_SCRIPT_StatusDamage_Acid",
-    ACID = "Projectile_AMER_SCRIPT_StatusDamage_Acid",
-    SUFFOCATING = "Projectile_AMER_SCRIPT_StatusDamage_Suffocating",
-    AMER_BANE = "Projectile_AMER_SCRIPT_StatusDamage_Bane",
-    AMER_THEKRAKEN_FIRE = "Projectile_AMER_SCRIPT_StatusDamage_Kraken_Fire",
-    AMER_THEKRAKEN_WATER = "Projectile_AMER_SCRIPT_StatusDamage_Kraken_Water",
-    AMER_THEKRAKEN_EARTH = "Projectile_AMER_SCRIPT_StatusDamage_Kraken_Earth",
-    AMER_THEKRAKEN_AIR = "Projectile_AMER_SCRIPT_StatusDamage_Kraken_Air",
-    AMER_CHARGED = "Projectile_AMER_SCRIPT_StatusDamage_Charged",
-    AMER_BRITTLE_1 = "Projectile_AMER_SCRIPT_StatusDamage_Brittle",
-    AMER_BRITTLE_2 = "Projectile_AMER_SCRIPT_StatusDamage_Brittle",
-    AMER_BRITTLE_3 = "Projectile_AMER_SCRIPT_StatusDamage_Brittle",
-}
-
-Data.Game.TORTURER_SKILL_OVERRIDES = {
-    Projectile_AMER_SCRIPT_StatusDamage_Burning = "Projectile_AMER_SCRIPT_StatusDamage_Burning_Tort",
-    -- Projectile_AMER_SCRIPT_StatusDamage_Calcifying = "Projectile_AMER_SCRIPT_StatusDamage_Calcifying_Tort",
-    Projectile_AMER_SCRIPT_StatusDamage_Poisoned = "Projectile_AMER_SCRIPT_StatusDamage_Poisoned_Tort",
-    Projectile_AMER_SCRIPT_StatusDamage_Bleeding = "Projectile_AMER_SCRIPT_StatusDamage_Bleeding_Tort",
-    Projectile_AMER_SCRIPT_StatusDamage_Acid = "Projectile_AMER_SCRIPT_StatusDamage_Acid_Tort",
-    Projectile_AMER_SCRIPT_StatusDamage_Corroding_Removed = "Projectile_AMER_SCRIPT_StatusDamage_Corroding_Removed_Tort",
-    Projectile_AMER_SCRIPT_StatusDamage_Suffocating = "Projectile_AMER_SCRIPT_StatusDamage_Suffocating_Tort",
-    Projectile_AMER_SCRIPT_StatusDamage_Charged = "Projectile_AMER_SCRIPT_StatusDamage_Charged_Tort",
-}
-
 Data.Patterns.GUID = "%x%x%x%x%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%-%x%x%x%x%x%x%x%x%x%x%x%x"
 Data.Patterns.GUID_CAPTURE = "_(" .. Data.Patterns.GUID .. ")$"
 Data.Patterns.ARTIFACT_ROOTTEMPLATE_SUBTYPE = "^AMER_UNI_.*_(.*)_" .. Data.Patterns.GUID .. "$"

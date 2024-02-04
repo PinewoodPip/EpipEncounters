@@ -243,80 +243,6 @@ function TooltipAdjustments.ChangeArtifactRarityDisplay(item, tooltip, a, b)
     end
 end
 
-local function OnStatusGetDescription(event)
-    local status = event.Status
-    local char = event.Owner
-    local source = event.StatusSource
-    local params = event.Params
-    local mainParam = params["1"]
-
-    if mainParam ~= "Damage" then return nil end
-    
-    local skillName = Data.Game.DAMAGING_STATUS_SKILLS[status.Name]
-    if not skillName then 
-        TooltipAdjustments:LogWarning("Missing status damage skill for status " .. status.Name)
-        return nil 
-    end
-
-    -- use torturer skills instead, when source char has the talent
-    local torturerSkillOverrides = Data.Game.TORTURER_SKILL_OVERRIDES
-    if torturerSkillOverrides[skillName] and source and source.TALENT_Torturer then
-        skillName = torturerSkillOverrides[skillName]
-    end
-
-    local skill = Ext.Stats.Get(skillName)
-    local level = char.Level -- if no source exists, char is used instead
-    if source then level = source.Level end
-
-    local damage = GetSkillDamage(skill, source, true, false, {0, 0, 0}, {0, 0, 0}, level, true, nil, nil)
-
-    local newTable = {}
-    local newString = ""
-
-    for i,d in pairs(damage:ToTable()) do
-        local damageRange = skill["Damage Range"] -- +/- 50% of the damage multiplier
-        local minDmg = d.Amount * (1 - ((damageRange/2) / 100))
-        local maxDmg = d.Amount * (1 + ((damageRange/2) / 100))
-
-        minDmg = math.max(minDmg, 1)
-        minDmg = math.floor(minDmg)
-
-        maxDmg = math.max(maxDmg, 1)
-        maxDmg = math.floor(maxDmg)
-
-        local color = ""
-        local dName = ""
-        local damageType = Client.UI.Data.DAMAGE_TYPES[d.DamageType]
-        if damageType then 
-            color = damageType.Color
-            dName = damageType.Suffix
-        else
-            TooltipAdjustments:LogWarning("Missing damage type " .. d.DamageType)
-        end
-
-        local dmgString = string.format("<font color='#%s'>%s-%s %s</font>", color, minDmg, maxDmg, dName)
-
-        table.insert(newTable, {Amount = dmgString, DamageType = d.DamageType})
-
-        newString = newString .. dmgString
-        if i ~= #damage:ToTable() then
-            newString = newString .. " + "
-        end
-    end
-
-    event.Description = newString
-end
-
--- Replace "(before damage modifiers)" in status tooltips that we're fixing to show real damage.
-local function OnStatusTooltipRender(_, status, tooltip)
-    if Data.Game.DAMAGING_STATUS_SKILLS[status.StatusId] then
-        for _,v in pairs(tooltip.Data) do
-            v.Label = v.Label:gsub(" %(before damage modifiers%)", "")
-            v.Label = v.Label:gsub(" %(before modifiers%)", "")
-        end
-    end
-end
-
 -- Make +AP Costs red, since it's a negative effect.
 Game.Tooltip.RegisterListener("Status", nil, function(_, _, tooltip)
     local statusBonuses = tooltip:GetElements("StatusBonus")
@@ -541,12 +467,10 @@ local function OnItemTooltipRender(item, tooltip)
     -- TooltipAdjustments.TestElements(item, tooltip)
 end
 
-Ext.Events.StatusGetDescriptionParam:Subscribe(OnStatusGetDescription)
 Ext.Events.SessionLoaded:Subscribe(function()
     Game.Tooltip.RegisterListener("Stat", nil, OnGenericStatTooltipRender)
     Game.Tooltip.RegisterListener("Ability", nil, OnGenericStatTooltipRender)
     Game.Tooltip.RegisterListener("Item", nil, OnItemTooltipRender)
-    Game.Tooltip.RegisterListener("Status", nil, OnStatusTooltipRender)
 end)
 
 -- Align tooltips to the top of the screen.
