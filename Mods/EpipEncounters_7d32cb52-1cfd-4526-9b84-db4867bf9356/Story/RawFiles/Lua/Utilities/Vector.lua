@@ -41,7 +41,13 @@ local _Vector = {
     end,
     __add = function(self, v) return Vector.Sum(self, v) end,
     __sub = function(self, v) return Vector.Subtract(self, v) end,
-    __mul = function(self, v) return Vector.DotProduct(self, v) end,
+    __mul = function(self, v)
+        if type(v) == "number" then
+            return Vector.ScalarProduct(self, v)
+        else
+            return Vector.DotProduct(self, v)
+        end
+    end,
     __unm = function(self) return Vector.Negate(self) end,
     __eq = function (self, v) return Vector.AreEqual(self, v) end,
 }
@@ -141,7 +147,6 @@ function Vector.AreEqual(v1, v2)
         Vector:Error("Vector:AreEqual", "Parameters must not be nil")
     end
     local equal = v1.Arity == v2.Arity
-
     if equal then
         for i,value in ipairs(v1) do
             if value ~= v2[i] then
@@ -149,7 +154,6 @@ function Vector.AreEqual(v1, v2)
             end
         end
     end
-
     return equal
 end
 
