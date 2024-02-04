@@ -466,6 +466,7 @@ LOAD_ORDER = {
             "Epip/TooltipAdjustments/ResourceCostBoostsFix/Client.lua",
             "Epip/TooltipAdjustments/SkillDamageMultipliers/Client.lua",
             "Epip/TooltipAdjustments/ScriptedStatusesDamage/Client.lua",
+            {ScriptSet = "Epip/TooltipAdjustments/AbeyanceBufferDisplay", RequiresEE = true},
         },
     },
 

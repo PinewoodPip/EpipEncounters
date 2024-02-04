@@ -307,6 +307,8 @@ LOAD_ORDER = {
 
     "Epip/AwesomeSoccer/Server.lua",
 
+    {ScriptSet = "Epip/TooltipAdjustments/AbeyanceBufferDisplay", RequiresEE = true},
+
     "Debug/Shared.lua",
     "Debug/Server.lua",
 
