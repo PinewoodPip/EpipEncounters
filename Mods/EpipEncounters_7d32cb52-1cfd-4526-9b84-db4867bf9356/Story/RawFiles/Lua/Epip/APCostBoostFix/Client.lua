@@ -14,12 +14,10 @@ local Fix = Epip.GetFeature("EpipEncounters", "APCostBoostFix") -- Defined in Sh
 ---@param item EclItem
 function Fix.CheckItemUseAttempt(item)
     local char = Client.GetCharacter()
-    local ap, _ = Character.GetActionPoints(char)
-    local apCostBoost = Character.GetDynamicStat(char, "APCostBoost")
-    local apCost = Item.GetUseAPCost(item) + apCostBoost
+    local apCost = Item.GetUseAPCost(item)
 
     -- Request the server to use the item for us if we're affected by the APCostBoost bug.
-    if apCostBoost > 0 and ap >= apCost and Fix:IsEnabled() and not Item.IsEquipment(item) then
+    if Fix.IsCostAffected(apCost) and Fix:IsEnabled() and not Item.IsEquipment(item) then
         Fix:DebugLog("Requesting server to use item", item.DisplayName, char.DisplayName)
 
         Net.PostToServer("EPIPENCOUNTERS_UseItem", {
@@ -29,9 +27,52 @@ function Fix.CheckItemUseAttempt(item)
     end
 end
 
+---Checks whether attacking a character is blocked by the APCostBoost bug and if so, requests the server to have the client character attack the target.
+---@param target EclCharacter|EclItem
+---@return boolean -- `true` if the check succeeded.
+function Fix.CheckAttackAttempt(target)
+    local clientChar = Client.GetCharacter()
+    local previewedTask = clientChar.InputController.PreviewTask
+    local isAttacking = ContextMenu.IsOpen() or (previewedTask and previewedTask.ActionTypeId == Character.CHARACTER_TASKS.ATTACK)
+    if isAttacking then
+        local attackCost = Game.Math.GetCharacterWeaponAPCost(clientChar.Stats) -- TODO this will not consider the GetAttackAPCost extender event due to limitations.
+        if Fix.IsCostAffected(attackCost) then
+            Fix:DebugLog("Requesting server to attack", target.DisplayName)
+
+            Net.PostToServer(Fix.NETMSG_ATTACK, {
+                AttackerNetID = clientChar.NetID,
+                TargetNetID = target.NetID,
+            })
+
+        end
+    end
+    return isAttacking
+end
+
+---Returns whether an AP cost is currently affected by the bug for the client character.
+---@param apCost integer Base AP cost.
+---@return boolean
+function Fix.IsCostAffected(apCost)
+    local char = Client.GetCharacter()
+    local ap, _ = Character.GetActionPoints(char)
+    local apCostBoost = Character.GetDynamicStat(char, "APCostBoost")
+    return apCostBoost > 0 and ap >= (apCost + apCostBoost)
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
+
+-- Handle attempts to attack through mouse controls.
+-- By timing miracles, this actually also works for the context menu "Attack" option.
+Client.Input.Events.KeyPressed:Subscribe(function (ev)
+    if ev.InputID == "left2" then
+        local target = ContextMenu.GetCurrentCharacter() or Pointer.GetCurrentCharacter(nil, true)
+        if target then
+            Fix.CheckAttackAttempt(target)
+        end
+    end
+end)
 
 -- Handle using items from vanilla context menus.
 ContextMenu.Events.EntryPressed:Subscribe(function (ev)

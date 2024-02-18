@@ -68,6 +68,16 @@ Character = {
         -- Unknown if more exist
     },
 
+    -- EclCharacterTask type IDs.
+    -- Incomplete! TODO
+    CHARACTER_TASKS = {
+        MOVE = 0,
+        ATTACK = 2,
+        USE_ITEM = 6,
+        DRAG_ITEM = 7, -- Occurs while dragging items from UIs.
+        MOVE_ITEM = 10,
+    },
+
     ---@type table<tag, Race>
     RACIAL_TAGS = {
         HUMAN = "Human",

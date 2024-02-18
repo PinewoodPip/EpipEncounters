@@ -12,3 +12,11 @@ Net.RegisterListener("EPIPENCOUNTERS_UseItem", function (payload)
 
     Osiris.CharacterUseItem(char, item, "")
 end)
+
+-- Listen for requests to attack.
+Net.RegisterListener(Fix.NETMSG_ATTACK, function (payload)
+    local attacker = Character.Get(payload.AttackerNetID)
+    local target = Character.Get(payload.TargetNetID) or Item.Get(payload.TargetNetID)
+
+    Osiris.CharacterAttack(attacker, target)
+end)
