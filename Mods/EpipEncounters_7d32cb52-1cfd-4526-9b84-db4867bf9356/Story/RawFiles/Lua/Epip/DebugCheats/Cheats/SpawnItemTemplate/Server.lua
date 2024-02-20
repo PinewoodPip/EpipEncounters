@@ -13,6 +13,6 @@ action:Subscribe(function (ev)
     local char = ev.Context.TargetCharacter
     local template = ev.Context.String
     local amount = ev.Context.Amount
-    
+
     Osiris.ItemTemplateAddTo(template, char, amount, 1)
 end)

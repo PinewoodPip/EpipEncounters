@@ -165,7 +165,7 @@ LOAD_ORDER = {
     {ScriptSet = "Epip/DatabaseSync"},
 
     -- Epic Encounters libraries
-    {ScriptSet = "Utilities/EpicEncounters"}, -- Core script needs to be present for now due to IsEnabled() - TODO move it out?
+    {Script = "Utilities/EpicEncounters/Shared.lua"}, -- Core script needs to be present for now due to IsEnabled() - TODO move it out?
     {ScriptSet = "Utilities/EpicEncounters/SourceInfusion", RequiresEE = true},
     {ScriptSet = "Utilities/EpicEncounters/BatteredHarried", RequiresEE = true},
     {
@@ -198,7 +198,7 @@ LOAD_ORDER = {
     "Epip/Server/AI.lua",
     "Epip/Server/ForceStoryPatching.lua",
     "Epip/Server/HotbarServer.lua",
-    {ScriptSet = "Epip/TooltipAdjustments"},
+    {Script = "Epip/TooltipAdjustments/Server.lua"},
     {ScriptSet = "Epip/WorldTooltipOpenContainers"},
 
     -- Chat Commands

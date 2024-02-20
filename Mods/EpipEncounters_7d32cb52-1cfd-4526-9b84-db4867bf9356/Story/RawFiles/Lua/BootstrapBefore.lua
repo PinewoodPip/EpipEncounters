@@ -12,8 +12,8 @@ GAMEMODE_MASK = {
 ---@class ScriptLoadRequest
 ---@field WIP boolean? If `true`, the script will only load in Pip dev mode.
 ---@field Developer boolean? If `true`, the script will only load in developer modes.
----@field ScriptSet path? Should be a folder. If present, its Shared.lua and Client.lua/Server.lua scripts will be loaded based on context.
----@field Script path?
+---@field ScriptSet path? Should be a folder. If present, its Shared.lua and Client.lua/Server.lua scripts will be loaded based on context. Incompatible with Script field - ScriptSet takes priority.
+---@field Script path? Incompatible with ScriptSet field, which takes priority.
 ---@field Scripts (path|ScriptLoadRequest)[]? Will be loaded sequentially, after ScriptSet (if present).
 ---@field RequiresEE boolean? If `true`, the scripts and script set will only be loaded if EE Core is enabled.
 ---@field RequiredMods GUID[]? If present, the request will only be fulfilled if all required mods are loaded.

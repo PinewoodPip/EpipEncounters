@@ -211,7 +211,7 @@ LOAD_ORDER = {
     {ScriptSet = "Epip/DatabaseSync"},
 
     -- Epic Encounters libraries
-    {ScriptSet = "Utilities/EpicEncounters"}, -- Core script needs to be present for now due to IsEnabled() - TODO move it out?
+    {Script = "Utilities/EpicEncounters/Shared.lua"}, -- Core script needs to be present for now due to IsEnabled() - TODO move it out?
     {ScriptSet = "Utilities/EpicEncounters/SourceInfusion", RequiresEE = true},
     {ScriptSet = "Utilities/EpicEncounters/BatteredHarried", RequiresEE = true},
     {
@@ -440,7 +440,7 @@ LOAD_ORDER = {
     "Epip/Client/ControllerMouse.lua",
 
     {
-        ScriptSet = "Epip/TooltipAdjustments",
+        Script = "Epip/TooltipAdjustments/Client.lua",
         Scripts = {
             "Epip/TooltipAdjustments/Client_Scrolling.lua",
             "Epip/TooltipAdjustments/Client_RuneCraftingHint.lua",
@@ -802,7 +802,7 @@ LOAD_ORDER = {
     "Epip/DebugCheats/UI/UI.lua",
     {ScriptSet = "Epip/DebugCheats/Cheats/CopyIdentifier"},
     {ScriptSet = "Epip/DebugCheats/Cheats/CopyPosition"},
-    {ScriptSet = "Epip/DebugCheats/Cheats/SpawnItemTemplate"},
+    {Script = "Epip/DebugCheats/Cheats/SpawnItemTemplate/Shared.lua"},
     {ScriptSet = "Epip/DebugCheats/Cheats/TeleportTo"},
 
     {
