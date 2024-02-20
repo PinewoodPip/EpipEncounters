@@ -160,6 +160,18 @@ local EpicEncountersStats = {
     FreeReaction_Occultist_Max = {},
 }
 
+-- Add EE regen stats to the Vitals category.
+local vitalsCategory = CustomStats.GetCategory("Vitals")
+local newStats = {
+    "RegenLifeCalculated",
+    "RegenPhysicalArmorCalculated",
+    "RegenMagicArmorCalculated",
+}
+for i=#newStats,1,-1 do -- Insert stats in order provided.
+    local id = newStats[i]
+    table.insert(vitalsCategory.Stats, 1, id)
+end
+
 for id,stat in pairs(EpicEncountersStats) do
     stat.DefaultValue = 0
     CustomStats.RegisterStat(id, stat)

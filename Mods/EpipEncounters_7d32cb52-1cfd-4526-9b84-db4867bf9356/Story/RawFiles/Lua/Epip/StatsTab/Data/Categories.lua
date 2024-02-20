@@ -22,9 +22,6 @@ local Categories = {
         Name = CommonStrings.Vitals,
         Behaviour = "GreyOut",
         Stats = {
-            "RegenLifeCalculated",
-            "RegenPhysicalArmorCalculated",
-            "RegenMagicArmorCalculated",
             "LifeSteal",
         },
     },
