@@ -58,7 +58,7 @@ function Selector.Create(ui, id, parent, label, size, options)
     instance:_SetupSubElementsContainers()
     instance:_SetupButtons()
 
-    instance:SetBackgroundSize(size or instance.DEFAULT_SIZE)
+    instance:SetBackgroundSize(size or instance.DEFAULT_SIZE) -- Necessary as __SetupBackground calls base class method.
 
     instance:SetSelectedOption(1)
 
@@ -102,7 +102,7 @@ function Selector:SetSelectedOption(index)
     end
 
     self._CurrentOptionIndex = index
-    self:_UpdateSelection()
+    self:UpdateSelection()
     self.Events.Updated:Throw({
         Index = self._CurrentOptionIndex
     })
@@ -110,6 +110,8 @@ end
 
 ---@override
 function Selector:SetBackgroundSize(size)
+    self._BackgroundSize = size
+
     FormElement.SetBackgroundSize(self, size)
 
     self.Label:SetPositionRelativeToParent("Center")
@@ -118,7 +120,7 @@ function Selector:SetBackgroundSize(size)
 end
 
 ---Updates the render of the selected option and subelements.
-function Selector:_UpdateSelection()
+function Selector:UpdateSelection()
     local option = self.Options[self._CurrentOptionIndex]
     local label = Text.Format("%s: %s", {
         FormatArgs = {
@@ -132,6 +134,9 @@ function Selector:_UpdateSelection()
     for i=1,#self.Options,1 do
         self.SubElementsLists[i]:SetVisible(i == self._CurrentOptionIndex)
     end
+
+    -- Set size override to consider the original background and current category.
+    self:SetSizeOverride(self._BackgroundSize + self.SubElementsLists[self._CurrentOptionIndex]:GetSize())
 end
 
 ---Creates the scrolling buttons.

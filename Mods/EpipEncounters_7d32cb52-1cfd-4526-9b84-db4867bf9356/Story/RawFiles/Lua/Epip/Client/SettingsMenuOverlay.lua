@@ -400,7 +400,7 @@ function UI._RenderCategory(data)
         options[i] = option.Label
     end
 
-    local element = SelectorPrefab.Create(UI, entry.ID, UI.List, entry.Label, UI.FORM_ELEMENT_SIZE, options)
+    local element = SelectorPrefab.Create(UI, entry.ID, data.Parent, entry.Label, UI.FORM_ELEMENT_SIZE, options)
 
     -- Create sub-elements
     for i,option in ipairs(entry.Options) do
@@ -413,6 +413,7 @@ function UI._RenderCategory(data)
 
         container:RepositionElements()
     end
+    element:UpdateSelection() -- Necessary after adding elements to the category lists.
 
     -- When the option changes, we need to reposition the main list,
     -- as the new contents might clip into entries below the selector.
