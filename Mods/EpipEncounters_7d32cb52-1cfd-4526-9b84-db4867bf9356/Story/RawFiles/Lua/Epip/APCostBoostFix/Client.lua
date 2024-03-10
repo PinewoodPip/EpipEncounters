@@ -2,6 +2,7 @@
 local Hotbar = Client.UI.Hotbar
 local Inventory = Client.UI.PartyInventory
 local ContextMenu = Client.UI.ContextMenu
+local Input = Client.Input
 
 ---@class Feature_APCostBoostFix : Feature
 local Fix = Epip.GetFeature("EpipEncounters", "APCostBoostFix") -- Defined in Shared.lua
@@ -65,14 +66,14 @@ end
 
 -- Handle attempts to attack through mouse controls.
 -- By timing miracles, this actually also works for the context menu "Attack" option.
-Client.Input.Events.KeyPressed:Subscribe(function (ev)
+Input.Events.KeyPressed:Subscribe(function (ev)
     if ev.InputID == "left2" then
         local target = ContextMenu.GetCurrentCharacter() or Pointer.GetCurrentCharacter(nil, true)
         if target then
             Fix.CheckAttackAttempt(target)
         end
     end
-end)
+end, {EnabledFunctor = function () return GameState.IsInRunningSession() end})
 
 -- Handle using items from vanilla context menus.
 ContextMenu.Events.EntryPressed:Subscribe(function (ev)
