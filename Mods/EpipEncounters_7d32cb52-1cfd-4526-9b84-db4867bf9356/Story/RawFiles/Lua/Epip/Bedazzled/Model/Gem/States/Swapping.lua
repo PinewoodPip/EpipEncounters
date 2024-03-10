@@ -36,3 +36,8 @@ function State:Update(dt)
         self.Gem:SetState(idleState:Create())
     end
 end
+
+---@override
+function State:IsBeingInteracted()
+    return true
+end

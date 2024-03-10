@@ -10,6 +10,7 @@ local CommonStrings = Text.CommonStrings
 local V = Vector.Create
 local GameModes = {
     Classic = Bedazzled:GetClass("Features.Bedazzled.GameModes.Classic"),
+    Twimstve = Bedazzled:GetClass("Features.Bedazzled.GameModes.Twimstve"),
 }
 
 ---@class Features.Bedazzled.UI.Menu : GenericUI_Instance
@@ -57,6 +58,7 @@ Bedazzled.Settings.GameMode = Bedazzled:RegisterSetting("GameMode", {
     ---@type SettingsLib_Setting_Choice_Entry[]
     Choices = {
         {ID = GameModes.Classic:GetClassName(), Name = GameModes.Classic:GetName()},
+        {ID = GameModes.Twimstve:GetClassName(), Name = GameModes.Twimstve:GetName()},
     },
 })
 
