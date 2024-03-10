@@ -162,7 +162,8 @@ function GemPrefab:Update()
     local x, y = UI.GamePositionToUIPosition(self.Gem.X, gem:GetPosition())
     local gemState = gem.State.ClassName
 
-    if gemState == "Feature_Bedazzled_Board_Gem_State_InvalidSwap" or gemState == "Feature_Bedazzled_Board_Gem_State_Swapping" then
+    -- TODO extract method/hook
+    if gemState == "Feature_Bedazzled_Board_Gem_State_InvalidSwap" or gemState == "Feature_Bedazzled_Board_Gem_State_Swapping" or gemState == "Features.Bedazzled.Board.Gem.State.MoveFrom" then
         -- Handled by tween
     else
         root:SetPosition(x, y)
@@ -476,6 +477,28 @@ function UI.OnGemStateChanged(gem, newState, oldState)
                     Duration = state.Duration / 2,
                 })
             end
+        })
+    elseif newState == "Features.Bedazzled.Board.Gem.State.MoveFrom" then
+        state = gem.State ---@type Features.Bedazzled.Board.Gem.State.MoveFrom
+        local elementX, elementY = UI.GamePositionToUIPosition(element.Gem:GetBoardPosition())
+        local oldX, oldY = UI.GamePositionToUIPosition(state.OriginalPosition:unpack())
+
+        -- Tween the gem to make it look like it's moving.
+        -- In the game logic, this actually happens instantly.
+        -- Match-checks are delayed until the state ends.
+        element:Tween({
+            EventID = "Bedazzled_MoveFrom",
+            FinalValues = {
+                x = elementX,
+                y = elementY,
+            },
+            StartingValues = {
+                x = oldX,
+                y = oldY,
+            },
+            Function = "Cubic",
+            Ease = "EaseOut",
+            Duration = state.Duration,
         })
     end
 end

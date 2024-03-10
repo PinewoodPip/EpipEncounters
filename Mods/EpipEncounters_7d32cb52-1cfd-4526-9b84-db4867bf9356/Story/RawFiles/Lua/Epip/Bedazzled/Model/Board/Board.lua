@@ -407,6 +407,21 @@ function _Board:IsIdle()
     return true
 end
 
+---Returns whether there are gems being interacted with (ex. swapping).
+---@return boolean
+function _Board:IsInteracting()
+    for x=1,self.Size[2],1 do
+        for y=1,self.Size[1],1 do
+            local pos = V(x, y)
+            local gem = self:GetGemAt(pos:unpack())
+            if gem and gem.State:IsBeingInteracted() then
+                return true
+            end
+        end
+    end
+    return false
+end
+
 ---Transforms a gem into another type.
 ---@param gem Feature_Bedazzled_Board_Gem
 ---@param newType string
@@ -529,7 +544,7 @@ function _Board:GetMatchAt(x, y)
     end
 
     local score = 0
-    
+
     -- Fuse star matches into lightning gems
     if #horizontalGems >= 3 and #verticalGems >= 3 then
         local fusionTarget = horizontalGems[#horizontalGems]

@@ -757,9 +757,6 @@ LOAD_ORDER = {
             "Epip/Bedazzled/Model/Board/GemModifierDescriptor.lua",
             "Epip/Bedazzled/Model/Board/Board.lua",
 
-            "Epip/Bedazzled/Model/GameModes/_GameMode.lua",
-            "Epip/Bedazzled/Model/GameModes/Classic.lua",
-
             "Epip/Bedazzled/Model/Gem/States/_State.lua",
             "Epip/Bedazzled/Model/Gem/States/Idle.lua",
             "Epip/Bedazzled/Model/Gem/States/Falling.lua",
@@ -768,6 +765,11 @@ LOAD_ORDER = {
             "Epip/Bedazzled/Model/Gem/States/Consuming.lua",
             "Epip/Bedazzled/Model/Gem/States/Fusing.lua",
             "Epip/Bedazzled/Model/Gem/States/Transforming.lua",
+            "Epip/Bedazzled/Model/Gem/States/MoveFrom.lua",
+
+            "Epip/Bedazzled/Model/GameModes/_GameMode.lua",
+            "Epip/Bedazzled/Model/GameModes/Classic.lua",
+            "Epip/Bedazzled/Model/GameModes/Twimstve.lua",
 
             "Epip/Bedazzled/Model/Modifiers/_Modifier.lua",
             "Epip/Bedazzled/Model/Modifiers/TimeLimit.lua",
@@ -776,6 +778,7 @@ LOAD_ORDER = {
             "Epip/Bedazzled/UI/Menu.lua",
             "Epip/Bedazzled/UI/ModifierOverlays.lua",
             "Epip/Bedazzled/UI/Game/Classic.lua",
+            "Epip/Bedazzled/UI/Game/Twimstve.lua",
         },
     },
     {Script = "Epip/Client/RainbowOverlays.lua"},
