@@ -46,7 +46,7 @@ DRP.Settings = {
     }),
     CustomLine2 = DRP:RegisterSetting("CustomLine2", {
         Type = "String",
-        Name = TSK.Setting_CustomLine1_Name,
+        Name = TSK.Setting_CustomLine2_Name,
         Description = TSK.Setting_CustomLine_Description,
         DefaultValue = "On that Epip grind",
     })
