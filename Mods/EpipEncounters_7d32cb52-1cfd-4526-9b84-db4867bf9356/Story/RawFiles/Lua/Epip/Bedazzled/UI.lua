@@ -56,6 +56,7 @@ UI.Events = {
     GemHovered = SubscribableEvent:New("GemHovered"), ---@type Event<Features.Bedazzled.UI.Game.Events.GemHovered>
     GameStarted = SubscribableEvent:New("GameStarted"), ---@type Event<Empty>
     NewGameRequested = SubscribableEvent:New("NewGameRequested"), ---@type Event<Empty>
+    ClickBoxHovered = SubscribableEvent:New("ClickboxHovered") ---@type Event<Features.Bedazzled.UI.Game.Events.ClickboxHovered>
 }
 
 ---------------------------------------------
@@ -76,6 +77,10 @@ UI.Events = {
 
 ---@class Features.Bedazzled.UI.Game.Events.GemHovered
 ---@field Position Vector2
+
+---@class Features.Bedazzled.UI.Game.Events.ClickboxHovered
+---@field GridPosition Vector2
+---@field Clickbox GenericUI_Element
 
 ---------------------------------------------
 -- GEM PREFAB
@@ -136,6 +141,7 @@ function GemPrefab.Create(ui, id, parent, gem)
     element.Gem = gem
 
     local root = element:CreateElement("Container", "GenericUI_Element_Empty", parent)
+    root:SetMouseMoveEventEnabled(true)
     element.Root = root
     local icon = element:CreateElement("Icon", "GenericUI_Element_IggyIcon", root)
     element.Icon = icon
@@ -706,7 +712,8 @@ function UI._Initialize(board)
                 local clickbox = clickboxGrid:AddChild("Clickbox_" .. i .. "_" .. j, "GenericUI_Element_Color")
                 clickbox:SetColor(UI.CELL_BACKGROUND_COLOR)
                 clickbox:SetSize(UI.CELL_SIZE:unpack())
-    
+                clickbox:SetMouseMoveEventEnabled(true)
+
                 clickbox.Events.MouseDown:Subscribe(function (_)
                     UI.OnGemClickboxClicked(j, board.Size[1] - i + 1)
                 end)
@@ -715,6 +722,12 @@ function UI._Initialize(board)
                 end)
                 clickbox.Events.MouseOut:Subscribe(function (_)
                     UI.OnGemClickboxMouseOut(j, board.Size[1] - i + 1)
+                end)
+                clickbox.Events.MouseMove:Subscribe(function (_)
+                    UI.Events.ClickBoxHovered:Throw({
+                        Clickbox = clickbox,
+                        GridPosition = V(j, board.Size[1] - i + 1),
+                    })
                 end)
             end
         end

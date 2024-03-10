@@ -3,6 +3,7 @@ local Bedazzled = Epip.GetFeature("Feature_Bedazzled")
 local TwimstveGameMode = Bedazzled:GetClass("Features.Bedazzled.GameModes.Twimstve")
 local Textures = Epip.GetFeature("Feature_GenericUITextures")
 local BaseUI = Bedazzled.GameUI
+local V = Vector.Create
 
 ---@class Features.Bedazzled.UI.Game.Twimstve
 local UI = {}
@@ -39,19 +40,24 @@ function UI.ClearSelection()
     UI.Rotator:SetVisible(false)
 end
 
----Sets the selection and shows the rotator.
+---Sets the selection and shows the rotator, if the position is valid.
 ---@param pos Vector2 Top-left grid coordinate of the rotator.
 function UI.SetSelection(pos)
     local rotator = UI.Rotator
-    local element = BaseUI.GetGemElement(UI.Game:GetGemAt(pos:unpack())) -- TODO nil checks
-    local visualPositionX, visualPositionY = element:GetGridPosition()
-    UI.RotatorAnchor = pos
+    local gem = UI.Game:GetGemAt(pos:unpack())
+    if gem and BaseUI.IsInteractable() and gem:IsIdle() and UI.Game:IsAnchorValid(pos) then
+        local element = BaseUI.GetGemElement(gem)
+        local visualPositionX, visualPositionY = element:GetGridPosition()
+        UI.RotatorAnchor = pos
 
-    visualPositionX = visualPositionX - BaseUI.CELL_SIZE[1]/2
-    visualPositionY = visualPositionY - BaseUI.CELL_SIZE[2]/2
+        visualPositionX = visualPositionX - BaseUI.CELL_SIZE[1]/2
+        visualPositionY = visualPositionY - BaseUI.CELL_SIZE[2]/2
 
-    rotator:SetPosition(visualPositionX, visualPositionY)
-    rotator:SetVisible(true)
+        rotator:SetPosition(visualPositionX, visualPositionY)
+        rotator:SetVisible(true)
+    else
+        UI.ClearSelection()
+    end
 end
 
 ---Returns whether the user has a valid selected anchor for the rotator.
@@ -109,8 +115,8 @@ function UI._Initialize()
     BaseUI.Events.GemClicked:Subscribe(function (ev)
         UI._OnGemClickboxClicked(ev.Position)
     end)
-    BaseUI.Events.GemHovered:Subscribe(function (ev)
-        UI._OnGemClickboxHovered(ev.Position)
+    BaseUI.Events.ClickBoxHovered:Subscribe(function (ev)
+        UI._UpdateSelection(ev.Clickbox, ev.GridPosition)
     end)
 
     UI._Initialized = true
@@ -120,19 +126,25 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
----Handle clickboxes being hovered over.
----@param pos Vector2
-function UI._OnGemClickboxHovered(pos)
-    local x, y = pos:unpack()
-    local gem = UI.Game:GetGemAt(x, y)
-    local element = BaseUI.GetGemElement(gem)
+---Updates the selection based on hovered position.
+---@param element GenericUI_Element
+---@param gridPos Vector2
+function UI._UpdateSelection(element, gridPos)
+    local mc = element:GetMovieClip()
+    local x, y = mc.mouseX, mc.mouseY
+    local cellSize = BaseUI.CELL_SIZE
+    local newPos = Vector.Clone(gridPos)
 
-    -- TODO snap within bounds when hovering over last row/column
-    if gem and element and BaseUI.IsInteractable() and gem:IsIdle() and UI.Game:IsAnchorValid(pos) then
-        UI.SetSelection(pos)
-    else
-        UI.ClearSelection()
+    -- Offset the selection based on the quadrant of the cell being hovered
+    if x < cellSize[1] / 2 and y < cellSize[2] / 2 then -- Top-left
+        newPos = V(gridPos[1] - 1, gridPos[2] + 1)
+    elseif x > cellSize[1] / 2 and y < cellSize[2] / 2 then -- Top-right
+        newPos = V(gridPos[1], gridPos[2] + 1)
+    elseif x < cellSize[1] / 2 and y > cellSize[2] / 2 then -- Bottom-left
+        newPos = V(gridPos[1] - 1, gridPos[2])
     end
+
+    UI.SetSelection(newPos)
 end
 
 ---Handle clickboxes being clicked.
