@@ -8,6 +8,16 @@ Bedazzled:RegisterClass("Features.Bedazzled.GameMode", Game, {"Feature_Bedazzled
 Interfaces.Apply(Game, "I_Describable")
 
 ---------------------------------------------
+-- EVENTS
+---------------------------------------------
+
+---@class Features.Bedazzled.GameMode.Events.MovePerformed
+---@field Position Vector2
+---@field InteractedGems Feature_Bedazzled_Board_Gem[]
+
+---@class Features.Bedazzled.GameMode.Events.InvalidMovePerformed : Features.Bedazzled.GameMode.Events.MovePerformed
+
+---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
@@ -15,4 +25,19 @@ Interfaces.Apply(Game, "I_Describable")
 ---@return TextLib_TranslatedString
 function Game.GetLongName()
     return Game.LongName
+end
+
+---Throws a MovePerformed event and increments move counter.
+---@param ev Features.Bedazzled.GameMode.Events.MovePerformed
+function Game:ReportMove(ev)
+    -- Reset cascade counter
+    self.MatchesSinceLastMove = 0
+
+    self.Events.MovePerformed:Throw(ev)
+end
+
+---Throws a InvalidMovePerformed event.
+---@param ev Features.Bedazzled.GameMode.Events.InvalidMovePerformed
+function Game:ReportInvalidMove(ev)
+    self.Events.InvalidMovePerformed:Throw(ev)
 end

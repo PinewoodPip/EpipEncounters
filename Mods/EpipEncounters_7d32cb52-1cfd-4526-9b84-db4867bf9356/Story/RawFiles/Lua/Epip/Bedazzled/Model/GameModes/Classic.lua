@@ -43,12 +43,9 @@ function Game:Swap(position1, position2)
             gem1:SetState(swappingState:Create(gem2))
             gem2:SetState(swappingState:Create(gem1))
 
-            -- Reset cascade counter
-            self.MatchesSinceLastMove = 0
-
-            self.Events.SwapPerformed:Throw({
-                Gem1 = gem1,
-                Gem2 = gem2,
+            self:ReportMove({
+                Position = position1,
+                InteractedGems = {gem1, gem2},
             })
         elseif gem1:IsAdjacentTo(gem2) and gem1:IsIdle() and gem2:IsIdle() then -- Enter invalid swap busy state - only if gems are adjacent and idle
             local invalidSwapState = Bedazzled.GetGemStateClass("Feature_Bedazzled_Board_Gem_State_InvalidSwap")
@@ -56,9 +53,9 @@ function Game:Swap(position1, position2)
             gem1:SetState(invalidSwapState:Create(gem2))
             gem2:SetState(invalidSwapState:Create(gem1))
 
-            self.Events.InvalidSwapPerformed:Throw({
-                Gem1 = gem1,
-                Gem2 = gem2,
+            self:ReportInvalidMove({
+                Position = position1,
+                InteractedGems = {gem1, gem2},
             })
         end
     end

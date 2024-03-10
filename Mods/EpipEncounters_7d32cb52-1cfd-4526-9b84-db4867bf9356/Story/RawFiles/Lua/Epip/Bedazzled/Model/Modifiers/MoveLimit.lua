@@ -54,7 +54,7 @@ function MoveLimit:Apply(board)
     self.RemainingMoves = self.Settings.MoveLimit
 
     -- Tick down the timer each update.
-    board.Events.SwapPerformed:Subscribe(function (_)
+    board.Events.MovePerformed:Subscribe(function (_)
         self.RemainingMoves = self.RemainingMoves - 1 -- Should never become negative as interaction is disabled at 0 moves remaining.
     end)
 

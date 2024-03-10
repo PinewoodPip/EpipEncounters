@@ -77,7 +77,7 @@ function Overlays._SetupMoveLimitDisplay(modifier)
     UpdateLabel()
 
     -- Update the label after successful moves.
-    UI.Board.Events.SwapPerformed:Subscribe(function (_)
+    UI.Board.Events.MovePerformed:Subscribe(function (_)
         UpdateLabel()
     end, {Priority = -1}) -- Not strictly necessary as the modifier should've been applied prior to this.
 end
