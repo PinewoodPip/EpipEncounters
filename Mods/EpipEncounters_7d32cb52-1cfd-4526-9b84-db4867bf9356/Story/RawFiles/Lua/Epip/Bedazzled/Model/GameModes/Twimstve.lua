@@ -51,6 +51,11 @@ function Game:Rotate(anchor, direction)
         gem.Modifiers = newState.Modifiers
         gem:SetState(GemStates.MoveFrom:Create(newState.OriginalPosition))
     end
+
+    self:ReportMove({
+        Position = anchor,
+        InteractedGems = gems,
+    })
 end
 
 ---Returns whether gems can be rotated at an anchor.

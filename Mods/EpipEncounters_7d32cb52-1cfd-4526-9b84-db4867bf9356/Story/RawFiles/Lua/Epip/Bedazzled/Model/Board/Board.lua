@@ -21,11 +21,12 @@ local _Board = {
     Events = {
         Updated = {}, ---@type Event<Feature_Bedazzled_Board_Event_Updated>
         GemAdded = {}, ---@type Event<Feature_Bedazzled_Board_Event_GemAdded>
-        SwapPerformed = {}, ---@type Event<Features.Bedazzled.Board.Events.SwapPerformed>
         MatchExecuted = {}, ---@type Event<Feature_Bedazzled_Board_Event_MatchExecuted>
-        InvalidSwapPerformed = {}, ---@type Event<Feature_Bedazzled_Board_Event_InvalidSwapPerformed>
         GameOver = {}, ---@type Event<Feature_Bedazzled_Board_Event_GameOver>
         GemTransformed = {}, ---@type Event<Feature_Bedazzled_Board_Event_GemTransformed>
+        -- TODO move these to GameMode class
+        MovePerformed = {}, ---@type Event<Features.Bedazzled.GameMode.Events.MovePerformed>
+        InvalidMovePerformed = {}, ---@type Event<Features.Bedazzled.GameMode.Events.InvalidMovePerformed>
     },
     Hooks = {
         IsInteractable = {}, ---@type Hook<Features.Bedazzled.Board.Hooks.IsInteractable>
@@ -46,14 +47,6 @@ Bedazzled:RegisterClass("Feature_Bedazzled_Board", _Board)
 
 ---@class Feature_Bedazzled_Board_Event_MatchExecuted
 ---@field Match Feature_Bedazzled_Match
-
----@class Features.Bedazzled.Board.Events.SwapPerformed
----@field Gem1 Feature_Bedazzled_Board_Gem
----@field Gem2 Feature_Bedazzled_Board_Gem
-
----@class Feature_Bedazzled_Board_Event_InvalidSwapPerformed
----@field Gem1 Feature_Bedazzled_Board_Gem
----@field Gem2 Feature_Bedazzled_Board_Gem
 
 ---@class Feature_Bedazzled_Board_Event_GameOver
 ---@field Score integer

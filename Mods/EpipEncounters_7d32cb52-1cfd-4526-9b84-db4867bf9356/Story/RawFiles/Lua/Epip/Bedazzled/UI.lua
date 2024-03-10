@@ -250,7 +250,7 @@ function UI.Setup(board)
     if oldBoard then
         oldBoard.Events.Updated:Unsubscribe("BedazzledUI_Updated")
         oldBoard.Events.MatchExecuted:Unsubscribe("BedazzledUI_MatchExecuted")
-        oldBoard.Events.InvalidSwapPerformed:Unsubscribe("BedazzledUI_InvalidSwapPerformed")
+        oldBoard.Events.InvalidMovePerformed:Unsubscribe("BedazzledUI_InvalidMovePerformed")
         oldBoard.Events.GemAdded:Unsubscribe("BedazzledUI_GemAdded")
         oldBoard.Events.GameOver:Unsubscribe("BedazzledUI_GameOver")
         oldBoard.Events.GemTransformed:Unsubscribe("BedazzledUI_GemTransformed")
@@ -271,9 +271,9 @@ function UI.Setup(board)
     end, {StringID = "BedazzledUI_MatchExecuted"})
 
     -- Play sound for invalid swaps.
-    board.Events.InvalidSwapPerformed:Subscribe(function (_)
+    board.Events.InvalidMovePerformed:Subscribe(function (_)
         UI:PlaySound(UI.SOUNDS.INVALID_MATCH)
-    end, {StringID = "BedazzledUI_InvalidSwapPerformed"})
+    end, {StringID = "BedazzledUI_InvalidMovePerformed"})
 
     board.Events.GemAdded:Subscribe(function (ev)
         local gem = ev.Gem
