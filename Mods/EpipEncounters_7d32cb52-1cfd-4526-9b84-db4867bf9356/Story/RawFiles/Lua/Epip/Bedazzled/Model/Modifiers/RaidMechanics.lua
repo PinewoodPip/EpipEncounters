@@ -1,5 +1,7 @@
 
 local Bedazzled = Epip.GetFeature("Feature_Bedazzled")
+local Match = Bedazzled:GetClass("Feature_Bedazzled_Match")
+local V = Vector.Create
 
 ---@class Features.Bedazzled.Board.Modifiers.RaidMechanics : Features.Bedazzled.Board.Modifier
 ---@field Settings Features.Bedazzled.Board.Modifiers.RaidMechanics.Config
@@ -108,13 +110,20 @@ function RaidMechanics:Apply(board)
     -- End the game if a game over is queued and the board becomes idle.
     local updatedSubscriberID = "Modifier.RaidMechanics"
     board.Events.Updated:Subscribe(function (_)
-        if board:IsIdle() then
+        if board:IsIdle() and board:IsRunning() then
             for _,gem in ipairs(board:GetGems()) do
                 ---@cast gem Features.Bedazzled.Board.Modifiers.RaidMechanics.Gem
 
                 -- End the game once any gem timer reaches 0.
                 if gem.EnrageTimer and gem.EnrageTimer <= 0 then
                     board:EndGame(TSK.GameOver_Reason)
+
+                    -- Blow up all gems on the board. Spectacularly.
+                    local explosion = Match.Create(V(1, 1), Match.REASONS.EXPLOSION)
+                    explosion:SetScore(0)
+                    explosion:AddGems(board:GetGems())
+                    board:ConsumeMatch(explosion)
+
                     board.Events.Updated:Unsubscribe(updatedSubscriberID)
                     break
                 end

@@ -852,7 +852,10 @@ function UI.OnMatchExecuted(ev)
         UI:PlaySound(UI.SOUNDS.MATCH)
     end
 
-    UI.CreateScoreFlyover(ev.Match)
+    -- Only create flyovers for matches that affect score.
+    if ev.Match.Score ~= 0 then
+        UI.CreateScoreFlyover(ev.Match)
+    end
 end
 
 ---Forwards event to request a new game.
