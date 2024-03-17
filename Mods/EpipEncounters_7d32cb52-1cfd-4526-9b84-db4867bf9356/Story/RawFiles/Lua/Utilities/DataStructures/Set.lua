@@ -73,7 +73,10 @@ end
 ---Creates a new set with the same elements.
 ---@return DataStructures_Set
 function Set:Clone()
-    local newSet = Set.Create(self._Elements) -- Safe due to Create() using Add() per-element.
+    local newSet = Set.Create()
+    for element,_ in pairs(self._Elements) do
+        newSet:Add(element)
+    end
     return newSet
 end
 
