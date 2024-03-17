@@ -40,6 +40,16 @@ local TSK = {
         Text = "TODO",
         ContextDescription = "Tooltip for game mode setting",
     }),
+    Setting_RaidMechanics_Intensity_Name = Bedazzled:RegisterTranslatedString({
+        Handle = "hde82ec74g19fcg4737g90b8g4b2ab8dd10ad",
+        Text = "Raid Level",
+        ContextDescription = [[Setting name for "Raid Mechanics" modifier intensity]],
+    }),
+    Setting_RaidMechanics_Intensity_Description = Bedazzled:RegisterTranslatedString({
+        Handle = "hb54abc37gfadeg4ac4gbeccgaf652d4bf6e3",
+        Text = "Enables MMO-style raid mechanics.<br>If >0, gems with MMO enrage timers will periodically appear with increasing frequency; if left unmatched, they will bring a fair and balanced instant game over.<br>Higher levels increase spawn frequency.",
+        ContextDescription = [[Tooltip for "Raid Level" setting]],
+    }),
 }
 
 UI.Events.RenderSettings = SubscribableEvent:New("RenderSettings") ---@type Event<Empty>
@@ -323,6 +333,7 @@ end)
 local Modifiers = {
     TimeLimit = Bedazzled:GetClass("Features.Bedazzled.Board.Modifiers.TimeLimit"),
     MoveLimit = Bedazzled:GetClass("Features.Bedazzled.Board.Modifiers.MoveLimit"),
+    RaidMechanics = Bedazzled:GetClass("Features.Bedazzled.Board.Modifiers.RaidMechanics"),
 }
 local ModifierSettings = {
     TimeLimit_Time = Bedazzled:RegisterSetting("Modifiers.TimeLimit.Time", {
@@ -348,11 +359,23 @@ local ModifierSettings = {
         DefaultValue = 0,
         PreferredRepresentation = "Spinner", ---@type Features.SettingWidgets.PreferredRepresentation.ClampedNumber
     }),
+    RaidMechanics_Intensity = Bedazzled:RegisterSetting("Modifiers.RaidMechanics.Intensity", {
+        Type = "ClampedNumber",
+        Name = TSK.Setting_RaidMechanics_Intensity_Name,
+        Description = TSK.Setting_RaidMechanics_Intensity_Description,
+        Min = 0,
+        Max = Modifiers.RaidMechanics.MAX_INTENSITY,
+        Step = 1,
+        HideNumbers = false,
+        DefaultValue = 0,
+        PreferredRepresentation = "Spinner", ---@type Features.SettingWidgets.PreferredRepresentation.ClampedNumber
+    })
 }
 -- In order of rendering.
 local SettingsOrder = {
     ModifierSettings.TimeLimit_Time,
     ModifierSettings.MoveLimit_Moves,
+    ModifierSettings.RaidMechanics_Intensity,
 }
 UI.Events.RenderSettings:Subscribe(function (_)
     for _,setting in ipairs(SettingsOrder) do
@@ -373,13 +396,20 @@ UI.Hooks.GetModifierConfiguration:Subscribe(function (ev)
                 TimeLimit = timeLimit,
             }
         end
-
     elseif modClassName == Modifiers.MoveLimit:GetClassName() then -- Move limit modifier
         local moveLimit = ModifierSettings.MoveLimit_Moves:GetValue()
         if moveLimit > 0 then
             ---@type Features.Bedazzled.Board.Modifiers.MoveLimit.Config
             ev.Config = {
                 MoveLimit = moveLimit,
+            }
+        end
+    elseif modClassName == Modifiers.RaidMechanics:GetClassName() then -- Raid Mechanics modifier
+        local intensity = ModifierSettings.RaidMechanics_Intensity:GetValue()
+        if intensity > 0 then
+            ---@type Features.Bedazzled.Board.Modifiers.RaidMechanics.Config
+            ev.Config = {
+                Intensity = intensity,
             }
         end
     end
