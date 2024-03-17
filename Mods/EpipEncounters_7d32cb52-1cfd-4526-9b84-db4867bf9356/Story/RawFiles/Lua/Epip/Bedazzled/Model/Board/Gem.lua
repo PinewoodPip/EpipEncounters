@@ -15,6 +15,11 @@ local _BoardGem = {
 }
 Bedazzled:RegisterClass("Feature_Bedazzled_Board_Gem", _BoardGem)
 
+--- TODO refactor to remove these fields from the Gem class itself
+---@class Features.Bedazzled.Board.Gem.Data
+---@field Type string
+---@field Modifiers DataStructures_Set
+
 ---@class Feature_Bedazzled_Board_Gem_Event_StateChanged
 ---@field NewState Feature_Bedazzled_Board_Gem_StateClassName
 ---@field OldState Feature_Bedazzled_Board_Gem_State

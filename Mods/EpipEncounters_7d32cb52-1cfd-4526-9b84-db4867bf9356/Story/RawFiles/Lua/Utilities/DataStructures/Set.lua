@@ -70,6 +70,13 @@ function Set:Clear()
     end
 end
 
+---Creates a new set with the same elements.
+---@return DataStructures_Set
+function Set:Clone()
+    local newSet = Set.Create(self._Elements) -- Safe due to Create() using Add() per-element.
+    return newSet
+end
+
 ---@iterator
 function Set.Iterator(self)
     local key

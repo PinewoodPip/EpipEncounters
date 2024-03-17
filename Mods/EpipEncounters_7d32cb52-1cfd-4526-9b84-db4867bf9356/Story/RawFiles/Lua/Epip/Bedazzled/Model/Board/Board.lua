@@ -27,9 +27,11 @@ local _Board = {
         -- TODO move these to GameMode class
         MovePerformed = {}, ---@type Event<Features.Bedazzled.GameMode.Events.MovePerformed>
         InvalidMovePerformed = {}, ---@type Event<Features.Bedazzled.GameMode.Events.InvalidMovePerformed>
+        GemDataApplied = {}, ---@type Event<Features.Bedazzled.Board.Events.GemDataApplied>
     },
     Hooks = {
         IsInteractable = {}, ---@type Hook<Features.Bedazzled.Board.Hooks.IsInteractable>
+        GetGemData = {}, ---@type Event<Features.Bedazzled.Board.Hooks.GetGemData>
     },
 }
 Bedazzled:RegisterClass("Feature_Bedazzled_Board", _Board)
@@ -57,8 +59,16 @@ Bedazzled:RegisterClass("Feature_Bedazzled_Board", _Board)
 ---@field OldType string
 ---@field NewType string
 
+---@class Features.Bedazzled.Board.Events.GemDataApplied
+---@field Gem Feature_Bedazzled_Board_Gem
+---@field Data Features.Bedazzled.Board.Gem.Data
+
 ---@class Features.Bedazzled.Board.Hooks.IsInteractable
 ---@field Interactable boolean Hookable. Defaults to `true`.
+
+---@class Features.Bedazzled.Board.Hooks.GetGemData
+---@field Gem Feature_Bedazzled_Board_Gem
+---@field Data Features.Bedazzled.Board.Gem.Data Hookable.
 
 ---------------------------------------------
 -- METHODS
@@ -433,6 +443,37 @@ function _Board:TransformGem(gem, newType)
         Gem = gem,
         OldType = oldType,
         NewType = newType,
+    })
+end
+
+---Returns the game data for a gem.
+---@see Features.Bedazzled.Board.Hooks.GetGemData
+---@param gem Feature_Bedazzled_Board_Gem
+---@return Features.Bedazzled.Board.Gem.Data
+function _Board:GetGemData(gem)
+    -- TODO move to Gem
+    ---@type Features.Bedazzled.Board.Gem.Data
+    local data = {
+        Type = gem.Type,
+        Modifiers = gem.Modifiers,
+    }
+    data = self.Hooks.GetGemData:Throw({
+        Gem = gem,
+        Data = data,
+    }).Data
+    return data
+end
+
+---Applies data properties onto a gem.
+---@param gem Feature_Bedazzled_Board_Gem
+---@param data Features.Bedazzled.Board.Gem.Data
+function _Board:ApplyGemData(gem, data)
+    gem.Type = data.Type
+    gem.Modifiers = data.Modifiers:Clone()
+
+    self.Events.GemDataApplied:Throw({
+        Gem = gem,
+        Data = data,
     })
 end
 
