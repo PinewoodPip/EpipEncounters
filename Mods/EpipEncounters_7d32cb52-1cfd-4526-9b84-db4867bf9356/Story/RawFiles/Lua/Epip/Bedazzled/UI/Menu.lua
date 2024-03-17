@@ -30,6 +30,16 @@ local TSK = {
         Text = "High-Scores",
         ContextDescription = "Label for highscores panel",
     }),
+    Label_NoHighScores = Bedazzled:RegisterTranslatedString({
+        Handle = "h828b925fg74e3g4ef5g83ecgc3577fd1e8df",
+        Text = "No scores yet!",
+        ContextDescription = [[Label for highscores panel, when there are not scores yet]],
+    }),
+    Label_Score = Bedazzled:RegisterTranslatedString({
+        Handle = "h0d904d22g8e9ag4450gaf2dg8236ba3b865a",
+        Text = "%d. %s pts",
+        ContextDescription = [[Label for a score entry. Params are ranking and score. "pts" at the end is abbreviation for "points"]],
+    }),
     Setting_GameMode_Name = Bedazzled:RegisterTranslatedString({
         Handle = "hc514c6a1g4fccg4d58g8d43g95ab5885182a",
         Text = "Game Mode",
@@ -132,29 +142,38 @@ function UI.UpdateHighScoresPanel()
     local scores = Bedazzled.GetHighScores(gamemode, mods)
     local list = UI.HighScoresList
     list:Clear()
-    for i,score in ipairs(scores) do -- Render scores
-        local label = Text.Format("%d. %s", {
-            FormatArgs = {
-                i,
-                Text.AddPadding(tostring(score.Score), 50, " ", "front")
-            },
+
+    -- Render scores
+    if scores[1] then
+        for i,score in ipairs(scores) do
+            local label = TSK.Label_Score:Format({
+                FormatArgs = {
+                    i,
+                    Text.AddPadding(tostring(score.Score), 50, " ", "front")
+                },
+                Color = Color.BLACK,
+            })
+            local text = TextPrefab.Create(UI, "HighScores_" .. tostring(i), list, label, "Left", V(300, 32))
+            text:SetMouseEnabled(true) -- Required for tooltips.
+
+            -- Show date of the score as tooltip
+            local date = Client.UI.Time.GetDateFromString(score.Date)
+            local dateLabel = Text.Format("%s/%s/%s @ %s:%s", {
+                FormatArgs = {
+                    date.Day,
+                    date.Month,
+                    date.Year,
+                    Text.AddPadding(tostring(date.Hour), 2, "0"),
+                    Text.AddPadding(tostring(date.Minute), 2, "0"),
+                },
+            })
+            text:SetTooltip("Simple", dateLabel)
+        end
+    else
+        local label = TSK.Label_NoHighScores:Format({
             Color = Color.BLACK,
         })
-        local text = TextPrefab.Create(UI, "HighScores_" .. tostring(i), list, label, "Left", V(300, 32))
-        text:SetMouseEnabled(true) -- Required for tooltips.
-
-        -- Show date of the score as tooltip
-        local date = Client.UI.Time.GetDateFromString(score.Date)
-        local dateLabel = Text.Format("%s/%s/%s @ %s:%s", {
-            FormatArgs = {
-                date.Day,
-                date.Month,
-                date.Year,
-                Text.AddPadding(tostring(date.Hour), 2, "0"),
-                Text.AddPadding(tostring(date.Minute), 2, "0"),
-            },
-        })
-        text:SetTooltip("Simple", dateLabel)
+        TextPrefab.Create(UI, "HighScores_Empty", list, label, "Center", V(270, 32))
     end
 end
 
