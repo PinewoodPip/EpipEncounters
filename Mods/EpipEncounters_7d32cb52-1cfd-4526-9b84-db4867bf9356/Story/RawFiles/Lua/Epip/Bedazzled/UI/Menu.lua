@@ -37,7 +37,7 @@ local TSK = {
     }),
     Setting_GameMode_Description = Bedazzled:RegisterTranslatedString({
         Handle = "h79eeb20cg10b4g4b59ga41dg4e94623fd506",
-        Text = "TODO",
+        Text = "Determines the base rules of the game and default modifier settings.<br><br>- Classic: swap adjacent gems to create matches. The original experience.<br>- Twimst've: rotate groups of 2x2 gems to create matches. The washing machine experience.",
         ContextDescription = "Tooltip for game mode setting",
     }),
     Setting_RaidMechanics_Intensity_Name = Bedazzled:RegisterTranslatedString({
