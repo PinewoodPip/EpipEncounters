@@ -40,15 +40,14 @@ function Game:Rotate(anchor, direction)
     local indexDirection = direction == "Anti-clockwise" and 1 or -1
     for i=(direction == "Anti-clockwise" and 1 or #gems),(direction == "Anti-clockwise" and #gems or 1),indexDirection do
         local nextGem = gems[i + indexDirection] or lastGem
-        newStates[i] = {Type = nextGem.Type, Modifiers = nextGem.Modifiers, OriginalPosition = V(nextGem:GetBoardPosition())}
+        newStates[i] = {Data = self:GetGemData(nextGem), Type = nextGem.Type, Modifiers = nextGem.Modifiers, OriginalPosition = V(nextGem:GetBoardPosition())}
     end
 
     -- TODO check for validity for rotate?
     for i=1,#newStates,1 do
         local gem = gems[i]
         local newState = newStates[i]
-        gem.Type = newState.Type
-        gem.Modifiers = newState.Modifiers
+        self:ApplyGemData(gem, newState.Data)
         gem:SetState(GemStates.MoveFrom:Create(newState.OriginalPosition))
     end
 

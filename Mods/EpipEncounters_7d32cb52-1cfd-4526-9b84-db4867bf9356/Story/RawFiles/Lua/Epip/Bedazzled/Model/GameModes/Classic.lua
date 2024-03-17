@@ -117,6 +117,7 @@ end
 ---@param gem1 Feature_Bedazzled_Board_Gem
 ---@param gem2 Feature_Bedazzled_Board_Gem
 function Game:_SwapGems(gem1, gem2)
-    gem1.Type, gem2.Type = gem2.Type, gem1.Type
-    gem1.Modifiers, gem2.Modifiers = gem2.Modifiers, gem1.Modifiers
+    local data1, data2 = self:GetGemData(gem1), self:GetGemData(gem2)
+    self:ApplyGemData(gem1, data2)
+    self:ApplyGemData(gem2, data1)
 end
