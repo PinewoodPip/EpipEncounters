@@ -13,6 +13,7 @@ local V = Vector.Create
 ---@field _Paused boolean
 ---@field Score integer
 ---@field MovesMade integer
+---@field GemsSpawned integer Total amount of gems spawned naturally.
 ---@field MatchesSinceLastMove integer
 ---@field Size Vector2
 ---@field Columns Feature_Bedazzled_Board_Column[]
@@ -85,6 +86,7 @@ function _Board:Create(size)
         _QueuedMatches = {},
         Score = 0,
         MovesMade = 0,
+        GemsSpawned = 0,
         MatchesSinceLastMove = 0,
         Size = size,
         Columns = {},
@@ -176,6 +178,8 @@ function _Board:Update(dt)
             end, {StringID = "DefaultBoardListener"})
 
             column:InsertGem(gem)
+
+            self.GemsSpawned = self.GemsSpawned + 1
 
             self.Events.GemAdded:Throw({
                 Gem = gem,

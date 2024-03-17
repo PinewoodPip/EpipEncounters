@@ -69,10 +69,14 @@ end
 
 ---Increments the progress towards the next enrage gem spawn.
 function RaidMechanics:IncrementProgress()
-    local intensity = self.Settings.Intensity
-    local intensityMultiplier = intensity / self.MAX_INTENSITY
-    local newProgress = 0.05 * intensityMultiplier
-    self.ProgressUntilNextSpawn = self.ProgressUntilNextSpawn + newProgress
+    local maxGemsOnBoard = self.Board.Size[1] * self.Board.Size[2]
+    -- Intensity cannot be gained from the gem spawns at the start of the game.
+    if self.Board.GemsSpawned > maxGemsOnBoard then
+        local intensity = self.Settings.Intensity
+        local intensityMultiplier = intensity / self.MAX_INTENSITY
+        local newProgress = 0.05 * intensityMultiplier
+        self.ProgressUntilNextSpawn = self.ProgressUntilNextSpawn + newProgress
+    end
 end
 
 ---Returns the timer to use for newly-spawned enrage gems.
