@@ -774,6 +774,7 @@ LOAD_ORDER = {
             "Epip/Bedazzled/Model/Modifiers/_Modifier.lua",
             "Epip/Bedazzled/Model/Modifiers/TimeLimit.lua",
             "Epip/Bedazzled/Model/Modifiers/MoveLimit.lua",
+            "Epip/Bedazzled/Model/Modifiers/RaidMechanics.lua",
 
             "Epip/Bedazzled/UI/Menu.lua",
             "Epip/Bedazzled/UI/ModifierOverlays.lua",

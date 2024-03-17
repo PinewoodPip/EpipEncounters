@@ -30,6 +30,8 @@ end
 ---Throws a MovePerformed event and increments move counter.
 ---@param ev Features.Bedazzled.GameMode.Events.MovePerformed
 function Game:ReportMove(ev)
+    self.MovesMade = self.MovesMade + 1
+
     -- Reset cascade counter
     self.MatchesSinceLastMove = 0
 

@@ -12,6 +12,7 @@ local V = Vector.Create
 ---@field _IsRunning boolean
 ---@field _Paused boolean
 ---@field Score integer
+---@field MovesMade integer
 ---@field MatchesSinceLastMove integer
 ---@field Size Vector2
 ---@field Columns Feature_Bedazzled_Board_Column[]
@@ -83,6 +84,7 @@ function _Board:Create(size)
         _IsRunning = true,
         _QueuedMatches = {},
         Score = 0,
+        MovesMade = 0,
         MatchesSinceLastMove = 0,
         Size = size,
         Columns = {},
@@ -353,6 +355,18 @@ function _Board:GetGemAt(x, y)
     local column = self.Columns[x]
 
     return column and column.Gems[y]
+end
+
+---Returns all gems currently on the board.
+---@return Feature_Bedazzled_Board_Gem[]
+function _Board:GetGems()
+    local gems = {} ---@type Feature_Bedazzled_Board_Gem[]
+    for _,column in ipairs(self.Columns) do
+        for _,gem in ipairs(column.Gems) do
+            table.insert(gems, gem)
+        end
+    end
+    return gems
 end
 
 ---Sets whether the board is paused.
