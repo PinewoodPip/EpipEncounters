@@ -106,32 +106,48 @@ function RaidMechanics:Apply(board)
         end
     end)
 
-    -- Prevent moves when a game over from the modifier is queued.
+    -- Prevent moves when an enraged gem's timer is at 0.
+    -- This does not necessarily mean that gem will end the game,
+    -- as it might be about to be matched.
     board.Hooks.IsInteractable:Subscribe(function (ev)
-        ev.Interactable = ev.Interactable and not self._Finished
+        if self._Finished then
+            ev.Interactable = false
+        else
+            for _,gem in ipairs(board:GetGems()) do
+                ---@cast gem Features.Bedazzled.Board.Modifiers.RaidMechanics.Gem
+                if gem.EnrageTimer and gem.EnrageTimer <= 0 then
+                    ev.Interactable = false
+                    break
+                end
+            end
+        end
     end)
 
     -- End the game if a game over is queued and the board becomes idle.
     local updatedSubscriberID = "Modifier.RaidMechanics"
     board.Events.Updated:Subscribe(function (_)
-        if board:IsIdle() and board:IsRunning() then
+        -- Queue ending the game once any gem timer reaches 0 and the board is idle.
+        if board:IsRunning() and board:IsIdle() then
             for _,gem in ipairs(board:GetGems()) do
                 ---@cast gem Features.Bedazzled.Board.Modifiers.RaidMechanics.Gem
 
-                -- End the game once any gem timer reaches 0.
                 if gem.EnrageTimer and gem.EnrageTimer <= 0 then
-                    board:EndGame(TSK.GameOver_Reason)
-
-                    -- Blow up all gems on the board. Spectacularly.
-                    local explosion = Match.Create(V(1, 1), Match.REASONS.EXPLOSION)
-                    explosion:SetScore(0)
-                    explosion:AddGems(board:GetGems())
-                    board:ConsumeMatch(explosion)
-
-                    board.Events.Updated:Unsubscribe(updatedSubscriberID)
+                    self._Finished = true
                     break
                 end
             end
+        end
+
+        if self._Finished then
+            board:EndGame(TSK.GameOver_Reason)
+
+            -- Blow up all gems on the board. Spectacularly.
+            local explosion = Match.Create(V(1, 1), Match.REASONS.EXPLOSION)
+            explosion:SetScore(0)
+            explosion:AddGems(board:GetGems())
+            board:ConsumeMatch(explosion)
+
+            board.Events.Updated:Unsubscribe(updatedSubscriberID)
         end
     end, {StringID = updatedSubscriberID})
 
