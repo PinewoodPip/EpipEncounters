@@ -353,6 +353,7 @@ local Modifiers = {
     TimeLimit = Bedazzled:GetClass("Features.Bedazzled.Board.Modifiers.TimeLimit"),
     MoveLimit = Bedazzled:GetClass("Features.Bedazzled.Board.Modifiers.MoveLimit"),
     RaidMechanics = Bedazzled:GetClass("Features.Bedazzled.Board.Modifiers.RaidMechanics"),
+    HyenaMode = Bedazzled:GetClass("Features.Bedazzled.Board.Modifiers.HyenaMode"),
 }
 local ModifierSettings = {
     TimeLimit_Time = Bedazzled:RegisterSetting("Modifiers.TimeLimit.Time", {
@@ -388,13 +389,20 @@ local ModifierSettings = {
         HideNumbers = false,
         DefaultValue = 0,
         PreferredRepresentation = "Spinner", ---@type Features.SettingWidgets.PreferredRepresentation.ClampedNumber
-    })
+    }),
+    HyenaMode = Bedazzled:RegisterSetting("Modifiers.HyenaMode", {
+        Type = "Boolean",
+        Name = Modifiers.HyenaMode.Name,
+        Description = Modifiers.HyenaMode.Description,
+        DefaultValue = false,
+    }),
 }
 -- In order of rendering.
 local SettingsOrder = {
     ModifierSettings.TimeLimit_Time,
     ModifierSettings.MoveLimit_Moves,
     ModifierSettings.RaidMechanics_Intensity,
+    ModifierSettings.HyenaMode,
 }
 UI.Events.RenderSettings:Subscribe(function (_)
     for _,setting in ipairs(SettingsOrder) do
@@ -430,6 +438,12 @@ UI.Hooks.GetModifierConfiguration:Subscribe(function (ev)
             ev.Config = {
                 Intensity = intensity,
             }
+        end
+    elseif modClassName == Modifiers.HyenaMode:GetClassName() then
+        local enabled = ModifierSettings.HyenaMode:GetValue() == true
+        if enabled then
+            -- Hyena mode takes no parameters.
+            ev.Config = {}
         end
     end
 end)

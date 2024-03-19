@@ -33,7 +33,8 @@ local _Board = {
     },
     Hooks = {
         IsInteractable = {}, ---@type Hook<Features.Bedazzled.Board.Hooks.IsInteractable>
-        GetGemData = {}, ---@type Event<Features.Bedazzled.Board.Hooks.GetGemData>
+        GetGemData = {}, ---@type Hook<Features.Bedazzled.Board.Hooks.GetGemData>
+        GetMatchAt = {}, ---@type Hook<Features.Bedazzled.Board.Hooks.GetMatchAt>
     },
 }
 Bedazzled:RegisterClass("Feature_Bedazzled_Board", _Board)
@@ -71,6 +72,11 @@ Bedazzled:RegisterClass("Feature_Bedazzled_Board", _Board)
 ---@class Features.Bedazzled.Board.Hooks.GetGemData
 ---@field Gem Feature_Bedazzled_Board_Gem
 ---@field Data Features.Bedazzled.Board.Gem.Data Hookable.
+
+---Thrown after all base logic has executed, including checks for minimum gem count in the match.
+---@class Features.Bedazzled.Board.Hooks.GetMatchAt
+---@field Match Feature_Bedazzled_Match? Hookable.
+---@field Position Vector2
 
 ---------------------------------------------
 -- METHODS
@@ -550,6 +556,7 @@ function _Board:ApplyScoreMultiplier(baseScore)
 end
 
 ---Returns the match that exists at the coordinates.
+---@see Features.Bedazzled.Board.Hooks.GetMatchAt
 ---@param x integer
 ---@param y integer
 ---@return Feature_Bedazzled_Match?
@@ -649,6 +656,11 @@ function _Board:GetMatchAt(x, y)
     if match and match:GetGemCount() < Bedazzled.MINIMUM_MATCH_GEMS then
         match = nil
     end
+
+    match = self.Hooks.GetMatchAt:Throw({
+        Match = match,
+        Position = V(x, y),
+    }).Match
 
     return match
 end
