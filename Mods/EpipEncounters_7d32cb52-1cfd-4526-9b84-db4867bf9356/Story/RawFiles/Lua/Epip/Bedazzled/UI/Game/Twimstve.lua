@@ -75,6 +75,12 @@ function UI.Cleanup()
     UI.Game = nil
 end
 
+---Returns whether the overlay should be active.
+---@return boolean
+function UI.IsActive()
+    return UI.Game ~= nil
+end
+
 ---Perform cleanup routines on a game over.
 function UI._OnGameOver()
     -- Clear gem selection
@@ -102,7 +108,7 @@ function UI._Initialize()
         local rotation = swirlAnchor:GetMovieClip().rotation
         local rotationSpeed = UI.Game:IsInteracting() and UI.SWIRL_ROTATION_SPEED.SWAPPING or UI.SWIRL_ROTATION_SPEED.NORMAL
         swirlAnchor:SetRotation(rotation + (ev.DeltaTime / 1000) * rotationSpeed)
-    end, {EnabledFunctor = function () return BaseUI:IsVisible() end})
+    end, {EnabledFunctor = function() return BaseUI:IsVisible() and UI.IsActive() end})
     UI.Rotator = rotator
 
     -- Hide rotator when mouse exits the grid
