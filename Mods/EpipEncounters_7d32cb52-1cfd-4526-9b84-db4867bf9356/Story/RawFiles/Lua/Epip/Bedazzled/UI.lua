@@ -6,6 +6,7 @@ local Generic = Client.UI.Generic
 local ButtonPrefab = Generic.GetPrefab("GenericUI_Prefab_Button")
 local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 local DraggingAreaPrefab = Generic.GetPrefab("GenericUI_Prefab_DraggingArea")
+local DiscordRichPresence = Epip.GetFeature("Features.DiscordRichPresence")
 local Input = Client.Input
 local V = Vector.Create
 
@@ -644,17 +645,21 @@ function UI.CreateScoreFlyover(match)
     })
 end
 
-function UI._FormatScoreNumber(score)
-    local pointsLabel = Text.AddPadding(tostring(score), UI.MINIMUM_SCORE_DIGITS, "0")
-    
+---Formats a score number, adding commas between groups of 3 digits.
+---@param score integer
+---@param addPadding boolean? Defaults to `true`
+---@return string
+function UI._FormatScoreNumber(score, addPadding)
+    local pointsLabel = addPadding ~= false and Text.AddPadding(tostring(score), UI.MINIMUM_SCORE_DIGITS, "0") or tostring(score)
+
     -- Add comma separators
     local newStr = ""
-    for i=1,#pointsLabel,1 do
+    for i=#pointsLabel,1,-1 do
         local index = #pointsLabel + 1 - i
-        newStr = pointsLabel:sub(index, index) .. newStr
+        newStr = newStr .. pointsLabel:sub(index, index)
 
-        if i % 3 == 0 and i ~= #pointsLabel then
-            newStr = "," .. newStr
+        if (i - 1) % 3 == 0 and i ~= 1 then
+            newStr = newStr .. ","
         end
     end
 
@@ -912,6 +917,21 @@ Bedazzled.Events.NewHighScore:Subscribe(function (ev)
     })
 
     Notification.ShowIconNotification(toastLabel, randomGem:GetIcon())
+end)
+
+-- Show a custom Discord Rich Presence if that feature is set to "overhaul mode"
+DiscordRichPresence.Hooks.GetPresence:Subscribe(function (ev)
+    local mode = DiscordRichPresence:GetSettingValue(DiscordRichPresence.Settings.Mode)
+    if mode == DiscordRichPresence.MODES.OVERHAUL and UI:IsVisible() and UI.Board then
+        local board = UI.Board
+        ev.Line1 = Bedazzled.TranslatedStrings.GameTitle:GetString()
+        ev.Line2 = Bedazzled.TranslatedStrings.DiscordRichPresence_Line2:Format({
+            FormatArgs = {
+                board:GetName(),
+                UI._FormatScoreNumber(board.Score, false),
+            },
+        })
+    end
 end)
 
 ---------------------------------------------
