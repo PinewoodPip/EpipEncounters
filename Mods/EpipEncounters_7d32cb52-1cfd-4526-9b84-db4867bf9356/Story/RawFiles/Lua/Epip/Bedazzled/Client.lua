@@ -72,7 +72,7 @@ local Bedazzled = {
     },
 
     HIGHSCORES_PROTOCOL = 1,
-    MAX_HIGHSCORES_PER_GAMEMODE = 5,
+    MAX_HIGHSCORES_PER_GAMEMODE = 5, -- Maximum amount of scores tracked per gamemode *and modifier configuration*.
     SPAWNED_GEM_INITIAL_VELOCITY = -4.5,
     GRAVITY = 5.5, -- Units per second squared
     MINIMUM_MATCH_GEMS = 3,
@@ -271,17 +271,19 @@ function Bedazzled.AddHighScore(gameMode, modifiers, score)
     table.insert(entry.HighScores, score)
     table.sortByProperty(entry.HighScores, "Score", true)
 
-    -- Remove scores past the limit
-    for i=Bedazzled.MAX_HIGHSCORES_PER_GAMEMODE+1,#scores,1 do
+    -- Remove old scores past the limit
+    for i=Bedazzled.MAX_HIGHSCORES_PER_GAMEMODE+1,#entry.HighScores,1 do
         entry.HighScores[i] = nil
     end
 
+    -- Find a scoreboard with matching modifier configs, if any
     for i,oldEntry in ipairs(scores) do
         if Bedazzled._ModifierConfigsAreEqual(oldEntry.ModifierConfigs, modifiers) then
             scores[i] = entry
             goto EntryUpdated
         end
     end
+    -- Otherwise insert a new scoreboard
     table.insert(scores, entry)
     ::EntryUpdated::
 
