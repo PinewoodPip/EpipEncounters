@@ -316,6 +316,12 @@ function UI:Hide()
     Client.UI._BaseUITable.Hide(self)
 end
 
+---Returns whether the current game has ended.
+---@return boolean -- Also `true` if no game has been started yet.
+function UI.IsGameEnded()
+    return UI.Board == nil or not UI.Board:IsRunning()
+end
+
 ---@param gem Feature_Bedazzled_Board_Gem
 ---@param newState Feature_Bedazzled_Board_Gem_StateClassName
 ---@param oldState Feature_Bedazzled_Board_Gem_State
