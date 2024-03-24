@@ -451,9 +451,13 @@ for _,mod in pairs(Modifiers) do
     UI.RegisterModifier(mod)
 end
 
--- Start the game when the context menu option is selected.
+-- Show the menu or resume the current game when the context menu option is selected.
 Client.UI.ContextMenu.RegisterElementListener("epip_Feature_Bedazzled", "buttonPressed", function(_, _)
-    UI:Show()
+    if Bedazzled.GameUI:GetBoard() ~= nil and not Bedazzled.GameUI.IsGameEnded() then
+        Bedazzled.GameUI:Show()
+    else
+        UI:Show()
+    end
 end)
 
 -- Show the menu when a new game is requested.
