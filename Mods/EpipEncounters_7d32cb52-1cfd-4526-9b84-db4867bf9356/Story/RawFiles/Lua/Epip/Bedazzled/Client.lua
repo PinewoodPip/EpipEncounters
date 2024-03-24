@@ -56,6 +56,11 @@ local Bedazzled = {
             Text = "Are you sure you want to forfeit the current game?<br>Your efforts will be considered.",
             ContextDescription = [[Prompt for the "Give up" button]],
         },
+        DiscordRichPresence_Line2 = {
+            Handle = "h821e09e9g5519g4d22ga658g6e10710444c1",
+            Text = "%s Mode - %s pts",
+            ContextDescription = [[Discord Rich Presence 2nd line; params are gamemode name and score. "Pts" is short for "points"]],
+        },
     },
     Settings = {
         HighScores = {
