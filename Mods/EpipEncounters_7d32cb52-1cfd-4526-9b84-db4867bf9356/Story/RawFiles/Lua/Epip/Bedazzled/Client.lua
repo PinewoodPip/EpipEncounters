@@ -26,6 +26,11 @@ local Bedazzled = {
             Text = "No more valid moves on the board!",
             ContextDescription = "Subtitle for game over text",
         },
+        GameOver_Reason_Forfeited = {
+            Handle = "h585fa6e9gdc3ag40deg97f8gf68df49288fd",
+            Text = "All hope was lost, apparently.",
+            ContextDescription = [[Subtitle for game over from forfeiting]],
+        },
         HighScore = {
            Handle = "ha1afe7c2g4d97g43b6g823eg03bf25788dbd",
            Text = "High-Score",
@@ -40,6 +45,16 @@ local Bedazzled = {
            Handle = "h9f5438ffg5024g4264gaaa2gef122c54e518",
            Text = "Are you sure you want to start a new game?",
            ContextDescription = "Message box for new game button",
+        },
+        Label_GiveUp = {
+            Handle = "hc158949eg6a66g4e1cga473g9a6c8295132f",
+            Text = "Give Up",
+            ContextDescription = [[Button label]],
+        },
+        MsgBox_GiveUp_Body = {
+            Handle = "h9110437dg4b59g460cg8b4aga436971e86c2",
+            Text = "Are you sure you want to forfeit the current game?<br>Your efforts will be considered.",
+            ContextDescription = [[Prompt for the "Give up" button]],
         },
     },
     Settings = {

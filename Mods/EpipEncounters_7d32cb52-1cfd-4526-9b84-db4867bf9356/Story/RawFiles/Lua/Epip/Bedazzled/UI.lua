@@ -3,6 +3,7 @@ local Notification = Client.UI.Notification
 local MsgBox = Client.UI.MessageBox
 local Bedazzled = Epip.GetFeature("Feature_Bedazzled") ---@class Feature_Bedazzled
 local Generic = Client.UI.Generic
+local ButtonPrefab = Generic.GetPrefab("GenericUI_Prefab_Button")
 local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 local DraggingAreaPrefab = Generic.GetPrefab("GenericUI_Prefab_DraggingArea")
 local Input = Client.Input
@@ -25,6 +26,7 @@ UI.MINIMUM_SCORE_DIGITS = 9
 UI.SCORE_FLYOVER_DURATION = 1
 UI.SCORE_FLYOVER_Y_OFFSET = -40
 UI.SCORE_FLYOVER_TRAVEL_DISTANCE = -50
+UI.FORFEIT_DELAY = 2 -- Delay in seconds before the UI closes after a forfeit.
 
 UI.SOUNDS = {
     CLICK = "UI_Game_Skillbar_Unlock",
@@ -55,7 +57,8 @@ UI.Events = {
     GemHovered = SubscribableEvent:New("GemHovered"), ---@type Event<Features.Bedazzled.UI.Game.Events.GemHovered>
     GameStarted = SubscribableEvent:New("GameStarted"), ---@type Event<Empty>
     NewGameRequested = SubscribableEvent:New("NewGameRequested"), ---@type Event<Empty>
-    ClickBoxHovered = SubscribableEvent:New("ClickboxHovered") ---@type Event<Features.Bedazzled.UI.Game.Events.ClickboxHovered>
+    ClickBoxHovered = SubscribableEvent:New("ClickboxHovered"), ---@type Event<Features.Bedazzled.UI.Game.Events.ClickboxHovered>
+    GameForfeited = SubscribableEvent:New("GameForfeited"), ---@type Event<Empty>
 }
 
 ---------------------------------------------
@@ -304,7 +307,9 @@ function UI.Setup(board)
         element:UpdateIcon()
     end, {StringID = "BedazzledUI_GemTransformed"})
 
-    UI.ResetButton:SetVisible(false)
+    -- Update reset button label
+    UI.ResetButton:SetLabel(Bedazzled.TranslatedStrings.Label_GiveUp)
+    UI.ResetButton:SetVisible(true) -- Might've been hidden from a previous forfeit.
 
     UI.Events.GameStarted:Throw()
 
@@ -547,8 +552,8 @@ function UI.OnGameOver(ev)
         Ease = "EaseOut",
     })
 
-    -- Show new game button
-    UI.ResetButton:SetVisible(true)
+    -- Update reset button text
+    UI.ResetButton:SetLabel(Text.CommonStrings.NewGame)
 end
 
 ---Returns whether the UI is in an interactable game state.
@@ -740,15 +745,13 @@ function UI._Initialize(board)
         gameOverText:SetPositionRelativeToParent("Center", 0, -50)
         UI.GameOverText = gameOverText
 
-        -- Reset button
-        local resetButton = bg:AddChild("ResetButton", "GenericUI_Element_Button")
-        resetButton:SetType("RedBig")
-        resetButton:SetText(Text.CommonStrings.NewGame:GetString(), 15)
+        -- Give up / new game button
+        local resetButton = ButtonPrefab.Create(UI, "ForfeitButton", bg, ButtonPrefab:GetStyle("LargeRed"))
+        resetButton:SetLabel(Bedazzled.TranslatedStrings.Label_GiveUp:GetString())
         resetButton.Events.Pressed:Subscribe(function (_)
-            UI._OnNewGamePressed()
+            UI._OnResetPressed()
         end)
         resetButton:SetPositionRelativeToParent("Center", 0, 320)
-        resetButton:SetVisible(false)
         UI.ResetButton = resetButton
     else -- Cleanup previous elements
         for _,gem in pairs(UI.Gems) do
@@ -857,15 +860,14 @@ function UI._RequestNewGame()
     UI.Events.NewGameRequested:Throw()
 end
 
----Fired when the new game button is pressed.
-function UI._OnNewGamePressed()
+---Handle the forfeit or new game button being pressed.
+function UI._OnResetPressed()
     local isInGame = UI.Board and UI.Board:IsRunning()
-
     if isInGame then
         MsgBox.Open({
-            Header = Text.CommonStrings.NewGame:GetString(),
-            Message = Bedazzled.TranslatedStrings.NewGamePrompt:GetString(),
-            ID = "Feature_Bedazzled_NewGame",
+            Header = Bedazzled.TranslatedStrings.Label_GiveUp:GetString(),
+            Message = Bedazzled.TranslatedStrings.MsgBox_GiveUp_Body:GetString(),
+            ID = "Features.Bedazzled.Forfeit",
             Buttons = {
                 {ID = 1, Text = Text.CommonStrings.Confirm:GetString()},
                 {ID = 2, Text = Text.CommonStrings.Cancel:GetString()},
@@ -875,9 +877,16 @@ function UI._OnNewGamePressed()
         UI._RequestNewGame()
     end
 end
-MsgBox.RegisterMessageListener("Feature_Bedazzled_NewGame", MsgBox.Events.ButtonPressed, function (buttonID)
+MsgBox.RegisterMessageListener("Features.Bedazzled.Forfeit", MsgBox.Events.ButtonPressed, function (buttonID)
     if buttonID == 1 then
-        UI._RequestNewGame()
+        UI.ResetButton:SetVisible(false) -- Hide the reset button so it doesn't show an erroneous label during the game over.
+        UI.Board:EndGame(Bedazzled.TranslatedStrings.GameOver_Reason_Forfeited)
+
+        -- Hide the UI after a delay so the game over reason can be read.
+        Timer.Start(UI.FORFEIT_DELAY, function (_)
+            UI:Hide()
+            UI.Events.GameForfeited:Throw()
+        end)
     end
 end)
 

@@ -460,6 +460,11 @@ Client.UI.ContextMenu.RegisterElementListener("epip_Feature_Bedazzled", "buttonP
     end
 end)
 
+-- Return to the menu when a game is forfeited.
+Bedazzled.GameUI.Events.GameForfeited:Subscribe(function (_)
+    UI:Show()
+end)
+
 -- Show the menu when a new game is requested.
 Bedazzled.GameUI.Events.NewGameRequested:Subscribe(function (_)
     UI:Show()
