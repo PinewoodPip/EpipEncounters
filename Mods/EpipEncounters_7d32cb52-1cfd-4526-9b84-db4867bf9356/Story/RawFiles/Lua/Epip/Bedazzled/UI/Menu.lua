@@ -337,7 +337,7 @@ Client.UI.ContextMenu.RegisterVanillaMenuHandler("Item", function(item)
     local showOption = IsRuneCraftingMaterial(item)
     if not showOption then -- Also show the entry for runes.
         local stat = Stats.Get("StatsLib_StatsEntry_Object", item.StatsId)
-        if stat.RuneLevel > 0 then
+        if stat.RuneLevel and stat.RuneLevel > 0 then
             showOption = true
         end
     end
