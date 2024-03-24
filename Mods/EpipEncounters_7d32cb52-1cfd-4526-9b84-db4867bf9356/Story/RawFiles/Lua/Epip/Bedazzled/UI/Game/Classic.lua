@@ -245,3 +245,51 @@ BaseUI.Events.GameStarted:Subscribe(function (_)
         UI.Cleanup()
     end
 end)
+
+-- Cheat: right-click cycles gem types.
+Input.Events.KeyPressed:Subscribe(function (ev)
+    if Bedazzled:IsDebug() and ev.InputID == "right2" and BaseUI.Board then
+        local pos = UI.HoveredGridPosition
+        local board = BaseUI.Board
+
+        if pos then
+            local descriptors = Bedazzled.GetGemDescriptors() ---@type table<string, Feature_Bedazzled_Gem>
+            local list = {} ---@type Feature_Bedazzled_Gem[]
+            for _,v in pairs(descriptors) do
+                table.insert(list, v.Type)
+            end
+            table.sort(list)
+
+            local currentGem = board:GetGemAt(pos:unpack())
+            if currentGem then
+                local currentIndex = table.reverseLookup(list, currentGem:GetDescriptor().Type)
+                local newIndex = currentIndex + 1
+                if newIndex == #list + 1 then newIndex = 1 end
+
+                board:TransformGem(currentGem, list[newIndex])
+            end
+        end
+    end
+end)
+
+-- Cheat: number keys add modifiers.
+Input.Events.KeyPressed:Subscribe(function (ev)
+    if Bedazzled:IsDebug() and BaseUI.Board and UI.HoveredGridPosition then
+        local pos = UI.HoveredGridPosition
+        local board = BaseUI.Board
+        local gem = board:GetGemAt(pos:unpack())
+        local modifier = nil
+
+        if ev.InputID == "num1" then
+            modifier = "Rune"
+        elseif ev.InputID == "num2" then
+            modifier = "LargeRune"
+        elseif ev.InputID == "num3" then
+            modifier = "GiantRune"
+        end
+
+        if gem and modifier then
+            gem:AddModifier(modifier)
+        end
+    end
+end)

@@ -25,7 +25,6 @@ UI.MINIMUM_SCORE_DIGITS = 9
 UI.SCORE_FLYOVER_DURATION = 1
 UI.SCORE_FLYOVER_Y_OFFSET = -40
 UI.SCORE_FLYOVER_TRAVEL_DISTANCE = -50
-UI.HoveredGridPosition = nil ---@type Vector2?
 
 UI.SOUNDS = {
     CLICK = "UI_Game_Skillbar_Unlock",
@@ -720,9 +719,6 @@ function UI._Initialize(board)
                 clickbox.Events.MouseOver:Subscribe(function (_)
                     UI.OnGemClickboxHovered(j, board.Size[1] - i + 1)
                 end)
-                clickbox.Events.MouseOut:Subscribe(function (_)
-                    UI.OnGemClickboxMouseOut(j, board.Size[1] - i + 1)
-                end)
                 clickbox.Events.MouseMove:Subscribe(function (_)
                     UI.Events.ClickBoxHovered:Throw({
                         Clickbox = clickbox,
@@ -807,14 +803,6 @@ function UI.OnGemClickboxHovered(x, y)
     })
 end
 
----Handle mouse leaving clickboxes.
----@param x integer
----@param y integer
----@diagnostic disable-next-line: unused-local
-function UI.OnGemClickboxMouseOut(x, y)
-    UI.HoveredGridPosition = nil
-end
-
 ---Returns the board being currently played.
 ---@return Feature_Bedazzled_Board?
 function UI.GetBoard()
@@ -896,55 +884,6 @@ Input.Events.KeyPressed:Subscribe(function (ev)
         board:SetPaused(not wasPaused)
 
         Client.UI.Notification.ShowNotification(wasPaused and "Board unpaused" or "Board paused")
-    end
-end)
-
--- Cheat: right-click cycles gem types.
-Input.Events.KeyPressed:Subscribe(function (ev)
-    if Bedazzled:IsDebug() and ev.InputID == "right2" and UI.Board then
-        local pos = UI.HoveredGridPosition
-        local board = UI.Board
-
-        if pos then
-            local descriptors = Bedazzled.GetGemDescriptors() ---@type table<string, Feature_Bedazzled_Gem>
-            local list = {} ---@type Feature_Bedazzled_Gem[]
-            for _,v in pairs(descriptors) do
-                table.insert(list, v.Type)
-            end
-            table.sort(list)
-
-            local currentGem = board:GetGemAt(pos:unpack())
-
-            if currentGem then
-                local currentIndex = table.reverseLookup(list, currentGem:GetDescriptor().Type)
-                local newIndex = currentIndex + 1
-                if newIndex == #list + 1 then newIndex = 1 end
-
-                board:TransformGem(currentGem, list[newIndex])
-            end
-        end
-    end
-end)
-
--- Cheat: number keys add modifiers.
-Input.Events.KeyPressed:Subscribe(function (ev)
-    if Bedazzled:IsDebug() and UI.Board and UI.HoveredGridPosition then
-        local pos = UI.HoveredGridPosition
-        local board = UI.Board
-        local gem = board:GetGemAt(pos:unpack())
-        local modifier = nil
-
-        if ev.InputID == "num1" then
-            modifier = "Rune"
-        elseif ev.InputID == "num2" then
-            modifier = "LargeRune"
-        elseif ev.InputID == "num3" then
-            modifier = "GiantRune"
-        end
-
-        if gem and modifier then
-            gem:AddModifier(modifier)
-        end
     end
 end)
 
