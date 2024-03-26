@@ -179,34 +179,6 @@ function Bedazzled.CreateGame(game, modifiers)
     return game
 end
 
----@return Feature_Bedazzled_Gem
-function Bedazzled.GetRandomGemDescriptor()
-    local totalWeight = 0
-    local gems = {} ---@type Feature_Bedazzled_Gem[]
-    local chosenGem
-
-    for _,g in pairs(Bedazzled._Gems) do
-        totalWeight = totalWeight + g.Weight
-        table.insert(gems, g)
-    end
-
-    if #gems == 0 then
-        Bedazzled:Error("GetRandomGemDescriptor", "No gems are registered.")
-    end
-
-    local seed = math.random(0, totalWeight)
-    for _,g in ipairs(gems) do
-        seed = seed - g.Weight
-
-        if seed <= 0 and g.Weight > 0 then -- Never choose gems with 0 weight
-            chosenGem = g
-            break
-        end
-    end
-
-    return chosenGem
-end
-
 ---@generic T
 ---@param className `T`|Feature_Bedazzled_Board_Gem_StateClassName
 ---@return `T`|Feature_Bedazzled_Board_Gem_State

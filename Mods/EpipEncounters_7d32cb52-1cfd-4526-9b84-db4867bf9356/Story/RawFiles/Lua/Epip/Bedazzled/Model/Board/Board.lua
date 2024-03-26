@@ -36,6 +36,7 @@ local _Board = {
         IsInteractable = {}, ---@type Hook<Features.Bedazzled.Board.Hooks.IsInteractable>
         GetGemData = {}, ---@type Hook<Features.Bedazzled.Board.Hooks.GetGemData>
         GetMatchAt = {}, ---@type Hook<Features.Bedazzled.Board.Hooks.GetMatchAt>
+        GemGemSpawnWeight = {}, ---@type Hook<Features.Bedazzled.Board.Hooks.GetGemSpawnWeight>
     },
 }
 Bedazzled:RegisterClass("Feature_Bedazzled_Board", _Board)
@@ -78,6 +79,10 @@ Bedazzled:RegisterClass("Feature_Bedazzled_Board", _Board)
 ---@class Features.Bedazzled.Board.Hooks.GetMatchAt
 ---@field Match Feature_Bedazzled_Match? Hookable.
 ---@field Position Vector2
+
+---@class Features.Bedazzled.Board.Hooks.GetGemSpawnWeight
+---@field Descriptor Feature_Bedazzled_Gem
+---@field Weight number Hookable. Defaults to the weight set within the descriptor.
 
 ---------------------------------------------
 -- METHODS
@@ -175,7 +180,7 @@ function _Board:Update(dt)
     for i,column in ipairs(self.Columns) do
         -- Insert new gem
         if not column:IsFilled() then
-            local desc = Bedazzled.GetRandomGemDescriptor()
+            local desc = self:GetRandomGemDescriptor()
             local startingState = Bedazzled.GetGemStateClass("Feature_Bedazzled_Board_Gem_State_Falling"):Create()
             startingState.Velocity = Bedazzled.SPAWNED_GEM_INITIAL_VELOCITY
 
@@ -244,6 +249,42 @@ end
 ---@return boolean
 function _Board:IsInteractable()
     return self.Hooks.IsInteractable:Throw({Interactable = true}).Interactable
+end
+
+---Returns a random gem descriptor, weighted.
+---@see Features.Bedazzled.Board.Hooks.GetGemSpawnWeight
+---@return Feature_Bedazzled_Gem
+function _Board:GetRandomGemDescriptor()
+    local totalWeight = 0
+    local gems = {} ---@type Feature_Bedazzled_Gem[]
+    local gemWeights = {} ---@type table<string, number>
+    local chosenGem
+
+    for _,gem in pairs(Bedazzled.GetGemDescriptors()) do
+        local gemWeight = self.Hooks.GemGemSpawnWeight:Throw({
+            Descriptor = gem,
+            Weight = gem.Weight,
+        }).Weight
+        totalWeight = totalWeight + gemWeight
+        gemWeights[gem.Type] = gemWeight
+        table.insert(gems, gem)
+    end
+
+    if totalWeight == 0 then
+        self:__Error("GetRandomGemDescriptor", "No gem descriptors with positive weight exist")
+    end
+
+    local seed = math.random() * totalWeight
+    for _,g in ipairs(gems) do
+        seed = seed - gemWeights[g.Type]
+
+        if seed <= 0 and gemWeights[g.Type] > 0 then -- Never choose gems with 0 weight, if 0 was the seed.
+            chosenGem = g
+            break
+        end
+    end
+
+    return chosenGem
 end
 
 ---Ends the game and stops the update loop.
