@@ -37,6 +37,7 @@ local _Board = {
         GetGemData = {}, ---@type Hook<Features.Bedazzled.Board.Hooks.GetGemData>
         GetMatchAt = {}, ---@type Hook<Features.Bedazzled.Board.Hooks.GetMatchAt>
         GemGemSpawnWeight = {}, ---@type Hook<Features.Bedazzled.Board.Hooks.GetGemSpawnWeight>
+        IsGemInteractable = {}, ---@type Hook<Features.Bedazzled.Board.Hooks.IsGemInteractable>
     },
 }
 Bedazzled:RegisterClass("Feature_Bedazzled_Board", _Board)
@@ -83,6 +84,10 @@ Bedazzled:RegisterClass("Feature_Bedazzled_Board", _Board)
 ---@class Features.Bedazzled.Board.Hooks.GetGemSpawnWeight
 ---@field Descriptor Feature_Bedazzled_Gem
 ---@field Weight number Hookable. Defaults to the weight set within the descriptor.
+
+---@class Features.Bedazzled.Board.Hooks.IsGemInteractable
+---@field Gem Feature_Bedazzled_Board_Gem
+---@field Interactable boolean Hookable. Defaults to `true`.
 
 ---------------------------------------------
 -- METHODS
@@ -249,6 +254,17 @@ end
 ---@return boolean
 function _Board:IsInteractable()
     return self.Hooks.IsInteractable:Throw({Interactable = true}).Interactable
+end
+
+---Returns whether a gem can be interacted with by the player, making it usable within moves.
+---@see Features.Bedazzled.Board.Hooks.IsGemInteractable
+---@param gem Feature_Bedazzled_Board_Gem
+---@return boolean
+function _Board:IsGemInteractable(gem)
+    return self.Hooks.IsGemInteractable:Throw({
+        Gem = gem,
+        Interactable = true,
+    }).Interactable
 end
 
 ---Returns a random gem descriptor, weighted.

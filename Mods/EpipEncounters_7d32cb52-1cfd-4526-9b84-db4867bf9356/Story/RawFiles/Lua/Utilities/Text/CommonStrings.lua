@@ -258,6 +258,10 @@ Text.CommonStrings.Start = Text.RegisterTranslatedString({
     Handle = "h807e1cacgfe65g4153gb4dfg2ca7fa75dd28",
     Text = "Start",
 })
+Text.CommonStrings.Unknown = Text.RegisterTranslatedString({
+    Handle = "h6a89a066g7f22g43b2g9abcg0932cf6f3e5d",
+    Text = "Unknown",
+})
 
 ---------------------------------------------
 -- BRANDING

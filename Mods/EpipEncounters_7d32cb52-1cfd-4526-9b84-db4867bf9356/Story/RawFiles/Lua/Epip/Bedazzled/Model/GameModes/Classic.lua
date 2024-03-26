@@ -47,6 +47,12 @@ function Game:Swap(position1, position2)
                 Position = position1,
                 InteractedGems = {gem1, gem2},
             })
+        elseif gem1:IsAdjacentTo(gem2) and (not self:IsGemInteractable(gem1) or not self:IsGemInteractable(gem2)) then
+            -- TODO use some state to show what's happening?
+            self:ReportInvalidMove({
+                Position = position1,
+                InteractedGems = {gem1, gem2},
+            })
         elseif gem1:IsAdjacentTo(gem2) and gem1:IsIdle() and gem2:IsIdle() then -- Enter invalid swap busy state - only if gems are adjacent and idle
             local invalidSwapState = Bedazzled.GetGemStateClass("Feature_Bedazzled_Board_Gem_State_InvalidSwap")
 
@@ -61,6 +67,7 @@ function Game:Swap(position1, position2)
     end
 end
 
+---Returns whether swapping two gems would result in a valid move.
 ---@param gem1 Feature_Bedazzled_Board_Gem
 ---@param gem2 Feature_Bedazzled_Board_Gem
 function Game:CanSwap(gem1, gem2)
@@ -80,8 +87,11 @@ function Game:CanSwap(gem1, gem2)
     -- Undo the swap
     self:_SwapGems(gem1, gem2)
 
-    -- Can always swap hypercubes
+    -- Can swap hypercubes with anything
     canSwap = canSwap or (gem1:GetDescriptor().Type == "Protean" or gem2:GetDescriptor().Type == "Protean")
+
+    -- Cannot swap non-interactable gems
+    canSwap = canSwap and self:IsGemInteractable(gem1) and self:IsGemInteractable(gem2)
 
     return canSwap
 end
