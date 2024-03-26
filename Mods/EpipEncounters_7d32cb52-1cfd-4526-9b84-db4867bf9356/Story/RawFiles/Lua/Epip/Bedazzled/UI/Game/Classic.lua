@@ -153,6 +153,7 @@ end
 ---@param x integer
 ---@param y integer
 function UI._OnGemClickboxHovered(x, y)
+    if not UI.Game then return end
     local gem = UI.Game:GetGemAt(x, y)
     local element = BaseUI.GetGemElement(gem)
     local selector = UI.SecondarySelector

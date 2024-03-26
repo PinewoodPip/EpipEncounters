@@ -114,16 +114,16 @@ function UI._Initialize()
     -- Hide rotator when mouse exits the grid
     BaseUI.GridClickbox.Events.MouseOut:Subscribe(function (_)
         UI.ClearSelection()
-    end)
+    end, {EnabledFunctor = function () return UI.IsActive() end})
 
     -- Event listeners for the base UI should be registered here
     -- as the UI is "static" and never re-created.
     BaseUI.Events.GemClicked:Subscribe(function (ev)
         UI._OnGemClickboxClicked(ev.Position)
-    end)
+    end, {EnabledFunctor = function () return UI.IsActive() end})
     BaseUI.Events.ClickBoxHovered:Subscribe(function (ev)
         UI._UpdateSelection(ev.Clickbox, ev.GridPosition)
-    end)
+    end, {EnabledFunctor = function () return UI.IsActive() end})
 
     UI._Initialized = true
 end
