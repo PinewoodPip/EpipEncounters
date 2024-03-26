@@ -67,7 +67,7 @@ function Game:CanRotateAt(anchor)
     local gems = self:__GetAnchorGems(anchor)
     -- All gems within the rotator must be matchable and idle.
     local canRotate = not table.any(gems, function (_, v)
-        return not v:IsMatchable() or not v:IsIdle()
+        return not v:IsMatchable() or not v:IsIdle() or not self:IsGemInteractable(v)
     end)
     return canRotate
 end

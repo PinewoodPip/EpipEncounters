@@ -159,9 +159,11 @@ function RaidMechanics:Apply(board)
             -- Randomize starting progress towards next gem
             self.ProgressUntilNextSpawn = math.random() * self.MAX_STARTING_PROGRESS
 
-            -- Add a timer to the new gem.
+            -- Add a timer to the new gem, if it is not an Epipe (would be too evil)
             local gem = ev.Gem ---@cast gem Features.Bedazzled.Board.Modifiers.RaidMechanics.Gem
-            gem.EnrageTimer = self:GetDefaultEnrageTimer()
+            if gem.Type ~= "Epipe" then
+                gem.EnrageTimer = self:GetDefaultEnrageTimer()
+            end
         end
     end)
 

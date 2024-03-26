@@ -29,7 +29,7 @@ end
 ---@param dt number In seconds.
 ---@diagnostic disable-next-line: unused-local
 function State:Update(dt)
-    
+
 end
 
 ---Returns whether the gem is in an "idle" state, not performing any specific action.

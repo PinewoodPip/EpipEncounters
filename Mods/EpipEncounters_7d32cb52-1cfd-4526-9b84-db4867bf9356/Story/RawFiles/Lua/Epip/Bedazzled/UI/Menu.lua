@@ -60,6 +60,21 @@ local TSK = {
         Text = "Enables MMO-style raid mechanics.<br>If >0, gems with MMO enrage timers will periodically appear with increasing frequency; if left unmatched, they will bring a fair and balanced instant game over.<br>Higher levels increase spawn frequency.",
         ContextDescription = [[Tooltip for "Raid Level" setting]],
     }),
+    Setting_CementMixer_Intensity_Choice_Low = Bedazzled:RegisterTranslatedString({
+        Handle = "hd2814793gdb4ag4ab1gb8b5g8bf25a06d5bb",
+        Text = "Low Load",
+        ContextDescription = [[Choice for "Cement Mixing" modifier setting; "Load" is used as in "workload"]],
+    }),
+    Setting_CementMixer_Intensity_Choice_Medium = Bedazzled:RegisterTranslatedString({
+        Handle = "h4b8d86eegf633g43cagb13ag375c003b00f2",
+        Text = "Considerable Load",
+        ContextDescription = [[Choice for "Cement Mixing" modifer setting; "Load" is used as in "workload"]],
+    }),
+    Setting_CementMixer_Intensity_Choice_High = Bedazzled:RegisterTranslatedString({
+        Handle = "h37022247gea5fg479dg81dag3e5f5532f915",
+        Text = "Huge Load",
+        ContextDescription = [[Choice for "Cement Mixing" modifer setting; "Load" is used as in "workload"]],
+    }),
 }
 
 UI.Events.RenderSettings = SubscribableEvent:New("RenderSettings") ---@type Event<Empty>
@@ -354,6 +369,7 @@ local Modifiers = {
     MoveLimit = Bedazzled:GetClass("Features.Bedazzled.Board.Modifiers.MoveLimit"),
     RaidMechanics = Bedazzled:GetClass("Features.Bedazzled.Board.Modifiers.RaidMechanics"),
     HyenaMode = Bedazzled:GetClass("Features.Bedazzled.Board.Modifiers.HyenaMode"),
+    CementMixer = Bedazzled:GetClass("Features.Bedazzled.Board.Modifiers.CementMixer"),
 }
 local ModifierSettings = {
     TimeLimit_Time = Bedazzled:RegisterSetting("Modifiers.TimeLimit.Time", {
@@ -396,6 +412,19 @@ local ModifierSettings = {
         Description = Modifiers.HyenaMode.Description,
         DefaultValue = false,
     }),
+    CementMixer_Intensity = Bedazzled:RegisterSetting("Modifiers.RaidMechanics.Intensity", {
+        Type = "Choice",
+        Name = Modifiers.CementMixer.Name,
+        Description = Modifiers.CementMixer.Description,
+        DefaultValue = 1,
+        ---@type SettingsLib_Setting_Choice_Entry[]
+        Choices = {
+            {ID = 1, NameHandle = CommonStrings.Off.Handle},
+            {ID = 2, NameHandle = TSK.Setting_CementMixer_Intensity_Choice_Low.Handle},
+            {ID = 3, NameHandle = TSK.Setting_CementMixer_Intensity_Choice_Medium.Handle},
+            {ID = 4, NameHandle = TSK.Setting_CementMixer_Intensity_Choice_High.Handle},
+        },
+    }),
 }
 -- In order of rendering.
 local SettingsOrder = {
@@ -403,6 +432,7 @@ local SettingsOrder = {
     ModifierSettings.MoveLimit_Moves,
     ModifierSettings.RaidMechanics_Intensity,
     ModifierSettings.HyenaMode,
+    ModifierSettings.CementMixer_Intensity,
 }
 UI.Events.RenderSettings:Subscribe(function (_)
     for _,setting in ipairs(SettingsOrder) do
@@ -444,6 +474,14 @@ UI.Hooks.GetModifierConfiguration:Subscribe(function (ev)
         if enabled then
             -- Hyena mode takes no parameters.
             ev.Config = {}
+        end
+    elseif modClassName == Modifiers.CementMixer:GetClassName() then
+        local intensity = ModifierSettings.CementMixer_Intensity:GetValue()
+        if intensity > 1 then
+            ---@type Features.Bedazzled.Board.Modifiers.CementMixer.Config
+            ev.Config = {
+                Intensity = intensity - 1, -- The Choice setting doesn't like numeric IDs that don't start from 1, so we offset them.
+            }
         end
     end
 end)

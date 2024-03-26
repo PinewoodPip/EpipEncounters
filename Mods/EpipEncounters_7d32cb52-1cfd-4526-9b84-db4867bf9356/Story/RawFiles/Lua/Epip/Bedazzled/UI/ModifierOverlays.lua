@@ -9,6 +9,10 @@ local V = Vector.Create
 local Overlays = {
     LABEL_SIZE = V(UI.BACKGROUND_SIZE[1] * 0.8, 30),
     ENRAGE_GEM_SPAWN_SOUND = "UI_Lobby_AssignMember",
+    SOUNDS = {
+        EPIPE_CONSUMED_AMBIENCE = "UI_Game_PerceptionReveal_Puzzle",
+        EPIPE_CONSUMED_IMPACT = "UI_Lobby_AssignMember",
+    },
 }
 
 local TSK = {
@@ -64,6 +68,12 @@ function Overlays.Setup()
         ---@cast raidMechanicsMod Features.Bedazzled.Board.Modifiers.RaidMechanics
         Overlays._SetupRaidMechanics(moveLimitMod)
     end
+
+    local cementMixerMod = modifiersSet["Features.Bedazzled.Board.Modifiers.CementMixer"]
+    if cementMixerMod then
+        ---@cast cementMixerMod Features.Bedazzled.Board.Modifiers.CementMixer
+        Overlays._SetupCementMixer(cementMixerMod)
+    end
 end
 
 ---Sets up the time limit label.
@@ -106,6 +116,7 @@ end
 
 ---Sets up gem timer displays for the RaidMechanics modifier.
 ---@param modifier Features.Bedazzled.Board.Modifiers.RaidMechanics
+---@diagnostic disable-next-line: unused-local
 function Overlays._SetupRaidMechanics(modifier)
     local board = UI.Board
 
@@ -142,6 +153,24 @@ function Overlays._SetupRaidMechanics(modifier)
     -- Update timers when gems have their data changed.
     board.Events.GemDataApplied:Subscribe(function (ev)
         Overlays._UpdateEnrageTimer(ev.Gem, UI.GetGemElement(ev.Gem))
+    end)
+end
+
+---Sets up sounds for the CementMixer modifier.
+---@param mod Features.Bedazzled.Board.Modifiers.CementMixer
+---@diagnostic disable-next-line: unused-local
+function Overlays._SetupCementMixer(mod)
+    local board = UI.Board
+
+    -- Play gratifying sounds when an Epipe is consumed.
+    board.Events.MatchExecuted:Subscribe(function (ev)
+        for _,gem in ipairs(ev.Match:GetAllGems()) do
+            if gem.Type == "Epipe" then
+                -- This is so epic that it has an "impact" sound AND a long ambience jingle.
+                UI:PlaySound(Overlays.SOUNDS.EPIPE_CONSUMED_AMBIENCE)
+                UI:PlaySound(Overlays.SOUNDS.EPIPE_CONSUMED_IMPACT)
+            end
+        end
     end)
 end
 
