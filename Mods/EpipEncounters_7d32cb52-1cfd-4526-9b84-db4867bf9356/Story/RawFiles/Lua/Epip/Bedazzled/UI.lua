@@ -909,7 +909,15 @@ end)
 
 -- Listen for new high scores being set to show a notification.
 Bedazzled.Events.NewHighScore:Subscribe(function (ev)
-    local randomGem = Bedazzled.GetRandomGemDescriptor()
+    local board = UI.Board
+    local randomGem
+    -- Use board logic for picking the random gem, if available.
+    if board then
+        randomGem = board:GetRandomGemDescriptor()
+    else
+        local _, gemDesc = next(Bedazzled.GetGemDescriptors())
+        randomGem = gemDesc
+    end
     local toastLabel = Text.Format(Bedazzled.TranslatedStrings.NewHighScore:GetString(), {
         FormatArgs = {
             ev.Score,
