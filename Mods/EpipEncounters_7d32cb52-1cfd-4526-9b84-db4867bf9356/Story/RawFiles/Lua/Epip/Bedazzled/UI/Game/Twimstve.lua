@@ -9,6 +9,7 @@ local V = Vector.Create
 local UI = {}
 UI.SOUNDS = {
     ROTATE = "UI_Game_Dialog_Open",
+    CANT_ROTATE = "UI_Game_ActionUnavailable",
 }
 -- In units per second.
 UI.SWIRL_ROTATION_SPEED = {
@@ -159,8 +160,13 @@ function UI._OnGemClickboxClicked(pos)
     local gem = UI.Game:GetGemAt(pos:unpack())
     local element = BaseUI.GetGemElement(gem)
 
-    if gem and element and gem:IsIdle() and UI.HasSelection() and UI.Game:CanRotateAt(UI.RotatorAnchor) then
-        UI.Game:Rotate(UI.RotatorAnchor, "Clockwise") -- TODO
+    if gem and element and gem:IsIdle() and UI.HasSelection() then
+        if UI.Game:CanRotateAt(UI.RotatorAnchor) then
+            UI.Game:Rotate(UI.RotatorAnchor, "Clockwise") -- TODO
+            BaseUI:PlaySound(UI.SOUNDS.ROTATE)
+        else
+            BaseUI:PlaySound(UI.SOUNDS.CANT_ROTATE)
+        end
     end
 end
 
