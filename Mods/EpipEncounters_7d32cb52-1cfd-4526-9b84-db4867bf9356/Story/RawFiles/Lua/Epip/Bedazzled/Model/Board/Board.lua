@@ -19,6 +19,7 @@ local V = Vector.Create
 ---@field Columns Feature_Bedazzled_Board_Column[]
 ---@field _QueuedMatches Feature_Bedazzled_Match[]
 ---@field _Modifiers table<classname, Features.Bedazzled.Board.Modifier>
+---@field _ShouldCheckOutOfMovesGameOver boolean
 local _Board = {
     Events = {
         Updated = {}, ---@type Event<Feature_Bedazzled_Board_Event_Updated>
@@ -98,6 +99,7 @@ function _Board:Create(size)
         Columns = {},
         Events = {},
         _Modifiers = {},
+        _ShouldCheckOutOfMovesGameOver = false,
     }) ---@cast board Feature_Bedazzled_Board
 
     board.GameMode = board:GetClassName() -- Legacy field. TODO remove?
@@ -215,9 +217,19 @@ function _Board:Update(dt)
     self.Events.Updated:Throw({DeltaTime = dt})
 
     -- Game over if all gems are idling with no moves available.
+    self:_CheckOutOfMovesGameOver()
+end
+
+---Checks whether the game should end from having no valid moves on the board.
+function _Board:_CheckOutOfMovesGameOver()
     -- IsRunning() check is necessary in case the game ended during the Updated event.
-    if self:IsRunning() and self:IsIdle() and not self:HasMovesAvailable() then
-        self:EndGame(Bedazzled.TranslatedStrings.GameOver_Reason_NoMoreMoves)
+    -- A boolean is used to minimize how often this check runs,
+    -- as it can be very expensive.
+    if self._ShouldCheckOutOfMovesGameOver and self:IsRunning() and self:IsIdle() then
+        if not self:HasMovesAvailable() then
+            self:EndGame(Bedazzled.TranslatedStrings.GameOver_Reason_NoMoreMoves)
+        end
+        self._ShouldCheckOutOfMovesGameOver = false
     end
 end
 
@@ -697,4 +709,7 @@ function _Board:OnGemStateChanged(gem, ev)
 
         self:QueueMatch(zap)
     end
+
+    -- Queue checks for running out of valid moves anytime a gem changes state.
+    self._ShouldCheckOutOfMovesGameOver = true
 end
