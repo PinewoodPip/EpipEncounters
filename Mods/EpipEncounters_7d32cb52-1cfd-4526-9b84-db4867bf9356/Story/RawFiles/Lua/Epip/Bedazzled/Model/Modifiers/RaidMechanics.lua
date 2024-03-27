@@ -13,6 +13,7 @@ local RaidMechanics = {
     MIN_ENRAGE_TIMER = 7, -- In moves.
     ENRAGE_TIMER_MAX_GRACE = 6, -- Extra enrage timer during early game; decreases progressively until 0.
     ENRAGE_TIME_GRACE_PERIOD_MOVES = 70, -- Moves until the enrage timer grace bonus is completely exhausted.
+    ENRAGED_GEM_SCORE_BONUS = 1000, -- Bonus points for defusing Enraged Gems.
 
     Name = Bedazzled:RegisterTranslatedString({
         Handle = "hc65f56cegc174g497eg8cd3g868daf684df1",
@@ -166,6 +167,20 @@ function RaidMechanics:Apply(board)
             end
         end
     end)
+
+    -- Grant extra points for consuming Enraged Gems.
+    -- Should run last to ensure the match is created.
+    board.Hooks.GetMatchAt:Subscribe(function (ev)
+        local match = ev.Match
+        if ev.Match then
+            for _,gem in ipairs(match:GetAllGems()) do
+                ---@cast gem Features.Bedazzled.Board.Modifiers.RaidMechanics.Gem
+                if gem.EnrageTimer then
+                    match.Score = match.Score + self.ENRAGED_GEM_SCORE_BONUS
+                end
+            end
+        end
+    end, {{Priority = -9999}})
 
     -- Copy enrage timer data when necessary.
     board.Events.GemDataApplied:Subscribe(function (ev)
