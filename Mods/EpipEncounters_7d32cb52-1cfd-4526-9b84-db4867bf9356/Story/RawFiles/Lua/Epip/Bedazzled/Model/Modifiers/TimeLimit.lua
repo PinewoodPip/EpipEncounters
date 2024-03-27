@@ -10,7 +10,7 @@ local TimeLimit = {
         ContextDescription = "Modifier name",
     }),
     Description = Bedazzled:RegisterTranslatedString("ha6259170g2afdg4323gaf0ag1ab3c1fbb152", {
-        Text = "Applies a time limit in seconds. If >0, the game will end when time runs out.",
+        Text = "Applies a time limit in seconds. If >0, the game will end when time runs out.<br>The timer starts ticking after your first move.",
         ContextDescription = "Modifier description for Time Limit",
     }),
 }
@@ -55,11 +55,14 @@ function TimeLimit:Apply(board)
 
     -- Tick down the timer each update.
     board.Events.Updated:Subscribe(function (ev)
-        self.RemainingTime = math.max(0, self.RemainingTime - ev.DeltaTime)
+        -- Time only starts ticking starting from the first move.
+        if board.MovesMade > 0 then
+            self.RemainingTime = math.max(0, self.RemainingTime - ev.DeltaTime)
 
-        -- Stop the game when the time runs out.
-        if self.RemainingTime <= 0 and board:IsIdle() then
-            board:EndGame(TSK.GameOver_Reason)
+            -- Stop the game when the time runs out.
+            if self.RemainingTime <= 0 and board:IsIdle() then
+                board:EndGame(TSK.GameOver_Reason)
+            end
         end
     end)
 
