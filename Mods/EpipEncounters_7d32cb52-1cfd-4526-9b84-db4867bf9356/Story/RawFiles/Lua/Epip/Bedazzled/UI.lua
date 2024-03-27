@@ -6,6 +6,7 @@ local Generic = Client.UI.Generic
 local ButtonPrefab = Generic.GetPrefab("GenericUI_Prefab_Button")
 local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 local DraggingAreaPrefab = Generic.GetPrefab("GenericUI_Prefab_DraggingArea")
+local SlicedTexture = Generic.GetPrefab("GenericUI.Prefabs.SlicedTexture")
 local DiscordRichPresence = Epip.GetFeature("Features.DiscordRichPresence")
 local Input = Client.Input
 local V = Vector.Create
@@ -28,6 +29,7 @@ UI.SCORE_FLYOVER_DURATION = 1
 UI.SCORE_FLYOVER_Y_OFFSET = -40
 UI.SCORE_FLYOVER_TRAVEL_DISTANCE = -50
 UI.FORFEIT_DELAY = 2 -- Delay in seconds before the UI closes after a forfeit.
+UI.PLAY_AREA_FRAME_BORDER_SIZE = V(20, 20) -- Size of the border around the gem area.
 
 UI.SOUNDS = {
     CLICK = "UI_Game_Skillbar_Unlock",
@@ -685,6 +687,8 @@ end
 ---@param board Feature_Bedazzled_Board
 function UI._Initialize(board)
     if not UI._Initialized then -- TODO support resizing the board
+        local gemAreaSize = V(board.Size[1] * UI.CELL_SIZE[1], board.Size[2] * UI.CELL_SIZE[2])
+
         -- Set UI size
         local uiObject = UI:GetUI()
         uiObject.SysPanelSize = UI.BACKGROUND_SIZE
@@ -706,10 +710,15 @@ function UI._Initialize(board)
         -- Draggable area
         DraggingAreaPrefab.Create(UI, "DraggableArea", bg, UI.BACKGROUND_SIZE)
 
+        -- Gem area
         local gemContainer = bg:AddChild("GemContainer", "GenericUI_Element_Empty")
         local BOARD_WIDTH = board.Size[2] * UI.CELL_SIZE[1]
         UI.GemContainer = gemContainer
         gemContainer:SetPosition(UI.BACKGROUND_SIZE[1]/2 - BOARD_WIDTH/2, 300)
+
+        -- Frame for gem area
+        local gemAreaFrame = SlicedTexture.Create(UI, "GemAreaFrame", gemContainer, SlicedTexture:GetStyle("SimpleTooltip"), gemAreaSize + UI.PLAY_AREA_FRAME_BORDER_SIZE)
+        gemAreaFrame:SetPosition(-UI.PLAY_AREA_FRAME_BORDER_SIZE[1] / 2, -UI.PLAY_AREA_FRAME_BORDER_SIZE[2] / 2)
 
         local closeButton = bg:AddChild("CloseButton", "GenericUI_Element_Button")
         closeButton:SetType("Close")
