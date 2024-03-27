@@ -412,7 +412,7 @@ local ModifierSettings = {
         Description = Modifiers.HyenaMode.Description,
         DefaultValue = false,
     }),
-    CementMixer_Intensity = Bedazzled:RegisterSetting("Modifiers.RaidMechanics.Intensity", {
+    CementMixer_Intensity = Bedazzled:RegisterSetting("Modifiers.CementMixer.Intensity", {
         Type = "Choice",
         Name = Modifiers.CementMixer.Name,
         Description = Modifiers.CementMixer.Description,
