@@ -25,6 +25,39 @@ local TSK = {
         Text = "A gem has enraged!",
         ContextDescription = [[Shown when a gem becomes enraged from the "Raid Mechanics" modifier]],
     }),
+    Label_EpipeImmoveable_1 = Bedazzled:RegisterTranslatedString({
+        Handle = "h29b8c5e5gfaffg40b2gaa69ge89801e57fcc",
+        Text = "The Epipe refuses to be touched!",
+        ContextDescription = [[Warning when trying to move an Epipe. Variant 1.]],
+    }),
+    Label_EpipeImmoveable_2 = Bedazzled:RegisterTranslatedString({
+        Handle = "h0a0a9c19gac3fg41c0g9c3ag9ee43c846b7e",
+        Text = "You shall not move the Epipe!",
+        ContextDescription = [[Warning when trying to move an Epipe. Variant 2.]],
+    }),
+    Label_EpipeImmoveable_3 = Bedazzled:RegisterTranslatedString({
+        Handle = "hf089a8e7g1b24g443egbdcag619693e44ea7",
+        Text = "The Epipe is too heavy. Concrete-heavy, to be precise.",
+        ContextDescription = [[Warning when trying to move an Epipe. Variant 3.]],
+    }),
+    Label_EpipeImmoveable_4 = Bedazzled:RegisterTranslatedString({
+        Handle = "hda128ee6g3312g4d8bgb6fegc4435a1dc338",
+        Text = "The Epipe is perfectly fine where it is.",
+        ContextDescription = [[Warning when trying to move an Epipe. Variant 4.]],
+    }),
+    Label_EpipeImmoveable_5 = Bedazzled:RegisterTranslatedString({
+        Handle = "hbbdd964eg4621g4e0cg8cc0g1c6b79bcc663",
+        Text = "A stoppable force is no match for the immoveable Epipe...",
+        ContextDescription = [[Warning when trying to move an Epipe. Variant 5.]],
+    })
+}
+-- Warning messages to show when an Epipe is attempted to be moved.
+Overlays.IMMOVEABLE_EPIPE_TSKS = {
+    TSK.Label_EpipeImmoveable_1,
+    TSK.Label_EpipeImmoveable_2,
+    TSK.Label_EpipeImmoveable_3,
+    TSK.Label_EpipeImmoveable_4,
+    TSK.Label_EpipeImmoveable_5,
 }
 
 ---------------------------------------------
@@ -156,7 +189,7 @@ function Overlays._SetupRaidMechanics(modifier)
     end)
 end
 
----Sets up sounds for the CementMixer modifier.
+---Sets up sounds and shenanigans for the CementMixer modifier.
 ---@param mod Features.Bedazzled.Board.Modifiers.CementMixer
 ---@diagnostic disable-next-line: unused-local
 function Overlays._SetupCementMixer(mod)
@@ -169,6 +202,17 @@ function Overlays._SetupCementMixer(mod)
                 -- This is so epic that it has an "impact" sound AND a long ambience jingle.
                 UI:PlaySound(Overlays.SOUNDS.EPIPE_CONSUMED_AMBIENCE)
                 UI:PlaySound(Overlays.SOUNDS.EPIPE_CONSUMED_IMPACT)
+            end
+        end
+    end)
+
+    -- Warn when trying to move Epipes.
+    board.Events.InvalidMovePerformed:Subscribe(function (ev)
+        for _,gem in ipairs(ev.InteractedGems) do
+            if gem.Type == "Epipe" then
+                local msg = Overlays.IMMOVEABLE_EPIPE_TSKS[math.random(1, #Overlays.IMMOVEABLE_EPIPE_TSKS)]
+                Notification.ShowWarning(msg:GetString())
+                break
             end
         end
     end)
