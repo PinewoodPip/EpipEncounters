@@ -161,12 +161,7 @@ function UI._OnGemClickboxClicked(pos)
     local element = BaseUI.GetGemElement(gem)
 
     if gem and element and gem:IsIdle() and UI.HasSelection() then
-        if UI.Game:CanRotateAt(UI.RotatorAnchor) then
-            UI.Game:Rotate(UI.RotatorAnchor, "Clockwise") -- TODO
-            BaseUI:PlaySound(UI.SOUNDS.ROTATE)
-        else
-            BaseUI:PlaySound(UI.SOUNDS.CANT_ROTATE)
-        end
+        UI.Game:Rotate(UI.RotatorAnchor, "Clockwise") -- TODO
     end
 end
 

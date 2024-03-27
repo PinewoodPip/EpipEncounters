@@ -24,37 +24,43 @@ Bedazzled:RegisterClass("Features.Bedazzled.GameModes.Twimstve", Game, {"Feature
 -- METHODS
 ---------------------------------------------
 
----Rotates gems around.
+---Attempts to rotate gems around, which counts as a move.
 ---@param anchor Vector2 Top-left gem coordinate.
 ---@param direction "Clockwise"|"Anti-clockwise"
 function Game:Rotate(anchor, direction)
     if not self:IsAnchorValid(anchor) then
         self:__Error("Rotate", "Invalid anchor position")
-    elseif not self:CanRotateAt(anchor) then
-        self:__Error("Rotate", "Can't rotate in the current situation")
     end
-
     local gems = self:__GetAnchorGems(anchor)
-    local newStates = {}
-    local lastGem = direction == "Anti-clockwise" and gems[1] or gems[#gems]
-    local indexDirection = direction == "Anti-clockwise" and 1 or -1
-    for i=(direction == "Anti-clockwise" and 1 or #gems),(direction == "Anti-clockwise" and #gems or 1),indexDirection do
-        local nextGem = gems[i + indexDirection] or lastGem
-        newStates[i] = {Data = self:GetGemData(nextGem), Type = nextGem.Type, Modifiers = nextGem.Modifiers, OriginalPosition = V(nextGem:GetBoardPosition())}
-    end
 
-    -- TODO check for validity for rotate?
-    for i=1,#newStates,1 do
-        local gem = gems[i]
-        local newState = newStates[i]
-        self:ApplyGemData(gem, newState.Data)
-        gem:SetState(GemStates.MoveFrom:Create(newState.OriginalPosition))
-    end
+    -- Report an invalid move if rotation at this position is not possible.
+    if not self:CanRotateAt(anchor) then
+        self:ReportInvalidMove({
+            Position = anchor,
+            InteractedGems = gems,
+        })
+    else
+        local newStates = {}
+        local lastGem = direction == "Anti-clockwise" and gems[1] or gems[#gems]
+        local indexDirection = direction == "Anti-clockwise" and 1 or -1
+        for i=(direction == "Anti-clockwise" and 1 or #gems),(direction == "Anti-clockwise" and #gems or 1),indexDirection do
+            local nextGem = gems[i + indexDirection] or lastGem
+            newStates[i] = {Data = self:GetGemData(nextGem), Type = nextGem.Type, Modifiers = nextGem.Modifiers, OriginalPosition = V(nextGem:GetBoardPosition())}
+        end
 
-    self:ReportMove({
-        Position = anchor,
-        InteractedGems = gems,
-    })
+        -- TODO check for validity for rotate?
+        for i=1,#newStates,1 do
+            local gem = gems[i]
+            local newState = newStates[i]
+            self:ApplyGemData(gem, newState.Data)
+            gem:SetState(GemStates.MoveFrom:Create(newState.OriginalPosition))
+        end
+
+        self:ReportMove({
+            Position = anchor,
+            InteractedGems = gems,
+        })
+    end
 end
 
 ---Returns whether gems can be rotated at an anchor.
