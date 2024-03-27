@@ -177,6 +177,7 @@ end
 ---@param x integer
 ---@param y integer
 function UI._OnGemClickboxClicked(x, y)
+    if not UI.Game then return end
     local newSelection = V(x, y)
     local gem = UI.Game:GetGemAt(x, y)
     local element = BaseUI.GetGemElement(gem)
