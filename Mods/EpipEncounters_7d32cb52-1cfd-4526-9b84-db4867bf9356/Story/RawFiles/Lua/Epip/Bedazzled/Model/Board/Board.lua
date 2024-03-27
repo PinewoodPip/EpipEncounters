@@ -588,19 +588,21 @@ function _Board:IsGemMatchableWith(gem, otherGem)
 end
 
 ---Adds gems from a list to a match, following the default logic for fusions.
+---**Assumes that all gems within the list are of the same type.**
 ---@param match Feature_Bedazzled_Match Mutated.
 ---@param list Feature_Bedazzled_Board_Gem[]
 function _Board:_AddGemsFromListToMatch(match, list)
     -- TODO prioritize fusing into swiped gem
     -- Only add gems if there were >= MINIMUM_MATCH_GEMS in the row/column
     if #list >= Bedazzled.MINIMUM_MATCH_GEMS then
-        if #list >= 6 then -- Fuse into a supernova
+        local isFusable = list[1].Type ~= "Epipe" -- Epipes cannot accept modifiers.
+        if #list >= 6 and isFusable then -- Fuse into a supernova
             local fusion = Fusion.Create(list[1], "GiantRune", list)
             match:AddFusion(fusion)
-        elseif #list >= 5 then -- Fuse into a hypercube
+        elseif #list >= 5 and isFusable then -- Fuse into a hypercube
             local fusion = Fusion.Create(list[1], nil, list, "Protean")
             match:AddFusion(fusion)
-        elseif #list >= 4 then -- Fuse into a Rune
+        elseif #list >= 4 and isFusable then -- Fuse into a Rune
             local fusion = Fusion.Create(list[2], "Rune", list)
             match:AddFusion(fusion)
         else -- Add gems for consumption
