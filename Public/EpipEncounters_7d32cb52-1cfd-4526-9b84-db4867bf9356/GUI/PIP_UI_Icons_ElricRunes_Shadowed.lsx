@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<save>
+    <header version="2" />
+    <version major="3" minor="6" revision="6" build="0" />
+    <region id="IconUVList">
+        <node id="root">
+            <children>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="ELRIC_LOOT_Rune_Bloodstone_Giant_Shadowed" type="22" />
+                    <attribute id="U1" value="0.000488281" type="6" />
+                    <attribute id="U2" value="0.0620117" type="6" />
+                    <attribute id="V1" value="0.000488281" type="6" />
+                    <attribute id="V2" value="0.0620117" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="ELRIC_LOOT_Rune_Bloodstone_Large_Shadowed" type="22" />
+                    <attribute id="U1" value="0.0629883" type="6" />
+                    <attribute id="U2" value="0.124512" type="6" />
+                    <attribute id="V1" value="0.000488281" type="6" />
+                    <attribute id="V2" value="0.0620117" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="ELRIC_LOOT_Rune_Bloodstone_Medium_Shadowed" type="22" />
+                    <attribute id="U1" value="0.125488" type="6" />
+                    <attribute id="U2" value="0.187012" type="6" />
+                    <attribute id="V1" value="0.000488281" type="6" />
+                    <attribute id="V2" value="0.0620117" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="ELRIC_LOOT_Rune_Bloodstone_Small_Shadowed" type="22" />
+                    <attribute id="U1" value="0.187988" type="6" />
+                    <attribute id="U2" value="0.249512" type="6" />
+                    <attribute id="V1" value="0.000488281" type="6" />
+                    <attribute id="V2" value="0.0620117" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="ELRIC_LOOT_Rune_Emerald_Giant_Shadowed" type="22" />
+                    <attribute id="U1" value="0.250488" type="6" />
+                    <attribute id="U2" value="0.312012" type="6" />
+                    <attribute id="V1" value="0.000488281" type="6" />
+                    <attribute id="V2" value="0.0620117" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="ELRIC_LOOT_Rune_Emerald_Large_Shadowed" type="22" />
+                    <attribute id="U1" value="0.312988" type="6" />
+                    <attribute id="U2" value="0.374512" type="6" />
+                    <attribute id="V1" value="0.000488281" type="6" />
+                    <attribute id="V2" value="0.0620117" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="ELRIC_LOOT_Rune_Emerald_Medium_Shadowed" type="22" />
+                    <attribute id="U1" value="0.375488" type="6" />
+                    <attribute id="U2" value="0.437012" type="6" />
+                    <attribute id="V1" value="0.000488281" type="6" />
+                    <attribute id="V2" value="0.0620117" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="ELRIC_LOOT_Rune_Emerald_Small_Shadowed" type="22" />
+                    <attribute id="U1" value="0.437988" type="6" />
+                    <attribute id="U2" value="0.499512" type="6" />
+                    <attribute id="V1" value="0.000488281" type="6" />
+                    <attribute id="V2" value="0.0620117" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="ELRIC_LOOT_Rune_Jade_Giant_Shadowed" type="22" />
+                    <attribute id="U1" value="0.500488" type="6" />
+                    <attribute id="U2" value="0.562012" type="6" />
+                    <attribute id="V1" value="0.000488281" type="6" />
+                    <attribute id="V2" value="0.0620117" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="ELRIC_LOOT_Rune_Jade_Large_Shadowed" type="22" />
+                    <attribute id="U1" value="0.562988" type="6" />
+                    <attribute id="U2" value="0.624512" type="6" />
+                    <attribute id="V1" value="0.000488281" type="6" />
+                    <attribute id="V2" value="0.0620117" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="ELRIC_LOOT_Rune_Jade_Medium_Shadowed" type="22" />
+                    <attribute id="U1" value="0.625488" type="6" />
+                    <attribute id="U2" value="0.687012" type="6" />
+                    <attribute id="V1" value="0.000488281" type="6" />
+                    <attribute id="V2" value="0.0620117" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="ELRIC_LOOT_Rune_Jade_Small_Shadowed" type="22" />
+                    <attribute id="U1" value="0.687988" type="6" />
+                    <attribute id="U2" value="0.749512" type="6" />
+                    <attribute id="V1" value="0.000488281" type="6" />
+                    <attribute id="V2" value="0.0620117" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="ELRIC_LOOT_Rune_Lapis_Giant_Shadowed" type="22" />
+                    <attribute id="U1" value="0.750488" type="6" />
+                    <attribute id="U2" value="0.812012" type="6" />
+                    <attribute id="V1" value="0.000488281" type="6" />
+                    <attribute id="V2" value="0.0620117" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="ELRIC_LOOT_Rune_Lapis_Large_Shadowed" type="22" />
+                    <attribute id="U1" value="0.812988" type="6" />
+                    <attribute id="U2" value="0.874512" type="6" />
+                    <attribute id="V1" value="0.000488281" type="6" />
+                    <attribute id="V2" value="0.0620117" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="ELRIC_LOOT_Rune_Lapis_Medium_Shadowed" type="22" />
+                    <attribute id="U1" value="0.875488" type="6" />
+                    <attribute id="U2" value="0.937012" type="6" />
+                    <attribute id="V1" value="0.000488281" type="6" />
+                    <attribute id="V2" value="0.0620117" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="ELRIC_LOOT_Rune_Lapis_Small_Shadowed" type="22" />
+                    <attribute id="U1" value="0.937988" type="6" />
+                    <attribute id="U2" value="0.999512" type="6" />
+                    <attribute id="V1" value="0.000488281" type="6" />
+                    <attribute id="V2" value="0.0620117" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="ELRIC_LOOT_Rune_Onyx_Giant_Shadowed" type="22" />
+                    <attribute id="U1" value="0.000488281" type="6" />
+                    <attribute id="U2" value="0.0620117" type="6" />
+                    <attribute id="V1" value="0.0629883" type="6" />
+                    <attribute id="V2" value="0.124512" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="ELRIC_LOOT_Rune_Onyx_Large_Shadowed" type="22" />
+                    <attribute id="U1" value="0.0629883" type="6" />
+                    <attribute id="U2" value="0.124512" type="6" />
+                    <attribute id="V1" value="0.0629883" type="6" />
+                    <attribute id="V2" value="0.124512" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="ELRIC_LOOT_Rune_Onyx_Medium_Shadowed" type="22" />
+                    <attribute id="U1" value="0.125488" type="6" />
+                    <attribute id="U2" value="0.187012" type="6" />
+                    <attribute id="V1" value="0.0629883" type="6" />
+                    <attribute id="V2" value="0.124512" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="ELRIC_LOOT_Rune_Onyx_Small_Shadowed" type="22" />
+                    <attribute id="U1" value="0.187988" type="6" />
+                    <attribute id="U2" value="0.249512" type="6" />
+                    <attribute id="V1" value="0.0629883" type="6" />
+                    <attribute id="V2" value="0.124512" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="ELRIC_LOOT_Rune_Sapphire_Giant_Shadowed" type="22" />
+                    <attribute id="U1" value="0.250488" type="6" />
+                    <attribute id="U2" value="0.312012" type="6" />
+                    <attribute id="V1" value="0.0629883" type="6" />
+                    <attribute id="V2" value="0.124512" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="ELRIC_LOOT_Rune_Sapphire_Large_Shadowed" type="22" />
+                    <attribute id="U1" value="0.312988" type="6" />
+                    <attribute id="U2" value="0.374512" type="6" />
+                    <attribute id="V1" value="0.0629883" type="6" />
+                    <attribute id="V2" value="0.124512" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="ELRIC_LOOT_Rune_Sapphire_Medium_Shadowed" type="22" />
+                    <attribute id="U1" value="0.375488" type="6" />
+                    <attribute id="U2" value="0.437012" type="6" />
+                    <attribute id="V1" value="0.0629883" type="6" />
+                    <attribute id="V2" value="0.124512" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="ELRIC_LOOT_Rune_Sapphire_Small_Shadowed" type="22" />
+                    <attribute id="U1" value="0.437988" type="6" />
+                    <attribute id="U2" value="0.499512" type="6" />
+                    <attribute id="V1" value="0.0629883" type="6" />
+                    <attribute id="V2" value="0.124512" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="ELRIC_LOOT_Rune_TigersEye_Giant_Shadowed" type="22" />
+                    <attribute id="U1" value="0.500488" type="6" />
+                    <attribute id="U2" value="0.562012" type="6" />
+                    <attribute id="V1" value="0.0629883" type="6" />
+                    <attribute id="V2" value="0.124512" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="ELRIC_LOOT_Rune_TigersEye_Large_Shadowed" type="22" />
+                    <attribute id="U1" value="0.562988" type="6" />
+                    <attribute id="U2" value="0.624512" type="6" />
+                    <attribute id="V1" value="0.0629883" type="6" />
+                    <attribute id="V2" value="0.124512" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="ELRIC_LOOT_Rune_TigersEye_Medium_Shadowed" type="22" />
+                    <attribute id="U1" value="0.625488" type="6" />
+                    <attribute id="U2" value="0.687012" type="6" />
+                    <attribute id="V1" value="0.0629883" type="6" />
+                    <attribute id="V2" value="0.124512" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="ELRIC_LOOT_Rune_TigersEye_Small_Shadowed" type="22" />
+                    <attribute id="U1" value="0.687988" type="6" />
+                    <attribute id="U2" value="0.749512" type="6" />
+                    <attribute id="V1" value="0.0629883" type="6" />
+                    <attribute id="V2" value="0.124512" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="ELRIC_LOOT_Rune_Topaz_Giant_Shadowed" type="22" />
+                    <attribute id="U1" value="0.750488" type="6" />
+                    <attribute id="U2" value="0.812012" type="6" />
+                    <attribute id="V1" value="0.0629883" type="6" />
+                    <attribute id="V2" value="0.124512" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="ELRIC_LOOT_Rune_Topaz_Large_Shadowed" type="22" />
+                    <attribute id="U1" value="0.812988" type="6" />
+                    <attribute id="U2" value="0.874512" type="6" />
+                    <attribute id="V1" value="0.0629883" type="6" />
+                    <attribute id="V2" value="0.124512" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="ELRIC_LOOT_Rune_Topaz_Medium_Shadowed" type="22" />
+                    <attribute id="U1" value="0.875488" type="6" />
+                    <attribute id="U2" value="0.937012" type="6" />
+                    <attribute id="V1" value="0.0629883" type="6" />
+                    <attribute id="V2" value="0.124512" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="ELRIC_LOOT_Rune_Topaz_Small_Shadowed" type="22" />
+                    <attribute id="U1" value="0.937988" type="6" />
+                    <attribute id="U2" value="0.999512" type="6" />
+                    <attribute id="V1" value="0.0629883" type="6" />
+                    <attribute id="V2" value="0.124512" type="6" />
+                </node>
+            </children>
+        </node>
+    </region>
+    <region id="TextureAtlasInfo">
+        <node id="root">
+            <children>
+                <node id="TextureAtlasIconSize">
+                    <attribute id="Height" value="64" type="4" />
+                    <attribute id="Width" value="64" type="4" />
+                </node>
+                <node id="TextureAtlasPath">
+                    <attribute id="Path" value="Assets/Textures/Icons/PIP_UI_Icons_ElricRunes_Shadowed.dds" type="20" />
+                    <attribute id="UUID" value="562efa0c-17c7-4bcc-ab90-6212cec25bbd" type="22" />
+                </node>
+                <node id="TextureAtlasTextureSize">
+                    <attribute id="Height" value="1024" type="4" />
+                    <attribute id="Width" value="1024" type="4" />
+                </node>
+            </children>
+        </node>
+    </region>
+</save>

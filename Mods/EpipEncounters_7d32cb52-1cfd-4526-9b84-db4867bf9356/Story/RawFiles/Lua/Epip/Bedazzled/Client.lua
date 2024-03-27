@@ -28,7 +28,7 @@ local Bedazzled = {
         },
         GameOver_Reason_Forfeited = {
             Handle = "h585fa6e9gdc3ag40deg97f8gf68df49288fd",
-            Text = "All hope was lost, apparently.",
+            Text = "All hope was lost, I guess.",
             ContextDescription = [[Subtitle for game over from forfeiting]],
         },
         HighScore = {
@@ -262,6 +262,7 @@ function Bedazzled.AddHighScore(gameMode, modifiers, score)
     setting.Scores[gameMode] = scores
 
     Bedazzled:SetSettingValue(Bedazzled.Settings.HighScores, setting)
+    Bedazzled:SaveSettings()
 end
 
 ---Returns all high scores.
@@ -370,35 +371,35 @@ GameState.Events.ClientReady:Subscribe(function (_)
     local gems = {
         {
             Type = "Bloodstone",
-            Icon = "Item_LOOT_Gem_Bloodstone",
+            Icon = "ELRIC_Gem_Bloodstone",
         },
         {
             Type = "Jade",
-            Icon = "Item_LOOT_Gem_Jade",
+            Icon = "ELRIC_Gem_Jade",
         },
         {
             Type = "Sapphire",
-            Icon = "Item_LOOT_Gem_Sapphire",
+            Icon = "ELRIC_Gem_Sapphire",
         },
         {
             Type = "Topaz",
-            Icon = "Item_LOOT_Gem_Topaz",
+            Icon = "ELRIC_Gem_Topaz",
         },
         {
             Type = "Onyx",
-            Icon = "Item_LOOT_Gem_Onyx",
+            Icon = "ELRIC_Gem_Onyx",
         },
         {
             Type = "Emerald",
-            Icon = "Item_LOOT_Gem_Emerald",
+            Icon = "ELRIC_Gem_Emerald",
         },
         {
             Type = "Lapis",
-            Icon = "Item_LOOT_Gem_Lapis",
+            Icon = "ELRIC_Gem_Lapis",
         },
         {
             Type = "TigersEye",
-            Icon = "Item_LOOT_Gem_TigersEye",
+            Icon = "ELRIC_Gem_TigersEye",
         },
         {
             Type = "Protean",
