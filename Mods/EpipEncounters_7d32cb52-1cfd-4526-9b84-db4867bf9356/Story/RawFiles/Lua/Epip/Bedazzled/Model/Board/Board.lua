@@ -13,6 +13,7 @@ local V = Vector.Create
 ---@field _Paused boolean
 ---@field Score integer
 ---@field MovesMade integer
+---@field TimeElapsed number In seconds, ticked while the board is updating.
 ---@field GemsSpawned integer Total amount of gems spawned naturally.
 ---@field MatchesSinceLastMove integer
 ---@field Size Vector2
@@ -103,6 +104,7 @@ function _Board:Create(size)
         _QueuedMatches = {},
         Score = 0,
         MovesMade = 0,
+        TimeElapsed = 0,
         GemsSpawned = 0,
         MatchesSinceLastMove = 0,
         Size = size,
@@ -224,6 +226,9 @@ function _Board:Update(dt)
         self:ConsumeMatch(bestMatch)
     end
 
+    -- Increment time tracker
+    self.TimeElapsed = self.TimeElapsed + dt
+
     self.Events.Updated:Throw({DeltaTime = dt})
 
     -- Game over if all gems are idling with no moves available.
@@ -320,6 +325,13 @@ function _Board:EndGame(reason)
 
     -- Stop updates
     GameState.Events.RunningTick:Unsubscribe("Bedazzled_" .. self.GUID)
+
+    -- Update statistics
+    Bedazzled.IncrementStatistic(Bedazzled.Settings.PlayTime, self.TimeElapsed)
+    Bedazzled.IncrementStatistic(Bedazzled.Settings.GamesPlayed)
+
+    -- Save statistics and other settings
+    Bedazzled:SaveSettings()
 end
 
 ---Returns the gems in a rect.
@@ -393,6 +405,13 @@ function _Board:ConsumeMatch(match)
                 self:QueueMatch(supernova)
             end
         end
+
+        -- Increment gem consumption statistics;
+        -- these intentionally also consider gems that are fused or transformed.
+        Bedazzled.IncrementStatistic(Bedazzled.Settings.GemsConsumed)
+        if gem.Type == "Epipe" then
+            Bedazzled.IncrementStatistic(Bedazzled.Settings.EpipesConsumed)
+        end
     end
 
     self.MatchesSinceLastMove = self.MatchesSinceLastMove + 1
@@ -403,9 +422,23 @@ function _Board:ConsumeMatch(match)
 
         if fusion.TargetType then
             self:TransformGem(target, fusion.TargetType)
+
+            -- Increment Callisto creation statistic
+            if fusion.TargetType == "Protean" then
+                Bedazzled.IncrementStatistic(Bedazzled.Settings.CallistoAnomaliesCreated)
+            end
         end
         if fusion.TargetModifier then
             target:AddModifier(fusion.TargetModifier)
+
+            -- Increment rune creation statistics
+            if fusion.TargetModifier == "Rune" then
+                Bedazzled.IncrementStatistic(Bedazzled.Settings.SmallRunesCreated)
+            elseif fusion.TargetModifier == "LargeRune" then
+                Bedazzled.IncrementStatistic(Bedazzled.Settings.LargeRunesCreated)
+            elseif  fusion.TargetModifier == "GiantRune" then
+                Bedazzled.IncrementStatistic(Bedazzled.Settings.GiantRunesCreated)
+            end
         end
         target:SetState(transformingState:Create())
 

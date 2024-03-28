@@ -5,6 +5,7 @@ local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 local Textures = Epip.GetFeature("Feature_GenericUITextures").TEXTURES
 local Button = Generic.GetPrefab("GenericUI_Prefab_Button")
 local CloseButton = Generic.GetPrefab("GenericUI_Prefab_CloseButton")
+local ValueLabelPrefab = Generic.GetPrefab("GenericUI.Prefabs.ValueLabel")
 local SettingWidgets = Epip.GetFeature("Features.SettingWidgets")
 local CommonStrings = Text.CommonStrings
 local V = Vector.Create
@@ -15,9 +16,9 @@ local GameModes = {
 
 ---@class Features.Bedazzled.UI.Menu : GenericUI_Instance
 local UI = Generic.Create("Features.Bedazzled.UI.Menu")
-
 ---@type table<string, Features.Bedazzled.Board.Modifier>
 UI._RegisteredModifiers = {}
+UI._StatisticLabels = {} ---@type table<string, GenericUI.Prefabs.ValueLabel> Maps namespaced setting ID to prefab instance.
 
 local TSK = {
     Label_Bedazzle = Bedazzled:RegisterTranslatedString({
@@ -62,7 +63,7 @@ local TSK = {
     }),
     Setting_CementMixer_Intensity_Choice_Low = Bedazzled:RegisterTranslatedString({
         Handle = "hd2814793gdb4ag4ab1gb8b5g8bf25a06d5bb",
-        Text = "Low Load",
+        Text = "Mild Load",
         ContextDescription = [[Choice for "Cement Mixing" modifier setting; "Load" is used as in "workload"]],
     }),
     Setting_CementMixer_Intensity_Choice_Medium = Bedazzled:RegisterTranslatedString({
@@ -107,6 +108,7 @@ function UI:Show()
 
     -- Update the highscores panel; necessary for when player returns from a game with a new score set.
     UI.UpdateHighScoresPanel()
+    UI._UpdateStatistics()
 
     self:SetPositionRelativeToViewport("center", "center")
     Client.UI._BaseUITable.Show(self)
@@ -245,7 +247,7 @@ function UI:_Initialize()
     settingsList:SetPositionRelativeToParent("Top", 10, 160)
 
     local startButton = Button.Create(UI, "StartButton", panel, Button:GetStyle("GreenMedium"))
-    startButton:SetLabel(CommonStrings.Start)
+    startButton:SetLabel(TSK.Label_Bedazzle)
     startButton:SetPositionRelativeToParent("Bottom", 0, -44)
 
     -- Start a new game when the start button is pressed.
@@ -257,6 +259,7 @@ function UI:_Initialize()
     closeButton:SetPositionRelativeToParent("TopLeft", 51, 45)
 
     UI._SetupHighScores()
+    UI._SetupStatistics()
 
     panelList:RepositionElements()
     uiObject.SysPanelSize = panelList:GetSize()
@@ -269,6 +272,7 @@ function UI._SetupHighScores()
     local panel = UI.PanelList:AddChild("HighScoresPanel", "GenericUI_Element_Texture")
     panel:SetTexture(Textures.PANELS.LIST)
     panel:SetCenterInLists(true)
+    UI.HighScoresPanel = panel
 
     local highscoresHeader = UI.CreateText("HighScoresHeader", panel, TSK.Label_HighScores:Format({Size = 23, Color = Bedazzled.LOGO_COLOR}), "Center", V(400, 50))
     highscoresHeader:SetPositionRelativeToParent("Top", 0, 100)
@@ -282,6 +286,50 @@ function UI._SetupHighScores()
     scoresList:SetElementSpacing(0)
     scoresList:SetPositionRelativeToParent("Top", 30, 215)
     UI.HighScoresList = scoresList
+end
+
+---Sets up the statistics panel.
+function UI._SetupStatistics()
+    local panel = UI.HighScoresPanel -- Statistics are shown in the same panel as high-scores.
+    local statisticsHeader = UI.CreateText("StatisticsHeader", panel, CommonStrings.Statistics:Format({Size = 23, Color = Bedazzled.LOGO_COLOR}), "Center", V(400, 50))
+    statisticsHeader:SetPositionRelativeToParent("Top", 0, 390)
+
+    local statsList = panel:AddChild("StatsList", "GenericUI_Element_ScrollList")
+    statsList:SetFrame(400 - 42, 320)
+    statsList:SetPositionRelativeToParent("TopLeft", 70, 430)
+    UI.StatsList = statsList
+
+    -- Create labels
+    for _,setting in ipairs(Bedazzled.STATISTIC_SETTINGS) do
+        -- These "settings" are for persistence only and not user-modifiable, thus we do not use SettingWidgets.
+        local label = ValueLabelPrefab.Create(UI, "Stats." .. setting:GetNamespacedID(), statsList, V(345, 30), Text.Format(setting:GetName(), {Color = Color.BLACK}), "")
+        label:SetTooltip("Simple", setting:GetDescription())
+
+        UI._StatisticLabels[setting:GetNamespacedID()] = label
+    end
+    statsList:RepositionElements()
+end
+
+---Updates the statistic labels.
+function UI._UpdateStatistics()
+    for _,setting in ipairs(Bedazzled.STATISTIC_SETTINGS) do
+        local label = UI._StatisticLabels[setting:GetNamespacedID()]
+        if label then
+            local value = setting:GetValue()
+            local valueLabel
+            -- Format time played.
+            if setting == Bedazzled.Settings.PlayTime then
+                valueLabel = Text.FormatTime(value)
+            else
+                valueLabel = tostring(value)
+            end
+            label.ValueLabel:SetText(Text.Format(valueLabel, {
+                Color = Color.BLACK,
+            }))
+        else
+            UI:__LogWarning("A statistic setting was added post-init? This is not supported and will not display correctly.")
+        end
+    end
 end
 
 ---Returns a string description of the currently-chosen gamemode and modifiers.
