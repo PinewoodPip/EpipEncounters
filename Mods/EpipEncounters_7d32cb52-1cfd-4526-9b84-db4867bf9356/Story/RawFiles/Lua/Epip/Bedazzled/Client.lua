@@ -61,6 +61,86 @@ local Bedazzled = {
             Text = "%s Mode - %s pts",
             ContextDescription = [[Discord Rich Presence 2nd line; params are gamemode name and score. "Pts" is short for "points"]],
         },
+        Setting_GemsConsumed_Name = {
+            Handle = "hc6114597gda86g4a38g9e44gf4636b9cea00",
+            Text = "Gems Matched",
+            ContextDescription = [[Statistic name]],
+        },
+        Setting_GemsConsumed_Description = {
+            Handle = "hbfa26979g030ag43e2g8d4bg868d43239676",
+            Text = "Total amount of gems matched.",
+            ContextDescription = [[Description for "Gems Matched" statistic]],
+        },
+        Setting_GamesPlayed_Name = {
+            Handle = "h36a5d25eg38dfg4158g81aeg082f714d1622",
+            Text = "Games Played",
+            ContextDescription = [[Statistic name]],
+        },
+        Setting_GamesPlayed_Description = {
+            Handle = "h45f1bbb1g6898g4b09gae35g11aa27a1f58c",
+            Text = "Total amount of games finished.",
+            ContextDescription = [[Description for "Games Played" statistic]],
+        },
+        Setting_PlayTime_Name = {
+            Handle = "heae3a7f9gcec8g46a0gae70g53dee327a8bb",
+            Text = "Total Playtime",
+            ContextDescription = [[Statistic name]],
+        },
+        Setting_PlayTime_Description = {
+            Handle = "hce78dedcgd0a5g459fgae07gba839cb5b63a",
+            Text = "Total time spent playing, in mm:ss format.",
+            ContextDescription = [[Description for "Total Playtime" statistic; "mm" refers to minutes, "ss" refers to seconds.]],
+        },
+        Setting_SmallRunesCreated_Name = {
+            Handle = "h28eeeac8g5a97g4e9eg8ba9ge110c4bc94cb",
+            Text = "Small Runes Crafted",
+            ContextDescription = [[Statistic name]],
+        },
+        Setting_SmallRunesCreated_Description = {
+            Handle = "h141b2d75gb02bg4397g9780g8326334ae9ed",
+            Text = "Total amount of small runes crafted from matching 4 gems in a line.",
+            ContextDescription = [[Description for "Small Runes Crafted" statistic]],
+        },
+        Setting_LargeRunesCreated_Name = {
+            Handle = "hd991a4bdg93c3g4620gaba4gf5cab79b70b3",
+            Text = "Large Runes Crafted",
+            ContextDescription = [[Statistic name]],
+        },
+        Setting_LargeRunesCreated_Description = {
+            Handle = "h27d08f20gb7b7g43a2g80a7g5eb2e6785099",
+            Text = "Total amount of giant runes crafted from matching gems in a \"|_\" shape.",
+            ContextDescription = [[Description for "Large Runes Crafted" statistic]],
+        },
+        Setting_GiantRunesCreated_Name = {
+            Handle = "h0047eaa9g9d43g4dcfgacebge26f278a3599",
+            Text = "Giant Runes Crafted",
+            ContextDescription = [[Statistic name]],
+        },
+        Setting_GiantRunesCreated_Description = {
+            Handle = "h08bc074cg4665g4024g921fg7075b92fcc4e",
+            Text = "Total amount of large runes crafted from matching 6 gems in line.",
+            ContextDescription = [[Description for "Giant Runes Crafted" statistic]],
+        },
+        Setting_CallistoAnomaliesCreated_Name = {
+            Handle = "h2d75368egf465g4657g894agcbe56da331ae",
+            Text = "Callisto Anomalies Built",
+            ContextDescription = [[Statistic name]],
+        },
+        Setting_CallistoAnomaliesCreated_Description = {
+            Handle = "hc32ad589g11a4g4400g904ega5c3faba99a6",
+            Text = "Total amount of unbuildable objects built from matching 5 gems in a line.",
+            ContextDescription = [[Description for "Callisto Anomalies Created" statistic]],
+        },
+        Setting_EpipesConsumed_Name = {
+            Handle = "h11a46b2cg0d46g47c2gbd3dg4c0d806a9fbc",
+            Text = "Epipes Dismissed",
+            ContextDescription = [[Statistic name]],
+        },
+        Setting_EpipesConsumed_Description = {
+            Handle = "h641b81cbgffb5g4b0bg83e3g3903d2c193bd",
+            Text = "Total amount of Epipes vanquished.",
+            ContextDescription = [[Description for "Epipes Dismissed" statistic]],
+        },
     },
     Settings = {
         HighScores = {
@@ -93,15 +173,80 @@ local Bedazzled = {
     }
 }
 Epip.RegisterFeature("Bedazzled", Bedazzled)
+local TSK = Bedazzled.TranslatedStrings
+
+---------------------------------------------
+-- SETTINGS
+---------------------------------------------
+
+Bedazzled.Settings.GemsConsumed = Bedazzled:RegisterSetting("GemsConsumed", {
+    Type = "Number",
+    Name = TSK.Setting_GemsConsumed_Name,
+    Description = TSK.Setting_GemsConsumed_Description,
+    DefaultValue = 0,
+})
+Bedazzled.Settings.GamesPlayed = Bedazzled:RegisterSetting("GamesPlayed", {
+    Type = "Number",
+    Name = TSK.Setting_GamesPlayed_Name,
+    Description = TSK.Setting_GamesPlayed_Description,
+    DefaultValue = 0,
+})
+Bedazzled.Settings.PlayTime = Bedazzled:RegisterSetting("PlayTime", {
+    Type = "Number",
+    Name = TSK.Setting_PlayTime_Name,
+    Description = TSK.Setting_PlayTime_Description,
+    DefaultValue = 0,
+})
+Bedazzled.Settings.SmallRunesCreated = Bedazzled:RegisterSetting("SmallRunesCreated", {
+    Type = "Number",
+    Name = TSK.Setting_SmallRunesCreated_Name,
+    Description = TSK.Setting_SmallRunesCreated_Description,
+    DefaultValue = 0,
+})
+Bedazzled.Settings.LargeRunesCreated = Bedazzled:RegisterSetting("LargeRunesCreated", {
+    Type = "Number",
+    Name = TSK.Setting_LargeRunesCreated_Name,
+    Description = TSK.Setting_LargeRunesCreated_Description,
+    DefaultValue = 0,
+})
+Bedazzled.Settings.GiantRunesCreated = Bedazzled:RegisterSetting("GiantRunesCreated", {
+    Type = "Number",
+    Name = TSK.Setting_GiantRunesCreated_Name,
+    Description = TSK.Setting_GiantRunesCreated_Description,
+    DefaultValue = 0,
+})
+Bedazzled.Settings.CallistoAnomaliesCreated = Bedazzled:RegisterSetting("CallistoAnomaliesCreated", {
+    Type = "Number",
+    Name = TSK.Setting_CallistoAnomaliesCreated_Name,
+    Description = TSK.Setting_CallistoAnomaliesCreated_Description,
+    DefaultValue = 0,
+})
+Bedazzled.Settings.EpipesConsumed = Bedazzled:RegisterSetting("EpipesConsumed", {
+    Type = "Number",
+    Name = TSK.Setting_EpipesConsumed_Name,
+    Description = TSK.Setting_EpipesConsumed_Description,
+    DefaultValue = 0,
+})
+
+Bedazzled.STATISTIC_SETTINGS = {
+    Bedazzled.Settings.GemsConsumed,
+    Bedazzled.Settings.GamesPlayed,
+    Bedazzled.Settings.PlayTime,
+    Bedazzled.Settings.SmallRunesCreated,
+    Bedazzled.Settings.LargeRunesCreated,
+    Bedazzled.Settings.GiantRunesCreated,
+    Bedazzled.Settings.CallistoAnomaliesCreated,
+    Bedazzled.Settings.EpipesConsumed,
+}
 
 ---------------------------------------------
 -- CLASSES
 ---------------------------------------------
 
 ---@alias Feature_Bedazzled_GemModifier_ID "Rune"|"LargeRune"|"GiantRune"
----@alias Feature_Bedazzled_GemDescriptor_ID "Bloodstone"|"Jade"|"Sapphire"|"Topaz"|"Onyx"|"Emerald"|"Lapis"|"TigersEye"|"Protean"
+---@alias Feature_Bedazzled_GemDescriptor_ID "Bloodstone"|"Jade"|"Sapphire"|"Topaz"|"Onyx"|"Emerald"|"Lapis"|"TigersEye"|"Protean"|"Epipe"
 
----@alias Feature_Bedazzled_GameMode_ID "Features.Bedazzled.GameModes.Classic"
+---@alias Feature_Bedazzled_GameMode_ID "Features.Bedazzled.GameModes.Classic"|"Features.Bedazzled.GameModes.Twimstve"
 
 ---@alias Features.Bedazzled.ModifierSet table<classname, Features.Bedazzled.Board.Modifier.Configuration>
 
@@ -263,6 +408,14 @@ function Bedazzled.AddHighScore(gameMode, modifiers, score)
 
     Bedazzled:SetSettingValue(Bedazzled.Settings.HighScores, setting)
     Bedazzled:SaveSettings()
+end
+
+---Increments the value of a statistic setting.
+---@param statistic SettingsLib_Setting_Number
+---@param value number? Defaults to `1`.
+function Bedazzled.IncrementStatistic(statistic, value)
+    value = value or 1
+    statistic:SetValue(statistic:GetValue() + value)
 end
 
 ---Returns all high scores.
