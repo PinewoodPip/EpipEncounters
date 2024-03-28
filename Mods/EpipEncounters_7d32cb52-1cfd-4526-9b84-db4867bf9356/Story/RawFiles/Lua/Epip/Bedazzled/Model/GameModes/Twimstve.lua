@@ -1,5 +1,6 @@
 
 local Bedazzled = Epip.GetFeature("Feature_Bedazzled")
+local BoardClass = Bedazzled:GetClass("Feature_Bedazzled_Board")
 local V = Vector.Create
 local GemStates = {
     MoveFrom = Bedazzled.GetGemStateClass("Features.Bedazzled.Board.Gem.State.MoveFrom")
@@ -7,6 +8,8 @@ local GemStates = {
 
 ---@class Features.Bedazzled.GameModes.Twimstve : Features.Bedazzled.GameMode
 local Game = {
+    _CallistoQueuedGemTypes = {}, ---@type table<Feature_Bedazzled_Board_Gem, string[]> -- Gem types to zap when a Callisto finished being rotated.
+
     Name = Bedazzled:RegisterTranslatedString({
         Handle = "h3a62400bg5fccg488agbc25ge3f4990d857a",
         Text = "Twimst've",
@@ -16,9 +19,14 @@ local Game = {
         Handle = "hb6b35565g099eg426cga87cg3459ca975b10",
         Text = "Match gems by rotating groups of 2x2 gems.",
         ContextDescription = "Game mode description for Twimst've game mode",
-    })
+    }),
 }
 Bedazzled:RegisterClass("Features.Bedazzled.GameModes.Twimstve", Game, {"Features.Bedazzled.GameMode"})
+
+-- Prevent this table from holding a refcount for the gems just in case.
+setmetatable(Game._CallistoQueuedGemTypes, {
+    __mode = 'k',
+})
 
 ---------------------------------------------
 -- METHODS
@@ -54,6 +62,16 @@ function Game:Rotate(anchor, direction)
             local newState = newStates[i]
             self:ApplyGemData(gem, newState.Data)
             gem:SetState(GemStates.MoveFrom:Create(newState.OriginalPosition))
+
+            -- Queue gem types to zap if a Callisto Anomaly was involved.
+            if gem.Type == "Protean" then
+                local otherTypes = {} ---@type table<Feature_Bedazzled_GemDescriptor_ID, true>
+                for _,otherGem in ipairs(gems) do
+                    otherTypes[otherGem.Type] = true
+                end
+                otherTypes["Protean"] = nil -- Don't zap other proteans.
+                self._CallistoQueuedGemTypes[gem] = otherTypes
+            end
         end
 
         self:ReportMove({
@@ -97,6 +115,22 @@ function Game:__GetAnchorGems(anchor)
         self:GetGemAt(anchor[1], anchor[2] - 1),
     }
     return gems
+end
+
+---@override
+---@param gem Feature_Bedazzled_Board_Gem
+---@param ev Feature_Bedazzled_Board_Gem_Event_StateChanged
+function Game:OnGemStateChanged(gem, ev)
+    BoardClass.OnGemStateChanged(self, gem, ev)
+
+    -- Zap gems when Callisto Anomalies finish being rotated.
+    if gem.Type == "Protean" and ev.NewState == "Feature_Bedazzled_Board_Gem_State_Idle" then
+        local queuedTypes = self._CallistoQueuedGemTypes[gem]
+        if queuedTypes then
+            self:QueueCallistoAnomalyZap(gem, queuedTypes)
+            self._CallistoQueuedGemTypes[gem] = nil
+        end
+    end
 end
 
 ---@override
