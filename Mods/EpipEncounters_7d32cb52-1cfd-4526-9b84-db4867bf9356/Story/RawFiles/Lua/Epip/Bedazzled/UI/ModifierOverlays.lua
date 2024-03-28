@@ -117,7 +117,7 @@ function Overlays._SetupTimeLimitDisplay(modifier)
 
     -- Update the label when the board updates.
     UI.Board.Events.Updated:Subscribe(function (_)
-        local color = modifier.RemainingTime >= 60 and Color.WHITE or Color.LARIAN.RED -- Show time left below a minute in red.
+        local color = modifier.RemainingTime >= 60 and Color.BLACK or Color.LARIAN.RED -- Show time left below a minute in red.
 
         label:SetText(Text.Format(Text.FormatTime(modifier.RemainingTime), {
             Color = color,
@@ -131,7 +131,7 @@ function Overlays._SetupMoveLimitDisplay(modifier)
     local list = Overlays.LabelList
     local label = TextPrefab.Create(UI, "Modifiers.MoveLimit.Label", list, "", "Center", Overlays.LABEL_SIZE)
     local function UpdateLabel()
-        local color = modifier.RemainingMoves > 10 and Color.WHITE or Color.LARIAN.RED -- Show remaining moves below a certain threshold in red.
+        local color = modifier.RemainingMoves > 10 and Color.BLACK or Color.LARIAN.RED -- Show remaining moves below a certain threshold in red.
         label:SetText(TSK.Label_MovesLeft:Format({
             FormatArgs = {modifier.RemainingMoves},
             Color = color,
