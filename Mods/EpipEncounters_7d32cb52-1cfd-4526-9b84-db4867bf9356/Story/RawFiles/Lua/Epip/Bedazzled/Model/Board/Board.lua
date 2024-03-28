@@ -742,6 +742,26 @@ function _Board:QueueMatch(match)
     table.insert(self._QueuedMatches, match)
 end
 
+---Queues gems to be zapped by a Callisto Anomaly gem.
+---@param gem Feature_Bedazzled_Board_Gem Will be consumed.
+---@param types table<Feature_Bedazzled_GemDescriptor_ID, true>
+function _Board:QueueCallistoAnomalyZap(gem, types)
+    local zap = Match.Create(self:GetGemGridCoordinates(gem), Match.REASONS.PLAYER_MOVE)
+
+    zap:AddGem(gem)
+
+    for _,otherGem in ipairs(self:GetGems()) do
+        if types[otherGem.Type] then
+            zap:AddGem(otherGem)
+        end
+    end
+
+    local gemsZapped = zap:GetGemCount() - 1 -- Excludes the Callisto Anomaly itself
+    zap:SetScore(self:ApplyScoreMultiplier(Bedazzled.BASE_SCORING.PROTEAN_PER_GEM * gemsZapped))
+
+    self:QueueMatch(zap)
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
