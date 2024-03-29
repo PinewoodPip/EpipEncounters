@@ -6,6 +6,7 @@ local Textures = Epip.GetFeature("Feature_GenericUITextures").TEXTURES
 local Button = Generic.GetPrefab("GenericUI_Prefab_Button")
 local CloseButton = Generic.GetPrefab("GenericUI_Prefab_CloseButton")
 local ValueLabelPrefab = Generic.GetPrefab("GenericUI.Prefabs.ValueLabel")
+local SlicedTexture = Generic.GetPrefab("GenericUI.Prefabs.SlicedTexture")
 local SettingWidgets = Epip.GetFeature("Features.SettingWidgets")
 local CommonStrings = Text.CommonStrings
 local V = Vector.Create
@@ -16,6 +17,10 @@ local GameModes = {
 
 ---@class Features.Bedazzled.UI.Menu : GenericUI_Instance
 local UI = Generic.Create("Features.Bedazzled.UI.Menu")
+UI.EXPERIENCE_BAR_EMPTY_COLOR = Color.Create(Color.LARIAN.DARK_GRAY)
+UI.EXPERIENCE_BAR_FILLED_COLOR = Color.Create(Bedazzled.LOGO_COLOR)
+UI.EXPERIENCE_BAR_SIZE = V(350, 35)
+
 ---@type table<string, Features.Bedazzled.Board.Modifier>
 UI._RegisteredModifiers = {}
 UI._StatisticLabels = {} ---@type table<string, GenericUI.Prefabs.ValueLabel> Maps namespaced setting ID to prefab instance.
@@ -97,6 +102,12 @@ Bedazzled.Settings.GameMode = Bedazzled:RegisterSetting("GameMode", {
         {ID = GameModes.Twimstve:GetClassName(), Name = GameModes.Twimstve:GetName()},
     },
 })
+Bedazzled.Settings.LevelUpMessageQueued = Bedazzled:RegisterSetting("LevelUpMessageQueued", {
+    Type = "Boolean",
+    Name = TSK.Setting_Experience_Name,
+    Description = TSK.Setting_Experience_Description,
+    DefaultValue = false,
+})
 
 ---------------------------------------------
 -- METHODS
@@ -109,6 +120,20 @@ function UI:Show()
     -- Update the highscores panel; necessary for when player returns from a game with a new score set.
     UI.UpdateHighScoresPanel()
     UI._UpdateStatistics()
+    UI._UpdateExperienceWidget()
+
+    -- Show a congratulatory message if the user has leveled up since the last time they accessed the menu.
+    if Bedazzled:GetSettingValue(Bedazzled.Settings.LevelUpMessageQueued) == true then
+        Client.UI.MessageBox.Open({
+            Header = Bedazzled.TranslatedStrings.MsgBox_LevelUp_Title:GetString(),
+            Message = Bedazzled.TranslatedStrings.MsgBox_LevelUp_Body:Format({
+                FormatArgs = {
+                    Text.Format(Bedazzled.GetLevelTitle(), {Color = Bedazzled.LOGO_COLOR}),
+                },
+            }),
+        })
+        Bedazzled:SetSettingValue(Bedazzled.Settings.LevelUpMessageQueued, false)
+    end
 
     self:SetPositionRelativeToViewport("center", "center")
     Client.UI._BaseUITable.Show(self)
@@ -258,8 +283,14 @@ function UI:_Initialize()
     local closeButton = CloseButton.Create(UI, "CloseButton", panel)
     closeButton:SetPositionRelativeToParent("TopLeft", 51, 45)
 
+    -- Track level-ups to queue congratulatory messages the next time the menu is accessed.
+    Bedazzled.Events.LeveledUp:Subscribe(function (_)
+        Bedazzled:SetSettingValue(Bedazzled.Settings.LevelUpMessageQueued, true)
+    end)
+
     UI._SetupHighScores()
     UI._SetupStatistics()
+    UI._SetupExperienceBar()
 
     panelList:RepositionElements()
     uiObject.SysPanelSize = panelList:GetSize()
@@ -292,11 +323,11 @@ end
 function UI._SetupStatistics()
     local panel = UI.HighScoresPanel -- Statistics are shown in the same panel as high-scores.
     local statisticsHeader = UI.CreateText("StatisticsHeader", panel, CommonStrings.Statistics:Format({Size = 23, Color = Bedazzled.LOGO_COLOR}), "Center", V(400, 50))
-    statisticsHeader:SetPositionRelativeToParent("Top", 0, 390)
+    statisticsHeader:SetPositionRelativeToParent("Top", 0, 380)
 
     local statsList = panel:AddChild("StatsList", "GenericUI_Element_ScrollList")
-    statsList:SetFrame(400 - 42, 320)
-    statsList:SetPositionRelativeToParent("TopLeft", 70, 430)
+    statsList:SetFrame(400 - 42, 270)
+    statsList:SetPositionRelativeToParent("TopLeft", 70, 490)
     UI.StatsList = statsList
 
     -- Create labels
@@ -308,6 +339,68 @@ function UI._SetupStatistics()
         UI._StatisticLabels[setting:GetNamespacedID()] = label
     end
     statsList:RepositionElements()
+end
+
+---Creates the experience/level widget.
+function UI._SetupExperienceBar()
+    local panel = UI.HighScoresPanel
+    local size = V(430, 80)
+    local widgetPanel = panel:AddChild("LevelWidget.Panel", "GenericUI_Element_TiledBackground")
+    widgetPanel:SetBackground("Black", size:unpack())
+    widgetPanel:SetAlpha(0)
+    local pos = V(UI.StatsList:GetPosition())
+    widgetPanel:SetPosition(26, pos[2] - size[2]) -- Position before the stats list.
+
+    -- Level title.
+    local titleLabel = UI.CreateText("LevelLabel", widgetPanel, "Temp", "Center", V(size[1], 40))
+    titleLabel:SetPositionRelativeToParent("Top", 0, 0)
+    UI.LevelTitleLabel = titleLabel
+
+    -- XP bar background.
+    local emptyBar = widgetPanel:AddChild("LevelWidget.EmptyBar", "GenericUI_Element_Color")
+    emptyBar:SetSize(UI.EXPERIENCE_BAR_SIZE:unpack())
+    emptyBar:SetColor(UI.EXPERIENCE_BAR_EMPTY_COLOR)
+    emptyBar:SetPositionRelativeToParent("Bottom", 0, -12)
+    UI.ExperienceBarBackground = emptyBar
+
+    -- XP bar fill.
+    local filledBar = emptyBar:AddChild("LevelWidget.FilledBar", "GenericUI_Element_Color")
+    filledBar:SetColor(UI.EXPERIENCE_BAR_FILLED_COLOR)
+    UI.FilledExperienceBar = filledBar
+
+    -- XP requirement label.
+    local xpRequirementLabel = UI.CreateText("LevelWidget.ExperienceLabel", emptyBar, "Placeholder", "Center", UI.EXPERIENCE_BAR_SIZE)
+    xpRequirementLabel:SetSize(UI.EXPERIENCE_BAR_SIZE[1], xpRequirementLabel:GetLineHeight(1))
+    xpRequirementLabel:SetPositionRelativeToParent("Center")
+    UI.ExperienceLabel = xpRequirementLabel
+end
+
+---Updates the level title and experience bar.
+function UI._UpdateExperienceWidget()
+    local level = Bedazzled.GetLevel()
+
+    -- Update title
+    local levelLabel = UI.LevelTitleLabel
+    levelLabel:SetText(Bedazzled.TranslatedStrings.Label_Rank:Format({
+        FormatArgs = {level, Bedazzled.GetLevelTitle()},
+        Color = Bedazzled.LOGO_COLOR,
+        Size = 21,
+    }))
+
+    -- Update XP bar fill
+    local xp = Bedazzled:GetSettingValue(Bedazzled.Settings.Experience)
+    local xpForCurrentLevel = Bedazzled.GetTotalExperienceRequirementForLevel(level)
+    local xpForNextLevel = Bedazzled.GetTotalExperienceRequirementForLevel(level + 1)
+    local currentLevelXp = (xp - xpForCurrentLevel)
+    local nextLevelXp = (xpForNextLevel - xpForCurrentLevel)
+    local xpFraction = currentLevelXp / nextLevelXp
+    UI.FilledExperienceBar:SetSize(UI.EXPERIENCE_BAR_SIZE[1] * xpFraction, UI.EXPERIENCE_BAR_SIZE[2])
+
+    -- Update XP bar label
+    UI.ExperienceLabel:SetText(Text.Format("%d / %d %s", {
+        FormatArgs = {currentLevelXp, nextLevelXp, Bedazzled.TranslatedStrings.Elo},
+    }))
+    UI.ExperienceBarBackground:SetTooltip("Simple", Bedazzled.TranslatedStrings.Label_TotalElo:Format(xp))
 end
 
 ---Updates the statistic labels.

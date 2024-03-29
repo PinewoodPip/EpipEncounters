@@ -2,6 +2,10 @@
 ---@class Feature_Bedazzled : Feature
 local Bedazzled = {
     LOGO_COLOR = "7E72D6",
+    -- https://www.desmos.com/calculator/khvtv4cpp0
+    BASE_LEVEL_EXPERIENCE_REQUIRED = 10000, -- Experience required to reach level 2.
+    LEVEL_EXPERIENCE_REQUIREMENT_EXPONENT = 1.037,
+    LEVEL_EXPERIENCE_REQUIREMENT_LINEAR = 1500, -- Flat extra XP requirement per level.
 
     _Gems = {}, ---@type table<string, Feature_Bedazzled_Gem>
     _GemModifierDescriptors = {}, ---@type table<string, Feature_Bedazzled_GemModifier>
@@ -46,6 +50,21 @@ local Bedazzled = {
            Text = "Are you sure you want to start a new game?",
            ContextDescription = "Message box for new game button",
         },
+        Elo = {
+            Handle = "hb194f8bag62cfg4f99g81c0g0577f33f6e80",
+            Text = "Elo",
+            ContextDescription = [[Refers to the Elo rating system]],
+        },
+        Label_TotalElo = {
+            Handle = "hbe6b58a7g2b97g4816gada4g057016101c9b",
+            Text = "Total Elo Rating: %d",
+            ContextDescription = [[Tooltip for XP bar. Param is total experience ("Elo rating")]],
+        },
+        Label_Rank = {
+            Handle = "hec5855cagb4eag40aagbeb8g060e965607b3",
+            Text = "Rank %d: %s",
+            ContextDescription = [[Experience level label. Params are level number and title (ex. "Novice Bedazzler").]],
+        },
         Label_GiveUp = {
             Handle = "hc158949eg6a66g4e1cga473g9a6c8295132f",
             Text = "Give Up",
@@ -55,6 +74,16 @@ local Bedazzled = {
             Handle = "h9110437dg4b59g460cg8b4aga436971e86c2",
             Text = "Are you sure you want to forfeit the current game?<br>Your efforts will be considered.",
             ContextDescription = [[Prompt for the "Give up" button]],
+        },
+        MsgBox_LevelUp_Title = {
+            Handle = "h5cbe0b4cg9bb1g460cgbe55g29afa05fc9ba",
+            Text = "Elo Rank Up",
+            ContextDescription = [[Header for level up message box]],
+        },
+        MsgBox_LevelUp_Body = {
+            Handle = "hb12932bag7252g4866ga6d3g5a2c55fadaef",
+            Text = "Congratulations, you have been promoted to the title of<br>%s!",
+            ContextDescription = [[Level up message box text; param is new level title]],
         },
         DiscordRichPresence_Line2 = {
             Handle = "h821e09e9g5519g4d22ga658g6e10710444c1",
@@ -108,7 +137,7 @@ local Bedazzled = {
         },
         Setting_LargeRunesCreated_Description = {
             Handle = "h27d08f20gb7b7g43a2g80a7g5eb2e6785099",
-            Text = "Total amount of giant runes crafted from matching gems in a \"|_\" shape.",
+            Text = "Total amount of giant runes crafted from matching gems in a \"L\" or \"T\" shape.",
             ContextDescription = [[Description for "Large Runes Crafted" statistic]],
         },
         Setting_GiantRunesCreated_Name = {
@@ -141,6 +170,116 @@ local Bedazzled = {
             Text = "Total amount of Epipes vanquished.",
             ContextDescription = [[Description for "Epipes Dismissed" statistic]],
         },
+        Setting_Experience_Name = {
+            Handle = "hfedcafbag2790g4030gb228g09f5502b6337",
+            Text = "Elo Rating",
+            ContextDescription = [[Name for experience counter; refers to the Elo rating system]],
+        },
+        Setting_Experience_Description = {
+            Handle = "heb0a888eg83ebg43f2g8302gfd2c397dcd92",
+            Text = "Represents your relative Bedazzle skill. All scores set increase your Elo, and certain Elo milestones will grant you noble titles to reflect your expertise.",
+            ContextDescription = [[Description of "Elo Rating"]],
+        },
+        Bedazzler = {
+            Handle = "hc940bf3fg8e22g4dbfg8b54g22a2b44e26ae",
+            Text = "Bedazzler",
+            ContextDescription = [[Refers to a player of Bedazzle.]],
+        },
+        LevelTitle_Novice = {
+            Handle = "h4767944eg778dg4b51ga155gcacd107ac3cb",
+            Text = "Novice %s",
+            ContextDescription = [[Rank title for the experience system ("ELO"). Param is the "Bedazzler" string.]],
+        },
+        LevelTitle_Apprentice = {
+            Handle = "h1ea47b3bgfdbbg428bg8c9eg7433598e76d2",
+            Text = "Apprentice %s",
+            ContextDescription = [[Rank title for the experience system ("ELO"). Param is the "Bedazzler" string.]],
+        },
+        LevelTitle_Average = {
+            Handle = "ha7f77984g9a3eg41f8g8092g51770524a786",
+            Text = "Average %s",
+            ContextDescription = [[Rank title for the experience system ("ELO"). Param is the "Bedazzler" string.]],
+        },
+        LevelTitle_Adept = {
+            Handle = "h27fa4327g7bc0g447dgae1ag4a014babd621",
+            Text = "Adept %s",
+            ContextDescription = [[Rank title for the experience system ("ELO"). Param is the "Bedazzler" string.]],
+        },
+        LevelTitle_Accomplished = {
+            Handle = "hc90726c1g9788g4d1ag8f28g8fc7ea3d265e",
+            Text = "Accomplished %s",
+            ContextDescription = [[Rank title for the experience system ("ELO"). Param is the "Bedazzler" string.]],
+        },
+        LevelTitle_Great = {
+            Handle = "ha00f1eb9g8cfdg490egbdd1gcfc604a3d580",
+            Text = "Great %s",
+            ContextDescription = [[Rank title for the experience system ("ELO"). Param is the "Bedazzler" string.]],
+        },
+        LevelTitle_Expert = {
+            Handle = "h19f37490gc721g4858g8531g33abd050c096",
+            Text = "Expert %s",
+            ContextDescription = [[Rank title for the experience system ("ELO"). Param is the "Bedazzler" string.]],
+        },
+        LevelTitle_Master = {
+            Handle = "h420b1379g979dg4509gb07eg6f1be47aace9",
+            Text = "Master %s",
+            ContextDescription = [[Rank title for the experience system ("ELO"). Param is the "Bedazzler" string.]],
+        },
+        LevelTitle_Extraordinary = {
+            Handle = "h6342f6feg2beeg4b35g9f3bg3bbfe3a67077",
+            Text = "Extraordinary %s",
+            ContextDescription = [[Rank title for the experience system ("ELO"). Param is the "Bedazzler" string.]],
+        },
+        LevelTitle_Incredible = {
+            Handle = "h353ac651g4564g4893gacdagfcba54e20f00",
+            Text = "Incredible %s",
+            ContextDescription = [[Rank title for the experience system ("ELO"). Param is the "Bedazzler" string.]],
+        },
+        LevelTitle_Credible = {
+            Handle = "h418fa4efgf2b8g4400ga1a0ga84be204d6fc",
+            Text = "Credible %s",
+            ContextDescription = [[Rank title for the experience system ("ELO"). Param is the "Bedazzler" string.]],
+        },
+        LevelTitle_Legendary = {
+            Handle = "h86d629d5g2c07g4af2g826cge4db3379af36",
+            Text = "Legendary %s",
+            ContextDescription = [[Rank title for the experience system ("ELO"). Param is the "Bedazzler" string.]],
+        },
+        LevelTitle_Fabulous = {
+            Handle = "h26fff604g31f2g47a4g910fgd728e411c33b",
+            Text = "Fabulous %s",
+            ContextDescription = [[Rank title for the experience system ("ELO"). Param is the "Bedazzler" string.]],
+        },
+        LevelTitle_Godly = {
+            Handle = "hed4b5958g677eg42e7g83e6gae38ed9451ba",
+            Text = "Godly %s",
+            ContextDescription = [[Rank title for the experience system ("ELO"). Param is the "Bedazzler" string.]],
+        },
+        LevelTitle_Otherwordly = {
+            Handle = "hb9601150gb5e9g4d40gbe6bg114ee9d8dd3a",
+            Text = "Otherwordly %s",
+            ContextDescription = [[Rank title for the experience system ("ELO"). Param is the "Bedazzler" string.]],
+        },
+        LevelTitle_Unimaginable = {
+            Handle = "h71d8e853ga10ag4c60g93a8g5489dedffdc4",
+            Text = "Unimaginable %s",
+            ContextDescription = [[Rank title for the experience system ("ELO"). Param is the "Bedazzler" string.]],
+        },
+        LevelTitle_Imaginary = {
+            Handle = "h44749c67gc042g49d5g8ef0ge38ab1f3aa57",
+            Text = "Imaginary %s",
+            ContextDescription = [[Rank title for the experience system ("ELO"). Param is the "Bedazzler" string.]],
+        },
+        LevelTitle_Holy = {
+            Handle = "hf621376fgd817g496bgb0cag7a131111c044",
+            Text = "Holy %s",
+            ContextDescription = [[Rank title for the experience system ("ELO"). Param is the "Bedazzler" string.]],
+        },
+        LevelTitle_Epic = {
+            Handle = "h14fb8c1cgda0bg4997g95b4g7edaafebf51e",
+            Text = "Epic %s",
+            ContextDescription = [[Rank title for the experience system ("ELO"). Param is the "Bedazzler" string.]],
+        },
     },
     Settings = {
         HighScores = {
@@ -170,10 +309,33 @@ local Bedazzled = {
 
     Events = {
         NewHighScore = {}, ---@type Event<Feature_Bedazzled_Board_Event_GameOver>
+        LeveledUp = {}, ---@type Event<Empty>
     }
 }
 Epip.RegisterFeature("Bedazzled", Bedazzled)
 local TSK = Bedazzled.TranslatedStrings
+
+---@type table<integer, TextLib_TranslatedString>
+Bedazzled.EXPERIENCE_LEVEL_TITLES = {
+    TSK.LevelTitle_Novice,
+    TSK.LevelTitle_Apprentice,
+    TSK.LevelTitle_Adept,
+    TSK.LevelTitle_Accomplished,
+    TSK.LevelTitle_Great,
+    TSK.LevelTitle_Expert,
+    TSK.LevelTitle_Master,
+    TSK.LevelTitle_Extraordinary,
+    TSK.LevelTitle_Incredible,
+    TSK.LevelTitle_Credible,
+    TSK.LevelTitle_Legendary,
+    TSK.LevelTitle_Fabulous,
+    TSK.LevelTitle_Godly,
+    TSK.LevelTitle_Otherwordly,
+    TSK.LevelTitle_Unimaginable,
+    TSK.LevelTitle_Imaginary,
+    TSK.LevelTitle_Holy,
+    TSK.LevelTitle_Epic,
+}
 
 ---------------------------------------------
 -- SETTINGS
@@ -225,6 +387,12 @@ Bedazzled.Settings.EpipesConsumed = Bedazzled:RegisterSetting("EpipesConsumed", 
     Type = "Number",
     Name = TSK.Setting_EpipesConsumed_Name,
     Description = TSK.Setting_EpipesConsumed_Description,
+    DefaultValue = 0,
+})
+Bedazzled.Settings.Experience = Bedazzled:RegisterSetting("Experience", {
+    Type = "Number",
+    Name = TSK.Setting_Experience_Name,
+    Description = TSK.Setting_Experience_Description,
     DefaultValue = 0,
 })
 
@@ -407,6 +575,10 @@ function Bedazzled.AddHighScore(gameMode, modifiers, score)
     setting.Scores[gameMode] = scores
 
     Bedazzled:SetSettingValue(Bedazzled.Settings.HighScores, setting)
+
+    -- Add XP.
+    Bedazzled.AddExperience(score.Score)
+
     Bedazzled:SaveSettings()
 end
 
@@ -416,6 +588,64 @@ end
 function Bedazzled.IncrementStatistic(statistic, value)
     value = value or 1
     statistic:SetValue(statistic:GetValue() + value)
+end
+
+---Returns the user's experience level ("Elo Rating Title").
+---@return integer
+function Bedazzled.GetLevel()
+    local xp = Bedazzled:GetSettingValue(Bedazzled.Settings.Experience)
+    local requirement = Bedazzled.GetLevelExperienceRequirement(2)
+    local level = 1
+    -- Yeah I'm bad at maths. TODO
+    while xp >= requirement do
+        level = level + 1
+        xp = xp - requirement
+        requirement = Bedazzled.GetLevelExperienceRequirement(level + 1)
+    end
+    return level
+end
+
+---Returns the experience required to go from level n-1 to level n.
+---@return integer
+---@param level integer
+function Bedazzled.GetLevelExperienceRequirement(level)
+    return math.ceil(Bedazzled.BASE_LEVEL_EXPERIENCE_REQUIRED * Bedazzled.LEVEL_EXPERIENCE_REQUIREMENT_EXPONENT ^ (level - 2) + Bedazzled.LEVEL_EXPERIENCE_REQUIREMENT_LINEAR * (level - 2))
+end
+
+---Returns the total amount of experience required to reach a level.
+---@param level integer
+---@return integer
+function Bedazzled.GetTotalExperienceRequirementForLevel(level)
+    local xp = 0
+    for i=2,level,1 do
+        xp = xp + Bedazzled.GetLevelExperienceRequirement(i)
+    end
+    return xp
+end
+
+---Returns the title for an experience level.
+---@param level integer? Defaults to current level.
+---@return string
+function Bedazzled.GetLevelTitle(level)
+    level = level or Bedazzled.GetLevel()
+    local tsk = Bedazzled.EXPERIENCE_LEVEL_TITLES[level] or Bedazzled.EXPERIENCE_LEVEL_TITLES[#Bedazzled.EXPERIENCE_LEVEL_TITLES] -- Default to final title.
+    return tsk:Format({
+        FormatArgs = {TSK.Bedazzler:GetString()},
+    })
+end
+
+---Increments the user's experience ("Elo Rating").
+---Throws the LeveldUp event if the experience causes a level-up.
+---@param xp integer
+function Bedazzled.AddExperience(xp)
+    local currentXp = Bedazzled:GetSettingValue(Bedazzled.Settings.Experience)
+    local currentLevel = Bedazzled.GetLevel()
+    local newXp = currentXp + xp
+    Bedazzled:SetSettingValue(Bedazzled.Settings.Experience, newXp)
+    local newLevel = Bedazzled.GetLevel()
+    if newLevel > currentLevel then
+        Bedazzled.Events.LeveledUp:Throw()
+    end
 end
 
 ---Returns all high scores.
