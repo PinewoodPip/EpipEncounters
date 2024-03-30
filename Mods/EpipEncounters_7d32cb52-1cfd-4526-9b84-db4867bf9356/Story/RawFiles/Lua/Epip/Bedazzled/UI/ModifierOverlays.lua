@@ -13,6 +13,8 @@ local Overlays = {
         EPIPE_CONSUMED_AMBIENCE = "UI_Game_PerceptionReveal_Puzzle",
         EPIPE_CONSUMED_IMPACT = "UI_Lobby_AssignMember",
     },
+    ENRAGE_GEM_SCALE_TWEEN = 1.3,
+    ENRAGE_GEM_TWEEN_DURATION = 0.5,
 }
 
 local TSK = {
@@ -109,7 +111,7 @@ function Overlays.Setup()
     local raidMechanicsMod = modifiersSet["Features.Bedazzled.Board.Modifiers.RaidMechanics"]
     if raidMechanicsMod then
         ---@cast raidMechanicsMod Features.Bedazzled.Board.Modifiers.RaidMechanics
-        Overlays._SetupRaidMechanics(moveLimitMod)
+        Overlays._SetupRaidMechanics(raidMechanicsMod)
     end
 
     local cementMixerMod = modifiersSet["Features.Bedazzled.Board.Modifiers.CementMixer"]
@@ -202,21 +204,59 @@ function Overlays._SetupRaidMechanics(modifier)
         element.EnrageTimer = label
 
         Overlays._UpdateEnrageTimer(gem, element)
-
-        -- Show notification for new enraged gems.
-        if gem.EnrageTimer then
-            Notification.ShowWarning(TSK.Label_GemEnraged_1:GetString(), nil, Overlays.ENRAGE_GEM_SPAWN_SOUND)
-        end
     end, {Priority = -1})
 
-    -- Update enrage timers after every move.
-    board.Events.MovePerformed:Subscribe(function (_)
+    -- Show notification for new enraged gems and play an animation.
+    modifier.Events.GemEnraged:Subscribe(function (ev)
+        Notification.ShowWarning(TSK.Label_GemEnraged_1:GetString(), nil, Overlays.ENRAGE_GEM_SPAWN_SOUND)
+
+        -- Ensure the gem element has been created in time
+        Ext.OnNextTick(function ()local element = UI.GetGemElement(ev.Gem)
+            ---@cast element Features.Bedazzled.UI.Game.ModifierOverlays.Gem
+            Overlays._UpdateEnrageTimer(ev.Gem, element)
+
+            -- Play a scale tween.
+            element:Tween({
+                EventID = "EnrageTimerScale_1",
+                FinalValues = {
+                    scaleX = Overlays.ENRAGE_GEM_SCALE_TWEEN,
+                    scaleY = Overlays.ENRAGE_GEM_SCALE_TWEEN,
+                },
+                Function = "Quadratic",
+                Ease = "EaseOut",
+                Duration = Overlays.ENRAGE_GEM_TWEEN_DURATION / 2,
+                OnComplete = function (_)
+                    element:Tween({
+                        EventID = "EnrageTimerScale_2",
+                        FinalValues = {
+                            scaleX = 1,
+                            scaleY = 1,
+                        },
+                        Function = "Quadratic",
+                        Ease = "EaseIn",
+                        Duration = Overlays.ENRAGE_GEM_TWEEN_DURATION / 2,
+                    })
+                end
+            })
+        end)
+    end)
+
+    -- Update enrage timers after every move and match (as fusions can clear timers).
+    local function UpdateTimers()
         for _,gem in ipairs(board:GetGems()) do
             ---@cast gem Features.Bedazzled.Board.Modifiers.RaidMechanics.Gem
-            if gem.EnrageTimer then
-                Overlays._UpdateEnrageTimer(gem, UI.GetGemElement(gem))
+            -- Need to do this even if the gem has no timer, as it might've been removed (ex. from a fusion)
+            local element = UI.GetGemElement(gem)
+            if element then
+                Overlays._UpdateEnrageTimer(gem, element)
             end
         end
+    end
+    board.Events.MovePerformed:Subscribe(function (_)
+        UpdateTimers()
+    end, {Priority = -1})
+    board.Events.MatchExecuted:Subscribe(function (_)
+        UpdateTimers()
     end, {Priority = -1})
 
     -- Update timers when gems have their data changed.
@@ -259,12 +299,14 @@ end
 ---@param element Features.Bedazzled.UI.Game.ModifierOverlays.Gem
 function Overlays._UpdateEnrageTimer(gem, element)
     local label = element.EnrageTimer
-    label:SetVisible(gem.EnrageTimer ~= nil)
-    if gem.EnrageTimer then
-        label:SetText(Text.Format("%s", {
-            FormatArgs = {element.Gem.EnrageTimer},
-            Color = Color.LARIAN.RED,
-        }))
+    if label then -- There's a race condition here somewhere... TODO
+        label:SetVisible(gem.EnrageTimer ~= nil)
+        if gem.EnrageTimer then
+            label:SetText(Text.Format("%s", {
+                FormatArgs = {element.Gem.EnrageTimer},
+                Color = Color.LARIAN.RED,
+            }))
+        end
     end
 end
 
