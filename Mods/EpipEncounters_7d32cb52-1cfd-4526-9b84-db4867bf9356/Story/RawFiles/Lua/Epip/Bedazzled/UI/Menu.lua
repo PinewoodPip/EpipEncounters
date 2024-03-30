@@ -635,7 +635,13 @@ Client.UI.ContextMenu.RegisterElementListener("epip_Feature_Bedazzled", "buttonP
     if Bedazzled.GameUI:GetBoard() ~= nil and not Bedazzled.GameUI.IsGameEnded() then
         Bedazzled.GameUI:Show()
     else
-        UI:Show()
+        -- If the user is playing for the first time,
+        -- skip the menu and go directly into a default-configuration game (Classic).
+        if Bedazzled.Settings.GamesPlayed:GetValue() == 0 then
+            UI.StartGame()
+        else
+            UI:Show()
+        end
     end
 end)
 
