@@ -20,6 +20,11 @@ local TSK = {
         Text = "%d Moves Left",
         ContextDescription = "Label for move limit; first parameter is amount of moves left",
     }),
+    Label_FreeMovesLeft = Bedazzled:RegisterTranslatedString({
+        Handle = "ha9ce71a4g7cd4g4099g8017g025c472ef4e6",
+        Text = "%d Free Moves Left",
+        ContextDescription = [[Label for Twimst've free moves; param is amount.]],
+    }),
     Label_GemEnraged_1 = Bedazzled:RegisterTranslatedString({
         Handle = "hdc4fb40cgce17g4d19g836bga575f703a664",
         Text = "A gem has enraged!",
@@ -88,6 +93,11 @@ function Overlays.Setup()
         Overlays._SetupTimeLimitDisplay(timeLimitMod)
     end
 
+    -- Setup free move display
+    if board:GetClassName() == "Features.Bedazzled.GameModes.Twimstve" then
+        Overlays._SetupFreeMoveDisplay()
+    end
+
     -- Setup move limit display
     local moveLimitMod = modifiersSet["Features.Bedazzled.Board.Modifiers.MoveLimit"]
     if moveLimitMod then
@@ -123,6 +133,32 @@ function Overlays._SetupTimeLimitDisplay(modifier)
             Color = color,
         }))
     end, {Priority = -1}) -- Not strictly necessary as the modifier should've been applied prior to this.
+end
+
+---Sets up the Twimst've free move display.
+---TODO move this to a modifier
+function Overlays._SetupFreeMoveDisplay()
+    local list = Overlays.LabelList
+    local label = TextPrefab.Create(UI, "Modifiers.FreeMoves.Label", list, "", "Center", Overlays.LABEL_SIZE)
+    local function UpdateLabel()
+        local game = UI.Board ---@cast game Features.Bedazzled.GameModes.Twimstve
+        local color = game.FreeMovesRemaining > 10 and Color.BLACK or Color.LARIAN.RED -- Show remaining moves below a certain threshold in red.
+        label:SetText(TSK.Label_FreeMovesLeft:Format({
+            FormatArgs = {game.FreeMovesRemaining},
+            Color = color,
+        }))
+    end
+
+    -- Update label immediately upon starting the game.
+    UpdateLabel()
+
+    -- Update the label after moves and matches (which may grant extra moves).
+    UI.Board.Events.MovePerformed:Subscribe(function (_)
+        UpdateLabel()
+    end)
+    UI.Board.Events.MatchExecuted:Subscribe(function (_)
+        UpdateLabel()
+    end, {Priority = -9999})
 end
 
 ---Sets up the move limit label.
