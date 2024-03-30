@@ -30,39 +30,39 @@ local TSK = {
         Text = "A gem has enraged!",
         ContextDescription = [[Shown when a gem becomes enraged from the "Raid Mechanics" modifier]],
     }),
-    Label_EpipeImmoveable_1 = Bedazzled:RegisterTranslatedString({
+    Label_EpipeImmovable_1 = Bedazzled:RegisterTranslatedString({
         Handle = "h29b8c5e5gfaffg40b2gaa69ge89801e57fcc",
         Text = "The Epipe refuses to be touched!",
         ContextDescription = [[Warning when trying to move an Epipe. Variant 1.]],
     }),
-    Label_EpipeImmoveable_2 = Bedazzled:RegisterTranslatedString({
+    Label_EpipeImmovable_2 = Bedazzled:RegisterTranslatedString({
         Handle = "h0a0a9c19gac3fg41c0g9c3ag9ee43c846b7e",
         Text = "You shall not move the Epipe!",
         ContextDescription = [[Warning when trying to move an Epipe. Variant 2.]],
     }),
-    Label_EpipeImmoveable_3 = Bedazzled:RegisterTranslatedString({
+    Label_EpipeImmovable_3 = Bedazzled:RegisterTranslatedString({
         Handle = "hf089a8e7g1b24g443egbdcag619693e44ea7",
         Text = "The Epipe is too heavy. Concrete-heavy, to be precise.",
         ContextDescription = [[Warning when trying to move an Epipe. Variant 3.]],
     }),
-    Label_EpipeImmoveable_4 = Bedazzled:RegisterTranslatedString({
+    Label_EpipeImmovable_4 = Bedazzled:RegisterTranslatedString({
         Handle = "hda128ee6g3312g4d8bgb6fegc4435a1dc338",
         Text = "The Epipe is perfectly fine where it is.",
         ContextDescription = [[Warning when trying to move an Epipe. Variant 4.]],
     }),
-    Label_EpipeImmoveable_5 = Bedazzled:RegisterTranslatedString({
+    Label_EpipeImmovable_5 = Bedazzled:RegisterTranslatedString({
         Handle = "hbbdd964eg4621g4e0cg8cc0g1c6b79bcc663",
-        Text = "A stoppable force is no match for the immoveable Epipe...",
+        Text = "A stoppable force is no match for the immovable Epipe...",
         ContextDescription = [[Warning when trying to move an Epipe. Variant 5.]],
     })
 }
 -- Warning messages to show when an Epipe is attempted to be moved.
 Overlays.IMMOVEABLE_EPIPE_TSKS = {
-    TSK.Label_EpipeImmoveable_1,
-    TSK.Label_EpipeImmoveable_2,
-    TSK.Label_EpipeImmoveable_3,
-    TSK.Label_EpipeImmoveable_4,
-    TSK.Label_EpipeImmoveable_5,
+    TSK.Label_EpipeImmovable_1,
+    TSK.Label_EpipeImmovable_2,
+    TSK.Label_EpipeImmovable_3,
+    TSK.Label_EpipeImmovable_4,
+    TSK.Label_EpipeImmovable_5,
 }
 
 ---------------------------------------------
