@@ -1553,6 +1553,9 @@ local Textures = {
             ARROW_WHITE = T("PIP_UI_Misc_Arrow_White", {
                 GUID = "d2e6126c-7a3d-41d7-92e0-fd45296692f3",
             }),
+            DVD = T("PIP_UI_Misc_DVD", {
+                GUID = "081d2dce-c13c-44d3-8a32-ad2070068f8a",
+            }),
             GLOW_BEIGE = T("PIP_UI_Misc_Glow_Beige", {
                 GUID = "6acd5391-65db-4042-a3e7-61c0eac8684f",
             }),

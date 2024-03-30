@@ -533,6 +533,7 @@ LOAD_ORDER = {
     },
 
     "Epip/Client/AprilFoolsCharacterSheet.lua",
+    "Epip/Screensaver/Client.lua",
     {ScriptSet = "Epip/AscensionShortcuts", RequiresEE = true},
     "Epip/Client/ExitChatAfterMessage.lua",
     "Epip/Client/CameraZoom.lua",
