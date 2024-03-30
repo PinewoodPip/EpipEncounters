@@ -6,7 +6,6 @@ local Textures = Epip.GetFeature("Feature_GenericUITextures").TEXTURES
 local Button = Generic.GetPrefab("GenericUI_Prefab_Button")
 local CloseButton = Generic.GetPrefab("GenericUI_Prefab_CloseButton")
 local ValueLabelPrefab = Generic.GetPrefab("GenericUI.Prefabs.ValueLabel")
-local SlicedTexture = Generic.GetPrefab("GenericUI.Prefabs.SlicedTexture")
 local SettingWidgets = Epip.GetFeature("Features.SettingWidgets")
 local CommonStrings = Text.CommonStrings
 local V = Vector.Create
@@ -85,6 +84,91 @@ local TSK = {
 
 UI.Events.RenderSettings = SubscribableEvent:New("RenderSettings") ---@type Event<Empty>
 UI.Hooks.GetModifierConfiguration = SubscribableEvent:New("GetModifierConfiguration") ---@type Hook<{Modifier:Features.Bedazzled.Board.Modifier, Config:Features.Bedazzled.Board.Modifier.Configuration?}>
+
+---------------------------------------------
+-- MODIFIER SETTINGS
+---------------------------------------------
+
+local Modifiers = {
+    TimeLimit = Bedazzled:GetClass("Features.Bedazzled.Board.Modifiers.TimeLimit"),
+    MoveLimit = Bedazzled:GetClass("Features.Bedazzled.Board.Modifiers.MoveLimit"),
+    RaidMechanics = Bedazzled:GetClass("Features.Bedazzled.Board.Modifiers.RaidMechanics"),
+    HyenaMode = Bedazzled:GetClass("Features.Bedazzled.Board.Modifiers.HyenaMode"),
+    CementMixer = Bedazzled:GetClass("Features.Bedazzled.Board.Modifiers.CementMixer"),
+}
+local ModifierSettings = {
+    TimeLimit_Time = Bedazzled:RegisterSetting("Modifiers.TimeLimit.Time", {
+        Type = "ClampedNumber",
+        Name = Modifiers.TimeLimit.Name,
+        Description = Modifiers.TimeLimit.Description,
+        Min = 0,
+        Max = 60 * 60, -- 1 hour.
+        Step = 60, -- 1 minute.
+        HideNumbers = false,
+        DefaultValue = 0,
+        PreferredRepresentation = "Spinner", ---@type Features.SettingWidgets.PreferredRepresentation.ClampedNumber
+        ValueFormatting = "Time", ---@type Features.SettingWidgets.ValueFormatting
+    }),
+    MoveLimit_Moves = Bedazzled:RegisterSetting("Modifiers.MoveLimit.Moves", {
+        Type = "ClampedNumber",
+        Name = Modifiers.MoveLimit.Name,
+        Description = Modifiers.MoveLimit.Description,
+        Min = 0,
+        Max = 1000,
+        Step = 10,
+        HideNumbers = false,
+        DefaultValue = 0,
+        PreferredRepresentation = "Spinner", ---@type Features.SettingWidgets.PreferredRepresentation.ClampedNumber
+    }),
+    RaidMechanics_Intensity = Bedazzled:RegisterSetting("Modifiers.RaidMechanics.Intensity", {
+        Type = "ClampedNumber",
+        Name = TSK.Setting_RaidMechanics_Intensity_Name,
+        Description = TSK.Setting_RaidMechanics_Intensity_Description,
+        Min = 0,
+        Max = Modifiers.RaidMechanics.MAX_INTENSITY,
+        Step = 1,
+        HideNumbers = false,
+        DefaultValue = 0,
+        PreferredRepresentation = "Spinner", ---@type Features.SettingWidgets.PreferredRepresentation.ClampedNumber
+    }),
+    HyenaMode = Bedazzled:RegisterSetting("Modifiers.HyenaMode", {
+        Type = "Boolean",
+        Name = Modifiers.HyenaMode.Name,
+        Description = Modifiers.HyenaMode.Description,
+        DefaultValue = false,
+    }),
+    CementMixer_Intensity = Bedazzled:RegisterSetting("Modifiers.CementMixer.Intensity", {
+        Type = "Choice",
+        Name = Modifiers.CementMixer.Name,
+        Description = Modifiers.CementMixer.Description,
+        DefaultValue = 1,
+        ---@type SettingsLib_Setting_Choice_Entry[]
+        Choices = {
+            {ID = 1, NameHandle = CommonStrings.Off.Handle},
+            {ID = 2, NameHandle = TSK.Setting_CementMixer_Intensity_Choice_Low.Handle},
+            {ID = 3, NameHandle = TSK.Setting_CementMixer_Intensity_Choice_Medium.Handle},
+            {ID = 4, NameHandle = TSK.Setting_CementMixer_Intensity_Choice_High.Handle},
+        },
+    }),
+}
+-- Default modifier settings for each gamemode.
+---@type table<Feature_Bedazzled_GameMode_ID|"Any", table<SettingsLib_Setting, any>>
+local DefaultModifierSettings = {
+    -- Applied before any gamemode-specific defaults.
+    ["Any"] = {
+        [ModifierSettings.TimeLimit_Time] = 0,
+        [ModifierSettings.MoveLimit_Moves] = 0,
+        [ModifierSettings.HyenaMode] = false,
+    },
+    ["Features.Bedazzled.GameModes.Classic"] = {
+        [ModifierSettings.RaidMechanics_Intensity] = 0,
+        [ModifierSettings.CementMixer_Intensity] = 1,
+    },
+    ["Features.Bedazzled.GameModes.Twimstve"] = {
+        [ModifierSettings.RaidMechanics_Intensity] = 10,
+        [ModifierSettings.CementMixer_Intensity] = 3,
+    }
+}
 
 ---------------------------------------------
 -- SETTINGS
@@ -166,6 +250,31 @@ function UI.StartGame()
     local game = Bedazzled.CreateGame(gameClass:Create(V(8, 8)), modifiers) -- TODO extract
     Bedazzled.GameUI.Setup(game)
     UI:Hide()
+end
+
+---Resets the modifier settings to the defaults for a gamemode.
+---@param gamemode Feature_Bedazzled_GameMode_ID
+function UI.ResetSettingsToDefault(gamemode)
+    local defaults = DefaultModifierSettings["Any"]
+    for setting,value in pairs(defaults) do
+        setting.DefaultValue = value
+        -- TODO better support for this within SettingWidgets
+        Bedazzled:SetSettingValue(setting, value)
+        SettingWidgets.Events.SettingUpdated:Throw({
+            Request = {Setting = setting},
+            Value = setting:GetValue(),
+        })
+    end
+    -- Gamemode-specific defaults
+    defaults = DefaultModifierSettings[gamemode]
+    for setting,value in pairs(defaults) do
+        setting.DefaultValue = value
+        Bedazzled:SetSettingValue(setting, value)
+        SettingWidgets.Events.SettingUpdated:Throw({
+            Request = {Setting = setting},
+            Value = setting:GetValue(),
+        })
+    end
 end
 
 ---Updates the highscores panel.
@@ -263,7 +372,8 @@ function UI:_Initialize()
     UI.SettingsList = settingsList
 
     -- Render gamemode setting
-    SettingWidgets.RenderSetting(UI, settingsList, Bedazzled.Settings.GameMode, self.SETTING_SIZE, function (_)
+    SettingWidgets.RenderSetting(UI, settingsList, Bedazzled.Settings.GameMode, self.SETTING_SIZE, function (value)
+        UI.ResetSettingsToDefault(value)
         UI.UpdateHighScoresPanel()
     end)
 
@@ -505,68 +615,6 @@ Client.UI.ContextMenu.RegisterVanillaMenuHandler("Item", function(item)
 end)
 
 -- Register modifiers and render/fetch their settings.
-local Modifiers = {
-    TimeLimit = Bedazzled:GetClass("Features.Bedazzled.Board.Modifiers.TimeLimit"),
-    MoveLimit = Bedazzled:GetClass("Features.Bedazzled.Board.Modifiers.MoveLimit"),
-    RaidMechanics = Bedazzled:GetClass("Features.Bedazzled.Board.Modifiers.RaidMechanics"),
-    HyenaMode = Bedazzled:GetClass("Features.Bedazzled.Board.Modifiers.HyenaMode"),
-    CementMixer = Bedazzled:GetClass("Features.Bedazzled.Board.Modifiers.CementMixer"),
-}
-local ModifierSettings = {
-    TimeLimit_Time = Bedazzled:RegisterSetting("Modifiers.TimeLimit.Time", {
-        Type = "ClampedNumber",
-        Name = Modifiers.TimeLimit.Name,
-        Description = Modifiers.TimeLimit.Description,
-        Min = 0,
-        Max = 60 * 60, -- 1 hour.
-        Step = 60, -- 1 minute.
-        HideNumbers = false,
-        DefaultValue = 0,
-        PreferredRepresentation = "Spinner", ---@type Features.SettingWidgets.PreferredRepresentation.ClampedNumber
-        ValueFormatting = "Time", ---@type Features.SettingWidgets.ValueFormatting
-    }),
-    MoveLimit_Moves = Bedazzled:RegisterSetting("Modifiers.MoveLimit.Moves", {
-        Type = "ClampedNumber",
-        Name = Modifiers.MoveLimit.Name,
-        Description = Modifiers.MoveLimit.Description,
-        Min = 0,
-        Max = 1000,
-        Step = 10,
-        HideNumbers = false,
-        DefaultValue = 0,
-        PreferredRepresentation = "Spinner", ---@type Features.SettingWidgets.PreferredRepresentation.ClampedNumber
-    }),
-    RaidMechanics_Intensity = Bedazzled:RegisterSetting("Modifiers.RaidMechanics.Intensity", {
-        Type = "ClampedNumber",
-        Name = TSK.Setting_RaidMechanics_Intensity_Name,
-        Description = TSK.Setting_RaidMechanics_Intensity_Description,
-        Min = 0,
-        Max = Modifiers.RaidMechanics.MAX_INTENSITY,
-        Step = 1,
-        HideNumbers = false,
-        DefaultValue = 0,
-        PreferredRepresentation = "Spinner", ---@type Features.SettingWidgets.PreferredRepresentation.ClampedNumber
-    }),
-    HyenaMode = Bedazzled:RegisterSetting("Modifiers.HyenaMode", {
-        Type = "Boolean",
-        Name = Modifiers.HyenaMode.Name,
-        Description = Modifiers.HyenaMode.Description,
-        DefaultValue = false,
-    }),
-    CementMixer_Intensity = Bedazzled:RegisterSetting("Modifiers.CementMixer.Intensity", {
-        Type = "Choice",
-        Name = Modifiers.CementMixer.Name,
-        Description = Modifiers.CementMixer.Description,
-        DefaultValue = 1,
-        ---@type SettingsLib_Setting_Choice_Entry[]
-        Choices = {
-            {ID = 1, NameHandle = CommonStrings.Off.Handle},
-            {ID = 2, NameHandle = TSK.Setting_CementMixer_Intensity_Choice_Low.Handle},
-            {ID = 3, NameHandle = TSK.Setting_CementMixer_Intensity_Choice_Medium.Handle},
-            {ID = 4, NameHandle = TSK.Setting_CementMixer_Intensity_Choice_High.Handle},
-        },
-    }),
-}
 -- In order of rendering.
 local SettingsOrder = {
     ModifierSettings.TimeLimit_Time,
@@ -656,3 +704,8 @@ Bedazzled.GameUI.Events.NewGameRequested:Subscribe(function (_)
     Bedazzled.GameUI:Hide()
 end)
 
+-- TODO temp
+GameState.Events.ClientReady:Subscribe(function (_)
+    UI:Show()
+    Bedazzled:Debug()
+end)
