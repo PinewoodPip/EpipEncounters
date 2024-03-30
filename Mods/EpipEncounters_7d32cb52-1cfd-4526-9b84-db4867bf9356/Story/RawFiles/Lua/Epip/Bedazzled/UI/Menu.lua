@@ -629,8 +629,8 @@ local SettingsOrder = {
     ModifierSettings.TimeLimit_Time,
     ModifierSettings.MoveLimit_Moves,
     ModifierSettings.RaidMechanics_Intensity,
-    ModifierSettings.HyenaMode,
     ModifierSettings.CementMixer_Intensity,
+    ModifierSettings.HyenaMode,
 }
 UI.Events.RenderSettings:Subscribe(function (_)
     for _,setting in ipairs(SettingsOrder) do
