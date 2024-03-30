@@ -894,7 +894,11 @@ end
 MsgBox.RegisterMessageListener("Features.Bedazzled.Forfeit", MsgBox.Events.ButtonPressed, function (buttonID)
     if buttonID == 1 then
         UI.ResetButton:SetVisible(false) -- Hide the reset button so it doesn't show an erroneous label during the game over.
-        UI.Board:EndGame(Bedazzled.TranslatedStrings.GameOver_Reason_Forfeited)
+
+        -- Do not request a gameover if one happened while the message box was being handled.
+        if UI.Board:IsRunning() then
+            UI.Board:EndGame(Bedazzled.TranslatedStrings.GameOver_Reason_Forfeited)
+        end
 
         -- Hide the UI after a delay so the game over reason can be read.
         Timer.Start(UI.FORFEIT_DELAY, function (_)
