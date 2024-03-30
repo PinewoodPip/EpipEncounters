@@ -408,9 +408,12 @@ function _Board:ConsumeMatch(match)
 
         -- Increment gem consumption statistics;
         -- these intentionally also consider gems that are fused or transformed.
-        Bedazzled.IncrementStatistic(Bedazzled.Settings.GemsConsumed)
-        if gem.Type == "Epipe" then
-            Bedazzled.IncrementStatistic(Bedazzled.Settings.EpipesConsumed)
+        -- Matches with 0 score are not considered to be caused by the player.
+        if match.Score > 0 then
+            Bedazzled.IncrementStatistic(Bedazzled.Settings.GemsConsumed)
+            if gem.Type == "Epipe" then
+                Bedazzled.IncrementStatistic(Bedazzled.Settings.EpipesConsumed)
+            end
         end
     end
 
