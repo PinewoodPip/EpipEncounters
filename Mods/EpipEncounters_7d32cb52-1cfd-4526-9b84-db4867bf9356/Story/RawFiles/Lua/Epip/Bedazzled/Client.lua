@@ -16,6 +16,11 @@ local Bedazzled = {
             Handle = "h833e3d98g6e6bg4cfag9c23g1bcd1c8e9de1",
             Text = "Bedazzled",
         },
+        Subtitle = {
+            Handle = "h1d6b6292gf30ag4f40ga602g556b3278bda4",
+            Text = "Anniversary Edition",
+            ContextDescription = [[Subtitle below the logo]],
+        },
         Score = {
             Handle = "h4bc543cag5f19g4e91gbb76gc3a18177874b",
             Text = "Score             %s\nHigh-Score %s",
