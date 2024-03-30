@@ -395,6 +395,13 @@ Bedazzled.Settings.Experience = Bedazzled:RegisterSetting("Experience", {
     Description = TSK.Setting_Experience_Description,
     DefaultValue = 0,
 })
+-- Indicates the user has played before the 2024 expansion.
+Bedazzled.Settings.IsVeteran = Bedazzled:RegisterSetting("IsVeteran", {
+    Type = "Boolean",
+    Name = "",
+    Description = "",
+    DefaultValue = false,
+})
 
 Bedazzled.STATISTIC_SETTINGS = {
     Bedazzled.Settings.GemsConsumed,
@@ -675,6 +682,10 @@ function Bedazzled._GetHighScores()
                     Date = oldScore.Date,
                 }
                 table.insert(scores[mode][1].HighScores, newScore)
+
+                -- Grant XP and some statistics retroactively.
+                Bedazzled.AddExperience(oldScore.Score)
+                Bedazzled.IncrementStatistic(Bedazzled.Settings.GamesPlayed)
             end
         end
 
@@ -685,6 +696,9 @@ function Bedazzled._GetHighScores()
         }
         setting = newData
         Bedazzled:SetSettingValue(Bedazzled.Settings.HighScores, newData)
+
+        -- Mark the user as a veteran.
+        Bedazzled:SetSettingValue(Bedazzled.Settings.IsVeteran, true)
     end
 
     return setting
