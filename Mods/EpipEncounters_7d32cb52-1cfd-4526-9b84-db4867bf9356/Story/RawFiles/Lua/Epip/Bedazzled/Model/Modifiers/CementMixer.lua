@@ -17,7 +17,7 @@ local CementMixer = {
     }),
     Description = Bedazzled:RegisterTranslatedString({
         Handle = "hf513cfa6g3cf1g4902gb10eg84722e3a18bf",
-        Text = "If enabled, \"Epipes\" will occasionally spawn to urge you to reconnect with reality.<br>Epipes are immoveable objects, but may be destroyed with the unstoppable force of rune explosions.<br>Doing so will grant additional points and soothe all Enraged Gems on the board.",
+        Text = "If enabled, \"Epipes\" will occasionally spawn to urge you to reconnect with reality.<br>Epipes are immovable objects, but may be destroyed with the unstoppable force of rune explosions.<br>Doing so will grant additional points and soothe all Enraged Gems on the board.",
         ContextDescription = [[Modifier description for "Cement Mixing"]],
     }),
 }
