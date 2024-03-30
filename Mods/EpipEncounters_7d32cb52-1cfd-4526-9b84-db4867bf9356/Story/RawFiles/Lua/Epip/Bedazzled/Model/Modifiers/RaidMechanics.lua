@@ -8,12 +8,19 @@ local V = Vector.Create
 ---@field ProgressUntilNextSpawn number Fraction.
 ---@field _Finished boolean `true` if a game over from this modifier is queued.
 local RaidMechanics = {
-    MAX_INTENSITY = 20,
-    MAX_STARTING_PROGRESS = 0.1, -- Maximum random starting progress towards the next enrage gem spawn.
+    BASE_PROGRESS_PER_MOVE = 0.12, -- Progress towards the next enraged gem spawn gained for each move, without considering the intensity multiplier.
+    MAX_STARTING_PROGRESS = 0.15, -- Maximum random starting progress towards the next enrage gem spawn.
     MIN_ENRAGE_TIMER = 7, -- In moves.
     ENRAGE_TIMER_MAX_GRACE = 6, -- Extra enrage timer during early game; decreases progressively until 0.
     ENRAGE_TIME_GRACE_PERIOD_MOVES = 70, -- Moves until the enrage timer grace bonus is completely exhausted.
-    ENRAGED_GEM_SCORE_BONUS = 1000, -- Bonus points for defusing Enraged Gems.
+    ENRAGED_GEM_SCORE_BONUS = 200, -- Bonus points for defusing Enraged Gems.
+    -- Recommended intensity values to use;
+    -- these use special labels when stringifying the modifier.
+    RECOMMENDED_INTENSITY_VALUES = {
+        0.6,
+        1.0,
+        1.6,
+    },
 
     Name = Bedazzled:RegisterTranslatedString({
         Handle = "hc65f56cegc174g497eg8cd3g868daf684df1",
@@ -25,6 +32,26 @@ local RaidMechanics = {
         Text = "If enabled, gems with MMO enrage timers will spawn with increasing frequency. If left unmatched, they will bring a fair and balanced instant game over.",
         ContextDescription = [[Description for "Raid Mechanics" modifier]],
     }),
+    TranslatedStrings = {
+        Intensity_Easy = Bedazzled:RegisterTranslatedString({
+            Handle = "h889783a6g2c7bg4074g9ceegcd7fb602685b",
+            Text = "EZ Raid",
+            ContextDescription = [[Choice for "Raid Mechanics" modifier setting; "EZ" is gamer slang for "easy"]],
+        }),
+        Intensity_Medium = Bedazzled:RegisterTranslatedString({
+            Handle = "hd9bab9d3gf36ag4da5ga272gdaedd5d48e87",
+            Text = "Casual Raid",
+            ContextDescription = [[Choice for "Raid Mechanics" modifier setting]],
+        }),
+        Intensity_Hard = Bedazzled:RegisterTranslatedString({
+            Handle = "h6af47672g5722g45fagadf2g2da5380da7c3",
+            Text = "Endgame Raid",
+            ContextDescription = [[Choice for "Raid Mechanics" modifier setting]],
+        }),
+    },
+    Events = {
+        GemEnraged = {}, ---@type Event<{Gem: Features.Bedazzled.Board.Modifiers.RaidMechanics.Gem}>
+    }
 }
 Bedazzled:RegisterClass("Features.Bedazzled.Board.Modifiers.RaidMechanics", RaidMechanics)
 local TSK = {
@@ -35,9 +62,14 @@ local TSK = {
     }),
     Label_Config_Intensity = Bedazzled:RegisterTranslatedString({
         Handle = "hd0e7acccge5acg47b5gbb4cg304caa1dbbce",
-        Text = "Raid Lv. %s",
-        ContextDescription = [[Short description for "Raid Mechanics" modifier; param is difficulty rating, from 1 to 20. "Lv." is short for "Level"]],
-    })
+        Text = "Raid (%sx Intensity)",
+        ContextDescription = [[Short description for "Raid Mechanics" modifier; param is difficulty rating, as decimal number. "Lv." is short for "Level"]],
+    }),
+}
+RaidMechanics.RECOMMENDED_INTENSITY_TSKS = {
+    RaidMechanics.TranslatedStrings.Intensity_Easy,
+    RaidMechanics.TranslatedStrings.Intensity_Medium,
+    RaidMechanics.TranslatedStrings.Intensity_Hard,
 }
 
 ---------------------------------------------
@@ -45,7 +77,7 @@ local TSK = {
 ---------------------------------------------
 
 ---@class Features.Bedazzled.Board.Modifiers.RaidMechanics.Config
----@field Intensity integer Intended range is 1-20.
+---@field Intensity number
 
 ---@class Features.Bedazzled.Board.Modifiers.RaidMechanics.Gem : Feature_Bedazzled_Board_Gem
 ---@field EnrageTimer integer? Moves left.
@@ -65,17 +97,17 @@ function RaidMechanics:Create(config)
     local mod = RaidMechanics:__Create({
         Settings = config,
     }) ---@cast mod Features.Bedazzled.Board.Modifiers.RaidMechanics
+    mod.Events = SubscribableEvent.InitializeEventTable(RaidMechanics.Events)
     return mod
 end
 
----Increments the progress towards the next enrage gem spawn.
+---Increments the progress towards the next enraged gem spawn.
 function RaidMechanics:IncrementProgress()
     local maxGemsOnBoard = self.Board.Size[1] * self.Board.Size[2]
     -- Intensity cannot be gained from the gem spawns at the start of the game.
     if self.Board.GemsSpawned > maxGemsOnBoard then
-        local intensity = self.Settings.Intensity
-        local intensityMultiplier = intensity / self.MAX_INTENSITY
-        local newProgress = 0.05 * intensityMultiplier
+        local intensityMultiplier = self.Settings.Intensity
+        local newProgress = self.BASE_PROGRESS_PER_MOVE * intensityMultiplier
         self.ProgressUntilNextSpawn = self.ProgressUntilNextSpawn + newProgress
     end
 end
@@ -124,6 +156,14 @@ function RaidMechanics:Apply(board)
         end
     end)
 
+    -- Clear enrage timers from fused gems.
+    board.Events.MatchExecuted:Subscribe(function (ev)
+        for _,fusion in ipairs(ev.Match.Fusions) do
+            local gem = fusion.TargetGem ---@cast gem Features.Bedazzled.Board.Modifiers.RaidMechanics.Gem
+            gem.EnrageTimer = nil
+        end
+    end)
+
     -- End the game if a game over is queued and the board becomes idle.
     local updatedSubscriberID = "Modifier.RaidMechanics"
     board.Events.Updated:Subscribe(function (_)
@@ -152,21 +192,26 @@ function RaidMechanics:Apply(board)
         end
     end, {StringID = updatedSubscriberID})
 
-    -- Increase progress for each gem spawned and roll for new enrage gems.
-    board.Events.GemAdded:Subscribe(function (ev)
+    -- Increase progress for each move made and roll for new enrage gems.
+    board.Events.MovePerformed:Subscribe(function (_)
         self:IncrementProgress()
-
-        if self.ProgressUntilNextSpawn > 1 then
+        if self.ProgressUntilNextSpawn >= 1 then -- Roll new enraged gems
             -- Randomize starting progress towards next gem
             self.ProgressUntilNextSpawn = math.random() * self.MAX_STARTING_PROGRESS
 
-            -- Add a timer to the new gem, if it is not an Epipe (would be too evil)
-            local gem = ev.Gem ---@cast gem Features.Bedazzled.Board.Modifiers.RaidMechanics.Gem
-            if gem.Type ~= "Epipe" then
-                gem.EnrageTimer = self:GetDefaultEnrageTimer()
-            end
+            -- Add a timer to a random gem that is not an Epipe (would be too evil) nor special (ex. runes), and doesn't have a timer already.
+            local gems = table.filter(board:GetGems(), function (gem)
+                ---@cast gem Features.Bedazzled.Board.Modifiers.RaidMechanics.Gem
+                return gem.Type ~= "Epipe" and #gem.Modifiers == 0 and gem.EnrageTimer == nil and gem:IsIdle()
+            end)
+            local gem = gems[math.random(1, #gems)] ---@cast gem Features.Bedazzled.Board.Modifiers.RaidMechanics.Gem
+            gem.EnrageTimer = self:GetDefaultEnrageTimer()
+
+            self.Events.GemEnraged:Throw({
+                Gem = gem,
+            })
         end
-    end)
+    end, {Priority = 9999})
 
     -- Grant extra points for consuming Enraged Gems.
     -- Should run last to ensure the match is created.
@@ -202,9 +247,17 @@ end
 ---@override
 ---@param config Features.Bedazzled.Board.Modifiers.RaidMechanics.Config
 function RaidMechanics.StringifyConfiguration(config)
-    return TSK.Label_Config_Intensity:Format({
-        FormatArgs = {config.Intensity},
-    })
+    local str
+    local index = table.reverseLookup(RaidMechanics.RECOMMENDED_INTENSITY_VALUES, config.Intensity)
+    -- Pray for no float precision issues
+    if index then
+        str = RaidMechanics.RECOMMENDED_INTENSITY_TSKS[index]:GetString()
+    else
+        str = TSK.Label_Config_Intensity:Format({
+            FormatArgs = {config.Intensity},
+        })
+    end
+    return str
 end
 
 ---@override
@@ -219,5 +272,5 @@ end
 ---@param config Features.Bedazzled.Board.Modifiers.RaidMechanics.Config
 ---@return boolean
 function RaidMechanics.IsConfigurationValid(config)
-    return config.Intensity >= 1 and config.Intensity <= RaidMechanics.MAX_INTENSITY
+    return config.Intensity > 0
 end

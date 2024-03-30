@@ -57,12 +57,12 @@ local TSK = {
     }),
     Setting_RaidMechanics_Intensity_Name = Bedazzled:RegisterTranslatedString({
         Handle = "hde82ec74g19fcg4737g90b8g4b2ab8dd10ad",
-        Text = "Raid Level",
+        Text = "Raid Mechanics",
         ContextDescription = [[Setting name for "Raid Mechanics" modifier intensity]],
     }),
     Setting_RaidMechanics_Intensity_Description = Bedazzled:RegisterTranslatedString({
         Handle = "hb54abc37gfadeg4ac4gbeccgaf652d4bf6e3",
-        Text = "Enables MMO-style raid mechanics.<br>If >0, gems with MMO enrage timers will periodically appear with increasing frequency; if left unmatched, they will bring a fair and balanced instant game over.<br>Higher levels increase spawn frequency.",
+        Text = "Adds MMO-style raid mechanics.<br>If enabled, gems with MMO enrage timers will periodically appear with increasing frequency; if left unmatched, they will bring a fair and balanced instant game over.<br>Higher raid difficulty levels increase spawn frequency.",
         ContextDescription = [[Tooltip for "Raid Level" setting]],
     }),
     Setting_CementMixer_Intensity_Choice_Low = Bedazzled:RegisterTranslatedString({
@@ -121,15 +121,17 @@ local ModifierSettings = {
         PreferredRepresentation = "Spinner", ---@type Features.SettingWidgets.PreferredRepresentation.ClampedNumber
     }),
     RaidMechanics_Intensity = Bedazzled:RegisterSetting("Modifiers.RaidMechanics.Intensity", {
-        Type = "ClampedNumber",
+        Type = "Choice",
         Name = TSK.Setting_RaidMechanics_Intensity_Name,
         Description = TSK.Setting_RaidMechanics_Intensity_Description,
-        Min = 0,
-        Max = Modifiers.RaidMechanics.MAX_INTENSITY,
-        Step = 1,
-        HideNumbers = false,
-        DefaultValue = 0,
-        PreferredRepresentation = "Spinner", ---@type Features.SettingWidgets.PreferredRepresentation.ClampedNumber
+        DefaultValue = 1,
+        ---@type SettingsLib_Setting_Choice_Entry[]
+        Choices = {
+            {ID = 1, NameHandle = CommonStrings.Off.Handle},
+            {ID = 2, NameHandle = Modifiers.RaidMechanics.TranslatedStrings.Intensity_Easy.Handle},
+            {ID = 3, NameHandle = Modifiers.RaidMechanics.TranslatedStrings.Intensity_Medium.Handle},
+            {ID = 4, NameHandle = Modifiers.RaidMechanics.TranslatedStrings.Intensity_Hard.Handle},
+        },
     }),
     HyenaMode = Bedazzled:RegisterSetting("Modifiers.HyenaMode", {
         Type = "Boolean",
@@ -161,11 +163,11 @@ local DefaultModifierSettings = {
         [ModifierSettings.HyenaMode] = false,
     },
     ["Features.Bedazzled.GameModes.Classic"] = {
-        [ModifierSettings.RaidMechanics_Intensity] = 0,
+        [ModifierSettings.RaidMechanics_Intensity] = 1,
         [ModifierSettings.CementMixer_Intensity] = 1,
     },
     ["Features.Bedazzled.GameModes.Twimstve"] = {
-        [ModifierSettings.RaidMechanics_Intensity] = 10,
+        [ModifierSettings.RaidMechanics_Intensity] = 3,
         [ModifierSettings.CementMixer_Intensity] = 3,
     }
 }
@@ -659,10 +661,11 @@ UI.Hooks.GetModifierConfiguration:Subscribe(function (ev)
         end
     elseif modClassName == Modifiers.RaidMechanics:GetClassName() then -- Raid Mechanics modifier
         local intensity = ModifierSettings.RaidMechanics_Intensity:GetValue()
-        if intensity > 0 then
+        if intensity > 1 then
             ---@type Features.Bedazzled.Board.Modifiers.RaidMechanics.Config
             ev.Config = {
-                Intensity = intensity,
+                -- Value 1 is off.
+                Intensity = Modifiers.RaidMechanics.RECOMMENDED_INTENSITY_VALUES[intensity - 1] or 1.0,
             }
         end
     elseif modClassName == Modifiers.HyenaMode:GetClassName() then
