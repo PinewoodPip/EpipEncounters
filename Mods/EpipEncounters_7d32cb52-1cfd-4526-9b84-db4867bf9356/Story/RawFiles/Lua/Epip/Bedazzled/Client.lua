@@ -280,6 +280,41 @@ local Bedazzled = {
             Text = "Epic %s",
             ContextDescription = [[Rank title for the experience system ("ELO"). Param is the "Bedazzler" string.]],
         },
+        LevelTitle_Dazzling = {
+            Handle = "ha82bd61egdb9dg46f7gb7c9gb2aecf18677a",
+            Text = "Dazzling %s",
+            ContextDescription = [[Rank title for the experience system ("ELO"). Param is the "Bedazzler" string.]],
+        },
+        LevelTitle_Bedazzling = {
+            Handle = "ha911f9feg355fg433dg90f5gdb5601d3fbc7",
+            Text = "Bedazzling %s",
+            ContextDescription = [[Rank title for the experience system ("ELO"). Param is the "Bedazzler" string.]],
+        },
+        LevelTitle_Noob = {
+            Handle = "h9f8077a1g40cdg4f79g9a88g884d12477854",
+            Text = "Noob %s",
+            ContextDescription = [[Rank title for the experience system ("ELO"). Param is the "Bedazzler" string.]],
+        },
+        LevelTitle_Pretentious = {
+            Handle = "hdc05bac2g07bfg41d7g87c9g53b042ca6bd6",
+            Text = "Pretentious %s",
+            ContextDescription = [[Rank title for the experience system ("ELO"). Param is the "Bedazzler" string.]],
+        },
+        LevelTitle_Arch = {
+            Handle = "h9dd675a4g1a67g42b9gb738g90968d178a89",
+            Text = "Arch-%s",
+            ContextDescription = [[Rank title for the experience system ("ELO"). Param is the "Bedazzler" string.]],
+        },
+        LevelTitle_Divine = {
+            Handle = "hfa908156ge7ebg4271g97a0g8471db9059d2",
+            Text = "Divine %s",
+            ContextDescription = [[Rank title for the experience system ("ELO"). Param is the "Bedazzler" string.]],
+        },
+        LevelTitle_Grandmaster = {
+            Handle = "h52bebfadg9b68g4680ga6c1g4760f73dc364",
+            Text = "Grandmaster %s",
+            ContextDescription = [[Rank title for the experience system ("ELO"). Param is the "Bedazzler" string.]],
+        },
     },
     Settings = {
         HighScores = {
@@ -315,25 +350,33 @@ local Bedazzled = {
 Epip.RegisterFeature("Bedazzled", Bedazzled)
 local TSK = Bedazzled.TranslatedStrings
 
----@type table<integer, TextLib_TranslatedString>
+---@type TextLib_TranslatedString[]
 Bedazzled.EXPERIENCE_LEVEL_TITLES = {
+    TSK.LevelTitle_Noob,
     TSK.LevelTitle_Novice,
     TSK.LevelTitle_Apprentice,
+    TSK.LevelTitle_Average,
     TSK.LevelTitle_Adept,
+    TSK.LevelTitle_Pretentious,
     TSK.LevelTitle_Accomplished,
     TSK.LevelTitle_Great,
     TSK.LevelTitle_Expert,
     TSK.LevelTitle_Master,
+    TSK.LevelTitle_Grandmaster,
     TSK.LevelTitle_Extraordinary,
     TSK.LevelTitle_Incredible,
     TSK.LevelTitle_Credible,
     TSK.LevelTitle_Legendary,
+    TSK.LevelTitle_Divine,
     TSK.LevelTitle_Fabulous,
     TSK.LevelTitle_Godly,
     TSK.LevelTitle_Otherwordly,
     TSK.LevelTitle_Unimaginable,
     TSK.LevelTitle_Imaginary,
     TSK.LevelTitle_Holy,
+    TSK.LevelTitle_Arch,
+    TSK.LevelTitle_Dazzling,
+    TSK.LevelTitle_Bedazzling,
     TSK.LevelTitle_Epic,
 }
 
