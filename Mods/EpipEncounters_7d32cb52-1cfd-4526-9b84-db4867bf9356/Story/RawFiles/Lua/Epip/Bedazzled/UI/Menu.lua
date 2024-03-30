@@ -365,6 +365,13 @@ function UI:_Initialize()
     local headerLabel = UI.CreateText("TitleHeader", panel, Text.Format(Bedazzled.TranslatedStrings.GameTitle:GetString(), {Size = 42, Color = Bedazzled.LOGO_COLOR, FontType = Text.FONTS.ITALIC}), "Center", V(self.BACKGROUND_SIZE[1], 50))
     headerLabel:SetPositionRelativeToParent("Top", 0, 70)
 
+    local subtitleLabel = UI.CreateText("SubtitleLabel", panel, Bedazzled.TranslatedStrings.Subtitle:Format({
+        Size = 23,
+        Color = Bedazzled.LOGO_COLOR,
+        FontType = Text.FONTS.ITALIC,
+    }), "Center", V(self.BACKGROUND_SIZE[1], 50))
+    subtitleLabel:SetPositionRelativeToParent("Top", 0, 120)
+
     local settingsList = panel:AddChild("SettingsList", "GenericUI_Element_ScrollList")
     settingsList:SetFrame(self.FRAME_SIZE:unpack())
     settingsList:SetMouseWheelEnabled(true)
@@ -418,7 +425,7 @@ function UI._SetupHighScores()
     local highscoresHeader = UI.CreateText("HighScoresHeader", panel, TSK.Label_HighScores:Format({Size = 23, Color = Bedazzled.LOGO_COLOR}), "Center", V(400, 50))
     highscoresHeader:SetPositionRelativeToParent("Top", 0, 100)
 
-    local gamemodeLabel = TextPrefab.Create(UI, "HighScoresGamemodeSubtitle", panel, "", "Center", V(400, 50))
+    local gamemodeLabel = TextPrefab.Create(UI, "HighScoresGamemodeSubtitle", panel, "", "Center", V(350, 50))
     gamemodeLabel:SetPositionRelativeToParent("Top", 0, 155)
     UI.GameModeLabel = gamemodeLabel
 
@@ -437,13 +444,13 @@ function UI._SetupStatistics()
 
     local statsList = panel:AddChild("StatsList", "GenericUI_Element_ScrollList")
     statsList:SetFrame(400 - 42, 270)
-    statsList:SetPositionRelativeToParent("TopLeft", 70, 490)
+    statsList:SetPositionRelativeToParent("TopLeft", 75, 490)
     UI.StatsList = statsList
 
     -- Create labels
     for _,setting in ipairs(Bedazzled.STATISTIC_SETTINGS) do
         -- These "settings" are for persistence only and not user-modifiable, thus we do not use SettingWidgets.
-        local label = ValueLabelPrefab.Create(UI, "Stats." .. setting:GetNamespacedID(), statsList, V(345, 30), Text.Format(setting:GetName(), {Color = Color.BLACK}), "")
+        local label = ValueLabelPrefab.Create(UI, "Stats." .. setting:GetNamespacedID(), statsList, V(335, 30), Text.Format(setting:GetName(), {Color = Color.BLACK}), "")
         label:SetTooltip("Simple", setting:GetDescription())
 
         UI._StatisticLabels[setting:GetNamespacedID()] = label
