@@ -104,7 +104,7 @@ end)
 
 -- Celebrate Pip's birthday by enabling the feature.
 GameState.Events.ClientReady:Subscribe(function (_)
-    if Epip.IsPipBirthday() then
+    if Epip.IsPipBirthday() or Epip.IsAprilFools() then
         RainbowOverlays.Start()
     end
 end)

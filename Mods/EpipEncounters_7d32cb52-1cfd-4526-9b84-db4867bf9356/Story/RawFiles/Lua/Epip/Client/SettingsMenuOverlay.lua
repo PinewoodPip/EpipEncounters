@@ -475,8 +475,8 @@ function UI._SetupBuildLabel()
         local buildLabel = TextPrefab.Create(UI, "BuildLabel", UI.LeftPanel, text, "Center", V(250, 100))
         buildLabel:SetPositionRelativeToParent("Bottom", 0, -10)
 
-        -- Animate text color into a rainbow when it is Pip's birthday
-        if Epip.IsPipBirthday() then
+        -- Animate text color into a rainbow when it is Pip's birthday or April Fools.
+        if Epip.IsPipBirthday() or Epip.IsAprilFools() then
             local currentTime = 0
             local colors = UI._RAINBOW_COLORS
             local colorStages = #colors
