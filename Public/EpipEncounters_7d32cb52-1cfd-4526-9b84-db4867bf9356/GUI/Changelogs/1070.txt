@@ -1,0 +1,70 @@
+v1070 is the 1070th release of Epip (aka "The Easter patch") and marks the third anniversary of the mod, but most importantly, the first anniversary of our infamous Bedazzled minigame! And what better way to celebrate Easter than with some bedazzling new additions to Bedazzled?
+
+### Bedazzled
+Bedazzled has received its first expansion, adding a new gamemode, modifiers, statistics, Elo ranking and more!
+
+**Out of the loop? Simply right-click a rune or rune-crafting gem and select the "Bedazzle" option in the context menu to get started.**
+
+Changes & additions:
+
+#### Gamemodes & modifiers
+
+A new game mode has been added: *Bedazzled Twimst've*
+
+- Spin2win by rotating groups of 2x2 gems to make matches
+- You have a limited amount of "free moves" to rotate gems even if doing so would not create matches, to ease setting up runes and cascades
+    - Crafting runes and destroying Epipes grants additional free moves
+- The original Bedazzled experience is now known as the *Classic* gamemode
+
+Modifiers have been added, which change the rules of the game or add restrictions. These are customizable for both gamemodes and include:
+
+- **Time Limit**: go for high-scores before time runs out
+- **Move Limit**: make each of your limited moves count
+- **Raid Mechanics**: gems with MMO enrage timers will spawn. If left unmatched, they will bring a fair and balanced instant game over.
+    - Enabled by default for Bedazzled Twimst've
+- **Cement Mixer**: immovable objects known as "Epipes" will spawn to urge you to reconnect with reality. Exorcise them with the unstoppable force of runes to gain additional points and soothe enraged gems.
+    - Enabled by default for Bedazzled Twimst've
+- **Hyena Mode**: eldritch 2x2 matches become a thing, as was never intended
+
+#### Main Menu
+
+A main menu has been added, unlocked after playing at least 1 game. The menu lets you select the gamemode to play, configure modifiers, view high-scores and lifetime statistics.
+
+Multiple high-scores are now tracked, for each possible combination of gamemode and modifier configurations. Old scores are preserved as Classic mode scores.
+
+##### Elo Rating
+Elo rating has been implemented to represent your relative Bedazzled skill. Each game finished increases your Elo based on your score, and reaching Elo milestones will grant you noble titles in recognition of your expertise.
+
+Players who had Bedazzled scores set before this update will retroactively gain Elo based on their 5 best scores. All other scrubs begin at 0 Elo.
+
+#### Other changes
+- Bedazzled can now also be accessed by right-clicking any rune, to make it easier to play without EE
+- Copied over the gem and rune icons from EE, so that the game is properly playable without EE (it was not intended to be accessible previously)
+- Added a decorative frame around the gem area
+
+### Other changes and additions
+
+*Some additions might only be available once the anniversary party starts in your timezone.*
+
+- The Abeyance status tooltip now shows buffered damage
+- Added a potential fix for being unable to use basic attacks while under the effects of increased AP costs, similar to our fix for using items
+- Added Catalan to the translation sheet
+- Added Herobrine (disabled by default)
+- Added a setting to enable all settings by default, in the "Haha you wish" settings tab (disabled by default)
+- EE status damage tooltips now use translated damage type names
+- Added ingame rewards if you also own Ep1p on the same Steam account
+- Added support for the iPhone 12(?), for the ~46 Epip users using it
+- Holding shift while pressing +/- buttons in spinner UI elements now increments/decrements the value by 5 steps
+- The settings menu has been renamed to "Quick Accessibility" for consistency and to get on with the new UX trends
+    - Similary, the "Keybinds" tab is now "Quick Keybinds", which also makes it more precise
+- Added a screensaver feature to reduce monitor burn-in, enabled if you idle for a while
+- Subscribers to the $500 Patreon tier can now view all my Red Prince porn in a new tab within the Codex
+- Items that can be absorbed by Gale now show a hint in their tooltips
+- The Punisher has regained his voice, just in time for the anniversary party
+- As usual, anniversary shenanigans from previous years make a temporary return, so don't panic
+
+### Fixes
+- Fixed the Discord Rich Presence line 2 setting being misnamed
+- Fixed the Epic Enemies settings tab not being scrollable (regression within the selector UI element)
+- Fixed EE regeneration stats showing in the Stats Tab without EE
+- Fixed the main menu being opened when clicking the send chat message button if "Unfocus after sending messages" setting was enabled but the chat field was not focused

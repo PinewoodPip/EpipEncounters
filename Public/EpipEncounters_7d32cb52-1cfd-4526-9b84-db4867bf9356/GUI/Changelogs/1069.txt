@@ -1,0 +1,75 @@
+This patch contains various fixes, a few new features as well as polishing for older ones.
+
+**Do not get too excited**: despite the version number ending in "69", this version does not add sex to the mod.
+
+### Camera
+- Added a keybind to change the camera pitch (vertical angle), *"Adjust Camera Pitch"*, located in the "Camera" tab and unbound by default
+	- While held, moving the mouse up/down will change the pitch; this basically lets you change it on the fly
+	- Other new settings exist in that same tab to adjust sensitivity, invert the controls as well as to allow the pitch to go negative
+		- A negative pitch allows you to look straight up; this clips the camera into the ground, and therefore is disabled by default for aesthetic reasons
+
+### Quick Examine
+- Added a new widget that displays the equipped items of player characters, enabled by default
+    - The order in which items appear can be set through the *"Equipment Slots Order"* setting in the Quick Examine tab
+- The grid-like widgets now use a consistent appearance, and the size of icons has been increased for readability
+- The related settings are now translatable and use more consistent wording
+
+### Vanity
+- Added a button to remove dyes
+- Fixed wrong item appearances being used for polymorphed characters
+- Fixed the armor toggle within character creation not working correctly
+
+### Player Health Bar
+- Added a setting to control every how many action points the golden divider appears in the AP bar, accessible from the "Hotbar" tab (*"AP Divider Interval"*).
+	- Defaults to 4 in EE (as before) and never otherwise, as it didn't make sense for vanilla people to have that every 4 AP as well (was pretty much an oversight)
+- The AP bar is now centered better
+- The UI is now repositioned immediately after resolution changes
+- Fixed positioning when UIScaling was >1
+
+### Settings Menu
+- The tab buttons are now more compact and support scrolling (once we add more of them)
+- The apply button now tells you whether you need to reload the game for changes to take effect
+- Most settings throughout Epip UIs (ex. Settings Menu and Quick Find) can be right-clicked to reset them to the default value
+- Keybind settings now show "Unbound" for unbound slots, and light up when hovered over for better UX
+- The useless cancel button has been replaced with text showing the Epip version and build date
+- Fixed some text not wrapping in the settings menu after changing tabs
+
+### Hotbar
+- Fixed slots not considering changes to SP costs, causing them to be grayed out incorrectly when these were applied (ex. Apotheosis in vanilla)
+- Fixed slots being grayed out while possessing GM mode NPCs that didn't meet skill ability requirements (which they don't have to, apparently)
+- Fixed a leftover vanilla graphic sometimes appearing to the right of the bar
+- Fixed the combat log button being visible in dialogue and improved its positioning to fix visual gaps
+
+### Quick Find
+- Slightly sped up equipment filters
+- The default value for the item slot setting is now "Any" instead of "Helmet"
+- Fixed a bug in Epip UIs that caused dropdowns to fire change events twice
+    - As a direct consequence, the Quick Find and Codex UIs now basically update 2x faster when changing the dropdown settings
+
+### Other changes and additions
+- Added French translations by Drayander
+- Physical & piercing (no longer "pierce") resistances in character sheet are now translated
+- When holding shift to show skill damage multipliers in tooltips, the damage types are now translated, the colors should be consistent with the ones the game uses and this feature now also works for skills that reference the damage of other skills (which includes most scripted skills and others such as Flaming Tongues)
+- The Flanked status now shows the amount of flankers in its tooltip
+- Skill tooltips now reflect statuses that change SP costs, like the previous feature that did so for AP cost boosts
+- Added English as an explicit language option
+    - This allows you to play the game in a different language but keep Epip in English
+- The name of the "Fix Astrologer's Gaze / Far Out Man range" setting is now dynamic and shows the name of the talent based on your active mods to avoid confusion
+- Epip keybinds are now considered as "released" once you release any of the keys needed for them, instead of all keys needing to be released
+	- This change only matters for keybinds that need to be held for them to do something
+- Multiple old strings have been made translatable
+- Giftbag compatibility warnings have become translatable
+- The "Enable world tooltips for all items" setting has been moved up to be the first one within its settings category, and its description has become translatable
+- The Animation Cancelling setting is now a simple checkbox and works like the "server-side" option did. The "client-side" option has been removed as it was a failed experiment
+    - You're going to have to re-enable the setting
+- For GM mode: added a setting to automatically apply bonuses to rolls based on character attributes, accessed from a new "Game Master" settings tab (*"Automatic Roll Bonus"*)
+- Added a new UI to paint surfaces, accessible in developer mode through the *"Toggle Surface Painter"* and *"Paint Surface"* keybinds (unbound by default)
+
+### Other fixes
+- Fixed some Epip tooltips not being positioned correctly when UIScaling was changed
+- Fixed Hotbar Groups not being restored properly after lua resets
+- Removed Origins (the vanilla campaign) as dependency (was an oversight from the gameplay mod era)
+- Fixed cooldowns not appearing in the Quick Examine skills widget
+- Fixed backgrounds for scrollbars not displaying correctly in Epip UIs
+- Fixed some typos in some setting tooltips
+- Fixed developer keybinds showing up in the keybinds settings tab outside of developer mode

@@ -713,9 +713,3 @@ Bedazzled.GameUI.Events.NewGameRequested:Subscribe(function (_)
     UI:Show()
     Bedazzled.GameUI:Hide()
 end)
-
--- TODO temp
-GameState.Events.ClientReady:Subscribe(function (_)
-    UI:Show()
-    Bedazzled:Debug()
-end)
