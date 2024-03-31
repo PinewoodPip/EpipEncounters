@@ -62,7 +62,7 @@ function GroupManager._CreateEditor(UIName, HeaderText, ButtonText)
     return ui
 end
 
-if GameState.IsInSession() then
+GameState.Events.ClientReady:Subscribe(function (ev)
     local Creator = GroupManager._CreateEditor("Creator",
     TSK.CreateGroupHeader:GetString(), TSK.CreateGroupButton:GetString())
     GroupManager.CreationUI = Creator
@@ -78,4 +78,4 @@ if GameState.IsInSession() then
         GroupManager.ResizeGroup(GroupManager._CurrentGroupGUID)
         GroupManager.ResizeUI:Hide()
     end)
-end
+end)
