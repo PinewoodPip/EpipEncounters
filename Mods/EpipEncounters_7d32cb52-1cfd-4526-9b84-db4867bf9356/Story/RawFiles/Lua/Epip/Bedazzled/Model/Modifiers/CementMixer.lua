@@ -5,7 +5,7 @@ local Bedazzled = Epip.GetFeature("Feature_Bedazzled")
 ---@field Settings Features.Bedazzled.Board.Modifiers.CementMixer.Config
 ---@field _Board Feature_Bedazzled_Board
 local CementMixer = {
-    BASE_SPAWN_CHANCE = 0.02,
+    BASE_SPAWN_CHANCE = 0.15,
     SPAWN_CHANCE_MULTIPLIER_PER_EPIPE = 0.9, -- Spawn chance penalty applied for each existing epipe.
     ENRAGED_GEM_TIMER_BOON = 5, -- Extra time added to Enraged Gem timers upon consuming an Epipe.
     EPIPE_POINT_BONUS = 1000, -- Bonus points for each Epipe consumed.
