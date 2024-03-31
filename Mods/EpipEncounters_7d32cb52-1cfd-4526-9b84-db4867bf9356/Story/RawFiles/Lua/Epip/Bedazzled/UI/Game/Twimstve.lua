@@ -174,3 +174,28 @@ BaseUI.Events.GameStarted:Subscribe(function (_)
         UI.Cleanup()
     end
 end)
+
+-- Cheat: right-click transmutes top-left gem in the rotator.
+Client.Input.Events.KeyPressed:Subscribe(function (ev)
+    if Bedazzled:IsDebug() and ev.InputID == "right2" and BaseUI.Board then
+        local board = BaseUI.Board
+        local pos = UI.RotatorAnchor
+        if pos then
+            local descriptors = Bedazzled.GetGemDescriptors() ---@type table<string, Feature_Bedazzled_Gem>
+            local list = {} ---@type Feature_Bedazzled_Gem[]
+            for _,v in pairs(descriptors) do
+                table.insert(list, v.Type)
+            end
+            table.sort(list)
+
+            local currentGem = board:GetGemAt(pos:unpack())
+            if currentGem then
+                local currentIndex = table.reverseLookup(list, currentGem:GetDescriptor().Type)
+                local newIndex = currentIndex + 1
+                if newIndex == #list + 1 then newIndex = 1 end
+
+                board:TransformGem(currentGem, list[newIndex])
+            end
+        end
+    end
+end)
