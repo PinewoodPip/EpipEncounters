@@ -224,7 +224,7 @@ function Spinner:_UpdateCounter()
     -- Remove trailing zeros for integer-only spinners
     -- TODO this assumes min/max is an integer as well.
     if self.step == 1 then
-        value = Text.RemoveTrailingZeros(value)
+        valueLabel = Text.RemoveTrailingZeros(value)
     end
 
     -- Get final label and text color from hooks.
