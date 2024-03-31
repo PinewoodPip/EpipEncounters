@@ -152,6 +152,12 @@ function Widgets._RenderComboBoxFromSetting(request)
 
     dropdown:SetTooltip("Custom", Widgets._GetSettingTooltip(setting))
 
+    -- Hide the tooltip when the dropdown is interacted with,
+    -- so it doesn't obscure the options.
+    dropdown.ComboBox.Events.MouseUp:Subscribe(function (_)
+        Client.Tooltip.HideTooltip()
+    end)
+
     -- Update the combobox when the setting is changed.
     Widgets._RegisterValueChangedListener(dropdown, request, function (ev)
         dropdown:SelectOption(ev.Value)
