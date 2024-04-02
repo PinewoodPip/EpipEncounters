@@ -9,6 +9,7 @@ local EpicEnemies = {
     INELIGIBLE_TAG = "PIP_EpicEnemies_Ineligible",
     EFFECT_TAG_PREFIX = "PIP_EpicEnemies_Effect_",
     SETTINGS_MODULE_ID = "EpicEnemies",
+    DEFAULT_EFFECT_PRIORITY = 1,
 
     ---@type SettingsLib_Setting[]
     _SHARED_SETTINGS = {
@@ -116,7 +117,8 @@ local _EpicEnemiesActivationCondition = {
 ---@field DefaultCost integer
 ---@field ActivationCondition EpicEnemiesActivationCondition
 ---@field Category string?
----@field Visible boolean? Whether this effect appears in tooltips. Defaults to true.
+---@field Visible boolean? Whether this effect appears in tooltips. Defaults to `true`.
+---@field Priority number? Effects with higher priority will attempt to roll first. Defaults to `1`.
 _EpicEnemiesEffect = {
     Description = "NO DESCRIPTION",
     Name = "NO NAME",

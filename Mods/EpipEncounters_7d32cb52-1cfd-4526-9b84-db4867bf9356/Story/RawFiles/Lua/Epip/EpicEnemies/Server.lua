@@ -65,6 +65,18 @@ function EpicEnemies.IsInitialized(char)
     return Osiris.IsTagged(char, EpicEnemies.INITIALIZED_TAG) == 1
 end
 
+---Returns a map of priorities and corresponding effects.
+---@return table<number, EpicEnemiesEffect[]>
+function EpicEnemies.GetEffectPriorityTiers()
+    local tiers = {} ---@type table<number, EpicEnemiesEffect[]>
+    for _,effect in pairs(EpicEnemies.EFFECTS) do
+        local priority = effect.Priority or EpicEnemies.DEFAULT_EFFECT_PRIORITY
+        tiers[priority] = tiers[priority] or {}
+        tiers[priority][effect.ID] = effect
+    end
+    return tiers
+end
+
 ---@param char EsvCharacter
 function EpicEnemies.InitializeCharacter(char)
     if not Settings.GetSettingValue(EpicEnemies.SETTINGS_MODULE_ID, "EpicEnemies_Toggle") then return nil end
@@ -73,31 +85,42 @@ function EpicEnemies.InitializeCharacter(char)
 
     if eligible then
         local points = EpicEnemies.GetPointsForCharacter(char)
-
         local addedEffects = {}
-        local pool = {}
-        for id,effect in pairs(EpicEnemies.EFFECTS) do
-            pool[id] = effect
+
+        -- Group effects into pool based on priority.
+        local tiers = EpicEnemies.GetEffectPriorityTiers()
+        local sortedPools = {} ---@type {Effects: table<string, Features.EpicEnemies.Effect>, Priority: number}[]
+        for prio,effects in pairs(tiers) do
+            table.insert(sortedPools, {
+                Effects = effects,
+                Priority = prio,
+            })
         end
+        table.sort(sortedPools, function (a, b)
+            return a.Priority > b.Priority
+        end)
 
+        -- Roll effects from pools in order of priority.
         local attempts = 0
-        while points > 0 or attempts > 100 do
-            local effect = EpicEnemies.GetRandomEffect(char, pool, addedEffects)
+        for _,poolData in ipairs(sortedPools) do
+            local pool = poolData.Effects
+            while points > 0 or attempts > 100 do
+                local effect = EpicEnemies.GetRandomEffect(char, pool, addedEffects)
+                if effect then
+                    EpicEnemies.ApplyEffect(char, effect)
 
-            if effect then
-                EpicEnemies.ApplyEffect(char, effect)
+                    table.insert(addedEffects, effect)
 
-                table.insert(addedEffects, effect)
+                    -- Effects cannot be rolled twice
+                    pool[effect.ID] = nil
 
-                -- Effects cannot be rolled twice
-                pool[effect.ID] = nil
+                    points = points - effect:GetCost()
+                else -- Break if valid effects remain.
+                    break
+                end
 
-                points = points - effect:GetCost()
-            else
-                break
+                attempts = attempts + 1
             end
-
-            attempts = attempts + 1
         end
 
         Osiris.SetTag(char, EpicEnemies.INITIALIZED_TAG)
@@ -266,9 +289,11 @@ function EpicEnemies.RemoveEffect(char, effectID)
     EpicEnemies.Events.EffectRemoved:Fire(char, effect)
 end
 
+---Returns a random effect from a pool that is valid for the character.
 ---@param char EsvCharacter
 ---@param effectPool table<string, EpicEnemiesEffect>
 ---@param activeEffects? EpicEnemiesEffect[]
+---@return Features.EpicEnemies.Effect? `nil` if no valid effects are in the pool.
 function EpicEnemies.GetRandomEffect(char, effectPool, activeEffects)
     local totalWeight = 0
     local chosenEffect
