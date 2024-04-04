@@ -107,6 +107,7 @@ local _EpicEnemiesActivationCondition = {
 ---@field ID string
 ---@field Effects string[]|EpicEnemiesEffect[] Can be an array of EpicEnemiesEffect while calling the register method. Will be turned into an ID array afterwards.
 
+---Legacy class name; use `Features.EpicEnemies.Effect` instead.
 ---@class EpicEnemiesEffect
 ---@field ID string
 ---@field Name string
@@ -119,12 +120,14 @@ local _EpicEnemiesActivationCondition = {
 ---@field Category string?
 ---@field Visible boolean? Whether this effect appears in tooltips. Defaults to `true`.
 ---@field Priority number? Effects with higher priority will attempt to roll first. Defaults to `1`.
+---@field Prerequisites table<string, true>? List of effect IDs to apply beforehand, consuming budget accordingly if not yet applied.
 _EpicEnemiesEffect = {
     Description = "NO DESCRIPTION",
     Name = "NO NAME",
     DefaultCost = 10,
     DefaultWeight = 10,
 }
+---@class Features.EpicEnemies.Effect : EpicEnemiesEffect
 
 ---Get the cost of an effect.
 function _EpicEnemiesEffect:GetCost()

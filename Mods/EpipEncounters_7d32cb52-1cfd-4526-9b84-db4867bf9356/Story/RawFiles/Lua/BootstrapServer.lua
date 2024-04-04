@@ -215,6 +215,7 @@ LOAD_ORDER = {
     {
         Scripts = {
             "Epip/EpicEnemies/Shared.lua",
+            "Epip/EpicEnemies/InitRequest.lua",
             "Epip/EpicEnemies/EffectTemplates.lua",
             "Epip/EpicEnemies/ActivationConditions.lua",
             "Epip/EpicEnemies/Server.lua",

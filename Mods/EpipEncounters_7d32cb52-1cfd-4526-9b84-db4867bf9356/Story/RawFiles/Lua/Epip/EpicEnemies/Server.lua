@@ -1,6 +1,7 @@
 
 ---@class Feature_EpicEnemies
 local EpicEnemies = Epip.Features.EpicEnemies
+local InitRequest = EpicEnemies:GetClass("Features.EpicEnemies.InitRequest")
 local Settings = Settings
 
 ---------------------------------------------
@@ -20,8 +21,8 @@ local Settings = Settings
 ---@field Return fun(self, eligible:boolean, char:EsvCharacter)
 
 ---@class EpicEnemies_Hook_IsEffectApplicable : LegacyHook
----@field RegisterHook fun(self, handler:fun(applicable:boolean, effect:EpicEnemiesEffect, char:EsvCharacter, activeEffects:EpicEnemiesEffect[]))
----@field Return fun(self, applicable:boolean, effect:EpicEnemiesEffect, char:EsvCharacter, activeEffects:EpicEnemiesEffect[])
+---@field RegisterHook fun(self, handler:fun(applicable:boolean, effect:EpicEnemiesEffect, char:EsvCharacter, activeEffects:EpicEnemiesEffect[], budget:number))
+---@field Return fun(self, applicable:boolean, effect:EpicEnemiesEffect, char:EsvCharacter, activeEffects:EpicEnemiesEffect[], budget:number)
 
 ---@class EpicEnemies_Event_EffectActivated : Event
 ---@field RegisterListener fun(self, listener:fun(char:EsvCharacter, effect:EpicEnemiesEffect))
@@ -82,9 +83,11 @@ function EpicEnemies.InitializeCharacter(char)
     if not Settings.GetSettingValue(EpicEnemies.SETTINGS_MODULE_ID, "EpicEnemies_Toggle") then return nil end
 
     local eligible = EpicEnemies.IsEligible(char)
-
     if eligible then
-        local points = EpicEnemies.GetPointsForCharacter(char)
+        local request = InitRequest.Create({
+            Character = char,
+            Budget = EpicEnemies.GetPointsForCharacter(char),
+        })
         local addedEffects = {}
 
         -- Group effects into pool based on priority.
@@ -104,23 +107,27 @@ function EpicEnemies.InitializeCharacter(char)
         local attempts = 0
         for _,poolData in ipairs(sortedPools) do
             local pool = poolData.Effects
-            while points > 0 or attempts > 100 do
-                local effect = EpicEnemies.GetRandomEffect(char, pool, addedEffects)
+            while request.Budget > 0 or attempts > 100 do
+                local effect = EpicEnemies.GetRandomEffect(char, pool, addedEffects, request.Budget)
                 if effect then
-                    EpicEnemies.ApplyEffect(char, effect)
+                    request:AddEffect(effect)
 
                     table.insert(addedEffects, effect)
 
                     -- Effects cannot be rolled twice
                     pool[effect.ID] = nil
-
-                    points = points - effect:GetCost()
                 else -- Break if valid effects remain.
                     break
                 end
 
                 attempts = attempts + 1
             end
+        end
+
+        -- Apply all effects from the request.
+        for effectID,_ in pairs(request.Effects) do
+            local effect = EpicEnemies.GetEffectData(effectID)
+            EpicEnemies.ApplyEffect(char, effect)
         end
 
         Osiris.SetTag(char, EpicEnemies.INITIALIZED_TAG)
@@ -293,8 +300,9 @@ end
 ---@param char EsvCharacter
 ---@param effectPool table<string, EpicEnemiesEffect>
 ---@param activeEffects? EpicEnemiesEffect[]
+---@param budget number
 ---@return Features.EpicEnemies.Effect? `nil` if no valid effects are in the pool.
-function EpicEnemies.GetRandomEffect(char, effectPool, activeEffects)
+function EpicEnemies.GetRandomEffect(char, effectPool, activeEffects, budget)
     local totalWeight = 0
     local chosenEffect
     activeEffects = activeEffects or {}
@@ -302,7 +310,7 @@ function EpicEnemies.GetRandomEffect(char, effectPool, activeEffects)
     local filteredPool = {}
 
     for id,effect in pairs(effectPool) do
-        local included = EpicEnemies.Hooks.IsEffectApplicable:Return(true, effect, char, activeEffects) and effect:GetWeight() > 0
+        local included =  effect:GetWeight() > 0 and EpicEnemies.Hooks.IsEffectApplicable:Return(true, effect, char, activeEffects, budget)
 
         if included then
             filteredPool[id] = effect
@@ -414,6 +422,34 @@ EpicEnemies.Hooks.IsEligible:RegisterHook(function (eligible, char)
     end
 
     return eligible
+end)
+
+-- Mark effects as valid only if the budget allows for them;
+-- the prerequisite effects must have either already been acquired or also be affordable.
+EpicEnemies.Hooks.IsEffectApplicable:RegisterHook(function (applicable, effect, _, activeEffects, budget)
+    local remainingBudget = budget - effect:GetCost()
+    if effect.Prerequisites then
+        for prereqID,_ in pairs(effect.Prerequisites) do
+            local prerequisiteEffect = EpicEnemies.GetEffectData(prereqID)
+
+            -- Check if the prerequisite is already applied
+            local meetsRequirement = table.any(activeEffects, function (_, v)
+                return v.ID == prereqID
+            end)
+            if not meetsRequirement then
+                -- Otherwise check if it can be afforded
+                local cost = prerequisiteEffect:GetCost()
+                if cost <= remainingBudget then
+                    remainingBudget = remainingBudget - cost
+                    meetsRequirement = true
+                end
+            end
+            if not meetsRequirement then
+                return false
+            end
+        end
+    end
+    return applicable and remainingBudget >= 0
 end)
 
 ---------------------------------------------
