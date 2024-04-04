@@ -311,7 +311,6 @@ function EpicEnemies.GetRandomEffect(char, effectPool, activeEffects, budget)
 
     for id,effect in pairs(effectPool) do
         local included =  effect:GetWeight() > 0 and EpicEnemies.Hooks.IsEffectApplicable:Return(true, effect, char, activeEffects, budget)
-
         if included then
             filteredPool[id] = effect
         end
@@ -321,8 +320,7 @@ function EpicEnemies.GetRandomEffect(char, effectPool, activeEffects, budget)
         totalWeight = totalWeight + effect:GetWeight()
     end
 
-    local seed = Ext.Random(0, math.floor(totalWeight))
-
+    local seed = math.random() * totalWeight
     for _,effect in pairs(filteredPool) do
         seed = seed - effect:GetWeight()
 
@@ -450,6 +448,14 @@ EpicEnemies.Hooks.IsEffectApplicable:RegisterHook(function (applicable, effect, 
         end
     end
     return applicable and remainingBudget >= 0
+end)
+
+-- AI archetype filter.
+EpicEnemies.Hooks.IsEffectApplicable:RegisterHook(function (applicable, effect, char, _, _)
+    if effect.AllowedAIArchetypes then
+        applicable = applicable and effect.AllowedAIArchetypes[char.Archetype] == true
+    end
+    return applicable
 end)
 
 ---------------------------------------------

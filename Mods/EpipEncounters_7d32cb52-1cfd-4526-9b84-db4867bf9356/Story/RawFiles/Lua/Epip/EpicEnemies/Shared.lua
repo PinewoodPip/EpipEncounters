@@ -121,6 +121,7 @@ local _EpicEnemiesActivationCondition = {
 ---@field Visible boolean? Whether this effect appears in tooltips. Defaults to `true`.
 ---@field Priority number? Effects with higher priority will attempt to roll first. Defaults to `1`.
 ---@field Prerequisites table<string, true>? List of effect IDs to apply beforehand, consuming budget accordingly if not yet applied.
+---@field AllowedAIArchetypes table<aitype, true>? If set, only characters with the specified AI archetypes will be able to roll the effect.
 _EpicEnemiesEffect = {
     Description = "NO DESCRIPTION",
     Name = "NO NAME",
