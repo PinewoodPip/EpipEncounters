@@ -23,6 +23,57 @@ local Tooltip = {
         Sulphur = true,
     },
 
+    -- Engine IDs for showStatTooltip.
+    ---@enum TooltipLib.StatID
+    STAT_IDS = {
+        STRENGTH = 0,
+        FINESSE = 1,
+        VITALITY = 12,
+        INTELLIGENCE = 2,
+        CONSTITUTION = 3,
+        MEMORY = 4,
+        WITS = 5,
+        DAMAGE = 6,
+        PHYSICAL_ARMOR = 7,
+        MAGIC_ARMOR = 8,
+        CRITICAL_CHANCE = 9,
+        ACCURACY = 10,
+        DODGING = 11,
+        ACTION_POINTS = 13,
+        SOURCE_POINTS = 14,
+        REPUTATION = 15,
+        KARMA = 16,
+        SIGHT = 17,
+        HEARING = 18,
+        VISION_ANGLE = 19,
+        MOVEMENT = 20,
+        INITIATIVE = 21,
+        BLOCK = 22,
+        PIERCING_RESISTANCE = 23,
+        PHYSICAL_RESISTANCE = 24,
+        CORROSIVE_RESISTANCE = 25,
+        MAGIC_RESISTANCE = 26,
+        TENEBRIUM_RESISTANCE = 27,
+        FIRE_RESISTANCE = 28,
+        WATER_RESISTANCE = 29,
+        EARTH_RESISTANCE = 30,
+        AIR_RESISTANCE = 31,
+        POISON_RESISTANCE = 32,
+        CUSTOM_RESISTANCE = 33, -- No description whatsoever.
+        WILLPOWER = 34,
+        BODYBUILDING = 35,
+        EXPERIENCE = 36,
+        NEXT_LEVEL = 37,
+        MAX_AP = 38,
+        START_AP = 39,
+        AP_RECOVERY = 40,
+        MAX_WEIGHT = 41,
+        MIN_DAMAGE = 42,
+        MAX_DAMAGE = 43,
+        LIFESTEAL = 44,
+        GAIN = 45,
+    },
+
     SIMPLE_TOOLTIP_STYLES = {
         Fancy = 0,
         Simple = 1,
@@ -47,6 +98,7 @@ local Tooltip = {
         RenderCustomFormattedTooltip = {Preventable = true}, ---@type PreventableEvent<TooltipLib_Hook_RenderCustomFormattedTooltip>
         RenderSkillTooltip = {Preventable = true,}, ---@type PreventableEvent<TooltipLib_Hook_RenderSkillTooltip>
         RenderItemTooltip = {Preventable = true,}, ---@type PreventableEvent<TooltipLib_Hook_RenderItemTooltip>
+        RenderStatTooltip = {Preventable = true}, ---@type PreventableEvent<TooltipLib.Hooks.RenderStatTooltip>
         RenderSurfaceTooltip = {Preventable = true,}, ---@type PreventableEvent<TooltipLib_Hook_RenderFormattedTooltip>
         RenderStatusTooltip = {Preventable = true,}, ---@type PreventableEvent<TooltipLib_Hook_RenderStatusTooltip>
         RenderMouseTextTooltip = {Preventable = true}, ---@type PreventableEvent<TooltipLib_Hook_RenderMouseTextTooltip>
@@ -60,7 +112,7 @@ Epip.InitializeLibrary("TooltipLib", Tooltip)
 -- CLASSES
 ---------------------------------------------
 
----@alias TooltipLib_TooltipType "Custom"|"Skill"|"Item"|"Status"|"Simple" TODO talent, stat, others
+---@alias TooltipLib_TooltipType "Custom"|"Skill"|"Item"|"Status"|"Simple"|"Stat" TODO talent, ability, others?
 ---@alias TooltipLib_FormattedTooltipType "Surface"|"Skill"|"Item"|"Custom"|"Status"
 ---@alias TooltipLib_Element table See `Game.Tooltip`. TODO
 ---@alias TooltipLib_FormattedTooltipElementType string TODO
@@ -74,6 +126,7 @@ Epip.InitializeLibrary("TooltipLib", Tooltip)
 ---@field SkillID string?
 ---@field FlashParams LuaFlashCompatibleType[]?
 ---@field UICall string?
+---@field StatID TooltipLib.StatID
 ---@field IsFromGame boolean `false` if the tooltip originated from this library.
 
 ---@class TooltipLib_SimpleTooltip
@@ -202,6 +255,9 @@ end
 
 ---@class TooltipLib_Hook_RenderItemTooltip : TooltipLib_Hook_RenderFormattedTooltip
 ---@field Item EclItem
+
+---@class TooltipLib.Hooks.RenderStatTooltip : TooltipLib_Hook_RenderFormattedTooltip
+---@field StatID TooltipLib.StatID
 
 ---@class TooltipLib_Hook_RenderStatusTooltip : TooltipLib_Hook_RenderFormattedTooltip
 ---@field Character EclCharacter
@@ -383,6 +439,7 @@ function Tooltip._SendFormattedTooltipHook(ui, tooltipType, data, sourceData)
         Item = item,
         SkillID = sourceData.SkillID,
         Status = status,
+        StatID = sourceData.StatID,
     }
 
     -- Specific listeners go first.
@@ -441,6 +498,9 @@ Ext.Events.UICall:Subscribe(function(ev)
         Tooltip._currentTooltipData = Tooltip.nextTooltipData
     elseif ev.Function == "showStatusTooltip" then
         Tooltip.nextTooltipData = {UIType = ev.UI:GetTypeId(), Type = "Status", FlashStatusHandle = param2, FlashCharacterHandle = param1, IsFromGame = true}
+        Tooltip._currentTooltipData = Tooltip.nextTooltipData
+    elseif ev.Function == "showStatTooltip" then
+        Tooltip.nextTooltipData = {UIType = ev.UI:GetTypeId(), Type = "Stat", StatID = param1, IsFromGame = true}
         Tooltip._currentTooltipData = Tooltip.nextTooltipData
     end
 end)
