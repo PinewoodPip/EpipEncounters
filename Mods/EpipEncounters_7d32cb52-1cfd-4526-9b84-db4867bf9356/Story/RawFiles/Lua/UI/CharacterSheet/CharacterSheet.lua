@@ -117,7 +117,7 @@ local CharacterSheet = {
         UpdateTalents = {}, ---@type Event<CharacterSheetUI_Hook_UpdateTalents>
     }
 }
-Epip.InitializeUI(Client.UI.Data.UITypes.characterSheet, "CharacterSheet", CharacterSheet)
+Epip.InitializeUI(Ext.UI.TypeID.characterSheet, "CharacterSheet", CharacterSheet)
 
 ---@class SecondaryStatBase
 

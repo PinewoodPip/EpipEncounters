@@ -669,7 +669,7 @@ end
 
 -- Handling redirected vanilla context menus - UNUSED?
 Client.UI.ContextMenu.RegisterElementListener("vanilla_button", "buttonPressed", function(character, params)
-    local ui = Ext.UI.GetByType(Client.UI.Data.UITypes.contextMenu)
+    local ui = Ext.UI.GetByType(Ext.UI.TypeID.contextMenu.Object) or Ext.UI.GetByType(Ext.UI.TypeID.contextMenu.Default)
     local root = ui:GetRoot()
 
     Ext.Print("handled vanilla button: " .. params.actionID)

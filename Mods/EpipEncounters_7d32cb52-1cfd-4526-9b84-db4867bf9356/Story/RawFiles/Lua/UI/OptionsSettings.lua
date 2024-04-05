@@ -39,10 +39,10 @@ local OptionsSettings = {
         TabRendered = {},
     },
 }
-Epip.InitializeUI(Client.UI.Data.UITypes.optionsSettings, "OptionsSettings", OptionsSettings)
--- OptionsSettings:Debug()
+Epip.InitializeUI(Ext.UI.TypeID.optionsSettings.Default, "OptionsSettings", OptionsSettings)
 
--- Strange, Type does not seem to work.
+---Each settings tab uses a different type ID, but the same `.swf`.
+---@override
 function OptionsSettings:GetUI()
     return Ext.UI.GetByPath("Public/Game/GUI/optionsSettings.swf")
 end

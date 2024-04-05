@@ -30,7 +30,7 @@ local Menu = {
         ButtonPressed = {}, ---@type Event<GameMenuUI_Event_ButtonPressed>
     },
 }
-Epip.InitializeUI(Client.UI.Data.UITypes.gameMenu, "GameMenu", Menu)
+Epip.InitializeUI(Ext.UI.TypeID.gameMenu, "GameMenu", Menu)
 Menu:Debug()
 
 ---------------------------------------------

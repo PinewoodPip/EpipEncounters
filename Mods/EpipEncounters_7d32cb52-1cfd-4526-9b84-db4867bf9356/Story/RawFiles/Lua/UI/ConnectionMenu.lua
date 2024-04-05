@@ -11,7 +11,7 @@ local ConnectionMenu = {
         DIRECT_CONNECT = 1,
     },
 }
-Epip.InitializeUI(Client.UI.Data.UITypes.connectionMenu, "ConnectionMenu", ConnectionMenu)
+Epip.InitializeUI(Ext.UI.TypeID.connectionMenu, "ConnectionMenu", ConnectionMenu)
 
 ---------------------------------------------
 -- EVENT LISTENERS

@@ -173,7 +173,7 @@ local Hotbar = {
         ["Public/Game/GUI/hotBar.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/hotBar.swf",
     },
 }
-Epip.InitializeUI(Client.UI.Data.UITypes.hotBar, "Hotbar", Hotbar)
+Epip.InitializeUI(Ext.UI.TypeID.hotBar, "Hotbar", Hotbar)
 Hotbar:Debug()
 
 for _=1,Hotbar.ACTION_BUTTONS_COUNT,1 do

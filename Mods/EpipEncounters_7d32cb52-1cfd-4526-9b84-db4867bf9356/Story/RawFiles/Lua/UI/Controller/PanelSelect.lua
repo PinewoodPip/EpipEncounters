@@ -18,7 +18,7 @@ local Wheel = {
         ["Public/Game/GUI/panelSelect_c.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/panelSelect_c.swf"
     },
 }
-Epip.InitializeUI(Client.UI.Data.UITypes.panelSelect_c, "PanelSelect", Wheel)
+Epip.InitializeUI(Ext.UI.TypeID.panelSelect_c, "PanelSelect", Wheel)
 Wheel:Debug()
 
 ---------------------------------------------

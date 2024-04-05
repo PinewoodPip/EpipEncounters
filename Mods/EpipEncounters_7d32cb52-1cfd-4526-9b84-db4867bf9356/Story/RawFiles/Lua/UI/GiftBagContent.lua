@@ -30,7 +30,7 @@ local GB = {
         GetContent = {},
     },
 }
-Epip.InitializeUI(Client.UI.Data.UITypes.giftBagContent, "GiftBagContent", GB)
+Epip.InitializeUI(Ext.UI.TypeID.giftBagContent, "GiftBagContent", GB)
 
 ---------------------------------------------
 -- EVENTS/HOOKS

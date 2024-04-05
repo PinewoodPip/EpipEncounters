@@ -121,12 +121,12 @@ end)
 
 -- Ping
 Hotbar.RegisterActionListener("Ping", "ActionUsed", function(char, data)
-    Ext.UI.GetByType(Client.UI.Data.UITypes.minimap):ExternalInterfaceCall("pingButtonPressed")
+    Ext.UI.GetByType(Ext.UI.TypeID.minimap):ExternalInterfaceCall("pingButtonPressed")
 end)
 
 -- Waypoints
 Hotbar.RegisterActionListener("Waypoints", "ActionUsed", function(char, data)
-    Ext.UI.GetByType(Client.UI.Data.UITypes.minimap):ExternalInterfaceCall("HomeButtonPressed")
+    Ext.UI.GetByType(Ext.UI.TypeID.minimap):ExternalInterfaceCall("HomeButtonPressed")
 end)
 Hotbar.RegisterActionHook("Waypoints", "IsActionHighlighted", function(highlighted, char, data)
     return Ext.UI.GetByPath("Public/Game/GUI/waypoints.swf") ~= nil
@@ -137,7 +137,7 @@ Hotbar.RegisterActionListener("CombatLog", "ActionUsed", function(char, data)
     Hotbar:GetUI():ExternalInterfaceCall("CombatLogBtnPressed")
 end)
 Hotbar.RegisterActionHook("CombatLog", "IsActionHighlighted", function(highlighted, char, data)
-    return Ext.UI.GetByType(Client.UI.Data.UITypes.combatLog):GetRoot().log_mc.visible
+    return Ext.UI.GetByType(Ext.UI.TypeID.combatLog):GetRoot().log_mc.visible
 end)
 
 -- Chat
@@ -145,7 +145,7 @@ Hotbar.RegisterActionListener("Chat", "ActionUsed", function(char, data)
     Hotbar:GetUI():ExternalInterfaceCall("ToggleChatLog")
 end)
 Hotbar.RegisterActionHook("Chat", "IsActionHighlighted", function(highlighted, char, data)
-    return Ext.UI.GetByType(Client.UI.Data.UITypes.chatLog):GetRoot().log_mc.visible
+    return Ext.UI.GetByType(Ext.UI.TypeID.chatLog):GetRoot().log_mc.visible
 end)
 
 Hotbar.SetHotkeyAction(1, "Pause")

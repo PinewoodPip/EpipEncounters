@@ -3,7 +3,7 @@
 ---------------------------------------------
 
 local Saving = {}
-Epip.InitializeUI(Client.UI.Data.UITypes.saving, "Saving", Saving)
+Epip.InitializeUI(Ext.UI.TypeID.saving, "Saving", Saving)
 
 ---------------------------------------------
 -- EVENT LISTENERS

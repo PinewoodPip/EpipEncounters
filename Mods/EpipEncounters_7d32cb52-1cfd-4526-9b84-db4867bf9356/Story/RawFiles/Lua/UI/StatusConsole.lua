@@ -151,7 +151,7 @@ end
 -- SETUP
 ---------------------------------------------
 Ext.Events.SessionLoaded:Subscribe(function()
-    StatusConsole.UI = Ext.UI.GetByType(Client.UI.Data.UITypes.statusConsole)
+    StatusConsole.UI = Ext.UI.GetByType(Ext.UI.TypeID.statusConsole)
     StatusConsole.Root = StatusConsole.UI:GetRoot()
 
     StatusConsole.Root.originalNotificationPosY = 3000

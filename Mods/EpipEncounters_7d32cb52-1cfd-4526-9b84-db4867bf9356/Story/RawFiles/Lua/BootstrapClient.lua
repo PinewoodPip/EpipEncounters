@@ -140,7 +140,6 @@ local coreLibraries = {
     "Client/Client.lua",
     "Client/Server.lua",
     "Client/Sound.lua",
-    "UI/Data.lua",
     {
         Scripts = {
             "Utilities/Client/Input/Main.lua",

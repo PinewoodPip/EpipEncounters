@@ -24,7 +24,7 @@ local Chat = {
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
 }
-Epip.InitializeUI(Client.UI.Data.UITypes.chatLog, "ChatLog", Chat)
+Epip.InitializeUI(Ext.UI.TypeID.chatLog, "ChatLog", Chat)
 
 ---------------------------------------------
 -- EVENTS/HOOKS

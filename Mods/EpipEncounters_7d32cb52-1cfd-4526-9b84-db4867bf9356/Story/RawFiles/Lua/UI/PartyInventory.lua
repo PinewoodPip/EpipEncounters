@@ -47,7 +47,7 @@ local Inv = {
         GetInventoryUpdate = {}, ---@type Event<UI.PartyInventory.Hooks.GetInventoryUpdate>
     },
 }
-Epip.InitializeUI(Client.UI.Data.UITypes.partyInventory, "PartyInventory", Inv)
+Epip.InitializeUI(Ext.UI.TypeID.partyInventory, "PartyInventory", Inv)
 
 ---@class PartyInventoryItemUpdate
 ---@field CharacterHandle FlashCharacterHandle

@@ -23,7 +23,7 @@ local CharacterCreationTypoFixes = Epip.Features.CharacterCreationTypoFixes
 ---------------------------------------------
 
 -- Listen for entering character name.
-Ext.RegisterUITypeCall(Client.UI.Data.UITypes.characterCreation, "handleTextInput", function(ui, method, id, text)
+Ext.RegisterUITypeCall(Ext.UI.TypeID.characterCreation, "handleTextInput", function(ui, method, id, text)
 
     local ui = TutorialBox.ui
     local root = TutorialBox.root

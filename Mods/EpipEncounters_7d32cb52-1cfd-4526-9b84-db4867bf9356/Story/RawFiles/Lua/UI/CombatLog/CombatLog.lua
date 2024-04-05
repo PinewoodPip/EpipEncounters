@@ -49,7 +49,7 @@ local Log = {
     SAVE_NAME = "Epip_CombatLogConfig.json",
     SAVE_FORMAT = 0,
 }
-Epip.InitializeUI(Client.UI.Data.UITypes.combatLog, "CombatLog", Log)
+Epip.InitializeUI(Ext.UI.TypeID.combatLog, "CombatLog", Log)
 
 ---@class CombatLogSentMessage
 ---@field Filter integer

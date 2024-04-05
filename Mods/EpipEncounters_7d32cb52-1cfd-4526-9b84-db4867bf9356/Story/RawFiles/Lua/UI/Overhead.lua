@@ -50,7 +50,7 @@ local Overhead = {
         RequestOverheads = {}, ---@type Event<UI.Overhead.Hooks.RequestOverheads>
     },
 }
-Epip.InitializeUI(Client.UI.Data.UITypes.overhead, "Overhead", Overhead)
+Epip.InitializeUI(Ext.UI.TypeID.overhead, "Overhead", Overhead)
 
 ---------------------------------------------
 -- CLASSES
@@ -167,7 +167,7 @@ Utilities.Hooks.RegisterListener("AMERUI", "CharacterExitedUI", function(data)
     end
 end)
 
-Ext.RegisterUITypeCall(Client.UI.Data.UITypes.overhead, "pipOverheadAttempt", function(ui, method, handle, str)
+Ext.RegisterUITypeCall(Ext.UI.TypeID.overhead, "pipOverheadAttempt", function(ui, method, handle, str)
 
     str = str:gsub(Text.PATTERNS.FONT_SIZE, string.format(Text.TEMPLATES.FONT_SIZE, Overhead.currentDamageOverheadSize))
 
@@ -179,7 +179,7 @@ Ext.RegisterUITypeCall(Client.UI.Data.UITypes.overhead, "pipOverheadAttempt", fu
     Overhead.AddDamage(char, str)
 end)
 
-Ext.RegisterUITypeCall(Client.UI.Data.UITypes.overhead, "pipOverheadDialogAttempt", function(ui, method, handle, str, duration)
+Ext.RegisterUITypeCall(Ext.UI.TypeID.overhead, "pipOverheadDialogAttempt", function(ui, method, handle, str, duration)
 
     str = str:gsub(Text.PATTERNS.FONT_SIZE, string.format(Text.TEMPLATES.FONT_SIZE, Overhead.currentOverheadSize))
 

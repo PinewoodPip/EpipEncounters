@@ -18,7 +18,7 @@ local SpamCalls = {
 }
 
 local sniffAll = false
-local UITypeToID = Client.UI.Data.UITypes
+local UITypeToID = Ext.UI.TypeID
 local uis = {
     -- [UITypeToID.overhead] = true,
     -- [UITypeToID.hotBar] = true,

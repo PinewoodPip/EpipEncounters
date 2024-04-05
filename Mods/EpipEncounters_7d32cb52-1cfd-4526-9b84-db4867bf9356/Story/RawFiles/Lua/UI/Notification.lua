@@ -20,7 +20,7 @@ local Notification = {
         ShowCastingNotification = {Preventable = true}, ---@type PreventableEvent<NotificationUI_Hook_ShowCastingNotification>
     },
 }
-Epip.InitializeUI(Client.UI.Data.UITypes.notification, "Notification", Notification)
+Epip.InitializeUI(Ext.UI.TypeID.notification, "Notification", Notification)
 
 ---------------------------------------------
 -- EVENTS/HOOKS
@@ -33,7 +33,6 @@ Epip.InitializeUI(Client.UI.Data.UITypes.notification, "Notification", Notificat
 ---@field IsNormal boolean If false, the notification will be a warning-style one.
 ---@field Unused1 number
 ---@field IsScripted boolean True if the notification came from a lua script.
-
 
 ---@class NotificationUI_Hook_ShowReceivalNotification
 ---@field Sound string

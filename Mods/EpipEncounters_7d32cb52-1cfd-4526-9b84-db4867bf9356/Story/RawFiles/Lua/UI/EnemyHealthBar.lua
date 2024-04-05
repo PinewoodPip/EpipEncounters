@@ -59,7 +59,7 @@ local Bar = {
         GetHeader = {}, ---@type Event<EnemyHealthBarUI_Hook_GetHeader>
     },
 }
-Epip.InitializeUI(Client.UI.Data.UITypes.enemyHealthBar, "EnemyHealthBar", Bar)
+Epip.InitializeUI(Ext.UI.TypeID.enemyHealthBar, "EnemyHealthBar", Bar)
 
 ---------------------------------------------
 -- EVENTS

@@ -98,7 +98,7 @@ end)
 -- Set custom icon for keyword stats when their tooltip is being rendered.
 CharacterSheet.StatsTab:RegisterListener("TooltipRendering", function(stat, data, tooltip)
     if data.Keyword then
-        local ui = Ext.UI.GetByType(Client.UI.Data.UITypes.tooltip)
+        local ui = Ext.UI.GetByType(Ext.UI.TypeID.tooltip)
         ui:SetCustomIcon("tt_talent_" .. CharacterSheet.StatsTab.TOOLTIP_TALENT_ID, "PIP_KeywordScaled_" .. data.Keyword, 128, 128)
     end
 end)
