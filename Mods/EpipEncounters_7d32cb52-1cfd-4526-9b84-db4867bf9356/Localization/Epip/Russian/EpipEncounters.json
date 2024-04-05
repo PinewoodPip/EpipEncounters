@@ -20,7 +20,7 @@
     },
     "he5c3a752gd8bag48fagb611g35b5d23bef9d": {
       "ReferenceText": "If enabled, your controlled character's skill animations will be cancelled after their effects execute, allowing you to perform consecutive actions quicker.",
-      "TranslatedText": "Если включено, (пост)анимация применения способностей у контролируемого персонажа будет отменяться сразу после исполнения ее эффекта."
+      "TranslatedText": "Если включено, (пост)анимация применения способностей у контролируемого персонажа будет отменяться сразу после исполнения их эффекта."
     },
     "hf832b7ceg2e16g454dg8b5cg2ac87a0f7681": {
       "ReferenceText": "Speed up world tooltip item pick-ups",
@@ -60,7 +60,7 @@
     },
     "h4bc543cag5f19g4e91gbb76gc3a18177874b": {
       "ReferenceText": "Score             %s\nHigh-Score %s",
-      "TranslatedText": "Очки             %s\nРекорд       %s"
+      "TranslatedText": "Очки             %s\nРекорд     %s"
     },
     "h54d9066eg87bdg439fg92f9g7027970af6ca": {
       "ReferenceText": "Camera",
@@ -72,7 +72,7 @@
     },
     "hec25a517g9521g47e3g8f74gfa658861a320": {
       "ReferenceText": "Controls the FOV of the camera. Low/high values may cause issues with dynamic shadows.<br>Default is 45.",
-      "TranslatedText": "Задает поле зрения камеры. Слишком низкие/высокие значения могут вызывать проблемы с динамическими тенями.<br> По умолчанию 45."
+      "TranslatedText": "Задает поле зрения камеры. Слишком низкие/высокие значения могут вызывать проблемы с динамическими тенями.<br>По умолчанию 45."
     },
     "h97ac5f1fg0ae8g490dg9050gb5f8fe4025a4": {
       "ReferenceText": "Controls the maximum distance the camera can zoom out in controller mode.<br>Default is 13.",
@@ -852,7 +852,7 @@
     },
     "h5efb42cag481bg466dg9089g55793976612a": {
       "ReferenceText": "Determines the maximum distance (in meters) that other players's characters can be at for their dialogues to be auto-listened to, if \"Auto-Listen Dialogues\" is enabled.",
-      "TranslatedText": "Определяет максимальную дистанцию (в метрах), на которой персонажи других игроков могут автоматически вступить в диалог (если включена \"Дальность авто-прослушивания диаголов\")"
+      "TranslatedText": "Определяет максимальную дистанцию (в метрах), на которой персонажи других игроков могут автоматически вступить в диалог (если включено \"Авто-прослушивание диаголов\")"
     },
     "h6b736d31gc985g48b6g8752g9137186f3703": {
       "ReferenceText": "Dialogue Notifications",
@@ -972,7 +972,7 @@
     },
     "h39849f5cga570g43bcg9258gf0c20c6f7e75": {
       "ReferenceText": "Crafting UI",
-      "TranslatedText": "Интерфейс крафта"
+      "TranslatedText": "Интерфейс ремесла"
     },
     "h5b1b94ebg3d90g47e5g8b29g9f75c0aa6cd6": {
       "ReferenceText": "French translation by Drayander",
@@ -1144,7 +1144,7 @@
     },
     "h49611d79g2ae8g47dcgb20bge13634676cad": {
       "ReferenceText": "Disables looting corpses in combat, unless shift is held. This allows you to easily move to their position.",
-      "TranslatedText": "Отключает возможность обыскивать трупы в бою пока не зажата клавиша Shift."
+      "TranslatedText": "Отключает возможность обыскивать трупы в бою, пока не зажата клавиша Shift."
     },
     "h3da94ae0ge613g4331gb629gb467b74f7ca4": {
       "ReferenceText": "Disables the hotbar slots while a spell is being cast.",
@@ -1160,15 +1160,15 @@
     },
     "h39e2d175g348eg4697g93a5gf28a9544e4ba": {
       "ReferenceText": "Emphasizes consumable items in world tooltips.",
-      "TranslatedText": "Подсвечивает расходуемые предметы в подсказках к окружающим объектам."
+      "TranslatedText": "Цвет подсветки расходуемых предметов в подсказках к окружающим объектам."
     },
     "he759cd00g404dg4731gb2a6g0ece913a327e": {
       "ReferenceText": "Emphasizes container items in world tooltips.",
-      "TranslatedText": "Подсвечивает контейнеры в подcказках к окружающим объектам."
+      "TranslatedText": "Цвет подсветки контейнеров в подcказках к окружающим объектам."
     },
     "hb461a9b1g4866g4bbdgb046gd478f7368fab": {
       "ReferenceText": "Emphasizes equipment items in world tooltips.",
-      "TranslatedText": "Подсвечивает предметы экипировки в подсказках к окружающим объектам."
+      "TranslatedText": "Цвет подсветки предметов экипировки в подсказках к окружающим объектам."
     },
     "hf288311dg0fccg47dcgbc6ag954c4d848835": {
       "ReferenceText": "Enable tooltips for all items",
@@ -1228,7 +1228,7 @@
     },
     "ha1146687g9261g49d4gad63g0269559fce2d": {
       "ReferenceText": "If enabled, chairs, ladders and beds will show world tooltips. Requires \"Enable tooltips for all items\" to be enabled, as these do not have tooltips by default.",
-      "TranslatedText": "Если включено, стулья, лестницы и кровати будут отображатся в подсказках к окружающим объектам.Требуется опция \"Включить подсказки для всех предметов\"."
+      "TranslatedText": "Если включено, стулья, лестницы и кровати будут отображаться в подсказках к окружающим объектам.Требуется опция \"Включить подсказки для всех предметов\"."
     },
     "hae703884g68c4g44d1gb1d2g211f87e7309c": {
       "ReferenceText": "If enabled, clicking world tooltips will open containers rather than picking them up.",
@@ -1236,11 +1236,11 @@
     },
     "h868a6168gd10eg4340gb5f4gb35dc338c453": {
       "ReferenceText": "If enabled, doors will show world tooltips. Requires \"Enable tooltips for all items\" to be enabled, as these do not have tooltips by default.",
-      "TranslatedText": "Если включено, двери будут отображатся в подсказках к окружающим объектам.Требуется опция \"Включить подсказки для всех предметов\"."
+      "TranslatedText": "Если включено, двери будут отображаться в подсказках к окружающим объектам.Требуется опция \"Включить подсказки для всех предметов\"."
     },
     "h0023bed4gd590g4375g80dcgf1e135f30b1e": {
       "ReferenceText": "If enabled, items with no use actions will show world tooltips.",
-      "TranslatedText": "Если включено, предметы без опции взаимодействия(ключи и пр.) будут отображаться в подcказках к окружающим объектах."
+      "TranslatedText": "Если включено, предметы без опции взаимодействия(ключи и прочее) будут отображаться в подcказках к окружающим объектах."
     },
     "h28a24072g481eg4d1fgaac8gfacbe5243bdb": {
       "ReferenceText": "If enabled, the Escape key will close EE UIs rather than turning back a page.",
@@ -1324,7 +1324,7 @@
     },
     "h21723370gb5acg4f7bg8628g6b7b3249808c": {
       "ReferenceText": "Show Character Sheet in Reward UI",
-      "TranslatedText": "Показывать окно персонажа в интерфейсе выбора награды."
+      "TranslatedText": "Показывать окно персонажа в интерфейсе выбора награды"
     },
     "h4e5e3786g9b22g4009gaf4egc680d28b83bd": {
       "ReferenceText": "Show Combat Log Button",
@@ -1452,7 +1452,7 @@
     },
     "hd8218bb5gcf00g4051g90f2g05388601ab51": {
       "ReferenceText": "Determines the default tab for the crafting UI.",
-      "TranslatedText": "Определяет раздел по умолчанию при открытии интерфейса крафта."
+      "TranslatedText": "Определяет раздел по умолчанию при открытии интерфейса ремесла."
     },
     "h20643acfg8b9fg46ccg8039g253dd6e02788": {
       "ReferenceText": "%s - Lvl %d",
@@ -1656,7 +1656,7 @@
     },
     "h405ae4b4g1499g463fgbe98ge384c0eaac2e": {
       "ReferenceText": "Determines the order in which equipment slots are shown in Quick Examine's equipment widget.",
-      "TranslatedText": "Определяет порядок отображение экипировки в Досье."
+      "TranslatedText": "Определяет порядок отображения экипировки в Досье."
     },
     "h614e84c5g5e03g4672g8b1cga7a8455f4a5a": {
       "ReferenceText": "Equipment Slots Order",
@@ -1696,7 +1696,7 @@
     },
     "h9d0d399dg626eg48f9ga7cag91bc0899906d": {
       "ReferenceText": "Determines the amount of action points between which a larger divider graphic is shown on the AP bar. May help with readability of remaining \"actions\".<br><br>Set to '20' to effectively disable them.",
-      "TranslatedText": "Определяет положение \"разделителя\" ОД, отображаемого на панели.<br><br>Установите на  '20' чтобы отключить разделитель."
+      "TranslatedText": "Определяет положение \"разделителя\" ОД, отображаемого на панели.<br><br>Установите на  '20', чтобы отключить разделитель."
     },
     "h2bbdd581g5f42g436fgafbbg923568599545": {
       "ReferenceText": "Creates a surface at the cursor's world position, if the Surface Painter UI is open.",
@@ -1724,7 +1724,7 @@
     },
     "h2f7ed974g4184g404fga2abg640d32f6f7aa": {
       "ReferenceText": "Controls the position of item tooltips within the Party Inventory and Container Inventory UIs.<br><br>- Near cursor: vanilla behaviour; tooltips appear near the cursor.<br>- On UI sides: tooltips will be positioned on the left side of the source UI if possible, or on the right otherwise.",
-      "TranslatedText": "Задает положение описаний предметов в интерфейсе инвентаря и контейнеров .<br><br>- Под курсором: как в ванилле, описание отображается под курсором.<br>- Сбоку интерфейса: описание отображается слева от интерфейса или справа, если нет свободного места."
+      "TranslatedText": "Задает положение описаний предметов в интерфейсе инвентаря и контейнеров .<br><br>- Под курсором: как в ванилле, описание отображается под курсором.<br>- Сбоку интерфейса: описание отображается слева от интерфейса, или справа, если нет свободного места."
     },
     "h9035058dg4e1ag41a5g9209gccee07be7808": {
       "ReferenceText": "Inventory Item Tooltips Position",
@@ -1828,7 +1828,7 @@
     },
     "hd15285dag87d6g450cg8f17gd663d87a474e": {
       "ReferenceText": "Chain/Unchain",
-      "TranslatedText": "Соед/разъед. отряд"
+      "TranslatedText": "Сгруппировать"
     },
     "h4ac91ab1gcde9g4cd5gb8a3gc19b15f3dd4b": {
       "ReferenceText": "Pyramids",
@@ -1872,7 +1872,7 @@
     },
     "h9582c7b8geff7g40cbg9276g6afac3ab2ee3": {
       "ReferenceText": "If enabled, multi-select controls will be available for the party inventory UI.\n\nUse Ctrl+Click to select/deselect items. If at least one item is selected, Shift+Click will select a range of items.\n\nRight-click selected items to access a context menu with operations, or drag and drop them to inventory slots, player inventory tabs, or container items to move them.",
-      "TranslatedText": "Если включено, вам будет доступен множественный выбор в инвентаре.\n\nИспользуйте Ctrl+клик чтобы отмечать предметы. Если выбран как минимум один предмет, сочетанием Shift+клик можно выбрать все предметы в диапазоне.\n\nВ ПКМ меню появятся новые функции для быстрой работы с предметами и также вы можете просто перемещать отмеченные предметы с помощью мыши в контейнеры, рюкзаки."
+      "TranslatedText": "Если включено, вам будет доступен множественный выбор в инвентаре группы.\n\nИспользуйте Ctrl+клик чтобы отмечать предметы. Если выбран как минимум один предмет, сочетанием Shift+клик можно выбрать все предметы в диапазоне.\n\nВ ПКМ меню появятся новые функции для быстрой работы с предметами и также вы можете просто перемещать отмеченные предметы с помощью мыши в контейнеры, рюкзаки."
     },
     "h74611874g72f2g4e23g8ae3g0200019466fe": {
       "ReferenceText": "Mark as wares",
@@ -2040,7 +2040,7 @@
     },
     "h6232b543g92dag4b65gac80g0d3f7e833f72": {
       "ReferenceText": "Quick Find is a UI that shows a customizable filtered view of the party inventory, opened using Ctrl+F by default.",
-      "TranslatedText": "Интерфейс быстрого поиска показывает настраивамое отображение инвентаря группы. По умолчанию открывается Ctrl+F."
+      "TranslatedText": "Интерфейс быстрого поиска показывает настраивамое отображение инвентаря группы. По умолчанию открывается сочетанием Ctrl+F."
     },
     "h3c90f954gcf43g4f24gab42gca440c18cdda": {
       "ReferenceText": "Quick Swap...",
@@ -2148,7 +2148,7 @@
     },
     "hca56dcd2gf7f6g4662g94cfga66262672545": {
       "ReferenceText": "Statuses in this list will be filtered out and not shown in the status bar if \"Alternative Status Display\" is enabled. Holding shift temporarily disables this filter.",
-      "TranslatedText": "Статусы из этого списка будут отфильтрованы и не станут отображаться, пока не зажата клавиша Shift (при включенном \"Альтернативном отображении статусоа\")."
+      "TranslatedText": "Статусы из этого списка будут отфильтрованы и не станут отображаться, пока не зажата клавиша Shift (при включенном \"Альтернативном отображении статусов\")."
     },
     "hdaeb81edg863bg492cgab09ged3a5d2470d7": {
       "ReferenceText": "Using toggleable world tooltips requires binding the vanilla key for them.",
@@ -2220,7 +2220,7 @@
     },
     "h2b831dbcg0141g444fg86bcg9f2224602030": {
       "ReferenceText": "Display rune crafting hint",
-      "TranslatedText": "Отображать подсказку для крафта рун"
+      "TranslatedText": "Отображать подсказку для создания рун"
     },
     "hdd0f768aged04g4450g8259g62763d810f2f": {
       "ReferenceText": "If enabled, items whose only purpose is to be crafted into runes will display how to do so in their tooltip.<br>%s",

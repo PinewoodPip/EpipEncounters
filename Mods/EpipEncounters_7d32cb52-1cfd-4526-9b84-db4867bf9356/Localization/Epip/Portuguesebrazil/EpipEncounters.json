@@ -690,6 +690,10 @@
       "ReferenceText": "Copy Position",
       "TranslatedText": "Copiar posição"
     },
+    "h4e3b6a84g9de1g4723gb807ga808db3c9d70": {
+      "ReferenceText": "TODO",
+      "TranslatedText": "Spawna um item a sua escolha "
+    },
     "hfd4d8ec8g76e3g4defg9647gc28159eb38e5": {
       "ReferenceText": "TODO",
       "TranslatedText": "Spawnar item"
@@ -701,10 +705,6 @@
     "h23e452c0g340fg4555g8034g753f003107bf": {
       "ReferenceText": "TODO",
       "TranslatedText": "Te teleporta para a localização X"
-    },
-    "h4e3b6a84g9de1g4723gb807ga808db3c9d70": {
-      "ReferenceText": "TODO",
-      "TranslatedText": "Spawna um item a sua escolha "
     },
     "ha6bf3f4cg6de4g4ac8gb706g3f39de8376c3": {
       "ReferenceText": "Teleport to",
