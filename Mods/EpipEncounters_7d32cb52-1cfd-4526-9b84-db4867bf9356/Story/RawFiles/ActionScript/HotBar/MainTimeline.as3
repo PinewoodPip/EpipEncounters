@@ -4,6 +4,7 @@ package hotBar_fla
     import flash.display.MovieClip;
     import flash.external.ExternalInterface;
     import flash.geom.Point;
+    import flash.geom.Rectangle;
     
     public dynamic class MainTimeline extends MovieClip
     {
@@ -125,7 +126,7 @@ package hotBar_fla
         
         public function onEventResolution(param1:Number, param2:Number) : *
         {
-            var _loc4_:uint = 0;
+            var _loc4_:uint = this.maxSlots;
             var _loc5_:uint = 0;
             var _loc6_:* = undefined;
             var _loc7_:uint = 29;
@@ -140,7 +141,6 @@ package hotBar_fla
                 _loc4_ = Math.floor((_loc3_ - this.baseBarWidth) / this.visualSlotWidth);
                 }
                 _loc5_ = this.barStopWidth + this.baseBarWidth + _loc4_ * this.visualSlotWidth + 5;
-                this.hotbar_mc.scrollRect = null;
                 _loc6_ = 12;
                 if(_loc4_ < this.maxSlots)
                 {
@@ -164,6 +164,11 @@ package hotBar_fla
                 this.actionSkillHolder_mc.x = this.hotbar_mc.x + this.actionsPos;
                 ExternalInterface.call("pipUpdateSlots");
             }
+            
+            // Crop frame beyond visible slots.
+            this.hotbar_mc.basebar_mc.scrollRect = new Rectangle(0, 0,  this.baseBarWidth + _loc4_ * this.visualSlotWidth + 6, 4000);
+            this.hotbar_mc.basebarFrame_mc.scrollRect = new Rectangle(0, 0,  this.barStopWidth + this.baseBarWidth + _loc4_ * this.visualSlotWidth + (_loc4_ >= this.maxSlots ? 15 : 0), 4000); // Needs extra width to show endpiece when all slots are visible; otherwise this is handled by endpiece_mc.
+
             this.resizeExpBar();
         }
         

@@ -1342,6 +1342,27 @@ function Hotbar.GetIconForSlot(index)
     return icon
 end
 
+---Returns the amount of slots visible per row,
+---determined by resolution and UI scaling.
+---Transcribed from `MainTimeline.as3`.
+---@return integer
+function Hotbar.GetVisibleSlotsPerRow()
+    local root = Hotbar:GetRoot()
+    local viewport = Client.GetViewportSize()
+    viewport[1] = viewport[1] / root.uiScaling
+    viewport[2] = viewport[2] / root.uiScaling
+    local scaledUIWidth = math.floor(viewport[1] / viewport[2] * (root.designResolution.y / root.uiScaling))
+    local slots
+    if scaledUIWidth < root.designResolution.x then
+        if scaledUIWidth > root.baseBarWidth then
+            slots = math.floor((scaledUIWidth - root.baseBarWidth) / root.visualSlotWidth)
+        end
+    else
+        slots = Hotbar.SLOTS_PER_ROW
+    end
+    return slots
+end
+
 function Hotbar.UpdateActionHolder()
     local dualLayout = Hotbar.HasSecondHotkeysRow()
     local actionSkillHolder = Hotbar:GetRoot().actionSkillHolder_mc
@@ -1600,14 +1621,13 @@ function Hotbar.RenderSlots()
             for i=0,Hotbar.GetSlotsPerRow() - 1,1 do
                 local slotIndex = (rowIndex - 1) * Hotbar.GetSlotsPerRow() + i
                 local success, msg = pcall(Hotbar.RenderSlot, char, canUseHotbar, slotIndex + 1)
-                
                 if not success then
                     local data = Hotbar.GetSkillBarItems(char)[slotIndex + 1]
-
-                    Hotbar:LogError("Error rendering slot " .. (slotIndex + 1))
-                    Hotbar:LogError(msg)
-                    Hotbar:LogError(string.format("Slot data: type %s skillID %s", data.Type, data.SkillOrStatId))
+                    Hotbar:__LogError("Error rendering slot " .. (slotIndex + 1))
+                    Hotbar:__LogError(msg)
+                    Hotbar:__LogError(string.format("Slot data: type %s skillID %s", data.Type, data.SkillOrStatId))
                 end
+
             end
         end
     end
@@ -1638,6 +1658,7 @@ function Hotbar.PositionBar(index, row)
     local SLOTSPACING = Hotbar.SLOT_SPACING
 
     -- Position slots
+    local visibleSlotsPerRow = Hotbar.GetVisibleSlotsPerRow()
     for i=0,Hotbar.GetSlotsPerRow()-1,1 do
         local slotIndex = ((row - 1) * Hotbar.GetSlotsPerRow()) + i
         local slot = slotHolder.slot_array[slotIndex]
@@ -1648,6 +1669,7 @@ function Hotbar.PositionBar(index, row)
         slot.y = slot.y + (index - 2)
 
         Hotbar.UpdateSlot(slotIndex)
+        slot.visible = i < visibleSlotsPerRow
     end
 end
 
@@ -1828,10 +1850,3 @@ Ext.Events.SessionLoaded:Subscribe(function()
 
     Hotbar.initialized = true
 end)
-
--- Hide the vanilla endpiece when vanilla logic tries to show it: when the resolution changes and upon showSkillBar() invoke.
-local function HideEndPiece()
-    Hotbar:GetRoot().endPiece_mc.visible = false
-end
-Client.Events.ViewportChanged:Subscribe(HideEndPiece, {EnabledFunctor = function () return Hotbar:Exists() end})
-Hotbar:RegisterInvokeListener("showSkillBar", HideEndPiece, "After")
