@@ -309,7 +309,8 @@ package hotBar_fla
         public function showSkillBar(param1:Boolean) : *
         {
             this.hotbar_mc.showSkillBar(param1);
-            this.endPiece_mc.visible = param1;
+            // Causes endpiece to appear even if all slots are visible, which it shouldn't (as that case is handled by frame).
+            // this.endPiece_mc.visible = param1;
         }
         
         public function setLockBtnTooltips(param1:String = "", param2:String = "") : *
