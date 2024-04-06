@@ -194,29 +194,45 @@ function Vanity.RefreshAppearance(char, useAlternativeStatus)
     local charGUID = char.MyGuid
     if useAlternativeStatus then status = "PIP_Vanity_Refresh_Alt" end
 
-    -- Transforming removes racial skills and as a result their cooldown is reset afterwards;
+    -- Transforming removes racial skills and as a result their cooldown is reset afterwards (and removed from the hotbar if "Remove unmemorised skills" is enabled);
     -- we need to restore the cooldowns afterwards.
     local race = Character.GetRacePreset(char)
-    local skillCooldowns = {} ---@type table<skill, number>
+    local racialSkills = {} ---@type table<skill, {Cooldown: number, SkillBarIndex: integer}>
     if race then
         local skillSet = Ext.Stats.SkillSet.GetLegacy(race.SkillSet)
         for _,skillID in ipairs(skillSet.Skills) do
             local skillRecord = Character.GetSkill(char, skillID)
             if skillRecord then
-                skillCooldowns[skillID] = skillRecord.ActiveCooldown
+                local skillBarIndex, _ = table.getFirst(char.PlayerData.SkillBar, function (k, v)
+                    return v.Type == "Skill" and v.SkillOrStatId == skillID
+                end)
+                ---@type {Cooldown: number, SkillBarIndex: integer}
+                local entry = {
+                    Cooldown = skillRecord.ActiveCooldown,
+                    SkillBarIndex = skillBarIndex
+                }
+                racialSkills[skillID] = entry
             end
         end
-
     end
 
     Osi.ApplyStatus(charGUID, status, 0, 1, NULLGUID)
 
+    -- Request to update the character sheet paperdoll.
     Timer.Start(0.2, function()
         Net.PostToCharacter(charGUID, "EPIPENCOUNTERS_Vanity_RefreshSheetAppearance")
     end)
-    Timer.Start(0.6, function (_) -- Restore racial skill cooldowns. It's unknown how many ticks this requires. Unfortunately will not stop the client from being able to cast the skill if they're fast enough.
-        for skillID,cooldown in pairs(skillCooldowns) do
-            Osi.NRD_SkillSetCooldown(charGUID, skillID, cooldown)
+
+    -- Restore racial skill cooldowns and put the skill back on the hotbar (if "Remove unmemorised skills" is enabled). It's unknown how many ticks this requires. Unfortunately will not stop the client from being able to cast the skill if they're fast enough.
+    Timer.Start(0.4, function (_)
+        char = Character.Get(charGUID)
+        for skillID,entry in pairs(racialSkills) do
+            Osi.NRD_SkillSetCooldown(charGUID, skillID, entry.Cooldown)
+            if entry.SkillBarIndex then
+                local skillBarSlot = char.PlayerData.SkillBar[entry.SkillBarIndex]
+                skillBarSlot.Type = "Skill"
+                skillBarSlot.SkillOrStatId = skillID
+            end
         end
     end)
 end
