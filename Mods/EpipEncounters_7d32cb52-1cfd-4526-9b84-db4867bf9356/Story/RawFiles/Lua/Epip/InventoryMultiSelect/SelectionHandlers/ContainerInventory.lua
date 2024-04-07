@@ -44,7 +44,6 @@ function ContainerSelections.ToggleItemSelection(item, selected)
         ItemHandle = item.Handle,
         InventoryCell = cell,
         CellIndex = cellIndex,
-        OwnerCharacterHandle = Character.Get(item:GetOwnerCharacter()).Handle,
     }
     if selected == nil then
         selected = not MultiSelect.IsSelected(item)

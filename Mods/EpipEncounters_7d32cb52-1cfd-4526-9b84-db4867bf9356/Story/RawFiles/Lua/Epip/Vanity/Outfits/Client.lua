@@ -76,7 +76,7 @@ function Outfits.SaveCurrentOutfit(name, slots)
 
     local outfit = Outfits.SavedOutfits[name]
 
-    for slot,i in pairs(Vanity.SLOT_TO_DB_INDEX) do
+    for slot,_ in pairs(Vanity.SLOT_TO_DB_INDEX) do
         -- Default values.
         outfit.Templates[slot] = ""
 
@@ -107,7 +107,7 @@ Client.UI.MessageBox.RegisterMessageListener("PIP_Vanity_RemoveOutfit", Client.U
     end
 end)
 
-Client.UI.MessageBox.RegisterMessageListener("epip_Vanity_Outfit_Save", Client.UI.MessageBox.Events.InputSubmitted, function(text, buttonId, data)
+Client.UI.MessageBox.RegisterMessageListener("epip_Vanity_Outfit_Save", Client.UI.MessageBox.Events.InputSubmitted, function(text, buttonId, _)
     local slots = {
         Helmet = true,
         Breast = true,

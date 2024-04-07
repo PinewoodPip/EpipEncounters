@@ -116,7 +116,7 @@ Tab:RegisterListener(Vanity.Events.CheckboxPressed, function(id, state)
             Slot = Vanity.currentSlot,
             State = state,
         })
-        
+
         Transmog.UpdateActiveCharacterTemplates()
     elseif id == "Vanity_KeepIcon" then
         Transmog.keepIcon = state

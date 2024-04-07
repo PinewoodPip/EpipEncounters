@@ -86,7 +86,8 @@ function Session:End()
     self.EndTime = Ext.Utils.MonotonicTime()
 end
 
----Returns the end time stamp of the last step.
+---Returns the end time stamp of the last step,
+---or the start of the profiling session if no steps have been made yet.
 function Session:GetLastStepTimeStamp()
     local lastStep = self:GetLatestStep()
     return lastStep and lastStep.EndTime or self.StartTime

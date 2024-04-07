@@ -28,7 +28,7 @@ end
 -- Render templates of the same slot as the item being transmog'd
 -- if they belong to the category.
 -- Items with "None" slot (which do not hide any armor visual handled by game) can render on any item, except breastplates, so as not to bloat their menu.
-Vanity:RegisterHook("ShouldRenderContextMenuEntry", function(bool, item, templateGUID, data, category, itemSlot, itemSubtype)
+Vanity:RegisterHook("ShouldRenderContextMenuEntry", function(bool, _, _, data, category, itemSlot, _)
     local char = Client.GetCharacter()
 
     if not bool and Vanity.BelongsToCategory(data, category) and (itemSlot == data.Slot or data.Slot == "None") then
@@ -38,7 +38,7 @@ Vanity:RegisterHook("ShouldRenderContextMenuEntry", function(bool, item, templat
         -- Chestplate doesn't show non-chest items - sorry, too much stuff.
         return ((data.Tags[gender] and data.Tags[race]) or (itemSlot == "Weapon" and data.Slot == "Weapon")) and (itemSlot == data.Slot or (itemSlot ~= "Breast" and itemSlot ~= "Weapon"))
     end
-    
+
     return bool
 end)
 
@@ -69,7 +69,7 @@ end
 function Vanity.GenerateContextMenuCategories(item, slot)
     local entries = {}
 
-    for i,id in pairs(Vanity.CATEGORY_ORDER) do
+    for _,id in pairs(Vanity.CATEGORY_ORDER) do
         local category = Vanity.CATEGORIES[id]
 
         -- Some categories have slot restrictions
@@ -85,15 +85,10 @@ function Vanity.GenerateContextMenuCategories(item, slot)
 end
 
 function Vanity.BelongsToCategory(templateData, category)
-
     local matchingTagsCount = 0
-    local categoryTagCount = 0
+    local categoryTagCount = table.getKeyCount(category.Tags)
 
-    for i,v in pairs(category.Tags) do
-        categoryTagCount = categoryTagCount + 1
-    end
-
-    for tag,bool in pairs(category.Tags) do
+    for tag,_ in pairs(category.Tags) do
         if templateData.Tags[tag] then
             matchingTagsCount = matchingTagsCount + 1
 

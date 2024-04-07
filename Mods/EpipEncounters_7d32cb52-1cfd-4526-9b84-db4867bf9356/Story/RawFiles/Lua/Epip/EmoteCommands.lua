@@ -67,7 +67,7 @@ else
         local animation = EmoteCommands.EMOTES[emote]
 
         if animation then
-            Osiris.PlayAnimation(char, animation)
+            Osiris.PlayAnimation(char, animation, "")
         end
     end
 end

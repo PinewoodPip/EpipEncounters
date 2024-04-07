@@ -308,6 +308,7 @@ local Vanity = {
 Epip.RegisterFeature("Vanity", Vanity)
 
 ---@class VanityCategory
+---@field ID string
 ---@field Name string
 ---@field Tags table<string,boolean>
 ---@field RequireAllTags boolean If true, the category will only show on items that have all its tags.
