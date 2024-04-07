@@ -25,14 +25,16 @@ local EpicEnemies = Epip.Features.EpicEnemies
 ---------------------------------------------
 
 ---@class EpicEnemiesExtendedEffect : EpicEnemiesEffect
----@field SpecialLogic? string Special logic to grant when the effect is rolled.
----@field Artifact? string Artifact power to grant when the effect is rolled.
----@field Keyword? EpicEnemiesKeywordData Used for activation conditions; certain keyword mutators will not be granted if the target has no activators of the keyword.
----@field Summon? GUID Template to summon.
----@field Status? EpicEnemiesStatus[]
----@field ExtendedStats? EpicEnemiesExtendedStat[]
----@field FlexStats? EpicEnemiesFlexStat[]
----@field RequiredSkills? string[] The effect is ineligible if the character does not have any of the required skills.
+---@field SpecialLogic (string|string[])? Special logic to grant when the effect is rolled.
+---@field Artifact string? Artifact Power to grant.
+---@field Artifacts string[]? Artifact Powers to grant.
+---@field Keyword EpicEnemiesKeywordData? Used for activation conditions; certain keyword mutators will not be granted if the target has no activators of the keyword.
+---@field Summon GUID? Template to summon.
+---@field Status EpicEnemiesStatus?
+---@field FlexStats EpicEnemiesFlexStat[]?
+---@field ExtendedStats EpicEnemiesExtendedStat[]?
+---@field KeywordStats Keyword[]? List of keywords to grant; i.e. basic activators.
+---@field RequiredSkills string[]? The effect is ineligible if the character does not have any of the required skills.
 
 ---@class EpicEnemiesStatus
 ---@field StatusID string
@@ -54,18 +56,36 @@ local EpicEnemies = Epip.Features.EpicEnemies
 -- EFFECTS
 ---------------------------------------------
 
+---Returns a list of the SpecialLogic to apply from an effect.
+---@param effect EpicEnemiesExtendedEffect
+---@return string[]
+local function GetSpecialLogicList(effect)
+    return type(effect.SpecialLogic) == "string" and {effect.SpecialLogic} or effect.SpecialLogic
+end
+
 EpicEnemies.Events.EffectActivated:RegisterListener(function(char, effect)
     ---@type EpicEnemiesExtendedEffect
     effect = effect
 
     -- Special logic effects.
     if effect.SpecialLogic then
-        Osi.PROC_AMER_UI_Ascension_SpecialLogic_Add(char.MyGuid, effect.SpecialLogic, 1)
+        local logicList = GetSpecialLogicList(effect)
+        for _,logic in ipairs(logicList) do
+            Osi.PROC_AMER_UI_Ascension_SpecialLogic_Add(char.MyGuid, logic, 1)
+        end
     end
 
-    -- Artifact.
+    -- Grant keyword stats.
+    for _,keyword in ipairs(effect.KeywordStats or {}) do
+        Osi.PROC_AMER_KeywordStat_Add(char.MyGuid, keyword, 1)
+    end
+
+    -- Grant Artifact Powers.
     if effect.Artifact then
         Osi.PROC_AMER_Artifacts_EquipEffects(char.MyGuid, effect.Artifact, "Rune")
+    end
+    for _,artifact in ipairs(effect.Artifacts or {}) do
+        Osi.PROC_AMER_Artifacts_EquipEffects(char.MyGuid, artifact, "Rune")
     end
 
     -- Statuses.
@@ -87,63 +107,78 @@ EpicEnemies.Events.EffectActivated:RegisterListener(function(char, effect)
 
     -- Flex Stats.
     if effect.FlexStats then
-        for i,flexStat in ipairs(effect.FlexStats) do
+        for _,flexStat in ipairs(effect.FlexStats) do
             Osi.PROC_AMER_FlexStat_CharacterAddStat(char.MyGuid, flexStat.Type, flexStat.Stat, flexStat.Amount)
         end
     end
 
     -- Extended Stats.
     if effect.ExtendedStats then
-        for i,extendedStat in ipairs(effect.ExtendedStats) do
+        for _,extendedStat in ipairs(effect.ExtendedStats) do
             Osi.PROC_AMER_ExtendedStat_CharacterAddStat(char.MyGuid, extendedStat.StatID, extendedStat.Property1 or "", extendedStat.Property2 or "", extendedStat.Property3 or "", extendedStat.Amount)
         end
     end
 end)
 
 EpicEnemies.Events.EffectRemoved:RegisterListener(function (char, effect)
-    -- SpecialLogic.
+    ---@cast effect EpicEnemiesExtendedEffect
+
+    -- Clear SpecialLogic.
     if effect.SpecialLogic then
-        Osi.PROC_AMER_UI_Ascension_SpecialLogic_Add(char.MyGuid, effect.SpecialLogic, -1)
+        local logicList = GetSpecialLogicList(effect)
+        for _,logic in ipairs(logicList) do
+            Osi.PROC_AMER_UI_Ascension_SpecialLogic_Add(char.MyGuid, logic, -1)
+        end
     end
 
-    -- Artifacts.
+    -- Clear keyword stats.
+    for _,keyword in ipairs(effect.KeywordStats or {}) do
+        Osi.PROC_AMER_KeywordStat_Add(char.MyGuid, keyword, -1)
+    end
+
+    -- Clear Artifact Powers.
     if effect.Artifact then
         Osi.PROC_AMER_Artifacts_UnequipEffects(char.MyGuid, effect.Artifact, "Rune")
     end
+    for _,artifact in ipairs(effect.Artifacts or {}) do
+        Osi.PROC_AMER_Artifacts_UnequipEffects(char.MyGuid, artifact, "Rune")
+    end
 
-    -- Statuses.
+    -- Clear Statuses.
     if effect.Status then
         local statusData = effect.Status
-        
         Osi.RemoveStatus(char.MyGuid, statusData.StatusID)
     end
 
     -- Flex Stats.
     if effect.FlexStats then
-        for i,flexStat in ipairs(effect.FlexStats) do
+        for _,flexStat in ipairs(effect.FlexStats) do
             Osi.PROC_AMER_FlexStat_CharacterAddStat(char.MyGuid, flexStat.Type, flexStat.Stat, -flexStat.Amount)
         end
     end
 
     -- Extended Stats.
     if effect.ExtendedStats then
-        for i,extendedStat in ipairs(effect.ExtendedStats) do
+        for _,extendedStat in ipairs(effect.ExtendedStats) do
             Osi.PROC_AMER_ExtendedStat_CharacterAddStat(char.MyGuid, extendedStat.StatID, extendedStat.Property1 or "", extendedStat.Property2 or "", extendedStat.Property3 or "", -extendedStat.Amount)
         end
     end
 end)
 
 -- Make mutator effects only available if character already has an activator
-EpicEnemies.Hooks.IsEffectApplicable:RegisterHook(function (applicable, effect, char, activeEffects)
+EpicEnemies.Hooks.IsEffectApplicable:RegisterHook(function (applicable, effect, _, activeEffects)
+    ---@cast effect EpicEnemiesExtendedEffect
     if effect.Keyword then
         local excluded = Templates.KEYWORD_ACTIVATOR_REQUIREMENT_EXCLUSIONS[effect.Keyword.Keyword]
-        
+
         if effect.Keyword.BoonType == "Mutator" and not excluded then
             local hasActivator = false
             local keywordID = effect.Keyword.Keyword
 
             -- Search for an activator for this keyword
-            for i,appliedEffect in ipairs(activeEffects) do
+            for _,appliedEffect in ipairs(activeEffects) do
+                ---@cast appliedEffect EpicEnemiesExtendedEffect
+                -- Boon type check is technically redundant, as activators must be applied first before any mutators are applied - thus even if we run into a mutator first while iterating, an activator must be present *under normal conditions*.
                 if appliedEffect.Keyword and appliedEffect.Keyword.Keyword == keywordID then
                     hasActivator = true
                     break
