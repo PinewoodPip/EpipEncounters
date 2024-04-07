@@ -313,7 +313,7 @@ LOAD_ORDER = {
     "Debug/Shared.lua",
     "Debug/Server.lua",
 
-    {ScriptSet = "Epip/HotbarPersistence"},
+    "Epip/HotbarPersistence/Shared.lua",
     {ScriptSet = "Epip/EpipInfoCodex"},
 
     "Epip/OsirisIDEAnnotationGenerator.lua",
@@ -325,8 +325,8 @@ LOAD_ORDER = {
             "Epip/DebugCheats/ActionTypes/_Action.lua",
         },
     },
-    {ScriptSet = "Epip/DebugCheats/Cheats/CopyIdentifier"},
-    {ScriptSet = "Epip/DebugCheats/Cheats/CopyPosition"},
+    "Epip/DebugCheats/Cheats/CopyIdentifier/Shared.lua",
+    "Epip/DebugCheats/Cheats/CopyPosition/Shared.lua",
     {ScriptSet = "Epip/DebugCheats/Cheats/SpawnItemTemplate"},
     {ScriptSet = "Epip/DebugCheats/Cheats/TeleportTo"},
 

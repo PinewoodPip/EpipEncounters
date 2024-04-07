@@ -178,7 +178,6 @@ LOAD_ORDER = {
     "Client/Server.lua",
     "Client/Flash.lua",
     "Client/Sound.lua",
-    "UI/Data.lua",
     {
         Scripts = {
             "Client/Camera/Camera.lua",
