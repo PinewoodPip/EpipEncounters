@@ -260,15 +260,14 @@ end
 ---@param t2 any[]
 ---@return any[]
 function table.join(t1, t2)
+    local t1Size = #t1
     local result = {}
-
-    for _,value in ipairs(t1) do
-        table.insert(result, value)
+    for i,value in ipairs(t1) do
+        result[i] = value -- Direct access is used for minor performance gain over insert()
     end
-    for _,value in ipairs(t2) do
-        table.insert(result, value)
+    for i,value in ipairs(t2) do
+        result[t1Size + i] = value
     end
-
     return result
 end
 
