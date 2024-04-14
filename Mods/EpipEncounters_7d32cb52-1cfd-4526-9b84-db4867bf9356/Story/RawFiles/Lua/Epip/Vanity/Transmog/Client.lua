@@ -547,13 +547,6 @@ Character.Hooks.CreateEquipmentVisuals:Subscribe(function (ev)
                 ev.Request.VisualResourceID = template.Equipment.VisualResources[equipmentClassIndex]
 
                 ev.Request.EquipmentSlotMask = equipmentSlotMask
-
-                -- Do not mess with the head mask for non-helmet slots,
-                -- as doing so appears to cause issues where the head is rendered
-                -- when it shouldn't be.
-                if slot ~= "Helmet" then
-                    visualSetSlotMask = visualSetSlotMask & ~(2)
-                end
                 ev.Request.VisualSetSlotMask = visualSetSlotMask
 
                 -- Hide masked slots, except in cases where a template is attempting to mask its own slot (ex. full-body replacements from Fashion Sins).
@@ -607,6 +600,11 @@ GameState.Events.GameReady:Subscribe(function (_)
             end
         end
     end
+end)
+
+-- Request visuals to be updated when the helmet visual is toggled.
+Client.UI.CharacterSheet.Events.HelmetToggled:Subscribe(function (_)
+    Vanity.RefreshAppearance(true)
 end)
 
 ---------------------------------------------

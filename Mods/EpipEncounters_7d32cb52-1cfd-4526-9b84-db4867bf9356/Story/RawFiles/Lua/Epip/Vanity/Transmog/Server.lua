@@ -36,7 +36,7 @@ function Vanity.TransmogItem(char, item, newTemplate, dye, keepIcon)
         Osi.SetTag(item.MyGuid, "PIP_Vanity_Transmogged")
     end
 
-    Vanity:Log("Transforming item " .. item.DisplayName .. " to " .. newTemplate)
+    Vanity:DebugLog("Transmogging item", item.DisplayName, "to", newTemplate)
 
     local template = Ext.Template.GetTemplate(newTemplate) ---@cast template ItemTemplate
 
@@ -47,7 +47,7 @@ function Vanity.TransmogItem(char, item, newTemplate, dye, keepIcon)
         end
     else
         local icon = template.Icon
-        
+
         -- Still need to set an icon override in this case
         -- as we are not transforming the item.
         Transmog.SetItemIcon(item, icon)
@@ -61,8 +61,14 @@ function Vanity.TransmogItem(char, item, newTemplate, dye, keepIcon)
     -- Update parameter tag
     Entity.RemoveTagsByPattern(item, Transmog.TRANSMOGGED_TAG_PATTERN)
     Osiris.SetTag(item, Transmog.TRANSMOGGED_TAG:format(newTemplate))
-    
+
+    -- Request to update visuals.
+    -- Doing this a second time is necessary to avoid jank with the Head visual mask.
     Vanity.RefreshAppearance(char, true)
+    local charHandle = char.Handle
+    Timer.Start(0.05, function (_)
+        Vanity.RefreshAppearance(Character.Get(charHandle), true)
+    end)
 end
 
 ---Sets a persistent icon override for an item.
