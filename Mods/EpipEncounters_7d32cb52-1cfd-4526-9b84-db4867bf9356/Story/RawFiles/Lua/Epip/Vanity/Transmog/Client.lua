@@ -312,7 +312,9 @@ function Transmog._GetEquipmentMasks(char)
             local template = transmoggedTemplateGUID and Ext.Template.GetTemplate(transmoggedTemplateGUID) or item.CurrentTemplate
 
             if Transmog._CanApplyMasks(char, slot) then
-                equipmentMask = equipmentMask | template.Equipment.EquipmentSlots
+                local templateEquipmentMask = template.Equipment.EquipmentSlots
+                templateEquipmentMask = templateEquipmentMask & ~(Transmog._ItemSlotToEquipmentMask[slot]) -- An item cannot mask itself.
+                equipmentMask = equipmentMask | templateEquipmentMask
             end
         end
     end
@@ -554,10 +556,12 @@ Character.Hooks.CreateEquipmentVisuals:Subscribe(function (ev)
                 end
                 ev.Request.VisualSetSlotMask = visualSetSlotMask
 
-                -- Hide masked slots
+                -- Hide masked slots, except in cases where a template is attempting to mask its own slot (ex. full-body replacements from Fashion Sins).
                 local slotMask = Transmog._ItemSlotToEquipmentMask[slot]
-                if slotMask and slotMask & equipmentSlotMask ~= 0 then
+                local templateSlotMask = template.Equipment.EquipmentSlots
+                if slotMask and slotMask & equipmentSlotMask ~= 0 and slotMask & templateSlotMask == 0 then
                     ev.Request.VisualResourceID = ""
+                    ev.Request.VisualSetSlotMask = 0
                 end
 
                 -- Apply skin color and other missing parameters to slots that the engine would normally mask
