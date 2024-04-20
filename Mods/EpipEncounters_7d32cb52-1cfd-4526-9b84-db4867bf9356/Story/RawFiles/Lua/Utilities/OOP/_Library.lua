@@ -31,6 +31,26 @@ OOP.RegisterClass("Library", Library)
 ---@class Library_TranslatedString : TextLib_TranslatedString
 ---@field LocalKey string? Usable with Feature.TSK - but not globally. Use when you want TSK keys without needing to prefix them to avoid collisions.
 
+---@class Library.Listenable : Event
+---@field Context context? If set, the event will only be registered on that context and throw when accessed in an invalid one.
+---@field Legacy boolean?
+
+---Creates an unusable listenable that throws upon indexing.
+---@param name string
+---@param listenableType listenabletype
+local function CreateInvalidListenable(name, listenableType, context)
+    local invalidListenable = {}
+    setmetatable(invalidListenable, {
+        __index = function (_, _)
+            error(string.format("%s %s is %s-only", listenableType, name, context))
+        end
+    })
+    return invalidListenable
+end
+
+---@class Library.Event : Library.Listenable
+---@class Library.Hook : Library.Listenable
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
@@ -54,19 +74,28 @@ function Library.Create(modTable, id, data)
     -- Initialize events and hooks.
     data.Events = data.Events or {}
     for ev,opts in pairs(data.Events) do
-        -- TODO resolve Event class
-        ---@diagnostic disable-next-line: undefined-field
+        ---@cast opts Library.Event
         if opts.Legacy == false or data.USE_LEGACY_EVENTS == false then
-            data:AddSubscribableEvent(ev, opts.Preventable)
+            -- Check if context is invalid
+            if opts.Context and ((opts.Context == "Client" and Ext.IsServer()) or (opts.Context == "Server" and Ext.IsClient())) then
+                data.Events[ev] = CreateInvalidListenable(ev, "Event", opts.Context)
+            else
+                data:AddSubscribableEvent(ev, opts.Preventable)
+            end
         else
             data:AddEvent(ev, opts)
         end
     end
     data.Hooks = data.Hooks or {}
     for hook,opts in pairs(data.Hooks) do
-        ---@diagnostic disable-next-line: undefined-field
+        ---@cast opts Library.Hook
         if opts.Legacy == false or data.USE_LEGACY_HOOKS == false then
-            data:AddSubscribableHook(hook, opts.Preventable)
+            -- Check if context is invalid
+            if opts.Context and ((opts.Context == "Client" and Ext.IsServer()) or (opts.Context == "Server" and Ext.IsClient())) then
+                data.Events[hook] = CreateInvalidListenable(hook, "Hook", opts.Context)
+            else
+                data:AddSubscribableHook(hook, opts.Preventable)
+            end
         else
             data:AddHook(hook, opts)
         end

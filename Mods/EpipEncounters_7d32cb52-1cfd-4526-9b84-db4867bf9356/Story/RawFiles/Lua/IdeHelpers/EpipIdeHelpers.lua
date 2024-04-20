@@ -7,7 +7,8 @@
 ---@alias Status EclStatus|EsvStatus
 ---@alias GUID string
 ---@alias PrefixedGUID string
----@alias Context "Client"|"Server" 
+---@alias Context "Client"|"Server" -- TODO replace with lowercase
+---@alias context "Client"|"Server"
 ---@alias pattern string
 ---@alias path string
 ---@alias bitfield integer
@@ -19,6 +20,7 @@
 ---@alias skill string Skill ID.
 ---@alias tag string
 ---@alias htmlcolor string
+---@alias listenabletype "Event"|"Hook"
 
 ---@alias UIObjectHandle ComponentHandle
 
