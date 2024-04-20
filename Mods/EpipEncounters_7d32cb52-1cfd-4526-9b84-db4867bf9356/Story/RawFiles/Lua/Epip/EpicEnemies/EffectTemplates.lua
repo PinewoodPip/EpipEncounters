@@ -120,7 +120,8 @@ EpicEnemies.Events.EffectActivated:RegisterListener(function(char, effect)
     end
 end)
 
-EpicEnemies.Events.EffectRemoved:RegisterListener(function (char, effect)
+EpicEnemies.Events.EffectRemoved:Subscribe(function (ev)
+    local char, effect = ev.Character, ev.Effect
     ---@cast effect EpicEnemiesExtendedEffect
 
     -- Clear SpecialLogic.
@@ -166,8 +167,11 @@ EpicEnemies.Events.EffectRemoved:RegisterListener(function (char, effect)
 end)
 
 -- Make mutator effects only available if character already has an activator
-EpicEnemies.Hooks.IsEffectApplicable:RegisterHook(function (applicable, effect, _, activeEffects)
-    ---@cast effect EpicEnemiesExtendedEffect
+EpicEnemies.Hooks.IsEffectApplicable:Subscribe(function (ev)
+    if not ev.Applicable then return end -- Do nothing if another listener already filtered this effect out.
+
+    local activeEffects = ev.ActiveEffects
+    local effect = ev.Effect ---@cast effect EpicEnemiesExtendedEffect
     if effect.Keyword then
         local excluded = Templates.KEYWORD_ACTIVATOR_REQUIREMENT_EXCLUSIONS[effect.Keyword.Keyword]
 
@@ -186,31 +190,26 @@ EpicEnemies.Hooks.IsEffectApplicable:RegisterHook(function (applicable, effect, 
             end
 
             if not hasActivator then
-                applicable = false
+                ev.Applicable = false
             end
         end
     end
-
-    return applicable
 end)
 
 -- RequiredSkills condition.
-EpicEnemies.Hooks.IsEffectApplicable:RegisterHook(function (applicable, effect, char, activeEffects)
-    ---@type EpicEnemiesExtendedEffect
-    effect = effect
+EpicEnemies.Hooks.IsEffectApplicable:Subscribe(function (ev)
+    local char = ev.Character
+    local effect = ev.Effect ---@cast effect EpicEnemiesExtendedEffect
 
-    if effect.RequiredSkills and applicable then
-        applicable = false
-
-        for i,skillID in ipairs(effect.RequiredSkills) do
+    if ev.Applicable and effect.RequiredSkills then
+        -- The effect will be applicable if any of the skills are present.
+        ev.Applicable = false
+        for _,skillID in ipairs(effect.RequiredSkills) do
             if Osi.CharacterHasSkill(char.MyGuid, skillID) == 1 then
-                applicable = true
+                ev.Applicable = true
                 break
             end
         end
-
-        -- Templates:DebugLog("RequiredSkills availability for", char.DisplayName, applicable)
+        -- Templates:DebugLog("RequiredSkills availability for", char.DisplayName, ev.Applicable)
     end
-
-    return applicable
 end)

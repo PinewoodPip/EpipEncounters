@@ -8,21 +8,28 @@ local Settings = Settings
 -- EVENTS/HOOKS
 ---------------------------------------------
 
----@class EpicEnemies_Event_EffectApplied : Event
----@field RegisterListener fun(self, listener:fun(char:EsvCharacter, effect:Features.EpicEnemies.Effect))
----@field Fire fun(self, char:EsvCharacter, effect:Features.EpicEnemies.Effect)
+---Server-only.
+---@class Features.EpicEnemies.Events.EffectApplied
+---@field Character EsvCharacter
+---@field Effect Features.EpicEnemies.Effect
 
----@class EpicEnemies_Event_EffectRemoved : Event
----@field RegisterListener fun(self, listener:fun(char:EsvCharacter, effect:Features.EpicEnemies.Effect))
----@field Fire fun(self, char:EsvCharacter, effect:Features.EpicEnemies.Effect)
+---Server-only.
+---@class Features.EpicEnemies.Events.EffectRemoved
+---@field Character EsvCharacter
+---@field Effect Features.EpicEnemies.Effect
 
----@class EpicEnemies_Hook_IsEligible : LegacyHook
----@field RegisterHook fun(self, handler:fun(eligible:boolean, char:EsvCharacter))
----@field Return fun(self, eligible:boolean, char:EsvCharacter)
+---Server-only.
+---@class Features.EpicEnemies.Hooks.IsCharacterEligible
+---@field Character EsvCharacter
+---@field Eligible boolean Hookable. Defaults to `false`.
 
----@class EpicEnemies_Hook_IsEffectApplicable : LegacyHook
----@field RegisterHook fun(self, handler:fun(applicable:boolean, effect:Features.EpicEnemies.Effect, char:EsvCharacter, activeEffects:Features.EpicEnemies.Effect[], budget:number))
----@field Return fun(self, applicable:boolean, effect:Features.EpicEnemies.Effect, char:EsvCharacter, activeEffects:Features.EpicEnemies.Effect[], budget:number)
+---Server-only.
+---@class Features.EpicEnemies.Hooks.IsEffectApplicable
+---@field Character EsvCharacter
+---@field Effect Features.EpicEnemies.Effect
+---@field ActiveEffects Features.EpicEnemies.Effect[]
+---@field Budget number
+---@field Applicable boolean Hookable. Defaults to `true`.
 
 ---@class EpicEnemies_Event_EffectActivated : Event
 ---@field RegisterListener fun(self, listener:fun(char:EsvCharacter, effect:Features.EpicEnemies.Effect))
@@ -173,7 +180,10 @@ end
 ---Returns true if the character is eligible to receive Epic Enemies effects.
 ---@param char EsvCharacter
 function EpicEnemies.IsEligible(char)
-    return EpicEnemies.Hooks.IsEligible:Return(false, char)
+    return EpicEnemies.Hooks.IsCharacterEligible:Throw({
+        Character = char,
+        Eligible = false,
+    }).Eligible
 end
 
 ---@param char EsvCharacter
@@ -293,7 +303,10 @@ function EpicEnemies.RemoveEffect(char, effectID)
 
     EpicEnemies:DebugLog("Removing effect: " .. effect.Name .. " from " .. char.DisplayName)
 
-    EpicEnemies.Events.EffectRemoved:Fire(char, effect)
+    EpicEnemies.Events.EffectRemoved:Throw({
+        Character = char,
+        Effect = effect,
+    })
 end
 
 ---Returns a random effect from a pool that is valid for the character.
@@ -310,7 +323,13 @@ function EpicEnemies.GetRandomEffect(char, effectPool, activeEffects, budget)
     local filteredPool = {}
 
     for id,effect in pairs(effectPool) do
-        local included =  effect:GetWeight() > 0 and EpicEnemies.Hooks.IsEffectApplicable:Return(true, effect, char, activeEffects, budget)
+        local included =  effect:GetWeight() > 0 and EpicEnemies.Hooks.IsEffectApplicable:Throw({
+            Character = char,
+            Effect = effect,
+            ActiveEffects = activeEffects,
+            Budget = budget,
+            Applicable = true,
+        }).Applicable
         if included then
             filteredPool[id] = effect
         end
@@ -366,18 +385,6 @@ Ext.Events.ResetCompleted:Subscribe(function()
     end
 end)
 
--- TODO better workaround for context-specific events
-if false then
-    ---@type EpicEnemies_Event_EffectApplied
-    EpicEnemies.Events.EffectApplied = {}
-    ---@type EpicEnemies_Hook_IsEligible
-    EpicEnemies.Hooks.IsEligible = {}
-    ---@type EpicEnemies_Event_EffectRemoved
-    EpicEnemies.Events.EffectRemoved = {}
-    ---@type EpicEnemies_Hook_IsEffectApplicable
-    EpicEnemies.Hooks.IsEffectApplicable = {}
-end
-
 -- In developer mode, remove effects after exiting combat
 Ext.Osiris.RegisterListener("PROC_AMER_CharLeftCombat", 2, "after", function(char, _)
     if Epip.IsDeveloperMode(true) then
@@ -391,7 +398,10 @@ Ext.Osiris.RegisterListener("PROC_AMER_CharAddedToCombat", 2, "after", function(
 end)
 
 -- TODO register this later so it runs last.
-EpicEnemies.Hooks.IsEligible:RegisterHook(function (eligible, char)
+EpicEnemies.Hooks.IsCharacterEligible:Subscribe(function (ev)
+    local char, eligible = ev.Character, ev.Eligible
+    if eligible then return end -- Do nothing if an earlier listener already made this character eligible.
+
     -- Eligibility based on slider settings
     if Osi.IsBoss(char.MyGuid) == 1 then
         eligible = Settings.GetSettingValue(EpicEnemies.SETTINGS_MODULE_ID, "EpicEnemies_PointsMultiplier_Bosses") > 0
@@ -409,22 +419,21 @@ EpicEnemies.Hooks.IsEligible:RegisterHook(function (eligible, char)
         eligible = false
     end
 
-    -- Cannot initialize the same character multiple times, nor initialize characters specifically excluded from this feature, nor initialize summons
-    if eligible then
-        eligible = not char:IsTagged(EpicEnemies.INITIALIZED_TAG) and not char:IsTagged(EpicEnemies.INELIGIBLE_TAG)
-    end
+    -- Cannot initialize the same character multiple times, nor initialize characters specifically excluded from this feature
+    eligible = eligible and not char:IsTagged(EpicEnemies.INITIALIZED_TAG) and not char:IsTagged(EpicEnemies.INELIGIBLE_TAG)
 
     -- Summons and party followers are ineligible.
-    if eligible then
-        eligible = not Osi.QRY_IsSummonOrPartyFollower(char.MyGuid)
-    end
+    eligible = eligible and not Osi.QRY_IsSummonOrPartyFollower(char.MyGuid)
 
-    return eligible
-end)
+    ev.Eligible = eligible
+end, {Priority = -99, StringID = "DefaultImplementation"})
 
 -- Mark effects as valid only if the budget allows for them;
 -- the prerequisite effects must have either already been acquired or also be affordable.
-EpicEnemies.Hooks.IsEffectApplicable:RegisterHook(function (applicable, effect, _, activeEffects, budget)
+EpicEnemies.Hooks.IsEffectApplicable:Subscribe(function (ev)
+    if not ev.Applicable then return end
+
+    local effect, activeEffects, budget = ev.Effect, ev.ActiveEffects, ev.Budget
     local remainingBudget = budget - effect:GetCost()
     if effect.Prerequisites then
         for prereqID,_ in pairs(effect.Prerequisites) do
@@ -443,19 +452,20 @@ EpicEnemies.Hooks.IsEffectApplicable:RegisterHook(function (applicable, effect, 
                 end
             end
             if not meetsRequirement then
-                return false
+                ev.Applicable = false
             end
         end
     end
-    return applicable and remainingBudget >= 0
+
+    ev.Applicable = remainingBudget >= 0
 end)
 
 -- AI archetype filter.
-EpicEnemies.Hooks.IsEffectApplicable:RegisterHook(function (applicable, effect, char, _, _)
+EpicEnemies.Hooks.IsEffectApplicable:Subscribe(function (ev)
+    local char, effect = ev.Character, ev.Effect
     if effect.AllowedAIArchetypes then
-        applicable = applicable and effect.AllowedAIArchetypes[char.Archetype] == true
+        ev.Applicable = ev.Applicable and effect.AllowedAIArchetypes[char.Archetype] == true
     end
-    return applicable
 end)
 
 ---------------------------------------------

@@ -65,20 +65,15 @@ local EpicEnemies = {
     },
 
     Events = {
-        
+        EffectApplied = {Context = "Server", Legacy = false}, ---@type Event<Features.EpicEnemies.Events.EffectApplied>
+        EffectRemoved = {Context = "Server", Legacy = false}, ---@type Event<Features.EpicEnemies.Events.EffectRemoved>
     },
-    Hooks = {},
+    Hooks = {
+        IsCharacterEligible = {Context = "Server", Legacy = false}, ---@type Hook<Features.EpicEnemies.Hooks.IsCharacterEligible>
+        IsEffectApplicable = {Context = "Server", Legacy = false} ---@type Hook<Features.EpicEnemies.Hooks.IsEffectApplicable>
+    },
 }
-
 if Ext.IsServer() then
-    ---@type EpicEnemies_Event_EffectApplied
-    EpicEnemies.Events.EffectApplied = {}
-    ---@type EpicEnemies_Hook_IsEligible
-    EpicEnemies.Hooks.IsEligible = {}
-    ---@type EpicEnemies_Event_EffectRemoved
-    EpicEnemies.Events.EffectRemoved = {}
-    ---@type EpicEnemies_Hook_IsEffectApplicable
-    EpicEnemies.Hooks.IsEffectApplicable = {}
     ---@type EpicEnemies_Event_EffectActivated
     EpicEnemies.Events.EffectActivated = {}
     ---@type EpicEnemies_Event_EffectDeactivated
