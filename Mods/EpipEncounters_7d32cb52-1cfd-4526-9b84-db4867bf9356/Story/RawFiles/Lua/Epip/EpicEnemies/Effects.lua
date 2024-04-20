@@ -1,5 +1,5 @@
 
----@type EpicEnemiesEffectsCategory
+---@type Features.EpicEnemies.EffectCategory
 local ArtifactsCategory = {
     Name = "Artifacts",
     ID = "Artifacts",

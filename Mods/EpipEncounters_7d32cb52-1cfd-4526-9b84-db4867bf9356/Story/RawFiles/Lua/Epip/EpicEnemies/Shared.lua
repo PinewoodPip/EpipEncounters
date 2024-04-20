@@ -1,7 +1,7 @@
 
 ---@class Feature_EpicEnemies : Feature
 local EpicEnemies = {
-    ---@type EpicEnemiesEffectsCategory[]
+    ---@type Features.EpicEnemies.EffectCategory[]
     CATEGORIES = {},
     INITIALIZED_TAG = "PIP_EpicEnemy",
     INELIGIBLE_TAG = "PIP_EpicEnemies_Ineligible",
@@ -109,7 +109,7 @@ local _EpicEnemiesActivationCondition = {
 ---@field Keyword Keyword
 ---@field BoonType KeywordBoonType
 
----@class EpicEnemiesEffectsCategory
+---@class Features.EpicEnemies.EffectCategory
 ---@field Name string
 ---@field ID string
 ---@field Effects string[]|Features.EpicEnemies.Effect[] Can be an array of effects while calling the register method. Will be turned into an ID array afterwards.
@@ -180,7 +180,7 @@ function EpicEnemies.GetEffectData(id)
     return EpicEnemies._RegisteredEffects[id]
 end
 
----@param category EpicEnemiesEffectsCategory
+---@param category Features.EpicEnemies.EffectCategory
 function EpicEnemies.RegisterEffectCategory(category)
     local settingID = "EpicEnemies_CategoryWeight_" .. category.ID
 
