@@ -493,7 +493,7 @@ Ext.Events.SessionLoading:Subscribe(function (_)
                 }
             end
 
-            ---@type EpicEnemiesEffect
+            ---@type EpicEnemiesExtendedEffect
             local effect = {
                 ID = id,
                 Name = Text.Format("Artifact: %s", {FormatArgs = {

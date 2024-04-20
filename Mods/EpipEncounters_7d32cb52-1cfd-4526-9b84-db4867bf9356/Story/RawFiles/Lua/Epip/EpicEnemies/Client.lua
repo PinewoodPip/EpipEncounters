@@ -25,7 +25,7 @@ SettingsMenu.RegisterTab(tab)
 
 ---@param char EclCharacter
 ---@param visibleOnly boolean? Defaults to false.
----@return EpicEnemiesEffect[] -- In order of application(? unconfirmed)
+---@return Features.EpicEnemies.Effect[] -- In order of application(? unconfirmed)
 function EpicEnemies.GetAppliedEffects(char, visibleOnly)
     local effects = {}
 

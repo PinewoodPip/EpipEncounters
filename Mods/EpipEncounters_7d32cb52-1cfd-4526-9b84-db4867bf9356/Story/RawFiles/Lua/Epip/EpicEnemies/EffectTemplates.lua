@@ -24,7 +24,7 @@ local EpicEnemies = Epip.Features.EpicEnemies
 -- CLASSES
 ---------------------------------------------
 
----@class EpicEnemiesExtendedEffect : EpicEnemiesEffect
+---@class EpicEnemiesExtendedEffect : Features.EpicEnemies.Effect
 ---@field SpecialLogic (string|string[])? Special logic to grant when the effect is rolled.
 ---@field Artifact string? Artifact Power to grant.
 ---@field Artifacts string[]? Artifact Powers to grant.

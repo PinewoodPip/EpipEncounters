@@ -1,8 +1,6 @@
 
 ---@class Feature_EpicEnemies : Feature
 local EpicEnemies = {
-    ---@type table<string, EpicEnemiesEffect>
-    EFFECTS = {},
     ---@type EpicEnemiesEffectsCategory[]
     CATEGORIES = {},
     INITIALIZED_TAG = "PIP_EpicEnemy",
@@ -10,6 +8,9 @@ local EpicEnemies = {
     EFFECT_TAG_PREFIX = "PIP_EpicEnemies_Effect_",
     SETTINGS_MODULE_ID = "EpicEnemies",
     DEFAULT_EFFECT_PRIORITY = 1,
+
+    ---@type table<string, Features.EpicEnemies.Effect>
+    _RegisteredEffects = {},
 
     ---@type SettingsLib_Setting[]
     _SHARED_SETTINGS = {
@@ -88,6 +89,12 @@ end
 
 Epip.RegisterFeature("EpicEnemies", EpicEnemies)
 Epip.Features.EpicEnemies = EpicEnemies
+EpicEnemies:__RegisterDeprecatedKeyRedirect("EFFECTS", {
+    WarningMessage = "Use GetRegisteredEffects() instead.",
+    Value = function (_)
+        return EpicEnemies.GetRegisteredEffects()
+    end
+})
 
 ---@class EpicEnemiesActivationCondition
 ---@field Type string
@@ -105,10 +112,10 @@ local _EpicEnemiesActivationCondition = {
 ---@class EpicEnemiesEffectsCategory
 ---@field Name string
 ---@field ID string
----@field Effects string[]|EpicEnemiesEffect[] Can be an array of EpicEnemiesEffect while calling the register method. Will be turned into an ID array afterwards.
+---@field Effects string[]|Features.EpicEnemies.Effect[] Can be an array of effects while calling the register method. Will be turned into an ID array afterwards.
 
 ---Legacy class name; use `Features.EpicEnemies.Effect` instead.
----@class EpicEnemiesEffect
+---@class Features.EpicEnemies.Effect
 ---@field ID string
 ---@field Name string
 ---@field Description string
@@ -128,7 +135,6 @@ _EpicEnemiesEffect = {
     DefaultCost = 10,
     DefaultWeight = 10,
 }
----@class Features.EpicEnemies.Effect : EpicEnemiesEffect
 
 ---Get the cost of an effect.
 function _EpicEnemiesEffect:GetCost()
@@ -169,9 +175,9 @@ function EpicEnemies.IsInitialized(char)
 end
 
 ---@param id string
----@return EpicEnemiesEffect
+---@return Features.EpicEnemies.Effect
 function EpicEnemies.GetEffectData(id)
-    return EpicEnemies.EFFECTS[id]
+    return EpicEnemies._RegisteredEffects[id]
 end
 
 ---@param category EpicEnemiesEffectsCategory
@@ -211,7 +217,7 @@ function EpicEnemies.RegisterEffectCategory(category)
 end
 
 ---@param id string
----@param effect EpicEnemiesEffect
+---@param effect Features.EpicEnemies.Effect
 function EpicEnemies.RegisterEffect(id, effect)
     -- Shorthand initializers for default values
     if effect.Cost then effect.DefaultCost = effect.Cost end
@@ -220,9 +226,9 @@ function EpicEnemies.RegisterEffect(id, effect)
     effect.Cost = nil -- TODO remove - wtf?
     effect.Weight = nil
     effect.ID = id
-    
+
     if effect.Visible == nil then effect.Visible = true end
-    
+
     if not effect.ActivationCondition then effect.ActivationCondition = {} end
     Inherit(effect.ActivationCondition, _EpicEnemiesActivationCondition)
 
@@ -231,14 +237,20 @@ function EpicEnemies.RegisterEffect(id, effect)
 
     setmetatable(effect, {__index = _EpicEnemiesEffect})
 
-    EpicEnemies.EFFECTS[id] = effect
+    EpicEnemies._RegisteredEffects[id] = effect
 
     -- Register customizable setting
     local setting = EpicEnemies.GenerateOptionData(effect)
     Settings.RegisterSetting(setting)
 end
 
----@param effect EpicEnemiesEffect
+---Returns all registered effects.
+---@return table<string, Features.EpicEnemies.Effect>
+function EpicEnemies.GetRegisteredEffects()
+    return EpicEnemies._RegisteredEffects
+end
+
+---@param effect Features.EpicEnemies.Effect
 function EpicEnemies.GenerateOptionData(effect)
     ---@type SettingsLib_Setting_ClampedNumber
     local option = {

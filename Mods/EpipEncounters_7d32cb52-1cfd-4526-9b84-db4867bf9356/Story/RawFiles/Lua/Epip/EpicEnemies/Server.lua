@@ -9,40 +9,40 @@ local Settings = Settings
 ---------------------------------------------
 
 ---@class EpicEnemies_Event_EffectApplied : Event
----@field RegisterListener fun(self, listener:fun(char:EsvCharacter, effect:EpicEnemiesEffect))
----@field Fire fun(self, char:EsvCharacter, effect:EpicEnemiesEffect)
+---@field RegisterListener fun(self, listener:fun(char:EsvCharacter, effect:Features.EpicEnemies.Effect))
+---@field Fire fun(self, char:EsvCharacter, effect:Features.EpicEnemies.Effect)
 
 ---@class EpicEnemies_Event_EffectRemoved : Event
----@field RegisterListener fun(self, listener:fun(char:EsvCharacter, effect:EpicEnemiesEffect))
----@field Fire fun(self, char:EsvCharacter, effect:EpicEnemiesEffect)
+---@field RegisterListener fun(self, listener:fun(char:EsvCharacter, effect:Features.EpicEnemies.Effect))
+---@field Fire fun(self, char:EsvCharacter, effect:Features.EpicEnemies.Effect)
 
 ---@class EpicEnemies_Hook_IsEligible : LegacyHook
 ---@field RegisterHook fun(self, handler:fun(eligible:boolean, char:EsvCharacter))
 ---@field Return fun(self, eligible:boolean, char:EsvCharacter)
 
 ---@class EpicEnemies_Hook_IsEffectApplicable : LegacyHook
----@field RegisterHook fun(self, handler:fun(applicable:boolean, effect:EpicEnemiesEffect, char:EsvCharacter, activeEffects:EpicEnemiesEffect[], budget:number))
----@field Return fun(self, applicable:boolean, effect:EpicEnemiesEffect, char:EsvCharacter, activeEffects:EpicEnemiesEffect[], budget:number)
+---@field RegisterHook fun(self, handler:fun(applicable:boolean, effect:Features.EpicEnemies.Effect, char:EsvCharacter, activeEffects:Features.EpicEnemies.Effect[], budget:number))
+---@field Return fun(self, applicable:boolean, effect:Features.EpicEnemies.Effect, char:EsvCharacter, activeEffects:Features.EpicEnemies.Effect[], budget:number)
 
 ---@class EpicEnemies_Event_EffectActivated : Event
----@field RegisterListener fun(self, listener:fun(char:EsvCharacter, effect:EpicEnemiesEffect))
----@field Fire fun(self, char:EsvCharacter, effect:EpicEnemiesEffect)
+---@field RegisterListener fun(self, listener:fun(char:EsvCharacter, effect:Features.EpicEnemies.Effect))
+---@field Fire fun(self, char:EsvCharacter, effect:Features.EpicEnemies.Effect)
 
 ---@class EpicEnemies_Event_EffectDeactivated : Event
----@field RegisterListener fun(self, listener:fun(char:EsvCharacter, effect:EpicEnemiesEffect))
----@field Fire fun(self, char:EsvCharacter, effect:EpicEnemiesEffect)
+---@field RegisterListener fun(self, listener:fun(char:EsvCharacter, effect:Features.EpicEnemies.Effect))
+---@field Fire fun(self, char:EsvCharacter, effect:Features.EpicEnemies.Effect)
 
 ---@class EpicEnemies_Hook_CanActivateEffect : LegacyHook
----@field RegisterHook fun(self, handler:fun(activate:boolean, char:EsvCharacter, effect:EpicEnemiesEffect, params:any))
----@field Return fun(self, activate:boolean, char:EsvCharacter, effect:EpicEnemiesEffect, params:any)
+---@field RegisterHook fun(self, handler:fun(activate:boolean, char:EsvCharacter, effect:Features.EpicEnemies.Effect, params:any))
+---@field Return fun(self, activate:boolean, char:EsvCharacter, effect:Features.EpicEnemies.Effect, params:any)
 
 ---@class EpicEnemies_Hook_GetPointsForCharacter : LegacyHook
 ---@field RegisterHook fun(self, handler:fun(points:integer, char:EsvCharacter))
 ---@field Return fun(self, points:integer, char:EsvCharacter)
 
 ---@class EpicEnemies_Event_CharacterInitialized : Event
----@field RegisterListener fun(self, listener:fun(char:EsvCharacter, effects:EpicEnemiesEffect[]))
----@field Fire fun(self, char:EsvCharacter, effects:EpicEnemiesEffect[])
+---@field RegisterListener fun(self, listener:fun(char:EsvCharacter, effects:Features.EpicEnemies.Effect[]))
+---@field Fire fun(self, char:EsvCharacter, effects:Features.EpicEnemies.Effect[])
 
 ---@class EpicEnemies_Event_CharacterCleanedUp : Event
 ---@field RegisterListener fun(self, listener:fun(char:EsvCharacter))
@@ -67,10 +67,10 @@ function EpicEnemies.IsInitialized(char)
 end
 
 ---Returns a map of priorities and corresponding effects.
----@return table<number, EpicEnemiesEffect[]>
+---@return table<number, Features.EpicEnemies.Effect[]>
 function EpicEnemies.GetEffectPriorityTiers()
-    local tiers = {} ---@type table<number, EpicEnemiesEffect[]>
-    for _,effect in pairs(EpicEnemies.EFFECTS) do
+    local tiers = {} ---@type table<number, Features.EpicEnemies.Effect[]>
+    for _,effect in pairs(EpicEnemies.GetRegisteredEffects()) do
         local priority = effect.Priority or EpicEnemies.DEFAULT_EFFECT_PRIORITY
         tiers[priority] = tiers[priority] or {}
         tiers[priority][effect.ID] = effect
@@ -177,7 +177,7 @@ function EpicEnemies.IsEligible(char)
 end
 
 ---@param char EsvCharacter
----@param effect EpicEnemiesEffect
+---@param effect Features.EpicEnemies.Effect
 function EpicEnemies.ApplyEffect(char, effect)
     EpicEnemies:DebugLog("Applying effect: " .. effect.Name .. " to " .. char.DisplayName)
 
@@ -188,7 +188,7 @@ function EpicEnemies.ApplyEffect(char, effect)
 end
 
 ---@param char EsvCharacter
----@param effect EpicEnemiesEffect
+---@param effect Features.EpicEnemies.Effect
 function EpicEnemies.ActivateEffect(char, effect)
     local _, _, activationCount = Osiris.DB_PIP_EpicEnemies_ActivatedEffect:Get(char.MyGuid, effect.ID, nil)
 
@@ -211,8 +211,8 @@ function EpicEnemies.ActivateEffect(char, effect)
 end
 
 ---@param char EsvCharacter
----@param predicate fun(char:EsvCharacter, effect:EpicEnemiesEffect)?
----@return table<string, EpicEnemiesEffect>
+---@param predicate fun(char:EsvCharacter, effect:Features.EpicEnemies.Effect)?
+---@return table<string, Features.EpicEnemies.Effect>
 function EpicEnemies.GetAppliedEffects(char, predicate)
     local _, _, tuples = Osiris.DB_PIP_EpicEnemies_AppliedEffect:Get(char.MyGuid, nil)
     local effects = {}
@@ -220,7 +220,7 @@ function EpicEnemies.GetAppliedEffects(char, predicate)
     if tuples then
         for _,tuple in ipairs(tuples) do
             local effect = EpicEnemies.GetEffectData(tuple[2])
-    
+
             if not predicate or predicate(char, effect) then
                 effects[effect.ID] = effect
             end
@@ -231,14 +231,14 @@ function EpicEnemies.GetAppliedEffects(char, predicate)
 end
 
 ---@param char EsvCharacter
----@param effect EpicEnemiesEffect
+---@param effect Features.EpicEnemies.Effect
 ---@return boolean
 function EpicEnemies.EffectIsActive(char, effect)
     return EpicEnemies.GetEffectActivationCount(char, effect) > 0
 end
 
 ---@param char EsvCharacter
----@param effect EpicEnemiesEffect
+---@param effect Features.EpicEnemies.Effect
 ---@return integer
 function EpicEnemies.GetEffectActivationCount(char, effect)
     local _, _, activationCount = Osiris.DB_PIP_EpicEnemies_ActivatedEffect:Get(char.MyGuid, effect.ID, nil)
@@ -260,7 +260,7 @@ function EpicEnemies.ActivateEffects(char, effectType, params)
 end
 
 ---@param char EsvCharacter
----@param effect EpicEnemiesEffect
+---@param effect Features.EpicEnemies.Effect
 ---@param charges integer? Defaults to 1.
 function EpicEnemies.DeactivateEffect(char, effect, charges)
     local _, _, activationCount = Osiris.DB_PIP_EpicEnemies_ActivatedEffect:Get(char.MyGuid, effect.ID, nil)
@@ -298,8 +298,8 @@ end
 
 ---Returns a random effect from a pool that is valid for the character.
 ---@param char EsvCharacter
----@param effectPool table<string, EpicEnemiesEffect>
----@param activeEffects? EpicEnemiesEffect[]
+---@param effectPool table<string, Features.EpicEnemies.Effect>
+---@param activeEffects? Features.EpicEnemies.Effect[]
 ---@param budget number
 ---@return Features.EpicEnemies.Effect? `nil` if no valid effects are in the pool.
 function EpicEnemies.GetRandomEffect(char, effectPool, activeEffects, budget)
