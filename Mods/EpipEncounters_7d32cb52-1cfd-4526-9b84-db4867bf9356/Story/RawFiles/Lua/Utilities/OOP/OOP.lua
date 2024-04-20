@@ -25,7 +25,12 @@ OOP = {
 ---@field __ParentClasses string[]
 ---@field __ClassDefinition Class
 ---@field __LoggingLevel OOPLib.LoggingLevel
+---@field ___DeprecatedKeyRedirects table<any, Class.DeprecatedKeyRedirect>? `nil` if none are registered.
 local Class = {}
+
+---@class Class.DeprecatedKeyRedirect
+---@field WarningMessage string? Warning to log when the redirect is used, in addition to a default "Field X is deprecated" message.
+---@field Value fun(self:Class):any Will be invoked to get the return value for indexing with the key.
 
 ---Creates a new instance of the class.
 ---@protected
@@ -39,8 +44,9 @@ function Class:__Create(data)
     setmetatable(data, {
         __index = function (instance, key)
             -- Check field presence in class definition
-            if classTable[key] ~= nil then
-                return classTable[key]
+            local classDefinitionValue = classTable[key] -- Uses a local to avoid indexing it twice.
+            if classDefinitionValue ~= nil then
+                return classDefinitionValue
             end
 
             -- Check presence in parent classes
@@ -205,6 +211,25 @@ function Class:__GetLoggingPrefix()
     return " [" .. self:GetClassName():upper() .. "]" -- Extra space at start to quickly tell Epip logging apart from others
 end
 
+---Marks a key as deprecated, logging a warning when it is indexed
+---and redirecting to a function's evaluation.
+---Intended for implementing backwards-compatibility. 
+---@param key any Must be `nil` within class definition.
+---@param redirect Class.DeprecatedKeyRedirect
+function Class:__RegisterDeprecatedKeyRedirect(key, redirect)
+    local tbl = self:GetClassDefinition()
+    -- Registering a redirect for a field still in-use by the class definition
+    -- is most likely not intended by user.
+    if tbl[key] ~= nil then
+        tbl:__Error("__RegisterDeprecatedKeyRedirect", key, "is not nil in class definition")
+    end
+    -- Create table on first registration.
+    if tbl.___DeprecatedKeyRedirects == nil then
+        tbl.___DeprecatedKeyRedirects = {}
+    end
+    tbl.___DeprecatedKeyRedirects[key] = redirect
+end
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
@@ -238,6 +263,15 @@ function OOP.RegisterClass(className, class, parentClasses)
     -- Set metatable for static access
     setmetatable(class, {
         __index = function (instance, key)
+            ---@cast instance Class
+
+            -- Check if the field is deprecated
+            if rawget(instance, "___DeprecatedKeyRedirects") and instance.___DeprecatedKeyRedirects[key] then
+                local redirect = instance.___DeprecatedKeyRedirects[key]
+                instance:__LogWarning("The field", key, "is deprecated.", redirect.WarningMessage or "")
+                return redirect.Value(instance)
+            end
+
             -- Check presence in parent classes
             for _,tbl in ipairs(Class.GetParentClasses(class)) do
                 if tbl[key] ~= nil then
