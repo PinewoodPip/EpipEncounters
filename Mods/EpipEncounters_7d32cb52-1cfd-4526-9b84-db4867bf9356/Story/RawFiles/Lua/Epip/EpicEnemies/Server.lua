@@ -189,7 +189,7 @@ end
 ---@param char EsvCharacter
 ---@param effect Features.EpicEnemies.Effect
 function EpicEnemies.ApplyEffect(char, effect)
-    EpicEnemies:DebugLog("Applying effect: " .. effect.Name .. " to " .. char.DisplayName)
+    EpicEnemies:DebugLog("Applying effect: " .. Text.Resolve(effect.Name) .. " to " .. char.DisplayName)
 
     Osiris.DB_PIP_EpicEnemies_AppliedEffect:Set(char.MyGuid, effect.ID)
     Osiris.SetTag(char, EpicEnemies.EFFECT_TAG_PREFIX .. effect.ID)
@@ -206,7 +206,7 @@ function EpicEnemies.ActivateEffect(char, effect)
 
     -- TODO move to hook
     if activationCount < effect.ActivationCondition.MaxActivations then
-        EpicEnemies:DebugLog("Activating effect: " .. effect.Name .. " of " .. char.DisplayName .. " to " .. tostring(activationCount + 1) .. " activations")
+        EpicEnemies:DebugLog("Activating effect: " .. Text.Resolve(effect.Name) .. " of " .. char.DisplayName .. " to " .. tostring(activationCount + 1) .. " activations")
 
         activationCount = activationCount + 1
 
@@ -301,7 +301,7 @@ function EpicEnemies.RemoveEffect(char, effectID)
     Osiris.DB_PIP_EpicEnemies_AppliedEffect:Delete(char.MyGuid, effectID)
     Osiris.ClearTag(char, EpicEnemies.EFFECT_TAG_PREFIX .. effectID)
 
-    EpicEnemies:DebugLog("Removing effect: " .. effect.Name .. " from " .. char.DisplayName)
+    EpicEnemies:DebugLog("Removing effect: " .. Text.Resolve(effect.Name) .. " from " .. char.DisplayName)
 
     EpicEnemies.Events.EffectRemoved:Throw({
         Character = char,

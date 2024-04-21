@@ -109,11 +109,10 @@ local _EpicEnemiesActivationCondition = {
 ---@field ID string
 ---@field Effects string[]|Features.EpicEnemies.Effect[] Can be an array of effects while calling the register method. Will be turned into an ID array afterwards.
 
----Legacy class name; use `Features.EpicEnemies.Effect` instead.
 ---@class Features.EpicEnemies.Effect
 ---@field ID string
----@field Name string
----@field Description string
+---@field Name TextLib.String
+---@field Description TextLib.String
 ---@field Cost integer
 ---@field Weight integer
 ---@field DefaultWeight integer

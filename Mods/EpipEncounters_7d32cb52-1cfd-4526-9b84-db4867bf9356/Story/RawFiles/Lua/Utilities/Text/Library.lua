@@ -62,7 +62,8 @@ Epip.InitializeLibrary("Text", Text)
 -- CLASSES
 ---------------------------------------------
 
----@alias TextLib_String TextLib_TranslatedString|string
+---@alias TextLib_String TextLib_TranslatedString|string -- Legacy alias; use `TextLib.String` instead. TODO migrate all annotations
+---@alias TextLib.String TextLib_String
 
 ---@class TextLib_TranslatedString
 ---@field Handle TranslatedStringHandle
@@ -401,7 +402,9 @@ end
 ---@overload fun(str:TextFormatData)
 ---@return string 
 function Text.Format(str, formatData)
-    setmetatable(formatData, {__index = _TextFormatData})
+    if getmetatable(formatData) == nil then
+        setmetatable(formatData, {__index = _TextFormatData}) -- TODO is this even necessary?
+    end
 
     if type(str) == "table" then
         str, formatData = Text.Resolve(str.Text), str
