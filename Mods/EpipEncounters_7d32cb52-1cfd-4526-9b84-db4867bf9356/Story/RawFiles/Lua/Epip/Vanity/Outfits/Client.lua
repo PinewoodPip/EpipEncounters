@@ -133,6 +133,6 @@ end)
 
 Vanity.Events.SaveDataLoaded:RegisterListener(function (data)
     if data.Version >= 2 then
-        Outfits.SavedOutfits = data.Outfits
+        Outfits.SavedOutfits = data.Outfits or {}
     end
 end)

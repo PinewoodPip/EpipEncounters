@@ -457,7 +457,7 @@ end)
 
 Vanity.Events.SaveDataLoaded:RegisterListener(function (data)
     if data.Version >= 3 then
-        Transmog.favoritedTemplates = data.Favorites
+        Transmog.favoritedTemplates = data.Favorites or {}
     end
 end)
 
