@@ -260,21 +260,46 @@ function Dyes.GetCurrentCustomDye(item, useSliders, useDefaultColors)
     end
 
     -- Try to get the base color of the item
-    if (not colorData) and item and useDefaultColors then
-        local boosts = Item.GetNamedBoosts(item)
+    if not colorData and item and useDefaultColors then
+        local stats = item.StatsFromName ---@type StatsLib_StatsEntry_Armor|StatsLib_StatsEntry_Weapon
+        local statObject = Ext.Stats.Get(item.Stats.Name) ---@type StatsLib_StatsEntry_Armor|StatsLib_StatsEntry_Weapon
+        local itemGroup = Ext.Stats.ItemGroup.GetLegacy(statObject.ItemGroup)
+        local colorStat = stats.ItemColor
 
-        for i=#boosts,1,-1 do
-            local stat = Ext.Stats.Get(boosts[i])
+        if item.ItemColorOverride ~= "" and not string.find(item.ItemColorOverride, "^PIP_DYE_") then -- Ignore our own dyes.
+            colorStat = item.ItemColorOverride
+        elseif itemGroup and item.Stats.LevelGroupIndex < #itemGroup.LevelGroups then
+            -- Fetch color from progression
+            local levelGroup = itemGroup.LevelGroups[item.Stats.LevelGroupIndex + 1]
+            local rootGroup = levelGroup.RootGroups[item.Stats.RootGroupIndex + 1]
+            if rootGroup.Color ~= "" then
+                colorStat = rootGroup.Color
+            end
+        else
+            -- Search for colors from deltamods
+            -- Latest deltamod takes priority.
+            for i=#item.Stats.DynamicStats,1,-1 do
+                local dynStat = item.Stats.DynamicStats[i]
+                if dynStat.ItemColor ~= "" then
+                    colorStat = dynStat.ItemColor
+                    break
+                end
+            end
+        end
 
-            if stat and stat.ItemColor ~= "" then
-                local itemColor = Ext.Stats.ItemColor.Get(stat.ItemColor)
+        -- Fetch the colors from the ItemColor stat
+        if colorStat ~= "" then
+            local itemColor = Ext.Stats.ItemColor.Get(colorStat)
+            colorData = {
+                Color1 = Color.CreateFromDecimal(itemColor.Color1),
+                Color2 = Color.CreateFromDecimal(itemColor.Color2),
+                Color3 = Color.CreateFromDecimal(itemColor.Color3),
+            }
 
-                colorData = {
-                    Color1 = Color.CreateFromDecimal(itemColor.Color1),
-                    Color2 = Color.CreateFromDecimal(itemColor.Color2),
-                    Color3 = Color.CreateFromDecimal(itemColor.Color3),
-                }
-                break
+            -- The game uses `pow(channel, 2.2)` for each color channel for armor and weapon visual colors.
+            for i=1,3,1 do
+                local r, g, b = colorData["Color" .. tostring(i)]:ToFloats()
+                colorData["Color" .. tostring(i)] = Color.Create(r ^ 2.2 * 255, g ^ 2.2 * 255, b ^ 2.2 * 255)
             end
         end
     end
