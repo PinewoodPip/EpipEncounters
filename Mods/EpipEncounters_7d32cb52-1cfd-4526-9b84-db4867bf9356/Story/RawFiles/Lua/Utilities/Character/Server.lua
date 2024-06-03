@@ -8,7 +8,7 @@ local Character = Character
 
 ---Returns a list of party members of char's party. Char must be a player.
 ---@param char EsvCharacter
----@return EsvCharacter[] Includes the char passed per param.
+---@return EsvCharacter[] -- Includes the char passed per param.
 function Character.GetPartyMembers(char)
     local members = {}
 

@@ -22,7 +22,7 @@ Character.Hooks.CreateEquipmentVisuals = Character:AddSubscribableHook("CreateEq
 ---Returns a list of party members of char's party. Char must be a player.
 ---Depends on PlayerInfo.
 ---@param char EclCharacter
----@return EclCharacter[] Includes the char passed per param.
+---@return EclCharacter[] -- Includes the char passed per param.
 function Character.GetPartyMembers(char)
     local members = {}
 
