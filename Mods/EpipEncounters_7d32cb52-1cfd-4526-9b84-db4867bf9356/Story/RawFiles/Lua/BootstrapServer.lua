@@ -314,6 +314,7 @@ LOAD_ORDER = {
     "Debug/Server.lua",
 
     "Epip/HotbarPersistence/Shared.lua",
+    {ScriptSet = "Epip/TogglePartyLink"},
     {ScriptSet = "Epip/EpipInfoCodex"},
 
     "Epip/OsirisIDEAnnotationGenerator.lua",

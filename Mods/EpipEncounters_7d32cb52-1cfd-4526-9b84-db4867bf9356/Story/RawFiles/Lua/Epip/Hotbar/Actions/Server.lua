@@ -38,13 +38,6 @@ Actions.Events.ActionUsed:Subscribe(function (ev)
     end
 end)
 
--- Listen for Toggle Party Link action.
-Actions.Events.ActionUsed:Subscribe(function (ev)
-    if ev.Action.ID == "EPIP_TogglePartyLink" then
-        Osiris.PROC_PIP_Hotkey_TogglePartyLink(ev.Character)
-    end
-end)
-
 -- Listen for Bedroll Rest action.
 -- Requires only one bedroll, anywhere in the party inventory.
 Actions.Events.ActionUsed:Subscribe(function (ev)

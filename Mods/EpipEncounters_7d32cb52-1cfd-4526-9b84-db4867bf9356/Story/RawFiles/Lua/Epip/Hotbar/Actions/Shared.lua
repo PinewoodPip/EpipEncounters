@@ -28,11 +28,6 @@ local Actions = {
     ACTIONS = {},
 
     TranslatedStrings = {
-        HotbarAction_TogglePartyLink = {
-           Handle = "hd15285dag87d6g450cg8f17gd663d87a474e",
-           Text = "Chain/Unchain",
-           ContextDescription = "Hotbar action name",
-        },
         HotbarAction_UserRest = {
            Handle = "ha314a4bag7349g4ec0g9e7eg122821cef234",
            Text = "Bedroll Rest",
@@ -134,13 +129,6 @@ local actions = {
         Name = Actions.TranslatedStrings.HotbarAction_UserRest:GetString(),
         Icon = "hotbar_icon_laureate",
         DefaultIndex = 9,
-    },
-    {
-        ID = "EPIP_TogglePartyLink",
-        Name = Actions.TranslatedStrings.HotbarAction_TogglePartyLink:GetString(),
-        Icon = "hotbar_icon_infinity",
-        DefaultIndex = 10,
-        Cooldown = 1,
     },
     {
         ID = "EE_Meditate",

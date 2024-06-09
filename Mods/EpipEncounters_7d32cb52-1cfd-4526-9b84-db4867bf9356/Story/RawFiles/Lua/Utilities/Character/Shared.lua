@@ -1,11 +1,13 @@
 
 local DeathType = Ext.Enums.DeathType
+local V = Vector.Create
 
 ---@class CharacterLib : Library
 Character = {
     AI_PREFERRED_TAG = "AI_PREFERRED_TARGET",
     AI_UNPREFERRED_TAG = "AI_UNPREFERRED_TARGET",
     AI_IGNORED_TAG = "AI_IGNORED_TARGET",
+    MAX_PARTYGROUP_LINK_RANGE = 20, -- In meters, 3D distance.
 
     ---@type table<string, ItemSlot>
     EQUIPMENT_SLOTS = {
@@ -830,6 +832,7 @@ function Character.GetSkillAPCost(char, skillID)
 
     -- Use the extender method if available, which will respect any hooks other mods might've made for this function.
     if Epip.IsPipFork() then
+        ---@diagnostic disable-next-line: undefined-field -- TODO annotate
         apCost, elementalAffinity = Ext.Stats.Math.GetSkillAPCost(char.Stats, skillID, char.WorldPos, char.AI.AIBoundsSize)
     else
         apCost, elementalAffinity = Game.Math.GetSkillAPCost(Stats.GetSkillData(skillID), char.Stats, Ext.Entity.GetAiGrid(), char.WorldPos, char.AI.AIBoundsSize)
@@ -907,6 +910,15 @@ function Character.IsCastingSkill(char)
 
     ---@diagnostic disable-next-line: undefined-field
     return state and state.State.Value >= Ext.Enums.SkillStateType.Casting.Value
+end
+
+---Returns whether 2 characters are in range to be linked to the same party group.
+---@param char1 EclCharacter
+---@param char2 EclCharacter
+---@return boolean
+function Character.IsInPartyLinkingRange(char1, char2)
+    local dist = (V(char1.WorldPos) - V(char2.WorldPos)).Length -- Game uses 3D distance for this check.
+    return dist < Character.MAX_PARTYGROUP_LINK_RANGE
 end
 
 ---Throws the ItemEquipped event.

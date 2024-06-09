@@ -10,6 +10,11 @@ local BH = EpicEncounters.BatteredHarried
 local PlayerInfo = {
     LOW_BH_OPACITY = 0.9,
     BH_DISPLAY_SCALE = 0.65,
+    SOUNDS = {
+        -- These 2 are played by the engine, not via PlaySound().
+        LINK = "UI_Game_Party_Merge",
+        UNLINK = "UI_Game_Party_Split",
+    },
 
     previousCombatState = nil,
     nextCharacterSelectionIsManual = false,
@@ -106,13 +111,12 @@ end
 ---@param char EclCharacter Must be a player (not summon or follower)
 ---@return FlashMovieClip? --`nil` if the character is not in the UI.
 function PlayerInfo.GetPlayerElement(char)
+    local handle = Ext.UI.HandleToDouble(char.Handle)
     local arr = PlayerInfo.GetPlayerElements()
     local playerElement = nil
 
     for i=0,#arr-1,1 do
         local player = arr[i]
-        local handle = Ext.UI.HandleToDouble(char.Handle)
-
         if player.characterHandle == handle then
             playerElement = player
             break

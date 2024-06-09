@@ -797,6 +797,7 @@ LOAD_ORDER = {
     },
 
     {ScriptSet = "Epip/HotbarPersistence"},
+    {ScriptSet = "Epip/TogglePartyLink"},
 
     -- Statuses display
     {
