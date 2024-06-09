@@ -4,6 +4,10 @@ local HotbarActions = Epip.GetFeature("Feature_HotbarActions")
 
 ---@class Features.PartyLinking
 local PartyLinking = Epip.GetFeature("Features.PartyLinking")
+PartyLinking.SOUNDS = {
+    LINK = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/Assets/Sounds/UI/Larian/UI_Game_Party_Merge.wav",
+    UNLINK = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/Assets/Sounds/UI/Larian/UI_Game_Party_Split.wav"
+}
 
 ---------------------------------------------
 -- METHODS
@@ -42,13 +46,19 @@ end
 ---@param requester EclCharacter
 ---@param players FlashMovieClip[]
 function PartyLinking._Link(requester, players)
+    local timerID = "Features.PartyLinking.RestoreUIVolume.Link"
+    local previousVolume = Ext.Audio.GetRTPC("HUD", "RTPC_Volume_UI")
     local characters = {} ---@type EclCharacter[]
     for i,player in ipairs(players) do
         characters[i] = Character.Get(player.characterHandle, true)
     end
 
+    -- Mute UI volume temporarily to prevent the chaining sound from stacking.
+    Ext.Audio.SetRTPC("HUD", "RTPC_Volume_UI", 0)
+
     -- Chain characters starting from top,
     -- chaining them to the closest previous character (in UI order).
+    local chainedAnyone = false
     for i=2,#players,1 do
         local player = players[i]
         local currentChar = characters[i]
@@ -78,9 +88,25 @@ function PartyLinking._Link(requester, players)
             Timer.StartTickTimer(4 * (i - 1), function (_)
                 local previousCharMC = PlayerInfo.GetPlayerElement(Character.Get(previousFlashHandle, true))
                 PlayerInfo:ExternalInterfaceCall("piAddToGroupUnder", flashHandle, previousCharMC.groupId, previousFlashHandle)
+
+                -- Restore UI volume after the last chain sound effect ends.
+                local timer = Timer.GetTimer(timerID)
+                if timer then timer:Cancel() end
+                Timer.Start(0.8, function (_)
+                    Ext.Audio.SetRTPC("HUD", "RTPC_Volume_UI", previousVolume)
+                end, timerID)
             end)
+            chainedAnyone = true
         end
         ::continue::
+    end
+
+    if chainedAnyone then
+        -- Play a single instance of the chain sound.
+        Ext.Audio.PlayExternalSound("Player1", "EXT_UI", PartyLinking.SOUNDS.LINK, 7)
+    else
+        -- Restore volume in the edge case that this call didn't actually chain anyone.
+        Ext.Audio.SetRTPC("HUD", "RTPC_Volume_UI", previousVolume)
     end
 end
 
@@ -88,6 +114,14 @@ end
 ---@param requester EclCharacter
 ---@param players FlashMovieClip[]
 function PartyLinking._Unlink(requester, players)
+    local previousVolume = Ext.Audio.GetRTPC("HUD", "RTPC_Volume_UI")
+
+    -- Mute UI volume temporarily to prevent the chaining sound from stacking.
+    Ext.Audio.SetRTPC("HUD", "RTPC_Volume_UI", 0)
+
+    -- Play a single instance of the unchain sound.
+    Ext.Audio.PlayExternalSound("Player1", "EXT_UI", PartyLinking.SOUNDS.UNLINK, 7)
+
     -- Get the characters that are grouped with the requester
     local requesterMC = PlayerInfo.GetPlayerElement(requester)
     local playerGroup = {}
@@ -96,10 +130,17 @@ function PartyLinking._Unlink(requester, players)
             table.insert(playerGroup, player)
         end
     end
+
+    -- Unchain the whole group
     for i=#playerGroup,1,-1 do
         local player = playerGroup[i]
         PlayerInfo:ExternalInterfaceCall("piDetachUnder", player.characterHandle, player.groupId) -- Will keep the character's position, unlike the Osiris call, which always detaches to the bottom.
     end
+
+    -- Restore volume after the vanilla sounds would've finished.
+    Timer.Start(0.9, function (_)
+        Ext.Audio.SetRTPC("HUD", "RTPC_Volume_UI", previousVolume)
+    end)
 end
 
 ---------------------------------------------
