@@ -315,6 +315,7 @@ LOAD_ORDER = {
 
     "Epip/HotbarPersistence/Shared.lua",
     {ScriptSet = "Epip/TogglePartyLink"},
+    {ScriptSet = "Epip/TradeContainers"},
     {ScriptSet = "Epip/EpipInfoCodex"},
 
     "Epip/OsirisIDEAnnotationGenerator.lua",
