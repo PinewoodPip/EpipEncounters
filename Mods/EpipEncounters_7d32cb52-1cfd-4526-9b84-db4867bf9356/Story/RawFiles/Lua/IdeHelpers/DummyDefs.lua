@@ -30,6 +30,7 @@ Client.UI.StatusConsole = {} ---@type StatusConsoleUI
 Client.UI.TextDisplay = {} ---@type TextDisplayUI
 Client.UI.Time = {} ---@type TimeUI
 Client.UI.Tooltip = {} ---@type TooltipUI
+Client.UI.Trade = {} ---@type TradeUI
 Client.UI.WorldTooltip = {} ---@type WorldTooltipUI
 Client.UI.CharacterSheet = {} ---@type CharacterSheetUI
 Client.UI.CombatLog = {} ---@type CombatLogUI

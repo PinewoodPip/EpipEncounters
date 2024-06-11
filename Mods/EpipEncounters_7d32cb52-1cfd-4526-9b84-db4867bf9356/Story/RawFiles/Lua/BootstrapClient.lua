@@ -263,6 +263,7 @@ LOAD_ORDER = {
     "UI/TutorialBox.lua",
     "UI/Examine.lua",
     "UI/Tooltip.lua",
+    "UI/Trade.lua",
     "UI/LoadingScreen.lua",
     "UI/Skills.lua",
 
