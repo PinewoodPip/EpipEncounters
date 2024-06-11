@@ -275,15 +275,15 @@ function Dyes.GetCurrentCustomDye(item, useSliders, useDefaultColors)
             if rootGroup.Color ~= "" then
                 colorStat = rootGroup.Color
             end
-        else
-            -- Search for colors from deltamods
-            -- Latest deltamod takes priority.
-            for i=#item.Stats.DynamicStats,1,-1 do
-                local dynStat = item.Stats.DynamicStats[i]
-                if dynStat.ItemColor ~= "" then
-                    colorStat = dynStat.ItemColor
-                    break
-                end
+        end
+
+        -- Search for colors from deltamods
+        -- Latest deltamod takes priority.
+        for i=#item.Stats.DynamicStats,1,-1 do
+            local dynStat = item.Stats.DynamicStats[i]
+            if dynStat.ItemColor ~= "" then
+                colorStat = dynStat.ItemColor
+                break
             end
         end
 
