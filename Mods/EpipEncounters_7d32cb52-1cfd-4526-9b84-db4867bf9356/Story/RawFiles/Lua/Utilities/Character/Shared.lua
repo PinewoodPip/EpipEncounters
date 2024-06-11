@@ -97,6 +97,29 @@ Character = {
         [DeathType.Lifetime] = true,
     },
 
+    -- Enum for AnimType fields.
+    -- Source: AnimationTypeToString()
+    WEAPON_ANIMATION_TYPES = {
+        NONE = -1,
+        OneHanded = 0,
+        TwoHanded = 1,
+        Bow = 2,
+        DualWielding = 3,
+        Shield = 4,
+        SmallWeapons = 5,
+        PoleArms = 6,
+        Unarmed = 7,
+        CrossBow = 8,
+        TwoHanded_Sword = 9,
+        Sitting = 10,
+        Lying = 11,
+        DualWieldingSmall = 12,
+        Staves = 13,
+        Wands = 14,
+        DualWieldingWands = 15,
+        ShieldWands = 16,
+    },
+
     -- TODO Shield, Reflexes, PhysicalArmorMastery, MagicArmorMastery, VitalityMaster, Crafting, Charm, Intimidate, Reason, Wand, Runecrafting, Brewmaster, Sulfurology
     ---@type table<AbilityType, TranslatedStringHandle>
     ABILITY_TSKHANDLES = {
