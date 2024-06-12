@@ -23,7 +23,7 @@ local ContainerPreview = {
         },
         Setting_DetailedItemsAmount_Name = {
            Handle = "hb6fcd193g708cg460bg88d6gd0cfb64de8ea",
-           Text = "Preview Container Items",
+           Text = "Preview container items",
            ContextDescription = "Setting name",
         },
         Setting_DetailedItemsAmount_Description = {

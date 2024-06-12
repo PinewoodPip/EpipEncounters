@@ -22,7 +22,7 @@ local StatusesDisplay = {
         },
         Setting_ShowSourceGeneration_Name = {
             Handle = "h82c7e2e1g5de2g4389ga7c5g639c3d653b96",
-            Text = "Show Source Generation Status",
+            Text = "Show Source Generation status",
             ContextDescription = "Portrait status source gen filter setting name",
         },
         Setting_ShowSourceGeneration_Description = {
@@ -32,7 +32,7 @@ local StatusesDisplay = {
         },
         Setting_ShowBatteredHarried_Name = {
             Handle = "haae0acc4gf8f6g4040g9038g52c50db75a38",
-            Text = "Show Battered/Harried Statuses",
+            Text = "Show Battered/Harried statuses",
             ContextDescription = "Portrait status BH filter setting name",
         },
         Setting_ShowBatteredHarried_Description = {

@@ -11,7 +11,7 @@ local MultiSelect = {
     TranslatedStrings = {
         Setting_Enabled_Name = {
            Handle = "he2f705dbg1127g4f97gaceeg1dc7e9de1129",
-           Text = "Multi-select controls",
+           Text = "Multi-select Controls",
            ContextDescription = "Setting name",
         },
         Setting_Enabled_Description = {

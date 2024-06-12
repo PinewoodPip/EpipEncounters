@@ -13,7 +13,7 @@ local TSK = TooltipAdjustments.TranslatedStrings
 ---------------------------------------------
 
 TSK.TooltipLayer_Setting_Name = TooltipAdjustments:RegisterTranslatedString("hcc271c27g1f31g42f9gafd3g989f2fc5dccd", {
-    Text = "Increase Surface Tooltip UI Layer",
+    Text = "Increase surface tooltip UI Layer",
     ContextDescription = "Setting name",
 })
 TSK.TooltipLayer_Setting_Tooltip = TooltipAdjustments:RegisterTranslatedString("h3e92415fg1242g4d2dg8297g4f4ed3d3d413", {

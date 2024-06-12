@@ -8,7 +8,7 @@ local Statuses = {
     TranslatedStrings = {
         Setting_Enabled_Name = {
             Handle = "h781196b1g2672g4814gba9cg909abae01815",
-            Text = "Show Statuses",
+            Text = "Show statuses",
             ContextDescription = "Setting name",
         },
         Setting_Enabled_Description = {

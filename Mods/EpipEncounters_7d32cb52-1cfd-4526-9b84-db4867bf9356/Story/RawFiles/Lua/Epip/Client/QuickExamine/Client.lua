@@ -43,7 +43,7 @@ local QuickExamine = {
         },
         EnableCorpses_Name = {
            Handle = "h30052af9g5fbag4abcg9a0eg1ee45676a79c",
-           Text = "Enable Corpses",
+           Text = "Enable corpses",
            ContextDescription = "Setting name",
         },
         EnableCorpses_Description = {

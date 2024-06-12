@@ -22,7 +22,7 @@ local EpipSettings = {
 
         AutoIdentify_Name = {
             Handle = "h799513e4g3995g4d45g8e0bg3ee08e6cd1db",
-            Text = "Auto-Identify Items",
+            Text = "Auto-identify items",
             ContextDescription = "Auto-identify setting name",
         },
         AutoIdentify_Description = {
@@ -104,7 +104,7 @@ local EpipSettings = {
 
         AggroInfo_Name = {
             Handle = "h05a930e2g0444g4cd3gacccg34cb46da59c9",
-            Text = "Show Aggro Information",
+            Text = "Show aggro information",
             ContextDescription = "Show aggro information setting name",
         },
         AggroInfo_Description = {
@@ -126,7 +126,7 @@ local EpipSettings = {
 
         Hotbar_CombatLogButton_Name = {
             Handle = "h4e5e3786g9b22g4009gaf4egc680d28b83bd",
-            Text = "Show Combat Log Button",
+            Text = "Show Combat Log button",
             ContextDescription = "Show combat log setting name",
         },
         Hotbar_CombatLogButton_Description = {
@@ -136,7 +136,7 @@ local EpipSettings = {
         },
         Hotbar_HotkeysText_Name = {
             Handle = "h8307bcc5gb35cg4277ga1d6gb9cc9d8d2eed",
-            Text = "Show Action Hotkeys",
+            Text = "Show action hotkeys",
             ContextDescription = "Hotbar hotkeys text setting name",
         },
         Hotbar_HotkeysText_Description = {
@@ -156,7 +156,7 @@ local EpipSettings = {
         },
         Hotbar_Greyout_Name = {
             Handle = "hd0e2b5b7geca4g4a5dgad60g1893680e319a",
-            Text = "Disable Slots while Casting",
+            Text = "Disable slots while casting",
             ContextDescription = "Hotbar greyout setting name",
         },
         Hotbar_Greyout_Description = {
@@ -291,7 +291,7 @@ local EpipSettings = {
         },
         PlayerInfo_StatusHolderOpacity_Name = {
             Handle = "h17251a41gb5a5g412dgb36ag4cfca9cebe22",
-            Text = "Status Opacity in Combat",
+            Text = "Combat Status Opacity",
             ContextDescription = "Portrait status opacity setting name",
         },
         PlayerInfo_StatusHolderOpacity_Description = {
@@ -353,7 +353,7 @@ local EpipSettings = {
         },
         Inventory_RewardItemComparison_Name = {
             Handle = "h21723370gb5acg4f7bg8628g6b7b3249808c",
-            Text = "Show Character Sheet in Reward UI",
+            Text = "Show Character Sheet in reward UI",
             ContextDescription = "Reward UI item comparison setting name",
         },
         Inventory_RewardItemComparison_Description = {

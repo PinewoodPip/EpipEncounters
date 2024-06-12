@@ -37,7 +37,7 @@ local DialogueTweaks = {
         },
         Setting_AutoListen_Name = {
             Handle = "h079a4fc9g48b4g4bc6gbf71gad47fa4acb61",
-            Text = "Auto-Listen Dialogues",
+            Text = "Auto-listen dialogues",
             ContextDescription = "Setting name",
         },
         Setting_AutoListen_Description = {
@@ -47,7 +47,7 @@ local DialogueTweaks = {
         },
         Setting_AutoListenRangeLimit_Name = {
             Handle = "hd8095efage554g41b7gafedg33447556533e",
-            Text = "Auto-Listen Range Limit",
+            Text = "Auto-listen Range Limit",
             ContextDescription = "Setting name",
         },
         Setting_AutoListenRangeLimi_Description = {

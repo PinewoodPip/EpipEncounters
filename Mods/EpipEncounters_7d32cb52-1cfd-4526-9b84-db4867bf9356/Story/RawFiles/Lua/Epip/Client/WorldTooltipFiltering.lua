@@ -19,7 +19,7 @@ local Filtering = {
     TranslatedStrings = {
         Setting_ShowLights_Name = {
            Handle = "h8605ee5agf02ag4f24g9bf2g60906ab5ef57",
-           Text = "Show Lights",
+           Text = "Show lights",
            ContextDescription = "Setting name",
         },
         Setting_ShowLights_Description = {

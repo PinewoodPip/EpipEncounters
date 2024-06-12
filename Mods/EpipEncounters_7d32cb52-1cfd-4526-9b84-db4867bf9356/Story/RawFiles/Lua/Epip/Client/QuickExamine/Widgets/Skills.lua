@@ -9,7 +9,7 @@ local Skills = {
     TranslatedStrings = {
         Setting_Enabled_Name = {
             Handle = "h186d9f82g7ad6g4113gb261g2a5eb62cf612",
-            Text = "Show Skills",
+            Text = "Show skills",
             ContextDescription = "Setting name",
         },
         Setting_Enabled_Description = {

@@ -26,7 +26,7 @@ local CameraControls = {
         },
         Setting_InvertControls_Name = {
             Handle = "h018412b6gd498g4fc9ga20egbfce71d5a5b8",
-            Text = [[Invert "Adjust Camera Pitch" Controls]],
+            Text = [[Invert "Adjust Camera Pitch" controls]],
             ContextDescription = [[Setting name, related to "Adjust Camera Pitch"]],
         },
         Setting_InvertControls_Description = {

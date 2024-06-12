@@ -12,7 +12,7 @@ local Tweaks = {
     TranslatedStrings = {
         Setting_HighlightEmptySlots_Name = {
             Handle = "h86148d3fg72feg42b1gacc8g8f1b57d5f975",
-            Text = "Highlight Empty Container Slots",
+            Text = "Highlight empty container slots",
             ContextDescription = "Setting name",
         },
         Setting_HighlightEmptySlots_Description = {

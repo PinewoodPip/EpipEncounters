@@ -12,7 +12,7 @@ local Layout = {
     TranslatedStrings = {
         Setting_Enabled_Name = {
             Handle = "h626e6a30gaf91g438aga001g799e54be1477",
-            Text = "Remember Panel Positions",
+            Text = "Remember panel positions",
             ContextDescription = "Setting name",
         },
         Setting_Enabled_Description = {

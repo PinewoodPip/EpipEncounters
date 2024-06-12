@@ -28,7 +28,7 @@ TooltipAdjustments.ELEMENTS_WITH_SET_PREFIX = {
 ---------------------------------------------
 
 TSK.Adjustment_RemoveSetPrefix_Name = TooltipAdjustments:RegisterTranslatedString("h5e7095b6ga182g4dc0gadfbg198413b93310", {
-    Text = "Remove 'Set :' Prefixes",
+    Text = [[Remove "Set :" prefixes]],
     ContextDescription = "Adjustment setting name",
 })
 TSK.Adjustment_RemoveSetPrefix_Description = TooltipAdjustments:RegisterTranslatedString("h979a8059g2ea7g436fg863bgf6b008ad3072", {

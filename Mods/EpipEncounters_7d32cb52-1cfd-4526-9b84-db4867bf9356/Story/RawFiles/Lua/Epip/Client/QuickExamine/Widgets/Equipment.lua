@@ -16,7 +16,7 @@ local Equipment = {
     TranslatedStrings = {
         Setting_Enabled_Name = {
             Handle = "h0cd1bcdcgdf0cg4740gaa47g6c551697f31a",
-            Text = "Show Equipped Items",
+            Text = "Show equipped items",
             ContextDescription = "Setting name for the widget",
         },
         Setting_Enabled_Description = {
