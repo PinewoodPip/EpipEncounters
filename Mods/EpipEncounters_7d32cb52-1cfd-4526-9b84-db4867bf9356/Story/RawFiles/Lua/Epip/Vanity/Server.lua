@@ -49,6 +49,14 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
+-- Revert appearance of items when they are unequipped.
+Osiris.RegisterSymbolListener("ItemUnEquipped", 2, "after", function (itemGUID, charGUID)
+    if Osiris.GetFirstFact("DB_IsPlayer", charGUID) and Vanity.Settings.RevertAppearanceOnUnequip:GetValue() == true then
+        local item = Item.Get(itemGUID)
+        Vanity.RevertAppearance(Character.Get(charGUID), item)
+    end
+end)
+
 -- Handle requests to revert item appearance.
 Net.RegisterListener(Vanity.NETMSG_REVERT_APPEARANCE, function (payload)
     Vanity._RevertAppearance(payload:GetCharacter(), payload:GetItem()) -- Do not notify the client back.

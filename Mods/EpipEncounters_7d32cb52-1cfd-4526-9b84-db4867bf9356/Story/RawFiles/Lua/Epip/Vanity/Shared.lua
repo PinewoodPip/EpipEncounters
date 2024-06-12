@@ -306,6 +306,31 @@ local Vanity = {
 
     NETMSG_REVERT_APPEARANCE = "Features.Vanity.NetMsgs.RevertAppearance",
 
+    TranslatedStrings = {
+        FeatureName = {
+            Handle = "h12e35ceeg43cbg4298ga0d1gfd1a6bf16b6a",
+            Text = "Vanity",
+            ContextDescription = [[Feature name]],
+        },
+        SettingsMenu_Description = {
+            Handle = "h56a937e0gb868g4e6cg9f1ag634beba6c7b4",
+            Text = [[Vanity allows you customize your equipment's appearance with transmog, custom dyes, and more.<br>Access it by right-clicking any equipped item and selecting "Vanity..." from the context menu.]],
+            ContextDescription = [[Settings menu paragraph]],
+        },
+        Setting_RevertAppearanceOnUnequip_Name = {
+            Handle = "h0655f2bfgcf50g4f99g9b72ge9d9d83a924e",
+            Text = "Revert appearance of unequipped items",
+            ContextDescription = [[Setting name]],
+        },
+        Setting_RevertAppearanceOnUnequip_Description = {
+            Handle = "h6e951ad3g6994g4580gb0c7gbdbbf3853809",
+            Text = "If enabled, items that are unequipped will have all their Vanity overrides (transmog, dyes, icon, etc.) removed automatically.<br><br>Host-only setting; applies to all players.",
+            ContextDescription = [[Setting tooltip]],
+        },
+    },
+
+    Settings = {},
+
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
 
@@ -314,6 +339,7 @@ local Vanity = {
     }
 }
 Epip.RegisterFeature("Vanity", Vanity)
+local TSK = Vanity.TranslatedStrings
 
 ---------------------------------------------
 -- CLASSES
@@ -348,3 +374,15 @@ Epip.RegisterFeature("Vanity", Vanity)
 ---------------------------------------------
 
 ---@class Features.Vanity.NetMsgs.RevertAppearance : NetLib_Message_Character, NetLib_Message_Item
+
+---------------------------------------------
+-- SETTINGS
+---------------------------------------------
+
+Vanity.Settings.RevertAppearanceOnUnequip = Vanity:RegisterSetting("RevertAppearanceOnUnequip", {
+    Type = "Boolean",
+    Context = "Host",
+    Name = TSK.Setting_RevertAppearanceOnUnequip_Name,
+    Description = TSK.Setting_RevertAppearanceOnUnequip_Description,
+    DefaultValue = false,
+})

@@ -13,6 +13,7 @@ local TooltipRepositioning = Epip.GetFeature("Features.TooltipAdjustments.Invent
 local TooltipDelay = Epip.GetFeature("Features.TooltipAdjustments.TooltipDelay")
 local StatusConsoleDividers = Epip.GetFeature("Features.StatusConsoleDividers")
 local HotbarTweaks = Epip.GetFeature("Features.HotbarTweaks")
+local Vanity = Epip.GetFeature("Feature_Vanity")
 local CommonStrings = Text.CommonStrings
 
 local QuickExamineWidgets = {
@@ -199,6 +200,16 @@ local tabs = {
             {Type = "Setting", Module = StatusConsoleDividers:GetNamespace(), ID = StatusConsoleDividers.Settings.DividerInterval:GetID()},
         }
     },
+    ["Features.Vanity"] = {
+        ID = "Features.Vanity",
+        ButtonLabel = Vanity.TranslatedStrings.FeatureName:GetString(),
+        HeaderLabel = Vanity.TranslatedStrings.FeatureName:GetString(),
+        Entries = {
+            CreateHeader(Vanity.TranslatedStrings.FeatureName:GetString()),
+            {Type = "Label", Label = Vanity.TranslatedStrings.SettingsMenu_Description:Format({Size = 19})},
+            CreateSettingEntry(Vanity.Settings.RevertAppearanceOnUnequip),
+        }
+    },
     ["Epip_QuickExamine"] = {
         ID = "Epip_QuickExamine",
         ButtonLabel = QuickExamine.TranslatedStrings.Name:GetString(),
@@ -365,6 +376,7 @@ local tabOrder = {
     tabs.Epip_Developer,
     tabs.EpipEncounters,
     tabs.Epip_Hotbar,
+    tabs["Features.Vanity"],
     tabs.Epip_QuickExamine,
     tabs.Epip_PlayerInfo,
     tabs.Epip_Inventory,
