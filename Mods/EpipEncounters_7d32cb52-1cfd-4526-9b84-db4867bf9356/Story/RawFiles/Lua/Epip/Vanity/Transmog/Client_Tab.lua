@@ -34,13 +34,13 @@ function Tab:Render()
 
     Vanity.RenderItemDropdown()
 
-    -- Don't show the visibility option for helms,
-    -- as they already have one in the vanilla UI.
-    if Item.GetItemSlot(item) ~= "Helmet" then
-        Vanity.RenderCheckbox("Vanity_MakeInvisible", Text.Format("Visible", {Color = Color.BLACK}), not item:HasTag(Transmog.INVISIBLE_TAG), true)
-    end
-
     if item then
+        -- Don't show the visibility option for helms,
+        -- as they already have one in the vanilla UI.
+        if Item.GetItemSlot(item) ~= "Helmet" then
+            Vanity.RenderCheckbox("Vanity_MakeInvisible", Text.Format("Visible", {Color = Color.BLACK}), not item:HasTag(Transmog.INVISIBLE_TAG), true)
+        end
+
         local canTransmog = Transmog.CanTransmogItem(item)
 
         -- Can toggle weapon overlay effects regardless of whether the item can be transmogged.
