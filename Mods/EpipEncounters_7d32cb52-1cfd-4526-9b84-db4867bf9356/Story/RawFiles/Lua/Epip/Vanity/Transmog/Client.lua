@@ -1,5 +1,6 @@
 
 local Vanity = Client.UI.Vanity
+local VanityFeature = Epip.GetFeature("Feature_Vanity")
 local Hotbar = Client.UI.Hotbar
 
 ---@class Feature_Vanity_Transmog
@@ -185,9 +186,29 @@ function Transmog.TransmogItem(item, template)
     end
 end
 
+---Reverts an item's appearance to its original state.
+---Will notify the server to do the same.
+---@param char EclCharacter
+---@param item EclItem
+function Transmog.RevertAppearance(char, item)
+    Net.PostToServer(Transmog.NET_MSG_REVERT_APPEARANCE, {
+        CharacterNetID = char.NetID,
+        ItemNetID = item.NetID,
+    })
+    Transmog._RevertAppearance(char, item)
+end
+
+---Reverts an item's appearance to its original state.
+---@param char EclCharacter
+---@param item EclItem
+---@diagnostic disable-next-line: unused-local
+function Transmog._RevertAppearance(char, item)
+    Transmog.SetItemIcon(item, "")
+end
+
 ---Sets a persistent icon override for an item.
 ---@param item EclItem
----@param icon icon
+---@param icon icon Use empty string to clear the override.
 function Transmog.SetItemIcon(item, icon)
     local char = Item.GetOwner(item) or Client.GetCharacter()
     item.Icon = icon
@@ -605,6 +626,11 @@ end)
 -- Request visuals to be updated when the helmet visual is toggled.
 Client.UI.CharacterSheet.Events.HelmetToggled:Subscribe(function (_)
     Vanity.RefreshAppearance(true)
+end)
+
+-- Clear icon override when appearance is reset.
+VanityFeature.Events.ItemAppearanceReset:Subscribe(function (ev)
+    Transmog._RevertAppearance(ev.Character, ev.Item)
 end)
 
 ---------------------------------------------

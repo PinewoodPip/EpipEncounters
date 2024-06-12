@@ -3,6 +3,7 @@
 local Transmog = {
     NET_MSG_ICON_REMOVED = "Feature_Vanity_Transmog_NetMessage_IconOverrideRemoved",
     NET_MSG_SET_ICON = "Feature_Vanity_Transmog_NetMsg_SetIcon",
+    NET_MSG_REVERT_APPEARANCE = "Features.Vanity.Transmog.NetMsgs.RevertAppearance",
 
     KEEP_APPEARANCE_TAG_PREFIX = "PIP_Vanity_Transmog_KeepAppearance_",
     INVISIBLE_TAG = "PIP_VANITY_INVISIBLE",
@@ -31,6 +32,8 @@ Epip.RegisterFeature("Vanity_Transmog", Transmog)
 
 ---@class Feature_Vanity_Transmog_NetMsg_SetIcon : NetLib_Message_Item, NetLib_Message_Character
 ---@field Icon icon
+
+---@class Features.Vanity.Transmog.NetMsgs.RevertAppearance : NetLib_Message_Character, NetLib_Message_Item
 
 ---------------------------------------------
 -- METHODS

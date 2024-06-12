@@ -1,4 +1,5 @@
 
+local VanityFeature = Epip.GetFeature("Feature_Vanity")
 local Vanity = Client.UI.Vanity
 local Transmog = Epip.GetFeature("Feature_Vanity_Transmog")
 
@@ -547,6 +548,14 @@ Dyes.Hooks.GetCategories:RegisterHook(function (categories)
     end
 
     return categories
+end)
+
+-- Clear color override when items are reverted.
+VanityFeature.Events.ItemAppearanceReset:Subscribe(function (ev)
+    local item = ev.Item
+    if string.find(item.ItemColorOverride, "^PIP_DYE") then
+        item.ItemColorOverride = ""
+    end
 end)
 
 -- Register all ItemColors into their own category.

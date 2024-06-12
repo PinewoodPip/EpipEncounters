@@ -1,4 +1,5 @@
 
+---@class Feature_Vanity
 local Vanity = Epip.GetFeature("Feature_Vanity")
 local ContextMenu = Client.UI.ContextMenu
 
@@ -10,6 +11,28 @@ function Vanity.TransmogItem(item, newTemplate)
         Char = Client.GetCharacter().NetID,
         Item = item.NetID,
         NewTemplate = newTemplate,
+    })
+end
+
+---Requests an item to be reverted its original state, discarding all Vanity features applied to it.
+---Will notify the server.
+---@param char EclCharacter
+---@param item EclItem
+function Vanity.RevertAppearance(char, item)
+    Net.PostToServer(Vanity.NETMSG_REVERT_APPEARANCE, {
+        CharacterNetID = char.NetID,
+        ItemNetID = item.NetID,
+    })
+    Vanity._RevertAppearance(char, item)
+end
+
+---Reverts an item to its original state, discarding all Vanity features applied to it.
+---@param char EclCharacter
+---@param item EclItem
+function Vanity._RevertAppearance(char, item)
+    Vanity.Events.ItemAppearanceReset:Throw({
+        Character = char,
+        Item = item,
     })
 end
 
@@ -208,4 +231,10 @@ end
 
 ContextMenu.RegisterElementListener("epip_VanityTransmog", "buttonPressed", function(item, params)
     Vanity.TransmogItem(item, params.Template)
+end)
+
+-- Handle requests from the server to revert item appearance.
+Net.RegisterListener(Vanity.NETMSG_REVERT_APPEARANCE, function (payload)
+    local char, item = payload:GetCharacter(), payload:GetItem()
+    Vanity._RevertAppearance(char, item) -- Do not send a message back to the server.
 end)

@@ -73,41 +73,45 @@ end
 
 ---Sets a persistent icon override for an item.
 ---@param item EsvItem
----@param icon icon
+---@param icon icon Use empty string to clear the override.
 function Transmog.SetItemIcon(item, icon)
     Entity.RemoveTagsByPattern(item, Transmog.KEEP_ICON_PATTERN)
-    Osiris.SetTag(item, Transmog.KEEP_ICON_TAG:format(icon))
+    if icon ~= "" then -- No need to add a tag if we're removing the icon override.
+        Osiris.SetTag(item, Transmog.KEEP_ICON_TAG:format(icon))
+    end
 end
 
 ---Reverts the appearance of an item to its original one.
 ---@param char EsvCharacter
 ---@param item EsvItem
-function Vanity.RevertAppearace(char, item)
+function Transmog.RevertAppearance(char, item)
     local _,originalTemplate = Osiris.DB_PIP_Vanity_OriginalTemplate:Get(item.MyGuid, nil)
-
     if originalTemplate then
         local itemHandle = item.Handle
         local charHandle = char.Handle
         local charUserID = char.ReservedUserID
-        
+
         Osi.ClearTag(item.MyGuid, "PIP_Vanity_Transmogged")
         Osiris.DB_PIP_Vanity_OriginalTemplate:Delete(item.MyGuid, nil)
-        
+
         Entity.RemoveTagsByPattern(item, Transmog.TRANSMOGGED_TAG_PATTERN)
-        Entity.RemoveTagsByPattern(item, Transmog.KEEP_ICON_PATTERN)
 
         Ext.OnNextTick(function()
             Ext.OnNextTick(function()
+                char, item = Character.Get(charHandle), Item.Get(itemHandle)
                 Net.PostToUser(charUserID, "EPIPENCOUNTERS_Vanity_SetTemplateOverride", {TemplateOverride = originalTemplate})
 
                 Net.Broadcast(Transmog.NET_MSG_ICON_REMOVED, {
-                    ItemNetID = Item.Get(itemHandle).NetID,
+                    ItemNetID = item.NetID,
                 })
 
-                Vanity.RefreshAppearance(Character.Get(charHandle), true)
+                if Item.IsEquipped(char, item) then
+                    Vanity.TryRefreshAppearance(char, item, true)
+                end
             end)
         end)
     end
+    Entity.RemoveTagsByPattern(item, Transmog.KEEP_ICON_PATTERN)
 end
 
 ---Sets the persistent outfit for a character to its current templates.
@@ -195,7 +199,7 @@ end
 ---Apply a Polymorph status to refresh character visuals without needing to re-equip. Credits to Luxen for the discovery!
 ---@param char EsvCharacter
 ---@param useAlternativeStatus boolean?
-function Vanity.RefreshAppearance(char, useAlternativeStatus)
+function Vanity.RefreshAppearance(char, useAlternativeStatus) -- TODO move
     local status = "PIP_Vanity_Refresh"
     local charGUID = char.MyGuid
     if useAlternativeStatus then status = "PIP_Vanity_Refresh_Alt" end
@@ -274,11 +278,11 @@ end)
 -- Refresh visuals when an item is unequipped.
 -- Necessary to handle the case of unequipping an item that the engine would've masked -
 -- doing so will not cause the body visuals of that region to be updated otherwise.
-Osiris.RegisterSymbolListener("ItemUnequipped", 2, "after", function (_, charGUID)
+Osiris.RegisterSymbolListener("ItemUnequipped", 2, "after", function (itemGUID, charGUID)
     if not Osi.ObjectExists(charGUID) then return end
     local char = Character.Get(charGUID)
     if char and Character.IsPlayer(char) then
-        Vanity.RefreshAppearance(char, true)
+        Vanity.TryRefreshAppearance(char, Item.Get(itemGUID), true)
     end
 end)
 
@@ -295,19 +299,17 @@ Net.RegisterListener("EPIPENCOUNTERS_Vanity_Transmog_KeepAppearance", function(p
 end)
 
 -- Listen for requests to revert item appearance.
-Net.RegisterListener("EPIPENCOUNTERS_Vanity_RevertTemplate", function(payload)
-    local char = Character.Get(payload.CharNetID)
-    local item = Item.Get(payload.ItemNetID)
-
-    Vanity.RevertAppearace(char, item)
+Net.RegisterListener(Transmog.NET_MSG_REVERT_APPEARANCE, function(payload)
+    local char, item = payload:GetCharacter(), payload:GetItem()
+    Transmog.RevertAppearance(char, item)
 end)
 
 -- Listen for requests to set an icon override (separate from transmog).
 Net.RegisterListener(Transmog.NET_MSG_SET_ICON, function(payload)
-    local item = payload:GetItem()
+    local char, item = payload:GetCharacter(), payload:GetItem()
 
     Transmog.SetItemIcon(item, payload.Icon)
-    Vanity.RefreshAppearance(payload:GetCharacter(), false)
+    Vanity.TryRefreshAppearance(char, item, true)
 end)
 
 -- Listen for toggling persistent outfit feature.
@@ -395,4 +397,9 @@ Ext.Events.SessionLoaded:Subscribe(function (ev)
         Ext.Stats.Sync("PIP_Vanity_Refresh", false)
         Ext.Stats.Sync("PIP_Vanity_Refresh_Alt", false)
     end
+end)
+
+-- Clear transmog when appearance is reset.
+Vanity.Events.ItemAppearanceReset:Subscribe(function (ev)
+    Transmog.RevertAppearance(ev.Character, ev.Item)
 end)

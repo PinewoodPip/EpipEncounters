@@ -1,4 +1,5 @@
 
+local VanityFeature = Epip.GetFeature("Feature_Vanity")
 local Vanity = Client.UI.Vanity
 local IconPicker = Epip.GetFeature("Feature_IconPicker")
 
@@ -98,12 +99,11 @@ Tab:RegisterListener(Vanity.Events.EntryFavoriteToggled, function(id, active)
     Vanity.Refresh()
 end)
 
+-- Handle buttons being pressed.
 Tab:RegisterListener(Vanity.Events.ButtonPressed, function(id)
     if id == "RevertTemplate" then
-        Net.PostToServer("EPIPENCOUNTERS_Vanity_RevertTemplate", {
-            CharNetID = Client.GetCharacter().NetID,
-            ItemNetID = Vanity.GetCurrentItem().NetID,
-        })
+        local char, item = Client.GetCharacter(), Vanity.GetCurrentItem()
+        Transmog.RevertAppearance(char, item)
     elseif id == "Transmog_SetIcon" then
         IconPicker.Open(Transmog.ICON_PICKER_REQUEST_ID)
     end

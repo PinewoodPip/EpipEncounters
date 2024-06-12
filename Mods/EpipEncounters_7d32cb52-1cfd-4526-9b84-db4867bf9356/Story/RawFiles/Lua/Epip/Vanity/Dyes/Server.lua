@@ -21,6 +21,16 @@ function Dyes.RemoveDye(item)
     end
 end
 
+---Clears the dyes for an item and refreshes the character if necessary.
+---@param char EsvCharacter
+---@param item EsvItem
+function Dyes.RevertAppearance(char, item)
+    Dyes.RemoveDye(item)
+    if Item.IsEquipped(char, item) then
+        Vanity.TryRefreshAppearance(char, item, true)
+    end
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
@@ -56,8 +66,12 @@ end)
 
 -- Handle requests to remove dyes.
 Net.RegisterListener(Dyes.NETMSG_REMOVE_DYE, function (payload)
-    local item = payload:GetItem()
-    local char = payload:GetCharacter()
-    Dyes.RemoveDye(item)
-    Vanity.RefreshAppearance(char, true)
+    local char, item = payload:GetCharacter(), payload:GetItem()
+    Dyes.RevertAppearance(char, item)
+end)
+
+-- Remove dyes when an item is reset.
+Vanity.Events.ItemAppearanceReset:Subscribe(function (ev)
+    local char, item = ev.Character, ev.Item
+    Dyes.RevertAppearance(char, item)
 end)

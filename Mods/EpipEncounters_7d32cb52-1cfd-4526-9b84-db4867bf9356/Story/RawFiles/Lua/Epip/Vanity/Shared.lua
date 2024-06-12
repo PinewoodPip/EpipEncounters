@@ -143,7 +143,6 @@ local Vanity = {
             Slots = {Weapon = true},
             Tags = {Shield = true},
         },
-        
         Other = {
             Name = "Other",
             Tags = {
@@ -304,21 +303,48 @@ local Vanity = {
         Weapon = true,
         Shield = true,
     },
+
+    NETMSG_REVERT_APPEARANCE = "Features.Vanity.NetMsgs.RevertAppearance",
+
+    USE_LEGACY_EVENTS = false,
+    USE_LEGACY_HOOKS = false,
+
+    Events = {
+        ItemAppearanceReset = {}, ---@type Event<Features.Vanity.Events.ItemAppearanceResetted>
+    }
 }
 Epip.RegisterFeature("Vanity", Vanity)
+
+---------------------------------------------
+-- CLASSES
+---------------------------------------------
 
 ---@class VanityCategory
 ---@field ID string
 ---@field Name string
----@field Tags table<string,boolean>
+---@field Tags table<string, boolean>
 ---@field RequireAllTags boolean If true, the category will only show on items that have all its tags.
----@field Slots table<string,boolean>
+---@field Slots table<string, boolean>
 
 ---@class VanityTemplate
 ---@field GUID GUID
----@field Tags table<string,boolean>
+---@field Tags table<string, boolean>
 ---@field Name string
 ---@field Slot string
 ---@field Mod GUID
 ---@field RootName string
 ---@field Visuals GUID[]
+
+---------------------------------------------
+-- EVENTS/HOOKS
+---------------------------------------------
+
+---@class Features.Vanity.Events.ItemAppearanceResetted
+---@field Item Item
+---@field Character Character Character requesting the revert.
+
+---------------------------------------------
+-- NET MESSAGES
+---------------------------------------------
+
+---@class Features.Vanity.NetMsgs.RevertAppearance : NetLib_Message_Character, NetLib_Message_Item
