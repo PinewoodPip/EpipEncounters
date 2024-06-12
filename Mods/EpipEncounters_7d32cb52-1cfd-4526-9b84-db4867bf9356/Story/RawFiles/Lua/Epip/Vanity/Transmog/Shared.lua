@@ -15,7 +15,13 @@ local Transmog = {
     favoritedTemplates = {},
     activeCharacterTemplates = {},
 
-    TranslatedStrings = {},
+    TranslatedStrings = {
+        VanityTabName = {
+            Handle = "h4528e43cga37bg40cdg9c6eg6b6144813c87",
+            Text = "Transmog",
+            ContextDescription = [[Vanity tab name]],
+        },
+    },
 
     Events = {},
     Hooks = {},

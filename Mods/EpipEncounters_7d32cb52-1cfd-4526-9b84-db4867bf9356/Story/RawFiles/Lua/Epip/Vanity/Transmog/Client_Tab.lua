@@ -1,28 +1,62 @@
 
-local VanityFeature = Epip.GetFeature("Feature_Vanity")
 local Vanity = Client.UI.Vanity
 local IconPicker = Epip.GetFeature("Feature_IconPicker")
 
 ---@class Feature_Vanity_Transmog
 local Transmog = Epip.GetFeature("Feature_Vanity_Transmog")
+local TSK = Transmog.TranslatedStrings
 Transmog.ICON_PICKER_REQUEST_ID = "Vanity_Transmog_SetIcon"
 
-Transmog.TranslatedStrings.Transmog_SetIcon = Transmog:RegisterTranslatedString("h19773400g8de1g46d7g9901g779b750ebddd", {
+---------------------------------------------
+-- STRINGS
+---------------------------------------------
+
+TSK.Label_ElementalEffects = Transmog:RegisterTranslatedString({
+    Handle = "hc48f3629g9abag4fe7g816ag4c06d2780870",
+    Text = "Elemental Effects",
+    ContextDescription = [[Checkbox for weapon elemental GFX]],
+})
+TSK.Label_SetIcon = Transmog:RegisterTranslatedString("h19773400g8de1g46d7g9901g779b750ebddd", {
    Text = "Set Icon",
    ContextDescription = "Override icon button",
 })
+TSK.Label_KeepIcon = Transmog:RegisterTranslatedString({
+    Handle = "h07513bd6ge8a4g4509g9c95g13e56a5eac03",
+    Text = "Keep Icon",
+    ContextDescription = [[Checkbox for preserving icon when transmogging]],
+})
+TSK.Label_KeepAppearance = Transmog:RegisterTranslatedString({
+    Handle = "h98e054f2g9d91g481agb967g51a1873b4a78",
+    Text = "Lock Appearance",
+    ContextDescription = [[Checkbox to keep appearance when new items are equipped]],
+})
+TSK.Label_RevertAppearance = Transmog:RegisterTranslatedString({
+    Handle = "hca179321g5478g4decga9fagc7b3bd11ca9a",
+    Text = "Revert Appearance",
+    ContextDescription = [[Button to remove transmog]],
+})
+TSK.Label_InvalidItem = Transmog:RegisterTranslatedString({
+    Handle = "hde9528cfg0189g45b2gbe7cg8d7bd5637012",
+    Text = "This item is too brittle to transmog.",
+    ContextDescription = [[Warning for items that cannot be transmogged]],
+})
+TSK.Label_NoItemEquipped = Transmog:RegisterTranslatedString({
+    Handle = "h31bb79b1g9516g4f23g8110g9b6bf75a11ea",
+    Text = "You don't have an item equipped in that slot!",
+    ContextDescription = [[Warning for selecting a slot with no item equipped]],
+})
+
+---------------------------------------------
+-- VANITY TAB
+---------------------------------------------
 
 ---@type CharacterSheetCustomTab
 local Tab = Vanity.CreateTab({
-    Name = "Transmog",
+    Name = TSK.VanityTabName:GetString(),
     ID = "PIP_Vanity_Transmog",
     Icon = "hotbar_icon_magic",
 })
 Transmog.Tab = Tab
-
----------------------------------------------
--- TAB FUNCTIONALITY
----------------------------------------------
 
 function Tab:Render()
     -- Only clear template override if the item changed
@@ -38,19 +72,19 @@ function Tab:Render()
         -- Don't show the visibility option for helms,
         -- as they already have one in the vanilla UI.
         if Item.GetItemSlot(item) ~= "Helmet" then
-            Vanity.RenderCheckbox("Vanity_MakeInvisible", Text.Format("Visible", {Color = Color.BLACK}), not item:HasTag(Transmog.INVISIBLE_TAG), true)
+            Vanity.RenderCheckbox("Vanity_MakeInvisible", Text.CommonStrings.Visible:Format({Color = Color.BLACK}), not item:HasTag(Transmog.INVISIBLE_TAG), true)
         end
 
         local canTransmog = Transmog.CanTransmogItem(item)
 
         -- Can toggle weapon overlay effects regardless of whether the item can be transmogged.
         if Item.IsWeapon(item) then
-            Vanity.RenderCheckbox("Vanity_OverlayEffects", Text.Format("Elemental Effects", {Color = Color.BLACK}), not item:HasTag("DISABLE_WEAPON_EFFECTS"), true)
+            Vanity.RenderCheckbox("Vanity_OverlayEffects", TSK.Label_ElementalEffects:Format({Color = Color.BLACK}), not item:HasTag("DISABLE_WEAPON_EFFECTS"), true)
         end
 
         if canTransmog then
-            Vanity.RenderCheckbox("Vanity_KeepIcon", Text.Format("Keep Icon", {Color = Color.BLACK}), Transmog.keepIcon, true)
-            Vanity.RenderButton("Transmog_SetIcon", Text.Format(Transmog.TranslatedStrings.Transmog_SetIcon:GetString(), {Color = Color.WHITE}), true)
+            Vanity.RenderCheckbox("Vanity_KeepIcon", TSK.Label_KeepIcon:Format({Color = Color.BLACK}), Transmog.keepIcon, true)
+            Vanity.RenderButton("Transmog_SetIcon", TSK.Label_SetIcon:Format({Color = Color.WHITE}), true)
 
             local categories = Transmog.GetCategories(item)
 
@@ -58,9 +92,9 @@ function Tab:Render()
             -- if item:HasTag("PIP_Vanity_Transmogged") or (Vanity.currentItemTemplateOverride and item.RootTemplate.Id ~= Vanity.currentItemTemplateOverride) then
             -- end
 
-            Vanity.RenderCheckbox("Vanity_KeepAppearance", Text.Format("Lock Appearance", {Color = "000000"}), Transmog.ShouldKeepAppearance(item), true)
+            Vanity.RenderCheckbox("Vanity_KeepAppearance", TSK.Label_KeepAppearance:Format({Color = "000000"}), Transmog.ShouldKeepAppearance(item), true)
 
-            Vanity.RenderButton("RevertTemplate", "Revert Appearance", true)
+            Vanity.RenderButton("RevertTemplate", TSK.Label_RevertAppearance:GetString(), true)
 
             for _,data in ipairs(categories) do
                 -- Render category collapse button
@@ -82,10 +116,10 @@ function Tab:Render()
                 end
             end
         else
-            Vanity.RenderText("InvalidItem", "This item is too brittle to transmog.")
+            Vanity.RenderText("InvalidItem", TSK.Label_InvalidItem:GetString())
         end
     else
-        Vanity.RenderText("NoItem", "You don't have an item equipped in that slot!")
+        Vanity.RenderText("NoItem", TSK.Label_NoItemEquipped:GetString())
     end
 end
 

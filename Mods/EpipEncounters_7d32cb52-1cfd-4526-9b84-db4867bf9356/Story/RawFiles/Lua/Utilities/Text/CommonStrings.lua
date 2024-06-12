@@ -266,6 +266,10 @@ Text.CommonStrings.Statistics = Text.RegisterTranslatedString({
     Handle = "h77ccbac2g8c6ag414fg8760g70ec87d3aa69",
     Text = "Statistics",
 })
+Text.CommonStrings.Visible = Text.RegisterTranslatedString({
+    Handle = "hd8a9153ega669g4118g9c78g0a242b67fb5a",
+    Text = "Visible",
+})
 
 ---------------------------------------------
 -- BRANDING
