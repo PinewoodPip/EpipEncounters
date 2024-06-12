@@ -279,8 +279,8 @@ function Dyes.GetCurrentCustomDye(item, useSliders, useDefaultColors)
         end
 
         -- Search for colors from deltamods
-        -- Latest deltamod takes priority.
-        for i=#item.Stats.DynamicStats,1,-1 do
+        -- Newest deltamod takes priority.
+        for i=#item.Stats.DynamicStats,2,-1 do -- Ignore the color of the base item stats - progression takes priority in that case.
             local dynStat = item.Stats.DynamicStats[i]
             if dynStat.ItemColor ~= "" then
                 colorStat = dynStat.ItemColor
