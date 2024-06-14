@@ -131,8 +131,8 @@ Epip.InitializeLibrary("TooltipLib", Tooltip)
 
 ---@class TooltipLib_SimpleTooltip
 ---@field Label string Supports <bp>, <line> and <shortline>
----@field Position Vector2D? Defaults to mouse position.
----@field UseDelay boolean
+---@field Position Vector2D? In screen coordinates. Defaults to mouse position, in which case the position is determined after the delay (if any).
+---@field UseDelay boolean If `true`, the tooltip will be shown after a delay. `See TooltipUI.SIMPLE_TOOLTIP_DELAY`.
 ---@field MouseStickMode "None"|"BottomRight"|"BottomLeft"|"TopRight"|"TopLeft"
 ---@field TooltipStyle "Simple"|"Fancy"
 ---@field IsCharacterTooltip boolean Whether this tooltip comes from a showCharTooltip call.
@@ -299,11 +299,32 @@ end
 ---Does not fire events.
 ---@param data TooltipLib_SimpleTooltip
 function Tooltip.ShowSimpleTooltip(data)
+    local ui = Client.UI.Tooltip
+    local root = ui:GetRoot()
+    local useCursorPosition = data.Position == nil
     local position = data.Position or Vector.Create(Client.GetMousePosition())
-    local root = Client.UI.Tooltip:GetRoot()
-    local x, y = position:unpack()
+    local x, y = position:unpack() -- No need to consider UI scale, as this positioning happens within the Tooltip UI's flash space.
 
     root.addTooltip(data.Label, x, y, data.UseDelay, Tooltip.SIMPLE_TOOLTIP_MOUSE_STICK_MODE[data.MouseStickMode], Tooltip.SIMPLE_TOOLTIP_STYLES[data.TooltipStyle])
+
+    -- We need to position the UI ourselves if no mouse-sticking is requested;
+    -- Normally this is done via setAnchor UICall.
+    if data.MouseStickMode == "None" then
+        local functor = function ()
+            -- Show the tooltip at the updated cursor position;
+            -- otherwise it might appear that the tooltip "lags" behind the cursor.
+            if useCursorPosition then
+                position = Vector.Create(Client.GetMousePosition())
+                x, y = position:unpack()
+            end
+            ui:SetPosition(Vector.Create(math.floor(root.frameSpacing + x), math.floor(root.frameSpacing + y)))
+        end
+        if data.UseDelay then
+            Timer.Start(ui.SIMPLE_TOOLTIP_DELAY, functor)
+        else
+            Ext.OnNextTick(functor)
+        end
+    end
 end
 
 ---@param text string
