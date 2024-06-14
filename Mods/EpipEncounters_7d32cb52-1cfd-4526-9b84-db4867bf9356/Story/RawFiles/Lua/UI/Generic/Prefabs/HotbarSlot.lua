@@ -368,7 +368,7 @@ function Slot:_ShowTooltip()
         Owner = Client.GetCharacter(),
     })
 
-    if not self:IsEmpty() then
+    if not self:IsEmpty() and GameState.IsInSession() then -- In multiplayer, non-hosts can crash while loading when showing skill tooltips.
         local obj = self.Object
         if obj.Type == "Item" or obj.Type == "Template" then
             local entity = obj:GetEntity() ---@type EclItem?
