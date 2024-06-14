@@ -274,6 +274,10 @@ Text.CommonStrings.Unnamed = Text.RegisterTranslatedString({
     Handle = "h1969b8b0ge281g4c5ag8297g24e31fd2aa7c",
     Text = "Unnamed",
 })
+Text.CommonStrings.Remove = Text.RegisterTranslatedString({
+    Handle = "h974c404ag23a3g4926gbf2fg8d4c881e37ea",
+    Text = "Remove",
+})
 
 ---------------------------------------------
 -- BRANDING
