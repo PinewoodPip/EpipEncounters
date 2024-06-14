@@ -722,6 +722,14 @@
       "ReferenceText": "Staff",
       "TranslatedText": "法杖"
     },
+    "h807e1cacgfe65g4153gb4dfg2ca7fa75dd28": {
+      "ReferenceText": "Start",
+      "TranslatedText": "开始"
+    },
+    "h77ccbac2g8c6ag414fg8760g70ec87d3aa69": {
+      "ReferenceText": "Statistics",
+      "TranslatedText": "统计"
+    },
     "h7187736egcc52g416dga221gc4f17ca41160": {
       "ReferenceText": "Statuses",
       "TranslatedText": "状态"
@@ -745,6 +753,10 @@
     "h0879c1f1gc016g460egba26gd81e2cca18a2": {
       "ReferenceText": "Unbound",
       "TranslatedText": "解绑"
+    },
+    "h6a89a066g7f22g43b2g9abcg0932cf6f3e5d": {
+      "ReferenceText": "Unknown",
+      "TranslatedText": "未知"
     },
     "h6a473ba0g726bg4188g811fgfa83c0b3def2": {
       "ReferenceText": "Vanilla",
@@ -830,13 +842,13 @@
       "ReferenceText": "%s has entered dialogue.",
       "TranslatedText": "%s 进入聊天对话中"
     },
-    "h079a4fc9g48b4g4bc6gbf71gad47fa4acb61": {
-      "ReferenceText": "Auto-Listen Dialogues",
-      "TranslatedText": "自动倾听对话"
-    },
     "hd8095efage554g41b7gafedg33447556533e": {
-      "ReferenceText": "Auto-Listen Range Limit",
+      "ReferenceText": "Auto-listen Range Limit",
       "TranslatedText": "自动倾听对话范围"
+    },
+    "h079a4fc9g48b4g4bc6gbf71gad47fa4acb61": {
+      "ReferenceText": "Auto-listen dialogues",
+      "TranslatedText": "自动倾听对话"
     },
     "h81560a4dg3324g4c62g971cg75855b8a1672": {
       "ReferenceText": "Auto-listening to %s's dialogue.",
@@ -1039,7 +1051,7 @@
       "TranslatedText": "区域转移标签持续时间"
     },
     "h799513e4g3995g4d45g8e0bg3ee08e6cd1db": {
-      "ReferenceText": "Auto-Identify Items",
+      "ReferenceText": "Auto-identify items",
       "TranslatedText": "自动鉴定物品"
     },
     "h5bef00c6g36deg4db0ga3d5gb006dbc5f601": {
@@ -1065,6 +1077,10 @@
     "h4bd4b3d7gf239g412dgb4e9g3421524ff330": {
       "ReferenceText": "Changes the loading screen into a family photoshoot!",
       "TranslatedText": "载入界面变为一张家庭照片!"
+    },
+    "h17251a41gb5a5g412dgb36ag4cfca9cebe22": {
+      "ReferenceText": "Combat Status Opacity",
+      "TranslatedText": "战斗状态透明度"
     },
     "h63aee58dg36e4g411cg9dcbg541062d696f0": {
       "ReferenceText": "Consumables Emphasis",
@@ -1131,7 +1147,7 @@
       "TranslatedText": "制造面板的默认显示页面"
     },
     "hd0e2b5b7geca4g4a5dgad60g1893680e319a": {
-      "ReferenceText": "Disable Slots while Casting",
+      "ReferenceText": "Disable slots while casting",
       "TranslatedText": "施法时禁用快捷栏槽位"
     },
     "h49611d79g2ae8g47dcgb20bge13634676cad": {
@@ -1306,20 +1322,12 @@
       "ReferenceText": "Save/Load UI Improvements",
       "TranslatedText": "保存/载入界面优化"
     },
-    "h8307bcc5gb35cg4277ga1d6gb9cc9d8d2eed": {
-      "ReferenceText": "Show Action Hotkeys",
-      "TranslatedText": "显示按钮快捷键"
-    },
-    "h05a930e2g0444g4cd3gacccg34cb46da59c9": {
-      "ReferenceText": "Show Aggro Information",
-      "TranslatedText": "显示仇恨信息"
-    },
     "h21723370gb5acg4f7bg8628g6b7b3249808c": {
-      "ReferenceText": "Show Character Sheet in Reward UI",
+      "ReferenceText": "Show Character Sheet in reward UI",
       "TranslatedText": "物品奖励页面可以检查装备"
     },
     "h4e5e3786g9b22g4009gaf4egc680d28b83bd": {
-      "ReferenceText": "Show Combat Log Button",
+      "ReferenceText": "Show Combat Log button",
       "TranslatedText": "显示战斗记录按钮"
     },
     "h3f4780c9g726bg43c3g8b59gd85d2a0aad07": {
@@ -1333,6 +1341,14 @@
     "h19c9fc59g789ag4c24gb90ag4858f13e79df": {
       "ReferenceText": "Show Minimap",
       "TranslatedText": "显示迷你地图"
+    },
+    "h8307bcc5gb35cg4277ga1d6gb9cc9d8d2eed": {
+      "ReferenceText": "Show action hotkeys",
+      "TranslatedText": "显示按钮快捷键"
+    },
+    "h05a930e2g0444g4cd3gacccg34cb46da59c9": {
+      "ReferenceText": "Show aggro information",
+      "TranslatedText": "显示仇恨信息"
     },
     "haa0cd7a5g5950g4cceg8fe0gd343fc6db5e0": {
       "ReferenceText": "Show chairs, ladders and beds",
@@ -1378,10 +1394,6 @@
       "ReferenceText": "Stat-sharing Notifications",
       "TranslatedText": "状态分享通告"
     },
-    "h17251a41gb5a5g412dgb36ag4cfca9cebe22": {
-      "ReferenceText": "Status Opacity in Combat",
-      "TranslatedText": "战斗状态透明度"
-    },
     "h7c2f8512g3c4eg4dffg946aga4482de181ae": {
       "ReferenceText": "Toggles visibility of the minimap UI element.",
       "TranslatedText": "显示小地图及其组件"
@@ -1419,7 +1431,7 @@
       "TranslatedText": "启用后, 调整摄像机间距, 有最低值"
     },
     "h018412b6gd498g4fc9ga20egbfce71d5a5b8": {
-      "ReferenceText": "Invert \"Adjust Camera Pitch\" Controls",
+      "ReferenceText": "Invert \"Adjust Camera Pitch\" controls",
       "TranslatedText": "反转调整摄像机间距"
     },
     "he2feffa4g625dg486fgbcafgd43f6bc7af72": {
@@ -1431,7 +1443,7 @@
       "TranslatedText": "按住时, 垂直鼠标移动将调整游戏摄像机的角度.<br><br>不会影响默认摄像机角度设置, 并且按键对角度的任何更改都不会在不同游戏战役中保留"
     },
     "h86148d3fg72feg42b1gacc8g8f1b57d5f975": {
-      "ReferenceText": "Highlight Empty Container Slots",
+      "ReferenceText": "Highlight empty container slots",
       "TranslatedText": "高亮空容器格子"
     },
     "h9f74c097g9888g4f33gb296gd6286d108329": {
@@ -1574,6 +1586,10 @@
       "ReferenceText": "Toggled extra bars visibility on.",
       "TranslatedText": "打开额外快捷栏"
     },
+    "hd15285dag87d6g450cg8f17gd663d87a474e": {
+      "ReferenceText": "Chain/Unchain",
+      "TranslatedText": "全队加锁/解锁"
+    },
     "h10e9e7c4g9c41g4cf2ga7f5g59052b73ae8d": {
       "ReferenceText": "Artifact Powers",
       "TranslatedText": "神器威能"
@@ -1603,7 +1619,7 @@
       "TranslatedText": "启用后, 快速检查UI会显示玩家角色的已装备物品"
     },
     "h0cd1bcdcgdf0cg4740gaa47g6c551697f31a": {
-      "ReferenceText": "Show Equipped Items",
+      "ReferenceText": "Show equipped items",
       "TranslatedText": "显示已装备物品"
     },
     "h7b5b3f77gecb7g400cgafedg1be1b2227264": {
@@ -1615,7 +1631,7 @@
       "TranslatedText": "启用后, 快速检查UI会显示角色身上的技能和冷却"
     },
     "h186d9f82g7ad6g4113gb261g2a5eb62cf612": {
-      "ReferenceText": "Show Skills",
+      "ReferenceText": "Show skills",
       "TranslatedText": "显示技能"
     },
     "h70e80784gadb9g4d5agae96gc219142a7d43": {
@@ -1623,7 +1639,7 @@
       "TranslatedText": "启用后, 快速检查UI会显示角色身上的可见状态"
     },
     "h781196b1g2672g4814gba9cg909abae01815": {
-      "ReferenceText": "Show Statuses",
+      "ReferenceText": "Show statuses",
       "TranslatedText": "显示状态来源"
     },
     "hd74d99b1gf914g4cb2gb3bfg832230e4cf0f": {
@@ -1699,7 +1715,7 @@
       "TranslatedText": "启用后，"
     },
     "h626e6a30gaf91g438aga001g799e54be1477": {
-      "ReferenceText": "Remember Panel Positions",
+      "ReferenceText": "Remember panel positions",
       "TranslatedText": "记住面板位置"
     },
     "h3a8d983cg5a8cg4b33g954cg39581bd8a04b": {
@@ -1762,10 +1778,6 @@
       "ReferenceText": "Bedroll Rest",
       "TranslatedText": "睡袋"
     },
-    "hd15285dag87d6g450cg8f17gd663d87a474e": {
-      "ReferenceText": "Chain/Unchain",
-      "TranslatedText": "全队加锁/解锁"
-    },
     "h4ac91ab1gcde9g4cd5gb8a3gc19b15f3dd4b": {
       "ReferenceText": "Pyramids",
       "TranslatedText": "金字塔"
@@ -1815,7 +1827,7 @@
       "TranslatedText": "标记为待售品"
     },
     "he2f705dbg1127g4f97gaceeg1dc7e9de1129": {
-      "ReferenceText": "Multi-select controls",
+      "ReferenceText": "Multi-select Controls",
       "TranslatedText": "多选物品"
     },
     "h6b5b9ed9g85f0g421bga071g409b1e4491ca": {
@@ -1903,7 +1915,7 @@
       "TranslatedText": "用户界面宽度<br><br>默认400"
     },
     "h30052af9g5fbag4abcg9a0eg1ee45676a79c": {
-      "ReferenceText": "Enable Corpses",
+      "ReferenceText": "Enable corpses",
       "TranslatedText": "启用尸体"
     },
     "h693e7865g63d9g402bgba37g2f627a59d4c6": {
@@ -2059,11 +2071,11 @@
       "TranslatedText": "设置状态排序顺序. 高优先级的状态会显示在最左边的位置, 最低优先级则在最右边."
     },
     "haae0acc4gf8f6g4040g9038g52c50db75a38": {
-      "ReferenceText": "Show Battered/Harried Statuses",
+      "ReferenceText": "Show Battered/Harried statuses",
       "TranslatedText": "显示重创和蹂躏状态"
     },
     "h82c7e2e1g5de2g4389ga7c5g639c3d653b96": {
-      "ReferenceText": "Show Source Generation Status",
+      "ReferenceText": "Show Source Generation status",
       "TranslatedText": "显示秘源再生状态"
     },
     "hb9e14744g4868g4e08gb3d7ga9bd57629d03": {
@@ -2123,7 +2135,7 @@
       "TranslatedText": "在提示中，显示容器中前几个物品，设置成 0 可以禁用此功能"
     },
     "hb6fcd193g708cg460bg88d6gd0cfb64de8ea": {
-      "ReferenceText": "Preview Container Items",
+      "ReferenceText": "Preview container items",
       "TranslatedText": "预览容器内物品"
     },
     "h5cb6c524ge5a5g4184g8354g9386bbfdc00c": {
@@ -2227,7 +2239,7 @@
       "TranslatedText": "启用后, 任务奖励窗口只会在发生后提醒增强生成<br><font color='FFFF00'>只适用于史诗遭遇mod</font>"
     },
     "hcc271c27g1f31g42f9gafd3g989f2fc5dccd": {
-      "ReferenceText": "Increase Surface Tooltip UI Layer",
+      "ReferenceText": "Increase surface tooltip UI Layer",
       "TranslatedText": "提高地表提示的UI显示层级"
     },
     "h36b35885g9f60g40b1ga77fg0c501ab76654": {
@@ -2239,7 +2251,7 @@
       "TranslatedText": "属于 %s"
     },
     "h5e7095b6ga182g4dc0gadfbg198413b93310": {
-      "ReferenceText": "Remove 'Set :' Prefixes",
+      "ReferenceText": "Remove \"Set :\" prefixes",
       "TranslatedText": "删除前缀'Set :'"
     },
     "h979a8059g2ea7g436fg863bgf6b008ad3072": {
@@ -2331,7 +2343,7 @@
       "TranslatedText": "启用后, 环境提示中会显示光源物品, 比如火炬, 蜡烛, 火盆"
     },
     "h8605ee5agf02ag4f24g9bf2g60906ab5ef57": {
-      "ReferenceText": "Show Lights",
+      "ReferenceText": "Show lights",
       "TranslatedText": "显示光源"
     }
   }

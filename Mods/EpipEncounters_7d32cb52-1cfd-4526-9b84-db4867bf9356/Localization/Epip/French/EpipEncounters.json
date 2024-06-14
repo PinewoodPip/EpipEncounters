@@ -34,6 +34,18 @@
       "ReferenceText": "Shows B/H amounts over the heads of characters in combat.",
       "TranslatedText": "Afficher le niveau de B/H au dessus des personnages en combat"
     },
+    "h585fa6e9gdc3ag40deg97f8gf68df49288fd": {
+      "ReferenceText": "All hope was lost, I guess.",
+      "TranslatedText": "Tout espoir est perdu, je suppose."
+    },
+    "h1d6b6292gf30ag4f40ga602g556b3278bda4": {
+      "ReferenceText": "Anniversary Edition",
+      "TranslatedText": "Édition anniversaire"
+    },
+    "h9110437dg4b59g460cg8b4aga436971e86c2": {
+      "ReferenceText": "Are you sure you want to forfeit the current game?<br>Your efforts will be considered.",
+      "TranslatedText": "Es-tu sûr de vouloir abandonner la partie en cours ? <br> Vos efforts seront considérés."
+    },
     "h9f5438ffg5024g4264gaaa2gef122c54e518": {
       "ReferenceText": "Are you sure you want to start a new game?",
       "TranslatedText": "Es-tu sûr de vouloir commencer une nouvelle partie ?"
@@ -42,12 +54,28 @@
       "ReferenceText": "Bedazzled",
       "TranslatedText": "Ébloui"
     },
+    "hd9bab9d3gf36ag4da5ga272gdaedd5d48e87": {
+      "ReferenceText": "Casual Raid",
+      "TranslatedText": "Raid classique"
+    },
+    "h40000864gc468g40a3g92d2g6f50c437f596": {
+      "ReferenceText": "Classic",
+      "TranslatedText": "Classique"
+    },
+    "hb12932bag7252g4866ga6d3g5a2c55fadaef": {
+      "ReferenceText": "Congratulations, you have been promoted to the title of<br>%s!",
+      "TranslatedText": "Félicitation, vous avez été promu au titre de <br>%s !"
+    },
     "h3166017ag50b9g4943g8ae9g5335c23c58e4": {
       "ReferenceText": "Game Over",
       "TranslatedText": "Fin de la partie"
     },
     "ha1afe7c2g4d97g43b6g823eg03bf25788dbd": {
       "ReferenceText": "High-Score",
+      "TranslatedText": "Meilleur score"
+    },
+    "he49de766g758eg4360g8000g0a8e5eb1885a": {
+      "ReferenceText": "High-Scores",
       "TranslatedText": "Meilleurs scores"
     },
     "hf254ab01gbb16g4c83ga1e5gc415eaef1acf": {
@@ -129,6 +157,14 @@
     "hde789445g157eg4ecbg962bg1cb03cdfdc80": {
       "ReferenceText": "View all sort of information from enabled mods.",
       "TranslatedText": "Afficher diverses informations sur les mods activés"
+    },
+    "hc31a7649g3a59g4595gbfecg3fdc812c0c1f": {
+      "ReferenceText": "Codex",
+      "TranslatedText": "Codex"
+    },
+    "h52c8465ag5bf7g4420g93b7ge555e6acb172": {
+      "ReferenceText": "Open Codex",
+      "TranslatedText": "Ouvrir le codex"
     },
     "he5fd06c2gba4dg4ec0g9c66gc6d0847cc6d9": {
       "ReferenceText": "By Cursor",
@@ -302,6 +338,10 @@
       "ReferenceText": "Cloud",
       "TranslatedText": "Nuage"
     },
+    "h2eea4c8ag25e9g48c3gbe20g5c84eaf9243b": {
+      "ReferenceText": "Club",
+      "TranslatedText": "Club"
+    },
     "hfc9df4bcgd7deg4e05ga37ag1b739d2a9e2b": {
       "ReferenceText": "Combat",
       "TranslatedText": "Combat"
@@ -370,6 +410,10 @@
       "ReferenceText": "Elementalist",
       "TranslatedText": "Élémentaliste"
     },
+    "h0e0a45c4g77f2g4bbdga211gdae7cb9176b0": {
+      "ReferenceText": "Embodiments",
+      "TranslatedText": "Incarnation"
+    },
     "ha5227515g6663g4386gb3bcga4ffb2043b65": {
       "ReferenceText": "Enable",
       "TranslatedText": "Activer"
@@ -382,6 +426,10 @@
       "ReferenceText": "Equipment",
       "TranslatedText": "Équipement"
     },
+    "h4b779123g7e18g4655g81e3ga5a0dfcc5d34": {
+      "ReferenceText": "Exit",
+      "TranslatedText": "Quitter"
+    },
     "h715a684agc1e6g47eagb4d8g13944bc7ebe7": {
       "ReferenceText": "Filtered",
       "TranslatedText": "Filtré"
@@ -393,6 +441,10 @@
     "h8d88a6c9gb72cg422fg8929g396e84f1e77b": {
       "ReferenceText": "Food and Drinks",
       "TranslatedText": "Nourriture et boissons"
+    },
+    "hdb77af8agd827g4a54gb80ag4540ab23988d": {
+      "ReferenceText": "Furniture",
+      "TranslatedText": "Fourniture"
     },
     "h9c53529bg5bc1g4005g9143g216bc58b959e": {
       "ReferenceText": "General",
@@ -662,6 +714,10 @@
       "ReferenceText": "Staff",
       "TranslatedText": "Bâton"
     },
+    "h77ccbac2g8c6ag414fg8760g70ec87d3aa69": {
+      "ReferenceText": "Statistics",
+      "TranslatedText": "Statistiques"
+    },
     "h7187736egcc52g416dga221gc4f17ca41160": {
       "ReferenceText": "Statuses",
       "TranslatedText": "Statuts"
@@ -681,6 +737,10 @@
     "h4119cfcegbfc2g4045gbeecgfb1c96de38e2": {
       "ReferenceText": "Type",
       "TranslatedText": "Type"
+    },
+    "h6a89a066g7f22g43b2g9abcg0932cf6f3e5d": {
+      "ReferenceText": "Unknown",
+      "TranslatedText": "Inconnu"
     },
     "h6a473ba0g726bg4188g811fgfa83c0b3def2": {
       "ReferenceText": "Vanilla",
@@ -741,6 +801,10 @@
     "hde6129e2g7b78g4b15gb1d1g2ef3dc9a4a47": {
       "ReferenceText": "%s has entered dialogue.",
       "TranslatedText": "%s a rejoint la conversation"
+    },
+    "haa1fa94dg26f6g4de2g9aa5g3223510da178": {
+      "ReferenceText": "If enabled, a notification will be shown when characters controlled by other players join dialogues, to make them harder to miss.",
+      "TranslatedText": "Si activé, une notification sera montré quand un personnage controlé par d'autres joueurs rejoit le dialogue"
     },
     "h5a1af856ge6bbg46b0g8c00g98c676f04629": {
       "ReferenceText": "We don't have that dye!<br>We shall shop for them at miscellaneous vendors.",

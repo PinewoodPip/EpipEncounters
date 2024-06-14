@@ -1,5 +1,450 @@
 {
   "FileFormatVersion": 0,
   "ModTable": "EpipEncounters",
-  "TranslatedStrings": {}
+  "TranslatedStrings": {
+    "he043b9f9gfc52g4c39ga4f1gc53ea4fcd5ce": {
+      "ReferenceText": "Add skill IDs to this setting to blacklist them from being animation-cancelled.",
+      "TranslatedText": "Agrega a esta configuracion las ID de las habilidades para evitar que se cancelen las animaciones."
+    },
+    "h3bf7ae10g24e1g4f50gbc69g71a8b95b1a51": {
+      "ReferenceText": "Animation Cancelling",
+      "TranslatedText": "Cancelar animaciones"
+    },
+    "ha50d50eag4185g4e10g82fdg19548a304b32": {
+      "ReferenceText": "Blacklisted Skills",
+      "TranslatedText": "Animaciones permitidas"
+    },
+    "h8277c4cdg8990g406fga0b5gef3f0d386620": {
+      "ReferenceText": "If enabled, the animation for picking up items through their world tooltip will be cancelled, allowing multiple items to be picked up faster.",
+      "TranslatedText": "Si está habilitado, la animación al recoger objetos a través de su descripción emergente en el mundo se cancelará, permitiendo recoger múltiples objetos más rápidamente."
+    },
+    "he5c3a752gd8bag48fagb611g35b5d23bef9d": {
+      "ReferenceText": "If enabled, your controlled character's skill animations will be cancelled after their effects execute, allowing you to perform consecutive actions quicker.",
+      "TranslatedText": "Si está habilitado, las animaciones de las habilidades del personaje controlado se cancelarán después de ejecutar sus efectos, permitiéndote realizar acciones consecutivas más rápidamente."
+    },
+    "hf832b7ceg2e16g454dg8b5cg2ac87a0f7681": {
+      "ReferenceText": "Speed up world tooltip item pick-ups",
+      "TranslatedText": "Acelera la recogida de objetos mediante descripciones emergentes en el mundo."
+    },
+    "h1d6b6292gf30ag4f40ga602g556b3278bda4": {
+      "ReferenceText": "Anniversary Edition",
+      "TranslatedText": "Edición de Aniversario"
+    },
+    "h40000864gc468g40a3g92d2g6f50c437f596": {
+      "ReferenceText": "Classic",
+      "TranslatedText": "Clásico"
+    },
+    "hc514c6a1g4fccg4d58g8d43g95ab5885182a": {
+      "ReferenceText": "Game Mode",
+      "TranslatedText": "Modo de juego"
+    },
+    "h54d9066eg87bdg439fg92f9g7027970af6ca": {
+      "ReferenceText": "Camera",
+      "TranslatedText": "Cámara"
+    },
+    "h3c77115cga69dg4c67g880bgd314b8072f7c": {
+      "ReferenceText": "Camera Angles",
+      "TranslatedText": "Ángulos de cámara"
+    },
+    "h265f89a4g9e80g420egb7adgd27aced5697b": {
+      "ReferenceText": "Field of View",
+      "TranslatedText": "Campo de visión (FOV)"
+    },
+    "haa0297d1ga978g4be1gb3b4g7295b9451b31": {
+      "ReferenceText": "Maximum Distance",
+      "TranslatedText": "Distancia Máxima"
+    },
+    "h3e9e4282gb66cg4498g83e0g8b79a4cec500": {
+      "ReferenceText": "Maximum Distance (controller mode)",
+      "TranslatedText": "Distancia Máxima (modo con mando)"
+    },
+    "h6270c4d7g0531g453agbae3g2503fb8c3c59": {
+      "ReferenceText": "Maximum Distance (locked-on)",
+      "TranslatedText": "Distancia Máxima (bloqueado)"
+    },
+    "h1ec057edg09a1g413dgaefdgaf7942d579ce": {
+      "ReferenceText": "Maximum Distance (tactical view)",
+      "TranslatedText": "Distancia Máxima (vista táctica)"
+    },
+    "h3ddc3759g3f70g4ac5g9401g76ced6258d7a": {
+      "ReferenceText": "Reset to defaults",
+      "TranslatedText": "Restablecer por defecto"
+    },
+    "h4b557dbeg4eefg4284gba11gef2cf523830f": {
+      "ReferenceText": "AP",
+      "TranslatedText": "PA"
+    },
+    "hce2c434eg0377g425eg82ceg3948a01e8ee4": {
+      "ReferenceText": "Accept",
+      "TranslatedText": "Aceptar"
+    },
+    "hff7beb36g46fbg40d9gb13cg2f8680af5b06": {
+      "ReferenceText": "Always",
+      "TranslatedText": "Siempre"
+    },
+    "h3b607ec3gf978g48ccgbb02g96aba3dd1430": {
+      "ReferenceText": "Amulet",
+      "TranslatedText": "Amuleto"
+    },
+    "h67b0f5b2gce06g4eefgbc69g36069a35bb3c": {
+      "ReferenceText": "Apply",
+      "TranslatedText": "Aplicar"
+    },
+    "hbcd07fa8gaaa1g4571gac0eg8a20d7955224": {
+      "ReferenceText": "Armor",
+      "TranslatedText": "Armadura"
+    },
+    "h37567161ge719g4466g96e1gb6fc29c40e6c": {
+      "ReferenceText": "Armor Type",
+      "TranslatedText": "Tipo de armadura"
+    },
+    "h09ce9aebgd1fbg4e42gadc9gacb2ce6383f6": {
+      "ReferenceText": "Artifact",
+      "TranslatedText": "Artefacto"
+    },
+    "h29f2c933gb1a3g4f4ag89d4gcca71ffeba51": {
+      "ReferenceText": "Artifacts",
+      "TranslatedText": "Artefactos"
+    },
+    "h7f4d1a8egfe38g4a39gb104g57738c21fd93": {
+      "ReferenceText": "Axe",
+      "TranslatedText": "Hacha"
+    },
+    "hbe579ebcg3585g4373g8d80g99de57eb1e7a": {
+      "ReferenceText": "Back",
+      "TranslatedText": "Volver"
+    },
+    "h0441f7fegeeebg4aedgb1a8ge5ef84a7b400": {
+      "ReferenceText": "Belt",
+      "TranslatedText": "Cinturón"
+    },
+    "hea4b1852geca7g46f0ga067g33ca3ec8159c": {
+      "ReferenceText": "Camera",
+      "TranslatedText": "Cámara"
+    },
+    "h5a50b777gc16cg4106gbde8gf9dd48954c7f": {
+      "ReferenceText": "Cancel",
+      "TranslatedText": "Cancelar"
+    },
+    "hfc9df4bcgd7deg4e05ga37ag1b739d2a9e2b": {
+      "ReferenceText": "Combat",
+      "TranslatedText": "Combate"
+    },
+    "h1f0e8d31gc83cg47e5gb69ag9f133fc64dcd": {
+      "ReferenceText": "Confirm",
+      "TranslatedText": "Confirmar"
+    },
+    "h304b2c12g06dag4389gaa3bg0f28e9916d32": {
+      "ReferenceText": "Critical Chance",
+      "TranslatedText": "Probabilidad de crítico"
+    },
+    "h17d882b6g83acg411dgbe52g3ed32443774a": {
+      "ReferenceText": "Custom",
+      "TranslatedText": "Personalizado"
+    },
+    "hb2e1d20dgd3c2g45b9ga922gf19ea1a12691": {
+      "ReferenceText": "Delete",
+      "TranslatedText": "Eliminar"
+    },
+    "hc66b270egc5bcg4bc3gbc2bgdd8278522f62": {
+      "ReferenceText": "Disable",
+      "TranslatedText": "Desactivar"
+    },
+    "h905ae122g47e8g41caga162g68a68b6a88af": {
+      "ReferenceText": "Disabled",
+      "TranslatedText": "Desactivado"
+    },
+    "h6eb4b775gdf93g4701g92b7g0ec21ed88442": {
+      "ReferenceText": "Disintegrate",
+      "TranslatedText": "Desintegrar"
+    },
+    "h136f2ef7g80ebg49acgbc4cgfd0a2cbc7250": {
+      "ReferenceText": "Duration",
+      "TranslatedText": "Duración"
+    },
+    "h59386967gb899g4f18ga61bg168b8d91f04a": {
+      "ReferenceText": "Elementalist",
+      "TranslatedText": "Elementalista"
+    },
+    "ha5227515g6663g4386gb3bcga4ffb2043b65": {
+      "ReferenceText": "Enable",
+      "TranslatedText": "Activar"
+    },
+    "he58ba92dg936fg49fagac2bg61a9c20dd142": {
+      "ReferenceText": "Enabled",
+      "TranslatedText": "Activado"
+    },
+    "ha5ce3e75g6795g493bgbd94g5d7779a15deb": {
+      "ReferenceText": "Equipment",
+      "TranslatedText": "Equipo"
+    },
+    "h4b779123g7e18g4655g81e3ga5a0dfcc5d34": {
+      "ReferenceText": "Exit",
+      "TranslatedText": "Salir"
+    },
+    "h715a684agc1e6g47eagb4d8g13944bc7ebe7": {
+      "ReferenceText": "Filtered",
+      "TranslatedText": "Filtrado"
+    },
+    "hab6d5bf9gc96eg42f1ga095gaef050698dfc": {
+      "ReferenceText": "Filters",
+      "TranslatedText": "Filtros"
+    },
+    "h8d88a6c9gb72cg422fg8929g396e84f1e77b": {
+      "ReferenceText": "Food and Drinks",
+      "TranslatedText": "Consumibles"
+    },
+    "h421f56f3g378cg4dfaga0d1ge6e2ea2f17c4": {
+      "ReferenceText": "Geomancer",
+      "TranslatedText": "Geomante"
+    },
+    "h6b38d491gbeccg47d1gad43g5e56e7b19242": {
+      "ReferenceText": "Gloves",
+      "TranslatedText": "Guantes"
+    },
+    "h0212f2a7gcebag4eaag8641g64cfb7bfc0d2": {
+      "ReferenceText": "Helmet",
+      "TranslatedText": "Casco"
+    },
+    "he8c517d9gc48fg42f8ga501g35f9909946b9": {
+      "ReferenceText": "Inventory",
+      "TranslatedText": "Inventario"
+    },
+    "hebad38dcg58c3g4a03gb44eg02833543ba38": {
+      "ReferenceText": "Keybinds",
+      "TranslatedText": "Teclas de acceso directo"
+    },
+    "hc2b715dfgf2a2g4ea3g8691gbc66ca160a1d": {
+      "ReferenceText": "Notifications",
+      "TranslatedText": "Notificaciones"
+    },
+    "h3e13ea04gcd9bg4630gabeagbc5f5095f684": {
+      "ReferenceText": "Overhaul",
+      "TranslatedText": "Mejorado"
+    },
+    "h797b8a3ag4b10g4549g8731g7ec3e775b896": {
+      "ReferenceText": "Reset",
+      "TranslatedText": "Restablecer"
+    },
+    "h2b13dd3bg4c83g4613g8884g746775c96afa": {
+      "ReferenceText": "Reset to default",
+      "TranslatedText": "Restablecer por defecto"
+    },
+    "he007d2e4gc918g475cgbca9g7edc91ad34ab": {
+      "ReferenceText": "SP",
+      "TranslatedText": "PF"
+    },
+    "hadee236cg225ag440fgb2fcg7da77645bc67": {
+      "ReferenceText": "Save",
+      "TranslatedText": "Guardar"
+    },
+    "hbd6a0da2gd153g40c7g972agb0d16bfe78d4": {
+      "ReferenceText": "Settings",
+      "TranslatedText": "Configuración"
+    },
+    "h921639b1g5656g4eafg9c4dg735bda9ba283": {
+      "ReferenceText": "Tooltips",
+      "TranslatedText": "Descripciones emergentes"
+    },
+    "h6a473ba0g726bg4188g811fgfa83c0b3def2": {
+      "ReferenceText": "Vanilla",
+      "TranslatedText": "Original"
+    },
+    "ha6bf3f4cg6de4g4ac8gb706g3f39de8376c3": {
+      "ReferenceText": "Teleport to",
+      "TranslatedText": "Teleportar a"
+    },
+    "h0e034a16gd835g46bcga5bfgd44c3f88a36e": {
+      "ReferenceText": "Brazilian Portuguese translation by Ferocidade",
+      "TranslatedText": "Traducción a Brasileño Portugués por Ferocidade"
+    },
+    "h5b1b94ebg3d90g47e5g8b29g9f75c0aa6cd6": {
+      "ReferenceText": "French translation by Drayander",
+      "TranslatedText": "Traducción al Francés por Drayander"
+    },
+    "h37985411gc95dg46a1g858bg021ed39e43cd": {
+      "ReferenceText": "Hotbar",
+      "TranslatedText": "Acceso rápido"
+    },
+    "hde49d383g961eg49d6gaa46gcc45ab299aa5": {
+      "ReferenceText": "Miscellaneous UI",
+      "TranslatedText": "Interfaz (varios)"
+    },
+    "he0473fbcg6b57g48aegb3c0g7bb24b1e0393": {
+      "ReferenceText": "Player Portraits",
+      "TranslatedText": "Retratos del jugador"
+    },
+    "hbce14cb2g1ed7g4076g95d1gb80c6085c3ad": {
+      "ReferenceText": "Russian translation by Cathe & JoienReid",
+      "TranslatedText": "Traducción al Ruso por Cathe & JoienReid"
+    },
+    "he1539138g972fg4dffg9026gb1624ae59da1": {
+      "ReferenceText": "Save/Load UI",
+      "TranslatedText": "Guardar/Cargar UI"
+    },
+    "h98c83d5fgd30dg41f6g825ag14707c6db182": {
+      "ReferenceText": "Simplified Chinese translation by Ainsky",
+      "TranslatedText": "Traducción a Chino Simplificado por Ainsky"
+    },
+    "h4a3e28fag3595g4753gb507g4423068aeda8": {
+      "ReferenceText": "Some options may require a reload for changes to apply.",
+      "TranslatedText": "Algunas opciones pueden requerir recargar el juego para que los cambios se apliquen."
+    },
+    "hf61f1a35g7ee7g4b79g8728g9a278d2522b0": {
+      "ReferenceText": "Area Transition Label Duration",
+      "TranslatedText": "Duración de la Etiqueta de Transición de Área"
+    },
+    "h799513e4g3995g4d45g8e0bg3ee08e6cd1db": {
+      "ReferenceText": "Auto-identify items",
+      "TranslatedText": "Auto-Identificación de Objetos"
+    },
+    "h5bef00c6g36deg4db0ga3d5gb006dbc5f601": {
+      "ReferenceText": "Auto-unlock inventory (Multiplayer)",
+      "TranslatedText": "Desbloqueo automático del inventario (Multijugador)"
+    },
+    "hafd62d05gc85eg434bg8f49g68214f14bb72": {
+      "ReferenceText": "Debug Display",
+      "TranslatedText": "Vista de Debug"
+    },
+    "h942bb08bg5e26g439eg8189ga3ece811436f": {
+      "ReferenceText": "Default Tab",
+      "TranslatedText": "Ventana por defecto"
+    },
+    "h2b23b849g0345g4d0dgb48dg15315ade1779": {
+      "ReferenceText": "Epip Language",
+      "TranslatedText": "Idioma de Epip"
+    },
+    "h53b42eecg74ccg4164gbd64g0bda6052e6f1": {
+      "ReferenceText": "Examine Menu Position",
+      "TranslatedText": "Posición del menú Examinar"
+    },
+    "h3f4780c9g726bg43c3g8b59gd85d2a0aad07": {
+      "ReferenceText": "Show Fog of War",
+      "TranslatedText": "Mostrar Niebla de Guerra"
+    },
+    "h19c9fc59g789ag4c24gb90ag4858f13e79df": {
+      "ReferenceText": "Show Minimap",
+      "TranslatedText": "Mostrar Minimapa"
+    },
+    "h52f49bccg59f7g4b72g8440g55847b964cde": {
+      "ReferenceText": "Character Level Display",
+      "TranslatedText": "Visualización del Nivel del Personaje"
+    },
+    "h33af8f80g537eg4f1fga457gf02894f0d762": {
+      "ReferenceText": "Resistances Display",
+      "TranslatedText": "Visualización de Resistencias"
+    },
+    "h7e532f24g51f1g439cg9851g8ff8f12a6b17": {
+      "ReferenceText": "When holding Shift",
+      "TranslatedText": "Presionando Shift"
+    },
+    "h614e84c5g5e03g4672g8b1cga7a8455f4a5a": {
+      "ReferenceText": "Equipment Slots Order",
+      "TranslatedText": "Orden de ranuras de equipo"
+    },
+    "h0cd1bcdcgdf0cg4740gaa47g6c551697f31a": {
+      "ReferenceText": "Show equipped items",
+      "TranslatedText": "Mostrar objetos equipados"
+    },
+    "h186d9f82g7ad6g4113gb261g2a5eb62cf612": {
+      "ReferenceText": "Show skills",
+      "TranslatedText": "Mostrar habilidades"
+    },
+    "h781196b1g2672g4814gba9cg909abae01815": {
+      "ReferenceText": "Show statuses",
+      "TranslatedText": "Mostrar estados"
+    },
+    "h4ac91ab1gcde9g4cd5gb8a3gc19b15f3dd4b": {
+      "ReferenceText": "Pyramids",
+      "TranslatedText": "Pirámides"
+    },
+    "hac06b15egc508g40b1gb729gf0951d875d5f": {
+      "ReferenceText": "We do not have a bedroll to rest on!",
+      "TranslatedText": "¡No tenemos un rollo de cama para descansar!"
+    },
+    "h94b55185g6055g42b9gac5bgc6bedbffdfef": {
+      "ReferenceText": "Choose an icon...",
+      "TranslatedText": "Elige un icono..."
+    },
+    "hcb827408g8ce1g41ffg8145gca288912cfb1": {
+      "ReferenceText": "Icon Type",
+      "TranslatedText": "Tipo de icono"
+    },
+    "he0a23e3cgbf9cg4f6eg8aecg454ee29fe9d7": {
+      "ReferenceText": "Press a key combination...",
+      "TranslatedText": "Presiona una combinación de teclas..."
+    },
+    "h042a555bg1f1dg43efg97a8g0df8238a0eb5": {
+      "ReferenceText": "Background Opacity",
+      "TranslatedText": "Opacidad del fondo"
+    },
+    "h30052af9g5fbag4abcg9a0eg1ee45676a79c": {
+      "ReferenceText": "Enable corpses",
+      "TranslatedText": "Habilitar cuerpos"
+    },
+    "h693e7865g63d9g402bgba37g2f627a59d4c6": {
+      "ReferenceText": "Height",
+      "TranslatedText": "Alto"
+    },
+    "h939f9996g8c0fg46dbg8d51g5816929f1387": {
+      "ReferenceText": "Quick Examine",
+      "TranslatedText": "Examinación rápida"
+    },
+    "h3a060f85gad6dg4e73g8526ga0606d366478": {
+      "ReferenceText": "Width",
+      "TranslatedText": "Ancho"
+    },
+    "h41dc13afg2becg4758g8212g5e71b34df083": {
+      "ReferenceText": "Epip Settings",
+      "TranslatedText": "Configuración de Epip"
+    },
+    "h489ece91g926dg48dfg85e7g7802206d217a": {
+      "ReferenceText": "One or more of the settings changed require the game to be saved and reloaded to take effect.",
+      "TranslatedText": "Una o más de las configuraciones cambiadas requieren que el juego sea guardado y recargado para que surtan efecto."
+    },
+    "he02fa608gae26g4160ga899gf19ad20429f8": {
+      "ReferenceText": "Reload Required",
+      "TranslatedText": "Requiere recargar"
+    },
+    "hae99eb29g1020g4242g9386g4b187b20cfd6": {
+      "ReferenceText": "Unsaved Changes",
+      "TranslatedText": "Cambios sin guardar"
+    },
+    "hb1f871fbg6572g4325gbd1fgebd218bf97a9": {
+      "ReferenceText": "You have unsaved changes. Do you wish to apply them?",
+      "TranslatedText": "Tienes cambios sin guardar. ¿Deseas aplicarlos?"
+    },
+    "haabd6906gee2dg4b39ga339gf5cdf1a2ee8b": {
+      "ReferenceText": "Tooltip Adjustments",
+      "TranslatedText": "Ajustes de Descripciones Emergentes"
+    },
+    "hc2778b10ge61fg46bfga656g1bac3d5b44ec": {
+      "ReferenceText": "Right-click to unlearn.",
+      "TranslatedText": "Ratón derecho para desaprender."
+    },
+    "h27591100g7b7dg4d6ag8c2eg3597762db593": {
+      "ReferenceText": "Unlearn",
+      "TranslatedText": "Desaprender"
+    },
+    "h88ea1fb2g6f70g445ag9aa3ga209b6ed7feb": {
+      "ReferenceText": "Unlearn Skill",
+      "TranslatedText": "Desaprender habilidad"
+    },
+    "h19773400g8de1g46d7g9901g779b750ebddd": {
+      "ReferenceText": "Set Icon",
+      "TranslatedText": "Establecer icono"
+    },
+    "h0d38d9a9gd416g4815gabc7gf9d8d901d40a": {
+      "ReferenceText": "If enabled, light items such as torches, candles and braziers will show world tooltips.",
+      "TranslatedText": "Si está habilitado, los objetos ligeros como antorchas, velas y braseros mostrarán descripciones emergentes en el mundo."
+    },
+    "h8605ee5agf02ag4f24g9bf2g60906ab5ef57": {
+      "ReferenceText": "Show lights",
+      "TranslatedText": "Mostrar luces"
+    },
+    "null": {
+      "ReferenceText": null,
+      "TranslatedText": "Traducción al Español en progreso (por AquaVXI )\nSi quieres hacer tu propia traducción, favor duplica la página"
+    }
+  }
 }

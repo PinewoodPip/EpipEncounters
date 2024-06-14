@@ -34,21 +34,301 @@
       "ReferenceText": "Shows B/H amounts over the heads of characters in combat.",
       "TranslatedText": "При удержании, показывает количество Battered/Harried стаков над персонажами в бою."
     },
+    "ha9ce71a4g7cd4g4099g8017g025c472ef4e6": {
+      "ReferenceText": "%d Free Moves Left",
+      "TranslatedText": "Осталось %d беспл. хода(ов)"
+    },
+    "h91bfdf8fg7b3bg44a7g83a4g488252d774b8": {
+      "ReferenceText": "%d Moves",
+      "TranslatedText": "%d хода(ов)"
+    },
+    "h9692b408ge89fg4f6cgb5d6gc0554e9fdd0c": {
+      "ReferenceText": "%d Moves Left",
+      "TranslatedText": "Осталось %d хода(ов)"
+    },
+    "ha3b2f0f0g7d77g4ce6ga6ffgeff2650f143d": {
+      "ReferenceText": "%d Seconds",
+      "TranslatedText": "%d сек."
+    },
+    "h0d904d22g8e9ag4450gaf2dg8236ba3b865a": {
+      "ReferenceText": "%d. %s pts",
+      "TranslatedText": "%d. %s очк."
+    },
+    "h821e09e9g5519g4d22ga658g6e10710444c1": {
+      "ReferenceText": "%s Mode - %s pts",
+      "TranslatedText": "Режим %s - %s очк."
+    },
+    "hdc4fb40cgce17g4d19g836bga575f703a664": {
+      "ReferenceText": "A gem has enraged!",
+      "TranslatedText": "Гем в ярости!"
+    },
+    "hbbdd964eg4621g4e0cg8cc0g1c6b79bcc663": {
+      "ReferenceText": "A stoppable force is no match for the immovable Epipe...",
+      "TranslatedText": "Противодействующая сила не ровня недвижимому Epipe..."
+    },
+    "hc90726c1g9788g4d1ag8f28g8fc7ea3d265e": {
+      "ReferenceText": "Accomplished %s",
+      "TranslatedText": "Заслуженный %s"
+    },
+    "hb54abc37gfadeg4ac4gbeccgaf652d4bf6e3": {
+      "ReferenceText": "Adds MMO-style raid mechanics.<br>If enabled, gems with MMO enrage timers will periodically appear with increasing frequency; if left unmatched, they will bring a fair and balanced instant game over.<br>Higher raid difficulty levels increase spawn frequency.",
+      "TranslatedText": "Добавляет в игру рейд механику в ММО-стиле.<br>Если включено, гемы на доске все с большей частотой будут \"приходить в ярость\". \"Успокоить\" гем можно его уничтожением. При игнорировании, такие гемы быстро закончат вашу игру.<br>Более высокие уровни рейда увеличат общую частоту его возникновения."
+    },
+    "h27fa4327g7bc0g447dgae1ag4a014babd621": {
+      "ReferenceText": "Adept %s",
+      "TranslatedText": "Адепт %s"
+    },
+    "h585fa6e9gdc3ag40deg97f8gf68df49288fd": {
+      "ReferenceText": "All hope was lost, I guess.",
+      "TranslatedText": "Видимо, больше не осталось надежды."
+    },
+    "h1d6b6292gf30ag4f40ga602g556b3278bda4": {
+      "ReferenceText": "Anniversary Edition",
+      "TranslatedText": "Юбилейная версия"
+    },
+    "h2e105e1fg2dcbg47ebgab42gd605bbd2f3cf": {
+      "ReferenceText": "Applies a limit the amount of moves you can make. If >0, the game will end after making the specified amount of valid moves.",
+      "TranslatedText": "Задает лимит на количество ходов. При значении >0, игра завершится после завершения указанного количества ходов."
+    },
+    "ha6259170g2afdg4323gaf0ag1ab3c1fbb152": {
+      "ReferenceText": "Applies a time limit in seconds. If >0, the game will end when time runs out.<br>The timer starts ticking after your first move.",
+      "TranslatedText": "Задает лимит времени в секундах. При значении >0, игра завершится по окончанию таймера.<br>Отсчет времени начинается после первого хода."
+    },
+    "h1ea47b3bgfdbbg428bg8c9eg7433598e76d2": {
+      "ReferenceText": "Apprentice %s",
+      "TranslatedText": "Ученик %s"
+    },
+    "h9dd675a4g1a67g42b9gb738g90968d178a89": {
+      "ReferenceText": "Arch-%s",
+      "TranslatedText": "Архи-%s"
+    },
+    "h9110437dg4b59g460cg8b4aga436971e86c2": {
+      "ReferenceText": "Are you sure you want to forfeit the current game?<br>Your efforts will be considered.",
+      "TranslatedText": "Вы уверены, что хотите завершить текущую игру?<br>Мы учтем ваши старания."
+    },
     "h9f5438ffg5024g4264gaaa2gef122c54e518": {
       "ReferenceText": "Are you sure you want to start a new game?",
       "TranslatedText": "Вы уверены, что хотите начать новую игру?"
+    },
+    "ha7f77984g9a3eg41f8g8092g51770524a786": {
+      "ReferenceText": "Average %s",
+      "TranslatedText": "Среднестатистический %s"
+    },
+    "h4f32f5d3g1149g4401gadc5g056b31b49f87": {
+      "ReferenceText": "Bedazzle",
+      "TranslatedText": "Bedazzle"
     },
     "h833e3d98g6e6bg4cfag9c23g1bcd1c8e9de1": {
       "ReferenceText": "Bedazzled",
       "TranslatedText": "Bedazzled"
     },
+    "hd58e1335gb503g49abg9c68g413cf2118d20": {
+      "ReferenceText": "Bedazzled Classic",
+      "TranslatedText": "Bedazzled классический"
+    },
+    "hc940bf3fg8e22g4dbfg8b54g22a2b44e26ae": {
+      "ReferenceText": "Bedazzler",
+      "TranslatedText": "Bedazzler"
+    },
+    "ha911f9feg355fg433dg90f5gdb5601d3fbc7": {
+      "ReferenceText": "Bedazzling %s",
+      "TranslatedText": "Bedazzling %s"
+    },
+    "h2d75368egf465g4657g894agcbe56da331ae": {
+      "ReferenceText": "Callisto Anomalies Built",
+      "TranslatedText": "Callisto Anomalies создано"
+    },
+    "hd9bab9d3gf36ag4da5ga272gdaedd5d48e87": {
+      "ReferenceText": "Casual Raid",
+      "TranslatedText": "Обычный рейд"
+    },
+    "h0fef09d8gaaabg4e34g9082g9a7be5bf02e4": {
+      "ReferenceText": "Cement Mixing",
+      "TranslatedText": "Замес цемента"
+    },
+    "h40000864gc468g40a3g92d2g6f50c437f596": {
+      "ReferenceText": "Classic",
+      "TranslatedText": "Классика"
+    },
+    "hb12932bag7252g4866ga6d3g5a2c55fadaef": {
+      "ReferenceText": "Congratulations, you have been promoted to the title of<br>%s!",
+      "TranslatedText": "Поздравляем, вы были повышены до <br>%s!"
+    },
+    "hd4217716gdedbg405ag8c48g01d70222be7d": {
+      "ReferenceText": "Considerable Cement Load",
+      "TranslatedText": "Значительная загрузка цемента"
+    },
+    "h4b8d86eegf633g43cagb13ag375c003b00f2": {
+      "ReferenceText": "Considerable Load",
+      "TranslatedText": "Значительная загрузка"
+    },
+    "h418fa4efgf2b8g4400ga1a0ga84be204d6fc": {
+      "ReferenceText": "Credible %s",
+      "TranslatedText": "Зарекомендовавший себя %s"
+    },
+    "ha82bd61egdb9dg46f7gb7c9gb2aecf18677a": {
+      "ReferenceText": "Dazzling %s",
+      "TranslatedText": "Dazzling %s"
+    },
+    "h79eeb20cg10b4g4b59ga41dg4e94623fd506": {
+      "ReferenceText": "Determines the base rules of the game and default modifier settings.<br><br>- Classic: swap adjacent gems to create matches. The original experience.<br>- Twimst've: rotate groups of 2x2 gems to create matches. The washing machine experience.",
+      "TranslatedText": "Определяет базовые правила игры, что также влияет на некоторые настраиваемые модификаторы.<br><br>- Классика: меняйте местами гемы, объединяя аналогичные. Симулятор оригинальности.<br>- Twimst've: вращайте куб 2x2 гема, объединяя аналогичные. Симулятор стиральной машины."
+    },
+    "hfa908156ge7ebg4271g97a0g8471db9059d2": {
+      "ReferenceText": "Divine %s",
+      "TranslatedText": "Божественный %s"
+    },
+    "h889783a6g2c7bg4074g9ceegcd7fb602685b": {
+      "ReferenceText": "EZ Raid",
+      "TranslatedText": "Легкий рейд"
+    },
+    "hb194f8bag62cfg4f99g81c0g0577f33f6e80": {
+      "ReferenceText": "Elo",
+      "TranslatedText": "Elo"
+    },
+    "h5cbe0b4cg9bb1g460cgbe55g29afa05fc9ba": {
+      "ReferenceText": "Elo Rank Up",
+      "TranslatedText": "Повышение Elo ранга"
+    },
+    "hfedcafbag2790g4030gb228g09f5502b6337": {
+      "ReferenceText": "Elo Rating",
+      "TranslatedText": "Рейтинг Elo"
+    },
+    "h6af47672g5722g45fagadf2g2da5380da7c3": {
+      "ReferenceText": "Endgame Raid",
+      "TranslatedText": "Лейтгеймовый рейд"
+    },
+    "h14fb8c1cgda0bg4997g95b4g7edaafebf51e": {
+      "ReferenceText": "Epic %s",
+      "TranslatedText": "Эпичный %s"
+    },
+    "h11a46b2cg0d46g47c2gbd3dg4c0d806a9fbc": {
+      "ReferenceText": "Epipes Dismissed",
+      "TranslatedText": "Epipes уничтожено"
+    },
+    "h19f37490gc721g4858g8531g33abd050c096": {
+      "ReferenceText": "Expert %s",
+      "TranslatedText": "Эксперт %s"
+    },
+    "h6342f6feg2beeg4b35g9f3bg3bbfe3a67077": {
+      "ReferenceText": "Extraordinary %s",
+      "TranslatedText": "Необыкновенный %s"
+    },
+    "h26fff604g31f2g47a4g910fgd728e411c33b": {
+      "ReferenceText": "Fabulous %s",
+      "TranslatedText": "Поразительный %s"
+    },
+    "hc514c6a1g4fccg4d58g8d43g95ab5885182a": {
+      "ReferenceText": "Game Mode",
+      "TranslatedText": "Режим игры"
+    },
     "h3166017ag50b9g4943g8ae9g5335c23c58e4": {
       "ReferenceText": "Game Over",
       "TranslatedText": "Игра окончена"
     },
+    "h36a5d25eg38dfg4158g81aeg082f714d1622": {
+      "ReferenceText": "Games Played",
+      "TranslatedText": "Сыграно игр"
+    },
+    "hc6114597gda86g4a38g9e44gf4636b9cea00": {
+      "ReferenceText": "Gems Matched",
+      "TranslatedText": "Гемов объединено"
+    },
+    "h0047eaa9g9d43g4dcfgacebge26f278a3599": {
+      "ReferenceText": "Giant Runes Crafted",
+      "TranslatedText": "Гиганских рун создано"
+    },
+    "hc158949eg6a66g4e1cga473g9a6c8295132f": {
+      "ReferenceText": "Give Up",
+      "TranslatedText": "Сдаться"
+    },
+    "hed4b5958g677eg42e7g83e6gae38ed9451ba": {
+      "ReferenceText": "Godly %s",
+      "TranslatedText": "Богоподобный %s"
+    },
+    "h52bebfadg9b68g4680ga6c1g4760f73dc364": {
+      "ReferenceText": "Grandmaster %s",
+      "TranslatedText": "Грандмастер %s"
+    },
+    "ha00f1eb9g8cfdg490egbdd1gcfc604a3d580": {
+      "ReferenceText": "Great %s",
+      "TranslatedText": "Великий %s"
+    },
     "ha1afe7c2g4d97g43b6g823eg03bf25788dbd": {
       "ReferenceText": "High-Score",
       "TranslatedText": "Рекорд"
+    },
+    "he49de766g758eg4360g8000g0a8e5eb1885a": {
+      "ReferenceText": "High-Scores",
+      "TranslatedText": "Рекорды"
+    },
+    "hf621376fgd817g496bgb0cag7a131111c044": {
+      "ReferenceText": "Holy %s",
+      "TranslatedText": "Святой %s"
+    },
+    "h1d60df09gccf3g48ccg9f74g5ac1b7ca5272": {
+      "ReferenceText": "Huge Cement Load",
+      "TranslatedText": "Огромная загрузка цемента"
+    },
+    "h37022247gea5fg479dg81dag3e5f5532f915": {
+      "ReferenceText": "Huge Load",
+      "TranslatedText": "Огромная загрузка"
+    },
+    "ha05efa1agb975g4152g818egbbbdcc962ed3": {
+      "ReferenceText": "Hyena Hunger",
+      "TranslatedText": "Голод гиены"
+    },
+    "hf513cfa6g3cf1g4902gb10eg84722e3a18bf": {
+      "ReferenceText": "If enabled, \"Epipes\" will occasionally spawn to urge you to reconnect with reality.<br>Epipes are immovable objects, but may be destroyed with the unstoppable force of rune explosions.<br>Doing so will grant additional points and soothe all Enraged Gems on the board.",
+      "TranslatedText": "Если включено, с некоторой вероятностью на доске будут возникать \"Epipes\", побуждающие вас восстановить вашу связь с реальностью.<br>Epipes это недвижимые объекты, которые могут быть разрушены неостановимой силой распада рун.<br>При уничтожении, Epipes дают доп. очки и также успокаивают все \"разъяренные гемы\" на доске."
+    },
+    "h4a69c351g2ebdg451fgb8dfg6aef67fcc167": {
+      "ReferenceText": "If enabled, gems with MMO enrage timers will spawn with increasing frequency. If left unmatched, they will bring a fair and balanced instant game over.",
+      "TranslatedText": "Если включено, гемы на доске все с большей частотой будут \"приходить в ярость\". \"Успокоить\" гем можно его уничтожением. При игнорировании, такие гемы быстро закончат вашу игру."
+    },
+    "h0680d093g65e0g46c0gbb33g1834d0cee055": {
+      "ReferenceText": "If enabled, you become a ferocious hungry hyena on the hunt for otherwise-impossible eldritch 2x2 matches, defying all expectations.",
+      "TranslatedText": "Если включено, вы становитесь свирепой голодной гиеной, охотящейся за невозможными, иначе жуткими матчами 2х2, бросая вызов всем ожиданиям."
+    },
+    "h44749c67gc042g49d5g8ef0ge38ab1f3aa57": {
+      "ReferenceText": "Imaginary %s",
+      "TranslatedText": "Мнимый %s"
+    },
+    "h353ac651g4564g4893gacdagfcba54e20f00": {
+      "ReferenceText": "Incredible %s",
+      "TranslatedText": "Невероятный %s"
+    },
+    "hd991a4bdg93c3g4620gaba4gf5cab79b70b3": {
+      "ReferenceText": "Large Runes Crafted",
+      "TranslatedText": "Больших рун создано"
+    },
+    "h86d629d5g2c07g4af2g826cge4db3379af36": {
+      "ReferenceText": "Legendary %s",
+      "TranslatedText": "Легендарный %s"
+    },
+    "h420b1379g979dg4509gb07eg6f1be47aace9": {
+      "ReferenceText": "Master %s",
+      "TranslatedText": "Мастер %s"
+    },
+    "hb6b35565g099eg426cga87cg3459ca975b10": {
+      "ReferenceText": "Match gems by rotating groups of 2x2 gems.",
+      "TranslatedText": "Объединяйте гемы, вращая их группой 2x2."
+    },
+    "hc076bb5dgc710g4bcagab45g7340fc67096e": {
+      "ReferenceText": "Match gems by swapping adjacent ones around.",
+      "TranslatedText": "Объединяйте гемы, меняя местами соседние."
+    },
+    "h098ad5cbg18a5g43d2g98feg7d3385daf7eb": {
+      "ReferenceText": "Mild Cement Load",
+      "TranslatedText": "Умеренная загрузка цемента"
+    },
+    "hd2814793gdb4ag4ab1gb8b5g8bf25a06d5bb": {
+      "ReferenceText": "Mild Load",
+      "TranslatedText": "Умеренная загрузка"
+    },
+    "h10cca036g0467g4d94g98acg704e38548857": {
+      "ReferenceText": "Moves Limit",
+      "TranslatedText": "Лимит ходов"
     },
     "hf254ab01gbb16g4c83ga1e5gc415eaef1acf": {
       "ReferenceText": "New high-score! %s points",
@@ -58,9 +338,133 @@
       "ReferenceText": "No more valid moves on the board!",
       "TranslatedText": "Ходы закончились!"
     },
+    "h828b925fg74e3g4ef5g83ecgc3577fd1e8df": {
+      "ReferenceText": "No scores yet!",
+      "TranslatedText": "Тут пока пусто!"
+    },
+    "h9f8077a1g40cdg4f79g9a88g884d12477854": {
+      "ReferenceText": "Noob %s",
+      "TranslatedText": "Нуб %s"
+    },
+    "h4767944eg778dg4b51ga155gcacd107ac3cb": {
+      "ReferenceText": "Novice %s",
+      "TranslatedText": "Новичок %s"
+    },
+    "hb9601150gb5e9g4d40gbe6bg114ee9d8dd3a": {
+      "ReferenceText": "Otherwordly %s",
+      "TranslatedText": "Потусторонний %s"
+    },
+    "h8560e895g53e8g4d27ga598gbbcc914ccedb": {
+      "ReferenceText": "Out of moves!",
+      "TranslatedText": "Ходы закончились!"
+    },
+    "hdc05bac2g07bfg41d7g87c9g53b042ca6bd6": {
+      "ReferenceText": "Pretentious %s",
+      "TranslatedText": "Претенциозный %s"
+    },
+    "hd0e7acccge5acg47b5gbb4cg304caa1dbbce": {
+      "ReferenceText": "Raid (%sx Intensity)",
+      "TranslatedText": "Рейд (Интенсивность %sx)"
+    },
+    "h998ff515gc80ag4cb4g9753ga5c426acb4d4": {
+      "ReferenceText": "Raid Failed!",
+      "TranslatedText": "Рейд провален!"
+    },
+    "hde82ec74g19fcg4737g90b8g4b2ab8dd10ad": {
+      "ReferenceText": "Raid Mechanics",
+      "TranslatedText": "Механика рейда"
+    },
+    "hc65f56cegc174g497eg8cd3g868daf684df1": {
+      "ReferenceText": "Raid Mechanics",
+      "TranslatedText": "Механика рейда"
+    },
+    "hec5855cagb4eag40aagbeb8g060e965607b3": {
+      "ReferenceText": "Rank %d: %s",
+      "TranslatedText": "Ранг %d: %s"
+    },
+    "heb0a888eg83ebg43f2g8302gfd2c397dcd92": {
+      "ReferenceText": "Represents your relative Bedazzle skill. All scores set increase your Elo, and certain Elo milestones will grant you noble titles to reflect your expertise.",
+      "TranslatedText": "Отображает вашу крутость в Bedazzle. Любые наборы очков повышают ваше Elo, а определенные этапы Elo дадут вам благородные титулы, отражающие ваш игровой опыт."
+    },
     "h4bc543cag5f19g4e91gbb76gc3a18177874b": {
       "ReferenceText": "Score             %s\nHigh-Score %s",
-      "TranslatedText": "Очки             %s\nРекорд     %s"
+      "TranslatedText": "Счет             %s\nРекорд     %s"
+    },
+    "h28eeeac8g5a97g4e9eg8ba9ge110c4bc94cb": {
+      "ReferenceText": "Small Runes Crafted",
+      "TranslatedText": "Малых рун создано"
+    },
+    "hda128ee6g3312g4d8bgb6fegc4435a1dc338": {
+      "ReferenceText": "The Epipe is perfectly fine where it is.",
+      "TranslatedText": "Epipe прекрасно себя ощущает и на этом месте."
+    },
+    "hf089a8e7g1b24g443egbdcag619693e44ea7": {
+      "ReferenceText": "The Epipe is too heavy. Concrete-heavy, to be precise.",
+      "TranslatedText": "Epipe слишком тяжелый. Тяжелый бетон, все-таки."
+    },
+    "h29b8c5e5gfaffg40b2gaa69ge89801e57fcc": {
+      "ReferenceText": "The Epipe refuses to be touched!",
+      "TranslatedText": "Epipe отказывается от ваших прикосновений!"
+    },
+    "he8f917c8g97fag44e2g9e7ag38bd6d8ac1a5": {
+      "ReferenceText": "Time Limit",
+      "TranslatedText": "Лимит времени"
+    },
+    "h243c4e8fg02cag48e2ga5f0g4a39d365d481": {
+      "ReferenceText": "Time's up!",
+      "TranslatedText": "Время вышло!"
+    },
+    "hbe6b58a7g2b97g4816gada4g057016101c9b": {
+      "ReferenceText": "Total Elo Rating: %d",
+      "TranslatedText": "Общий Elo рейтинг: %d"
+    },
+    "heae3a7f9gcec8g46a0gae70g53dee327a8bb": {
+      "ReferenceText": "Total Playtime",
+      "TranslatedText": "Общее время игры"
+    },
+    "h641b81cbgffb5g4b0bg83e3g3903d2c193bd": {
+      "ReferenceText": "Total amount of Epipes vanquished.",
+      "TranslatedText": "Общее количество уничтоженных Epipes."
+    },
+    "h45f1bbb1g6898g4b09gae35g11aa27a1f58c": {
+      "ReferenceText": "Total amount of games finished.",
+      "TranslatedText": "Общее количество законченных игр."
+    },
+    "hbfa26979g030ag43e2g8d4bg868d43239676": {
+      "ReferenceText": "Total amount of gems matched.",
+      "TranslatedText": "Общее количество объединенных гемов."
+    },
+    "h27d08f20gb7b7g43a2g80a7g5eb2e6785099": {
+      "ReferenceText": "Total amount of giant runes crafted from matching gems in a \"L\" or \"T\" shape.",
+      "TranslatedText": "Количество созданных гиганских рун (гемы в виде буквы \"Г\" или \"Т\")"
+    },
+    "h08bc074cg4665g4024g921fg7075b92fcc4e": {
+      "ReferenceText": "Total amount of large runes crafted from matching 6 gems in line.",
+      "TranslatedText": "Количество созданных больших рун (6 гемов в ряд)."
+    },
+    "h141b2d75gb02bg4397g9780g8326334ae9ed": {
+      "ReferenceText": "Total amount of small runes crafted from matching 4 gems in a line.",
+      "TranslatedText": "Количество созданных маленьких рун (4 гема в ряд)."
+    },
+    "hc32ad589g11a4g4400g904ega5c3faba99a6": {
+      "ReferenceText": "Total amount of unbuildable objects built from matching 5 gems in a line.",
+      "TranslatedText": "Количество созданных Callisto Anomalies (5 гемов в ряд)."
+    },
+    "hce78dedcgd0a5g459fgae07gba839cb5b63a": {
+      "ReferenceText": "Total time spent playing, in mm:ss format.",
+      "TranslatedText": "Общее время в игре, в формате мм:сс."
+    },
+    "h3a62400bg5fccg488agbc25ge3f4990d857a": {
+      "ReferenceText": "Twimst've",
+      "TranslatedText": "Twimst've"
+    },
+    "h71d8e853ga10ag4c60g93a8g5489dedffdc4": {
+      "ReferenceText": "Unimaginable %s",
+      "TranslatedText": "Невообразимый %s"
+    },
+    "h0a0a9c19gac3fg41c0g9c3ag9ee43c846b7e": {
+      "ReferenceText": "You shall not move the Epipe!",
+      "TranslatedText": "Вы не будете передвигать Epipe!"
     },
     "h54d9066eg87bdg439fg92f9g7027970af6ca": {
       "ReferenceText": "Camera",
@@ -654,6 +1058,10 @@
       "ReferenceText": "Reactions",
       "TranslatedText": "Реакции"
     },
+    "h974c404ag23a3g4926gbf2fg8d4c881e37ea": {
+      "ReferenceText": "Remove",
+      "TranslatedText": "Убрать"
+    },
     "h797b8a3ag4b10g4549g8731g7ec3e775b896": {
       "ReferenceText": "Reset",
       "TranslatedText": "Сбросить"
@@ -726,6 +1134,14 @@
       "ReferenceText": "Staff",
       "TranslatedText": "Посох"
     },
+    "h807e1cacgfe65g4153gb4dfg2ca7fa75dd28": {
+      "ReferenceText": "Start",
+      "TranslatedText": "Старт"
+    },
+    "h77ccbac2g8c6ag414fg8760g70ec87d3aa69": {
+      "ReferenceText": "Statistics",
+      "TranslatedText": "Статистика"
+    },
     "h7187736egcc52g416dga221gc4f17ca41160": {
       "ReferenceText": "Statuses",
       "TranslatedText": "Статусы"
@@ -754,6 +1170,14 @@
       "ReferenceText": "Unbound",
       "TranslatedText": "Не назначено"
     },
+    "h6a89a066g7f22g43b2g9abcg0932cf6f3e5d": {
+      "ReferenceText": "Unknown",
+      "TranslatedText": "Неизвестно"
+    },
+    "h1969b8b0ge281g4c5ag8297g24e31fd2aa7c": {
+      "ReferenceText": "Unnamed",
+      "TranslatedText": "Без имени"
+    },
     "h6a473ba0g726bg4188g811fgfa83c0b3def2": {
       "ReferenceText": "Vanilla",
       "TranslatedText": "Ванилла"
@@ -761,6 +1185,10 @@
     "h8f43167fge54bg419ag8b9agf80ad45e5c87": {
       "ReferenceText": "Violent Strikes",
       "TranslatedText": "Violent Strikes"
+    },
+    "hd8a9153ega669g4118g9c78g0a242b67fb5a": {
+      "ReferenceText": "Visible",
+      "TranslatedText": "Видимость"
     },
     "h25fa3d4fg6833g4bb5ga16eg33b2fa3d3d2e": {
       "ReferenceText": "Vitality Void",
@@ -838,13 +1266,13 @@
       "ReferenceText": "%s has entered dialogue.",
       "TranslatedText": "%s вступает в диалог."
     },
-    "h079a4fc9g48b4g4bc6gbf71gad47fa4acb61": {
-      "ReferenceText": "Auto-Listen Dialogues",
-      "TranslatedText": "Авто-прослушивание диалогов"
-    },
     "hd8095efage554g41b7gafedg33447556533e": {
-      "ReferenceText": "Auto-Listen Range Limit",
+      "ReferenceText": "Auto-listen Range Limit",
       "TranslatedText": "Дальность авто-прослушивания диалогов"
+    },
+    "h079a4fc9g48b4g4bc6gbf71gad47fa4acb61": {
+      "ReferenceText": "Auto-listen dialogues",
+      "TranslatedText": "Авто-прослушивание диалогов"
     },
     "h81560a4dg3324g4c62g971cg75855b8a1672": {
       "ReferenceText": "Auto-listening to %s's dialogue.",
@@ -1047,7 +1475,7 @@
       "TranslatedText": "Длительность отображения названия локации при переходе"
     },
     "h799513e4g3995g4d45g8e0bg3ee08e6cd1db": {
-      "ReferenceText": "Auto-Identify Items",
+      "ReferenceText": "Auto-identify items",
       "TranslatedText": "Авто-опознавание предметов"
     },
     "h5bef00c6g36deg4db0ga3d5gb006dbc5f601": {
@@ -1073,6 +1501,10 @@
     "h4bd4b3d7gf239g412dgb4e9g3421524ff330": {
       "ReferenceText": "Changes the loading screen into a family photoshoot!",
       "TranslatedText": "Меняет экран загрузки на семейное фото!"
+    },
+    "h17251a41gb5a5g412dgb36ag4cfca9cebe22": {
+      "ReferenceText": "Combat Status Opacity",
+      "TranslatedText": "Непрозрачность статусов в бою"
     },
     "h63aee58dg36e4g411cg9dcbg541062d696f0": {
       "ReferenceText": "Consumables Emphasis",
@@ -1139,7 +1571,7 @@
       "TranslatedText": "Определяет вкладку по умолчанию в интерфейсе крафта."
     },
     "hd0e2b5b7geca4g4a5dgad60g1893680e319a": {
-      "ReferenceText": "Disable Slots while Casting",
+      "ReferenceText": "Disable slots while casting",
       "TranslatedText": "Затемнять панель быстрого доступа при использовании навыков"
     },
     "h49611d79g2ae8g47dcgb20bge13634676cad": {
@@ -1314,20 +1746,12 @@
       "ReferenceText": "Save/Load UI Improvements",
       "TranslatedText": "Улучшения меню сохранения/загрузки"
     },
-    "h8307bcc5gb35cg4277ga1d6gb9cc9d8d2eed": {
-      "ReferenceText": "Show Action Hotkeys",
-      "TranslatedText": "Показывать горячие клавиши"
-    },
-    "h05a930e2g0444g4cd3gacccg34cb46da59c9": {
-      "ReferenceText": "Show Aggro Information",
-      "TranslatedText": "Показывать информацию об аггро"
-    },
     "h21723370gb5acg4f7bg8628g6b7b3249808c": {
-      "ReferenceText": "Show Character Sheet in Reward UI",
+      "ReferenceText": "Show Character Sheet in reward UI",
       "TranslatedText": "Показывать окно персонажа в интерфейсе выбора награды"
     },
     "h4e5e3786g9b22g4009gaf4egc680d28b83bd": {
-      "ReferenceText": "Show Combat Log Button",
+      "ReferenceText": "Show Combat Log button",
       "TranslatedText": "Показывать кнопку журнала"
     },
     "h3f4780c9g726bg43c3g8b59gd85d2a0aad07": {
@@ -1341,6 +1765,14 @@
     "h19c9fc59g789ag4c24gb90ag4858f13e79df": {
       "ReferenceText": "Show Minimap",
       "TranslatedText": "Показывать миникарту"
+    },
+    "h8307bcc5gb35cg4277ga1d6gb9cc9d8d2eed": {
+      "ReferenceText": "Show action hotkeys",
+      "TranslatedText": "Показывать горячие клавиши"
+    },
+    "h05a930e2g0444g4cd3gacccg34cb46da59c9": {
+      "ReferenceText": "Show aggro information",
+      "TranslatedText": "Показывать информацию об аггро"
     },
     "haa0cd7a5g5950g4cceg8fe0gd343fc6db5e0": {
       "ReferenceText": "Show chairs, ladders and beds",
@@ -1386,10 +1818,6 @@
       "ReferenceText": "Stat-sharing Notifications",
       "TranslatedText": "Оповещения \"персонаж делится знанием\""
     },
-    "h17251a41gb5a5g412dgb36ag4cfca9cebe22": {
-      "ReferenceText": "Status Opacity in Combat",
-      "TranslatedText": "Непрозрачность статусов в бою"
-    },
     "h7c2f8512g3c4eg4dffg946aga4482de181ae": {
       "ReferenceText": "Toggles visibility of the minimap UI element.",
       "TranslatedText": "Переключает видимость миникарты."
@@ -1427,7 +1855,7 @@
       "TranslatedText": "Если включено, при зажатии клавиши \"Отрегулировать угол наклона камеры\" камера не будет опускаться ниже определенного порога, не позволяя вам выходить сквозь текстуры пола."
     },
     "h018412b6gd498g4fc9ga20egbfce71d5a5b8": {
-      "ReferenceText": "Invert \"Adjust Camera Pitch\" Controls",
+      "ReferenceText": "Invert \"Adjust Camera Pitch\" controls",
       "TranslatedText": "Инвертировать \"Отрегулировать угол наклона камеры\""
     },
     "he2feffa4g625dg486fgbcafgd43f6bc7af72": {
@@ -1439,7 +1867,7 @@
       "TranslatedText": "При удержании, вертикальное движение мыши будет регулировать наклон игровой камеры.<br><br>Наклон не влияет на ваши настройки камеры и также не распространяется на прочие игровые сессии."
     },
     "h86148d3fg72feg42b1gacc8g8f1b57d5f975": {
-      "ReferenceText": "Highlight Empty Container Slots",
+      "ReferenceText": "Highlight empty container slots",
       "TranslatedText": "Подсвечивать пустые ячейки контейнеров"
     },
     "h9f74c097g9888g4f33gb296gd6286d108329": {
@@ -1521,6 +1949,294 @@
     "h7e532f24g51f1g439cg9851g8ff8f12a6b17": {
       "ReferenceText": "When holding Shift",
       "TranslatedText": "При удержании Shift"
+    },
+    "hc494217ag176ag48d8g9e98g3032373a316d": {
+      "ReferenceText": "%s: Arcanist",
+      "TranslatedText": "%s: Arcanist"
+    },
+    "h96ccf541g6010g4649g8365gc4c6ec771ba8": {
+      "ReferenceText": "%s: Arcanist",
+      "TranslatedText": "%s: Arcanist"
+    },
+    "h2f769914gfc48g478bg8334g1658c61893a2": {
+      "ReferenceText": "%s: Archer",
+      "TranslatedText": "%s: Archer"
+    },
+    "ha948c2f6gc504g4317ga7f0g0afacddef535": {
+      "ReferenceText": "%s: Basilisk",
+      "TranslatedText": "%s: Basilisk"
+    },
+    "h1f1e612cg81e7g42f9g9f0dge68da29d7901": {
+      "ReferenceText": "%s: Champion",
+      "TranslatedText": "%s: Champion"
+    },
+    "h96b347e8g8044g4f64ga0f5gad88b6e6f204": {
+      "ReferenceText": "%s: Conqueror",
+      "TranslatedText": "%s: Conqueror"
+    },
+    "hb7ca1bb4g9911g4d08gafabgdbc9f8762c5e": {
+      "ReferenceText": "%s: Conqueror",
+      "TranslatedText": "%s: Conqueror"
+    },
+    "h6dadd464g7e6eg4f1fg9ddagd165c29bc648": {
+      "ReferenceText": "%s: Death",
+      "TranslatedText": "%s: Death"
+    },
+    "h14e4e4e2gbfe2g49ecg8854g6271530bf5be": {
+      "ReferenceText": "%s: Falcon",
+      "TranslatedText": "%s: Falcon"
+    },
+    "hcef1a00bg41a1g4afagade1gca98b9906f14": {
+      "ReferenceText": "%s: Falcon",
+      "TranslatedText": "%s: Falcon"
+    },
+    "h4febc429g2bf4g4307g9a87g358cdeb603ea": {
+      "ReferenceText": "%s: Falcon",
+      "TranslatedText": "%s: Falcon"
+    },
+    "h63ae98ebg0fcbg49fbg877dg957622cdf46c": {
+      "ReferenceText": "%s: Falcon",
+      "TranslatedText": "%s: Falcon"
+    },
+    "h136f12f3g44abg4ff1gb98dg881a8ba70ba1": {
+      "ReferenceText": "%s: Fly",
+      "TranslatedText": "%s: Fly"
+    },
+    "h158030fbg06bbg41a2gb3c2g12aa909a883d": {
+      "ReferenceText": "%s: Gryphon",
+      "TranslatedText": "%s: Gryphon"
+    },
+    "h1b930e38g1f4bg430bgb9f9g368f666c6db5": {
+      "ReferenceText": "%s: Guardsmen",
+      "TranslatedText": "%s: Guardsmen"
+    },
+    "hf6eb07b9ga55cg4954g97c3gad49be926b0a": {
+      "ReferenceText": "%s: Hatchet",
+      "TranslatedText": "%s: Hatchet"
+    },
+    "hd606a082g2984g4b6bg976eg155d5613b92a": {
+      "ReferenceText": "%s: Hatchet",
+      "TranslatedText": "%s: Hatchet"
+    },
+    "h71b98ee8ga15cg4cabgab1eg78d809fb0bda": {
+      "ReferenceText": "%s: Hind",
+      "TranslatedText": "%s: Hind"
+    },
+    "h081c501bg1799g4484g805cg32d128aa0f90": {
+      "ReferenceText": "%s: Hind",
+      "TranslatedText": "%s: Hind"
+    },
+    "h61c8dac4ge489g4a0dga7e6gd42e7c0f8ddb": {
+      "ReferenceText": "%s: Key",
+      "TranslatedText": "%s: Key"
+    },
+    "h98db5bdfgc091g4214gbea8g9c637abe8464": {
+      "ReferenceText": "%s: Kraken",
+      "TranslatedText": "%s: Kraken"
+    },
+    "h3cc80872g92d7g4428gb272gdb1c7f86c255": {
+      "ReferenceText": "%s: Manticore",
+      "TranslatedText": "%s: Manticore"
+    },
+    "hd356a0ecg68aeg41e6g85deg6a4684a644da": {
+      "ReferenceText": "%s: Pegasus",
+      "TranslatedText": "%s: Pegasus"
+    },
+    "hd1aec727g0761g4a05g85c4gdbdb777fb7e6": {
+      "ReferenceText": "%s: Scorpion",
+      "TranslatedText": "%s: Scorpion"
+    },
+    "hc608e22eg5881g4020ga070g8e820c8ea451": {
+      "ReferenceText": "%s: Tiger",
+      "TranslatedText": "%s: Tiger"
+    },
+    "h0f95f877gfddfg459eg8113geb4dd8f316a8": {
+      "ReferenceText": "%s: Tiger",
+      "TranslatedText": "%s: Tiger"
+    },
+    "h2f961697gc8bcg40a0ga032g2bba5e498778": {
+      "ReferenceText": "+10% Damage from Power per stack",
+      "TranslatedText": " +10% урона от Мощи за стак"
+    },
+    "hcd5b9f12gedb3g403bg8e7bge411ec7d5c70": {
+      "ReferenceText": "+5% Crit Chance per stack",
+      "TranslatedText": " +5% шанс крит. удара за стак"
+    },
+    "h3158d4d2ga92ag4d54gab02g7b3c80050494": {
+      "ReferenceText": "15% chance per hit",
+      "TranslatedText": "15% шанса за удар"
+    },
+    "h280fc43cgcdfag4a57g83a5gfecd9e6d376c": {
+      "ReferenceText": "After dealing damage exceeding 20% of total Vitality",
+      "TranslatedText": "После нанесения урона в размере более чем 20% здоровья"
+    },
+    "he7fe3b89g3a58g4478ga9b1g28be15da9498": {
+      "ReferenceText": "After dodging an attack",
+      "TranslatedText": "После уклонения от атаки"
+    },
+    "h590e55ddgad50g43bfga1f2g1049cb7ac792": {
+      "ReferenceText": "After reaching 0 AP",
+      "TranslatedText": "При достижении 0 ОД"
+    },
+    "h8c210f40gc030g4895g8015gc60256ccc7d8": {
+      "ReferenceText": "After reaching 7 stacks of either Battered or Harried",
+      "TranslatedText": "После достижения 7 стаков Battered или Harried"
+    },
+    "h9803bbbcg2bfbg4a05gb06bgc995e48590f6": {
+      "ReferenceText": "Apply Hemorrhage if target is Bleeding",
+      "TranslatedText": "Накладывает кровоизлияние при наложении кровотечения"
+    },
+    "he69bf5c8g91b4g4210gb48cg34e1824c00d1": {
+      "ReferenceText": "Apply up to Slowed II",
+      "TranslatedText": "Накладывает эффект Slowed (вплоть до II уровня)"
+    },
+    "heeee531cgacb1g4226g9d49g4f2d87eed723": {
+      "ReferenceText": "Apply up to Terrified II",
+      "TranslatedText": "Накладывает эффект Terrified (вплоть до II уровня)"
+    },
+    "h48374cacg3393g41d0g8a75gfc04db881e13": {
+      "ReferenceText": "Boneshaped Crusher",
+      "TranslatedText": "Костяной голем"
+    },
+    "h4560bb6bg439eg43f8g9db8gebfcaa3c008c": {
+      "ReferenceText": "Celestial Activator",
+      "TranslatedText": "Активатор Celestial"
+    },
+    "h37831f03g8ba1g473agb7f7g8118315cb64a": {
+      "ReferenceText": "Centurion Activator",
+      "TranslatedText": "Активатор Centurion"
+    },
+    "ha16ffc0agfb05g4dbeg8bbbg0a1696de3c31": {
+      "ReferenceText": "Centurion Mutator",
+      "TranslatedText": "Мутатор Centurion"
+    },
+    "hfd0211e7g675cg4c8ag91ebge0b25d23e97f": {
+      "ReferenceText": "Character gains the Summon Boneshaped Crusher spell",
+      "TranslatedText": "Персонаж получает способность \"Призыв костяного голема\""
+    },
+    "h951a2633ge5d9g4452g8b7bg87c66176f938": {
+      "ReferenceText": "Elementalist Activator",
+      "TranslatedText": "Активатор Elementalist"
+    },
+    "hba96f941g3f15g4b61g8ff0gcfd688243b5d": {
+      "ReferenceText": "Elementalist Mutator",
+      "TranslatedText": "Мутатор Elementalist"
+    },
+    "h7bd0bfa2g0555g41e1gbb63gc57e456c3513": {
+      "ReferenceText": "Finesse's AP recovery works on magic spells",
+      "TranslatedText": "Восстановление ОД от ловкости теперь работает на заклинания"
+    },
+    "h415eaa70gb07fg4759g9ee8gdf426115da3f": {
+      "ReferenceText": "For each Source Point spent",
+      "TranslatedText": "За каждое потраченное очко истока"
+    },
+    "hb33f449eg7c79g403aga592gab78dc3cd532": {
+      "ReferenceText": "Grants missing Vitality regeneration, damage and resistances",
+      "TranslatedText": "Дает восстановление недостающего здоровья, бонусный урон и сопротивления"
+    },
+    "hf5330d15gde4bg4ae2g93f6g2bd57bc4cede": {
+      "ReferenceText": "On Aerotheurge/Hydrosophist Skill",
+      "TranslatedText": "Способности Аэротеургии/Гидрософистики"
+    },
+    "h3de98ca0gc819g459ag8d96g60f9c0950790": {
+      "ReferenceText": "On Calcifying",
+      "TranslatedText": "При окаменении"
+    },
+    "h6b97d443g4ae2g45f1gac2dgaecddd543ca1": {
+      "ReferenceText": "On Calcifying/Scorched",
+      "TranslatedText": "При окаменении/сожжении"
+    },
+    "h625ba67fg0f0eg42e2g8250gd9578153f662": {
+      "ReferenceText": "On Dazzled",
+      "TranslatedText": "При Dazzled"
+    },
+    "h36275f5ag2a80g4f6dgb19dg79184fc09839": {
+      "ReferenceText": "On Geomancer/Pyromancer",
+      "TranslatedText": "Способности Геомантии/Пирокинетики"
+    },
+    "hfd888170g85c7g4345g9530g5b40bfad71f1": {
+      "ReferenceText": "On Huntsman/Warfare Skill",
+      "TranslatedText": "Способности Мастерства охоты/Военного дела"
+    },
+    "h97e3c6feg4307g498cgb694gbfaa21a51800": {
+      "ReferenceText": "On Predator/Vulnerable III",
+      "TranslatedText": "При Predator/Vulnerable III"
+    },
+    "h11cf3af7gc893g4c8cga65cg2413ab490b6e": {
+      "ReferenceText": "On Terrified",
+      "TranslatedText": "При Terrified"
+    },
+    "h2b630d44gbb94g4336g8124gf510cedcb449": {
+      "ReferenceText": "On Vulnerable III",
+      "TranslatedText": "При Vulnerable III"
+    },
+    "hf4fe45e4g3e55g48a3gb2acgd025803a0dfa": {
+      "ReferenceText": "Predator Activator",
+      "TranslatedText": "Predator Activator"
+    },
+    "h210cf852gf864g4c7dgb1f8gcec415573b8b": {
+      "ReferenceText": "Predator Mutator",
+      "TranslatedText": "Мутатор Predator"
+    },
+    "hd73c51b6g059cg41c3g8c07g891c74834f8c": {
+      "ReferenceText": "Presence Mutators",
+      "TranslatedText": "Мутатор Presence"
+    },
+    "h44b68871gd69eg4326gb38ag7f21c34ef0a4": {
+      "ReferenceText": "Prosperity Activator",
+      "TranslatedText": "Активатор Prosperity"
+    },
+    "h75a36550gb2b4g454eg8e2cg946b4a037fa3": {
+      "ReferenceText": "Prosperity Mutator",
+      "TranslatedText": "Мутатор Prosperity"
+    },
+    "h33316445g8084g4ddbga2c7g81d73403f66d": {
+      "ReferenceText": "Spellcaster Finesse",
+      "TranslatedText": "Ловкость заклинателя"
+    },
+    "h61bd66f1g96dag4036gb7deg2a0944c69d5b": {
+      "ReferenceText": "Violent Strike when 2 or more stacks",
+      "TranslatedText": "Violent Strike when 2 or more stacks"
+    },
+    "haf6a360fg632eg4da1g9b55g2ab6ca582059": {
+      "ReferenceText": "Violent Strikes Activator",
+      "TranslatedText": "Активатор Violent Strikes"
+    },
+    "h7eef9e20g4f25g463egbaa7gbbd250b554c8": {
+      "ReferenceText": "Violent Strikes Mutator",
+      "TranslatedText": "Мутатор Violent Strikes"
+    },
+    "h28960efcg10f7g4482g8563gd91ee9bffe89": {
+      "ReferenceText": "Vitality Void Activator",
+      "TranslatedText": "Активатор Vitality Void"
+    },
+    "h4ffcae73g362bg484bgadfege805c6835061": {
+      "ReferenceText": "Vitality Void when performing Violent Strike",
+      "TranslatedText": "Vitality Void при применении Violent Strike"
+    },
+    "hc1ee75b0gff4dg4dc5ga322g725a35121842": {
+      "ReferenceText": "Ward Activator",
+      "TranslatedText": "Активатор Ward"
+    },
+    "hc685e036gefe7g464fg97fdg56420f6a2949": {
+      "ReferenceText": "When a non-summon character dies",
+      "TranslatedText": "При смерти не призванного персонажа"
+    },
+    "h06dc2c7eg034ag44a2gb98cga40573eec901": {
+      "ReferenceText": "When an ally is hit",
+      "TranslatedText": "Когда атакуют союзника"
+    },
+    "hb4265152g8d4ag40cbg8fadg6f7b6abd0c77": {
+      "ReferenceText": "When an ally with less than 50% Vitality spends Source",
+      "TranslatedText": "Когда союзник с менее чем 50% здоровья тратит Исток"
+    },
+    "hddf2dce9g6cf0g4300g88b5gbaf0555d61b2": {
+      "ReferenceText": "When being Critically Hit",
+      "TranslatedText": "При получении критического удара"
+    },
+    "hf50fcf99gd7dag42b7g96d3gf212e81c8be5": {
+      "ReferenceText": "Wither Activator",
+      "TranslatedText": "Активатор Wither"
     },
     "h2883c225g0406g48ffg8c39g1439bdf66f38": {
       "ReferenceText": "%s<br>Reason:<br>%s<br><br>%s",
@@ -1638,6 +2354,10 @@
       "ReferenceText": "Toggled extra bars visibility on.",
       "TranslatedText": "Видимость дополнительных панелей вкл."
     },
+    "hd15285dag87d6g450cg8f17gd663d87a474e": {
+      "ReferenceText": "Chain/Unchain",
+      "TranslatedText": "Сгруппировать"
+    },
     "h10e9e7c4g9c41g4cf2ga7f5g59052b73ae8d": {
       "ReferenceText": "Artifact Powers",
       "TranslatedText": "Силы Артефактов"
@@ -1667,7 +2387,7 @@
       "TranslatedText": "Если включено, в Досье будут отображаться экипированные персонажем предметы."
     },
     "h0cd1bcdcgdf0cg4740gaa47g6c551697f31a": {
-      "ReferenceText": "Show Equipped Items",
+      "ReferenceText": "Show equipped items",
       "TranslatedText": "Показывать экипированные предметы"
     },
     "h7b5b3f77gecb7g400cgafedg1be1b2227264": {
@@ -1679,7 +2399,7 @@
       "TranslatedText": "Если включено, в Досье будут отображаться способности персонажей (в памяти, с отображением перезарядки)."
     },
     "h186d9f82g7ad6g4113gb261g2a5eb62cf612": {
-      "ReferenceText": "Show Skills",
+      "ReferenceText": "Show skills",
       "TranslatedText": "Показывать способности"
     },
     "h70e80784gadb9g4d5agae96gc219142a7d43": {
@@ -1687,7 +2407,7 @@
       "TranslatedText": "Если включено, в Досье будут отображаться статусы персонажей."
     },
     "h781196b1g2672g4814gba9cg909abae01815": {
-      "ReferenceText": "Show Statuses",
+      "ReferenceText": "Show statuses",
       "TranslatedText": "Показывать статусы"
     },
     "hd74d99b1gf914g4cb2gb3bfg832230e4cf0f": {
@@ -1722,6 +2442,14 @@
       "ReferenceText": "Toggles the Surface Painter UI.",
       "TranslatedText": "Открыть окно Создания поверхностей"
     },
+    "h1c4d0e87g8710g4fb1gb98ag97d35a24bb5b": {
+      "ReferenceText": "Abeying %d damage.",
+      "TranslatedText": "Будет получено %d урона от Abeyance."
+    },
+    "h1ca15e96g0bf6g4ba6gaa64g1dec7a28d3af": {
+      "ReferenceText": "Gale can absorb this item's magic, destroying it.",
+      "TranslatedText": "Гейл может поглотить магию этого предмета, уничтожив его."
+    },
     "h2f7ed974g4184g404fga2abg640d32f6f7aa": {
       "ReferenceText": "Controls the position of item tooltips within the Party Inventory and Container Inventory UIs.<br><br>- Near cursor: vanilla behaviour; tooltips appear near the cursor.<br>- On UI sides: tooltips will be positioned on the left side of the source UI if possible, or on the right otherwise.",
       "TranslatedText": "Задает положение описаний предметов в интерфейсе инвентаря и контейнеров .<br><br>- Под курсором: как в ванилле, описание отображается под курсором.<br>- Сбоку интерфейса: описание отображается слева от интерфейса, или справа, если нет свободного места."
@@ -1737,6 +2465,14 @@
     "h5f55f283g3f47g4d04g9f4eg44d2617254a4": {
       "ReferenceText": "On UI Sides",
       "TranslatedText": "Сбоку интерфейса"
+    },
+    "hd3c5462egafcbg4008gbba8g657cffae5ed7": {
+      "ReferenceText": " %(before damage modifiers%)",
+      "TranslatedText": " %(до модификаторов урона%)"
+    },
+    "h02273499g09a1g4dccg8d25g55913948a95b": {
+      "ReferenceText": " %(before modifiers%)",
+      "TranslatedText": " %(до модификаторов%)"
     },
     "hf2848d52g9abbg4567g89e7gec23e4573bf2": {
       "ReferenceText": "%s%% weapon-based damage",
@@ -1758,12 +2494,16 @@
       "ReferenceText": "Item Comparison Tooltip Delay",
       "TranslatedText": "Задержка описаний сравниваемых предметов"
     },
+    "hd2aaa37dg2eccg4480g90d5gab593d074c2f": {
+      "ReferenceText": "Right-click to open.",
+      "TranslatedText": "Правый клик, чтобы открыть."
+    },
     "h4025c1c4g6527g4b6ag8369g49c0b1949dea": {
       "ReferenceText": "If enabled, the positions of the character sheet and party inventory UIs will be remembered across sessions.",
       "TranslatedText": "Если включено, положение окна персонажа и инвентаря группы будет запоминаться и не сбрасываться при смене игровой сессии."
     },
     "h626e6a30gaf91g438aga001g799e54be1477": {
-      "ReferenceText": "Remember Panel Positions",
+      "ReferenceText": "Remember panel positions",
       "TranslatedText": "Запоминать положение окон"
     },
     "h3a8d983cg5a8cg4b33g954cg39581bd8a04b": {
@@ -1826,10 +2566,6 @@
       "ReferenceText": "Bedroll Rest",
       "TranslatedText": "Лежанка"
     },
-    "hd15285dag87d6g450cg8f17gd663d87a474e": {
-      "ReferenceText": "Chain/Unchain",
-      "TranslatedText": "Сгруппировать"
-    },
     "h4ac91ab1gcde9g4cd5gb8a3gc19b15f3dd4b": {
       "ReferenceText": "Pyramids",
       "TranslatedText": "Пирамиды"
@@ -1879,7 +2615,7 @@
       "TranslatedText": "Добавить в товары"
     },
     "he2f705dbg1127g4f97gaceeg1dc7e9de1129": {
-      "ReferenceText": "Multi-select controls",
+      "ReferenceText": "Multi-select Controls",
       "TranslatedText": "Функция множественного выбора"
     },
     "h6b5b9ed9g85f0g421bga071g409b1e4491ca": {
@@ -1967,7 +2703,7 @@
       "TranslatedText": "Задает ширину интерфейса.<br><br>По умолчанию 400."
     },
     "h30052af9g5fbag4abcg9a0eg1ee45676a79c": {
-      "ReferenceText": "Enable Corpses",
+      "ReferenceText": "Enable corpses",
       "TranslatedText": "Осматривать трупы"
     },
     "h693e7865g63d9g402bgba37g2f627a59d4c6": {
@@ -2004,7 +2740,7 @@
     },
     "h54323161g125cg4289gb934g2d9fc803c92c": {
       "ReferenceText": "Filters items by stat boost, such as attribute or ability boosts.\nEx. 'Summoning' will show items that increase the Summoning ability. Queries need not be whole words.",
-      "TranslatedText": "Фильтр предметов по бонусам к параметрам, таких как качество или боевой навык.\nНапример, 'Призывание' будет показывать предметы с этим навыком. Запросы не обязательно должны быть целыми словами."
+      "TranslatedText": "Писать наименование на английском (пока что)! Фильтр предметов по бонусам к параметрам, таких как качество или боевой навык.\nНапример, 'Призывание' (Summoning) будет показывать предметы с этим навыком. Запросы не обязательно должны быть целыми словами."
     },
     "h13d1cd67ga1e8g4d7cg813bg3c01187b10ce": {
       "ReferenceText": "If enabled, books that have been read and keys that have been used will be shown.",
@@ -2123,11 +2859,11 @@
       "TranslatedText": "Устанавливает порядок сортировки для статусов. Статусы с высоким приоритетом отображаются слева, с низким - справа."
     },
     "haae0acc4gf8f6g4040g9038g52c50db75a38": {
-      "ReferenceText": "Show Battered/Harried Statuses",
+      "ReferenceText": "Show Battered/Harried statuses",
       "TranslatedText": "Показывать B/H статусы"
     },
     "h82c7e2e1g5de2g4389ga7c5g639c3d653b96": {
-      "ReferenceText": "Show Source Generation Status",
+      "ReferenceText": "Show Source Generation status",
       "TranslatedText": "Показывать статус Генерации истока"
     },
     "hb9e14744g4868g4e08gb3d7ga9bd57629d03": {
@@ -2187,7 +2923,7 @@
       "TranslatedText": "Отображает названия нескольких предметов в контейнере. Поставьте 0, чтобы отключить."
     },
     "hb6fcd193g708cg460bg88d6gd0cfb64de8ea": {
-      "ReferenceText": "Preview Container Items",
+      "ReferenceText": "Preview container items",
       "TranslatedText": "Предпросмотр предметов в контейнерах"
     },
     "h5cb6c524ge5a5g4184g8354g9386bbfdc00c": {
@@ -2291,7 +3027,7 @@
       "TranslatedText": "Если включено, при выборе награды будет отображаться предупреждение о deltamod генерации (параметры предмета определяются после выбора награды).<br><font color='FFFF00'>Применяется только для EE.</font>"
     },
     "hcc271c27g1f31g42f9gafd3g989f2fc5dccd": {
-      "ReferenceText": "Increase Surface Tooltip UI Layer",
+      "ReferenceText": "Increase surface tooltip UI Layer",
       "TranslatedText": "Повысить приоритет описаний поверхностей"
     },
     "h36b35885g9f60g40b1ga77fg0c501ab76654": {
@@ -2303,7 +3039,7 @@
       "TranslatedText": "Владелец:  %s"
     },
     "h5e7095b6ga182g4dc0gadfbg198413b93310": {
-      "ReferenceText": "Remove 'Set :' Prefixes",
+      "ReferenceText": "Remove \"Set :\" prefixes",
       "TranslatedText": "Убрать приставку 'Set :'"
     },
     "h979a8059g2ea7g436fg863bgf6b008ad3072": {
@@ -2382,20 +3118,148 @@
       "ReferenceText": "Unlearn Skill",
       "TranslatedText": "Забыть способность"
     },
+    "h1050422bg60f7g4cfag8a89ge22ef3bcf7c6": {
+      "ReferenceText": "Attachment Point",
+      "TranslatedText": "Место привязки"
+    },
+    "hba14c3f1g1d8fg4ddeg935bg2a8189f90d32": {
+      "ReferenceText": "Auras",
+      "TranslatedText": "Ауры"
+    },
+    "h1bbafd1cg0289g47cbga8cdg93e45e2edbdc": {
+      "ReferenceText": "Remove Auras",
+      "TranslatedText": "Убрать ауры"
+    },
+    "h97fd1347g2a02g4221g8b95g4d7111b1aeee": {
+      "ReferenceText": "Apply Dye",
+      "TranslatedText": "Применить краску"
+    },
+    "h92e8b290g5e1fg4e2aga497g8d782364617a": {
+      "ReferenceText": "Are you sure you want to remove this dye (%s)?",
+      "TranslatedText": "Вы уверены, что хотите убрать эту краску (%s)?"
+    },
+    "he980829dgb88eg4804g9c76gba9032eb01e5": {
+      "ReferenceText": "Copied dye colors to clipboard.",
+      "TranslatedText": "Цвета краски скопированы в буфер обмена."
+    },
+    "hfe2cdebcg8b7ag4648gb5efg912f86758ff4": {
+      "ReferenceText": "Custom Color (RGB)",
+      "TranslatedText": "Настройка цвета (RGB)"
+    },
+    "h0844733egaca8g4b92g967ag9be4b8ec5041": {
+      "ReferenceText": "Dye Exported",
+      "TranslatedText": "Краска экспортирована"
+    },
+    "h51316fa0g86f3g49a1g99f4g30bd703db792": {
+      "ReferenceText": "Dyes",
+      "TranslatedText": "Краски"
+    },
+    "he363c0b9g91fbg48a3ga1cbgbc7a759eb832": {
+      "ReferenceText": "Enter a name for this dye!",
+      "TranslatedText": "Выберите название для краски!"
+    },
+    "h3427b3a5gcda2g43fdgb888g093b23202fe0": {
+      "ReferenceText": "Export Dye",
+      "TranslatedText": "Экспорт краски"
+    },
+    "h2ee9689egad84g43ddg949egbac1d1d0ed6e": {
+      "ReferenceText": "Import Dye",
+      "TranslatedText": "Импорт краски"
+    },
+    "h598b8807gfcedg41e7gb839g3d8f252fa9bf": {
+      "ReferenceText": "Lock Color Sliders",
+      "TranslatedText": "Закрепить ползунки выбора цвета"
+    },
     "hbb910187g05dag4c1fgb07cg3f1c6515de8f": {
       "ReferenceText": "Remove Dye",
       "TranslatedText": "Убрать краску"
     },
+    "hc597a867g6292g4c8dgb9a0gf6adb8e76729": {
+      "ReferenceText": "Save Dye",
+      "TranslatedText": "Сохранить краску"
+    },
+    "h6e951ad3g6994g4580gb0c7gbdbbf3853809": {
+      "ReferenceText": "If enabled, items that are unequipped will have all their Vanity overrides (transmog, dyes, icon, etc.) removed automatically.<br><br>Host-only setting; applies to all players.",
+      "TranslatedText": "Если включено, все настройки Vanity для предмета экипировки (краска, иконка, смена вида и т.д ) будут сбрасываться при его снятии.<br><br>Для хоста; применяется для всех игроков."
+    },
+    "he381be9bg9e27g4c86g883cg7f3879f704f5": {
+      "ReferenceText": "Are you sure you want to remove this outfit (%s)?",
+      "TranslatedText": "Вы уверены, что хотите убрать этот набор (%s)?"
+    },
+    "h025ca76ag673eg4f3agb92agb693e964f023": {
+      "ReferenceText": "Name your outfit!",
+      "TranslatedText": "Выберите имя для набора снаряжения!"
+    },
+    "he5c7af2eg96a9g4e92g8a50g5ef795e219d1": {
+      "ReferenceText": "Outfits",
+      "TranslatedText": "Наборы снаряжения"
+    },
+    "hc6649aa4g4a9eg4bc3g97d5g2f281efe855a": {
+      "ReferenceText": "Remove Outfit",
+      "TranslatedText": "Убрать набор"
+    },
+    "he6444a72g7e13g43d7gb58fg16746e643f90": {
+      "ReferenceText": "Save Outfit",
+      "TranslatedText": "Сохранить набор"
+    },
+    "h157ffd3bg5fdag4f5ag93c3gd575ef924d37": {
+      "ReferenceText": "Save and apply outfits consisting of all your currently applied items.",
+      "TranslatedText": "Сохраняйте и надевайте наборы, состоящие из всех экипированных в данный момент предметов."
+    },
+    "h744534d4g7175g4bd6g814fgf6c9272d060a": {
+      "ReferenceText": "Save with weapons",
+      "TranslatedText": "Сохранить с оружием"
+    },
+    "h0655f2bfgcf50g4f99g9b72ge9d9d83a924e": {
+      "ReferenceText": "Revert appearance of unequipped items",
+      "TranslatedText": "Сброс внешнего вида у неэкипированных предметов"
+    },
+    "hc48f3629g9abag4fe7g816ag4c06d2780870": {
+      "ReferenceText": "Elemental Effects",
+      "TranslatedText": "Элементальные эффекты"
+    },
+    "h07513bd6ge8a4g4509g9c95g13e56a5eac03": {
+      "ReferenceText": "Keep Icon",
+      "TranslatedText": "Сохранить иконку"
+    },
+    "h98e054f2g9d91g481agb967g51a1873b4a78": {
+      "ReferenceText": "Lock Appearance",
+      "TranslatedText": "Закрепить внешний вид"
+    },
+    "hca179321g5478g4decga9fagc7b3bd11ca9a": {
+      "ReferenceText": "Revert Appearance",
+      "TranslatedText": "Сбросить внешний вид"
+    },
     "h19773400g8de1g46d7g9901g779b750ebddd": {
       "ReferenceText": "Set Icon",
       "TranslatedText": "Установить иконку"
+    },
+    "hde9528cfg0189g45b2gbe7cg8d7bd5637012": {
+      "ReferenceText": "This item is too brittle to transmog.",
+      "TranslatedText": "Этот предмет нельзя "
+    },
+    "h4528e43cga37bg40cdg9c6eg6b6144813c87": {
+      "ReferenceText": "Transmog",
+      "TranslatedText": "Смена внешнего вида"
+    },
+    "h12e35ceeg43cbg4298ga0d1gfd1a6bf16b6a": {
+      "ReferenceText": "Vanity",
+      "TranslatedText": "Vanity"
+    },
+    "h56a937e0gb868g4e6cg9f1ag634beba6c7b4": {
+      "ReferenceText": "Vanity allows you customize your equipment's appearance with transmog, custom dyes, and more.<br>Access it by right-clicking any equipped item and selecting \"Vanity...\" from the context menu.",
+      "TranslatedText": "Vanity позволяет вам настраивать внешний вид, цвет и прочие визуальные параметры вашей экипировки<br>Для доступа к настройке выберите \"Vanity...\" в контекстном меню предмета (ПКМ)."
+    },
+    "h31bb79b1g9516g4f23g8110g9b6bf75a11ea": {
+      "ReferenceText": "You don't have an item equipped in that slot!",
+      "TranslatedText": "У вас нет предмета в этом слоте!"
     },
     "h0d38d9a9gd416g4815gabc7gf9d8d901d40a": {
       "ReferenceText": "If enabled, light items such as torches, candles and braziers will show world tooltips.",
       "TranslatedText": "Если включено, факелы, свечи и прочие источники света будут отображаться в подсказках к окружающим объектам."
     },
     "h8605ee5agf02ag4f24g9bf2g60906ab5ef57": {
-      "ReferenceText": "Show Lights",
+      "ReferenceText": "Show lights",
       "TranslatedText": "Показывать источники света"
     }
   }

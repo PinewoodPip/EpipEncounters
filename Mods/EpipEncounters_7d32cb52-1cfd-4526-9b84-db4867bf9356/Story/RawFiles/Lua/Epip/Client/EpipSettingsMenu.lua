@@ -63,7 +63,7 @@ local EpipSettingsMenu = {
         },
         TranslationCredits_French = {
             Handle = "h5b1b94ebg3d90g47e5g8b29g9f75c0aa6cd6",
-            Text = "French translation by Drayander",
+            Text = "French translation by Drayander & Ostheboss",
             ContextDescription = "Displayed at the bottom of the general Epip settings tab",
         },
         Tab_Hotbar = {
