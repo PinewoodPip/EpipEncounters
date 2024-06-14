@@ -270,6 +270,10 @@ Text.CommonStrings.Visible = Text.RegisterTranslatedString({
     Handle = "hd8a9153ega669g4118g9c78g0a242b67fb5a",
     Text = "Visible",
 })
+Text.CommonStrings.Unnamed = Text.RegisterTranslatedString({
+    Handle = "h1969b8b0ge281g4c5ag8297g24e31fd2aa7c",
+    Text = "Unnamed",
+})
 
 ---------------------------------------------
 -- BRANDING

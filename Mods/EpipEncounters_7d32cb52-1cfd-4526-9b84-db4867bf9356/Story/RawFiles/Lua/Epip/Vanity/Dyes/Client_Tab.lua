@@ -1,25 +1,81 @@
 
 local Vanity = Client.UI.Vanity
+local VanityFeature = Epip.GetFeature("Feature_Vanity")
 
 ---@class Feature_Vanity_Dyes
 local Dyes = Epip.GetFeature("Feature_Vanity_Dyes")
 local TSK = {
-    Button_RemoveDye = Dyes:RegisterTranslatedString("hbb910187g05dag4c1fgb07cg3f1c6515de8f", {
+    VanityTab = Dyes:RegisterTranslatedString({
+        Handle = "h51316fa0g86f3g49a1g99f4g30bd703db792",
+        Text = "Dyes",
+        ContextDescription = [[Vanity tab name]],
+    }),
+    Label_CustomDye = Dyes:RegisterTranslatedString({
+        Handle = "hfe2cdebcg8b7ag4648gb5efg912f86758ff4",
+        Text = "Custom Color (RGB)",
+        ContextDescription = [[Label in UI; "RGB" refers to "Red, green, blue"]],
+    }),
+    Button_ApplyDye = Dyes:RegisterTranslatedString({
+        Handle = "h97fd1347g2a02g4221g8b95g4d7111b1aeee",
+        Text = "Apply Dye",
+        ContextDescription = [[Button label]],
+    }),
+    Button_ImportDye = Dyes:RegisterTranslatedString({
+        Handle = "h2ee9689egad84g43ddg949egbac1d1d0ed6e",
+        Text = "Import Dye",
+        ContextDescription = [[Button label]],
+    }),
+    Button_ExportDye = Dyes:RegisterTranslatedString({
+        Handle = "h3427b3a5gcda2g43fdgb888g093b23202fe0",
+        Text = "Export Dye",
+        ContextDescription = [[Button label]],
+    }),
+    Label_RemoveDye = Dyes:RegisterTranslatedString("hbb910187g05dag4c1fgb07cg3f1c6515de8f", {
         Text = "Remove Dye",
         ContextDescription = "Button for removing item dyes",
-    })
+    }),
+    Checkbox_LockColorSlides = Dyes:RegisterTranslatedString({
+        Handle = "h598b8807gfcedg41e7gb839g3d8f252fa9bf",
+        Text = "Lock Color Sliders",
+        ContextDescription = [[Checkbox for preventing RGB sliders from being set automatically]],
+    }),
+    Label_SaveDye = Dyes:RegisterTranslatedString({
+        Handle = "hc597a867g6292g4c8dgb9a0gf6adb8e76729",
+        Text = "Save Dye",
+        ContextDescription = [[Button label]],
+    }),
+    MsgBox_SaveDye_Body = Dyes:RegisterTranslatedString({
+        Handle = "he363c0b9g91fbg48a3ga1cbgbc7a759eb832",
+        Text = "Enter a name for this dye!",
+        ContextDescription = [[Message box body for saving dyes]],
+    }),
+    MsgBox_DyeExported_Title = Dyes:RegisterTranslatedString({
+        Handle = "h0844733egaca8g4b92g967ag9be4b8ec5041",
+        Text = "Dye Exported",
+        ContextDescription = [[Message box header when copying dyes to clipboard]],
+    }),
+    MsgBox_DyeExported_Body = Dyes:RegisterTranslatedString({
+        Handle = "he980829dgb88eg4804g9c76gba9032eb01e5",
+        Text = "Copied dye colors to clipboard.",
+        ContextDescription = [[Message box body when copying dyes to clipboard]],
+    }),
+    MsgBox_RemoveDye_Body = Dyes:RegisterTranslatedString({
+        Handle = "h92e8b290g5e1fg4e2aga497g8d782364617a",
+        Text = "Are you sure you want to remove this dye (%s)?",
+        ContextDescription = [[Message box for removing favorited/saved dyes; param is name of the custom dye to remove]],
+    }),
 }
 
 ---@class Features.Vanity.Dyes.Tab : CharacterSheetCustomTab
 local Tab = {
-    Name = "Dyes",
     ID = "PIP_Vanity_Dyes",
+    Name = TSK.VanityTab:GetString(),
     Icon = "hotbar_icon_dye",
     BUTTONS = {
         REMOVE = "Dye_Remove",
     },
 }
-Tab = Vanity.CreateTab(Tab)
+Tab = Vanity.CreateTab(Tab) ---@cast Tab Features.Vanity.Dyes.Tab
 Dyes.Tab = Tab
 
 ---------------------------------------------
@@ -28,7 +84,7 @@ Dyes.Tab = Tab
 
 ---@param categories VanityDyeCategory[]
 function Tab:RenderCategories(categories)
-    for i,category in ipairs(categories) do
+    for _,category in ipairs(categories) do
         local isOpen = Vanity.IsCategoryOpen(category.ID)
         Vanity.RenderEntry(category.ID, category.Name, true, isOpen, false, false)
 
@@ -96,7 +152,7 @@ function Tab:Render()
             Dyes.currentSliderColor = currentSliderColor
         end
 
-        Vanity.RenderText("Color1_Hint", "Custom Color (RGB)")
+        Vanity.RenderText("Color1_Hint", TSK.Label_CustomDye:GetString())
         -- RGB sliders
         for i=1,3,1 do
             ---@type RGBColor
@@ -112,15 +168,15 @@ function Tab:Render()
             Vanity.RenderSlider("Dye_" .. i .. "_Blue", color.Blue, 0, 255, Dyes.DYE_PALETTE_BITS, "Blue", "Blue")
         end
 
-        Vanity.RenderButtonPair("Dye_Apply", "Apply Dye", true, "Dye_Save", "Save Dye", true)
-        Vanity.RenderButtonPair("Dye_Import", "Import Dye", true, "Dye_Export", "Export Dye", true)
-        Vanity.RenderButton(Tab.BUTTONS.REMOVE, TSK.Button_RemoveDye:GetString(), true)
+        Vanity.RenderButtonPair("Dye_Apply", TSK.Button_ApplyDye:GetString(), true, "Dye_Save", TSK.Label_SaveDye:GetString(), true)
+        Vanity.RenderButtonPair("Dye_Import", TSK.Button_ImportDye:GetString(), true, "Dye_Export", TSK.Button_ExportDye:GetString(), true)
+        Vanity.RenderButton(Tab.BUTTONS.REMOVE, TSK.Label_RemoveDye:GetString(), true)
 
-        Vanity.RenderCheckbox("Dye_DefaultToItemColor", Text.Format("Lock Color Sliders", {Color = "000000"}), Dyes.lockColorSlider, true)
+        Vanity.RenderCheckbox("Dye_DefaultToItemColor", TSK.Checkbox_LockColorSlides:Format({Color = "000000"}), Dyes.lockColorSlider, true)
 
         self:RenderCategories(categories)
     else
-        Vanity.RenderText("NoItem", "You don't have an item equipped in that slot!")
+        Vanity.RenderText("NoItem", VanityFeature.TranslatedStrings.Label_NoItemEquipped:GetString())
     end
 end
 
@@ -135,10 +191,10 @@ Tab:RegisterListener(Vanity.Events.ButtonPressed, function(id)
     elseif id == "Dye_Save" then
         Client.UI.MessageBox.Open({
             ID = "PIP_Vanity_SaveDye",
-            Header = "Save Dye",
+            Header = TSK.Label_SaveDye:GetString(),
             Type = "Input",
-            Message = "Enter a name for this dye!",
-            Buttons = {{Text = "Accept", Type = 1, ID = 0}},
+            Message = TSK.MsgBox_SaveDye_Body:GetString(),
+            Buttons = {{Text = Text.CommonStrings.Accept:GetString(), Type = 1, ID = 0}},
         })
     elseif id == "Dye_Export" then
         local export = Text.Format("%s-%s-%s", {
@@ -154,10 +210,11 @@ Tab:RegisterListener(Vanity.Events.ButtonPressed, function(id)
 
         Client.UI.MessageBox.CopyToClipboard(export)
 
-        Timer.Start("", 0.2, function()
+        -- Needs a timer to not interfere with the actual copy-to-clipboard operation.
+        Timer.Start(0.2, function()
             Client.UI.MessageBox.Open({
-                Header = "Dye Exported",
-                Message = "Copied dye colors to clipboard."
+                Header = TSK.MsgBox_DyeExported_Title:GetString(),
+                Message = TSK.MsgBox_DyeExported_Body:GetString(),
             })
         end)
     elseif id == "Dye_Import" then
@@ -234,7 +291,7 @@ Tab:RegisterListener(Vanity.Events.InputChanged, function(id, text)
 
     if string.len(text) == 6 then
         local color = Color.CreateFromHex(text)
-        
+
         Dyes.currentSliderColor["Color" .. colorIndex] = color
 
         Tab:SetSliderColor(colorIndex, color, false)
@@ -245,8 +302,8 @@ end)
 Tab:RegisterListener(Vanity.Events.EntryRemoved, function(id)
     Client.UI.MessageBox.Open({
         ID = "PIP_Vanity_RemoveDye",
-        Header = "Remove Dye",
-        Message = Text.Format("Are you sure you want to remove this dye (%s)?", {
+        Header = TSK.Label_RemoveDye:GetString(),
+        Message = TSK.MsgBox_RemoveDye_Body:Format({
             FormatArgs = {id},
         }),
         Buttons = {

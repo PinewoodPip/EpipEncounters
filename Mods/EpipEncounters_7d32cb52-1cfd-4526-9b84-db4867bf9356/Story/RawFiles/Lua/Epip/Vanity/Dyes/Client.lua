@@ -248,7 +248,7 @@ function Dyes.GetCurrentCustomDye(item, useSliders, useDefaultColors)
         if not colorData then
             for _,mod in ipairs(item:GetDeltaMods()) do
                 local c1,c2,c3 = string.match(mod, "PIP_GENCOLOR_FF(%x%x%x%x%x%x)_FF(%x%x%x%x%x%x)_FF(%x%x%x%x%x%x)")
-    
+
                 if c1 then
                     colorData = {
                         Color1 = Color.CreateFromHex(c1),
@@ -410,7 +410,7 @@ end)
 Dyes.Events.DyeUsed:RegisterListener(function (dye, item, character)
 
     if #Dyes.DyeHistory == 0 or not Dyes.DyesAreEqual(Dyes.DyeHistory[#Dyes.DyeHistory], dye) then
-        dye.Name = dye.Name or "Unnamed"
+        dye.Name = dye.Name or Text.CommonStrings.Unnamed:GetString()
 
         table.insert(Dyes.DyeHistory, dye)
 
@@ -465,7 +465,7 @@ end)
 Epip.GetFeature("Feature_Vanity_Outfits").Hooks.GetOutfitSaveData:RegisterHook(function(outfit, char)
     outfit.CustomDyes = {}
 
-    for i,slot in ipairs(Data.Game.SLOTS_WITH_VISUALS) do
+    for _,slot in ipairs(Data.Game.SLOTS_WITH_VISUALS) do
         local item = char:GetItemBySlot(slot)
 
         if item then
@@ -506,7 +506,7 @@ end)
 Dyes.Hooks.GetCategories:RegisterHook(function (categories)
     local dyes = {}
 
-    for id,dye in pairs(Dyes.CustomDyes) do
+    for _,dye in pairs(Dyes.CustomDyes) do
         table.insert(dyes, dye)
     end
 

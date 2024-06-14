@@ -397,15 +397,6 @@ LOAD_ORDER = {
     {Script = "Epip/SettingWidgets/Client.lua"},
     "Epip/IDEAnnotations/Client.lua",
 
-    -- Vanity
-    {
-        Scripts = {
-            "UI/Vanity/Vanity.lua",
-            "UI/Vanity/Tabs/_Tab.lua",
-        },
-    },
-    {ScriptSet = "UI/Vanity/Tabs/Shapeshift", WIP = true},
-
     {
         Scripts = {
             "UI/CombatLog/CombatLog.lua",
@@ -621,6 +612,10 @@ LOAD_ORDER = {
     -- Vanity
     {
         ScriptSet = "Epip/Vanity",
+        Scripts = {
+            "UI/Vanity/Vanity.lua",
+            "UI/Vanity/Tabs/_Tab.lua",
+        },
     },
     -- Vanity Transmog
     {
@@ -651,6 +646,7 @@ LOAD_ORDER = {
             "Epip/Vanity/Auras/Client_Tab.lua",
         },
     },
+    {ScriptSet = "UI/Vanity/Tabs/Shapeshift", WIP = true},
 
     -- Fishing
     {

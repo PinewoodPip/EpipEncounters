@@ -3,6 +3,7 @@
 -- UI for the Vanity feature.
 ---------------------------------------------
 
+local VanityFeature = Epip.GetFeature("Feature_Vanity")
 local CharacterSheet = Client.UI.CharacterSheet
 
 ---@class VanityUI : UI
@@ -339,6 +340,12 @@ local Vanity = {
     },
 }
 Epip.InitializeUI(nil, "Vanity", Vanity)
+
+VanityFeature.TranslatedStrings.Label_NoItemEquipped = VanityFeature:RegisterTranslatedString({
+    Handle = "h31bb79b1g9516g4f23g8110g9b6bf75a11ea",
+    Text = "You don't have an item equipped in that slot!",
+    ContextDescription = [[Warning for selecting a slot with no item equipped]],
+})
 
 ---------------------------------------------
 -- EVENTS / HOOKS

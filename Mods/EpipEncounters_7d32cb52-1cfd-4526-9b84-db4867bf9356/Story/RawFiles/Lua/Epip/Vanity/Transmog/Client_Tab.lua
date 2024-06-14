@@ -1,5 +1,6 @@
 
 local Vanity = Client.UI.Vanity
+local VanityFeature = Epip.GetFeature("Feature_Vanity")
 local IconPicker = Epip.GetFeature("Feature_IconPicker")
 
 ---@class Feature_Vanity_Transmog
@@ -39,11 +40,6 @@ TSK.Label_InvalidItem = Transmog:RegisterTranslatedString({
     Handle = "hde9528cfg0189g45b2gbe7cg8d7bd5637012",
     Text = "This item is too brittle to transmog.",
     ContextDescription = [[Warning for items that cannot be transmogged]],
-})
-TSK.Label_NoItemEquipped = Transmog:RegisterTranslatedString({
-    Handle = "h31bb79b1g9516g4f23g8110g9b6bf75a11ea",
-    Text = "You don't have an item equipped in that slot!",
-    ContextDescription = [[Warning for selecting a slot with no item equipped]],
 })
 
 ---------------------------------------------
@@ -119,7 +115,7 @@ function Tab:Render()
             Vanity.RenderText("InvalidItem", TSK.Label_InvalidItem:GetString())
         end
     else
-        Vanity.RenderText("NoItem", TSK.Label_NoItemEquipped:GetString())
+        Vanity.RenderText("NoItem", VanityFeature.TranslatedStrings.Label_NoItemEquipped:GetString())
     end
 end
 
