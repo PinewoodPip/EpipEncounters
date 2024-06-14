@@ -406,6 +406,8 @@ function Text.Format(str, formatData)
         setmetatable(formatData, {__index = _TextFormatData}) -- TODO is this even necessary?
     end
 
+    -- FormatData-only overload.
+    -- Passing a TSK as the only parameter is not supported - use GetString() instead.
     if type(str) == "table" then
         str, formatData = Text.Resolve(str.Text), str
     end
@@ -430,7 +432,8 @@ function Text.Format(str, formatData)
     if formatData.FormatArgs then
         for _,arg in ipairs(formatData.FormatArgs) do
             if type(arg) == "table" then
-                table.insert(finalArgs, Text.Format(Text.Resolve(arg.Text), arg))
+                ---@cast arg TextFormatData|TextLib_TranslatedString
+                table.insert(finalArgs, arg.Handle == nil and Text.Format(Text.Resolve(arg.Text), arg) or arg:GetString())
             elseif type(arg) == "number" then
                 table.insert(finalArgs, Text.RemoveTrailingZeros(arg))
             else
