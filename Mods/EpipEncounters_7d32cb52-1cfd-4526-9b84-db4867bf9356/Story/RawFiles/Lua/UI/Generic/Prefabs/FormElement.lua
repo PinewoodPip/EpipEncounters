@@ -1,8 +1,9 @@
 
 local Generic = Client.UI.Generic
+local Navigation = Generic.Navigation
 local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
-local Component = Generic:GetClass("GenericUI.Navigation.Component")
-local LegacyElementNavigation = Generic:GetClass("GenericUI.Navigation.LegacyElementNavigation")
+local Component = Navigation:GetClass("GenericUI.Navigation.Component")
+local LegacyElementNavigation = Navigation:GetClass("GenericUI.Navigation.LegacyElementNavigation")
 
 ---Base class for prefabs styled as a form element.
 ---@class GenericUI_Prefab_FormElement : GenericUI_Prefab, GenericUI_I_Elementable

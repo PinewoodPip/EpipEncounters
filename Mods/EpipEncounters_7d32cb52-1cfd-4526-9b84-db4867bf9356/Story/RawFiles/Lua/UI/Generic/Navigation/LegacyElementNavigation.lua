@@ -5,6 +5,7 @@
 ---------------------------------------------
 
 local Generic = Client.UI.Generic
+local Navigation = Generic.Navigation
 
 ---@class GenericUI.Navigation.LegacyElementNavigation : Class
 local LegacyNavigation = {
@@ -13,7 +14,7 @@ local LegacyNavigation = {
         ElementInteracted = SubscribableEvent:New("ElementInteracted"), ---@type Event<{Element:GenericUI.Navigation.LegacyElementNavigation.ElementType}>
     }
 }
-Generic:RegisterClass("GenericUI.Navigation.LegacyElementNavigation", LegacyNavigation)
+Navigation:RegisterClass("GenericUI.Navigation.LegacyElementNavigation", LegacyNavigation)
 
 ---@alias GenericUI.Navigation.LegacyElementNavigation.ElementType GenericUI_Element_Button|GenericUI_Element_StateButton|GenericUI_Element_ComboBox
 

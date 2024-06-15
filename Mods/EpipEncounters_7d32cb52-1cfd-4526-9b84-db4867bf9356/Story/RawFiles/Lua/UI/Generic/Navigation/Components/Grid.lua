@@ -4,14 +4,15 @@
 ---------------------------------------------
 
 local Generic = Client.UI.Generic
-local ListComponent = Generic:GetClass("GenericUI.Navigation.Components.List")
+local Navigation = Generic.Navigation
+local ListComponent = Navigation:GetClass("GenericUI.Navigation.Components.List")
 
 ---@class GenericUI.Navigation.Components.Grid : GenericUI.Navigation.Components.List
 ---@field __Target GenericUI_Element_Grid
 ---@field __ScrollUpEvents table<InputLib_InputEventStringID, true>
 ---@field __ScrollDownEvents table<InputLib_InputEventStringID, true>
 local GridComponent = {}
-Generic:RegisterClass("GenericUI.Navigation.Components.Grid", GridComponent, {"GenericUI.Navigation.Components.List"})
+Navigation:RegisterClass("GenericUI.Navigation.Components.Grid", GridComponent, {"GenericUI.Navigation.Components.List"})
 
 ---------------------------------------------
 -- CLASSES

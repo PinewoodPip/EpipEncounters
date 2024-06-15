@@ -11,7 +11,7 @@ local Navigation = Generic.Navigation
 ---@field _RootComponent GenericUI.Navigation.Component
 ---@field _ConsumedIggyEventCounts table<iggyevent, integer>
 local Controller = {}
-Generic:RegisterClass("GenericUI.Navigation.Controller", Controller)
+Navigation:RegisterClass("GenericUI.Navigation.Controller", Controller)
 
 ---------------------------------------------
 -- METHODS

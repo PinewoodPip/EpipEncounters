@@ -11,7 +11,7 @@ local Navigation = Generic.Navigation
 local Component = {
     CONSUMED_IGGY_EVENTS = {},
 }
-Generic:RegisterClass("GenericUI.Navigation.Component", Component)
+Navigation:RegisterClass("GenericUI.Navigation.Component", Component)
 
 ---@alias GenericUI.Navigation.Component.Target GenericUI_Element|GenericUI_I_Elementable|{___Component: GenericUI.Navigation.Component}
 

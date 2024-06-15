@@ -6,7 +6,7 @@
 
 local Generic = Client.UI.Generic
 local Navigation = Generic.Navigation
-local Component = Generic:GetClass("GenericUI.Navigation.Component")
+local Component = Navigation:GetClass("GenericUI.Navigation.Component")
 
 ---@class GenericUI.Navigation.Components.List : GenericUI.Navigation.Component
 ---@field __Index integer? Index of the current focus. `nil` if there is no focus (ex. upon creation, if list is empty).
@@ -19,7 +19,7 @@ local ListComponent = {
         ChildAdded = {}, ---@type Event<GenericUI.Element.Events.ChildAdded> Use to create components for new children.
     },
 }
-Generic:RegisterClass("GenericUI.Navigation.Components.List", ListComponent, {"GenericUI.Navigation.Component"})
+Navigation:RegisterClass("GenericUI.Navigation.Components.List", ListComponent, {"GenericUI.Navigation.Component"})
 
 ---------------------------------------------
 -- CLASSES

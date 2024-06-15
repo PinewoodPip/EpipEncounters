@@ -4,6 +4,7 @@
 ---------------------------------------------
 
 local Generic = Client.UI.Generic
+local Navigation = Generic.Navigation
 
 ---@class GenericUI.Navigation.Components.Generic : GenericUI.Navigation.Component
 local GenericComponent = {
@@ -11,7 +12,7 @@ local GenericComponent = {
         "UIAccept",
     },
 }
-Generic:RegisterClass("GenericUI.Navigation.Components.Generic", GenericComponent, {"GenericUI.Navigation.Component"})
+Navigation:RegisterClass("GenericUI.Navigation.Components.Generic", GenericComponent, {"GenericUI.Navigation.Component"})
 
 ---------------------------------------------
 -- METHODS
