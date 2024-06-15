@@ -48,6 +48,12 @@ local styles = {
         Center = T.MESSAGES.BLACK.CENTER,
         Right = T.MESSAGES.BLACK.RIGHT,
     },
+    HorizontalShadow = {
+        Type = "3-Sliced Horizontal",
+        Left = T.SHADOWS.HORIZONTAL.LEFT,
+        Center = T.SHADOWS.HORIZONTAL.CENTER,
+        Right = T.SHADOWS.HORIZONTAL.RIGHT,
+    },
 }
 
 for id,style in pairs(styles) do

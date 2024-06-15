@@ -32,6 +32,12 @@ local styles = {
         HighlightedTexture = ButtonTextures.ARROWS.UP.HIGHLIGHTED,
         PressedTexture = ButtonTextures.ARROWS.UP.PRESSED,
     },
+    DiamondArrowUp = {
+        IdleTexture = ButtonTextures.ARROWS.UP_DIAMOND.IDLE,
+        HighlightedTexture = ButtonTextures.ARROWS.UP_DIAMOND.HIGHLIGHTED,
+        PressedTexture = ButtonTextures.ARROWS.UP_DIAMOND.PRESSED,
+        DisabledTexture = ButtonTextures.ARROWS.UP_DIAMOND.DISABLED,
+    },
     AddSlot = {
         IdleTexture = ButtonTextures.ADD.SLOT.IDLE,
         HighlightedTexture = ButtonTextures.ADD.SLOT.HIGHLIGHTED,
@@ -46,6 +52,11 @@ local styles = {
         HighlightedTexture =  ButtonTextures.BROWN.MICRO.HIGHLIGHTED,
         PressedTexture =  ButtonTextures.BROWN.MICRO.PRESSED,
     },
+    CancelListen = {
+        IdleTexture = ButtonTextures.CANCEL.LISTEN.IDLE,
+        HighlightedOverlay = ButtonTextures.CANCEL.LISTEN.HIGHLIGHTED,
+        PressedTexture = ButtonTextures.CANCEL.LISTEN.PRESSED,
+    },
     DOS1Blue = {
         IdleTexture = ButtonTextures.BLUE_DOS1.IDLE,
         HighlightedTexture =  ButtonTextures.BLUE_DOS1.HIGHLIGHTED,
@@ -58,6 +69,8 @@ local styles = {
     Diamond = {
         IdleTexture = ButtonTextures.ARROWS.DIAMOND.NORMAL.IDLE,
         HighlightedTexture = ButtonTextures.ARROWS.DIAMOND.NORMAL.HIGHLIGHTED,
+        PressedTexture = ButtonTextures.ARROWS.DIAMOND.NORMAL.PRESSED,
+        DisabledTexture = ButtonTextures.ARROWS.DIAMOND.NORMAL.DISABLED,
     },
     DiamondUp = {
         IdleTexture = ButtonTextures.ARROWS.DIAMOND.UP.IDLE,
@@ -66,6 +79,8 @@ local styles = {
     DoubleDiamond = {
         IdleTexture = ButtonTextures.ARROWS.DIAMOND.DOUBLE.IDLE,
         HighlightedTexture = ButtonTextures.ARROWS.DIAMOND.DOUBLE.HIGHLIGHTED,
+        PressedTexture = ButtonTextures.ARROWS.DIAMOND.DOUBLE.PRESSED,
+        DisabledTexture = ButtonTextures.ARROWS.DIAMOND.DOUBLE.DISABLED,
     },
     DoubleUp = {
         IdleTexture = ButtonTextures.ARROWS.DIAMOND.UP_DOUBLE.IDLE,
@@ -188,6 +203,11 @@ local styles = {
         IdleTexture = ButtonTextures.TRADE.LARGE.IDLE,
         PressedTexture = ButtonTextures.TRADE.LARGE.PRESSED,
     },
+    TradeDialogue = {
+        IdleTexture = ButtonTextures.TRADE.DIALOG.IDLE,
+        HighlightedTexture = ButtonTextures.TRADE.DIALOG.HIGHLIGHTED,
+        PressedTexture = ButtonTextures.TRADE.DIALOG.PRESSED,
+    },
     LabelPointy = {
         IdleTexture = ButtonTextures.LABEL.POINTY.IDLE,
         HighlightedTexture = ButtonTextures.LABEL.POINTY.HIGHLIGHTED,
@@ -265,6 +285,18 @@ local styles = {
         HighlightedTexture = ButtonTextures.BROWN.SMALL.HIGHLIGHTED,
         PressedTexture = ButtonTextures.BROWN.SMALL.PRESSED,
         DisabledTexture = ButtonTextures.BROWN.SMALL.DISABLED,
+    },
+    IncrementGreen = {
+        IdleTexture = ButtonTextures.COUNTER.GREEN.INCREMENT.IDLE,
+    },
+    DecrementGreen = {
+        IdleTexture = ButtonTextures.COUNTER.GREEN.DECREMENT.IDLE,
+    },
+    IncrementWhite = {
+        IdleTexture = ButtonTextures.COUNTER.WHITE.INCREMENT.IDLE,
+    },
+    DecrementWhite = {
+        IdleTexture = ButtonTextures.COUNTER.WHITE.DECREMENT.IDLE,
     },
     DOS1DecrementLarge = {
         IdleTexture = ButtonTextures.COUNTER.DOS1.DECREMENT.IDLE,
@@ -372,6 +404,12 @@ local styles = {
     Armor_Active = {
         IdleTexture = StateButtonTextures.ARMOR.ACTIVE_IDLE,
     },
+    ArmorBorderless_Inactive = {
+        IdleTexture = StateButtonTextures.ARMOR_BORDERLESS.INACTIVE_IDLE,
+    },
+    ArmorBorderless_Active = {
+        IdleTexture = StateButtonTextures.ARMOR_BORDERLESS.ACTIVE_IDLE,
+    },
     BrownSimple_Inactive = CreateStyle(StateButtonTextures.BROWN_SIMPLE.INACTIVE),
     BrownSimple_Active = CreateStyle(StateButtonTextures.BROWN_SIMPLE.ACTIVE),
     Helmet_Inactive = {
@@ -383,6 +421,24 @@ local styles = {
         IdleTexture = StateButtonTextures.HELMET.ACTIVE_IDLE,
         HighlightedTexture = StateButtonTextures.HELMET.ACTIVE_HIGHLIGHTED,
         PressedTexture = StateButtonTextures.HELMET.ACTIVE_PRESSED,
+    },
+    HelmetBorderless_Inactive = {
+        IdleTexture = StateButtonTextures.HELMET_BORDERLESS.INACTIVE_IDLE,
+    },
+    HelmetBorderless_Active = {
+        IdleTexture = StateButtonTextures.HELMET_BORDERLESS.ACTIVE_IDLE,
+    },
+    GenderMaleBorderless_Inactive = {
+        IdleTexture = StateButtonTextures.GENDER.MALE.BORDERLESS.INACTIVE_IDLE,
+    },
+    GenderMaleBorderless_Active = {
+        IdleTexture = StateButtonTextures.GENDER.MALE.BORDERLESS.ACTIVE_IDLE,
+    },
+    GenderFemaleBorderless_Inactive = {
+        IdleTexture = StateButtonTextures.GENDER.FEMALE.BORDERLESS.INACTIVE_IDLE,
+    },
+    GenderFemaleBorderless_Active = {
+        IdleTexture = StateButtonTextures.GENDER.FEMALE.BORDERLESS.ACTIVE_IDLE,
     },
     SimpleCheckbox_Inactive = {
         IdleTexture = StateButtonTextures.CHECKBOXES.SIMPLE.BACKGROUND,
