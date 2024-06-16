@@ -120,6 +120,7 @@ function Overlay.Setup(tab, entries)
             SettingsMenu.tabButtonToTabID[i] = id -- TODO remove
         end
     end
+    tabButtonsList:RepositionElements()
 
     for _,entry in ipairs(entries) do
         UI.RenderEntry(entry)
@@ -181,7 +182,7 @@ function Overlay._Initialize()
         UI.LeftPanel = leftPanel
 
         local tabButtonsList = leftPanel:AddChild("TabButtonsList", "GenericUI_Element_ScrollList")
-        tabButtonsList:SetFrame(360, 900)
+        tabButtonsList:SetFrame(360, 728)
         tabButtonsList:SetMouseWheelEnabled(true)
         tabButtonsList:SetScrollbarSpacing(-371)
         tabButtonsList:SetPosition(0, 120)
