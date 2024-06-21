@@ -55,7 +55,7 @@ end
 ---Focused components will consume input events.
 ---@return GenericUI.Navigation.Component?
 function Component:GetFocus()
-    return self._Focus
+    return (self._Focus and self._Focus:IsAlive()) and self._Focus or nil
 end
 
 ---Sets the focused subcomponent.
@@ -65,7 +65,7 @@ function Component:SetFocus(focus)
     self._Focus = focus
     local controller = self:_GetController() -- TODO nil check? Using components without a controller is atm undefined behaviour.
 
-    if previousFocus then
+    if previousFocus and previousFocus:IsAlive() then
         controller:SetFocus(previousFocus, false)
         previousFocus:OnFocusChanged(false)
     end
@@ -84,7 +84,7 @@ end
 ---Returns whether the target for this component still exists (as in, has not been destroyed).
 ---@return boolean
 function Component:IsAlive()
-    return not table.isdestroyed(self.__Target)
+    return not self.__Target:IsDestroyed()
 end
 
 ---Sets whether the component is focused by its parent.

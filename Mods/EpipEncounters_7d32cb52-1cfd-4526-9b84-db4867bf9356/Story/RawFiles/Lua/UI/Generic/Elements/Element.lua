@@ -207,7 +207,15 @@ end
 
 function _Element:Destroy()
     self.UI:DestroyElement(self)
-    table.destroy(self)
+    table.destroy(self, nil)
+    rawset(self, "IsDestroyed", _Element.IsDestroyed)
+end
+
+---Returns whether the element has been destroyed.
+---No other calls/operations are valid on destroyed elements, and will throw.
+---@return boolean
+function _Element:IsDestroyed()
+    return table.isdestroyed(self)
 end
 
 ---@deprecated
@@ -410,7 +418,7 @@ function _Element:SetTooltip(tooltipType, tooltip)
             Tooltip.ShowCustomFormattedTooltip(tooltip)
         end, {StringID = "_Tooltip"})
     else
-        Generic:LogError("FormElement:SetTooltip: unsupported tooltip type " .. tooltipType)
+        Generic:LogError("Element:SetTooltip: unsupported tooltip type " .. tooltipType)
     end
 
     targetElement.Events.MouseOut:Subscribe(function (_)
