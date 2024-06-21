@@ -92,12 +92,8 @@ local enabledHotbarButtons = {
 }
 
 -- Track highlighting of the vanilla buttons
-Ext.Events.SessionLoaded:Subscribe(function()
-    local ui = Hotbar:GetUI()
-
-    Ext.RegisterUIInvokeListener(ui, "setButtonActive", function(ui, method, btn, state)
-        enabledHotbarButtons[btn] = state
-    end)
+Hotbar:RegisterInvokeListener("setButtonActive", function (_, btn, state)
+    enabledHotbarButtons[btn] = state
 end)
 
 Hotbar:RegisterListener("ActionUsed", function(id, char, data)

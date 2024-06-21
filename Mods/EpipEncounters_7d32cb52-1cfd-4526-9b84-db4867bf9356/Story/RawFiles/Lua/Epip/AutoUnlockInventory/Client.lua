@@ -47,13 +47,13 @@ GameState.Events.ClientReady:Subscribe(function (_)
     if AutoUnlock:IsEnabled() then
         Timer.Start(2, function (_) -- Possibly unnecessary?
             AutoUnlock:DebugLog("Requesting unlock")
-    
+
             local characters = Client.UI.PlayerInfo.GetCharacters(true)
             for _,char in ipairs(characters) do
                 AutoUnlock:DebugLog("Unlocking inventory of " .. char.DisplayName)
-    
+
                 Net.PostToServer("EPIPENCOUNTERS_ToggleInventoryLock", {NetID = char.NetID, State = false})
             end
         end)
     end
-end)
+end, {EnabledFunctor = Client.IsUsingKeyboardAndMouse})

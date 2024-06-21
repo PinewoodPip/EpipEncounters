@@ -326,6 +326,7 @@ local function ShowCustomStatTooltip(ui, call, elementID, ...)
 end
 
 Ext.Events.SessionLoaded:Subscribe(function()
+    if Client.IsUsingController() then return end
     local ui = CharacterSheet:GetUI()
 
     Ext.RegisterUICall(ui, "pipRenderCustomStats", OnRequestRender)

@@ -234,6 +234,7 @@ end
 -- Close the message box on reset, since we will have lost the custom message data anyways.
 -- TODO fix
 Ext.Events.ResetCompleted:Subscribe(function()
+    if Client.IsUsingController() then return end
     Timer.Start("", 0.5, function() MessageBox:GetUI():Hide() end)
 end)
 

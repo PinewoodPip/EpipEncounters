@@ -423,6 +423,7 @@ end
 
 -- Position elements once the UI is loaded.
 Ext.Events.SessionLoaded:Subscribe(function()
+    if Client.IsUsingController() then return end
     local root = Bar:GetRoot()
 
     Bar._PositionElements()

@@ -188,6 +188,12 @@ function Client.IsUsingController()
     return Ext.UI.GetByPath("Public/Game/GUI/msgBox_c.swf") ~= nil
 end
 
+---Returns whether the client is playing with keyboard and mouse.
+---@return boolean
+function Client.IsUsingKeyboardAndMouse()
+    return not Client.IsUsingController()
+end
+
 ---Returns the viewport size.
 ---@return Vector2
 function Client.GetViewportSize()

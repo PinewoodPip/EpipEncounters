@@ -83,12 +83,12 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
-local function OnGameMenuButtonAdd(ui, method, id, name, enabled)
+Menu:RegisterInvokeListener("addMenuButton", function (_, id, name, enabled)
     Menu:FireEvent("ButtonAdded", id, name, enabled)
-    if not table.reverseLookup(Menu.BUTTON_IDS, id) then
-        Menu:LogWarning("Unmapped button ID:", id, name)
+    if Menu:IsDebug() and not table.reverseLookup(Menu.BUTTON_IDS, id) then
+        Menu:__LogWarning("Unmapped button ID:", id, name)
     end
-end
+end)
 
 -- Intercept vanilla button requests - TODO
 -- Menu:RegisterInvokeListener("addMenuButton", function(ev)
@@ -122,12 +122,4 @@ Menu:RegisterCallListener("buttonPressed", function(ev)
     Menu.Events.ButtonPressed:Throw({
         NumID = buttonID,
     })
-end)
-
----------------------------------------------
--- SETUP
----------------------------------------------
-
-Ext.Events.SessionLoaded:Subscribe(function()
-    Ext.RegisterUIInvokeListener(Menu:GetUI(), "addMenuButton", OnGameMenuButtonAdd)
 end)

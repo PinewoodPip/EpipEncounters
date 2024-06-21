@@ -311,6 +311,7 @@ end)
 
 -- Clear the log on reset.
 Ext.Events.ResetCompleted:Subscribe(function()
+    if Client.IsUsingController() then return end
     Log.Clear()
     Log:GetRoot().addTextToFilter(0, "Welcome to the combat log. Right-click to access filters.")
 end)
@@ -363,6 +364,7 @@ end)
 ---------------------------------------------
 
 function Log:__Setup()
+    if Client.IsUsingController() then return end
     Log:GetRoot().log_mc.filterHolder_mc.visible = false
 
     Log.LoadConfig()

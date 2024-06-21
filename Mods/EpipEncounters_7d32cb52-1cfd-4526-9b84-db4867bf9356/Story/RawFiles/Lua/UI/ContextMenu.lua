@@ -456,7 +456,7 @@ end
 function ContextMenu.GetActiveUI()
     local ui = ContextMenu.UI
 
-    if not ContextMenu.Root.visible then
+    if not ContextMenu.Root or not ContextMenu.Root.visible then
         ui = Ext.UI.GetByType(Ext.UI.TypeID.contextMenu.Object) or Ext.UI.GetByType(Ext.UI.TypeID.contextMenu.Default)
     end
 
@@ -940,12 +940,12 @@ end)
 -- Listen for characters being hovered to remember the latest hovered character.
 Pointer.Events.HoverCharacterChanged:Subscribe(function (_)
     UpdateLatestHoveredCharacter()
-end)
+end, {EnabledFunctor = Client.IsUsingKeyboardAndMouse})
 Pointer.Events.HoverCharacter2Changed:Subscribe(function (_)
     UpdateLatestHoveredCharacter()
-end)
+end, {EnabledFunctor = Client.IsUsingKeyboardAndMouse})
 
 -- Listen for items being hovered in the world to track their handle.
 Pointer.Events.HoverItemChanged:Subscribe(function (_)
     UpdateLatestHoveredItem()
-end)
+end, {EnabledFunctor = Client.IsUsingKeyboardAndMouse})

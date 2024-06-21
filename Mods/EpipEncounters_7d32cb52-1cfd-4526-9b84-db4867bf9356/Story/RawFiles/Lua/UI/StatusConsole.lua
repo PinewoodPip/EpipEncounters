@@ -151,6 +151,7 @@ end
 -- SETUP
 ---------------------------------------------
 Ext.Events.SessionLoaded:Subscribe(function()
+    if Client.IsUsingController() then return end
     StatusConsole.UI = Ext.UI.GetByType(Ext.UI.TypeID.statusConsole)
     StatusConsole.Root = StatusConsole.UI:GetRoot()
 

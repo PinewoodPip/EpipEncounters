@@ -129,8 +129,10 @@ end
 
 -- Register tracked UIs and restore their positions when the client loads in.
 GameState.Events.ClientReady:Subscribe(function (_)
-    Layout.RegisterTrackedUI(Client.UI.CharacterSheet)
-    Layout.RegisterTrackedUI(Client.UI.PartyInventory)
+    if Client.IsUsingKeyboardAndMouse() then
+        Layout.RegisterTrackedUI(Client.UI.CharacterSheet)
+        Layout.RegisterTrackedUI(Client.UI.PartyInventory)
+    end
 
     if Layout:IsEnabled() then
         Layout.RestorePositions()

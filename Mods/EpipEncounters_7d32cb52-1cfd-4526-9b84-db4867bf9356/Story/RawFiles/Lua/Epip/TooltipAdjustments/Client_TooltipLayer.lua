@@ -51,9 +51,9 @@ Settings.Events.SettingValueChanged:Subscribe(function (ev)
     if ev.Setting == TooltipAdjustments.Settings.TooltipLayer then
         UpdateLayer(ev.Value == true)
     end
-end, {StringID = "TooltipAdjustments_TooltipLayer"})
+end, {StringID = "TooltipAdjustments_TooltipLayer", EnabledFunctor = Client.IsUsingKeyboardAndMouse})
 
 -- Update the layer upon loading into the session.
 GameState.Events.ClientReady:Subscribe(function (_)
     UpdateLayer(TooltipAdjustments:GetSettingValue(TooltipAdjustments.Settings.TooltipLayer) == true)
-end, {StringID = "TooltipAdjustments_TooltipLayer"})
+end, {StringID = "TooltipAdjustments_TooltipLayer", EnabledFunctor = Client.IsUsingKeyboardAndMouse})

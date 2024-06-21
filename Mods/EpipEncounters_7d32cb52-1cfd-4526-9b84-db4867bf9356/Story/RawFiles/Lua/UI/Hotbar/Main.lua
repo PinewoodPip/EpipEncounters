@@ -1083,7 +1083,7 @@ GameState.Events.GameReady:Subscribe(function ()
     Hotbar.initialized = true
     Hotbar.LoadData()
     Hotbar.Refresh()
-end)
+end, {EnabledFunctor = function () return not Client.IsUsingController() end})
 
 Client.Input.Events.ActionExecuted:Subscribe(function (ev)
     local actionPattern = "EpipEncounters_Hotbar_(%d+)"
@@ -1724,6 +1724,7 @@ function Hotbar.SetupSlot(index)
 end
 
 Ext.Events.SessionLoaded:Subscribe(function()
+    if Client.IsUsingController() then return end
     local ui = Hotbar:GetUI()
     local skillbook = Ext.UI.GetByPath("Public/Game/GUI/skills.swf")
 
@@ -1798,7 +1799,7 @@ end
 
 ---Refreshes the visuals of the UI, as well as hotkeys.
 function Hotbar.Refresh()
-    if not GameState.IsInSession() then
+    if not GameState.IsInSession() or Client.IsUsingController() then
         return
     end
 
@@ -1833,6 +1834,7 @@ function Hotbar.Refresh()
 end
 
 Ext.Events.SessionLoaded:Subscribe(function()
+    if Client.IsUsingController() then return end
     local ui = Hotbar:GetUI()
 
     Hotbar.GetSlotHolder().rowHeight = 65
