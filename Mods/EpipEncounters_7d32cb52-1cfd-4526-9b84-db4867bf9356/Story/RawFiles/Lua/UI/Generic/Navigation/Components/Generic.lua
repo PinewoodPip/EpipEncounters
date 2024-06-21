@@ -21,18 +21,20 @@ Navigation:RegisterClass("GenericUI.Navigation.Components.Generic", GenericCompo
 ---@override
 function GenericComponent:OnIggyEvent(event)
     -- Emulate clicks.
-    if event.EventID == "UIAccept" and event.Timing == "Up" then
-        local target = self.__Target
-        target.Events.MouseDown:Throw()
-        target.Events.MouseUp:Throw()
+    -- A pcall is used as the target might've been destroyed as a result of the click events.
+    return pcall(function ()
+        if event.EventID == "UIAccept" and event.Timing == "Up" then
+            local target = self.__Target
+            target.Events.MouseDown:Throw()
+            target.Events.MouseUp:Throw()
 
-        if target.Type == "GenericUI_Element_Slot" then
-            ---@cast target GenericUI_Element_Slot
-            target.Events.Clicked:Throw()
+            if target.Type == "GenericUI_Element_Slot" then
+                ---@cast target GenericUI_Element_Slot
+                target.Events.Clicked:Throw()
+            end
+            return true
         end
-
-        return true
-    end
+    end)
 end
 
 ---@override
