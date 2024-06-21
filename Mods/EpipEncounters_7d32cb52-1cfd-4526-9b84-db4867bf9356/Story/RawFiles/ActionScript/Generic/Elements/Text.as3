@@ -51,7 +51,7 @@ package Elements
 
         public override function SupportsPooling() : Boolean
         {
-            return true;
+            return false;
         }
 
         public override function SetMouseEnabled(enabled) : *
