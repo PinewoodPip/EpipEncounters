@@ -53,8 +53,8 @@ function ListComponent:Create(target, config)
     local instance = Component.Create(self, target) ---@cast instance GenericUI.Navigation.Components.List
     instance.Events = SubscribableEvent.CreateEventsTable(ListComponent.Events)
 
-    instance.__ScrollBackwardEvents = table.listtoset(config.ScrollBackwardEvents)
-    instance.__ScrollForwardEvents = table.listtoset(config.ScrollForwardEvents)
+    instance.__ScrollBackwardEvents = table.listtoset(config.ScrollBackwardEvents or EMPTY)
+    instance.__ScrollForwardEvents = table.listtoset(config.ScrollForwardEvents or EMPTY)
     instance.__Wrap = config.Wrap
     instance.__Index = nil
 
@@ -78,7 +78,8 @@ end
 ---@override
 function ListComponent:OnFocusChanged(focused)
     if focused and self.__Index then
-        self:__FocusByIndex(self.__Index)
+        local children = self:GetChildren()
+        self:__FocusByIndex(math.clamp(self.__Index, 1, #children)) -- Children might've changed since the last time the list was focused.
     end
 end
 
