@@ -124,6 +124,17 @@ Input.Events.MouseMoved:Subscribe(function (ev)
             end
 
             Camera.SetPositionSwitches(nil, positionMode, pos1, pos2)
+
+            -- Add a minimum amount of camera rotation to force the camera to update,
+            -- fixing "stuttering" when changing the pitch by large increments.
+            local camera = Camera.GetPlayerCamera() 
+            if GetExtType(camera) == "ecl::GameCamera" then
+                ---@cast camera EclGameCamera
+                local EPSILON = 0.001
+                if math.abs(camera.InputRotationRateMode1) < EPSILON then
+                    camera.InputRotationRateMode1 = EPSILON
+                end
+            end
         end
     end
 end)
