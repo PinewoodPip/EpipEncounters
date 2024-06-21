@@ -1,7 +1,7 @@
 
 ---@class ClientLib : Library
 Client = {
-    UI = {GM = {}},
+    UI = {GM = {}, Controller = {}},
     Input = {}, -- See Input.lua
 
     USE_LEGACY_EVENTS = false,
@@ -275,15 +275,31 @@ function Client._AbsoluteUIPathToDataPath(path)
     return string.match(path, ".*(Public/.+)$")
 end
 
+---Throws the `DeterminedAsHost` event and sets the host flag, only if it wasn't set before.
+function Client._ThrowHostDetermined()
+    if not Client.IS_HOST then
+        Client.IS_HOST = true
+        Client:Log("Client is hosting.")
+        Client:FireEvent("DeterminedAsHost")
+    end
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
 
 -- Open the pause menu while loading to check for host status.
 GameState.Events.ClientReady:Subscribe(function (_)
-    Client.UI.GameMenu:GetUI():Show()
-    Timer.StartTickTimer(1, function (_)
-        Client.UI.GameMenu:GetUI():Hide()
+    local ui = Client.IsUsingController() and Client.UI.Controller.GameMenu or Client.UI.GameMenu
+    -- Listen for host-only buttons being added to the controller menu.
+    Client.UI.Controller.GameMenu:RegisterInvokeListener("addMenuButton", function (_, id)
+        if id == Client.UI.Controller.GameMenu.BUTTON_IDS.LOAD then
+            Client._ThrowHostDetermined()
+        end
+    end)
+    ui:Show()
+    Timer.StartTickTimer(0.1, function (_)
+        ui:Hide()
     end)
 end)
 

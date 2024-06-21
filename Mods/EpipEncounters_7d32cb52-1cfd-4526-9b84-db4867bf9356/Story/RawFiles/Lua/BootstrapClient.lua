@@ -427,6 +427,8 @@ LOAD_ORDER = {
     },
 
     -- "UI/Controller/PanelSelect.lua",
+    "UI/Controller/MainMenu.lua",
+    "UI/Controller/GameMenu.lua",
 
     "Epip/Client/NameTypoFixes.lua",
     "Epip/Client/ExamineImprovements.lua",
