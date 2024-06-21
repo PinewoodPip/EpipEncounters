@@ -33,6 +33,8 @@
 
 ---@alias iggyevent string -- In the format "IE EventName"
 
+---@class set<T> : {[T]:true}
+
 ---@class Empty
 
 Mods = {}

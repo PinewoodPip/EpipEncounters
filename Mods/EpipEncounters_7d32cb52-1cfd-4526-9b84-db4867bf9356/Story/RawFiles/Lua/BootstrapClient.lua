@@ -316,6 +316,7 @@ LOAD_ORDER = {
             "UI/Generic/Navigation/LegacyElementNavigation.lua",
             "UI/Generic/Navigation/Components/Generic.lua",
             "UI/Generic/Navigation/Components/List.lua",
+            "UI/Generic/Navigation/Components/ScrollList.lua",
             "UI/Generic/Navigation/Components/Grid.lua",
 
             "UI/Generic/Prefabs/Text.lua",
