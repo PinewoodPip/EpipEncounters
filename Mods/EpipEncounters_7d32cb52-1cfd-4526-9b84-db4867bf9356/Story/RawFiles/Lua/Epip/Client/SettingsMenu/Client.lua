@@ -1,6 +1,7 @@
 
 local Settings = Settings
 local OptionsSettings = Client.UI.OptionsSettings
+local ControllerMenu = Client.UI.Controller.MainMenu
 local MsgBox = Client.UI.MessageBox
 
 ---@class Feature_SettingsMenu : Feature
@@ -448,6 +449,12 @@ function Menu.Close()
 
     Client.UI.Fade.FadeOut()
 
+    -- Necessary to clear the fade properly on controller, for reasons unbeknownst.
+    if Client.IsUsingController() then
+        Client.UI.Controller.GameMenu:Show()
+        Client.UI.Controller.GameMenu:Hide()
+    end
+
     ui:Hide()
 end
 
@@ -769,6 +776,28 @@ Menu.Hooks.GetTabEntries:Subscribe(function (ev)
     end
 
     ev.Entries = filteredEntries
+end)
+
+-- Add an option to open the menu from the controller settings menu.
+GameState.Events.GameReady:Subscribe(function (_)
+    if Client.IsUsingController() then
+        ControllerMenu:RegisterInvokeListener("addMenuButton", function (_, id)
+            if id == ControllerMenu.OPTIONS_BUTTON_IDS.GAME then
+                Timer.Start(0.1, function (_)
+                    ControllerMenu.AddButton(Menu.TAB_BUTTON_ID, Menu.TranslatedStrings.MenuButton)
+                end)
+            end
+        end, "After")
+        ControllerMenu:RegisterCallListener("buttonPressed", function (ev, id)
+            if id == Menu.TAB_BUTTON_ID then
+                Client.UI.Controller.GameMenu:Hide()
+                Timer.Start(0.1, function (_)
+                    Menu.Open()
+                end)
+                ev:PreventAction()
+            end
+        end)
+    end
 end)
 
 ---------------------------------------------
