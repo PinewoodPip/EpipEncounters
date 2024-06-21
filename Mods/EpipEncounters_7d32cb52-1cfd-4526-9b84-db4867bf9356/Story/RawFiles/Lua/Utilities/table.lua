@@ -3,6 +3,13 @@
 -- Extensions to the table table.
 ---------------------------------------------
 
+EMPTY = {}
+setmetatable(EMPTY, {
+    __newindex = function (_, _, _)
+        error("Attempted to extend the EMPTY table")
+    end
+})
+
 local _DestroyedMetatableMsg = function(self, _)
     error(self.___Message)
 end
