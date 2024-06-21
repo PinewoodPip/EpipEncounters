@@ -266,6 +266,7 @@ LOAD_ORDER = {
     "UI/Trade.lua",
     "UI/LoadingScreen.lua",
     "UI/Skills.lua",
+    "UI/MainMenu.lua",
 
     -- GM UIs
     {Script = "UI/GM/Roll.lua", GameModes = GAMEMODE_MASK.GameMaster},

@@ -39,3 +39,4 @@ Client.UI.Vanity = {} ---@type VanityUI
 Client.UI.Mods = {} ---@type ModsUI
 Client.UI.GameMenu = {} ---@type GameMenuUI
 Client.UI.Fade = {} ---@type FadeUI
+Client.UI.MainMenu = {} ---@type UI.MainMenu
