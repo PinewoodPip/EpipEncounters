@@ -59,7 +59,7 @@ function Text:GetTextSize()
 
     for i=1,txt.numLines,1 do
         height = height + self:GetLineHeight(i)
-        width = math.max(width, self:GetLineWidth(i)) -- Not 100% if necessary
+        width = math.max(width, self:GetLineWidth(i)) -- Not 100% sure if necessary
     end
 
     return Vector.Create(math.max(0, width), math.ceil(height)) -- Empty text fields have -infinity width.
@@ -77,6 +77,14 @@ end
 ---@param wrap boolean
 function Text:SetWordWrap(wrap)
     self:GetMovieClip().text_txt.wordWrap = wrap
+end
+
+---Resizes the element to the size of the text without wrapping.
+---**Will turn off wordwrap.**
+function Text:FitSize()
+    self:SetWordWrap(false)
+    self:SetSize(1, 1)
+    self:SetSize(self:GetTextSize():unpack())
 end
 
 ---Returns whether the mouse is currently hovering over a range of characters.

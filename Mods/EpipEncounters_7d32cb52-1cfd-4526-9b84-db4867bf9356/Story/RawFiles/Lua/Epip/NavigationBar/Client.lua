@@ -1,0 +1,120 @@
+
+local Generic = Client.UI.Generic
+local SlicedTexture = Generic.GetPrefab("GenericUI.Prefabs.SlicedTexture")
+local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
+local Input = Client.Input
+local V = Vector.Create
+
+---@class Features.NavigationBar : Feature
+local Navbar = {
+    ---@type table<InputRawType, TextureLib_Texture>
+    INPUTEVENT_TO_TEXTURE = {
+        -- TODO!
+    }
+}
+Epip.RegisterFeature("Features.NavigationBar", Navbar)
+
+---@class Features.NavigationBar.UI : GenericUI_Instance
+local UI = Generic.Create("Features.Navbar.UI", 99)
+UI.ACTION_HEIGHT = 50
+UI.PADDING = 30
+UI.BOTTOM_MARGIN = 50 -- In UIObject space.
+UI.ACTION_SPACING = 50
+UI.SUBSCRIBERID_TICK = "Features.NavigationBar." -- Suffixed with UI ID.
+
+---------------------------------------------
+-- METHODS
+---------------------------------------------
+
+---Shows the bar for a UI.
+---@param ui GenericUI.Navigation.UI
+---@param positionOffset Vector2?
+function Navbar.Setup(ui, positionOffset)
+    positionOffset = positionOffset or Vector.zero2
+    if not ui.___NavigationController then
+        Navbar:__Error("Setup", "UI must have a navigation controller")
+    end
+    UI._PositionOffset = positionOffset
+    UI._Initialize()
+
+    -- Hide the bar when the target UI becomes hidden.
+    local subscriberID = UI.SUBSCRIBERID_TICK .. ui:GetID()
+    GameState.Events.Tick:Subscribe(function (_)
+        if not ui:IsVisible() then
+            UI:Hide()
+            GameState.Events.Tick:Unsubscribe(subscriberID)
+        end
+    end, {StringID = subscriberID})
+
+    Navbar.UpdateActions(ui)
+    UI:Show()
+end
+
+---Updates the actions shown.
+---@param ui GenericUI.Navigation.UI
+function Navbar.UpdateActions(ui)
+    local list = UI.ActionList
+    list:Clear()
+
+    local actions = ui.___NavigationController:GetCurrentActions()
+    for _,action in ipairs(actions) do
+        UI._RenderAction(action)
+    end
+
+    list:RepositionElements()
+
+    list:SetPositionRelativeToParent("Center")
+
+    local bg = UI.Background
+    local uiObj = UI:GetUI()
+    uiObj.SysPanelSize = bg:GetSize() * uiObj:GetUIScaleMultiplier() + V(0, UI.BOTTOM_MARGIN)
+    UI:SetPositionRelativeToViewport("bottom", "bottom", "screen")
+    UI:Move(UI._PositionOffset)
+end
+
+---Adds an action to the list.
+---@param action GenericUI.Navigation.Component.Action
+function UI._RenderAction(action)
+    local actionName = Text.Resolve(action.Name)
+    local id = "Action." .. actionName .. "." .. Text.GenerateGUID() -- There may be multiple actions with the same name.
+    local list = UI.ActionList:AddChild(id, "GenericUI_Element_HorizontalList")
+
+    for inputEvent in pairs(action.Inputs) do
+        local binding = Input.GetBinding(inputEvent)
+        local texture = binding and Navbar.INPUTEVENT_TO_TEXTURE[binding.InputID] or nil
+        if texture then
+            local icon = list:AddChild(id .. "_Icon", "GenericUI_Element_Texture")
+            icon:SetTexture(texture) -- TODO use fixed size?
+        elseif binding then
+            -- Fallback to showing just the name
+            local keyCombo = binding:ToKeyCombination()
+            local bindingStr = Input.StringifyBinding(keyCombo)
+            bindingStr = string.format("[%s]", bindingStr)
+            local label = TextPrefab.Create(UI, id .. "_IconLabel", list, bindingStr, "Center", V(1, UI.ACTION_HEIGHT))
+            label:FitSize()
+            label:SetCenterInLists(true)
+        end
+    end
+
+    -- Label for the action's name
+    local label = TextPrefab.Create(UI, id .. "_Label", list, actionName, "Center", V(1, UI.ACTION_HEIGHT))
+    label:FitSize()
+    label:SetCenterInLists(true)
+
+    list:RepositionElements()
+end
+
+---Initializes the UI's static elements.
+function UI._Initialize()
+    if UI._Initialized then return end
+
+    local root = UI:CreateElement("Root", "GenericUI_Element_Empty")
+    local bg = SlicedTexture.Create(UI, "Background", root, SlicedTexture:GetStyle("SimpleTooltip"), V(1500, UI.ACTION_HEIGHT + UI.PADDING)) -- TODO autosize
+    UI.Background = bg
+
+    local actionList = bg:AddChild("ActionList", "GenericUI_Element_HorizontalList")
+    actionList:SetElementSpacing(UI.ACTION_SPACING)
+    UI.ActionList = actionList
+
+    UI._Initialized = true
+end

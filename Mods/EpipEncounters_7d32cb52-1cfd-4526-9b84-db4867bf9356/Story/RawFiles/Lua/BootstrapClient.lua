@@ -356,6 +356,7 @@ LOAD_ORDER = {
         },
     },
     "Epip/GenericUITextures/Client_TestUI.lua", -- Should be loaded after Generic itself
+    "Epip/NavigationBar/Client.lua",
 
     -- Hotbar
     {

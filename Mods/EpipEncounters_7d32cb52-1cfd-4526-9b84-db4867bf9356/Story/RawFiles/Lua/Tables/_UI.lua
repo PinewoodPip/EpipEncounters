@@ -157,8 +157,8 @@ end
 
 ---Sets the position of the UIObject relative to viewport.
 ---Equivalent to the `setPosition` UI call.
----@param anchor "center"|"topleft"|"topright"|"bottomleft"|"bottomright"
----@param position "center"|"topleft"|"topright"|"bottomleft"|"bottomright"
+---@param anchor "center"|"topleft"|"topright"|"bottomleft"|"bottomright"|"bottom"|"top"
+---@param position "center"|"topleft"|"topright"|"bottomleft"|"bottomright"|"bottom"|"top"
 ---@param target ("screen"|"splitscreen")? Defaults to `"screen"`
 ---@param delay number? Defaults to 0 seconds. Useful while initializing the UI, as the call does not work during the first few ticks of its existence.
 function BaseUI:SetPositionRelativeToViewport(anchor, position, target, delay)
@@ -178,6 +178,15 @@ end
 ---@param pos Vector2
 function BaseUI:SetPosition(pos)
     self:GetUI():SetPosition(pos:unpack())
+end
+
+---Moves the UI by an offset.
+---@param offset Vector2 In pixels; will be truncated to integers.
+function BaseUI:Move(offset)
+    local pos = Vector.Create(self:GetPosition())
+    pos = pos + offset
+    pos[1], pos[2] = math.floor(pos[1]), math.floor(pos[2])
+    self:SetPosition(pos)
 end
 
 ---Sets the panel size of the UI.
