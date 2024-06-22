@@ -83,6 +83,46 @@ function Controller:SetFocus(component, focused)
     end
 end
 
+---Returns the currently available actions that the components report.
+---@return GenericUI.Navigation.Component.Action[]
+function Controller:GetCurrentActions()
+    local stack = self:GetFocusStack()
+    local actions = {} ---@type GenericUI.Navigation.Component.Action[]
+    local usedInputs = {} ---@type set<InputLib_InputEventStringID>
+
+    for i=#stack,1,-1 do
+        local component = stack[i]
+        local componentActions = component:GetActions()
+        for _,action in ipairs(componentActions) do
+            local valid = false
+            -- Only include the action if no deeper components already define one for the input events.
+            for inputEvent,_ in pairs(action.Inputs) do
+                if not usedInputs[inputEvent] then
+                    valid = true
+                end
+                usedInputs[inputEvent] = true
+            end
+            if valid then
+                table.insert(actions, action)
+            end
+        end
+    end
+
+    return actions
+end
+
+---Returns the stack of focused components.
+---@return GenericUI.Navigation.Component[] -- In order from lowest (top-level) to highest depth.
+function Controller:GetFocusStack()
+    local stack = {} ---@type GenericUI.Navigation.Component[]
+    local focus = self._RootComponent
+    while focus do
+        table.insert(stack, focus)
+        focus = focus:GetFocus()
+    end
+    return stack
+end
+
 ---Forwards an Iggy Event to components that can consume it.
 ---Consumption is prioritized by depth; the deepest focused component will consume the event.
 ---@param event GenericUI.Instance.Events.IggyEventCaptured
@@ -90,12 +130,7 @@ function Controller:_ProcessIggyEvent(event)
     Navigation:DebugLog("Processing event", event.EventID, event.Timing)
     local iggyEvent = event.EventID
 
-    local stack = {} ---@type GenericUI.Navigation.Component[]
-    local focus = self._RootComponent
-    while focus do
-        table.insert(stack, focus)
-        focus = focus:GetFocus()
-    end
+    local stack = self:GetFocusStack()
     for i=#stack,1,-1 do
         local component = stack[i]
         if component:___CanConsumeIggyEvent(iggyEvent) then

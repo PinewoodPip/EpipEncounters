@@ -278,6 +278,30 @@ Text.CommonStrings.Remove = Text.RegisterTranslatedString({
     Handle = "h974c404ag23a3g4926gbf2fg8d4c881e37ea",
     Text = "Remove",
 })
+Text.CommonStrings.Interact = Text.RegisterTranslatedString({
+    Handle = "haf50e434g26ecg44b2ga0a4gf24ec486c7e5",
+    Text = "Interact",
+})
+Text.CommonStrings.Down = Text.RegisterTranslatedString({
+    Handle = "hed778b0fgee1ag4507ga1ebg7dd249d17ce3",
+    Text = "Down",
+    ContextDescription = "As in, the direction",
+})
+Text.CommonStrings.Up = Text.RegisterTranslatedString({
+    Handle = "h5c0045dbgbeb9g4be4g8575g16120176d671",
+    Text = "Up",
+    ContextDescription = "As in, the direction",
+})
+Text.CommonStrings.Left = Text.RegisterTranslatedString({
+    Handle = "h8ac83ff6g90a0g4082gaaf0gd300c042db9a",
+    Text = "Left",
+    ContextDescription = "As in, the direction",
+})
+Text.CommonStrings.Right = Text.RegisterTranslatedString({
+    Handle = "h19cc3513g8f3eg4168gb9dbgca2e37ebb679",
+    Text = "Right",
+    ContextDescription = "As in, the direction",
+})
 
 ---------------------------------------------
 -- BRANDING

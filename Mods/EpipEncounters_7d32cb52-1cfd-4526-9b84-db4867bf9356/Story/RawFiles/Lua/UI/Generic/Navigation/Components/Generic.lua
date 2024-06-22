@@ -46,3 +46,15 @@ function GenericComponent:OnFocusChanged(focused)
         self.__Target.Events.MouseOut:Throw()
     end
 end
+
+---@override
+function GenericComponent:GetActions()
+    ---@type GenericUI.Navigation.Component.Action[]
+    local actions = {
+        {
+            Inputs = {["UIAccept"] = true}, -- TODO make customizable
+            Name = Text.CommonStrings.Interact,
+        },
+    }
+    return actions
+end

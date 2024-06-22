@@ -7,6 +7,7 @@
 local Generic = Client.UI.Generic
 local Navigation = Generic.Navigation
 local Component = Navigation:GetClass("GenericUI.Navigation.Component")
+local CommonStrings = Text.CommonStrings
 
 ---@class GenericUI.Navigation.Components.List : GenericUI.Navigation.Component
 ---@field __Index integer? Index of the current focus. `nil` if there is no focus (ex. upon creation, if list is empty).
@@ -152,4 +153,18 @@ end
 ---@param children GenericUI.Navigation.Component[]?
 function ListComponent:SetChildren(children)
     self.__ChildrenOverride = children
+end
+
+---@override
+function ListComponent:GetActions()
+    local actions = {} ---@type GenericUI.Navigation.Component.Action[]
+    table.insert(actions, {
+        Inputs = self.__ScrollBackwardEvents,
+        Name = CommonStrings.Previous,
+    })
+    table.insert(actions, {
+        Inputs = self.__ScrollForwardEvents,
+        Name = CommonStrings.Next,
+    })
+    return actions
 end

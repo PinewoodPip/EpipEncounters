@@ -6,6 +6,7 @@
 local Generic = Client.UI.Generic
 local Navigation = Generic.Navigation
 local ListComponent = Navigation:GetClass("GenericUI.Navigation.Components.List")
+local CommonStrings = Text.CommonStrings
 
 ---@class GenericUI.Navigation.Components.Grid : GenericUI.Navigation.Components.List
 ---@field __Target GenericUI_Element_Grid
@@ -97,4 +98,26 @@ function GridComponent:OnIggyEvent(event)
             return true
         end
     end
+end
+
+---@override
+function GridComponent:GetActions()
+    local actions = {} ---@type GenericUI.Navigation.Component.Action[]
+    table.insert(actions, {
+        Inputs = self.__ScrollBackwardEvents,
+        Name = CommonStrings.Left,
+    })
+    table.insert(actions, {
+        Inputs = self.__ScrollForwardEvents,
+        Name = CommonStrings.Right,
+    })
+    table.insert(actions, {
+        Inputs = self.__ScrollDownEvents,
+        Name = CommonStrings.Down,
+    })
+    table.insert(actions, {
+        Inputs = self.__ScrollUpEvents,
+        Name = CommonStrings.Up,
+    })
+    return actions
 end

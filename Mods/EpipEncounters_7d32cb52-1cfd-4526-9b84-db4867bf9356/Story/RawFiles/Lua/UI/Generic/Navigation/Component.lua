@@ -13,7 +13,15 @@ local Component = {
 }
 Navigation:RegisterClass("GenericUI.Navigation.Component", Component)
 
+---------------------------------------------
+-- CLASSES
+---------------------------------------------
+
 ---@alias GenericUI.Navigation.Component.Target GenericUI_Element|GenericUI_I_Elementable|{___Component: GenericUI.Navigation.Component}
+
+---@class GenericUI.Navigation.Component.Action
+---@field Inputs set<InputLib_InputEventStringID>
+---@field Name TextLib.String
 
 ---------------------------------------------
 -- METHODS
@@ -85,6 +93,13 @@ end
 ---@return boolean
 function Component:IsAlive()
     return not self.__Target:IsDestroyed()
+end
+
+---Returns the actions currently available for the component.
+---@virtual
+---@return GenericUI.Navigation.Component.Action[]
+function Component:GetActions()
+    return EMPTY
 end
 
 ---Sets whether the component is focused by its parent.
