@@ -7,20 +7,14 @@
 local Generic = Client.UI.Generic
 local Navigation = Generic.Navigation
 local ListComponent = Navigation:GetClass("GenericUI.Navigation.Components.List")
+local CommonStrings = Text.CommonStrings
 
 ---@class GenericUI.Navigation.Components.ScrollList : GenericUI.Navigation.Components.List
 ---@field __Target GenericUI_Element_ScrollList
----@field __ScrollUpEvents set<InputLib_InputEventStringID>
----@field __ScrollDownEvents set<InputLib_InputEventStringID>
----@field __ScrollAmount number Pixels to scroll per ScrollUp/ScrollDown event.
+---@field __ScrollAmount number Pixels to scroll per ScrollUp/ScrollDown action.
 local ScrollListComponent = {
     DEFAULT_SCROLL_AMOUNT = 50,
-
-    Events = {},
 }
-for k,v in pairs(ListComponent.Events) do -- Inherit events
-    ScrollListComponent.Events[k] = v
-end
 Navigation:RegisterClass("GenericUI.Navigation.Components.ScrollList", ScrollListComponent, {"GenericUI.Navigation.Components.List"})
 
 ---------------------------------------------
@@ -48,32 +42,33 @@ function ScrollListComponent:Create(target, config)
 
     local instance = ListComponent.Create(self, target, config) ---@cast instance GenericUI.Navigation.Components.ScrollList
 
-    self.__ScrollAmount = config.ScrollAmount or self.DEFAULT_SCROLL_AMOUNT
+    instance.__ScrollAmount = config.ScrollAmount or instance.DEFAULT_SCROLL_AMOUNT
 
-    -- Add manual scrolling input events
-    instance.__ScrollUpEvents = table.listtoset(config.ScrollUpEvents or EMPTY)
-    instance.__ScrollDownEvents = table.listtoset(config.ScrollDownEvents or EMPTY)
-    for _,id in ipairs(config.ScrollUpEvents or EMPTY) do
-        table.insert(instance.CONSUMED_IGGY_EVENTS, id)
-    end
-    for _,id in ipairs(config.ScrollDownEvents or EMPTY) do
-        table.insert(instance.CONSUMED_IGGY_EVENTS, id)
-    end
+    -- Add manual scrolling actions
+    instance:AddAction({
+        ID = "ScrollUp",
+        Name = CommonStrings.Up,
+        Inputs = table.listtoset(config.ScrollUpEvents or EMPTY),
+    })
+    instance:AddAction({
+        ID = "ScrollDown",
+        Name = CommonStrings.Down,
+        Inputs = table.listtoset(config.ScrollDownEvents or EMPTY),
+    })
 
     return instance
 end
 
 ---@override
 function ScrollListComponent:OnIggyEvent(event)
+    if ListComponent.OnIggyEvent(self, event) then return true end
     if event.Timing == "Down" then
-        if self.__ScrollUpEvents[event.EventID] then
+        if self:CanConsumeInput("ScrollUp", event.EventID) then
             self:Scroll(-self.__ScrollAmount)
             return true
-        elseif self.__ScrollDownEvents[event.EventID] then
+        elseif self:CanConsumeInput("ScrollDown", event.EventID) then
             self:Scroll(self.__ScrollAmount)
             return true
-        else
-            return ListComponent.OnIggyEvent(self, event)
         end
     end
 end

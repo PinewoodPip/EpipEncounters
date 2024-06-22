@@ -4,6 +4,7 @@ local Navigation = Generic.Navigation
 local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 local Component = Navigation:GetClass("GenericUI.Navigation.Component")
 local LegacyElementNavigation = Navigation:GetClass("GenericUI.Navigation.LegacyElementNavigation")
+local CommonStrings = Text.CommonStrings
 
 ---Base class for prefabs styled as a form element.
 ---@class GenericUI_Prefab_FormElement : GenericUI_Prefab, GenericUI_I_Elementable
@@ -23,19 +24,26 @@ Generic.RegisterPrefab("GenericUI_Prefab_FormElement", Prefab)
 ---@diagnostic disable-next-line: duplicate-doc-alias
 ---@alias GenericUI_PrefabClass "GenericUI_Prefab_FormElement"
 
+local TSK = {
+    Label_PreviousItem = Navigation:RegisterTranslatedString({
+        Handle = "he55dc83eg5d16g4af0g8c8bg2bd5e368e620",
+        Text = "Previous Item",
+        ContextDescription = [[Input binding hint]],
+    }),
+    Label_NextItem = Navigation:RegisterTranslatedString({
+        Handle = "h5c14960age89bg4621gbdeagd2165e0c74de",
+        Text = "Next Item",
+        ContextDescription = [[Input binding hint]],
+    }),
+}
+
 ---------------------------------------------
 -- CLASSES
 ---------------------------------------------
 
 ---@class GenericUI.Prefabs.FormElement.NavigationComponent : GenericUI.Navigation.Component
 ---@field __Target GenericUI_Prefab_FormElement
-local _NavigationComponent = {
-    CONSUMED_IGGY_EVENTS = {
-        "UIAccept",
-        "UIUp",
-        "UIDown",
-    }
-}
+local _NavigationComponent = {}
 Generic:RegisterClass("GenericUI.Prefabs.FormElement.NavigationComponent", _NavigationComponent, {"GenericUI.Navigation.Component"})
 
 ---Creates a navigation component for a form element.
@@ -46,21 +54,39 @@ function _NavigationComponent.Create(prefabInstance)
 
     instance.__Target = prefabInstance
 
+    -- Register default actions
+    instance:AddAction({
+        ID = "Interact",
+        Name = CommonStrings.Interact,
+        Inputs = {["UIAccept"] = true},
+    })
+    instance:AddAction({
+        ID = "PreviousItem",
+        Name = TSK.Label_PreviousItem,
+        Inputs = {["UIUp"] = true},
+    })
+    instance:AddAction({
+        ID = "NextItem",
+        Name = TSK.Label_NextItem,
+        Inputs = {["UIDown"] = true},
+    })
+
     return instance
 end
 
 ---@override
 function _NavigationComponent:OnIggyEvent(event)
+    if Component.OnIggyEvent(self, event) then return true end
     if event.Timing == "Down" then
         local interactable = self.__Target:GetInteractableElement()
         if interactable then
-            if event.EventID == "UIAccept" then
+            if self:CanConsumeInput("Interact", event.EventID) then
                 LegacyElementNavigation.InteractWith(interactable)
                 return true
-            elseif (event.EventID == "UIUp" or event.EventID == "UIDown") and interactable.Type == "GenericUI_Element_ComboBox" then
+            elseif (self:CanConsumeInput("PreviousItem", event.EventID) or self:CanConsumeInput("NextItem", event.EventID)) and interactable.Type == "GenericUI_Element_ComboBox" then
                 ---@cast interactable GenericUI_Element_ComboBox
                 if interactable:IsOpen() then
-                    LegacyElementNavigation.ScrollComboBox(interactable, event.EventID == "UIUp" and -1 or 1)
+                    LegacyElementNavigation.ScrollComboBox(interactable, self:CanConsumeInput("PreviousItem", event.EventID) and -1 or 1)
                     return true
                 end
             end

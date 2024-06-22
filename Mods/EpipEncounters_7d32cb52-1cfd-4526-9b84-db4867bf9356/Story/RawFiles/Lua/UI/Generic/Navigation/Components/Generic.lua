@@ -5,13 +5,10 @@
 
 local Generic = Client.UI.Generic
 local Navigation = Generic.Navigation
+local Component = Navigation:GetClass("GenericUI.Navigation.Component")
 
 ---@class GenericUI.Navigation.Components.Generic : GenericUI.Navigation.Component
-local GenericComponent = {
-    CONSUMED_IGGY_EVENTS = {
-        "UIAccept",
-    },
-}
+local GenericComponent = {}
 Navigation:RegisterClass("GenericUI.Navigation.Components.Generic", GenericComponent, {"GenericUI.Navigation.Component"})
 
 ---------------------------------------------
@@ -19,15 +16,29 @@ Navigation:RegisterClass("GenericUI.Navigation.Components.Generic", GenericCompo
 ---------------------------------------------
 
 ---@override
+---@return GenericUI.Navigation.Components.Generic
+function GenericComponent:Create(target)
+    local instance = Component.Create(self, target) ---@cast instance GenericUI.Navigation.Components.Generic
+    -- Register interact action
+    instance:AddAction({
+        ID = "Interact",
+        Name = Text.CommonStrings.Interact,
+        Inputs = {["UIAccept"] = true}, -- TODO make customizable
+    })
+    return instance
+end
+
+---@override
 function GenericComponent:OnIggyEvent(event)
+    if Component.OnIggyEvent(self, event) then return true end
+
     -- Emulate clicks.
     -- A pcall is used as the target might've been destroyed as a result of the click events.
     return pcall(function ()
-        if event.EventID == "UIAccept" and event.Timing == "Up" then
+        if self:CanConsumeInput("UIAccept") and event.Timing == "Up" then
             local target = self.__Target
             target.Events.MouseDown:Throw()
             target.Events.MouseUp:Throw()
-
             if target.Type == "GenericUI_Element_Slot" then
                 ---@cast target GenericUI_Element_Slot
                 target.Events.Clicked:Throw()
@@ -45,16 +56,4 @@ function GenericComponent:OnFocusChanged(focused)
     else
         self.__Target.Events.MouseOut:Throw()
     end
-end
-
----@override
-function GenericComponent:GetActions()
-    ---@type GenericUI.Navigation.Component.Action[]
-    local actions = {
-        {
-            Inputs = {["UIAccept"] = true}, -- TODO make customizable
-            Name = Text.CommonStrings.Interact,
-        },
-    }
-    return actions
 end

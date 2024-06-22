@@ -11,11 +11,10 @@ local CommonStrings = Text.CommonStrings
 
 ---@class GenericUI.Navigation.Components.List : GenericUI.Navigation.Component
 ---@field __Index integer? Index of the current focus. `nil` if there is no focus (ex. upon creation, if list is empty).
----@field __ScrollForwardEvents table<InputLib_InputEventStringID, true>
----@field __ScrollBackwardEvents table<InputLib_InputEventStringID, true>
 ---@field __Wrap boolean
 ---@field __ChildrenOverride GenericUI.Navigation.Component[]
 local ListComponent = {
+    ---@class GenericUI.Navigation.Components.List.Events : GenericUI.Navigation.Component.Events
     Events = {
         ChildAdded = {}, ---@type Event<GenericUI.Element.Events.ChildAdded> Use to create components for new children.
     },
@@ -52,20 +51,26 @@ function ListComponent:Create(target, config)
         Inherit(config, _DefaultConfig)
     end
     local instance = Component.Create(self, target) ---@cast instance GenericUI.Navigation.Components.List
-    instance.Events = SubscribableEvent.CreateEventsTable(ListComponent.Events)
+    instance.Events.ChildAdded = SubscribableEvent:New("ChildAdded")
 
-    instance.__ScrollBackwardEvents = table.listtoset(config.ScrollBackwardEvents or EMPTY)
-    instance.__ScrollForwardEvents = table.listtoset(config.ScrollForwardEvents or EMPTY)
     instance.__Wrap = config.Wrap
     instance.__Index = nil
 
-    -- Register events as consumable
-    instance.CONSUMED_IGGY_EVENTS = {}
-    for _,id in ipairs(config.ScrollBackwardEvents) do
-        table.insert(instance.CONSUMED_IGGY_EVENTS, id)
-    end
-    for _,id in ipairs(config.ScrollForwardEvents) do
-        table.insert(instance.CONSUMED_IGGY_EVENTS, id)
+    -- Register default actions
+    -- TODO make names customizable as well
+    local actions = {} ---@type GenericUI.Navigation.Component.Action[]
+    table.insert(actions, {
+        ID = "Previous",
+        Name = CommonStrings.Previous,
+        Inputs = table.listtoset(config.ScrollBackwardEvents),
+    })
+    table.insert(actions, {
+        ID = "Next",
+        Name = CommonStrings.Next,
+        Inputs = table.listtoset(config.ScrollForwardEvents),
+    })
+    for _,action in ipairs(actions) do
+        instance:AddAction(action)
     end
 
     -- Forward events
@@ -86,11 +91,13 @@ end
 
 ---@override
 function ListComponent:OnIggyEvent(event)
+    if Component.OnIggyEvent(self, event) then return true end
+
     if event.Timing == "Down" then -- Down is used to allow key repeat
         local scrollDirection = nil
-        if self.__ScrollForwardEvents[event.EventID] then
+        if self:CanConsumeInput("Next", event.EventID) then
             scrollDirection = 1
-        elseif self.__ScrollBackwardEvents[event.EventID] then
+        elseif self:CanConsumeInput("Previous", event.EventID) then
             scrollDirection = -1
         end
         -- Scroll the focus of the list.
@@ -100,7 +107,7 @@ function ListComponent:OnIggyEvent(event)
             if self.__Index then
                 newIndex = self.__Index + scrollDirection
             else
-                newIndex = self.__ScrollForwardEvents[event.EventID] and 1 or #children -- Starting index is based on direction pressed
+                newIndex = scrollDirection == 1 and 1 or #children -- Starting index is based on direction pressed
             end
 
             if self.__Wrap then
@@ -153,18 +160,4 @@ end
 ---@param children GenericUI.Navigation.Component[]?
 function ListComponent:SetChildren(children)
     self.__ChildrenOverride = children
-end
-
----@override
-function ListComponent:GetActions()
-    local actions = {} ---@type GenericUI.Navigation.Component.Action[]
-    table.insert(actions, {
-        Inputs = self.__ScrollBackwardEvents,
-        Name = CommonStrings.Previous,
-    })
-    table.insert(actions, {
-        Inputs = self.__ScrollForwardEvents,
-        Name = CommonStrings.Next,
-    })
-    return actions
 end

@@ -4,12 +4,19 @@ local Navigation = Generic.Navigation
 
 ---@class GenericUI.Navigation.Component : Class
 ---@field __Target GenericUI.Navigation.Component.Target
+---@field __ActionsMap table<InputLib_InputEventStringID, GenericUI.Navigation.Component.Action>
+---@field __Actions GenericUI.Navigation.Component.Action[] In order of registration.
 ---@field _Focus GenericUI.Navigation.Component?
 ---@field _IsFocused boolean
----@field CONSUMED_IGGY_EVENTS InputLib_InputEventStringID[] List of Iggy Events the component will consume when focused. Do not change after the component is created.
----@field _ConsumedIggyEventsMap table<InputLib_InputEventStringID, true> Automatically generated.
+---@field _ConsumedIggyEventsMap set<InputLib_InputEventStringID> Automatically generated.
 local Component = {
-    CONSUMED_IGGY_EVENTS = {},
+    ---@class GenericUI.Navigation.Component.Events
+    Events = {
+        ActionAdded = {}, ---@type Event<GenericUI.Navigation.Component.Events.ActionAdded>
+    },
+    Hooks = {
+        ConsumeInput = {}, ---@type Hook<GenericUI.Navigation.Component.Hooks.ConsumeInput>
+    },
 }
 Navigation:RegisterClass("GenericUI.Navigation.Component", Component)
 
@@ -20,8 +27,21 @@ Navigation:RegisterClass("GenericUI.Navigation.Component", Component)
 ---@alias GenericUI.Navigation.Component.Target GenericUI_Element|GenericUI_I_Elementable|{___Component: GenericUI.Navigation.Component}
 
 ---@class GenericUI.Navigation.Component.Action
----@field Inputs set<InputLib_InputEventStringID>
+---@field ID string
 ---@field Name TextLib.String
+---@field Inputs set<InputLib_InputEventStringID>
+
+---------------------------------------------
+-- EVENTS
+---------------------------------------------
+
+---@class GenericUI.Navigation.Component.Events.ActionAdded
+---@field Action GenericUI.Navigation.Component.Action
+
+---@class GenericUI.Navigation.Component.Hooks.ConsumeInput
+---@field Event GenericUI.Instance.Events.IggyEventCaptured
+---@field Action GenericUI.Navigation.Component.Action
+---@field Consumed boolean Hookable. Defaults to `false`.
 
 ---------------------------------------------
 -- METHODS
@@ -30,6 +50,7 @@ Navigation:RegisterClass("GenericUI.Navigation.Component", Component)
 ---Creates a navigation component for an elementable.
 ---Inheritable constructor.
 ---@param target GenericUI.Navigation.Component.Target
+---@return GenericUI.Navigation.Component
 function Component:Create(target)
     local instance = self:__Create({
         __Target = target,
@@ -40,6 +61,11 @@ function Component:Create(target)
     -- Track the component for the target
     -- Preventing component replacement is not necessary, and anti-modding.
     instance.__Target.___Component = instance
+    instance.__Actions = {}
+    instance.__ActionsMap = {}
+
+    instance.Events = SubscribableEvent.CreateEventsTable(Component.Events)
+    instance.Hooks = SubscribableEvent.CreateEventsTable(Component.Hooks)
 
     return instance
 end
@@ -56,7 +82,41 @@ function Component:OnFocusChanged(focused) end
 ---@return boolean -- If `true`, the event will be considered consumed and will not propagate to parent components.
 ---@diagnostic disable-next-line: unused-local
 function Component:OnIggyEvent(event)
-    return false
+    return self.Hooks.ConsumeInput:Throw({
+        Action = self:GetInputEventAction(event.EventID),
+        Event = event,
+        Consumed = false,
+    }).Consumed
+end
+
+---Registers an action that the component can consume while focused.
+---@param action GenericUI.Navigation.Component.Action
+function Component:AddAction(action)
+    for input in pairs(action.Inputs) do
+        if self.__ActionsMap[input] then
+            Component:__Error("AddAction", input, "is already in use by another action")
+        end
+        self.__ActionsMap[input] = action
+    end
+    table.insert(self.__Actions, action)
+    self.Events.ActionAdded:Throw({
+        Action = action,
+    })
+    -- If the component was focused, the ref counts for the inputs to consume need to be updated
+    local controller = self:_GetController()
+    if controller and self:IsFocused() then
+        for input in pairs(action.Inputs) do
+            ---@diagnostic disable-next-line: invisible
+            controller:_UpdateInputEventRefCount(input, true)
+        end
+    end
+end
+
+---Returns the actions for an input event.
+---@param inputEvent InputLib_InputEventStringID
+---@return GenericUI.Navigation.Component.Action?
+function Component:GetInputEventAction(inputEvent)
+    return self.__ActionsMap[inputEvent]
 end
 
 ---Gets the focused subcomponent.
@@ -96,10 +156,9 @@ function Component:IsAlive()
 end
 
 ---Returns the actions currently available for the component.
----@virtual
 ---@return GenericUI.Navigation.Component.Action[]
 function Component:GetActions()
-    return EMPTY
+    return self.__Actions
 end
 
 ---Sets whether the component is focused by its parent.
@@ -110,14 +169,18 @@ function Component:___SetFocused(focused)
     self:OnFocusChanged(focused)
 end
 
----Returns whether the component can consume an Iggy Event.
----@param iggyEvent InputLib_InputEventStringID
+---Returns whether there are any actions that can consume an input event.
+---Note that actual event consumption may have conditional logic not reflected by this.
+---@overload fun(input):boolean
+---@param input InputLib_InputEventStringID
 ---@return boolean
-function Component:___CanConsumeIggyEvent(iggyEvent)
-    if not self._ConsumedIggyEventsMap then
-        self._ConsumedIggyEventsMap = table.listtoset(self.CONSUMED_IGGY_EVENTS)
+function Component:CanConsumeInput(actionID, input)
+    if input == nil then -- Input-only overload.
+        input = actionID
+        actionID = nil
     end
-    return self._ConsumedIggyEventsMap[iggyEvent] == true
+    local action = self:GetInputEventAction(input)
+    return action and (actionID == nil or action.ID == actionID)
 end
 
 ---Returns the navigation controller that the component is bound to.

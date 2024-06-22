@@ -71,15 +71,11 @@ function Controller:SetFocus(component, focused)
 
     -- Navigation:DebugLog("Component focus changed", component:GetClassName(), focused)
 
-    for _,iggyEvent in ipairs(component.CONSUMED_IGGY_EVENTS) do
-        iggyEvent = iggyEvent:gsub("^IE ", "")
-
-        self._ConsumedIggyEventCounts[iggyEvent] = self._ConsumedIggyEventCounts[iggyEvent] + (focused and 1 or -1)
-        if self._ConsumedIggyEventCounts[iggyEvent] < 0 then
-            Generic:LogError("Navigation.Controller:SetFocus", "Iggy event consumption count reached <0 for", iggyEvent)
+    for _,action in ipairs(component:GetActions()) do
+        for input in pairs(action.Inputs) do
+            input = input:gsub("^IE ", "")
+            self:_UpdateInputEventRefCount(input, focused)
         end
-
-        self.UI:SetIggyEventCapture(iggyEvent, self._ConsumedIggyEventCounts[iggyEvent] > 0)
     end
 end
 
@@ -133,7 +129,7 @@ function Controller:_ProcessIggyEvent(event)
     local stack = self:GetFocusStack()
     for i=#stack,1,-1 do
         local component = stack[i]
-        if component:___CanConsumeIggyEvent(iggyEvent) then
+        if component:CanConsumeInput(iggyEvent) then
             local consumed = component:OnIggyEvent(event)
             if consumed then
                 Navigation:DebugLog(event.EventID, "consumed by", component.__Target.ID)
@@ -141,4 +137,16 @@ function Controller:_ProcessIggyEvent(event)
             end
         end
     end
+end
+
+---Updates the bookkeeping for which input events the current focused component stack can consume.
+---@param input InputLib_InputEventStringID
+---@param focused boolean
+function Controller:_UpdateInputEventRefCount(input, focused)
+    self._ConsumedIggyEventCounts[input] = self._ConsumedIggyEventCounts[input] + (focused and 1 or -1)
+    if self._ConsumedIggyEventCounts[input] < 0 then
+        Controller:__LogError("SetFocus", "Input event consumption count reached <0 for", input)
+    end
+
+    self.UI:SetIggyEventCapture(input, self._ConsumedIggyEventCounts[input] > 0)
 end

@@ -10,8 +10,6 @@ local CommonStrings = Text.CommonStrings
 
 ---@class GenericUI.Navigation.Components.Grid : GenericUI.Navigation.Components.List
 ---@field __Target GenericUI_Element_Grid
----@field __ScrollUpEvents table<InputLib_InputEventStringID, true>
----@field __ScrollDownEvents table<InputLib_InputEventStringID, true>
 local GridComponent = {}
 Navigation:RegisterClass("GenericUI.Navigation.Components.Grid", GridComponent, {"GenericUI.Navigation.Components.List"})
 
@@ -50,12 +48,21 @@ function GridComponent:Create(target, config)
     instance.__ScrollUpEvents = table.listtoset(config.ScrollUpEvents)
     instance.__ScrollDownEvents = table.listtoset(config.ScrollDownEvents)
 
-    -- Register events as consumable
-    for _,id in ipairs(config.ScrollUpEvents) do
-        table.insert(instance.CONSUMED_IGGY_EVENTS, id)
-    end
-    for _,id in ipairs(config.ScrollDownEvents) do
-        table.insert(instance.CONSUMED_IGGY_EVENTS, id)
+    -- Register default actions
+    -- TODO make names customizable as well, rename inherited List ones
+    local actions = {} ---@type GenericUI.Navigation.Component.Action[]
+    table.insert(actions, {
+        ID = "Down",
+        Name = CommonStrings.Down,
+        Inputs = table.listtoset(config.ScrollDownEvents),
+    })
+    table.insert(actions, {
+        ID = "Up",
+        Name = CommonStrings.Up,
+        Inputs = table.listtoset(config.ScrollUpEvents),
+    })
+    for _,action in ipairs(actions) do
+        instance:AddAction(action)
     end
 
     return instance
@@ -64,16 +71,14 @@ end
 ---@override
 function GridComponent:OnIggyEvent(event)
     -- Let ListComponent handle next/prev scrolling
-    if ListComponent.OnIggyEvent(self, event) then
-        return true
-    end
+    if ListComponent.OnIggyEvent(self, event) then return true end
 
     if event.Timing == "Down" then -- Handle up/down scrolling. Down timing is used to allow key repeat
         local _, gridColumns = self.__Target:GetGridSize()
         local scrollDirection = nil
-        if self.__ScrollDownEvents[event.EventID] then
+        if self:CanConsumeInput("Down", event.EventID) then
             scrollDirection = 1
-        elseif self.__ScrollUpEvents[event.EventID] then
+        elseif self:CanConsumeInput("Up", event.EventID) then
             scrollDirection = -1
         end
 
@@ -84,7 +89,7 @@ function GridComponent:OnIggyEvent(event)
             if self.__Index then
                 newIndex = self.__Index + scrollAmount
             else
-                newIndex = self.__ScrollDownEvents[event.EventID] and 1 or #children -- Starting index is based on direction pressed
+                newIndex = scrollDirection == 1 and 1 or #children -- Starting index is based on direction pressed
             end
 
             if self.__Wrap then
@@ -98,26 +103,4 @@ function GridComponent:OnIggyEvent(event)
             return true
         end
     end
-end
-
----@override
-function GridComponent:GetActions()
-    local actions = {} ---@type GenericUI.Navigation.Component.Action[]
-    table.insert(actions, {
-        Inputs = self.__ScrollBackwardEvents,
-        Name = CommonStrings.Left,
-    })
-    table.insert(actions, {
-        Inputs = self.__ScrollForwardEvents,
-        Name = CommonStrings.Right,
-    })
-    table.insert(actions, {
-        Inputs = self.__ScrollDownEvents,
-        Name = CommonStrings.Down,
-    })
-    table.insert(actions, {
-        Inputs = self.__ScrollUpEvents,
-        Name = CommonStrings.Up,
-    })
-    return actions
 end
