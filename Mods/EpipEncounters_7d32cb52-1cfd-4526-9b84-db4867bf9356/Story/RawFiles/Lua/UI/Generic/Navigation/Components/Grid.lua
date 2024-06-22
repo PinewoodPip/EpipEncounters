@@ -93,7 +93,7 @@ function GridComponent:OnIggyEvent(event)
                 newIndex = math.clamp(newIndex, 1, #children)
             end
 
-            self:__FocusByIndex(newIndex)
+            self:FocusByIndex(newIndex)
 
             return true
         end

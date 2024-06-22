@@ -35,7 +35,7 @@ local Overlay = {
     }
 }
 Epip.RegisterFeature("SettingsMenuOverlay", Overlay)
-local UI = Generic.Create("PIP_SettingsMenuOverlay")
+local UI = Generic.Create("PIP_SettingsMenuOverlay") ---@class Features.SettingsMenuOverlay.UI : GenericUI_Instance
 UI._Initialized = false
 UI.LIST_SIZE = V(950, 770)
 UI.FORM_ELEMENT_SIZE = V(800, 60)
@@ -52,6 +52,7 @@ UI._RAINBOW_COLORS = {
     "DE3E3E",
 }
 UI._RAINBOW_TEXT_CYCLE_TIME = 3.5 -- In seconds.
+Overlay.UI = UI
 
 ---------------------------------------------
 -- STYLES

@@ -745,6 +745,7 @@ LOAD_ORDER = {
 
     "Epip/Client/ImageViewer.lua",
     "Epip/Client/SettingsMenuOverlay.lua",
+    "Epip/Client/SettingsMenu/UI_Navigation.lua",
     "Epip/InputSettingsMenu/Client.lua",
 
     {

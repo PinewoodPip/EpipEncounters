@@ -80,7 +80,7 @@ end
 function ListComponent:OnFocusChanged(focused)
     if focused and self.__Index then
         local children = self:GetChildren()
-        self:__FocusByIndex(math.clamp(self.__Index, 1, #children)) -- Children might've changed since the last time the list was focused.
+        self:FocusByIndex(math.clamp(self.__Index, 1, #children)) -- Children might've changed since the last time the list was focused.
     end
 end
 
@@ -109,7 +109,7 @@ function ListComponent:OnIggyEvent(event)
                 newIndex = math.clamp(newIndex, 1, #children)
             end
 
-            self:__FocusByIndex(newIndex)
+            self:FocusByIndex(newIndex)
 
             return true
         end
@@ -118,7 +118,7 @@ end
 
 ---Focuses the child with a specific index.
 ---@param index integer
-function ListComponent:__FocusByIndex(index)
+function ListComponent:FocusByIndex(index)
     local children = self:GetChildren()
     local child = children[index]
 
