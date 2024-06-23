@@ -5,6 +5,7 @@
 
 local Set = DataStructures.Get("DataStructures_Set")
 local Minimap = Client.UI.Minimap
+local MinimapC = Client.UI.Controller.Minimap
 
 ---@class Feature_MinimapToggle : Feature
 local MinimapToggle = {
@@ -47,8 +48,9 @@ end
 
 -- Updates visibility of the UI based on settings and modules requesting it to be hidden.
 function MinimapToggle._Update()
-    if Minimap:Exists() then -- TODO restore visibility when feature is disabled
-        local root = Minimap:GetRoot()
+    local ui = MinimapToggle._GetUI()
+    if ui:Exists() then -- TODO restore visibility when feature is disabled
+        local root = ui:GetRoot()
         local uiState = root.visible
         local featureState = MinimapToggle.IsVisible()
 
@@ -57,6 +59,12 @@ function MinimapToggle._Update()
             root.visible = featureState
         end
     end
+end
+
+---Returns the UI library to use, based on current input mode.
+---@return UI
+function MinimapToggle._GetUI()
+    return Client.IsUsingController() and MinimapC or Minimap
 end
 
 ---------------------------------------------
