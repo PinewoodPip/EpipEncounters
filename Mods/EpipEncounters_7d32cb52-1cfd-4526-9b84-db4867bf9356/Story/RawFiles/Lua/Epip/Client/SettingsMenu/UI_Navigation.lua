@@ -106,7 +106,8 @@ end
 local origSetup = Overlay.Setup
 Overlay.Setup = function (...)
     origSetup(...)
-    Navbar.Setup(UI, Vector.Create(0, UI.NAVIGATION_BAR_OFFSET))
-    UI:GetUI().Top = -UI.OFFSET_WITH_NAVIGATION_BAR
-    UI:Move(Vector.Create(0, UI.OFFSET_WITH_NAVIGATION_BAR))
+    if Navbar.Setup(UI, Vector.Create(0, UI.NAVIGATION_BAR_OFFSET)) then
+        UI:GetUI().Top = -UI.OFFSET_WITH_NAVIGATION_BAR
+        UI:Move(Vector.Create(0, UI.OFFSET_WITH_NAVIGATION_BAR))
+    end
 end

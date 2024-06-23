@@ -40,9 +40,33 @@ local Navbar = {
         ["dpad_down"] = ControllerTextures.DPAD.UP,
         ["dpad_left"] = ControllerTextures.DPAD.RIGHT,
         ["dpad_right"] = ControllerTextures.DPAD.DOWN,
-    }
+    },
+    TranslatedStrings = {
+        Setting_EnabledForKeyboard_Name = {
+            Handle = "hf2b30b24ge1a7g432cgb1b4g72820964705a",
+            Text = "Show keyboard Navigation Bar",
+            ContextDescription = [[Setting name]],
+        },
+        Setting_EnabledForKeyboard_Description = {
+            Handle = "h236b1865g25e1g4264ga431g97e1e853005b",
+            Text = "If enabled, Epip UIs that support keyboard navigation will show a bar with the UI's keyboard controls when playing with keyboard + mouse.<br><br>Toggling this setting requires affected UIs to be closed and reopened for it to take effect.",
+            ContextDescription = [[Setting tooltip for "Show keyboard Navigation Bar"]],
+        },
+        Setting_EnabledForController_Name = {
+            Handle = "h6c98e77ag7451g4fb9g983bg1c9982916ce6",
+            Text = "Show controller Navigation Bar",
+            ContextDescription = [[Setting name]],
+        },
+        Setting_EnabledForController_Description = {
+            Handle = "hdfd37c7dg00c0g4077gbe73gd2a79a31d654",
+            Text = "If enabled, Epip UIs that support controller navigation will show a bar with the UI's controls when playing with a controller.<br><br>Toggling this setting requires affected UIs to be closed and reopened for it to take effect.",
+            ContextDescription = [[Setting tooltip for "Show controller Navigation Bar]],
+        },
+    },
+    Settings = {},
 }
 Epip.RegisterFeature("Features.NavigationBar", Navbar)
+local TSK = Navbar.TranslatedStrings
 
 ---@class Features.NavigationBar.UI : GenericUI_Instance
 local UI = Generic.Create("Features.Navbar.UI", 99)
@@ -55,13 +79,34 @@ UI.ICON_SIZE = V(40, 40) -- Input icon size.
 UI._PreviousActions = {} ---@type GenericUI.Navigation.Component.Action[]
 
 ---------------------------------------------
+-- SETTINGS
+---------------------------------------------
+
+Navbar.Settings.EnabledForKeyboard = Navbar:RegisterSetting("EnabledForKeyboard", {
+    Type = "Boolean",
+    Name = TSK.Setting_EnabledForKeyboard_Name,
+    Description = TSK.Setting_EnabledForKeyboard_Description,
+    DefaultValue = false,
+})
+Navbar.Settings.EnabledForController = Navbar:RegisterSetting("EnabledForController", {
+    Type = "Boolean",
+    Name = TSK.Setting_EnabledForController_Name,
+    Description = TSK.Setting_EnabledForController_Description,
+    DefaultValue = true,
+})
+
+---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
----Shows the bar for a UI.
+---Shows the bar for a UI, if it is enabled by the user.
 ---@param ui GenericUI.Navigation.UI
 ---@param positionOffset Vector2?
+---@return boolean -- Whether the navigation bar was opened. Ex. it might've not if disabled by user settings.
 function Navbar.Setup(ui, positionOffset)
+    local setting = Client.IsUsingController() and Navbar.Settings.EnabledForController or Navbar.Settings.EnabledForKeyboard
+    if setting:GetValue() == false then return false end
+
     positionOffset = positionOffset or Vector.zero2
     if not ui.___NavigationController then
         Navbar:__Error("Setup", "UI must have a navigation controller")
@@ -81,6 +126,8 @@ function Navbar.Setup(ui, positionOffset)
     end, {StringID = subscriberID})
 
     UI:Show()
+
+    return true
 end
 
 ---Updates the actions shown.

@@ -14,6 +14,7 @@ local TooltipDelay = Epip.GetFeature("Features.TooltipAdjustments.TooltipDelay")
 local StatusConsoleDividers = Epip.GetFeature("Features.StatusConsoleDividers")
 local HotbarTweaks = Epip.GetFeature("Features.HotbarTweaks")
 local Vanity = Epip.GetFeature("Feature_Vanity")
+local Navbar = Epip.GetFeature("Features.NavigationBar")
 local CommonStrings = Text.CommonStrings
 
 local QuickExamineWidgets = {
@@ -110,6 +111,11 @@ local EpipSettingsMenu = {
            Handle = "h39849f5cga570g43bcg9258gf0c20c6f7e75",
            Text = "Crafting UI",
            ContextDescription = "Settings section name",
+        },
+        Section_Navigation = {
+            Handle = "h663df9f7g47dcg4de4g9178gdea692da71a9",
+            Text = "Keyboard & Controller UI Navigation",
+            ContextDescription = [[Settings menu section name]],
         },
     }
 }
@@ -240,6 +246,10 @@ local tabs = {
             {Module = "Epip_Overheads", ID = "DamageOverheadsSize"},
             {Module = "Epip_Overheads", ID = "StatusOverheadsDurationMultiplier"},
             {Module = "Epip_Notifications", ID = "RegionLabelDuration"},
+
+            CreateHeader(TSK.Section_Navigation),
+            CreateSettingEntry(Navbar.Settings.EnabledForKeyboard),
+            CreateSettingEntry(Navbar.Settings.EnabledForController),
 
             CreateHeader(CommonStrings.Chat),
             {Module = "Epip_Chat", ID = "Chat_MessageSound"},
