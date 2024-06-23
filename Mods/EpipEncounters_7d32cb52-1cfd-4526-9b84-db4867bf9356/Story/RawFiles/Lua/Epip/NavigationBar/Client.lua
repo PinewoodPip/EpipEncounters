@@ -21,6 +21,7 @@ UI.PADDING = 30
 UI.BOTTOM_MARGIN = 50 -- In UIObject space.
 UI.ACTION_SPACING = 50
 UI.SUBSCRIBERID_TICK = "Features.NavigationBar." -- Suffixed with UI ID.
+UI._PreviousActions = {} ---@type GenericUI.Navigation.Component.Action[]
 
 ---------------------------------------------
 -- METHODS
@@ -43,10 +44,11 @@ function Navbar.Setup(ui, positionOffset)
         if not ui:IsVisible() then
             UI:Hide()
             GameState.Events.Tick:Unsubscribe(subscriberID)
+        else
+            Navbar.UpdateActions(ui)
         end
     end, {StringID = subscriberID})
 
-    Navbar.UpdateActions(ui)
     UI:Show()
 end
 
@@ -54,22 +56,27 @@ end
 ---@param ui GenericUI.Navigation.UI
 function Navbar.UpdateActions(ui)
     local list = UI.ActionList
-    list:Clear()
-
     local actions = ui.___NavigationController:GetCurrentActions()
-    for _,action in ipairs(actions) do
-        UI._RenderAction(action)
+
+    if Navbar._ActionListsAreDifferent(actions, UI._PreviousActions) then
+        list:Clear()
+
+        for _,action in ipairs(actions) do
+            UI._RenderAction(action)
+        end
+
+        list:RepositionElements()
+
+        list:SetPositionRelativeToParent("Center")
+
+        local bg = UI.Background
+        local uiObj = UI:GetUI()
+        uiObj.SysPanelSize = bg:GetSize() * uiObj:GetUIScaleMultiplier() + V(0, UI.BOTTOM_MARGIN)
+        UI:SetPositionRelativeToViewport("bottom", "bottom", "screen")
+        UI:Move(UI._PositionOffset)
+
+        UI._PreviousActions = actions
     end
-
-    list:RepositionElements()
-
-    list:SetPositionRelativeToParent("Center")
-
-    local bg = UI.Background
-    local uiObj = UI:GetUI()
-    uiObj.SysPanelSize = bg:GetSize() * uiObj:GetUIScaleMultiplier() + V(0, UI.BOTTOM_MARGIN)
-    UI:SetPositionRelativeToViewport("bottom", "bottom", "screen")
-    UI:Move(UI._PositionOffset)
 end
 
 ---Adds an action to the list.
@@ -117,4 +124,19 @@ function UI._Initialize()
     UI.ActionList = actionList
 
     UI._Initialized = true
+end
+
+---Returns whether 2 action lists are different.
+---@param list1 GenericUI.Navigation.Component.Action[]
+---@param list2 GenericUI.Navigation.Component.Action[]
+---@return boolean
+function Navbar._ActionListsAreDifferent(list1, list2)
+    if #list1 ~= #list2 then return true end
+    for i,action1 in ipairs(list1) do
+        local action2 = list2[i]
+        if action1.ID ~= action2.ID then
+            return true
+        end
+    end
+    return false
 end
