@@ -82,6 +82,7 @@ function UI.SetupNavigation()
 
     -- Set default foci for the lists
     root:FocusByIndex(1) -- Tab buttons
+    rightPanel:SetFocusedIndex(1)
     bottomButtons:SetFocusedIndex(2) -- FocusByIndex() is not used as it would immediately highlight the button
 end
 
