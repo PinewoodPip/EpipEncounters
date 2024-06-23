@@ -1,6 +1,8 @@
 
 local Generic = Client.UI.Generic
 local SlicedTexture = Generic.GetPrefab("GenericUI.Prefabs.SlicedTexture")
+local Textures = Epip.GetFeature("Feature_GenericUITextures").TEXTURES
+local ControllerTextures = Textures.INPUT.CONTROLLER.XBOX -- TODO support PS ones as well
 local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 local Input = Client.Input
 local V = Vector.Create
@@ -9,7 +11,35 @@ local V = Vector.Create
 local Navbar = {
     ---@type table<InputRawType, TextureLib_Texture>
     INPUTEVENT_TO_TEXTURE = {
-        -- TODO!
+        ["start"] = ControllerTextures.START,
+        ["guide"] = ControllerTextures.SELECT,
+
+        ["controller_a"] = ControllerTextures.A_BUTTON,
+        ["controller_b"] = ControllerTextures.B_BUTTON,
+        ["controller_x"] = ControllerTextures.X_BUTTON,
+        ["controller_y"] = ControllerTextures.Y_BUTTON,
+
+        ["leftshoulder"] = ControllerTextures.LEFT_BUTTON,
+        ["rightshoulder"] = ControllerTextures.RIGHT_BUTTON,
+        ["lefttrigger"] = ControllerTextures.LEFT_TRIGGER,
+        ["righttrigger"] = ControllerTextures.RIGHT_TRIGGER,
+
+        ["leftstick"] = ControllerTextures.LEFT_STICK.PRESS,
+        ["leftstick_xneg"] = ControllerTextures.LEFT_STICK.LEFT,
+        ["leftstick_ypos"] = ControllerTextures.LEFT_STICK.UP,
+        ["leftstick_xpos"] = ControllerTextures.LEFT_STICK.RIGHT,
+        ["leftstick_yneg"] = ControllerTextures.LEFT_STICK.DOWN,
+
+        ["rightstick"] = ControllerTextures.RIGHT_STICK.PRESS,
+        ["rightstick_xneg"] = ControllerTextures.RIGHT_STICK.LEFT,
+        ["rightstick_ypos"] = ControllerTextures.RIGHT_STICK.UP,
+        ["rightstick_xpos"] = ControllerTextures.RIGHT_STICK.RIGHT,
+        ["rightstick_yneg"] = ControllerTextures.RIGHT_STICK.DOWN,
+
+        ["dpad_up"] = ControllerTextures.DPAD.LEFT,
+        ["dpad_down"] = ControllerTextures.DPAD.UP,
+        ["dpad_left"] = ControllerTextures.DPAD.RIGHT,
+        ["dpad_right"] = ControllerTextures.DPAD.DOWN,
     }
 }
 Epip.RegisterFeature("Features.NavigationBar", Navbar)
@@ -21,6 +51,7 @@ UI.PADDING = 30
 UI.BOTTOM_MARGIN = 50 -- In UIObject space.
 UI.ACTION_SPACING = 50
 UI.SUBSCRIBERID_TICK = "Features.NavigationBar." -- Suffixed with UI ID.
+UI.ICON_SIZE = V(40, 40) -- Input icon size.
 UI._PreviousActions = {} ---@type GenericUI.Navigation.Component.Action[]
 
 ---------------------------------------------
@@ -85,13 +116,15 @@ function UI._RenderAction(action)
     local actionName = Text.Resolve(action.Name)
     local id = "Action." .. actionName .. "." .. Text.GenerateGUID() -- There may be multiple actions with the same name.
     local list = UI.ActionList:AddChild(id, "GenericUI_Element_HorizontalList")
+    list:SetCenterInLists(true)
 
     for inputEvent in pairs(action.Inputs) do
-        local binding = Input.GetBinding(inputEvent)
+        local binding = Input.GetBinding(inputEvent, Client.IsUsingController() and "C" or "Key")
         local texture = binding and Navbar.INPUTEVENT_TO_TEXTURE[binding.InputID] or nil
         if texture then
             local icon = list:AddChild(id .. "_Icon", "GenericUI_Element_Texture")
-            icon:SetTexture(texture) -- TODO use fixed size?
+            icon:SetTexture(texture)
+            icon:SetCenterInLists(true)
         elseif binding then
             -- Fallback to showing just the name
             local keyCombo = binding:ToKeyCombination()

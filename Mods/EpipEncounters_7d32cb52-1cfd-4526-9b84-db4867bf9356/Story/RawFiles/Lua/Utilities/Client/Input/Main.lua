@@ -736,7 +736,7 @@ function Input.GetBinding(eventID, deviceType, bindingIndex, playerIndex)
 
     local validBindings = {}
     for _,b in ipairs(bindings) do
-        if b.DeviceId == deviceType then
+        if b.DeviceId == deviceType or (deviceType == "C" and b.DeviceId == "Unknown") then -- Controller bindings show up here as Unknown device type.
             table.insert(validBindings, b)
         end
     end
@@ -750,7 +750,7 @@ function Input.GetBinding(eventID, deviceType, bindingIndex, playerIndex)
             Ctrl = binding.Ctrl,
             GUI = binding.Gui,
             InputID = binding.InputId,
-            DeviceType = binding.DeviceId,
+            DeviceType = (deviceType == "C" and binding.DeviceId == "Unknown") and "C" or binding.DeviceId,
         })
     end
 

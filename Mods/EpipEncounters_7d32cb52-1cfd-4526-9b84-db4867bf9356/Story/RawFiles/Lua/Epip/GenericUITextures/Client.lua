@@ -1651,7 +1651,7 @@ local Textures = {
                         LEFT = T("PIP_UI_Input_Controller_RightStick_Left", {
                             GUID = "e0f9f2b8-40cf-4fdf-8803-46e1b573cee9",
                         }),
-                        PRESSED = T("PIP_UI_Input_Controller_RightStick_Press", {
+                        PRESS = T("PIP_UI_Input_Controller_RightStick_Press", {
                             GUID = "109a38d6-d7db-495e-81e0-3b7df77869d0",
                         }),
                         RIGHT = T("PIP_UI_Input_Controller_RightStick_Right", {
