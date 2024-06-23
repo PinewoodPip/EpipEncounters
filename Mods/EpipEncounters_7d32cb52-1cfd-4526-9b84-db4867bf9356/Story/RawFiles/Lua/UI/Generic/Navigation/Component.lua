@@ -6,6 +6,7 @@ local Navigation = Generic.Navigation
 ---@field __Target GenericUI.Navigation.Component.Target
 ---@field __ActionsMap table<InputLib_InputEventStringID, GenericUI.Navigation.Component.Action>
 ---@field __Actions GenericUI.Navigation.Component.Action[] In order of registration.
+---@field __ActionsByID table<string, GenericUI.Navigation.Component.Action>
 ---@field _Focus GenericUI.Navigation.Component?
 ---@field _IsFocused boolean
 ---@field _ConsumedIggyEventsMap set<InputLib_InputEventStringID> Automatically generated.
@@ -67,6 +68,7 @@ function Component:Create(target)
     instance.__Target.___Component = instance
     instance.__Actions = {}
     instance.__ActionsMap = {}
+    instance.__ActionsByID = {}
 
     instance.Events = SubscribableEvent.CreateEventsTable(Component.Events)
     instance.Hooks = SubscribableEvent.CreateEventsTable(Component.Hooks)
@@ -103,6 +105,7 @@ function Component:AddAction(action)
         self.__ActionsMap[input] = action
     end
     table.insert(self.__Actions, action)
+    self.__ActionsByID[action.ID] = action
     self.Events.ActionAdded:Throw({
         Action = action,
     })
@@ -163,6 +166,13 @@ end
 ---@return GenericUI.Navigation.Component.Action[]
 function Component:GetActions()
     return self.__Actions
+end
+
+---Returns an action by ID.
+---@param id string
+---@return GenericUI.Navigation.Component.Action?
+function Component:GetAction(id)
+    return self.__ActionsByID[id]
 end
 
 ---Sets whether the component is focused by its parent.

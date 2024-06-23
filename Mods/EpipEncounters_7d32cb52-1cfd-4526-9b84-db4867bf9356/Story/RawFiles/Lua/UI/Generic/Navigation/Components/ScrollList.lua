@@ -47,12 +47,12 @@ function ScrollListComponent:Create(target, config)
     -- Add manual scrolling actions
     instance:AddAction({
         ID = "ScrollUp",
-        Name = CommonStrings.Up,
+        Name = CommonStrings.ScrollUp,
         Inputs = table.listtoset(config.ScrollUpEvents or EMPTY),
     })
     instance:AddAction({
         ID = "ScrollDown",
-        Name = CommonStrings.Down,
+        Name = CommonStrings.ScrollDown,
         Inputs = table.listtoset(config.ScrollDownEvents or EMPTY),
     })
 

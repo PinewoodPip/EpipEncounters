@@ -282,6 +282,24 @@ Text.CommonStrings.Interact = Text.RegisterTranslatedString({
     Handle = "haf50e434g26ecg44b2ga0a4gf24ec486c7e5",
     Text = "Interact",
 })
+Text.CommonStrings.ScrollDown = Text.RegisterTranslatedString({
+    Handle = "h02b0d0b3g900cg442cg9686gb4d5f7e405f3",
+    Text = "Scroll Down",
+    ContextDescription = "As in, scrolling a scroll bar",
+})
+Text.CommonStrings.ScrollUp = Text.RegisterTranslatedString({
+    Handle = "h6cdca959g97a7g4d37ga5b7gf1fe7d9bf7cf",
+    Text = "Scroll Up",
+    ContextDescription = "As in, scrolling a scroll bar",
+})
+Text.CommonStrings.NextSection = Text.RegisterTranslatedString({
+    Handle = "h9a1bb000g2aabg4302g8c79g04a628aa626e",
+    Text = "Next Section",
+})
+Text.CommonStrings.PreviousSection = Text.RegisterTranslatedString({
+    Handle = "hd3daf1b6g1405g478agaf4fga0ebc65ebfc1",
+    Text = "Previous Section",
+})
 Text.CommonStrings.Down = Text.RegisterTranslatedString({
     Handle = "hed778b0fgee1ag4507ga1ebg7dd249d17ce3",
     Text = "Down",

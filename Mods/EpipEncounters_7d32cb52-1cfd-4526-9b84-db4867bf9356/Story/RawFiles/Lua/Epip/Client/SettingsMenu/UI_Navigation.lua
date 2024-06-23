@@ -22,9 +22,12 @@ UI.NAVIGATION_BAR_OFFSET = 40 -- Vertical offset for navigation bar.
 function UI.SetupNavigation()
     local root = ListComponent:Create(UI:GetElementByID("Root"), {
         -- PrevObject/NextObject correspond to bumpers on controller
-        ScrollBackwardEvents = {"UILeft", "PrevObject"},
+        ScrollBackwardEvents = {"UILeft", "PrevObject", "UIBack"},
         ScrollForwardEvents = {"UIRight", "NextObject"},
     })
+    -- Rename the default actions to reduce ambiguity
+    root:GetAction("Next").Name = CommonStrings.NextSection
+    root:GetAction("Previous").Name = CommonStrings.PreviousSection
     -- Add action for closing the UI
     root:AddAction({
         ID = "Exit",
@@ -65,18 +68,6 @@ function UI.SetupNavigation()
         ScrollBackwardEvents = {"UILeft"},
         ScrollForwardEvents = {"UIRight"},
     })
-    -- Add action for returning focus to the settings list
-    bottomButtons:AddAction({
-        ID = "Back",
-        Name = CommonStrings.Back,
-        Inputs = {["UIUp"] = true, ["UIBack"] = true},
-    })
-    bottomButtons.Hooks.ConsumeInput:Subscribe(function (ev)
-        if ev.Event.Timing == "Up" and bottomButtons:CanConsumeInput("Back", ev.Event.EventID) then
-            Ext.OnNextTick(function () root:FocusByIndex(2) end)
-            ev.Consumed = true
-        end
-    end)
     GenericComponent:Create(UI.AcceptButton)
     GenericComponent:Create(UI.ApplyButton)
 

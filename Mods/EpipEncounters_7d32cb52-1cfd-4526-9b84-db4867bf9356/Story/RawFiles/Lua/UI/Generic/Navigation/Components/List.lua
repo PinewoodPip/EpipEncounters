@@ -135,6 +135,11 @@ function ListComponent:FocusByIndex(index)
     -- Navigation:DebugLog("List", self.__Target.ID, "New focus", child and child.__Target.ID or "nil")
 end
 
+---Returns the currently-focused child index.
+function ListComponent:GetFocusedIndex()
+    return self.__Index
+end
+
 ---Sets the index of the child to focus without updating the focus.
 ---Can be used to set the default index to focus.
 ---@param index integer
