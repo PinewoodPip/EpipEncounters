@@ -101,6 +101,14 @@ function _NavigationComponent:OnFocusChanged(focused)
         LegacyElementNavigation.SetFocus(interactable, focused)
     end
 
+    -- Emulate mouse over/out for tooltip purposes.
+    local root = self.__Target:GetRootElement()
+    if focused then
+        root.Events.MouseOver:Throw()
+    else
+        root.Events.MouseOut:Throw()
+    end
+
     -- Change background opacity to indicate focus.
     -- This is only used for navigation, so as not to make the background seem interactable when using mouse.
     local bg = self.__Target.Background
