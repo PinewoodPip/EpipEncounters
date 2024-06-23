@@ -68,27 +68,31 @@ function _NavigationComponent.Create(prefabInstance)
     instance:AddAction({
         ID = "Interact",
         Name = CommonStrings.Interact,
-        Inputs = {["UIAccept"] = true},
+        Inputs = {["UIAccept"] = true}, -- TODO this action doesn't make sense for slider? Unless we make some toggle state for dragging the handle.
     })
     instance:AddAction({
         ID = "PreviousItem",
         Name = TSK.Label_PreviousItem,
         Inputs = {["UIUp"] = true},
+        IsConsumableFunctor = instance._IsComboBoxActionConsumable,
     })
     instance:AddAction({
         ID = "NextItem",
         Name = TSK.Label_NextItem,
         Inputs = {["UIDown"] = true},
+        IsConsumableFunctor = instance._IsComboBoxActionConsumable,
     })
     instance:AddAction({
         ID = "SlideLeft",
         Name = TSK.Label_PreviousItem,
         Inputs = {["UILeft"] = true},
+        IsConsumableFunctor = instance._IsSlideActionConsumable,
     })
     instance:AddAction({
         ID = "SlideRight",
         Name = TSK.Label_NextItem,
         Inputs = {["UIRight"] = true},
+        IsConsumableFunctor = instance._IsSlideActionConsumable,
     })
 
     return instance
@@ -142,6 +146,23 @@ function _NavigationComponent:OnFocusChanged(focused)
     local bg = self.__Target.Background
     local BG_ALPHA = self.__Target.BACKGROUND_ALPHA
     bg:SetAlpha(focused and BG_ALPHA.FOCUSED or BG_ALPHA.UNFOCUSED)
+end
+
+---Returns whether the slider actions are consumable.
+---@return boolean
+function _NavigationComponent:_IsSlideActionConsumable()
+    return self.__Target:GetInteractableElement().Type == "GenericUI_Element_Slider"
+end
+
+---Returns whether the combobox actions are consumable.
+---@return boolean
+function _NavigationComponent:_IsComboBoxActionConsumable()
+    local element = self.__Target:GetInteractableElement()
+    if element.Type == "GenericUI_Element_ComboBox" then
+        ---@cast element GenericUI_Element_ComboBox
+        return element:IsOpen()
+    end
+    return false
 end
 
 ---------------------------------------------

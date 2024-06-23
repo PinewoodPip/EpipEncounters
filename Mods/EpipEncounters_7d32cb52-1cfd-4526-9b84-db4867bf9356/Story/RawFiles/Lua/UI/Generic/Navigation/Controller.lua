@@ -88,7 +88,7 @@ function Controller:GetCurrentActions()
 
     for i=#stack,1,-1 do
         local component = stack[i]
-        local componentActions = component:GetActions()
+        local componentActions = component:GetConsumableActions()
         for _,action in ipairs(componentActions) do
             local valid = false
             -- Only include the action if no deeper components already define one for the input events.

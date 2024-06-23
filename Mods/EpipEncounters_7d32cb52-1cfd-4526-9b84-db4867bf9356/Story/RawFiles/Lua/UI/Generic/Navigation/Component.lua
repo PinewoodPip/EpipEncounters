@@ -31,6 +31,7 @@ Navigation:RegisterClass("GenericUI.Navigation.Component", Component)
 ---@field ID string
 ---@field Name TextLib.String
 ---@field Inputs set<InputLib_InputEventStringID>
+---@field IsConsumableFunctor (fun(component:GenericUI.Navigation.Component):boolean)? If `nil`, the action is considered to always be consumable.
 
 ---------------------------------------------
 -- EVENTS
@@ -83,6 +84,7 @@ end
 function Component:OnFocusChanged(focused) end
 
 ---Called when the component receives an Iggy Event.
+---@see GenericUI.Navigation.Component.Hooks.ConsumeInput
 ---@virtual
 ---@param event GenericUI.Instance.Events.IggyEventCaptured
 ---@return boolean -- If `true`, the event will be considered consumed and will not propagate to parent components.
@@ -162,10 +164,23 @@ function Component:IsAlive()
     return not self.__Target:IsDestroyed()
 end
 
----Returns the actions currently available for the component.
+---Returns the actions registered for the component.
 ---@return GenericUI.Navigation.Component.Action[]
 function Component:GetActions()
     return self.__Actions
+end
+
+---Returns the actions currently consumable by the component.
+---@return GenericUI.Navigation.Component.Action[]
+function Component:GetConsumableActions()
+    local actions = self:GetActions()
+    local consumableActions = {}
+    for _,action in ipairs(actions) do
+        if action.IsConsumableFunctor == nil or action.IsConsumableFunctor(self) then
+            table.insert(consumableActions, action)
+        end
+    end
+    return consumableActions
 end
 
 ---Returns an action by ID.
