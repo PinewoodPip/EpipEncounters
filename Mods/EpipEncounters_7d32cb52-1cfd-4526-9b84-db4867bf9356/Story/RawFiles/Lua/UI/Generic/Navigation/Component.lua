@@ -52,6 +52,10 @@ Navigation:RegisterClass("GenericUI.Navigation.Component", Component)
 ---@param target GenericUI.Navigation.Component.Target
 ---@return GenericUI.Navigation.Component
 function Component:Create(target)
+    -- Other components expect Target to be element. TODO also hold a prefab ref?
+    if OOP.ImplementsClass(target, "GenericUI_I_Elementable") then
+        target = target:GetRootElement()
+    end
     local instance = self:__Create({
         __Target = target,
         _Focus = nil,

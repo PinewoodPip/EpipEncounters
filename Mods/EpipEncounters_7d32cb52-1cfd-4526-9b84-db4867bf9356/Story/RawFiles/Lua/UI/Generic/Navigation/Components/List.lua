@@ -30,8 +30,8 @@ Navigation:RegisterClass("GenericUI.Navigation.Components.List", ListComponent, 
 ---@field ScrollBackwardEvents InputLib_InputEventStringID[]? Events that will switch focus to the previous target.
 ---@field Wrap boolean? If `true`, scrolling past boundaries will cause focus to wrap to the other edge target. Defaults to `false`.
 local _DefaultConfig = {
-    ScrollBackwardEvents = {"UIUp", "UILeft"},
-    ScrollForwardEvents = {"UIDown", "UIRight"},
+    ScrollBackwardEvents = {"UIUp"},
+    ScrollForwardEvents = {"UIDown"},
     Wrap = false,
 }
 ListComponent.DEFAULT_CONFIG = _DefaultConfig
@@ -133,6 +133,13 @@ function ListComponent:FocusByIndex(index)
     self:SetFocus(child)
 
     -- Navigation:DebugLog("List", self.__Target.ID, "New focus", child and child.__Target.ID or "nil")
+end
+
+---Sets the index of the child to focus without updating the focus.
+---Can be used to set the default index to focus.
+---@param index integer
+function ListComponent:SetFocusedIndex(index)
+    self.__Index = index
 end
 
 ---Returns the child components.
