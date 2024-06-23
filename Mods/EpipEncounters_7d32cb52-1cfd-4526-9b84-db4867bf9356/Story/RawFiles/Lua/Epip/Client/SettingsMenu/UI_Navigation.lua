@@ -5,6 +5,8 @@ local Controller = Navigation:GetClass("GenericUI.Navigation.Controller")
 local GenericComponent = Navigation:GetClass("GenericUI.Navigation.Components.Generic")
 local ListComponent = Navigation:GetClass("GenericUI.Navigation.Components.List")
 local ScrollListComponent = Navigation:GetClass("GenericUI.Navigation.Components.ScrollList")
+local CommonStrings = Text.CommonStrings
+local SettingsMenu = Epip.GetFeature("Feature_SettingsMenu")
 local Overlay = Epip.GetFeature("Feature_SettingsMenuOverlay")
 local Navbar = Epip.GetFeature("Features.NavigationBar")
 local UI = Overlay.UI ---@cast UI +GenericUI.Navigation.UI
@@ -19,25 +21,77 @@ UI.NAVIGATION_BAR_OFFSET = 40 -- Vertical offset for navigation bar.
 ---Sets up the navigation controller for the UI.
 function UI.SetupNavigation()
     local root = ListComponent:Create(UI:GetElementByID("Root"), {
-        ScrollBackwardEvents = {"UISelectChar1", "UISelectSlot1", "PrevObject"},
-        ScrollForwardEvents = {"UISelectChar2", "UISelectSlot2", "NextObject"},
+        -- PrevObject/NextObject correspond to bumpers on controller
+        ScrollBackwardEvents = {"UILeft", "PrevObject"},
+        ScrollForwardEvents = {"UIRight", "NextObject"},
     })
+    -- Add action for closing the UI
+    root:AddAction({
+        ID = "Exit",
+        Name = CommonStrings.Close,
+        Inputs = {["ToggleInGameMenu"] = true},
+    })
+    root.Hooks.ConsumeInput:Subscribe(function (ev)
+        if ev.Event.Timing == "Up" and root:CanConsumeInput("Exit", ev.Event.EventID) then
+            SettingsMenu.Close()
+            ev.Consumed = true
+        end
+    end)
+
+    -- Tab buttons
     local tabButtons = ScrollListComponent:Create(UI.TabButtonsList)
     tabButtons.Events.ChildAdded:Subscribe(function (ev)
-        GenericComponent:Create(ev.Child)
+        -- Create generic components for all tab buttons so they can be interacted with
+        local component = GenericComponent:Create(ev.Child)
+
+        -- Automatically focus the settings list after changing tabs
+        component.Hooks.ConsumeInput:Subscribe(function (inputEv)
+            if inputEv.Event.Timing == "Up" and component:CanConsumeInput("Interact", inputEv.Event.EventID) then
+                Ext.OnNextTick(function() root:FocusByIndex(2) end) -- Needs be delayed to have the button finish handling the Up event
+                -- Should not consume the event so the default Button component logic does so
+            end
+        end)
     end, {Priority = -999})
+
+    -- Settings list
     local rightPanel = ScrollListComponent:Create(UI.List, {
-        ScrollDownEvents = {"ShowSneakCones", "CameraZoomOut"},
-        ScrollUpEvents = {"DestructionToggle", "CameraZoomIn"},
+        ScrollDownEvents = {"CameraZoomOut"},
+        ScrollUpEvents = {"CameraZoomIn"},
     })
 
+    -- Bottom buttons
+    local bottomButtons = ListComponent:Create(UI.BottomButtonList, {
+        -- The buttons list is horizontal, thus the default up/down would not be intuitive
+        ScrollBackwardEvents = {"UILeft"},
+        ScrollForwardEvents = {"UIRight"},
+    })
+    -- Add action for returning focus to the settings list
+    bottomButtons:AddAction({
+        ID = "Back",
+        Name = CommonStrings.Back,
+        Inputs = {["UIUp"] = true, ["UIBack"] = true},
+    })
+    bottomButtons.Hooks.ConsumeInput:Subscribe(function (ev)
+        if ev.Event.Timing == "Up" and bottomButtons:CanConsumeInput("Back", ev.Event.EventID) then
+            Ext.OnNextTick(function () root:FocusByIndex(2) end)
+            ev.Consumed = true
+        end
+    end)
+    GenericComponent:Create(UI.AcceptButton)
+    GenericComponent:Create(UI.ApplyButton)
+
+    -- Root navigation
     root:SetChildren({
         tabButtons,
         rightPanel,
+        bottomButtons,
     })
 
     Controller.Create(UI, root)
-    root:FocusByIndex(1)
+
+    -- Set default foci for the lists
+    root:FocusByIndex(1) -- Tab buttons
+    bottomButtons:SetFocusedIndex(2) -- FocusByIndex() is not used as it would immediately highlight the button
 end
 
 ---------------------------------------------

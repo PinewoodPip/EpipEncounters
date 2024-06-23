@@ -302,6 +302,10 @@ Text.CommonStrings.Right = Text.RegisterTranslatedString({
     Text = "Right",
     ContextDescription = "As in, the direction",
 })
+Text.CommonStrings.Close = Text.RegisterTranslatedString({
+    Handle = "hd5213948g0a1bg4d8cg8f64g1f144d44e578",
+    Text = "Close",
+})
 
 ---------------------------------------------
 -- BRANDING

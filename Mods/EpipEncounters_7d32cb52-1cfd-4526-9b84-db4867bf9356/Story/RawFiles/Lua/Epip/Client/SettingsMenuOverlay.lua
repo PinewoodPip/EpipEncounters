@@ -220,14 +220,17 @@ function Overlay._Initialize()
                 SettingsMenu.Close()
             end
         end)
+        UI.AcceptButton = acceptButton
 
         local applyButton = ButtonPrefab.Create(UI, "ApplyButton", bottomButtonsList, UI.LARGE_BUTTON_STYLE)
         applyButton:SetLabel(CommonStrings.Apply:Format({Casing = "Uppercase"}))
         applyButton.Events.Pressed:Subscribe(function (_)
             SettingsMenu.ApplyPendingChanges()
         end)
+        UI.ApplyButton = applyButton
 
         bottomButtonsList:SetPositionRelativeToParent("Bottom", 0, -44)
+        UI.BottomButtonList = bottomButtonsList
 
         local closeButton = CloseButton.Create(UI, "CloseButton", rightPanel)
         closeButton:SetPositionRelativeToParent("TopRight", -20, 22)
