@@ -59,10 +59,23 @@ function Slider:SetMax(max)
     self:GetMovieClip().maximum = max
 end
 
+---Returns the minimum and maximum value accepted by the slider.
+---@return number, number -- Min, max.
+function Slider:GetRange()
+    local mc = self:GetMovieClip()
+    return mc.minimum, mc.maximum
+end
+
 ---Sets the step interval of the slider.
 ---@param step number
 function Slider:SetStep(step)
     self:GetMovieClip().snapInterval = step
+end
+
+---Returns the step interval of the slider.
+---@return number
+function Slider:GetStep()
+    return self:GetMovieClip().snapInterval
 end
 
 ---------------------------------------------

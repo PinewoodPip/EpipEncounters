@@ -35,6 +35,16 @@ local TSK = {
         Text = "Next Item",
         ContextDescription = [[Input binding hint]],
     }),
+    Label_SlideLeft = Navigation:RegisterTranslatedString({
+        Handle = "hc80564a1g07e6g4dc4g97cdgedeedee8797f",
+        Text = "Slide Left",
+        ContextDescription = [[As in, adjust a slider UI widget.]],
+    }),
+    Label_SlideRight = Navigation:RegisterTranslatedString({
+        Handle = "h462d4e75g38f1g42a4g8ad4g547e2dd6f836",
+        Text = "Slide Right",
+        ContextDescription = [[As in, adjust a slider UI widget.]],
+    }),
 }
 
 ---------------------------------------------
@@ -70,6 +80,16 @@ function _NavigationComponent.Create(prefabInstance)
         Name = TSK.Label_NextItem,
         Inputs = {["UIDown"] = true},
     })
+    instance:AddAction({
+        ID = "SlideLeft",
+        Name = TSK.Label_PreviousItem,
+        Inputs = {["UILeft"] = true},
+    })
+    instance:AddAction({
+        ID = "SlideRight",
+        Name = TSK.Label_NextItem,
+        Inputs = {["UIRight"] = true},
+    })
 
     return instance
 end
@@ -83,12 +103,20 @@ function _NavigationComponent:OnIggyEvent(event)
             if self:CanConsumeInput("Interact", event.EventID) then
                 LegacyElementNavigation.InteractWith(interactable)
                 return true
+            -- TODO the next 2 handlers should be done in the derived FormElement types instead!
             elseif (self:CanConsumeInput("PreviousItem", event.EventID) or self:CanConsumeInput("NextItem", event.EventID)) and interactable.Type == "GenericUI_Element_ComboBox" then
                 ---@cast interactable GenericUI_Element_ComboBox
                 if interactable:IsOpen() then
                     LegacyElementNavigation.ScrollComboBox(interactable, self:CanConsumeInput("PreviousItem", event.EventID) and -1 or 1)
                     return true
                 end
+            elseif (self:CanConsumeInput("SlideLeft", event.EventID) or self:CanConsumeInput("SlideRight", event.EventID)) and interactable.Type == "GenericUI_Element_Slider" then
+                ---@cast interactable GenericUI_Element_Slider
+                LegacyElementNavigation.AdjustSlider(interactable, self:CanConsumeInput("SlideLeft", event.EventID) and -1 or 1)
+                interactable.Events.HandleMoved:Throw({
+                    Value = interactable:GetValue()
+                })
+                return true
             end
         end
     end

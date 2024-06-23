@@ -52,6 +52,14 @@ function LegacyNavigation.ScrollComboBox(comboBox, direction)
     mc.selectedIndex = newIndex % #options
 end
 
+---Changes the value of a slider by 1 step.
+---@param slider GenericUI_Element_Slider
+---@param direction 1|-1
+function LegacyNavigation.AdjustSlider(slider, direction)
+    local min, max = slider:GetRange()
+    slider:SetValue(math.clamp(slider:GetValue() + direction * slider:GetStep(), min, max))
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
