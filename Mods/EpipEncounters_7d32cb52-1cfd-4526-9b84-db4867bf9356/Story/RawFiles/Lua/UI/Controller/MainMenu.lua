@@ -12,7 +12,7 @@ local Menu = {
         GAME = 4,
     }
 }
-Epip.InitializeUI(Ext.UI.TypeID.mainMenu_c, "MainMenuC", Menu)
+Epip.InitializeUI(Ext.UI.TypeID.mainMenu_c, "MainMenuC", Menu, false)
 Client.UI.Controller.MainMenu = Menu
 
 ---------------------------------------------

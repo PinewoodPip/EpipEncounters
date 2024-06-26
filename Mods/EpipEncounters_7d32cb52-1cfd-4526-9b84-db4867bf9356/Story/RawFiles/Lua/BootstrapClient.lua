@@ -431,6 +431,7 @@ LOAD_ORDER = {
     "UI/Controller/MainMenu.lua",
     "UI/Controller/GameMenu.lua",
     "UI/Controller/Minimap.lua",
+    "UI/Controller/BottomBar.lua",
 
     "Epip/Client/NameTypoFixes.lua",
     "Epip/Client/ExamineImprovements.lua",

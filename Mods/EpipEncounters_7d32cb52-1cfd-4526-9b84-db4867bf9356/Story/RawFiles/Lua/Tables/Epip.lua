@@ -239,7 +239,7 @@ if Ext.IsClient() then
     ---@param type integer?
     ---@param id string
     ---@param ui UI Will be initialized.
-    ---@param assignToUINamespace boolean?
+    ---@param assignToUINamespace boolean? Defaults to `true`.
     function Epip.InitializeUI(type, id, ui, assignToUINamespace)
         if assignToUINamespace == nil then assignToUINamespace = true end
         local instance = Client.UI._BaseUITable.Create(id, type, ui)

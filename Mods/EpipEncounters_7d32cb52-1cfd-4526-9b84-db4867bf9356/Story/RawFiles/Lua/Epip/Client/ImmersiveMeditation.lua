@@ -5,6 +5,9 @@
 ---------------------------------------------
 
 local MinimapToggle = Epip.GetFeature("Feature_MinimapToggle")
+local BottomBarC = Client.UI.Controller.BottomBar
+local StatusConsole = Client.UI.StatusConsole
+local Hotbar = Client.UI.Hotbar
 local Ascension = Game.Ascension
 
 ---@type Feature
@@ -23,6 +26,7 @@ local IM = {
             ContextDescription = "Immersive meditation setting tooltip",
         },
     },
+    Settings = {},
 }
 Epip.RegisterFeature("ImmersiveMeditation", IM)
 
@@ -30,7 +34,7 @@ Epip.RegisterFeature("ImmersiveMeditation", IM)
 -- SETTINGS
 ---------------------------------------------
 
-IM:RegisterSetting("Enabled", 
+IM:RegisterSetting("Enabled",
 {
     Type = "Boolean",
     NameHandle = IM.TranslatedStrings.ImmersiveMeditation_Name,
@@ -48,24 +52,26 @@ function IM:IsEnabled()
     return IM:GetSettingValue(IM.Settings.Enabled) == true and _Feature.IsEnabled(self)
 end
 
+---Updates the visibility of the affected UIs.
 function IM.Update()
-    if Client.IsUsingController() then return nil end
-    local state = IM:ReturnFromHooks("GetState", false)
+    local enabled = IM:ReturnFromHooks("GetState", false)
+    local uisVisible = not enabled
 
-    if state == IM.currentState then return nil end
+    -- Bottom bar can still be shown if attempting to use it.
+    -- This update thus needs to run regardless of whether the Immersive Meditation state changed. 
+    if Client.IsUsingController() then
+        BottomBarC:GetRoot().visible = uisVisible or BottomBarC.IsActive()
+    end
 
-    IM.currentState = state
+    if enabled == IM.currentState then return nil end
 
-    if state then
-        Client.UI.Hotbar.ToggleVisibility(false, "PIP_ImmersiveMeditation")
-        Client.UI.StatusConsole.Toggle(false, "PIP_ImmersiveMeditation")
-        
-        MinimapToggle.RequestState("ImmersiveMeditation", false)
-    else
-        Client.UI.Hotbar.ToggleVisibility(true, "PIP_ImmersiveMeditation")
-        Client.UI.StatusConsole.Toggle(true, "PIP_ImmersiveMeditation")
+    IM.currentState = enabled
 
-        MinimapToggle.RequestState("ImmersiveMeditation", true)
+    -- Update UI visibility
+    MinimapToggle.RequestState("ImmersiveMeditation", uisVisible)
+    if not Client.IsUsingController() then
+        Hotbar.ToggleVisibility(uisVisible, "PIP_ImmersiveMeditation")
+        StatusConsole.Toggle(uisVisible, "PIP_ImmersiveMeditation")
     end
 end
 
@@ -82,16 +88,13 @@ IM:RegisterHook("GetState", function(enabled)
     return enabled
 end)
 
--- Update state when client toggles meditation, the hotbar refreshes or the game is unpaused. The hotbar listener is needed for unpause
-Ascension:RegisterListener("ClientToggledMeditating", function(_)
-    IM.Update()
+-- Update state when client toggles meditation, the hotbar refreshes or the game is unpaused. The hotbar listener is needed for unpause.
+Ascension:RegisterListener("ClientToggledMeditating", IM.Update)
+Hotbar:RegisterListener("Refreshed", IM.Update)
+BottomBarC:RegisterInvokeListener("updateSlots", IM.Update)
+BottomBarC.Events.ActiveStateToggled:Subscribe(function (_)
+    Timer.Start(0.1, function (_)
+        IM.Update()
+    end)
 end)
-
-Client.UI.Hotbar:RegisterListener("Refreshed", function()
-    IM.Update()
-end)
-
--- No timer necessary!
-Utilities.Hooks.RegisterListener("GameState", "GameUnpaused", function()
-    IM.Update()
-end)
+Utilities.Hooks.RegisterListener("GameState", "GameUnpaused", IM.Update)
