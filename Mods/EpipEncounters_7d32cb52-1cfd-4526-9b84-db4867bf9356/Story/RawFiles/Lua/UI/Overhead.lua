@@ -22,6 +22,31 @@ local Overhead = {
         "Label",
         "Duration",
     },
+    FLASH_ENTRY_TEMPLATES = {
+        SELECTION_INFO = {
+            "ComponentHandle",
+            "NameLabel",
+            "Unused1",
+            "UnknownColor",
+            "VitalityFraction",
+            "PhysicalArmorFraction",
+            "MagicArmorFraction",
+            "PhysicalArmorLabel",
+            "MagicArmorLabel",
+            "Unknown10",
+            "LevelLabel",
+            "InteractLabel",
+            "InteractInfoLabel",
+            "ActionPointsLabel",
+            "HasEnoughAPForAction",
+            "ShowCyclers",
+            "VitalityLabel",
+            "ChanceToHitLabel",
+            "HasNoAction_m",
+            "PlayerOwnerID",
+            "CanCreateNewHolder",
+        },
+    },
 
     DEFAULT_OVERHEADS_SIZE = 19, -- TODO implement in swf
     DEFAULT_DAMAGE_OVERHEADS_SIZE = 24,
@@ -47,7 +72,8 @@ local Overhead = {
     USE_LEGACY_HOOKS = false,
 
     Hooks = {
-        RequestOverheads = {}, ---@type Event<UI.Overhead.Hooks.RequestOverheads>
+        RequestOverheads = {}, ---@type Hook<UI.Overhead.Hooks.RequestOverheads>
+        UpdateSelections = {}, ---@type Hook<UI.Overhead.Hooks.UpdateSelections>
     },
 }
 Epip.InitializeUI(Ext.UI.TypeID.overhead, "Overhead", Overhead)
@@ -62,12 +88,38 @@ Epip.InitializeUI(Ext.UI.TypeID.overhead, "Overhead", Overhead)
 ---@field Label string
 ---@field Duration integer Has different meaning for CHARHOLDER. TODO
 
+---@class UI.Overhead.SelectionRequest
+---@field ComponentHandle FlashItemHandle|FlashCharacterHandle
+---@field NameLabel string
+---@field Unused1 unknown
+---@field UnknownColor number
+---@field VitalityFraction number
+---@field PhysicalArmorFraction number
+---@field MagicArmorFraction number
+---@field PhysicalArmorLabel string
+---@field MagicArmorLabel string
+---@field Unknown10 unknown
+---@field LevelLabel string
+---@field InteractLabel string
+---@field InteractInfoLabel string
+---@field ActionPointsLabel string
+---@field HasEnoughAPForAction boolean
+---@field ShowCyclers boolean
+---@field VitalityLabel string
+---@field ChanceToHitLabel string
+---@field HasNoAction_m boolean
+---@field PlayerOwnerID integer
+---@field CanCreateNewHolder boolean
+
 ---------------------------------------------
 -- EVENTS/HOOKS
 ---------------------------------------------
 
 ---@class UI.Overhead.Hooks.RequestOverheads
 ---@field Overheads UI.Overhead.OverheadRequest[] Hookable.
+
+---@class UI.Overhead.Hooks.UpdateSelections
+---@field Selections UI.Overhead.SelectionRequest[] Hookable.
 
 ---------------------------------------------
 -- METHODS
@@ -135,7 +187,8 @@ end
 
 -- Hook overhead requests.
 Overhead:RegisterInvokeListener("updateOHs", function (ev)
-    local array = ev.UI:GetRoot().addOH_array
+    local root = ev.UI:GetRoot()
+    local array = root.addOH_array
     local contents = Client.Flash.ParseArray(array, Overhead.FLASH_ADDOH_ARRAY_TEMPLATE, false) ---@type UI.Overhead.OverheadRequest[]
 
     contents = Overhead.Hooks.RequestOverheads:Throw({
@@ -143,6 +196,13 @@ Overhead:RegisterInvokeListener("updateOHs", function (ev)
     }).Overheads
 
     Client.Flash.EncodeArray(array, Overhead.FLASH_ADDOH_ARRAY_TEMPLATE, contents)
+
+    local selectionArray = root.selectionInfo_array
+    local selections = Client.Flash.ParseArray(selectionArray, Overhead.FLASH_ENTRY_TEMPLATES.SELECTION_INFO)
+    selections = Overhead.Hooks.UpdateSelections:Throw({
+        Selections = selections,
+    }).Selections
+    Client.Flash.EncodeArray(selectionArray, Overhead.FLASH_ENTRY_TEMPLATES.SELECTION_INFO, selections)
 end, "Before")
 
 Settings.Events.SettingValueChanged:Subscribe(function (ev)

@@ -3,9 +3,11 @@
 -- Displays resistances at the bottom of the
 -- enemy health bar, or AP/SP/Init info if shift is held.
 -- Additionally, moves the level display to the header.
+-- Also displays this information in controller selection overheads.
 ---------------------------------------------
 
 local EnemyHealthBar = Client.UI.EnemyHealthBar
+local Overhead = Client.UI.Overhead -- For controller support.
 local CommonStrings = Text.CommonStrings
 
 ---@class Features.EnemyHealthBarExtraInfo : Feature
@@ -38,6 +40,9 @@ local ExtraInfo = {
         ALWAYS = 4,
     },
     TEXT_SIZE = 14.5,
+    CONTROLLER_RESISTANCES_SIZE = 19,
+    CONTROLLER_ALTERNATIVE_DISPLAY_SIZE = 19,
+    CONTROLLER_RESISTANCES_BOTTOM_MARGIN = 5,
 
     TranslatedStrings = {
         SettingName = {
@@ -220,7 +225,7 @@ function ExtraInfo.GetAlternativeDisplayLabel(char)
     }
 
     -- Insert level, based on user setting
-    if ExtraInfo:GetSettingValue(ExtraInfo.Settings.Mode) == ExtraInfo.CHARACTER_LEVEL_MODES.IN_ALT_INFO then
+    if ExtraInfo:GetSettingValue(ExtraInfo.Settings.Mode) == ExtraInfo.CHARACTER_LEVEL_MODES.IN_ALT_INFO and not Client.IsUsingController() then -- Redundant in controller UI as the selection info already shows level nicely.
         local level = Character.GetLevel(char)
 
         table.insert(texts, 1, string.format("%s %s", CommonStrings.Level:GetString(), level))
@@ -300,3 +305,63 @@ EnemyHealthBar.Hooks.GetBottomLabel:Subscribe(function (ev)
 
     end
 end, {Priority = -9999999}) -- TODO better way of ensuring we are operating on the level label - implement string IDs for the labels, possibly.
+
+-- Add resistance & alternative info labels to controller selection overheads.
+Overhead.Hooks.UpdateSelections:Subscribe(function (ev)
+    for _,selection in ipairs(ev.Selections) do
+        local char = Entity.GetComponent(Ext.UI.DoubleToHandle(selection.ComponentHandle))
+        if char and Entity.IsCharacter(char) then
+            ---@cast char +EclCharacter
+            local label = ExtraInfo.GetResistancesLabel(char)
+            if label then
+                selection.NameLabel = Text.Format("%s<br>%s", {
+                    FormatArgs = {
+                        selection.NameLabel,
+                        {
+                            Text = label,
+                            Size = ExtraInfo.CONTROLLER_RESISTANCES_SIZE,
+                        },
+                        -- Add a bit of margin at the bottom.
+                        {
+                            Text = " ",
+                            Size = ExtraInfo.CONTROLLER_RESISTANCES_BOTTOM_MARGIN,
+                        }
+                    }
+                })
+            end
+
+            -- Only append extra info in situations where combat stats are displayed
+            -- and the context menu is opened, as a form of "quick examine" (not to be confused with Quick Examine™).
+            local contextMenu = Ext.UI.GetByType(Ext.UI.TypeID.contextMenu_c.Object)
+            if selection.ChanceToHitLabel ~= "" and contextMenu.OF_Visible then
+                selection.ChanceToHitLabel = Text.Format("%s<br>%s", {
+                    FormatArgs = {
+                        selection.ChanceToHitLabel,
+                        {
+                            Text = ExtraInfo.GetAlternativeDisplayLabel(char),
+                            Size = ExtraInfo.CONTROLLER_ALTERNATIVE_DISPLAY_SIZE,
+                        }
+                    }
+                })
+            end
+        end
+    end
+end)
+-- Reposition selection elements to fit alongside the new information labels.
+GameState.Events.GameReady:Subscribe(function (_)
+    if Client.IsUsingController() then
+        GameState.Events.RunningTick:Subscribe(function (_)
+            local root = Overhead:GetRoot()
+            local array = root.overhead_array
+            for i=0,#array-1,1 do
+                local info = array[i].sInfo
+                if info then
+                    local nameText = info.name_mc.name_txt
+                    if info and nameText.numLines > 1 then -- Only do this for selections where we added resistance info.
+                        info.statusInfo_mc.y = -225 -- The vanilla code repositions these too far up when the name has multiple lines.
+                    end
+                end
+            end
+        end, {StringID = "Features.EnemyHealthBarExtraInfo.OverheadSelectionRepositioning"})
+    end
+end)
