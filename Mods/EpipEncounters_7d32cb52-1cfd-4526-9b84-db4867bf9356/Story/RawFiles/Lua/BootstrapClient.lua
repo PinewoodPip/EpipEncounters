@@ -470,6 +470,7 @@ LOAD_ORDER = {
             "Epip/TooltipAdjustments/ScriptedStatusesDamage/Client.lua",
             "Epip/TooltipAdjustments/CharacterSheet/Client.lua",
             {ScriptSet = "Epip/TooltipAdjustments/AbeyanceBufferDisplay", RequiresEE = true},
+            "Epip/TooltipAdjustments/StatAdjustmentMerging/Client.lua",
             "Epip/TooltipAdjustments/AprilFools/Client.lua",
         },
     },

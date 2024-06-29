@@ -28,7 +28,6 @@ local TooltipAdjustments = {
         "Dual Wielding",
     }),
     LW_BOOST_PATTERN = "(From Lone Wolf: %+0%%)",
-    STAT_ADJUSTMENT_PATTERN = "From Stat Adjustment: (%+?-?%d*%.?%d*)%%*",
     BOOST_AP_COST_TSKHANDLE = "h228e474ag396ag4dc9g837egd8d05d15bbb2", -- "AP Cost", used in boost tooltips
 
     Settings = {
@@ -129,50 +128,6 @@ function TooltipAdjustments.RemoveDeprecatedLWBoosts(_, _, tooltip)
         if v.Label:match(TooltipAdjustments.LW_BOOST_PATTERN) then
             tooltip:RemoveElement(v)
         end
-    end
-end
-
-function TooltipAdjustments.MergeStatAdjustments(tooltip)
-    local count = 0
-    local needsPercentageSign = false
-
-    -- count all stat adjustment status displays, and remove them
-    for i,v in pairs(tooltip.Data) do
-        if (v.Type == "StatsPercentageBoost" or v.Type == "StatsTalentsBoost" or v.Type == "StatsPercentageMalus" or v.Type == "StatsTalentsMalus") and v.Label:match(TooltipAdjustments.STAT_ADJUSTMENT_PATTERN) then
-            local amount, _ = v.Label:match(TooltipAdjustments.STAT_ADJUSTMENT_PATTERN)
-            amount = tonumber(amount)
-
-            if amount then
-                count = count + amount
-            end
-
-            if v.Type == "StatsPercentageBoost" or v.Type == "StatsPercentageMalus" then
-                needsPercentageSign = true
-            end
-
-            tooltip.Data[i] = nil
-        end
-    end
-
-    -- insert new tooltip element with the total value
-    if count ~= 0 then
-
-        local baseString = "From Stat Adjustment: {PREFIX}%s%%"
-        if not needsPercentageSign then
-            baseString = "From Stat Adjustment: {PREFIX}%s" -- no percentage sign
-        end
-
-        local type = "StatsPercentageBoost"
-        if count < 0 then
-            type = "StatsTalentsMalus"
-        end
-
-        local prefix = "+"
-        if count < 0 then prefix = "" end
-
-        baseString = baseString:gsub("{PREFIX}", prefix)
-
-        table.insert(tooltip.Data, {Type = type, Label = string.format(baseString, string.gsub(tostring(count), "%.0?+$", ""))})
     end
 end
 
@@ -454,7 +409,6 @@ end
 
 local function OnGenericStatTooltipRender(char, stat, tooltip)
     if not tooltip or not TooltipAdjustments:IsEnabled() then return nil end -- TODO why does this happen with item examine tooltips?
-    TooltipAdjustments.MergeStatAdjustments(tooltip)
     TooltipAdjustments.RemoveDeprecatedLWBoosts(char, stat, tooltip)
     TooltipAdjustments.FixSheetDamageTooltip(char, stat, tooltip)
 end
