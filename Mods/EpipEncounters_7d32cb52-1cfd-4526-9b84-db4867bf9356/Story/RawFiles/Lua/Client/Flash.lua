@@ -201,3 +201,18 @@ end
 function Flash.ToEngineHandle(flashHandle)
     return Ext.UI.DoubleToHandle(flashHandle)
 end
+
+---Copies the elements of a list to a flash array.
+---@param list LuaFlashCompatibleType[]
+---@param arr FlashArray Will have its length truncated.
+function Flash.ListToArray(list, arr)
+    local arrLength = #arr
+    local listLength = #list
+    for i,v in ipairs(list) do
+        arr[i-1] = v
+    end
+    -- Truncate array
+    if listLength < arrLength then
+        arr.length = listLength
+    end
+end

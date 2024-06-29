@@ -1,4 +1,5 @@
 
+local TooltipUI = Client.UI.Tooltip
 local TextDisplay = Client.UI.TextDisplay
 local Examine = Client.UI.Examine
 
@@ -299,7 +300,7 @@ end
 ---Does not fire events.
 ---@param data TooltipLib_SimpleTooltip
 function Tooltip.ShowSimpleTooltip(data)
-    local ui = Client.UI.Tooltip
+    local ui = TooltipUI
     local root = ui:GetRoot()
     local useCursorPosition = data.Position == nil
     local position = data.Position or Vector.Create(Client.GetMousePosition())
@@ -399,7 +400,7 @@ function Tooltip.HideTooltip()
 
     ui:ExternalInterfaceCall("hideTooltip")
 
-    Client.UI.Tooltip:GetRoot().removeTooltip()
+    TooltipUI:GetRoot().removeTooltip()
 
     Tooltip._currentTooltipData = nil
 end
@@ -476,10 +477,6 @@ function Tooltip._SendFormattedTooltipHook(ui, tooltipType, data, sourceData)
     return hook
 end
 
----------------------------------------------
--- EVENT LISTENERS
----------------------------------------------
-
 ---@param ui UIObject
 ---@param fieldName string
 ---@return table
@@ -487,7 +484,7 @@ local function ParseArray(ui, fieldName)
     return Tooltip._ParseTooltipArray(Game.Tooltip.TableFromFlash(ui, fieldName))
 end
 
-local function HandleFormattedTooltip(ev, arrayFieldName, sourceData, tooltipData)
+function Tooltip._HandleFormattedTooltip(ev, arrayFieldName, sourceData, tooltipData)
     if sourceData then
         tooltipData = tooltipData or ParseArray(ev.UI, arrayFieldName)
 
@@ -496,7 +493,7 @@ local function HandleFormattedTooltip(ev, arrayFieldName, sourceData, tooltipDat
         if not hook.Prevented then
             local newTable = Game.Tooltip.EncodeTooltipArray(hook.Tooltip.Elements)
 
-            Game.Tooltip.ReplaceTooltipArray(ev.UI, arrayFieldName, newTable, tooltipData)
+            Tooltip._ReplaceTooltipArray(ev.UI, arrayFieldName, newTable)
         else
             ev:PreventAction()
         end
@@ -505,6 +502,10 @@ local function HandleFormattedTooltip(ev, arrayFieldName, sourceData, tooltipDat
     Tooltip.nextTooltipData = nil
     Tooltip._currentTooltipData = tooltipData
 end
+
+---------------------------------------------
+-- EVENT LISTENERS
+---------------------------------------------
 
 -- Listen for global tooltip request calls.
 Ext.Events.UICall:Subscribe(function(ev)
@@ -527,24 +528,24 @@ Ext.Events.UICall:Subscribe(function(ev)
 end)
 
 -- Listen for formatted tooltip invokes on the main tooltip UI.
-Client.UI.Tooltip:RegisterInvokeListener("addFormattedTooltip", function(ev, _, _, _)
-    HandleFormattedTooltip(ev, "tooltip_array", Tooltip.nextTooltipData, nil)
+TooltipUI:RegisterInvokeListener("addFormattedTooltip", function(ev, _, _, _)
+    Tooltip._HandleFormattedTooltip(ev, "tooltip_array", Tooltip.nextTooltipData, nil)
 end)
 
 -- Listen for status tooltip invokes on the main tooltip UI.
-Client.UI.Tooltip:RegisterInvokeListener("addStatusTooltip", function (ev)
-    HandleFormattedTooltip(ev, "tooltip_array", Tooltip.nextTooltipData)
+TooltipUI:RegisterInvokeListener("addStatusTooltip", function (ev)
+    Tooltip._HandleFormattedTooltip(ev, "tooltip_array", Tooltip.nextTooltipData)
 end)
 
 -- Listen for custom formatted tooltip render requests.
-Client.UI.Tooltip:RegisterInvokeListener("addFormattedTooltip", function(ev, _, _, _)
+TooltipUI:RegisterInvokeListener("addFormattedTooltip", function(ev, _, _, _)
     if Tooltip._nextCustomTooltip then
         local tooltipData = Tooltip._nextCustomTooltip
 
         -- Clear the previous tooltip data
-        Client.UI.Tooltip:GetRoot().tooltip_array.length = 0
+        TooltipUI:GetRoot().tooltip_array.length = 0
 
-        HandleFormattedTooltip(ev, "tooltip_array", {UIType = Ext.UI.TypeID.hotBar, Type = "Custom", FlashCharacterHandle = Ext.UI.HandleToDouble(Client.GetCharacter().Handle)}, tooltipData.Elements)
+        Tooltip._HandleFormattedTooltip(ev, "tooltip_array", {UIType = Ext.UI.TypeID.hotBar, Type = "Custom", FlashCharacterHandle = Ext.UI.HandleToDouble(Client.GetCharacter().Handle)}, tooltipData.Elements)
     end
 end)
 
@@ -627,7 +628,7 @@ Ext.Events.UICall:Subscribe(function(ev)
         end
     end
 end)
-Client.UI.Tooltip:RegisterInvokeListener("addTooltip", function (ev, text, x, y, allowDelay, stickToMouseMode, tooltipStyle)
+TooltipUI:RegisterInvokeListener("addTooltip", function (ev, text, x, y, allowDelay, stickToMouseMode, tooltipStyle)
     -- Default values from flash method.
     x = x or 0
     y = y or 18

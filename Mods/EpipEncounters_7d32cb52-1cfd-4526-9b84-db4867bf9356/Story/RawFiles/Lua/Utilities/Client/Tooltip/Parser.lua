@@ -10,6 +10,7 @@ local ParseTooltipSkillProperties = Game.Tooltip.ParseTooltipSkillProperties
 local ParseTooltipArmorSet = Game.Tooltip.ParseTooltipArmorSet
 local TooltipSpecs = Game.Tooltip.TooltipSpecs
 local ParseTooltipElement = Game.Tooltip.ParseTooltipElement
+local Flash = Client.Flash
 
 ---@class TooltipLib
 local Tooltip = Client.Tooltip
@@ -57,4 +58,13 @@ function Tooltip._ParseTooltipArray(tt)
 	end
 
 	return elements
+end
+
+---Replaces the contents of a tooltip array.
+---@param ui UIObject Tooltip UI object
+---@param propertyName string Flash property name (tooltip_array, tooltipCompare_array, etc.)
+---@param tooltipArray table Tooltip array
+function Tooltip._ReplaceTooltipArray(ui, propertyName, tooltipArray)
+	local root = ui:GetRoot()
+	Flash.ListToArray(tooltipArray, root[propertyName])
 end

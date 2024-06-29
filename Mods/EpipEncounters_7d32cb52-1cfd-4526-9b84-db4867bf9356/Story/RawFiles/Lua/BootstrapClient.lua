@@ -268,6 +268,13 @@ LOAD_ORDER = {
     "UI/Skills.lua",
     "UI/MainMenu.lua",
 
+    "UI/Controller/MainMenu.lua",
+    "UI/Controller/GameMenu.lua",
+    "UI/Controller/Minimap.lua",
+    "UI/Controller/BottomBar.lua",
+    "UI/Controller/ContextMenu.lua",
+    "UI/Controller/Examine.lua",
+
     -- GM UIs
     {Script = "UI/GM/Roll.lua", GameModes = GAMEMODE_MASK.GameMaster},
 
@@ -277,6 +284,7 @@ LOAD_ORDER = {
             "Utilities/Client/Tooltip/Main.lua",
             "Utilities/Client/Tooltip/Parser.lua",
             "Utilities/Client/Tooltip/Status.lua",
+            "Utilities/Client/Tooltip/Controller.lua",
         },
     },
 
@@ -428,10 +436,6 @@ LOAD_ORDER = {
     },
 
     -- "UI/Controller/PanelSelect.lua",
-    "UI/Controller/MainMenu.lua",
-    "UI/Controller/GameMenu.lua",
-    "UI/Controller/Minimap.lua",
-    "UI/Controller/BottomBar.lua",
 
     "Epip/Client/NameTypoFixes.lua",
     "Epip/Client/ExamineImprovements.lua",
