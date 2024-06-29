@@ -1,7 +1,10 @@
 
-local ExamineC = Client.UI.Controller.Examine
-local BottomBarC = Client.UI.Controller.BottomBar
-local InventorySkillPanelC = Client.UI.Controller.InventorySkillPanel
+local ControllerUIs = Client.UI.Controller
+local ExamineC = ControllerUIs.Examine
+local BottomBarC = ControllerUIs.BottomBar
+local PartyInventoryC = ControllerUIs.PartyInventory
+local EquipmentPanelC = ControllerUIs.EquipmentPanel
+local InventorySkillPanelC = ControllerUIs.InventorySkillPanel
 
 ---@class TooltipLib
 local Tooltip = Client.Tooltip
@@ -19,6 +22,13 @@ Tooltip.CONTROLLER_UIS = {
     }},
     {UI = BottomBarC, Invokes = {
         {FunctionName = "updateTooltip", ArrayName = "tooltip_array"},
+    }},
+    {UI = PartyInventoryC, Invokes = {
+        {FunctionName = "updateTooltip", ArrayName = "tooltip_array"}, -- TODO offhand/compare tooltips
+    }},
+    {UI = EquipmentPanelC, Invokes = {
+        {FunctionName = "updateEquipTooltip", ArrayName = "equipTooltip_array"},
+        {FunctionName = "updateTooltip", ArrayName = "tooltip_array"}, -- The UI has confusing names for the arrays; equipTooltip_array is the equipped item, tooltip_array is for items from the equip widget.
     }},
 }
 
@@ -155,6 +165,50 @@ BottomBarC:RegisterCallListener("updateSelection", function (ev, slotID)
     local char = Client.GetCharacter()
     Tooltip._UpdateBottomBarCSourceData(ev.UI, "updateSelection", char, slotID)
 end)
+
+---------------------------------------------
+-- PARTY INVENTORY
+---------------------------------------------
+
+-- Handle item tooltips.
+PartyInventoryC:RegisterCallListener("slotOver", function (ev, itemFlashHandle, slotFlashIndex, inventoryOwnerFlashHandle)
+    if itemFlashHandle ~= 0 then
+        ---@type TooltipLib_TooltipSourceData
+        local sourceData = {
+            UIType = ev.UI:GetTypeId(),
+            UICall = ev.Function,
+            Type = "Item",
+            FlashCharacterHandle = Ext.UI.HandleToDouble(Client.GetCharacter().Handle), -- Tooltips are generated based on active character, not the owner of the inventory being browsed.
+            FlashItemHandle = itemFlashHandle,
+            FlashParams = {itemFlashHandle, slotFlashIndex, inventoryOwnerFlashHandle},
+            IsFromGame = true,
+        }
+        Tooltip.nextTooltipData = sourceData
+    end
+end)
+
+---------------------------------------------
+-- EQUIPMENT PANEL
+---------------------------------------------
+
+-- Handle item tooltips.
+local function OnEquipmentPanelItemSelected(ev, itemFlashHandle)
+    if itemFlashHandle ~= 0 then
+        ---@type TooltipLib_TooltipSourceData
+        local sourceData = {
+            UIType = ev.UI:GetTypeId(),
+            UICall = ev.Function,
+            Type = "Item",
+            FlashCharacterHandle = Ext.UI.HandleToDouble(Client.GetCharacter().Handle),
+            FlashItemHandle = itemFlashHandle,
+            FlashParams = {itemFlashHandle},
+            IsFromGame = true,
+        }
+        Tooltip.nextTooltipData = sourceData
+    end
+end
+EquipmentPanelC:RegisterCallListener("itemDollOver", OnEquipmentPanelItemSelected) -- Equipped items.
+EquipmentPanelC:RegisterCallListener("itemOver", OnEquipmentPanelItemSelected) -- Items within the swapping widget.
 
 ---------------------------------------------
 -- OTHER
