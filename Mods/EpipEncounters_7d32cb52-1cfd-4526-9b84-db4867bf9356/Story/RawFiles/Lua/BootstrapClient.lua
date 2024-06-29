@@ -274,6 +274,7 @@ LOAD_ORDER = {
     "UI/Controller/BottomBar.lua",
     "UI/Controller/ContextMenu.lua",
     "UI/Controller/Examine.lua",
+    "UI/Controller/InventorySkillPanel.lua",
 
     -- GM UIs
     {Script = "UI/GM/Roll.lua", GameModes = GAMEMODE_MASK.GameMaster},
