@@ -165,7 +165,9 @@ function Dyes.IsEEDye(id)
     return Dyes.DYE_DATA[id] ~= nil
 end
 
-VanityDyes.Events.DyeUsed:RegisterListener(function (dye, item, _)
+-- Handle applying EE dyes.
+VanityDyes.Events.DyeUsed:Subscribe(function (ev)
+    local dye, item = ev.Dye, ev.Item
     if dye.Type == "EE" then
         ---@cast dye DyeItem
         local hasDye = Item.GetPartyTemplateCount(dye.Template) > 0

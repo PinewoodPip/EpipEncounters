@@ -20,7 +20,6 @@ local Dyes = {
     DYE_CATEGORY_ORDER = {},
     DYE_PALETTE_BITS = 1,
     COLOR_NAMES = {"Primary", "Secondary", "Tertiary"},
-    CACHE = {},
     DYE_HISTORY_LIMIT = 10,
     DYED_ITEM_TAG = "^PIP_DYE_(%x+)_(%x+)_(%x+)$",
 

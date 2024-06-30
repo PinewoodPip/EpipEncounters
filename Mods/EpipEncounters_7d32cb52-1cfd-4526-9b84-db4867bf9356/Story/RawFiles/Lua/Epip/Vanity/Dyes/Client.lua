@@ -10,17 +10,17 @@ local Dyes = Epip.GetFeature("Feature_Vanity_Dyes")
 -- EVENTS / HOOKS
 ---------------------------------------------
 
-Dyes.Events.DyeUsed = Dyes:AddEvent("DyeUsed") ---@type VanityDyes_Event_DyeUsed
+Dyes.Events.DyeUsed = Dyes:AddSubscribableEvent("DyeUsed") ---@type Event<Features.Vanity.Dyes.Events.DyeUsed>
 
-Dyes.Hooks.GetCategories = Dyes:AddHook("GetCategories") ---@type VanityDyes_Hook_GetCategories
+Dyes.Hooks.GetCategories = Dyes:AddSubscribableHook("GetCategories") ---@type Hook<Features.Vanity.Dyes.Hooks.GetCategories>
 
----@class VanityDyes_Event_DyeUsed : Event
----@field RegisterListener fun(self, listener:fun(dye:VanityDye, item:EclItem, character:EclCharacter))
----@field Fire fun(self, dye:VanityDye, item:EclItem, character:EclCharacter)
+---@class Features.Vanity.Dyes.Events.DyeUsed
+---@field Dye VanityDye
+---@field Item EclItem
+---@field Character EclCharacter
 
----@class VanityDyes_Hook_GetCategories : LegacyHook
----@field RegisterHook fun(self, handler:fun(categories:VanityDyeCategory[]))
----@field Return fun(self, categories:VanityDyeCategory[])
+---@class Features.Vanity.Dyes.Hooks.GetCategories
+---@field Categories VanityDyeCategory[] Hookable.
 
 ---------------------------------------------
 -- METHODS
@@ -82,10 +82,12 @@ end
 ---@param id string
 function Dyes.UseDye(id)
     local data = Dyes.DYE_DATA[id] or Dyes.CustomDyes[id]
-
     Dyes:DebugLog("Using dye: " .. id)
-
-    Dyes.Events.DyeUsed:Fire(data, Vanity.GetCurrentItem(), Client.GetCharacter())
+    Dyes.Events.DyeUsed:Throw({
+        Dye = data,
+        Item = Vanity.GetCurrentItem(),
+        Character = Client.GetCharacter(),
+    })
 end
 
 ---Save a custom dye.
@@ -143,42 +145,6 @@ function Dyes.DeleteCustomDye(dyeID)
     Dyes.CustomDyes[dyeID] = nil
     Vanity.SaveData()
     Vanity.Refresh()
-end
-
----@param item EclItem|string
----@param dyeStat StatsItemColorDefinition
-function Dyes.CreateDyeStats(item, dyeStat)
-    local statType = item
-    if type(item) ~= "string" then statType = item.Stats.ItemType end
-
-    local deltaModName = string.format("Boost_%s_%s", statType, dyeStat.Name)
-    local boostStatName = "_" .. deltaModName
-    local stat = Stats.Get(statType, boostStatName)
-
-    Stats.Update("ItemColor", dyeStat)
-
-    if not stat then
-        stat = Ext.Stats.Create(boostStatName, statType)
-    end
-
-    stat.ItemColor = dyeStat.Name
-
-    Stats.Update("DeltaModifier", {
-        Name = deltaModName,
-        MinLevel = 1,
-        Frequency = 1,
-        BoostType = "ItemCombo",
-        ModifierType = statType,
-        SlotType = "Sentinel",
-        WeaponType = "Sentinel",
-        Handedness = "Any",
-        Boosts = {
-            {
-                Boost = boostStatName,
-                Count = 1,
-            }
-        }
-    })
 end
 
 function Dyes.ApplyGenericDyeFromSliders()
@@ -392,23 +358,9 @@ Vanity.Events.AppearanceReapplied:Subscribe(function (_)
     Dyes.UpdateActiveCharacterDyes()
 end)
 
-Ext.Events.SessionLoading:Subscribe(function()
-    local file = IO.LoadFile("pip_useddyes.json")
-
-    Dyes.CACHE = file or {}
-
-    if file then
-        -- print("creating dyes from cache")
-        for _,dye in pairs(file) do
-            Dyes.CreateDyeStats("Armor", dye)
-            Dyes.CreateDyeStats("Weapon", dye)
-        end
-    end
-end)
-
 -- Keep a history of recently-used dyes. TODO finish
-Dyes.Events.DyeUsed:RegisterListener(function (dye, item, character)
-
+Dyes.Events.DyeUsed:Subscribe(function (ev)
+    local dye = ev.Dye
     if #Dyes.DyeHistory == 0 or not Dyes.DyesAreEqual(Dyes.DyeHistory[#Dyes.DyeHistory], dye) then
         dye.Name = dye.Name or Text.CommonStrings.Unnamed:GetString()
 
@@ -494,7 +446,8 @@ Epip.GetFeature("Feature_Vanity_Outfits").Events.OutfitApplied:RegisterListener(
     end
 end)
 
-Dyes.Events.DyeUsed:RegisterListener(function (dye, item, character)
+Dyes.Events.DyeUsed:Subscribe(function (ev)
+    local dye = ev.Dye
     if dye.Type == "Custom" then
         Dyes.ApplyCustomDye(dye)
 
@@ -502,21 +455,17 @@ Dyes.Events.DyeUsed:RegisterListener(function (dye, item, character)
     end
 end)
 
--- Custom Dyes.
-Dyes.Hooks.GetCategories:RegisterHook(function (categories)
+-- Add Custom Dyes category.
+Dyes.Hooks.GetCategories:Subscribe(function (ev)
     local dyes = {}
-
     for _,dye in pairs(Dyes.CustomDyes) do
         table.insert(dyes, dye)
     end
-
-    table.insert(categories, {
+    table.insert(ev.Categories, {
         ID = "CustomDyes",
         Name = "Custom Dyes",
         Dyes = dyes,
     })
-
-    return categories
 end)
 
 -- Dye history tab.
@@ -540,14 +489,11 @@ end)
 -- end)
 
 -- Registered categories of premade dyes.
-Dyes.Hooks.GetCategories:RegisterHook(function (categories)
+Dyes.Hooks.GetCategories:Subscribe(function (ev)
     for _,categoryID in ipairs(Dyes.DYE_CATEGORY_ORDER) do
         local category = Dyes.DYE_CATEGORIES[categoryID]
-
-        table.insert(categories, category)
+        table.insert(ev.Categories, category)
     end
-
-    return categories
 end)
 
 -- Clear color override when items are reverted.

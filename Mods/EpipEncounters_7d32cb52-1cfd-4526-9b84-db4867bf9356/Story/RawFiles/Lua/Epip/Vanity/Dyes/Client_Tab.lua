@@ -132,12 +132,9 @@ function Tab:SetSliderColor(sliderIndex, color, forceTextUpdate)
 end
 
 function Tab:Render()
-    local item = Vanity.GetCurrentItem()
-
     Vanity.RenderItemDropdown()
 
-    local categories = Dyes.Hooks.GetCategories:Return({})
-
+    local item = Vanity.GetCurrentItem()
     if item then
         local currentSliderColor = {
             Color1 = Color.Create(),
@@ -174,6 +171,10 @@ function Tab:Render()
 
         Vanity.RenderCheckbox("Dye_DefaultToItemColor", TSK.Checkbox_LockColorSlides:Format({Color = "000000"}), Dyes.lockColorSlider, true)
 
+        -- Render categories
+        local categories = Dyes.Hooks.GetCategories:Throw({
+            Categories = {},
+        }).Categories
         self:RenderCategories(categories)
     else
         Vanity.RenderText("NoItem", VanityFeature.TranslatedStrings.Label_NoItemEquipped:GetString())
