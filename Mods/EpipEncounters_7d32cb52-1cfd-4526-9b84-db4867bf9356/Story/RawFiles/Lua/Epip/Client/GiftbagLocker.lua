@@ -146,9 +146,10 @@ GBUI:RegisterCallListener("buttonPressed", function(ev)
 end)
 
 -- Append warnings to giftbag descriptions.
-GBUI.Hooks.GetContent:RegisterHook(function (content)
+GBUI.Hooks.GetContent:Subscribe(function (ev)
     GBL.warnedGiftbags = {} -- Reset warning tracking anything the content updates (when the UI opens)
 
+    local content = ev.Content
     for _,entry in ipairs(content) do
         GBL.enabledGiftbags[entry.ID] = entry.Enabled -- Track which giftbags are enabled
 
@@ -180,6 +181,4 @@ GBUI.Hooks.GetContent:RegisterHook(function (content)
             })
         end
     end
-
-    return content
 end)

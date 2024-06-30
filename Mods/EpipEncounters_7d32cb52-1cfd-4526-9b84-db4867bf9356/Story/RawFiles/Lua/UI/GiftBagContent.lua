@@ -21,13 +21,15 @@ local GB = {
         [14] = MODS.GB_LEVELUP_ITEMS,
         [15] = MODS.GB_SPRINT,
     },
+
+    USE_LEGACY_EVENTS = false,
+    USE_LEGACY_HOOKS = false,
+
     Events = {
-        ---@type GiftBagContentUI_Event_ContentUpdated
-        ContentUpdated = {},
+        ContentUpdated = {}, ---@type Event<UI.GiftBagContent.Events.ContentUpdated>
     },
     Hooks = {
-        ---@type GiftBagContentUI_Hook_GetContent
-        GetContent = {},
+        GetContent = {}, ---@type Hook<UI.GiftBagContent.Hooks.GetContent>
     },
 }
 Epip.InitializeUI(Ext.UI.TypeID.giftBagContent, "GiftBagContent", GB)
@@ -37,14 +39,12 @@ Epip.InitializeUI(Ext.UI.TypeID.giftBagContent, "GiftBagContent", GB)
 ---------------------------------------------
 
 ---Fired after the UI's content is updated, upon opening the UI.
----@class GiftBagContentUI_Event_ContentUpdated : Event
----@field RegisterListener fun(self, listener:fun(content:GiftBagContentUIEntry[]))
----@field Fire fun(self, content:GiftBagContentUIEntry[])
+---@class UI.GiftBagContent.Events.ContentUpdated
+---@field Content GiftBagContentUIEntry[]
 
 ---Fired when the content of the UI needs to be updated.
----@class GiftBagContentUI_Hook_GetContent : LegacyHook
----@field RegisterHook fun(self, handler:fun(content:GiftBagContentUIEntry[]))
----@field Return fun(self, content:GiftBagContentUIEntry[])
+---@class UI.GiftBagContent.Hooks.GetContent
+---@field Content GiftBagContentUIEntry[] Hookable.
 
 ---------------------------------------------
 -- CLASSES
@@ -88,14 +88,18 @@ function GB.RenderContent()
         })
     end
 
-    content = GB:ReturnFromHooks("GetContent", content)
+    content = GB.Hooks.GetContent:Throw({
+        Content = content
+    }).Content
 
     for _,entry in ipairs(content) do
         root.giftContent_mc.addItem(entry.ID, entry.Name, entry.Description, entry.Enabled, entry.Locked)
     end
 
     GB:DebugLog("Content updated.")
-    GB.Events.ContentUpdated:Fire(content)
+    GB.Events.ContentUpdated:Throw({
+        Content = content,
+    })
 end
 
 ---------------------------------------------
