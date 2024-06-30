@@ -77,5 +77,13 @@ local functions = {
             },
         },
     },
+    ["Ext_Utils"] = {
+        ["Random"] = {
+            Overloads = {
+                "fun(maximum):integer",
+                "fun():number",
+            },
+        },
+    }
 }
 return functions

@@ -393,6 +393,7 @@ end
 ---@field Params Features.IDEAnnotations.Function.Parameter[]
 ---@field ReturnValues Features.IDEAnnotations.Function.Parameter[]
 ---@field IsInstanceMethod boolean
+---@field Overloads string[] Manually defined annotations.
 ---@field Comment string?
 
 ---@param module TypeInformation
@@ -405,6 +406,7 @@ local function GetFunctionData(module, type, methodName)
         IsInstanceMethod = module.Kind == "Object",
         Params = {},
         ReturnValues = {},
+        Overloads = {},
     }
 
     local nativeData = GetNativeData(module)
@@ -443,8 +445,15 @@ local function GetFunctionData(module, type, methodName)
 
     -- Apply overrides
     local moduleName = Generator._GetLocalName(Generator._GetClassName(module))
-    local moduleOverrides = Generator._FunctionOverrides[moduleName] or Generator._FunctionFixes[moduleName]
-    local funcOverrides = moduleOverrides and moduleOverrides[methodName] or nil
+    local moduleFunctionOverrides = Generator._FunctionOverrides[moduleName]
+    local moduleFunctionFixes =  Generator._FunctionFixes[moduleName]
+    -- Look for the override in both override files. TODO just combine these into 1 file
+    local funcOverrides = nil
+    if moduleFunctionOverrides and moduleFunctionOverrides[methodName] then
+        funcOverrides = moduleFunctionOverrides[methodName]
+    elseif moduleFunctionFixes and moduleFunctionFixes[methodName] then
+        funcOverrides = moduleFunctionFixes[methodName]
+    end
 
     if funcOverrides then
         if funcOverrides.Params then
@@ -458,6 +467,12 @@ local function GetFunctionData(module, type, methodName)
                 }
             end
         end
+
+        -- Copy over overload annotations
+        if funcOverrides.Overloads then
+            data.Overloads = funcOverrides.Overloads
+        end
+
         if funcOverrides.Return then
             data.ReturnValues = {}
             for i,returnValue in ipairs(funcOverrides.Return) do
@@ -505,6 +520,10 @@ function Generator._AnnotateMethod(writer, _, methodName, type, module)
         writer:AddLine(string.format("---%s", data.Comment))
     end
 
+    for _,overload in ipairs(data.Overloads) do
+        writer:AddLine(string.format("---@overload %s", overload))
+    end
+
     for _,param in ipairs(data.Params) do
         writer:AddLine(string.format("---@param %s %s", param.Name, param.Type))
     end
@@ -531,16 +550,22 @@ end
 ---@return string
 function Generator._GetClassName(typeInfo)
     local typeName = type(typeInfo) == "string" and typeInfo or typeInfo.TypeName
+
+    -- Split by namespace separator and capitalize each part
     local name, _ = string.gsub(typeName, "::", "")
-    name = name:gsub("^ecllua", "EclLua")
-    name = name:gsub("^esvlua", "EsvLua")
-    name = name:sub(1, 1):upper() .. name:sub(2)
+    local parts = Text.Split_2(typeName, "::")
+    for i,part in ipairs(parts) do
+        parts[i] = Text.Capitalize(part)
+    end
+    name = Text.Join(parts, "")
+
     -- Consider generic types as separate classes
     if typeName:match("<.+>") then
         local genericTypeName = typeName:match("<([^>]+)>")
         name = name:gsub("<([^>]+)>", "_" .. Text.Capitalize(genericTypeName))
         name = Generator._GetClassName(name)
     end
+
     return name
 end
 
