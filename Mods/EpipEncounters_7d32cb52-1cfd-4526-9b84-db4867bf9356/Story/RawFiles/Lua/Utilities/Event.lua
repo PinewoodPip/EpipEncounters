@@ -8,7 +8,9 @@
 ---@field Name string
 SubscribableEvent = {}
 
----@alias Hook<T> Event<T>
+---@class Hook<T>:{ (Subscribe:fun(self:Event, callback:fun(ev:T|Event_Params), opts:Event_Options|nil, stringID:string|nil):integer), Unsubscribe:fun(self:Event, index:integer|string), (Throw:fun(self:Event, event:T|Event_Params|nil):Event_Params|T), (RemoveNodes:fun(self:Event, predicate:(fun(node:table):boolean)?))}
+---@field Preventable false
+---@field Name string
 
 ---@class Event_Options
 ---@field Priority number? Defaults to 100.

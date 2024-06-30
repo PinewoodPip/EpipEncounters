@@ -1,7 +1,7 @@
 
 local DefaultTable = DataStructures.Get("DataStructures_DefaultTable")
 
----@class OsirisLib : Library, {[string]: function}, Osi
+---@class OsirisLib : Library, {[string]: function|OsiDatabase|OsirisLib.LegacyDatabase}, Osi
 Osiris = {
     _Databases = DefaultTable.Create({}), ---@type table<string, table<integer, OsirisLib_Database>>
     _UserQueries = DefaultTable.Create({}), ---@type table<string, table<integer, OsirisLib_UserQuery>>
@@ -15,6 +15,9 @@ Epip.InitializeLibrary("Osiris", Osiris)
 ---@alias OsirisType "INTEGER"|"INTEGER64"|"REAL"|"STRING"|"REAL"|"GUIDSTRING"|"CHARACTERGUID"|"ITEMGUID"|"TRIGGERGUID"|"SPLINEGUID"|"LEVELTEMPLATEGUID"
 ---@alias OsirisLib_OsirisCompatibleLuaType string|number|boolean
 ---@alias OsirisLib_CompatibleType OsirisLib_OsirisCompatibleLuaType|EsvCharacter|EsvItem
+
+---@class OsirisLib.LegacyDatabase : OsiDatabase
+---@field Set fun(...)
 
 ---@class OsirisLib_Tuple : Class, {[string]:OsirisLib_OsirisCompatibleLuaType, [integer]:OsirisLib_OsirisCompatibleLuaType}
 ---@field Values OsirisLib_OsirisCompatibleLuaType[]

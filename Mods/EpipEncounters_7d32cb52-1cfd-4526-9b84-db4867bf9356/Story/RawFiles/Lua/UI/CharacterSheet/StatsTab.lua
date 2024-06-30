@@ -6,7 +6,7 @@
 local CustomStats = Epip.GetFeature("Feature_CustomStats")
 
 ---@class CharacterSheetUIStatsTab : Library
----@field Stats table<string, StatsTabStat>
+---@field Stats table<string, Feature_CustomStats_Stat>
 ---@field TOOLTIP_TALENT_ID number Enum of the talent ID we hijack the tooltip of.
 ---@field TOOLTIP_TALENT_NAME string String ID of the talent we hijack the tooltip of.
 ---@field DEFAULT_STAT_VALUE number
@@ -36,7 +36,7 @@ local CharacterSheet = Client.UI.CharacterSheet
 
 ---Fired when a stat is rendered.
 ---@class CharacterSheetUIStatsTab_EntryAdded : Event
----@field data StatsTabStat
+---@field data Feature_CustomStats_Stat
 ---@field value number
 
 ---Fired before stats are (re-)rendered.
@@ -57,25 +57,25 @@ local CharacterSheet = Client.UI.CharacterSheet
 ---Fired when a stat tooltip is being rendered.
 ---@class CharacterSheetUIStatsTab_TooltipRendering : Event
 ---@field statID string
----@field data StatsTabStat
+---@field data Feature_CustomStats_Stat
 ---@field tooltip TooltipData The default tooltip, using Tooltip from the stat data, or Description as a fallback.
 
 ---Hook to change the calculated value of a stat.
 ---@class CharacterSheetUIStatsTab_GetStatValue : LegacyHook
 ---@field value number
----@field data StatsTabStat
+---@field data Feature_CustomStats_Stat
 ---@field char EclCharacter
 
 ---Hook to manipulate the string display of a stat's value.
 ---@class CharacterSheetUIStatsTab_FormatStatValue : LegacyHook
 ---@field value number
----@field data StatsTabStat
+---@field data Feature_CustomStats_Stat
 ---@field char EclCharacter
 
 ---Hook to manipulate the label display of a stat.
 ---@class CharacterSheetUIStatsTab_FormatLabel : LegacyHook
 ---@field label string
----@field data StatsTabStat
+---@field data Feature_CustomStats_Stat
 ---@field value number
 
 ---------------------------------------------
@@ -131,7 +131,7 @@ function StatsTab.RenderStat(id)
         StatsTab:LogWarning("Attempted to render non-existent stat " .. id)
         return
     end
-    
+
     local value = CustomStats.GetStatValue(char, id)
     local valueLabel = StatsTab.FormatStatValue(id, value)
     local label = data.Name
@@ -265,28 +265,12 @@ end
 ---------------------------------------------
 
 -- Refresh stats tab.
-Net.RegisterListener("EPIPENCOUNTERS_RefreshStatsTab", function(payload)
+Net.RegisterListener("EPIPENCOUNTERS_RefreshStatsTab", function(_)
     -- Needs a delay, as applying tags is apparently slower than this.
     Timer.Start("UI_CharacterSheet", 0.1, function()
         StatsTab.RenderStats()
     end)
 end)
-
-local function OnStatClick(uiObj, methodName, elementID)
-    StatsTab:FireEvent("StatClicked", elementID)
-end
-
-local function OnRequestRender(ui, method)
-    local root = ui:GetRoot()
-
-    StatsTab.RenderStats()
-end
-
-local function OnTabOpen(ui, method, tab)
-    if tab == 8 then
-        StatsTab.RenderStats()
-    end
-end
 
 local function OnStatTooltipRender(_, stat, tooltip)
     if not StatsTab.currentlySelectedStat or stat ~= StatsTab.TOOLTIP_TALENT_NAME then return nil end
@@ -305,7 +289,7 @@ local function OnStatTooltipRender(_, stat, tooltip)
 
         -- TODO add descriptions to categories
         if not CustomStats.IsCategory(StatsTab.currentlySelectedStat) then
-            table.insert(tooltip.Data, 
+            table.insert(tooltip.Data,
             {
                 Type = "StatsDescription",
                 Label = data:GetDescription() or "MISSING .Description",
@@ -319,7 +303,7 @@ local function OnStatTooltipRender(_, stat, tooltip)
 end
 
 -- When showCustomStatTooltip is sent to engine from flash, send a normal stat tooltip request, with a special, normally invalid statID.
-local function ShowCustomStatTooltip(ui, call, elementID, ...)
+local function ShowCustomStatTooltip(ui, _, elementID, ...)
     StatsTab.currentlySelectedStat = elementID
 
     ui:ExternalInterfaceCall("showTalentTooltip", StatsTab.TOOLTIP_TALENT_ID, ...)
@@ -329,9 +313,17 @@ Ext.Events.SessionLoaded:Subscribe(function()
     if Client.IsUsingController() then return end
     local ui = CharacterSheet:GetUI()
 
-    Ext.RegisterUICall(ui, "pipRenderCustomStats", OnRequestRender)
-    Ext.RegisterUICall(ui, "pipCustomStatClicked", OnStatClick) -- stat click handler
-    Ext.RegisterUICall(ui, "selectedTab", OnTabOpen, "After") -- tab open handler
+    Ext.RegisterUICall(ui, "pipRenderCustomStats", function (_, _)
+        StatsTab.RenderStats()
+    end)
+    Ext.RegisterUICall(ui, "pipCustomStatClicked", function (_, _, elementID)
+        StatsTab:FireEvent("StatClicked", elementID)
+    end) -- stat click handler
+    Ext.RegisterUICall(ui, "selectedTab", function (_, _, tabID)
+        if tabID == CharacterSheet.TABS.CUSTOM_STATS then
+            StatsTab.RenderStats()
+        end
+    end, "After") -- tab open handler
 
     -- Tooltip handlers
     Ext.RegisterUICall(ui, "showCustomStatTooltip", ShowCustomStatTooltip, "After")

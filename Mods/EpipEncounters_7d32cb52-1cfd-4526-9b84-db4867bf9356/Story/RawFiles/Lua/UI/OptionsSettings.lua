@@ -297,8 +297,8 @@ end
 ---@param id string
 ---@return OptionsSettingsOption
 function OptionsSettings.GetOptionData(id)
-    for modID,modData in pairs(OptionsSettings.Options) do
-        for i,optionData in ipairs(modData.Options) do
+    for _,modData in pairs(OptionsSettings.Options) do
+        for _,optionData in ipairs(modData.Options) do
             if optionData.ID == id then
                 return optionData
             end
@@ -346,9 +346,8 @@ function OptionsSettings.SetOptionValue(mod, option, value, synch)
             OptionsSettings:FireEvent("OptionSet", data, value)
         end
     else
-        GameState.Events.GameReady:Subscribe(function (e)
+        GameState.Events.GameReady:Subscribe(function (_)
             local data = OptionsSettings.GetOptionData(option)
-
             if data then
                 OptionsSettings:FireEvent("OptionSet", data, value)
             end
@@ -441,7 +440,7 @@ function OptionsSettings.RenderSelector(selector, numID)
     for i,option in ipairs(selector.Options) do
         root.mainMenu_mc.addSelectorOption(numID, i - 1, option.Label)
     end
-    
+
     OptionsSettings.SetElementState(selector.ID, OptionsSettings.GetOptionValue(selector.Mod, selector.ID))
 end
 
@@ -506,7 +505,7 @@ end
 ---@return number? Numeric ID.
 function OptionsSettings.RenderOption(elementData, numID)
     numID = numID or OptionsSettings.nextNumID
-    
+
     -- Register dynamically-created settings
     if not OptionsSettings.GetOptionData(elementData.ID) then
         if not elementData.Mod then
@@ -528,16 +527,16 @@ function OptionsSettings.RenderOption(elementData, numID)
             OptionsSettings:FireEvent("ElementRenderRequest", elementData.Type, elementData, numID)
 
             if elementData.Type == "Selector" then
-                for z,subSettingID in ipairs(elementData.Options[OptionsSettings.GetOptionValue(elementData.Mod, elementData.ID)].SubSettings) do
+                for _,subSettingID in ipairs(elementData.Options[OptionsSettings.GetOptionValue(elementData.Mod, elementData.ID)].SubSettings) do
                     local settingData = OptionsSettings.GetOptionData(subSettingID)
-    
+
                     ---@diagnostic disable-next-line: unused-local
                     local elementID = OptionsSettings.RenderOption(settingData, nil)
-        
+
                     -- TODO finish
                     -- OptionsSettings:DebugLog("Adding subsetting with id", elementID)
                     -- OptionsSettings:Dump(settingData)
-        
+
                     -- if elementID then
                     --     OptionsSettings.GetOptionElement(elementID).visible = false
                     --     root.mainMenu_mc.addSelectorSubSetting(numID, i - 1, elementID)
@@ -633,7 +632,7 @@ function OptionsSettings.SaveSettings()
     for modID,modData in pairs(OptionsSettings.Options) do
         json.mods[modID] = {settings = {}}
 
-        for i,setting in pairs(modData.Options) do
+        for _,setting in pairs(modData.Options) do
             if not setting.SaveOnServer then
                 json.mods[modID].settings[setting.ID] = OptionsSettings.GetOptionValue(modID, setting.ID)
             end
@@ -778,7 +777,7 @@ end
 
 function OptionsSettings.EncodeBaseUpdate(ui, elements)
     local newArray = {}
-    for i,element in ipairs(elements) do
+    for _,element in ipairs(elements) do
         if element.Type == "TabButton" then
 
             -- Special handling, since the normal update uses a constant
@@ -823,8 +822,7 @@ end
 --     end
 -- end)
 
-Ext.RegisterUINameCall("PipCustomTabClick", function(ui, method, id)
-    local tab = OptionsSettings.currentCustomTabs[id]
+Ext.RegisterUINameCall("PipCustomTabClick", function(ui, _, id)
     local root = ui:GetRoot()
     local overview = ui:GetRoot().mainMenu_mc
     local buttons = overview.menuBtnList.content_array
@@ -868,7 +866,7 @@ local function OnButton(ui, method, id)
     end
 end
 
-local function OnSliderChange(ui, method, id, value)
+local function OnSliderChange(_, _, id, value)
     OptionsSettings:DebugLog("Slider changed: " .. id)
     local element = OptionsSettings.currentElements[id]
 
@@ -877,7 +875,7 @@ local function OnSliderChange(ui, method, id, value)
     end
 end
 
-local function OnDropdownChange(ui, method, id, optionIndex)
+local function OnDropdownChange(_, _, id, optionIndex)
     OptionsSettings:DebugLog("Dropdown changed: " .. id)
     local element = OptionsSettings.currentElements[id]
 
@@ -912,7 +910,7 @@ OptionsSettings:RegisterListener("DropdownChanged", function(element, optionInde
     OptionsSettings.PendingValueChanges[element.ID] = optionIndex
 end)
 
-local function OnApplyOverrides(ui, method)
+local function OnApplyOverrides(_, _)
     for settingID,value in pairs(OptionsSettings.PendingValueChanges) do
         local setting = OptionsSettings.GetOptionData(settingID)
 

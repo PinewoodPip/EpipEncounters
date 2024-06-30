@@ -458,7 +458,7 @@ Vanity.Events.SaveDataLoaded:RegisterListener(function (data)
     end
 end)
 
-Client.UI.MessageBox.RegisterMessageListener("PIP_Vanity_SaveDye", Client.UI.MessageBox.Events.InputSubmitted, function(input, id, data)
+Client.UI.MessageBox.RegisterMessageListener("PIP_Vanity_SaveDye", Client.UI.MessageBox.Events.InputSubmitted, function(input, _, _)
     Dyes.SaveCustomDye(input, Dyes.GetSelectedDye())
 end)
 

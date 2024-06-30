@@ -1,4 +1,5 @@
 
+---@class HotbarUI
 local Hotbar = Client.UI.Hotbar
 
 ---@class HotbarLoadout
@@ -18,7 +19,7 @@ local Hotbar = Client.UI.Hotbar
 ---@param loadout string Loadout ID.
 ---@param row integer
 ---@param replaceUsedSlots boolean? If false, only empty slots will be filled. Defaults to false.
-function Client.UI.Hotbar.ApplyLoadout(char, loadout, row, replaceUsedSlots)
+function Hotbar.ApplyLoadout(char, loadout, row, replaceUsedSlots)
     local data = Hotbar.Loadouts[loadout]
 
     if data then
@@ -47,7 +48,7 @@ end
 ---Save a row loadout.
 ---@param row integer
 ---@param name string Name of the loadout. Saving under an existing name overrides the loadout.
-function Client.UI.Hotbar.SaveLoadout(row, name)
+function Hotbar.SaveLoadout(row, name)
     local skillBar = Client.GetCharacter().PlayerData.SkillBarItems
     ---@type HotbarLoadout
     local loadout = {
@@ -83,7 +84,7 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
-Hotbar:RegisterCallListener("pipSlotRightClicked", function(ev, index)
+Hotbar:RegisterCallListener("pipSlotRightClicked", function(_, index)
     index = index + 1
 
     local ui = Hotbar:GetUI()

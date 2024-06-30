@@ -37,12 +37,12 @@ end)
 ---------------------------------------------
 
 -- Shift slots.
-Client.UI.ContextMenu.RegisterElementListener("hotBar_ShiftRow", "buttonPressed", function(char, params)
+Client.UI.ContextMenu.RegisterElementListener("hotBar_ShiftRow", "buttonPressed", function(_, params)
     Hotbar.ShiftSlots(Hotbar.contextMenuSlot, params.Direction)
 end)
 
 -- Remove unmemorized.
-Client.UI.ContextMenu.RegisterElementListener("hotBarRow_RemoveUnmemorized", "buttonPressed", function(char, params)
+Client.UI.ContextMenu.RegisterElementListener("hotBarRow_RemoveUnmemorized", "buttonPressed", function(char, _)
     Hotbar.ClearRow(char, Hotbar.currentLoadoutRow, function(char, slot)
         if slot.Type == "Skill" then
             ---@type EclSkill
@@ -55,7 +55,7 @@ Client.UI.ContextMenu.RegisterElementListener("hotBarRow_RemoveUnmemorized", "bu
 end)
 
 -- Clear row.
-Client.UI.ContextMenu.RegisterElementListener("hotBarRow_ClearRow", "buttonPressed", function(char, params)
+Client.UI.ContextMenu.RegisterElementListener("hotBarRow_ClearRow", "buttonPressed", function(char, _)
     Hotbar.ClearRow(char, Hotbar.currentLoadoutRow)
     Hotbar.currentLoadoutRow = nil
 end)
@@ -91,7 +91,7 @@ Client.UI.ContextMenu.RegisterMenuHandler("hotBarLoadoutsMenu", function()
     end
 
     -- Insert loadout entries before the divider
-    for i,entry in ipairs(loadoutEntries) do
+    for _,entry in ipairs(loadoutEntries) do
         table.insert(entries, #entries - 1, entry)
     end
 
@@ -104,7 +104,7 @@ Client.UI.ContextMenu.RegisterMenuHandler("hotBarLoadoutsMenu", function()
 end)
 
 -- Remove a loadout.
-Client.UI.ContextMenu.RegisterElementListener("hotBarLoadLoadout", "removablePressed", function(char, params)
+Client.UI.ContextMenu.RegisterElementListener("hotBarLoadLoadout", "removablePressed", function(_, params)
     Hotbar.Loadouts[params.ID] = nil
     Hotbar.currentLoadoutRow = nil
 end)

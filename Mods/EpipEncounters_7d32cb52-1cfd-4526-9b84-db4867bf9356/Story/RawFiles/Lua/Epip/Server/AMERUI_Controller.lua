@@ -70,7 +70,7 @@ Controller.Events.CommandReceived:RegisterListener(function (command, char)
 
             -- Pop page if there are any. We don't call the method directly as there are some special listeners for it to manipulate the stack in the Greatforge UI.
             if stackCount and stackCount > 0 and ui ~= "AMER_UI_ModSettings" then
-                CharacterItemEvent(char.MyGuid, NULLGUID, "AMER_UI_GEN_PagePop")
+                Osi.CharacterItemEvent(char.MyGuid, NULLGUID, "AMER_UI_GEN_PagePop")
             else -- Exit UI otherwise
                 Osi.PROC_AMER_UI_ExitUI(char.MyGuid)
             end
@@ -89,14 +89,16 @@ Controller.RegisterCommandHandler("AMER_UI_Ascension", "Page_Gateway", "SelectCl
 
     elementName = visibleElementsQuery[2][4]
 
+    ---@diagnostic disable: unused-local
     local _, _, _, cluster, index, _, tuples = Osiris.DB_AMER_UI_ElementWheel_Element(state.Instance, "AMER_UI_Ascension", "PathWheel", elementName, nil, nil)
 
     local _, _, _, vindex, index2, _, _, guid, tuples2 = Osiris.DB_AMER_UI_ElementWheel_Visible(state.Instance, "AMER_UI_Ascension", "PathWheel", nil, index, nil, nil, nil)
+    ---@diagnostic enable: unused-local
 
     item = Ext.GetItem(item)
     guid = item.CurrentTemplate.Name .. "_" .. guid
 
-    CharacterItemEvent(Utilities.GetPrefixedGUID(char), guid, "AMER_UI_Ascension_ClusterChosen")
+    Osi.CharacterItemEvent(Utilities.GetPrefixedGUID(char), guid, "AMER_UI_Ascension_ClusterChosen")
 end)
 
 Controller.RegisterCommandHandler("AMER_UI_Ascension", "Page_Gateway", "ScrollRight", function(char)

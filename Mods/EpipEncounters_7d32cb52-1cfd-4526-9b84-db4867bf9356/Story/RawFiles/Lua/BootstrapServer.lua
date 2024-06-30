@@ -314,7 +314,6 @@ LOAD_ORDER = {
     "Debug/Server.lua",
 
     "Epip/HotbarPersistence/Shared.lua",
-    {ScriptSet = "Epip/TogglePartyLink"},
     {ScriptSet = "Epip/TradeContainers"},
     {ScriptSet = "Epip/EpipInfoCodex"},
 
@@ -367,9 +366,9 @@ local _registeredSymbols = {}
 Net.RegisterListener("EPIP_RegisterGenericOsiSymbolEvent", function(payload)
     -- Don't register listeners multiple times
     -- Alternatively we could only send these requests from the host client :thinking:
-    for i,s in ipairs(_registeredSymbols) do
+    for _,s in ipairs(_registeredSymbols) do
         if s.Arity == payload.Arity and s.Symbol == payload.Symbol then
-            return nil
+            return
         end
     end
 

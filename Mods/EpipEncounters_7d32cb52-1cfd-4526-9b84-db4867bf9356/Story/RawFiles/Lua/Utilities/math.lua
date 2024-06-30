@@ -14,11 +14,7 @@ end
 
 ---@return 1|-1
 function math.randomSign()
-    if Ext.Random(0, 1) == 1 then
-        return 1
-    else
-        return -1
-    end
+    return Ext.Random(0, 1) == 1 and 1 or -1
 end
 
 ---Linearly interpolates a value from a starting value to an end value.

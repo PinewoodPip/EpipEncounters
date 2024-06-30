@@ -208,7 +208,8 @@ end
 ---@param str1 string
 ---@param str2 string
 ---@param separator string? Defaults to ` `
----@overload fun(str:string[], separator:string?)
+---@overload fun(str:string[], separator:string?):string
+---@return string
 function Text.Join(str1, str2, separator)
     if type(str1) == "table" then separator = str2 end
     separator = separator or " "

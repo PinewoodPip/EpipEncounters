@@ -8,6 +8,9 @@
 -- EVENTS
 ---------------------------------------------
 
+---Deprecated.
+---@see Event
+---@class LegacyEvent
 _Event = {
     Module = "",
     Event = "",

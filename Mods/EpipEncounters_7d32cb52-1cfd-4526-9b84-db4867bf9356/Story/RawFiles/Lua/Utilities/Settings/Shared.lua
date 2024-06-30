@@ -31,6 +31,7 @@ Epip.InitializeLibrary("Settings", Settings)
 -- CLASSES
 ---------------------------------------------
 
+---@diagnostic disable-next-line: duplicate-doc-alias
 ---@alias SettingsLib_SettingType "Boolean"|"Number"|"ClampedNumber"|"Choice"|"Set"|"Map"|"Vector"|"String"
 
 ---@class EPIP_SETTINGS_SYNC

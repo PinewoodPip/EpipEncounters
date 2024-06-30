@@ -563,7 +563,7 @@ end
 ---Clear the skillbar data of char on a specific row, optionally filtering by a predicate function.
 ---@param char EclCharacter
 ---@param row integer
----@param predicate fun(char: EclCharacter, slot: EocSkillBarItem)
+---@param predicate fun(char: EclCharacter, slot: EocSkillBarItem)?
 function Hotbar.ClearRow(char, row, predicate)
     local skillBar = char.PlayerData.SkillBarItems
 

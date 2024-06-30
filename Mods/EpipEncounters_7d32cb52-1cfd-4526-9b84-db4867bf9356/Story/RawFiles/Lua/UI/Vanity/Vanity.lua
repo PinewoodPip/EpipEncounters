@@ -547,7 +547,7 @@ function Vanity.IsCategoryOpen(categoryID)
 end
 
 ---@param tab CharacterSheetCustomTab
-function Vanity.Setup(tab, ...)
+function Vanity.Setup(tab)
     Vanity.Cleanup()
 
     CharacterSheet:GetUI():Show()
@@ -925,9 +925,7 @@ end
 
 function Vanity.SetPosition(x, y)
     local ui = Vanity:GetUI()
-
-    Vanity:GetUI():SetPosition(x, y)
-
+    ui:SetPosition(x, y)
     Vanity.Position = {x, y}
 end
 
@@ -971,8 +969,7 @@ end)
 
 -- Remove underscores and replace some common words to create
 -- somewhat readable and coherent names for the context menus.
-Vanity:RegisterHook("GenerateTemplateName", function(name, template, data)
-    
+Vanity:RegisterHook("GenerateTemplateName", function(name, _, data)
     -- Miscellaneous prefix removals
     for pattern,replacement in pairs(Vanity.ROOT_NAME_REPLACEMENTS) do
         name = name:gsub(pattern, replacement)
@@ -1126,36 +1123,34 @@ Vanity:RegisterCallListener("copyFromElement", function(ev, id)
     Vanity.Events.CopyPressed:Fire(Vanity.currentTab, id, element.input_txt.htmlText)
 end)
 
-Vanity:RegisterCallListener("pasteIntoElement", function(ev, id)
-    local element = ev.UI:GetRoot().focusedElement
-
+Vanity:RegisterCallListener("pasteIntoElement", function(_, id)
     Vanity:DebugLog("Pasting into ", id)
 
     Vanity.Events.PastePressed:Fire(Vanity.currentTab, id)
 end)
 
-Vanity:RegisterCallListener("pipMinusPressed", function(ev, id)
+Vanity:RegisterCallListener("pipMinusPressed", function(_, id)
     Vanity.Events.EntryRemoved:Fire(Vanity.currentTab, id)
 end)
 
-Vanity:RegisterCallListener("copyPressed", function(ev, id, text)
+Vanity:RegisterCallListener("copyPressed", function(_, id, text)
     Vanity.Events.CopyPressed:Fire(Vanity.currentTab, id, text)
 end)
 
-Vanity:RegisterCallListener("checkBoxID", function(ev, id, state)
+Vanity:RegisterCallListener("checkBoxID", function(_, id, state)
     Vanity.Events.CheckboxPressed:Fire(Vanity.currentTab, id, state == 1)
 end)
 
-Vanity:RegisterCallListener("pastePressed", function(ev, id)
+Vanity:RegisterCallListener("pastePressed", function(_, id)
     Vanity.Events.PastePressed:Fire(Vanity.currentTab, id)
 end)
 
-Vanity:RegisterCallListener("acceptInput", function(ev, id, text)
+Vanity:RegisterCallListener("acceptInput", function(_, id, text)
     Vanity.Events.InputChanged:Fire(Vanity.currentTab, id, text)
 end)
 
 -- Hide level up blips while the UI is open.
-GameState.Events.RunningTick:Subscribe(function (e)
+GameState.Events.RunningTick:Subscribe(function (_)
     if not Client.IsUsingController() then
         if Vanity.visible and CharacterSheet:Exists() then
             Vanity.TogglePointsWarning(false)
@@ -1170,12 +1165,12 @@ Utilities.Hooks.RegisterListener("GameState", "GamePaused", function()
     Vanity.SaveData()
 end)
 
-Vanity:RegisterCallListener("sliderHandleUp", function(ev, id, value)
+Vanity:RegisterCallListener("sliderHandleUp", function(_, id, value)
     Vanity.Events.SliderHandleReleased:Fire(Vanity.currentTab, id, value)
 end)
 
 -- Close the UI when the selected item is unequipped and we're in the transmog menu.
-Server.RegisterOsirisListener("ItemUnEquipped", 2, function(item, char)
+Server.RegisterOsirisListener("ItemUnEquipped", 2, function(item, _)
     if Vanity:IsVisible() and Vanity.currentTab and Ext.Entity.GetItem(item) == Vanity.GetCurrentItem() then
         Timer.Start("PIP_VanityRefresh", 0.15, Vanity.Refresh)
     end
@@ -1191,7 +1186,7 @@ Client.UI.CharacterSheet.Events.TabChanged:Subscribe(function (_)
     Vanity.Toggle(false)
 end)
 
-Vanity:RegisterCallListener("entryClicked", function(ev, id, isCategory)
+Vanity:RegisterCallListener("entryClicked", function(_, id, isCategory)
     Vanity:DebugLog("Entry clicked: " .. id)
 
     Vanity:GetUI():ExternalInterfaceCall("PlaySound", "UI_Game_CharacterSheet_Attribute_Select_Click")
@@ -1225,7 +1220,7 @@ Vanity.Events.TabButtonPressed:RegisterListener(function (id)
     end
 end)
 
-Vanity:RegisterListener("ComboElementSelected", function(id, index, oldIndex)
+Vanity:RegisterListener("ComboElementSelected", function(id, index, _)
     if id == "TransmogItemSlot" then
         Vanity.SetSlot(Data.Game.SLOTS_WITH_VISUALS[index])
     end
@@ -1240,15 +1235,15 @@ Client.UI.ContextMenu.RegisterVanillaMenuHandler("Item", function(item)
     end
 end)
 
-Vanity:RegisterCallListener("pipTabButtonPressed", function(ev, id)
+Vanity:RegisterCallListener("pipTabButtonPressed", function(_, id)
     Vanity.Events.TabButtonPressed:Fire(id)
 end)
 
-Vanity:RegisterCallListener("pipListButtonClicked", function(ev, id)
+Vanity:RegisterCallListener("pipListButtonClicked", function(_, id)
     Vanity.Events.ButtonPressed:Fire(Vanity.currentTab, id)
 end)
 
-local function OnComboSelected(ui, method, id, index, oldIndex)
+local function OnComboSelected(_, _, id, index, oldIndex)
     Vanity:FireEvent("ComboElementSelected", id, index + 1, oldIndex + 1)
 end
 
@@ -1267,7 +1262,7 @@ local function OnTick()
     Vanity.SnapToCharacterSheet()
 end
 
-Vanity:RegisterCallListener("pipEntryFavoriteClicked", function(ev, id, active)
+Vanity:RegisterCallListener("pipEntryFavoriteClicked", function(_, id, active)
     Vanity:DebugLog("Toggling favorite " .. tostring(active))
     Vanity.Events.EntryFavoriteToggled:Fire(Vanity.currentTab, id, active)
 end)
@@ -1358,12 +1353,10 @@ function Vanity.Init()
     tabs.list.EL_SPACING = -9
 
     -- Fix for character sheet buttons not re-lighting up when you close the Vanity UI by going back to the real opened tab.
-    Ext.RegisterUICall(CharacterSheet:GetUI(), "selectedTab", function(ui, method, newTab)
-        local buttons = ui:GetRoot().stats_mc.tabsList
-
-        for i=0,#buttons.content_array-1,1 do
-            local button = buttons.content_array[i]
-
+    CharacterSheet:RegisterCallListener("selectedTab", function (_, newTab)
+        local tabButtons = CharacterSheet:GetRoot().stats_mc.tabsList
+        for i=0,#tabButtons.content_array-1,1 do
+            local button = tabButtons.content_array[i]
             if button.id == newTab then
                 button.setActive(true)
             end

@@ -5,10 +5,10 @@
 ---------------------------------------------
 
 local CharacterSheet = Client.UI.CharacterSheet
-local EpipStats = Epip.GetFeature("Feature_CustomStats")
+local EpipStats = Epip.GetFeature("Feature_CustomStats") ---@class Feature_CustomStats
 
 -- Special tooltips for Ascension node stats
-CharacterSheet.StatsTab:RegisterHook("GetStatTooltip", function(tooltip, stat, data)
+CharacterSheet.StatsTab:RegisterHook("GetStatTooltip", function(tooltip, _, data)
     if data.Keyword then
         local aspectName = Data.Game.ASPECT_NAMES[data.Cluster]
         local source = string.format("Source: %s (Node %d.%d)", aspectName, data.NodeIndex, data.NodeSubIndex)
@@ -89,14 +89,14 @@ Ext.RegisterUITypeInvokeListener(CharacterSheet.UITypeID, "setHelmetOptionState"
 end)
 
 -- Request update when the tab is opened.
-Ext.RegisterUITypeCall(CharacterSheet.UITypeID, "selectedTab", function(ui, method, tab)
-    if tab == 8 then
+CharacterSheet:RegisterCallListener("selectedTab", function (_, tabID)
+    if tabID == CharacterSheet.TABS.CUSTOM_STATS then
         Net.PostToServer("EPIPENCOUNTERS_UpdateCustomStats", {NetID = CharacterSheet.GetCharacter().NetID})
     end
 end)
 
 -- Set custom icon for keyword stats when their tooltip is being rendered.
-CharacterSheet.StatsTab:RegisterListener("TooltipRendering", function(stat, data, tooltip)
+CharacterSheet.StatsTab:RegisterListener("TooltipRendering", function(_, data, _)
     if data.Keyword then
         local ui = Ext.UI.GetByType(Ext.UI.TypeID.tooltip)
         ui:SetCustomIcon("tt_talent_" .. CharacterSheet.StatsTab.TOOLTIP_TALENT_ID, "PIP_KeywordScaled_" .. data.Keyword, 128, 128)
@@ -110,7 +110,6 @@ end)
 Ext.Events.SessionLoaded:Subscribe(function()
     -- Define stats
     for statID,stat in pairs(EpipStats.STATS) do
-        local tooltip = nil
         local description = stat.Description
 
         if stat.Footnote then
@@ -140,7 +139,7 @@ Ext.Events.SessionLoaded:Subscribe(function()
     end
 
     -- Define the clickable category headers as stats
-    for i,categoryID in pairs(EpipStats.CATEGORIES_ORDER) do
+    for _,categoryID in pairs(EpipStats.CATEGORIES_ORDER) do
         local category = EpipStats.GetCategory(categoryID)
 
         CharacterSheet.StatsTab.Stats[categoryID] = {

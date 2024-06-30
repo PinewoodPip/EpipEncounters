@@ -142,7 +142,7 @@ EpicEnemies.Hooks.CanActivateEffect:RegisterHook(function(activate, char, effect
     return activate
 end)
 
-EpicEnemies.Hooks.CanActivateEffect:RegisterHook(function(activate, char, effect, condition, params)
+EpicEnemies.Hooks.CanActivateEffect:RegisterHook(function(activate, _, _, condition, params)
     ---@type EpicEnemiesCondition_StatusGained
     condition = condition
 

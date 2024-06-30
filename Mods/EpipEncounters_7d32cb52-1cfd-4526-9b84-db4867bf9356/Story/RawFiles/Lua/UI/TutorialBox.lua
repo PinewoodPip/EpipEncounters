@@ -44,8 +44,8 @@ function TutorialBox:ShowModal(id, data)
 end
 
 Ext.Events.SessionLoaded:Subscribe(function()
-    if Client.IsUsingController() then return nil end
-    
+    if Client.IsUsingController() then return end
+
     TutorialBox.ui = Ext.UI.Create("pip_tutorial", "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/tutorialBox.swf", 100)
 
     TutorialBox.root = TutorialBox.ui:GetRoot()

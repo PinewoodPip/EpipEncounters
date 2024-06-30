@@ -5,6 +5,10 @@ local ContextMenu = Client.UI.ContextMenu
 
 Vanity.Outfits = {}
 
+---------------------------------------------
+-- METHODS
+---------------------------------------------
+
 -- Request to transform an item into a template.
 function Vanity.TransmogItem(item, newTemplate)
     Net.PostToServer("EPIPENCOUNTERS_VanityTransmog", {
@@ -141,6 +145,7 @@ end
 
 
 -- "Transmog..." submenu handler - pulls up the category selection menu.
+-- TODO remove
 ContextMenu.RegisterMenuHandler("epip_VanityMenu", function()
     local item = ContextMenu.item
 

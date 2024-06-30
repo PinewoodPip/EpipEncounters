@@ -62,7 +62,7 @@ function GroupManager._CreateEditor(UIName, HeaderText, ButtonText)
     return ui
 end
 
-GameState.Events.ClientReady:Subscribe(function (ev)
+GameState.Events.ClientReady:Subscribe(function (_)
     local Creator = GroupManager._CreateEditor("Creator",
     TSK.CreateGroupHeader:GetString(), TSK.CreateGroupButton:GetString())
     GroupManager.CreationUI = Creator

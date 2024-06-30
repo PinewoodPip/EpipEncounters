@@ -103,6 +103,8 @@ end
 ---@field Boolean boolean Boolean stats show no value label.
 ---@field MaxCharges string If specified, this stat will display as "{Value}/{Value of MaxCharges stat}"
 ---@field IgnoreForHiding boolean If true, this stat will not be considered as added when determining if a Hidden category should display.
+---@field Keyword Keyword
+---@field BoonType KeywordBoonType
 ---@field DefaultValue any?
 local _Stat = {}
 EpipStats:RegisterClass("Feature_CustomStats_Stat", _Stat)

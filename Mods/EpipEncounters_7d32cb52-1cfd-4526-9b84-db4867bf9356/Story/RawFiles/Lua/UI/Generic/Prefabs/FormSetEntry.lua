@@ -38,7 +38,7 @@ function Prefab.Create(ui, id, parent, label, minimumSize)
     end)
 
     -- Resize the element to fit the text
-    local textSize = instance.Label:GetTextSize() + Vector.Create(40, 0)
+    local textSize = instance.Label:GetTextSize() + Vector.Create(40, 0) -- Add offset to make space for the button.
     textSize = Vector.Create(math.max(minimumSize[1], textSize[1]), 30)
 
     instance:SetBackgroundSize(textSize)

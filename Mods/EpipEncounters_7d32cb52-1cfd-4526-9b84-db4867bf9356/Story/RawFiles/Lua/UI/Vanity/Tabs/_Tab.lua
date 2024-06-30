@@ -23,8 +23,8 @@ end
 
 function _CharacterSheetTab:Render() end
 
----@param event Event
----@param handler fun(id:string)
+---@param event LegacyEvent
+---@param handler fun(id:string, ...)
 function _CharacterSheetTab:RegisterListener(event, handler)
     event:RegisterListener(function (tab, id, ...)
         if tab == self then
