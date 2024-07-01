@@ -70,6 +70,17 @@ Character = {
         -- Unknown if more exist
     },
 
+    SKILLBAR_AUTOFILL_FLAGS = {
+        ARROWS = 1,
+        CONSUMABLES = 2,
+        CONTAINERS = 4,
+        GRENADES = 8,
+        POTIONS = 16,
+        SCROLLS = 32,
+        SKILLS = 64,
+        USABLE_ITEMS = 128,
+    },
+
     -- EclCharacterTask type IDs.
     -- Incomplete! TODO
     CHARACTER_TASKS = {
@@ -825,6 +836,44 @@ function Character.GetSkillBarRowContents(char, row, slotsPerRow)
     end
 
     return items
+end
+
+---Returns the skillbar of char.
+---@param char Character
+---@return EocSkillBarItem[]
+function Character.GetSkillBar(char)
+    return Ext.IsServer() and char.PlayerData.SkillBar or char.PlayerData.SkillBarItems
+end
+
+---Clears a skillbar slot.
+---@param char Character
+---@param index integer
+function Character.ClearSkillBarSlot(char, index)
+    local skillbar = Character.GetSkillBar(char)
+    local slot = skillbar[index]
+    slot.Type = "None"
+end
+
+---Sets a skillbar slot to contain a skill.
+---@param char Character
+---@param index integer
+---@param skill skill
+function Character.SetSkillBarSkill(char, index, skill)
+    local skillbar = Character.GetSkillBar(char)
+    local slot = skillbar[index]
+    slot.Type = "Skill"
+    slot.SkillOrStatId = skill
+end
+
+---Sets a skillbar slot to contain an item.
+---@param char Character
+---@param index integer
+---@param item Item
+function Character.SetSkillBarItem(char, index, item)
+    local skillbar = Character.GetSkillBar(char)
+    local slot = skillbar[index]
+    slot.Type = "Item"
+    slot.ItemHandle = item.Handle
 end
 
 ---Returns a status on char by its net ID.

@@ -175,7 +175,7 @@ function Vanity.ClearPersistentOutfit(char, slots, tag)
         currentPersistentOutfit = db[1]
 
         -- Clear requested slots.
-        for i,slot in ipairs(slots) do
+        for _,slot in ipairs(slots) do
             local index = Vanity.SLOT_TO_DB_INDEX[slot] + 1
             currentPersistentOutfit[index] = ""
         end
@@ -213,7 +213,7 @@ function Vanity.RefreshAppearance(char, useAlternativeStatus) -- TODO move
         for _,skillID in ipairs(skillSet.Skills) do
             local skillRecord = Character.GetSkill(char, skillID)
             if skillRecord then
-                local skillBarIndex, _ = table.getFirst(char.PlayerData.SkillBar, function (k, v)
+                local skillBarIndex, _ = table.getFirst(char.PlayerData.SkillBar, function (_, v)
                     return v.Type == "Skill" and v.SkillOrStatId == skillID
                 end)
                 ---@type {Cooldown: number, SkillBarIndex: integer}
@@ -237,11 +237,22 @@ function Vanity.RefreshAppearance(char, useAlternativeStatus) -- TODO move
     Timer.Start(0.4, function (_)
         char = Character.Get(charGUID)
         for skillID,entry in pairs(racialSkills) do
+            local oldSkillBarIndex = entry.SkillBarIndex
+
+            -- Restore cooldown
             Osi.NRD_SkillSetCooldown(charGUID, skillID, entry.Cooldown)
+
+            -- If the game re-added the skill to the hotbar, remove it.
+            local newSkillBarIndex, _ = table.getFirst(char.PlayerData.SkillBar, function (_, v)
+                return v.Type == "Skill" and v.SkillOrStatId == skillID
+            end)
+            if newSkillBarIndex and newSkillBarIndex ~= oldSkillBarIndex then
+                Character.ClearSkillBarSlot(char, newSkillBarIndex)
+            end
+
+            -- Re-add the skill where it previously was.
             if entry.SkillBarIndex then
-                local skillBarSlot = char.PlayerData.SkillBar[entry.SkillBarIndex]
-                skillBarSlot.Type = "Skill"
-                skillBarSlot.SkillOrStatId = skillID
+                Character.SetSkillBarSkill(char, entry.SkillBarIndex, skillID)
             end
         end
     end)
@@ -354,7 +365,7 @@ end)
 Net.RegisterListener("EPIPENCOUNTERS_Vanity_Transmog_ToggleVisibility", function (payload)
     local item = Item.Get(payload.ItemNetID)
     local char = Character.Get(payload.CharacterNetID)
-    
+
     if payload.State then
         Osiris.ClearTag(item, "PIP_VANITY_INVISIBLE")
     else
@@ -385,7 +396,7 @@ Ext.Events.SessionLoaded:Subscribe(function (ev)
     if not stat2 then
         stat2 = Ext.Stats.Create("PIP_Vanity_Refresh_Alt", "StatusData")
     end
-    
+
     stat.StatusType = "POLYMORPHED"
     stat2.StatusType = "POLYMORPHED"
     stat.PolymorphResult = ""
