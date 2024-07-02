@@ -258,6 +258,11 @@ local TSK = Effects.TranslatedStrings
 ---@param data TextLib_TranslatedString
 ---@return Library_TranslatedString
 local function EffectTSK(data)
+    -- Hilarious fuckup while refactoring the whole thing to be translatable. Unfortunate. TODO?
+    data.FormatOptions = {
+        ---@diagnostic disable-next-line: undefined-field
+        FormatArgs = data.FormatArgs
+    }
     return Effects:RegisterTranslatedString(data)
 end
 
@@ -838,7 +843,8 @@ local forcedEffect = {
 EpicEnemies.RegisterEffect(forcedEffect.ID, forcedEffect)
 
 if Ext.IsServer() then
-    EpicEnemies.Events.CharacterInitialized:RegisterListener(function(char, _)
-        EpicEnemies.ApplyEffect(char, forcedEffect)
+    -- Apply the forced effects to all initialized characters.
+    EpicEnemies.Events.CharacterInitialized:Subscribe(function(ev)
+        EpicEnemies.ApplyEffect(ev.Character, forcedEffect)
     end)
 end

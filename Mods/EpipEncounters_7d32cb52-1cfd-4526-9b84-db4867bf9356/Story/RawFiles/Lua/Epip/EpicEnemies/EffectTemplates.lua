@@ -63,7 +63,8 @@ local function GetSpecialLogicList(effect)
     return type(effect.SpecialLogic) == "string" and {effect.SpecialLogic} or effect.SpecialLogic
 end
 
-EpicEnemies.Events.EffectActivated:RegisterListener(function(char, effect)
+EpicEnemies.Events.EffectActivated:Subscribe(function(ev)
+    local char, effect = ev.Character, ev.Effect
     ---@type EpicEnemiesExtendedEffect
     effect = effect
 

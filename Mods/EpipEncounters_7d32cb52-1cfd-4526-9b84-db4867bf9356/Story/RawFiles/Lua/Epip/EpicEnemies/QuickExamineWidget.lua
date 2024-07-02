@@ -51,7 +51,7 @@ function Widget:Render(entity)
 
     for _,effect in ipairs(sortedEffects.Other) do
         local entry = container:AddChild(effect.ID, "GenericUI_Element_Text")
-        local activationConditionText = EpicEnemies.Hooks.GetActivationConditionDescription:Return("", effect.ActivationCondition, entity)
+        local activationConditionText = EpicEnemies.GetActivationConditionDescription(effect.ActivationCondition, entity)
 
         local text = Text.Format(Text.Format("• ", {Size = 28}) .. Text.Resolve(effect.Name), {FontType = Text.FONTS.BOLD, Color = "088cc4"})
 

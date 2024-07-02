@@ -984,6 +984,13 @@ function Character.IsCastingSkill(char)
     return state and state.State.Value >= Ext.Enums.SkillStateType.Casting.Value
 end
 
+---Returns whether char is a boss.
+---@param char Character
+---@return boolean
+function Character.IsBoss(char)
+    return Combat.GetCombatComponent(char).IsBoss
+end
+
 ---Returns whether 2 characters are in range to be linked to the same party group.
 ---@param char1 EclCharacter
 ---@param char2 EclCharacter

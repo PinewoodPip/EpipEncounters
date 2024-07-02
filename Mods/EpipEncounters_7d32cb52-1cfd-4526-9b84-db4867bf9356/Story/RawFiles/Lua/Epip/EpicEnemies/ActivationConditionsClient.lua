@@ -15,10 +15,14 @@ local EpicEnemies = Epip.Features.EpicEnemies
 -- EVENT LISTENERS
 ---------------------------------------------
 
-EpicEnemies.Hooks.GetActivationConditionDescription:RegisterHook(function(text, condition, char)
+-- Supply descriptions for default conditions.
+EpicEnemies.Hooks.GetActivationConditionDescription:Subscribe(function(ev)
+    local condition = ev.Condition
     local type = condition.Type
+    local text = ev.Description
 
     if type == "TurnStart" then
+        ---@cast condition EpicEnemiesCondition_TurnStart
         local addendum = ""
 
         if condition.Repeat then
@@ -27,6 +31,7 @@ EpicEnemies.Hooks.GetActivationConditionDescription:RegisterHook(function(text, 
 
         text = Text.Format(Conditions.TEMPLATES.TurnStart, {FormatArgs = {condition.Round, addendum}})
     elseif type == "HealthThreshold" then
+        ---@cast condition EpicEnemiesCondition_HealthThreshold
         local str = ""
 
         if condition.Vitality then
@@ -65,6 +70,7 @@ EpicEnemies.Hooks.GetActivationConditionDescription:RegisterHook(function(text, 
             }
         })
     elseif type == "BatteredHarried" then
+        ---@cast condition EpicEnemiesCondition_BatteredHarried
         local stackNames = {
             B = "Battered",
             H = "Harried",
@@ -78,6 +84,7 @@ EpicEnemies.Hooks.GetActivationConditionDescription:RegisterHook(function(text, 
             }
         })
     elseif type == "StatusGained" then
+        ---@cast condition EpicEnemiesCondition_StatusGained
         local statusName = condition.StatusID
         local stat = Ext.Stats.Get(statusName)
 
@@ -90,5 +97,5 @@ EpicEnemies.Hooks.GetActivationConditionDescription:RegisterHook(function(text, 
         })
     end
 
-    return text
-end)
+    ev.Description = text
+end, {StringID = "DefaultImplementation"})

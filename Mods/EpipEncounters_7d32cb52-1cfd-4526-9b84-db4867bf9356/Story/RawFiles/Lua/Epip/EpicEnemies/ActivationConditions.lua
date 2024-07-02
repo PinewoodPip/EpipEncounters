@@ -82,7 +82,8 @@ Osiris.RegisterSymbolListener("PROC_AMER_GEN_FilteredStatus_Applied", 4, "after"
     end
 end)
 
-EpicEnemies.Hooks.CanActivateEffect:RegisterHook(function(activate, char, effect, condition, params)
+EpicEnemies.Hooks.CanActivateEffect:Subscribe(function(ev)
+    local condition, params = ev.Condition, ev.Params
     local conditionType = condition.Type
 
     if conditionType == "TurnStart" then
@@ -94,12 +95,12 @@ EpicEnemies.Hooks.CanActivateEffect:RegisterHook(function(activate, char, effect
                 local freq = condition.RepeatFrequency or 1
                 local roundsAfter = params.Round - condition.Round
 
-                return roundsAfter % freq == 0
+                ev.CanActivate = roundsAfter % freq == 0
             end
         else
-            return params.Round == condition.Round
+            ev.CanActivate = params.Round == condition.Round
         end
-        return params.Round == condition.Round or (params.Round >= condition.Round and condition.Repeat)
+        ev.CanActivate = params.Round == condition.Round or (params.Round >= condition.Round and condition.Repeat)
     elseif conditionType == "HealthThreshold" then
         ---@type EpicEnemiesCondition_HealthThreshold
         condition = condition
@@ -116,39 +117,35 @@ EpicEnemies.Hooks.CanActivateEffect:RegisterHook(function(activate, char, effect
         local magicArmor = params.MagicArmor <= mag
 
         if condition.RequireAll then
-            return vitality and physArmor and magicArmor
+            ev.CanActivate = vitality and physArmor and magicArmor
         else
-            return vitality or physArmor or magicArmor
+            ev.CanActivate = vitality or physArmor or magicArmor
         end
     end
+end, {StringID = "Conditions.TurnStartAndHealthThreshold"})
 
-    return activate
-end)
-
-EpicEnemies.Hooks.CanActivateEffect:RegisterHook(function(activate, char, effect, condition, params)
+EpicEnemies.Hooks.CanActivateEffect:Subscribe(function(ev)
+    local condition, params = ev.Condition, ev.Params
     ---@type EpicEnemiesCondition_BatteredHarried
     condition = condition
 
     if condition.Type == "BatteredHarried" then
         if condition.StackType == "Both" then
-            return params.Total >= condition.Amount
+            ev.CanActivate = params.Total >= condition.Amount
         elseif condition.StackType == "Battered" or condition.StackType == "B" then
-            return params.Battered >= condition.Amount
+            ev.CanActivate = params.Battered >= condition.Amount
         elseif condition.StackType == "Harried" or condition.StackType == "H" then
-            return params.Harried >= condition.Amount
+            ev.CanActivate = params.Harried >= condition.Amount
         end
     end
+end, {StringID = "Condition.BatteredHarried"})
 
-    return activate
-end)
-
-EpicEnemies.Hooks.CanActivateEffect:RegisterHook(function(activate, _, _, condition, params)
+EpicEnemies.Hooks.CanActivateEffect:Subscribe(function(ev)
+    local condition, params = ev.Condition, ev.Params
     ---@type EpicEnemiesCondition_StatusGained
     condition = condition
 
     if condition.Type == "StatusGained" then
-        return params.StatusID == condition.StatusID
+        ev.CanActivate = params.StatusID == condition.StatusID
     end
-
-    return activate
-end)
+end, {StringID = "Condition.StatusGained"})

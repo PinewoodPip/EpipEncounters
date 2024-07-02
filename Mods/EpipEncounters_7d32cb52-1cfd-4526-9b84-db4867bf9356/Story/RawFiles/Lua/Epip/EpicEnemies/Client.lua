@@ -1,9 +1,8 @@
 
-local EpicEnemies = Epip.GetFeature("Feature_EpicEnemies")
 local SettingsMenu = Epip.GetFeature("Feature_SettingsMenu")
 
----@type EpicEnemies_Hook_GetActivationConditionDescription
-EpicEnemies.Hooks.GetActivationConditionDescription = EpicEnemies:AddHook("GetActivationConditionDescription")
+---@class Feature_EpicEnemies
+local EpicEnemies = Epip.GetFeature("Feature_EpicEnemies")
 
 local tab = {
     ID = EpicEnemies.SETTINGS_MODULE_ID,
@@ -49,13 +48,27 @@ function EpicEnemies.GetAppliedEffects(char, visibleOnly)
     return effects
 end
 
+---Returns the description for an activation condition.
+---@see Features.EpicEnemies.Hooks.GetActivationConditionDescription
+---@param condition EpicEnemiesActivationCondition
+---@param char EclCharacter
+---@return string
+function EpicEnemies.GetActivationConditionDescription(condition, char)
+    return EpicEnemies.Hooks.GetActivationConditionDescription:Throw({
+        Character = char,
+        Condition = condition,
+        Description = "",
+    }).Description
+end
+
 ---------------------------------------------
 -- EVENTS/HOOKS
 ---------------------------------------------
 
----@class EpicEnemies_Hook_GetActivationConditionDescription : LegacyHook
----@field RegisterHook fun(self, handler:fun(text:string, condition:EpicEnemiesActivationCondition, char:EclCharacter))
----@field Return fun(self, text:string, condition:EpicEnemiesActivationCondition, char:EclCharacter)
+---@class Features.EpicEnemies.Hooks.GetActivationConditionDescription
+---@field Character EclCharacter
+---@field Condition EpicEnemiesActivationCondition
+---@field Description string Hookable. Defaults to empty string.
 
 ---------------------------------------------
 -- EVENT LISTENERS
@@ -69,12 +82,12 @@ Game.Tooltip.RegisterListener("Status", nil, function(char, status, tooltip)
 
         for _,effect in ipairs(effects) do
             if effect.Visible or effect.Visible == nil then
-                local activationConditionText = EpicEnemies.Hooks.GetActivationConditionDescription:Return("", effect.ActivationCondition, char)
+                local activationConditionText = EpicEnemies.GetActivationConditionDescription(effect.ActivationCondition, char)
 
                 str = str .. Text.Format("%s<br>%s<br>%s", {
                     FormatArgs = {
-                        Text.Format(Text.Format("• ", {Size = 28}) .. effect.Name, {FontType = Text.FONTS.BOLD, Color = "088cc4"}),
-                        Text.Format("      " .. effect.Description, {Size = 17}),
+                        Text.Format(Text.Format("• ", {Size = 28}) .. Text.Resolve(effect.Name), {FontType = Text.FONTS.BOLD, Color = "088cc4"}),
+                        Text.Format("      " .. Text.Resolve(effect.Description), {Size = 17}),
                         Text.Format("      " .. activationConditionText, {Size = 16}),
                     }
                 })

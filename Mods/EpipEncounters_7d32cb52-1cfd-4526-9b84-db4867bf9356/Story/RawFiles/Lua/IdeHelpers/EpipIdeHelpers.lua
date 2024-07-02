@@ -6,6 +6,7 @@
 ---@alias Item EclItem|EsvItem
 ---@alias Status EclStatus|EsvStatus
 ---@alias GUID string
+---@alias GUID.Character GUID
 ---@alias PrefixedGUID string
 ---@alias Context "Client"|"Server" -- TODO replace with lowercase
 ---@alias context "Client"|"Server"

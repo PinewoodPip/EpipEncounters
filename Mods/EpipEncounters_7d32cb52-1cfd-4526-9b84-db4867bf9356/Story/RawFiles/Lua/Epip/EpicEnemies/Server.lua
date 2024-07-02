@@ -31,37 +31,35 @@ local Settings = Settings
 ---@field Budget number
 ---@field Applicable boolean Hookable. Defaults to `true`.
 
----@class EpicEnemies_Event_EffectActivated : Event
----@field RegisterListener fun(self, listener:fun(char:EsvCharacter, effect:Features.EpicEnemies.Effect))
----@field Fire fun(self, char:EsvCharacter, effect:Features.EpicEnemies.Effect)
+---Server-only.
+---@class Features.EpicEnemies.Events.EffectActivated
+---@field Character EsvCharacter
+---@field Effect Features.EpicEnemies.Effect
 
----@class EpicEnemies_Event_EffectDeactivated : Event
----@field RegisterListener fun(self, listener:fun(char:EsvCharacter, effect:Features.EpicEnemies.Effect))
----@field Fire fun(self, char:EsvCharacter, effect:Features.EpicEnemies.Effect)
+---Server-only.
+---@class Features.EpicEnemies.Events.EffectDeactivated : Features.EpicEnemies.Events.EffectActivated
 
----@class EpicEnemies_Hook_CanActivateEffect : LegacyHook
----@field RegisterHook fun(self, handler:fun(activate:boolean, char:EsvCharacter, effect:Features.EpicEnemies.Effect, params:any))
----@field Return fun(self, activate:boolean, char:EsvCharacter, effect:Features.EpicEnemies.Effect, params:any)
+---Server-only.
+---@class Features.EpicEnemies.Hooks.CanActivateEffect
+---@field Character EsvCharacter
+---@field Effect Features.EpicEnemies.Effect
+---@field Condition EpicEnemiesActivationCondition
+---@field Params any
+---@field CanActivate boolean Hookable. Defaults to `false`.
 
----@class EpicEnemies_Hook_GetPointsForCharacter : LegacyHook
----@field RegisterHook fun(self, handler:fun(points:integer, char:EsvCharacter))
----@field Return fun(self, points:integer, char:EsvCharacter)
+---Server-only.
+---@class Features.EpicEnemies.Hooks.GetPointsForCharacter
+---@field Character EsvCharacter
+---@field Points integer Hookable. Defaults to setting value.
 
----@class EpicEnemies_Event_CharacterInitialized : Event
----@field RegisterListener fun(self, listener:fun(char:EsvCharacter, effects:Features.EpicEnemies.Effect[]))
----@field Fire fun(self, char:EsvCharacter, effects:Features.EpicEnemies.Effect[])
+---Server-only.
+---@class Features.EpicEnemies.Events.CharacterInitialized
+---@field Character EsvCharacter
+---@field Effects Features.EpicEnemies.Effect[]
 
----@class EpicEnemies_Event_CharacterCleanedUp : Event
----@field RegisterListener fun(self, listener:fun(char:EsvCharacter))
----@field Fire fun(self, char:EsvCharacter)
-
----@type EpicEnemies_Event_CharacterInitialized
-EpicEnemies.Events.CharacterInitialized = EpicEnemies:AddEvent("CharacterInitialized")
----@type EpicEnemies_Event_CharacterCleanedUp
-EpicEnemies.Events.CharacterCleanedUp = EpicEnemies:AddEvent("CharacterCleanedUp")
-
----@type EpicEnemies_Hook_GetPointsForCharacter
-EpicEnemies.Hooks.GetPointsForCharacter = EpicEnemies:AddHook("GetPointsForCharacter")
+---Server-only.
+---@class Features.EpicEnemies.Events.CharacterCleanedUp
+---@field Character EsvCharacter
 
 ---------------------------------------------
 -- METHODS
@@ -147,7 +145,10 @@ function EpicEnemies.InitializeCharacter(char)
 
         EpicEnemies:DebugLog("Initialized effects on " .. char.DisplayName)
 
-        EpicEnemies.Events.CharacterInitialized:Fire(char, addedEffects)
+        EpicEnemies.Events.CharacterInitialized:Throw({
+            Character = char,
+            Effects = addedEffects,
+        })
     end
 end
 
@@ -173,7 +174,9 @@ function EpicEnemies.CleanupCharacter(char)
 
         Osiris.RemoveStatus(char, "PIP_OSITOOLS_EpicBossesDisplay")
 
-        EpicEnemies.Events.CharacterCleanedUp:Fire(char)
+        EpicEnemies.Events.CharacterCleanedUp:Throw({
+            Character = char,
+        })
     end
 end
 
@@ -213,15 +216,17 @@ function EpicEnemies.ActivateEffect(char, effect)
         Osiris.DB_PIP_EpicEnemies_ActivatedEffect:Delete(char.MyGuid, effect.ID, nil)
         Osiris.DB_PIP_EpicEnemies_ActivatedEffect:Set(char.MyGuid, effect.ID, activationCount)
 
-        -- TODO event
         if activationCount == 1 then
-            EpicEnemies.Events.EffectActivated:Fire(char, effect)
+            EpicEnemies.Events.EffectActivated:Throw({
+                Character = char,
+                Effect = effect,
+            })
         end
     end
 end
 
 ---@param char EsvCharacter
----@param predicate fun(char:EsvCharacter, effect:Features.EpicEnemies.Effect)?
+---@param predicate (fun(char:EsvCharacter, effect:Features.EpicEnemies.Effect):boolean)?
 ---@return table<string, Features.EpicEnemies.Effect>
 function EpicEnemies.GetAppliedEffects(char, predicate)
     local _, _, tuples = Osiris.DB_PIP_EpicEnemies_AppliedEffect:Get(char.MyGuid, nil)
@@ -256,14 +261,20 @@ function EpicEnemies.GetEffectActivationCount(char, effect)
     return activationCount or 0
 end
 
----@param char EsvCharacter
+---@param char EsvCharacter|GUID.Character
 ---@param effectType string
 ---@param params table?
 function EpicEnemies.ActivateEffects(char, effectType, params)
-    if type(char) ~= "userdata" then char = Ext.GetCharacter(char) end
+    if type(char) ~= "userdata" then char = Character.Get(char) end
 
     for _,effect in pairs(EpicEnemies.GetAppliedEffects(char, function(_, eff) return eff.ActivationCondition.Type == effectType end)) do
-        if EpicEnemies.Hooks.CanActivateEffect:Return(false, char, effect, effect.ActivationCondition, params) then
+        if EpicEnemies.Hooks.CanActivateEffect:Throw({
+            Character = char,
+            Effect = effect,
+            Condition = effect.ActivationCondition,
+            Params = params,
+            CanActivate = false,
+        }).CanActivate then
             EpicEnemies.ActivateEffect(char, effect)
         end
     end
@@ -285,7 +296,10 @@ function EpicEnemies.DeactivateEffect(char, effect, charges)
         Osiris.DB_PIP_EpicEnemies_ActivatedEffect:Set(char.MyGuid, effect.ID, activationCount)
         -- TODO event
     else
-        EpicEnemies.Events.EffectDeactivated:Fire(char, effect)
+        EpicEnemies.Events.EffectDeactivated:Throw({
+            Character = char,
+            Effect = effect,
+        })
     end
 end
 
@@ -352,18 +366,24 @@ function EpicEnemies.GetRandomEffect(char, effectPool, activeEffects, budget)
     return chosenEffect
 end
 
+---Returns the points budget for a character.
 ---@param char EsvCharacter
+---@return integer
 function EpicEnemies.GetPointsForCharacter(char)
-    return EpicEnemies.Hooks.GetPointsForCharacter:Return(Settings.GetSettingValue(EpicEnemies.SETTINGS_MODULE_ID, "EpicEnemies_PointsBudget"), char)
+    return EpicEnemies.Hooks.GetPointsForCharacter:Throw({
+        Character = char,
+        Points = Settings.GetSettingValue(EpicEnemies.SETTINGS_MODULE_ID, "EpicEnemies_PointsBudget"),
+    }).Points
 end
 
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
 
--- Multiply points by slider settings.
-EpicEnemies.Hooks.GetPointsForCharacter:RegisterHook(function(points, char)
-    local isBoss = Osi.IsBoss(char.MyGuid) == 1
+-- Multiply point budget by slider settings.
+EpicEnemies.Hooks.GetPointsForCharacter:Subscribe(function(ev)
+    local char, points = ev.Character, ev.Points
+    local isBoss = Character.IsBoss(char)
 
     if isBoss then
         points = points * Settings.GetSettingValue(EpicEnemies.SETTINGS_MODULE_ID, "EpicEnemies_PointsMultiplier_Bosses")
@@ -371,8 +391,8 @@ EpicEnemies.Hooks.GetPointsForCharacter:RegisterHook(function(points, char)
         points = points * Settings.GetSettingValue(EpicEnemies.SETTINGS_MODULE_ID, "EpicEnemies_PointsMultiplier_Normies")
     end
 
-    return points
-end)
+    ev.Points = points
+end, {StringID = "Settings.PointsMultiplier"})
 
 -- Reset state upon lua reset
 Ext.Events.ResetCompleted:Subscribe(function()
@@ -473,12 +493,9 @@ end)
 ---------------------------------------------
 
 -- Activate effects with the "EffectApplied" condition always.
-EpicEnemies.Hooks.CanActivateEffect:RegisterHook(function(activate, _, _, activationCondition, _)
-    local condition = activationCondition.Type
-
+EpicEnemies.Hooks.CanActivateEffect:Subscribe(function(ev)
+    local condition = ev.Condition.Type
     if condition == "EffectApplied" then
-        activate = true
+        ev.CanActivate = true
     end
-
-    return activate
-end)
+end, {StringID = "Condition.EffectApplied"})

@@ -64,23 +64,25 @@ local EpicEnemies = {
         },
     },
 
+    USE_LEGACY_EVENTS = false,
+    USE_LEGACY_HOOKS = false,
+
     Events = {
-        EffectApplied = {Context = "Server", Legacy = false}, ---@type Event<Features.EpicEnemies.Events.EffectApplied>
-        EffectRemoved = {Context = "Server", Legacy = false}, ---@type Event<Features.EpicEnemies.Events.EffectRemoved>
+        EffectApplied = {Context = "Server"}, ---@type Event<Features.EpicEnemies.Events.EffectApplied>
+        EffectRemoved = {Context = "Server"}, ---@type Event<Features.EpicEnemies.Events.EffectRemoved>
+        EffectActivated = {Context = "Server"}, ---@type Event<Features.EpicEnemies.Events.EffectActivated>
+        EffectDeactivated = {Context = "Server"}, ---@type Event<Features.EpicEnemies.Events.EffectDeactivated>
+        CharacterInitialized = {Context = "Server"}, ---@type Event<Features.EpicEnemies.Events.CharacterInitialized>
+        CharacterCleanedUp = {Context = "Server"}, ---@type Event<Features.EpicEnemies.Events.CharacterCleanedUp>
     },
     Hooks = {
-        IsCharacterEligible = {Context = "Server", Legacy = false}, ---@type Hook<Features.EpicEnemies.Hooks.IsCharacterEligible>
-        IsEffectApplicable = {Context = "Server", Legacy = false} ---@type Hook<Features.EpicEnemies.Hooks.IsEffectApplicable>
+        IsCharacterEligible = {Context = "Server"}, ---@type Hook<Features.EpicEnemies.Hooks.IsCharacterEligible>
+        IsEffectApplicable = {Context = "Server"}, ---@type Hook<Features.EpicEnemies.Hooks.IsEffectApplicable>
+        CanActivateEffect = {Context = "Server"}, ---@type Hook<Features.EpicEnemies.Hooks.CanActivateEffect>
+        GetPointsForCharacter = {Context = "Server"}, ---@type Hook<Features.EpicEnemies.Hooks.GetPointsForCharacter>
+        GetActivationConditionDescription = {Context = "Client"} ---@type Hook<Features.EpicEnemies.Hooks.GetActivationConditionDescription>
     },
 }
-if Ext.IsServer() then
-    ---@type EpicEnemies_Event_EffectActivated
-    EpicEnemies.Events.EffectActivated = {}
-    ---@type EpicEnemies_Event_EffectDeactivated
-    EpicEnemies.Events.EffectDeactivated = {}
-    ---@type EpicEnemies_Hook_CanActivateEffect
-    EpicEnemies.Hooks.CanActivateEffect = {}
-end
 
 Epip.RegisterFeature("EpicEnemies", EpicEnemies)
 Epip.Features.EpicEnemies = EpicEnemies
