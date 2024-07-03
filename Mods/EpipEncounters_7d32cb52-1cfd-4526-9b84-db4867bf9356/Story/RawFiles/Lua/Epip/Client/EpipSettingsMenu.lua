@@ -67,6 +67,16 @@ local EpipSettingsMenu = {
             Text = "French translation by Drayander & Ostheboss",
             ContextDescription = "Displayed at the bottom of the general Epip settings tab",
         },
+        TranslationCredits_Spanish = {
+            Handle = "hb6222658gfc63g4d1ag8c41g71f86ef5ec99",
+            Text = "Spanish translation by AquaVXI",
+            ContextDescription = [[Displayed at the bottom of the general Epip settings tab]],
+        },
+        TranslationCredits_Polish = {
+            Handle = "hc7d35703gbf43g4f19ga94dg590f99309514",
+            Text = "Polish translation by Nektun",
+            ContextDescription = [[Displayed at the bottom of the general Epip settings tab]],
+        },
         Tab_Hotbar = {
            Handle = "h37985411gc95dg46a1g858bg021ed39e43cd",
            Text = "Hotbar",
@@ -167,6 +177,12 @@ local tabs = {
                 Size = 19,
             })},
             {Type = "Label", Label = Text.Format(TSK.TranslationCredits_French:GetString(), {
+                Size = 19,
+            })},
+            {Type = "Label", Label = Text.Format(TSK.TranslationCredits_Spanish:GetString(), {
+                Size = 19,
+            })},
+            {Type = "Label", Label = Text.Format(TSK.TranslationCredits_Polish:GetString(), {
                 Size = 19,
             })},
 

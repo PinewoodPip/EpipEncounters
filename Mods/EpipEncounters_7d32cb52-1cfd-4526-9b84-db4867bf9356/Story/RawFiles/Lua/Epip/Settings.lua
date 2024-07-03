@@ -539,6 +539,7 @@ local newSettings = {
             {ID = "Simplified Chinese", Name = "Simplified Chinese"},
             {ID = "French", Name = "French"},
             {ID = "Spanish", Name = "Spanish"},
+            {ID = "Polish", Name = "Polish"},
         }
     },
     {

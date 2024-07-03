@@ -843,16 +843,14 @@ Text.Hooks.GetTranslationTemplateEntry:Subscribe(function (ev)
     local entry, tsk = ev.Entry, ev.TranslatedString
 
     ---@diagnostic disable undefined-field
-    if tsk.FeatureID and (tsk.FeatureID ~= "CommonStrings" and tsk.FeatureID ~= "Generic") then
-        local feature = Epip.GetFeature(tsk.ModTable, tsk.FeatureID)
-
-        if feature.DoNotExportTSKs then
-            ev.Entry = nil
-        else
-            entry.FeatureID = tsk.FeatureID
-        end
-    elseif tsk.FeatureID == "CommonStrings" or tsk.FeatureID == "Generic" then
+    if tsk.FeatureID then -- TODO rename this field and adjust check below, as it is used by library classes too.
         entry.FeatureID = tsk.FeatureID
+
+        -- Check for features whose TSKs are excluded from exports (ex. top-secret WIP features)
+        local feature = Epip.GetFeature(tsk.ModTable, tsk.FeatureID)
+        if feature and feature.DoNotExportTSKs then
+            ev.Entry = nil
+        end
     end
     ---@diagnostic enable undefined-field
 end)

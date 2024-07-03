@@ -43,8 +43,6 @@ local function GenerateLocalizationTemplate(_, modTable, existingLocalization, f
         _D(outdatedStrings)
     end
 
-    -- IO.SaveFile(filename, template, nil, true)
-
     -- Write the JSON manually to get around encoding limitations
     local rawStrings = {}
     for handle,data in pairs(template.TranslatedStrings) do
@@ -89,6 +87,7 @@ local function GenerateLocalizationTemplates()
         "Simplified Chinese",
         "Portuguesebrazil",
         "French",
+        "Polish",
     }
 
     for _,language in ipairs(languages) do
