@@ -6,8 +6,8 @@ local Generic = Client.UI.Generic
 ---@class GenericUI.Prefabs.PooledContainer : GenericUI_Prefab, GenericUI_I_Elementable
 ---@field Container GenericUI.Container
 ---@field _NewItemFunctor GenericUI.Prefabs.PooledContainer.NewItemFunctor
----@field _Items GenericUI_I_Elementable[]
----@field _CurrentItemsAmount integer
+---@field _Items GenericUI_I_Elementable[] All instances items, including unused (in-pool) ones.
+---@field _CurrentItemsAmount integer Amount of items currently in use.
 local Container = {}
 Generic:RegisterClass("GenericUI.Prefabs.PooledContainer", Container, {"GenericUI_Prefab", "GenericUI_I_Elementable"})
 Generic.RegisterPrefab("GenericUI.Prefabs.PooledContainer", Container)
@@ -39,25 +39,25 @@ end
 
 ---Returns an item by index.
 ---A new item will be created if necessary.
----@param index integer Must be <= (Current items + 1)
+---@param index integer? Must be <= (Current items + 1)
 ---@return GenericUI_I_Elementable
 function Container:GetItem(index)
+    index = index or (self._CurrentItemsAmount + 1)
     local item = self._Items[index]
     if not item then
         if index > (self._CurrentItemsAmount + 1) then
             Container:__Error("GetItem", "Requesting items out of order; current amount is", self._CurrentItemsAmount, ", requesting item at index", index)
         end
         item = self:__CreateItem()
-        self:_RegisterItem(item)
     end
-    self._CurrentItemsAmount = index -- Safe due to the order check above.
     item:SetVisible(true)
+    self._CurrentItemsAmount = math.max(self._CurrentItemsAmount, index) -- Safe due to the order check above.
     return item
 end
 
 ---Repositions items of the container and hides unused items.
 function Container:RepositionElements()
-    for i=self._CurrentItemsAmount+1,#self._Items,1 do -- Hide unused items
+    for i=self._CurrentItemsAmount+1,#self._Items,1 do -- Hide unused items. Prior ones are assumed to be visible as per the SetVisible() call from GetItem().
         local item = self._Items[i]
         if item:IsVisible() then
             item:SetVisible(false)
