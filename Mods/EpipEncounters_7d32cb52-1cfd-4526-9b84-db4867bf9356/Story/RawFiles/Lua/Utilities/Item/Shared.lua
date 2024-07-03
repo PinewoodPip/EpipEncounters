@@ -123,6 +123,9 @@ Item = {
         ["Axe"] = true,
     },
 
+    LUCKY_CHARM_EFFECT = "RS3_FX_GP_ScriptedEvent_Lucky_01",
+    LUCKY_CHARM_EFFECT_BONE = "Dummy_OverheadFX",
+
     ---@type table<ItemLib_Rarity, icon>
     _ITEM_RARITY_ICONS = {
         Uncommon = "Item_Uncommon",
@@ -501,6 +504,64 @@ function Item.CanUse(char, item)
     canUse = canUse and ap >= apCost
 
     return canUse
+end
+
+---Returns the level of treasure that would generate in the item
+---if opened by char.
+---This is an approximation based on DOS1 code; might have inaccuracies.
+---@param item EsvItem
+---@param char EsvCharacter
+function Item.GetTreasureLevel(item, char)
+    local template = item.CurrentTemplate
+    local treasureLevel
+    if not template.UsePartyLevelForTreasureLevel then
+        treasureLevel = template.TreasureLevel
+    else
+        local members = Character.GetPartyMembers(char)
+        local maxLevel = -1
+        for _,member in ipairs(members) do
+            maxLevel = math.max(member.Stats.Level, maxLevel)
+        end
+    end
+    if treasureLevel < 1 then
+        treasureLevel = item.TreasureLevel -- Assuming this is a cached "area level"
+    end
+    return treasureLevel
+end
+
+---Generates treasure in an item as if char had opened it.
+---Does nothing if the item already had treasure generated.
+---@param item EsvItem Must be a container.
+---@param char EsvCharacter
+function Item.GenerateDefaultTreasure(item, char)
+    if item.TreasureGenerated then return end
+    local treasureLevel = Item.GetTreasureLevel(item, char)
+
+    -- Generate regular treasure
+    local treasures = item.CurrentTemplate.Treasures
+    for _,treasureID in ipairs(treasures) do
+        Osiris.GenerateTreasure(item, treasureID, treasureLevel, char)
+    end
+    item.TreasureGenerated = true
+
+    -- Apply Lucky Charm
+    local luckyCharm = Character.GetHighestPartyAbility(char, "Luck")
+    if luckyCharm > 0 then
+        local luckyCharmTreasureID = string.format("Luck%d", luckyCharm)
+        local previousItemsAmount = #item:GetInventoryItems()
+        Osiris.GenerateTreasure(item, luckyCharmTreasureID, treasureLevel, char)
+
+        -- Play Lucky Charm effect if the table rolled any items.
+        -- Normally the game would set the LuckyFind flag,
+        -- which is checked by the Open action state to play the effect
+        -- and is cleared afterwards.
+        -- This function is intended to be called outside of this regular scenario,
+        -- as such it's better to play the effect directly and leave the flag unset.
+        local newItemsAmount = #item:GetInventoryItems()
+        if newItemsAmount > previousItemsAmount then
+            Osiris.PlayEffect(char, Item.LUCKY_CHARM_EFFECT, Item.LUCKY_CHARM_EFFECT_BONE)
+        end
+    end
 end
 
 ---Returns all items in the party inventory of char matching the predicate, or all if no predicate is passed.

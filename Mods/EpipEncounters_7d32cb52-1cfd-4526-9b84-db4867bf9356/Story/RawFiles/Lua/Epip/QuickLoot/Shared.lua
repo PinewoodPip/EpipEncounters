@@ -2,6 +2,8 @@
 ---@class Features.QuickLoot : Feature
 local QuickLoot = {
     NETMSG_PICKUP_ITEM = "Features.QuickLoot.NetMsgs.PickUp",
+    NETMSG_GENERATE_TREASURE = "Features.QuickLoot.NetMsgs.GenerateTreasure",
+    NETMSG_TREASURE_GENERATED = "Features.QuickLoot.NetMsgs.TreasureGenerated", -- Empty message.
 
     TranslatedStrings = {
         Label_FeatureName = {
@@ -34,12 +36,33 @@ local QuickLoot = {
             Text = "Hold to search nearby containers and corpses to loot.",
             ContextDescription = [[Keybind tooltip]],
         },
+    },
+    USE_LEGACY_EVENTS = false,
+    USE_LEGACY_HOOKS = false,
+
+    Events = {
+        SearchCompleted = {Context = "Client"}, ---@type Event<Features.QuickLoot.Events.SearchCompleted>
     }
 }
 Epip.RegisterFeature("Features.QuickLoot", QuickLoot)
+QuickLoot:Debug()
+
+---------------------------------------------
+-- EVENTS/HOOKS
+---------------------------------------------
+
+---@class Features.QuickLoot.Events.SearchCompleted
+---@field Character EclCharacter
+---@field Radius number In meters.
+---@field LootableItems EclItem[]
+---@field Containers EclItem[]
+---@field Corpses EclCharacter[]
 
 ---------------------------------------------
 -- NET MESSAGES
 ---------------------------------------------
 
 ---@class Features.QuickLoot.NetMsgs.PickUp : NetLib_Message_Character, NetLib_Message_Item
+
+---@class Features.QuickLoot.NetMsgs.GenerateTreasure : NetLib_Message_Character
+---@field ItemNetIDs NetId[]

@@ -7,7 +7,6 @@ local ButtonPrefab = Generic.GetPrefab("GenericUI_Prefab_Button")
 local CloseButtonPrefab = Generic.GetPrefab("GenericUI_Prefab_CloseButton")
 local PooledContainer = Generic.GetPrefab("GenericUI.Prefabs.PooledContainer")
 local Notification = Client.UI.Notification
-local Input = Client.Input
 local V = Vector.Create
 
 ---@class Features.QuickLoot
@@ -178,22 +177,12 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
--- Start & stop searches when the action is pressed & released.
-Input.Events.ActionExecuted:Subscribe(function (ev)
-    if ev.Action.ID == QuickLoot.InputActions.Search.ID then
-        QuickLoot.StartSearch(Client.GetCharacter())
-        Notification.ShowWarning(TSK.Notification_Searching:GetString(), 0.5)
-    end
-end)
-Input.Events.ActionReleased:Subscribe(function (ev)
-    if ev.Action.ID == QuickLoot.InputActions.Search.ID then
-        local char = Client.GetCharacter()
-        local radius = QuickLoot.StopSearch(char)
-        local items = QuickLoot.GetItems(V(char.WorldPos), radius)
-        if #items == 0 then -- Do not open the UI if no items were found.
-            Notification.ShowNotification(TSK.Notification_NoLootNearby:GetString())
-        else
-            UI.Setup(items)
-        end
+-- Open the UI when a search completes.
+QuickLoot.Events.SearchCompleted:Subscribe(function (ev)
+    local items = ev.LootableItems
+    if #items == 0 then -- Do not open the UI if no items were found.
+        Notification.ShowNotification(TSK.Notification_NoLootNearby:GetString())
+    else
+        UI.Setup(items)
     end
 end)

@@ -183,3 +183,56 @@ function Entity.GetNearbyItems(pos, radius, predicate)
     end
     return nearItems
 end
+
+---Converts a list of entities to a list of their net IDs.
+---@param list (IEoCClientReplicatedObject|IEoCServerObject)[]
+---@return NetId[]
+function Entity.EntityListToNetIDs(list)
+    local netIDs = {}
+    for i,entity in ipairs(list) do
+        netIDs[i] = entity.NetID
+    end
+    return netIDs
+end
+
+---Converts a list of entities to a list of their net IDs.
+---@param list (IEoCClientReplicatedObject|IEoCServerObject)[]
+---@return ComponentHandle[]
+function Entity.EntityListToHandles(list)
+    local handles = {}
+    for i,entity in ipairs(list) do
+        handles[i] = entity.Handle
+    end
+    return handles
+end
+
+---Converts a list of net IDs to a list of their game objects.
+---@generic T
+---@param list NetId[]
+---@param expectedType `T`|"EsvItem"|"EclItem"|"EsvCharacter"|"EclCharacter"
+---@return T[]
+---@diagnostic disable-next-line: unused-local
+function Entity.NetIDListToEntities(list, expectedType)
+    local entities = {}
+    -- Entity.GetGameObject() does not accept net IDs.
+    -- TODO expand this to support more types
+    local getter = string.find(expectedType, "Character") and Character.Get or Item.Get
+    for i,netID in ipairs(list) do
+        entities[i] = getter(netID)
+    end
+    return entities
+end
+
+---Converts a list of handles to a list of their game objects.
+---@generic T
+---@param list ComponentHandle[]
+---@param expectedType `T`|"EsvItem"|"EclItem"|"EsvCharacter"|"EclCharacter" For IDE purposes only.
+---@return T[]
+---@diagnostic disable-next-line: unused-local
+function Entity.HandleListToEntities(list, expectedType)
+    local entities = {}
+    for i,handle in ipairs(list) do
+        entities[i] = Ext.Entity.GetGameObject(handle)
+    end
+    return entities
+end

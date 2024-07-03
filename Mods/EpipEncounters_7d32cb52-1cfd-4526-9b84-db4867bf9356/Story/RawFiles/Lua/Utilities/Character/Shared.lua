@@ -759,7 +759,7 @@ end
 
 ---Gets the highest stat score of all characters in char's party.
 ---@param char Character
----@param ability string Needs to be a property indexable in char.Stats
+---@param ability AbilityType Needs to be a property indexable in char.Stats
 ---@return integer
 function Character.GetHighestPartyAbility(char, ability)
     local highest = 0
