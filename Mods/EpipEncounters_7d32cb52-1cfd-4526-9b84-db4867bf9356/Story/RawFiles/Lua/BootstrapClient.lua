@@ -697,6 +697,7 @@ LOAD_ORDER = {
             "Epip/QuickInventory/Filters/Containers.lua",
         }
     },
+    {ScriptSet = "Epip/QuickLoot", Scripts = {"Epip/QuickLoot/Client_UI.lua"}},
 
     {
         Script = "Epip/Client/EE_Dyes.lua",

@@ -539,6 +539,13 @@ function Character.IsDead(char)
     return char:GetStatus("DYING") ~= nil
 end
 
+---Returns whether char is dead and lootable.
+---@param char Character
+---@return boolean
+function Character.IsLootableCorpse(char)
+    return Character.IsDead(char) and char.CorpseLootable
+end
+
 ---Returns a status by handle.
 ---@param char Character
 ---@param handle EntityHandle
@@ -874,6 +881,20 @@ function Character.SetSkillBarItem(char, index, item)
     local slot = skillbar[index]
     slot.Type = "Item"
     slot.ItemHandle = item.Handle
+end
+
+---Returns the lootable items on char.
+---@param char Character
+function Character.GetLootableItems(char)
+    local inventory = Ext.Entity.GetInventory(char.InventoryHandle)
+    local items = {} ---@type Item[]
+    for i,handle in ipairs(inventory.ItemsBySlot) do
+        local item = Item.Get(handle)
+        if item and item.CanBePickedUp and (i > inventory.EquipmentSlots or (item.Stats and item.Stats.LootableWhenEquipped)) then
+            table.insert(items, item)
+        end
+    end
+    return items
 end
 
 ---Returns a status on char by its net ID.

@@ -145,3 +145,41 @@ function Entity.GetParameterTagValue(gameObject, pattern)
         end
     end
 end
+
+---Returns the characters near a position.
+---@param pos vec3
+---@param radius number Radial.
+---@param predicate (fun(char:Character):boolean)? Should return `true` for a character to be included.
+---@return Character[]
+function Entity.GetNearbyCharacters(pos, radius, predicate)
+    local allChars = Entity.GetRegisteredCharacters()
+    local radiusSquared = radius ^ 2
+    local nearChars = {} ---@type Item[]
+    for _,char in ipairs(allChars) do
+        local charPos = char.WorldPos
+        local dist = (charPos[1] - pos[1]) ^ 2 + (charPos[2] - pos[2]) ^ 2 + (charPos[3] - pos[3]) ^ 2 -- VectorLib and sqrt are avoided to maximize performance.
+        if dist <= radiusSquared and (predicate == nil or predicate(char)) then
+            table.insert(nearChars, char)
+        end
+    end
+    return nearChars
+end
+
+---Returns the items near a position.
+---@param pos vec3
+---@param radius number Radial.
+---@param predicate (fun(item:Item):boolean)? Should return `true` for an item to be included.
+---@return Item[]
+function Entity.GetNearbyItems(pos, radius, predicate)
+    local allItems = Entity.GetRegisteredItems()
+    local radiusSquared = radius ^ 2
+    local nearItems = {} ---@type Item[]
+    for _,item in ipairs(allItems) do
+        local itemPos = item.WorldPos
+        local dist = (itemPos[1] - pos[1]) ^ 2 + (itemPos[2] - pos[2]) ^ 2 + (itemPos[3] - pos[3]) ^ 2 -- VectorLib and sqrt are avoided to maximize performance.
+        if dist <= radiusSquared and (predicate == nil or predicate(item)) then
+            table.insert(nearItems, item)
+        end
+    end
+    return nearItems
+end
