@@ -533,8 +533,9 @@ end
 ---Does nothing if the item already had treasure generated.
 ---@param item EsvItem Must be a container.
 ---@param char EsvCharacter
+---@return boolean -- `true` if the container did not have treasure generated before.
 function Item.GenerateDefaultTreasure(item, char)
-    if item.TreasureGenerated then return end
+    if item.TreasureGenerated then return false end
     local treasureLevel = Item.GetTreasureLevel(item, char)
 
     -- Generate regular treasure
@@ -562,6 +563,8 @@ function Item.GenerateDefaultTreasure(item, char)
             Osiris.PlayEffect(char, Item.LUCKY_CHARM_EFFECT, Item.LUCKY_CHARM_EFFECT_BONE)
         end
     end
+
+    return true
 end
 
 ---Returns all items in the party inventory of char matching the predicate, or all if no predicate is passed.

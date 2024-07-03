@@ -48,7 +48,6 @@ local QuickLoot = {
     },
 }
 Epip.RegisterFeature("Features.QuickLoot", QuickLoot)
-QuickLoot:Debug()
 
 ---------------------------------------------
 -- EVENTS/HOOKS

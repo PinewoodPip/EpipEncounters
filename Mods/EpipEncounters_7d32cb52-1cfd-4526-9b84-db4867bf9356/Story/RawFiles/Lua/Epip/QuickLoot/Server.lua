@@ -1,4 +1,6 @@
 
+local AutoIdentify = Epip.GetFeature("Feature_AutoIdentify")
+
 ---@class Features.QuickLoot
 local QuickLoot = Epip.GetFeature("Features.QuickLoot")
 
@@ -27,11 +29,20 @@ Net.RegisterListener(QuickLoot.NETMSG_GENERATE_TREASURE, function (payload)
     for _,netID in ipairs(payload.ItemNetIDs) do
         local item = Item.Get(netID)
 
-        Item.GenerateDefaultTreasure(item, char)
+        local generated = Item.GenerateDefaultTreasure(item, char)
+        if generated then
+            -- Mark the containers as having been opened
+            item.Known = true -- Unsure if necessary, nor what exactly it means.
+            item.IsContainer = true -- This appears to actually be the equivalent of the "WasOpened" client flag.
 
-        -- Mark the containers as having been opened
-        item.Known = true -- Unsure if necessary, nor what exactly it means.
-        item.IsContainer = true -- This appears to actually be the equivalent of the "WasOpened" client flag.
+            -- Run auto-identify feature
+            for _,itemGUID in ipairs(item:GetInventoryItems()) do
+                local generatedItem = Item.Get(itemGUID)
+                if not Item.IsIdentified(generatedItem) then
+                    AutoIdentify.ProcessItem(generatedItem)
+                end
+            end
+        end
     end
     -- Items generated seem to need a delay before they're synched.
     -- 0.1s can fail even in singleplayer.
