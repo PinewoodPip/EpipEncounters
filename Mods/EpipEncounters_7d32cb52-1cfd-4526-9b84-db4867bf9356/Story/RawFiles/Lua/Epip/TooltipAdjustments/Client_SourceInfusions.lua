@@ -41,8 +41,10 @@ local TSK = SourceInfusionTooltips.TranslatedStrings
 function SourceInfusionTooltips.ProcessTooltip(char, skillID, tooltip)
     local element = tooltip:GetFirstElement("SkillDescription")
     if not element then return end
+    local skill = Stats.Get("StatsLib_StatsEntry_SkillData", skillID)
+    if not skill then return end -- Can happen with Actions.
 
-    local school = Stats.Get("StatsLib_StatsEntry_SkillData", skillID).Ability
+    local school = skill.Ability
     if not school or school == "None" then return end -- Though it would be possible to create SIs for no-school skills, this feature would likely not be relevant to them.
 
     local fieldName = Stats.SKILL_ABILITY_TO_STATISTIC[school]
