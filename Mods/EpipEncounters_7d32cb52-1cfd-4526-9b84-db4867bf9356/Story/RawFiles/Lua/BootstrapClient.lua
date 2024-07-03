@@ -363,6 +363,8 @@ LOAD_ORDER = {
 
             "UI/Generic/Prefabs/AnchoredText.lua",
 
+            "UI/Generic/Prefabs/Containers/PooledContainer.lua",
+
             "UI/Generic/Prefabs/Containers/VerticalList.lua",
         },
     },
