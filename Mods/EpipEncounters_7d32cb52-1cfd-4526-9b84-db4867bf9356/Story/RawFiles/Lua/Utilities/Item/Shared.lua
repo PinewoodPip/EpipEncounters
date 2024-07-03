@@ -998,6 +998,14 @@ function Item.IsMarkedAsWares(item)
     return item.Flags["DontAddToBottomBar"]
 end
 
+---Returns whether an item is locked.
+---@param item Item
+---@return boolean
+function Item.IsLocked(item)
+    local key = Ext.IsClient() and item.KeyName or item.Key -- This field is cleared when the item is unlocked.
+    return key ~= ""
+end
+
 ---------------------------------------------
 -- REGION Querying items in inventories.
 ---------------------------------------------

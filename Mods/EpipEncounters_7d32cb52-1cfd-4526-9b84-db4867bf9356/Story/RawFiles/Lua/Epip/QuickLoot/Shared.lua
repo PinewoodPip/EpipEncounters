@@ -42,7 +42,10 @@ local QuickLoot = {
 
     Events = {
         SearchCompleted = {Context = "Client"}, ---@type Event<Features.QuickLoot.Events.SearchCompleted>
-    }
+    },
+    Hooks = {
+        IsContainerLootable = {Context = "Client"}, ---@type Hook<Features.QuickLoot.Hooks.IsContainerLootable>
+    },
 }
 Epip.RegisterFeature("Features.QuickLoot", QuickLoot)
 QuickLoot:Debug()
@@ -57,6 +60,10 @@ QuickLoot:Debug()
 ---@field LootableItems EclItem[]
 ---@field Containers EclItem[]
 ---@field Corpses EclCharacter[]
+
+---@class Features.QuickLoot.Hooks.IsContainerLootable
+---@field Container EclItem
+---@field Lootable boolean Hookable. Defaults to `true`.
 
 ---------------------------------------------
 -- NET MESSAGES

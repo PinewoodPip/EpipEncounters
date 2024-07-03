@@ -25,12 +25,16 @@ QuickLoot._Searches = {} ---@type table<CharacterHandle, Features.QuickLoot.Sear
 ---------------------------------------------
 
 ---Returns the containers and corpses near a position.
+---@see Features.QuickLoot.Hooks.IsContainerLootable
 ---@param pos vec3
 ---@param radius number In meters.
 ---@return EclItem[], EclCharacter[] -- Containers and corpses.
 function QuickLoot.GetContainers(pos, radius)
     local nearbyContainers = Entity.GetNearbyItems(pos, radius, function (item)
-        return Item.IsContainer(item)
+        return Item.IsContainer(item) and QuickLoot.Hooks.IsContainerLootable:Throw({
+            Container = item,
+            Lootable = true,
+        }).Lootable
     end)
     local nearbyCorpses = Entity.GetNearbyCharacters(pos, radius, function (char)
         return Character.IsLootableCorpse(char) and not Character.IsPlayer(char)
@@ -173,6 +177,14 @@ end
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
+
+-- Prevent looting certain containers.
+QuickLoot.Hooks.IsContainerLootable:Subscribe(function (ev)
+    local item, lootable = ev.Container, ev.Lootable
+    lootable = lootable and Item.IsLegal(item) -- Can't steal with Quick Loot
+    lootable = lootable and not Item.IsLocked(item) -- Can't loot locked containers
+    lootable = lootable and item.Activated and not item.Invisible -- Can't loot hidden containers
+end, {StringID = "DefaultImplementation"})
 
 -- Start & stop searches when the action is pressed & released.
 Input.Events.ActionExecuted:Subscribe(function (ev)
