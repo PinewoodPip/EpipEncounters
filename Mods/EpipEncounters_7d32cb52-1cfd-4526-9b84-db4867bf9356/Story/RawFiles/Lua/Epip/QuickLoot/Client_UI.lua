@@ -24,6 +24,7 @@ UI.SCROLL_LIST_FRAME = UI.BACKGROUND_SIZE - V(40, 137)
 UI.ITEM_SIZE = V(58, 58)
 UI.ELEMENT_SPACING = 5
 UI.PICKUP_SOUND = "UI_Game_PartyFormation_PickUp"
+UI.EVENTID_TICK_IS_MOVING = "Features.QuickLoot.UI.IsCharacterMoving"
 
 QuickLoot:RegisterInputAction("Search", {
     Name = TSK.InputAction_Search_Name,
@@ -51,6 +52,16 @@ function UI.Setup(items, handleMap)
         UI._RenderItem(item)
     end
     UI.ItemGrid:RepositionElements()
+
+    -- Close the UI when the character begins to move.
+    GameState.Events.RunningTick:Unsubscribe(UI.EVENTID_TICK_IS_MOVING)
+    GameState.Events.RunningTick:Subscribe(function (_)
+        local char = Client.GetCharacter()
+        if Character.IsMoving(char) or not UI:IsVisible() then -- Also remove the listener after the UI closes.
+            UI:TryHide()
+            GameState.Events.RunningTick:Unsubscribe(UI.EVENTID_TICK_IS_MOVING)
+        end
+    end, {StringID = UI.EVENTID_TICK_IS_MOVING})
 
     UI:Show()
 end

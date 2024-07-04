@@ -6,6 +6,7 @@ local Input = Client.Input
 local QuickLoot = Epip.GetFeature("Features.QuickLoot")
 local TSK = QuickLoot.TranslatedStrings
 QuickLoot.EVENTID_TICK_SELECTOR_EFFECT = "Features.QuickLoot.SelectorEffect"
+QuickLoot.EVENTID_TICK_IS_MOVING = "Features.QuickLoot.IsCharacterMoving"
 QuickLoot.MAX_SEARCH_DISTANCE = 10 -- In meters.
 QuickLoot.SEARCH_RADIUS_PER_SECOND = 5 -- How many meters the selector's radius expands per second.
 QuickLoot.SEARCH_BASE_RADIUS = 1 -- In meters.
@@ -108,6 +109,7 @@ function QuickLoot.StartSearch(char)
     -- Set default radius, then update it per-tick
     effect.WorldTransform.Scale = {QuickLoot.SEARCH_BASE_RADIUS, QuickLoot.SEARCH_BASE_RADIUS, 0}
     GameState.Events.Tick:Subscribe(function (ev)
+        char = Character.Get(charHandle)
         local eff = Ext.Entity.GetEffect(effectHandle)
         local scale = eff.WorldTransform.Scale
         local radiusChange = ev.DeltaTime / 1000 * QuickLoot.SEARCH_RADIUS_PER_SECOND
@@ -115,12 +117,21 @@ function QuickLoot.StartSearch(char)
         eff.WorldTransform.Scale = {newScale, 1, newScale}
 
         -- Delete the effect when searching ends.
-        if QuickLoot._Searches[charHandle].EndTime then
+        if not QuickLoot.IsSearching(char) then
             eff.WorldTransform.Scale = {0, 0, 0} -- Effects are pooled; we need to reset the scale to avoid a flicker when the effect instance is re-used.
             Ext.Visual.Get(multiVisualHandle):Delete()
             GameState.Events.Tick:Unsubscribe(QuickLoot.EVENTID_TICK_SELECTOR_EFFECT)
         end
     end, {StringID = QuickLoot.EVENTID_TICK_SELECTOR_EFFECT}) -- TODO append some char identifier to listener
+
+    -- Cancel the search when the character begins to move.
+    GameState.Events.RunningTick:Subscribe(function (_)
+        char = Character.Get(charHandle)
+        if Character.IsMoving(char) then
+            QuickLoot._Searches[charHandle] = nil
+            GameState.Events.RunningTick:Unsubscribe(QuickLoot.EVENTID_TICK_IS_MOVING)
+        end
+    end, {StringID = QuickLoot.EVENTID_TICK_IS_MOVING})
 
     ---@type Features.QuickLoot.Search
     local search = {
@@ -129,6 +140,13 @@ function QuickLoot.StartSearch(char)
         MultiVisualHandle = multiVisualHandle,
     }
     QuickLoot._Searches[char.Handle] = search
+end
+
+---Returns the search char is currently performing, if any.
+---@param char EclCharacter
+---@return Features.QuickLoot.Search?
+function QuickLoot.GetSearch(char)
+    return QuickLoot._Searches[char.Handle]
 end
 
 ---Returns whether char is performing a search.
@@ -197,7 +215,7 @@ end, {StringID = "DefaultImplementation"})
 Input.Events.ActionExecuted:Subscribe(function (ev)
     if ev.Action.ID == QuickLoot.InputActions.Search.ID then
         local char = Client.GetCharacter()
-        if not QuickLoot.IsRequesting(char) then
+        if not QuickLoot.IsRequesting(char) and not Character.IsMoving(char) then -- Can't search while moving.
             QuickLoot.StartSearch(char)
             Notification.ShowWarning(TSK.Notification_Searching:GetString(), 0.5)
         end
@@ -216,6 +234,7 @@ end)
 -- after server has finished generating loot in containers.
 Net.RegisterListener(QuickLoot.NETMSG_TREASURE_GENERATED, function (_)
     local char = Client.GetCharacter()
+    if not QuickLoot.IsRequesting(char) then return end -- Do nothing if the request was cancelled before resolving.
     local radius = QuickLoot.GetSearchRadius(char)
     local containers, corpses = QuickLoot.GetContainers(char.WorldPos, radius)
     local items, handleMap = QuickLoot.GetItems(char.WorldPos, radius)

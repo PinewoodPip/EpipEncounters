@@ -1021,6 +1021,14 @@ function Character.IsInPartyLinkingRange(char1, char2)
     return dist < Character.MAX_PARTYGROUP_LINK_RANGE
 end
 
+---Returns whether a character is walking or running.
+---@param char Character
+---@return boolean
+function Character.IsMoving(char)
+    local layer = char.MovementMachine.Layers[1] ---@cast layer EsvMSMovement This class is actually the same across both contexts.
+    return layer and layer.IsMoving
+end
+
 ---Throws the ItemEquipped event.
 ---@param character Character
 ---@param item Item
