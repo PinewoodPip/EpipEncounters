@@ -34,9 +34,11 @@ QuickLoot:RegisterInputAction("Search", {
 
 ---Sets up the UI with a list of items.
 ---@param items EclItem[]
-function UI.Setup(items)
+---@param handleMap Features.QuickLoot.HandleMap
+function UI.Setup(items, handleMap)
     UI._Initialize()
 
+    UI._HandleMap = handleMap
     UI._CurrentItemHandles = {}
     UI._ItemHandleToSlot = {}
     UI._ItemsCount = 0
@@ -89,6 +91,15 @@ end
 ---@return GenericUI_Prefab_HotbarSlot
 function UI.GetItemSlot(item)
     return UI._ItemHandleToSlot[item.Handle]
+end
+
+---Returns the container or corpse that contains the item.
+---@param item EclItem Must be currently within the UI.
+---@return EclItem|EclCharacter
+function UI.GetItemSource(item)
+    local handleMap = UI._HandleMap
+    local containerHandle, corpseHandle = handleMap.ItemHandleToContainerHandle[item.Handle], handleMap.ItemHandleToCorpseHandle[item.Handle]
+    return containerHandle and Item.Get(containerHandle) or Character.Get(corpseHandle)
 end
 
 ---Returns the amount of items that fit per row.
@@ -183,6 +194,28 @@ QuickLoot.Events.SearchCompleted:Subscribe(function (ev)
     if #items == 0 then -- Do not open the UI if no items were found.
         Notification.ShowNotification(TSK.Notification_NoLootNearby:GetString())
     else
-        UI.Setup(items)
+        UI.Setup(items, ev.HandleMaps)
+    end
+end)
+
+-- Append source container/corpse to item tooltips.
+Client.Tooltip.Hooks.RenderItemTooltip:Subscribe(function (ev)
+    if UI:IsVisible() then
+        local source = UI.GetItemSource(ev.Item)
+        if source then -- The tooltip might be from another UI, or the item might've been moved out by another character in the meantime.
+            local tsk = Entity.IsItem(source) and TSK.Label_SourceContainer or TSK.Label_SourceCorpse
+            local label = tsk:Format({
+                FormatArgs = {source.DisplayName},
+                Color = Color.LARIAN.GREEN,
+            })
+            local element = ev.Tooltip:GetFirstElement("ItemDescription")
+            local infix = "<br><br>"
+            if not element then
+                element = {Type = "ItemDescription", Label = ""}
+                ev.Tooltip:InsertElement(element)
+                infix = "" -- Don't append line breaks if there was no element before.
+            end
+            element.Label = string.format("%s%s%s", element.Label, infix, label)
+        end
     end
 end)

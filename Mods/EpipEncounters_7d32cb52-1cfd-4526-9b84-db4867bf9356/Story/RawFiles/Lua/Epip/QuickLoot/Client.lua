@@ -20,6 +20,8 @@ QuickLoot._Searches = {} ---@type table<CharacterHandle, Features.QuickLoot.Sear
 ---@field Containers ItemHandle[]? `nil` if the search is in progress.
 ---@field EndTime integer? `nil` if the search is in progress. 
 
+---@alias Features.QuickLoot.HandleMap {ItemHandleToContainerHandle: table<ItemHandle, ItemHandle>, ItemHandleToCorpseHandle: table<ItemHandle, CharacterHandle>}
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
@@ -45,17 +47,21 @@ end
 ---Returns items to loot near a position.
 ---@param pos Vector3
 ---@param radius number In meters.
----@return EclItem[]
+---@return EclItem[], Features.QuickLoot.HandleMap
 function QuickLoot.GetItems(pos, radius)
     local nearbyContainers, nearbyCorpses = QuickLoot.GetContainers(pos, radius)
+    local itemHandleToContainerHandle = {}
+    local itemHandleToCorpseHandle = {}
     local items = {} ---@type EclItem[]
 
     -- Fetch items from nearby containers
     QuickLoot:DebugLog(#nearbyContainers, "nearby containers")
-    for _,item in ipairs(nearbyContainers) do
-        local contents = item:GetInventoryItems()
+    for _,container in ipairs(nearbyContainers) do
+        local contents = container:GetInventoryItems()
         for _,contentGUID in ipairs(contents) do
-            table.insert(items, Item.Get(contentGUID))
+            local item = Item.Get(contentGUID)
+            table.insert(items, item)
+            itemHandleToContainerHandle[item.Handle] = container.Handle
         end
     end
 
@@ -65,12 +71,13 @@ function QuickLoot.GetItems(pos, radius)
         local contents = Character.GetLootableItems(char)
         for _,item in ipairs(contents) do
             table.insert(items, item)
+            itemHandleToCorpseHandle[item.Handle] = char.Handle
         end
     end
 
     QuickLoot:DebugLog(#items, "items found")
 
-    return items
+    return items, {ItemHandleToContainerHandle = itemHandleToContainerHandle, ItemHandleToCorpseHandle = itemHandleToCorpseHandle}
 end
 
 ---Requests an item to be picked up.
@@ -211,7 +218,7 @@ Net.RegisterListener(QuickLoot.NETMSG_TREASURE_GENERATED, function (_)
     local char = Client.GetCharacter()
     local radius = QuickLoot.GetSearchRadius(char)
     local containers, corpses = QuickLoot.GetContainers(char.WorldPos, radius)
-    local items = QuickLoot.GetItems(char.WorldPos, radius)
+    local items, handleMap = QuickLoot.GetItems(char.WorldPos, radius)
 
     -- Mark corpses as looted.
     -- Can't be done on the server - no accessible equivalent(?)
@@ -227,6 +234,7 @@ Net.RegisterListener(QuickLoot.NETMSG_TREASURE_GENERATED, function (_)
         LootableItems = items,
         Containers = containers,
         Corpses = corpses,
+        HandleMaps = handleMap,
     })
 
     -- Dispose of the search.

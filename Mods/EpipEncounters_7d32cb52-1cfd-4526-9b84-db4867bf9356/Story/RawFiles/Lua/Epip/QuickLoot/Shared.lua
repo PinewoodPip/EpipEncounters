@@ -16,6 +16,16 @@ local QuickLoot = {
             Text = "Loot All",
             ContextDescription = [[Button label]],
         },
+        Label_SourceContainer = {
+            Handle = "h156a7412g4f0fg4483g9977g5341ae987ba1",
+            Text = "In %s.",
+            ContextDescription = [[Tooltip for source container of an item. Param is item name]],
+        },
+        Label_SourceCorpse = {
+            Handle = "h3833c781g3601g4c0cgb6b0g17863e16b166",
+            Text = "In %s's corpse.",
+            ContextDescription = [[Tooltip for source corpse of an item. Param is character name]],
+        },
         Notification_NoLootNearby = {
             Handle = "h75d9d7f6g8200g43ffg9ef6g10a48ab961a6",
             Text = "No loot found nearby.",
@@ -59,6 +69,7 @@ Epip.RegisterFeature("Features.QuickLoot", QuickLoot)
 ---@field LootableItems EclItem[]
 ---@field Containers EclItem[]
 ---@field Corpses EclCharacter[]
+---@field HandleMaps Features.QuickLoot.HandleMap
 
 ---@class Features.QuickLoot.Hooks.IsContainerLootable
 ---@field Container EclItem
