@@ -13,6 +13,9 @@ local QuickLoot = Epip.GetFeature("Features.QuickLoot")
 ---@param item EsvItem
 function QuickLoot.PickUpItem(char, item)
     Osiris.ItemToInventory(item, char, item.Amount, 1, 0)
+
+    -- Does not appear to work.
+    -- Osiris.CharacterPlayHUDSoundResource(char, item.CurrentTemplate.PickupSound)
 end
 
 ---------------------------------------------

@@ -22,6 +22,7 @@ UI.SCROLL_LIST_AREA = UI.BACKGROUND_SIZE - V(40 + UI.SCROLLBAR_WIDTH, 140)
 UI.SCROLL_LIST_FRAME = UI.BACKGROUND_SIZE - V(40, 137)
 UI.ITEM_SIZE = V(58, 58)
 UI.ELEMENT_SPACING = 5
+UI.PICKUP_SOUND = "UI_Game_PartyFormation_PickUp"
 
 QuickLoot:RegisterInputAction("Search", {
     Name = TSK.InputAction_Search_Name,
@@ -67,6 +68,7 @@ function UI.LootItem(item)
     end
 
     QuickLoot.RequestPickUp(Client.GetCharacter(), item)
+    UI:PlaySound(UI.PICKUP_SOUND) -- This sound is normally different per-item, however we cannot recreate that.
 
     table.remove(UI._CurrentItemHandles, slotIndex)
 
@@ -83,6 +85,7 @@ function UI.LootAll()
         -- No need to update bookkeeping of the UI, as we can just empty/hide it right afterwards.
         QuickLoot.RequestPickUp(char, Item.Get(handle))
     end
+    UI:PlaySound(UI.PICKUP_SOUND) -- Play the sound only once so as not to stack it.
     UI:Hide()
 end
 
