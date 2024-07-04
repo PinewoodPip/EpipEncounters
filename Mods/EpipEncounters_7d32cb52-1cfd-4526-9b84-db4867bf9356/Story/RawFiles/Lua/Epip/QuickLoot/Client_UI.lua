@@ -6,6 +6,7 @@ local DraggingAreaPrefab = Generic.GetPrefab("GenericUI_Prefab_DraggingArea")
 local ButtonPrefab = Generic.GetPrefab("GenericUI_Prefab_Button")
 local CloseButtonPrefab = Generic.GetPrefab("GenericUI_Prefab_CloseButton")
 local PooledContainer = Generic.GetPrefab("GenericUI.Prefabs.PooledContainer")
+local Tooltip = Client.Tooltip
 local Notification = Client.UI.Notification
 local V = Vector.Create
 
@@ -40,8 +41,8 @@ function UI.Setup(items, handleMap)
     UI._Initialize()
 
     UI._HandleMap = handleMap
-    UI._CurrentItemHandles = {}
-    UI._ItemHandleToSlot = {}
+    UI._CurrentItemHandles = {} ---@type ItemHandle[]
+    UI._ItemHandleToSlot = {} ---@type table<ItemHandle, GenericUI_Prefab_HotbarSlot>
     UI._ItemsCount = 0
 
     -- Render items
@@ -76,6 +77,12 @@ function UI.LootItem(item)
     local slot = UI.GetItemSlot(item)
     slot:SetVisible(false)
     UI.ItemGrid.Container:RepositionElements() -- Done directly so as not to invoke PooledContainer's behaviour of stopping at the first invisible element.
+
+    -- Close the UI if all items have been looted.
+    if #UI._CurrentItemHandles == 0 then
+        Tooltip.HideTooltip()
+        UI:Hide()
+    end
 end
 
 ---Requests to loot all items in the UI.
@@ -208,7 +215,7 @@ QuickLoot.Events.SearchCompleted:Subscribe(function (ev)
 end)
 
 -- Append source container/corpse to item tooltips.
-Client.Tooltip.Hooks.RenderItemTooltip:Subscribe(function (ev)
+Tooltip.Hooks.RenderItemTooltip:Subscribe(function (ev)
     if UI:IsVisible() then
         local source = UI.GetItemSource(ev.Item)
         if source then -- The tooltip might be from another UI, or the item might've been moved out by another character in the meantime.
@@ -227,4 +234,9 @@ Client.Tooltip.Hooks.RenderItemTooltip:Subscribe(function (ev)
             element.Label = string.format("%s%s%s", element.Label, infix, label)
         end
     end
+end)
+
+-- Close the UI when active character changes.
+Client.Events.ActiveCharacterChanged:Subscribe(function (_)
+    UI:TryHide()
 end)
