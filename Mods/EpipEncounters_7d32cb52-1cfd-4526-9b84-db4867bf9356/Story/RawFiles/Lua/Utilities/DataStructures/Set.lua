@@ -20,7 +20,7 @@ function Set.Create(elements)
     }
     -- Inherit(tbl, Set)
     setmetatable(tbl, {
-        __index = Set,
+        __index = Set.__index,
         __pairs = Set.__pairs,
         __ipairs = Set.__ipairs,
         __len = Set.__len,
@@ -94,6 +94,14 @@ function Set.Iterator(self)
     end
 
     return generator
+end
+
+function Set.__index(self, key)
+    if Set[key] then -- Basic inheritance
+        return Set[key]
+    end
+    -- Allow set<T>-like use.
+    return self:Contains(key)
 end
 
 function Set.__len(self)
