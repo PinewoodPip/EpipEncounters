@@ -181,6 +181,12 @@ function UI._Initialize()
     -- Only set relative position the first time the UI is used in a session.
     UI:SetPositionRelativeToViewport("center", "center")
 
+    -- Close the UI when pause key is pressed.
+    UI:SetIggyEventCapture("ToggleInGameMenu", true)
+    UI.Events.IggyEventDownCaptured:Subscribe(function (_)
+        UI:Hide()
+    end)
+
     UI._Initialized = true
 end
 

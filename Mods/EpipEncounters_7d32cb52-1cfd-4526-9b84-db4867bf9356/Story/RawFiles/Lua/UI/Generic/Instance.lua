@@ -64,7 +64,7 @@ function _Instance:GetElementByID(id)
 end
 
 ---Sets whether an iggy event should be captured.
----@param eventID string Unprefixed name; ex. "UICancel"
+---@param eventID InputLib_InputEventStringID Unprefixed name; ex. "UICancel"
 ---@param capture boolean All events are uncaptured by default.
 function _Instance:SetIggyEventCapture(eventID, capture)
     local root = self:GetRoot()
