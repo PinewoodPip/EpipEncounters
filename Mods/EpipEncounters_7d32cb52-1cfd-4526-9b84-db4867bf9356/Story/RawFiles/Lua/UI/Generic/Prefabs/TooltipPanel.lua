@@ -6,10 +6,11 @@
 local Generic = Client.UI.Generic
 local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 
----@class GenericUI_Prefab_TooltipPanel : GenericUI_Prefab
+---@class GenericUI_Prefab_TooltipPanel : GenericUI_Prefab, GenericUI_I_Elementable
 ---@field Background GenericUI_Element_TiledBackground
 ---@field HeaderText GenericUI_Element_Text
 local TooltipPanelPrefab = {}
+Generic:RegisterClass("GenericUI_Prefab_TooltipPanel", TooltipPanelPrefab, {"GenericUI_Prefab", "GenericUI_I_Elementable"})
 Generic.RegisterPrefab("GenericUI_Prefab_TooltipPanel", TooltipPanelPrefab)
 
 ---@diagnostic disable-next-line: duplicate-doc-alias
@@ -50,8 +51,14 @@ function TooltipPanelPrefab:AddChild(id, elementType)
     return self.Background:AddChild(id, elementType)
 end
 
+---Destroys the elements of the prefab.
 function TooltipPanelPrefab:Destroy()
     self.UI:DestroyElement(self.Background)
 
     self.Background, self.HeaderText = nil, nil
+end
+
+---@override
+function TooltipPanelPrefab:GetRootElement()
+    return self.Background
 end

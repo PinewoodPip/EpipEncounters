@@ -503,6 +503,14 @@ function Stats.GetStatusIcon(status)
     return icon
 end
 
+---Returns the type of a stats object.
+---@param statObj StatsObject
+---@return string -- TODO
+function Stats.GetType(statObj)
+    local manager = Ext.Stats.GetStatsManager()
+    return manager.ModifierLists.Elements[statObj.ModifierListIndex + 1].Name
+end
+
 function Stats.CountStat(stats, stat)
     local count = 0
     local dynStats = stats.DynamicStats

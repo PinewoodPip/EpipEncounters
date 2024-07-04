@@ -48,8 +48,10 @@ end
 ---Returns items to loot near a position.
 ---@param pos Vector3
 ---@param radius number In meters.
+---@param applyFilters boolean? Defaults to `true`.
 ---@return EclItem[], Features.QuickLoot.HandleMap
-function QuickLoot.GetItems(pos, radius)
+function QuickLoot.GetItems(pos, radius, applyFilters)
+    if applyFilters == nil then applyFilters = true end
     local nearbyContainers, nearbyCorpses = QuickLoot.GetContainers(pos, radius)
     local itemHandleToContainerHandle = {}
     local itemHandleToCorpseHandle = {}
@@ -61,8 +63,10 @@ function QuickLoot.GetItems(pos, radius)
         local contents = container:GetInventoryItems()
         for _,contentGUID in ipairs(contents) do
             local item = Item.Get(contentGUID)
-            table.insert(items, item)
-            itemHandleToContainerHandle[item.Handle] = container.Handle
+            if not applyFilters or not QuickLoot.IsItemFilteredOut(item) then
+                table.insert(items, item)
+                itemHandleToContainerHandle[item.Handle] = container.Handle
+            end
         end
     end
 
@@ -71,8 +75,10 @@ function QuickLoot.GetItems(pos, radius)
     for _,char in ipairs(nearbyCorpses) do
         local contents = Character.GetLootableItems(char)
         for _,item in ipairs(contents) do
-            table.insert(items, item)
-            itemHandleToCorpseHandle[item.Handle] = char.Handle
+            if not applyFilters or not QuickLoot.IsItemFilteredOut(item) then
+                table.insert(items, item)
+                itemHandleToCorpseHandle[item.Handle] = char.Handle
+            end
         end
     end
 
@@ -89,6 +95,16 @@ function QuickLoot.RequestPickUp(char, item)
         CharacterNetID = char.NetID,
         ItemNetID = item.NetID,
     })
+end
+
+---Returns whether an item should be filtered out.
+---@see Features.QuickLoot.Hooks.IsItemFilteredOut
+---@param item any
+function QuickLoot.IsItemFilteredOut(item)
+    return QuickLoot.Hooks.IsItemFilteredOut:Throw({
+        Item = item,
+        FilteredOut = false,
+    }).FilteredOut
 end
 
 ---Begins searching for nearby lootables.
@@ -259,3 +275,35 @@ Net.RegisterListener(QuickLoot.NETMSG_TREASURE_GENERATED, function (_)
     -- Dispose of the search.
     QuickLoot._Searches[char.Handle] = nil
 end)
+
+-- Apply default filters.
+QuickLoot.Hooks.IsItemFilteredOut:Subscribe(function (ev)
+    local item = ev.Item
+    local filtered = ev.FilteredOut
+    local settings = QuickLoot.Settings
+    local minRarity = settings.MinEquipmentRarity:GetValue()
+
+    -- Rarity filter
+    if minRarity ~= "Common" and Item.IsEquipment(item) then
+        local rarityValue = Ext.Enums.ItemDataRarity[item.Stats.Rarity]
+        local minRarityValue = Ext.Enums.ItemDataRarity[minRarity]
+        filtered = filtered or (rarityValue.Value < minRarityValue.Value)
+    end
+
+    -- Consumables filter
+    if settings.ShowConsumables:GetValue() == false then
+        filtered = filtered or Item.IsPotion(item) or Item.IsScroll(item) or Item.IsGrenade(item)
+    end
+
+    -- Food and drink filter
+    if settings.ShowFoodAndDrinks:GetValue() == false then
+        filtered = filtered or (Item.IsFood(item) and not Item.IsIngredient(item)) -- Do not consider items like potion mushroom ingredients as food.
+    end
+
+    -- Ingredients filter
+    if settings.ShowIngredients:GetValue() == false then
+        filtered = filtered or Item.IsIngredient(item)
+    end
+
+    ev.FilteredOut = filtered
+end, {StringID = "DefaultImplementation"})

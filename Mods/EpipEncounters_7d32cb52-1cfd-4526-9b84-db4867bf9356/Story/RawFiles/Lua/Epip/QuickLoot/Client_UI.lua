@@ -6,6 +6,7 @@ local DraggingAreaPrefab = Generic.GetPrefab("GenericUI_Prefab_DraggingArea")
 local ButtonPrefab = Generic.GetPrefab("GenericUI_Prefab_Button")
 local CloseButtonPrefab = Generic.GetPrefab("GenericUI_Prefab_CloseButton")
 local PooledContainer = Generic.GetPrefab("GenericUI.Prefabs.PooledContainer")
+local SettingWidgets = Epip.GetFeature("Features.SettingWidgets")
 local Tooltip = Client.Tooltip
 local Notification = Client.UI.Notification
 local V = Vector.Create
@@ -25,6 +26,11 @@ UI.ITEM_SIZE = V(58, 58)
 UI.ELEMENT_SPACING = 5
 UI.PICKUP_SOUND = "UI_Game_PartyFormation_PickUp"
 UI.EVENTID_TICK_IS_MOVING = "Features.QuickLoot.UI.IsCharacterMoving"
+UI.SETTINGS_PANEL_SIZE = V(500, 500)
+UI.SETTINGS_PANEL_ELEMENT_SIZE = V(UI.SETTINGS_PANEL_SIZE[1] - 55, 50)
+UI.SETTINGS_PANEL_SCROLLLIST_FRAME = UI.SETTINGS_PANEL_SIZE - V(20, 150)
+
+UI.Hooks.GetSettings = UI:AddSubscribableHook("GetSettings") ---@type Hook<{Settings:SettingsLib_Setting[]}> Fired only once when the UI is first opened.
 
 QuickLoot:RegisterInputAction("Search", {
     Name = TSK.InputAction_Search_Name,
@@ -36,20 +42,35 @@ QuickLoot:RegisterInputAction("Search", {
 ---------------------------------------------
 
 ---Sets up the UI with a list of items.
----@param items EclItem[]
----@param handleMap Features.QuickLoot.HandleMap
-function UI.Setup(items, handleMap)
+---@param searchResult Features.QuickLoot.Events.SearchCompleted
+function UI.Setup(searchResult)
     UI._Initialize()
 
-    UI._HandleMap = handleMap
+    UI._HandleMap = searchResult.HandleMaps
     UI._CurrentItemHandles = {} ---@type ItemHandle[]
     UI._ItemHandleToSlot = {} ---@type table<ItemHandle, GenericUI_Prefab_HotbarSlot>
     UI._ItemsCount = 0
 
     -- Render items
     UI.ItemGrid:Clear()
+    local items = searchResult.LootableItems
+    local itemsSet = {} ---@type set<ItemHandle>
+    for _,item in ipairs(items) do itemsSet[item.Handle] = true end
+    local filteredOutItems = {} ---@type set<ItemHandle>
+    -- Add filtered-out items in greyed-out mode.
+    if QuickLoot.Settings.FilterMode:GetValue() == QuickLoot.SETTING_FILTERMODE_CHOICES.GREYED_OUT then
+        local allItems, newMap = QuickLoot.GetItems(searchResult.Character.WorldPos, searchResult.Radius, false)
+        for _,item in ipairs(allItems) do
+            if not itemsSet[item.Handle] then
+                table.insert(items, item)
+                filteredOutItems[item.Handle] = true
+                UI._HandleMap.ItemHandleToContainerHandle[item.Handle] = newMap.ItemHandleToContainerHandle[item.Handle]
+                UI._HandleMap.ItemHandleToCorpseHandle[item.Handle] = newMap.ItemHandleToCorpseHandle[item.Handle]
+            end
+        end
+    end
     for _,item in ipairs(items) do
-        UI._RenderItem(item)
+        UI._RenderItem(item, filteredOutItems[item.Handle])
     end
     UI.ItemGrid:RepositionElements()
 
@@ -144,14 +165,15 @@ end
 
 ---Renders an item onto the grid.
 ---@param item EclItem
-function UI._RenderItem(item)
+---@param greyedOut boolean
+function UI._RenderItem(item, greyedOut)
     local itemIndex = UI._ItemsCount + 1
     local slot = UI.ItemGrid:GetItem(itemIndex) ---@type GenericUI_Prefab_HotbarSlot
     UI._ItemHandleToSlot[item.Handle] = slot
     UI._CurrentItemHandles[itemIndex] = item.Handle
     UI._ItemsCount = itemIndex
     slot:SetItem(item)
-    slot:SetEnabled(true)
+    slot:SetEnabled(not greyedOut)
     slot:SetCanDragDrop(false)
     slot:SetUsable(false)
     slot:SetUpdateDelay(-1)
@@ -163,7 +185,10 @@ function UI._Initialize()
 
     UI:GetUI().SysPanelSize = {UI.BACKGROUND_SIZE[1], UI.BACKGROUND_SIZE[2]}
 
-    local bg = TooltipPanelPrefab.Create(UI, "Background", nil, UI.BACKGROUND_SIZE, Text.Format(TSK.Label_FeatureName:GetString(), {
+    local root = UI:CreateElement("Root", "GenericUI_Element_Empty")
+    UI.Root = root
+
+    local bg = TooltipPanelPrefab.Create(UI, "Background", root, UI.BACKGROUND_SIZE, Text.Format(TSK.Label_FeatureName:GetString(), {
         Size = 23,
     }), UI.HEADER_SIZE)
     UI.Background = bg
@@ -199,6 +224,8 @@ function UI._Initialize()
         return slot
     end)
 
+    UI._InitalizeSettingsPanel()
+
     -- Only set relative position the first time the UI is used in a session.
     UI:SetPositionRelativeToViewport("center", "center")
 
@@ -211,6 +238,40 @@ function UI._Initialize()
     UI._Initialized = true
 end
 
+---Initializes the settings panel.
+function UI._InitalizeSettingsPanel()
+    local settingsPanel = TooltipPanelPrefab.Create(UI, "Settings", UI.Root, UI.SETTINGS_PANEL_SIZE, Text.Format(Text.CommonStrings.Filters:GetString(), {Size = 23}), UI.HEADER_SIZE)
+    settingsPanel.Background:SetPosition(UI.BACKGROUND_SIZE[1] - 15, 0)
+    UI.SettingsPanel = settingsPanel
+
+    local list = settingsPanel:AddChild("SettingsList", "GenericUI_Element_ScrollList")
+    list:SetFrame(UI.SETTINGS_PANEL_SCROLLLIST_FRAME:unpack())
+    list:SetRepositionAfterAdding(false)
+    list:SetScrollbarSpacing(-50)
+    list:SetMouseWheelEnabled(true)
+    list:SetPosition(20, 80)
+    UI.SettingsPanelList = list
+
+    -- Render settings
+    for _,setting in ipairs(UI.Hooks.GetSettings:Throw({Settings = {}}).Settings) do
+        SettingWidgets.RenderSetting(UI, list, setting, UI.SETTINGS_PANEL_ELEMENT_SIZE, function (_)
+            -- TODO refresh UI
+            QuickLoot:SaveSettings()
+        end)
+    end
+    list:RepositionElements()
+
+    -- Settings button
+    local settingsButton = ButtonPrefab.Create(UI, "SettingsButton", UI.Background:GetRootElement(), ButtonPrefab:GetStyle("SettingsRed"))
+    settingsButton:SetPositionRelativeToParent("TopRight", -13, 13)
+    -- Toggle panel visibility
+    settingsButton.Events.Pressed:Subscribe(function (_)
+        settingsPanel:SetVisible(not settingsPanel:IsVisible())
+    end)
+
+    settingsPanel:SetVisible(false)
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
@@ -221,9 +282,24 @@ QuickLoot.Events.SearchCompleted:Subscribe(function (ev)
     if #items == 0 then -- Do not open the UI if no items were found.
         Notification.ShowNotification(TSK.Notification_NoLootNearby:GetString())
     else
-        UI.Setup(items, ev.HandleMaps)
+        UI.Setup(ev)
     end
 end)
+
+-- Show default settings.
+UI.Hooks.GetSettings:Subscribe(function (ev)
+    local settings = QuickLoot.Settings
+    local defaultSettings = {
+        settings.FilterMode,
+        settings.MinEquipmentRarity,
+        settings.ShowConsumables,
+        settings.ShowFoodAndDrinks,
+        settings.ShowIngredients,
+    }
+    for _,setting in ipairs(defaultSettings) do
+        table.insert(ev.Settings, setting)
+    end
+end, {StringID = "DefaultImplementation"})
 
 -- Append source container/corpse to item tooltips.
 Tooltip.Hooks.RenderItemTooltip:Subscribe(function (ev)

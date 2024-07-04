@@ -84,6 +84,36 @@ Item = {
         UNIQUE = "h04685fd1g024ag4641gaed6g0ffb2d0ff103",
     },
 
+    -- Commonly-used tags.
+    TAGS = {
+        POTION_TAGS = Set.Create({
+            "POTIONS",
+            "Potion", -- Yes, these are 2 different tags used interchangeably by Larian.
+            "ORGANIZE_POTION",
+        }),
+        FOOD_TAGS = Set.Create({
+            "FOOD",
+            "ORGANIZE_FOOD",
+        }),
+        DRINK_TAGS = Set.Create({
+            "DRINK", -- Similar case to POTIONS and Potion.
+            "BEVERAGES",
+            "ORGANIZE_DRINK",
+        }),
+        SCROLL_TAGS = Set.Create({
+            "SCROLLS",
+            "ORGANIZE_SCROLL",
+        }),
+        GRENADE_TAGS = Set.Create({
+            "GRENADES",
+            "ORGANIZE_GRENADE",
+        }),
+        ARROW_TAGS = Set.Create({
+            "ARROWS",
+            "ORGANIZE_ARROW",
+        }),
+    },
+
     UNIDENTIFIED_ITEM_TSKHANDLE = "hf9d034e1gf819g4c6cga36fg7afd009b5827", --- "Unidentified [1]"
 
     ---Does not include weapon types.
@@ -1007,6 +1037,73 @@ end
 function Item.IsLocked(item)
     local key = Ext.IsClient() and item.KeyName or item.Key -- This field is cleared when the item is unlocked.
     return key ~= ""
+end
+
+---Returns whether an item has a Consume action and any common potion tag.
+---@param item Item
+---@return boolean
+function Item.IsPotion(item)
+    return Item.HasUseAction(item, "Consume") and Entity.HasAnyTag(item, Item.TAGS.POTION_TAGS)
+end
+
+---Returns whether an item has a UseSkill action of a non-projectile, non-grenade skill.
+---@param item Item
+---@return boolean
+function Item.IsScroll(item)
+    local actions = Item.GetUseActions(item, "UseSkill") ---@cast actions UseSkillActionData[]
+    for _,action in ipairs(actions) do
+        local skill = Stats.Get("StatsLib_StatsEntry_SkillData", action.SkillID)
+        if skill and skill.ProjectileType == "None" then
+            return true
+        end
+    end
+    return false
+end
+
+---Returns whether an item has a UseSkill action of a grenade skill.
+---@param item Item
+---@return boolean
+function Item.IsGrenade(item)
+    local actions = Item.GetUseActions(item, "UseSkill") ---@cast actions UseSkillActionData[]
+    for _,action in ipairs(actions) do
+        ---@cast action UseSkillActionData
+        local skill = Stats.Get("StatsLib_StatsEntry_SkillData", action.SkillID)
+        if skill and skill.ProjectileType == "Grenade" then
+            return true
+        end
+    end
+    return false
+end
+
+---Returns whether an item has a UseSkill action of an arrow skill.
+---@param item Item
+---@return boolean
+function Item.IsArrow(item)
+    local actions = Item.GetUseActions(item, "UseSkill") ---@cast actions UseSkillActionData[]
+    for _,action in ipairs(actions) do
+        local skill = Stats.Get("StatsLib_StatsEntry_SkillData", action.SkillID)
+        if skill and skill.ProjectileType == "Arrow" then
+            return true
+        end
+    end
+    return false
+end
+
+---Returns whether an item is consumable and marked as food.
+---@param item Item
+---@return boolean
+function Item.IsFood(item)
+    local stat = Ext.Stats.GetForPip(item.StatsId) ---@type StatsLib_StatsEntry_Potion
+    return stat and Stats.GetType(stat) == "Potion" and stat.IsConsumable == "Yes" and stat.IsFood == "Yes"
+end
+
+---Returns whether an item is considered an ingredient for inventory categorization.
+---@param item Item
+---@return boolean
+function Item.IsIngredient(item)
+    local stat = Ext.Stats.GetForPip(item.StatsId) ---@type StatsLib_StatsEntry_Potion|StatsLib_StatsEntry_Object
+    local statType = Stats.GetType(stat)
+    return stat and (statType == "Potion" or statType == "Object") and stat.InventoryTab == "Ingredient"
 end
 
 ---------------------------------------------

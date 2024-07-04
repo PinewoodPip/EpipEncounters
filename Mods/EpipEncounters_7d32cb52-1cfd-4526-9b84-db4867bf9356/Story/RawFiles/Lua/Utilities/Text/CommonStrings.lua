@@ -67,6 +67,10 @@ Text.CommonStrings.Hidden = Text.RegisterTranslatedString({
    Handle = "h1a45624fgcbe1g48b8g9b4ag23e6f8cebe67",
    Text = "Hidden",
 })
+Text.CommonStrings.Hide = Text.RegisterTranslatedString({
+    Handle = "h4b3dde2dge122g40c7gbb6dg585e04dfac8d",
+    Text = "Hide",
+})
 Text.CommonStrings.NewGame = Text.RegisterTranslatedString({
    Handle = "h1aedd70egab23g4218gb9cdg04ff62ebdf60",
    Text = "New Game",

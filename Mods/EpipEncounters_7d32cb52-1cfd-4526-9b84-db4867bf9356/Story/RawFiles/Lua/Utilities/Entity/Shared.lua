@@ -236,3 +236,15 @@ function Entity.HandleListToEntities(list, expectedType)
     end
     return entities
 end
+
+---Returns whether an entity has any tag out of a list.
+---@param entity IGameObject
+---@param tagSet set<tag>
+function Entity.HasAnyTag(entity, tagSet)
+    for _,tag in ipairs(entity:GetTags()) do
+        if tagSet[tag] then
+            return true
+        end
+    end
+    return false
+end
