@@ -7,9 +7,7 @@ local QuickLoot = Epip.GetFeature("Features.QuickLoot")
 local TSK = QuickLoot.TranslatedStrings
 QuickLoot.EVENTID_TICK_SELECTOR_EFFECT = "Features.QuickLoot.SelectorEffect"
 QuickLoot.EVENTID_TICK_IS_MOVING = "Features.QuickLoot.IsCharacterMoving"
-QuickLoot.MAX_SEARCH_DISTANCE = 10 -- In meters.
 QuickLoot.SEARCH_RADIUS_PER_SECOND = 5 -- How many meters the selector's radius expands per second.
-QuickLoot.SEARCH_BASE_RADIUS = 1 -- In meters.
 QuickLoot.SEARCH_EFFECT = "RS3_FX_UI_Target_Circle_01" -- TODO is this the controller selection area effect, or is it another?
 QuickLoot.CONTAINER_EFFECT = "RS3_FX_UI_PerceptionReveal_GroundSmall_01"
 
@@ -126,7 +124,8 @@ function QuickLoot.StartSearch(char)
     local effectHandle = multiVisual.Effects[1]
     local effect = Ext.Entity.GetEffect(effectHandle)
     local highlightEffectHandlers = {} ---@type table<ItemHandle, ComponentHandle>
-    effect.WorldTransform.Scale = {QuickLoot.SEARCH_BASE_RADIUS, QuickLoot.SEARCH_BASE_RADIUS, 0}
+    local baseRadius = QuickLoot.GetBaseSearchRadius()
+    effect.WorldTransform.Scale = {baseRadius, baseRadius, 0}
     GameState.Events.Tick:Subscribe(function (ev)
         char = Character.Get(charHandle)
         local eff = Ext.Entity.GetEffect(effectHandle)
@@ -222,7 +221,7 @@ function QuickLoot.GetSearchRadius(char)
 
     local endTime = search.EndTime or Ext.Utils.MonotonicTime()
     local elapsedSeconds = (endTime - search.StartTime) / 1000
-    local radius = QuickLoot.SEARCH_BASE_RADIUS + elapsedSeconds * QuickLoot.SEARCH_RADIUS_PER_SECOND
+    local radius = QuickLoot.GetBaseSearchRadius() + elapsedSeconds * QuickLoot.SEARCH_RADIUS_PER_SECOND
     radius = math.min(QuickLoot.MAX_SEARCH_DISTANCE, radius)
     return radius
 end
@@ -246,6 +245,12 @@ function QuickLoot.StopSearch(char)
         CharacterNetID = char.NetID,
         ItemNetIDs = Entity.EntityListToNetIDs(containers),
     })
+end
+
+---Returns the default search radius based on user settings.
+---@return number -- In meters.
+function QuickLoot.GetBaseSearchRadius()
+    return QuickLoot.Settings.BaseRadius:GetValue()
 end
 
 ---------------------------------------------

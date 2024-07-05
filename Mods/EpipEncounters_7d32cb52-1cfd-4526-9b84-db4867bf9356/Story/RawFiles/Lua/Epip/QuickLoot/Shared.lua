@@ -5,6 +5,9 @@ local QuickLoot = {
     NETMSG_GENERATE_TREASURE = "Features.QuickLoot.NetMsgs.GenerateTreasure",
     NETMSG_TREASURE_GENERATED = "Features.QuickLoot.NetMsgs.TreasureGenerated", -- Empty message.
 
+    MAX_SEARCH_DISTANCE = 10, -- In meters.
+    SEARCH_BASE_RADIUS = 1, -- In meters.
+
     SETTING_FILTERMODE_CHOICES = {
         HIDDEN = "Hidden",
         GREYED_OUT = "GreyedOut",
@@ -106,6 +109,16 @@ local QuickLoot = {
             Text = "If enabled, crafting ingredients will be included.",
             ContextDescription = [[Setting tooltip for "Show crafting ingredients"]],
         },
+        Setting_BaseRadius_Name = {
+            Handle = "hdd379f13g9fb6g4195ga02bge51a06d5f44a",
+            Text = "Default Radius",
+            ContextDescription = [[Setting name]],
+        },
+        Setting_BaseRadius_Description = {
+            Handle = "hb53ca0e9g7d6cg47c3g9747g38e19a343a90",
+            Text = "Determines the starting radius of the search area, in meters.",
+            ContextDescription = [[Setting tooltip for "Default Radius"]],
+        },
         InputAction_Search_Name = {
             Handle = "ha539c465g36e0g4780g9892g58e33578124f",
             Text = "Quick Loot: Start Search",
@@ -178,6 +191,16 @@ QuickLoot.Settings.ShowIngredients = QuickLoot:RegisterSetting("ShowIngredients"
     Name = TSK.Setting_ShowIngredients_Name,
     Description = TSK.Setting_ShowIngredients_Description,
     DefaultValue = true,
+})
+QuickLoot.Settings.BaseRadius = QuickLoot:RegisterSetting("BaseRadius", {
+    Type = "ClampedNumber",
+    Name = TSK.Setting_BaseRadius_Name,
+    Description = TSK.Setting_BaseRadius_Description,
+    Min = 1,
+    Max = QuickLoot.MAX_SEARCH_DISTANCE,
+    Step = 1,
+    HideNumbers = false,
+    DefaultValue = QuickLoot.SEARCH_BASE_RADIUS,
 })
 
 ---------------------------------------------
