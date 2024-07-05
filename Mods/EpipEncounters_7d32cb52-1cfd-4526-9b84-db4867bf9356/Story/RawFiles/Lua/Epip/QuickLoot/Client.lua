@@ -11,6 +11,7 @@ QuickLoot.MAX_SEARCH_DISTANCE = 10 -- In meters.
 QuickLoot.SEARCH_RADIUS_PER_SECOND = 5 -- How many meters the selector's radius expands per second.
 QuickLoot.SEARCH_BASE_RADIUS = 1 -- In meters.
 QuickLoot.SEARCH_EFFECT = "RS3_FX_UI_Target_Circle_01" -- TODO is this the controller selection area effect, or is it another?
+QuickLoot.CONTAINER_EFFECT = "RS3_FX_UI_PerceptionReveal_GroundSmall_01"
 
 QuickLoot._Searches = {} ---@type table<CharacterHandle, Features.QuickLoot.Search>
 
@@ -119,10 +120,12 @@ function QuickLoot.StartSearch(char)
     local multiVisual = Ext.Visual.CreateOnCharacter(char.WorldPos, char)
     local multiVisualHandle = multiVisual.Handle
     multiVisual:ParseFromStats(QuickLoot.SEARCH_EFFECT)
+
+    -- Set default effect radius, update it per-tick and play effects on found containers
     local charHandle = char.Handle
     local effectHandle = multiVisual.Effects[1]
     local effect = Ext.Entity.GetEffect(effectHandle)
-    -- Set default radius, then update it per-tick
+    local highlightEffectHandlers = {} ---@type table<ItemHandle, ComponentHandle>
     effect.WorldTransform.Scale = {QuickLoot.SEARCH_BASE_RADIUS, QuickLoot.SEARCH_BASE_RADIUS, 0}
     GameState.Events.Tick:Subscribe(function (ev)
         char = Character.Get(charHandle)
@@ -137,6 +140,21 @@ function QuickLoot.StartSearch(char)
             eff.WorldTransform.Scale = {0, 0, 0} -- Effects are pooled; we need to reset the scale to avoid a flicker when the effect instance is re-used.
             Ext.Visual.Get(multiVisualHandle):Delete()
             GameState.Events.Tick:Unsubscribe(QuickLoot.EVENTID_TICK_SELECTOR_EFFECT)
+        else
+            -- Play an effect on containers and corpses within range.
+            local containers, corpses = QuickLoot.GetContainers(char.WorldPos, newScale)
+            for i=1,#containers+#corpses,1 do -- Avoid list concatenation for performance.
+                local entity = i > #containers and corpses[i - #containers] or containers[i]
+                if not highlightEffectHandlers[entity.Handle] then
+                    local containerMultiVisual = Entity.IsItem(entity) and Ext.Visual.CreateOnItem(entity.WorldPos, entity) or Ext.Visual.CreateOnCharacter(entity.WorldPos, entity)
+                    local handle = containerMultiVisual.Handle
+                    highlightEffectHandlers[entity.Handle] = handle
+                    containerMultiVisual:ParseFromStats("PIP_FX_PerceptionReveal_OverlayOnly")
+                    Timer.Start(3, function (_)
+                        Ext.Visual.Get(handle):Delete()
+                    end)
+                end
+            end
         end
     end, {StringID = QuickLoot.EVENTID_TICK_SELECTOR_EFFECT}) -- TODO append some char identifier to listener
 
