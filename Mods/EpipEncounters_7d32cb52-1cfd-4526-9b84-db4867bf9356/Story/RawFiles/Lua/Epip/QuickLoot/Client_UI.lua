@@ -30,12 +30,21 @@ UI.SETTINGS_PANEL_SIZE = V(500, 500)
 UI.SETTINGS_PANEL_ELEMENT_SIZE = V(UI.SETTINGS_PANEL_SIZE[1] - 55, 50)
 UI.SETTINGS_PANEL_SCROLLLIST_FRAME = UI.SETTINGS_PANEL_SIZE - V(20, 150)
 
+UI._State = nil ---@type Features.QuickLoot.UI.State?
+
 UI.Hooks.GetSettings = UI:AddSubscribableHook("GetSettings") ---@type Hook<{Settings:SettingsLib_Setting[]}> Fired only once when the UI is first opened.
 
 QuickLoot:RegisterInputAction("Search", {
     Name = TSK.InputAction_Search_Name,
     Description = TSK.InputAction_Search_Description,
 })
+
+---@class Features.QuickLoot.UI.State
+---@field HandleMaps Features.QuickLoot.HandleMap
+---@field ItemHandles ItemHandle[] Items currently in the UI.
+---@field LowPriorityItemHandles set<ItemHandle> Items to show as greyed out.
+---@field ItemHandleToSlot table<ItemHandle, GenericUI_Prefab_HotbarSlot>
+---@field SearchRadius number
 
 ---------------------------------------------
 -- METHODS
@@ -46,33 +55,7 @@ QuickLoot:RegisterInputAction("Search", {
 function UI.Setup(searchResult)
     UI._Initialize()
 
-    UI._HandleMap = searchResult.HandleMaps
-    UI._CurrentItemHandles = {} ---@type ItemHandle[]
-    UI._ItemHandleToSlot = {} ---@type table<ItemHandle, GenericUI_Prefab_HotbarSlot>
-    UI._ItemsCount = 0
-
-    -- Render items
-    UI.ItemGrid:Clear()
-    local items = searchResult.LootableItems
-    local itemsSet = {} ---@type set<ItemHandle>
-    for _,item in ipairs(items) do itemsSet[item.Handle] = true end
-    local filteredOutItems = {} ---@type set<ItemHandle>
-    -- Add filtered-out items in greyed-out mode.
-    if QuickLoot.Settings.FilterMode:GetValue() == QuickLoot.SETTING_FILTERMODE_CHOICES.GREYED_OUT then
-        local allItems, newMap = QuickLoot.GetItems(searchResult.Character.WorldPos, searchResult.Radius, false)
-        for _,item in ipairs(allItems) do
-            if not itemsSet[item.Handle] then
-                table.insert(items, item)
-                filteredOutItems[item.Handle] = true
-                UI._HandleMap.ItemHandleToContainerHandle[item.Handle] = newMap.ItemHandleToContainerHandle[item.Handle]
-                UI._HandleMap.ItemHandleToCorpseHandle[item.Handle] = newMap.ItemHandleToCorpseHandle[item.Handle]
-            end
-        end
-    end
-    for _,item in ipairs(items) do
-        UI._RenderItem(item, filteredOutItems[item.Handle])
-    end
-    UI.ItemGrid:RepositionElements()
+    UI._UpdateItems(searchResult)
 
     -- Close the UI when the character begins to move.
     GameState.Events.RunningTick:Unsubscribe(UI.EVENTID_TICK_IS_MOVING)
@@ -92,54 +75,66 @@ end
 function UI.LootItem(item)
     local slotIndex
     if GetExtType(item) ~= nil then
-        slotIndex = table.getFirst(UI._CurrentItemHandles, function (_, v)
-            return v == item.Handle
-        end)
+        slotIndex = UI._GetItemIndex(item)
     else -- Index overload.
         slotIndex = item
-        item = Item.Get(UI._CurrentItemHandles[slotIndex])
+        item = Item.Get(UI._State.ItemHandles[slotIndex])
     end
 
     QuickLoot.RequestPickUp(Client.GetCharacter(), item)
     UI:PlaySound(UI.PICKUP_SOUND) -- This sound is normally different per-item, however we cannot recreate that.
 
-    table.remove(UI._CurrentItemHandles, slotIndex)
-
-    -- Hide the slot and reposition the grid elements.
-    local slot = UI.GetItemSlot(item)
-    slot:SetVisible(false)
-    UI.ItemGrid.Container:RepositionElements() -- Done directly so as not to invoke PooledContainer's behaviour of stopping at the first invisible element.
+    UI.RemoveItem(item)
 
     -- Close the UI if all items have been looted.
-    if #UI._CurrentItemHandles == 0 then
+    -- GetItems() is not used to avoid getter calls - though the performance gain is non-crucial.
+    if #UI._State.ItemHandles == 0 then
         Tooltip.HideTooltip()
         UI:Hide()
     end
 end
 
+---Refetches items and rerenders the item list based on the last search's radius.
+function UI.Refresh()
+    UI._UpdateItems(UI._State.SearchRadius)
+end
+
 ---Requests to loot all items in the UI.
 function UI.LootAll()
     local char = UI.GetCharacter()
-    for _,handle in ipairs(UI._CurrentItemHandles) do
+    for _,item in ipairs(UI.GetItems()) do
         -- No need to update bookkeeping of the UI, as we can just empty/hide it right afterwards.
-        QuickLoot.RequestPickUp(char, Item.Get(handle))
+        QuickLoot.RequestPickUp(char, item)
     end
     UI:PlaySound(UI.PICKUP_SOUND) -- Play the sound only once so as not to stack it.
     UI:Hide()
+end
+
+---Returns the items currently in the UI.
+---@return EclItem[]
+function UI.GetItems()
+    return Entity.HandleListToEntities(UI._State.ItemHandles, "EclItem")
+end
+
+---Returns whether an item is in the UI.
+---@param item EclItem
+---@return boolean
+function UI.IsItemInUI(item)
+    return table.reverseLookup(UI._State.ItemHandles, item.Handle) ~= nil
 end
 
 ---Returns the slot element for an item already in the UI.
 ---@param item EclItem
 ---@return GenericUI_Prefab_HotbarSlot
 function UI.GetItemSlot(item)
-    return UI._ItemHandleToSlot[item.Handle]
+    return UI._State.ItemHandleToSlot[item.Handle]
 end
 
 ---Returns the container or corpse that contains the item.
 ---@param item EclItem Must be currently within the UI.
 ---@return EclItem|EclCharacter
 function UI.GetItemSource(item)
-    local handleMap = UI._HandleMap
+    local handleMap = UI._State.HandleMaps
     local containerHandle, corpseHandle = handleMap.ItemHandleToContainerHandle[item.Handle], handleMap.ItemHandleToCorpseHandle[item.Handle]
     return containerHandle and Item.Get(containerHandle) or Character.Get(corpseHandle)
 end
@@ -163,20 +158,115 @@ function UI.GetCharacter()
     return Client.GetCharacter()
 end
 
----Renders an item onto the grid.
+---Renders an item onto the grid and tracks it.
+---Should be called during or after Setup().
 ---@param item EclItem
----@param greyedOut boolean
-function UI._RenderItem(item, greyedOut)
-    local itemIndex = UI._ItemsCount + 1
+---@param source EclItem|EclCharacter
+---@param greyedOut boolean? Defaults to `false`.
+function UI.AddItem(item, source, greyedOut)
+    greyedOut = greyedOut or false
+    local state = UI._State
+
+    -- Update bookkeeping
+    table.insert(state.ItemHandles, item.Handle)
+    local handleMap = Entity.IsCharacter(source) and state.HandleMaps.ItemHandleToCorpseHandle or state.HandleMaps.ItemHandleToContainerHandle
+    handleMap[item.Handle] = source.Handle
+    state.LowPriorityItemHandles[item.Handle] = greyedOut or nil
+end
+
+---Removes an item from the UI.
+---@param item EclItem|integer Item or slot index.
+function UI.RemoveItem(item)
+    local index = UI._GetItemIndex(item)
+    local state = UI._State
+
+    -- Hide the slot and reposition the grid elements.
+    local slot = UI.GetItemSlot(item)
+    slot:SetVisible(false)
+    UI.ItemGrid.Container:RepositionElements() -- Done directly so as not to invoke PooledContainer's behaviour of stopping at the first invisible element.
+
+    -- Update bookkeeping
+    table.remove(state.ItemHandles, index)
+    state.ItemHandleToSlot[item.Handle] = nil
+    state.LowPriorityItemHandles[item.Handle] = nil
+    state.HandleMaps.ItemHandleToContainerHandle[item.Handle] = nil
+    state.HandleMaps.ItemHandleToCorpseHandle[item.Handle] = nil
+end
+
+---Re-fetches items and resets the state.
+---@param search Features.QuickLoot.Events.SearchCompleted|number Search or radius.
+function UI._UpdateItems(search)
+    local items, handleMaps, radius
+    if type(search) == "number" then -- Radius overload.
+        radius = search
+        items, handleMaps = QuickLoot.GetItems(UI.GetCharacter().WorldPos, radius)
+    else
+        items, handleMaps, radius = search.LootableItems, search.HandleMaps, search.Radius
+    end
+    local char = UI.GetCharacter()
+
+    UI._State = {
+        HandleMaps = handleMaps,
+        ItemHandles = {},
+        ItemHandleToSlot = {},
+        LowPriorityItemHandles = {},
+        SearchRadius = radius,
+    }
+
+    -- Add items and render the list
+    for _,item in ipairs(items) do
+        local sourceHandle = handleMaps.ItemHandleToContainerHandle[item.Handle] or handleMaps.ItemHandleToCorpseHandle[item.Handle]
+        UI.AddItem(item, Entity.GetGameObjectComponent(sourceHandle), false)
+    end
+    -- Add filtered-out items in greyed-out mode.
+    if QuickLoot.Settings.FilterMode:GetValue() == QuickLoot.SETTING_FILTERMODE_CHOICES.GREYED_OUT then
+        local allItems, newMap = QuickLoot.GetItems(char.WorldPos, radius, false)
+        for _,item in ipairs(allItems) do
+            if not UI.IsItemInUI(item) then
+                local sourceHandle = newMap.ItemHandleToContainerHandle[item.Handle] or newMap.ItemHandleToCorpseHandle[item.Handle]
+                UI.AddItem(item, Entity.GetGameObjectComponent(sourceHandle), true)
+            end
+        end
+    end
+
+    UI._RenderItems()
+end
+
+---Re-renders the item list.
+function UI._RenderItems()
+    local grid = UI.ItemGrid
+    grid:Clear()
+    for _,item in ipairs(UI.GetItems()) do
+        UI._RenderItem(item)
+    end
+    grid:RepositionElements()
+end
+
+---Renders an item onto the UI.
+---@param item EclItem
+function UI._RenderItem(item)
+    local state = UI._State
+    local itemIndex = table.reverseLookup(state.ItemHandles, item.Handle)
     local slot = UI.ItemGrid:GetItem(itemIndex) ---@type GenericUI_Prefab_HotbarSlot
-    UI._ItemHandleToSlot[item.Handle] = slot
-    UI._CurrentItemHandles[itemIndex] = item.Handle
-    UI._ItemsCount = itemIndex
+
+    -- Setup slot
     slot:SetItem(item)
-    slot:SetEnabled(not greyedOut)
+    slot:SetEnabled(not state.LowPriorityItemHandles[item.Handle])
     slot:SetCanDragDrop(false)
     slot:SetUsable(false)
     slot:SetUpdateDelay(-1)
+
+    state.ItemHandleToSlot[item.Handle] = slot
+end
+
+---Returns the slot index of an item.
+---@param item EclItem Must be in the UI.
+---@return integer
+function UI._GetItemIndex(item)
+    local index, _ = table.getFirst(UI._State.ItemHandles, function (_, handle)
+        return handle == item.Handle
+    end)
+    return index
 end
 
 ---Initializes the static elements of the UI.
@@ -255,7 +345,7 @@ function UI._InitalizeSettingsPanel()
     -- Render settings
     for _,setting in ipairs(UI.Hooks.GetSettings:Throw({Settings = {}}).Settings) do
         SettingWidgets.RenderSetting(UI, list, setting, UI.SETTINGS_PANEL_ELEMENT_SIZE, function (_)
-            -- TODO refresh UI
+            UI.Refresh()
             QuickLoot:SaveSettings()
         end)
     end
