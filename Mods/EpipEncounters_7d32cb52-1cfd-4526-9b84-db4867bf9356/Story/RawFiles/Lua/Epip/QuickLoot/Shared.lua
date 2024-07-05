@@ -127,7 +127,8 @@ local QuickLoot = {
     },
     Hooks = {
         IsContainerLootable = {Context = "Client"}, ---@type Hook<Features.QuickLoot.Hooks.IsContainerLootable>
-        IsItemFilteredOut = {Context = "Client"} ---@type Hook<Features.QuickLoot.Hooks.IsItemFilteredOut>
+        IsItemFilteredOut = {Context = "Client"}, ---@type Hook<Features.QuickLoot.Hooks.IsItemFilteredOut>
+        CanSearch = {Context = "Client"}, ---@type Hook<{Character:EclCharacter, CanSearch:boolean}>
     },
 }
 Epip.RegisterFeature("Features.QuickLoot", QuickLoot)
@@ -198,6 +199,10 @@ QuickLoot.Settings.ShowIngredients = QuickLoot:RegisterSetting("ShowIngredients"
 ---@class Features.QuickLoot.Hooks.IsItemFilteredOut
 ---@field Item EclItem
 ---@field FilteredOut boolean Hookable. Defaults to `false`.
+
+---@class Features.QuickLoot.Hooks.CanSearch
+---@field Character EclCharacter
+---@field CanSearch boolean Hookable. Defaults to whether the character currently has no search ongoing.
 
 ---------------------------------------------
 -- NET MESSAGES

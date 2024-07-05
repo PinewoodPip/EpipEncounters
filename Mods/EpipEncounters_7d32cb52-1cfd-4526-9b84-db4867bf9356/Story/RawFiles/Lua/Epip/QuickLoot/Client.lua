@@ -180,6 +180,17 @@ function QuickLoot.StartSearch(char)
     })
 end
 
+---Returns whether char can start searches.
+---@see Features.QuickLoot.Hooks.CanSearch
+---@param char EclCharacter
+---@return boolean
+function QuickLoot.CanSearch(char)
+    return QuickLoot.Hooks.CanSearch:Throw({
+        Character = char,
+        CanSearch = not QuickLoot.IsRequesting(char),
+    }).CanSearch
+end
+
 ---Returns the search char is currently performing, if any.
 ---@param char EclCharacter
 ---@return Features.QuickLoot.Search?
@@ -253,7 +264,7 @@ end, {StringID = "DefaultImplementation"})
 Input.Events.ActionExecuted:Subscribe(function (ev)
     if ev.Action.ID == QuickLoot.InputActions.Search.ID then
         local char = Client.GetCharacter()
-        if not QuickLoot.IsRequesting(char) and not Character.IsMoving(char) then -- Can't search while moving.
+        if QuickLoot.CanSearch(char) then
             QuickLoot.StartSearch(char)
             Notification.ShowWarning(TSK.Notification_Searching:GetString(), 0.5)
         end
@@ -267,6 +278,12 @@ Input.Events.ActionReleased:Subscribe(function (ev)
         end
     end
 end)
+
+-- Prevent searching in combat or while moving.
+QuickLoot.Hooks.CanSearch:Subscribe(function (ev)
+    local char, canSearch = ev.Character, ev.CanSearch
+    ev.CanSearch = canSearch and not Character.IsInCombat(char) and not Character.IsMoving(char)
+end, {StringID = "DefaultImplementation"})
 
 -- Fetch lootables and throw search completion events
 -- after server has finished generating loot in containers.
