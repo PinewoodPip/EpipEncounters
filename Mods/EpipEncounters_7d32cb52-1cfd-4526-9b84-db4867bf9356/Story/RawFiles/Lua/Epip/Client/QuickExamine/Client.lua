@@ -366,7 +366,7 @@ function QuickExamine.SetEntity(entity, forceUpdate)
             -- Filler to compensate for the top div having a short height for the culling effect.
             QuickExamine.GetContainer():AddChild("Filler", "GenericUI_Element_Empty"):GetMovieClip().heightOverride = 10
 
-            QuickExamine.CharacterNameElement:SetText(Text.Format(entity.DisplayName, {
+            QuickExamine.CharacterNameElement:SetText(Text.Format(Character.GetDisplayName(entity), {
                 Color = "ffffff",
                 Size = 21,
             }))

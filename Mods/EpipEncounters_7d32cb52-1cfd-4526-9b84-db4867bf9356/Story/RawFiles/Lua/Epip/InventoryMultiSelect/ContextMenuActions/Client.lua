@@ -84,7 +84,7 @@ ContextMenu.RegisterMenuHandler("Features.InventoryMultiSelect", function(_)
         -- Only insert option if all the selections do not come from this member.
         -- This prevents the option to send all items to the character that owns them from appearing.
         if not excludedCharacterHandle or member.Handle ~= excludedCharacterHandle then
-            table.insert(entries, {id = "Features.InventoryMultiSelect.SendToCharacter." .. member.NetID, type = "button", text = string.format(MultiSelect.TranslatedStrings.ContextMenu_SendTo:GetString(), member.DisplayName), params = {NetID = member.NetID}, eventIDOverride = "Features.InventoryMultiSelect.SendToCharacter"})
+            table.insert(entries, {id = "Features.InventoryMultiSelect.SendToCharacter." .. member.NetID, type = "button", text = string.format(MultiSelect.TranslatedStrings.ContextMenu_SendTo:GetString(), Character.GetDisplayName(member)), params = {NetID = member.NetID}, eventIDOverride = "Features.InventoryMultiSelect.SendToCharacter"})
         end
     end
 

@@ -172,12 +172,12 @@ function Bar._UpdateTexts(originalHeader)
     local header, footer
     if not originalHeader then
         if char then
-            originalHeader = char.DisplayName
+            originalHeader = Character.GetDisplayName(char)
         elseif item then
             originalHeader = item.DisplayName
         end
     end
-    
+
     header = Bar.Hooks.GetHeader:Throw({
         Header = originalHeader,
         Character = char,

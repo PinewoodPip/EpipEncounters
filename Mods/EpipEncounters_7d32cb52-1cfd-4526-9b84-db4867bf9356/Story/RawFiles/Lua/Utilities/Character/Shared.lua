@@ -284,6 +284,27 @@ function Character.IsSkillLearnt(char, skillID)
     return state and state.IsActivated or Character.IsSkillInnate(char, skillID)
 end
 
+---Returns the localized name of char.
+---@param char EclCharacter
+---@return string
+function Character.GetDisplayName(char)
+    local name = char.DisplayName -- Fallback english name.
+
+    if Ext.IsClient() then
+        ---@cast char EclCharacter
+        -- Custom name override from CharacterSetCustomName().
+        if char.StoryDisplayName and char.StoryDisplayName.Handle.ReferenceString ~= "" then
+            name = char.StoryDisplayName.Handle.ReferenceString -- Could also just DisplayName in this case, as it becomes overwritten.
+        else
+            name = Text.GetTranslatedString(char.CurrentTemplate.DisplayName, name)
+        end
+    else
+        Character:__Error("GetDisplayName", "Not implemented on server") -- TODO
+    end
+
+    return name
+end
+
 ---Returns the record for a skill.
 ---@param char Character
 ---@param skillID skill

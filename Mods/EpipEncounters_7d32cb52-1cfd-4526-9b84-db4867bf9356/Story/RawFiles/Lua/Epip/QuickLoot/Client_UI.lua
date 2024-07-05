@@ -397,7 +397,7 @@ Tooltip.Hooks.RenderItemTooltip:Subscribe(function (ev)
     if UI:IsVisible() then
         local source = UI.GetItemSource(ev.Item)
         if source then -- The tooltip might be from another UI, or the item might've been moved out by another character in the meantime.
-            local entityName = source.DisplayName
+            local entityName = Entity.IsItem(source) and Item.GetDisplayName(source) or Character.GetDisplayName(source)
             local hasCorpseKeyword = string.find(entityName, CommonStrings.Corpse:GetString(), nil, true)
             local tsk = (Entity.IsItem(source) or hasCorpseKeyword) and TSK.Label_SourceContainer or TSK.Label_SourceCorpse -- Avoid using "In {name}'s corpse" if the word "corpse" is already in the entity name.
             local label = tsk:Format({

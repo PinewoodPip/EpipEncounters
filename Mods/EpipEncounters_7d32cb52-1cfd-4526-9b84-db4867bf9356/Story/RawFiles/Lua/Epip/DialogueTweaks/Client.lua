@@ -145,7 +145,8 @@ function DialogueTweaks._ListenToPlayer(targetChar)
             Client.Input.Inject("Mouse", "left2", "Released")
 
             -- Show notification
-            Notification.ShowNotification(DialogueTweaks.TranslatedStrings.Notification_AutoListened:Format(targetChar.DisplayName), DialogueTweaks.NOTIFICATION_DURATION, nil, DialogueTweaks.NOTIFICATION_SOUND)
+            local targetCharName = Character.GetDisplayName(targetChar)
+            Notification.ShowNotification(DialogueTweaks.TranslatedStrings.Notification_AutoListened:Format(targetCharName), DialogueTweaks.NOTIFICATION_DURATION, nil, DialogueTweaks.NOTIFICATION_SOUND)
             GameState.Events.RunningTick:Unsubscribe("Features.DialogueTweaks.AutoListen")
         elseif timeElapsed > DialogueTweaks.AUTOLISTEN_TIMEOUT then -- Stop attempting to listen if we weren't able to select the character quickly.
             GameState.Events.RunningTick:Unsubscribe("Features.DialogueTweaks.AutoListen")
@@ -175,7 +176,7 @@ PlayerInfo.Hooks.UpdateInfos:Subscribe(function (ev)
                         elseif DialogueTweaks:GetSettingValue(DialogueTweaks.Settings.Enabled) == true then -- Show notification.
                             Notification.ShowNotification(Text.Format(DialogueTweaks.TranslatedStrings.Notification_JoinedDialogue:GetString(), {
                                 FormatArgs = {
-                                    char.DisplayName,
+                                    Character.GetDisplayName(char),
                                 }
                             }), DialogueTweaks.NOTIFICATION_DURATION, nil, DialogueTweaks.NOTIFICATION_SOUND)
                         end

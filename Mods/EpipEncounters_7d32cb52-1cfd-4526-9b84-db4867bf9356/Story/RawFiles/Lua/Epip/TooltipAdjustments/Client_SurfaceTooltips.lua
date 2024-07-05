@@ -66,10 +66,12 @@ Net.RegisterListener("EPIPENCOUNTERS_ReturnSurfaceData", function(payload)
         end
 
         if groundOwner then
-            pendingSurfaceTooltip:InsertElement({Type = "Duration", Label = Text.Format(TSK.SurfaceTooltips_OwnedBy:GetString(), {FormatArgs = {groundOwner.DisplayName}})}, 3)
+            local ownerName = Character.GetDisplayName(groundOwner)
+            pendingSurfaceTooltip:InsertElement({Type = "Duration", Label = Text.Format(TSK.SurfaceTooltips_OwnedBy:GetString(), {FormatArgs = {ownerName}})}, 3)
         end
         if cloudOwner then
-            pendingSurfaceTooltip:InsertElement({Type = "Duration", Label = Text.Format(TSK.SurfaceTooltips_OwnedBy:GetString(), {FormatArgs = {cloudOwner.DisplayName}})}, #pendingSurfaceTooltip.Elements)
+            local ownerName = Character.GetDisplayName(cloudOwner)
+            pendingSurfaceTooltip:InsertElement({Type = "Duration", Label = Text.Format(TSK.SurfaceTooltips_OwnedBy:GetString(), {FormatArgs = {ownerName}})}, #pendingSurfaceTooltip.Elements)
         end
 
         -- Also add a hint on how surface damage scales, only for surfaces that deal damage

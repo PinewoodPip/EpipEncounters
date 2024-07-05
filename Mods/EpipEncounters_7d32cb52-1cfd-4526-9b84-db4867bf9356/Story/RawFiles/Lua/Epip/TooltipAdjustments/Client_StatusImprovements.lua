@@ -64,7 +64,7 @@ TooltipLib.Hooks.RenderStatusTooltip:Subscribe(function (ev)
 
     if source then
         local text = Text.Format(TSK.StatusImprovements_AppliedBy:GetString(), {
-            FormatArgs = {source.DisplayName},
+            FormatArgs = {Character.GetDisplayName(source)},
             FontType = Text.FONTS.ITALIC,
             Color = Color.LARIAN.LIGHT_GRAY,
         })

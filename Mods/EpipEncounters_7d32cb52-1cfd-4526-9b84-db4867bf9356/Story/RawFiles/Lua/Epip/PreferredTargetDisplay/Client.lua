@@ -32,16 +32,15 @@ function PreferredTargetDisplay.GetTauntString(char)
 
         if tauntSourceGUID then
             local enemy = Character.Get(tauntSourceGUID)
-
-            str = str .. TSK.AggroEffect_TauntedBy:Format(enemy.DisplayName)
+            local enemyName = Character.GetDisplayName(enemy)
+            str = str .. TSK.AggroEffect_TauntedBy:Format(enemyName)
         end
 
         if tauntTargetGUID then
             local enemy = Character.Get(tauntTargetGUID)
-
-            if str ~= "" then str = str .. "<br>" end
-
-            str = str .. TSK.AggroEffect_Taunting:Format(enemy.DisplayName)
+            local enemyName = Character.GetDisplayName(enemy)
+            if str ~= "" then str = str .. "<br>" end -- Add a line break if the character is both taunting and being taunted.
+            str = str .. TSK.AggroEffect_Taunting:Format(enemyName)
         end
     end
 
