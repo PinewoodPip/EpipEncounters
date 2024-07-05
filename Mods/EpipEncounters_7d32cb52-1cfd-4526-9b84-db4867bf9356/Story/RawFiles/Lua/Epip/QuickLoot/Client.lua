@@ -156,6 +156,10 @@ function QuickLoot.StartSearch(char)
         MultiVisualHandle = multiVisualHandle,
     }
     QuickLoot._Searches[char.Handle] = search
+
+    QuickLoot.Events.SearchStarted:Throw({
+        Character = char,
+    })
 end
 
 ---Returns the search char is currently performing, if any.

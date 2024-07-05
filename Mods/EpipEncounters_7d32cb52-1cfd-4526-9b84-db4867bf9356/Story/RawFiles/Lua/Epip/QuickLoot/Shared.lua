@@ -117,6 +117,7 @@ local QuickLoot = {
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
     Events = {
+        SearchStarted = {Context = "Client"}, ---@type Event<{Character: EclCharacter}>
         SearchCompleted = {Context = "Client"}, ---@type Event<Features.QuickLoot.Events.SearchCompleted>
     },
     Hooks = {

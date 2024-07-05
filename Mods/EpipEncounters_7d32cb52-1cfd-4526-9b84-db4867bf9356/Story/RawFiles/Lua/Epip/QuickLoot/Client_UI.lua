@@ -413,7 +413,7 @@ Tooltip.Hooks.RenderItemTooltip:Subscribe(function (ev)
     end
 end)
 
--- Close the UI when active character changes.
-Client.Events.ActiveCharacterChanged:Subscribe(function (_)
-    UI:TryHide()
-end)
+-- Close the UI when active character changes or a new search is started.
+local function TryHide() UI:TryHide() end
+Client.Events.ActiveCharacterChanged:Subscribe(TryHide)
+QuickLoot.Events.SearchStarted:Subscribe(TryHide)
