@@ -328,6 +328,11 @@ Text.CommonStrings.Close = Text.RegisterTranslatedString({
     Handle = "hd5213948g0a1bg4d8cg8f64g1f144d44e578",
     Text = "Close",
 })
+Text.CommonStrings.Corpse = Text.RegisterTranslatedString({
+    Handle = "ha8662402g3ee2g4717g91d3g186a7fdc5cb9",
+    Text = "Corpse",
+    ContextDescription = "As in, a cadaver.",
+})
 
 ---------------------------------------------
 -- BRANDING

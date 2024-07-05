@@ -7,6 +7,7 @@ local ButtonPrefab = Generic.GetPrefab("GenericUI_Prefab_Button")
 local CloseButtonPrefab = Generic.GetPrefab("GenericUI_Prefab_CloseButton")
 local PooledContainer = Generic.GetPrefab("GenericUI.Prefabs.PooledContainer")
 local SettingWidgets = Epip.GetFeature("Features.SettingWidgets")
+local CommonStrings = Text.CommonStrings
 local Tooltip = Client.Tooltip
 local Notification = Client.UI.Notification
 local V = Vector.Create
@@ -396,9 +397,11 @@ Tooltip.Hooks.RenderItemTooltip:Subscribe(function (ev)
     if UI:IsVisible() then
         local source = UI.GetItemSource(ev.Item)
         if source then -- The tooltip might be from another UI, or the item might've been moved out by another character in the meantime.
-            local tsk = Entity.IsItem(source) and TSK.Label_SourceContainer or TSK.Label_SourceCorpse
+            local entityName = source.DisplayName
+            local hasCorpseKeyword = string.find(entityName, CommonStrings.Corpse:GetString(), nil, true)
+            local tsk = (Entity.IsItem(source) or hasCorpseKeyword) and TSK.Label_SourceContainer or TSK.Label_SourceCorpse -- Avoid using "In {name}'s corpse" if the word "corpse" is already in the entity name.
             local label = tsk:Format({
-                FormatArgs = {source.DisplayName},
+                FormatArgs = {entityName},
                 Color = Color.LARIAN.GREEN,
             })
             local element = ev.Tooltip:GetFirstElement("ItemDescription")
