@@ -16,6 +16,11 @@ local QuickLoot = {
             Text = "Quick Loot",
             ContextDescription = [[UI header]],
         },
+        Label_FeatureDescription = {
+            Handle = "h0547ce79g8094g4cb4gb975g81cc0b5c9b6a",
+            Text = [[Quick Loot is a feature that allows you to loot nearby containers and corpses from a unified UI. Access it by holding down its "Search" keybind.]],
+            ContextDescription = [[Hint in settings menu tab]],
+        },
         Label_LootAll = {
             Handle = "h8eb26275gd698g4286gb7a5gaaa099e9aa37",
             Text = "Loot All",

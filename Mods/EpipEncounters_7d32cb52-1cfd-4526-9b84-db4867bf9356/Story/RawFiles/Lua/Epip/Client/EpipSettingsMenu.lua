@@ -15,6 +15,7 @@ local StatusConsoleDividers = Epip.GetFeature("Features.StatusConsoleDividers")
 local HotbarTweaks = Epip.GetFeature("Features.HotbarTweaks")
 local Vanity = Epip.GetFeature("Feature_Vanity")
 local Navbar = Epip.GetFeature("Features.NavigationBar")
+local QuickLoot = Epip.GetFeature("Features.QuickLoot")
 local CommonStrings = Text.CommonStrings
 
 local QuickExamineWidgets = {
@@ -386,7 +387,23 @@ local tabs = {
             {Module = "EpipEncounters_TooltipAdjustments.ContainerPreview", ID = "DetailedItemsAmount"},
             {Module = "EpipEncounters_TooltipAdjustments.OpaqueBackground", ID = "Enabled"},
         }
-    }
+    },
+    ["Features.QuickLoot"] = {
+        ID = "Features.QuickLoot",
+        ButtonLabel = QuickLoot.TranslatedStrings.Label_FeatureName:GetString(),
+        HeaderLabel = QuickLoot.TranslatedStrings.Label_FeatureName:GetString(),
+        Entries = {
+            CreateHeader(QuickLoot.TranslatedStrings.Label_FeatureName),
+            {Type = "Label", Label = QuickLoot.TranslatedStrings.Label_FeatureDescription:Format({Size = 19})},
+            CreateSettingEntry(Client.Input.GetActionBindingSetting(QuickLoot.InputActions.Search)),
+            CreateHeader(CommonStrings.Filters),
+            CreateSettingEntry(QuickLoot.Settings.FilterMode),
+            CreateSettingEntry(QuickLoot.Settings.MinEquipmentRarity),
+            CreateSettingEntry(QuickLoot.Settings.ShowConsumables),
+            CreateSettingEntry(QuickLoot.Settings.ShowFoodAndDrinks),
+            CreateSettingEntry(QuickLoot.Settings.ShowIngredients),
+        },
+    },
 }
 
 -- Insert EE-only settings
@@ -404,6 +421,7 @@ local tabOrder = {
     tabs.Epip_Hotbar,
     tabs["Features.Vanity"],
     tabs.Epip_QuickExamine,
+    tabs["Features.QuickLoot"],
     tabs.Epip_PlayerInfo,
     tabs.Epip_Inventory,
     tabs.Epip_Notifications,
