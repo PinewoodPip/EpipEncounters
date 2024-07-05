@@ -7,6 +7,7 @@ local ButtonPrefab = Generic.GetPrefab("GenericUI_Prefab_Button")
 local CloseButtonPrefab = Generic.GetPrefab("GenericUI_Prefab_CloseButton")
 local PooledContainer = Generic.GetPrefab("GenericUI.Prefabs.PooledContainer")
 local SettingWidgets = Epip.GetFeature("Features.SettingWidgets")
+local Input = Client.Input
 local CommonStrings = Text.CommonStrings
 local Tooltip = Client.Tooltip
 local Notification = Client.UI.Notification
@@ -295,6 +296,10 @@ function UI._Initialize()
     lootAllButton.Events.Pressed:Subscribe(function (_)
         UI.LootAll()
     end)
+    -- Show "Take all" binding in tooltip.
+    -- Will not update if rebound mid-session - TODO?
+    local takeAllBinding = Input.GetBinding("UITakeAll", "Key")
+    lootAllButton:SetTooltip("Simple", CommonStrings.KeybindHint:Format(Input.StringifyBinding(takeAllBinding:ToKeyCombination())))
     UI.LootAllButton = lootAllButton
 
     local scrollList = bg:AddChild("Items", "GenericUI_Element_ScrollList")
@@ -320,11 +325,22 @@ function UI._Initialize()
     -- Only set relative position the first time the UI is used in a session.
     UI:SetPositionRelativeToViewport("center", "center")
 
-    -- Close the UI when pause key is pressed.
+    -- Close the UI when pause key is pressed and bind "Take all" to loot all.
     UI:SetIggyEventCapture("ToggleInGameMenu", true)
-    UI.Events.IggyEventDownCaptured:Subscribe(function (_)
-        UI:Hide()
+    UI.Events.IggyEventDownCaptured:Subscribe(function (ev)
+        local eventID = ev.EventID
+        if eventID == "ToggleInGameMenu" then
+            UI:Hide()
+        end
     end)
+    -- Bind "Take all" to loot all.
+    -- Cannot be done via Iggy events as some vanilla UI takes priority.
+    Input.Events.KeyPressed:Subscribe(function (_)
+        local currentTakeAllBinding = Input.GetBinding("UITakeAll", "Key")
+        if currentTakeAllBinding and Input.HasInputEventModifiersPressed(currentTakeAllBinding) and Input.IsKeyPressed(currentTakeAllBinding.InputID) then
+            UI.LootAll()
+        end
+    end, {EnabledFunctor = function () return UI:IsVisible() end})
 
     UI._Initialized = true
 end

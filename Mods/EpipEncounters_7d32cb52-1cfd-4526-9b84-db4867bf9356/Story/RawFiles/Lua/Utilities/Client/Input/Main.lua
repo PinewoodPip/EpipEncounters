@@ -757,6 +757,19 @@ function Input.GetBinding(eventID, deviceType, bindingIndex, playerIndex)
     return obj
 end
 
+---Returns whether modifier keys for an InputEvent binding are currently being held down.
+---@param binding InputLib_InputEventBinding
+---@return boolean
+function Input.HasInputEventModifiersPressed(binding)
+    local active = (
+        (not binding.Shift or Input.IsShiftPressed())
+        and (not binding.Ctrl or Input.IsCtrlPressed())
+        and (not binding.Alt or Input.IsAltPressed())
+        and (not binding.GUI or Input.IsGUIPressed())
+    )
+    return active
+end
+
 ---Returns the name for a raw input ID.
 ---@param rawID InputRawType
 ---@param short boolean?

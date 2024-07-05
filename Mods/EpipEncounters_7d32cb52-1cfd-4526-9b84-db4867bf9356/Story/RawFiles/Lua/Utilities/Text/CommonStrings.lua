@@ -174,6 +174,11 @@ Text.CommonStrings.Keybinds = Text.RegisterTranslatedString({
    Handle = "hebad38dcg58c3g4a03gb44eg02833543ba38",
    Text = "Keybinds",
 })
+Text.CommonStrings.KeybindHint = Text.RegisterTranslatedString({
+    Handle = "hc49c127cge8a7g426dga569g09c5fb0e92f7",
+    Text = "Keybind: %s",
+    ContextDescription = "Param is a key combination."
+})
 Text.CommonStrings.Accept = Text.RegisterTranslatedString({
    Handle = "hce2c434eg0377g425eg82ceg3948a01e8ee4",
    Text = "Accept",
