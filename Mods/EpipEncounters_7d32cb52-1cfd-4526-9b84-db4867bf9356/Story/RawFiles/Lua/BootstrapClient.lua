@@ -223,6 +223,7 @@ LOAD_ORDER = {
 
     "UI/OptionsSettings.lua",
 
+    "Epip/ExtenderForkVersionCheck/Client.lua",
     "Epip/SkillbookTemplates/Shared.lua",
 
     -- Needs to be ordered after the above.

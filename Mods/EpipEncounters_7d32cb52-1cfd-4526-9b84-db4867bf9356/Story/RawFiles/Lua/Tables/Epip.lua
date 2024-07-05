@@ -2,6 +2,8 @@
 ---@class Epip
 ---@field VERSION integer In the format ex. `1066`
 Epip = {
+    MIN_PIP_FORK_VERSION = 1, -- Ensured by ExtenderForkVersionCheck feature.
+
     Features = {}, ---@type table<string, Feature> Legacy table.
     _Features = {}, ---@type table<string, Epip.ModTable>
     _FeatureRegistrationOrder = {},
@@ -153,6 +155,13 @@ end
 function Epip.IsPipFork()
     ---@diagnostic disable-next-line: undefined-field
     return Ext.IsPipFork == true
+end
+
+---Returns the version of Pip's Script Extender fork.
+---@return integer? -- `nil` if the fork is not installed.
+function Epip.GetPipForkVersion()
+    ---@diagnostic disable-next-line: undefined-field
+    return Epip.IsPipFork() and (Ext.PipForkVersion or 0) or nil -- Early versions did not have a PipForkVersion field.
 end
 
 ---Silences logging from all features of a mod.
