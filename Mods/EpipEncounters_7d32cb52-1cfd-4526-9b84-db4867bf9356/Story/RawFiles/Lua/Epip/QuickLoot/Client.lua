@@ -292,32 +292,77 @@ end, {StringID = "DefaultImplementation"})
 
 -- Fetch lootables and throw search completion events
 -- after server has finished generating loot in containers.
-Net.RegisterListener(QuickLoot.NETMSG_TREASURE_GENERATED, function (_)
+Net.RegisterListener(QuickLoot.NETMSG_TREASURE_GENERATED, function (ev)
     local char = Client.GetCharacter()
     if not QuickLoot.IsRequesting(char) then return end -- Do nothing if the request was cancelled before resolving.
     local radius = QuickLoot.GetSearchRadius(char)
-    local containers, corpses = QuickLoot.GetContainers(char.WorldPos, radius)
-    local items, handleMap = QuickLoot.GetItems(char.WorldPos, radius)
+    local containers, corpses
+    local items, handleMap
 
-    -- Mark corpses as looted.
-    -- Can't be done on the server - no accessible equivalent(?)
-    -- Unfortunately will not persist.
-    for _,corpse in ipairs(corpses) do
-        corpse.HasInventory = true
+    -- If any containers had their loot generated during the search,
+    -- we must delay opening the UI until all of the items have been synched
+    -- to the client.
+    -- Items appear to be synched in batches,
+    -- thus checking if the amount of items has changed seems reliable.
+    local remainingSyncAttempts = 20
+    local unsynchedContainers = {} ---@type table<NetId, integer>
+    for netID,expectedItemsAmount in pairs(ev.GeneratedContainerNetIDs) do
+        netID = tonumber(netID) -- Keys arrive stringified.
+        local itemsAmount = #Item.Get(netID):GetInventoryItems()
+        if itemsAmount < expectedItemsAmount then
+            unsynchedContainers[netID] = itemsAmount
+        end
     end
+    Coroutine.Create(function (inst)
+        -- Keep checking whether all containers have had their contents synched.
+        while next(unsynchedContainers) do
+            char = Client.GetCharacter()
+            -- containers, corpses = QuickLoot.GetContainers(char.WorldPos, radius)
 
-    -- Throw event.
-    QuickLoot.Events.SearchCompleted:Throw({
-        Character = char,
-        Radius = radius,
-        LootableItems = items,
-        Containers = containers,
-        Corpses = corpses,
-        HandleMaps = handleMap,
-    })
+            -- Mark containers as synched if their item count has changed.
+            for containerHandle,oldItemsAmount in pairs(unsynchedContainers) do
+                local container = Item.Get(containerHandle)
+                if #container:GetInventoryItems() > oldItemsAmount then
+                    unsynchedContainers[container.NetID] = nil
+                end
+            end
 
-    -- Dispose of the search.
-    QuickLoot._Searches[char.Handle] = nil
+            -- Wait and try again if any containers are still missing their items.
+            if next(unsynchedContainers) then
+                remainingSyncAttempts = remainingSyncAttempts - 1
+                if remainingSyncAttempts <= 0 then -- Give up after X tries.
+                    break
+                else
+                    inst:Sleep(0.05)
+                end
+            end
+        end
+
+        -- Fetch final items.
+        char = Client.GetCharacter()
+        containers, corpses = QuickLoot.GetContainers(char.WorldPos, radius)
+        items, handleMap = QuickLoot.GetItems(char.WorldPos, radius)
+
+        -- Mark corpses as looted.
+        -- Can't be done on the server - no accessible equivalent(?)
+        -- Unfortunately will not persist.
+        for _,corpse in ipairs(corpses) do
+            corpse.HasInventory = true
+        end
+
+        -- Throw event.
+        QuickLoot.Events.SearchCompleted:Throw({
+            Character = char,
+            Radius = radius,
+            LootableItems = items,
+            Containers = containers,
+            Corpses = corpses,
+            HandleMaps = handleMap,
+        })
+
+        -- Dispose of the search.
+        QuickLoot._Searches[char.Handle] = nil
+    end):Continue()
 end)
 
 -- Apply default filters.

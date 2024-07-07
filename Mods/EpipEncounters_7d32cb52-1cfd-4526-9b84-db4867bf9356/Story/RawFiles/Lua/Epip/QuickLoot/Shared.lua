@@ -235,3 +235,6 @@ QuickLoot.Settings.BaseRadius = QuickLoot:RegisterSetting("BaseRadius", {
 
 ---@class Features.QuickLoot.NetMsgs.GenerateTreasure : NetLib_Message_Character
 ---@field ItemNetIDs NetId[]
+
+---@class Features.QuickLoot.NetMsgs.TreasureGenerated : NetLib_Message
+---@field GeneratedContainerNetIDs table<NetId, integer> Maps container to expected amount of items.

@@ -29,10 +29,14 @@ end)
 
 Net.RegisterListener(QuickLoot.NETMSG_GENERATE_TREASURE, function (payload)
     local char = payload:GetCharacter()
+    local generatedContainers = {} ---@type table<NetId, integer>
     for _,netID in ipairs(payload.ItemNetIDs) do
         local item = Item.Get(netID)
 
+        local oldItemsCount = #item:GetInventoryItems()
         local generated = Item.GenerateDefaultTreasure(item, char)
+        local newItemsCount = #item:GetInventoryItems()
+        local hasNewItems = newItemsCount > oldItemsCount
         if generated then
             -- Mark the containers as having been opened
             item.Known = true -- Unsure if necessary, nor what exactly it means.
@@ -45,11 +49,16 @@ Net.RegisterListener(QuickLoot.NETMSG_GENERATE_TREASURE, function (payload)
                     AutoIdentify.ProcessItem(generatedItem)
                 end
             end
+
+            -- Track containers that have had items generated
+            -- so the client can know how many items to expect in them.
+            -- Necessary as item synching can be at times slow.
+            if hasNewItems then
+                generatedContainers[item.NetID] = newItemsCount
+            end
         end
     end
-    -- Items generated seem to need a delay before they're synched.
-    -- 0.1s can fail even in singleplayer.
-    Timer.Start(0.15, function (_)
-        Net.PostToCharacter(payload:GetCharacter(), QuickLoot.NETMSG_TREASURE_GENERATED)
-    end)
+    Net.PostToCharacter(payload:GetCharacter(), QuickLoot.NETMSG_TREASURE_GENERATED, {
+        GeneratedContainerNetIDs = generatedContainers,
+    })
 end)
