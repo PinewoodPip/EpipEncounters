@@ -25,6 +25,8 @@ local Widgets = {
         RESET = "Features.SettingWidgets.Reset",
     },
 
+    _TOOLTIP_ID_PATTERN = "^SettingWidgets%.(.+)%.(.+)$", -- Module ID can have periods.
+
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
 
@@ -92,6 +94,20 @@ function Widgets.RenderSetting(ui, parent, setting, size, callback, updateSettin
         Instance = nil,
         UpdateSettingValue = updateSettingValue,
     }).Instance
+end
+
+---Returns the setting being displayed in a custom tooltip, if any.
+---@param tooltip TooltipLib_TooltipSourceData
+---@return SettingsLib_Setting?
+function Widgets.GetTooltipSetting(tooltip)
+    local tooltipID = tooltip.CustomTooltipID
+    if not tooltipID then return nil end
+    local module, id = tooltipID:match(Widgets._TOOLTIP_ID_PATTERN)
+    local setting = nil ---@type SettingsLib_Setting?
+    if module then
+        setting = Settings.GetSetting(module, id)
+    end
+    return setting
 end
 
 ---------------------------------------------
@@ -350,6 +366,7 @@ function Widgets._GetSettingTooltip(setting)
 
     ---@type TooltipLib_CustomFormattedTooltip
     local tooltip = {
+        ID = string.format("SettingWidgets.%s.%s", setting.ModTable, setting.ID),
         Elements = {
             {
                 Type = "ItemName",

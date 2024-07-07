@@ -382,6 +382,18 @@ function UI._InitalizeSettingsPanel()
         settingsPanel:SetVisible(not settingsPanel:IsVisible())
     end)
 
+    -- Position setting tooltips to the right of the settings panel.
+    Tooltip.Events.TooltipPositioned:Subscribe(function (_)
+        local currentTooltip = Tooltip.GetCurrentTooltipSourceData()
+        if currentTooltip and currentTooltip.Type == "Custom" and UI:IsVisible() then
+            local setting = SettingWidgets.GetTooltipSetting(currentTooltip) -- Technically the tooltip could still come from another UI, but that's a hilarious edgecase
+            if setting and setting.ModTable == QuickLoot:GetNamespace() then
+                local pos = V(UI:GetPosition()) + V(UI:GetUI().SysPanelSize[1] - UI.UIOBJECT_PANEL_EXTRA_WIDTH + 20, -30) -- No idea why another horizontal offset is needed.
+                Client.UI.Tooltip:SetPosition(pos)
+            end
+        end
+    end)
+
     settingsPanel:SetVisible(false)
 end
 
