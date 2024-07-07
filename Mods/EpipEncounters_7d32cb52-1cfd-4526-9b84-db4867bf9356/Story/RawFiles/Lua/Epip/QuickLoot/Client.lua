@@ -393,5 +393,10 @@ QuickLoot.Hooks.IsItemFilteredOut:Subscribe(function (ev)
         filtered = filtered or Item.IsIngredient(item)
     end
 
+    -- Clutter filter
+    if settings.ShowClutter:GetValue() == false then
+        filtered = filtered or (not Item.IsEquipment(item) and not Item.HasUseActions(item) and not Item.IsIngredient(item) and not Item.IsRune(item) and not Item.IsGold(item) and not Item.IsKey(item))
+    end
+
     ev.FilteredOut = filtered
 end, {StringID = "DefaultImplementation"})

@@ -56,6 +56,10 @@ Item = {
         "Overhead",
     }),
 
+    TEMPLATES = {
+        GOLD = "1c3c9c74-34a1-4685-989e-410dc080be6f",
+    },
+
     SHEATHED_ATTACHMENT_BONES = {
         BOW = "Dummy_Weapon_BOW",
         TWO_HANDED = "Dummy_Weapon_2H",
@@ -201,6 +205,20 @@ end
 ---@return boolean
 function Item.IsRune(item)
     return Stats.GetRuneDefinition(item.StatsId) ~= nil
+end
+
+---Returns whether an item is a stack of gold.
+---@param item Item
+---@return boolean
+function Item.IsGold(item)
+    return item.CurrentTemplate.Id == Item.TEMPLATES.GOLD
+end
+
+---Returns whether an item is a key.
+---@param item Item
+---@return boolean
+function Item.IsKey(item)
+    return item.IsKey
 end
 
 ---Returns whether item is a melee weapon (satisfying a MeleeWeapon requirement)

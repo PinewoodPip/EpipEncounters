@@ -109,6 +109,16 @@ local QuickLoot = {
             Text = "If enabled, crafting ingredients will be included.",
             ContextDescription = [[Setting tooltip for "Show crafting ingredients"]],
         },
+        Setting_ShowClutter_Name = {
+            Handle = "h3dbd2ed3gf0efg4cacgb22fg727c434bb1f3",
+            Text = "Show clutter",
+            ContextDescription = [[Setting name]],
+        },
+        Setting_ShowClutter_Description = {
+            Handle = "ha874d82cg830bg4658gbb16g7772fc94ea62",
+            Text = "If enabled, items with no interactions nor crafting use will be included.",
+            ContextDescription = [[]],
+        },
         Setting_BaseRadius_Name = {
             Handle = "hdd379f13g9fb6g4195ga02bge51a06d5f44a",
             Text = "Default Radius",
@@ -195,6 +205,13 @@ QuickLoot.Settings.ShowIngredients = QuickLoot:RegisterSetting("ShowIngredients"
     Context = "Client",
     Name = TSK.Setting_ShowIngredients_Name,
     Description = TSK.Setting_ShowIngredients_Description,
+    DefaultValue = true,
+})
+QuickLoot.Settings.ShowClutter = QuickLoot:RegisterSetting("ShowClutter", {
+    Type = "Boolean",
+    Context = "Client",
+    Name = TSK.Setting_ShowClutter_Name,
+    Description = TSK.Setting_ShowClutter_Description,
     DefaultValue = true,
 })
 QuickLoot.Settings.BaseRadius = QuickLoot:RegisterSetting("BaseRadius", {
