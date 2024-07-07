@@ -54,6 +54,14 @@ Mod = {
         VANILLA_PLUS = "3ff156e2-289e-4dac-81f5-a44e3e304163",
         FARANDOLE = "98a2a913-3f9f-42be-9cfb-5c1cb881f578",
         DIVINE_WAR = "ea101dc5-4492-4d96-9b1f-0920ba5431f6",
+
+        CAMPAIGNS = {
+            ORIGINS = "1301db3d-1f54-4e98-9be5-5094030916e4",
+            PYRAMID_OF_SHADOWS = "c3182a0f-31df-b08e-1ca8-e891cb283cf1",
+            MYSTICS = "854bb26c-938b-6a92-b77c-7e8f94f7538b",
+            MYSTICS_2 = "edffc554-457e-4316-b309-5851c61b477a",
+            ROGUELIKE_ARENA = "a5f5bd15-a925-4d90-9604-d7df6921fc79",
+        },
     },
 }
 Epip.InitializeLibrary("Mods", Mod)
