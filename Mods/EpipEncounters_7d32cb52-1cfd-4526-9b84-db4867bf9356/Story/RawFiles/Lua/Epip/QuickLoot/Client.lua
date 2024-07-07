@@ -126,13 +126,9 @@ function QuickLoot.StartSearch(char)
     local highlightEffectHandlers = {} ---@type table<ItemHandle, ComponentHandle>
     local baseRadius = QuickLoot.GetBaseSearchRadius()
     effect.WorldTransform.Scale = {baseRadius, baseRadius, 0}
-    GameState.Events.Tick:Subscribe(function (ev)
+    GameState.Events.Tick:Subscribe(function (_)
         char = Character.Get(charHandle)
         local eff = Ext.Entity.GetEffect(effectHandle)
-        local scale = eff.WorldTransform.Scale
-        local radiusChange = ev.DeltaTime / 1000 * QuickLoot.SEARCH_RADIUS_PER_SECOND
-        local newScale = math.min(scale[1] + radiusChange, QuickLoot.MAX_SEARCH_DISTANCE)
-        eff.WorldTransform.Scale = {newScale, 1, newScale}
 
         -- Delete the effect when searching ends.
         if not QuickLoot.IsSearching(char) then
@@ -140,6 +136,9 @@ function QuickLoot.StartSearch(char)
             Ext.Visual.Get(multiVisualHandle):Delete()
             GameState.Events.Tick:Unsubscribe(QuickLoot.EVENTID_TICK_SELECTOR_EFFECT)
         else
+            local newScale = QuickLoot.GetSearchRadius(char)
+            eff.WorldTransform.Scale = {newScale, 1, newScale}
+
             -- Play an effect on containers and corpses within range.
             local containers, corpses = QuickLoot.GetContainers(char.WorldPos, newScale)
             for i=1,#containers+#corpses,1 do -- Avoid list concatenation for performance.
