@@ -1,6 +1,6 @@
 
----@class GenericUI
 local Generic = Client.UI.Generic
+local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 local Tooltip = Client.Tooltip
 local V = Vector.Create
 
@@ -8,6 +8,7 @@ local V = Vector.Create
 ---@field SlotIcon GenericUI_Element_IggyIcon
 ---@field RarityIcon GenericUI_Element_IggyIcon? Created on demand.
 ---@field RuneSlotsIcon GenericUI_Element_IggyIcon? Created on demand.
+---@field Label GenericUI_Prefab_Text? Opt-in via requirements.
 ---@field _CanDrag boolean
 ---@field _CanDrop boolean
 ---@field _ClearAfterDrag boolean
@@ -54,6 +55,7 @@ Generic.RegisterPrefab("GenericUI_Prefab_HotbarSlot", Slot)
 ---@class GenericUI.Prefabs.HotbarSlot.RequiredFeatures
 ---@field CooldownAnimations boolean? Defaults to `false`.
 ---@field ActiveAnimation boolean? Defaults to `false`.
+---@field TextLabel boolean? Whether to use a Text element for the label instead of the simple flash textfield of the Slot element. Defaults to `false`.
 
 ---@alias GenericUI_Prefab_HotbarSlot_Object_Type "None"|"Skill"|"Item"|"Action"|"Template"
 
@@ -136,6 +138,13 @@ function Slot.Create(ui, id, parent, requiredFeatures)
     iconMC.iggy_mc.y = 1
     iconMC.iggy_mc.x = 1
 
+    -- Create "amount" label
+    if requiredFeatures.TextLabel then
+        local label = TextPrefab.Create(ui, obj:PrefixID("Label"), slot, "", "Right", Slot.ICON_SIZE)
+        slot:SetChildIndex(label, 2) -- Position in front of icon but behind highlight
+        obj.Label = label
+    end
+
     ---@diagnostic disable invisible
     slot.Events.MouseUp:Subscribe(function (e) obj:_OnElementMouseUp(e) end)
     slot.Events.Clicked:Subscribe(function (e) obj:_OnSlotClicked(e) end)
@@ -193,7 +202,9 @@ function Slot:SetItem(item)
     self:SetIcon(Item.GetIcon(item))
     self:SetRarityIcon(item)
     self:SetCooldown(0, false)
-    self:SetLabel(item.Amount > 1 and item.Amount or "")
+
+    local label = Text.Format(item.Amount > 1 and tostring(item.Amount) or "", {Size = 19})
+    self:SetLabel(label)
 
     local runeSlotsIcon = Item.IsEquipment(item) and Item.GetRuneSlotsIcon(item) or nil
     if runeSlotsIcon then
@@ -218,9 +229,15 @@ end
 ---Sets the label of the slot, displayed in the bottom right corner.
 ---@param label string
 function Slot:SetLabel(label)
-    local slot = self.SlotElement
-
-    slot:SetLabel(tostring(label))
+    if self._RequiredFeatures.TextLabel then
+        local text = self.Label
+        text:SetText(label)
+        text:FitSize()
+        text:SetPositionRelativeToParent("BottomRight", -3, 0) -- Text within text fields is top-anchored, thus we must reposition.
+    else
+        local slot = self.SlotElement
+        slot:SetLabel(label)
+    end
 end
 
 ---Sets the icon of the slot.
