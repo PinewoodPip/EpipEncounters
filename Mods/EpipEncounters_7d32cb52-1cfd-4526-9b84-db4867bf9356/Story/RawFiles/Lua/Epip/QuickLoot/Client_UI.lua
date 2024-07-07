@@ -91,7 +91,6 @@ function UI.LootItem(item)
     -- Close the UI if all items have been looted.
     -- GetItems() is not used to avoid getter calls - though the performance gain is non-crucial.
     if #UI._State.ItemHandles == 0 then
-        Tooltip.HideTooltip()
         UI:Hide()
     end
 end
@@ -317,6 +316,10 @@ function UI._Initialize()
         slot.Events.Clicked:Subscribe(function (_)
             UI.LootItem(slot.Object:GetEntity())
         end, {StringID = "PickUpItem"})
+        -- Position tooltips to the right of the panel.
+        slot.Hooks.GetTooltipData:Subscribe(function (ev)
+            ev.Position = V(UI:GetPosition()) + V(UI.BACKGROUND_SIZE[1], 0)
+        end)
         return slot
     end)
 
@@ -377,6 +380,12 @@ function UI._InitalizeSettingsPanel()
     end)
 
     settingsPanel:SetVisible(false)
+end
+
+---@override
+function UI:Hide()
+    Tooltip.HideTooltip()
+    Client.UI._BaseUITable.Hide(self)
 end
 
 ---------------------------------------------
