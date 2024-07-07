@@ -150,6 +150,7 @@ local TSK = QuickLoot.TranslatedStrings
 -- UI-only; does not affect filtering logic.
 QuickLoot.Settings.FilterMode = QuickLoot:RegisterSetting("FilterMode", {
     Type = "Choice",
+    Context = "Client",
     Name = TSK.Setting_FilterMode_Name,
     Description = TSK.Setting_FilterMode_Description,
     DefaultValue = QuickLoot.SETTING_FILTERMODE_CHOICES.GREYED_OUT,
@@ -161,6 +162,7 @@ QuickLoot.Settings.FilterMode = QuickLoot:RegisterSetting("FilterMode", {
 })
 QuickLoot.Settings.MinEquipmentRarity = QuickLoot:RegisterSetting("MinEquipmentRarity", {
     Type = "Choice",
+    Context = "Client",
     Name = TSK.Setting_MinEquipmentRarity_Name,
     Description = TSK.Setting_MinEquipmentRarity_Description,
     DefaultValue = "Common",
@@ -176,24 +178,28 @@ QuickLoot.Settings.MinEquipmentRarity = QuickLoot:RegisterSetting("MinEquipmentR
 })
 QuickLoot.Settings.ShowConsumables = QuickLoot:RegisterSetting("ShowConsumables", {
     Type = "Boolean",
+    Context = "Client",
     Name = TSK.Setting_ShowConsumables_Name,
     Description = TSK.Setting_ShowConsumables_Description,
     DefaultValue = true,
 })
 QuickLoot.Settings.ShowFoodAndDrinks = QuickLoot:RegisterSetting("ShowFoodAndDrinks", {
     Type = "Boolean",
+    Context = "Client",
     Name = TSK.Setting_ShowFoodAndDrinks_Name,
     Description = TSK.Setting_ShowFoodAndDrinks_Description,
     DefaultValue = true,
 })
 QuickLoot.Settings.ShowIngredients = QuickLoot:RegisterSetting("ShowIngredients", {
     Type = "Boolean",
+    Context = "Client",
     Name = TSK.Setting_ShowIngredients_Name,
     Description = TSK.Setting_ShowIngredients_Description,
     DefaultValue = true,
 })
 QuickLoot.Settings.BaseRadius = QuickLoot:RegisterSetting("BaseRadius", {
     Type = "ClampedNumber",
+    Context = "Client",
     Name = TSK.Setting_BaseRadius_Name,
     Description = TSK.Setting_BaseRadius_Description,
     Min = 1,
