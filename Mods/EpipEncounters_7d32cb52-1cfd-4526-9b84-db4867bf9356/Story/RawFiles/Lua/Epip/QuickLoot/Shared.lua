@@ -56,7 +56,7 @@ local QuickLoot = {
         },
         Setting_FilterMode_Description = {
             Handle = "ha9cb323cgaba1g42ddg9710g6b10d180a1cf",
-            Text = "Determines items filtered-out by other settings are treated.<br>- Hide items: filtered-out items are not shown in the UI.<br>- Grey out items: filtered-out items are shown greyed-out and moved to the end of the list.",
+            Text = "Determines how items filtered-out by other settings are treated.<br>- Hide items: filtered-out items are not shown in the UI.<br>- Grey out items: filtered-out items are shown greyed-out and moved to the end of the list.",
             ContextDescription = [[Setting tooltip for "Filter Mode"]],
         },
         Setting_FilterMode_Choice_Hidden = {
