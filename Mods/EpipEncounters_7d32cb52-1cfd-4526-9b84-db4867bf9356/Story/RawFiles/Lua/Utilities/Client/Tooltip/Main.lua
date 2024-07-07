@@ -5,10 +5,12 @@ local Examine = Client.UI.Examine
 
 ---@class TooltipLib : Library
 local Tooltip = {
-    nextTooltipData = nil, ---@type TooltipLib_TooltipSourceData
-    _nextCustomTooltip = nil, ---@type TooltipLib_CustomFormattedTooltip
-    _nextSkillTooltip = nil, ---@type TooltipLib_SkillTooltipRequest
-    _currentTooltipData = nil, ---@type TooltipLib_TooltipSourceData
+    nextTooltipData = nil, ---@type TooltipLib_TooltipSourceData?
+    _currentTooltipData = nil, ---@type TooltipLib_TooltipSourceData?
+    _nextSkillTooltip = nil, ---@type TooltipLib_SkillTooltipRequest?
+    _nextCustomTooltip = nil, ---@type TooltipLib_CustomFormattedTooltip?
+    _LastCustomTooltipSource = nil, ---@type TooltipLib_TooltipSourceData?
+    _LastCustomTooltipEntry = nil, ---@type TooltipLib_CustomFormattedTooltip?
     _PartyInventoryUIInitialized = false,
 
     _POSITION_OFFSET = -34,
@@ -114,7 +116,7 @@ Epip.InitializeLibrary("TooltipLib", Tooltip)
 ---------------------------------------------
 
 ---@alias TooltipLib_TooltipType "Custom"|"Skill"|"Item"|"Status"|"Simple"|"Stat" TODO talent, ability, others?
----@alias TooltipLib_FormattedTooltipType "Surface"|"Skill"|"Item"|"Custom"|"Status"
+---@alias TooltipLib_FormattedTooltipType "Surface"|"Skill"|"Item"|"Custom"|"Status"|"Stat"
 ---@alias TooltipLib_Element table See `Game.Tooltip`. TODO
 ---@alias TooltipLib_FormattedTooltipElementType string TODO
 
@@ -128,6 +130,7 @@ Epip.InitializeLibrary("TooltipLib", Tooltip)
 ---@field FlashParams LuaFlashCompatibleType[]?
 ---@field UICall string?
 ---@field StatID TooltipLib.StatID
+---@field CustomTooltipID string?
 ---@field IsFromGame boolean `false` if the tooltip originated from this library.
 
 ---@class TooltipLib_SimpleTooltip
@@ -234,7 +237,7 @@ function _FormattedTooltip:RemoveElement(element)
 end
 
 ---@class TooltipLib_CustomFormattedTooltip : TooltipLib_FormattedTooltip
----@field ID string
+---@field ID string?
 ---@field Position Vector2D
 
 ---@class TooltipLib_SkillTooltipRequest
@@ -326,6 +329,8 @@ function Tooltip.ShowSimpleTooltip(data)
             Ext.OnNextTick(functor)
         end
     end
+
+    Tooltip._LastCustomTooltipSource = nil
 end
 
 ---@param text string
@@ -360,6 +365,16 @@ function Tooltip.ShowCustomFormattedTooltip(tooltip)
     local mouseX, mouseY = Client.GetMousePosition()
 
     Tooltip._nextCustomTooltip = tooltip
+    Tooltip._LastCustomTooltipEntry = tooltip
+    -- TODO allow setting source
+    Tooltip._SetNextTooltipSource({
+        UIType = Ext.UI.TypeID.containerInventory.Default,
+        Type = "Custom",
+        UICall = "showSkillTooltip",
+        FlashParams = {Ext.UI.HandleToDouble(Client.GetCharacter().Handle), "Teleportation_FreeFall", mouseX, mouseY, 100, 100, "Left"},
+        CustomTooltipID = tooltip.ID,
+        IsFromGame = false,
+    })
 
     ui:ExternalInterfaceCall("showSkillTooltip", characterHandle, "Teleportation_FreeFall", mouseX, mouseY, 100, 100, "left")
 end
@@ -497,10 +512,31 @@ function Tooltip._HandleFormattedTooltip(ev, arrayFieldName, sourceData, tooltip
         else
             ev:PreventAction()
         end
+    else
+        Tooltip:__LogWarning("Handling tooltip with no source data", arrayFieldName)
     end
 
-    Tooltip.nextTooltipData = nil
-    Tooltip._currentTooltipData = tooltipData
+    Tooltip._SetCurrentTooltipSource(sourceData)
+    Tooltip.nextTooltipData = nil -- Marks the tooltip as handled.
+end
+
+---Sets the source data of the next tooltip to display.
+---@param source TooltipLib_TooltipSourceData
+function Tooltip._SetNextTooltipSource(source)
+    Tooltip.nextTooltipData = source
+    -- Current tooltip source is instead set after handling it.
+end
+
+---Sets the source data of the currently-displayed tooltip.
+---@param source TooltipLib_TooltipSourceData?
+function Tooltip._SetCurrentTooltipSource(source)
+    Tooltip._currentTooltipData = source
+    if source and source.Type == "Custom" then
+        Tooltip._LastCustomTooltipSource = source
+    else
+        Tooltip._LastCustomTooltipSource = nil
+        Tooltip._LastCustomTooltipEntry = nil
+    end
 end
 
 ---------------------------------------------
@@ -512,18 +548,39 @@ Ext.Events.UICall:Subscribe(function(ev)
     local param1, param2 = table.unpack(ev.Args)
 
     if ev.Function == "showSkillTooltip" and not Tooltip._nextCustomTooltip then
-        local char = Character.Get(param1, true)
-        Tooltip.nextTooltipData = {UIType = ev.UI:GetTypeId(), Type = "Skill", FlashCharacterHandle = param1, SkillID = param2, UICall = ev.Function, FlashParams = {table.unpack(ev.Args)}, Character = char, IsFromGame = Tooltip._nextSkillTooltip == nil}
-        Tooltip._currentTooltipData = Tooltip.nextTooltipData
+        Tooltip._SetNextTooltipSource({
+            UIType = ev.UI:GetTypeId(),
+            Type = "Skill",
+            FlashCharacterHandle = param1,
+            SkillID = param2,
+            UICall = ev.Function,
+            FlashParams = {table.unpack(ev.Args)},
+            IsFromGame = Tooltip._nextSkillTooltip == nil,
+        })
     elseif ev.Function == "showItemTooltip" then
-        Tooltip.nextTooltipData = {UIType = ev.UI:GetTypeId(), Type = "Item", FlashItemHandle = param1, UICall = ev.Function, FlashParams = {table.unpack(ev.Args)}, IsFromGame = Tooltip._nextItemTooltip == nil}
-        Tooltip._currentTooltipData = Tooltip.nextTooltipData
+        Tooltip._SetNextTooltipSource({
+            UIType = ev.UI:GetTypeId(),
+            Type = "Item",
+            FlashItemHandle = param1,
+            UICall = ev.Function,
+            FlashParams = {table.unpack(ev.Args)},
+            IsFromGame = Tooltip._nextItemTooltip == nil,
+        })
     elseif ev.Function == "showStatusTooltip" then
-        Tooltip.nextTooltipData = {UIType = ev.UI:GetTypeId(), Type = "Status", FlashStatusHandle = param2, FlashCharacterHandle = param1, IsFromGame = true}
-        Tooltip._currentTooltipData = Tooltip.nextTooltipData
+        Tooltip._SetNextTooltipSource({
+            UIType = ev.UI:GetTypeId(),
+            Type = "Status",
+            FlashStatusHandle = param2,
+            FlashCharacterHandle = param1,
+            IsFromGame = true,
+        })
     elseif ev.Function == "showStatTooltip" then
-        Tooltip.nextTooltipData = {UIType = ev.UI:GetTypeId(), Type = "Stat", StatID = param1, IsFromGame = true}
-        Tooltip._currentTooltipData = Tooltip.nextTooltipData
+        Tooltip._SetNextTooltipSource({
+            UIType = ev.UI:GetTypeId(),
+            Type = "Stat",
+            StatID = param1,
+            IsFromGame = true,
+        })
     end
 end)
 
@@ -545,7 +602,16 @@ TooltipUI:RegisterInvokeListener("addFormattedTooltip", function(ev, _, _, _)
         -- Clear the previous tooltip data
         TooltipUI:GetRoot().tooltip_array.length = 0
 
-        Tooltip._HandleFormattedTooltip(ev, "tooltip_array", {UIType = Ext.UI.TypeID.hotBar, Type = "Custom", FlashCharacterHandle = Ext.UI.HandleToDouble(Client.GetCharacter().Handle)}, tooltipData.Elements)
+        local mouseX, mouseY = Client.GetMousePosition()
+        Tooltip._SetNextTooltipSource({
+            UIType = Ext.UI.TypeID.containerInventory.Default,
+            Type = "Custom",
+            UICall = "showSkillTooltip",
+            FlashParams = {Ext.UI.HandleToDouble(Client.GetCharacter().Handle), "Teleportation_FreeFall", mouseX, mouseY, 100, 100, "Left"},
+            CustomTooltipID = tooltipData.ID,
+            IsFromGame = false,
+        })
+        Tooltip._HandleFormattedTooltip(ev, "tooltip_array", Tooltip._currentTooltipData, tooltipData.Elements)
     end
 end)
 
@@ -586,7 +652,11 @@ TextDisplay:RegisterInvokeListener("displaySurfaceText", function(ev, _, _)
     local ui = ev.UI
     local arrayFieldName = "tooltipArray"
 
-    Tooltip.nextTooltipData = {UIType = ev.UI:GetTypeId(), Type = "Surface", IsFromGame = true}
+    Tooltip._SetNextTooltipSource({
+        UIType = ev.UI:GetTypeId(),
+        Type = "Surface",
+        IsFromGame = true,
+    })
 
     local tbl = Tooltip._ParseTooltipArray(Game.Tooltip.TableFromFlash(ui, arrayFieldName))
 
@@ -648,6 +718,11 @@ TooltipUI:RegisterInvokeListener("addTooltip", function (ev, text, x, y, allowDe
         }
     })
 
+    -- Clear custom tooltip tracking
+    -- so as to prevent it from showing up again when re-rendering.
+    Tooltip._LastCustomTooltipSource = nil
+    Tooltip._LastCustomTooltipEntry = nil
+
     if not event.Prevented then
         Tooltip.ShowSimpleTooltip(event.Tooltip)
     end
@@ -664,8 +739,10 @@ end, "Before")
 Client.Input.Events.KeyStateChanged:Subscribe(function (ev)
     if ev.InputID == "lshift" then
         local currentTooltip = Tooltip._currentTooltipData
-
-        if currentTooltip and currentTooltip.UICall then
+        if Tooltip._LastCustomTooltipSource then
+            Tooltip.HideTooltip()
+            Tooltip.ShowCustomFormattedTooltip(Tooltip._LastCustomTooltipEntry)
+        elseif currentTooltip and currentTooltip.UICall then
             Ext.OnNextTick(function()
                 local ui = Ext.UI.GetByType(currentTooltip.UIType)
 

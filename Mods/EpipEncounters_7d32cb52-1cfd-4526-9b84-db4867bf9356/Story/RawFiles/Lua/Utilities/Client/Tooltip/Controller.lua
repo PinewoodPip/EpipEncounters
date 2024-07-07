@@ -73,7 +73,7 @@ for _,examineTooltipType in ipairs(Tooltip.CONTROLLER_EXAMINE_TOOLTIP_TYPES) do
             StatID = id,
             FlashParams = {id},
         }
-        Tooltip.nextTooltipData = sourceData
+        Tooltip._SetNextTooltipSource(sourceData)
     end)
 end
 
@@ -95,7 +95,7 @@ InventorySkillPanelC:RegisterCallListener("selectSkill", function (ev, skillID)
             SkillID = skillID,
             FlashParams = {skillID},
         }
-        Tooltip.nextTooltipData = sourceData
+        Tooltip._SetNextTooltipSource(sourceData)
     end
 end)
 
@@ -135,7 +135,7 @@ function Tooltip._UpdateBottomBarCSourceData(ui, funcName, char, slotID)
             FlashParams = {statID},
             IsFromGame = true,
         }
-        Tooltip.nextTooltipData = sourceData
+        Tooltip._SetNextTooltipSource(sourceData)
         Tooltip:DebugLog("Received BottomBarC tooltip source data")
     end
 end
@@ -183,7 +183,7 @@ PartyInventoryC:RegisterCallListener("slotOver", function (ev, itemFlashHandle, 
             FlashParams = {itemFlashHandle, slotFlashIndex, inventoryOwnerFlashHandle},
             IsFromGame = true,
         }
-        Tooltip.nextTooltipData = sourceData
+        Tooltip._SetNextTooltipSource(sourceData)
     end
 end)
 
@@ -204,7 +204,7 @@ local function OnEquipmentPanelItemSelected(ev, itemFlashHandle)
             FlashParams = {itemFlashHandle},
             IsFromGame = true,
         }
-        Tooltip.nextTooltipData = sourceData
+        Tooltip._SetNextTooltipSource(sourceData)
     end
 end
 EquipmentPanelC:RegisterCallListener("itemDollOver", OnEquipmentPanelItemSelected) -- Equipped items.
