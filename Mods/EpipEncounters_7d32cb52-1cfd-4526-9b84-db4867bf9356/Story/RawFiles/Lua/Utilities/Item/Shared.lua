@@ -1107,6 +1107,13 @@ function Item.IsArrow(item)
     return false
 end
 
+---Returns whether an item has a Book use action.
+---@param item Item
+---@return boolean
+function Item.IsBook(item)
+    return Item.GetUseActions(item, "Book")[1] ~= nil
+end
+
 ---Returns whether an item is consumable and marked as food.
 ---@param item Item
 ---@return boolean

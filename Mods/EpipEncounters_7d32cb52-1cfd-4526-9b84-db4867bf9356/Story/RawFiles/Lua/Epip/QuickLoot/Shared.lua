@@ -109,6 +109,16 @@ local QuickLoot = {
             Text = "If enabled, crafting ingredients will be included.",
             ContextDescription = [[Setting tooltip for "Show crafting ingredients"]],
         },
+        Setting_ShowBooks_Name = {
+            Handle = "h462927ecg6518g490bg8ec3gcb0a1f42f5cf",
+            Text = "Show books",
+            ContextDescription = [[Setting name]],
+        },
+        Setting_ShowBooks_Description = {
+            Handle = "he5aa70fbg87fag4679gae29g7b8efc22f2f7",
+            Text = "If enabled, books and other readable items will be included.",
+            ContextDescription = [[Setting tooltip for "Show books"]],
+        },
         Setting_ShowClutter_Name = {
             Handle = "h3dbd2ed3gf0efg4cacgb22fg727c434bb1f3",
             Text = "Show clutter",
@@ -117,7 +127,7 @@ local QuickLoot = {
         Setting_ShowClutter_Description = {
             Handle = "ha874d82cg830bg4658gbb16g7772fc94ea62",
             Text = "If enabled, items with no interactions nor crafting use will be included.",
-            ContextDescription = [[]],
+            ContextDescription = [[Setting tooltip for "Show clutter]],
         },
         Setting_BaseRadius_Name = {
             Handle = "hdd379f13g9fb6g4195ga02bge51a06d5f44a",
@@ -205,6 +215,13 @@ QuickLoot.Settings.ShowIngredients = QuickLoot:RegisterSetting("ShowIngredients"
     Context = "Client",
     Name = TSK.Setting_ShowIngredients_Name,
     Description = TSK.Setting_ShowIngredients_Description,
+    DefaultValue = true,
+})
+QuickLoot.Settings.ShowBooks = QuickLoot:RegisterSetting("ShowBooks", {
+    Type = "Boolean",
+    Context = "Client",
+    Name = TSK.Setting_ShowBooks_Name,
+    Description = TSK.Setting_ShowBooks_Description,
     DefaultValue = true,
 })
 QuickLoot.Settings.ShowClutter = QuickLoot:RegisterSetting("ShowClutter", {

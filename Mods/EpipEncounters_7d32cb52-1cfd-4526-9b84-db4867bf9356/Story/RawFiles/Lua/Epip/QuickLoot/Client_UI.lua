@@ -411,6 +411,7 @@ UI.Hooks.GetSettings:Subscribe(function (ev)
         settings.ShowConsumables,
         settings.ShowFoodAndDrinks,
         settings.ShowIngredients,
+        settings.ShowBooks,
         settings.ShowClutter,
     }
     for _,setting in ipairs(defaultSettings) do

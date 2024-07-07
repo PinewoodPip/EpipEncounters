@@ -403,6 +403,8 @@ local tabs = {
             CreateSettingEntry(QuickLoot.Settings.ShowConsumables),
             CreateSettingEntry(QuickLoot.Settings.ShowFoodAndDrinks),
             CreateSettingEntry(QuickLoot.Settings.ShowIngredients),
+            CreateSettingEntry(QuickLoot.Settings.ShowBooks),
+            CreateSettingEntry(QuickLoot.Settings.ShowClutter),
         },
     },
 }
