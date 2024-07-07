@@ -31,6 +31,7 @@ UI.EVENTID_TICK_IS_MOVING = "Features.QuickLoot.UI.IsCharacterMoving"
 UI.SETTINGS_PANEL_SIZE = V(500, 500)
 UI.SETTINGS_PANEL_ELEMENT_SIZE = V(UI.SETTINGS_PANEL_SIZE[1] - 55, 50)
 UI.SETTINGS_PANEL_SCROLLLIST_FRAME = UI.SETTINGS_PANEL_SIZE - V(20, 150)
+UI.UIOBJECT_PANEL_EXTRA_WIDTH = 300 -- Extra width for panel size.
 
 UI._State = nil ---@type Features.QuickLoot.UI.State?
 
@@ -274,7 +275,9 @@ end
 function UI._Initialize()
     if UI._Initialized then return end
 
-    UI:GetUI().SysPanelSize = {UI.BACKGROUND_SIZE[1], UI.BACKGROUND_SIZE[2]}
+    local uiObj = UI:GetUI()
+    uiObj.SysPanelSize = {UI.BACKGROUND_SIZE[1] + UI.SETTINGS_PANEL_ELEMENT_SIZE[1] + UI.UIOBJECT_PANEL_EXTRA_WIDTH, UI.BACKGROUND_SIZE[2]} -- Padding makes the UI get positioned slightly to the left by default, so as not to obscure the character.
+    uiObj.Left = UI.BACKGROUND_SIZE[1] -- Prevent dragging the main panel outside the viewport.
 
     local root = UI:CreateElement("Root", "GenericUI_Element_Empty")
     UI.Root = root
@@ -318,7 +321,7 @@ function UI._Initialize()
         end, {StringID = "PickUpItem"})
         -- Position tooltips to the right of the panel.
         slot.Hooks.GetTooltipData:Subscribe(function (ev)
-            ev.Position = V(UI:GetPosition()) + V(UI.BACKGROUND_SIZE[1], 0)
+            ev.Position = V(UI:GetPosition()) + V(UI.BACKGROUND_SIZE[1] - 15, 3)
         end)
         return slot
     end)
