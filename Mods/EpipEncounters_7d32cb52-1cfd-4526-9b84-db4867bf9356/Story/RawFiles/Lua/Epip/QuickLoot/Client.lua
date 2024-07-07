@@ -373,7 +373,7 @@ QuickLoot.Hooks.IsItemFilteredOut:Subscribe(function (ev)
     local minRarity = settings.MinEquipmentRarity:GetValue()
 
     -- Rarity filter
-    if minRarity ~= "Common" and Item.IsEquipment(item) then
+    if minRarity ~= "Common" and Item.IsEquipment(item) and item.Stats.Rarity ~= "Unique" then -- Always show unique items
         local rarityValue = Ext.Enums.ItemDataRarity[item.Stats.Rarity]
         local minRarityValue = Ext.Enums.ItemDataRarity[minRarity]
         filtered = filtered or (rarityValue.Value < minRarityValue.Value)
