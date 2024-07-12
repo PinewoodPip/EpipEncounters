@@ -494,6 +494,7 @@ LOAD_ORDER = {
 
     "Epip/Client/TreasureTableDisplay.lua",
     "Epip/Client/SummonControlFix.lua",
+    "Epip/CloseUpDialogueFix/Client.lua",
     "Epip/Client/Notifications.lua",
     "Epip/Client/CraftingFixes.lua",
     "Epip/UserVarsGUIDSyncWorkaround/Client.lua",

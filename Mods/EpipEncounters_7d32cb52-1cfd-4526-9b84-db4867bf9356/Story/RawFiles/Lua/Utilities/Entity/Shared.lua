@@ -105,6 +105,7 @@ end
 ---Returns the main game object component of an entity.
 ---This will be either a character or item component, if either are on the entity.
 ---@param entity Entity|EntityHandle
+---@return Character|Item
 function Entity.GetGameObjectComponent(entity)
     if Ext.Utils.IsValidHandle(entity) then
         entity = Entity.GetEntity(entity)

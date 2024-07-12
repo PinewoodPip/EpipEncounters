@@ -3,6 +3,7 @@
 Client = {
     UI = {GM = {}, Controller = {}},
     Input = {}, -- See Input.lua
+    _IsInDialogue = false,
 
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
@@ -54,6 +55,7 @@ Client = {
         ActiveCharacterChanged = {}, ---@type Event<ClientLib_Event_ActiveCharacterChanged>
         SkillStateChanged = {}, ---@type Event<ClientLib_Event_SkillStateChanged>
         ViewportChanged = {}, ---@type Event<ClientLib_Event_ViewportChanged>
+        InDialogueStateChanged = {}, ---@type Event<{InDialogue:boolean}>
     }
 }
 Epip.InitializeLibrary("Client", Client)
@@ -372,6 +374,17 @@ Ext.Events.Tick:Subscribe(function (_)
         oldViewport = viewport
     end
 end)
+
+-- Throw events for in-dialogue state changing.
+GameState.Events.RunningTick:Subscribe(function (_)
+    local char = Client.GetCharacter()
+    local oldState = Client._IsInDialogue
+    local newState = char and char.InDialog or false -- The client might've become a spectator with no assigned characters.
+    if oldState ~= newState then
+        Client._IsInDialogue = newState
+        Client.Events.InDialogueStateChanged:Throw({InDialogue = newState})
+    end
+end, {StringID = "ClientLib.InDialogueStateChangedEvent"})
 
 ---------------------------------------------
 -- SETUP
