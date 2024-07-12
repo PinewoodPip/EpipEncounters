@@ -53,7 +53,9 @@ function Widget:Render(entity)
         local entry = container:AddChild(effect.ID, "GenericUI_Element_Text")
         local activationConditionText = EpicEnemies.GetActivationConditionDescription(effect.ActivationCondition, entity)
 
-        local text = Text.Format(Text.Format("• ", {Size = 28}) .. Text.Resolve(effect.Name), {FontType = Text.FONTS.BOLD, Color = "088cc4"})
+        local text = Text.Format(Text.Format("• ", {Size = 28}) .. Text.Format("%s%s", {
+            FormatArgs = {Text.Resolve(effect.Name), Epip.IsDeveloperMode() and string.format(" (%s)", effect.ID) or ""}
+        }), {FontType = Text.FONTS.BOLD, Color = "088cc4"})
 
         if effect.Description and string.len(Text.Resolve(effect.Description)) > 0 then
             text = text .. "<br>" .. Text.Format("      " .. Text.Resolve(effect.Description), {Size = 17})
