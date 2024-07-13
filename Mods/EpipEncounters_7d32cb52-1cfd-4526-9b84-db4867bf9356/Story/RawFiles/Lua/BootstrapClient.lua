@@ -546,7 +546,6 @@ LOAD_ORDER = {
 
     "Epip/Client/AprilFoolsCharacterSheet.lua",
     "Epip/Screensaver/Client.lua",
-    {ScriptSet = "Epip/AscensionShortcuts", RequiresEE = true},
     "Epip/Client/ExitChatAfterMessage.lua",
     "Epip/Client/CameraZoom.lua",
     "Epip/CameraControls/Client.lua",
@@ -594,6 +593,8 @@ LOAD_ORDER = {
 
     -- Hotbar stuff
     {ScriptSet = "Epip/Hotbar/Actions"},
+
+    {ScriptSet = "Epip/AscensionShortcuts", RequiresEE = true},
 
     -- Epic Enemies
     {

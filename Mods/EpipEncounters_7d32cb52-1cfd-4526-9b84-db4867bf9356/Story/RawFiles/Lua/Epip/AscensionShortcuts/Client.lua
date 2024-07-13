@@ -1,5 +1,6 @@
 
 local Shortcuts = Epip.GetFeature("Feature_AscensionShortcuts")
+local HotbarActions = Epip.GetFeature("Feature_HotbarActions")
 
 ---------------------------------------------
 -- EVENT LISTENERS
@@ -9,9 +10,7 @@ local Shortcuts = Epip.GetFeature("Feature_AscensionShortcuts")
 Client.Input.Events.KeyPressed:Subscribe(function (e)
     if e.InputID == "escape" and GameState.GetState() == "Running" and Game.Ascension.IsMeditating() then
         if Settings.GetSettingValue("EpipEncounters", "ESCClosesAmerUI") then
-            Net.PostToServer("EPIPENCOUNTERS_Hotkey_Meditate", {
-                NetID = Client.GetCharacter().NetID,
-            })
+            HotbarActions.TryExecuteAction(Client.GetCharacter(), "EE_Meditate")
         else -- Pop page
             Net.PostToServer(Shortcuts.POP_PAGE_NET_MSG, {CharacterNetID = Client.GetCharacter().NetID})
         end
