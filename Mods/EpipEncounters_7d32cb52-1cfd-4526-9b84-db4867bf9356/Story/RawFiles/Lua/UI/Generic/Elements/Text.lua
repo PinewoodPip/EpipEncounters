@@ -99,6 +99,7 @@ end
 _Text.SetText = Generic.ExposeFunction("SetText")
 _Text.SetType = Generic.ExposeFunction("SetType")
 _Text.SetEditable = Generic.ExposeFunction("SetEditable")
+_Text.IsFocused = Generic.ExposeFunction("IsFocused")
 _Text.SetRestrictedCharacters = Generic.ExposeFunction("SetRestrictedCharacters")
 _Text.GetLineWidth = Generic.ExposeFunction("GetLineWidth")
 _Text.GetLineHeight = Generic.ExposeFunction("GetLineHeight")

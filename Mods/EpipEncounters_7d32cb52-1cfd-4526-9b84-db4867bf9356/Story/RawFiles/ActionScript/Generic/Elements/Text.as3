@@ -99,6 +99,12 @@ package Elements
             }
         }
 
+        // Returns whether the text field is being edited.
+        public function IsFocused() : Boolean
+        {
+            return (root as MovieClip).stage.focus == this.text_txt;
+        }
+
         public function IsMouseWithinRange(startIndex:int, length:int) : Boolean
         {
             var mouseX:Number = this.text_txt.mouseX;
@@ -204,8 +210,6 @@ package Elements
 
                 this.text_txt.addEventListener(KeyboardEvent.KEY_DOWN, this.inputHandler);
                 ExternalInterface.call("inputFocus");
-
-                base.focusedElement = this; // TODO remove?
 
                 ExternalInterface.call("Text_Focused", this.stringID);
             }

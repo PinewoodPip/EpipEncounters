@@ -18,6 +18,10 @@ function Text:SetType(textType) end
 ---@param editable boolean
 function Text:SetEditable(editable) end
 
+---Returns whether the text field is being edited by the user.
+---@return boolean
+function Text:IsFocused(editable) end
+
 ---Sets the restriction for characters that the user can enter onto the text field.
 ---Has no effect on setting the text from scripting.
 ---@see GenericUI_Element_Text.SetEditable
