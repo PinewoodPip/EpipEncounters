@@ -94,6 +94,7 @@ function QuickLoot.RequestPickUp(char, item)
     Net.PostToServer(QuickLoot.NETMSG_PICKUP_ITEM, {
         CharacterNetID = char.NetID,
         ItemNetID = item.NetID,
+        PlayLootingEffect = QuickLoot.Settings.LootingEffect:GetValue() == true,
     })
 end
 

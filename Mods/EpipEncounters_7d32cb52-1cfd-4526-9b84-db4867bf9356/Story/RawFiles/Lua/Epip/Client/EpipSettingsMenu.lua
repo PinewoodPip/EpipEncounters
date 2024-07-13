@@ -397,6 +397,7 @@ local tabs = {
             {Type = "Label", Label = QuickLoot.TranslatedStrings.Label_FeatureDescription:Format({Size = 19})},
             CreateSettingEntry(Client.Input.GetActionBindingSetting(QuickLoot.InputActions.Search)),
             CreateSettingEntry(QuickLoot.Settings.BaseRadius),
+            CreateSettingEntry(QuickLoot.Settings.LootingEffect),
             CreateHeader(CommonStrings.Filters),
             CreateSettingEntry(QuickLoot.Settings.FilterMode),
             CreateSettingEntry(QuickLoot.Settings.MinEquipmentRarity),

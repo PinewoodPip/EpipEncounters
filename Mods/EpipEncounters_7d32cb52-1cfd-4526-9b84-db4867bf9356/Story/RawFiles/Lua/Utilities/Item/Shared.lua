@@ -159,6 +159,8 @@ Item = {
 
     LUCKY_CHARM_EFFECT = "RS3_FX_GP_ScriptedEvent_Lucky_01",
     LUCKY_CHARM_EFFECT_BONE = "Dummy_OverheadFX",
+    TELEKINESIS_BEAM_EFFECT = "RS3_FX_GP_Beams_Telekinesis_01",
+    TELEKINESIS_IMPACT_EFFECT = "RS3_FX_GP_Impacts_Telekinesis_Items_01", -- Plays on the items affected by telekinesis.
 
     ---@type table<ItemLib_Rarity, icon>
     _ITEM_RARITY_ICONS = {
@@ -653,6 +655,31 @@ function Item.GetItemsInPartyInventory(char, predicate, recursive)
     end
 
     return items
+end
+
+---Returns the character or item that contains the item passed.
+---@param item Item
+---@return (Character|Item)? -- `nil` if the item is not in an inventory.
+function Item.GetInventoryParent(item)
+    local parentInventory = Ext.Utils.IsValidHandle(item.ParentInventoryHandle) and Ext.Entity.GetInventory(item.ParentInventoryHandle) or nil
+    local parentEntity = nil
+    if parentInventory then
+        parentEntity = Entity.GetComponent(parentInventory.ParentHandle)
+    end
+    return parentEntity
+end
+
+---Returns the top-most character or item that contains the item passed.
+---@param item Item
+---@return (Character|Item)? -- `nil` if the item is not in an inventory.
+function Item.GetInventoryRoot(item)
+    local previousParent = Item.GetInventoryParent(item)
+    local parent = previousParent
+    while parent and not Entity.IsCharacter(parent) do -- Characters cannot be within inventories.
+        previousParent = parent
+        parent = Item.GetInventoryParent(previousParent)
+    end
+    return parent or previousParent -- Parent won't be nil if the top-most inventory is of a character.
 end
 
 ---Returns whether an item is identified.

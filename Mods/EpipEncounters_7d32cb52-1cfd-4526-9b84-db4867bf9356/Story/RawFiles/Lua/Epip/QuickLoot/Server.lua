@@ -18,13 +18,27 @@ function QuickLoot.PickUpItem(char, item)
     -- Osiris.CharacterPlayHUDSoundResource(char, item.CurrentTemplate.PickupSound)
 end
 
+---Plays a beam effect between char and the container or corpse holding the item.
+---@param char EsvCharacter
+---@param item EsvItem
+function QuickLoot.PlayLootingEffect(char, item)
+    local container = Item.GetInventoryParent(item) -- Assumed not to be nested in inventories.
+    Osiris.PlayBeamEffect(char, container, Item.TELEKINESIS_BEAM_EFFECT, "Dummy_R_Hand", "Dummy_Root")
+    Osiris.PlayEffect(container, Item.TELEKINESIS_IMPACT_EFFECT, "Dummy_Root")
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
 
 -- Handle requests to pick up items.
 Net.RegisterListener(QuickLoot.NETMSG_PICKUP_ITEM, function (payload)
-    QuickLoot.PickUpItem(payload:GetCharacter(), payload:GetItem())
+    local char, item = payload:GetCharacter(), payload:GetItem()
+    -- Should be done before looting, as the container/corpse of the item must be determined.
+    if payload.PlayLootingEffect then
+        QuickLoot.PlayLootingEffect(char, item)
+    end
+    QuickLoot.PickUpItem(char, item)
 end)
 
 Net.RegisterListener(QuickLoot.NETMSG_GENERATE_TREASURE, function (payload)

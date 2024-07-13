@@ -139,6 +139,16 @@ local QuickLoot = {
             Text = "Determines the starting radius of the search area, in meters.",
             ContextDescription = [[Setting tooltip for "Default Radius"]],
         },
+        Setting_LootingEffect_Name = {
+            Handle = "hac9dbcaeg3c55g4dedg96ccgb29dab55fde6",
+            Text = "Looting GFX",
+            ContextDescription = [[Setting name]],
+        },
+        Setting_LootingEffect_Description = {
+            Handle = "h6b9c0d7fg3955g424bg847eg7b2201275db0",
+            Text = "If enabled, a beam effect will play while looting items, visualizing the container or corpse they are being taken from.",
+            ContextDescription = [[Setting tooltip for "Looting GFX"]],
+        },
         InputAction_Search_Name = {
             Handle = "ha539c465g36e0g4780g9892g58e33578124f",
             Text = "Quick Loot: Start Search",
@@ -242,6 +252,12 @@ QuickLoot.Settings.BaseRadius = QuickLoot:RegisterSetting("BaseRadius", {
     HideNumbers = false,
     DefaultValue = QuickLoot.SEARCH_BASE_RADIUS,
 })
+QuickLoot.Settings.LootingEffect = QuickLoot:RegisterSetting("LootingEffect", {
+    Type = "Boolean",
+    Name = TSK.Setting_LootingEffect_Name,
+    Description = TSK.Setting_LootingEffect_Description,
+    DefaultValue = false,
+})
 
 ---------------------------------------------
 -- EVENTS/HOOKS
@@ -273,6 +289,7 @@ QuickLoot.Settings.BaseRadius = QuickLoot:RegisterSetting("BaseRadius", {
 ---------------------------------------------
 
 ---@class Features.QuickLoot.NetMsgs.PickUp : NetLib_Message_Character, NetLib_Message_Item
+---@field PlayLootingEffect boolean
 
 ---@class Features.QuickLoot.NetMsgs.GenerateTreasure : NetLib_Message_Character
 ---@field ItemNetIDs NetId[]
