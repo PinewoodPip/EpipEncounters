@@ -907,12 +907,19 @@ end
 ---Returns the lootable items on char.
 ---@param char Character
 function Character.GetLootableItems(char)
+    local canLootEquipment = char.CurrentTemplate.IsEquipmentLootable
     local inventory = Ext.Entity.GetInventory(char.InventoryHandle)
+    local equipmentSlots = inventory.EquipmentSlots
     local items = {} ---@type Item[]
     for i,handle in ipairs(inventory.ItemsBySlot) do
         local item = Item.Get(handle)
-        if item and item.CanBePickedUp and (i > inventory.EquipmentSlots or (item.Stats and item.Stats.LootableWhenEquipped)) then
-            table.insert(items, item)
+        if item and item.CanBePickedUp then
+            local isEquipped = i <= equipmentSlots
+            local isNPCEquipment = item.Stats and string.sub(item.StatsId, 1, 1) == "_" -- Stat entries prefixed with "_" are for NPC use only.
+            local isRemovable = (not isEquipped or ((canLootEquipment or item.Stats.LootableWhenEquipped) and not item.UnEquipLocked)) and not isNPCEquipment
+            if isRemovable then
+                table.insert(items, item)
+            end
         end
     end
     return items
