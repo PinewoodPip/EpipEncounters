@@ -211,7 +211,10 @@ function Widgets._RenderTextFieldFromSetting(request)
 
     -- Update the text when the setting is changed.
     Widgets._RegisterValueChangedListener(field, request, function (ev)
-        field:SetText(ev.Value)
+        local textField = field.Text
+        if not textField:IsFocused() then -- Do not do this if the user is typing, as it is redundant and will reset the caret.
+            field:SetText(ev.Value)
+        end
     end)
 
     return field
