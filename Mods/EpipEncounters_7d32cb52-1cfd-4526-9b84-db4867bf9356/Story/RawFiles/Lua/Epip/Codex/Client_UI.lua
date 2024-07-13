@@ -10,6 +10,7 @@ local CloseButtonPrefab = Generic.GetPrefab("GenericUI_Prefab_CloseButton")
 local Textures = Epip.GetFeature("Feature_GenericUITextures").TEXTURES
 local SettingWidgets = Epip.GetFeature("Features.SettingWidgets")
 local Codex = Epip.GetFeature("Feature_Codex")
+local Input = Client.Input
 local TSK = Codex.TranslatedStrings
 local V = Vector.Create
 
@@ -214,6 +215,14 @@ function UI._Init()
         indexList:SetFrame(UI.INDEX_FRAME_SIZE:unpack())
         indexList:SetScrollbarSpacing(UI.INDEX_FRAME_SCROLLBAR_SPACING)
         UI.IndexList = indexList
+
+        -- Close the UI when escape is pressed.
+        Input.Events.KeyStateChanged:Subscribe(function (ev)
+            if ev.InputID == "escape" and UI:IsVisible() then
+                UI:Hide()
+                ev:Prevent()
+            end
+        end)
 
         UI._Initialized = true
     end
