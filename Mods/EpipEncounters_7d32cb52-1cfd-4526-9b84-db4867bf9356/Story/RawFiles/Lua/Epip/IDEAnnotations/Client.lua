@@ -154,10 +154,6 @@ function Generator.Generate(filename)
     writer:AddLine("---@class Ext\nExt = {}")
     writer:AddLine("Game = {}\n")
     writer:AddLine("Ext.Enums = {}")
-    writer:AddLine(
-[[---Extender enum/bitfield class.
----@class Enum<T> : {Label:T, Value:integer, EnumName:string, __Labels:T[], __Value:integer, __EnumName:string} 
-]])
 
     -- Write aliases
     Generator._WriteBasicAliases(writer)
@@ -177,6 +173,12 @@ function Generator.Generate(filename)
             Generator:LogWarning("Unknown type kind", type.Kind)
         end
     end
+
+    -- Put enum class at the bottom so that it does not appear as the first entry in go-to-source.
+    writer:AddLine(
+[[---Extender enum/bitfield class.
+---@class Enum<T> : {Label:T, Value:integer, EnumName:string, __Labels:T[], __Value:integer, __EnumName:string} 
+]])
 
     -- Write events
     Generator._AnnotateEvents(writer)
@@ -337,9 +339,29 @@ function Generator._AnnotateEnum(writer, enum)
         table.insert(aliasAnnotations, string.format("---|\"%s\" # %s", alias.Name, alias.Index))
     end
 
-    writer:AddLine(string.format("---@alias %s string|integer\n%s", enum.TypeName, Text.Join(aliasAnnotations, "\n")))
+    -- Auxiliary aliases
+    -- Necessary to workaround issues with unions with generic types.
+    local enumAlias = string.format("____%sEnum", enum.TypeName) 
+    local unionAlias = string.format("____%sEnumUnion", enum.TypeName)
+    local unionType = string.format("integer|string|%s", enumAlias)
+    writer:AddLine(string.format("---@alias %s Enum<%s>", enumAlias, enum.TypeName))
+    writer:AddLine(string.format("---@alias %s %s", unionAlias, unionType))
 
-    writer:AddLine(string.format("Ext.Enums.%s = {} ---@type table<%s, Enum<%s>|%s>", enum.TypeName, enum.TypeName, enum.TypeName, enum.TypeName))
+    writer:AddLine(string.format("---@alias %s %s\n%s", enum.TypeName, unionAlias, Text.Join(aliasAnnotations, "\n")))
+
+    -- Add enum table
+    -- ---@type table<Enum, integer> is a poor choice as it prevents auto-completion.
+    -- "[string]:Enumtype" works, but adds the string "string" as an autocomplete option. This indexing annotation is necessary for [] indexing with variables to return correct type.
+    writer:AddLine(string.format("---@class ____%sTable : {[\"\"]:%s}", enum.TypeName, enum.TypeName))
+    writer:AddLine(string.format("Ext.Enums.%s = {", enum.TypeName))
+    for _,alias in ipairs(aliases) do
+        local reservedKeywords = {["end"] = true}
+        local field = reservedKeywords[alias.Name] and "[\"%s\"]" or "%s"
+        field = string.format(field, alias.Name)
+        writer:AddLine(string.format([[    %s = %s, ---@type %s]], field, alias.Index, enum.TypeName))
+    end
+    writer:AddLine("}")
+
     writer:AddLine()
 end
 
