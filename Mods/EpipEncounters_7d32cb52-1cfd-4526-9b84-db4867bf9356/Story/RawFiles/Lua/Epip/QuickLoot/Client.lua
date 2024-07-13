@@ -38,10 +38,10 @@ function QuickLoot.GetContainers(pos, radius)
             Position = pos,
             Lootable = true,
         }).Lootable
-    end)
+    end, true)
     local nearbyCorpses = Entity.GetNearbyCharacters(pos, radius, function (char)
         return Character.IsLootableCorpse(char) and not Character.IsPlayer(char)
-    end)
+    end, true)
     return nearbyContainers, nearbyCorpses
 end
 
