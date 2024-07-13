@@ -35,6 +35,7 @@ function QuickLoot.GetContainers(pos, radius)
     local nearbyContainers = Entity.GetNearbyItems(pos, radius, function (item)
         return Item.IsContainer(item) and QuickLoot.Hooks.IsContainerLootable:Throw({
             Container = item,
+            Position = pos,
             Lootable = true,
         }).Lootable
     end)
@@ -263,6 +264,20 @@ QuickLoot.Hooks.IsContainerLootable:Subscribe(function (ev)
     lootable = lootable and not Item.IsLocked(item) -- Can't loot locked containers
     lootable = lootable and item.Activated and not item.Invisible -- Can't loot hidden containers
 end, {StringID = "DefaultImplementation"})
+
+-- Prevent looting containers out of sight.
+-- This appears to be perfectly in-sync with the check for whether an item displays a world tooltip.
+-- TODO also implement for corpses?
+QuickLoot.Hooks.IsContainerLootable:Subscribe(function (ev)
+    local item = ev.Container
+    local characterHeight = Client.GetCharacter().Height -- Appears to be the same (1.8m) for all races.
+    local visionFlags = 0
+    if item.AI then
+        local offsetPos = Vector.Create(ev.Position) + Vector.Create({0, characterHeight, 0})
+        visionFlags = Entity.GetLevel().VisionGrid:RaycastToObject(offsetPos, item.AI, "VisionBlock").__Value
+    end
+    ev.Lootable = ev.Lootable and visionFlags == 0
+end, {StringID = "DefaultImplementation.LineOfSight"})
 
 -- Start & stop searches when the action is pressed & released.
 Input.Events.ActionExecuted:Subscribe(function (ev)

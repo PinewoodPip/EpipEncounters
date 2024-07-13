@@ -257,6 +257,7 @@ QuickLoot.Settings.BaseRadius = QuickLoot:RegisterSetting("BaseRadius", {
 
 ---@class Features.QuickLoot.Hooks.IsContainerLootable
 ---@field Container EclItem
+---@field Position vec3 Origin of the request.
 ---@field Lootable boolean Hookable. Defaults to `true`.
 
 ---@class Features.QuickLoot.Hooks.IsItemFilteredOut
