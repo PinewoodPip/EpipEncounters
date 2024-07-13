@@ -27,8 +27,7 @@ local Settings = Settings
 ---@class Features.EpicEnemies.Hooks.IsEffectApplicable
 ---@field Character EsvCharacter
 ---@field Effect Features.EpicEnemies.Effect
----@field ActiveEffects Features.EpicEnemies.Effect[]
----@field Budget number
+---@field Request Features.EpicEnemies.InitRequest
 ---@field Applicable boolean Hookable. Defaults to `true`.
 
 ---Server-only.
@@ -112,8 +111,8 @@ function EpicEnemies.InitializeCharacter(char)
         local attempts = 0
         for _,poolData in ipairs(sortedPools) do
             local pool = poolData.Effects
-            while request.Budget > 0 or attempts > 100 do
-                local effect = EpicEnemies.GetRandomEffect(char, pool, addedEffects, request.Budget)
+            while request.Budget > 0 and attempts < 100 do
+                local effect = EpicEnemies.GetRandomEffect(char, pool, request)
                 if effect then
                     request:AddEffect(effect)
 
@@ -121,7 +120,7 @@ function EpicEnemies.InitializeCharacter(char)
 
                     -- Effects cannot be rolled twice
                     pool[effect.ID] = nil
-                else -- Break if valid effects remain.
+                else -- Break if no valid effects remain.
                     break
                 end
 
@@ -323,25 +322,42 @@ function EpicEnemies.RemoveEffect(char, effectID)
     })
 end
 
+---Returns the points cost of an effect.
+---@param effect Features.EpicEnemies.Effect
+---@param initRequest Features.EpicEnemies.InitRequest? If passed, already-obtained prerequisites will be considered.
+---@return number -- 0 if the request already has the effect.
+function EpicEnemies.GetEffectCost(effect, initRequest)
+    if initRequest and initRequest:HasEffect(effect) then return 0 end
+    local cost = effect:GetCost()
+    if initRequest then
+        -- Sum costs of unmet prerequisites
+        for prereq in pairs(effect.Prerequisites or {}) do
+            if not effect.DiscountPrerequisites or not initRequest:HasEffect(prereq) then
+                local prereqEffect = EpicEnemies.GetEffectData(prereq)
+                -- cost = cost + EpicEnemies.GetEffectCost(prereqEffect, initRequest) -- Nesting prerequisites is unsupported atm. TODO?
+                cost = cost + prereqEffect:GetCost()
+            end
+        end
+    end
+    return cost
+end
+
 ---Returns a random effect from a pool that is valid for the character.
 ---@param char EsvCharacter
 ---@param effectPool table<string, Features.EpicEnemies.Effect>
----@param activeEffects? Features.EpicEnemies.Effect[]
----@param budget number
+---@param request Features.EpicEnemies.InitRequest
 ---@return Features.EpicEnemies.Effect? `nil` if no valid effects are in the pool.
-function EpicEnemies.GetRandomEffect(char, effectPool, activeEffects, budget)
+function EpicEnemies.GetRandomEffect(char, effectPool, request)
     local totalWeight = 0
     local chosenEffect
-    activeEffects = activeEffects or {}
 
     local filteredPool = {}
-
     for id,effect in pairs(effectPool) do
-        local included =  effect:GetWeight() > 0 and EpicEnemies.Hooks.IsEffectApplicable:Throw({
+        -- Skip inclusion checks for effects that cannot randomly roll or have already been added - rolling an effect twice would be a no-op (no budget reduced).
+        local included = effect:GetWeight() > 0 and not request:HasEffect(id) and EpicEnemies.GetEffectCost(effect, request) <= request.Budget and EpicEnemies.Hooks.IsEffectApplicable:Throw({
             Character = char,
             Effect = effect,
-            ActiveEffects = activeEffects,
-            Budget = budget,
+            Request = request,
             Applicable = true,
         }).Applicable
         if included then
@@ -447,38 +463,6 @@ EpicEnemies.Hooks.IsCharacterEligible:Subscribe(function (ev)
 
     ev.Eligible = eligible
 end, {Priority = -99, StringID = "DefaultImplementation"})
-
--- Mark effects as valid only if the budget allows for them;
--- the prerequisite effects must have either already been acquired or also be affordable.
-EpicEnemies.Hooks.IsEffectApplicable:Subscribe(function (ev)
-    if not ev.Applicable then return end
-
-    local effect, activeEffects, budget = ev.Effect, ev.ActiveEffects, ev.Budget
-    local remainingBudget = budget - effect:GetCost()
-    if effect.Prerequisites then
-        for prereqID,_ in pairs(effect.Prerequisites) do
-            local prerequisiteEffect = EpicEnemies.GetEffectData(prereqID)
-
-            -- Check if the prerequisite is already applied
-            local meetsRequirement = table.any(activeEffects, function (_, v)
-                return v.ID == prereqID
-            end)
-            if not meetsRequirement then
-                -- Otherwise check if it can be afforded
-                local cost = prerequisiteEffect:GetCost()
-                if cost <= remainingBudget then
-                    remainingBudget = remainingBudget - cost
-                    meetsRequirement = true
-                end
-            end
-            if not meetsRequirement then
-                ev.Applicable = false
-            end
-        end
-    end
-
-    ev.Applicable = remainingBudget >= 0
-end)
 
 -- AI archetype filter.
 EpicEnemies.Hooks.IsEffectApplicable:Subscribe(function (ev)

@@ -124,6 +124,7 @@ local _EpicEnemiesActivationCondition = {
 ---@field Visible boolean? Whether this effect appears in tooltips. Defaults to `true`.
 ---@field Priority number? Effects with higher priority will attempt to roll first. Defaults to `1`.
 ---@field Prerequisites table<string, true>? List of effect IDs to apply beforehand, consuming budget accordingly if not yet applied.
+---@field DiscountPrerequisites boolean? If `true`, the cost of the effect will be the sum of the base cost and every prerequisite that hasn't been obtained yet. Otherwise, the cost will be the sum of the base cost and base costs of all prerequisites, regardless of whether the character already has them. Defaults to `true`.
 ---@field AllowedAIArchetypes table<aitype, true>? If set, only characters with the specified AI archetypes will be able to roll the effect.
 _EpicEnemiesEffect = {
     Description = "NO DESCRIPTION",
@@ -132,11 +133,10 @@ _EpicEnemiesEffect = {
     DefaultWeight = 10,
 }
 
----Get the cost of an effect.
+---Returns the base cost of an effect without considering prerequisites.
+---@return number
 function _EpicEnemiesEffect:GetCost()
-    local cost = self.DefaultCost or self.Cost
-
-    return cost
+    return self.DefaultCost or self.Cost
 end
 
 function _EpicEnemiesEffect:GetWeight()
@@ -230,6 +230,17 @@ function EpicEnemies.RegisterEffect(id, effect)
 
     if not effect.DefaultCost then effect.DefaultCost = 10 end
     if not effect.DefaultWeight then effect.DefaultWeight = 10 end
+    if effect.DiscountPrerequisites == nil then effect.DiscountPrerequisites = true end
+
+    -- Ensure prerequisites are registered and have no redundancies
+    for prereqID in pairs(effect.Prerequisites or {}) do
+        local prereqEffect = EpicEnemies.GetEffectData(prereqID)
+        if not prereqEffect then
+            EpicEnemies:__Error("RegisterEffect", "Prerequisite", prereqID, "for", id, "is not registered")
+        elseif next(prereqEffect.Prerequisites or {}) then
+            EpicEnemies:__Error("RegisterEffect", "Nesting prerequisites is not supported; an effect cannot have prerequisite effects that have prerequisites themselves. Effect", id)
+        end
+    end
 
     setmetatable(effect, {__index = _EpicEnemiesEffect})
 

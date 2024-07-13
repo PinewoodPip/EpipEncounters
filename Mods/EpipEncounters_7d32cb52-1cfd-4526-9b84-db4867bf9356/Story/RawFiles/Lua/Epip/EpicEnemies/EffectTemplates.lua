@@ -171,7 +171,6 @@ end)
 EpicEnemies.Hooks.IsEffectApplicable:Subscribe(function (ev)
     if not ev.Applicable then return end -- Do nothing if another listener already filtered this effect out.
 
-    local activeEffects = ev.ActiveEffects
     local effect = ev.Effect ---@cast effect EpicEnemiesExtendedEffect
     if effect.Keyword then
         local excluded = Templates.KEYWORD_ACTIVATOR_REQUIREMENT_EXCLUSIONS[effect.Keyword.Keyword]
@@ -181,7 +180,8 @@ EpicEnemies.Hooks.IsEffectApplicable:Subscribe(function (ev)
             local keywordID = effect.Keyword.Keyword
 
             -- Search for an activator for this keyword
-            for _,appliedEffect in ipairs(activeEffects) do
+            for appliedEffectID in pairs(ev.Request.Effects) do
+                local appliedEffect = EpicEnemies.GetEffectData(appliedEffectID)
                 ---@cast appliedEffect EpicEnemiesExtendedEffect
                 -- Boon type check is technically redundant, as activators must be applied first before any mutators are applied - thus even if we run into a mutator first while iterating, an activator must be present *under normal conditions*.
                 if appliedEffect.Keyword and appliedEffect.Keyword.Keyword == keywordID then
