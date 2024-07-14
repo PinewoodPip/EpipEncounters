@@ -162,19 +162,15 @@ function Client.CopyToClipboard(text)
     Client.UI.MessageBox.CopyToClipboard(text)
 end
 
----Returns whether the client's char is currently playing its turn in a combat. TODO this fails while fear is applied.
----Relies on StatusConsole.
+---Returns whether the client's char is currently playing its turn in a combat.
 ---@return boolean
 function Client.IsActiveCombatant()
-    local sc = Client.UI.StatusConsole
-
-    if sc:Exists() then
-        local root = sc:GetRoot()
-    
-        return root and root.fightButtons_mc.duoBtns_mc.visible
-    else
-        return false
+    local char = Client.GetCharacter()
+    if char and char.InCombat then
+        local combatID = Combat.GetCombatID(char)
+        return Combat.GetActiveCombatant(combatID) == char
     end
+    return false
 end
 
 ---Returns whether the client char is in combat.
