@@ -4,7 +4,7 @@ local Dyes = {
     NETMSG_REMOVE_DYE = "Features.Vanity.Dyes.NetMsg.Remove",
 
     Tab = nil,
-    CustomDyes = {},
+    CustomDyes = {}, ---@type table<string, VanityDye>
     DyeHistory = {}, ---@type VanityDye[]
     lockColorSlider = false,
     colorPasteIndex = nil,
@@ -52,6 +52,9 @@ Epip.RegisterFeature("Vanity_Dyes", Dyes)
 ---@field ID string
 ---@field Name string
 ---@field Dyes VanityDye[]
+
+---@class Features.Vanity.Dyes.SaveData : Features.Vanity.SaveData
+---@field Dyes table<string, VanityDye>
 
 ---------------------------------------------
 -- NET MESSAGES

@@ -1,4 +1,5 @@
 
+local VanityFeature = Epip.GetFeature("Feature_Vanity")
 local Vanity = Client.UI.Vanity
 local Transmog = Epip.GetFeature("Feature_Vanity_Transmog")
 
@@ -37,7 +38,7 @@ Outfits.Hooks.GetOutfitSaveData = Outfits:AddHook("GetOutfitSaveData")
 function Outfits.DeleteOutfit(id)
     Outfits.SavedOutfits[id] = nil
     Vanity.Refresh()
-    Vanity.SaveData()
+    VanityFeature.SaveData()
 end
 
 ---Request an outfit to be applied to a character.
@@ -94,7 +95,7 @@ function Outfits.SaveCurrentOutfit(name, slots)
 
     Outfits.Events.OutfitSaved:Fire(outfit)
     Vanity.Refresh()
-    Vanity.SaveData()
+    VanityFeature.SaveData()
 end
 
 ---------------------------------------------
@@ -125,13 +126,15 @@ Client.UI.MessageBox.RegisterMessageListener("epip_Vanity_Outfit_Save", Client.U
     Outfits.SaveCurrentOutfit(text, slots)
 end)
 
-Vanity.Hooks.GetSaveData:RegisterHook(function (data)
+-- Save outfits.
+VanityFeature.Hooks.GetSaveData:Subscribe(function (ev)
+    local data = ev.SaveData ---@cast data Features.Vanity.Outfits.SaveData
     data.Outfits = Outfits.SavedOutfits
-
-    return data
 end)
 
-Vanity.Events.SaveDataLoaded:RegisterListener(function (data)
+-- Load saved outfits.
+VanityFeature.Events.SaveDataLoaded:Subscribe(function (ev)
+    local data = ev.SaveData ---@cast data Features.Vanity.Outfits.SaveData
     if data.Version >= 2 then
         Outfits.SavedOutfits = data.Outfits or {}
     end

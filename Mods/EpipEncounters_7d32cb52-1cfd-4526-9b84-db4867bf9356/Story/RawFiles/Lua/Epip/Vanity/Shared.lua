@@ -11,6 +11,9 @@ local ARMOR_SLOTS = {
 local Vanity = {
     Name = "Vanity",
 
+    CURRENT_SAVE_VERSION = 4,
+    SAVE_FILENAME = "EPIP_VanityOutfits.json",
+
     ---@type table<string,VanityCategory>
     CATEGORIES = {
         -- Elven = {
@@ -336,7 +339,11 @@ local Vanity = {
 
     Events = {
         ItemAppearanceReset = {}, ---@type Event<Features.Vanity.Events.ItemAppearanceResetted>
-    }
+        SaveDataLoaded = {}, ---@type Event<Features.Vanity.Events.SaveDataLoaded>
+    },
+    Hooks = {
+        GetSaveData = {}, ---@type Hook<Features.Vanity.Hooks.GetSaveData>
+    },
 }
 Epip.RegisterFeature("Vanity", Vanity)
 local TSK = Vanity.TranslatedStrings
@@ -361,6 +368,9 @@ local TSK = Vanity.TranslatedStrings
 ---@field RootName string
 ---@field Visuals GUID[]
 
+---@class Features.Vanity.SaveData
+---@field Version integer
+
 ---------------------------------------------
 -- EVENTS/HOOKS
 ---------------------------------------------
@@ -368,6 +378,12 @@ local TSK = Vanity.TranslatedStrings
 ---@class Features.Vanity.Events.ItemAppearanceResetted
 ---@field Item Item
 ---@field Character Character Character requesting the revert.
+
+---@class Features.Vanity.Events.SaveDataLoaded
+---@field SaveData Features.Vanity.SaveData
+
+---@class Features.Vanity.Hooks.GetSaveData
+---@field SaveData Features.Vanity.SaveData Hookable.
 
 ---------------------------------------------
 -- NET MESSAGES

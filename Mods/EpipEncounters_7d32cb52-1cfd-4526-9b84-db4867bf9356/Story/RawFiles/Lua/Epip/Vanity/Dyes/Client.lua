@@ -100,7 +100,7 @@ function Dyes.SaveCustomDye(id, data)
     Dyes.CustomDyes[id] = data
 
     Vanity.Refresh()
-    Vanity.SaveData()
+    VanityFeature.SaveData()
 end
 
 function Dyes.SetItemColorOverride(item, dye)
@@ -143,7 +143,7 @@ end
 ---@param dyeID string
 function Dyes.DeleteCustomDye(dyeID)
     Dyes.CustomDyes[dyeID] = nil
-    Vanity.SaveData()
+    VanityFeature.SaveData()
     Vanity.Refresh()
 end
 
@@ -376,13 +376,15 @@ Dyes.Events.DyeUsed:Subscribe(function (ev)
     end
 end)
 
-Vanity.Hooks.GetSaveData:RegisterHook(function (data)
+-- Save custom dyes.
+VanityFeature.Hooks.GetSaveData:Subscribe(function (ev)
+    local data = ev.SaveData ---@cast data Features.Vanity.Dyes.SaveData
     data.Dyes = Dyes.CustomDyes
-
-    return data
 end)
 
-Vanity.Events.SaveDataLoaded:RegisterListener(function (data)
+-- Load custom dyes.
+VanityFeature.Events.SaveDataLoaded:Subscribe(function (ev)
+    local data = ev.SaveData ---@cast data Features.Vanity.Dyes.SaveData
     if data.Version >= 4 then
         Dyes.CustomDyes = data.Dyes or {}
 
@@ -395,8 +397,9 @@ Vanity.Events.SaveDataLoaded:RegisterListener(function (data)
         end
 
         -- Initialize Color objects for outfits
+        ---@cast data +Features.Vanity.Outfits.SaveData
         local outfits = data.Outfits ---@type table<string, VanityOutfit>
-        for _,outfit in pairs(outfits) do
+        for _,outfit in pairs(outfits or {}) do
             ---@diagnostic disable undefined-field
             for slot,dye in pairs(outfit.CustomDyes or {}) do
                 outfit.CustomDyes[slot] = {

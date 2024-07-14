@@ -9,6 +9,28 @@ Vanity.Outfits = {}
 -- METHODS
 ---------------------------------------------
 
+---Saves the client's Vanity data and preferences.
+---@param path path? Defaults to `SAVE_FILENAME`.
+function Vanity.SaveData(path)
+    local save = {
+        Version = Vanity.CURRENT_SAVE_VERSION,
+    }
+    path = path or Vanity.SAVE_FILENAME
+
+    save = Vanity.Hooks.GetSaveData:Throw({SaveData = save}).SaveData
+
+    IO.SaveFile(path, save)
+end
+
+---Loads the client's Vanity data and preferences.
+---@see Features.Vanity.Events.SaveDataLoaded
+---@param path path? Defaults to `SAVE_FILENAME`.
+function Vanity.LoadData(path)
+    path = path or Vanity.SAVE_FILENAME
+    local save = IO.LoadFile(path)
+    Vanity.Events.SaveDataLoaded:Throw({SaveData = save})
+end
+
 -- Request to transform an item into a template.
 function Vanity.TransmogItem(item, newTemplate)
     Net.PostToServer("EPIPENCOUNTERS_VanityTransmog", {
@@ -242,4 +264,9 @@ end)
 Net.RegisterListener(Vanity.NETMSG_REVERT_APPEARANCE, function (payload)
     local char, item = payload:GetCharacter(), payload:GetItem()
     Vanity._RevertAppearance(char, item) -- Do not send a message back to the server.
+end)
+
+-- Save data on pause.
+Utilities.Hooks.RegisterListener("GameState", "GamePaused", function()
+    Vanity.SaveData()
 end)

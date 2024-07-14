@@ -12,7 +12,7 @@ local Transmog = {
     TRANSMOGGED_TAG = "PIP_VANITY_TRANSMOG_TEMPLATE_%s",
     TRANSMOGGED_TAG_PATTERN = "^PIP_VANITY_TRANSMOG_TEMPLATE_(.+)$",
 
-    favoritedTemplates = {},
+    favoritedTemplates = {}, ---@type set<GUID.ItemTemplate>
     activeCharacterTemplates = {},
 
     TranslatedStrings = {
@@ -40,6 +40,13 @@ Epip.RegisterFeature("Vanity_Transmog", Transmog)
 ---@field Icon icon
 
 ---@class Features.Vanity.Transmog.NetMsgs.RevertAppearance : NetLib_Message_Character, NetLib_Message_Item
+
+---------------------------------------------
+-- CLASSES
+---------------------------------------------
+
+---@class Features.Vanity.Transmog.SaveData : Features.Vanity.SaveData
+---@field Favorites set<GUID.ItemTemplate>
 
 ---------------------------------------------
 -- METHODS

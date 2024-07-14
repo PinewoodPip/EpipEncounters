@@ -470,13 +470,15 @@ Transmog.Hooks.TemplateBelongsToCategory:Subscribe(function (ev)
     end
 end)
 
-Vanity.Hooks.GetSaveData:RegisterHook(function (data)
+-- Save favorite templates.
+VanityFeature.Hooks.GetSaveData:Subscribe(function (ev)
+    local data = ev.SaveData ---@cast data Features.Vanity.Transmog.SaveData
     data.Favorites = Transmog.favoritedTemplates
-
-    return data
 end)
 
-Vanity.Events.SaveDataLoaded:RegisterListener(function (data)
+-- Load favorite templates.
+VanityFeature.Events.SaveDataLoaded:Subscribe(function (ev)
+    local data = ev.SaveData ---@cast data Features.Vanity.Transmog.SaveData
     if data.Version >= 3 then
         Transmog.favoritedTemplates = data.Favorites or {}
     end

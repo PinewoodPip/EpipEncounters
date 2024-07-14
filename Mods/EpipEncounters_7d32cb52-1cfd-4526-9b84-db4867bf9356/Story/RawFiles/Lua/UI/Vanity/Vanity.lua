@@ -302,16 +302,12 @@ local Vanity = {
     HEADER_ENTRY_WIDTH = 240,
     ID = "PIP_Vanity",
     PATH = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/Vanity.swf",
-    CURRENT_SAVE_VERSION = 4,
-    SAVE_FILENAME = "EPIP_VanityOutfits.json",
 
     Events = {
         ---@type VanityUI_Event_EntryClicked
         EntryClicked = {},
         ---@type VanityUI_Event_EntryRemoved
         EntryRemoved = {},
-        ---@type VanityUI_Event_SaveDataLoaded
-        SaveDataLoaded = {},
         ---@type VanityUI_Event_ButtonPressed
         ButtonPressed = {},
         ---@type VanityUI_Event_EntryFavoriteToggled
@@ -335,8 +331,6 @@ local Vanity = {
         GetEntryLabel = {},
         ---@type VanityUI_Hook_GetLabelColor
         GetLabelColor = {},
-        ---@type VanityUI_Hook_GetSaveData
-        GetSaveData = {},
     },
 }
 Epip.InitializeUI(nil, "Vanity", Vanity)
@@ -369,10 +363,6 @@ VanityFeature.TranslatedStrings.Label_NoItemEquipped = VanityFeature:RegisterTra
 ---@field RegisterListener fun(self, listener:fun(tab:CharacterSheetCustomTab, id:string, value:number))
 ---@field Fire fun(self, tab:CharacterSheetCustomTab, id:string, value:number)
 
----@class VanityUI_Event_SaveDataLoaded : Event
----@field RegisterListener fun(self, listener:fun(data:table))
----@field Fire fun(self, data:table)
-
 ---@class VanityUI_Event_TabButtonPressed : Event
 ---@field RegisterListener fun(self, listener:fun(id:string))
 ---@field Fire fun(self, id:string)
@@ -397,10 +387,6 @@ VanityFeature.TranslatedStrings.Label_NoItemEquipped = VanityFeature:RegisterTra
 ---@field RegisterListener fun(self, listener:fun(tab:CharacterSheetCustomTab, id:string))
 ---@field Fire fun(self, tab:CharacterSheetCustomTab, id:string)
 
----@class VanityUI_Hook_GetSaveData : LegacyHook
----@field RegisterHook fun(self, handler:fun(data:table))
----@field Return fun(self, data:table)
-
 ---@class VanityUI_Hook_GetEntryLabel : LegacyHook
 ---@field RegisterHook fun(self, handler:fun(text:string, tab:CharacterSheetCustomTab, entryID:string))
 ---@field Return fun(self, text:string, tab:CharacterSheetCustomTab, entryID:string)
@@ -421,8 +407,8 @@ end
 ---@field Name string
 ---@field Race Race
 ---@field Gender Gender
----@field Templates table<string,string>
----@field Dyes table<string,string>
+---@field Templates table<ItemSlot, GUID.ItemTemplate>
+---@field Dyes table<string, string> TODO remove?
 
 ---------------------------------------------
 -- METHODS
@@ -501,24 +487,6 @@ end
 ---------------------------------------------
 -- INTERNAL METHODS
 ---------------------------------------------
-
-function Vanity.SaveData(path)
-    local save = {
-        Version = Vanity.CURRENT_SAVE_VERSION,
-    }
-    path = path or Vanity.SAVE_FILENAME
-
-    save = Vanity.Hooks.GetSaveData:Return(save)
-
-    IO.SaveFile(path, save)
-end
-
-function Vanity.LoadData(path)
-    path = path or Vanity.SAVE_FILENAME
-    local save = IO.LoadFile(path)
-
-    Vanity.Events.SaveDataLoaded:Fire(save)
-end
 
 function Vanity.Cleanup()
     local root = Vanity:GetRoot()
@@ -1160,11 +1128,6 @@ GameState.Events.RunningTick:Subscribe(function (_)
     end
 end)
 
--- Save data on pause.
-Utilities.Hooks.RegisterListener("GameState", "GamePaused", function()
-    Vanity.SaveData()
-end)
-
 Vanity:RegisterCallListener("sliderHandleUp", function(_, id, value)
     Vanity.Events.SliderHandleReleased:Fire(Vanity.currentTab, id, value)
 end)
@@ -1366,5 +1329,5 @@ end
 
 function Vanity:__Setup()
     Vanity.Init()
-    Vanity.LoadData()
+    VanityFeature.LoadData()
 end
