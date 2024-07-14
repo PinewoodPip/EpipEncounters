@@ -20,6 +20,9 @@ local Vanity = {
     oldScrollY = 0,
     racialCategories = {},
 
+    ENTRY_LABEL_COLOR = "453b2b",
+    ENTRY_LABEL_GRAY_COLOR = "706262",
+
     ---@type table<string,VanityTemplate>
     TEMPLATES = {},
     CATEGORIES = {
@@ -327,10 +330,8 @@ local Vanity = {
         AppearanceReapplied = {Legacy = false}, ---@type Event<VanityUI_Event_AppearanceRefreshed>
     },
     Hooks = {
-        ---@type VanityUI_Hook_GetEntryLabel
-        GetEntryLabel = {},
-        ---@type VanityUI_Hook_GetLabelColor
-        GetLabelColor = {},
+        GetEntryLabel = {Legacy = false}, ---@type Hook<Features.Vanity.UI.Hooks.GetEntryLabel>
+        GetLabelColor = {Legacy = false}, ---@type Hook<Features.Vanity.UI.Hooks.GetLabelColor>
     },
 }
 Epip.InitializeUI(nil, "Vanity", Vanity)
@@ -387,13 +388,16 @@ VanityFeature.TranslatedStrings.Label_NoItemEquipped = VanityFeature:RegisterTra
 ---@field RegisterListener fun(self, listener:fun(tab:CharacterSheetCustomTab, id:string))
 ---@field Fire fun(self, tab:CharacterSheetCustomTab, id:string)
 
----@class VanityUI_Hook_GetEntryLabel : LegacyHook
----@field RegisterHook fun(self, handler:fun(text:string, tab:CharacterSheetCustomTab, entryID:string))
----@field Return fun(self, text:string, tab:CharacterSheetCustomTab, entryID:string)
+---@class Features.Vanity.UI.Hooks.GetEntryLabel
+---@field Tab CharacterSheetCustomTab
+---@field EntryID string
+---@field Label string Hookable.
 
----@class VanityUI_Hook_GetLabelColor : LegacyHook
----@field RegisterHook fun(self, handler:fun(color:string, label:string, tab:CharacterSheetCustomTab, entryID:string))
----@field Return fun(self, color:string, label:string, tab:CharacterSheetCustomTab, entryID:string)
+---@class Features.Vanity.UI.Hooks.GetLabelColor
+---@field Tab CharacterSheetCustomTab
+---@field EntryID string
+---@field Label string
+---@field Color htmlcolor Hookable.
 
 for id,data in pairs(Vanity.CATEGORIES) do
     data.ID = id
@@ -798,9 +802,18 @@ function Vanity.RenderEntry(id, text, canCollapse, active, canFavorite, favorite
     if canRemove == nil then canRemove = false end
 
     text = Text.Format(text, {
-        Color = Vanity.Hooks.GetLabelColor:Return("453b2b", text, Vanity.currentTab, id),
+        Color = Vanity.Hooks.GetLabelColor:Throw({
+            Tab = Vanity.currentTab,
+            EntryID = id,
+            Label = text,
+            Color = Vanity.ENTRY_LABEL_COLOR,
+        }).Color,
     })
-    text = Vanity.Hooks.GetEntryLabel:Return(text, Vanity.currentTab, id)
+    text = Vanity.Hooks.GetEntryLabel:Throw({
+        Tab = Vanity.currentTab,
+        EntryID = id,
+        Label = text,
+    }).Label
 
     menu.addEntry(id, text, canCollapse, active, canFavorite, favorited)
 

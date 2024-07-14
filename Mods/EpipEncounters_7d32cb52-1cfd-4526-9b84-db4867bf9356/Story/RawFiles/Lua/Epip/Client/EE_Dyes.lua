@@ -187,17 +187,16 @@ VanityDyes.Events.DyeUsed:Subscribe(function (ev)
 end)
 
 -- Grey out text for EE dyes if we don't have them.
-Vanity.Hooks.GetLabelColor:RegisterHook(function (color, _, tab, entryID)
+Vanity.Hooks.GetLabelColor:Subscribe(function (ev)
+    local tab, entryID = ev.Tab, ev.EntryID
     if tab.ID == "PIP_Vanity_Dyes" and Dyes.IsEEDye(entryID) then
         local dye = Dyes.DYE_DATA[entryID]
         local hasDye = Item.GetPartyTemplateCount(dye.Template) > 0
 
         if not hasDye then
-            color = "706262"
+            ev.Color = Vanity.ENTRY_LABEL_GRAY_COLOR
         end
     end
-
-    return color
 end)
 
 ---------------------------------------------
