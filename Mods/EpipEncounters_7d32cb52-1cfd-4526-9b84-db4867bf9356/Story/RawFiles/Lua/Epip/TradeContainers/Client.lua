@@ -78,7 +78,13 @@ Net.RegisterListener(TradeContainers.NETMSG_SEND_TO_CHARACTER_COMPLETED, functio
     local item = payload:GetItem()
     local handle = item.Handle
     Timer.StartTickTimer(2, function (_)
+        local switches = Ext.Utils.GetGlobalSwitches()
+        local splitterSetting = switches.AlwaysShowSplitterInTrade
+        switches.AlwaysShowSplitterInTrade = false -- Temporarily disable the splitter UI so as not to interfere with batch offers. It will still be usable if user holds shift (the default force-split bind).
+
         Trade:ExternalInterfaceCall("itemClick", Trade.GRID_IDS.PLAYER_INVENTORY, Ext.UI.HandleToDouble(handle))
+
+        switches.AlwaysShowSplitterInTrade = splitterSetting
     end)
 end)
 
