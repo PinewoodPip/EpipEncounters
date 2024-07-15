@@ -4,9 +4,7 @@ local Input = {
     ID = "PIP_Input",
     PATH = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/input.swf",
 
-    CAPTURED_EVENTS = {
-
-    },
+    CAPTURED_EVENTS = {}, ---@type table<iggyevent, set<string>> Maps event to set of requests.
     KEY_CODES = {
         [17] = "Ctrl",
         [18] = "Alt",
@@ -60,27 +58,24 @@ Epip.InitializeUI(nil, "Input", Input)
 -- METHODS
 ---------------------------------------------
 
+---Returns whether an input event is being captured by this library.
+---@param event iggyevent Must be prefixed.
+---@return boolean
 function Input.EventIsBeingCaptured(event)
-    local captured = false
     local state = Input.CAPTURED_EVENTS[event]
-
-    if state then
-        for k,b in pairs(state) do
-            if b then
-                captured = true
-                break
-            end
-        end
-    end
-
-    return captured
+    return next(state) == true
 end
 
+---Sets whether mouse wheel input should be consumed by the auxiliary UI.
 ---@param active boolean
 function Input.SetMouseWheelBlocked(active)
     Input:GetRoot().captureMouseWheel(active)
 end
 
+---Requests an input event to be consumed by the auxiliary UI.
+---@param event iggyevent Must be prefixed.
+---@param capture boolean
+---@param requestID string
 function Input.ToggleEventCapture(event, capture, requestID)
     if not requestID then Input:LogError("ToggleEventCapture(): A request ID must be passed.") end
     if not capture then capture = nil end
@@ -94,30 +89,8 @@ function Input.ToggleEventCapture(event, capture, requestID)
         Input:GetRoot().captureEvent(event)
         Input:DebugLog("Capturing event: " .. event)
     end
-    
-    Input.CAPTURED_EVENTS[event][requestID] = capture
-end
 
-function Input.PressedCtrlRecently()
-    return Ext.MonotonicTime() - Input.ctrlTime < Input.SPECIAL_KEY_TIME
-end
-
-function Input.PressedAltRecently()
-    return Ext.MonotonicTime() - Input.altTime < Input.SPECIAL_KEY_TIME
-end
-
----TODO rework
-function Input.IsAltPressed()
-    local pressed = false
-
-    for i,flag in ipairs(Ext.UI.GetByPath("Public/Game/GUI/worldTooltip.swf").Flags) do
-        if flag == "OF_Visible" then
-            pressed = true
-            break
-        end
-    end
-
-    return pressed
+    Input.CAPTURED_EVENTS[event][requestID] = capture or nil
 end
 
 ---------------------------------------------
