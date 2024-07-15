@@ -21,6 +21,18 @@ function Camera.GetPlayerCamera(playerIndex)
     return cameraManager.Controllers[cameraID]
 end
 
+---Returns the camera's current target distance.
+---@return number? -- `nil` if the current camera is not the game one.
+function Camera.GetTargetDistance()
+    local camera = Camera.GetPlayerCamera()
+    local dist = nil
+    if GetExtType(camera) == "ecl::GameCamera" then -- There's dialogue in the game that can occur during cutscenes that use a different camera.
+        ---@cast camera EclGameCamera
+        dist = camera.TargetCameraDistance
+    end
+    return dist
+end
+
 ---@param mode (0|1)? Defaults to `0`.
 ---@return GlobalCameraSwitches
 function Camera.GetGlobalSwitches(mode)

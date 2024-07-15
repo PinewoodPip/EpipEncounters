@@ -9,6 +9,8 @@ local CameraZoom = {
 
     SETTINGS_MODULE_ID = "Feature_CameraZoom",
 
+    EVENTID_TICK_PRESERVE_DIALOGUE_ZOOM = "Features.CameraZoom.PreserveZoomInDialogue",
+
     TranslatedStrings = {
         ["h54d9066eg87bdg439fg92f9g7027970af6ca"] = {
             Text = "Camera",
@@ -89,6 +91,16 @@ local CameraZoom = {
         },
         ["hec25a517g9521g47e3g8f74gfa658861a320"] = {
             Text = "Controls the FOV of the camera. Low/high values may cause issues with dynamic shadows.<br>Default is 45.",
+        },
+        Setting_PreserveZoomInDialogues_Name = {
+            Handle = "h0ea53526g269dg479fgbc83gf068477ed6f6",
+            Text = "Preserve zoom level in dialogues",
+            ContextDescription = [[Setting name]],
+        },
+        Setting_PreserveZoomInDialogues_Description = {
+            Handle = "h8dbeb996g3d15g4ac0ga45fg8118abe7961d",
+            Text = "If enabled, the camera zoom will not change during dialogue.",
+            ContextDescription = [[Setting tooltip for "Preserve zoom level in dialogues"]],
         },
         ["h3c77115cga69dg4c67g880bgd314b8072f7c"] = {
             Text = "Camera Angles",
@@ -371,6 +383,7 @@ SettingsMenu.RegisterTab({
         {Type = "Setting", Module = CameraZoom.SETTINGS_MODULE_ID, ID = "ControllerModeZoomInLimit"},
         {Type = "Setting", Module = CameraZoom.SETTINGS_MODULE_ID, ID = "Camera_TargetModeZoomLimit"},
         {Type = "Setting", Module = CameraZoom.SETTINGS_MODULE_ID, ID = "TargetModeZoomInLimit"},
+        {Type = "Setting", Module = CameraZoom.SETTINGS_MODULE_ID, ID = "PreserveZoomInDialogues"},
         {Type = "Setting", Module = CameraZoom.SETTINGS_MODULE_ID, ID = "Camera_FieldOfView"},
         {Type = "Label", Label = Text.Format(TSK["h3c77115cga69dg4c67g880bgd314b8072f7c"], {Color = "7E72D6", Size = 22})},
         {Type = "Button", Label = TSK["h3ddc3759g3f70g4ac5g9401g76ced6258d7a"], Tooltip = TSK["h24797af2gde0ag48cdgb741gec2049e1c631"], ID = "Feature_CameraZoom_Reset"},
@@ -483,6 +496,13 @@ local cameraSettings = {
         HideNumbers = false,
         DefaultValue = 45,
     },
+    {
+        ID = "PreserveZoomInDialogues",
+        Type = "Boolean",
+        Name = TSKs.Setting_PreserveZoomInDialogues_Name,
+        Description = TSKs.Setting_PreserveZoomInDialogues_Description,
+        DefaultValue = false,
+    },
     -- {
     --     ID = "Camera_MoveSpeed",
     --     Type = "Slider",
@@ -499,3 +519,23 @@ for _,setting in ipairs(cameraSettings) do
     setting.ModTable = CameraZoom.SETTINGS_MODULE_ID
     Settings.RegisterSetting(setting)
 end
+
+-- Set target distance in dialogue to the distance before entering dialogue.
+Client.Events.InDialogueStateChanged:Subscribe(function (ev)
+    if ev.InDialogue then
+        local dist = Camera.GetTargetDistance()
+        GameState.Events.RunningTick:Subscribe(function (_)
+            dist = dist or Camera.GetTargetDistance() -- Refetch distance if we couldn't do it at the start.
+            local camera = Camera.GetPlayerCamera()
+            if GetExtType(camera) == "ecl::GameCamera" then -- There's dialogue in the game that can occur during cutscenes that use a different camera.
+                ---@cast camera EclGameCamera
+                camera.TargetCameraDistance = dist
+            end
+            if not Client.IsInDialogue() then
+                GameState.Events.RunningTick:Unsubscribe(CameraZoom.EVENTID_TICK_PRESERVE_DIALOGUE_ZOOM)
+            end
+        end, {StringID = CameraZoom.EVENTID_TICK_PRESERVE_DIALOGUE_ZOOM})
+    end
+end, {EnabledFunctor = function ()
+    return CameraZoom.GetSetting("PreserveZoomInDialogues") == true and not Ext.Utils.GetGlobalSwitches().GameCameraEnableCloseUpDialog -- Allow close-up dialogue to take priority.
+end})

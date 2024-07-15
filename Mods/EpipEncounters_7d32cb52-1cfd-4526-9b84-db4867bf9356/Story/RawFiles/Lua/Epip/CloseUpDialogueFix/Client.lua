@@ -27,7 +27,6 @@ Client.Events.InDialogueStateChanged:Subscribe(function (ev)
             local camera = Camera.GetPlayerCamera()
             if GetExtType(camera) == "ecl::GameCamera" then -- There's dialogue in the game that can occur during cutscenes that use a different camera.
                 ---@cast camera EclGameCamera
-                -- local target = Entity.GetGameObjectComponent(camera.Targets[1])
                 camera.TargetCameraDistance = CameraFix.CAMERA_DISTANCE
             end
             if not Client.IsInDialogue() then
