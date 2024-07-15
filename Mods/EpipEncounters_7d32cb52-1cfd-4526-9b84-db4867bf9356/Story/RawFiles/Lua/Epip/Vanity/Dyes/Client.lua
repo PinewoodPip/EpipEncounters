@@ -2,6 +2,7 @@
 local VanityFeature = Epip.GetFeature("Feature_Vanity")
 local Vanity = Client.UI.Vanity
 local Transmog = Epip.GetFeature("Feature_Vanity_Transmog")
+local Outfits = Epip.GetFeature("Feature_Vanity_Outfits")
 
 ---@class Feature_Vanity_Dyes
 local Dyes = Epip.GetFeature("Feature_Vanity_Dyes")
@@ -417,34 +418,30 @@ Client.UI.MessageBox.RegisterMessageListener("PIP_Vanity_SaveDye", Client.UI.Mes
     Dyes.SaveCustomDye(input, Dyes.GetSelectedDye())
 end)
 
-Epip.GetFeature("Feature_Vanity_Outfits").Hooks.GetOutfitSaveData:RegisterHook(function(outfit, char)
+-- Save custom dyes to outfits.
+Outfits.Hooks.GetOutfitSaveData:Subscribe(function (ev)
+    local char, outfit = ev.Character, ev.Data ---@cast outfit Features.Vanity.Dyes.Outfit
     outfit.CustomDyes = {}
-
     for _,slot in ipairs(Data.Game.SLOTS_WITH_VISUALS) do
         local item = char:GetItemBySlot(slot)
-
         if item then
             item = Ext.GetItem(item)
-
             local dye = Dyes.GetCurrentCustomDye(item, false)
             outfit.CustomDyes[slot] = dye
         end
     end
-
-    return outfit
 end)
 
-Epip.GetFeature("Feature_Vanity_Outfits").Events.OutfitApplied:RegisterListener(function (outfit, char)
+Outfits.Events.OutfitApplied:RegisterListener(function (outfit, char)
+    ---@cast outfit Features.Vanity.Dyes.Outfit 
     if outfit.CustomDyes then
         for slot,dye in pairs(outfit.CustomDyes) do
             local item = char:GetItemBySlot(slot)
             item = item and Item.Get(item)
-
             if item then
                 Dyes.ApplyCustomDye(dye, item)
             end
         end
-
         Dyes:DebugLog("Applied saved dyes to outfit " .. outfit.Name)
     end
 end)

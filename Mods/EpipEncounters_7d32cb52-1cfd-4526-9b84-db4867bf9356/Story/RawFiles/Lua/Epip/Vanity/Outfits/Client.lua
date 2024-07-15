@@ -14,8 +14,7 @@ Outfits.Events.OutfitSaved = Outfits:AddEvent("OutfitSaved")
 ---@type VanityOutfits_Event_OutfitApplied
 Outfits.Events.OutfitApplied = Outfits:AddEvent("OutfitApplied")
 
----@type VanityOutfits_Hook_GetOutfitSaveData
-Outfits.Hooks.GetOutfitSaveData = Outfits:AddHook("GetOutfitSaveData")
+Outfits.Hooks.GetOutfitSaveData = Outfits:AddSubscribableHook("GetOutfitSaveData") ---@type Hook<Features.Vanity.Outfits.Hooks.GetOutfitSaveData>
 
 ---@class VanityOutfits_Event_OutfitApplied : Event
 ---@field RegisterListener fun(self, listener:fun(outfit:VanityOutfit, char:EclCharacter))
@@ -25,9 +24,9 @@ Outfits.Hooks.GetOutfitSaveData = Outfits:AddHook("GetOutfitSaveData")
 ---@field RegisterListener fun(self, listener:fun(outfit:VanityOutfit))
 ---@field Fire fun(self, outfit:VanityOutfit)
 
----@class VanityOutfits_Hook_GetOutfitSaveData : LegacyHook
----@field RegisterHook fun(self, handler:fun(data:VanityOutfit, char:EclCharacter))
----@field Return fun(self, data:VanityOutfit, char:EclCharacter)
+---@class Features.Vanity.Outfits.Hooks.GetOutfitSaveData
+---@field Character EclCharacter
+---@field Data VanityOutfit Hookable.
 
 ---------------------------------------------
 -- METHODS
@@ -91,7 +90,10 @@ function Outfits.SaveCurrentOutfit(name, slots)
         end
     end
 
-    outfit = Outfits.Hooks.GetOutfitSaveData:Return(outfit, char)
+    outfit = Outfits.Hooks.GetOutfitSaveData:Throw({
+        Character = char,
+        Data = outfit,
+    }).Data
 
     Outfits.Events.OutfitSaved:Fire(outfit)
     Vanity.Refresh()

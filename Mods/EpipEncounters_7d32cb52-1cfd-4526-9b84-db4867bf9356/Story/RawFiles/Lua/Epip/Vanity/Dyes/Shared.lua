@@ -56,6 +56,10 @@ Epip.RegisterFeature("Vanity_Dyes", Dyes)
 ---@class Features.Vanity.Dyes.SaveData : Features.Vanity.SaveData
 ---@field Dyes table<string, VanityDye>
 
+---Mix-in class.
+---@class Features.Vanity.Dyes.Outfit : VanityOutfit
+---@field CustomDyes table<ItemSlot, VanityDye>
+
 ---------------------------------------------
 -- NET MESSAGES
 ---------------------------------------------
