@@ -29,6 +29,46 @@ local CameraZoom = {
         ["h1ec057edg09a1g413dgaefdgaf7942d579ce"] = {
             Text = "Maximum Distance (tactical view)",
         },
+        Setting_MinimumDistance_Name = {
+            Handle = "h626d2da2g381eg4536g9bd0g56dd32edbe3e",
+            Text = "Minimum Distance",
+            ContextDescription = [[Setting name]],
+        },
+        Setting_MinimumDistance_Description = {
+            Handle = "hb0379c8bg24bfg4755ga9b3geb29817de37b",
+            Text = "Controls the minimum distance the camera can zoom in during regular gameplay.<br>Default is 5.5.",
+            ContextDescription = [[Setting tooltip for "Minimum Distance"]],
+        },
+        Setting_ControllerMinimumDistance_Name = {
+            Handle = "h039c29fag6078g4ff6ga239g9fcb8eb798d1",
+            Text = "Minimum Distance (controller mode)",
+            ContextDescription = [[Setting name]],
+        },
+        Setting_ControllerMinimumDistance_Description = {
+            Handle = "he80877b1g380eg4e61g8a4ag66d806352679",
+            Text = "Controls the minimum distance the camera can zoom in while using a controller.<br>Default is 5.5.",
+            ContextDescription = [[Setting tooltip for "Minimum Distance (controller mode)"]],
+        },
+        Setting_OverheadMinimumDistance_Name = {
+            Handle = "h3a28ae91ge8e5g4b54g9542g0d4cd0671198",
+            Text = "Minimum Distance (tactical view)",
+            ContextDescription = [[Setting name]],
+        },
+        Setting_OverheadMinimumDistance_Description = {
+            Handle = "hb5f81ce7g26cfg4e30gb9ddg1ccf51f78fcd",
+            Text = "Controls the minimum distance the camera can zoom in while using the tactical view.<br>Default is 6.",
+            ContextDescription = [[]],
+        },
+        Setting_TargetMinimumDistance_Name = {
+            Handle = "h042628degf10fg4e96ga61cgb1a0965dc7e4",
+            Text = "Minimum Distance (locked-on)",
+            ContextDescription = [[Setting name]],
+        },
+        Setting_TargetMinimumDistance_Description = {
+            Handle = "hd804e90bgd821g475eg845bgd5c3e8363394",
+            Text = "Controls the minimum distance the camera can zoom in while it is tracking an entity.<br>Default is 17.",
+            ContextDescription = [[]],
+        },
         ["h22447dfage02dg4c93gbf2agded54810ce36"] = {
             Text = "Controls the maximum distance the camera can zoom out in tactical view mode.<br>Default is 25.",
         },
@@ -64,6 +104,7 @@ local CameraZoom = {
 }
 Epip.RegisterFeature("CameraZoom", CameraZoom)
 local TSK = CameraZoom.TSK
+local TSKs = CameraZoom.TranslatedStrings
 
 ---------------------------------------------
 -- CLASSES
@@ -173,17 +214,24 @@ end
 function CameraZoom.LoadSettings()
     local switches = Client.Camera.GetGlobalSwitches()
 
+    switches.MinCameraDistance = CameraZoom.GetSetting("NormalModeZoomInLimit")
     switches.MaxCameraDistance = CameraZoom.GetSetting("Camera_NormalModeZoomLimit")
+
     switches.MaxCameraDistanceOverhead = CameraZoom.GetSetting("Camera_OverheadModeZoomLimit")
+    switches.MinCameraDistanceOverhead = CameraZoom.GetSetting("OverheadModeZoomInLimit")
+
     switches.MaxCameraDistanceController = CameraZoom.GetSetting("Camera_ControllerModeZoomLimit")
+    switches.MinCameraDistanceController = CameraZoom.GetSetting("ControllerModeZoomInLimit")
+
     switches.MaxCameraDistanceWithTarget = CameraZoom.GetSetting("Camera_TargetModeZoomLimit")
+    switches.MinCameraDistanceWithTarget = CameraZoom.GetSetting("TargetModeZoomInLimit")
+
     switches.FOV = CameraZoom.GetSetting("Camera_FieldOfView")
     -- switches.MoveSpeed = CameraZoom.GetSetting("Camera_MoveSpeed") -- Does not appear to work from here - overwritten by game upon leaving the menu.
 
     -- Apply position overrides.
     for _,globalSwitchID in ipairs(CameraZoom.POSITIONS_REGISTRATION_ORDER) do
         local position = CameraZoom.GetPosition(globalSwitchID)
-
         local zoomedInPos, zoomedOutPos = position:GetSettings()
         switches[globalSwitchID .. "2"] = zoomedInPos
         switches[globalSwitchID] = zoomedOutPos
@@ -316,9 +364,13 @@ SettingsMenu.RegisterTab({
     Entries = { -- Position settings are dynamically generated and appended.
         {Type = "Label", Label = Text.Format(CameraZoom.TSK["h804e5cefgef0eg4351gb19cge60e92ca4297"], {Color = "7E72D6", Size = 23})},
         {Type = "Setting", Module = CameraZoom.SETTINGS_MODULE_ID, ID = "Camera_NormalModeZoomLimit"},
+        {Type = "Setting", Module = CameraZoom.SETTINGS_MODULE_ID, ID = "NormalModeZoomInLimit"},
         {Type = "Setting", Module = CameraZoom.SETTINGS_MODULE_ID, ID = "Camera_OverheadModeZoomLimit"},
+        {Type = "Setting", Module = CameraZoom.SETTINGS_MODULE_ID, ID = "OverheadModeZoomInLimit"},
         {Type = "Setting", Module = CameraZoom.SETTINGS_MODULE_ID, ID = "Camera_ControllerModeZoomLimit"},
+        {Type = "Setting", Module = CameraZoom.SETTINGS_MODULE_ID, ID = "ControllerModeZoomInLimit"},
         {Type = "Setting", Module = CameraZoom.SETTINGS_MODULE_ID, ID = "Camera_TargetModeZoomLimit"},
+        {Type = "Setting", Module = CameraZoom.SETTINGS_MODULE_ID, ID = "TargetModeZoomInLimit"},
         {Type = "Setting", Module = CameraZoom.SETTINGS_MODULE_ID, ID = "Camera_FieldOfView"},
         {Type = "Label", Label = Text.Format(TSK["h3c77115cga69dg4c67g880bgd314b8072f7c"], {Color = "7E72D6", Size = 22})},
         {Type = "Button", Label = TSK["h3ddc3759g3f70g4ac5g9401g76ced6258d7a"], Tooltip = TSK["h24797af2gde0ag48cdgb741gec2049e1c631"], ID = "Feature_CameraZoom_Reset"},
@@ -342,6 +394,50 @@ local cameraSettings = {
         Step = 0.5,
         HideNumbers = false,
         DefaultValue = 19,
+    },
+    {
+        ID = "NormalModeZoomInLimit",
+        Type = "ClampedNumber",
+        Name = TSKs.Setting_MinimumDistance_Name,
+        Description = TSKs.Setting_MinimumDistance_Description,
+        Min = 1,
+        Max = 5.5,
+        Step = 0.5,
+        HideNumbers = false,
+        DefaultValue = 5.5,
+    },
+    {
+        ID = "ControllerModeZoomInLimit",
+        Type = "ClampedNumber",
+        Name = TSKs.Setting_ControllerMinimumDistance_Name,
+        Description = TSKs.Setting_ControllerMinimumDistance_Description,
+        Min = 1,
+        Max = 5.5,
+        Step = 0.5,
+        HideNumbers = false,
+        DefaultValue = 5.5,
+    },
+    {
+        ID = "OverheadModeZoomInLimit",
+        Type = "ClampedNumber",
+        Name = TSKs.Setting_OverheadMinimumDistance_Name,
+        Description = TSKs.Setting_OverheadMinimumDistance_Description,
+        Min = 1,
+        Max = 6,
+        Step = 0.5,
+        HideNumbers = false,
+        DefaultValue = 6,
+    },
+    {
+        ID = "TargetModeZoomInLimit",
+        Type = "ClampedNumber",
+        Name = TSKs.Setting_TargetMinimumDistance_Name,
+        Description = TSKs.Setting_TargetMinimumDistance_Description,
+        Min = 1,
+        Max = 17,
+        Step = 0.5,
+        HideNumbers = false,
+        DefaultValue = 17,
     },
     {
         ID = "Camera_OverheadModeZoomLimit",
