@@ -8,7 +8,7 @@ local TradeContainers = {
     TranslatedStrings = {
         Tooltip_Hint = {
             Handle = "hd2aaa37dg2eccg4480g90d5gab593d074c2f",
-            Text = "Right-click to open.",
+            Text = "Right-click to open.<br>Ctrl+right-click to offer all items within.",
             ContextDescription = [[Tooltip hint for containers]],
         },
     },

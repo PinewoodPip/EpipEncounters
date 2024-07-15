@@ -17,6 +17,24 @@ function TradeContainers._SetupUIs()
     ContainerInventory:GetUI().Layer = tradeUI.Layer + 1
 end
 
+---Requests an item to be added to the trade offer.
+---@param item EclItem Assumed to be within a container.
+function TradeContainers.RequestItemOffer(item)
+    Net.PostToServer(TradeContainers.NETMSG_SEND_TO_CHARACTER, {
+        CharacterNetID = Trade.GetSelectedCharacter().NetID,
+        ItemNetID = item.NetID,
+    })
+    Trade:PlaySound("UI_Game_PartyFormation_PickUp") -- TODO verify which event is exactly used for the swoosh.
+end
+
+---Requests a container's items to be added to the trade offer.
+---@param container EclItem Must be a container.
+function TradeContainers.RequestContainerOffer(container)
+    for _,itemGUID in ipairs(container:GetInventoryItems()) do
+        TradeContainers.RequestItemOffer(Item.Get(itemGUID))
+    end
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
@@ -24,15 +42,19 @@ end
 -- Request containers to be opened upon right-clicking them.
 Input.Events.KeyPressed:Subscribe(function (ev)
     if ev.InputID == "right2" and Trade:IsVisible() then
+        -- Handle the item operation.
         local slot = Trade.GetSelectedSlot()
         if slot and slot.Item and Item.IsContainer(slot.Item) then
-            Net.PostToServer(TradeContainers.NETMSG_OPEN_CONTAINER, {
-                CharacterNetID = Client.GetCharacter().NetID,
-                ItemNetID = slot.Item.NetID,
-            })
+            if Input.IsCtrlPressed() then -- Offer items within. Ctrl is used as shift is by default bound to "Force-show item stack splitter", which interferes.
+                TradeContainers.RequestContainerOffer(slot.Item)
+            else -- Open the container.
+                Net.PostToServer(TradeContainers.NETMSG_OPEN_CONTAINER, {
+                    CharacterNetID = Client.GetCharacter().NetID,
+                    ItemNetID = slot.Item.NetID,
+                })
+                TradeContainers._SetupUIs() -- Not necessary if using just the "Offer items within" case.
+            end
         end
-
-        TradeContainers._SetupUIs()
     end
 end)
 
