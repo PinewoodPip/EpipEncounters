@@ -16,7 +16,7 @@ end)
 Net.RegisterListener(TradeContainers.NETMSG_SEND_TO_CHARACTER, function (payload)
     local char, item = payload:GetCharacter(), payload:GetItem()
     Osiris.ItemToInventory(item, char, item.Amount, 0, 0)
-    Net.PostToCharacter(char, TradeContainers.NETMSG_SEND_TO_CHARACTER_COMPLETED, {
+    Net.PostToUser(char, TradeContainers.NETMSG_SEND_TO_CHARACTER_COMPLETED, {
         ItemNetID = item.NetID,
     })
 end)
