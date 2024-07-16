@@ -107,6 +107,17 @@ function Inv.IsTabFilterActive(tab)
     return tabMC.isSelected()
 end
 
+---@override
+function Inv:Show()
+    -- With extender's patches to item synching,
+    -- showing the UI during certain load states crashes the game for non-hosts.
+    if not GameState.IsLoading() then
+        Client.UI._BaseUITable.Show(self)
+    else
+        Inv:__LogWarning("Attempted to show PartyInventory during a load state; this could cause crashes for non-hosts.")
+    end
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------

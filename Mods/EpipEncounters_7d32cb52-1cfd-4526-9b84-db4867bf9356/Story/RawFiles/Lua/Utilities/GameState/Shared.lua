@@ -28,6 +28,7 @@ GameState = {
         "UnloadLevel",
         "UnloadModule",
         "Idle",
+        "Sync",
     }),
     MENU_STATES = Set.Create({
         "Unitialized",

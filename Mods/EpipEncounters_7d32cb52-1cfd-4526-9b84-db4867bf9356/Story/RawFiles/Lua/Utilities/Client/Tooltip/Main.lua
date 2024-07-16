@@ -429,7 +429,7 @@ function Tooltip._GetDefaultCustomTooltipUI()
         return Ext.UI.GetByType(Ext.UI.TypeID.containerInventory.Default) or Ext.UI.GetByType(Ext.UI.TypeID.gmInventory)
     else
         local ui = Ext.UI.GetByType(Ext.UI.TypeID.partyInventory)
-        if ui and not Tooltip._PartyInventoryUIInitialized then -- The UI must've been shown at least once in the session for the tooltips to work properly.
+        if ui and not Tooltip._PartyInventoryUIInitialized and (Client.IsHost() or not GameState.IsLoading()) then -- The UI must've been shown at least once in the session for the tooltips to work properly. The PartyInventory UI particularly can crash the game if shown during load due to extender item synch patches; avoid doing so.
             if not ui.OF_Visible then
                 ui:Show()
 
