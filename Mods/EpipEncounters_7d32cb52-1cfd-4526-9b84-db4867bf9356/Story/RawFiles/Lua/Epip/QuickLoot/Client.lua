@@ -264,6 +264,7 @@ QuickLoot.Hooks.IsContainerLootable:Subscribe(function (ev)
     lootable = lootable and Item.IsLegal(item) -- Can't steal with Quick Loot
     lootable = lootable and not Item.IsLocked(item) -- Can't loot locked containers
     lootable = lootable and item.Activated and not item.Invisible -- Can't loot hidden containers
+    ev.Lootable = lootable
 end, {StringID = "DefaultImplementation"})
 
 -- Prevent looting containers out of sight.
