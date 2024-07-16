@@ -16,7 +16,7 @@ local EpipSettings = {
         },
         EpipLanguage_Description = {
             Handle = "h2c6440beg71c6g45c3g8a8bg9f6c64454faf",
-            Text = "Changes Epip's language to display in a language different than the one the game is running in.<br>Use to remedy current issues with running EE mods in languages other than English.",
+            Text = "Determines the language to use for Epip's features. Can be different than the language the game is running in.",
             ContextDescription = "Epip language setting tooltip",
         },
 
@@ -540,7 +540,8 @@ local newSettings = {
             {ID = "French", Name = "French"},
             {ID = "Spanish", Name = "Spanish"},
             {ID = "Polish", Name = "Polish"},
-        }
+        },
+        RequiresReload = true,
     },
     {
         ID = "AutoIdentify",
