@@ -1,6 +1,18 @@
 
 ---@class EntityLib
-Entity = {}
+Entity = {
+    LEVEL_IDS = {
+        ORIGINS = {
+            CHARACTER_CREATION = "SYS_Character_Creation_A",
+            TUTORIAL_SHIP = "TUT_Tutorial_A",
+            FORT_JOY = "FJ_FortJoy_Main",
+            HALL_OF_ECHOES = "LV_HoE_Main", -- Also the act 1 -> 2 transition level.
+            REAPERS_COAST = "RC_Main",
+            NAMELESS_ISLES = "CoS_Main",
+            ARX = "Arx_Main",
+        },
+    },
+}
 
 ---------------------------------------------
 -- CLASSES
@@ -140,7 +152,6 @@ end
 function Entity.GetParameterTagValue(gameObject, pattern)
     for _,tag in ipairs(gameObject:GetTags()) do
         local params = {tag:match(pattern)}
-
         if #params > 0 then
             return table.unpack(params)
         end

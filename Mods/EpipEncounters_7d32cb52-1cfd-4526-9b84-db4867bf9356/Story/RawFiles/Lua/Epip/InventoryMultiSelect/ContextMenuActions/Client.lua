@@ -88,7 +88,10 @@ ContextMenu.RegisterMenuHandler("Features.InventoryMultiSelect", function(_)
         end
     end
 
-    table.insert(entries, {id = "Features.InventoryMultiSelect.SendToHomestead", type = "button", text = MultiSelect.TranslatedStrings.ContextMenu_SendToHomestead:GetString()})
+    -- TODO more robust check; requires ecl::GameControl to be mapped (boolean @ 0x9 bytes)
+    if Entity.GetLevelID() ~= Entity.LEVEL_IDS.ORIGINS.FORT_JOY then
+        table.insert(entries, {id = "Features.InventoryMultiSelect.SendToHomestead", type = "button", text = MultiSelect.TranslatedStrings.ContextMenu_SendToHomestead:GetString()})
+    end
 
     ContextMenu.Setup({
         menu = {
