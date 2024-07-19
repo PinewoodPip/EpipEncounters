@@ -242,6 +242,7 @@ function UI._RenderItems()
         UI._RenderItem(item)
     end
     grid:RepositionElements()
+    UI.ItemsViewport:RepositionElements() -- Necessary to update the scroll area.
 end
 
 ---Renders an item onto the UI.
@@ -309,7 +310,7 @@ function UI._Initialize()
     scrollList:SetMouseWheelEnabled(true)
     scrollList:SetPosition(UI.BACKGROUND_SIZE[1]/2 - UI.GetItemListWidth()/2, 80)
     scrollList:SetScrollbarSpacing(-22)
-    UI.ItemsList = scrollList
+    UI.ItemsViewport = scrollList
 
     local slotGrid = scrollList:AddChild("ItemGrid", "GenericUI_Element_Grid")
     slotGrid:SetRepositionAfterAdding(false)
