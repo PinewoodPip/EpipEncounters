@@ -907,9 +907,14 @@ end
 
 ---Returns the lootable items on char.
 ---@param char Character
+---@return Item[]
 function Character.GetLootableItems(char)
     local canLootEquipment = char.CurrentTemplate.IsEquipmentLootable
     local inventory = Ext.Entity.GetInventory(char.InventoryHandle)
+    if not inventory then -- Observed to have happened on client, but conditions are unknown.
+        Character:__LogWarning("GetLootableItems():", char.DisplayName, "has no inventory?")
+        return {}
+    end
     local equipmentSlots = inventory.EquipmentSlots
     local items = {} ---@type Item[]
     for i,handle in ipairs(inventory.ItemsBySlot) do

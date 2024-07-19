@@ -13,6 +13,8 @@ local Inventory = {
         },
     },
 
+    _CurrentContainerHandle = nil, ---@type ItemHandle?
+
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
 
@@ -112,6 +114,19 @@ function Inventory.GetItemCell(item)
     return itemCell, cellIndex
 end
 
+---Returns whether the container is owned by players; ie. in their inventory.
+---This prevents the take-all button from appearing, but gives the client seemingly greater authority over managing the inventory, and preserves layout (empty slots are kept).
+---@return boolean
+function Inventory.IsPlayerInventory()
+    return Inventory:GetRoot().playerInventory
+end
+
+---Returns the container currently open in the UI.
+---@return EclItem? `nil` if the UI is closed.
+function Inventory.GetContainerItem()
+    return (Inventory._CurrentContainerHandle and Inventory:IsVisible()) and Item.Get(Inventory._CurrentContainerHandle) or nil
+end
+
 ---@override
 ---@return UIObject
 function Inventory:GetUI()
@@ -162,4 +177,14 @@ Inventory:RegisterCallListener("slotOut", function (_)
     Inventory.Events.HoveredItemChanged:Throw({
         Item = nil,
     })
+end)
+
+-- Track the container open in the UI.
+-- We currently have no client-side way of determining this,
+-- other than trying to catch every interaction with an item client-side - unreasonable to implement.
+Item.Events.ItemUsed:Subscribe(function (ev)
+    local char, item = ev.Character, ev.Item
+    if char == Client.GetCharacter() and Item.IsContainer(item) then
+        Inventory._CurrentContainerHandle = item.Handle
+    end
 end)

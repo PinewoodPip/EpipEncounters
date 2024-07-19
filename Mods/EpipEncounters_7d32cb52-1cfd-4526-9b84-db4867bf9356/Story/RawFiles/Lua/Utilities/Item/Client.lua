@@ -26,3 +26,15 @@ function Item.GetPartyTemplateCount(template)
 
     return count
 end
+
+---------------------------------------------
+-- EVENT LISTENERS
+---------------------------------------------
+
+-- Forward item use events.
+Net.RegisterListener(Item.NETMSG_ITEM_USED, function (payload)
+    Item.Events.ItemUsed:Throw({
+        Character = payload:GetCharacter(),
+        Item = payload:GetItem(),
+    })
+end)

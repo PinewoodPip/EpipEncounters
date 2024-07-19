@@ -173,6 +173,15 @@ Item = {
     },
 
     MAX_RUNE_SLOTS = 3,
+
+    USE_LEGACY_EVENTS = false,
+    USE_LEGACY_HOOKS = false,
+
+    NETMSG_ITEM_USED = "ItemLib.NetMsgs.ItemUsed",
+
+    Events = {
+        ItemUsed = {}, ---@type Event<ItemLib.Events.ItemUsed>
+    },
 }
 Epip.InitializeLibrary("Item", Item)
 
@@ -182,6 +191,12 @@ Epip.InitializeLibrary("Item", Item)
 
 ---@alias ItemLib_EquipmentType WeaponType|ArmorType
 ---@alias ItemLib_Rarity "Common"|"Uncommon"|"Rare"|"Epic"|"Legendary"|"Divine"|"Unique"
+
+---@class ItemLib.Events.ItemUsed
+---@field Character Character
+---@field Item Item
+
+---@class ItemLib.NetMsgs.ItemUsed : NetLib_Message_Character, NetLib_Message_Item
 
 ---------------------------------------------
 -- METHODS

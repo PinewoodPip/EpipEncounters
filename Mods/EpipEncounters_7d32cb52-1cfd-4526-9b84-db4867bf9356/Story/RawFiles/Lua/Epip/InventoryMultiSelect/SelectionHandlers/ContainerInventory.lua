@@ -151,29 +151,41 @@ MultiSelect.Events.MultiDragEnded:Subscribe(function (ev)
     else
         local _, selectedSlotIndex = ContainerInventory.GetSelectedCell()
         if selectedSlotIndex then
-            -- Put items into hovered slot and subsequent available ones
-            -- Must be done next tick, or emulating startDragging will throw "Already multi-dragging" error
-            Ext.OnNextTick(function ()
-                local cells = ContainerInventory.GetCells()
-                local nextSlotIndex = selectedSlotIndex
+            if ContainerInventory.IsPlayerInventory() then
+                -- Put items into hovered slot and subsequent available ones
+                -- Must be done next tick, or emulating startDragging will throw "Already multi-dragging" error
+                Ext.OnNextTick(function ()
+                    local cells = ContainerInventory.GetCells()
+                    local nextSlotIndex = selectedSlotIndex
 
-                -- Move each selection to the next available slot starting from hovered one
-                for _,selection in ipairs(ev.OrderedSelections) do
-                    item = Item.Get(selection.ItemHandle)
-                    local slot = cells[nextSlotIndex]
-                    while slot and slot.itemHandle ~= 0 do -- Search next empty slot. Cells that do not exist are surely empty.
-                        nextSlotIndex = nextSlotIndex + 1
-                        slot = cells[nextSlotIndex]
-                        if nextSlotIndex > 999 then -- TODO check whether we've run out of slots
-                            MultiSelect:InternalError("Events.MultiDragEnded", "Could not find slot within reasonable range")
+                    -- Move each selection to the next available slot starting from hovered one
+                    for _,selection in ipairs(ev.OrderedSelections) do
+                        item = Item.Get(selection.ItemHandle)
+                        local slot = cells[nextSlotIndex]
+                        while slot and slot.itemHandle ~= 0 do -- Search next empty slot. Cells that do not exist are surely empty.
+                            nextSlotIndex = nextSlotIndex + 1
+                            slot = cells[nextSlotIndex]
+                            if nextSlotIndex > 999 then -- TODO check whether we've run out of slots
+                                MultiSelect:InternalError("Events.MultiDragEnded", "Could not find slot within reasonable range")
+                            end
                         end
+
+                        ContainerSelections._MoveItemToSlot(item, nextSlotIndex)
+
+                        nextSlotIndex = nextSlotIndex + 1
                     end
-
-                    ContainerSelections._MoveItemToSlot(item, nextSlotIndex)
-
-                    nextSlotIndex = nextSlotIndex + 1
-                end
-            end)
+                end)
+            else
+                -- For containers that are not "owned" by the players, the previous drag-drop approach does not work.
+                -- This is possibly because the client does not have as much authority over the container.
+                -- Additionally, these containers do not save the inventory layout; empty slots will be removed upon re-opening the inventory.
+                -- Thus requesting to send the items instead is a reasonable alternative.
+                local container = ContainerInventory.GetContainerItem()
+                Net.PostToServer(MultiSelect.NETMSG_SEND_TO_CONTAINER, {
+                    ItemNetIDs = MultiSelect._SelectionsToNetIDList(ev.OrderedSelections),
+                    TargetContainerNetID = container.NetID,
+                })
+            end
             ContainerInventory:PlaySound(MultiSelect.SOUND_DRAG_TO_SLOT)
             ev:StopPropagation()
         end
