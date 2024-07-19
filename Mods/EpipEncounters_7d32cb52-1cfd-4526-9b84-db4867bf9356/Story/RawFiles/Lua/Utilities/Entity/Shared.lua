@@ -84,6 +84,13 @@ function Entity.GetEntity(entity)
     return entity.Base.Entity
 end
 
+---Returns the display name of a game object.
+---@param entity Character|Item
+---@return string
+function Entity.GetDisplayName(entity)
+    return Entity.IsCharacter(entity) and Character.GetDisplayName(entity) or Item.GetDisplayName(entity)
+end
+
 ---Returns a list of characters registered on the current level.
 ---@return EclCharacter[]|EsvCharacter[] Read-only.
 function Entity.GetRegisteredCharacters()

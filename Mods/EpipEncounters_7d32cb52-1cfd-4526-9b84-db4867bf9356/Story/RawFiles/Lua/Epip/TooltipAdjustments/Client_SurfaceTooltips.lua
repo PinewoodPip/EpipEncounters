@@ -66,11 +66,11 @@ Net.RegisterListener("EPIPENCOUNTERS_ReturnSurfaceData", function(payload)
         end
 
         if groundOwner then
-            local ownerName = Character.GetDisplayName(groundOwner)
+            local ownerName = Entity.GetDisplayName(groundOwner)
             pendingSurfaceTooltip:InsertElement({Type = "Duration", Label = Text.Format(TSK.SurfaceTooltips_OwnedBy:GetString(), {FormatArgs = {ownerName}})}, 3)
         end
         if cloudOwner then
-            local ownerName = Character.GetDisplayName(cloudOwner)
+            local ownerName = Entity.GetDisplayName(cloudOwner)
             pendingSurfaceTooltip:InsertElement({Type = "Duration", Label = Text.Format(TSK.SurfaceTooltips_OwnedBy:GetString(), {FormatArgs = {ownerName}})}, #pendingSurfaceTooltip.Elements)
         end
 
