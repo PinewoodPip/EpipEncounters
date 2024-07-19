@@ -292,8 +292,9 @@ function Character.GetDisplayName(char)
 
     if Ext.IsClient() then
         ---@cast char EclCharacter
-        -- Custom name override from CharacterSetCustomName().
-        if char.StoryDisplayName and char.StoryDisplayName.Handle.ReferenceString ~= "" then
+        if char.PlayerCustomData then
+            name = char.PlayerCustomData.NameTranslated.Handle.ReferenceString
+        elseif char.StoryDisplayName and char.StoryDisplayName.Handle.ReferenceString ~= "" then -- Custom name override from CharacterSetCustomName().
             name = char.StoryDisplayName.Handle.ReferenceString -- Could also just DisplayName in this case, as it becomes overwritten.
         else
             name = Text.GetTranslatedString(char.CurrentTemplate.DisplayName, name)
