@@ -13,6 +13,9 @@ local CameraControls = {
     REFERENCE_RESOLUTION = 1080, -- Reference vertical resolution (in pixels) for determining the change in pitch per mouse pixel moved.
     MIN_PITCH = 0.1, -- Minimum pitch for when "Limit Pitch" is enabled.
 
+    _CachedLeftRotationKeybinds = nil, ---@type InputLib_InputEventBinding[]?
+    _CachedRightRotationKeybinds = nil, ---@type InputLib_InputEventBinding[]?
+
     TranslatedStrings = {
         Setting_Sensitivity_Name = {
             Handle = "h1563a7b9g0998g4e06g82eag75097d9a7b79",
@@ -43,6 +46,16 @@ local CameraControls = {
             Handle = "h6902de2eg38f8g4893ga0feged6f278f7ffa",
             Text = [[If enabled, the "Adjust Camera Pitch" keybind will not be able to lower the pitch below a certain threshold, reducing the likelihood of the camera clipping through the ground while using it.]],
             ContextDescription = "Setting tooltip",
+        },
+        Setting_KeybindRotationRate_Name = {
+            Handle = "hb0debfabg884fg4dd2gb69cgd0c6aff725ab",
+            Text = "Keybind Rotation Speed",
+            ContextDescription = [[Setting name]],
+        },
+        Setting_KeybindRotationRate_Description = {
+            Handle = "h40f15b62g4243g45abgb642g1ae9df4dc9ff",
+            Text = "Controls the rotation speed of the camera while using the corresponding keybinds.<br>Default is 1.",
+            ContextDescription = [[Tooltip for "Keybind Rotation Rate"]],
         },
         InputAction_AdjustPitch_Name = {
             Handle = "h812ece0eg34adg44eag8c8bg50030a7e66d0",
@@ -93,11 +106,22 @@ CameraControls.Settings.LimitPitch = CameraControls:RegisterSetting("LimitPitch"
     DescriptionHandle = TSK.Setting_LimitPitch_Description,
     DefaultValue = true,
 })
+CameraControls.Settings.KeybindRotationRate = CameraControls:RegisterSetting("KeybindRotationRate", {
+    Type = "ClampedNumber",
+    Name = TSK.Setting_KeybindRotationRate_Name,
+    Description = TSK.Setting_KeybindRotationRate_Description,
+    Min = 1,
+    Max = 5,
+    Step = 0.1,
+    HideNumbers = false,
+    DefaultValue = 1,
+})
 
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
 
+-- Update camera pitch when moving the mouse with the Input Action active.
 Input.Events.MouseMoved:Subscribe(function (ev)
     if Input.GetCurrentAction() == CameraControls.InputActions.AdjustPitch then
         local positionMode = Camera.GetCurrentPositionMode()
@@ -139,6 +163,46 @@ Input.Events.MouseMoved:Subscribe(function (ev)
     end
 end)
 
+-- Modify camera rotation speed when using the vanilla keybinds.
+GameState.Events.RunningTick:Subscribe(function (_)
+    -- Cache keybinds - TODO update these if rebound mid-session
+    if not CameraControls._CachedLeftRotationKeybinds or not CameraControls._CachedRightRotationKeybinds then
+        CameraControls._CachedLeftRotationKeybinds = {
+            Input.GetBinding("CameraRotateLeft", "Key", 1, nil),
+            Input.GetBinding("CameraRotateLeft", "Key", 2, nil)
+        }
+        CameraControls._CachedRightRotationKeybinds = {
+            Input.GetBinding("CameraRotateRight", "Key", 1, nil),
+            Input.GetBinding("CameraRotateRight", "Key", 2, nil)
+        }
+    end
+    -- Determine rotation direction (if the user is currently rotating the camera)
+    local rotationDirection = nil ---@type (1|-1)?
+    for _,binding in ipairs(CameraControls._CachedLeftRotationKeybinds) do
+        if Input.HasInputEventModifiersPressed(binding) and Input.IsKeyPressed(binding.InputID) then
+            rotationDirection = -1
+        end
+    end
+    if not rotationDirection then
+        for _,binding in ipairs(CameraControls._CachedRightRotationKeybinds) do
+            if Input.HasInputEventModifiersPressed(binding) and Input.IsKeyPressed(binding.InputID) then
+                rotationDirection = 1
+            end
+        end
+    end
+    -- Adjust rotation speed
+    if rotationDirection then
+        local camera = Camera.GetPlayerCamera()
+        if camera and GetExtType(camera) == "ecl::GameCamera" then
+            ---@cast camera EclGameCamera
+            camera.InputRotationRate = rotationDirection * CameraControls.Settings.KeybindRotationRate:GetValue()
+        end
+    end
+end, {EnabledFunctor = function ()
+    -- Only run the listener if the rotation rate would be different from the vanilla one.
+    return CameraControls.Settings.KeybindRotationRate:GetValue() ~= 1
+end})
+
 ---------------------------------------------
 -- SETUP
 ---------------------------------------------
@@ -154,3 +218,4 @@ table.insert(tab.Entries, 11, {Type = "Setting", Module = adjustPitchSetting.Mod
 table.insert(tab.Entries, 12, {Type = "Setting", Module = CameraControls:GetNamespace(), ID = CameraControls.Settings.Sensitivity:GetID()})
 table.insert(tab.Entries, 13, {Type = "Setting", Module = CameraControls:GetNamespace(), ID = CameraControls.Settings.InvertControls:GetID()})
 table.insert(tab.Entries, 14, {Type = "Setting", Module = CameraControls:GetNamespace(), ID = CameraControls.Settings.LimitPitch:GetID()})
+table.insert(tab.Entries, 15, {Type = "Setting", Module = CameraControls:GetNamespace(), ID = CameraControls.Settings.KeybindRotationRate:GetID()})
