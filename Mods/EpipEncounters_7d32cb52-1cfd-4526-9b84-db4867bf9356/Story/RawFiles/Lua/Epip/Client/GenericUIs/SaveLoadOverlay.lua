@@ -45,8 +45,8 @@ function Overlay.SetSortingMode(mode)
     Settings.SetValue("Epip_SaveLoad", "SaveLoad_Sorting", index)
 end
 
----@param entries SaveLoadUI_Entry[]
----@return SaveLoadUI_Entry[] --By reference (table passed by parameter is mutated).
+---@param entries UI.SaveLoad.Entries.Save[]
+---@return UI.SaveLoad.Entries.Save[] --By reference (table passed by parameter is mutated).
 function Overlay.SortContent(entries)
     local mode = Overlay.GetSortingMode()
 
@@ -57,10 +57,10 @@ function Overlay.SortContent(entries)
     return entries
 end
 
----@param entries SaveLoadUI_Entry[]
+---@param entries UI.SaveLoad.Entries.Save[]
 ---@param fieldName string
 ---@param text string
----@return SaveLoadUI_Entry[] By reference (table passed by parameter is mutated).
+---@return UI.SaveLoad.Entries.Save[] By reference (table passed by parameter is mutated).
 function Overlay.FilterContent(entries, fieldName, text)
     if text ~= nil and text ~= "" then
         text = text:lower() -- Searching is case-insensitive - this does technically break using patterns, but oh well.
@@ -105,7 +105,7 @@ Client.UI.GameMenu.Events.ButtonPressed:Subscribe(function (ev)
 end)
 
 -- Sort content and show overlay.
-SaveLoad.Events.GetContent:Subscribe(function (e)
+SaveLoad.Hooks.GetContent:Subscribe(function (e)
     if Overlay:IsEnabled() and Overlay._nextAccessIsFromGameMenu then
         local ui = Overlay.UI
 
@@ -122,8 +122,8 @@ SaveLoad.Events.GetContent:Subscribe(function (e)
         end
 
         -- Sort and filter content
-        Overlay.FilterContent(e.Entries, "Name", Overlay.searchTerm)
-        Overlay.SortContent(e.Entries)
+        Overlay.FilterContent(e.Saves, "Name", Overlay.searchTerm)
+        Overlay.SortContent(e.Saves)
         Overlay.Position()
     end
 end)
