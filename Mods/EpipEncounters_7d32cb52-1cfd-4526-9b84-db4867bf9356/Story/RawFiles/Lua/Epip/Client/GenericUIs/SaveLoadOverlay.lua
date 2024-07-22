@@ -2,6 +2,7 @@
 local Generic = Client.UI.Generic
 local SearchBarPrefab = Generic.GetPrefab("GenericUI_Prefab_SearchBar")
 local SaveLoad = Client.UI.SaveLoad
+local GameMenu = Client.UI.GameMenu
 local V = Vector.Create
 
 ---@type Feature|table
@@ -98,8 +99,8 @@ end
 -- The feature currently does not work when it is opened from the
 -- game over state due to issues with the modal flag and
 -- msgBox UI.
-Client.UI.GameMenu.Events.ButtonPressed:Subscribe(function (ev)
-    if ev.NumID == Client.UI.GameMenu.BUTTON_IDS.LOAD then
+GameMenu.Events.ButtonPressed:Subscribe(function (ev)
+    if ev.NumID == GameMenu.BUTTON_IDS.SAVE or ev.NumID == GameMenu.BUTTON_IDS.LOAD then
         Overlay._nextAccessIsFromGameMenu = true
     end
 end)
