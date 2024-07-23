@@ -81,14 +81,16 @@ Settings.Events.SettingValueChanged:Subscribe(function (ev)
 
         Utilities.Log("AutoIdentify", "Toggled autoidentify to state " .. AutoIdentify.state)
 
-        -- Auto-identify all items in the party inventory when the feature is enabled.
+        -- Auto-identify all items in the party inventory when the feature is enabled mid-session.
         if AutoIdentify:IsEnabled() then
             local host = Character.Get(Osi.CharacterGetHostCharacter())
-            local items = Item.GetItemsInPartyInventory(host, function (item)
-                return item.Stats and not Item.IsIdentified(item)
-            end, true)
-            for _,item in ipairs(items) do
-                AutoIdentify.ProcessItem(item)
+            if host then
+                local items = Item.GetItemsInPartyInventory(host, function (item)
+                    return item.Stats and not Item.IsIdentified(item)
+                end, true)
+                for _,item in ipairs(items) do
+                    AutoIdentify.ProcessItem(item)
+                end
             end
         end
     end
