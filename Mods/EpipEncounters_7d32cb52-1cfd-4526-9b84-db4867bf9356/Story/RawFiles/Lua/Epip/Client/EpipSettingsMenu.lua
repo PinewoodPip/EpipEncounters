@@ -6,6 +6,7 @@ local TooltipAdjustments = Epip.GetFeature("Feature_TooltipAdjustments")
 local AnimationCancelling = Epip.GetFeature("Feature_AnimationCancelling")
 local StatusesDisplay = Epip.GetFeature("Feature_StatusesDisplay")
 local CraftingFixes = Epip.GetFeature("Features.CraftingFixes")
+local SkillbookIconsFix = Epip.GetFeature("Features.SkillbookIconsFix")
 local InventoryMultiSelect = Epip.GetFeature("Features.InventoryMultiSelect")
 local DiscordRichPresence = Epip.GetFeature("Features.DiscordRichPresence")
 local ContainerInventoryTweaks = Epip.GetFeature("Features.ContainerInventoryTweaks")
@@ -271,6 +272,9 @@ local tabs = {
             CreateHeader(CommonStrings.Chat),
             {Module = "Epip_Chat", ID = "Chat_MessageSound"},
             {Module = "Epip_Chat", ID = "Chat_ExitAfterSendingMessage"},
+
+            CreateHeader(CommonStrings.Skills),
+            CreateSettingEntry(SkillbookIconsFix.Settings.Enabled),
 
             CreateHeader(TSK.Section_SaveLoadUI),
             {Module = "Epip_SaveLoad", ID = "SaveLoad_Overlay"},
