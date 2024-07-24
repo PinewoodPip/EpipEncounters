@@ -102,6 +102,10 @@ local styles = {
         HighlightedTexture = ButtonTextures.ARROWS.DOWN_GREEN.HIGHLIGHTED,
         PressedTexture = ButtonTextures.ARROWS.DOWN_GREEN.PRESSED,
     },
+    ScrollBarHorizontal = CreateStyle(ButtonTextures.SCROLL_BARS.HORIZONTAL),
+    ScrollLeft = CreateStyle(ButtonTextures.SCROLL.LEFT),
+    ScrollRight = CreateStyle(ButtonTextures.SCROLL.RIGHT),
+    RoundWhiteDot = CreateStyle(ButtonTextures.ROUND.WHITE_DOT),
     SquareUp = {
         IdleTexture = ButtonTextures.ARROWS.SQUARE.UP.IDLE,
         HighlightedTexture = ButtonTextures.ARROWS.SQUARE.UP.HIGHLIGHTED,
@@ -260,6 +264,11 @@ local styles = {
         HighlightedTexture = ButtonTextures.CLOSE.BACKGROUNDLESS.HIGHLIGHTED,
         PressedTexture = ButtonTextures.CLOSE.BACKGROUNDLESS.PRESSED,
     },
+    CloseBackgroundlessShaded = {
+        IdleTexture = ButtonTextures.CLOSE.BACKGROUNDLESS.SHADED.IDLE,
+        HighlightedTexture = ButtonTextures.CLOSE.BACKGROUNDLESS.SHADED.HIGHLIGHTED,
+        PressedTexture = ButtonTextures.CLOSE.BACKGROUNDLESS.SHADED.PRESSED,
+    },
     CloseDOS1Square = {
         IdleTexture = ButtonTextures.CLOSE.DOS1_SQUARE.IDLE,
         HighlightedTexture = ButtonTextures.CLOSE.DOS1_SQUARE.HIGHLIGHTED,
@@ -373,6 +382,7 @@ local styles = {
         HighlightedTexture = ButtonTextures.RED.SMALL.HIGHLIGHTED,
         PressedTexture = ButtonTextures.RED.SMALL.PRESSED,
     },
+    RedTinySquare = CreateStyle(ButtonTextures.RED.TINY_SQUARE),
     RedDOS1 = {
         IdleTexture = ButtonTextures.RED.DOS1.IDLE,
         HighlightedTexture = ButtonTextures.RED.DOS1.HIGHLIGHTED,
@@ -450,6 +460,7 @@ local styles = {
         IdleOverlay = StateButtonTextures.CHECKBOXES.SIMPLE.CHECKMARK,
         HighlightedOverlay = StateButtonTextures.CHECKBOXES.SIMPLE.CHECKMARK_HIGHLIGHTED,
     },
+    SmallDiamond_Inactive = CreateStyle(StateButtonTextures.SMALL_DIAMOND),
     RoundCheckbox_Inactive = {
         IdleTexture = StateButtonTextures.CHECKBOXES.ROUND.BACKGROUND,
     },

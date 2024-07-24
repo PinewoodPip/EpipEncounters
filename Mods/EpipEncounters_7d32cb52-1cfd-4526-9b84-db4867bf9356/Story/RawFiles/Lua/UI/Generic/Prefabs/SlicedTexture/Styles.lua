@@ -4,6 +4,24 @@ local Generic = Client.UI.Generic
 
 local SlicedTexture = Generic.GetPrefab("GenericUI.Prefabs.SlicedTexture")
 
+---Creates a 9-sliced texture style.
+---@param tbl table Must have all 9 textures named in uppercase with underscore separator.
+---@return GenericUI.Prefabs.SlicedTexture.Style
+local function Create9SlicedStyle(tbl)
+    return {
+        Type = "9-Sliced",
+        Bottom = tbl.BOTTOM,
+        BottomLeft = tbl.BOTTOM_LEFT,
+        BottomRight = tbl.BOTTOM_RIGHT,
+        TopLeft = tbl.TOP_LEFT,
+        Top = tbl.TOP,
+        TopRight = tbl.TOP_RIGHT,
+        Left = tbl.LEFT,
+        Center = tbl.CENTER,
+        Right = tbl.RIGHT,
+    }
+end
+
 ---@type table<string, GenericUI.Prefabs.SlicedTexture.Style>
 local styles = {
     AztecSquiggles = {
@@ -24,6 +42,7 @@ local styles = {
         Center = T.CONTEXT_MENU.CENTER,
         Bottom = T.CONTEXT_MENU.BOTTOM,
     },
+    ControllerContextMenu = Create9SlicedStyle(T.CONTROLLER_CONTEXT_MENU),
     SimpleTooltip = {
         Type = "9-Sliced",
         Bottom = T.SIMPLE_TOOLTIP.BOTTOM,
