@@ -84,13 +84,13 @@ function _NavigationComponent.Create(prefabInstance)
     })
     instance:AddAction({
         ID = "SlideLeft",
-        Name = TSK.Label_PreviousItem,
+        Name = TSK.Label_SlideLeft,
         Inputs = {["UILeft"] = true},
         IsConsumableFunctor = instance._IsSlideActionConsumable,
     })
     instance:AddAction({
         ID = "SlideRight",
-        Name = TSK.Label_NextItem,
+        Name = TSK.Label_SlideRight,
         Inputs = {["UIRight"] = true},
         IsConsumableFunctor = instance._IsSlideActionConsumable,
     })
