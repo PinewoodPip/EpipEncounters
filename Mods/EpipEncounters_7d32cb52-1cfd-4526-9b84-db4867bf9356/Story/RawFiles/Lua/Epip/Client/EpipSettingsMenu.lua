@@ -154,8 +154,8 @@ end
 local tabs = {
     ["EpipEncounters"] = {
         ID = "EpipEncounters",
-        ButtonLabel = "General",
-        HeaderLabel = "Epip Encounters",
+        ButtonLabel = CommonStrings.General:GetString(),
+        HeaderLabel = CommonStrings.Epip:GetString(),
         Entries = {
             {Type = "Label", Label = Text.Format(TSK.Subtitle:GetString(), {
                 Size = 23,
