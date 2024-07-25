@@ -5,6 +5,7 @@
 ---------------------------------------------
 
 local PlayerInfo = Client.UI.PlayerInfo
+local WorldTooltip = Client.UI.WorldTooltip
 
 ---@class Feature_StatusesDisplay : Feature
 local StatusesDisplay = {
@@ -265,6 +266,15 @@ function StatusesDisplay.Destroy(ui)
     ui:Destroy()
 end
 
+---Returns whether filters should be applied,
+---based on whether the user is using the keybinds to toggle them
+---(shift on KBM, world tooltips toggle on controller).
+---@return boolean
+function StatusesDisplay._ShouldUseFilters()
+    local isController = Client.IsUsingController()
+    return not Client.Input.IsShiftPressed() and (not isController or not WorldTooltip:IsVisible())
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
@@ -302,8 +312,8 @@ end)
 StatusesDisplay.Hooks.IsStatusFiltered:Subscribe(function (ev)
     local id = ev.Status.StatusId
 
-    -- Filter out statuses based on user settings, except while shift is being held
-    if StatusesDisplay.IsStatusFilteredBySetting(ev.Status) and not Client.Input.IsShiftPressed() then
+    -- Filter out statuses based on user settings, except while shift is being held or world tooltips are shown on controller (as an equivalent keybind).
+    if StatusesDisplay._ShouldUseFilters() and StatusesDisplay.IsStatusFilteredBySetting(ev.Status) then
         ev.Filtered = true
     elseif EpicEncounters.IsEnabled() then
         if table.reverseLookup(EpicEncounters.SourceInfusion.SOURCE_GENERATION_DISPLAY_STATUSES, id) and StatusesDisplay:GetSettingValue(StatusesDisplay.Settings.ShowSourceGeneration) == false then -- Filter Source Generation statuses
