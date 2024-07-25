@@ -693,6 +693,7 @@ LOAD_ORDER = {
             "Epip/QuickInventory/Client_Settings.lua",
 
             "Epip/QuickInventory/UI.lua",
+            "Epip/QuickInventory/UI_Navigation.lua",
 
             "Epip/QuickInventory/Filters/Equipment.lua",
             "Epip/QuickInventory/Filters/Consumables.lua",

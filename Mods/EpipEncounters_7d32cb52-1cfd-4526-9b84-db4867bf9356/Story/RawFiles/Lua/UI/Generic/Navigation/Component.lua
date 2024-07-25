@@ -121,7 +121,7 @@ function Component:AddAction(action)
     end
 end
 
----Returns the actions for an input event.
+---Returns the action for an input event.
 ---@param inputEvent InputLib_InputEventStringID
 ---@return GenericUI.Navigation.Component.Action?
 function Component:GetInputEventAction(inputEvent)

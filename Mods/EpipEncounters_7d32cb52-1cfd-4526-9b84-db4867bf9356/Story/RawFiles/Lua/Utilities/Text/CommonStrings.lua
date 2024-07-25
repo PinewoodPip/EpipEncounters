@@ -646,6 +646,10 @@ Text.CommonStrings.ItemSlot = Text.RegisterTranslatedString({
    Handle = "h543a5832g1c08g4c3eg9e21g9ee1414c9941",
    Text = "Item Slot",
 })
+Text.CommonStrings.Items = Text.RegisterTranslatedString({
+    Handle = "he903ca90ga133g427dgaec0g67aa6bba06fc",
+    Text = "Items",
+})
 Text.CommonStrings.WeaponType = Text.RegisterTranslatedString({
    Handle = "h53ac110bgde75g4517ga5a6gdb5daf3abc88",
    Text = "Weapon Type",
