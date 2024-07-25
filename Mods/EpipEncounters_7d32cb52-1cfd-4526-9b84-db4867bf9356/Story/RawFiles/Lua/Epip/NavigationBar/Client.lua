@@ -85,6 +85,8 @@ local Navbar = {
         PLAYSTATION = "PLAYSTATION",
     },
 
+    _UsedBindings = nil, ---@type set<InputRawType>
+
     TranslatedStrings = {
         Setting_EnabledForKeyboard_Name = {
             Handle = "hf2b30b24ge1a7g432cgb1b4g72820964705a",
@@ -202,6 +204,7 @@ function Navbar.UpdateActions(ui)
     local actions = ui.___NavigationController:GetCurrentActions()
 
     if Navbar._ActionListsAreDifferent(actions, UI._PreviousActions) then
+        UI._UsedBindings = {}
         list:Clear()
 
         for _,action in ipairs(actions) do
@@ -232,6 +235,7 @@ function UI._RenderAction(action)
 
     for inputEvent in pairs(action.Inputs) do
         local binding = Input.GetBinding(inputEvent, Client.IsUsingController() and "C" or "Key")
+        if not binding or UI._UsedBindings[binding.InputID] then goto continue end -- Avoid showing bindings that are in use by an earlier, higher-priority action.
         local texture = binding and Navbar._GetIconForBinding(binding) or nil
         if texture then
             local icon = list:AddChild(id .. "_Icon", "GenericUI_Element_Texture")
@@ -246,6 +250,8 @@ function UI._RenderAction(action)
             label:FitSize()
             label:SetCenterInLists(true)
         end
+        UI._UsedBindings[binding.InputID] = true
+        ::continue::
     end
 
     -- Label for the action's name
