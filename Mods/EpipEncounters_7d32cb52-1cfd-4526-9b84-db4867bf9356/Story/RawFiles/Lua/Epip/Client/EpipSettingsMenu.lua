@@ -268,6 +268,7 @@ local tabs = {
             CreateHeader(TSK.Section_Navigation),
             CreateSettingEntry(Navbar.Settings.EnabledForKeyboard),
             CreateSettingEntry(Navbar.Settings.EnabledForController),
+            CreateSettingEntry(Navbar.Settings.GlyphStyle),
 
             CreateHeader(CommonStrings.Chat),
             {Module = "Epip_Chat", ID = "Chat_MessageSound"},

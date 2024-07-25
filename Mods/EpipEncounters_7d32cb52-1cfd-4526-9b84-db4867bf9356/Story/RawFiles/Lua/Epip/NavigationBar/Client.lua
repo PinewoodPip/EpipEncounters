@@ -2,45 +2,89 @@
 local Generic = Client.UI.Generic
 local SlicedTexture = Generic.GetPrefab("GenericUI.Prefabs.SlicedTexture")
 local Textures = Epip.GetFeature("Feature_GenericUITextures").TEXTURES
-local ControllerTextures = Textures.INPUT.CONTROLLER.XBOX -- TODO support PS ones as well
+local XboxControllerTextures = Textures.INPUT.CONTROLLER.XBOX
+local PlaystationControllerTextures = Textures.INPUT.CONTROLLER.PLAYSTATION
 local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 local Input = Client.Input
 local V = Vector.Create
 
 ---@class Features.NavigationBar : Feature
 local Navbar = {
-    ---@type table<InputRawType, TextureLib_Texture>
     INPUTEVENT_TO_TEXTURE = {
-        ["start"] = ControllerTextures.START,
-        ["guide"] = ControllerTextures.SELECT,
+        ---@type table<InputRawType, TextureLib_Texture>
+        XBOX = {
+            ["start"] = XboxControllerTextures.START,
+            ["guide"] = XboxControllerTextures.SELECT,
 
-        ["controller_a"] = ControllerTextures.A_BUTTON,
-        ["controller_b"] = ControllerTextures.B_BUTTON,
-        ["controller_x"] = ControllerTextures.X_BUTTON,
-        ["controller_y"] = ControllerTextures.Y_BUTTON,
+            ["controller_a"] = XboxControllerTextures.A_BUTTON,
+            ["controller_b"] = XboxControllerTextures.B_BUTTON,
+            ["controller_x"] = XboxControllerTextures.X_BUTTON,
+            ["controller_y"] = XboxControllerTextures.Y_BUTTON,
 
-        ["leftshoulder"] = ControllerTextures.LEFT_BUTTON,
-        ["rightshoulder"] = ControllerTextures.RIGHT_BUTTON,
-        ["lefttrigger"] = ControllerTextures.LEFT_TRIGGER,
-        ["righttrigger"] = ControllerTextures.RIGHT_TRIGGER,
+            ["leftshoulder"] = XboxControllerTextures.LEFT_BUTTON,
+            ["rightshoulder"] = XboxControllerTextures.RIGHT_BUTTON,
+            ["lefttrigger"] = XboxControllerTextures.LEFT_TRIGGER,
+            ["righttrigger"] = XboxControllerTextures.RIGHT_TRIGGER,
 
-        ["leftstick"] = ControllerTextures.LEFT_STICK.PRESS,
-        ["leftstick_xneg"] = ControllerTextures.LEFT_STICK.LEFT,
-        ["leftstick_ypos"] = ControllerTextures.LEFT_STICK.UP,
-        ["leftstick_xpos"] = ControllerTextures.LEFT_STICK.RIGHT,
-        ["leftstick_yneg"] = ControllerTextures.LEFT_STICK.DOWN,
+            ["leftstick"] = XboxControllerTextures.LEFT_STICK.PRESS,
+            ["leftstick_xneg"] = XboxControllerTextures.LEFT_STICK.LEFT,
+            ["leftstick_ypos"] = XboxControllerTextures.LEFT_STICK.UP,
+            ["leftstick_xpos"] = XboxControllerTextures.LEFT_STICK.RIGHT,
+            ["leftstick_yneg"] = XboxControllerTextures.LEFT_STICK.DOWN,
 
-        ["rightstick"] = ControllerTextures.RIGHT_STICK.PRESS,
-        ["rightstick_xneg"] = ControllerTextures.RIGHT_STICK.LEFT,
-        ["rightstick_ypos"] = ControllerTextures.RIGHT_STICK.UP,
-        ["rightstick_xpos"] = ControllerTextures.RIGHT_STICK.RIGHT,
-        ["rightstick_yneg"] = ControllerTextures.RIGHT_STICK.DOWN,
+            ["rightstick"] = XboxControllerTextures.RIGHT_STICK.PRESS,
+            ["rightstick_xneg"] = XboxControllerTextures.RIGHT_STICK.LEFT,
+            ["rightstick_ypos"] = XboxControllerTextures.RIGHT_STICK.UP,
+            ["rightstick_xpos"] = XboxControllerTextures.RIGHT_STICK.RIGHT,
+            ["rightstick_yneg"] = XboxControllerTextures.RIGHT_STICK.DOWN,
 
-        ["dpad_up"] = ControllerTextures.DPAD.LEFT,
-        ["dpad_down"] = ControllerTextures.DPAD.UP,
-        ["dpad_left"] = ControllerTextures.DPAD.RIGHT,
-        ["dpad_right"] = ControllerTextures.DPAD.DOWN,
+            ["dpad_up"] = XboxControllerTextures.DPAD.LEFT,
+            ["dpad_down"] = XboxControllerTextures.DPAD.UP,
+            ["dpad_left"] = XboxControllerTextures.DPAD.RIGHT,
+            ["dpad_right"] = XboxControllerTextures.DPAD.DOWN,
+        },
+        ---@type table<InputRawType, TextureLib_Texture>
+        PLAYSTATION = {
+            ["start"] = PlaystationControllerTextures.START,
+            ["guide"] = PlaystationControllerTextures.SELECT,
+
+            ["controller_a"] = PlaystationControllerTextures.A_BUTTON,
+            ["controller_b"] = PlaystationControllerTextures.B_BUTTON,
+            ["controller_x"] = PlaystationControllerTextures.X_BUTTON,
+            ["controller_y"] = PlaystationControllerTextures.Y_BUTTON,
+
+            ["leftshoulder"] = PlaystationControllerTextures.LEFT_BUTTON,
+            ["rightshoulder"] = PlaystationControllerTextures.RIGHT_BUTTON,
+            ["lefttrigger"] = PlaystationControllerTextures.LEFT_TRIGGER,
+            ["righttrigger"] = PlaystationControllerTextures.RIGHT_TRIGGER,
+
+            ["leftstick"] = PlaystationControllerTextures.LEFT_STICK.PRESS,
+            ["leftstick_xneg"] = PlaystationControllerTextures.LEFT_STICK.LEFT,
+            ["leftstick_ypos"] = PlaystationControllerTextures.LEFT_STICK.UP,
+            ["leftstick_xpos"] = PlaystationControllerTextures.LEFT_STICK.RIGHT,
+            ["leftstick_yneg"] = PlaystationControllerTextures.LEFT_STICK.DOWN,
+
+            ["rightstick"] = PlaystationControllerTextures.RIGHT_STICK.PRESS,
+            ["rightstick_xneg"] = PlaystationControllerTextures.RIGHT_STICK.LEFT,
+            ["rightstick_ypos"] = PlaystationControllerTextures.RIGHT_STICK.UP,
+            ["rightstick_xpos"] = PlaystationControllerTextures.RIGHT_STICK.RIGHT,
+            ["rightstick_yneg"] = PlaystationControllerTextures.RIGHT_STICK.DOWN,
+
+            ["dpad_up"] = PlaystationControllerTextures.DPAD.LEFT,
+            ["dpad_down"] = PlaystationControllerTextures.DPAD.UP,
+            ["dpad_left"] = PlaystationControllerTextures.DPAD.RIGHT,
+            ["dpad_right"] = PlaystationControllerTextures.DPAD.DOWN,
+        },
+        ---@type table<InputRawType, TextureLib_Texture>
+        FALLBACK = {},
     },
+
+    -- These should be kept in-sync with keys within INPUTEVENT_TO_TEXTURE.
+    _SETTING_GLYPHSTYLE_CHOICES = {
+        XBOX = "XBOX",
+        PLAYSTATION = "PLAYSTATION",
+    },
+
     TranslatedStrings = {
         Setting_EnabledForKeyboard_Name = {
             Handle = "hf2b30b24ge1a7g432cgb1b4g72820964705a",
@@ -61,6 +105,16 @@ local Navbar = {
             Handle = "hdfd37c7dg00c0g4077gbe73gd2a79a31d654",
             Text = "If enabled, Epip UIs that support controller navigation will show a bar with the UI's controls when playing with a controller.<br><br>Toggling this setting requires affected UIs to be closed and reopened for it to take effect.",
             ContextDescription = [[Setting tooltip for "Show controller Navigation Bar]],
+        },
+        Setting_GlyphStyle_Name = {
+            Handle = "h2e3a6261g5eceg4785ga00dgedb0fd8284b7",
+            Text = "Controller Icons Style",
+            ContextDescription = [[Setting name]],
+        },
+        Setting_GlyphStyle_Description = {
+            Handle = "h3cc0c39cgc634g4afcg8398g3507057fbe69",
+            Text = "Determines which controller icons to show on the Navigation Bar.",
+            ContextDescription = [[Setting tooltip for "Controller Icons Style"]],
         },
     },
     Settings = {},
@@ -93,6 +147,17 @@ Navbar.Settings.EnabledForController = Navbar:RegisterSetting("EnabledForControl
     Name = TSK.Setting_EnabledForController_Name,
     Description = TSK.Setting_EnabledForController_Description,
     DefaultValue = true,
+})
+Navbar.Settings.GlyphStyle = Navbar:RegisterSetting("GlyphStyle", {
+    Type = "Choice",
+    Name = TSK.Setting_GlyphStyle_Name,
+    Description = TSK.Setting_GlyphStyle_Description,
+    DefaultValue = Navbar._SETTING_GLYPHSTYLE_CHOICES.XBOX,
+    ---@type SettingsLib_Setting_Choice_Entry[]
+    Choices = {
+        {ID = Navbar._SETTING_GLYPHSTYLE_CHOICES.XBOX, Name = "Xbox"}, -- It should not be necessary to translate these.
+        {ID = Navbar._SETTING_GLYPHSTYLE_CHOICES.PLAYSTATION, Name = "Playstation"}, -- It should not be necessary to translate these.
+    }
 })
 
 ---------------------------------------------
@@ -167,7 +232,7 @@ function UI._RenderAction(action)
 
     for inputEvent in pairs(action.Inputs) do
         local binding = Input.GetBinding(inputEvent, Client.IsUsingController() and "C" or "Key")
-        local texture = binding and Navbar.INPUTEVENT_TO_TEXTURE[binding.InputID] or nil
+        local texture = binding and Navbar._GetIconForBinding(binding) or nil
         if texture then
             local icon = list:AddChild(id .. "_Icon", "GenericUI_Element_Texture")
             icon:SetTexture(texture)
@@ -204,6 +269,15 @@ function UI._Initialize()
     UI.ActionList = actionList
 
     UI._Initialized = true
+end
+
+---Returns the icon to use for a binding's raw input ID.
+---@param binding InputLib_InputEventBinding
+---@return TextureLib_Texture
+function Navbar._GetIconForBinding(binding)
+    local controllerGlyphsStyle = Navbar.Settings.GlyphStyle:GetValue()
+    local textureSet = Navbar.INPUTEVENT_TO_TEXTURE[controllerGlyphsStyle]
+    return textureSet[binding.InputID] or Navbar.INPUTEVENT_TO_TEXTURE.FALLBACK[binding.InputID]
 end
 
 ---Returns whether 2 action lists are different.
