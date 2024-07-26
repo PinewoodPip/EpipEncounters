@@ -6,6 +6,7 @@ local AnimCancel = {
     NET_MESSAGE = "Epip_Feature_AnimationCancelling",
     NETMSG_ITEM_PICKUP = "Epip_Feature_AnimationCancelling_ItemPickUpEntered", -- Empty message.
     DEFAULT_DELAY = 0.05, -- In seconds.
+    DEFAULT_DELAY_NO_AP = 0.25, -- Delay to use when at 0 AP, in seconds.
     PING_DELAY = 2, -- In ticks.
 
     ---@type table<string, number> Delays for cancelling specific skills, in seconds.
@@ -129,6 +130,16 @@ AnimCancel.Hooks.GetDelay:Subscribe(function (ev)
 
     if timeDelay then
         ev.Delay = timeDelay
+    end
+end)
+
+-- Delay animation cancelling if the character is at 0AP.
+-- Workaround for an issue with executioner where
+-- the character's turn can end prematurely.
+AnimCancel.Hooks.GetDelay:Subscribe(function (ev)
+    local ap, _ = Character.GetActionPoints(ev.Character)
+    if ap <= 0 then
+        ev.Delay = AnimCancel.DEFAULT_DELAY_NO_AP
     end
 end)
 
