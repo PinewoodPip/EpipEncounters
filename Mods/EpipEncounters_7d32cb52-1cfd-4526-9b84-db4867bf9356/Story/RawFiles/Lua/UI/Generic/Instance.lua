@@ -20,6 +20,7 @@ local _Instance = {
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
 
+    ---@class GenericUI.Instance.Events
     Events = {
         IggyEventUpCaptured = {}, ---@type Event<GenericUI.Instance.Events.IggyEventCaptured>
         IggyEventDownCaptured = {}, ---@type Event<GenericUI.Instance.Events.IggyEventCaptured>

@@ -33,6 +33,11 @@ UI.SETTINGS_PANEL_ELEMENT_SIZE = V(UI.SETTINGS_PANEL_SIZE[1] - 55, 50)
 UI.SETTINGS_PANEL_SCROLLLIST_FRAME = UI.SETTINGS_PANEL_SIZE - V(20, 150)
 UI.UIOBJECT_PANEL_EXTRA_WIDTH = 300 -- Extra width for panel size.
 
+---@class Features.QuickLoot.UI.Events : GenericUI.Instance.Events
+UI.Events = UI.Events
+UI.Events.Initialized = UI:AddSubscribableEvent("Initialized") ---@type Event<Empty>
+UI.Events.Opened = UI:AddSubscribableEvent("Opened") ---@type Event<Empty>
+
 UI._State = nil ---@type Features.QuickLoot.UI.State?
 
 UI.Hooks.GetSettings = UI:AddSubscribableHook("GetSettings") ---@type Hook<{Settings:SettingsLib_Setting[]}> Fired only once when the UI is first opened.
@@ -71,6 +76,7 @@ function UI.Setup(searchResult)
     end, {StringID = UI.EVENTID_TICK_IS_MOVING})
 
     UI:Show()
+    UI.Events.Opened:Throw()
 end
 
 ---Requests to loot an item.
@@ -279,6 +285,9 @@ function UI._Initialize()
     local uiObj = UI:GetUI()
     uiObj.SysPanelSize = {UI.BACKGROUND_SIZE[1] + UI.SETTINGS_PANEL_ELEMENT_SIZE[1] + UI.UIOBJECT_PANEL_EXTRA_WIDTH, UI.BACKGROUND_SIZE[2]} -- Padding makes the UI get positioned slightly to the left by default, so as not to obscure the character.
     uiObj.Left = UI.BACKGROUND_SIZE[1] -- Prevent dragging the main panel outside the viewport.
+    if Client.IsUsingController() then
+        uiObj.OF_PlayerModal1 = true -- Necessary to prevent character movement from using the left-stick, which would also close the UI.
+    end
 
     local root = UI:CreateElement("Root", "GenericUI_Element_Empty")
     UI.Root = root
@@ -351,6 +360,7 @@ function UI._Initialize()
     end, {EnabledFunctor = function () return UI:IsVisible() end})
 
     UI._Initialized = true
+    UI.Events.Initialized:Throw()
 end
 
 ---Initializes the settings panel.
@@ -402,6 +412,7 @@ end
 ---@override
 function UI:Hide()
     Tooltip.HideTooltip()
+    UI.SettingsPanel:SetVisible(false) -- Make the settings panel default to closed when opening the UI.
     Client.UI._BaseUITable.Hide(self)
 end
 

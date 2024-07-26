@@ -300,6 +300,21 @@ Input.Events.ActionReleased:Subscribe(function (ev)
     end
 end)
 
+-- Start & stop searches when holding the world tooltips toggle on a controller,
+-- as a temporary solution to Input Actions not being easily usable.
+GameState.Events.GameReady:Subscribe(function (_)
+    Ext.Events.InputEvent:Subscribe(function (ev)
+        if Input.GetGameEvent(ev.Event.EventId).EventName == "ShowWorldTooltips" and ev.Event.DeviceId == "Unknown" then -- Only do this if the input event is from a controller.
+            local char = Client.GetCharacter()
+            if ev.Event.Press and QuickLoot.CanSearch(char) then
+                QuickLoot.StartSearch(char)
+            elseif ev.Event.Release and QuickLoot.IsSearching(char) then
+                QuickLoot.StopSearch(char)
+            end
+        end
+    end)
+end, {EnabledFunctor = Client.IsUsingController})
+
 -- Prevent searching in combat or while moving.
 QuickLoot.Hooks.CanSearch:Subscribe(function (ev)
     local char, canSearch = ev.Character, ev.CanSearch
