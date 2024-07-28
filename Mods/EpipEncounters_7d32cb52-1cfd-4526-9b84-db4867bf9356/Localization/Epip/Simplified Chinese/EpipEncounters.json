@@ -979,7 +979,7 @@
       "TranslatedText": "锻造页面"
     },
     "h5b1b94ebg3d90g47e5g8b29g9f75c0aa6cd6": {
-      "ReferenceText": "French translation by Drayander",
+      "ReferenceText": "French translation by Drayander & Ostheboss",
       "TranslatedText": "法语来自Drayander"
     },
     "h37985411gc95dg46a1g858bg021ed39e43cd": {
@@ -1066,10 +1066,6 @@
       "ReferenceText": "Causes EpicEncounters.IsLoaded() call to return false even if EE Core is enabled.",
       "TranslatedText": "原因是调用EpicEncounters.IsLoaded() 返回false, 即使启用了EE Core"
     },
-    "h2c6440beg71c6g45c3g8a8bg9f6c64454faf": {
-      "ReferenceText": "Changes Epip's language to display in a language different than the one the game is running in.<br>Use to remedy current issues with running EE mods in languages other than English.",
-      "TranslatedText": "将Epip语言调整为非游戏所用语言<br>如果当前语言有问题的话"
-    },
     "h351cdabfg577fg45e8gbe9dg6a513e599d13": {
       "ReferenceText": "Changes the duration of the label that appears at the top of the screen when you change areas. Set to 0 to disable them entirely.<br><br>Default is 5 seconds.",
       "TranslatedText": "所在区域改变时, 弹出的提示的持续时间. 设置0为禁止显示<br><br>默认5秒"
@@ -1145,6 +1141,10 @@
     "h1afda15cgc951g46e6g8aa6g333bc56665ae": {
       "ReferenceText": "Determines the default tab for the crafting UI.",
       "TranslatedText": "制造面板的默认显示页面"
+    },
+    "h2c6440beg71c6g45c3g8a8bg9f6c64454faf": {
+      "ReferenceText": "Determines the language to use for Epip's features. Can be different than the language the game is running in.",
+      "TranslatedText": "将Epip语言调整为非游戏所用语言<br>如果当前语言有问题的话"
     },
     "hd0e2b5b7geca4g4a5dgad60g1893680e319a": {
       "ReferenceText": "Disable slots while casting",
@@ -1474,11 +1474,11 @@
       "ReferenceText": "Custom Line 2",
       "TranslatedText": "自定义行2"
     },
-    "hdb9a40e2g4713g40e0g8885gd6e1b75512c3": {
+    "hd1eed9f3g8a0bg4098g9369g0ba5549b947f": {
       "ReferenceText": "Discord Rich Presence",
       "TranslatedText": "Discord 游戏状态"
     },
-    "hd1eed9f3g8a0bg4098g9369g0ba5549b947f": {
+    "hdb9a40e2g4713g40e0g8885gd6e1b75512c3": {
       "ReferenceText": "Discord Rich Presence",
       "TranslatedText": "Discord 游戏状态"
     },

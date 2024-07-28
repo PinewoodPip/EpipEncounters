@@ -682,6 +682,10 @@
       "ReferenceText": "Clear",
       "TranslatedText": "Wyczyść "
     },
+    "hd5213948g0a1bg4d8cg8f64g1f144d44e578": {
+      "ReferenceText": "Close",
+      "TranslatedText": "Zamknij"
+    },
     "hbef0236fga72cg4b4bg930ag44ba332514dd": {
       "ReferenceText": "Cloth",
       "TranslatedText": "Tkanina"
@@ -753,6 +757,10 @@
     "h6eb4b775gdf93g4701g92b7g0ec21ed88442": {
       "ReferenceText": "Disintegrate",
       "TranslatedText": "Rozpadnij"
+    },
+    "hed778b0fgee1ag4507ga1ebg7dd249d17ce3": {
+      "ReferenceText": "Down",
+      "TranslatedText": "W Dół "
     },
     "h136f2ef7g80ebg49acgbc4cgfd0a2cbc7250": {
       "ReferenceText": "Duration",
@@ -846,6 +854,10 @@
       "ReferenceText": "Info",
       "TranslatedText": "Info"
     },
+    "haf50e434g26ecg44b2ga0a4gf24ec486c7e5": {
+      "ReferenceText": "Interact",
+      "TranslatedText": "Interakcja"
+    },
     "he8c517d9gc48fg42f8ga501g35f9909946b9": {
       "ReferenceText": "Inventory",
       "TranslatedText": "Ekwipunek"
@@ -885,6 +897,10 @@
     "h7038367dgd010g46fbg9b9fg7c5c40d7ef44": {
       "ReferenceText": "Leather",
       "TranslatedText": "Skóra"
+    },
+    "h8ac83ff6g90a0g4082gaaf0gd300c042db9a": {
+      "ReferenceText": "Left",
+      "TranslatedText": "W Lewo"
     },
     "h16088a37gd5b2g4bf3g9f7fgc3477eda6c4d": {
       "ReferenceText": "Leggings",
@@ -942,6 +958,10 @@
       "ReferenceText": "Next",
       "TranslatedText": "Następny"
     },
+    "h9a1bb000g2aabg4302g8c79g04a628aa626e": {
+      "ReferenceText": "Next Section",
+      "TranslatedText": "Następna Sekcja"
+    },
     "h45a75b5agbe29g438dgbf17g6a9362cd7eed": {
       "ReferenceText": "No Filter",
       "TranslatedText": "Bez Filtra"
@@ -994,6 +1014,10 @@
       "ReferenceText": "Previous",
       "TranslatedText": "Poprzednie"
     },
+    "hd3daf1b6g1405g478agaf4fga0ebc65ebfc1": {
+      "ReferenceText": "Previous Section",
+      "TranslatedText": "Poprzednia Sekcja"
+    },
     "ha53ef891g707cg4195g9c43g556d65e0e3e3": {
       "ReferenceText": "Prosperity",
       "TranslatedText": "Dobrobyt"
@@ -1038,6 +1062,10 @@
       "ReferenceText": "Resize",
       "TranslatedText": "Zmień rozmiar"
     },
+    "h19cc3513g8f3eg4168gb9dbgca2e37ebb679": {
+      "ReferenceText": "Right",
+      "TranslatedText": "W Prawo"
+    },
     "h7afd19eegf79bg42f9g97e7g66f4ac3a51c6": {
       "ReferenceText": "Ring",
       "TranslatedText": "Pierścień"
@@ -1057,6 +1085,14 @@
     "h7ca5d696g5244g435eg887bg524f556990f6": {
       "ReferenceText": "Scoundrel",
       "TranslatedText": "Szelmostwo"
+    },
+    "h02b0d0b3g900cg442cg9686gb4d5f7e405f3": {
+      "ReferenceText": "Scroll Down",
+      "TranslatedText": "Przewiń w Dół "
+    },
+    "h6cdca959g97a7g4d37ga5b7gf1fe7d9bf7cf": {
+      "ReferenceText": "Scroll Up",
+      "TranslatedText": "Przewiń w Górę"
     },
     "hb986b161gd6c3g459bga8f6gba07c8483103": {
       "ReferenceText": "Scrolls",
@@ -1133,6 +1169,10 @@
     "h1969b8b0ge281g4c5ag8297g24e31fd2aa7c": {
       "ReferenceText": "Unnamed",
       "TranslatedText": "Nienazwany"
+    },
+    "h5c0045dbgbeb9g4be4g8575g16120176d671": {
+      "ReferenceText": "Up",
+      "TranslatedText": "W górę"
     },
     "h6a473ba0g726bg4188g811fgfa83c0b3def2": {
       "ReferenceText": "Vanilla",
@@ -1347,8 +1387,8 @@
       "TranslatedText": "UI Wytwarzania"
     },
     "h5b1b94ebg3d90g47e5g8b29g9f75c0aa6cd6": {
-      "ReferenceText": "French translation by Drayander",
-      "TranslatedText": "Francuskie tłumaczenie od Drayander"
+      "ReferenceText": "French translation by Drayander & Ostheboss",
+      "TranslatedText": "Francuskie tłumaczenie od Drayander & Ostheboss"
     },
     "h37985411gc95dg46a1g858bg021ed39e43cd": {
       "ReferenceText": "Hotbar",
@@ -1357,6 +1397,10 @@
     "hc574348cg706eg4618g9629g6a08ad4aed70": {
       "ReferenceText": "Inventory UI",
       "TranslatedText": "UI Ekwipunku"
+    },
+    "h663df9f7g47dcg4de4g9178gdea692da71a9": {
+      "ReferenceText": "Keyboard & Controller UI Navigation",
+      "TranslatedText": "Nawigacja UI Klawiatury i Kontrolera"
     },
     "hde49d383g961eg49d6gaa46gcc45ab299aa5": {
       "ReferenceText": "Miscellaneous UI",
@@ -1434,10 +1478,6 @@
       "ReferenceText": "Causes EpicEncounters.IsLoaded() call to return false even if EE Core is enabled.",
       "TranslatedText": "Sprawia że wywołanie EpicEncounters.IsLoaded() zwraca fałsz nawet jeśli EE Core jest włączony."
     },
-    "h2c6440beg71c6g45c3g8a8bg9f6c64454faf": {
-      "ReferenceText": "Changes Epip's language to display in a language different than the one the game is running in.<br>Use to remedy current issues with running EE mods in languages other than English.",
-      "TranslatedText": "Zmienia wyświetlany język Epip'a na inny język niż ten w którym jest uruchomiona gra.<br> Użyj żeby zaradzić aktualnym problemom z używaniem modów EE w języku innym niż Angielski."
-    },
     "h351cdabfg577fg45e8gbe9dg6a513e599d13": {
       "ReferenceText": "Changes the duration of the label that appears at the top of the screen when you change areas. Set to 0 to disable them entirely.<br><br>Default is 5 seconds.",
       "TranslatedText": "Zmienia czas trwania etykiety która pojawia się na górnej części ekranu przy zmianie lokacji. Ustaw na 0 żeby wyłączyć kompletnie.<br><br> Domyślnie: 5s"
@@ -1513,6 +1553,10 @@
     "h1afda15cgc951g46e6g8aa6g333bc56665ae": {
       "ReferenceText": "Determines the default tab for the crafting UI.",
       "TranslatedText": "Ustala domyślam kartę dla UI Wytwarzania."
+    },
+    "h2c6440beg71c6g45c3g8a8bg9f6c64454faf": {
+      "ReferenceText": "Determines the language to use for Epip's features. Can be different than the language the game is running in.",
+      "TranslatedText": "Zmienia wyświetlany język Epip'a na inny język niż ten w którym jest uruchomiona gra.<br> Użyj żeby zaradzić aktualnym problemom z używaniem modów EE w języku innym niż Angielski."
     },
     "hd0e2b5b7geca4g4a5dgad60g1893680e319a": {
       "ReferenceText": "Disable slots while casting",
@@ -1986,6 +2030,30 @@
       "ReferenceText": "Show statuses",
       "TranslatedText": "Pokazuj statusy"
     },
+    "h7222d389g2b3cg40a8gb589gc41902b02ce8": {
+      "ReferenceText": "Hold to search nearby containers and corpses to loot.",
+      "TranslatedText": "Przytrzymaj żeby ograbić pobliskie pojemniki i zwłoki."
+    },
+    "h8eb26275gd698g4286gb7a5gaaa099e9aa37": {
+      "ReferenceText": "Loot All",
+      "TranslatedText": "Ograb Wszystko"
+    },
+    "h75d9d7f6g8200g43ffg9ef6g10a48ab961a6": {
+      "ReferenceText": "No loot found nearby.",
+      "TranslatedText": "Nie znaleziono łupu w pobliżu."
+    },
+    "hf0cdc4a1g6e7bg41c6ga408g9bd330ecae22": {
+      "ReferenceText": "Quick Loot",
+      "TranslatedText": "Szybkie łupowanie"
+    },
+    "ha539c465g36e0g4780g9892g58e33578124f": {
+      "ReferenceText": "Quick Loot: Start Search",
+      "TranslatedText": "Szybkie Łupowanie: Zacznij Wyszukiwanie"
+    },
+    "h8fe098cag9221g4fdbgaec2g392e49012d1a": {
+      "ReferenceText": "Searching...",
+      "TranslatedText": "Wyszukiwanie..."
+    },
     "hd74d99b1gf914g4cb2gb3bfg832230e4cf0f": {
       "ReferenceText": "AP Divider Interval",
       "TranslatedText": "Rozdzielacz PA"
@@ -2056,15 +2124,15 @@
     },
     "h1da3e55cg3534g4e65gb5f1g66d514505862": {
       "ReferenceText": "Inventory Item Tooltip Delay",
-      "TranslatedText": "Opóźnienie informacji o przedmiocie w ekwipunku"
+      "TranslatedText": "Opóźnienie Dymków Przedmiotów"
     },
     "h4a54f1a3gad5eg4855g9b9cge11cad401d59": {
       "ReferenceText": "Item Comparison Tooltip Delay",
-      "TranslatedText": "Opóźnienie porównania informacji o przedmiotów"
+      "TranslatedText": "Opóźnienie Dymków Porównania Przedmiotów"
     },
     "hd2aaa37dg2eccg4480g90d5gab593d074c2f": {
-      "ReferenceText": "Right-click to open.",
-      "TranslatedText": "Prawy przycisk aby otworzyć"
+      "ReferenceText": "Right-click to open.<br>Ctrl+right-click to offer all items within.",
+      "TranslatedText": "PPM aby otworzyć"
     },
     "h4025c1c4g6527g4b6ag8369g49c0b1949dea": {
       "ReferenceText": "If enabled, the positions of the character sheet and party inventory UIs will be remembered across sessions.",
@@ -2076,7 +2144,7 @@
     },
     "h3a8d983cg5a8cg4b33g954cg39581bd8a04b": {
       "ReferenceText": "AI Type: %s",
-      "TranslatedText": "Rodzaj AI: %s"
+      "TranslatedText": "Rodzaj SI: %s"
     },
     "he42675fag827ag4189g9c55g0af27feb5fc2": {
       "ReferenceText": "Attack Of Opportunity Available",
@@ -2101,6 +2169,22 @@
     "h4c2e34f9g7feeg4303g9dfegcc0c44cf6011": {
       "ReferenceText": "Turn Delayed",
       "TranslatedText": "Tura Opóźniona"
+    },
+    "h5c14960age89bg4621gbdeagd2165e0c74de": {
+      "ReferenceText": "Next Item",
+      "TranslatedText": "Następny Przedmiot"
+    },
+    "he55dc83eg5d16g4af0g8c8bg2bd5e368e620": {
+      "ReferenceText": "Previous Item",
+      "TranslatedText": "Poprzedni Przedmiot"
+    },
+    "hc80564a1g07e6g4dc4g97cdgedeedee8797f": {
+      "ReferenceText": "Slide Left",
+      "TranslatedText": "Przesuń w Lewo"
+    },
+    "h462d4e75g38f1g42a4g8ad4g547e2dd6f836": {
+      "ReferenceText": "Slide Right",
+      "TranslatedText": "Przesuń w Prawo"
     },
     "h8db61443g39bfg45f1g8c0cga6ab56bb12b7": {
       "ReferenceText": "Open Generic UI Texture Test UI",
@@ -2132,7 +2216,7 @@
     },
     "ha314a4bag7349g4ec0g9e7eg122821cef234": {
       "ReferenceText": "Bedroll Rest",
-      "TranslatedText": "Odpoczynek posłaniem"
+      "TranslatedText": "Odpoczynek"
     },
     "h4ac91ab1gcde9g4cd5gb8a3gc19b15f3dd4b": {
       "ReferenceText": "Pyramids",

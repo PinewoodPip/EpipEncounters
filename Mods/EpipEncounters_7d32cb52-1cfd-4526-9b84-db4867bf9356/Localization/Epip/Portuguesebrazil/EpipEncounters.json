@@ -690,17 +690,17 @@
       "ReferenceText": "Copy Position",
       "TranslatedText": "Copiar posição"
     },
-    "h23e452c0g340fg4555g8034g753f003107bf": {
+    "h4e3b6a84g9de1g4723gb807ga808db3c9d70": {
       "ReferenceText": "TODO",
-      "TranslatedText": "Te teleporta para a localização X"
+      "TranslatedText": "Spawna um item a sua escolha "
     },
     "ha8b96a59gace5g4aa5gba9cgc7567a58a8e8": {
       "ReferenceText": "TODO",
       "TranslatedText": "Copia a GUID de um objeto "
     },
-    "h4e3b6a84g9de1g4723gb807ga808db3c9d70": {
+    "h23e452c0g340fg4555g8034g753f003107bf": {
       "ReferenceText": "TODO",
-      "TranslatedText": "Spawna um item a sua escolha "
+      "TranslatedText": "Te teleporta para a localização X"
     },
     "hfd4d8ec8g76e3g4defg9647gc28159eb38e5": {
       "ReferenceText": "TODO",
@@ -914,10 +914,6 @@
       "ReferenceText": "Causes EpicEncounters.IsLoaded() call to return false even if EE Core is enabled.",
       "TranslatedText": "Faz com que a chamada EpicEncounters.IsLoaded() retorne false mesmo se o EE Core estiver habilitado."
     },
-    "h2c6440beg71c6g45c3g8a8bg9f6c64454faf": {
-      "ReferenceText": "Changes Epip's language to display in a language different than the one the game is running in.<br>Use to remedy current issues with running EE mods in languages other than English.",
-      "TranslatedText": "Altera o idioma do Epip para ser exibido em um idioma diferente daquele em que o jogo está sendo executado.<br>Use para solucionar problemas atuais com a execução de mods EE em idiomas diferentes do inglês."
-    },
     "h351cdabfg577fg45e8gbe9dg6a513e599d13": {
       "ReferenceText": "Changes the duration of the label that appears at the top of the screen when you change areas. Set to 0 to disable them entirely.<br><br>Default is 5 seconds.",
       "TranslatedText": "Altera a duração do rótulo que aparece na parte superior da tela quando você muda de área. Defina como 0 para desativá-los totalmente.<br><br>O padrão é 5 segundos."
@@ -993,6 +989,10 @@
     "h1afda15cgc951g46e6g8aa6g333bc56665ae": {
       "ReferenceText": "Determines the default tab for the crafting UI.",
       "TranslatedText": "Determina a Aba padrão Para a interface de Criação"
+    },
+    "h2c6440beg71c6g45c3g8a8bg9f6c64454faf": {
+      "ReferenceText": "Determines the language to use for Epip's features. Can be different than the language the game is running in.",
+      "TranslatedText": "Altera o idioma do Epip para ser exibido em um idioma diferente daquele em que o jogo está sendo executado.<br>Use para solucionar problemas atuais com a execução de mods EE em idiomas diferentes do inglês."
     },
     "hd0e2b5b7geca4g4a5dgad60g1893680e319a": {
       "ReferenceText": "Disable slots while casting",

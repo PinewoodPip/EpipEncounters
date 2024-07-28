@@ -1,0 +1,98 @@
+This update lays out the foundations for controller support, making various Epip UIs and features usable with a controller for the first time. In addition to that, a new "Quick Loot" feature has been added, as well as a comprehensive Polish translation by Nektun.
+
+## Controller support
+
+The settings menu can now be accessed from the controller settings menu, and it supports controller and keyboard navigation.
+
+There is currently no clear indicator of which settings are applicable, but numerous old ones that previously weren't or had some inaccessible features now work with controllers:
+
+- *"Show Minimap"* setting
+- *"Resistances Display"* setting
+    - Resistances are shown by the name of characters
+    - Opening the context menu for a character while in combat displays the "alternative" information (AP, SP, initiative, etc.)
+- *"Immersive Meditation"* setting
+- Quick Find UI
+- Most tooltip adjustments
+- You can now toggle filters for the "Alternative Status Bar" by pressing the right stick
+
+In Epip UIs with controller support, a new "Navigation Bar" widget at the bottom of the screen displays the UI's controls.
+
+You can disable the Navigation Bar in the settings (*"Show controller Navigation Bar"* in the "Miscellaneous UI" tab) or enable it for keyboard + mouse as well - as any UIs that got this controller support also support keyboard navigation. When playing with a controller, you can also configure which glyphs to show (Xbox or Playstation style) with the *"Controller Icons Style"* setting.
+
+It's worth noting that no convenient ways exist yet to access UIs that require a keybind press, such as Quick Find. Our recommended temporary solution is to create a Steam Input virtual menu to be able to execute the respective keybinds. In v1072, custom radial menus will be added to remedy this.
+
+Interacting with keybind and "set" settings (ex. Animation Cancelling blacklist) is not currently supported.
+
+## Quick Loot
+A new "Quick Loot" UI has been added, which allows you to loot items from nearby containers and corpses through a unified UI with a single keybind press.
+
+To use it, hold down the new *"Quick Loot: Start Search"* keybind (unbound by default) to select containers & corpses nearby. You may also configure the keybind from the new "Quick Loot" settings tab as well as increase the default search range and enable visual feedback for looting.
+
+Various filters exist to avoid picking up undesired items, quickly accessible via the settings button in the UI.
+
+Hovering over items will show their source container/corpse in the tooltip, and you may also use the vanilla "take all" keybind to loot all items in the UI.
+
+The Quick Loot UI supports controllers. When playing with a controller, you may hold down the right-stick to begin searching.
+
+Note that containers that are locked, out of line-of-sight or considered as stealing will not be looted.
+
+## Inventories
+- You can now open containers (ex. backpacks) in the trade UI by right-clicking them; left-clicking items within will offer them for trade
+    - lctrl + m1 on a container will instead offer all the items inside for trade
+
+- Multi-select improvements:
+    - Added support for dragging items in and out of containers that are not owned by the party, ex. barrels in the world and the Lady Vengeance chest
+        - Due to quirks with these, items dragged in & out of them will go to the first available slot rather than hovered one
+    - The "Store on Lady Vengeance" context menu option no longer shows up in Fort Joy
+
+## Camera
+- Added a setting to control the rotation speed when using the rotate camera keybinds (*"Keybind Rotation Speed"*)
+- Added a setting to prevent the zoom level from changing when entering dialogue (*"Preserve zoom level in dialogues"*)
+- Added settings for minimum zoom distance
+- The vanilla "Close-up dialogue" setting no longer zooms-in the camera obnoxiously close to characters
+- Fixed stuttering when changing the pitch without moving the camera to the sides
+
+## Vanity
+- Added a setting to revert the appearance of items when they are unequipped; "*Revert appearance of unequipped items*" in the new "Vanity" settings tab; disabled by default
+    - This can be helpful to keep your inventory readable when using transmogs that alter icons heavily
+- Reduced stuttering when transmogging or dyeing items
+- Appearance is now refreshed when toggling your helmet
+- Most of the UI is now translatable
+- Fixed the UI closing when the selected item is unequipped
+- Fixed default equipment colors being wrong when not using EE
+- Fixed issues with item models that mask their own equip slots, ex. full-body armors from Majora's Fashion Sins
+- Fixed racial skills disappearing from the hotbar when refreshing Vanity appearances
+
+## Hotbar
+- Fixed slots being visible beyond the edge of the hotbar when using aspect ratios shorter than 16:9
+- Fixed the "endpiece" at the right appearing after exiting dialogue in cases when it shouldn't
+
+## Other changes and additions
+- Added Polish translation by Nektun
+- Added partial Spanish translation by AquaVXI
+- Chain/unchain hotbar action now preserves order of party members in the UI, rather than shuffling them around
+- Added a setting to render each icon in the skillbook UI separately, which fixes the issue of icons disappearing when using too many mods that add more - *"Render icons individually"* setting in the "Miscellaneous UI" tab, disabled by default
+- Epip features that show character names should now show the translated names
+- Stat tooltips no longer show "+0%" effects (ex. from vanilla perks deprecated in EE)
+- Improved consistency of setting names; settings that start with a verb no longer capitalize all words
+- The scrollable area of the settings menu tabs has been adjusted to not crop out buttons
+- Epic Enemies effects are now translatable
+- Merging EE stat adjustment tooltips now works with translation mods
+- Custom tooltips in Epip UIs now support refreshing them with the shift key, though there aren't any uses of this yet
+    - Currently only works on unmemorized skills (the left panel)
+- You are now warned if you're using an outdated version of the Extender fork
+    - If you were using it before, v1071 requires you to update by redownloading it
+
+## Other fixes
+- Potentially fixed a rare issue with Animation Cancelling and AP refund effects (ex. the Executioner talent) that could cause a character's turn to end prematurely
+- Fixed positioning simple tooltips in Epip UIs (ex. highscore dates in Bedazzled)
+- Fixed the language setting not warning you that you need to reload the game
+- Fixed the caret resetting when typing in text settings
+- Fixed warnings in the gift bags UI not using translations
+- Fixed the "Escape closes EE UIs" setting not working
+- Added safeguards against opening the party inventory UI while loading (which can rarely cause a crash for non-hosts)
+- Fixed the save/load UI breaking showing no saves after deleting one
+- Fixed "Save/Load UI Improvements" not working in the save UI
+- Possibly prevented a rare crash that could occur for non-hosts while loading
+- Fixed the "General" settings tab not using a translatable name
+- Fixed numerous console error messages when playing with a controller
