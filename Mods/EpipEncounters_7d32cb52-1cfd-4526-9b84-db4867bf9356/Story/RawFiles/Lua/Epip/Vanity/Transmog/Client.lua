@@ -551,8 +551,8 @@ Character.Hooks.CreateEquipmentVisuals:Subscribe(function (ev)
                 ev.Request.EquipmentSlotMask = 0
                 ev.Request.VisualSetSlotMask = 0
 
-                -- Change the attachment point of weapons/offhands.
-                if not char.WeaponSheathed then
+                -- Change the attachment point of weapons/offhands while sheathed.
+                if not char.WeaponSheathed then -- This flag is named backwards.
                     local bone
                     local vanityData = Vanity.TEMPLATES[transmoggedTemplateGUID]
 

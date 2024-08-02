@@ -390,4 +390,4 @@ GameState.Events.GamePaused:Subscribe(function (_)
     end
 end)
 
-Ext.Require(prefixedGUID, "_LastScript.lua");
+Ext.Require(prefixedGUID, "_LastScript.lua")

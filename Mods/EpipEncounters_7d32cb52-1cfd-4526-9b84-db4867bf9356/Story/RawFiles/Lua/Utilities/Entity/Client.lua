@@ -13,8 +13,9 @@ Epip.InitializeLibrary("Entity", Entity)
 ---@generic T
 ---@param handle ComponentHandle
 ---@param isFlashHandle boolean? Defaults to false.
----@param component `T`|EntityLib_EntityComponent
+---@param component `T`|EntityLib_EntityComponent For IDE purposes only.
 ---@return BaseComponent?
+---@diagnostic disable-next-line: unused-local
 function Entity.GetComponent(handle, component, isFlashHandle)
     if isFlashHandle then
         handle = Ext.UI.DoubleToHandle(handle)

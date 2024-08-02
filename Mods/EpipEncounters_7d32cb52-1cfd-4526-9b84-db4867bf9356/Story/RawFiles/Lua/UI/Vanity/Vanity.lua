@@ -470,7 +470,7 @@ function Vanity.SetSlot(slot)
 end
 
 function Vanity.GetCurrentItem()
-    return Ext.GetItem(Client.GetCharacter():GetItemBySlot(Vanity.currentSlot))
+    return Item.Get(Client.GetCharacter():GetItemBySlot(Vanity.currentSlot))
 end
 
 ---Refreshes the appearance of visuals on the active char by toggling their helmet preference (for character sheet) and applying a polymorph status (for world model). Credits to Luxen for the discovery!

@@ -938,6 +938,8 @@ function Item.GetEquippedSlot(item, char)
     if not isEquipped then
         slot = nil
     end
+    -- There's a strange bug with the extension with fetching the fields of the enum in this particular function.
+    ---@diagnostic disable-next-line: undefined-field
     return slot and Ext.Enums.ItemSlot[slot].Label
 end
 
@@ -1177,21 +1179,17 @@ end
 -- REGION Querying items in inventories.
 ---------------------------------------------
 
---- Returns a list of the items in the entity's inventory that match an optional predicate function.  
---- Predicate is passed the EclItem/EsvItem and should return true for items to be included.
+---Returns a list of the items in the entity's inventory that match an optional predicate function.  
 ---@param entity Entity
----@param predicate fun(item: Item)
+---@param predicate (fun(item:Item):boolean)? Should return `true` for items to be included?
 ---@return Item[]
 function Item.GetItemsInInventory(entity, predicate)
     local items = {}
-
     for _,guid in pairs(entity:GetInventoryItems()) do
         local item = Item.Get(guid)
-
         if predicate == nil or predicate(item) then
             table.insert(items, item)
         end
     end
-
     return items
 end

@@ -107,7 +107,7 @@ function _Element:GetParent()
 end
 
 ---Returns the children of the element.
----@return GenericUI_Element[]
+---@return GenericUI_Element[] -- By-reference. Careful with destroying children while iterating.
 function _Element:GetChildren()
     return self._Children
 end

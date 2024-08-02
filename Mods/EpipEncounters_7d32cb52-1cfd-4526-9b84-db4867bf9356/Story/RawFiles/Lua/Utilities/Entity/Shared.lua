@@ -165,7 +165,7 @@ end
 ---Returns the values of the first parametrized tag by pattern.
 ---@param gameObject IGameObject
 ---@param pattern pattern
----@return string ...
+---@return string? ...
 function Entity.GetParameterTagValue(gameObject, pattern)
     for _,tag in ipairs(gameObject:GetTags()) do
         local params = {tag:match(pattern)}
@@ -173,6 +173,7 @@ function Entity.GetParameterTagValue(gameObject, pattern)
             return table.unpack(params)
         end
     end
+    return nil
 end
 
 ---Returns the characters near a position.

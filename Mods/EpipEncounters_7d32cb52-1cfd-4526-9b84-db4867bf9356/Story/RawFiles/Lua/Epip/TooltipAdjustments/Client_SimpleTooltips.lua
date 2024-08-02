@@ -32,7 +32,7 @@ TooltipLib.Hooks.RenderSimpleTooltip:Subscribe(function (ev)
         if tooltip.TooltipStyle == "Simple" then
             settingID = TooltipAdjustments.SIMPLE_TOOLTIP_UI_DELAY_SETTING
         end
-    
+
         local delay = Settings.GetSettingValue("Epip_Tooltips", settingID)
 
         tooltip.UseDelay = false
