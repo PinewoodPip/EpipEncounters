@@ -238,6 +238,17 @@ function Client.IsCursorOverUI(playerIndex)
     return playerState.UIUnderMouseCursor
 end
 
+---Returns whether the "Store on Lady Vengeance" item context menu option is available.
+---**Inaccurate outside of Origins if the extender fork is not installed.**
+---@return boolean
+function Client.CanSendToLadyVengeance()
+    if Epip.IsPipFork() and Epip.GetPipForkVersion() >= 2 then
+        return Ext.Client.GetGameControl().CanSendToLadyVengeance
+    else
+        return Entity.GetLevelID() ~= Entity.LEVEL_IDS.ORIGINS.FORT_JOY
+    end
+end
+
 ---Returns the last UIObject the player has interacted with.
 ---@param playerIndex integer? Defaults to `1`.
 ---@return UIObject?
