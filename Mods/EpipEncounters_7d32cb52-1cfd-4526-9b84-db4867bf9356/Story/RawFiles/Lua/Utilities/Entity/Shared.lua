@@ -12,6 +12,16 @@ Entity = {
             ARX = "Arx_Main",
         },
     },
+    -- Highlight modes to use with `ecl::HighlightManager::SetHighlight()`.
+    ---@enum EntityLib.HighlightType
+    HIGHLIGHT_TYPES = {
+        NONE = 0,
+        SELECTED = 1, -- White.
+        ENEMY = 2,
+        ATTITUDE_BASED = 3,
+        NONE_2 = 4, -- Used in some places, but for what?
+        YELLOW = 5,
+    }
 }
 
 ---------------------------------------------

@@ -9,7 +9,7 @@ QuickLoot.EVENTID_TICK_SELECTOR_EFFECT = "Features.QuickLoot.SelectorEffect"
 QuickLoot.EVENTID_TICK_IS_MOVING = "Features.QuickLoot.IsCharacterMoving"
 QuickLoot.SEARCH_RADIUS_PER_SECOND = 5 -- How many meters the selector's radius expands per second.
 QuickLoot.SEARCH_EFFECT = "RS3_FX_UI_Target_Circle_01" -- TODO is this the controller selection area effect, or is it another?
-QuickLoot.CONTAINER_EFFECT = "RS3_FX_UI_PerceptionReveal_GroundSmall_01"
+QuickLoot.CONTAINER_EFFECT = "PIP_FX_PerceptionReveal_OverlayOnly"
 
 QuickLoot._Searches = {} ---@type table<CharacterHandle, Features.QuickLoot.Search>
 
@@ -145,14 +145,17 @@ function QuickLoot.StartSearch(char)
             local containers, corpses = QuickLoot.GetContainers(char.WorldPos, newScale)
             for i=1,#containers+#corpses,1 do -- Avoid list concatenation for performance.
                 local entity = i > #containers and corpses[i - #containers] or containers[i]
+                local entityHandle = entity.Handle
                 if not highlightEffectHandlers[entity.Handle] then
                     local containerMultiVisual = Entity.IsItem(entity) and Ext.Visual.CreateOnItem(entity.WorldPos, entity) or Ext.Visual.CreateOnCharacter(entity.WorldPos, entity)
                     local handle = containerMultiVisual.Handle
                     highlightEffectHandlers[entity.Handle] = handle
-                    containerMultiVisual:ParseFromStats("PIP_FX_PerceptionReveal_OverlayOnly")
+                    containerMultiVisual:ParseFromStats(QuickLoot.CONTAINER_EFFECT)
                     Timer.Start(3, function (_)
                         Ext.Visual.Get(handle):Delete()
                     end)
+                else -- Highlight target containers each subsequent tick.
+                    Entity.SetHighlight(entityHandle, Entity.HIGHLIGHT_TYPES.SELECTED)
                 end
             end
         end
@@ -237,7 +240,7 @@ function QuickLoot.StopSearch(char)
         QuickLoot:__Error("StopSearch", "Character is not searching")
     end
     local search = QuickLoot._Searches[char.Handle]
-    local containers = QuickLoot.GetContainers(char.WorldPos, QuickLoot.GetSearchRadius(char))
+    local containers, corpses = QuickLoot.GetContainers(char.WorldPos, QuickLoot.GetSearchRadius(char))
     search.EndTime = Ext.Utils.MonotonicTime()
     search.Containers = Entity.EntityListToHandles(containers)
     -- Stopping the effect is handled via tick listener.
@@ -246,6 +249,16 @@ function QuickLoot.StopSearch(char)
         CharacterNetID = char.NetID,
         ItemNetIDs = Entity.EntityListToNetIDs(containers),
     })
+
+    -- Remove highlights
+    if Epip.IsPipFork() then
+        for _,container in ipairs(containers) do
+            Entity.SetHighlight(container, Entity.HIGHLIGHT_TYPES.NONE)
+        end
+        for _,corpse in ipairs(corpses) do
+            Entity.SetHighlight(corpse, Entity.HIGHLIGHT_TYPES.NONE)
+        end
+    end
 end
 
 ---Returns the default search radius based on user settings.
@@ -348,7 +361,6 @@ Net.RegisterListener(QuickLoot.NETMSG_TREASURE_GENERATED, function (ev)
         -- Keep checking whether all containers have had their contents synched.
         while next(unsynchedContainers) do
             char = Client.GetCharacter()
-            -- containers, corpses = QuickLoot.GetContainers(char.WorldPos, radius)
 
             -- Mark containers as synched if their item count has changed.
             for containerHandle,oldItemsAmount in pairs(unsynchedContainers) do

@@ -412,7 +412,9 @@ end
 ---@override
 function UI:Hide()
     Tooltip.HideTooltip()
-    UI.SettingsPanel:SetVisible(false) -- Make the settings panel default to closed when opening the UI.
+    if UI._Initialized then
+        UI.SettingsPanel:SetVisible(false) -- Make the settings panel default to closed when opening the UI.
+    end
     Client.UI._BaseUITable.Hide(self)
 end
 

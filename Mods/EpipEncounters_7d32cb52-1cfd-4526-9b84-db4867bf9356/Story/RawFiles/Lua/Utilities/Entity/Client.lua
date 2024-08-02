@@ -22,3 +22,15 @@ function Entity.GetComponent(handle, component, isFlashHandle)
 
     return Entity._GetComponent(handle)
 end
+
+---Sets the highlight for an entity.
+---**Does nothing if the extender fork is not installed.**
+---@param entity EclCharacter|EsvCharacter|ComponentHandle
+---@param highlight EntityLib.HighlightType
+---@param playerID integer? Defaults to `1`.
+---@param unknownBool boolean? Defaults to `false`.
+function Entity.SetHighlight(entity, highlight, playerID, unknownBool)
+    if not Epip.IsPipFork() or Epip.GetPipForkVersion() < 2 then return end
+    local entityHandle = GetExtType(entity) ~= nil and entity.Handle or entity -- Handle overload.
+    Ext.Entity.SetHighlight(playerID or 1, entityHandle, highlight, unknownBool or false)
+end
