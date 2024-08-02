@@ -16,9 +16,27 @@ local CombatRange = {
             Text = "Moving here would exit combat.",
             ContextDescription = [[Tooltip when trying to move too far away in combat]],
         },
-    }
+    },
 }
 Epip.RegisterFeature("Features.TooltipAdjustments.CombatRangeWarning", CombatRange)
+
+---------------------------------------------
+-- METHODS
+---------------------------------------------
+
+---Returns whether the warning can be shown for a character.
+---Warnings can be shown if the character is in combat and either planning to move or preparing a movement skill.
+---@param char EclCharacter
+---@return boolean
+function CombatRange.CanShowWarning(char)
+    local canShow = Character.IsInCombat(char)
+    local skillID = Character.GetCurrentSkill(char)
+    if canShow and skillID then
+        local skill = Stats.Get("StatsLib_StatsEntry_SkillData", skillID)
+        canShow = canShow and (Stats.MOVEMENT_SKILLS_TYPES[skill.SkillType] or (skill.SkillType == "Projectile" and skill.MovingObject == "Caster")) -- Only show the warning when using movement skills, including "Flight" skills.
+    end
+    return canShow
+end
 
 ---------------------------------------------
 -- EVENT LISTENERS
@@ -60,4 +78,6 @@ Tooltip.Hooks.RenderMouseTextTooltip:Subscribe(function (ev)
             end
         end
     end
-end, {EnabledFunctor = Client.IsInCombat})
+end, {EnabledFunctor = function ()
+    return CombatRange.CanShowWarning(Client.GetCharacter())
+end})

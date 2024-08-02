@@ -27,6 +27,13 @@ Stats = {
         "StatsLib_StatsEntry_StatusData"
     }),
 
+    -- Skill types that can move the caster.
+    MOVEMENT_SKILLS_TYPES = {
+        ["Jump"] = true,
+        ["Rush"] = true,
+        ["Teleportation"] = true, -- Odd case, as does not necessarily teleport the caster.
+    },
+
     CONSUME_STATUS_SUBTYPES = Set.Create({
         "ACTIVE_DEFENSE",
         "ADRENALINE",
