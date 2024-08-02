@@ -36,6 +36,11 @@ TSK.Label_RevertAppearance = Transmog:RegisterTranslatedString({
     Text = "Revert Appearance",
     ContextDescription = [[Button to remove transmog]],
 })
+TSK.Label_WeaponAnimationType = Transmog:RegisterTranslatedString({
+    Handle = "h6a8b2c24ga258g4bf3gbb12gbab3c37c0d8e",
+    Text = "Weapon Animations",
+    ContextDescription = [[Dropdown to swap weapon animations]],
+})
 TSK.Label_InvalidItem = Transmog:RegisterTranslatedString({
     Handle = "hde9528cfg0189g45b2gbe7cg8d7bd5637012",
     Text = "This item is too brittle to transmog.",
@@ -76,6 +81,7 @@ function Tab:Render()
         -- Can toggle weapon overlay effects regardless of whether the item can be transmogged.
         if Item.IsWeapon(item) then
             Vanity.RenderCheckbox("Vanity_OverlayEffects", TSK.Label_ElementalEffects:Format({Color = Color.BLACK}), not item:HasTag("DISABLE_WEAPON_EFFECTS"), true)
+            self:_RenderWeaponAnimationDropdown()
         end
 
         if canTransmog then
@@ -118,6 +124,37 @@ function Tab:Render()
         Vanity.RenderText("NoItem", VanityFeature.TranslatedStrings.Label_NoItemEquipped:GetString())
     end
 end
+
+---Renders the weapon animation dropdown.
+---**Does nothing if the extender fork is not installed.**
+function Tab:_RenderWeaponAnimationDropdown()
+    if not Transmog._SupportsWeaponAnimationOverrides() then return end -- This feature requires the fork.
+    local options = {}
+    local currentOverride = Transmog.GetWeaponAnimationOverride(Client.GetCharacter())
+    local selectedIndex = currentOverride and Transmog._WEAPON_ANIM_TYPE_TO_OPTION_INDEX[currentOverride] + 1 or 1
+
+    Vanity.RenderText("WeaponAnimationTypeLabel", TSK.Label_WeaponAnimationType:GetString())
+
+    table.insert(options, Text.CommonStrings.Default:GetString())
+    for _,option in ipairs(Transmog.WEAPON_ANIMATION_OVERRIDE_OPTIONS) do -- Will exclude NONE (0 in 1-based index)
+        table.insert(options, option.Name:GetString())
+    end
+
+    Vanity.RenderDropdown("WeaponAnimationType", options, selectedIndex)
+end
+
+-- Request weapon animation overrides when interacting with the dropdown.
+Vanity:RegisterListener("ComboElementSelected", function(id, index, _)
+    if id == "WeaponAnimationType" then
+        local animType ---@type CharacterLib.WeaponAnimationType
+        if index == 1 then -- "Default" option; ie. no override
+            animType = Character.WEAPON_ANIMATION_TYPES.NONE
+        else
+            animType = Transmog.WEAPON_ANIMATION_OVERRIDE_OPTIONS[index - 1].AnimType
+        end
+        Transmog.RequestWeaponAnimationOverride(Client.GetCharacter(), animType)
+    end
+end)
 
 Tab:RegisterListener(Vanity.Events.EntryFavoriteToggled, function(id, active)
     if active then

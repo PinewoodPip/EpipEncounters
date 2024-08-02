@@ -125,6 +125,16 @@ function Transmog.ReapplyAppearance(char, item)
     end
 end
 
+---Requests an override for char's weapon animations.
+---@param char EclCharacter
+---@param animType CharacterLib.WeaponAnimationType
+function Transmog.RequestWeaponAnimationOverride(char, animType)
+    Net.PostToServer(Transmog.NETMSG_SET_WEAPON_ANIMATION_OVERRIDE, {
+        CharacterNetID = char.NetID,
+        AnimType = animType,
+    })
+end
+
 function Transmog.UpdateActiveCharacterTemplates()
     local char = Client.GetCharacter()
 
@@ -372,6 +382,13 @@ function Transmog.IsItemInvisible(item, char)
     end
 
     return invisible
+end
+
+---Returns the weapon animation set override for char.
+---@param char Character
+---@return CharacterLib.WeaponAnimationType? -- `nil` for `NONE`.
+function Transmog.GetWeaponAnimationOverride(char)
+    return tonumber(Entity.GetParameterTagValue(char, Transmog.WEAPON_ANIMATION_OVERRIDE_TAG_PATTERN))
 end
 
 ---Returns whether equipment can be shown for a character.
@@ -634,6 +651,20 @@ end)
 VanityFeature.Events.ItemAppearanceReset:Subscribe(function (ev)
     Transmog._RevertAppearance(ev.Character, ev.Item)
 end)
+
+-- Apply weapon animation set overrides; requires the fork.
+if Transmog._SupportsWeaponAnimationOverrides() then
+    Ext.Events.GetCharacterWeaponAnimationSetType:Subscribe(function(ev)
+        local stats = ev.Character ---@type CDivinityStats_Character
+        local char = stats.Character ---@cast char Character
+        if char.IsPlayer then -- Only do this for players.
+            local override = Transmog.GetWeaponAnimationOverride(char)
+            if override then
+                ev.AnimationSetType = override
+            end
+        end
+    end)
+end
 
 ---------------------------------------------
 -- HOTBAR ACTION

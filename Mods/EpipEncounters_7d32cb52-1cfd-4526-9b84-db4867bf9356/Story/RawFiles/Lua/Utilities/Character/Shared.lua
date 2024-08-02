@@ -111,6 +111,7 @@ Character = {
 
     -- Enum for AnimType fields.
     -- Source: AnimationTypeToString()
+    ---@enum CharacterLib.WeaponAnimationType
     WEAPON_ANIMATION_TYPES = {
         NONE = -1,
         OneHanded = 0,

@@ -338,6 +338,19 @@ Text.CommonStrings.Corpse = Text.RegisterTranslatedString({
     Text = "Corpse",
     ContextDescription = "As in, a cadaver.",
 })
+Text.CommonStrings.Default = Text.RegisterTranslatedString({
+    Handle = "h2f5e4b44gb19fg4cdbgacc2gf8e45809f68a",
+    Text = "Default",
+})
+Text.CommonStrings.Sitting = Text.RegisterTranslatedString({
+    Handle = "h7bf8da3bg45f2g4f23gab94g139d4205a6e6",
+    Text = "Sitting",
+})
+Text.CommonStrings.Lying = Text.RegisterTranslatedString({
+    Handle = "h04a0f08aga2a8g42c3g8758g0d89d36a669c",
+    Text = "Lying",
+    ContextDescription = "As in, laying down."
+})
 
 ---------------------------------------------
 -- BRANDING
@@ -630,6 +643,42 @@ Text.CommonStrings.IncarnateChampion = Text.RegisterTranslatedString({
 -- GAME TERMS
 ---------------------------------------------
 
+Text.CommonStrings.OneHanded = Text.RegisterTranslatedString({
+    Handle = "h0e559c51gea17g4f88gaf6dg0a9b53d3a634",
+    Text = "One-handed",
+})
+Text.CommonStrings.TwoHanded = Text.RegisterTranslatedString({
+    Handle = "hc9fdc733gd227g4b1ega50egabad80fa56c3",
+    Text = "Two-handed",
+})
+Text.CommonStrings.TwoHandedSword = Text.RegisterTranslatedString({
+    Handle = "h3bc14f6dg6448g4fefgb74bgefc5e476a72f",
+    Text = "Two-handed Sword",
+})
+Text.CommonStrings.DualWielding = Text.RegisterTranslatedString({
+    Handle = "h2bb349f7g83aeg41adg9f22gab5497b1a124",
+    Text = "Dual-wielding",
+})
+Text.CommonStrings.DualWieldingSmall = Text.RegisterTranslatedString({
+    Handle = "h05e03661gafd3g4fddga325gbdbdb19d7645",
+    Text = "Dual-wielding Small",
+})
+Text.CommonStrings.SmallWeapon = Text.RegisterTranslatedString({
+    Handle = "hb75e3597gaf4fg4da0gab70g2970b9d4a621",
+    Text = "Small Weapon",
+})
+Text.CommonStrings.Unarmed = Text.RegisterTranslatedString({
+    Handle = "ha7eaf544gfd75g4e8fgba7bg671c0383313e",
+    Text = "Unarmed",
+})
+Text.CommonStrings.DualWieldingWands = Text.RegisterTranslatedString({
+    Handle = "h1dca0d1ag8e34g47e9g8cbegfe26d5c277e5",
+    Text = "Dual-wielding Wands",
+})
+Text.CommonStrings.WandAndShield = Text.RegisterTranslatedString({
+    Handle = "h0623ae9ag95ddg4034g9313g14ab02fd44a4",
+    Text = "Wand & Shield",
+})
 Text.CommonStrings.Equipment = Text.RegisterTranslatedString({
    Handle = "ha5ce3e75g6795g493bgbd94g5d7779a15deb",
    Text = "Equipment",

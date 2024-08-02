@@ -19,6 +19,17 @@ function Vanity.GetTemplateInSlot(char, slot)
     return template
 end
 
+---Sets a weapon animation override for char.
+---@param char EsvCharacter
+---@param animType CharacterLib.WeaponAnimationType Set to `NONE` to remove an override.
+function Transmog.SetWeaponAnimationOverride(char, animType)
+    Entity.RemoveTagsByPattern(char, Transmog.WEAPON_ANIMATION_OVERRIDE_TAG_PATTERN) -- Remove previous override.
+    if animType ~= Character.WEAPON_ANIMATION_TYPES.NONE then
+        Osiris.SetTag(char, string.format(Transmog.WEAPON_ANIMATION_OVERRIDE_TAG, animType))
+    end
+    Transmog:DebugLog("Set weapon animation override", char.DisplayName, table.reverseLookup(Character.WEAPON_ANIMATION_TYPES, animType))
+end
+
 ---Transmogrifies an item into another template.
 ---@param char EsvCharacter
 ---@param item EsvItem
@@ -380,6 +391,15 @@ Net.RegisterListener("EPIPENCOUNTERS_Vanity_RefreshAppearance", function (payloa
     local char = Character.Get(payload.CharacterNetID)
 
     Vanity.RefreshAppearance(char, payload.UseAltStatus)
+end)
+
+-- Handle requests to set weapon animation overrides.
+Net.RegisterListener(Transmog.NETMSG_SET_WEAPON_ANIMATION_OVERRIDE, function (payload)
+    local char = payload:GetCharacter()
+    Transmog.SetWeaponAnimationOverride(char, payload.AnimType)
+    -- Update the animation and unsheathe to preview it
+    Osiris.CharacterSetFightMode(char, false, true) -- Toggle is necessary in case character was already unsheathed.
+    Osiris.CharacterSetFightMode(char, true, true)
 end)
 
 -- TODO better handling - this can break with multiple people equipping stuff at once
