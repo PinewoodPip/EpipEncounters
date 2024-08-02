@@ -8,6 +8,7 @@ Character = {
     AI_UNPREFERRED_TAG = "AI_UNPREFERRED_TARGET",
     AI_IGNORED_TAG = "AI_IGNORED_TARGET",
     MAX_PARTYGROUP_LINK_RANGE = 20, -- In meters, 3D distance.
+    COMBAT_EXIT_RANGE = 27.75, -- In meters, 3D distance.
 
     ---@type table<string, ItemSlot>
     EQUIPMENT_SLOTS = {

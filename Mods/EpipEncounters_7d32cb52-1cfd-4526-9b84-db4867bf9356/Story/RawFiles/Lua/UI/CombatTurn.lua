@@ -28,6 +28,19 @@ local CombatTurn = {
         },
     },
 
+    -- From `getCharTypeColour()`, in decimal.
+    ---@enum UI.CombatTurn.HighlightColor
+    HIGHLIGHT_COLORS = {
+        ACTIVE = 16777215, -- Active combatant.
+        UNKNOWN2 = 41981, -- Blue
+        ALLY = 1169530,
+        ENEMY = 14090271,
+        FRIENDLY = 4697160,
+        UNKNOWN6 = 1142406, -- Dark blue
+        NEUTRAL = 13016101,
+        UNKNOWN8 = 9247788, -- Dark red
+    },
+
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
 
@@ -60,9 +73,39 @@ Epip.InitializeUI(Ext.UI.TypeID.combatTurn, "CombatTurn", CombatTurn)
 ---@field NextRoundEntries CombatTurnUI_ArrayEntry_Turn[]
 
 ---------------------------------------------
+-- METHODS
+---------------------------------------------
+
+---Returns the elements for an entity.
+---@param entity CombatLib_CombatCompatibleEntity
+---@return FlashMovieClip?, FlashMovieClip? -- Current round and next round entries. `nil` if the entity has no entry in the UI. **The active character will not be returned for the current round**.
+function CombatTurn.GetEntityElement(entity)
+    local root = CombatTurn:GetRoot()
+    local currentRoundList = root.list
+    local nextRoundList = root.nextRoundList
+    return CombatTurn._GetEntityElement(entity, currentRoundList), CombatTurn._GetEntityElement(entity, nextRoundList)
+end
+
+---Returns the element of an entity within a list.
+---@param entity CombatLib_CombatCompatibleEntity
+---@param list FlashMovieClip
+---@return FlashMovieClip? -- `nil` if the entity has no entry in the UI.
+function CombatTurn._GetEntityElement(entity, list)
+    for i=0,#list.content_array-1,1 do
+        local entry = list.content_array[i]
+        local entryEntity = Combat.GetEntityByCombinedID(entry.id) -- IDs within the UI are combined combat IDs.
+        if entryEntity.Handle == entity.Handle then
+            return entry
+        end
+    end
+    return nil
+end
+
+---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
 
+-- Hook entry updates.
 CombatTurn:RegisterInvokeListener("updateTurnList", function (ev)
     local root = ev.UI:GetRoot()
     local currentRoundArray = root.currentTurn_Array

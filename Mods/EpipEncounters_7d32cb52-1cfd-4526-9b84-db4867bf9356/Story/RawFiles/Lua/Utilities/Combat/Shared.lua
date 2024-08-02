@@ -77,3 +77,40 @@ function Combat.GetCombatID(entity)
 
     return combatID
 end
+
+---Returns all the entities in a combat.
+---@param combat EclTurnManagerCombat|EsvTurnManagerCombat
+---@return CombatLib_CombatCompatibleEntity[]
+function Combat.GetParticipants(combat)
+    local entities = {} ---@type CombatLib_CombatCompatibleEntity[]
+    if Ext.IsClient() then
+        ---@cast combat EclTurnManagerCombat
+        local teams = combat.Teams
+        for _,handle in pairs(teams) do
+            table.insert(entities, Combat.GetEntityByCombinedID(Ext.Entity.GetCombatComponent(handle.Handle).CombatAndTeamIndex))
+        end
+    else
+        Combat:__ThrowNotImplemented("GetParticipants") -- TODO
+    end
+    return entities
+end
+
+---Returns an entity by its combat and team ID.
+---@param id EocCombatTeamId|integer
+---@return CombatLib_CombatCompatibleEntity?
+function Combat.GetEntityByCombinedID(id)
+    local combatID, teamID
+    if type(id) == "number" then -- Number overload (ex. for IDs extracted from UIs)
+        combatID, teamID = id >> 24, id & 16777215 -- Higher 8 bits is combat ID, lower 24 bits is team ID
+    else
+        combatID, teamID = id.CombatId, id.TeamId
+    end
+    local combat = Combat.GetCombat(combatID)
+    for _,team in pairs(combat.Teams) do
+        local combatComp = Ext.Entity.GetCombatComponent(team.Handle)
+        if combatComp.CombatAndTeamIndex.TeamId == teamID then
+            return Entity.GetGameObjectComponent(combatComp.Entity)
+        end
+    end
+    return nil
+end
