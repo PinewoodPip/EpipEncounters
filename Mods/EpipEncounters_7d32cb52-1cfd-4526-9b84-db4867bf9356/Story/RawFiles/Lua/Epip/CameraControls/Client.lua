@@ -169,24 +169,30 @@ GameState.Events.RunningTick:Subscribe(function (_)
     if not CameraControls._CachedLeftRotationKeybinds or not CameraControls._CachedRightRotationKeybinds then
         CameraControls._CachedLeftRotationKeybinds = {
             Input.GetBinding("CameraRotateLeft", "Key", 1, nil),
-            Input.GetBinding("CameraRotateLeft", "Key", 2, nil)
+            Input.GetBinding("CameraRotateLeft", "Key", 2, nil),
+            Input.GetBinding("CameraRotateLeft", "Mouse", 1, nil), -- Also check mouse binds for scenarios like binding to M4 & M5.
+            Input.GetBinding("CameraRotateLeft", "Mouse", 2, nil),
         }
         CameraControls._CachedRightRotationKeybinds = {
             Input.GetBinding("CameraRotateRight", "Key", 1, nil),
-            Input.GetBinding("CameraRotateRight", "Key", 2, nil)
+            Input.GetBinding("CameraRotateRight", "Key", 2, nil),
+            Input.GetBinding("CameraRotateRight", "Mouse", 1, nil), -- See note above.
+            Input.GetBinding("CameraRotateRight", "Mouse", 2, nil),
         }
     end
     -- Determine rotation direction (if the user is currently rotating the camera)
     local rotationDirection = nil ---@type (1|-1)?
-    for _,binding in ipairs(CameraControls._CachedLeftRotationKeybinds) do
+    for _,binding in pairs(CameraControls._CachedLeftRotationKeybinds) do
         if Input.HasInputEventModifiersPressed(binding) and Input.IsKeyPressed(binding.InputID) then
             rotationDirection = -1
+            break
         end
     end
     if not rotationDirection then
-        for _,binding in ipairs(CameraControls._CachedRightRotationKeybinds) do
+        for _,binding in pairs(CameraControls._CachedRightRotationKeybinds) do
             if Input.HasInputEventModifiersPressed(binding) and Input.IsKeyPressed(binding.InputID) then
                 rotationDirection = 1
+                break
             end
         end
     end
