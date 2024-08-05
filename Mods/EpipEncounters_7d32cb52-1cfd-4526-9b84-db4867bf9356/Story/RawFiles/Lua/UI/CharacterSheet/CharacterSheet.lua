@@ -3,6 +3,8 @@
 -- Hooks for characterSheet.swf.
 ---------------------------------------------
 
+local UIOverrideToggles = Epip.GetFeature("Features.UIOverrideToggles")
+
 ---@class CharacterSheetUI : UI
 local CharacterSheet = {
     StatsTab = {}, -- See StatsTab.lua
@@ -102,10 +104,6 @@ local CharacterSheet = {
         EXPERIENCE = 19,
     },
 
-    FILEPATH_OVERRIDES = {
-        ["Public/Game/GUI/characterSheet.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/characterSheet.swf",
-    },
-
     Events = {
         HelmetToggled = {}, ---@type Event<CharacterSheetUI_Event_HelmetToggled>
         TabChanged = {}, ---@type Event<CharacterSheetUI_Event_TabChanged>
@@ -118,6 +116,11 @@ local CharacterSheet = {
     }
 }
 Epip.InitializeUI(Ext.UI.TypeID.characterSheet, "CharacterSheet", CharacterSheet)
+
+-- Apply .swf override
+if UIOverrideToggles.Settings.EnableCharacterSheetOverride:GetValue() == true then
+    Ext.IO.AddPathOverride("Public/Game/GUI/characterSheet.swf", "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/characterSheet.swf")
+end
 
 ---@class SecondaryStatBase
 
@@ -223,6 +226,7 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
+-- Forward tab change events.
 CharacterSheet:RegisterCallListener("selectedTab", function (_, id)
     CharacterSheet.Events.TabChanged:Throw({TabID = id})
 end)

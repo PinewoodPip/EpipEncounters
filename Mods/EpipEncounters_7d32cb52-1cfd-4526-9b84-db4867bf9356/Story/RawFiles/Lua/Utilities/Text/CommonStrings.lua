@@ -363,6 +363,10 @@ Text.CommonStrings.Slots = Text.RegisterTranslatedString({
     Handle = "h17e9949ege435g4e52ga279g3818b0f3184b",
     Text = "Slots",
 })
+Text.CommonStrings.Compatibility = Text.RegisterTranslatedString({
+    Handle = "h8899625eg7ef9g4091g8107g351e2b7f147b",
+    Text = "Compatibility",
+})
 
 ---------------------------------------------
 -- BRANDING

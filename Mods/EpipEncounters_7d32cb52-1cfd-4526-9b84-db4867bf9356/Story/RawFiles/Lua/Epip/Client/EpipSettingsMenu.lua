@@ -17,6 +17,7 @@ local HotbarTweaks = Epip.GetFeature("Features.HotbarTweaks")
 local Vanity = Epip.GetFeature("Feature_Vanity")
 local Navbar = Epip.GetFeature("Features.NavigationBar")
 local QuickLoot = Epip.GetFeature("Features.QuickLoot")
+local UIOverrideToggles = Epip.GetFeature("Features.UIOverrideToggles")
 local CommonStrings = Text.CommonStrings
 
 local QuickExamineWidgets = {
@@ -285,6 +286,9 @@ local tabs = {
             {Module = DiscordRichPresence:GetNamespace(), ID = DiscordRichPresence.Settings.Mode:GetID()},
             {Module = DiscordRichPresence:GetNamespace(), ID = DiscordRichPresence.Settings.CustomLine1:GetID()},
             {Module = DiscordRichPresence:GetNamespace(), ID = DiscordRichPresence.Settings.CustomLine2:GetID()},
+
+            CreateHeader(CommonStrings.Compatibility),
+            CreateSettingEntry(UIOverrideToggles.Settings.EnableCharacterSheetOverride),
         }
     },
     ["Epip_Developer"] = {

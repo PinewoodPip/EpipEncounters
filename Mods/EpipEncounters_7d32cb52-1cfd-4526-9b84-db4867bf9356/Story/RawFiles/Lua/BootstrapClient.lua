@@ -228,6 +228,7 @@ LOAD_ORDER = {
 
     -- Needs to be ordered after the above.
     "Epip/Settings.lua",
+    "Epip/UIOverrideToggles/Client.lua",
 
     "UI/StatusConsole.lua",
 
