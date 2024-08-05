@@ -288,7 +288,11 @@ local tabs = {
             {Module = DiscordRichPresence:GetNamespace(), ID = DiscordRichPresence.Settings.CustomLine2:GetID()},
 
             CreateHeader(CommonStrings.Compatibility),
+            {Type = "Label", Label = Text.Format(UIOverrideToggles.TranslatedStrings.Label_SettingsMenuHint:GetString(), {
+                Size = 19,
+            })},
             CreateSettingEntry(UIOverrideToggles.Settings.EnableCharacterSheetOverride),
+            CreateSettingEntry(UIOverrideToggles.Settings.EnablePlayerInfoOverride),
         }
     },
     ["Epip_Developer"] = {

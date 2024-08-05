@@ -1,9 +1,10 @@
 
 ---------------------------------------------
 -- Hooks for playerInfo.swf.
--- The SWF is edited to support a BH display, and status sorting in the future.
+-- The SWF is edited to support a BH display.
 ---------------------------------------------
 
+local UIOverrideToggles = Epip.GetFeature("Features.UIOverrideToggles")
 local BH = EpicEncounters.BatteredHarried
 
 ---@class PlayerInfoUI : UI
@@ -18,15 +19,12 @@ local PlayerInfo = {
 
     previousCombatState = nil,
     nextCharacterSelectionIsManual = false,
+    _OverrideApplied = false, -- Whether Epip's .swf override is applied.
 
     StatusApplyTime = {
 
     },
     StatusNetIDs = {},
-
-    FILEPATH_OVERRIDES = {
-        ["Public/Game/GUI/playerInfo.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/playerInfo.swf"
-    },
 
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
@@ -45,6 +43,12 @@ local PlayerInfo = {
     }
 }
 Epip.InitializeUI(Ext.UI.TypeID.playerInfo, "PlayerInfo", PlayerInfo)
+
+-- Apply .swf override
+if UIOverrideToggles.Settings.EnablePlayerInfoOverride:GetValue() == true then
+    Ext.IO.AddPathOverride("Public/Game/GUI/playerInfo.swf", "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/playerInfo.swf")
+    PlayerInfo._OverrideApplied = true
+end
 
 ---------------------------------------------
 -- EVENTS
@@ -102,8 +106,10 @@ function PlayerInfo:GetUI()
 end
 
 ---Sets whether the combat badge should show on portraits.
+---Does nothing if the .swf override is not applied.
 ---@param state boolean
 function PlayerInfo.SetCombatBadgeVisibility(state)
+    if not PlayerInfo._OverrideApplied then return end
     PlayerInfo:GetRoot().COMBAT_BADGE_ENABLED = state
 end
 
@@ -205,7 +211,8 @@ end
 -- INTERNAL METHODS - DO NOT CALL
 ---------------------------------------------
 
-function PlayerInfo.SetBH(player, element, stacks, visible, height)
+function PlayerInfo.SetBH(_, element, stacks, visible, height)
+    if not PlayerInfo._OverrideApplied then return end
     element.visible = visible
 
     if element.visible then
@@ -231,8 +238,9 @@ function PlayerInfo.SetBH(player, element, stacks, visible, height)
 end
 
 ---Updates the BH indicators for a player.
----@param player FlashObjectHandle
+---@param player FlashMovieClip
 function PlayerInfo._UpdateBH(player)
+    if not PlayerInfo._OverrideApplied then return end
     local char = Character.Get(player.characterHandle, true)
 
     local displaysVisible = PlayerInfo.Hooks.GetBHVisibility:Throw({
@@ -251,6 +259,7 @@ function PlayerInfo._UpdateBH(player)
 end
 
 function PlayerInfo.UpdatePlayers()
+    if not PlayerInfo._OverrideApplied then return end
     local root = PlayerInfo:GetRoot()
     local players = root.player_array
     local inCombat = Client.IsInCombat()
@@ -296,12 +305,12 @@ end
 ---------------------------------------------
 
 -- Listen for character being selected by player.
-PlayerInfo:RegisterCallListener("charSel", function(e, handle, isScripted)
+PlayerInfo:RegisterCallListener("charSel", function(_, _, isScripted)
     PlayerInfo.nextCharacterSelectionIsManual = not isScripted
 end)
 
 -- Listen for the active character being changed.
-PlayerInfo:RegisterCallListener("activeCharacterChanged", function(ev, previousHandle, newHandle)
+PlayerInfo:RegisterCallListener("activeCharacterChanged", function(_, previousHandle, newHandle)
     local prevChar, newChar
 
     if previousHandle ~= 0 then prevChar = Character.Get(previousHandle, true) end
@@ -316,7 +325,7 @@ PlayerInfo:RegisterCallListener("activeCharacterChanged", function(ev, previousH
     PlayerInfo.nextCharacterSelectionIsManual = false
 end)
 
-PlayerInfo:RegisterCallListener("statusHovered", function(ev, charFlashHandle, statusFlashHandle)
+PlayerInfo:RegisterCallListener("statusHovered", function(_, charFlashHandle, statusFlashHandle)
     local char, status
 
     if charFlashHandle ~= "" then
@@ -352,16 +361,16 @@ PlayerInfo.Hooks.GetBHVisibility:Subscribe(function (ev)
     ev.Visible = visible
 end)
 
-Ext.RegisterUITypeInvokeListener(PlayerInfo.UITypeID, "updateInfos", function(ui, method)
+-- Update Epip's elements when player elements or statuses are updated.
+Ext.RegisterUITypeInvokeListener(PlayerInfo.UITypeID, "updateInfos", function(_, _)
     PlayerInfo.UpdatePlayers()
 end, "After")
-
-Ext.RegisterUITypeInvokeListener(PlayerInfo.UITypeID, "updateStatuses", function(ui, method, createIfDoesntExist, cleanupAll)
+Ext.RegisterUITypeInvokeListener(PlayerInfo.UITypeID, "updateStatuses", function(_, _, _, _)
     PlayerInfo.UpdatePlayers()
 end, "After")
 
 -- Cleanup status data on expiry.
-PlayerInfo:RegisterCallListener("pipStatusExpired", function (event, flashHandle, characterFlashHandle)
+PlayerInfo:RegisterCallListener("pipStatusExpired", function (_, flashHandle, _)
     local handle = Ext.UI.DoubleToHandle(flashHandle)
     local netID = PlayerInfo.StatusNetIDs[flashHandle]
 
@@ -390,6 +399,8 @@ end, "Before")
 
 -- Set some values on playerInfo for summon stretching to work
 Ext.Events.SessionLoaded:Subscribe(function()
+    if not PlayerInfo._OverrideApplied then return end
+
     -- UI, Root fields are for backwards compatibility
     PlayerInfo.UI = PlayerInfo:GetUI()
     PlayerInfo.Root = PlayerInfo:GetRoot()
