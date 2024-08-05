@@ -26,7 +26,7 @@
                 <node id="ModuleInfo">
                     <attribute id="Author" value="PinewoodPip" type="30" />
                     <attribute id="CharacterCreationLevelName" value="" type="22" />
-                    <attribute id="Description" value="UI, QoL and modding utilities for Epic Encounters." type="30" />
+                    <attribute id="Description" value="Epip is a UI and QoL mod that introduces dozens of usability improvements to existing UIs, as well as numerous custom ones to fulfill needs that the vanilla ones cannot." type="30" />
                     <attribute id="DescriptionName" value="" handle="ls::TranslatedStringRepository::s_HandleUnknown" type="28" />
                     <attribute id="DisplayName" value="" handle="ls::TranslatedStringRepository::s_HandleUnknown" type="28" />
                     <attribute id="Folder" value="EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356" type="30" />
@@ -34,7 +34,7 @@
                     <attribute id="LobbyLevelName" value="" type="22" />
                     <attribute id="MD5" value="" type="23" />
                     <attribute id="MenuLevelName" value="" type="22" />
-                    <attribute id="Name" value="Epip Encounters" type="22" />
+                    <attribute id="Name" value="Epip" type="22" />
                     <attribute id="NumPlayers" value="2" type="1" />
                     <attribute id="PhotoBooth" value="" type="22" />
                     <attribute id="StartupLevelName" value="" type="22" />
