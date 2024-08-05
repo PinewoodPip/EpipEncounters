@@ -145,7 +145,32 @@ function Input.SetActionBindings(actionID, bindings)
     Input._UpdateInputMap()
 end
 
+---Attempts to execute an action.
+---@param action InputLib_Action|string
+---@param keys table? TODO
+function Input.TryExecuteAction(action, keys)
+    if type(action) == "string" then action = Input.GetAction(action) end -- String overload.
+    if not Input.CanExecuteAction(action:GetID()) then return end
+    Input.Events.ActionExecuted:Throw({
+        Character = Client.GetCharacter(),
+        Action = action,
+    })
+
+    if Input._CurrentAction then
+        Input._FireActionReleasedEvent()
+    end
+
+    if keys then
+        Input._CurrentAction = action:GetID()
+        Input._CurrentActionKeys = keys
+    else
+        -- Immediately consider the action as released.
+        Input._FireActionReleasedEvent()
+    end
+end
+
 ---Returns whether an action can be currently executed.
+---@see InputLib_Hook_CanExecuteAction
 ---@param actionID string
 ---@return boolean
 function Input.CanExecuteAction(actionID)
@@ -325,19 +350,7 @@ Input.Events.KeyPressed:Subscribe(function (_)
 
     local actions = Input.GetBoundActions(dummyBinding)
     for _,action in ipairs(actions) do
-        if Input.CanExecuteAction(action:GetID()) then
-            Input.Events.ActionExecuted:Throw({
-                Character = Client.GetCharacter(),
-                Action = action,
-            })
-
-            if Input._CurrentAction then
-                Input._FireActionReleasedEvent()
-            end
-
-            Input._CurrentAction = action:GetID()
-            Input._CurrentActionKeys = dummyBinding
-        end
+        Input.TryExecuteAction(action, dummyBinding)
     end
 
     Input._lastActionMapping = mapping

@@ -98,11 +98,8 @@ end
 ---@diagnostic disable-next-line: missing-return, unused-local
 function Epip.GetFeature(id) end -- IDE dummy
 
----@generic T
----@param modTable string
----@param id `T`
----@param required boolean? If `true`, an error will be thrown if the feature could not be fetched.
----@return Feature|`T`
+-- An update to LLS broke overloads with generics, so this is now unannotated.
+---Param `required boolean?`: If `true`, an error will be thrown if the feature could not be fetched.
 function Epip.GetFeature(modTable, id, required)
     -- Overload to get features built-in into Epip.
     if id == nil then

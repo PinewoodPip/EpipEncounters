@@ -351,6 +351,18 @@ Text.CommonStrings.Lying = Text.RegisterTranslatedString({
     Text = "Lying",
     ContextDescription = "As in, laying down."
 })
+Text.CommonStrings.Name = Text.RegisterTranslatedString({
+    Handle = "h44116ad8g6ba7g40c5g86cfgde2042d5bc58",
+    Text = "Name",
+})
+Text.CommonStrings.Create = Text.RegisterTranslatedString({
+    Handle = "h9bffc6e1geabfg439agaa63g3fe318e38fbd",
+    Text = "Create",
+})
+Text.CommonStrings.Slots = Text.RegisterTranslatedString({
+    Handle = "h17e9949ege435g4e52ga279g3818b0f3184b",
+    Text = "Slots",
+})
 
 ---------------------------------------------
 -- BRANDING
@@ -809,6 +821,15 @@ Text.CommonStrings.Cursed = Text.RegisterTranslatedString({
 Text.CommonStrings.Purified = Text.RegisterTranslatedString({
     Handle = "he817378ege243g4985gaf21g502181dcf2e6",
     Text = "Purified",
+})
+
+---------------------------------------------
+-- UI TERMS
+---------------------------------------------
+
+Text.CommonStrings.Hotbar = Text.RegisterTranslatedString({
+    Handle = "h50e1fa5dg66c8g49dagb30bgcafb9a2886fd",
+    Text = "Hotbar",
 })
 
 ---------------------------------------------

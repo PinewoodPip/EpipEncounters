@@ -367,6 +367,7 @@ LOAD_ORDER = {
             "UI/Generic/Prefabs/Containers/PooledContainer.lua",
 
             "UI/Generic/Prefabs/Containers/VerticalList.lua",
+            "UI/Generic/Prefabs/Containers/RadialList.lua",
         },
     },
     "Epip/GenericUITextures/Client_TestUI.lua", -- Should be loaded after Generic itself
@@ -544,6 +545,18 @@ LOAD_ORDER = {
             "Epip/HotbarGroups/UIs/Creator.lua",
             "Epip/HotbarGroups/UIs/HotbarGroup.lua",
         },
+    },
+    {
+        Scripts = {
+            "Epip/RadialMenus/Client.lua",
+            "Epip/RadialMenus/Prefabs/Slot.lua",
+            "Epip/RadialMenus/Prefabs/RadialMenu.lua",
+            "Epip/RadialMenus/Menus/_Menu.lua",
+            "Epip/RadialMenus/Menus/Hotbar.lua",
+            "Epip/RadialMenus/UI/Main.lua",
+            "Epip/RadialMenus/UI/MenuCreator.lua",
+        },
+        WIP = true,
     },
 
     "Epip/Client/AprilFoolsCharacterSheet.lua",

@@ -22,6 +22,16 @@ function Container:OnElementAdded(element) end
 ---@abstract
 function Container:PositionElements() end
 
+---Removes all elements of the container.
+---@virtual
+function Container:Clear()
+    local children = self:GetChildren()
+    for i=#children,1,-1 do
+        local child = children[i]
+        child:Destroy()
+    end
+end
+
 ---@override
 function Container:GetRootElement()
     return self.Root

@@ -315,7 +315,6 @@ function Item.GetIcon(item)
     -- Gold is a special case.
     if item.RootTemplate.Id == "1c3c9c74-34a1-4685-989e-410dc080be6f" then
         local amount = item.Amount
-
         if amount >= 500 then
             icon = "Item_Loot_Gold_A"
         elseif amount >= 100 then
@@ -332,6 +331,7 @@ function Item.GetIcon(item)
             local statObject = Ext.Stats.Get(item.Stats.Name)
             local itemGroup = Ext.Stats.ItemGroup.GetLegacy(statObject.ItemGroup)
 
+            -- Fetch icon from progression
             if itemGroup and item.Stats.LevelGroupIndex < #itemGroup.LevelGroups then
                 local levelGroup = itemGroup.LevelGroups[item.Stats.LevelGroupIndex + 1]
                 local rootGroup = levelGroup.RootGroups[item.Stats.RootGroupIndex + 1]

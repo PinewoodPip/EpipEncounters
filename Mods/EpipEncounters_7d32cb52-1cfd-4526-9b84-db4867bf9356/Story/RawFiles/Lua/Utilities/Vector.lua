@@ -196,6 +196,14 @@ function Vector.GetLength(vector)
     return length
 end
 
+---Rotates a vector.
+---@param vec Vector2
+---@param degrees number
+function Vector.Rotate(vec, degrees)
+    local radians = math.rad(degrees)
+    return Vector.Create(math.cos(radians) * vec[1] - math.sin(radians) * vec[2], math.sin(radians) * vec[1] + math.cos(radians) * vec[2])
+end
+
 ---------------------------------------------
 -- SETUP
 ---------------------------------------------

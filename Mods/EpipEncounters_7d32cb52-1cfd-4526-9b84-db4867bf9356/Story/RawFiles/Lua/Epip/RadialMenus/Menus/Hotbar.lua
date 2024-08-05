@@ -1,0 +1,75 @@
+
+local RadialMenus = Epip.GetFeature("Features.RadialMenus")
+
+---@class Features.RadialMenus.Menu.Hotbar : Features.RadialMenus.Menu
+---@field StartingIndex integer
+---@field SlotsAmount integer
+local _HotbarMenu = {}
+RadialMenus:RegisterClass("Features.RadialMenus.Menu.Hotbar", _HotbarMenu, {"Features.RadialMenus.Menu"})
+
+---Creates a hotbar row menu.
+---@param name string
+---@param startingIndex integer
+---@param slots integer
+---@return Features.RadialMenus.Menu.Hotbar
+function _HotbarMenu.Create(name, startingIndex, slots)
+    local instance = _HotbarMenu:__Create() ---@cast instance Features.RadialMenus.Menu.Hotbar
+    instance.Name = name
+    instance.StartingIndex = startingIndex
+    instance.SlotsAmount = slots
+    return instance
+end
+
+---@override
+function _HotbarMenu:GetSlots()
+    local char = Client.GetCharacter() -- Hotbar menus use current active character.
+    local skillBar = char.PlayerData.SkillBarItems
+    local startIndex = self.StartingIndex
+    local slots = {} ---@type (Features.RadialMenus.Slot.Skill|Features.RadialMenus.Slot.Item|Features.RadialMenus.Slot.Empty)[]
+    for i=startIndex,math.min(startIndex+self.SlotsAmount-1, 145),1 do
+        local skillBarSlot = skillBar[i]
+        if skillBarSlot.Type == "Skill" then
+            local skill = Stats.Get("StatsLib_StatsEntry_SkillData", skillBarSlot.SkillOrStatId)
+            ---@type Features.RadialMenus.Slot.Skill
+            local slot = {
+                Type = "Skill",
+                Name = Text.GetTranslatedString(skill.DisplayName),
+                Icon = skill.Icon,
+                SkillID = skillBarSlot.SkillOrStatId,
+            }
+            table.insert(slots, slot)
+        elseif skillBarSlot.Type == "Action" then
+            local action = Stats.GetAction(skillBarSlot.SkillOrStatId)
+            ---@type Features.RadialMenus.Slot.Skill
+            local slot = {
+                Type = "Skill",
+                Name = action:GetName(), -- TODO support alt names?
+                Icon = action.Icon,
+                SkillID = skillBarSlot.SkillOrStatId,
+            }
+            table.insert(slots, slot)
+        elseif skillBarSlot.Type == "Item" then
+            local item = Item.Get(skillBarSlot.ItemHandle)
+            ---@type Features.RadialMenus.Slot.Skill
+            local slot = {
+                Type = "Item",
+                Name = Item.GetDisplayName(item),
+                Icon = Item.GetIcon(item),
+                ItemHandle = item.Handle,
+            }
+            table.insert(slots, slot)
+        else -- ItemTemplate slots are ignored (as they're unused by the game?).
+            table.insert(slots, RadialMenus.EMPTY_SLOT)
+        end
+    end
+    -- Fill rest of the menu with empty slots (ex. if the starting index is near the end of the array)
+    for i=#slots+1,self.SlotsAmount,1 do
+        slots[i] = RadialMenus.EMPTY_SLOT
+    end
+    return slots
+end
+
+---@override
+function _HotbarMenu:GetTypeName()
+    return Text.CommonStrings.Hotbar
+end
