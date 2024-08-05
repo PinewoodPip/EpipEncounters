@@ -151,7 +151,7 @@ function UI._Initialize()
     contentArea:SetAlpha(0)
     contentArea:SetPositionRelativeToParent("TopLeft", 100, 100)
 
-    local header = TextPrefab.Create(UI, "Header", contentArea, TSK.Label_CreateNewMenu:GetString(), "Center", V(500, 50))
+    local header = TextPrefab.Create(UI, "Header", contentArea, TSK.Label_CreateNewMenu, "Center", V(500, 50))
     header:SetPositionRelativeToParent("Top")
 
     local contentList = contentArea:AddChild("ContentList", "GenericUI_Element_ScrollList")

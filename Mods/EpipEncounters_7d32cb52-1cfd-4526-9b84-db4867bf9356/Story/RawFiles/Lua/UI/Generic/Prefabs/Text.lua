@@ -1,6 +1,7 @@
 
 local Generic = Client.UI.Generic
 local TextElement = Generic.ELEMENTS.Text
+local TextLib = Text
 
 ---@class GenericUI_Prefab_Text : GenericUI_Prefab, GenericUI_Element_Text
 local Text = {
@@ -26,7 +27,7 @@ InheritMultiple(Text, Generic._Prefab, TextElement) -- Inheritance with basic Te
 ---@param ui GenericUI_Instance
 ---@param id string
 ---@param parent (GenericUI_Element|string)?
----@param text string
+---@param text TextLib.String
 ---@param alignType GenericUI_Element_Text_Align
 ---@param size Vector2
 ---@return GenericUI_Prefab_Text
@@ -38,7 +39,7 @@ function Text.Create(ui, id, parent, text, alignType, size)
 
     textElement:SetType(alignType)
     textElement:SetSize(size[1], size[2])
-    textElement:SetText(text)
+    textElement:SetText(TextLib.Resolve(text))
     textElement:SetMouseEnabled(false)
 
     -- Forward events
@@ -65,10 +66,10 @@ end
 
 ---Sets the element's text.
 ---Note that the text will be culled if it doesn't fit the dimensions of the element.
----@param text string
+---@param text TextLib.String
 ---@param setSize boolean? Defaults to `false`. If `true`, the element will be automatically resized to fit the new text.
 function Text:SetText(text, setSize)
-    self.Element:SetText(text, setSize)
+    self.Element:SetText(TextLib.Resolve(text), setSize)
 end
 
 function Text:GetMainElement()

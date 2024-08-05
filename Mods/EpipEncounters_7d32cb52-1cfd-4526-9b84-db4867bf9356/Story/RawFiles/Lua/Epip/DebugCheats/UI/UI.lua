@@ -106,7 +106,7 @@ function UI._Initialize()
 
         DraggingAreaPrefab.Create(UI, "DraggableArea", bg, UI.DRAGGABLE_AREA_SIZE, UI.DRAGGABLE_AREA_ALPHA)
 
-        local _ = TextPrefab.Create(UI, "Header", contentList, DebugCheatsUI.TranslatedStrings.Header:GetString(), "Center", UI.HEADER_SIZE)
+        local _ = TextPrefab.Create(UI, "Header", contentList, DebugCheatsUI.TranslatedStrings.Header, "Center", UI.HEADER_SIZE)
         local contextText = TextPrefab.Create(UI, "ContextLabel", contentList, "", "Center", UI.HEADER_SIZE)
         UI.ContextLabel = contextText
 

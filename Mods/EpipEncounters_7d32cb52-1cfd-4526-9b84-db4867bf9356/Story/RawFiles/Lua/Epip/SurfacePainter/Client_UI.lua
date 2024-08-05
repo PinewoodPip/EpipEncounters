@@ -131,7 +131,7 @@ function UI._Initialize()
 
     local _ = DraggingArea.Create(UI, "DragArea", panel, UI.DRAG_AREA_SIZE)
 
-    local header = TextPrefab.Create(UI, "Header", panel, TSK.Header:GetString(), "Center", UI.HEADER_SIZE)
+    local header = TextPrefab.Create(UI, "Header", panel, TSK.Header, "Center", UI.HEADER_SIZE)
     header:SetPositionRelativeToParent("Top", 0, 10)
 
     local settingsList = panel:AddChild("SettingsList", "GenericUI_Element_VerticalList")

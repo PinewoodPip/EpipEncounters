@@ -93,7 +93,7 @@ function UI._Initialize()
     UI.Root = root
 
     -- "No menus" hint
-    local noMenusLabel = TextPrefab.Create(UI, "NoMenusLabel", UI.Root, TSK.Label_NoMenus:GetString(), "Center", V(500, 50))
+    local noMenusLabel = TextPrefab.Create(UI, "NoMenusLabel", UI.Root, TSK.Label_NoMenus, "Center", V(500, 50))
     noMenusLabel:SetPositionRelativeToParent("Center")
     UI.NoMenusLabel = noMenusLabel
 
