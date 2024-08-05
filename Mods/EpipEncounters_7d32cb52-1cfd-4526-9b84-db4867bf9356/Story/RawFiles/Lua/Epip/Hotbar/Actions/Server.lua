@@ -101,8 +101,11 @@ end)
 
 -- Forward net events as ActionUsed event listeners.
 Net.RegisterListener(Actions.NET_MSG_ACTION_USED, function (payload)
-    Actions.Events.ActionUsed:Throw({
-        Character = payload:GetCharacter(),
-        Action = Actions.GetAction(payload.ActionID),
-    })
+    local action = Actions.GetAction(payload.ActionID)
+    if action then -- Only do this if the action is also registered on the server.
+        Actions.Events.ActionUsed:Throw({
+            Character = payload:GetCharacter(),
+            Action = action,
+        })
+    end
 end)
