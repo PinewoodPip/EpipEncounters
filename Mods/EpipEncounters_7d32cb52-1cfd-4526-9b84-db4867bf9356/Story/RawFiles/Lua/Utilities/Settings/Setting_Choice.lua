@@ -3,11 +3,10 @@ local Settings = Settings
 
 ---A setting that only permits values from a defined list.
 ---@class SettingsLib_Setting_Choice : SettingsLib_Setting
----@field Enabled boolean
+---@field DefaultValue any
 local _Choice = {
     Type = "Choice",
-    Choices = {}, ---@type SettingsLib_Setting_Choice_Entry[]
-    DefaultValue = "",
+    Choices = {}, ---@type SettingsLib_Setting_Choice_Entry[] Will be auto-initialized when the setting is created. Use `SetChoices()` to alter them post-init.
 }
 Settings:RegisterClass("SettingsLib_Setting_Choice", _Choice, {"SettingsLib_Setting"})
 Settings.RegisterSettingType("Choice", _Choice)
@@ -34,7 +33,19 @@ end
 
 ---@override
 function _Choice:_Init()
-    for i,choice in ipairs(self.Choices) do
+    self:SetChoices(self.Choices)
+
+    -- Default to first choice if unspecified
+    if self.DefaultValue == nil then
+        self.DefaultValue = self.Choices[1].ID
+    end
+end
+
+---Sets the valid choices.
+---Does not alter the current value.
+---@param choices SettingsLib_Setting_Choice_Entry[] Will be initialized to the class.
+function _Choice:SetChoices(choices)
+    for i,choice in ipairs(choices) do
         _Entry.Create(choice)
 
         -- Default to numbered IDs for choices.
@@ -42,10 +53,7 @@ function _Choice:_Init()
             choice.ID = tostring(i)
         end
     end
-    -- Default to first choice if unspecified
-    if self.DefaultValue == "" then
-        self.DefaultValue = self.Choices[1].ID
-    end
+    self.Choices = choices
 end
 
 ---@param value integer|string Index or string ID.

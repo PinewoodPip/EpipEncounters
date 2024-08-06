@@ -29,15 +29,7 @@ function _HotbarMenu:GetSlots()
     for i=startIndex,math.min(startIndex+self.SlotsAmount-1, 145),1 do
         local skillBarSlot = skillBar[i]
         if skillBarSlot.Type == "Skill" then
-            local skill = Stats.Get("StatsLib_StatsEntry_SkillData", skillBarSlot.SkillOrStatId)
-            ---@type Features.RadialMenus.Slot.Skill
-            local slot = {
-                Type = "Skill",
-                Name = Text.GetTranslatedString(skill.DisplayName),
-                Icon = skill.Icon,
-                SkillID = skillBarSlot.SkillOrStatId,
-            }
-            table.insert(slots, slot)
+            table.insert(slots, RadialMenus.CreateSkillSlot(skillBarSlot.SkillOrStatId))
         elseif skillBarSlot.Type == "Action" then
             local action = Stats.GetAction(skillBarSlot.SkillOrStatId)
             ---@type Features.RadialMenus.Slot.Skill
@@ -50,14 +42,7 @@ function _HotbarMenu:GetSlots()
             table.insert(slots, slot)
         elseif skillBarSlot.Type == "Item" then
             local item = Item.Get(skillBarSlot.ItemHandle)
-            ---@type Features.RadialMenus.Slot.Skill
-            local slot = {
-                Type = "Item",
-                Name = Item.GetDisplayName(item),
-                Icon = Item.GetIcon(item),
-                ItemHandle = item.Handle,
-            }
-            table.insert(slots, slot)
+            table.insert(slots, RadialMenus.CreateItemSlot(item))
         else -- ItemTemplate slots are ignored (as they're unused by the game?).
             table.insert(slots, RadialMenus.EMPTY_SLOT)
         end

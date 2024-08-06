@@ -21,7 +21,8 @@ local Menu = {
         ["Pressed"] = Color.Create(255, 255, 255, 255 * 0.6),
     },
     Events = {
-        SegmentClicked = {}, ---@type Event<{Index: integer}>
+        SegmentClicked = {}, ---@type Event<{Index:integer}>
+        SegmentRightClicked = {}, ---@type Event<{Index:integer}>
     },
 }
 RadialMenus:RegisterClass("Features.RadialMenus.Prefabs.RadialMenu", Menu, {"GenericUI_Prefab", "GenericUI_I_Elementable"})
@@ -75,7 +76,7 @@ function Menu:_Render()
         -- Render the segment's default state immediately.
         self:_UpdateSegment(i, "Idle")
 
-        -- Update segment graphics upon mouse interaction.
+        -- Update segment graphics upon mouse interaction and forward events.
         if slot.Type ~= "Empty" then -- Empty slots are non-interactable.
             selectionArea.Events.MouseOver:Subscribe(function (_)
                 self:_UpdateSegment(i, "Highlighted")
@@ -89,6 +90,16 @@ function Menu:_Render()
             selectionArea.Events.MouseUp:Subscribe(function (_)
                 self:_UpdateSegment(i, "Highlighted")
                 self.Events.SegmentClicked:Throw({
+                    Index = i,
+                })
+            end)
+        end
+
+        -- Handle right-clicks for editing slots, even for empty slots
+        if self._Config.Menu:GetClassName() == "Features.RadialMenus.Menu.Custom" then
+            selectionArea.Events.RightClick:Subscribe(function (_)
+                self:_UpdateSegment(i, "Pressed")
+                self.Events.SegmentRightClicked:Throw({
                     Index = i,
                 })
             end)
@@ -110,6 +121,12 @@ end
 function Menu:SetMenu(menu)
     self._Config.Menu = menu
     self:_Render()
+end
+
+---Returns the instance's current radial menu.
+---@return Features.RadialMenus.Menu
+function Menu:GetMenu()
+    return self._Config.Menu
 end
 
 ---Returns the container that children should be added to.

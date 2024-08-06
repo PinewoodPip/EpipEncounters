@@ -367,6 +367,14 @@ Text.CommonStrings.Compatibility = Text.RegisterTranslatedString({
     Handle = "h8899625eg7ef9g4091g8107g351e2b7f147b",
     Text = "Compatibility",
 })
+Text.CommonStrings.Keybind = Text.RegisterTranslatedString({
+    Handle = "h65a3a042g1e2eg4d6eg9e9fg31c908c1efe9",
+    Text = "Keybind",
+})
+Text.CommonStrings.Empty = Text.RegisterTranslatedString({
+    Handle = "h44af81d2gaa26g4767gb863g7933f41b4565",
+    Text = "Empty",
+})
 
 ---------------------------------------------
 -- BRANDING
@@ -778,6 +786,15 @@ Text.CommonStrings.Armor = Text.RegisterTranslatedString({
 Text.CommonStrings.Jewelry = Text.RegisterTranslatedString({
    Handle = "hf791f6e7g31cdg4e84gb349g383ad5b4409c",
    Text = "Jewelry",
+})
+Text.CommonStrings.Skill = Text.RegisterTranslatedString({
+    Handle = "h81299213g96fcg4c2cg9790g96ac44c22a4b",
+    Text = "Skill",
+})
+Text.CommonStrings.Item = Text.RegisterTranslatedString({
+    Handle = "h35dfd330gc074g4e79g8243g8ed2e6952b03",
+    Text = "Item",
+    ContextDescription = "As in, an inventory item",
 })
 Text.CommonStrings.Skills = Text.RegisterTranslatedString({
    Handle = "h14674f13g78c9g49ecgac6dgbf7a95039189",

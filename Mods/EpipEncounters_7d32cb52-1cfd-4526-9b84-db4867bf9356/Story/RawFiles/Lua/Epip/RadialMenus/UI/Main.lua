@@ -23,7 +23,8 @@ RadialMenus:RegisterInputAction("OpenRadialMenu", {
 ---@class Features.RadialMenus.UI.Events : GenericUI.Instance.Events
 UI.Events = UI.Events
 UI.Events.NewMenuRequested = UI:AddSubscribableEvent("NewMenuRequested") ---@type Event<Empty>
-UI.Events.EditMenuRequested = UI:AddSubscribableEvent("NewMenuRequested") ---@type Event<{Menu:Features.RadialMenus.Menu}>
+UI.Events.EditMenuRequested = UI:AddSubscribableEvent("EditMenuRequested") ---@type Event<{Menu:Features.RadialMenus.Menu}>
+UI.Events.EditSlotRequested = UI:AddSubscribableEvent("EditSlotRequested") ---@type Event<{Menu:Features.RadialMenus.Menu, Index:integer, Slot:Features.RadialMenus.Slot}>
 
 RadialMenus.UI = UI
 
@@ -162,10 +163,26 @@ function UI._RenderMenu(menu)
 
         -- Use slots when they're interacted with and close the UI.
         instance.Events.SegmentClicked:Subscribe(function (ev)
+            menu = UI._CurrentMenu:GetMenu()
             slots = menu:GetSlots() -- Must re-fetch slots, as they might've changed.
             local slot = slots[ev.Index]
             RadialMenus.UseSlot(Client.GetCharacter(), slot)
             UI:Hide()
+        end)
+        -- Handle requests to edit slots
+        instance.Events.SegmentRightClicked:Subscribe(function (ev)
+            menu = UI._CurrentMenu:GetMenu()
+            -- Can only edit slots of custom menus
+            if menu:GetClassName() == "Features.RadialMenus.Menu.Custom" then
+                slots = menu:GetSlots() -- Must re-fetch slots, as they might've changed.
+                local index = ev.Index
+                local slot = slots[index]
+                UI.Events.EditSlotRequested:Throw({
+                    Menu = menu,
+                    Index = index,
+                    Slot = slot,
+                })
+            end
         end)
     end
     instance:SetMenu(menu)

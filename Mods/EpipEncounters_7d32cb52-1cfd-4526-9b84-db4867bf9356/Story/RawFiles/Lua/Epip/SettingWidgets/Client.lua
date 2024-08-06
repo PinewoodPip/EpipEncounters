@@ -89,7 +89,7 @@ function Widgets.RenderSetting(ui, parent, setting, size, callback, updateSettin
         UI = ui,
         Parent = parent,
         Setting = setting,
-        Size = size,
+        Size = size or Widgets.DEFAULT_SIZE,
         ValueChangedCallback = callback,
         Instance = nil,
         UpdateSettingValue = updateSettingValue,

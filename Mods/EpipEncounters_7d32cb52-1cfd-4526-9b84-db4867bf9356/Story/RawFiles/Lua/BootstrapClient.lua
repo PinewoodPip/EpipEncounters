@@ -554,6 +554,7 @@ LOAD_ORDER = {
             "Epip/RadialMenus/Prefabs/RadialMenu.lua",
             "Epip/RadialMenus/Menus/_Menu.lua",
             "Epip/RadialMenus/Menus/Hotbar.lua",
+            "Epip/RadialMenus/Menus/Custom.lua",
             "Epip/RadialMenus/UI/Main.lua",
             "Epip/RadialMenus/UI/MenuCreator.lua",
         },

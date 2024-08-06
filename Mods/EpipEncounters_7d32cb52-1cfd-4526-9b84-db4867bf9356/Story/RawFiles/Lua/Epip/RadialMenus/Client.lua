@@ -33,6 +33,16 @@ local RadialMenus = {
             Text = "Create New Menu",
             ContextDescription = [[Header for creator UI]],
         },
+        Label_EditMenu = {
+            Handle = "h1cef44f3g474bg4ed6gb45cg2956edf2d87e",
+            Text = "Edit Menu",
+            ContextDescription = [[Header for editor UI]],
+        },
+        Label_EditSlot = {
+            Handle = "hdf2431e0g2c4fg4f52gb076g27f53a00306f",
+            Text = "Edit Slot",
+            ContextDescription = [[Header for editor UI]],
+        },
         Label_NoMenus = {
             Handle = "h5a5a16c8g1423g4e47g9b18g1c75d9984a92",
             Text = [[Use the "+" button to create radial menus.]],
@@ -45,7 +55,7 @@ local RadialMenus = {
         },
         Setting_NewMenuType_Description = {
             Handle = "h6545fd7fg9919g4e82gb9c3g598cfbc9e4fa",
-            Text = "Determines the contents of the new menu.<br>- Hotbar: slots are automatically filled with the contents of the character's hotbar.",
+            Text = "Determines the contents of the new menu.<br>- Hotbar: slots are automatically filled with the contents of the character's hotbar.<br>- Custom: slots must be manually configured.",
             ContextDescription = [[Tooltip for "Menu Type" form]],
         },
         Setting_HotbarStartIndex_Name = {
@@ -62,6 +72,21 @@ local RadialMenus = {
             Handle = "hff74a7eeg26cag4ea4gb09bgca0544402200",
             Text = "Determines the amount of slots to show in the menu.",
             ContextDescription = [[Tooltip for "Slots" form]],
+        },
+        Setting_SlotType_Name = {
+            Handle = "h67cc16ccgd666g4bf6ga746g4f2445ceeed0",
+            Text = "Slot Type",
+            ContextDescription = [[Form name]],
+        },
+        Setting_SlotType_Description = {
+            Handle = "hb02313dagf2c3g4bb0gaeb1ga6447c96896d",
+            Text = "Determines what kind of action this slot can hold.",
+            ContextDescription = [[Tooltip for "Slot Type" form]],
+        },
+        Setting_Keybind_Description = {
+            Handle = "hba30f22ag08acg4becg91b4g8832160d6270",
+            Text = "Determines the Epip keybind action to fire when the slot is used.<br>Actions that require the keybind to be held are not currently supported.",
+            ContextDescription = [[Form tooltip for "Keybind"]],
         },
     },
     USE_LEGACY_EVENTS = false,
@@ -127,6 +152,50 @@ function RadialMenus.UseSlot(char, slot)
         Character = char,
         Slot = slot,
     })
+end
+
+---Creates a slot for a skill.
+---@param skillID skill
+---@return Features.RadialMenus.Slot.Skill
+function RadialMenus.CreateSkillSlot(skillID)
+    local skill = Stats.Get("StatsLib_StatsEntry_SkillData", skillID)
+    ---@type Features.RadialMenus.Slot.Skill
+    local slot = {
+        Type = "Skill",
+        Name = Text.GetTranslatedString(skill.DisplayName),
+        Icon = skill.Icon,
+        SkillID = skillID,
+    }
+    return slot
+end
+
+---Creates a slot for an input action.
+---@param actionID string
+---@return Features.RadialMenus.Slot.InputAction
+function RadialMenus.CreateInputActionSlot(actionID)
+    local action = Client.Input.GetAction(actionID)
+    ---@type Features.RadialMenus.Slot.InputAction
+    local slot = {
+        Type = "InputAction",
+        Name = action:GetName(),
+        -- Icon = , -- TODO
+        ActionID = actionID,
+    }
+    return slot
+end
+
+---Creates a slot for an item.
+---@param item EclItem
+---@return Features.RadialMenus.Slot.Item
+function RadialMenus.CreateItemSlot(item)
+    ---@type Features.RadialMenus.Slot.Item
+    local slot = {
+        Type = "Item",
+        Name = Item.GetDisplayName(item),
+        Icon = Item.GetIcon(item),
+        ItemHandle = item.Handle,
+    }
+    return slot
 end
 
 ---------------------------------------------
