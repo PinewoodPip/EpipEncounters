@@ -279,6 +279,7 @@ LOAD_ORDER = {
     "UI/Controller/InventorySkillPanel.lua",
     "UI/Controller/PartyInventory.lua",
     "UI/Controller/EquipmentPanel.lua",
+    "UI/Controller/PanelSelect.lua",
 
     -- GM UIs
     {Script = "UI/GM/Roll.lua", GameModes = GAMEMODE_MASK.GameMaster},
@@ -408,6 +409,7 @@ LOAD_ORDER = {
             "Epip/IconPicker/UI.lua",
         },
     },
+    "Epip/SkillPicker/Client.lua",
     {
         Scripts = {
             "Epip/InputBinder/Client.lua",
@@ -443,8 +445,6 @@ LOAD_ORDER = {
             "UI/CombatLog/Messages/Dodge.lua",
         },
     },
-
-    -- "UI/Controller/PanelSelect.lua",
 
     "Epip/Client/NameTypoFixes.lua",
     "Epip/Client/ExamineImprovements.lua",
