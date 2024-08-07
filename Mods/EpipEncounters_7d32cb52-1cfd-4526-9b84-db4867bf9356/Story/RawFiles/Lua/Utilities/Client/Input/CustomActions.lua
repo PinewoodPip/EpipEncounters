@@ -160,8 +160,9 @@ function Input.TryExecuteAction(action, keys)
         Input._FireActionReleasedEvent()
     end
 
+    Input._CurrentAction = action:GetID()
+
     if keys then
-        Input._CurrentAction = action:GetID()
         Input._CurrentActionKeys = keys
     else
         -- Immediately consider the action as released.
@@ -272,13 +273,11 @@ end
 ---Fires the event for actions being released.
 function Input._FireActionReleasedEvent()
     local action = Input.GetAction(Input._CurrentAction)
-
     if action then
         Input.Events.ActionReleased:Throw({
             Character = Client.GetCharacter(),
             Action = action,
         })
-
         Input._CurrentAction = nil
         Input._CurrentActionKeys = nil
     else
