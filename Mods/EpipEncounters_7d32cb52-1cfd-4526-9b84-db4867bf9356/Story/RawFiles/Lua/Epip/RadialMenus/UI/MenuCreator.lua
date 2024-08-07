@@ -12,11 +12,12 @@ local RadialMenus = Epip.GetFeature("Features.RadialMenus")
 local RadialMenuUI = RadialMenus.UI
 local TSK = RadialMenus.TranslatedStrings
 
-local UI = Generic.Create("Features.RadialMenus.UI.MenuCreator", 15) ---@class Features.RadialMenus.UI.MenuCreator : GenericUI_Instance
+local UI = Generic.Create("Features.RadialMenus.UI.MenuCreator", 8) ---@class Features.RadialMenus.UI.MenuCreator : GenericUI_Instance -- Layer 9 is KBM skillbook UI.
 RadialMenus.MenuCreatorUI = UI
 UI.CONTENT_SIZE = V(670, 500)
 UI.HEADER_SIZE = V(400, 50)
 UI.SETTING_SIZE = V(650, 50)
+UI.SLOT_SETTING_SIZE = V(UI.SETTING_SIZE[1], 70) -- Size for settings that render as hotbar slots.
 ---@type table<Features.Features.RadialMenus.UI.MenuCreator.Mode, TextLib_TranslatedString>
 UI.MODE_HEADERS = {
     ["CreateMenu"] = TSK.Label_CreateNewMenu,
@@ -84,6 +85,11 @@ local Settings = {
         DefaultValue = 10,
         PreferredRepresentation = "Spinner", ---@type Features.SettingWidgets.PreferredRepresentation.ClampedNumber
     }),
+    Skill = RadialMenus:RegisterSetting("MenuCreator.Skill", {
+        Type = "Skill",
+        Name = CommonStrings.Name, -- I don't feel this needs a description.
+        DefaultValue = "",
+    }),
 
     -- Slot settings
     SlotType = RadialMenus:RegisterSetting("MenuCreator.SlotType", {
@@ -93,9 +99,9 @@ local Settings = {
         DefaultValue = 1,
         ---@type SettingsLib_Setting_Choice_Entry[]
         Choices = {
-            -- TODO support items, skills
+            -- TODO support items
             {ID = "Empty", Name = CommonStrings.Empty:GetString()},
-            -- {ID = "Skill", Name = CommonStrings.Skill:GetString()},
+            {ID = "Skill", Name = CommonStrings.Skill:GetString()},
             -- {ID = "Item", Name = CommonStrings.Item:GetString()},
             {ID = "InputAction", Name = CommonStrings.Keybind:GetString()},
         }
@@ -426,7 +432,7 @@ end, {StringID = "DefaultImplementation"})
 UI.Hooks.UpdateSlot:Subscribe(function (ev)
     local newType = Settings.SlotType:GetValue() ---@type Features.RadialMenus.Slot.Type
     if newType == "Skill" then
-        -- ev.Slot = RadialMenus.CreateSkillSlot() -- TODO
+        ev.Slot = RadialMenus.CreateSkillSlot(Settings.Skill:GetValue())
     elseif newType == "InputAction" then
         ev.Slot = RadialMenus.CreateInputActionSlot(Settings.InputAction:GetValue())
     elseif newType == "Item" then
@@ -451,7 +457,7 @@ end, {StringID = "DefaultImplementation"})
 UI.Events.RenderSlotSettings:Subscribe(function (ev)
     local container, slotType = ev.Container, Settings.SlotType:GetValue()
     if slotType == "Skill" then
-        -- TODO
+        SettingWidgets.RenderSetting(UI, container, Settings.Skill, UI.SLOT_SETTING_SIZE)
     elseif slotType == "InputAction" then
         UI._RenderInputActionDropdown(container)
     end
