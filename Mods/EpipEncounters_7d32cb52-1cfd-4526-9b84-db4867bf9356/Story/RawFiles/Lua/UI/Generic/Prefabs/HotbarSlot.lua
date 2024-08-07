@@ -15,6 +15,7 @@ local V = Vector.Create
 ---@field _AutoUpdateDelay number In seconds.
 ---@field _AutoUpdateRemainingDelay number In seconds.
 ---@field _RequiredFeatures GenericUI.Prefabs.HotbarSlot.RequiredFeatures
+---@field _ValidObjectTypes set<GenericUI_Prefab_HotbarSlot_Object_Type>
 local Slot = {
     ID = nil, ---@type string
     SlotElement = nil, ---@type GenericUI_Element_Slot
@@ -127,6 +128,7 @@ function Slot.Create(ui, id, parent, requiredFeatures)
     obj._AutoUpdateRemainingDelay = obj._AutoUpdateDelay
     obj._Usable = true
     obj._RequiredFeatures = requiredFeatures
+    obj._ValidObjectTypes = {["Skill"] = true, ["Item"] = true, ["Action"] = true, ["Template"] = true} -- Allow all object types by default
 
     obj.SlotElement = ui:CreateElement(id, "GenericUI_Element_Slot", parent)
     local slot = obj.SlotElement
@@ -185,8 +187,10 @@ function Slot:SetObject(obj)
     end
 end
 
----@param skillID string
+---Sets the skill to display in the slot.
+---@param skillID skill|"" The slot will be cleared if empty string is passed.
 function Slot:SetSkill(skillID)
+    if skillID == "" then self:Clear() return end -- Clear the slot if empty string is passed.
     local stat = Stats.Get("StatsLib_StatsEntry_SkillData", skillID)
     local slot = self.SlotElement
 
@@ -238,6 +242,13 @@ function Slot:SetLabel(label)
         local slot = self.SlotElement
         slot:SetLabel(label)
     end
+end
+
+---Sets the object types that can be dragged *into* the slot.
+---This has no effect on direct setter calls nor the current object.
+---@param types set<GenericUI_Prefab_HotbarSlot_Object_Type>
+function Slot:SetValidObjectTypes(types)
+    self._ValidObjectTypes = types
 end
 
 ---Sets the icon of the slot.
@@ -408,18 +419,17 @@ function Slot:_OnElementMouseUp(_)
         local data = Ext.UI.GetDragDrop().PlayerDragDrops[1]
         local objectID = data.DragId
         local objectWasDropped = false
-
         if objectID ~= "" then
-            local skill = Stats.Get("SkillData", objectID)
-
-            if skill then
+            local isAction = Stats.GetAction(objectID) ~= nil
+            local isSkill = Stats.Get("SkillData", objectID) ~= nil
+            local canDragIn = (isAction and self._ValidObjectTypes["Action"]) or (isSkill and self._ValidObjectTypes["Skill"])
+            if canDragIn then
                 self:SetSkill(objectID)
                 objectWasDropped = true
             end
         else
             local item = Item.Get(data.DragObject)
-
-            if item then
+            if item and self._ValidObjectTypes["Item"] then
                 self:SetTemplate(item.RootTemplate.Id)
                 self.Object.ItemHandle = item.Handle -- For dragging purposes only.
                 objectWasDropped = true

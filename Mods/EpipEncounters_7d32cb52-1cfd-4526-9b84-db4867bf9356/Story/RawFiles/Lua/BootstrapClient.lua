@@ -344,6 +344,7 @@ LOAD_ORDER = {
             "UI/Generic/Prefabs/LabelledSlider.lua",
             "UI/Generic/Prefabs/LabelledDropdown.lua",
             "UI/Generic/Prefabs/LabelledTextField.lua",
+            "UI/Generic/Prefabs/LabelledSlot.lua", -- TODO rebrand and reorganize these; clearer to call them "form elements"
             "UI/Generic/Prefabs/FormSetEntry.lua",
             "UI/Generic/Prefabs/FormSet.lua",
             "UI/Generic/Prefabs/FormTextHolder.lua",
