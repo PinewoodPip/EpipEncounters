@@ -12,6 +12,8 @@ local LabelledTextField = Generic.GetPrefab("GenericUI_Prefab_LabelledTextField"
 local LabelledSlider = Generic.GetPrefab("GenericUI_Prefab_LabelledSlider")
 local Spinner = Generic.GetPrefab("GenericUI_Prefab_Spinner")
 local FormTextHolder = Generic.GetPrefab("GenericUI.Prefabs.FormTextHolder")
+local FormSlot = Generic.GetPrefab("GenericUI.Prefab.Form.Slot")
+local SkillPicker = Epip.GetFeature("Features.SkillPicker")
 local InputBinder = Epip.GetFeature("Features.InputBinder")
 local V = Vector.Create
 
@@ -26,6 +28,8 @@ local Widgets = {
     },
 
     _TOOLTIP_ID_PATTERN = "^SettingWidgets%.(.+)%.(.+)$", -- Module ID can have periods.
+
+    _CurrentSkillPickerSetting = nil, ---@type Features.SettingWidgets.Hooks.RenderSetting?
 
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
@@ -327,6 +331,52 @@ function Widgets._RenderClampedNumberSetting(request)
     return instance
 end
 
+
+---Renders a slider for a ClampedNumber setting.
+---@param request Features.SettingWidgets.Hooks.RenderSetting
+---@return GenericUI.Prefab.Form.Slot
+function Widgets._RenderSlotSetting(request)
+    local setting = request.Setting ---@cast setting SettingsLib.Setting.Skill
+    local ui, parent, size = request.UI, request.Parent, request.Size
+
+    local instance
+    local settingID = Widgets._GetPrefixedID(setting)
+    instance = FormSlot.Create(ui, settingID, parent, setting:GetName(), size)
+    local slot = instance.Slot
+    slot:SetCanDrag(false)
+    slot:SetCanDrop(true)
+    slot:SetValidObjectTypes({
+        ["Skill"] = true,
+        ["Action"] = true,
+    })
+
+    -- Handle the element being interacted with
+    instance.Events.ObjectDraggedIn:Subscribe(function (ev)
+        if ev.Object.Type == "Skill" then
+            Widgets._SetSettingValue(setting, ev.Object.StatsID, request)
+        end
+    end)
+
+    -- Open the skill picker when the slot is clicked
+    instance.Events.Clicked:Subscribe(function (_)
+        Widgets._CurrentSkillPickerSetting = request
+        SkillPicker.Request("SettingWidget")
+    end)
+
+    -- Set the slot to display the setting's skill
+    instance.Slot:SetSkill(setting:GetValue())
+
+    -- Update the slot when the setting is changed
+    Widgets._RegisterValueChangedListener(instance, request, function (ev)
+        instance.Slot:SetSkill(ev.Value)
+    end)
+
+    -- Setup tooltips on hover
+    instance:SetTooltip("Custom", Widgets._GetSettingTooltip(setting))
+
+    return instance
+end
+
 ---Registers a callback for a setting value changing.
 ---@param instance GenericUI_I_Elementable
 ---@param request Features.SettingWidgets.Hooks.RenderSetting The request's callback will also be invoked.
@@ -427,6 +477,8 @@ Widgets.Hooks.RenderSetting:Subscribe(function (ev)
         ev.Instance = Widgets._RenderInputBindingSetting(ev)
     elseif setting.Type == "ClampedNumber" then
         ev.Instance = Widgets._RenderClampedNumberSetting(ev)
+    elseif setting.Type == "Skill" then
+        ev.Instance = Widgets._RenderSlotSetting(ev)
     end
 
     -- Add listeners for opening the context menu.
@@ -446,4 +498,12 @@ ContextMenu.RegisterElementListener(Widgets.CONTEXT_MENU_ENTRIES.RESET, "buttonP
 
     -- Widgets will be updated using their regular SettingsLib listeners; no need to track requests here.
     Widgets._SetSettingValue(setting, setting:GetDefaultValue(), request)
+end)
+
+-- Handle skill settings being set from the picker.
+SkillPicker.Events.RequestCompleted:Subscribe(function (ev)
+    if ev.RequestID == "SettingWidget" then
+        local request = Widgets._CurrentSkillPickerSetting
+        Widgets._SetSettingValue(request.Setting, ev.Skill, request)
+    end
 end)
