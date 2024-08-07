@@ -1,23 +1,39 @@
 
 local RadialMenus = Epip.GetFeature("Features.RadialMenus")
+local MenuClass = RadialMenus:GetClass("Features.RadialMenus.Menu")
 
 ---@class Features.RadialMenus.Menu.Custom : Features.RadialMenus.Menu
 ---@field Slots Features.RadialMenus.Slot[]
 local CustomMenu = {}
 RadialMenus:RegisterClass("Features.RadialMenus.Menu.Custom", CustomMenu, {"Features.RadialMenus.Menu"})
 
+---@class Features.RadialMenus.Menu.Custom.SaveData : Features.RadialMenus.Menu.SaveData
+---@field Slots Features.RadialMenus.Slot[]
+
+---------------------------------------------
+-- METHODS
+---------------------------------------------
+
 ---Creates a hotbar row menu.
 ---@param name string
 ---@param slotsAmount integer
 ---@return Features.RadialMenus.Menu.Custom
 function CustomMenu.Create(name, slotsAmount)
-    local instance = CustomMenu:__Create() ---@cast instance Features.RadialMenus.Menu.Custom
-    instance.Name = name
+    local instance = MenuClass.Create(CustomMenu, name) ---@cast instance Features.RadialMenus.Menu.Custom
     instance.Slots = {}
     -- Fill slots with empty ones
     for i=1,slotsAmount,1 do
         instance.Slots[i] = table.shallowCopy(RadialMenus.EMPTY_SLOT) -- Must be copied to avoid editing the original reference
     end
+    return instance
+end
+
+---@override
+---@param saveData Features.RadialMenus.Menu.Custom.SaveData
+---@return Features.RadialMenus.Menu.Custom
+function CustomMenu:CreateFromSaveData(saveData)
+    local instance = MenuClass.CreateFromSaveData(CustomMenu, saveData) ---@cast instance Features.RadialMenus.Menu.Custom
+    instance.Slots = saveData.Slots
     return instance
 end
 
@@ -49,6 +65,13 @@ end
 ---@override
 function CustomMenu:GetSlots()
     return self.Slots
+end
+
+---@override
+function CustomMenu:GetSaveData()
+    local data = MenuClass.GetSaveData(self) ---@cast data Features.RadialMenus.Menu.Custom.SaveData
+    data.Slots = self.Slots
+    return data
 end
 
 ---@override

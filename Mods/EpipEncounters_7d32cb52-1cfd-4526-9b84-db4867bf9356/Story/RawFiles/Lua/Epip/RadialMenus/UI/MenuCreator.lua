@@ -197,6 +197,7 @@ function UI._CreateMenu()
     }).Menu
     if menu then -- Add the menu and set it as the active one
         RadialMenus.AddMenu(menu)
+        RadialMenus.SaveData()
         RadialMenuUI.SetCurrentMenu(menu)
     else
         UI:__LogWarning("_CreateMenu()", "No CreateMenu hooks responded")
@@ -221,6 +222,7 @@ function UI._SaveEdits()
     end
     RadialMenuUI.Refresh()
     UI:Hide()
+    RadialMenus.SaveData()
 end
 
 ---Initializes the static elements of the UI.

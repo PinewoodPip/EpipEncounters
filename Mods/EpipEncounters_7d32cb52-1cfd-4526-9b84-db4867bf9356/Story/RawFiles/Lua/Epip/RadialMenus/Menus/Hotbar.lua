@@ -1,5 +1,6 @@
 
 local RadialMenus = Epip.GetFeature("Features.RadialMenus")
+local MenuClass = RadialMenus:GetClass("Features.RadialMenus.Menu")
 
 ---@class Features.RadialMenus.Menu.Hotbar : Features.RadialMenus.Menu
 ---@field StartingIndex integer
@@ -7,16 +8,33 @@ local RadialMenus = Epip.GetFeature("Features.RadialMenus")
 local _HotbarMenu = {}
 RadialMenus:RegisterClass("Features.RadialMenus.Menu.Hotbar", _HotbarMenu, {"Features.RadialMenus.Menu"})
 
+---@class Features.RadialMenus.Menu.Hotbar.SaveData : Features.RadialMenus.Menu.SaveData
+---@field StartingIndex integer
+---@field SlotsAmount integer
+
+---------------------------------------------
+-- METHODS
+---------------------------------------------
+
 ---Creates a hotbar row menu.
 ---@param name string
 ---@param startingIndex integer
 ---@param slots integer
 ---@return Features.RadialMenus.Menu.Hotbar
 function _HotbarMenu.Create(name, startingIndex, slots)
-    local instance = _HotbarMenu:__Create() ---@cast instance Features.RadialMenus.Menu.Hotbar
-    instance.Name = name
+    local instance = MenuClass.Create(_HotbarMenu, name) ---@cast instance Features.RadialMenus.Menu.Hotbar
     instance.StartingIndex = startingIndex
     instance.SlotsAmount = slots
+    return instance
+end
+
+---@override
+---@param saveData Features.RadialMenus.Menu.Hotbar.SaveData
+---@return Features.RadialMenus.Menu.Hotbar
+function _HotbarMenu:CreateFromSaveData(saveData)
+    local instance = MenuClass.CreateFromSaveData(_HotbarMenu, saveData) ---@cast instance Features.RadialMenus.Menu.Hotbar
+    instance.StartingIndex = saveData.StartingIndex
+    instance.SlotsAmount = saveData.SlotsAmount
     return instance
 end
 
@@ -52,6 +70,14 @@ function _HotbarMenu:GetSlots()
         slots[i] = RadialMenus.EMPTY_SLOT
     end
     return slots
+end
+
+---@override
+function _HotbarMenu:GetSaveData()
+    local data = MenuClass.GetSaveData(self) ---@cast data Features.RadialMenus.Menu.Hotbar.SaveData
+    data.StartingIndex = self.StartingIndex
+    data.SlotsAmount = self.SlotsAmount
+    return data
 end
 
 ---@override

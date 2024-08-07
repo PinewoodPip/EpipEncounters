@@ -10,8 +10,10 @@ local RadialMenus = {
         Name = "",
         Icon = nil,
     },
-    ---@type Features.RadialMenus.Menu[]
-    _Menus = {},
+    SAVE_PROTOCOL = 0,
+
+    _Menus = {}, ---@type Features.RadialMenus.Menu[]
+
     TranslatedStrings = {
         InputAction_Open_Name = {
             Handle = "h20c8b8dagecb6g4ddbgacd7gd760f1f68305",
@@ -89,6 +91,12 @@ local RadialMenus = {
             ContextDescription = [[Form tooltip for "Keybind"]],
         },
     },
+    Settings = {
+        RadialMenus = {
+            Type = "Map",
+            Context = "Client",
+        },
+    },
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
     Events = {
@@ -118,6 +126,10 @@ Epip.RegisterFeature("Features.RadialMenus", RadialMenus)
 
 ---@class Features.RadialMenus.Slot.InputAction : Features.RadialMenus.Slot
 ---@field ActionID string
+
+---@class Features.RadialMenus.SaveData
+---@field Protocol integer
+---@field Menus Features.RadialMenus.Menu.SaveData[]
 
 ---------------------------------------------
 -- EVENTS/HOOKS
@@ -198,6 +210,37 @@ function RadialMenus.CreateItemSlot(item)
     return slot
 end
 
+---Saves the user's radial menus.
+function RadialMenus.SaveData()
+    -- Write to the setting
+    ---@type Features.RadialMenus.SaveData
+    local data = {
+        Protocol = RadialMenus.SAVE_PROTOCOL,
+        Menus = {},
+    }
+    for i,menu in ipairs(RadialMenus.GetMenus()) do
+        data.Menus[i] = menu:GetSaveData()
+    end
+    RadialMenus.Settings.RadialMenus:SetValue(data)
+    RadialMenus:SaveSettings()
+end
+
+---Loads the user's radial menus from their saved settings.
+function RadialMenus.LoadData()
+    local data = RadialMenus.Settings.RadialMenus:GetValue() ---@cast data Features.RadialMenus.SaveData
+    if not data or not data.Protocol then return end
+
+    -- Remove previous menus
+    RadialMenus._Menus = {}
+
+    -- Reinstantiate all menus
+    for _,menuData in ipairs(data.Menus) do
+        local class = RadialMenus:GetClass(menuData.ClassName) ---@type Features.RadialMenus.Menu
+        local menu = class:CreateFromSaveData(menuData)
+        RadialMenus.AddMenu(menu)
+    end
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
@@ -216,3 +259,8 @@ RadialMenus.Events.SlotUsed:Subscribe(function (ev)
         Client.Input.TryExecuteAction(slot.ActionID)
     end
 end, {StringID = "DefaultImplementation.Slot.Skill"})
+
+-- Load saved data upon entering the session.
+GameState.Events.GameReady:Subscribe(function (_)
+    RadialMenus.LoadData()
+end)
