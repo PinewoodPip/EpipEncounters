@@ -12,6 +12,7 @@ local CameraControls = {
     SENSITIVITY_SCALE_FACTOR = 1 / 400, -- Sensitivty setting is multiplied by this value before being applied. Intended to make the setting value range look more natural within the settings menu.
     REFERENCE_RESOLUTION = 1080, -- Reference vertical resolution (in pixels) for determining the change in pitch per mouse pixel moved.
     MIN_PITCH = 0.1, -- Minimum pitch for when "Limit Pitch" is enabled.
+    EVENTID_TICK_PRESERVE_POSITION = "Features.CameraControls.PreservePositionInDialogues",
 
     _CachedLeftRotationKeybinds = nil, ---@type InputLib_InputEventBinding[]?
     _CachedRightRotationKeybinds = nil, ---@type InputLib_InputEventBinding[]?
@@ -56,6 +57,16 @@ local CameraControls = {
             Handle = "h40f15b62g4243g45abgb642g1ae9df4dc9ff",
             Text = "Controls the rotation speed of the camera while using the corresponding keybinds.<br>Default is 1.",
             ContextDescription = [[Tooltip for "Keybind Rotation Rate"]],
+        },
+        Setting_PreservePositionInDialogues_Name = {
+            Handle = "h4a3eccd2g468ag4ff9g8f3dg561219508669",
+            Text = "Preserve position in dialogues",
+            ContextDescription = [[Setting name]],
+        },
+        Setting_PreservePositionInDialogues_Description = {
+            Handle = "h31a7cef1gf8d7g4565gad91g0e02b9e8ab04",
+            Text = "If enabled, the camera will no longer center on the character(s) being spoken to in dialogues.",
+            ContextDescription = [[Setting tooltip for "Preserve position in dialogues"]],
         },
         InputAction_AdjustPitch_Name = {
             Handle = "h812ece0eg34adg44eag8c8bg50030a7e66d0",
@@ -115,6 +126,12 @@ CameraControls.Settings.KeybindRotationRate = CameraControls:RegisterSetting("Ke
     Step = 0.1,
     HideNumbers = false,
     DefaultValue = 1,
+})
+CameraControls.Settings.PreservePositionInDialogue = CameraControls:RegisterSetting("PreservePositionInDialogue", {
+    Type = "Boolean",
+    Name = TSK.Setting_PreservePositionInDialogues_Name,
+    Description = TSK.Setting_PreservePositionInDialogues_Description,
+    DefaultValue = false,
 })
 
 ---------------------------------------------
@@ -209,6 +226,33 @@ end, {EnabledFunctor = function ()
     return CameraControls.Settings.KeybindRotationRate:GetValue() ~= 1
 end})
 
+-- Prevent the camera from moving to the dialogue target(s).
+Client.Events.InDialogueStateChanged:Subscribe(function (ev)
+    if ev.InDialogue then
+        local camera = Camera.GetPlayerCamera()
+        if GetExtType(camera) == "ecl::GameCamera" then
+            ---@cast camera EclGameCamera
+            local previousLookAt = camera.TargetLookAt
+            GameState.Events.RunningTick:Subscribe(function (_)
+                camera = Camera.GetPlayerCamera()
+                if GetExtType(camera) == "ecl::GameCamera" then -- There's dialogue in the game that can occur during cutscenes that use a different camera.
+                    ---@cast camera EclGameCamera
+                    camera.TargetLookAt = previousLookAt
+                    -- Dummy-out all LookAt targets; necessary to avoid stuttering from the game trying to move the camera back
+                    for i,_ in ipairs(camera.Targets) do
+                        camera.Targets[i] = Ext.Entity.NullHandle()
+                    end
+                end
+                if not Client.IsInDialogue() then
+                    GameState.Events.RunningTick:Unsubscribe(CameraControls.EVENTID_TICK_PRESERVE_POSITION)
+                end
+            end, {StringID = CameraControls.EVENTID_TICK_PRESERVE_POSITION})
+        end
+    end
+end, {EnabledFunctor = function ()
+    return CameraControls.Settings.PreservePositionInDialogue:GetValue() == true
+end})
+
 ---------------------------------------------
 -- SETUP
 ---------------------------------------------
@@ -220,8 +264,9 @@ local CameraZoom = Epip.GetFeature("Feature_CameraZoom")
 local tab = SettingsMenu.GetTab(CameraZoom.SETTINGS_MODULE_ID)
 local adjustPitchSetting = Input.GetActionBindingSetting(CameraControls.InputActions.AdjustPitch)
 
-table.insert(tab.Entries, 11, {Type = "Setting", Module = adjustPitchSetting.ModTable, ID = adjustPitchSetting:GetID()})
-table.insert(tab.Entries, 12, {Type = "Setting", Module = CameraControls:GetNamespace(), ID = CameraControls.Settings.Sensitivity:GetID()})
-table.insert(tab.Entries, 13, {Type = "Setting", Module = CameraControls:GetNamespace(), ID = CameraControls.Settings.InvertControls:GetID()})
-table.insert(tab.Entries, 14, {Type = "Setting", Module = CameraControls:GetNamespace(), ID = CameraControls.Settings.LimitPitch:GetID()})
-table.insert(tab.Entries, 15, {Type = "Setting", Module = CameraControls:GetNamespace(), ID = CameraControls.Settings.KeybindRotationRate:GetID()})
+table.insert(tab.Entries, 11, {Type = "Setting", Module = CameraControls:GetNamespace(), ID = CameraControls.Settings.PreservePositionInDialogue:GetID()})
+table.insert(tab.Entries, 12, {Type = "Setting", Module = adjustPitchSetting.ModTable, ID = adjustPitchSetting:GetID()})
+table.insert(tab.Entries, 13, {Type = "Setting", Module = CameraControls:GetNamespace(), ID = CameraControls.Settings.Sensitivity:GetID()})
+table.insert(tab.Entries, 14, {Type = "Setting", Module = CameraControls:GetNamespace(), ID = CameraControls.Settings.InvertControls:GetID()})
+table.insert(tab.Entries, 15, {Type = "Setting", Module = CameraControls:GetNamespace(), ID = CameraControls.Settings.LimitPitch:GetID()})
+table.insert(tab.Entries, 16, {Type = "Setting", Module = CameraControls:GetNamespace(), ID = CameraControls.Settings.KeybindRotationRate:GetID()})
