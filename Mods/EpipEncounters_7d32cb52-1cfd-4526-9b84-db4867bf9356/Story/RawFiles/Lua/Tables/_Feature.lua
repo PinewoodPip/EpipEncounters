@@ -219,10 +219,11 @@ end
 ---@return InputLib_Action
 function Feature:RegisterInputAction(id, action)
     if not Ext.IsClient() then
-        self:Error("RegisterInputAction", "Called outside of client context")
+        self:__Error("RegisterInputAction", "Called outside of client context")
     end
-    action.ID = self:GetNamespace() .. "_" .. id
-    action = Client.Input.RegisterAction(id, action)
+    local prefixedID = self:GetNamespace() .. "_" .. id
+    action.ID = prefixedID
+    action = Client.Input.RegisterAction(prefixedID, action)
 
     self.InputActions[id] = action -- Uses non-prefixed ID.
 
