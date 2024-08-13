@@ -3,13 +3,6 @@ local Hotbar = Client.UI.Hotbar
 
 ---@class Features.RadialMenus : Feature
 local RadialMenus = {
-    ---Do not modify!
-    ---@type Features.RadialMenus.Slot.Empty
-    EMPTY_SLOT = {
-        Type = "Empty",
-        Name = "",
-        Icon = nil,
-    },
     SAVE_PROTOCOL = 0,
 
     _Menus = {}, ---@type Features.RadialMenus.Menu[]
@@ -208,6 +201,17 @@ function RadialMenus.CreateItemSlot(item)
         ItemHandle = item.Handle,
     }
     return slot
+end
+
+---Creates an empty slot.
+---@return Features.RadialMenus.Slot.Empty
+function RadialMenus.CreateEmptySlot()
+    ---@type Features.RadialMenus.Slot.Empty
+    return {
+        Type = "Empty",
+        Name = "",
+        Icon = nil,
+    }
 end
 
 ---Saves the user's radial menus.

@@ -23,7 +23,7 @@ function CustomMenu.Create(name, slotsAmount)
     instance.Slots = {}
     -- Fill slots with empty ones
     for i=1,slotsAmount,1 do
-        instance.Slots[i] = table.shallowCopy(RadialMenus.EMPTY_SLOT) -- Must be copied to avoid editing the original reference
+        instance.Slots[i] = RadialMenus.CreateEmptySlot()
     end
     return instance
 end
@@ -53,7 +53,7 @@ function CustomMenu:SetSlotsAmount(amount)
     local currentAmount = #self.Slots
     if amount > currentAmount then -- Pad new slots with empty ones
         for i=currentAmount+1,amount,1 do
-            self.Slots[i] = table.shallowCopy(RadialMenus.EMPTY_SLOT)
+            self.Slots[i] = RadialMenus.CreateEmptySlot()
         end
     elseif amount < currentAmount then -- Remove excess slots
         for i=amount+1,currentAmount,1 do

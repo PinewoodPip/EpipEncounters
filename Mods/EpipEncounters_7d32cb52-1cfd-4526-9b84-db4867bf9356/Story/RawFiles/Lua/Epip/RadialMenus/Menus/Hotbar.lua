@@ -62,12 +62,12 @@ function _HotbarMenu:GetSlots()
             local item = Item.Get(skillBarSlot.ItemHandle)
             table.insert(slots, RadialMenus.CreateItemSlot(item))
         else -- ItemTemplate slots are ignored (as they're unused by the game?).
-            table.insert(slots, RadialMenus.EMPTY_SLOT)
+            table.insert(slots, RadialMenus.CreateEmptySlot())
         end
     end
     -- Fill rest of the menu with empty slots (ex. if the starting index is near the end of the array)
     for i=#slots+1,self.SlotsAmount,1 do
-        slots[i] = RadialMenus.EMPTY_SLOT
+        slots[i] = RadialMenus.CreateEmptySlot()
     end
     return slots
 end

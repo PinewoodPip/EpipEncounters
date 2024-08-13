@@ -440,7 +440,7 @@ UI.Hooks.UpdateSlot:Subscribe(function (ev)
     elseif newType == "Item" then
         -- TODO!
     elseif newType == "Empty" then
-        ev.Slot = table.shallowCopy(RadialMenus.EMPTY_SLOT)
+        ev.Slot = RadialMenus.CreateEmptySlot()
     end
 end, {StringID = "DefaultImplementation"})
 
