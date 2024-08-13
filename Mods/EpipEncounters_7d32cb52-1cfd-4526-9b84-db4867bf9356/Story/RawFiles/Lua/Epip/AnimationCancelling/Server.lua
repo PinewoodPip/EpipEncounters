@@ -33,6 +33,26 @@ AnimCancel.SAFE_SKILL_TYPES = Set.Create({
 -- METHODS
 ---------------------------------------------
 
+---Returns whether character has finished their current cancellable action state (attack or skill state).
+---@param char EsvCharacter
+---@return boolean, EsvActionState? -- Whether the state is finished, and the state itself. First return value is `false` if char has no action state.
+function AnimCancel.IsActionFinished(char)
+    local state = Character.GetActionState(char)
+    local finished = false
+    if state then
+        if state.Type == "Attack" then
+            ---@cast state EsvASAttack
+            finished = AnimCancel.IsAttackFinished(state)
+        elseif state.Type == "UseSkill" then
+            local skillState = Character.GetSkillState(char)
+            finished = AnimCancel.IsSkillStateFinished(skillState)
+        else
+            state = nil -- Do not return state if it's not a cancellable one.
+        end
+    end
+    return finished, state
+end
+
 ---Returns whether a skill state can be cancelled.
 ---@param state EsvSkillState
 ---@return boolean
@@ -43,20 +63,41 @@ function AnimCancel.IsSkillStateFinished(state)
     }).Finished
 end
 
----Cancels the animation for a character.
----@param char EsvCharacter
----@param skillID string
-function AnimCancel.CancelAnimation(char, skillID)
-    AnimCancel:DebugLog("Server anim cancelled for", char.DisplayName)
-    AnimCancel._SendCancellationNetMessage(char, skillID)
+---Returns whether an attack state has finished dealing all hits.
+---@param state EsvASAttack
+---@return boolean
+function AnimCancel.IsAttackFinished(state)
+    local mainHandHitsFinished = state.HitCount >= state.TotalHits
+    local offhandHitsFinished = state.HitCountOffHand >= state.TotalHitOffHand
+    local shootsFinished = state.ShootCount >= state.TotalShoots
+    local offhandShootsFinished = state.ShootCountOffHand >= state.TotalShootsOffHand
+    return mainHandHitsFinished and offhandHitsFinished and shootsFinished and offhandShootsFinished
 end
 
----Sends a net message to char notifying them that a skill can be cancelled.
+---Cancels the animation for a character's current action state.
 ---@param char EsvCharacter
----@param skillID string
-function AnimCancel._SendCancellationNetMessage(char, skillID)
-    skillID = skillID:gsub("_%-1", "")
-    Net.PostToCharacter(char, AnimCancel.NET_MESSAGE, {SkillID = skillID, CharacterNetID = char.NetID})
+function AnimCancel.CancelAnimation(char)
+    AnimCancel:DebugLog("Server anim cancelled for", char.DisplayName)
+    AnimCancel._SendCancellationNetMessage(char, Character.GetActionState(char))
+end
+
+---Sends a net message to char notifying them that an action state can be cancelled.
+---@param char EsvCharacter
+---@param actionState EsvActionState
+function AnimCancel._SendCancellationNetMessage(char, actionState)
+    ---@type Epip_Feature_AnimationCancelling
+    local msg = {
+        CharacterNetID = char.NetID,
+        ActionType = actionState.Type,
+        SkillID = nil,
+    }
+    if actionState.Type == "UseSkill" then -- Fetch skill ID
+        ---@cast actionState EsvASUseSkill
+        local skillID = actionState.Skill.SkillId
+        skillID = Stats.RemoveLevelSuffix(skillID)
+        msg.SkillID = skillID
+    end
+    Net.PostToCharacter(char, AnimCancel.NET_MESSAGE, msg)
 end
 
 ---------------------------------------------
@@ -67,30 +108,25 @@ end
 Osiris.RegisterSymbolListener("SkillCast", 4, "after", function(charGUID, skillID, _, _)
     local char = Character.Get(charGUID)
     local skill = Stats.Get("StatsLib_StatsEntry_SkillData", skillID)
-
     if AnimCancel.SAFE_SKILL_TYPES:Contains(skill.SkillType) then
-        AnimCancel.CancelAnimation(char, skillID)
+        AnimCancel.CancelAnimation(char)
     end
 end)
 
 -- Listen for controlled player characters completing spellcasts to notify them that the animation can be cancelled.
 -- This requires tracking the progress of the UseSkill action.
 Osiris.RegisterSymbolListener("NRD_OnActionStateEnter", 2, "after", function (charGUID, action)
-    if action == "UseSkill" then
+    if action == "UseSkill" or action == "Attack" then
         local char = Character.Get(charGUID)
         local eventID = string.format("AnimationCancelling_%s", charGUID)
-
         if Character.IsPlayer(char) then
             GameState.Events.RunningTick:Subscribe(function (_)
                 char = Character.Get(charGUID)
-                local state = Character.GetSkillState(char)
-                local isFinished = state and AnimCancel.IsSkillStateFinished(state)
-
-                if isFinished then
-                    AnimCancel.CancelAnimation(char, state.SkillId)
+                local isFinished, state = AnimCancel.IsActionFinished(char)
+                if state and isFinished then
+                    AnimCancel.CancelAnimation(char)
                 end
-
-                if state == nil or isFinished then
+                if not state or isFinished then -- Remove the listener once no longer necessary
                     GameState.Events.RunningTick:Unsubscribe(eventID)
                 end
             end, {StringID = eventID})

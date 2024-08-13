@@ -15,15 +15,30 @@ local AnimCancel = {
     BANNED_SKILLS = Set.Create({}), ---@type DataStructures_Set<skill> Add skills to prevent them from being animation-cancelled.
 
     TranslatedStrings = {
-        Setting_Enabled_Name = {
+        Label_FeatureName = {
            Handle = "h3bf7ae10g24e1g4f50gbc69g71a8b95b1a51",
            Text = "Animation Cancelling",
+           ContextDescription = "Feature name; displayed in settings menu",
+        },
+        Setting_CancelSkills_Name = {
+           Handle = "h0a1e975egaf04g414cg9be0g559112d5284d",
+           Text = "Cancel skill animations",
            ContextDescription = "Setting name",
         },
-        Setting_Enabled_Description = {
+        Setting_CancelSkills_Description = {
            Handle = "he5c3a752gd8bag48fagb611g35b5d23bef9d",
            Text = "If enabled, your controlled character's skill animations will be cancelled after their effects execute, allowing you to perform consecutive actions quicker.",
            ContextDescription = "Setting tooltip",
+        },
+        Setting_CancelAttacks_Name = {
+            Handle = "hbcafdc0cg81b6g4dd9g853fga0b42f636c1c",
+            Text = "Cancel attack animations",
+            ContextDescription = [[Setting name]],
+        },
+        Setting_CancelAttacks_Description = {
+            Handle = "h1c66019dgac33g49f4g8c11gbbfe9d4dbf61",
+            Text = "If enabled, attack animations will be cancelled once all of their hits and projectiles have fired, allowing you to perform consecutive actions quicker.",
+            ContextDescription = [[Setting tooltip for "Cancel attack animations"]],
         },
         Blacklist_Name = {
            Handle = "ha50d50eag4185g4e10g82fdg19548a304b32",
@@ -55,8 +70,9 @@ local AnimCancel = {
 
     Hooks = {
         GetDelay = {}, ---@type Event<Feature_AnimationCancelling_Hook_GetDelay>
-        IsSkillEligible = {}, ---@type Event<Feature_AnimationCancelling_Hook_IsSkillEligible>
+        IsSkillEligible = {Context = "Client"}, ---@type Event<Feature_AnimationCancelling_Hook_IsSkillEligible>
         IsSkillStateFinished = {}, ---@type Event<Feature_AnimationCancelling_Hook_IsSkillStateFinished>
+        CanCancelAnimation = {Context = "Client"}, ---@type Hook<Features.AnimationCancelling.Hooks.CanCancelAnimation>
     }
 }
 Epip.RegisterFeature("AnimationCancelling", AnimCancel)
@@ -67,37 +83,55 @@ Epip.RegisterFeature("AnimationCancelling", AnimCancel)
 
 ---@class Feature_AnimationCancelling_Hook_GetDelay
 ---@field Character Character
----@field SkillID string
+---@field SkillID string? `nil` for non-skill states.
 ---@field Delay number Hookable. Defaults to 0 seconds.
 
+---Client-only.
 ---@class Feature_AnimationCancelling_Hook_IsSkillEligible
 ---@field Character Character
 ---@field SkillID string
 ---@field Stat StatsLib_StatsEntry_SkillData
 ---@field Eligible boolean Hookable. Defaults to true.
 
+---Client-only.
+---@class Features.AnimationCancelling.Hooks.CanCancelAnimation
+---@field Character EclCharacter
+---@field CanCancel boolean Hookable. Defaults to `false`.
+
 ---------------------------------------------
 -- NET MESSAGES
 ---------------------------------------------
 
 ---@class Epip_Feature_AnimationCancelling : NetLib_Message_Character
----@field SkillID string
+---@field ActionType ActionStateType
+---@field SkillID string? Only for `UseSkill` actions.
 
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
+---Returns the delay for cancelling a state.
+---@see Feature_AnimationCancelling_Hook_GetDelay
 ---@param char Character
----@param skillID string
+---@param state EclActionState|EsvActionState|skill
 ---@return number -- In seconds.
-function AnimCancel.GetDelay(char, skillID)
-    local hook = AnimCancel.Hooks.GetDelay:Throw({
+function AnimCancel.GetDelay(char, state)
+    local delay = AnimCancel.DEFAULT_DELAY
+    local skillID = type(state) == "string" and state or nil
+    if type(state) ~= "string" and state.Type == "UseSkill" then
+        if Ext.IsServer() then
+            ---@cast state EsvASUseSkill
+            skillID = Stats.RemoveLevelSuffix(state.Skill.SkillId)
+        else
+            skillID = Character.GetCurrentSkill(char)
+        end
+    end
+    delay = AnimCancel.Hooks.GetDelay:Throw({
         Character = char,
         SkillID = skillID,
         Delay = AnimCancel.DEFAULT_DELAY,
-    })
-
-    return hook.Delay
+    }).Delay
+    return delay
 end
 
 ---@param skillID string
@@ -106,30 +140,17 @@ function AnimCancel.SetSkillDelay(skillID, delay)
     AnimCancel.SKILL_DELAYS[skillID] = delay
 end
 
----@param char Character
----@param skillID string
----@return boolean
-function AnimCancel.IsEligible(char, skillID)
-    local hook = AnimCancel.Hooks.IsSkillEligible:Throw({
-        Character = char,
-        SkillID = skillID,
-        Stat = Stats.Get("SkillData", skillID),
-        Eligible = true,
-    })
-
-    return hook.Eligible
-end
-
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
 
 -- Use a time-based delay for certain skills.
 AnimCancel.Hooks.GetDelay:Subscribe(function (ev)
-    local timeDelay = AnimCancel.SKILL_DELAYS[ev.SkillID]
-
-    if timeDelay then
-        ev.Delay = timeDelay
+    if ev.SkillID then
+        local timeDelay = AnimCancel.SKILL_DELAYS[ev.SkillID]
+        if timeDelay then
+            ev.Delay = timeDelay
+        end
     end
 end)
 
@@ -140,14 +161,5 @@ AnimCancel.Hooks.GetDelay:Subscribe(function (ev)
     local ap, _ = Character.GetActionPoints(ev.Character)
     if ap <= 0 then
         ev.Delay = AnimCancel.DEFAULT_DELAY_NO_AP
-    end
-end)
-
--- Apply skill and archetype blacklists.
-AnimCancel.Hooks.IsSkillEligible:Subscribe(function (ev)
-    local skillID = ev.SkillID
-    local stat = ev.Stat
-    if AnimCancel.BANNED_SKILLS:Contains(skillID) or AnimCancel.BANNED_ARCHETYPES:Contains(stat.SkillType) then
-        ev.Eligible = false
     end
 end)

@@ -204,8 +204,9 @@ local tabs = {
             "CombatLogImprovements",
             "PreferredTargetDisplay",
 
-            CreateHeader(AnimationCancelling.TranslatedStrings.Setting_Enabled_Name),
-            CreateSettingEntry(AnimationCancelling.Settings.Enabled),
+            CreateHeader(AnimationCancelling.TranslatedStrings.Label_FeatureName),
+            CreateSettingEntry(AnimationCancelling.Settings.CancelSkills),
+            CreateSettingEntry(AnimationCancelling.Settings.CancelAttacks),
             CreateSettingEntry(AnimationCancelling.Settings.Blacklist),
             CreateSettingEntry(AnimationCancelling.Settings.CancelWorldTooltipItemPickups),
         }

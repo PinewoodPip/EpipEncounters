@@ -984,6 +984,14 @@ function Character.GetSkillAPCost(char, skillID)
     return apCost, elementalAffinity
 end
 
+---Returns the character's current action state, if any.
+---@param char Character
+---@return (EclActionState|EsvActionState)?
+function Character.GetActionState(char)
+    local layer = char.ActionMachine.Layers[1]
+    return layer and layer.State or nil
+end
+
 ---Returns the current skill state of char.
 ---**On the server, this can only return the state while using the skill. Preparation state cannot be accessed.**
 ---@param char Character
@@ -1008,16 +1016,14 @@ end
 
 ---Returns the ID of the skill that char is preparing or casting.
 ---@param char Character
----@return string? --`nil` if the character has no active skill state.
+---@return skill? --`nil` if the character has no active skill state.
 function Character.GetCurrentSkill(char)
     local state = Character.GetSkillState(char)
     local skill = nil
-
     if state then
         skill = state.SkillId
-        skill = string.sub(skill, 0, #skill - 3)
+        skill = Stats.RemoveLevelSuffix(skill)
     end
-
     return skill
 end
 
