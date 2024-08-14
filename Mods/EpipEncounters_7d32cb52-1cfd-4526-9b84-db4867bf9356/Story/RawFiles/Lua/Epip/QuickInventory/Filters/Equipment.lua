@@ -254,6 +254,18 @@ QuickInventory.Settings.ShowWares = QuickInventory:RegisterSetting("ShowWares", 
     DefaultValue = false,
 })
 
+-- Sorting select
+QuickInventory.Settings.Sorting = QuickInventory:RegisterSetting("Sorting", {
+    Type = "Choice",
+    Name = QuickInventory.TranslatedStrings.Setting_Sorting_Name,
+    DefaultValue = "Rarity",
+    ---@type SettingsLib_Setting_Choice_Entry[]
+    Choices = {
+        {ID = "Rarity", NameHandle = CommonStrings.Rarity.Handle},
+        {ID = "Level", NameHandle = CommonStrings.Level.Handle},
+    },
+})
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
@@ -330,7 +342,7 @@ end
 
 -- Equipment filter.
 QuickInventory.Hooks.IsItemVisible:Subscribe(function (ev)
-    local item = ev.Item
+    local item = ev.Item ---@type EclItem
     local visible = ev.Visible
 
     if visible and QuickInventory:GetSettingValue(QuickInventory.Settings.ItemCategory) == "Equipment" then
@@ -408,22 +420,75 @@ QuickInventory.Hooks.IsItemVisible:Subscribe(function (ev)
     ev.Visible = visible
 end)
 
--- Sort equipment by rarity.
+---@param item EclItem
+---@return integer
+function ScoreLevel(item)
+    local result = item.Stats and item.Stats.Level
+    return result or 0
+end
+
+---@param item EclItem
+---@return integer
+function ScoreRarity(item)
+    local rarity = item.Stats and item.Stats.Rarity
+    if Item.IsArtifact(item) then
+        rarity = "Artifact"
+    end
+
+    return QuickInventory.RARITY_PRIORITY[rarity] or 0
+end
+
+---@param scoreFunction fun(EclItem):integer
+---@param itemA EclItem
+---@param itemB EclItem
+---@return integer
+function CompareItemScores(scoreFunction, itemA, itemB)
+    local scoreA = scoreFunction(itemA)
+    local scoreB = scoreFunction(itemB)
+    if scoreA == scoreB then
+        return 0
+    elseif scoreA > scoreB then
+        return 1
+    else
+        return -1
+    end
+end
+
+---@param ev Feature_QuickInventory_Hook_SortItems
+---@return integer
+function CompareEquipment(ev)
+    local sortingToScoreFunction = {
+        Level = ScoreLevel,
+        Rarity = ScoreRarity,
+    }
+
+    -- first sort by the given sorting, otherwise if tied then secondarily walk through the others
+    local initialSorting = QuickInventory:GetSettingValue(QuickInventory.Settings.Sorting)
+    local initialScoreFunction = sortingToScoreFunction[initialSorting]
+    local initialComparison = CompareItemScores(initialScoreFunction, ev.ItemA, ev.ItemB)
+    if initialComparison ~= 0 then
+        return initialComparison
+    end
+
+    for sorting, scoreFunction in pairs(sortingToScoreFunction) do
+        if sorting ~= initialSorting then
+            local comparison = CompareItemScores(scoreFunction, ev.ItemA, ev.ItemB)
+            if comparison ~= 0 then
+                return comparison
+            end
+        end
+    end
+
+    -- everything thinks they're equal, so give up
+    return 0
+end
+
+-- Sort equipment by rarity or level.
 QuickInventory.Hooks.SortItems:Subscribe(function (ev)
     if QuickInventory:GetSettingValue(QuickInventory.Settings.ItemCategory) == "Equipment" then
-        local rarityA, rarityB = ev.ItemA.Stats.Rarity, ev.ItemB.Stats.Rarity
-        local scoreA, scoreB
+        local comparison = CompareEquipment(ev)
 
-        if Item.IsArtifact(ev.ItemA) then
-            rarityA = "Artifact"
-        end
-        if Item.IsArtifact(ev.ItemB) then
-            rarityB = "Artifact"
-        end
-
-        scoreA, scoreB = QuickInventory.RARITY_PRIORITY[rarityA] or 0, QuickInventory.RARITY_PRIORITY[rarityB] or 0
-
-        ev.Result = scoreA > scoreB
+        ev.Result = comparison == 1
         ev:StopPropagation()
     end
 end)
@@ -435,6 +500,7 @@ UI.Events.RenderSettings:Subscribe(function (ev)
 
         UI.RenderSetting(QuickInventory.Settings.ItemSlot) -- Equipment slot
         UI.RenderSetting(QuickInventory.Settings.Rarity) -- Rarity
+        UI.RenderSetting(QuickInventory.Settings.Sorting) -- Sorting
 
         if itemSlot == "Weapon" then
             UI.RenderSetting(QuickInventory.Settings.WeaponSubType) -- Equipment subtype

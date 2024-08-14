@@ -100,6 +100,11 @@ local QuickInventory = {
            Text = "Quick Swap...",
            ContextDescription = "Context menu button label",
         },
+        Setting_Sorting_Name = {
+            Handle = "h39395b76g0d38g4e2egb0e8ga740cc618466",
+            Text = "Sorting",
+            ContextDescription = "Sorting select label",
+        },
     },
 
     USE_LEGACY_EVENTS = false,
