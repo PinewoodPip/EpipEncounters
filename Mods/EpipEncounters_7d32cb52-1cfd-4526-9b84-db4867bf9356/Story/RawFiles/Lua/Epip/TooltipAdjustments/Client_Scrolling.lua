@@ -1,5 +1,11 @@
 
+---------------------------------------------
+-- Allows formatted tooltips to be "scrolled" vertically,
+-- useful in cases where they overflow the screen.
+---------------------------------------------
+
 local TooltipUI = Client.UI.Tooltip
+local Input = Client.Input
 
 ---@class Feature_TooltipScrolling : Feature
 local TooltipScrolling = {
@@ -69,7 +75,8 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
-Client.Input.Events.KeyPressed:Subscribe(function (ev)
+-- Move the tooltip UI with mouse wheel when scrolling is enabled.
+Input.Events.KeyPressed:Subscribe(function (ev)
     if (ev.InputID == "wheel_ypos" or ev.InputID == "wheel_yneg") and TooltipScrolling.IsActive() then
         local offset = TooltipScrolling.SCROLLING_STEP
         if ev.InputID == "wheel_yneg" then offset = -offset end
@@ -100,8 +107,17 @@ TooltipUI:RegisterInvokeListener("removeTooltip", function (_)
     TooltipScrolling:DebugLog("Tooltip now removed")
 end)
 
-Client.Input.Events.ActionExecuted:Subscribe(function (ev)
+-- Toggle scrolling when the action is used.
+Input.Events.ActionExecuted:Subscribe(function (ev)
     if ev.Action.ID == TooltipScrolling.INPUT_ACTION and TooltipScrolling.tooltipExists and TooltipScrolling:IsEnabled() then
         TooltipScrolling.Toggle(not TooltipScrolling.IsActive(), true)
+    end
+end)
+
+-- Prevent the action from being executed (consuming keys) when there's no tooltip.
+-- This reduces conflicts when there's another action bound to the same keys.
+Input.Hooks.CanExecuteAction:Subscribe(function (ev)
+    if ev.Action.ID == TooltipScrolling.INPUT_ACTION then
+        ev.CanExecute = ev.CanExecute and TooltipScrolling.tooltipExists
     end
 end)
