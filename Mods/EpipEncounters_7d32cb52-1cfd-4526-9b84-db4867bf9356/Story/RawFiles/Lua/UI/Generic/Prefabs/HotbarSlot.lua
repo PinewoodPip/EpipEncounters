@@ -27,6 +27,7 @@ local Slot = {
     Events = {
         ObjectDraggedIn = {}, ---@type Event<GenericUI_Prefab_HotbarSlot_Event_ObjectDraggedIn>
         Clicked = {}, ---@type Event<Empty>
+        Used = {}, ---@type Event<Empty> Thrown when an enabled, filled slot is clicked.
     },
     Hooks = {
         GetTooltipData = {}, ---@type Event<GenericUI_Prefab_HotbarSlot_Hook_GetTooltipData>
@@ -303,8 +304,13 @@ end
 ---@param enabled boolean
 function Slot:SetEnabled(enabled)
     local slot = self.SlotElement
-
     slot:SetEnabled(enabled)
+end
+
+---Returns whether the slot is enabled.
+---@return boolean
+function Slot:IsEnabled()
+    return self.SlotElement:IsEnabled()
 end
 
 ---Sets the cooldown displayed on the slot.
@@ -521,21 +527,25 @@ function Slot:_OnTick(ev)
     end
 end
 
+---Use the slot's contents when it is clicked.
 function Slot:_OnSlotClicked(_)
     local obj = self.Object
-
-    if self._Usable then
-        if obj.Type == "Skill" then
+    local used = false
+    if self._Usable and self:IsEnabled() then
+        if obj.Type == "Skill" or obj.Type == "Action" then
             Client.UI.Hotbar.UseSkill(obj.StatsID)
+            used = true
         elseif obj.Type == "Item" or obj.Type == "Template" then
             local item = obj:GetEntity()
-
             Client.UI.Hotbar.UseSkill(item)
+            used = true
         end
     end
-
     -- Throw clicked event regardless of usable state
     self.Events.Clicked:Throw()
+    if used then
+        self.Events.Used:Throw()
+    end
 end
 
 ---Handles drag-drops starting on the slot.

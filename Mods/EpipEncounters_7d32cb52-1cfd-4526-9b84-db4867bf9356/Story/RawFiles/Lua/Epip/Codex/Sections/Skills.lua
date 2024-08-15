@@ -430,9 +430,13 @@ function Section:__CreateElement(index)
             -- Set position to be below the index header
             position = position + indexPosition + V(0, headerElement:GetHeight()) + self.LEFT_SIDE_SKILL_TOOLTIP_OFFSET
         end
-
         ev.Position = position or ev.Position
     end, {StringID = "Features.Codex.Skills.TooltipPosition"})
+
+    -- Close the UI when a skill is used.
+    instance.Events.Used:Subscribe(function (_)
+        Codex.UI:Hide()
+    end)
 
     return instance
 end

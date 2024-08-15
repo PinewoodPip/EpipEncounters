@@ -24,6 +24,12 @@ Generic.Inherit(Slot, Generic._Element)
 -- METHODS
 ---------------------------------------------
 
+---Returns whether the slot is enabled. Disabled slots are greyed out.
+---@return boolean
+function Slot:IsEnabled()
+    return self:GetMovieClip().enabled
+end
+
 Slot.SetCooldown = Generic.ExposeFunction("SetCooldown")
 Slot.SetEnabled = Generic.ExposeFunction("SetEnabled")
 Slot.SetLabel = Generic.ExposeFunction("SetLabel")
@@ -44,12 +50,6 @@ function Slot:_OnCreation()
     mc.highlight_mc.x, mc.highlight_mc.y = 1.5, 2
     mc.disable_mc.x, mc.disable_mc.y = 2, 2
 end
-
----------------------------------------------
--- EVENT LISTENERS
----------------------------------------------
-
-
 
 ---------------------------------------------
 -- SETUP
