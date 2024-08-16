@@ -18,6 +18,26 @@ local RadialMenus = {
             Text = "Opens the radial menus UI.",
             ContextDescription = [[Keybind description for "Show radial menus"]],
         },
+        InputAction_PreviousMenu_Name = {
+            Handle = "h692c89c9g7ce4g42e4g8c52ge027ea83f186",
+            Text = "Radial Menus: Previous Menu",
+            ContextDescription = [[Keybind name]],
+        },
+        InputAction_PreviousMenu_Description = {
+            Handle = "h8f5b9b70g4ee0g4c60gb9f8gf5ff26567f0d",
+            Text = "Cycles to the previous radial menu while the UI is open.",
+            ContextDescription = [[Keybind description for "Radial Menus: Previous Menu"]],
+        },
+        InputAction_NextMenu_Name = {
+            Handle = "ha60bb03egff09g41bfg8d51gb512877729c4",
+            Text = "Radial Menus: Next Menu",
+            ContextDescription = [[Keybind name]],
+        },
+        InputAction_NextMenu_Description = {
+            Handle = "ha643cdeagcf4dg4128g81c6gd1cf68f76a18",
+            Text = "Cycles to the next radial menu while the UI is open.",
+            ContextDescription = [[Keybind description for "Radial Menus: Next Menu"]],
+        },
         Label_NewMenu = {
             Handle = "he5d99c4bg29e2g4094g8a5bgddba7436dfd9",
             Text = "New Menu",

@@ -18,6 +18,16 @@ RadialMenus:RegisterInputAction("OpenRadialMenu", {
     Name = TSK.InputAction_Open_Name,
     Description = TSK.InputAction_Open_Description,
 })
+RadialMenus:RegisterInputAction("PreviousMenu", {
+    Name = TSK.InputAction_PreviousMenu_Name,
+    Description = TSK.InputAction_PreviousMenu_Description,
+    DefaultInput1 = {Keys = {"wheel_yneg"}}
+})
+RadialMenus:RegisterInputAction("NextMenu", {
+    Name = TSK.InputAction_NextMenu_Name,
+    Description = TSK.InputAction_NextMenu_Description,
+    DefaultInput1 = {Keys = {"wheel_ypos"}}
+})
 
 ---@class Features.RadialMenus.UI.Events : GenericUI.Instance.Events
 UI.Events = UI.Events
@@ -36,6 +46,8 @@ function UI.Setup()
     UI._Initialize()
     UI.Refresh()
     UI._AnimateMainMenu()
+
+    Client.UI.Input.SetMouseWheelBlocked(true) -- Prevent the default cycler bindings (mouse wheel) from altering camera zoom.
 
     UI:Show()
 end
@@ -369,6 +381,12 @@ function UI._InitializeClickbox(id, previewWidget)
     return clickArea
 end
 
+---@override
+function UI:Hide()
+    Client.UI._BaseUITable.Hide(UI)
+    Client.UI.Input.SetMouseWheelBlocked(false) -- Unblock mouse wheel.
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
@@ -381,6 +399,23 @@ Input.Events.ActionExecuted:Subscribe(function (ev)
         else
             UI.Setup()
         end
+    end
+end)
+
+-- Scroll menus when the actions are used.
+Input.Events.ActionExecuted:Subscribe(function (ev)
+    if ev.Action.ID == RadialMenus.InputActions.NextMenu.ID then
+        UI.ScrollMenus(1)
+    elseif ev.Action.ID == RadialMenus.InputActions.PreviousMenu.ID then
+        UI.ScrollMenus(-1)
+    end
+end, {EnabledFunctor = function ()
+    return UI:IsVisible()
+end})
+Input.Hooks.CanExecuteAction:Subscribe(function (ev)
+    -- Only consume cycler input actions when the UI is visible.
+    if ev.Action.ID == RadialMenus.InputActions.NextMenu.ID or ev.Action.ID == RadialMenus.InputActions.PreviousMenu.ID then
+        ev.CanExecute = UI:IsVisible()
     end
 end)
 
