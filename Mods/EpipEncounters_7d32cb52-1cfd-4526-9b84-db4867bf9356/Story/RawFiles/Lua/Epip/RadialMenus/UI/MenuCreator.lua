@@ -145,8 +145,24 @@ end
 ---Sets up the UI to edit an existing menu.
 ---@param menu Features.RadialMenus.Menu
 function UI.SetupEditMenu(menu)
+    local menuType = menu:GetClassName()
     UI._CurrentMode = "EditMenu"
     UI._MenuBeingEdited = menu
+
+    -- Set settings to the menu's current ones
+    Settings.MenuName:SetValue(menu.Name)
+    Settings.NewMenuType:SetValue(menuType)
+    if menuType == MenuTypes.Hotbar:GetClassName() then
+        ---@cast menu Features.RadialMenus.Menu.Hotbar
+        Settings.HotbarStartIndex:SetValue(menu.StartingIndex)
+        Settings.HotbarSlots:SetValue(menu.SlotsAmount)
+    elseif menuType == MenuTypes.Custom:GetClassName() then
+        ---@cast menu Features.RadialMenus.Menu.Custom
+        Settings.HotbarSlots:SetValue(#menu:GetSlots())
+    else
+        UI:__LogWarning("Editing unsupported menu type", menuType) -- TODO event
+    end
+
     UI._Setup()
 end
 
@@ -164,12 +180,15 @@ function UI.SetupEditSlot(menu, index, slot)
     local slotType = slot.Type
     Settings.SlotType:SetValue(slotType)
     if slotType == "Skill" then
-        -- TODO
+        ---@cast slot Features.RadialMenus.Slot.Skill
+        Settings.Skill:SetValue(slot.SkillID)
     elseif slotType == "InputAction" then
         ---@cast slot Features.RadialMenus.Slot.InputAction
         Settings.InputAction:SetValue(slot.ActionID)
     elseif slotType == "Item" then
         -- TODO
+    else
+        UI:__LogWarning("Editing unsupported slot type", slotType) -- TODO event
     end
 
     UI._Setup()
