@@ -10,7 +10,6 @@ local RadialMenus = Epip.GetFeature("Features.RadialMenus")
 local RadialMenuPrefab = RadialMenus:GetClass("Features.RadialMenus.Prefabs.RadialMenu")
 local TSK = RadialMenus.TranslatedStrings
 local UI = Generic.Create("Features.RadialMenus", 7) ---@class Features.RadialMenus.UI : GenericUI_Instance
-UI.PANEL_SIZE = V(1200, 925)
 UI.HEADER_SIZE = V(200, 30)
 UI._CurrentMenuIndex = 1
 UI._CurrentMenu = nil ---@type Features.RadialMenus.Prefabs.RadialMenu?
@@ -37,10 +36,6 @@ function UI.Setup()
     UI._Initialize()
     UI.Refresh()
     UI._AnimateMainMenu()
-
-    -- Position the UI
-    UI:SetPositionRelativeToViewport("center", "center")
-    UI:Move(V(0, -60))
 
     UI:Show()
 end
@@ -85,11 +80,7 @@ end
 function UI._Initialize()
     if UI._Initialized then return end
 
-    local uiObj = UI:GetUI()
-    uiObj.SysPanelSize = {UI.PANEL_SIZE[1], UI.PANEL_SIZE[2]}
-
     local root = UI:CreateElement("Root", "GenericUI_Element_TiledBackground")
-    root:SetBackground("Black", UI.PANEL_SIZE:unpack())
     root:SetAlpha(0.5)
     UI.Root = root
 
@@ -110,6 +101,7 @@ function UI._Initialize()
     UI.EditMenuButton = editButton
 
     local header = TextPrefab.Create(UI, "Header", topBar, "", "Center", UI.HEADER_SIZE)
+    header:SetCenterInLists(true)
     UI.Header = header
 
     local newMenuButton = ButtonPrefab.Create(UI, "NewMenuButton", topBar, ButtonPrefab:GetStyle("DOS1IncrementLarge"))
@@ -118,13 +110,13 @@ function UI._Initialize()
     end)
     UI.NewMenuButton = newMenuButton
 
-    topBar:RepositionElements()
-    topBar:SetPositionRelativeToParent("Top", 0, 5)
-
     local buttonsBar = root:AddChild("ButtonList", "GenericUI_Element_HorizontalList")
     -- newMenuButton:SetLabel(TSK.Label_NewMenu)
     buttonsBar:RepositionElements()
     buttonsBar:SetPositionRelativeToParent("Bottom")
+
+    topBar:RepositionElements()
+    UI._ResizePanel()
 
     UI._Initialized = true
 end
@@ -157,10 +149,6 @@ function UI._RenderMenu(menu)
             Menu = menu,
         })
 
-        -- Center the menu;
-        -- the menu is center-anchored, so SetPositionRelativeToParent() doesn't work.
-        instance:Move(UI.PANEL_SIZE[1] / 2, UI.PANEL_SIZE[2] / 2)
-
         -- Use slots when they're interacted with and close the UI.
         instance.Events.SegmentClicked:Subscribe(function (ev)
             menu = UI._CurrentMenu:GetMenu()
@@ -188,6 +176,7 @@ function UI._RenderMenu(menu)
     instance:SetMenu(menu)
     UI.Header:SetText(menu.Name)
     UI._CurrentMenu = instance
+    UI._RepositionMenus()
 end
 
 ---Re-renders the current menu.
@@ -221,6 +210,40 @@ function UI._AnimateMainMenu()
     end
 end
 
+---Returns the size of the panel.
+---@return Vector2
+function UI._GetPanelSize()
+    local viewport = Client.GetViewportSize()
+    local uiObj = UI:GetUI()
+    local panelSize = Vector.ScalarProduct(viewport, 1 / uiObj:GetUIScaleMultiplier())
+    return panelSize
+end
+
+---Resizes the panel and UI to take up the whole viewport.
+function UI._ResizePanel()
+    local panelSize = UI._GetPanelSize()
+    local uiObj = UI:GetUI()
+    local root = UI.Root
+    local topBar = UI.TopBar
+    uiObj.SysPanelSize = panelSize
+    uiObj:Resize(panelSize[1], panelSize[2], uiObj:GetUIScaleMultiplier()) -- Necessary to avoid cropping on ultrawide resolutions. Resizing is done in flash space.
+    root:SetBackground("Black", UI._GetPanelSize():unpack())
+    UI._RepositionMenus()
+    topBar:SetPositionRelativeToParent("Top", 0, 5)
+    UI:SetPositionRelativeToViewport("topleft", "topleft")
+end
+
+---Repositions the menu widgets.
+function UI._RepositionMenus()
+    local panelSize = UI._GetPanelSize()
+    local instance = UI._CurrentMenu
+    if instance then
+        -- Center the menu;
+        -- the menu is center-anchored, so SetPositionRelativeToParent() doesn't work.
+        instance:SetPosition(panelSize[1] / 2, panelSize[2] / 2)
+    end
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
@@ -233,5 +256,12 @@ Input.Events.ActionExecuted:Subscribe(function (ev)
         else
             UI.Setup()
         end
+    end
+end)
+
+-- Resize the panel when viewport changes.
+Client.Events.ViewportChanged:Subscribe(function (_)
+    if UI._Initialized then
+        UI._ResizePanel()
     end
 end)
