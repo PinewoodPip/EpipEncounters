@@ -11,6 +11,9 @@ local RadialMenuPrefab = RadialMenus:GetClass("Features.RadialMenus.Prefabs.Radi
 local TSK = RadialMenus.TranslatedStrings
 local UI = Generic.Create("Features.RadialMenus", 7) ---@class Features.RadialMenus.UI : GenericUI_Instance
 UI.HEADER_SIZE = V(200, 30)
+UI.OPEN_TWEEN_DURATION = 0.15 -- In seconds.
+UI.OPEN_TWEEN_STARTING_SCALE = 0.4
+UI.OPEN_TWEEN_STARTING_ALPHA = 0.2
 UI._CurrentMenuIndex = 1
 UI._CurrentMenu = nil ---@type Features.RadialMenus.Prefabs.RadialMenu?
 
@@ -278,9 +281,9 @@ function UI._AnimateMainMenu()
         menu:Tween({
             EventID = "Opening",
             StartingValues = {
-                scaleX = 0.4,
-                scaleY = 0.4,
-                alpha = 0.2,
+                scaleX = UI.OPEN_TWEEN_STARTING_SCALE,
+                scaleY = UI.OPEN_TWEEN_STARTING_SCALE,
+                alpha = UI.OPEN_TWEEN_STARTING_ALPHA,
             },
             FinalValues = {
                 scaleX = 1,
@@ -289,8 +292,27 @@ function UI._AnimateMainMenu()
             },
             Function = "Cubic",
             Ease = "EaseIn",
-            Duration = 0.15,
+            Duration = UI.OPEN_TWEEN_DURATION,
         })
+    end
+    -- For preview widgets, animate only alpha
+    local previewWidgets = table.pack(UI._LeftMenuPreview, UI._RightMenuPreview)
+    for i=1,previewWidgets.n,1 do
+        local widget = previewWidgets[i]
+        if widget then
+            widget:Tween({
+                EventID = "Opening",
+                StartingValues = {
+                    alpha = UI.OPEN_TWEEN_STARTING_ALPHA,
+                },
+                FinalValues = {
+                    alpha = 1,
+                },
+                Function = "Cubic",
+                Ease = "EaseIn",
+                Duration = UI.OPEN_TWEEN_DURATION,
+            })
+        end
     end
 end
 
