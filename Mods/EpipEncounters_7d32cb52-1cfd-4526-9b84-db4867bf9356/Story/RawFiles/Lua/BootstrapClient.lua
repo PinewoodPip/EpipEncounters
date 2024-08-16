@@ -483,6 +483,7 @@ LOAD_ORDER = {
             "Epip/TooltipAdjustments/StatAdjustmentMerging/Client.lua",
             "Epip/TooltipAdjustments/AprilFools/Client.lua",
             "Epip/TooltipAdjustments/CombatRangeWarning/Client.lua",
+            "Epip/TooltipAdjustments/Artifacts/Client.lua",
         },
     },
 

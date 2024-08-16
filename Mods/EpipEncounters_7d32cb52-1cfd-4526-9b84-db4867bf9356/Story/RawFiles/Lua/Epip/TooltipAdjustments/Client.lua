@@ -10,16 +10,6 @@ local Set = DataStructures.Get("DataStructures_Set")
 local TooltipAdjustments = {
     Name = "TooltipAdjustments",
 
-    -- ===================================================
-    --    This color was colored by the EE team, all thanks go to Ameranth and Elric!
-    --===================================================
-    ARTIFACT_RARITY_STRING = "<font color=\"#a34114\">%s</font>",
-    -- other colors we tried:
-    -- #c7a758
-    -- #9c561e
-    -- #9e4b06
-    -- #9c561e -- PoE color, iirc?
-
     ---@type DataStructures_Set<pattern>
     WEAPON_ABILITY_PATTERNS = Set.Create({
         "Two%-Handed",
@@ -131,72 +121,6 @@ function TooltipAdjustments.RemoveDeprecatedLWBoosts(_, _, tooltip)
     end
 end
 
--- Change rarity color of Artifact items in tooltip
-function TooltipAdjustments.ChangeArtifactRarityDisplay(item, tooltip, a, b)
-
-    local isArtifact = item.DisplayName == "Protean Artifact" -- proteans don't have a special tag, so we just detect them by name
-    local isArtifactRune = false
-
-    -- UI elements to modify. The tooltip UI is modular and uses different elements for different parts of a tooltip. The extender tooltip API lets you change their data from a lua table.
-    local itemNameElement = nil
-    local rarityElement = nil
-    local runeEffectElement = nil
-
-    local tags = item:GetTags()
-
-    -- artifact items have these tags.
-    for i,v in pairs(tags) do
-        if v == "AMER_UNI" then
-            isArtifact = true
-        elseif v == "AMER_UNI_RUNE" then
-            isArtifactRune = true
-        elseif v == "PIP_FAKE_ARTIFACT" then -- Normal items transmogged into artifacts. 
-            isArtifact = false
-            break
-        end
-    end
-
-    -- stop here if item is not artifact nor focus - leaving the tooltip unchanged
-    if not isArtifact and not isArtifactRune then return nil end
-
-    for i,v in pairs(tooltip.Data) do
-        if v.Type == "ItemName" then
-            itemNameElement = v
-        elseif v.Type == "ItemRarity" then 
-            rarityElement = v 
-        elseif v.Type == "RuneEffect" then
-            runeEffectElement = v
-        end
-    end
-
-    local rarityName = "Artifact"
-    if isArtifactRune then
-        rarityName = "Artifact Focus"
-    end
-    local rarityString = TooltipAdjustments.ARTIFACT_RARITY_STRING:format(rarityName) -- add the special Artifact color
-
-    -- Change item name
-    itemNameElement.Label = TooltipAdjustments.ARTIFACT_RARITY_STRING:format(itemNameElement.Label:match(".*>(.*)<.*"):gsub("Unique", "Artifact")) -- captures the Artifact's name in the tooltip. Replaces unidentified "Unique" with "Artifact"
-
-    -- Change rarity name
-    -- Runes need this element added; they do not have it normally
-    if not rarityElement then
-        -- Does not currently work. Adding this particular element causes an error in Flash.
-        -- tooltip:AppendElement({Type = "ItemRarity", Label = rarityString})
-    else
-        rarityElement.Label = rarityString
-    end
-
-    -- Add "Cannot equip" to empty rune effects
-    if runeEffectElement then
-        local props = {"Rune1", "Rune2", "Rune3"}
-        for i,v in pairs(props) do
-            if runeEffectElement[v] == "" then
-                runeEffectElement[v] = "<font color='7b8087'>Cannot equip.</font>" -- sadly, color here seems to be overwritten somehow.
-            end
-        end
-    end
-end
 
 -- Make +AP Costs red, since it's a negative effect.
 Game.Tooltip.RegisterListener("Status", nil, function(_, _, tooltip)
@@ -413,18 +337,9 @@ local function OnGenericStatTooltipRender(char, stat, tooltip)
     TooltipAdjustments.FixSheetDamageTooltip(char, stat, tooltip)
 end
 
-local function OnItemTooltipRender(item, tooltip)
-    if not TooltipAdjustments:IsEnabled() then return nil end
-    -- TooltipAdjustments.ShowAbilityScoresForSI(nil, skill, tooltip) -- TODO
-    TooltipAdjustments.ChangeArtifactRarityDisplay(item, tooltip)
-
-    -- TooltipAdjustments.TestElements(item, tooltip)
-end
-
 Ext.Events.SessionLoaded:Subscribe(function()
     Game.Tooltip.RegisterListener("Stat", nil, OnGenericStatTooltipRender)
     Game.Tooltip.RegisterListener("Ability", nil, OnGenericStatTooltipRender)
-    Game.Tooltip.RegisterListener("Item", nil, OnItemTooltipRender)
 end)
 
 -- Align tooltips to the top of the screen.

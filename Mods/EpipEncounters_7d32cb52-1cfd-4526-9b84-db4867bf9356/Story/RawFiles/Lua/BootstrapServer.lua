@@ -111,7 +111,6 @@ local coreLibraries = {
     {ScriptSet = "Utilities/Combat"},
     "Utilities/Texture.lua",
     "Utilities/Profiling.lua",
-    {ScriptSet = "Utilities/Artifact", RequiresEE = true,},
 
     {ScriptSet = "Utilities/Character"},
     "Utilities/Character/Shared_Talents.lua",
@@ -120,6 +119,7 @@ local coreLibraries = {
     {
         ScriptSet = "Utilities/Item",
     },
+    {ScriptSet = "Utilities/Artifact", RequiresEE = true,},
 
     -- Stats
     {

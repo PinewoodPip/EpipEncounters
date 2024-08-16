@@ -6,6 +6,10 @@ Artifact = {
     _ItemTemplateGUIDMap = {}, ---@type table<GUID, string> Maps non-prefixed template GUID to artifact ID.
     _RuneTemplateGUIDMap = {}, ---@type table<GUID, string> Maps non-prefixed template GUID to artifact ID.
 
+    ARTIFACT_TAG = "AMER_UNI",
+    FOCUS_TAG = "AMER_UNI_RUNE",
+    PROTEAN_TEMPLATE = "a70a946e-fda2-4101-82e9-605b0055dd56",
+
     EQUIPPED_POWERS_USERVAR = "EquippedArtifacts",
 
     -- Item slots that have artifacts.
@@ -1078,6 +1082,20 @@ function Artifact.IsOwnedByParty(id)
     return owned
 end
 
+---Returns whether an item is an Artifact.
+---@param item Item
+---@return boolean
+function Artifact.IsArtifact(item)
+    return item:HasTag(Artifact.ARTIFACT_TAG) and not item:HasTag("PIP_FAKE_ARTIFACT")
+end
+
+---Returns whether an item is an Artifact focus rune.
+---@param item Item
+---@return boolean
+function Artifact.IsArtifactFocus(item)
+    return item:HasTag(Artifact.FOCUS_TAG)
+end
+
 ---------------------------------------------
 -- SETUP
 ---------------------------------------------
@@ -1086,3 +1104,5 @@ end
 for _,artifact in pairs(Artifact.ARTIFACTS) do
     Artifact.RegisterArtifact(artifact)
 end
+
+Item.IsArtifact = Artifact.IsArtifact -- For backwards compatibility.

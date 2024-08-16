@@ -202,13 +202,6 @@ Epip.InitializeLibrary("Item", Item)
 -- METHODS
 ---------------------------------------------
 
----Returns true if the item is an Artifact by checking the AMER_UNI tag.
----@param item Item
----@return boolean
-function Item.IsArtifact(item)
-    return item:HasTag("AMER_UNI") and not item:HasTag("PIP_FAKE_ARTIFACT")
-end
-
 ---Returns whether an item is of Unique rarity.
 ---Returns `true` for Artifact items.
 ---@param item Item

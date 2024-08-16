@@ -775,6 +775,10 @@ Text.CommonStrings.Artifacts = Text.RegisterTranslatedString({
    Handle = "h29f2c933gb1a3g4f4ag89d4gcca71ffeba51",
    Text = "Artifacts",
 })
+Text.CommonStrings.ArtifactFocus = Text.RegisterTranslatedString({
+    Handle = "h68ee1bc9gaf81g43a1g8d72g9e48a6d8b953",
+    Text = "Focused Artifact",
+})
 Text.CommonStrings.Combat = Text.RegisterTranslatedString({
    Handle = "hfc9df4bcgd7deg4e05ga37ag1b739d2a9e2b",
    Text = "Combat",
