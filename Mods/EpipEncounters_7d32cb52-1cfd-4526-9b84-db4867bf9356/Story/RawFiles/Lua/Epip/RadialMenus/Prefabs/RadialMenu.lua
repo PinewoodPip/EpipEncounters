@@ -14,6 +14,7 @@ local SlotPrefab = RadialMenus:GetClass("Features.RadialMenus.Prefabs.Slot")
 local Menu = {
     ELEMENT_RADIUS = 280,
     SEGMENT_RADIUS = 400,
+    SEGMENT_HOVER_SOUND = "UI_Game_Reward_MoveCursor",
     ---@type table<Features.RadialMenus.Prefabs.RadialMenu.SegmentState, Color>
     SEGMENT_STATE_COLORS = {
         ["Idle"] = Color.Create(255, 255, 255, 255 * 0.2),
@@ -79,6 +80,7 @@ function Menu:_Render()
         -- Update segment graphics upon mouse interaction and forward events.
         if slot.Type ~= "Empty" then -- Empty slots are non-interactable.
             selectionArea.Events.MouseOver:Subscribe(function (_)
+                self.UI:PlaySound(self.SEGMENT_HOVER_SOUND)
                 self:_UpdateSegment(i, "Highlighted")
             end)
             selectionArea.Events.MouseOut:Subscribe(function (_)

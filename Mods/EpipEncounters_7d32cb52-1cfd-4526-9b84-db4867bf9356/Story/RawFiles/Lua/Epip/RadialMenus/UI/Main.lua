@@ -14,6 +14,10 @@ UI.HEADER_SIZE = V(200, 30)
 UI.OPEN_TWEEN_DURATION = 0.15 -- In seconds.
 UI.OPEN_TWEEN_STARTING_SCALE = 0.4
 UI.OPEN_TWEEN_STARTING_ALPHA = 0.2
+UI.SOUNDS = {
+    TOGGLE = "UI_Game_Journal_Close",
+    CYCLE = "UI_Game_PartyFormation_Drop",
+}
 UI._CurrentMenuIndex = 1
 UI._CurrentMenu = nil ---@type Features.RadialMenus.Prefabs.RadialMenu?
 
@@ -53,6 +57,7 @@ function UI.Setup()
     Client.UI.Input.SetMouseWheelBlocked(true) -- Prevent the default cycler bindings (mouse wheel) from altering camera zoom.
 
     UI:Show()
+    UI:PlaySound(UI.SOUNDS.TOGGLE)
 end
 
 ---Sets the current active menu.
@@ -140,7 +145,10 @@ end
 ---@param offset integer Index offset.
 function UI.ScrollMenus(offset)
     UI._CurrentMenuIndex = math.indexmodulo(UI._CurrentMenuIndex + offset, #RadialMenus:GetMenus())
-    UI.Refresh()
+    if UI:IsVisible() then
+        UI:PlaySound(UI.SOUNDS.CYCLE)
+        UI.Refresh()
+    end
 end
 
 ---Returns the current menu.
