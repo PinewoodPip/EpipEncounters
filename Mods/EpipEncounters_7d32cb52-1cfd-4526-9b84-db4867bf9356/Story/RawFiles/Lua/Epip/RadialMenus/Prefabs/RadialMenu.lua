@@ -12,7 +12,7 @@ local SlotPrefab = RadialMenus:GetClass("Features.RadialMenus.Prefabs.Slot")
 ---@field RadialList GenericUI.Prefabs.Containers.RadialList
 ---@field _Config Features.RadialMenus.Prefabs.RadialMenu.Config
 local Menu = {
-    ELEMENT_RADIUS = 280, -- Element radius; segment radius is twice of this.
+    ELEMENT_RADIUS = 280,
     SEGMENT_RADIUS = 400,
     ---@type table<Features.RadialMenus.Prefabs.RadialMenu.SegmentState, Color>
     SEGMENT_STATE_COLORS = {
@@ -133,6 +133,12 @@ end
 ---@return GenericUI.Prefabs.Containers.RadialList
 function Menu:GetContainer()
     return self.RadialList
+end
+
+---Returns the segment radius with the horizontal element scale override considered.
+---@return number
+function Menu:GetScaledRadius()
+    return self.SEGMENT_RADIUS * self:GetScale()[1]
 end
 
 ---Redraws a segment.

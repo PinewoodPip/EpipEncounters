@@ -121,6 +121,13 @@ function UI._Initialize()
     UI._Initialized = true
 end
 
+---Switches to a neighbour menu.
+---@param offset integer Index offset.
+function UI.ScrollMenus(offset)
+    UI._CurrentMenuIndex = math.indexmodulo(UI._CurrentMenuIndex + offset, #RadialMenus:GetMenus())
+    UI.Refresh()
+end
+
 ---Returns the current menu.
 ---@return Features.RadialMenus.Menu?
 function UI._GetCurrentMenu()
@@ -172,11 +179,74 @@ function UI._RenderMenu(menu)
                 })
             end
         end)
+
+        UI._CurrentMenu = instance
     end
     instance:SetMenu(menu)
     UI.Header:SetText(menu.Name)
-    UI._CurrentMenu = instance
-    UI._RepositionMenus()
+end
+
+---Renders the next/previous menus.
+function UI._RenderAdjacentMenus()
+    -- Fetch neighbour menus
+    local menus = RadialMenus:GetMenus()
+    local previousMenu, nextMenu = nil, nil
+    if #menus == 2 then -- Do not show the other menu on both sides.
+        if UI._CurrentMenuIndex == 1 then
+            nextMenu = menus[2]
+        else -- Current index 2.
+            previousMenu = menus[1]
+        end
+    elseif #menus >= 3 then
+        local previousMenuIndex, nextMenuIndex = math.indexmodulo(UI._CurrentMenuIndex - 1, #menus), math.indexmodulo(UI._CurrentMenuIndex + 1, #menus)
+        previousMenu, nextMenu = menus[previousMenuIndex], menus[nextMenuIndex]
+    end
+
+    -- Initialize preview widgets
+    local leftMenuInstance = UI._LeftMenuPreview
+    if not leftMenuInstance then
+        leftMenuInstance = UI._InitializePreviewWidget("LeftMenuPreview")
+        UI._LeftMenuPreview = leftMenuInstance
+
+        -- Setup click area
+        local clickbox = UI._InitializeClickbox("LeftMenuPreviewClickbox", leftMenuInstance)
+        UI._LeftMenuPreviewClickbox = clickbox
+
+        -- Scroll menus when the area is clicked.
+        clickbox.Events.MouseUp:Subscribe(function (_)
+            UI.ScrollMenus(-1)
+        end)
+    end
+    local rightMenuInstance = UI._RightMenuPreview
+    if not rightMenuInstance then
+        rightMenuInstance = UI._InitializePreviewWidget("RightMenuPreview")
+        UI._RightMenuPreview = rightMenuInstance
+
+        -- Setup click area
+        local clickbox = UI._InitializeClickbox("RightMenuPreviewClickbox", rightMenuInstance)
+        UI._RightMenuPreviewClickbox = clickbox
+
+        -- Scroll menus when the area is clicked.
+        clickbox.Events.MouseUp:Subscribe(function (_)
+            UI.ScrollMenus(1)
+        end)
+    end
+
+    -- Set preview widgets
+    UI._UpdateMenuPreview(UI._LeftMenuPreview, UI._LeftMenuPreviewClickbox, previousMenu)
+    UI._UpdateMenuPreview(UI._RightMenuPreview, UI._RightMenuPreviewClickbox, nextMenu)
+end
+
+---Updates a menu preview widget.
+---@param previewInstance Features.RadialMenus.Prefabs.RadialMenu
+---@param clickbox GenericUI_Element
+---@param menu Features.RadialMenus.Menu
+function UI._UpdateMenuPreview(previewInstance, clickbox, menu)
+    previewInstance:SetVisible(menu ~= nil)
+    clickbox:SetVisible(menu ~= nil)
+    if menu then
+        previewInstance:SetMenu(menu)
+    end
 end
 
 ---Re-renders the current menu.
@@ -184,6 +254,8 @@ function UI._RenderCurrentMenu()
     local menu = UI._GetCurrentMenu()
     if menu then
         UI._RenderMenu(menu)
+        UI._RenderAdjacentMenus()
+        UI._RepositionMenus()
     end
 end
 
@@ -241,7 +313,60 @@ function UI._RepositionMenus()
         -- Center the menu;
         -- the menu is center-anchored, so SetPositionRelativeToParent() doesn't work.
         instance:SetPosition(panelSize[1] / 2, panelSize[2] / 2)
+
+        -- Position preview widgets
+        local leftPreview, rightPreview = UI._LeftMenuPreview, UI._RightMenuPreview
+        local currentMenuWidth = instance:GetScaledRadius()
+        if leftPreview then
+            leftPreview:SetPosition(panelSize[1] / 2 - currentMenuWidth - leftPreview:GetScaledRadius(), panelSize[2] / 2)
+            UI._PositionPreviewClickbox(UI._LeftMenuPreviewClickbox, leftPreview)
+        end
+        if rightPreview then
+            rightPreview:SetPosition(panelSize[1] / 2 + currentMenuWidth + rightPreview:GetScaledRadius(), panelSize[2] / 2)
+            UI._PositionPreviewClickbox(UI._RightMenuPreviewClickbox, rightPreview)
+        end
     end
+end
+
+---Repositions a clickbox for a preview widget.
+---@param clickbox GenericUI_Element
+---@param previewWidget Features.RadialMenus.Prefabs.RadialMenu
+function UI._PositionPreviewClickbox(clickbox, previewWidget)
+    local clickAreaX, clickAreaY = previewWidget:GetPosition()
+    clickAreaX, clickAreaY = clickAreaX - previewWidget:GetWidth() / 2, clickAreaY - previewWidget:GetHeight() / 2
+    clickbox:SetPosition(clickAreaX, clickAreaY)
+end
+
+---Initializes a menu preview widget.
+---@param id string
+---@return Features.RadialMenus.Prefabs.RadialMenu
+function UI._InitializePreviewWidget(id)
+    local instance = RadialMenuPrefab.Create(UI, id, UI.Root, {
+        Menu = UI._GetCurrentMenu(), -- Temporarily initialize to current menu, to simplify handling initialization if there are no neighbours.
+    })
+    instance:SetScale(V(0.5, 0.5))
+    instance:SetMouseChildren(false)
+    return instance
+end
+
+---Initializes a clickbox for a menu preview widget.
+---@param id string
+---@param previewWidget Features.RadialMenus.Prefabs.RadialMenu
+---@return GenericUI_Element
+function UI._InitializeClickbox(id, previewWidget)
+    local clickArea = UI.Root:AddChild(id, "GenericUI_Element_TiledBackground")
+    clickArea:SetBackground("Black", previewWidget:GetSize():unpack())
+    clickArea:SetAlpha(0)
+
+    -- Add visual feedback on hover
+    clickArea.Events.MouseOver:Subscribe(function (_)
+        clickArea:SetAlpha(0.3)
+    end)
+    clickArea.Events.MouseOut:Subscribe(function (_)
+        clickArea:SetAlpha(0)
+    end)
+
+    return clickArea
 end
 
 ---------------------------------------------
