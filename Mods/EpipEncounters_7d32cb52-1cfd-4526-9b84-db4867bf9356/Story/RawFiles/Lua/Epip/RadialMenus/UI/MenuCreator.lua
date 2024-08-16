@@ -3,6 +3,7 @@ local Generic = Client.UI.Generic
 local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 local Textures = Epip.GetFeature("Feature_GenericUITextures").TEXTURES
 local ButtonPrefab = Generic.GetPrefab("GenericUI_Prefab_Button")
+local CloseButtonPrefab = Generic.GetPrefab("GenericUI_Prefab_CloseButton")
 local SettingWidgets = Epip.GetFeature("Features.SettingWidgets")
 local Input = Client.Input
 local CommonStrings = Text.CommonStrings
@@ -16,6 +17,7 @@ local UI = Generic.Create("Features.RadialMenus.UI.MenuCreator", 8) ---@class Fe
 RadialMenus.MenuCreatorUI = UI
 UI.CONTENT_SIZE = V(670, 500)
 UI.HEADER_SIZE = V(400, 50)
+UI.HEADER_FONT_SIZE = 23
 UI.SETTING_SIZE = V(650, 50)
 UI.SLOT_SETTING_SIZE = V(UI.SETTING_SIZE[1], 70) -- Size for settings that render as hotbar slots.
 ---@type table<Features.Features.RadialMenus.UI.MenuCreator.Mode, TextLib_TranslatedString>
@@ -201,7 +203,7 @@ function UI._Setup()
 
     -- Update static elements
     UI.CreateButton:SetLabel(isEditing and CommonStrings.Save or CommonStrings.Create)
-    UI.Header:SetText(UI.MODE_HEADERS[UI._CurrentMode] or "Please update header TSK list")
+    UI.Header:SetText(Text.Format(UI.MODE_HEADERS[UI._CurrentMode] or "Please update header TSK list", {Size = UI.HEADER_FONT_SIZE}))
 
     UI._RenderSettings()
 
@@ -260,6 +262,7 @@ function UI._Initialize()
 
     local header = TextPrefab.Create(UI, "Header", contentArea, "", "Center", V(500, 50))
     header:SetPositionRelativeToParent("Top")
+    header:SetStroke(Color.Create(0, 0, 0):ToDecimal(), 2, 1, 15, 15)
     UI.Header = header
 
     local contentList = contentArea:AddChild("ContentList", "GenericUI_Element_ScrollList")
@@ -279,11 +282,15 @@ function UI._Initialize()
     -- "Create" button
     local createButton = ButtonPrefab.Create(UI, "CreateButton", root, ButtonPrefab:GetStyle("DOS1Blue"))
     createButton:SetLabel(CommonStrings.Create)
-    createButton:SetPositionRelativeToParent("Bottom", 0, -50)
+    createButton:SetPositionRelativeToParent("Bottom", 0, -60)
     createButton.Events.Pressed:Subscribe(function (_)
         UI._Finish()
     end)
     UI.CreateButton = createButton
+
+    -- Close button
+    local closeButton = CloseButtonPrefab.Create(UI, "CloseButton", root, ButtonPrefab:GetStyle("CloseStone"))
+    closeButton:SetPositionRelativeToParent("TopRight", -47, 58)
 
     -- Set panel size
     local uiObj = UI:GetUI()
