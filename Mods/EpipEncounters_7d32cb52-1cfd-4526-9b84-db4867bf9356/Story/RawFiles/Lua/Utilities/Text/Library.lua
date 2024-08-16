@@ -410,7 +410,7 @@ function Text.Format(str, formatData)
     -- FormatData-only overload.
     -- Passing a TSK as the only parameter is not supported - use GetString() instead.
     if type(str) == "table" then
-        str, formatData = Text.Resolve(str.Text), str
+        str, formatData = Text.Resolve(str.Text), formatData == nil and str or formatData
     end
 
     if formatData.RemovePreviousFormatting then
