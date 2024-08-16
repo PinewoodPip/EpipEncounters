@@ -240,7 +240,7 @@ Epip.InitializeLibrary("Stats", Stats)
 ---@param itemSource Item?
 ---@return boolean
 function Stats.MeetsRequirements(char, statID, isItem, itemSource)
-    local data = Ext.Stats.Get(statID)
+    local data = Ext.Stats.Get(statID) ---@type StatsLib_StatsEntry_SkillData|StatsLib_StatsEntry_Object
     local stats = char.Stats
     local isEquipment = false
     -- local dynamicStats = char.Stats.DynamicStats
@@ -340,25 +340,9 @@ function Stats.MeetsRequirements(char, statID, isItem, itemSource)
 
     -- Only check other requirements if this spell is natural to the character
     if not grantedByExternalSource then
-        -- Requirements
+        -- Usage requirements
         for _,req in ipairs(data.Requirements) do
-            local reqMet = false
-
-            if req.Requirement == "Combat" then
-                reqMet = Character.IsInCombat(char)
-            elseif req.Requirement == "Tag" then
-                reqMet = char:HasTag(req.Param)
-            elseif req.Requirement == "Immobile" then
-                reqMet = Character.GetMovement(char) <= 0
-            else
-                reqMet = Stats.MeetsRequirementsINT(char, req)
-            end
-
-            if req.Not then
-                reqMet = not reqMet
-            end
-
-            if not reqMet then
+            if not Ext.Stats.Requirement.Evaluate(stats, req.Requirement, req.Param, req.Tag, req.Not) then
                 return false
             end
         end
@@ -366,7 +350,7 @@ function Stats.MeetsRequirements(char, statID, isItem, itemSource)
         -- Memorization requirements
         if not isItem then
             for _,req in ipairs(data.MemorizationRequirements) do
-                if not Stats.MeetsRequirementsINT(char, req) then
+                if not Ext.Stats.Requirement.Evaluate(stats, req.Requirement, req.Param, req.Tag, req.Not) then
                     return false
                 end
             end
@@ -541,34 +525,4 @@ function Stats.CountStat(stats, stat)
     -- end
 
     return count
-end
-
----@param char Character
----@param req StatsRequirement
----@return boolean
-function Stats.MeetsRequirementsINT(char, req)
-    local reqMet = false
-
-    -- Possessed GM mode characters bypass ability requirements.
-    if char.IsPossessed and Ext.Enums.AbilityType[req.Requirement] ~= nil then
-        reqMet = true
-    else
-        if req.Requirement == "None" then
-            reqMet = true
-        elseif req.Requirement == "Tag" then
-            reqMet = char:HasTag(req.Param)
-        elseif type(char.Stats[req.Requirement]) == "boolean" then
-            reqMet = char.Stats[req.Requirement]
-        else
-            local amount = char.Stats[req.Requirement]
-
-            reqMet = amount >= req.Param
-        end
-
-        if req.Not then
-            reqMet = not reqMet
-        end
-    end
-
-    return reqMet
 end
