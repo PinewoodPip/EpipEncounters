@@ -5,6 +5,7 @@ local Textures = Epip.GetFeature("Feature_GenericUITextures").TEXTURES
 local ButtonPrefab = Generic.GetPrefab("GenericUI_Prefab_Button")
 local CloseButtonPrefab = Generic.GetPrefab("GenericUI_Prefab_CloseButton")
 local SettingWidgets = Epip.GetFeature("Features.SettingWidgets")
+local MsgBox = Client.UI.MessageBox
 local Input = Client.Input
 local CommonStrings = Text.CommonStrings
 local V = Vector.Create
@@ -20,6 +21,7 @@ UI.HEADER_SIZE = V(400, 50)
 UI.HEADER_FONT_SIZE = 23
 UI.SETTING_SIZE = V(650, 50)
 UI.SLOT_SETTING_SIZE = V(UI.SETTING_SIZE[1], 70) -- Size for settings that render as hotbar slots.
+UI.MSGBOXID_DELETE_MENU = "Features.RadialMenus.UI.MenuCreator.DeleteMenu"
 ---@type table<Features.Features.RadialMenus.UI.MenuCreator.Mode, TextLib_TranslatedString>
 UI.MODE_HEADERS = {
     ["CreateMenu"] = TSK.Label_CreateNewMenu,
@@ -205,6 +207,11 @@ function UI._Setup()
     UI.CreateButton:SetLabel(isEditing and CommonStrings.Save or CommonStrings.Create)
     UI.Header:SetText(Text.Format(UI.MODE_HEADERS[UI._CurrentMode] or "Please update header TSK list", {Size = UI.HEADER_FONT_SIZE}))
 
+    -- Only menus can be deleted; slots must be set to "empty", or removed by decrementing the amount of slots of the Custom menu.
+    UI.DeleteButton:SetVisible(mode == "EditMenu")
+    UI.ButtonsBar:RepositionElements()
+    UI.ButtonsBar:SetPositionRelativeToParent("Bottom", 0, -60)
+
     UI._RenderSettings()
 
     UI:SetPositionRelativeToViewport("center", "center")
@@ -279,14 +286,23 @@ function UI._Initialize()
     UI.MenuSpecificSettingsList = menuSpecificSettingsList
     UI._RenderMenuTypeSettings()
 
-    -- "Create" button
-    local createButton = ButtonPrefab.Create(UI, "CreateButton", root, ButtonPrefab:GetStyle("DOS1Blue"))
+    -- Create/save & delete buttons
+    local buttonsBar = root:AddChild("BottomButtons", "GenericUI_Element_HorizontalList")
+    UI.ButtonsBar = buttonsBar
+
+    local createButton = ButtonPrefab.Create(UI, "CreateButton", buttonsBar, ButtonPrefab:GetStyle("DOS1Blue"))
     createButton:SetLabel(CommonStrings.Create)
-    createButton:SetPositionRelativeToParent("Bottom", 0, -60)
     createButton.Events.Pressed:Subscribe(function (_)
         UI._Finish()
     end)
     UI.CreateButton = createButton
+
+    local deleteButton = ButtonPrefab.Create(UI, "DeleteButton", buttonsBar, ButtonPrefab:GetStyle("RedDOS1"))
+    deleteButton:SetLabel(CommonStrings.Delete)
+    deleteButton.Events.Pressed:Subscribe(function (_)
+        UI._RequestDeleteMenu()
+    end)
+    UI.DeleteButton = deleteButton
 
     -- Close button
     local closeButton = CloseButtonPrefab.Create(UI, "CloseButton", root, ButtonPrefab:GetStyle("CloseStone"))
@@ -395,6 +411,29 @@ function UI._Finish()
     end
 end
 
+---Prompts the user to delete the current menu.
+function UI._RequestDeleteMenu()
+    if UI._CurrentMode ~= "EditMenu" then UI:__Error("_DeleteMenu", "UI is not in menu edit mode") end
+    MsgBox.Open({
+        ID = UI.MSGBOXID_DELETE_MENU,
+        Header = TSK.MsgBox_DeleteMenu_Title:GetString(),
+        Message = TSK.MsgBox_DeleteMenu_Body:Format(UI._MenuBeingEdited.Name),
+        Buttons = {
+            {ID = 1, Text = CommonStrings.Delete:GetString()},
+            {ID = 2, Text = CommonStrings.Cancel:GetString()},
+        },
+    })
+end
+
+---Deletes the current menu.
+function UI._DeleteMenu()
+    if UI._CurrentMode ~= "EditMenu" then UI:__Error("_DeleteMenu", "UI is not in menu edit mode") end
+    RadialMenus.RemoveMenu(UI._MenuBeingEdited)
+    UI:Hide()
+    RadialMenuUI.Refresh()
+    RadialMenus.SaveData()
+end
+
 ---Returns whether the UI is being used to edit an existing menu.
 ---@return boolean
 function UI._IsEditingMenu()
@@ -488,5 +527,12 @@ UI.Events.RenderSlotSettings:Subscribe(function (ev)
         SettingWidgets.RenderSetting(UI, container, Settings.Skill, UI.SLOT_SETTING_SIZE)
     elseif slotType == "InputAction" then
         UI._RenderInputActionDropdown(container)
+    end
+end)
+
+-- Handle menu deletion requests.
+MsgBox.RegisterMessageListener(UI.MSGBOXID_DELETE_MENU, MsgBox.Events.ButtonPressed, function (buttonID)
+    if buttonID == 1 then
+        UI._DeleteMenu()
     end
 end)

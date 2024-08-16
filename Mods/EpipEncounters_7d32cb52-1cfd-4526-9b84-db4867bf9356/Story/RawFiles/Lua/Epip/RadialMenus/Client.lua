@@ -63,6 +63,16 @@ local RadialMenus = {
             Text = [[Use the "+" button to create radial menus.]],
             ContextDescription = [[Hint when no menus exist]],
         },
+        MsgBox_DeleteMenu_Title = {
+            Handle = "hde39ce3dgd432g48beg98f2g347228bb4de6",
+            Text = "Delete Menu",
+            ContextDescription = [[Message box header]],
+        },
+        MsgBox_DeleteMenu_Body = {
+            Handle = "h920ae542ga390g42d7g8cd3g0cb24794c3bb",
+            Text = [[Are you sure you want to delete the "%s" menu?]],
+            ContextDescription = [[Message box for deleting menus; param is the menu's name (named by user)]],
+        },
         Setting_NewMenuType_Name = {
             Handle = "hf741a592g9333g47cdgacc5gc7e19a09ab41",
             Text = "Menu Type",
@@ -160,6 +170,12 @@ Epip.RegisterFeature("Features.RadialMenus", RadialMenus)
 ---@param menu Features.RadialMenus.Menu
 function RadialMenus.AddMenu(menu)
     table.insert(RadialMenus._Menus, menu)
+end
+
+---Removes a menu from the user.
+---@param menu Features.RadialMenus.Menu
+function RadialMenus.RemoveMenu(menu)
+    table.remove(RadialMenus._Menus, table.reverseLookup(RadialMenus._Menus, menu))
 end
 
 ---Returns the user's menus.
