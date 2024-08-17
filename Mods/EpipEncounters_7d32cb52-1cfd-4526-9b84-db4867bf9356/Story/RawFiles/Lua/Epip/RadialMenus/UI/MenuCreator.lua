@@ -214,6 +214,8 @@ function UI._Setup()
 
     UI._RenderSettings()
 
+    Client.UI.Input.SetMouseWheelBlocked(false) -- Unblock mouse wheel so it's usable in dropdowns.
+
     UI:SetPositionRelativeToViewport("center", "center")
     UI:Show()
 end
@@ -311,6 +313,7 @@ function UI._Initialize()
     -- Set panel size
     local uiObj = UI:GetUI()
     uiObj.SysPanelSize = {root:GetSize():unpack()}
+    uiObj.OF_PlayerModal1 = true -- Prevents input actions from being usable while in the UI (ex. scrolling the radial menus in the main UI)
 
     UI._Initialized = true
 end
@@ -451,6 +454,12 @@ function UI._PositionLists()
     UI.SharedSettingsList:RepositionElements()
     UI.MenuSpecificSettingsList:RepositionElements()
     UI.ContentList:RepositionElements()
+end
+
+---@override
+function UI:Hide()
+    Client.UI._BaseUITable.Hide(self)
+    Client.UI.Input.SetMouseWheelBlocked(RadialMenuUI:IsVisible()) -- Reblock mouse wheel if necessary.
 end
 
 ---------------------------------------------

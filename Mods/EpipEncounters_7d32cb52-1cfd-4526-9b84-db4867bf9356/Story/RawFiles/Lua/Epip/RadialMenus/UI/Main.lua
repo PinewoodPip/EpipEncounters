@@ -458,7 +458,7 @@ end})
 Input.Hooks.CanExecuteAction:Subscribe(function (ev)
     -- Only consume cycler input actions when the UI is visible.
     if ev.Action.ID == RadialMenus.InputActions.NextMenu.ID or ev.Action.ID == RadialMenus.InputActions.PreviousMenu.ID then
-        ev.CanExecute = UI:IsVisible()
+        ev.CanExecute = ev.CanExecute and UI:IsVisible()
     end
 end)
 
