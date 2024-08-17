@@ -3,6 +3,7 @@ local Generic = Client.UI.Generic
 local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 local ButtonPrefab = Generic.GetPrefab("GenericUI_Prefab_Button")
 local SlicedTexturePrefab = Generic.GetPrefab("GenericUI.Prefabs.SlicedTexture")
+local PanelSelect = Client.UI.Controller.PanelSelect
 local Input = Client.Input
 local V = Vector.Create
 
@@ -10,7 +11,7 @@ local V = Vector.Create
 local RadialMenus = Epip.GetFeature("Features.RadialMenus")
 local RadialMenuPrefab = RadialMenus:GetClass("Features.RadialMenus.Prefabs.RadialMenu")
 local TSK = RadialMenus.TranslatedStrings
-local UI = Generic.Create("Features.RadialMenus", 7) ---@class Features.RadialMenus.UI : GenericUI_Instance
+local UI = Generic.Create("Features.RadialMenus", 7, false) ---@class Features.RadialMenus.UI : GenericUI_Instance
 UI.HEADER_SIZE = V(200, 30)
 UI.OPEN_TWEEN_DURATION = 0.15 -- In seconds.
 UI.OPEN_TWEEN_STARTING_SCALE = 0.4
@@ -20,6 +21,7 @@ UI.SOUNDS = {
     CYCLE = "UI_Game_PartyFormation_Drop",
 }
 UI.PREVIEW_WIDGET_SPACING = 40
+UI.CONTROLLER_STICK_SELECT_THRESHOLD = 0.3 -- In fraction of distance from center.
 UI._CurrentMenuIndex = 1
 UI._CurrentMenu = nil ---@type Features.RadialMenus.Prefabs.RadialMenu?
 
@@ -102,6 +104,11 @@ end
 ---Initializes the static elements of the UI.
 function UI._Initialize()
     if UI._Initialized then return end
+
+    -- Make the UI modal on controllers to block character and camera movement with sticks.
+    if Client.IsUsingController() then
+        UI:GetUI().OF_PlayerModal1 = true
+    end
 
     local root = UI:CreateElement("Root", "GenericUI_Element_TiledBackground")
     root:SetAlpha(0.5)
@@ -468,3 +475,39 @@ Client.Events.ViewportChanged:Subscribe(function (_)
         UI._ResizePanel()
     end
 end)
+
+-- Open the menu when the controller bottom face button is pressed
+-- while in the vanilla radial menu.
+Input.Events.KeyPressed:Subscribe(function (ev)
+    if ev.InputID == "controller_a" and PanelSelect:IsVisible() then -- This input can only happen when a controller is used, so an explicit controller check is unnecessary. 
+        UI.Setup()
+        PanelSelect:Hide()
+    end
+end)
+
+-- Select segments of the menu
+-- while using the left or right sticks on a controller.
+Input.Events.StickMoved:Subscribe(function (ev)
+    local direction = V(table.unpack(ev.NewState))
+    if Vector.GetLength(direction) >= UI.CONTROLLER_STICK_SELECT_THRESHOLD then -- Consider a deadzone.
+        local menuWidget = UI._CurrentMenu
+        local menu = menuWidget:GetMenu()
+        local slotsAmount = #menu:GetSlots()
+        local anglePerSlot = (2 * math.pi) / slotsAmount
+        local firstSegmentStart = V(0, -1) -- Top of the stick is (0, -1)
+        firstSegmentStart = Vector.Rotate(firstSegmentStart, -math.deg(anglePerSlot / 2)) -- But the first segment's left boundary does not necessarily start at (0, -1)
+        local angle = Vector.Angle(direction, firstSegmentStart)
+
+        -- Determine if the stick is on the other side of the wheel (past the 180 deg point) to calculate the 360 angle
+        local crossProd = firstSegmentStart[1] * direction[2] - firstSegmentStart[2] * direction[1]
+        if crossProd < 0 then
+            angle = math.rad(360) - angle
+        end
+        local fraction = angle / (2 * math.pi)
+        local slotIndex = math.floor(slotsAmount * fraction) + 1
+        slotIndex = math.clamp(slotIndex, 1, slotsAmount)
+        menuWidget:SelectSegment(slotIndex)
+    end
+end, {EnabledFunctor = function ()
+    return UI:IsVisible() and UI._GetCurrentMenu() ~= nil
+end})

@@ -11,6 +11,7 @@ local SlotPrefab = RadialMenus:GetClass("Features.RadialMenus.Prefabs.Slot")
 ---@field SegmentsList GenericUI.Prefabs.Containers.RadialList
 ---@field RadialList GenericUI.Prefabs.Containers.RadialList
 ---@field _Config Features.RadialMenus.Prefabs.RadialMenu.Config
+---@field _SelectedSegmentIndex integer?
 local Menu = {
     ELEMENT_RADIUS = 280,
     SEGMENT_RADIUS = 400,
@@ -64,6 +65,35 @@ function Menu.Create(ui, id, parent, config)
     return instance
 end
 
+---Selects a segment, as if it had been hovered over.
+---@param index integer
+function Menu:SelectSegment(index)
+    if index == self._SelectedSegmentIndex then return end
+    self:DeselectSegment()
+    local slots = self:GetMenu():GetSlots()
+    if slots[index].Type ~= "Empty" then -- Empty slots are non-interactable.
+        self.UI:PlaySound(self.SEGMENT_HOVER_SOUND)
+        self:_UpdateSegment(index, "Highlighted")
+        self._SelectedSegmentIndex = index
+    end
+end
+
+---Deselects the current segment, as if it had been hovered out of.
+function Menu:DeselectSegment()
+    local index = self._SelectedSegmentIndex
+    if not index then return end
+    self:_UpdateSegment(index, "Idle")
+    self._SelectedSegmentIndex = nil
+end
+
+---Interacts with a segment.
+---@param index integer
+function Menu:ActivateSegment(index)
+    self.Events.SegmentClicked:Throw({
+        Index = index,
+    })
+end
+
 ---Re-renders the menu's slots.
 function Menu:_Render()
     local slots = self._Config.Menu:GetSlots()
@@ -80,20 +110,17 @@ function Menu:_Render()
         -- Update segment graphics upon mouse interaction and forward events.
         if slot.Type ~= "Empty" then -- Empty slots are non-interactable.
             selectionArea.Events.MouseOver:Subscribe(function (_)
-                self.UI:PlaySound(self.SEGMENT_HOVER_SOUND)
-                self:_UpdateSegment(i, "Highlighted")
+                self:SelectSegment(i)
             end)
             selectionArea.Events.MouseOut:Subscribe(function (_)
-                self:_UpdateSegment(i, "Idle")
+                self:DeselectSegment()
             end)
             selectionArea.Events.MouseDown:Subscribe(function (_)
                 self:_UpdateSegment(i, "Pressed")
             end)
             selectionArea.Events.MouseUp:Subscribe(function (_)
                 self:_UpdateSegment(i, "Highlighted")
-                self.Events.SegmentClicked:Throw({
-                    Index = i,
-                })
+                self:ActivateSegment(i)
             end)
         end
 

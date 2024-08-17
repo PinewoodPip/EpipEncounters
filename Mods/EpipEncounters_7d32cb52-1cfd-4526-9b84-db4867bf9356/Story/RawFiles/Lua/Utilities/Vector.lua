@@ -204,6 +204,14 @@ function Vector.Rotate(vec, degrees)
     return Vector.Create(math.cos(radians) * vec[1] - math.sin(radians) * vec[2], math.sin(radians) * vec[1] + math.cos(radians) * vec[2])
 end
 
+---Returns the angle between 2D vectors.
+---@param v1 Vector2
+---@param v2 Vector2
+function Vector.Angle(v1, v2)
+    local x1, y1, x2, y2 = v1[1], v1[2], v2[1], v2[2]
+    return math.acos((x1 * x2 + y1 * y2) / (math.sqrt(x1 ^ 2 + y1 ^ 2) * (math.sqrt(x2 ^ 2 + y2 ^ 2))))
+end
+
 ---------------------------------------------
 -- SETUP
 ---------------------------------------------
