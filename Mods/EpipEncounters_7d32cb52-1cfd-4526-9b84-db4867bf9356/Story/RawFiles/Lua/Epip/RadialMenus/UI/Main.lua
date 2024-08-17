@@ -2,6 +2,7 @@
 local Generic = Client.UI.Generic
 local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 local ButtonPrefab = Generic.GetPrefab("GenericUI_Prefab_Button")
+local SlicedTexturePrefab = Generic.GetPrefab("GenericUI.Prefabs.SlicedTexture")
 local Input = Client.Input
 local V = Vector.Create
 
@@ -87,6 +88,7 @@ function UI._UpdateTopBar()
     local menu = UI._GetCurrentMenu()
     if menu then
         header:SetText(menu.Name)
+        header:SetPositionRelativeToParent("Center")
     end
     UI.EditMenuButton:SetVisible(menu ~= nil)
 end
@@ -107,25 +109,25 @@ function UI._Initialize()
 
     -- "No menus" hint
     local noMenusLabel = TextPrefab.Create(UI, "NoMenusLabel", UI.Root, TSK.Label_NoMenus, "Center", V(500, 50))
-    noMenusLabel:SetPositionRelativeToParent("Center")
     UI.NoMenusLabel = noMenusLabel
 
     -- Create top buttons & labels bar
-    local topBar = root:AddChild("TopBar", "GenericUI_Element_HorizontalList")
+    local topBar = SlicedTexturePrefab.Create(UI, "TopBar", root, SlicedTexturePrefab:GetStyle("SimpleTooltip"), V(500, 75))
     UI.TopBar = topBar
 
     -- Edit button
-    local editButton = ButtonPrefab.Create(UI, "EditMenuButton", topBar, ButtonPrefab:GetStyle("EditGreen"))
+    local editButton = ButtonPrefab.Create(UI, "EditMenuButton", topBar:GetRootElement(), ButtonPrefab:GetStyle("EditGreen"))
+    editButton:SetPositionRelativeToParent("Left", 20, 0)
     editButton.Events.Pressed:Subscribe(function (_)
         UI._EditCurrentMenu()
     end)
     UI.EditMenuButton = editButton
 
-    local header = TextPrefab.Create(UI, "Header", topBar, "", "Center", UI.HEADER_SIZE)
-    header:SetCenterInLists(true)
+    local header = TextPrefab.Create(UI, "Header", topBar:GetRootElement(), "", "Center", UI.HEADER_SIZE)
     UI.Header = header
 
-    local newMenuButton = ButtonPrefab.Create(UI, "NewMenuButton", topBar, ButtonPrefab:GetStyle("DOS1IncrementLarge"))
+    local newMenuButton = ButtonPrefab.Create(UI, "NewMenuButton", topBar:GetRootElement(), ButtonPrefab:GetStyle("DOS1IncrementLarge"))
+    newMenuButton:SetPositionRelativeToParent("Right", -20, 0)
     newMenuButton.Events.Pressed:Subscribe(function (_)
         UI.RequestNewMenu()
     end)
@@ -136,7 +138,6 @@ function UI._Initialize()
     buttonsBar:RepositionElements()
     buttonsBar:SetPositionRelativeToParent("Bottom")
 
-    topBar:RepositionElements()
     UI._ResizePanel()
 
     UI._Initialized = true
@@ -281,6 +282,9 @@ function UI._RenderCurrentMenu()
         UI._RenderAdjacentMenus()
         UI._RepositionMenus()
     end
+    if UI._CurrentMenu then -- Toggle visibility of the menu if it has been initialized
+        UI._CurrentMenu:SetVisible(menu ~= nil)
+    end
 end
 
 ---Animates the main menu opening with a tween.
@@ -342,10 +346,11 @@ function UI._ResizePanel()
     local topBar = UI.TopBar
     uiObj.SysPanelSize = panelSize
     uiObj:Resize(panelSize[1], panelSize[2], uiObj:GetUIScaleMultiplier()) -- Necessary to avoid cropping on ultrawide resolutions. Resizing is done in flash space.
-    root:SetBackground("Black", UI._GetPanelSize():unpack())
+    root:SetBackground("Black", panelSize:unpack())
     UI._RepositionMenus()
-    topBar:SetPositionRelativeToParent("Top", 0, 5)
+    topBar:SetPositionRelativeToParent("Top", 0, 40)
     UI:SetPositionRelativeToViewport("topleft", "topleft")
+    UI.NoMenusLabel:SetPositionRelativeToParent("Center")
 end
 
 ---Repositions the menu widgets.
