@@ -376,7 +376,8 @@ end
 ---@param previewWidget Features.RadialMenus.Prefabs.RadialMenu
 function UI._PositionPreviewClickbox(clickbox, previewWidget)
     local clickAreaX, clickAreaY = previewWidget:GetPosition()
-    clickAreaX, clickAreaY = clickAreaX - previewWidget:GetWidth() / 2, clickAreaY - previewWidget:GetHeight() / 2
+    local widgetRadius = previewWidget:GetScaledRadius()
+    clickAreaX, clickAreaY = clickAreaX - widgetRadius, clickAreaY - widgetRadius
     clickbox:SetPosition(clickAreaX, clickAreaY)
 end
 
@@ -398,15 +399,21 @@ end
 ---@return GenericUI_Element
 function UI._InitializeClickbox(id, previewWidget)
     local clickArea = UI.Root:AddChild(id, "GenericUI_Element_TiledBackground")
-    clickArea:SetBackground("Black", previewWidget:GetSize():unpack())
+    local diameter = previewWidget:GetScaledRadius() * 2
+    clickArea:SetBackground("Black", diameter, diameter)
     clickArea:SetAlpha(0)
 
-    -- Add visual feedback on hover
+    -- Add highlight for visual feedback on hover
     clickArea.Events.MouseOver:Subscribe(function (_)
-        clickArea:SetAlpha(0.3)
+        local graphics = clickArea:GetMovieClip().graphics
+        local w, h = clickArea:GetSize():unpack()
+        graphics.clear()
+        graphics.beginFill(Color.CreateFromHex(Color.LARIAN.GRAY):ToDecimal(), 0.4)
+        graphics.drawCircle(w / 2, h / 2, w / 2) -- Draw from center (coincides with preview widget center)
     end)
     clickArea.Events.MouseOut:Subscribe(function (_)
-        clickArea:SetAlpha(0)
+        local graphics = clickArea:GetMovieClip().graphics
+        graphics.clear()
     end)
 
     return clickArea
