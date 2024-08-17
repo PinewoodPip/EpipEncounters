@@ -68,7 +68,7 @@ end
 -- By timing miracles, this actually also works for the context menu "Attack" option.
 Input.Events.KeyPressed:Subscribe(function (ev)
     if ev.InputID == "left2" then
-        local target = ContextMenu.GetCurrentCharacter() or Pointer.GetCurrentCharacter(nil, true)
+        local target = (not Client.IsUsingController() and ContextMenu.GetCurrentCharacter()) or Pointer.GetCurrentCharacter(nil, true) -- TODO support controller context menu
         if target then
             Fix.CheckAttackAttempt(target)
         end

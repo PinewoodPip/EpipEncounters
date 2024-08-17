@@ -112,7 +112,7 @@ Client.Input.Events.KeyReleased:Subscribe(function (ev)
             end
         end
     end
-end)
+end, {EnabledFunctor = Client.IsUsingKeyboardAndMouse}) -- This feature is irrelevant to controller (no hotbar UI that can be dragged into)
 
 -- Prevent "X doesn't know this skill" notifications if dragging unlearnt skills is enabled.
 Client.UI.Notification.Events.TextNotificationShown:Subscribe(function (ev)
