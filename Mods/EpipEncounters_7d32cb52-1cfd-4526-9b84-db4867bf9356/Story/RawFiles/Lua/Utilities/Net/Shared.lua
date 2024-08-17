@@ -182,8 +182,12 @@ end
 
 -- Forward Net messages to corresponding events.
 Ext.Events.NetMessageReceived:Subscribe(function(ev)
-    -- Parse returns non-string for non-string primitives.
-    local rawPayload = ev.Payload and Ext.Json.Parse(ev.Payload) or {}
+    -- Try parsing json payloads
+    local rawPayload = ev.Payload -- Fallback if parsing fails (ex. a raw string payload)
+    local success, parsedPayload = pcall(Ext.Json.Parse, ev.Payload) -- Note: parse returns non-string for non-string primitives.
+    if success then
+        rawPayload = parsedPayload
+    end
     local payload
 
     -- Only create a Payload instance if the message was a table.
