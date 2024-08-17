@@ -149,23 +149,44 @@ end
 function Menu:_UpdateSegment(index, state)
     local segment = self.SegmentsList:GetChildren()[index]:GetMovieClip()
     local slots = self._Config.Menu:GetSlots()
+    local slotsAmount = #slots
     local slot = slots[index]
     local graphics = segment.graphics
-    local topVector = V(0, -self.SEGMENT_RADIUS / 2)
-    local rotation = -(2 * math.pi) / #slots
-    local leftVector = Vector.Rotate(topVector, math.deg(rotation))
+    local topVector = V(0, -self.SEGMENT_RADIUS)
+    local rotation = -(2 * math.pi) / slotsAmount
+    local leftVector = Vector.Rotate(topVector, math.deg(rotation) / 2) -- We're rotating from the middle to one of the sides, thus we divide the angle by 2.
     local color = Menu.SEGMENT_STATE_COLORS[state]
     -- Empty slots are non-interactable; do not change graphics for them.
     if slot.Type == "Empty" then
         state = "Idle"
     end
+
+    -- Though the segment has its root in its middle,
+    -- for easier maths we treat the center of the menu as the origin.
+    local offset = V(0, self.SEGMENT_RADIUS / 2)
+    local origin = V(0, 0)
+
+    -- Magic numbers galore!
+    -- The fewer slots there are, the further out the anchor point
+    -- has to be for the menu to appear nicely round.
+    -- We do not use drawCircle as there'd be no way to highlight specific segments with it.
+    local curveAnchorOffset = 0.9 ^ slotsAmount * 50
+    if slotsAmount == 5 then
+        curveAnchorOffset = curveAnchorOffset + 50
+    elseif slotsAmount == 6 then
+        curveAnchorOffset = curveAnchorOffset + 30
+    elseif slotsAmount == 7 then
+        curveAnchorOffset = curveAnchorOffset + 20
+    end
+
+    -- Draw the segment
     graphics.clear()
     graphics.lineStyle(2, 0, 1, true, "normal", "none", "round", 2)
     graphics.beginFill(color:ToDecimal(), color.Alpha / 256)
-    graphics.moveTo(0, self.SEGMENT_RADIUS / 2) -- Go to center
-    graphics.lineTo(leftVector[1], leftVector[2])
-    graphics.curveTo(topVector[1], topVector[2] - 1, -leftVector[1], leftVector[2])
-    graphics.lineTo(0, self.SEGMENT_RADIUS / 2)
+    graphics.moveTo((origin + offset):unpack()) -- Go to center
+    graphics.lineTo((leftVector + offset):unpack())
+    graphics.curveTo(topVector[1] + offset[1], topVector[2] + offset[2] - curveAnchorOffset, -leftVector[1] + offset[1], leftVector[2] + offset[2])
+    graphics.lineTo((origin + offset):unpack())
     graphics.endFill()
 end
 
