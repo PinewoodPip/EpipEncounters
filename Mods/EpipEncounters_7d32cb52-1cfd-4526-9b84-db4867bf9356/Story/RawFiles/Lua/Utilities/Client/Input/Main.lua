@@ -53,6 +53,19 @@ local Input = {
         rightstick_yneg = "y",
     },
 
+    ---@type table<InputRawType, "Left"|"Right">
+    STICK_MOTION_EVENTS = {
+        leftstick_xpos = "Left",
+        leftstick_xneg = "Left",
+        leftstick_ypos = "Left",
+        leftstick_yneg = "Left",
+
+        rightstick_xpos = "Right",
+        rightstick_xneg = "Right",
+        rightstick_ypos = "Right",
+        rightstick_yneg = "Right",
+    },
+
     MOUSE_RAW_INPUT_EVENTS = {
         motion = true,
         motion_xneg = true,
@@ -527,6 +540,7 @@ local Input = {
         KeyPressed = {}, ---@type Event<InputLib_Event_KeyPressed>
         KeyReleased = {}, ---@type Event<InputLib_Event_KeyReleased>
         MouseButtonPressed = {}, ---@type Event<InputLib_Event_MouseButtonPressed>
+        StickMoved = {}, ---@type Event<InputLib.Events.StickMoved>
 
         ActionExecuted = {}, ---@type Event<InputLib_Event_ActionExecuted>
         ActionReleased = {}, ---@type Event<InputLib_Event_ActionExecuted>
@@ -672,6 +686,10 @@ end
 ---@class InputLib_Event_MouseButtonPressed
 ---@field Position Vector2D
 ---@field InputID InputRawType
+
+---@class InputLib.Events.StickMoved
+---@field Stick "Left"|"Right"
+---@field NewState vec2
 
 ---------------------------------------------
 -- METHODS
@@ -1017,6 +1035,31 @@ Ext.Events.Tick:Subscribe(function (_)
     end
 end)
 
+-- Forward controller stick events
+Ext.Events.RawInput:Subscribe(function (ev)
+    local stick = Input.STICK_MOTION_EVENTS[ev.Input.Input.InputId or ""]
+    if stick then
+        local manager = Ext.Input.GetInputManager()
+        local playerDeviceID = manager.PlayerDeviceIDs[1]
+        if playerDeviceID ~= -1 then
+            local inputRawIDPrefix = stick == "Left" and "leftstick_" or "rightstick_"
+            local inputStates = manager.InputStates[playerDeviceID + 1].Inputs -- These fields are considered arrays, thus we must convert to 1-based index.
+            local xNeg = inputStates[Input.GetRawInputNumericID(inputRawIDPrefix .. "xneg") + 1]
+            local xPos = inputStates[Input.GetRawInputNumericID(inputRawIDPrefix .. "xpos") + 1]
+            local yNeg = inputStates[Input.GetRawInputNumericID(inputRawIDPrefix .. "yneg") + 1]
+            local yPos = inputStates[Input.GetRawInputNumericID(inputRawIDPrefix .. "ypos") + 1]
+            local newState = {
+                xNeg.Value2 ~= 0 and -xNeg.Value2 or xPos.Value2,
+                yNeg.Value2 ~= 0 and -yNeg.Value2 or yPos.Value2,
+            }
+            Input.Events.StickMoved:Throw({
+                Stick = stick,
+                NewState = newState,
+            })
+        end
+    end
+end)
+
 -- Block inputs based on requests to SetInputBlocked()
 Input.Events.KeyStateChanged:Subscribe(function (ev)
     if Input.IsInputBlocked(ev.InputID) then
@@ -1056,19 +1099,3 @@ for eventID,data in pairs(InputManager.InputDefinitions) do
     Input.INPUT_EVENTS[eventID] = entry
     Input.INPUT_EVENT_STRING_ID_MAP[entry.StringID] = eventID
 end
-
----------------------------------------------
--- TESTS
----------------------------------------------
-
--- Input.Events.MouseMoved:Subscribe(function (e)
---     _D(e)
--- end)
-
--- Input.Events.KeyStateChanged:Subscribe(function (e)
---     _D(e)
--- end)
-
--- Input.Events.MouseButtonPressed:Subscribe(function (e)
---     _D(e)
--- end)
