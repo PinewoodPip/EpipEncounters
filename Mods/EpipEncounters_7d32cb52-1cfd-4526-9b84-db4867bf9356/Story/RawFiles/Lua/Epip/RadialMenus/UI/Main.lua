@@ -18,6 +18,7 @@ UI.SOUNDS = {
     TOGGLE = "UI_Game_Journal_Close",
     CYCLE = "UI_Game_PartyFormation_Drop",
 }
+UI.PREVIEW_WIDGET_SPACING = 40
 UI._CurrentMenuIndex = 1
 UI._CurrentMenu = nil ---@type Features.RadialMenus.Prefabs.RadialMenu?
 
@@ -360,11 +361,11 @@ function UI._RepositionMenus()
         local leftPreview, rightPreview = UI._LeftMenuPreview, UI._RightMenuPreview
         local currentMenuWidth = instance:GetScaledRadius()
         if leftPreview then
-            leftPreview:SetPosition(panelSize[1] / 2 - currentMenuWidth - leftPreview:GetScaledRadius(), panelSize[2] / 2)
+            leftPreview:SetPosition(panelSize[1] / 2 - currentMenuWidth - leftPreview:GetScaledRadius() - UI.PREVIEW_WIDGET_SPACING, panelSize[2] / 2)
             UI._PositionPreviewClickbox(UI._LeftMenuPreviewClickbox, leftPreview)
         end
         if rightPreview then
-            rightPreview:SetPosition(panelSize[1] / 2 + currentMenuWidth + rightPreview:GetScaledRadius(), panelSize[2] / 2)
+            rightPreview:SetPosition(panelSize[1] / 2 + currentMenuWidth + rightPreview:GetScaledRadius() + UI.PREVIEW_WIDGET_SPACING, panelSize[2] / 2)
             UI._PositionPreviewClickbox(UI._RightMenuPreviewClickbox, rightPreview)
         end
     end
