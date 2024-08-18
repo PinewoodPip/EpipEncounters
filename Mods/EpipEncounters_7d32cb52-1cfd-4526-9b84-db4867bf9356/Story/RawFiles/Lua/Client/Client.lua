@@ -249,6 +249,63 @@ function Client.CanSendToLadyVengeance()
     end
 end
 
+---Attempts to enter a skill preparation state.
+---@param char EclCharacter Must be active.
+---@param skillID skill
+function Client.PrepareSkill(char, skillID)
+    if Client.IsUsingKeyboardAndMouse() then
+        Client.UI.Hotbar.UseSkill(skillID) -- TODO move code here
+    else
+        local BottomBar = Client.UI.Controller.BottomBar
+        local skillBar = Character.GetSkillBar(char)
+        local row = char.PlayerData.SelectedSkillSet
+        local slotIndex = row * BottomBar.SLOTS_PER_ROW + 13 -- Index of the last slot in the current row. We're using 1-based index here, so the last slot in the row is 13.
+        local slot = skillBar[slotIndex]
+        ---@type EocSkillBarItem Store previous slot data to restore later.
+        local previousSlotData = {
+            Type = slot.Type,
+            SkillOrStatId = slot.SkillOrStatId,
+            ItemHandle = slot.ItemHandle,
+        }
+
+        slot.Type = "Skill"
+        slot.SkillOrStatId = skillID
+
+        -- In order for casting to work correctly, the character must be standing still.
+        -- Hijack walk & run thresholds temporarily to prevent movement.
+        -- Must be done ahead of time.
+        if Client.IsUsingController() then
+            local switches = Ext.Utils.GetGlobalSwitches()
+            local previousWalkThreshold = switches.ControllerCharacterWalkThreshold
+            local previousRunThreshold = switches.ControllerCharacterRunThreshold
+            switches.ControllerCharacterWalkThreshold = 2 -- 1 is not reliable.
+            switches.ControllerCharacterRunThreshold = 2
+            Timer.StartTickTimer(8, function () -- 6 ticks is rarely not enough.
+                switches = Ext.Utils.GetGlobalSwitches()
+                switches.ControllerCharacterWalkThreshold = previousWalkThreshold
+                switches.ControllerCharacterRunThreshold = previousRunThreshold
+            end)
+        end
+
+        local charHandle = char.Handle
+        Ext.OnNextTick(function ()
+            -- The hotbar must be refreshed for SlotPressed to work.
+            BottomBar:ExternalInterfaceCall("prevHotbar")
+            BottomBar:ExternalInterfaceCall("nextHotbar")
+            Timer.StartTickTimer(3, function (_)
+                BottomBar:ExternalInterfaceCall("SlotPressed", 12) -- Note: though it is possible to use slots on other rows, the scenario of being on row 5 is inconvenient to handle, so we opted to just put the skill on the current row.
+
+                -- Restore slot contents
+                char = Character.Get(charHandle)
+                slot = Character.GetSkillBar(char)[slotIndex]
+                slot.Type = previousSlotData.Type
+                slot.SkillOrStatId = previousSlotData.SkillOrStatId
+                slot.ItemHandle = previousSlotData.ItemHandle
+            end)
+        end)
+    end
+end
+
 ---Returns the last UIObject the player has interacted with.
 ---@param playerIndex integer? Defaults to `1`.
 ---@return UIObject?

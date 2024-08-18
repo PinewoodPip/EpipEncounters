@@ -291,6 +291,15 @@ Text.CommonStrings.Interact = Text.RegisterTranslatedString({
     Handle = "haf50e434g26ecg44b2ga0a4gf24ec486c7e5",
     Text = "Interact",
 })
+Text.CommonStrings.Activate = Text.RegisterTranslatedString({
+    Handle = "hc5962b8eg6a3ag40b5ga1a9g2999e964c3e7",
+    Text = "Activate",
+})
+Text.CommonStrings.Use = Text.RegisterTranslatedString({
+    Handle = "h344c2ea2g2d80g4a1eg818bgadcc4988a1d6",
+    Text = "Use",
+    ContextDescription = "As in, the verb"
+})
 Text.CommonStrings.ScrollDown = Text.RegisterTranslatedString({
     Handle = "h02b0d0b3g900cg442cg9686gb4d5f7e405f3",
     Text = "Scroll Down",

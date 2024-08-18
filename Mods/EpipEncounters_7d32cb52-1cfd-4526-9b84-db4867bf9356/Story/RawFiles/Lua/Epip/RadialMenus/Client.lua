@@ -63,6 +63,16 @@ local RadialMenus = {
             Text = [[Use the "+" button to create radial menus.]],
             ContextDescription = [[Hint when no menus exist]],
         },
+        Label_PreviousMenu = {
+            Handle = "h7031852fg830cg42d3gbbc3g8179d3ffd957",
+            Text = "Previous Menu",
+            ContextDescription = [[Input label]],
+        },
+        Label_NextMenu = {
+            Handle = "hb50b9e8bgefe9g4c8bg957cge4597f8df3c8",
+            Text = "Next Menu",
+            ContextDescription = [[Input label]],
+        },
         MsgBox_DeleteMenu_Title = {
             Handle = "hde39ce3dgd432g48beg98f2g347228bb4de6",
             Text = "Delete Menu",
@@ -290,7 +300,7 @@ RadialMenus.Events.SlotUsed:Subscribe(function (ev)
     local slot = ev.Slot
     if slot.Type == "Skill" then -- TODO support controller for all these
         ---@cast slot Features.RadialMenus.Slot.Skill
-        Hotbar.UseSkill(slot.SkillID)
+        Client.PrepareSkill(ev.Character, slot.SkillID)
     elseif slot.Type == "Item" then
         ---@cast slot Features.RadialMenus.Slot.Item
         Hotbar.UseSkill(Item.Get(slot.ItemHandle))

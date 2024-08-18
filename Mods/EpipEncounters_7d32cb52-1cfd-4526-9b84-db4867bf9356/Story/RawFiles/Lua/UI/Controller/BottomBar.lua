@@ -1,6 +1,8 @@
 
 ---@class UI.Controller.BottomBar : UI
 local BottomBar = {
+    SLOTS_PER_ROW = 13,
+
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
     Events = {

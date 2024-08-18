@@ -42,6 +42,8 @@ RadialMenus:RegisterInputAction("NextMenu", {
 
 ---@class Features.RadialMenus.UI.Events : GenericUI.Instance.Events
 UI.Events = UI.Events
+UI.Events.Initialized = UI:AddSubscribableEvent("Initialized") ---@type Event<Empty>
+UI.Events.Opened = UI:AddSubscribableEvent("Opened") ---@type Event<Empty>
 UI.Events.NewMenuRequested = UI:AddSubscribableEvent("NewMenuRequested") ---@type Event<Empty>
 UI.Events.EditMenuRequested = UI:AddSubscribableEvent("EditMenuRequested") ---@type Event<{Menu:Features.RadialMenus.Menu}>
 UI.Events.EditSlotRequested = UI:AddSubscribableEvent("EditSlotRequested") ---@type Event<{Menu:Features.RadialMenus.Menu, Index:integer, Slot:Features.RadialMenus.Slot}>
@@ -62,6 +64,7 @@ function UI.Setup()
 
     UI:Show()
     UI:PlaySound(UI.SOUNDS.TOGGLE)
+    UI.Events.Opened:Throw()
 end
 
 ---Sets the current active menu.
@@ -126,7 +129,7 @@ function UI._Initialize()
     local editButton = ButtonPrefab.Create(UI, "EditMenuButton", topBar:GetRootElement(), ButtonPrefab:GetStyle("EditGreen"))
     editButton:SetPositionRelativeToParent("Left", 20, 0)
     editButton.Events.Pressed:Subscribe(function (_)
-        UI._EditCurrentMenu()
+        UI.EditCurrentMenu()
     end)
     UI.EditMenuButton = editButton
 
@@ -148,6 +151,7 @@ function UI._Initialize()
     UI._ResizePanel()
 
     UI._Initialized = true
+    UI.Events.Initialized:Throw()
 end
 
 ---Switches to a neighbour menu.
@@ -160,6 +164,23 @@ function UI.ScrollMenus(offset)
     end
 end
 
+---Returns the currently-selected slot, if any.
+---@return Features.RadialMenus.Slot?
+function UI.GetSelectedSlot()
+    local menu = UI._CurrentMenu
+    return menu and menu:GetSelectedSlot() or nil
+end
+
+---Attempts to use a slot.
+---@param slot Features.RadialMenus.Slot? Defaults to currently-selected slot.
+function UI.InteractWithSlot(slot)
+    slot = slot or UI.GetSelectedSlot()
+    if slot then
+        UI:TryHide() -- Needs to be done first for input actions to work, as they are not normally executable in modal UIs (which the radial menu is when using a controller)
+        RadialMenus.UseSlot(Client.GetCharacter(), slot)
+    end
+end
+
 ---Returns the current menu.
 ---@return Features.RadialMenus.Menu?
 function UI._GetCurrentMenu()
@@ -169,7 +190,7 @@ function UI._GetCurrentMenu()
 end
 
 ---Opens the edit UI for the current menu, if any.
-function UI._EditCurrentMenu()
+function UI.EditCurrentMenu()
     local menu = UI._GetCurrentMenu()
     if menu then
         UI.Events.EditMenuRequested:Throw({
@@ -193,8 +214,7 @@ function UI._RenderMenu(menu)
             menu = UI._CurrentMenu:GetMenu()
             slots = menu:GetSlots() -- Must re-fetch slots, as they might've changed.
             local slot = slots[ev.Index]
-            RadialMenus.UseSlot(Client.GetCharacter(), slot)
-            UI:Hide()
+            UI.InteractWithSlot(slot)
         end)
         -- Handle requests to edit slots
         instance.Events.SegmentRightClicked:Subscribe(function (ev)
@@ -433,6 +453,7 @@ end
 
 ---@override
 function UI:Hide()
+    UI._CurrentMenu:DeselectSegment()
     Client.UI._BaseUITable.Hide(UI)
     Client.UI.Input.SetMouseWheelBlocked(false) -- Unblock mouse wheel.
 end
@@ -478,7 +499,7 @@ end)
 
 -- Open the menu when the controller bottom face button is pressed
 -- while in the vanilla radial menu.
-Input.Events.KeyPressed:Subscribe(function (ev)
+Input.Events.KeyReleased:Subscribe(function (ev)
     if ev.InputID == "controller_a" and PanelSelect:IsVisible() then -- This input can only happen when a controller is used, so an explicit controller check is unnecessary. 
         UI.Setup()
         PanelSelect:Hide()

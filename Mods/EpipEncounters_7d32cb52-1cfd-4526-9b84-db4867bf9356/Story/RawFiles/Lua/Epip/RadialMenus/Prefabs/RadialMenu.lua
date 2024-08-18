@@ -94,6 +94,13 @@ function Menu:ActivateSegment(index)
     })
 end
 
+---Returns the currently-selected slot, if any.
+---@return Features.RadialMenus.Slot?, integer? -- Slot, index.
+function Menu:GetSelectedSlot()
+    local index = self._SelectedSegmentIndex
+    return (index and self:GetMenu():GetSlots()[index] or nil), index
+end
+
 ---Re-renders the menu's slots.
 function Menu:_Render()
     local slots = self._Config.Menu:GetSlots()
