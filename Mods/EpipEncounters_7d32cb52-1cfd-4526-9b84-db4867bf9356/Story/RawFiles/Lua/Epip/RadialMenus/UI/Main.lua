@@ -11,7 +11,7 @@ local V = Vector.Create
 local RadialMenus = Epip.GetFeature("Features.RadialMenus")
 local RadialMenuPrefab = RadialMenus:GetClass("Features.RadialMenus.Prefabs.RadialMenu")
 local TSK = RadialMenus.TranslatedStrings
-local UI = Generic.Create("Features.RadialMenus", 7, false) ---@class Features.RadialMenus.UI : GenericUI_Instance
+local UI = Generic.Create("Features.RadialMenus", {Layer = 7, Visible = false}) ---@class Features.RadialMenus.UI : GenericUI_Instance
 UI.HEADER_SIZE = V(200, 30)
 UI.OPEN_TWEEN_DURATION = 0.15 -- In seconds.
 UI.OPEN_TWEEN_STARTING_SCALE = 0.4

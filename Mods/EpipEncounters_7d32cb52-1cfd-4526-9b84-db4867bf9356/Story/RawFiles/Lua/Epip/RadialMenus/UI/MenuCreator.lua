@@ -14,7 +14,7 @@ local RadialMenus = Epip.GetFeature("Features.RadialMenus")
 local RadialMenuUI = RadialMenus.UI
 local TSK = RadialMenus.TranslatedStrings
 
-local UI = Generic.Create("Features.RadialMenus.UI.MenuCreator", 8) ---@class Features.RadialMenus.UI.MenuCreator : GenericUI_Instance -- Layer 9 is KBM skillbook UI.
+local UI = Generic.Create("Features.RadialMenus.UI.MenuCreator", {Layer = 8, Visible = false}) ---@class Features.RadialMenus.UI.MenuCreator : GenericUI_Instance -- Layer 9 is KBM skillbook UI.
 RadialMenus.MenuCreatorUI = UI
 UI.CONTENT_SIZE = V(670, 500)
 UI.HEADER_SIZE = V(400, 50)

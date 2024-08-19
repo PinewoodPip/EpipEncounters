@@ -13,14 +13,24 @@ Epip.InitializeLibrary("Generic", Generic)
 
 ---@alias GenericUI_ParentIdentifier string|GenericUI_Element
 
+---@class GenericUI.InitialConfig
+---@field Layer integer? Defaults to `DEFAULT_LAYER`.
+---@field Visible boolean? Defaults to `false`.
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
 ---@param id string
----@param layer integer? Defaults to `DEFAULT_LAYER`.
+---@param config (GenericUI.InitialConfig|integer)? Integer overload is for layer for backwards-compatibility.
 ---@return GenericUI_Instance
-function Generic.Create(id, layer)
+function Generic.Create(id, config)
+    if config == nil or type(config) == "number" then
+        config = {
+            Layer = type(config) == "number" and config or nil,
+            Visible = false,
+        }
+    end
     ---@type GenericUI_Instance
     local ui = {
         ID = id,
@@ -33,7 +43,7 @@ function Generic.Create(id, layer)
         },
         Hooks = {},
     }
-    local uiOBject = Ext.UI.Create(id, Generic.SWF_PATH, layer or Generic.DEFAULT_LAYER)
+    local uiOBject = Ext.UI.Create(id, Generic.SWF_PATH, config.Layer or Generic.DEFAULT_LAYER)
     Epip.InitializeUI(uiOBject:GetTypeId(), id, ui)
     ui = Generic:GetClass("GenericUI_Instance").Create(ui)
 
@@ -94,8 +104,8 @@ function Generic.Create(id, layer)
         end
     end)
 
-    if ui:Exists() then
-        ui:Hide()
+    if not config.Visible then
+        uiOBject:Hide()
     end
 
     return ui
