@@ -30,18 +30,20 @@ function Slot.Create(ui, id, parent, slot)
     local instance = Slot:_Create(ui, id) ---@cast instance Features.RadialMenus.Prefabs.Slot
     instance._Slot = slot
 
+    local slotData = RadialMenus.GetSlotData(slot)
+
     local root = instance:CreateElement("Root", "GenericUI_Element_Empty", parent)
     instance.Root = root
 
     local icon = instance:CreateElement("Icon", "GenericUI_Element_IggyIcon", root)
-    if slot.Icon then
-        icon:SetIcon(slot.Icon, instance.ICON_SIZE:unpack())
+    if slotData.Icon then
+        icon:SetIcon(slotData.Icon, instance.ICON_SIZE:unpack())
     else
         icon:SetVisible(false)
     end
     instance.Icon = icon
 
-    local header = TextPrefab.Create(ui, instance:PrefixID("Header"), root, slot.Name, "Center", instance.HEADER_SIZE)
+    local header = TextPrefab.Create(ui, instance:PrefixID("Header"), root, slotData.Name, "Center", instance.HEADER_SIZE)
     header:FitSize()
     header:Move(0, icon:GetHeight())
     instance.Header = header

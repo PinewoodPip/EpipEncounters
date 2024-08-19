@@ -1,5 +1,6 @@
 
 local Hotbar = Client.UI.Hotbar
+local Input = Client.Input
 
 ---@class Features.RadialMenus : Feature
 local RadialMenus = {
@@ -135,6 +136,9 @@ local RadialMenus = {
     Events = {
         SlotUsed = {}, ---@type Event<Features.RadialMenus.Events.SlotUsed>
     },
+    Hooks = {
+        GetSlotData = {}, ---@type Event<Features.RadialMenus.Hooks.GetSlotData>
+    }
 }
 Epip.RegisterFeature("Features.RadialMenus", RadialMenus)
 
@@ -146,8 +150,6 @@ Epip.RegisterFeature("Features.RadialMenus", RadialMenus)
 
 ---@class Features.RadialMenus.Slot
 ---@field Type Features.RadialMenus.Slot.Type
----@field Name TextLib.String
----@field Icon icon?
 
 ---@class Features.RadialMenus.Slot.Empty : Features.RadialMenus.Slot
 
@@ -172,6 +174,11 @@ Epip.RegisterFeature("Features.RadialMenus", RadialMenus)
 ---@field Character EclCharacter
 ---@field Slot Features.RadialMenus.Slot
 
+---@class Features.RadialMenus.Hooks.GetSlotData
+---@field Slot Features.RadialMenus.Slot
+---@field Name string Hookable. Defaults to empty string.
+---@field Icon icon? Hookable. Defaults to `nil`.
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
@@ -194,6 +201,19 @@ function RadialMenus.GetMenus()
     return RadialMenus._Menus
 end
 
+---Returns the extra data of a slot.
+---@see Features.RadialMenus.Hooks.GetSlotData
+---@param slot Features.RadialMenus.Slot
+---@return Features.RadialMenus.Hooks.GetSlotData
+function RadialMenus.GetSlotData(slot)
+    local data = RadialMenus.Hooks.GetSlotData:Throw({
+        Slot = slot,
+        Name = "",
+        Icon = nil,
+    })
+    return data
+end
+
 ---Executes a slot's action.
 ---@see Features.RadialMenus.Events.SlotUsed
 ---@param char EclCharacter
@@ -209,12 +229,9 @@ end
 ---@param skillID skill
 ---@return Features.RadialMenus.Slot.Skill
 function RadialMenus.CreateSkillSlot(skillID)
-    local skill = Stats.Get("StatsLib_StatsEntry_SkillData", skillID)
     ---@type Features.RadialMenus.Slot.Skill
     local slot = {
         Type = "Skill",
-        Name = Text.GetTranslatedString(skill.DisplayName),
-        Icon = skill.Icon,
         SkillID = skillID,
     }
     return slot
@@ -224,12 +241,9 @@ end
 ---@param actionID string
 ---@return Features.RadialMenus.Slot.InputAction
 function RadialMenus.CreateInputActionSlot(actionID)
-    local action = Client.Input.GetAction(actionID)
     ---@type Features.RadialMenus.Slot.InputAction
     local slot = {
         Type = "InputAction",
-        Name = action:GetName(),
-        -- Icon = , -- TODO
         ActionID = actionID,
     }
     return slot
@@ -242,8 +256,6 @@ function RadialMenus.CreateItemSlot(item)
     ---@type Features.RadialMenus.Slot.Item
     local slot = {
         Type = "Item",
-        Name = Item.GetDisplayName(item),
-        Icon = Item.GetIcon(item),
         ItemHandle = item.Handle,
     }
     return slot
@@ -255,8 +267,6 @@ function RadialMenus.CreateEmptySlot()
     ---@type Features.RadialMenus.Slot.Empty
     return {
         Type = "Empty",
-        Name = "",
-        Icon = nil,
     }
 end
 
@@ -309,6 +319,33 @@ RadialMenus.Events.SlotUsed:Subscribe(function (ev)
         Client.Input.TryExecuteAction(slot.ActionID)
     end
 end, {StringID = "DefaultImplementation.Slot.Skill"})
+
+-- Provide name and icons for slots.
+RadialMenus.Hooks.GetSlotData:Subscribe(function (ev)
+    local slot, slotType = ev.Slot, ev.Slot.Type
+    if slotType == "Skill" then
+        ---@cast slot Features.RadialMenus.Slot.Skill
+        local action = Stats.GetAction(slot.SkillID)
+        if action then
+            ev.Name = action:GetName()
+            ev.Icon = action.Icon
+        else -- Regular skill case.
+            local skill = Stats.Get("StatsLib_StatsEntry_SkillData", slot.SkillID)
+            ev.Name = Text.GetTranslatedString(skill.DisplayName)
+            ev.Icon = skill.Icon
+        end
+    elseif slotType == "InputAction" then
+        ---@cast slot Features.RadialMenus.Slot.InputAction
+        local action = Input.GetAction(slot.ActionID)
+        ev.Name = action:GetName()
+        -- TODO icon
+    elseif slotType == "Item" then
+        ---@cast slot Features.RadialMenus.Slot.Item
+        local item = Item.Get(slot.ItemHandle)
+        ev.Name = Item.GetDisplayName(item)
+        ev.Icon = Item.GetIcon(item)
+    end
+end)
 
 -- Load saved data upon entering the session.
 GameState.Events.GameReady:Subscribe(function (_)

@@ -155,6 +155,7 @@ end
 ---Sets the menu to display and re-renders the prefab.
 ---@param menu Features.RadialMenus.Menu
 function Menu:SetMenu(menu)
+    self:DeselectSegment() -- Necessary when shrinking the wheel, as the user might've been hovering over a segment that will no longer exist after the re-render.
     self._Config.Menu = menu
     self:_Render()
 end
