@@ -724,7 +724,8 @@ TooltipUI:RegisterInvokeListener("addTooltip", function (ev, text, x, y, allowDe
     Tooltip._LastCustomTooltipEntry = nil
 
     if not event.Prevented then
-        Tooltip.ShowSimpleTooltip(event.Tooltip)
+        local tooltipData = event.Tooltip
+        ev.UI:GetRoot().addTooltip(tooltipData.Label, tooltipData.Position[1], tooltipData.Position[2], tooltipData.UseDelay, Tooltip.SIMPLE_TOOLTIP_MOUSE_STICK_MODE[tooltipData.MouseStickMode], Tooltip.SIMPLE_TOOLTIP_STYLES[tooltipData.TooltipStyle])
     end
 
     isCharTooltip = false
