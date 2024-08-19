@@ -168,6 +168,12 @@ function Button:SetTooltip(type, tooltip)
 end
 
 ---@override
+function Button:SetScale(scale)
+    local holder = self:GetMovieClip().bitmapHolder
+    holder.scaleX, holder.scaleY = scale[1], scale[2]
+end
+
+---@override
 function Button:GetRootElement()
     return self.Root
 end
