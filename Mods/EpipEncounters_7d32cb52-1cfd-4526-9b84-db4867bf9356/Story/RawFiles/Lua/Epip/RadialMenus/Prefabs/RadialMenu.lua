@@ -206,7 +206,9 @@ function Menu:_UpdateSegment(index, state)
     -- has to be for the menu to appear nicely round.
     -- We do not use drawCircle as there'd be no way to highlight specific segments with it.
     local curveAnchorOffset = 0.9 ^ slotsAmount * 50
-    if slotsAmount == 5 then
+    if slotsAmount == 4 then
+        curveAnchorOffset = curveAnchorOffset + 90
+    elseif slotsAmount == 5 then
         curveAnchorOffset = curveAnchorOffset + 50
     elseif slotsAmount == 6 then
         curveAnchorOffset = curveAnchorOffset + 30
