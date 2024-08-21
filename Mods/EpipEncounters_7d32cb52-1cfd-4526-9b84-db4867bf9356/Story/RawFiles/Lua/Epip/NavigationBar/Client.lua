@@ -38,10 +38,10 @@ local Navbar = {
             ["rightstick_xpos"] = XboxControllerTextures.RIGHT_STICK.RIGHT,
             ["rightstick_yneg"] = XboxControllerTextures.RIGHT_STICK.DOWN,
 
-            ["dpad_up"] = XboxControllerTextures.DPAD.LEFT,
-            ["dpad_down"] = XboxControllerTextures.DPAD.UP,
-            ["dpad_left"] = XboxControllerTextures.DPAD.RIGHT,
-            ["dpad_right"] = XboxControllerTextures.DPAD.DOWN,
+            ["dpad_up"] = XboxControllerTextures.DPAD.UP,
+            ["dpad_down"] = XboxControllerTextures.DPAD.DOWN,
+            ["dpad_left"] = XboxControllerTextures.DPAD.LEFT,
+            ["dpad_right"] = XboxControllerTextures.DPAD.RIGHT,
         },
         ---@type table<InputRawType, TextureLib_Texture>
         PLAYSTATION = {
@@ -70,10 +70,10 @@ local Navbar = {
             ["rightstick_xpos"] = PlaystationControllerTextures.RIGHT_STICK.RIGHT,
             ["rightstick_yneg"] = PlaystationControllerTextures.RIGHT_STICK.DOWN,
 
-            ["dpad_up"] = PlaystationControllerTextures.DPAD.LEFT,
-            ["dpad_down"] = PlaystationControllerTextures.DPAD.UP,
-            ["dpad_left"] = PlaystationControllerTextures.DPAD.RIGHT,
-            ["dpad_right"] = PlaystationControllerTextures.DPAD.DOWN,
+            ["dpad_up"] = PlaystationControllerTextures.DPAD.UP,
+            ["dpad_down"] = PlaystationControllerTextures.DPAD.DOWN,
+            ["dpad_left"] = PlaystationControllerTextures.DPAD.LEFT,
+            ["dpad_right"] = PlaystationControllerTextures.DPAD.RIGHT,
         },
         ---@type table<InputRawType, TextureLib_Texture>
         FALLBACK = {},
