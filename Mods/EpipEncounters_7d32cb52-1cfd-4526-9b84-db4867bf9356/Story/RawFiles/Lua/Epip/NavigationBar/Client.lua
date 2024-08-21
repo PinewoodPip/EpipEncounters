@@ -86,6 +86,7 @@ local Navbar = {
     },
 
     _UsedBindings = nil, ---@type set<InputRawType>
+    _CurrentUIs = {}, ---@type set<UI>
 
     TranslatedStrings = {
         Setting_EnabledForKeyboard_Name = {
@@ -181,11 +182,16 @@ function Navbar.Setup(ui, positionOffset)
     UI._PositionOffset = positionOffset
     UI._Initialize()
 
+    Navbar._CurrentUIs[ui] = true
+
     -- Hide the bar when the target UI becomes hidden.
     local subscriberID = UI.SUBSCRIBERID_TICK .. ui:GetID()
     GameState.Events.Tick:Subscribe(function (_)
         if not ui:IsVisible() then
-            UI:Hide()
+            Navbar._CurrentUIs[ui] = nil
+            if not next(Navbar._CurrentUIs) then -- Only hide the navbar if all UIs were closed.
+                UI:Hide()
+            end
             GameState.Events.Tick:Unsubscribe(subscriberID)
         else
             Navbar.UpdateActions(ui)
@@ -198,8 +204,9 @@ function Navbar.Setup(ui, positionOffset)
 end
 
 ---Updates the actions shown.
----@param ui GenericUI.Navigation.UI
+---@param ui GenericUI.Navigation.UI Must be the current active UI.
 function Navbar.UpdateActions(ui)
+    if ui ~= Navbar.GetCurrentUI() then return end -- Can only update the current UI.
     local list = UI.ActionList
     local actions = ui.___NavigationController:GetCurrentActions()
 
@@ -223,6 +230,21 @@ function Navbar.UpdateActions(ui)
 
         UI._PreviousActions = actions
     end
+end
+
+---Returns the UI that the bar is currently active for, if any.
+---@return UI -- The UI of the highest layer.
+function Navbar.GetCurrentUI()
+    local maxLayer = -1
+    local topUI = nil
+    for ui in pairs(Navbar._CurrentUIs) do
+        local uiObj = ui:GetUI()
+        if uiObj and (not topUI or uiObj.Layer > maxLayer) then
+            topUI = ui
+            maxLayer = uiObj.Layer
+        end
+    end
+    return topUI
 end
 
 ---Adds an action to the list.
