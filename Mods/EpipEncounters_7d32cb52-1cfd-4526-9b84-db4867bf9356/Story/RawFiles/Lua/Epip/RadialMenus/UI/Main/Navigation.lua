@@ -37,7 +37,16 @@ UI.Events.Initialized:Subscribe(function (_)
     root:AddAction({
         ID = "NewMenu",
         Name = TSK.Label_NewMenu,
+        Inputs = {["DestructionToggle"] = true},
+    })
+    root:AddAction({
+        ID = "EditSlot",
+        Name = TSK.Label_EditSlot,
         Inputs = {["UISetSlot"] = true},
+        IsConsumableFunctor = function (_)
+            local _, index = UI.GetSelectedSlot()
+            return index and UI.CanEditSlot(index)
+        end
     })
     root:AddAction({
         ID = "Close",
@@ -73,6 +82,9 @@ UI.Events.Initialized:Subscribe(function (_)
             elseif ev.Action.ID == "EditMenu" then
                 UI.EditCurrentMenu()
                 ev.Consumed = true
+            elseif ev.Action.ID == "EditSlot" then
+                local _, index = UI.GetSelectedSlot()
+                UI.RequestEditSlot(index)
             end
         end
     end)

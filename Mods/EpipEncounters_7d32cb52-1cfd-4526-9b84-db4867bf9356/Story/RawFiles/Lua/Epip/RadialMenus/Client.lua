@@ -291,6 +291,18 @@ function RadialMenus.IsSlotUsable(slot)
     }).Usable
 end
 
+---Returns whether a slot can be edited.
+---TODO add hooks
+---@param menu Features.RadialMenus.Menu? Defaults to current menu.
+---@param index integer
+---@return boolean
+function RadialMenus.CanEditSlot(menu, index)
+    local canEdit = false
+    local slot = menu:GetSlots()[index]
+    canEdit = slot and menu:GetClassName() == "Features.RadialMenus.Menu.Custom"
+    return canEdit
+end
+
 ---Saves the user's radial menus.
 function RadialMenus.SaveData()
     -- Write to the setting

@@ -166,10 +166,14 @@ function UI.ScrollMenus(offset)
 end
 
 ---Returns the currently-selected slot, if any.
----@return Features.RadialMenus.Slot?
+---@return Features.RadialMenus.Slot?, integer? -- Slot, index.
 function UI.GetSelectedSlot()
     local menu = UI._CurrentMenu
-    return menu and menu:GetSelectedSlot() or nil
+    local slot, index = nil, nil
+    if menu then
+        slot, index = menu:GetSelectedSlot()
+    end
+    return slot, index
 end
 
 ---Attempts to use a slot.
@@ -220,23 +224,37 @@ function UI._RenderMenu(menu)
         -- Handle requests to edit slots
         instance.Events.SegmentRightClicked:Subscribe(function (ev)
             menu = UI._CurrentMenu:GetMenu()
-            -- Can only edit slots of custom menus
-            if menu:GetClassName() == "Features.RadialMenus.Menu.Custom" then
-                slots = menu:GetSlots() -- Must re-fetch slots, as they might've changed.
-                local index = ev.Index
-                local slot = slots[index]
-                UI.Events.EditSlotRequested:Throw({
-                    Menu = menu,
-                    Index = index,
-                    Slot = slot,
-                })
-            end
+            UI.RequestEditSlot(ev.Index)
         end)
 
         UI._CurrentMenu = instance
     end
     instance:SetMenu(menu)
     UI.Header:SetText(menu.Name)
+end
+
+---Requests to edit a slot from the current menu.
+---@param index integer
+function UI.RequestEditSlot(index)
+    if UI.CanEditSlot(index) then
+        local menu = UI._GetCurrentMenu()
+        local slots = menu:GetSlots()
+        local slot = slots[index]
+        UI.Events.EditSlotRequested:Throw({
+            Menu = menu,
+            Index = index,
+            Slot = slot,
+        })
+    end
+end
+
+---Returns whether a slot of the current menu can be edited.
+---@param index integer
+---@return boolean
+function UI.CanEditSlot(index)
+    local menu = UI._GetCurrentMenu()
+    local canEdit = menu and RadialMenus.CanEditSlot(menu, index) or false
+    return canEdit
 end
 
 ---Renders the next/previous menus.
