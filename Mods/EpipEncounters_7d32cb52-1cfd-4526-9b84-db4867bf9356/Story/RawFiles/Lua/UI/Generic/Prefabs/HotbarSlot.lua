@@ -517,6 +517,9 @@ function Slot:_OnTick(ev)
                     end
                 end
 
+                -- Summons cannot open the party inventory, thus they cannot use items.
+                isEnabled = isEnabled and not Character.IsSummon(char)
+
                 slot:SetEnabled(isEnabled)
             else -- Clear the slot once we consume all stacks of this item.
                 self:Clear()
