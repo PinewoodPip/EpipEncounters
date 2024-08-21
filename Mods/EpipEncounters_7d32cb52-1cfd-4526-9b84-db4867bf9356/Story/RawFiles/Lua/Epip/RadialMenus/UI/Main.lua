@@ -62,6 +62,12 @@ function UI.Setup()
 
     Client.UI.Input.SetMouseWheelBlocked(true) -- Prevent the default cycler bindings (mouse wheel) from altering camera zoom.
 
+    -- Make the UI modal on controllers to block character and camera movement with sticks.
+    -- Needs to be re-set on each open as the creator UI modifies it.
+    if Client.IsUsingController() then
+        UI:GetUI().OF_PlayerModal1 = true
+    end
+
     UI:Show()
     UI:PlaySound(UI.SOUNDS.TOGGLE)
     UI.Events.Opened:Throw()
@@ -107,11 +113,6 @@ end
 ---Initializes the static elements of the UI.
 function UI._Initialize()
     if UI._Initialized then return end
-
-    -- Make the UI modal on controllers to block character and camera movement with sticks.
-    if Client.IsUsingController() then
-        UI:GetUI().OF_PlayerModal1 = true
-    end
 
     local root = UI:CreateElement("Root", "GenericUI_Element_TiledBackground")
     root:SetAlpha(0.5)

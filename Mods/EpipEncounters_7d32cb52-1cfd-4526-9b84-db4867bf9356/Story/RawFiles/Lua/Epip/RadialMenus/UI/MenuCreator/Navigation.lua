@@ -7,7 +7,6 @@ local ListComponent = Navigation:GetClass("GenericUI.Navigation.Components.List"
 local Navbar = Epip.GetFeature("Features.NavigationBar")
 local CommonStrings = Text.CommonStrings
 local RadialMenus = Epip.GetFeature("Features.RadialMenus")
-local TSK = RadialMenus.TranslatedStrings
 local UI = RadialMenus.MenuCreatorUI ---@cast UI +GenericUI.Navigation.UI
 
 ---------------------------------------------

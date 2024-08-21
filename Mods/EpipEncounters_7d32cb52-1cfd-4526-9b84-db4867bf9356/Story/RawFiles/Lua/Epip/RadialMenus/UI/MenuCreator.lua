@@ -257,6 +257,9 @@ function UI._Setup()
 
     Client.UI.Input.SetMouseWheelBlocked(false) -- Unblock mouse wheel so it's usable in dropdowns.
 
+    if RadialMenuUI:IsVisible() and Client.IsUsingController() then -- Disable modal on main UI to gain control
+        RadialMenuUI:GetUI().OF_PlayerModal1 = false
+    end
     UI:SetPositionRelativeToViewport("center", "center")
     UI:Show()
     UI.Events.Opened:Throw()
@@ -371,6 +374,7 @@ end
 ---@see Features.RadialMenus.UI.MenuCreator.Events.RenderMenuSettings
 function UI._RenderMenuSettings()
     local list = UI.SettingsList
+    local preventCallbacks = true -- Awkward workaround for an unknown infinite update loop.
     list:Clear()
 
     SettingWidgets.RenderSetting(UI, list, Settings.MenuName, UI.SETTING_SIZE)
@@ -378,10 +382,16 @@ function UI._RenderMenuSettings()
     -- Cannot edit the type of existing menus.
     if not UI.IsEditingMenu() then
         SettingWidgets.RenderSetting(UI, list, Settings.NewMenuType, UI.SETTING_SIZE, function (_)
-            UI._RenderMenuSettings()
-            UI._PositionLists()
+            -- Refresh settings when menu type is changed.
+            if not preventCallbacks then
+                UI._RenderMenuSettings()
+                UI._PositionLists()
+            end
         end)
     end
+    Timer.Start(0.2, function (_)
+        preventCallbacks = false
+    end)
 
     -- Render type-specific settings.
     UI.Events.RenderMenuSettings:Throw({
@@ -453,6 +463,9 @@ end
 
 ---@override
 function UI:Hide()
+    if RadialMenuUI:IsVisible() and Client.IsUsingController() then -- Re-enable modal on main UI to restore previous behaviour
+        RadialMenuUI:GetUI().OF_PlayerModal1 = true
+    end
     Client.UI._BaseUITable.Hide(self)
     Client.UI.Input.SetMouseWheelBlocked(RadialMenuUI:IsVisible()) -- Reblock mouse wheel if necessary.
 end
