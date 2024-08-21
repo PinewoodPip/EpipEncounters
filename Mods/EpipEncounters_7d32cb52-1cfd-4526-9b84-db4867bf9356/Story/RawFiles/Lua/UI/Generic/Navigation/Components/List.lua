@@ -92,7 +92,6 @@ end
 ---@override
 function ListComponent:OnIggyEvent(event)
     if Component.OnIggyEvent(self, event) then return true end
-
     if event.Timing == "Down" then -- Down is used to allow key repeat
         local scrollDirection = nil
         if self:CanConsumeInput("Next", event.EventID) then
@@ -110,17 +109,17 @@ function ListComponent:OnIggyEvent(event)
                 newIndex = scrollDirection == 1 and 1 or #children -- Starting index is based on direction pressed
             end
 
+            -- Attempt to scroll
             if self.__Wrap then
                 newIndex = math.indexmodulo(newIndex, #children)
-            else
-                newIndex = math.clamp(newIndex, 1, #children)
             end
-
-            self:FocusByIndex(newIndex)
-
-            return true
+            if self.__Wrap or (newIndex >= 1 and newIndex <= #children) then -- Don't consume inputs when scrolling while at the edge if wrapping is disabled.
+                self:FocusByIndex(newIndex)
+                return true
+            end
         end
     end
+    return false
 end
 
 ---Focuses the child with a specific index.
@@ -128,10 +127,10 @@ end
 function ListComponent:FocusByIndex(index)
     local children = self:GetChildren()
     local child = children[index]
-
     self.__Index = index
-    self:SetFocus(child)
-
+    if self:IsFocused() then
+        self:SetFocus(child)
+    end
     -- Navigation:DebugLog("List", self.__Target.ID, "New focus", child and child.__Target.ID or "nil")
 end
 
