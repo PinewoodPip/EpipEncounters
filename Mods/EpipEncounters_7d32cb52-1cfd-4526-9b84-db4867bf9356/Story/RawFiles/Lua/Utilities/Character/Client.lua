@@ -21,9 +21,13 @@ Character.Hooks.CreateEquipmentVisuals = Character:AddSubscribableHook("CreateEq
 
 ---Returns a list of party members of char's party. Char must be a player.
 ---Depends on PlayerInfo.
----@param char EclCharacter
+---Excludes summons.
+---@param char EclCharacter If a summon, the owner's party will be considered.
 ---@return EclCharacter[] -- Includes the char passed per param.
 function Character.GetPartyMembers(char)
+    while Character.IsSummon(char) do -- Fetch owner first.
+        char = Character.GetOwner(char)
+    end
     local members = {}
 
     if char.IsPlayer then
