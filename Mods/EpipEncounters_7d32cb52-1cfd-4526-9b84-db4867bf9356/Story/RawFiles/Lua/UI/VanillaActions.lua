@@ -87,13 +87,15 @@ end
 Hotbar.SetHotkeyAction(11, "ShowActions")
 
 -- Buttons from the vanilla hotbar.
-local enabledHotbarButtons = {
+local highlightedHotbarButtons = {}
+local disabledHotbarButtons = {} ---@type set<integer>
 
-}
-
--- Track highlighting of the vanilla buttons
+-- Track enabled and highlighted state of the vanilla buttons
 Hotbar:RegisterInvokeListener("setButtonActive", function (_, btn, state)
-    enabledHotbarButtons[btn] = state
+    highlightedHotbarButtons[btn] = state
+end)
+Hotbar:RegisterInvokeListener("setButtonDisabled", function (_, id, disabled)
+    disabledHotbarButtons[id] = disabled or nil
 end)
 
 Hotbar:RegisterListener("ActionUsed", function(id, char, data)
@@ -111,7 +113,12 @@ end)
 
 Hotbar:RegisterHook("IsActionHighlighted", function(highlighted, id, char, data)
     if data.Type == "VanillaHotbarButton" then
-        return enabledHotbarButtons[data.VanillaButtonIndex]
+        return highlightedHotbarButtons[data.VanillaButtonIndex]
+    end
+end)
+Hotbar:RegisterHook("IsActionEnabled", function(_, _, _, data)
+    if data.Type == "VanillaHotbarButton" then
+        return disabledHotbarButtons[data.VanillaButtonIndex] == nil
     end
 end)
 

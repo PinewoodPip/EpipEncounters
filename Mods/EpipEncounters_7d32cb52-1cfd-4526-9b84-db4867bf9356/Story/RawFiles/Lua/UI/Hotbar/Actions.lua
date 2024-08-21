@@ -304,7 +304,7 @@ function Hotbar.UnbindActionButton(index)
 
     local hotkeys = Hotbar.GetHotkeysHolder()
     local button = hotkeys.hotkeyButtons[index - 1]
-    
+
     Hotbar.ActionsState[index].ActionID = ""
     button.setAction("")
 end
@@ -340,8 +340,7 @@ end)
 Hotbar:RegisterCallListener("pipHotbarStopRearrange", function(_, index)
     index = index + 1
     Hotbar:DebugLog("Stopped dragging on " .. index)
-    
-    if not Hotbar.IsLocked() then 
+    if not Hotbar.IsLocked() then
         local draggingPreview = Hotbar.GetHotkeysHolder().draggingPreview
         local previousIndex = draggingPreview.index + 1
 
