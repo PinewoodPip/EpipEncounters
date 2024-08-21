@@ -486,7 +486,9 @@ end})
 Input.Hooks.CanExecuteAction:Subscribe(function (ev)
     -- Only consume cycler input actions when the UI is visible.
     if ev.Action.ID == RadialMenus.InputActions.NextMenu.ID or ev.Action.ID == RadialMenus.InputActions.PreviousMenu.ID then
-        ev.CanExecute = ev.CanExecute and UI:IsVisible()
+        ev.CanExecute = ev.CanExecute and UI:IsVisible() and not RadialMenus.MenuCreatorUI:IsVisible() -- The creator UI must also be closed. It cannot be made modal as that interferes with the skill picker.
+    elseif ev.Action.ID == RadialMenus.InputActions.OpenRadialMenu.ID then
+        ev.CanExecute = ev.CanExecute and not RadialMenus.MenuCreatorUI:IsVisible() -- Disallow this input while editing menus/slots.
     end
 end)
 

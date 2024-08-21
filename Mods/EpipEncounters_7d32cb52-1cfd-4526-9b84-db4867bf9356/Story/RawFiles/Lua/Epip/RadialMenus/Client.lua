@@ -124,6 +124,11 @@ local RadialMenus = {
             Text = "Determines the Epip keybind action to fire when the slot is used.<br>Actions that require the keybind to be held are not currently supported.",
             ContextDescription = [[Form tooltip for "Keybind"]],
         },
+        Setting_Skill_Description = {
+            Handle = "hc4a1e5a0gdbaeg4a2dg8e92gd7ef42084361",
+            Text = "Determines the skill to use for the slot. Drag-and-drop a skill or click the socket to pick one.",
+            ContextDescription = [[Tooltip for skill slot form]],
+        },
     },
     Settings = {
         RadialMenus = {

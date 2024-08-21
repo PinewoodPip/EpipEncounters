@@ -10,7 +10,7 @@ local Input = Client.Input
 local CommonStrings = Text.CommonStrings
 local V = Vector.Create
 
-local RadialMenus = Epip.GetFeature("Features.RadialMenus")
+local RadialMenus = Epip.GetFeature("Features.RadialMenus") ---@class Features.RadialMenus
 local RadialMenuUI = RadialMenus.UI
 local TSK = RadialMenus.TranslatedStrings
 
@@ -42,6 +42,8 @@ UI.Hooks.UpdateSlot = UI:AddSubscribableHook("UpdateSlot") ---@type Hook<{Slot:F
 
 ---@class Features.RadialMenus.UI.MenuCreator.Events : GenericUI.Instance.Events
 UI.Events = UI.Events
+UI.Events.Initialized = UI:AddSubscribableEvent("Initialized") ---@type Event<Empty>
+UI.Events.Opened = UI:AddSubscribableEvent("Opened") ---@type Event<Empty>
 UI.Events.RenderMenuSettings = UI:AddSubscribableEvent("RenderMenuSettings") ---@type Event<Features.RadialMenus.UI.MenuCreator.Events.RenderMenuSettings>
 UI.Events.RenderSlotSettings = UI:AddSubscribableEvent("RenderSlotSettings") ---@type Event<Features.RadialMenus.UI.MenuCreator.Events.RenderSlotSettings>
 UI.Events.UpdateMenu = UI:AddSubscribableEvent("UpdateMenu") ---@type Event<{Menu:Features.RadialMenus.Menu}> Thrown when editing a menu has finished.
@@ -91,7 +93,8 @@ local Settings = {
     }),
     Skill = RadialMenus:RegisterSetting("MenuCreator.Skill", {
         Type = "Skill",
-        Name = CommonStrings.Name, -- I don't feel this needs a description.
+        Name = CommonStrings.Skill,
+        Description = TSK.Setting_Skill_Description,
         DefaultValue = "",
     }),
 
@@ -198,6 +201,44 @@ function UI.SetupEditSlot(menu, index, slot)
     UI._Setup()
 end
 
+---Confirms the creation or edits of the menu.
+function UI.Finish()
+    local mode = UI._CurrentMode
+    if mode == "CreateMenu" then
+        UI._CreateMenu()
+    elseif mode == "EditMenu" or mode == "EditSlot" then
+        UI._SaveEdits()
+    else
+        UI:__Error("_Finish", "Unsupported mode", mode)
+    end
+end
+
+---Prompts the user to delete the current menu.
+function UI.RequestDeleteMenu()
+    if UI._CurrentMode ~= "EditMenu" then UI:__Error("_DeleteMenu", "UI is not in menu edit mode") end
+    MsgBox.Open({
+        ID = UI.MSGBOXID_DELETE_MENU,
+        Header = TSK.MsgBox_DeleteMenu_Title:GetString(),
+        Message = TSK.MsgBox_DeleteMenu_Body:Format(UI._MenuBeingEdited.Name),
+        Buttons = {
+            {ID = 1, Text = CommonStrings.Delete:GetString()},
+            {ID = 2, Text = CommonStrings.Cancel:GetString()},
+        },
+    })
+end
+
+---Returns whether the UI is being used to edit an existing menu.
+---@return boolean
+function UI.IsEditingMenu()
+    return UI._CurrentMode == "EditMenu"
+end
+
+---Returns whether the UI is being used to edit a custom slot.
+---@return boolean
+function UI.IsEditingSlot()
+    return UI._CurrentMode == "EditSlot"
+end
+
 function UI._Setup()
     local mode = UI._CurrentMode
     local isEditing = mode == "EditMenu" or mode == "EditSlot"
@@ -218,6 +259,7 @@ function UI._Setup()
 
     UI:SetPositionRelativeToViewport("center", "center")
     UI:Show()
+    UI.Events.Opened:Throw()
 end
 
 ---Creates a menu from the current setting values and closes the UI.
@@ -281,12 +323,8 @@ function UI._Initialize()
 
     -- Setting lists
     local sharedSettingsList = contentList:AddChild("SharedSettingsList", "GenericUI_Element_VerticalList")
-    UI.SharedSettingsList = sharedSettingsList
-    UI._RenderSharedSettings()
-
-    local menuSpecificSettingsList = contentList:AddChild("MenuSpecificSettingsList", "GenericUI_Element_VerticalList")
-    UI.MenuSpecificSettingsList = menuSpecificSettingsList
-    UI._RenderMenuTypeSettings()
+    UI.SettingsList = sharedSettingsList
+    UI._RenderMenuSettings()
 
     -- Create/save & delete buttons
     local buttonsBar = root:AddChild("BottomButtons", "GenericUI_Element_HorizontalList")
@@ -295,14 +333,14 @@ function UI._Initialize()
     local createButton = ButtonPrefab.Create(UI, "CreateButton", buttonsBar, ButtonPrefab:GetStyle("DOS1Blue"))
     createButton:SetLabel(CommonStrings.Create)
     createButton.Events.Pressed:Subscribe(function (_)
-        UI._Finish()
+        UI.Finish()
     end)
     UI.CreateButton = createButton
 
     local deleteButton = ButtonPrefab.Create(UI, "DeleteButton", buttonsBar, ButtonPrefab:GetStyle("RedDOS1"))
     deleteButton:SetLabel(CommonStrings.Delete)
     deleteButton.Events.Pressed:Subscribe(function (_)
-        UI._RequestDeleteMenu()
+        UI.RequestDeleteMenu()
     end)
     UI.DeleteButton = deleteButton
 
@@ -313,9 +351,9 @@ function UI._Initialize()
     -- Set panel size
     local uiObj = UI:GetUI()
     uiObj.SysPanelSize = {root:GetSize():unpack()}
-    uiObj.OF_PlayerModal1 = true -- Prevents input actions from being usable while in the UI (ex. scrolling the radial menus in the main UI)
 
     UI._Initialized = true
+    UI.Events.Initialized:Throw()
 end
 
 ---Renders the settings for the current mode and object.
@@ -324,33 +362,28 @@ function UI._RenderSettings()
     if mode == "EditSlot" then
         UI._RenderSlotSettings()
     elseif mode == "CreateMenu" or mode == "EditMenu" then
-        UI._RenderSharedSettings()
-        UI._RenderMenuTypeSettings()
+        UI._RenderMenuSettings()
     end
     UI._PositionLists()
 end
 
 ---Renders the shared setting widgets.
-function UI._RenderSharedSettings()
-    local list = UI.SharedSettingsList
+---@see Features.RadialMenus.UI.MenuCreator.Events.RenderMenuSettings
+function UI._RenderMenuSettings()
+    local list = UI.SettingsList
     list:Clear()
 
     SettingWidgets.RenderSetting(UI, list, Settings.MenuName, UI.SETTING_SIZE)
 
     -- Cannot edit the type of existing menus.
-    if not UI._IsEditingMenu() then
+    if not UI.IsEditingMenu() then
         SettingWidgets.RenderSetting(UI, list, Settings.NewMenuType, UI.SETTING_SIZE, function (_)
-            UI._RenderMenuTypeSettings()
+            UI._RenderMenuSettings()
             UI._PositionLists()
         end)
     end
-end
 
----Renders settings specific to the selected menu type.
----@see Features.RadialMenus.UI.MenuCreator.Events.RenderMenuSettings
-function UI._RenderMenuTypeSettings()
-    local list = UI.MenuSpecificSettingsList
-    list:Clear()
+    -- Render type-specific settings.
     UI.Events.RenderMenuSettings:Throw({
         MenuType = Settings.NewMenuType:GetValue(),
         Container = list,
@@ -359,23 +392,24 @@ end
 
 ---Renders the settings for the slot being edited.
 function UI._RenderSlotSettings()
-    local sharedList = UI.SharedSettingsList
-    sharedList:Clear()
-    SettingWidgets.RenderSetting(UI, sharedList, Settings.SlotType, UI.SETTING_SIZE, function (_)
-        -- Refresh settings when type is changed
-        UI._RenderSpecificSlotSettings()
-        UI._PositionLists()
+    local list = UI.SettingsList
+    local preventCallbacks = true -- Awkward workaround for an unknown infinite update loop.
+    list:Clear()
+    SettingWidgets.RenderSetting(UI, list, Settings.SlotType, UI.SETTING_SIZE, function (_)
+        -- Refresh settings when type is changed.
+        if not preventCallbacks then
+            UI._RenderSlotSettings()
+            UI._PositionLists()
+        end
     end)
-    UI._RenderSpecificSlotSettings()
-end
+    Timer.Start(0.2, function (_)
+        preventCallbacks = false
+    end)
 
----Renders the settings specific to the current slot's type.
-function UI._RenderSpecificSlotSettings()
-    local specificList = UI.MenuSpecificSettingsList
-    specificList:Clear()
+    -- Render type-specific settings.
     UI.Events.RenderSlotSettings:Throw({
         Slot = UI._SlotBeingEdited,
-        Container = specificList,
+        Container = list,
     })
 end
 
@@ -402,32 +436,6 @@ function UI._RenderInputActionDropdown(container)
     end
 end
 
----Confirms the creation or edits of the menu.
-function UI._Finish()
-    local mode = UI._CurrentMode
-    if mode == "CreateMenu" then
-        UI._CreateMenu()
-    elseif mode == "EditMenu" or mode == "EditSlot" then
-        UI._SaveEdits()
-    else
-        UI:__Error("_Finish", "Unsupported mode", mode)
-    end
-end
-
----Prompts the user to delete the current menu.
-function UI._RequestDeleteMenu()
-    if UI._CurrentMode ~= "EditMenu" then UI:__Error("_DeleteMenu", "UI is not in menu edit mode") end
-    MsgBox.Open({
-        ID = UI.MSGBOXID_DELETE_MENU,
-        Header = TSK.MsgBox_DeleteMenu_Title:GetString(),
-        Message = TSK.MsgBox_DeleteMenu_Body:Format(UI._MenuBeingEdited.Name),
-        Buttons = {
-            {ID = 1, Text = CommonStrings.Delete:GetString()},
-            {ID = 2, Text = CommonStrings.Cancel:GetString()},
-        },
-    })
-end
-
 ---Deletes the current menu.
 function UI._DeleteMenu()
     if UI._CurrentMode ~= "EditMenu" then UI:__Error("_DeleteMenu", "UI is not in menu edit mode") end
@@ -437,22 +445,9 @@ function UI._DeleteMenu()
     RadialMenus.SaveData()
 end
 
----Returns whether the UI is being used to edit an existing menu.
----@return boolean
-function UI._IsEditingMenu()
-    return UI._CurrentMode == "EditMenu"
-end
-
----Returns whether the UI is being used to edit a custom slot.
----@return boolean
-function UI._IsEditingSlot()
-    return UI._CurrentMode == "EditSlot"
-end
-
 ---Repositions all content lists.
 function UI._PositionLists()
-    UI.SharedSettingsList:RepositionElements()
-    UI.MenuSpecificSettingsList:RepositionElements()
+    UI.SettingsList:RepositionElements()
     UI.ContentList:RepositionElements()
 end
 

@@ -561,6 +561,7 @@ LOAD_ORDER = {
             "Epip/RadialMenus/UI/Main.lua",
             "Epip/RadialMenus/UI/Main/Navigation.lua",
             "Epip/RadialMenus/UI/MenuCreator.lua",
+            "Epip/RadialMenus/UI/MenuCreator/Navigation.lua",
         },
         WIP = true,
     },
