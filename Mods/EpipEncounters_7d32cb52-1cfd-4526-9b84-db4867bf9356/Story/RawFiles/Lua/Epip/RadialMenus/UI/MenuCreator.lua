@@ -216,15 +216,19 @@ end
 ---Prompts the user to delete the current menu.
 function UI.RequestDeleteMenu()
     if UI._CurrentMode ~= "EditMenu" then UI:__Error("_DeleteMenu", "UI is not in menu edit mode") end
-    MsgBox.Open({
-        ID = UI.MSGBOXID_DELETE_MENU,
-        Header = TSK.MsgBox_DeleteMenu_Title:GetString(),
-        Message = TSK.MsgBox_DeleteMenu_Body:Format(UI._MenuBeingEdited.Name),
-        Buttons = {
-            {ID = 1, Text = CommonStrings.Delete:GetString()},
-            {ID = 2, Text = CommonStrings.Cancel:GetString()},
-        },
-    })
+    if Client.IsUsingKeyboardAndMouse() then
+        MsgBox.Open({
+            ID = UI.MSGBOXID_DELETE_MENU,
+            Header = TSK.MsgBox_DeleteMenu_Title:GetString(),
+            Message = TSK.MsgBox_DeleteMenu_Body:Format(UI._MenuBeingEdited.Name),
+            Buttons = {
+                {ID = 1, Text = CommonStrings.Delete:GetString()},
+                {ID = 2, Text = CommonStrings.Cancel:GetString()},
+            },
+        })
+    else -- MsgBox_c does not currently have an Epip API.
+        UI._DeleteMenu()
+    end
 end
 
 ---Returns whether the UI is being used to edit an existing menu.
