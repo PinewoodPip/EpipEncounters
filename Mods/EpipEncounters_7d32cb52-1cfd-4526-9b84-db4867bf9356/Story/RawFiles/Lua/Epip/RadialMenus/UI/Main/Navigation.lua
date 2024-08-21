@@ -42,13 +42,14 @@ UI.Events.Initialized:Subscribe(function (_)
     root:AddAction({
         ID = "Close",
         Name = CommonStrings.Close,
-        Inputs = {["UIBack"] = true},
+        Inputs = {["UIBack"] = true, ["ToggleInGameMenu"] = true},
     })
     -- Rename interact action, make it only usable when there is a slot selected
     local interactAction = root:GetAction("Interact")
     interactAction.Name = CommonStrings.Use
     interactAction.IsConsumableFunctor = function (_)
-        return UI.GetSelectedSlot() ~= nil
+        local slot = UI.GetSelectedSlot()
+        return slot and RadialMenus.IsSlotUsable(slot)
     end
     root.Hooks.ConsumeInput:Subscribe(function (ev)
         if ev.Event.Timing == "Down" then

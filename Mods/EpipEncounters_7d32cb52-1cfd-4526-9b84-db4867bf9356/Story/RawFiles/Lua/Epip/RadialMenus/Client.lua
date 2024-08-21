@@ -143,6 +143,7 @@ local RadialMenus = {
     },
     Hooks = {
         GetSlotData = {}, ---@type Event<Features.RadialMenus.Hooks.GetSlotData>
+        IsSlotUsable = {}, ---@type Hook<Features.RadialMenus.Hooks.IsSlotUsable>
     }
 }
 Epip.RegisterFeature("Features.RadialMenus", RadialMenus)
@@ -183,6 +184,10 @@ Epip.RegisterFeature("Features.RadialMenus", RadialMenus)
 ---@field Slot Features.RadialMenus.Slot
 ---@field Name string Hookable. Defaults to empty string.
 ---@field Icon icon? Hookable. Defaults to `nil`.
+
+---@class Features.RadialMenus.Hooks.IsSlotUsable
+---@field Slot Features.RadialMenus.Slot
+---@field Usable boolean Hookable. Defaults to whether the slot is not empty.
 
 ---------------------------------------------
 -- METHODS
@@ -273,6 +278,17 @@ function RadialMenus.CreateEmptySlot()
     return {
         Type = "Empty",
     }
+end
+
+---Returns whether a slot can currently be used.
+---@see Features.RadialMenus.Hooks.IsSlotUsable
+---@param slot Features.RadialMenus.Slot
+---@return boolean
+function RadialMenus.IsSlotUsable(slot)
+    return RadialMenus.Hooks.IsSlotUsable:Throw({
+        Slot = slot,
+        Usable = slot.Type ~= "Empty",
+    }).Usable
 end
 
 ---Saves the user's radial menus.

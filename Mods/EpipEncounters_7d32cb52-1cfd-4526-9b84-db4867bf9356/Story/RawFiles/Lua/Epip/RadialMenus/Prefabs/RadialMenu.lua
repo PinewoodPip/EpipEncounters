@@ -70,12 +70,9 @@ end
 function Menu:SelectSegment(index)
     if index == self._SelectedSegmentIndex then return end
     self:DeselectSegment()
-    local slots = self:GetMenu():GetSlots()
-    if slots[index].Type ~= "Empty" then -- Empty slots are non-interactable.
-        self.UI:PlaySound(self.SEGMENT_HOVER_SOUND)
-        self:_UpdateSegment(index, "Highlighted")
-        self._SelectedSegmentIndex = index
-    end
+    self.UI:PlaySound(self.SEGMENT_HOVER_SOUND)
+    self:_UpdateSegment(index, "Highlighted")
+    self._SelectedSegmentIndex = index
 end
 
 ---Deselects the current segment, as if it had been hovered out of.
@@ -115,21 +112,19 @@ function Menu:_Render()
         self:_UpdateSegment(i, "Idle")
 
         -- Update segment graphics upon mouse interaction and forward events.
-        if slot.Type ~= "Empty" then -- Empty slots are non-interactable.
-            selectionArea.Events.MouseOver:Subscribe(function (_)
-                self:SelectSegment(i)
-            end)
-            selectionArea.Events.MouseOut:Subscribe(function (_)
-                self:DeselectSegment()
-            end)
-            selectionArea.Events.MouseDown:Subscribe(function (_)
-                self:_UpdateSegment(i, "Pressed")
-            end)
-            selectionArea.Events.MouseUp:Subscribe(function (_)
-                self:_UpdateSegment(i, "Highlighted")
-                self:ActivateSegment(i)
-            end)
-        end
+        selectionArea.Events.MouseOver:Subscribe(function (_)
+            self:SelectSegment(i)
+        end)
+        selectionArea.Events.MouseOut:Subscribe(function (_)
+            self:DeselectSegment()
+        end)
+        selectionArea.Events.MouseDown:Subscribe(function (_)
+            self:_UpdateSegment(i, "Pressed")
+        end)
+        selectionArea.Events.MouseUp:Subscribe(function (_)
+            self:_UpdateSegment(i, "Highlighted")
+            self:ActivateSegment(i)
+        end)
 
         -- Handle right-clicks for editing slots, even for empty slots
         if self._Config.Menu:GetClassName() == "Features.RadialMenus.Menu.Custom" then
@@ -185,16 +180,11 @@ function Menu:_UpdateSegment(index, state)
     local segment = self.SegmentsList:GetChildren()[index]:GetMovieClip()
     local slots = self._Config.Menu:GetSlots()
     local slotsAmount = #slots
-    local slot = slots[index]
     local graphics = segment.graphics
     local topVector = V(0, -self.SEGMENT_RADIUS)
     local rotation = -(2 * math.pi) / slotsAmount
     local leftVector = Vector.Rotate(topVector, math.deg(rotation) / 2) -- We're rotating from the middle to one of the sides, thus we divide the angle by 2.
     local color = Menu.SEGMENT_STATE_COLORS[state]
-    -- Empty slots are non-interactable; do not change graphics for them.
-    if slot.Type == "Empty" then
-        state = "Idle"
-    end
 
     -- Though the segment has its root in its middle,
     -- for easier maths we treat the center of the menu as the origin.
