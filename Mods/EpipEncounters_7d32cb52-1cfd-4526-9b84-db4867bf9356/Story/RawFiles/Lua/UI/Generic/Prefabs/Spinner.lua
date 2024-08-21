@@ -8,6 +8,7 @@ local Generic = Client.UI.Generic
 local Input = Client.Input
 local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 local ButtonPrefab = Generic.GetPrefab("GenericUI_Prefab_Button")
+local CommonStrings = Text.CommonStrings
 local V = Vector.Create
 
 ---@class GenericUI_Prefab_Spinner : GenericUI_Prefab_FormElement, GenericUI_I_Stylable
@@ -101,6 +102,26 @@ function Spinner.Create(ui, id, parent, label, min, max, step, size, style)
     spinner:_Init(ui)
     spinner:SetLabel(label)
     spinner:SetBounds(min, max, step)
+
+    -- Extend navigation component
+    local root = spinner:GetRootElement() ---@cast root +GenericUI.Navigation.Component.Target
+    local component = root.___Component
+    if component then
+        -- Repurpose actions from base class.
+        component:GetAction("SlideLeft").Name = CommonStrings.Decrement
+        component:GetAction("SlideRight").Name = CommonStrings.Increment
+        component.Hooks.ConsumeInput:Subscribe(function (ev)
+            if ev.Event.Timing == "Down" then
+                if ev.Action.ID == "SlideLeft" then
+                    spinner:Decrement()
+                    ev.Consumed = true
+                elseif ev.Action.ID == "SlideRight" then
+                    spinner:Increment()
+                    ev.Consumed = true
+                end
+            end
+        end)
+    end
 
     return spinner
 end
@@ -262,4 +283,10 @@ end
 ---@override
 function Spinner:__OnStyleChanged()
     self:_UpdateButtons()
+end
+
+---@override
+function Spinner:GetInteractableElement()
+    -- Awkward case; there isn't a single interactable.
+    return self.ButtonList
 end

@@ -384,6 +384,14 @@ Text.CommonStrings.Empty = Text.RegisterTranslatedString({
     Handle = "h44af81d2gaa26g4767gb863g7933f41b4565",
     Text = "Empty",
 })
+Text.CommonStrings.Decrement = Text.RegisterTranslatedString({
+    Handle = "h4edd0abfgf4b8g4e23gbc9cg8114fe650234",
+    Text = "Decrement",
+})
+Text.CommonStrings.Increment = Text.RegisterTranslatedString({
+    Handle = "h35ed4408g3e32g4d16ga1d8g148559bae84a",
+    Text = "Increment",
+})
 
 ---------------------------------------------
 -- BRANDING
