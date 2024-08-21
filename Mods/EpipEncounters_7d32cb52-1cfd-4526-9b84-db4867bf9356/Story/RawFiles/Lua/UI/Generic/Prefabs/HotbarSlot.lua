@@ -487,6 +487,9 @@ function Slot:_OnTick(ev)
                 enabled = Character.CanUseSkill(char, obj.StatsID)
             end
 
+            -- Can't use slots outside of your turn.
+            enabled = enabled and (not Client.IsInCombat() or Client.IsActiveCombatant())
+
             self:SetLabel("")
             self:SetCooldown(cooldown, false)
             self:SetEnabled(enabled or cooldown > 0)
@@ -519,6 +522,9 @@ function Slot:_OnTick(ev)
 
                 -- Summons cannot open the party inventory, thus they cannot use items.
                 isEnabled = isEnabled and not Character.IsSummon(char)
+
+                -- Can't use slots outside of your turn.
+                isEnabled = isEnabled and (not Client.IsInCombat() or Client.IsActiveCombatant())
 
                 slot:SetEnabled(isEnabled)
             else -- Clear the slot once we consume all stacks of this item.
