@@ -126,7 +126,7 @@ local RadialMenus = {
         },
         Setting_Skill_Description = {
             Handle = "hc4a1e5a0gdbaeg4a2dg8e92gd7ef42084361",
-            Text = "Determines the skill to use for the slot. Drag-and-drop a skill or click the socket to pick one.",
+            Text = "Determines the skill to use for the slot. Drag-and-drop a skill or interact with the socket to pick one.",
             ContextDescription = [[Tooltip for skill slot form]],
         },
     },

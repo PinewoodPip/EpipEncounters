@@ -47,6 +47,19 @@ function FormSlot.Create(ui, id, parent, label, size)
         obj.Events.Clicked:Throw(ev)
     end)
 
+    -- Extend navigation
+    local root = obj:GetRootElement() ---@cast root +GenericUI.Navigation.Component.Target
+    local component = root.___Component
+    if component then
+        component.Hooks.ConsumeInput:Subscribe(function (ev)
+            if ev.Event.Timing == "Up" and ev.Action.ID == "Interact" then
+                slot:Use()
+                ev.Consumed = true
+                ev:StopPropagation()
+            end
+        end, {Priority = 999})
+    end
+
     return obj
 end
 

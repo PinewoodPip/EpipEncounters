@@ -378,6 +378,11 @@ function Slot:SetUpdateDelay(delay)
     self._AutoUpdateDelay = delay
 end
 
+---Attempts to use the slot's contents, as if it were clicked.
+function Slot:Use()
+    self:_OnSlotClicked()
+end
+
 ---Returns whether the slot currently holds no object.
 ---@return boolean
 function Slot:IsEmpty()
@@ -542,7 +547,7 @@ function Slot:_OnSlotClicked(_)
     local used = false
     if self._Usable and self:IsEnabled() then
         if obj.Type == "Skill" or obj.Type == "Action" then
-            Client.UI.Hotbar.UseSkill(obj.StatsID)
+            Client.PrepareSkill(Client.GetCharacter(), obj.StatsID)
             used = true
         elseif obj.Type == "Item" or obj.Type == "Template" then
             local item = obj:GetEntity()

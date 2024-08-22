@@ -345,6 +345,7 @@ function Widgets._RenderSlotSetting(request)
     local slot = instance.Slot
     slot:SetCanDrag(false)
     slot:SetCanDrop(true)
+    slot:SetUsable(false)
     slot:SetValidObjectTypes({
         ["Skill"] = true,
         ["Action"] = true,
