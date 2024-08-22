@@ -179,10 +179,15 @@ end
 ---Attempts to use a slot.
 ---@param slot Features.RadialMenus.Slot? Defaults to currently-selected slot.
 function UI.InteractWithSlot(slot)
+    local menu = UI._GetCurrentMenu()
     slot = slot or UI.GetSelectedSlot()
     if slot then
-        UI:TryHide() -- Needs to be done first for input actions to work, as they are not normally executable in modal UIs (which the radial menu is when using a controller)
-        RadialMenus.UseSlot(Client.GetCharacter(), slot)
+        if slot.Type == "Empty" and menu:IsSlotEditable(slot) then -- Edit empty slots.
+            UI.RequestEditSlot(table.reverseLookup(menu:GetSlots(), slot))
+        else -- Otherwise use the slot.
+            UI:TryHide() -- Needs to be done first for input actions to work, as they are not normally executable in modal UIs (which the radial menu is when using a controller)
+            RadialMenus.UseSlot(Client.GetCharacter(), slot)
+        end
     end
 end
 

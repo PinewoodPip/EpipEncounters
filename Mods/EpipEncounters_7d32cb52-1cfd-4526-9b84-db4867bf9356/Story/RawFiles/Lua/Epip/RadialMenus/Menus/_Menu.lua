@@ -57,6 +57,14 @@ function _Menu:GetSaveData()
     return data
 end
 
+---Returns whether a slot is user-editable.
+---@virtual
+---@param slot Features.RadialMenus.Slot|integer
+---@diagnostic disable-next-line: unused-local
+function _Menu:IsSlotEditable(slot)
+    return false
+end
+
 ---Returns a user-friendly name for this kind of menu.
 ---@abstract
 ---@return TextLib_String

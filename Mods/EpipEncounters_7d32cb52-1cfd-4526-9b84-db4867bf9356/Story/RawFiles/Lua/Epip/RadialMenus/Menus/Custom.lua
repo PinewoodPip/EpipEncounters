@@ -68,6 +68,12 @@ function CustomMenu:GetSlots()
 end
 
 ---@override
+---@diagnostic disable-next-line: unused-local
+function CustomMenu:IsSlotEditable(slot)
+    return true -- All slots of custom menus are editable.
+end
+
+---@override
 function CustomMenu:GetSaveData()
     local data = MenuClass.GetSaveData(self) ---@cast data Features.RadialMenus.Menu.Custom.SaveData
     data.Slots = self.Slots
