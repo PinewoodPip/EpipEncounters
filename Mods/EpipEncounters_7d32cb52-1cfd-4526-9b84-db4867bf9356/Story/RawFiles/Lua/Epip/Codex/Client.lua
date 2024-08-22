@@ -5,6 +5,8 @@
 -- 26/06/23 Pip
 ---------------------------------------------
 
+local Textures = Epip.GetFeature("Feature_GenericUITextures")
+
 ---@class Feature_Codex : Feature
 ---@field UI Feature_Codex_UI
 local Codex = {
@@ -28,6 +30,7 @@ Epip.RegisterFeature("Codex", Codex)
 
 Codex.InputActions.Open = Codex:RegisterInputAction("Open", {
     Name = Codex.TranslatedStrings.InputAction_Open_Name:GetString(),
+    Icon = Textures.ICONS.DIFFICULTIES.STORY,
     DefaultInput1 = {Keys = {"lctrl", "g"}},
 })
 

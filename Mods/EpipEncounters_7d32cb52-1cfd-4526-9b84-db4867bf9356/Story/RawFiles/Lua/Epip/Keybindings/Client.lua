@@ -3,7 +3,7 @@
 -- Temporary script to register keybindings until a better API exists to register them onto the UI.
 ---------------------------------------------
 
-local Codex = Epip.GetFeature("Feature_Codex")
+local CommonStrings = Text.CommonStrings
 
 ---@type InputLib_Action[]
 local keybinds = {
@@ -17,15 +17,12 @@ local keybinds = {
     {Name = "Log RootTemplate", ID = "EpipEncounters_Debug_LogRootTemplate", DeveloperOnly = true},
     -- {Name = "Open Cheats", ID = "EpipEncounters_DebugCheats_OpenUI", DeveloperOnly = true, DefaultInput1 = {Keys = {"g"}}}, -- Removed until the feature is more finished.
 
-    {Name = "Open Quick Find", ID = "EpipEncounters_QuickFind", DefaultInput1 = {Keys = {"lctrl", "f"}}},
-
-    -- Features
-    Codex.InputActions.Open,
+    {Name = "Open Quick Find", ID = "EpipEncounters_QuickFind", DefaultInput1 = {Keys = {"lctrl", "f"}}, Icon = "hotbar_icon_inventory"},
 
     -- Misc
     {Name = "Toggle Tooltip Scrolling", ID = "EpipEncounters_ScrollTooltip", DefaultInput1 = {Keys = {"middle"}}},
     {Name = "Toggle World Item Tooltips", ID = "EpipEncounters_ToggleWorldTooltips"},
-    {Name = "Quick Examine", ID = "EpipEncounters_QuickExamine", DefaultInput1 = {Keys = {"v"}}},
+    {Name = "Quick Examine", ID = "EpipEncounters_QuickExamine", DefaultInput1 = {Keys = {"v"}}, Icon = "hotbar_icon_combatlog"},
     {Name = "Examine", ID = "EpipEncounters_Examine"},
 
     -- Hotbar
@@ -58,11 +55,13 @@ local keybinds = {
 if EpicEncounters.IsEnabled() then
     table.insert(keybinds, {
         ID = "EpicEncounters_Meditate",
-        Name = "Meditate",
+        Name = CommonStrings.Meditate,
+        Icon = "hotbar_icon_nongachatransmute",
     })
     table.insert(keybinds, {
         ID = "EpipEncounters_SourceInfuse",
-        Name = "Source Infuse",
+        Name = CommonStrings.SourceInfuse,
+        Icon = "hotbar_icon_sp",
     })
 end
 

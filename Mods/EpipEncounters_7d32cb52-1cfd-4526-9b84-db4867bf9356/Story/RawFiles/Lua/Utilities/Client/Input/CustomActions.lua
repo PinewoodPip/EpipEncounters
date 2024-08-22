@@ -42,6 +42,7 @@ Input.ACTION_WHITELISTED_MOUSE_INPUTS = {
 
 ---@class InputLib_Action : Class, I_Identifiable, I_Describable
 ---@field ID string
+---@field Icon? icon
 ---@field DefaultInput1 InputLib_Action_KeyCombination?
 ---@field DefaultInput2 InputLib_Action_KeyCombination?
 ---@field DeveloperOnly boolean? If true, the action will only be usable in developer mode.
