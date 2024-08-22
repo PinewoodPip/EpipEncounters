@@ -261,8 +261,11 @@ function UI._Setup()
 
     Client.UI.Input.SetMouseWheelBlocked(false) -- Unblock mouse wheel so it's usable in dropdowns.
 
-    if RadialMenuUI:IsVisible() and Client.IsUsingController() then -- Disable modal on main UI to gain control
-        RadialMenuUI:GetUI().OF_PlayerModal1 = false
+    if Client.IsUsingController() then
+        UI:GetUI().OF_PlayerModal1 = true
+        if RadialMenuUI:IsVisible() then -- Disable modal on main UI to gain control
+            RadialMenuUI:GetUI().OF_PlayerModal1 = false
+        end
     end
     UI:SetPositionRelativeToViewport("center", "center")
     UI:Show()

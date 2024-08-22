@@ -536,7 +536,7 @@ end)
 -- while using the left or right sticks on a controller.
 Input.Events.StickMoved:Subscribe(function (ev)
     local direction = V(table.unpack(ev.NewState))
-    if Vector.GetLength(direction) >= UI.CONTROLLER_STICK_SELECT_THRESHOLD then -- Consider a deadzone.
+    if Vector.GetLength(direction) >= UI.CONTROLLER_STICK_SELECT_THRESHOLD and not RadialMenus.MenuCreatorUI:IsVisible() then -- Consider a deadzone and do not select anything on the wheel while the creator is open.
         local menuWidget = UI._CurrentMenu
         local menu = menuWidget:GetMenu()
         local slotsAmount = #menu:GetSlots()
