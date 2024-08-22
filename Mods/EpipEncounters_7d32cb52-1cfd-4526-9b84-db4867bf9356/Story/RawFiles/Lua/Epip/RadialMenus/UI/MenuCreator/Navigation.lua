@@ -9,6 +9,8 @@ local CommonStrings = Text.CommonStrings
 local RadialMenus = Epip.GetFeature("Features.RadialMenus")
 local UI = RadialMenus.MenuCreatorUI ---@cast UI +GenericUI.Navigation.UI
 
+local RootComponent ---@type GenericUI.Navigation.Components.List
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
@@ -66,6 +68,8 @@ UI.Events.Initialized:Subscribe(function (_)
         end
     end)
 
+    RootComponent = root
+
     Controller.Create(UI, root)
     root:FocusByIndex(1)
     buttonsList:FocusByIndex(1)
@@ -73,5 +77,6 @@ end)
 
 -- Show the navbar when the UI is opened.
 UI.Events.Opened:Subscribe(function (_)
+    RootComponent:FocusByIndex(1) -- Focus the settings list, so the focus doesn't get restored to other elements like the buttons bar.
     Navbar.Setup(UI)
 end)
