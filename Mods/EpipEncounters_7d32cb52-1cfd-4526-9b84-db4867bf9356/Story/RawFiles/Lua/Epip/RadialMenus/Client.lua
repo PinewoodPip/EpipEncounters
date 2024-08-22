@@ -371,7 +371,7 @@ RadialMenus.Hooks.GetSlotData:Subscribe(function (ev)
         ---@cast slot Features.RadialMenus.Slot.InputAction
         local action = Input.GetAction(slot.ActionID)
         ev.Name = action:GetName()
-        -- TODO icon
+        ev.Icon = action.Icon
     elseif slotType == "Item" then
         ---@cast slot Features.RadialMenus.Slot.Item
         local item = Item.Get(slot.ItemHandle)

@@ -68,15 +68,15 @@ UI.Events.Initialized:Subscribe(function (_)
             elseif ev.Action.ID == "NextMenu" then
                 UI.ScrollMenus(1)
                 ev.Consumed = true
-            elseif ev.Action.ID == "Interact" then
-                UI.InteractWithSlot()
-                ev.Consumed = true
             elseif ev.Action.ID == "Close" then
                 UI:Hide()
                 ev.Consumed = true
             end
         elseif ev.Event.Timing == "Up" then -- Some of these events used are only fired by the game for "Up".
-            if ev.Action.ID == "NewMenu" then
+            if ev.Action.ID == "Interact" then
+                UI.InteractWithSlot()
+                ev.Consumed = true
+            elseif ev.Action.ID == "NewMenu" then
                 UI.RequestNewMenu()
                 ev.Consumed = true
             elseif ev.Action.ID == "EditMenu" then

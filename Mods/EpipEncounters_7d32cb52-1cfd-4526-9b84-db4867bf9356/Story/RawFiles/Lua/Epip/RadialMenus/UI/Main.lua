@@ -179,6 +179,7 @@ end
 ---Attempts to use a slot.
 ---@param slot Features.RadialMenus.Slot? Defaults to currently-selected slot.
 function UI.InteractWithSlot(slot)
+    if UI._TweeningMainMenu then return end -- Do nothing while the UI is being opened.
     local menu = UI._GetCurrentMenu()
     slot = slot or UI.GetSelectedSlot()
     if slot then
@@ -357,7 +358,11 @@ function UI._AnimateMainMenu()
             Function = "Cubic",
             Ease = "EaseIn",
             Duration = UI.OPEN_TWEEN_DURATION,
+            OnComplete = function (_)
+                UI._TweeningMainMenu = false
+            end
         })
+        UI._TweeningMainMenu = true
     end
     -- For preview widgets, animate only alpha
     local previewWidgets = table.pack(UI._LeftMenuPreview, UI._RightMenuPreview)
