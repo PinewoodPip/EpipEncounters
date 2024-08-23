@@ -4,6 +4,7 @@ local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 local ButtonPrefab = Generic.GetPrefab("GenericUI_Prefab_Button")
 local SlicedTexturePrefab = Generic.GetPrefab("GenericUI.Prefabs.SlicedTexture")
 local PanelSelect = Client.UI.Controller.PanelSelect
+local GameMenu = Client.UI.GameMenu
 local Input = Client.Input
 local V = Vector.Create
 
@@ -25,6 +26,7 @@ UI.PREVIEW_WIDGET_SPACING = 40
 UI.CONTROLLER_STICK_SELECT_THRESHOLD = 0.3 -- In fraction of distance from center.
 UI._CurrentMenuIndex = 1
 UI._CurrentMenu = nil ---@type Features.RadialMenus.Prefabs.RadialMenu?
+UI._NeedsResize = false
 
 RadialMenus:RegisterInputAction("OpenRadialMenu", {
     Name = TSK.InputAction_Open_Name,
@@ -58,6 +60,13 @@ RadialMenus.UI = UI
 ---Sets up the UI.
 function UI.Setup()
     UI._Initialize()
+
+    -- Update panel size if the UI is dirty.
+    -- Should be done before any positioning operations.
+    if UI._NeedsResize then
+        UI._ResizePanel()
+    end
+
     UI.Refresh()
     UI._AnimateMainMenu()
 
@@ -411,6 +420,7 @@ function UI._ResizePanel()
     topBar:SetPositionRelativeToParent("Top", 0, 20)
     UI:SetPositionRelativeToViewport("topleft", "topleft")
     UI.NoMenusLabel:SetPositionRelativeToParent("Center")
+    UI._NeedsResize = false
 end
 
 ---Repositions the menu widgets.
@@ -569,3 +579,9 @@ Input.Events.StickMoved:Subscribe(function (ev)
 end, {EnabledFunctor = function ()
     return UI:IsVisible() and UI._GetCurrentMenu() ~= nil
 end})
+
+-- Unpausing the game screws with the flash size override for some reason,
+-- thus we must mark the UI as dirty in this regard.
+GameMenu.Events.Opened:Subscribe(function (_)
+    UI._NeedsResize = true
+end)
