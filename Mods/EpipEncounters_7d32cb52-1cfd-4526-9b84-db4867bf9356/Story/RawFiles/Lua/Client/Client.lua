@@ -301,6 +301,12 @@ function Client.PrepareSkill(char, skillID)
                 slot.Type = previousSlotData.Type
                 slot.SkillOrStatId = previousSlotData.SkillOrStatId
                 slot.ItemHandle = previousSlotData.ItemHandle
+
+                -- Hide the active skill animation.
+                -- TODO play it on the correct slot if the skill is on the bar
+                Timer.StartTickTimer(3, function ()
+                    BottomBar:GetRoot().showActiveSkill(-1)
+                end)
             end)
         end)
     end
