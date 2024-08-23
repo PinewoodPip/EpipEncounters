@@ -170,9 +170,20 @@ end
 
 ---Switches to a neighbour menu.
 ---@param offset integer Index offset.
-function UI.ScrollMenus(offset)
-    UI._CurrentMenuIndex = math.indexmodulo(UI._CurrentMenuIndex + offset, #RadialMenus:GetMenus())
-    if UI:IsVisible() then
+---@param canWrap boolean? Defaults to `false`.
+function UI.ScrollMenus(offset, canWrap)
+    local menusCount = #RadialMenus:GetMenus()
+    local newIndex = UI._CurrentMenuIndex
+    if canWrap then
+        newIndex = math.indexmodulo(UI._CurrentMenuIndex + offset, menusCount)
+    else
+        local unclampedNewIndex = UI._CurrentMenuIndex + offset
+        if unclampedNewIndex >= 1 and unclampedNewIndex <= menusCount then
+            newIndex = unclampedNewIndex
+        end
+    end
+    if UI:IsVisible() and newIndex ~= UI._CurrentMenuIndex then
+        UI._CurrentMenuIndex = newIndex
         UI:PlaySound(UI.SOUNDS.CYCLE)
         UI.Refresh()
     end
