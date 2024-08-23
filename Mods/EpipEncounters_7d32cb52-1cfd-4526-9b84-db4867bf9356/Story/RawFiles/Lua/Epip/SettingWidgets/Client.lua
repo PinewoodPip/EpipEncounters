@@ -302,7 +302,7 @@ function Widgets._RenderClampedNumberSetting(request)
         instance.Events.HandleMoved:Subscribe(OnValueChanged)
         instance.Events.HandleReleased:Subscribe(OnValueChanged)
     elseif preferredRepresentation == "Spinner" then
-        instance = Spinner.Create(ui, settingID, parent, setting:GetName(), setting.Min, setting.Max, step, size, Spinner:GetStyle("DOS1Large"))
+        instance = Spinner.Create(ui, settingID, parent, setting:GetName(), setting.Min, setting.Max, step, size, Spinner.STYLES.DOS1Large)
 
         instance.Events.ValueChanged:Subscribe(function (ev)
             Widgets._SetSettingValue(setting, ev.Value, request)

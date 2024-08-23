@@ -47,12 +47,14 @@ Spinner.DEFAULT_STYLE = {
     MinusButtonStyle = ButtonPrefab.STYLES.DecrementCharacterSheet,
     AmountLabelSize = V(50, 30),
 }
-Spinner:RegisterStyle("Default", Spinner.DEFAULT_STYLE)
-Spinner:RegisterStyle("DOS1Large", {
-    PlusButtonStyle = ButtonPrefab.STYLES.DOS1IncrementLarge,
-    MinusButtonStyle = ButtonPrefab.STYLES.DOS1DecrementLarge,
-    AmountLabelSize = V(75, 30),
-})
+Spinner.STYLES = {
+    Default = Spinner:RegisterStyle("Default", Spinner.DEFAULT_STYLE),
+    DOS1Large = Spinner:RegisterStyle("DOS1Large", {
+        PlusButtonStyle = ButtonPrefab.STYLES.DOS1IncrementLarge,
+        MinusButtonStyle = ButtonPrefab.STYLES.DOS1DecrementLarge,
+        AmountLabelSize = V(75, 30),
+    }),
+}
 
 ---@diagnostic disable-next-line: duplicate-doc-alias
 ---@alias GenericUI_PrefabClass "GenericUI_Prefab_Spinner"

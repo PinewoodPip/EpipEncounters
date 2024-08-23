@@ -123,7 +123,7 @@ function UI._Initialize()
     UI.NoMenusLabel = noMenusLabel
 
     -- Create top buttons & labels bar
-    local topBar = SlicedTexturePrefab.Create(UI, "TopBar", root, SlicedTexturePrefab:GetStyle("SimpleTooltip"), V(500, 75))
+    local topBar = SlicedTexturePrefab.Create(UI, "TopBar", root, SlicedTexturePrefab.STYLES.SimpleTooltip, V(500, 75))
     UI.TopBar = topBar
 
     -- Edit button

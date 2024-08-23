@@ -21,15 +21,15 @@ Generic:RegisterClass("GenericUI_I_Stylable", Stylable)
 ---**Styles are stored per-class, not globally.**
 ---@param id string
 ---@param style GenericUI_I_Stylable_Style
+---@return GenericUI_I_Stylable_Style -- With no changes.
 function Stylable:RegisterStyle(id, style)
     local def = self:GetClassDefinition()
     ---@cast def GenericUI_I_Stylable
-
-    if not def._RegisteredStyles then
+    if not def._RegisteredStyles then -- Initialize storage
         def._RegisteredStyles = {}
     end
-
     def._RegisteredStyles[id] = style
+    return style
 end
 
 ---Returns a style by its ID.

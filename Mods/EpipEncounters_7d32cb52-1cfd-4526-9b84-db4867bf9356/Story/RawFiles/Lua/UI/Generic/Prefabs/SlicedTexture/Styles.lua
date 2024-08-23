@@ -2,7 +2,7 @@
 local T = Epip.GetFeature("Feature_GenericUITextures").TEXTURES.SLICED
 local Generic = Client.UI.Generic
 
-local SlicedTexture = Generic.GetPrefab("GenericUI.Prefabs.SlicedTexture")
+local SlicedTexture = Generic.GetPrefab("GenericUI.Prefabs.SlicedTexture") ---@class GenericUI.Prefabs.SlicedTexture
 
 ---Creates a 9-sliced texture style.
 ---@param tbl table Must have all 9 textures named in uppercase with underscore separator.
@@ -22,8 +22,8 @@ local function Create9SlicedStyle(tbl)
     }
 end
 
----@type table<string, GenericUI.Prefabs.SlicedTexture.Style>
-local styles = {
+----@type table<string, GenericUI.Prefabs.SlicedTexture.Style> Annotation must be omitted as it breaks autocompletion.
+SlicedTexture.STYLES = {
     AztecSquiggles = {
         Type = "9-Sliced",
         Bottom = T.AZTEC_SQUIGGLES.BOTTOM,
@@ -75,6 +75,6 @@ local styles = {
     },
 }
 
-for id,style in pairs(styles) do
+for id,style in pairs(SlicedTexture.STYLES) do
     SlicedTexture:RegisterStyle(id, style)
 end
