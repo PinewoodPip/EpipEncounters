@@ -152,8 +152,9 @@ local RadialMenus = {
         SlotUsed = {}, ---@type Event<Features.RadialMenus.Events.SlotUsed>
     },
     Hooks = {
-        GetSlotData = {}, ---@type Event<Features.RadialMenus.Hooks.GetSlotData>
+        GetSlotData = {}, ---@type Hook<Features.RadialMenus.Hooks.GetSlotData>
         IsSlotUsable = {}, ---@type Hook<Features.RadialMenus.Hooks.IsSlotUsable>
+        IsSlotValid = {}, ---@type Hook<Features.RadialMenus.Hooks.IsSlotValid>
     }
 }
 Epip.RegisterFeature("Features.RadialMenus", RadialMenus)
@@ -198,6 +199,10 @@ Epip.RegisterFeature("Features.RadialMenus", RadialMenus)
 ---@class Features.RadialMenus.Hooks.IsSlotUsable
 ---@field Slot Features.RadialMenus.Slot
 ---@field Usable boolean Hookable. Defaults to whether the slot is not empty.
+
+---@class Features.RadialMenus.Hooks.IsSlotValid
+---@field Slot Features.RadialMenus.Slot
+---@field IsValid boolean Hookable. Defaults to `true`.
 
 ---------------------------------------------
 -- METHODS
@@ -301,6 +306,17 @@ function RadialMenus.IsSlotUsable(slot)
     }).Usable
 end
 
+---Returns whether a slot's data is valid.
+---@see Features.RadialMenus.Hooks.IsSlotValid
+---@param slot Features.RadialMenus.Slot
+---@return boolean
+function RadialMenus.IsSlotValid(slot)
+    return RadialMenus.Hooks.IsSlotValid:Throw({
+        Slot = slot,
+        IsValid = true,
+    }).IsValid
+end
+
 ---Returns whether a slot can be edited.
 ---TODO add hooks
 ---@param menu Features.RadialMenus.Menu? Defaults to current menu.
@@ -389,6 +405,18 @@ RadialMenus.Hooks.GetSlotData:Subscribe(function (ev)
         ev.Icon = Item.GetIcon(item)
     end
 end)
+
+-- Validate slots.
+RadialMenus.Hooks.IsSlotValid:Subscribe(function (ev)
+    local slot = ev.Slot
+    if slot.Type == "Skill" then
+        ---@cast slot Features.RadialMenus.Slot.Skill
+        ev.IsValid = Stats.GetSkillData(slot.SkillID) ~= nil
+    elseif slot.Type == "InputAction" then
+        ---@cast slot Features.RadialMenus.Slot.InputAction
+        ev.IsValid = Input.GetAction(slot.ActionID) ~= nil
+    end
+end, {StringID = "DefaultImplementation"})
 
 -- Load saved data upon entering the session.
 GameState.Events.GameReady:Subscribe(function (_)

@@ -33,6 +33,12 @@ end
 ---@return Features.RadialMenus.Menu.Custom
 function CustomMenu:CreateFromSaveData(saveData)
     local instance = MenuClass.CreateFromSaveData(CustomMenu, saveData) ---@cast instance Features.RadialMenus.Menu.Custom
+    local slots = saveData.Slots
+    for i,slot in ipairs(slots) do -- Replace invalid slots with empty ones
+        if not RadialMenus.IsSlotValid(slot) then
+            slots[i] = RadialMenus.CreateEmptySlot()
+        end
+    end
     instance.Slots = saveData.Slots
     return instance
 end
