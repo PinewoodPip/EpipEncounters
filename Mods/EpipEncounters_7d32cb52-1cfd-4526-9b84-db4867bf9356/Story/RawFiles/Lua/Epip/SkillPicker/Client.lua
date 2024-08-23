@@ -7,6 +7,7 @@ local Notification = Client.UI.Notification
 local Skills = Client.UI.Skills
 local PanelSelect = Client.UI.Controller.PanelSelect
 local SkillsC = Client.UI.Controller.InventorySkillPanel
+local BottomBarC = Client.UI.Controller.BottomBar
 
 ---@class Features.SkillPicker : Feature
 local Picker = {
@@ -113,4 +114,5 @@ Skills:RegisterCallListener("cantUnlearn", CompleteRequest) -- Fired when clicki
 -- Controller equivalent
 SkillsC:RegisterCallListener("useSkill", function (ev, _)
     CompleteRequest(ev, SkillsC.GetSelectedSkill())
+    BottomBarC:Show() -- Must be re-shown manually.
 end)
