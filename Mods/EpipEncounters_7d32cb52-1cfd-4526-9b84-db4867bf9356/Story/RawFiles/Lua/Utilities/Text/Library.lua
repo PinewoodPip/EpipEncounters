@@ -18,6 +18,14 @@ Text = {
         BIG_NUMBERS = "CollegiateBlackFLF",
         FALLBACK = "fb",
     },
+    -- Languages that use the fallback font.
+    -- Might be incomplete.
+    ---@type set<language>
+    FALLBACK_FONT_LANGUAGES = {
+        ["Chinese"] = true,
+        ["Chinesetraditional"] = true,
+        ["Japanese"] = true,
+    },
     LUA_PATTERN_CHARACTERS = {
         ["^"] = "%^",
         ["$"] = "%$",
@@ -756,15 +764,14 @@ function Text.GenerateLocalizationTemplate(modTable, existingTemplate)
 end
 
 ---Returns the language the game is set to.
+---@param useOverride boolean? Whether to consider the Epip language override setting. Defaults to `true`.
 ---@return string
-function Text.GetCurrentLanguage()
+function Text.GetCurrentLanguage(useOverride)
     local language = Ext.Utils.GetGlobalSwitches().ChatLanguage
-    local settingOverride = IO.LoadFile("Epip/LanguageOverride.txt", "user", true)
-
+    local settingOverride = useOverride ~= false and IO.LoadFile("Epip/LanguageOverride.txt", "user", true) or ""
     if settingOverride and settingOverride ~= "" then
         language = settingOverride
     end
-
     return language
 end
 

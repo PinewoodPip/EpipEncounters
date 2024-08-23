@@ -23,6 +23,7 @@
 ---@alias tag string
 ---@alias htmlcolor string
 ---@alias listenabletype "Event"|"Hook"
+---@alias language string
 
 ---@alias UIObjectHandle ComponentHandle
 

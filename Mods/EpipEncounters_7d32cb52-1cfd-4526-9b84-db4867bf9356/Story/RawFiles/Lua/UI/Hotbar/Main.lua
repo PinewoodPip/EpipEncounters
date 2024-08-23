@@ -1835,20 +1835,30 @@ end
 
 Ext.Events.SessionLoaded:Subscribe(function()
     if Client.IsUsingController() then return end
-    local ui = Hotbar:GetUI()
+    local ui, root = Hotbar:GetUI(), Hotbar:GetRoot()
 
     Hotbar.GetSlotHolder().rowHeight = 65
 
-    if ui then
-        -- Hide the original iggy icon.
-        Hotbar:GetRoot().actionSkillHolder_mc.iggy_actions.visible = false
-    
-        -- Setup custom icons for all engine actions.
-        for id,entry in pairs(Stats.Actions) do
-            ui:SetCustomIcon(id, entry.Icon, 50, 50)
-        end
+    -- Hide the original iggy icon.
+    root.actionSkillHolder_mc.iggy_actions.visible = false
+
+    -- Setup custom icons for all engine actions.
+    for id,entry in pairs(Stats.Actions) do
+        ui:SetCustomIcon(id, entry.Icon, 50, 50)
     end
 
+    -- Widen the vanilla keybinds text a bit,
+    -- else they will slightly clip into the slot borders (especially on languages with the fallback font).
+    -- This is somehow an issue caused by Epip's swf changes.
+    local keysHolder = root.hotbar_mc.hotkeys_mc
+    for i=1,12,1 do
+        local key = "key" .. tostring(i) .. "_mc"
+        local element = keysHolder[key]
+        if not element._pipPositionAdjusted then
+            element.width = Text.FALLBACK_FONT_LANGUAGES[Text.GetCurrentLanguage(false)] and 15 or 14 -- Use higher width for languages with the large fallback font.
+            element._pipPositionAdjusted = true -- Mark the element as moved so as to avoid shifting the position further on lua reset.
+        end
+    end
 
     Hotbar.initialized = true
 end)
