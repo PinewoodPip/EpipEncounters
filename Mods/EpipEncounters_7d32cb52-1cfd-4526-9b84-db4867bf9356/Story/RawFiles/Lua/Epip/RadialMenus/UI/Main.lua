@@ -486,7 +486,9 @@ end
 
 ---@override
 function UI:Hide()
-    UI._CurrentMenu:DeselectSegment()
+    if UI._CurrentMenu then
+        UI._CurrentMenu:DeselectSegment()
+    end
     Client.UI._BaseUITable.Hide(UI)
     Client.UI.Input.SetMouseWheelBlocked(false) -- Unblock mouse wheel.
 end

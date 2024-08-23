@@ -523,7 +523,12 @@ end, {StringID = "DefaultImplementation"})
 UI.Hooks.UpdateSlot:Subscribe(function (ev)
     local newType = Settings.SlotType:GetValue() ---@type Features.RadialMenus.Slot.Type
     if newType == "Skill" then
-        ev.Slot = RadialMenus.CreateSkillSlot(Settings.Skill:GetValue())
+        local skill = Settings.Skill:GetValue()
+        if skill ~= "" then
+            ev.Slot = RadialMenus.CreateSkillSlot(skill)
+        else
+            ev.Slot = RadialMenus.CreateEmptySlot()
+        end
     elseif newType == "InputAction" then
         ev.Slot = RadialMenus.CreateInputActionSlot(Settings.InputAction:GetValue())
     elseif newType == "Item" then
