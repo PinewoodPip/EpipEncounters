@@ -5,7 +5,7 @@ local ButtonPrefab = Generic.GetPrefab("GenericUI_Prefab_Button")
 ---Prefab for a button that hides the UI.
 ---@class GenericUI_Prefab_CloseButton : GenericUI_Prefab_Button
 local CloseButton = {
-    DEFAULT_STYLE = ButtonPrefab:GetStyle("Close"),
+    DEFAULT_STYLE = ButtonPrefab.STYLES.Close,
     Hooks = {
         CanClose = {}, ---@type Hook<{CanClose:boolean}> -- Defaults to `true`.
     },

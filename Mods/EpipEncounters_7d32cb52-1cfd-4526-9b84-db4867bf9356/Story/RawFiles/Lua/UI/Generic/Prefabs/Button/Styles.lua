@@ -4,7 +4,7 @@ local ButtonTextures = T.TEXTURES.BUTTONS
 local StateButtonTextures = T.TEXTURES.STATE_BUTTONS
 local Generic = Client.UI.Generic
 
-local Button = Generic.GetPrefab("GenericUI_Prefab_Button")
+local Button = Generic.GetPrefab("GenericUI_Prefab_Button") ---@class GenericUI_Prefab_Button
 
 ---Creates a Button styles from a table of textures with keys `IDLE`, `HIGHLIGHTED`, `PRESSED` and `DISABLED`.
 ---@param textures {IDLE:TextureLib_Texture?, HIGHLIGHTED:TextureLib_Texture?, PRESSED:TextureLib_Texture?, DISABLED:TextureLib_Texture?}
@@ -20,8 +20,8 @@ local function CreateStyle(textures, otherFields)
     return style
 end
 
----@type table<string, GenericUI_Prefab_Button_Style>
-local styles = {
+----@type table<string, GenericUI_Prefab_Button_Style> Type annotation must be omitted as it breaks autocompletion.
+Button.STYLES = {
     ArrowDown = {
         IdleTexture = ButtonTextures.ARROWS.DOWN.IDLE,
         HighlightedTexture = ButtonTextures.ARROWS.DOWN.HIGHLIGHTED,
@@ -499,6 +499,6 @@ local styles = {
     },
 }
 
-for id,style in pairs(styles) do
+for id,style in pairs(Button.STYLES) do
     Button:RegisterStyle(id, style)
 end

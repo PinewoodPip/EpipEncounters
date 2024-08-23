@@ -184,7 +184,7 @@ end
 
 ---Initializes the close button.
 function UI._SetupCloseButton()
-    local button = CloseButtonPrefab.Create(UI, "CloseButton", UI.Root, ButtonPrefab:GetStyle("CloseStone"))
+    local button = CloseButtonPrefab.Create(UI, "CloseButton", UI.Root, ButtonPrefab.STYLES.CloseStone)
     button:SetPositionRelativeToParent("TopRight", -45, 20)
 end
 

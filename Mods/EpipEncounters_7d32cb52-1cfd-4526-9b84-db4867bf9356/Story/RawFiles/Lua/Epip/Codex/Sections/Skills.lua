@@ -495,7 +495,7 @@ function Section:_SetupSchoolButtons()
     list:Move(self.SCHOOL_BUTTONS_OFFSET:unpack())
 
     for _,id in ipairs(Skills.SCHOOL_ORDER) do
-        local button = ButtonPrefab.Create(Codex.UI, "Skills_" .. id, list, ButtonPrefab:GetStyle("SquareStone"))
+        local button = ButtonPrefab.Create(Codex.UI, "Skills_" .. id, list, ButtonPrefab.STYLES.SquareStone)
 
         -- Set this to be the only school if clicked (mimicking vanilla skillbook behaviour)
         button.Events.Pressed:Subscribe(function (_)

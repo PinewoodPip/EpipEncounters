@@ -760,7 +760,7 @@ function UI._Initialize(board)
         UI.GameOverText = gameOverText
 
         -- Give up / new game button
-        local resetButton = ButtonPrefab.Create(UI, "ForfeitButton", bg, ButtonPrefab:GetStyle("LargeRed"))
+        local resetButton = ButtonPrefab.Create(UI, "ForfeitButton", bg, ButtonPrefab.STYLES.LargeRed)
         resetButton:SetLabel(Bedazzled.TranslatedStrings.Label_GiveUp:GetString())
         resetButton.Events.Pressed:Subscribe(function (_)
             UI._OnResetPressed()

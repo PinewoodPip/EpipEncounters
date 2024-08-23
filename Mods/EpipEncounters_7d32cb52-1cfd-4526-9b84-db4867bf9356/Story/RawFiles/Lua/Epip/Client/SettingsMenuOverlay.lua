@@ -59,15 +59,15 @@ Overlay.UI = UI
 ---------------------------------------------
 
 ---@type GenericUI_Prefab_Button_Style
-UI.LARGE_BUTTON_STYLE = table.shallowCopy(ButtonPrefab:GetStyle("LargeRed"))
+UI.LARGE_BUTTON_STYLE = table.shallowCopy(ButtonPrefab.STYLES.LargeRed)
 UI.LARGE_BUTTON_STYLE.Sound = "UI_Gen_Accept" -- UI_Gen_Apply maps to the same sound.
 
 ---@type GenericUI_Prefab_Button_Style
-UI.TAB_BUTTON_STYLE_INACTIVE = table.shallowCopy(ButtonPrefab:GetStyle("TransparentLargeDark"))
+UI.TAB_BUTTON_STYLE_INACTIVE = table.shallowCopy(ButtonPrefab.STYLES.TransparentLargeDark)
 UI.TAB_BUTTON_STYLE_INACTIVE.Sound = "UI_Gen_BigButton_Click"
 
 ---@type GenericUI_Prefab_Button_Style
-UI.TAB_BUTTON_STYLE_ACTIVE = table.shallowCopy(ButtonPrefab:GetStyle("LargeRedWithArrows"))
+UI.TAB_BUTTON_STYLE_ACTIVE = table.shallowCopy(ButtonPrefab.STYLES.LargeRedWithArrows)
 UI.TAB_BUTTON_STYLE_ACTIVE.Sound = "UI_Gen_BigButton_Click"
 
 ---------------------------------------------

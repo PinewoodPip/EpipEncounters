@@ -52,7 +52,7 @@ end
 ---Initializes the elements of the UI.
 function UI._Initialize()
     if UI._Initialized then return end
-    local buttonStyle = Button:GetStyle("SmallRed")
+    local buttonStyle = Button.STYLES.SmallRed
     local bg = UI:CreateElement("Root", "GenericUI_Element_Texture")
     bg:SetTexture(Textures.PANELS.CLIPBOARD_LARGE)
 

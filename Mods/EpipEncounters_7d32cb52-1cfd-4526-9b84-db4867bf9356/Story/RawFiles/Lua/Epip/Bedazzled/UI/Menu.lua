@@ -390,7 +390,7 @@ function UI:_Initialize()
     UI.Events.RenderSettings:Throw()
     settingsList:SetPositionRelativeToParent("Top", 10, 160)
 
-    local startButton = Button.Create(UI, "StartButton", panel, Button:GetStyle("GreenMedium"))
+    local startButton = Button.Create(UI, "StartButton", panel, Button.STYLES.GreenMedium)
     startButton:SetLabel(TSK.Label_Bedazzle)
     startButton:SetPositionRelativeToParent("Bottom", 0, -44)
 

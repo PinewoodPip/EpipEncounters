@@ -302,7 +302,7 @@ function UI._Initialize()
     local closeButton = CloseButtonPrefab.Create(UI, "CloseButton", bg.Background)
     closeButton:SetPositionRelativeToParent("TopLeft", 9, 9)
 
-    local lootAllButton = ButtonPrefab.Create(UI, "LootAllButton", bg.Background, ButtonPrefab:GetStyle("GreenSmallTextured"))
+    local lootAllButton = ButtonPrefab.Create(UI, "LootAllButton", bg.Background, ButtonPrefab.STYLES.GreenSmallTextured)
     lootAllButton:SetLabel(TSK.Label_LootAll)
     lootAllButton:SetPositionRelativeToParent("Bottom", 0, -13)
     lootAllButton.Events.Pressed:Subscribe(function (_)
@@ -387,7 +387,7 @@ function UI._InitalizeSettingsPanel()
     list:RepositionElements()
 
     -- Settings button
-    local settingsButton = ButtonPrefab.Create(UI, "SettingsButton", UI.Background:GetRootElement(), ButtonPrefab:GetStyle("SettingsRed"))
+    local settingsButton = ButtonPrefab.Create(UI, "SettingsButton", UI.Background:GetRootElement(), ButtonPrefab.STYLES.SettingsRed)
     settingsButton:SetPositionRelativeToParent("TopRight", -13, 13)
     -- Toggle panel visibility
     settingsButton.Events.Pressed:Subscribe(function (_)

@@ -127,7 +127,7 @@ function UI._Initialize()
     UI.TopBar = topBar
 
     -- Edit button
-    local editButton = ButtonPrefab.Create(UI, "EditMenuButton", topBar:GetRootElement(), ButtonPrefab:GetStyle("EditGreen"))
+    local editButton = ButtonPrefab.Create(UI, "EditMenuButton", topBar:GetRootElement(), ButtonPrefab.STYLES.EditGreen)
     editButton:SetPositionRelativeToParent("Left", 20, 0)
     editButton.Events.Pressed:Subscribe(function (_)
         UI.EditCurrentMenu()
@@ -137,7 +137,7 @@ function UI._Initialize()
     local header = TextPrefab.Create(UI, "Header", topBar:GetRootElement(), "", "Center", UI.HEADER_SIZE)
     UI.Header = header
 
-    local newMenuButton = ButtonPrefab.Create(UI, "NewMenuButton", topBar:GetRootElement(), ButtonPrefab:GetStyle("DOS1IncrementLarge"))
+    local newMenuButton = ButtonPrefab.Create(UI, "NewMenuButton", topBar:GetRootElement(), ButtonPrefab.STYLES.DOS1IncrementLarge)
     newMenuButton:SetPositionRelativeToParent("Right", -20, 0)
     newMenuButton.Events.Pressed:Subscribe(function (_)
         UI.RequestNewMenu()

@@ -340,14 +340,14 @@ function UI._Initialize()
     local buttonsBar = root:AddChild("BottomButtons", "GenericUI_Element_HorizontalList")
     UI.ButtonsBar = buttonsBar
 
-    local createButton = ButtonPrefab.Create(UI, "CreateButton", buttonsBar, ButtonPrefab:GetStyle("DOS1Blue"))
+    local createButton = ButtonPrefab.Create(UI, "CreateButton", buttonsBar, ButtonPrefab.STYLES.DOS1Blue)
     createButton:SetLabel(CommonStrings.Create)
     createButton.Events.Pressed:Subscribe(function (_)
         UI.Finish()
     end)
     UI.CreateButton = createButton
 
-    local deleteButton = ButtonPrefab.Create(UI, "DeleteButton", buttonsBar, ButtonPrefab:GetStyle("RedDOS1"))
+    local deleteButton = ButtonPrefab.Create(UI, "DeleteButton", buttonsBar, ButtonPrefab.STYLES.RedDOS1)
     deleteButton:SetLabel(CommonStrings.Delete)
     deleteButton.Events.Pressed:Subscribe(function (_)
         UI.RequestDeleteMenu()
@@ -355,7 +355,7 @@ function UI._Initialize()
     UI.DeleteButton = deleteButton
 
     -- Close button
-    local closeButton = CloseButtonPrefab.Create(UI, "CloseButton", root, ButtonPrefab:GetStyle("CloseStone"))
+    local closeButton = CloseButtonPrefab.Create(UI, "CloseButton", root, ButtonPrefab.STYLES.CloseStone)
     closeButton:SetPositionRelativeToParent("TopRight", -47, 58)
 
     -- Set panel size

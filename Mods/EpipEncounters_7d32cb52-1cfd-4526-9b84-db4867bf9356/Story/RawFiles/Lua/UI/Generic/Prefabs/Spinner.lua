@@ -43,14 +43,14 @@ Generic.RegisterPrefab("GenericUI_Prefab_Spinner", Spinner)
 -- TODO extract to separate script
 ---@type GenericUI.Prefabs.Spinner.Style
 Spinner.DEFAULT_STYLE = {
-    PlusButtonStyle = ButtonPrefab:GetStyle("IncrementCharacterSheet"),
-    MinusButtonStyle = ButtonPrefab:GetStyle("DecrementCharacterSheet"),
+    PlusButtonStyle = ButtonPrefab.STYLES.IncrementCharacterSheet,
+    MinusButtonStyle = ButtonPrefab.STYLES.DecrementCharacterSheet,
     AmountLabelSize = V(50, 30),
 }
 Spinner:RegisterStyle("Default", Spinner.DEFAULT_STYLE)
 Spinner:RegisterStyle("DOS1Large", {
-    PlusButtonStyle = ButtonPrefab:GetStyle("DOS1IncrementLarge"),
-    MinusButtonStyle = ButtonPrefab:GetStyle("DOS1DecrementLarge"),
+    PlusButtonStyle = ButtonPrefab.STYLES.DOS1IncrementLarge,
+    MinusButtonStyle = ButtonPrefab.STYLES.DOS1DecrementLarge,
     AmountLabelSize = V(75, 30),
 })
 
