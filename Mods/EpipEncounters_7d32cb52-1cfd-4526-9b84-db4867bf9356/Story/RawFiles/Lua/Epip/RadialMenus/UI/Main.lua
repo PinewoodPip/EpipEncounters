@@ -13,6 +13,7 @@ local RadialMenuPrefab = RadialMenus:GetClass("Features.RadialMenus.Prefabs.Radi
 local TSK = RadialMenus.TranslatedStrings
 local UI = Generic.Create("Features.RadialMenus", {Layer = 7, Visible = false}) ---@class Features.RadialMenus.UI : GenericUI_Instance
 UI.HEADER_SIZE = V(200, 30)
+UI.EDIT_SLOT_LABEL_SIZE = V(400, 30)
 UI.OPEN_TWEEN_DURATION = 0.15 -- In seconds.
 UI.OPEN_TWEEN_STARTING_SCALE = 0.4
 UI.OPEN_TWEEN_STARTING_ALPHA = 0.2
@@ -97,11 +98,12 @@ end
 function UI._UpdateTopBar()
     local header = UI.Header
     local menu = UI._GetCurrentMenu()
-    if menu then
-        header:SetText(menu.Name)
-        header:SetPositionRelativeToParent("Center")
-    end
+    local headerLabel = menu and menu.Name or TSK.Label_RadialMenus
+    header:SetText(headerLabel)
+    header:SetPositionRelativeToParent("Center")
     UI.EditMenuButton:SetVisible(menu ~= nil)
+    UI.EditSlotHintLabel:SetPositionRelativeToParent("Top", 0, 100)
+    UI.EditSlotHintLabel:SetVisible(menu and menu:GetClassName() == "Features.RadialMenus.Menu.Custom" and Client.IsUsingKeyboardAndMouse() or false) -- TODO use a better check, per-slot
 end
 
 ---Requests a new menu to be created.
@@ -119,7 +121,7 @@ function UI._Initialize()
     UI.Root = root
 
     -- "No menus" hint
-    local noMenusLabel = TextPrefab.Create(UI, "NoMenusLabel", UI.Root, TSK.Label_NoMenus, "Center", V(500, 50))
+    local noMenusLabel = TextPrefab.Create(UI, "NoMenusLabel", root, TSK.Label_NoMenus, "Center", V(500, 50))
     UI.NoMenusLabel = noMenusLabel
 
     -- Create top buttons & labels bar
@@ -145,9 +147,11 @@ function UI._Initialize()
     UI.NewMenuButton = newMenuButton
 
     local buttonsBar = root:AddChild("ButtonList", "GenericUI_Element_HorizontalList")
-    -- newMenuButton:SetLabel(TSK.Label_NewMenu)
     buttonsBar:RepositionElements()
     buttonsBar:SetPositionRelativeToParent("Bottom")
+
+    local editSlotLabel = TextPrefab.Create(UI, "EditSlotLabel", root, TSK.Label_EditSlotHint, "Center", UI.EDIT_SLOT_LABEL_SIZE)
+    UI.EditSlotHintLabel = editSlotLabel
 
     UI._ResizePanel()
 
@@ -404,7 +408,7 @@ function UI._ResizePanel()
     uiObj:Resize(panelSize[1], panelSize[2], uiObj:GetUIScaleMultiplier()) -- Necessary to avoid cropping on ultrawide resolutions. Resizing is done in flash space.
     root:SetBackground("Black", panelSize:unpack())
     UI._RepositionMenus()
-    topBar:SetPositionRelativeToParent("Top", 0, 40)
+    topBar:SetPositionRelativeToParent("Top", 0, 20)
     UI:SetPositionRelativeToViewport("topleft", "topleft")
     UI.NoMenusLabel:SetPositionRelativeToParent("Center")
 end

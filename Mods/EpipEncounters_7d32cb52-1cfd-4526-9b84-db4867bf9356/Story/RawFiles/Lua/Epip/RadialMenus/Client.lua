@@ -39,10 +39,20 @@ local RadialMenus = {
             Text = "Cycles to the next radial menu while the UI is open.",
             ContextDescription = [[Keybind description for "Radial Menus: Next Menu"]],
         },
+        Label_RadialMenus = {
+            Handle = "ha50291ebgfcdbg4a3bgbd43g75802d9d0b67",
+            Text = "Radial Menus",
+            ContextDescription = [[Feature name]],
+        },
         Label_NewMenu = {
             Handle = "he5d99c4bg29e2g4094g8a5bgddba7436dfd9",
             Text = "New Menu",
             ContextDescription = [[Button label]],
+        },
+        Label_EditSlotHint = {
+            Handle = "hba173410g9d70g4a7fg9fdbg23ba719d69c7",
+            Text = "Right-click a slot to edit it.",
+            ContextDescription = [[Hint at the bottom of the UI when using a custom menu]],
         },
         Label_CreateNewMenu = {
             Handle = "h10569261ge489g4575g9010gcac5fdf393bd",

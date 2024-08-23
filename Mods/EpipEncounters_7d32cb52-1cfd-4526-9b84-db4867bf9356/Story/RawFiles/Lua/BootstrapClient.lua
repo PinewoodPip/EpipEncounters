@@ -563,7 +563,6 @@ LOAD_ORDER = {
             "Epip/RadialMenus/UI/MenuCreator.lua",
             "Epip/RadialMenus/UI/MenuCreator/Navigation.lua",
         },
-        WIP = true,
     },
 
     "Epip/Client/AprilFoolsCharacterSheet.lua",
