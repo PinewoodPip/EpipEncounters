@@ -261,6 +261,19 @@ end
 -- METHODS
 ---------------------------------------------
 
+local function CenterElement(element, parent, axis, elementSizeOverride)
+    local elementSize = element.height
+    local size = "height"
+    if axis == "x" then size = "width" end
+    if axis == "x" then
+        elementSize = element.width
+    end
+    if elementSizeOverride then
+        elementSize = elementSizeOverride
+    end
+    element[axis] = parent[size] / 2 - elementSize / 2
+end
+
 ---Get the real active row of the current char - the one the game remembers.
 ---@return integer
 function Hotbar.GetCurrentRealRow()

@@ -126,7 +126,7 @@ local _EpicEnemiesActivationCondition = {
 ---@field Prerequisites table<string, true>? List of effect IDs to apply beforehand, consuming budget accordingly if not yet applied.
 ---@field DiscountPrerequisites boolean? If `true`, the cost of the effect will be the sum of the base cost and every prerequisite that hasn't been obtained yet. Otherwise, the cost will be the sum of the base cost and base costs of all prerequisites, regardless of whether the character already has them. Defaults to `true`.
 ---@field AllowedAIArchetypes table<aitype, true>? If set, only characters with the specified AI archetypes will be able to roll the effect.
-_EpicEnemiesEffect = {
+local _EpicEnemiesEffect = {
     Description = "NO DESCRIPTION",
     Name = "NO NAME",
     DefaultCost = 10,

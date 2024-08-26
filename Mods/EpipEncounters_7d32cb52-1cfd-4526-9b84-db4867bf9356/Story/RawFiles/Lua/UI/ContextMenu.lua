@@ -545,9 +545,13 @@ function ContextMenu.AddCheckbox(ui, menuID, elementID, text, checked, greyedOut
     checkbox.text_txt.x = checkbox.text_txt.x + 20
 end
 
-function ContextMenu.AddHeader(ui, menuID, elementID, text, data)
-    local root = ui:GetRoot()
+-- Incredible technology. The work of a maestro
+local function CenterText(element, offset)
+    element.htmlText = '<p align="center">' .. element.htmlText .. '</p>'
+    element.x = element.x + (offset or 0)
+end
 
+function ContextMenu.AddHeader(ui, menuID, elementID, text, data)
     ContextMenu.AddButton(ui, menuID, elementID, text, false, true, data)
 
     local element = ContextMenu.GetLastElement(ui, menuID)

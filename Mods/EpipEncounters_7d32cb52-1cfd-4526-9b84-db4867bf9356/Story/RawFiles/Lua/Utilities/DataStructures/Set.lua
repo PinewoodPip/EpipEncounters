@@ -83,7 +83,7 @@ end
 ---@iterator
 function Set.Iterator(self)
     local elements = self._Elements -- Upvalued for faster access.
-    local key
+    local key, _
     local generator = function ()
         if key then
             key, _ = next(elements, key)

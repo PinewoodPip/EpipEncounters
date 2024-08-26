@@ -194,8 +194,6 @@ LOAD_ORDER = {
     },
     "EpipEncountersServer.lua",
 
-    -- "GreatforgeExclude.lua",
-
     "Epip/Server/Shroud.lua",
     "Epip/Server/AMERUI_Controller.lua",
 
