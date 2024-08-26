@@ -641,12 +641,6 @@ LOAD_ORDER = {
     {ScriptSet = "Epip/GreatforgeDragDrop", RequiresEE = true},
     {ScriptSet = "Epip/Greatforge/MassDismantle", RequiresEE = true},
 
-    -- AMER UI controller support
-    -- "Epip/Client/AMERUI_Controller/AMERUI_Controller.lua",
-    -- "Epip/Client/AMERUI_Controller/Handlers/Ascension/MainHub.lua",
-    -- "Epip/Client/AMERUI_Controller/Handlers/Ascension/Gateway.lua",
-    -- "Epip/Client/AMERUI_Controller/Handlers/Ascension/Cluster.lua",
-
     {Script = "Epip/ContextMenus/Greatforge/Client.lua", RequiresEE = true},
     "Epip/ContextMenus/PlayerInfo.lua",
 
