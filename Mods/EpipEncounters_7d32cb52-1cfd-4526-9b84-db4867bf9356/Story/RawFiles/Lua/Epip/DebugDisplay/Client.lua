@@ -11,8 +11,9 @@ DebugDisplay.TrackedModVersions = {
     {GUID = Mod.GUIDS.EE_ORIGINS, Name = "Origins"},
     {GUID = Mod.GUIDS.EE_DERPY, Name = "Derpy's"},
 }
-DebugDisplay.BG_SIZE = Vector.Create(200, 200)
+DebugDisplay.BG_SIZE = Vector.Create(200, 240)
 DebugDisplay.PING_INTERVAL = 0.8
+DebugDisplay.MEMORY_UPDATE_INTERVAL = 0.5
 DebugDisplay.pingTime = Ext.Utils.MonotonicTime()
 
 ---------------------------------------------
@@ -61,6 +62,17 @@ function DebugDisplay.UpdateModVersions()
     end
 
     element:SetText(text)
+end
+
+---Updates the lua memory display.
+function DebugDisplay.UpdateMemoryDisplay()
+    local memUsage = collectgarbage("count")
+    local megaBytes = memUsage / 1024
+    DebugDisplay.MemoryLabel:SetText(Text.Format("Lua: %sMB", {
+        FormatArgs = {
+            Text.Round(megaBytes, 2)
+        }
+    }))
 end
 
 ---@param mod Module
@@ -127,7 +139,7 @@ Net.RegisterListener("EPIPENCOUNTERS_DebugDisplay_Ping", function (payload)
     end
 end)
 
-Ext.Events.Tick:Subscribe(function (ev)
+Ext.Events.Tick:Subscribe(function (_)
     DebugDisplay.AddTick()
 end)
 
@@ -164,12 +176,13 @@ function DebugDisplay:__Setup()
 
     local tickCounter = TextPrefab.Create(ui, "TickCounter", container, "", "Left", textSize)
 
-    Ext.Events.Tick:Subscribe(function (ev)
+    Ext.Events.Tick:Subscribe(function (_)
         DebugDisplay.SetClientTicks(#DebugDisplay.ticks)
     end)
 
     local serverTickCounter = TextPrefab.Create(ui, "ServerTickCounter", container, "", "Left", textSize)
     local pingCounter = TextPrefab.Create(ui, "PingLabel", container, "", "Left", textSize)
+    local memoryLabel = TextPrefab.Create(ui, "MemoryLabel", container, "", "Left", textSize)
     local extVersionText = TextPrefab.Create(ui, "ExtVersionLabel", container, Text.Format("Ext: v%s", {FormatArgs = {Ext.Utils.Version()}}), "Left", textSize)
 
     local modVersionText = TextPrefab.Create(ui, "ModVersionLabel", container, "", "Left", Vector.Create(DebugDisplay.BG_SIZE[1], 200))
@@ -189,14 +202,18 @@ function DebugDisplay:__Setup()
     DebugDisplay.ModVersionText = modVersionText
     DebugDisplay.ExtVersionText = extVersionText
     DebugDisplay.PingLabel = pingCounter
+    DebugDisplay.MemoryLabel = memoryLabel
 
     DebugDisplay.UpdateModVersions()
 
     DebugDisplay.Toggle(Settings.GetSettingValue("Epip_Developer", "Developer_DebugDisplay"))
 
-    Timer.Start(DebugDisplay.PING_INTERVAL, function (ev)
+    Timer.Start(DebugDisplay.PING_INTERVAL, function (_)
         if DebugDisplay:IsEnabled() then
             DebugDisplay.SendPingRequest()
         end
+    end):SetRepeatCount(-1)
+    Timer.Start(DebugDisplay.MEMORY_UPDATE_INTERVAL, function (_)
+        DebugDisplay.UpdateMemoryDisplay()
     end):SetRepeatCount(-1)
 end
