@@ -186,7 +186,7 @@ end
 ---@param mod string
 ---@param data OptionsSettingsOption[]
 function OptionsSettings.RegisterOptions(mod, data)
-    for i,option in pairs(data) do
+    for _,option in pairs(data) do
         OptionsSettings.RegisterOption(mod, option)
     end
 end

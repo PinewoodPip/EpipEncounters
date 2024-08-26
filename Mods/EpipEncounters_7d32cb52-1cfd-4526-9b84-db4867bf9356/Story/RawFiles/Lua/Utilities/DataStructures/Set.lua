@@ -82,12 +82,13 @@ end
 
 ---@iterator
 function Set.Iterator(self)
+    local elements = self._Elements -- Upvalued for faster access.
     local key
     local generator = function ()
         if key then
-            key, _ = next(self._Elements, key)
+            key, _ = next(elements, key)
         else -- Start with the first key.
-            key = pairs(self._Elements)(self._Elements)
+            key = pairs(elements)(elements)
         end
 
         return key

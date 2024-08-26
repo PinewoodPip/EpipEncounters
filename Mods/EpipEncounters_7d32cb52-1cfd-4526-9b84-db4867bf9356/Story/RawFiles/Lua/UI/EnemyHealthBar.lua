@@ -174,7 +174,7 @@ function Bar._UpdateTexts(originalHeader)
         if char then
             originalHeader = Character.GetDisplayName(char)
         elseif item then
-            originalHeader = item.DisplayName
+            originalHeader = Item.GetDisplayName(item)
         end
     end
 

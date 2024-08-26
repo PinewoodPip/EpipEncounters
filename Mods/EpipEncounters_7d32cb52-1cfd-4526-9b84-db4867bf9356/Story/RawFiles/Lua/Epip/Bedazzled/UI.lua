@@ -717,7 +717,7 @@ function UI._Initialize(board)
         gemContainer:SetPosition(UI.BACKGROUND_SIZE[1]/2 - BOARD_WIDTH/2, 300)
 
         -- Frame for gem area
-        local gemAreaFrame = SlicedTexture.Create(UI, "GemAreaFrame", gemContainer, SlicedTexture:GetStyle("SimpleTooltip"), gemAreaSize + UI.PLAY_AREA_FRAME_BORDER_SIZE)
+        local gemAreaFrame = SlicedTexture.Create(UI, "GemAreaFrame", gemContainer, SlicedTexture.STYLES.SimpleTooltip, gemAreaSize + UI.PLAY_AREA_FRAME_BORDER_SIZE)
         gemAreaFrame:SetPosition(-UI.PLAY_AREA_FRAME_BORDER_SIZE[1] / 2, -UI.PLAY_AREA_FRAME_BORDER_SIZE[2] / 2)
 
         local closeButton = bg:AddChild("CloseButton", "GenericUI_Element_Button")

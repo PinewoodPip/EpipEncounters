@@ -124,7 +124,7 @@ local Hotbar = {
             "Enabled",
         },
     },
-    
+
     POSITIONING = {
         CYCLERS = {
             X = 315,
@@ -563,21 +563,18 @@ end
 ---Clear the skillbar data of char on a specific row, optionally filtering by a predicate function.
 ---@param char EclCharacter
 ---@param row integer
----@param predicate fun(char: EclCharacter, slot: EocSkillBarItem)?
+---@param predicate (fun(char: EclCharacter, slot: EocSkillBarItem):boolean)?
 function Hotbar.ClearRow(char, row, predicate)
     local skillBar = char.PlayerData.SkillBarItems
-
     local startingIndex = (row - 1) * Hotbar.GetSlotsPerRow()
     for i=1,Hotbar.GetSlotsPerRow(),1 do
         local slotIndex = startingIndex + i
         local slot = skillBar[slotIndex]
-
         if predicate == nil or predicate(char, slot) then
             slot.Type = "None"
             slot.SkillOrStatId = ""
         end
     end
-
     Hotbar:DebugLog("Cleared row " .. row)
 end
 

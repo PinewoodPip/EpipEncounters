@@ -235,6 +235,7 @@ end
 ---@param height number
 ---@param _ unknown
 ---@param align unknown
+---@diagnostic disable-next-line: unused-local
 function Generic._OnElementShowTooltip(ev, id, x, y, width, height, _, align)
     local ui = Generic.GetInstance(ev.UI:GetTypeId())
     local mouseX, mouseY = ui:GetMousePosition()

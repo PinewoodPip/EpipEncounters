@@ -358,7 +358,7 @@ end
 function Client._ThrowHostDetermined()
     if not Client.IS_HOST then
         Client.IS_HOST = true
-        Client:Log("Client is hosting.")
+        Client:__Log("Client is hosting.")
         Client:FireEvent("DeterminedAsHost")
     end
 end

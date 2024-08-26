@@ -41,13 +41,12 @@ Client.UI.ContextMenu.RegisterElementListener("hotBar_ShiftRow", "buttonPressed"
     Hotbar.ShiftSlots(Hotbar.contextMenuSlot, params.Direction)
 end)
 
--- Remove unmemorized.
+-- Remove unmemorized skills.
 Client.UI.ContextMenu.RegisterElementListener("hotBarRow_RemoveUnmemorized", "buttonPressed", function(char, _)
-    Hotbar.ClearRow(char, Hotbar.currentLoadoutRow, function(char, slot)
+    Hotbar.ClearRow(char, Hotbar.currentLoadoutRow, function(predicateChar, slot)
         if slot.Type == "Skill" then
             ---@type EclSkill
-            local skill = char.SkillManager.Skills[slot.SkillOrStatId]
-            
+            local skill = predicateChar.SkillManager.Skills[slot.SkillOrStatId]
             return skill == nil or not skill.IsLearned
         end
     end)

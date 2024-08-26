@@ -62,19 +62,6 @@ function Chat.AddFormattedMessage(tab, userName, message)
     Chat.AddMessage(tab, msg)
 end
 
----Clear a chat tab's messages.
----@param tab integer|string
--- function Chat.ClearTab(tab)
---     local root = Chat:GetRoot()
---     if type(tab) == "string" then tab = Chat.CUSTOM_TABS[tab] end
-
---     if not tab then
---         tab = root.log_mc.currentTab
---     end
-
---     root.log_mc.clearTab(tab)
--- end
-
 ---Render raw text onto the chatbox.
 ---@param tab? integer|string Tab ID. See ChatLog.TABS enum. For custom tabs, use your string ID. Defaults to current tab.
 ---@param text string

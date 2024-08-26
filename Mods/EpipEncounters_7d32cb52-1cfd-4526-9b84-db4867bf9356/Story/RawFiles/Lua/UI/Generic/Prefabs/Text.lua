@@ -1,6 +1,6 @@
 
 local Generic = Client.UI.Generic
-local TextElement = Generic.ELEMENTS.Text
+local TextElement = Generic.ELEMENTS["Text"]
 local TextLib = Text
 
 ---@class GenericUI_Prefab_Text : GenericUI_Prefab, GenericUI_Element_Text
@@ -15,7 +15,7 @@ local Text = {
     }
 }
 Generic.RegisterPrefab("GenericUI_Prefab_Text", Text)
-InheritMultiple(Text, Generic._Prefab, TextElement) -- Inheritance with basic Text class works because all methods fetch the MC by ID
+InheritMultiple(Text, Generic:GetClass("GenericUI_Prefab"), TextElement) -- Inheritance with basic Text class works because all methods fetch the MC by ID
 
 ---@diagnostic disable-next-line: duplicate-doc-alias
 ---@alias GenericUI_PrefabClass "GenericUI_Prefab_Text"

@@ -289,7 +289,7 @@ function UI._Initialize()
     if UI._Initialized then return end
 
     local root = UI:CreateElement("Root", "GenericUI_Element_Empty")
-    local bg = SlicedTexture.Create(UI, "Background", root, SlicedTexture:GetStyle("SimpleTooltip"), V(1800, UI.ACTION_HEIGHT + UI.PADDING)) -- TODO autosize
+    local bg = SlicedTexture.Create(UI, "Background", root, SlicedTexture.STYLES.SimpleTooltip, V(1800, UI.ACTION_HEIGHT + UI.PADDING)) -- TODO autosize
     UI.Background = bg
 
     local actionList = bg:AddChild("ActionList", "GenericUI_Element_HorizontalList")
