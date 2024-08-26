@@ -233,8 +233,13 @@ LOAD_ORDER = {
 
     "UI/StatusConsole.lua",
 
-    "EpicStatsKeywords.lua",
-    "EpicStatsDefinitions.lua",
+    {
+        ScriptSet = "Epip/EpicEncountersStatsTab",
+        Scripts = {
+            "Epip/EpicEncountersStatsTab/StatDefinitions.lua"
+        },
+        RequiresEE = true,
+    },
 
     "UI/EnemyHealthBar.lua",
 

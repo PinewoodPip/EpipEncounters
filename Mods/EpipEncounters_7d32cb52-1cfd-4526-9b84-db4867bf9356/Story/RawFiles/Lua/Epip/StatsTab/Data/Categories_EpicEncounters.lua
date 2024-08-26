@@ -193,6 +193,7 @@ local CategoriesOrder = {
     "Keyword_Centurion",
     "Keyword_Defiance",
     "Keyword_Elementalist",
+    "Keyword_IncarnateChampion",
     "Keyword_Occultist",
     "Keyword_Paucity",
     "Keyword_Predator",

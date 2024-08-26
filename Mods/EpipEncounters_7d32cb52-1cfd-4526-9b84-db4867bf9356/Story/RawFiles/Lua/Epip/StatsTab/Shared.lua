@@ -147,7 +147,9 @@ function EpipStats.AddNodeStat(clusterId, nodeIndex, nodeSubIndex, keyword, keyw
     -- Add stat to category
     local category = "Keyword_" .. keyword
     if EpipStats.CATEGORIES[category] then
-        table.insert(EpipStats.CATEGORIES[category].Stats, statID)
+        if keyword ~= "IncarnateChampion" then -- Do not show incarnate champion stats, as they do not have a keyword icon.
+            table.insert(EpipStats.CATEGORIES[category].Stats, statID)
+        end
     else
         EpipStats:LogError("Keyword category missing: " .. category)
     end

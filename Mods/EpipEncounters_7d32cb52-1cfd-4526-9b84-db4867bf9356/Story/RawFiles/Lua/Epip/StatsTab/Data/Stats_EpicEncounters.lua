@@ -1,5 +1,6 @@
 
 local CustomStats = Epip.GetFeature("Feature_CustomStats")
+local KeywordStatDefinitions = Epip.GetFeature("Features.EpicEncountersStatsTabKeywords")
 
 ---@type table<string, Feature_CustomStats_Stat>
 local EpicEncountersStats = {
@@ -177,15 +178,15 @@ for id,stat in pairs(EpicEncountersStats) do
     CustomStats.RegisterStat(id, stat)
 end
 
--- Create Ascension stats from old data
+-- Map cluster IDs to user-friendly aspect name
 Data.Game.ASPECT_NAMES = {}
--- TODO cache
-for _,data in pairs(epicStatsKeywords) do
+for _,data in pairs(KeywordStatDefinitions.KEYWORD_STATS) do
     if not Data.Game.ASPECT_NAMES[data.ClusterId] then
         Data.Game.ASPECT_NAMES[data.ClusterId] = data.SourceAspect
     end
 end
-for _,data in pairs(epicStatsKeywords) do
+-- Create Ascension stats definitions
+for _,data in pairs(KeywordStatDefinitions.KEYWORD_STATS) do
     CustomStats.AddNodeStat(data.ClusterId, data.NodeIndex, data.SubNodeIndex, data.Keyword, data.Type, {
         Name = data.Display,
         Description = data.Description,

@@ -185,8 +185,13 @@ LOAD_ORDER = {
     "Game/Ascension/Shared.lua",
     "Game/Ascension/Server.lua",
 
-    "EpicStatsKeywords.lua",
-    "EpicStatsDefinitions.lua",
+    {
+        ScriptSet = "Epip/EpicEncountersStatsTab",
+        Scripts = {
+            "Epip/EpicEncountersStatsTab/StatDefinitions.lua"
+        },
+        RequiresEE = true,
+    },
     "EpipEncountersServer.lua",
 
     -- "GreatforgeExclude.lua",
