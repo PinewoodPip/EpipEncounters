@@ -569,6 +569,7 @@ end
 
 ---@class InputLib_InputEventDefinition
 ---@field NameHandle TranslatedStringHandle
+---@field EventName string
 ---@field ReferenceName string
 ---@field EventID integer
 ---@field StringID string
@@ -578,12 +579,6 @@ local _InputEventDefinition = {}
 function _InputEventDefinition:GetName()
     return Ext.L10N.GetTranslatedString(self.NameHandle, self.ReferenceName)
 end
-
----@class InputLib_InputEventDefinition
----@field EventName string
----@field CategoryName string
----@field ReferenceString string
----@field NumID integer
 
 ---@class InputLib_Binding
 local _Binding = {}
@@ -702,36 +697,8 @@ end
 
 ---@param eventID string
 ---@return integer
-function Input.GetGameEventNumID(eventID)
-    local manager = Input.GetManager()
-    local numID
-
-    for i,def in pairs(manager.InputDefinitions) do -- TODO cache these
-        if def.EventName == eventID then
-            numID = i
-            break
-        end
-    end
-
-    return numID
-end
-
----@param id string|integer
----@return InputLib_InputEventDefinition
-function Input.GetGameEvent(id)
-    local manager = Input.GetManager()
-    if type(id) == "string" then id = Input.GetGameEventNumID(id) end
-    local data = manager.InputDefinitions[id]
-
-    ---@type InputLib_InputEventDefinition
-    local event = {
-        EventName = data.EventName,
-        CategoryName = data.CategoryName,
-        ReferenceString = data.EventDesc.Handle.ReferenceString,
-        NumID = id,
-    }
-
-    return event
+function Input.GetInputEventNumID(eventID)
+    return Input.INPUT_EVENT_STRING_ID_MAP[eventID]
 end
 
 ---Returns the binding for an InputEvent.
@@ -741,7 +708,7 @@ end
 ---@param playerIndex integer? Defaults to 1 (player index 0 in engine).
 ---@return InputLib_InputEventBinding?
 function Input.GetBinding(eventID, deviceType, bindingIndex, playerIndex)
-    if type(eventID) == "string" then eventID = Input.GetGameEventNumID(eventID) end
+    if type(eventID) == "string" then eventID = Input.GetInputEventNumID(eventID) end
     local manager = Input.GetManager()
     local scheme = manager.InputScheme
     playerIndex = playerIndex or 1
@@ -806,7 +773,6 @@ function Input.GetInputEventDefinition(id)
     if type(id) == "string" then
         id = Input.INPUT_EVENT_STRING_ID_MAP[id]
     end
-
     return Input.INPUT_EVENTS[id]
 end
 
@@ -1089,6 +1055,7 @@ for eventID,data in pairs(InputManager.InputDefinitions) do
     ---@type InputLib_InputEventDefinition
     local entry = {
         NameHandle = data.EventDesc.Handle.Handle,
+        EventName = data.EventName,
         ReferenceName = data.EventDesc.Handle.ReferenceString,
         EventID = eventID,
         StringID = data.EventName,

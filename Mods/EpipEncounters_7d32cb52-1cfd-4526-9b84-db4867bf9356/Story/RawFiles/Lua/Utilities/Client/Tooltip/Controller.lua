@@ -143,7 +143,7 @@ end
 -- Listen for input events that come right before bottom bar tooltips being updated to track tooltip sources.
 GameState.Events.GameReady:Subscribe(function (_)
     Ext.Events.InputEvent:Subscribe(function (ev)
-        local name = Client.Input.GetGameEvent(ev.Event.EventId).EventName
+        local name = Client.Input.GetInputEventDefinition(ev.Event.EventId).EventName
         local tickDelay = Tooltip.CONTROLLER_BOTTOMBAR_TOOLTIP_REFRESH_INPUTEVENTS[name]
         if tickDelay then
             local ui = BottomBarC:GetUI()

@@ -317,7 +317,7 @@ end)
 -- as a temporary solution to Input Actions not being easily usable.
 GameState.Events.GameReady:Subscribe(function (_)
     Ext.Events.InputEvent:Subscribe(function (ev)
-        if Input.GetGameEvent(ev.Event.EventId).EventName == "ShowWorldTooltips" and ev.Event.DeviceId == "Unknown" then -- Only do this if the input event is from a controller.
+        if Input.GetInputEventDefinition(ev.Event.EventId).EventName == "ShowWorldTooltips" and ev.Event.DeviceId == "Unknown" then -- Only do this if the input event is from a controller.
             local char = Client.GetCharacter()
             if ev.Event.Press and QuickLoot.CanSearch(char) then
                 QuickLoot.StartSearch(char)
