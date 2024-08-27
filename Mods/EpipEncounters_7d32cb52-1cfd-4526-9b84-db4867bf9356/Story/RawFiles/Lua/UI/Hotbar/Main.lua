@@ -12,8 +12,6 @@ local Input = Client.Input
 ---@field Loadouts table<string, HotbarLoadout>
 ---@field PreparedSkills table<NetId, HotbarPreparedSkill> Tracks the prepared skill, as well as the skill being used.
 ---@field RegisteredActionOrder string[]
----@field UPDATE_DELAY integer Ticks to wait inbetween each hotbar update.
----@field COOLDOWN_UPDATE_DELAY integer Ticks to wait inbetween each cooldown animation update
 ---@field CUSTOM_RENDERING boolean
 ---@field CurrentVanillaRows table<integer, integer>
 ---@field SLOT_SIZE number
@@ -45,6 +43,8 @@ local Hotbar = {
     timer = 0,
     engineActionsCount = 3,
 
+    _CooldownsUpdateTimer = 0,
+    _HotkeysUpdateTimer = 0,
     ACTION_BUTTONS_COUNT = 12,
     SKILL_USE_TIME = 3000, -- Kept as a fallback.
     SLOT_SIZE = 50,
@@ -52,9 +52,9 @@ local Hotbar = {
     SLOTS_PER_ROW = 29,
     CUSTOM_RENDERING = false,
     SAVE_FILENAME = "Config_PIP_ImprovedHotbar.json",
-    UPDATE_DELAY = 8,
-    REFRESH_DELAY = 1400,
-    COOLDOWN_UPDATE_DELAY = 3,
+    HOTKEYS_UPDATE_DELAY = 500, -- In milliseconds.
+    REFRESH_DELAY = 1400, -- In milliseconds.
+    COOLDOWN_UPDATE_DELAY = 200, -- Milliseconds to wait inbetween each cooldown animations update.
 
     DEFAULT_ACTION_PROPERTIES = {
         IsActionVisibleInDrawer = true,
@@ -1104,8 +1104,7 @@ Client.Input.Events.ActionExecuted:Subscribe(function (ev)
     end
 end)
 
--- Refresh the hotbar every X ticks.
--- Utilities.Hooks.RegisterListener("Game", "Loaded", function()
+-- Refresh the hotbar elements preiodically.
 GameState.Events.RunningTick:Subscribe(function (e)
     if Client.IsUsingController() then return end
 
@@ -1124,11 +1123,15 @@ GameState.Events.RunningTick:Subscribe(function (e)
     end
 
     if Hotbar.initialized then
-        if Hotbar.tickCounter % Hotbar.COOLDOWN_UPDATE_DELAY == 0 then
+        Hotbar._CooldownsUpdateTimer = Hotbar._CooldownsUpdateTimer - e.DeltaTime
+        if Hotbar._CooldownsUpdateTimer <= 0 then
             Hotbar.RenderCooldowns()
+            Hotbar._CooldownsUpdateTimer = Hotbar.COOLDOWN_UPDATE_DELAY
         end
-        if Hotbar.tickCounter % Hotbar.UPDATE_DELAY == 0 then
+        Hotbar._HotkeysUpdateTimer = Hotbar._HotkeysUpdateTimer - e.DeltaTime
+        if Hotbar._HotkeysUpdateTimer <= 0 then
             Hotbar.RenderHotkeys()
+            Hotbar._HotkeysUpdateTimer = Hotbar.HOTKEYS_UPDATE_DELAY
         end
 
         Hotbar.timer = Hotbar.timer + e.DeltaTime
@@ -1438,13 +1441,12 @@ function Hotbar.RenderCooldowns()
                 local slotIndex = (rowIndex - 1) * Hotbar.GetSlotsPerRow() + i
                 local slot = slotHolder.slot_array[slotIndex]
                 local data = Hotbar.GetSlotData(char, slotIndex + 1)
-        
                 local cooldown = 0
 
                 if data.Type == "Skill" then
                     ---@type EclSkill
                     local skill = char.SkillManager.Skills[data.SkillOrStatId]
-        
+
                     if skill then
                         cooldown = skill.ActiveCooldown / 6
                     else 
@@ -1458,8 +1460,8 @@ function Hotbar.RenderCooldowns()
                 if data.Type ~= "Skill" and slot.oldCD > 0 then
                     cooldown = -1
                 end
-                
-                slot.setCoolDown(cooldown, true) -- Used to be true
+
+                slot.setCoolDown(cooldown, true)
 
                 if not canUseHotbar then -- TODO figure out what is fucking with this - it must be the setCooldown function somehow. Slots get enabled when they shouldn't be
                     slot.disable_mc.alpha = 1
@@ -1485,7 +1487,7 @@ function Hotbar.UseSkill(skill)
         if slot.Type == "Skill" then
             previousSkill = slot.SkillOrStatId
         end
-    
+
         if type(skill) == "string" then
             skillBar[145].SkillOrStatId = skill
             skillBar[145].Type = "Skill"
@@ -1493,12 +1495,12 @@ function Hotbar.UseSkill(skill)
             skillBar[145].ItemHandle = skill.Handle
             skillBar[145].Type = "Item"
         end
-    
+
         Hotbar.UpdateSlotTextures()
-    
+
         Timer.Start("UseHotbarSlot", 0.05, function()
             Hotbar.UseSlot(145)
-    
+
             -- Rebind the auxiliary slot back to its original skill
             if previousSkill ~= nil then
                 Ext.OnNextTick(function()
@@ -1511,7 +1513,6 @@ function Hotbar.UseSkill(skill)
                     Hotbar.RenderSlots()
                     Hotbar.UpdateSlot(145)
                 end)
-    
             else
                 Ext.OnNextTick(function()
                     char = Client.GetCharacter()
@@ -1523,7 +1524,6 @@ function Hotbar.UseSkill(skill)
                     Hotbar.RenderSlots()
                     Hotbar.UpdateSlot(145)
                 end)
-                
             end
         end)
     end
@@ -1548,7 +1548,7 @@ function Hotbar.RenderSlot(char, canUseHotbar, slotIndex)
     local cooldown = 0
     local unavailable = false
 
-    -- types: 0 empty, 1 skill, 2 item
+    -- Types: 0 empty, 1 skill, 2 item
     if data.Type == "Skill" then
         ---@type EclSkill
         local skill = char.SkillManager.Skills[data.SkillOrStatId]
@@ -1565,8 +1565,7 @@ function Hotbar.RenderSlot(char, canUseHotbar, slotIndex)
             if not skill.IsLearned then
                 unavailable = true
             end
-        else 
-            -- Hotbar:LogError("Trying to update skill not in skillmanager! " .. data.SkillOrStatId)
+        else -- The skill was removed from the character.
             cooldown = 0
             handle = Ext.HandleToDouble(char.Handle)
             isEnabled = false
@@ -1603,8 +1602,6 @@ function Hotbar.RenderSlot(char, canUseHotbar, slotIndex)
     if not isEnabled and cooldown <= 0 then
         slot.disable_mc.alpha = 1
     end
-    
-    -- print(slotIndex, tooltip, isEnabled, inUse, handle, slotType, amount)
 
     -- slot.unavailable_mc.visible = false -- Leftover from DOS1. (SetSlotPreviewEnabledMC)
 
