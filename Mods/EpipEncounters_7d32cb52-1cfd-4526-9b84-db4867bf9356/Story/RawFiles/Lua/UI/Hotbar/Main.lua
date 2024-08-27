@@ -57,7 +57,7 @@ local Hotbar = {
     SAVE_FILENAME = "Config_PIP_ImprovedHotbar.json",
     HOTKEYS_UPDATE_DELAY = 500, -- In milliseconds.
     REFRESH_DELAY = 1400, -- In milliseconds.
-    COOLDOWN_UPDATE_DELAY = 200, -- Milliseconds to wait inbetween each cooldown animations update.
+    COOLDOWN_UPDATE_DELAY = 70, -- Milliseconds to wait inbetween each cooldown animations update.
     MAX_SLOTS = 145, -- The maximum amount of slots the game supports for PlayerData.
 
     DEFAULT_ACTION_PROPERTIES = {
@@ -675,40 +675,40 @@ function Hotbar.UseSlot(index, isEnabled)
 
     Hotbar.lastClickedSlot = index
 
-    Hotbar.ResyncEngineRow()
-
     Hotbar.Events.SlotPressed:Throw({
         SlotData = data,
         Index = index,
         IsEnabled = slot.isEnabled,
     })
+
+    -- Must wait for the skill state to be initialized.
+    Timer.StartTickTimer(3, function ()
+        Hotbar.UpdateActiveSkill()
+    end)
 end
 
+---Updates the active skill visual.
+---Not necessary to call when using skills via keyboard keys.
 function Hotbar.UpdateActiveSkill()
     local char = Client.GetCharacter()
     local skillState = Character.GetSkillState(char)
     local slotHolder = Hotbar.GetSlotHolder()
     local index = -1
-
     if skillState and Character.IsPreparingSkill(char) then
         local skillID = Character.GetCurrentSkill(char)
-
         -- A strange use of the predicate, but whatever.
         Hotbar.GetSkillBarItems(char, function (_, slot, slotIndex)
             local valid = false
-
             -- If we clicked a slot recently, prioritize it.
             -- Otherwise use the last slot with the skill.
-            -- A skill CAN be in multiple slots, mainly if you install the mod mid-playthrough.
+            -- A skill CAN be in multiple slots, particularly on different rows, or via shifting across rows.
             if slot.SkillOrStatId == skillID and (index == -1 or slotIndex == Hotbar.lastClickedSlot) then
                 index = slotIndex - 1 -- Subtract one because we're sending to flash.
                 valid = true
             end
-
             return valid
         end)
     end
-
     slotHolder.showActiveSkill(index)
 end
 
@@ -1637,8 +1637,6 @@ function Hotbar.RenderSlots()
 
     local startingBar = 2
     local canUseHotbar = Hotbar.CanUseHotbar()
-
-    Hotbar.UpdateActiveSkill()
 
     if not canUseHotbar or not Hotbar:GetRoot().useArrays then
         startingBar = 1
