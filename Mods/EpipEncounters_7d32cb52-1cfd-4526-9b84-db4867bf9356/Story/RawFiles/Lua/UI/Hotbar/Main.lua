@@ -58,6 +58,7 @@ local Hotbar = {
     HOTKEYS_UPDATE_DELAY = 500, -- In milliseconds.
     REFRESH_DELAY = 1400, -- In milliseconds.
     COOLDOWN_UPDATE_DELAY = 200, -- Milliseconds to wait inbetween each cooldown animations update.
+    MAX_SLOTS = 145, -- The maximum amount of slots the game supports for PlayerData.
 
     DEFAULT_ACTION_PROPERTIES = {
         IsActionVisibleInDrawer = true,
@@ -178,6 +179,8 @@ local Hotbar = {
 }
 Epip.InitializeUI(Ext.UI.TypeID.hotBar, "Hotbar", Hotbar)
 Hotbar:Debug()
+
+local _SlotElements = {} ---@type table<integer, FlashMovieClip> Cached references to slot elements. Index is 0-based. Local to be upvalued for better performance.
 
 for _=1,Hotbar.ACTION_BUTTONS_COUNT,1 do
     table.insert(Hotbar.ActionsState, {
@@ -458,7 +461,7 @@ function Hotbar.GetSkillBarItems(char, predicate)
     if predicate == nil then
         slots = skillBar
     else
-        for i=1,145,1 do
+        for i=1,Hotbar.MAX_SLOTS,1 do
             if predicate(char, skillBar[i], i) then
                 slots[i] = skillBar[i]
             end
@@ -509,7 +512,7 @@ function Hotbar.ShiftSlots(selectedSlot, direction)
         local endSlot = 1 -- Slot to end the search at. Previously we bounded it to the same row; removed as it didn't feel necessary.
 
         if direction > 0 then
-            endSlot = 145
+            endSlot = Hotbar.MAX_SLOTS
         end
 
         -- If the slot is empty, find the closest one
@@ -1319,8 +1322,7 @@ function Hotbar.ShouldShowSourceFrame(index)
 end
 
 function Hotbar.UpdateSlot(index)
-    local slotHolder = Hotbar.GetSlotHolder()
-    local slot = slotHolder.slot_array[index]
+    local slot = _SlotElements[index]
     local row = Hotbar.GetRowForSlot(index + 1)
 
     -- Only update visible slots
@@ -1446,8 +1448,6 @@ end
 
 function Hotbar.RenderCooldowns()
     if not Hotbar.CUSTOM_RENDERING then return nil end
-
-    local slotHolder = Hotbar.GetSlotHolder()
     local char = Client.GetCharacter()
     local startingBar = 2
     local canUseHotbar = Hotbar.CanUseHotbar()
@@ -1460,7 +1460,7 @@ function Hotbar.RenderCooldowns()
         if Hotbar.IsRowVisible(char, rowIndex) then
             for i=0,Hotbar.GetSlotsPerRow() - 1,1 do
                 local slotIndex = (rowIndex - 1) * Hotbar.GetSlotsPerRow() + i
-                local slot = slotHolder.slot_array[slotIndex]
+                local slot = _SlotElements[slotIndex]
                 local data = Hotbar.GetSlotData(char, slotIndex + 1)
                 local cooldown = 0
 
@@ -1496,7 +1496,8 @@ end
 function Hotbar.UseSkill(skill)
     local char = Client.GetCharacter()
     local skillBar = char.PlayerData.SkillBarItems
-    local slot = skillBar[145]
+    local slotIndex = Hotbar.MAX_SLOTS
+    local slot = skillBar[slotIndex]
     local previousSkill
 
     if GetExtType(skill) == "ecl::Item" then
@@ -1510,40 +1511,39 @@ function Hotbar.UseSkill(skill)
         end
 
         if type(skill) == "string" then
-            skillBar[145].SkillOrStatId = skill
-            skillBar[145].Type = "Skill"
+            skillBar[slotIndex].SkillOrStatId = skill
+            skillBar[slotIndex].Type = "Skill"
         else
-            skillBar[145].ItemHandle = skill.Handle
-            skillBar[145].Type = "Item"
+            skillBar[slotIndex].ItemHandle = skill.Handle
+            skillBar[slotIndex].Type = "Item"
         end
 
         Hotbar.UpdateSlotTextures()
 
         Timer.Start("UseHotbarSlot", 0.05, function()
-            Hotbar.UseSlot(145)
+            Hotbar.UseSlot(slotIndex)
 
             -- Rebind the auxiliary slot back to its original skill
+            -- Clearing the item handle field appears to be unnecessary.
             if previousSkill ~= nil then
                 Ext.OnNextTick(function()
                     char = Client.GetCharacter()
-                    char.PlayerData.SkillBarItems[145].SkillOrStatId = previousSkill
-                    -- char.PlayerData.SkillBarItems[145].ItemHandle = nil
+                    char.PlayerData.SkillBarItems[slotIndex].SkillOrStatId = previousSkill
                     Hotbar.lastClickedSlot = nil
                     Hotbar.UpdateSlotTextures()
                     Hotbar.Refresh()
                     Hotbar.RenderSlots()
-                    Hotbar.UpdateSlot(145)
+                    Hotbar.UpdateSlot(slotIndex)
                 end)
             else
                 Ext.OnNextTick(function()
                     char = Client.GetCharacter()
-                    char.PlayerData.SkillBarItems[145].Type = "None"
-                    -- char.PlayerData.SkillBarItems[145].ItemHandle = nil
+                    char.PlayerData.SkillBarItems[slotIndex].Type = "None"
                     Hotbar.lastClickedSlot = nil
                     Hotbar.UpdateSlotTextures()
                     Hotbar.Refresh()
                     Hotbar.RenderSlots()
-                    Hotbar.UpdateSlot(145)
+                    Hotbar.UpdateSlot(slotIndex)
                 end)
             end
         end)
@@ -1557,7 +1557,7 @@ function Hotbar.RenderSlot(char, canUseHotbar, slotIndex)
     local slotHolder = Hotbar.GetSlotHolder()
     slotIndex = slotIndex - 1 -- SIKE YA THOUGHT!!!!
 
-    local slot = slotHolder.slot_array[slotIndex]
+    local slot = _SlotElements[slotIndex]
     local data = Hotbar.GetSlotData(char, slotIndex + 1)
 
     local inUse = true -- Whether the slot holds anything.
@@ -1662,8 +1662,6 @@ function Hotbar.RenderSlots()
 end
 
 function Hotbar.PositionBar(index, row)
-    local slotHolder = Hotbar.GetSlotHolder()
-    
     -- Position cyclers
     if index > 1 then
         local buttons = Hotbar:GetRoot().hotbar_mc["cycleHotBar" .. (index) .. "_mc"]
@@ -1689,7 +1687,7 @@ function Hotbar.PositionBar(index, row)
     local visibleSlotsPerRow = Hotbar.GetVisibleSlotsPerRow()
     for i=0,Hotbar.GetSlotsPerRow()-1,1 do
         local slotIndex = ((row - 1) * Hotbar.GetSlotsPerRow()) + i
-        local slot = slotHolder.slot_array[slotIndex]
+        local slot = _SlotElements[slotIndex]
 
         slot.x = (i * SLOTSIZE) + (i * SLOTSPACING) + 1
 
@@ -1702,16 +1700,14 @@ function Hotbar.PositionBar(index, row)
 end
 
 function Hotbar.HideBar(index, row)
-    local slotHolder = Hotbar.GetSlotHolder()
-
     -- Hide slots
     for i=0,Hotbar.GetSlotsPerRow()-1,1 do
         local slotIndex = ((row - 1) * Hotbar.GetSlotsPerRow()) + i
-        local slot = slotHolder.slot_array[slotIndex]
+        local slot = _SlotElements[slotIndex]
 
         slot.y = 500
     end
-
+    -- Hide cycler
     if index > 1 then
         local buttons = Hotbar:GetRoot().hotbar_mc["cycleHotBar" .. (index) .. "_mc"]
         buttons.visible = false
@@ -1738,8 +1734,7 @@ end)
 
 -- Position a slot's visuals.
 function Hotbar.SetupSlot(index)
-    local slotHolder = Hotbar.GetSlotHolder()
-    local slot = slotHolder.slot_array[index]
+    local slot = _SlotElements[index]
 
     slot.icon_mc.y = 1
     slot.icon_mc.x = 1
@@ -1760,7 +1755,11 @@ Ext.Events.SessionLoaded:Subscribe(function()
     ui.Layer = 10
     skillbook.Layer = 9
 
-    for i=0,144,1 do
+    -- Initialize slots and element cache
+    local slotHolder = Hotbar.GetSlotHolder()
+    for i=0,Hotbar.MAX_SLOTS-1,1 do
+        local slot = slotHolder.slot_array[i]
+        _SlotElements[i] = slot
         Hotbar.SetupSlot(i)
     end
 
@@ -1772,8 +1771,6 @@ Ext.Events.SessionLoaded:Subscribe(function()
 
     Hotbar.CUSTOM_RENDERING = true
     Hotbar:GetRoot().useArrays = false
-
-    local slotHolder = Hotbar.GetSlotHolder()
 
     slotHolder.iggy_slots.visible = false
 end)
