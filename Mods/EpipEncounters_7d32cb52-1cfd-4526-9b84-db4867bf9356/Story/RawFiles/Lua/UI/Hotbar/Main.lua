@@ -45,6 +45,9 @@ local Hotbar = {
 
     _CooldownsUpdateTimer = 0,
     _HotkeysUpdateTimer = 0,
+    _HotkeyIcons = {}, ---@type table<integer, icon?> Map of icons currently used by hotkey buttons.
+    _SlotIcons = {}, ---@type table<integer, icon?> Map of icons currently used by slots.
+
     ACTION_BUTTONS_COUNT = 12,
     SKILL_USE_TIME = 3000, -- Kept as a fallback.
     SLOT_SIZE = 50,
@@ -1182,7 +1185,7 @@ function Hotbar.RenderHotkey(i, state)
         if hasAction then
             -- Icon
             local icon = Hotbar.GetActionIcon(actionID, i)
-            Hotbar:GetUI():SetCustomIcon("pip_hotkey_" .. (i - 1), icon, 32, 32)
+            Hotbar._SetHotkeyIcon(i, icon)
 
             -- Keybind text
             keyString = Hotbar.GetKeyString(i)
@@ -1235,6 +1238,15 @@ function Hotbar.RenderHotkey(i, state)
         element.icon_mc.visible = hasAction
         element.text_mc.visible = hasAction
     end
+end
+
+---Sets the icon for a hotkey button.
+---@param index integer 1-based.
+---@param icon icon
+function Hotbar._SetHotkeyIcon(index, icon)
+    if Hotbar._HotkeyIcons[index] == icon then return end -- Do nothing if the icon hasn't changed, as setting iggy icons is expensive.
+    Hotbar:GetUI():SetCustomIcon("pip_hotkey_" .. (index - 1), icon, 32, 32)
+    Hotbar._HotkeyIcons[index] = icon
 end
 
 function Hotbar.RenderHotkeys()
@@ -1316,7 +1328,7 @@ function Hotbar.UpdateSlot(index)
         -- Icon
         local icon = Hotbar.GetIconForSlot(index)
         if icon then
-            Hotbar:GetUI():SetCustomIcon("pip_hotbar_slot_" .. index, icon, 48, 48)
+            Hotbar._SetSlotIcon(index, icon)
             slot.icon_mc.visible = true
         else
             slot.icon_mc.visible = false
@@ -1325,6 +1337,15 @@ function Hotbar.UpdateSlot(index)
         -- Source frame
         slot.source_frame_mc.visible = Hotbar.ShouldShowSourceFrame(index)
     end
+end
+
+---Sets the icon for a slot.
+---@param index integer 1-based.
+---@param icon icon
+function Hotbar._SetSlotIcon(index, icon)
+    if Hotbar._SlotIcons[index] == icon then return end -- Do nothing if the icon hasn't changed, as setting iggy icons is expensive.
+    Hotbar:GetUI():SetCustomIcon("pip_hotbar_slot_" .. index, icon, 48, 48)
+    Hotbar._SlotIcons[index] = icon
 end
 
 function Hotbar.GetIconForSlot(index)
