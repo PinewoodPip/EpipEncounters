@@ -181,6 +181,7 @@ Epip.InitializeUI(Ext.UI.TypeID.hotBar, "Hotbar", Hotbar)
 Hotbar:Debug()
 
 local _SlotElements = {} ---@type table<integer, FlashMovieClip> Cached references to slot elements. Index is 0-based. Local to be upvalued for better performance.
+local _SlotHolder = nil ---@type FlashMovieClip?
 
 for _=1,Hotbar.ACTION_BUTTONS_COUNT,1 do
     table.insert(Hotbar.ActionsState, {
@@ -357,7 +358,7 @@ end
 ---Returns the slotHolder movieclip.
 ---@return FlashMovieClip
 function Hotbar.GetSlotHolder()
-    return Hotbar:GetRoot().hotbar_mc.slotholder_mc
+    return _SlotHolder
 end
 
 ---@param char? EclCharacter
@@ -861,7 +862,7 @@ end
 ---@param index integer 1-based.
 ---@return boolean
 function Hotbar.IsSlotEnabled(index)
-    return Hotbar.GetSlotHolder().slot_array[index].isEnabled
+    return _SlotElements[index - 1].isEnabled
 end
 
 ---Returns the slots currently being hovered.
@@ -1746,17 +1747,18 @@ end
 
 Ext.Events.SessionLoaded:Subscribe(function()
     if Client.IsUsingController() then return end
-    local ui = Hotbar:GetUI()
-    local skillbook = Ext.UI.GetByPath("Public/Game/GUI/skills.swf")
+    local ui, root = Hotbar:GetUI(), Hotbar:GetRoot()
+    local skillbook = Client.UI.Skills:GetUI()
 
+    -- Adjust UI layers to make additional rows easier to use.
     Client.UI.CharacterSheet:GetUI().Layer = 9
     ui.Layer = 10
     skillbook.Layer = 9
 
     -- Initialize slots and element cache
-    local slotHolder = Hotbar.GetSlotHolder()
+    _SlotHolder = root.hotbar_mc.slotholder_mc
     for i=0,Hotbar.MAX_SLOTS-1,1 do
-        local slot = slotHolder.slot_array[i]
+        local slot = _SlotHolder.slot_array[i]
         _SlotElements[i] = slot
         Hotbar.SetupSlot(i)
     end
@@ -1764,13 +1766,13 @@ Ext.Events.SessionLoaded:Subscribe(function()
     Hotbar.PositionElements()
 
     -- Hide vanilla buttons
-    Hotbar:GetRoot().hotbar_mc.minusBtn_mc.visible = false
-    Hotbar:GetRoot().hotbar_mc.plusBtn_mc.visible = false
+    root.hotbar_mc.minusBtn_mc.visible = false
+    root.hotbar_mc.plusBtn_mc.visible = false
 
     Hotbar.CUSTOM_RENDERING = true
-    Hotbar:GetRoot().useArrays = false
+    root.useArrays = false
 
-    slotHolder.iggy_slots.visible = false
+    _SlotHolder.iggy_slots.visible = false
 end)
 
 function Hotbar.PositionElements()
