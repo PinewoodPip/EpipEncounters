@@ -1449,7 +1449,10 @@ end
 
 function Hotbar.RenderCooldowns()
     if not Hotbar.CUSTOM_RENDERING then return nil end
+    local SLOTS_PER_ROW = Hotbar.SLOTS_PER_ROW
     local char = Client.GetCharacter()
+    local skillBar = char.PlayerData.SkillBarItems
+    local skills = char.SkillManager.Skills
     local startingBar = 2
     local canUseHotbar = Hotbar.CanUseHotbar()
 
@@ -1459,31 +1462,33 @@ function Hotbar.RenderCooldowns()
 
     for rowIndex=startingBar,5,1 do
         if Hotbar.IsRowVisible(char, rowIndex) then
-            for i=0,Hotbar.GetSlotsPerRow() - 1,1 do
-                local slotIndex = (rowIndex - 1) * Hotbar.GetSlotsPerRow() + i
+            for i=0,SLOTS_PER_ROW-1,1 do
+                local slotIndex = (rowIndex - 1) * SLOTS_PER_ROW + i
                 local slot = _SlotElements[slotIndex]
-                local data = Hotbar.GetSlotData(char, slotIndex + 1)
+                local data = skillBar[slotIndex + 1]
+                local previousCooldown = slot.oldCD
                 local cooldown = 0
 
                 if data.Type == "Skill" then
                     ---@type EclSkill
-                    local skill = char.SkillManager.Skills[data.SkillOrStatId]
-
+                    local skill = skills[data.SkillOrStatId]
                     if skill then
                         cooldown = skill.ActiveCooldown / 6
-                    else 
-                        -- Hotbar:LogError("Trying to update skill not in skillmanager! " .. data.SkillOrStatId)
+                    else -- The skill was removed from the character.
                         cooldown = 0
                     end
                 end
 
                 -- If this slot was changed away from a skill,
                 -- remove the cooldown without playing the finished animation.
-                if data.Type ~= "Skill" and slot.oldCD > 0 then
+                if data.Type ~= "Skill" and previousCooldown > 0 then
                     cooldown = -1
                 end
 
-                slot.setCoolDown(cooldown, true)
+                -- Avoid running the AS method if the cooldown hasn't changed.
+                if previousCooldown ~= cooldown then
+                    slot.setCoolDown(cooldown, true)
+                end
 
                 if not canUseHotbar then -- TODO figure out what is fucking with this - it must be the setCooldown function somehow. Slots get enabled when they shouldn't be
                     slot.disable_mc.alpha = 1
@@ -1554,12 +1559,14 @@ end
 ---@param char EclCharacter
 ---@param canUseHotbar boolean
 ---@param slotIndex integer 1-based.
-function Hotbar.RenderSlot(char, canUseHotbar, slotIndex)
+---@param skillBarSlot EocSkillBarItem? Fetched via `slotIndex` if necessary. Passable for performance reasons.
+function Hotbar.RenderSlot(char, canUseHotbar, slotIndex, skillBarSlot)
     local slotHolder = Hotbar.GetSlotHolder()
+    skillBarSlot = skillBarSlot or char.PlayerData.SkillBarItems[slotIndex]
     slotIndex = slotIndex - 1 -- SIKE YA THOUGHT!!!!
 
     local slot = _SlotElements[slotIndex]
-    local data = Hotbar.GetSlotData(char, slotIndex + 1)
+    local data = skillBarSlot
 
     local inUse = true -- Whether the slot holds anything.
     local amount = 0
@@ -1572,10 +1579,9 @@ function Hotbar.RenderSlot(char, canUseHotbar, slotIndex)
 
     -- Types: 0 empty, 1 skill, 2 item
     if data.Type == "Skill" then
-        ---@type EclSkill
         local skill = char.SkillManager.Skills[data.SkillOrStatId]
-        tooltip = data.SkillOrStatId
         slotType = 1
+        tooltip = data.SkillOrStatId
 
         if skill then
             cooldown = skill.ActiveCooldown / 6
@@ -1594,16 +1600,14 @@ function Hotbar.RenderSlot(char, canUseHotbar, slotIndex)
             unavailable = Stats.Get("SkillData", data.SkillOrStatId) ~= nil -- Only show warning if the skill exists in the current session
         end
     elseif data.Type == "Item" then
+        local item = Item.Get(data.ItemHandle)
         slotType = 2
-
-        local item = Ext.GetItem(data.ItemHandle)
-
         handle = Ext.HandleToDouble(item.Handle)
         amount = item.Amount
         isEnabled = Item.CanUse(char, item)
     elseif data.Type == "Action" then
-        isEnabled = true
         slotType = 1
+        isEnabled = true
         tooltip = data.SkillOrStatId
         handle = Ext.HandleToDouble(char.Handle)
     elseif data.Type == "None" then
@@ -1632,9 +1636,11 @@ function Hotbar.RenderSlot(char, canUseHotbar, slotIndex)
 end
 
 function Hotbar.RenderSlots()
+    local SLOTS_PER_ROW = Hotbar.SLOTS_PER_ROW
     local char = Client.GetCharacter()
 
     if not Hotbar.CUSTOM_RENDERING or not char then return nil end
+    local skillBar = char.PlayerData.SkillBarItems
 
     local startingBar = 2
     local canUseHotbar = Hotbar.CanUseHotbar()
@@ -1645,16 +1651,15 @@ function Hotbar.RenderSlots()
 
     for rowIndex=startingBar,5,1 do
         if Hotbar.IsRowVisible(char, rowIndex) then
-            for i=0,Hotbar.GetSlotsPerRow() - 1,1 do
-                local slotIndex = (rowIndex - 1) * Hotbar.GetSlotsPerRow() + i
-                local success, msg = pcall(Hotbar.RenderSlot, char, canUseHotbar, slotIndex + 1)
+            for i=0,SLOTS_PER_ROW - 1,1 do
+                local slotIndex = (rowIndex - 1) * SLOTS_PER_ROW + i
+                local success, msg = pcall(Hotbar.RenderSlot, char, canUseHotbar, slotIndex + 1, skillBar[slotIndex + 1])
                 if not success then
                     local data = Hotbar.GetSkillBarItems(char)[slotIndex + 1]
                     Hotbar:__LogError("Error rendering slot " .. (slotIndex + 1))
                     Hotbar:__LogError(msg)
                     Hotbar:__LogError(string.format("Slot data: type %s skillID %s", data.Type, data.SkillOrStatId))
                 end
-
             end
         end
     end
