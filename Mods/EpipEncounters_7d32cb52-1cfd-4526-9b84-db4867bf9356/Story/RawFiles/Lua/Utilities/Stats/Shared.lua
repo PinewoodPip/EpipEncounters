@@ -342,7 +342,7 @@ function Stats.MeetsRequirements(char, statID, isItem, itemSource)
     if not grantedByExternalSource then
         -- Usage requirements
         for _,req in ipairs(data.Requirements) do
-            if not Ext.Stats.Requirement.Evaluate(stats, req.Requirement, req.Param, req.Tag, req.Not) then
+            if not Stats.EvaluateRequirement(stats, req) then
                 return false
             end
         end
@@ -350,7 +350,7 @@ function Stats.MeetsRequirements(char, statID, isItem, itemSource)
         -- Memorization requirements
         if not isItem then
             for _,req in ipairs(data.MemorizationRequirements) do
-                if not Ext.Stats.Requirement.Evaluate(stats, req.Requirement, req.Param, req.Tag, req.Not) then
+                if not Stats.EvaluateRequirement(stats, req) then
                     return false
                 end
             end
@@ -359,9 +359,7 @@ function Stats.MeetsRequirements(char, statID, isItem, itemSource)
 
     if itemSource and itemSource.Stats then
         for _,req in ipairs(itemSource.Stats.Requirements) do
-            local customReqMet = Ext.Stats.Requirement.Evaluate(stats, req.Requirement, req.Param, req.Tag, req.Not)
-
-            if not customReqMet then
+            if not Stats.EvaluateRequirement(stats, req) then
                 return false
             end
         end
@@ -500,6 +498,13 @@ end
 function Stats.GetType(statObj)
     local manager = Ext.Stats.GetStatsManager()
     return manager.ModifierLists.Elements[statObj.ModifierListIndex + 1].Name
+end
+
+---Returns whether a character meets a requirement.
+---@param stats CDivinityStats_Character
+---@param req StatRequirement|StatsRequirement
+function Stats.EvaluateRequirement(stats, req)
+    return Ext.Stats.Requirement.Evaluate(stats, req.Requirement, type(req.Param) == "number" and req.Param or nil, type(req.Param) == "string" and req.Param or req.Tag, req.Not) -- The "Tag" field appears unused.
 end
 
 function Stats.CountStat(stats, stat)
