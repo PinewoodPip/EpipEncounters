@@ -1012,11 +1012,6 @@ end, "After")
 Hotbar:RegisterInvokeListener("updateSlots", function (_, _)
     Hotbar.RenderSlots()
 end)
-Hotbar:RegisterInvokeListener("setAllSlotsEnabled", function (_, _)
-    Timer.StartTickTimer(1, function (_)
-        Hotbar.RenderSlots()
-    end)
-end, "After")
 
 -- Listen for hotkey buttons being unbound.
 Hotbar:RegisterCallListener("pipUnbindHotbarButton", function (_, index)
