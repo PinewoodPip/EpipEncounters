@@ -199,6 +199,16 @@ Stats = {
 Game.Stats = Stats
 Epip.InitializeLibrary("Stats", Stats)
 
+---@type table<StatsLib_Enum_SkillRequirement, fun(char:Character):boolean>
+local WeaponRequirementToFunctor = {
+    ["MeleeWeapon"] = Character.HasMeleeWeapon,
+    ["RangedWeapon"] = Character.HasRangedWeapon,
+    ["ShieldWeapon"] = Character.HasShield,
+    ["DaggerWeapon"] = Character.HasDagger,
+    -- I'm fairly certain ArrowWeapon is unimplemented; appears always met.
+    ["ArrowWeapon"] = function (_) return true end
+}
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
@@ -243,7 +253,6 @@ function Stats.MeetsRequirements(char, statID, isItem, itemSource)
     local data = Ext.Stats.Get(statID) ---@type StatsLib_StatsEntry_SkillData|StatsLib_StatsEntry_Object
     local stats = char.Stats
     local isEquipment = false
-    -- local dynamicStats = char.Stats.DynamicStats
 
     if isItem and itemSource then
         if not itemSource.Stats then
@@ -254,7 +263,7 @@ function Stats.MeetsRequirements(char, statID, isItem, itemSource)
     end
 
     -- Dead chars cannot use skills or items.
-    if Game.Character.IsDead(char) then
+    if Character.IsDead(char) then
         return false
     end
 
@@ -264,7 +273,6 @@ function Stats.MeetsRequirements(char, statID, isItem, itemSource)
 
     --- AP cost
     local apCost
-
     if isEquipment then
         apCost = 1 -- TODO is this affected by extra AP costs?
     elseif itemSource and itemSource.StatsId then
@@ -272,7 +280,6 @@ function Stats.MeetsRequirements(char, statID, isItem, itemSource)
     else
         apCost = Character.GetSkillAPCost(char, statID)
     end
-
     apCost = apCost or 0
 
     -- Consider APCostBoost
@@ -283,14 +290,14 @@ function Stats.MeetsRequirements(char, statID, isItem, itemSource)
 
     -- Muted
     if not isItem and data.IgnoreSilence ~= "Yes" and (data.UseWeaponDamage ~= "Yes" and (data.Requirement == "None" or data.Requirement == "ShieldWeapon")) then
-        if Game.Character.IsMuted(char) then
+        if Character.IsMuted(char) then
             return false
         end
     end
 
     -- Disarmed
     if not isItem and (data.Requirement ~= "None" or data.UseWeaponDamage == "Yes") then
-        if Game.Character.IsDisarmed(char) then
+        if Character.IsDisarmed(char) then
             return false
         end
     end
@@ -327,13 +334,8 @@ function Stats.MeetsRequirements(char, statID, isItem, itemSource)
 
     -- Weapon requirements
     if not isItem and data.Requirement ~= "None" then
-        if data.Requirement == "MeleeWeapon" and not Game.Character.HasMeleeWeapon(char) then
-            return false
-        elseif data.Requirement == "RangedWeapon" and not Character.HasRangedWeapon(char) then
-            return false
-        elseif data.Requirement == "ShieldWeapon" and not Game.Character.HasShield(char) then
-            return false
-        elseif data.Requirement == "DaggerWeapon" and not Game.Character.HasDagger(char) then
+        local functor = WeaponRequirementToFunctor[data.Requirement]
+        if functor and not functor(char) then
             return false
         end
     end

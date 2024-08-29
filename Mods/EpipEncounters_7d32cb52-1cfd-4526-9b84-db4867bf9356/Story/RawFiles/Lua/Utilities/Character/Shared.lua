@@ -708,7 +708,7 @@ end
 ---@param itemSource Item?
 ---@return boolean
 function Character.CanUseSkill(char, skillID, itemSource)
-    return Game.Stats.MeetsRequirements(char, skillID, false, itemSource)
+    return Stats.MeetsRequirements(char, skillID, false, itemSource)
 end
 
 ---Returns whether char has a melee weapon equipped in either slot.
