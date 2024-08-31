@@ -21,6 +21,7 @@ local Slot = {
     SlotElement = nil, ---@type GenericUI_Element_Slot
     Object = nil, ---@type GenericUI_Prefab_HotbarSlot_Object
 
+    UPDATE_INTERVAL = 0.1, -- In seconds.
     ICON_SIZE = V(52, 52),
     DRAG_SOUND = "UI_Game_PartyFormation_PickUp",
 
@@ -125,8 +126,8 @@ function Slot.Create(ui, id, parent, requiredFeatures)
     obj._CanDrag = false
     obj._CanDrop = false
     obj._ClearAfterDrag = false
-    obj._AutoUpdateDelay = 0.1
-    obj._AutoUpdateRemainingDelay = obj._AutoUpdateDelay
+    obj._AutoUpdateDelay = Slot.UPDATE_INTERVAL
+    obj._AutoUpdateRemainingDelay = Slot.UPDATE_INTERVAL
     obj._Usable = true
     obj._RequiredFeatures = requiredFeatures
     obj._ValidObjectTypes = {["Skill"] = true, ["Item"] = true, ["Action"] = true, ["Template"] = true} -- Allow all object types by default
@@ -373,7 +374,7 @@ function Slot:SetCanDragDrop(canDragDrop)
 end
 
 ---Sets the time between the element being automatically updated with data of its set entity.
----@param delay number In seconds. Set to `-1` to disable.
+---@param delay number In seconds. Set to negative to disable.
 function Slot:SetUpdateDelay(delay)
     self._AutoUpdateDelay = delay
 end
@@ -456,88 +457,88 @@ function Slot:_OnElementMouseUp(_)
     end
 end
 
----Updates the element based on the held entity.
+---Updates the element based on the held entity and resets the update timer.
+function Slot:_Update()
+    local char = Client.GetCharacter()
+    local slot = self.SlotElement
+    local obj = self.Object
+    local isPreparingSkill = false
+
+    if obj.Type == "Skill" then
+        local skill = char.SkillManager.Skills[obj.StatsID]
+        local cooldown = -1
+        local enabled = false
+        isPreparingSkill = Character.GetCurrentSkill(char) == obj.StatsID and Character.IsPreparingSkill(char) -- Skill ID must match, and the slot only blinks during preparation phase
+
+        if skill then
+            cooldown = skill.ActiveCooldown / 6
+            enabled = Character.CanUseSkill(char, obj.StatsID)
+        end
+
+        -- Can't use slots outside of your turn.
+        enabled = enabled and (not Client.IsInCombat() or Client.IsActiveCombatant())
+
+        self:SetLabel("")
+        self:SetCooldown(cooldown, false)
+        self:SetEnabled(enabled or cooldown > 0)
+    elseif obj.Type == "Item" or obj.Type == "Template" then
+        local item = obj:GetEntity()
+
+        if item and item.Amount then
+            -- We display the total item count in the party inventory.
+            local amount = Item.GetPartyTemplateCount(item.RootTemplate.Id)
+            local label = ""
+            local isEnabled = amount > 0
+            if amount > 1 then label = tostring(amount) end -- Only display label for >1 item stacks
+
+            self:SetLabel(label)
+            self:SetCooldown(0, false)
+
+            if item.Stats then
+                isEnabled = isEnabled and Game.Stats.MeetsRequirements(char, item.Stats.Name, true, item)
+            end
+
+            -- Item skills
+            local useActions = item.RootTemplate.OnUsePeaceActions
+            for _,action in ipairs(useActions) do
+                if action.Type == "UseSkill" and isEnabled then
+                    ---@cast action UseSkillActionData
+
+                    isEnabled = isEnabled and Character.CanUseSkill(char, action.SkillID, item)
+                end
+            end
+
+            -- Summons cannot open the party inventory, thus they cannot use items.
+            isEnabled = isEnabled and not Character.IsSummon(char)
+
+            -- Can't use slots outside of your turn.
+            isEnabled = isEnabled and (not Client.IsInCombat() or Client.IsActiveCombatant())
+
+            slot:SetEnabled(isEnabled)
+        else -- Clear the slot once we consume all stacks of this item.
+            self:Clear()
+        end
+    end
+
+    self:SetActive(isPreparingSkill)
+end
+
+---Decrements the update timer.
 ---@param ev GameStateLib_Event_RunningTick
 function Slot:_OnTick(ev)
     local canUpdate = false
-
-    if self._AutoUpdateDelay > -1 then -- TODO use a timer instead
+    if self._AutoUpdateDelay > 0 then
+        -- Decrement timer
         local remainingTime = self._AutoUpdateRemainingDelay
-
         remainingTime = remainingTime - ev.DeltaTime / 1000
-
         if remainingTime <= 0 then
             canUpdate = true
-
             remainingTime = self._AutoUpdateDelay
         end
-
         self._AutoUpdateRemainingDelay = remainingTime
     end
-
     if canUpdate then
-        local char = Client.GetCharacter()
-        local slot = self.SlotElement
-        local obj = self.Object
-        local isPreparingSkill = false
-
-        if obj.Type == "Skill" then
-            local skill = char.SkillManager.Skills[obj.StatsID]
-            local cooldown = -1
-            local enabled = false
-            isPreparingSkill = Character.GetCurrentSkill(char) == obj.StatsID and Character.IsPreparingSkill(char) -- Skill ID must match, and the slot only blinks during preparation phase
-
-            if skill then
-                cooldown = skill.ActiveCooldown / 6
-                enabled = Character.CanUseSkill(char, obj.StatsID)
-            end
-
-            -- Can't use slots outside of your turn.
-            enabled = enabled and (not Client.IsInCombat() or Client.IsActiveCombatant())
-
-            self:SetLabel("")
-            self:SetCooldown(cooldown, false)
-            self:SetEnabled(enabled or cooldown > 0)
-        elseif obj.Type == "Item" or obj.Type == "Template" then
-            local item = obj:GetEntity()
-
-            if item and item.Amount then
-                -- We display the total item count in the party inventory.
-                local amount = Item.GetPartyTemplateCount(item.RootTemplate.Id)
-                local label = ""
-                local isEnabled = amount > 0
-                if amount > 1 then label = tostring(amount) end -- Only display label for >1 item stacks
-
-                self:SetLabel(label)
-                self:SetCooldown(0, false)
-
-                if item.Stats then
-                    isEnabled = isEnabled and Game.Stats.MeetsRequirements(char, item.Stats.Name, true, item)
-                end
-
-                -- Item skills
-                local useActions = item.RootTemplate.OnUsePeaceActions
-                for _,action in ipairs(useActions) do
-                    if action.Type == "UseSkill" and isEnabled then
-                        ---@cast action UseSkillActionData
-
-                        isEnabled = isEnabled and Character.CanUseSkill(char, action.SkillID, item)
-                    end
-                end
-
-                -- Summons cannot open the party inventory, thus they cannot use items.
-                isEnabled = isEnabled and not Character.IsSummon(char)
-
-                -- Can't use slots outside of your turn.
-                isEnabled = isEnabled and (not Client.IsInCombat() or Client.IsActiveCombatant())
-
-                slot:SetEnabled(isEnabled)
-            else -- Clear the slot once we consume all stacks of this item.
-                self:Clear()
-            end
-        end
-
-        self:SetActive(isPreparingSkill)
+        self:_Update()
     end
 end
 
