@@ -286,6 +286,7 @@ LOAD_ORDER = {
     "UI/Controller/PartyInventory.lua",
     "UI/Controller/EquipmentPanel.lua",
     "UI/Controller/PanelSelect.lua",
+    "UI/Controller/AreaInteract.lua",
 
     -- GM UIs
     {Script = "UI/GM/Roll.lua", GameModes = GAMEMODE_MASK.GameMaster},
@@ -509,6 +510,7 @@ LOAD_ORDER = {
     "Epip/Client/Notifications.lua",
     "Epip/Client/CraftingFixes.lua",
     "Epip/SkillbookIconsFix/Client.lua",
+    "Epip/AreaInteractFix/Client.lua",
     "Epip/UserVarsGUIDSyncWorkaround/Client.lua",
     "Epip/Client/RewardItemComparison.lua",
     {ScriptSet = "Epip/HotbarTweaks"},
