@@ -14,7 +14,7 @@ local V = Vector.Create
 ---@field _StatusPrefabInstances GenericUI_Prefab_Status[]
 ---@field GUID GUID
 local Manager = {
-    UPDATE_DELAY = 10,
+    UPDATE_INTERVAL = 0.2, -- In seconds.
     MIN_STATUSES_PER_ROW = 6,
     ROWS = 2,
     FLASH_POSITION = V(112, 2), -- Offset for the root within flash. Used to position the overlay UI properly regardless of resolution.
@@ -148,7 +148,9 @@ function Manager:_IsVisible()
 end
 
 ---Updates the statuses on the display.
-function Manager:Update()
+---@param dtSeconds number? An update will be forced if nil.
+function Manager:Update(dtSeconds)
+    dtSeconds = dtSeconds or self._Delay -- Force-run an update if deltatime is nil.
     local visible = self:_IsVisible()
     if visible then -- Calling Show() unnecessarily leads to mouse event issues with different layers!
         self.UI:TryShow()
@@ -158,11 +160,11 @@ function Manager:Update()
     end
     local char = Character.Get(self.CharacterHandle)
 
-    self._Delay = self._Delay - 1
+    self._Delay = self._Delay - dtSeconds
     if self._Delay <= 0 then
         local visibleStatusesCount = 0
 
-        self._Delay = self.UPDATE_DELAY
+        self._Delay = self.UPDATE_INTERVAL
 
         for i,status in ipairs(StatusesDisplay.GetStatuses(char)) do
             self:_UpdateStatusInstance(i, status)
