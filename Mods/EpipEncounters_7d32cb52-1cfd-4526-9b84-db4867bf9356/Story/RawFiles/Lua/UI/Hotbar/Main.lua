@@ -12,8 +12,6 @@ local Input = Client.Input
 ---@field Loadouts table<string, HotbarLoadout>
 ---@field PreparedSkills table<NetId, HotbarPreparedSkill> Tracks the prepared skill, as well as the skill being used.
 ---@field RegisteredActionOrder string[]
----@field UPDATE_DELAY integer Ticks to wait inbetween each hotbar update.
----@field COOLDOWN_UPDATE_DELAY integer Ticks to wait inbetween each cooldown animation update
 ---@field CUSTOM_RENDERING boolean
 ---@field CurrentVanillaRows table<integer, integer>
 ---@field SLOT_SIZE number
@@ -39,11 +37,14 @@ local Hotbar = {
     elementsToggled = true,
     initialized = false,
     currentLoadoutRow = nil,
-    tickCounter = 0,
     lastClickedSlot = -1,
     wasVisible = false,
-    timer = 0,
     engineActionsCount = 3,
+
+    _CooldownsUpdateTimer = 0,
+    _HotkeysUpdateTimer = 0,
+    _HotkeyIcons = {}, ---@type table<integer, icon?> Map of icons currently used by hotkey buttons.
+    _SlotIcons = {}, ---@type table<integer, icon?> Map of icons currently used by slots.
 
     ACTION_BUTTONS_COUNT = 12,
     SKILL_USE_TIME = 3000, -- Kept as a fallback.
@@ -52,9 +53,9 @@ local Hotbar = {
     SLOTS_PER_ROW = 29,
     CUSTOM_RENDERING = false,
     SAVE_FILENAME = "Config_PIP_ImprovedHotbar.json",
-    UPDATE_DELAY = 8,
-    REFRESH_DELAY = 1400,
-    COOLDOWN_UPDATE_DELAY = 3,
+    HOTKEYS_UPDATE_DELAY = 500, -- In milliseconds.
+    COOLDOWN_UPDATE_DELAY = 70, -- Milliseconds to wait inbetween each cooldown animations update.
+    MAX_SLOTS = 145, -- The maximum amount of slots the game supports for PlayerData.
 
     DEFAULT_ACTION_PROPERTIES = {
         IsActionVisibleInDrawer = true,
@@ -176,6 +177,9 @@ local Hotbar = {
 Epip.InitializeUI(Ext.UI.TypeID.hotBar, "Hotbar", Hotbar)
 Hotbar:Debug()
 
+local _SlotElements = {} ---@type table<integer, FlashMovieClip> Cached references to slot elements. Index is 0-based. Local to be upvalued for better performance.
+local _SlotHolder = nil ---@type FlashMovieClip?
+
 for _=1,Hotbar.ACTION_BUTTONS_COUNT,1 do
     table.insert(Hotbar.ActionsState, {
         ActionID = "",
@@ -281,12 +285,11 @@ function Hotbar.GetCurrentRealRow()
 end
 
 ---Returns the skillbar data of the slot at index.
----@param char? EclCharacter
+---@param char EclCharacter? Defaults to client character.
 ---@param index integer
 ---@return EocSkillBarItem
 function Hotbar.GetSlotData(char, index)
-    if not char then char = Client.GetCharacter() end
-
+    char = char or Client.GetCharacter()
     return char.PlayerData.SkillBarItems[index]
 end
 
@@ -299,7 +302,7 @@ function Hotbar.ToggleVisibility(visible, requestID)
     -- hotbar:ToggleElements(visible)
 
     if not requestID then
-        Hotbar:LogError("Must pass a requestID to ToggleVisiblity.")
+        Hotbar:__Error("ToggleVisibility", "Must pass a requestID to ToggleVisiblity.")
         return nil
     end
 
@@ -351,7 +354,7 @@ end
 ---Returns the slotHolder movieclip.
 ---@return FlashMovieClip
 function Hotbar.GetSlotHolder()
-    return Hotbar:GetRoot().hotbar_mc.slotholder_mc
+    return _SlotHolder
 end
 
 ---@param char? EclCharacter
@@ -360,7 +363,7 @@ function Hotbar.GetState(char)
     char = char or Client.GetCharacter()
     local guid = char.NetID
     local state = Hotbar.State[guid]
-    
+
     -- Create a new state
     if not state then
         Hotbar.State[guid] = {
@@ -406,13 +409,11 @@ end
 ---@param row integer
 function Hotbar.IsRowVisible(char, row)
     local state = Hotbar.GetState(char)
-
     for i,bar in ipairs(state.Bars) do
         if bar.Row == row then
             return Hotbar.IsBarVisible(i)
         end
     end
-
     return false
 end
 
@@ -445,7 +446,7 @@ end
 function Hotbar.GetSkillBarItems(char, predicate)
     local slots = {}
     local skillBar
-    
+
     if not char then
         char = Client.GetCharacter()
     end
@@ -455,7 +456,7 @@ function Hotbar.GetSkillBarItems(char, predicate)
     if predicate == nil then
         slots = skillBar
     else
-        for i=1,145,1 do
+        for i=1,Hotbar.MAX_SLOTS,1 do
             if predicate(char, skillBar[i], i) then
                 slots[i] = skillBar[i]
             end
@@ -506,7 +507,7 @@ function Hotbar.ShiftSlots(selectedSlot, direction)
         local endSlot = 1 -- Slot to end the search at. Previously we bounded it to the same row; removed as it didn't feel necessary.
 
         if direction > 0 then
-            endSlot = 145
+            endSlot = Hotbar.MAX_SLOTS
         end
 
         -- If the slot is empty, find the closest one
@@ -626,7 +627,6 @@ function Hotbar.LoadData()
             end
         end
 
-        
         Hotbar:FireEvent("SaveDataLoaded", save)
     end
 end
@@ -669,40 +669,40 @@ function Hotbar.UseSlot(index, isEnabled)
 
     Hotbar.lastClickedSlot = index
 
-    Hotbar.ResyncEngineRow()
-
     Hotbar.Events.SlotPressed:Throw({
         SlotData = data,
         Index = index,
         IsEnabled = slot.isEnabled,
     })
+
+    -- Must wait for the skill state to be initialized.
+    Timer.StartTickTimer(3, function ()
+        Hotbar.UpdateActiveSkill()
+    end)
 end
 
+---Updates the active skill visual.
+---Not necessary to call when using skills via keyboard keys.
 function Hotbar.UpdateActiveSkill()
     local char = Client.GetCharacter()
     local skillState = Character.GetSkillState(char)
     local slotHolder = Hotbar.GetSlotHolder()
     local index = -1
-
     if skillState and Character.IsPreparingSkill(char) then
         local skillID = Character.GetCurrentSkill(char)
-
         -- A strange use of the predicate, but whatever.
         Hotbar.GetSkillBarItems(char, function (_, slot, slotIndex)
             local valid = false
-
             -- If we clicked a slot recently, prioritize it.
             -- Otherwise use the last slot with the skill.
-            -- A skill CAN be in multiple slots, mainly if you install the mod mid-playthrough.
+            -- A skill CAN be in multiple slots, particularly on different rows, or via shifting across rows.
             if slot.SkillOrStatId == skillID and (index == -1 or slotIndex == Hotbar.lastClickedSlot) then
                 index = slotIndex - 1 -- Subtract one because we're sending to flash.
                 valid = true
             end
-
             return valid
         end)
     end
-
     slotHolder.showActiveSkill(index)
 end
 
@@ -793,7 +793,7 @@ function Hotbar.CycleBar(index, increment)
         if nextBar then -- attempt to swap rows
             nextBar.Row = currentRowIndex
         end
-        
+
         bar.Row = nextRowIndex
 
         Hotbar:DebugLog("Cycled bar " .. index)
@@ -855,7 +855,7 @@ end
 ---@param index integer 1-based.
 ---@return boolean
 function Hotbar.IsSlotEnabled(index)
-    return Hotbar.GetSlotHolder().slot_array[index].isEnabled
+    return _SlotElements[index - 1].isEnabled
 end
 
 ---Returns the slots currently being hovered.
@@ -947,7 +947,6 @@ local function CycleHotbar(barIndex, increment)
 end
 Hotbar:RegisterCallListener("pipPrevHotbar", function (_, _, index)
     CycleHotbar(index, -1)
-    
 end)
 Hotbar:RegisterCallListener("pipNextHotbar", function (_, _, index)
     CycleHotbar(index, 1)
@@ -959,7 +958,7 @@ Hotbar:RegisterInvokeListener("updateActionSkills", function (ev)
     local hook = Hotbar.Hooks.UpdateEngineActions:Throw({
         Actions = Client.Flash.ParseArray(array, Hotbar.ARRAY_ENTRY_TEMPLATES.ACTIONS)
     })
-    
+
     Client.Flash.EncodeArray(array, Hotbar.ARRAY_ENTRY_TEMPLATES.ACTIONS, hook.Actions)
 
     Hotbar.engineActionsCount = #hook.Actions
@@ -1013,11 +1012,6 @@ end, "After")
 Hotbar:RegisterInvokeListener("updateSlots", function (_, _)
     Hotbar.RenderSlots()
 end)
-Hotbar:RegisterInvokeListener("setAllSlotsEnabled", function (_, _)
-    Timer.StartTickTimer(1, function (_)
-        Hotbar.RenderSlots()
-    end)
-end, "After")
 
 -- Listen for hotkey buttons being unbound.
 Hotbar:RegisterCallListener("pipUnbindHotbarButton", function (_, index)
@@ -1098,14 +1092,12 @@ end, {EnabledFunctor = function () return not Client.IsUsingController() end})
 Client.Input.Events.ActionExecuted:Subscribe(function (ev)
     local actionPattern = "EpipEncounters_Hotbar_(%d+)"
     local index = ev.Action.ID:match(actionPattern)
-
     if index then
         Hotbar.PressHotkey(tonumber(index))
     end
 end)
 
--- Refresh the hotbar every X ticks.
--- Utilities.Hooks.RegisterListener("Game", "Loaded", function()
+-- Refresh the hotbar elements preiodically.
 GameState.Events.RunningTick:Subscribe(function (e)
     if Client.IsUsingController() then return end
 
@@ -1113,9 +1105,8 @@ GameState.Events.RunningTick:Subscribe(function (e)
     local visible = Hotbar:IsVisible()
     if visible ~= Hotbar.wasVisible then
         Hotbar.wasVisible = visible
-
-        if visible then
-            Timer.Start("", 0.1, function()
+        if visible then -- Update slots when the hotbar becomes visible again.
+            Timer.Start(0.1, function()
                 Hotbar.RenderSlots()
             end)
         end
@@ -1123,24 +1114,17 @@ GameState.Events.RunningTick:Subscribe(function (e)
         Hotbar.PositionCombatLogButton()
     end
 
+    -- Update cooldowns and hotkeys
     if Hotbar.initialized then
-        if Hotbar.tickCounter % Hotbar.COOLDOWN_UPDATE_DELAY == 0 then
+        Hotbar._CooldownsUpdateTimer = Hotbar._CooldownsUpdateTimer - e.DeltaTime
+        if Hotbar._CooldownsUpdateTimer <= 0 then
             Hotbar.RenderCooldowns()
+            Hotbar._CooldownsUpdateTimer = Hotbar.COOLDOWN_UPDATE_DELAY
         end
-        if Hotbar.tickCounter % Hotbar.UPDATE_DELAY == 0 then
+        Hotbar._HotkeysUpdateTimer = Hotbar._HotkeysUpdateTimer - e.DeltaTime
+        if Hotbar._HotkeysUpdateTimer <= 0 then
             Hotbar.RenderHotkeys()
-        end
-
-        Hotbar.timer = Hotbar.timer + e.DeltaTime
-        if Hotbar.timer > Hotbar.REFRESH_DELAY then
-            Hotbar.RenderSlots()
-            Hotbar.timer = 0
-        end
-
-        Hotbar.tickCounter = Hotbar.tickCounter + 1
-
-        if Hotbar.tickCounter > math.maxinteger - 10 then
-            Hotbar.tickCounter = 0
+            Hotbar._HotkeysUpdateTimer = Hotbar.HOTKEYS_UPDATE_DELAY
         end
     end
 end)
@@ -1179,7 +1163,7 @@ function Hotbar.RenderHotkey(i, state)
         if hasAction then
             -- Icon
             local icon = Hotbar.GetActionIcon(actionID, i)
-            Hotbar:GetUI():SetCustomIcon("pip_hotkey_" .. (i - 1), icon, 32, 32)
+            Hotbar._SetHotkeyIcon(i, icon)
 
             -- Keybind text
             keyString = Hotbar.GetKeyString(i)
@@ -1226,12 +1210,21 @@ function Hotbar.RenderHotkey(i, state)
         if i > 6 then
             element.y = element.y - 63
         end
-        
+
         element.icon_mc.x = 1
 
         element.icon_mc.visible = hasAction
         element.text_mc.visible = hasAction
     end
+end
+
+---Sets the icon for a hotkey button.
+---@param index integer 1-based.
+---@param icon icon
+function Hotbar._SetHotkeyIcon(index, icon)
+    if Hotbar._HotkeyIcons[index] == icon then return end -- Do nothing if the icon hasn't changed, as setting iggy icons is expensive.
+    Hotbar:GetUI():SetCustomIcon("pip_hotkey_" .. (index - 1), icon, 32, 32)
+    Hotbar._HotkeyIcons[index] = icon
 end
 
 function Hotbar.RenderHotkeys()
@@ -1304,8 +1297,7 @@ function Hotbar.ShouldShowSourceFrame(index)
 end
 
 function Hotbar.UpdateSlot(index)
-    local slotHolder = Hotbar.GetSlotHolder()
-    local slot = slotHolder.slot_array[index]
+    local slot = _SlotElements[index]
     local row = Hotbar.GetRowForSlot(index + 1)
 
     -- Only update visible slots
@@ -1313,7 +1305,7 @@ function Hotbar.UpdateSlot(index)
         -- Icon
         local icon = Hotbar.GetIconForSlot(index)
         if icon then
-            Hotbar:GetUI():SetCustomIcon("pip_hotbar_slot_" .. index, icon, 48, 48)
+            Hotbar._SetSlotIcon(index, icon)
             slot.icon_mc.visible = true
         else
             slot.icon_mc.visible = false
@@ -1324,31 +1316,31 @@ function Hotbar.UpdateSlot(index)
     end
 end
 
+---Sets the icon for a slot.
+---@param index integer 1-based.
+---@param icon icon
+function Hotbar._SetSlotIcon(index, icon)
+    if Hotbar._SlotIcons[index] == icon then return end -- Do nothing if the icon hasn't changed, as setting iggy icons is expensive.
+    Hotbar:GetUI():SetCustomIcon("pip_hotbar_slot_" .. index, icon, 48, 48)
+    Hotbar._SlotIcons[index] = icon
+end
+
 function Hotbar.GetIconForSlot(index)
     local bar = Client.GetCharacter().PlayerData.SkillBarItems
     local slot = bar[index + 1]
     local icon
-
     if slot.Type == "Skill" then
         local stat = Stats.Get("StatsLib_StatsEntry_SkillData", slot.SkillOrStatId)
-
         if stat then
             icon = stat.Icon
         end
     elseif slot.Type == "Item" then
-        local item = Ext.GetItem(slot.ItemHandle)
-
+        local item = Item.Get(slot.ItemHandle)
         icon = Item.GetIcon(item)
     elseif slot.Type == "Action" then
         local action = Stats.GetAction(slot.SkillOrStatId)
-
         icon = action.Icon
-
-        if not icon then
-            Hotbar:LogError("Unknown hotbar action " .. slot.SkillOrStatId)
-        end
     end
-
     return icon
 end
 
@@ -1422,9 +1414,10 @@ end
 
 function Hotbar.RenderCooldowns()
     if not Hotbar.CUSTOM_RENDERING then return nil end
-
-    local slotHolder = Hotbar.GetSlotHolder()
+    local SLOTS_PER_ROW = Hotbar.SLOTS_PER_ROW
     local char = Client.GetCharacter()
+    local skillBar = char.PlayerData.SkillBarItems
+    local skills = char.SkillManager.Skills
     local startingBar = 2
     local canUseHotbar = Hotbar.CanUseHotbar()
 
@@ -1434,32 +1427,33 @@ function Hotbar.RenderCooldowns()
 
     for rowIndex=startingBar,5,1 do
         if Hotbar.IsRowVisible(char, rowIndex) then
-            for i=0,Hotbar.GetSlotsPerRow() - 1,1 do
-                local slotIndex = (rowIndex - 1) * Hotbar.GetSlotsPerRow() + i
-                local slot = slotHolder.slot_array[slotIndex]
-                local data = Hotbar.GetSlotData(char, slotIndex + 1)
-        
+            for i=0,SLOTS_PER_ROW-1,1 do
+                local slotIndex = (rowIndex - 1) * SLOTS_PER_ROW + i
+                local slot = _SlotElements[slotIndex]
+                local data = skillBar[slotIndex + 1]
+                local previousCooldown = slot.oldCD
                 local cooldown = 0
 
                 if data.Type == "Skill" then
                     ---@type EclSkill
-                    local skill = char.SkillManager.Skills[data.SkillOrStatId]
-        
+                    local skill = skills[data.SkillOrStatId]
                     if skill then
                         cooldown = skill.ActiveCooldown / 6
-                    else 
-                        -- Hotbar:LogError("Trying to update skill not in skillmanager! " .. data.SkillOrStatId)
+                    else -- The skill was removed from the character.
                         cooldown = 0
                     end
                 end
 
                 -- If this slot was changed away from a skill,
                 -- remove the cooldown without playing the finished animation.
-                if data.Type ~= "Skill" and slot.oldCD > 0 then
+                if data.Type ~= "Skill" and previousCooldown > 0 then
                     cooldown = -1
                 end
-                
-                slot.setCoolDown(cooldown, true) -- Used to be true
+
+                -- Avoid running the AS method if the cooldown hasn't changed.
+                if previousCooldown ~= cooldown then
+                    slot.setCoolDown(cooldown, true)
+                end
 
                 if not canUseHotbar then -- TODO figure out what is fucking with this - it must be the setCooldown function somehow. Slots get enabled when they shouldn't be
                     slot.disable_mc.alpha = 1
@@ -1473,7 +1467,8 @@ end
 function Hotbar.UseSkill(skill)
     local char = Client.GetCharacter()
     local skillBar = char.PlayerData.SkillBarItems
-    local slot = skillBar[145]
+    local slotIndex = Hotbar.MAX_SLOTS
+    local slot = skillBar[slotIndex]
     local previousSkill
 
     if GetExtType(skill) == "ecl::Item" then
@@ -1485,45 +1480,42 @@ function Hotbar.UseSkill(skill)
         if slot.Type == "Skill" then
             previousSkill = slot.SkillOrStatId
         end
-    
+
         if type(skill) == "string" then
-            skillBar[145].SkillOrStatId = skill
-            skillBar[145].Type = "Skill"
+            skillBar[slotIndex].SkillOrStatId = skill
+            skillBar[slotIndex].Type = "Skill"
         else
-            skillBar[145].ItemHandle = skill.Handle
-            skillBar[145].Type = "Item"
+            skillBar[slotIndex].ItemHandle = skill.Handle
+            skillBar[slotIndex].Type = "Item"
         end
-    
+
         Hotbar.UpdateSlotTextures()
-    
+
         Timer.Start("UseHotbarSlot", 0.05, function()
-            Hotbar.UseSlot(145)
-    
+            Hotbar.UseSlot(slotIndex)
+
             -- Rebind the auxiliary slot back to its original skill
+            -- Clearing the item handle field appears to be unnecessary.
             if previousSkill ~= nil then
                 Ext.OnNextTick(function()
                     char = Client.GetCharacter()
-                    char.PlayerData.SkillBarItems[145].SkillOrStatId = previousSkill
-                    -- char.PlayerData.SkillBarItems[145].ItemHandle = nil
+                    char.PlayerData.SkillBarItems[slotIndex].SkillOrStatId = previousSkill
                     Hotbar.lastClickedSlot = nil
                     Hotbar.UpdateSlotTextures()
                     Hotbar.Refresh()
                     Hotbar.RenderSlots()
-                    Hotbar.UpdateSlot(145)
+                    Hotbar.UpdateSlot(slotIndex)
                 end)
-    
             else
                 Ext.OnNextTick(function()
                     char = Client.GetCharacter()
-                    char.PlayerData.SkillBarItems[145].Type = "None"
-                    -- char.PlayerData.SkillBarItems[145].ItemHandle = nil
+                    char.PlayerData.SkillBarItems[slotIndex].Type = "None"
                     Hotbar.lastClickedSlot = nil
                     Hotbar.UpdateSlotTextures()
                     Hotbar.Refresh()
                     Hotbar.RenderSlots()
-                    Hotbar.UpdateSlot(145)
+                    Hotbar.UpdateSlot(slotIndex)
                 end)
-                
             end
         end)
     end
@@ -1532,12 +1524,14 @@ end
 ---@param char EclCharacter
 ---@param canUseHotbar boolean
 ---@param slotIndex integer 1-based.
-function Hotbar.RenderSlot(char, canUseHotbar, slotIndex)
+---@param skillBarSlot EocSkillBarItem? Fetched via `slotIndex` if necessary. Passable for performance reasons.
+function Hotbar.RenderSlot(char, canUseHotbar, slotIndex, skillBarSlot)
     local slotHolder = Hotbar.GetSlotHolder()
+    skillBarSlot = skillBarSlot or char.PlayerData.SkillBarItems[slotIndex]
     slotIndex = slotIndex - 1 -- SIKE YA THOUGHT!!!!
 
-    local slot = slotHolder.slot_array[slotIndex]
-    local data = Hotbar.GetSlotData(char, slotIndex + 1)
+    local slot = _SlotElements[slotIndex]
+    local data = skillBarSlot
 
     local inUse = true -- Whether the slot holds anything.
     local amount = 0
@@ -1548,12 +1542,11 @@ function Hotbar.RenderSlot(char, canUseHotbar, slotIndex)
     local cooldown = 0
     local unavailable = false
 
-    -- types: 0 empty, 1 skill, 2 item
+    -- Types: 0 empty, 1 skill, 2 item
     if data.Type == "Skill" then
-        ---@type EclSkill
         local skill = char.SkillManager.Skills[data.SkillOrStatId]
-        tooltip = data.SkillOrStatId
         slotType = 1
+        tooltip = data.SkillOrStatId
 
         if skill then
             cooldown = skill.ActiveCooldown / 6
@@ -1565,24 +1558,21 @@ function Hotbar.RenderSlot(char, canUseHotbar, slotIndex)
             if not skill.IsLearned then
                 unavailable = true
             end
-        else 
-            -- Hotbar:LogError("Trying to update skill not in skillmanager! " .. data.SkillOrStatId)
+        else -- The skill was removed from the character.
             cooldown = 0
             handle = Ext.HandleToDouble(char.Handle)
             isEnabled = false
             unavailable = Stats.Get("SkillData", data.SkillOrStatId) ~= nil -- Only show warning if the skill exists in the current session
         end
     elseif data.Type == "Item" then
+        local item = Item.Get(data.ItemHandle)
         slotType = 2
-
-        local item = Ext.GetItem(data.ItemHandle)
-
         handle = Ext.HandleToDouble(item.Handle)
         amount = item.Amount
         isEnabled = Item.CanUse(char, item)
     elseif data.Type == "Action" then
-        isEnabled = true
         slotType = 1
+        isEnabled = true
         tooltip = data.SkillOrStatId
         handle = Ext.HandleToDouble(char.Handle)
     elseif data.Type == "None" then
@@ -1603,8 +1593,6 @@ function Hotbar.RenderSlot(char, canUseHotbar, slotIndex)
     if not isEnabled and cooldown <= 0 then
         slot.disable_mc.alpha = 1
     end
-    
-    -- print(slotIndex, tooltip, isEnabled, inUse, handle, slotType, amount)
 
     -- slot.unavailable_mc.visible = false -- Leftover from DOS1. (SetSlotPreviewEnabledMC)
 
@@ -1613,14 +1601,14 @@ function Hotbar.RenderSlot(char, canUseHotbar, slotIndex)
 end
 
 function Hotbar.RenderSlots()
+    local SLOTS_PER_ROW = Hotbar.SLOTS_PER_ROW
     local char = Client.GetCharacter()
 
     if not Hotbar.CUSTOM_RENDERING or not char then return nil end
+    local skillBar = char.PlayerData.SkillBarItems
 
     local startingBar = 2
     local canUseHotbar = Hotbar.CanUseHotbar()
-
-    Hotbar.UpdateActiveSkill()
 
     if not canUseHotbar or not Hotbar:GetRoot().useArrays then
         startingBar = 1
@@ -1628,24 +1616,21 @@ function Hotbar.RenderSlots()
 
     for rowIndex=startingBar,5,1 do
         if Hotbar.IsRowVisible(char, rowIndex) then
-            for i=0,Hotbar.GetSlotsPerRow() - 1,1 do
-                local slotIndex = (rowIndex - 1) * Hotbar.GetSlotsPerRow() + i
-                local success, msg = pcall(Hotbar.RenderSlot, char, canUseHotbar, slotIndex + 1)
+            for i=0,SLOTS_PER_ROW - 1,1 do
+                local slotIndex = (rowIndex - 1) * SLOTS_PER_ROW + i
+                local success, msg = pcall(Hotbar.RenderSlot, char, canUseHotbar, slotIndex + 1, skillBar[slotIndex + 1])
                 if not success then
                     local data = Hotbar.GetSkillBarItems(char)[slotIndex + 1]
                     Hotbar:__LogError("Error rendering slot " .. (slotIndex + 1))
                     Hotbar:__LogError(msg)
                     Hotbar:__LogError(string.format("Slot data: type %s skillID %s", data.Type, data.SkillOrStatId))
                 end
-
             end
         end
     end
 end
 
 function Hotbar.PositionBar(index, row)
-    local slotHolder = Hotbar.GetSlotHolder()
-    
     -- Position cyclers
     if index > 1 then
         local buttons = Hotbar:GetRoot().hotbar_mc["cycleHotBar" .. (index) .. "_mc"]
@@ -1671,7 +1656,7 @@ function Hotbar.PositionBar(index, row)
     local visibleSlotsPerRow = Hotbar.GetVisibleSlotsPerRow()
     for i=0,Hotbar.GetSlotsPerRow()-1,1 do
         local slotIndex = ((row - 1) * Hotbar.GetSlotsPerRow()) + i
-        local slot = slotHolder.slot_array[slotIndex]
+        local slot = _SlotElements[slotIndex]
 
         slot.x = (i * SLOTSIZE) + (i * SLOTSPACING) + 1
 
@@ -1684,16 +1669,14 @@ function Hotbar.PositionBar(index, row)
 end
 
 function Hotbar.HideBar(index, row)
-    local slotHolder = Hotbar.GetSlotHolder()
-
     -- Hide slots
     for i=0,Hotbar.GetSlotsPerRow()-1,1 do
         local slotIndex = ((row - 1) * Hotbar.GetSlotsPerRow()) + i
-        local slot = slotHolder.slot_array[slotIndex]
+        local slot = _SlotElements[slotIndex]
 
         slot.y = 500
     end
-
+    -- Hide cycler
     if index > 1 then
         local buttons = Hotbar:GetRoot().hotbar_mc["cycleHotBar" .. (index) .. "_mc"]
         buttons.visible = false
@@ -1720,8 +1703,7 @@ end)
 
 -- Position a slot's visuals.
 function Hotbar.SetupSlot(index)
-    local slotHolder = Hotbar.GetSlotHolder()
-    local slot = slotHolder.slot_array[index]
+    local slot = _SlotElements[index]
 
     slot.icon_mc.y = 1
     slot.icon_mc.x = 1
@@ -1735,29 +1717,32 @@ end
 
 Ext.Events.SessionLoaded:Subscribe(function()
     if Client.IsUsingController() then return end
-    local ui = Hotbar:GetUI()
-    local skillbook = Ext.UI.GetByPath("Public/Game/GUI/skills.swf")
+    local ui, root = Hotbar:GetUI(), Hotbar:GetRoot()
+    local skillbook = Client.UI.Skills:GetUI()
 
+    -- Adjust UI layers to make additional rows easier to use.
     Client.UI.CharacterSheet:GetUI().Layer = 9
     ui.Layer = 10
     skillbook.Layer = 9
 
-    for i=0,144,1 do
+    -- Initialize slots and element cache
+    _SlotHolder = root.hotbar_mc.slotholder_mc
+    for i=0,Hotbar.MAX_SLOTS-1,1 do
+        local slot = _SlotHolder.slot_array[i]
+        _SlotElements[i] = slot
         Hotbar.SetupSlot(i)
     end
 
     Hotbar.PositionElements()
 
     -- Hide vanilla buttons
-    Hotbar:GetRoot().hotbar_mc.minusBtn_mc.visible = false
-    Hotbar:GetRoot().hotbar_mc.plusBtn_mc.visible = false
+    root.hotbar_mc.minusBtn_mc.visible = false
+    root.hotbar_mc.plusBtn_mc.visible = false
 
     Hotbar.CUSTOM_RENDERING = true
-    Hotbar:GetRoot().useArrays = false
+    root.useArrays = false
 
-    local slotHolder = Hotbar.GetSlotHolder()
-
-    slotHolder.iggy_slots.visible = false
+    _SlotHolder.iggy_slots.visible = false
 end)
 
 function Hotbar.PositionElements()

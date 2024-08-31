@@ -108,7 +108,7 @@ Client.Input.Events.KeyReleased:Subscribe(function (ev)
                 slot.ItemHandle = Ext.Entity.NullHandle()
 
                 Hotbar.Refresh()
-                Hotbar.RenderSlot(char, Hotbar.CanUseHotbar(), hoveredSlotIndex)
+                Hotbar.RenderSlot(char, Hotbar.CanUseHotbar(), hoveredSlotIndex, slot)
             end
         end
     end
