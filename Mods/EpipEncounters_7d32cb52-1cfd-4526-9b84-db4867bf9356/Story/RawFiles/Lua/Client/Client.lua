@@ -56,6 +56,8 @@ Client = {
         SkillStateChanged = {}, ---@type Event<ClientLib_Event_SkillStateChanged>
         ViewportChanged = {}, ---@type Event<ClientLib_Event_ViewportChanged>
         InDialogueStateChanged = {}, ---@type Event<{InDialogue:boolean}>
+        LocalCoopStarted = {}, ---@type Event<Empty> Will be thrown during session load if reloading while in local co-op.
+        LocalCoopEnded = {}, ---@type Event<Empty>
     }
 }
 Epip.InitializeLibrary("Client", Client)
@@ -191,6 +193,14 @@ end
 ---@return boolean
 function Client.IsUsingKeyboardAndMouse()
     return not Client.IsUsingController()
+end
+
+---Returns whether the game is in local co-op mode.
+---@return boolean
+function Client.IsLocalCoop()
+    local playerManager = Ext.Entity.GetPlayerManager()
+    local playerCount = table.getKeyCount(playerManager.Players)
+    return playerCount >= 2 -- Should never be 3+, as support for more players appears scrapped.
 end
 
 ---Returns the viewport size.
@@ -456,6 +466,22 @@ GameState.Events.RunningTick:Subscribe(function (_)
         Client.Events.InDialogueStateChanged:Throw({InDialogue = newState})
     end
 end, {StringID = "ClientLib.InDialogueStateChangedEvent"})
+
+-- Throw events for entering/exiting splitscreen.
+local wasInLocalCoop = false
+if Client.IsUsingController() then
+    GameState.Events.Tick:Subscribe(function (_)
+        local inCoop = Client.IsLocalCoop()
+        if inCoop ~= wasInLocalCoop then
+            if inCoop then
+                Client.Events.LocalCoopStarted:Throw()
+            else
+                Client.Events.LocalCoopEnded:Throw()
+            end
+            wasInLocalCoop = inCoop
+        end
+    end)
+end
 
 ---------------------------------------------
 -- SETUP
