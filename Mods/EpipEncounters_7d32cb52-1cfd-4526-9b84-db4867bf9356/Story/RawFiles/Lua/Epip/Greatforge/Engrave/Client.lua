@@ -28,15 +28,19 @@ Net.RegisterListener(Engrave.NETMSG_ENGRAVE_START, function(payload)
 end)
 
 MessageBox.RegisterMessageListener("GreatforgeEngrave", MessageBox.Events.InputSubmitted, function(text)
-    local item = Item.Get(Engrave.currentItemHandle)
+    local success, err = pcall(function ()
+        local item = Item.Get(Engrave.currentItemHandle)
+        item.CustomDisplayName.Handle.Handle = Text.UNKNOWN_HANDLE
+        item.CustomDisplayName.Handle.ReferenceString = text
 
-    item.CustomDisplayName.Handle.Handle = Text.UNKNOWN_HANDLE
-    item.CustomDisplayName.Handle.ReferenceString = text
+        Net.PostToServer(Engrave.NETMSG_ENGRAVE_CONFIRM, {
+            ItemNetID = item.NetID,
+            NewItemName = text,
+        })
 
-    Net.PostToServer(Engrave.NETMSG_ENGRAVE_CONFIRM, {
-        ItemNetID = item.NetID,
-        NewItemName = text,
-    })
-
-    Engrave.currentItemHandle = nil
+        Engrave.currentItemHandle = nil
+    end)
+    if not success then -- Some users have gotten stuck in this dialogue; though we've yet to confirm why.
+        Engrave:__LogError("Failed to engrave:", err)
+    end
 end)
