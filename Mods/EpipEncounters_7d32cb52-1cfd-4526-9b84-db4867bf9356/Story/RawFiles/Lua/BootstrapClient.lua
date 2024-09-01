@@ -618,6 +618,7 @@ LOAD_ORDER = {
     "Epip/Client/WorldTooltipFiltering.lua",
     "Epip/Client/HoverCharacterEffects.lua",
     "Epip/Client/IncompatibleModsWarning.lua",
+    "Epip/LocalCoopSupportWarning/Client.lua",
     -- "Epip/Client/LoadingScreenReplacement.lua",
 
     -- Hotbar stuff
