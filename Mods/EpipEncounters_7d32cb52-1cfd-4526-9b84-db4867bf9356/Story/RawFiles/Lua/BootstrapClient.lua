@@ -287,6 +287,7 @@ LOAD_ORDER = {
     "UI/Controller/EquipmentPanel.lua",
     "UI/Controller/PanelSelect.lua",
     "UI/Controller/AreaInteract.lua",
+    "UI/Controller/MessageBox.lua",
 
     -- GM UIs
     {Script = "UI/GM/Roll.lua", GameModes = GAMEMODE_MASK.GameMaster},
