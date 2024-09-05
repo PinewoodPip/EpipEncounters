@@ -16,6 +16,7 @@ PersonalScripts._MSGBOX_BUTTONID_TO_CONTEXT = {
     [2] = "Client",
     [3] = "Server",
 }
+local SETTINGS_MENU_TABID = PersonalScripts:GetNamespace()
 
 ---------------------------------------------
 -- METHODS
@@ -72,7 +73,7 @@ end
 
 -- Render entries in the settings menu.
 SettingsMenuOverlay.Events.TabRendered:Subscribe(function (ev)
-    if ev.Tab.ID == PersonalScripts:GetNamespace() then
+    if ev.Tab.ID == SETTINGS_MENU_TABID then
         local scripts = PersonalScripts.GetAllScripts()
         PersonalScripts._RenderedEntries = {}
         for i,script in ipairs(scripts) do
@@ -88,7 +89,7 @@ end)
 -- Register settings tab.
 ---@type Feature_SettingsMenu_Tab
 local Tab = {
-    ID = PersonalScripts:GetNamespace(),
+    ID = SETTINGS_MENU_TABID,
     HeaderLabel = TSK.FeatureName:GetString(),
     ButtonLabel = TSK.FeatureName:GetString(),
     Entries = {
@@ -144,5 +145,12 @@ MsgBox.RegisterMessageListener(PersonalScripts._MSGBOX_ADD_SCRIPT, MsgBox.Events
                 Message = TSK.MsgBox_InvalidPath_Body:Format(PersonalScripts._GetPrefixedFolderPath() .. "/" .. unprefixedPath),
             })
         end)
+    end
+end)
+
+-- Refresh the tab when a new script is registered.
+PersonalScripts.Events.ScriptRegistered:Subscribe(function (_)
+    if SettingsMenuOverlay.UI:IsVisible() and SettingsMenu.IsTabOpen(SETTINGS_MENU_TABID) then
+        SettingsMenu.SetActiveTab(SETTINGS_MENU_TABID)
     end
 end)

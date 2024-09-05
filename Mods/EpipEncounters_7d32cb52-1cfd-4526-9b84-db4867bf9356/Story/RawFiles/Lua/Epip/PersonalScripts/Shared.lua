@@ -59,6 +59,13 @@ local PersonalScripts = {
             ContextDescription = [[Message box when adding a script with a wrong path. Param is the path the user previously entered.]],
         },
     },
+
+    USE_LEGACY_EVENTS = false,
+    USE_LEGACY_HOOKS = false,
+
+    Events = {
+        ScriptRegistered = {Context = "Client"}, ---@type Event<{Config:Features.PersonalScripts.Script}> Only thrown for scripts registered at runtime; not thrown for scripts registered from loading the saved config.
+    },
 }
 Epip.RegisterFeature("PersonalScripts", PersonalScripts)
 
@@ -101,10 +108,14 @@ function PersonalScripts.GetScript(path)
 end
 
 ---Registers a config for a new script.
+---Will throw `ScriptRegistered`.
 ---@param config Features.PersonalScripts.Script
 function PersonalScripts.RegisterScript(config)
     table.insert(PersonalScripts._ScriptConfigs, config)
     PersonalScripts.SaveConfig()
+    PersonalScripts.Events.ScriptRegistered:Throw({
+        Config = config,
+    })
 end
 
 ---Saves the configuration and load order of all scripts.
