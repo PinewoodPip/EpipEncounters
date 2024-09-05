@@ -343,7 +343,7 @@ LOAD_ORDER = {
 
     {ScriptSet = "Epip/PunisherVoiceActing", RequiredMods = {MODS.EE_DERPY}},
 
-    {Script = "Epip/PersonalScripts/Shared.lua", Developer = true},
+    {Script = "Epip/PersonalScripts/Shared.lua"},
 
     -- Should be loaded last
     {ScriptSet = "Epip/DebugMenu", Developer = true,},

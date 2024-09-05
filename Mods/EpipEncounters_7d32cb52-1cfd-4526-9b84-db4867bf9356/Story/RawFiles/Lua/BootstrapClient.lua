@@ -879,7 +879,12 @@ LOAD_ORDER = {
     },
 
     {Script = "Epip/Client/OverlayColorsBruteForcer.lua", Developer = true},
-    {Script = "Epip/PersonalScripts/Shared.lua", Developer = true},
+    {
+        ScriptSet = "Epip/PersonalScripts",
+        Scripts = {
+            "Epip/PersonalScripts/Prefabs/Entry.lua",
+        },
+    },
 
     -- Should be loaded last
     {ScriptSet = "Epip/DebugMenu", Developer = true,},

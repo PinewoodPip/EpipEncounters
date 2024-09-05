@@ -1,0 +1,148 @@
+
+local SettingsMenu = Epip.GetFeature("Feature_SettingsMenu")
+local SettingsMenuOverlay = Epip.GetFeature("Feature_SettingsMenuOverlay")
+local MsgBox = Client.UI.MessageBox
+
+---@class Features.PersonalScripts
+local PersonalScripts = Epip.GetFeature("Features.PersonalScripts")
+local TSK = PersonalScripts.TranslatedStrings
+
+PersonalScripts._RenderedEntries = nil ---@type Features.PersonalScripts.Prefabs.Entry[]?
+PersonalScripts._SETTINGS_TAB_BUTTONID_ADD_SCRIPT = "Features.PersonalScripts.AddScript"
+PersonalScripts._MSGBOX_ADD_SCRIPT = "Features.PersonalScripts.AddScript"
+---@type table<integer, ScriptContext>
+PersonalScripts._MSGBOX_BUTTONID_TO_CONTEXT = {
+    [1] = "Shared",
+    [2] = "Client",
+    [3] = "Server",
+}
+
+---------------------------------------------
+-- METHODS
+---------------------------------------------
+
+---Creates an instance of a Generic prefab to configure a script.
+---@param script Features.PersonalScripts.Script
+---@param index integer? Script load order index.
+---@return Features.PersonalScripts.Prefabs.Entry
+function PersonalScripts._CreateEntryPrefab(script, index)
+    -- This function is in no way intended to be used outside of the default settings tab implementation. It assumes all entries come from it and are not altered by anything else while alive.
+    index = index or table.reverseLookup(PersonalScripts.GetAllScripts(), script)
+    local EntryPrefab = Client.UI.Generic.GetPrefab("Features.PersonalScripts.Prefabs.Entry") -- The prefab is registered after this script loads.
+    local entry = EntryPrefab.Create(SettingsMenuOverlay.UI, "PersonalScripts.Entry." .. script.Path, SettingsMenuOverlay.UI.List, script, index)
+    entry:SetCenterInLists(true)
+
+    -- Handle button presses
+    entry.LoadOrderUpButton.Events.Pressed:Subscribe(function (_)
+        local scripts = PersonalScripts.GetAllScripts()
+        script = scripts[index]
+        local prevScript = scripts[index - 1]
+        if prevScript then
+            scripts[index - 1], scripts[index] = script, prevScript
+            PersonalScripts._RenderedEntries[index - 1]:SetScript(script, index - 1)
+            PersonalScripts._RenderedEntries[index]:SetScript(prevScript, index)
+            PersonalScripts.SaveConfig()
+        end
+    end)
+    entry.LoadOrderDownButton.Events.Pressed:Subscribe(function (_)
+        local scripts = PersonalScripts.GetAllScripts()
+        script = scripts[index]
+        local nextScript = scripts[index + 1]
+        if nextScript then
+            scripts[index], scripts[index + 1] = nextScript, script
+            PersonalScripts._RenderedEntries[index]:SetScript(nextScript, index)
+            PersonalScripts._RenderedEntries[index + 1]:SetScript(script, index + 1)
+            PersonalScripts.SaveConfig()
+        end
+    end)
+    entry.EnabledCheckbox.Events.Pressed:Subscribe(function (_)
+        -- Toggle the script when the button is pressed.
+        entry:GetScript().Enabled = entry.EnabledCheckbox:IsActivated()
+        PersonalScripts.SaveConfig()
+    end)
+
+    PersonalScripts._RenderedEntries[index] = entry
+
+    return entry
+end
+
+---------------------------------------------
+-- EVENT LISTENERS
+---------------------------------------------
+
+-- Render entries in the settings menu.
+SettingsMenuOverlay.Events.TabRendered:Subscribe(function (ev)
+    if ev.Tab.ID == PersonalScripts:GetNamespace() then
+        local scripts = PersonalScripts.GetAllScripts()
+        PersonalScripts._RenderedEntries = {}
+        for i,script in ipairs(scripts) do
+            PersonalScripts._CreateEntryPrefab(script, i)
+        end
+    end
+end)
+
+---------------------------------------------
+-- SETUP
+---------------------------------------------
+
+-- Register settings tab.
+---@type Feature_SettingsMenu_Tab
+local Tab = {
+    ID = PersonalScripts:GetNamespace(),
+    HeaderLabel = TSK.FeatureName:GetString(),
+    ButtonLabel = TSK.FeatureName:GetString(),
+    Entries = {
+        {Type = "Label", Label = TSK.Label_Explanation:GetString()},
+        {Type = "Label", Label = TSK.Label_Details:Format({
+            FormatArgs = {
+                {
+                    Text = PersonalScripts._GetPrefixedFolderPath(),
+                    Font = Text.FONTS.ITALIC,
+                },
+            },
+        })},
+        {Type = "Button", ID = PersonalScripts._SETTINGS_TAB_BUTTONID_ADD_SCRIPT, Label = TSK.Label_AddScript:GetString(), Tooltip = ""},
+    },
+}
+SettingsMenu.RegisterTab(Tab)
+
+-- Handle requests to add scripts.
+SettingsMenu.Events.ButtonPressed:Subscribe(function (ev)
+    if ev.ButtonID == PersonalScripts._SETTINGS_TAB_BUTTONID_ADD_SCRIPT then
+        MsgBox.Open({
+            ID = PersonalScripts._MSGBOX_ADD_SCRIPT,
+            Header = TSK.Label_AddScript:GetString(),
+            Message = TSK.MsgBox_AddScript_Body:GetString(),
+            Type = "Input",
+            Buttons = {
+                {ID = 1, Text = TSK.MsgBox_AddScript_Button_Shared:GetString()},
+                {ID = 2, Text = TSK.MsgBox_AddScript_Button_Client:GetString()},
+                {ID = 3, Text = TSK.MsgBox_AddScript_Button_Server:GetString()},
+            },
+        })
+    end
+end)
+MsgBox.RegisterMessageListener(PersonalScripts._MSGBOX_ADD_SCRIPT, MsgBox.Events.InputSubmitted, function(text, id, _)
+    local unprefixedPath = text:gsub("^/", "") .. ".lua" -- The message box requires you to type the path without the extension, as the UI disallows periods by default.
+    local fullPath = PersonalScripts.FOLDER_PATH .. "/" .. unprefixedPath
+    local isPathValid = IO.LoadFile(fullPath, "user", true) ~= nil
+    if isPathValid then
+        ---@type Features.PersonalScripts.Script
+        local config = {
+            Path = unprefixedPath,
+            ModTable = "EpipEncounters", -- TODO? Or at least allow changing it later
+            Enabled = true,
+            Context = PersonalScripts._MSGBOX_BUTTONID_TO_CONTEXT[id],
+            PathRoot = "user",
+        }
+        PersonalScripts.RegisterScript(config)
+    else
+        -- Cannot open a message box immediately from another one's handler; will softlock.
+        Timer.Start(0.1, function (_)
+            MsgBox.Open({
+                Header = "",
+                Message = TSK.MsgBox_InvalidPath_Body:Format(PersonalScripts._GetPrefixedFolderPath() .. "/" .. unprefixedPath),
+            })
+        end)
+    end
+end)

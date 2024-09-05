@@ -29,6 +29,7 @@ local Overlay = {
 
     Events = {
         RenderEntry = {}, ---@type Event<Feature_SettingsMenuOverlay_Event_RenderEntry>
+        TabRendered = {}, ---@type Event<{Tab:Feature_SettingsMenu_Tab, Entries:Feature_SettingsMenu_Entry[]}>
     },
     Hooks = {
         CanRenderEntry = {}, ---@type Event<Feature_SettingsMenuOverlay_Hook_CanRenderEntry>
@@ -123,13 +124,18 @@ function Overlay.Setup(tab, entries)
     end
     tabButtonsList:RepositionElements()
 
+    -- Render entries
     for _,entry in ipairs(entries) do
         UI.RenderEntry(entry)
     end
+    Overlay.Events.TabRendered:Throw({
+        Tab = tab,
+        Entries = entries,
+    })
 
     UI.TabHeader:SetText(Text.Format(tab.HeaderLabel:upper(), {Size = 22, FontType = Text.FONTS.BOLD}))
 
-    UI.List:RepositionElements()
+    UI.List:RepositionElements() -- Reposition entries after the TabRendered event, in case other scripts added elements to it at that time.
     UI:GetUI().Layer = SettingsMenu:GetUI():GetUI().Layer + 1
     SettingsMenu:GetUI():SetFlag("OF_PlayerModal1", false)
     UI:Show()
