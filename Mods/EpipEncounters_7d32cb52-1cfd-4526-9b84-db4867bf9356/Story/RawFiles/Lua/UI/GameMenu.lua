@@ -23,13 +23,17 @@ local Menu = {
         GM_PARTY_REROLL = 22,
         GIFT_BAGS = 24,
     },
+    SOUNDS = {
+        BUTTON_PRESS = "UI_Game_GameMenu_Close", -- Unintuitive name, but it is the same sound.
+        -- TODO find the "woosh" that plays from the "Resume" button
+    },
 
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
 
     Events = {
         Opened = {}, ---@type Event<Empty>
-        ButtonPressed = {}, ---@type Event<GameMenuUI_Event_ButtonPressed>
+        ButtonPressed = {Preventable = true}, ---@type PreventableEvent<GameMenuUI_Event_ButtonPressed>
     },
 }
 Epip.InitializeUI(Ext.UI.TypeID.gameMenu, "GameMenu", Menu)
@@ -119,7 +123,10 @@ Menu:RegisterCallListener("buttonPressed", function(ev)
 
     Menu:FireEvent("ButtonPressed", buttonID)
 
-    Menu.Events.ButtonPressed:Throw({
+    local prevented = Menu.Events.ButtonPressed:Throw({
         NumID = buttonID,
-    })
+    }).Prevented
+    if prevented then
+        ev:PreventAction()
+    end
 end)

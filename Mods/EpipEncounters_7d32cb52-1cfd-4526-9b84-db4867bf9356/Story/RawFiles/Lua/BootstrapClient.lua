@@ -518,6 +518,7 @@ LOAD_ORDER = {
     "Epip/Client/ExamineKeybind.lua",
     "Epip/Client/MoreWorldTooltips.lua",
     "Epip/Client/EnemyHealthBarExtraInfo.lua",
+    "Epip/SettingsMenuShortcut/Client.lua",
     {Script = "Epip/UILayout/Client.lua"},
 
     {ScriptSet = "Epip/OverheadFixes"},
