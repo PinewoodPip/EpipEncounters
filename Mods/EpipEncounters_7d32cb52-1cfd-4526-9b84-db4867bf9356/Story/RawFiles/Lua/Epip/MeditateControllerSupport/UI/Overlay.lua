@@ -37,6 +37,7 @@ UI._CurrentGraphNode = nil ---@type Features.MeditateControllerSupport.Page.Grap
 ---@field CollectionID string
 ---@field EventID string
 ---@field Neighbours string[] In clock-wise order.
+---@field Rotation number? Rotation offset for determining where the "top" (first) node is relative to stick direction, in degrees. Defaults to `0`.
 
 ---@class Features.MeditateControllerSupport.Page.Graph : Features.MeditateControllerSupport.Page
 ---@field StartingNode string
@@ -201,10 +202,11 @@ Input.Events.StickMoved:Subscribe(function (ev)
         isPastThreshold = true
         local page = UI._CurrentPage ---@cast page Features.MeditateControllerSupport.Page.Graph Valid cast due to the EnabledFunctor checks.
         local node = UI._CurrentGraphNode
+        local rotation = node.Rotation or 0
         local slotsAmount = #node.Neighbours
         local anglePerSlot = (2 * math.pi) / slotsAmount
         local firstSegmentStart = V(0, -1) -- Top of the stick is (0, -1)
-        firstSegmentStart = Vector.Rotate(firstSegmentStart, -math.deg(anglePerSlot / 2)) -- But the first segment's left boundary does not necessarily start at (0, -1)
+        firstSegmentStart = Vector.Rotate(firstSegmentStart, -math.deg(anglePerSlot / 2) + rotation) -- But the first segment's left boundary does not necessarily start at (0, -1)
         local angle = Vector.Angle(direction, firstSegmentStart)
 
         -- Determine if the stick is on the other side of the wheel (past the 180 deg point) to calculate the 360 angle
@@ -292,6 +294,7 @@ local Crossroads = {
                 "Node_3", -- Inertia
                 "Life",
             },
+            Rotation = 45,
         },
         ["Node_2"] = {
             ID = "Node_2", -- Form
@@ -302,6 +305,7 @@ local Crossroads = {
                 "Form",
                 "Node_3", -- Inertia
             },
+            Rotation = 15,
         },
         ["Node_3"] = {
             ID = "Node_3", -- Inertia
@@ -312,6 +316,7 @@ local Crossroads = {
                 "Node_2", -- Form
                 "Inertia",
             },
+            Rotation = -15,
         },
         ["Node_4"] = {
             ID = "Node_4", -- Entropy
@@ -322,6 +327,7 @@ local Crossroads = {
                 "Entropy",
                 "Node_2", -- Form
             },
+            Rotation = -45,
         },
     },
     StartingNode = "Node_0"
