@@ -858,6 +858,14 @@ LOAD_ORDER = {
     "Epip/Client/EpipSettingsMenu.lua",
     "Epip/Keybindings/Client.lua",
 
+    {
+        ScriptSet = "Epip/MeditateControllerSupport",
+        Scripts = {
+            "Epip/MeditateControllerSupport/UI/Overlay.lua",
+        },
+        RequiresEE = true,
+    },
+
     -- Debug Cheats
     {
         ScriptSet = "Epip/DebugCheats",

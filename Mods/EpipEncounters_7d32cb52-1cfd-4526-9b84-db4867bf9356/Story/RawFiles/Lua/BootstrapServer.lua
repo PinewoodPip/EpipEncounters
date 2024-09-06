@@ -324,6 +324,11 @@ LOAD_ORDER = {
 
     "Epip/OsirisIDEAnnotationGenerator.lua",
 
+    {
+        ScriptSet = "Epip/MeditateControllerSupport",
+        RequiresEE = true,
+    },
+
     -- Debug Cheats
     {
         ScriptSet = "Epip/DebugCheats",

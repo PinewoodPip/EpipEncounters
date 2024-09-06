@@ -1,0 +1,31 @@
+
+---@class Features.MeditateControllerSupport
+local Support = Epip.GetFeature("Features.MeditateControllerSupport")
+
+---------------------------------------------
+-- EVENT LISTENERS
+---------------------------------------------
+
+-- TODO remove
+Osiris.RegisterSymbolListener("CharacterItemEvent", 3, "after", function(char, item, event)
+    if string.find(event, "AMER") then
+        print("CharacterItemEvent", char, item, event)
+    end
+end)
+
+Net.RegisterListener(Support.NETMSG_INTERACT, function (payload)
+    local char = payload:GetCharacter()
+    local instanceID = Osi.DB_AMER_UI_UsersInUI:Get(nil, nil, char.RootTemplate.Id .. "_" .. char.MyGuid)[1][1]
+    -- TODO page sanity checks
+    local element = Osi.DB_AMER_UI_ElementsOfInstance:Get(instanceID, "AMER_UI_Ascension", payload.CollectionID, payload.ElementID, nil)[1][5] -- TODO
+    Osiris.CharacterUseItem(char, element, payload.EventID)
+end)
+
+-- Exit the UI when lua is reset, for testing convenience,
+-- as the libraries do not support the UI being open right after initialization.
+Ext.Events.ResetCompleted:Subscribe(function (_)
+    local host = Character.Get(Osiris.CharacterGetHostCharacter())
+    if Osi.DB_AMER_UI_UsersInUI:Get(nil, nil, host.RootTemplate.Id .. "_" .. host.MyGuid)[1] ~= nil then
+        Osiris.CharacterUseSkill(host, EpicEncounters.Meditate.MEDITATE_SKILL_ID, host, 1, 1, 1)
+    end
+end)
