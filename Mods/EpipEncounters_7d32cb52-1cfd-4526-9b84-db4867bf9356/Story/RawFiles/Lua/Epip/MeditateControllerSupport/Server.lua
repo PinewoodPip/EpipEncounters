@@ -3,6 +3,18 @@
 local Support = Epip.GetFeature("Features.MeditateControllerSupport")
 
 ---------------------------------------------
+-- METHODS
+---------------------------------------------
+
+---Causes char to exit their current meditate UI.
+---@param char EsvCharacter
+function Support.ExitUI(char)
+    if Osi.DB_AMER_UI_UsersInUI:Get(nil, nil, char.RootTemplate.Id .. "_" .. char.MyGuid)[1] ~= nil then
+        Osiris.CharacterUseSkill(char, EpicEncounters.Meditate.MEDITATE_SKILL_ID, char, 1, 1, 1)
+    end
+end
+
+---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
 
@@ -25,7 +37,11 @@ end)
 -- as the libraries do not support the UI being open right after initialization.
 Ext.Events.ResetCompleted:Subscribe(function (_)
     local host = Character.Get(Osiris.CharacterGetHostCharacter())
-    if Osi.DB_AMER_UI_UsersInUI:Get(nil, nil, host.RootTemplate.Id .. "_" .. host.MyGuid)[1] ~= nil then
-        Osiris.CharacterUseSkill(host, EpicEncounters.Meditate.MEDITATE_SKILL_ID, host, 1, 1, 1)
-    end
+    Support.ExitUI(host)
+end)
+
+-- Handle requests to exit the UI.
+Net.RegisterListener(Support.NETMSG_EXIT, function (payload)
+    local char = payload:GetCharacter()
+    Support.ExitUI(char)
 end)

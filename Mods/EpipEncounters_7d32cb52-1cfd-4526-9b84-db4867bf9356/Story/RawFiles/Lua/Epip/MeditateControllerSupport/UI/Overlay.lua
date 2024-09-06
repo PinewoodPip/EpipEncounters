@@ -90,6 +90,13 @@ function UI.RegisterPage(page)
     end
 end
 
+---Requests the meditate UI to be exited entirely.
+function UI.RequestExit()
+    Net.PostToServer(Support.NETMSG_EXIT, {
+        CharacterNetID = Client.GetCharacter().NetID,
+    })
+end
+
 ---Creates the elements for a graph page.
 ---@param page Features.MeditateControllerSupport.Page.Graph
 function UI._CreateGraphPage(page)
@@ -164,10 +171,20 @@ function UI._Initialize()
         Name = Text.CommonStrings.Interact,
         Inputs = {["UIAccept"] = true},
     })
+    rootNav:AddAction({
+        ID = "Exit",
+        Name = Text.CommonStrings.Exit,
+        Inputs = {["ToggleInGameMenu"] = true},
+    })
     rootNav.Hooks.ConsumeInput:Subscribe(function (ev)
-        if ev.Action.ID == "Interact" and ev.Event.Timing == "Up" and UI._CanInteract() then
-            UI._Interact()
-            ev.Consumed = true
+        if ev.Event.Timing == "Up" then
+            if ev.Action.ID == "Interact" and UI._CanInteract() then
+                UI._Interact()
+                ev.Consumed = true
+            elseif ev.Action.ID == "Exit" then
+                UI.RequestExit()
+                ev.Consumed = true
+            end
         end
     end)
     rootNav:SetChildren({pageNav})
