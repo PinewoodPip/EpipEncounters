@@ -23,8 +23,7 @@ end
 
 Net.RegisterListener("EPIPENCOUNTERS_AMERUI_StateChanged", function(payload)
     local guid = payload.Character
-    payload.Character = Ext.GetCharacter(guid)
-
+    local char = Character.Get(guid)
 
     if not payload.Interface then
         AMERUI.characterStates[guid] = nil
@@ -38,14 +37,14 @@ Net.RegisterListener("EPIPENCOUNTERS_AMERUI_StateChanged", function(payload)
             Interface = payload.Interface,
             Page = payload.Page,
         }
-    
+
         Utilities.Log("Client.AMERUI", "Entered UI: " .. guid .. " UI " .. payload.Interface .. " Page " .. payload.Page)
 
         Utilities.Hooks.FireEvent("AMERUI", "CharacterEnteredUI", payload)
     end
 
     -- NOTE: BEHAVES WRONGLY WHEN CHANGING CHARS!!!! TODO FIX
-    if payload.Character == Client.GetCharacter().MyGuid then
+    if char == Client.GetCharacter().MyGuid then
         if not payload.Interface then
             Utilities.Hooks.FireEvent("AMERUI", "ClientExitedUIs")
         else

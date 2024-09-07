@@ -3,6 +3,8 @@ local Generic = Client.UI.Generic
 local Navigation = Generic.Navigation
 local Controller = Navigation:GetClass("GenericUI.Navigation.Controller")
 local ListComponent = Navigation:GetClass("GenericUI.Navigation.Components.List")
+local GenericComponent = Navigation:GetClass("GenericUI.Navigation.Components.Generic")
+local CommonStrings = Text.CommonStrings
 local Input = Client.Input
 local V = Vector.Create
 
@@ -31,6 +33,8 @@ UI._CurrentGraphNode = nil ---@type Features.MeditateControllerSupport.Page.Grap
 ---@field Type Features.MeditateControllerSupport.Page.Type
 
 ---@class Features.MeditateControllerSupport.Page.Wheel : Features.MeditateControllerSupport.Page
+---@field WheelID string
+---@field SelectEventID string
 
 ---@class Features.MeditateControllerSupport.Page.Graph.Node
 ---@field ID string
@@ -50,28 +54,31 @@ UI._CurrentGraphNode = nil ---@type Features.MeditateControllerSupport.Page.Grap
 ---Sets up the overlay.
 function UI.Setup()
     UI._Initialize()
-    UI.SetPage(UI._Pages["Page_MainHub"])
     UI:Show()
     Support:DebugLog("UI setup complete")
 end
 
 ---Sets the current page of the UI.
----@param page Features.MeditateControllerSupport.Page
-function UI.SetPage(page)
-    if not UI._Pages[page.ID] then
-        UI.RegisterPage(page)
-    end
-    UI._PageContainerNav:FocusByIndex(UI._PageToContainerChildIndex[page.ID])
-    UI._CurrentPage = page
-    if page.Type == "Graph" then
-        ---@cast page Features.MeditateControllerSupport.Page.Graph
-        _D(page.Nodes[page.StartingNode])
-        _D(page.Nodes)
-        UI._SelectNode(page.Nodes[page.StartingNode])
-    else
+---@param pageID string
+function UI.SetPage(pageID)
+    local page = UI._Pages[pageID]
+    if not page then
+        UI:__LogWarning("Page not registered, disabling overlay", pageID)
+        UI._CurrentPage = nil
         UI._CurrentGraphNode = nil
+    else
+        UI._PageContainerNav:FocusByIndex(UI._PageToContainerChildIndex[pageID])
+        UI._CurrentPage = page
+
+        -- Select starting node
+        if page.Type == "Graph" then
+            ---@cast page Features.MeditateControllerSupport.Page.Graph
+            UI._SelectNode(page.Nodes[page.StartingNode])
+        else
+            UI._CurrentGraphNode = nil
+        end
+        Support:DebugLog("Page set", page.ID)
     end
-    Support:DebugLog("Page set", page.ID)
 end
 
 ---Registers a page for use within the UI.
@@ -83,10 +90,11 @@ function UI.RegisterPage(page)
 
     -- Create elements
     if page.Type == "Wheel" then
-        UI:ThrowNotImplemented("RegisterPage Wheel type")
+        ---@cast page Features.MeditateControllerSupport.Page.Wheel
+        UI._CreateWheelPage(page)
     elseif page.Type == "Graph" then
         ---@cast page Features.MeditateControllerSupport.Page.Graph
-        UI._CreateGraphPage(page)
+        UI._CreateEmptyPage(page)
     end
 end
 
@@ -97,10 +105,62 @@ function UI.RequestExit()
     })
 end
 
----Creates the elements for a graph page.
----@param page Features.MeditateControllerSupport.Page.Graph
-function UI._CreateGraphPage(page)
-    local _ = UI:CreateElement(page.ID .. "." .. "Container", "GenericUI_Element_Empty", UI._PageContainer)
+---Creates the elements for a page that doesn't use dummy elements.
+---@param page Features.MeditateControllerSupport.Page
+function UI._CreateEmptyPage(page)
+    local element = UI:CreateElement(page.ID .. "." .. "Container", "GenericUI_Element_Empty", UI._PageContainer)
+    -- TODO create an "empty" component instead of abusing List
+    local _ = ListComponent:Create(element, {
+        ScrollForwardEvents = {},
+        ScrollBackwardEvents = {},
+        Wrap = false,
+    })
+end
+
+---Creates the elements for a wheel page.
+---@param page Features.MeditateControllerSupport.Page.Wheel
+function UI._CreateWheelPage(page)
+    local element = UI:CreateElement(page.ID .. "." .. "Container", "GenericUI_Element_Empty", UI._PageContainer)
+    local nav = GenericComponent:Create(element)
+    nav:AddAction({
+        ID = "Previous",
+        Name = CommonStrings.Previous,
+        Inputs = {["UILeft"] = true, ["UITabPrev"] = true},
+    })
+    nav:AddAction({
+        ID = "Next",
+        Name = CommonStrings.Next,
+        Inputs = {["UIRight"] = true, ["UITabNext"] = true},
+    })
+    nav.Hooks.ConsumeInput:Subscribe(function (ev)
+        if ev.Event.Timing == "Up" then
+            if ev.Action.ID == "Previous" then
+                Net.PostToServer(Support.NETMSG_SCROLL_WHEEL, {
+                    CharacterNetID = Client.GetCharacter().NetID,
+                    PageID = page.ID,
+                    WheelID = page.WheelID,
+                    Direction = "Previous",
+                })
+                ev.Consumed = true
+            elseif ev.Action.ID == "Next" then
+                Net.PostToServer(Support.NETMSG_SCROLL_WHEEL, {
+                    CharacterNetID = Client.GetCharacter().NetID,
+                    PageID = page.ID,
+                    WheelID = page.WheelID,
+                    Direction = "Next",
+                })
+                ev.Consumed = true
+            elseif ev.Action.ID == "Interact" then
+                Net.PostToServer(Support.NETMSG_INTERACT_WHEEL, {
+                    CharacterNetID = Client.GetCharacter().NetID,
+                    PageID = page.ID,
+                    WheelID = page.WheelID,
+                    EventID = page.SelectEventID,
+                })
+                ev.Consumed = true
+            end
+        end
+    end)
 end
 
 ---Selects a node from the graph.
@@ -121,7 +181,7 @@ function UI._CanInteract()
     local page = UI._CurrentPage
     local canInteract = false
     if page.Type == "Wheel" then
-        UI:__ThrowNotImplemented("_CanInteract wheel type")
+        canInteract = true
     elseif page.Type == "Graph" then
         canInteract = UI._CurrentGraphNode ~= nil
     end
@@ -132,7 +192,7 @@ end
 function UI._Interact()
     local page = UI._CurrentPage
     if page.Type == "Wheel" then
-        UI:ThrowNotImplemented("_Interact wheel type")
+        -- TODO? just do the useless click?
     elseif page.Type == "Graph" then
         local node = UI._CurrentGraphNode
         ---@type Features.MeditateControllerSupport.NetMsg.InteractWithElement
@@ -239,8 +299,15 @@ Input.Events.StickMoved:Subscribe(function (ev)
         isPastThreshold = false
     end
 end, {EnabledFunctor = function ()
-    return UI:IsVisible() and UI._CurrentPage.Type == "Graph"
+    return UI:IsVisible() and UI._CurrentPage and UI._CurrentPage.Type == "Graph"
 end})
+
+-- Track page changes.
+Net.RegisterListener("EPIPENCOUNTERS_AMERUI_StateChanged", function (payload)
+    if Character.Get(payload.Character) == Client.GetCharacter() then
+        UI.SetPage(payload.Page)
+    end
+end)
 
 ---------------------------------------------
 -- SETUP
@@ -350,3 +417,13 @@ local Crossroads = {
     StartingNode = "Node_0"
 }
 UI.RegisterPage(Crossroads)
+
+---@type Features.MeditateControllerSupport.Page.Wheel
+local Gateway = {
+    UI = "AMER_UI_Ascension",
+    ID = "Page_Gateway",
+    Type = "Wheel",
+    WheelID = "PathWheel",
+    SelectEventID = "AMER_UI_Ascension_ClusterChosen",
+}
+UI.RegisterPage(Gateway)

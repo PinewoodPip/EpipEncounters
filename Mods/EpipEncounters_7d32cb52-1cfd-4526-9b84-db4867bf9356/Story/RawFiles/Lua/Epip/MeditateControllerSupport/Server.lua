@@ -14,6 +14,61 @@ function Support.ExitUI(char)
     end
 end
 
+---Scrolls a Wheel element.
+---@param instance integer
+---@param ui string
+---@param wheel string
+---@param direction "Previous"|"Next"
+function Support.ScrollWheel(instance, ui, wheel, direction)
+    local charGUID = Support._GetInstanceCharacter(instance)
+    local element = Support._GetElement(instance, ui, wheel, nil)
+    if direction == "Previous" then
+        Osi.PROC_AMER_UI_ElementWheel_Scroll_Down(charGUID, element)
+    else -- "Next" direction case.
+        Osi.PROC_AMER_UI_ElementWheel_Scroll_Up(charGUID, element)
+    end
+end
+
+---Returns the item of an element.
+---@param instance integer
+---@param ui string
+---@param collection string?
+---@param name string?
+function Support._GetElement(instance, ui, collection, name)
+    return Osiris.GetFirstFact("DB_AMER_UI_ElementsOfInstance", instance, ui, collection, name, nil)[5]
+end
+
+---Returns the character of an instance.
+---@param instance integer
+---@return GUID
+function Support._GetInstanceCharacter(instance)
+    return Osiris.GetFirstFact("DB_AMER_UI_UsersInUI", instance, nil, nil)[3]
+end
+
+---Returns the instance ID of char.
+---@param char EsvCharacter|GUID
+---@return integer
+function Support._GetInstanceID(char)
+    local charGuid = GetExtType(char) ~= nil and char.RootTemplate.Id .. "_" .. char.MyGuid or char -- Object overload.
+    return Osiris.GetFirstFact("DB_AMER_UI_UsersInUI", nil, nil, charGuid)[1]
+end
+
+---Returns the current page of an instance.
+---@param instance integer
+---@return string, integer -- Page ID and stack index.
+function Support._GetCurrentPage(instance)
+    local fact = Osiris.GetFirstFact("DB_AMER_UI_CurrentPage", instance, nil, nil, nil)
+    return fact[3], fact[4]
+end
+
+---Returns the current UI of an instance.
+---@param instance integer
+---@return string
+function Support._GetCurrentUI(instance)
+    local fact = Osiris.GetFirstFact("DB_AMER_UI_CurrentPage", instance, nil, nil, nil)
+    return fact[2]
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
@@ -29,7 +84,22 @@ Net.RegisterListener(Support.NETMSG_INTERACT, function (payload)
     local char = payload:GetCharacter()
     local instanceID = Osi.DB_AMER_UI_UsersInUI:Get(nil, nil, char.RootTemplate.Id .. "_" .. char.MyGuid)[1][1]
     -- TODO page sanity checks
-    local element = Osi.DB_AMER_UI_ElementsOfInstance:Get(instanceID, "AMER_UI_Ascension", payload.CollectionID, payload.ElementID, nil)[1][5] -- TODO
+    local element = Osi.DB_AMER_UI_ElementsOfInstance:Get(instanceID, Support._GetCurrentUI(instanceID), payload.CollectionID, payload.ElementID, nil)[1][5]
+    Osiris.CharacterUseItem(char, element, payload.EventID)
+end)
+
+-- Handle requests to scroll and interact with wheels.
+Net.RegisterListener(Support.NETMSG_SCROLL_WHEEL, function (payload)
+    local instanceID = Support._GetInstanceID(payload:GetCharacter())
+    -- TODO page sanity checks
+    Support.ScrollWheel(instanceID, Support._GetCurrentUI(instanceID), payload.WheelID, payload.Direction)
+end)
+Net.RegisterListener(Support.NETMSG_INTERACT_WHEEL, function (payload)
+    local char = payload:GetCharacter()
+    local instanceID = Support._GetInstanceID(char)
+    -- TODO page sanity checks
+    local tuples = Osi.DB_AMER_UI_ElementsOfInstance:Get(instanceID, Support._GetCurrentUI(instanceID), payload.WheelID, nil, nil)
+    local element = tuples[2][5] -- The center element of the wheel is the one that's used to navigate to other pages.
     Osiris.CharacterUseItem(char, element, payload.EventID)
 end)
 
