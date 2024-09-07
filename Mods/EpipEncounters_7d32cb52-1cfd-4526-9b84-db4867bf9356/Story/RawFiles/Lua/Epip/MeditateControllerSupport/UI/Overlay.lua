@@ -232,6 +232,11 @@ function UI._Initialize()
         Inputs = {["UIAccept"] = true},
     })
     rootNav:AddAction({
+        ID = "Back",
+        Name = Text.CommonStrings.Back,
+        Inputs = {["UICancel"] = true},
+    })
+    rootNav:AddAction({
         ID = "Exit",
         Name = Text.CommonStrings.Exit,
         Inputs = {["ToggleInGameMenu"] = true},
@@ -240,6 +245,9 @@ function UI._Initialize()
         if ev.Event.Timing == "Up" then
             if ev.Action.ID == "Interact" and UI._CanInteract() then
                 UI._Interact()
+                ev.Consumed = true
+            elseif ev.Action.ID == "Back" then
+                Support.RequestReturnToPreviousPage()
                 ev.Consumed = true
             elseif ev.Action.ID == "Exit" then
                 UI.RequestExit()

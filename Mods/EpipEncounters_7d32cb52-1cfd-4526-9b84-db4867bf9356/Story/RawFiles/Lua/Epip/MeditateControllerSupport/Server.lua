@@ -6,6 +6,18 @@ local Support = Epip.GetFeature("Features.MeditateControllerSupport")
 -- METHODS
 ---------------------------------------------
 
+---Returns the UI to the previous page.
+---@param char EsvCharacter
+function Support.ReturnToPreviousPage(char)
+    local instanceID = Support._GetInstanceID(char)
+    local element = Support._GetElement(instanceID, Support._GetCurrentUI(instanceID), "Back", "Back")
+    if element then
+        Osiris.CharacterUseItem(char, element, "AMER_UI_Ascension_NavBar_Back")
+    else -- Exit the UI if it's at the starting page.
+        Support.ExitUI(char)
+    end
+end
+
 ---Causes char to exit their current meditate UI.
 ---@param char EsvCharacter
 function Support.ExitUI(char)
@@ -34,8 +46,9 @@ end
 ---@param ui string
 ---@param collection string?
 ---@param name string?
+---@return GUID?
 function Support._GetElement(instance, ui, collection, name)
-    return Osiris.GetFirstFact("DB_AMER_UI_ElementsOfInstance", instance, ui, collection, name, nil)[5]
+    return Osiris.GetFirstFactOrEmpty("DB_AMER_UI_ElementsOfInstance", instance, ui, collection, name, nil)[5]
 end
 
 ---Returns the character of an instance.
@@ -110,7 +123,11 @@ Ext.Events.ResetCompleted:Subscribe(function (_)
     Support.ExitUI(host)
 end)
 
--- Handle requests to exit the UI.
+-- Handle requests to return to the previous page or exit the UI.
+Net.RegisterListener(Support.NETMSG_BACK, function (payload)
+    local char = payload:GetCharacter()
+    Support.ReturnToPreviousPage(char)
+end)
 Net.RegisterListener(Support.NETMSG_EXIT, function (payload)
     local char = payload:GetCharacter()
     Support.ExitUI(char)
