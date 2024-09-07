@@ -55,6 +55,7 @@ UI._CurrentGraphNode = nil ---@type Features.MeditateControllerSupport.Page.Grap
 function UI.Setup()
     UI._Initialize()
     UI:Show()
+    UI:TogglePlayerInput(not Client.IsInSelectorMode()) -- Restore player input if the UI was previously closed while in selector mode (ex. from manually pressing the exit button)
     Support:DebugLog("UI setup complete")
 end
 
@@ -276,6 +277,11 @@ Game.Ascension:RegisterListener("ClientToggledMeditating", function (entered)
     end
 end)
 
+-- Disable the overlay when in selector mode.
+Client.Events.SelectorModeChanged:Subscribe(function (ev)
+    UI:TogglePlayerInput(not ev.Enabled)
+end, {EnabledFunctor = function () return UI:IsVisible() end})
+
 -- Navigate graphs with the left stick
 local isPastThreshold = false
 Input.Events.StickMoved:Subscribe(function (ev)
@@ -307,7 +313,7 @@ Input.Events.StickMoved:Subscribe(function (ev)
         isPastThreshold = false
     end
 end, {EnabledFunctor = function ()
-    return UI:IsVisible() and UI._CurrentPage and UI._CurrentPage.Type == "Graph"
+    return UI:IsVisible() and UI:GetUI().OF_PlayerInput1 and UI._CurrentPage and UI._CurrentPage.Type == "Graph"
 end})
 
 -- Track page changes.

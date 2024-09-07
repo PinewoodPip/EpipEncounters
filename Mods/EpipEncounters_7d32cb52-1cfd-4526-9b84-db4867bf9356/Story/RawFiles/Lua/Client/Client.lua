@@ -58,6 +58,7 @@ Client = {
         InDialogueStateChanged = {}, ---@type Event<{InDialogue:boolean}>
         LocalCoopStarted = {}, ---@type Event<Empty> Will be thrown during session load if reloading while in local co-op.
         LocalCoopEnded = {}, ---@type Event<Empty>
+        SelectorModeChanged = {}, ---@type Event<{PlayerIndex:integer, Enabled:boolean}>
     }
 }
 Epip.InitializeLibrary("Client", Client)
@@ -201,6 +202,19 @@ function Client.IsLocalCoop()
     local playerManager = Ext.Entity.GetPlayerManager()
     local playerCount = table.getKeyCount(playerManager.Players)
     return playerCount >= 2 -- Should never be 3+, as support for more players appears scrapped.
+end
+
+---Returns whether a player is in controller selector mode.
+---@param playerIndex integer? Defaults to `1`.
+function Client.IsInSelectorMode(playerIndex)
+    playerIndex = playerIndex or 1
+    local camera = Client.Camera.GetPlayerCamera(playerIndex)
+    local inSelectorMode = false
+    if GetExtType(camera) == "ecl::GameCamera" then
+        ---@cast camera EclGameCamera
+        inSelectorMode = camera.CameraMode == 1
+    end
+    return inSelectorMode
 end
 
 ---Returns the viewport size.
@@ -468,8 +482,8 @@ GameState.Events.RunningTick:Subscribe(function (_)
 end, {StringID = "ClientLib.InDialogueStateChangedEvent"})
 
 -- Throw events for entering/exiting splitscreen.
-local wasInLocalCoop = false
 if Client.IsUsingController() then
+    local wasInLocalCoop = false
     GameState.Events.Tick:Subscribe(function (_)
         local inCoop = Client.IsLocalCoop()
         if inCoop ~= wasInLocalCoop then
@@ -479,6 +493,24 @@ if Client.IsUsingController() then
                 Client.Events.LocalCoopEnded:Throw()
             end
             wasInLocalCoop = inCoop
+        end
+    end)
+end
+
+-- Throw events for controller selector mode changing.
+if Client.IsUsingController() then
+    local wasInSelectorMode = {[1] = false, [2] = false} ---@type table<integer, boolean> Maps player ID to selector mode state.
+    GameState.Events.RunningTick:Subscribe(function (_)
+        local playerCount = Client.IsLocalCoop() and 2 or 1
+        for playerIndex=1,playerCount,1 do
+            local inSelectorMode = Client.IsInSelectorMode(playerIndex)
+            if inSelectorMode ~= wasInSelectorMode[playerIndex] then
+                Client.Events.SelectorModeChanged:Throw({
+                    PlayerIndex = playerIndex,
+                    Enabled = inSelectorMode,
+                })
+                wasInSelectorMode[playerIndex] = inSelectorMode
+            end
         end
     end)
 end
