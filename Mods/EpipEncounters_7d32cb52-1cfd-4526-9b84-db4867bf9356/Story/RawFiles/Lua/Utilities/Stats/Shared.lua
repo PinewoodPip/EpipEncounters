@@ -506,7 +506,12 @@ end
 ---@param stats CDivinityStats_Character
 ---@param req StatRequirement|StatsRequirement
 function Stats.EvaluateRequirement(stats, req)
-    return Ext.Stats.Requirement.Evaluate(stats, req.Requirement, type(req.Param) == "number" and req.Param or nil, type(req.Param) == "string" and req.Param or req.Tag, req.Not) -- The "Tag" field appears unused.
+    if req.Requirement == "Combat" then -- The Combat requirement is occasionally buggy to check with Evaluate() when loading saves mid-combat.
+        local inCombat = Character.IsInCombat(stats.Character)
+        return req.Not and not inCombat or inCombat
+    else
+        return Ext.Stats.Requirement.Evaluate(stats, req.Requirement, type(req.Param) == "number" and req.Param or nil, type(req.Param) == "string" and req.Param or req.Tag, req.Not) -- The "Tag" field appears unused.
+    end
 end
 
 function Stats.CountStat(stats, stat)
