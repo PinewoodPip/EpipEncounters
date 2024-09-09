@@ -34,8 +34,8 @@ function GenericComponent:OnIggyEvent(event)
 
     -- Emulate clicks.
     -- A pcall is used as the target might've been destroyed as a result of the click events.
-    return pcall(function ()
-        if self:CanConsumeInput("UIAccept") and event.Timing == "Up" then
+    local success, consumed = pcall(function ()
+        if self:CanConsumeInput("Interact", event.EventID) and event.Timing == "Up" then
             local target = self.__Target
             target.Events.MouseDown:Throw()
             target.Events.MouseUp:Throw()
@@ -45,7 +45,9 @@ function GenericComponent:OnIggyEvent(event)
             end
             return true
         end
+        return false
     end)
+    return success and consumed or false
 end
 
 ---@override
