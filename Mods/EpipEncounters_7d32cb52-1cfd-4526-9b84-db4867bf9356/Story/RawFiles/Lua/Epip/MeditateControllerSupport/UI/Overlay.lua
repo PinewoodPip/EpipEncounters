@@ -10,6 +10,7 @@ local V = Vector.Create
 
 ---@class Features.MeditateControllerSupport
 local Support = Epip.GetFeature("Features.MeditateControllerSupport")
+local TSK = Support.TranslatedStrings
 Support:Debug()
 
 local UI = Generic.Create("Features.MeditateControllerSupport.Overlay", {Layer = 99}) ---@class Features.MeditateControllerSupport.Overlay : GenericUI_Instance
@@ -25,7 +26,7 @@ UI._CurrentGraphNode = nil ---@type Features.MeditateControllerSupport.Page.Grap
 -- CLASSES
 ---------------------------------------------
 
----@alias Features.MeditateControllerSupport.Page.Type "Wheel"|"Graph"
+---@alias Features.MeditateControllerSupport.Page.Type "Wheel"|"Graph"|"AspectGraph"
 
 ---@class Features.MeditateControllerSupport.Page
 ---@field UI string
@@ -63,10 +64,12 @@ end
 ---@param pageID string
 function UI.SetPage(pageID)
     local page = UI._Pages[pageID]
+    Support._CurrentAspectID = nil
+    Support._CurrentAspectNode = nil
+    UI._CurrentGraphNode = nil
     if not page then
         UI:__LogWarning("Page not registered, disabling overlay", pageID)
         UI._CurrentPage = nil
-        UI._CurrentGraphNode = nil
     else
         UI._PageContainerNav:FocusByIndex(UI._PageToContainerChildIndex[pageID])
         UI._CurrentPage = page
@@ -75,8 +78,6 @@ function UI.SetPage(pageID)
         if page.Type == "Graph" then
             ---@cast page Features.MeditateControllerSupport.Page.Graph
             UI._SelectNode(page.Nodes[page.StartingNode])
-        else
-            UI._CurrentGraphNode = nil
         end
         Support:DebugLog("Page set", page.ID)
     end
@@ -96,6 +97,9 @@ function UI.RegisterPage(page)
     elseif page.Type == "Graph" then
         ---@cast page Features.MeditateControllerSupport.Page.Graph
         UI._CreateEmptyPage(page)
+    elseif page.Type == "AspectGraph" then
+        ---@cast page Features.MeditateControllerSupport.Page.AspectGraph
+        UI._CreateAspectGraphPage(page)
     end
 end
 
@@ -164,10 +168,57 @@ function UI._CreateWheelPage(page)
     end)
 end
 
+---Creates the elements for an aspect graph page.
+---@param page Features.MeditateControllerSupport.Page.AspectGraph
+function UI._CreateAspectGraphPage(page)
+    local element = UI:CreateElement(page.ID .. "." .. "Container", "GenericUI_Element_Empty", UI._PageContainer)
+    local nav = GenericComponent:Create(element)
+    nav:AddAction({
+        ID = "PreviousNode",
+        Name = TSK.Label_PreviousNode,
+        Inputs = {["UITabPrev"] = true},
+    })
+    nav:AddAction({
+        ID = "NextNode",
+        Name = TSK.Label_NextNode,
+        Inputs = {["UITabNext"] = true},
+    })
+    nav:AddAction({
+        ID = "Back",
+        Name = Text.CommonStrings.Back,
+        Inputs = {["UICancel"] = true},
+    })
+    nav.Hooks.ConsumeInput:Subscribe(function (ev)
+        if ev.Event.Timing == "Up" then
+            local aspect = Support.GetAspect()
+            local currentNode = UI._CurrentGraphNode
+            if ev.Action.ID == "PreviousNode" then
+                local previousNode = aspect.Nodes[currentNode.Neighbours[1]] -- Assumes no forking paths.
+                if table.reverseLookup(aspect.NodeOrder, previousNode.ID) < table.reverseLookup(aspect.NodeOrder, currentNode.ID) then -- Do not change nodes if the only neighbour is the next node.
+                    UI._SelectNode(previousNode)
+                    ev.Consumed = true
+                end
+            elseif ev.Action.ID == "NextNode" then
+                local nextNode = aspect.Nodes[currentNode.Neighbours[2] or currentNode.Neighbours[1]] -- Assumes no forking paths.
+                if table.reverseLookup(aspect.NodeOrder, nextNode.ID) > table.reverseLookup(aspect.NodeOrder, currentNode.ID) then -- Do not change nodes if the only neighbour is the previous node.
+                    UI._SelectNode(nextNode)
+                    ev.Consumed = true
+                end
+            elseif ev.Action.ID == "Interact" then
+                -- TODO select subnode
+            elseif ev.Action.ID == "Back" then
+                if UI.IsInGraph() and Support._CurrentAspectNode then
+                    Support.RequestDeselectElement()
+                end
+            end
+        end
+    end)
+end
+
 ---Selects a node from the graph.
 ---@param node Features.MeditateControllerSupport.Page.Graph.Node
 function UI._SelectNode(node)
-    if UI._CurrentPage.Type ~= "Graph" then
+    if UI._CurrentPage.Type ~= "Graph" and UI._CurrentPage.Type ~= "AspectGraph" then
         UI:__Error("_SelectNode", "Not in a graph page")
     end
     UI._CurrentGraphNode = node -- TODO wait for confirmation from the server
@@ -183,7 +234,7 @@ function UI._CanInteract()
     local canInteract = false
     if page.Type == "Wheel" then
         canInteract = true
-    elseif page.Type == "Graph" then
+    elseif page.Type == "Graph" or page.Type == "AspectGraph" then
         canInteract = UI._CurrentGraphNode ~= nil
     end
     return canInteract
@@ -194,7 +245,7 @@ function UI._Interact()
     local page = UI._CurrentPage
     if page.Type == "Wheel" then
         -- TODO? just do the useless click?
-    elseif page.Type == "Graph" then
+    elseif page.Type == "Graph" or page.Type == "AspectGraph" then
         local node = UI._CurrentGraphNode
         ---@type Features.MeditateControllerSupport.NetMsg.InteractWithElement
         local msg = {
@@ -291,10 +342,17 @@ Input.Events.StickMoved:Subscribe(function (ev)
         -- Do not consider more inputs until the stick is reset to a neutral position.
         if isPastThreshold then return end
         isPastThreshold = true
-        local page = UI._CurrentPage ---@cast page Features.MeditateControllerSupport.Page.Graph Valid cast due to the EnabledFunctor checks.
+
+        if not UI._CurrentGraphNode and Support._CurrentAspectID then
+            local aspect = Support.GetAspect(Support._CurrentAspectID)
+            UI._SelectNode(aspect.Nodes[aspect.StartingNode])
+            return
+        end
+
+        local page = UI._CurrentPage
         local node = UI._CurrentGraphNode
         local rotation = node.Rotation or 0
-        local slotsAmount = #node.Neighbours
+        local slotsAmount = Support._CurrentAspectNode and Support.GetSubnodesCount(Support._CurrentAspectID, node.ID) or #node.Neighbours -- In aspect graphs the left stick navigates subnodes instead.
         local anglePerSlot = (2 * math.pi) / slotsAmount
         local firstSegmentStart = V(0, -1) -- Top of the stick is (0, -1)
         firstSegmentStart = Vector.Rotate(firstSegmentStart, -math.deg(anglePerSlot / 2) + rotation) -- But the first segment's left boundary does not necessarily start at (0, -1)
@@ -308,13 +366,41 @@ Input.Events.StickMoved:Subscribe(function (ev)
         local fraction = angle / (2 * math.pi)
         local slotIndex = math.floor(slotsAmount * fraction) + 1
         slotIndex = math.clamp(slotIndex, 1, slotsAmount)
-        UI._SelectNode(page.Nodes[node.Neighbours[slotIndex]])
+
+        if page.Type == "Graph" then
+            ---@cast page Features.MeditateControllerSupport.Page.Graph
+            UI._SelectNode(page.Nodes[node.Neighbours[slotIndex]])
+        elseif page.Type == "AspectGraph" then
+            ---@cast page Features.MeditateControllerSupport.Page.AspectGraph
+            local aspect = Support.GetAspect(Support._CurrentAspectID)
+            if Support._CurrentAspectNode then
+                ---@type Features.MeditateControllerSupport.NetMsg.InteractWithElement
+                local msg = {
+                    CharacterNetID = Client.GetCharacter().NetID,
+                    CollectionID = node.CollectionID,
+                    EventID = "AMER_UI_ElementChain_ChildNodeUse",
+                    PageID = UI._CurrentPage.ID,
+                    ElementID = string.format("Node_%s.%s", math.floor(Support._CurrentAspectNode - 1), math.floor(slotIndex - 1)),
+                }
+                Net.PostToServer(Support.NETMSG_INTERACT, msg)
+            else
+                Support:DebugLog("Selecting aspect node", slotIndex)
+                UI._SelectNode(aspect.Nodes[node.Neighbours[slotIndex]])
+            end
+        end
     elseif directionLength > 0 then
         isPastThreshold = false
     end
 end, {EnabledFunctor = function ()
-    return UI:IsVisible() and UI:GetUI().OF_PlayerInput1 and UI._CurrentPage and UI._CurrentPage.Type == "Graph"
+    return UI:IsVisible() and UI:GetUI().OF_PlayerInput1 and UI.IsInGraph()
 end})
+
+---Returns whether the navigation is currently within a graph-like collection.
+---@return boolean
+function UI.IsInGraph()
+    local page = UI._CurrentPage
+    return page and (page.Type == "Graph" or page.Type == "AspectGraph") or false
+end
 
 -- Track page changes.
 Net.RegisterListener("EPIPENCOUNTERS_AMERUI_StateChanged", function (payload)
@@ -441,3 +527,11 @@ local Gateway = {
     SelectEventID = "AMER_UI_Ascension_ClusterChosen",
 }
 UI.RegisterPage(Gateway)
+
+---@type Features.MeditateControllerSupport.Page.AspectGraph
+local Aspect = {
+    UI = "AMER_UI_Ascension",
+    ID = "Page_Cluster",
+    Type = "AspectGraph",
+}
+UI.RegisterPage(Aspect)

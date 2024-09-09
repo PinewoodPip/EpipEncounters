@@ -18,6 +18,15 @@ function Support.ReturnToPreviousPage(char)
     end
 end
 
+---Deselects any selected element. Equivalent to clicking the background.
+---@param char EsvCharacter
+function Support.DeselectElement(char)
+    Osiris.PROC_AMER_UI_Ascension_BackgroundClicked(Support._GetInstanceID(char), char.CurrentTemplate.Id .. "_" .. char.MyGuid)
+    Net.PostToCharacter(char, Support.NETMSG_SET_ASPECT_NODE, {
+        NodeID = nil,
+    })
+end
+
 ---Causes char to exit their current meditate UI.
 ---@param char EsvCharacter
 function Support.ExitUI(char)
@@ -82,6 +91,63 @@ function Support._GetCurrentUI(instance)
     return fact[2]
 end
 
+---Sends node graph data to all clients.
+function Support._SendNodeData()
+    local nodes = Osi.DB_AMER_UI_ElementChain_Node:Get(nil, "AMER_UI_Ascension", nil, nil, nil, nil, nil);
+    local graphs = {} ---@type table<string, Features.MeditateControllerSupport.AspectGraph>
+    for _,tuple in ipairs(nodes) do
+        ---@diagnostic disable-next-line: unused-local
+        local aspect, nodeID, x, y = tuple[3], tuple[4], tuple[6], tuple[7]
+        if aspect == "Crossroads" then goto continue end -- The Core is a special case, already handled by the Graph page type.
+
+        -- Initialize graph
+        local graph
+        if not graphs[aspect] then
+            ---@type Features.MeditateControllerSupport.AspectGraph
+            graphs[aspect] = {
+                AspectID = aspect,
+                StartingNode = nodeID, -- Nodes are defined in order.
+                Nodes = {},
+                NodeOrder = {},
+            }
+        end
+        graph = graphs[aspect]
+
+        ---@type Features.MeditateControllerSupport.Page.AspectGraph.Node
+        local node = {
+            ID = nodeID,
+            CollectionID = aspect,
+            EventID = "AMER_UI_ElementChain_NodeUse",
+            Neighbours = {}, -- Determined later.
+            Rotation = nil,
+            Subnodes = Osiris.GetFirstFactOrEmpty("DB_AMER_UI_ElementChain_Node_ChildNode_Count", -1, "AMER_UI_Ascension", aspect, nodeID, nil)[5] or 0, -- The final Demilich node has no subnodes.
+        }
+        graph.Nodes[nodeID] = node
+        table.insert(graph.NodeOrder, nodeID)
+        ::continue::
+    end
+
+    for _,aspect in pairs(graphs) do
+        for i,nodeID in ipairs(aspect.NodeOrder) do
+            local node = aspect.Nodes[nodeID]
+
+            -- Define neighbours
+            -- Nodes with forking paths are deprecated; we assume all nodes are sequential.
+            local previous, next = aspect.NodeOrder[i - 1], aspect.NodeOrder[i + 1]
+            if previous then
+                table.insert(node.Neighbours, previous)
+            end
+            if next then
+                table.insert(node.Neighbours, next)
+            end
+        end
+    end
+
+    Net.Broadcast(Support.NETMSG_SEND_NODE_DATA, {
+        Aspects = graphs,
+    })
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
@@ -123,12 +189,37 @@ Ext.Events.ResetCompleted:Subscribe(function (_)
     Support.ExitUI(host)
 end)
 
--- Handle requests to return to the previous page or exit the UI.
+-- Handle requests to return to the previous page, deselect elements or exit the UI.
 Net.RegisterListener(Support.NETMSG_BACK, function (payload)
     local char = payload:GetCharacter()
     Support.ReturnToPreviousPage(char)
 end)
+Net.RegisterListener(Support.NETMSG_DESELECT, function (payload)
+    Support.DeselectElement(payload:GetCharacter())
+end)
 Net.RegisterListener(Support.NETMSG_EXIT, function (payload)
     local char = payload:GetCharacter()
     Support.ExitUI(char)
+end)
+
+-- Track selected aspect and node changes.
+Osiris.RegisterSymbolListener("PROC_AMER_UI_Ascension_SelectedElement_Set", 10, "after", function (instance, _, cluster) -- Second parameter is path.
+    if cluster ~= "Crossroads" then
+        local char = Support._GetInstanceCharacter(instance)
+        Net.PostToCharacter(char, Support.NETMSG_SET_ASPECT, {
+            AspectID = cluster,
+        })
+    end
+end)
+Osiris.RegisterSymbolListener("PROC_AMER_UI_ElementChain_Node_Used", 7, "after", function (char, _, _, cluster, node)
+    if cluster ~= "Crossroads" then
+        Net.PostToCharacter(Character.Get(char), Support.NETMSG_SET_ASPECT_NODE, {
+            NodeID = node,
+        })
+    end
+end)
+
+-- Send node data to clients connecting.
+GameState.Events.ClientReady:Subscribe(function (_)
+    Support._SendNodeData()
 end)
