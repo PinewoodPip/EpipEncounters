@@ -11,7 +11,6 @@ local V = Vector.Create
 ---@class Features.MeditateControllerSupport
 local Support = Epip.GetFeature("Features.MeditateControllerSupport")
 local TSK = Support.TranslatedStrings
-Support:Debug()
 
 local UI = Generic.Create("Features.MeditateControllerSupport.Overlay", {Layer = 99}) ---@class Features.MeditateControllerSupport.Overlay : GenericUI_Instance
 UI.CONTROLLER_STICK_SELECT_THRESHOLD = 0.8
@@ -20,7 +19,6 @@ UI._Pages = {} ---@type table<string, Features.MeditateControllerSupport.Page>
 UI._GraphIndexMaps = {} ---@type table<string, table<string, integer>> Maps page ID to map of node IDs to container child index.
 UI._CurrentPage = nil ---@type Features.MeditateControllerSupport.Page
 UI._PageToContainerChildIndex = {} ---@type table<string, integer>
-UI._CurrentGraphNode = nil ---@type Features.MeditateControllerSupport.Page.Graph.Node
 
 ---------------------------------------------
 -- CLASSES
@@ -66,7 +64,7 @@ function UI.SetPage(pageID)
     local page = UI._Pages[pageID]
     Support._CurrentAspectID = nil
     Support._CurrentAspectNode = nil
-    UI._CurrentGraphNode = nil
+    Support._CurrentGraphNode = nil
     if not page then
         UI:__LogWarning("Page not registered, disabling overlay", pageID)
         UI._CurrentPage = nil
@@ -187,29 +185,41 @@ function UI._CreateAspectGraphPage(page)
         ID = "Back",
         Name = Text.CommonStrings.Back,
         Inputs = {["UICancel"] = true},
+        IsConsumableFunctor = function (_)
+            -- Only consumable when there is a node selected; otherwise let root consume it (to go back)
+            return UI.IsInGraph() and Support._CurrentAspectNode or false
+        end
     })
     nav.Hooks.ConsumeInput:Subscribe(function (ev)
         if ev.Event.Timing == "Up" then
             local aspect = Support.GetAspect()
-            local currentNode = UI._CurrentGraphNode
+            local currentNode = Support._CurrentGraphNode
             if ev.Action.ID == "PreviousNode" then
-                local previousNode = aspect.Nodes[currentNode.Neighbours[1]] -- Assumes no forking paths.
-                if table.reverseLookup(aspect.NodeOrder, previousNode.ID) < table.reverseLookup(aspect.NodeOrder, currentNode.ID) then -- Do not change nodes if the only neighbour is the next node.
-                    UI._SelectNode(previousNode)
-                    ev.Consumed = true
+                if currentNode then
+                    local previousNode = aspect.Nodes[currentNode.Neighbours[1]] -- Assumes no forking paths.
+                    if table.reverseLookup(aspect.NodeOrder, previousNode.ID) < table.reverseLookup(aspect.NodeOrder, currentNode.ID) then -- Do not change nodes if the only neighbour is the next node.
+                        UI._SelectNode(previousNode)
+                        ev.Consumed = true
+                    end
+                else -- Select first node.
+                    UI._SelectNode(aspect.Nodes[aspect.NodeOrder[1]])
                 end
             elseif ev.Action.ID == "NextNode" then
-                local nextNode = aspect.Nodes[currentNode.Neighbours[2] or currentNode.Neighbours[1]] -- Assumes no forking paths.
-                if table.reverseLookup(aspect.NodeOrder, nextNode.ID) > table.reverseLookup(aspect.NodeOrder, currentNode.ID) then -- Do not change nodes if the only neighbour is the previous node.
-                    UI._SelectNode(nextNode)
+                if currentNode then
+                    local nextNode = aspect.Nodes[currentNode.Neighbours[2] or currentNode.Neighbours[1]] -- Assumes no forking paths.
+                    if table.reverseLookup(aspect.NodeOrder, nextNode.ID) > table.reverseLookup(aspect.NodeOrder, currentNode.ID) then -- Do not change nodes if the only neighbour is the previous node.
+                        UI._SelectNode(nextNode)
+                        ev.Consumed = true
+                    end
+                else -- Select next available node.
+                    Support.RequestSelectNextUnobtainedNode()
                     ev.Consumed = true
                 end
             elseif ev.Action.ID == "Interact" then
                 -- TODO select subnode
-            elseif ev.Action.ID == "Back" then
-                if UI.IsInGraph() and Support._CurrentAspectNode then
-                    Support.RequestDeselectElement()
-                end
+            elseif ev.Action.ID == "Back" and nav:GetAction("Back").IsConsumableFunctor(nav) then -- TODO remove functor check when the functor usage is made more consistent
+                Support.RequestDeselectElement()
+                ev.Consumed = true
             end
         end
     end)
@@ -221,7 +231,7 @@ function UI._SelectNode(node)
     if UI._CurrentPage.Type ~= "Graph" and UI._CurrentPage.Type ~= "AspectGraph" then
         UI:__Error("_SelectNode", "Not in a graph page")
     end
-    UI._CurrentGraphNode = node -- TODO wait for confirmation from the server
+    Support._CurrentGraphNode = node -- TODO wait for confirmation from the server
     if UI._CanInteract() then
         UI._Interact()
     end
@@ -235,7 +245,7 @@ function UI._CanInteract()
     if page.Type == "Wheel" then
         canInteract = true
     elseif page.Type == "Graph" or page.Type == "AspectGraph" then
-        canInteract = UI._CurrentGraphNode ~= nil
+        canInteract = Support._CurrentGraphNode ~= nil
     end
     return canInteract
 end
@@ -246,7 +256,7 @@ function UI._Interact()
     if page.Type == "Wheel" then
         -- TODO? just do the useless click?
     elseif page.Type == "Graph" or page.Type == "AspectGraph" then
-        local node = UI._CurrentGraphNode
+        local node = Support._CurrentGraphNode
         ---@type Features.MeditateControllerSupport.NetMsg.InteractWithElement
         local msg = {
             CharacterNetID = Client.GetCharacter().NetID,
@@ -343,14 +353,14 @@ Input.Events.StickMoved:Subscribe(function (ev)
         if isPastThreshold then return end
         isPastThreshold = true
 
-        if not UI._CurrentGraphNode and Support._CurrentAspectID then
+        if not Support._CurrentGraphNode and Support._CurrentAspectID then
             local aspect = Support.GetAspect(Support._CurrentAspectID)
             UI._SelectNode(aspect.Nodes[aspect.StartingNode])
             return
         end
 
         local page = UI._CurrentPage
-        local node = UI._CurrentGraphNode
+        local node = Support._CurrentGraphNode
         local rotation = node.Rotation or 0
         local slotsAmount = Support._CurrentAspectNode and Support.GetSubnodesCount(Support._CurrentAspectID, node.ID) or #node.Neighbours -- In aspect graphs the left stick navigates subnodes instead.
         local anglePerSlot = (2 * math.pi) / slotsAmount

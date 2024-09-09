@@ -4,6 +4,7 @@ local Support = Epip.GetFeature("Features.MeditateControllerSupport")
 Support._AspectGraphs = nil ---@type table<string, Features.MeditateControllerSupport.AspectGraph>
 Support._CurrentAspectID = nil ---@type string?
 Support._CurrentAspectNode = nil ---@type integer?
+Support._CurrentGraphNode = nil ---@type Features.MeditateControllerSupport.Page.Graph.Node
 
 ---------------------------------------------
 -- METHODS
@@ -19,6 +20,17 @@ end
 ---Requests the current element to be deselected.
 function Support.RequestDeselectElement()
     Net.PostToServer(Support.NETMSG_DESELECT, {
+        CharacterNetID = Client.GetCharacter().NetID,
+    })
+end
+
+---Requests the next unobtained node of the current aspect to be selected.
+function Support.RequestSelectNextUnobtainedNode()
+    if not Support._CurrentAspectID then
+        Support:__Error("RequestSelectNextUnobtainedNode", "Not in aspect")
+        return
+    end
+    Net.PostToServer(Support.NETMSG_SELECT_NEXT_UNOBTAINED_NODE, {
         CharacterNetID = Client.GetCharacter().NetID,
     })
 end
@@ -53,9 +65,12 @@ Net.RegisterListener(Support.NETMSG_SET_ASPECT, function (payload)
 end)
 Net.RegisterListener(Support.NETMSG_SET_ASPECT_NODE, function (payload)
     if payload.NodeID then
-        Support._CurrentAspectNode = table.reverseLookup(Support.GetAspect(Support._CurrentAspectID).NodeOrder, payload.NodeID)
+        local aspect = Support.GetAspect(Support._CurrentAspectID)
+        Support._CurrentAspectNode = table.reverseLookup(aspect.NodeOrder, payload.NodeID)
+        Support._CurrentGraphNode = aspect.Nodes[payload.NodeID]
     else
         Support._CurrentAspectNode = nil
+        Support._CurrentGraphNode = nil
     end
     Support:DebugLog("Aspect node set", payload.NodeID)
 end)

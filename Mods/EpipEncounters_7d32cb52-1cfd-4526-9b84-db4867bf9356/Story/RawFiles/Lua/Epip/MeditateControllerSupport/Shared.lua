@@ -9,6 +9,7 @@ local Support = {
     NETMSG_SEND_NODE_DATA = "Features.MeditateControllerSupport.NetMsg.SendNodeData",
     NETMSG_SET_ASPECT = "Features.MeditateControllerSupport.NetMsg.SetAspect",
     NETMSG_SET_ASPECT_NODE = "Features.MeditateControllerSupport.NetMsg.SetAspectNode",
+    NETMSG_SELECT_NEXT_UNOBTAINED_NODE = "Features.MeditateControllerSupport.NetMsg.SelectNextUnobtainedNode",
     NETMSG_BACK = "Features.MeditateControllerSupport.NetMsg.Back",
     NETMSG_DESELECT = "Features.MeditateControllerSupport.NetMsg.DeselectElement",
     NETMSG_EXIT = "Features.MeditateControllerSupport.NetMsg.ExitUI",
@@ -75,6 +76,8 @@ Epip.RegisterFeature("Features.MeditateControllerSupport", Support)
 
 ---@class Features.MeditateControllerSupport.NetMsg.SetAspectNode
 ---@field NodeID string? `nil` if a node was deselected.
+
+---@class Features.MeditateControllerSupport.NetMsg.SelectNextUnobtainedNode : NetLib_Message_Character
 
 ---@class Features.MeditateControllerSupport.NetMsg.SendNodeData
 ---@field Aspects table<string, Features.MeditateControllerSupport.AspectGraph>

@@ -1,6 +1,7 @@
 
 ---@class Features.MeditateControllerSupport
 local Support = Epip.GetFeature("Features.MeditateControllerSupport")
+Support._AspectGraphs = nil ---@type table<string, Features.MeditateControllerSupport.AspectGraph>?
 
 ---------------------------------------------
 -- METHODS
@@ -143,6 +144,7 @@ function Support._SendNodeData()
         end
     end
 
+    Support._AspectGraphs = graphs
     Net.Broadcast(Support.NETMSG_SEND_NODE_DATA, {
         Aspects = graphs,
     })
@@ -217,6 +219,23 @@ Osiris.RegisterSymbolListener("PROC_AMER_UI_ElementChain_Node_Used", 7, "after",
             NodeID = node,
         })
     end
+end)
+
+-- Handle requests to select the next unobtained node of an aspect.
+Net.RegisterListener(Support.NETMSG_SELECT_NEXT_UNOBTAINED_NODE, function (payload)
+    local char = payload:GetCharacter()
+    local instanceID = Support._GetInstanceID(char)
+    local aspectID = Osi.DB_AMER_UI_Ascension_SelectedElement:Get(instanceID, nil, nil, nil, nil)[1][3]
+    local aspect = Support._AspectGraphs[aspectID]
+
+    -- Determine the next unobtained node
+    local allocatedNodes = #Osi.DB_AMER_UI_ElementChain_Node_ChildNode_StateData:Get(char.CurrentTemplate.Id .. "_" .. char.MyGuid, "AMER_UI_Ascension", aspectID, nil, nil)
+    local nextNodeIndex = math.clamp(allocatedNodes + 1, 1, #aspect.NodeOrder) -- Clamp to last node.
+
+    -- Interact with the node
+    local element = Osi.DB_AMER_UI_ElementsOfInstance:Get(instanceID, Support._GetCurrentUI(instanceID), aspectID, aspect.NodeOrder[nextNodeIndex], nil)[1][5]
+    Support:DebugLog("Interacting with next unobtained node", nextNodeIndex, aspectID)
+    Osiris.CharacterUseItem(char, element, "AMER_UI_ElementChain_NodeUse") -- State on the client will be updated by the PROC listener.
 end)
 
 -- Send node data to clients connecting.
