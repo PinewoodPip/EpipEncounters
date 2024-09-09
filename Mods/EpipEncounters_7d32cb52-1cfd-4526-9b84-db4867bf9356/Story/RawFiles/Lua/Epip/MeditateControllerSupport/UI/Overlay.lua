@@ -14,6 +14,20 @@ local TSK = Support.TranslatedStrings
 
 local UI = Generic.Create("Features.MeditateControllerSupport.Overlay", {Layer = 99}) ---@class Features.MeditateControllerSupport.Overlay : GenericUI_Instance
 UI.CONTROLLER_STICK_SELECT_THRESHOLD = 0.8
+---@type table<integer, number[]> Maps subnodes amount to angle (in degrees) limit for each segment. Ex. if the angle is below the Nth limit, it's considered to be within the Nth segment. If the angle is beyond the last limit, it's considered to be within the first segment.
+UI.SUBNODE_WHEEL_ANGLES = {
+    [2] = {180, 360},
+    [3] = {90, 180, 270},
+    [4] = {75, 180, 250, 310}, -- This is such an annoying layout. TODO have some deadzone at the top?
+    [5] = {52, 124, 196, 268, 340},
+}
+---@type table<integer, integer[]> Remaps segments of subnodes (in clockwise order) to their actual subnode index (1-based).
+UI.SUBNODE_INDEX_REMAP = {
+    [2] = {2, 1},
+    [3] = {1, 3, 2},
+    [4] = {2, 4, 3, 1},
+    [5] = {1, 3, 5, 4, 2},
+}
 
 UI._Pages = {} ---@type table<string, Features.MeditateControllerSupport.Page>
 UI._GraphIndexMaps = {} ---@type table<string, table<string, integer>> Maps page ID to map of node IDs to container child index.
@@ -353,6 +367,8 @@ Input.Events.StickMoved:Subscribe(function (ev)
         if isPastThreshold then return end
         isPastThreshold = true
 
+        -- If there is no node selected,
+        -- select the starting node regardless of stick direction.
         if not Support._CurrentGraphNode and Support._CurrentAspectID then
             local aspect = Support.GetAspect(Support._CurrentAspectID)
             UI._SelectNode(aspect.Nodes[aspect.StartingNode])
@@ -365,7 +381,9 @@ Input.Events.StickMoved:Subscribe(function (ev)
         local slotsAmount = Support._CurrentAspectNode and Support.GetSubnodesCount(Support._CurrentAspectID, node.ID) or #node.Neighbours -- In aspect graphs the left stick navigates subnodes instead.
         local anglePerSlot = (2 * math.pi) / slotsAmount
         local firstSegmentStart = V(0, -1) -- Top of the stick is (0, -1)
-        firstSegmentStart = Vector.Rotate(firstSegmentStart, -math.deg(anglePerSlot / 2) + rotation) -- But the first segment's left boundary does not necessarily start at (0, -1)
+        if page.Type ~= "AspectGraph" then -- Adjust the "start" of the wheel outside of aspects (which have manually-defined angle limits for each subnode segment)
+            firstSegmentStart = Vector.Rotate(firstSegmentStart, -math.deg(anglePerSlot / 2) + rotation)
+        end
         local angle = Vector.Angle(direction, firstSegmentStart)
 
         -- Determine if the stick is on the other side of the wheel (past the 180 deg point) to calculate the 360 angle
@@ -382,21 +400,30 @@ Input.Events.StickMoved:Subscribe(function (ev)
             UI._SelectNode(page.Nodes[node.Neighbours[slotIndex]])
         elseif page.Type == "AspectGraph" then
             ---@cast page Features.MeditateControllerSupport.Page.AspectGraph
-            local aspect = Support.GetAspect(Support._CurrentAspectID)
-            if Support._CurrentAspectNode then
-                ---@type Features.MeditateControllerSupport.NetMsg.InteractWithElement
-                local msg = {
-                    CharacterNetID = Client.GetCharacter().NetID,
-                    CollectionID = node.CollectionID,
-                    EventID = "AMER_UI_ElementChain_ChildNodeUse",
-                    PageID = UI._CurrentPage.ID,
-                    ElementID = string.format("Node_%s.%s", math.floor(Support._CurrentAspectNode - 1), math.floor(slotIndex - 1)),
-                }
-                Net.PostToServer(Support.NETMSG_INTERACT, msg)
-            else
-                Support:DebugLog("Selecting aspect node", slotIndex)
-                UI._SelectNode(aspect.Nodes[node.Neighbours[slotIndex]])
+            ---@cast node Features.MeditateControllerSupport.Page.AspectGraph.Node
+
+            -- Determine which segment and subnode is being selected
+            local subnodesAmount = node.Subnodes
+            local angles = UI.SUBNODE_WHEEL_ANGLES[subnodesAmount]
+            local segmentIndex = 1
+            local degrees = fraction * 360
+            for i,angleLimit in ipairs(angles) do
+                if degrees < angleLimit then
+                    segmentIndex = i
+                    break
+                end
             end
+            local subnodeIndex = UI.SUBNODE_INDEX_REMAP[subnodesAmount][segmentIndex]
+
+            ---@type Features.MeditateControllerSupport.NetMsg.InteractWithElement
+            local msg = {
+                CharacterNetID = Client.GetCharacter().NetID,
+                CollectionID = node.CollectionID,
+                EventID = "AMER_UI_ElementChain_ChildNodeUse",
+                PageID = page.ID,
+                ElementID = string.format("Node_%s.%s", math.floor(Support._CurrentAspectNode - 1), math.floor(subnodeIndex - 1)),
+            }
+            Net.PostToServer(Support.NETMSG_INTERACT, msg)
         end
     elseif directionLength > 0 then
         isPastThreshold = false
