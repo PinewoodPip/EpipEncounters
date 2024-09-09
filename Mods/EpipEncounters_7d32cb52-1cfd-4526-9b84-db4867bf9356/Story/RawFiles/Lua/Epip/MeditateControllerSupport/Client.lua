@@ -35,6 +35,15 @@ function Support.RequestSelectNextUnobtainedNode()
     })
 end
 
+---Requests the zoom level to be adjusted.
+---@param adjustment Features.MeditateControllerSupport.ZoomAdjustment
+function Support.RequestAdjustZoom(adjustment)
+    Net.PostToServer(Support.NETMSG_ADJUST_ZOOM, {
+        CharacterNetID = Client.GetCharacter().NetID,
+        Adjustment = adjustment,
+    })
+end
+
 ---Returns the amount of subnodes of a node.
 ---@param aspectID string
 ---@param nodeID string

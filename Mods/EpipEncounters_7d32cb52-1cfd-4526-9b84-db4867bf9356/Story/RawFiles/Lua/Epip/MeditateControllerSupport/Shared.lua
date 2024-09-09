@@ -10,6 +10,7 @@ local Support = {
     NETMSG_SET_ASPECT = "Features.MeditateControllerSupport.NetMsg.SetAspect",
     NETMSG_SET_ASPECT_NODE = "Features.MeditateControllerSupport.NetMsg.SetAspectNode",
     NETMSG_SELECT_NEXT_UNOBTAINED_NODE = "Features.MeditateControllerSupport.NetMsg.SelectNextUnobtainedNode",
+    NETMSG_ADJUST_ZOOM = "Features.MeditateControllerSupport.NetMsg.AdjustZoom",
     NETMSG_BACK = "Features.MeditateControllerSupport.NetMsg.Back",
     NETMSG_DESELECT = "Features.MeditateControllerSupport.NetMsg.DeselectElement",
     NETMSG_EXIT = "Features.MeditateControllerSupport.NetMsg.ExitUI",
@@ -45,6 +46,8 @@ Epip.RegisterFeature("Features.MeditateControllerSupport", Support)
 ---@field Nodes table<string, Features.MeditateControllerSupport.Page.AspectGraph.Node>
 ---@field NodeOrder string[]
 
+---@alias Features.MeditateControllerSupport.ZoomAdjustment "ZoomIn"|"ZoomOut"
+
 ---------------------------------------------
 -- NET MESSAGES
 ---------------------------------------------
@@ -54,6 +57,9 @@ Epip.RegisterFeature("Features.MeditateControllerSupport", Support)
 ---@field PageID string For sanity/sync checks.
 ---@field ElementID string
 ---@field EventID string StoryUse action data is unmapped; thus we cannot fetch the event ID automatically.
+
+---@class Features.MeditateControllerSupport.NetMsg.AdjustZoom : NetLib_Message_Character
+---@field Adjustment Features.MeditateControllerSupport.ZoomAdjustment
 
 ---@class Features.MeditateControllerSupport.NetMsg.Back : NetLib_Message_Character
 

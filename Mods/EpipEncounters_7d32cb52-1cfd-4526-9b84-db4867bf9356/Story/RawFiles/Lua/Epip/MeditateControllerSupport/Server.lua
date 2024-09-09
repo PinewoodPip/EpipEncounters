@@ -238,6 +238,12 @@ Net.RegisterListener(Support.NETMSG_SELECT_NEXT_UNOBTAINED_NODE, function (paylo
     Osiris.CharacterUseItem(char, element, "AMER_UI_ElementChain_NodeUse") -- State on the client will be updated by the PROC listener.
 end)
 
+-- Handle requests to adjust zoom level.
+Net.RegisterListener(Support.NETMSG_ADJUST_ZOOM, function (payload)
+    local char = payload:GetCharacter()
+    Osiris.PROC_AMER_UI_Camera_Zoom(char, payload.Adjustment == "ZoomOut" and 1 or -1)
+end)
+
 -- Send node data to clients connecting.
 GameState.Events.ClientReady:Subscribe(function (_)
     Support._SendNodeData()

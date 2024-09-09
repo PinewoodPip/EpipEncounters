@@ -28,6 +28,8 @@ UI.SUBNODE_INDEX_REMAP = {
     [4] = {2, 4, 3, 1},
     [5] = {1, 3, 5, 4, 2},
 }
+UI.ZOOM_STICK_THRESHOLD = 0.5
+UI.ZOOM_COOLDOWN = 0.25 -- Time between zoom requests, in seconds.
 
 UI._Pages = {} ---@type table<string, Features.MeditateControllerSupport.Page>
 UI._GraphIndexMaps = {} ---@type table<string, table<string, integer>> Maps page ID to map of node IDs to container child index.
@@ -357,9 +359,10 @@ Client.Events.SelectorModeChanged:Subscribe(function (ev)
     UI:TogglePlayerInput(not ev.Enabled)
 end, {EnabledFunctor = function () return UI:IsVisible() end})
 
--- Navigate graphs with the left stick
+-- Navigate graphs with the left stick.
 local isPastThreshold = false
 Input.Events.StickMoved:Subscribe(function (ev)
+    if ev.Stick ~= "Left" then return end -- Only left stick is used for node navigation.
     local direction = V(table.unpack(ev.NewState))
     local directionLength = Vector.GetLength(direction)
     if directionLength >= UI.CONTROLLER_STICK_SELECT_THRESHOLD then -- Consider a deadzone.
@@ -445,6 +448,21 @@ Net.RegisterListener("EPIPENCOUNTERS_AMERUI_StateChanged", function (payload)
         UI.SetPage(payload.Page)
     end
 end)
+
+-- Request to change zoom level.
+local lastZoomTime = -1
+Input.Events.StickMoved:Subscribe(function (ev)
+    if ev.Stick == "Right" then
+        local direction = ev.NewState[2] -- Y axis.
+        local now = Ext.Utils.MonotonicTime()
+        if math.abs(direction) >= UI.ZOOM_STICK_THRESHOLD and (now - lastZoomTime) / 1000 >= UI.ZOOM_COOLDOWN then -- Consider deadzone and a cooldown to control "repeat rate" - the event is likely to fire so long as the stick is held due to micro-adjustments.
+            Support.RequestAdjustZoom(direction > 0 and "ZoomOut" or "ZoomIn") -- Push up for zoom-in.
+            lastZoomTime = Ext.Utils.MonotonicTime()
+        end
+    end
+end, {EnabledFunctor = function ()
+    return UI:IsVisible() and UI:GetUI().OF_PlayerInput1
+end})
 
 ---------------------------------------------
 -- SETUP
