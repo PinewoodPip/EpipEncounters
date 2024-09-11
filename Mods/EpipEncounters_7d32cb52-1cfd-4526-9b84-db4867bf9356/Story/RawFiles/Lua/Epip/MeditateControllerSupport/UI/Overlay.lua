@@ -58,6 +58,7 @@ UI._PageToContainerChildIndex = DefaultTable.Create({}) ---@type table<string, t
 ---@field EventID string
 ---@field Neighbours string[] In clock-wise order.
 ---@field Rotation number? Rotation offset for determining where the "top" (first) node is relative to stick direction, in degrees. Defaults to `0`.
+---@field Deadzones vec2[]? Angle ranges within which stick inputs are ignored, in degrees.
 
 ---@class Features.MeditateControllerSupport.Page.Graph : Features.MeditateControllerSupport.Page
 ---@field StartingNode string
@@ -410,7 +411,7 @@ Input.Events.StickMoved:Subscribe(function (ev)
         local slotsAmount = Support._CurrentAspectNode and Support.GetSubnodesCount(Support._CurrentAspectID, node.ID) or #node.Neighbours -- In aspect graphs the left stick navigates subnodes instead.
         local anglePerSlot = (2 * math.pi) / slotsAmount
         local firstSegmentStart = V(0, -1) -- Top of the stick is (0, -1)
-        if page.Type ~= "AspectGraph" then -- Adjust the "start" of the wheel outside of aspects (which have manually-defined angle limits for each subnode segment)
+        if page.Type ~= "AspectGraph" and node.Neighbours[2] then -- Adjust the "start" of the wheel outside of aspects (which have manually-defined angle limits for each subnode segment); only for nodes with multiple (2+) neighbours.
             firstSegmentStart = Vector.Rotate(firstSegmentStart, -math.deg(anglePerSlot / 2) + rotation)
         end
         local angle = Vector.Angle(direction, firstSegmentStart)
@@ -423,6 +424,16 @@ Input.Events.StickMoved:Subscribe(function (ev)
         local fraction = angle / (2 * math.pi)
         local slotIndex = math.floor(slotsAmount * fraction) + 1
         slotIndex = math.clamp(slotIndex, 1, slotsAmount)
+
+        -- Do nothing if the angle ends up within a deadzone.
+        if node.Deadzones then
+            local degrees = fraction * 360
+            for _,deadzone in ipairs(node.Deadzones) do
+                if degrees >= deadzone[1] and degrees <= deadzone[2] then
+                    return
+                end
+            end
+        end
 
         if page.Type == "Graph" then
             ---@cast page Features.MeditateControllerSupport.Page.Graph
@@ -512,6 +523,10 @@ local Crossroads = {
             Neighbours = {
                 "Node_0",
             },
+            Deadzones = {
+                {0, 120},
+                {240, 360},
+            },
         },
         ["Life"] = {
             ID = "Life",
@@ -519,6 +534,10 @@ local Crossroads = {
             EventID = "AMER_UI_Ascension_PathGateway",
             Neighbours = {
                 "Node_1",
+            },
+            Deadzones = {
+                {0, 45},
+                {180, 360},
             },
         },
         ["Form"] = {
@@ -528,6 +547,9 @@ local Crossroads = {
             Neighbours = {
                 "Node_2",
             },
+            Deadzones = {
+                {0, 220},
+            },
         },
         ["Inertia"] = {
             ID = "Inertia",
@@ -536,6 +558,9 @@ local Crossroads = {
             Neighbours = {
                 "Node_3",
             },
+            Deadzones = {
+                {90, 280},
+            },
         },
         ["Entropy"] = {
             ID = "Entropy",
@@ -543,6 +568,9 @@ local Crossroads = {
             EventID = "AMER_UI_Ascension_PathGateway",
             Neighbours = {
                 "Node_4",
+            },
+            Deadzones = {
+                {0, 180},
             },
         },
         ["Node_0"] = {
