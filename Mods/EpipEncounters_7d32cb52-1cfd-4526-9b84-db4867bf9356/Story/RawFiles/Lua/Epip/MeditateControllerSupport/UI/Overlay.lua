@@ -18,7 +18,7 @@ UI.CONTROLLER_STICK_SELECT_THRESHOLD = 0.8
 UI.SUBNODE_WHEEL_ANGLES = {
     [2] = {180, 360},
     [3] = {90, 180, 270},
-    [4] = {75, 180, 250, 310}, -- This is such an annoying layout. TODO have some deadzone at the top?
+    [4] = {75, 180, 250, 340}, -- This is such an annoying layout. TODO have some deadzone at the top?
     [5] = {52, 124, 196, 268, 340},
 }
 ---@type table<integer, integer[]> Remaps segments of subnodes (in clockwise order) to their actual subnode index (1-based).
@@ -30,6 +30,7 @@ UI.SUBNODE_INDEX_REMAP = {
 }
 UI.ZOOM_STICK_THRESHOLD = 0.5
 UI.ZOOM_COOLDOWN = 0.25 -- Time between zoom requests, in seconds.
+UI.WHEEL_SCROLL_REPEAT_RATE = 0.25 -- In seconds.
 
 UI._Pages = {} ---@type table<string, Features.MeditateControllerSupport.Page>
 UI._GraphIndexMaps = {} ---@type table<string, table<string, integer>> Maps page ID to map of node IDs to container child index.
@@ -151,8 +152,13 @@ function UI._CreateWheelPage(page)
         Name = CommonStrings.Next,
         Inputs = {["UIRight"] = true, ["UITabNext"] = true},
     })
+    local actionLastUseTime = {} ---@type table<string, integer?> Maps ID to last use timestamp.
     nav.Hooks.ConsumeInput:Subscribe(function (ev)
-        if ev.Event.Timing == "Up" then
+        if ev.Event.Timing == "Down" then
+            local lastUseTime = actionLastUseTime[ev.Action.ID] or -1
+            local now = Ext.Utils.MonotonicTime()
+            if now - lastUseTime < UI.WHEEL_SCROLL_REPEAT_RATE * 1000 then return end -- Impose a repeat rate restriction, as the default for the InputEvents is too fast.
+
             if ev.Action.ID == "Previous" then
                 Net.PostToServer(Support.NETMSG_SCROLL_WHEEL, {
                     CharacterNetID = Client.GetCharacter().NetID,
@@ -178,6 +184,11 @@ function UI._CreateWheelPage(page)
                 })
                 ev.Consumed = true
             end
+
+            actionLastUseTime[ev.Action.ID] = now
+        elseif ev.Event.Timing == "Up" then
+            -- Clear repeat rate cooldown.
+            actionLastUseTime[ev.Action.ID] = nil
         end
     end)
 end
@@ -206,8 +217,9 @@ function UI._CreateAspectGraphPage(page)
             return UI.IsInGraph() and Support._CurrentAspectNode or false
         end
     })
+    local pressedActions = {} ---@type set<string> -- Used to prevent actions from repeating when their inputs are held down.
     nav.Hooks.ConsumeInput:Subscribe(function (ev)
-        if ev.Event.Timing == "Up" then
+        if ev.Event.Timing == "Down" and not pressedActions[ev.Action.ID] then
             local aspect = Support.GetAspect()
             local currentNode = Support._CurrentGraphNode
             if ev.Action.ID == "PreviousNode" then
@@ -237,6 +249,9 @@ function UI._CreateAspectGraphPage(page)
                 Support.RequestDeselectElement()
                 ev.Consumed = true
             end
+            pressedActions[ev.Action.ID] = true
+        elseif ev.Event.Timing == "Up" then
+            pressedActions[ev.Action.ID] = nil
         end
     end)
 end
@@ -320,7 +335,7 @@ function UI._Initialize()
         Inputs = {["ToggleInGameMenu"] = true},
     })
     rootNav.Hooks.ConsumeInput:Subscribe(function (ev)
-        if ev.Event.Timing == "Up" then
+        if ev.Event.Timing == "Down" then
             if ev.Action.ID == "Interact" and UI._CanInteract() then
                 UI._Interact()
                 ev.Consumed = true
