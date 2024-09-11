@@ -300,9 +300,10 @@ function Character.GetDisplayName(char)
     if Ext.IsClient() then
         ---@cast char EclCharacter
         if char.PlayerCustomData then
-            name = char.PlayerCustomData.NameTranslated.Handle.ReferenceString
+            local translatedName = char.PlayerCustomData.NameTranslated.Handle.ReferenceString
+            name = translatedName ~= "" and translatedName or char.PlayerCustomData.OriginName -- Happens with Fane.
         elseif char.StoryDisplayName and char.StoryDisplayName.Handle.ReferenceString ~= "" then -- Custom name override from CharacterSetCustomName().
-            name = char.StoryDisplayName.Handle.ReferenceString -- Could also just DisplayName in this case, as it becomes overwritten.
+            name = char.StoryDisplayName.Handle.ReferenceString -- Could also just use DisplayName in this case, as it becomes overwritten.
         else
             name = Text.GetTranslatedString(char.CurrentTemplate.DisplayName, name)
         end
