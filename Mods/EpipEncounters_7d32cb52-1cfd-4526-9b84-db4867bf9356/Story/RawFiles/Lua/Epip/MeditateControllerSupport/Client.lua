@@ -2,13 +2,25 @@
 ---@class Features.MeditateControllerSupport
 local Support = Epip.GetFeature("Features.MeditateControllerSupport")
 Support._AspectGraphs = nil ---@type table<string, Features.MeditateControllerSupport.AspectGraph>
+Support._CurrentUI = nil ---@type string?
+Support._CurrentPage = nil ---@type Features.MeditateControllerSupport.Page?
 Support._CurrentAspectID = nil ---@type string?
 Support._CurrentAspectNode = nil ---@type integer?
 Support._CurrentGraphNode = nil ---@type Features.MeditateControllerSupport.Page.Graph.Node
+Support._RegisteredPagesCount = 0
 
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
+
+---Unselects the current page, effectively disabling the overlay.
+function Support.ClearPage()
+    Support._CurrentUI = nil
+    Support._CurrentAspectID = nil
+    Support._CurrentAspectNode = nil
+    Support._CurrentGraphNode = nil
+    Support._CurrentPage = nil
+end
 
 ---Requests to return to the previous page.
 function Support.RequestReturnToPreviousPage()

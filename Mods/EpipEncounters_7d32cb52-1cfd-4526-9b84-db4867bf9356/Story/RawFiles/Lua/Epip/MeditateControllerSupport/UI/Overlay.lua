@@ -4,6 +4,7 @@ local Navigation = Generic.Navigation
 local Controller = Navigation:GetClass("GenericUI.Navigation.Controller")
 local ListComponent = Navigation:GetClass("GenericUI.Navigation.Components.List")
 local GenericComponent = Navigation:GetClass("GenericUI.Navigation.Components.Generic")
+local DefaultTable = DataStructures.Get("DataStructures_DefaultTable")
 local CommonStrings = Text.CommonStrings
 local Input = Client.Input
 local V = Vector.Create
@@ -32,10 +33,9 @@ UI.ZOOM_STICK_THRESHOLD = 0.5
 UI.ZOOM_COOLDOWN = 0.25 -- Time between zoom requests, in seconds.
 UI.WHEEL_SCROLL_REPEAT_RATE = 0.25 -- In seconds.
 
-UI._Pages = {} ---@type table<string, Features.MeditateControllerSupport.Page>
+UI._Pages = DefaultTable.Create({}) ---@type table<string, table<string, Features.MeditateControllerSupport.Page>> Maps UI to map of its pages.
 UI._GraphIndexMaps = {} ---@type table<string, table<string, integer>> Maps page ID to map of node IDs to container child index.
-UI._CurrentPage = nil ---@type Features.MeditateControllerSupport.Page
-UI._PageToContainerChildIndex = {} ---@type table<string, integer>
+UI._PageToContainerChildIndex = DefaultTable.Create({}) ---@type table<string, table<string, integer>> Maps UI to map of page indexes.
 
 ---------------------------------------------
 -- CLASSES
@@ -76,18 +76,19 @@ function UI.Setup()
 end
 
 ---Sets the current page of the UI.
+---@param ui string
 ---@param pageID string
-function UI.SetPage(pageID)
-    local page = UI._Pages[pageID]
-    Support._CurrentAspectID = nil
-    Support._CurrentAspectNode = nil
-    Support._CurrentGraphNode = nil
+function UI.SetPage(ui, pageID) -- TODO move to Support
+    local page = UI._Pages[ui][pageID]
+    Support.ClearPage()
     if not page then
         UI:__LogWarning("Page not registered, disabling overlay", pageID)
-        UI._CurrentPage = nil
+        UI._RootNav:FocusByIndex(1) -- Focus the dummy element, so the input handlers from the previous page are no longer used.
     else
-        UI._PageContainerNav:FocusByIndex(UI._PageToContainerChildIndex[pageID])
-        UI._CurrentPage = page
+        UI._PageContainerNav:FocusByIndex(UI._PageToContainerChildIndex[ui][pageID]) -- Focus the page's element
+        UI._RootNav:FocusByIndex(2) -- Focus page container
+        Support._CurrentUI = ui
+        Support._CurrentPage = page
 
         -- Select starting node
         if page.Type == "Graph" then
@@ -102,8 +103,9 @@ end
 ---@param page Features.MeditateControllerSupport.Page
 function UI.RegisterPage(page)
     UI._Initialize()
-    UI._Pages[page.ID] = page
-    UI._PageToContainerChildIndex[page.ID] = table.getKeyCount(UI._Pages) -- Should be done after writing to _Pages.
+    UI._Pages[page.UI][page.ID] = page
+    Support._RegisteredPagesCount = Support._RegisteredPagesCount + 1
+    UI._PageToContainerChildIndex[page.UI][page.ID] = Support._RegisteredPagesCount -- Should be done after writing to _Pages.
 
     -- Create elements
     if page.Type == "Wheel" then
@@ -259,7 +261,7 @@ end
 ---Selects a node from the graph.
 ---@param node Features.MeditateControllerSupport.Page.Graph.Node
 function UI._SelectNode(node)
-    if UI._CurrentPage.Type ~= "Graph" and UI._CurrentPage.Type ~= "AspectGraph" then
+    if Support._CurrentPage.Type ~= "Graph" and Support._CurrentPage.Type ~= "AspectGraph" then
         UI:__Error("_SelectNode", "Not in a graph page")
     end
     Support._CurrentGraphNode = node -- TODO wait for confirmation from the server
@@ -271,19 +273,21 @@ end
 ---Returns whether there is a currently-selected element that can be interacted with.
 ---@return boolean
 function UI._CanInteract()
-    local page = UI._CurrentPage
-    local canInteract = false
-    if page.Type == "Wheel" then
-        canInteract = true
-    elseif page.Type == "Graph" or page.Type == "AspectGraph" then
-        canInteract = Support._CurrentGraphNode ~= nil
+    local page = Support._CurrentPage
+    local canInteract = page ~= nil
+    if page then
+        if page.Type == "Wheel" then
+            canInteract = true
+        elseif page.Type == "Graph" or page.Type == "AspectGraph" then
+            canInteract = Support._CurrentGraphNode ~= nil
+        end
     end
     return canInteract
 end
 
 ---Interacts with the current element.
 function UI._Interact()
-    local page = UI._CurrentPage
+    local page = Support._CurrentPage
     if page.Type == "Wheel" then
         -- TODO? just do the useless click?
     elseif page.Type == "Graph" or page.Type == "AspectGraph" then
@@ -293,7 +297,7 @@ function UI._Interact()
             CharacterNetID = Client.GetCharacter().NetID,
             CollectionID = node.CollectionID,
             EventID = node.EventID,
-            PageID = UI._CurrentPage.ID,
+            PageID = Support._CurrentPage.ID,
             ElementID = node.ID,
         }
         Net.PostToServer(Support.NETMSG_INTERACT, msg)
@@ -311,6 +315,12 @@ function UI._Initialize()
     -- Navigation
     local pageNav = ListComponent:Create(pageContainer, {
         ScrollBackwardEvents = {}, -- The user cannot change pages manually. Flow is controlled by element interactions and global shortcuts.
+        ScrollForwardEvents = {},
+        Wrap = false,
+    })
+    local dummy = root:AddChild("Dummy", "GenericUI_Element_Empty") -- Dummy element that consumes no inputs; used for unregistered pages/UIs.
+    local dummyNav = ListComponent:Create(dummy, {
+        ScrollBackwardEvents = {},
         ScrollForwardEvents = {},
         Wrap = false,
     })
@@ -348,7 +358,8 @@ function UI._Initialize()
             end
         end
     end)
-    rootNav:SetChildren({pageNav})
+    rootNav:SetChildren({dummyNav, pageNav})
+    UI._RootNav = rootNav
     Controller.Create(UI, rootNav)
     rootNav:FocusByIndex(1)
 
@@ -393,7 +404,7 @@ Input.Events.StickMoved:Subscribe(function (ev)
             return
         end
 
-        local page = UI._CurrentPage
+        local page = Support._CurrentPage
         local node = Support._CurrentGraphNode
         local rotation = node.Rotation or 0
         local slotsAmount = Support._CurrentAspectNode and Support.GetSubnodesCount(Support._CurrentAspectID, node.ID) or #node.Neighbours -- In aspect graphs the left stick navigates subnodes instead.
@@ -453,14 +464,19 @@ end})
 ---Returns whether the navigation is currently within a graph-like collection.
 ---@return boolean
 function UI.IsInGraph()
-    local page = UI._CurrentPage
+    local page = Support._CurrentPage
     return page and (page.Type == "Graph" or page.Type == "AspectGraph") or false
 end
 
 -- Track page changes.
 Net.RegisterListener("EPIPENCOUNTERS_AMERUI_StateChanged", function (payload)
     if Character.Get(payload.Character) == Client.GetCharacter() then
-        UI.SetPage(payload.Page)
+        if payload.Interface then
+            UI.SetPage(payload.Interface, payload.Page)
+        else
+            UI._RootNav:FocusByIndex(1) -- Focus the dummy element, so the input handlers from the previous page are no longer used.
+            Support.ClearPage()
+        end
     end
 end)
 
