@@ -12,6 +12,7 @@ Entity = {
             ARX = "Arx_Main",
         },
     },
+
     -- Highlight modes to use with `ecl::HighlightManager::SetHighlight()`.
     ---@enum EntityLib.HighlightType
     HIGHLIGHT_TYPES = {
@@ -22,6 +23,11 @@ Entity = {
         NONE_2 = 4, -- Used in some places, but for what?
         YELLOW = 5,
     }
+}
+---@type set<string>
+Entity.ORIGINS_LEVELS_WITH_NO_STORAGE_CHEST = {
+    [Entity.LEVEL_IDS.ORIGINS.TUTORIAL_SHIP] = true,
+    [Entity.LEVEL_IDS.ORIGINS.FORT_JOY] = true,
 }
 
 ---------------------------------------------

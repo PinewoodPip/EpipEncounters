@@ -255,7 +255,8 @@ function Client.CanSendToLadyVengeance()
     if Epip.IsPipFork() and Epip.GetPipForkVersion() >= 2 then
         return Ext.Client.GetGameControl().CanSendToLadyVengeance
     else
-        return Entity.GetLevelID() ~= Entity.LEVEL_IDS.ORIGINS.FORT_JOY
+        local levelID = Entity.GetLevelID()
+        return not Entity.ORIGINS_LEVELS_WITH_NO_STORAGE_CHEST[levelID]
     end
 end
 
