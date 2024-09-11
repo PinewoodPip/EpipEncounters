@@ -432,6 +432,13 @@ QuickLoot.Events.SearchCompleted:Subscribe(function (ev)
     end
 end)
 
+-- Close the UI if the client character died.
+Character.Events.CharacterDied:Subscribe(function (ev)
+    if ev.Character == Client.GetCharacter() then
+        UI:Hide()
+    end
+end, {EnabledFunctor = function () return UI:IsVisible() end})
+
 -- Show default settings.
 UI.Hooks.GetSettings:Subscribe(function (ev)
     local settings = QuickLoot.Settings

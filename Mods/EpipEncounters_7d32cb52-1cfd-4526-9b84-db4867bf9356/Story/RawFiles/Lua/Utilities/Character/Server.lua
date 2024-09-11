@@ -61,3 +61,10 @@ Osiris.RegisterSymbolListener("ItemEquipped", 2, "after", function(itemGUID, cha
         ItemNetID = item.NetID,
     })
 end)
+
+-- Forward death events.
+Osiris.RegisterSymbolListener("CharacterDied", 1, "after", function (charGUID)
+    Net.Broadcast(Character.NETMSG_CHARACTER_DIED, {
+        CharacterNetID = Character.Get(charGUID).NetID,
+    })
+end)

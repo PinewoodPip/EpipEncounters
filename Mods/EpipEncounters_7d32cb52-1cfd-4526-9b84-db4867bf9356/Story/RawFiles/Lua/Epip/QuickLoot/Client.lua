@@ -161,11 +161,15 @@ function QuickLoot.StartSearch(char)
         end
     end, {StringID = QuickLoot.EVENTID_TICK_SELECTOR_EFFECT}) -- TODO append some char identifier to listener
 
-    -- Cancel the search when the character begins to move.
+    -- Cancel the search when the character begins to move or dies.
     GameState.Events.RunningTick:Subscribe(function (_)
         char = Character.Get(charHandle)
-        if Character.IsMoving(char) then
-            QuickLoot._Searches[charHandle] = nil
+        if QuickLoot.IsSearching(char) then
+            if Character.IsMoving(char) or Character.IsDead(char) then
+                QuickLoot.CancelSearch(char)
+                GameState.Events.RunningTick:Unsubscribe(QuickLoot.EVENTID_TICK_IS_MOVING)
+            end
+        else
             GameState.Events.RunningTick:Unsubscribe(QuickLoot.EVENTID_TICK_IS_MOVING)
         end
     end, {StringID = QuickLoot.EVENTID_TICK_IS_MOVING})
@@ -261,6 +265,16 @@ function QuickLoot.StopSearch(char)
     end
 end
 
+---Cancels a character's current search.
+---@param char EclCharacter
+function QuickLoot.CancelSearch(char)
+    local search = QuickLoot.GetSearch(char)
+    if not search then
+        QuickLoot:__Error("StopSearch", "Character is not searching")
+    end
+    QuickLoot._Searches[char.Handle] = nil
+end
+
 ---Returns the default search radius based on user settings.
 ---@return number -- In meters.
 function QuickLoot.GetBaseSearchRadius()
@@ -328,10 +342,10 @@ GameState.Events.GameReady:Subscribe(function (_)
     end)
 end, {EnabledFunctor = Client.IsUsingController})
 
--- Prevent searching in combat or while moving.
+-- Prevent searching while dead, in combat or while moving.
 QuickLoot.Hooks.CanSearch:Subscribe(function (ev)
     local char, canSearch = ev.Character, ev.CanSearch
-    ev.CanSearch = canSearch and not Character.IsInCombat(char) and not Character.IsMoving(char)
+    ev.CanSearch = canSearch and not Character.IsDead(char) and not Character.IsInCombat(char) and not Character.IsMoving(char)
 end, {StringID = "DefaultImplementation"})
 
 -- Fetch lootables and throw search completion events

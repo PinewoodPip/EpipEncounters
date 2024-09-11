@@ -107,9 +107,7 @@ Net.RegisterListener("EPIP_CharacterLib_StatusApplied", function (payload)
     local entity = Character.Get(payload.OwnerNetID) or Item.Get(payload.OwnerNetID) ---@type IGameObject
     if entity then
         local status = Character.GetStatusByNetID(entity, payload.StatusNetID)
-    
-        -- This is not reliable for statuses that are quickly deleted(?)
-        if status then
+        if status then -- This is not reliable for statuses that are quickly deleted(?)
             Character.Events.StatusApplied:Throw({
                 Status = status,
                 SourceHandle = status.StatusSourceHandle,
@@ -122,6 +120,12 @@ end)
 -- Forward item equip events.
 Net.RegisterListener("EPIP_CharacterLib_ItemEquipped", function (payload)
     local char, item = Character.Get(payload.CharacterNetID), Item.Get(payload.ItemNetID)
-    
     Character._ThrowItemEquippedEvent(char, item)
+end)
+
+-- Forward death events.
+Net.RegisterListener(Character.NETMSG_CHARACTER_DIED, function (payload)
+    Character.Events.CharacterDied:Throw({
+        Character = payload:GetCharacter(),
+    })
 end)

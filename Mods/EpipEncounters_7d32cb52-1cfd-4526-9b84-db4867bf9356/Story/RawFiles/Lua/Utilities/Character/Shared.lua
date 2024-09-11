@@ -202,12 +202,15 @@ Character = {
         Lizard = {"Cone_Flamebreath"},
     },
 
+    NETMSG_CHARACTER_DIED = "CharacterLib.NetMsg.CharacterDied",
+
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
 
     Events = {
         StatusApplied = {}, ---@type Event<CharacterLib_Event_StatusApplied>
         ItemEquipped = {}, ---@type Event<CharacterLib_Event_ItemEquipped>
+        CharacterDied = {Context = "Client"}, ---@type Event<{Character:EclCharacter}> Client-only as it's redundant on server.
     },
     Hooks = {
         CreateEquipmentVisuals = {}, ---@type Event<CharacterLib_Hook_CreateEquipmentVisuals> Client-only.
@@ -253,6 +256,8 @@ Epip.InitializeLibrary("Character", Character)
 ---@field StatusNetID NetId
 
 ---@class EPIP_CharacterLib_ItemEquipped : NetLib_Message_Character, NetLib_Message_Item
+
+---@class CharacterLib.NetMsg.CharacterDied : NetLib_Message_Character
 
 ---------------------------------------------
 -- CLASSES
