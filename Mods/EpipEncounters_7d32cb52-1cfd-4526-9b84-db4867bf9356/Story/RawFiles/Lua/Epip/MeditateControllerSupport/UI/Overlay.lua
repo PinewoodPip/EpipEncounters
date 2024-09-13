@@ -247,7 +247,9 @@ function UI._CreateAspectGraphPage(page)
                     ev.Consumed = true
                 end
             elseif ev.Action.ID == "Interact" then
-                -- TODO select subnode
+                Net.PostToServer(Support.NETMSG_TOGGLE_SUBNODE, {
+                    CharacterNetID = Client.GetCharacter().NetID,
+                })
             elseif ev.Action.ID == "Back" and nav:GetAction("Back").IsConsumableFunctor(nav) then -- TODO remove functor check when the functor usage is made more consistent
                 Support.RequestDeselectElement()
                 ev.Consumed = true
@@ -455,15 +457,14 @@ Input.Events.StickMoved:Subscribe(function (ev)
             end
             local subnodeIndex = UI.SUBNODE_INDEX_REMAP[subnodesAmount][segmentIndex]
 
-            ---@type Features.MeditateControllerSupport.NetMsg.InteractWithElement
+            ---@type Features.MeditateControllerSupport.NetMsg.SelectSubnode
             local msg = {
                 CharacterNetID = Client.GetCharacter().NetID,
                 CollectionID = node.CollectionID,
-                EventID = "AMER_UI_ElementChain_ChildNodeUse",
-                PageID = page.ID,
                 ElementID = string.format("Node_%s.%s", math.floor(Support._CurrentAspectNode - 1), math.floor(subnodeIndex - 1)),
+                SubnodeIndex = subnodeIndex,
             }
-            Net.PostToServer(Support.NETMSG_INTERACT, msg)
+            Net.PostToServer(Support.NETMSG_SELECT_SUBNODE, msg)
         end
     elseif directionLength > 0 then
         isPastThreshold = false

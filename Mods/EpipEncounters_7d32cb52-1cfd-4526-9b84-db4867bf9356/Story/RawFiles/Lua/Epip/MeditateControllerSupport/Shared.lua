@@ -9,6 +9,8 @@ local Support = {
     NETMSG_SEND_NODE_DATA = "Features.MeditateControllerSupport.NetMsg.SendNodeData",
     NETMSG_SET_ASPECT = "Features.MeditateControllerSupport.NetMsg.SetAspect",
     NETMSG_SET_ASPECT_NODE = "Features.MeditateControllerSupport.NetMsg.SetAspectNode",
+    NETMSG_SELECT_SUBNODE = "Features.MeditateControllerSupport.NetMsg.SelectSubnode",
+    NETMSG_TOGGLE_SUBNODE = "Features.MeditateControllerSupport.NetMsg.ToggleSubnode",
     NETMSG_SELECT_NEXT_UNOBTAINED_NODE = "Features.MeditateControllerSupport.NetMsg.SelectNextUnobtainedNode",
     NETMSG_ADJUST_ZOOM = "Features.MeditateControllerSupport.NetMsg.AdjustZoom",
     NETMSG_BACK = "Features.MeditateControllerSupport.NetMsg.Back",
@@ -30,6 +32,7 @@ local Support = {
     USE_LEGACY_HOOKS = false,
 }
 Epip.RegisterFeature("Features.MeditateControllerSupport", Support)
+Support:Debug()
 
 ---------------------------------------------
 -- CLASSES
@@ -82,6 +85,13 @@ Epip.RegisterFeature("Features.MeditateControllerSupport", Support)
 
 ---@class Features.MeditateControllerSupport.NetMsg.SetAspectNode
 ---@field NodeID string? `nil` if a node was deselected.
+
+---@class Features.MeditateControllerSupport.NetMsg.SelectSubnode : NetLib_Message_Character
+---@field CollectionID string
+---@field ElementID string
+---@field SubnodeIndex integer 1-based.
+
+---@class Features.MeditateControllerSupport.NetMsg.ToggleSubnode : NetLib_Message_Character
 
 ---@class Features.MeditateControllerSupport.NetMsg.SelectNextUnobtainedNode : NetLib_Message_Character
 

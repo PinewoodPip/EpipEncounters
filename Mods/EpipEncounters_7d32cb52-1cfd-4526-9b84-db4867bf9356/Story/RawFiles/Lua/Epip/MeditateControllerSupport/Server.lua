@@ -161,12 +161,21 @@ Osiris.RegisterSymbolListener("CharacterItemEvent", 3, "after", function(char, i
     end
 end)
 
+---Interacts with an element, simulating a click on it (item use).
+---@param char EsvCharacter
+---@param collectionID string
+---@param elementID string
+---@param eventID string
+function Support.InteractWithElement(char, collectionID, elementID, eventID)
+    local instanceID = Support._GetInstanceID(char)
+    local element = Osi.DB_AMER_UI_ElementsOfInstance:Get(instanceID, Support._GetCurrentUI(instanceID), collectionID, elementID, nil)[1][5]
+    Osiris.CharacterUseItem(char, element, eventID)
+end
+
 Net.RegisterListener(Support.NETMSG_INTERACT, function (payload)
     local char = payload:GetCharacter()
-    local instanceID = Osi.DB_AMER_UI_UsersInUI:Get(nil, nil, char.RootTemplate.Id .. "_" .. char.MyGuid)[1][1]
     -- TODO page sanity checks
-    local element = Osi.DB_AMER_UI_ElementsOfInstance:Get(instanceID, Support._GetCurrentUI(instanceID), payload.CollectionID, payload.ElementID, nil)[1][5]
-    Osiris.CharacterUseItem(char, element, payload.EventID)
+    Support.InteractWithElement(char, payload.CollectionID, payload.ElementID, payload.EventID)
 end)
 
 -- Handle requests to scroll and interact with wheels.
@@ -218,6 +227,35 @@ Osiris.RegisterSymbolListener("PROC_AMER_UI_ElementChain_Node_Used", 7, "after",
         Net.PostToCharacter(Character.Get(char), Support.NETMSG_SET_ASPECT_NODE, {
             NodeID = node,
         })
+    end
+end)
+
+-- Handle requests to select subnodes.
+Net.RegisterListener(Support.NETMSG_SELECT_SUBNODE, function (payload)
+    local char = payload:GetCharacter()
+    local instanceID = Support._GetInstanceID(char)
+    local selectedElement = Osiris.GetFirstFactOrEmpty("DB_AMER_UI_Ascension_SelectedElement", instanceID, nil, nil, nil, nil)[4]
+    local isDifferentNode = true
+    if selectedElement then
+        -- Check if the user is requesting to select the same node again;
+        -- if so, we must not interact with it, as it would toggle the node.
+        local subnodeIndex = string.match(selectedElement, "Node_%d+%.(%d+)")
+        if subnodeIndex then -- The user might have the main node selected instead.
+            isDifferentNode = (tonumber(subnodeIndex) + 1) ~= payload.SubnodeIndex
+        end
+    end
+    if isDifferentNode then
+        Support.InteractWithElement(char, payload.CollectionID, payload.ElementID, "AMER_UI_ElementChain_ChildNodeUse")
+    end
+end)
+
+-- Handle requests to toggle subnodes.
+Net.RegisterListener(Support.NETMSG_TOGGLE_SUBNODE, function (payload)
+    local char = payload:GetCharacter()
+    local instanceID = Support._GetInstanceID(char)
+    local selectedElement = Osiris.GetFirstFact("DB_AMER_UI_Ascension_SelectedElement", instanceID, nil, nil, nil, "Node")
+    if selectedElement and string.find(selectedElement[4], "%.") then -- Ensure the selected element is a subnode (contains a dot).
+        Support.InteractWithElement(char, selectedElement[3], selectedElement[4], "AMER_UI_ElementChain_ChildNodeUse")
     end
 end)
 
