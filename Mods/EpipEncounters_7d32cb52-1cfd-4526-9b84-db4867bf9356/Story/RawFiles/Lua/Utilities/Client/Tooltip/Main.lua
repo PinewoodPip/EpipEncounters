@@ -423,27 +423,7 @@ end
 ---Returns the default UI to be used for displaying custom tooltips.
 ---@return UIObject
 function Tooltip._GetDefaultCustomTooltipUI()
-    if Client.IsUsingController() then
-        -- These are guaranteed to exist in both input modes, however the ContainerInventory item tooltips use the owner character of items to show compare tooltips, instead of the client character.
-        -- In GM mode, the container UI appears to only exist when needed.
-        return Ext.UI.GetByType(Ext.UI.TypeID.containerInventory.Default) or Ext.UI.GetByType(Ext.UI.TypeID.gmInventory)
-    else
-        local ui = Ext.UI.GetByType(Ext.UI.TypeID.partyInventory)
-        if ui and not Tooltip._PartyInventoryUIInitialized and (Client.IsHost() or not GameState.IsLoading()) then -- The UI must've been shown at least once in the session for the tooltips to work properly. The PartyInventory UI particularly can crash the game if shown during load due to extender item synch patches; avoid doing so.
-            if not ui.OF_Visible then
-                ui:Show()
-
-                -- To make things even more complicated, it needs to stay visible for at least a tick.
-                ui:GetRoot().visible = false -- Set root to be invisible so the user doesn't see the UI flashing
-                Timer.StartTickTimer(2, function (_)
-                    ui:Hide()
-                    ui:GetRoot().visible = true
-                end)
-            end
-            Tooltip._PartyInventoryUIInitialized = true
-        end
-        return ui
-    end
+    return Ext.UI.GetByType(Ext.UI.TypeID.containerInventory.Pickpocket) -- Exists for both input methods. The default containerInventory's item tooltips use the owner character of items to show compare tooltips, instead of the client character.
 end
 
 ---@param ui UIObject
