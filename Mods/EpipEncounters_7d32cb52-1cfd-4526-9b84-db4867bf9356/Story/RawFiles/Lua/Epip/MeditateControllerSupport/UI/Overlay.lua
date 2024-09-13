@@ -61,7 +61,7 @@ UI._PageToContainerChildIndex = DefaultTable.Create({}) ---@type table<string, t
 ---@field Deadzones vec2[]? Angle ranges within which stick inputs are ignored, in degrees.
 
 ---@class Features.MeditateControllerSupport.Page.Graph : Features.MeditateControllerSupport.Page
----@field StartingNode string
+---@field StartingNodes string[] In clockwise order.
 ---@field Nodes table<string, Features.MeditateControllerSupport.Page.Graph.Node>
 
 ---------------------------------------------
@@ -90,12 +90,6 @@ function UI.SetPage(ui, pageID) -- TODO move to Support
         UI._RootNav:FocusByIndex(2) -- Focus page container
         Support._CurrentUI = ui
         Support._CurrentPage = page
-
-        -- Select starting node
-        if page.Type == "Graph" then
-            ---@cast page Features.MeditateControllerSupport.Page.Graph
-            UI._SelectNode(page.Nodes[page.StartingNode])
-        end
         Support:DebugLog("Page set", page.ID)
     end
 end
@@ -399,15 +393,39 @@ Input.Events.StickMoved:Subscribe(function (ev)
         if isPastThreshold then return end
         isPastThreshold = true
 
-        -- If there is no node selected,
-        -- select the starting node regardless of stick direction.
-        if not Support._CurrentGraphNode and Support._CurrentAspectID then
-            local aspect = Support.GetAspect(Support._CurrentAspectID)
-            UI._SelectNode(aspect.Nodes[aspect.StartingNode])
-            return
+        local page = Support._CurrentPage
+
+        -- Handle initial node selection.
+        if not Support._CurrentGraphNode then
+            if page.Type == "Graph" then
+                ---@cast page Features.MeditateControllerSupport.Page.Graph
+                -- Select first node based on sitck direction
+                local slotsAmount = #page.StartingNodes
+                local anglePerSlot = (2 * math.pi) / slotsAmount
+                local firstSegmentStart = V(0, -1) -- Top of the stick is (0, -1)
+                firstSegmentStart = Vector.Rotate(firstSegmentStart, -math.deg(anglePerSlot))
+                local angle = Vector.Angle(direction, firstSegmentStart)
+
+                -- Determine if the stick is on the other side of the wheel (past the 180 deg point) to calculate the 360 angle
+                local crossProd = firstSegmentStart[1] * direction[2] - firstSegmentStart[2] * direction[1]
+                if crossProd < 0 then
+                    angle = math.rad(360) - angle
+                end
+                local fraction = angle / (2 * math.pi)
+                local slotIndex = math.floor(slotsAmount * fraction) + 1
+                slotIndex = math.clamp(slotIndex, 1, slotsAmount)
+
+                UI._SelectNode(page.Nodes[page.StartingNodes[slotIndex]])
+                return
+            elseif page.Type == "AspectGraph" and Support._CurrentAspectID then
+                -- If there is no node selected,
+                -- select the starting node regardless of stick direction.
+                local aspect = Support.GetAspect(Support._CurrentAspectID)
+                UI._SelectNode(aspect.Nodes[aspect.StartingNode])
+                return
+            end
         end
 
-        local page = Support._CurrentPage
         local node = Support._CurrentGraphNode
         local rotation = node.Rotation or 0
         local slotsAmount = Support._CurrentAspectNode and Support.GetSubnodesCount(Support._CurrentAspectID, node.ID) or #node.Neighbours -- In aspect graphs the left stick navigates subnodes instead.
@@ -629,7 +647,13 @@ local Crossroads = {
             Rotation = -45,
         },
     },
-    StartingNode = "Node_0"
+    StartingNodes = {
+        "Node_0",
+        "Node_4",
+        "Node_2",
+        "Node_3",
+        "Node_1",
+    },
 }
 UI.RegisterPage(Crossroads)
 
