@@ -4,6 +4,7 @@ local Navigation = Generic.Navigation
 local Controller = Navigation:GetClass("GenericUI.Navigation.Controller")
 local ListComponent = Navigation:GetClass("GenericUI.Navigation.Components.List")
 local GenericComponent = Navigation:GetClass("GenericUI.Navigation.Components.Generic")
+local NavigationBar = Epip.GetFeature("Features.NavigationBar")
 local DefaultTable = DataStructures.Get("DataStructures_DefaultTable")
 local CommonStrings = Text.CommonStrings
 local Input = Client.Input
@@ -13,7 +14,7 @@ local V = Vector.Create
 local Support = Epip.GetFeature("Features.MeditateControllerSupport")
 local TSK = Support.TranslatedStrings
 
-local UI = Generic.Create("Features.MeditateControllerSupport.Overlay", {Layer = 99}) ---@class Features.MeditateControllerSupport.Overlay : GenericUI_Instance
+local UI = Generic.Create("Features.MeditateControllerSupport.Overlay", {Layer = 99}) ---@class Features.MeditateControllerSupport.Overlay : GenericUI.Navigation.UI
 UI.CONTROLLER_STICK_SELECT_THRESHOLD = 0.8
 ---@type table<integer, number[]> Maps subnodes amount to angle (in degrees) limit for each segment. Ex. if the angle is below the Nth limit, it's considered to be within the Nth segment. If the angle is beyond the last limit, it's considered to be within the first segment.
 UI.SUBNODE_WHEEL_ANGLES = {
@@ -74,6 +75,7 @@ function UI.Setup()
     UI:Show()
     UI:TogglePlayerInput(not Client.IsInSelectorMode()) -- Restore player input if the UI was previously closed while in selector mode (ex. from manually pressing the exit button)
     Support:DebugLog("UI setup complete")
+    NavigationBar.Setup(UI)
 end
 
 ---Sets the current page of the UI.
@@ -341,6 +343,17 @@ function UI._Initialize()
         Name = Text.CommonStrings.Exit,
         Inputs = {["ToggleInGameMenu"] = true},
     })
+    rootNav:AddAction({
+        ID = "ZoomIn",
+        Name = Text.CommonStrings.ZoomIn,
+        Inputs = {["CameraZoomIn"] = true},
+    })
+    rootNav:AddAction({
+        ID = "ZoomOut",
+        Name = Text.CommonStrings.ZoomOut,
+        Inputs = {["CameraZoomOut"] = true},
+    })
+    local lastZoomTime = -1
     rootNav.Hooks.ConsumeInput:Subscribe(function (ev)
         if ev.Event.Timing == "Down" then
             if ev.Action.ID == "Interact" and UI._CanInteract() then
@@ -351,6 +364,15 @@ function UI._Initialize()
                 ev.Consumed = true
             elseif ev.Action.ID == "Exit" then
                 UI.RequestExit()
+                ev.Consumed = true
+            elseif ev.Action.ID == "ZoomIn" or ev.Action.ID == "ZoomOut" then
+                -- Request to change zoom level.
+                local direction = Input.GetStickPosition("Right")[2] -- Y axis.
+                local now = Ext.Utils.MonotonicTime()
+                if math.abs(direction) >= UI.ZOOM_STICK_THRESHOLD and (now - lastZoomTime) / 1000 >= UI.ZOOM_COOLDOWN then -- Consider deadzone and a cooldown to control "repeat rate" - the event is likely to fire so long as the stick is held due to micro-adjustments.
+                    Support.RequestAdjustZoom(direction > 0 and "ZoomOut" or "ZoomIn") -- Push up for zoom-in.
+                    lastZoomTime = Ext.Utils.MonotonicTime()
+                end
                 ev.Consumed = true
             end
         end
@@ -509,21 +531,6 @@ Net.RegisterListener("EPIPENCOUNTERS_AMERUI_StateChanged", function (payload)
         end
     end
 end)
-
--- Request to change zoom level.
-local lastZoomTime = -1
-Input.Events.StickMoved:Subscribe(function (ev)
-    if ev.Stick == "Right" then
-        local direction = ev.NewState[2] -- Y axis.
-        local now = Ext.Utils.MonotonicTime()
-        if math.abs(direction) >= UI.ZOOM_STICK_THRESHOLD and (now - lastZoomTime) / 1000 >= UI.ZOOM_COOLDOWN then -- Consider deadzone and a cooldown to control "repeat rate" - the event is likely to fire so long as the stick is held due to micro-adjustments.
-            Support.RequestAdjustZoom(direction > 0 and "ZoomOut" or "ZoomIn") -- Push up for zoom-in.
-            lastZoomTime = Ext.Utils.MonotonicTime()
-        end
-    end
-end, {EnabledFunctor = function ()
-    return UI:IsVisible() and UI:GetUI().OF_PlayerInput1
-end})
 
 ---------------------------------------------
 -- SETUP
