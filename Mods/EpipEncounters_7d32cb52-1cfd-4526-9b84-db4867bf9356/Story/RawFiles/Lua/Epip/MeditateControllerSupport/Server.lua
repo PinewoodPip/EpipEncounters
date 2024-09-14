@@ -230,6 +230,21 @@ Osiris.RegisterSymbolListener("PROC_AMER_UI_ElementChain_Node_Used", 7, "after",
     end
 end)
 
+-- Update state for clients when changing characters while in the UI.
+Ext.Osiris.RegisterListener("PROC_AMER_UI_ActiveCharChanging", 5, "after", function(_, instance, _, _, newChar)
+    local char = Character.Get(newChar)
+    local page = Support._GetCurrentPage(instance)
+    if page == "Page_Cluster" then
+        local tuple = Osiris.GetFirstFact("DB_AMER_UI_Ascension_SelectedElement", instance, nil, nil, nil, nil)
+        Net.PostToCharacter(char, Support.NETMSG_SET_ASPECT, {
+            AspectID = tuple[3],
+        })
+        Net.PostToCharacter(char, Support.NETMSG_SET_ASPECT_NODE, {
+            NodeID = nil, -- The subnode flower is closed on character change. TODO support this state better
+        })
+    end
+end)
+
 -- Handle requests to select subnodes.
 Net.RegisterListener(Support.NETMSG_SELECT_SUBNODE, function (payload)
     local char = payload:GetCharacter()

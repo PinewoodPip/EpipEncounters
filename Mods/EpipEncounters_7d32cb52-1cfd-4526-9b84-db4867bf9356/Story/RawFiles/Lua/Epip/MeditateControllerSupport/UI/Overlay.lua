@@ -393,7 +393,10 @@ end
 -- Enable the overlay when entering meditate.
 Game.Ascension:RegisterListener("ClientToggledMeditating", function (entered)
     if entered then
-        UI.Setup()
+        -- Do not reset the overlay if it was already in use (ex. when changing characters)
+        if not UI:IsVisible() then
+            UI.Setup()
+        end
     else
         UI:Hide()
     end
@@ -523,9 +526,10 @@ end
 -- Track page changes.
 Net.RegisterListener("EPIPENCOUNTERS_AMERUI_StateChanged", function (payload)
     if Character.Get(payload.Character) == Client.GetCharacter() then
-        if payload.Interface then
+        local page = Support._CurrentPage
+        if payload.Interface and (not page or (page.UI ~= payload.Interface or page.ID ~= payload.Page)) then -- Do nothing if the UI and page hasn't changed (ex. when changing characters)
             UI.SetPage(payload.Interface, payload.Page)
-        else
+        elseif not payload.Interface then
             UI._RootNav:FocusByIndex(1) -- Focus the dummy element, so the input handlers from the previous page are no longer used.
             Support.ClearPage()
         end
