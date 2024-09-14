@@ -34,8 +34,8 @@ Ext.Osiris.RegisterListener("PROC_AMER_UI_Page_PageBecame", 3, "after", function
     AMERUI.UpdateState(char, instance, interface, page)
 end)
 
-Ext.Osiris.RegisterListener("PROC_AMER_UI_ActiveCharChanging", 5, "after", function(map, instance, interface, oldChar, newChar)
-    AMERUI.ClearState(oldChar)
+Ext.Osiris.RegisterListener("PROC_AMER_UI_ActiveCharChanging", 5, "after", function(_, instance, interface, oldChar, newChar)
+    AMERUI.characterStates[Text.RemoveGUIDPrefix(oldChar)] = nil -- Clear state without firing events, clients could at times be wrongly considered outside the UIs.
     AMERUI.UpdateState(newChar, instance, interface, AMERUI.GetCurrentPage(instance))
 end)
 

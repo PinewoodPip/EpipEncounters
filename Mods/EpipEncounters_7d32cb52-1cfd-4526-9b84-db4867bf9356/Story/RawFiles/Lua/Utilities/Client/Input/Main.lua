@@ -1001,6 +1001,32 @@ Ext.Events.Tick:Subscribe(function (_)
     end
 end)
 
+---Returns the position of a controller stick.
+---@overload fun(stick:"Left"|"Right"):vec2
+---@param playerID integer? Defaults to `1`.
+---@param stick "Left"|"Right"
+---@return vec2
+function Input.GetStickPosition(playerID, stick)
+    if type(playerID) == "string" then -- Player 1-only overload.
+        playerID, stick = 1, playerID
+    else
+        playerID = playerID or 1
+    end
+    local manager = Ext.Input.GetInputManager()
+    local playerDeviceID = manager.PlayerDeviceIDs[playerID]
+    local inputRawIDPrefix = stick == "Left" and "leftstick_" or "rightstick_"
+    local inputStates = manager.InputStates[playerDeviceID + 1].Inputs -- These fields are considered arrays, thus we must convert to 1-based index.
+    local xNeg = inputStates[Input.GetRawInputNumericID(inputRawIDPrefix .. "xneg") + 1]
+    local xPos = inputStates[Input.GetRawInputNumericID(inputRawIDPrefix .. "xpos") + 1]
+    local yNeg = inputStates[Input.GetRawInputNumericID(inputRawIDPrefix .. "yneg") + 1]
+    local yPos = inputStates[Input.GetRawInputNumericID(inputRawIDPrefix .. "ypos") + 1]
+    local state = {
+        xNeg.Value2 ~= 0 and -xNeg.Value2 or xPos.Value2,
+        yNeg.Value2 ~= 0 and -yNeg.Value2 or yPos.Value2,
+    }
+    return state
+end
+
 -- Forward controller stick events
 Ext.Events.RawInput:Subscribe(function (ev)
     local stick = Input.STICK_MOTION_EVENTS[ev.Input.Input.InputId or ""]
@@ -1008,16 +1034,7 @@ Ext.Events.RawInput:Subscribe(function (ev)
         local manager = Ext.Input.GetInputManager()
         local playerDeviceID = manager.PlayerDeviceIDs[1]
         if playerDeviceID ~= -1 then
-            local inputRawIDPrefix = stick == "Left" and "leftstick_" or "rightstick_"
-            local inputStates = manager.InputStates[playerDeviceID + 1].Inputs -- These fields are considered arrays, thus we must convert to 1-based index.
-            local xNeg = inputStates[Input.GetRawInputNumericID(inputRawIDPrefix .. "xneg") + 1]
-            local xPos = inputStates[Input.GetRawInputNumericID(inputRawIDPrefix .. "xpos") + 1]
-            local yNeg = inputStates[Input.GetRawInputNumericID(inputRawIDPrefix .. "yneg") + 1]
-            local yPos = inputStates[Input.GetRawInputNumericID(inputRawIDPrefix .. "ypos") + 1]
-            local newState = {
-                xNeg.Value2 ~= 0 and -xNeg.Value2 or xPos.Value2,
-                yNeg.Value2 ~= 0 and -yNeg.Value2 or yPos.Value2,
-            }
+            local newState = Input.GetStickPosition(1, stick) -- TODO support other players?
             Input.Events.StickMoved:Throw({
                 Stick = stick,
                 NewState = newState,

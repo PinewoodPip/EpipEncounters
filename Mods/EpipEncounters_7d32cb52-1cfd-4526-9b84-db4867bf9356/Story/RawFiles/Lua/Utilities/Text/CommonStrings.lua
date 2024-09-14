@@ -392,6 +392,14 @@ Text.CommonStrings.Increment = Text.RegisterTranslatedString({
     Handle = "h35ed4408g3e32g4d16ga1d8g148559bae84a",
     Text = "Increment",
 })
+Text.CommonStrings.ZoomIn = Text.RegisterTranslatedString({
+    Handle = "hac8aa82cgd83cg4ff7g8d25gc2ada09d8c93",
+    Text = "Zoom in",
+})
+Text.CommonStrings.ZoomOut = Text.RegisterTranslatedString({
+    Handle = "h1a702168gb147g47b3gb525g55ab7ca95ce2",
+    Text = "Zoom out",
+})
 
 ---------------------------------------------
 -- BRANDING
