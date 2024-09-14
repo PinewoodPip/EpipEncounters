@@ -15,6 +15,7 @@ local Support = Epip.GetFeature("Features.MeditateControllerSupport")
 local TSK = Support.TranslatedStrings
 
 local UI = Generic.Create("Features.MeditateControllerSupport.Overlay", {Layer = 99}) ---@class Features.MeditateControllerSupport.Overlay : GenericUI.Navigation.UI
+Support.Overlay = UI
 UI.CONTROLLER_STICK_SELECT_THRESHOLD = 0.8
 ---@type table<integer, number[]> Maps subnodes amount to angle (in degrees) limit for each segment. Ex. if the angle is below the Nth limit, it's considered to be within the Nth segment. If the angle is beyond the last limit, it's considered to be within the first segment.
 UI.SUBNODE_WHEEL_ANGLES = {
@@ -97,8 +98,12 @@ function UI.SetPage(ui, pageID) -- TODO move to Support
 end
 
 ---Registers a page for use within the UI.
+---Must be done after ClientReady.
 ---@param page Features.MeditateControllerSupport.Page
 function UI.RegisterPage(page)
+    if GameState.IsLoading() then
+        UI:__Error("RegisterPage", "Cannot register pages during load game states")
+    end
     UI._Initialize()
     UI._Pages[page.UI][page.ID] = page
     Support._RegisteredPagesCount = Support._RegisteredPagesCount + 1
@@ -535,153 +540,3 @@ Net.RegisterListener("EPIPENCOUNTERS_AMERUI_StateChanged", function (payload)
         end
     end
 end)
-
----------------------------------------------
--- SETUP
----------------------------------------------
-
----@type Features.MeditateControllerSupport.Page.Graph
-local Crossroads = {
-    UI = "AMER_UI_Ascension",
-    ID = "Page_MainHub",
-    Type = "Graph",
-    Nodes = {
-        ["Force"] = {
-            ID = "Force",
-            CollectionID = "MainHub_Gateway",
-            EventID = "AMER_UI_Ascension_PathGateway",
-            Neighbours = {
-                "Node_0",
-            },
-            Deadzones = {
-                {0, 120},
-                {240, 360},
-            },
-        },
-        ["Life"] = {
-            ID = "Life",
-            CollectionID = "MainHub_Gateway",
-            EventID = "AMER_UI_Ascension_PathGateway",
-            Neighbours = {
-                "Node_1",
-            },
-            Deadzones = {
-                {0, 45},
-                {180, 360},
-            },
-        },
-        ["Form"] = {
-            ID = "Form",
-            CollectionID = "MainHub_Gateway",
-            EventID = "AMER_UI_Ascension_PathGateway",
-            Neighbours = {
-                "Node_2",
-            },
-            Deadzones = {
-                {0, 220},
-            },
-        },
-        ["Inertia"] = {
-            ID = "Inertia",
-            CollectionID = "MainHub_Gateway",
-            EventID = "AMER_UI_Ascension_PathGateway",
-            Neighbours = {
-                "Node_3",
-            },
-            Deadzones = {
-                {90, 280},
-            },
-        },
-        ["Entropy"] = {
-            ID = "Entropy",
-            CollectionID = "MainHub_Gateway",
-            EventID = "AMER_UI_Ascension_PathGateway",
-            Neighbours = {
-                "Node_4",
-            },
-            Deadzones = {
-                {0, 180},
-            },
-        },
-        ["Node_0"] = {
-            ID = "Node_0", -- Force
-            CollectionID = "Crossroads",
-            EventID = "AMER_UI_ElementChain_NodeUse",
-            Neighbours = {
-                "Force",
-                "Node_4", -- Entropy
-                "Node_1", -- Life
-            },
-        },
-        ["Node_1"] = {
-            ID = "Node_1", -- Life
-            CollectionID = "Crossroads",
-            EventID = "AMER_UI_ElementChain_NodeUse",
-            Neighbours = {
-                "Node_0", -- Force
-                "Node_3", -- Inertia
-                "Life",
-            },
-            Rotation = 45,
-        },
-        ["Node_2"] = {
-            ID = "Node_2", -- Form
-            CollectionID = "Crossroads",
-            EventID = "AMER_UI_ElementChain_NodeUse",
-            Neighbours = {
-                "Node_4", -- Entropy
-                "Form",
-                "Node_3", -- Inertia
-            },
-            Rotation = 15,
-        },
-        ["Node_3"] = {
-            ID = "Node_3", -- Inertia
-            CollectionID = "Crossroads",
-            EventID = "AMER_UI_ElementChain_NodeUse",
-            Neighbours = {
-                "Node_1", -- Life
-                "Node_2", -- Form
-                "Inertia",
-            },
-            Rotation = -15,
-        },
-        ["Node_4"] = {
-            ID = "Node_4", -- Entropy
-            CollectionID = "Crossroads",
-            EventID = "AMER_UI_ElementChain_NodeUse",
-            Neighbours = {
-                "Node_0", -- Force
-                "Entropy",
-                "Node_2", -- Form
-            },
-            Rotation = -45,
-        },
-    },
-    StartingNodes = {
-        "Node_0",
-        "Node_4",
-        "Node_2",
-        "Node_3",
-        "Node_1",
-    },
-}
-UI.RegisterPage(Crossroads)
-
----@type Features.MeditateControllerSupport.Page.Wheel
-local Gateway = {
-    UI = "AMER_UI_Ascension",
-    ID = "Page_Gateway",
-    Type = "Wheel",
-    WheelID = "PathWheel",
-    SelectEventID = "AMER_UI_Ascension_ClusterChosen",
-}
-UI.RegisterPage(Gateway)
-
----@type Features.MeditateControllerSupport.Page.AspectGraph
-local Aspect = {
-    UI = "AMER_UI_Ascension",
-    ID = "Page_Cluster",
-    Type = "AspectGraph",
-}
-UI.RegisterPage(Aspect)

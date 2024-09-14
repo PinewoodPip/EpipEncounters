@@ -862,6 +862,9 @@ LOAD_ORDER = {
         ScriptSet = "Epip/MeditateControllerSupport",
         Scripts = {
             "Epip/MeditateControllerSupport/UI/Overlay.lua",
+            "Epip/MeditateControllerSupport/Pages/Ascension/MainHub.lua",
+            "Epip/MeditateControllerSupport/Pages/Ascension/Gateway.lua",
+            "Epip/MeditateControllerSupport/Pages/Ascension/Cluster.lua",
         },
         RequiresEE = true,
     },
