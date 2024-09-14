@@ -510,7 +510,7 @@ Input.Events.StickMoved:Subscribe(function (ev)
         isPastThreshold = false
     end
 end, {EnabledFunctor = function ()
-    return UI:IsVisible() and UI:GetUI().OF_PlayerInput1 and UI.IsInGraph()
+    return UI:IsVisible() and UI:GetUI().OF_PlayerInput1 and UI.IsInGraph() and Input.IsAcceptingInput()
 end})
 
 ---Returns whether the navigation is currently within a graph-like collection.
