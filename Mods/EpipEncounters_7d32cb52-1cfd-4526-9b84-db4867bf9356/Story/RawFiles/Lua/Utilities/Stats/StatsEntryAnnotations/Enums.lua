@@ -23,7 +23,7 @@
 
 ---@alias StatsLib_Enum_SkillAbility "None"|"Warrior"|"Ranger"|"Rogue"|"Source"|"Fire"|"Water"|"Air"|"Earth"|"Death"|"Summoning"|"Polymorph"
 
----@alias StatsLib_StatsEntryField_Requirements table[] TODO
+---@alias StatsLib_StatsEntryField_Requirements StatsRequirement[]
 
 ---@alias StatsLib_Enum_SkillRequirement "None"|"MeleeWeapon"|"RangedWeapon"|"StaffWeapon"|"DaggerWeapon"|"ShieldWeapon"|"ArrowWeapon"
 

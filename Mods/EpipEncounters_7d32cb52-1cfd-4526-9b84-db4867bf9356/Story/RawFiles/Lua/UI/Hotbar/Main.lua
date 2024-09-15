@@ -42,9 +42,12 @@ local Hotbar = {
     engineActionsCount = 3,
 
     _CooldownsUpdateTimer = 0,
+    _CustomRequirementsCheckTimer = 0,
     _HotkeysUpdateTimer = 0,
     _HotkeyIcons = {}, ---@type table<integer, icon?> Map of icons currently used by hotkey buttons.
     _SlotIcons = {}, ---@type table<integer, icon?> Map of icons currently used by slots.
+    _SkillsWithCustomRequirements = {}, ---@type set<skill>
+    _SkillsCheckedForCustomRequirements = {}, ---@type set<skill>
 
     ACTION_BUTTONS_COUNT = 12,
     SKILL_USE_TIME = 3000, -- Kept as a fallback.
@@ -55,6 +58,7 @@ local Hotbar = {
     SAVE_FILENAME = "Config_PIP_ImprovedHotbar.json",
     HOTKEYS_UPDATE_DELAY = 500, -- In milliseconds.
     COOLDOWN_UPDATE_DELAY = 70, -- Milliseconds to wait inbetween each cooldown animations update.
+    CUSTOM_REQUIREMENTS_UPDATE_DELAY = 200, -- Milliseconds to wait inbetween updates for skills with custom requirements.
     MAX_SLOTS = 145, -- The maximum amount of slots the game supports for PlayerData.
 
     DEFAULT_ACTION_PROPERTIES = {
@@ -1121,6 +1125,11 @@ GameState.Events.RunningTick:Subscribe(function (e)
             Hotbar.RenderCooldowns()
             Hotbar._CooldownsUpdateTimer = Hotbar.COOLDOWN_UPDATE_DELAY
         end
+        Hotbar._CustomRequirementsCheckTimer = Hotbar._CustomRequirementsCheckTimer - e.DeltaTime
+        if Hotbar._CustomRequirementsCheckTimer <= 0 then
+            Hotbar.UpdateSkillsWithCustomRequirements()
+            Hotbar._CustomRequirementsCheckTimer = Hotbar.CUSTOM_REQUIREMENTS_UPDATE_DELAY
+        end
         Hotbar._HotkeysUpdateTimer = Hotbar._HotkeysUpdateTimer - e.DeltaTime
         if Hotbar._HotkeysUpdateTimer <= 0 then
             Hotbar.RenderHotkeys()
@@ -1600,6 +1609,21 @@ function Hotbar.RenderSlot(char, canUseHotbar, slotIndex, skillBarSlot)
     -- slotHolder.setSlot(slotIndex, tooltip, isEnabled and cooldown <= 0, handle, slotType, amount)
 end
 
+---Attempts to update a slot.
+---@param char EclCharacter
+---@param slotIndex integer 1-based.
+---@param skillBar EocSkillBarItem[]
+---@param canUseHotbar boolean
+function Hotbar._TryRenderSlot(char, slotIndex, skillBar, canUseHotbar)
+    local success, msg = pcall(Hotbar.RenderSlot, char, canUseHotbar, slotIndex, skillBar[slotIndex])
+    if not success then
+        local data = Hotbar.GetSkillBarItems(char)[slotIndex]
+        Hotbar:__LogError("Error rendering slot " .. (slotIndex))
+        Hotbar:__LogError(msg)
+        Hotbar:__LogError(string.format("Slot data: type %s skillID %s", data.Type, data.SkillOrStatId))
+    end
+end
+
 function Hotbar.RenderSlots()
     local SLOTS_PER_ROW = Hotbar.SLOTS_PER_ROW
     local char = Client.GetCharacter()
@@ -1618,12 +1642,42 @@ function Hotbar.RenderSlots()
         if Hotbar.IsRowVisible(char, rowIndex) then
             for i=0,SLOTS_PER_ROW - 1,1 do
                 local slotIndex = (rowIndex - 1) * SLOTS_PER_ROW + i
-                local success, msg = pcall(Hotbar.RenderSlot, char, canUseHotbar, slotIndex + 1, skillBar[slotIndex + 1])
-                if not success then
-                    local data = Hotbar.GetSkillBarItems(char)[slotIndex + 1]
-                    Hotbar:__LogError("Error rendering slot " .. (slotIndex + 1))
-                    Hotbar:__LogError(msg)
-                    Hotbar:__LogError(string.format("Slot data: type %s skillID %s", data.Type, data.SkillOrStatId))
+                Hotbar._TryRenderSlot(char, slotIndex + 1, skillBar, canUseHotbar)
+            end
+        end
+    end
+end
+
+---Updates all slots that contain skills with custom requirements.
+function Hotbar.UpdateSkillsWithCustomRequirements()
+    local SLOTS_PER_ROW = Hotbar.SLOTS_PER_ROW
+    local char = Client.GetCharacter()
+    local canUseHotbar = Hotbar.CanUseHotbar()
+    local skillBar = char.PlayerData.SkillBarItems
+
+    for rowIndex=1,5,1 do
+        if Hotbar.IsRowVisible(char, rowIndex) then
+            for i=0,SLOTS_PER_ROW - 1,1 do
+                local slotIndex = (rowIndex - 1) * SLOTS_PER_ROW + i
+                local skillbarItem = skillBar[slotIndex + 1]
+                if skillbarItem.Type == "Skill" then
+                    local skillID = skillbarItem.SkillOrStatId
+
+                    -- Track skills with custom requirements,
+                    -- as these require the hotbar to update periodically to validate them.
+                    if not Hotbar._SkillsCheckedForCustomRequirements[skillID] then
+                        local stat = Stats.GetSkillData(skillID)
+                        for _,req in ipairs(stat.Requirements) do -- Memorization requirements should be unnecessary to check.
+                            if req.Requirement.Value > Stats.Enums.REQUIREMENT_TYPE_HIGHEST_VANILLA_ID then
+                                Hotbar._SkillsWithCustomRequirements[skillID] = true
+                            end
+                        end
+                        Hotbar._SkillsCheckedForCustomRequirements[skillID] = true
+                    end
+
+                    if Hotbar._SkillsWithCustomRequirements[skillbarItem.SkillOrStatId] then
+                        Hotbar._TryRenderSlot(char, slotIndex + 1, skillBar, canUseHotbar)
+                    end
                 end
             end
         end

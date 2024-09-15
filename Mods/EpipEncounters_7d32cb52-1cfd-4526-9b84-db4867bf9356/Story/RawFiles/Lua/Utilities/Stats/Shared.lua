@@ -192,6 +192,7 @@ Stats = {
             [10] = "Summoning",
             [11] = "Polymorph",
         },
+        REQUIREMENT_TYPE_HIGHEST_VANILLA_ID = 183, -- Highest RequirementType ID used aside from custom requirements.
     },
 
     ModifierLists = {},
