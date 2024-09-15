@@ -433,23 +433,19 @@ end)
 local inSkillState = false
 GameState.Events.RunningTick:Subscribe(function (_)
     local char = Client.GetCharacter()
-    
     if char then
         local state = Character.GetSkillState(char)
-
         if inSkillState and state == nil then
             Client.Events.SkillStateChanged:Throw({
                 Character = char,
                 State = nil,
             })
-
             inSkillState = false
         elseif not inSkillState and state then
             Client.Events.SkillStateChanged:Throw({
                 Character = char,
                 State = state,
             })
-
             inSkillState = true
         end
     end

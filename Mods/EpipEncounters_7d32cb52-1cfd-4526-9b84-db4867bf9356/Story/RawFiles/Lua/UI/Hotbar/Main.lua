@@ -1911,3 +1911,13 @@ Ext.Events.SessionLoaded:Subscribe(function()
 
     Hotbar.initialized = true
 end)
+
+-- Update slots after casting skills if the "Disable slots while casting" setting is enabled,
+-- as the engine will not trigger an update from this.
+Client.Events.SkillStateChanged:Subscribe(function (ev)
+    if not ev.State then
+        Hotbar.RenderSlots()
+    end
+end, {EnabledFunctor = function ()
+    return Settings.GetSettingValue("Epip_Hotbar", "HotbarCastingGreyOut") == true
+end})

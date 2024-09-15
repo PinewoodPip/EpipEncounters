@@ -666,7 +666,7 @@ local newSettings = {
         Type = "Boolean",
         NameHandle = TSKs.Hotbar_Greyout_Name,
         DescriptionHandle = TSKs.Hotbar_Greyout_Description,
-        DefaultValue = true,
+        DefaultValue = false,
     },
     {
         ID = "WEAPONEX_OriginalButton",

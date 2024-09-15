@@ -1050,7 +1050,7 @@ function Character.IsCastingSkill(char)
     local state = Character.GetSkillState(char)
 
     ---@diagnostic disable-next-line: undefined-field
-    return state and state.State.Value >= Ext.Enums.SkillStateType.Casting.Value
+    return state and state.State.Value >= Ext.Enums.SkillStateType.Casting.Value or false
 end
 
 ---Returns whether char is a boss.
