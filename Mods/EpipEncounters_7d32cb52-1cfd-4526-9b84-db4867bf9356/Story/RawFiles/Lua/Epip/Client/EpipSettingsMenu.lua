@@ -137,6 +137,7 @@ local EpipSettingsMenu = {
 Epip.RegisterFeature("EpipSettingsMenu", EpipSettingsMenu)
 local TSK = EpipSettingsMenu.TranslatedStrings ---@type table<string, TextLib_TranslatedString>
 
+---Creates a header for dividing sections.
 ---@param name string|TextLib_TranslatedString
 ---@return Feature_SettingsMenu_Entry_Label
 local function CreateHeader(name)
@@ -209,6 +210,7 @@ local tabs = {
             CreateHeader(AnimationCancelling.TranslatedStrings.Label_FeatureName),
             CreateSettingEntry(AnimationCancelling.Settings.CancelSkills),
             CreateSettingEntry(AnimationCancelling.Settings.CancelAttacks),
+            CreateSettingEntry(AnimationCancelling.Settings.CancelNPCAnimations),
             CreateSettingEntry(AnimationCancelling.Settings.Blacklist),
             CreateSettingEntry(AnimationCancelling.Settings.CancelWorldTooltipItemPickups),
         }

@@ -40,6 +40,16 @@ local AnimCancel = {
             Text = "If enabled, attack animations will be cancelled once all of their hits and projectiles have fired, allowing you to perform consecutive actions quicker.",
             ContextDescription = [[Setting tooltip for "Cancel attack animations"]],
         },
+        Setting_CancelNPCAnimations_Name = {
+            Handle = "h4f7b80efgc4b8g43a5g9971gc7014c8c9a2c",
+            Text = "Cancel NPC animations",
+            ContextDescription = [[Setting name]],
+        },
+        Setting_CancelNPCAnimations_Description = {
+            Handle = "h012184d6g4d40g4ad7g890bg5f9bad080a77",
+            Text = "If enabled, skill and attack animations of NPCs will be cancelled after their effects execute.",
+            ContextDescription = [[Setting tooltip for "Cancel NPC animations"]],
+        },
         Blacklist_Name = {
            Handle = "ha50d50eag4185g4e10g82fdg19548a304b32",
            Text = "Blacklisted Skills",
@@ -47,7 +57,7 @@ local AnimCancel = {
         },
         Blacklist_Description = {
            Handle = "he043b9f9gfc52g4c39ga4f1gc53ea4fcd5ce",
-           Text = "Add skill IDs to this setting to blacklist them from being animation-cancelled.",
+           Text = "Add skill IDs to this setting to blacklist them from being animation-cancelled.<br>Only affects skills used by the player.",
            ContextDescription = "Tooltip for blacklist setting",
         },
         Setting_CancelWorldTooltipItemPickups_Name = {
@@ -76,6 +86,19 @@ local AnimCancel = {
     }
 }
 Epip.RegisterFeature("AnimationCancelling", AnimCancel)
+local TSK = AnimCancel.TranslatedStrings
+
+---------------------------------------------
+-- SETTINGs
+---------------------------------------------
+
+AnimCancel.Settings.CancelNPCAnimations = AnimCancel:RegisterSetting("CancelNPCAnimations", {
+    Type = "Boolean",
+    Context = "Host",
+    Name = TSK.Setting_CancelNPCAnimations_Name,
+    Description = TSK.Setting_CancelNPCAnimations_Description,
+    DefaultValue = false,
+})
 
 ---------------------------------------------
 -- EVENTS/HOOKS

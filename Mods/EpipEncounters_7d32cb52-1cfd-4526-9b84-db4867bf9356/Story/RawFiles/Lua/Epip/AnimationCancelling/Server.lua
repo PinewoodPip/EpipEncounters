@@ -3,6 +3,7 @@ local Set = DataStructures.Get("DataStructures_Set")
 
 ---@class Feature_AnimationCancelling
 local AnimCancel = Epip.GetFeature("Feature_AnimationCancelling")
+AnimCancel._TIMERID_NPC_CANCELLING = "Features.AnimationCancelling.NPCCancelling"
 
 ---Skill types that can be cancelled right on the SkillCast event,
 ---needing no special consideration.
@@ -78,7 +79,21 @@ end
 ---@param char EsvCharacter
 function AnimCancel.CancelAnimation(char)
     AnimCancel:DebugLog("Server anim cancelled for", char.DisplayName)
-    AnimCancel._SendCancellationNetMessage(char, Character.GetActionState(char))
+    if Character.IsPlayer(char) then
+        -- Players cancel their animations from their client to avoid issues with skillstate authority (if cancelled from server, it could occur before effects are fully executed), as well as to respect client-side settings.
+        AnimCancel._SendCancellationNetMessage(char, Character.GetActionState(char))
+    else
+        local charGUID = char.MyGuid
+        if Osiris.GetFirstFact("DB_ObjectTimer", charGUID, charGUID .. AnimCancel._TIMERID_NPC_CANCELLING, AnimCancel._TIMERID_NPC_CANCELLING) == nil then
+            Osi.ProcObjectTimer(charGUID, AnimCancel._TIMERID_NPC_CANCELLING, 80) -- TODO is the timer necessary? Faster AI Spells used it, but it was not commented why.
+        end
+    end
+end
+
+---Returns whether NPC animations can be cancelled.
+---@return boolean
+function AnimCancel.IsEnemyCancellingEnabled()
+    return AnimCancel.Settings.CancelNPCAnimations:GetValue() == true
 end
 
 ---Sends a net message to char notifying them that an action state can be cancelled.
@@ -113,13 +128,13 @@ Osiris.RegisterSymbolListener("SkillCast", 4, "after", function(charGUID, skillI
     end
 end)
 
--- Listen for controlled player characters completing spellcasts to notify them that the animation can be cancelled.
+-- Listen for characters completing spellcasts to notify them that the animation can be cancelled.
 -- This requires tracking the progress of the UseSkill action.
 Osiris.RegisterSymbolListener("NRD_OnActionStateEnter", 2, "after", function (charGUID, action)
     if action == "UseSkill" or action == "Attack" then
         local char = Character.Get(charGUID)
         local eventID = string.format("AnimationCancelling_%s", charGUID)
-        if Character.IsPlayer(char) then
+        if Character.IsPlayer(char) or AnimCancel.IsEnemyCancellingEnabled() then
             GameState.Events.RunningTick:Subscribe(function (_)
                 char = Character.Get(charGUID)
                 local isFinished, state = AnimCancel.IsActionFinished(char)
@@ -138,6 +153,13 @@ end)
 Osiris.RegisterSymbolListener("NRD_OnActionStateEnter", 2, "before", function (charGUID, action)
     if action == "PickUp" and Osiris.GetFirstFact("DB_IsPlayer", charGUID) ~= nil then
         Net.PostToCharacter(charGUID, AnimCancel.NETMSG_ITEM_PICKUP)
+    end
+end)
+
+-- Cancel NPC animations after a short delay.
+Osiris.RegisterSymbolListener("ProcObjectTimerFinished", 2, "after", function(charGUID, event)
+    if event == AnimCancel._TIMERID_NPC_CANCELLING then
+        Osi.PlayAnimation(charGUID, "noprepare")
     end
 end)
 
