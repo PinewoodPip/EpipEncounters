@@ -400,6 +400,14 @@ Text.CommonStrings.ZoomOut = Text.RegisterTranslatedString({
     Handle = "h1a702168gb147g47b3gb525g55ab7ca95ce2",
     Text = "Zoom out",
 })
+Text.CommonStrings.Dialogue = Text.RegisterTranslatedString({
+    Handle = "h3fdf6c58gbfd5g4665g8426g26296acc0e1a",
+    Text = "Dialogue",
+})
+Text.CommonStrings.Random = Text.RegisterTranslatedString({
+    Handle = "hcb50611fg556ag42f1gac9fgd36826106744",
+    Text = "Random",
+})
 
 ---------------------------------------------
 -- BRANDING

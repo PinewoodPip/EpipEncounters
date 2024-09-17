@@ -406,6 +406,7 @@ LOAD_ORDER = {
     "UI/WorldTooltip.lua",
     "UI/CombatTurn.lua",
     "UI/Fade.lua",
+    "UI/Dialog.lua",
 
     -- Title screen UIs
     "UI/Mods.lua",
@@ -614,6 +615,7 @@ LOAD_ORDER = {
     {Script = "Epip/Client/GiftbagLocker.lua", RequiresEE = true},
     "Epip/Client/ChatNotificationSound.lua",
     "Epip/DialogueTweaks/Client.lua",
+    "Epip/FastForwardDialogue/Client.lua",
     "Epip/ContainerInventoryTweaks/Client.lua",
     "Epip/Client/ToggleableWorldTooltips.lua",
     "Epip/Client/WorldTooltipFiltering.lua",

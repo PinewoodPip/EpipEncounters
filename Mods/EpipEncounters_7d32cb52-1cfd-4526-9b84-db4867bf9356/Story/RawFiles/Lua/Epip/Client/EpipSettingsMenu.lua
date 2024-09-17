@@ -18,6 +18,8 @@ local Vanity = Epip.GetFeature("Feature_Vanity")
 local Navbar = Epip.GetFeature("Features.NavigationBar")
 local QuickLoot = Epip.GetFeature("Features.QuickLoot")
 local UIOverrideToggles = Epip.GetFeature("Features.UIOverrideToggles")
+local FastForwardDialogue = Epip.GetFeature("Features.FastForwardDialogue")
+local Input = Client.Input
 local CommonStrings = Text.CommonStrings
 
 local QuickExamineWidgets = {
@@ -28,8 +30,8 @@ local QuickExamineWidgets = {
 }
 
 local InventoryMultiSelectInputActionSettings = {
-    ToggleSelection = Client.Input.GetActionBindingSetting(InventoryMultiSelect.InputActions.ToggleSelection),
-    SelectRange = Client.Input.GetActionBindingSetting(InventoryMultiSelect.InputActions.SelectRange),
+    ToggleSelection = Input.GetActionBindingSetting(InventoryMultiSelect.InputActions.ToggleSelection),
+    SelectRange = Input.GetActionBindingSetting(InventoryMultiSelect.InputActions.SelectRange),
 }
 
 ---@class Feature_EpipSettingsMenu : Feature
@@ -272,6 +274,10 @@ local tabs = {
             CreateSettingEntry(Navbar.Settings.EnabledForController),
             CreateSettingEntry(Navbar.Settings.GlyphStyle),
 
+            CreateHeader(CommonStrings.Dialogue),
+            CreateSettingEntry(Input.GetActionBindingSetting(FastForwardDialogue.InputActions.FastForward)),
+            CreateSettingEntry(FastForwardDialogue.Settings.Strategy),
+
             CreateHeader(CommonStrings.Chat),
             {Module = "Epip_Chat", ID = "Chat_MessageSound"},
             {Module = "Epip_Chat", ID = "Chat_ExitAfterSendingMessage"},
@@ -409,7 +415,7 @@ local tabs = {
         Entries = {
             CreateHeader(QuickLoot.TranslatedStrings.Label_FeatureName),
             {Type = "Label", Label = QuickLoot.TranslatedStrings.Label_FeatureDescription:Format({Size = 19})},
-            CreateSettingEntry(Client.Input.GetActionBindingSetting(QuickLoot.InputActions.Search)),
+            CreateSettingEntry(Input.GetActionBindingSetting(QuickLoot.InputActions.Search)),
             CreateSettingEntry(QuickLoot.Settings.BaseRadius),
             CreateSettingEntry(QuickLoot.Settings.LootingEffect),
             CreateHeader(CommonStrings.Filters),

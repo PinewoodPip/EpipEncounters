@@ -40,3 +40,4 @@ Client.UI.Mods = {} ---@type ModsUI
 Client.UI.GameMenu = {} ---@type GameMenuUI
 Client.UI.Fade = {} ---@type FadeUI
 Client.UI.MainMenu = {} ---@type UI.MainMenu
+Client.UI.Dialog = {} ---@type UI.Dialog
