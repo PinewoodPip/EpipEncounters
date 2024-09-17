@@ -598,7 +598,7 @@ local newSettings = {
         Type = "Boolean",
         NameHandle = TSKs.WalkOnCorpses_Name,
         DescriptionHandle = TSKs.WalkOnCorpses_Description,
-        DefaultValue = true,
+        DefaultValue = false,
     },
     {
         ID = "CombatLogImprovements",

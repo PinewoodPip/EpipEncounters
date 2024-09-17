@@ -71,18 +71,23 @@ Epip.InitializeLibrary("Pointer", Pointer)
 -- METHODS
 ---------------------------------------------
 
----@param playerIndex integer? Defaults to 1.
----@param includeDead boolean? Defaults to false.
+---Returns the currently-selected character.
+---@param playerIndex integer? Defaults to `1`.
+---@param includeDead boolean? Alive characters take priority. Defaults to `false`.
 ---@return EclCharacter?
 function Pointer.GetCurrentCharacter(playerIndex, includeDead)
     local char = Pointer._GetCurrentEntity(playerIndex, "HoverCharacter") ---@type EclCharacter
-
-    -- Check HoverCharacter2 for corpses.
-    if not char and includeDead then
-        char = Pointer._GetCurrentEntity(playerIndex, "HoverCharacter2") ---@type EclCharacter
+    if not char and includeDead then -- Check HoverCharacter2 for corpses.
+        char = Pointer.GetCurrentCorpse(playerIndex)
     end
-
     return char
+end
+
+---Returns the currently-selected dead character.
+---@param playerIndex integer? Defaults to `1`.
+---@return EclCharacter
+function Pointer.GetCurrentCorpse(playerIndex)
+    return Pointer._GetCurrentEntity(playerIndex or 1, "HoverCharacter2")
 end
 
 ---@param playerIndex integer? Defaults to 1.
