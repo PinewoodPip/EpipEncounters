@@ -1667,9 +1667,11 @@ function Hotbar.UpdateSkillsWithCustomRequirements()
                     -- as these require the hotbar to update periodically to validate them.
                     if not Hotbar._SkillsCheckedForCustomRequirements[skillID] then
                         local stat = Stats.GetSkillData(skillID)
-                        for _,req in ipairs(stat.Requirements) do -- Memorization requirements should be unnecessary to check.
-                            if req.Requirement.Value > Stats.Enums.REQUIREMENT_TYPE_HIGHEST_VANILLA_ID then
-                                Hotbar._SkillsWithCustomRequirements[skillID] = true
+                        if stat then -- Skills from removed mods are not removed from the skillbar.
+                            for _,req in ipairs(stat.Requirements) do -- Memorization requirements should be unnecessary to check.
+                                if req.Requirement.Value > Stats.Enums.REQUIREMENT_TYPE_HIGHEST_VANILLA_ID then
+                                    Hotbar._SkillsWithCustomRequirements[skillID] = true
+                                end
                             end
                         end
                         Hotbar._SkillsCheckedForCustomRequirements[skillID] = true
