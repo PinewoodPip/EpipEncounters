@@ -103,13 +103,7 @@ end
 ---Returns the item being shown on the bar.
 ---@return EclItem?
 function Bar.GetItem()
-    local hasChar = Bar.GetCharacter() ~= nil
-    local item = nil
-
-    if not hasChar then -- Characters take priority.
-        item = Pointer.GetCurrentItem()
-    end
-
+    local item = Bar.GetCharacter() == nil and Pointer.GetCurrentItem() or nil -- Characters take priority.
     return item
 end
 
@@ -117,7 +111,6 @@ end
 ---@param text string
 function Bar.SetBottomText(text)
     local element = Bar:GetRoot().hp_mc.textHolder_mc.label_txt
-
     element.htmlText = text
 end
 
@@ -125,13 +118,13 @@ end
 ---@return string
 function Bar.GetBottomText()
     local element = Bar:GetRoot().hp_mc.textHolder_mc.label_txt
-
     return element.htmlText
 end
 
+---Sets the header above the frame.
+---@param text string
 function Bar.SetHeader(text)
     local root = Bar:GetRoot()
-
     root.hp_mc.nameHolder_mc.text_txt.htmlText = text
 end
 
@@ -143,7 +136,7 @@ end
 function Bar._Update()
     Bar._UpdateFrame()
     Bar._UpdateStacks()
-    Bar._UpdateTexts()
+    Bar._UpdateBottomText()
     Bar._UpdateStatusHolder()
 end
 
@@ -163,26 +156,31 @@ function Bar._UpdateStatusHolder()
     }).Opacity
 end
 
----Updates the label below the frame.
----@param originalHeader string? Defaults to entity display name.
----@return string, string --Header, bottom label.
-function Bar._UpdateTexts(originalHeader)
+---Updates the header element.
+---@see EnemyHealthBarUI_Hook_GetHeader
+---@param originalHeader string
+---@return string -- Header post-hooks.
+function Bar._UpdateHeader(originalHeader)
     local char = Bar:GetCharacter()
     local item = Bar:GetItem()
-    local header, footer
-    if not originalHeader then
-        if char then
-            originalHeader = Character.GetDisplayName(char)
-        elseif item then
-            originalHeader = Item.GetDisplayName(item)
-        end
-    end
-
-    header = Bar.Hooks.GetHeader:Throw({
+    local header = Bar.Hooks.GetHeader:Throw({
         Header = originalHeader,
         Character = char,
         Item = item,
     }).Header
+
+    Bar.SetHeader(header)
+
+    return header
+end
+
+---Updates the label below the frame.
+---@see EnemyHealthBarUI_Hook_GetBottomLabel
+---@return string -- Bottom label post-hooks.
+function Bar._UpdateBottomText()
+    local char = Bar:GetCharacter()
+    local item = Bar:GetItem()
+    local footer
     local labels = Bar.Hooks.GetBottomLabel:Throw({
         Labels = {Bar._cachedVanillaBottomText or Bar.GetBottomText()},
         Character = char,
@@ -192,7 +190,7 @@ function Bar._UpdateTexts(originalHeader)
 
     Bar.SetBottomText(footer)
 
-    return header, footer
+    return footer
 end
 
 ---Updates the BH stack displays.
@@ -206,8 +204,8 @@ function Bar._UpdateStacks()
         Bar._SetStack("Battered", 0)
         Bar._SetStack("Harried", 0)
     else
-        local battered,batteredDuration = BH.GetStacks(char, "B")
-        local harried,harriedDuration = BH.GetStacks(char, "H")
+        local battered, batteredDuration = BH.GetStacks(char, "B")
+        local harried, harriedDuration = BH.GetStacks(char, "H")
 
         Bar._SetStack("Battered", battered, batteredDuration)
         Bar._SetStack("Harried", harried, harriedDuration)
@@ -306,10 +304,8 @@ Bar.Hooks.GetStackOpacity:Subscribe(function (ev)
     local isEE = EpicEncounters.IsEnabled()
     local amount = ev.Amount
     local opacity
-
     if isEE then
         local threshold = BH.GetStacksNeededToInflictTier3(Client.GetCharacter())
-
         if amount >= threshold then
             opacity = 1
         elseif amount == 0 then
@@ -320,14 +316,13 @@ Bar.Hooks.GetStackOpacity:Subscribe(function (ev)
     else
         opacity = 0
     end
-
     ev.Opacity = opacity
 end)
 
 -- Listen for texts being set.
 Bar:RegisterInvokeListener("setText", function (ev, header, footer, useLongTextField)
     Bar._cachedVanillaBottomText = footer
-    local t1, t2 = Bar._UpdateTexts(header)
+    local t1, t2 = Bar._UpdateHeader(header), Bar._UpdateBottomText()
 
     ev:PreventAction()
     ev.UI:GetRoot().setText(t1, t2, useLongTextField)
