@@ -36,6 +36,8 @@ local InventoryMultiSelectInputActionSettings = {
 
 ---@class Feature_EpipSettingsMenu : Feature
 local EpipSettingsMenu = {
+    LABEL_FONT_SIZE = 19, -- Font size of general info labels.
+
     TranslatedStrings = {
         WarpToTestLevel = {
             Handle = "h68a80196g2a32g4e12g9757gc826f58efd20",
@@ -47,40 +49,60 @@ local EpipSettingsMenu = {
            Text = "%s v%s by %s",
            ContextDescription = "Shows in the default tab of the settings menu",
         },
+        Label_SettingsMenuHint = {
+            Handle = "h78121f59g7e1bg4d00g8b1eg8065379bf1dc",
+            Text = "Use the tabs on the left to browse Epip's configuration settings.",
+            ContextDescription = [[Hint in the "Info" tab]],
+        },
         SettingApplicationWarning = {
            Handle = "h4a3e28fag3595g4753gb507g4423068aeda8",
-           Text = "Some options may require a reload for changes to apply.",
+           Text = "Some settings may require a reload for changes to apply. You'll be warned when this is the case.",
            ContextDescription = "Warning at the top of the settings menu",
+        },
+        Credits_Main = {
+            Handle = "hae3e6bddg3af0g4355gb90ag512c668df8a9",
+            Text = "Design & programming by PinewoodPip<br>Additional UI art by Elric",
+            ContextDescription = [[Credits in the "Info" tab]],
+        },
+        Credits_SpecialThanks = {
+            Handle = "hf25b230cg35fbg4142g8b49g40c4989cae08",
+            Text = [[Special thanks to Ameranth & Elric, Norbyte, all Cathes (Cathe, Bun, JoienReid), Derpy Moa, Clibanarius, AQUACORAL, Zares, and the entire Epic Encounters community]],
+            ContextDescription = [[Credits in the "Info" tab]],
+        },
+        Header_Translations = {
+            Handle = "hb19f4840g3f0bg486ag8510g605da376dbff",
+            Text = "Translation Credits",
+            ContextDescription = [[Header in the "Info" tab]],
         },
         TranslationCredits_Russian = {
            Handle = "hbce14cb2g1ed7g4076g95d1gb80c6085c3ad",
-           Text = "Russian translation by Cathe & JoienReid",
-           ContextDescription = "Displayed at the bottom of the general Epip settings tab",
+           Text = "Russian translation by JoienReid & Cathe",
+           ContextDescription = "Displayed at the bottom of the info Epip settings tab",
         },
         TranslationCredits_BrazilianPortuguese = {
            Handle = "h0e034a16gd835g46bcga5bfgd44c3f88a36e",
            Text = "Brazilian Portuguese translation by Ferocidade",
-           ContextDescription = "Displayed at the bottom of the general Epip settings tab",
+           ContextDescription = "Displayed at the bottom of the info Epip settings tab",
         },
         TranslationCredits_SimplifiedChinese = {
            Handle = "h98c83d5fgd30dg41f6g825ag14707c6db182",
            Text = "Simplified Chinese translation by Ainsky",
-           ContextDescription = "Displayed at the bottom of the general Epip settings tab",
+           ContextDescription = "Displayed at the bottom of the info Epip settings tab",
         },
         TranslationCredits_French = {
             Handle = "h5b1b94ebg3d90g47e5g8b29g9f75c0aa6cd6",
             Text = "French translation by Drayander & Ostheboss",
-            ContextDescription = "Displayed at the bottom of the general Epip settings tab",
+            ContextDescription = "Displayed at the bottom of the info Epip settings tab",
         },
         TranslationCredits_Spanish = {
             Handle = "hb6222658gfc63g4d1ag8c41g71f86ef5ec99",
             Text = "Spanish translation by AquaVXI",
-            ContextDescription = [[Displayed at the bottom of the general Epip settings tab]],
+            ContextDescription = [[Displayed at the bottom of the info Epip settings tab]],
         },
         TranslationCredits_Polish = {
             Handle = "hc7d35703gbf43g4f19ga94dg590f99309514",
             Text = "Polish translation by Nektun",
-            ContextDescription = [[Displayed at the bottom of the general Epip settings tab]],
+            ContextDescription = [[Displayed at the bottom of the info Epip settings tab]],
         },
         Tab_Hotbar = {
            Handle = "h37985411gc95dg46a1g858bg021ed39e43cd",
@@ -91,6 +113,11 @@ local EpipSettingsMenu = {
            Handle = "hde49d383g961eg49d6gaa46gcc45ab299aa5",
            Text = "Miscellaneous UI",
            ContextDescription = "Settings tab name",
+        },
+        Tab_MiscQoL = {
+            Handle = "ha2808031g83f4g48d6g8304gabe840372382",
+            Text = "Miscellaneous QoL",
+            ContextDescription = [[Settings tab name; "QoL" is short for "Quality of life"]],
         },
         Section_Overheads = {
            Handle = "h6ba9c31fgd5d1g4563gb72eg32f83bcb1302",
@@ -135,7 +162,7 @@ local EpipSettingsMenu = {
     }
 }
 Epip.RegisterFeature("EpipSettingsMenu", EpipSettingsMenu)
-local TSK = EpipSettingsMenu.TranslatedStrings ---@type table<string, TextLib_TranslatedString>
+local TSK = EpipSettingsMenu.TranslatedStrings
 
 ---Creates a header for dividing sections.
 ---@param name string|TextLib_TranslatedString
@@ -147,6 +174,13 @@ local function CreateHeader(name)
     return {Type = "Label", Label = Text.Format(name, {Color = "7E72D6", Size = 23})}
 end
 
+---Creates a standard information label.
+---@param str TextLib.String
+---@return Feature_SettingsMenu_Entry_Label
+local function CreateLabel(str)
+    return {Type = "Label", Label = Text.Format(Text.Resolve(str), {Size = EpipSettingsMenu.LABEL_FONT_SIZE})}
+end
+
 ---Creates an entry for a setting.
 ---@param setting SettingsLib_Setting
 ---@return Feature_SettingsMenu_Entry_Setting
@@ -154,13 +188,21 @@ local function CreateSettingEntry(setting)
     return {Type = "Setting", Module = setting.ModTable, ID = setting:GetID()}
 end
 
+---Creates an entry for settings within the legacy "EpipEncounters" module.
+---@param id string
+---@return Feature_SettingsMenu_Entry_Setting
+local function CreateLegacySettingEntry(id)
+    return {Type = "Setting", Module = "EpipEncounters", ID = id}
+end
+
 ---@type table<string, Feature_SettingsMenu_Tab>
 local tabs = {
     ["EpipEncounters"] = {
         ID = "EpipEncounters",
-        ButtonLabel = CommonStrings.General:GetString(),
-        HeaderLabel = CommonStrings.Epip:GetString(),
+        ButtonLabel = CommonStrings.Info:GetString(),
+        HeaderLabel = CommonStrings.Info:GetString(),
         Entries = {
+            -- Main header and settings menu hint(s)
             {Type = "Label", Label = Text.Format(TSK.Subtitle:GetString(), {
                 Size = 23,
                 FormatArgs = {
@@ -169,51 +211,34 @@ local tabs = {
                     {Text = CommonStrings.TeamPinewood:GetString(), Color = Color.TEAM_PINEWOOD.LIGHT_GREEN},
                 },
             })},
-            {Type = "Label", Label = Text.Format(TSK.SettingApplicationWarning:GetString(), {Size = 19})},
-            {Type = "Label", Label = Text.Format("——————————————————————————————", {
-                Size = 19,
-            })},
-            {Type = "Label", Label = Text.Format(TSK.TranslationCredits_Russian:GetString(), {
-                Size = 19,
-            })},
-            {Type = "Label", Label = Text.Format(TSK.TranslationCredits_BrazilianPortuguese:GetString(), {
-                Size = 19,
-            })},
-            {Type = "Label", Label = Text.Format(TSK.TranslationCredits_SimplifiedChinese:GetString(), {
-                Size = 19,
-            })},
-            {Type = "Label", Label = Text.Format(TSK.TranslationCredits_French:GetString(), {
-                Size = 19,
-            })},
-            {Type = "Label", Label = Text.Format(TSK.TranslationCredits_Spanish:GetString(), {
-                Size = 19,
-            })},
-            {Type = "Label", Label = Text.Format(TSK.TranslationCredits_Polish:GetString(), {
-                Size = 19,
-            })},
+            CreateLabel(TSK.Label_SettingsMenuHint),
+            CreateLabel(TSK.SettingApplicationWarning),
 
-            "EpipLanguage",
-            "AutoIdentify",
-            {Type = "Setting", Module = "EpipEncounters_ImmersiveMeditation", ID = "Enabled"},
-            "ExaminePosition",
-            "Minimap",
-            {Type = "Setting", Module = "EpipEncounters_TreasureTableDisplay", ID = "Enabled"},
-            {Type = "Setting", Module = "EpipEncounters_Features.EnemyHealthBarExtraInfo", ID = "Mode"},
-            {Type = "Setting", Module = "EpipEncounters_Features.EnemyHealthBarExtraInfo", ID = "ResistancesDisplay"},
-            {Type = "Setting", Module = "EpipEncounters_FlagsDisplay", ID = "Enabled"},
-            "ESCClosesAmerUI",
-            "RenderShroud",
-            "Feature_WalkOnCorpses",
-            "CombatLogImprovements",
-            "PreferredTargetDisplay",
+            CreateLegacySettingEntry("EpipLanguage"),
 
-            CreateHeader(AnimationCancelling.TranslatedStrings.Label_FeatureName),
-            CreateSettingEntry(AnimationCancelling.Settings.CancelSkills),
-            CreateSettingEntry(AnimationCancelling.Settings.CancelAttacks),
-            CreateSettingEntry(AnimationCancelling.Settings.CancelNPCAnimations),
-            CreateSettingEntry(AnimationCancelling.Settings.Blacklist),
-            CreateSettingEntry(AnimationCancelling.Settings.CancelWorldTooltipItemPickups),
+            -- Credits
+            CreateLabel("——————————————————————————————"),
+            CreateHeader(CommonStrings.Credits),
+            CreateLabel(TSK.Credits_Main),
+            CreateLabel(TSK.Credits_SpecialThanks),
+            CreateLabel("——————————————————————————————"),
+            CreateHeader(TSK.Header_Translations),
+            CreateLabel(TSK.TranslationCredits_Russian),
+            CreateLabel(TSK.TranslationCredits_BrazilianPortuguese),
+            CreateLabel(TSK.TranslationCredits_SimplifiedChinese),
+            CreateLabel(TSK.TranslationCredits_French),
+            CreateLabel(TSK.TranslationCredits_Spanish),
+            CreateLabel(TSK.TranslationCredits_Polish),
         }
+    },
+    ["Epip.EpicEncounters"] = {
+        ID = "Epip.EpicEncounters",
+        ButtonLabel = "Epic Encounters", -- Not necessary to be translatable.
+        HeaderLabel = "Epic Encounters",
+        Entries = {
+            {Type = "Setting", Module = "EpipEncounters_ImmersiveMeditation", ID = "Enabled"},
+            {Type = "Setting", Module = "EpipEncounters", ID = "ESCClosesAmerUI"},
+        },
     },
     ["Epip_Hotbar"] = {
         ID = "Epip_Hotbar",
@@ -265,43 +290,82 @@ local tabs = {
             CreateHeader(CommonStrings.General),
             {Module = "EpipEncounters_Features.UILayout", ID = "Enabled"},
 
+            -- Enemy health bar
+            CreateHeader(CommonStrings.HealthBars),
+            {Type = "Setting", Module = "EpipEncounters_Features.EnemyHealthBarExtraInfo", ID = "Mode"},
+            {Type = "Setting", Module = "EpipEncounters_Features.EnemyHealthBarExtraInfo", ID = "ResistancesDisplay"},
+            "PreferredTargetDisplay",
+            {Type = "Setting", Module = "EpipEncounters_FlagsDisplay", ID = "Enabled"},
+            {Type = "Setting", Module = "EpipEncounters_TreasureTableDisplay", ID = "Enabled"},
+
+            -- Overheads
             CreateHeader(TSK.Section_Overheads),
             {Module = "Epip_Overheads", ID = "OverheadsSize"},
             {Module = "Epip_Overheads", ID = "DamageOverheadsSize"},
             {Module = "Epip_Overheads", ID = "StatusOverheadsDurationMultiplier"},
             {Module = "Epip_Notifications", ID = "RegionLabelDuration"},
 
+            -- Navigation
             CreateHeader(TSK.Section_Navigation),
             CreateSettingEntry(Navbar.Settings.EnabledForKeyboard),
             CreateSettingEntry(Navbar.Settings.EnabledForController),
             CreateSettingEntry(Navbar.Settings.GlyphStyle),
 
+            -- Dialogue
             CreateHeader(CommonStrings.Dialogue),
             CreateSettingEntry(Input.GetActionBindingSetting(FastForwardDialogue.InputActions.FastForward)),
             CreateSettingEntry(FastForwardDialogue.Settings.Strategy),
 
+            -- Combat log
+            CreateHeader(CommonStrings.CombatLog),
+            {Type = "Setting", Module = "EpipEncounters", ID = "CombatLogImprovements"},
+
+            -- Minimap
+            CreateHeader(CommonStrings.Minimap),
+            {Type = "Setting", Module = "EpipEncounters", ID = "Minimap"},
+
+            -- Examine
+            CreateHeader(CommonStrings.ExamineUI),
+            {Type = "Setting", Module = "EpipEncounters", ID = "ExaminePosition"},
+
+            -- Chat
             CreateHeader(CommonStrings.Chat),
             {Module = "Epip_Chat", ID = "Chat_MessageSound"},
             {Module = "Epip_Chat", ID = "Chat_ExitAfterSendingMessage"},
 
+            -- Skillbook
             CreateHeader(CommonStrings.Skills),
             CreateSettingEntry(SkillbookIconsFix.Settings.Enabled),
 
+            -- Save/load
             CreateHeader(TSK.Section_SaveLoadUI),
             {Module = "Epip_SaveLoad", ID = "SaveLoad_Overlay"},
             {Module = "Epip_SaveLoad", ID = "SaveLoad_Sorting"},
 
+            -- Discord Rich Presence
             CreateHeader(DiscordRichPresence.TranslatedStrings.Label_RichPresence),
             {Module = DiscordRichPresence:GetNamespace(), ID = DiscordRichPresence.Settings.Mode:GetID()},
             {Module = DiscordRichPresence:GetNamespace(), ID = DiscordRichPresence.Settings.CustomLine1:GetID()},
             {Module = DiscordRichPresence:GetNamespace(), ID = DiscordRichPresence.Settings.CustomLine2:GetID()},
 
+            -- Mod compatibility
             CreateHeader(CommonStrings.Compatibility),
             {Type = "Label", Label = Text.Format(UIOverrideToggles.TranslatedStrings.Label_SettingsMenuHint:GetString(), {
                 Size = 19,
             })},
             CreateSettingEntry(UIOverrideToggles.Settings.EnableCharacterSheetOverride),
             CreateSettingEntry(UIOverrideToggles.Settings.EnablePlayerInfoOverride),
+        }
+    },
+    ["Epip.MiscellaneousQol"] = {
+        ID = "Epip.MiscellaneousQol",
+        ButtonLabel = TSK.Tab_MiscQoL:GetString(),
+        HeaderLabel = TSK.Tab_MiscQoL:GetString(),
+        Entries = {
+            CreateHeader(TSK.Tab_MiscQoL),
+            CreateLegacySettingEntry("AutoIdentify"),
+            CreateLegacySettingEntry("RenderShroud"),
+            CreateLegacySettingEntry("Feature_WalkOnCorpses"),
         }
     },
     ["Epip_Developer"] = {
@@ -430,6 +494,19 @@ local tabs = {
             CreateSettingEntry(QuickLoot.Settings.ShowClutter),
         },
     },
+    ["Features.AnimationCancelling"] = {
+        ID = "Features.AnimationCancelling",
+        ButtonLabel = AnimationCancelling.TranslatedStrings.Label_FeatureName:GetString(),
+        HeaderLabel = AnimationCancelling.TranslatedStrings.Label_FeatureName:GetString(),
+        Entries = {
+            CreateHeader(AnimationCancelling.TranslatedStrings.Label_FeatureName),
+            CreateSettingEntry(AnimationCancelling.Settings.CancelSkills),
+            CreateSettingEntry(AnimationCancelling.Settings.CancelAttacks),
+            CreateSettingEntry(AnimationCancelling.Settings.CancelNPCAnimations),
+            CreateSettingEntry(AnimationCancelling.Settings.Blacklist),
+            CreateSettingEntry(AnimationCancelling.Settings.CancelWorldTooltipItemPickups),
+        },
+    },
 }
 
 -- Insert EE-only settings
@@ -445,14 +522,17 @@ local tabOrder = {
     tabs.Epip_Developer,
     tabs.EpipEncounters,
     tabs.Epip_Hotbar,
+    tabs["Epip.EpicEncounters"],
     tabs["Features.Vanity"],
     tabs.Epip_QuickExamine,
     tabs["Features.QuickLoot"],
+    tabs["Features.AnimationCancelling"],
     tabs.Epip_PlayerInfo,
     tabs.Epip_Inventory,
     tabs.Epip_Notifications,
     tabs.Epip_Tooltips,
     tabs.Epip_Other,
+    tabs["Epip.MiscellaneousQol"]
 }
 
 -- GM tab is only visible in the corresponding game mode

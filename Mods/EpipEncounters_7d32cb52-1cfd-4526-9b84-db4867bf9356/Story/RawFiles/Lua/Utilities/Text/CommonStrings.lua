@@ -400,6 +400,11 @@ Text.CommonStrings.ZoomOut = Text.RegisterTranslatedString({
     Handle = "h1a702168gb147g47b3gb525g55ab7ca95ce2",
     Text = "Zoom out",
 })
+Text.CommonStrings.Credits = Text.RegisterTranslatedString({
+    Handle = "hbe49b67fg603bg46cag9b49g565949e20b31",
+    Text = "Credits",
+    ContextDescription = "As in, attribution of work.",
+})
 Text.CommonStrings.Dialogue = Text.RegisterTranslatedString({
     Handle = "h3fdf6c58gbfd5g4665g8426g26296acc0e1a",
     Text = "Dialogue",
@@ -888,6 +893,25 @@ Text.CommonStrings.Purified = Text.RegisterTranslatedString({
 Text.CommonStrings.Hotbar = Text.RegisterTranslatedString({
     Handle = "h50e1fa5dg66c8g49dagb30bgcafb9a2886fd",
     Text = "Hotbar",
+})
+Text.CommonStrings.CombatLog = Text.RegisterTranslatedString({
+    Handle = "h445d3e76g419eg4938g9bceg5802f0fd6514",
+    Text = "Combat Log",
+    ContextDescription = "As in, the UI.",
+})
+Text.CommonStrings.HealthBars = Text.RegisterTranslatedString({
+    Handle = "hac470828g9eecg4770g9df8g33c48faa05e6",
+    Text = "Health Bars",
+})
+Text.CommonStrings.Minimap = Text.RegisterTranslatedString({
+    Handle = "h336ff240ga7a7g46b9g97e3g8a671d9206b3",
+    Text = "Minimap",
+    ContextDescription = "As in, the UI.",
+})
+Text.CommonStrings.ExamineUI = Text.RegisterTranslatedString({
+    Handle = "haa9f4fb6gad49g4288ga0a9ga52d389bc69d",
+    Text = "Examine",
+    ContextDescription = "As in, the UI."
 })
 
 ---------------------------------------------
