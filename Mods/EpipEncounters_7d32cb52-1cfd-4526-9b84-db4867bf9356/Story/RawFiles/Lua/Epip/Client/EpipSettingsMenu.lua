@@ -364,6 +364,7 @@ local tabs = {
         Entries = {
             CreateHeader(TSK.Tab_MiscQoL),
             CreateLegacySettingEntry("AutoIdentify"),
+            CreateLegacySettingEntry("Inventory_InfiniteCarryWeight"),
             CreateLegacySettingEntry("RenderShroud"),
             CreateLegacySettingEntry("Feature_WalkOnCorpses"),
         }
@@ -408,7 +409,6 @@ local tabs = {
             {Module = InventoryMultiSelectInputActionSettings.SelectRange.ModTable, ID = InventoryMultiSelectInputActionSettings.SelectRange:GetID()},
 
             "Inventory_AutoUnlockInventory",
-            "Inventory_InfiniteCarryWeight",
             "Inventory_RewardItemComparison",
             {Module = ContainerInventoryTweaks:GetNamespace(), ID = ContainerInventoryTweaks.Settings.HighlightEmptySlots:GetID()},
 
