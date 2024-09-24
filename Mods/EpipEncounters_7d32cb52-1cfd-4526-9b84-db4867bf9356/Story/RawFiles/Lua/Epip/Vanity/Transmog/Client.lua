@@ -572,7 +572,7 @@ Character.Hooks.CreateEquipmentVisuals:Subscribe(function (ev)
                         elseif tags["2H"] then
                             bone = BONES.TWO_HANDED
                         else
-                            bone = slot == "Weapon" and BONES.ONE_HANDED or BONES.OFF_HAND
+                            bone = slot == "Weapon" and BONES.OFF_HAND or BONES.ONE_HANDED -- Not a mistake; while sheathed, these bones are unintuitively on opposite sides.
                         end
 
                         ev.Request.AttachmentBoneName = bone
