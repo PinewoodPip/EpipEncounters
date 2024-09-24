@@ -86,6 +86,14 @@ function CombatTurn.GetEntityElement(entity)
     return CombatTurn._GetEntityElement(entity, currentRoundList), CombatTurn._GetEntityElement(entity, nextRoundList)
 end
 
+---Returns the first (from either current or next round) element for an entity.
+---@param entity CombatLib_CombatCompatibleEntity
+---@return FlashMovieClip? -- Current round element takes priority.
+function CombatTurn.GetFirstEntityElement(entity)
+    local currentRoundElement, nextRoundElement = CombatTurn.GetEntityElement(entity)
+    return currentRoundElement or nextRoundElement
+end
+
 ---Returns the element of an entity within a list.
 ---@param entity CombatLib_CombatCompatibleEntity
 ---@param list FlashMovieClip

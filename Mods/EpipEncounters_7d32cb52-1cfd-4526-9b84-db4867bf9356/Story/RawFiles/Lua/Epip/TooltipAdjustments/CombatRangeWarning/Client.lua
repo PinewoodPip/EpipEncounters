@@ -51,7 +51,7 @@ Tooltip.Hooks.RenderMouseTextTooltip:Subscribe(function (ev)
         local enemies = {} ---@type EclCharacter[] Items cannot be enemies(?).
         local combatants = Combat.GetParticipants(combat)
         for _,combatant in ipairs(combatants) do
-            local entry = CombatTurn.GetEntityElement(combatant)
+            local entry = CombatTurn.GetFirstEntityElement(combatant)
             if entry and entry.typeColour == CombatTurn.HIGHLIGHT_COLORS.ENEMY then
                 table.insert(enemies, combatant)
             end
