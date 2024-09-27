@@ -4,6 +4,7 @@
 ---------------------------------------------
 
 local Set = DataStructures.Get("DataStructures_Set")
+local Input = Client.Input
 local Minimap = Client.UI.Minimap
 local MinimapC = Client.UI.Controller.Minimap
 
@@ -11,9 +12,34 @@ local MinimapC = Client.UI.Controller.Minimap
 local MinimapToggle = {
     _ModulesRequestingDisable = Set.Create(),
 
+    TranslatedStrings = {
+        InputAction_Toggle_Name = {
+            Handle = "h4909f5e1g70d6g4b89g98f3g3dda794aec4f",
+            Text = "Toggle Minimap",
+            ContextDescription = [[Keybind name]],
+        },
+        InputAction_Toggle_Description = {
+            Handle = "h6ef014f9g75f8g4c3fga5dbg6b7407405e1c",
+            Text = "Toggles visibility of the Minimap UI.",
+            ContextDescription = [[Tooltip for "Toggle Minimap" keybind]],
+        },
+    },
+
     SupportedGameStates = _Feature.GAME_STATES.RUNNING_SESSION | _Feature.GAME_STATES.PAUSED_SESSION,
 }
 Epip.RegisterFeature("MinimapToggle", MinimapToggle)
+local TSK = MinimapToggle.TranslatedStrings
+
+---------------------------------------------
+-- SETTINGS/INPUT ACTIONS
+---------------------------------------------
+
+MinimapToggle.InputActions = {
+    Toggle = MinimapToggle:RegisterInputAction("Toggle", {
+        Name = TSK.InputAction_Toggle_Name,
+        Description = TSK.InputAction_Toggle_Description,
+    })
+}
 
 ---------------------------------------------
 -- METHODS
@@ -84,6 +110,15 @@ end)
 -- (where the game can be paused)
 Settings.Events.SettingValueChanged:Subscribe(function (ev)
     if ev.Setting.ModTable == "EpipEncounters" and ev.Setting.ID == "Minimap" then
+        MinimapToggle._Update()
+    end
+end)
+
+-- Toggle setting when using the input action.
+Input.Events.ActionExecuted:Subscribe(function (ev)
+    if ev.Action.ID == MinimapToggle.InputActions.Toggle.ID then
+        local setting = Settings.GetSetting("EpipEncounters", "Minimap")
+        Settings.SetValue("EpipEncounters", "Minimap", not setting:GetValue())
         MinimapToggle._Update()
     end
 end)

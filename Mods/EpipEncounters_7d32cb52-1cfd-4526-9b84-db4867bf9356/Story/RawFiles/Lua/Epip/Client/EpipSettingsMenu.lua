@@ -19,6 +19,7 @@ local Navbar = Epip.GetFeature("Features.NavigationBar")
 local QuickLoot = Epip.GetFeature("Features.QuickLoot")
 local UIOverrideToggles = Epip.GetFeature("Features.UIOverrideToggles")
 local FastForwardDialogue = Epip.GetFeature("Features.FastForwardDialogue")
+local MinimapToggle = Epip.GetFeature("Feature_MinimapToggle")
 local Input = Client.Input
 local CommonStrings = Text.CommonStrings
 
@@ -340,6 +341,7 @@ local tabs = {
             -- Minimap
             CreateHeader(CommonStrings.Minimap),
             {Type = "Setting", Module = "EpipEncounters", ID = "Minimap"},
+            CreateSettingEntry(Input.GetActionBindingSetting(MinimapToggle.InputActions.Toggle)),
 
             -- Examine
             CreateHeader(CommonStrings.ExamineUI),
