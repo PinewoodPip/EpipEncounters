@@ -4,13 +4,27 @@
 ---------------------------------------------
 
 local SettingsMenu = Epip.GetFeature("Feature_SettingsMenuOverlay")
+local LoadingScreen = Client.UI.LoadingScreen
 
 ---@class Features.Tips : Feature
 local Tips = {
+    LOADING_SCREEN_TIP_CHANCE = 0.8, -- Chance for an Epip tip to be displayed in the loading screen instead of a vanilla one, if enabled.
+
     _Tips = {}, ---@type table<string, Features.Tips.Tip>
 
     Settings = {},
-    TranslatedStrings = {},
+    TranslatedStrings = {
+        Setting_ShowInLoadingScreen_Name = {
+            Handle = "he41b2329gd754g4addg9fb0g0cfe895cfba6",
+            Text = "Show Epip tips while loading",
+            ContextDescription = [[Setting name]],
+        },
+        Setting_ShowInLoadingScreen_Description = {
+            Handle = "hc13c1020g3725g4febg958cg6a01491c8e2c",
+            Text = "If enabled, Epip usage tips will be shown during loading screens.",
+            ContextDescription = [[Tooltip for "Show Epip tips while loading" setting]],
+        },
+    },
 
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
@@ -20,6 +34,7 @@ local Tips = {
     },
 }
 Epip.RegisterFeature("Features.Tips", Tips)
+local TSK = Tips.TranslatedStrings
 
 ---------------------------------------------
 -- CLASSES
@@ -41,6 +56,12 @@ Epip.RegisterFeature("Features.Tips", Tips)
 Tips.Settings.SeenTips = Tips:RegisterSetting("SeenTips", {
     Type = "Map",
     DefaultValue = {},
+})
+Tips.Settings.ShowInLoadingScreen = Tips:RegisterSetting("ShowInLoadingScreen", {
+    Type = "Boolean",
+    Name = TSK.Setting_ShowInLoadingScreen_Name,
+    Description = TSK.Setting_ShowInLoadingScreen_Description,
+    DefaultValue = false,
 })
 
 ---------------------------------------------
@@ -148,3 +169,12 @@ SettingsMenu.Events.RenderEntry:Subscribe(function (ev)
         SettingsMenu.UI.RenderEntry({Type = "Label", Label = tip and Text.Resolve(tip.Tip) or ""})
     end
 end)
+
+-- Show tips in loading screen.
+LoadingScreen.Hooks.GetHintText:Subscribe(function (ev)
+    if math.random() <= Tips.LOADING_SCREEN_TIP_CHANCE then
+        ev.Hint = Text.Resolve(Tips.GetRandomTip().Tip)
+    end
+end, {EnabledFunctor = function ()
+    return Tips.Settings.ShowInLoadingScreen:GetValue() == true
+end})

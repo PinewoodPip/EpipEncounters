@@ -233,6 +233,7 @@ local tabs = {
             CreateHeader(TSK.Label_TipOfTheDay),
             {Type = "Tip"},
             {Type = "Button", ID = EpipSettingsMenu.BUTTONID_NEXT_TIP, Label = TSK.Label_NextTip:GetString(), Tooltip = ""},
+            {Type = "Setting", Module = "EpipEncounters_Features.Tips", ID = "ShowInLoadingScreen"}, -- Annoying case due to the feature itself needing to load very late.
 
             -- Credits
             CreateLabel("——————————————————————————————"),

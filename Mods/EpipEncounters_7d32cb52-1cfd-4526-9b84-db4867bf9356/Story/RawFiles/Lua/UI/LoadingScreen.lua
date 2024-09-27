@@ -41,18 +41,18 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
+-- Throw events for progress bar changing.
 Loading:RegisterInvokeListener("setBar1Progress", function(_, value)
     Loading.Events.ProgressChanged:Throw({
         Progress = value,
     })
 end)
 
+-- Hook tip changes.
 Loading:RegisterInvokeListener("setInfoText", function(ev, text)
-    local hook = {Hint = text} ---@type LoadingScreenUI_Hook_GetHintText
-
-    Loading.Hooks.GetHintText:Throw(hook)
-
-    -- Arg replacement does not seem to work for invokes.
-    ev.UI:GetRoot().setInfoText(hook.Hint)
+    local hintText = Loading.Hooks.GetHintText:Throw({
+        Hint = text,
+    }).Hint
+    ev.UI:GetRoot().setInfoText(hintText)
     ev:PreventAction()
 end, "Before")
