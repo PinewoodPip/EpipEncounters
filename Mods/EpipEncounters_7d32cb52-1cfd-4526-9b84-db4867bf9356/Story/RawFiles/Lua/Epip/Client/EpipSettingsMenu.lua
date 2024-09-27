@@ -384,7 +384,7 @@ local tabs = {
         Entries = {
             CreateHeader(TSK.Tab_MiscQoL),
             CreateLegacySettingEntry("AutoIdentify"),
-            CreateLegacySettingEntry("Inventory_InfiniteCarryWeight"),
+            {Type = "Setting", Module = "Epip_Inventory", ID = "Inventory_InfiniteCarryWeight"},
             CreateLegacySettingEntry("RenderShroud"),
             CreateLegacySettingEntry("Feature_WalkOnCorpses"),
         }
