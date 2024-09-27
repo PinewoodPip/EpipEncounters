@@ -70,6 +70,7 @@ local TSK = Menu.TranslatedStrings
 ---------------------------------------------
 
 ---@alias Feature_SettingsMenu_ElementID integer
+---@alias Features.SettingsMenu.Entry.Type "Setting"|"Label"|"Button"|"Category"
 
 ---@class Feature_SettingsMenu_Tab
 ---@field ID string
@@ -80,7 +81,7 @@ local TSK = Menu.TranslatedStrings
 ---@field Entries Feature_SettingsMenu_Entry[]
 
 ---@class Feature_SettingsMenu_Entry
----@field Type "Setting"|"Label"|"Button"|"Category"
+---@field Type Features.SettingsMenu.Entry.Type
 
 ---@class Feature_SettingsMenu_Entry_Label : Feature_SettingsMenu_Entry
 ---@field Label string

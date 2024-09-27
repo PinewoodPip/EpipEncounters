@@ -871,6 +871,14 @@ LOAD_ORDER = {
         RequiresEE = true,
     },
 
+    -- Tips; should load as late as possible as it references other features
+    {
+        Scripts = {
+            "Epip/Tips/Client.lua",
+            "Epip/Tips/Tips.lua",
+        },
+    },
+
     -- Debug Cheats
     {
         ScriptSet = "Epip/DebugCheats",

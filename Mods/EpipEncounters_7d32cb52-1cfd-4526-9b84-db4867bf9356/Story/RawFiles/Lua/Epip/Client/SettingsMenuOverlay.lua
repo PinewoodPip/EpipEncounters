@@ -559,8 +559,6 @@ Overlay.Events.RenderEntry:Subscribe(function (ev)
         element = UI._RenderButton(ev)
     elseif entryType == "Category" then
         element = UI._RenderCategory(ev)
-    else
-        Overlay:LogWarning("Unsupported entry type: " .. entry.Type)
     end
 
     if element then

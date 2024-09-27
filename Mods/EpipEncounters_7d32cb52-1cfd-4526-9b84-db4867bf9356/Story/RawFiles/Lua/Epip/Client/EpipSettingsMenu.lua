@@ -37,6 +37,7 @@ local InventoryMultiSelectInputActionSettings = {
 ---@class Feature_EpipSettingsMenu : Feature
 local EpipSettingsMenu = {
     LABEL_FONT_SIZE = 19, -- Font size of general info labels.
+    BUTTONID_NEXT_TIP = "Info.NextTip",
 
     TranslatedStrings = {
         WarpToTestLevel = {
@@ -48,6 +49,16 @@ local EpipSettingsMenu = {
            Handle = "h866e5a46g3002g4c1bgba33g4aaef5ca5413",
            Text = "%s v%s by %s",
            ContextDescription = "Shows in the default tab of the settings menu",
+        },
+        Label_TipOfTheDay = {
+            Handle = "h10e67f1agfadcg40d5ga31ag0cbbe61c180b",
+            Text = "Tip of the day",
+            ContextDescription = [[Label in "Info" tab]],
+        },
+        Label_NextTip = {
+            Handle = "h890f714agb2d5g4e07gadacg068f217314eb",
+            Text = "Next Tip",
+            ContextDescription = [[Button in the "Info" tab]],
         },
         Label_SettingsMenuHint = {
             Handle = "h78121f59g7e1bg4d00g8b1eg8065379bf1dc",
@@ -215,6 +226,12 @@ local tabs = {
             CreateLabel(TSK.SettingApplicationWarning),
 
             CreateLegacySettingEntry("EpipLanguage"),
+
+            -- Tips
+            CreateLabel("——————————————————————————————"),
+            CreateHeader(TSK.Label_TipOfTheDay),
+            {Type = "Tip"},
+            {Type = "Button", ID = EpipSettingsMenu.BUTTONID_NEXT_TIP, Label = TSK.Label_NextTip:GetString(), Tooltip = ""},
 
             -- Credits
             CreateLabel("——————————————————————————————"),
@@ -567,3 +584,10 @@ for tabIndex,tab in ipairs(tabOrder) do
 
     Menu.RegisterTab(tab, tabIndex)
 end
+
+-- Show a new tip when requested via the button.
+Menu.Events.ButtonPressed:Subscribe(function (ev)
+    if ev.ButtonID == EpipSettingsMenu.BUTTONID_NEXT_TIP then
+        Menu.SetActiveTab("EpipEncounters") -- TODO do this without re-rendering the whole tab
+    end
+end)

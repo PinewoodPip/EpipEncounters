@@ -24,6 +24,7 @@
 ---@alias htmlcolor string
 ---@alias listenabletype "Event"|"Hook"
 ---@alias language string
+---@alias inputdevice "KeyboardAndMouse"|"Controller"
 
 ---@alias UIObjectHandle ComponentHandle
 
