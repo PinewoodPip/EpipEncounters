@@ -3,7 +3,7 @@
   "ModTable": "EpipEncounters",
   "TranslatedStrings": {
     "he043b9f9gfc52g4c39ga4f1gc53ea4fcd5ce": {
-      "ReferenceText": "Add skill IDs to this setting to blacklist them from being animation-cancelled.",
+      "ReferenceText": "Add skill IDs to this setting to blacklist them from being animation-cancelled.<br>Only affects skills used by the player.",
       "TranslatedText": "Adicione IDs de habilidade a esta configuração para colocá-los na lista negra de serem cancelados por animação."
     },
     "h3bf7ae10g24e1g4f50gbc69g71a8b95b1a51": {
@@ -690,14 +690,6 @@
       "ReferenceText": "Copy Position",
       "TranslatedText": "Copiar posição"
     },
-    "h4e3b6a84g9de1g4723gb807ga808db3c9d70": {
-      "ReferenceText": "TODO",
-      "TranslatedText": "Spawna um item a sua escolha "
-    },
-    "ha8b96a59gace5g4aa5gba9cgc7567a58a8e8": {
-      "ReferenceText": "TODO",
-      "TranslatedText": "Copia a GUID de um objeto "
-    },
     "h23e452c0g340fg4555g8034g753f003107bf": {
       "ReferenceText": "TODO",
       "TranslatedText": "Te teleporta para a localização X"
@@ -705,6 +697,14 @@
     "hfd4d8ec8g76e3g4defg9647gc28159eb38e5": {
       "ReferenceText": "TODO",
       "TranslatedText": "Spawnar item"
+    },
+    "ha8b96a59gace5g4aa5gba9cgc7567a58a8e8": {
+      "ReferenceText": "TODO",
+      "TranslatedText": "Copia a GUID de um objeto "
+    },
+    "h4e3b6a84g9de1g4723gb807ga808db3c9d70": {
+      "ReferenceText": "TODO",
+      "TranslatedText": "Spawna um item a sua escolha "
     },
     "ha6bf3f4cg6de4g4ac8gb706g3f39de8376c3": {
       "ReferenceText": "Teleport to",
@@ -850,10 +850,6 @@
       "ReferenceText": "Player Portraits",
       "TranslatedText": "Retrato de Personagem"
     },
-    "hbce14cb2g1ed7g4076g95d1gb80c6085c3ad": {
-      "ReferenceText": "Russian translation by Cathe & JoienReid",
-      "TranslatedText": "Tradução Brasileira por ferocidade"
-    },
     "he1539138g972fg4dffg9026gb1624ae59da1": {
       "ReferenceText": "Save/Load UI",
       "TranslatedText": "Salvar/Carregar interface"
@@ -863,7 +859,7 @@
       "TranslatedText": "Tradução chinesa simplificada por Ainsky\n"
     },
     "h4a3e28fag3595g4753gb507g4423068aeda8": {
-      "ReferenceText": "Some options may require a reload for changes to apply.",
+      "ReferenceText": "Some settings may require a reload for changes to apply. You'll be warned when this is the case.",
       "TranslatedText": "Maioria das opções requer um recarregamento para que as alterações sejam aplicadas."
     },
     "hd34a81ecg7b8eg4ad6g8fc4gf6310e5ae556": {

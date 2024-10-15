@@ -3,7 +3,7 @@
   "ModTable": "EpipEncounters",
   "TranslatedStrings": {
     "he043b9f9gfc52g4c39ga4f1gc53ea4fcd5ce": {
-      "ReferenceText": "Add skill IDs to this setting to blacklist them from being animation-cancelled.",
+      "ReferenceText": "Add skill IDs to this setting to blacklist them from being animation-cancelled.<br>Only affects skills used by the player.",
       "TranslatedText": "Dodaj ID umiejętności do tej opcji żeby wykluczyć je z Przerywania Animacji "
     },
     "h3bf7ae10g24e1g4f50gbc69g71a8b95b1a51": {
@@ -346,11 +346,11 @@
       "ReferenceText": "Raid Failed!",
       "TranslatedText": "Porażka Rajdu!"
     },
-    "hde82ec74g19fcg4737g90b8g4b2ab8dd10ad": {
+    "hc65f56cegc174g497eg8cd3g868daf684df1": {
       "ReferenceText": "Raid Mechanics",
       "TranslatedText": "Mechaniki Rajdu"
     },
-    "hc65f56cegc174g497eg8cd3g868daf684df1": {
+    "hde82ec74g19fcg4737g90b8g4b2ab8dd10ad": {
       "ReferenceText": "Raid Mechanics",
       "TranslatedText": "Mechaniki Rajdu"
     },
@@ -1415,8 +1415,8 @@
       "TranslatedText": "Portrety Gracza"
     },
     "hbce14cb2g1ed7g4076g95d1gb80c6085c3ad": {
-      "ReferenceText": "Russian translation by Cathe & JoienReid",
-      "TranslatedText": "Rosyjskie tłumaczenie od Cathe & JoienReid"
+      "ReferenceText": "Russian translation by JoienReid & Cathe",
+      "TranslatedText": "Rosyjskie tłumaczenie od JoienReid & Cathe"
     },
     "he1539138g972fg4dffg9026gb1624ae59da1": {
       "ReferenceText": "Save/Load UI",
@@ -1427,7 +1427,7 @@
       "TranslatedText": "Uproszczone Chińskie tłumaczenie od Ainsky"
     },
     "h4a3e28fag3595g4753gb507g4423068aeda8": {
-      "ReferenceText": "Some options may require a reload for changes to apply.",
+      "ReferenceText": "Some settings may require a reload for changes to apply. You'll be warned when this is the case.",
       "TranslatedText": "Niektóre opcje mogą wymagać ponownego uruchomienia aby zmiany się zatwierdziły."
     },
     "hd34a81ecg7b8eg4ad6g8fc4gf6310e5ae556": {

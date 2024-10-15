@@ -3,7 +3,7 @@
   "ModTable": "EpipEncounters",
   "TranslatedStrings": {
     "he043b9f9gfc52g4c39ga4f1gc53ea4fcd5ce": {
-      "ReferenceText": "Add skill IDs to this setting to blacklist them from being animation-cancelled.",
+      "ReferenceText": "Add skill IDs to this setting to blacklist them from being animation-cancelled.<br>Only affects skills used by the player.",
       "TranslatedText": "添加不需要取消动作的技能ID"
     },
     "h3bf7ae10g24e1g4f50gbc69g71a8b95b1a51": {
@@ -1003,8 +1003,8 @@
       "TranslatedText": "玩家肖像"
     },
     "hbce14cb2g1ed7g4076g95d1gb80c6085c3ad": {
-      "ReferenceText": "Russian translation by Cathe & JoienReid",
-      "TranslatedText": "俄语翻译: Cathe & JoienReid"
+      "ReferenceText": "Russian translation by JoienReid & Cathe",
+      "TranslatedText": "俄语翻译: JoienReid & Cathe"
     },
     "he1539138g972fg4dffg9026gb1624ae59da1": {
       "ReferenceText": "Save/Load UI",
@@ -1015,7 +1015,7 @@
       "TranslatedText": "简体中文翻译: Ainsky"
     },
     "h4a3e28fag3595g4753gb507g4423068aeda8": {
-      "ReferenceText": "Some options may require a reload for changes to apply.",
+      "ReferenceText": "Some settings may require a reload for changes to apply. You'll be warned when this is the case.",
       "TranslatedText": "大多数选项需要存档然后读档才能生效"
     },
     "hd34a81ecg7b8eg4ad6g8fc4gf6310e5ae556": {

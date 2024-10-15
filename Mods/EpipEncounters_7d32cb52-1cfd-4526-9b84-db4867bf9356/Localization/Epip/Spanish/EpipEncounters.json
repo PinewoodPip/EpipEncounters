@@ -3,7 +3,7 @@
   "ModTable": "EpipEncounters",
   "TranslatedStrings": {
     "he043b9f9gfc52g4c39ga4f1gc53ea4fcd5ce": {
-      "ReferenceText": "Add skill IDs to this setting to blacklist them from being animation-cancelled.",
+      "ReferenceText": "Add skill IDs to this setting to blacklist them from being animation-cancelled.<br>Only affects skills used by the player.",
       "TranslatedText": "Agrega a esta configuracion las ID de las habilidades para evitar que se cancelen las animaciones."
     },
     "h3bf7ae10g24e1g4f50gbc69g71a8b95b1a51": {
@@ -46,9 +46,53 @@
       "ReferenceText": "Camera Angles",
       "TranslatedText": "Ángulos de cámara"
     },
+    "hec25a517g9521g47e3g8f74gfa658861a320": {
+      "ReferenceText": "Controls the FOV of the camera. Low/high values may cause issues with dynamic shadows.<br>Default is 45.",
+      "TranslatedText": "Controla el campo de visión (FOV) de la cámara. Los valores bajos/altos pueden causar problemas con las sombras dinámicas.<br>El valor predeterminado es 45."
+    },
+    "h97ac5f1fg0ae8g490dg9050gb5f8fe4025a4": {
+      "ReferenceText": "Controls the maximum distance the camera can zoom out in controller mode.<br>Default is 13.",
+      "TranslatedText": "Controla la distancia máxima a la que la cámara puede alejarse con el mando.<br>El valor predeterminado es 13."
+    },
+    "h8403161cgb78fg453fg9676gd4c14f3afd29": {
+      "ReferenceText": "Controls the maximum distance the camera can zoom out in regular gameplay.<br>Default is 19.",
+      "TranslatedText": "Controla la distancia máxima a la que la cámara puede alejarse en el juego normal.<br>El valor predeterminado es 19."
+    },
+    "h22447dfage02dg4c93gbf2agded54810ce36": {
+      "ReferenceText": "Controls the maximum distance the camera can zoom out in tactical view mode.<br>Default is 25.",
+      "TranslatedText": "Controla la distancia máxima a la que la cámara puede alejarse en el modo de vista táctica.<br>El valor predeterminado es 25."
+    },
+    "h3af2fabcg24ffg4e29ga965g69180c641040": {
+      "ReferenceText": "Controls the maximum distance the camera can zoom out while it is tracking an entity.<br>Default is 17.",
+      "TranslatedText": "Controla la distancia máxima a la que la cámara puede alejarse mientras está siguiendo a una entidad.<br>El valor predeterminado es 17."
+    },
+    "hb0379c8bg24bfg4755ga9b3geb29817de37b": {
+      "ReferenceText": "Controls the minimum distance the camera can zoom in during regular gameplay.<br>Default is 5.5.",
+      "TranslatedText": "Controla la distancia mínima a la que la cámara puede acercarse durante el juego normal.<br>El valor predeterminado es 5.5."
+    },
+    "hd804e90bgd821g475eg845bgd5c3e8363394": {
+      "ReferenceText": "Controls the minimum distance the camera can zoom in while it is tracking an entity.<br>Default is 17.",
+      "TranslatedText": "Controla la distancia mínima a la que la cámara puede acercarse mientras está siguiendo a una entidad.<br>El valor predeterminado es 17."
+    },
+    "he80877b1g380eg4e61g8a4ag66d806352679": {
+      "ReferenceText": "Controls the minimum distance the camera can zoom in while using a controller.<br>Default is 5.5.",
+      "TranslatedText": "Controla la distancia mínima a la que la cámara puede acercarse al usar el mando.<br>El valor predeterminado es 5.5."
+    },
+    "hb5f81ce7g26cfg4e30gb9ddg1ccf51f78fcd": {
+      "ReferenceText": "Controls the minimum distance the camera can zoom in while using the tactical view.<br>Default is 6.",
+      "TranslatedText": "Controla la distancia mínima a la que la cámara puede acercarse al usar la vista táctica.<br>El valor predeterminado es 6."
+    },
     "h265f89a4g9e80g420egb7adgd27aced5697b": {
       "ReferenceText": "Field of View",
       "TranslatedText": "Campo de visión (FOV)"
+    },
+    "h804e5cefgef0eg4351gb19cge60e92ca4297": {
+      "ReferenceText": "General",
+      "TranslatedText": "General"
+    },
+    "h8dbeb996g3d15g4ac0ga45fg8118abe7961d": {
+      "ReferenceText": "If enabled, the camera zoom will not change during dialogue.",
+      "TranslatedText": "Si está habilitado, el zoom de la cámara no cambiará durante el diálogo."
     },
     "haa0297d1ga978g4be1gb3b4g7295b9451b31": {
       "ReferenceText": "Maximum Distance",
@@ -66,9 +110,49 @@
       "ReferenceText": "Maximum Distance (tactical view)",
       "TranslatedText": "Distancia Máxima (vista táctica)"
     },
+    "h626d2da2g381eg4536g9bd0g56dd32edbe3e": {
+      "ReferenceText": "Minimum Distance",
+      "TranslatedText": "Distancia mínima"
+    },
+    "h039c29fag6078g4ff6ga239g9fcb8eb798d1": {
+      "ReferenceText": "Minimum Distance (controller mode)",
+      "TranslatedText": "Distancia mínima (mando)"
+    },
+    "h042628degf10fg4e96ga61cgb1a0965dc7e4": {
+      "ReferenceText": "Minimum Distance (locked-on)",
+      "TranslatedText": "Distancia mínima (bloqueado)"
+    },
+    "h3a28ae91ge8e5g4b54g9542g0d4cd0671198": {
+      "ReferenceText": "Minimum Distance (tactical view)",
+      "TranslatedText": "Distancia mínima (vista táctica)"
+    },
+    "h0ea53526g269dg479fgbc83gf068477ed6f6": {
+      "ReferenceText": "Preserve zoom level in dialogues",
+      "TranslatedText": "Preservar nivel de zoom en diálogos"
+    },
     "h3ddc3759g3f70g4ac5g9401g76ced6258d7a": {
       "ReferenceText": "Reset to defaults",
       "TranslatedText": "Restablecer por defecto"
+    },
+    "h24797af2gde0ag48cdgb741gec2049e1c631": {
+      "ReferenceText": "Restores the angle settings to default values.",
+      "TranslatedText": "Restaura la configuración de ángulo a los valores predeterminados."
+    },
+    "h1900a04ag7611g4d34g8975g89a0dac84c56": {
+      "ReferenceText": "Displays all Epic Encounters Artifacts.",
+      "TranslatedText": "Muestra todos los Artefactos de Encuentros Épicos."
+    },
+    "hde789445g157eg4ecbg962bg1cb03cdfdc80": {
+      "ReferenceText": "View all sort of information from enabled mods.",
+      "TranslatedText": "Ver toda la información de los mods habilitados."
+    },
+    "hc31a7649g3a59g4595gbfecg3fdc812c0c1f": {
+      "ReferenceText": "Codex",
+      "TranslatedText": "Códice"
+    },
+    "h52c8465ag5bf7g4420g93b7ge555e6acb172": {
+      "ReferenceText": "Open Codex",
+      "TranslatedText": "Abrir códice"
     },
     "h4b557dbeg4eefg4284gba11gef2cf523830f": {
       "ReferenceText": "AP",
@@ -85,6 +169,14 @@
     "h3b607ec3gf978g48ccgbb02g96aba3dd1430": {
       "ReferenceText": "Amulet",
       "TranslatedText": "Amuleto"
+    },
+    "hcb8d99d9g28aeg4310gba17g4561e98b4b8e": {
+      "ReferenceText": "Any",
+      "TranslatedText": "Cualquiera"
+    },
+    "h67f7cc80g5e7eg4e4eg85e4gb451cc2cab48": {
+      "ReferenceText": "Applies only to EE.",
+      "TranslatedText": "Se aplica solo a EE."
     },
     "h67b0f5b2gce06g4eefgbc69g36069a35bb3c": {
       "ReferenceText": "Apply",
@@ -138,9 +230,21 @@
       "ReferenceText": "Critical Chance",
       "TranslatedText": "Probabilidad de crítico"
     },
+    "h7f53d9adg7fdeg4005gaa99g0ffde8a8b21f": {
+      "ReferenceText": "Crossbow",
+      "TranslatedText": "Ballesta\n"
+    },
+    "h7a7863ecg913dg4decg83efg7b3d5b3827da": {
+      "ReferenceText": "Cursed",
+      "TranslatedText": "Maldito"
+    },
     "h17d882b6g83acg411dgbe52g3ed32443774a": {
       "ReferenceText": "Custom",
       "TranslatedText": "Personalizado"
+    },
+    "h82933829g4fd3g4dfeg9b84ga47e14020bd6": {
+      "ReferenceText": "Dagger",
+      "TranslatedText": "Daga"
     },
     "hb2e1d20dgd3c2g45b9ga922gf19ea1a12691": {
       "ReferenceText": "Delete",
@@ -194,6 +298,10 @@
       "ReferenceText": "Food and Drinks",
       "TranslatedText": "Consumibles"
     },
+    "h9c53529bg5bc1g4005g9143g216bc58b959e": {
+      "ReferenceText": "General",
+      "TranslatedText": "General"
+    },
     "h421f56f3g378cg4dfaga0d1ge6e2ea2f17c4": {
       "ReferenceText": "Geomancer",
       "TranslatedText": "Geomante"
@@ -202,17 +310,41 @@
       "ReferenceText": "Gloves",
       "TranslatedText": "Guantes"
     },
+    "h7f208716g53a7g4f87ga23eg57dd190a5372": {
+      "ReferenceText": "Ground",
+      "TranslatedText": "Piso"
+    },
     "h0212f2a7gcebag4eaag8641g64cfb7bfc0d2": {
       "ReferenceText": "Helmet",
       "TranslatedText": "Casco"
+    },
+    "h1a45624fgcbe1g48b8g9b4ag23e6f8cebe67": {
+      "ReferenceText": "Hidden",
+      "TranslatedText": "Oculto"
+    },
+    "h4b3dde2dge122g40c7gbb6dg585e04dfac8d": {
+      "ReferenceText": "Hide",
+      "TranslatedText": "Ocultar"
     },
     "he8c517d9gc48fg42f8ga501g35f9909946b9": {
       "ReferenceText": "Inventory",
       "TranslatedText": "Inventario"
     },
+    "h543a5832g1c08g4c3eg9e21g9ee1414c9941": {
+      "ReferenceText": "Item Slot",
+      "TranslatedText": "Ranura de objeto"
+    },
+    "he903ca90ga133g427dgaec0g67aa6bba06fc": {
+      "ReferenceText": "Items",
+      "TranslatedText": "Objetos"
+    },
     "hebad38dcg58c3g4a03gb44eg02833543ba38": {
       "ReferenceText": "Keybinds",
-      "TranslatedText": "Teclas de acceso directo"
+      "TranslatedText": "Atajos de acceso"
+    },
+    "h7e55ac61g269fg4f0dgabf9g06cbe52d0d22": {
+      "ReferenceText": "Knife",
+      "TranslatedText": "Cuchillo"
     },
     "hc2b715dfgf2a2g4ea3g8691gbc66ca160a1d": {
       "ReferenceText": "Notifications",
@@ -222,6 +354,14 @@
       "ReferenceText": "Overhaul",
       "TranslatedText": "Mejorado"
     },
+    "h4e1defceg6104g42adg8da7g5d484b8e589f": {
+      "ReferenceText": "Radius",
+      "TranslatedText": "Radio"
+    },
+    "h974c404ag23a3g4926gbf2fg8d4c881e37ea": {
+      "ReferenceText": "Remove",
+      "TranslatedText": "Quitar"
+    },
     "h797b8a3ag4b10g4549g8731g7ec3e775b896": {
       "ReferenceText": "Reset",
       "TranslatedText": "Restablecer"
@@ -229,6 +369,18 @@
     "h2b13dd3bg4c83g4613g8884g746775c96afa": {
       "ReferenceText": "Reset to default",
       "TranslatedText": "Restablecer por defecto"
+    },
+    "hd15232f0gd82dg42a3g82ddg7597d3911122": {
+      "ReferenceText": "Resize",
+      "TranslatedText": "Redimensionar"
+    },
+    "h19cc3513g8f3eg4168gb9dbgca2e37ebb679": {
+      "ReferenceText": "Right",
+      "TranslatedText": "Derecha"
+    },
+    "h7afd19eegf79bg42f9g97e7g66f4ac3a51c6": {
+      "ReferenceText": "Ring",
+      "TranslatedText": "Anillo"
     },
     "he007d2e4gc918g475cgbca9g7edc91ad34ab": {
       "ReferenceText": "SP",
@@ -238,13 +390,53 @@
       "ReferenceText": "Save",
       "TranslatedText": "Guardar"
     },
+    "h02b0d0b3g900cg442cg9686gb4d5f7e405f3": {
+      "ReferenceText": "Scroll Down",
+      "TranslatedText": "Deslizar abajo"
+    },
+    "h6cdca959g97a7g4d37ga5b7gf1fe7d9bf7cf": {
+      "ReferenceText": "Scroll Up",
+      "TranslatedText": "Deslizar arriba"
+    },
+    "hb986b161gd6c3g459bga8f6gba07c8483103": {
+      "ReferenceText": "Scrolls",
+      "TranslatedText": "Pergaminos"
+    },
     "hbd6a0da2gd153g40c7g972agb0d16bfe78d4": {
       "ReferenceText": "Settings",
       "TranslatedText": "Configuración"
     },
+    "h3d0006a6g5449g47fdg91d6g2920c42ea0f3": {
+      "ReferenceText": "Shield",
+      "TranslatedText": "Escudo"
+    },
+    "h4fc7301egc609g4739g9752g7b0fae2e8c5b": {
+      "ReferenceText": "Skillbooks",
+      "TranslatedText": "Libros de hechizos"
+    },
+    "h14674f13g78c9g49ecgac6dgbf7a95039189": {
+      "ReferenceText": "Skills",
+      "TranslatedText": "Habilidades"
+    },
+    "h77ccbac2g8c6ag414fg8760g70ec87d3aa69": {
+      "ReferenceText": "Statistics",
+      "TranslatedText": "Estadísticas"
+    },
+    "h0f112ed1gcc18g470egaf01ga5cd65d1f22b": {
+      "ReferenceText": "Sword",
+      "TranslatedText": "Espada"
+    },
     "h921639b1g5656g4eafg9c4dg735bda9ba283": {
       "ReferenceText": "Tooltips",
       "TranslatedText": "Descripciones emergentes"
+    },
+    "h4119cfcegbfc2g4045gbeecgfb1c96de38e2": {
+      "ReferenceText": "Type",
+      "TranslatedText": "Tipo"
+    },
+    "h0879c1f1gc016g460egba26gd81e2cca18a2": {
+      "ReferenceText": "Unbound",
+      "TranslatedText": "Sin asignar"
     },
     "h6a473ba0g726bg4188g811fgfa83c0b3def2": {
       "ReferenceText": "Vanilla",
@@ -274,9 +466,13 @@
       "ReferenceText": "Player Portraits",
       "TranslatedText": "Retratos del jugador"
     },
+    "hc7d35703gbf43g4f19ga94dg590f99309514": {
+      "ReferenceText": "Polish translation by Nektun",
+      "TranslatedText": "Traducción al Polaco por Nektun"
+    },
     "hbce14cb2g1ed7g4076g95d1gb80c6085c3ad": {
-      "ReferenceText": "Russian translation by Cathe & JoienReid",
-      "TranslatedText": "Traducción al Ruso por Cathe & JoienReid"
+      "ReferenceText": "Russian translation by JoienReid & Cathe",
+      "TranslatedText": "Traducción al Ruso por JoienReid & Cathe"
     },
     "he1539138g972fg4dffg9026gb1624ae59da1": {
       "ReferenceText": "Save/Load UI",
@@ -287,8 +483,12 @@
       "TranslatedText": "Traducción a Chino Simplificado por Ainsky"
     },
     "h4a3e28fag3595g4753gb507g4423068aeda8": {
-      "ReferenceText": "Some options may require a reload for changes to apply.",
+      "ReferenceText": "Some settings may require a reload for changes to apply. You'll be warned when this is the case.",
       "TranslatedText": "Algunas opciones pueden requerir recargar el juego para que los cambios se apliquen."
+    },
+    "hb6222658gfc63g4d1ag8c41g71f86ef5ec99": {
+      "ReferenceText": "Spanish translation by AquaVXI",
+      "TranslatedText": "Traducción al Español por AquaVXI"
     },
     "hf61f1a35g7ee7g4b79g8728g9a278d2522b0": {
       "ReferenceText": "Area Transition Label Duration",
@@ -296,7 +496,7 @@
     },
     "h799513e4g3995g4d45g8e0bg3ee08e6cd1db": {
       "ReferenceText": "Auto-identify items",
-      "TranslatedText": "Auto-Identificación de Objetos"
+      "TranslatedText": "Identificar objetos (auto)"
     },
     "h5bef00c6g36deg4db0ga3d5gb006dbc5f601": {
       "ReferenceText": "Auto-unlock inventory (Multiplayer)",
@@ -316,19 +516,79 @@
     },
     "h53b42eecg74ccg4164gbd64g0bda6052e6f1": {
       "ReferenceText": "Examine Menu Position",
-      "TranslatedText": "Posición del menú Examinar"
+      "TranslatedText": "Posición del menú 'examinar'"
+    },
+    "h01f17781g7f5ag4113g9505g4cba31cd0d07": {
+      "ReferenceText": "Improved Combat Log",
+      "TranslatedText": "Registro de Combate Mejorado"
+    },
+    "hd71aa49cgcb72g4cd1ga209g28e6a6159b95": {
+      "ReferenceText": "Infinite Carry Weight",
+      "TranslatedText": "Capacidad de carga sin límite"
+    },
+    "h1e03cfb3g592dg4698ga246gdc1e34d9915a": {
+      "ReferenceText": "Item Notifications",
+      "TranslatedText": "Notificaciones de Objetos"
     },
     "h3f4780c9g726bg43c3g8b59gd85d2a0aad07": {
       "ReferenceText": "Show Fog of War",
       "TranslatedText": "Mostrar Niebla de Guerra"
     },
+    "h54022e48gaecfg4b0ega332gd42d4ac64dd4": {
+      "ReferenceText": "Show Mastery Button",
+      "TranslatedText": "Mostrar botón de Maestría"
+    },
     "h19c9fc59g789ag4c24gb90ag4858f13e79df": {
       "ReferenceText": "Show Minimap",
       "TranslatedText": "Mostrar Minimapa"
     },
+    "h8f7f66d4g1806g478agb229g3f36b527d44d": {
+      "ReferenceText": "Simple Tooltip Delay (World)",
+      "TranslatedText": "Retraso de notificación simple (Mundo)"
+    },
+    "h7c2f8512g3c4eg4dffg946aga4482de181ae": {
+      "ReferenceText": "Toggles visibility of the minimap UI element.",
+      "TranslatedText": "Alterna la visibilidad del minimapa."
+    },
+    "hed5f3515g0bcdg4e22ga774gb2221e6b308f": {
+      "ReferenceText": "Custom Line 1",
+      "TranslatedText": "Linea personzalizada 1"
+    },
+    "h37705f99g9f5cg4f74g9751g3302acb7c87b": {
+      "ReferenceText": "Custom Line 2",
+      "TranslatedText": "Linea personzalizada 2"
+    },
+    "h8dbe0f11g045dg4abbg9c90ge35a40efe4e9": {
+      "ReferenceText": "Unknown Region",
+      "TranslatedText": "Región desconocida"
+    },
+    "hd2e9ffeega495g4fdagb818gbc7b6275e9b3": {
+      "ReferenceText": "After Name",
+      "TranslatedText": "Después del nombre"
+    },
+    "h2a5a9fedg9c42g4f0ag9d54gb4098614b91b": {
+      "ReferenceText": "Below Health Bar",
+      "TranslatedText": "Debajo de la barra de salud"
+    },
     "h52f49bccg59f7g4b72g8440g55847b964cde": {
       "ReferenceText": "Character Level Display",
-      "TranslatedText": "Visualización del Nivel del Personaje"
+      "TranslatedText": "Mostrar Nivel del Personaje"
+    },
+    "hedbf4e2fgb8e6g400cgb08bgd33f99bc101d": {
+      "ReferenceText": "Controls how character levels are displayed in the health bar UI.",
+      "TranslatedText": "Controla cómo se muestran los niveles de los personajes en la interfaz de la barra de salud."
+    },
+    "h71cef3e3g71bag4da1gb743g56dc62daf7ac": {
+      "ReferenceText": "Controls how resistances are shown in the health bar UI.<br><br>- Never: resistances are never shown under the health bar.<br>- Only non-zero: only resistances that are not at 0 are displayed.<br>- If any non-zero: all resistances are displayed if the character has a non-zero amount of any of them; otherwise none are shown.<br>- Always: all resistances are shown.",
+      "TranslatedText": "Controla cómo se muestran las resistencias en la interfaz de la barra de salud.<br><br>- Nunca: las resistencias nunca se muestran debajo de la barra de salud.<br>- Si no es cero: solo se muestran las resistencias que no están en 0.<br>- Si alguna no es cero: se muestran todas las resistencias si el personaje tiene una cantidad no cero de alguna de ellas; de lo contrario, no se muestra ninguna.<br>- Siempre: se muestran todas las resistencias."
+    },
+    "h14408a2cgee5fg4f6agb7f8g33c364419f75": {
+      "ReferenceText": "If any non-zero",
+      "TranslatedText": "Si alguna no es cero"
+    },
+    "h6493dca2g23e2g43d9g8cd4gfa10a05faedd": {
+      "ReferenceText": "Only non-zero",
+      "TranslatedText": "Si no es cero"
     },
     "h33af8f80g537eg4f1fga457gf02894f0d762": {
       "ReferenceText": "Resistances Display",
@@ -336,23 +596,159 @@
     },
     "h7e532f24g51f1g439cg9851g8ff8f12a6b17": {
       "ReferenceText": "When holding Shift",
-      "TranslatedText": "Presionando Shift"
+      "TranslatedText": "Presionando Mayúsculas"
+    },
+    "hd15285dag87d6g450cg8f17gd663d87a474e": {
+      "ReferenceText": "Chain/Unchain",
+      "TranslatedText": "Unir/Separar personajes."
+    },
+    "h92f5ec36g9d74g4eccg951eg9d9620dda934": {
+      "ReferenceText": "If enabled, the Quick Examine UI will show the equipped artifacts of characters.",
+      "TranslatedText": "Si está habilitado, la interfaz de usuario de Examinar Rápido mostrará los artefactos equipados de los personajes."
+    },
+    "he518f8b3gac8eg4855gb7b3gfd6217a94fde": {
+      "ReferenceText": "Armor First",
+      "TranslatedText": "Armaduras primero"
+    },
+    "h405ae4b4g1499g463fgbe98ge384c0eaac2e": {
+      "ReferenceText": "Determines the order in which equipment slots are shown in Quick Examine's equipment widget.",
+      "TranslatedText": "Determina el orden en el que se muestran los espacios de equipo en la sección de Equipo de la interfaz."
     },
     "h614e84c5g5e03g4672g8b1cga7a8455f4a5a": {
       "ReferenceText": "Equipment Slots Order",
       "TranslatedText": "Orden de ranuras de equipo"
     },
+    "h130006d8gccb5g4164g87aeged4685812627": {
+      "ReferenceText": "If enabled, the Quick Examine UI will show the equipped items of player characters.",
+      "TranslatedText": "Si está habilitado, la interfaz de usuario de Examinar Rápido mostrará los objetos equipados de los personajes jugadores."
+    },
     "h0cd1bcdcgdf0cg4740gaa47g6c551697f31a": {
       "ReferenceText": "Show equipped items",
       "TranslatedText": "Mostrar objetos equipados"
+    },
+    "h7b5b3f77gecb7g400cgafedg1be1b2227264": {
+      "ReferenceText": "Weapons & Accessories First",
+      "TranslatedText": "Armas y Accesorios primero"
+    },
+    "h41f3c758g87e9g4caegb1eeg5e324bd1564a": {
+      "ReferenceText": "If enabled, the Quick Examine UI will show the skills of player characters and their cooldowns.",
+      "TranslatedText": "Si está habilitado, la interfaz de usuario de Examinar Rápido mostrará las habilidades de los personajes jugadores y sus tiempos de recarga."
     },
     "h186d9f82g7ad6g4113gb261g2a5eb62cf612": {
       "ReferenceText": "Show skills",
       "TranslatedText": "Mostrar habilidades"
     },
+    "h70e80784gadb9g4d5agae96gc219142a7d43": {
+      "ReferenceText": "If enabled, the Quick Examine UI will show the active and visible statuses of characters.",
+      "TranslatedText": "Si está habilitado, la interfaz de usuario de Examinar Rápido mostrará los estados activos y visibles de los personajes."
+    },
     "h781196b1g2672g4814gba9cg909abae01815": {
       "ReferenceText": "Show statuses",
       "TranslatedText": "Mostrar estados"
+    },
+    "hdd379f13g9fb6g4195ga02bge51a06d5f44a": {
+      "ReferenceText": "Default Radius",
+      "TranslatedText": "Radio predeterminado"
+    },
+    "ha9cb323cgaba1g42ddg9710g6b10d180a1cf": {
+      "ReferenceText": "Determines how items filtered-out by other settings are treated.<br>- Hide items: filtered-out items are not shown in the UI.<br>- Grey out items: filtered-out items are shown greyed-out and moved to the end of the list.",
+      "TranslatedText": "Determina cómo se tratan los objetos filtrados por otras configuraciones.<br>- Ocultar: los objetos filtrados no se muestran en la interfaz de usuario.<br>- Atenuar objetos: los objetos filtrados se muestran atenuados y se mueven al final de la lista."
+    },
+    "h63dc15c7g9d83g495cg9555g0a3d9a468100": {
+      "ReferenceText": "Determines the minimum rarity of equipment to include.",
+      "TranslatedText": "Determina la rareza mínima del equipo para incluir."
+    },
+    "hb53ca0e9g7d6cg47c3g9747g38e19a343a90": {
+      "ReferenceText": "Determines the starting radius of the search area, in meters.",
+      "TranslatedText": "Determina el radio inicial del área de búsqueda, en metros."
+    },
+    "h27133569gae70g4950g968ag09472626efb7": {
+      "ReferenceText": "Filter Mode",
+      "TranslatedText": "Modo de filtrado"
+    },
+    "h39465db7g62c7g4799g902ag39d3eb629f8a": {
+      "ReferenceText": "Grey out items",
+      "TranslatedText": "Oscurecer"
+    },
+    "h8ce3b6efg058fg476dga263gc226a11d49a2": {
+      "ReferenceText": "Hide items",
+      "TranslatedText": "No mostrar"
+    },
+    "h7222d389g2b3cg40a8gb589gc41902b02ce8": {
+      "ReferenceText": "Hold to search nearby containers and corpses to loot.",
+      "TranslatedText": "Mantén presionado para registrar los contenedores y cadáveres cercanos."
+    },
+    "h6b9c0d7fg3955g424bg847eg7b2201275db0": {
+      "ReferenceText": "If enabled, a beam effect will play while looting items, visualizing the container or corpse they are being taken from.",
+      "TranslatedText": "Si está habilitado, se producirá un efecto de telequinesis mientras registras objetos, visualizando el contenedor o cadáver del que se están tomando."
+    },
+    "he5aa70fbg87fag4679gae29g7b8efc22f2f7": {
+      "ReferenceText": "If enabled, books and other readable items will be included.",
+      "TranslatedText": "Si está habilitado, se incluirán libros y otros objetos legibles."
+    },
+    "h9bfec1c4g695dg4259gb489g606897bbe8e6": {
+      "ReferenceText": "If enabled, crafting ingredients will be included.",
+      "TranslatedText": "Si está habilitado, se incluirán los ingredientes de fabricación."
+    },
+    "heded2e03g9a95g4567gaa8cg2e226f54865f": {
+      "ReferenceText": "If enabled, food and drink items will be included.",
+      "TranslatedText": "Si está habilitado, se incluirán los alimentos y bebidas."
+    },
+    "ha874d82cg830bg4658gbb16g7772fc94ea62": {
+      "ReferenceText": "If enabled, items with no interactions nor crafting use will be included.",
+      "TranslatedText": "Si está habilitado, se incluirán los objetos sin interacciones ni uso de elaboración."
+    },
+    "h6fd97af9g0c50g41f5gb10ag07874c528116": {
+      "ReferenceText": "If enabled, potion, scroll and grenade items will be included.",
+      "TranslatedText": "Si está habilitado, se incluirán pociones, pergaminos y objetos de granadas."
+    },
+    "h8eb26275gd698g4286gb7a5gaaa099e9aa37": {
+      "ReferenceText": "Loot All",
+      "TranslatedText": "Saquear todo"
+    },
+    "hac9dbcaeg3c55g4dedg96ccgb29dab55fde6": {
+      "ReferenceText": "Looting GFX",
+      "TranslatedText": "Animación al registar"
+    },
+    "hb4729dd9g3c8bg4adfg8845g821b99fe6cde": {
+      "ReferenceText": "Minimum Rarity",
+      "TranslatedText": "Rareza mínima"
+    },
+    "h75d9d7f6g8200g43ffg9ef6g10a48ab961a6": {
+      "ReferenceText": "No loot found nearby.",
+      "TranslatedText": "No hay botín cercano."
+    },
+    "hf0cdc4a1g6e7bg41c6ga408g9bd330ecae22": {
+      "ReferenceText": "Quick Loot",
+      "TranslatedText": "Botín rápido"
+    },
+    "h0547ce79g8094g4cb4gb975g81cc0b5c9b6a": {
+      "ReferenceText": "Quick Loot is a feature that allows you to loot nearby containers and corpses from a unified UI. Access it by holding down its \"Search\" keybind.",
+      "TranslatedText": "Botín Rápido es una función que permite registrar contenedores y cadáveres cercanos desde una nueva interfaz unificada. Accede a él presionando su tecla de acceso rápido \"Buscar\"."
+    },
+    "ha539c465g36e0g4780g9892g58e33578124f": {
+      "ReferenceText": "Quick Loot: Start Search",
+      "TranslatedText": "Botín rápido: Buscar"
+    },
+    "h8fe098cag9221g4fdbgaec2g392e49012d1a": {
+      "ReferenceText": "Searching...",
+      "TranslatedText": "Buscando..."
+    },
+    "hd74d99b1gf914g4cb2gb3bfg832230e4cf0f": {
+      "ReferenceText": "AP Divider Interval",
+      "TranslatedText": "Divizor de intervalos PA"
+    },
+    "h4025c1c4g6527g4b6ag8369g49c0b1949dea": {
+      "ReferenceText": "If enabled, the positions of the character sheet and party inventory UIs will be remembered across sessions.",
+      "TranslatedText": "Si está habilitado, las posiciones de la hoja de personaje y la interfaz de inventario del grupo se recordarán entre sesiones."
+    },
+    "h626e6a30gaf91g438aga001g799e54be1477": {
+      "ReferenceText": "Remember panel positions",
+      "TranslatedText": "Recordar posiciones de paneles"
+    },
+    "ha314a4bag7349g4ec0g9e7eg122821cef234": {
+      "ReferenceText": "Bedroll Rest",
+      "TranslatedText": "Descansar"
     },
     "h4ac91ab1gcde9g4cd5gb8a3gc19b15f3dd4b": {
       "ReferenceText": "Pyramids",
@@ -374,13 +770,37 @@
       "ReferenceText": "Press a key combination...",
       "TranslatedText": "Presiona una combinación de teclas..."
     },
+    "h74611874g72f2g4e23g8ae3g0200019466fe": {
+      "ReferenceText": "Mark as wares",
+      "TranslatedText": "Marcar como mercancía"
+    },
+    "he2f705dbg1127g4f97gaceeg1dc7e9de1129": {
+      "ReferenceText": "Multi-select Controls",
+      "TranslatedText": "Control de selección múltiple"
+    },
+    "h6b5b9ed9g85f0g421bga071g409b1e4491ca": {
+      "ReferenceText": "Select Range",
+      "TranslatedText": "Selección de rango"
+    },
+    "h4a828b3egc70fg4ce9g8d81gd46b307b9366": {
+      "ReferenceText": "Selects a range of items starting from the first selected item and ending with the hovered one, if 'Multi-Select controls' are enabled and at least one item is selected.",
+      "TranslatedText": "Selecciona un rango de objetos comenzando desde el primer objeto seleccionado y terminando con el que está posicionado, si están habilitados los 'controles de selección múltiple' y al menos un objeto está seleccionado.<br><br>Nota: Primero debes seleccionar un objeto, luego utilizar este comando sobre el último objeto deseado para aplicar el rango."
+    },
+    "hc1f05532ga3a6g4b02gb837g77d3267b8f18": {
+      "ReferenceText": "Send to %s",
+      "TranslatedText": "Enviar a %s"
+    },
+    "h51a61f00g9350g4a6eg943bg340d01c6b8a4": {
+      "ReferenceText": "Store on Lady Vengeance",
+      "TranslatedText": "Guardar en el Lady Venganza"
+    },
     "h042a555bg1f1dg43efg97a8g0df8238a0eb5": {
       "ReferenceText": "Background Opacity",
       "TranslatedText": "Opacidad del fondo"
     },
     "h30052af9g5fbag4abcg9a0eg1ee45676a79c": {
       "ReferenceText": "Enable corpses",
-      "TranslatedText": "Habilitar cuerpos"
+      "TranslatedText": "Examinar cuerpos"
     },
     "h693e7865g63d9g402bgba37g2f627a59d4c6": {
       "ReferenceText": "Height",
@@ -388,11 +808,31 @@
     },
     "h939f9996g8c0fg46dbg8d51g5816929f1387": {
       "ReferenceText": "Quick Examine",
-      "TranslatedText": "Examinación rápida"
+      "TranslatedText": "Examinar rápido"
+    },
+    "h6cc76e3fg8d5cg466egb96agb780b490d0d5": {
+      "ReferenceText": "Save Default Position",
+      "TranslatedText": "Guardar posición predeterminada"
+    },
+    "h9e8f2aecg2b81g4f48ga9bbg43dd8f593686": {
+      "ReferenceText": "Saves the UI's current position and restores it upon reloading. Use to set the default position of the UI.",
+      "TranslatedText": "Guarda la posición actual de la interfaz de usuario y la restaura al recargar. Úsalo para establecer la posición predeterminada de la interfaz."
     },
     "h3a060f85gad6dg4e73g8526ga0606d366478": {
       "ReferenceText": "Width",
       "TranslatedText": "Ancho"
+    },
+    "hf196badfg6c61g4bd5g91e8g7bfbf9874cbf": {
+      "ReferenceText": "Quick Find",
+      "TranslatedText": "Buscar rápido"
+    },
+    "h6232b543g92dag4b65gac80g0d3f7e833f72": {
+      "ReferenceText": "Quick Find is a UI that shows a customizable filtered view of the party inventory, opened using Ctrl+F by default.",
+      "TranslatedText": "Buscar rápido' es una interfaz de usuario que muestra una vista filtrada personalizable del inventario del grupo, abierta con Ctrl+F por defecto."
+    },
+    "h1110db28g66a0g4f73gb67fgdc8d32c3af40": {
+      "ReferenceText": "Warning: can be very slow!",
+      "TranslatedText": "¡Advertencia: puede ser muy lento!"
     },
     "h41dc13afg2becg4758g8212g5e71b34df083": {
       "ReferenceText": "Epip Settings",
@@ -414,9 +854,61 @@
       "ReferenceText": "You have unsaved changes. Do you wish to apply them?",
       "TranslatedText": "Tienes cambios sin guardar. ¿Deseas aplicarlos?"
     },
+    "hb5e67864g87f1g4493gb758g47bdab2b69aa": {
+      "ReferenceText": "Alternative Status Display",
+      "TranslatedText": "Visualización alternativa de estados"
+    },
+    "h9e59177cgec69g4920g981bg8adee0d6600c": {
+      "ReferenceText": "Filtered Statuses",
+      "TranslatedText": "Estados filtrados"
+    },
+    "he442b301g5534g421egbd7bg890c9f507e4c": {
+      "ReferenceText": "Max Quality",
+      "TranslatedText": "Calidad máx."
+    },
+    "h8f54bda9g54cdg4390gb819g7d0af8b9d0ef": {
+      "ReferenceText": "Opaque Background",
+      "TranslatedText": "Opacidad de fondo"
+    },
+    "h61ee7e1ag46beg4da5g9ba9g8763560995b6": {
+      "ReferenceText": "Owned by %s",
+      "TranslatedText": "Poseído por %s"
+    },
     "haabd6906gee2dg4b39ga339gf5cdf1a2ee8b": {
       "ReferenceText": "Tooltip Adjustments",
       "TranslatedText": "Ajustes de Descripciones Emergentes"
+    },
+    "hcd9974f8g16cfg4cbfga08agbf28ee5b55eb": {
+      "ReferenceText": "Show loot drops in health bar",
+      "TranslatedText": "Mostrar objetos obtenidos en la barra de salud"
+    },
+    "hc8131fa1g3bf9g4773gb244gcdf8b1b45f7c": {
+      "ReferenceText": "%s is an innate skill; it might be unwise to rid myself of it.",
+      "TranslatedText": "%s es una habilidad innata; podría ser imprudente deshacerme de ella."
+    },
+    "h663a33aeg894cg428eg8d9eg799a8bd07386": {
+      "ReferenceText": "Are you sure you want to unlearn %s?",
+      "TranslatedText": "¿Estás seguro de que quieres desaprender %s?"
+    },
+    "hcc3ddb27g8770g4d1bg9964gb2387308d99c": {
+      "ReferenceText": "I cannot unlearn skills granted by external sources.",
+      "TranslatedText": "No puedo desaprender habilidades otorgadas por fuentes externas."
+    },
+    "hb931ea77g4e56g47c3g9a69g923b8f76482b": {
+      "ReferenceText": "I cannot unlearn skills that do not exist.",
+      "TranslatedText": "No puedo desaprender habilidades que no existen."
+    },
+    "h616fdab7g67c9g4db0g80f4gc04d25dc0e4e": {
+      "ReferenceText": "I cannot unlearn skills that take up no memory.",
+      "TranslatedText": "No puedo desaprender habilidades que no ocupan memoria."
+    },
+    "h651ef6a9gf376g47b7gb230gb73521021f74": {
+      "ReferenceText": "I cannot unlearn skills while in combat.",
+      "TranslatedText": "No puedo desaprender habilidades mientras estoy en combate."
+    },
+    "hf29be376g590ag4cd8gac23gc527f2c7a610": {
+      "ReferenceText": "I cannot unlearn this skill.",
+      "TranslatedText": "No puedo desaprender esta habilidad."
     },
     "hc2778b10ge61fg46bfga656g1bac3d5b44ec": {
       "ReferenceText": "Right-click to unlearn.",
@@ -430,9 +922,73 @@
       "ReferenceText": "Unlearn Skill",
       "TranslatedText": "Desaprender habilidad"
     },
+    "h025ca76ag673eg4f3agb92agb693e964f023": {
+      "ReferenceText": "Name your outfit!",
+      "TranslatedText": "¡Nombra tu conjunto!"
+    },
+    "he5c7af2eg96a9g4e92g8a50g5ef795e219d1": {
+      "ReferenceText": "Outfits",
+      "TranslatedText": "Conjuntos"
+    },
+    "hc6649aa4g4a9eg4bc3g97d5g2f281efe855a": {
+      "ReferenceText": "Remove Outfit",
+      "TranslatedText": "Eliminar conjunto"
+    },
+    "he6444a72g7e13g43d7gb58fg16746e643f90": {
+      "ReferenceText": "Save Outfit",
+      "TranslatedText": "Guardar conjunto"
+    },
+    "h157ffd3bg5fdag4f5ag93c3gd575ef924d37": {
+      "ReferenceText": "Save and apply outfits consisting of all your currently applied items.",
+      "TranslatedText": "Guardar y aplicar conjuntos que consisten en todos los objetos que tienes aplicados actualmente."
+    },
+    "h744534d4g7175g4bd6g814fgf6c9272d060a": {
+      "ReferenceText": "Save with weapons",
+      "TranslatedText": "Guardar con armas"
+    },
+    "h0655f2bfgcf50g4f99g9b72ge9d9d83a924e": {
+      "ReferenceText": "Revert appearance of unequipped items",
+      "TranslatedText": "Revertir apariencia de objetos no equipados"
+    },
+    "hc48f3629g9abag4fe7g816ag4c06d2780870": {
+      "ReferenceText": "Elemental Effects",
+      "TranslatedText": "Efectos Elementales"
+    },
+    "h07513bd6ge8a4g4509g9c95g13e56a5eac03": {
+      "ReferenceText": "Keep Icon",
+      "TranslatedText": "Mantener ícono"
+    },
+    "h98e054f2g9d91g481agb967g51a1873b4a78": {
+      "ReferenceText": "Lock Appearance",
+      "TranslatedText": "Bloquear apariencia"
+    },
+    "hca179321g5478g4decga9fagc7b3bd11ca9a": {
+      "ReferenceText": "Revert Appearance",
+      "TranslatedText": "Revertir apariencia"
+    },
     "h19773400g8de1g46d7g9901g779b750ebddd": {
       "ReferenceText": "Set Icon",
       "TranslatedText": "Establecer icono"
+    },
+    "hde9528cfg0189g45b2gbe7cg8d7bd5637012": {
+      "ReferenceText": "This item is too brittle to transmog.",
+      "TranslatedText": "Este objeto es demasiado frágil para transfigurar."
+    },
+    "h4528e43cga37bg40cdg9c6eg6b6144813c87": {
+      "ReferenceText": "Transmog",
+      "TranslatedText": "Transfigurar"
+    },
+    "h12e35ceeg43cbg4298ga0d1gfd1a6bf16b6a": {
+      "ReferenceText": "Vanity",
+      "TranslatedText": "Vanidad"
+    },
+    "h56a937e0gb868g4e6cg9f1ag634beba6c7b4": {
+      "ReferenceText": "Vanity allows you customize your equipment's appearance with transmog, custom dyes, and more.<br>Access it by right-clicking any equipped item and selecting \"Vanity...\" from the context menu.",
+      "TranslatedText": "La \"Vanidad\" te permite personalizar la apariencia de tu equipo con transfiguración, tintes personalizados y más.<br>Accede a ella haciendo clic derecho en cualquier objeto equipado y seleccionando \"Vanidad...\" en el menú contextual."
+    },
+    "h31bb79b1g9516g4f23g8110g9b6bf75a11ea": {
+      "ReferenceText": "You don't have an item equipped in that slot!",
+      "TranslatedText": "¡No tienes un objeto equipado en ese espacio!"
     },
     "h0d38d9a9gd416g4815gabc7gf9d8d901d40a": {
       "ReferenceText": "If enabled, light items such as torches, candles and braziers will show world tooltips.",
