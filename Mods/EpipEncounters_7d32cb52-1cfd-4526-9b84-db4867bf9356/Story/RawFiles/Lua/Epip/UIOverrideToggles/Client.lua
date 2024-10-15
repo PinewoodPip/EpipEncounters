@@ -31,7 +31,7 @@ local Toggles = {
         },
         Setting_EnablePlayerInfoOverride_Description = {
             Handle = "h36388340g34f3g485fgb871g6391fe5312c6",
-            Text = [[Enables Epip's changes to the player portraits UI. If disabled, the following features will not be available:<br>- Wrapping status bar<br>- Battered/Harried indicators<br>- Adjusting status bar opacity<br>- Player context menus<br>The "Alternative Status Bar" setting is unaffected.]],
+            Text = [[Enables Epip's changes to the player portraits UI. If disabled, the following features will not be available:<br>- Wrapping status bar<br>- Battered/Harried indicators<br>- Adjusting status bar opacity<br>- Player context menus<br>The "Alternative Status Display" setting is unaffected.]],
             ContextDescription = [[Setting tooltip for "Player Portraits Overrides"]],
         },
     },

@@ -14,15 +14,21 @@ local Codex = Epip.GetFeature("Feature_Codex")
 local Input = Client.Input
 
 local Tips = Epip.GetFeature("Features.Tips")
-local SettingParamContextHint = "Param is the relevant setting name"
-local InputActionParamContextHint = "Param is the relevant setting name"
+local SettingParamContextHint = "Param is the relevant setting name (\"%s\")"
+local InputActionParamContextHint = "Param is the relevant keybind name (\"%s\")"
 
 ---@param entry TextLib_TranslatedString|{RelevantSetting:SettingsLib_Setting, RelevantInputAction:InputLib_Action}
 local TSK = function(entry)
     if entry.RelevantSetting or entry.RelevantInputAction then
+        local relevantResource = (entry.RelevantSetting or entry.RelevantInputAction)
+
         -- Allow manual overrides of these fields.
-        entry.ContextDescription = entry.ContextDescription or (entry.RelevantSetting and SettingParamContextHint or InputActionParamContextHint)
-        entry.FormatOptions = entry.FormatOptions or {FormatArgs = {(entry.RelevantSetting or entry.RelevantInputAction):GetName()}}
+        if not entry.ContextDescription then
+            local templateStr = entry.ContextDescription or (entry.RelevantSetting and SettingParamContextHint or InputActionParamContextHint)
+            entry.ContextDescription = string.format(templateStr, relevantResource:GetName())
+        end
+
+        entry.FormatOptions = entry.FormatOptions or {FormatArgs = {relevantResource:GetName()}}
     end
     return Tips:RegisterTranslatedString(entry)
 end
@@ -235,7 +241,7 @@ local tips = {
         ID = "EpicEncounters.MassDismantle",
         Tip = TSK({
             Handle = "hc72f22a1g462cg4932g961eg531e228a8a8c",
-            Text = [[Right-click containers in your inventory and select "Mass Dismantle" to dismantle all non-unique equipment within.]],
+            Text = [[Right-click containers in your inventory and select "Dismantle All" to dismantle all non-unique equipment within.]],
         }),
         RequiresEE = true,
     },
