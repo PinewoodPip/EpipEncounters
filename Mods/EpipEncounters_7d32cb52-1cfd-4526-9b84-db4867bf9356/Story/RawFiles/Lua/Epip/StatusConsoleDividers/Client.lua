@@ -7,6 +7,11 @@ local StatusConsole = Client.UI.StatusConsole
 
 ---@class Features.StatusConsoleDividers : Feature
 local Dividers = {
+    ---@type table<GUID, integer> Default setting value to be used when certain mods are loaded. Used for mods that change the base AP values, where these dividers can be helpful for readability.
+    OVERHAUL_DEFAULTS = {
+        [Mod.GUIDS.EE_CORE] = 4,
+        [Mod.GUIDS.FARANDOLE] = 4,
+    },
     Settings = {},
     TranslatedStrings = {
         Setting_DividerInterval_Name = {
@@ -28,6 +33,7 @@ local TSK = Dividers.TranslatedStrings
 -- SETTINGS
 ---------------------------------------------
 
+local _OverhaulMod = Mod.GetOverhaul()
 Dividers.Settings.DividerInterval = Dividers:RegisterSetting("DividerInterval", {
     Type = "ClampedNumber",
     Name = TSK.Setting_DividerInterval_Name,
@@ -36,7 +42,7 @@ Dividers.Settings.DividerInterval = Dividers:RegisterSetting("DividerInterval", 
     Max = 20,
     Step = 1,
     HideNumbers = false,
-    DefaultValue = EpicEncounters.IsEnabled() and 4 or 20, -- Defaults to base weapon attack cost in EE, effectively disabled otherwise.
+    DefaultValue = (_OverhaulMod and Dividers.OVERHAUL_DEFAULTS[_OverhaulMod.Info.ModuleUUID]) or 20, -- Defaults to 4 AP for overhauls that change the AP economy to be DOS1-like, effectively disabled otherwise.
 })
 
 ---------------------------------------------
