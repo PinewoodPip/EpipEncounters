@@ -1,0 +1,124 @@
+This update adds supports for custom radial menus, as well as expanding controller support with natural controller navigation for Epic Encounters's Ascension UI. As usual, numerous other features and fixes are included.
+
+The extender forkextender.md has received a minor update with functionality needed for some of the new features. It remains optional to use.
+
+Due to internal changes, you may need to rebind certain Epip keybinds after installing this update.
+
+### Radial Menus
+Support for creating custom radial menus has been added for both KB+M and controller. These menus offer you a new way of using skills and Epip keybinds using just a single keybind and mouse/stick movement.
+
+Radial menus can be opened via the new *"Show radial menus"* keybind on KB+M; on controller, you can access them by pressing A while the vanilla radial menu from the right-trigger is open.
+
+You can create multiple menus with a customizable amount of segments, shared across characters. Two types of radial menus exist:
+
+- **Hotbar**: slots of the menu are dynamically filled from your current character's hotbar
+- **Custom**: slots are be assigned to skills and Epip keybinds manually
+    - This makes various older Epip features much easier to access on controller, or saves you from needing to bind more keys for keybinds you rarely use
+
+If you have multiple menus, you can switch between them by clicking on the previews of the neighbour ones, or you can use the *"Radial Menus: Next Menu"* and *"Radial Menus: Previous Menu"* keybinds. These keybinds default to mouse wheel up/down, and RB/LB on controller.
+
+Menus can also be edited after their creation by pressing the pencil button by their name.
+
+Epip keybinds that normally require you to hold the buttons or also move the cursor at the same time are not currently supported from Radial Menus.
+
+Support for per-character menus, reordering menus, displaying skill cooldowns and binding items is planned for future releases.
+
+### Ascension Controller Support
+This update adds proper controller support to Epic Encounters 2's Ascension UI, enabled when the cursor is not in the pointer mode.
+
+You can use left stick to navigate nodes/carousels/subnodes, A & B buttons to interact and go back respectively, with other controls being listed on the Navigation Bar.
+
+You can still use the pointer mode as before, which you'll need to in order to access less commonly-used elements like the keyword descriptions, the "Deallocate All" button and other EE UIs.
+
+### Settings Menu
+The "General" settings tab has become the "Info" tab, acting as a credits + landing page, as the previous tab was largely a remnant of simpler days where we didn't have enough settings to warrant specialized tabs.
+
+The Info tab displays random Epip usage tips, mainly to promote obscure or easily-overlooked features in a non-intrusive manner. A setting exists there to show these tips during loading screens as well (*"Show Epip tips while loading"*), off by default.
+
+Settings that were previously there have been moved to other tabs, mainly "Miscellaneous UI"; settings that were not UI-related were moved to a new "Miscellaneous QoL" tab instead.
+
+- The *"Infinite Carry Weight"* setting had been moved to this new tab as well as it's not technically UI-related.
+
+### Animation Cancelling
+- Added an animation cancelling setting for NPCs (*"Cancel NPC animations"*), which takes advantage of extender tech to work on all skills just like the player version does
+    - Cancels both skill and attack animations, and does not use the blacklist setting
+    - Configurable by the host player only
+- Added a setting for cancelling basic attacks (*"Cancel attack animations"*)
+    - The previous animation cancelling setting has been renamed to *"Cancel skill animations"*, and you'll have to re-enable it as the ID has changed
+
+### Vanity
+- When using the updated version of the extender fork, you can now change your weapon animations from the Transmog menu when selecting the Weapon item slot
+- Fixed Vanity Transmog swapping hands of weapons while dual-wielding
+
+### Quick Loot
+- When using the updated version of the extender fork, containers and corpses now show outlines while within the search radius
+- Adjusted the yellow overlay effect to be somewhat more in sync with when the items enter the radius
+- Fixed being able search and loot while dead
+
+### Hotbar
+- Numerous optimizations have been made to increase performance:
+    - The Hotbar now only updates when necessary rather than every few frames, and updates are ~20% faster
+    - Icons are no longer updated when there's no change
+    - Various other minor speedups have been made to related code
+    - If you previously experienced lower performance when using Epip, these changes should significantly cut down on its impact
+- Fixed slot greyout issues with mods that use Extender custom requirements; these are now updated every 0.2s
+- Fixed vanilla hotkey buttons not getting disabled when they should be
+- Fixed combat-only skills being greyed out when loading a save that was in combat
+- Adjusted the vanilla keybind labels so they don't appear cropped with the larger font some languages use
+- Fixed slots not updating after a skill cast if *"Disable slots while casting"* was enabled; the setting is now also disabled by default for consistency with vanilla behaviour
+
+### Camera
+- Added a setting to prevent the camera from centering on NPCs in dialogue (*"Preserve position in dialogues"* in the "Camera" tab)
+- Fixed the *"Keybind Rotation Speed"* setting not working if the rotate keybind was bound to a mouse button, and also fixed it not working when using the secondary vanilla bindings
+
+### Other additions and adjustments
+- When in combat, the cursor now displays a warning when attempting to move to a spot that would cause you to exit combat (roughly 27.5m away from the nearest enemy in 2D distance)
+    - This warning also displays when using movement skills (Jump, Rush, Teleport skills)
+- Added a *"Fast-forward dialogues"* keybind which automatically picks dialogue options, in the "Miscellaneous UI" tab, unbound by default
+    - This is essentially a button-mashing macro, as fast as possible
+    - You can configure which options to pick (first, last or random) with the *"Fast-forward strategy"* setting next to it
+- French localization is now complete, thanks to Bern'
+- Spanish localization has gotten a lot more lines; we're not currently sure who to thank for this, but thank you!
+- Added a *"Toggle Minimap"* keybind, which functions the same as the setting
+- The "Alternative Status Display" now refreshes every 0.2 seconds rather than every 10 frames, greatly reducing its performance impact
+- Holding shift while pressing the vanilla "Options" button in the pause menu will open the Epip settings menu directly
+- Added a potential fix for a vanilla bug where the controller area search UI could have bugged item interaction behaviour
+- The mod is now just called "Epip" in the mod menu, since that's what everyone and their mom calls it
+- Added settings for toggling Epip's UI file overrides for the character sheet and player portraits UI individually, at the bottom of the "Miscellaneous UI" tab (*"Character Sheet Overrides"* & *"Player Portraits Overrides"*), enabled by default to preserve existing behaviour
+    - This can be useful to allow other mods's changes to these UI files to apply, at the cost of some Epip functionality becoming unavailable
+- Using a skill from the Codex now closes the UI
+- The "Store on Lady Vengeance" option when using multi-select is now accurate in custom campaigns when using an updated version of the extender fork
+- Added icons for some keybinds, currently only used for Radial Menus
+- The *"Allow walking to corpses in combat"* setting is now disabled by default to stay inline with the "keep defaults as close to vanilla as possible" policy
+- The *"AP Divider Interval"* setting now defaults to 4 in Divinity Farandole since they recently switched to the DOS1-style AP granularity
+- "Cannot equip." label in Artifact rune tooltips is now translatable
+- The Debug Display now shows Lua RAM usage
+- Starting local co-op now displays a warning that Epip does not support it
+
+### Other fixes
+- Fixed items being cleared from Hotbar Groups when playing as summons (as well as any other possible jank related to getting a summon's party)
+- Fixed summons being able to use items from Hotbar Groups
+- Fixed Hotbar Groups not getting greyed out when it's not your turn
+- Fixed some tooltips in Epip UIs not hiding while using a controller
+- Quick Find now blocks input when playing with a controller, so inputs don't also get send to the world
+- Fixed keybind IDs not being prefixed with their script name as was intended, making them prone to conflicts
+    - Unfortunately you'll need to rebind most of your Epip keybinds as a result
+- If there's an error while renaming an item with Engrave, it should no longer cause a softlock with the message box
+- The default *"Toggle tooltip scrolling"* keybind (middle-mouse) should no longer cause conflicts if you use middle-mouse for other keybinds (ex. the *"Adjust Camera Pitch"* keybind)
+- Fixed some positioning issues with custom simple tooltips
+- Fixed various benign console errors, including numerous ones when playing with a controller
+- Fixed character names getting blanked out if they have a handle but aren't in an `.xml` translation when the enemy health bar UI was brought up for them
+- Fixed some settings being referred to by inconsistent names
+- Fixed character names in Epip UIs being incorrect for some origins
+- Fixed item comparison tooltips in Epip UIs not comparing the gear to the correct character
+- Fixed the first custom Epip tooltip in a session failing to show 
+- Fixed "Send to Lady Vengeance" being available when multi-selecting in the tutorial ship, if the extender forkextender.md is not installed
+
+### Custom Scripts
+Made it easier to load lua scripts without needing to make a mod pak via the new "Custom Scripts" settings tab. This allows you to write small Lua snippets to quickly customize or extend Epip's functionality, or to write test scripts for your own mod's purposes.
+
+- Place scripts in `Osiris Data/CustomScripts` and use the "Add script" button in the tab to register them, then save & reload to reload the scripts
+- You can toggle custom scripts and change their load order from this settings tab
+- Scripts loading (or failing to load) is logged to console
+- Developer mode is not necessary to use this feature, making this more "plug & play"
+- To migrate from the older iteration of this feature ("Personal Scripts"), rename `PersonalScripts.json` to `CustomScripts.json`, put your scripts in the new folder and adjust paths within the json to be relative to it

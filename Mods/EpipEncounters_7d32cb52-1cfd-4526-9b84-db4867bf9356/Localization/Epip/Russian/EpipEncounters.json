@@ -44,7 +44,7 @@
     },
     "hf832b7ceg2e16g454dg8b5cg2ac87a0f7681": {
       "ReferenceText": "Speed up world tooltip item pick-ups",
-      "TranslatedText": "Ускорить \"подсказки\" подбираемых предметов"
+      "TranslatedText": "Ускорить подбирание предметов"
     },
     "hb98d5bd4g800cg4d76gb941g7c3c59bd9553": {
       "ReferenceText": "Show B/H",
@@ -1960,7 +1960,7 @@
     },
     "hae703884g68c4g44d1gb1d2g211f87e7309c": {
       "ReferenceText": "If enabled, clicking world tooltips will open containers rather than picking them up.",
-      "TranslatedText": "Если включено, открывает, а не поднимает контейнер при нажатии на текст подсказки к окружающим объектам."
+      "TranslatedText": "Если включено, вы будете открывать, а не поднимать контейнер при нажатии на текст подсказки к окружающим объектам."
     },
     "h868a6168gd10eg4340gb5f4gb35dc338c453": {
       "ReferenceText": "If enabled, doors will show world tooltips. Requires \"Enable tooltips for all items\" to be enabled, as these do not have tooltips by default.",
@@ -2172,7 +2172,7 @@
     },
     "h4a3eccd2g468ag4ff9g8f3dg561219508669": {
       "ReferenceText": "Preserve position in dialogues",
-      "TranslatedText": "Сохранять расположение при диалогах"
+      "TranslatedText": "Сохранять положение камеры при диалогах"
     },
     "hfbdd1288g3c74g4d2cgb072gceee4bf1f9a0": {
       "ReferenceText": "While held, vertical mouse movement will adjust the pitch (vertical angle) of the game camera.<br><br>Does not affect your default camera angle settings and any changes to the angle from the keybind will not persist across sessions.",
@@ -2210,11 +2210,11 @@
       "ReferenceText": "Custom Line 2",
       "TranslatedText": "Строка 2"
     },
-    "hd1eed9f3g8a0bg4098g9369g0ba5549b947f": {
+    "hdb9a40e2g4713g40e0g8885gd6e1b75512c3": {
       "ReferenceText": "Discord Rich Presence",
       "TranslatedText": "Детализированный статус в Discord"
     },
-    "hdb9a40e2g4713g40e0g8885gd6e1b75512c3": {
+    "hd1eed9f3g8a0bg4098g9369g0ba5549b947f": {
       "ReferenceText": "Discord Rich Presence",
       "TranslatedText": "Детализированный статус в Discord"
     },
@@ -2282,11 +2282,11 @@
       "ReferenceText": "%s: Champion",
       "TranslatedText": "%s: Champion"
     },
-    "hb7ca1bb4g9911g4d08gafabgdbc9f8762c5e": {
+    "h96b347e8g8044g4f64ga0f5gad88b6e6f204": {
       "ReferenceText": "%s: Conqueror",
       "TranslatedText": "%s: Conqueror"
     },
-    "h96b347e8g8044g4f64ga0f5gad88b6e6f204": {
+    "hb7ca1bb4g9911g4d08gafabgdbc9f8762c5e": {
       "ReferenceText": "%s: Conqueror",
       "TranslatedText": "%s: Conqueror"
     },
@@ -2294,7 +2294,7 @@
       "ReferenceText": "%s: Death",
       "TranslatedText": "%s: Death"
     },
-    "hcef1a00bg41a1g4afagade1gca98b9906f14": {
+    "h14e4e4e2gbfe2g49ecg8854g6271530bf5be": {
       "ReferenceText": "%s: Falcon",
       "TranslatedText": "%s: Falcon"
     },
@@ -2302,11 +2302,11 @@
       "ReferenceText": "%s: Falcon",
       "TranslatedText": "%s: Falcon"
     },
-    "h14e4e4e2gbfe2g49ecg8854g6271530bf5be": {
+    "h63ae98ebg0fcbg49fbg877dg957622cdf46c": {
       "ReferenceText": "%s: Falcon",
       "TranslatedText": "%s: Falcon"
     },
-    "h63ae98ebg0fcbg49fbg877dg957622cdf46c": {
+    "hcef1a00bg41a1g4afagade1gca98b9906f14": {
       "ReferenceText": "%s: Falcon",
       "TranslatedText": "%s: Falcon"
     },
@@ -3143,7 +3143,7 @@
       "TranslatedText": "Нажмите правый кнопкой на экипированный предмет в окне персонажа и выберите \"%s\", чтобы открыть меню, где можно преобразить предмет на ваш вкус."
     },
     "hc72f22a1g462cg4932g961eg531e228a8a8c": {
-      "ReferenceText": "Right-click containers in your inventory and select \"Mass Dismantle\" to dismantle all non-unique equipment within.",
+      "ReferenceText": "Right-click containers in your inventory and select \"Dismantle All\" to dismantle all non-unique equipment within.",
       "TranslatedText": "Правый клик на контейнер в инвентаре и опция \"Разобрать все\", позволит вам быстро разобрать все не уникальные предметы в этом контейнере."
     },
     "hf23c6ab7gd9afg4086g9dc8g3f13c5ceb3b4": {
@@ -3168,7 +3168,7 @@
     },
     "ha3abcdafg29a5g4c62gb0dbg3522263cb2a6": {
       "ReferenceText": "Skill animations taking too long? Try the Animation Cancelling feature!",
-      "TranslatedText": "Анимации способности занимают слишком много времени? Попробуйте функцию \"Отмена анимаций\"!"
+      "TranslatedText": "Анимации способностей занимают слишком много времени? Попробуйте функцию \"Отмена анимаций\"!"
     },
     "he0ec379ag6bdag4d69gac0eg9d487a5ef12c": {
       "ReferenceText": "The \"Keybinds\" settings menu tab contains numerous new shortcuts, including an Examine keybind.",
@@ -3276,7 +3276,7 @@
     },
     "h1da3e55cg3534g4e65gb5f1g66d514505862": {
       "ReferenceText": "Inventory Item Tooltip Delay",
-      "TranslatedText": "Задержка описаний предм. в инвентаре"
+      "TranslatedText": "Задержка описаний предметов"
     },
     "h4a54f1a3gad5eg4855g9b9cge11cad401d59": {
       "ReferenceText": "Item Comparison Tooltip Delay",
@@ -3303,7 +3303,7 @@
       "TranslatedText": "Если выключено, следующие функции будут недоступны:<br>- Иконки для физ. и колющего сопротивления<br>- \"Keywords & Misc.\" tab."
     },
     "h36388340g34f3g485fgb871g6391fe5312c6": {
-      "ReferenceText": "Enables Epip's changes to the player portraits UI. If disabled, the following features will not be available:<br>- Wrapping status bar<br>- Battered/Harried indicators<br>- Adjusting status bar opacity<br>- Player context menus<br>The \"Alternative Status Bar\" setting is unaffected.",
+      "ReferenceText": "Enables Epip's changes to the player portraits UI. If disabled, the following features will not be available:<br>- Wrapping status bar<br>- Battered/Harried indicators<br>- Adjusting status bar opacity<br>- Player context menus<br>The \"Alternative Status Display\" setting is unaffected.",
       "TranslatedText": "Если выключено, следующие функции будут недоступны:<br>- Статусы в несколько рядов<br>- Индикаторы Battered/Harried<br>- Настройка непрозрачности статусов<br>- Контекстные меню персонажей."
     },
     "h4978bb6fg7904g44ccg912fgc6ae2897f3d8": {
@@ -3312,7 +3312,7 @@
     },
     "hdeef5528gca68g4566g9af5gc53982dd1366": {
       "ReferenceText": "The following settings control Epip's UI file overrides. Disabling these allows other mods's overrides to be used instead, but will make some of Epip's functionalities related to that UI unavailable.",
-      "TranslatedText": "The following settings control Epip's UI file overrides. Disabling these allows other mods's overrides to be used instead, but will make some of Epip's functionalities related to that UI unavailable.\nСледующие настройки отвечают за нововведения Epip в интерфейсе (посредством замены файлов). Отключение данных опций позволит работать прочим модам, которые заменяют те же файлы, но при этом отключатся некоторые функции Epip."
+      "TranslatedText": "Следующие настройки отвечают за нововведения Epip в интерфейсе (посредством замены файлов). Отключение данных опций позволит работать прочим модам, которые заменяют те же файлы, но при этом отключатся некоторые функции Epip."
     },
     "h3a8d983cg5a8cg4b33g954cg39581bd8a04b": {
       "ReferenceText": "AI Type: %s",
@@ -3496,11 +3496,11 @@
     },
     "h02aa046bgd8f6g4627g9637gd4d69407abad": {
       "ReferenceText": "Add client script",
-      "TranslatedText": "Добавить скрипт (клиент)"
+      "TranslatedText": "Доб. скрипт(клиент)"
     },
     "h4c185a0bg8cdcg4b2ega962g78420c14debc": {
       "ReferenceText": "Add server script",
-      "TranslatedText": "Добавить скрипт (сервер)"
+      "TranslatedText": "Доб.скрипт(сервер)"
     },
     "he0716b9bga6f2g4e49g8891g21780216c118": {
       "ReferenceText": "Add shared script",
@@ -3596,11 +3596,11 @@
     },
     "h1d691e43g71beg469ag8795g8f6fdf95be62": {
       "ReferenceText": "Close UI after using an item",
-      "TranslatedText": "Закрывать интерфейс после использования предмета"
+      "TranslatedText": "Закрывать окно поиска после использования предмета"
     },
     "h14aad639gb9c4g456bgb7fcg48e9cd5fef17": {
       "ReferenceText": "Close upon world interaction",
-      "TranslatedText": "Закрывать интерфейс при взаимодействии"
+      "TranslatedText": "Закрывать окно поиска при взаимодействии"
     },
     "hb29270e7g6dc8g44c0g9391g21b25965aea6": {
       "ReferenceText": "Consumable Type",
