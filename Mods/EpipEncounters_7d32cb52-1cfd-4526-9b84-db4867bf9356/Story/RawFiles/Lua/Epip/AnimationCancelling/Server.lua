@@ -90,6 +90,14 @@ function AnimCancel.CancelAnimation(char)
     end
 end
 
+---Returns whether a character can have their animation cancelled.
+---@see Feature_AnimationCancelling.IsEnemyCancellingEnabled
+---@param char EsvCharacter
+---@return boolean
+function AnimCancel.IsCharacterEligible(char)
+    return Character.IsPlayer(char) or AnimCancel.IsEnemyCancellingEnabled()
+end
+
 ---Returns whether NPC animations can be cancelled.
 ---@return boolean
 function AnimCancel.IsEnemyCancellingEnabled()
@@ -123,7 +131,7 @@ end
 Osiris.RegisterSymbolListener("SkillCast", 4, "after", function(charGUID, skillID, _, _)
     local char = Character.Get(charGUID)
     local skill = Stats.Get("StatsLib_StatsEntry_SkillData", skillID)
-    if AnimCancel.SAFE_SKILL_TYPES:Contains(skill.SkillType) then
+    if AnimCancel.SAFE_SKILL_TYPES:Contains(skill.SkillType) and AnimCancel.IsCharacterEligible(char) then
         AnimCancel.CancelAnimation(char)
     end
 end)
@@ -134,7 +142,7 @@ Osiris.RegisterSymbolListener("NRD_OnActionStateEnter", 2, "after", function (ch
     if action == "UseSkill" or action == "Attack" then
         local char = Character.Get(charGUID)
         local eventID = string.format("AnimationCancelling_%s", charGUID)
-        if Character.IsPlayer(char) or AnimCancel.IsEnemyCancellingEnabled() then
+        if AnimCancel.IsCharacterEligible(char) then
             GameState.Events.RunningTick:Subscribe(function (_)
                 char = Character.Get(charGUID)
                 local isFinished, state = AnimCancel.IsActionFinished(char)
