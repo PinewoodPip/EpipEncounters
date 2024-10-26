@@ -16,6 +16,7 @@ GroupManager.CONTENT_WIDTH = 450
 GroupManager.UI_WIDTH = 500
 GroupManager.UI_HEIGHT = 400
 GroupManager._REQUESTID_HIDE_IN_CHARACTER_CREATION = "Features.HotbarGroups.HideInCharacterCreation"
+GroupManager._REQUESTID_HIDE_IN_DIALOGUE = "Features.HotbarGroups.HideInDialogue"
 GroupManager._EVENTID_TOGGLE_VISIBILITY_AFTER_CC = "Features.HotbarGroups.ShowAfterCharacterCreation"
 GroupManager._CurrentGroupGUID = nil ---@type GUID? ID of the currently-selected group, for purposes such as resizing.
 GroupManager._SetupCompleted = false
@@ -325,6 +326,11 @@ CharacterCreation.Events.Finished:Subscribe(function (_)
             GameState.Events.RunningTick:Unsubscribe(GroupManager._EVENTID_TOGGLE_VISIBILITY_AFTER_CC)
         end
     end, {StringID = GroupManager._EVENTID_TOGGLE_VISIBILITY_AFTER_CC})
+end)
+
+-- Hide groups in dialogue.
+Client.Events.InDialogueStateChanged:Subscribe(function (ev)
+    GroupManager.RequestVisibility(GroupManager._REQUESTID_HIDE_IN_DIALOGUE, not ev.InDialogue)
 end)
 
 ---------------------------------------------
