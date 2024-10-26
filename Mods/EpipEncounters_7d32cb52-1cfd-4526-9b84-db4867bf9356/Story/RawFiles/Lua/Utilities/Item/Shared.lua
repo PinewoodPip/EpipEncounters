@@ -629,8 +629,9 @@ end
 ---@param char Character
 ---@param predicate (fun(item:Item):boolean)?
 ---@param recursive boolean? Defaults to `false`.
+---@return Item[]
 function Item.GetItemsInPartyInventory(char, predicate, recursive)
-    local items = {}
+    local items = {} ---@type Item[]
     local partyCharacters = Character.GetPartyMembers(char)
 
     for _,partyMember in ipairs(partyCharacters) do
@@ -639,24 +640,29 @@ function Item.GetItemsInPartyInventory(char, predicate, recursive)
         for _,guid in ipairs(charItems) do
             local item = Item.Get(guid)
 
-            if predicate == nil or predicate(item) then
+            if predicate == nil or predicate(item) or (recursive and Item.IsContainer(item)) then -- When doing a recursive search, we initially include containers as well for recursive inspection.
                 table.insert(items, item)
             end
         end
     end
 
-    -- Recrusive search is performed afterwards.
+    -- Search containers recursively and also filter them out if they don't match the predicate.
     if recursive then
-        local len = #items
+        local itemQueue = items
+        items = {}
+        local len = #itemQueue
         local i = 1
         while i <= len do
-            local item = items[i]
+            local item = itemQueue[i]
             if Item.IsContainer(item) then
                 local contents = item:GetInventoryItems()
                 for _,guid in ipairs(contents) do
-                    items[len+1] = Item.Get(guid)
+                    itemQueue[len+1] = Item.Get(guid) -- Append the item to the queue.
                     len = len + 1
                 end
+            end
+            if predicate == nil or predicate(item) then -- Will filter out containers that themselves do not match the predicate.
+                table.insert(items, item)
             end
             i = i + 1
         end
