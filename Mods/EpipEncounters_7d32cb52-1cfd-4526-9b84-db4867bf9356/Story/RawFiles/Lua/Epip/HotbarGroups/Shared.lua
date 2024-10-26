@@ -6,7 +6,7 @@
 ---@class Features.HotbarGroups : Feature
 local GroupManager = {
     SAVE_FILENAME = "EpipEncounters_HotbarGroups.json",
-    SAVE_VERSION = 0,
+    SAVE_VERSION = 1,
 
     TranslatedStrings = {
         CreateGroupHeader = {
@@ -43,6 +43,11 @@ local GroupManager = {
             Handle = "h3edeba4cg45a9g46f9g8c02g85e9ff956909",
             Text = "Click and hold to drag.",
             ContextDescription = "Tooltip for hotbar group drag area",
+        },
+        Label_LockPosition = {
+            Handle = "h41e08555gac00g4954g91edg9b89f595ca30",
+            Text = "Lock position",
+            ContextDescription = [[Option in group context menu]],
         },
     },
 }

@@ -13,6 +13,7 @@ local TSK = GroupManager.TranslatedStrings
 ---@field GUID GUID
 ---@field _Slots table<GenericUI_Prefab_HotbarSlot>
 ---@field _SlotsAllocated integer
+---@field _LockPosition boolean
 ---@field package _Rows integer
 ---@field package _Columns integer
 ---@field package _Content  GenericUI_Element_TiledBackground
@@ -116,6 +117,19 @@ function HotbarGroup:Resize(newRows, newColumns)
     end
 end
 
+---Returns whether the Hotbar Group can be dragged around.
+---@return boolean
+function HotbarGroup:IsPositionLocked()
+    return self._LockPosition
+end
+
+---Sets whether the Hotbar Group can be dragged around.
+---@param lock boolean
+function HotbarGroup:SetLockPosition(lock)
+    self._LockPosition = lock
+    self._DragArea:SetVisible(not lock) -- Toggle dragging handle
+end
+
 ---Initializes the UI for a hotbar group.
 ---@param id string
 ---@param rows integer
@@ -130,6 +144,7 @@ function HotbarGroup.___Create(id, rows, columns)
     group._Rows = 0
     group._Columns = 0
     group._SlotsAllocated = 0
+    group._LockPosition = false
 
     local content = group:CreateElement("ContentContainer" .. group.GUID, "GenericUI_Element_TiledBackground")
     content:SetAlpha(0)

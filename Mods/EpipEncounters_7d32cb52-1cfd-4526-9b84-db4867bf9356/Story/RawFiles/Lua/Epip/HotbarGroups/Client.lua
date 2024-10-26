@@ -7,6 +7,7 @@ local CommonStrings = Text.CommonStrings
 ---@field CreationUI Features.HotbarGroups.UI.Editor
 ---@field ResizeUI Features.HotbarGroups.UI.Editor
 local GroupManager = Epip.GetFeature("Features.HotbarGroups")
+local TSK = GroupManager.TranslatedStrings
 
 GroupManager.Groups = {} ---@type table<GUID, Features.HotbarGroups.UI.Group>
 GroupManager.SharedGroups = {} ---@type table<GUID, true>
@@ -30,6 +31,7 @@ GroupManager._HideGroupsRequests = {} ---@type table<string, true>
 ---@field SharedContents GenericUI_Prefab_HotbarSlot_Object[][]
 ---@field RelativePosition number[]
 ---@field Layer integer Layer of the UIObject.
+---@field LockPosition boolean
 
 ---------------------------------------------
 -- METHODS
@@ -136,6 +138,7 @@ function GroupManager.GetGroupState(group)
     local state = {
         Rows = rows,
         Columns = columns,
+        LockPosition = group:IsPositionLocked(),
     }
 
     -- Store position relative to viewport edges
@@ -188,7 +191,7 @@ function GroupManager.LoadData(path)
     path = path or GroupManager.SAVE_FILENAME
     local save = IO.LoadFile(path) ---@type {Groups: table<GUID, HotbarGroupState>, Version:integer}
 
-    if save and save.Version == 0 then
+    if save then
         local groups = save.Groups
 
         for guid,data in pairs(groups) do
@@ -224,6 +227,9 @@ function GroupManager.LoadData(path)
 
             -- Set layer
             group:GetUI().Layer = data.Layer
+
+            -- Set position lock
+            group:SetLockPosition(data.LockPosition or false) -- Added in v1.
         end
     end
 end
@@ -260,8 +266,10 @@ end)
 
 -- Listen for requests to create the context menu.
 ContextMenu.RegisterMenuHandler("HotbarGroup", function(_, guid)
+    local group = GroupManager.GetGroup(guid)
     local contextMenu = {
-        {id = "HotbarGroup_Layer", type = "stat", text = CommonStrings.Layer:GetString(), value = 1, params = {GUID = guid}},
+        {id = "HotbarGroup_Layer", type = "stat", text = CommonStrings.Layer:GetString(), value = 1, params = {GUID = guid}}, -- Actual value is visually "set" via hook.
+        {id = "HotbarGroup_LockPosition", type = "checkbox", text = TSK.Label_LockPosition:GetString(), checked = group:IsPositionLocked(), params = {GUID = guid}},
         {id = "HotbarGroup_Resize", type = "button", text = CommonStrings.Resize:GetString(), params = {GUID = guid}},
         {id = "HotbarGroup_Delete", type = "button", text = CommonStrings.Delete:GetString(), params = {GUID = guid}},
     }
@@ -280,6 +288,12 @@ end)
 ContextMenu.RegisterStatDisplayHook("HotbarGroup_Layer", function(_, _, params)
     local group = GroupManager.GetGroup(params.GUID)
     return group:GetUI().Layer
+end)
+
+-- Listen for requests to toggle position lock.
+ContextMenu.RegisterElementListener("HotbarGroup_LockPosition", "buttonPressed", function(_, params)
+    local group = GroupManager.GetGroup(params.GUID)
+    group:SetLockPosition(not group:IsPositionLocked())
 end)
 
 -- Listen for the layer being changed from the context menu.
