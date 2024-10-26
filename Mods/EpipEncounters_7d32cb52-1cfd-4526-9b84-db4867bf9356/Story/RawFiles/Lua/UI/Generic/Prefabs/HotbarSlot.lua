@@ -102,7 +102,7 @@ function _SlotObject:GetEntity()
 
             item = Item.GetItemsInPartyInventory(Client.GetCharacter(), function(i)
                 return i.RootTemplate.Id == self.TemplateID
-            end)[1]
+            end, true)[1]
         end
 
         entity = item
