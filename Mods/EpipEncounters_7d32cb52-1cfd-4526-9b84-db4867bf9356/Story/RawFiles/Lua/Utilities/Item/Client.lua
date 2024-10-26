@@ -10,18 +10,21 @@ function Item.SetIconOverride(item, icon)
     item.Icon = icon
 end
 
----Count the amount of template instances (prefix + guid) in the client party's inventory.
----@param template string
----@return number
+---Counts the amount of template instances in the client party's inventory recursively, considering item stacks.
+---@param template GUID|PrefixedGUID
+---@return integer
 function Item.GetPartyTemplateCount(template)
+    local char = Client.GetCharacter()
     local templateGUID = template:match(Text.PATTERNS.GUID)
-    local count = 0
     local predicate = function(item)
-        return item.RootTemplate.Id == templateGUID
+        ---@cast item Item
+        return item.CurrentTemplate.Id == templateGUID
     end
+    local templateItems = Item.GetItemsInPartyInventory(char, predicate, true)
+    local count = 0
 
-    for _,player in ipairs(Character.GetPartyMembers(Client.GetCharacter())) do
-        count = count + Item.CountItemsInInventory(player, predicate)
+    for _,item in ipairs(templateItems) do
+        count = count + item.Amount -- Consider item stacks.
     end
 
     return count
