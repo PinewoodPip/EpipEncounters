@@ -215,57 +215,11 @@ function Vanity.RefreshAppearance(char, useAlternativeStatus) -- TODO move
     local charGUID = char.MyGuid
     if useAlternativeStatus then status = "PIP_Vanity_Refresh_Alt" end
 
-    -- Transforming removes racial skills and as a result their cooldown is reset afterwards (and removed from the hotbar if "Remove unmemorised skills" is enabled);
-    -- we need to restore the cooldowns afterwards.
-    local race = Character.GetRacePreset(char)
-    local racialSkills = {} ---@type table<skill, {Cooldown: number, SkillBarIndex: integer}>
-    if race then
-        local skillSet = Ext.Stats.SkillSet.GetLegacy(race.SkillSet)
-        for _,skillID in ipairs(skillSet.Skills) do
-            local skillRecord = Character.GetSkill(char, skillID)
-            if skillRecord then
-                local skillBarIndex, _ = table.getFirst(char.PlayerData.SkillBar, function (_, v)
-                    return v.Type == "Skill" and v.SkillOrStatId == skillID
-                end)
-                ---@type {Cooldown: number, SkillBarIndex: integer}
-                local entry = {
-                    Cooldown = skillRecord.ActiveCooldown,
-                    SkillBarIndex = skillBarIndex
-                }
-                racialSkills[skillID] = entry
-            end
-        end
-    end
-
     Osi.ApplyStatus(charGUID, status, 0, 1, NULLGUID)
 
     -- Request to update the character sheet paperdoll.
     Timer.Start(0.2, function()
         Net.PostToCharacter(charGUID, "EPIPENCOUNTERS_Vanity_RefreshSheetAppearance")
-    end)
-
-    -- Restore racial skill cooldowns and put the skill back on the hotbar (if "Remove unmemorised skills" is enabled). It's unknown how many ticks this requires. Unfortunately will not stop the client from being able to cast the skill if they're fast enough.
-    Timer.Start(0.4, function (_)
-        char = Character.Get(charGUID)
-        for skillID,entry in pairs(racialSkills) do
-            local oldSkillBarIndex = entry.SkillBarIndex
-
-            -- Restore cooldown
-            Osi.NRD_SkillSetCooldown(charGUID, skillID, entry.Cooldown)
-
-            -- If the game re-added the skill to the hotbar, remove it.
-            local newSkillBarIndex, _ = table.getFirst(char.PlayerData.SkillBar, function (_, v)
-                return v.Type == "Skill" and v.SkillOrStatId == skillID
-            end)
-            if newSkillBarIndex and newSkillBarIndex ~= oldSkillBarIndex then
-                Character.ClearSkillBarSlot(char, newSkillBarIndex)
-            end
-
-            -- Re-add the skill where it previously was.
-            if entry.SkillBarIndex then
-                Character.SetSkillBarSkill(char, entry.SkillBarIndex, skillID)
-            end
-        end
     end)
 end
 
@@ -417,12 +371,27 @@ Ext.Events.SessionLoaded:Subscribe(function (ev)
         stat2 = Ext.Stats.Create("PIP_Vanity_Refresh_Alt", "StatusData")
     end
 
+    -- Gather all racial skills to preserve them during the polymorph.
+    -- Otherwise refreshing visuals this way would remove them temporarily, resetting their cooldown (and possibly also hotbar position) upon transforming back.
+    -- Previous approach restored skill cooldowns after refreshing, however this caused visual flickers on the hotbar.
+    local races = Ext.Stats.GetCharacterCreation().RacePresets
+    local racialSkills = {} ---@type skill[]
+    for _,race in ipairs(races) do
+        local skillSet = Ext.Stats.SkillSet.GetLegacy(race.SkillSet)
+        if skillSet then
+            for _,skillID in ipairs(skillSet.Skills) do
+                table.insert(racialSkills, skillID)
+            end
+        end
+    end
+
     stat.StatusType = "POLYMORPHED"
     stat2.StatusType = "POLYMORPHED"
     stat.PolymorphResult = ""
     stat2.PolymorphResult = "820f165e-62f5-4de4-a739-6274cfac1c8e" -- Used for dyes. Causes flickering but is necessary for the item color to update.
     stat.DisableInteractions = "No"
     stat2.DisableInteractions = "No"
+    stat2.RetainSkills = Text.Join(racialSkills, ";")
 
     if Ext.IsServer() then -- TODO redundant?
         Ext.Stats.Sync("PIP_Vanity_Refresh", false)
