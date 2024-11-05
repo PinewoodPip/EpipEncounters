@@ -396,16 +396,18 @@ end
 ---------------------------------------------
 
 -- Enable the overlay when entering meditate.
-Game.Ascension:RegisterListener("ClientToggledMeditating", function (entered)
-    if entered then
-        -- Do not reset the overlay if it was already in use (ex. when changing characters)
-        if not UI:IsVisible() then
-            UI.Setup()
+if Client.IsUsingController() then
+    Game.Ascension:RegisterListener("ClientToggledMeditating", function (entered)
+        if entered then
+            -- Do not reset the overlay if it was already in use (ex. when changing characters)
+            if not UI:IsVisible() then
+                UI.Setup()
+            end
+        else
+            UI:Hide()
         end
-    else
-        UI:Hide()
-    end
-end)
+    end)
+end
 
 -- Disable the overlay when in selector mode.
 Client.Events.SelectorModeChanged:Subscribe(function (ev)
