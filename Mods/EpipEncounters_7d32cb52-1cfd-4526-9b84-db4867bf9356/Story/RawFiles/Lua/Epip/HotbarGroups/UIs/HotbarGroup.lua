@@ -167,6 +167,7 @@ function HotbarGroup.___Create(id, rows, columns)
 
     group:Resize(rows, columns)
 
+    group:GetUI().MovieLayout = 3 -- Allows UIScaling to apply to the group's UI.
     group:Show()
 
     return group
