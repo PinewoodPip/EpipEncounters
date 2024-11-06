@@ -34,6 +34,7 @@ UI.SUBNODE_INDEX_REMAP = {
 UI.ZOOM_STICK_THRESHOLD = 0.5
 UI.ZOOM_COOLDOWN = 0.25 -- Time between zoom requests, in seconds.
 UI.WHEEL_SCROLL_REPEAT_RATE = 0.25 -- In seconds.
+UI.MAX_SUBNODES = 5 -- Maximum amount of subnodes supported.
 
 UI._Pages = DefaultTable.Create({}) ---@type table<string, table<string, Features.MeditateControllerSupport.Page>> Maps UI to map of its pages.
 UI._GraphIndexMaps = {} ---@type table<string, table<string, integer>> Maps page ID to map of node IDs to container child index.
@@ -202,15 +203,16 @@ end
 function UI._CreateAspectGraphPage(page)
     local element = UI:CreateElement(page.ID .. "." .. "Container", "GenericUI_Element_Empty", UI._PageContainer)
     local nav = GenericComponent:Create(element)
+    local isUsingKeyboard = Client.IsUsingKeyboardAndMouse() -- Some bindings are KB+M only as they would not be intuitive for controller, or would conflict.
     nav:AddAction({
         ID = "PreviousNode",
         Name = TSK.Label_PreviousNode,
-        Inputs = {["UITabPrev"] = true},
+        Inputs = {["UITabPrev"] = true, ["UILeft"] = isUsingKeyboard},
     })
     nav:AddAction({
         ID = "NextNode",
         Name = TSK.Label_NextNode,
-        Inputs = {["UITabNext"] = true},
+        Inputs = {["UITabNext"] = true, ["UIRight"] = isUsingKeyboard},
     })
     nav:AddAction({
         ID = "Back",
@@ -221,6 +223,14 @@ function UI._CreateAspectGraphPage(page)
             return UI.IsInGraph() and Support._CurrentAspectNode or false
         end
     })
+    -- Create KB+M actions for selecting subnodes.
+    for i=1,UI.MAX_SUBNODES,1 do
+        nav:AddAction({
+            ID = "SelectSubnode" .. i,
+            Name = TSK.Label_SelectSubnode:Format(i),
+            Inputs = {["UISelectSlot" .. i] = true}, -- These actions are mapped to the hotbar slot input events, as they are intuitively bound to digits by default.
+        })
+    end
     local pressedActions = {} ---@type set<string> -- Used to prevent actions from repeating when their inputs are held down.
     nav.Hooks.ConsumeInput:Subscribe(function (ev)
         if ev.Event.Timing == "Down" and not pressedActions[ev.Action.ID] then
@@ -254,6 +264,23 @@ function UI._CreateAspectGraphPage(page)
             elseif ev.Action.ID == "Back" and nav:GetAction("Back").IsConsumableFunctor(nav) then -- TODO remove functor check when the functor usage is made more consistent
                 Support.RequestDeselectElement()
                 ev.Consumed = true
+            else
+                -- Check KBM subnode selection actions
+                local subnodeIndex = ev.Action.ID:match("SelectSubnode(%d+)")
+                subnodeIndex = subnodeIndex and tonumber(subnodeIndex) or nil
+                local node = Support._CurrentGraphNode
+                ---@cast node Features.MeditateControllerSupport.Page.AspectGraph.Node
+                if node and subnodeIndex and subnodeIndex <= node.Subnodes then
+                    ---@type Features.MeditateControllerSupport.NetMsg.SelectSubnode
+                    local msg = {
+                        CharacterNetID = Client.GetCharacter().NetID,
+                        CollectionID = node.CollectionID,
+                        ElementID = string.format("Node_%s.%s", math.floor(Support._CurrentAspectNode - 1), math.floor(subnodeIndex - 1)),
+                        SubnodeIndex = subnodeIndex,
+                        AllowToggle = isUsingKeyboard, -- Allow toggling nodes this way for KBM only, as on controller this is too easy to do by accident.
+                    }
+                    Net.PostToServer(Support.NETMSG_SELECT_SUBNODE, msg)
+                end
             end
             pressedActions[ev.Action.ID] = true
         elseif ev.Event.Timing == "Up" then
@@ -367,7 +394,7 @@ function UI._Initialize()
             elseif ev.Action.ID == "Back" then
                 Support.RequestReturnToPreviousPage()
                 ev.Consumed = true
-            elseif ev.Action.ID == "Exit" then
+            elseif ev.Action.ID == "Exit" and Client.IsUsingController() then -- Ignore this action on KB+M, as it conflicts with other existing ways of exiting the UI with the corresponding keys.
                 UI.RequestExit()
                 ev.Consumed = true
             elseif ev.Action.ID == "ZoomIn" or ev.Action.ID == "ZoomOut" then
@@ -396,18 +423,16 @@ end
 ---------------------------------------------
 
 -- Enable the overlay when entering meditate.
-if Client.IsUsingController() then
-    Game.Ascension:RegisterListener("ClientToggledMeditating", function (entered)
-        if entered then
-            -- Do not reset the overlay if it was already in use (ex. when changing characters)
-            if not UI:IsVisible() then
-                UI.Setup()
-            end
-        else
-            UI:Hide()
+Game.Ascension:RegisterListener("ClientToggledMeditating", function (entered)
+    if entered then
+        -- Do not reset the overlay if it was already in use (ex. when changing characters)
+        if not UI:IsVisible() then
+            UI.Setup()
         end
-    end)
-end
+    else
+        UI:Hide()
+    end
+end)
 
 -- Disable the overlay when in selector mode.
 Client.Events.SelectorModeChanged:Subscribe(function (ev)

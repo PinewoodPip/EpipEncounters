@@ -27,6 +27,11 @@ local Support = {
             Text = "Next Node",
             ContextDescription = [[Input label]],
         },
+        Label_SelectSubnode = {
+            Handle = "h6123f516g3e9ag4885g848egd3a5ecfd2782",
+            Text = "Select Subnode %s",
+            ContextDescription = [[Input label; param is the index of the subnode (1-5 normally)]],
+        },
     },
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
@@ -90,6 +95,7 @@ Support:Debug()
 ---@field CollectionID string
 ---@field ElementID string
 ---@field SubnodeIndex integer 1-based.
+---@field AllowToggle boolean? If `true`, selecting a subnode that is already selected will attempt to toggle it. Defaults to `false`.
 
 ---@class Features.MeditateControllerSupport.NetMsg.ToggleSubnode : NetLib_Message_Character
 

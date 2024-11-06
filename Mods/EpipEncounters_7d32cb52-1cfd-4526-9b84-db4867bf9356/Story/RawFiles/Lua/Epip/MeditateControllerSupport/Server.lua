@@ -253,13 +253,15 @@ Net.RegisterListener(Support.NETMSG_SELECT_SUBNODE, function (payload)
     local isDifferentNode = true
     if selectedElement then
         -- Check if the user is requesting to select the same node again;
-        -- if so, we must not interact with it, as it would toggle the node.
+        -- if so, interacting with it again would toggle the node.
         local subnodeIndex = string.match(selectedElement, "Node_%d+%.(%d+)")
         if subnodeIndex then -- The user might have the main node selected instead.
             isDifferentNode = (tonumber(subnodeIndex) + 1) ~= payload.SubnodeIndex
         end
     end
-    if isDifferentNode then
+    -- Interact with the node if it's different from the previously-selected one,
+    -- or if explicitly allowed to toggle subnodes.
+    if isDifferentNode or payload.AllowToggle then
         Support.InteractWithElement(char, payload.CollectionID, payload.ElementID, "AMER_UI_ElementChain_ChildNodeUse")
     end
 end)
