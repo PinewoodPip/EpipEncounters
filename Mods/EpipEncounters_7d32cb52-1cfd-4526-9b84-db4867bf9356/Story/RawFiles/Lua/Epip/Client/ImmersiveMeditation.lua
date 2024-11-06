@@ -5,6 +5,7 @@
 ---------------------------------------------
 
 local MinimapToggle = Epip.GetFeature("Feature_MinimapToggle")
+local HotbarGroups = Epip.GetFeature("Features.HotbarGroups") ---@cast HotbarGroups Features.HotbarGroups.Client
 local BottomBarC = Client.UI.Controller.BottomBar
 local StatusConsole = Client.UI.StatusConsole
 local Hotbar = Client.UI.Hotbar
@@ -73,6 +74,9 @@ function IM.Update()
         Hotbar.ToggleVisibility(uisVisible, "PIP_ImmersiveMeditation")
         StatusConsole.Toggle(uisVisible, "PIP_ImmersiveMeditation")
     end
+
+    -- Hide Hotbar Groups as well.
+    HotbarGroups.RequestVisibility("Features.ImmersiveMeditation", uisVisible)
 end
 
 ---------------------------------------------
