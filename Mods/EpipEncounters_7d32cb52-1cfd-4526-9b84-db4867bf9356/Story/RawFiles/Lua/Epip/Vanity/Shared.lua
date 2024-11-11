@@ -249,7 +249,7 @@ local Vanity = {
         {Race = "Lizard", Gender = "Female", LifeType = "Living"},
 
         {Race = "?", Gender = "?", LifeType = "?"},
-        
+
         {Race = "Undead_Human", Gender = "Male", LifeType = "Undead"},
         {Race = "Undead_Human", Gender = "Female", LifeType = "Undead"},
         {Race = "Undead_Dwarf", Gender = "Male", LifeType = "Undead"},
@@ -330,6 +330,21 @@ local Vanity = {
             Text = "If enabled, items that are unequipped will have all their Vanity overrides (transmog, dyes, icon, etc.) removed automatically.<br><br>Host-only setting; applies to all players.",
             ContextDescription = [[Setting tooltip]],
         },
+        Label_CopyAppearance = {
+            Handle = "h63d72701gaa49g421dg972egc75a54e08bb1",
+            Text = "Vanity: Copy Appearance",
+            ContextDescription = [[Context menu option for equipment while Vanity is open]],
+        },
+        Label_CopyAppearance_Mainhand = {
+            Handle = "hff78f222g1c48g4051g8f02gb74c8b2d9315",
+            Text = "To Main Hand",
+            ContextDescription = [[Context menu option for weapon/shield equipment while Vanity is open; contextually, this reads "Copy appearance to mainhand"]],
+        },
+        Label_CopyAppearance_Offhand = {
+            Handle = "hc079de50g6f53g4894g9bb8g854765f6fd07",
+            Text = "To Offhand",
+            ContextDescription = [[Context menu option for weapon/shield equipment while Vanity is open; contextually, this reads "Copy appearance to offhand"]],
+        },
     },
 
     Settings = {},
@@ -339,6 +354,7 @@ local Vanity = {
 
     Events = {
         ItemAppearanceReset = {}, ---@type Event<Features.Vanity.Events.ItemAppearanceResetted>
+        CopyAppearanceRequested = {}, ---@type Event<Features.Vanity.Events.CopyAppearanceRequested>
         SaveDataLoaded = {}, ---@type Event<Features.Vanity.Events.SaveDataLoaded>
     },
     Hooks = {

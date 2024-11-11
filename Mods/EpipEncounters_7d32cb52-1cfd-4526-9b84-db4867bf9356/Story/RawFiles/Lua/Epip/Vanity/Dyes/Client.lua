@@ -504,6 +504,14 @@ VanityFeature.Events.ItemAppearanceReset:Subscribe(function (ev)
     end
 end)
 
+-- Request a dye when copying appearance is requested.
+VanityFeature.Events.CopyAppearanceRequested:Subscribe(function (ev)
+    local dye = Dyes.GetCurrentCustomDye(ev.ItemToCopy, false, true)
+    if dye then -- TODO why does this fail on ex. Debug Tools fork?
+        Dyes.ApplyCustomDye(dye, ev.TargetItem)
+    end
+end)
+
 -- Register all ItemColors into their own category.
 function Dyes:__Setup()
     ---@type VanityDyeCategory

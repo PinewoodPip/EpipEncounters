@@ -1,9 +1,18 @@
 
----@class Feature_Vanity
-local Vanity = Epip.GetFeature("Feature_Vanity")
 local ContextMenu = Client.UI.ContextMenu
 
+---@class Feature_Vanity
+local Vanity = Epip.GetFeature("Feature_Vanity")
+
 Vanity.Outfits = {}
+
+---------------------------------------------
+-- EVENTS/HOOKS
+---------------------------------------------
+
+---@class Features.Vanity.Events.CopyAppearanceRequested
+---@field ItemToCopy EclItem The item whose appearance is being copied.
+---@field TargetItem EclItem The item onto which the appearance is being copied.
 
 ---------------------------------------------
 -- METHODS
@@ -59,6 +68,17 @@ function Vanity._RevertAppearance(char, item)
     Vanity.Events.ItemAppearanceReset:Throw({
         Character = char,
         Item = item,
+    })
+end
+
+---Requests the appearance of an item to be copied onto another one.
+---@see Features.Vanity.Events.CopyAppearanceRequested
+---@param targetItem EclItem
+---@param itemToCopy EclItem
+function Vanity.RequestCopyAppearance(targetItem, itemToCopy)
+    Vanity.Events.CopyAppearanceRequested:Throw({
+        TargetItem = targetItem,
+        ItemToCopy = itemToCopy,
     })
 end
 

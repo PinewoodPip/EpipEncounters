@@ -4,7 +4,9 @@
 ---------------------------------------------
 
 local VanityFeature = Epip.GetFeature("Feature_Vanity")
+local TSK = VanityFeature.TranslatedStrings
 local CharacterSheet = Client.UI.CharacterSheet
+local ContextMenu = Client.UI.ContextMenu
 
 ---@class VanityUI : UI
 local Vanity = {
@@ -1073,6 +1075,15 @@ function Vanity.TogglePointsWarning(state)
     end
 end
 
+---Requests to copy the appearance of an item to the client character's currently-equipped item in a slot.
+---@param item EclItem
+---@param slot ItemSlot
+function Vanity._CopyAppearanceToSlot(item, slot)
+    local char = Client.GetCharacter()
+    local targetItem = char:GetItemObjectBySlot(slot)
+    VanityFeature.RequestCopyAppearance(targetItem, item)
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
@@ -1202,14 +1213,81 @@ Vanity:RegisterListener("ComboElementSelected", function(id, index, _)
     end
 end)
 
-Client.UI.ContextMenu.RegisterVanillaMenuHandler("Item", function(item)
+ContextMenu.RegisterVanillaMenuHandler("Item", function(item)
     if Item.IsDyeable(item) and Item.IsEquipped(Client.GetCharacter(), item) then
         local selectable = (not Client.IsInCombat()) and (not Game.Character.IsDead(Client.GetCharacter()))
-        Client.UI.ContextMenu.AddElement({
+        ContextMenu.AddElement({
             {id = "epip_OpenVanity", type = "button", text = "Vanity...", selectable = selectable, faded = not selectable},
         })
     end
 end)
+
+-- Add "Copy appearance" option to equipment context menus while Vanity UI is open.
+ContextMenu.RegisterVanillaMenuHandler("Item", function(item)
+    local slot = Item.GetItemSlot(item)
+    if Vanity:IsVisible() and Item.IsEquipment(item) and table.reverseLookup(Data.Game.SLOTS_WITH_VISUALS, slot) then
+        local char = Client.GetCharacter()
+        local hasSlotEquipped = slot ~= "Weapon" and slot ~= "Shield" and char:GetItemBySlot(slot) -- Doesn't consider Ring & Ring2, as they are not supported for Vanity due to traditionally lacking equipment visuals.
+        local usesBothWeaponSlots = false
+        if Item.IsWeapon(item) or Item.IsShield(item) then -- If the item goes into the weapon/shield slot, check for the character having either.
+            local mainhand, offhand = char:GetItemBySlot("Weapon"), char:GetItemBySlot("Shield")
+            hasSlotEquipped = mainhand or offhand
+            usesBothWeaponSlots = mainhand and offhand
+        end
+
+        -- Only show the option if char has an item equipped in the relevant slot and the item to copy is not equipped.
+        if hasSlotEquipped and not Item.IsEquipped(char, item) then
+            if usesBothWeaponSlots then -- For items in weapon slots, show a submenu to select which slot to copy appearance to, if the character has both slots used.
+                ContextMenu.AddElement({{id = "Vanity.CopyAppearanceToWeaponSlots", type = "subMenu", text = TSK.Label_CopyAppearance:GetString() .. "...", subMenu = "Vanity.CopyAppearanceToWeaponSlots.Menu"}}) -- Append "..." to indicate this opens a submenu.
+            else
+                ContextMenu.AddElement({{id = "Vanity.CopyAppearance", type = "button", text = TSK.Label_CopyAppearance:GetString()}}) -- No need to set `selectable`, as this option will only appear in contexts where the UI is already usable.
+            end
+        end
+    end
+end)
+-- Show submenu for copying appearance to weapon & shield slots.
+ContextMenu.RegisterMenuHandler("Vanity.CopyAppearanceToWeaponSlots.Menu", function(_)
+    ContextMenu.AddSubMenu({
+        menu = {
+            id = "Vanity.CopyAppearanceToWeaponSlots.Menu",
+            entries = {
+                {id = "Vanity.CopyAppearanceToWeaponSlots.Mainhand", type = "button", text = TSK.Label_CopyAppearance_Mainhand:GetString()},
+                {id = "Vanity.CopyAppearanceToWeaponSlots.Offhand", type = "button", text = TSK.Label_CopyAppearance_Offhand:GetString()},
+            }
+        }
+    })
+end)
+ContextMenu.RegisterElementListener("Vanity.CopyAppearance", "buttonPressed", function(item, _)
+    local char = Client.GetCharacter()
+    local itemSlot = Item.GetItemSlot(item)
+    local targetItem = char:GetItemObjectBySlot(itemSlot)
+    if itemSlot == "Weapon" then -- Consider shield slot as well, for cases where the character has only 1 weapon equipped, but in their offhand.
+        targetItem = targetItem or char:GetItemObjectBySlot("Shield")
+    end
+
+    VanityFeature.RequestCopyAppearance(targetItem, item)
+end)
+ContextMenu.RegisterElementListener("Vanity.CopyAppearanceToWeaponSlots.Mainhand", "buttonPressed", function(item, _)
+    Vanity._CopyAppearanceToSlot(item, "Weapon")
+end)
+ContextMenu.RegisterElementListener("Vanity.CopyAppearanceToWeaponSlots.Offhand", "buttonPressed", function(item, _)
+    Vanity._CopyAppearanceToSlot(item, "Shield")
+end)
+
+-- Update the UI after copying appearance.
+VanityFeature.Events.CopyAppearanceRequested:Subscribe(function (ev)
+    if Vanity:IsVisible() then
+        Vanity.SetSlot(ev.TargetItem) -- Select the copied item's slot to make it easier to adjust the appearance after copying.
+        Vanity.Setup(Vanity.currentTab or Epip.GetFeature("Feature_Vanity_Transmog").Tab) -- Open the Vanity UI if it wasn't already (ex. if this feature is invoked by another mod in a different context) -- TODO support setting default tab
+
+        -- Uses a timer since there may be server-side components to this process,
+        -- however no callback is required from them.
+        -- 0.2s should be enough assuming there's no artificial delays.
+        Timer.Start(0.2, function (_)
+            Vanity.Refresh()
+        end)
+    end
+end, {Priority = -math.maxinteger})
 
 Vanity:RegisterCallListener("pipTabButtonPressed", function(_, id)
     Vanity.Events.TabButtonPressed:Fire(id)

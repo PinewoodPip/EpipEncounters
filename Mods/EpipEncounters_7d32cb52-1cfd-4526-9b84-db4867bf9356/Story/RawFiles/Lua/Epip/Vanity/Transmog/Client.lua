@@ -652,6 +652,11 @@ VanityFeature.Events.ItemAppearanceReset:Subscribe(function (ev)
     Transmog._RevertAppearance(ev.Character, ev.Item)
 end)
 
+-- Request a transmog when copying appearance is requested.
+VanityFeature.Events.CopyAppearanceRequested:Subscribe(function (ev)
+    Transmog.TransmogItem(ev.TargetItem, ev.ItemToCopy.CurrentTemplate.Id)
+end)
+
 -- Apply weapon animation set overrides; requires the fork.
 if Transmog._SupportsWeaponAnimationOverrides() then
     Ext.Events.GetCharacterWeaponAnimationSetType:Subscribe(function(ev)
