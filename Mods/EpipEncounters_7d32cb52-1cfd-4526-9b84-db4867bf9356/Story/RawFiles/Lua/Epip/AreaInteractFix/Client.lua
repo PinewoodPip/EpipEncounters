@@ -19,12 +19,16 @@ Epip.RegisterFeature("Features.AreaInteractFix", Fix)
 -- This technically only needs to be done once at runtime.
 -- Presumably the issue comes from custom UIs defaulting to layers above the UI's default of 10.
 GameState.Events.GameReady:Subscribe(function (_)
-    local uiObj = AreaInteract:GetUI()
+    local areaInteractUIObj = AreaInteract:GetUI()
     local inventoryUIObj = ContainerInventory:GetUI()
-    uiObj.Layer = 16
-    -- Make sure the inventory UI goes on top, as it stays open
-    -- alongside AreaInteract.
-    if inventoryUIObj.Layer < 16 then
-        inventoryUIObj.Layer = 17
+    local contextMenuUIObj = Ext.UI.GetByType(Ext.UI.TypeID.contextMenu_c.Object)
+    areaInteractUIObj.Layer = 16 -- 1 layer higher than the default for custom UIs, which appears to be what triggers this issue.
+    -- Make sure the inventory and context menu UIs go on top,
+    -- as they stay open alongside AreaInteract.
+    if inventoryUIObj.Layer < areaInteractUIObj.Layer then
+        inventoryUIObj.Layer = areaInteractUIObj.Layer + 1
+    end
+    if contextMenuUIObj.Layer < areaInteractUIObj.Layer then
+        contextMenuUIObj.Layer = areaInteractUIObj.Layer + 1
     end
 end, {EnabledFunctor = Client.IsUsingController})
