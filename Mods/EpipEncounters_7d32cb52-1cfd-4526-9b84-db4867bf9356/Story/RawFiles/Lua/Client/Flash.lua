@@ -1,7 +1,12 @@
 
-local Flash = {}
+local V = Vector.Create
+
+local Flash = {
+    REFERENCE_RESOLUTION = V(1920, 1080), -- Design resolution used by various vanilla UIs.
+}
 Epip.InitializeLibrary("Flash", Flash)
 Client.Flash = Flash
+Flash.REFERENCE_ASPECT_RATIO = Flash.REFERENCE_RESOLUTION[1] / Flash.REFERENCE_RESOLUTION[2] -- Design aspect ratio used by various vanilla UIs.
 
 ---------------------------------------------
 -- CLASSES
@@ -20,6 +25,19 @@ Client.Flash = Flash
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
+
+---Converts coordinates from screen space to stretched stage space -
+---the space where the window is considered to be always 1080 units tall.
+---@param pos Vector2
+---@return Vector2
+function Flash.ScreenSpaceToStretchedStage(pos)
+    local viewport = Client.GetViewportSize()
+    local aspectRatio = viewport[1] / viewport[2]
+    local stageResolution = Vector.Create(Flash.REFERENCE_RESOLUTION[1] * (aspectRatio / Flash.REFERENCE_ASPECT_RATIO), Flash.REFERENCE_RESOLUTION[2])
+    local relativeCursorPos = Vector.Create(pos[1] / viewport[1], pos[2] / viewport[2])
+
+    return Vector.Create(relativeCursorPos[1] * stageResolution[1], relativeCursorPos[2] * stageResolution[2])
+end
 
 ---Returns the last element of an array.
 ---@param array FlashArray

@@ -343,7 +343,10 @@ function Tooltip.ShowFormattedTooltip(ui, tooltipType, tooltip)
 
         Game.Tooltip.ReplaceTooltipArray(ui, "tooltipArray", newTable, originalTbl)
 
-        root.displaySurfaceText(Client.GetMousePosition())
+        local cursor = Vector.Create(Client.GetMousePosition())
+        -- Cursor position is in pixels, we need to convert it to "1080p-relative" stage space.
+        local stageCursorPos = Client.Flash.ScreenSpaceToStretchedStage(cursor)
+        root.displaySurfaceText(stageCursorPos:unpack())
     else
         Tooltip:LogError("ShowFormattedTooltip(): Tooltip type not supported: " .. tooltipType)
     end
