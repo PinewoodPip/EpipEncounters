@@ -324,6 +324,42 @@ function Skills.IsSchoolFiltered(schoolID)
     return Skills._HiddenSchools:Contains(schoolID)
 end
 
+---Returns whether a skill's applied statuses's names or IDs match a search pattern, considering names and IDs as lowercase.
+---@param skill StatsLib_StatsEntry_SkillData
+---@param searchTerm pattern Should avoid checking uppercase characters.
+---@return boolean
+function Skills.SearchSkillStatuses(skill, searchTerm)
+    local skillProperties = skill.SkillProperties or EMPTY ---@type AnyStatProperty[]
+    local matches = false
+
+    -- Search skill properties
+    for _,prop in ipairs(skillProperties) do
+        if prop.Type == "Status" then
+            ---@cast prop StatPropertyStatus
+            local statusID = prop.Action
+
+            -- Search status ID.
+            matches = statusID:lower():match(searchTerm)
+
+            -- Search status name.
+            if not matches then
+                local statusData = Stats.Get("StatsLib_StatsEntry_StatusData", statusID)
+                local statusName = Stats.GetStatusName({StatusType = statusData and statusData.StatusType or statusID, StatusId = prop.Action}) -- We have no way of determining the status type for hardcoded statuses with no stats; assume their type matches their ID in that case.
+                if statusName then
+                    statusName = statusName:lower()
+                    matches = statusName:match(searchTerm)
+                end
+            end
+
+            if matches then
+                break
+            end
+        end
+    end
+
+    return matches
+end
+
 ---------------------------------------------
 -- PRIVATE METHODS
 ---------------------------------------------
@@ -622,7 +658,9 @@ Skills.Hooks.IsSkillValid:Subscribe(function (ev)
         -- Filter based on search term - should be done last for performance reasons
         local searchTerm = Skills._SearchTerm:lower()
         if searchTerm ~= "" then
-            if not lowercaseName:match(searchTerm) and not lowercaseID:match(searchTerm) then
+            local searchMatches = lowercaseName:match(searchTerm) or lowercaseID:match(searchTerm) -- Name and ID search.
+            searchMatches = searchMatches or Skills.SearchSkillStatuses(ev.Stat, searchTerm) -- Search names and IDs of applied statuses.
+            if not searchMatches then
                 valid = false
                 goto End
             end

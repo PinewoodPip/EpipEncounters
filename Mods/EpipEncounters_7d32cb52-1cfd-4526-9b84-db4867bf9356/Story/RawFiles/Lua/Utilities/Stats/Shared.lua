@@ -433,7 +433,7 @@ function Stats.IsStatusVisible(status)
 end
 
 ---Returns the display name of a status.
----@param status EclStatus|EsvStatus
+---@param status EclStatus|EsvStatus|{StatusType: StatusType, StatusId: string}
 ---@return string --Defaults to status ID.
 function Stats.GetStatusName(status)
     local name = nil
