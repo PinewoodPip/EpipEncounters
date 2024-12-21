@@ -329,7 +329,9 @@ function Stats.MeetsRequirements(char, statID, isItem, itemSource)
     end
 
     -- Memorization
-    if charSkillData and (not charSkillData.IsLearned and not grantedByExternalSource) then
+    -- The case of "Memorized but not learnt" (IsLearnt & !IsActivated) is required for skills granted from polymorphing;
+    -- these linger in the SkillManager in this strange state after the character reverts back to their original form.
+    if charSkillData and (not charSkillData.IsLearned or not charSkillData.IsActivated) and not grantedByExternalSource then
         return false
     end
 

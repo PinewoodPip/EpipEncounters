@@ -667,9 +667,23 @@ end
 function Hotbar.UseSlot(index, isEnabled)
     Hotbar:DebugLog("Pressed slot: " .. index)
     local slot = Hotbar.GetSlotHolder().slot_array[index - 1]
-    local data = Client.GetCharacter().PlayerData.SkillBarItems[index]
+    local char = Client.GetCharacter()
+    local data = char.PlayerData.SkillBarItems[index]
+    local canUse = true
 
-    Hotbar:GetUI():ExternalInterfaceCall("slotPressed", index - 1, isEnabled or true)
+    -- Normally it is safe to send the external call at all times since the engine re-checks requirements for the slot usage,
+    -- however skills granted from expired polymorph statuses are an exception;
+    -- these are grayed out in the vanilla hotbar and thus don't fire the call,
+    -- however they are technically usable by the character.
+    if data.Type == "Skill" then
+        local skill = char.SkillManager.Skills[data.SkillOrStatId]
+        if skill and skill.IsLearned and not skill.IsActivated and skill.CauseListSize == 0 then
+            canUse = false
+        end
+    end
+    if canUse then
+        Hotbar:GetUI():ExternalInterfaceCall("slotPressed", index - 1, isEnabled or true)
+    end
 
     Hotbar.lastClickedSlot = index
 
@@ -1564,7 +1578,8 @@ function Hotbar.RenderSlot(char, canUseHotbar, slotIndex, skillBarSlot)
 
             isEnabled = Character.CanUseSkill(char, data.SkillOrStatId)
 
-            if not skill.IsLearned then
+            -- The second case is required for the edgecase of skills granted by now-expired polymorph statuses, which remain in the SkillManager as memorized but not learnt.
+            if not skill.IsLearned or (not skill.IsActivated and skill.CauseListSize == 0) then
                 unavailable = true
             end
         else -- The skill was removed from the character.
