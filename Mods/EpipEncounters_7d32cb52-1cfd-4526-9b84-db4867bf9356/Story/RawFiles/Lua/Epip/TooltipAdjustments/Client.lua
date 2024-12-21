@@ -161,19 +161,6 @@ Game.Tooltip.RegisterListener("Status", nil, function(_, _, tooltip)
     end
 end)
 
--- Show skill IDs.
-TooltipLib.Hooks.RenderSkillTooltip:Subscribe(function (ev)
-    if Epip.IsDeveloperMode() then
-        ev.Tooltip:InsertElement({
-            Type = "Engraving",
-            Label = Text.Format("StatsId: %s", {
-                FormatArgs = {ev.SkillID},
-                Color = Color.LARIAN.GREEN,
-            })
-        })
-    end
-end)
-
 -- Fix the erroneous GB5 penalty tooltip icons.
 Game.Tooltip.RegisterListener("Status", nil, function(char, status, tooltip)
     local desc = tooltip:GetElement("StatusDescription") or {Type = "StatusDescription", Label = ""}
@@ -231,12 +218,6 @@ Game.Tooltip.RegisterListener("Status", nil, function(char, status, tooltip)
     end
 end)
 
--- Show talent IDs in Talent tooltips.
-Game.Tooltip.RegisterListener("Talent", nil, function(_, talentID, tooltip)
-    if Epip.IsDeveloperMode() then
-        table.insert(tooltip.Data, 1, {Type = "Engraving", Label = Text.Format("ID: %s", {FormatArgs = {talentID}, Color = Color.GREEN})})
-    end
-end)
 
 function TooltipAdjustments.TestElements(item, tooltip)
     local LABEL_ELEMENTS = {

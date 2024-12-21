@@ -133,19 +133,3 @@ TooltipLib.Hooks.RenderStatusTooltip:Subscribe(function (ev)
         })
     end
 end)
-
--- Show status object information in dev mode.
-TooltipLib.Hooks.RenderStatusTooltip:Subscribe(function (ev)
-    if Epip.IsDeveloperMode() then
-        ev.Tooltip:InsertElement({
-            Type = "Engraving",
-            Label = Text.Format("StatusId: %s<br>StatusType: %s", {
-                FormatArgs = {
-                    ev.Status.StatusId,
-                    ev.Status.StatusType,
-                },
-                Color = Color.LARIAN.GREEN,
-            })
-        })
-    end
-end)

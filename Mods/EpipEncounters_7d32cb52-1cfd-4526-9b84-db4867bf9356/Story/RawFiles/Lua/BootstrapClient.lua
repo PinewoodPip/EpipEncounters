@@ -492,6 +492,7 @@ LOAD_ORDER = {
             "Epip/TooltipAdjustments/AprilFools/Client.lua",
             "Epip/TooltipAdjustments/CombatRangeWarning/Client.lua",
             {Script = "Epip/TooltipAdjustments/Artifacts/Client.lua", RequiresEE = true},
+            {Script = "Epip/TooltipAdjustments/DeveloperInfo/Client.lua", Developer = true},
         },
     },
 
