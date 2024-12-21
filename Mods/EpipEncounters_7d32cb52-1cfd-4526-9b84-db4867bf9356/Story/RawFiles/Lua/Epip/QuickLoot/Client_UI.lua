@@ -7,6 +7,7 @@ local ButtonPrefab = Generic.GetPrefab("GenericUI_Prefab_Button")
 local CloseButtonPrefab = Generic.GetPrefab("GenericUI_Prefab_CloseButton")
 local PooledContainer = Generic.GetPrefab("GenericUI.Prefabs.PooledContainer")
 local SettingWidgets = Epip.GetFeature("Features.SettingWidgets")
+local UILayout = Epip.GetFeature("Features.UILayout")
 local Input = Client.Input
 local CommonStrings = Text.CommonStrings
 local Tooltip = Client.Tooltip
@@ -46,6 +47,7 @@ QuickLoot:RegisterInputAction("Search", {
     Name = TSK.InputAction_Search_Name,
     Description = TSK.InputAction_Search_Description,
 })
+UILayout.RegisterTrackedUI(UI) -- Persist UI position.
 
 ---@class Features.QuickLoot.UI.State
 ---@field HandleMaps Features.QuickLoot.HandleMap
@@ -358,6 +360,9 @@ function UI._Initialize()
             UI.LootAll()
         end
     end, {EnabledFunctor = function () return UI:IsVisible() end})
+
+    -- Attempt to restore the UI's position when it is initialized.
+    UILayout.RestorePosition(UI, UI.BACKGROUND_SIZE) -- Use only the main panel size for determining overflow, since the SysPanel size is padded to offset centering via the setPosition UICall.
 
     UI._Initialized = true
     UI.Events.Initialized:Throw()

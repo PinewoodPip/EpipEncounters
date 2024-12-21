@@ -353,6 +353,7 @@ function Client.GetActiveUI(playerIndex)
 end
 
 ---Returns the Epip UI table for a UI, if registered.
+---**Does not support Generic UIs.**
 ---@param ui UIObject|integer UI or type ID.
 ---@return UI
 function Client.GetUI(ui)

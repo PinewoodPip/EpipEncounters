@@ -6,6 +6,7 @@ local TooltipPanelPrefab = Generic.GetPrefab("GenericUI_Prefab_TooltipPanel")
 local DraggingAreaPrefab = Generic.GetPrefab("GenericUI_Prefab_DraggingArea")
 local CloseButtonPrefab = Generic.GetPrefab("GenericUI_Prefab_CloseButton")
 local SettingWidgets = Epip.GetFeature("Features.SettingWidgets")
+local UILayout = Epip.GetFeature("Features.UILayout")
 local Tooltip = Client.Tooltip
 local Input = Client.Input
 local V = Vector.Create
@@ -34,6 +35,8 @@ UI.ELEMENT_SPACING = 5
 UI.SETTINGS_PANEL_ELEMENT_SIZE = V(UI.SETTINGS_PANEL_SIZE[1] - 55, 50)
 UI.SETTINGS_PANEL_SCROLLLIST_FRAME = UI.SETTINGS_PANEL_SIZE - V(20, 150)
 UI.DRAGGABLE_AREA_SIZE = V(UI.BACKGROUND_SIZE[1] + UI.SETTINGS_PANEL_SIZE[1], 65)
+
+UILayout.RegisterTrackedUI(UI) -- Persist UI position.
 
 UI.Events.RenderSettings = SubscribableEvent:New("RenderSettings") ---@type Event<{ItemCategory:string}> Children of the list are set to invisible before invoking; you're expected to pool the setting elements. See `UI.RenderSetting()`.
 
@@ -186,6 +189,9 @@ function UI._Initialize()
 
         -- Only set relative position the first time the UI is used in a session.
         UI:SetPositionRelativeToViewport("center", "center")
+
+        -- Attempt to restore UI position.
+        UILayout.RestorePosition(UI)
     end
 
     UI._Initialized = true
