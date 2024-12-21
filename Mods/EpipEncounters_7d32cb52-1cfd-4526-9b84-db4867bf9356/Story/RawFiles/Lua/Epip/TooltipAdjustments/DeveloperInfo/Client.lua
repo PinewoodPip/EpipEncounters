@@ -4,6 +4,7 @@
 ---------------------------------------------
 
 local Tooltip = Client.Tooltip
+local Input = Client.Input
 
 ---@type Feature
 local DeveloperInfo = {}
@@ -37,6 +38,33 @@ Tooltip.Hooks.RenderStatusTooltip:Subscribe(function (ev)
         })
     })
 end)
+
+-- Show item stat object IDs and tags while shift is held (since this information isn't needed as often).
+Tooltip.Hooks.RenderItemTooltip:Subscribe(function (ev)
+    local item = ev.Item
+    local labels = {} ---@type string[]
+
+    -- Show stats object ID.
+    table.insert(labels, Text.Format("StatsId: %s", {
+        FormatArgs = {item.StatsId},
+    }))
+
+    -- Show tags.
+    local tags = item:GetTags()
+    if tags[1] then
+        table.insert(labels, Text.Format("Tags: %s", {
+            FormatArgs = {Text.Join(tags, ", ")},
+        }))
+    else
+        table.insert(labels, "No tags")
+    end
+
+    -- Add all labels as a single element, since the ordering of multiple engraving elements appears to be inconsistent.
+    ev.Tooltip:InsertElement({
+        Type = "Engraving",
+        Label = Text.Format(Text.Join(labels, "<br>"), {Color = Color.LARIAN.GREEN}),
+    })
+end, {EnabledFunctor = Input.IsShiftPressed})
 
 -- Show talent IDs in Talent tooltips.
 Game.Tooltip.RegisterListener("Talent", nil, function(_, talentID, tooltip)
