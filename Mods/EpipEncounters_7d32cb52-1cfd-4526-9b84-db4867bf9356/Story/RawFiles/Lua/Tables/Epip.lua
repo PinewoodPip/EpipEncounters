@@ -10,6 +10,7 @@ Epip = {
 
     PREFIXED_GUID = "EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356",
     cachedAprilFoolsState = nil,
+    _CachedChristmasState = nil,
     _devMode = nil,
 
     Events = {
@@ -288,6 +289,18 @@ if Ext.IsClient() then
         end
 
         return Epip.cachedAprilFoolsState or Settings.GetSettingValue("Epip_Developer", "DEBUG_AprilFools")
+    end
+
+    ---Returns whether it is currently christmassy enough (by Pip's standards) or the "Out of season April Fools jokes" setting is enabled.
+    ---@return boolean
+    function Epip.IsChristmas()
+        -- Minor optimisation
+        if Epip._CachedChristmasState == nil then
+            local date = Client.GetDate()
+            Epip._CachedChristmasState = ((date.Month == 12 and date.Day >= 20) or (date.Month == 1 and date.Day <= 2)) -- We consider christmas to run from 20th of December to 2nd of January.
+        end
+
+        return Epip._CachedChristmasState or Settings.GetSettingValue("Epip_Developer", "DEBUG_AprilFools")
     end
 
     ---Returns whether it is currently Pip's birthday.

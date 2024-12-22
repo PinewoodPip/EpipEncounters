@@ -833,6 +833,14 @@ LOAD_ORDER = {
         },
     },
     {Script = "Epip/Client/RainbowOverlays.lua"},
+    {
+        Scripts = {
+            "Epip/ProgrammableLights/Client.lua",
+            "Epip/ProgrammableLights/Program.lua",
+            "Epip/ProgrammableLights/Prefabs/Light.lua",
+            "Epip/ProgrammableLights/Programs/Default.lua",
+        },
+    },
 
     -- BH Overheads
     {
