@@ -207,6 +207,17 @@ function Vanity.ClearPersistentOutfit(char, slots, tag)
     Osi.ClearTag(char.MyGuid, tag)
 end
 
+---Sets whether a helmet should always show hair (ie. never mask it).
+---@param item EsvItem Should be a helmet.
+---@param forceShow boolean
+function Transmog.SetForceShowHair(item, forceShow)
+    if forceShow then
+        Osi.SetTag(item.MyGuid, Transmog.FORCE_SHOW_HAIR_TAG)
+    else
+        Osi.ClearTag(item.MyGuid, Transmog.FORCE_SHOW_HAIR_TAG)
+    end
+end
+
 ---Apply a Polymorph status to refresh character visuals without needing to re-equip. Credits to Luxen for the discovery!
 ---@param char EsvCharacter
 ---@param useAlternativeStatus boolean?
@@ -338,6 +349,12 @@ Net.RegisterListener("EPIPENCOUNTERS_Vanity_Transmog_ToggleVisibility", function
     end
 
     Vanity.RefreshAppearance(char, true)
+end)
+
+-- Handle requests for toggling hair masking for helmets.
+Net.RegisterListener(Transmog.NETMSG_SET_FORCE_SHOW_HAIR, function (payload)
+    local item = payload:GetItem()
+    Transmog.SetForceShowHair(item, payload.ShowHair)
 end)
 
 -- Listen for requests to refresh visuals.

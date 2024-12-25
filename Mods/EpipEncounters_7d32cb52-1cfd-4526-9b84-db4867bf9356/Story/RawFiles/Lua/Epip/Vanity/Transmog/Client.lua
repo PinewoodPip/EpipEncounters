@@ -344,7 +344,7 @@ function Transmog._GetEquipmentMasks(char)
 
             if Transmog._CanApplyMasks(char, slot) then
                 local templateEquipmentMask = template.Equipment.EquipmentSlots
-                templateEquipmentMask = templateEquipmentMask & ~(Transmog._ItemSlotToEquipmentMask[slot]) -- An item cannot mask itself.
+                templateEquipmentMask = templateEquipmentMask & ~(Transmog._ItemSlotToEquipmentMask[slot]) -- An item cannot mask itself. Some modded equipment have such masks (ex. Majora's fullbody armors), though it's a no-op.
                 equipmentMask = equipmentMask | templateEquipmentMask
             end
         end
@@ -356,9 +356,15 @@ function Transmog._GetEquipmentMasks(char)
         if item then
             local transmoggedTemplateGUID = Transmog.GetTransmoggedTemplate(item)
             local template = transmoggedTemplateGUID and Ext.Template.GetTemplate(transmoggedTemplateGUID) or item.CurrentTemplate
+            local templateVisualMask = template.Equipment.VisualSetSlots
+
+            -- Apply "Force show hair" preference.
+            if slot == "Helmet" and Transmog.ShouldForceShowHair(item) then
+                templateVisualMask = templateVisualMask & (~Ext.Enums.DeactivateVisualSetSlotMask.DeactivateHair)
+            end
 
             if Transmog._CanApplyMasks(char, slot) and (equipmentMask & Transmog._ItemSlotToEquipmentMask[slot] == 0) then
-                visualSetMask = visualSetMask | template.Equipment.VisualSetSlots
+                visualSetMask = visualSetMask | templateVisualMask
             end
         end
     end

@@ -31,6 +31,11 @@ TSK.Label_KeepAppearance = Transmog:RegisterTranslatedString({
     Text = "Lock Appearance",
     ContextDescription = [[Checkbox to keep appearance when new items are equipped]],
 })
+TSK.Label_ForceShowHair = Transmog:RegisterTranslatedString({
+    Handle = "h984069e2gd55ag4627g9031g1f19dfa0064f",
+    Text = [[Force show hair]],
+    ContextDescription = [[Checkbox in helmet transmog to have hair always show]],
+})
 TSK.Label_RevertAppearance = Transmog:RegisterTranslatedString({
     Handle = "hca179321g5478g4decga9fagc7b3bd11ca9a",
     Text = "Revert Appearance",
@@ -70,9 +75,11 @@ function Tab:Render()
     Vanity.RenderItemDropdown()
 
     if item then
+        local itemSlot = Item.GetItemSlot(item)
+
         -- Don't show the visibility option for helms,
         -- as they already have one in the vanilla UI.
-        if Item.GetItemSlot(item) ~= "Helmet" then
+        if itemSlot ~= "Helmet" then
             Vanity.RenderCheckbox("Vanity_MakeInvisible", Text.CommonStrings.Visible:Format({Color = Color.BLACK}), not item:HasTag(Transmog.INVISIBLE_TAG), true)
         end
 
@@ -97,6 +104,11 @@ function Tab:Render()
             Vanity.RenderCheckbox("Vanity_KeepAppearance", TSK.Label_KeepAppearance:Format({Color = "000000"}), Transmog.ShouldKeepAppearance(item), true)
 
             Vanity.RenderButton("RevertTemplate", TSK.Label_RevertAppearance:GetString(), true)
+
+            -- "Force show hair" option for helmets
+            if itemSlot == "Helmet" then
+                Vanity.RenderCheckbox("Vanity_ForceShowHair", TSK.Label_ForceShowHair:Format({Color = "000000"}), Transmog.ShouldForceShowHair(item))
+            end
 
             for _,data in ipairs(categories) do
                 -- Render category collapse button
@@ -194,6 +206,14 @@ Tab:RegisterListener(Vanity.Events.CheckboxPressed, function(id, state)
             ItemNetID = Vanity.GetCurrentItem().NetID,
         })
 
+        Timer.Start(0.4, function()
+            Vanity.RefreshAppearance(true)
+        end)
+    elseif id == "Vanity_ForceShowHair" then -- Sent request to toggle forcing hair to be shown for helmets.
+        Net.PostToServer(Transmog.NETMSG_SET_FORCE_SHOW_HAIR, {
+            ItemNetID = Vanity.GetCurrentItem().NetID,
+            ShowHair = state,
+        })
         Timer.Start(0.4, function()
             Vanity.RefreshAppearance(true)
         end)

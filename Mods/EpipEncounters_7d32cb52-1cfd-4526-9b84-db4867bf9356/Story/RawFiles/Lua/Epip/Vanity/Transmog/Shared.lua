@@ -7,11 +7,13 @@ local Transmog = {
     NET_MSG_SET_ICON = "Feature_Vanity_Transmog_NetMsg_SetIcon",
     NET_MSG_REVERT_APPEARANCE = "Features.Vanity.Transmog.NetMsgs.RevertAppearance",
     NETMSG_SET_WEAPON_ANIMATION_OVERRIDE = "Features.Vanity.Transmog.SetWeaponAnimationOverride",
+    NETMSG_SET_FORCE_SHOW_HAIR = "Features.Vanity.Transmog.SetForceShowHair",
 
     KEEP_APPEARANCE_TAG_PREFIX = "PIP_Vanity_Transmog_KeepAppearance_",
     INVISIBLE_TAG = "PIP_VANITY_INVISIBLE",
     KEEP_ICON_TAG = "PIP_VANITY_TRANSMOG_ICON_%s",
     KEEP_ICON_PATTERN = "^PIP_VANITY_TRANSMOG_ICON_(.+)$",
+    FORCE_SHOW_HAIR_TAG = "PIP_VANITY_FORCE_SHOW_HAIR",
     TRANSMOGGED_TAG = "PIP_VANITY_TRANSMOG_TEMPLATE_%s",
     TRANSMOGGED_TAG_PATTERN = "^PIP_VANITY_TRANSMOG_TEMPLATE_(.+)$",
     WEAPON_ANIMATION_OVERRIDE_TAG = "Features.Vanity.Transmog.WeaponAnimationOverride.%s",
@@ -138,6 +140,9 @@ Epip.RegisterFeature("Vanity_Transmog", Transmog)
 ---@class Features.Vanity.Transmog.SetWeaponAnimationOverride : NetLib_Message_Character
 ---@field AnimType CharacterLib.WeaponAnimationType
 
+---@class Features.Vanity.Transmog.SetForceShowHair : NetLib_Message_Item
+---@field ShowHair boolean
+
 ---------------------------------------------
 -- CLASSES
 ---------------------------------------------
@@ -164,6 +169,13 @@ end
 ---@return GUID?
 function Transmog.GetTransmoggedTemplate(item)
     return Entity.GetParameterTagValue(item, Transmog.TRANSMOGGED_TAG_PATTERN)
+end
+
+---Returns whether an item is forced to not mask hair.
+---@param item Item
+---@return boolean
+function Transmog.ShouldForceShowHair(item)
+    return item:HasTag(Transmog.FORCE_SHOW_HAIR_TAG)
 end
 
 ---Returns whether weapon animation overrides are supported.
