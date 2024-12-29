@@ -20,6 +20,8 @@ package Elements
         public var _cachedText:String = "";
         private var _editable:Boolean = false;
 
+        public var _nextTextFormatProperties:Object = null; // Proxy object to set text format properties from lua. For optimization purposes, this is only initialized when necessary.
+
         public function Text()
         {
             super();
@@ -175,6 +177,32 @@ package Elements
         public function GetLineWidth(lineIndex:uint) : Number
         {
             return this.text_txt.getLineMetrics(lineIndex - 1).width;
+        }
+
+        public function PrepareNewTextFormat() : *
+        {
+            this._nextTextFormatProperties = new Object();
+        }
+
+        public function SetTextFormat(startIndex:Number=-1, endIndex:Number=-1) : *
+        {
+            var newFormat:TextFormat = new TextFormat();
+            for (var key:String in this._nextTextFormatProperties)
+            {
+                newFormat[key] = this._nextTextFormatProperties[key];
+            }
+            if (startIndex != -1 && endIndex != -1)
+            {
+                this.text_txt.setTextFormat(newFormat, startIndex, endIndex);
+            }
+            else if (startIndex != -1)
+            {
+                this.text_txt.setTextFormat(newFormat, startIndex);
+            }
+            else
+            {
+                this.text_txt.setTextFormat(newFormat);
+            }
         }
 
         private function acceptSave() : *

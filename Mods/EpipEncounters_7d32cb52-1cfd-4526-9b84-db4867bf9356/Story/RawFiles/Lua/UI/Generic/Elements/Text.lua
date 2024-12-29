@@ -15,6 +15,28 @@ local Text = {
 local _Text = Text
 
 ---------------------------------------------
+-- CLASSES
+---------------------------------------------
+
+---@class GenericUI.Elements.Text.TextFormat
+--- @field align "center"|"end"|"justify"|"left"|"right"|"start"
+--- @field blockIndent boolean
+--- @field bold boolean
+--- @field bullet boolean
+--- @field color uint32
+--- @field font TextLib_Font
+--- @field indent number
+--- @field italic boolean
+--- @field kerning boolean
+--- @field leading number
+--- @field leftMargin number
+--- @field letterSpacing number
+--- @field rightMargin number
+--- @field size number
+--- @field tabStops FlashArray
+--- @field underline boolean TODO does this work?
+
+---------------------------------------------
 -- EVENTS
 ---------------------------------------------
 
@@ -94,6 +116,22 @@ end
 ---@return boolean
 function Text:IsMouseWithinRange(startIndex, length)
     return self:GetMovieClip().IsMouseWithinRange(startIndex - 1, length)
+end
+
+---Sets the text format for a range of characters.
+---Indexes for overloads are also 1-based.
+---@overload fun(self, textFormat:GenericUI.Elements.Text.TextFormat) -- Sets the format on the whole text.
+---@overload fun(self, textFormat:GenericUI.Elements.Text.TextFormat, characterIndex:integer) -- Sets the format on a single character.
+---@param textFormat GenericUI.Elements.Text.TextFormat
+---@param startIndex integer 1-based.
+---@param endIndex integer 1-based.
+function Text:SetTextFormat(textFormat, startIndex, endIndex)
+    local mc = self:GetMovieClip()
+    mc.PrepareNewTextFormat()
+    for k,v in pairs(textFormat) do
+        mc._nextTextFormatProperties[k] = v
+    end
+    mc.SetTextFormat(startIndex or -1, endIndex or -1)
 end
 
 _Text.SetText = Generic.ExposeFunction("SetText")
