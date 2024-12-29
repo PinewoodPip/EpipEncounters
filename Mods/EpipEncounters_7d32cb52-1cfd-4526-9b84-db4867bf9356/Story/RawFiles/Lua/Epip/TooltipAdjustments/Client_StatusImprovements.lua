@@ -61,8 +61,35 @@ TooltipLib.Hooks.RenderStatusTooltip:Subscribe(function (ev)
     local source = Character.Get(ev.Status.StatusSourceHandle)
     local statusesFromItems = Character.GetStatusesFromItems(ev.Character)
     local tooltip = ev.Tooltip
+    local itemSource = nil ---@type EclItem?
 
-    if source then
+    -- Check if the status is from an equipped item
+    for _,entry in ipairs(statusesFromItems) do
+        if entry.Status == ev.Status then
+            itemSource = entry.ItemSource
+            break
+        end
+    end
+
+    -- Show item source
+    if itemSource then
+        local addendum = Text.Format(TSK.StatusImprovements_FromItem:GetString(), {
+            FormatArgs = {Item.GetDisplayName(itemSource)},
+            FontType = Text.FONTS.ITALIC,
+            Color = Color.LARIAN.LIGHT_GRAY,
+        })
+
+        local elements = tooltip:GetElements("StatusDescription")
+        local element = elements[#elements] -- Append to the last description (usually the duration text)
+        if not element then
+            tooltip:InsertElement({
+                Type = "StatusDescription",
+                Label = addendum,
+            })
+        else
+            element.Label = element.Label .. "<br>" .. addendum
+        end
+    elseif source then -- Only show character source if the status is not from an item, as it's redundant in that case - the character source can only be the wearer. Oddly there are cases (ex. Source Collar) where the owner of the status is unset, however this doesn't appear to make any practical difference.
         local text = Text.Format(TSK.StatusImprovements_AppliedBy:GetString(), {
             FormatArgs = {Character.GetDisplayName(source)},
             FontType = Text.FONTS.ITALIC,
@@ -78,29 +105,6 @@ TooltipLib.Hooks.RenderStatusTooltip:Subscribe(function (ev)
             })
         else
             element.Label = element.Label .. "<br>" .. text
-        end
-    end
-
-    -- Check if the status is from an equipped item
-    for _,entry in ipairs(statusesFromItems) do
-        if entry.Status == ev.Status then
-            local addendum = Text.Format(TSK.StatusImprovements_FromItem:GetString(), {
-                FormatArgs = {entry.ItemSource.DisplayName},
-                FontType = Text.FONTS.ITALIC,
-                Color = Color.LARIAN.LIGHT_GRAY,
-            })
-
-            local elements = tooltip:GetElements("StatusDescription")
-            local element = elements[#elements] -- Append to the last description (usually the duration text)
-
-            if not element then
-                tooltip:InsertElement({
-                    Type = "StatusDescription",
-                    Label = addendum,
-                })
-            else
-                element.Label = element.Label .. "<br>" .. addendum
-            end
         end
     end
 end)
