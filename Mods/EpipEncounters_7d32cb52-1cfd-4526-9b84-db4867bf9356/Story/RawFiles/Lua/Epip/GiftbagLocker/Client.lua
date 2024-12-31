@@ -1,9 +1,9 @@
 
 ---------------------------------------------
--- Locks giftbags incompatible with EE and prepends compatibility warnings.
+-- Warns or disables giftbags incompatible with the user's mods and prepends compatibility warnings.
 ---------------------------------------------
 
-local MODS = Mod.GUIDS
+local GBUI = Client.UI.GiftBagContent
 
 ---@class Features.GiftBagCompatibilityWarnings : Feature
 local GBL = {
@@ -16,12 +16,12 @@ local GBL = {
     TranslatedStrings = {
         MsgBox_UndesirableWarning_Header = {
             Handle = "hc14509ffgb0cdg4ef3g80a5gf6490f287073",
-            Text = "Epic Encounters Warning",
+            Text = "Mod Compatibility Warning",
             ContextDescription = "Header for message box warning about undesirable giftbags",
         },
         MsgBox_UndesirableWarning_Body = {
             Handle = "hdcc2ff83gd864g4895gb15cg8101b9e83eed",
-            Text = "This giftbag has been marked as unnecessary or potentially undesirable and may negatively affect the EE experience. See the Discord FAQ channel for more information.",
+            Text = "This giftbag has been marked as unnecessary or potentially undesirable when used alongside other mods you currently have installed, and may negatively affect your experience.",
             ContextDescription = "Message box for warning about undesirable giftbags",
         },
         Label_Incompatible = {
@@ -37,62 +37,7 @@ local GBL = {
         Label_GiftbagDescription = {
             Handle = "h2883c225g0406g48ffg8c39g1439bdf66f38",
             Text = "%s<br>Reason:<br>%s",
-            ContextDescription = "Template for problematic giftbag descriptions; params are warning (incompatible/undesirable), reason for the warning and original description",
-        },
-        Warning_8AP = {
-            Handle = "he5cba61ag9a66g44d3gaf5cg43c1f5dbf53a",
-            Text = "The value of an action point has been halved, meaning characters have a maximum of 12 AP by default.",
-            ContextDescription = "EE compatibility warning for 8AP giftbag",
-        },
-        Warning_Crafting = {
-            Handle = "h05eeb4f1gee14g43ddgb1ddg44ac6112f92b",
-            Text = "Breaks dual-wielding AP cost and reintroduces removed gear perks.",
-            ContextDescription = "EE compatibility warning for crafting giftbag",
-        },
-        Warning_PetPal = {
-            Handle = "hb7d3ca9eg7516g4af3g9616g98aa4db5947d",
-            Text = "Pet Pal is already innate in EE.",
-            ContextDescription = "EE compatibility warning for innate pet pal giftbag",
-        },
-        Warning_LevelUpItems = {
-            Handle = "h757b89dbg52a1g401cgb040gc6a0489ac60b",
-            Text = "Breaks item statistics and is unnecessary due to the Greatforge already having a way to level up items.",
-            ContextDescription = "EE compatibility warning for item levelling giftbag",
-        },
-        Warning_Summoning = {
-            Handle = "h0fa608ccgd3d8g4af1ga48agd1a51e1a4d95",
-            Text = "Reverts EE's changes to summoning.",
-            ContextDescription = "EE compatibility warning for summoning giftbag",
-        },
-        Warning_Talents = {
-            Handle = "h9e2fea9age009g42ccg8828g5ea0bfa6fb0f",
-            Text = "Prevents you from choosing Glass Cannon. The new talents are unsupported.",
-            ContextDescription = "EE compatibility warning for talents giftbag",
-        },
-        Warning_SpiritVision = {
-            Handle = "h653f684ag7015g46b0ga945ge473bea2fc04",
-            Text = "Spirit Vision is already infinite by default in EE.",
-            ContextDescription = "EE compatibility warning for talents giftbag",
-        },
-        Warning_Randomizer = {
-            Handle = "h5cd299ccg2753g4c7fgbb43g33ec950e8954",
-            Text = "Not designed for EE, and is buggy, bestowing permanent resistance boosts to your characters.",
-            ContextDescription = "EE compatibility warning for randomizer giftbag",
-        },
-        Warning_Rest = {
-            Handle = "h5d55674cg8400g4039gb640ga7498b5b8e09",
-            Text = "Unnecessary due to the new Source system.",
-            ContextDescription = "EE compatibility warning for resting giftbag",
-        },
-        Warning_Organization = {
-            Handle = "hefaa5c7cga265g4789gb95ag974dd3365ea0",
-            Text = "Poorly implemented, creates a lot of tedium and inconvenience.",
-            ContextDescription = "EE compatibility warning for organization bags giftbag",
-        },
-        Warning_Barter = {
-            Handle = "hf1e6fd47gefadg47b9ga523gd997e9e33e0d",
-            Text = "Buggy in multiplayer, prevents trading.",
-            ContextDescription = "EE compatibility warning for bartering giftbag",
+            ContextDescription = "Template for problematic giftbag descriptions; params are warning (incompatible/undesirable) and reason for the warning",
         },
     },
 
@@ -106,27 +51,6 @@ local GBL = {
 }
 Epip.RegisterFeature("Features.GiftBagCompatibilityWarnings", GBL)
 local TSK = GBL.TranslatedStrings
-
--- Setup warnings for giftbags.
----@type table<GUID, TextLib_TranslatedString>
-GBL.INCOMPATIBLE_GIFTBAGS = { -- Prevented from being chosen.
-    [MODS.GB_8AP] = TSK.Warning_8AP,
-    [MODS.GB_CRAFTING] = TSK.Warning_Crafting,
-    [MODS.GB_PETPAL] = TSK.Warning_PetPal,
-    [MODS.GB_LEVELUP_ITEMS] = TSK.Warning_LevelUpItems,
-    [MODS.GB_SUMMONING] = TSK.Warning_Summoning,
-    [MODS.GB_TALENTS] = TSK.Warning_Talents,
-    [MODS.GB_SPIRIT_VISION] = TSK.Warning_SpiritVision,
-}
----@type table<GUID, TextLib_TranslatedString>
-GBL.UNDESIRABLE_GIFTBAGS = { -- Show warnings upon being chosen.
-    [MODS.GB_RANDOMIZER] = TSK.Warning_Randomizer,
-    [MODS.GB_REST_SOURCE] = TSK.Warning_Rest,
-    [MODS.GB_ORGANIZATION] = TSK.Warning_Organization,
-    [MODS.GB_BARTER] = TSK.Warning_Barter,
-}
-
-local GBUI = Client.UI.GiftBagContent
 
 ---------------------------------------------
 -- EVENTS & HOOKS
@@ -145,26 +69,26 @@ local GBUI = Client.UI.GiftBagContent
 ---------------------------------------------
 
 ---Returns whether a giftbag is marked as incompatible with the current mod setup.
+---These will be prevented from being chosen.
 ---@param modGUID GUID
 ---@return boolean, table<GUID.Mod, TextLib.String>? -- Incompatibility status and reasons, if incompatible.
 function GBL.IsIncompatible(modGUID)
-    local eeReason = GBL.INCOMPATIBLE_GIFTBAGS[modGUID]
     local incompatibilityReasons = GBL.Hooks.IsIncompatible:Throw({
         ModGUID = modGUID,
-        IncompatibilityReasons = {[Mod.GUIDS.EE_CORE] = eeReason},
+        IncompatibilityReasons = {},
     }).IncompatibilityReasons
     local isIncompatible = next(incompatibilityReasons) ~= nil
     return isIncompatible, isIncompatible and incompatibilityReasons or nil
 end
 
 ---Returns whether a giftbag is marked as potentially undesirable with the current mod setup.
+---These will show warnings upon being chosen.
 ---@param modGUID GUID
 ---@return boolean, TextLib.String? -- Undesirability status and reason, if undesirable.
 function GBL.IsUndesirable(modGUID)
-    local eeReason = GBL.UNDESIRABLE_GIFTBAGS[modGUID]
     local undesirabilityReasons = GBL.Hooks.IsUndesirable:Throw({
         ModGUID = modGUID,
-        UndesirabilityReasons = {[Mod.GUIDS.EE_CORE] = eeReason},
+        UndesirabilityReasons = {},
     }).UndesirabilityReasons
     local isUndesirable = next(undesirabilityReasons) ~= nil
     return isUndesirable, isUndesirable and undesirabilityReasons or nil
@@ -223,10 +147,10 @@ GBUI.Hooks.GetContent:Subscribe(function (ev)
                 }))
             end
 
-            -- Preppend to description
+            -- Prepend to description
             local originalDescription = entry.Description
             entry.Description = Text.Join(incompatibilityStrings, "<br>")
-            entry.Description = entry.Description .. "<br>" .. originalDescription
+            entry.Description = entry.Description .. "<br><br>" .. originalDescription
 
             -- Only lock giftbags that are not already enabled - this is so they can still be disabled (if possible)
             if not entry.Enabled then
@@ -252,10 +176,10 @@ GBUI.Hooks.GetContent:Subscribe(function (ev)
                 }))
             end
 
-            -- Preppend to description
+            -- Prepend to description
             local originalDescription = entry.Description
             entry.Description = Text.Join(undesirabilityStrings, "<br>")
-            entry.Description = entry.Description .. "<br>" .. originalDescription
+            entry.Description = entry.Description .. "<br><br>" .. originalDescription
         end
     end
 end)
