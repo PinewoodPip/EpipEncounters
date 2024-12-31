@@ -5,13 +5,13 @@
 
 local MODS = Mod.GUIDS
 
----@type Feature
+---@class Features.GiftBagCompatibilityWarnings : Feature
 local GBL = {
-    enabledGiftbags = {},
-    warnedGiftbags = {},
-
     INCOMPATIBLE_LABEL_COLOR = "992f2f",
     UNDESIRABLE_LABEL_COLOR = "945b00",
+
+    _EnabledGiftbags = {},
+    _WarnedGiftbags = {},
 
     TranslatedStrings = {
         MsgBox_UndesirableWarning_Header = {
@@ -26,17 +26,17 @@ local GBL = {
         },
         Label_Incompatible = {
             Handle = "hf7564e88g6db5g4f04g9471g668f0f2902a1",
-            Text = "Incompatible with Epic Encounters.",
+            Text = "Incompatible with %s.",
             ContextDescription = "Shown for incompatible giftbags",
         },
         Label_Undesirable = {
             Handle = "h799a3ec0g65bdg4b30ga240gf12d6aca29c2",
-            Text = "Undesirable with Epic Encounters.",
+            Text = "Undesirable with %s.",
             ContextDescription = "Shown for undesirable/unnecessary giftbags",
         },
         Label_GiftbagDescription = {
             Handle = "h2883c225g0406g48ffg8c39g1439bdf66f38",
-            Text = "%s<br>Reason:<br>%s<br><br>%s",
+            Text = "%s<br>Reason:<br>%s",
             ContextDescription = "Template for problematic giftbag descriptions; params are warning (incompatible/undesirable), reason for the warning and original description",
         },
         Warning_8AP = {
@@ -95,6 +95,14 @@ local GBL = {
             ContextDescription = "EE compatibility warning for bartering giftbag",
         },
     },
+
+    USE_LEGACY_EVENTS = false,
+    USE_LEGACY_HOOKS = false,
+
+    Hooks = {
+        IsIncompatible = {}, ---@type Hook<Features.GiftBagCompatibilityWarnings.Hooks.IsIncompatible>
+        IsUndesirable = {}, ---@type Hook<Features.GiftBagCompatibilityWarnings.Hooks.IsUndesirable>
+    }
 }
 Epip.RegisterFeature("Features.GiftBagCompatibilityWarnings", GBL)
 local TSK = GBL.TranslatedStrings
@@ -121,6 +129,48 @@ GBL.UNDESIRABLE_GIFTBAGS = { -- Show warnings upon being chosen.
 local GBUI = Client.UI.GiftBagContent
 
 ---------------------------------------------
+-- EVENTS & HOOKS
+---------------------------------------------
+
+---@class Features.GiftBagCompatibilityWarnings.Hooks.IsIncompatible
+---@field ModGUID GUID
+---@field IncompatibilityReasons table<GUID.Mod, TextLib.String> Defaults to `{}`. The giftbag is considered incomaptible if any key is present.
+
+---@class Features.GiftBagCompatibilityWarnings.Hooks.IsUndesirable
+---@field ModGUID GUID
+---@field UndesirabilityReasons table<GUID.Mod, TextLib.String>? Defaults to `{}`. The mod is considered undesirable if key is present.
+
+---------------------------------------------
+-- METHODS
+---------------------------------------------
+
+---Returns whether a giftbag is marked as incompatible with the current mod setup.
+---@param modGUID GUID
+---@return boolean, table<GUID.Mod, TextLib.String>? -- Incompatibility status and reasons, if incompatible.
+function GBL.IsIncompatible(modGUID)
+    local eeReason = GBL.INCOMPATIBLE_GIFTBAGS[modGUID]
+    local incompatibilityReasons = GBL.Hooks.IsIncompatible:Throw({
+        ModGUID = modGUID,
+        IncompatibilityReasons = {[Mod.GUIDS.EE_CORE] = eeReason},
+    }).IncompatibilityReasons
+    local isIncompatible = next(incompatibilityReasons) ~= nil
+    return isIncompatible, isIncompatible and incompatibilityReasons or nil
+end
+
+---Returns whether a giftbag is marked as potentially undesirable with the current mod setup.
+---@param modGUID GUID
+---@return boolean, TextLib.String? -- Undesirability status and reason, if undesirable.
+function GBL.IsUndesirable(modGUID)
+    local eeReason = GBL.UNDESIRABLE_GIFTBAGS[modGUID]
+    local undesirabilityReasons = GBL.Hooks.IsUndesirable:Throw({
+        ModGUID = modGUID,
+        UndesirabilityReasons = {[Mod.GUIDS.EE_CORE] = eeReason},
+    }).UndesirabilityReasons
+    local isUndesirable = next(undesirabilityReasons) ~= nil
+    return isUndesirable, isUndesirable and undesirabilityReasons or nil
+end
+
+---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
 
@@ -128,15 +178,14 @@ local GBUI = Client.UI.GiftBagContent
 GBUI:RegisterCallListener("buttonPressed", function(ev)
     local _, id = ev.Args[1],ev.Args[2]
     local mod = GBUI.GetModGUID(id)
-    local isEnabled = GBL.enabledGiftbags[id]
-    local isIncompatible = GBL.INCOMPATIBLE_GIFTBAGS[mod]
-    local isUnwanted = GBL.UNDESIRABLE_GIFTBAGS[mod]
-
-    if not isEnabled then
+    local isEnabled = GBL._EnabledGiftbags[id]
+    local isIncompatible = GBL.IsIncompatible(mod)
+    local isUnwanted = GBL.IsUndesirable(mod)
+    if not isEnabled then -- Don't prevent disabling already-enabled giftbags.
         if isIncompatible then
             ev:PreventAction()
-        elseif isUnwanted and not GBL.warnedGiftbags[id] then
-            GBL.warnedGiftbags[id] = true
+        elseif isUnwanted and not GBL._WarnedGiftbags[id] then -- Only show warning once per session.
+            GBL._WarnedGiftbags[id] = true
             Client.UI.MessageBox.Open({
                 Header = TSK.MsgBox_UndesirableWarning_Header:GetString(),
                 Message = TSK.MsgBox_UndesirableWarning_Body:GetString(),
@@ -147,38 +196,66 @@ end)
 
 -- Append warnings to giftbag descriptions.
 GBUI.Hooks.GetContent:Subscribe(function (ev)
-    GBL.warnedGiftbags = {} -- Reset warning tracking anything the content updates (when the UI opens)
+    GBL._WarnedGiftbags = {} -- Reset warning tracking anything the content updates (when the UI opens)
 
     local content = ev.Content
     for _,entry in ipairs(content) do
-        GBL.enabledGiftbags[entry.ID] = entry.Enabled -- Track which giftbags are enabled
+        GBL._EnabledGiftbags[entry.ID] = entry.Enabled -- Track which giftbags are enabled
 
         -- Prepend incompatibility warnings
-        if GBL.INCOMPATIBLE_GIFTBAGS[entry.Mod] then
-            local reason = GBL.INCOMPATIBLE_GIFTBAGS[entry.Mod]
+        local isIncompatible, incompatibilityReasons = GBL.IsIncompatible(entry.Mod)
+        local isUndesirable, undesirabilityReasons = GBL.IsUndesirable(entry.Mod)
+        if isIncompatible then
+            -- Gather incompatibility reasons
+            local incompatibilityStrings = {} ---@type string
+            for modGUID,reason in pairs(incompatibilityReasons) do
+                local modData = Mod.Get(modGUID)
+                local modName = modData and modData.Info.Name or modGUID -- Fallback to GUID - ugly, but also allows a "hack" to display any string as the incomaptibility source.
+                if modGUID == Mod.GUIDS.EE_CORE then -- Special case.
+                    modName = "Epic Encounters"
+                end
 
-            entry.Description = TSK.Label_GiftbagDescription:Format({
-                FormatArgs = {
-                    {Text = TSK.Label_Incompatible, Color = GBL.INCOMPATIBLE_LABEL_COLOR},
-                    reason,
-                    entry.Description,
-                },
-            })
+                table.insert(incompatibilityStrings, TSK.Label_GiftbagDescription:Format({
+                    FormatArgs = {
+                        {Text = TSK.Label_Incompatible:Format(modName), Color = GBL.INCOMPATIBLE_LABEL_COLOR},
+                        reason,
+                    },
+                }))
+            end
+
+            -- Preppend to description
+            local originalDescription = entry.Description
+            entry.Description = Text.Join(incompatibilityStrings, "<br>")
+            entry.Description = entry.Description .. "<br>" .. originalDescription
 
             -- Only lock giftbags that are not already enabled - this is so they can still be disabled (if possible)
             if not entry.Enabled then
                 entry.Locked = true
             end
-        elseif GBL.UNDESIRABLE_GIFTBAGS[entry.Mod] then
-            local reason = GBL.UNDESIRABLE_GIFTBAGS[entry.Mod]
+        end
+        -- Also show undesirability reasons, even if the mod is already deemed incompatible for any other reasons.
+        if isUndesirable then
+            -- Gather undesirability reasons
+            local undesirabilityStrings = {} ---@type string
+            for modGUID,reason in pairs(undesirabilityReasons) do
+                local modData = Mod.Get(modGUID)
+                local modName = modData and modData.Info.Name or modGUID -- Fallback to GUID - ugly, but also allows a "hack" to display any string as the incomaptibility source.
+                if modGUID == Mod.GUIDS.EE_CORE then -- Special case.
+                    modName = "Epic Encounters"
+                end
 
-            entry.Description = TSK.Label_GiftbagDescription:Format({
-                FormatArgs = {
-                    {Text = TSK.Label_Undesirable, Color = GBL.UNDESIRABLE_LABEL_COLOR},
-                    reason,
-                    entry.Description,
-                }
-            })
+                table.insert(undesirabilityStrings, TSK.Label_GiftbagDescription:Format({
+                    FormatArgs = {
+                        {Text = TSK.Label_Undesirable:Format(modName), Color = GBL.UNDESIRABLE_LABEL_COLOR},
+                        reason,
+                    },
+                }))
+            end
+
+            -- Preppend to description
+            local originalDescription = entry.Description
+            entry.Description = Text.Join(undesirabilityStrings, "<br>")
+            entry.Description = entry.Description .. "<br>" .. originalDescription
         end
     end
 end)
