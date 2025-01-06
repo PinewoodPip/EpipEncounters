@@ -239,7 +239,7 @@ function _FormattedTooltip:InsertAfter(target, element)
     end
 
     if not inserted then
-        _FormattedTooltip:InsertElement(element)
+        self:InsertElement(element)
     end
 end
 
