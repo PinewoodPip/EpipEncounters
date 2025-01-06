@@ -121,7 +121,7 @@ end)
 Tab:RegisterListener(Vanity.Events.EntryRemoved, function(id)
     Client.UI.MessageBox.Open({
         ID = "PIP_Vanity_RemoveOutfit",
-        Header = TSK.Label_RemoveOutfit:GetString(),
+        Header = TSK.MsgBox_RemoveOutfit_Header:GetString(),
         Message = TSK.MsgBox_RemoveOutfit_Description:Format({
             FormatArgs = {id},
         }),
