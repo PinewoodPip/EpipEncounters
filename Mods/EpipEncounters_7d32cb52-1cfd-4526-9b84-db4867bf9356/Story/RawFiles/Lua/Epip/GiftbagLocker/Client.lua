@@ -58,7 +58,7 @@ local TSK = GBL.TranslatedStrings
 
 ---@class Features.GiftBagCompatibilityWarnings.Hooks.IsIncompatible
 ---@field ModGUID GUID
----@field IncompatibilityReasons table<GUID.Mod, TextLib.String> Defaults to `{}`. The giftbag is considered incomaptible if any key is present.
+---@field IncompatibilityReasons table<GUID.Mod, TextLib.String> Defaults to `{}`. The giftbag is considered incompatible if any key is present.
 
 ---@class Features.GiftBagCompatibilityWarnings.Hooks.IsUndesirable
 ---@field ModGUID GUID

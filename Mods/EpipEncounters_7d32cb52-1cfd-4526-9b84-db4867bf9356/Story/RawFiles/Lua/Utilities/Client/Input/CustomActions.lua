@@ -312,7 +312,7 @@ Input.Hooks.CanExecuteAction:Subscribe(function (ev)
     if execute then
         execute = not Client.IsInDialogue() -- Cannot execute in dialogue.
         execute = execute and not GameState.IsPaused() -- Cannot execute in pause.
-        execute = execute and Client.Input.IsAcceptingInput() -- Cannot execute while a UI is accepting text input.
+        execute = execute and Input.IsAcceptingInput() -- Cannot execute while a UI is accepting text input.
     end
 
     ev.CanExecute = execute

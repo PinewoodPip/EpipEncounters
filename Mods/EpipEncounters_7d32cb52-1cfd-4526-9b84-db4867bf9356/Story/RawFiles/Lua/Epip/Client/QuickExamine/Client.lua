@@ -216,7 +216,7 @@ end
 ---@param widget Features.QuickExamine.Widget
 function QuickExamine.RegisterWidget(widget)
     if not OOP.ImplementsClass(widget, _Widget) then
-        QuickExamine:Error("RegisterWidget", "Widget must inherit from Features.QuickExamine.Widget")
+        QuickExamine:__Error("RegisterWidget", "Widget must inherit from Features.QuickExamine.Widget")
     end
     table.insert(QuickExamine._Widgets, widget)
 end
@@ -438,7 +438,7 @@ QuickExamine.Events.EntityChanged:RegisterListener(function (entity)
             local success, msg = pcall(widget.Render, widget, entity)
 
             if not success then
-                QuickExamine:LogError("Error while rendering widget: " .. msg)
+                QuickExamine:__Error("Error while rendering widget: " .. msg)
             end
         end
 

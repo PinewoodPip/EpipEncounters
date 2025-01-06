@@ -86,7 +86,7 @@ function StatusConsole.UpdatePosition()
     local hotbarRowHeight = 57
     local offset = extraBars > 0 and -2 or 0
 
-    root.y = (-hotbarRowHeight * 1) * (extraBars) - offset
+    root.y = -hotbarRowHeight * (extraBars) - offset
 
     -- If UIScaling (the global switch only!) is not 1, the UIObject position on the Y axis is not 0; we need to compensate for this.
     if Ext.Utils.GetGlobalSwitches().UIScaling > 1 then

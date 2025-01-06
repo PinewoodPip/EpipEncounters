@@ -200,7 +200,7 @@ function _FormattedTooltip:InsertElement(element, index)
 end
 
 ---@param elementType TooltipLib_FormattedTooltipElementType?
----@return TooltipLib_Element[] If elementType is nil, the list will be passed by reference.
+---@return TooltipLib_Element[] -- If elementType is nil, the list will be passed by reference.
 function _FormattedTooltip:GetElements(elementType)
     local elements = {}
 

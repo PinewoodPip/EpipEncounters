@@ -63,6 +63,8 @@ end
 
 ---Creates a hotbar group.
 ---@param id string? Defaults to random GUID.
+---@param rows integer
+---@param columns integer
 ---@return Features.HotbarGroups.UI.Group
 function GroupManager.Create(id, rows, columns)
     local HotbarGroup = GroupManager:GetClass("Features.HotbarGroups.UI.Group")
