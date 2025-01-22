@@ -178,12 +178,10 @@ function UI._Initialize()
     gradient:SetPositionRelativeToParent("Center")
     UI.GradientImage = gradient
 
-    -- Padding between gradient and options
-    local padding = pickerContainer:AddChild("PickerPadding", "GenericUI_Element_Empty")
-    padding:SetSizeOverride(V(1, 15))
+    local settingsList = bg:AddChild("SettingsList", "GenericUI_Element_VerticalList")
 
     -- Hue slider
-    local hueSlider = LabelledSlider.Create(UI, "HueSlider", pickerContainer, UI.SLIDER_SIZE, TSK.Label_Hue:GetString(), 0, 360, 1)
+    local hueSlider = LabelledSlider.Create(UI, "HueSlider", settingsList, UI.SLIDER_SIZE, TSK.Label_Hue:GetString(), 0, 360, 1)
     -- Update hue upon slider value change.
     hueSlider.Events.HandleReleased:Subscribe(function (ev)
         local newHue = ev.Value
@@ -206,22 +204,20 @@ function UI._Initialize()
     hueSlider.Background:SetChildIndex(hueSliderSpectrum.Root, 1)
     UI.HueSlider = hueSlider
 
-    pickerContainer:RepositionElements()
-
     -- RGB sliders
-    local redSlider = LabelledSlider.Create(UI, "RedSlider", pickerContainer, UI.SLIDER_SIZE, CommonStrings.Red:GetString(), 0, 255, 1)
+    local redSlider = LabelledSlider.Create(UI, "RedSlider", settingsList, UI.SLIDER_SIZE, CommonStrings.Red:GetString(), 0, 255, 1)
     redSlider.Events.HandleReleased:Subscribe(function (ev)
         local newR = ev.Value
         local oldColor = UI._CurrentColor
         UI.SetColor(Color.Create(newR, oldColor.Green, oldColor.Blue))
     end)
-    local greenSlider = LabelledSlider.Create(UI, "GreenSlider", pickerContainer, UI.SLIDER_SIZE, CommonStrings.Green:GetString(), 0, 255, 1)
+    local greenSlider = LabelledSlider.Create(UI, "GreenSlider", settingsList, UI.SLIDER_SIZE, CommonStrings.Green:GetString(), 0, 255, 1)
     greenSlider.Events.HandleReleased:Subscribe(function (ev)
         local newG = ev.Value
         local oldColor = UI._CurrentColor
         UI.SetColor(Color.Create(oldColor.Red, newG, oldColor.Blue))
     end)
-    local blueSlider = LabelledSlider.Create(UI, "BlueSlider", pickerContainer, UI.SLIDER_SIZE, CommonStrings.Blue:GetString(), 0, 255, 1)
+    local blueSlider = LabelledSlider.Create(UI, "BlueSlider", settingsList, UI.SLIDER_SIZE, CommonStrings.Blue:GetString(), 0, 255, 1)
     blueSlider.Events.HandleReleased:Subscribe(function (ev)
         local newB = ev.Value
         local oldColor = UI._CurrentColor
@@ -236,7 +232,10 @@ function UI._Initialize()
         blueSlider:SetValue(b)
     end)
 
+    pickerContainer:RepositionElements()
     panelList:RepositionElements()
+    settingsList:RepositionElements()
+    settingsList:SetPositionRelativeToParent("Top", 0, pickerContainer:GetHeight() + 130) -- Padding is necessary to account for the UI header.
 
     UI._InitializePreviewWidget()
 
