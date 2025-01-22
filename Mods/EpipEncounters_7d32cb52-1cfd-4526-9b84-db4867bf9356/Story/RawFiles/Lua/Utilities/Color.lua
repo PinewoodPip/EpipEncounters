@@ -203,6 +203,28 @@ function RGBColor:ToFloats()
     return self.Red / 255, self.Green / 255, self.Blue / 255, self.Alpha / 255
 end
 
+---Converts RGB values to HSV.
+---Ignores alpha.
+---@return integer, integer, integer -- Hue, saturation, value.
+function RGBColor:ToHSV()
+    local r, g, b, _ = self:ToFloats()
+    local cmax, cmin = math.max(r, g, b), math.min(r, g, b)
+    local delta = cmax - cmin
+    local hue
+    if math.abs(delta) < 0.0000001 then
+        hue = 0
+    elseif cmax == r then
+        hue = 60 * (((g - b) / delta) % 6)
+    elseif cmax == g then
+        hue = 60 * (((b - r) / delta) + 2)
+    elseif cmax == b then
+        hue = 60 * (((r - g) / delta) + 4)
+    end
+    local saturation = math.abs(cmax) < 0.0000001 and 0 or (delta / cmax)
+    local value = cmax
+    return hue, saturation, value
+end
+
 ---Returns a new instance of RGBColor with the same values.
 ---@return RGBColor
 function RGBColor:Clone()
@@ -249,10 +271,38 @@ end
 
 ---Creates a color from a hexadecimal value.
 ---Does not support alpha.
----@param hex string
+---@param hex htmlcolor
 ---@return RGBColor
 function RGBColor.CreateFromHex(hex)
+    hex = hex:gsub("^#", "") -- Remove "#" prefix.
     return Color.Create(tonumber(string.sub(hex, 1, 2), 16), tonumber(string.sub(hex, 3, 4), 16), tonumber(string.sub(hex, 5, 6), 16))
+end
+
+---Creates a color from HSV values.
+---@param hue integer In degrees.
+---@param saturation number As fraction.
+---@param value number As fraction.
+---@return RGBColor, number, number, number -- Color and RGB values as floats.
+function RGBColor.CreateFromHSV(hue, saturation, value)
+    local c = value * saturation
+    local x = c * (1 - math.abs(((hue / 60) % 2) - 1))
+    local m = value - c
+    local r, g, b
+    if hue < 60 then
+        r, g, b = c, x, 0
+    elseif hue < 120 then
+        r, g, b = x, c, 0
+    elseif hue < 180 then
+        r, g, b = 0, c, x
+    elseif hue < 240 then
+        r, g, b = 0, x, c
+    elseif hue < 300 then
+        r, g, b = x, 0, c
+    else
+        r, g, b = c, 0, x
+    end
+    r, g, b = (r + m) * 255, (g + m) * 255, (b + m) * 255
+    return Color.CreateFromRGB(Ext.Round(r), Ext.Round(g), Ext.Round(b)), r, g, b
 end
 
 ---Returns whether 2 colors have the same RGBA values.
@@ -346,10 +396,20 @@ end
 
 ---Creates a color from an html-format hex color code.
 ---Does not support alpha.
----@param hex string
+---@param hex htmlcolor
 ---@return RGBColor
 function Color.CreateFromHex(hex)
     return RGBColor.CreateFromHex(hex)
+end
+
+---Creates a color from HSV values.
+---@param hue integer In degrees.
+---@param saturation number As percentage.
+---@param value number As percentage.
+---@return RGBColor
+function Color.CreateFromHSV(hue, saturation, value)
+    local color, _, _, _ = RGBColor.CreateFromHSV(hue, saturation, value)
+    return color
 end
 
 ---Clones a color instance.
@@ -370,4 +430,12 @@ function Color.Lerp(startColor, targetColor, progress)
     local b = math.lerp(startColor.Blue, targetColor.Blue, progress)
 
     return Color.CreateFromRGB(r, g, b, targetColor.Alpha)
+end
+
+---Returns whether a string is a valid hex color code.
+---@param text string May be prefixed with "#".
+---@return boolean
+function Color.IsHexColorCode(text)
+    text = text:gsub("^#", "")
+    return #text == 6 and tonumber(text, 16) ~= nil
 end
