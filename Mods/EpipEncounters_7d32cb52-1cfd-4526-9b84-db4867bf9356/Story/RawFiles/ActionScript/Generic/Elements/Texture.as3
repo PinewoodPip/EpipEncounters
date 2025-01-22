@@ -39,7 +39,7 @@ package Elements
             
             IggyFunctions.setTextureForBitmap(this.customBitmap, guid);
 
-            // Must be done setTextureForBitmap(); initial values for BitmapData constructor and IggyFunctions call are disregarded(?)
+            // Must be done after setTextureForBitmap(); initial values for BitmapData constructor and IggyFunctions call are disregarded(?)
             if (width != -1)
             {
                 this.customBitmap.width = width;
@@ -69,6 +69,12 @@ package Elements
             {
                 this.bitmapHolder.alpha = this._alpha;
             }
+        }
+
+        public override function SetSize(width:Number, height:Number) : *
+        {
+            this.width = width;
+            this.height = height;
         }
         
         public override function GetRawWidth(considerOverrides:Boolean=true) : Number
