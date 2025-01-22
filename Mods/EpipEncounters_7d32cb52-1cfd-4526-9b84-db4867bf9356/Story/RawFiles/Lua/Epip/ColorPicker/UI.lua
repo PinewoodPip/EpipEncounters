@@ -67,6 +67,8 @@ function UI.Setup(request)
 
     UI._CurrentRequest = request
 
+    UI:GetUI().SysPanelSize = UI.PANEL_SIZE
+    UI:SetPositionRelativeToViewport("center", "center")
     UI:Show()
 end
 
