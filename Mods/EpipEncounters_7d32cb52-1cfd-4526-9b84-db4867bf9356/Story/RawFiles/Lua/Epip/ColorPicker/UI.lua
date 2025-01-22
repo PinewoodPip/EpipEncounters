@@ -19,7 +19,8 @@ local UI = Generic.Create("Features.ColorPicker.UI")
 ColorPicker.UI = UI
 UI.PANEL_SIZE = V(700, 700)
 UI.PICKER_IMAGE_SIZE = V(64, 64)
-UI.HUE_SLIDER_SIZE = V(550, 50)
+UI.SLIDER_SIZE = V(550, 50)
+UI.SPECTRUM_SIZE = V(400, UI.SLIDER_SIZE[2]) -- Size of the hue spectrum preview.
 UI.SETTINGS_SIZE = V(500, 50)
 UI.HEADER_FONT_SIZE = 24
 UI.PREVIEW_COLOR_SIZE = V(80, 80)
@@ -174,8 +175,8 @@ function UI._Initialize()
     end)
     UI.GradientImage = gradient
 
-    -- Hue slider TODO preview the hue range
-    local hueSlider = LabelledSlider.Create(UI, "HueSlider", pickerContainer, UI.HUE_SLIDER_SIZE, TSK.Label_Hue:GetString(), 0, 360, 1)
+    -- Hue slider
+    local hueSlider = LabelledSlider.Create(UI, "HueSlider", pickerContainer, UI.SLIDER_SIZE, TSK.Label_Hue:GetString(), 0, 360, 1)
     -- Update hue upon slider value change.
     hueSlider.Events.HandleReleased:Subscribe(function (ev)
         local newHue = ev.Value
@@ -183,24 +184,37 @@ function UI._Initialize()
         local _, saturation, value = currentColor:ToHSV()
         UI.SetColor(Color.CreateFromHSV(newHue, saturation, value))
     end)
+    -- Render a preview image underneath the slider so the user knows the color spectrum at quick glance.
+    img = Client.Image.CreateImage(352, 16) -- Hope nobody notices 8 degrees are missing to have the texture width be multiple of 16x lmao
+    for _=1,16,1 do
+        for hue=1,352,1 do
+            local color = Color.CreateFromHSV(hue, 1, 1)
+            img:AddPixel(color)
+        end
+    end
+    local hueSliderSpectrum = ImagePrefab.Create(UI, "HueSliderSpectrum", hueSlider.Background, img)
+    hueSliderSpectrum:SetSize(hueSlider.Slider:GetWidth() - 40, 25)
+    hueSliderSpectrum:SetPositionRelativeToParent("Right", -80, 0)
+    hueSliderSpectrum:SetSize(hueSlider.Slider:GetWidth() - 40, 25) -- Needs to called again due to SetPositionRelativeToParent() jank related to restoring scale... bruh
+    hueSlider.Background:SetChildIndex(hueSliderSpectrum.Root, 1)
     UI.HueSlider = hueSlider
 
     pickerContainer:RepositionElements()
 
     -- RGB sliders
-    local redSlider = LabelledSlider.Create(UI, "RedSlider", pickerContainer, UI.HUE_SLIDER_SIZE, CommonStrings.Red:GetString(), 0, 255, 1)
+    local redSlider = LabelledSlider.Create(UI, "RedSlider", pickerContainer, UI.SLIDER_SIZE, CommonStrings.Red:GetString(), 0, 255, 1)
     redSlider.Events.HandleReleased:Subscribe(function (ev)
         local newR = ev.Value
         local oldColor = UI._CurrentColor
         UI.SetColor(Color.Create(newR, oldColor.Green, oldColor.Blue))
     end)
-    local greenSlider = LabelledSlider.Create(UI, "GreenSlider", pickerContainer, UI.HUE_SLIDER_SIZE, CommonStrings.Green:GetString(), 0, 255, 1)
+    local greenSlider = LabelledSlider.Create(UI, "GreenSlider", pickerContainer, UI.SLIDER_SIZE, CommonStrings.Green:GetString(), 0, 255, 1)
     greenSlider.Events.HandleReleased:Subscribe(function (ev)
         local newG = ev.Value
         local oldColor = UI._CurrentColor
         UI.SetColor(Color.Create(oldColor.Red, newG, oldColor.Blue))
     end)
-    local blueSlider = LabelledSlider.Create(UI, "BlueSlider", pickerContainer, UI.HUE_SLIDER_SIZE, CommonStrings.Blue:GetString(), 0, 255, 1)
+    local blueSlider = LabelledSlider.Create(UI, "BlueSlider", pickerContainer, UI.SLIDER_SIZE, CommonStrings.Blue:GetString(), 0, 255, 1)
     blueSlider.Events.HandleReleased:Subscribe(function (ev)
         local newB = ev.Value
         local oldColor = UI._CurrentColor

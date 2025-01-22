@@ -19,6 +19,12 @@ package Elements
             return "Empty";
         }
 
+        public override function SetSize(width:Number, height:Number) : *
+        {
+            this.width = width;
+            this.height = height;
+        }
+
         public override function SetMouseEnabled(enabled:Boolean) : *
         {
             this.mouseEnabled = enabled;
