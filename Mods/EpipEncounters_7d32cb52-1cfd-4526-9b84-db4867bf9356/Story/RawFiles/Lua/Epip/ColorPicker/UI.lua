@@ -148,7 +148,7 @@ function UI._Initialize()
 
     -- Picker panel
     local pickerContainer = panelList:AddChild("PickerContainer", "GenericUI_Element_VerticalList")
-    pickerContainer:SetElementSpacing(15)
+    pickerContainer:SetElementSpacing(10)
     pickerContainer:Move(0, 40)
     UI.PickerContainer = pickerContainer
 
@@ -159,7 +159,9 @@ function UI._Initialize()
             img:AddPixel(Color.CreateFromHex(Color.BLACK))
         end
     end
-    local gradient = ImagePrefab.Create(UI, "PickerImage", pickerContainer, img)
+    local gradientHolder = UI:CreateElement("GradientContainer", "GenericUI_Element_Texture", pickerContainer)
+    gradientHolder:SetTexture(TEXTURES.FRAMES.BROWN, V(272, 272))
+    local gradient = ImagePrefab.Create(UI, "PickerImage", gradientHolder, img)
     -- Set picked color upon clicking on the gradient.
     gradient.Root.Events.MouseDown:Subscribe(function (_) -- TODO inherit events
         local mc = gradient.Root:GetMovieClip()
@@ -173,7 +175,12 @@ function UI._Initialize()
         -- We must store the color as float, as otherwise hue loss issues occur when clicking certain parts of the gradient to pick new colors.
         UI._CurrentColorFloats = V(newR, newG, newB)
     end)
+    gradient:SetPositionRelativeToParent("Center")
     UI.GradientImage = gradient
+
+    -- Padding between gradient and options
+    local padding = pickerContainer:AddChild("PickerPadding", "GenericUI_Element_Empty")
+    padding:SetSizeOverride(V(1, 15))
 
     -- Hue slider
     local hueSlider = LabelledSlider.Create(UI, "HueSlider", pickerContainer, UI.SLIDER_SIZE, TSK.Label_Hue:GetString(), 0, 360, 1)
