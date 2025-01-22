@@ -18,6 +18,10 @@ function Text:SetType(textType) end
 ---@param editable boolean
 function Text:SetEditable(editable) end
 
+---Sets the text field's focus state.
+---@param focused boolean
+function Text:SetFocused(focused) end
+
 ---Returns whether the text field is being edited by the user.
 ---@return boolean
 function Text:IsFocused(editable) end

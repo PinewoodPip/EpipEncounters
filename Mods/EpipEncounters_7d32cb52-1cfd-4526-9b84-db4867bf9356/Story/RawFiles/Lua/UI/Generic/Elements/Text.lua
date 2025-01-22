@@ -134,10 +134,18 @@ function Text:SetTextFormat(textFormat, startIndex, endIndex)
     mc.SetTextFormat(startIndex or -1, endIndex or -1)
 end
 
+---Sets the maximum characters that the user can enter into the text field.
+---Does not affect scripted sets nor current text.
+---@param length integer
+function Text:SetMaxCharacters(length)
+    self:GetMovieClip().text_txt.maxChars = length
+end
+
 _Text.SetText = Generic.ExposeFunction("SetText")
 _Text.SetType = Generic.ExposeFunction("SetType")
 _Text.SetEditable = Generic.ExposeFunction("SetEditable")
 _Text.IsFocused = Generic.ExposeFunction("IsFocused")
+_Text.SetFocused = Generic.ExposeFunction("SetFocused")
 _Text.SetRestrictedCharacters = Generic.ExposeFunction("SetRestrictedCharacters")
 _Text.GetLineWidth = Generic.ExposeFunction("GetLineWidth")
 _Text.GetLineHeight = Generic.ExposeFunction("GetLineHeight")

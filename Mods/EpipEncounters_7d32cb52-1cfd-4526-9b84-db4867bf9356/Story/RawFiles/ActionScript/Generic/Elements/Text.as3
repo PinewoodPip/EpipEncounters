@@ -19,6 +19,7 @@ package Elements
 
         public var _cachedText:String = "";
         private var _editable:Boolean = false;
+        private var _focused:Boolean = false;
 
         public var _nextTextFormatProperties:Object = null; // Proxy object to set text format properties from lua. For optimization purposes, this is only initialized when necessary.
 
@@ -205,6 +206,21 @@ package Elements
             }
         }
 
+        public function SetFocused(focused:Boolean) : *
+        {
+            if (focused != this._focused)
+            {
+                if (focused)
+                {
+                    this.root.stage.focus = this.text_txt;
+                }
+                else
+                {
+                    this.root.stage.focus = null;
+                }
+            }
+        }
+
         private function acceptSave() : *
         {
             var _loc1_:String = this.text_txt.text;
@@ -240,6 +256,8 @@ package Elements
                 ExternalInterface.call("inputFocus");
 
                 ExternalInterface.call("Text_Focused", this.stringID);
+
+                this._focused = true;
             }
         }
         
@@ -249,6 +267,8 @@ package Elements
             ExternalInterface.call("inputFocusLost");
 
             ExternalInterface.call("Text_Unfocused", this.stringID);
+
+            this._focused = false;
         }
         
         private function strReplace(param1:String, param2:String, param3:String) : String
