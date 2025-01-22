@@ -297,7 +297,7 @@ Client.Input.Events.KeyStateChanged:Subscribe(function (ev)
     if ev.InputID == "lshift" then
         Bar._Update()
     end
-end, {EnabledFunctor = function () return Bar:Exists() end})
+end, {EnabledFunctor = function () return Bar:Exists() and GameState.IsInRunningSession() end})
 
 -- Set opacity for stack backgrounds based on if the amount if enough to inflict a T3.
 Bar.Hooks.GetStackOpacity:Subscribe(function (ev)
