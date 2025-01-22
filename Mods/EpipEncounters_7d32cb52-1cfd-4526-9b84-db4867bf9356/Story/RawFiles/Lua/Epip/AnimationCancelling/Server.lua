@@ -19,6 +19,13 @@ AnimCancel.SAFE_SKILL_TYPES = Set.Create({
     "Tornado",
 })
 
+---Applies to non-player characters only.
+---@type set<GUID>
+AnimCancel.CHARACTER_BLACKLIST = {
+    ["d783285f-d3be-4cba-8333-db8976cef182"] = true, -- S_GLO_Windego; causes infinite loop in the tutorial cutscene.
+    ["69b951dc-55a4-44b8-a2d5-5efedbd7d572"] = true, -- S_GLO_Dallis; causes infinite loop in the Fort Joy purging scene.
+}
+
 ---------------------------------------------
 -- EVENTS/HOOKS
 ---------------------------------------------
@@ -95,7 +102,8 @@ end
 ---@param char EsvCharacter
 ---@return boolean
 function AnimCancel.IsCharacterEligible(char)
-    return Character.IsPlayer(char) or AnimCancel.IsEnemyCancellingEnabled()
+    local isEligible = Character.IsPlayer(char) or (AnimCancel.IsEnemyCancellingEnabled() and not AnimCancel.CHARACTER_BLACKLIST[char.MyGuid])
+    return isEligible
 end
 
 ---Returns whether NPC animations can be cancelled.
