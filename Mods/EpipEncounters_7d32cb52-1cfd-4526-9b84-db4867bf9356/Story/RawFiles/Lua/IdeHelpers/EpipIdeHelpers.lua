@@ -22,7 +22,7 @@
 ---@alias date string
 ---@alias skill string Skill ID.
 ---@alias tag string
----@alias htmlcolor string
+---@alias htmlcolor string May be prefixed with "#"
 ---@alias listenabletype "Event"|"Hook"
 ---@alias language string
 ---@alias inputdevice "KeyboardAndMouse"|"Controller"

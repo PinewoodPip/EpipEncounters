@@ -1331,18 +1331,6 @@ local Textures = {
                 GOLDEN = T("PIP_UI_Frame_Portrait_Golden", {
                     GUID = "f77e3f35-314d-46cc-9440-500839a808dd",
                 }),
-                GOLDEN_HIGHLIGHTED = T("PIP_UI_Frame_Slot_Fancy_Gold_Highlighted", {
-                    GUID = "b345e0ff-f3ad-466a-886d-73eb934bb334",
-                }),
-                FANCY_SLOT_BRIGHT = T("PIP_UI_Frame_Slot_Fancy_Large_Bright", {
-                    GUID = "876cc33b-feca-455b-bc39-002a2f32e42c",
-                }),
-                SILVER = T("PIP_UI_Frame_Slot_Fancy_Silver", {
-                    GUID = "eb313b8b-54b8-4d08-b716-45b4f4dfea8e",
-                }),
-                SILVER_HIGHLIGHTED = T("PIP_UI_Frame_Slot_Fancy_Silver_Highlighted", {
-                    GUID = "45f65faf-d7ab-4295-8c06-e8ea56cd5e65",
-                }),
                 BEIGE = T("PIP_UI_Frame_Portrait_Beige", {
                     GUID = "1ec759f8-c08e-49ae-b7cf-cacf01071542",
                 }),
@@ -1491,6 +1479,18 @@ local Textures = {
                 }),
                 FANCY_GOLD = T("PIP_UI_Frame_Slot_Fancy_Gold", {
                     GUID = "c7e1451c-ad81-4e17-a874-b4330d106632",
+                }),
+                GOLDEN_HIGHLIGHTED = T("PIP_UI_Frame_Slot_Fancy_Gold_Highlighted", {
+                    GUID = "b345e0ff-f3ad-466a-886d-73eb934bb334",
+                }),
+                FANCY_SLOT_BRIGHT = T("PIP_UI_Frame_Slot_Fancy_Large_Bright", {
+                    GUID = "876cc33b-feca-455b-bc39-002a2f32e42c",
+                }),
+                SILVER = T("PIP_UI_Frame_Slot_Fancy_Silver", {
+                    GUID = "eb313b8b-54b8-4d08-b716-45b4f4dfea8e",
+                }),
+                SILVER_HIGHLIGHTED = T("PIP_UI_Frame_Slot_Fancy_Silver_Highlighted", {
+                    GUID = "45f65faf-d7ab-4295-8c06-e8ea56cd5e65",
                 }),
             },
             STATUS = T("PIP_UI_Frame_Status", {

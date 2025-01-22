@@ -419,6 +419,12 @@ LOAD_ORDER = {
             "Epip/IconPicker/UI.lua",
         },
     },
+    {
+        Scripts = {
+            "Epip/ColorPicker/Client.lua",
+            "Epip/ColorPicker/UI.lua",
+        },
+    },
     "Epip/SkillPicker/Client.lua",
     {
         Scripts = {

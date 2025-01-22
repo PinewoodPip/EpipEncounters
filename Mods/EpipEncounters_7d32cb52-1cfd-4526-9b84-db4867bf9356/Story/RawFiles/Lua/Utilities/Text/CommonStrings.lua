@@ -413,6 +413,19 @@ Text.CommonStrings.Random = Text.RegisterTranslatedString({
     Handle = "hcb50611fg556ag42f1gac9fgd36826106744",
     Text = "Random",
 })
+Text.CommonStrings.Preview = Text.RegisterTranslatedString({
+    Handle = "h35aae55eg8978g4167gbd48g16d0ef3fbc62",
+    Text = "Preview",
+})
+Text.CommonStrings.Copy = Text.RegisterTranslatedString({
+    Handle = "hed140640g9989g44adg9ba8ga1c8ee451488",
+    Text = "Copy",
+})
+Text.CommonStrings.Paste = Text.RegisterTranslatedString({
+    Handle = "h63ede9d0g0e86g4079ga81eg9ad76eb5c6df",
+    Text = "Paste",
+    ContextDescription = [[As in, "paste from clipboard"]],
+})
 
 ---------------------------------------------
 -- BRANDING
@@ -427,6 +440,26 @@ Text.CommonStrings.TeamPinewood = Text.RegisterTranslatedString({
    Handle = "h48e0051bg2cc7g4ef2gbea8gbe8152ee6413",
    ContextDescription = "Do not translate",
    Text = "Team Pinewood",
+})
+
+---------------------------------------------
+-- COLORS
+---------------------------------------------
+
+Text.CommonStrings.Red = Text.RegisterTranslatedString({
+    Handle = "h0e272276g80feg4fe8gbc82g620aa85b0cbc",
+    Text = "Red",
+    ContextDescription = "As in, the color.",
+})
+Text.CommonStrings.Green = Text.RegisterTranslatedString({
+    Handle = "hf7e4ab5egf7deg4432gb346g217f6a162608",
+    Text = "Green",
+    ContextDescription = "As in, the color.",
+})
+Text.CommonStrings.Blue = Text.RegisterTranslatedString({
+    Handle = "hd2164b0fg76dbg4467ga82fg8a228f145091",
+    Text = "Blue",
+    ContextDescription = "As in, the color.",
 })
 
 ---------------------------------------------
