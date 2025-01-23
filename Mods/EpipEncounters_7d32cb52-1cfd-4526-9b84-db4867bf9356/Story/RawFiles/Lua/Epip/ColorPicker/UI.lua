@@ -25,6 +25,8 @@ UI.SPECTRUM_SIZE = V(400, UI.SLIDER_SIZE[2]) -- Size of the hue spectrum preview
 UI.SETTINGS_SIZE = V(500, 50)
 UI.HEADER_FONT_SIZE = 24
 UI.PREVIEW_COLOR_SIZE = V(80, 80)
+UI.CROSSHAIR_WIDTH = 2 -- In pixels.
+UI.CROSSHAIR_INVERT_COLOR_THRESHOLD = 0.3 -- Value threshold to invert the crosshair color to white for better contrast.
 UI.PREVIEW_COLOR_PADDING = V(56, 56) -- Per-axe padding for the color preview.
 UI.Events = {
     ColorChanged = SubscribableEvent:New("ColorChanged"), ---@type Event<{NewColor:RGBColor}>
@@ -201,6 +203,31 @@ function UI._Initialize()
     end)
     gradient:SetPositionRelativeToParent("Center")
     UI.GradientImage = gradient
+
+    -- Gradient crosshair
+    local gradientCrosshairX = gradientHolder:AddChild("GradientCrosshairX", "GenericUI_Element_Color")
+    local gradientCrosshairY = gradientHolder:AddChild("GradientCrosshairY", "GenericUI_Element_Color")
+    gradientCrosshairX:SetMouseEnabled(false)
+    gradientCrosshairY:SetMouseEnabled(false)
+    gradientCrosshairX:SetSize(gradient:GetWidth(), UI.CROSSHAIR_WIDTH)
+    gradientCrosshairY:SetSize(UI.CROSSHAIR_WIDTH, gradient:GetHeight())
+    -- Update crosshair position when color changes.
+    UI.Events.ColorChanged:Subscribe(function (ev)
+        local _, saturation, value = ev.NewColor:ToHSV() -- Top-left is (0, 1)
+        local gradientSize = gradient:GetSize()
+
+        -- Set position to new color coordinates.
+        gradientCrosshairY:SetPosition((1 - value) * gradientSize[1] * 1.03, 0) -- The mysterious 1.03 is necessary for it to fully match up cursor position when on the far right side. Yup.
+        gradientCrosshairX:SetPosition(0, saturation * gradientSize[2])
+        gradientCrosshairX:Move(8, 5) -- Offset position to compensate for frame size.
+        gradientCrosshairY:Move(8, 7)
+
+        -- Use black or white color based on value / X position to have good contrast.
+        local crosshairColor = value < UI.CROSSHAIR_INVERT_COLOR_THRESHOLD and Color.CreateFromHex(Color.WHITE) or Color.CreateFromHex(Color.BLACK)
+        gradientCrosshairX:SetColor(crosshairColor)
+        gradientCrosshairY:SetColor(crosshairColor)
+    end)
+    UI.GradientCrosshairX, UI.GradientCrosshairY = gradientCrosshairX, gradientCrosshairY
 
     local settingsList = bg:AddChild("SettingsList", "GenericUI_Element_VerticalList")
 
