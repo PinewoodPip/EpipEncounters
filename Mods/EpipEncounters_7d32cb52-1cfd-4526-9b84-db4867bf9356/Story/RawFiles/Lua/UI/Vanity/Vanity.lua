@@ -315,6 +315,8 @@ local Vanity = {
         EntryRemoved = {},
         ---@type VanityUI_Event_ButtonPressed
         ButtonPressed = {},
+        ---@type VanityUI_Event_ButtonPressed
+        ColorPressed = {},
         ---@type VanityUI_Event_EntryFavoriteToggled
         EntryFavoriteToggled = {},
         ---@type VanityUI_Event_TabButtonPressed
@@ -1295,6 +1297,11 @@ end)
 
 Vanity:RegisterCallListener("pipListButtonClicked", function(_, id)
     Vanity.Events.ButtonPressed:Fire(Vanity.currentTab, id)
+end)
+
+-- Forward events for clicking color previews.
+Vanity:RegisterCallListener("ColorClicked", function(_, id)
+    Vanity.Events.ColorPressed:Fire(Vanity.currentTab, id)
 end)
 
 local function OnComboSelected(_, _, id, index, oldIndex)

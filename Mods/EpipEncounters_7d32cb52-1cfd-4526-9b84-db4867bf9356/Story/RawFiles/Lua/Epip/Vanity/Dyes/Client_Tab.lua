@@ -1,6 +1,7 @@
 
 local Vanity = Client.UI.Vanity
 local VanityFeature = Epip.GetFeature("Feature_Vanity")
+local ColorPicker = Epip.GetFeature("Features.ColorPicker")
 
 ---@class Feature_Vanity_Dyes
 local Dyes = Epip.GetFeature("Feature_Vanity_Dyes")
@@ -318,5 +319,20 @@ end)
 Client.UI.MessageBox.RegisterMessageListener("PIP_Vanity_RemoveDye", Client.UI.MessageBox.Events.ButtonPressed, function(buttonID, data)
     if buttonID == 0 then
         Dyes.DeleteCustomDye(data.DyeID)
+    end
+end)
+
+-- Bring up the Color Picker when clicking on the color previews.
+Tab:RegisterListener(Vanity.Events.ColorPressed, function(id)
+    if id:find("Color_Label_") then
+        local colorIndex = tonumber(id:sub(-1))
+        ColorPicker.Request("Features.Vanity.Dyes.UI.Color." .. colorIndex, Dyes.currentSliderColor["Color" .. colorIndex])
+    end
+end)
+ColorPicker.Events.ColorPicked:Subscribe(function (ev)
+    if ev.RequestID:find("Features.Vanity.Dyes.UI.Color.", nil, true) then
+        local colorIndex = tonumber(ev.RequestID:sub(-1))
+        Dyes.currentSliderColor["Color" .. colorIndex] = ev.Color
+        Tab:SetSliderColor(colorIndex, ev.Color, true)
     end
 end)

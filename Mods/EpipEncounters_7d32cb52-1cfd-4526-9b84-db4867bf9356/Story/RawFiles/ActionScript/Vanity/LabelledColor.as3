@@ -2,6 +2,8 @@ package
 {
     import flash.display.MovieClip;
     import flash.geom.ColorTransform;
+    import flash.events.MouseEvent;
+    import flash.external.ExternalInterface;
     
     public dynamic class LabelledColor extends MovieClip
     {
@@ -14,6 +16,7 @@ package
             super();
             this.setColor(color, label);
             this.text_mc.setWidth(200);
+            this.color_mc.addEventListener(MouseEvent.MOUSE_UP, this.onMouseUp);
             addFrameScript(0,this.frame1);
         }
 
@@ -31,6 +34,11 @@ package
         public function setInput(text:String) : *
         {
             this.inputField_mc.setText(text);
+        }
+
+        private function onMouseUp(event:MouseEvent) : *
+        {
+            ExternalInterface.call("ColorClicked", this.id); // ID is set by VanityMenu.
         }
         
         function frame1() : *
