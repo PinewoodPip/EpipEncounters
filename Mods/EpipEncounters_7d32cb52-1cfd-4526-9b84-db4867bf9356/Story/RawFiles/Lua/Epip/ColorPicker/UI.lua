@@ -24,7 +24,7 @@ UI.SPECTRUM_SIZE = V(400, UI.SLIDER_SIZE[2]) -- Size of the hue spectrum preview
 UI.SETTINGS_SIZE = V(500, 50)
 UI.HEADER_FONT_SIZE = 24
 UI.PREVIEW_COLOR_SIZE = V(80, 80)
-UI.PREVIEW_COLOR_PADDING = V(58, 58) -- Per-axe padding for the color preview.
+UI.PREVIEW_COLOR_PADDING = V(56, 56) -- Per-axe padding for the color preview.
 UI.Events = {
     ColorChanged = SubscribableEvent:New("ColorChanged"), ---@type Event<{NewColor:RGBColor}>
 }
@@ -63,7 +63,7 @@ local TSK = {
 function UI.Setup(request)
     UI._Initialize()
 
-    UI.SetColor(request.DefaultColor)
+    UI.SetColor(request.DefaultColor, true)
 
     UI._CurrentRequest = request
 
@@ -74,10 +74,11 @@ end
 
 ---Sets the selected color.
 ---@param color RGBColor
-function UI.SetColor(color)
+---@param updateHue boolean? Whether to force-update the hue slider and gradient. Defaults to `false`.
+function UI.SetColor(color, updateHue)
     local currentColor = UI._CurrentColor
     local hue, _, _ = color:ToHSV()
-    local hueChanged = currentColor == nil
+    local hueChanged = currentColor == nil or updateHue
     if not hueChanged then
         local oldHue, _, _ = currentColor:ToHSV()
         hueChanged = math.abs(hue - oldHue) > 0.8 -- Needs to be a high threshold due to loss when converting to & from HSV using integer RGB
@@ -100,6 +101,11 @@ function UI.SetColor(color)
             end
         end
         UI.GradientImage:SetImage(img)
+    end
+
+    -- Update hue slider.
+    if updateHue then
+        UI.HueSlider:SetValue(Ext.Round(hue))
     end
 end
 
@@ -211,19 +217,19 @@ function UI._Initialize()
     redSlider.Events.HandleReleased:Subscribe(function (ev)
         local newR = ev.Value
         local oldColor = UI._CurrentColor
-        UI.SetColor(Color.Create(newR, oldColor.Green, oldColor.Blue))
+        UI.SetColor(Color.Create(newR, oldColor.Green, oldColor.Blue), true)
     end)
     local greenSlider = LabelledSlider.Create(UI, "GreenSlider", settingsList, UI.SLIDER_SIZE, CommonStrings.Green:GetString(), 0, 255, 1)
     greenSlider.Events.HandleReleased:Subscribe(function (ev)
         local newG = ev.Value
         local oldColor = UI._CurrentColor
-        UI.SetColor(Color.Create(oldColor.Red, newG, oldColor.Blue))
+        UI.SetColor(Color.Create(oldColor.Red, newG, oldColor.Blue), true)
     end)
     local blueSlider = LabelledSlider.Create(UI, "BlueSlider", settingsList, UI.SLIDER_SIZE, CommonStrings.Blue:GetString(), 0, 255, 1)
     blueSlider.Events.HandleReleased:Subscribe(function (ev)
         local newB = ev.Value
         local oldColor = UI._CurrentColor
-        UI.SetColor(Color.Create(oldColor.Red, oldColor.Green, newB))
+        UI.SetColor(Color.Create(oldColor.Red, oldColor.Green, newB), true)
     end)
 
     -- Update RGB sliders when color is changed.
@@ -293,7 +299,7 @@ function UI._InitializePreviewWidget()
     htmlField.Events.TextEdited:Subscribe(function (ev)
         local text = ev.Text
         if Color.IsHexColorCode(text) then
-            UI.SetColor(Color.CreateFromHex(text))
+            UI.SetColor(Color.CreateFromHex(text), true)
         end
     end)
     UI.Events.ColorChanged:Subscribe(function (ev)
@@ -329,10 +335,7 @@ function UI._InitializePreviewWidget()
             htmlField:SetFocused(false)
             if Color.IsHexColorCode(text) then
                 local newColor = Color.CreateFromHex(text)
-                UI.SetColor(newColor)
-
-                -- Update hue slider, which otherwise has no listeners to update itself due to precision loss bugs. TODO!
-                UI.HueSlider:SetValue(Ext.Round(newColor:ToHSV()))
+                UI.SetColor(newColor, true)
             else
                 Notification.ShowNotification(TSK.Notification_InvalidPaste:GetString())
             end
@@ -355,6 +358,11 @@ local TryHide = function (_)
 end
 ColorPicker.Events.RequestCancelled:Subscribe(TryHide)
 ColorPicker.Events.ColorPicked:Subscribe(TryHide)
+
+-- Open the UI to handle requests.
+ColorPicker.Events.ColorRequested:Subscribe(function (ev)
+    UI.Setup(ev)
+end, {StringID = "DefaultImplementation"})
 
 -- Show Color Picker on session load in debug mode.
 GameState.Events.ClientReady:Subscribe(function (_)
