@@ -9,6 +9,7 @@ local DraggingArea = Generic.GetPrefab("GenericUI_Prefab_DraggingArea")
 local TEXTURES = Epip.GetFeature("Feature_GenericUITextures").TEXTURES
 local Notification = Client.UI.Notification
 local MsgBox = Client.UI.MessageBox
+local Input = Client.Input
 local CommonStrings = Text.CommonStrings
 local V = Vector.Create
 
@@ -124,6 +125,22 @@ function UI._SetTextColorWithStroke(textField, label, color)
     textField:SetStroke(strokeColor:ToDecimal(), 2, 1, 15, 20)
 end
 
+---Selects a color based on the cursor position over the gradient image.
+---Expects cursor to be over the gradient.
+function UI._SelectColorFromGradient()
+    local gradient = UI.GradientImage
+    local mc = gradient.Root:GetMovieClip()
+    local mouseX, mouseY = mc.mouseX, mc.mouseY
+    local w, h = gradient.Root:GetSize():unpack()
+    local saturation, value = mouseY / w, 1 - mouseX / h
+    saturation, value = math.clamp(saturation, 0, 1), math.clamp(value, 0, 1)
+    local hue, _, _ = UI._CurrentColor:ToHSV()
+    local newColor, newR, newG, newB = Color.CreateFromHSV(hue, saturation, value)
+    UI.SetColor(newColor) -- Hue is altered via a slider instead.
+    -- We must store the color as float, as otherwise hue loss issues occur when clicking certain parts of the gradient to pick new colors.
+    UI._CurrentColorFloats = V(newR, newG, newB)
+end
+
 ---Initializes the UI's static elements.
 function UI._Initialize()
     if UI._Initialized then return end
@@ -170,18 +187,17 @@ function UI._Initialize()
     local gradientHolder = UI:CreateElement("GradientContainer", "GenericUI_Element_Texture", pickerContainer)
     gradientHolder:SetTexture(TEXTURES.FRAMES.BROWN, V(272, 272))
     local gradient = ImagePrefab.Create(UI, "PickerImage", gradientHolder, img)
+    gradient:SetMouseMoveEventEnabled(true)
     -- Set picked color upon clicking on the gradient.
-    gradient.Root.Events.MouseDown:Subscribe(function (_) -- TODO inherit events
-        local mc = gradient.Root:GetMovieClip()
-        local mouseX, mouseY = mc.mouseX, mc.mouseY
-        local w, h = gradient.Root:GetSize():unpack()
-        local saturation, value = mouseY / w, 1 - mouseX / h
-        saturation, value = math.clamp(saturation, 0, 1), math.clamp(value, 0, 1)
-        local hue, _, _ = UI._CurrentColor:ToHSV()
-        local newColor, newR, newG, newB = Color.CreateFromHSV(hue, saturation, value)
-        UI.SetColor(newColor) -- Hue is altered via a slider instead.
-        -- We must store the color as float, as otherwise hue loss issues occur when clicking certain parts of the gradient to pick new colors.
-        UI._CurrentColorFloats = V(newR, newG, newB)
+    gradient.Root.Events.MouseDown:Subscribe(function (_)
+        UI._SelectColorFromGradient()
+    end)
+    -- Also select colors while left-click is held down.
+    -- This allows click-and-hold controls while moving the mouse across the gradient.
+    gradient.Root.Events.MouseMove:Subscribe(function (_)
+        if Input.IsKeyPressed("left2") then
+            UI._SelectColorFromGradient()
+        end
     end)
     gradient:SetPositionRelativeToParent("Center")
     UI.GradientImage = gradient
