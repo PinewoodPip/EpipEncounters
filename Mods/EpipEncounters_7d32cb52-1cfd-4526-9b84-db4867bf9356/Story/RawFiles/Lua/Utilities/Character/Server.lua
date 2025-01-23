@@ -25,6 +25,18 @@ function Character.GetPartyMembers(char)
     return members
 end
 
+---Sets the cooldown of a skill.
+---@param char EsvCharacter
+---@param skillID skill Must be a skill the character has.
+---@param cooldown number In seconds.
+function Character.SetSkillCooldown(char, skillID, cooldown)
+    local record = Character.GetSkill(char, skillID)
+    if not record then Character:__Error("SetSkillCooldown", char.DisplayName, "has no skill", skillID) end
+
+    record.ActiveCooldown = cooldown
+    record.ShouldSyncCooldown = true -- Necessary for the change to sync correctly when not setting it to 0.
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
