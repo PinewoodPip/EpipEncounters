@@ -212,6 +212,39 @@ function Vector.Angle(v1, v2)
     return math.acos((x1 * x2 + y1 * y2) / (math.sqrt(x1 ^ 2 + y1 ^ 2) * (math.sqrt(x2 ^ 2 + y2 ^ 2))))
 end
 
+---Returns a new vector with floored components of another.
+---@param vec Vector
+---@return Vector
+function Vector.Floor(vec)
+    local components = {} ---@type number[]
+    for i=1,vec.Arity,1 do
+        components[i] = math.floor(vec[i])
+    end
+    return Vector.Create(components)
+end
+
+---Returns a new vector with ceiled components of another.
+---@param vec Vector
+---@return Vector
+function Vector.Ceil(vec)
+    local components = {} ---@type number[]
+    for i=1,vec.Arity,1 do
+        components[i] = math.ceil(vec[i])
+    end
+    return Vector.Create(components)
+end
+
+---Returns a new vector with rounded components of another.
+---@param vec Vector
+---@return Vector
+function Vector.Round(vec)
+    local components = {} ---@type number[]
+    for i=1,vec.Arity,1 do
+        components[i] = Ext.Round(vec[i])
+    end
+    return Vector.Create(components)
+end
+
 ---------------------------------------------
 -- SETUP
 ---------------------------------------------
