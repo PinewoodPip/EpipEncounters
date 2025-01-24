@@ -11,6 +11,7 @@ local V = Vector.Create
 ---@field Root GenericUI_Element_Empty
 ---@field _ImageContainer GenericUI_Element_Empty
 ---@field _CurrentImage ImageLib_Image
+---@field _Chunks GenericUI_Prefab_Text[][]
 local Image = {
     CHUNK_SIZE = 16,
 }
@@ -44,6 +45,7 @@ end
 ---Sets the image to render.
 ---@param img ImageLib_Image
 function Image:SetImage(img)
+    local oldImg = self._CurrentImage
     local CHUNK_SIZE = self.CHUNK_SIZE
     local width, height = img.Width, img.Height
 
@@ -71,15 +73,32 @@ function Image:SetImage(img)
         end
     end
 
-    -- Create text fields for each chunk
-    if self._ImageContainer then
+    -- Create text fields for each chunk.
+    -- Recreate elements only if dimensions have changed.
+    local needsInstancing = self._ImageContainer == nil
+    if self._ImageContainer and (oldImg.Width ~= img.Width or oldImg.Height ~= img.Height) then
         self._ImageContainer:Destroy()
+        needsInstancing = true
     end
-    local container = self:CreateElement("Container", "GenericUI_Element_Empty", self.Root)
-    self._ImageContainer = container
+    local container = self._ImageContainer
+    if needsInstancing then
+        container = self:CreateElement("Container", "GenericUI_Element_Empty", self.Root)
+        self._ImageContainer = container
+        self._Chunks = {}
+        for rowIndex,_ in ipairs(imageMatrix) do
+            self._Chunks[rowIndex] = {}
+        end
+    end
     for i,row in ipairs(imageMatrix) do
         for j,subImage in ipairs(row) do
-            local text = TextPrefab.Create(self.UI, self:PrefixID("ImageText" .. i .. "." .. j), container, Image.ImageToText(subImage), "Left", V(100, 100))
+            local subImageText = Image.ImageToText(subImage)
+            local text = self._Chunks[i][j]
+            if text then
+                text:SetText(subImageText)
+            else -- Reinstantiate the text field
+                text = TextPrefab.Create(self.UI, self:PrefixID("ImageText" .. i .. "." .. j), container, subImageText, "Left", V(100, 100))
+                self._Chunks[i][j] = text
+            end
             -- Shrink kerning and line height to remove seams
             text:SetTextFormat({
                 letterSpacing = -2,
