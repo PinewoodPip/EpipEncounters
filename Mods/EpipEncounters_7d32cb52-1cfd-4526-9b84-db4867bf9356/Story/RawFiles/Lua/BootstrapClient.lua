@@ -592,6 +592,7 @@ LOAD_ORDER = {
     },
 
     "Epip/Client/AprilFoolsCharacterSheet.lua",
+    "Epip/AprilFools/AnimationCancellingHotkey/Client.lua",
     "Epip/Screensaver/Client.lua",
     "Epip/Client/ExitChatAfterMessage.lua",
     "Epip/Client/CameraZoom.lua",
