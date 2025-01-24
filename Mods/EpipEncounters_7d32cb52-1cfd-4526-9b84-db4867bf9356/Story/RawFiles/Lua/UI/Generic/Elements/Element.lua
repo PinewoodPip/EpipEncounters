@@ -2,6 +2,7 @@
 ---@class GenericUI
 local Generic = Client.UI.Generic
 local Tooltip = Client.Tooltip
+local V = Vector.Create
 
 ---------------------------------------------
 -- ELEMENT
@@ -233,17 +234,16 @@ end
 ---@return number, number -- X and Y coordinates in local space.
 function _Element:GetPosition()
     local mc = self:GetMovieClip()
-
     return mc.GetPositionX(), mc.GetPositionY()
 end
 
 ---Returns the global position of the element within the UI.
 ---@return Vector2
 function _Element:GetGlobalPosition()
-    local pos = Vector.Create(self:GetPosition())
+    local pos = V(self:GetPosition())
     local parent = self:GetParent()
     while parent do
-        pos = pos + Vector.Create(parent:GetPosition())
+        pos = pos + V(parent:GetPosition())
         parent = parent:GetParent()
     end
     return pos
@@ -260,6 +260,13 @@ function _Element:GetScreenPosition(floor)
         pos[1], pos[2] = math.floor(pos[1]), math.floor(pos[2])
     end
     return pos
+end
+
+---Returns the relative position of the mouse within the element.
+---@return Vector2
+function _Element:GetMousePosition()
+    local mc = self:GetMovieClip()
+    return V(mc.mouseX, mc.mouseY)
 end
 
 ---Returns whether the element is visible.
@@ -306,7 +313,6 @@ end
 ---@param height number
 function _Element:SetSizeOverride(width, height)
     if type(width) == "table" then width, height = width:unpack() end
-
     self:GetMovieClip().SetSizeOverride(width, height)
 end
 
@@ -317,7 +323,7 @@ function _Element:GetSizeOverride()
     local override = nil
 
     if mc.widthOverride or mc.heightOverride then
-        override = Vector.Create(self:GetWidth(), self:GetHeight())
+        override = V(self:GetWidth(), self:GetHeight())
     end
 
     return override
@@ -329,7 +335,6 @@ end
 function _Element:SetScrollRect(position, size)
     local x, y = position:unpack()
     local w, h = size:unpack()
-
     self:GetMovieClip().SetScrollRect(x, y, w, h)
 end
 
@@ -359,7 +364,6 @@ end
 ---@param scale Vector2
 function _Element:SetScale(scale)
     local mc = self:GetMovieClip()
-
     mc.scaleX, mc.scaleY = scale[1], scale[2]
 end
 
@@ -367,21 +371,20 @@ end
 ---@param considerOverrides boolean? If `true`, width/height overrides will be considered. Defaults to `true`.
 ---@return Vector2
 function _Element:GetSize(considerOverrides)
-    return Vector.Create(self:GetWidth(considerOverrides), self:GetHeight(considerOverrides))
+    return V(self:GetWidth(considerOverrides), self:GetHeight(considerOverrides))
 end
 
 ---Returns the scale of the element.
 ---@return Vector2
 function _Element:GetScale()
     local mc = self:GetMovieClip()
-
-    return Vector.Create(mc.scaleX, mc.scaleY)
+    return V(mc.scaleX, mc.scaleY)
 end
 
 ---Gets the size of the element without considering its children.
 ---@return Vector2
 function _Element:GetRawSize()
-    return Vector.Create(self:GetRawWidth(), self:GetRawHeight())
+    return V(self:GetRawWidth(), self:GetRawHeight())
 end
 
 ---Sets the tooltip of the element.
