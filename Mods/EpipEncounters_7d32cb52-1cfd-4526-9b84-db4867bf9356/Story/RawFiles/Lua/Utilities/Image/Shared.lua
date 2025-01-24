@@ -57,6 +57,13 @@ function _Image:AddPixel(color)
     self._PixelsAdded = self._PixelsAdded + 1
 end
 
+---Sets the color of a pixel.
+---@param coords vec2 Row and column coordinates.
+---@param color RGBColor
+function _Image:SetPixel(coords, color)
+    self.Pixels[coords[1]][coords[2]] = color
+end
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------

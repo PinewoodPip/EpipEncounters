@@ -426,6 +426,31 @@ Text.CommonStrings.Paste = Text.RegisterTranslatedString({
     Text = "Paste",
     ContextDescription = [[As in, "paste from clipboard"]],
 })
+Text.CommonStrings.Shape = Text.RegisterTranslatedString({
+    Handle = "h0b5cea35gfa34g4c80gab49gdafdf7136ea3",
+    Text = "Shape",
+})
+Text.CommonStrings.Size = Text.RegisterTranslatedString({
+    Handle = "hedfa43d8g9813g4f0cg92b2g012c313568aa",
+    Text = "Size",
+})
+
+---------------------------------------------
+-- SHAPES
+---------------------------------------------
+
+Text.CommonStrings.Shapes = {
+   Round = Text.RegisterTranslatedString({
+       Handle = "h04e67320g1c67g41c8g860dg178b4d512d29",
+       Text = "Round",
+       ContextDescription = "As in, a round shape",
+   }),
+   Square = Text.RegisterTranslatedString({
+       Handle = "hea58117dg1c87g4327g8141gca29322b66ab",
+       Text = "Square",
+       ContextDescription = "As in, the square shape",
+   }),
+}
 
 ---------------------------------------------
 -- BRANDING
