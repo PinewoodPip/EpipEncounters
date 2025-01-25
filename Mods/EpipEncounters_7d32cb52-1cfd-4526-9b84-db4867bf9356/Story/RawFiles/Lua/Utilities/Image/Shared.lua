@@ -71,6 +71,19 @@ function _Image:SetPixel(coords, color)
     self.Pixels[coords[1]][coords[2]] = color
 end
 
+---Returns a copy of the image.
+---@return ImageLib_Image
+function _Image:Copy()
+    local newImg = Image.CreateImage(self.Width, self.Height)
+    for i=1,self.Height,1 do
+        for j=1,self.Width,1 do
+            local pixel = self.Pixels[i][j]
+            newImg:AddPixel(pixel)
+        end
+    end
+    return newImg
+end
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------

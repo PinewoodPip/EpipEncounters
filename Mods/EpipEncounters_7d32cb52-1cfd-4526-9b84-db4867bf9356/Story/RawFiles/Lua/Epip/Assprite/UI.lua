@@ -13,6 +13,7 @@ local V = Vector.Create
 
 ---@class Features.Assprite
 local Assprite = Epip.GetFeature("Features.Assprite")
+local TSK = Assprite.TranslatedStrings
 
 ---@class Features.Assprite.UI : GenericUI_Instance
 local UI = Generic.Create("Features.Assprite.UI")
@@ -130,6 +131,20 @@ function UI._Initialize(img)
         if ev.InputID == "left2" and Assprite.GetActiveTool() ~= nil then
             Assprite.EndToolUse()
         end
+    end)
+
+    -- Undo button
+    local undoButton = ButtonPrefab.Create(UI, "UndoButton", contentArea, ButtonPrefab.STYLES.SmallRed)
+    undoButton:SetLabel(TSK.Label_Undo)
+    undoButton:Move(0, canvas:GetHeight())
+    -- Disable button if no more snapshots remain.
+    undoButton.Events.Pressed:Subscribe(function (_)
+        Assprite.Undo()
+        undoButton:SetEnabled(Assprite.GetContext().History[1] ~= nil)
+    end)
+    -- Enable button when snapshots are added.
+    Assprite.Events.ToolUseStarted:Subscribe(function (_)
+        undoButton:SetEnabled(Assprite.GetContext().History[1] ~= nil)
     end)
 
     -- Side panel

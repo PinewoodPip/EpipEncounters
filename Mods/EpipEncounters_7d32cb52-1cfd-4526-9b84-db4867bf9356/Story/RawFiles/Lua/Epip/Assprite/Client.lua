@@ -9,6 +9,7 @@ local Assprite = {
     USE_LEGACY_HOOKS = false,
 
     CURSOR_MOVEMENT_INTERPOLATION_INTERVAL = 0.1, -- Interval to use when interpolating cursor movement. Ex. 0.2 corresponds to trying 5 new positions using 20% "steps" between the old and new position.
+    MAX_HISTORY_SNAPSHOTS = 10, -- Maximum image snapshots stored for undo/redo operations.
 
     _Context = nil, ---@type Features.Assprite.Context
 
@@ -17,6 +18,11 @@ local Assprite = {
             Handle = "he8713dd0g2846g4580g9a44g2f83bd7e6c72",
             Text = "Assprite",
             ContextDescription = [[Feature name; portmanteau of "Ass" and "Aseprite" (a propietary image editing software)]],
+        },
+        Label_Undo = {
+            Handle = "hf41b62a3g4357g4641g836bg0ad425b11c0c",
+            Text = "Undo",
+            ContextDescription = [[As in, "undo action"]],
         },
     },
 
@@ -39,6 +45,7 @@ Epip.RegisterFeature("Features.Assprite", Assprite)
 ---@class Features.Assprite.Context
 ---@field RequestID string
 ---@field Image ImageLib_Image
+---@field History ImageLib_Image[] Previous iterations of the image, from oldest to newest.
 ---@field CursorPos Vector2? Pixel coordinates of the cursor (row and column).
 ---@field Color RGBColor Selected color.
 ---@field Tool Features.Assprite.Tool? The tool currently being used.
@@ -70,6 +77,7 @@ function Assprite.RequestEditor(requestID, image)
     Assprite._Context = {
         RequestID = requestID,
         Image = image,
+        History = {},
         CursorPos = nil,
         Color = Color.CreateFromHex(Color.WHITE),
         Tool = nil,
@@ -105,6 +113,10 @@ function Assprite.BeginToolUse(tool)
     if context.Tool then
         Assprite.EndToolUse()
     end
+
+    -- Save snapshot before tool uses
+    Assprite.SaveSnapshot()
+
     context.Tool = tool
     local changed = tool:OnUseStarted(context)
     Assprite.Events.ToolUseStarted:Throw({
@@ -156,6 +168,32 @@ function Assprite.SetCursor(pos)
     end
 end
 
+---Saves a copy of the image to the History stack.
+function Assprite.SaveSnapshot()
+    local context = Assprite._Context
+    local snapshot = context.Image:Copy()
+
+    table.insert(context.History, snapshot)
+
+    -- Remove oldest entry once the limit is reached.
+    if context.History[Assprite.MAX_HISTORY_SNAPSHOTS + 1] then
+        table.remove(context.History, 1)
+    end
+end
+
+---Reverts the image to the previous snapshot, if any.
+function Assprite.Undo()
+    local context = Assprite._Context
+    local snapshot = context.History[#context.History]
+    if snapshot then
+        context.Image = snapshot
+        table.remove(context.History, #context.History)
+        Assprite.Events.ImageChanged:Throw({
+            Context = context
+        })
+    end
+end
+
 ---Sets the cursor position and runs OnCursorChanged for the current tool without interpolation.
 ---**Does not throw CursorPositionChanged.**
 ---@param newPos Vector2
@@ -184,6 +222,12 @@ function Assprite.SetColor(color)
     Assprite.Events.ColorChanged:Throw({
         Context = context,
     })
+end
+
+---Returns the current context.
+---@return Features.Assprite.Context?
+function Assprite.GetContext()
+    return Assprite._Context
 end
 
 ---Returns the tool currently being used, if any.
