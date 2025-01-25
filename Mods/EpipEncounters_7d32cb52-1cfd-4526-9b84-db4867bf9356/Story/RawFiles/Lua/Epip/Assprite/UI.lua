@@ -114,7 +114,7 @@ function UI._Initialize(img)
         pos[1], pos[2] = pos[1] / canvas:GetWidth(), pos[2] / canvas:GetHeight()
         pos[1], pos[2] = math.clamp(pos[1], 0, 1), math.clamp(pos[2], 0, 1)
         local image = Assprite.GetImage()
-        local pixelPos = V(math.ceil(pos[1] * image.Width), math.ceil(pos[2] * image.Height))
+        local pixelPos = V(math.ceil(pos[2] * image.Height), math.ceil(pos[1] * image.Width)) -- Convert x & y to row & column coordinates.
         Assprite.SetCursor(pixelPos)
     end)
     canvas:SetPositionRelativeToParent("TopLeft")

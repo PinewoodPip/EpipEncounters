@@ -38,7 +38,7 @@ Epip.RegisterFeature("Features.Assprite", Assprite)
 ---@class Features.Assprite.Context
 ---@field RequestID string
 ---@field Image ImageLib_Image
----@field CursorPos Vector2? Pixel coordinates of the cursor.
+---@field CursorPos Vector2? Pixel coordinates of the cursor (row and column).
 ---@field Color RGBColor Selected color.
 ---@field Tool Features.Assprite.Tool? The tool currently being used.
 
