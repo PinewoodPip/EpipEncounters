@@ -162,6 +162,7 @@ local coreLibraries = {
             "Utilities/Settings/Setting_String.lua",
             "Utilities/Settings/Setting_InputBinding.lua",
             "Utilities/Settings/Setting_Skill.lua",
+            "Utilities/Settings/Setting_Color.lua",
         },
     },
 }
@@ -354,6 +355,7 @@ LOAD_ORDER = {
             "UI/Generic/Prefabs/LabelledDropdown.lua",
             "UI/Generic/Prefabs/LabelledTextField.lua",
             "UI/Generic/Prefabs/LabelledSlot.lua", -- TODO rebrand and reorganize these; clearer to call them "form elements"
+            "UI/Generic/Prefabs/LabelledColor.lua",
             "UI/Generic/Prefabs/FormSetEntry.lua",
             "UI/Generic/Prefabs/FormSet.lua",
             "UI/Generic/Prefabs/FormTextHolder.lua",

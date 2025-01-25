@@ -13,8 +13,10 @@ local LabelledSlider = Generic.GetPrefab("GenericUI_Prefab_LabelledSlider")
 local Spinner = Generic.GetPrefab("GenericUI_Prefab_Spinner")
 local FormTextHolder = Generic.GetPrefab("GenericUI.Prefabs.FormTextHolder")
 local FormSlot = Generic.GetPrefab("GenericUI.Prefab.Form.Slot")
+local FormColor = Generic.GetPrefab("GenericUI.Prefab.Form.Color")
 local SkillPicker = Epip.GetFeature("Features.SkillPicker")
 local InputBinder = Epip.GetFeature("Features.InputBinder")
+local ColorPicker = Epip.GetFeature("Features.ColorPicker")
 local V = Vector.Create
 
 ---@class Features.SettingWidgets : Feature
@@ -30,6 +32,7 @@ local Widgets = {
     _TOOLTIP_ID_PATTERN = "^SettingWidgets%.(.+)%.(.+)$", -- Module ID can have periods.
 
     _CurrentSkillPickerSetting = nil, ---@type Features.SettingWidgets.Hooks.RenderSetting?
+    _CurrentColorPickerSetting = nil, ---@type Features.SettingWidgets.Hooks.RenderSetting?
 
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
@@ -47,7 +50,7 @@ Epip.RegisterFeature("SettingWidgets", Widgets)
 -- CLASSES
 ---------------------------------------------
 
----@alias Features.SettingWidgets.SupportedSettingType SettingsLib_Setting_Choice|SettingsLib_Setting_Boolean|SettingsLib_Setting_String|SettingsLib.Settings.InputBinding|SettingsLib_Setting_ClampedNumber
+---@alias Features.SettingWidgets.SupportedSettingType SettingsLib_Setting_Choice|SettingsLib_Setting_Boolean|SettingsLib_Setting_String|SettingsLib.Settings.InputBinding|SettingsLib_Setting_ClampedNumber|SettingsLib.Setting.Color
 
 ---@alias Features.SettingWidgets.PreferredRepresentation.ClampedNumber "Slider"|"Spinner"
 ---@alias Features.SettingWidgets.ValueFormatting "Default"|"Time"
@@ -378,6 +381,35 @@ function Widgets._RenderSlotSetting(request)
     return instance
 end
 
+---Renders a picker for a Color setting.
+---@param request Features.SettingWidgets.Hooks.RenderSetting
+---@return GenericUI.Prefab.Form.Color
+function Widgets._RenderColorSetting(request)
+    local setting = request.Setting ---@cast setting SettingsLib.Setting.Color
+    local ui, parent, size = request.UI, request.Parent, request.Size
+
+    local instance
+    local settingID = Widgets._GetPrefixedID(setting)
+    instance = FormColor.Create(ui, settingID, parent, setting:GetName(), size)
+    instance:SetColor(setting:GetValue()) -- Display the current color.
+
+    -- Open the Color Picker when the color is clicked.
+    instance.Events.ColorClicked:Subscribe(function (_)
+        Widgets._CurrentColorPickerSetting = request
+        ColorPicker.Request("SettingWidget", setting:GetValue())
+    end)
+
+    -- Update the color when the setting is changed
+    Widgets._RegisterValueChangedListener(instance, request, function (ev)
+        instance:SetColor(ev.Value)
+    end)
+
+    -- Setup tooltips on hover
+    instance:SetTooltip("Custom", Widgets._GetSettingTooltip(setting))
+
+    return instance
+end
+
 ---Registers a callback for a setting value changing.
 ---@param instance GenericUI_I_Elementable
 ---@param request Features.SettingWidgets.Hooks.RenderSetting The request's callback will also be invoked.
@@ -480,6 +512,8 @@ Widgets.Hooks.RenderSetting:Subscribe(function (ev)
         ev.Instance = Widgets._RenderClampedNumberSetting(ev)
     elseif setting.Type == "Skill" then
         ev.Instance = Widgets._RenderSlotSetting(ev)
+    elseif setting.Type == "Color" then
+        ev.Instance = Widgets._RenderColorSetting(ev)
     end
 
     -- Add listeners for opening the context menu.
@@ -506,5 +540,13 @@ SkillPicker.Events.RequestCompleted:Subscribe(function (ev)
     if ev.RequestID == "SettingWidget" then
         local request = Widgets._CurrentSkillPickerSetting
         Widgets._SetSettingValue(request.Setting, ev.Skill, request)
+    end
+end)
+
+-- Handle color settings being set from the picker.
+ColorPicker.Events.ColorPicked:Subscribe(function (ev)
+    if ev.RequestID == "SettingWidget" then
+        local request = Widgets._CurrentColorPickerSetting
+        Widgets._SetSettingValue(request.Setting, ev.Color, request)
     end
 end)
