@@ -24,6 +24,11 @@ UI.HEADER_SIZE = V(200, 50)
 UI.SIDEBAR_WIDTH = 250
 UI.SETTINGS_SIZE = V(UI.SIDEBAR_WIDTH, 50)
 UI.TOOLBAR_COLUMNS = 3
+---@type Features.Assprite.Tool[] Tools in order of appearance in the toolbar.
+UI.TOOLS = {
+    Assprite:GetClass("Features.Assprite.Tools.Brush"),
+    Assprite:GetClass("Features.Assprite.Tools.ColorPicker"),
+}
 
 UI._CurrentTool = nil ---@type Features.Assprite.Tool?
 
@@ -137,8 +142,7 @@ function UI._Initialize(img)
     toolbarGrid:SetGridSize(UI.TOOLBAR_COLUMNS, -1)
 
     -- Render tools
-    local tools = {Assprite:GetClass("Features.Assprite.Tools.Brush")} -- TODO extract
-    for _,tool in ipairs(tools) do
+    for _,tool in ipairs(UI.TOOLS) do
         local toolButton = ButtonPrefab.Create(UI, "Tool." .. tool:GetClassName(), toolbarGrid, ButtonPrefab.STYLES.TabCharacterSheet)
         toolButton:SetIcon(tool.ICON, V(32, 32))
         toolButton:SetTooltip("Simple", tool.Name:GetString())
@@ -153,8 +157,12 @@ function UI._Initialize(img)
     local globalSettingsList = sidePanel:AddChild("GlobalSettings", "GenericUI_Element_VerticalList")
 
     -- Selected color
-    local _ = SettingWidgets.RenderSetting(UI, globalSettingsList, Settings.Color, UI.SETTINGS_SIZE, function (value)
+    local colorWidget = SettingWidgets.RenderSetting(UI, globalSettingsList, Settings.Color, UI.SETTINGS_SIZE, function (value)
         Assprite.SetColor(value)
+    end) ---@cast colorWidget GenericUI.Prefab.Form.Color
+    -- Synchronize the setting value with the context color
+    Assprite.Events.ColorChanged:Subscribe(function (ev)
+        colorWidget:SetColor(ev.Context.Color)
     end)
 
     -- Update the image when it is edited.

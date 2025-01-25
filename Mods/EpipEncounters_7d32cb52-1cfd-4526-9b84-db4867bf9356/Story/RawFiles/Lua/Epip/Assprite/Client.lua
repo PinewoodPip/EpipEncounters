@@ -26,6 +26,7 @@ local Assprite = {
         CursorPositionChanged = {}, ---@type Event<Features.Assprite.ContextEvent>
         ToolUseStarted = {}, ---@type Event<Features.Assprite.ContextEvent>
         ToolUseEnded = {}, ---@type Event<Features.Assprite.ContextEvent> Context will still contain the old tool.
+        ColorChanged = {}, ---@type Event<Features.Assprite.ContextEvent>
         ImageChanged = {}, ---@type Event<Features.Assprite.ContextEvent>
     },
 }
@@ -180,6 +181,9 @@ function Assprite.SetColor(color)
         Assprite:__Error("BeginToolUse", "No active context")
     end
     context.Color = color
+    Assprite.Events.ColorChanged:Throw({
+        Context = context,
+    })
 end
 
 ---Returns the tool currently being used, if any.

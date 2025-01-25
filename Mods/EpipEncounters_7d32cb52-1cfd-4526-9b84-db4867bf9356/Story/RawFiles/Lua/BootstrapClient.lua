@@ -446,6 +446,7 @@ LOAD_ORDER = {
             "Epip/Assprite/Client.lua",
             "Epip/Assprite/Tools/_Tool.lua",
             "Epip/Assprite/Tools/Brush.lua",
+            "Epip/Assprite/Tools/ColorPicker.lua",
             "Epip/Assprite/UI.lua",
         },
     },
