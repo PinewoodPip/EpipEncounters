@@ -1,10 +1,13 @@
 
 local Generic = Client.UI.Generic
+local SettingWidgets = Epip.GetFeature("Features.SettingWidgets")
 local CloseButtonPrefab = Generic.GetPrefab("GenericUI_Prefab_CloseButton")
+local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 local ButtonPrefab = Generic.GetPrefab("GenericUI_Prefab_Button")
 local ImagePrefab = Generic.GetPrefab("GenericUI.Prefabs.Image")
 local DraggingArea = Generic.GetPrefab("GenericUI_Prefab_DraggingArea")
 local TooltipPanel = Generic.GetPrefab("GenericUI_Prefab_TooltipPanel")
+local CommonStrings = Text.CommonStrings
 local Input = Client.Input
 local V = Vector.Create
 
@@ -18,9 +21,19 @@ Assprite.UI = UI
 UI.PANEL_SIZE = V(700, 700)
 UI.PICKER_IMAGE_SIZE = V(64, 64)
 UI.HEADER_SIZE = V(200, 50)
+UI.SIDEBAR_WIDTH = 250
+UI.SETTINGS_SIZE = V(UI.SIDEBAR_WIDTH, 50)
 UI.TOOLBAR_COLUMNS = 3
 
 UI._CurrentTool = nil ---@type Features.Assprite.Tool?
+
+local Settings = {
+    Color =  Assprite:RegisterSetting("Color", {
+        Type = "Color",
+        Name = CommonStrings.Color,
+        DefaultValue = Color.CreateFromHex(Color.WHITE),
+    })
+}
 
 ---------------------------------------------
 -- METHODS
@@ -31,6 +44,8 @@ UI._CurrentTool = nil ---@type Features.Assprite.Tool?
 function UI.Setup(request)
     UI._Initialize(request.Image)
     UI._SetImage(request.Image)
+    Assprite.SetColor(Settings.Color:GetValue())
+    UI:SetPositionRelativeToViewport("center", "center")
     UI:Show()
 end
 
@@ -116,29 +131,43 @@ function UI._Initialize(img)
     local sidePanel = contentArea:AddChild("SidePanel", "GenericUI_Element_VerticalList")
 
     -- Toolbar
-    local toolbar = sidePanel:AddChild("ToolbarGrid", "GenericUI_Element_Grid")
-    toolbar:SetGridSize(UI.TOOLBAR_COLUMNS, -1)
+    local toolBar = sidePanel:AddChild("ToolbarContainer", "GenericUI_Element_VerticalList")
+    local _ = TextPrefab.Create(UI, "ToolbarHeader", toolBar, CommonStrings.Tools, "Center", V(UI.SIDEBAR_WIDTH, 35)) -- Header
+    local toolbarGrid = toolBar:AddChild("ToolbarGrid", "GenericUI_Element_Grid")
+    toolbarGrid:SetGridSize(UI.TOOLBAR_COLUMNS, -1)
 
     -- Render tools
     local tools = {Assprite:GetClass("Features.Assprite.Tools.Brush")} -- TODO extract
     for _,tool in ipairs(tools) do
-        local toolButton = ButtonPrefab.Create(UI, "Tool." .. tool:GetClassName(), toolbar, ButtonPrefab.STYLES.TabCharacterSheet)
+        local toolButton = ButtonPrefab.Create(UI, "Tool." .. tool:GetClassName(), toolbarGrid, ButtonPrefab.STYLES.TabCharacterSheet)
         toolButton:SetIcon(tool.ICON, V(32, 32))
         toolButton:SetTooltip("Simple", tool.Name:GetString())
         toolButton.Events.Pressed:Subscribe(function (_)
             UI.SelectTool(tool)
         end)
     end
-    toolbar:RepositionElements()
-    UI.ToolGrid = toolbar
+    toolbarGrid:RepositionElements()
+    UI.ToolGrid = toolbarGrid
+
+    -- Global settings
+    local globalSettingsList = sidePanel:AddChild("GlobalSettings", "GenericUI_Element_VerticalList")
+
+    -- Selected color
+    local _ = SettingWidgets.RenderSetting(UI, globalSettingsList, Settings.Color, UI.SETTINGS_SIZE, function (value)
+        Assprite.SetColor(value)
+    end)
 
     -- Update the image when it is edited.
     Assprite.Events.ImageChanged:Subscribe(function (ev)
         UI._SetImage(ev.Context.Image)
     end)
 
+    globalSettingsList:RepositionElements()
     sidePanel:RepositionElements()
     sidePanel:SetPositionRelativeToParent("TopRight")
+
+    -- Setup UIObject panel size
+    UI:GetUI().SysPanelSize = UI.PANEL_SIZE
 
     UI._Initialized = true
 end

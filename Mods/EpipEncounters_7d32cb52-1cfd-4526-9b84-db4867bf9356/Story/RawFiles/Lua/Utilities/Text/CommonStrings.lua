@@ -434,6 +434,14 @@ Text.CommonStrings.Size = Text.RegisterTranslatedString({
     Handle = "hedfa43d8g9813g4f0cg92b2g012c313568aa",
     Text = "Size",
 })
+Text.CommonStrings.Tools = Text.RegisterTranslatedString({
+    Handle = "hec4f779bg15dcg4daeg9f74g7fd4f9075375",
+    Text = "Tools",
+})
+Text.CommonStrings.Color = Text.RegisterTranslatedString({
+    Handle = "h6cb64038ga8abg40a9g9b65g87af6fb35007",
+    Text = "Color",
+})
 
 ---------------------------------------------
 -- SHAPES
