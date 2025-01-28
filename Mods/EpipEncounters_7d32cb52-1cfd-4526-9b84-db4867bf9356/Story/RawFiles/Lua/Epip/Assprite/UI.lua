@@ -132,7 +132,27 @@ function UI._Initialize(img)
                 }
             }
         })
-
+        ContextMenu.Open()
+    end)
+    -- "Edit" button
+    local editButton = ButtonPrefab.Create(UI, "TopButton.Edit", topBar, ButtonPrefab.STYLES.BrownSimple_Inactive)
+    editButton:SetLabel(CommonStrings.Edit)
+    -- Open context menu on click
+    editButton.Events.Pressed:Subscribe(function (_)
+        local x, y = editButton:GetScreenPosition(true):unpack()
+        y = y + editButton:GetHeight()
+        ContextMenu.RequestMenu(x, y, "Features.Assprite.UI.Edit")
+    end)
+    ContextMenu.RegisterMenuHandler("Features.Assprite.UI.Edit", function()
+        local canUndo = Assprite.CanUndo()
+        ContextMenu.Setup({
+            menu = {
+                id = "main",
+                entries = {
+                    {id = "Features.Assprite.UI.Undo", type = "button", text = TSK.Label_Undo:GetString(), disabled = not canUndo, selectable = canUndo, faded = not canUndo},
+                }
+            }
+        })
         ContextMenu.Open()
     end)
 
@@ -185,11 +205,11 @@ function UI._Initialize(img)
     -- Disable button if no more snapshots remain.
     undoButton.Events.Pressed:Subscribe(function (_)
         Assprite.Undo()
-        undoButton:SetEnabled(Assprite.GetContext().History[1] ~= nil)
+        undoButton:SetEnabled(Assprite.CanUndo())
     end)
     -- Enable button when snapshots are added.
     Assprite.Events.ToolUseStarted:Subscribe(function (_)
-        undoButton:SetEnabled(Assprite.GetContext().History[1] ~= nil)
+        undoButton:SetEnabled(Assprite.CanUndo())
     end)
 
     -- Side panel
@@ -252,6 +272,9 @@ end)
 -- Handle context menus interactions.
 ContextMenu.RegisterElementListener("Features.Assprite.UI.Load", "buttonPressed", function ()
     UI.RequestLoad()
+end)
+ContextMenu.RegisterElementListener("Features.Assprite.UI.Undo", "buttonPressed", function ()
+    Assprite.Undo()
 end)
 
 -- Handle load prompts.

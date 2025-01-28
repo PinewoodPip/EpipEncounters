@@ -447,6 +447,11 @@ Text.CommonStrings.Color = Text.RegisterTranslatedString({
     Handle = "h6cb64038ga8abg40a9g9b65g87af6fb35007",
     Text = "Color",
 })
+Text.CommonStrings.Edit = Text.RegisterTranslatedString({
+    Handle = "heb9526cdgd173g429egbd31g82232610b051",
+    Text = "Edit",
+    ContextDescription = [[Refers to the "to edit" verb]],
+})
 
 ---------------------------------------------
 -- SHAPES

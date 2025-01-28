@@ -225,6 +225,13 @@ function Assprite.Undo()
     end
 end
 
+---Returns whether the history stack is not empty.
+---@return boolean
+function Assprite.CanUndo()
+    local context = Assprite._Context
+    return context.History[1] ~= nil
+end
+
 ---Sets the cursor position and runs OnCursorChanged for the current tool without interpolation.
 ---**Does not throw CursorPositionChanged.**
 ---@param newPos Vector2
