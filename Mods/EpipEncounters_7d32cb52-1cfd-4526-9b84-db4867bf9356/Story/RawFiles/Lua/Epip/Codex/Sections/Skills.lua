@@ -459,12 +459,11 @@ function Section:__CreateElement(index)
         if positionSetting == Skills.SETTING_TOOLTIP_POSITION_CHOICES.BY_CURSOR then
             position = V(Client.GetMousePosition())
         elseif positionSetting == Skills.SETTING_TOOLTIP_POSITION_CHOICES.LEFT_SIDE then
-            position = V(Codex.UI:GetPosition())
             local headerElement = Codex.UI.IndexHeader
             local indexPosition = headerElement:GetScreenPosition()
 
             -- Set position to be below the index header
-            position = position + indexPosition + V(0, headerElement:GetHeight()) + self.LEFT_SIDE_SKILL_TOOLTIP_OFFSET
+            position = indexPosition + V(0, headerElement:GetHeight()) + self.LEFT_SIDE_SKILL_TOOLTIP_OFFSET
         end
         ev.Position = position or ev.Position
     end, {StringID = "Features.Codex.Skills.TooltipPosition"})

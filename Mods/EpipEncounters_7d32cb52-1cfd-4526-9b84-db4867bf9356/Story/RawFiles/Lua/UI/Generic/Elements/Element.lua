@@ -255,7 +255,9 @@ end
 function _Element:GetScreenPosition(floor)
     if floor == nil then floor = true end
     local pos = self:GetGlobalPosition()
-    pos = Vector.ScalarProduct(pos, self.UI:GetUI():GetUIScaleMultiplier())
+    local uiObj = self.UI:GetUI()
+    pos = Vector.ScalarProduct(pos, uiObj:GetUIScaleMultiplier())
+    pos = pos + V(uiObj:GetPosition())
     if floor then
         pos[1], pos[2] = math.floor(pos[1]), math.floor(pos[2])
     end
