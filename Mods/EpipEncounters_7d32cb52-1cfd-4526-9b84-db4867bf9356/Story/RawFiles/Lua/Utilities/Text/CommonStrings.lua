@@ -263,6 +263,11 @@ Text.CommonStrings.Save = Text.RegisterTranslatedString({
     Text = "Save",
     ContextDescription = [[As in, "save settings"]],
 })
+Text.CommonStrings.Load = Text.RegisterTranslatedString({
+    Handle = "hdeeae4bcgd104g4beagbf88g052d13e28756",
+    Text = "Load",
+    ContextDescription = [[As in, "load a file"]]
+})
 Text.CommonStrings.Start = Text.RegisterTranslatedString({
     Handle = "h807e1cacgfe65g4153gb4dfg2ca7fa75dd28",
     Text = "Start",

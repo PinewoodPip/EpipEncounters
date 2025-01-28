@@ -171,6 +171,18 @@ local coreLibraries = {
             "Utilities/Settings/Setting_Color.lua",
         },
     },
+
+    -- ImageLib
+    {
+        Scripts = {
+            "Utilities/Image/Shared.lua",
+            "Utilities/Image/_Decoder.lua",
+            "Utilities/Image/Decoders/PNG/Decoder.lua",
+            "Utilities/Image/Decoders/PNG/Chunks/IHDR.lua",
+            "Utilities/Image/Decoders/PNG/Chunks/IDAT.lua",
+            "Utilities/Image/Decoders/PNG/Chunks/IEND.lua",
+        }
+    },
 }
 for _,lib in ipairs(coreLibraries) do
     RequestScriptLoad(lib)
@@ -802,17 +814,6 @@ LOAD_ORDER = {
             "Epip/InventoryMultiSelect/MultiDragHandlers/Client.lua",
             {ScriptSet = "Epip/InventoryMultiSelect/ContextMenuActions"},
         },
-    },
-
-    {
-        Scripts = {
-            "Utilities/Image/Shared.lua",
-            "Utilities/Image/_Decoder.lua",
-            "Utilities/Image/Decoders/PNG/Decoder.lua",
-            "Utilities/Image/Decoders/PNG/Chunks/IHDR.lua",
-            "Utilities/Image/Decoders/PNG/Chunks/IDAT.lua",
-            "Utilities/Image/Decoders/PNG/Chunks/IEND.lua",
-        }
     },
 
     "Epip/Client/ImageViewer.lua",

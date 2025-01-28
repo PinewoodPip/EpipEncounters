@@ -7,8 +7,12 @@ local ButtonPrefab = Generic.GetPrefab("GenericUI_Prefab_Button")
 local ImagePrefab = Generic.GetPrefab("GenericUI.Prefabs.Image")
 local DraggingArea = Generic.GetPrefab("GenericUI_Prefab_DraggingArea")
 local TooltipPanel = Generic.GetPrefab("GenericUI_Prefab_TooltipPanel")
-local CommonStrings = Text.CommonStrings
+local Notification = Client.UI.Notification
+local ContextMenu = Client.UI.ContextMenu
+local MessageBox = Client.UI.MessageBox
+local ImageLib = Client.Image
 local Input = Client.Input
+local CommonStrings = Text.CommonStrings
 local V = Vector.Create
 
 ---@class Features.Assprite
@@ -75,6 +79,16 @@ function UI.SelectTool(tool)
     UI._CurrentTool = tool
 end
 
+---Requests an image to be loaded from disk.
+function UI.RequestLoad()
+    MessageBox.Open({
+        ID = "Features.Assprite.UI.Load",
+        Header = CommonStrings.Load:GetString(),
+        Message = TSK.MsgBox_Load_Body:GetString(),
+        Type = "Input",
+    })
+end
+
 ---Initializes the static elements of the UI.
 ---@param img ImageLib_Image Initial image to display.
 function UI._Initialize(img)
@@ -86,12 +100,6 @@ function UI._Initialize(img)
     -- Dragging area
     DraggingArea.Create(UI, "DraggingArea", panel, V(UI.PANEL_SIZE[1], UI.HEADER_SIZE[2]))
 
-    -- Content container
-    local contentArea = panel:AddChild("ContentContainer", "GenericUI_Element_TiledBackground")
-    contentArea:SetAlpha(0)
-    contentArea:SetBackground("Black", UI.PANEL_SIZE[1] - 40, UI.PANEL_SIZE[2] - UI.HEADER_SIZE[2])
-    contentArea:SetPositionRelativeToParent("Top", 0, UI.HEADER_SIZE[2] + 30)
-
     -- Close button
     local closeButton = CloseButtonPrefab.Create(UI, "CloseButton", panel)
     closeButton:SetPositionRelativeToParent("TopRight")
@@ -99,6 +107,42 @@ function UI._Initialize(img)
         -- TODO confirm to close
         Assprite.CompleteRequest()
     end)
+
+    -- Top buttons bar
+    local topBar = panel:AddChild("TopBar", "GenericUI_Element_HorizontalList")
+    topBar:SetPositionRelativeToParent("TopLeft", 20, UI.HEADER_SIZE[2] + 30)
+    topBar:SetElementSpacing(0)
+
+    -- "File" button
+    local fileButton = ButtonPrefab.Create(UI, "TopButton.File", topBar, ButtonPrefab.STYLES.BrownSimple_Inactive)
+    fileButton:SetLabel(TSK.Label_File)
+    -- Open context menu on click
+    fileButton.Events.Pressed:Subscribe(function (_)
+        local x, y = fileButton:GetScreenPosition(true):unpack()
+        y = y + fileButton:GetHeight()
+        ContextMenu.RequestMenu(x, y, "Features.Assprite.UI.File")
+    end)
+    ContextMenu.RegisterMenuHandler("Features.Assprite.UI.File", function()
+        ContextMenu.Setup({
+            menu = {
+                id = "main",
+                entries = {
+                    {id = "Features.Assprite.UI.Load", type = "button", text = CommonStrings.Load:GetString()},
+                }
+            }
+        })
+
+        ContextMenu.Open()
+    end)
+
+    topBar:RepositionElements()
+    UI.TopBar = topBar
+
+    -- Content container
+    local contentArea = panel:AddChild("ContentContainer", "GenericUI_Element_TiledBackground")
+    contentArea:SetAlpha(0)
+    contentArea:SetBackground("Black", UI.PANEL_SIZE[1] - 40, UI.PANEL_SIZE[2] - UI.HEADER_SIZE[2])
+    contentArea:SetPositionRelativeToParent("Top", 0, UI.HEADER_SIZE[2] + 30 + topBar:GetHeight())
 
     -- Canvas
     local canvas = ImagePrefab.Create(UI, "CanvasImage", contentArea, img)
@@ -202,6 +246,27 @@ end
 -- Open the UI when image editing is requested.
 Assprite.Events.EditorRequested:Subscribe(function (ev)
     UI.Setup(ev)
+end)
+
+-- Handle context menus interactions.
+ContextMenu.RegisterElementListener("Features.Assprite.UI.Load", "buttonPressed", function ()
+    UI.RequestLoad()
+end)
+
+-- Handle load prompts.
+MessageBox.RegisterMessageListener("Features.Assprite.UI.Load", MessageBox.Events.InputSubmitted, function (path, _, _)
+    local img = nil ---@type ImageLib_Image?
+    local success, trace = pcall(function ()
+        local decoder = ImageLib.GetDecoder("ImageLib_Decoder_PNG"):Create(path .. ".png")
+        img = decoder:Decode()
+    end)
+    if success then
+        Assprite.SetImage(img)
+        Notification.ShowNotification(TSK.Notification_Load_Success:GetString())
+    else
+        Notification.ShowWarning(TSK.Notification_Load_Error:GetString())
+        Assprite:__LogWarning("Failed to load image", trace)
+    end
 end)
 
 -- Quick debug snippet to open the UI on load. TODO remove

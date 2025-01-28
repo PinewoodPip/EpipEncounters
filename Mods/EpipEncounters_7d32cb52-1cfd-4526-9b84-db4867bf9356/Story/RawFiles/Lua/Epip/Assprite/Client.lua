@@ -24,6 +24,26 @@ local Assprite = {
             Text = "Undo",
             ContextDescription = [[As in, "undo action"]],
         },
+        Label_File = {
+            Handle = "hf1d05cfdg2d04g4637g9dc7g0d68ff88c0dc",
+            Text = "File",
+            ContextDescription = [[As in, "computer file"]],
+        },
+        Notification_Load_Success = {
+            Handle = "h77a50a9dg1123g4fe6ga3fbge3ad69e11c68",
+            Text = "Image loaded",
+            ContextDescription = [[Notification from load option]],
+        },
+        Notification_Load_Error = {
+            Handle = "hf53ae24bg6559g4552g9149g531488fb0b38",
+            Text = "Failed to load image",
+            ContextDescription = [[Notification from load option]],
+        },
+        MsgBox_Load_Body = {
+            Handle = "h37a87c28g91efg42f6g9b13g632167e743c7",
+            Text = "Enter a path to load a .PNG from (excluding extension), relative to the Osiris Data folder.",
+            ContextDescription = [[Message box for load option]],
+        },
     },
 
     Events = {
@@ -166,6 +186,17 @@ function Assprite.SetCursor(pos)
             Context = context,
         })
     end
+end
+
+---Replaces the image being currently edited.
+---@param img ImageLib_Image
+function Assprite.SetImage(img)
+    local context = Assprite._Context
+    Assprite.SaveSnapshot() -- Save snapshot first to be able to undo this
+    context.Image = img
+    Assprite.Events.ImageChanged:Throw({
+        Context = context
+    })
 end
 
 ---Saves a copy of the image to the History stack.
