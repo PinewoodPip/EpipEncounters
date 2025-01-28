@@ -33,6 +33,7 @@ UI.TOOLBAR_COLUMNS = 3
 UI.TOOLS = {
     Assprite:GetClass("Features.Assprite.Tools.Brush"),
     Assprite:GetClass("Features.Assprite.Tools.ColorPicker"),
+    Assprite:GetClass("Features.Assprite.Tools.Bucket"),
 }
 
 UI._CurrentTool = nil ---@type Features.Assprite.Tool?
