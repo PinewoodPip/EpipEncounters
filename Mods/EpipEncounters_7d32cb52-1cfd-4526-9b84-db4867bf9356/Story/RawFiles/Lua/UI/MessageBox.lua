@@ -290,3 +290,12 @@ MessageBox:RegisterCallListener("ButtonPressed", function(ev, id, device)
         end
     end
 end)
+
+-- Hide all message box UIs on reset, to prevent softlocks from custom message boxes that can no longer be handled.
+Ext.Events.ResetCompleted:Subscribe(function (_)
+    for _,obj in ipairs(Ext.UI.GetUIObjectManager().UIObjects) do
+        if obj.Path:find("Public/Game/GUI/msgBox%.swf$") then
+            obj:Hide()
+        end
+    end
+end)
