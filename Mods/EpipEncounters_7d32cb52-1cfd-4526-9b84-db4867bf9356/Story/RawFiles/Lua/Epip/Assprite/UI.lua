@@ -24,7 +24,6 @@ local UI = Generic.Create("Features.Assprite.UI")
 Assprite.UI = UI
 
 UI.PANEL_SIZE = V(700, 700)
-UI.PICKER_IMAGE_SIZE = V(64, 64)
 UI.HEADER_SIZE = V(200, 50)
 UI.SIDEBAR_WIDTH = 250
 UI.SETTINGS_SIZE = V(UI.SIDEBAR_WIDTH, 50)
@@ -193,16 +192,9 @@ function UI._Initialize(img)
     canvas.Root.Events.MouseDown:Subscribe(function (_)
         UI.UseCurrentTool()
     end)
-    UI.Canvas = canvas
-
-    -- Dummy element to have hover events be more reliable (which they aren't while the underlying Image prefab elements are being recreated)
-    local canvasClickArea = canvas.Root:AddChild("CanvasClickArea", "GenericUI_Element_TiledBackground")
-    canvasClickArea:SetBackground("Black", 260, 260)
-    canvasClickArea:SetAlpha(0.2)
-    canvasClickArea:SetMouseMoveEventEnabled(true)
-    -- Update cursor while moving mouse over the click area
-    canvasClickArea.Events.MouseMove:Subscribe(function (_)
-        local pos = canvasClickArea:GetMousePosition()
+    -- Update cursor while moving mouse over the canvas
+    canvas.Root.Events.MouseMove:Subscribe(function (_)
+        local pos = canvas.Root:GetMousePosition()
         pos[1], pos[2] = pos[1] / canvas:GetWidth(), pos[2] / canvas:GetHeight()
         pos[1], pos[2] = math.clamp(pos[1], 0, 1), math.clamp(pos[2], 0, 1)
         local image = Assprite.GetImage()
@@ -210,6 +202,7 @@ function UI._Initialize(img)
         Assprite.SetCursor(pixelPos)
     end)
     canvas:SetPositionRelativeToParent("TopLeft")
+    UI.Canvas = canvas
 
     -- Stop using the tool when M1 is released.
     -- This must be done via an input listener as MouseUp events are not reliable when elements are being recreated under the cursor, as is the case when the image is re-rendered. This also covers the key being released while the mouse is not over the element anymore.
@@ -345,8 +338,14 @@ end)
 
 -- Quick debug snippet to open the UI on load. TODO remove
 GameState.Events.ClientReady:Subscribe(function ()
-    local img = Client.Image.GetDecoder("ImageLib_Decoder_PNG"):Create("test_rgb_64x.png")
-    Assprite.RequestEditor("Debug", img:Decode())
+    local PORTRAIT_SIZE = V(68, 90)
+    local img = Client.Image.CreateImage(PORTRAIT_SIZE:unpack())
+    for _=1,PORTRAIT_SIZE[2],1 do
+        for _=1,PORTRAIT_SIZE[1],1 do
+            img:AddPixel(Color.CreateFromHex(Color.WHITE))
+        end
+    end
+    Assprite.RequestEditor("Debug", img)
     Assprite.SetColor(Color.Create(120, 120, 30))
 end, {EnabledFunctor = function ()
     return Epip.IsDeveloperMode(true)

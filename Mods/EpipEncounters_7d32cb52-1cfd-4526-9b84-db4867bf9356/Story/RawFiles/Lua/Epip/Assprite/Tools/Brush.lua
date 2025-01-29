@@ -70,7 +70,7 @@ function Brush:_Apply(context)
     local img = context.Image
     for _,relativePos in ipairs(area) do -- TODO implement color equality check? for detecting no-ops
         local pos = {cursorPos[1] + relativePos[1], cursorPos[2] + relativePos[2]}
-        if pos[1] >= 1 and pos[1] <= img.Width and pos[2] >= 1 and pos[2] <= img.Height then
+        if pos[1] >= 1 and pos[1] <= img.Height and pos[2] >= 1 and pos[2] <= img.Width then
             img:SetPixel(pos, color)
         end
     end
