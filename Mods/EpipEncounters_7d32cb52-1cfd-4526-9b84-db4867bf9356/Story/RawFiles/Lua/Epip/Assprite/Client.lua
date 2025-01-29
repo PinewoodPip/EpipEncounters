@@ -44,6 +44,16 @@ local Assprite = {
             Text = "Enter a path to load a .PNG from (excluding extension), relative to the Osiris Data folder.",
             ContextDescription = [[Message box for load option]],
         },
+        MsgBox_Exit_Header = {
+            Handle = "hdf193d0fga963g41c6gb531g0df00750848d",
+            Text = "Exit Assprite",
+            ContextDescription = [[Header for exit message box]],
+        },
+        MsgBox_Exit_Body = {
+            Handle = "h5a24063fga5ebg4ae9gb1c9gc1c197dd3f37",
+            Text = "Are you sure you want to exit? Your current image will be discarded.",
+            ContextDescription = [[Message box for exit option]],
+        },
     },
 
     Events = {
@@ -83,7 +93,7 @@ Epip.RegisterFeature("Features.Assprite", Assprite)
 
 ---@class Features.Assprite.Events.RequestCompleted
 ---@field RequestID string
----@field Image ImageLib_Image
+---@field Image ImageLib_Image? `nil` if the request was cancelled.
 
 ---------------------------------------------
 -- METHODS
@@ -120,6 +130,13 @@ function Assprite.CompleteRequest()
         Image = context.Image,
     })
     Assprite._Context = nil
+end
+
+---Cancels the current editing request.
+function Assprite.CancelRequest()
+    local context = Assprite._Context
+    context.Image = nil
+    Assprite.CompleteRequest()
 end
 
 ---Requests to start using a tool.

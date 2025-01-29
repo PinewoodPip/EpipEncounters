@@ -129,6 +129,7 @@ function UI._Initialize(img)
                 id = "main",
                 entries = {
                     {id = "Features.Assprite.UI.Load", type = "button", text = CommonStrings.Load:GetString()},
+                    {id = "Features.Assprite.UI.Exit", type = "button", text = CommonStrings.Exit:GetString()},
                 }
             }
         })
@@ -260,6 +261,12 @@ function UI._Initialize(img)
     UI._Initialized = true
 end
 
+---@override
+function UI:Hide()
+    Assprite.CancelRequest()
+    Client.UI._BaseUITable.Hide(self)
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
@@ -272,6 +279,17 @@ end)
 -- Handle context menus interactions.
 ContextMenu.RegisterElementListener("Features.Assprite.UI.Load", "buttonPressed", function ()
     UI.RequestLoad()
+end)
+ContextMenu.RegisterElementListener("Features.Assprite.UI.Exit", "buttonPressed", function ()
+    MessageBox.Open({
+        ID = "Features.Assprite.UI.Exit",
+        Header = TSK.MsgBox_Exit_Header:GetString(),
+        Message = TSK.MsgBox_Exit_Body:GetString(),
+        Buttons = {
+            {ID = 1, Text = CommonStrings.Exit:GetString()},
+            {ID = 2, Text = CommonStrings.Cancel:GetString()},
+        }
+    })
 end)
 ContextMenu.RegisterElementListener("Features.Assprite.UI.Undo", "buttonPressed", function ()
     Assprite.Undo()
@@ -290,6 +308,12 @@ MessageBox.RegisterMessageListener("Features.Assprite.UI.Load", MessageBox.Event
     else
         Notification.ShowWarning(TSK.Notification_Load_Error:GetString())
         Assprite:__LogWarning("Failed to load image", trace)
+    end
+end)
+-- Handle "Exit" message box.
+MessageBox.RegisterMessageListener("Features.Assprite.UI.Exit", MessageBox.Events.ButtonPressed, function(buttonID)
+    if buttonID == 1 then
+        UI:Hide()
     end
 end)
 
