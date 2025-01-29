@@ -69,7 +69,7 @@ function _PNG:DecompressData()
     data = data:sub(3) -- Remove method, flag bytes
     data = data:sub(1, #data-4) -- Remove adler32
 
-    local decompressed, unprocessed = Image.LibDeflate:DecompressDeflate(data)
+    local decompressed, _ = Image.LibDeflate:DecompressDeflate(data)
 
     local bytesDecompressed = {}
     for i=1,#decompressed,1 do
@@ -84,7 +84,7 @@ function _PNG:DecompressData()
     -- elseif png.ColorType == 3 then
         -- channelCount = 4
     else
-        Image:Error("IDAT.ReadChunk", "ColorType not supported")
+        Image:Error("DecompressData", "ColorType not supported")
     end
 
     -- Parse bytes into an array for easier de-filtering.
@@ -111,7 +111,6 @@ function _PNG:DecompressData()
             local filteringValue
             local byteX, byteY = i, j
             local currentByte = byteArray[byteX][byteY]
-            local pixelIndex = ((byteY - 2) % (channelCount)) + 1
 
             local previousByte = byteArray[byteX][byteY - 3] or 0 -- Corresponding byte of previous pixel
             if byteY - 1 == 1 and scanlineFiltering ~= 0 and (byteX > 1) then -- Use last byte of previous row instead - TODO is this correct?
@@ -189,18 +188,17 @@ local function toHex(str)
     return valStr:upper()
 end
 
----@param chunkID string
+---Returns the metadata for a chunk by its hex ID.
+---@param chunkID string In spaced hex.
 ---@return ImageLib_Decoder_PNG_ChunkDescriptor
 function _PNG:GetChunkData(chunkID)
-    local chunk = nil
-
+    local chunk = nil ---@type ImageLib_Decoder_PNG_ChunkDescriptor?
     for _,v in pairs(self.CHUNKS) do
         if v.Hex == chunkID then
             chunk = v
             break
         end
     end
-
     return chunk
 end
 
@@ -256,5 +254,5 @@ function _PNG:ReadChunk()
         end
     end
 
-    local crcBytes = self:ConsumeBytes(4) -- Read CRC data (TODO not currently checked)
+    local _ = self:ConsumeBytes(4) -- Read CRC data (TODO not currently checked)
 end
