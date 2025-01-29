@@ -49,10 +49,6 @@ function Image:SetImage(img)
     local CHUNK_SIZE = self.CHUNK_SIZE
     local width, height = img.Width, img.Height
 
-    if height % CHUNK_SIZE ~= 0 or width % CHUNK_SIZE ~= 0 then
-        Image:__Error("SetImage", "Image dimensions should be multiple of", CHUNK_SIZE)
-    end
-
     local imageMatrix = {} ---@type ImageLib_Image[][] Matrix of image chunks.
 
     -- Add rows
@@ -63,9 +59,11 @@ function Image:SetImage(img)
     -- Divide the image into chunks
     for i=1,height,CHUNK_SIZE do
         for j=1,width,CHUNK_SIZE do
-            local subImg = Client.Image.CreateImage(CHUNK_SIZE, CHUNK_SIZE)
-            for i2=i,i+CHUNK_SIZE-1,1 do
-                for j2=j,j+CHUNK_SIZE-1,1 do
+            local chunkWidth = math.min(width - j + 1, CHUNK_SIZE)
+            local chunkHeight = math.min(height - i + 1, CHUNK_SIZE)
+            local subImg = Client.Image.CreateImage(chunkWidth, chunkHeight)
+            for i2=i,i+chunkHeight-1,1 do
+                for j2=j,j+chunkWidth-1,1 do
                     subImg:AddPixel(img.Pixels[i2][j2])
                 end
             end
@@ -89,8 +87,10 @@ function Image:SetImage(img)
             self._Chunks[rowIndex] = {}
         end
     end
+    local TEXT_SIZE ---@type vec2 Used for positioning, see below.
     for i,row in ipairs(imageMatrix) do
         for j,subImage in ipairs(row) do
+            -- Update or instantiate the text field for the chunk
             local subImageText = Image.ImageToText(subImage)
             local text = self._Chunks[i][j]
             if text then
@@ -99,14 +99,21 @@ function Image:SetImage(img)
                 text = TextPrefab.Create(self.UI, self:PrefixID("ImageText" .. i .. "." .. j), container, subImageText, "Left", V(100, 100))
                 self._Chunks[i][j] = text
             end
+
             -- Shrink kerning and line height to remove seams
             text:SetTextFormat({
                 letterSpacing = -2,
                 leading = -18,
             })
             text:FitSize()
-            local textSize = text:GetTextSize()
-            text:SetPosition((j - 1) * textSize[1] - 6 * (j - 1), (i - 1) * textSize[2] - 15 * (i - 1)) -- The text size is lying a bit still, need to subtract a bit to get them to sit tight with each other
+
+            -- Determine text size from the first chunk only, which will be the largest one. Chunks near the right and bottom edges might be smaller, but their positioning assumes previous ones are same size.
+            if i == 1 and j == 1 then
+                TEXT_SIZE = text:GetTextSize()
+            end
+
+            -- Position chunk
+            text:SetPosition((j - 1) * TEXT_SIZE[1] - 6 * (j - 1), (i - 1) * TEXT_SIZE[2] - 15 * (i - 1)) -- The text size is lying a bit still, need to subtract a bit to get them to sit tight with each other
         end
     end
 
