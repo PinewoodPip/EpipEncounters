@@ -156,6 +156,26 @@ function UI._Initialize(img)
         })
         ContextMenu.Open()
     end)
+    -- "Help" button
+    local helpButton = ButtonPrefab.Create(UI, "TopButton.Help", topBar, ButtonPrefab.STYLES.BrownSimple_Inactive)
+    helpButton:SetLabel(CommonStrings.Help)
+    -- Open context menu on click
+    helpButton.Events.Pressed:Subscribe(function (_)
+        local x, y = helpButton:GetScreenPosition(true):unpack()
+        y = y + helpButton:GetHeight()
+        ContextMenu.RequestMenu(x, y, "Features.Assprite.UI.Help")
+    end)
+    ContextMenu.RegisterMenuHandler("Features.Assprite.UI.Help", function()
+        ContextMenu.Setup({
+            menu = {
+                id = "main",
+                entries = {
+                    {id = "Features.Assprite.UI.About", type = "button", text = CommonStrings.About:GetString()},
+                }
+            }
+        })
+        ContextMenu.Open()
+    end)
 
     topBar:RepositionElements()
     UI.TopBar = topBar
@@ -293,6 +313,12 @@ ContextMenu.RegisterElementListener("Features.Assprite.UI.Exit", "buttonPressed"
 end)
 ContextMenu.RegisterElementListener("Features.Assprite.UI.Undo", "buttonPressed", function ()
     Assprite.Undo()
+end)
+ContextMenu.RegisterElementListener("Features.Assprite.UI.About", "buttonPressed", function ()
+    MessageBox.Open({
+        Header = TSK.Assprite:GetString(),
+        Message = TSK.MsgBox_About_Body:GetString(),
+    })
 end)
 
 -- Handle load prompts.

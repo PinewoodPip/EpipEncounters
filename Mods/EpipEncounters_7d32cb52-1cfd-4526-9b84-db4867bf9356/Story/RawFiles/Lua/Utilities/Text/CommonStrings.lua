@@ -452,6 +452,15 @@ Text.CommonStrings.Edit = Text.RegisterTranslatedString({
     Text = "Edit",
     ContextDescription = [[Refers to the "to edit" verb]],
 })
+Text.CommonStrings.Help = Text.RegisterTranslatedString({
+    Handle = "h43418d76g367bg4462g9128g2e8411de907d",
+    Text = "Help",
+})
+Text.CommonStrings.About = Text.RegisterTranslatedString({
+    Handle = "h9a503fe9g2698g45f2ga8begf055a5f0eb8a",
+    Text = "About",
+    ContextDescription = [[As in, an "about"/info page]]
+})
 
 ---------------------------------------------
 -- SHAPES

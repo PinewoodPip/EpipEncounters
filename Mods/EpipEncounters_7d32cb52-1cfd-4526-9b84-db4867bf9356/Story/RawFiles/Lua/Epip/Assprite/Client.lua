@@ -54,6 +54,18 @@ local Assprite = {
             Text = "Are you sure you want to exit? Your current image will be discarded.",
             ContextDescription = [[Message box for exit option]],
         },
+        MsgBox_About_Body = {
+            Handle = "h890ba9d3g02bcg4a69gbc1agfbfaacd0d940",
+            Text = "A spriting editor by %s<br>Spring 2025 (for Epip's 4th anniversary)",
+            ContextDescription = [["About" message box. Param is creator credit ("Team Pinewood")]],
+            FormatOptions = {
+                FormatArgs = {
+                    Text.CommonStrings.TeamPinewood:Format({
+                        Color = Color.LARIAN.GREEN, -- The actual Team Pinewood green was too dark against the message box prompt to use here.
+                    })
+                }
+            }
+        },
     },
 
     Events = {
