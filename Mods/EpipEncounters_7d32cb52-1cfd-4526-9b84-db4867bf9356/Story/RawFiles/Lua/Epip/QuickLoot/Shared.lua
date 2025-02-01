@@ -277,6 +277,7 @@ QuickLoot.Settings.BaseRadius = QuickLoot:RegisterSetting("BaseRadius", {
 })
 QuickLoot.Settings.LootingEffect = QuickLoot:RegisterSetting("LootingEffect", {
     Type = "Boolean",
+    Context = "Client",
     Name = TSK.Setting_LootingEffect_Name,
     Description = TSK.Setting_LootingEffect_Description,
     DefaultValue = false,
