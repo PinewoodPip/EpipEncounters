@@ -22,9 +22,9 @@ end
 ---@param char EsvCharacter
 ---@param item EsvItem
 function QuickLoot.PlayLootingEffect(char, item)
-    local container = Item.GetInventoryParent(item) -- Assumed not to be nested in inventories.
-    Osiris.PlayBeamEffect(char, container, Item.TELEKINESIS_BEAM_EFFECT, "Dummy_R_Hand", "Dummy_Root")
-    Osiris.PlayEffect(container, Item.TELEKINESIS_IMPACT_EFFECT, "Dummy_Root")
+    local effectTarget = Item.GetInventoryParent(item) or item -- Assumed not to be nested in inventories. The item might be on the ground.
+    Osiris.PlayBeamEffect(char, effectTarget, Item.TELEKINESIS_BEAM_EFFECT, "Dummy_R_Hand", "Dummy_Root")
+    Osiris.PlayEffect(effectTarget, Item.TELEKINESIS_IMPACT_EFFECT, "Dummy_Root")
 end
 
 ---------------------------------------------

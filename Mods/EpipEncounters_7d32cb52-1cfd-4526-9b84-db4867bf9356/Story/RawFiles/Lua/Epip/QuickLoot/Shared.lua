@@ -39,6 +39,11 @@ local QuickLoot = {
             Text = "In %s's corpse.",
             ContextDescription = [[Tooltip for source corpse of an item. Param is character name]],
         },
+        Label_OnGround = {
+            Handle = "hecfea8f8g6674g4e1dg86b6g5ae65b73e3ba",
+            Text = "On the ground.",
+            ContextDescription = [[Tooltip for source of items laying on the ground]],
+        },
         Notification_NoLootNearby = {
             Handle = "h75d9d7f6g8200g43ffg9ef6g10a48ab961a6",
             Text = "No loot found nearby.",
@@ -129,6 +134,16 @@ local QuickLoot = {
             Text = "If enabled, items with no interactions nor crafting use will be included.",
             ContextDescription = [[Setting tooltip for "Show clutter]],
         },
+        Setting_ShowGroundItems_Name = {
+            Handle = "h481467e2g1b90g4f83ga5d9gc2b8e62f601f",
+            Text = "Show ground items",
+            ContextDescription = [[Setting name]],
+        },
+        Setting_ShowGroundItems_Description = {
+            Handle = "h97731ba3geb7dg475agb3d2gcf173d6152b6",
+            Text = "If enabled, items on the ground will be included, except containers themselves.",
+            ContextDescription = [[Setting tooltip for "Include ground items"]],
+        },
         Setting_BaseRadius_Name = {
             Handle = "hdd379f13g9fb6g4195ga02bge51a06d5f44a",
             Text = "Default Radius",
@@ -170,6 +185,7 @@ local QuickLoot = {
     },
     Hooks = {
         IsContainerLootable = {Context = "Client"}, ---@type Hook<Features.QuickLoot.Hooks.IsContainerLootable>
+        IsGroundItemLootable = {Context = "Client"}, ---@type Hook<Features.QuickLoot.Hooks.IsGroundItemLootable>
         IsItemFilteredOut = {Context = "Client"}, ---@type Hook<Features.QuickLoot.Hooks.IsItemFilteredOut>
         CanSearch = {Context = "Client"}, ---@type Hook<{Character:EclCharacter, CanSearch:boolean}>
     },
@@ -241,6 +257,13 @@ QuickLoot.Settings.ShowClutter = QuickLoot:RegisterSetting("ShowClutter", {
     Description = TSK.Setting_ShowClutter_Description,
     DefaultValue = true,
 })
+QuickLoot.Settings.ShowGroundItems = QuickLoot:RegisterSetting("ShowGroundItems", {
+    Type = "Boolean",
+    Context = "Client",
+    Name = TSK.Setting_ShowGroundItems_Name,
+    Description = TSK.Setting_ShowGroundItems_Description,
+    DefaultValue = false,
+})
 QuickLoot.Settings.BaseRadius = QuickLoot:RegisterSetting("BaseRadius", {
     Type = "ClampedNumber",
     Context = "Client",
@@ -275,6 +298,11 @@ QuickLoot.Settings.LootingEffect = QuickLoot:RegisterSetting("LootingEffect", {
 ---@field Container EclItem
 ---@field Position vec3 Origin of the request.
 ---@field Lootable boolean Hookable. Defaults to `true`.
+
+---@class Features.QuickLoot.Hooks.IsGroundItemLootable
+---@field Item EclItem
+---@field RequestPosition vec3 Origin of the request.
+---@field Lootable boolean Hookable. Defaults to whether the item is not a container.
 
 ---@class Features.QuickLoot.Hooks.IsItemFilteredOut
 ---@field Item EclItem

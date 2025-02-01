@@ -683,6 +683,13 @@ function Item.GetInventoryParent(item)
     return parentEntity
 end
 
+---Returns whether an item is within an inventory.
+---@param item Item
+---@return boolean
+function Item.IsInInventory(item)
+    return Item.GetInventoryParent(item) ~= nil
+end
+
 ---Returns the top-most character or item that contains the item passed.
 ---@param item Item
 ---@return (Character|Item)? -- `nil` if the item is not in an inventory.

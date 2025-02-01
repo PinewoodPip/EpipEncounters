@@ -171,7 +171,7 @@ end
 ---Renders an item onto the grid and tracks it.
 ---Should be called during or after Setup().
 ---@param item EclItem
----@param source EclItem|EclCharacter
+---@param source (EclItem|EclCharacter)? Use `nil` for items on the ground.
 ---@param greyedOut boolean? Defaults to `false`.
 function UI.AddItem(item, source, greyedOut)
     greyedOut = greyedOut or false
@@ -179,8 +179,10 @@ function UI.AddItem(item, source, greyedOut)
 
     -- Update bookkeeping
     table.insert(state.ItemHandles, item.Handle)
-    local handleMap = Entity.IsCharacter(source) and state.HandleMaps.ItemHandleToCorpseHandle or state.HandleMaps.ItemHandleToContainerHandle
-    handleMap[item.Handle] = source.Handle
+    if source then
+        local handleMap = Entity.IsCharacter(source) and state.HandleMaps.ItemHandleToCorpseHandle or state.HandleMaps.ItemHandleToContainerHandle
+        handleMap[item.Handle] = source.Handle
+    end
     state.LowPriorityItemHandles[item.Handle] = greyedOut or nil
 end
 
@@ -201,6 +203,14 @@ function UI.RemoveItem(item)
     state.LowPriorityItemHandles[item.Handle] = nil
     state.HandleMaps.ItemHandleToContainerHandle[item.Handle] = nil
     state.HandleMaps.ItemHandleToCorpseHandle[item.Handle] = nil
+end
+
+---Returns whether a tracked item is on the ground.
+---@param item EclItem
+---@return boolean
+function UI.IsGroundItem(item)
+    local handleMap = UI._State.HandleMaps
+    return handleMap.GroundItems[item.Handle]
 end
 
 ---Re-fetches items and resets the state.
@@ -226,7 +236,7 @@ function UI._UpdateItems(search)
     -- Add items and render the list
     for _,item in ipairs(items) do
         local sourceHandle = handleMaps.ItemHandleToContainerHandle[item.Handle] or handleMaps.ItemHandleToCorpseHandle[item.Handle]
-        UI.AddItem(item, Entity.GetGameObjectComponent(sourceHandle), false)
+        UI.AddItem(item, sourceHandle and Entity.GetGameObjectComponent(sourceHandle) or nil, false)
     end
     -- Add filtered-out items in greyed-out mode.
     if QuickLoot.Settings.FilterMode:GetValue() == QuickLoot.SETTING_FILTERMODE_CHOICES.GREYED_OUT then
@@ -455,6 +465,7 @@ UI.Hooks.GetSettings:Subscribe(function (ev)
         settings.ShowIngredients,
         settings.ShowBooks,
         settings.ShowClutter,
+        settings.ShowGroundItems,
     }
     for _,setting in ipairs(defaultSettings) do
         table.insert(ev.Settings, setting)
@@ -464,15 +475,27 @@ end, {StringID = "DefaultImplementation"})
 -- Append source container/corpse to item tooltips.
 Tooltip.Hooks.RenderItemTooltip:Subscribe(function (ev)
     if UI:IsVisible() then
+        local sourceLabel = nil ---@type string? 
+
+        -- Check item source
+        -- The tooltip might be from another UI, or the item might've been moved out by another character in the meantime.
         local source = UI.GetItemSource(ev.Item)
-        if source then -- The tooltip might be from another UI, or the item might've been moved out by another character in the meantime.
+        if source then
             local entityName = Entity.IsItem(source) and Item.GetDisplayName(source) or Character.GetDisplayName(source)
             local hasCorpseKeyword = string.find(entityName, CommonStrings.Corpse:GetString(), nil, true)
             local tsk = (Entity.IsItem(source) or hasCorpseKeyword) and TSK.Label_SourceContainer or TSK.Label_SourceCorpse -- Avoid using "In {name}'s corpse" if the word "corpse" is already in the entity name.
-            local label = tsk:Format({
+            sourceLabel = tsk:Format({
                 FormatArgs = {entityName},
                 Color = Color.LARIAN.GREEN,
             })
+        elseif UI.IsGroundItem(ev.Item) then
+            sourceLabel = TSK.Label_OnGround:Format({
+                Color = Color.LARIAN.GREEN,
+            })
+        end
+
+        -- Append tooltip label.
+        if sourceLabel then
             local element = ev.Tooltip:GetFirstElement("ItemDescription")
             local infix = "<br><br>"
             if not element then
@@ -480,7 +503,7 @@ Tooltip.Hooks.RenderItemTooltip:Subscribe(function (ev)
                 ev.Tooltip:InsertElement(element)
                 infix = "" -- Don't append line breaks if there was no element before.
             end
-            element.Label = string.format("%s%s%s", element.Label, infix, label)
+            element.Label = string.format("%s%s%s", element.Label, infix, sourceLabel)
         end
     end
 end)

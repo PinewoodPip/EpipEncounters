@@ -20,7 +20,7 @@ QuickLoot._Searches = {} ---@type table<CharacterHandle, Features.QuickLoot.Sear
 ---@field Containers ItemHandle[]? `nil` if the search is in progress.
 ---@field EndTime integer? `nil` if the search is in progress. 
 
----@alias Features.QuickLoot.HandleMap {ItemHandleToContainerHandle: table<ItemHandle, ItemHandle>, ItemHandleToCorpseHandle: table<ItemHandle, CharacterHandle>}
+---@alias Features.QuickLoot.HandleMap {ItemHandleToContainerHandle:table<ItemHandle, ItemHandle>, ItemHandleToCorpseHandle:table<ItemHandle, CharacterHandle>, GroundItems:set<ItemHandle>}
 
 ---------------------------------------------
 -- METHODS
@@ -45,6 +45,22 @@ function QuickLoot.GetContainers(pos, radius)
     return nearbyContainers, nearbyCorpses
 end
 
+---Returns the lootable non-container items near a position.
+---@see Features.QuickLoot.Hooks.IsGroundItemLootable
+---@param pos vec3
+---@param radius number In meters.
+---@return EclItem[]
+function QuickLoot.GetGroundItems(pos, radius)
+    local items = Entity.GetNearbyItems(pos, radius, function (item)
+        return item.CanBePickedUp and QuickLoot.Hooks.IsGroundItemLootable:Throw({
+            Container = item,
+            RequestPosition = pos,
+            Lootable = not Item.IsContainer(item), -- Do not include containers by default.
+        }).Lootable
+    end, true)
+    return items
+end
+
 ---Returns items to loot near a position.
 ---@param pos Vector3
 ---@param radius number In meters.
@@ -53,8 +69,10 @@ end
 function QuickLoot.GetItems(pos, radius, applyFilters)
     if applyFilters == nil then applyFilters = true end
     local nearbyContainers, nearbyCorpses = QuickLoot.GetContainers(pos, radius)
+    local groundItems = QuickLoot.GetGroundItems(pos, radius)
     local itemHandleToContainerHandle = {}
     local itemHandleToCorpseHandle = {}
+    local includedGroundItems = {} ---@type set<ItemHandle>
     local items = {} ---@type EclItem[]
 
     -- Fetch items from nearby containers
@@ -82,9 +100,18 @@ function QuickLoot.GetItems(pos, radius, applyFilters)
         end
     end
 
+    -- Filter ground items
+    QuickLoot:DebugLog(#groundItems, "nearby ground items")
+    for _,item in ipairs(groundItems) do
+        if not applyFilters or not QuickLoot.IsItemFilteredOut(item) then
+            table.insert(items, item)
+            includedGroundItems[item.Handle] = true
+        end
+    end
+
     QuickLoot:DebugLog(#items, "items found")
 
-    return items, {ItemHandleToContainerHandle = itemHandleToContainerHandle, ItemHandleToCorpseHandle = itemHandleToCorpseHandle}
+    return items, {ItemHandleToContainerHandle = itemHandleToContainerHandle, ItemHandleToCorpseHandle = itemHandleToCorpseHandle, GroundItems = includedGroundItems}
 end
 
 ---Requests an item to be picked up.
@@ -143,8 +170,11 @@ function QuickLoot.StartSearch(char)
 
             -- Play an effect on containers and corpses within range.
             local containers, corpses = QuickLoot.GetContainers(char.WorldPos, newScale)
-            for i=1,#containers+#corpses,1 do -- Avoid list concatenation for performance.
-                local entity = i > #containers and corpses[i - #containers] or containers[i]
+            local groundItems = table.filter(QuickLoot.GetGroundItems(char.WorldPos, newScale), function (item)
+                return not QuickLoot.IsItemFilteredOut(item) -- Must apply filter here to not show the effect for ground items when the setting is disabled.
+            end)
+            local allItems = table.join(table.join(containers, corpses), groundItems)
+            for _,entity in ipairs(allItems) do
                 local entityHandle = entity.Handle
                 if not highlightEffectHandlers[entity.Handle] then
                     local containerMultiVisual = Entity.IsItem(entity) and Ext.Visual.CreateOnItem(entity.WorldPos, entity) or Ext.Visual.CreateOnCharacter(entity.WorldPos, entity)
@@ -244,7 +274,9 @@ function QuickLoot.StopSearch(char)
         QuickLoot:__Error("StopSearch", "Character is not searching")
     end
     local search = QuickLoot._Searches[char.Handle]
-    local containers, corpses = QuickLoot.GetContainers(char.WorldPos, QuickLoot.GetSearchRadius(char))
+    local searchRadius = QuickLoot.GetSearchRadius(char)
+    local containers, corpses = QuickLoot.GetContainers(char.WorldPos, searchRadius)
+    local groundItems = QuickLoot.GetGroundItems(char.WorldPos, searchRadius)
     search.EndTime = Ext.Utils.MonotonicTime()
     search.Containers = Entity.EntityListToHandles(containers)
     -- Stopping the effect is handled via tick listener.
@@ -261,6 +293,9 @@ function QuickLoot.StopSearch(char)
         end
         for _,corpse in ipairs(corpses) do
             Entity.SetHighlight(corpse, Entity.HIGHLIGHT_TYPES.NONE)
+        end
+        for _,item in ipairs(groundItems) do
+            Entity.SetHighlight(item, Entity.HIGHLIGHT_TYPES.NONE)
         end
     end
 end
@@ -459,6 +494,11 @@ QuickLoot.Hooks.IsItemFilteredOut:Subscribe(function (ev)
     -- Clutter filter
     if settings.ShowClutter:GetValue() == false then
         filtered = filtered or (not Item.IsEquipment(item) and not Item.HasUseActions(item) and not Item.IsIngredient(item) and not Item.IsRune(item) and not Item.IsGold(item) and not Item.IsKey(item))
+    end
+
+    -- Ground item filter
+    if settings.ShowGroundItems:GetValue() == false then
+        filtered = filtered or not Item.IsInInventory(item)
     end
 
     ev.FilteredOut = filtered

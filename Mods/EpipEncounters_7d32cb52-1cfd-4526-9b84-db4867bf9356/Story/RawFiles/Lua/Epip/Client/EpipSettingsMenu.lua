@@ -512,6 +512,7 @@ local tabs = {
             CreateSettingEntry(QuickLoot.Settings.ShowIngredients),
             CreateSettingEntry(QuickLoot.Settings.ShowBooks),
             CreateSettingEntry(QuickLoot.Settings.ShowClutter),
+            CreateSettingEntry(QuickLoot.Settings.ShowGroundItems),
         },
     },
     ["Features.AnimationCancelling"] = {

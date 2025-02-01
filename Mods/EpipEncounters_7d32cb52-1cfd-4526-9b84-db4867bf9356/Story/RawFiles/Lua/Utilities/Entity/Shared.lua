@@ -206,7 +206,7 @@ end
 ---@param pos vec3
 ---@param radius number Radial.
 ---@param predicate (fun(item:Item):boolean)? Should return `true` for an item to be included.
----@param twoDimensional boolean? Defaults to `false`.
+---@param twoDimensional boolean? Whether the radius checks should only consider 2D distance. Defaults to `false`.
 ---@return Item[]
 function Entity.GetNearbyItems(pos, radius, predicate, twoDimensional)
     local allItems = Entity.GetRegisteredItems()
