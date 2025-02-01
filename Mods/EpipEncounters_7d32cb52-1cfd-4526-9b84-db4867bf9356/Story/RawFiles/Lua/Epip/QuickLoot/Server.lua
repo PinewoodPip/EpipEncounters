@@ -22,9 +22,14 @@ end
 ---@param char EsvCharacter
 ---@param item EsvItem
 function QuickLoot.PlayLootingEffect(char, item)
-    local effectTarget = Item.GetInventoryParent(item) or item -- Assumed not to be nested in inventories. The item might be on the ground.
-    Osiris.PlayBeamEffect(char, effectTarget, Item.TELEKINESIS_BEAM_EFFECT, "Dummy_R_Hand", "Dummy_Root")
-    Osiris.PlayEffect(effectTarget, Item.TELEKINESIS_IMPACT_EFFECT, "Dummy_Root")
+    local inventoryParent = Item.GetInventoryParent(item) -- Assumed not to be nested in inventories.
+    if inventoryParent then -- The item might be on the ground.
+        Osiris.PlayBeamEffect(char, inventoryParent, Item.TELEKINESIS_BEAM_EFFECT, "Dummy_R_Hand", "Dummy_Root")
+        Osiris.PlayEffect(item, Item.TELEKINESIS_IMPACT_EFFECT, "Dummy_Root")
+    else -- Play a poof effect instead. Sadly using ItemMoveToPosition together with ItemToInventory causes random (and frequent) crashes, so we cannot emulate a pickup animation.
+        local pos = item.WorldPos
+        Osiris.PlayEffectAtPosition(QuickLoot.GROUND_ITEM_PICKUP_EFFECT, pos[1], pos[2], pos[3]) -- Could've been done client-side, but we consider it useful for other players to see that someone else is looting ground items this way.
+    end
 end
 
 ---------------------------------------------

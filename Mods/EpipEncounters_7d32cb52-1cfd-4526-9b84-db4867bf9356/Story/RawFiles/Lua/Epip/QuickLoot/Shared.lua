@@ -7,6 +7,7 @@ local QuickLoot = {
 
     MAX_SEARCH_DISTANCE = 10, -- In meters.
     SEARCH_BASE_RADIUS = 1, -- In meters.
+    GROUND_ITEM_PICKUP_EFFECT = "RS3_FX_GP_ScriptedEvent_Teleport_GenericSmoke_01", -- A bit big and loud, but oh well.
 
     SETTING_FILTERMODE_CHOICES = {
         HIDDEN = "Hidden",
