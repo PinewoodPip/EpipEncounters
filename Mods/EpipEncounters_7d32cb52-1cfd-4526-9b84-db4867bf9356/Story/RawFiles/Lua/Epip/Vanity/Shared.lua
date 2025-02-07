@@ -307,7 +307,8 @@ local Vanity = {
         Shield = true,
     },
 
-    NETMSG_REVERT_APPEARANCE = "Features.Vanity.NetMsgs.RevertAppearance",
+    NETMSG_REVERT_APPEARANCE = "Features.Vanity.NetMsg.RevertAppearance",
+    NETMSG_REFRESH_VISUALS = "Features.Vanity.NetMsg.RefreshVisuals",
 
     TranslatedStrings = {
         FeatureName = {
@@ -405,7 +406,8 @@ local TSK = Vanity.TranslatedStrings
 -- NET MESSAGES
 ---------------------------------------------
 
----@class Features.Vanity.NetMsgs.RevertAppearance : NetLib_Message_Character, NetLib_Message_Item
+---@class Features.Vanity.NetMsg.RevertAppearance : NetLib_Message_Character, NetLib_Message_Item
+---@class Features.Vanity.NetMsg.RefreshVisuals : NetLib_Message_Character
 
 ---------------------------------------------
 -- SETTINGS

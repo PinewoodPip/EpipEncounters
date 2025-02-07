@@ -1101,6 +1101,12 @@ Client.UI.CharacterSheet:RegisterCallListener("showStatTooltip", PreventTooltip)
 Client.UI.CharacterSheet:RegisterCallListener("showAbilityTooltip", PreventTooltip)
 Client.UI.CharacterSheet:RegisterCallListener("showTalentTooltip", PreventTooltip)
 
+-- Handle requests to refresh visuals.
+Net.RegisterListener(VanityFeature.NETMSG_REFRESH_VISUALS, function (payload)
+    if Epip.IsPipFork() and Epip.GetPipForkVersion() >= 3 then
+        Ext.Entity.RefreshEquipmentVisuals(payload:GetCharacter().Handle)
+    end
+end)
 Net.RegisterListener("EPIPENCOUNTERS_Vanity_RefreshSheetAppearance", function(_)
     local sheet = Client.UI.CharacterSheet
     if sheet:IsVisible() then

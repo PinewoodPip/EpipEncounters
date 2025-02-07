@@ -218,19 +218,27 @@ function Transmog.SetForceShowHair(item, forceShow)
     end
 end
 
----Apply a Polymorph status to refresh character visuals without needing to re-equip. Credits to Luxen for the discovery!
+---Refreshes the equipment visuals of a character.
+---If the extender fork is not installed, this is done by applying a Polymorph status. Credits to Luxen for the discovery!
 ---@param char EsvCharacter
 ---@param useAlternativeStatus boolean?
 function Vanity.RefreshAppearance(char, useAlternativeStatus) -- TODO move
-    local status = "PIP_Vanity_Refresh"
-    local charGUID = char.MyGuid
-    if useAlternativeStatus then status = "PIP_Vanity_Refresh_Alt" end
+    local charGUID, charNetID = char.MyGuid, char.NetID
 
-    Osi.ApplyStatus(charGUID, status, 0, 1, NULLGUID)
+    -- Use polymorph status to refresh visuals.
+    if not Epip.IsPipFork() or Epip.GetPipForkVersion() < 3 then
+        local status = useAlternativeStatus and "PIP_Vanity_Refresh_Alt" or "PIP_Vanity_Refresh"
+        Osi.ApplyStatus(charGUID, status, 0, 1, NULLGUID)
+    end
 
-    -- Request to update the character sheet paperdoll.
+    -- Request to update visuals.
     Timer.Start(0.2, function()
         Net.PostToCharacter(charGUID, "EPIPENCOUNTERS_Vanity_RefreshSheetAppearance")
+    end)
+    Timer.StartTickTimer(2, function ()
+        Net.Broadcast(Vanity.NETMSG_REFRESH_VISUALS, {
+            CharacterNetID = charNetID,
+        })
     end)
 end
 
