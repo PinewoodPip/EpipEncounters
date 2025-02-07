@@ -127,10 +127,10 @@ function Dyes.ApplyCustomDye(dye, item)
 
     Dyes.SetItemColorOverride(item, dye)
 
-    Timer.Start(0.55, function()
-        Net.PostToServer("EPIPENCOUNTERS_DyeItem", {ItemNetID = itemNetID, Dye = dye, CharacterNetID = Client.GetCharacter().NetID})
+    Net.PostToServer("EPIPENCOUNTERS_DyeItem", {ItemNetID = itemNetID, Dye = dye, CharacterNetID = Client.GetCharacter().NetID}) -- This used to have a 0.55s delay in <v1073, though it appears unnecessary?
+    Timer.Start(0.8, function(_)
+        Dyes.UpdateActiveCharacterDyes()
     end)
-    Timer.Start(0.8, function(_) Dyes.UpdateActiveCharacterDyes() end)
 end
 
 ---Requests dyes to be removed from an item.

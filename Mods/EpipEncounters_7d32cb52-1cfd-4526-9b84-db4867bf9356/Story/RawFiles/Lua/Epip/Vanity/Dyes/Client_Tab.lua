@@ -240,6 +240,11 @@ Tab:RegisterListener(Vanity.Events.SliderHandleReleased, function (id, value)
     color[channel] = value
 
     Tab:UpdateColorSliderLabel(colorIndex, true)
+
+    -- Apply the dye immediately if the fork is installed, as then this can be done without visual flickering.
+    if Epip.IsPipFork() and Epip.GetPipForkVersion() >= 3 then
+        Dyes.ApplyGenericDyeFromSliders()
+    end
 end)
 
 -- Listen for copy buttons.
