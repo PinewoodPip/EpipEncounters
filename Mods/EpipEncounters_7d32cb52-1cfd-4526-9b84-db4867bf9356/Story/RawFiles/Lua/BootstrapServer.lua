@@ -25,6 +25,12 @@
 
     Sick/epic/awesome ASCII header is from https://patorjk.com/software/taag/
 ]]
+
+-- Epip does not work in-editor.
+if Ext.Utils.GameVersion() == "v3.6.51.9303" then
+    return
+end
+
 Ext.Require("BootstrapBefore.lua")
 Utilities = {}
 
