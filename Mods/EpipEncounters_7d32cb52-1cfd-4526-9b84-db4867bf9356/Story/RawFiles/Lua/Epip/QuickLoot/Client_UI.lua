@@ -40,6 +40,7 @@ UI.Events.Initialized = UI:AddSubscribableEvent("Initialized") ---@type Event<Em
 UI.Events.Opened = UI:AddSubscribableEvent("Opened") ---@type Event<Empty>
 
 UI._State = nil ---@type Features.QuickLoot.UI.State?
+UI._LootallRequestRemainingWeight = nil ---@type integer? Necessary to prevent overencumbrance, as looting operations are asynchronous and thus character inventory weight doesn't update right after a request.
 
 UI.Hooks.GetSettings = UI:AddSubscribableHook("GetSettings") ---@type Hook<{Settings:SettingsLib_Setting[]}> Fired only once when the UI is first opened.
 
@@ -112,12 +113,32 @@ end
 ---Requests to loot all items in the UI.
 function UI.LootAll()
     local char = UI.GetCharacter()
+    local lootedAny = false
+    local lootedAll = true
+    UI._LootallRequestRemainingWeight = Character.GetMaxCarryWeight(char) - Character.GetCarryWeight(char)
     for _,item in ipairs(UI.GetItems()) do
         -- No need to update bookkeeping of the UI, as we can just empty/hide it right afterwards.
-        QuickLoot.RequestPickUp(char, item)
+        local looted = QuickLoot.RequestPickUp(char, item)
+        if looted then
+            UI._LootallRequestRemainingWeight = UI._LootallRequestRemainingWeight - Item.GetWeight(item, true)
+        end
+        lootedAll = lootedAll and looted
+        lootedAny = lootedAny or looted
     end
-    UI:PlaySound(UI.PICKUP_SOUND) -- Play the sound only once so as not to stack it.
+
+    -- Show warning if not all items were looted
+    if not lootedAll then
+        Notification.ShowWarning(TSK.Notification_DidNotLootAll:GetString())
+    end
+
+    -- Play looting sound - only once, so as not to stack it.
+    if lootedAny then
+        UI:PlaySound(UI.PICKUP_SOUND)
+    end
+
     UI:Hide()
+
+    UI._LootallRequestRemainingWeight = nil
 end
 
 ---Returns the items currently in the UI.
@@ -472,7 +493,7 @@ UI.Hooks.GetSettings:Subscribe(function (ev)
     end
 end, {StringID = "DefaultImplementation"})
 
--- Append source container/corpse to item tooltips.
+-- Append source container/corpse to item tooltips, as well as warnings for items that cannot be picked up.
 Tooltip.Hooks.RenderItemTooltip:Subscribe(function (ev)
     if UI:IsVisible() then
         local sourceLabel = nil ---@type string? 
@@ -494,18 +515,35 @@ Tooltip.Hooks.RenderItemTooltip:Subscribe(function (ev)
             })
         end
 
-        -- Append tooltip label.
+        -- Append source label.
+        local element = ev.Tooltip:GetFirstElement("ItemDescription")
+        local hadElement = element ~= nil
+        local labels = {} ---@type string[]
+        local infix = element == nil and "" or "<br><br>" -- Don't append line breaks if there was no element before.
         if sourceLabel then
-            local element = ev.Tooltip:GetFirstElement("ItemDescription")
-            local infix = "<br><br>"
-            if not element then
-                element = {Type = "ItemDescription", Label = ""}
-                ev.Tooltip:InsertElement(element)
-                infix = "" -- Don't append line breaks if there was no element before.
-            end
-            element.Label = string.format("%s%s%s", element.Label, infix, sourceLabel)
+            table.insert(labels, sourceLabel)
+        end
+
+        -- Append overencumbrance warning.
+        if Character.ItemWouldOverencumber(Client.GetCharacter(), ev.Item) then
+            table.insert(labels, TSK.Label_CannotPickup_TooHeavy:Format({
+                Color = Color.LARIAN.ORANGE,
+            }))
+        end
+
+        -- Update or insert the element
+        element = element or {Type = "ItemDescription", Label = ""}
+        element.Label = string.format("%s%s%s", element.Label, infix, Text.Join(labels, "<br>"))
+        if not hadElement and labels[1] then
+            ev.Tooltip:InsertElement(element)
         end
     end
+end)
+
+-- Do not allow looting more items if they were to overencumber the character considering the current request.
+QuickLoot.Hooks.CanPickupItem:Subscribe(function (ev)
+    if not ev.CanPickup or UI._LootallRequestRemainingWeight == nil then return end
+    ev.CanPickup = UI._LootallRequestRemainingWeight >= Item.GetWeight(ev.Item, true)
 end)
 
 -- Close the UI when active character changes or a new search is started.

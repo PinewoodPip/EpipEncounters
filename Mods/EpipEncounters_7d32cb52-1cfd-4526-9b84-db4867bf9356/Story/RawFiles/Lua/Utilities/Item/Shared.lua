@@ -749,6 +749,28 @@ function Item.GetIdentifyRequirement(item)
     return 1
 end
 
+---Returns the weight of an item, considering its stack amount.
+---@param item Item
+---@param recursive boolean? Whether to sum the weight of the contents if the item is a container. Defaults to `true`.
+---@return integer -- In "grams".
+function Item.GetWeight(item, recursive)
+    if recursive == nil then recursive = true end
+    local stat = Ext.Stats.Get(item.StatsId) ---@type StatsLib_StatsEntry_Object|StatsLib_StatsEntry_Potion|StatsLib_StatsEntry_Shield|StatsLib_StatsEntry_Weapon
+    local weight = stat.Weight
+    if item.BaseWeightOverwrite > -1 then
+        weight = item.BaseWeightOverwrite
+    end
+    weight = weight * item.Amount -- Consider stack amount
+    -- Sum weight of the container's contents
+    if recursive then -- Not 100% how this should work with weight override
+        local contentGUIDs = item:GetInventoryItems()
+        for _,itemGUID in ipairs(contentGUIDs) do
+            weight = weight + Item.GetWeight(Item.Get(itemGUID), true)
+        end
+    end
+    return weight
+end
+
 ---@param identifier GUID|NetId|EntityHandle
 ---@param isFlashHandle boolean?
 ---@return Item

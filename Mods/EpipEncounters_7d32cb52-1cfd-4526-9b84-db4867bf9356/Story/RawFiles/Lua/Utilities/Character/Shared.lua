@@ -457,6 +457,34 @@ function Character.GetMaxCarryWeight(char)
     return base + (strength * strScaling)
 end
 
+---Returns the weight of a character's inventory.
+---@param char Character
+---@return integer -- In "grams".
+function Character.GetCarryWeight(char)
+    local weight = 0
+    if Ext.IsServer() then
+        weight = Ext.Entity.GetInventory(char.InventoryHandle).CachedWeight
+    else
+        -- The CachedWeight field is unfortunately unavailable.
+        for _,itemGUID in ipairs(char:GetInventoryItems()) do
+            weight = weight + Item.GetWeight(Item.Get(itemGUID), true)
+        end
+    end
+    return weight
+end
+
+---Returns whether char would be overencumbered by picking up an item.
+---Always returns `true` if the character is already overencumbered.
+---@param char Character
+---@param item Item
+---@return boolean
+function Character.ItemWouldOverencumber(char, item)
+    local maxCarryWeight = Character.GetMaxCarryWeight(char)
+    local carryWeight = Character.GetCarryWeight(char)
+    local itemWeight = Item.GetWeight(item)
+    return carryWeight + itemWeight > maxCarryWeight
+end
+
 ---@param char Character
 ---@return integer, integer --Current, maximum
 function Character.GetActionPoints(char)

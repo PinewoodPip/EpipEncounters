@@ -55,6 +55,16 @@ local QuickLoot = {
             Text = "Searching...",
             ContextDescription = [[Notification when starting to search nearby lootables]],
         },
+        Notification_DidNotLootAll = {
+            Handle = "h181532ebg36b3g426bg93e8gcadaeaf5f379",
+            Text = "Not all items could be picked up.",
+            ContextDescription = [[Warning when "loot all" doesn't complete fully]],
+        },
+        Label_CannotPickup_TooHeavy = {
+            Handle = "h269e54a6g62f9g47afg8e22g52e0dd69a807",
+            Text = "Picking up this item would overencumber you.",
+            ContextDescription = [[Warning for items that are too heavy]],
+        },
         Setting_FilterMode_Name = {
             Handle = "h27133569gae70g4950g968ag09472626efb7",
             Text = "Filter Mode",
@@ -188,6 +198,7 @@ local QuickLoot = {
         IsContainerLootable = {Context = "Client"}, ---@type Hook<Features.QuickLoot.Hooks.IsContainerLootable>
         IsGroundItemLootable = {Context = "Client"}, ---@type Hook<Features.QuickLoot.Hooks.IsGroundItemLootable>
         IsItemFilteredOut = {Context = "Client"}, ---@type Hook<Features.QuickLoot.Hooks.IsItemFilteredOut>
+        CanPickupItem = {Context = "Client"}, ---@type Hook<Features.QuickLoot.Hooks.CanPickupItem>
         CanSearch = {Context = "Client"}, ---@type Hook<{Character:EclCharacter, CanSearch:boolean}>
     },
 }
@@ -309,6 +320,11 @@ QuickLoot.Settings.LootingEffect = QuickLoot:RegisterSetting("LootingEffect", {
 ---@class Features.QuickLoot.Hooks.IsItemFilteredOut
 ---@field Item EclItem
 ---@field FilteredOut boolean Hookable. Defaults to `false`.
+
+---@class Features.QuickLoot.Hooks.CanPickupItem
+---@field Character EclCharacter
+---@field Item EclItem
+---@field CanPickup boolean Defaults to `true`.
 
 ---@class Features.QuickLoot.Hooks.CanSearch
 ---@field Character EclCharacter

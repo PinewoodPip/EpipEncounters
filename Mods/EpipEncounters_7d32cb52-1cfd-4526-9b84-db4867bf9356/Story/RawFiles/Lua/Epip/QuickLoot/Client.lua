@@ -61,6 +61,19 @@ function QuickLoot.GetGroundItems(pos, radius)
     return items
 end
 
+---Returns whether a character can pickup an item.
+---@see Features.QuickLoot.Hooks.CanPickupItem
+---@param char EclCharacter
+---@param item EclItem
+---@return boolean
+function QuickLoot.CanPickUp(char, item)
+    return QuickLoot.Hooks.CanPickupItem:Throw({
+        Character = char,
+        Item = item,
+        CanPickup = true,
+    }).CanPickup
+end
+
 ---Returns items to loot near a position.
 ---@param pos Vector3
 ---@param radius number In meters.
@@ -115,14 +128,20 @@ function QuickLoot.GetItems(pos, radius, applyFilters)
 end
 
 ---Requests an item to be picked up.
+---@see Features.QuickLoot.Hooks.CanPickupItem
 ---@param char EclCharacter
 ---@param item EclItem
+---@return boolean -- Whether the request succeeded.
 function QuickLoot.RequestPickUp(char, item)
-    Net.PostToServer(QuickLoot.NETMSG_PICKUP_ITEM, {
-        CharacterNetID = char.NetID,
-        ItemNetID = item.NetID,
-        PlayLootingEffect = QuickLoot.Settings.LootingEffect:GetValue() == true,
-    })
+    local canPickup = QuickLoot.CanPickUp(char, item)
+    if canPickup then
+        Net.PostToServer(QuickLoot.NETMSG_PICKUP_ITEM, {
+            CharacterNetID = char.NetID,
+            ItemNetID = item.NetID,
+            PlayLootingEffect = QuickLoot.Settings.LootingEffect:GetValue() == true,
+        })
+    end
+    return canPickup
 end
 
 ---Returns whether an item should be filtered out.
@@ -503,3 +522,10 @@ QuickLoot.Hooks.IsItemFilteredOut:Subscribe(function (ev)
 
     ev.FilteredOut = filtered
 end, {StringID = "DefaultImplementation"})
+
+-- Do not allow picking up items if they were to overencumber the character.
+QuickLoot.Hooks.CanPickupItem:Subscribe(function (ev)
+    if not ev.CanPickup then return end
+    local char, item = ev.Character, ev.Item
+    ev.CanPickup = not Character.ItemWouldOverencumber(char, item)
+end)
