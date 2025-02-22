@@ -76,6 +76,7 @@ Epip.RegisterFeature("SettingWidgets", Widgets)
 ---@field ValueChangedCallback fun(value:any)? Callback for when the setting's value changes **through the widget**.
 ---@field Instance (GenericUI_Prefab|GenericUI_I_Elementable)? Hookable. Defaults to `nil`.
 ---@field UpdateSettingValue boolean
+---@field DefaultShownValue any?
 
 ---------------------------------------------
 -- METHODS
@@ -89,8 +90,9 @@ Epip.RegisterFeature("SettingWidgets", Widgets)
 ---@param size Vector2?
 ---@param callback fun(value:any)?
 ---@param updateSettingValue boolean? If `true`, interactions with the element will automatically apply changes to the setting. Defaults to `true`.
+---@param defaultShownValue any? If set, the element will be set to display this value regardless of the setting's actual value. Setting a `nil` value is unsupported.
 ---@return GenericUI_Prefab|GenericUI_I_Elementable
-function Widgets.RenderSetting(ui, parent, setting, size, callback, updateSettingValue)
+function Widgets.RenderSetting(ui, parent, setting, size, callback, updateSettingValue, defaultShownValue)
     updateSettingValue = updateSettingValue == nil and true or updateSettingValue
     return Widgets.Hooks.RenderSetting:Throw({
         UI = ui,
@@ -100,6 +102,7 @@ function Widgets.RenderSetting(ui, parent, setting, size, callback, updateSettin
         ValueChangedCallback = callback,
         Instance = nil,
         UpdateSettingValue = updateSettingValue,
+        DefaultShownValue = defaultShownValue,
     }).Instance
 end
 
@@ -131,7 +134,7 @@ function Widgets._RenderCheckboxFromSetting(request)
     local checkbox = LabelledCheckboxPrefab.Create(ui, Widgets._GetPrefixedID(setting), parent, setting:GetName())
 
     checkbox:SetSize(size:unpack())
-    checkbox:SetState(setting:GetValue())
+    checkbox:SetState(Widgets._GetDefaultShownValue(request))
 
     -- Set setting value and run callback.
     checkbox.Events.StateChanged:Subscribe(function (ev)
@@ -166,7 +169,7 @@ function Widgets._RenderComboBoxFromSetting(request)
 
     local dropdown = LabelledDropdownPrefab.Create(ui, Widgets._GetPrefixedID(setting), parent, setting:GetName(), options)
     dropdown:SetSize(size:unpack())
-    dropdown:SelectOption(setting:GetValue())
+    dropdown:SelectOption(Widgets._GetDefaultShownValue(request))
 
     -- Set setting value and run callback.
     dropdown.Events.OptionSelected:Subscribe(function (ev)
@@ -198,7 +201,7 @@ function Widgets._RenderTextFieldFromSetting(request)
     local ui, parent, size = request.UI, request.Parent, request.Size
 
     local field = LabelledTextField.Create(ui, Widgets._GetPrefixedID(setting), parent, setting:GetName())
-    field:SetText(setting:GetValue())
+    field:SetText(Widgets._GetDefaultShownValue(request))
     field:SetSize(size:unpack())
 
     -- Set setting value and run callback
@@ -280,6 +283,10 @@ function Widgets._RenderInputBindingSetting(request)
         Widgets:LogWarning("Using InputBinding settings without a target action is not supported!")
     end
 
+    if request.DefaultShownValue ~= nil then
+        Widgets:__LogWarning("_RenderInputBindingSetting", "DefaultShownValue is not supported for InputBinding settings")
+    end
+
     return form
 end
 
@@ -321,7 +328,7 @@ function Widgets._RenderClampedNumberSetting(request)
         end
     end
 
-    instance:SetValue(setting:GetValue())
+    instance:SetValue(Widgets._GetDefaultShownValue(request))
 
     -- Update the slider when the setting is changed.
     Widgets._RegisterValueChangedListener(instance, request, function (ev)
@@ -368,7 +375,7 @@ function Widgets._RenderSlotSetting(request)
     end)
 
     -- Set the slot to display the setting's skill
-    instance.Slot:SetSkill(setting:GetValue())
+    instance.Slot:SetSkill(Widgets._GetDefaultShownValue(request))
 
     -- Update the slot when the setting is changed
     Widgets._RegisterValueChangedListener(instance, request, function (ev)
@@ -391,7 +398,7 @@ function Widgets._RenderColorSetting(request)
     local instance
     local settingID = Widgets._GetPrefixedID(setting)
     instance = FormColor.Create(ui, settingID, parent, setting:GetName(), size)
-    instance:SetColor(setting:GetValue()) -- Display the current color.
+    instance:SetColor(Widgets._GetDefaultShownValue(request)) -- Display the current color.
 
     -- Open the Color Picker when the color is clicked.
     instance.Events.ColorClicked:Subscribe(function (_)
@@ -484,6 +491,17 @@ function Widgets._SetupSettingContextMenu(request)
     })
 
     ContextMenu.Open(V(Client.GetMousePosition()))
+end
+
+---Returns the default value to display for a widget.
+---@param request Features.SettingWidgets.Hooks.RenderSetting
+---@return any
+function Widgets._GetDefaultShownValue(request)
+    if request.DefaultShownValue ~= nil then
+        return request.DefaultShownValue
+    else
+        return request.Setting:GetValue()
+    end
 end
 
 ---Returns a prefixed ID, for use with elements.
