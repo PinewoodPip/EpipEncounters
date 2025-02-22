@@ -363,6 +363,12 @@ function BaseUI:FlashPositionToScreen(pos, floor)
     return pos
 end
 
+---Returns the UI's scale multiplier.
+---@return number
+function BaseUI:GetScaleMultiplier()
+    return self:GetUI():GetUIScaleMultiplier()
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------

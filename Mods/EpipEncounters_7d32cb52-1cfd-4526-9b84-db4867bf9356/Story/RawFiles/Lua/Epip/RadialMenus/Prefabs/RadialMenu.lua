@@ -25,6 +25,7 @@ local Menu = {
     Events = {
         SegmentClicked = {}, ---@type Event<{Index:integer}>
         SegmentRightClicked = {}, ---@type Event<{Index:integer}>
+        SegmentSelected = {}, ---@type Event<{Index:integer}>
     },
 }
 RadialMenus:RegisterClass("Features.RadialMenus.Prefabs.RadialMenu", Menu, {"GenericUI_Prefab", "GenericUI_I_Elementable"})
@@ -66,6 +67,7 @@ function Menu.Create(ui, id, parent, config)
 end
 
 ---Selects a segment, as if it had been hovered over.
+---@see Features.RadialMenus.Prefabs.RadialMenu.Events
 ---@param index integer
 function Menu:SelectSegment(index)
     if index == self._SelectedSegmentIndex then return end
@@ -73,6 +75,9 @@ function Menu:SelectSegment(index)
     self.UI:PlaySound(self.SEGMENT_HOVER_SOUND)
     self:_UpdateSegment(index, "Highlighted")
     self._SelectedSegmentIndex = index
+    self.Events.SegmentSelected:Throw({
+        Index = index,
+    })
 end
 
 ---Deselects the current segment, as if it had been hovered out of.
@@ -105,7 +110,7 @@ function Menu:_Render()
     -- Render segments
     local segmentList = self.SegmentsList
     segmentList:Clear()
-    for i,slot in ipairs(slots) do
+    for i,_ in ipairs(slots) do
         local selectionArea = self:CreateElement("Segment" .. tostring(i), "GenericUI_Element_Empty", segmentList:GetRootElement())
 
         -- Render the segment's default state immediately.

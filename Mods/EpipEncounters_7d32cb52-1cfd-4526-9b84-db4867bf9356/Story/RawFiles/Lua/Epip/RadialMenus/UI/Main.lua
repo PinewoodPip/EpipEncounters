@@ -5,6 +5,7 @@ local ButtonPrefab = Generic.GetPrefab("GenericUI_Prefab_Button")
 local SlicedTexturePrefab = Generic.GetPrefab("GenericUI.Prefabs.SlicedTexture")
 local PanelSelect = Client.UI.Controller.PanelSelect
 local GameMenu = Client.UI.GameMenu
+local Tooltip = Client.Tooltip
 local Input = Client.Input
 local V = Vector.Create
 
@@ -49,9 +50,20 @@ UI.Events.Initialized = UI:AddSubscribableEvent("Initialized") ---@type Event<Em
 UI.Events.Opened = UI:AddSubscribableEvent("Opened") ---@type Event<Empty>
 UI.Events.NewMenuRequested = UI:AddSubscribableEvent("NewMenuRequested") ---@type Event<Empty>
 UI.Events.EditMenuRequested = UI:AddSubscribableEvent("EditMenuRequested") ---@type Event<{Menu:Features.RadialMenus.Menu}>
-UI.Events.EditSlotRequested = UI:AddSubscribableEvent("EditSlotRequested") ---@type Event<{Menu:Features.RadialMenus.Menu, Index:integer, Slot:Features.RadialMenus.Slot}>
+UI.Events.EditSlotRequested = UI:AddSubscribableEvent("EditSlotRequested") ---@type Event<Features.RadialMenus.UI.Events.SlotEvent>
+UI.Events.SlotSelected = UI:AddSubscribableEvent("SlotSelected") ---@type Event<Features.RadialMenus.UI.Events.SlotEvent>
+UI.Events.MenuChanged = UI:AddSubscribableEvent("MenuChanged") ---@type Event<{Menu:Features.RadialMenus.Menu}>
 
 RadialMenus.UI = UI
+
+---------------------------------------------
+-- EVENTS/HOOKS
+---------------------------------------------
+
+---@class Features.RadialMenus.UI.Events.SlotEvent
+---@field Menu Features.RadialMenus.Menu
+---@field Slot Features.RadialMenus.Slot
+---@field Index integer
 
 ---------------------------------------------
 -- METHODS
@@ -186,6 +198,9 @@ function UI.ScrollMenus(offset, canWrap)
         UI._CurrentMenuIndex = newIndex
         UI:PlaySound(UI.SOUNDS.CYCLE)
         UI.Refresh()
+        UI.Events.MenuChanged:Throw({
+            Menu = UI._GetCurrentMenu(),
+        })
     end
 end
 
@@ -258,6 +273,15 @@ function UI._RenderMenu(menu)
         end)
 
         UI._CurrentMenu = instance
+
+        -- Forward slot selection events.
+        instance.Events.SegmentSelected:Subscribe(function (ev)
+            UI.Events.SlotSelected:Throw({
+                Menu = UI._GetCurrentMenu(),
+                Slot = UI.GetSelectedSlot(),
+                Index = ev.Index
+            })
+        end)
     end
     instance:SetMenu(menu)
     UI.Header:SetText(menu.Name)
@@ -590,6 +614,34 @@ Input.Events.StickMoved:Subscribe(function (ev)
 end, {EnabledFunctor = function ()
     return UI:IsVisible() and UI._GetCurrentMenu() ~= nil
 end})
+
+-- Hide any old tooltip when selected slot changes.
+UI.Events.SlotSelected:Subscribe(function (_)
+    Tooltip.HideTooltip()
+end, {StringID = "DefaultImplementation.HideOldTooltip"})
+
+-- Show skill tooltips for Skill slots.
+UI.Events.SlotSelected:Subscribe(function (ev)
+    local slot = ev.Slot
+    if slot.Type == "Skill" then
+        ---@cast slot Features.RadialMenus.Slot.Skill
+        local slotCount = #ev.Menu:GetSlots()
+        local isOnLeftHalf = ev.Index > slotCount // 2
+        local radialMenuPos = UI._CurrentMenu:GetScreenPosition()
+        local radialMenuRadius = UI._CurrentMenu:GetScaledRadius()
+
+        -- Show tooltips on the side of the selected slot, with a bit of extra margin.
+        local posOffset = (isOnLeftHalf and V(-radialMenuRadius - 430, -radialMenuRadius) or V(radialMenuRadius + 20, -radialMenuRadius))
+        posOffset = posOffset * UI:GetScaleMultiplier()
+        local tooltipPos = radialMenuPos + posOffset
+        Tooltip.ShowSkillTooltip(Client.GetCharacter(), slot.SkillID, tooltipPos)
+    end
+end, {StringID = "DefaultImplementation.SkillTooltips"})
+
+-- Hide tooltips when menu changes.
+UI.Events.MenuChanged:Subscribe(function (_)
+    Tooltip.HideTooltip()
+end)
 
 -- Unpausing the game screws with the flash size override for some reason,
 -- thus we must mark the UI as dirty in this regard.
