@@ -35,19 +35,20 @@ function Fix.CheckAttackAttempt(target)
     local clientChar = Client.GetCharacter()
     local previewedTask = clientChar.InputController.PreviewTask
     local isAttacking = ContextMenu.IsOpen() or (previewedTask and previewedTask.ActionTypeId == Character.CHARACTER_TASKS.ATTACK)
+    local isAffectedByBug = isAttacking
     if isAttacking then
         local attackCost = Game.Math.GetCharacterWeaponAPCost(clientChar.Stats) -- TODO this will not consider the GetAttackAPCost extender event due to limitations.
         if Fix.IsCostAffected(attackCost) then
             Fix:DebugLog("Requesting server to attack", target.DisplayName)
-
             Net.PostToServer(Fix.NETMSG_ATTACK, {
                 AttackerNetID = clientChar.NetID,
                 TargetNetID = target.NetID,
             })
-
+        else
+            isAffectedByBug = false
         end
     end
-    return isAttacking
+    return isAffectedByBug
 end
 
 ---Returns whether an AP cost is currently affected by the bug for the client character.
@@ -57,7 +58,7 @@ function Fix.IsCostAffected(apCost)
     local char = Client.GetCharacter()
     local ap, _ = Character.GetActionPoints(char)
     local apCostBoost = Character.GetDynamicStat(char, "APCostBoost")
-    return apCostBoost > 0 and ap >= (apCost + apCostBoost)
+    return apCostBoost > 0 and ap >= (apCost + apCostBoost) and ap < (apCost + apCostBoost * 2) -- The character is only affected if they don't have enough AP to pay the cost + twice the AP cost boost.
 end
 
 ---------------------------------------------
@@ -69,11 +70,11 @@ end
 Input.Events.KeyPressed:Subscribe(function (ev)
     if ev.InputID == "left2" then
         local target = (not Client.IsUsingController() and ContextMenu.GetCurrentCharacter()) or Pointer.GetCurrentCharacter(nil, true) -- TODO support controller context menu
-        if target then
+        if target and target ~= Client.GetCharacter() then -- Do not attempt to attack self.
             Fix.CheckAttackAttempt(target)
         end
     end
-end, {EnabledFunctor = function () return GameState.IsInRunningSession() end})
+end, {EnabledFunctor = function () return GameState.IsInRunningSession() and Fix:IsEnabled() end})
 
 -- Handle using items from vanilla context menus.
 ContextMenu.Events.EntryPressed:Subscribe(function (ev)
