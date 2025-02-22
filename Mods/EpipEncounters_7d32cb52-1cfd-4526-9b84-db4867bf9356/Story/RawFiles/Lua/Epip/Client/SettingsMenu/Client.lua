@@ -214,6 +214,14 @@ function Menu.SetPendingChange(setting, value)
     Menu:DebugLog("Pending change set:", setting.ModTable, setting.ID, value)
 end
 
+---Returns the pending change value of a setting, if any.
+---@param setting SettingsLib_Setting
+---@return any?
+function Menu.GetPendingChange(setting)
+    local moduleSettings = Menu.pendingChanges[setting.ModTable]
+    return moduleSettings and moduleSettings[setting.ID]
+end
+
 function Menu.ApplyPendingChanges()
     local changesRequireReload = false
 
@@ -448,6 +456,9 @@ function Menu.Close()
 
     Menu.categoryStateIndexes = {}
 
+    -- Clear pending changes
+    Menu.pendingChanges = {}
+
     Client.UI.Fade.FadeOut()
 
     -- Necessary to clear the fade properly on controller, for reasons unbeknownst.
@@ -493,11 +504,8 @@ end
 ---@param tabID string
 function Menu.SetActiveTab(tabID)
     Menu.currentTabID = tabID
-    
-    Menu:DebugLog("Switching tab to", tabID)
 
-    -- Clear pending changes
-    Menu.pendingChanges = {}
+    Menu:DebugLog("Switching tab to", tabID)
 
     if Menu.GetUI():IsVisible() then
         Menu._Setup()

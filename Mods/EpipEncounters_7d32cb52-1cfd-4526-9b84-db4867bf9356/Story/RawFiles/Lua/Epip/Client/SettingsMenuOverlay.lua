@@ -315,8 +315,7 @@ end
 function UI._RenderChoice(setting, parent)
     local element = SettingWidgets.RenderSetting(UI, parent, setting, UI.FORM_ELEMENT_SIZE, function (value)
         SettingsMenu.SetPendingChange(setting, value)
-    end, false)
-
+    end, false, SettingsMenu.GetPendingChange(setting))
     return element
 end
 
@@ -327,8 +326,7 @@ end
 function UI._RenderCheckbox(setting, parent)
     local element = SettingWidgets.RenderSetting(UI, parent, setting, UI.FORM_ELEMENT_SIZE, function (value)
         SettingsMenu.SetPendingChange(setting, value)
-    end, false)
-
+    end, false, SettingsMenu.GetPendingChange(setting))
     return element
 end
 
@@ -339,8 +337,7 @@ end
 function UI._RenderClampedNumber(setting, parent)
     local element = SettingWidgets.RenderSetting(UI, parent, setting, UI.FORM_ELEMENT_SIZE, function (value)
         SettingsMenu.SetPendingChange(setting, value)
-    end, false)
-
+    end, false, SettingsMenu.GetPendingChange(setting))
     return element
 end
 
@@ -351,7 +348,7 @@ end
 function UI._RenderInputBinding(setting, parent)
     local instance = SettingWidgets.RenderSetting(UI, parent, setting, UI.FORM_ELEMENT_SIZE, function (value)
         SettingsMenu.SetPendingChange(setting, value)
-    end, false)
+    end, false, SettingsMenu.GetPendingChange(setting))
     ---@cast instance GenericUI.Prefabs.FormTextHolder
     return instance
 end
@@ -363,7 +360,7 @@ end
 function UI._RenderStringSetting(setting, parent)
     local instance = SettingWidgets.RenderSetting(UI, parent, setting, UI.FORM_ELEMENT_SIZE, function (value)
         SettingsMenu.SetPendingChange(setting, value)
-    end, false)
+    end, false, SettingsMenu.GetPendingChange(setting))
     ---@cast instance GenericUI_Prefab_LabelledTextField
     return instance
 end
