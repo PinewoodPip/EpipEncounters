@@ -3,9 +3,13 @@
 local Image = {
     _Decoders = {}, ---@type table<string, ImageLib_Decoder>
 }
-Client.Image = Image
+_G.Image = Image
 Epip.InitializeLibrary("Image", Image)
 Image.LibDeflate = Ext.Require("Utilities/LibDeflate.lua") ---@type unknown TODO annotate
+
+if Ext.IsClient() then
+    Client.Image = Image -- Legacy alias.
+end
 
 ---------------------------------------------
 -- CLASSES

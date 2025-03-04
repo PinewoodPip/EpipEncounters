@@ -1,5 +1,5 @@
 
-local Image = Client.Image
+local Image = Image
 
 ---@class ImageLib_Decoder_PNG_ChunkDescriptor
 ---@field Hex string Spaced.

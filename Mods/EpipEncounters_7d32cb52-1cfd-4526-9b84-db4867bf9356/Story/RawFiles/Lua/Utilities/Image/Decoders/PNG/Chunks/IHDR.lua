@@ -1,5 +1,5 @@
 
-local Image = Client.Image
+local Image = Image
 local PNG = Image.GetDecoder("ImageLib_Decoder_PNG")
 
 ---@type ImageLib_Decoder_PNG_ChunkParser
