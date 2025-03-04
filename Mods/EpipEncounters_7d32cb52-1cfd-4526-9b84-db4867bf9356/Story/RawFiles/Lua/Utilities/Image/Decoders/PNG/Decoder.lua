@@ -139,7 +139,7 @@ function _PNG:DecompressData()
             elseif scanlineFiltering == 2 then
                 filteringValue = upperByte
             elseif scanlineFiltering == 3 then
-                filteringValue = (upperByte + previousByte + byteC) // 3
+                filteringValue = (upperByte + previousByte) // 2
             elseif scanlineFiltering == 4 then -- Paeth
                 local p = previousByte + upperByte - byteC
                 local closestVal = 99999
