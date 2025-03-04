@@ -204,6 +204,25 @@ function UI._Initialize(img)
     canvas:SetPositionRelativeToParent("TopLeft")
     UI.Canvas = canvas
 
+    -- Cursor; graphics-driven
+    local cursor = canvas:AddChild("CanvasCursor", "GenericUI_Element_Empty")
+    cursor:SetMouseEnabled(false)
+    Assprite.Events.CursorPositionChanged:Subscribe(function (ev)
+        local graphics = cursor:GetMovieClip().graphics
+        local i, j = ev.Context.CursorPos:unpack()
+        local canvasSize = canvas:GetSize()
+        local contextImg = ev.Context.Image
+        local color = ev.Context.Color
+
+        cursor:SetPosition(j / contextImg.Width * canvasSize[1], i / contextImg.Height * canvasSize[2])
+
+        -- Repaint graphics
+        graphics.clear()
+        graphics.beginFill(color:ToDecimal(), 1) -- TODO hook
+        graphics.drawRect(-5, 0, 6, 6)
+    end)
+    UI.Cursor = cursor
+
     -- Stop using the tool when M1 is released.
     -- This must be done via an input listener as MouseUp events are not reliable when elements are being recreated under the cursor, as is the case when the image is re-rendered. This also covers the key being released while the mouse is not over the element anymore.
     Input.Events.KeyReleased:Subscribe(function (ev)
