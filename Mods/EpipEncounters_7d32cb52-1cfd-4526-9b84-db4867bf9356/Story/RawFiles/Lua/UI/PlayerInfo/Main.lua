@@ -38,8 +38,9 @@ local PlayerInfo = {
         ActiveCharacterChanged = {},
     },
     Hooks = {
-        GetBHVisibility = {}, ---@type Event<PlayerInfoUI_Hook_GetBHVisibility>
-        UpdateInfos = {}, ---@type Event<UI.PlayerInfo.Hooks.UpdateInfos>
+        GetBHVisibility = {}, ---@type Hook<PlayerInfoUI_Hook_GetBHVisibility>
+        UpdateInfos = {}, ---@type Hook<UI.PlayerInfo.Hooks.UpdateInfos>
+        GetContextMenuEntries = {}, ---@type Hook<UI.PlayerInfo.Hooks.GetContextMenuEntries>
     }
 }
 Epip.InitializeUI(Ext.UI.TypeID.playerInfo, "PlayerInfo", PlayerInfo)
@@ -72,6 +73,10 @@ end
 
 ---@class UI.PlayerInfo.Hooks.UpdateInfos
 ---@field Entries UI.PlayerInfo.Entries.Base[] Hookable.
+
+---@class UI.PlayerInfo.Hooks.GetContextMenuEntries
+---@field Entries table[] Hookable. TODO typing
+---@field IsSummon boolean
 
 ---------------------------------------------
 -- CLASSES
