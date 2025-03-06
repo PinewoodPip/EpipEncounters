@@ -23,7 +23,7 @@ local TSK = Assprite.TranslatedStrings
 local UI = Generic.Create("Features.Assprite.UI")
 Assprite.UI = UI
 
-UI.PANEL_SIZE = V(700, 700)
+UI.PANEL_SIZE = V(700, 800)
 UI.HEADER_SIZE = V(200, 50)
 UI.SIDEBAR_WIDTH = 250
 UI.SETTINGS_SIZE = V(UI.SIDEBAR_WIDTH, 50)
@@ -162,11 +162,14 @@ function UI._Initialize(img)
     end)
     ContextMenu.RegisterMenuHandler("Features.Assprite.UI.Edit", function()
         local canUndo = Assprite.CanUndo()
+        local undoKeybind = Input.GetActionBindings(Assprite.InputActions.Undo.ID)
+        local keybindLabel = undoKeybind[1] and string.format(" (%s)", Input.StringifyBinding(undoKeybind[1], true)) or ""
+        local undoLabel = string.format("%s%s", TSK.Label_Undo:GetString(), keybindLabel)
         ContextMenu.Setup({
             menu = {
                 id = "main",
                 entries = {
-                    {id = "Features.Assprite.UI.Undo", type = "button", text = TSK.Label_Undo:GetString(), disabled = not canUndo, selectable = canUndo, faded = not canUndo},
+                    {id = "Features.Assprite.UI.Undo", type = "button", text = undoLabel, disabled = not canUndo, selectable = canUndo, faded = not canUndo},
                 }
             }
         })

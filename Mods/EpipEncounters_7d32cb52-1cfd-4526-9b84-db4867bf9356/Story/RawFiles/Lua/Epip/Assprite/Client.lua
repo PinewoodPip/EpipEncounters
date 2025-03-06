@@ -81,6 +81,11 @@ local Assprite = {
                 }
             }
         },
+        InputAction_Undo_Description = {
+            Handle = "hc9381a40g9557g4bd0g8e2ag2bfe75c44b66",
+            Text = "Undoes the last edit made to the canvas.",
+            ContextDescription = [[Tooltip for "Undo" keybind]],
+        },
     },
 
     Events = {
@@ -97,6 +102,14 @@ local Assprite = {
     },
 }
 Epip.RegisterFeature("Features.Assprite", Assprite)
+local TSK = Assprite.TranslatedStrings
+local InputActions = {
+    Undo = Assprite:RegisterInputAction("Undo", {
+        Name = TSK.Label_Undo,
+        Description = TSK.InputAction_Undo_Description,
+        DefaultInput1 = {Keys = {"lctrl", "z"}},
+    }),
+}
 
 ---------------------------------------------
 -- CLASSES
@@ -368,3 +381,17 @@ end
 function Assprite.IsEditing()
     return Assprite._Context ~= nil
 end
+
+---------------------------------------------
+-- EVENT LISTENERS
+---------------------------------------------
+
+-- Apply keybind effects.
+Client.Input.Events.ActionExecuted:Subscribe(function (ev)
+    local action = ev.Action
+    if action == InputActions.Undo then
+        Assprite.Undo()
+    end
+end, {EnabledFunctor = function ()
+    return Assprite.IsEditing()
+end})
