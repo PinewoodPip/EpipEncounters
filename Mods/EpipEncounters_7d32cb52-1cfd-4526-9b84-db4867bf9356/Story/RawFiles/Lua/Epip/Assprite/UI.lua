@@ -363,17 +363,34 @@ MessageBox.RegisterMessageListener("Features.Assprite.UI.Save", MessageBox.Event
 end)
 -- Handle load prompts.
 MessageBox.RegisterMessageListener("Features.Assprite.UI.Load", MessageBox.Events.InputSubmitted, function (path, _, _)
+    local success, failureMsg = true, nil ---@type TextLib.String
     local img = nil ---@type ImageLib_Image?
-    local success, trace = pcall(function ()
-        local decoder = ImageLib.GetDecoder("ImageLib_Decoder_PNG"):Create(path .. ".png")
-        img = decoder:Decode()
-    end)
+
+    -- Check file exists
+    path = path .. ".png"
+    if not IO.LoadFile(path, "user", true) then
+        success, failureMsg = false, TSK.Notification_Load_Error_FileDoesntExist:Format(path)
+    end
+
+    if not failureMsg then
+        -- Parse image
+        success, failureMsg = pcall(function ()
+            local decoder = ImageLib.GetDecoder("ImageLib_Decoder_PNG"):Create(path)
+            img = decoder:Decode()
+        end)
+    end
+
+    -- Set image, which may fail for user-defined reasons
     if success then
-        Assprite.SetImage(img)
+        success, failureMsg = Assprite.SetImage(img)
+    end
+
+    -- Notify success/failure
+    if success then
         Notification.ShowNotification(TSK.Notification_Load_Success:GetString())
     else
-        Notification.ShowWarning(TSK.Notification_Load_Error:GetString())
-        Assprite:__LogWarning("Failed to load image", trace)
+        Notification.ShowWarning(TSK.Notification_Load_Error:Format(Text.Resolve(failureMsg)))
+        Assprite:__LogWarning("Failed to load image", failureMsg)
     end
 end)
 -- Handle "Exit" message box.

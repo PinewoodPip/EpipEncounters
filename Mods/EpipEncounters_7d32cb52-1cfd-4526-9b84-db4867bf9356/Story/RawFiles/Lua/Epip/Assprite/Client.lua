@@ -41,8 +41,13 @@ local Assprite = {
         },
         Notification_Load_Error = {
             Handle = "hf53ae24bg6559g4552g9149g531488fb0b38",
-            Text = "Failed to load image",
-            ContextDescription = [[Notification from load option]],
+            Text = "Failed to load image<br>%s",
+            ContextDescription = [[Notification from load option. Param is failure reason]],
+        },
+        Notification_Load_Error_FileDoesntExist = {
+            Handle = "hfd190c24g601fg442egacfcg0f5791421973",
+            Text = [[File "%s" doesn't exist.]],
+            ContextDescription = [[Notification when loading an image with a non-existent path. Param is file path.]],
         },
         MsgBox_Save_Body = {
             Handle = "h0dee3b84gdb20g4caegbcabga1530c734a20",
@@ -87,6 +92,9 @@ local Assprite = {
         ColorChanged = {}, ---@type Event<Features.Assprite.ContextEvent>
         ImageChanged = {}, ---@type Event<Features.Assprite.ContextEvent>
     },
+    Hooks = {
+        IsImageValid = {}, ---@type Hook<Features.Assprite.Hooks.IsImageValid>
+    },
 }
 Epip.RegisterFeature("Features.Assprite", Assprite)
 
@@ -116,6 +124,10 @@ Epip.RegisterFeature("Features.Assprite", Assprite)
 ---@class Features.Assprite.Events.RequestCompleted
 ---@field RequestID string
 ---@field Image ImageLib_Image? `nil` if the request was cancelled.
+
+---@class Features.Assprite.Hooks.IsImageValid
+---@field Image ImageLib_Image
+---@field InvalidReason TextLib.String? Hookable. If set, the image is considered invalid. Defaults to `nil`.
 
 ---------------------------------------------
 -- METHODS
@@ -228,14 +240,26 @@ function Assprite.SetCursor(pos)
 end
 
 ---Replaces the image being currently edited.
+---@see Features.Assprite.Hooks.IsImageValid
 ---@param img ImageLib_Image
+---@return boolean, string? -- Success and failure reason in case of failure.
 function Assprite.SetImage(img)
     local context = Assprite._Context
-    Assprite.SaveSnapshot() -- Save snapshot first to be able to undo this
-    context.Image = img
-    Assprite.Events.ImageChanged:Throw({
-        Context = context
-    })
+    local invalidReason = Assprite.Hooks.IsImageValid:Throw({
+        Image = img,
+        InvalidReason = nil,
+    }).InvalidReason
+
+    -- Apply image
+    if not invalidReason then
+        Assprite.SaveSnapshot() -- Save snapshot first to be able to undo this
+        context.Image = img
+        Assprite.Events.ImageChanged:Throw({
+            Context = context
+        })
+    end
+
+    return invalidReason == nil, invalidReason
 end
 
 ---Saves a copy of the image to the History stack.
