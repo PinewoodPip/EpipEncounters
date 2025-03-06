@@ -269,6 +269,10 @@ LOAD_ORDER = {
     {ScriptSet = "Epip/UnlearnSkills"},
     {ScriptSet = "Epip/AutoUnlockInventory"},
 
+    {
+        ScriptSet = "Epip/CustomPortraits",
+    },
+
     "Epip/ShowConsumableEffects.lua",
 
     -- Stats tab
