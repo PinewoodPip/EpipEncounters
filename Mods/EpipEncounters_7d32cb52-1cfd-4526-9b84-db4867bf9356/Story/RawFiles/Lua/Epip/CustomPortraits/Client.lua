@@ -106,7 +106,7 @@ end})
 ContextMenu.RegisterElementListener(CustomPortraits.CONTEXTMENU_ENTRY_ID_SET_PORTRAIT, "buttonPressed", function (character, _)
     local img = CustomPortraits.CreateDefaultImage()
     CustomPortraits._CurrentCharacterHandle = character.Handle
-    Assprite.RequestEditor(CustomPortraits.REQUESTID_ASSPRITE, img)
+    Assprite.RequestEditor(CustomPortraits.REQUESTID_ASSPRITE, img, TSK.Label_ApplyPortrait)
 end)
 
 -- Prevent loading images of wrong size.

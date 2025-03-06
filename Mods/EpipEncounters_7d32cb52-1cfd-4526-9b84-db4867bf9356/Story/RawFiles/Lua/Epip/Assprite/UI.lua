@@ -59,7 +59,16 @@ local Settings = {
 function UI.Setup(request)
     UI._Initialize(request.Image)
     UI._SetImage(request.Image)
+
+    -- Synchronize color in UI to the Assprite context
     Assprite.SetColor(Settings.Color:GetValue())
+
+    -- Update confirm button
+    UI.ConfirmButton:SetVisible(request.ConfirmLabel ~= nil)
+    if request.ConfirmLabel then
+        UI.ConfirmButton:SetLabel(Text.Resolve(request.ConfirmLabel))
+    end
+
     UI:SetPositionRelativeToViewport("center", "center")
     UI:Show()
 end
@@ -91,6 +100,12 @@ function UI.SelectTool(tool)
     -- Activate button of the new tool
     local toolElement = UI.ToolButtons[tool:GetClassName()]
     toolElement:SetActivated(true)
+end
+
+---Completes the current request and closes the UI.
+function UI.CompleteRequest()
+    Assprite.CompleteRequest()
+    UI:Hide()
 end
 
 ---Requests an image to be saved to disk.
@@ -135,7 +150,7 @@ function UI._Initialize(img)
     closeButton:SetPositionRelativeToParent("TopRight")
     closeButton.Events.Pressed:Subscribe(function (_)
         -- TODO confirm to close
-        Assprite.CompleteRequest()
+        UI.CompleteRequest()
     end)
 
     -- Top buttons bar
@@ -278,6 +293,15 @@ function UI._Initialize(img)
     Assprite.Events.ToolUseStarted:Subscribe(function (_)
         undoButton:SetEnabled(Assprite.CanUndo())
     end)
+
+    -- Confirm button; only visible when opening Assprite for a particular purpose
+    local confirmButton = ButtonPrefab.Create(UI, "ConfirmButton", panel, ButtonPrefab.STYLES.GreenMedium)
+    confirmButton:SetPositionRelativeToParent("Bottom", 0, -65)
+    confirmButton:SetVisible(false)
+    confirmButton.Events.Pressed:Subscribe(function (_)
+        UI.CompleteRequest()
+    end)
+    UI.ConfirmButton = confirmButton
 
     -- Side panel
     local sidePanel = contentArea:AddChild("SidePanel", "GenericUI_Element_VerticalList")

@@ -132,6 +132,7 @@ local InputActions = {
 
 ---@class Features.Assprite.Events.EditorRequested
 ---@field RequestID string
+---@field ConfirmLabel TextLib.String?
 ---@field Image ImageLib_Image
 
 ---@class Features.Assprite.Events.RequestCompleted
@@ -150,7 +151,8 @@ local InputActions = {
 ---@see Features.Assprite.Events.EditorRequested
 ---@param requestID string
 ---@param image ImageLib_Image
-function Assprite.RequestEditor(requestID, image)
+---@param purpose TextLib.String? Label used to confirm submission from the UI, ex. "Apply image".
+function Assprite.RequestEditor(requestID, image, purpose)
     Assprite._Context = {
         RequestID = requestID,
         Image = image,
@@ -162,6 +164,7 @@ function Assprite.RequestEditor(requestID, image)
     Assprite.Events.EditorRequested:Throw({
         RequestID = requestID,
         Image = image,
+        ConfirmLabel = purpose,
     })
 end
 

@@ -11,6 +11,11 @@ local CustomPortraits = {
             Text = "Set custom portrait...",
             ContextDescription = [[Context menu option in player portraits UI]],
         },
+        Label_ApplyPortrait = {
+            Handle = "h9dba55fag87efg4214g9f3egf3fafacc8565",
+            Text = "Apply Portrait",
+            ContextDescription = [[Button in the Assprite UI]],
+        },
         Notification_Load_Error_WrongResolution = {
             Handle = "h17c93d66g67e5g418ag9a0bgf9235674e3f2",
             Text = "Image must be %dx%d pixels.",
