@@ -79,6 +79,19 @@ function UI.SelectTool(tool)
     UI._CurrentTool = tool
 end
 
+---Requests an image to be saved to disk.
+function UI.RequestSave()
+    MessageBox.Open({
+        ID = "Features.Assprite.UI.Save",
+        Header = CommonStrings.Save:GetString(),
+        Message = TSK.MsgBox_Save_Body:GetString(),
+        Type = "Input",
+        Buttons = {
+            {ID = 1, Type = "Yes", Text = CommonStrings.Accept:GetString()}
+        },
+    })
+end
+
 ---Requests an image to be loaded from disk.
 function UI.RequestLoad()
     MessageBox.Open({
@@ -86,6 +99,9 @@ function UI.RequestLoad()
         Header = CommonStrings.Load:GetString(),
         Message = TSK.MsgBox_Load_Body:GetString(),
         Type = "Input",
+        Buttons = {
+            {ID = 1, Type = "Yes", Text = CommonStrings.Accept:GetString()}
+        },
     })
 end
 
@@ -127,6 +143,7 @@ function UI._Initialize(img)
             menu = {
                 id = "main",
                 entries = {
+                    {id = "Features.Assprite.UI.Save", type = "button", text = CommonStrings.Save:GetString()},
                     {id = "Features.Assprite.UI.Load", type = "button", text = CommonStrings.Load:GetString()},
                     {id = "Features.Assprite.UI.Exit", type = "button", text = CommonStrings.Exit:GetString()},
                 }
@@ -295,7 +312,9 @@ end
 
 ---@override
 function UI:Hide()
-    Assprite.CancelRequest()
+    if Assprite.IsEditing() then
+        Assprite.CancelRequest()
+    end
     Client.UI._BaseUITable.Hide(self)
 end
 
@@ -309,6 +328,9 @@ Assprite.Events.EditorRequested:Subscribe(function (ev)
 end)
 
 -- Handle context menus interactions.
+ContextMenu.RegisterElementListener("Features.Assprite.UI.Save", "buttonPressed", function ()
+    UI.RequestSave()
+end)
 ContextMenu.RegisterElementListener("Features.Assprite.UI.Load", "buttonPressed", function ()
     UI.RequestLoad()
 end)
@@ -333,6 +355,12 @@ ContextMenu.RegisterElementListener("Features.Assprite.UI.About", "buttonPressed
     })
 end)
 
+-- Handle save prompts.
+MessageBox.RegisterMessageListener("Features.Assprite.UI.Save", MessageBox.Events.InputSubmitted, function (path, _, _)
+    local rawData = Assprite.GetImage():ToRawData()
+    IO.SaveFile(path .. ".txt", rawData, true)
+    Notification.ShowNotification(TSK.Notification_Save_Success:GetString())
+end)
 -- Handle load prompts.
 MessageBox.RegisterMessageListener("Features.Assprite.UI.Load", MessageBox.Events.InputSubmitted, function (path, _, _)
     local img = nil ---@type ImageLib_Image?
@@ -354,18 +382,3 @@ MessageBox.RegisterMessageListener("Features.Assprite.UI.Exit", MessageBox.Event
         UI:Hide()
     end
 end)
-
--- Quick debug snippet to open the UI on load. TODO remove
-GameState.Events.ClientReady:Subscribe(function ()
-    local PORTRAIT_SIZE = V(68, 90)
-    local img = Client.Image.CreateImage(PORTRAIT_SIZE:unpack())
-    for _=1,PORTRAIT_SIZE[2],1 do
-        for _=1,PORTRAIT_SIZE[1],1 do
-            img:AddPixel(Color.CreateFromHex(Color.WHITE))
-        end
-    end
-    Assprite.RequestEditor("Debug", img)
-    Assprite.SetColor(Color.Create(120, 120, 30))
-end, {EnabledFunctor = function ()
-    return Epip.IsDeveloperMode(true)
-end})

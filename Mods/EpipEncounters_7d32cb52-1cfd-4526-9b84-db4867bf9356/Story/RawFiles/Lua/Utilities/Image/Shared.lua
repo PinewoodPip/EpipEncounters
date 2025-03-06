@@ -89,6 +89,7 @@ function _Image:Copy()
 end
 
 ---Returns the image data as a comma-separated string, starting with width and height.
+---@return string
 function _Image:ToRawData()
     local fields = {self.Width, self.Height}
     for i=1,self.Height,1 do

@@ -29,6 +29,11 @@ local Assprite = {
             Text = "File",
             ContextDescription = [[As in, "computer file"]],
         },
+        Notification_Save_Success = {
+            Handle = "ha8aad9a3ged5cg414dgb649g3b3e18384224",
+            Text = "Image saved",
+            ContextDescription = [[Notification from save option]],
+        },
         Notification_Load_Success = {
             Handle = "h77a50a9dg1123g4fe6ga3fbge3ad69e11c68",
             Text = "Image loaded",
@@ -38,6 +43,11 @@ local Assprite = {
             Handle = "hf53ae24bg6559g4552g9149g531488fb0b38",
             Text = "Failed to load image",
             ContextDescription = [[Notification from load option]],
+        },
+        MsgBox_Save_Body = {
+            Handle = "h0dee3b84gdb20g4caegbcabga1530c734a20",
+            Text = "Enter a path (excluding extension) to save image raw data, relative to the Osiris Data folder.",
+            ContextDescription = [[Message box for save option]],
         },
         MsgBox_Load_Body = {
             Handle = "h37a87c28g91efg42f6g9b13g632167e743c7",
