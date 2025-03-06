@@ -35,6 +35,11 @@ UI.TOOLS = {
     Assprite:GetClass("Features.Assprite.Tools.Bucket"),
 }
 
+---@type GenericUI_Prefab_Button_Style
+UI.TOOL_BUTTON_ACTIVE_STYLE = table.shallowCopy(ButtonPrefab.STYLES.TabCharacterSheet)
+-- Swap some textures around to create a cheap active button style
+UI.TOOL_BUTTON_ACTIVE_STYLE.IdleTexture = UI.TOOL_BUTTON_ACTIVE_STYLE.HighlightedTexture
+
 UI._CurrentTool = nil ---@type Features.Assprite.Tool?
 
 local Settings = {
@@ -75,8 +80,17 @@ end
 ---Sets the active tool.
 ---@param tool Features.Assprite.Tool
 function UI.SelectTool(tool)
-    -- TODO check if a tool is being used first?
+    -- Deactivate the button of previous tool
+    if UI._CurrentTool then
+        local toolElement = UI.ToolButtons[UI._CurrentTool:GetClassName()]
+        toolElement:SetActivated(false)
+    end
+
     UI._CurrentTool = tool
+
+    -- Activate button of the new tool
+    local toolElement = UI.ToolButtons[tool:GetClassName()]
+    toolElement:SetActivated(true)
 end
 
 ---Requests an image to be saved to disk.
@@ -275,16 +289,20 @@ function UI._Initialize(img)
     toolbarGrid:SetGridSize(UI.TOOLBAR_COLUMNS, -1)
 
     -- Render tools
+    local toolButtons = {} ---@type table<classname, GenericUI_Prefab_Button>
     for _,tool in ipairs(UI.TOOLS) do
         local toolButton = ButtonPrefab.Create(UI, "Tool." .. tool:GetClassName(), toolbarGrid, ButtonPrefab.STYLES.TabCharacterSheet)
+        toolButton:SetActiveStyle(UI.TOOL_BUTTON_ACTIVE_STYLE)
         toolButton:SetIcon(tool.ICON, V(32, 32))
         toolButton:SetTooltip("Simple", tool.Name:GetString())
         toolButton.Events.Pressed:Subscribe(function (_)
             UI.SelectTool(tool)
         end)
+        toolButtons[tool:GetClassName()] = toolButton
     end
     toolbarGrid:RepositionElements()
     UI.ToolGrid = toolbarGrid
+    UI.ToolButtons = toolButtons
 
     -- Global settings
     local globalSettingsList = sidePanel:AddChild("GlobalSettings", "GenericUI_Element_VerticalList")
