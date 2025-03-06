@@ -86,6 +86,11 @@ local Assprite = {
             Text = "Undoes the last edit made to the canvas.",
             ContextDescription = [[Tooltip for "Undo" keybind]],
         },
+        Label_SelectTool = {
+            Handle = "h4de997b3gdc73g4e53g9660g63b24a7a2867",
+            Text = "Select %s tool",
+            ContextDescription = [[Generic keybind name; param is tool name]],
+        },
     },
 
     Events = {

@@ -316,9 +316,10 @@ function UI._Initialize(img)
     local toolButtons = {} ---@type table<classname, GenericUI_Prefab_Button>
     for _,tool in ipairs(UI.TOOLS) do
         local toolButton = ButtonPrefab.Create(UI, "Tool." .. tool:GetClassName(), toolbarGrid, ButtonPrefab.STYLES.TabCharacterSheet)
+        local toolKeybind = tool:GetKeybind()
         toolButton:SetActiveStyle(UI.TOOL_BUTTON_ACTIVE_STYLE)
         toolButton:SetIcon(tool.ICON, V(32, 32))
-        toolButton:SetTooltip("Simple", tool.Name:GetString())
+        toolButton:SetTooltip("Simple", string.format("%s<br>%s", tool.Name:GetString(), toolKeybind and CommonStrings.KeybindHint:Format(Input.StringifyBinding(toolKeybind)) or "")) -- TODO update if user changes keybind
         toolButton.Events.Pressed:Subscribe(function (_)
             UI.SelectTool(tool)
         end)

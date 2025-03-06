@@ -18,6 +18,7 @@ local Bucket = {
     SIMILARITY_THRESHOLD = 24, -- TODO extract setting
 }
 Assprite:RegisterClass("Features.Assprite.Tools.Bucket", Bucket, {"Features.Assprite.Tool"})
+Bucket:__RegisterInputAction({Keys = {"f"}})
 
 ---------------------------------------------
 -- METHODS

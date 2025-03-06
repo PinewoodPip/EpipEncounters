@@ -21,6 +21,7 @@ local Brush = {
     },
 }
 Assprite:RegisterClass("Features.Assprite.Tools.Brush", Brush, {"Features.Assprite.Tool"})
+Brush:__RegisterInputAction({Keys = {"b"}})
 
 ---@alias Features.Assprite.Tools.Brush.Shape "Square"|"Round"
 

@@ -5,6 +5,7 @@
 ---@meta
 
 local Assprite = Epip.GetFeature("Features.Assprite")
+local Input = Client.Input
 
 ---@class Features.Assprite.Tool : Class
 ---@field ICON icon
@@ -41,4 +42,31 @@ end
 ---@diagnostic disable-next-line: unused-local
 function Tool:OnUseEnded(context)
     return false
+end
+
+---Returns the primary keybind for the tool.
+---@return InputLib_Action_KeyCombination?
+function Tool:GetKeybind()
+    local action = Assprite.InputActions[self:GetClassName() .. ".Apply"]
+    if not action then return nil end -- The tool might have no input action.
+    local bindings = Input.GetActionBindings(action.ID)
+    return bindings[1]
+end
+
+---Registers the input action to select the tool in the UI.
+---@param defaultKeys InputLib_Action_KeyCombination
+function Tool:__RegisterInputAction(defaultKeys)
+    local action = Assprite:RegisterInputAction(self:GetClassName() .. ".Apply", {
+        Name = Assprite.TranslatedStrings.Label_SelectTool:Format(self.Name:GetString()),
+        DefaultInput1 = defaultKeys,
+    })
+
+    -- Bruh doing this here is so fucking dirty lmao TODO
+    Input.Events.ActionExecuted:Subscribe(function (ev)
+        if ev.Action == action then
+            Assprite.UI.SelectTool(self)
+        end
+    end, {EnabledFunctor = function ()
+        return Assprite.UI:IsVisible()
+    end})
 end

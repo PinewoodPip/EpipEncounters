@@ -21,6 +21,7 @@ local ColorPicker = {
     },
 }
 Assprite:RegisterClass("Features.Assprite.Tools.ColorPicker", ColorPicker, {"Features.Assprite.Tool"})
+ColorPicker:__RegisterInputAction({Keys = {"p"}})
 
 ---------------------------------------------
 -- METHODS
