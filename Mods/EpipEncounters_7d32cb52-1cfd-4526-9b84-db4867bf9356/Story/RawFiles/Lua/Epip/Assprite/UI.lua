@@ -33,6 +33,7 @@ UI.TOOLS = {
     Assprite:GetClass("Features.Assprite.Tools.Brush"),
     Assprite:GetClass("Features.Assprite.Tools.ColorPicker"),
     Assprite:GetClass("Features.Assprite.Tools.Bucket"),
+    Assprite:GetClass("Features.Assprite.Tools.Blur"),
 }
 
 ---@type GenericUI_Prefab_Button_Style
