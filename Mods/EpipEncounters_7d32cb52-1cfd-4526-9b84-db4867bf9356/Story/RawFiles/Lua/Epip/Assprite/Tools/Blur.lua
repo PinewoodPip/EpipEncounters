@@ -77,7 +77,7 @@ function Blur:_Apply(context)
         end
 
         -- Determine convolution bounds; clamp near edges (dubious choice but oh well)
-        local convolutionStart, convolutionEnd = {math.max(pos[1] - kernelSize, 1), math.max(pos[2] - kernelSize, 1)}, {math.min(pos[1] + kernelSize, img.Height), math.min(pos[2] + kernelSize, img.Height)}
+        local convolutionStart, convolutionEnd = {math.max(pos[1] - kernelSize, 1), math.max(pos[2] - kernelSize, 1)}, {math.min(pos[1] + kernelSize, img.Height), math.min(pos[2] + kernelSize, img.Width)}
 
         -- Sum weighted color values
         local r, g, b = 0, 0, 0
