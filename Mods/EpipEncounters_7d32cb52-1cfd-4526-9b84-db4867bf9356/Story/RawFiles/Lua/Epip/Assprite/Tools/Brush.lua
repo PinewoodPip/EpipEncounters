@@ -30,7 +30,7 @@ Brush:__RegisterInputAction({Keys = {"b"}})
 ---------------------------------------------
 
 local Settings = {
-    Shape = Assprite:RegisterSetting("Tools.Brush.Shape", {
+    Shape = Assprite:RegisterSetting(Brush:GetClassName() .. ".Shape", {
         Type = "Choice",
         NameHandle = Text.CommonStrings.Shape,
         DefaultValue = "Square", ---@type Features.Assprite.Tools.Brush.Shape
@@ -40,7 +40,7 @@ local Settings = {
             {ID = Brush.SHAPES.ROUND, NameHandle = Text.CommonStrings.Shapes.Round.Handle},
         }
     }),
-    Size = Assprite:RegisterSetting("Size", {
+    Size = Assprite:RegisterSetting(Brush:GetClassName() .. ".Size", {
         Type = "ClampedNumber",
         Name = Text.CommonStrings.Size,
         Min = 1,

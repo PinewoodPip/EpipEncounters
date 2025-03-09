@@ -19,11 +19,6 @@ Assprite:RegisterClass("Features.Assprite.Tools.Blur", Blur, {"Features.Assprite
 Blur:__RegisterInputAction({Keys = {"a"}})
 
 local TSK = {
-    Setting_AreaOfEffect_Name = Assprite:RegisterTranslatedString({
-        Handle = "h2b379df8g8c9ag43c2ga1f8g1063cdb96a08",
-        Text = [[Area of Effect]],
-        ContextDescription = [[Size setting name for blur tool]],
-    }),
     Setting_KernelSize_Name = Assprite:RegisterTranslatedString({
         Handle = "hd2856fecgfe75g4187g974dgce318fa7c19b",
         Text = [[Brain Size]],
@@ -38,7 +33,7 @@ local TSK = {
 local Settings = {
     AreaOfEffectSize = Assprite:RegisterSetting(Blur:GetClassName() ..  ".AreaOfEffectSize", {
         Type = "ClampedNumber",
-        Name = TSK.Setting_AreaOfEffect_Name,
+        Name = Text.CommonStrings.AreaOfEffect,
         Min = 3,
         Max = 15,
         Step = 1,

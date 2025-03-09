@@ -461,6 +461,7 @@ LOAD_ORDER = {
             "Epip/Assprite/Tools/ColorPicker.lua",
             "Epip/Assprite/Tools/Bucket.lua",
             "Epip/Assprite/Tools/Blur.lua",
+            "Epip/Assprite/Tools/Noise.lua",
             "Epip/Assprite/UI.lua",
         },
     },

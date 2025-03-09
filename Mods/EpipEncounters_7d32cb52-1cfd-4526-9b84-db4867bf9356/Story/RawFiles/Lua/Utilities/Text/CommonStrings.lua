@@ -461,6 +461,10 @@ Text.CommonStrings.About = Text.RegisterTranslatedString({
     Text = "About",
     ContextDescription = [[As in, an "about"/info page]]
 })
+Text.CommonStrings.Entropy = Text.RegisterTranslatedString({
+    Handle = "h7c901de9gb42ag4a86g9e99gf92635df0998",
+    Text = "Entropy",
+})
 
 ---------------------------------------------
 -- SHAPES
@@ -969,6 +973,11 @@ Text.CommonStrings.Cursed = Text.RegisterTranslatedString({
 Text.CommonStrings.Purified = Text.RegisterTranslatedString({
     Handle = "he817378ege243g4985gaf21g502181dcf2e6",
     Text = "Purified",
+})
+Text.CommonStrings.AreaOfEffect = Text.RegisterTranslatedString({
+    Handle = "hd7ccabf3gbf19g4f46gac8bg4614e2589714",
+    Text = "Area of effect",
+    ContextDescription = [[As in, "an AoE spell"]]
 })
 
 ---------------------------------------------
