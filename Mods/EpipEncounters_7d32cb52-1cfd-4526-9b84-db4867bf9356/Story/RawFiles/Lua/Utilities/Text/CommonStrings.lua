@@ -431,6 +431,10 @@ Text.CommonStrings.Paste = Text.RegisterTranslatedString({
     Text = "Paste",
     ContextDescription = [[As in, "paste from clipboard"]],
 })
+Text.CommonStrings.CopyToClipboard = Text.RegisterTranslatedString({
+    Handle = "hf81df634gd4a9g4822g9d16ga65dad39a7af",
+    Text = "Copy to clipboard",
+})
 Text.CommonStrings.Shape = Text.RegisterTranslatedString({
     Handle = "h0b5cea35gfa34g4c80gab49gdafdf7136ea3",
     Text = "Shape",

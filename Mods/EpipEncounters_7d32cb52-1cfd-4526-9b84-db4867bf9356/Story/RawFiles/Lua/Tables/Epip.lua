@@ -3,6 +3,7 @@
 ---@field VERSION integer In the format ex. `1066`
 Epip = {
     MIN_PIP_FORK_VERSION = 1, -- Ensured by ExtenderForkVersionCheck feature.
+    EXTENDER_FORK_DOWNLOAD_URL = "https://www.pinewood.team/epip/extender/",
 
     Features = {}, ---@type table<string, Feature> Legacy table.
     _Features = {}, ---@type table<string, Epip.ModTable>

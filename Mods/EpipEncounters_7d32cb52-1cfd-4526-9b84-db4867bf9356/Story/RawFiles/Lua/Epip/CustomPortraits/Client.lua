@@ -1,6 +1,7 @@
 
 local Assprite = Epip.GetFeature("Features.Assprite")
 local ContextMenu = Client.UI.ContextMenu
+local MsgBox = Client.UI.MessageBox
 local PlayerInfo = Client.UI.PlayerInfo
 local CharacterSheet = Client.UI.CharacterSheet
 local CombatTurn = Client.UI.CombatTurn
@@ -10,6 +11,7 @@ local Hotbar = Client.UI.Hotbar
 local CustomPortraits = Epip.GetFeature("Features.CustomPortraits")
 local TSK = CustomPortraits.TranslatedStrings
 CustomPortraits.REQUESTID_ASSPRITE = "Features.CustomPortraits.AsspriteRequest"
+CustomPortraits.MSGBOXID_REQUIRES_EXTENDER_FORK = "Features.CustomPortraits.MsgBox.ExtenderForkRequired"
 CustomPortraits.CONTEXTMENU_ENTRY_ID_SET_PORTRAIT = "Features.CustomPortraits.SetPortrait"
 
 -- UIs to refresh when a portrait is set. This will re-show the UI, if it was visible.
@@ -97,16 +99,34 @@ PlayerInfo.Hooks.GetContextMenuEntries:Subscribe(function (ev)
         id = CustomPortraits.CONTEXTMENU_ENTRY_ID_SET_PORTRAIT,
         type = "button",
         text = CustomPortraits.TranslatedStrings.Label_SetPortrait:GetString(),
+        faded = not CustomPortraits.IsSupported(), -- The option is still selectable to inform the user about the fork requirement.
     })
-end, {EnabledFunctor = function ()
-    return Epip.IsPipFork() and Epip.GetPipForkVersion() >= 4 -- TODO show the option grayed out if unavaiable?
-end})
+end)
 
 -- Handle requests to open the portrait editor.
 ContextMenu.RegisterElementListener(CustomPortraits.CONTEXTMENU_ENTRY_ID_SET_PORTRAIT, "buttonPressed", function (character, _)
-    local img = CustomPortraits.CreateDefaultImage()
-    CustomPortraits._CurrentCharacterHandle = character.Handle
-    Assprite.RequestEditor(CustomPortraits.REQUESTID_ASSPRITE, img, TSK.Label_ApplyPortrait)
+    if CustomPortraits.IsSupported() then
+        character = character ---@type EclCharacter
+        local img = CustomPortraits.CreateDefaultImage(character)
+        CustomPortraits._CurrentCharacterHandle = character.Handle
+        Assprite.RequestEditor(CustomPortraits.REQUESTID_ASSPRITE, img, TSK.Label_ApplyPortrait)
+    else
+        MsgBox.Open({
+            ID = CustomPortraits.MSGBOXID_REQUIRES_EXTENDER_FORK,
+            Header = TSK.MsgBox_NoFork_Title:GetString(),
+            Message = TSK.MsgBox_NoFork_Body:Format(Epip.EXTENDER_FORK_DOWNLOAD_URL),
+            Buttons = {
+                {ID = 1, Text = Text.CommonStrings.CopyToClipboard:GetString()},
+                {ID = 2, Text = Text.CommonStrings.Close:GetString()},
+            },
+        })
+    end
+end)
+-- Copy fork download URL to clipboard when requested so from the message box.
+MsgBox.RegisterMessageListener(CustomPortraits.MSGBOXID_REQUIRES_EXTENDER_FORK, MsgBox.Events.ButtonPressed, function(buttonId, _)
+    if buttonId == 1 then
+        Client.CopyToClipboard(Epip.EXTENDER_FORK_DOWNLOAD_URL)
+    end
 end)
 
 -- Prevent loading images of wrong size.
