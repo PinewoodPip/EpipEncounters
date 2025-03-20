@@ -443,6 +443,11 @@ UI.Events.CursorUpdated:Subscribe(function (_)
     local tool = UI._CurrentTool
     local toolClass = tool:GetClassName()
 
+    -- Some tools may use a contrasting color versus the pixel underneath the cursor
+    local pixel = context.Image:GetPixel(context.CursorPos)
+    local _, _, value = pixel:ToHSV()
+    local contrastingColor = value >= ColorPicker.UI.CROSSHAIR_INVERT_COLOR_THRESHOLD and Color.CreateFromHex(Color.BLACK) or Color.CreateFromHex(Color.WHITE)
+
     -- Determine flash graphics params to use
     local size = 1 ---@type number In canvas pixels.
     local pixelSize = 6 ---@type number Rough size of a canvas pixel in flash graphics space.
@@ -456,34 +461,34 @@ UI.Events.CursorUpdated:Subscribe(function (_)
         local SHAPES = tools.Brush.SHAPES
         if shape == SHAPES.SQUARE then
             shape = "rect"
-            pixelSize = size * 6
         elseif shape == SHAPES.ROUND then
             shape = "circle"
-            pixelSize = size * 3
         end
     elseif toolClass == tools.ColorPicker:GetClassName() then
-        -- Use a contrasting color versus the pixel underneath the cursor
-        local pixel = context.Image:GetPixel(context.CursorPos)
-        local _, _, value = pixel:ToHSV()
-        color = value >= ColorPicker.UI.CROSSHAIR_INVERT_COLOR_THRESHOLD and Color.CreateFromHex(Color.BLACK) or Color.CreateFromHex(Color.WHITE)
-        pixelSize = 6
         opacity = 0.3
+        color = contrastingColor
     elseif toolClass == tools.Bucket:GetClassName() then
-        pixelSize = 6
+        -- Pass.
     elseif toolClass == tools.Blur:GetClassName() then
-        size = tools.Blur.Settings.AreaOfEffectSize:GetValue()
-        opacity = 0.5
+        size = tools.Blur.Settings.AreaOfEffectSize:GetValue() + 2
+        opacity = 0.2
+        shape = "circle"
+        color = contrastingColor
     elseif toolClass == tools.Noise:GetClassName() then
-        size = tools.Noise.Settings.AreaOfEffectSize:GetValue()
-        opacity = 0.5
+        size = tools.Noise.Settings.AreaOfEffectSize:GetValue() + 2
+        opacity = 0.2
+        shape = "circle"
+        color = contrastingColor
     end
 
     -- Repaint cursor
     graphics.clear()
     graphics.beginFill(color:ToDecimal(), opacity)
     if shape == "rect" then
+        pixelSize = size * 6
         graphics.drawRect(-pixelSize/2, -pixelSize/2, pixelSize, pixelSize)
     elseif shape == "circle" then
+        pixelSize = size * 3
         graphics.drawCircle(0, 0, pixelSize)
     end
 end, {StringID = "DefaultImplementation"})
