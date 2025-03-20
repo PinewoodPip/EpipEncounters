@@ -155,23 +155,27 @@ function Image.ToBCT1Stream(img)
     if img.Width % 4 ~= 0 or img.Height % 4 ~= 0 then
         Image:__Error("ToBCT1Stream", "Image dimensions must be a multiple of 4")
     end
+
+    -- Encode blocks
     for i=1,img.Height,4 do
         for j=1,img.Width,4 do
             -- Determine min & max colors of the block
-            local minColor, maxColor = img.Pixels[i][j], img.Pixels[i][j]
-            local minColorSum = minColor.Red + minColor.Green + minColor.Blue
-            local maxColorSum = maxColor.Red + maxColor.Green + maxColor.Blue
+            local maxColor = {0, 0, 0}
+            local minColor = {255, 255, 255}
+            local minScore = 255
+            local maxScore = 0
             for i2=0,3,1 do
                 for j2=0,3,1 do
                     local otherColor = img.Pixels[i + i2][j + j2]
                     local otherColorSum = otherColor.Red + otherColor.Green + otherColor.Blue
-                    if otherColorSum < minColorSum then
+                    local pixelScore = otherColorSum / 3
+                    if pixelScore <= minScore then
                         minColor = otherColor
-                        minColorSum = otherColorSum
+                        minScore = pixelScore
                     end
-                    if otherColorSum > maxColorSum then
+                    if pixelScore >= maxScore then
                         maxColor = otherColor
-                        maxColorSum = maxColorSum
+                        maxScore = pixelScore
                     end
                 end
             end
@@ -179,6 +183,7 @@ function Image.ToBCT1Stream(img)
             local minR, minG, minB = minColor:Unpack()
             local maxR, maxG, maxB = maxColor:Unpack()
             local colorMiddle = Color.Create(math.floor(1/2 * minR + 1/2 * maxR), math.floor(1/2 * minG + 1/2 * maxG), math.floor(1/2 * minB + 1/2 * maxB))
+
             -- TODO support no-transparency mode; the color blending is different in that case
             -- local color2 = Color.Create(math.floor(2/3 * minR + 1/3 * maxR), math.floor(2/3 * minG + 1/3 * maxG), math.floor(2/3 * minB + 1/3 * maxB))
             -- local color3 = Color.Create(math.floor(1/3 * minR + 2/3 * maxR), math.floor(1/3 * minG + 2/3 * maxG), math.floor(1/3 * minB + 2/3 * maxB))
@@ -188,9 +193,10 @@ function Image.ToBCT1Stream(img)
             ---@return integer
             local function toBits(color)
                 local minRed = math.floor(color.Red / 255 * (2^5 - 1))
-                local minGreen = math.floor(color.Green / 255 * (2^5 - 1)) -- Was 6 bits
+                local minGreen = math.floor(color.Green / 255 * (2^6 - 1))
                 local minBlue = math.floor(color.Blue / 255 * (2^5 - 1))
-                local minColorBits = (minBlue << 10) | (minRed << 6) | minGreen -- Was 11, 5, as per the Microsoft documentation, but that appears to be wrong
+                -- local minColorBits = (minBlue << 10) | (minRed << 6) | minGreen -- Was 11, 5, as per the Microsoft documentation, but that appears to be wrong
+                local minColorBits = (minRed << 11) | (minGreen << 5) | minBlue
                 return minColorBits
             end
 
@@ -205,10 +211,10 @@ function Image.ToBCT1Stream(img)
             end
 
             local block = {
-                string.char(minColorBits >> 8),
                 string.char(minColorBits & 0xFF),
+                string.char(minColorBits >> 8),
+                string.char(maxColorBits & 0xFF),
                 string.char(maxColorBits >> 8),
-                string.char(maxColorBits & 0xFF)
             }
 
             -- Determine color indexes for the pixels of the block
@@ -246,7 +252,6 @@ function Image.ToBCT1Stream(img)
                 end
             end
 
-            -- TODO this used to insert to blocks, surely a mistake?
             table.insert(block, string.char(pixelColorIndexes >> 24))
             table.insert(block, string.char((pixelColorIndexes >> 16) & 0xFF))
             table.insert(block, string.char((pixelColorIndexes >> 8) & 0xFF))
