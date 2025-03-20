@@ -36,6 +36,7 @@ UI.TOOLS = {
     Assprite:GetClass("Features.Assprite.Tools.Blur"),
     Assprite:GetClass("Features.Assprite.Tools.Noise"),
 }
+UI.DEFAULT_TOOL = Assprite:GetClass("Features.Assprite.Tools.Brush")
 
 ---@type GenericUI_Prefab_Button_Style
 UI.TOOL_BUTTON_ACTIVE_STYLE = table.shallowCopy(ButtonPrefab.STYLES.TabCharacterSheet)
@@ -64,6 +65,9 @@ function UI.Setup(request)
 
     -- Synchronize color in UI to the Assprite context
     Assprite.SetColor(Settings.Color:GetValue())
+
+    -- Select default tool
+    UI.SelectTool(UI.DEFAULT_TOOL)
 
     -- Update confirm button
     UI.ConfirmButton:SetVisible(request.ConfirmLabel ~= nil)
