@@ -51,6 +51,7 @@ local Settings = {
         PreferredRepresentation = "Spinner", ---@type Features.SettingWidgets.PreferredRepresentation.ClampedNumber
     })
 }
+Brush.Settings = Settings
 
 ---------------------------------------------
 -- METHODS

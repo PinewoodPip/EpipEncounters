@@ -1,6 +1,7 @@
 
 local Generic = Client.UI.Generic
 local SettingWidgets = Epip.GetFeature("Features.SettingWidgets")
+local ColorPicker = Epip.GetFeature("Features.ColorPicker")
 local CloseButtonPrefab = Generic.GetPrefab("GenericUI_Prefab_CloseButton")
 local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 local ButtonPrefab = Generic.GetPrefab("GenericUI_Prefab_Button")
@@ -19,6 +20,13 @@ local V = Vector.Create
 ---@class Features.Assprite
 local Assprite = Epip.GetFeature("Features.Assprite")
 local TSK = Assprite.TranslatedStrings
+local tools = {
+    Brush = Assprite:GetClass("Features.Assprite.Tools.Brush"),
+    ColorPicker = Assprite:GetClass("Features.Assprite.Tools.ColorPicker"),
+    Bucket = Assprite:GetClass("Features.Assprite.Tools.Bucket"),
+    Blur = Assprite:GetClass("Features.Assprite.Tools.Blur"),
+    Noise = Assprite:GetClass("Features.Assprite.Tools.Noise"),
+}
 
 ---@class Features.Assprite.UI : GenericUI_Instance
 local UI = Generic.Create("Features.Assprite.UI")
@@ -31,11 +39,11 @@ UI.SETTINGS_SIZE = V(UI.SIDEBAR_WIDTH, 50)
 UI.TOOLBAR_COLUMNS = 8
 ---@type Features.Assprite.Tool[] Tools in order of appearance in the toolbar.
 UI.TOOLS = {
-    Assprite:GetClass("Features.Assprite.Tools.Brush"),
-    Assprite:GetClass("Features.Assprite.Tools.ColorPicker"),
-    Assprite:GetClass("Features.Assprite.Tools.Bucket"),
-    Assprite:GetClass("Features.Assprite.Tools.Blur"),
-    Assprite:GetClass("Features.Assprite.Tools.Noise"),
+    tools.Brush,
+    tools.ColorPicker,
+    tools.Bucket,
+    tools.Blur,
+    tools.Noise,
 }
 UI.DEFAULT_TOOL = Assprite:GetClass("Features.Assprite.Tools.Brush")
 
@@ -43,6 +51,8 @@ UI.DEFAULT_TOOL = Assprite:GetClass("Features.Assprite.Tools.Brush")
 UI.TOOL_BUTTON_ACTIVE_STYLE = table.shallowCopy(ButtonPrefab.STYLES.TabCharacterSheet)
 -- Swap some textures around to create a cheap active button style
 UI.TOOL_BUTTON_ACTIVE_STYLE.IdleTexture = UI.TOOL_BUTTON_ACTIVE_STYLE.HighlightedTexture
+
+UI.Events.CursorUpdated = UI:AddSubscribableEvent("CursorUpdated") ---@type Event<{Pos: vec2}> -- Thrown when the cursor was repositioned and needs to be re-rendered.
 
 UI._CurrentTool = nil ---@type Features.Assprite.Tool?
 
@@ -299,18 +309,16 @@ function UI._Initialize(img)
     local cursor = canvas:AddChild("CanvasCursor", "GenericUI_Element_Empty")
     cursor:SetMouseEnabled(false)
     Assprite.Events.CursorPositionChanged:Subscribe(function (ev)
-        local graphics = cursor:GetMovieClip().graphics
         local i, j = ev.Context.CursorPos:unpack()
         local canvasSize = canvas:GetSize()
         local contextImg = ev.Context.Image
-        local color = ev.Context.Color
 
         cursor:SetPosition(j / contextImg.Width * canvasSize[1], i / contextImg.Height * canvasSize[2])
 
-        -- Repaint graphics
-        graphics.clear()
-        graphics.beginFill(color:ToDecimal(), 1) -- TODO hook
-        graphics.drawRect(-5, 0, 6, 6)
+        -- Throw hook to repaint cursor graphics
+        UI.Events.CursorUpdated:Throw({
+            pos = ev.Context.CursorPos,
+        })
     end)
     UI.Cursor = cursor
 
@@ -425,6 +433,60 @@ end
 Assprite.Events.EditorRequested:Subscribe(function (ev)
     UI.Setup(ev)
 end)
+
+-- Re-render the cursor when its position changes based on the current tool.
+UI.Events.CursorUpdated:Subscribe(function (_)
+    local cursor = UI.Cursor
+    local context = Assprite.GetContext()
+    local graphics = cursor:GetMovieClip().graphics
+    local color = Assprite.GetContext().Color
+    local tool = UI._CurrentTool
+    local toolClass = tool:GetClassName()
+
+    -- Determine flash graphics params to use
+    local size = 1 ---@type number In canvas pixels.
+    local pixelSize = 6 ---@type number Rough size of a canvas pixel in flash graphics space.
+    local shape = "rect" ---@type "rect"|"circle"
+    local opacity = 1
+    if toolClass == tools.Brush:GetClassName() then
+        size = tools.Brush.Settings.Size:GetValue()
+        shape = tools.Brush.Settings.Shape:GetValue()
+
+        -- Set shape
+        local SHAPES = tools.Brush.SHAPES
+        if shape == SHAPES.SQUARE then
+            shape = "rect"
+            pixelSize = size * 6
+        elseif shape == SHAPES.ROUND then
+            shape = "circle"
+            pixelSize = size * 3
+        end
+    elseif toolClass == tools.ColorPicker:GetClassName() then
+        -- Use a contrasting color versus the pixel underneath the cursor
+        local pixel = context.Image:GetPixel(context.CursorPos)
+        local _, _, value = pixel:ToHSV()
+        color = value >= ColorPicker.UI.CROSSHAIR_INVERT_COLOR_THRESHOLD and Color.CreateFromHex(Color.BLACK) or Color.CreateFromHex(Color.WHITE)
+        pixelSize = 6
+        opacity = 0.3
+    elseif toolClass == tools.Bucket:GetClassName() then
+        pixelSize = 6
+    elseif toolClass == tools.Blur:GetClassName() then
+        size = tools.Blur.Settings.AreaOfEffectSize:GetValue()
+        opacity = 0.5
+    elseif toolClass == tools.Noise:GetClassName() then
+        size = tools.Noise.Settings.AreaOfEffectSize:GetValue()
+        opacity = 0.5
+    end
+
+    -- Repaint cursor
+    graphics.clear()
+    graphics.beginFill(color:ToDecimal(), opacity)
+    if shape == "rect" then
+        graphics.drawRect(-pixelSize/2, -pixelSize/2, pixelSize, pixelSize)
+    elseif shape == "circle" then
+        graphics.drawCircle(0, 0, pixelSize)
+    end
+end, {StringID = "DefaultImplementation"})
 
 -- Handle context menus interactions.
 ContextMenu.RegisterElementListener("Features.Assprite.UI.Save", "buttonPressed", function ()

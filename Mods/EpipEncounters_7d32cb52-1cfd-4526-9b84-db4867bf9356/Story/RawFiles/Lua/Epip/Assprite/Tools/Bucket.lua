@@ -18,6 +18,10 @@ local Bucket = {
 Assprite:RegisterClass("Features.Assprite.Tools.Bucket", Bucket, {"Features.Assprite.Tool"})
 Bucket:__RegisterInputAction({Keys = {"f"}})
 
+---------------------------------------------
+-- SETTINGS
+---------------------------------------------
+
 local Settings = {
     Greed = Assprite:RegisterSetting(Bucket:GetClassName() .. ".Greed", {
         Type = "ClampedNumber",
@@ -30,6 +34,7 @@ local Settings = {
         PreferredRepresentation = "Spinner", ---@type Features.SettingWidgets.PreferredRepresentation.ClampedNumber
     }),
 }
+Bucket.Settings = Settings
 
 ---------------------------------------------
 -- METHODS

@@ -52,6 +52,7 @@ local Settings = {
         PreferredRepresentation = "Spinner", ---@type Features.SettingWidgets.PreferredRepresentation.ClampedNumber
     }),
 }
+Blur.Settings = Settings
 
 ---------------------------------------------
 -- METHODS

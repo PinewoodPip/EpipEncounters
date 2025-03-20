@@ -45,6 +45,7 @@ local Settings = {
         PreferredRepresentation = "Spinner", ---@type Features.SettingWidgets.PreferredRepresentation.ClampedNumber
     }),
 }
+Noise.Settings = Settings
 
 ---------------------------------------------
 -- METHODS
