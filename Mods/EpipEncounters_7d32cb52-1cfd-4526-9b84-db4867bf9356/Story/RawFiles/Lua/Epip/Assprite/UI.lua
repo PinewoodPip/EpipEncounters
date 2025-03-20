@@ -136,6 +136,19 @@ function UI.RequestLoad()
     })
 end
 
+---Prompts the user to confirm closing the UI.
+function UI.RequestExit()
+    MessageBox.Open({
+        ID = "Features.Assprite.UI.Exit",
+        Header = TSK.MsgBox_Exit_Header:GetString(),
+        Message = TSK.MsgBox_Exit_Body:GetString(),
+        Buttons = {
+            {ID = 1, Text = CommonStrings.Exit:GetString()},
+            {ID = 2, Text = CommonStrings.Cancel:GetString()},
+        }
+    })
+end
+
 ---Initializes the static elements of the UI.
 ---@param img ImageLib_Image Initial image to display.
 function UI._Initialize(img)
@@ -151,8 +164,10 @@ function UI._Initialize(img)
     local closeButton = CloseButtonPrefab.Create(UI, "CloseButton", panel)
     closeButton:SetPositionRelativeToParent("TopRight")
     closeButton.Events.Pressed:Subscribe(function (_)
-        -- TODO confirm to close
-        UI.CompleteRequest()
+        UI.RequestExit()
+    end)
+    closeButton.Hooks.CanClose:Subscribe(function (ev)
+        ev.CanClose = false -- Closing is handled by prompt instead.
     end)
 
     -- Top buttons bar
@@ -383,15 +398,7 @@ ContextMenu.RegisterElementListener("Features.Assprite.UI.Load", "buttonPressed"
     UI.RequestLoad()
 end)
 ContextMenu.RegisterElementListener("Features.Assprite.UI.Exit", "buttonPressed", function ()
-    MessageBox.Open({
-        ID = "Features.Assprite.UI.Exit",
-        Header = TSK.MsgBox_Exit_Header:GetString(),
-        Message = TSK.MsgBox_Exit_Body:GetString(),
-        Buttons = {
-            {ID = 1, Text = CommonStrings.Exit:GetString()},
-            {ID = 2, Text = CommonStrings.Cancel:GetString()},
-        }
-    })
+    UI.RequestExit()
 end)
 ContextMenu.RegisterElementListener("Features.Assprite.UI.Undo", "buttonPressed", function ()
     Assprite.Undo()
