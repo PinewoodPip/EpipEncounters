@@ -57,18 +57,28 @@ end
 ---@param char EclCharacter
 ---@param img ImageLib_Image
 function CustomPortraits._SetPortrait(char, img)
-    local bct1Stream = Client.Image.ToBCT1Stream(img)
-    Ext.Entity.SetPortrait(char.Handle, img.Width, img.Height, bct1Stream)
+    local dds = Image.ToDDS(img)
+    local charHandle = char.Handle
 
-    -- Refresh commonly-used UIs that display portraits
-    Ext.OnNextTick(function (_)
-        for _,ui in ipairs(CustomPortraits.REFRESHED_UIS) do
-            if ui:IsVisible() then -- Avoid showing UIs that may currently be hidden.
-                ui:Hide() -- Necessary for the Hotbar UI.
-                ui:Show()
+    local success = Ext.Entity.SetPortrait(charHandle, img.Width, img.Height, dds)
+    if success then
+        -- Refresh commonly-used UIs that display portraits
+        Ext.OnNextTick(function (_)
+            for _,ui in ipairs(CustomPortraits.REFRESHED_UIS) do
+                if ui:IsVisible() then -- Avoid showing UIs that may currently be hidden.
+                    ui:Show()
+                end
             end
-        end
-    end)
+
+            -- TODO hide Fade UI as well
+            Client.UI.GameMenu:Show()
+            Client.UI.GameMenu:GetRoot().visible = false -- Necessary to prevent the UI from flashing visible.
+            Timer.StartTickTimer(3, function ()
+                Client.UI.GameMenu:Hide()
+                Client.UI.GameMenu:GetRoot().visible = true
+            end)
+        end)
+    end
 end
 
 ---------------------------------------------
