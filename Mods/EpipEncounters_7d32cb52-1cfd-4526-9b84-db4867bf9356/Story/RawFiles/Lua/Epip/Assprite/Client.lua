@@ -51,7 +51,7 @@ local Assprite = {
         },
         MsgBox_Save_Body = {
             Handle = "h0dee3b84gdb20g4caegbcabga1530c734a20",
-            Text = "Enter a path (excluding extension) to save image raw data, relative to the Osiris Data folder.",
+            Text = "Enter a path (excluding extension) to save image as DDS, relative to the Osiris Data folder.",
             ContextDescription = [[Message box for save option]],
         },
         MsgBox_Load_Body = {

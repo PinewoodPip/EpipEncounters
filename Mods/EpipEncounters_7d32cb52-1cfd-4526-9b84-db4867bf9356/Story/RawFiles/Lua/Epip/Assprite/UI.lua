@@ -416,8 +416,9 @@ end)
 
 -- Handle save prompts.
 MessageBox.RegisterMessageListener("Features.Assprite.UI.Save", MessageBox.Events.InputSubmitted, function (path, _, _)
-    local rawData = Assprite.GetImage():ToRawData()
-    IO.SaveFile(path .. ".txt", rawData, true)
+    local img = Assprite.GetImage()
+    local data = Image.ToDDS(img)
+    IO.SaveFile(path .. ".dds", data, true)
     Notification.ShowNotification(TSK.Notification_Save_Success:GetString())
 end)
 -- Handle load prompts.
