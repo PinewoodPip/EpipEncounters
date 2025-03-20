@@ -5,7 +5,6 @@ local MsgBox = Client.UI.MessageBox
 local PlayerInfo = Client.UI.PlayerInfo
 local CharacterSheet = Client.UI.CharacterSheet
 local CombatTurn = Client.UI.CombatTurn
-local Hotbar = Client.UI.Hotbar
 
 ---@class Features.CustomPortraits : Feature
 local CustomPortraits = Epip.GetFeature("Features.CustomPortraits")
@@ -19,7 +18,7 @@ CustomPortraits.CONTEXTMENU_ENTRY_ID_SET_PORTRAIT = "Features.CustomPortraits.Se
 CustomPortraits.REFRESHED_UIS = {
     PlayerInfo,
     CharacterSheet,
-    Hotbar,
+    -- Hotbar, -- More reliable to update via a GameMenu toggle.
     CombatTurn, -- Just in case someone spends their round painting in multiplayer, I guess?
 }
 
@@ -40,17 +39,23 @@ function CustomPortraits.RequestSetPortrait(char, portrait)
 end
 
 ---Returns the default image to use when requesting Assprite.
+---@param char EclCharacter? If provided and char has a PlayerData portrait, the image will be the char's PlayerData portrait.
 ---@return ImageLib_Image
-function CustomPortraits.CreateDefaultImage()
-    local PORTRAIT_SIZE = CustomPortraits.PORTRAIT_SIZE
-    local img = Client.Image.CreateImage(PORTRAIT_SIZE:unpack())
-    -- Fill with white
-    for _=1,PORTRAIT_SIZE[2],1 do
-        for _=1,PORTRAIT_SIZE[1],1 do
-            img:AddPixel(Color.CreateFromHex(Color.WHITE))
+function CustomPortraits.CreateDefaultImage(char)
+    if char then -- Use char's portrait. TODO check if PlayerData is initialized
+        local dds = Ext.Entity.GetPortrait(char.Handle)
+        return Image.GetDecoder("ImageLib.Decoders.DDS"):Decode(dds)
+    else
+        local PORTRAIT_SIZE = CustomPortraits.PORTRAIT_SIZE
+        local img = Client.Image.CreateImage(PORTRAIT_SIZE:unpack())
+        -- Fill with white
+        for _=1,PORTRAIT_SIZE[2],1 do
+            for _=1,PORTRAIT_SIZE[1],1 do
+                img:AddPixel(Color.CreateFromHex(Color.WHITE))
+            end
         end
+        return img
     end
-    return img
 end
 
 ---Sets a character's portrait client-side and refreshes relevant UIs.
