@@ -168,6 +168,7 @@ local coreLibraries = {
             "Utilities/Image/Decoders/PNG/Chunks/IHDR.lua",
             "Utilities/Image/Decoders/PNG/Chunks/IDAT.lua",
             "Utilities/Image/Decoders/PNG/Chunks/IEND.lua",
+            "Utilities/Image/Decoders/DDS/Decoder.lua",
         }
     },
 }
