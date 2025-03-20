@@ -13,6 +13,7 @@ local MessageBox = Client.UI.MessageBox
 local ImageLib = Client.Image
 local Input = Client.Input
 local CommonStrings = Text.CommonStrings
+local SettingsLib = Settings
 local V = Vector.Create
 
 ---@class Features.Assprite
@@ -23,11 +24,11 @@ local TSK = Assprite.TranslatedStrings
 local UI = Generic.Create("Features.Assprite.UI")
 Assprite.UI = UI
 
-UI.PANEL_SIZE = V(700, 800)
+UI.PANEL_SIZE = V(775, 800)
 UI.HEADER_SIZE = V(200, 50)
-UI.SIDEBAR_WIDTH = 250
+UI.SIDEBAR_WIDTH = 375
 UI.SETTINGS_SIZE = V(UI.SIDEBAR_WIDTH, 50)
-UI.TOOLBAR_COLUMNS = 3
+UI.TOOLBAR_COLUMNS = 8
 ---@type Features.Assprite.Tool[] Tools in order of appearance in the toolbar.
 UI.TOOLS = {
     Assprite:GetClass("Features.Assprite.Tools.Brush"),
@@ -106,6 +107,8 @@ function UI.SelectTool(tool)
     -- Activate button of the new tool
     local toolElement = UI.ToolButtons[tool:GetClassName()]
     toolElement:SetActivated(true)
+
+    UI._UpdateToolSettings()
 end
 
 ---Completes the current request and closes the UI.
@@ -151,6 +154,24 @@ function UI.RequestExit()
             {ID = 2, Text = CommonStrings.Cancel:GetString()},
         }
     })
+end
+
+---Re-renders the tool settings list.
+function UI._UpdateToolSettings()
+    local toolSettingList = UI.ToolSettingsList
+
+    toolSettingList:Clear()
+
+    -- Render tool-specific settings
+    local tool = UI._CurrentTool
+    if tool then
+        local toolSettings = tool:GetSettings()
+        for _,setting in ipairs(toolSettings) do
+            SettingWidgets.RenderSetting(UI, toolSettingList, setting, UI.SETTINGS_SIZE)
+        end
+    end
+
+    toolSettingList:RepositionElements()
 end
 
 ---Initializes the static elements of the UI.
@@ -350,32 +371,43 @@ function UI._Initialize(img)
     UI.ToolGrid = toolbarGrid
     UI.ToolButtons = toolButtons
 
-    -- Global settings
-    local globalSettingsList = sidePanel:AddChild("GlobalSettings", "GenericUI_Element_VerticalList")
+    -- Tool settings
+    local toolSettingsList = sidePanel:AddChild("ToolSettingsList", "GenericUI_Element_VerticalList")
+    UI.ToolSettingsList = toolSettingsList
 
-    -- Selected color
-    local colorWidget = SettingWidgets.RenderSetting(UI, globalSettingsList, Settings.Color, UI.SETTINGS_SIZE, function (value)
-        Assprite.SetColor(value)
-    end) ---@cast colorWidget GenericUI.Prefab.Form.Color
-    -- Synchronize the setting value with the context color
-    Assprite.Events.ColorChanged:Subscribe(function (ev)
-        colorWidget:SetColor(ev.Context.Color)
-    end)
+    sidePanel:RepositionElements()
+    sidePanel:SetPositionRelativeToParent("TopRight")
 
     -- Update the image when it is edited.
     Assprite.Events.ImageChanged:Subscribe(function (ev)
         UI._SetImage(ev.Context.Image)
     end)
 
-    globalSettingsList:RepositionElements()
-    sidePanel:RepositionElements()
-    sidePanel:SetPositionRelativeToParent("TopRight")
-
     -- Setup UIObject panel size
     UI:GetUI().SysPanelSize = UI.PANEL_SIZE
 
     UI._Initialized = true
 end
+
+-- Synchronize the setting value with the context color
+local ignoreColorEvent = false -- Necessary to avoid an infinite loop due to the "two-way data binding".
+SettingsLib.Events.SettingValueChanged:Subscribe(function (ev)
+    if ev.Setting == Settings.Color then
+        ignoreColorEvent = true
+        Assprite.SetColor(ev.Value)
+        ignoreColorEvent = false
+    end
+end, {EnabledFunctor = function ()
+    return not ignoreColorEvent
+end})
+Assprite.Events.ColorChanged:Subscribe(function (ev)
+    ignoreColorEvent = true
+    Settings.Color:SetValue(ev.Context.Color)
+    ignoreColorEvent = false
+    UI._UpdateToolSettings() -- Necessary for the setting widget to update.
+end, {EnabledFunctor = function ()
+    return not ignoreColorEvent
+end})
 
 ---@override
 function UI:Hide()

@@ -39,6 +39,13 @@ function ColorPicker:OnCursorChanged(context) -- Allows click-and-drag to pick c
     return false
 end
 
+---@override
+function ColorPicker:GetSettings()
+    return {
+        Assprite.Settings.Color,
+    }
+end
+
 ---Picks the color from the context's cursor.
 ---@param context Features.Assprite.Context
 function ColorPicker:_Pick(context)

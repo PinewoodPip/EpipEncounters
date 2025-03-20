@@ -44,6 +44,13 @@ function Tool:OnUseEnded(context)
     return false
 end
 
+---Returns the settings related to the tool.
+---@virtual
+---@return SettingsLib_Setting[]
+function Tool:GetSettings()
+    return EMPTY
+end
+
 ---Returns the primary keybind for the tool.
 ---@return InputLib_Action_KeyCombination?
 function Tool:GetKeybind()

@@ -39,6 +39,7 @@ local Settings = {
         Step = 1,
         HideNumbers = false,
         DefaultValue = 3,
+        PreferredRepresentation = "Spinner", ---@type Features.SettingWidgets.PreferredRepresentation.ClampedNumber
     }),
     KernelSize = Assprite:RegisterSetting(Blur:GetClassName() ..  ".KernelSize", {
         Type = "ClampedNumber",
@@ -48,6 +49,7 @@ local Settings = {
         Step = 1,
         HideNumbers = false,
         DefaultValue = 3,
+        PreferredRepresentation = "Spinner", ---@type Features.SettingWidgets.PreferredRepresentation.ClampedNumber
     }),
 }
 
@@ -106,6 +108,15 @@ function Blur:OnCursorChanged(context)
         self:_Apply(context)
     end
     return context.CursorPos ~= nil
+end
+
+---@override
+function Blur:GetSettings()
+    return {
+        Assprite.Settings.Color,
+        Settings.AreaOfEffectSize,
+        Settings.KernelSize,
+    }
 end
 
 ---Returns a map of the relative coordinates the tool covers based on the size setting.

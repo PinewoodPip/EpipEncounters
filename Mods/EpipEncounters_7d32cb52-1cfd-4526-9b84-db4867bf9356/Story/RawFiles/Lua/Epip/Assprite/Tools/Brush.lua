@@ -44,10 +44,11 @@ local Settings = {
         Type = "ClampedNumber",
         Name = Text.CommonStrings.Size,
         Min = 1,
-        Max = 5,
+        Max = 10,
         Step = 1,
         HideNumbers = false,
         DefaultValue = 1,
+        PreferredRepresentation = "Spinner", ---@type Features.SettingWidgets.PreferredRepresentation.ClampedNumber
     })
 }
 
@@ -85,6 +86,15 @@ function Brush:OnCursorChanged(context)
     return context.CursorPos ~= nil
 end
 
+---@override
+function Brush:GetSettings()
+    return {
+        Assprite.Settings.Color,
+        Settings.Shape,
+        Settings.Size,
+    }
+end
+
 ---Returns a map of the relative coordinates a shape covers.
 ---@param shape Features.Assprite.Tools.Brush.Shape
 ---@return vec2[] -- List of coordinates relative to cursor position.
@@ -100,7 +110,7 @@ function Brush:GetShapeArea(shape)
     elseif shape == "Round" then
         for i=-size,size,1 do
             for j=-size,size,1 do
-                if not (math.abs(i) == size and math.abs(j) == -size) then -- Exclude corners.
+                if math.sqrt(i ^ 2 + j ^ 2) <= size then -- Circular radius check.
                     table.insert(area, {i, j})
                 end
             end

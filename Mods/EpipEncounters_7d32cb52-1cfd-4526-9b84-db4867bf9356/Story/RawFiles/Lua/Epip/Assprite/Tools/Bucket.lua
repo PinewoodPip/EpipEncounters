@@ -65,6 +65,13 @@ function Bucket:OnUseStarted(context)
     return true
 end
 
+---@override
+function Bucket:GetSettings()
+    return {
+        Assprite.Settings.Color,
+    }
+end
+
 ---Returns whether 2 colors are similar enough to each other for the fill tool to cover them.
 ---@param color1 RGBColor
 ---@param color2 RGBColor

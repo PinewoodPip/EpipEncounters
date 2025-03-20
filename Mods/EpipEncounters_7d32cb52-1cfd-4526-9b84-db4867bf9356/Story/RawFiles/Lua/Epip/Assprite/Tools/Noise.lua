@@ -32,6 +32,7 @@ local Settings = {
         Step = 1,
         HideNumbers = false,
         DefaultValue = 3,
+        PreferredRepresentation = "Spinner", ---@type Features.SettingWidgets.PreferredRepresentation.ClampedNumber
     }),
     Entropy = Assprite:RegisterSetting(Noise:GetClassName() ..  ".Entropy", {
         Type = "ClampedNumber",
@@ -41,6 +42,7 @@ local Settings = {
         Step = 5,
         HideNumbers = false,
         DefaultValue = 25,
+        PreferredRepresentation = "Spinner", ---@type Features.SettingWidgets.PreferredRepresentation.ClampedNumber
     }),
 }
 
@@ -89,6 +91,15 @@ function Noise:OnCursorChanged(context)
         self:_Apply(context)
     end
     return context.CursorPos ~= nil
+end
+
+
+---@override
+function Noise:GetSettings()
+    return {
+        Settings.AreaOfEffectSize,
+        Settings.Entropy,
+    }
 end
 
 ---Returns a map of the relative coordinates the tool covers based on the size setting.
