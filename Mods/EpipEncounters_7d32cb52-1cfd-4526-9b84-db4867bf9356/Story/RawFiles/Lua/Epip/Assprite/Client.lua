@@ -46,8 +46,8 @@ local Assprite = {
         },
         Notification_Load_Error_FileDoesntExist = {
             Handle = "hfd190c24g601fg442egacfcg0f5791421973",
-            Text = [[File "%s" doesn't exist.]],
-            ContextDescription = [[Notification when loading an image with a non-existent path. Param is file path.]],
+            Text = [[File "%s.png" or "%s.dds" doesn't exist.]],
+            ContextDescription = [[Notification when loading an image with a non-existent path. Params are file path.]],
         },
         MsgBox_Save_Body = {
             Handle = "h0dee3b84gdb20g4caegbcabga1530c734a20",
@@ -56,7 +56,7 @@ local Assprite = {
         },
         MsgBox_Load_Body = {
             Handle = "h37a87c28g91efg42f6g9b13g632167e743c7",
-            Text = "Enter a path to load a .PNG from (excluding extension), relative to the Osiris Data folder.",
+            Text = "Enter a path to load a .PNG or .DDS from (excluding extension), relative to the Osiris Data folder.",
             ContextDescription = [[Message box for load option]],
         },
         MsgBox_Exit_Header = {

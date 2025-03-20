@@ -458,17 +458,21 @@ MessageBox.RegisterMessageListener("Features.Assprite.UI.Load", MessageBox.Event
     local success, failureMsg = true, nil ---@type TextLib.String
     local img = nil ---@type ImageLib_Image?
 
-    -- Check file exists
-    path = path .. ".png"
-    if not IO.LoadFile(path, "user", true) then
-        success, failureMsg = false, TSK.Notification_Load_Error_FileDoesntExist:Format(path)
+    -- Check either file exists
+    local pngPath = path .. ".png"
+    local ddsPath = path .. ".dds"
+    local pngContents = IO.LoadFile(pngPath, "user", true)
+    local ddsContents = IO.LoadFile(ddsPath, "user", true)
+    if not pngContents and not ddsContents then
+        success, failureMsg = false, TSK.Notification_Load_Error_FileDoesntExist:Format(path, path)
     end
 
     if not failureMsg then
         -- Parse image
         success, failureMsg = pcall(function ()
-            local decoder = ImageLib.GetDecoder("ImageLib_Decoder_PNG"):Create(path)
-            img = decoder:Decode()
+            local decoder = pngContents and ImageLib.GetDecoder("ImageLib_Decoder_PNG") or ImageLib.GetDecoder("ImageLib.Decoders.DDS")
+            local decoderIntance = decoder:Create(pngContents and pngPath or ddsPath)
+            img = decoderIntance:Decode()
         end)
     end
 
