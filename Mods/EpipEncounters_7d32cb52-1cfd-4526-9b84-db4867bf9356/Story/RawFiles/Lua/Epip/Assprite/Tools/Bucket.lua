@@ -14,11 +14,22 @@ local Bucket = {
         Text = [[Bucket Fill]],
         ContextDescription = [[Tool name]],
     }),
-
-    SIMILARITY_THRESHOLD = 24, -- TODO extract setting
 }
 Assprite:RegisterClass("Features.Assprite.Tools.Bucket", Bucket, {"Features.Assprite.Tool"})
 Bucket:__RegisterInputAction({Keys = {"f"}})
+
+local Settings = {
+    Greed = Assprite:RegisterSetting(Bucket:GetClassName() .. ".Greed", {
+        Type = "ClampedNumber",
+        Name = Text.CommonStrings.Greed,
+        Min = 5,
+        Max = 250,
+        Step = 5,
+        HideNumbers = false,
+        DefaultValue = 25,
+        PreferredRepresentation = "Spinner", ---@type Features.SettingWidgets.PreferredRepresentation.ClampedNumber
+    }),
+}
 
 ---------------------------------------------
 -- METHODS
@@ -69,6 +80,7 @@ end
 function Bucket:GetSettings()
     return {
         Assprite.Settings.Color,
+        Settings.Greed,
     }
 end
 
@@ -76,8 +88,9 @@ end
 ---@param color1 RGBColor
 ---@param color2 RGBColor
 function Bucket:_AreColorsSimilar(color1, color2)
+    local threshold = Settings.Greed:GetValue()
     local r1, g1, b1 = color1:Unpack()
     local r2, g2, b2 = color2:Unpack()
     local diff = math.abs(r1 - r2) + math.abs(g1 - g2) + math.abs(b1 - b2)
-    return diff <= self.SIMILARITY_THRESHOLD
+    return diff <= threshold
 end

@@ -469,6 +469,10 @@ Text.CommonStrings.Entropy = Text.RegisterTranslatedString({
     Handle = "h7c901de9gb42ag4a86g9e99gf92635df0998",
     Text = "Entropy",
 })
+Text.CommonStrings.Greed = Text.RegisterTranslatedString({
+    Handle = "h12213140gf541g443ag82ecgaab544f0502a",
+    Text = "Greed",
+})
 
 ---------------------------------------------
 -- SHAPES
