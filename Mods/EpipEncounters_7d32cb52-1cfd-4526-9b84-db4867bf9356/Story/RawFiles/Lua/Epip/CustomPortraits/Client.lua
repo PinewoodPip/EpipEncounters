@@ -86,6 +86,16 @@ function CustomPortraits._SetPortrait(char, img)
     end
 end
 
+---Saves a character's portrait to disk, if they have a custom portrait.
+---@param char EclCharacter
+function CustomPortraits._BackupPortrait(char)
+    local portrait = Ext.Entity.GetPortrait(char.Handle)
+    if portrait then
+        local path = string.format("Epip/PortraitBackups/%s_%s.dds", char.DisplayName, char.MyGuid)
+        IO.SaveFile(path, portrait, true)
+    end
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------
@@ -94,6 +104,10 @@ end
 Net.RegisterListener(CustomPortraits.NETMSG_SET_PORTRAIT, function (payload)
     local char = payload:GetCharacter()
     local img = Client.Image.CreateFromRawData(payload.ImageRawData)
+
+    -- Save a copy of the portrait to user storage first
+    CustomPortraits._BackupPortrait(char)
+
     CustomPortraits._SetPortrait(char, img)
 end)
 
