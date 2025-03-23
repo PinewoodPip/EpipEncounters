@@ -49,7 +49,21 @@ local Settings = {
         HideNumbers = false,
         DefaultValue = 1,
         PreferredRepresentation = "Spinner", ---@type Features.SettingWidgets.PreferredRepresentation.ClampedNumber
-    })
+    }),
+    Opacity = Assprite:RegisterSetting(Brush:GetClassName() .. ".Opacity", {
+        Type = "ClampedNumber",
+        Name = Assprite:RegisterTranslatedString({
+            Handle = "hc41596f1gfb56g4814g9b96g50df2a31238a",
+            Text = [[Grip]],
+            ContextDescription = [[Setting name for brush opacity]],
+        }),
+        Min = 0.05,
+        Max = 1,
+        Step = 0.05,
+        HideNumbers = false,
+        DefaultValue = 1,
+        PreferredRepresentation = "Spinner", ---@type Features.SettingWidgets.PreferredRepresentation.ClampedNumber
+    }),
 }
 Brush.Settings = Settings
 
@@ -68,13 +82,27 @@ end
 function Brush:_Apply(context)
     local shape = Settings.Shape:GetValue()
     local area = self:GetShapeArea(shape)
+    local opacity = Settings.Opacity:GetValue()
     local cursorPos = context.CursorPos
-    local color = context.Color
+    local selectedColor = context.Color
     local img = context.Image
     for _,relativePos in ipairs(area) do -- TODO implement color equality check? for detecting no-ops
         local pos = {cursorPos[1] + relativePos[1], cursorPos[2] + relativePos[2]}
         if pos[1] >= 1 and pos[1] <= img.Height and pos[2] >= 1 and pos[2] <= img.Width then
-            img:SetPixel(pos, color)
+            local pixel = img:GetPixel(pos)
+            local newColor
+            if opacity < 1 then
+                -- Blend color based on brush opacity
+                newColor = Color.Create(
+                    math.floor(selectedColor.Red * opacity + pixel.Red * (1 - opacity)),
+                    math.floor(selectedColor.Green * opacity + pixel.Green * (1 - opacity)),
+                    math.floor(selectedColor.Blue * opacity + pixel.Blue * (1 - opacity))
+                )
+            else
+                -- Fast-path for fully replacing the color
+                newColor = selectedColor
+            end
+            img:SetPixel(pos, newColor)
         end
     end
 end
@@ -93,6 +121,7 @@ function Brush:GetSettings()
         Assprite.Settings.Color,
         Settings.Shape,
         Settings.Size,
+        Settings.Opacity,
     }
 end
 
