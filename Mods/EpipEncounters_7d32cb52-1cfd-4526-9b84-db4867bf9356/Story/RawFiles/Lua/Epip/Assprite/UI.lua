@@ -32,11 +32,12 @@ local tools = {
 local UI = Generic.Create("Features.Assprite.UI")
 Assprite.UI = UI
 
-UI.PANEL_SIZE = V(775, 800)
+UI.PANEL_SIZE = V(850, 800)
 UI.HEADER_SIZE = V(200, 50)
 UI.SIDEBAR_WIDTH = 375
 UI.SETTINGS_SIZE = V(UI.SIDEBAR_WIDTH, 50)
 UI.TOOLBAR_COLUMNS = 8
+UI.STATUS_BAR_LABEL_SIZE = V(100, 50)
 ---@type Features.Assprite.Tool[] Tools in order of appearance in the toolbar.
 UI.TOOLS = {
     tools.Brush,
@@ -55,6 +56,7 @@ UI.TOOL_BUTTON_ACTIVE_STYLE.IdleTexture = UI.TOOL_BUTTON_ACTIVE_STYLE.Highlighte
 UI.Events.CursorUpdated = UI:AddSubscribableEvent("CursorUpdated") ---@type Event<{Pos: vec2}> -- Thrown when the cursor was repositioned and needs to be re-rendered.
 
 UI._CurrentTool = nil ---@type Features.Assprite.Tool?
+UI._CanvasHovered = false
 
 local Settings = {
     Color =  Assprite:RegisterSetting("Color", {
@@ -301,6 +303,11 @@ function UI._Initialize(img)
         local image = Assprite.GetImage()
         local pixelPos = V(math.ceil(pos[2] * image.Height), math.ceil(pos[1] * image.Width)) -- Convert x & y to row & column coordinates.
         Assprite.SetCursor(pixelPos)
+        UI._CanvasHovered = true
+    end)
+    canvas.Root.Events.MouseOut:Subscribe(function (_)
+        UI._CanvasHovered = false
+        UI._UpdateCursorLabel()
     end)
     canvas:SetPositionRelativeToParent("TopLeft")
     UI.Canvas = canvas
@@ -330,10 +337,22 @@ function UI._Initialize(img)
         end
     end)
 
+    -- Status bar
+    local statusBar = contentArea:AddChild("StatusBarList", "GenericUI_Element_HorizontalList")
+    statusBar:Move(0, canvas:GetHeight())
+    UI.StatusBarList = statusBar
+
+    -- Cursor position label
+    local cursorPosLabel = TextPrefab.Create(UI, "StatusBarCursorPosLabel", statusBar, "", "Center", UI.STATUS_BAR_LABEL_SIZE)
+    -- Update label when cursor is changed
+    Assprite.Events.CursorPositionChanged:Subscribe(function (_)
+        UI._UpdateCursorLabel()
+    end)
+    UI.CursorPosLabel = cursorPosLabel
+
     -- Undo button
-    local undoButton = ButtonPrefab.Create(UI, "UndoButton", contentArea, ButtonPrefab.STYLES.SmallRed)
+    local undoButton = ButtonPrefab.Create(UI, "UndoButton", statusBar, ButtonPrefab.STYLES.SmallRed)
     undoButton:SetLabel(TSK.Label_Undo)
-    undoButton:Move(0, canvas:GetHeight())
     -- Disable button if no more snapshots remain.
     undoButton.Events.Pressed:Subscribe(function (_)
         Assprite.Undo()
@@ -343,6 +362,8 @@ function UI._Initialize(img)
     Assprite.Events.ToolUseStarted:Subscribe(function (_)
         undoButton:SetEnabled(Assprite.CanUndo())
     end)
+
+    statusBar:RepositionElements()
 
     -- Confirm button; only visible when opening Assprite for a particular purpose
     local confirmButton = ButtonPrefab.Create(UI, "ConfirmButton", panel, ButtonPrefab.STYLES.GreenMedium)
@@ -397,25 +418,17 @@ function UI._Initialize(img)
     UI._Initialized = true
 end
 
--- Synchronize the setting value with the context color
-local ignoreColorEvent = false -- Necessary to avoid an infinite loop due to the "two-way data binding".
-SettingsLib.Events.SettingValueChanged:Subscribe(function (ev)
-    if ev.Setting == Settings.Color then
-        ignoreColorEvent = true
-        Assprite.SetColor(ev.Value)
-        ignoreColorEvent = false
+---Updates the cursor label in the status bar.
+function UI._UpdateCursorLabel()
+    local label = UI.CursorPosLabel
+    local context = Assprite.GetContext()
+    local pos = context.CursorPos
+    if UI._CanvasHovered then
+        label:SetText(string.format("(%d, %d)", pos:unpack()))
+    else
+        label:SetText("")
     end
-end, {EnabledFunctor = function ()
-    return not ignoreColorEvent
-end})
-Assprite.Events.ColorChanged:Subscribe(function (ev)
-    ignoreColorEvent = true
-    Settings.Color:SetValue(ev.Context.Color)
-    ignoreColorEvent = false
-    UI._UpdateToolSettings() -- Necessary for the setting widget to update.
-end, {EnabledFunctor = function ()
-    return not ignoreColorEvent
-end})
+end
 
 ---@override
 function UI:Hide()
@@ -492,6 +505,26 @@ UI.Events.CursorUpdated:Subscribe(function (_)
         graphics.drawCircle(0, 0, pixelSize)
     end
 end, {StringID = "DefaultImplementation"})
+
+-- Synchronize the setting value with the context color
+local ignoreColorEvent = false -- Necessary to avoid an infinite loop due to the "two-way data binding".
+SettingsLib.Events.SettingValueChanged:Subscribe(function (ev)
+    if ev.Setting == Settings.Color then
+        ignoreColorEvent = true
+        Assprite.SetColor(ev.Value)
+        ignoreColorEvent = false
+    end
+end, {EnabledFunctor = function ()
+    return not ignoreColorEvent
+end})
+Assprite.Events.ColorChanged:Subscribe(function (ev)
+    ignoreColorEvent = true
+    Settings.Color:SetValue(ev.Context.Color)
+    ignoreColorEvent = false
+    UI._UpdateToolSettings() -- Necessary for the setting widget to update.
+end, {EnabledFunctor = function ()
+    return not ignoreColorEvent
+end})
 
 -- Handle context menus interactions.
 ContextMenu.RegisterElementListener("Features.Assprite.UI.Save", "buttonPressed", function ()
