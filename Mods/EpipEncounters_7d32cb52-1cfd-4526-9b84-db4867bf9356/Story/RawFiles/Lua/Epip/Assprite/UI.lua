@@ -307,7 +307,10 @@ function UI._Initialize(img)
     end)
     canvas.Root.Events.MouseOut:Subscribe(function (_)
         UI._CanvasHovered = false
+
+        -- Hide cursor and update status bar label
         UI._UpdateCursorLabel()
+        UI.Cursor:SetVisible(false)
     end)
     canvas:SetPositionRelativeToParent("TopLeft")
     UI.Canvas = canvas
@@ -321,6 +324,7 @@ function UI._Initialize(img)
         local contextImg = ev.Context.Image
 
         cursor:SetPosition(j / contextImg.Width * canvasSize[1], i / contextImg.Height * canvasSize[2])
+        cursor:SetVisible(true)
 
         -- Throw hook to repaint cursor graphics
         UI.Events.CursorUpdated:Throw({
