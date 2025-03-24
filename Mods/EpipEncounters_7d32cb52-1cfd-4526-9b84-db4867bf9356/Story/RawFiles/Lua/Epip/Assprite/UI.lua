@@ -82,11 +82,13 @@ function UI.Setup(request)
     -- Select default tool
     UI.SelectTool(UI.DEFAULT_TOOL)
 
-    -- Update confirm button
+    -- Update buttons
     UI.ConfirmButton:SetVisible(request.ConfirmLabel ~= nil)
     if request.ConfirmLabel then
         UI.ConfirmButton:SetLabel(Text.Resolve(request.ConfirmLabel))
     end
+    UI.UndoButton:SetEnabled(Assprite.CanUndo())
+    UI.RedoButton:SetEnabled(Assprite.CanRedo())
 
     UI:SetPositionRelativeToViewport("center", "center")
     UI:Show()
@@ -249,13 +251,20 @@ function UI._Initialize(img)
     ContextMenu.RegisterMenuHandler("Features.Assprite.UI.Edit", function()
         local canUndo = Assprite.CanUndo()
         local undoKeybind = Input.GetActionBindings(Assprite.InputActions.Undo.ID)
-        local keybindLabel = undoKeybind[1] and string.format(" (%s)", Input.StringifyBinding(undoKeybind[1], true)) or ""
-        local undoLabel = string.format("%s%s", TSK.Label_Undo:GetString(), keybindLabel)
+        local undoKeybindLabel = undoKeybind[1] and string.format(" (%s)", Input.StringifyBinding(undoKeybind[1], true)) or ""
+        local undoLabel = string.format("%s%s", TSK.Label_Undo:GetString(), undoKeybindLabel)
+
+        local canRedo = Assprite.CanRedo()
+        local redoKeybind = Input.GetActionBindings(Assprite.InputActions.Redo.ID)
+        local redoKeybindLabel = redoKeybind[1] and string.format(" (%s)", Input.StringifyBinding(redoKeybind[1], true)) or ""
+        local redoLabel = string.format("%s%s", TSK.Label_Redo:GetString(), redoKeybindLabel)
+
         ContextMenu.Setup({
             menu = {
                 id = "main",
                 entries = {
                     {id = "Features.Assprite.UI.Undo", type = "button", text = undoLabel, disabled = not canUndo, selectable = canUndo, faded = not canUndo},
+                    {id = "Features.Assprite.UI.Redo", type = "button", text = redoLabel, disabled = not canRedo, selectable = canRedo, faded = not canRedo},
                 }
             }
         })
@@ -366,9 +375,22 @@ function UI._Initialize(img)
         undoButton:SetEnabled(Assprite.CanUndo())
     end)
     -- Enable button when snapshots are added.
-    Assprite.Events.ToolUseStarted:Subscribe(function (_)
+    Assprite.Events.ImageChanged:Subscribe(function (_)
         undoButton:SetEnabled(Assprite.CanUndo())
     end)
+    UI.UndoButton = undoButton
+
+    -- Redo button
+    local redoButton = ButtonPrefab.Create(UI, "RedoButton", statusBar, ButtonPrefab.STYLES.SmallRed)
+    redoButton:SetLabel(TSK.Label_Redo)
+    redoButton.Events.Pressed:Subscribe(function (_)
+        Assprite.Redo()
+        redoButton:SetEnabled(Assprite.CanRedo())
+    end)
+    Assprite.Events.ImageChanged:Subscribe(function (_)
+        redoButton:SetEnabled(Assprite.CanRedo())
+    end)
+    UI.RedoButton = redoButton
 
     statusBar:RepositionElements()
 
@@ -549,6 +571,9 @@ ContextMenu.RegisterElementListener("Features.Assprite.UI.Exit", "buttonPressed"
 end)
 ContextMenu.RegisterElementListener("Features.Assprite.UI.Undo", "buttonPressed", function ()
     Assprite.Undo()
+end)
+ContextMenu.RegisterElementListener("Features.Assprite.UI.Redo", "buttonPressed", function ()
+    Assprite.Redo()
 end)
 ContextMenu.RegisterElementListener("Features.Assprite.UI.About", "buttonPressed", function ()
     MessageBox.Open({

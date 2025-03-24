@@ -24,6 +24,11 @@ local Assprite = {
             Text = "Undo",
             ContextDescription = [[As in, "undo action"]],
         },
+        Label_Redo = {
+            Handle = "h8317485ag3f62g424dg9171ge5cc69910d77",
+            Text = "Redo",
+            ContextDescription = [[As in, "re-do action"]],
+        },
         Label_File = {
             Handle = "hf1d05cfdg2d04g4637g9dc7g0d68ff88c0dc",
             Text = "File",
@@ -86,6 +91,11 @@ local Assprite = {
             Text = "Undoes the last edit made to the canvas.",
             ContextDescription = [[Tooltip for "Undo" keybind]],
         },
+        InputAction_Redo_Description = {
+            Handle = "h95fc0085g786cg40a2g959eg2ec7556248be",
+            Text = "Redoes the last undo done to the canvas.",
+            ContextDescription = [[Tooltip for "Redo" keybind]],
+        },
         Label_SelectTool = {
             Handle = "h4de997b3gdc73g4e53g9660g63b24a7a2867",
             Text = "Select %s tool",
@@ -114,6 +124,11 @@ local InputActions = {
         Description = TSK.InputAction_Undo_Description,
         DefaultInput1 = {Keys = {"lctrl", "z"}},
     }),
+    Redo = Assprite:RegisterInputAction("Redo", {
+        Name = TSK.Label_Redo,
+        Description = TSK.InputAction_Redo_Description,
+        DefaultInput1 = {Keys = {"lctrl", "y"}},
+    }),
 }
 
 ---------------------------------------------
@@ -124,6 +139,8 @@ local InputActions = {
 ---@field RequestID string
 ---@field Image ImageLib_Image
 ---@field History ImageLib_Image[] Previous iterations of the image, from oldest to newest.
+---@field HistoryUndoStackIndex integer Current amount of undo-s done since the last push to the History stack.
+---@field LatestImage ImageLib_Image[] Latest image right before beginning to traverse the history stack through an undo.
 ---@field CursorPos Vector2? Pixel coordinates of the cursor (row and column).
 ---@field Color RGBColor Selected color.
 ---@field Tool Features.Assprite.Tool? The tool currently being used.
@@ -162,6 +179,8 @@ function Assprite.RequestEditor(requestID, image, purpose)
         RequestID = requestID,
         Image = image,
         History = {},
+        HistoryUndoStackIndex = 0,
+        LatestImage = image,
         CursorPos = nil,
         Color = Color.CreateFromHex(Color.WHITE),
         Tool = nil,
@@ -288,6 +307,15 @@ function Assprite.SaveSnapshot()
     local context = Assprite._Context
     local snapshot = context.Image:Copy()
 
+    -- If we were undoing before, reset the top of the stack
+    if context.HistoryUndoStackIndex > 0 then
+        for _=1,context.HistoryUndoStackIndex,1 do
+            context.History[#context.History] = nil
+        end
+        context.HistoryUndoStackIndex = 0
+        context.LatestImage = snapshot
+    end
+
     table.insert(context.History, snapshot)
 
     -- Remove oldest entry once the limit is reached.
@@ -299,10 +327,27 @@ end
 ---Reverts the image to the previous snapshot, if any.
 function Assprite.Undo()
     local context = Assprite._Context
-    local snapshot = context.History[#context.History]
+    local snapshot = context.History[#context.History - context.HistoryUndoStackIndex]
+    if snapshot then
+        -- If we're undoing from the top of the stack, save a copy of the image before undo
+        if context.HistoryUndoStackIndex == 0 then
+            context.LatestImage = context.Image:Copy()
+        end
+        context.Image = snapshot
+        context.HistoryUndoStackIndex = context.HistoryUndoStackIndex + 1
+        Assprite.Events.ImageChanged:Throw({
+            Context = context
+        })
+    end
+end
+
+---Redoes the last undone action.
+function Assprite.Redo()
+    local context = Assprite._Context
+    local snapshot = context.HistoryUndoStackIndex == 1 and context.LatestImage or context.History[#context.History - context.HistoryUndoStackIndex + 2]
     if snapshot then
         context.Image = snapshot
-        table.remove(context.History, #context.History)
+        context.HistoryUndoStackIndex = context.HistoryUndoStackIndex - 1
         Assprite.Events.ImageChanged:Throw({
             Context = context
         })
@@ -313,7 +358,14 @@ end
 ---@return boolean
 function Assprite.CanUndo()
     local context = Assprite._Context
-    return context.History[1] ~= nil
+    return context and context.History[#context.History - context.HistoryUndoStackIndex] ~= nil
+end
+
+---Returns whether the history stack is being traversed.
+---@return boolean
+function Assprite.CanRedo()
+    local context = Assprite._Context
+    return context and context.HistoryUndoStackIndex > 0
 end
 
 ---Sets the cursor position and runs OnCursorChanged for the current tool without interpolation.
@@ -399,6 +451,8 @@ Client.Input.Events.ActionExecuted:Subscribe(function (ev)
     local action = ev.Action
     if action == InputActions.Undo then
         Assprite.Undo()
+    elseif action == InputActions.Redo then
+        Assprite.Redo()
     end
 end, {EnabledFunctor = function ()
     return Assprite.IsEditing()
