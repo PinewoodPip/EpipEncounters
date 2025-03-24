@@ -120,6 +120,9 @@ function UI.SelectTool(tool)
     local toolElement = UI.ToolButtons[tool:GetClassName()]
     toolElement:SetActivated(true)
 
+    -- Update label
+    UI.ToolLabel:SetText(Text.Resolve(tool.Name))
+
     UI._UpdateToolSettings()
 end
 
@@ -199,7 +202,7 @@ function UI._Initialize(img)
 
     -- Close button
     local closeButton = CloseButtonPrefab.Create(UI, "CloseButton", panel)
-    closeButton:SetPositionRelativeToParent("TopRight")
+    closeButton:SetPositionRelativeToParent("TopRight", -10, 10)
     closeButton.Events.Pressed:Subscribe(function (_)
         UI.RequestExit()
     end)
@@ -403,6 +406,10 @@ function UI._Initialize(img)
     toolbarGrid:RepositionElements()
     UI.ToolGrid = toolbarGrid
     UI.ToolButtons = toolButtons
+
+    -- Tool label
+    local toolLabel = TextPrefab.Create(UI, "ToolLabel", sidePanel, "", "Center", V(UI.SETTINGS_SIZE[1], 30))
+    UI.ToolLabel = toolLabel
 
     -- Tool settings
     local toolSettingsList = sidePanel:AddChild("ToolSettingsList", "GenericUI_Element_VerticalList")
