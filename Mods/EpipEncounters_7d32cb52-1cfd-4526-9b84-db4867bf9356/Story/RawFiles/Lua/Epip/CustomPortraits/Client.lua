@@ -88,10 +88,11 @@ end
 
 ---Saves a character's portrait to disk, if they have a custom portrait.
 ---@param char EclCharacter
-function CustomPortraits._BackupPortrait(char)
+---@param suffix string?
+function CustomPortraits._BackupPortrait(char, suffix)
     local portrait = Ext.Entity.GetPortrait(char.Handle)
     if portrait then
-        local path = string.format("Epip/PortraitBackups/%s_%s.dds", char.DisplayName, char.MyGuid)
+        local path = string.format("Epip/PortraitBackups/%s_%s%s.dds", char.DisplayName, char.MyGuid, suffix and "_" .. suffix or "")
         IO.SaveFile(path, portrait, true)
     end
 end
@@ -106,9 +107,12 @@ Net.RegisterListener(CustomPortraits.NETMSG_SET_PORTRAIT, function (payload)
     local img = Client.Image.CreateFromRawData(payload.ImageRawData)
 
     -- Save a copy of the portrait to user storage first
-    CustomPortraits._BackupPortrait(char)
+    CustomPortraits._BackupPortrait(char, "old")
 
     CustomPortraits._SetPortrait(char, img)
+
+    -- Save copy of new portrait
+    CustomPortraits._BackupPortrait(char)
 end)
 
 -- Handle applying portraits from Assprite.
