@@ -13,6 +13,8 @@ local Assprite = {
 
     _Context = nil, ---@type Features.Assprite.Context
 
+    Settings = {},
+
     TranslatedStrings = {
         Assprite = {
             Handle = "he8713dd0g2846g4580g9a44g2f83bd7e6c72",
@@ -33,6 +35,21 @@ local Assprite = {
             Handle = "hf1d05cfdg2d04g4637g9dc7g0d68ff88c0dc",
             Text = "File",
             ContextDescription = [[As in, "computer file"]],
+        },
+        Label_HardwareAcceleration = {
+            Handle = "h095688d5g843bg4ff4gabfdgf8f029cde26a",
+            Text = "Hardware Acceleration: %s",
+            ContextDescription = [[Context menu option in "Settings" dropdown. Param is "off" or "on"]],
+        },
+        Setting_HardwareAcceleration_Name = {
+            Handle = "h59c5aa71g729ag4677gaabagd4678e6e016a",
+            Text = "Hardware Acceleration",
+            ContextDescription = [[Setting name]],
+        },
+        Setting_HardwareAcceleration_Description = {
+            Handle = "h25f75a69gbd5dg4f13g8c36gcc280c0b4bbe",
+            Text = "Applies GPU logistics to speed up canvas rendering. Last-minute addition, use at your own risk.",
+            ContextDescription = [[Setting tooltip for "Hardware Particle Acceleration"]],
         },
         Notification_Save_Success = {
             Handle = "ha8aad9a3ged5cg414dgb649g3b3e18384224",
@@ -86,6 +103,11 @@ local Assprite = {
                 }
             }
         },
+        MsgBox_HardwareAcceleration_Body = {
+            Handle = "h83626a85g3f25g4ec0g9d68g3c3f9f677ba4",
+            Text = "Hardware acceleration takes advantage of your GPU to render the canvas much faster, but it is also a feature we added literally last minute and is smooth as fuck. Proceed at your own risk.",
+            ContextDescription = [[Message box for "Hardware acceleration" dropdown option]],
+        },
         InputAction_Undo_Description = {
             Handle = "hc9381a40g9557g4bd0g8e2ag2bfe75c44b66",
             Text = "Undoes the last edit made to the canvas.",
@@ -130,6 +152,12 @@ local InputActions = {
         DefaultInput1 = {Keys = {"lctrl", "y"}},
     }),
 }
+Assprite:RegisterSetting("HardwareAcceleration", {
+    Type = "Boolean",
+    Name = TSK.Setting_HardwareAcceleration_Name,
+    Description = TSK.Setting_HardwareAcceleration_Description,
+    DefaultValue = false,
+})
 
 ---------------------------------------------
 -- CLASSES

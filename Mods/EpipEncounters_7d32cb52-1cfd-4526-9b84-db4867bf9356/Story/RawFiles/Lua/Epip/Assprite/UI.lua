@@ -94,10 +94,30 @@ function UI.Setup(request)
     UI:Show()
 end
 
----Sets the image being edited.
----@param img ImageLib_Image
+---Updates the canvas image being edited.
+---@param img ImageLib_Image? Defaults to refreshing the current image.
 function UI._SetImage(img)
-    UI.Canvas:SetImage(img)
+    img = img or Assprite.GetImage()
+    local acceleration = Assprite.Settings.HardwareAcceleration:GetValue()
+    local hardwareCanvas = UI.AcceleratedCanvas
+    local canvas = UI.Canvas
+
+    -- Update the current canvas
+    if acceleration then
+        local char = Client.GetCharacter()
+        local currentPortrait = Ext.Entity.GetPortrait(char.Handle)
+        local imgDDS = Image.ToDDS(img)
+
+        Ext.Entity.SetPortrait(char.Handle, img.Width, img.Height, imgDDS)
+
+        ---@diagnostic disable-next-line: invisible TODO! Need to access the container as graphics stretches the element width/height
+        UI:GetUI():SetCustomPortraitIcon("HardwareAcceleratedCanvas", char.Handle, math.ceil(canvas._ImageContainer:GetWidth()) + 4, math.ceil(canvas._ImageContainer:GetHeight()) + 4) -- Extra size to fit the canvas better and align with cursors
+        Ext.Entity.SetPortrait(char.Handle, 80, 100, currentPortrait) -- TODO fetch previous width/height
+    else
+        canvas:SetImage(img)
+    end
+
+    hardwareCanvas:SetVisible(acceleration)
 end
 
 ---Applies the current tool's effects, if a tool is selected.
@@ -270,6 +290,27 @@ function UI._Initialize(img)
         })
         ContextMenu.Open()
     end)
+    -- "Settings" button
+    local settingsButton = ButtonPrefab.Create(UI, "TopButton.Settings", topBar, ButtonPrefab.STYLES.BrownSimple_Inactive)
+    settingsButton:SetLabel(CommonStrings.Settings)
+    -- Open context menu on click
+    settingsButton.Events.Pressed:Subscribe(function (_)
+        local x, y = settingsButton:GetScreenPosition(true):unpack()
+        y = y + settingsButton:GetHeight()
+        ContextMenu.RequestMenu(x, y, "Features.Assprite.UI.Settings")
+    end)
+    ContextMenu.RegisterMenuHandler("Features.Assprite.UI.Settings", function()
+        local hardwareAcceleration = Assprite.Settings.HardwareAcceleration:GetValue()
+        ContextMenu.Setup({
+            menu = {
+                id = "main",
+                entries = {
+                    {id = "Features.Assprite.UI.HardwareAcceleration", type = "button", text = TSK.Label_HardwareAcceleration:Format(hardwareAcceleration and CommonStrings.On:GetString() or CommonStrings.Off:GetString())},
+                }
+            }
+        })
+        ContextMenu.Open()
+    end)
     -- "Help" button
     local helpButton = ButtonPrefab.Create(UI, "TopButton.Help", topBar, ButtonPrefab.STYLES.BrownSimple_Inactive)
     helpButton:SetLabel(CommonStrings.Help)
@@ -326,6 +367,12 @@ function UI._Initialize(img)
     end)
     canvas:SetPositionRelativeToParent("TopLeft")
     UI.Canvas = canvas
+
+    -- Hardware-accelerated canvas
+    local acceleratedCanvas = canvas:AddChild("HardwareAcceleratedCanvasIcon", "GenericUI_Element_Empty")
+    acceleratedCanvas:SetMouseEnabled(false)
+    acceleratedCanvas:GetMovieClip().name = "iggy_HardwareAcceleratedCanvas"
+    UI.AcceleratedCanvas = acceleratedCanvas
 
     -- Cursor; graphics-driven
     local cursor = canvas:AddChild("CanvasCursor", "GenericUI_Element_Empty")
@@ -593,6 +640,24 @@ end)
 ContextMenu.RegisterElementListener("Features.Assprite.UI.Redo", "buttonPressed", function ()
     Assprite.Redo()
 end)
+ContextMenu.RegisterElementListener("Features.Assprite.UI.HardwareAcceleration", "buttonPressed", function ()
+    local accelerated = Assprite.Settings.HardwareAcceleration:GetValue()
+    if accelerated then
+        Assprite.Settings.HardwareAcceleration:SetValue(false)
+        UI._SetImage()
+    else
+        MessageBox.Open({
+            ID = "Features.Assprite.UI.HardwareAcceleration",
+            Header = Assprite.Settings.HardwareAcceleration:GetName(),
+            Message = TSK.MsgBox_HardwareAcceleration_Body:GetString(),
+            Buttons = {
+                {ID = 1, Type = "Yes", Text = CommonStrings.Enable:GetString()},
+                {ID = 2, Text = CommonStrings.Cancel:GetString()},
+            },
+        })
+
+    end
+end)
 ContextMenu.RegisterElementListener("Features.Assprite.UI.About", "buttonPressed", function ()
     MessageBox.Open({
         Header = TSK.Assprite:GetString(),
@@ -647,5 +712,12 @@ end)
 MessageBox.RegisterMessageListener("Features.Assprite.UI.Exit", MessageBox.Events.ButtonPressed, function(buttonID)
     if buttonID == 1 then
         UI:Hide()
+    end
+end)
+-- Handle hardware acceleration toggle prompts.
+MessageBox.RegisterMessageListener("Features.Assprite.UI.HardwareAcceleration", MessageBox.Events.ButtonPressed, function(buttonID)
+    if buttonID == 1 then
+        Assprite.Settings.HardwareAcceleration:SetValue(true)
+        UI._SetImage()
     end
 end)

@@ -473,6 +473,11 @@ Text.CommonStrings.Greed = Text.RegisterTranslatedString({
     Handle = "h12213140gf541g443ag82ecgaab544f0502a",
     Text = "Greed",
 })
+Text.CommonStrings.On = Text.RegisterTranslatedString({
+    Handle = "h80e38523g223ag4562g9957g3fafce45a084",
+    Text = "On",
+    ContextDescription = [[As in, "turned on"]]
+})
 
 ---------------------------------------------
 -- SHAPES
