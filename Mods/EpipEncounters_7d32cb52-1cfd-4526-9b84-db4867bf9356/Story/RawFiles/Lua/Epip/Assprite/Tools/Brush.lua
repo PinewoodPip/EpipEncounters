@@ -3,16 +3,20 @@
 -- Basic paint brush tool with support for multiple shapes and sizes.
 ---------------------------------------------
 
-local ICONS = Epip.GetFeature("Feature_GenericUITextures").ICONS
 local Assprite = Epip.GetFeature("Features.Assprite")
 
 ---@class Features.Assprite.Tools.Brush : Features.Assprite.Tool
 local Brush = {
-    ICON = ICONS.EQUIPMENT_SLOTS.WEAPON, -- TODO?
+    ICON = "LOOT_vulture_feather_blessed",
     Name = Assprite:RegisterTranslatedString({
         Handle = "hbb15b2cegfe6eg4861gaf58g32a0b0cc29f1",
         Text = [[Brush]],
         ContextDescription = [[Tool name]],
+    }),
+    Description = Assprite:RegisterTranslatedString({
+        Handle = "hdbd325d8g4ea7g4bb5g924fga87c1b89d4ba",
+        Text = [[Turns dreams to reality.]],
+        ContextDescription = [[Tooltip for brush tool]],
     }),
 
     SHAPES = {

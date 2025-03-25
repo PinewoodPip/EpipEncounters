@@ -3,17 +3,21 @@
 -- Color randomizer tool.
 ---------------------------------------------
 
-local ICONS = Epip.GetFeature("Feature_GenericUITextures").ICONS
 local CommonStrings = Text.CommonStrings
 local Assprite = Epip.GetFeature("Features.Assprite")
 
 ---@class Features.Assprite.Tools.Noise : Features.Assprite.Tool
 local Noise = {
-    ICON = ICONS.EQUIPMENT_SLOTS.WEAPON, -- TODO
+    ICON = "ELRIC_BRUH_GriplessGoat",
     Name = Assprite:RegisterTranslatedString({
         Handle = "hc50b3d14g0d12g482bga339g7a1a51b76e09",
         Text = "AI Degenerate",
         ContextDescription = [[Noise tool name]],
+    }),
+    Description = Assprite:RegisterTranslatedString({
+        Handle = "h8e8f8442g77edg4437g8a39g5a9b01739896",
+        Text = [[Reverts the canvas to more primordial states of entropy.]],
+        ContextDescription = [[Tooltip for noise tool]],
     }),
 }
 Assprite:RegisterClass("Features.Assprite.Tools.Noise", Noise, {"Features.Assprite.Tool"})
@@ -123,5 +127,5 @@ end
 ---@param entropy integer
 ---@return integer
 function Noise:_RandomizeComponent(value, entropy)
-    return math.clamp(value + math.random(-entropy // 2, entropy // 2), 0, 255) -- Integer division is not the best choice but oh well
+    return math.clamp(value + math.random(-entropy // 2, entropy // 2), 0, 255) -- Integer division is not the best choice but oh well. In fact for uneven entropies, this causes a bias towards darkening. Bug? Nah, it's a secret pro trick.
 end

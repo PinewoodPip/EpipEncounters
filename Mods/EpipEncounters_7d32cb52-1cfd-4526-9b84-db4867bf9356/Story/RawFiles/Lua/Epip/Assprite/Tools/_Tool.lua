@@ -10,6 +10,7 @@ local Input = Client.Input
 ---@class Features.Assprite.Tool : Class
 ---@field ICON icon
 ---@field Name TextLib.String
+---@field Description TextLib.String
 local Tool = {}
 Assprite:RegisterClass("Features.Assprite.Tool", Tool)
 

@@ -3,16 +3,20 @@
 -- Fill bucket tool.
 ---------------------------------------------
 
-local ICONS = Epip.GetFeature("Feature_GenericUITextures").ICONS
 local Assprite = Epip.GetFeature("Features.Assprite")
 
 ---@class Features.Assprite.Tools.Bucket : Features.Assprite.Tool
 local Bucket = {
-    ICON = ICONS.FRAMED_GEMS.YELLOW, -- TODO
+    ICON = "Item_FUR_Humans_FishFactory_Bucket_B",
     Name = Assprite:RegisterTranslatedString({
         Handle = "h1189e170g0d10g4bffga7a0g300c8d491098",
-        Text = [[Bucket Fill]],
+        Text = [[Splurge]],
         ContextDescription = [[Tool name]],
+    }),
+    Description = Assprite:RegisterTranslatedString({
+        Handle = "hf09e051fge328g4599ga274gee83dc3dba1d",
+        Text = [[Goes hard all over the same-vibe areas.]],
+        ContextDescription = [[Tooltip for bucket tool]],
     }),
 }
 Assprite:RegisterClass("Features.Assprite.Tools.Bucket", Bucket, {"Features.Assprite.Tool"})

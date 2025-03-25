@@ -3,16 +3,20 @@
 -- Basic paint brush tool with support for multiple shapes and sizes.
 ---------------------------------------------
 
-local ICONS = Epip.GetFeature("Feature_GenericUITextures").ICONS
 local Assprite = Epip.GetFeature("Features.Assprite")
 
 ---@class Features.Assprite.Tools.ColorPicker : Features.Assprite.Tool
 local ColorPicker = {
-    ICON = ICONS.FRAMED_GEMS.BLUE, -- TODO
+    ICON = "statcons_Arrowhead_Blood",
     Name = Assprite:RegisterTranslatedString({
         Handle = "hd1e74dcfg9fe7g4757g996fgdddb6b22eadc",
-        Text = [[Color Picker]],
+        Text = [[Insight]],
         ContextDescription = [[Tool name]],
+    }),
+    Description = Assprite:RegisterTranslatedString({
+        Handle = "h41d3fa39g650fg4382gad13gb70f9a1a943c",
+        Text = [[Performs reflection on image data points.]],
+        ContextDescription = [[Tooltip for color picker tool]],
     }),
 
     SHAPES = {

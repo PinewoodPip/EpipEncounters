@@ -3,16 +3,20 @@
 -- Convolution-based blur tool.
 ---------------------------------------------
 
-local ICONS = Epip.GetFeature("Feature_GenericUITextures").ICONS
 local Assprite = Epip.GetFeature("Features.Assprite")
 
 ---@class Features.Assprite.Tools.Blur : Features.Assprite.Tool
 local Blur = {
-    ICON = ICONS.EQUIPMENT_SLOTS.WEAPON, -- TODO
+    ICON = "statIcons_Clean",
     Name = Assprite:RegisterTranslatedString({
         Handle = "h39945451gc551g4ac3ga12ag411c08214331",
         Text = [[AI Regenerate]],
         ContextDescription = [[Name for blur tool]],
+    }),
+    Description = Assprite:RegisterTranslatedString({
+        Handle = "hfa67e2f9g9757g4d3cga8ceg75035d43e0d6",
+        Text = [[Applies skin care to the image.]],
+        ContextDescription = [[Tooltip for blur tool]],
     }),
 }
 Assprite:RegisterClass("Features.Assprite.Tools.Blur", Blur, {"Features.Assprite.Tool"})
