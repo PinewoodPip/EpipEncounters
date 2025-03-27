@@ -31,6 +31,16 @@ local CustomPortraits = {
             Text = "This feature requires a special version of the script extender:<br>%s",
             ContextDescription = [[Message box when attempting to use the feature without having the extender fork installed. Param is URL to the download site]],
         },
+        MsgBox_NotInitialized_Title = {
+            Handle = "hb456dc72g31ffg4397g8316gc1340e7ee238",
+            Text = "Custom Portraits Unavailable",
+            ContextDescription = [[Header for message box when attempting to set a custom portrait for a character that doesn't support them]],
+        },
+        MsgBox_NotInitialized_Body = {
+            Handle = "h42abf938g98bbg4686ga1c2g91a9fe239ea0",
+            Text = "Due to technical limitations, this character must use the Magic Mirror at least once for Custom Portraits to be available to them.",
+            ContextDescription = [[Message box when attempting to set a custom portrait for a character that doesn't support them]],
+        },
     },
 
 }

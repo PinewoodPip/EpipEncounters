@@ -139,10 +139,18 @@ end)
 -- Handle requests to open the portrait editor.
 ContextMenu.RegisterElementListener(CustomPortraits.CONTEXTMENU_ENTRY_ID_SET_PORTRAIT, "buttonPressed", function (character, _)
     if CustomPortraits.IsSupported() then
-        character = character ---@type EclCharacter
-        local img = CustomPortraits.CreateDefaultImage(character)
-        CustomPortraits._CurrentCharacterHandle = character.Handle
-        Assprite.RequestEditor(CustomPortraits.REQUESTID_ASSPRITE, img, TSK.Label_ApplyPortrait)
+        if character.PlayerData.CustomData.Initialized then
+            character = character ---@type EclCharacter
+            local img = CustomPortraits.CreateDefaultImage(character)
+            CustomPortraits._CurrentCharacterHandle = character.Handle
+            Assprite.RequestEditor(CustomPortraits.REQUESTID_ASSPRITE, img, TSK.Label_ApplyPortrait)
+        else
+            MsgBox.Open({
+                ID = CustomPortraits.MSGBOXID_REQUIRES_EXTENDER_FORK,
+                Header = TSK.MsgBox_NotInitialized_Title:GetString(),
+                Message = TSK.MsgBox_NotInitialized_Body:GetString(),
+            })
+        end
     else
         MsgBox.Open({
             ID = CustomPortraits.MSGBOXID_REQUIRES_EXTENDER_FORK,
