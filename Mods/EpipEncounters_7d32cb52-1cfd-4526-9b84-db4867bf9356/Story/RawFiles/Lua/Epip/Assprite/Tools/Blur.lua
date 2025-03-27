@@ -118,7 +118,6 @@ end
 ---@override
 function Blur:GetSettings()
     return {
-        Assprite.Settings.Color,
         Settings.AreaOfEffectSize,
         Settings.KernelSize,
     }
