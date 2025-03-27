@@ -644,6 +644,7 @@ ContextMenu.RegisterElementListener("Features.Assprite.UI.HardwareAcceleration",
     local accelerated = Assprite.Settings.HardwareAcceleration:GetValue()
     if accelerated then
         Assprite.Settings.HardwareAcceleration:SetValue(false)
+        Assprite:SaveSettings()
         UI._SetImage()
     else
         MessageBox.Open({
@@ -718,6 +719,7 @@ end)
 MessageBox.RegisterMessageListener("Features.Assprite.UI.HardwareAcceleration", MessageBox.Events.ButtonPressed, function(buttonID)
     if buttonID == 1 then
         Assprite.Settings.HardwareAcceleration:SetValue(true)
+        Assprite:SaveSettings()
         UI._SetImage()
     end
 end)
