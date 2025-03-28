@@ -53,7 +53,7 @@ end
 function QuickLoot.GetGroundItems(pos, radius)
     local items = Entity.GetNearbyItems(pos, radius, function (item)
         return item.CanBePickedUp and QuickLoot.Hooks.IsGroundItemLootable:Throw({
-            Container = item,
+            Item = item,
             RequestPosition = pos,
             Lootable = not Item.IsContainer(item), -- Do not include containers by default.
         }).Lootable
@@ -339,7 +339,7 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
--- Prevent looting certain containers.
+-- Prevent looting certain containers and items.
 QuickLoot.Hooks.IsContainerLootable:Subscribe(function (ev)
     local item, lootable = ev.Container, ev.Lootable
     lootable = lootable and Item.IsLegal(item) -- Can't steal with Quick Loot
@@ -347,6 +347,12 @@ QuickLoot.Hooks.IsContainerLootable:Subscribe(function (ev)
     lootable = lootable and item.Activated and not item.Invisible -- Can't loot hidden containers
     ev.Lootable = lootable
 end, {StringID = "DefaultImplementation"})
+QuickLoot.Hooks.IsGroundItemLootable:Subscribe(function (ev)
+    local item, lootable = ev.Item, ev.Lootable
+    lootable = lootable and Item.IsLegal(item) -- Can't steal with Quick Loot
+    lootable = lootable and item.Activated and not item.Invisible -- Can't loot hidden treasures
+    ev.Lootable = lootable
+end)
 
 -- Prevent looting containers out of sight.
 -- This appears to be perfectly in-sync with the check for whether an item displays a world tooltip.
