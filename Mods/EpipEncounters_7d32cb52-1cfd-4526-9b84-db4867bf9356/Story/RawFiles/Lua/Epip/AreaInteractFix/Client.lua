@@ -28,7 +28,19 @@ GameState.Events.GameReady:Subscribe(function (_)
     if inventoryUIObj.Layer < areaInteractUIObj.Layer then
         inventoryUIObj.Layer = areaInteractUIObj.Layer + 1
     end
-    if contextMenuUIObj.Layer < areaInteractUIObj.Layer then
-        contextMenuUIObj.Layer = areaInteractUIObj.Layer + 1
+    if contextMenuUIObj.Layer < inventoryUIObj.Layer then
+        contextMenuUIObj.Layer = inventoryUIObj.Layer + 1
     end
 end, {EnabledFunctor = Client.IsUsingController})
+
+-- Adjust layer of UIs intended to go above the container inventory
+Ext.Events.UIObjectCreated:Subscribe(function (ev)
+    if ev.UI:GetTypeId() == Ext.UI.TypeID.book then
+        ev.UI.Layer = ContainerInventory:GetUI().Layer + 1
+    end
+end)
+Ext.Events.UIObjectCreated:Subscribe(function (ev)
+    if ev.UI:GetTypeId() == Ext.UI.TypeID.sortBy_c then
+        ev.UI.Layer = ContainerInventory:GetUI().Layer + 1
+    end
+end)
