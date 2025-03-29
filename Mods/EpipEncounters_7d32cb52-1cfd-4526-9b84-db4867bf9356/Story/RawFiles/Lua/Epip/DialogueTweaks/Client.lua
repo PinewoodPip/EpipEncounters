@@ -92,7 +92,6 @@ DialogueTweaks.Settings.AutoListen = DialogueTweaks:RegisterSetting("AutoListen"
     Description = DialogueTweaks.TranslatedStrings.Setting_AutoListen_Description,
     Context = "Client",
     DefaultValue = false,
-    RequiresPipFork = true,
 })
 DialogueTweaks.Settings.AutoListenRangeLimit = DialogueTweaks:RegisterSetting("AutoListenRangeLimit", {
     Type = "ClampedNumber",
@@ -103,7 +102,6 @@ DialogueTweaks.Settings.AutoListenRangeLimit = DialogueTweaks:RegisterSetting("A
     Step = 1,
     HideNumbers = false,
     DefaultValue = 15,
-    RequiresPipFork = true,
 })
 
 ---------------------------------------------
@@ -194,7 +192,7 @@ DialogueTweaks.Hooks.CanAutoListen:Subscribe(function (ev)
     local clientChar = Client.GetCharacter()
 
     -- Auto-listening requires having the Pip fork installed (due to the fields being written being RO otherwise)
-    canListen = canListen and Epip.IsPipFork()
+    -- canListen = canListen and Epip.IsPipFork() -- No longer requires fork in late v60 releases.
 
     -- Auto-listening has a maximum distance range.
     local distance = Vector.GetLength(V(char.WorldPos) - V(clientChar.WorldPos))

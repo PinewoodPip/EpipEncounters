@@ -306,7 +306,7 @@ function QuickLoot.StopSearch(char)
     })
 
     -- Remove highlights
-    if Epip.IsPipFork() then
+    if Ext.Entity.SetHighlight ~= nil then -- This used to be exclusive to the fork.
         for _,container in ipairs(containers) do
             Entity.SetHighlight(container, Entity.HIGHLIGHT_TYPES.NONE)
         end

@@ -1103,7 +1103,7 @@ Client.UI.CharacterSheet:RegisterCallListener("showTalentTooltip", PreventToolti
 
 -- Handle requests to refresh visuals.
 Net.RegisterListener(VanityFeature.NETMSG_REFRESH_VISUALS, function (payload)
-    if Epip.IsPipFork() and Epip.GetPipForkVersion() >= 3 then
+    if Ext.Entity.RefreshEquipmentVisuals ~= nil then -- This function used to be exclusive to the fork.
         Ext.Entity.RefreshEquipmentVisuals(payload:GetCharacter().Handle)
     end
 end)

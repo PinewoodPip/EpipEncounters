@@ -31,11 +31,7 @@ function IO.SaveFile(filename, contents, raw, clean)
         contents = table.clean(contents)
     end
     if not raw then contents = Ext.DumpExport(contents) end
-    if Epip.IsPipFork() and Epip.GetPipForkVersion() >= 4 then -- TODO is the check necessary?
-        Ext.IO.SaveFile(filename, contents, #contents)
-    else
-        Ext.IO.SaveFile(filename, contents)
-    end
+    Ext.IO.SaveFile(filename, contents, #contents)
 end
 
 ---Loads a file.

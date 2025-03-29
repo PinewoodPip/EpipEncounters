@@ -993,8 +993,8 @@ end
 function Character.GetSkillAPCost(char, skillID)
     local apCost, elementalAffinity
 
-    -- Use the extender method if available, which will respect any hooks other mods might've made for this function.
-    if Epip.IsPipFork() then
+    -- Use the extender method if available (used to be fork-exclusive), which will respect any hooks other mods might've made for this function.
+    if Ext.Stats.Math.GetSkillAPCost ~= nil then
         ---@diagnostic disable-next-line: undefined-field -- TODO annotate
         apCost, elementalAffinity = Ext.Stats.Math.GetSkillAPCost(char.Stats, skillID, char.WorldPos, char.AI.AIBoundsSize)
     else

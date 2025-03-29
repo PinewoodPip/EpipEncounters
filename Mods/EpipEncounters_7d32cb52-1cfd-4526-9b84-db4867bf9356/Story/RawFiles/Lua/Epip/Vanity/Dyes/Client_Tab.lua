@@ -241,8 +241,8 @@ Tab:RegisterListener(Vanity.Events.SliderHandleReleased, function (id, value)
 
     Tab:UpdateColorSliderLabel(colorIndex, true)
 
-    -- Apply the dye immediately if the fork is installed, as then this can be done without visual flickering.
-    if Epip.IsPipFork() and Epip.GetPipForkVersion() >= 3 then
+    -- Apply the dye immediately.
+    if Ext.Entity.RefreshEquipmentVisuals ~= nil then -- This used to be exclusive to the fork.
         Dyes.ApplyGenericDyeFromSliders()
     end
 end)

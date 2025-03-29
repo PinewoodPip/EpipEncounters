@@ -60,6 +60,6 @@ Epip.RegisterFeature("Features.CustomPortraits", CustomPortraits)
 ---Returns whether the feature is supported by the user's extender version.
 ---@return boolean
 function CustomPortraits.IsSupported()
-    local hasFork = Epip.IsPipFork() and Epip.GetPipForkVersion() >= 4
-    return hasFork
+    local isSupported = Ext.Entity.SetPortrait ~= nil -- This function used to be exclusive to the fork.
+    return isSupported
 end
