@@ -391,9 +391,9 @@ end)
 -- as a temporary solution to Input Actions not being easily usable.
 GameState.Events.GameReady:Subscribe(function (_)
     Ext.Events.InputEvent:Subscribe(function (ev)
-        if Input.GetInputEventDefinition(ev.Event.EventId).EventName == "ShowWorldTooltips" and ev.Event.DeviceId == "Unknown" then -- Only do this if the input event is from a controller.
+        if Input.IsAcceptingInput() and Input.GetInputEventDefinition(ev.Event.EventId).EventName == "ShowWorldTooltips" and ev.Event.DeviceId == "Unknown" then -- Only do this if the input event is from a controller.
             local char = Client.GetCharacter()
-            if ev.Event.Press and QuickLoot.CanSearch(char) then
+            if ev.Event.Press and QuickLoot.CanSearch(char) and Input.IsKeyPressed("leftshoulder") then -- Require holding the shoulder buttons before the world tooltip toggle to make it less likely for users to use the feature by accident.
                 QuickLoot.StartSearch(char)
             elseif ev.Event.Release and QuickLoot.IsSearching(char) then
                 QuickLoot.StopSearch(char)
