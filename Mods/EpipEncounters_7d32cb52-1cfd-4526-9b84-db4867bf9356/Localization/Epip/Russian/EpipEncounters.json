@@ -628,7 +628,7 @@
     },
     "hb1aa6659g9385g4966g9b9fga77082927a94": {
       "ReferenceText": "Show Memorized",
-      "TranslatedText": "Способности \"в памяти\""
+      "TranslatedText": "Навыки в памяти"
     },
     "h254f04a8gbaceg4970g97bdga522f285b929": {
       "ReferenceText": "Show Not Learnt",
@@ -1456,7 +1456,7 @@
     },
     "h0623ae9ag95ddg4034g9313g14ab02fd44a4": {
       "ReferenceText": "Wand & Shield",
-      "TranslatedText": "Жезлы и щиты"
+      "TranslatedText": "Жезл и щит"
     },
     "h4a44e189g9952g4edagb5efg9d56cba381f4": {
       "ReferenceText": "Ward",
@@ -2640,7 +2640,7 @@
     },
     "h5d55674cg8400g4039gb640ga7498b5b8e09": {
       "ReferenceText": "Unnecessary due to the new Source system.",
-      "TranslatedText": "Несовместимо с Epic Encounters по причине изменения системы взаимодействия с Истоком."
+      "TranslatedText": "Бесполезен при игре с Epic Encounters по причине изменения системы взаимодействия с Истоком (кроме сюжетных моментов, требующих Исток)."
     },
     "h3edeba4cg45a9g46f9g8c02g85e9ff956909": {
       "ReferenceText": "Click and hold to drag.",
@@ -3100,7 +3100,7 @@
     },
     "heb1b963bg108fg4cf7ga4d0g8e3424fc3891": {
       "ReferenceText": "Hold shift while viewing a skill tooltip to quickly reference your relevant ability score and check unlocked Source Infusions.",
-      "TranslatedText": "Удерживайте shift при наведении на способность, чтобы отобразить ваше значении навыка и доступность насыщений истоком."
+      "TranslatedText": "Удерживайте shift при наведении на способность, чтобы отобразить ваше значение навыка и доступность насыщений истоком."
     },
     "h4d828efdg6de7g4617gb367ga1e3e3005010": {
       "ReferenceText": "Hold shift while viewing an equipment tooltip to see its Epic Encounters gear modifier tiers.",
