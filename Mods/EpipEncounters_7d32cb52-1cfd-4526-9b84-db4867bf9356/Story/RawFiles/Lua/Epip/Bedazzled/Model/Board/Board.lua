@@ -14,6 +14,7 @@ local V = Vector.Create
 ---@field Score integer
 ---@field MovesMade integer
 ---@field TimeElapsed number In seconds, ticked while the board is updating.
+---@field HintCooldown number Time since the last valid move in seconds, ticked while the board is updating.
 ---@field GemsSpawned integer Total amount of gems spawned naturally.
 ---@field MatchesSinceLastMove integer
 ---@field Size Vector2
@@ -22,6 +23,8 @@ local V = Vector.Create
 ---@field _Modifiers table<classname, Features.Bedazzled.Board.Modifier>
 ---@field _ShouldCheckOutOfMovesGameOver boolean
 local _Board = {
+    HINT_COOLDOWN = 25, -- In seconds.
+
     Events = {
         Updated = {}, ---@type Event<Feature_Bedazzled_Board_Event_Updated>
         GemAdded = {}, ---@type Event<Feature_Bedazzled_Board_Event_GemAdded>
@@ -32,6 +35,7 @@ local _Board = {
         MovePerformed = {}, ---@type Event<Features.Bedazzled.GameMode.Events.MovePerformed>
         InvalidMovePerformed = {}, ---@type Event<Features.Bedazzled.GameMode.Events.InvalidMovePerformed>
         GemDataApplied = {}, ---@type Event<Features.Bedazzled.Board.Events.GemDataApplied>
+        HintRequested = {}, ---@type Event<Features.Bedazzled.Board.Events.HintRequested>
     },
     Hooks = {
         IsInteractable = {}, ---@type Hook<Features.Bedazzled.Board.Hooks.IsInteractable>
@@ -70,6 +74,9 @@ Bedazzled:RegisterClass("Feature_Bedazzled_Board", _Board)
 ---@field Gem Feature_Bedazzled_Board_Gem
 ---@field Data Features.Bedazzled.Board.Gem.Data
 
+---@class Features.Bedazzled.Board.Events.HintRequested
+---@field Position Vector2
+
 ---@class Features.Bedazzled.Board.Hooks.IsInteractable
 ---@field Interactable boolean Hookable. Defaults to `true`.
 
@@ -105,6 +112,7 @@ function _Board:Create(size)
         Score = 0,
         MovesMade = 0,
         TimeElapsed = 0,
+        HintCooldown = self.HINT_COOLDOWN,
         GemsSpawned = 0,
         MatchesSinceLastMove = 0,
         Size = size,
@@ -228,11 +236,36 @@ function _Board:Update(dt)
 
     -- Increment time tracker
     self.TimeElapsed = self.TimeElapsed + dt
+    self.HintCooldown = self.HintCooldown - dt
+    if self.HintCooldown < 0 then -- Show hint if we crossed the time threshold.
+        self:RequestHint()
+    end
 
     self.Events.Updated:Throw({DeltaTime = dt})
 
     -- Game over if all gems are idling with no moves available.
     self:_CheckOutOfMovesGameOver()
+end
+
+---Requests a hint for a board position where a move can be made and resets the automatic hint cooldown.
+---@see Features.Bedazzled.Board.Events.HintRequested
+---@return Vector2 -- Board position from which a valid move can be made.
+function _Board:RequestHint()
+    local hintPos = self:GetHintPosition()
+    if hintPos then
+        self.Events.HintRequested:Throw({
+            Position = hintPos
+        })
+    end
+    self.HintCooldown = self.HINT_COOLDOWN
+    return hintPos
+end
+
+---Returns a position on the board from which a valid move can be made.
+---@abstract
+---@return Vector2? -- `nil` if no valid moves remain.
+function _Board:GetHintPosition()
+    self:__ThrowNotImplemented("GetHintPosition")
 end
 
 ---Checks whether the game should end from having no valid moves on the board.

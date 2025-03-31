@@ -67,10 +67,11 @@ function Game:Swap(position1, position2)
     end
 end
 
----Returns whether swapping two gems would result in a valid move.
+---Returns whether swapping two gems would result in a valid move, as well as on which which position a match would occur as a result.
 ---@param gem1 Feature_Bedazzled_Board_Gem
 ---@param gem2 Feature_Bedazzled_Board_Gem
-function Game:CanSwap(gem1, gem2)
+---@return boolean, Vector2? -- Whether the move is valid and the position that would cause a match; might be `nil` if the move is valid but creates no match.
+function Game:_CanSwap(gem1, gem2)
     local canSwap = true
 
     canSwap = canSwap and gem1 ~= gem2
@@ -93,33 +94,49 @@ function Game:CanSwap(gem1, gem2)
     -- Cannot swap non-interactable gems
     canSwap = canSwap and self:IsGemInteractable(gem1) and self:IsGemInteractable(gem2)
 
+    local match = (match1 or match2)
+    return canSwap, match and match.OriginPosition or nil
+end
+
+---Returns whether swapping two gems would result in a valid move.
+---@param gem1 Feature_Bedazzled_Board_Gem
+---@param gem2 Feature_Bedazzled_Board_Gem
+function Game:CanSwap(gem1, gem2)
+    local canSwap, _ = self:_CanSwap(gem1, gem2)
     return canSwap
 end
 
 ---@override
----@return boolean
-function Game:HasMovesAvailable()
-    local hasMoves = false
+function Game:GetHintPosition()
     local moveDirections = {
         V(-1, 0),
         V(1, 0),
         V(0, -1),
         V(0, 1),
     }
-
+    -- Try swapping in each direction from each board position
     for x=1,self.Size[2],1 do
         for y=1,self.Size[1],1 do
             for _,v in ipairs(moveDirections) do
                 local pos = V(x, y)
                 local gem1, gem2 = self:GetGemAt(pos:unpack()), self:GetGemAt((pos + v):unpack())
 
-                if gem1 and gem2 and self:CanSwap(gem1, gem2) then
-                    return true
+                if gem1 and gem2 then
+                    local canSwap, matchPos = self:_CanSwap(gem1, gem2)
+                    if canSwap then
+                        return matchPos or pos -- Fallback to position of gem 1 if the move is valid but creates no match (arbitrary choice)
+                    end
                 end
             end
         end
     end
+    return nil
+end
 
+---@override
+---@return boolean
+function Game:HasMovesAvailable()
+    local hasMoves = self:GetHintPosition() ~= nil
     return hasMoves
 end
 
