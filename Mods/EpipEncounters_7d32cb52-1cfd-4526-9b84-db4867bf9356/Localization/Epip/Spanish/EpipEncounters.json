@@ -451,7 +451,7 @@
       "TranslatedText": "Traducción a Brasileño Portugués por Ferocidade"
     },
     "h5b1b94ebg3d90g47e5g8b29g9f75c0aa6cd6": {
-      "ReferenceText": "French translation by Drayander & Ostheboss",
+      "ReferenceText": "French translation by Bern', Drayander & Ostheboss",
       "TranslatedText": "Traducción al Francés por Drayander"
     },
     "h37985411gc95dg46a1g858bg021ed39e43cd": {
@@ -739,7 +739,7 @@
       "TranslatedText": "Divizor de intervalos PA"
     },
     "h4025c1c4g6527g4b6ag8369g49c0b1949dea": {
-      "ReferenceText": "If enabled, the positions of the character sheet and party inventory UIs will be remembered across sessions.",
+      "ReferenceText": "If enabled, the positions of the following UIs will be remembered across sessions:<br>- Character Sheet<br>- Party Inventory<br>- Quick Find<br>- Quick Loot",
       "TranslatedText": "Si está habilitado, las posiciones de la hoja de personaje y la interfaz de inventario del grupo se recordarán entre sesiones."
     },
     "h626e6a30gaf91g438aga001g799e54be1477": {

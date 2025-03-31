@@ -979,7 +979,7 @@
       "TranslatedText": "锻造页面"
     },
     "h5b1b94ebg3d90g47e5g8b29g9f75c0aa6cd6": {
-      "ReferenceText": "French translation by Drayander & Ostheboss",
+      "ReferenceText": "French translation by Bern', Drayander & Ostheboss",
       "TranslatedText": "法语来自Drayander"
     },
     "h37985411gc95dg46a1g858bg021ed39e43cd": {
@@ -1474,11 +1474,11 @@
       "ReferenceText": "Custom Line 2",
       "TranslatedText": "自定义行2"
     },
-    "hd1eed9f3g8a0bg4098g9369g0ba5549b947f": {
+    "hdb9a40e2g4713g40e0g8885gd6e1b75512c3": {
       "ReferenceText": "Discord Rich Presence",
       "TranslatedText": "Discord 游戏状态"
     },
-    "hdb9a40e2g4713g40e0g8885gd6e1b75512c3": {
+    "hd1eed9f3g8a0bg4098g9369g0ba5549b947f": {
       "ReferenceText": "Discord Rich Presence",
       "TranslatedText": "Discord 游戏状态"
     },
@@ -1527,11 +1527,11 @@
       "TranslatedText": "按住shift"
     },
     "h2883c225g0406g48ffg8c39g1439bdf66f38": {
-      "ReferenceText": "%s<br>Reason:<br>%s<br><br>%s",
-      "TranslatedText": "%s<br>原因:<br>%s<br><br>%s"
+      "ReferenceText": "%s<br>Reason:<br>%s",
+      "TranslatedText": "%s<br>原因:<br>%s"
     },
     "hf7564e88g6db5g4f04g9471g668f0f2902a1": {
-      "ReferenceText": "Incompatible with Epic Encounters.",
+      "ReferenceText": "Incompatible with %s.",
       "TranslatedText": "显示不兼容史诗遭遇的官方mod"
     },
     "h3edeba4cg45a9g46f9g8c02g85e9ff956909": {
@@ -1711,7 +1711,7 @@
       "TranslatedText": "物品比较提示延迟"
     },
     "h4025c1c4g6527g4b6ag8369g49c0b1949dea": {
-      "ReferenceText": "If enabled, the positions of the character sheet and party inventory UIs will be remembered across sessions.",
+      "ReferenceText": "If enabled, the positions of the following UIs will be remembered across sessions:<br>- Character Sheet<br>- Party Inventory<br>- Quick Find<br>- Quick Loot",
       "TranslatedText": "启用后，"
     },
     "h626e6a30gaf91g438aga001g799e54be1477": {
