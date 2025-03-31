@@ -11,6 +11,14 @@ local cheatMenu = Debug.CheatsContextMenu
 if not Epip.IsDeveloperMode() then cheatMenu = nil end
 
 -- Show status toggle context menu, as well as debugging cheats.
+local lastCharHandle = nil ---@type CharacterHandle?
+Ext.Events.UICall:Subscribe(function (ev) -- Very hasty workaround for not having the character handle
+    if ev.Function == "pipRequestContextMenu" then
+        if ev.Args[1] == "playerInfoPlayerPortrait" then
+            lastCharHandle = Ext.UI.DoubleToHandle(ev.Args[4])
+        end
+    end
+end, {Priority = 99999})
 Client.UI.ContextMenu.RegisterMenuHandler("playerInfoPlayerPortrait", function()
     local data = {
         {id = "playerInfo_Header", type = "header", text = "—— Player Status ——"},
@@ -26,6 +34,7 @@ Client.UI.ContextMenu.RegisterMenuHandler("playerInfoPlayerPortrait", function()
     data = PlayerInfo.Hooks.GetContextMenuEntries:Throw({
         Entries = data,
         IsSummon = false,
+        Character = lastCharHandle and Character.Get(lastCharHandle) or nil,
     }).Entries
 
     Client.UI.ContextMenu.Setup({

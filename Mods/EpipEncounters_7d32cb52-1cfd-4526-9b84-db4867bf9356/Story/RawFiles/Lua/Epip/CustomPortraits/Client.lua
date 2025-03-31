@@ -128,12 +128,16 @@ end)
 
 -- Append entries to PlayerInfo context menu.
 PlayerInfo.Hooks.GetContextMenuEntries:Subscribe(function (ev)
-    table.insert(ev.Entries, {
-        id = CustomPortraits.CONTEXTMENU_ENTRY_ID_SET_PORTRAIT,
-        type = "button",
-        text = CustomPortraits.TranslatedStrings.Label_SetPortrait:GetString(),
-        faded = not CustomPortraits.IsSupported(), -- The option is still selectable to inform the user about the fork requirement.
-    })
+    -- Only show the option for controlled characters.
+    local element = ev.Character and PlayerInfo.GetPlayerElement(ev.Character) or nil
+    if element and element.controlled then
+        table.insert(ev.Entries, {
+            id = CustomPortraits.CONTEXTMENU_ENTRY_ID_SET_PORTRAIT,
+            type = "button",
+            text = CustomPortraits.TranslatedStrings.Label_SetPortrait:GetString(),
+            faded = not CustomPortraits.IsSupported(), -- The option is still selectable to inform the user about the fork requirement.
+        })
+    end
 end)
 
 -- Handle requests to open the portrait editor.

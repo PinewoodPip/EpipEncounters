@@ -76,6 +76,7 @@ end
 
 ---@class UI.PlayerInfo.Hooks.GetContextMenuEntries
 ---@field Entries table[] Hookable. TODO typing
+---@field Character EclCharacter
 ---@field IsSummon boolean
 
 ---------------------------------------------
