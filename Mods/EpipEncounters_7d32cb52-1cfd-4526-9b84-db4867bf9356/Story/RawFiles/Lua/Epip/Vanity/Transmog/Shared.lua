@@ -180,5 +180,5 @@ end
 
 ---Returns whether weapon animation overrides are supported.
 function Transmog._SupportsWeaponAnimationOverrides()
-    return Epip.IsPipFork() and Epip.GetPipForkVersion() >= 2
+    return Ext.Events.CharacterGetWeaponAnimationSetTypeEvent ~= nil
 end
