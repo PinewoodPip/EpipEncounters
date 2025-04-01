@@ -266,7 +266,7 @@ end
 ---**Inaccurate outside of Origins if the extender fork is not installed.**
 ---@return boolean
 function Client.CanSendToLadyVengeance()
-    if Epip.IsPipFork() and Epip.GetPipForkVersion() >= 2 then
+    if Ext.Client.GetGameControl ~= nil then -- This function used to be exclusive to the fork.
         return Ext.Client.GetGameControl().CanSendToLadyVengeance
     else
         local levelID = Entity.GetLevelID()

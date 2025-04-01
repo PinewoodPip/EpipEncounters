@@ -263,6 +263,11 @@ Text.CommonStrings.Save = Text.RegisterTranslatedString({
     Text = "Save",
     ContextDescription = [[As in, "save settings"]],
 })
+Text.CommonStrings.Load = Text.RegisterTranslatedString({
+    Handle = "hdeeae4bcgd104g4beagbf88g052d13e28756",
+    Text = "Load",
+    ContextDescription = [[As in, "load a file"]]
+})
 Text.CommonStrings.Start = Text.RegisterTranslatedString({
     Handle = "h807e1cacgfe65g4153gb4dfg2ca7fa75dd28",
     Text = "Start",
@@ -426,6 +431,70 @@ Text.CommonStrings.Paste = Text.RegisterTranslatedString({
     Text = "Paste",
     ContextDescription = [[As in, "paste from clipboard"]],
 })
+Text.CommonStrings.CopyToClipboard = Text.RegisterTranslatedString({
+    Handle = "hf81df634gd4a9g4822g9d16ga65dad39a7af",
+    Text = "Copy to clipboard",
+})
+Text.CommonStrings.Shape = Text.RegisterTranslatedString({
+    Handle = "h0b5cea35gfa34g4c80gab49gdafdf7136ea3",
+    Text = "Shape",
+})
+Text.CommonStrings.Size = Text.RegisterTranslatedString({
+    Handle = "hedfa43d8g9813g4f0cg92b2g012c313568aa",
+    Text = "Size",
+})
+Text.CommonStrings.Tools = Text.RegisterTranslatedString({
+    Handle = "hec4f779bg15dcg4daeg9f74g7fd4f9075375",
+    Text = "Tools",
+})
+Text.CommonStrings.Color = Text.RegisterTranslatedString({
+    Handle = "h6cb64038ga8abg40a9g9b65g87af6fb35007",
+    Text = "Color",
+})
+Text.CommonStrings.Edit = Text.RegisterTranslatedString({
+    Handle = "heb9526cdgd173g429egbd31g82232610b051",
+    Text = "Edit",
+    ContextDescription = [[Refers to the "to edit" verb]],
+})
+Text.CommonStrings.Help = Text.RegisterTranslatedString({
+    Handle = "h43418d76g367bg4462g9128g2e8411de907d",
+    Text = "Help",
+})
+Text.CommonStrings.About = Text.RegisterTranslatedString({
+    Handle = "h9a503fe9g2698g45f2ga8begf055a5f0eb8a",
+    Text = "About",
+    ContextDescription = [[As in, an "about"/info page]]
+})
+Text.CommonStrings.Entropy = Text.RegisterTranslatedString({
+    Handle = "h7c901de9gb42ag4a86g9e99gf92635df0998",
+    Text = "Entropy",
+})
+Text.CommonStrings.Greed = Text.RegisterTranslatedString({
+    Handle = "h12213140gf541g443ag82ecgaab544f0502a",
+    Text = "Greed",
+})
+Text.CommonStrings.On = Text.RegisterTranslatedString({
+    Handle = "h80e38523g223ag4562g9957g3fafce45a084",
+    Text = "On",
+    ContextDescription = [[As in, "turned on"]]
+})
+
+---------------------------------------------
+-- SHAPES
+---------------------------------------------
+
+Text.CommonStrings.Shapes = {
+   Round = Text.RegisterTranslatedString({
+       Handle = "h04e67320g1c67g41c8g860dg178b4d512d29",
+       Text = "Round",
+       ContextDescription = "As in, a round shape",
+   }),
+   Square = Text.RegisterTranslatedString({
+       Handle = "hea58117dg1c87g4327g8141gca29322b66ab",
+       Text = "Square",
+       ContextDescription = "As in, the square shape",
+   }),
+}
 
 ---------------------------------------------
 -- BRANDING
@@ -917,6 +986,11 @@ Text.CommonStrings.Cursed = Text.RegisterTranslatedString({
 Text.CommonStrings.Purified = Text.RegisterTranslatedString({
     Handle = "he817378ege243g4985gaf21g502181dcf2e6",
     Text = "Purified",
+})
+Text.CommonStrings.AreaOfEffect = Text.RegisterTranslatedString({
+    Handle = "hd7ccabf3gbf19g4f46gac8bg4614e2589714",
+    Text = "Area of effect",
+    ContextDescription = [[As in, "an AoE spell"]]
 })
 
 ---------------------------------------------

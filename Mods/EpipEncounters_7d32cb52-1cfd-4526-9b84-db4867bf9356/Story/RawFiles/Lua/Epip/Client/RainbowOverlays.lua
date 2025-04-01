@@ -12,7 +12,7 @@ local RainbowOverlays = {
     _Enabled = false,
     _CurrentTime = 0,
 
-    CYCLE_TIME = 3.5, -- In seconds.
+    CYCLE_TIME = 9, -- In seconds.
     OVERLAYS = Set.Create({ -- Overlay colors affected.
         OVERLAY_COLOR_INDEXES.SELECTOR_DOTS,
         OVERLAY_COLOR_INDEXES.SELECTOR_OUTER_CIRCLE,

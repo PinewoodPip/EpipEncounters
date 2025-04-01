@@ -96,14 +96,14 @@ function Image:SetImage(img)
             if text then
                 text:SetText(subImageText)
             else -- Reinstantiate the text field
-                text = TextPrefab.Create(self.UI, self:PrefixID("ImageText" .. i .. "." .. j), container, subImageText, "Left", V(100, 100))
+                text = TextPrefab.Create(self.UI, self:PrefixID("ImageText" .. i .. "." .. j), container, subImageText, "Left", V(150, 150))
                 self._Chunks[i][j] = text
             end
 
             -- Shrink kerning and line height to remove seams
             text:SetTextFormat({
                 letterSpacing = -2,
-                leading = -18,
+                leading = -15,
             })
             text:FitSize()
 
@@ -113,13 +113,19 @@ function Image:SetImage(img)
             end
 
             -- Position chunk
-            text:SetPosition((j - 1) * TEXT_SIZE[1] - 6 * (j - 1), (i - 1) * TEXT_SIZE[2] - 15 * (i - 1)) -- The text size is lying a bit still, need to subtract a bit to get them to sit tight with each other
+            text:SetPosition((j - 1) * TEXT_SIZE[1] - 6 * (j - 1), (i - 1) * TEXT_SIZE[2] - 11.7 * (i - 1)) -- The text size is lying a bit still, need to subtract a bit to get them to sit tight with each other
         end
     end
 
-    container:SetScale(V(0.33, 0.5)) -- Necessary for a roughly square pixel ratio
+    container:SetScale(V(0.415, 0.45)) -- Necessary for a roughly square pixel ratio
 
     self._CurrentImage = img
+end
+
+---Returns the image being displayed.
+---@return ImageLib_Image
+function Image:GetImage()
+    return self._CurrentImage
 end
 
 ---@override

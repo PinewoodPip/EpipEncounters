@@ -158,6 +158,19 @@ local coreLibraries = {
             "Utilities/Settings/Setting_Skill.lua",
         },
     },
+
+    -- ImageLib
+    {
+        Scripts = {
+            "Utilities/Image/Shared.lua",
+            "Utilities/Image/_Decoder.lua",
+            "Utilities/Image/Decoders/PNG/Decoder.lua",
+            "Utilities/Image/Decoders/PNG/Chunks/IHDR.lua",
+            "Utilities/Image/Decoders/PNG/Chunks/IDAT.lua",
+            "Utilities/Image/Decoders/PNG/Chunks/IEND.lua",
+            "Utilities/Image/Decoders/DDS/Decoder.lua",
+        }
+    },
 }
 for _,lib in ipairs(coreLibraries) do
     RequestScriptLoad(lib)
@@ -256,6 +269,10 @@ LOAD_ORDER = {
     {ScriptSet = "Epip/DebugDisplay", Developer = true,},
     {ScriptSet = "Epip/UnlearnSkills"},
     {ScriptSet = "Epip/AutoUnlockInventory"},
+
+    {
+        ScriptSet = "Epip/CustomPortraits",
+    },
 
     "Epip/ShowConsumableEffects.lua",
 

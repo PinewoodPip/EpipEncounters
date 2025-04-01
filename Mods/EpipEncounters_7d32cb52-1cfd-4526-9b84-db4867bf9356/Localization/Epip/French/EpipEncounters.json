@@ -1655,7 +1655,7 @@
       "TranslatedText": "Conception et programmation par PinewoodPip<br>Conception artistique aditionnelle par Elric"
     },
     "h5b1b94ebg3d90g47e5g8b29g9f75c0aa6cd6": {
-      "ReferenceText": "French translation by Drayander & Ostheboss",
+      "ReferenceText": "French translation by Bern', Drayander & Ostheboss",
       "TranslatedText": "Traduction française par Drayander & Ostheboss"
     },
     "h37985411gc95dg46a1g858bg021ed39e43cd": {
@@ -2274,11 +2274,11 @@
       "ReferenceText": "%s: Champion",
       "TranslatedText": "%s: Champion(ne)"
     },
-    "h96b347e8g8044g4f64ga0f5gad88b6e6f204": {
+    "hb7ca1bb4g9911g4d08gafabgdbc9f8762c5e": {
       "ReferenceText": "%s: Conqueror",
       "TranslatedText": "%s: Conquérant(e)"
     },
-    "hb7ca1bb4g9911g4d08gafabgdbc9f8762c5e": {
+    "h96b347e8g8044g4f64ga0f5gad88b6e6f204": {
       "ReferenceText": "%s: Conqueror",
       "TranslatedText": "%s: Conquérant(e)"
     },
@@ -2286,7 +2286,7 @@
       "ReferenceText": "%s: Death",
       "TranslatedText": "%s: Mort"
     },
-    "h14e4e4e2gbfe2g49ecg8854g6271530bf5be": {
+    "hcef1a00bg41a1g4afagade1gca98b9906f14": {
       "ReferenceText": "%s: Falcon",
       "TranslatedText": "%s: Faucon"
     },
@@ -2294,11 +2294,11 @@
       "ReferenceText": "%s: Falcon",
       "TranslatedText": "%s: Faucon"
     },
-    "h63ae98ebg0fcbg49fbg877dg957622cdf46c": {
+    "h14e4e4e2gbfe2g49ecg8854g6271530bf5be": {
       "ReferenceText": "%s: Falcon",
       "TranslatedText": "%s: Faucon"
     },
-    "hcef1a00bg41a1g4afagade1gca98b9906f14": {
+    "h63ae98ebg0fcbg49fbg877dg957622cdf46c": {
       "ReferenceText": "%s: Falcon",
       "TranslatedText": "%s: Faucon"
     },
@@ -2350,11 +2350,11 @@
       "ReferenceText": "%s: Scorpion",
       "TranslatedText": "%s: Scorpion"
     },
-    "hc608e22eg5881g4020ga070g8e820c8ea451": {
+    "h0f95f877gfddfg459eg8113geb4dd8f316a8": {
       "ReferenceText": "%s: Tiger",
       "TranslatedText": "%s: Tigre"
     },
-    "h0f95f877gfddfg459eg8113geb4dd8f316a8": {
+    "hc608e22eg5881g4020ga070g8e820c8ea451": {
       "ReferenceText": "%s: Tiger",
       "TranslatedText": "%s: Tigre"
     },
@@ -2571,8 +2571,8 @@
       "TranslatedText": "Durant les dialogues, un choix sera fait automatiquement en accord avec la méthode de Dialogues Rapides choisie."
     },
     "h2883c225g0406g48ffg8c39g1439bdf66f38": {
-      "ReferenceText": "%s<br>Reason:<br>%s<br><br>%s",
-      "TranslatedText": "%s<br>Raison:<br>%s<br><br>%s"
+      "ReferenceText": "%s<br>Reason:<br>%s",
+      "TranslatedText": "%s<br>Raison:<br>%s"
     },
     "h05eeb4f1gee14g43ddgb1ddg44ac6112f92b": {
       "ReferenceText": "Breaks dual-wielding AP cost and reintroduces removed gear perks.",
@@ -2586,13 +2586,13 @@
       "ReferenceText": "Buggy in multiplayer, prevents trading.",
       "TranslatedText": "Buggé en multijoueurs, empèche le commerce."
     },
-    "hc14509ffgb0cdg4ef3g80a5gf6490f287073": {
-      "ReferenceText": "Epic Encounters Warning",
-      "TranslatedText": "Alerte Epic Encounters"
-    },
     "hf7564e88g6db5g4f04g9471g668f0f2902a1": {
-      "ReferenceText": "Incompatible with Epic Encounters.",
+      "ReferenceText": "Incompatible with %s.",
       "TranslatedText": "Incompatible avec Epic Encounters."
+    },
+    "hc14509ffgb0cdg4ef3g80a5gf6490f287073": {
+      "ReferenceText": "Mod Compatibility Warning",
+      "TranslatedText": "Alerte Epic Encounters"
     },
     "h5cd299ccg2753g4c7fgbb43g33ec950e8954": {
       "ReferenceText": "Not designed for EE, and is buggy, bestowing permanent resistance boosts to your characters.",
@@ -2623,11 +2623,11 @@
       "TranslatedText": "La valeur d'un PA a été divisée par 2, ce qui fait que les personnages ont un maximum d'AP de 12 par défaut."
     },
     "hdcc2ff83gd864g4895gb15cg8101b9e83eed": {
-      "ReferenceText": "This giftbag has been marked as unnecessary or potentially undesirable and may negatively affect the EE experience. See the Discord FAQ channel for more information.",
+      "ReferenceText": "This giftbag has been marked as unnecessary or potentially undesirable when used alongside other mods you currently have installed, and may negatively affect your experience.",
       "TranslatedText": "Ce Giftbag a été jugé inutile ou indésirable à l'utilisation de EE. Voir la FAQ du Discord."
     },
     "h799a3ec0g65bdg4b30ga240gf12d6aca29c2": {
-      "ReferenceText": "Undesirable with Epic Encounters.",
+      "ReferenceText": "Undesirable with %s.",
       "TranslatedText": "Indésirable pour Epic Encounters."
     },
     "h5d55674cg8400g4039gb640ga7498b5b8e09": {
@@ -3279,7 +3279,7 @@
       "TranslatedText": "Clic-droit pour ouvrir.<br>Ctrl+clic-droit pour vendre tout le contenu."
     },
     "h4025c1c4g6527g4b6ag8369g49c0b1949dea": {
-      "ReferenceText": "If enabled, the positions of the character sheet and party inventory UIs will be remembered across sessions.",
+      "ReferenceText": "If enabled, the positions of the following UIs will be remembered across sessions:<br>- Character Sheet<br>- Party Inventory<br>- Quick Find<br>- Quick Loot",
       "TranslatedText": "Sauvegarder la position de la feuille de personnages et de l'inventaire entre les sessions."
     },
     "h626e6a30gaf91g438aga001g799e54be1477": {

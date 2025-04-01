@@ -188,6 +188,20 @@ function Game:OnGemStateChanged(gem, ev)
 end
 
 ---@override
+function Game:GetHintPosition()
+    for i=1,self.Size[1] - 1,1 do
+        for j=2,self.Size[2],1 do
+            -- TODO consider other rotation directions
+            local anchor = V(i, j)
+            if self:CanRotateAt(anchor) and self:_WouldMoveResultInMatch(anchor, "Clockwise") then
+                return anchor
+            end
+        end
+    end
+    return nil
+end
+
+---@override
 ---@return boolean
 function Game:HasMovesAvailable()
     -- Check free moves first
@@ -195,16 +209,7 @@ function Game:HasMovesAvailable()
 
     -- Otherwise check for valid moves on board
     if not hasMoves then
-        for i=1,self.Size[1] - 1,1 do
-            for j=2,self.Size[2],1 do
-                -- TODO consider other rotation directions
-                local anchor = V(i, j)
-                if self:CanRotateAt(anchor) and self:_WouldMoveResultInMatch(anchor, "Clockwise") then
-                    hasMoves = true
-                    break
-                end
-            end
-        end
+        hasMoves = self:GetHintPosition() ~= nil
     end
 
     return hasMoves

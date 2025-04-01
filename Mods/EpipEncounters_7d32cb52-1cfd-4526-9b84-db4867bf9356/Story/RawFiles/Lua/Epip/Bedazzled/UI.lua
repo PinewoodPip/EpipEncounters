@@ -8,6 +8,7 @@ local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 local DraggingAreaPrefab = Generic.GetPrefab("GenericUI_Prefab_DraggingArea")
 local SlicedTexture = Generic.GetPrefab("GenericUI.Prefabs.SlicedTexture")
 local DiscordRichPresence = Epip.GetFeature("Features.DiscordRichPresence")
+local TEXTURES = Epip.GetFeature("Feature_GenericUITextures").TEXTURES
 local Input = Client.Input
 local V = Vector.Create
 
@@ -30,6 +31,12 @@ UI.SCORE_FLYOVER_Y_OFFSET = -40
 UI.SCORE_FLYOVER_TRAVEL_DISTANCE = -50
 UI.FORFEIT_DELAY = 2 -- Delay in seconds before the UI closes after a forfeit.
 UI.PLAY_AREA_FRAME_BORDER_SIZE = V(20, 20) -- Size of the border around the gem area.
+UI.HINT_SOUND = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/Assets/Sounds/Voice/Bedazzled/bruh.wav"
+UI.HINT_MARKER_DURATION = 3 -- Duration of each phase (start & end) in seconds. Sum should be lower than board hint cooldown.
+UI.HINT_TWEEN_PARAMS = {
+    SCALE = 3, -- Huge cuz at least in Classic pinpointing the exact position where the match occurs is hard af, so we just show the "general area" of the hint
+    IDLE_DURATION = 1, -- Delay between the start and end tween, in seconds.
+}
 
 UI.SOUNDS = {
     CLICK = "UI_Game_Skillbar_Unlock",
@@ -265,6 +272,7 @@ function UI.Setup(board)
         oldBoard.Events.GemAdded:Unsubscribe("BedazzledUI_GemAdded")
         oldBoard.Events.GameOver:Unsubscribe("BedazzledUI_GameOver")
         oldBoard.Events.GemTransformed:Unsubscribe("BedazzledUI_GemTransformed")
+        oldBoard.Events.HintRequested:Unsubscribe("BedazzledUI_HintRequested")
     end
 
     UI.Board = board
@@ -309,6 +317,65 @@ function UI.Setup(board)
         local element = UI.GetGemElement(ev.Gem)
         element:UpdateIcon()
     end, {StringID = "BedazzledUI_GemTransformed"})
+
+    -- Show a marker over hint positions
+    board.Events.HintRequested:Subscribe(function (ev)
+        local marker = UI.HintMarker
+        local uiPos = UI._GetGemContainerPosition() + V(UI.GamePositionToUIPosition(ev.Position:unpack()))
+        local x, y = uiPos:unpack()
+        marker:SetPosition(x, y)
+        marker:SetVisible(true)
+        Timer.Start(UI.HINT_MARKER_DURATION / 2 - 0.2, function (_)
+            -- Play sound
+            Ext.Audio.PlayExternalSound("Player1", "EXT_UI", UI.HINT_SOUND, 7)
+        end)
+        local PARAMS = UI.HINT_TWEEN_PARAMS
+        marker:Tween({
+            EventID = "Bedazzled_HintMarker",
+            FinalValues = {
+                scaleX = PARAMS.SCALE,
+                scaleY = PARAMS.SCALE,
+                alpha = 1,
+                rotation = 359,
+            },
+            StartingValues = {
+                alpha = 0,
+                scaleX = 1,
+                scaleY = 1,
+                rotation = 0,
+            },
+            Function = "Elastic",
+            Ease = "EaseInOut",
+            Duration = UI.HINT_MARKER_DURATION,
+            OnComplete = function (_)
+                -- Tween the marker back after a delay
+                Timer.Start(PARAMS.IDLE_DURATION, function (_)
+                    marker:Tween({
+                        EventID = "Bedazzled_HintMarker_End",
+                        FinalValues = {
+                            scaleX = 1,
+                            scaleY = 1,
+                            alpha = 0,
+                            rotation = 0,
+                        },
+                        StartingValues = {
+                            alpha = 1,
+                            scaleX = PARAMS.SCALE,
+                            scaleY = PARAMS.SCALE,
+                            rotation = 359,
+                        },
+                        Function = "Elastic",
+                        Ease = "EaseInOut",
+                        Duration = UI.HINT_MARKER_DURATION,
+                        OnComplete = function (_)
+                            marker:SetVisible(false)
+                        end
+                    })
+                end)
+            end
+        })
+
+    end, {StringID = "BedazzledUI_HintRequested"})
 
     -- Update reset button label
     UI.ResetButton:SetLabel(Bedazzled.TranslatedStrings.Label_GiveUp)
@@ -754,6 +821,18 @@ function UI._Initialize(board)
         end
         UI.GridClickbox = clickboxGrid
 
+        -- Hint marker
+        local hintMarker = bg:AddChild("HintFrame", "GenericUI_Element_Empty")
+        local hintIcon = hintMarker:AddChild("HintIcon", "GenericUI_Element_Texture")
+        hintMarker:SetPosition(UI.BACKGROUND_SIZE[1]/2 - BOARD_WIDTH/2, 300) -- Same position as gem container
+        hintIcon:SetTexture(TEXTURES.FRAMES.PORTRAIT.HEXAGONAL.YELLOW_TRANSPARENT)
+        -- hintIcon:SetIcon("Item_Epic", UI.CELL_SIZE:unpack())
+        hintIcon:SetPosition(-hintIcon:GetWidth() / 2, -hintIcon:GetHeight() / 2)
+        hintMarker:SetVisible(false)
+        hintMarker:SetMouseEnabled(false)
+        hintMarker:SetMouseChildren(false)
+        UI.HintMarker = hintMarker
+
         -- Game Over text
         local gameOverText = UI.CreateText("GameOverText", bg, "", "Center", V(UI.BACKGROUND_SIZE[1], 150))
         gameOverText:SetPositionRelativeToParent("Center", 0, -50)
@@ -810,6 +889,13 @@ function UI.Update(dt)
     end
 
     UI.UpdateScore()
+end
+
+---Returns the position of the gem container relative to the background.
+---@return Vector2
+function UI._GetGemContainerPosition()
+    local board = UI.Board
+    return V(UI.BACKGROUND_SIZE[1]/2 - board.Size[2] * UI.CELL_SIZE[1]/2, 300)
 end
 
 ---------------------------------------------

@@ -1387,7 +1387,7 @@
       "TranslatedText": "UI Wytwarzania"
     },
     "h5b1b94ebg3d90g47e5g8b29g9f75c0aa6cd6": {
-      "ReferenceText": "French translation by Drayander & Ostheboss",
+      "ReferenceText": "French translation by Bern', Drayander & Ostheboss",
       "TranslatedText": "Francuskie tłumaczenie od Drayander & Ostheboss"
     },
     "h37985411gc95dg46a1g858bg021ed39e43cd": {
@@ -2135,7 +2135,7 @@
       "TranslatedText": "PPM aby otworzyć"
     },
     "h4025c1c4g6527g4b6ag8369g49c0b1949dea": {
-      "ReferenceText": "If enabled, the positions of the character sheet and party inventory UIs will be remembered across sessions.",
+      "ReferenceText": "If enabled, the positions of the following UIs will be remembered across sessions:<br>- Character Sheet<br>- Party Inventory<br>- Quick Find<br>- Quick Loot",
       "TranslatedText": "Jeśli włączone, pozycja UI kart postaci i ekwipunku drużyny będzie zapamietywana między sesjami."
     },
     "h626e6a30gaf91g438aga001g799e54be1477": {

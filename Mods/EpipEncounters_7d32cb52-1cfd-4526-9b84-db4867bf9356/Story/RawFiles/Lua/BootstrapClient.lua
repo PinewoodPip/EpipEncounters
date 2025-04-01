@@ -171,6 +171,19 @@ local coreLibraries = {
             "Utilities/Settings/Setting_Color.lua",
         },
     },
+
+    -- ImageLib
+    {
+        Scripts = {
+            "Utilities/Image/Shared.lua",
+            "Utilities/Image/_Decoder.lua",
+            "Utilities/Image/Decoders/PNG/Decoder.lua",
+            "Utilities/Image/Decoders/PNG/Chunks/IHDR.lua",
+            "Utilities/Image/Decoders/PNG/Chunks/IDAT.lua",
+            "Utilities/Image/Decoders/PNG/Chunks/IEND.lua",
+            "Utilities/Image/Decoders/DDS/Decoder.lua",
+        }
+    },
 }
 for _,lib in ipairs(coreLibraries) do
     RequestScriptLoad(lib)
@@ -441,6 +454,18 @@ LOAD_ORDER = {
         },
     },
     {Script = "Epip/SettingWidgets/Client.lua"},
+    {
+        Scripts = {
+            "Epip/Assprite/Client.lua",
+            "Epip/Assprite/Tools/_Tool.lua",
+            "Epip/Assprite/Tools/Brush.lua",
+            "Epip/Assprite/Tools/ColorPicker.lua",
+            "Epip/Assprite/Tools/Bucket.lua",
+            "Epip/Assprite/Tools/Blur.lua",
+            "Epip/Assprite/Tools/Noise.lua",
+            "Epip/Assprite/UI.lua",
+        },
+    },
     "Epip/IDEAnnotations/Client.lua",
 
     {
@@ -592,6 +617,11 @@ LOAD_ORDER = {
     },
 
     "Epip/Client/AprilFoolsCharacterSheet.lua",
+    "Epip/AprilFools/AnimationCancellingHotkey/Client.lua",
+    "Epip/AprilFools/OverheadTextFixes/Client.lua",
+    {
+        ScriptSet = "Epip/CustomPortraits",
+    },
     "Epip/Screensaver/Client.lua",
     "Epip/Client/ExitChatAfterMessage.lua",
     "Epip/Client/CameraZoom.lua",
@@ -791,17 +821,6 @@ LOAD_ORDER = {
             "Epip/InventoryMultiSelect/MultiDragHandlers/Client.lua",
             {ScriptSet = "Epip/InventoryMultiSelect/ContextMenuActions"},
         },
-    },
-
-    {
-        Scripts = {
-            "Utilities/Image/Shared.lua",
-            "Utilities/Image/_Decoder.lua",
-            "Utilities/Image/Decoders/PNG/Decoder.lua",
-            "Utilities/Image/Decoders/PNG/Chunks/IHDR.lua",
-            "Utilities/Image/Decoders/PNG/Chunks/IDAT.lua",
-            "Utilities/Image/Decoders/PNG/Chunks/IEND.lua",
-        }
     },
 
     "Epip/Client/ImageViewer.lua",

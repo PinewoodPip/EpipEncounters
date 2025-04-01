@@ -225,8 +225,8 @@ end
 function Vanity.RefreshAppearance(char, useAlternativeStatus) -- TODO move
     local charGUID, charNetID = char.MyGuid, char.NetID
 
-    -- Use polymorph status to refresh visuals.
-    if not Epip.IsPipFork() or Epip.GetPipForkVersion() < 3 then
+    -- Use polymorph status to refresh visuals for legacy v60 versions where RefreshEquipmentVisuals() was not available. That function is client-only, so we need to check for a different one to determine the extender build.
+    if Ext.IO.IsFile == nil then
         local status = useAlternativeStatus and "PIP_Vanity_Refresh_Alt" or "PIP_Vanity_Refresh"
         Osi.ApplyStatus(charGUID, status, 0, 1, NULLGUID)
     end

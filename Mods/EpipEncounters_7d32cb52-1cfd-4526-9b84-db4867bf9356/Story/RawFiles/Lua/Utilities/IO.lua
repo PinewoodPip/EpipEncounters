@@ -31,7 +31,7 @@ function IO.SaveFile(filename, contents, raw, clean)
         contents = table.clean(contents)
     end
     if not raw then contents = Ext.DumpExport(contents) end
-    Ext.IO.SaveFile(filename, contents)
+    Ext.IO.SaveFile(filename, contents, #contents)
 end
 
 ---Loads a file.

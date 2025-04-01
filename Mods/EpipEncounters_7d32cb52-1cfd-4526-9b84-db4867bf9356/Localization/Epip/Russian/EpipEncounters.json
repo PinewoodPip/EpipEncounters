@@ -92,7 +92,7 @@
     },
     "hb54abc37gfadeg4ac4gbeccgaf652d4bf6e3": {
       "ReferenceText": "Adds MMO-style raid mechanics.<br>If enabled, gems with MMO enrage timers will periodically appear with increasing frequency; if left unmatched, they will bring a fair and balanced instant game over.<br>Higher raid difficulty levels increase spawn frequency.",
-      "TranslatedText": "Добавляет в игру рейд механику в ММО-стиле.<br>Если включено, гемы на доске все с большей частотой будут \"приходить в ярость\". \"Успокоить\" гем можно его уничтожением. При игнорировании, такие гемы быстро закончат вашу игру.<br>Более высокие уровни рейда увеличат общую частоту его возникновения."
+      "TranslatedText": "Добавляет в игру рейд механику в ММО-стиле.<br>Если включено, гемы на доске все с большей частотой будут \"приходить в ярость\". \"Успокоить\" гем можно его уничтожением. При игнорировании, такие гемы быстро закончат вашу игру.<br>Б"
     },
     "h27fa4327g7bc0g447dgae1ag4a014babd621": {
       "ReferenceText": "Adept %s",
@@ -730,6 +730,10 @@
       "ReferenceText": "Blessed",
       "TranslatedText": "Благословлен."
     },
+    "hd2164b0fg76dbg4467ga82fg8a228f145091": {
+      "ReferenceText": "Blue",
+      "TranslatedText": "Синий"
+    },
     "ha9646fd9ge69fg46d2g9fc2gc9442c28041c": {
       "ReferenceText": "Books",
       "TranslatedText": "Книги"
@@ -813,6 +817,10 @@
     "h80897d5bg5b2cg4261gbd85gafc7482541fd": {
       "ReferenceText": "Containers",
       "TranslatedText": "Контейнеры"
+    },
+    "hed140640g9989g44adg9ba8ga1c8ee451488": {
+      "ReferenceText": "Copy",
+      "TranslatedText": "Копировать"
     },
     "ha8662402g3ee2g4717g91d3g186a7fdc5cb9": {
       "ReferenceText": "Corpse",
@@ -969,6 +977,10 @@
     "h6b38d491gbeccg47d1gad43g5e56e7b19242": {
       "ReferenceText": "Gloves",
       "TranslatedText": "Перчатки"
+    },
+    "hf7e4ab5egf7deg4432gb346g217f6a162608": {
+      "ReferenceText": "Green",
+      "TranslatedText": "Зеленый"
     },
     "h7f208716g53a7g4f87ga23eg57dd190a5372": {
       "ReferenceText": "Ground",
@@ -1190,6 +1202,10 @@
       "ReferenceText": "Overhead",
       "TranslatedText": "Нимб"
     },
+    "h63ede9d0g0e86g4079ga81eg9ad76eb5c6df": {
+      "ReferenceText": "Paste",
+      "TranslatedText": "Вставить"
+    },
     "h4e09e95aga08bg4250g821bg910ba2bef9ca": {
       "ReferenceText": "Paucity",
       "TranslatedText": "Paucity"
@@ -1213,6 +1229,10 @@
     "hb6171987gab82g4fdcgbff3gcc635d063926": {
       "ReferenceText": "Presence",
       "TranslatedText": "Presence"
+    },
+    "h35aae55eg8978g4167gbd48g16d0ef3fbc62": {
+      "ReferenceText": "Preview",
+      "TranslatedText": "Предпросмотр"
     },
     "h5bf72ea7ge22ag4ccag9c30g88d06bcd9cc6": {
       "ReferenceText": "Previous",
@@ -1253,6 +1273,10 @@
     "h8a290a77g93c2g4821g8019gc74551cb306a": {
       "ReferenceText": "Reactions",
       "TranslatedText": "Реакции"
+    },
+    "h0e272276g80feg4fe8gbc82g620aa85b0cbc": {
+      "ReferenceText": "Red",
+      "TranslatedText": "Красный"
     },
     "h974c404ag23a3g4926gbf2fg8d4c881e37ea": {
       "ReferenceText": "Remove",
@@ -1554,6 +1578,26 @@
       "ReferenceText": "We don't have that dye!<br>We shall shop for them at miscellaneous vendors.",
       "TranslatedText": "У нас нет этой краски!<br>Надо бы закупиться."
     },
+    "h53d49f75g5520g48e1g8fc0gb793134dd234": {
+      "ReferenceText": "Entropy",
+      "TranslatedText": "Entropy"
+    },
+    "h53c27242gdc58g43f2g999fg1305a5e6aeaa": {
+      "ReferenceText": "Force",
+      "TranslatedText": "Force"
+    },
+    "haa562285gecd2g41efg9db6gb3aa2b0b32b3": {
+      "ReferenceText": "Form",
+      "TranslatedText": "Form"
+    },
+    "hca631646g887ag4958g8efcgc0adb2cb7969": {
+      "ReferenceText": "Inertia",
+      "TranslatedText": "Inertia"
+    },
+    "hd8b2a948g5b60g41dfgae0eg4efb456d8c24": {
+      "ReferenceText": "Life",
+      "TranslatedText": "Life"
+    },
     "hf72184f1g53fdg4103g81d3gc3cf433c3bfb": {
       "ReferenceText": "Arcane Mist",
       "TranslatedText": "Мистический туман"
@@ -1663,8 +1707,8 @@
       "TranslatedText": "Разработка и программирование от PinewoodPip<br>Визуал отдельных элементов интерфейса от Elric"
     },
     "h5b1b94ebg3d90g47e5g8b29g9f75c0aa6cd6": {
-      "ReferenceText": "French translation by Drayander & Ostheboss",
-      "TranslatedText": "Перевод на французский от Drayander & Ostheboss"
+      "ReferenceText": "French translation by Bern', Drayander & Ostheboss",
+      "TranslatedText": "Перевод на французский от Bern', Drayander & Ostheboss"
     },
     "h37985411gc95dg46a1g858bg021ed39e43cd": {
       "ReferenceText": "Hotbar",
@@ -2178,6 +2222,22 @@
       "ReferenceText": "While held, vertical mouse movement will adjust the pitch (vertical angle) of the game camera.<br><br>Does not affect your default camera angle settings and any changes to the angle from the keybind will not persist across sessions.",
       "TranslatedText": "При удержании, вертикальное движение мыши будет регулировать наклон игровой камеры.<br><br>Наклон не влияет на ваши настройки камеры и также не распространяется на прочие игровые сессии."
     },
+    "hf3ead812g1edcg46c4gb4d2gad348ea52b93": {
+      "ReferenceText": "Color %s copied to clipboard.",
+      "TranslatedText": "Цвет %s скопирован в буфер обмена."
+    },
+    "h7466ab56g6ec0g45a0g9d4cgf47554dbd0c8": {
+      "ReferenceText": "Color Picker",
+      "TranslatedText": "Выбор цвета"
+    },
+    "h1bd5ba3cg52f2g43d2gae8bg914ead477199": {
+      "ReferenceText": "Hue",
+      "TranslatedText": "Оттенок"
+    },
+    "h5922087ag9b79g483eg88f1g12e30819488b": {
+      "ReferenceText": "Invalid hex/html color in clipboard.",
+      "TranslatedText": "Недопустимое значение цвета (hex/html) в буфере обмена."
+    },
     "h86148d3fg72feg42b1gacc8g8f1b57d5f975": {
       "ReferenceText": "Highlight empty container slots",
       "TranslatedText": "Подсвечивать пустые ячейки контейнеров"
@@ -2282,11 +2342,11 @@
       "ReferenceText": "%s: Champion",
       "TranslatedText": "%s: Champion"
     },
-    "h96b347e8g8044g4f64ga0f5gad88b6e6f204": {
+    "hb7ca1bb4g9911g4d08gafabgdbc9f8762c5e": {
       "ReferenceText": "%s: Conqueror",
       "TranslatedText": "%s: Conqueror"
     },
-    "hb7ca1bb4g9911g4d08gafabgdbc9f8762c5e": {
+    "h96b347e8g8044g4f64ga0f5gad88b6e6f204": {
       "ReferenceText": "%s: Conqueror",
       "TranslatedText": "%s: Conqueror"
     },
@@ -2294,7 +2354,7 @@
       "ReferenceText": "%s: Death",
       "TranslatedText": "%s: Death"
     },
-    "h14e4e4e2gbfe2g49ecg8854g6271530bf5be": {
+    "hcef1a00bg41a1g4afagade1gca98b9906f14": {
       "ReferenceText": "%s: Falcon",
       "TranslatedText": "%s: Falcon"
     },
@@ -2302,11 +2362,11 @@
       "ReferenceText": "%s: Falcon",
       "TranslatedText": "%s: Falcon"
     },
-    "h63ae98ebg0fcbg49fbg877dg957622cdf46c": {
+    "h14e4e4e2gbfe2g49ecg8854g6271530bf5be": {
       "ReferenceText": "%s: Falcon",
       "TranslatedText": "%s: Falcon"
     },
-    "hcef1a00bg41a1g4afagade1gca98b9906f14": {
+    "h63ae98ebg0fcbg49fbg877dg957622cdf46c": {
       "ReferenceText": "%s: Falcon",
       "TranslatedText": "%s: Falcon"
     },
@@ -2358,11 +2418,11 @@
       "ReferenceText": "%s: Scorpion",
       "TranslatedText": "%s: Scorpion"
     },
-    "hc608e22eg5881g4020ga070g8e820c8ea451": {
+    "h0f95f877gfddfg459eg8113geb4dd8f316a8": {
       "ReferenceText": "%s: Tiger",
       "TranslatedText": "%s: Tiger"
     },
-    "h0f95f877gfddfg459eg8113geb4dd8f316a8": {
+    "hc608e22eg5881g4020ga070g8e820c8ea451": {
       "ReferenceText": "%s: Tiger",
       "TranslatedText": "%s: Tiger"
     },
@@ -2579,8 +2639,8 @@
       "TranslatedText": "При удержании клавиши в диалоге, будут автоматически выбираться варианты ответов, в зависимости от \"Настройки ускорения диалогов\"."
     },
     "h2883c225g0406g48ffg8c39g1439bdf66f38": {
-      "ReferenceText": "%s<br>Reason:<br>%s<br><br>%s",
-      "TranslatedText": "%s<br>Причина:<br>%s<br><br>%s"
+      "ReferenceText": "%s<br>Reason:<br>%s",
+      "TranslatedText": "%s<br>Причина:<br>%s"
     },
     "h05eeb4f1gee14g43ddgb1ddg44ac6112f92b": {
       "ReferenceText": "Breaks dual-wielding AP cost and reintroduces removed gear perks.",
@@ -2594,13 +2654,13 @@
       "ReferenceText": "Buggy in multiplayer, prevents trading.",
       "TranslatedText": "Вызывает проблемы при торговле в мультиплеерной игре."
     },
-    "hc14509ffgb0cdg4ef3g80a5gf6490f287073": {
-      "ReferenceText": "Epic Encounters Warning",
-      "TranslatedText": "Предупреждение Epic Encounters"
-    },
     "hf7564e88g6db5g4f04g9471g668f0f2902a1": {
-      "ReferenceText": "Incompatible with Epic Encounters.",
-      "TranslatedText": "Несовместимо с Epic Encounters"
+      "ReferenceText": "Incompatible with %s.",
+      "TranslatedText": "Несовместимо с %s."
+    },
+    "hc14509ffgb0cdg4ef3g80a5gf6490f287073": {
+      "ReferenceText": "Mod Compatibility Warning",
+      "TranslatedText": "Предупреждение о совместимости модов"
     },
     "h5cd299ccg2753g4c7fgbb43g33ec950e8954": {
       "ReferenceText": "Not designed for EE, and is buggy, bestowing permanent resistance boosts to your characters.",
@@ -2631,12 +2691,12 @@
       "TranslatedText": "В EE количество ОД уже по умолчанию равно 12."
     },
     "hdcc2ff83gd864g4895gb15cg8101b9e83eed": {
-      "ReferenceText": "This giftbag has been marked as unnecessary or potentially undesirable and may negatively affect the EE experience. See the Discord FAQ channel for more information.",
-      "TranslatedText": "Этот мешок с подарками отмечен как потенциально неподдерживаемый и может негативно повлиять на игровой опыт при игре с Epic Encounters."
+      "ReferenceText": "This giftbag has been marked as unnecessary or potentially undesirable when used alongside other mods you currently have installed, and may negatively affect your experience.",
+      "TranslatedText": "Этот мешок с подарками отмечен как ненужный или потенциально нежелательный при использовании с вашими текущими модами и может негативно повлиять на ваш игровой опыт."
     },
     "h799a3ec0g65bdg4b30ga240gf12d6aca29c2": {
-      "ReferenceText": "Undesirable with Epic Encounters.",
-      "TranslatedText": "Не рекомендуется при игре с Epic Encounters."
+      "ReferenceText": "Undesirable with %s.",
+      "TranslatedText": "Не нужен при игре с %s."
     },
     "h5d55674cg8400g4039gb640ga7498b5b8e09": {
       "ReferenceText": "Unnecessary due to the new Source system.",
@@ -2657,6 +2717,10 @@
     "h4179a16bg43a5g40bcg88ccg7870114fb6c0": {
       "ReferenceText": "Create Hotbar Group",
       "TranslatedText": "Создать мини-панель"
+    },
+    "h41e08555gac00g4954g91edg9b89f595ca30": {
+      "ReferenceText": "Lock position",
+      "TranslatedText": "Закрепить положение"
     },
     "hf0192252g5d7ag429eg96a6g21be87bd88cd": {
       "ReferenceText": "Resize",
@@ -2705,6 +2769,10 @@
     "h3d2488adg92abg4983gbaf6gccce651f920f": {
       "ReferenceText": "Previous Node",
       "TranslatedText": "Пред. ячейка"
+    },
+    "h6123f516g3e9ag4885g848egd3a5ecfd2782": {
+      "ReferenceText": "Select Subnode %s",
+      "TranslatedText": "Выбрать под-ячейку %s"
     },
     "h2e3a6261g5eceg4785ga00dgedb0fd8284b7": {
       "ReferenceText": "Controller Icons Style",
@@ -2834,6 +2902,10 @@
       "ReferenceText": "If enabled, food and drink items will be included.",
       "TranslatedText": "Если включено, еда и напитки будут отображаться."
     },
+    "h97731ba3geb7dg475agb3d2gcf173d6152b6": {
+      "ReferenceText": "If enabled, items on the ground will be included, except containers themselves.",
+      "TranslatedText": "Если включено, предметы на земле будут отображаться, кроме самих контейнеров."
+    },
     "ha874d82cg830bg4658gbb16g7772fc94ea62": {
       "ReferenceText": "If enabled, items with no interactions nor crafting use will be included.",
       "TranslatedText": "Если включено, предметы без опции взаимодействия и ремесла будут отображаться (ключи и прочее)."
@@ -2866,6 +2938,18 @@
       "ReferenceText": "No loot found nearby.",
       "TranslatedText": "Ничего не найдено."
     },
+    "h181532ebg36b3g426bg93e8gcadaeaf5f379": {
+      "ReferenceText": "Not all items could be picked up.",
+      "TranslatedText": "Не все предметы могут быть подобраны."
+    },
+    "hecfea8f8g6674g4e1dg86b6g5ae65b73e3ba": {
+      "ReferenceText": "On the ground.",
+      "TranslatedText": "На земле."
+    },
+    "h269e54a6g62f9g47afg8e22g52e0dd69a807": {
+      "ReferenceText": "Picking up this item would overencumber you.",
+      "TranslatedText": "Вас перегрузит после поднятия этого предмета."
+    },
     "hf0cdc4a1g6e7bg41c6ga408g9bd330ecae22": {
       "ReferenceText": "Quick Loot",
       "TranslatedText": "Быстрый обыск"
@@ -2897,6 +2981,10 @@
     "hc2c9ebc7g4f13g4939g8851g01e9fca8ab4e": {
       "ReferenceText": "Show food & drinks",
       "TranslatedText": "Показывать еду и напитки"
+    },
+    "h481467e2g1b90g4f83ga5d9gc2b8e62f601f": {
+      "ReferenceText": "Show ground items",
+      "TranslatedText": "Показывать предметы на земле"
     },
     "h0440532agbdc5g4d55g82b7gbbc128030986": {
       "ReferenceText": "Show potions, scrolls & grenades",
@@ -3287,8 +3375,8 @@
       "TranslatedText": "Правый клик, чтобы открыть.<br>Ctrl+правый клик, чтобы добавить все предметы внутри контейнера."
     },
     "h4025c1c4g6527g4b6ag8369g49c0b1949dea": {
-      "ReferenceText": "If enabled, the positions of the character sheet and party inventory UIs will be remembered across sessions.",
-      "TranslatedText": "Если включено, положение окна персонажа и инвентаря группы будет запоминаться и не сбрасываться при смене игровой сессии."
+      "ReferenceText": "If enabled, the positions of the following UIs will be remembered across sessions:<br>- Character Sheet<br>- Party Inventory<br>- Quick Find<br>- Quick Loot",
+      "TranslatedText": "Если включено, положение следующих окон будет запоминаться и не сбрасываться при смене игровой сессии:<br>- Панель персонажа<br>- Инвентарь группы<br>- Быстрый поиск<br>- Быстрый обыск"
     },
     "h626e6a30gaf91g438aga001g799e54be1477": {
       "ReferenceText": "Remember panel positions",
@@ -4082,6 +4170,14 @@
       "ReferenceText": "Revert appearance of unequipped items",
       "TranslatedText": "Сброс внешнего вида у неэкипированных предметов"
     },
+    "hff78f222g1c48g4051g8f02gb74c8b2d9315": {
+      "ReferenceText": "To Main Hand",
+      "TranslatedText": "На основную руку"
+    },
+    "hc079de50g6f53g4894g9bb8g854765f6fd07": {
+      "ReferenceText": "To Offhand",
+      "TranslatedText": "На левую руку"
+    },
     "hee8f9fa0ged91g48e3gb8cbg70b241a61685": {
       "ReferenceText": "Bow",
       "TranslatedText": "Лук"
@@ -4093,6 +4189,10 @@
     "hc48f3629g9abag4fe7g816ag4c06d2780870": {
       "ReferenceText": "Elemental Effects",
       "TranslatedText": "Элементальные эффекты"
+    },
+    "h984069e2gd55ag4627g9031g1f19dfa0064f": {
+      "ReferenceText": "Force show hair",
+      "TranslatedText": "Показывать волосы"
     },
     "h07513bd6ge8a4g4509g9c95g13e56a5eac03": {
       "ReferenceText": "Keep Icon",
@@ -4141,6 +4241,10 @@
     "h56a937e0gb868g4e6cg9f1ag634beba6c7b4": {
       "ReferenceText": "Vanity allows you customize your equipment's appearance with transmog, custom dyes, and more.<br>Access it by right-clicking any equipped item and selecting \"Vanity...\" from the context menu.",
       "TranslatedText": "Vanity позволяет вам настраивать внешний вид, цвет и прочие визуальные параметры вашей экипировки<br>Для доступа к настройке выберите \"Vanity...\" в контекстном меню предмета (ПКМ)."
+    },
+    "h63d72701gaa49g421dg972egc75a54e08bb1": {
+      "ReferenceText": "Vanity: Copy Appearance",
+      "TranslatedText": "Vanity: Скопировать внешний вид"
     },
     "h31bb79b1g9516g4f23g8110g9b6bf75a11ea": {
       "ReferenceText": "You don't have an item equipped in that slot!",

@@ -31,7 +31,7 @@ end
 ---@param playerID integer? Defaults to `1`.
 ---@param unknownBool boolean? Defaults to `false`.
 function Entity.SetHighlight(entity, highlight, playerID, unknownBool)
-    if not Epip.IsPipFork() or Epip.GetPipForkVersion() < 2 then return end
+    if Ext.Entity.SetHighlight == nil then return end -- This function used to be fork-exclusive
     local entityHandle = GetExtType(entity) ~= nil and entity.Handle or entity -- Handle overload.
     Ext.Entity.SetHighlight(playerID or 1, entityHandle, highlight, unknownBool or false)
 end

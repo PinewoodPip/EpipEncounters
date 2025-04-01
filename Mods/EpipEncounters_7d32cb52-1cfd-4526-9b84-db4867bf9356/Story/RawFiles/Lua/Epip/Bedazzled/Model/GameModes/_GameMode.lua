@@ -35,6 +35,9 @@ function Game:ReportMove(ev)
     -- Reset cascade counter
     self.MatchesSinceLastMove = 0
 
+    -- Reset hint cooldown
+    self.HintCooldown = self.HINT_COOLDOWN
+
     self.Events.MovePerformed:Throw(ev)
 end
 

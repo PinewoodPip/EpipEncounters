@@ -1,5 +1,5 @@
 
-local Image = Client.Image
+local Image = Image
 
 ---@class ImageLib_Decoder_PNG_ChunkDescriptor
 ---@field Hex string Spaced.
@@ -84,7 +84,12 @@ function _PNG:DecompressData()
     -- elseif png.ColorType == 3 then
         -- channelCount = 4
     else
-        Image:Error("DecompressData", "ColorType not supported")
+        if self.ColorType == 6 then
+            Image:Error("DecompressData", "Transparency is not supported")
+        else
+            -- TODO document these
+            Image:Error("DecompressData", "ColorType not supported: ", self.ColorType)
+        end
     end
 
     -- Parse bytes into an array for easier de-filtering.
@@ -113,25 +118,23 @@ function _PNG:DecompressData()
             local currentByte = byteArray[byteX][byteY]
 
             local previousByte = byteArray[byteX][byteY - 3] or 0 -- Corresponding byte of previous pixel
-            if byteY - 1 == 1 and scanlineFiltering ~= 0 and (byteX > 1) then -- Use last byte of previous row instead - TODO is this correct?
-                -- previousByte = byteArray[byteX - 1][rowLength - channelCount - 1 + pixelIndex]
+            if byteY - 3 <= 1 then
                 previousByte = 0
             end
-            local upperByte
-            if scanlineFiltering > 1 then
+            local upperByte = 0
+            if scanlineFiltering > 1 and i > 1 then
                 upperByte = byteArray[i - 1][j] -- Directly above
             end
             local byteC
             if scanlineFiltering > 2 then
                 byteC = byteArray[byteX - 1][byteY - 3] or 0
-                if byteX - 1 == 1 then
-                    -- byteC = byteArray[byteX - 2][rowLength - channelCount - 1 + pixelIndex] -- Wrap to last byte of 2 rows prior - TODO is this correct?
+                if byteX == 1 or (byteY - 3) <= 1 then
                     byteC = 0
                 end
             end
 
             if scanlineFiltering == 1 then
-                if (byteY - 1) > channelCount then -- Does not apply to first pixel in a scanline
+                if (byteY > 1) then
                     filteringValue = previousByte
                 else
                     filteringValue = 0
@@ -139,14 +142,13 @@ function _PNG:DecompressData()
             elseif scanlineFiltering == 2 then
                 filteringValue = upperByte
             elseif scanlineFiltering == 3 then
-                filteringValue = (upperByte + previousByte + byteC) // 3
+                filteringValue = (upperByte + previousByte) // 2
             elseif scanlineFiltering == 4 then -- Paeth
                 local p = previousByte + upperByte - byteC
-                local closestVal = 99999
+                local closestVal = 999999
                 local candidates = {previousByte, upperByte, byteC}
-
                 for _,candidate in ipairs(candidates) do
-                    local dist = math.abs(candidate - p)
+                    local dist = math.abs(p - candidate)
                     if dist < closestVal then
                         filteringValue = candidate
                         closestVal = dist
