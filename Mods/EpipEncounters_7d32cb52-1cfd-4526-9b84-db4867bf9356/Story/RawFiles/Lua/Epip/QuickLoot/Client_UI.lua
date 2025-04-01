@@ -264,8 +264,17 @@ function UI._UpdateItems(search)
         local allItems, newMap = QuickLoot.GetItems(char.WorldPos, radius, false)
         for _,item in ipairs(allItems) do
             if not UI.IsItemInUI(item) then
-                local sourceHandle = newMap.ItemHandleToContainerHandle[item.Handle] or newMap.ItemHandleToCorpseHandle[item.Handle]
-                UI.AddItem(item, Entity.GetGameObjectComponent(sourceHandle), true)
+                local itemHandle = item.Handle
+                local sourceHandle = newMap.ItemHandleToContainerHandle[itemHandle] or newMap.ItemHandleToCorpseHandle[itemHandle]
+                local isGroundItem = sourceHandle == nil
+
+                -- Only include filtered-out ground items if the setting is enabled; without this check they would always show, as the GetItems() call above ignores this filter as well.
+                if not isGroundItem or QuickLoot.Settings.ShowGroundItems:GetValue() == true then
+                    UI.AddItem(item, sourceHandle and Entity.GetGameObjectComponent(sourceHandle) or nil, true)
+                    if isGroundItem then
+                        UI._State.HandleMaps.GroundItems[itemHandle] = true
+                    end
+                end
             end
         end
     end
