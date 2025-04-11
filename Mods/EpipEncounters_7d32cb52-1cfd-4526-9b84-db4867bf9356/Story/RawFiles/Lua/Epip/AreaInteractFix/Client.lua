@@ -6,6 +6,7 @@
 
 local AreaInteract = Client.UI.Controller.AreaInteract
 local ContainerInventory = Client.UI.ContainerInventory
+local FadeUI = Client.UI.Fade
 
 ---@type Feature
 local Fix = {}
@@ -36,11 +37,11 @@ end, {EnabledFunctor = Client.IsUsingController})
 -- Adjust layer of UIs intended to go above the container inventory
 Ext.Events.UIObjectCreated:Subscribe(function (ev)
     if ev.UI:GetTypeId() == Ext.UI.TypeID.book then
-        ev.UI.Layer = ContainerInventory:GetUI().Layer + 1
+        ev.UI.Layer = FadeUI:GetUI().Layer + 1
     end
-end)
+end, {EnabledFunctor = Client.IsUsingController})
 Ext.Events.UIObjectCreated:Subscribe(function (ev)
     if ev.UI:GetTypeId() == Ext.UI.TypeID.sortBy_c then
         ev.UI.Layer = ContainerInventory:GetUI().Layer + 1
     end
-end)
+end, {EnabledFunctor = Client.IsUsingController})
