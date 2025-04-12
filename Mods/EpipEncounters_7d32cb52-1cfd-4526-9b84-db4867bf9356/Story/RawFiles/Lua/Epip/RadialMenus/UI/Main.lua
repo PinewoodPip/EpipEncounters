@@ -620,11 +620,11 @@ UI.Events.SlotSelected:Subscribe(function (_)
     Tooltip.HideTooltip()
 end, {StringID = "DefaultImplementation.HideOldTooltip"})
 
--- Show skill tooltips for Skill slots.
+-- Show skill tooltips for Skill and Item slots.
 UI.Events.SlotSelected:Subscribe(function (ev)
     local slot = ev.Slot
-    if slot.Type == "Skill" then
-        ---@cast slot Features.RadialMenus.Slot.Skill
+    if slot.Type == "Skill" or slot.Type == "Item" then
+        ---@cast slot Features.RadialMenus.Slot.Skill|Features.RadialMenus.Slot.Item
         local slotCount = #ev.Menu:GetSlots()
         local isOnLeftHalf = ev.Index > slotCount // 2
         local radialMenuPos = UI._CurrentMenu:GetScreenPosition()
@@ -634,7 +634,11 @@ UI.Events.SlotSelected:Subscribe(function (ev)
         local posOffset = (isOnLeftHalf and V(-radialMenuRadius - 430, -radialMenuRadius) or V(radialMenuRadius + 20, -radialMenuRadius))
         posOffset = posOffset * UI:GetScaleMultiplier()
         local tooltipPos = radialMenuPos + posOffset
-        Tooltip.ShowSkillTooltip(Client.GetCharacter(), slot.SkillID, tooltipPos)
+        if slot.Type == "Skill" then
+            Tooltip.ShowSkillTooltip(Client.GetCharacter(), slot.SkillID, tooltipPos)
+        elseif slot.Type == "Item" then
+            Tooltip.ShowItemTooltip(Item.Get(slot.ItemHandle), tooltipPos)
+        end
     end
 end, {StringID = "DefaultImplementation.SkillTooltips"})
 
