@@ -92,7 +92,7 @@
     },
     "hb54abc37gfadeg4ac4gbeccgaf652d4bf6e3": {
       "ReferenceText": "Adds MMO-style raid mechanics.<br>If enabled, gems with MMO enrage timers will periodically appear with increasing frequency; if left unmatched, they will bring a fair and balanced instant game over.<br>Higher raid difficulty levels increase spawn frequency.",
-      "TranslatedText": "Добавляет в игру рейд механику в ММО-стиле.<br>Если включено, гемы на доске все с большей частотой будут \"приходить в ярость\". \"Успокоить\" гем можно его уничтожением. При игнорировании, такие гемы быстро закончат вашу игру.<br>Б"
+      "TranslatedText": "Добавляет в игру рейд механику в ММО-стиле.<br>Если включено, гемы на доске все с большей частотой будут \"приходить в ярость\". \"Успокоить\" гем можно его уничтожением. При игнорировании, такие гемы быстро закончат вашу игру.<br>"
     },
     "h27fa4327g7bc0g447dgae1ag4a014babd621": {
       "ReferenceText": "Adept %s",
@@ -390,11 +390,11 @@
       "ReferenceText": "Raid Failed!",
       "TranslatedText": "Рейд провален!"
     },
-    "hc65f56cegc174g497eg8cd3g868daf684df1": {
+    "hde82ec74g19fcg4737g90b8g4b2ab8dd10ad": {
       "ReferenceText": "Raid Mechanics",
       "TranslatedText": "Механика рейда"
     },
-    "hde82ec74g19fcg4737g90b8g4b2ab8dd10ad": {
+    "hc65f56cegc174g497eg8cd3g868daf684df1": {
       "ReferenceText": "Raid Mechanics",
       "TranslatedText": "Механика рейда"
     },
@@ -654,6 +654,10 @@
       "ReferenceText": "Ability School",
       "TranslatedText": "Школа магии"
     },
+    "h9a503fe9g2698g45f2ga8begf055a5f0eb8a": {
+      "ReferenceText": "About",
+      "TranslatedText": "Описание"
+    },
     "hce2c434eg0377g425eg82ceg3948a01e8ee4": {
       "ReferenceText": "Accept",
       "TranslatedText": "Принять"
@@ -693,6 +697,10 @@
     "h67b0f5b2gce06g4eefgbc69g36069a35bb3c": {
       "ReferenceText": "Apply",
       "TranslatedText": "Применить"
+    },
+    "hd7ccabf3gbf19g4f46gac8bg4614e2589714": {
+      "ReferenceText": "Area of effect",
+      "TranslatedText": "Область действия"
     },
     "hbcd07fa8gaaa1g4571gac0eg8a20d7955224": {
       "ReferenceText": "Armor",
@@ -794,6 +802,10 @@
       "ReferenceText": "Club",
       "TranslatedText": "Палица"
     },
+    "h6cb64038ga8abg40a9g9b65g87af6fb35007": {
+      "ReferenceText": "Color",
+      "TranslatedText": "Цвет"
+    },
     "hfc9df4bcgd7deg4e05ga37ag1b739d2a9e2b": {
       "ReferenceText": "Combat",
       "TranslatedText": "Бой"
@@ -821,6 +833,10 @@
     "hed140640g9989g44adg9ba8ga1c8ee451488": {
       "ReferenceText": "Copy",
       "TranslatedText": "Копировать"
+    },
+    "hf81df634gd4a9g4822g9d16ga65dad39a7af": {
+      "ReferenceText": "Copy to clipboard",
+      "TranslatedText": "Скопировать в буфер"
     },
     "ha8662402g3ee2g4717g91d3g186a7fdc5cb9": {
       "ReferenceText": "Corpse",
@@ -910,6 +926,10 @@
       "ReferenceText": "Duration",
       "TranslatedText": "Длительность"
     },
+    "heb9526cdgd173g429egbd31g82232610b051": {
+      "ReferenceText": "Edit",
+      "TranslatedText": "Изменить"
+    },
     "h59386967gb899g4f18ga61bg168b8d91f04a": {
       "ReferenceText": "Elementalist",
       "TranslatedText": "Elementalist"
@@ -929,6 +949,10 @@
     "he58ba92dg936fg49fagac2bg61a9c20dd142": {
       "ReferenceText": "Enabled",
       "TranslatedText": "Включено"
+    },
+    "h7c901de9gb42ag4a86g9e99gf92635df0998": {
+      "ReferenceText": "Entropy",
+      "TranslatedText": "Entropy"
     },
     "h3e8e86e9g661eg4a3dga574ged9d4b424610": {
       "ReferenceText": "Epip",
@@ -978,6 +1002,10 @@
       "ReferenceText": "Gloves",
       "TranslatedText": "Перчатки"
     },
+    "h12213140gf541g443ag82ecgaab544f0502a": {
+      "ReferenceText": "Greed",
+      "TranslatedText": "Жадность"
+    },
     "hf7e4ab5egf7deg4432gb346g217f6a162608": {
       "ReferenceText": "Green",
       "TranslatedText": "Зеленый"
@@ -993,6 +1021,10 @@
     "h0212f2a7gcebag4eaag8641g64cfb7bfc0d2": {
       "ReferenceText": "Helmet",
       "TranslatedText": "Шлем"
+    },
+    "h43418d76g367bg4462g9128g2e8411de907d": {
+      "ReferenceText": "Help",
+      "TranslatedText": "Помощь"
     },
     "h1a45624fgcbe1g48b8g9b4ag23e6f8cebe67": {
       "ReferenceText": "Hidden",
@@ -1114,6 +1146,10 @@
       "ReferenceText": "Level %d-%d",
       "TranslatedText": "Уровень %d-%d"
     },
+    "hdeeae4bcgd104g4beagbf88g052d13e28756": {
+      "ReferenceText": "Load",
+      "TranslatedText": "Загрузить"
+    },
     "h04a0f08aga2a8g42c3g8758g0d89d36a669c": {
       "ReferenceText": "Lying",
       "TranslatedText": "Лежа"
@@ -1189,6 +1225,10 @@
     "h540c1336g27b1g4382gb911g8adced234ee6": {
       "ReferenceText": "Off",
       "TranslatedText": "Откл."
+    },
+    "h80e38523g223ag4562g9957g3fafce45a084": {
+      "ReferenceText": "On",
+      "TranslatedText": "Вкл."
     },
     "h0e559c51gea17g4f88gaf6dg0a9b53d3a634": {
       "ReferenceText": "One-handed",
@@ -1338,6 +1378,10 @@
       "ReferenceText": "Settings",
       "TranslatedText": "Настройки"
     },
+    "h0b5cea35gfa34g4c80gab49gdafdf7136ea3": {
+      "ReferenceText": "Shape",
+      "TranslatedText": "Форма"
+    },
     "h3d0006a6g5449g47fdg91d6g2920c42ea0f3": {
       "ReferenceText": "Shield",
       "TranslatedText": "Щит"
@@ -1345,6 +1389,10 @@
     "h7bf8da3bg45f2g4f23gab94g139d4205a6e6": {
       "ReferenceText": "Sitting",
       "TranslatedText": "Сидя"
+    },
+    "hedfa43d8g9813g4f0cg92b2g012c313568aa": {
+      "ReferenceText": "Size",
+      "TranslatedText": "Размер"
     },
     "h81299213g96fcg4c2cg9790g96ac44c22a4b": {
       "ReferenceText": "Skill",
@@ -1368,11 +1416,11 @@
     },
     "h3a1d4228ga393g44d8g8588ga5a2d81ca956": {
       "ReferenceText": "Source Infuse",
-      "TranslatedText": "Насыщение истоком"
+      "TranslatedText": "Насыщение Истоком"
     },
     "hee5bca62g5b34g4846g92fdgdaafaa1a5625": {
       "ReferenceText": "Sourcery",
-      "TranslatedText": "Магия истока"
+      "TranslatedText": "Магия Истока"
     },
     "hefb45469g4aabg4a8ega8aagbed67af313e1": {
       "ReferenceText": "Spear",
@@ -1405,6 +1453,10 @@
     "h48e0051bg2cc7g4ef2gbea8gbe8152ee6413": {
       "ReferenceText": "Team Pinewood",
       "TranslatedText": "Team Pinewood"
+    },
+    "hec4f779bg15dcg4daeg9f74g7fd4f9075375": {
+      "ReferenceText": "Tools",
+      "TranslatedText": "Инструменты"
     },
     "h921639b1g5656g4eafg9c4dg735bda9ba283": {
       "ReferenceText": "Tooltips",
@@ -2174,6 +2226,134 @@
       "ReferenceText": "With enough Loremaster",
       "TranslatedText": "С дост. знанием легенд"
     },
+    "h890ba9d3g02bcg4a69gbc1agfbfaacd0d940": {
+      "ReferenceText": "A spriting editor by %s<br>Spring 2025 (for Epip's 4th anniversary)",
+      "TranslatedText": "Редактор спрайтов от %s<br>Весна 2025 (на четвертую годовщину Epip)"
+    },
+    "hc50b3d14g0d12g482bga339g7a1a51b76e09": {
+      "ReferenceText": "AI Degenerate",
+      "TranslatedText": "ИИ-дегенерация"
+    },
+    "h39945451gc551g4ac3ga12ag411c08214331": {
+      "ReferenceText": "AI Regenerate",
+      "TranslatedText": "ИИ-регенерация"
+    },
+    "h25f75a69gbd5dg4f13g8c36gcc280c0b4bbe": {
+      "ReferenceText": "Applies GPU logistics to speed up canvas rendering. Last-minute addition, use at your own risk.",
+      "TranslatedText": "Применяет GPU логистику для ускорения рендера. Было добавлено в последний момент, используйте на свой страх и риск."
+    },
+    "hfa67e2f9g9757g4d3cga8ceg75035d43e0d6": {
+      "ReferenceText": "Applies skin care to the image.",
+      "TranslatedText": "Программное средство по уходу за кожей."
+    },
+    "h5a24063fga5ebg4ae9gb1c9gc1c197dd3f37": {
+      "ReferenceText": "Are you sure you want to exit? Your current image will be discarded.",
+      "TranslatedText": "Вы уверены, что хотите выйти? Текущее изображение будет удалено."
+    },
+    "he8713dd0g2846g4580g9a44g2f83bd7e6c72": {
+      "ReferenceText": "Assprite",
+      "TranslatedText": "Assprite"
+    },
+    "hd2856fecgfe75g4187g974dgce318fa7c19b": {
+      "ReferenceText": "Brain Size",
+      "TranslatedText": "Размер"
+    },
+    "hbb15b2cegfe6eg4861gaf58g32a0b0cc29f1": {
+      "ReferenceText": "Brush",
+      "TranslatedText": "Кисть"
+    },
+    "h0dee3b84gdb20g4caegbcabga1530c734a20": {
+      "ReferenceText": "Enter a path (excluding extension) to save image as DDS, relative to the Osiris Data folder.",
+      "TranslatedText": "Укажите название (без расширения) для сохранения изображения в качестве .DDS файла в папке Osiris Data."
+    },
+    "h37a87c28g91efg42f6g9b13g632167e743c7": {
+      "ReferenceText": "Enter a path to load a .PNG or .DDS from (excluding extension), relative to the Osiris Data folder.",
+      "TranslatedText": "Укажите название (без расширения) для загрузки .PNG или .DDS файла из папки Osiris Data."
+    },
+    "hdf193d0fga963g41c6gb531g0df00750848d": {
+      "ReferenceText": "Exit Assprite",
+      "TranslatedText": "Выйти из Assprite"
+    },
+    "hf53ae24bg6559g4552g9149g531488fb0b38": {
+      "ReferenceText": "Failed to load image<br>%s",
+      "TranslatedText": "Ошибка при загрузке изображения<br>%s"
+    },
+    "hf1d05cfdg2d04g4637g9dc7g0d68ff88c0dc": {
+      "ReferenceText": "File",
+      "TranslatedText": "Файл"
+    },
+    "hfd190c24g601fg442egacfcg0f5791421973": {
+      "ReferenceText": "File \"%s.png\" or \"%s.dds\" doesn't exist.",
+      "TranslatedText": "Файла \"%s.png\" или \"%s.dds\" не существует."
+    },
+    "hf09e051fge328g4599ga274gee83dc3dba1d": {
+      "ReferenceText": "Goes hard all over the same-vibe areas.",
+      "TranslatedText": "Жесткая отливка в схожих местах изображения."
+    },
+    "hc41596f1gfb56g4814g9b96g50df2a31238a": {
+      "ReferenceText": "Grip",
+      "TranslatedText": "Нажатие"
+    },
+    "h59c5aa71g729ag4677gaabagd4678e6e016a": {
+      "ReferenceText": "Hardware Acceleration",
+      "TranslatedText": "Аппаратное ускорение"
+    },
+    "h095688d5g843bg4ff4gabfdgf8f029cde26a": {
+      "ReferenceText": "Hardware Acceleration: %s",
+      "TranslatedText": "Аппаратное ускорение:%s"
+    },
+    "h83626a85g3f25g4ec0g9d68g3c3f9f677ba4": {
+      "ReferenceText": "Hardware acceleration takes advantage of your GPU to render the canvas much faster, but it is also a feature we added literally last minute and is smooth as fuck. Proceed at your own risk.",
+      "TranslatedText": "Аппаратное ускорение использует ресурсы вашего GPU, обеспечивая более высокую скорость рендера. Опция была реально добавлена в последнюю минуту перед выходом, так что используйте на свой страх и риск."
+    },
+    "h77a50a9dg1123g4fe6ga3fbge3ad69e11c68": {
+      "ReferenceText": "Image loaded",
+      "TranslatedText": "Изображение загружено"
+    },
+    "ha8aad9a3ged5cg414dgb649g3b3e18384224": {
+      "ReferenceText": "Image saved",
+      "TranslatedText": "Изображение сохранено"
+    },
+    "hd1e74dcfg9fe7g4757g996fgdddb6b22eadc": {
+      "ReferenceText": "Insight",
+      "TranslatedText": "Insight"
+    },
+    "h41d3fa39g650fg4382gad13gb70f9a1a943c": {
+      "ReferenceText": "Performs reflection on image data points.",
+      "TranslatedText": "Отражает цифровую суть изображения."
+    },
+    "h8317485ag3f62g424dg9171ge5cc69910d77": {
+      "ReferenceText": "Redo",
+      "TranslatedText": "Повторить"
+    },
+    "h95fc0085g786cg40a2g959eg2ec7556248be": {
+      "ReferenceText": "Redoes the last undo done to the canvas.",
+      "TranslatedText": "Повторяет ваше последнее действие."
+    },
+    "h8e8f8442g77edg4437g8a39g5a9b01739896": {
+      "ReferenceText": "Reverts the canvas to more primordial states of entropy.",
+      "TranslatedText": "Возвращение к первичным состояниям энтропии."
+    },
+    "h4de997b3gdc73g4e53g9660g63b24a7a2867": {
+      "ReferenceText": "Select %s tool",
+      "TranslatedText": "Выбрать %s"
+    },
+    "h1189e170g0d10g4bffga7a0g300c8d491098": {
+      "ReferenceText": "Splurge",
+      "TranslatedText": "Splurge"
+    },
+    "hdbd325d8g4ea7g4bb5g924fga87c1b89d4ba": {
+      "ReferenceText": "Turns dreams to reality.",
+      "TranslatedText": "Воплощает мечты в реальность."
+    },
+    "hf41b62a3g4357g4641g836bg0ad425b11c0c": {
+      "ReferenceText": "Undo",
+      "TranslatedText": "Отменить"
+    },
+    "hc9381a40g9557g4bd0g8e2ag2bfe75c44b66": {
+      "ReferenceText": "Undoes the last edit made to the canvas.",
+      "TranslatedText": "Отменяет ваше последнее действие."
+    },
     "h812ece0eg34adg44eag8c8bg50030a7e66d0": {
       "ReferenceText": "Adjust Camera Pitch",
       "TranslatedText": "Отрег. угол наклона камеры"
@@ -2254,6 +2434,34 @@
       "ReferenceText": "Determines the default tab for the crafting UI.",
       "TranslatedText": "Определяет раздел по умолчанию при открытии интерфейса ремесла."
     },
+    "h9dba55fag87efg4214g9f3egf3fafacc8565": {
+      "ReferenceText": "Apply Portrait",
+      "TranslatedText": "Установить портрет"
+    },
+    "hb456dc72g31ffg4397g8316gc1340e7ee238": {
+      "ReferenceText": "Custom Portraits Unavailable",
+      "TranslatedText": "Индивидуальный портрет недоступен"
+    },
+    "h42abf938g98bbg4686ga1c2g91a9fe239ea0": {
+      "ReferenceText": "Due to technical limitations, this character must use the Magic Mirror at least once for Custom Portraits to be available to them.",
+      "TranslatedText": "По техническим причинам, этот персонаж должен сначала хотя бы раз использовать Зеркало для открытия доступа к индивидуальному портрету."
+    },
+    "h205ddda8gf9ccg44f1ga215g057d211ad70c": {
+      "ReferenceText": "Extender fork required",
+      "TranslatedText": "Требуется Extender fork"
+    },
+    "h17c93d66g67e5g418ag9a0bgf9235674e3f2": {
+      "ReferenceText": "Image must be %dx%d pixels.",
+      "TranslatedText": "Изображение должно быть %dx%d пикселей."
+    },
+    "h18a8fee4gdc22g411dgad89ge700c9c0a5d0": {
+      "ReferenceText": "Set custom portrait...",
+      "TranslatedText": "Индивидуальный портрет..."
+    },
+    "h6005d151g64b3g4931gafbegb3ccb14a6754": {
+      "ReferenceText": "This feature requires a special version of the script extender:<br>%s",
+      "TranslatedText": "Эта функция требует особую версию script extender:<br>%s"
+    },
     "h20643acfg8b9fg46ccg8039g253dd6e02788": {
       "ReferenceText": "%s - Lvl %d",
       "TranslatedText": "%s - Ур %d"
@@ -2270,11 +2478,11 @@
       "ReferenceText": "Custom Line 2",
       "TranslatedText": "Строка 2"
     },
-    "hdb9a40e2g4713g40e0g8885gd6e1b75512c3": {
+    "hd1eed9f3g8a0bg4098g9369g0ba5549b947f": {
       "ReferenceText": "Discord Rich Presence",
       "TranslatedText": "Детализированный статус в Discord"
     },
-    "hd1eed9f3g8a0bg4098g9369g0ba5549b947f": {
+    "hdb9a40e2g4713g40e0g8885gd6e1b75512c3": {
       "ReferenceText": "Discord Rich Presence",
       "TranslatedText": "Детализированный статус в Discord"
     },
@@ -2342,11 +2550,11 @@
       "ReferenceText": "%s: Champion",
       "TranslatedText": "%s: Champion"
     },
-    "hb7ca1bb4g9911g4d08gafabgdbc9f8762c5e": {
+    "h96b347e8g8044g4f64ga0f5gad88b6e6f204": {
       "ReferenceText": "%s: Conqueror",
       "TranslatedText": "%s: Conqueror"
     },
-    "h96b347e8g8044g4f64ga0f5gad88b6e6f204": {
+    "hb7ca1bb4g9911g4d08gafabgdbc9f8762c5e": {
       "ReferenceText": "%s: Conqueror",
       "TranslatedText": "%s: Conqueror"
     },
@@ -2354,7 +2562,7 @@
       "ReferenceText": "%s: Death",
       "TranslatedText": "%s: Death"
     },
-    "hcef1a00bg41a1g4afagade1gca98b9906f14": {
+    "h14e4e4e2gbfe2g49ecg8854g6271530bf5be": {
       "ReferenceText": "%s: Falcon",
       "TranslatedText": "%s: Falcon"
     },
@@ -2362,11 +2570,11 @@
       "ReferenceText": "%s: Falcon",
       "TranslatedText": "%s: Falcon"
     },
-    "h14e4e4e2gbfe2g49ecg8854g6271530bf5be": {
+    "h63ae98ebg0fcbg49fbg877dg957622cdf46c": {
       "ReferenceText": "%s: Falcon",
       "TranslatedText": "%s: Falcon"
     },
-    "h63ae98ebg0fcbg49fbg877dg957622cdf46c": {
+    "hcef1a00bg41a1g4afagade1gca98b9906f14": {
       "ReferenceText": "%s: Falcon",
       "TranslatedText": "%s: Falcon"
     },
@@ -2390,11 +2598,11 @@
       "ReferenceText": "%s: Hatchet",
       "TranslatedText": "%s: Hatchet"
     },
-    "h71b98ee8ga15cg4cabgab1eg78d809fb0bda": {
+    "h081c501bg1799g4484g805cg32d128aa0f90": {
       "ReferenceText": "%s: Hind",
       "TranslatedText": "%s: Hind"
     },
-    "h081c501bg1799g4484g805cg32d128aa0f90": {
+    "h71b98ee8ga15cg4cabgab1eg78d809fb0bda": {
       "ReferenceText": "%s: Hind",
       "TranslatedText": "%s: Hind"
     },
@@ -2500,7 +2708,7 @@
     },
     "h415eaa70gb07fg4759g9ee8gdf426115da3f": {
       "ReferenceText": "For each Source Point spent",
-      "TranslatedText": "За каждое потраченное очко истока"
+      "TranslatedText": "За каждое потраченное очко Истока"
     },
     "hb33f449eg7c79g403aga592gab78dc3cd532": {
       "ReferenceText": "Grants missing Vitality regeneration, damage and resistances",
@@ -3188,7 +3396,7 @@
     },
     "heb1b963bg108fg4cf7ga4d0g8e3424fc3891": {
       "ReferenceText": "Hold shift while viewing a skill tooltip to quickly reference your relevant ability score and check unlocked Source Infusions.",
-      "TranslatedText": "Удерживайте shift при наведении на способность, чтобы отобразить ваше значение навыка и доступность насыщений истоком."
+      "TranslatedText": "Удерживайте shift при наведении на способность, чтобы отобразить ваше значение навыка и доступность насыщений Истоком."
     },
     "h4d828efdg6de7g4617gb367ga1e3e3005010": {
       "ReferenceText": "Hold shift while viewing an equipment tooltip to see its Epic Encounters gear modifier tiers.",
@@ -3588,11 +3796,11 @@
     },
     "h4c185a0bg8cdcg4b2ega962g78420c14debc": {
       "ReferenceText": "Add server script",
-      "TranslatedText": "Доб.скрипт(сервер)"
+      "TranslatedText": "Доб. скрипт(сервер)"
     },
     "he0716b9bga6f2g4e49g8891g21780216c118": {
       "ReferenceText": "Add shared script",
-      "TranslatedText": "Добавить (shared) скрипт"
+      "TranslatedText": "Доб. скрипт(shared) "
     },
     "hbc86d8eag822bg4699g9046gc47787f8565d": {
       "ReferenceText": "Custom Scripts",
@@ -3672,7 +3880,7 @@
     },
     "h6cc76e3fg8d5cg466egb96agb780b490d0d5": {
       "ReferenceText": "Save Default Position",
-      "TranslatedText": "Сохранить позицию по умолчанию"
+      "TranslatedText": "Сохр. позицию по умолчанию"
     },
     "h9e8f2aecg2b81g4f48ga9bbg43dd8f593686": {
       "ReferenceText": "Saves the UI's current position and restores it upon reloading. Use to set the default position of the UI.",
@@ -3820,7 +4028,7 @@
     },
     "h82c7e2e1g5de2g4389ga7c5g639c3d653b96": {
       "ReferenceText": "Show Source Generation status",
-      "TranslatedText": "Показывать статус Генерации истока"
+      "TranslatedText": "Показывать статус Генерации Истока"
     },
     "hb9e14744g4868g4e08gb3d7ga9bd57629d03": {
       "ReferenceText": "Shows the Battered/Harries statuses while Alternative Status Display is enabled.<br>If you disable this, it is recommended to enable the B/H display on the portraits.",
@@ -3828,7 +4036,7 @@
     },
     "h4b67c715g0d30g4015gba18ge8ea4f357448": {
       "ReferenceText": "Shows the Source Generation status while Alternative Status Display is enabled.",
-      "TranslatedText": "Показывает статус генерации истока при включенном \"Альтернативном отображении статусов\"."
+      "TranslatedText": "Показывает статус генерации Истока при включенном \"Альтернативном отображении статусов\"."
     },
     "h0e24fb6bg2c78g4dd3g995cg9d04ea62eaab": {
       "ReferenceText": "Sorting Index",
@@ -3932,7 +4140,7 @@
     },
     "h68c538dbgf229g40b5ga826gb23b92c4f5c7": {
       "ReferenceText": "Source Infusions:",
-      "TranslatedText": "Насыщения истоком:"
+      "TranslatedText": "Насыщения Истоком:"
     },
     "hb7c72307g365dg4b59g9cf2gf9c9093d2ec3": {
       "ReferenceText": "%sm + %sm",
@@ -4124,7 +4332,7 @@
     },
     "h598b8807gfcedg41e7gb839g3d8f252fa9bf": {
       "ReferenceText": "Lock Color Sliders",
-      "TranslatedText": "Закрепить ползунки выбора цвета"
+      "TranslatedText": "Закрепить выбор цвета"
     },
     "hbb910187g05dag4c1fgb07cg3f1c6515de8f": {
       "ReferenceText": "Remove Dye",
