@@ -161,9 +161,15 @@ function Slot.Create(ui, id, parent, requiredFeatures)
         Tooltip.HideTooltip()
         slot:SetHighlighted(false)
     end)
+    local subscriberID = Text.GenerateGUID()
     GameState.Events.RunningTick:Subscribe(function (ev)
-        obj:_OnTick(ev)
-    end)
+        if not obj:IsDestroyed() then
+            obj:_OnTick(ev)
+        else
+            -- Remove listener when the prefab is destroyed.
+            GameState.Events.RunningTick:Unsubscribe(subscriberID)
+        end
+    end, {StringID = subscriberID})
     ---@diagnostic enable invisible
 
     obj:Clear()
