@@ -390,8 +390,10 @@ RadialMenus.Hooks.GetSlotData:Subscribe(function (ev)
             ev.Icon = action.Icon
         else -- Regular skill case.
             local skill = Stats.Get("StatsLib_StatsEntry_SkillData", slot.SkillID)
-            ev.Name = Text.GetTranslatedString(skill.DisplayName)
-            ev.Icon = skill.Icon
+            if skill then
+                ev.Name = Text.GetTranslatedString(skill.DisplayName)
+                ev.Icon = skill.Icon
+            end
         end
     elseif slotType == "InputAction" then
         ---@cast slot Features.RadialMenus.Slot.InputAction
@@ -401,8 +403,10 @@ RadialMenus.Hooks.GetSlotData:Subscribe(function (ev)
     elseif slotType == "Item" then
         ---@cast slot Features.RadialMenus.Slot.Item
         local item = Item.Get(slot.ItemHandle)
-        ev.Name = Item.GetDisplayName(item)
-        ev.Icon = Item.GetIcon(item)
+        if item then
+            ev.Name = Item.GetDisplayName(item)
+            ev.Icon = Item.GetIcon(item)
+        end
     end
 end)
 

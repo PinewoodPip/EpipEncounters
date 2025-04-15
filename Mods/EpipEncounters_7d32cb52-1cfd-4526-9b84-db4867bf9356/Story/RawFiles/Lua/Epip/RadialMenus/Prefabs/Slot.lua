@@ -46,24 +46,30 @@ function Slot.Create(ui, id, parent, slot)
     -- Create icon-like element
     local iconElement = nil ---@type GenericUI_Element
     if instance.HOTBAR_LIKE_SLOT_TYPES[slot.Type] then -- Create HotbarSlot if adequate for the slot type
-        -- Note: disabling drag & other mouse events is not necessary as the RadialMenu prefab always occludes the Slots.
-        local hotbarSlot = HotbarSlot.Create(ui, instance:PrefixID("HotbarSlot"), root, {
-            TextLabel = slot.Type == "Item", -- Items need to display stack amount.
-            CooldownAnimations = true,
-        })
-        if slot.Type == "Skill" then
-            ---@cast slot Features.RadialMenus.Slot.Skill
-            hotbarSlot:SetSkill(slot.SkillID)
-        elseif slot.Type == "Item" then
-            ---@cast slot Features.RadialMenus.Slot.Item
-            local item = Item.Get(slot.ItemHandle)
-            if item then
-                hotbarSlot:SetItem(item)
+        ---@cast slot Features.RadialMenus.Slot.Skill | Features.RadialMenus.Slot.Item
+        local canUseHotbarSlot = slot.Type ~= "Skill" or (not Stats.GetAction(slot.SkillID)) -- HotbarSlot does not support Actions.
+        if canUseHotbarSlot then
+            -- Note: disabling drag & other mouse events is not necessary as the RadialMenu prefab always occludes the Slots.
+            local hotbarSlot = HotbarSlot.Create(ui, instance:PrefixID("HotbarSlot"), root, {
+                TextLabel = slot.Type == "Item", -- Items need to display stack amount.
+                CooldownAnimations = true,
+            })
+            if slot.Type == "Skill" then
+                if Stats.GetSkillData(slot.SkillID) then
+                    hotbarSlot:SetSkill(slot.SkillID)
+                end
+            elseif slot.Type == "Item" then
+                ---@cast slot Features.RadialMenus.Slot.Item
+                local item = Item.Get(slot.ItemHandle)
+                if item then
+                    hotbarSlot:SetItem(item)
+                end
             end
+            instance.HotbarSlot = hotbarSlot
+            iconElement = hotbarSlot
         end
-        instance.HotbarSlot = hotbarSlot
-        iconElement = hotbarSlot
-    else -- Use iggy icon for other types
+    end
+    if not iconElement then -- Use iggy icon for other types
         local icon = instance:CreateElement("Icon", "GenericUI_Element_IggyIcon", root)
         if slotData.Icon then
             icon:SetIcon(slotData.Icon, instance.ICON_SIZE:unpack())
