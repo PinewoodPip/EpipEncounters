@@ -203,13 +203,7 @@ local settings = {
         FilterPredicate = function (_, entity)
             if GetExtType(entity) == "ecl::Item" then
                 ---@cast entity EclItem
-
-                -- Filter out based on stats ID
-                if entity.StatsFromName and table.contains(entity.StatsFromName.StatsEntry.Flags, "Torch") then -- -1 vitality items have no dynamic stats (Stats field).
-                    return true
-                end
-
-                return false
+                return Item.IsLight(entity)
             else
                 return false
             end

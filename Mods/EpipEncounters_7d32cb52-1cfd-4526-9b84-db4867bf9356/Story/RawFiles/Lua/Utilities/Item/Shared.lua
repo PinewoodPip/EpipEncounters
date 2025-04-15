@@ -504,6 +504,14 @@ function Item.IsSkillbook(item)
     return Item.HasUseAction(item, "SkillBook")
 end
 
+---Returns whether an item is marked as a light source.
+---@param item Item
+---@return boolean
+function Item.IsLight(item)
+    ---@diagnostic disable-next-line: undefined-field
+    return item.StatsFromName and table.contains(item.StatsFromName.StatsEntry.Flags, "Torch") -- -1 vitality items have no dynamic stats (Stats field).
+end
+
 ---Returns the base AP cost of using an item, independent of the character.
 ---@param item Item
 ---@return integer

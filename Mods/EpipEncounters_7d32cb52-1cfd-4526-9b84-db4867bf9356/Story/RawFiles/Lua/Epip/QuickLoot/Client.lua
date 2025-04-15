@@ -518,7 +518,8 @@ QuickLoot.Hooks.IsItemFilteredOut:Subscribe(function (ev)
 
     -- Clutter filter
     if settings.ShowClutter:GetValue() == false then
-        filtered = filtered or (not Item.IsEquipment(item) and not Item.HasUseActions(item) and not Item.IsIngredient(item) and not Item.IsRune(item) and not Item.IsGold(item) and not Item.IsKey(item))
+        local hasUses = Item.HasUseActions(item) and not Item.IsLight(item) -- Do not consider lights as having a use. TODO are there any edgecases of lights with extra uses?
+        filtered = filtered or (not Item.IsEquipment(item) and not hasUses and not Item.IsIngredient(item) and not Item.IsRune(item) and not Item.IsGold(item) and not Item.IsKey(item))
     end
 
     -- Ground item filter
