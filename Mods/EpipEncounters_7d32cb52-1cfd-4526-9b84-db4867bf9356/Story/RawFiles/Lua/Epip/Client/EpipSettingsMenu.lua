@@ -20,6 +20,7 @@ local QuickLoot = Epip.GetFeature("Features.QuickLoot")
 local UIOverrideToggles = Epip.GetFeature("Features.UIOverrideToggles")
 local FastForwardDialogue = Epip.GetFeature("Features.FastForwardDialogue")
 local MinimapToggle = Epip.GetFeature("Feature_MinimapToggle")
+local TurnNotifications = Epip.GetFeature("Features.TurnNotifications")
 local Input = Client.Input
 local CommonStrings = Text.CommonStrings
 
@@ -450,6 +451,7 @@ local tabs = {
             "CastingNotifications",
             "Notification_ItemReceival",
             "Notification_StatSharing",
+            CreateSettingEntry(TurnNotifications.Settings.Enabled),
             {Type = "Setting", Module = "EpipEncounters_DialogueTweaks", ID = "Enabled"},
             {Type = "Setting", Module = "EpipEncounters_DialogueTweaks", ID = "AutoListen"},
             {Type = "Setting", Module = "EpipEncounters_DialogueTweaks", ID = "AutoListenRangeLimit"},

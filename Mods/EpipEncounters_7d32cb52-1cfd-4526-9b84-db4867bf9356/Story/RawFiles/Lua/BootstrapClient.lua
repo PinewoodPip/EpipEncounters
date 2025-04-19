@@ -560,6 +560,7 @@ LOAD_ORDER = {
     "Epip/Client/ExamineKeybind.lua",
     "Epip/Client/MoreWorldTooltips.lua",
     "Epip/Client/EnemyHealthBarExtraInfo.lua",
+    "Epip/TurnNotifications/Client.lua",
     "Epip/SettingsMenuShortcut/Client.lua",
     {Script = "Epip/UILayout/Client.lua"},
 

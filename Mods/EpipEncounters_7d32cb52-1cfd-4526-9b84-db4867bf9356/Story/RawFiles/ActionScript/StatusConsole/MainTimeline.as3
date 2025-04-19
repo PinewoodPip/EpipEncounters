@@ -71,7 +71,7 @@ package statusConsole_fla
         
         public const notifTweenTime:Number = 0.2;
         
-        public const notificationOffset:int = 100;
+        // public const notificationOffset:int = 100;
         
         public const upScaled:Number = 1.3;
         
@@ -411,6 +411,7 @@ package statusConsole_fla
             var notice:String = param2;
             var yourTurnAnim:Boolean = param3;
             var showTimer:Boolean = param4;
+            var self:MovieClip = this; // Used to workaround a JPEXS recompiler bug that breaks closures in anonymous functions.
             this.showTurnTimer = showTimer;
             this.turnNotice_mc.timer_txt.visible = this.showTurnTimer;
             if(turnID < 0 && this.turnNotice_mc.visible)
@@ -431,7 +432,7 @@ package statusConsole_fla
                 this.notifTween = new larTween(this.turnNotice_mc,"alpha",Linear.easeIn,1,this.minAlpha,this.notifTweenTime);
                 this.notifTween.onComplete = function():*
                 {
-                    this.showNotification(turnID,notice,yourTurnAnim);
+                    self.showNotification(turnID,notice,yourTurnAnim);
                 };
                 }
             }
@@ -477,7 +478,7 @@ package statusConsole_fla
                 if(param1 == 1)
                 {
                 _loc4_ = this.notifTweenTime * 3;
-                this.turnNotice_mc.y = this.originalNotificationPosY - this.notificationOffset;
+                // this.turnNotice_mc.y = this.originalNotificationPosY - this.notificationOffset;
                 this.scaleXTween = new larTween(this.turnNotice_mc,"scaleX",Elastic.easeOut,1,this.upScaled,_loc4_,this.yourTurnAnimation);
                 this.scaleYTween = new larTween(this.turnNotice_mc,"scaleY",Elastic.easeOut,1,this.upScaled,_loc4_);
                 this.notifTween = new larTween(this.turnNotice_mc,"alpha",Linear.easeIn,this.minAlpha,1,this.notifTweenTime);
@@ -487,11 +488,11 @@ package statusConsole_fla
                 this.turnNotice_mc.scaleX = 1;
                 this.turnNotice_mc.scaleY = 1;
                 this.notifTween = new larTween(this.turnNotice_mc,"alpha",Linear.easeIn,this.minAlpha,1,this.notifTweenTime);
-                this.turnNotice_mc.y = this.originalNotificationPosY;
+                // this.turnNotice_mc.y = this.originalNotificationPosY;
                 }
             }
             this.turnNotice_mc.setText(param2.toUpperCase());
-            this.turnNotice_mc.y = this.originalNotificationPosY;
+            // this.turnNotice_mc.y = this.originalNotificationPosY;
             switch(param1)
             {
                 case 0:
@@ -517,7 +518,7 @@ package statusConsole_fla
             var _loc1_:Number = this.notifTweenTime * 2;
             this.scaleXTween = new larTween(this.turnNotice_mc,"scaleX",Quartic.easeOut,NaN,1,_loc1_,null,null,this.animDelayTime);
             this.scaleYTween = new larTween(this.turnNotice_mc,"scaleY",Quartic.easeOut,NaN,1,_loc1_,null,null,this.animDelayTime);
-            this.notifTween = new larTween(this.turnNotice_mc,"y",Quartic.easeOut,this.originalNotificationPosY - this.notificationOffset,this.originalNotificationPosY,_loc1_,this.TurnNoticeAnimDone,null,this.animDelayTime);
+            this.notifTween = new larTween(this.turnNotice_mc,"y",Quartic.easeOut,this.originalNotificationPosY,this.originalNotificationPosY,_loc1_,this.TurnNoticeAnimDone,null,this.animDelayTime);
         }
         
         public function TurnNoticeAnimDone() : *

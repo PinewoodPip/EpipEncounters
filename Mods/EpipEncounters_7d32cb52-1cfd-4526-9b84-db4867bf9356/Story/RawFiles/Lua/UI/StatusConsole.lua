@@ -5,6 +5,14 @@
 
 ---@class StatusConsoleUI : UI
 local StatusConsole = {
+    ---@enum UI.StatusConsole.TurnNotificationType
+    TURN_NOTIFICATION_TYPES = {
+        NEUTRAL_TURN = 0,
+        YOUR_TURN = 1,
+        UNKNOWN = 2, -- Also a player-related one.
+        ALLIED_TURN = 3,
+        ENEMY_TURN = 4,
+    },
     visible = true,
     modulesRequestingHide = {},
 
@@ -140,9 +148,6 @@ local function OnHealthBarUpdate(uiObj, method, param3, num1, str1, bool1)
     root.console_mc.abTxt_mc.visible = true
     root.console_mc.mabTxt_mc.visible = true
     root.console_mc.hbTxt_mc.visible = true
-
-    root.turnNotice_mc.visible = false -- todo fix properly. we might be using an outdated version of the swf?
-    root.turnNotice_mc.x = 8000
 
     StatusConsole.Toggle(true, "VanillaBehaviour")
 end
