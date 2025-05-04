@@ -421,13 +421,11 @@ end
 Character.Hooks.CreateEquipmentVisuals:Subscribe(function (ev)
     local request = ev.Request
     local item = ev.Item
-
     if item and Transmog.IsItemInvisible(item, ev.Character) then
         request.VisualResourceID = ""
         request.EquipmentSlotMask = 0
         request.VisualSetSlotMask = 0
-
-        ev:StopPropagation()
+        ev:StopPropagation() -- Do not run further hooks.
     end
 end)
 

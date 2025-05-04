@@ -222,11 +222,12 @@ end
 ---If the extender fork is not installed, this is done by applying a Polymorph status. Credits to Luxen for the discovery!
 ---@param char EsvCharacter
 ---@param useAlternativeStatus boolean?
-function Vanity.RefreshAppearance(char, useAlternativeStatus) -- TODO move
+---@param useStatus boolean? -- Defaults to `false`. If `true`, a polymorph status will be used to refresh the visuals.
+function Vanity.RefreshAppearance(char, useAlternativeStatus, useStatus) -- TODO move
     local charGUID, charNetID = char.MyGuid, char.NetID
 
     -- Use polymorph status to refresh visuals for legacy v60 versions where RefreshEquipmentVisuals() was not available. That function is client-only, so we need to check for a different one to determine the extender build.
-    if Ext.IO.IsFile == nil then
+    if Ext.IO.IsFile == nil or useStatus then
         local status = useAlternativeStatus and "PIP_Vanity_Refresh_Alt" or "PIP_Vanity_Refresh"
         Osi.ApplyStatus(charGUID, status, 0, 1, NULLGUID)
     end
@@ -356,7 +357,9 @@ Net.RegisterListener("EPIPENCOUNTERS_Vanity_Transmog_ToggleVisibility", function
         Osiris.SetTag(item, "PIP_VANITY_INVISIBLE")
     end
 
-    Vanity.RefreshAppearance(char, true)
+    -- Refresh visuals using the polymorph status.
+    -- RefreshVisuals() does not work for this; it appears there may be additional equipment visual system flags we cannot set to cause body parts to update properly.
+    Vanity.RefreshAppearance(char, true, true)
 end)
 
 -- Handle requests for toggling hair masking for helmets.
