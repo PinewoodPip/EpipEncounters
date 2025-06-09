@@ -33,6 +33,7 @@ GroupManager._HideGroupsRequests = {} ---@type table<string, true>
 ---@field RelativePosition number[]
 ---@field Layer integer Layer of the UIObject.
 ---@field LockPosition boolean
+---@field SnapToHotbar boolean Whether the group's Y position should snap to the Hotbar UI.
 
 ---------------------------------------------
 -- METHODS
@@ -142,6 +143,7 @@ function GroupManager.GetGroupState(group)
         Rows = rows,
         Columns = columns,
         LockPosition = group:IsPositionLocked(),
+        SnapToHotbar = group:IsSnappingToHotbar(),
     }
 
     -- Store position relative to viewport edges
@@ -231,8 +233,11 @@ function GroupManager.LoadData(path)
             -- Set layer
             group:GetUI().Layer = data.Layer
 
-            -- Set position lock
+            -- Set position lock and snapping
             group:SetLockPosition(data.LockPosition or false) -- Added in v1.
+            group:SetSnapToHotbar(data.SnapToHotbar or false) -- Added in v2.
+
+            group:UpdatePosition()
         end
     end
 end
@@ -273,6 +278,7 @@ ContextMenu.RegisterMenuHandler("HotbarGroup", function(_, guid)
     local contextMenu = {
         {id = "HotbarGroup_Layer", type = "stat", text = CommonStrings.Layer:GetString(), value = 1, params = {GUID = guid}}, -- Actual value is visually "set" via hook.
         {id = "HotbarGroup_LockPosition", type = "checkbox", text = TSK.Label_LockPosition:GetString(), checked = group:IsPositionLocked(), params = {GUID = guid}},
+        {id = "HotbarGroup_SnapToHotbar", type = "checkbox", text = TSK.Label_SnapToHotbar:GetString(), checked = group:IsSnappingToHotbar(), params = {GUID = guid}},
         {id = "HotbarGroup_Resize", type = "button", text = CommonStrings.Resize:GetString(), params = {GUID = guid}},
         {id = "HotbarGroup_Delete", type = "button", text = CommonStrings.Delete:GetString(), params = {GUID = guid}},
     }
@@ -297,6 +303,12 @@ end)
 ContextMenu.RegisterElementListener("HotbarGroup_LockPosition", "buttonPressed", function(_, params)
     local group = GroupManager.GetGroup(params.GUID)
     group:SetLockPosition(not group:IsPositionLocked())
+end)
+
+-- Listen for requests to toggle snapping to hotbar.
+ContextMenu.RegisterElementListener("HotbarGroup_SnapToHotbar", "buttonPressed", function(_, params)
+    local group = GroupManager.GetGroup(params.GUID)
+    group:SetSnapToHotbar(not group:IsSnappingToHotbar())
 end)
 
 -- Listen for the layer being changed from the context menu.

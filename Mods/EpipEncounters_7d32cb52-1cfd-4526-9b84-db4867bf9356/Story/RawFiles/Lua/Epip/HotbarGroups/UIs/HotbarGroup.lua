@@ -1,6 +1,8 @@
 
 local Generic = Client.UI.Generic
 local HotbarSlot = Generic.GetPrefab("GenericUI_Prefab_HotbarSlot")
+local Hotbar = Client.UI.Hotbar
+local V = Vector.Create
 
 local GroupManager = Epip.GetFeature("Features.HotbarGroups") ---@cast GroupManager Features.HotbarGroups.Client
 local TSK = GroupManager.TranslatedStrings
@@ -14,6 +16,7 @@ local TSK = GroupManager.TranslatedStrings
 ---@field _Slots table<GenericUI_Prefab_HotbarSlot>
 ---@field _SlotsAllocated integer
 ---@field _LockPosition boolean
+---@field _SnapToHotbar boolean
 ---@field package _Rows integer
 ---@field package _Columns integer
 ---@field package _Content  GenericUI_Element_TiledBackground
@@ -106,7 +109,7 @@ function HotbarGroup:Resize(newRows, newColumns)
     local mcWidth, mcHeight = width, height
     local EXTRA_WIDTH = 15 * 2
     -- Show the handle on the longest side of the slot group
-    if width < height then
+    if not self:_IsHandleOnLeft() then
         self._DragArea:SetRotation(90)
         self._DragArea:SetSize(mcHeight + EXTRA_WIDTH)
         self._DragArea:SetPosition(0, -EXTRA_WIDTH/2)
@@ -115,8 +118,9 @@ function HotbarGroup:Resize(newRows, newColumns)
         self._DragArea:SetSize(mcWidth + EXTRA_WIDTH)
         self._DragArea:SetPosition(-EXTRA_WIDTH/2, -25)
     end
-end
 
+    self:UpdatePosition()
+end
 ---Returns whether the Hotbar Group can be dragged around.
 ---@return boolean
 function HotbarGroup:IsPositionLocked()
@@ -128,6 +132,21 @@ end
 function HotbarGroup:SetLockPosition(lock)
     self._LockPosition = lock
     self._DragArea:SetVisible(not lock) -- Toggle dragging handle
+end
+
+---Returns whether the group's Y position should snap to the hotbar.
+---@return boolean
+function HotbarGroup:IsSnappingToHotbar()
+    return self._SnapToHotbar
+end
+
+---Sets whether the group should snap to the hotbar.
+---@param snap boolean
+function HotbarGroup:SetSnapToHotbar(snap)
+    self._SnapToHotbar = snap
+    if snap then
+        self:UpdatePosition()
+    end
 end
 
 ---Initializes the UI for a hotbar group.
@@ -145,6 +164,7 @@ function HotbarGroup.___Create(id, rows, columns)
     group._Columns = 0
     group._SlotsAllocated = 0
     group._LockPosition = false
+    group._SnapToHotbar = false
 
     local content = group:CreateElement("ContentContainer" .. group.GUID, "GenericUI_Element_TiledBackground")
     content:SetAlpha(0)
@@ -165,10 +185,62 @@ function HotbarGroup.___Create(id, rows, columns)
     dragArea.Tooltip = TSK.HotbarGroup_DragHandle_Tooltip:GetString()
     group._DragArea = dragArea
 
+    -- Apply preference of snapping to hotbar when dragging the group.
+    local dragTickListener = "Features.HotbarGroups.UI.Group." .. group.GUID .. ".DragTickListener"
+    group:RegisterCallListener("startMoveWindow", function (_)
+        GameState.Events.Tick:Subscribe(function (_)
+            ---@diagnostic disable-next-line: invisible
+            group:UpdatePosition()
+        end, {StringID = dragTickListener})
+    end)
+    group:RegisterCallListener("cancelMoveWindow", function (_)
+        GameState.Events.Tick:Unsubscribe(dragTickListener)
+    end)
+
+    -- Reposition the group when the hotbar bar changes.
+    Hotbar:RegisterListener("Refreshed", function (_)
+        ---@diagnostic disable-next-line: invisible
+        group:UpdatePosition()
+    end)
+
     group:Resize(rows, columns)
 
     group:GetUI().MovieLayout = 3 -- Allows UIScaling to apply to the group's UI.
+    group:UpdatePosition()
     group:Show()
 
     return group
+end
+
+---Updates the position of the hotbar group according to snapping preferences.
+function HotbarGroup:UpdatePosition()
+    if not self._SnapToHotbar then return end -- Do nothing to the position if not snapping to hotbar.
+
+    -- Calculate hotbar height
+    local rows = Hotbar.GetBarCount()
+    local rowHeight = Hotbar.SLOT_SIZE + Hotbar.SLOT_SPACING
+    local offset = rows * 2 -- Magic numbers galore as usual
+    if rows == 1 then offset = offset + 5 end
+    local hotbarTop = rowHeight * rows + offset
+    hotbarTop = hotbarTop * self:GetUI():GetUIScaleMultiplier() -- Apply UIScaling
+
+    -- Calculate group height
+    local groupHeight = self._Container:GetHeight()
+    if self:_IsHandleOnLeft() and not self:IsPositionLocked() then -- Compensate for drag handle when it is on the left.
+        groupHeight = groupHeight + 16 - rows
+    else
+        groupHeight = groupHeight + (7 - rows)
+    end
+    groupHeight = groupHeight * self:GetUI():GetUIScaleMultiplier() -- Apply UIScaling
+
+    -- Reposition group to snap to the top of the hotbar
+    local x, _ = self:GetPosition()
+    self:SetPosition(V(x, math.floor(Client.GetViewportSize()[2] - groupHeight - hotbarTop)))
+end
+
+---Returns whether the dragging handle should be on the left side of the group.
+---@return boolean
+function HotbarGroup:_IsHandleOnLeft()
+    local width, height = self:GetSlotAreaSize()
+    return width >= height
 end

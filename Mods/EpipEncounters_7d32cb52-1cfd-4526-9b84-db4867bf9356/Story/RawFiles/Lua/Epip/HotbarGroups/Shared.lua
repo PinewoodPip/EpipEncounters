@@ -6,7 +6,7 @@
 ---@class Features.HotbarGroups : Feature
 local GroupManager = {
     SAVE_FILENAME = "EpipEncounters_HotbarGroups.json",
-    SAVE_VERSION = 1,
+    SAVE_VERSION = 2,
 
     TranslatedStrings = {
         CreateGroupHeader = {
@@ -47,6 +47,11 @@ local GroupManager = {
         Label_LockPosition = {
             Handle = "h41e08555gac00g4954g91edg9b89f595ca30",
             Text = "Lock position",
+            ContextDescription = [[Option in group context menu]],
+        },
+        Label_SnapToHotbar = {
+            Handle = "h37258013g671cg4548g89ebgcd7c144ce710",
+            Text = "Snap to Hotbar",
             ContextDescription = [[Option in group context menu]],
         },
     },
