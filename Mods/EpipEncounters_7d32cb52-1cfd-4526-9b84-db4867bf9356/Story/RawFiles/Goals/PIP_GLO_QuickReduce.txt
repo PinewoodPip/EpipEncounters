@@ -96,21 +96,13 @@ DB_AMER_GEN_OUTPUT_Integer(_CostInt);
 QRY QRY_PIP_Greatforge_Pay((CHARACTERGUID)_Char, (STRING)_Operation, (STRING)_CurrencyName, (INTEGER)_Cost)
 AND
 QRY_PIP_Greatforge_CanAfford(_Char, _Operation, _CurrencyName, _Cost)
-AND
-IntegertoString(_Cost, _CostStr)
-AND
-StringConcatenate(_Operation, " for ", _Str0)
-AND
-StringConcatenate(_Str0, _CostStr, _Str1)
-AND
-StringConcatenate(_Str1, " ", _Str2)
-AND
-StringConcatenate(_Str2, _CurrencyName, _Str3)
-AND
-StringConcatenate(_Str3, ".", _FinalStr)
 THEN
 PROC_PIP_Greatforge_Pay_Internal(_Char, _CurrencyName, _Cost);
-CharacterStatusText(_Char, _FinalStr);
+PROC_PIP_ShowGreatforgeCostOverhead(_Char, _Operation, _CurrencyName, _Cost);
+
+PROC PROC_PIP_ShowGreatforgeCostOverhead((CHARACTERGUID)_Char, (STRING)_Operation, (STRING)_CurrencyName, (INTEGER)_Cost)
+THEN
+DB_NOOP(0); // Actual display handled in Lua instead to facilitate localization.
 
 //REGION Paying the costs with various currencies.
 

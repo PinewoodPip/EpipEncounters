@@ -290,7 +290,7 @@ LOAD_ORDER = {
     {Script = "Epip/StatsTab/Data/Stats_EpicEncounters.lua", RequiresEE = true},
     {Script = "Epip/StatsTab/Data/Stats_Artifacts.lua", RequiresEE = true},
 
-    {Script = "Epip/ContextMenus/Greatforge/Server.lua", RequiresEE = true},
+    {ScriptSet = "Epip/ContextMenus/Greatforge", RequiresEE = true},
 
     -- Vanity
     {

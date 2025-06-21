@@ -3,9 +3,8 @@
 -- Server-side helpers for using Greatforge options through context menus.
 ---------------------------------------------
 
-Epip.Features.GreatforgeContextMenu = {
-}
-local GreatforgeContextMenu = Epip.Features.GreatforgeContextMenu
+---@class Features.GreatforgeContextMenu
+local GreatforgeContextMenu = Epip.GetFeature("Features.GreatforgeContextMenu")
 
 ---------------------------------------------
 -- DISMANTLE
@@ -21,6 +20,16 @@ Net.RegisterListener("EPIPENCOUNTERS_QuickExtractRunes", function(payload)
     local char, item = Character.Get(payload.Char), Item.Get(payload.Item)
 
     Osiris.PROC_PIP_QuickExtractRunes(char, item)
+end)
+
+-- Show overhead when runes are extracted.
+Ext.Osiris.RegisterListener("PROC_PIP_ShowGreatforgeCostOverhead", 4, "after", function(charGUID, operation, _, cost) -- Third param is currency type.
+    if operation == "Extracted runes" then
+        local msg = GreatforgeContextMenu.TranslatedStrings.Overhead_ExtractedRunes.Text:format(cost)
+        Osi.CharacterStatusText(charGUID, msg)
+    else
+        GreatforgeContextMenu:__LogWarning("Unsupported operation from PROC_PIP_ShowGreatforgeCostOverhead: %s", operation)
+    end
 end)
 
 ---------------------------------------------

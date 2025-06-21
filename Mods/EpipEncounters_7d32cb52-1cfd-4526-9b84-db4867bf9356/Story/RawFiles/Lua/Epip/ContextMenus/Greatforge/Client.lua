@@ -3,35 +3,32 @@
 -- Adds Greatforge options to item context menus.
 ---------------------------------------------
 
-Epip.Features.GreatforgeContextMenu = {
-    Entries = {
-        -- requires shift+click if item has runes.
-        DISMANTLE = {
-            id = "epip_Dismantle",
-            type = "button",
-            text = "Dismantle",
-        },
-        -- enabled/disabled based on whether the item has runes.
-        EXTRACT_RUNES = {
-            id = "epip_ExtractRunes",
-            type = "button",
-            text = "Extract Runes",
-        },
-        REMOVE_MODS = {
-            id = "epip_RemoveMods",
-            type = "subMenu",
-            subMenu = "epip_RemoveMods_menu",
-            text = "Cull...",
-        },
-    },
+local GreatforgeContextMenu = Epip.GetFeature("Features.GreatforgeContextMenu")
+local TSK = GreatforgeContextMenu.TranslatedStrings
 
-    -- TODO move to GF lib
-    SUPPORTED_MODS = {
-
+GreatforgeContextMenu.Entries = {
+    -- Requires shift+click if item has runes.
+    DISMANTLE = {
+        id = "epip_Dismantle",
+        type = "button",
+        text = TSK.Label_Dismantle:GetString(),
     },
-    DELTAMOD_TO_MOD = {},
+    -- Enabled/disabled based on whether the item has runes.
+    EXTRACT_RUNES = {
+        id = "epip_ExtractRunes",
+        type = "button",
+        text = TSK.Label_ExtractRunes:GetString(),
+    },
+    REMOVE_MODS = {
+        id = "epip_RemoveMods",
+        type = "subMenu",
+        subMenu = "epip_RemoveMods_menu",
+        text = "Cull...",
+    },
 }
-local GreatforgeContextMenu = Epip.Features.GreatforgeContextMenu
+-- TODO move to GF lib
+GreatforgeContextMenu.SUPPORTED_MODS = {} -- Initialized upon session load.
+GreatforgeContextMenu.DELTAMOD_TO_MOD = {}
 local ContextMenu = Client.UI.ContextMenu
 
 -- Returns the mod family name and the value of the deltamod passed,

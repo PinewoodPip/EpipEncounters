@@ -701,7 +701,7 @@ LOAD_ORDER = {
     {ScriptSet = "Epip/GreatforgeDragDrop", RequiresEE = true},
     {ScriptSet = "Epip/Greatforge/MassDismantle", RequiresEE = true},
 
-    {Script = "Epip/ContextMenus/Greatforge/Client.lua", RequiresEE = true},
+    {ScriptSet = "Epip/ContextMenus/Greatforge", RequiresEE = true},
     "Epip/ContextMenus/PlayerInfo.lua",
 
     -- Vanity
