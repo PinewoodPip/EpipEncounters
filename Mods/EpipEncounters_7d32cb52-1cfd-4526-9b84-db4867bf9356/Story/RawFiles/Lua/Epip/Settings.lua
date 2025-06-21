@@ -6,6 +6,8 @@
 -- respective scripts.
 ---------------------------------------------
 
+local CommonStrings = Text.CommonStrings
+
 ---@class Feature_EpipSettings : Feature
 local EpipSettings = {
     TranslatedStrings = {
@@ -505,19 +507,23 @@ local EpipSettings = {
             Text = "If enabled, world tooltips will be shown for all items.<br>This includes clutter like doors, which you may filter out through the other world tooltip settings.",
             ContextDescription = [[Setting tooltip for "Enable tooltips for all items"]],
         },
+        WorldTooltip_Emphasis_Choice_Label = {
+            Handle = "hefa60c94g6371g4fdag8becg8d5be01ab245",
+            Text = "%s Label",
+            ContextDescription = [[Choices for the "X Emphasis" settings; param is a color name (ex. "Blue")]],
+        },
     },
 }
 Epip.RegisterFeature("EpipSettings", EpipSettings)
+local TSKs = EpipSettings.TranslatedStrings
 
 local WorldTooltipsEmphasisColorsChoices = {
-    {ID = 1, Name = "None",},
-    {ID = 2, Name = "Blue Label",},
-    {ID = 3, Name = "Green Label",},
-    {ID = 4, Name = "Yellow Label",},
-    {ID = 5, Name = "Orange Label",},
+    {ID = 1, Name = CommonStrings.None:GetString(),},
+    {ID = 2, Name = TSKs.WorldTooltip_Emphasis_Choice_Label:Format(CommonStrings.Blue:GetString())},
+    {ID = 3, Name = TSKs.WorldTooltip_Emphasis_Choice_Label:Format(CommonStrings.Green:GetString())},
+    {ID = 4, Name = TSKs.WorldTooltip_Emphasis_Choice_Label:Format(CommonStrings.Yellow:GetString())},
+    {ID = 5, Name = TSKs.WorldTooltip_Emphasis_Choice_Label:Format(CommonStrings.Orange:GetString())},
 }
-
-local TSKs = EpipSettings.TranslatedStrings
 
 -- New settings declarations
 ---@type SettingsLib_Setting[]

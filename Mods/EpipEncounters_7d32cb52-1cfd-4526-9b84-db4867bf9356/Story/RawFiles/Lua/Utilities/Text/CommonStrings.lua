@@ -530,6 +530,16 @@ Text.CommonStrings.Blue = Text.RegisterTranslatedString({
     Text = "Blue",
     ContextDescription = "As in, the color.",
 })
+Text.CommonStrings.Yellow = Text.RegisterTranslatedString({
+    Handle = "he37d0176g8178g468cga11fg746dc1937a81",
+    Text = "Yellow",
+    ContextDescription = "As in, the color.",
+})
+Text.CommonStrings.Orange = Text.RegisterTranslatedString({
+    Handle = "h206d69a7g9033g4ba9gb553g806e279da47b",
+    Text = "Orange",
+    ContextDescription = "As in, the color.",
+})
 
 ---------------------------------------------
 -- WEAPON TYPES
