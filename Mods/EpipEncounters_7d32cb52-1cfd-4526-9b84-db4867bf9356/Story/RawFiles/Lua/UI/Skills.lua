@@ -13,6 +13,24 @@ local Skills = {
     },
     selectedSkill = nil, ---@type string
 
+    -- Order in which school sections are displayed.
+    ---@type StatsLib_Enum_SkillAbility[]
+    SCHOOL_ORDER = {
+        "Warrior",
+        "Ranger",
+        "Rogue",
+        "Fire",
+        "Water",
+        "Air",
+        "Earth",
+        "Death",
+        "Summoning",
+        "Polymorph",
+
+        "None", -- "Special".
+        "Source",
+    },
+
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
 

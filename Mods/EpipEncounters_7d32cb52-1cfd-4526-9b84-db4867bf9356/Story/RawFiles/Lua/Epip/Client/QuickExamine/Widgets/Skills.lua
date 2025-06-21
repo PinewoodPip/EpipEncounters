@@ -2,6 +2,7 @@
 local QuickExamine = Epip.GetFeature("Feature_QuickExamine")
 local Generic = Client.UI.Generic
 local HotbarSlot = Generic.GetPrefab("GenericUI_Prefab_HotbarSlot")
+local SkillBookUI = Client.UI.Skills
 local V = Vector.Create
 
 ---@class Features.QuickExamine.Widgets.Skills : Feature
@@ -22,6 +23,12 @@ local Skills = {
 }
 Epip.RegisterFeature("Features.QuickExamine.Widgets.Skills", Skills)
 local TSK = Skills.TranslatedStrings
+
+-- Build map of school to their index in the skill book UI, to display skills in the same order.
+Skills.STATS_SCHOOL_TO_INDEX = {} ---@type table<StatsLib_Enum_SkillAbility, integer>
+for i,school in ipairs(SkillBookUI.SCHOOL_ORDER) do
+    Skills.STATS_SCHOOL_TO_INDEX[school] = i
+end
 
 ---------------------------------------------
 -- SETTINGS
@@ -53,8 +60,47 @@ end
 
 ---@override
 function Widget:RenderGridElements(entity)
+    local SCHOOL_TO_INDEX = Skills.STATS_SCHOOL_TO_INDEX
+    local SCHOOLS_COUNT = #SkillBookUI.SCHOOL_ORDER
+
     local skills = entity.SkillManager.Skills
-    for skill,_ in pairs(skills) do
+    local innateSkills = {} ---@type set<skill>
+    local itemOrTemporarySkills = {} ---@type set<skill>
+    local orderedSkills = {} ---@type skill[]
+
+    -- Gather abilities and innate/from-item status of all skills
+    local skillSchools = {} ---@type table<skill, StatsLib_Enum_SkillAbility>
+    for skillID,skill in pairs(skills) do
+        local stat = Stats.Get("StatsLib_StatsEntry_SkillData", skillID)
+
+        -- Track innate and temporary/item skills.
+        if Character.IsSkillInnate(entity, skillID) then
+            innateSkills[skillID] = true
+        end
+        if skill.CauseListSize > 0 then
+            itemOrTemporarySkills[skillID] = true
+        end
+
+        skillSchools[skillID] = stat.Ability
+        table.insert(orderedSkills, skillID)
+    end
+
+    -- Order skills by their school
+    table.sort(orderedSkills, function(skillA, skillB)
+        local schoolA, schoolB = skillSchools[skillA], skillSchools[skillB]
+        local scoreA, scoreB = SCHOOL_TO_INDEX[schoolA], SCHOOL_TO_INDEX[schoolB]
+
+        -- Show innate skills and skills from items/statuses at the end of the list.
+        scoreA = scoreA + (innateSkills[skillA] and SCHOOLS_COUNT or 0)
+        scoreB = scoreB + (innateSkills[skillB] and SCHOOLS_COUNT or 0)
+        scoreA = scoreA + (itemOrTemporarySkills[skillA] and SCHOOLS_COUNT or 0)
+        scoreB = scoreB + (itemOrTemporarySkills[skillB] and SCHOOLS_COUNT or 0)
+
+        return scoreA < scoreB
+    end)
+
+    -- Render entries
+    for _,skill in ipairs(orderedSkills) do
         self:RenderSkill(entity, skill)
     end
 end
