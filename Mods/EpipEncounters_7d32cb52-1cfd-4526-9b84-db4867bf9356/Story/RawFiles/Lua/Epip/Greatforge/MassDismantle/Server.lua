@@ -81,3 +81,10 @@ Net.RegisterListener(MassDismantle.REQUEST_NET_MSG, function(payload)
         MassDismantle:LogWarning("Attempted to mass-dismantle while one is already running")
     end
 end)
+
+-- Display localized overhead when paying dismantle costs.
+-- Technically not strictly related to just the "MassDismantle" feature itself, but I didn't feel like making a separate feature just for this.
+Osiris.RegisterSymbolListener("PROC_PIP_ShowCostOverhead", 2, "after", function (charGUID, cost)
+    local costMsg = MassDismantle.TranslatedStrings.Overhead_DismantledCost:Format(cost)
+    Osi.CharacterStatusText(charGUID, costMsg)
+end)

@@ -12,6 +12,11 @@ local MassDismantle = {
            Text = "Dismantle All",
            ContextDescription = "Button label for context menu",
         },
+        Overhead_DismantledCost = {
+            Handle = "ha278dabdg5febg46f4gbb76g82435dd2883a",
+            Text = "Dismantled for %s Gold.",
+            ContextDescription = [[Overhead shown after dismantling an item. Param is gold cost.]],
+        },
     },
     Hooks = {
         IsEligible = {}, ---@type Event<Feature_MassDismantle_Hook_IsEligible>

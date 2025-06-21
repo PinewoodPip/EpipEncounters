@@ -225,30 +225,26 @@ Integer(_CostBounded, _CostInt)
 AND
 QRY_PIP_CanAffordQuickReduce(_Char, _CostInt)
 AND
-QRY_AMER_GEN_RealToString(_CostBounded, 0)
-AND
-DB_AMER_GEN_OUTPUT_String(_CostStr)
-AND
-StringConcatenate("Dismantled for ", _CostStr, _Str1)
-AND
-StringConcatenate(_Str1, " Gold.", _FinalStr)
-AND
 IntegerSubtract(0, _CostInt, _GoldToRemove)
 THEN
 ItemTemplateAddTo("AMER_LOOT_GreatforgeFragment_A_a41f2a71-6ff1-4c60-a74a-20c96fb9c487", _Char, _FragsAwardedNew);
 PROC_AMER_UI_Greatforge_Reduce_GrantTreasureTable(_Char, _Cont, _Level, _IngredChance, "ST_Ingredients");
 PROC_AMER_UI_Greatforge_Reduce_GrantTreasureTable(_Char, _Cont, _Level, _RareIngredChance, "ST_RareIngredient");
-PROC_AMER_GEN_ItemRemoveRunes(_Char, _Item, 0, 5);	//Indecies zero to five--should be more than we'll ever need to consider.
+PROC_AMER_GEN_ItemRemoveRunes(_Char, _Item, 0, 5);	//Indices zero to five--should be more than we'll ever need to consider.
 PROC_AMER_GEN_UnequipAndRemoveItem(_Char, _Item);
 TimerLaunch("PIP_UnreserveReduceContainer", 200);
 DB_PIP_QuickReduce_ReservedContainer(_Char, _Cont);
-CharacterStatusText(_Char, _FinalStr);
 PartyAddGold(_Char, _GoldToRemove);
 NOT DB_PIP_QuickDismantling(_Char, _Item, _Level);
+PROC_PIP_ShowCostOverhead(_Char, _CostInt);
 // PROC_AMER_GEN_CharacterCombatLogText(_Char, _CostStr);
 // PROC_AMER_GEN_CharacterCombatLogText(_Char, _ItemType);
 // PROC_AMER_GEN_CharacterCombatLogText(_Char, _Slot);
 // PROC_AMER_GEN_CharacterCombatLogText(_Char, _SubType);
+
+PROC PROC_PIP_ShowCostOverhead((CHARACTERGUID)_Char, (INTEGER)_Cost)
+THEN
+DB_NOOP(0); // Actual display handled in Lua instead to facilitate localization.
 
 QRY QRY_PIP_CanAffordQuickReduce((CHARACTERGUID)_Char, (INTEGER)_Cost)
 AND
