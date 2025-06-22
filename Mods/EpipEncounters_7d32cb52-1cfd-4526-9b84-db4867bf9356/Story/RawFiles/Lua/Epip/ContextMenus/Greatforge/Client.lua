@@ -49,10 +49,8 @@ function GreatforgeContextMenu.GetDeltaModTier(data, deltamod)
     local tier = nil
 
     if data then
-        local reversed = {}
-        
         local maxValue = 0
-        for d,v in pairs(data.DeltaMods) do
+        for _,v in pairs(data.DeltaMods) do
             if v > maxValue then
                 maxValue = v
             end
@@ -84,6 +82,10 @@ end
 ContextMenu.RegisterVanillaMenuHandler("Item", function(item)
     -- Greatforge menus are only applicable to equipment.
     if not item.Stats or not Item.IsEquipment(item) then return nil end
+
+    -- Don't show the context menu for items in character inventories that are not players (ex. while pickpocketing).
+    local inventoryRoot = Item.GetInventoryRoot(item)
+    if inventoryRoot and Entity.IsCharacter(inventoryRoot) and not Character.IsPlayer(inventoryRoot) then return end
 
     local hasRunes = Item.HasRunes(item)
     local isEquipped = Item.IsEquipped(Client.GetCharacter(), item)
