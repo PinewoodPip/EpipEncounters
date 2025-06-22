@@ -12,6 +12,12 @@ local QuickLoot = Epip.GetFeature("Features.QuickLoot")
 ---@param char EsvCharacter
 ---@param item EsvItem
 function QuickLoot.PickUpItem(char, item)
+    -- If the item has story usage, emulate the event to *hopefully* trigger any scripted events.
+    -- This is not a comprehensive solution, but should cover the general cases, ex. pulling Spear of Braccus Rex.
+    if Item.HasUseAction(item, "StoryUse") then
+        Osiris.CharacterUsedItem(char, item)
+    end
+
     Osiris.ItemToInventory(item, char, item.Amount, 1, 0)
 
     -- Does not appear to work.
