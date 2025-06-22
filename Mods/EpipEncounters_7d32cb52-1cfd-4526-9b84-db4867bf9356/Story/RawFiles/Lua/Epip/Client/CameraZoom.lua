@@ -112,6 +112,43 @@ local CameraZoom = {
             Text = "Restores the angle settings to default values.",
             ContextDescription = "Tooltip for reset button"
         },
+
+        Label_Angle = {
+            Handle = "h334fa434gca71g4723g864bg55c79e5f08b4",
+            Text = "Angle Value %s",
+            ContextDescription = [[Setting name for camera angle settings. Param is the angle index (1, 2, or 3)]],
+        },
+        Label_ZoomedInAngle = {
+            Handle = "hf1a464a4g4d51g4e6fg9af7g484197b1daf0",
+            Text = "Zoomed In Angle",
+            ContextDescription = [[Title in settings menu tab]],
+        },
+        Label_ZoomedOutAngle = {
+            Handle = "h7af499c7g872ag4c68gaf53g67561291f807",
+            Text = "Zoomed Out Angle",
+            ContextDescription = [[Title in settings menu tab]],
+        },
+
+        Label_Position_Regular = {
+            Handle = "h17e23748gdcb0g4555g817bga83ec3f3176d",
+            Text = "Regular Camera",
+            ContextDescription = [[Section title in settings menu tab]],
+        },
+        Label_Position_Combat = {
+            Handle = "he046b554gc9f0g467dg8496g161c51d24b5f",
+            Text = "Combat Camera",
+            ContextDescription = [[Section title in settings menu tab]],
+        },
+        Label_Position_Tactical = {
+            Handle = "h9dae206fg1544g488agbbcdg173edc63773a",
+            Text = "Tactical Camera",
+            ContextDescription = [[Section title in settings menu tab]],
+        },
+        Label_Position_Controller = {
+            Handle = "h8a409ad5gfe18g4736g9f65gfbb6ce1f8513",
+            Text = "Controller Camera",
+            ContextDescription = [[Section title in settings menu tab]],
+        },
     },
 }
 Epip.RegisterFeature("CameraZoom", CameraZoom)
@@ -149,7 +186,7 @@ function _CameraPosition:GetSliderDefinitions()
             ID = self:GetSettingID("ZoomedIn", i),
             ModTable = CameraZoom.SETTINGS_MODULE_ID,
             Type = "ClampedNumber",
-            Name = Text.Format("Angle Value %s", {FormatArgs = {i}}),
+            Name = TSKs.Label_Angle:Format(i),
             Description = "",
             Min = self.SLIDER_MIN,
             Max = self.SLIDER_MAX,
@@ -164,7 +201,7 @@ function _CameraPosition:GetSliderDefinitions()
             ID = self:GetSettingID("ZoomedOut", i),
             ModTable = CameraZoom.SETTINGS_MODULE_ID,
             Type = "ClampedNumber",
-            Name = Text.Format("Angle Value %s", {FormatArgs = {i}}),
+            Name = TSKs.Label_Angle:Format(i),
             Description = "",
             Min = self.SLIDER_MIN,
             Max = self.SLIDER_MAX,
@@ -281,7 +318,7 @@ SettingsMenu.Hooks.GetTabEntries:Subscribe(function (ev)
             })
             table.insert(entries, {
                 Type = "Label",
-                Label = Text.Format("Zoomed In Angle", {Color = Color.WHITE, Size = 19})
+                Label = TSKs.Label_ZoomedInAngle:Format({Color = Color.WHITE, Size = 19})
             })
 
             for i,slider in ipairs(table.join(zoomedInSliders, zoomedOutSliders)) do
@@ -289,7 +326,7 @@ SettingsMenu.Hooks.GetTabEntries:Subscribe(function (ev)
                 if i == 4 then
                     table.insert(entries, {
                         Type = "Label",
-                        Label = Text.Format("Zoomed Out Angle", {Color = Color.WHITE, Size = 19}),
+                        Label = TSKs.Label_ZoomedOutAngle:Format({Color = Color.WHITE, Size = 19}),
                     })
                 end
 
@@ -343,25 +380,25 @@ local combatPos = Camera.GetDefaultPosition("Combat")
 ---@type Feature_CameraZoom_CameraPosition[]
 local positions = {
     {
-        Name = "Regular Camera",
+        Name = TSKs.Label_Position_Regular:GetString(),
         GlobalSwitchID = "DefaultPosition",
         DefaultPositionZoomedIn = defaultPos.ZoomedIn,
         DefaultPositionZoomedOut = defaultPos.ZoomedOut,
     },
     {
-        Name = "Combat Camera",
+        Name = TSKs.Label_Position_Combat:GetString(),
         GlobalSwitchID = "DefaultCombatPosition",
         DefaultPositionZoomedIn = combatPos.ZoomedIn,
         DefaultPositionZoomedOut = combatPos.ZoomedOut,
     },
     {
-        Name = "Tactical Camera",
+        Name = TSKs.Label_Position_Tactical:GetString(),
         GlobalSwitchID = "DefaultOverheadPosition",
         DefaultPositionZoomedIn = overheadPos.ZoomedIn,
         DefaultPositionZoomedOut = overheadPos.ZoomedOut,
     },
     {
-        Name = "Controller Camera",
+        Name = TSKs.Label_Position_Controller:GetString(),
         GlobalSwitchID = "DefaultControllerPosition",
         DefaultPositionZoomedIn = controllerPos.ZoomedIn,
         DefaultPositionZoomedOut = controllerPos.ZoomedOut,
