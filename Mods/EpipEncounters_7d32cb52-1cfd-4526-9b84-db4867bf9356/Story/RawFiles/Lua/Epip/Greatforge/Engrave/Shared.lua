@@ -8,7 +8,7 @@ local Engrave = {
     TranslatedStrings = {
         Option_Name = {
            Handle = "h66c830b8geefbg42afgb501g0942d3a13036",
-           Text = Text.Format("Engrave", {Color = "ebc808"}),
+           Text = Text.Format("Engrave", {Size = 30, Color = "ebc808"}),
            StringKey = "AMER_UI_Greatforge_Title_PIP_Engrave",
            ContextDescription = "Greatforge option name",
         },
