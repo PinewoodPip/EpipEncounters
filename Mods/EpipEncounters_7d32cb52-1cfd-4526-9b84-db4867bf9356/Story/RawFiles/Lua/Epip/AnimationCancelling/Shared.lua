@@ -20,6 +20,11 @@ local AnimCancel = {
            Text = "Animation Cancelling",
            ContextDescription = "Feature name; displayed in settings menu",
         },
+        Label_Description = {
+            Handle = "hb909e1ceg8636g48afg8672g2acc5a1ce44e",
+            Text = "Animation Cancelling allows skill casts to end earlier by interrupting their animations after their effects execute, speeding up combat.",
+            ContextDescription = [[Description shown in settings tab]],
+        },
         Setting_CancelSkills_Name = {
            Handle = "h0a1e975egaf04g414cg9be0g559112d5284d",
            Text = "Cancel skill animations",

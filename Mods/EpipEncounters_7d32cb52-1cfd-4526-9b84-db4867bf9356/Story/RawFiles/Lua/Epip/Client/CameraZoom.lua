@@ -17,6 +17,11 @@ local CameraZoom = {
             ContextDescription = "Settings tab name",
             LocalKey = "SettingsTabName",
         },
+        Label_Description = {
+            Handle = "h3b641590gbf77g4000g83b2gbe2ecedb6219",
+            Text = "Customize the camera's angles, zoom distances and behaviour.",
+            ContextDescription = [[Description in settings menu tab]],
+        },
         ["h804e5cefgef0eg4351gb19cge60e92ca4297"] = {
             Text = "General",
             ContextDescription = "Top header of settings menu",
@@ -412,6 +417,8 @@ SettingsMenu.RegisterTab({
     HeaderLabel = Text.CommonStrings.Camera:GetString(),
     Entries = { -- Position settings are dynamically generated and appended.
         {Type = "Label", Label = Text.Format(CameraZoom.TSK["h804e5cefgef0eg4351gb19cge60e92ca4297"], {Color = "7E72D6", Size = 23})},
+        {Type = "Label", Label = TSKs.Label_Description:GetString()},
+
         {Type = "Setting", Module = CameraZoom.SETTINGS_MODULE_ID, ID = "Camera_NormalModeZoomLimit"},
         {Type = "Setting", Module = CameraZoom.SETTINGS_MODULE_ID, ID = "NormalModeZoomInLimit"},
         {Type = "Setting", Module = CameraZoom.SETTINGS_MODULE_ID, ID = "Camera_OverheadModeZoomLimit"},

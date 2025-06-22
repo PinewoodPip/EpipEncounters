@@ -31,6 +31,11 @@ local QuickExamine = {
            Text = "Quick Examine",
            ContextDescription = "Name of the feature",
         },
+        Description = {
+            Handle = "hbc1b3c20g0846g4f88g8856g59cad7d56b7d",
+            Text = [[Quick Examine is a UI that allows you to view additional information about characters. Access it through the "Quick Examine" keybind while hovering over a character.]],
+            ContextDescription = [[Description shown in settings menu tab]],
+        },
         SavePosition = {
            Handle = "h6cc76e3fg8d5cg466egb96agb780b490d0d5",
            Text = "Save Default Position",
@@ -96,7 +101,7 @@ local QuickExamine = {
 Epip.RegisterFeature("QuickExamine", QuickExamine)
 
 ---------------------------------------------
--- SETTINGS
+-- SETTINGS & INPUT ACTIONS
 ---------------------------------------------
 
 local TSKs = QuickExamine.TranslatedStrings
@@ -145,6 +150,14 @@ QuickExamine:RegisterSetting("Position", {
     Description = "Controls the position of the interface.",
     DefaultValue = Vector.Create(-1, -1),
 })
+
+local InputActions = {
+    Open = QuickExamine:RegisterInputAction("Open", {
+        Name = TSKs.Name,
+        DefaultInput1 = {Keys = {"v"}},
+        Icon = "hotbar_icon_combatlog"
+    })
+}
 
 ---------------------------------------------
 -- CLASSES
@@ -406,7 +419,7 @@ end
 ---------------------------------------------
 
 Client.Input.Events.ActionExecuted:Subscribe(function (ev)
-    if ev.Action.ID == "EpipEncounters_QuickExamine" then
+    if ev.Action.ID == InputActions.Open:GetID() then
         local char = Pointer.GetCurrentCharacter(nil, true)
 
         QuickExamine.SetEntity(char, true)

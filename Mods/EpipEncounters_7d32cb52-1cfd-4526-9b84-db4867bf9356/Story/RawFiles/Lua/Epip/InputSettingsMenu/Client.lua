@@ -12,6 +12,14 @@ local InputSettingsMenu = {
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
 
+    TranslatedStrings = {
+        Label_Description = {
+            Handle = "h4843a923ga322g4e29gacd6g816fe5c8d9d5",
+            Text = "Customize the key bindings for Epip features.",
+            ContextDescription = [[Description shown in the settings menu tab.]],
+        },
+    },
+
     Hooks = {
         IsActionVisible = {}, ---@type Event<Features.InputSettingsMenu.Hooks.IsActionVisible>
     }
@@ -57,6 +65,12 @@ end
 -- Request all visible actions to be rendered as entries.
 SettingsMenu.Hooks.GetTabEntries:Subscribe(function (ev)
     if ev.Tab == tab then
+        -- Insert description entry
+        table.insert(ev.Entries, {
+            Type = "Label",
+            Label = InputSettingsMenu.TranslatedStrings.Label_Description:GetString(),
+        })
+
         -- Get all visible actions
         local actions = {} ---@type InputLib_Action[]
         for _,action in pairs(Input.GetActions()) do

@@ -36,6 +36,10 @@ local InventoryMultiSelectInputActionSettings = {
     SelectRange = Input.GetActionBindingSetting(InventoryMultiSelect.InputActions.SelectRange),
 }
 
+local QuickExamineInputActionSettings = {
+    Open = Input.GetActionBindingSetting(QuickExamine.InputActions.Open),
+}
+
 ---@class Feature_EpipSettingsMenu : Feature
 local EpipSettingsMenu = {
     LABEL_FONT_SIZE = 19, -- Font size of general info labels.
@@ -122,15 +126,40 @@ local EpipSettingsMenu = {
            Text = "Hotbar",
            ContextDescription = "Tab name for hotbar settings",
         },
+        Tab_Hotbar_Description = {
+            Handle = "h43088c55g78c4g4cadg90ceg15b4b979274f",
+            Text = "Customize the Hotbar and related widgets.",
+            ContextDescription = [[Description for the Hotbar settings tab]],
+        },
+        Tab_Tooltips_Description = {
+            Handle = "hbe7663beg1066g45bag9dbcg27bdf6d18421",
+            Text = "Customize tooltip behaviours and which items display world tooltips.",
+            ContextDescription = [[Description for the "Tooltips" settings tab]],
+        },
         Tab_MiscUI = {
            Handle = "hde49d383g961eg49d6gaa46gcc45ab299aa5",
            Text = "Miscellaneous UI",
            ContextDescription = "Settings tab name",
         },
+        Tab_MiscUI_Description = {
+            Handle = "h13bbc4f0g191dg485eg990agd6f5ec58c4d7",
+            Text = "Customize various other UIs and widgets.",
+            ContextDescription = [[Description for the "Miscellaneous UI" settings tab]],
+        },
+        Tab_EpicEncounters_Description = {
+            Handle = "h3b085ee9g7e53g4d41gb55fg7c035b5a44d1",
+            Text = "Settings specific to Epic Encounters 2.",
+            ContextDescription = [[Description for the "Epic Encounters" settings tab]],
+        },
         Tab_MiscQoL = {
             Handle = "ha2808031g83f4g48d6g8304gabe840372382",
             Text = "Miscellaneous QoL",
             ContextDescription = [[Settings tab name; "QoL" is short for "Quality of life"]],
+        },
+        Tab_MiscQoL_Description = {
+            Handle = "h96ed79f6gc2cdg4355g83bcg8bca076dc98c",
+            Text = "Customize various quality of life features unrelated to UIs.",
+            ContextDescription = [[Description for the "Miscellaneous QoL" settings tab]],
         },
         Section_Overheads = {
            Handle = "h6ba9c31fgd5d1g4563gb72eg32f83bcb1302",
@@ -147,6 +176,11 @@ local EpipSettingsMenu = {
            Text = "Player Portraits",
            ContextDescription = "Settings menu section name",
         },
+        Tab_PlayerInfo_Description = {
+            Handle = "ha407da41gc23dg48d6g84e7gcf7d32870e47",
+            Text = "Customize the player portraits UI on the side of the screen and its status bars.",
+            ContextDescription = [[Description for the "Player Portraits" settings tab]],
+        },
         Section_UITooltips = {
            Handle = "hd34a81ecg7b8eg4ad6g8fc4gf6310e5ae556",
            Text = "UI Tooltips",
@@ -156,6 +190,16 @@ local EpipSettingsMenu = {
            Handle = "hc574348cg706eg4618g9629g6a08ad4aed70",
            Text = "Inventory UI",
            ContextDescription = "Settings section name",
+        },
+        Tab_Inventory_Description = {
+            Handle = "hd4768ef1g4729g4cd6gbcdag38396e85cff3",
+            Text = "Customize inventory UIs.",
+            ContextDescription = [[Description for the "Inventory UI" settings tab]],
+        },
+        Tab_Notifications_Description = {
+            Handle = "h6f4a5e88g9ac4g4d9dg9788g6f16cc3f7a82",
+            Text = "Customize notification messages.",
+            ContextDescription = [[Description for the "Notifications" settings tab]],
         },
         Section_WorldItemTooltips = {
            Handle = "had9e68fbgbd66g4141gab13gd1b41046c493",
@@ -256,6 +300,8 @@ local tabs = {
         ButtonLabel = "Epic Encounters", -- Not necessary to be translatable.
         HeaderLabel = "Epic Encounters",
         Entries = {
+            CreateLabel(TSK.Tab_EpicEncounters_Description),
+
             {Type = "Setting", Module = "EpipEncounters_ImmersiveMeditation", ID = "Enabled"},
             {Type = "Setting", Module = "EpipEncounters", ID = "ESCClosesAmerUI"},
         },
@@ -266,6 +312,7 @@ local tabs = {
         HeaderLabel = TSK.Tab_Hotbar:GetString(),
         Entries = {
             CreateHeader(TSK.Tab_Hotbar),
+            CreateLabel(TSK.Tab_Hotbar_Description),
             "HotbarCombatLogButton",
             "HotbarHotkeysText",
             "HotbarHotkeysLayout",
@@ -291,14 +338,23 @@ local tabs = {
         HeaderLabel = QuickExamine.TranslatedStrings.Name:GetString(),
         Entries = {
             CreateHeader(QuickExamine.TranslatedStrings.Name),
-            {Module = "EpipEncounters_QuickExamine", ID = "AllowDead"},
-            {Module = "EpipEncounters_QuickExamine", ID = "Opacity"},
-            {Module = "EpipEncounters_QuickExamine", ID = "Width"},
-            {Module = "EpipEncounters_QuickExamine", ID = "Height"},
+            CreateLabel(QuickExamine.TranslatedStrings.Description),
+
+            -- Keybind
+            {Module = QuickExamineInputActionSettings.Open.ModTable, ID = QuickExamineInputActionSettings.Open:GetID()},
+
+            -- Settings
+            CreateSettingEntry(QuickExamine.Settings.AllowDead),
+            CreateSettingEntry(QuickExamine.Settings.Opacity),
+            CreateSettingEntry(QuickExamine.Settings.Width),
+            CreateSettingEntry(QuickExamine.Settings.Height),
+
+            -- Widgets
             CreateSettingEntry(QuickExamineWidgets.Statuses.Settings.Enabled),
             CreateSettingEntry(QuickExamineWidgets.Skills.Settings.Enabled),
             CreateSettingEntry(QuickExamineWidgets.Equipment.Settings.Enabled),
             CreateSettingEntry(QuickExamineWidgets.Equipment.Settings.SlotOrder),
+
             {Type = "Button", ID = "QuickExamine_SaveDefaultPosition", Label = QuickExamine.TranslatedStrings.SavePosition:GetString(), Tooltip = QuickExamine.TranslatedStrings.SavePositionTooltip:GetString()},
         }
     },
@@ -307,6 +363,8 @@ local tabs = {
         ButtonLabel = TSK.Tab_MiscUI:GetString(),
         HeaderLabel = TSK.Tab_MiscUI:GetString(),
         Entries = {
+            CreateLabel(TSK.Tab_MiscUI_Description),
+
             CreateHeader(CommonStrings.General),
             {Module = "EpipEncounters_Features.UILayout", ID = "Enabled"},
 
@@ -384,6 +442,8 @@ local tabs = {
         HeaderLabel = TSK.Tab_MiscQoL:GetString(),
         Entries = {
             CreateHeader(TSK.Tab_MiscQoL),
+            CreateLabel(TSK.Tab_MiscQoL_Description),
+
             CreateLegacySettingEntry("AutoIdentify"),
             {Type = "Setting", Module = "Epip_Inventory", ID = "Inventory_InfiniteCarryWeight"},
             CreateLegacySettingEntry("RenderShroud"),
@@ -411,6 +471,8 @@ local tabs = {
         HeaderLabel = TSK.Section_PlayerInfo:GetString(),
         Entries = {
             CreateHeader(TSK.Section_PlayerInfo),
+            CreateLabel(TSK.Tab_PlayerInfo_Description),
+
             "PlayerInfoBH",
             "PlayerInfo_StatusHolderOpacity",
             {Module = StatusesDisplay:GetSettingsModuleID(), ID = StatusesDisplay.Settings.Enabled.ID},
@@ -424,7 +486,9 @@ local tabs = {
         ButtonLabel = CommonStrings.Inventory:GetString(),
         HeaderLabel = CommonStrings.Inventory:GetString(),
         Entries = {
+            CreateLabel(TSK.Tab_Inventory_Description),
             CreateHeader(TSK.Section_InventoryUI),
+
             {Module = InventoryMultiSelect:GetNamespace(), ID = InventoryMultiSelect.Settings.Enabled.ID},
             {Module = InventoryMultiSelectInputActionSettings.ToggleSelection.ModTable, ID = InventoryMultiSelectInputActionSettings.ToggleSelection:GetID()},
             {Module = InventoryMultiSelectInputActionSettings.SelectRange.ModTable, ID = InventoryMultiSelectInputActionSettings.SelectRange:GetID()},
@@ -448,6 +512,8 @@ local tabs = {
         HeaderLabel = CommonStrings.Notifications:GetString(),
         Entries = {
             CreateHeader(CommonStrings.Notifications:GetString()),
+            CreateLabel(TSK.Tab_Notifications_Description),
+
             "CastingNotifications",
             "Notification_ItemReceival",
             "Notification_StatSharing",
@@ -462,7 +528,9 @@ local tabs = {
         ButtonLabel = CommonStrings.Tooltips:GetString(),
         HeaderLabel = CommonStrings.Tooltips:GetString(),
         Entries = {
+            CreateLabel(TSK.Tab_Tooltips_Description),
             CreateHeader(TSK.Section_UITooltips),
+
             "Tooltip_SimpleTooltipDelay_World",
             "Tooltip_SimpleTooltipDelay_UI",
             {Module = TooltipRepositioning:GetNamespace(), ID = TooltipRepositioning.Settings.Position:GetID()},
@@ -523,6 +591,8 @@ local tabs = {
         HeaderLabel = AnimationCancelling.TranslatedStrings.Label_FeatureName:GetString(),
         Entries = {
             CreateHeader(AnimationCancelling.TranslatedStrings.Label_FeatureName),
+            CreateLabel(AnimationCancelling.TranslatedStrings.Label_Description),
+
             CreateSettingEntry(AnimationCancelling.Settings.CancelSkills),
             CreateSettingEntry(AnimationCancelling.Settings.CancelAttacks),
             CreateSettingEntry(AnimationCancelling.Settings.CancelNPCAnimations),

@@ -22,7 +22,6 @@ local keybinds = {
     -- Misc
     {Name = "Toggle Tooltip Scrolling", ID = "EpipEncounters_ScrollTooltip", DefaultInput1 = {Keys = {"middle"}}},
     {Name = "Toggle World Item Tooltips", ID = "EpipEncounters_ToggleWorldTooltips"},
-    {Name = "Quick Examine", ID = "EpipEncounters_QuickExamine", DefaultInput1 = {Keys = {"v"}}, Icon = "hotbar_icon_combatlog"},
     {Name = "Examine", ID = "EpipEncounters_Examine"},
 
     -- Hotbar
