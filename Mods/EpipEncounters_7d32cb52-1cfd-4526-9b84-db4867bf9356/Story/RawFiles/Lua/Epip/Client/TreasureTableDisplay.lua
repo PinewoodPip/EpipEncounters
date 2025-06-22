@@ -7,63 +7,7 @@ local Bar = Client.UI.EnemyHealthBar
 
 ---@class Feature_TreasureTableDisplay : Feature
 local TTD = {
-    -- Treasure tables checked and their display name. Use AddTreasureTable() to add more.
-    ---@type table<string, TreasureTableDisplayEntry>
-    TREASURE_TABLES = {
-        TinyBoss = {
-            Name = "Tiny Boss",
-            ArtifactChance = 0.33,
-        },
-        MiniBoss = {
-            Name = "Mini Boss",
-            ArtifactChance = 0.5,
-        },
-        ST_AMER_UNI = {
-            Name = "Artifact",
-            ArtifactChance = 1,
-        },
-        AMER_UNI_Cheat = {
-            Name = "All Artifacts",
-            ArtifactChance = 1,
-        },
-        RewardCombat = {
-            Name = "Combat Reward",
-            ArtifactChance = 1/26,
-        },
-        RewardMedium = {
-            Name = "Medium Reward",
-            ArtifactChance = 1/20,
-        },
-        RewardBig = {
-            Name = "Big Reward",
-            ArtifactChance = 1/5,
-            ProteanChance = 1/5,
-        },
-        QuestReward_Hard_Choice_6 = {
-            Name = "Hard Quest Reward",
-            ArtifactChance = 0.5,
-        },
-        QuestReward_Impossible_Choice_4 = {
-            Name = "Impossible Quest Reward",
-            ArtifactChance = 0.5,
-        },
-        QuestReward_Impossible_Choice_6 = {
-            Name = "Impossible Quest Reward",
-            ArtifactChance = 0.5,
-        },
-        MiniBoss_ArtifactAlways = {
-            Name = "Mini Boss",
-            ArtifactChance = 1,
-        },
-        MiniBoss_ProteanAlways = {
-            Name = "Mini Boss",
-            ProteanChance = 1,
-        },
-        MegaBoss = {
-            Name = "Mega Boss",
-            ProteanChance = 1,
-        },
-    },
+    LABEL_SIZE = 14.5,
 
     TranslatedStrings = {
         Setting_Enabled_Name = {
@@ -75,6 +19,109 @@ local TTD = {
             Handle = "h9cd1245egdfdeg4cbbgbae7gfa179a954eac",
             Text = "If enabled, the health bar when you hover over characters and items will show their treasure table (if relevant) as well as the chance of getting an artifact. For characters, this requires holding the Show Sneak Cones key (shift by default)",
             ContextDescription = "Treasure table display setting tooltip",
+        },
+
+        Label_ArtifactAprilFools = {
+            Handle = "ha388e4dfg01b9g4c71g8114g49a1d94a940b",
+            Text = "THIS ONE CAN HAVE ARTIFACT !!!!<br>CLICK IT <font size='42'>NOW</font>",
+            ContextDescription = [[Label shown on items with artifact treasure tables during April Fools]],
+        },
+
+        Label_Treasure = {
+            Handle = "h40ce8995g1bbeg40d6gb009g3c9e8a9c7b38",
+            Text = "Treasure: %s",
+            ContextDescription = [[Label for characters/items with relevant treasure tables. Param is the name of the treasure table.]],
+        },
+        Label_GuaranteedArtifact = {
+            Handle = "h37e691e4g9d5eg4a14g8e9agd76a02fb955f",
+            Text = "Guaranteed Artifact",
+            ContextDescription = [[Label for treasure tables that always give an artifact]],
+        },
+        Label_ArtifactChance = {
+            Handle = "h55e06232g49d9g42aegbe39g422c9cfa234d",
+            Text = "Artifact Chance: %s%%",
+            ContextDescription = [[Label for treasure tables with artifacts. Param is artifact chance.]],
+        },
+        Label_GuaranteedProtean = {
+            Handle = "h53d36548g5ce7g460cg8a6fgffe81bdc7cf0",
+            Text = "Guaranteed Protean",
+            ContextDescription = [[Label for treasure tables that always give a protean]],
+        },
+        Label_ProteanChance = {
+            Handle = "h6f017814g60ffg42cag980ag754cf8a028f4",
+            Text = "Protean Chance: %s%%",
+            ContextDescription = [[Label for treasure tables with proteans. Param is protean chance.]],
+        },
+
+        TreasureTable_TinyBoss = {
+            Handle = "h6f1fb76dgb892g44a3gb6ffge807500fd288",
+            Text = "Tiny Boss",
+            ContextDescription = [[Treasure table name for TinyBoss]],
+        },
+        TreasureTable_MiniBoss = {
+            Handle = "hace7c5feg45c7g4d47ga27cg3d18d2597ffc",
+            Text = "Mini Boss",
+            ContextDescription = [[Treasure table name for MiniBoss]],
+        },
+        TreasureTable_Artifact = {
+            Handle = "hd82e9005g842cg41daga3efgfc1f0e999e44",
+            Text = "Artifact",
+            ContextDescription = [[Treasure table name for ST_AMER_UNI]],
+        },
+        TreasureTable_RewardCombat = {
+            Handle = "hacb3ef1bg1d2ag4432g9a4fg060f794c0314",
+            Text = "Combat Reward",
+            ContextDescription = [[Treasure table name for RewardCombat]],
+        },
+        TreasureTable_RewardMedium = {
+            Handle = "hcce330e6gf2b8g4c49gba57ge8a920543146",
+            Text = "Medium Reward",
+            ContextDescription = [[Treasure table name for RewardMedium]],
+        },
+        TreasureTable_RewardBig = {
+            Handle = "h167a1cdfg859fg4c05gab86g1acf11a9e62b",
+            Text = "Big Reward",
+            ContextDescription = [[Treasure table name for RewardBig]],
+        },
+        TreasureTable_QuestReward_Hard_Choice_6 = {
+            Handle = "h37eee33bgb5bdg4ea2g89c7g3553daef3a14",
+            Text = "Hard Quest Reward",
+            ContextDescription = [[Treasure table name for QuestReward_Hard_Choice_6]],
+        },
+        TreasureTable_QuestReward_Impossible_Choice_4 = {
+            Handle = "h57bd9a78g6f13g42d0gb379g1983838f129d",
+            Text = "Impossible Quest Reward",
+            ContextDescription = [[Treasure table name for QuestReward_Impossible_Choice_4]],
+        },
+        TreasureTable_QuestReward_Impossible_Choice_6 = {
+            Handle = "h7cd46932ga606g4d18g99dcg3545b9770930",
+            Text = "Impossible Quest Reward",
+            ContextDescription = [[Treasure table name for QuestReward_Impossible_Choice_6]],
+        },
+        TreasureTable_MiniBoss_ArtifactAlways = {
+            Handle = "h3a8d17fdg5b5fg4014g87f2g1d110bb7a4f2",
+            Text = "Mini Boss",
+            ContextDescription = [[Treasure table name for MiniBoss_ArtifactAlways]],
+        },
+        TreasureTable_MiniBoss_ProteanAlways = {
+            Handle = "h68a2c359g6d13g4c26g8cf9g4e50f2e815e6",
+            Text = "Mini Boss",
+            ContextDescription = [[Treasure table name for MiniBoss_ProteanAlways]],
+        },
+        TreasureTable_MegaBoss = {
+            Handle = "h4129a99egbc81g4f46g836eg187fc4e03a73",
+            Text = "Mega Boss",
+            ContextDescription = [[Treasure table name for Megaboss]],
+        },
+        TreasureTable_OmegaBoss = {
+            Handle = "ha29d7114g7e3ag4ff3g9297g11f7159c2255",
+            Text = "Omega Boss",
+            ContextDescription = [[Treasure table name for OmegaBoss]],
+        },
+        TreasureTable_MicroBoss = {
+            Handle = "h22488442gbbbcg41efga8e2g3ae781f53b9e",
+            Text = "Micro Boss",
+            ContextDescription = [[Treasure table name for MicroBoss]],
         },
     },
     Settings = {},
@@ -89,6 +136,60 @@ local TTD = {
 Epip.RegisterFeature("TreasureTableDisplay", TTD)
 local TSK = TTD.TranslatedStrings
 
+-- Treasure tables checked and their display name. Use AddTreasureTable() to add more.
+---@type table<string, TreasureTableDisplayEntry>
+TTD.TREASURE_TABLES = {
+    TinyBoss = {
+        Name = TSK.TreasureTable_TinyBoss,
+        ArtifactChance = 0.33,
+    },
+    MiniBoss = {
+        Name = TSK.TreasureTable_MiniBoss,
+        ArtifactChance = 0.5,
+    },
+    ST_AMER_UNI = {
+        Name = TSK.TreasureTable_Artifact,
+        ArtifactChance = 1,
+    },
+    RewardCombat = {
+        Name = TSK.TreasureTable_RewardCombat,
+        ArtifactChance = 1/26,
+    },
+    RewardMedium = {
+        Name = TSK.TreasureTable_RewardMedium,
+        ArtifactChance = 1/20,
+    },
+    RewardBig = {
+        Name = TSK.TreasureTable_RewardBig,
+        ArtifactChance = 1/5,
+        ProteanChance = 1/5,
+    },
+    QuestReward_Hard_Choice_6 = {
+        Name = TSK.TreasureTable_QuestReward_Hard_Choice_6,
+        ArtifactChance = 0.5,
+    },
+    QuestReward_Impossible_Choice_4 = {
+        Name = TSK.TreasureTable_QuestReward_Impossible_Choice_4,
+        ArtifactChance = 0.5,
+    },
+    QuestReward_Impossible_Choice_6 = {
+        Name = TSK.TreasureTable_QuestReward_Impossible_Choice_6,
+        ArtifactChance = 0.5,
+    },
+    MiniBoss_ArtifactAlways = {
+        Name = TSK.TreasureTable_MiniBoss_ArtifactAlways,
+        ArtifactChance = 1,
+    },
+    MiniBoss_ProteanAlways = {
+        Name = TSK.TreasureTable_MiniBoss_ProteanAlways,
+        ProteanChance = 1,
+    },
+    MegaBoss = {
+        Name = TSK.TreasureTable_MegaBoss,
+        ProteanChance = 1,
+    },
+}
+
 ---------------------------------------------
 -- EVENTS/HOOKS
 ---------------------------------------------
@@ -102,9 +203,9 @@ local TSK = TTD.TranslatedStrings
 ---------------------------------------------
 
 ---@class TreasureTableDisplayEntry
----@field Name string
----@field ArtifactChance? number
----@field ProteanChance? number
+---@field Name TextLib.String
+---@field ArtifactChance number?
+---@field ProteanChance number?
 local _TreasureTableEntry = {
     GetArtifactChance = function(self) return self.ArtifactChance or 0 end,
     GetProteanChance = function(self) return self.ProteanChance or 0 end,
@@ -148,7 +249,6 @@ end
 function TTD.GetTreasureData(entity)
     local treasures = entity.RootTemplate.Treasures
     local tableData
-    
     if #treasures > 0 then
         for _,treasureTableID in ipairs(treasures) do
             tableData = TTD.TREASURE_TABLES[treasureTableID]
@@ -197,36 +297,39 @@ Bar.Hooks.GetBottomLabel:Subscribe(function (ev)
         local treasureData = TTD.GetTreasureData(entity)
 
         if treasureData then
-            local addendum = "Treasure: " .. treasureData.Name
-            
+            local addendum = TSK.Label_Treasure:Format(Text.Resolve(treasureData.Name))
+
+            -- Get artifact & protean chances
             local artifactChance = treasureData:GetArtifactChance()
             local proteanChance = treasureData:GetProteanChance()
 
+            -- Add artifact label
             if artifactChance > 0 then
                 if artifactChance >= 1 then
-                    addendum = addendum .. "\nGuaranteed Artifact"
+                    addendum = addendum .. "\n" .. TSK.Label_GuaranteedArtifact:GetString()
                 else
                     local chanceDisplay = Text.Round(artifactChance * 100, 2)
 
-                    addendum = addendum .. "\nArtifact Chance: " .. chanceDisplay .. "%"
+                    addendum = addendum .. "\n" .. TSK.Label_ArtifactChance:Format(chanceDisplay)
                 end
             end
 
+            -- Add protean label
             if proteanChance > 0 then
                 if proteanChance >= 1 then
-                    addendum = addendum .. "\nGuaranteed Protean"
+                    addendum = addendum .. "\n" .. TSK.Label_GuaranteedProtean:GetString()
                 else
                     local chanceDisplay = Text.Round(proteanChance * 100, 2)
 
-                    addendum = addendum .. string.format("\nProtean Chance: %s%%", chanceDisplay)
+                    addendum = addendum .. "\n" .. TSK.Label_ProteanChance:Format(chanceDisplay)
                 end
             end
 
-            table.insert(ev.Labels, "<font size='14.5'>" ..  addendum .. "</font>")
+            table.insert(ev.Labels, Text.Format(addendum, {Size = TTD.LABEL_SIZE}))
 
             -- lmao will keep this one for 2023. See you then
             if item and Epip.IsAprilFools() then
-                table.insert(ev.Labels, "\n<font size='30'>THIS ONE CAN HAVE ARTIFACT !!!!\nCLICK IT <font size='42'>NOW</font></font>\n           |\n           |\n           |\n           V")
+                table.insert(ev.Labels, string.format("\n<font size='30'>%s</font>\n   |\n   |\n   |\n   V", TSK.Label_ArtifactAprilFools:GetString()))
             end
         end
     end
@@ -242,6 +345,6 @@ end
 
 -- Derpy compatibility
 if Mod.IsLoaded(Mod.GUIDS.EE_DERPY) then
-    TTD.AddTreasureTable("OmegaBoss", {Name = "Omega Boss", ProteanChance = 1})
-    TTD.AddTreasureTable("MicroBoss", {Name = "Micro Boss"})
+    TTD.AddTreasureTable("OmegaBoss", {Name = TSK.TreasureTable_OmegaBoss, ProteanChance = 1})
+    TTD.AddTreasureTable("MicroBoss", {Name = TSK.TreasureTable_MicroBoss})
 end
