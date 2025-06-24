@@ -213,7 +213,7 @@ LOAD_ORDER = {
     },
     "EpipEncountersServer.lua",
 
-    "Epip/Server/Shroud.lua",
+    "Epip/ShroudToggle/Server.lua",
     "Epip/Server/AMERUI_Controller.lua",
 
     "Epip/Server/AutoIdentify.lua",
