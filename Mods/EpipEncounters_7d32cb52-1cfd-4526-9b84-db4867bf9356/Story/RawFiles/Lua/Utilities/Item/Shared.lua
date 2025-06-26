@@ -764,7 +764,7 @@ end
 function Item.GetWeight(item, recursive)
     if recursive == nil then recursive = true end
     local stat = Ext.Stats.Get(item.StatsId) ---@type StatsLib_StatsEntry_Object|StatsLib_StatsEntry_Potion|StatsLib_StatsEntry_Shield|StatsLib_StatsEntry_Weapon
-    local weight = stat.Weight
+    local weight = stat and stat.Weight or 0 -- Items with no stats have no weight.
     if item.BaseWeightOverwrite > -1 then
         weight = item.BaseWeightOverwrite
     end
