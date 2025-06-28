@@ -180,6 +180,12 @@ function GameState.IsInRunningSession()
     return GameState.GetState() == "Running"
 end
 
+---Returns whether the game state is within a Game Master session (either prepare or play modes).
+---@return boolean
+function GameState.IsInGameMasterMode()
+    return Ext.Utils.GetGameMode() == "GameMaster"
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------

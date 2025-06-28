@@ -309,4 +309,6 @@ GameState.Events.ClientReady:Subscribe(function()
     for _,handle in ipairs(CharacterSheet.CUSTOM_STATS_TAB_TSKHANDLES) do
         Text.SetTranslatedString(handle, label)
     end
-end)
+end, {EnabledFunctor = function ()
+    return UIOverrideToggles.Settings.EnableCharacterSheetOverride:GetValue() == true and not GameState.IsInGameMasterMode() -- Do not change the label in GM mode, as this tab is used for its original custom stats purpose there instead.
+end})

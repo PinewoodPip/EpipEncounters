@@ -3,6 +3,7 @@
 -- Scripting for the custom stats tab.
 ---------------------------------------------
 
+local UIOverrideToggles = Epip.GetFeature("Features.UIOverrideToggles")
 local CustomStats = Epip.GetFeature("Feature_CustomStats")
 
 ---@class CharacterSheetUIStatsTab : Library
@@ -205,7 +206,7 @@ end
 ---Call to perform a full re-render of the tab.
 ---TODO some SetDirty call to prevent infinite loops with multiple modules calling this?
 function StatsTab.RenderStats()
-    if not CharacterSheet:IsVisible() then return nil end
+    if not CharacterSheet:IsVisible() or not StatsTab:IsEnabled() then return nil end
 
     local root = CharacterSheet:GetRoot()
     local stats = root.stats_mc
@@ -231,6 +232,12 @@ end
 function StatsTab.RegisterStatValueFormatHook(stat, handler)
     CustomStats:LogWarning("StatValueFormatHook is deprecated: " .. stat)
     StatsTab:RegisterHook("FormatStatValue_" .. stat, handler)
+end
+
+---Returns whether the game & settings config is in a state where the stats tab is applicable.
+---@return boolean
+function StatsTab:IsEnabled()
+    return UIOverrideToggles.Settings.EnableCharacterSheetOverride:GetValue() == true and not GameState.IsInGameMasterMode()
 end
 
 ---------------------------------------------
@@ -309,8 +316,31 @@ local function ShowCustomStatTooltip(ui, _, elementID, ...)
     ui:ExternalInterfaceCall("showTalentTooltip", StatsTab.TOOLTIP_TALENT_ID, ...)
 end
 
+-- Render the vanilla custom stats if the feature is disabled.
+-- Necessary as the swf was modified to remove this scripting from it.
+CharacterSheet:RegisterInvokeListener("updateArraySystem", function (ev)
+    if StatsTab:IsEnabled() then return end
+    local root = ev.UI:GetRoot()
+    local arr = root.customStats_array
+    local stats = root.stats_mc
+
+    -- Render custom stats
+    stats.clearCustomStatsOptions()
+    for i=0,#arr-1,3 do
+        if arr[i] < 0 then break end -- Recreated from original code.
+        stats.addCustomStat(arr[i], arr[i + 1], arr[i + 2])
+    end
+
+    -- Reposition value labels
+    local elementsArr = stats.customStats_mc.list.content_array
+    for i=0,#elementsArr-1,1 do
+        local element = elementsArr[i]
+        element.text_txt.x = 250
+    end
+end)
+
 Ext.Events.SessionLoaded:Subscribe(function()
-    if Client.IsUsingController() then return end
+    if Client.IsUsingController() or not StatsTab:IsEnabled() then return end -- Do nothing if the character sheet override is disabled.
     local ui = CharacterSheet:GetUI()
 
     Ext.RegisterUICall(ui, "pipRenderCustomStats", function (_, _)
