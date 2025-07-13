@@ -375,6 +375,13 @@ end, {StringID = "DefaultImplementation.LineOfSight"})
 Input.Events.ActionExecuted:Subscribe(function (ev)
     if ev.Action.ID == QuickLoot.InputActions.Search.ID then
         local char = Client.GetCharacter()
+
+        -- If the character is moving, attempt to stop them first.
+        if Character.IsMoving(char) and Client.IsUsingKeyboardAndMouse() then
+            Client.Input.Inject("Mouse", "right2", "Pressed")
+            Client.Input.Inject("Mouse", "right2", "Released")
+        end
+
         if QuickLoot.CanSearch(char) then
             QuickLoot.StartSearch(char)
             Notification.ShowWarning(TSK.Notification_Searching:GetString(), 0.5)
