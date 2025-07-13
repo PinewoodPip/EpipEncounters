@@ -358,7 +358,8 @@ function UI._Initialize()
     -- Show "Take all" binding in tooltip.
     -- Will not update if rebound mid-session - TODO?
     local takeAllBinding = Input.GetBinding("UITakeAll", "Key")
-    lootAllButton:SetTooltip("Simple", CommonStrings.KeybindHint:Format(Input.StringifyBinding(takeAllBinding:ToKeyCombination())))
+    local keybindLabel = takeAllBinding and CommonStrings.KeybindHint:Format(Input.StringifyBinding(takeAllBinding:ToKeyCombination())) or ""
+    lootAllButton:SetTooltip("Simple", TSK.Tooltip_LootAll:Format(keybindLabel))
     UI.LootAllButton = lootAllButton
 
     local scrollList = bg:AddChild("Items", "GenericUI_Element_ScrollList")

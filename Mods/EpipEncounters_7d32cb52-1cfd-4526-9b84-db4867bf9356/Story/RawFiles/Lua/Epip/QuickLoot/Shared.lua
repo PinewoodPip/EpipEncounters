@@ -50,6 +50,11 @@ local QuickLoot = {
             Text = "Left-click to loot, right-click to loot as wares.",
             ContextDescription = [[Tooltip hint for items within the UI]],
         },
+        Tooltip_LootAll = {
+            Handle = "h8b644327gb5dag4a16ga237g8208c5db6f32",
+            Text = "%s<br>Right-click to loot all items as wares.",
+            ContextDescription = [[Tooltip for "Loot All" button. Param is keybind for the loot all action]],
+        },
         Notification_NoLootNearby = {
             Handle = "h75d9d7f6g8200g43ffg9ef6g10a48ab961a6",
             Text = "No loot found nearby.",
