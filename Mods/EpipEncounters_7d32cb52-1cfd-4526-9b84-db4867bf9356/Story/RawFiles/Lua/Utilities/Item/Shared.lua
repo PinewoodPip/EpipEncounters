@@ -1129,6 +1129,20 @@ function Item.IsMarkedAsWares(item)
     return item.Flags["DontAddToBottomBar"]
 end
 
+---Sets an item to be marked as wares.
+---@param item EclItem Must be an item in the party inventory. **Will be re-added to the inventory to properly refresh UIs.**
+---@param isWares boolean
+function Item.SetMarkedAsWares(item, isWares)
+    local owner = Osiris.ItemGetOwner(item)
+    item.DontAddToHotbar = isWares
+
+    -- Necessary to properly update the inventory UI, else the item will not show in the correct categories.
+    -- We don't have access to it on the client, so we set it from the server and force a sync.
+    -- Unfortunately, this will also cause the item to be moved to the first empty slot.
+    Osiris.ItemToInventory(item, owner, item.Amount, 0, 0)
+    item.ForceClientSync = true
+end
+
 ---Returns whether an item is locked.
 ---@param item Item
 ---@return boolean

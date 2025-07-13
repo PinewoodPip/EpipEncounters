@@ -84,7 +84,8 @@ end
 
 ---Requests to loot an item.
 ---@param item EclItem|integer Item or slot index.
-function UI.LootItem(item)
+---@param asWares boolean? If `true`, the item will also be added to wares.
+function UI.LootItem(item, asWares)
     local slotIndex
     if GetExtType(item) ~= nil then
         slotIndex = UI._GetItemIndex(item)
@@ -93,7 +94,7 @@ function UI.LootItem(item)
         item = Item.Get(UI._State.ItemHandles[slotIndex])
     end
 
-    QuickLoot.RequestPickUp(Client.GetCharacter(), item)
+    QuickLoot.RequestPickUp(Client.GetCharacter(), item, asWares)
     UI:PlaySound(UI.PICKUP_SOUND) -- This sound is normally different per-item, however we cannot recreate that.
 
     UI.RemoveItem(item)
@@ -111,14 +112,15 @@ function UI.Refresh()
 end
 
 ---Requests to loot all items in the UI.
-function UI.LootAll()
+---@param asWares boolean? If `true`, all items will be added to wares.
+function UI.LootAll(asWares)
     local char = UI.GetCharacter()
     local lootedAny = false
     local lootedAll = true
     UI._LootallRequestRemainingWeight = Character.GetMaxCarryWeight(char) - Character.GetCarryWeight(char)
     for _,item in ipairs(UI.GetItems()) do
         -- No need to update bookkeeping of the UI, as we can just empty/hide it right afterwards.
-        local looted = QuickLoot.RequestPickUp(char, item)
+        local looted = QuickLoot.RequestPickUp(char, item, asWares)
         if looted then
             UI._LootallRequestRemainingWeight = UI._LootallRequestRemainingWeight - Item.GetWeight(item, true)
         end
@@ -350,6 +352,9 @@ function UI._Initialize()
     lootAllButton.Events.Pressed:Subscribe(function (_)
         UI.LootAll()
     end)
+    lootAllButton.Events.RightClicked:Subscribe(function (_)
+        UI.LootAll(true) -- Loot all as wares.
+    end)
     -- Show "Take all" binding in tooltip.
     -- Will not update if rebound mid-session - TODO?
     local takeAllBinding = Input.GetBinding("UITakeAll", "Key")
@@ -372,6 +377,9 @@ function UI._Initialize()
         slot.Events.Clicked:Subscribe(function (_)
             UI.LootItem(slot.Object:GetEntity())
         end, {StringID = "PickUpItem"})
+        slot:GetRootElement().Events.RightClick:Subscribe(function (_)
+            UI.LootItem(slot.Object:GetEntity(), true) -- Right-click loots as wares.
+        end)
         -- Position tooltips to the right of the panel.
         slot.Hooks.GetTooltipData:Subscribe(function (ev)
             ev.Position = V(UI:GetPosition()) + V(UI.BACKGROUND_SIZE[1] - 15, 3)
@@ -505,7 +513,10 @@ end, {StringID = "DefaultImplementation"})
 -- Append source container/corpse to item tooltips, as well as warnings for items that cannot be picked up.
 Tooltip.Hooks.RenderItemTooltip:Subscribe(function (ev)
     if UI:IsVisible() then
-        local sourceLabel = nil ---@type string? 
+        local element = ev.Tooltip:GetFirstElement("ItemDescription")
+        local hadElement = element ~= nil
+        local infix = element == nil and "" or "<br><br>" -- Don't append line breaks if there was no element before.
+        local sourceLabel = nil ---@type string?
 
         -- Check item source
         -- The tooltip might be from another UI, or the item might've been moved out by another character in the meantime.
@@ -525,13 +536,14 @@ Tooltip.Hooks.RenderItemTooltip:Subscribe(function (ev)
         end
 
         -- Append source label.
-        local element = ev.Tooltip:GetFirstElement("ItemDescription")
-        local hadElement = element ~= nil
         local labels = {} ---@type string[]
-        local infix = element == nil and "" or "<br><br>" -- Don't append line breaks if there was no element before.
         if sourceLabel then
             table.insert(labels, sourceLabel)
         end
+
+        -- Append hint on looting controls
+        -- TODO make these different for controller
+        table.insert(labels, TSK.Label_LootingHint:GetString())
 
         -- Append overencumbrance warning.
         if Character.ItemWouldOverencumber(Client.GetCharacter(), ev.Item) then

@@ -11,14 +11,19 @@ local QuickLoot = Epip.GetFeature("Features.QuickLoot")
 ---Picks up an item to char's inventory.
 ---@param char EsvCharacter
 ---@param item EsvItem
-function QuickLoot.PickUpItem(char, item)
+---@param addToWares boolean? If `true`, the item will also be added to wares.
+function QuickLoot.PickUpItem(char, item, addToWares)
     -- If the item has story usage, emulate the event to *hopefully* trigger any scripted events.
     -- This is not a comprehensive solution, but should cover the general cases, ex. pulling Spear of Braccus Rex.
     if Item.HasUseAction(item, "StoryUse") then
         Osiris.CharacterUsedItem(char, item)
     end
 
+    -- Loot the item.
     Osiris.ItemToInventory(item, char, item.Amount, 1, 0)
+    if addToWares then
+        Item.SetMarkedAsWares(item, true)
+    end
 
     -- Does not appear to work.
     -- Osiris.CharacterPlayHUDSoundResource(char, item.CurrentTemplate.PickupSound)
@@ -49,7 +54,7 @@ Net.RegisterListener(QuickLoot.NETMSG_PICKUP_ITEM, function (payload)
     if payload.PlayLootingEffect then
         QuickLoot.PlayLootingEffect(char, item)
     end
-    QuickLoot.PickUpItem(char, item)
+    QuickLoot.PickUpItem(char, item, payload.AddToWares)
 end)
 
 Net.RegisterListener(QuickLoot.NETMSG_GENERATE_TREASURE, function (payload)

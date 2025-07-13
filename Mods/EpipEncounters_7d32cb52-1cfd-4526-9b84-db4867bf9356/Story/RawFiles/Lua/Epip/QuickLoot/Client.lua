@@ -131,14 +131,17 @@ end
 ---@see Features.QuickLoot.Hooks.CanPickupItem
 ---@param char EclCharacter
 ---@param item EclItem
+---@param asWares boolean? If `true`, the item will also be added to wares.
 ---@return boolean -- Whether the request succeeded.
-function QuickLoot.RequestPickUp(char, item)
+function QuickLoot.RequestPickUp(char, item, asWares)
+    if asWares == nil then asWares = false end
     local canPickup = QuickLoot.CanPickUp(char, item)
     if canPickup then
         Net.PostToServer(QuickLoot.NETMSG_PICKUP_ITEM, {
             CharacterNetID = char.NetID,
             ItemNetID = item.NetID,
             PlayLootingEffect = QuickLoot.Settings.LootingEffect:GetValue() == true,
+            AddToWares = asWares,
         })
     end
     return canPickup

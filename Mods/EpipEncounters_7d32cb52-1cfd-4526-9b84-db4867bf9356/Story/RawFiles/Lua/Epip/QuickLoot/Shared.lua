@@ -45,6 +45,11 @@ local QuickLoot = {
             Text = "On the ground.",
             ContextDescription = [[Tooltip for source of items laying on the ground]],
         },
+        Label_LootingHint = {
+            Handle = "h6b8490dcg409dg47c7gb49bg76989ace163f",
+            Text = "Left-click to loot, right-click to loot as wares.",
+            ContextDescription = [[Tooltip hint for items within the UI]],
+        },
         Notification_NoLootNearby = {
             Handle = "h75d9d7f6g8200g43ffg9ef6g10a48ab961a6",
             Text = "No loot found nearby.",
@@ -336,6 +341,7 @@ QuickLoot.Settings.LootingEffect = QuickLoot:RegisterSetting("LootingEffect", {
 
 ---@class Features.QuickLoot.NetMsgs.PickUp : NetLib_Message_Character, NetLib_Message_Item
 ---@field PlayLootingEffect boolean
+---@field AddToWares boolean
 
 ---@class Features.QuickLoot.NetMsgs.GenerateTreasure : NetLib_Message_Character
 ---@field ItemNetIDs NetId[]
