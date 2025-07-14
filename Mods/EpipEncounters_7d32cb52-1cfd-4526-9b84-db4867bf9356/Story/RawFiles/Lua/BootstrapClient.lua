@@ -554,6 +554,7 @@ LOAD_ORDER = {
     "Epip/Client/CraftingFixes.lua",
     "Epip/SkillbookIconsFix/Client.lua",
     "Epip/AreaInteractFix/Client.lua",
+    "Epip/BookLayerFix/Client.lua",
     "Epip/UserVarsGUIDSyncWorkaround/Client.lua",
     "Epip/Client/RewardItemComparison.lua",
     {ScriptSet = "Epip/HotbarTweaks"},
