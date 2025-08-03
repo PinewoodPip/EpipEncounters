@@ -13,6 +13,15 @@ local StatusConsole = {
         ALLIED_TURN = 3,
         ENEMY_TURN = 4,
     },
+
+    -- IDs of buttons by the health bar.
+    BUTTON_IDS = {
+        END_TURN = 0,
+        DELAY_TURN = 1,
+        FLEE = 2,
+        TO_GM = 3, -- "To game master" button.
+    },
+
     visible = true,
     modulesRequestingHide = {},
 
@@ -55,7 +64,7 @@ function StatusConsole.Toggle(visible, requestID)
         if not visible then
             StatusConsole.modulesRequestingHide[requestID] = true
         else
-            StatusConsole.modulesRequestingHide[requestID] = false
+            StatusConsole.modulesRequestingHide[requestID] = nil
         end
 
         local newState = StatusConsole.ShouldBeVisible()
@@ -77,12 +86,7 @@ end
 -- Returns false if any module is requesting the UI to remain hidden.
 -- Meaning hide requests take priority over showing.
 function StatusConsole.ShouldBeVisible()
-    for module,status in pairs(StatusConsole.modulesRequestingHide) do
-        if status then
-            return false
-        end
-    end
-    return true
+    return next(StatusConsole.modulesRequestingHide) == nil
 end
 
 ---Updates position based on hotbar bar count.
@@ -138,6 +142,7 @@ StatusConsole:RegisterInvokeListener("setSourcePoints", function(ev, available)
     list.x = list.x - ((15 * max + (max - 2) * 5) // 2)
 end, "After")
 
+---@diagnostic disable-next-line: unused-local
 local function OnHealthBarUpdate(uiObj, method, param3, num1, str1, bool1)
     local root = uiObj:GetRoot()
     local char = Ext.GetCharacter(uiObj:GetPlayerHandle())
