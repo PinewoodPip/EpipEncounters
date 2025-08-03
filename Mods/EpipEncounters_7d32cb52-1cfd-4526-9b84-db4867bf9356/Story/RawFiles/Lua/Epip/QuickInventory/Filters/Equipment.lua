@@ -207,7 +207,9 @@ QuickInventory.Settings.ArmorSubType = QuickInventory:RegisterSetting("ArmorSubT
     },
 })
 
-QuickInventory.Settings.Rarity = QuickInventory:RegisterSetting("Rarity", {
+-- Rarity setting
+---@type SettingsLib_Setting_Choice
+local raritySetting = {
     Type = "Choice",
     Name = CommonStrings.Rarity,
     DefaultValue = "Any",
@@ -221,9 +223,13 @@ QuickInventory.Settings.Rarity = QuickInventory:RegisterSetting("Rarity", {
         {ID = "Legendary", NameHandle = Item.RARITY_HANDLES.LEGENDARY},
         {ID = "Divine", NameHandle = Item.RARITY_HANDLES.DIVINE},
         {ID = "Unique", NameHandle = Item.RARITY_HANDLES.UNIQUE},
-        {ID = "Artifact", NameHandle = CommonStrings.Artifact.Handle}, -- TODO hide outside of EE
     },
-})
+}
+-- Add Artifact choice when using EE
+if EpicEncounters.IsEnabled() then
+    table.insert(raritySetting.Choices, {ID = "Artifact", NameHandle = CommonStrings.Artifact.Handle})
+end
+QuickInventory.Settings.Rarity = QuickInventory:RegisterSetting("Rarity", raritySetting)
 
 QuickInventory.Settings.DynamicStat = QuickInventory:RegisterSetting("DynamicStat", {
     Type = "String",
