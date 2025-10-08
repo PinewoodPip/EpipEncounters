@@ -41,6 +41,7 @@ UI.Events.Opened = UI:AddSubscribableEvent("Opened") ---@type Event<Empty>
 
 UI._State = nil ---@type Features.QuickLoot.UI.State?
 UI._LootallRequestRemainingWeight = nil ---@type integer? Necessary to prevent overencumbrance, as looting operations are asynchronous and thus character inventory weight doesn't update right after a request.
+UI._HighlightedEntityHandle = nil ---@type ItemHandle? The entity currently highlighted in the world to denote a selected item in the UI. In the case of items in containers/corpses, this will be the container/corpse. 
 
 UI.Hooks.GetSettings = UI:AddSubscribableHook("GetSettings") ---@type Hook<{Settings:SettingsLib_Setting[]}> Fired only once when the UI is first opened.
 
@@ -165,7 +166,7 @@ end
 
 ---Returns the container or corpse that contains the item.
 ---@param item EclItem Must be currently within the UI.
----@return EclItem|EclCharacter
+---@return (EclItem|EclCharacter)? -- `nil` if the item is on the ground.
 function UI.GetItemSource(item)
     local handleMap = UI._State.HandleMaps
     local containerHandle, corpseHandle = handleMap.ItemHandleToContainerHandle[item.Handle], handleMap.ItemHandleToCorpseHandle[item.Handle]
@@ -310,6 +311,30 @@ function UI._RenderItem(item)
     slot:SetUpdateDelay(-1)
 
     state.ItemHandleToSlot[item.Handle] = slot
+end
+
+---Sets an item's source to be highlighted in the world with an outline.
+---Will clear the outline of the previously-highlighted item.
+---@param selectedItem EclItem? `nil` to clear highlight.
+function UI._SetHighlightedItem(selectedItem)
+    local sourceEntity = selectedItem and UI.GetItemSource(selectedItem) or selectedItem
+    local previousHandle = UI._HighlightedEntityHandle
+
+    -- Clear previous highlight
+    if previousHandle then
+        local previousEntity = Entity.GetGameObjectComponent(previousHandle)
+        if previousEntity then
+            Entity.SetHighlight(previousHandle, Entity.HIGHLIGHT_TYPES.NONE)
+        end
+    end
+
+    -- Set new highlight
+    if sourceEntity then
+        Entity.SetHighlight(sourceEntity.Handle, Entity.HIGHLIGHT_TYPES.SELECTED)
+    end
+
+    -- Update bookkeeping
+    UI._HighlightedEntityHandle = sourceEntity and sourceEntity.Handle or nil
 end
 
 ---Returns the slot index of an item.
@@ -561,6 +586,24 @@ Tooltip.Hooks.RenderItemTooltip:Subscribe(function (ev)
         end
     end
 end)
+
+-- Highlight source containers/corpses when items are selected in the UI.
+Tooltip.Hooks.RenderItemTooltip:Subscribe(function (ev)
+    -- Check whether the item is in Quick Loot
+    -- The tooltip might be from another UI, or the item might've been moved out by another character in the meantime.
+    local isInUI = UI.IsItemInUI(ev.Item)
+    if isInUI then
+        UI._SetHighlightedItem(ev.Item)
+    end
+end, {EnabledFunctor = function ()
+    return UI:IsVisible()
+end})
+-- Clear highlights when items are deselected.
+Tooltip.Events.TooltipHidden:Subscribe(function (_)
+    UI._SetHighlightedItem(nil)
+end, {EnabledFunctor = function ()
+    return UI:IsVisible()
+end})
 
 -- Do not allow looting more items if they were to overencumber the character considering the current request.
 QuickLoot.Hooks.CanPickupItem:Subscribe(function (ev)
