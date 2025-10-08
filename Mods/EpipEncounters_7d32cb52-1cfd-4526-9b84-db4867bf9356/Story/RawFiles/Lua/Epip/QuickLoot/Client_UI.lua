@@ -38,6 +38,7 @@ UI.UIOBJECT_PANEL_EXTRA_WIDTH = 300 -- Extra width for panel size.
 UI.Events = UI.Events
 UI.Events.Initialized = UI:AddSubscribableEvent("Initialized") ---@type Event<Empty>
 UI.Events.Opened = UI:AddSubscribableEvent("Opened") ---@type Event<Empty>
+UI.Hooks.GetLootAllItems = UI:AddSubscribableHook("GetLootAllItems") ---@type Hook<Features.QuickLoot.UI.Hooks.GetLootAllItems>
 
 UI._State = nil ---@type Features.QuickLoot.UI.State?
 UI._LootallRequestRemainingWeight = nil ---@type integer? Necessary to prevent overencumbrance, as looting operations are asynchronous and thus character inventory weight doesn't update right after a request.
@@ -57,6 +58,10 @@ UILayout.RegisterTrackedUI(UI) -- Persist UI position.
 ---@field LowPriorityItemHandles set<ItemHandle> Items to show as greyed out.
 ---@field ItemHandleToSlot table<ItemHandle, GenericUI_Prefab_HotbarSlot>
 ---@field SearchRadius number
+
+---Thrown when the "Loot all" functionality is used.
+---@class Features.QuickLoot.UI.Hooks.GetLootAllItems
+---@field Items EclItem[] Defaults to all items in the UI.
 
 ---------------------------------------------
 -- METHODS
@@ -118,8 +123,9 @@ function UI.LootAll(asWares)
     local char = UI.GetCharacter()
     local lootedAny = false
     local lootedAll = true
+    local itemsToLoot = UI.GetLootAllItems() -- Items may be excluded from loot-all.
     UI._LootallRequestRemainingWeight = Character.GetMaxCarryWeight(char) - Character.GetCarryWeight(char)
-    for _,item in ipairs(UI.GetItems()) do
+    for _,item in ipairs(itemsToLoot) do
         -- No need to update bookkeeping of the UI, as we can just empty/hide it right afterwards.
         local looted = QuickLoot.RequestPickUp(char, item, asWares)
         if looted then
@@ -148,6 +154,15 @@ end
 ---@return EclItem[]
 function UI.GetItems()
     return Entity.HandleListToEntities(UI._State.ItemHandles, "EclItem")
+end
+
+---Returns the items that are valid to be looted via the "Loot all" button.
+---@see Features.QuickLoot.UI.Hooks.GetLootAllItems
+---@return EclItem[]
+function UI.GetLootAllItems()
+    local items = UI.GetItems()
+    items = UI.Hooks.GetLootAllItems:Throw({Items = items}).Items
+    return items
 end
 
 ---Returns whether an item is in the UI.
@@ -534,6 +549,13 @@ UI.Hooks.GetSettings:Subscribe(function (ev)
     for _,setting in ipairs(defaultSettings) do
         table.insert(ev.Settings, setting)
     end
+end, {StringID = "DefaultImplementation"})
+
+-- Exclude greyed/filtered-out items from the "Loot all" functionality.
+UI.Hooks.GetLootAllItems:Subscribe(function (ev)
+    ev.Items = table.filter(ev.Items, function (item)
+        return not UI._State.LowPriorityItemHandles[item.Handle]
+    end)
 end, {StringID = "DefaultImplementation"})
 
 -- Append source container/corpse to item tooltips, as well as warnings for items that cannot be picked up.
