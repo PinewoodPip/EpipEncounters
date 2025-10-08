@@ -581,8 +581,10 @@ Skills.Hooks.IsSkillValid:Subscribe(function (ev)
         if not valid then goto End end
 
         -- Check school filter
+        -- "Sourcery" filter also includes skills that cost source points.
         local school = Skills.STATABILITY_TO_SCHOOL[stat.Ability]
-        if Skills.IsSchoolFiltered(school) then
+        local isSourceSkill = Stats.IsSourceSkill(stat)
+        if Skills.IsSchoolFiltered(school) and (not isSourceSkill or Skills.IsSchoolFiltered("Sourcery")) then
             valid = false
             goto End
         end

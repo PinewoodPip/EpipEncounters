@@ -497,6 +497,14 @@ function Stats.GetStatusIcon(status)
     return icon
 end
 
+---Returns whether a skill costs source points or belongs to the sourcery school.
+---@param skill StatsLib_StatsEntry_SkillData|skill
+---@return boolean
+function Stats.IsSourceSkill(skill)
+    local stat = GetExtType(skill) and skill or Stats.Get("StatsLib_StatsEntry_SkillData", skill) -- ID overload.
+    return stat["Magic Cost"] > 0 or stat.Ability == "Source"
+end
+
 ---Returns the type of a stats object.
 ---@param statObj StatsObject
 ---@return string -- TODO
