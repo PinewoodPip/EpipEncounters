@@ -1,12 +1,14 @@
 
+---------------------------------------------
+-- Handler for skill cast messages ("X used Y [on Z]").
+---------------------------------------------
+
 local Log = Client.UI.CombatLog
 
----@alias SkillTargetType "Character" | "Ground" | "Self"
-
----@class CombatLogSkillMessage : CombatLogCharacterMessage
+---@class UI.CombatLog.Messages.Skill : UI.CombatLog.Messages.Character
 ---@field Skill string
----@field SkillColor string
----@field Target SkillTargetType
+---@field SkillColor htmlcolor
+---@field Target UI.CombatLog.Messages.Skill.Type
 ---@field TargetCharacter string?
 ---@field TargetCharacterColor string?
 local _Skill = {
@@ -20,36 +22,38 @@ local _Skill = {
         SELF = "Self",
     }
 }
-Inherit(_Skill, Log.MessageTypes.Character)
-Log.MessageTypes.Skill = _Skill
+Log:RegisterClass("UI.CombatLog.Messages.Skill", _Skill, {"UI.CombatLog.Messages.Character"})
+Log.RegisterMessageHandler(_Skill)
+
+---@alias UI.CombatLog.Messages.Skill.Type "Character" | "Ground" | "Self"
 
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
+---Creates a skill message.
 ---@param charName string
 ---@param charColor string
 ---@param skillName string
 ---@param skillColor string
----@param targetType SkillTargetType
+---@param targetType UI.CombatLog.Messages.Skill.Type
 ---@param targetName string?
 ---@param targetColor string?
-function _Skill.Create(charName, charColor, skillName, skillColor, targetType, targetName, targetColor)
-    ---@type CombatLogSkillMessage
-    local obj = Log.MessageTypes.Character.Create(charName, charColor)
-    Inherit(obj, _Skill)
+function _Skill:Create(charName, charColor, skillName, skillColor, targetType, targetName, targetColor)
+    ---@type UI.CombatLog.Messages.Skill
+    return self:__Create({
+        CharacterName = charName,
+        CharacterColor = charColor,
 
-    obj.Skill = skillName
-    obj.SkillColor = skillColor
-    obj.Target = targetType
-    obj.TargetCharacter = targetName
-    obj.TargetCharacterColor = targetColor
-
-    return obj
+        Skill = skillName,
+        SkillColor = skillColor,
+        Target = targetType,
+        TargetCharacter = targetName,
+        TargetCharacterColor = targetColor,
+    })
 end
 
-function _Skill:CanMerge(msg) return false end
-
+---@override
 function _Skill:ToString()
     local targetStr = ""
 
@@ -79,6 +83,7 @@ end
 -- PARSING
 ---------------------------------------------
 
+-- Create message objects.
 Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
     local targetType = _Skill.TARGET_TYPES.CHARACTER
     local charColor, charName, skillColor, skillName, targetColor, targetName = message:match(_Skill.PATTERN_CHARACTER)
@@ -98,7 +103,7 @@ Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
     end
 
     if charColor then
-        obj = _Skill.Create(charName, charColor, skillName, skillColor, targetType, targetName, targetColor)
+        obj = _Skill:Create(charName, charColor, skillName, skillColor, targetType, targetName, targetColor)
     end
 
     return obj

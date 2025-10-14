@@ -1,25 +1,33 @@
 
+---------------------------------------------
+-- Fallback handler for combat log messages that lack them.
+---------------------------------------------
+
 local Log = Client.UI.CombatLog
 
----@class CombatLogUnsupportedMessage : CombatLogMessage
----@field Text string
-local _CombatLogUnsupportedMessage = {}
-setmetatable(_CombatLogUnsupportedMessage, {__index = Client.UI.CombatLog.MessageTypes.Base})
-Client.UI.CombatLog.MessageTypes.Unsupported = _CombatLogUnsupportedMessage
+---@class UI.CombatLog.Messages.Unsupported : UI.CombatLog.Message
+---@field Text string The raw message.
+local _CombatLogUnsupportedMessage = {
+    Type = "Unsupported",
+}
+Log:RegisterClass("UI.CombatLog.Messages.Unsupported", _CombatLogUnsupportedMessage, {"UI.CombatLog.Message"})
+Log.RegisterMessageHandler(_CombatLogUnsupportedMessage)
 
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
+---Creates an unsupported message.
 ---@param str string
----@return CombatLogUnsupportedMessage
-function _CombatLogUnsupportedMessage.Create(str)
-    ---@type CombatLogUnsupportedMessage
-    local obj = {Type = "Unsupported", Text = str}
-
-    setmetatable(obj, {__index = _CombatLogUnsupportedMessage})
-
-    return obj
+---@return UI.CombatLog.Messages.Unsupported
+function _CombatLogUnsupportedMessage:Create(str)
+    ---@type UI.CombatLog.Messages.Unsupported
+    return self:__Create({
+        Text = str
+    })
 end
 
-function _CombatLogUnsupportedMessage:ToString() return self.Text end
+---@override
+function _CombatLogUnsupportedMessage:ToString()
+    return self.Text
+end

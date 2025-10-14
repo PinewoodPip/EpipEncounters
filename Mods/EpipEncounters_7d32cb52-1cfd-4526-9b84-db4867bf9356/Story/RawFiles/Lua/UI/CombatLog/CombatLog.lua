@@ -13,7 +13,7 @@
 ---@field COLORS table<string, string>
 ---@field MAX_MESSAGES integer
 ---@field MAX_MERGING_TIME number Maximum time that can elapse before a message no longer can be merged into, in seconds.
----@field MessageTypes table<string, CombatLogMessage> Templtes for creating messages.
+---@field MessageTypes table<string, UI.CombatLog.Message> Templates for creating messages.
 ---@field FILTERS table<string, CombatLogFilter>
 ---@field EnabledFilters table<string, boolean>
 local Log = {
@@ -53,20 +53,22 @@ Epip.InitializeUI(Ext.UI.TypeID.combatLog, "CombatLog", Log)
 
 ---@class CombatLogSentMessage
 ---@field Filter integer
----@field Message CombatLogMessage
+---@field Message UI.CombatLog.Message
 ---@field Time integer Monotonic time.
 
 ---@class CombatLogFilter
 ---@field Name string
 ---@field MessageTypes table<string, boolean>
 
+---@alias UI.CombatLog.MessageType string
+
 ---------------------------------------------
 -- EVENTS/HOOKS
 ---------------------------------------------
 
 ---@class CombatLogUI_Hook_GetMessageObject : LegacyHook
----@field RegisterHook fun(self, handler:fun(obj:CombatLogMessage, message:string):CombatLogMessage)
----@field Return fun(self, obj:CombatLogMessage, message:string):CombatLogMessage
+---@field RegisterHook fun(self, handler:fun(obj:UI.CombatLog.Message, message:string):UI.CombatLog.Message)
+---@field Return fun(self, obj:UI.CombatLog.Message, message:string):UI.CombatLog.Message
 
 ---@class CombatLogUI_Event_MessageAdded : Event
 ---@field RegisterListener fun(self, listener:fun(msg:CombatLogSentMessage))
@@ -84,6 +86,12 @@ Epip.InitializeUI(Ext.UI.TypeID.combatLog, "CombatLog", Log)
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
+
+---Registers a message handler.
+---@param handler UI.CombatLog.Message
+function Log.RegisterMessageHandler(handler)
+    Log.MessageTypes[handler.Type] = handler
+end
 
 ---@param filter string
 ---@return boolean
@@ -161,7 +169,7 @@ function Log.RegisterFilter(id, filter)
 end
 
 ---Adds a message to the log.
----@param msg CombatLogMessage
+---@param msg UI.CombatLog.Message
 ---@param filter number? Defaults to 0.
 function Log.AddMessage(msg, filter)
     filter = filter or 0
@@ -189,18 +197,15 @@ function Log.AddMessage(msg, filter)
     if combined then
         -- Edit the last message
         local root = Log:GetRoot()
-        local filterObj = root.log_mc.filterList.content_array[filter].text_Array
-        local msgIndex = filterObj[#filterObj - 1]
-        local msg = root.log_mc.textList.content_array[#root.log_mc.textList.content_array - 1]
+        local msgElement = root.log_mc.textList.content_array[#root.log_mc.textList.content_array - 1]
 
         Log:DebugLog("Appending messages of type " .. lastMessage.Message.Type)
 
         lastMessage.Time = Ext.MonotonicTime() -- Update time.
 
-        msg.text = lastMessage.Message:ToString()
-        msg.text_txt.htmlText = msg.text
+        msgElement.text = lastMessage.Message:ToString()
+        msgElement.text_txt.htmlText = msgElement.text
     else
-
         Log:GetRoot().addTextToFilter(filter, msg:ToString(), msg.Type)
 
         table.insert(Log.Messages, obj)
@@ -219,7 +224,7 @@ function Log.AddMessage(msg, filter)
 end
 
 ---Converts a vanilla combat log message to its object form.
----@return CombatLogMessage
+---@return UI.CombatLog.Message
 function Log.GetData(msg)
     local obj
 
@@ -227,7 +232,8 @@ function Log.GetData(msg)
 
     --Fallback to a generic message type.
     if not obj then
-        obj = Log.MessageTypes.Unsupported.Create(msg)
+        local UnsupportedMsg = Log:GetClass("UI.CombatLog.Messages.Unsupported")
+        obj = UnsupportedMsg:Create(msg)
     end
 
     return obj

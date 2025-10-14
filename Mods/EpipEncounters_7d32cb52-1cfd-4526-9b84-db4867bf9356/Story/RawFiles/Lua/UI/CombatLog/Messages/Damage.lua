@@ -1,31 +1,44 @@
 
+---------------------------------------------
+-- Base class for messages involving damage hits.
+---------------------------------------------
+
 local Log = Client.UI.CombatLog
 
----@class CombatLogDamageMessage : CombatLogCharacterMessage
----@field Damage DamageInstance[]
-local _DamageMessage = {}
-setmetatable(_DamageMessage, {__index = Client.UI.CombatLog.MessageTypes.Character})
-Client.UI.CombatLog.MessageTypes.Damage = _DamageMessage
+---@class UI.CombatLog.Messages.Damage : UI.CombatLog.Messages.Character
+---@field Damage UI.CombatLog.Messages.Damage.Hit[]
+local _DamageMessage = {
+    Type = "Damage",
+}
+Log:RegisterClass("UI.CombatLog.Messages.Damage", _DamageMessage, {"UI.CombatLog.Messages.Character"})
+Log.RegisterMessageHandler(_DamageMessage)
+
+---@class UI.CombatLog.Messages.Damage.Hit
+---@field Type string
+---@field Amount integer Amount of damage dealt across all hits of this type.
+---@field Color string
+---@field Hits integer
+---@field HitTime integer
 
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
 ---@param charName string
----@param charColor string
+---@param charColor htmlcolor
 ---@param damageType string
 ---@param amount integer
----@param color string
----@return CombatLogDamageMessage
-function _DamageMessage.Create(charName, charColor, damageType, amount, color)
-    ---@type CombatLogDamageMessage
-    local obj = {Type = "Damage"}
-    setmetatable(obj, {__index = _DamageMessage})
+---@param color htmlcolor
+---@return UI.CombatLog.Messages.Damage
+function _DamageMessage:Create(charName, charColor, damageType, amount, color)
+    ---@type UI.CombatLog.Messages.Damage
+    local obj = self:__Create({
+        CharacterName = charName,
+        CharacterColor = charColor,
+        Damage = {},
+    })
 
-    obj.CharacterName = charName
-    obj.CharacterColor = charColor
-
-    obj.Damage = {}
+    -- Insert initial hit
     table.insert(obj.Damage, {
         Type = damageType,
         Amount = amount,
@@ -37,12 +50,14 @@ function _DamageMessage.Create(charName, charColor, damageType, amount, color)
     return obj
 end
 
----@param msg CombatLogDamageMessage
+---@override
+---@param msg UI.CombatLog.Messages.Damage
 function _DamageMessage:CombineWith(msg)
     local hasType = false
 
-    for i,dmg in ipairs(self.Damage) do
+    for _,dmg in ipairs(self.Damage) do
         -- TODO support merging multiple at once.
+        -- 2025 note: is the above msg relevant? New messages would only ever have one damage entry.
         if dmg.Type == msg.Damage[1].Type then
             dmg.Amount = dmg.Amount + msg.Damage[1].Amount
 
@@ -96,6 +111,7 @@ function _DamageMessage:GetDamageString()
     return damages, addendum
 end
 
+---@override
 ---@return string
 function _DamageMessage:ToString()
     local dmgString,addendum = self:GetDamageString()
@@ -116,20 +132,20 @@ end
 -- PARSING
 ---------------------------------------------
 
--- local pattern = "<font color=\"#DBDBDB\"><font color=\"#(%x%x%x%x%x%x)\">(.+)</font> has the status: <font color="#4197E2">Elementalist: x3</font></font>"
-
+-- Create message objects.
 Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
     local pattern = '^<font color="#DBDBDB"><font color="#(%x%x%x%x%x%x)">(.+)</font> was hit for <font color="#(%x%x%x%x%x%x)">(%d+) (.+) Damage</font></font>$'
 
     local characterColor, characterName, dmgColor, dmgAmount, dmgType = message:match(pattern)
 
     if characterColor then
-        obj = _DamageMessage.Create(characterName, characterColor, dmgType, dmgAmount, dmgColor)
+        obj = _DamageMessage:Create(characterName, characterColor, dmgType, dmgAmount, dmgColor)
     end
 
     return obj
 end)
 
+-- Merge consecutive damage messages.
 Log.Hooks.CombineMessage:RegisterHook(function (combined, msg1, msg2)
     if msg1.Message.Type == "Damage" and msg2.Message.Type == "Damage" then
         msg1.Message:CombineWith(msg2.Message)

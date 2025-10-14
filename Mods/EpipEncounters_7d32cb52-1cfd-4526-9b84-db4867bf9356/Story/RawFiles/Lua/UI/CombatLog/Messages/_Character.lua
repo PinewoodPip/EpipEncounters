@@ -1,28 +1,25 @@
 
+---------------------------------------------
+-- Base class for messages that reference a character.
+---------------------------------------------
+
 local Log = Client.UI.CombatLog
 
----@class CombatLogCharacterMessage : CombatLogMessage
+---@class UI.CombatLog.Messages.Character : UI.CombatLog.Message
 ---@field CharacterName string
 ---@field CharacterColor string
-local _CharacterMessage = {}
-setmetatable(_CharacterMessage, Log.MessageTypes.Base)
-Log.MessageTypes.Character = _CharacterMessage
+local _CharacterMessage = {
+    Type = "Character",
+}
+Log:RegisterClass("UI.CombatLog.Messages.Character", _CharacterMessage, {"UI.CombatLog.Message"})
+Log.RegisterMessageHandler(_CharacterMessage)
 
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
-function _CharacterMessage.Create(charName, charColor)
-    ---@type CombatLogCharacterMessage
-    local obj = {
-        CharacterName = charName,
-        CharacterColor = charColor,
-    }
-    Inherit(obj, _CharacterMessage)
-
-    return obj
-end
-
+---@override
 function _CharacterMessage:CanMerge(msg)
-    return self.CharacterName == msg.CharacterName
+    ---@cast msg UI.CombatLog.Messages.Character
+    return msg:ImplementsClass("UI.CombatLog.Messages.Character") and self.CharacterName == msg.CharacterName -- Can merge into messages of the same character.
 end

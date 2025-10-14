@@ -1,43 +1,47 @@
 
+---------------------------------------------
+-- Handler for status applied/removed messages.
+---------------------------------------------
+
 local Log = Client.UI.CombatLog
 
----@class CombatLogStatus
+---@class UI.CombatLog.Messages.Status : UI.CombatLog.Messages.Character
+---@field Statuses UI.CombatLog.Messages.Status.Entry[]
+---@field LosingStatuses boolean
+local _StatusMessage = {
+    Type = "Status",
+}
+Log:RegisterClass("UI.CombatLog.Messages.Status", _StatusMessage, {"UI.CombatLog.Messages.Character"})
+Log.RegisterMessageHandler(_StatusMessage)
+
+---@class UI.CombatLog.Messages.Status.Entry
 ---@field Name string
 ---@field Color string
-
----@class CombatLogStatusMessage : CombatLogCharacterMessage
----@field Statuses CombatLogStatus[]
----@field LosingStatuses boolean
-local _StatusMessage = {}
-setmetatable(_StatusMessage, {__index = Log.MessageTypes.Character})
-Log.MessageTypes.Status = _StatusMessage
 
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
-
+---Creates a status message.
 ---@param charName string
----@param charColor string
+---@param charColor htmlcolor
 ---@param statusName string
----@param statusColor string
----@param gained? boolean
-function _StatusMessage.Create(charName, charColor, statusName, statusColor, gained)
+---@param statusColor htmlcolor
+---@param gained? boolean True if the status was applied, false if being removed. Defaults to true.
+function _StatusMessage:Create(charName, charColor, statusName, statusColor, gained)
     if gained == nil then gained = true end
 
-    ---@type CombatLogStatusMessage
-    local obj = {}
-    setmetatable(obj, {__index = _StatusMessage})
-
-    obj.Type = "Status"
-    obj.CharacterName = charName
-    obj.CharacterColor = charColor
-    obj.Statuses = {{Name = statusName, Color = statusColor}}
-    obj.LosingStatuses = not gained
-
+    ---@type UI.CombatLog.Messages.Status
+    local obj = self:__Create({
+        CharacterName = charName,
+        CharacterColor = charColor,
+        Statuses = {{Name = statusName, Color = statusColor}},
+        LosingStatuses = not gained
+    })
     return obj
 end
 
+---@override
 function _StatusMessage:ToString()
     local statuses = ""
 
@@ -77,20 +81,25 @@ function _StatusMessage:ToString()
 end
 
 function _StatusMessage:CombineWith(msg)
-    for _,status in ipairs(msg.Statuses) do
-        -- TODO make sure they dont repeat
-        table.insert(self.Statuses, status)
+    if msg:ImplementsClass("UI.CombatLog.Messages.Status") then
+        ---@cast msg UI.CombatLog.Messages.Status
+        for _,status in ipairs(msg.Statuses) do
+            -- TODO make sure they dont repeat?
+            table.insert(self.Statuses, status)
+        end
     end
 end
 
 function _StatusMessage:CanMerge(msg)
-    return self.Type == msg.Type and self.CharacterName == msg.CharacterName and self.LosingStatuses == msg.LosingStatuses
+    ---@cast msg UI.CombatLog.Messages.Status
+    return msg:ImplementsClass("UI.CombatLog.Messages.Status") and self.CharacterName == msg.CharacterName and self.LosingStatuses == msg.LosingStatuses
 end
 
 ---------------------------------------------
 -- PARSING
 ---------------------------------------------
 
+-- Create message objects.
 Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
     local pattern = '<font color="#DBDBDB"><font color="#(%x%x%x%x%x%x)">(.+)</font> has the status: <font color="#(%x%x%x%x%x%x)">(.+)</font></font>'
 
@@ -99,24 +108,23 @@ Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
     local charColor, charName, statusColor, statusName = message:match(pattern)
 
     if charColor then
-        obj = _StatusMessage.Create(charName, charColor, statusName, statusColor)
+        obj = _StatusMessage:Create(charName, charColor, statusName, statusColor)
     else
         charColor, charName, statusColor, statusName = message:match(lostStatusPattern)
 
         if charColor then
-            obj = _StatusMessage.Create(charName, charColor, statusName, statusColor, false)
+            obj = _StatusMessage:Create(charName, charColor, statusName, statusColor, false)
         end
     end
 
     return obj
 end)
 
+-- Merge consecutive status messages from the same character.
 Log.Hooks.CombineMessage:RegisterHook(function (combined, msg1, msg2)
     if msg1.Message.Type == "Status" and msg2.Message.Type == "Status" then
         msg1.Message:CombineWith(msg2.Message)
-
-        return true
+        combined = true
     end
-
     return combined
 end)

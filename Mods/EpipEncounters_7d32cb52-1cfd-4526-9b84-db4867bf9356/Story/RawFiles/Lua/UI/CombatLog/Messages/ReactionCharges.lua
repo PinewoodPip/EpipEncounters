@@ -1,29 +1,34 @@
 
+---------------------------------------------
+-- Handler for "X has Y reaction charges remaining" messages from Epic Encounters.
+---------------------------------------------
+
 local Log = Client.UI.CombatLog
 
----@class CombatLogReactionChargesData
----@field Reaction string
----@field Amount integer
-
----@class CombatLogReactionChargesMessage : CombatLogScriptedMessage
----@field Reactions CombatLogReactionChargesData[]
+---@class UI.CombatLog.Messages.ReactionCharges : UI.CombatLog.Messages.Scripted
+---@field Reactions UI.CombatLog.Messages.ReactionCharges.Reaction[]
 local _Charges = {
     PATTERN_ALT = '<font color="#(%x%x%x%x%x%x)">(.+)</font>: has free reaction charges:<br>(.+)', -- TODO
     PATTERN = '<font color="#(%x%x%x%x%x%x)">(.+)</font>: (.+) free reaction charges remaining: (%d+)',
     Type = "ReactionCharges",
 }
-Inherit(_Charges, Log.MessageTypes.Scripted)
-Log.MessageTypes.ReactionCharges = _Charges
+Log:RegisterClass("UI.CombatLog.Messages.ReactionCharges", _Charges, {"UI.CombatLog.Messages.Scripted"})
+Log.RegisterMessageHandler(_Charges)
+
+---@class UI.CombatLog.Messages.ReactionCharges.Reaction
+---@field Reaction string
+---@field Amount integer
 
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
+---Creates a new reaction charges message.
 ---@param charName string
 ---@param charColor string
----@param reactions CombatLogReactionChargesData[]
----@return CombatLogReactionChargesMessage
-function _Charges.Create(charName, charColor, reactions, fallbackText)
+---@param reactions UI.CombatLog.Messages.ReactionCharges.Reaction[]
+---@return UI.CombatLog.Messages.ReactionCharges
+function _Charges:Create(charName, charColor, reactions, fallbackText)
     local text = ""
 
     -- TODO finish
@@ -61,13 +66,13 @@ function _Charges.Create(charName, charColor, reactions, fallbackText)
         })
     end
 
-    ---@type CombatLogReactionChargesMessage
-    local obj = Log.MessageTypes.Scripted.Create(charName, charColor, text, nil)
-    Inherit(obj, _Charges)
-    obj.Type = "ReactionCharges"
-
-    obj.Reactions = reactions
-
+    ---@type UI.CombatLog.Messages.ReactionCharges
+    local obj = self:__Create({
+        CharacterName = charName,
+        CharacterColor = charColor,
+        Text = text,
+        Reactions = reactions
+    })
     return obj
 end
 
@@ -75,6 +80,7 @@ end
 -- PARSING
 ---------------------------------------------
 
+-- Create message objects.
 Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
     local charColor, charName, reaction, charges = message:match(_Charges.PATTERN)
 
@@ -102,7 +108,7 @@ Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
         end
     else -- just one reaction
         if charColor then
-            obj = _Charges.Create(charName, charColor, {{Reaction = reaction, Amount = charges}})
+            obj = _Charges:Create(charName, charColor, {{Reaction = reaction, Amount = charges}})
         end
     end
 

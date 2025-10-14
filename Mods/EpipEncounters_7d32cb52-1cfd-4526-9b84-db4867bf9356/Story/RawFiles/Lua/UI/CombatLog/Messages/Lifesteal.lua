@@ -1,26 +1,42 @@
 
+---------------------------------------------
+-- Handler for "X regained Y from Lifesteal" messages.
+---------------------------------------------
+
 local Log = Client.UI.CombatLog
 
----@class CombatLogLifestealMessage : CombatLogDamageMessage
-local _LifestealMessage = {
-    Type = "Lifesteal",
-}
-setmetatable(_LifestealMessage, {__index = Log.MessageTypes.Damage})
-Log.MessageTypes.Lifesteal = _LifestealMessage
+---@class UI.CombatLog.Messages.Lifesteal : UI.CombatLog.Messages.Damage
+local _LifestealMessage = {}
+Log:RegisterClass("UI.CombatLog.Messages.Lifesteal", _LifestealMessage, {"UI.CombatLog.Messages.Damage"})
+Log.RegisterMessageHandler(_LifestealMessage)
 
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
-function _LifestealMessage.Create(charName, charColor, damageType, amount, color)
-    local obj = Log.MessageTypes.Damage.Create(charName, charColor, damageType, amount, color)
-    setmetatable(obj, {__index = _LifestealMessage})
-
-    obj.Type = _LifestealMessage.Type
-
-    return obj
+---Creates a lifesteal message.
+---@param charName string
+---@param charColor htmlcolor
+---@param damageType string
+---@param amount integer
+---@param color htmlcolor
+---@return UI.CombatLog.Messages.Lifesteal
+function _LifestealMessage:Create(charName, charColor, damageType, amount, color)
+    ---@type UI.CombatLog.Messages.Lifesteal
+    return self:__Create({
+        CharacterName = charName,
+        CharacterColor = charColor,
+        Damage = {
+            {
+                Type = damageType,
+                Amount = tonumber(amount),
+                Color = color,
+            },
+        },
+    })
 end
 
+---@override
 function _LifestealMessage:ToString()
     local msg = Text.Format("%s regained %s from Lifesteal", {
         Color = Log.COLORS.TEXT,
@@ -37,13 +53,14 @@ end
 -- PARSING
 ---------------------------------------------
 
+-- Create message objects.
 Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
     local pattern = '<font color="#DBDBDB"><font color="#(%x%x%x%x%x%x)">(.+)</font> regained <font color="#(%x%x%x%x%x%x)">(%d+) (.+)</font> using vampiric means...</font>'
 
     local charColor, charName, dmgColor, dmgAmount, dmgType = message:match(pattern)
 
     if charColor then
-        obj = _LifestealMessage.Create(charName, charColor, dmgType, dmgAmount, dmgColor)
+        obj = _LifestealMessage:Create(charName, charColor, dmgType, dmgAmount, dmgColor)
     end
 
     return obj
