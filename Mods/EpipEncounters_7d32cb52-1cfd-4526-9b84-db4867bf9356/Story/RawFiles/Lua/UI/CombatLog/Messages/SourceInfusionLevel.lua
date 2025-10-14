@@ -10,7 +10,6 @@ local Log = Client.UI.CombatLog
 local _SourceInfusionLevel = {
     PATTERN = '<font color="#(%x%x%x%x%x%x)">(.+)</font>: Source Infusion: (%d+)', -- "+" just in case someone mods in SI 10 (Derby mod in 20XX)
     PATTERN_ALT = '<font color="#(%x%x%x%x%x%x)">(.+)</font>: Source Infusion cleared',
-    Type = "SourceInfusionLevel",
 }
 Log:RegisterClass("UI.CombatLog.Messages.SourceInfusionLevel", _SourceInfusionLevel, {"UI.CombatLog.Messages.Scripted"})
 Log.RegisterMessageHandler(_SourceInfusionLevel)

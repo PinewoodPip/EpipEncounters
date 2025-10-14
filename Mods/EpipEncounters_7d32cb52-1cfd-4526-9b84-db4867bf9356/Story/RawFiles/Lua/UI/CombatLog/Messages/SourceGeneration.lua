@@ -11,7 +11,6 @@ local Log = Client.UI.CombatLog
 ---@field Color htmlcolor
 local _SourceGenMessage = {
     PATTERN_NEXT_ROUND = '<font color="#(%x%x%x%x%x%x)">(.+)</font>: <font color="(%x%x%x%x%x%x)">(.+)</font>',
-    Type = "SourceGeneration",
 }
 Log:RegisterClass("UI.CombatLog.Messages.SourceGeneration", _SourceGenMessage, {"UI.CombatLog.Messages.Character"})
 Log.RegisterMessageHandler(_SourceGenMessage)

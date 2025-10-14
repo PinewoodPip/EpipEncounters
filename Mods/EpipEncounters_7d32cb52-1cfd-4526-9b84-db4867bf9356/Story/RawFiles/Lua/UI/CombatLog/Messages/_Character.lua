@@ -8,9 +8,7 @@ local Log = Client.UI.CombatLog
 ---@class UI.CombatLog.Messages.Character : UI.CombatLog.Message
 ---@field CharacterName string
 ---@field CharacterColor string
-local _CharacterMessage = {
-    Type = "Character",
-}
+local _CharacterMessage = {}
 Log:RegisterClass("UI.CombatLog.Messages.Character", _CharacterMessage, {"UI.CombatLog.Message"})
 Log.RegisterMessageHandler(_CharacterMessage)
 

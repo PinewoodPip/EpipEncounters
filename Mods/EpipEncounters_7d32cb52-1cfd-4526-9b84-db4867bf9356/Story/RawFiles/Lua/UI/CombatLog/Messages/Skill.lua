@@ -15,7 +15,6 @@ local _Skill = {
     PATTERN = '<font color="#DBDBDB"><font color="#(%x%x%x%x%x%x)">(.+)</font> u?s?e?d?c?a?s?t? <font color="#(%x%x%x%x%x%x)">(.+)</font></font>',
     PATTERN_CHARACTER = '<font color="#DBDBDB"><font color="#(%x%x%x%x%x%x)">(.+)</font> used <font color="#(%x%x%x%x%x%x)">(.+)</font> on <font color="#(%x%x%x%x%x%x)">(.+)</font></font>',
     PATTERN_GROUND = '<font color="#DBDBDB"><font color="#(%x%x%x%x%x%x)">(.+)</font> cast <font color="#(%x%x%x%x%x%x)">(.+)</font> on the ground</font>',
-    Type = "Skill",
     TARGET_TYPES = {
         CHARACTER = "Character",
         GROUND = "Ground",

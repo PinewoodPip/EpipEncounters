@@ -10,7 +10,6 @@ local Log = Client.UI.CombatLog
 local _Charges = {
     PATTERN_ALT = '<font color="#(%x%x%x%x%x%x)">(.+)</font>: has free reaction charges:<br>(.+)', -- TODO
     PATTERN = '<font color="#(%x%x%x%x%x%x)">(.+)</font>: (.+) free reaction charges remaining: (%d+)',
-    Type = "ReactionCharges",
 }
 Log:RegisterClass("UI.CombatLog.Messages.ReactionCharges", _Charges, {"UI.CombatLog.Messages.Scripted"})
 Log.RegisterMessageHandler(_Charges)

@@ -7,7 +7,6 @@ local Log = Client.UI.CombatLog
 
 ---@class UI.CombatLog.Messages.CriticalHit : UI.CombatLog.Messages.CharacterInteraction
 local _CriticalHit = {
-    Type = "CriticalHit",
     PATTERN = "<font color=\"#DBDBDB\"><font color=\"#(%x%x%x%x%x%x)\">(.+)</font> dealt a <font color=\"#C80030\">Critical Hit</font> to <font color=\"#(%x%x%x%x%x%x)\">(.+)</font></font>",
     CRITICAL_COLOR = "C80030",
 }

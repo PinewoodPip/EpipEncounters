@@ -12,7 +12,6 @@ local Log = Client.UI.CombatLog
 local APPreservation = {
     PATTERN = '<font color="#FFAB00">(.+): (%d+) Action Points preserved</font>',
     COLOR = "FFAB00", -- This message is oddly distinctive due to being a DOS1 leftover.
-    Type = "APPreservation",
 }
 Log:RegisterClass("UI.CombatLog.Messages.APPreservation", APPreservation, {"UI.CombatLog.Messages.Character"})
 Log.RegisterMessageHandler(APPreservation)

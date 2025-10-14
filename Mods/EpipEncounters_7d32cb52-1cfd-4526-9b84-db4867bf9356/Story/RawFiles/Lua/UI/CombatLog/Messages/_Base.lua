@@ -6,7 +6,6 @@
 local Log = Client.UI.CombatLog
 
 ---@class UI.CombatLog.Message : Class
----@field Type UI.CombatLog.MessageType
 local _CombatLogMessage = {}
 Log:RegisterClass("UI.CombatLog.Message", _CombatLogMessage)
 

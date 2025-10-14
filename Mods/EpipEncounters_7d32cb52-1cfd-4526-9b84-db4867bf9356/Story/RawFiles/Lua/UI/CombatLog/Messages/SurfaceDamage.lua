@@ -4,11 +4,11 @@
 ---------------------------------------------
 
 local Log = Client.UI.CombatLog
+local DamageClass = Log:GetClass("UI.CombatLog.Messages.Damage")
 
 ---@class UI.CombatLog.Messages.SurfaceDamage : UI.CombatLog.Messages.Damage
 local _Surface = {
     PATTERN = '<font color="#DBDBDB"><font color="#(%x%x%x%x%x%x)">(.+)</font> was hit for <font color="#(%x%x%x%x%x%x)">(%d+) (.+) Damage</font> by a surface</font>',
-    Type = "SurfaceDamage",
 }
 Log:RegisterClass("UI.CombatLog.Messages.SurfaceDamage", _Surface, {"UI.CombatLog.Messages.Damage"})
 Log.RegisterMessageHandler(_Surface)
@@ -45,7 +45,7 @@ end
 function _Surface:ToString()
     local str = Text.Format("%s by a surface", {
         FormatArgs = {
-            Log.MessageTypes.Damage.ToString(self),
+            DamageClass.ToString(self),
         },
         Color = Log.COLORS.TEXT,
     })
@@ -69,8 +69,9 @@ Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
 end)
 
 -- Combine consecutive surface damage messages from the same character.
+local surfaceDamageClassName = _Surface:GetClassName()
 Log.Hooks.CombineMessage:RegisterHook(function (combined, msg1, msg2)
-    if msg1.Message.Type == "SurfaceDamage" and msg2.Message.Type == "SurfaceDamage" then
+    if msg1.Message:GetClassName() == surfaceDamageClassName and msg2.Message:GetClassName() == surfaceDamageClassName then
         msg1.Message:CombineWith(msg2.Message)
         combined = true
     end

@@ -6,9 +6,7 @@
 local Log = Client.UI.CombatLog
 
 ---@class UI.CombatLog.Messages.Healing : UI.CombatLog.Messages.Damage
-local _HealingMessage = {
-    Type = "Healing",
-}
+local _HealingMessage = {}
 Log:RegisterClass("UI.CombatLog.Messages.Healing", _HealingMessage, {"UI.CombatLog.Messages.Damage"})
 Log.RegisterMessageHandler(_HealingMessage)
 
@@ -95,8 +93,9 @@ Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
 end)
 
 -- Merge consecutive healing messages.
+local healingClassName = _HealingMessage:GetClassName()
 Log.Hooks.CombineMessage:RegisterHook(function (combined, msg1, msg2)
-    if msg1.Message.Type == "Healing" and msg2.Message.Type == "Healing" then
+    if msg1.Message:GetClassName() == healingClassName and msg2.Message:GetClassName() == healingClassName then
         msg1.Message:CombineWith(msg2.Message)
         combined = true
     end

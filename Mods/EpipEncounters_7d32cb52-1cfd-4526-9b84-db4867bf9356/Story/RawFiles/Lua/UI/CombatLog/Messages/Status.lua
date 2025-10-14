@@ -8,9 +8,7 @@ local Log = Client.UI.CombatLog
 ---@class UI.CombatLog.Messages.Status : UI.CombatLog.Messages.Character
 ---@field Statuses UI.CombatLog.Messages.Status.Entry[]
 ---@field LosingStatuses boolean
-local _StatusMessage = {
-    Type = "Status",
-}
+local _StatusMessage = {}
 Log:RegisterClass("UI.CombatLog.Messages.Status", _StatusMessage, {"UI.CombatLog.Messages.Character"})
 Log.RegisterMessageHandler(_StatusMessage)
 
@@ -121,8 +119,9 @@ Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
 end)
 
 -- Merge consecutive status messages from the same character.
+local statusClassName = _StatusMessage:GetClassName()
 Log.Hooks.CombineMessage:RegisterHook(function (combined, msg1, msg2)
-    if msg1.Message.Type == "Status" and msg2.Message.Type == "Status" then
+    if msg1.Message:GetClassName() == statusClassName and msg2.Message:GetClassName() == statusClassName then
         msg1.Message:CombineWith(msg2.Message)
         combined = true
     end

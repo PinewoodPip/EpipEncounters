@@ -86,8 +86,9 @@ Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
 end)
 
 -- Merge with other attack messages.
+local attackClassName = _Attack:GetClassName()
 Log.Hooks.CombineMessage:RegisterHook(function (combined, msg1, msg2)
-    if msg1.Message.Type == "Attack" and msg2.Message.Type == "Attack" then
+    if msg1.Message:GetClassName() == attackClassName and msg2.Message:GetClassName() == attackClassName then
         msg1.Message:CombineWith(msg2.Message)
         combined = true
     end

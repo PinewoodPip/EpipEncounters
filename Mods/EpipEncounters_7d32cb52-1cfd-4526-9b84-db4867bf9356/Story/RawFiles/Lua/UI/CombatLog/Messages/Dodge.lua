@@ -7,7 +7,6 @@ local Log = Client.UI.CombatLog
 
 ---@class UI.CombatLog.Messages.Dodge : UI.CombatLog.Messages.CharacterInteraction
 local _Dodge = {
-    Type = "Dodge",
     PATTERN = "<font color=\"#DBDBDB\"><font color=\"#(%x%x%x%x%x%x)\">(.+)</font> missed <font color=\"#(%x%x%x%x%x%x)\">(.+)</font></font>",
 }
 Log:RegisterClass("UI.CombatLog.Messages.Dodge", _Dodge, {"UI.CombatLog.Messages.CharacterInteraction"})

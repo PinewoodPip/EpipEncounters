@@ -13,7 +13,6 @@ local Log = Client.UI.CombatLog
 local _ScriptedMessage = {
     PATTERN = '<font color="#(%x%x%x%x%x%x)">(.+)</font>: <font color="(%x%x%x%x%x%x)">(.+)</font>',
     PATTERN_ALT = '<font color="#(%x%x%x%x%x%x)">(.+)</font>: (.+)',
-    Type = "Scripted",
 }
 Log:RegisterClass("UI.CombatLog.Messages.Scripted", _ScriptedMessage, {"UI.CombatLog.Messages.Character"})
 Log.RegisterMessageHandler(_ScriptedMessage)

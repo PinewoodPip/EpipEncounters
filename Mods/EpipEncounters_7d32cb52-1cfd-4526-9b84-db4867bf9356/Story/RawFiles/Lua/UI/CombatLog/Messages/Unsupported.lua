@@ -7,9 +7,7 @@ local Log = Client.UI.CombatLog
 
 ---@class UI.CombatLog.Messages.Unsupported : UI.CombatLog.Message
 ---@field Text string The raw message.
-local _CombatLogUnsupportedMessage = {
-    Type = "Unsupported",
-}
+local _CombatLogUnsupportedMessage = {}
 Log:RegisterClass("UI.CombatLog.Messages.Unsupported", _CombatLogUnsupportedMessage, {"UI.CombatLog.Message"})
 Log.RegisterMessageHandler(_CombatLogUnsupportedMessage)
 

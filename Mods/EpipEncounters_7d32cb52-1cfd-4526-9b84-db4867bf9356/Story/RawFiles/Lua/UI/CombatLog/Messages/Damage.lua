@@ -7,9 +7,7 @@ local Log = Client.UI.CombatLog
 
 ---@class UI.CombatLog.Messages.Damage : UI.CombatLog.Messages.Character
 ---@field Damage UI.CombatLog.Messages.Damage.Hit[]
-local _DamageMessage = {
-    Type = "Damage",
-}
+local _DamageMessage = {}
 Log:RegisterClass("UI.CombatLog.Messages.Damage", _DamageMessage, {"UI.CombatLog.Messages.Character"})
 Log.RegisterMessageHandler(_DamageMessage)
 
@@ -146,8 +144,9 @@ Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
 end)
 
 -- Merge consecutive damage messages.
+local damageClassName = _DamageMessage:GetClassName()
 Log.Hooks.CombineMessage:RegisterHook(function (combined, msg1, msg2)
-    if msg1.Message.Type == "Damage" and msg2.Message.Type == "Damage" then
+    if msg1.Message:GetClassName() == damageClassName and msg2.Message:GetClassName() == damageClassName then
         msg1.Message:CombineWith(msg2.Message)
         combined = true
     end

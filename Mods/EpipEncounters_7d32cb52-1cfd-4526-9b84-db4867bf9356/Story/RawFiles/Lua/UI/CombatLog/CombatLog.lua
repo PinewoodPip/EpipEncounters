@@ -13,7 +13,7 @@
 ---@field COLORS table<string, string>
 ---@field MAX_MESSAGES integer
 ---@field MAX_MERGING_TIME number Maximum time that can elapse before a message no longer can be merged into, in seconds.
----@field MessageTypes table<string, UI.CombatLog.Message> Templates for creating messages.
+---@field MessageTypes table<classname, UI.CombatLog.Message> Message type handlers.
 ---@field FILTERS table<string, CombatLogFilter>
 ---@field EnabledFilters table<string, boolean>
 local Log = {
@@ -26,9 +26,7 @@ local Log = {
     MAX_MESSAGES = 20,
     MAX_MERGING_TIME = 7,
     FILTERS = {},
-    MessageTypes = {
-
-    },
+    MessageTypes = {},
     EnabledFilters = {},
     FilterOrder = {},
     Hooks = {
@@ -58,9 +56,7 @@ Epip.InitializeUI(Ext.UI.TypeID.combatLog, "CombatLog", Log)
 
 ---@class CombatLogFilter
 ---@field Name string
----@field MessageTypes table<string, boolean>
-
----@alias UI.CombatLog.MessageType string
+---@field MessageTypes set<classname> Message types that this filter includes.
 
 ---------------------------------------------
 -- EVENTS/HOOKS
@@ -90,7 +86,7 @@ Epip.InitializeUI(Ext.UI.TypeID.combatLog, "CombatLog", Log)
 ---Registers a message handler.
 ---@param handler UI.CombatLog.Message
 function Log.RegisterMessageHandler(handler)
-    Log.MessageTypes[handler.Type] = handler
+    Log.MessageTypes[handler:GetClassName()] = handler
 end
 
 ---@param filter string
@@ -189,7 +185,7 @@ function Log.AddMessage(msg, filter)
         local timeElapsed = Ext.MonotonicTime() - lastMessage.Time
         timeElapsed = timeElapsed / 1000
 
-        if lastMessage.Message.Type == msg.Type and timeElapsed < Log.MAX_MERGING_TIME and Log.Hooks.MessageCanMerge:Return(false, lastMessage, obj) then
+        if lastMessage.Message:GetClassName() == msg:GetClassName() and timeElapsed < Log.MAX_MERGING_TIME and Log.Hooks.MessageCanMerge:Return(false, lastMessage, obj) then
             combined = Log.Hooks.CombineMessage:Return(false, lastMessage, obj)
         end
     end
@@ -199,14 +195,14 @@ function Log.AddMessage(msg, filter)
         local root = Log:GetRoot()
         local msgElement = root.log_mc.textList.content_array[#root.log_mc.textList.content_array - 1]
 
-        Log:DebugLog("Appending messages of type " .. lastMessage.Message.Type)
+        Log:DebugLog("Appending messages of type " .. lastMessage.Message:GetClassName())
 
         lastMessage.Time = Ext.MonotonicTime() -- Update time.
 
         msgElement.text = lastMessage.Message:ToString()
         msgElement.text_txt.htmlText = msgElement.text
     else
-        Log:GetRoot().addTextToFilter(filter, msg:ToString(), msg.Type)
+        Log:GetRoot().addTextToFilter(filter, msg:ToString(), msg:GetClassName())
 
         table.insert(Log.Messages, obj)
 
@@ -217,9 +213,10 @@ function Log.AddMessage(msg, filter)
 
     Log.Events.MessageAdded:Fire(obj)
 
-    if Log:IsDebug() and obj.Message.Type ~= "Unsupported" then
+    -- Log added message, if it doesn't use the fallback type
+    if obj.Message:GetClassName() ~= "UI.CombatLog.Messages.Unsupported" then
         Log:DebugLog("Message added: ")
-        _D(obj)
+        Log:Dump(obj)
     end
 end
 
@@ -387,88 +384,88 @@ local DefaultFilters = {
         ID = "Actions",
         Name = "Skills",
         MessageTypes = {
-            Skill = true,
+            ["UI.CombatLog.Messages.Skill"] = true,
         }
     },
     {
         ID = "Damage",
         Name = "Damage",
         MessageTypes = {
-            Damage = true,
-            Attack = true,
+            ["UI.CombatLog.Messages.Damage"] = true,
+            ["UI.CombatLog.Messages.Attack"] = true,
         },
     },
     {
         ID = "SurfaceDamage",
         Name = "Surface Damage",
         MessageTypes = {
-            SurfaceDamage = true,
+            ["UI.CombatLog.Messages.SurfaceDamage"] = true,
         },
     },
     {
         ID = "ReflectedDamage",
         Name = "Reflected Damage",
         MessageTypes = {
-            ReflectedDamage = true,
+            ["UI.CombatLog.Messages.ReflectedDamage"] = true,
         },
     },
     {
         ID = "Healing",
         Name = "Healing",
         MessageTypes = {
-            Healing = true,
-            -- Lifesteal = true,
+            ["UI.CombatLog.Messages.Healing"] = true,
+            -- Lifesteal is not included as it has its own filter. 
         }
     },
     {
         ID = "Lifesteal",
         Name = "Lifesteal",
         MessageTypes = {
-            Lifesteal = true,
+            ["UI.CombatLog.Messages.Lifesteal"] = true,
         }
     },
     {
         ID = "CriticalHits",
         Name = "Critical Hits & Dodges",
         MessageTypes = {
-            CriticalHit = true,
-            Dodge = true,
+            ["UI.CombatLog.Messages.CriticalHit"] = true,
+            ["UI.CombatLog.Messages.Dodge"] = true,
         },
     },
     {
         ID = "StatusApplication",
         Name = "Statuses",
         MessageTypes = {
-            Status = true,
+            ["UI.CombatLog.Messages.Status"] = true,
         }
     },
     {
         ID = "SourceGeneration",
         Name = "Source Gen/Infuse",
         MessageTypes = {
-            SourceGeneration = true,
-            SourceInfusionLevel = true,
+            ["UI.CombatLog.Messages.SourceGeneration"] = true,
+            ["UI.CombatLog.Messages.SourceInfusionLevel"] = true,
         }
     },
     {
         ID = "SystemSpam",
         Name = "Reaction Charges",
         MessageTypes = {
-            ReactionCharges = true,
+            ["UI.CombatLog.Messages.ReactionCharges"] = true,
         },
     },
     {
         ID = "APPreservation",
         Name = "AP Preservation",
         MessageTypes = {
-            APPreservation = true,
+            ["UI.CombatLog.Messages.APPreservation"] = true,
         }
     },
     {
         ID = "Scripted",
         Name = "Generic/Scripted",
         MessageTypes = {
-            Scripted = true,
+            ["UI.CombatLog.Messages.Scripted"] = true,
         },
     },
 }

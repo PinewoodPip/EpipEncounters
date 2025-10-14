@@ -4,11 +4,11 @@
 ---------------------------------------------
 
 local Log = Client.UI.CombatLog
+local DamageClass = Log:GetClass("UI.CombatLog.Messages.Damage")
 
 ---@class UI.CombatLog.Messages.ReflectedDamage : UI.CombatLog.Messages.Damage
 local _Reflect = {
     PATTERN = '<font color="#DBDBDB"><font color="#(%x%x%x%x%x%x)">(.+)</font> was hit for <font color="#(%x%x%x%x%x%x)">(%d+) (.+) Damage%(reflected%)</font></font>',
-    Type = "ReflectedDamage",
 }
 Log:RegisterClass("UI.CombatLog.Messages.ReflectedDamage", _Reflect, {"UI.CombatLog.Messages.Damage"})
 Log.RegisterMessageHandler(_Reflect)
@@ -42,7 +42,7 @@ end
 
 ---@override
 function _Reflect:ToString()
-    local msg = Log.MessageTypes.Damage.ToString(self)
+    local msg = DamageClass.ToString(self)
 
     msg = string.gsub(msg, " damage ", " reflected damage ")
 
