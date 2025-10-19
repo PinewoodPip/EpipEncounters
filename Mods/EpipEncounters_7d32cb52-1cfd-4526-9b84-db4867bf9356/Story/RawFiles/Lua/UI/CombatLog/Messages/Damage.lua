@@ -133,7 +133,7 @@ end
 ---Returns the pattern that matches damage amount & type messages (ex. "X Fire Damage"), including their color.
 ---@return pattern
 function _DamageMessage:__GetDamagePattern()
-    return [[<font color="#(%x%x%x%x%x%x)">]] .. Text.FormatLarianTranslatedString(Log.DAMAGE_TSKHANDLE, [[(%d+) (.+)]]) .. [[</font>]]
+    return [[<font color="#(%x%x%x%x%x%x)">]] .. [[(%d+) (.+)]] .. [[</font>]]
 end
 
 ---------------------------------------------
@@ -147,7 +147,13 @@ Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
         Text.GetTranslatedString(_DamageMessage.HIT_TSKHANDLE),
         _DamageMessage:__GetDamagePattern()
     )
-    local characterColor, characterName, dmgColor, dmgAmount, dmgType = message:match(pattern)
+    local characterColor, characterName, dmgColor, dmgAmount, dmgType
+    local params = {message:match(pattern)}
+    if tonumber(params[2]) then -- In some languages (ex. Spanish) the damage comes before character name.
+        characterColor, characterName, dmgColor, dmgAmount, dmgType = params[4], params[5], params[1], params[2], params[3]
+    else
+        characterColor, characterName, dmgColor, dmgAmount, dmgType = table.unpack(params)
+    end
     if characterColor then
         obj = _DamageMessage:Create(characterName, characterColor, dmgType, dmgAmount, dmgColor)
     end
