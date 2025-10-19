@@ -556,7 +556,7 @@ function Text.ReplaceLarianPlaceholders(str, replacement)
 
     local replacementIndex = 1
     local placeholder = "[" .. tostring(replacementIndex) .. "]"
-    while str:find(placeholder) do
+    while str:find(placeholder, nil, true) do
         str = Text.Replace(str, placeholder, replacements[replacementIndex] or replacements[#replacements]) -- Use last replacement available as fallback.
         replacementIndex = replacementIndex + 1
         placeholder = "[" .. tostring(replacementIndex) .. "]"
