@@ -17,6 +17,10 @@
 ---@field FILTERS table<string, CombatLogFilter>
 ---@field EnabledFilters table<string, boolean>
 local Log = {
+    CHARACTER_ACTION_TSKHANDLE = "hddc42b8dg6456g4b7eg98d1gea65bc929fed", -- "[1] [2] [3], for [4]"; multiple message types use this structure; params 1 & 3 tend to be attacker & defender (optional)
+    CHARACTER_RECEIVED_ACTION_TSKHANDLE = "h3cc306cdg95b4g4803g803ag2dd33a722d6c", -- "[1] was [2] for [3]"; used for ex. "X was hit for Y damage"
+    DAMAGE_TSKHANDLE = "h784f42a9g95e6g4a55gb2b5g3ef52f6bbee6", -- "[1] Damage"
+
     Messages = {},
     COLORS = {
         PARTY_MEMBER = "188EDE",

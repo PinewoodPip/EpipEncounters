@@ -6,7 +6,9 @@
 local Log = Client.UI.CombatLog
 
 ---@class UI.CombatLog.Messages.Lifesteal : UI.CombatLog.Messages.Damage
-local _LifestealMessage = {}
+local _LifestealMessage = {
+    LIFESTEAL_TSKHANDLE = "h071d5329g54c5g4f35g82b9g128f7774a73c", -- "[1] regained [2] using vampiric means..."
+}
 Log:RegisterClass("UI.CombatLog.Messages.Lifesteal", _LifestealMessage, {"UI.CombatLog.Messages.Damage"})
 Log.RegisterMessageHandler(_LifestealMessage)
 
@@ -55,13 +57,10 @@ end
 
 -- Create message objects.
 Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
-    local pattern = '<font color="#DBDBDB"><font color="#(%x%x%x%x%x%x)">(.+)</font> regained <font color="#(%x%x%x%x%x%x)">(%d+) (.+)</font> using vampiric means...</font>'
-
+    local pattern = Text.FormatLarianTranslatedString(_LifestealMessage.LIFESTEAL_TSKHANDLE, _LifestealMessage.KEYWORD_PATTERN, _LifestealMessage.DAMAGE_PATTERN)
     local charColor, charName, dmgColor, dmgAmount, dmgType = message:match(pattern)
-
     if charColor then
         obj = _LifestealMessage:Create(charName, charColor, dmgType, dmgAmount, dmgColor)
     end
-
     return obj
 end)

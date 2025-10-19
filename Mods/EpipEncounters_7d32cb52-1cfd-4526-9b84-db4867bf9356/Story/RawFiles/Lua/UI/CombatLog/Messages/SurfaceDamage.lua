@@ -8,7 +8,7 @@ local DamageClass = Log:GetClass("UI.CombatLog.Messages.Damage")
 
 ---@class UI.CombatLog.Messages.SurfaceDamage : UI.CombatLog.Messages.Damage
 local _Surface = {
-    PATTERN = '<font color="#DBDBDB"><font color="#(%x%x%x%x%x%x)">(.+)</font> was hit for <font color="#(%x%x%x%x%x%x)">(%d+) (.+) Damage</font> by a surface</font>',
+    SURFACE_DAMAGE_TSKHANDLE = "hb1dd9994g2e17g4dd9gb69egb138ee4b6b2a", -- "[1] was hit for [2] by a surface"
 }
 Log:RegisterClass("UI.CombatLog.Messages.SurfaceDamage", _Surface, {"UI.CombatLog.Messages.Damage"})
 Log.RegisterMessageHandler(_Surface)
@@ -59,12 +59,15 @@ end
 
 -- Create message objects.
 Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
-    local charColor, charName, dmgColor, dmgAmount, dmgType = message:match(_Surface.PATTERN)
-
+    local pattern = Text.FormatLarianTranslatedString(_Surface.SURFACE_DAMAGE_TSKHANDLE,
+        _Surface.KEYWORD_PATTERN,
+        Text.GetTranslatedString(_Surface.HIT_TSKHANDLE),
+        _Surface.DAMAGE_PATTERN
+    )
+    local charColor, charName, dmgColor, dmgAmount, dmgType = message:match(pattern)
     if charColor then
         obj = _Surface:Create(charName, charColor, dmgType, dmgAmount, dmgColor)
     end
-
     return obj
 end)
 

@@ -10,7 +10,8 @@ local Log = Client.UI.CombatLog
 ---@field COLOR string
 ---@field AP integer
 local APPreservation = {
-    PATTERN = '<font color="#FFAB00">(.+): (%d+) Action Points preserved</font>',
+    AP_PRESERVED_TSKHANDLE = "hc0dcc2c7g3fe4g4292g9492g16bd87b30185", -- "Action Points preserved"
+    PATTERN = '<font color="#FFAB00">(.+): (%d+) [1]</font>',
     COLOR = "FFAB00", -- This message is oddly distinctive due to being a DOS1 leftover.
 }
 Log:RegisterClass("UI.CombatLog.Messages.APPreservation", APPreservation, {"UI.CombatLog.Messages.Character"})
@@ -50,7 +51,10 @@ end
 
 -- Create message objects.
 Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
-    local charName, ap = message:match(APPreservation.PATTERN)
+    local pattern = Text.ReplaceLarianPlaceholders(APPreservation.PATTERN, {
+        Text.GetTranslatedString(APPreservation.AP_PRESERVED_TSKHANDLE)
+    })
+    local charName, ap = message:match(pattern)
     if charName then
         obj = APPreservation:Create(charName, ap)
     end

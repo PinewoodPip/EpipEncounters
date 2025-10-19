@@ -6,7 +6,9 @@
 local Log = Client.UI.CombatLog
 
 ---@class UI.CombatLog.Message : Class
-local _CombatLogMessage = {}
+local _CombatLogMessage = {
+    KEYWORD_PATTERN = [[<font color="#(%x%x%x%x%x%x)">(.+)</font>]], -- Used to color keywords such as character/skill names or damage instances.
+}
 Log:RegisterClass("UI.CombatLog.Message", _CombatLogMessage)
 
 ---------------------------------------------

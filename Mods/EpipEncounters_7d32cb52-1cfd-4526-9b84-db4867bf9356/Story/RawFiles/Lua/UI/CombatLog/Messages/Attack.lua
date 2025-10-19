@@ -9,7 +9,7 @@ local Log = Client.UI.CombatLog
 ---@field TargetCharacter string
 ---@field TargetCharacterColor string
 local _Attack = {
-    PATTERN = '<font color="#DBDBDB"><font color="#(%x%x%x%x%x%x)">(.+)</font> attacked <font color="#(%x%x%x%x%x%x)">(.+)</font>, for <font color="#(%x%x%x%x%x%x)">(%d+) (.+) Damage</font></font>',
+    ATTACKED_TSKHANDLE = "h2ad55999g203eg4468g84abg99f66b50f5ec", -- "Attacked"
     Type = "Attack",
 }
 Log:RegisterClass("UI.CombatLog.Messages.Attack", _Attack, {"UI.CombatLog.Messages.Damage"})
@@ -78,7 +78,13 @@ end
 
 -- Create message objects.
 Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
-    local charColor, charName, targetColor, targetName, damageColor, damageAmount, damageType = message:match(_Attack.PATTERN)
+    local pattern = Text.ReplaceLarianPlaceholders(Text.GetTranslatedString(Log.CHARACTER_ACTION_TSKHANDLE), {
+        _Attack.KEYWORD_PATTERN,
+        Text.GetTranslatedString(_Attack.ATTACKED_TSKHANDLE),
+        _Attack.KEYWORD_PATTERN,
+        _Attack:__GetDamagePattern(),
+    })
+    local charColor, charName, targetColor, targetName, damageColor, damageAmount, damageType = message:match(pattern)
     if charColor then
         obj = _Attack:Create(charName, charColor, targetName, targetColor, damageType, damageAmount, damageColor)
     end

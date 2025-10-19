@@ -8,7 +8,10 @@ local Log = Client.UI.CombatLog
 ---@class UI.CombatLog.Messages.Status : UI.CombatLog.Messages.Character
 ---@field Statuses UI.CombatLog.Messages.Status.Entry[]
 ---@field LosingStatuses boolean
-local _StatusMessage = {}
+local _StatusMessage = {
+    STATUS_APPLIED_TSKHANDLE = "hd7eb5503g3894g4ce9ga7b4g26836f5356d5", -- "[1] has the status: [3]"
+    STATUS_REMOVED_TSKHANDLE = "h5e6ac140g634bg46dcg903ag0597244d57c4", -- "[1] no longer has the status: [3]"
+}
 Log:RegisterClass("UI.CombatLog.Messages.Status", _StatusMessage, {"UI.CombatLog.Messages.Character"})
 Log.RegisterMessageHandler(_StatusMessage)
 
@@ -97,24 +100,27 @@ end
 -- PARSING
 ---------------------------------------------
 
--- Create message objects.
+-- Create message objects for applied & removed statuses.
 Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
-    local pattern = '<font color="#DBDBDB"><font color="#(%x%x%x%x%x%x)">(.+)</font> has the status: <font color="#(%x%x%x%x%x%x)">(.+)</font></font>'
-
-    local lostStatusPattern = '<font color="#DBDBDB"><font color="#(%x%x%x%x%x%x)">(.+)</font> no longer has the status: <font color="#(%x%x%x%x%x%x)">(.+)</font></font>'
-
-    local charColor, charName, statusColor, statusName = message:match(pattern)
-
+    local statusAppliedPattern = Text.FormatLarianTranslatedString(_StatusMessage.STATUS_APPLIED_TSKHANDLE,
+        _StatusMessage.KEYWORD_PATTERN,
+        _StatusMessage.KEYWORD_PATTERN
+    )
+    local charColor, charName, statusColor, statusName = message:match(statusAppliedPattern)
     if charColor then
         obj = _StatusMessage:Create(charName, charColor, statusName, statusColor)
-    else
-        charColor, charName, statusColor, statusName = message:match(lostStatusPattern)
-
-        if charColor then
-            obj = _StatusMessage:Create(charName, charColor, statusName, statusColor, false)
-        end
     end
-
+    return obj
+end)
+Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
+    local lostStatusPattern = Text.FormatLarianTranslatedString(_StatusMessage.STATUS_REMOVED_TSKHANDLE,
+        _StatusMessage.KEYWORD_PATTERN,
+        _StatusMessage.KEYWORD_PATTERN
+    )
+    local charColor, charName, statusColor, statusName = message:match(lostStatusPattern)
+    if charColor then
+        obj = _StatusMessage:Create(charName, charColor, statusName, statusColor, false)
+    end
     return obj
 end)
 

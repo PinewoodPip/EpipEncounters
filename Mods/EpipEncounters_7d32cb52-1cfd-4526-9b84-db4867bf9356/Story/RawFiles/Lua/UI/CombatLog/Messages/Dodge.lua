@@ -7,7 +7,7 @@ local Log = Client.UI.CombatLog
 
 ---@class UI.CombatLog.Messages.Dodge : UI.CombatLog.Messages.CharacterInteraction
 local _Dodge = {
-    PATTERN = "<font color=\"#DBDBDB\"><font color=\"#(%x%x%x%x%x%x)\">(.+)</font> missed <font color=\"#(%x%x%x%x%x%x)\">(.+)</font></font>",
+    MISSED_TSKHANDLE = "hdc96a2c4g48d3g44a4g9c2aga85d059d43e5", -- "[2] missed [1]" (yes, the order of params is reversed from the usual)
 }
 Log:RegisterClass("UI.CombatLog.Messages.Dodge", _Dodge, {"UI.CombatLog.Messages.CharacterInteraction"})
 Log.RegisterMessageHandler(_Dodge)
@@ -50,7 +50,11 @@ end
 
 -- Create message objects.
 Log.Hooks.GetMessageObject:RegisterHook(function(obj, message)
-    local charColor, charName, targetColor, targetName = message:match(_Dodge.PATTERN)
+    local pattern = Text.FormatLarianTranslatedString(_Dodge.MISSED_TSKHANDLE,
+        _Dodge.KEYWORD_PATTERN,
+        _Dodge.KEYWORD_PATTERN
+    )
+    local charColor, charName, targetColor, targetName = message:match(pattern)
     if charColor then
         obj = _Dodge:Create(charName, charColor, targetName, targetColor)
     end

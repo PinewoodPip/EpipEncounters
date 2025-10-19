@@ -6,7 +6,9 @@
 local Log = Client.UI.CombatLog
 
 ---@class UI.CombatLog.Messages.Healing : UI.CombatLog.Messages.Damage
-local _HealingMessage = {}
+local _HealingMessage = {
+    REGAINED_TSKHANDLE = "h7aec4117g5f25g45eaga9edg744a2b5d1856", -- "[1] regained [2]"
+}
 Log:RegisterClass("UI.CombatLog.Messages.Healing", _HealingMessage, {"UI.CombatLog.Messages.Damage"})
 Log.RegisterMessageHandler(_HealingMessage)
 
@@ -76,19 +78,11 @@ end
 -- Create message objects.
 -- Both healing and armor restoration become the same object type, Healing.
 Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
-    local healingPattern = "<font color=\"#DBDBDB\"><font color=\"#(%x%x%x%x%x%x)\">(.+)</font> regained <font color=\"#(%x%x%x%x%x%x)\">(%d+) (.+)</font></font>"
+    local healingPattern = Text.FormatLarianTranslatedString(_HealingMessage.REGAINED_TSKHANDLE, _HealingMessage.KEYWORD_PATTERN, _HealingMessage.DAMAGE_PATTERN)
     local charColor, char, color, amount, damageType = message:match(healingPattern)
-    if not char then
-        -- Check armor restoration pattern
-        healingPattern = "<font color=\"#DBDBDB\"><font color=\"#(%x%x%x%x%x%x)\">(.+)</font> restored <font color=\"#(%x%x%x%x%x%x)\">(%d+) (.+)</font></font>"
-
-        charColor, char, color, amount, damageType = message:match(healingPattern)
-    end
-
     if char then
         obj = _HealingMessage:Create(char, charColor, damageType, amount, color)
     end
-
     return obj
 end)
 

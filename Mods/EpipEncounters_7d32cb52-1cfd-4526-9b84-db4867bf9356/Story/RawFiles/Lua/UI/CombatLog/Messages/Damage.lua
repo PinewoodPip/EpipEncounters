@@ -7,7 +7,11 @@ local Log = Client.UI.CombatLog
 
 ---@class UI.CombatLog.Messages.Damage : UI.CombatLog.Messages.Character
 ---@field Damage UI.CombatLog.Messages.Damage.Hit[]
-local _DamageMessage = {}
+local _DamageMessage = {
+    HIT_TSKHANDLE = "h8ade1bb0gb79eg44c0gbe01g1dd0d51935df", -- "hit"
+
+    DAMAGE_PATTERN = [[<font color="#(%x%x%x%x%x%x)">(%d+) (.+)</font>]], -- Pattern for damage color, amount & type.
+}
 Log:RegisterClass("UI.CombatLog.Messages.Damage", _DamageMessage, {"UI.CombatLog.Messages.Character"})
 Log.RegisterMessageHandler(_DamageMessage)
 
@@ -126,20 +130,27 @@ function _DamageMessage:ToString()
     return msg
 end
 
+---Returns the pattern that matches damage amount & type messages (ex. "X Fire Damage"), including their color.
+---@return pattern
+function _DamageMessage:__GetDamagePattern()
+    return [[<font color="#(%x%x%x%x%x%x)">]] .. Text.FormatLarianTranslatedString(Log.DAMAGE_TSKHANDLE, [[(%d+) (.+)]]) .. [[</font>]]
+end
+
 ---------------------------------------------
 -- PARSING
 ---------------------------------------------
 
 -- Create message objects.
 Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
-    local pattern = '^<font color="#DBDBDB"><font color="#(%x%x%x%x%x%x)">(.+)</font> was hit for <font color="#(%x%x%x%x%x%x)">(%d+) (.+) Damage</font></font>$'
-
+    local pattern = Text.FormatLarianTranslatedString(Log.CHARACTER_RECEIVED_ACTION_TSKHANDLE,
+        _DamageMessage.KEYWORD_PATTERN,
+        Text.GetTranslatedString(_DamageMessage.HIT_TSKHANDLE),
+        _DamageMessage:__GetDamagePattern()
+    )
     local characterColor, characterName, dmgColor, dmgAmount, dmgType = message:match(pattern)
-
     if characterColor then
         obj = _DamageMessage:Create(characterName, characterColor, dmgType, dmgAmount, dmgColor)
     end
-
     return obj
 end)
 
