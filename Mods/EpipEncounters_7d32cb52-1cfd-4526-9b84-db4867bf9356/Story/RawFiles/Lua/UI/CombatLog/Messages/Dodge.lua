@@ -34,13 +34,10 @@ end
 
 ---@override
 function _Dodge:ToString()
-    local msg = Text.Format("%s missed %s", {
-        FormatArgs = {
-            {Text = self.CharacterName, Color = self.CharacterColor},
-            {Text = self.TargetName, Color = self.TargetColor},
-        },
-        Color = Log.COLORS.TEXT,
-    })
+    local msg = Text.FormatLarianTranslatedString(_Dodge.MISSED_TSKHANDLE,
+        self:GetTargetLabel(), -- First param ([1]) in this TSK is target, oddly.
+        self:GetCharacterLabel()
+    )
     return msg
 end
 

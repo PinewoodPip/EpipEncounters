@@ -53,15 +53,12 @@ end
 ---@override
 function _Attack:ToString()
     local dmg,addendum = self:GetDamageString()
-    local msg = Text.Format("%s attacked %s for %s damage %s", {
-        Color = Log.COLORS.TEXT,
-        FormatArgs = {
-            {Text = self.CharacterName, Color = self.CharacterColor},
-            {Text = self.TargetCharacter, Color = self.TargetCharacterColor},
-            dmg,
-            addendum,
-        }
-    })
+    local msg = Text.FormatLarianTranslatedString(Log.CHARACTER_ACTION_TSKHANDLE, 
+        self:GetCharacterLabel(),
+        Text.GetTranslatedString(_Attack.ATTACKED_TSKHANDLE),
+        Text.Format(self.TargetCharacter, {Color = self.TargetCharacterColor}),
+        dmg .. addendum
+    )
     return msg
 end
 

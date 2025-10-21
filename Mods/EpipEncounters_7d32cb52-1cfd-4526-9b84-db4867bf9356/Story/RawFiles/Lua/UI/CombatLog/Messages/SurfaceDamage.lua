@@ -4,7 +4,6 @@
 ---------------------------------------------
 
 local Log = Client.UI.CombatLog
-local DamageClass = Log:GetClass("UI.CombatLog.Messages.Damage")
 
 ---@class UI.CombatLog.Messages.SurfaceDamage : UI.CombatLog.Messages.Damage
 local _Surface = {
@@ -43,12 +42,10 @@ end
 
 ---@override
 function _Surface:ToString()
-    local str = Text.Format("%s by a surface", {
-        FormatArgs = {
-            DamageClass.ToString(self),
-        },
-        Color = Log.COLORS.TEXT,
-    })
+    local str = Text.FormatLarianTranslatedString(_Surface.SURFACE_DAMAGE_TSKHANDLE,
+        self:GetCharacterLabel(),
+        self:GetDamageString()
+    )
 
     return str
 end

@@ -17,7 +17,7 @@ Log:RegisterClass("UI.CombatLog.Message", _CombatLogMessage)
 
 ---Converts the message object to a string.
 ---@virtual
----@return string
+---@return string -- Does not need to be wrapped in the base combat log color.
 function _CombatLogMessage:ToString() return "" end
 
 ---Merges 2 messages together.

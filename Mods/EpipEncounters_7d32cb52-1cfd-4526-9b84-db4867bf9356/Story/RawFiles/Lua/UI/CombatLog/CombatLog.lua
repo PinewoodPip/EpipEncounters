@@ -168,6 +168,13 @@ function Log.RegisterFilter(id, filter)
     Log.ToggleFilter(id, true)
 end
 
+---Stringifies a message and applies formatting to display it in the combat log.
+---@param msg UI.CombatLog.Message
+---@return string
+function Log.StringifyMessage(msg)
+    return Text.Format(msg:ToString(), {Color = Log.COLORS.TEXT})
+end
+
 ---Adds a message to the log.
 ---@param msg UI.CombatLog.Message
 ---@param filter number? Defaults to 0.
@@ -203,10 +210,10 @@ function Log.AddMessage(msg, filter)
 
         lastMessage.Time = Ext.MonotonicTime() -- Update time.
 
-        msgElement.text = lastMessage.Message:ToString()
+        msgElement.text = Log.StringifyMessage(lastMessage.Message)
         msgElement.text_txt.htmlText = msgElement.text
     else
-        Log:GetRoot().addTextToFilter(filter, msg:ToString(), msg:GetClassName())
+        Log:GetRoot().addTextToFilter(filter, Log.StringifyMessage(msg), msg:GetClassName())
 
         table.insert(Log.Messages, obj)
 

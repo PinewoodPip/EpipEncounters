@@ -31,7 +31,7 @@ local _Skill = {
         TELEPORT = "Teleport",
         WALL = "Wall",
         RAIN = "Rain",
-        SUMMON = "Summon",
+        SUMMON = "Summon", -- TODO handle this case more gracefully; skill name is not included in this message, only the summon name.
     }
 }
 Log:RegisterClass("UI.CombatLog.Messages.Skill", _Skill, {"UI.CombatLog.Messages.Character"})
@@ -78,44 +78,43 @@ end
 
 ---@override
 function _Skill:ToString()
-    local targetStr = ""
+    local message = ""
+    local skillLabel = Text.Format(self.Skill, {Color = self.SkillColor})
 
     if self.Target == self.TARGET_TYPES.SUMMON then
-        -- TODO handle this case more gracefully; skill name is not included in this message, only the summon name.
-        return Text.Format("%s summoned %s onto the battlefield", {
-            Color = Log.COLORS.TEXT,
+        message = Text.FormatLarianTranslatedString(_Skill.SUMMONED_TSKHANDLE, {
             FormatArgs = {
                 {Text = self.CharacterName, Color = self.CharacterColor},
-                {Text = self.Skill, Color = self.SkillColor},
             },
         })
+        message = Text.Replace(message, "[3]", Text.Format(self.TargetCharacter, {Color = self.TargetCharacterColor}), 1) -- This TSK has params [1] & [3], thus the previous call cannot handle it properly.
     elseif self.Target == self.TARGET_TYPES.GROUND then
-        targetStr = "on the ground"
+        message = Text.FormatLarianTranslatedString(_Skill.CAST_ON_GROUND_TSKHANDLE,
+            self:GetCharacterLabel(),
+            skillLabel
+        )
     elseif self.Target == self.TARGET_TYPES.CHARACTER then
-        targetStr = Text.Format("on %s", {
-            FormatArgs = {
-                {Text = self.TargetCharacter, Color = self.TargetCharacterColor},
-            },
-        })
+        message = Text.FormatLarianTranslatedString(_Skill.ON_TSKHANDLE,
+            Text.FormatLarianTranslatedString(_Skill.USED_TSKHANDLE,
+                self:GetCharacterLabel(),
+                skillLabel
+            ),
+            Text.Format(self.TargetCharacter, {Color = self.TargetCharacterColor})
+        )
     elseif self.Target == self.TARGET_TYPES.TELEPORT then
-        targetStr = Text.Format(", teleporting %s into the air", {
-            FormatArgs = {
-                {Text = self.TargetCharacter, Color = self.TargetCharacterColor},
-            },
-        })
+        message = Text.FormatLarianTranslatedString(_Skill.CAST_TELEPORT_TSKHANDLE,
+            self:GetCharacterLabel(),
+            skillLabel,
+            Text.Format(self.TargetCharacter, {Color = self.TargetCharacterColor})
+        )
+    else -- Wall, Rain, and Self cases.
+        message = Text.FormatLarianTranslatedString(_Skill.CAST_TSKHANDLE,
+            self:GetCharacterLabel(),
+            skillLabel
+        )
     end
-    -- Note: Wall, Rain, and Self casts have no additional trailing text.
 
-    local msg = Text.Format("%s used %s %s", {
-        Color = Log.COLORS.TEXT,
-        FormatArgs = {
-            {Text = self.CharacterName, Color = self.CharacterColor},
-            {Text = self.Skill, Color = self.SkillColor},
-            targetStr,
-        },
-    })
-
-    return msg
+    return message
 end
 
 ---------------------------------------------

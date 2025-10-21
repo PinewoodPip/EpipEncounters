@@ -35,6 +35,12 @@ function _CharacterInteractionMessage:Create(charName, charColor, targetName, ta
     return instance
 end
 
+---Returns a color-formatted label of the target character.
+---@return string
+function _CharacterInteractionMessage:GetTargetLabel()
+    return Text.Format(self.TargetName, {Color = self.TargetColor})
+end
+
 ---@override
 function _CharacterInteractionMessage:CanMerge(msg)
     ---@cast msg UI.CombatLog.Messages.CharacterInteraction

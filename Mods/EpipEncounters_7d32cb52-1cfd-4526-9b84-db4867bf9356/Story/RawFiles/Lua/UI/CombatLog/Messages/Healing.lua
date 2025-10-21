@@ -33,6 +33,8 @@ function _HealingMessage:Create(charName, charColor, damageType, amount, color)
                 Type = damageType,
                 Amount = tonumber(amount),
                 Color = color,
+                Hits = 1,
+                HitTime = Ext.MonotonicTime(),
             },
         },
     })
@@ -40,6 +42,7 @@ end
 
 ---@override
 function _HealingMessage:ToString()
+    -- Concatenate all heals
     local heals = {}
     local healStr = ""
     for i=1,#self.Damage,1 do
@@ -52,22 +55,15 @@ function _HealingMessage:ToString()
             healStr = healStr .. ", "
         end
     end
-
     for _,v in ipairs(heals) do
         healStr = healStr .. v
     end
 
-    local str = Text.Format("%s restored %s", {
-        FormatArgs = {{
-            Text = self.CharacterName,
-            Color = self.CharacterColor,
-        },
-        {
-            Text = healStr,
-        }},
-        Color = Log.COLORS.TEXT,
-    })
-
+    -- Build final string
+    local str = Text.FormatLarianTranslatedString(_HealingMessage.REGAINED_TSKHANDLE,
+        self:GetCharacterLabel(),
+        healStr
+    )
     return str
 end
 

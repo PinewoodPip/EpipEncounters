@@ -35,9 +35,11 @@ end
 
 ---@override
 function APPreservation:ToString()
-    local msg = Text.Format("%s: %s Action Points unspent", {
+    local msg = Text.Format("%s: %s %s", {
         FormatArgs = {
-            self.CharacterName, self.AP
+            self.CharacterName,
+            self.AP,
+            Text.GetTranslatedString(APPreservation.AP_PRESERVED_TSKHANDLE),
         },
         Color = self.COLOR,
     })

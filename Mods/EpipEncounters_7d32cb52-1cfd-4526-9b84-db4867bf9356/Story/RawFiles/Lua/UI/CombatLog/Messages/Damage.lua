@@ -107,7 +107,7 @@ function _DamageMessage:GetDamageString()
 
     local addendum = ""
     if totalHits > 1 then
-        addendum = string.format("from %s hits", totalHits)
+        addendum = string.format("from %s hits", totalHits) -- TODO translate
     end
 
     return damages, addendum
@@ -117,16 +117,11 @@ end
 ---@return string
 function _DamageMessage:ToString()
     local dmgString,addendum = self:GetDamageString()
-
-    local msg = Text.Format("%s was hit for %s damage %s", {
-        Color = Log.COLORS.TEXT,
-        FormatArgs = {
-            {Text = self.CharacterName, Color = self.CharacterColor},
-            dmgString,
-            addendum,
-        }
-    })
-
+    local msg = Text.FormatLarianTranslatedString(Log.CHARACTER_RECEIVED_ACTION_TSKHANDLE,
+        self:GetCharacterLabel(),
+        Text.GetTranslatedString(_DamageMessage.HIT_TSKHANDLE),
+        dmgString .. addendum
+    )
     return msg
 end
 

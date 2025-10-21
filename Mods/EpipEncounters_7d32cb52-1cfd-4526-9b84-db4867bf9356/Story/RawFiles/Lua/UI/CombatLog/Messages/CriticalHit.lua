@@ -37,14 +37,11 @@ end
 
 ---@override
 function _CriticalHit:ToString()
-    local msg = Text.Format("%s dealt a %s to %s", {
-        FormatArgs = {
-            {Text = self.CharacterName, Color = self.CharacterColor},
-            {Text = "critical hit", Color = self.CRITICAL_HIT_COLOR},
-            {Text = self.TargetName, Color = self.TargetColor},
-        },
-        Color = Log.COLORS.TEXT,
-    })
+    local msg = Text.FormatLarianTranslatedString(_CriticalHit.CRITICAL_HIT_MESSAGE_TSKHANDLE,
+        self:GetCharacterLabel(),
+        Text.Format(Text.GetTranslatedString(_CriticalHit.CRITICAL_HIT_TSKHANDLE), {Color = self.CRITICAL_HIT_COLOR}),
+        self:GetTargetLabel()
+    )
 
     return msg
 end

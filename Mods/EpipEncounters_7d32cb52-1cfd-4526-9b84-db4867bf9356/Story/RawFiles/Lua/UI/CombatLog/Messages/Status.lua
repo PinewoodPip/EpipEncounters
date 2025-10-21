@@ -44,39 +44,18 @@ end
 
 ---@override
 function _StatusMessage:ToString()
-    local statuses = ""
-
+    local statusLabels = {} ---@type string[]
     for i,status in ipairs(self.Statuses) do
-        statuses = statuses .. Text.Format(status.Name, {Color = status.Color})
-
-        if i ~= #self.Statuses then
-            statuses = statuses .. ", "
-        end
+        statusLabels[i] = Text.Format(status.Name, {Color = status.Color})
     end
 
-    local moreStatusForDisplayString = "status"
-
-    if #self.Statuses > 1 then
-        moreStatusForDisplayString = "statuses"
-    end
-
-    local msg = ""
-
-    -- if #self.Statuses > 1 then
-        -- TODO filter out reappled status
-    local word = "gained"
-    if self.LosingStatuses then word = "lost" end
-
-    msg = msg .. Text.Format("%s %s the %s %s", {
-        Color = Log.COLORS.TEXT,
-        FormatArgs = {
-            {Text = self.CharacterName, Color = self.CharacterColor},
-            word,
-            moreStatusForDisplayString,
-            statuses,
-        }
-    })
-    -- end
+    -- TODO reimplement plural "statuses" label; the game TSKs do not have strings for it,
+    -- thus we'd have to add our own.
+    local tskHandle = self.LosingStatuses and _StatusMessage.STATUS_REMOVED_TSKHANDLE or _StatusMessage.STATUS_APPLIED_TSKHANDLE
+    local msg = Text.FormatLarianTranslatedString(tskHandle,
+        self:GetCharacterLabel(),
+        Text.Join(statusLabels, ", ")
+    )
 
     return msg
 end

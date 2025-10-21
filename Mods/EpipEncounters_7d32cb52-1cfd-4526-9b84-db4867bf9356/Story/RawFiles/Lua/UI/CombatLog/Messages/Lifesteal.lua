@@ -40,13 +40,17 @@ end
 
 ---@override
 function _LifestealMessage:ToString()
-    local msg = Text.Format("%s regained %s from Lifesteal", {
-        Color = Log.COLORS.TEXT,
-        FormatArgs = {
-            {Text = self.CharacterName, Color = self.CharacterColor},
-            {Text = "%s %s", Color = self.Damage[1].Color, FormatArgs = {Text.RemoveTrailingZeros(self.Damage[1].Amount), self.Damage[1].Type}}
-        },
-    })
+    local msg = Text.FormatLarianTranslatedString(_LifestealMessage.LIFESTEAL_TSKHANDLE,
+        self:GetCharacterLabel(),
+        Text.Format("%s %s", {
+            -- This message doesn't support merging, thus there will only ever be one damage entry.
+            Color = self.Damage[1].Color,
+            FormatArgs = {
+                Text.RemoveTrailingZeros(self.Damage[1].Amount),
+                self.Damage[1].Type,
+            },
+        })
+    )
 
     return msg
 end
