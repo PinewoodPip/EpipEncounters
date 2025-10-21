@@ -3,10 +3,7 @@
 -- Scripting for the extended combat log.
 ---------------------------------------------
 
--- TODO
--- Check last X messages for merging
--- Add more message types
--- Some utility method for concatenating with commas
+local CommonStrings = Text.CommonStrings
 
 ---@class CombatLogUI : UI
 ---@field Messages CombatLogSentMessage[]
@@ -33,6 +30,55 @@ local Log = {
     MessageTypes = {},
     EnabledFilters = {},
     FilterOrder = {},
+
+    TranslatedStrings = {
+        Label_Welcome = {
+            Handle = "hfc2baeaeg3443g491cg97e4g895a23400f2d",
+            Text = "Welcome to the combat log. Right-click to access filters.",
+            ContextDescription = [[Message added when loading into a session]],
+        },
+        MessageBox_FeatureNotEnabled_Header = {
+            Handle = "h68096433g8e54g4a81g9894g4be5096d2cdc",
+            Text = "Feature Not Enabled",
+            ContextDescription = [[Header for message box shown when trying to use filters without enabling the feature]],
+        },
+        MessageBox_FeatureNotEnabled_Message = {
+            Handle = "hc3d4397fgb1ffg4cd2g8e3bg52b67ec37424",
+            Text = [[You must enable "Combat Log Improvements" in the options menu and reload the savefile to use custom filters.]],
+            ContextDescription = [[Message shown when trying to use filters without the feature enabled]],
+        },
+        Header_Filters = {
+            Handle = "hbfa93b2eg8fa6g4e2fgb241gc64e7c4708ec",
+            Text = "———— Filters ————",
+            ContextDescription = [[Header for the filters section in context menu. Em-dashes are decorative.]],
+        },
+        Filter_CriticalsAndDodges = {
+            Handle = "h6f3a9d1bg8c7eg4b52ga9d3ge7c1f4b2a8d6",
+            Text = "Critical Hits & Dodges",
+            ContextDescription = [[Filter name for critical hits and dodges]],
+        },
+        Filter_SourceGenerationAndSI = {
+            Handle = "h2d7f4a9egb1c8g4e47g9a6dgc3f8e1b5d2a7",
+            Text = "Source Gen/Infuse",
+            ContextDescription = [[Filter name for source generation and infusion (Epic Encounters 2 mechanics)]],
+        },
+        Filter_ReactionCharges = {
+            Handle = "h1c9e3b7dga5f2g4d18g8e7cgf2a6d4c1b9e3",
+            Text = "Reaction Charges",
+            ContextDescription = [[Filter name for reaction charges (Epic Encounters 2 mechanic)]],
+        },
+        Filter_APPreservation = {
+            Handle = "h3f5d8c2agb9e1g4a74g8d3bgf7c2e5a4b8d1",
+            Text = "AP Preservation",
+            ContextDescription = [[Filter name for AP preservation messages]],
+        },
+        Filter_Scripted = {
+            Handle = "h7a4b9e2fg1d6cg4895ga2f7gd5e3c8b1a4f9",
+            Text = "Generic/Scripted",
+            ContextDescription = [[Filter name for generic/scripted messages]],
+        },
+    },
+
     Hooks = {
         ---@type CombatLogUI_Hook_GetMessageObject
         GetMessageObject = {Options = {First = false}},
@@ -45,6 +91,7 @@ local Log = {
         ---@type CombatLogUI_Event_MessageAdded
         MessageAdded = {},
     },
+
     FILEPATH_OVERRIDES = {
         ["Public/Game/GUI/combatLog.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/combatLog.swf",
     },
@@ -52,6 +99,7 @@ local Log = {
     SAVE_FORMAT = 0,
 }
 Epip.InitializeUI(Ext.UI.TypeID.combatLog, "CombatLog", Log)
+local TSK = Log.TranslatedStrings
 
 ---@class CombatLogSentMessage
 ---@field Filter integer
@@ -327,7 +375,9 @@ end)
 Ext.Events.ResetCompleted:Subscribe(function()
     if Client.IsUsingController() then return end
     Log.Clear()
-    Log:GetRoot().addTextToFilter(0, "Welcome to the combat log. Right-click to access filters.")
+
+    -- Resend welcome message
+    Log:GetRoot().addTextToFilter(0, TSK.Label_Welcome:GetString())
 end)
 
 Client.UI.ContextMenu.RegisterMenuHandler("combatLog", function()
@@ -336,8 +386,8 @@ Client.UI.ContextMenu.RegisterMenuHandler("combatLog", function()
     if not Settings.GetSettingValue("EpipEncounters", "CombatLogImprovements") then
         Client.UI.MessageBox.Open({
             ID = "CombatLog_Disabled",
-            Header = "Feature Not Enabled",
-            Message = "You must enable 'Combat Log Improvements' in the options menu and reload the savefile to use custom filters.",
+            Header = TSK.MessageBox_FeatureNotEnabled_Header:GetString(),
+            Message = TSK.MessageBox_FeatureNotEnabled_Message:GetString(),
         })
         return nil
     end
@@ -357,13 +407,13 @@ Client.UI.ContextMenu.RegisterMenuHandler("combatLog", function()
         })
     end
 
-    table.insert(filters, {id = "combatLog_Clear", type = "button", text = "Clear", requireShiftClick = true})
+    table.insert(filters, {id = "combatLog_Clear", type = "button", text = CommonStrings.Clear:GetString(), requireShiftClick = true})
 
     Client.UI.ContextMenu.Setup({
         menu = {
             id = "main",
             entries = {
-                {id = "combatLog_Filters_Header", type = "header", text = "———— Filters ————"},
+                {id = "combatLog_Filters_Header", type = "header", text = TSK.Header_Filters:GetString()},
 
                 table.unpack(filters),
             }
@@ -393,14 +443,14 @@ end
 local DefaultFilters = {
     {
         ID = "Actions",
-        Name = "Skills",
+        Name = CommonStrings.Skills:GetString(),
         MessageTypes = {
             ["UI.CombatLog.Messages.Skill"] = true,
         }
     },
     {
         ID = "Damage",
-        Name = "Damage",
+        Name = CommonStrings.Damage:GetString(),
         MessageTypes = {
             ["UI.CombatLog.Messages.Damage"] = true,
             ["UI.CombatLog.Messages.Attack"] = true,
@@ -408,21 +458,21 @@ local DefaultFilters = {
     },
     {
         ID = "SurfaceDamage",
-        Name = "Surface Damage",
+        Name = CommonStrings.SurfaceDamage:GetString(),
         MessageTypes = {
             ["UI.CombatLog.Messages.SurfaceDamage"] = true,
         },
     },
     {
         ID = "ReflectedDamage",
-        Name = "Reflected Damage",
+        Name = CommonStrings.ReflectedDamage:GetString(),
         MessageTypes = {
             ["UI.CombatLog.Messages.ReflectedDamage"] = true,
         },
     },
     {
         ID = "Healing",
-        Name = "Healing",
+        Name = CommonStrings.Healing:GetString(),
         MessageTypes = {
             ["UI.CombatLog.Messages.Healing"] = true,
             -- Lifesteal is not included as it has its own filter. 
@@ -430,14 +480,14 @@ local DefaultFilters = {
     },
     {
         ID = "Lifesteal",
-        Name = "Lifesteal",
+        Name = CommonStrings.Lifesteal:GetString(),
         MessageTypes = {
             ["UI.CombatLog.Messages.Lifesteal"] = true,
         }
     },
     {
         ID = "CriticalHits",
-        Name = "Critical Hits & Dodges",
+        Name = TSK.Filter_CriticalsAndDodges:GetString(),
         MessageTypes = {
             ["UI.CombatLog.Messages.CriticalHit"] = true,
             ["UI.CombatLog.Messages.Dodge"] = true,
@@ -445,14 +495,14 @@ local DefaultFilters = {
     },
     {
         ID = "StatusApplication",
-        Name = "Statuses",
+        Name = CommonStrings.Statuses:GetString(),
         MessageTypes = {
             ["UI.CombatLog.Messages.Status"] = true,
         }
     },
     {
         ID = "SourceGeneration",
-        Name = "Source Gen/Infuse",
+        Name = TSK.Filter_SourceGenerationAndSI:GetString(),
         MessageTypes = {
             ["UI.CombatLog.Messages.SourceGeneration"] = true,
             ["UI.CombatLog.Messages.SourceInfusionLevel"] = true,
@@ -460,21 +510,21 @@ local DefaultFilters = {
     },
     {
         ID = "SystemSpam",
-        Name = "Reaction Charges",
+        Name = TSK.Filter_ReactionCharges:GetString(),
         MessageTypes = {
             ["UI.CombatLog.Messages.ReactionCharges"] = true,
         },
     },
     {
         ID = "APPreservation",
-        Name = "AP Preservation",
+        Name = TSK.Filter_APPreservation:GetString(),
         MessageTypes = {
             ["UI.CombatLog.Messages.APPreservation"] = true,
         }
     },
     {
         ID = "Scripted",
-        Name = "Generic/Scripted",
+        Name = TSK.Filter_Scripted:GetString(),
         MessageTypes = {
             ["UI.CombatLog.Messages.Scripted"] = true,
         },
