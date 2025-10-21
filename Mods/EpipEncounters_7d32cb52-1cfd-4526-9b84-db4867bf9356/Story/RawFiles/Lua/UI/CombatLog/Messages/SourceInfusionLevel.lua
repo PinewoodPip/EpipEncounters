@@ -14,6 +14,19 @@ local _SourceInfusionLevel = {
 Log:RegisterClass("UI.CombatLog.Messages.SourceInfusionLevel", _SourceInfusionLevel, {"UI.CombatLog.Messages.Scripted"})
 Log.RegisterMessageHandler(_SourceInfusionLevel)
 
+local TSKs = {
+    SourceInfusion_Level = Log:RegisterTranslatedString({
+        Handle = "h6d73a6cbg2e37g406dg8059gf047e7bcbaf1",
+        Text = [[Source Infusion: %s]],
+        ContextDescription = [[Message for a character's source infusion level changing; param is the new level.]],
+    }),
+    SourceInfusion_Cleared = Log:RegisterTranslatedString({
+        Handle = "h3f4e1c2bgf4edg4b8bg9f5fg2d3e1e2f6b2a",
+        Text = [[Source Infusion cleared]],
+        ContextDescription = [[Message for a character's source infusion being cleared.]],
+    }),
+}
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
@@ -24,10 +37,7 @@ Log.RegisterMessageHandler(_SourceInfusionLevel)
 ---@param level integer
 ---@return CombatLog.Messages.SourceInfusionLevel
 function _SourceInfusionLevel:Create(charName, charColor, level)
-    local text = Text.Format("Source Infusion: %s", {FormatArgs = {level}})
-    if level == 0 then
-        text = "Source Infusion cleared"
-    end
+    local text = level > 0 and TSKs.SourceInfusion_Level:Format(level) or TSKs.SourceInfusion_Cleared:Format()
 
     ---@type CombatLog.Messages.SourceInfusionLevel
     local obj = self:__Create({

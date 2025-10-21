@@ -48,7 +48,8 @@ end
 function _Reflect:ToString()
     local msg = DamageClass.ToString(self)
 
-    msg = string.gsub(msg, " damage ", " reflected damage ")
+    -- Add "(reflected)" suffix
+    msg = msg .. " " .. Text.GetTranslatedString(_Reflect.REFLECTED_TSKHANDLE)
 
     return msg
 end
@@ -64,12 +65,16 @@ Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
         Text.GetTranslatedString(_Reflect.HIT_TSKHANDLE),
 
         -- "X damage(reflected)"; lack of space is intentional (vanilla oversight).
-        Text.FormatLarianTranslatedString(_Reflect.REFLECTED_DAMAGE_PATTERN,
-            Text.FormatLarianTranslatedString(Log.DAMAGE_TSKHANDLE, "(%d+) (.+)"),
-            Text.EscapePatternCharacters(Text.GetTranslatedString(_Reflect.REFLECTED_TSKHANDLE)) -- This string has parenthesis in English, thus must be escaped for the pattern to work.
-        )
+        -- This string has parenthesis in English, thus must be escaped for the pattern to work.
+        [[<font color="#(%x%x%x%x%x%x)">(%d+) (.+)]] .. Text.EscapePatternCharacters(Text.GetTranslatedString(_Reflect.REFLECTED_TSKHANDLE)) .. [[</font>]]
     )
-    local charColor, charName, dmgColor, dmgAmount, dmgType = message:match(pattern)
+    local charColor, charName, dmgColor, dmgAmount, dmgType
+    local params = {message:match(pattern)}
+    if tonumber(params[2]) then -- In some languages (ex. Spanish) the damage comes before character name.
+        charColor, charName, dmgColor, dmgAmount, dmgType = params[4], params[5], params[1], params[2], params[3]
+    else
+        charColor, charName, dmgColor, dmgAmount, dmgType = table.unpack(params)
+    end
     if charColor then
         obj = _Reflect.Create(charName, charColor, dmgType, dmgAmount, dmgColor)
     end

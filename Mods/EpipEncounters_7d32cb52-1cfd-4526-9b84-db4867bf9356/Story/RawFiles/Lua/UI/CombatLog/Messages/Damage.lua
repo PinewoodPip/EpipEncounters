@@ -15,6 +15,14 @@ local _DamageMessage = {
 Log:RegisterClass("UI.CombatLog.Messages.Damage", _DamageMessage, {"UI.CombatLog.Messages.Character"})
 Log.RegisterMessageHandler(_DamageMessage)
 
+local TSKs = {
+    Suffix_FromXHits = Log:RegisterTranslatedString({
+        Handle = "hf09d887cgd6bbg43e9g9947g7bbbcb4f661f",
+        Text = [[from %s hits]],
+        ContextDescription = [[Suffix added to merged combat log hit messages; param is amount of hits. Ex. "<character> took 10 damage from 2 hits"]],
+    }),
+}
+
 ---@class UI.CombatLog.Messages.Damage.Hit
 ---@field Type string
 ---@field Amount integer Amount of damage dealt across all hits of this type.
@@ -107,7 +115,7 @@ function _DamageMessage:GetDamageString()
 
     local addendum = ""
     if totalHits > 1 then
-        addendum = string.format("from %s hits", totalHits) -- TODO translate
+        addendum = TSKs.Suffix_FromXHits:Format(totalHits)
     end
 
     return damages, addendum

@@ -14,6 +14,19 @@ local _Charges = {
 Log:RegisterClass("UI.CombatLog.Messages.ReactionCharges", _Charges, {"UI.CombatLog.Messages.Scripted"})
 Log.RegisterMessageHandler(_Charges)
 
+local TSKs = {
+    ReactionCharges_Remaining_Prefixed = Log:RegisterTranslatedString({
+        Handle = "hbb7f4c8bgf1a1g4b2bg8e6fgc6e2e4e2d3e4",
+        Text = [[%s reaction charges remaining: %s]],
+        ContextDescription = [[Message for a character's remaining charges for a reaction; params are reaction type and amount.]],
+    }),
+    ReactionCharges_Remaining = Log:RegisterTranslatedString({
+        Handle = "h0095bd8ag2e26g4cc3gb6e0gb86d38e65b3a",
+        Text = [[reaction charges remaining: %s]],
+        ContextDescription = [[Message for a character's summary of remaining reaction charges of all types; param is the reaction charges (ex. "Predator: 1<br>Celestial: 2").]],
+    }),
+}
+
 ---@class UI.CombatLog.Messages.ReactionCharges.Reaction
 ---@field Reaction string
 ---@field Amount integer
@@ -32,11 +45,7 @@ function _Charges:Create(charName, charColor, reactions, fallbackText)
 
     -- TODO finish
     if reactions then
-        text = Text.Format("%s reaction charges remaining: %s", {
-            FormatArgs = {
-                reactions[1].Reaction, reactions[1].Amount
-            }
-        })
+        text = TSKs.ReactionCharges_Remaining_Prefixed:Format(reactions[1].Reaction, reactions[1].Amount)
     end
 
     -- Start with a line break for multi-reaction messages
@@ -54,15 +63,11 @@ function _Charges:Create(charName, charColor, reactions, fallbackText)
             end
         end
 
-        text = Text.Format("reaction charges remaining:<br>%s", {
-            FormatArgs = {addendum},
-        })
+        text = TSKs.ReactionCharges_Remaining:Format(addendum)
     end
 
     if not reactions then
-        text = Text.Format("reaction charges remaining:<br>%s", {
-            FormatArgs = {fallbackText}
-        })
+        text = TSKs.ReactionCharges_Remaining:Format(fallbackText)
     end
 
     ---@type UI.CombatLog.Messages.ReactionCharges
