@@ -115,7 +115,15 @@ function _DamageMessage:GetDamageString()
 
     local addendum = ""
     if totalHits > 1 then
-        addendum = TSKs.Suffix_FromXHits:Format(totalHits)
+        -- Use Epip's TSK is translated for the current language
+        if Text.GetTranslatedStringTranslation(TSKs.Suffix_FromXHits.Handle) then
+            addendum = TSKs.Suffix_FromXHits:Format(totalHits)
+        else -- Otherwise fallback to "<amount>x hit" to avoid showing the english suffix in an otherwise-translated message. The "hit" is awkward in singular, but sadly no plural string for it exists in the vanilla TSKs.
+            addendum = Text.Format("(%sx %s)", {FormatArgs = {
+                totalHits,
+                Text.GetTranslatedString(_DamageMessage.HIT_TSKHANDLE)
+            }})
+        end
     end
 
     return damages, addendum
