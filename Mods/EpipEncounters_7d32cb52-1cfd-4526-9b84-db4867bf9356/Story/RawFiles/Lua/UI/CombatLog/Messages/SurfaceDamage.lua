@@ -7,7 +7,7 @@ local Log = Client.UI.CombatLog
 
 ---@class UI.CombatLog.Messages.SurfaceDamage : UI.CombatLog.Messages.Damage
 local _Surface = {
-    SURFACE_DAMAGE_TSKHANDLE = "hb1dd9994g2e17g4dd9gb69egb138ee4b6b2a", -- "[1] was hit for [2] by a surface"
+    SURFACE_DAMAGE_TSKHANDLE = "hb1dd9994g2e17g4dd9gb69egb138ee4b6b2a", -- "[1] was [2] for [3] by a surface"
 }
 Log:RegisterClass("UI.CombatLog.Messages.SurfaceDamage", _Surface, {"UI.CombatLog.Messages.Damage"})
 Log.RegisterMessageHandler(_Surface)
@@ -42,9 +42,11 @@ end
 
 ---@override
 function _Surface:ToString()
+    local dmgString, addendum = self:GetDamageString()
     local str = Text.FormatLarianTranslatedString(_Surface.SURFACE_DAMAGE_TSKHANDLE,
         self:GetCharacterLabel(),
-        self:GetDamageString()
+        Text.GetTranslatedString(_Surface.HIT_TSKHANDLE),
+        dmgString .. addendum
     )
 
     return str

@@ -132,7 +132,7 @@ end
 ---@override
 ---@return string
 function _DamageMessage:ToString()
-    local dmgString,addendum = self:GetDamageString()
+    local dmgString, addendum = self:GetDamageString()
     local msg = Text.FormatLarianTranslatedString(Log.CHARACTER_RECEIVED_ACTION_TSKHANDLE,
         self:GetCharacterLabel(),
         Text.GetTranslatedString(_DamageMessage.HIT_TSKHANDLE),
