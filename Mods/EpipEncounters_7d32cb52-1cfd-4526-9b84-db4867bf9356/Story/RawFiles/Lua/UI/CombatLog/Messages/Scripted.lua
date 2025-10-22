@@ -51,6 +51,7 @@ end
 
 -- Create message objects.
 Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
+    if obj then return obj end -- Do not override any existing messages. Some languages (ex. Polish) use this format for vanilla messages, such as attacks ("<postać> atakuje: ...").
     local pattern = Text.FormatLarianTranslatedString(_ScriptedMessage.MESSAGE_TSKHANDLE,
         _ScriptedMessage.KEYWORD_PATTERN,
         "(.+)"

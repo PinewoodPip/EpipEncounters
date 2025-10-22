@@ -8,7 +8,7 @@ local DamageClass = Log:GetClass("UI.CombatLog.Messages.Damage")
 
 ---@class UI.CombatLog.Messages.ReflectedDamage : UI.CombatLog.Messages.Damage
 local _Reflect = {
-    REFLECTED_TSKHANDLE = "h359e50f7g14f3g476bg8717g92e9a23576ef", -- "(reflected)"
+    REFLECTED_TSKHANDLE = "h5c7e82f0gf29dg4dd8g973eg7ba53972207f", -- "(reflected)"
 
     REFLECTED_DAMAGE_PATTERN = [[<font color="#(%x%x%x%x%x%x)">[1][2]</font>]], -- Param is "(reflected)" label.
 }

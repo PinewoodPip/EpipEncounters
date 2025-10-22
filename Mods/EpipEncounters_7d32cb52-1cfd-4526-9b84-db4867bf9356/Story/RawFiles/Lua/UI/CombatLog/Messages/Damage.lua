@@ -10,7 +10,7 @@ local Log = Client.UI.CombatLog
 local _DamageMessage = {
     HIT_TSKHANDLE = "h8ade1bb0gb79eg44c0gbe01g1dd0d51935df", -- "hit"
 
-    DAMAGE_PATTERN = [[<font color="#(%x%x%x%x%x%x)">(%d+) (.+)</font>]], -- Pattern for damage color, amount & type.
+    DAMAGE_PATTERN = [[<font color="#(%x%x%x%x%x%x)">(%d+):? (.+)</font>]], -- Pattern for damage color, amount & type. Russian language includes a ":" after the amount, but only for armor restoration.
 }
 Log:RegisterClass("UI.CombatLog.Messages.Damage", _DamageMessage, {"UI.CombatLog.Messages.Character"})
 Log.RegisterMessageHandler(_DamageMessage)

@@ -75,7 +75,12 @@ end
 
 -- Create message objects.
 Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
-    local pattern = Text.ReplaceLarianPlaceholders(Text.GetTranslatedString(Log.CHARACTER_ACTION_TSKHANDLE), {
+    -- In some languages (ex. Polish) this string contains parenthesis, thus we must escape them.
+    -- Text.EscapePatternCharacters() cannot be used here as it would also escape the Larian string placeholders.
+    local baseString = Text.GetTranslatedString(Log.CHARACTER_ACTION_TSKHANDLE)
+    baseString = baseString:gsub("%(", "%%(")
+    baseString = baseString:gsub("%)", "%%)")
+    local pattern = Text.ReplaceLarianPlaceholders(baseString, {
         _Attack.KEYWORD_PATTERN,
         Text.GetTranslatedString(_Attack.ATTACKED_TSKHANDLE),
         _Attack.KEYWORD_PATTERN,
