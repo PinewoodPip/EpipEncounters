@@ -82,11 +82,9 @@ function _Skill:ToString()
     local skillLabel = Text.Format(self.Skill, {Color = self.SkillColor})
 
     if self.Target == self.TARGET_TYPES.SUMMON then
-        message = Text.FormatLarianTranslatedString(_Skill.SUMMONED_TSKHANDLE, {
-            FormatArgs = {
-                {Text = self.CharacterName, Color = self.CharacterColor},
-            },
-        })
+        message = Text.FormatLarianTranslatedString(_Skill.SUMMONED_TSKHANDLE,
+            Text.Format(self.CharacterName, {Color = self.CharacterColor})
+        )
         message = Text.Replace(message, "[3]", Text.Format(self.TargetCharacter, {Color = self.TargetCharacterColor}), 1) -- This TSK has params [1] & [3], thus the previous call cannot handle it properly.
     elseif self.Target == self.TARGET_TYPES.GROUND then
         message = Text.FormatLarianTranslatedString(_Skill.CAST_ON_GROUND_TSKHANDLE,
@@ -125,6 +123,8 @@ end
 Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
     -- Check for every skill pattern
     for _,basePattern in ipairs(_Skill.PATTERNS) do
+        local hasSkillName = true
+
         -- Build the pattern
         local pattern
         if basePattern.Pattern == _Skill.SUMMONED_TSKHANDLE then -- Annoying edgecase: this TSK has params [1] & [3], skipping [2], thus our format function is inapplicable.
@@ -132,6 +132,7 @@ Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
                 _Skill.KEYWORD_PATTERN
             )
             pattern = Text.Replace(pattern, "[3]", _Skill.KEYWORD_PATTERN) -- Target character
+            hasSkillName = false
         else
             pattern = Text.FormatLarianTranslatedString(basePattern.Pattern,
             _Skill.KEYWORD_PATTERN, -- Caster character
@@ -139,7 +140,15 @@ Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
             _Skill.KEYWORD_PATTERN -- Used by teleport and rain skills.
         )
         end
-        local charColor, charName, skillColor, skillName, targetColor, targetName = message:match(pattern)
+
+        -- Parse message
+        local charColor, charName, skillColor, skillName, targetColor, targetName
+        local params = {message:match(pattern)}
+        if hasSkillName then
+            charColor, charName, skillColor, skillName, targetColor, targetName = table.unpack(params)
+        else -- Not all skill casts include skill name.
+            charColor, charName, skillColor, skillName, targetColor, targetName = params[1], params[2], nil, nil, params[3], params[4]
+        end
         if charColor then -- Note: not all skill types have the targetColor and targetName params.
             obj = _Skill:Create(charName, charColor, skillName, skillColor, basePattern.SkillType, targetName, targetColor)
             break
