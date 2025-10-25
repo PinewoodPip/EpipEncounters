@@ -75,7 +75,7 @@ local surfaceDamageClassName = _Surface:GetClassName()
 Log.Hooks.CombineMessage:Subscribe(function (ev)
     local prevMsg, newMsg = ev.PreviousMessage.Message, ev.NewMessage.Message
     if prevMsg:GetClassName() == surfaceDamageClassName and newMsg:GetClassName() == surfaceDamageClassName then
-        prevMsg:CombineWith(newMsg)
+        prevMsg:MergeWith(newMsg)
         ev.Combined = true
     end
 end)

@@ -99,7 +99,7 @@ local attackClassName = _Attack:GetClassName()
 Log.Hooks.CombineMessage:Subscribe(function (ev)
     local msg1, msg2 = ev.PreviousMessage, ev.NewMessage
     if msg1.Message:GetClassName() == attackClassName and msg2.Message:GetClassName() == attackClassName then
-        msg1.Message:CombineWith(msg2.Message)
+        msg1.Message:MergeWith(msg2.Message)
         ev.Combined = true
     end
 end)

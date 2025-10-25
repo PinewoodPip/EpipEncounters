@@ -24,7 +24,7 @@ function _CombatLogMessage:ToString() return "" end
 ---@virtual
 ---@param msg UI.CombatLog.Message
 ---@diagnostic disable-next-line: unused-local
-function _CombatLogMessage:CombineWith(msg) end -- TODO rename
+function _CombatLogMessage:MergeWith(msg) end
 
 ---Returns whether another message can be merged with this one.
 ---@param msg UI.CombatLog.Message

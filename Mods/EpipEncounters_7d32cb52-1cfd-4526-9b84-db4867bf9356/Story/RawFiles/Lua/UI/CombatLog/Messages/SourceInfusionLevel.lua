@@ -32,7 +32,7 @@ local TSKs = {
 ---------------------------------------------
 
 ---Creates a source infusion message.
----@param charName UI.CombatLog.Messages.Scripted
+---@param charName string
 ---@param charColor htmlcolor
 ---@param level integer
 ---@return CombatLog.Messages.SourceInfusionLevel

@@ -8,7 +8,7 @@ local Log = Client.UI.CombatLog
 ---@class UI.CombatLog.Messages.ReactionCharges : UI.CombatLog.Messages.Scripted
 ---@field Reactions UI.CombatLog.Messages.ReactionCharges.Reaction[]
 local _Charges = {
-    PATTERN_ALT = '<font color="#(%x%x%x%x%x%x)">(.+)</font>: has free reaction charges:<br>(.+)', -- TODO
+    PATTERN_MULTIPLE_REACTIONS = '<font color="#(%x%x%x%x%x%x)">(.+)</font>: has free reaction charges:<br>(.+)',
     PATTERN = '<font color="#(%x%x%x%x%x%x)">(.+)</font>: (.+) free reaction charges remaining: (%d+)',
 }
 Log:RegisterClass("UI.CombatLog.Messages.ReactionCharges", _Charges, {"UI.CombatLog.Messages.Scripted"})
@@ -91,7 +91,7 @@ Log.Hooks.ParseMessage:Subscribe(function (ev)
 
     -- Multiple reactions in one message
     if not charColor then
-        charColor, charName, reaction = rawMsg:match(_Charges.PATTERN_ALT)
+        charColor, charName, reaction = rawMsg:match(_Charges.PATTERN_MULTIPLE_REACTIONS)
 
         -- TODO finish. the split function does not work with more than one char!!! wth. the lua patterns are pissing me off and i should switch to some regex lib.
         if reaction then

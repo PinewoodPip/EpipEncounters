@@ -17,14 +17,14 @@ Log.RegisterMessageHandler(_HealingMessage)
 ---------------------------------------------
 
 ---Creates a heal message.
----@param charName UI.CombatLog.Messages.Damage
+---@param charName string
 ---@param charColor string
 ---@param damageType string
 ---@param amount string
 ---@param color htmlcolor
----@return UI.CombatLog.Messages.Damage
+---@return UI.CombatLog.Messages.Healing
 function _HealingMessage:Create(charName, charColor, damageType, amount, color)
-    ---@type UI.CombatLog.Messages.Damage
+    ---@type UI.CombatLog.Messages.Healing
     return self:__Create({
         CharacterName = charName,
         CharacterColor = charColor,
@@ -86,7 +86,7 @@ local healingClassName = _HealingMessage:GetClassName()
 Log.Hooks.CombineMessage:Subscribe(function (ev)
     local prevMsg, newMsg = ev.PreviousMessage.Message, ev.NewMessage.Message
     if prevMsg:GetClassName() == healingClassName and newMsg:GetClassName() == healingClassName then
-        prevMsg:CombineWith(newMsg)
+        prevMsg:MergeWith(newMsg)
         ev.Combined = true
     end
 end)
