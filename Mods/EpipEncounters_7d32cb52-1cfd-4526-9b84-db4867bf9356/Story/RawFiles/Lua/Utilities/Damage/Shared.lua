@@ -11,7 +11,7 @@ Damage = {
         DAMAGE_TYPE_TEMPLATE = "h784f42a9g95e6g4a55gb2b5g3ef52f6bbee6", -- "[1] Damage"
     },
 
-    ---@type table<DamageType, DamageLib_DamageType>
+    ---@type table<DamageType, DamageLib.DamageType>
     DAMAGE_TYPES = {
         None = {
             ID = 0,
@@ -127,6 +127,38 @@ Damage = {
             Color = "C80030",
         },
     },
+
+    ---@type table<StatusHealType, DamageLib.HealType>
+    HEALING_TYPES = {
+        Vitality = {
+            ID = Ext.Enums.StatusHealType.Vitality,
+            NameHandle = "hc07b544dg0f54g4a8dg9d69g0aeb4497690b",
+            TooltipNameHandle = "hc122d41cg67d2g44a5g9cc9g92ff3baeec89",
+            Color = "97FBFF",
+        },
+        PhysicalArmor = {
+            ID = Ext.Enums.StatusHealType.PhysicalArmor,
+            NameHandle = "hd5aaae39g8dc4g4d7cga540g6c6ca35f0366",
+            TooltipNameHandle = "haa550f6fga515g4be8g935bga00f2f12d35b",
+            Color = "A8A8A8",
+        },
+        MagicArmor = {
+            ID = Ext.Enums.StatusHealType.MagicArmor,
+            NameHandle = "hc6dcb940gb6b6g41aagaeceg31008af9c082", -- "Magic Armour"
+            TooltipNameHandle = "ha7078442gef18g4a25ga9dcg9673d150533a",
+            Color = "004672", -- Dark blue; wildly different from the damage color.
+        },
+        AllArmor = {
+            ID = Ext.Enums.StatusHealType.AllArmor,
+        },
+        All = {
+            ID = Ext.Enums.StatusHealType.All,
+        },
+        -- Unused?
+        Source = {
+            ID = Ext.Enums.StatusHealType.Source,
+        },
+    }
 }
 Epip.InitializeLibrary("Damage", Damage)
 
@@ -139,13 +171,19 @@ end
 -- CLASSES
 ---------------------------------------------
 
----@class DamageLib_DamageType
+---@class DamageLib.DamageType
 ---@field ID integer
 ---@field StringID DamageType
 ---@field NameHandle TranslatedStringHandle?
 ---@field LowercaseNameHandle TranslatedStringHandle?
 ---@field TooltipNameHandle TranslatedStringHandle? Name used for Damage parameters in skill tooltips. 
----@field Color htmlcolor Color used in tooltips. TODO is this the same color for combat log, etc.?
+---@field Color htmlcolor Color used in tooltips and combat log.
+
+---@class DamageLib.HealType
+---@field ID StatusHealType
+---@field NameHandle TranslatedStringHandle?
+---@field TooltipNameHandle TranslatedStringHandle? Parametrized string used for tooltips and combat log messages.
+---@field Color htmlcolor?
 
 ---------------------------------------------
 -- METHODS
@@ -153,7 +191,7 @@ end
 
 ---Returns the definition for a damage type.
 ---@param damageType DamageType|integer
----@return DamageLib_DamageType
+---@return DamageLib.DamageType
 function Damage.GetDamageTypeDefinition(damageType)
     if type(damageType) == "number" then -- Integer ID.
         damageType = Damage._DamageTypeIDToStringID[damageType]
