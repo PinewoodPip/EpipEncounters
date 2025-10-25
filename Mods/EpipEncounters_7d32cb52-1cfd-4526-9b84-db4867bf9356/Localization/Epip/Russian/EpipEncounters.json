@@ -10,6 +10,10 @@
       "ReferenceText": "Animation Cancelling",
       "TranslatedText": "Отмена анимаций"
     },
+    "hb909e1ceg8636g48afg8672g2acc5a1ce44e": {
+      "ReferenceText": "Animation Cancelling allows skill casts to end earlier by interrupting their animations after their effects execute, speeding up combat.",
+      "TranslatedText": "Отмена анимаций ускоряет бои, прерывая анимации способностей после исполнения их эффектов."
+    },
     "ha50d50eag4185g4e10g82fdg19548a304b32": {
       "ReferenceText": "Blacklisted Skills",
       "TranslatedText": "Исключенные способности"
@@ -32,7 +36,7 @@
     },
     "h012184d6g4d40g4ad7g890bg5f9bad080a77": {
       "ReferenceText": "If enabled, skill and attack animations of NPCs will be cancelled after their effects execute.",
-      "TranslatedText": "Если включено, анимации атак и заклинаний у NPC будут отменяться после применения их эффектов."
+      "TranslatedText": "Если включено, анимации атак и заклинаний у NPC будут отменяться после исполнения их эффектов."
     },
     "h8277c4cdg8990g406fga0b5gef3f0d386620": {
       "ReferenceText": "If enabled, the animation for picking up items through their world tooltip will be cancelled, allowing multiple items to be picked up faster.",
@@ -40,7 +44,7 @@
     },
     "he5c3a752gd8bag48fagb611g35b5d23bef9d": {
       "ReferenceText": "If enabled, your controlled character's skill animations will be cancelled after their effects execute, allowing you to perform consecutive actions quicker.",
-      "TranslatedText": "Если включено, анимация применения способностей у контролируемого персонажа будет отменяться сразу после исполнения их эффекта, позволяя вам быстрее применять несколько действий подряд"
+      "TranslatedText": "Если включено, анимация применения способностей у контролируемого персонажа будет отменяться сразу после исполнения их эффекта, позволяя вам быстрее применять несколько действий подряд."
     },
     "hf832b7ceg2e16g454dg8b5cg2ac87a0f7681": {
       "ReferenceText": "Speed up world tooltip item pick-ups",
@@ -52,19 +56,19 @@
     },
     "he085d18bge863g4bf2ga811g562dcc358d76": {
       "ReferenceText": "Shows B/H amounts over the heads of characters in combat.",
-      "TranslatedText": "При удержании, показывает количество Battered/Harried стаков над персонажами в бою."
+      "TranslatedText": "При удержании, показывает количество стаков Battered/Harried над персонажами в бою."
     },
     "ha9ce71a4g7cd4g4099g8017g025c472ef4e6": {
       "ReferenceText": "%d Free Moves Left",
-      "TranslatedText": "Осталось %d беспл. хода(ов)"
+      "TranslatedText": "Осталось %d беспл. хода"
     },
     "h91bfdf8fg7b3bg44a7g83a4g488252d774b8": {
       "ReferenceText": "%d Moves",
-      "TranslatedText": "%d хода(ов)"
+      "TranslatedText": "%d хода"
     },
     "h9692b408ge89fg4f6cgb5d6gc0554e9fdd0c": {
       "ReferenceText": "%d Moves Left",
-      "TranslatedText": "Осталось %d хода(ов)"
+      "TranslatedText": "Осталось %d хода"
     },
     "ha3b2f0f0g7d77g4ce6ga6ffgeff2650f143d": {
       "ReferenceText": "%d Seconds",
@@ -300,7 +304,7 @@
     },
     "hf513cfa6g3cf1g4902gb10eg84722e3a18bf": {
       "ReferenceText": "If enabled, \"Epipes\" will occasionally spawn to urge you to reconnect with reality.<br>Epipes are immovable objects, but may be destroyed with the unstoppable force of rune explosions.<br>Doing so will grant additional points and soothe all Enraged Gems on the board.",
-      "TranslatedText": "Если включено, с некоторой вероятностью на доске будут возникать \"Epipes\", побуждающие вас восстановить вашу связь с реальностью.<br>Epipes это недвижимые объекты, которые могут быть разрушены только неостановимой силой распада рун.<br>При уничтожении, Epipes дают доп. очки и также успокаивают все \"разъяренные гемы\" на доске."
+      "TranslatedText": "Если включено, с некоторой вероятностью на доске будут возникать \"Epipes\", побуждающие вас восстановить вашу связь с реальностью.<br>Epipes это недвижимые объекты, которые могут быть разрушены только неостановимой силой распада рун.<br>При уничтожении, Epipes дают дополнительные очки и также успокаивают все \"разъяренные гемы\" на доске."
     },
     "h4a69c351g2ebdg451fgb8dfg6aef67fcc167": {
       "ReferenceText": "If enabled, gems with MMO enrage timers will spawn with increasing frequency. If left unmatched, they will bring a fair and balanced instant game over.",
@@ -486,6 +490,10 @@
       "ReferenceText": "You shall not move the Epipe!",
       "TranslatedText": "Вы не будете передвигать Epipe!"
     },
+    "h334fa434gca71g4723g864bg55c79e5f08b4": {
+      "ReferenceText": "Angle Value %s",
+      "TranslatedText": "Значение угла %s"
+    },
     "h54d9066eg87bdg439fg92f9g7027970af6ca": {
       "ReferenceText": "Camera",
       "TranslatedText": "Камера"
@@ -493,6 +501,14 @@
     "h3c77115cga69dg4c67g880bgd314b8072f7c": {
       "ReferenceText": "Camera Angles",
       "TranslatedText": "Углы камеры"
+    },
+    "he046b554gc9f0g467dg8496g161c51d24b5f": {
+      "ReferenceText": "Combat Camera",
+      "TranslatedText": "Боевая камера"
+    },
+    "h8a409ad5gfe18g4736g9f65gfbb6ce1f8513": {
+      "ReferenceText": "Controller Camera",
+      "TranslatedText": "Камера контроллера"
     },
     "hec25a517g9521g47e3g8f74gfa658861a320": {
       "ReferenceText": "Controls the FOV of the camera. Low/high values may cause issues with dynamic shadows.<br>Default is 45.",
@@ -529,6 +545,10 @@
     "hb5f81ce7g26cfg4e30gb9ddg1ccf51f78fcd": {
       "ReferenceText": "Controls the minimum distance the camera can zoom in while using the tactical view.<br>Default is 6.",
       "TranslatedText": "Задает минимальное расстояние, на которое камера может отдалиться в тактическом режиме.<br>По умолчанию 6."
+    },
+    "h3b641590gbf77g4000g83b2gbe2ecedb6219": {
+      "ReferenceText": "Customize the camera's angles, zoom distances and behaviour.",
+      "TranslatedText": "Настраивайте поведение камеры, значения углов и дальность."
     },
     "h265f89a4g9e80g420egb7adgd27aced5697b": {
       "ReferenceText": "Field of View",
@@ -578,6 +598,10 @@
       "ReferenceText": "Preserve zoom level in dialogues",
       "TranslatedText": "Сохранять зум в диалогах"
     },
+    "h17e23748gdcb0g4555g817bga83ec3f3176d": {
+      "ReferenceText": "Regular Camera",
+      "TranslatedText": "Свободная камера"
+    },
     "h3ddc3759g3f70g4ac5g9401g76ced6258d7a": {
       "ReferenceText": "Reset to defaults",
       "TranslatedText": "Настройки по умолчанию"
@@ -585,6 +609,22 @@
     "h24797af2gde0ag48cdgb741gec2049e1c631": {
       "ReferenceText": "Restores the angle settings to default values.",
       "TranslatedText": "Восстановить значение угла по умолчанию."
+    },
+    "h9dae206fg1544g488agbbcdg173edc63773a": {
+      "ReferenceText": "Tactical Camera",
+      "TranslatedText": "Тактическая камера"
+    },
+    "hf1a464a4g4d51g4e6fg9af7g484197b1daf0": {
+      "ReferenceText": "Zoomed In Angle",
+      "TranslatedText": "Угол при приближении"
+    },
+    "h7af499c7g872ag4c68gaf53g67561291f807": {
+      "ReferenceText": "Zoomed Out Angle",
+      "TranslatedText": "Угол при отдалении"
+    },
+    "h1a027d33g636fg4a2dga363gfc9f755c6c93": {
+      "ReferenceText": "Keywords & Misc.",
+      "TranslatedText": "Прочие характеристики"
     },
     "h1900a04ag7611g4d34g8975g89a0dac84c56": {
       "ReferenceText": "Displays all Epic Encounters Artifacts.",
@@ -641,6 +681,62 @@
     "he415fd76g51bfg4b25g955cg59c3165c73ba": {
       "ReferenceText": "Skillbook",
       "TranslatedText": "Книга навыков"
+    },
+    "hbb7f4c8bgf1a1g4b2bg8e6fgc6e2e4e2d3e4": {
+      "ReferenceText": "%s reaction charges remaining: %s",
+      "TranslatedText": "Реакция %s, осталось зарядов: %s"
+    },
+    "h3f5d8c2agb9e1g4a74g8d3bgf7c2e5a4b8d1": {
+      "ReferenceText": "AP Preservation",
+      "TranslatedText": "Сохраненные ОД"
+    },
+    "h6f3a9d1bg8c7eg4b52ga9d3ge7c1f4b2a8d6": {
+      "ReferenceText": "Critical Hits & Dodges",
+      "TranslatedText": "Крит. удары & уклонения"
+    },
+    "h68096433g8e54g4a81g9894g4be5096d2cdc": {
+      "ReferenceText": "Feature Not Enabled",
+      "TranslatedText": "Функция не включена"
+    },
+    "h7a4b9e2fg1d6cg4895ga2f7gd5e3c8b1a4f9": {
+      "ReferenceText": "Generic/Scripted",
+      "TranslatedText": "Общее/Скрипты"
+    },
+    "h1c9e3b7dga5f2g4d18g8e7cgf2a6d4c1b9e3": {
+      "ReferenceText": "Reaction Charges",
+      "TranslatedText": "Заряды реакций"
+    },
+    "h2d7f4a9egb1c8g4e47g9a6dgc3f8e1b5d2a7": {
+      "ReferenceText": "Source Gen/Infuse",
+      "TranslatedText": "Генерация Истока/Насыщения"
+    },
+    "h3f4e1c2bgf4edg4b8bg9f5fg2d3e1e2f6b2a": {
+      "ReferenceText": "Source Infusion cleared",
+      "TranslatedText": "Насыщение Истоком снято"
+    },
+    "h6d73a6cbg2e37g406dg8059gf047e7bcbaf1": {
+      "ReferenceText": "Source Infusion: %s",
+      "TranslatedText": "Насыщение Истоком: %s"
+    },
+    "hfc2baeaeg3443g491cg97e4g895a23400f2d": {
+      "ReferenceText": "Welcome to the combat log. Right-click to access filters.",
+      "TranslatedText": "Добро пожаловать в журнал боя. Для доступа к фильтрам используйте правый клик."
+    },
+    "hc3d4397fgb1ffg4cd2g8e3bg52b67ec37424": {
+      "ReferenceText": "You must enable \"Combat Log Improvements\" in the options menu and reload the savefile to use custom filters.",
+      "TranslatedText": "Для использования фильтров, необходимо включить \"Улучшенный журнал боя\" в настройках, после перезагрузить сохранение."
+    },
+    "hf09d887cgd6bbg43e9g9947g7bbbcb4f661f": {
+      "ReferenceText": "from %s hits",
+      "TranslatedText": "от %s удар."
+    },
+    "h0095bd8ag2e26g4cc3gb6e0gb86d38e65b3a": {
+      "ReferenceText": "reaction charges remaining: %s",
+      "TranslatedText": "осталось зарядов реакций: %s"
+    },
+    "hbfa93b2eg8fa6g4e2fgb241gc64e7c4708ec": {
+      "ReferenceText": "———— Filters ————",
+      "TranslatedText": "———— Фильтры ————"
     },
     "h4b557dbeg4eefg4284gba11gef2cf523830f": {
       "ReferenceText": "AP",
@@ -870,6 +966,10 @@
       "ReferenceText": "Dagger",
       "TranslatedText": "Кинжал"
     },
+    "ha3f8b2c1g4d5eg4a7bgb8c9gf1e2d3c4b5a6": {
+      "ReferenceText": "Damage",
+      "TranslatedText": "Урон"
+    },
     "h4edd0abfgf4b8g4e23gbc9cg8114fe650234": {
       "ReferenceText": "Decrement",
       "TranslatedText": "Уменьш."
@@ -952,7 +1052,7 @@
     },
     "h7c901de9gb42ag4a86g9e99gf92635df0998": {
       "ReferenceText": "Entropy",
-      "TranslatedText": "Entropy"
+      "TranslatedText": "Энтропизация"
     },
     "h3e8e86e9g661eg4a3dga574ged9d4b424610": {
       "ReferenceText": "Epip",
@@ -1013,6 +1113,10 @@
     "h7f208716g53a7g4f87ga23eg57dd190a5372": {
       "ReferenceText": "Ground",
       "TranslatedText": "Поверхность"
+    },
+    "h9d1f7a3egc5b2g4e81gb3f6g2a7c4e8d9b1f": {
+      "ReferenceText": "Healing",
+      "TranslatedText": "Лечение"
     },
     "hac470828g9eecg4770g9df8g33c48faa05e6": {
       "ReferenceText": "Health Bars",
@@ -1146,6 +1250,10 @@
       "ReferenceText": "Level %d-%d",
       "TranslatedText": "Уровень %d-%d"
     },
+    "h4e8c6b2dga9f1g4735g8c2egb4d7f1e3a5c8": {
+      "ReferenceText": "Lifesteal",
+      "TranslatedText": "Вампиризм"
+    },
     "hdeeae4bcgd104g4beagbf88g052d13e28756": {
       "ReferenceText": "Load",
       "TranslatedText": "Загрузить"
@@ -1234,6 +1342,10 @@
       "ReferenceText": "One-handed",
       "TranslatedText": "Одноручное"
     },
+    "h206d69a7g9033g4ba9gb553g806e279da47b": {
+      "ReferenceText": "Orange",
+      "TranslatedText": "Оранжевый"
+    },
     "h3e13ea04gcd9bg4630gabeagbc5f5095f684": {
       "ReferenceText": "Overhaul",
       "TranslatedText": "Overhaul"
@@ -1317,6 +1429,10 @@
     "h0e272276g80feg4fe8gbc82g620aa85b0cbc": {
       "ReferenceText": "Red",
       "TranslatedText": "Красный"
+    },
+    "h5c2d8e4agb7f3g4926g8a1dg3f6e9c2b4d5a": {
+      "ReferenceText": "Reflected Damage",
+      "TranslatedText": "Отраженный урон"
     },
     "h974c404ag23a3g4926gbf2fg8d4c881e37ea": {
       "ReferenceText": "Remove",
@@ -1446,6 +1562,10 @@
       "ReferenceText": "Summoning",
       "TranslatedText": "Призывание"
     },
+    "h7b9e3a1cg2f4dg4c8egad7bg6e5f4c3b2a19": {
+      "ReferenceText": "Surface Damage",
+      "TranslatedText": "Урон от поверхности"
+    },
     "h0f112ed1gcc18g470egaf01ga5cd65d1f22b": {
       "ReferenceText": "Sword",
       "TranslatedText": "Меч"
@@ -1562,6 +1682,10 @@
       "ReferenceText": "Wither",
       "TranslatedText": "Wither"
     },
+    "he37d0176g8178g468cga11fg746dc1937a81": {
+      "ReferenceText": "Yellow",
+      "TranslatedText": "Желтый"
+    },
     "hac8aa82cgd83cg4ff7g8d25gc2ada09d8c93": {
       "ReferenceText": "Zoom in",
       "TranslatedText": "Приблизить"
@@ -1628,7 +1752,7 @@
     },
     "h5a1af856ge6bbg46b0g8c00g98c676f04629": {
       "ReferenceText": "We don't have that dye!<br>We shall shop for them at miscellaneous vendors.",
-      "TranslatedText": "У нас нет этой краски!<br>Надо бы закупиться."
+      "TranslatedText": "У вас нет этой краски!<br>Возможно, ее можно найти у какого-нибудь торговца."
     },
     "h53d49f75g5520g48e1g8fc0gb793134dd234": {
       "ReferenceText": "Entropy",
@@ -1754,6 +1878,34 @@
       "ReferenceText": "Crafting UI",
       "TranslatedText": "Интерфейс ремесла"
     },
+    "hd4768ef1g4729g4cd6gbcdag38396e85cff3": {
+      "ReferenceText": "Customize inventory UIs.",
+      "TranslatedText": "Настройка интерфейса инвентаря."
+    },
+    "h6f4a5e88g9ac4g4d9dg9788g6f16cc3f7a82": {
+      "ReferenceText": "Customize notification messages.",
+      "TranslatedText": "Настройка оповещений."
+    },
+    "h43088c55g78c4g4cadg90ceg15b4b979274f": {
+      "ReferenceText": "Customize the Hotbar and related widgets.",
+      "TranslatedText": "Настройка панели быстрого доступа и связанных с ней виджетов."
+    },
+    "ha407da41gc23dg48d6g84e7gcf7d32870e47": {
+      "ReferenceText": "Customize the player portraits UI on the side of the screen and its status bars.",
+      "TranslatedText": "Настройка портретов игрока и панели статусов."
+    },
+    "hbe7663beg1066g45bag9dbcg27bdf6d18421": {
+      "ReferenceText": "Customize tooltip behaviours and which items display world tooltips.",
+      "TranslatedText": "Настройка отображаемых окружающих объектов."
+    },
+    "h13bbc4f0g191dg485eg990agd6f5ec58c4d7": {
+      "ReferenceText": "Customize various other UIs and widgets.",
+      "TranslatedText": "Настройка прочих интерфейсов и виджетов."
+    },
+    "h96ed79f6gc2cdg4355g83bcg8bca076dc98c": {
+      "ReferenceText": "Customize various quality of life features unrelated to UIs.",
+      "TranslatedText": "Настройка различных полезных функций, не связанных с интерфейсом."
+    },
     "hae3e6bddg3af0g4355gb90ag512c668df8a9": {
       "ReferenceText": "Design & programming by PinewoodPip<br>Additional UI art by Elric",
       "TranslatedText": "Разработка и программирование от PinewoodPip<br>Визуал отдельных элементов интерфейса от Elric"
@@ -1806,9 +1958,13 @@
       "ReferenceText": "Save/Load UI",
       "TranslatedText": "Интерфейс сохранения/загрузки"
     },
+    "h3b085ee9g7e53g4d41gb55fg7c035b5a44d1": {
+      "ReferenceText": "Settings specific to Epic Encounters 2.",
+      "TranslatedText": "Настройки для Epic Encounters 2."
+    },
     "h98c83d5fgd30dg41f6g825ag14707c6db182": {
-      "ReferenceText": "Simplified Chinese translation by Ainsky",
-      "TranslatedText": "Перевод на упрощенный китайский от Ainsky"
+      "ReferenceText": "Simplified Chinese translation by Ainsky & HeiMao",
+      "TranslatedText": "Перевод на упрощенный китайский от Ainsky & HeiMao"
     },
     "h4a3e28fag3595g4753gb507g4423068aeda8": {
       "ReferenceText": "Some settings may require a reload for changes to apply. You'll be warned when this is the case.",
@@ -1846,13 +2002,17 @@
       "ReferenceText": "World Item Tooltips",
       "TranslatedText": "Подсказки к окружающим объектам"
     },
+    "hefa60c94g6371g4fdag8becg8d5be01ab245": {
+      "ReferenceText": "%s Label",
+      "TranslatedText": "%s цвет"
+    },
     "hdf91946ag8402g42ecgafc2g4f2a232b81ef": {
       "ReferenceText": "Adds aggro information to the health bar when hovering over enemies: AI preferred/unpreferred/ignored tag, as well as taunt source/target(s).",
       "TranslatedText": "Добавляет информацию об аггро на панели здоровья врагов: теги ИИ предпочитаемый/непредпочитаемый/игнорируемый, а также источник/цель провокации."
     },
     "h3eb881efg123fg449bg9718g65ba0891f5bc": {
       "ReferenceText": "Adds improvements to the combat log: custom filters (accessible through right-click), merging messages, and slight rewording to improve consistency.<br>You must reload the save after making changes to this setting.",
-      "TranslatedText": "Добавляет улучшения журнала: настраиваемые фильтры (ПКМ для доступа), слияние сообщений.<br>Требуется перезагрузка сохранения."
+      "TranslatedText": "Добавляет улучшения для журнала боя: настраиваемые фильтры (ПКМ для доступа), слияние сообщений.<br>Требуется перезагрузка сохранения."
     },
     "h86c94636gb954g4e3dg9679g477c7f889bb3": {
       "ReferenceText": "Allow walking to corpses in combat",
@@ -2080,7 +2240,7 @@
     },
     "h01f17781g7f5ag4113g9505g4cba31cd0d07": {
       "ReferenceText": "Improved Combat Log",
-      "TranslatedText": "Улучшенный журнал"
+      "TranslatedText": "Улучшенный журнал боя"
     },
     "hd71aa49cgcb72g4cd1ga209g28e6a6159b95": {
       "ReferenceText": "Infinite Carry Weight",
@@ -2144,7 +2304,7 @@
     },
     "h4e5e3786g9b22g4009gaf4egc680d28b83bd": {
       "ReferenceText": "Show Combat Log button",
-      "TranslatedText": "Показывать кнопку журнала"
+      "TranslatedText": "Показывать кнопку журнала боя"
     },
     "h3f4780c9g726bg43c3g8b59gd85d2a0aad07": {
       "ReferenceText": "Show Fog of War",
@@ -2300,7 +2460,7 @@
     },
     "h095688d5g843bg4ff4gabfdgf8f029cde26a": {
       "ReferenceText": "Hardware Acceleration: %s",
-      "TranslatedText": "Аппаратное ускорение:%s"
+      "TranslatedText": "Аппаратное ускорение: %s"
     },
     "h83626a85g3f25g4ec0g9d68g3c3f9f677ba4": {
       "ReferenceText": "Hardware acceleration takes advantage of your GPU to render the canvas much faster, but it is also a feature we added literally last minute and is smooth as fuck. Proceed at your own risk.",
@@ -2478,11 +2638,11 @@
       "ReferenceText": "Custom Line 2",
       "TranslatedText": "Строка 2"
     },
-    "hd1eed9f3g8a0bg4098g9369g0ba5549b947f": {
+    "hdb9a40e2g4713g40e0g8885gd6e1b75512c3": {
       "ReferenceText": "Discord Rich Presence",
       "TranslatedText": "Детализированный статус в Discord"
     },
-    "hdb9a40e2g4713g40e0g8885gd6e1b75512c3": {
+    "hd1eed9f3g8a0bg4098g9369g0ba5549b947f": {
       "ReferenceText": "Discord Rich Presence",
       "TranslatedText": "Детализированный статус в Discord"
     },
@@ -2550,11 +2710,11 @@
       "ReferenceText": "%s: Champion",
       "TranslatedText": "%s: Champion"
     },
-    "h96b347e8g8044g4f64ga0f5gad88b6e6f204": {
+    "hb7ca1bb4g9911g4d08gafabgdbc9f8762c5e": {
       "ReferenceText": "%s: Conqueror",
       "TranslatedText": "%s: Conqueror"
     },
-    "hb7ca1bb4g9911g4d08gafabgdbc9f8762c5e": {
+    "h96b347e8g8044g4f64ga0f5gad88b6e6f204": {
       "ReferenceText": "%s: Conqueror",
       "TranslatedText": "%s: Conqueror"
     },
@@ -2562,7 +2722,7 @@
       "ReferenceText": "%s: Death",
       "TranslatedText": "%s: Death"
     },
-    "h14e4e4e2gbfe2g49ecg8854g6271530bf5be": {
+    "h63ae98ebg0fcbg49fbg877dg957622cdf46c": {
       "ReferenceText": "%s: Falcon",
       "TranslatedText": "%s: Falcon"
     },
@@ -2570,11 +2730,11 @@
       "ReferenceText": "%s: Falcon",
       "TranslatedText": "%s: Falcon"
     },
-    "h63ae98ebg0fcbg49fbg877dg957622cdf46c": {
+    "hcef1a00bg41a1g4afagade1gca98b9906f14": {
       "ReferenceText": "%s: Falcon",
       "TranslatedText": "%s: Falcon"
     },
-    "hcef1a00bg41a1g4afagade1gca98b9906f14": {
+    "h14e4e4e2gbfe2g49ecg8854g6271530bf5be": {
       "ReferenceText": "%s: Falcon",
       "TranslatedText": "%s: Falcon"
     },
@@ -2590,19 +2750,19 @@
       "ReferenceText": "%s: Guardsmen",
       "TranslatedText": "%s: Guardsmen"
     },
-    "hd606a082g2984g4b6bg976eg155d5613b92a": {
-      "ReferenceText": "%s: Hatchet",
-      "TranslatedText": "%s: Hatchet"
-    },
     "hf6eb07b9ga55cg4954g97c3gad49be926b0a": {
       "ReferenceText": "%s: Hatchet",
       "TranslatedText": "%s: Hatchet"
     },
-    "h081c501bg1799g4484g805cg32d128aa0f90": {
+    "hd606a082g2984g4b6bg976eg155d5613b92a": {
+      "ReferenceText": "%s: Hatchet",
+      "TranslatedText": "%s: Hatchet"
+    },
+    "h71b98ee8ga15cg4cabgab1eg78d809fb0bda": {
       "ReferenceText": "%s: Hind",
       "TranslatedText": "%s: Hind"
     },
-    "h71b98ee8ga15cg4cabgab1eg78d809fb0bda": {
+    "h081c501bg1799g4484g805cg32d128aa0f90": {
       "ReferenceText": "%s: Hind",
       "TranslatedText": "%s: Hind"
     },
@@ -2626,21 +2786,21 @@
       "ReferenceText": "%s: Scorpion",
       "TranslatedText": "%s: Scorpion"
     },
-    "h0f95f877gfddfg459eg8113geb4dd8f316a8": {
+    "hc608e22eg5881g4020ga070g8e820c8ea451": {
       "ReferenceText": "%s: Tiger",
       "TranslatedText": "%s: Tiger"
     },
-    "hc608e22eg5881g4020ga070g8e820c8ea451": {
+    "h0f95f877gfddfg459eg8113geb4dd8f316a8": {
       "ReferenceText": "%s: Tiger",
       "TranslatedText": "%s: Tiger"
     },
     "h2f961697gc8bcg40a0ga032g2bba5e498778": {
       "ReferenceText": "+10% Damage from Power per stack",
-      "TranslatedText": " +10% урона от мощи за стак"
+      "TranslatedText": "+10% урона от мощи за стак"
     },
     "hcd5b9f12gedb3g403bg8e7bge411ec7d5c70": {
       "ReferenceText": "+5% Crit Chance per stack",
-      "TranslatedText": " +5% шанс крит. удара за стак"
+      "TranslatedText": "+5% шанс крит. удара за стак"
     },
     "h3158d4d2ga92ag4d54gab02g7b3c80050494": {
       "ReferenceText": "15% chance per hit",
@@ -2868,7 +3028,7 @@
     },
     "hc14509ffgb0cdg4ef3g80a5gf6490f287073": {
       "ReferenceText": "Mod Compatibility Warning",
-      "TranslatedText": "Предупреждение о совместимости модов"
+      "TranslatedText": "Предупреждение совместимости"
     },
     "h5cd299ccg2753g4c7fgbb43g33ec950e8954": {
       "ReferenceText": "Not designed for EE, and is buggy, bestowing permanent resistance boosts to your characters.",
@@ -2910,6 +3070,18 @@
       "ReferenceText": "Unnecessary due to the new Source system.",
       "TranslatedText": "Бесполезен при игре с Epic Encounters по причине изменения системы взаимодействия с Истоком (кроме сюжетных моментов, требующих Исток)."
     },
+    "hd0ca255cg4598g4a16g8a9ag89f96981f52f": {
+      "ReferenceText": "Dismantle",
+      "TranslatedText": "Разобрать"
+    },
+    "he8b4b102g4280g45c0g9ebag15c97ee8c6a3": {
+      "ReferenceText": "Extract Runes",
+      "TranslatedText": "Извлечь руны"
+    },
+    "hc4043848g4c14g42cfg9d89g3b7c21c98b28": {
+      "ReferenceText": "Extracted runes for %s Splinters.",
+      "TranslatedText": "Руны извлечены за %s осколков."
+    },
     "h3edeba4cg45a9g46f9g8c02g85e9ff956909": {
       "ReferenceText": "Click and hold to drag.",
       "TranslatedText": "Нажмите и удерживайте для переноса."
@@ -2941,6 +3113,10 @@
     "h36ba40b2ge76bg4ea9g90ecgde3d4fc01945": {
       "ReferenceText": "Rows",
       "TranslatedText": "Строки"
+    },
+    "h37258013g671cg4548g89ebgcd7c144ce710": {
+      "ReferenceText": "Snap to Hotbar",
+      "TranslatedText": "Прикрепить к панели"
     },
     "h1608e07agf046g4d0dg8298gcfd263df903e": {
       "ReferenceText": "Allow dragging in unlearnt skills",
@@ -3062,13 +3238,17 @@
       "ReferenceText": "Show statuses",
       "TranslatedText": "Показывать статусы"
     },
+    "h8b644327gb5dag4a16ga237g8208c5db6f32": {
+      "ReferenceText": "%s<br>Right-click to loot all items as wares.",
+      "TranslatedText": "%s<br>Правый клик, чтобы взять все как товары."
+    },
     "hdd379f13g9fb6g4195ga02bge51a06d5f44a": {
       "ReferenceText": "Default Radius",
       "TranslatedText": "Радиус по умолчанию"
     },
     "ha9cb323cgaba1g42ddg9710g6b10d180a1cf": {
-      "ReferenceText": "Determines how items filtered-out by other settings are treated.<br>- Hide items: filtered-out items are not shown in the UI.<br>- Grey out items: filtered-out items are shown greyed-out and moved to the end of the list.",
-      "TranslatedText": "Определяет поведение фильтров для предметов.<br>- Скрывать предметы: отфильтрованные предметы не отображаются.<br>- Затемнять предметы: отфильтрованные предметы затемняются и помещаются в конце списка."
+      "ReferenceText": "Determines how items filtered-out by other settings are treated.<br>- Hide items: filtered-out items are not shown in the UI.<br>- Grey out items: filtered-out items are shown greyed-out and moved to the end of the list.<br><br>Filtered-out items will not be looted when using the \"Loot all\" button.",
+      "TranslatedText": "Определяет поведение фильтров для предметов.<br>- Скрывать предметы: отфильтрованные предметы не отображаются.<br>- Затемнять предметы: отфильтрованные предметы затемняются и помещаются в конце списка.<br><br>Отфильтрованные предметы не будут подобраны при нажатии \"Взять все\"."
     },
     "h63dc15c7g9d83g495cg9555g0a3d9a468100": {
       "ReferenceText": "Determines the minimum rarity of equipment to include.",
@@ -3130,9 +3310,13 @@
       "ReferenceText": "In %s.",
       "TranslatedText": "Находится в: %s."
     },
+    "h6b8490dcg409dg47c7gb49bg76989ace163f": {
+      "ReferenceText": "Left-click to loot, right-click to loot as wares.",
+      "TranslatedText": "Левый клик чтобы взять, правый клик взять как товары."
+    },
     "h8eb26275gd698g4286gb7a5gaaa099e9aa37": {
       "ReferenceText": "Loot All",
-      "TranslatedText": "Забрать все"
+      "TranslatedText": "Взять все"
     },
     "hac9dbcaeg3c55g4dedg96ccgb29dab55fde6": {
       "ReferenceText": "Looting GFX",
@@ -3156,15 +3340,15 @@
     },
     "h269e54a6g62f9g47afg8e22g52e0dd69a807": {
       "ReferenceText": "Picking up this item would overencumber you.",
-      "TranslatedText": "Вас перегрузит после поднятия этого предмета."
+      "TranslatedText": "Персонаж получит перегрузку после поднятия этого предмета."
     },
     "hf0cdc4a1g6e7bg41c6ga408g9bd330ecae22": {
       "ReferenceText": "Quick Loot",
       "TranslatedText": "Быстрый обыск"
     },
     "h0547ce79g8094g4cb4gb975g81cc0b5c9b6a": {
-      "ReferenceText": "Quick Loot is a feature that allows you to loot nearby containers and corpses from a unified UI. Access it by holding down its \"Search\" keybind.",
-      "TranslatedText": "Быстрый обыск это функция, которая позволяет обыскивать ближайшие контейнеры и трупы. Для использования, удерживайте клавишу поиска."
+      "ReferenceText": "Quick Loot is a feature that allows you to loot nearby containers and corpses from a unified UI. Access it by holding down its \"Start Search\" keybind.",
+      "TranslatedText": "Быстрый обыск это функция, которая позволяет обыскивать ближайшие контейнеры и трупы. Для использования, удерживайте клавишу \"Начать поиск\"."
     },
     "ha539c465g36e0g4780g9892g58e33578124f": {
       "ReferenceText": "Quick Loot: Start Search",
@@ -3272,15 +3456,15 @@
     },
     "ha50291ebgfcdbg4a3bgbd43g75802d9d0b67": {
       "ReferenceText": "Radial Menus",
-      "TranslatedText": "Круговые меню"
+      "TranslatedText": "Круговое меню"
     },
     "ha60bb03egff09g41bfg8d51gb512877729c4": {
       "ReferenceText": "Radial Menus: Next Menu",
-      "TranslatedText": "Круговые меню: Следующее"
+      "TranslatedText": "Круговое меню: Следующее"
     },
     "h692c89c9g7ce4g42e4g8c52ge027ea83f186": {
       "ReferenceText": "Radial Menus: Previous Menu",
-      "TranslatedText": "Круговые меню: Предыдущее"
+      "TranslatedText": "Круговое меню: Предыдущее"
     },
     "hba173410g9d70g4a7fg9fdbg23ba719d69c7": {
       "ReferenceText": "Right-click a slot to edit it.",
@@ -3582,6 +3766,14 @@
       "ReferenceText": "Right-click to open.<br>Ctrl+right-click to offer all items within.",
       "TranslatedText": "Правый клик, чтобы открыть.<br>Ctrl+правый клик, чтобы добавить все предметы внутри контейнера."
     },
+    "h7fda32ffg167cg43e5gad2dg8672bc83a0ba": {
+      "ReferenceText": "Controls whether toast widgets will be shown by the bottom health bar whenever a new turn begins in combat.",
+      "TranslatedText": "Настраивает отображение виджета ходов персонажей у нижней панели здоровья."
+    },
+    "h3793ded0g7ef1g4f73ga0a8g2f2b9bb05727": {
+      "ReferenceText": "Turn Notifications",
+      "TranslatedText": "Оповещения хода"
+    },
     "h4025c1c4g6527g4b6ag8369g49c0b1949dea": {
       "ReferenceText": "If enabled, the positions of the following UIs will be remembered across sessions:<br>- Character Sheet<br>- Party Inventory<br>- Quick Find<br>- Quick Loot",
       "TranslatedText": "Если включено, положение следующих окон будет запоминаться и не сбрасываться при смене игровой сессии:<br>- Панель персонажа<br>- Инвентарь группы<br>- Быстрый поиск<br>- Быстрый обыск"
@@ -3671,8 +3863,8 @@
       "TranslatedText": "<font color='ebc808' size='30'>Переименовать</font>"
     },
     "h3a1fa582g7217g4722gbcc5gc835c482d94a": {
-      "ReferenceText": "Carve a name onto the item to signify the special bond between yourself and it.<br><font color=\"a8a8a8\" size=\"21\" face=\"Averia Serif\">Purely cosmetic.</font>",
-      "TranslatedText": "Переименуйте предмет.<br><font color=\"a8a8a8\" size=\"21\" face=\"Averia Serif\">Исключительно косметический эффект.</font>"
+      "ReferenceText": "<p align=\"left\">Carve a name onto the item to signify the special bond between yourself and it. <font color=\"a8a8a8\" size=\"21\" face=\"Averia Serif\">Purely cosmetic.</font></p>",
+      "TranslatedText": "<p align=\"left\">Переименуйте предмет. <font color=\"a8a8a8\" size=\"21\" face=\"Averia Serif\">Исключительно косметический эффект.</font></p>"
     },
     "h083f5e98g18e2g4708gae54g82b7697923b0": {
       "ReferenceText": "Choose a name to engrave.",
@@ -3721,6 +3913,10 @@
     "he0a23e3cgbf9cg4f6eg8aecg454ee29fe9d7": {
       "ReferenceText": "Press a key combination...",
       "TranslatedText": "Введите комбинацию клавиш..."
+    },
+    "h4843a923ga322g4e29gacd6g816fe5c8d9d5": {
+      "ReferenceText": "Customize the key bindings for Epip features.",
+      "TranslatedText": "Назначайте клавиши для функций Epip."
     },
     "h7807c88fg2c24g4d2dg8015ga1666bcfa0b1": {
       "ReferenceText": "Dragging %s items",
@@ -3778,6 +3974,10 @@
       "ReferenceText": "Dismantle All",
       "TranslatedText": "Разобрать все"
     },
+    "ha278dabdg5febg46f4gbb76g82435dd2883a": {
+      "ReferenceText": "Dismantled for %s Gold.",
+      "TranslatedText": "Разобрано за %s золота."
+    },
     "h4909f5e1g70d6g4b89g98f3g3dda794aec4f": {
       "ReferenceText": "Toggle Minimap",
       "TranslatedText": "Переключить миникарту"
@@ -3792,11 +3992,11 @@
     },
     "h02aa046bgd8f6g4627g9637gd4d69407abad": {
       "ReferenceText": "Add client script",
-      "TranslatedText": "Доб. скрипт(клиент)"
+      "TranslatedText": "Скрипт(клиент)"
     },
     "h4c185a0bg8cdcg4b2ega962g78420c14debc": {
       "ReferenceText": "Add server script",
-      "TranslatedText": "Доб. скрипт(сервер)"
+      "TranslatedText": "Скрипт(сервер)"
     },
     "he0716b9bga6f2g4e49g8891g21780216c118": {
       "ReferenceText": "Add shared script",
@@ -3804,11 +4004,11 @@
     },
     "hbc86d8eag822bg4699g9046gc47787f8565d": {
       "ReferenceText": "Custom Scripts",
-      "TranslatedText": "Настраиваемые скрипты"
+      "TranslatedText": "Пользовательские скрипты"
     },
     "he4b6fda6gfaddg43a7gb3ecg20e01e95238e": {
       "ReferenceText": "Custom Scripts allow you to load additional Lua scripts without needing to include them in a mod pak.<br>They can be useful to quickly extend & modify Epip's behaviour, create quick tests and cheats, or small new features.",
-      "TranslatedText": "Настраиваемые скрипты позволят вам загружать Lua скрипты без необходимости включать их в состав мода.<br>Полезно для быстрой модификации Epip, тестирования и читов."
+      "TranslatedText": "Пользовательские скрипты позволят вам загружать ваши Lua скрипты без необходимости включать их в состав мода.<br>Полезно для быстрой модификации Epip, тестирования и читов."
     },
     "hc9cf6a7age288g4bd7gbfbag75c71c1969ae": {
       "ReferenceText": "Enter the script's relative path with no extension.",
@@ -3816,11 +4016,23 @@
     },
     "hb4f59492g1fdag4824gae84g0eb3c3d4527c": {
       "ReferenceText": "Put Lua scripts in the %s folder (relative to your savegames folder) and use the \"Add Script\" button to register and configure them. Custom Scripts load after Epip's, in top-to-bottom order, and are not synchronized between peers.<br>Use the checkboxes to toggle scripts, and the arrow buttons to set load order. A Lua reset or a save & reload is required to reload scripts.",
-      "TranslatedText": "Поместите Lua скрипты в папку %s (в соответствии с вашей папкой сохранений) и используйте клавишу \"Добавить скрипт\" для его регистрации и настройки. Настраиваемые скрипты загружаются после Epip, в порядке сверху вниз, и не синхронизируются.<br>Используйте галочки для переключения скриптов и стрелки для назначения порядка загрузки. Для перезагрузки скриптов необходимо сбросить Lua или сохранить и перезагрузить сохранение."
+      "TranslatedText": "Поместите Lua скрипты в папку %s (в соответствии с вашей папкой сохранений) и используйте клавишу \"Добавить скрипт\" для его регистрации и настройки. Пользовательские скрипты загружаются после Epip, в порядке сверху вниз, и не синхронизируются.<br>Используйте галочки для переключения скриптов и стрелки для назначения порядка загрузки. Для перезагрузки скриптов необходимо сбросить Lua или сохранить и перезагрузить сохранение."
     },
     "h192d069eg0a8eg4a88g92cdg31d84fc06104": {
       "ReferenceText": "There is no script at %s. Ensure you have placed the script in the correct folder.",
       "TranslatedText": "Скрипт не найдет в %s. Убедитесь, что вы поместили скрипт в корректную папку."
+    },
+    "h58d447e9gf7e7g4299gbae7gbc1c9e70adda": {
+      "ReferenceText": "Show Statuses",
+      "TranslatedText": "Показывать статусы"
+    },
+    "hd8528c79g1e8ag48f3g8241g38332e78cc95": {
+      "ReferenceText": "Show Summons",
+      "TranslatedText": "Показывать существ"
+    },
+    "he60622c5g07adg4b95g9df4g673e55c5d33a": {
+      "ReferenceText": "—— Player Status ——",
+      "TranslatedText": "—— Статус игрока ——"
     },
     "h11ffdfdbg98d0g41afgb4e4g7242c71f6a2d": {
       "ReferenceText": "Respec",
@@ -3877,6 +4089,10 @@
     "h939f9996g8c0fg46dbg8d51g5816929f1387": {
       "ReferenceText": "Quick Examine",
       "TranslatedText": "Досье"
+    },
+    "hbc1b3c20g0846g4f88g8856g59cad7d56b7d": {
+      "ReferenceText": "Quick Examine is a UI that allows you to view additional information about characters. Access it through the \"Quick Examine\" keybind while hovering over a character.",
+      "TranslatedText": "Интерфейс Досье позволяет вам просматривать дополнительную информацию. Используйте клавишу \"Досье\" при наведении на персонажа."
     },
     "h6cc76e3fg8d5cg466egb96agb780b490d0d5": {
       "ReferenceText": "Save Default Position",
@@ -4016,7 +4232,7 @@
     },
     "h0d296a7dgd716g475agb4c6g9b3de417c79f": {
       "ReferenceText": "Replaces the status bar by your characters's portraits with a custom UI that enables various sorting and filtering options.",
-      "TranslatedText": "Заменяет отображение статусов рядом с портретом персонажа на альтернативное, с возможностью использования сортировки и фильтрации."
+      "TranslatedText": "Заменяет отображение статусов рядом с портретом персонажа на альтернативное, с возможностью использования фильтров и сортировки."
     },
     "h4c594766g0190g4016gb7a5g0b99c3e2011a": {
       "ReferenceText": "Sets the sorting order for statuses. Statuses with a higher priority show in the left-most position, statuses with a lower priority show in the right-most position.",
@@ -4060,7 +4276,7 @@
     },
     "hba6d14b0gdbb9g4b00g8036ga14b329a1960": {
       "ReferenceText": "If enabled, zone and cone-type skills will display the correct range if the character has %s.",
-      "TranslatedText": "Если включено, у персонажей с талантом %s будут корректно отображаться радиусы способностей."
+      "TranslatedText": "Если включено, у персонажей с талантом %s будут корректно отображаться увеличения дальности способностей."
     },
     "hc7cfbfcdgc4b2g4ac3g92b3gbb6856d5b361": {
       "ReferenceText": "1Handed",
@@ -4152,7 +4368,7 @@
     },
     "h56298a9agd232g45d3ga079g28bedb59e95d": {
       "ReferenceText": "+%sm Weapon Range",
-      "TranslatedText": " +%sм Дальность оружия"
+      "TranslatedText": "+%sм Дальность оружия"
     },
     "hc28e1c17g7862g402bgabc7gaab851087be4": {
       "ReferenceText": "AP Costs",
@@ -4226,13 +4442,93 @@
       "ReferenceText": "Tooltip scrolling enabled.",
       "TranslatedText": "Прокрутка описаний вкл."
     },
+    "hd82e9005g842cg41daga3efgfc1f0e999e44": {
+      "ReferenceText": "Artifact",
+      "TranslatedText": "Артефакт"
+    },
+    "h55e06232g49d9g42aegbe39g422c9cfa234d": {
+      "ReferenceText": "Artifact Chance: %s%%",
+      "TranslatedText": "Шанс на Артефакт: %s%%"
+    },
+    "h167a1cdfg859fg4c05gab86g1acf11a9e62b": {
+      "ReferenceText": "Big Reward",
+      "TranslatedText": "Большая награда"
+    },
+    "hacb3ef1bg1d2ag4432g9a4fg060f794c0314": {
+      "ReferenceText": "Combat Reward",
+      "TranslatedText": "Боевая награда"
+    },
+    "h37e691e4g9d5eg4a14g8e9agd76a02fb955f": {
+      "ReferenceText": "Guaranteed Artifact",
+      "TranslatedText": "Гарантированный Артефакт"
+    },
+    "h53d36548g5ce7g460cg8a6fgffe81bdc7cf0": {
+      "ReferenceText": "Guaranteed Protean",
+      "TranslatedText": "Гарантированный Протеан"
+    },
+    "h37eee33bgb5bdg4ea2g89c7g3553daef3a14": {
+      "ReferenceText": "Hard Quest Reward",
+      "TranslatedText": "Квестовая награда (Hard)"
+    },
     "h9cd1245egdfdeg4cbbgbae7gfa179a954eac": {
       "ReferenceText": "If enabled, the health bar when you hover over characters and items will show their treasure table (if relevant) as well as the chance of getting an artifact. For characters, this requires holding the Show Sneak Cones key (shift by default)",
       "TranslatedText": "Если включено, при наведении, под панелью здоровья будет показываться вариант добычи (treasure table) с шансом получения артефакта. Для отображения у персонажей требуется зажать Shift."
     },
+    "h7cd46932ga606g4d18g99dcg3545b9770930": {
+      "ReferenceText": "Impossible Quest Reward",
+      "TranslatedText": "Квестовая награда (Impossible)"
+    },
+    "h57bd9a78g6f13g42d0gb379g1983838f129d": {
+      "ReferenceText": "Impossible Quest Reward",
+      "TranslatedText": "Квестовая награда (Impossible)"
+    },
+    "hcce330e6gf2b8g4c49gba57ge8a920543146": {
+      "ReferenceText": "Medium Reward",
+      "TranslatedText": "Средняя награда"
+    },
+    "h4129a99egbc81g4f46g836eg187fc4e03a73": {
+      "ReferenceText": "Mega Boss",
+      "TranslatedText": "Мега Босс"
+    },
+    "h22488442gbbbcg41efga8e2g3ae781f53b9e": {
+      "ReferenceText": "Micro Boss",
+      "TranslatedText": "Микро Босс"
+    },
+    "hace7c5feg45c7g4d47ga27cg3d18d2597ffc": {
+      "ReferenceText": "Mini Boss",
+      "TranslatedText": "Мини Босс"
+    },
+    "h68a2c359g6d13g4c26g8cf9g4e50f2e815e6": {
+      "ReferenceText": "Mini Boss",
+      "TranslatedText": "Мини Босс"
+    },
+    "h3a8d17fdg5b5fg4014g87f2g1d110bb7a4f2": {
+      "ReferenceText": "Mini Boss",
+      "TranslatedText": "Мини Босс"
+    },
+    "ha29d7114g7e3ag4ff3g9297g11f7159c2255": {
+      "ReferenceText": "Omega Boss",
+      "TranslatedText": "Омега Босс"
+    },
+    "h6f017814g60ffg42cag980ag754cf8a028f4": {
+      "ReferenceText": "Protean Chance: %s%%",
+      "TranslatedText": "Шанс на Протеан: %s%%"
+    },
     "hcd9974f8g16cfg4cbfga08agbf28ee5b55eb": {
       "ReferenceText": "Show loot drops in health bar",
       "TranslatedText": "Показывать вариант добычи под панелью здоровья"
+    },
+    "ha388e4dfg01b9g4c71g8114g49a1d94a940b": {
+      "ReferenceText": "THIS ONE CAN HAVE ARTIFACT !!!!<br>CLICK IT <font size='42'>NOW</font>",
+      "TranslatedText": "В ЭТОМ МОЖЕТ БЫТЬ АРТЕФАКТ !!!!<br>НАЖИМАЙ <font size='42'>СЕЙЧАС</font>"
+    },
+    "h6f1fb76dgb892g44a3gb6ffge807500fd288": {
+      "ReferenceText": "Tiny Boss",
+      "TranslatedText": "Малый Босс"
+    },
+    "h40ce8995g1bbeg40d6gb009g3c9e8a9c7b38": {
+      "ReferenceText": "Treasure: %s",
+      "TranslatedText": "Добыча: %s"
     },
     "hc8131fa1g3bf9g4773gb244gcdf8b1b45f7c": {
       "ReferenceText": "%s is an innate skill; it might be unwise to rid myself of it.",
@@ -4244,27 +4540,27 @@
     },
     "hcc3ddb27g8770g4d1bg9964gb2387308d99c": {
       "ReferenceText": "I cannot unlearn skills granted by external sources.",
-      "TranslatedText": "Я не могу забывать такие способности."
+      "TranslatedText": "Нельзя забывать такие способности."
     },
     "hb931ea77g4e56g47c3g9a69g923b8f76482b": {
       "ReferenceText": "I cannot unlearn skills that do not exist.",
-      "TranslatedText": "Я не могу забывать такие способности."
+      "TranslatedText": "Нельзя забывать такие способности."
     },
     "h616fdab7g67c9g4db0g80f4gc04d25dc0e4e": {
       "ReferenceText": "I cannot unlearn skills that take up no memory.",
-      "TranslatedText": "Я не могу забывать способности без требований памяти."
+      "TranslatedText": "Нельзя забывать способности без требований памяти."
     },
     "h651ef6a9gf376g47b7gb230gb73521021f74": {
       "ReferenceText": "I cannot unlearn skills while in combat.",
-      "TranslatedText": "Я не могу забывать способности в бою."
+      "TranslatedText": "Нельзя забывать способности в бою."
     },
     "hf29be376g590ag4cd8gac23gc527f2c7a610": {
       "ReferenceText": "I cannot unlearn this skill.",
-      "TranslatedText": "Я не могу забывать такие способности."
+      "TranslatedText": "Нельзя забывать такие способности."
     },
     "h9b5014e1gb9d4g4dc8g8c47g11f06fe3e576": {
       "ReferenceText": "I would lose my special spark if I were to give that up.",
-      "TranslatedText": "Я не могу забывать такие способности."
+      "TranslatedText": "Нельзя забывать такие способности."
     },
     "hc2778b10ge61fg46bfga656g1bac3d5b44ec": {
       "ReferenceText": "Right-click to unlearn.",
@@ -4272,7 +4568,7 @@
     },
     "ha58ca030gdf7bg42ffga616gcda9d8f3b753": {
       "ReferenceText": "Sourcery is an innate part of who I am; I cannot get rid of it.",
-      "TranslatedText": "Я не могу забывать такие способности."
+      "TranslatedText": "Нельзя забывать такие способности."
     },
     "h27591100g7b7dg4d6ag8c2eg3597762db593": {
       "ReferenceText": "Unlearn",

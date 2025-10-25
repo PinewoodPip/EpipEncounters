@@ -4,7 +4,7 @@
   "TranslatedStrings": {
     "he043b9f9gfc52g4c39ga4f1gc53ea4fcd5ce": {
       "ReferenceText": "Add skill IDs to this setting to blacklist them from being animation-cancelled.<br>Only affects skills used by the player.",
-      "TranslatedText": "添加不需要取消动作的技能ID"
+      "TranslatedText": "将技能 ID 添加到该设置中，以便将其列入黑名单，使其无法被取消动画。<br>此操作仅对玩家使用的技能有效。"
     },
     "h3bf7ae10g24e1g4f50gbc69g71a8b95b1a51": {
       "ReferenceText": "Animation Cancelling",
@@ -13,6 +13,26 @@
     "ha50d50eag4185g4e10g82fdg19548a304b32": {
       "ReferenceText": "Blacklisted Skills",
       "TranslatedText": "技能黑名单"
+    },
+    "h4f7b80efgc4b8g43a5g9971gc7014c8c9a2c": {
+      "ReferenceText": "Cancel NPC animations",
+      "TranslatedText": "取消非玩家角色（NPC）动作"
+    },
+    "hbcafdc0cg81b6g4dd9g853fga0b42f636c1c": {
+      "ReferenceText": "Cancel attack animations",
+      "TranslatedText": "取消攻击动作"
+    },
+    "h0a1e975egaf04g414cg9be0g559112d5284d": {
+      "ReferenceText": "Cancel skill animations",
+      "TranslatedText": "取消技能动作"
+    },
+    "h1c66019dgac33g49f4g8c11gbbfe9d4dbf61": {
+      "ReferenceText": "If enabled, attack animations will be cancelled once all of their hits and projectiles have fired, allowing you to perform consecutive actions quicker.",
+      "TranslatedText": "如果启用该功能，一旦攻击动画的所有命中效果和投射物都已发出，攻击动画就会取消，这样你就能更快地执行连续动作。"
+    },
+    "h012184d6g4d40g4ad7g890bg5f9bad080a77": {
+      "ReferenceText": "If enabled, skill and attack animations of NPCs will be cancelled after their effects execute.",
+      "TranslatedText": "如果启用，非玩家角色（NPC）的技能和攻击动画在其效果执行后将会被取消。"
     },
     "h8277c4cdg8990g406fga0b5gef3f0d386620": {
       "ReferenceText": "If enabled, the animation for picking up items through their world tooltip will be cancelled, allowing multiple items to be picked up faster.",
@@ -38,9 +58,17 @@
       "ReferenceText": "Are you sure you want to start a new game?",
       "TranslatedText": "你确定要开始新游戏吗?"
     },
-    "h833e3d98g6e6bg4cfag9c23g1bcd1c8e9de1": {
-      "ReferenceText": "Bedazzled",
-      "TranslatedText": "困惑"
+    "h4f32f5d3g1149g4401gadc5g056b31b49f87": {
+      "ReferenceText": "Bedazzle",
+      "TranslatedText": "宝石迷阵"
+    },
+    "h40000864gc468g40a3g92d2g6f50c437f596": {
+      "ReferenceText": "Classic",
+      "TranslatedText": "经典模式"
+    },
+    "hb12932bag7252g4866ga6d3g5a2c55fadaef": {
+      "ReferenceText": "Congratulations, you have been promoted to the title of<br>%s!",
+      "TranslatedText": "恭喜，你已经晋升到<br>%s的头衔！"
     },
     "h3166017ag50b9g4943g8ae9g5335c23c58e4": {
       "ReferenceText": "Game Over",
@@ -90,6 +118,22 @@
       "ReferenceText": "Controls the maximum distance the camera can zoom out while it is tracking an entity.<br>Default is 17.",
       "TranslatedText": "跟踪一个实体时, 镜头的最大缩小距离<br>默认17"
     },
+    "hb0379c8bg24bfg4755ga9b3geb29817de37b": {
+      "ReferenceText": "Controls the minimum distance the camera can zoom in during regular gameplay.<br>Default is 5.5.",
+      "TranslatedText": "控制在常规游戏过程中相机能够放大（拉近镜头）的最小距离。<br>默认值为 5.5。"
+    },
+    "hd804e90bgd821g475eg845bgd5c3e8363394": {
+      "ReferenceText": "Controls the minimum distance the camera can zoom in while it is tracking an entity.<br>Default is 17.",
+      "TranslatedText": "控制在追踪一个实体时相机能够放大（拉近镜头）的最小距离。<br>默认值为 17。"
+    },
+    "he80877b1g380eg4e61g8a4ag66d806352679": {
+      "ReferenceText": "Controls the minimum distance the camera can zoom in while using a controller.<br>Default is 5.5.",
+      "TranslatedText": "控制在使用控制器时相机能够放大（拉近镜头）的最小距离。<br>默认值为 5.5。"
+    },
+    "hb5f81ce7g26cfg4e30gb9ddg1ccf51f78fcd": {
+      "ReferenceText": "Controls the minimum distance the camera can zoom in while using the tactical view.<br>Default is 6.",
+      "TranslatedText": "控制在使用战术视角时相机能够拉近（放大）的最小距离。<br>默认值为 6。"
+    },
     "h265f89a4g9e80g420egb7adgd27aced5697b": {
       "ReferenceText": "Field of View",
       "TranslatedText": "视野"
@@ -97,6 +141,10 @@
     "h804e5cefgef0eg4351gb19cge60e92ca4297": {
       "ReferenceText": "General",
       "TranslatedText": "通用"
+    },
+    "h8dbeb996g3d15g4ac0ga45fg8118abe7961d": {
+      "ReferenceText": "If enabled, the camera zoom will not change during dialogue.",
+      "TranslatedText": "如果启用此功能，在对话期间相机的缩放（镜头远近）不会发生变化。"
     },
     "haa0297d1ga978g4be1gb3b4g7295b9451b31": {
       "ReferenceText": "Maximum Distance",
@@ -113,6 +161,26 @@
     "h1ec057edg09a1g413dgaefdgaf7942d579ce": {
       "ReferenceText": "Maximum Distance (tactical view)",
       "TranslatedText": "最大距离 (战术视角)"
+    },
+    "h626d2da2g381eg4536g9bd0g56dd32edbe3e": {
+      "ReferenceText": "Minimum Distance",
+      "TranslatedText": "最小距离"
+    },
+    "h039c29fag6078g4ff6ga239g9fcb8eb798d1": {
+      "ReferenceText": "Minimum Distance (controller mode)",
+      "TranslatedText": "最小距离（手柄模式）"
+    },
+    "h042628degf10fg4e96ga61cgb1a0965dc7e4": {
+      "ReferenceText": "Minimum Distance (locked-on)",
+      "TranslatedText": "最小距离（锁定）"
+    },
+    "h3a28ae91ge8e5g4b54g9542g0d4cd0671198": {
+      "ReferenceText": "Minimum Distance (tactical view)",
+      "TranslatedText": "最小距离（战术视角）"
+    },
+    "h0ea53526g269dg479fgbc83gf068477ed6f6": {
+      "ReferenceText": "Preserve zoom level in dialogues",
+      "TranslatedText": "在对话中保留缩放级别"
     },
     "h3ddc3759g3f70g4ac5g9401g76ced6258d7a": {
       "ReferenceText": "Reset to defaults",
@@ -190,9 +258,17 @@
       "ReferenceText": "Ability School",
       "TranslatedText": "学派"
     },
+    "h9a503fe9g2698g45f2ga8begf055a5f0eb8a": {
+      "ReferenceText": "About",
+      "TranslatedText": "关于"
+    },
     "hce2c434eg0377g425eg82ceg3948a01e8ee4": {
       "ReferenceText": "Accept",
       "TranslatedText": "接受"
+    },
+    "hc5962b8eg6a3ag40b5ga1a9g2999e964c3e7": {
+      "ReferenceText": "Activate",
+      "TranslatedText": "激活"
     },
     "hd6db0ca4g7edag4067g9635g88ad68b24784": {
       "ReferenceText": "Active",
@@ -225,6 +301,10 @@
     "h67b0f5b2gce06g4eefgbc69g36069a35bb3c": {
       "ReferenceText": "Apply",
       "TranslatedText": "应用"
+    },
+    "hd7ccabf3gbf19g4f46gac8bg4614e2589714": {
+      "ReferenceText": "Area of effect",
+      "TranslatedText": "效果范围"
     },
     "hbcd07fa8gaaa1g4571gac0eg8a20d7955224": {
       "ReferenceText": "Armor",
@@ -261,6 +341,10 @@
     "hbeff45e1gc8d3g4d5fg86a6g4fb41036410a": {
       "ReferenceText": "Blessed",
       "TranslatedText": "受祝福的"
+    },
+    "hd2164b0fg76dbg4467ga82fg8a228f145091": {
+      "ReferenceText": "Blue",
+      "TranslatedText": "蓝色"
     },
     "ha9646fd9ge69fg46d2g9fc2gc9442c28041c": {
       "ReferenceText": "Books",
@@ -306,6 +390,10 @@
       "ReferenceText": "Client-side",
       "TranslatedText": "客机端"
     },
+    "hd5213948g0a1bg4d8cg8f64g1f144d44e578": {
+      "ReferenceText": "Close",
+      "TranslatedText": "关闭"
+    },
     "hbef0236fga72cg4b4bg930ag44ba332514dd": {
       "ReferenceText": "Cloth",
       "TranslatedText": "服饰"
@@ -318,9 +406,21 @@
       "ReferenceText": "Club",
       "TranslatedText": "棍棒"
     },
+    "h6cb64038ga8abg40a9g9b65g87af6fb35007": {
+      "ReferenceText": "Color",
+      "TranslatedText": "颜色"
+    },
     "hfc9df4bcgd7deg4e05ga37ag1b739d2a9e2b": {
       "ReferenceText": "Combat",
       "TranslatedText": "战斗"
+    },
+    "h445d3e76g419eg4938g9bceg5802f0fd6514": {
+      "ReferenceText": "Combat Log",
+      "TranslatedText": "战斗日志"
+    },
+    "h8899625eg7ef9g4091g8107g351e2b7f147b": {
+      "ReferenceText": "Compatibility",
+      "TranslatedText": "兼容"
     },
     "h1f0e8d31gc83cg47e5gb69ag9f133fc64dcd": {
       "ReferenceText": "Confirm",
@@ -333,6 +433,26 @@
     "h80897d5bg5b2cg4261gbd85gafc7482541fd": {
       "ReferenceText": "Containers",
       "TranslatedText": "容器"
+    },
+    "hed140640g9989g44adg9ba8ga1c8ee451488": {
+      "ReferenceText": "Copy",
+      "TranslatedText": "复制"
+    },
+    "hf81df634gd4a9g4822g9d16ga65dad39a7af": {
+      "ReferenceText": "Copy to clipboard",
+      "TranslatedText": "复制到剪贴板"
+    },
+    "ha8662402g3ee2g4717g91d3g186a7fdc5cb9": {
+      "ReferenceText": "Corpse",
+      "TranslatedText": "尸体"
+    },
+    "h9bffc6e1geabfg439agaa63g3fe318e38fbd": {
+      "ReferenceText": "Create",
+      "TranslatedText": "生成"
+    },
+    "hbe49b67fg603bg46cag9b49g565949e20b31": {
+      "ReferenceText": "Credits",
+      "TranslatedText": "致谢"
     },
     "h304b2c12g06dag4389gaa3bg0f28e9916d32": {
       "ReferenceText": "Critical Chance",
@@ -354,6 +474,14 @@
       "ReferenceText": "Dagger",
       "TranslatedText": "匕首"
     },
+    "h4edd0abfgf4b8g4e23gbc9cg8114fe650234": {
+      "ReferenceText": "Decrement",
+      "TranslatedText": "减少"
+    },
+    "h2f5e4b44gb19fg4cdbgacc2gf8e45809f68a": {
+      "ReferenceText": "Default",
+      "TranslatedText": "默认"
+    },
     "ha01e7516ga580g4f00ga7f3gd59d23ca38c4": {
       "ReferenceText": "Defiance",
       "TranslatedText": "抗争"
@@ -365,6 +493,10 @@
     "hd286ded2g4b06g4fedg923cg235ebaa1ae49": {
       "ReferenceText": "Developer",
       "TranslatedText": "开发者"
+    },
+    "h3fdf6c58gbfd5g4665g8426g26296acc0e1a": {
+      "ReferenceText": "Dialogue",
+      "TranslatedText": "对话"
     },
     "hc66b270egc5bcg4bc3gbc2bgdd8278522f62": {
       "ReferenceText": "Disable",
@@ -378,9 +510,29 @@
       "ReferenceText": "Disintegrate",
       "TranslatedText": "分解"
     },
+    "hed778b0fgee1ag4507ga1ebg7dd249d17ce3": {
+      "ReferenceText": "Down",
+      "TranslatedText": "下"
+    },
+    "h2bb349f7g83aeg41adg9f22gab5497b1a124": {
+      "ReferenceText": "Dual-wielding",
+      "TranslatedText": "双持"
+    },
+    "h05e03661gafd3g4fddga325gbdbdb19d7645": {
+      "ReferenceText": "Dual-wielding Small",
+      "TranslatedText": "双持武器"
+    },
+    "h1dca0d1ag8e34g47e9g8cbegfe26d5c277e5": {
+      "ReferenceText": "Dual-wielding Wands",
+      "TranslatedText": "双持魔杖"
+    },
     "h136f2ef7g80ebg49acgbc4cgfd0a2cbc7250": {
       "ReferenceText": "Duration",
       "TranslatedText": "持续时间"
+    },
+    "heb9526cdgd173g429egbd31g82232610b051": {
+      "ReferenceText": "Edit",
+      "TranslatedText": "编辑"
     },
     "h59386967gb899g4f18ga61bg168b8d91f04a": {
       "ReferenceText": "Elementalist",
@@ -390,6 +542,10 @@
       "ReferenceText": "Embodiments",
       "TranslatedText": "体现"
     },
+    "h44af81d2gaa26g4767gb863g7933f41b4565": {
+      "ReferenceText": "Empty",
+      "TranslatedText": "空的"
+    },
     "ha5227515g6663g4386gb3bcga4ffb2043b65": {
       "ReferenceText": "Enable",
       "TranslatedText": "启用"
@@ -398,9 +554,17 @@
       "ReferenceText": "Enabled",
       "TranslatedText": "已启用"
     },
+    "h7c901de9gb42ag4a86g9e99gf92635df0998": {
+      "ReferenceText": "Entropy",
+      "TranslatedText": "熵"
+    },
     "ha5ce3e75g6795g493bgbd94g5d7779a15deb": {
       "ReferenceText": "Equipment",
       "TranslatedText": "装备"
+    },
+    "haa9f4fb6gad49g4288ga0a9ga52d389bc69d": {
+      "ReferenceText": "Examine",
+      "TranslatedText": "快速检查"
     },
     "h4b779123g7e18g4655g81e3ga5a0dfcc5d34": {
       "ReferenceText": "Exit",
@@ -413,6 +577,10 @@
     "hab6d5bf9gc96eg42f1ga095gaef050698dfc": {
       "ReferenceText": "Filters",
       "TranslatedText": "过滤"
+    },
+    "h68ee1bc9gaf81g43a1g8d72g9e48a6d8b953": {
+      "ReferenceText": "Focused Artifact",
+      "TranslatedText": "增幅神器"
     },
     "h8d88a6c9gb72cg422fg8929g396e84f1e77b": {
       "ReferenceText": "Food and Drinks",
@@ -434,21 +602,45 @@
       "ReferenceText": "Gloves",
       "TranslatedText": "手套"
     },
+    "h12213140gf541g443ag82ecgaab544f0502a": {
+      "ReferenceText": "Greed",
+      "TranslatedText": "贪婪"
+    },
+    "hf7e4ab5egf7deg4432gb346g217f6a162608": {
+      "ReferenceText": "Green",
+      "TranslatedText": "绿色"
+    },
     "h7f208716g53a7g4f87ga23eg57dd190a5372": {
       "ReferenceText": "Ground",
       "TranslatedText": "地面"
+    },
+    "hac470828g9eecg4770g9df8g33c48faa05e6": {
+      "ReferenceText": "Health Bars",
+      "TranslatedText": "生命值条"
     },
     "h0212f2a7gcebag4eaag8641g64cfb7bfc0d2": {
       "ReferenceText": "Helmet",
       "TranslatedText": "头盔"
     },
+    "h43418d76g367bg4462g9128g2e8411de907d": {
+      "ReferenceText": "Help",
+      "TranslatedText": "帮助"
+    },
     "h1a45624fgcbe1g48b8g9b4ag23e6f8cebe67": {
       "ReferenceText": "Hidden",
+      "TranslatedText": "隐藏"
+    },
+    "h4b3dde2dge122g40c7gbb6dg585e04dfac8d": {
+      "ReferenceText": "Hide",
       "TranslatedText": "隐藏"
     },
     "h3140c19bgec23g4a62g8d4ag9703a6bf89f4": {
       "ReferenceText": "Horns",
       "TranslatedText": "角"
+    },
+    "h50e1fa5dg66c8g49dagb30bgcafb9a2886fd": {
+      "ReferenceText": "Hotbar",
+      "TranslatedText": "快捷栏"
     },
     "h7c16563egd7cdg471cga0c5g30aa3344eeda": {
       "ReferenceText": "Huntsman",
@@ -466,17 +658,33 @@
       "ReferenceText": "Incarnate Champion",
       "TranslatedText": "冠军魔妖"
     },
+    "h35ed4408g3e32g4d16ga1d8g148559bae84a": {
+      "ReferenceText": "Increment",
+      "TranslatedText": "增量"
+    },
     "h829886b0g20a7g4185gb5c8g84ac8ce1402a": {
       "ReferenceText": "Info",
       "TranslatedText": "信息"
+    },
+    "haf50e434g26ecg44b2ga0a4gf24ec486c7e5": {
+      "ReferenceText": "Interact",
+      "TranslatedText": "交流"
     },
     "he8c517d9gc48fg42f8ga501g35f9909946b9": {
       "ReferenceText": "Inventory",
       "TranslatedText": "背包"
     },
+    "h35dfd330gc074g4e79g8243g8ed2e6952b03": {
+      "ReferenceText": "Item",
+      "TranslatedText": "物品"
+    },
     "h543a5832g1c08g4c3eg9e21g9ee1414c9941": {
       "ReferenceText": "Item Slot",
       "TranslatedText": "装备孔位"
+    },
+    "he903ca90ga133g427dgaec0g67aa6bba06fc": {
+      "ReferenceText": "Items",
+      "TranslatedText": "物品"
     },
     "hf791f6e7g31cdg4e84gb349g383ad5b4409c": {
       "ReferenceText": "Jewelry",
@@ -485,6 +693,14 @@
     "h64beeb05g019ag4a0agb151g974864cc5625": {
       "ReferenceText": "Journal",
       "TranslatedText": "日志"
+    },
+    "h65a3a042g1e2eg4d6eg9e9fg31c908c1efe9": {
+      "ReferenceText": "Keybind",
+      "TranslatedText": "按键绑定"
+    },
+    "hc49c127cge8a7g426dga569g09c5fb0e92f7": {
+      "ReferenceText": "Keybind: %s",
+      "TranslatedText": "按键绑定：%S"
     },
     "hebad38dcg58c3g4a03gb44eg02833543ba38": {
       "ReferenceText": "Keybinds",
@@ -510,6 +726,10 @@
       "ReferenceText": "Leather",
       "TranslatedText": "皮革"
     },
+    "h8ac83ff6g90a0g4082gaaf0gd300c042db9a": {
+      "ReferenceText": "Left",
+      "TranslatedText": "左"
+    },
     "h16088a37gd5b2g4bf3g9f7fgc3477eda6c4d": {
       "ReferenceText": "Leggings",
       "TranslatedText": "绑腿"
@@ -526,6 +746,14 @@
       "ReferenceText": "Level %d-%d",
       "TranslatedText": "等级 %d-%d"
     },
+    "hdeeae4bcgd104g4beagbf88g052d13e28756": {
+      "ReferenceText": "Load",
+      "TranslatedText": "导入"
+    },
+    "h04a0f08aga2a8g42c3g8758g0d89d36a669c": {
+      "ReferenceText": "Lying",
+      "TranslatedText": "躺着"
+    },
     "hb2c6a1a0gbac4g45e2gb2dcg12010a8fa2c8": {
       "ReferenceText": "Mace",
       "TranslatedText": "锤子"
@@ -538,6 +766,10 @@
       "ReferenceText": "Meditate",
       "TranslatedText": "冥想"
     },
+    "h336ff240ga7a7g46b9g97e3g8a671d9206b3": {
+      "ReferenceText": "Minimap",
+      "TranslatedText": "小地图"
+    },
     "h20175646g1124g48cag88ceg0b909cd717cd": {
       "ReferenceText": "Misc.",
       "TranslatedText": "其他"
@@ -549,6 +781,10 @@
     "h1e8ef1aeg06dag4d82gba3bg7e4cfd31f36f": {
       "ReferenceText": "Modifier",
       "TranslatedText": "附魔"
+    },
+    "h44116ad8g6ba7g40c5g86cfgde2042d5bc58": {
+      "ReferenceText": "Name",
+      "TranslatedText": "名称"
     },
     "hb09a2fc1g7ad5g4caag8606g936398d62a3b": {
       "ReferenceText": "Necromancer",
@@ -565,6 +801,10 @@
     "ha752b7e8g5211g424fg9350g7111ead5cbac": {
       "ReferenceText": "Next",
       "TranslatedText": "下一个"
+    },
+    "h9a1bb000g2aabg4302g8c79g04a628aa626e": {
+      "ReferenceText": "Next Section",
+      "TranslatedText": "下一章节"
     },
     "h45a75b5agbe29g438dgbf17g6a9362cd7eed": {
       "ReferenceText": "No Filter",
@@ -586,6 +826,14 @@
       "ReferenceText": "Off",
       "TranslatedText": "关闭"
     },
+    "h80e38523g223ag4562g9957g3fafce45a084": {
+      "ReferenceText": "On",
+      "TranslatedText": "开启"
+    },
+    "h0e559c51gea17g4f88gaf6dg0a9b53d3a634": {
+      "ReferenceText": "One-handed",
+      "TranslatedText": "单手"
+    },
     "h3e13ea04gcd9bg4630gabeagbc5f5095f684": {
       "ReferenceText": "Overhaul",
       "TranslatedText": "大修"
@@ -593,6 +841,10 @@
     "hbb33eea8g0ce7g4bbcga719gc5c4e7811d4a": {
       "ReferenceText": "Overhead",
       "TranslatedText": "神圣槽位"
+    },
+    "h63ede9d0g0e86g4079ga81eg9ad76eb5c6df": {
+      "ReferenceText": "Paste",
+      "TranslatedText": "黏贴"
     },
     "h4e09e95aga08bg4250g821bg910ba2bef9ca": {
       "ReferenceText": "Paucity",
@@ -618,9 +870,17 @@
       "ReferenceText": "Presence",
       "TranslatedText": "存在"
     },
+    "h35aae55eg8978g4167gbd48g16d0ef3fbc62": {
+      "ReferenceText": "Preview",
+      "TranslatedText": "预览"
+    },
     "h5bf72ea7ge22ag4ccag9c30g88d06bcd9cc6": {
       "ReferenceText": "Previous",
       "TranslatedText": "上一个"
+    },
+    "hd3daf1b6g1405g478agaf4fga0ebc65ebfc1": {
+      "ReferenceText": "Previous Section",
+      "TranslatedText": "上一章节"
     },
     "ha53ef891g707cg4195g9c43g556d65e0e3e3": {
       "ReferenceText": "Prosperity",
@@ -642,6 +902,10 @@
       "ReferenceText": "Radius",
       "TranslatedText": "半径"
     },
+    "hcb50611fg556ag42f1gac9fgd36826106744": {
+      "ReferenceText": "Random",
+      "TranslatedText": "随机"
+    },
     "hce1fce1ega375g4e85g8adcg22da632e1097": {
       "ReferenceText": "Rarity",
       "TranslatedText": "稀有度"
@@ -649,6 +913,14 @@
     "h8a290a77g93c2g4821g8019gc74551cb306a": {
       "ReferenceText": "Reactions",
       "TranslatedText": "反应"
+    },
+    "h0e272276g80feg4fe8gbc82g620aa85b0cbc": {
+      "ReferenceText": "Red",
+      "TranslatedText": "红色"
+    },
+    "h974c404ag23a3g4926gbf2fg8d4c881e37ea": {
+      "ReferenceText": "Remove",
+      "TranslatedText": "重设"
     },
     "h797b8a3ag4b10g4549g8731g7ec3e775b896": {
       "ReferenceText": "Reset",
@@ -661,6 +933,10 @@
     "hd15232f0gd82dg42a3g82ddg7597d3911122": {
       "ReferenceText": "Resize",
       "TranslatedText": "调整大小"
+    },
+    "h19cc3513g8f3eg4168gb9dbgca2e37ebb679": {
+      "ReferenceText": "Right",
+      "TranslatedText": "右"
     },
     "h7afd19eegf79bg42f9g97e7g66f4ac3a51c6": {
       "ReferenceText": "Ring",
@@ -682,6 +958,14 @@
       "ReferenceText": "Scoundrel",
       "TranslatedText": "刺杀学派"
     },
+    "h02b0d0b3g900cg442cg9686gb4d5f7e405f3": {
+      "ReferenceText": "Scroll Down",
+      "TranslatedText": "向下滚动"
+    },
+    "h6cdca959g97a7g4d37ga5b7gf1fe7d9bf7cf": {
+      "ReferenceText": "Scroll Up",
+      "TranslatedText": "向上滚动"
+    },
     "hb986b161gd6c3g459bga8f6gba07c8483103": {
       "ReferenceText": "Scrolls",
       "TranslatedText": "卷轴"
@@ -694,9 +978,25 @@
       "ReferenceText": "Settings",
       "TranslatedText": "设置"
     },
+    "h0b5cea35gfa34g4c80gab49gdafdf7136ea3": {
+      "ReferenceText": "Shape",
+      "TranslatedText": "形状"
+    },
     "h3d0006a6g5449g47fdg91d6g2920c42ea0f3": {
       "ReferenceText": "Shield",
       "TranslatedText": "盾牌"
+    },
+    "h7bf8da3bg45f2g4f23gab94g139d4205a6e6": {
+      "ReferenceText": "Sitting",
+      "TranslatedText": "坐着"
+    },
+    "hedfa43d8g9813g4f0cg92b2g012c313568aa": {
+      "ReferenceText": "Size",
+      "TranslatedText": "尺寸"
+    },
+    "h81299213g96fcg4c2cg9790g96ac44c22a4b": {
+      "ReferenceText": "Skill",
+      "TranslatedText": "技能"
     },
     "h4fc7301egc609g4739g9752g7b0fae2e8c5b": {
       "ReferenceText": "Skillbooks",
@@ -705,6 +1005,14 @@
     "h14674f13g78c9g49ecgac6dgbf7a95039189": {
       "ReferenceText": "Skills",
       "TranslatedText": "技能"
+    },
+    "h17e9949ege435g4e52ga279g3818b0f3184b": {
+      "ReferenceText": "Slots",
+      "TranslatedText": "插槽"
+    },
+    "hb75e3597gaf4fg4da0gab70g2970b9d4a621": {
+      "ReferenceText": "Small Weapon",
+      "TranslatedText": "小型武器"
     },
     "h3a1d4228ga393g44d8g8588ga5a2d81ca956": {
       "ReferenceText": "Source Infuse",
@@ -742,13 +1050,29 @@
       "ReferenceText": "Sword",
       "TranslatedText": "剑"
     },
+    "hec4f779bg15dcg4daeg9f74g7fd4f9075375": {
+      "ReferenceText": "Tools",
+      "TranslatedText": "工具"
+    },
     "h921639b1g5656g4eafg9c4dg735bda9ba283": {
       "ReferenceText": "Tooltips",
       "TranslatedText": "提示"
     },
+    "hc9fdc733gd227g4b1ega50egabad80fa56c3": {
+      "ReferenceText": "Two-handed",
+      "TranslatedText": "双手"
+    },
+    "h3bc14f6dg6448g4fefgb74bgefc5e476a72f": {
+      "ReferenceText": "Two-handed Sword",
+      "TranslatedText": "双手剑"
+    },
     "h4119cfcegbfc2g4045gbeecgfb1c96de38e2": {
       "ReferenceText": "Type",
       "TranslatedText": "类型"
+    },
+    "ha7eaf544gfd75g4e8fgba7bg671c0383313e": {
+      "ReferenceText": "Unarmed",
+      "TranslatedText": "缴械"
     },
     "h0879c1f1gc016g460egba26gd81e2cca18a2": {
       "ReferenceText": "Unbound",
@@ -758,6 +1082,18 @@
       "ReferenceText": "Unknown",
       "TranslatedText": "未知"
     },
+    "h1969b8b0ge281g4c5ag8297g24e31fd2aa7c": {
+      "ReferenceText": "Unnamed",
+      "TranslatedText": "无名的"
+    },
+    "h5c0045dbgbeb9g4be4g8575g16120176d671": {
+      "ReferenceText": "Up",
+      "TranslatedText": "上"
+    },
+    "h344c2ea2g2d80g4a1eg818bgadcc4988a1d6": {
+      "ReferenceText": "Use",
+      "TranslatedText": "使用"
+    },
     "h6a473ba0g726bg4188g811fgfa83c0b3def2": {
       "ReferenceText": "Vanilla",
       "TranslatedText": "原版"
@@ -765,6 +1101,10 @@
     "h8f43167fge54bg419ag8b9agf80ad45e5c87": {
       "ReferenceText": "Violent Strikes",
       "TranslatedText": "巨力重击"
+    },
+    "hd8a9153ega669g4118g9c78g0a242b67fb5a": {
+      "ReferenceText": "Visible",
+      "TranslatedText": "可见的"
     },
     "h25fa3d4fg6833g4bb5ga16eg33b2fa3d3d2e": {
       "ReferenceText": "Vitality Void",
@@ -785,6 +1125,10 @@
     "he0847edfg24f4g4259ga31bg1f665425e26c": {
       "ReferenceText": "Wand",
       "TranslatedText": "魔杖"
+    },
+    "h0623ae9ag95ddg4034g9313g14ab02fd44a4": {
+      "ReferenceText": "Wand & Shield",
+      "TranslatedText": "魔杖&盾牌"
     },
     "h4a44e189g9952g4edagb5efg9d56cba381f4": {
       "ReferenceText": "Ward",
@@ -813,6 +1157,14 @@
     "hc9809692g2710g43e5g9e8ege3bd035472ac": {
       "ReferenceText": "Wither",
       "TranslatedText": "枯萎"
+    },
+    "hac8aa82cgd83cg4ff7g8d25gc2ada09d8c93": {
+      "ReferenceText": "Zoom in",
+      "TranslatedText": "放大"
+    },
+    "h1a702168gb147g47b3gb525g55ab7ca95ce2": {
+      "ReferenceText": "Zoom out",
+      "TranslatedText": "缩小"
     },
     "h97f62f62gcd0fg4addg9db9g5504788bcb50": {
       "ReferenceText": "Tier",
@@ -873,6 +1225,26 @@
     "h5a1af856ge6bbg46b0g8c00g98c676f04629": {
       "ReferenceText": "We don't have that dye!<br>We shall shop for them at miscellaneous vendors.",
       "TranslatedText": "我们没有这个染料!<br>染料可以从材料商人购买"
+    },
+    "h53d49f75g5520g48e1g8fc0gb793134dd234": {
+      "ReferenceText": "Entropy",
+      "TranslatedText": "熵"
+    },
+    "h53c27242gdc58g43f2g999fg1305a5e6aeaa": {
+      "ReferenceText": "Force",
+      "TranslatedText": "力"
+    },
+    "haa562285gecd2g41efg9db6gb3aa2b0b32b3": {
+      "ReferenceText": "Form",
+      "TranslatedText": "形"
+    },
+    "hca631646g887ag4958g8efcgc0adb2cb7969": {
+      "ReferenceText": "Inertia",
+      "TranslatedText": "惯"
+    },
+    "hd8b2a948g5b60g41dfgae0eg4efb456d8c24": {
+      "ReferenceText": "Life",
+      "TranslatedText": "命"
     },
     "hf72184f1g53fdg4103g81d3gc3cf433c3bfb": {
       "ReferenceText": "Arcane Mist",
@@ -978,6 +1350,10 @@
       "ReferenceText": "Crafting UI",
       "TranslatedText": "锻造页面"
     },
+    "hae3e6bddg3af0g4355gb90ag512c668df8a9": {
+      "ReferenceText": "Design & programming by PinewoodPip<br>Additional UI art by Elric",
+      "TranslatedText": "设计与编程：PinewoodPip <br> 额外的用户界面美术设计：Elric"
+    },
     "h5b1b94ebg3d90g47e5g8b29g9f75c0aa6cd6": {
       "ReferenceText": "French translation by Bern', Drayander & Ostheboss",
       "TranslatedText": "法语来自Drayander"
@@ -990,9 +1366,21 @@
       "ReferenceText": "Inventory UI",
       "TranslatedText": "背包UI"
     },
+    "h663df9f7g47dcg4de4g9178gdea692da71a9": {
+      "ReferenceText": "Keyboard & Controller UI Navigation",
+      "TranslatedText": "键盘与控制器的用户界面导航"
+    },
+    "ha2808031g83f4g48d6g8304gabe840372382": {
+      "ReferenceText": "Miscellaneous QoL",
+      "TranslatedText": "游戏体验提升设置"
+    },
     "hde49d383g961eg49d6gaa46gcc45ab299aa5": {
       "ReferenceText": "Miscellaneous UI",
       "TranslatedText": "其他页面"
+    },
+    "h890f714agb2d5g4e07gadacg068f217314eb": {
+      "ReferenceText": "Next Tip",
+      "TranslatedText": "下个条小贴士"
     },
     "h6ba9c31fgd5d1g4563gb72eg32f83bcb1302": {
       "ReferenceText": "Overheads",
@@ -1001,6 +1389,10 @@
     "he0473fbcg6b57g48aegb3c0g7bb24b1e0393": {
       "ReferenceText": "Player Portraits",
       "TranslatedText": "玩家肖像"
+    },
+    "hc7d35703gbf43g4f19ga94dg590f99309514": {
+      "ReferenceText": "Polish translation by Nektun",
+      "TranslatedText": "波兰语翻译：Nektun"
     },
     "hbce14cb2g1ed7g4076g95d1gb80c6085c3ad": {
       "ReferenceText": "Russian translation by JoienReid & Cathe",
@@ -1018,9 +1410,29 @@
       "ReferenceText": "Some settings may require a reload for changes to apply. You'll be warned when this is the case.",
       "TranslatedText": "大多数选项需要存档然后读档才能生效"
     },
+    "hb6222658gfc63g4d1ag8c41g71f86ef5ec99": {
+      "ReferenceText": "Spanish translation by AquaVXI",
+      "TranslatedText": "西班牙语翻译: AquaVXI"
+    },
+    "hf25b230cg35fbg4142g8b49g40c4989cae08": {
+      "ReferenceText": "Special thanks to Ameranth & Elric, Norbyte, all Cathes (Cathe, Bun, JoienReid), Derpy Moa, Clibanarius, AQUACORAL, Zares, and the entire Epic Encounters community",
+      "TranslatedText": "特别感谢Ameranth、Elric、Norbyte、所有的Cathes成员（Cathe、Bun、oienReid）、Derpy Moa、Clibanarius、AQUACORAL、Zares，以及整个 “史诗遭遇（Epic Encounters）” 社区。"
+    },
+    "h10e67f1agfadcg40d5ga31ag0cbbe61c180b": {
+      "ReferenceText": "Tip of the day",
+      "TranslatedText": "每日小贴士"
+    },
+    "hb19f4840g3f0bg486ag8510g605da376dbff": {
+      "ReferenceText": "Translation Credits",
+      "TranslatedText": "翻译致谢"
+    },
     "hd34a81ecg7b8eg4ad6g8fc4gf6310e5ae556": {
       "ReferenceText": "UI Tooltips",
       "TranslatedText": "UI提示"
+    },
+    "h78121f59g7e1bg4d00g8b1eg8065379bf1dc": {
+      "ReferenceText": "Use the tabs on the left to browse Epip's configuration settings.",
+      "TranslatedText": "使用左侧的选项卡浏览Epip的配置设置。"
     },
     "h68a80196g2a32g4e12g9757gc826f58efd20": {
       "ReferenceText": "Warp to AMER_Test",
@@ -1092,7 +1504,7 @@
     },
     "h262d04a1g16d3g4dabg8f01gd68a6b25efc7": {
       "ReferenceText": "Controls the default position of the Examine menu when it is opened.",
-      "TranslatedText": "调查界面的默认位置"
+      "TranslatedText": "快速检查菜单的默认位置"
     },
     "hb8f2e390g2811g4df4gb9fdg3661092ef520": {
       "ReferenceText": "Controls the delay for simple tooltips to appear while hovering over objects in the world.<br><br>Default is 0.5s.",
@@ -1208,7 +1620,7 @@
     },
     "h53b42eecg74ccg4164gbd64g0bda6052e6f1": {
       "ReferenceText": "Examine Menu Position",
-      "TranslatedText": "调查界面位置"
+      "TranslatedText": "快速检查菜单位置"
     },
     "h3a72d579gc132g43d8gb6f0g097bfdbf76fb": {
       "ReferenceText": "Force Story Patching",
@@ -1410,6 +1822,134 @@
       "ReferenceText": "With enough Loremaster",
       "TranslatedText": "足够的博学"
     },
+    "h890ba9d3g02bcg4a69gbc1agfbfaacd0d940": {
+      "ReferenceText": "A spriting editor by %s<br>Spring 2025 (for Epip's 4th anniversary)",
+      "TranslatedText": "由%s制作的肖像编辑器<br>2025 年春季   Epip四周年纪念版"
+    },
+    "hc50b3d14g0d12g482bga339g7a1a51b76e09": {
+      "ReferenceText": "AI Degenerate",
+      "TranslatedText": "AI 降噪"
+    },
+    "h39945451gc551g4ac3ga12ag411c08214331": {
+      "ReferenceText": "AI Regenerate",
+      "TranslatedText": "AI 修复"
+    },
+    "h25f75a69gbd5dg4f13g8c36gcc280c0b4bbe": {
+      "ReferenceText": "Applies GPU logistics to speed up canvas rendering. Last-minute addition, use at your own risk.",
+      "TranslatedText": "应用图形处理器（GPU）的运算逻辑来加快画布的渲染速度。这是最后添加的功能，使用时风险自负。"
+    },
+    "hfa67e2f9g9757g4d3cga8ceg75035d43e0d6": {
+      "ReferenceText": "Applies skin care to the image.",
+      "TranslatedText": "图像修复"
+    },
+    "h5a24063fga5ebg4ae9gb1c9gc1c197dd3f37": {
+      "ReferenceText": "Are you sure you want to exit? Your current image will be discarded.",
+      "TranslatedText": "你确定要退出吗？你当前的图像将会被放弃。"
+    },
+    "he8713dd0g2846g4580g9a44g2f83bd7e6c72": {
+      "ReferenceText": "Assprite",
+      "TranslatedText": "模糊工具"
+    },
+    "hd2856fecgfe75g4187g974dgce318fa7c19b": {
+      "ReferenceText": "Brain Size",
+      "TranslatedText": "模糊工具大小"
+    },
+    "hbb15b2cegfe6eg4861gaf58g32a0b0cc29f1": {
+      "ReferenceText": "Brush",
+      "TranslatedText": "刷子工具"
+    },
+    "h0dee3b84gdb20g4caegbcabga1530c734a20": {
+      "ReferenceText": "Enter a path (excluding extension) to save image as DDS, relative to the Osiris Data folder.",
+      "TranslatedText": "输入一个名称（不包含扩展名）以将图像保存为 DDS 格式，该路径是相对于 （Osiris）数据文件夹” 的。"
+    },
+    "h37a87c28g91efg42f6g9b13g632167e743c7": {
+      "ReferenceText": "Enter a path to load a .PNG or .DDS from (excluding extension), relative to the Osiris Data folder.",
+      "TranslatedText": "输入一个名称（不包含文件扩展名），以便从 “Osiris” 中加载一个 PNG 或 DDS 文件。"
+    },
+    "hdf193d0fga963g41c6gb531g0df00750848d": {
+      "ReferenceText": "Exit Assprite",
+      "TranslatedText": "退出工具"
+    },
+    "hf53ae24bg6559g4552g9149g531488fb0b38": {
+      "ReferenceText": "Failed to load image<br>%s",
+      "TranslatedText": "加载失败<br>%s"
+    },
+    "hf1d05cfdg2d04g4637g9dc7g0d68ff88c0dc": {
+      "ReferenceText": "File",
+      "TranslatedText": "文件"
+    },
+    "hfd190c24g601fg442egacfcg0f5791421973": {
+      "ReferenceText": "File \"%s.png\" or \"%s.dds\" doesn't exist.",
+      "TranslatedText": "文件 “% s.png” 或 “% s.dds” 不存在。"
+    },
+    "hf09e051fge328g4599ga274gee83dc3dba1d": {
+      "ReferenceText": "Goes hard all over the same-vibe areas.",
+      "TranslatedText": "在相同区域应用"
+    },
+    "hc41596f1gfb56g4814g9b96g50df2a31238a": {
+      "ReferenceText": "Grip",
+      "TranslatedText": "画笔不透明度控制"
+    },
+    "h59c5aa71g729ag4677gaabagd4678e6e016a": {
+      "ReferenceText": "Hardware Acceleration",
+      "TranslatedText": "硬件加速"
+    },
+    "h095688d5g843bg4ff4gabfdgf8f029cde26a": {
+      "ReferenceText": "Hardware Acceleration: %s",
+      "TranslatedText": "硬件加速: %s"
+    },
+    "h83626a85g3f25g4ec0g9d68g3c3f9f677ba4": {
+      "ReferenceText": "Hardware acceleration takes advantage of your GPU to render the canvas much faster, but it is also a feature we added literally last minute and is smooth as fuck. Proceed at your own risk.",
+      "TranslatedText": "硬件加速利用GPU来大幅加快画布的渲染速度。在最后时刻才添加的功能，运行起来非常流畅，风险自负。"
+    },
+    "h77a50a9dg1123g4fe6ga3fbge3ad69e11c68": {
+      "ReferenceText": "Image loaded",
+      "TranslatedText": "图像加载"
+    },
+    "ha8aad9a3ged5cg414dgb649g3b3e18384224": {
+      "ReferenceText": "Image saved",
+      "TranslatedText": "图像保存"
+    },
+    "hd1e74dcfg9fe7g4757g996fgdddb6b22eadc": {
+      "ReferenceText": "Insight",
+      "TranslatedText": "清晰化"
+    },
+    "h41d3fa39g650fg4382gad13gb70f9a1a943c": {
+      "ReferenceText": "Performs reflection on image data points.",
+      "TranslatedText": "对图像数据点执行反射处理"
+    },
+    "h8317485ag3f62g424dg9171ge5cc69910d77": {
+      "ReferenceText": "Redo",
+      "TranslatedText": "重复操作"
+    },
+    "h95fc0085g786cg40a2g959eg2ec7556248be": {
+      "ReferenceText": "Redoes the last undo done to the canvas.",
+      "TranslatedText": "对画布上已执行的最后一次撤销操作进行重做。"
+    },
+    "h8e8f8442g77edg4437g8a39g5a9b01739896": {
+      "ReferenceText": "Reverts the canvas to more primordial states of entropy.",
+      "TranslatedText": "将画布恢复到无序度更高的初始状态。"
+    },
+    "h4de997b3gdc73g4e53g9660g63b24a7a2867": {
+      "ReferenceText": "Select %s tool",
+      "TranslatedText": "选择%s工具"
+    },
+    "h1189e170g0d10g4bffga7a0g300c8d491098": {
+      "ReferenceText": "Splurge",
+      "TranslatedText": "炫耀"
+    },
+    "hdbd325d8g4ea7g4bb5g924fga87c1b89d4ba": {
+      "ReferenceText": "Turns dreams to reality.",
+      "TranslatedText": "把梦想变为现实。"
+    },
+    "hf41b62a3g4357g4641g836bg0ad425b11c0c": {
+      "ReferenceText": "Undo",
+      "TranslatedText": "重做"
+    },
+    "hc9381a40g9557g4bd0g8e2ag2bfe75c44b66": {
+      "ReferenceText": "Undoes the last edit made to the canvas.",
+      "TranslatedText": "对画布上已执行的最后一次撤销操作进行重做。"
+    },
     "h812ece0eg34adg44eag8c8bg50030a7e66d0": {
       "ReferenceText": "Adjust Camera Pitch",
       "TranslatedText": "调整摄像机间距"
@@ -1417,6 +1957,10 @@
     "h1563a7b9g0998g4e06g82eag75097d9a7b79": {
       "ReferenceText": "Camera Pitch Adjust Sensitivity",
       "TranslatedText": "调整摄像机间距敏感度"
+    },
+    "h40f15b62g4243g45abgb642g1ae9df4dc9ff": {
+      "ReferenceText": "Controls the rotation speed of the camera while using the corresponding keybinds.<br>Default is 1.",
+      "TranslatedText": "在使用相应的按键操作时，控制相机的旋转速度。<br>默认值为 1。"
     },
     "h991ec3d1g0162g4b29g8778gc986b7e3be6d": {
       "ReferenceText": "Determines how rapidly the camera pitch changes as you move the mouse with the \"Adjust Camera Pitch\" keybind active.",
@@ -1430,17 +1974,45 @@
       "ReferenceText": "If enabled, the \"Adjust Camera Pitch\" keybind will not be able to lower the pitch below a certain threshold, reducing the likelihood of the camera clipping through the ground while using it.",
       "TranslatedText": "启用后, 调整摄像机间距, 有最低值"
     },
+    "h31a7cef1gf8d7g4565gad91g0e02b9e8ab04": {
+      "ReferenceText": "If enabled, the camera will no longer center on the character(s) being spoken to in dialogues.",
+      "TranslatedText": "如果启用此功能，在对话中相机将不再以正在交谈的角色为中心进行定位。"
+    },
     "h018412b6gd498g4fc9ga20egbfce71d5a5b8": {
       "ReferenceText": "Invert \"Adjust Camera Pitch\" controls",
       "TranslatedText": "反转调整摄像机间距"
+    },
+    "hb0debfabg884fg4dd2gb69cgd0c6aff725ab": {
+      "ReferenceText": "Keybind Rotation Speed",
+      "TranslatedText": "摄像机旋转速度"
     },
     "he2feffa4g625dg486fgbcafgd43f6bc7af72": {
       "ReferenceText": "Limit Pitch",
       "TranslatedText": "摄像机间距限制"
     },
+    "h4a3eccd2g468ag4ff9g8f3dg561219508669": {
+      "ReferenceText": "Preserve position in dialogues",
+      "TranslatedText": "保持在对话中的摄像机位置"
+    },
     "hfbdd1288g3c74g4d2cgb072gceee4bf1f9a0": {
       "ReferenceText": "While held, vertical mouse movement will adjust the pitch (vertical angle) of the game camera.<br><br>Does not affect your default camera angle settings and any changes to the angle from the keybind will not persist across sessions.",
       "TranslatedText": "按住时, 垂直鼠标移动将调整游戏摄像机的角度.<br><br>不会影响默认摄像机角度设置, 并且按键对角度的任何更改都不会在不同游戏战役中保留"
+    },
+    "hf3ead812g1edcg46c4gb4d2gad348ea52b93": {
+      "ReferenceText": "Color %s copied to clipboard.",
+      "TranslatedText": "颜色%s已复制到剪贴板。"
+    },
+    "h7466ab56g6ec0g45a0g9d4cgf47554dbd0c8": {
+      "ReferenceText": "Color Picker",
+      "TranslatedText": "颜色选择器"
+    },
+    "h1bd5ba3cg52f2g43d2gae8bg914ead477199": {
+      "ReferenceText": "Hue",
+      "TranslatedText": "色调"
+    },
+    "h5922087ag9b79g483eg88f1g12e30819488b": {
+      "ReferenceText": "Invalid hex/html color in clipboard.",
+      "TranslatedText": "剪贴板中的十六进制 / HTML 颜色无效。"
     },
     "h86148d3fg72feg42b1gacc8g8f1b57d5f975": {
       "ReferenceText": "Highlight empty container slots",
@@ -1458,6 +2030,34 @@
       "ReferenceText": "Determines the default tab for the crafting UI.",
       "TranslatedText": "决定合成面板默认显示的页面"
     },
+    "h9dba55fag87efg4214g9f3egf3fafacc8565": {
+      "ReferenceText": "Apply Portrait",
+      "TranslatedText": "应用肖像"
+    },
+    "hb456dc72g31ffg4397g8316gc1340e7ee238": {
+      "ReferenceText": "Custom Portraits Unavailable",
+      "TranslatedText": "自定义肖像不可用"
+    },
+    "h42abf938g98bbg4686ga1c2g91a9fe239ea0": {
+      "ReferenceText": "Due to technical limitations, this character must use the Magic Mirror at least once for Custom Portraits to be available to them.",
+      "TranslatedText": "由于技术限制，这个角色必须至少使用一次魔镜，自定义肖像才可供其使用。"
+    },
+    "h205ddda8gf9ccg44f1ga215g057d211ad70c": {
+      "ReferenceText": "Extender fork required",
+      "TranslatedText": "需要扩展支持"
+    },
+    "h17c93d66g67e5g418ag9a0bgf9235674e3f2": {
+      "ReferenceText": "Image must be %dx%d pixels.",
+      "TranslatedText": "图像必须为 %dx%d 像素。"
+    },
+    "h18a8fee4gdc22g411dgad89ge700c9c0a5d0": {
+      "ReferenceText": "Set custom portrait...",
+      "TranslatedText": "设置自定义肖像…"
+    },
+    "h6005d151g64b3g4931gafbegb3ccb14a6754": {
+      "ReferenceText": "This feature requires a special version of the script extender:<br>%s",
+      "TranslatedText": "此功能需要脚本扩展器的特定版本：<br>%s"
+    },
     "h20643acfg8b9fg46ccg8039g253dd6e02788": {
       "ReferenceText": "%s - Lvl %d",
       "TranslatedText": "%s - 等级 %d"
@@ -1474,11 +2074,11 @@
       "ReferenceText": "Custom Line 2",
       "TranslatedText": "自定义行2"
     },
-    "hdb9a40e2g4713g40e0g8885gd6e1b75512c3": {
+    "hd1eed9f3g8a0bg4098g9369g0ba5549b947f": {
       "ReferenceText": "Discord Rich Presence",
       "TranslatedText": "Discord 游戏状态"
     },
-    "hd1eed9f3g8a0bg4098g9369g0ba5549b947f": {
+    "hdb9a40e2g4713g40e0g8885gd6e1b75512c3": {
       "ReferenceText": "Discord Rich Presence",
       "TranslatedText": "Discord 游戏状态"
     },
@@ -1526,13 +2126,113 @@
       "ReferenceText": "When holding Shift",
       "TranslatedText": "按住shift"
     },
+    "hc685e036gefe7g464fg97fdg56420f6a2949": {
+      "ReferenceText": "When a non-summon character dies",
+      "TranslatedText": "当非召唤物死亡"
+    },
+    "h06dc2c7eg034ag44a2gb98cga40573eec901": {
+      "ReferenceText": "When an ally is hit",
+      "TranslatedText": "当友方角色被被攻击时"
+    },
+    "hb4265152g8d4ag40cbg8fadg6f7b6abd0c77": {
+      "ReferenceText": "When an ally with less than 50% Vitality spends Source",
+      "TranslatedText": "当一个生命值低于 50% 的友方角色消耗源力时"
+    },
+    "hddf2dce9g6cf0g4300g88b5gbaf0555d61b2": {
+      "ReferenceText": "When being Critically Hit",
+      "TranslatedText": "当被暴击时"
+    },
+    "hc727866cg72b4g4e07gaa98g6c027a0c266f": {
+      "ReferenceText": "Using Pip's Extender fork with this version of Epip requires a newer version of the fork; you have v%d, required is v%d+. Update it by redownloading it from the site.<br>https://www.pinewood.team/epip/extender",
+      "TranslatedText": "使用此版本 Epip 的Pip扩展插件需要更新；你现有的是 v%d 版本，而所需的是 v%d 及以上版本。请从以下网站重新下载进行更新。<br>https://www.pinewood.team/epip/extender<br>"
+    },
+    "hc6136040gde31g4d2ag8687g4b65823c2d20": {
+      "ReferenceText": "Determines which answers to pick while using the \"Fast-forward Dialogue\" keybind.",
+      "TranslatedText": "确定在使用 “对话快进” 按键绑定时选择哪个回应。"
+    },
+    "h724c5f19g3e5eg405cgbb02g202b4219f120": {
+      "ReferenceText": "Fast-forward Dialogue",
+      "TranslatedText": "对话快进设置"
+    },
+    "h98801058gfb66g43dfg99fbg957f057f235b": {
+      "ReferenceText": "Fast-forward Strategy",
+      "TranslatedText": "对话快进策略"
+    },
+    "hb9ee62f3g9ee1g4045g85feg92d88e5fc29d": {
+      "ReferenceText": "First answer",
+      "TranslatedText": "第一个回应"
+    },
+    "ha7270389gce2dg488fg97bcgcdfddf004180": {
+      "ReferenceText": "Last answer",
+      "TranslatedText": "最后一个回应"
+    },
+    "hf56e75b9gec18g485bga1eag5f5401dab30b": {
+      "ReferenceText": "While held when in dialogue, options will automatically be picked according to the \"Fast-forward Strategy\" setting.",
+      "TranslatedText": "在对话过程中按住（某个按键）时，选项将根据 “快进策略” 设置自动被选中。"
+    },
     "h2883c225g0406g48ffg8c39g1439bdf66f38": {
       "ReferenceText": "%s<br>Reason:<br>%s",
       "TranslatedText": "%s<br>原因:<br>%s"
     },
+    "h05eeb4f1gee14g43ddgb1ddg44ac6112f92b": {
+      "ReferenceText": "Breaks dual-wielding AP cost and reintroduces removed gear perks.",
+      "TranslatedText": "破坏双持的行动点数消耗限制，会将已移除的装备效果重新引入。"
+    },
+    "h757b89dbg52a1g401cgb040gc6a0489ac60b": {
+      "ReferenceText": "Breaks item statistics and is unnecessary due to the Greatforge already having a way to level up items.",
+      "TranslatedText": "破坏了物品的属性，并且由于 “伟大熔炉” 已经有一种提升物品等级的方法，所以该选项是没有必要的。"
+    },
+    "hf1e6fd47gefadg47b9ga523gd997e9e33e0d": {
+      "ReferenceText": "Buggy in multiplayer, prevents trading.",
+      "TranslatedText": "在多人游戏中存在漏洞，会阻碍交易。"
+    },
     "hf7564e88g6db5g4f04g9471g668f0f2902a1": {
       "ReferenceText": "Incompatible with %s.",
-      "TranslatedText": "显示不兼容史诗遭遇的官方mod"
+      "TranslatedText": "显示不兼容史诗遭遇的官方mod。"
+    },
+    "hc14509ffgb0cdg4ef3g80a5gf6490f287073": {
+      "ReferenceText": "Mod Compatibility Warning",
+      "TranslatedText": "模组兼容性提醒"
+    },
+    "h5cd299ccg2753g4c7fgbb43g33ec950e8954": {
+      "ReferenceText": "Not designed for EE, and is buggy, bestowing permanent resistance boosts to your characters.",
+      "TranslatedText": "并非为EE设计，存在漏洞，会错误的赋予永久性的抗性提升。"
+    },
+    "hb7d3ca9eg7516g4af3g9616g98aa4db5947d": {
+      "ReferenceText": "Pet Pal is already innate in EE.",
+      "TranslatedText": "在史诗遭遇模组中，“宠物伙伴” 已是角色固有的特性。"
+    },
+    "hefaa5c7cga265g4789gb95ag974dd3365ea0": {
+      "ReferenceText": "Poorly implemented, creates a lot of tedium and inconvenience.",
+      "TranslatedText": "效果不佳，且带来了许多繁琐和不便。"
+    },
+    "h9e2fea9age009g42ccg8828g5ea0bfa6fb0f": {
+      "ReferenceText": "Prevents you from choosing Glass Cannon. The new talents are unsupported.",
+      "TranslatedText": "这会阻止你选择 “玻璃大炮”。无法支持新的天赋。"
+    },
+    "h0fa608ccgd3d8g4af1ga48agd1a51e1a4d95": {
+      "ReferenceText": "Reverts EE's changes to summoning.",
+      "TranslatedText": "影响史诗遭遇中对召唤机制所做的更改。"
+    },
+    "h653f684ag7015g46b0ga945ge473bea2fc04": {
+      "ReferenceText": "Spirit Vision is already infinite by default in EE.",
+      "TranslatedText": "在史诗遭遇中，“灵视” 已是默认无限的。"
+    },
+    "he5cba61ag9a66g44d3gaf5cg43c1f5dbf53a": {
+      "ReferenceText": "The value of an action point has been halved, meaning characters have a maximum of 12 AP by default.",
+      "TranslatedText": "行动点的数值被减半，这意味着角色默认情况下最多拥有 12 点行动点。"
+    },
+    "hdcc2ff83gd864g4895gb15cg8101b9e83eed": {
+      "ReferenceText": "This giftbag has been marked as unnecessary or potentially undesirable when used alongside other mods you currently have installed, and may negatively affect your experience.",
+      "TranslatedText": "此礼包内容已被标记为在与你当前已安装的其他模组一起使用时是不必要的，或者可能是不理想的，并且可能会对你的游戏体验产生负面影响。"
+    },
+    "h799a3ec0g65bdg4b30ga240gf12d6aca29c2": {
+      "ReferenceText": "Undesirable with %s.",
+      "TranslatedText": "不建议以下模组搭配使用：%s "
+    },
+    "h5d55674cg8400g4039gb640ga7498b5b8e09": {
+      "ReferenceText": "Unnecessary due to the new Source system.",
+      "TranslatedText": "由于新的源力机制，该模组是不必要的。"
     },
     "h3edeba4cg45a9g46f9g8c02g85e9ff956909": {
       "ReferenceText": "Click and hold to drag.",
@@ -1549,6 +2249,10 @@
     "h4179a16bg43a5g40bcg88ccg7870114fb6c0": {
       "ReferenceText": "Create Hotbar Group",
       "TranslatedText": "创建快捷栏组"
+    },
+    "h41e08555gac00g4954g91edg9b89f595ca30": {
+      "ReferenceText": "Lock position",
+      "TranslatedText": "锁定位置"
     },
     "hf0192252g5d7ag429eg96a6g21be87bd88cd": {
       "ReferenceText": "Resize",
@@ -1585,6 +2289,46 @@
     "h75631deegfe03g4b5bgafd8g16871fb83e77": {
       "ReferenceText": "Toggled extra bars visibility on.",
       "TranslatedText": "打开额外快捷栏"
+    },
+    "h1193ef69g784ag4286ga539g154b40c7db32": {
+      "ReferenceText": "Epip does not currently support local co-op. Most features will not work correctly or only work for the first player. It is recommended to disable the mod.",
+      "TranslatedText": "Epip 目前不支持本地合作模式。大多数功能将无法正常工作，或者仅对第一个玩家有效。建议禁用该模组。"
+    },
+    "h3c15e2c8gadbag4bd8g9888g232a459755e1": {
+      "ReferenceText": "Next Node",
+      "TranslatedText": "下一个节点"
+    },
+    "h3d2488adg92abg4983gbaf6gccce651f920f": {
+      "ReferenceText": "Previous Node",
+      "TranslatedText": "上一个节点"
+    },
+    "h6123f516g3e9ag4885g848egd3a5ecfd2782": {
+      "ReferenceText": "Select Subnode %s",
+      "TranslatedText": "选择子节点 %s"
+    },
+    "h2e3a6261g5eceg4785ga00dgedb0fd8284b7": {
+      "ReferenceText": "Controller Icons Style",
+      "TranslatedText": "控制器图标类型"
+    },
+    "h3cc0c39cgc634g4afcg8398g3507057fbe69": {
+      "ReferenceText": "Determines which controller icons to show on the Navigation Bar.",
+      "TranslatedText": "确定在导航栏上显示哪种控制器图标。"
+    },
+    "hdfd37c7dg00c0g4077gbe73gd2a79a31d654": {
+      "ReferenceText": "If enabled, Epip UIs that support controller navigation will show a bar with the UI's controls when playing with a controller.<br><br>Toggling this setting requires affected UIs to be closed and reopened for it to take effect.",
+      "TranslatedText": "如果启用此设置，在使用控制器进行游戏时，Epic将显示由控制器控制的导航界面。<br>切换此设置后，需要关闭并重新打开受影响的用户界面，该设置才会生效。"
+    },
+    "h236b1865g25e1g4264ga431g97e1e853005b": {
+      "ReferenceText": "If enabled, Epip UIs that support keyboard navigation will show a bar with the UI's keyboard controls when playing with keyboard + mouse.<br><br>Toggling this setting requires affected UIs to be closed and reopened for it to take effect.",
+      "TranslatedText": "如果启用此设置，在使用键盘和鼠标进行操作时，Epic将显示由键盘控制的导航界面。<br>切换此设置后，需要关闭并重新打开受影响的用户界面，该设置才会生效。"
+    },
+    "h6c98e77ag7451g4fb9g983bg1c9982916ce6": {
+      "ReferenceText": "Show controller Navigation Bar",
+      "TranslatedText": "显示控制器导航栏"
+    },
+    "hf2b30b24ge1a7g432cgb1b4g72820964705a": {
+      "ReferenceText": "Show keyboard Navigation Bar",
+      "TranslatedText": "显示键盘导航栏"
     },
     "hd15285dag87d6g450cg8f17gd663d87a474e": {
       "ReferenceText": "Chain/Unchain",
@@ -1642,6 +2386,258 @@
       "ReferenceText": "Show statuses",
       "TranslatedText": "显示状态来源"
     },
+    "hdd379f13g9fb6g4195ga02bge51a06d5f44a": {
+      "ReferenceText": "Default Radius",
+      "TranslatedText": "默认半径"
+    },
+    "ha9cb323cgaba1g42ddg9710g6b10d180a1cf": {
+      "ReferenceText": "Determines how items filtered-out by other settings are treated.<br>- Hide items: filtered-out items are not shown in the UI.<br>- Grey out items: filtered-out items are shown greyed-out and moved to the end of the list.",
+      "TranslatedText": "用于确定由其他设置过滤掉的物品将如何处理。<br>物品隐藏：被过滤掉的物品不会在用户界面中显示。<br>物品变灰：被过滤掉的物品会以灰色显示，并移至列表末尾。"
+    },
+    "h63dc15c7g9d83g495cg9555g0a3d9a468100": {
+      "ReferenceText": "Determines the minimum rarity of equipment to include.",
+      "TranslatedText": "确定要包含的装备的最低稀有度。"
+    },
+    "hb53ca0e9g7d6cg47c3g9747g38e19a343a90": {
+      "ReferenceText": "Determines the starting radius of the search area, in meters.",
+      "TranslatedText": "确定搜索区域的起始半径（以米为单位）。"
+    },
+    "h27133569gae70g4950g968ag09472626efb7": {
+      "ReferenceText": "Filter Mode",
+      "TranslatedText": "过滤模式"
+    },
+    "h39465db7g62c7g4799g902ag39d3eb629f8a": {
+      "ReferenceText": "Grey out items",
+      "TranslatedText": "物品隐藏"
+    },
+    "h8ce3b6efg058fg476dga263gc226a11d49a2": {
+      "ReferenceText": "Hide items",
+      "TranslatedText": "物品变灰"
+    },
+    "h7222d389g2b3cg40a8gb589gc41902b02ce8": {
+      "ReferenceText": "Hold to search nearby containers and corpses to loot.",
+      "TranslatedText": "按该键来搜索附近的容器和尸体以进行搜刮。"
+    },
+    "h6b9c0d7fg3955g424bg847eg7b2201275db0": {
+      "ReferenceText": "If enabled, a beam effect will play while looting items, visualizing the container or corpse they are being taken from.",
+      "TranslatedText": "如果启用此功能，在搜刮物品时会显示光束效果，直观显示物品是从哪个容器或尸体中获取的。"
+    },
+    "he5aa70fbg87fag4679gae29g7b8efc22f2f7": {
+      "ReferenceText": "If enabled, books and other readable items will be included.",
+      "TranslatedText": "如果启用此功能，书籍及其他可阅读的物品将会被包含在内。"
+    },
+    "h9bfec1c4g695dg4259gb489g606897bbe8e6": {
+      "ReferenceText": "If enabled, crafting ingredients will be included.",
+      "TranslatedText": "如果启用此功能，制作材料将会被包含在内。"
+    },
+    "heded2e03g9a95g4567gaa8cg2e226f54865f": {
+      "ReferenceText": "If enabled, food and drink items will be included.",
+      "TranslatedText": "如果启用此功能，食物和饮品将会被包含在内。"
+    },
+    "h97731ba3geb7dg475agb3d2gcf173d6152b6": {
+      "ReferenceText": "If enabled, items on the ground will be included, except containers themselves.",
+      "TranslatedText": "如果启用此功能，地面上的物品（容器本身除外）将被包含在内。"
+    },
+    "ha874d82cg830bg4658gbb16g7772fc94ea62": {
+      "ReferenceText": "If enabled, items with no interactions nor crafting use will be included.",
+      "TranslatedText": "如果启用此功能，那些既没有交互功能也没有制作用途的杂物将会被包含在内。"
+    },
+    "h6fd97af9g0c50g41f5gb10ag07874c528116": {
+      "ReferenceText": "If enabled, potion, scroll and grenade items will be included.",
+      "TranslatedText": "如果启用此功能，药水、卷轴和手雷类物品将会被包含在内。"
+    },
+    "h3833c781g3601g4c0cgb6b0g17863e16b166": {
+      "ReferenceText": "In %s's corpse.",
+      "TranslatedText": "在 %s 的尸体里。"
+    },
+    "h156a7412g4f0fg4483g9977g5341ae987ba1": {
+      "ReferenceText": "In %s.",
+      "TranslatedText": "在 %s 里。"
+    },
+    "h8eb26275gd698g4286gb7a5gaaa099e9aa37": {
+      "ReferenceText": "Loot All",
+      "TranslatedText": "全部搜刮"
+    },
+    "hac9dbcaeg3c55g4dedg96ccgb29dab55fde6": {
+      "ReferenceText": "Looting GFX",
+      "TranslatedText": "搜刮特效"
+    },
+    "hb4729dd9g3c8bg4adfg8845g821b99fe6cde": {
+      "ReferenceText": "Minimum Rarity",
+      "TranslatedText": "最低稀有度"
+    },
+    "h75d9d7f6g8200g43ffg9ef6g10a48ab961a6": {
+      "ReferenceText": "No loot found nearby.",
+      "TranslatedText": "附近未找到可搜刮的物品。"
+    },
+    "h181532ebg36b3g426bg93e8gcadaeaf5f379": {
+      "ReferenceText": "Not all items could be picked up.",
+      "TranslatedText": "并非所有物品都能被捡起。"
+    },
+    "hecfea8f8g6674g4e1dg86b6g5ae65b73e3ba": {
+      "ReferenceText": "On the ground.",
+      "TranslatedText": "在地面上。"
+    },
+    "h269e54a6g62f9g47afg8e22g52e0dd69a807": {
+      "ReferenceText": "Picking up this item would overencumber you.",
+      "TranslatedText": "捡起这件物品会让负重过高。"
+    },
+    "hf0cdc4a1g6e7bg41c6ga408g9bd330ecae22": {
+      "ReferenceText": "Quick Loot",
+      "TranslatedText": "快速搜刮"
+    },
+    "h0547ce79g8094g4cb4gb975g81cc0b5c9b6a": {
+      "ReferenceText": "Quick Loot is a feature that allows you to loot nearby containers and corpses from a unified UI. Access it by holding down its \"Search\" keybind.",
+      "TranslatedText": "快速搜刮是一项功能，可让你通过统一的用户界面搜刮附近的容器和尸体。按住绑定的按键即可使用该功能。"
+    },
+    "ha539c465g36e0g4780g9892g58e33578124f": {
+      "ReferenceText": "Quick Loot: Start Search",
+      "TranslatedText": "快速搜刮：启动搜索"
+    },
+    "h8fe098cag9221g4fdbgaec2g392e49012d1a": {
+      "ReferenceText": "Searching...",
+      "TranslatedText": "搜索中…"
+    },
+    "h462927ecg6518g490bg8ec3gcb0a1f42f5cf": {
+      "ReferenceText": "Show books",
+      "TranslatedText": "显示书本"
+    },
+    "h3dbd2ed3gf0efg4cacgb22fg727c434bb1f3": {
+      "ReferenceText": "Show clutter",
+      "TranslatedText": "显示杂物"
+    },
+    "h9b47b2d0gc233g4dbfga7d5g9dfae168e615": {
+      "ReferenceText": "Show crafting ingredients",
+      "TranslatedText": "显示材料"
+    },
+    "hc2c9ebc7g4f13g4939g8851g01e9fca8ab4e": {
+      "ReferenceText": "Show food & drinks",
+      "TranslatedText": "显示食物"
+    },
+    "h481467e2g1b90g4f83ga5d9gc2b8e62f601f": {
+      "ReferenceText": "Show ground items",
+      "TranslatedText": "显示地面物品"
+    },
+    "h0440532agbdc5g4d55g82b7gbbc128030986": {
+      "ReferenceText": "Show potions, scrolls & grenades",
+      "TranslatedText": "显示可投掷物"
+    },
+    "h920ae542ga390g42d7g8cd3g0cb24794c3bb": {
+      "ReferenceText": "Are you sure you want to delete the \"%s\" menu?",
+      "TranslatedText": "你确定要删除 “%s” 菜单吗？"
+    },
+    "h10569261ge489g4575g9010gcac5fdf393bd": {
+      "ReferenceText": "Create New Menu",
+      "TranslatedText": "创建新的菜单"
+    },
+    "ha643cdeagcf4dg4128g81c6gd1cf68f76a18": {
+      "ReferenceText": "Cycles to the next radial menu while the UI is open.",
+      "TranslatedText": "当用户界面处于打开状态时，循环切换到下一个菜单。"
+    },
+    "h8f5b9b70g4ee0g4c60gb9f8gf5ff26567f0d": {
+      "ReferenceText": "Cycles to the previous radial menu while the UI is open.",
+      "TranslatedText": "当用户界面处于打开状态时，循环切换到上一个菜单。"
+    },
+    "hde39ce3dgd432g48beg98f2g347228bb4de6": {
+      "ReferenceText": "Delete Menu",
+      "TranslatedText": "删除菜单"
+    },
+    "hba30f22ag08acg4becg91b4g8832160d6270": {
+      "ReferenceText": "Determines the Epip keybind action to fire when the slot is used.<br>Actions that require the keybind to be held are not currently supported.",
+      "TranslatedText": "绑定Epip按键以触发该插槽动作。<br>目前不支持需要按住按键绑定的动作。"
+    },
+    "hff74a7eeg26cag4ea4gb09bgca0544402200": {
+      "ReferenceText": "Determines the amount of slots to show in the menu.",
+      "TranslatedText": "确定要在菜单中显示的插槽数量。"
+    },
+    "h6545fd7fg9919g4e82gb9c3g598cfbc9e4fa": {
+      "ReferenceText": "Determines the contents of the new menu.<br>- Hotbar: slots are automatically filled with the contents of the character's hotbar.<br>- Custom: slots must be manually configured.",
+      "TranslatedText": "确定新菜单的内容。<br>快捷栏：插槽会自动填充角色快捷栏中的物品。<br>自定义：插槽必须手动进行配置。\n"
+    },
+    "h68a39633g3fa6g4ad8gb86eg7efeeaa768b8": {
+      "ReferenceText": "Determines the hotbar slot for the menu's slots to start.<br>For reference, the keyboard + mouse Hotbar UI can show up to 29 slots per row.",
+      "TranslatedText": "确定菜单插槽开始的快捷栏插槽。<br>参考，键盘加鼠标的快捷栏用户界面每行最多可显示 29 个插槽。"
+    },
+    "hc4a1e5a0gdbaeg4a2dg8e92gd7ef42084361": {
+      "ReferenceText": "Determines the skill to use for the slot. Drag-and-drop a skill or interact with the socket to pick one.",
+      "TranslatedText": "确定要为该插槽使用的技能。拖放一个技能，或者与插槽进行交互以选择一个技能。"
+    },
+    "hb02313dagf2c3g4bb0gaeb1ga6447c96896d": {
+      "ReferenceText": "Determines what kind of action this slot can hold.",
+      "TranslatedText": "确定这个插槽可以承载何种动作。"
+    },
+    "h1cef44f3g474bg4ed6gb45cg2956edf2d87e": {
+      "ReferenceText": "Edit Menu",
+      "TranslatedText": "编辑菜单"
+    },
+    "hdf2431e0g2c4fg4f52gb076g27f53a00306f": {
+      "ReferenceText": "Edit Slot",
+      "TranslatedText": "编辑插槽"
+    },
+    "hf741a592g9333g47cdgacc5gc7e19a09ab41": {
+      "ReferenceText": "Menu Type",
+      "TranslatedText": "菜单类型"
+    },
+    "he5d99c4bg29e2g4094g8a5bgddba7436dfd9": {
+      "ReferenceText": "New Menu",
+      "TranslatedText": "新的菜单"
+    },
+    "hb50b9e8bgefe9g4c8bg957cge4597f8df3c8": {
+      "ReferenceText": "Next Menu",
+      "TranslatedText": "下一个菜单"
+    },
+    "h0785e087g2c9ag4eacgae97g6d1441301d17": {
+      "ReferenceText": "Opens the radial menus UI.",
+      "TranslatedText": "打开辐射式菜单的界面"
+    },
+    "h7031852fg830cg42d3gbbc3g8179d3ffd957": {
+      "ReferenceText": "Previous Menu",
+      "TranslatedText": "前一个菜单"
+    },
+    "ha50291ebgfcdbg4a3bgbd43g75802d9d0b67": {
+      "ReferenceText": "Radial Menus",
+      "TranslatedText": "辐射式菜单"
+    },
+    "ha60bb03egff09g41bfg8d51gb512877729c4": {
+      "ReferenceText": "Radial Menus: Next Menu",
+      "TranslatedText": "辐射式菜单：下一个菜单"
+    },
+    "h692c89c9g7ce4g42e4g8c52ge027ea83f186": {
+      "ReferenceText": "Radial Menus: Previous Menu",
+      "TranslatedText": "辐射式菜单：上一个菜单"
+    },
+    "hba173410g9d70g4a7fg9fdbg23ba719d69c7": {
+      "ReferenceText": "Right-click a slot to edit it.",
+      "TranslatedText": "右键一个插槽来编辑它。"
+    },
+    "h20c8b8dagecb6g4ddbgacd7gd760f1f68305": {
+      "ReferenceText": "Show radial menus",
+      "TranslatedText": "显示辐射式菜单"
+    },
+    "h67cc16ccgd666g4bf6ga746g4f2445ceeed0": {
+      "ReferenceText": "Slot Type",
+      "TranslatedText": "插槽类型"
+    },
+    "h8a3bc887g043fg4901ga76fgd1395661f1dd": {
+      "ReferenceText": "Starting Slot",
+      "TranslatedText": "起始插槽"
+    },
+    "h5a5a16c8g1423g4e47g9b18g1c75d9984a92": {
+      "ReferenceText": "Use the \"+\" button to create radial menus.",
+      "TranslatedText": "使用“+”按钮来创建辐射式菜单"
+    },
+    "hfa698acbg0d00g4441g833eg48ecf14fc04f": {
+      "ReferenceText": "Select a skill.",
+      "TranslatedText": "选择一个技能"
+    },
+    "h020cf6bbgd57ag41eag801fg538b7b9901fc": {
+      "ReferenceText": "If enabled, skill icons in the skills UI will be rendered individually rather than as a single texture.<br>This fixes the issue of icons disappearing when using many mods.",
+      "TranslatedText": "如果启用，技能用户界面中的技能图标将单独渲染，而不是作为单个纹理进行渲染。<br>这可解决使用多个模组时图标消失的问题。"
+    },
+    "h165ef29eg55a7g4148g920eg6505ada99b29": {
+      "ReferenceText": "Render icons individually",
+      "TranslatedText": "图标单独渲染"
+    },
     "hd74d99b1gf914g4cb2gb3bfg832230e4cf0f": {
       "ReferenceText": "AP Divider Interval",
       "TranslatedText": "行动点分隔"
@@ -1674,6 +2670,194 @@
       "ReferenceText": "Toggles the Surface Painter UI.",
       "TranslatedText": "切换地表画画UI"
     },
+    "h79c8cb89g33c7g48cagaac3ge0bae06d585e": {
+      "ReferenceText": "Adjust the \"%s\" setting to rotate the camera faster with the keyboard.",
+      "TranslatedText": "调整 “%s” 设置，以便使用键盘更快地旋转相机。"
+    },
+    "hf9c292ccga0c3g48fbgbaa5gb26ff6115fa1": {
+      "ReferenceText": "Adjust the Quick Loot \"%s\" setting to select containers further away with quick taps of the keybind.",
+      "TranslatedText": "调整快速拾取 “%s” 设置，以便快捷的通过点击绑定按键来选择更远距离的容器。"
+    },
+    "h5e9bbf2fga329g4284g8cfegb1a6005e2c4d": {
+      "ReferenceText": "Browse the \"Tooltips\" settings tab to configure extensive filters for world tooltips, such as hiding empty containers.",
+      "TranslatedText": "浏览 “提示信息” 设置选项卡，为环境提示信息设置过滤，例如隐藏空容器。"
+    },
+    "h0fe8cd11g4b93g4109gbf60g284b84d78eb7": {
+      "ReferenceText": "Click on statuses to focus the camera on the character that applied them.",
+      "TranslatedText": "点击状态信息，可将相机焦点对准应用了这些状态的角色。"
+    },
+    "h78c3cb94g6af7g4cd4g822agafb87add26be": {
+      "ReferenceText": "Drag-and-drop items into the Greatforge socket to work with them.",
+      "TranslatedText": "可将物品拖放到大熔炉插槽中以对其进行操作。"
+    },
+    "hdcfcacdeg3e21g4b37g80bcg813c80877f98": {
+      "ReferenceText": "Enable \"%s\" and bind its respective keybinds to quickly move groups of items in inventories, including bags.",
+      "TranslatedText": "启用 “%s” 并绑定其相应的按键绑定，以便快速移动包括背包在内的物品组。"
+    },
+    "hf14fc0f2gf02dg4ef2g9ac3g91d04fd179b0": {
+      "ReferenceText": "Enable \"%s\" to be able to filter and reorder statuses by the player portraits by right-clicking them.",
+      "TranslatedText": "启用 “%s”以便能够通过右键单击玩家头像来筛选状态并对其重新排序。"
+    },
+    "h416a48e6g2251g468agba4aga11aaf8ae546": {
+      "ReferenceText": "Enable \"%s\" to be able to use slots from higher bars with keybinds.",
+      "TranslatedText": "启用 “%s”以便能够通过按键绑定来使用更高栏位中的插槽。"
+    },
+    "ha5eb7b58g616bg419fgaa8bg7e4a0731c261": {
+      "ReferenceText": "Epip's anniversary is celebrated on the 1st of April with various special features.",
+      "TranslatedText": "Epip的周年纪念日在 4 月 1 日庆祝，且有各种特别的活动。"
+    },
+    "h89864b53g6c80g4beegbef4g525cda3cbef0": {
+      "ReferenceText": "Hold shift while clicking on \"Options\" in the pause menu to open the Epip settings menu directly.",
+      "TranslatedText": "在暂停菜单中点击 “选项” 的同时按住 Shift 键，可直接打开 Epip 设置菜单。"
+    },
+    "hb08d946dgc24dg41f6gab0ega2906c48dbd7": {
+      "ReferenceText": "Hold shift while moving in combat to see precise AP costs.",
+      "TranslatedText": "在战斗中移动时按住 Shift 键，以查看精确的行动点数（AP）消耗。"
+    },
+    "h0383a7b3gbc16g48afg932ag2e5de1b7b526": {
+      "ReferenceText": "Hold shift while viewing a character's healthbar to show their AP, SP, initiative and other information.",
+      "TranslatedText": "在查看角色的生命值条时按住 Shift 键，以显示其行动点数（AP）、技能点数（SP）、先攻以及其他信息。"
+    },
+    "heb1b963bg108fg4cf7ga4d0g8e3424fc3891": {
+      "ReferenceText": "Hold shift while viewing a skill tooltip to quickly reference your relevant ability score and check unlocked Source Infusions.",
+      "TranslatedText": "在查看技能提示时按住 Shift 键，以便快速查阅相关的能力数值并查看已解锁的源力注入情况。"
+    },
+    "h4d828efdg6de7g4617gb367ga1e3e3005010": {
+      "ReferenceText": "Hold shift while viewing an equipment tooltip to see its Epic Encounters gear modifier tiers.",
+      "TranslatedText": "在查看装备提示信息时按住 Shift 键，以查看其 “史诗遭遇” 装备修正等级。"
+    },
+    "hd6bf50e5g1bf2g48acg9406g3ceacee06365": {
+      "ReferenceText": "If \"%s\" is enabled, holding shift will temporarily disable your status filters.",
+      "TranslatedText": "如果 “%s” 已启用，按住 Shift 键将暂时禁用状态过滤器。"
+    },
+    "he466b5b5g84f1g42c5g913cg6eeec2ce54d4": {
+      "ReferenceText": "If \"%s\" is enabled, pressing right-stick will toggle your status filters.",
+      "TranslatedText": "如果 “%s” 已启用，按下右摇杆将切换你的状态过滤器。"
+    },
+    "hc13c1020g3725g4febg958cg6a01491c8e2c": {
+      "ReferenceText": "If enabled, Epip usage tips will be shown during loading screens.",
+      "TranslatedText": "如果已启用，在加载屏幕期间将显示Epip的使用提示。"
+    },
+    "h22455277g5301g4695gb5adg6ccf414797d0": {
+      "ReferenceText": "Open the context menu for characters in combat to quickly check their AP, SP and initiative.",
+      "TranslatedText": "在战斗中打开角色的状态菜单，以便快速查看他们的行动点数（AP）、技能点数（SP）和先攻。"
+    },
+    "hf6bd74e0g8002g45d9gbb61g4678876368c9": {
+      "ReferenceText": "Right-click a Hotbar Group to edit its size or delete it.",
+      "TranslatedText": "右键点击快捷栏分组，以编辑其大小或删除该分组。"
+    },
+    "hfc643ff3g4eacg493agb7e1gb680f2712c58": {
+      "ReferenceText": "Right-click a Hotbar row and select \"Create group...\" to create additional detached slot groups.",
+      "TranslatedText": "右键点击快捷栏行并选择 “创建组...” 来创建额外的独立槽位组。"
+    },
+    "hb57564f8g68bag4e0bgaa33g15e2f6635231": {
+      "ReferenceText": "Right-click a Hotbar row to save & load loadouts, clear rows, or shift groups of slots around.",
+      "TranslatedText": "右键点击快捷栏行，以保存和加载配置、清空行或移动槽位组。"
+    },
+    "h388c53d5g04b6g4f6cg9a05gdd6c3439f55c": {
+      "ReferenceText": "Right-click an equipped item in the character sheet and select \"%s\" to browse items that can go in that slot.",
+      "TranslatedText": "在角色表中右键点击已装备的物品，然后选择 “%s” 来浏览可以放入该槽位的物品。"
+    },
+    "h115197c6g73d3g48f6g8f80g6152dacab766": {
+      "ReferenceText": "Right-click an equipped item in the character sheet and select \"Vanity\" to access vast appearance customization options.",
+      "TranslatedText": "在角色表单中右键点击已装备的物品，然后选择 “幻化” 以使用丰富的外观自定义选项。"
+    },
+    "hc72f22a1g462cg4932g961eg531e228a8a8c": {
+      "ReferenceText": "Right-click containers in your inventory and select \"Dismantle All\" to dismantle all non-unique equipment within.",
+      "TranslatedText": "右键点击你物品栏中的容器，然后选择 “全部拆解” 来拆解其中所有非独特的装备。"
+    },
+    "hf23c6ab7gd9afg4086g9dc8g3f13c5ceb3b4": {
+      "ReferenceText": "Right-click items and select \"Dismantle\" to quickly dismantle items without going to the Greatforge.",
+      "TranslatedText": "右键点击物品并选择 “拆解”，以便无需前往伟大熔炉即可快速拆解物品。"
+    },
+    "h319a6617geab6g42efg943dgf6086e1f4b5f": {
+      "ReferenceText": "Right-click items and select \"Extract Runes\" to recover the runes as if doing so through the Greatforge.",
+      "TranslatedText": "右键点击物品并选择 “提取符文”，就如同通过伟大熔炉那样来提取符文。"
+    },
+    "h8c888787g3010g44cbg8665g209abca084f7": {
+      "ReferenceText": "Right-click skills in the skillbook UI to unlearn them.",
+      "TranslatedText": "在技能书用户界面中，右键点击技能即可遗忘它们。"
+    },
+    "h1495fbfeg9e3dg4d12gbf4fg417e821ab9a0": {
+      "ReferenceText": "Right-click the buttons at the bottom left of the Hotbar or use the \"^\" button to view all actions.",
+      "TranslatedText": "右键点击快捷栏左下角的按钮或使用 “^” 按钮来查看所有操作。"
+    },
+    "he41b2329gd754g4addg9fb0g0cfe895cfba6": {
+      "ReferenceText": "Show Epip tips while loading",
+      "TranslatedText": "在加载时显示Epip提示信息。"
+    },
+    "ha3abcdafg29a5g4c62gb0dbg3522263cb2a6": {
+      "ReferenceText": "Skill animations taking too long? Try the Animation Cancelling feature!",
+      "TranslatedText": "技能动画耗时过长？试试动画取消功能！"
+    },
+    "he0ec379ag6bdag4d69gac0eg9d487a5ef12c": {
+      "ReferenceText": "The \"Keybinds\" settings menu tab contains numerous new shortcuts, including an Examine keybind.",
+      "TranslatedText": "“按键绑定” 设置菜单选项卡包含许多新的快捷键，其中包括一个 “检查” 快捷键。"
+    },
+    "ha4a8e067g039ag4295g8c98g710cee3611cf": {
+      "ReferenceText": "Tired of holding \"%s\"? Try the \"%s\" Epip keybind!",
+      "TranslatedText": "厌烦一直按住 “%s” 吗？试试 “%s” Epip的按键绑定功能吧！\n"
+    },
+    "hdc31c891ge5bdg40f5gb098geb0b0e961a81": {
+      "ReferenceText": "Use the \"%s\" keybind to open an encyclopedia-style UI with a list of all skills and Epic Encounters Artifacts.",
+      "TranslatedText": "使用 “% s” 按键绑定来打开一个百科全书式的用户界面，其中包含所有技能和史诗遭遇神器的列表。"
+    },
+    "hb7782218gea9cg44beg893dg6127d8f00a3d": {
+      "ReferenceText": "Use the \"%s\" keybind to quickly adjust the camera angle.",
+      "TranslatedText": "使用 “%s” 按键绑定来快速调整相机角度。"
+    },
+    "h143b716bg5c94g40b1g98f9gd9000ce95e3c": {
+      "ReferenceText": "Use the \"Outfits\" tab in the Vanity UI to save the appearance of all your equipped items to re-use across playthroughs or share outfits with other players.",
+      "TranslatedText": "使用外观用户界面中的 “套装” 选项卡，保存所有已装备物品的外观，以便在不同游戏进程中重复使用，或与其他玩家分享套装。"
+    },
+    "h714d5863g1a8bg4d35gb4e2gfcdc35be3cb8": {
+      "ReferenceText": "Visit the website for overviews and demostrations of major features.",
+      "TranslatedText": "访问该网站，以获取主要功能的概述和演示。"
+    },
+    "h73ae2206ga122g46d7gab18g83db9069fc4c": {
+      "ReferenceText": "While multi-selecting items, you may drop them onto inventory cells, container items or player bag headers.",
+      "TranslatedText": "当对物品进行多选时，你可以将它们拖放到物品栏单元格、容器物品或玩家背包的顶部。"
+    },
+    "h73e142a6gd7aeg4239g8aa2g33f2d4b20e0f": {
+      "ReferenceText": "While the Hotbar is unlocked, you can drag-and-drop buttons at the bottom left to reorder them.",
+      "TranslatedText": "当快捷栏处于解锁状态时，你可以拖放左下角的按钮来重新排列它们的顺序。"
+    },
+    "he4f29d95gf861g434ega840g813a9dddffc7": {
+      "ReferenceText": "You can disable the minimap UI in the \"Miscellaneous UI\" settings tab.",
+      "TranslatedText": "你可以在 “杂项用户界面” 设置选项卡中禁用小地图用户界面。"
+    },
+    "hbde30424g74b4g4524gb1c8g0ff0425c2e64": {
+      "ReferenceText": "You can use the \"%s\" search bar in Quick Find to search for party equipment with specific stat boosts.",
+      "TranslatedText": "你可以使用 “快速查找” 中的 “%s” 搜索栏来搜索具有特定属性加成的团队装备。"
+    },
+    "h39aeaf1cga7f6g418ag8954g6c7b8fd1c5e3": {
+      "ReferenceText": "You can use the Quick Examine UI to check the skills, cooldowns and equipment of other players in multiplayer.",
+      "TranslatedText": "在多人游戏中，你可以使用快速检查界面来查看其他玩家的技能、冷却时间和装备情况。"
+    },
+    "h901fdfa6gb1d0g4190g9f4cg6d6adeefb841": {
+      "ReferenceText": "You may configure the \"%s\" setting to have tooltips appear by the side of the UI rather than by the cursor.",
+      "TranslatedText": "你可以配置 “%s” 设置，让提示出现在用户界面旁边，而不是光标旁边。"
+    },
+    "h1803b4d7gfc22g4c70gbb02g9c0c55af30ed": {
+      "ReferenceText": "You may drag & drop skills from the Codex to your Hotbar. Enable \"%s\" to be able to do so even for unlearnt ones.",
+      "TranslatedText": "你可以将技能从技能书拖放到快捷栏。启用 “%s” 后，即使是未学习的技能也能这样操作。"
+    },
+    "h1c4d0e87g8710g4fb1gb98ag97d35a24bb5b": {
+      "ReferenceText": "Abeying %d damage.",
+      "TranslatedText": "吸收%d点伤害"
+    },
+    "h1ca15e96g0bf6g4ba6gaa64g1dec7a28d3af": {
+      "ReferenceText": "Gale can absorb this item's magic, destroying it.",
+      "TranslatedText": "盖尔可以吸收这件物品的魔法，然后将其摧毁。"
+    },
+    "h54e102a8ge257g41c9g91ecgf19525348e6e": {
+      "ReferenceText": "Cannot equip.",
+      "TranslatedText": "无法装备"
+    },
+    "h3e106820ge677g4e64gae9fgf308a5c93b43": {
+      "ReferenceText": "Moving here would exit combat.",
+      "TranslatedText": "移动到此处将推出战斗"
+    },
     "h2f7ed974g4184g404fga2abg640d32f6f7aa": {
       "ReferenceText": "Controls the position of item tooltips within the Party Inventory and Container Inventory UIs.<br><br>- Near cursor: vanilla behaviour; tooltips appear near the cursor.<br>- On UI sides: tooltips will be positioned on the left side of the source UI if possible, or on the right otherwise.",
       "TranslatedText": "背包和容器物品提示显示的位置.<br><br>- 指针附近: 同原版, 提示显示在指针附近.<br>-界面边缘: 提示会显示在界面左边或右边."
@@ -1689,6 +2873,14 @@
     "h5f55f283g3f47g4d04g9f4eg44d2617254a4": {
       "ReferenceText": "On UI Sides",
       "TranslatedText": "界面边缘"
+    },
+    "hd3c5462egafcbg4008gbba8g657cffae5ed7": {
+      "ReferenceText": " %(before damage modifiers%)",
+      "TranslatedText": "%(伤害修正前）"
+    },
+    "h02273499g09a1g4dccg8d25g55913948a95b": {
+      "ReferenceText": " %(before modifiers%)",
+      "TranslatedText": "%(修正前）"
     },
     "hf2848d52g9abbg4567g89e7gec23e4573bf2": {
       "ReferenceText": "%s%% weapon-based damage",
@@ -1710,6 +2902,10 @@
       "ReferenceText": "Item Comparison Tooltip Delay",
       "TranslatedText": "物品比较提示延迟"
     },
+    "hd2aaa37dg2eccg4480g90d5gab593d074c2f": {
+      "ReferenceText": "Right-click to open.<br>Ctrl+right-click to offer all items within.",
+      "TranslatedText": "右键点击以打开。<br>按住 Ctrl 键并右键点击以全选里面的物品。"
+    },
     "h4025c1c4g6527g4b6ag8369g49c0b1949dea": {
       "ReferenceText": "If enabled, the positions of the following UIs will be remembered across sessions:<br>- Character Sheet<br>- Party Inventory<br>- Quick Find<br>- Quick Loot",
       "TranslatedText": "启用后，"
@@ -1717,6 +2913,26 @@
     "h626e6a30gaf91g438aga001g799e54be1477": {
       "ReferenceText": "Remember panel positions",
       "TranslatedText": "记住面板位置"
+    },
+    "hb0c886b2g7598g46e8ga0f3g0b90fa295fff": {
+      "ReferenceText": "Character Sheet Overrides",
+      "TranslatedText": "角色面板覆盖"
+    },
+    "h6e636546ge930g472eg9998gf083a124eca9": {
+      "ReferenceText": "Enables Epip's changes to the character sheet UI. If disabled, the following features will not be available:<br>- Physical & piercing resistance icons<br>- \"Keywords & Misc.\" tab<br>Tooltip adjustments are unaffected.",
+      "TranslatedText": "启用Epip对角色界面的更改。如果禁用，以下功能将不可用：<br>抗性图标<br>“简要及杂项” 选项卡，<br>工具提示的调整不受此影响。"
+    },
+    "h36388340g34f3g485fgb871g6391fe5312c6": {
+      "ReferenceText": "Enables Epip's changes to the player portraits UI. If disabled, the following features will not be available:<br>- Wrapping status bar<br>- Battered/Harried indicators<br>- Adjusting status bar opacity<br>- Player context menus<br>The \"Alternative Status Display\" setting is unaffected.",
+      "TranslatedText": "启用Epip对玩家肖像用户界面的更改。如果禁用此功能，以下功能将不可用：<br>环绕状态栏\n<br>重创/蹂躏指示器<br>调整状态栏透明度<br>玩家状态菜单<br>“替代状态显示” 设置不受此影响。"
+    },
+    "h4978bb6fg7904g44ccg912fgc6ae2897f3d8": {
+      "ReferenceText": "Player Portraits Overrides",
+      "TranslatedText": "玩家肖像设置"
+    },
+    "hdeef5528gca68g4566g9af5gc53982dd1366": {
+      "ReferenceText": "The following settings control Epip's UI file overrides. Disabling these allows other mods's overrides to be used instead, but will make some of Epip's functionalities related to that UI unavailable.",
+      "TranslatedText": "以下设置控制Epip的用户界面文件覆盖项。禁用这些设置将允许使用其他模组的覆盖内容，但会使一些与该用户界面相关的伊皮功能无法使用。"
     },
     "h3a8d983cg5a8cg4b33g954cg39581bd8a04b": {
       "ReferenceText": "AI Type: %s",
@@ -1745,6 +2961,22 @@
     "h4c2e34f9g7feeg4303g9dfegcc0c44cf6011": {
       "ReferenceText": "Turn Delayed",
       "TranslatedText": "回合延后"
+    },
+    "h5c14960age89bg4621gbdeagd2165e0c74de": {
+      "ReferenceText": "Next Item",
+      "TranslatedText": "下一项"
+    },
+    "he55dc83eg5d16g4af0g8c8bg2bd5e368e620": {
+      "ReferenceText": "Previous Item",
+      "TranslatedText": "前一项"
+    },
+    "hc80564a1g07e6g4dc4g97cdgedeedee8797f": {
+      "ReferenceText": "Slide Left",
+      "TranslatedText": "向左滑动"
+    },
+    "h462d4e75g38f1g42a4g8ad4g547e2dd6f836": {
+      "ReferenceText": "Slide Right",
+      "TranslatedText": "向右滑动"
     },
     "h8db61443g39bfg45f1g8c0cga6ab56bb12b7": {
       "ReferenceText": "Open Generic UI Texture Test UI",
@@ -1869,6 +3101,50 @@
     "hc53e69e8ge732g435dg84dcgfb0541f33326": {
       "ReferenceText": "Dismantle All",
       "TranslatedText": "全部取消"
+    },
+    "h4909f5e1g70d6g4b89g98f3g3dda794aec4f": {
+      "ReferenceText": "Toggle Minimap",
+      "TranslatedText": "切换小地图"
+    },
+    "h6ef014f9g75f8g4c3fga5dbg6b7407405e1c": {
+      "ReferenceText": "Toggles visibility of the Minimap UI.",
+      "TranslatedText": "切换小地图UI可见性"
+    },
+    "h4617b458g594dg4024gb37eg8062631ebee9": {
+      "ReferenceText": "Add Script",
+      "TranslatedText": "添加脚本"
+    },
+    "h02aa046bgd8f6g4627g9637gd4d69407abad": {
+      "ReferenceText": "Add client script",
+      "TranslatedText": "增加客户端脚本（client）"
+    },
+    "h4c185a0bg8cdcg4b2ega962g78420c14debc": {
+      "ReferenceText": "Add server script",
+      "TranslatedText": "增加服务器脚本（server）"
+    },
+    "he0716b9bga6f2g4e49g8891g21780216c118": {
+      "ReferenceText": "Add shared script",
+      "TranslatedText": "添加共享脚本"
+    },
+    "hbc86d8eag822bg4699g9046gc47787f8565d": {
+      "ReferenceText": "Custom Scripts",
+      "TranslatedText": "自定义脚本"
+    },
+    "he4b6fda6gfaddg43a7gb3ecg20e01e95238e": {
+      "ReferenceText": "Custom Scripts allow you to load additional Lua scripts without needing to include them in a mod pak.<br>They can be useful to quickly extend & modify Epip's behaviour, create quick tests and cheats, or small new features.",
+      "TranslatedText": "自定义脚本允许你加载额外的 Lua 脚本，而无需将它们包含在模组包中。<br>它们在快速扩展和修改Epip的行为、创建快速测试和作弊功能，或是开发小的新功能方面很有用。"
+    },
+    "hc9cf6a7age288g4bd7gbfbag75c71c1969ae": {
+      "ReferenceText": "Enter the script's relative path with no extension.",
+      "TranslatedText": "输入脚本的相对路径，不要带文件扩展名。"
+    },
+    "hb4f59492g1fdag4824gae84g0eb3c3d4527c": {
+      "ReferenceText": "Put Lua scripts in the %s folder (relative to your savegames folder) and use the \"Add Script\" button to register and configure them. Custom Scripts load after Epip's, in top-to-bottom order, and are not synchronized between peers.<br>Use the checkboxes to toggle scripts, and the arrow buttons to set load order. A Lua reset or a save & reload is required to reload scripts.",
+      "TranslatedText": "将 Lua 脚本放置在 % s 文件夹中（你的存档文件夹），并使用 “添加脚本” 按钮来注册和配置它们。自定义脚本会在Epip的脚本之后按从上到下的顺序加载，并且不会在对等端之间进行同步。<br>使用复选框来切换脚本，并使用箭头按钮来设置加载顺序。<br>重新加载脚本需要重置 Lua 或者保存并重新加载游戏。"
+    },
+    "h192d069eg0a8eg4a88g92cdg31d84fc06104": {
+      "ReferenceText": "There is no script at %s. Ensure you have placed the script in the correct folder.",
+      "TranslatedText": "在 % s 位置没有脚本。请确保你已将脚本放置在正确的文件夹中。"
     },
     "h11ffdfdbg98d0g41afgb4e4g7242c71f6a2d": {
       "ReferenceText": "Respec",
@@ -2330,13 +3606,181 @@
       "ReferenceText": "Unlearn Skill",
       "TranslatedText": "遗忘技能"
     },
+    "h1050422bg60f7g4cfag8a89ge22ef3bcf7c6": {
+      "ReferenceText": "Attachment Point",
+      "TranslatedText": "设定位置"
+    },
+    "hba14c3f1g1d8fg4ddeg935bg2a8189f90d32": {
+      "ReferenceText": "Auras",
+      "TranslatedText": "光效"
+    },
+    "h1bbafd1cg0289g47cbga8cdg93e45e2edbdc": {
+      "ReferenceText": "Remove Auras",
+      "TranslatedText": "移除光效"
+    },
+    "h97fd1347g2a02g4221g8b95g4d7111b1aeee": {
+      "ReferenceText": "Apply Dye",
+      "TranslatedText": "应用染色"
+    },
+    "h92e8b290g5e1fg4e2aga497g8d782364617a": {
+      "ReferenceText": "Are you sure you want to remove this dye (%s)?",
+      "TranslatedText": "移除染色"
+    },
+    "he980829dgb88eg4804g9c76gba9032eb01e5": {
+      "ReferenceText": "Copied dye colors to clipboard.",
+      "TranslatedText": "复制染色"
+    },
+    "hfe2cdebcg8b7ag4648gb5efg912f86758ff4": {
+      "ReferenceText": "Custom Color (RGB)",
+      "TranslatedText": "定制染色（RGB）"
+    },
+    "h0844733egaca8g4b92g967ag9be4b8ec5041": {
+      "ReferenceText": "Dye Exported",
+      "TranslatedText": "导出染色"
+    },
+    "h51316fa0g86f3g49a1g99f4g30bd703db792": {
+      "ReferenceText": "Dyes",
+      "TranslatedText": "染色"
+    },
+    "he363c0b9g91fbg48a3ga1cbgbc7a759eb832": {
+      "ReferenceText": "Enter a name for this dye!",
+      "TranslatedText": "保存染色方案"
+    },
+    "h3427b3a5gcda2g43fdgb888g093b23202fe0": {
+      "ReferenceText": "Export Dye",
+      "TranslatedText": "导出染色方案"
+    },
+    "h2ee9689egad84g43ddg949egbac1d1d0ed6e": {
+      "ReferenceText": "Import Dye",
+      "TranslatedText": "导入染色方案"
+    },
+    "h598b8807gfcedg41e7gb839g3d8f252fa9bf": {
+      "ReferenceText": "Lock Color Sliders",
+      "TranslatedText": "锁定色彩调节"
+    },
     "hbb910187g05dag4c1fgb07cg3f1c6515de8f": {
       "ReferenceText": "Remove Dye",
       "TranslatedText": "移除染色"
     },
+    "hc597a867g6292g4c8dgb9a0gf6adb8e76729": {
+      "ReferenceText": "Save Dye",
+      "TranslatedText": "保存染色"
+    },
+    "h6e951ad3g6994g4580gb0c7gbdbbf3853809": {
+      "ReferenceText": "If enabled, items that are unequipped will have all their Vanity overrides (transmog, dyes, icon, etc.) removed automatically.<br><br>Host-only setting; applies to all players.",
+      "TranslatedText": "如果启用此功能，已卸下的物品将自动移除所有外观覆盖（幻化、染色、图标等）。<br>仅限主机设置；对所有玩家生效。"
+    },
+    "he381be9bg9e27g4c86g883cg7f3879f704f5": {
+      "ReferenceText": "Are you sure you want to remove this outfit (%s)?",
+      "TranslatedText": "你确定要移除该套装（% s）吗？"
+    },
+    "h025ca76ag673eg4f3agb92agb693e964f023": {
+      "ReferenceText": "Name your outfit!",
+      "TranslatedText": "命名你的套装"
+    },
+    "he5c7af2eg96a9g4e92g8a50g5ef795e219d1": {
+      "ReferenceText": "Outfits",
+      "TranslatedText": "套装"
+    },
+    "hc6649aa4g4a9eg4bc3g97d5g2f281efe855a": {
+      "ReferenceText": "Remove Outfit",
+      "TranslatedText": "移除套装"
+    },
+    "he6444a72g7e13g43d7gb58fg16746e643f90": {
+      "ReferenceText": "Save Outfit",
+      "TranslatedText": "保存套装"
+    },
+    "h157ffd3bg5fdag4f5ag93c3gd575ef924d37": {
+      "ReferenceText": "Save and apply outfits consisting of all your currently applied items.",
+      "TranslatedText": "保存并应用当前已装备物品组成的套装。"
+    },
+    "h744534d4g7175g4bd6g814fgf6c9272d060a": {
+      "ReferenceText": "Save with weapons",
+      "TranslatedText": "保存套装及武器"
+    },
+    "h0655f2bfgcf50g4f99g9b72ge9d9d83a924e": {
+      "ReferenceText": "Revert appearance of unequipped items",
+      "TranslatedText": "恢复未装备物品的外观。"
+    },
+    "hff78f222g1c48g4051g8f02gb74c8b2d9315": {
+      "ReferenceText": "To Main Hand",
+      "TranslatedText": "应用到主武器"
+    },
+    "hc079de50g6f53g4894g9bb8g854765f6fd07": {
+      "ReferenceText": "To Offhand",
+      "TranslatedText": "应用到副武器"
+    },
+    "hee8f9fa0ged91g48e3gb8cbg70b241a61685": {
+      "ReferenceText": "Bow",
+      "TranslatedText": "弓箭"
+    },
+    "hcc4b1748ged00g450bg8a5ag3f884691e55a": {
+      "ReferenceText": "Dual-wielding",
+      "TranslatedText": "双持"
+    },
+    "hc48f3629g9abag4fe7g816ag4c06d2780870": {
+      "ReferenceText": "Elemental Effects",
+      "TranslatedText": "元素效果"
+    },
+    "h984069e2gd55ag4627g9031g1f19dfa0064f": {
+      "ReferenceText": "Force show hair",
+      "TranslatedText": "强制显示头发"
+    },
+    "h07513bd6ge8a4g4509g9c95g13e56a5eac03": {
+      "ReferenceText": "Keep Icon",
+      "TranslatedText": "锁定图标"
+    },
+    "h98e054f2g9d91g481agb967g51a1873b4a78": {
+      "ReferenceText": "Lock Appearance",
+      "TranslatedText": "锁定外观"
+    },
+    "h411fbda4gdfe0g4fb5gb79eg3f7f99a347d7": {
+      "ReferenceText": "One-handed",
+      "TranslatedText": "单手"
+    },
+    "hca179321g5478g4decga9fagc7b3bd11ca9a": {
+      "ReferenceText": "Revert Appearance",
+      "TranslatedText": "移除变幻"
+    },
     "h19773400g8de1g46d7g9901g779b750ebddd": {
       "ReferenceText": "Set Icon",
       "TranslatedText": "设置图标"
+    },
+    "h4690f681g9d16g4ff4gbe5dg2b6c977843d1": {
+      "ReferenceText": "Small Weapons",
+      "TranslatedText": "小型武器"
+    },
+    "hde9528cfg0189g45b2gbe7cg8d7bd5637012": {
+      "ReferenceText": "This item is too brittle to transmog.",
+      "TranslatedText": "这件物品太易碎了，无法进行幻化。"
+    },
+    "h4528e43cga37bg40cdg9c6eg6b6144813c87": {
+      "ReferenceText": "Transmog",
+      "TranslatedText": "变幻"
+    },
+    "ha29f6a6fg7c7eg48f9g858bg2a05317ccff9": {
+      "ReferenceText": "Two-handed",
+      "TranslatedText": "双手"
+    },
+    "h6a8b2c24ga258g4bf3gbb12gbab3c37c0d8e": {
+      "ReferenceText": "Weapon Animations",
+      "TranslatedText": "武器动作"
+    },
+    "h12e35ceeg43cbg4298ga0d1gfd1a6bf16b6a": {
+      "ReferenceText": "Vanity",
+      "TranslatedText": "幻化"
+    },
+    "h56a937e0gb868g4e6cg9f1ag634beba6c7b4": {
+      "ReferenceText": "Vanity allows you customize your equipment's appearance with transmog, custom dyes, and more.<br>Access it by right-clicking any equipped item and selecting \"Vanity...\" from the context menu.",
+      "TranslatedText": "“幻化” 功能可让你使用幻化、自定义染色等方式来定制装备的外观。<br>你可以通过右键点击任意已装备的物品，然后从上下文菜单中选择 “幻化…” 来使用此功能。"
+    },
+    "h63d72701gaa49g421dg972egc75a54e08bb1": {
+      "ReferenceText": "Vanity: Copy Appearance",
+      "TranslatedText": "复制外观"
+    },
+    "h31bb79b1g9516g4f23g8110g9b6bf75a11ea": {
+      "ReferenceText": "You don't have an item equipped in that slot!",
+      "TranslatedText": "那个装备栏里没有装备任何物品！"
     },
     "h0d38d9a9gd416g4815gabc7gf9d8d901d40a": {
       "ReferenceText": "If enabled, light items such as torches, candles and braziers will show world tooltips.",

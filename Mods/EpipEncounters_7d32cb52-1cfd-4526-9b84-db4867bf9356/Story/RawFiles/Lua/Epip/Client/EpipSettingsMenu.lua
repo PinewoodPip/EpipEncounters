@@ -104,7 +104,7 @@ local EpipSettingsMenu = {
         },
         TranslationCredits_SimplifiedChinese = {
            Handle = "h98c83d5fgd30dg41f6g825ag14707c6db182",
-           Text = "Simplified Chinese translation by Ainsky",
+           Text = "Simplified Chinese translation by Ainsky & HeiMao",
            ContextDescription = "Displayed at the bottom of the info Epip settings tab",
         },
         TranslationCredits_French = {
