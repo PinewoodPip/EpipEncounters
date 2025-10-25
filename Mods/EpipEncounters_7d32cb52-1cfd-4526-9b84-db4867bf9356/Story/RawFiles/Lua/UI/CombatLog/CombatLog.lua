@@ -120,7 +120,7 @@ local TSK = Log.TranslatedStrings
 
 ---@class UI.CombatLog.Hooks.ParseMessage
 ---@field ParsedMessage UI.CombatLog.Message? Hookable. Defaults to `nil`.
----@field RawMessage string The message being sent to the log by the game.
+---@field RawMessage string The message being sent to the log by the game, with the base combat log color font tag removed.
 
 ---Fired when 2 messages of the same type are attempted to be sent one after another.
 ---Set `Combined` true to indicate you've edited `Message1` to amend it with the second message's data.
@@ -301,7 +301,7 @@ end
 ---@return UI.CombatLog.Message
 function Log.GetData(msg)
     local parsedMsg = Log.Hooks.ParseMessage:Throw({
-        RawMessage = msg,
+        RawMessage = msg:gsub([[^<font color="#]] .. Log.COLORS.TEXT .. [[">(.+)</font>$]], "%1"), -- Remove base message color
         ParsedMessage = nil
     }).ParsedMessage
 
