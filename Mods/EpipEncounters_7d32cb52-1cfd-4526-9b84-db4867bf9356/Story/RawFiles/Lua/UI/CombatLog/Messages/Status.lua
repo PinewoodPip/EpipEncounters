@@ -15,6 +15,19 @@ local _StatusMessage = {
 Log:RegisterClass("UI.CombatLog.Messages.Status", _StatusMessage, {"UI.CombatLog.Messages.Character"})
 Log.RegisterMessageHandler(_StatusMessage)
 
+local TSK = {
+    Msg_StatusesApplied = Log:RegisterTranslatedString({
+        Handle = "h62429127g04c8g406fga3cag4a440c430c2f",
+        Text = [[%s has the statuses: %s]],
+        ContextDescription = [[Message for a character gaining multiple statuses. Params are character name and statuses gained (ex. "<character> has the statuses: Hasted, Fortified")]],
+    }),
+    Msg_StatusesRemoved = Log:RegisterTranslatedString({
+        Handle = "h5fa98726g2c12g453fg80afg6d315b23be7c",
+        Text = [[%s no longer has the statuses: %s]],
+        ContextDescription = [[Message for a character losing multiple statuses. Params are character name and statuses lost (ex. "<character> no longer has the statuses: Hasted, Fortified")]],
+    }),
+}
+
 ---@class UI.CombatLog.Messages.Status.Entry
 ---@field Name string
 ---@field Color string
@@ -44,18 +57,33 @@ end
 
 ---@override
 function _StatusMessage:ToString()
+    local msg ---@type string
     local statusLabels = {} ---@type string[]
     for i,status in ipairs(self.Statuses) do
         statusLabels[i] = Text.Format(status.Name, {Color = status.Color})
     end
 
-    -- TODO reimplement plural "statuses" label; the game TSKs do not have strings for it,
-    -- thus we'd have to add our own.
-    local tskHandle = self.LosingStatuses and _StatusMessage.STATUS_REMOVED_TSKHANDLE or _StatusMessage.STATUS_APPLIED_TSKHANDLE
-    local msg = Text.FormatLarianTranslatedString(tskHandle,
-        self:GetCharacterLabel(),
-        Text.Join(statusLabels, ", ")
-    )
+    -- Check whether plural should be used and whether it is supported by the current language;
+    -- The vanilla game has no plural TSKs for "statuses", so displaying the plural is only supported if the Epip localization has it.
+    -- Otherwise, the singular form is used as fallback.
+    local usePlural = #statusLabels > 1 and (self.LosingStatuses and (Text.GetTranslatedStringTranslation(TSK.Msg_StatusesRemoved.Handle) ~= nil) or (Text.GetTranslatedStringTranslation(TSK.Msg_StatusesApplied.Handle) ~= nil))
+
+    -- Format string
+    if usePlural then
+        -- Show multiple statuses
+        local tsk = self.LosingStatuses and TSK.Msg_StatusesRemoved or TSK.Msg_StatusesApplied
+        msg = tsk:Format(
+            Text.Format(self.CharacterName, {Color = self.CharacterColor}),
+            Text.Join(statusLabels, ", ")
+        )
+    else
+        -- Show single status
+        local tskHandle = self.LosingStatuses and _StatusMessage.STATUS_REMOVED_TSKHANDLE or _StatusMessage.STATUS_APPLIED_TSKHANDLE
+        msg = Text.FormatLarianTranslatedString(tskHandle,
+            self:GetCharacterLabel(),
+            Text.Join(statusLabels, ", ")
+        )
+    end
 
     return msg
 end
