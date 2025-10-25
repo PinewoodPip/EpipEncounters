@@ -44,7 +44,7 @@ local Log = {
         },
         MessageBox_FeatureNotEnabled_Message = {
             Handle = "hc3d4397fgb1ffg4cd2g8e3bg52b67ec37424",
-            Text = [[You must enable "Combat Log Improvements" in the options menu and reload the savefile to use custom filters.]],
+            Text = [[You must enable "Improved Combat Log" in the options menu and reload the savefile to use custom filters.]],
             ContextDescription = [[Message shown when trying to use filters without the feature enabled]],
         },
         Header_Filters = {
