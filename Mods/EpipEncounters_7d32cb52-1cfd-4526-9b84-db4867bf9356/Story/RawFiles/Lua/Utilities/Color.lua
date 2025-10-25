@@ -31,6 +31,7 @@ Color = {
     },
 
     -- From https://docs.larian.game/UI_Colors_Reference_Sheet
+    -- These correspond to EStringColor.
     LARIAN = {
         BLUE = "0078FF",
         GREEN = "00F27D",

@@ -1,38 +1,51 @@
 
+---------------------------------------------
+-- Handler for "X has Y reaction charges remaining" messages from Epic Encounters.
+---------------------------------------------
+
 local Log = Client.UI.CombatLog
 
----@class CombatLogReactionChargesData
+---@class UI.CombatLog.Messages.ReactionCharges : UI.CombatLog.Messages.Scripted
+---@field Reactions UI.CombatLog.Messages.ReactionCharges.Reaction[]
+local _Charges = {
+    PATTERN_MULTIPLE_REACTIONS = '<font color="#(%x%x%x%x%x%x)">(.+)</font>: has free reaction charges:<br>(.+)',
+    PATTERN = '<font color="#(%x%x%x%x%x%x)">(.+)</font>: (.+) free reaction charges remaining: (%d+)',
+}
+Log:RegisterClass("UI.CombatLog.Messages.ReactionCharges", _Charges, {"UI.CombatLog.Messages.Scripted"})
+Log.RegisterMessageHandler(_Charges)
+
+local TSKs = {
+    ReactionCharges_Remaining_Prefixed = Log:RegisterTranslatedString({
+        Handle = "hbb7f4c8bgf1a1g4b2bg8e6fgc6e2e4e2d3e4",
+        Text = [[%s reaction charges remaining: %s]],
+        ContextDescription = [[Message for a character's remaining charges for a reaction; params are reaction type and amount.]],
+    }),
+    ReactionCharges_Remaining = Log:RegisterTranslatedString({
+        Handle = "h0095bd8ag2e26g4cc3gb6e0gb86d38e65b3a",
+        Text = [[reaction charges remaining: %s]],
+        ContextDescription = [[Message for a character's summary of remaining reaction charges of all types; param is the reaction charges (ex. "Predator: 1<br>Celestial: 2").]],
+    }),
+}
+
+---@class UI.CombatLog.Messages.ReactionCharges.Reaction
 ---@field Reaction string
 ---@field Amount integer
-
----@class CombatLogReactionChargesMessage : CombatLogScriptedMessage
----@field Reactions CombatLogReactionChargesData[]
-local _Charges = {
-    PATTERN_ALT = '<font color="#(%x%x%x%x%x%x)">(.+)</font>: has free reaction charges:<br>(.+)', -- TODO
-    PATTERN = '<font color="#(%x%x%x%x%x%x)">(.+)</font>: (.+) free reaction charges remaining: (%d+)',
-    Type = "ReactionCharges",
-}
-Inherit(_Charges, Log.MessageTypes.Scripted)
-Log.MessageTypes.ReactionCharges = _Charges
 
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
+---Creates a new reaction charges message.
 ---@param charName string
 ---@param charColor string
----@param reactions CombatLogReactionChargesData[]
----@return CombatLogReactionChargesMessage
-function _Charges.Create(charName, charColor, reactions, fallbackText)
+---@param reactions UI.CombatLog.Messages.ReactionCharges.Reaction[]
+---@return UI.CombatLog.Messages.ReactionCharges
+function _Charges:Create(charName, charColor, reactions, fallbackText)
     local text = ""
 
     -- TODO finish
     if reactions then
-        text = Text.Format("%s reaction charges remaining: %s", {
-            FormatArgs = {
-                reactions[1].Reaction, reactions[1].Amount
-            }
-        })
+        text = TSKs.ReactionCharges_Remaining_Prefixed:Format(reactions[1].Reaction, reactions[1].Amount)
     end
 
     -- Start with a line break for multi-reaction messages
@@ -50,24 +63,20 @@ function _Charges.Create(charName, charColor, reactions, fallbackText)
             end
         end
 
-        text = Text.Format("reaction charges remaining:<br>%s", {
-            FormatArgs = {addendum},
-        })
+        text = TSKs.ReactionCharges_Remaining:Format(addendum)
     end
 
     if not reactions then
-        text = Text.Format("reaction charges remaining:<br>%s", {
-            FormatArgs = {fallbackText}
-        })
+        text = TSKs.ReactionCharges_Remaining:Format(fallbackText)
     end
 
-    ---@type CombatLogReactionChargesMessage
-    local obj = Log.MessageTypes.Scripted.Create(charName, charColor, text, nil)
-    Inherit(obj, _Charges)
-    obj.Type = "ReactionCharges"
-
-    obj.Reactions = reactions
-
+    ---@type UI.CombatLog.Messages.ReactionCharges
+    local obj = self:__Create({
+        CharacterName = charName,
+        CharacterColor = charColor,
+        Text = text,
+        Reactions = reactions
+    })
     return obj
 end
 
@@ -75,12 +84,14 @@ end
 -- PARSING
 ---------------------------------------------
 
-Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
-    local charColor, charName, reaction, charges = message:match(_Charges.PATTERN)
+-- Create message objects.
+Log.Hooks.ParseMessage:Subscribe(function (ev)
+    local rawMsg = ev.RawMessage
+    local charColor, charName, reaction, charges = rawMsg:match(_Charges.PATTERN)
 
     -- Multiple reactions in one message
     if not charColor then
-        charColor, charName, reaction = message:match(_Charges.PATTERN_ALT)
+        charColor, charName, reaction = rawMsg:match(_Charges.PATTERN_MULTIPLE_REACTIONS)
 
         -- TODO finish. the split function does not work with more than one char!!! wth. the lua patterns are pissing me off and i should switch to some regex lib.
         if reaction then
@@ -98,13 +109,11 @@ Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
             --     table.insert(data, {Reaction = t, Amount = amount})
             -- end
 
-            obj = _Charges.Create(charName, charColor, nil, reaction)
+            ev.ParsedMessage = _Charges.Create(charName, charColor, nil, reaction)
         end
-    else -- just one reaction
+    else -- Single reaction
         if charColor then
-            obj = _Charges.Create(charName, charColor, {{Reaction = reaction, Amount = charges}})
+            ev.ParsedMessage = _Charges:Create(charName, charColor, {{Reaction = reaction, Amount = charges}})
         end
     end
-
-    return obj
 end)

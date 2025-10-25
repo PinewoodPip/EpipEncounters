@@ -14,6 +14,7 @@ local TooltipRepositioning = Epip.GetFeature("Features.TooltipAdjustments.Invent
 local TooltipDelay = Epip.GetFeature("Features.TooltipAdjustments.TooltipDelay")
 local StatusConsoleDividers = Epip.GetFeature("Features.StatusConsoleDividers")
 local HotbarTweaks = Epip.GetFeature("Features.HotbarTweaks")
+local CombatLogTweaks = Epip.GetFeature("Features.CombatLogTweaks")
 local Vanity = Epip.GetFeature("Feature_Vanity")
 local Navbar = Epip.GetFeature("Features.NavigationBar")
 local QuickLoot = Epip.GetFeature("Features.QuickLoot")
@@ -397,6 +398,7 @@ local tabs = {
             -- Combat log
             CreateHeader(CommonStrings.CombatLog),
             {Type = "Setting", Module = "EpipEncounters", ID = "CombatLogImprovements"},
+            CreateSettingEntry(CombatLogTweaks.Settings.ImproveDamageTypeContrast),
 
             -- Minimap
             CreateHeader(CommonStrings.Minimap),

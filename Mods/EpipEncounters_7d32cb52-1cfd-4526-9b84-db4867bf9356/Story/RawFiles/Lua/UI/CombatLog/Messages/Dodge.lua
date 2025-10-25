@@ -1,43 +1,43 @@
 
+---------------------------------------------
+-- Handler for "X dodged Y" messages.
+---------------------------------------------
+
 local Log = Client.UI.CombatLog
 
----@class CombatLogDodgeMessage : CombatLogCharacterInteractionMessage
+---@class UI.CombatLog.Messages.Dodge : UI.CombatLog.Messages.CharacterInteraction
 local _Dodge = {
-    Type = "Dodge",
-    PATTERN = "<font color=\"#DBDBDB\"><font color=\"#(%x%x%x%x%x%x)\">(.+)</font> missed <font color=\"#(%x%x%x%x%x%x)\">(.+)</font></font>",
+    MISSED_TSKHANDLE = "hdc96a2c4g48d3g44a4g9c2aga85d059d43e5", -- "[2] missed [1]" (yes, the order of params is reversed from the usual)
 }
-Inherit(_Dodge, Log.MessageTypes.CharacterInteraction)
-Client.UI.CombatLog.MessageTypes.Dodge = _Dodge
+Log:RegisterClass("UI.CombatLog.Messages.Dodge", _Dodge, {"UI.CombatLog.Messages.CharacterInteraction"})
+Log.RegisterMessageHandler(_Dodge)
 
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
+---Creates a dodge message.
 ---@param charName string
 ---@param charColor string
 ---@param targetName string
 ---@param targetColor string
----@return CombatLogDodgeMessage
-function _Dodge.Create(charName, charColor, targetName, targetColor)
-    ---@type CombatLogDodgeMessage
-    local obj = Log.MessageTypes.CharacterInteraction.Create(charName, charColor, targetName, targetColor)
-
-    Inherit(obj, _Dodge)
-
-    return obj
+---@return UI.CombatLog.Messages.Dodge
+function _Dodge:Create(charName, charColor, targetName, targetColor)
+    ---@type UI.CombatLog.Messages.Dodge
+    return self:__Create({
+        CharacterName = charName,
+        CharacterColor = charColor,
+        TargetName = targetName,
+        TargetColor = targetColor,
+    })
 end
 
-function _Dodge:CanMerge(msg) return false end
-
+---@override
 function _Dodge:ToString()
-    local msg = Text.Format("%s missed %s", {
-        FormatArgs = {
-            {Text = self.CharacterName, Color = self.CharacterColor},
-            {Text = self.TargetName, Color = self.TargetColor},
-        },
-        Color = Log.COLORS.TEXT,
-    })
-
+    local msg = Text.FormatLarianTranslatedString(_Dodge.MISSED_TSKHANDLE,
+        self:GetTargetLabel(), -- First param ([1]) in this TSK is target, oddly.
+        self:GetCharacterLabel()
+    )
     return msg
 end
 
@@ -45,12 +45,15 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
-Log.Hooks.GetMessageObject:RegisterHook(function(obj, message)
-    local charColor, charName, targetColor, targetName = message:match(_Dodge.PATTERN)
-
+-- Create message objects.
+Log.Hooks.ParseMessage:Subscribe(function (ev)
+    local message = ev.RawMessage
+    local pattern = Text.FormatLarianTranslatedString(_Dodge.MISSED_TSKHANDLE,
+        _Dodge.KEYWORD_PATTERN,
+        _Dodge.KEYWORD_PATTERN
+    )
+    local charColor, charName, targetColor, targetName = message:match(pattern)
     if charColor then
-        obj = _Dodge.Create(charName, charColor, targetName, targetColor)
+        ev.ParsedMessage = _Dodge:Create(charName, charColor, targetName, targetColor)
     end
-
-    return obj
 end)

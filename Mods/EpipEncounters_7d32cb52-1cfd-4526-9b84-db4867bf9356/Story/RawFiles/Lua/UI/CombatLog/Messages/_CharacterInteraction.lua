@@ -1,14 +1,16 @@
 
+---------------------------------------------
+-- Base class for messages that involve a target character in addition to a user.
+---------------------------------------------
+
 local Log = Client.UI.CombatLog
 
----@class CombatLogCharacterInteractionMessage : CombatLogCharacterMessage
+---@class UI.CombatLog.Messages.CharacterInteraction : UI.CombatLog.Messages.Character
 ---@field TargetName string
 ---@field TargetColor string
-local _CharacterInteractionMessage = {
-    Type = "CharacterInteraction",
-}
-Inherit(_CharacterInteractionMessage, Log.MessageTypes.Character)
-Log.MessageTypes.CharacterInteraction = _CharacterInteractionMessage
+local _CharacterInteractionMessage = {}
+Log:RegisterClass("UI.CombatLog.Messages.CharacterInteraction", _CharacterInteractionMessage, {"UI.CombatLog.Messages.Character"})
+Log.RegisterMessageHandler(_CharacterInteractionMessage)
 
 ---------------------------------------------
 -- METHODS
@@ -18,19 +20,30 @@ Log.MessageTypes.CharacterInteraction = _CharacterInteractionMessage
 ---@param charColor string
 ---@param targetName string
 ---@param targetColor string
----@return CombatLogCharacterInteractionMessage
-function _CharacterInteractionMessage.Create(charName, charColor, targetName, targetColor)
-    ---@type CombatLogCharacterInteractionMessage
-    local obj = Log.MessageTypes.Character.Create(charName, charColor)
+---@return UI.CombatLog.Messages.CharacterInteraction
+function _CharacterInteractionMessage:Create(charName, charColor, targetName, targetColor)
+    ---@type UI.CombatLog.Messages.CharacterInteraction
+    local instance = self:__Create({
+        -- Base class fields
+        CharacterName = charName,
+        CharacterColor = charColor,
 
-    obj.TargetName = targetName
-    obj.TargetColor = targetColor
-
-    Inherit(obj, _CharacterInteractionMessage)
-
-    return obj
+        -- Interaction fields
+        TargetName = targetName,
+        TargetColor = targetColor,
+    })
+    return instance
 end
 
+---Returns a color-formatted label of the target character.
+---@return string
+function _CharacterInteractionMessage:GetTargetLabel()
+    return Text.Format(self.TargetName, {Color = self.TargetColor})
+end
+
+---@override
 function _CharacterInteractionMessage:CanMerge(msg)
-    return self.CharacterName == msg.CharacterName and self.TargetName == msg.TargetName
+    ---@cast msg UI.CombatLog.Messages.CharacterInteraction
+    return msg:ImplementsClass("UI.CombatLog.Messages.CharacterInteraction") and
+    self.CharacterName == msg.CharacterName and self.TargetName == msg.TargetName -- Can merge into messages involving the same characters.
 end

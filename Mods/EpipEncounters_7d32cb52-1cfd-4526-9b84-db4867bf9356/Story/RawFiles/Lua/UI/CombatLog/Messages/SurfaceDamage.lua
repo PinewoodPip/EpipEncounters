@@ -1,34 +1,53 @@
 
+---------------------------------------------
+-- Handler for "X was hit for Y Damage by a surface" messages.
+---------------------------------------------
+
 local Log = Client.UI.CombatLog
 
----@class CombatLogSurfaceDamage : CombatLogDamageMessage
+---@class UI.CombatLog.Messages.SurfaceDamage : UI.CombatLog.Messages.Damage
 local _Surface = {
-    PATTERN = '<font color="#DBDBDB"><font color="#(%x%x%x%x%x%x)">(.+)</font> was hit for <font color="#(%x%x%x%x%x%x)">(%d+) (.+) Damage</font> by a surface</font>',
-    Type = "SurfaceDamage",
+    SURFACE_DAMAGE_TSKHANDLE = "hb1dd9994g2e17g4dd9gb69egb138ee4b6b2a", -- "[1] was [2] for [3] by a surface"
 }
-Inherit(_Surface, Log.MessageTypes.Damage)
-Log.MessageTypes.Surface = _Surface
+Log:RegisterClass("UI.CombatLog.Messages.SurfaceDamage", _Surface, {"UI.CombatLog.Messages.Damage"})
+Log.RegisterMessageHandler(_Surface)
 
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
-function _Surface.Create(charName, charColor, dmgType, dmgAmount, dmgColor)
-    ---@type CombatLogSurfaceDamage
-    local obj = Log.MessageTypes.Damage.Create(charName, charColor, dmgType, dmgAmount, dmgColor)
-    Inherit(obj, _Surface)
-    obj.Type = "SurfaceDamage"
-
-    return obj
+---Creates a surface damage message.
+---@param charName UI.CombatLog.Messages.Damage
+---@param charColor htmlcolor
+---@param dmgType string
+---@param dmgAmount integer
+---@param dmgColor htmlcolor
+---@return UI.CombatLog.Messages.SurfaceDamage
+function _Surface:Create(charName, charColor, dmgType, dmgAmount, dmgColor)
+    ---@type UI.CombatLog.Messages.SurfaceDamage
+    return self:__Create({
+        CharacterName = charName,
+        CharacterColor = charColor,
+        Damage = {
+            {
+                Type = dmgType,
+                Amount = tonumber(dmgAmount),
+                Color = dmgColor,
+                Hits = 1,
+                HitTime = Ext.MonotonicTime(),
+            },
+        },
+    })
 end
 
+---@override
 function _Surface:ToString()
-    local str = Text.Format("%s by a surface", {
-        FormatArgs = {
-            Log.MessageTypes.Damage.ToString(self),
-        },
-        Color = Log.COLORS.TEXT,
-    })
+    local dmgString, addendum = self:GetDamageString()
+    local str = Text.FormatLarianTranslatedString(_Surface.SURFACE_DAMAGE_TSKHANDLE,
+        self:GetCharacterLabel(),
+        Text.GetTranslatedString(_Surface.HIT_TSKHANDLE),
+        dmgString .. addendum
+    )
 
     return str
 end
@@ -37,21 +56,26 @@ end
 -- PARSING
 ---------------------------------------------
 
-Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
-    local charColor, charName, dmgColor, dmgAmount, dmgType = message:match(_Surface.PATTERN)
-
+-- Create message objects.
+Log.Hooks.ParseMessage:Subscribe(function (ev)
+    local rawMsg = ev.RawMessage
+    local pattern = Text.FormatLarianTranslatedString(_Surface.SURFACE_DAMAGE_TSKHANDLE,
+        _Surface.KEYWORD_PATTERN,
+        Text.GetTranslatedString(_Surface.HIT_TSKHANDLE),
+        _Surface.DAMAGE_PATTERN
+    )
+    local charColor, charName, dmgColor, dmgAmount, dmgType = rawMsg:match(pattern)
     if charColor then
-        obj = _Surface.Create(charName, charColor, dmgType, dmgAmount, dmgColor)
+        ev.ParsedMessage = _Surface:Create(charName, charColor, dmgType, dmgAmount, dmgColor)
     end
-
-    return obj
 end)
 
-Log.Hooks.CombineMessage:RegisterHook(function (combined, msg1, msg2)
-    if msg1.Message.Type == "SurfaceDamage" and msg2.Message.Type == "SurfaceDamage" then
-        msg1.Message:CombineWith(msg2.Message)
-        combined = true
+-- Combine consecutive surface damage messages from the same character.
+local surfaceDamageClassName = _Surface:GetClassName()
+Log.Hooks.CombineMessage:Subscribe(function (ev)
+    local prevMsg, newMsg = ev.PreviousMessage.Message, ev.NewMessage.Message
+    if prevMsg:GetClassName() == surfaceDamageClassName and newMsg:GetClassName() == surfaceDamageClassName then
+        prevMsg:MergeWith(newMsg)
+        ev.Combined = true
     end
-
-    return combined
 end)

@@ -1,26 +1,48 @@
 
+---------------------------------------------
+-- Handler for messages involving heals.
+---------------------------------------------
+
 local Log = Client.UI.CombatLog
 
----@class CombatLogHealingMessage : CombatLogDamageMessage
-local _HealingMessage = {}
-setmetatable(_HealingMessage, {__index = Log.MessageTypes.Damage})
-Client.UI.CombatLog.MessageTypes.Healing = _HealingMessage
+---@class UI.CombatLog.Messages.Healing : UI.CombatLog.Messages.Damage
+local _HealingMessage = {
+    REGAINED_TSKHANDLE = "h7aec4117g5f25g45eaga9edg744a2b5d1856", -- "[1] regained [2]"
+}
+Log:RegisterClass("UI.CombatLog.Messages.Healing", _HealingMessage, {"UI.CombatLog.Messages.Damage"})
+Log.RegisterMessageHandler(_HealingMessage)
 
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
-function _HealingMessage.Create(charName, charColor, damageType, amount, color)
-    ---@type CombatLogDamageMessage
-    local obj = Log.MessageTypes.Damage.Create(charName, charColor, damageType, amount, color)
-    setmetatable(obj, {__index = _HealingMessage})
-
-    obj.Type = "Healing"
-
-    return obj
+---Creates a heal message.
+---@param charName string
+---@param charColor string
+---@param damageType string
+---@param amount string
+---@param color htmlcolor
+---@return UI.CombatLog.Messages.Healing
+function _HealingMessage:Create(charName, charColor, damageType, amount, color)
+    ---@type UI.CombatLog.Messages.Healing
+    return self:__Create({
+        CharacterName = charName,
+        CharacterColor = charColor,
+        Damage = {
+            {
+                Type = damageType,
+                Amount = tonumber(amount),
+                Color = color,
+                Hits = 1,
+                HitTime = Ext.MonotonicTime(),
+            },
+        },
+    })
 end
 
+---@override
 function _HealingMessage:ToString()
+    -- Concatenate all heals
     local heals = {}
     local healStr = ""
     for i=1,#self.Damage,1 do
@@ -33,22 +55,15 @@ function _HealingMessage:ToString()
             healStr = healStr .. ", "
         end
     end
-
     for _,v in ipairs(heals) do
         healStr = healStr .. v
     end
 
-    local str = Text.Format("%s restored %s", {
-        FormatArgs = {{
-            Text = self.CharacterName,
-            Color = self.CharacterColor,
-        },
-        {
-            Text = healStr,
-        }},
-        Color = Log.COLORS.TEXT,
-    })
-
+    -- Build final string
+    local str = Text.FormatLarianTranslatedString(_HealingMessage.REGAINED_TSKHANDLE,
+        self:GetCharacterLabel(),
+        healStr
+    )
     return str
 end
 
@@ -56,31 +71,22 @@ end
 -- PARSING
 ---------------------------------------------
 
----Both healing and armor restoration become the same object type, Healing.
-Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
-    local healingPattern = "<font color=\"#DBDBDB\"><font color=\"#(%x%x%x%x%x%x)\">(.+)</font> regained <font color=\"#(%x%x%x%x%x%x)\">(%d+) (.+)</font></font>"
-    local charColor, char, color, amount, damageType = message:match(healingPattern)
-
-    if not char then
-        healingPattern = "<font color=\"#DBDBDB\"><font color=\"#(%x%x%x%x%x%x)\">(.+)</font> restored <font color=\"#(%x%x%x%x%x%x)\">(%d+) (.+)</font></font>"
-
-        charColor, char, color, amount, damageType = message:match(healingPattern)
-
-    end
-
+-- Create message objects.
+-- Both healing and armor restoration become the same object type, Healing.
+Log.Hooks.ParseMessage:Subscribe(function (ev)
+    local healingPattern = Text.FormatLarianTranslatedString(_HealingMessage.REGAINED_TSKHANDLE, _HealingMessage.KEYWORD_PATTERN, _HealingMessage.DAMAGE_PATTERN)
+    local charColor, char, color, amount, damageType = ev.RawMessage:match(healingPattern)
     if char then
-        obj = _HealingMessage.Create(char, charColor, damageType, amount, color)
+        ev.ParsedMessage = _HealingMessage:Create(char, charColor, damageType, amount, color)
     end
-
-    return obj
 end)
 
-Log.Hooks.CombineMessage:RegisterHook(function (combined, msg1, msg2)
-    if msg1.Message.Type == "Healing" and msg2.Message.Type == "Healing" then
-        msg1.Message:CombineWith(msg2.Message)
-
-        return true
+-- Merge consecutive healing messages.
+local healingClassName = _HealingMessage:GetClassName()
+Log.Hooks.CombineMessage:Subscribe(function (ev)
+    local prevMsg, newMsg = ev.PreviousMessage.Message, ev.NewMessage.Message
+    if prevMsg:GetClassName() == healingClassName and newMsg:GetClassName() == healingClassName then
+        prevMsg:MergeWith(newMsg)
+        ev.Combined = true
     end
-
-    return combined
 end)

@@ -1,33 +1,55 @@
 
-local Log = Client.UI.CombatLog
+---------------------------------------------
+-- Handler for "X was hit for Y Damage (reflected)" messages.
+---------------------------------------------
 
----@class CombatLogReflectedDamageMessage : CombatLogDamageMessage
+local Log = Client.UI.CombatLog
+local DamageClass = Log:GetClass("UI.CombatLog.Messages.Damage")
+
+---@class UI.CombatLog.Messages.ReflectedDamage : UI.CombatLog.Messages.Damage
 local _Reflect = {
-    PATTERN = '<font color="#DBDBDB"><font color="#(%x%x%x%x%x%x)">(.+)</font> was hit for <font color="#(%x%x%x%x%x%x)">(%d+) (.+) Damage%(reflected%)</font></font>',
-    Type = "ReflectedDamage",
+    REFLECTED_TSKHANDLE = "h5c7e82f0gf29dg4dd8g973eg7ba53972207f", -- "(reflected)"
+
+    REFLECTED_DAMAGE_PATTERN = [[<font color="#(%x%x%x%x%x%x)">[1][2]</font>]], -- Param is "(reflected)" label.
 }
-Inherit(_Reflect, Log.MessageTypes.Damage)
-Log.MessageTypes.ReflectedDamage = _Reflect
+Log:RegisterClass("UI.CombatLog.Messages.ReflectedDamage", _Reflect, {"UI.CombatLog.Messages.Damage"})
+Log.RegisterMessageHandler(_Reflect)
 
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
+---Creates a reflection message.
+---@param charName UI.CombatLog.Messages.Damage
+---@param charColor htmlcolor
+---@param damageType string
+---@param amount string
+---@param color htmlcolor
+---@return UI.CombatLog.Messages.ReflectedDamage
 function _Reflect.Create(charName, charColor, damageType, amount, color)
-    ---@type CombatLogReflectedDamageMessage
-    local obj = Log.MessageTypes.Damage.Create(charName, charColor, damageType, amount, color)
-    Inherit(obj, _Reflect)
-    obj.Type = "ReflectedDamage"
-
+    ---@type UI.CombatLog.Messages.ReflectedDamage
+    local obj = _Reflect:__Create({
+        CharacterName = charName,
+        CharacterColor = charColor,
+        Damage = {
+            {
+                Type = damageType,
+                Amount = tonumber(amount),
+                Color = color,
+                Hits = 1,
+                HitTime = Ext.MonotonicTime(),
+            },
+        },
+    })
     return obj
 end
 
-function _Reflect:CanMerge(msg) return false end -- TODO should these merge?
-
+---@override
 function _Reflect:ToString()
-    local msg = Log.MessageTypes.Damage.ToString(self)
+    local msg = DamageClass.ToString(self)
 
-    msg = string.gsub(msg, " damage ", " reflected damage ")
+    -- Add "(reflected)" suffix
+    msg = msg .. " " .. Text.GetTranslatedString(_Reflect.REFLECTED_TSKHANDLE)
 
     return msg
 end
@@ -36,12 +58,25 @@ end
 -- PARSING
 ---------------------------------------------
 
-Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
-    local charColor, charName, dmgColor, dmgAmount, dmgType = message:match(_Reflect.PATTERN)
+-- Create message objects.
+Log.Hooks.ParseMessage:Subscribe(function (ev)
+    local rawMsg = ev.RawMessage
+    local pattern = Text.FormatLarianTranslatedString(Log.CHARACTER_RECEIVED_ACTION_TSKHANDLE,
+        _Reflect.KEYWORD_PATTERN,
+        Text.GetTranslatedString(_Reflect.HIT_TSKHANDLE),
 
-    if charColor then
-        obj = _Reflect.Create(charName, charColor, dmgType, dmgAmount, dmgColor)
+        -- "X damage(reflected)"; lack of space is intentional (vanilla oversight).
+        -- This string has parenthesis in English, thus must be escaped for the pattern to work.
+        [[<font color="#(%x%x%x%x%x%x)">(%d+) (.+)]] .. Text.EscapePatternCharacters(Text.GetTranslatedString(_Reflect.REFLECTED_TSKHANDLE)) .. [[</font>]]
+    )
+    local charColor, charName, dmgColor, dmgAmount, dmgType
+    local params = {rawMsg:match(pattern)}
+    if tonumber(params[2]) then -- In some languages (ex. Spanish) the damage comes before character name.
+        charColor, charName, dmgColor, dmgAmount, dmgType = params[4], params[5], params[1], params[2], params[3]
+    else
+        charColor, charName, dmgColor, dmgAmount, dmgType = table.unpack(params)
     end
-
-    return obj
+    if charColor then
+        ev.ParsedMessage = _Reflect.Create(charName, charColor, dmgType, dmgAmount, dmgColor)
+    end
 end)

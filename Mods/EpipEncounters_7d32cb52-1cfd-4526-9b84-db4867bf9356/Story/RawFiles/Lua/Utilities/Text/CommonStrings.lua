@@ -1002,6 +1002,27 @@ Text.CommonStrings.AreaOfEffect = Text.RegisterTranslatedString({
     Text = "Area of effect",
     ContextDescription = [[As in, "an AoE spell"]]
 })
+Text.CommonStrings.Damage = Text.RegisterTranslatedString({
+    Handle = "ha3f8b2c1g4d5eg4a7bgb8c9gf1e2d3c4b5a6",
+    Text = "Damage",
+})
+Text.CommonStrings.SurfaceDamage = Text.RegisterTranslatedString({
+    Handle = "h7b9e3a1cg2f4dg4c8egad7bg6e5f4c3b2a19",
+    Text = "Surface Damage",
+    ContextDescription = "As in, damage dealt by surfaces (ex. fire surface).",
+})
+Text.CommonStrings.ReflectedDamage = Text.RegisterTranslatedString({
+    Handle = "h5c2d8e4agb7f3g4926g8a1dg3f6e9c2b4d5a",
+    Text = "Reflected Damage",
+})
+Text.CommonStrings.Healing = Text.RegisterTranslatedString({
+    Handle = "h9d1f7a3egc5b2g4e81gb3f6g2a7c4e8d9b1f",
+    Text = "Healing",
+})
+Text.CommonStrings.Lifesteal = Text.RegisterTranslatedString({
+    Handle = "h4e8c6b2dga9f1g4735g8c2egb4d7f1e3a5c8",
+    Text = "Lifesteal",
+})
 
 ---------------------------------------------
 -- UI TERMS

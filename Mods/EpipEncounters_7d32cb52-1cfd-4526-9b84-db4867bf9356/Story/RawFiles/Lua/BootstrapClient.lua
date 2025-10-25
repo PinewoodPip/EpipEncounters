@@ -558,6 +558,7 @@ LOAD_ORDER = {
     "Epip/UserVarsGUIDSyncWorkaround/Client.lua",
     "Epip/Client/RewardItemComparison.lua",
     {ScriptSet = "Epip/HotbarTweaks"},
+    "Epip/CombatLogTweaks/Client.lua",
     "Epip/Client/ExamineKeybind.lua",
     "Epip/Client/MoreWorldTooltips.lua",
     "Epip/Client/EnemyHealthBarExtraInfo.lua",

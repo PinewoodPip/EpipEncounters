@@ -3,20 +3,21 @@
 -- Scripting for the extended combat log.
 ---------------------------------------------
 
--- TODO
--- Check last X messages for merging
--- Add more message types
--- Some utility method for concatenating with commas
+local CommonStrings = Text.CommonStrings
 
 ---@class CombatLogUI : UI
----@field Messages CombatLogSentMessage[]
+---@field Messages UI.CombatLog.ParsedMessage[]
 ---@field COLORS table<string, string>
 ---@field MAX_MESSAGES integer
 ---@field MAX_MERGING_TIME number Maximum time that can elapse before a message no longer can be merged into, in seconds.
----@field MessageTypes table<string, CombatLogMessage> Templtes for creating messages.
----@field FILTERS table<string, CombatLogFilter>
+---@field MessageTypes table<classname, UI.CombatLog.Message> Message type handlers.
+---@field FILTERS table<string, UI.CombatLog.Filter>
 ---@field EnabledFilters table<string, boolean>
 local Log = {
+    CHARACTER_ACTION_TSKHANDLE = "hddc42b8dg6456g4b7eg98d1gea65bc929fed", -- "[1] [2] [3], for [4]"; multiple message types use this structure; params 1 & 3 tend to be attacker & defender (optional)
+    CHARACTER_RECEIVED_ACTION_TSKHANDLE = "h3cc306cdg95b4g4803g803ag2dd33a722d6c", -- "[1] was [2] for [3]"; used for ex. "X was hit for Y damage"
+    DAMAGE_TSKHANDLE = "h784f42a9g95e6g4a55gb2b5g3ef52f6bbee6", -- "[1] Damage"
+
     Messages = {},
     COLORS = {
         PARTY_MEMBER = "188EDE",
@@ -26,23 +27,70 @@ local Log = {
     MAX_MESSAGES = 20,
     MAX_MERGING_TIME = 7,
     FILTERS = {},
-    MessageTypes = {
-
-    },
+    MessageTypes = {},
     EnabledFilters = {},
     FilterOrder = {},
-    Hooks = {
-        ---@type CombatLogUI_Hook_GetMessageObject
-        GetMessageObject = {Options = {First = false}},
-        ---@type CombatLogUI_Hook_CombineMessage
-        CombineMessage = {},
-        ---@type CombatLogUI_Hook_MessageCanMerge
-        MessageCanMerge = {},
+
+    TranslatedStrings = {
+        Label_Welcome = {
+            Handle = "hfc2baeaeg3443g491cg97e4g895a23400f2d",
+            Text = "Welcome to the combat log. Right-click to access filters.",
+            ContextDescription = [[Message added when loading into a session]],
+        },
+        MessageBox_FeatureNotEnabled_Header = {
+            Handle = "h68096433g8e54g4a81g9894g4be5096d2cdc",
+            Text = "Feature Not Enabled",
+            ContextDescription = [[Header for message box shown when trying to use filters without enabling the feature]],
+        },
+        MessageBox_FeatureNotEnabled_Message = {
+            Handle = "hc3d4397fgb1ffg4cd2g8e3bg52b67ec37424",
+            Text = [[You must enable "Improved Combat Log" in the options menu and reload the savefile to use custom filters.]],
+            ContextDescription = [[Message shown when trying to use filters without the feature enabled]],
+        },
+        Header_Filters = {
+            Handle = "hbfa93b2eg8fa6g4e2fgb241gc64e7c4708ec",
+            Text = "———— Filters ————",
+            ContextDescription = [[Header for the filters section in context menu. Em-dashes are decorative.]],
+        },
+        Filter_CriticalsAndDodges = {
+            Handle = "h6f3a9d1bg8c7eg4b52ga9d3ge7c1f4b2a8d6",
+            Text = "Critical Hits & Dodges",
+            ContextDescription = [[Filter name for critical hits and dodges]],
+        },
+        Filter_SourceGenerationAndSI = {
+            Handle = "h2d7f4a9egb1c8g4e47g9a6dgc3f8e1b5d2a7",
+            Text = "Source Gen/Infuse",
+            ContextDescription = [[Filter name for source generation and infusion (Epic Encounters 2 mechanics)]],
+        },
+        Filter_ReactionCharges = {
+            Handle = "h1c9e3b7dga5f2g4d18g8e7cgf2a6d4c1b9e3",
+            Text = "Reaction Charges",
+            ContextDescription = [[Filter name for reaction charges (Epic Encounters 2 mechanic)]],
+        },
+        Filter_APPreservation = {
+            Handle = "h3f5d8c2agb9e1g4a74g8d3bgf7c2e5a4b8d1",
+            Text = "AP Preservation",
+            ContextDescription = [[Filter name for AP preservation messages]],
+        },
+        Filter_Scripted = {
+            Handle = "h7a4b9e2fg1d6cg4895ga2f7gd5e3c8b1a4f9",
+            Text = "Generic/Scripted",
+            ContextDescription = [[Filter name for generic/scripted messages]],
+        },
     },
+
     Events = {
-        ---@type CombatLogUI_Event_MessageAdded
-        MessageAdded = {},
+        MessageAdded = {}, ---@type Event<UI.CombatLog.Events.MessageAdded>
     },
+    Hooks = {
+        ParseMessage = {}, ---@type Hook<UI.CombatLog.Hooks.ParseMessage>
+        CombineMessage = {}, ---@type Hook<UI.CombatLog.Hooks.CombineMessage>
+        MessageCanMerge = {}, ---@type Hook<UI.CombatLog.Hooks.MessageCanMerge>
+    },
+
+    USE_LEGACY_EVENTS = false,
+    USE_LEGACY_HOOKS = false,
+
     FILEPATH_OVERRIDES = {
         ["Public/Game/GUI/combatLog.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/combatLog.swf",
     },
@@ -50,40 +98,53 @@ local Log = {
     SAVE_FORMAT = 0,
 }
 Epip.InitializeUI(Ext.UI.TypeID.combatLog, "CombatLog", Log)
+local TSK = Log.TranslatedStrings
 
----@class CombatLogSentMessage
+---A parsed message present in the UI.
+---@class UI.CombatLog.ParsedMessage
 ---@field Filter integer
----@field Message CombatLogMessage
----@field Time integer Monotonic time.
+---@field Message UI.CombatLog.Message
+---@field Time integer Monotonic time at which the message was added.
 
----@class CombatLogFilter
+---@class UI.CombatLog.Filter
 ---@field Name string
----@field MessageTypes table<string, boolean>
+---@field MessageTypes set<classname> Message types that this filter includes.
 
 ---------------------------------------------
 -- EVENTS/HOOKS
 ---------------------------------------------
 
----@class CombatLogUI_Hook_GetMessageObject : LegacyHook
----@field RegisterHook fun(self, handler:fun(obj:CombatLogMessage, message:string):CombatLogMessage)
----@field Return fun(self, obj:CombatLogMessage, message:string):CombatLogMessage
+---Fired when a message is added to the log.
+---@class UI.CombatLog.Events.MessageAdded
+---@field Message UI.CombatLog.ParsedMessage
 
----@class CombatLogUI_Event_MessageAdded : Event
----@field RegisterListener fun(self, listener:fun(msg:CombatLogSentMessage))
----@field Fire fun(self, msg:CombatLogSentMessage)
+---@class UI.CombatLog.Hooks.ParseMessage
+---@field ParsedMessage UI.CombatLog.Message? Hookable. Defaults to `nil`.
+---@field RawMessage string The message being sent to the log by the game, with the base combat log color font tag removed.
 
----Fired when 2 messages of the same type are attempted to be sent one after another. You're expected to return true if you've edited msg1 to append to its message. If combined is true, msg1 will be re-rendered and msg2 will not be sent to the UI.
----@class CombatLogUI_Hook_CombineMessage : LegacyHook
----@field RegisterHook fun(self, handler:fun(combined:boolean, msg1:CombatLogSentMessage, msg2:CombatLogSentMessage):boolean)
----@field Return fun(self, combined:boolean, msg1:CombatLogSentMessage, msg2:CombatLogSentMessage):boolean
+---Fired when 2 messages of the same type are attempted to be sent one after another.
+---Set `Combined` true to indicate you've edited `Message1` to amend it with the second message's data.
+---If combined is true, `Message1` will be re-rendered and `Message2` will not be sent to the UI.
+---@class UI.CombatLog.Hooks.CombineMessage
+---@field PreviousMessage UI.CombatLog.ParsedMessage The previous message.
+---@field NewMessage UI.CombatLog.ParsedMessage The new message being added. If combined, will not be sent to the UI.
+---@field Combined boolean Hookable. Indicates whether the messages were combined. Defaults to `false`.
 
----@class CombatLogUI_Hook_MessageCanMerge : LegacyHook
----@field RegisterHook fun(self, handler:fun(canMerge:boolean, msg1:CombatLogSentMessage, msg2:CombatLogSentMessage):boolean)
----@field Return fun(self, canMerge:boolean, msg1:CombatLogSentMessage, msg2:CombatLogSentMessage):boolean
+---Fired to determine if two messages can be merged.
+---@class UI.CombatLog.Hooks.MessageCanMerge
+---@field PreviousMessage UI.CombatLog.ParsedMessage The previous message.
+---@field NewMessage UI.CombatLog.ParsedMessage The new message being added.
+---@field CanMerge boolean Hookable. Defaults to `false`.
 
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
+
+---Registers a message handler.
+---@param handler UI.CombatLog.Message
+function Log.RegisterMessageHandler(handler)
+    Log.MessageTypes[handler:GetClassName()] = handler
+end
 
 ---@param filter string
 ---@return boolean
@@ -129,7 +190,7 @@ function Log.ToggleFilter(filter, state)
     Log.RefreshFilters(filter)
 end
 
----@param filter? CombatLogFilter
+---@param filter? UI.CombatLog.Filter
 function Log.RefreshFilters(filter)
     if Log:Exists() then
         if filter then
@@ -151,7 +212,7 @@ function Log.RefreshFilters(filter)
 end
 
 ---@param id string
----@param filter CombatLogFilter
+---@param filter UI.CombatLog.Filter
 function Log.RegisterFilter(id, filter)
     Log.FILTERS[id] = filter
 
@@ -160,48 +221,63 @@ function Log.RegisterFilter(id, filter)
     Log.ToggleFilter(id, true)
 end
 
+---Stringifies a message and applies formatting to display it in the combat log.
+---@param msg UI.CombatLog.Message
+---@return string
+function Log.StringifyMessage(msg)
+    return Text.Format(msg:ToString(), {Color = Log.COLORS.TEXT})
+end
+
 ---Adds a message to the log.
----@param msg CombatLogMessage
+---@param msg UI.CombatLog.Message
 ---@param filter number? Defaults to 0.
 function Log.AddMessage(msg, filter)
     filter = filter or 0
 
-    ---@type CombatLogSentMessage
+    ---@type UI.CombatLog.ParsedMessage
     local obj = {
         Message = msg,
         Filter = filter,
         Time = Ext.MonotonicTime(),
     }
 
-    ---@type CombatLogSentMessage
+    ---@type UI.CombatLog.ParsedMessage
     local lastMessage = Log.Messages[#Log.Messages]
     local combined = false
 
+    -- Attempt to merge message with the immediate previous one
     if lastMessage then
         local timeElapsed = Ext.MonotonicTime() - lastMessage.Time
         timeElapsed = timeElapsed / 1000
-
-        if lastMessage.Message.Type == msg.Type and timeElapsed < Log.MAX_MERGING_TIME and Log.Hooks.MessageCanMerge:Return(false, lastMessage, obj) then
-            combined = Log.Hooks.CombineMessage:Return(false, lastMessage, obj)
+        if lastMessage.Message:GetClassName() == msg:GetClassName() and timeElapsed < Log.MAX_MERGING_TIME then -- Messages must be of the same type and recent
+            local canMerge = Log.Hooks.MessageCanMerge:Throw({
+                PreviousMessage = lastMessage,
+                NewMessage = obj,
+                CanMerge = false,
+            }).CanMerge
+            if canMerge then
+                combined = Log.Hooks.CombineMessage:Throw({
+                    PreviousMessage = lastMessage,
+                    NewMessage = obj,
+                    Combined = false,
+                }).Combined
+            end
         end
     end
 
     if combined then
         -- Edit the last message
         local root = Log:GetRoot()
-        local filterObj = root.log_mc.filterList.content_array[filter].text_Array
-        local msgIndex = filterObj[#filterObj - 1]
-        local msg = root.log_mc.textList.content_array[#root.log_mc.textList.content_array - 1]
+        local msgElement = root.log_mc.textList.content_array[#root.log_mc.textList.content_array - 1]
 
-        Log:DebugLog("Appending messages of type " .. lastMessage.Message.Type)
+        Log:DebugLog("Appending messages of type " .. lastMessage.Message:GetClassName())
 
         lastMessage.Time = Ext.MonotonicTime() -- Update time.
 
-        msg.text = lastMessage.Message:ToString()
-        msg.text_txt.htmlText = msg.text
+        msgElement.text = Log.StringifyMessage(lastMessage.Message)
+        msgElement.text_txt.htmlText = msgElement.text
     else
-
-        Log:GetRoot().addTextToFilter(filter, msg:ToString(), msg.Type)
+        Log:GetRoot().addTextToFilter(filter, Log.StringifyMessage(msg), msg:GetClassName())
 
         table.insert(Log.Messages, obj)
 
@@ -210,27 +286,32 @@ function Log.AddMessage(msg, filter)
         end
     end
 
-    Log.Events.MessageAdded:Fire(obj)
+    Log.Events.MessageAdded:Throw({
+        Message = obj,
+    })
 
-    if Log:IsDebug() and obj.Message.Type ~= "Unsupported" then
+    -- Log added message, if it doesn't use the fallback type
+    if obj.Message:GetClassName() ~= "UI.CombatLog.Messages.Unsupported" then
         Log:DebugLog("Message added: ")
-        _D(obj)
+        Log:Dump(obj)
     end
 end
 
 ---Converts a vanilla combat log message to its object form.
----@return CombatLogMessage
+---@return UI.CombatLog.Message
 function Log.GetData(msg)
-    local obj
+    local parsedMsg = Log.Hooks.ParseMessage:Throw({
+        RawMessage = msg:gsub([[^<font color="#]] .. Log.COLORS.TEXT .. [[">(.+)</font>$]], "%1"), -- Remove base message color
+        ParsedMessage = nil
+    }).ParsedMessage
 
-    obj = Log.Hooks.GetMessageObject:Return(obj, msg)
-
-    --Fallback to a generic message type.
-    if not obj then
-        obj = Log.MessageTypes.Unsupported.Create(msg)
+    -- Fallback to a generic message type.
+    if not parsedMsg then
+        local UnsupportedMsg = Log:GetClass("UI.CombatLog.Messages.Unsupported")
+        parsedMsg = UnsupportedMsg:Create(msg)
     end
 
-    return obj
+    return parsedMsg
 end
 
 function Log.IsMessageTypeFiltered(messageType)
@@ -259,12 +340,10 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
-Log.Hooks.MessageCanMerge:RegisterHook(function (canMerge, msg1, msg2)
-    if msg1.Filter == msg2.Filter then
-        canMerge = msg1.Message:CanMerge(msg2.Message)
+Log.Hooks.MessageCanMerge:Subscribe(function (ev)
+    if ev.PreviousMessage.Filter == ev.NewMessage.Filter then
+        ev.CanMerge = ev.PreviousMessage.Message:CanMerge(ev.NewMessage.Message)
     end
-
-    return canMerge
 end)
 
 -- Force hardcoded filters to always be enabled.
@@ -274,9 +353,7 @@ Log:RegisterInvokeListener("setFilterSelection", function(ev, filter, _)
 end)
 
 Log:RegisterInvokeListener("addTextToFilter", function(ev, filter, text)
-
     if Settings.GetSettingValue("EpipEncounters", "CombatLogImprovements") then
-
         -- The engine sometimes sends these empty messages which confuse the system. Fuck em.
         if text == '<font size="16"></font>' then
             ev:PreventAction()
@@ -313,7 +390,9 @@ end)
 Ext.Events.ResetCompleted:Subscribe(function()
     if Client.IsUsingController() then return end
     Log.Clear()
-    Log:GetRoot().addTextToFilter(0, "Welcome to the combat log. Right-click to access filters.")
+
+    -- Resend welcome message
+    Log:GetRoot().addTextToFilter(0, TSK.Label_Welcome:GetString())
 end)
 
 Client.UI.ContextMenu.RegisterMenuHandler("combatLog", function()
@@ -322,8 +401,8 @@ Client.UI.ContextMenu.RegisterMenuHandler("combatLog", function()
     if not Settings.GetSettingValue("EpipEncounters", "CombatLogImprovements") then
         Client.UI.MessageBox.Open({
             ID = "CombatLog_Disabled",
-            Header = "Feature Not Enabled",
-            Message = "You must enable 'Combat Log Improvements' in the options menu and reload the savefile to use custom filters.",
+            Header = TSK.MessageBox_FeatureNotEnabled_Header:GetString(),
+            Message = TSK.MessageBox_FeatureNotEnabled_Message:GetString(),
         })
         return nil
     end
@@ -343,13 +422,13 @@ Client.UI.ContextMenu.RegisterMenuHandler("combatLog", function()
         })
     end
 
-    table.insert(filters, {id = "combatLog_Clear", type = "button", text = "Clear", requireShiftClick = true})
+    table.insert(filters, {id = "combatLog_Clear", type = "button", text = CommonStrings.Clear:GetString(), requireShiftClick = true})
 
     Client.UI.ContextMenu.Setup({
         menu = {
             id = "main",
             entries = {
-                {id = "combatLog_Filters_Header", type = "header", text = "———— Filters ————"},
+                {id = "combatLog_Filters_Header", type = "header", text = TSK.Header_Filters:GetString()},
 
                 table.unpack(filters),
             }
@@ -375,94 +454,94 @@ end
 -- TEST FILTERS
 ---------------------------------------------
 
----@type CombatLogFilter[]
+---@type UI.CombatLog.Filter[]
 local DefaultFilters = {
     {
         ID = "Actions",
-        Name = "Skills",
+        Name = CommonStrings.Skills:GetString(),
         MessageTypes = {
-            Skill = true,
+            ["UI.CombatLog.Messages.Skill"] = true,
         }
     },
     {
         ID = "Damage",
-        Name = "Damage",
+        Name = CommonStrings.Damage:GetString(),
         MessageTypes = {
-            Damage = true,
-            Attack = true,
+            ["UI.CombatLog.Messages.Damage"] = true,
+            ["UI.CombatLog.Messages.Attack"] = true,
         },
     },
     {
         ID = "SurfaceDamage",
-        Name = "Surface Damage",
+        Name = CommonStrings.SurfaceDamage:GetString(),
         MessageTypes = {
-            SurfaceDamage = true,
+            ["UI.CombatLog.Messages.SurfaceDamage"] = true,
         },
     },
     {
         ID = "ReflectedDamage",
-        Name = "Reflected Damage",
+        Name = CommonStrings.ReflectedDamage:GetString(),
         MessageTypes = {
-            ReflectedDamage = true,
+            ["UI.CombatLog.Messages.ReflectedDamage"] = true,
         },
     },
     {
         ID = "Healing",
-        Name = "Healing",
+        Name = CommonStrings.Healing:GetString(),
         MessageTypes = {
-            Healing = true,
-            -- Lifesteal = true,
+            ["UI.CombatLog.Messages.Healing"] = true,
+            -- Lifesteal is not included as it has its own filter. 
         }
     },
     {
         ID = "Lifesteal",
-        Name = "Lifesteal",
+        Name = CommonStrings.Lifesteal:GetString(),
         MessageTypes = {
-            Lifesteal = true,
+            ["UI.CombatLog.Messages.Lifesteal"] = true,
         }
     },
     {
         ID = "CriticalHits",
-        Name = "Critical Hits & Dodges",
+        Name = TSK.Filter_CriticalsAndDodges:GetString(),
         MessageTypes = {
-            CriticalHit = true,
-            Dodge = true,
+            ["UI.CombatLog.Messages.CriticalHit"] = true,
+            ["UI.CombatLog.Messages.Dodge"] = true,
         },
     },
     {
         ID = "StatusApplication",
-        Name = "Statuses",
+        Name = CommonStrings.Statuses:GetString(),
         MessageTypes = {
-            Status = true,
+            ["UI.CombatLog.Messages.Status"] = true,
         }
     },
     {
         ID = "SourceGeneration",
-        Name = "Source Gen/Infuse",
+        Name = TSK.Filter_SourceGenerationAndSI:GetString(),
         MessageTypes = {
-            SourceGeneration = true,
-            SourceInfusionLevel = true,
+            ["UI.CombatLog.Messages.SourceGeneration"] = true,
+            ["UI.CombatLog.Messages.SourceInfusionLevel"] = true,
         }
     },
     {
         ID = "SystemSpam",
-        Name = "Reaction Charges",
+        Name = TSK.Filter_ReactionCharges:GetString(),
         MessageTypes = {
-            ReactionCharges = true,
+            ["UI.CombatLog.Messages.ReactionCharges"] = true,
         },
     },
     {
         ID = "APPreservation",
-        Name = "AP Preservation",
+        Name = TSK.Filter_APPreservation:GetString(),
         MessageTypes = {
-            APPreservation = true,
+            ["UI.CombatLog.Messages.APPreservation"] = true,
         }
     },
     {
         ID = "Scripted",
-        Name = "Generic/Scripted",
+        Name = TSK.Filter_Scripted:GetString(),
         MessageTypes = {
-            Scripted = true,
+            ["UI.CombatLog.Messages.Scripted"] = true,
         },
     },
 }
