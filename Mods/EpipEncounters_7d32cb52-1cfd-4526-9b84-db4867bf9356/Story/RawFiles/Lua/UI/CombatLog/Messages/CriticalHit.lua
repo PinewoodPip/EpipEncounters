@@ -51,7 +51,8 @@ end
 ---------------------------------------------
 
 -- Create message objects.
-Log.Hooks.GetMessageObject:RegisterHook(function(obj, message)
+Log.Hooks.ParseMessage:Subscribe(function (ev)
+    local message = ev.RawMessage
     local pattern = Text.FormatLarianTranslatedString(_CriticalHit.CRITICAL_HIT_MESSAGE_TSKHANDLE,
         [[<font color="#(%x%x%x%x%x%x)">(.+)</font>]],
         [[<font color="#C80030">]] .. Text.GetTranslatedString(_CriticalHit.CRITICAL_HIT_TSKHANDLE) .. [[</font>]], -- This keyword is colored red.
@@ -59,7 +60,6 @@ Log.Hooks.GetMessageObject:RegisterHook(function(obj, message)
     )
     local charColor, charName, targetColor, targetName = message:match(pattern)
     if charColor then
-        obj = _CriticalHit:Create(charName, charColor, targetName, targetColor)
+        ev.ParsedMessage = _CriticalHit:Create(charName, charColor, targetName, targetColor)
     end
-    return obj
 end)

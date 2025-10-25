@@ -60,11 +60,10 @@ end
 ---------------------------------------------
 
 -- Create message objects.
-Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
+Log.Hooks.ParseMessage:Subscribe(function (ev)
     local pattern = Text.FormatLarianTranslatedString(_LifestealMessage.LIFESTEAL_TSKHANDLE, _LifestealMessage.KEYWORD_PATTERN, _LifestealMessage.DAMAGE_PATTERN)
-    local charColor, charName, dmgColor, dmgAmount, dmgType = message:match(pattern)
+    local charColor, charName, dmgColor, dmgAmount, dmgType = ev.RawMessage:match(pattern)
     if charColor then
-        obj = _LifestealMessage:Create(charName, charColor, dmgType, dmgAmount, dmgColor)
+        ev.ParsedMessage = _LifestealMessage:Create(charName, charColor, dmgType, dmgAmount, dmgColor)
     end
-    return obj
 end)

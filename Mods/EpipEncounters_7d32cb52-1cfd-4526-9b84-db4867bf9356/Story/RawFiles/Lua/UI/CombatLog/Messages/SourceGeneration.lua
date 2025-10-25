@@ -52,12 +52,9 @@ end
 ---------------------------------------------
 
 -- Create message objects.
-Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
-    local charColor, charName, msgColor, text = message:match(_SourceGenMessage.PATTERN_NEXT_ROUND)
-
+Log.Hooks.ParseMessage:Subscribe(function (ev)
+    local charColor, charName, msgColor, text = ev.RawMessage:match(_SourceGenMessage.PATTERN_NEXT_ROUND)
     if charColor then
-        obj = _SourceGenMessage:Create(charName, charColor, text, msgColor)
+        ev.ParsedMessage = _SourceGenMessage:Create(charName, charColor, text, msgColor)
     end
-
-    return obj
 end)

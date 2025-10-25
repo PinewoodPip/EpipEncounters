@@ -85,12 +85,13 @@ end
 ---------------------------------------------
 
 -- Create message objects.
-Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
-    local charColor, charName, reaction, charges = message:match(_Charges.PATTERN)
+Log.Hooks.ParseMessage:Subscribe(function (ev)
+    local rawMsg = ev.RawMessage
+    local charColor, charName, reaction, charges = rawMsg:match(_Charges.PATTERN)
 
     -- Multiple reactions in one message
     if not charColor then
-        charColor, charName, reaction = message:match(_Charges.PATTERN_ALT)
+        charColor, charName, reaction = rawMsg:match(_Charges.PATTERN_ALT)
 
         -- TODO finish. the split function does not work with more than one char!!! wth. the lua patterns are pissing me off and i should switch to some regex lib.
         if reaction then
@@ -108,13 +109,11 @@ Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
             --     table.insert(data, {Reaction = t, Amount = amount})
             -- end
 
-            obj = _Charges.Create(charName, charColor, nil, reaction)
+            ev.ParsedMessage = _Charges.Create(charName, charColor, nil, reaction)
         end
-    else -- just one reaction
+    else -- Single reaction
         if charColor then
-            obj = _Charges:Create(charName, charColor, {{Reaction = reaction, Amount = charges}})
+            ev.ParsedMessage = _Charges:Create(charName, charColor, {{Reaction = reaction, Amount = charges}})
         end
     end
-
-    return obj
 end)

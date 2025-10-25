@@ -74,7 +74,9 @@ end
 ---------------------------------------------
 
 -- Create message objects.
-Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
+Log.Hooks.ParseMessage:Subscribe(function (ev)
+    local message = ev.RawMessage
+
     -- In some languages (ex. Polish) this string contains parenthesis, thus we must escape them.
     -- Text.EscapePatternCharacters() cannot be used here as it would also escape the Larian string placeholders.
     local baseString = Text.GetTranslatedString(Log.CHARACTER_ACTION_TSKHANDLE)
@@ -88,17 +90,16 @@ Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
     })
     local charColor, charName, targetColor, targetName, damageColor, damageAmount, damageType = message:match(pattern)
     if charColor then
-        obj = _Attack:Create(charName, charColor, targetName, targetColor, damageType, damageAmount, damageColor)
+        ev.ParsedMessage = _Attack:Create(charName, charColor, targetName, targetColor, damageType, damageAmount, damageColor)
     end
-    return obj
 end)
 
 -- Merge with other attack messages.
 local attackClassName = _Attack:GetClassName()
-Log.Hooks.CombineMessage:RegisterHook(function (combined, msg1, msg2)
+Log.Hooks.CombineMessage:Subscribe(function (ev)
+    local msg1, msg2 = ev.PreviousMessage, ev.NewMessage
     if msg1.Message:GetClassName() == attackClassName and msg2.Message:GetClassName() == attackClassName then
         msg1.Message:CombineWith(msg2.Message)
-        combined = true
+        ev.Combined = true
     end
-    return combined
 end)

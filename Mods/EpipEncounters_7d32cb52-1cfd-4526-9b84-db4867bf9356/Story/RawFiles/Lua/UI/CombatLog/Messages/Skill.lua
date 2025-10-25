@@ -120,7 +120,9 @@ end
 ---------------------------------------------
 
 -- Create message objects.
-Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
+Log.Hooks.ParseMessage:Subscribe(function (ev)
+    local rawMsg = ev.RawMessage
+
     -- Check for every skill pattern
     for _,basePattern in ipairs(_Skill.PATTERNS) do
         local hasSkillName = true
@@ -143,18 +145,17 @@ Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
 
         -- Parse message
         local charColor, charName, skillColor, skillName, targetColor, targetName
-        local params = {message:match(pattern)}
+        local params = {rawMsg:match(pattern)}
         if hasSkillName then
             charColor, charName, skillColor, skillName, targetColor, targetName = table.unpack(params)
         else -- Not all skill casts include skill name.
             charColor, charName, skillColor, skillName, targetColor, targetName = params[1], params[2], nil, nil, params[3], params[4]
         end
         if charColor then -- Note: not all skill types have the targetColor and targetName params.
-            obj = _Skill:Create(charName, charColor, skillName, skillColor, basePattern.SkillType, targetName, targetColor)
+            ev.ParsedMessage = _Skill:Create(charName, charColor, skillName, skillColor, basePattern.SkillType, targetName, targetColor)
             break
         end
     end
-    return obj
 end)
 
 -- Construct additonal patterns dynamically;

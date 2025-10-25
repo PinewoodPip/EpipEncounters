@@ -46,14 +46,14 @@ end
 ---------------------------------------------
 
 -- Create message objects.
-Log.Hooks.GetMessageObject:RegisterHook(function(obj, message)
+Log.Hooks.ParseMessage:Subscribe(function (ev)
+    local message = ev.RawMessage
     local pattern = Text.FormatLarianTranslatedString(_Dodge.MISSED_TSKHANDLE,
         _Dodge.KEYWORD_PATTERN,
         _Dodge.KEYWORD_PATTERN
     )
     local charColor, charName, targetColor, targetName = message:match(pattern)
     if charColor then
-        obj = _Dodge:Create(charName, charColor, targetName, targetColor)
+        ev.ParsedMessage = _Dodge:Create(charName, charColor, targetName, targetColor)
     end
-    return obj
 end)

@@ -152,7 +152,8 @@ end
 ---------------------------------------------
 
 -- Create message objects.
-Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
+Log.Hooks.ParseMessage:Subscribe(function (ev)
+    local message = ev.RawMessage
     local pattern = Text.FormatLarianTranslatedString(Log.CHARACTER_RECEIVED_ACTION_TSKHANDLE,
         _DamageMessage.KEYWORD_PATTERN,
         Text.GetTranslatedString(_DamageMessage.HIT_TSKHANDLE),
@@ -166,18 +167,16 @@ Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
         characterColor, characterName, dmgColor, dmgAmount, dmgType = table.unpack(params)
     end
     if characterColor then
-        obj = _DamageMessage:Create(characterName, characterColor, dmgType, dmgAmount, dmgColor)
+        ev.ParsedMessage = _DamageMessage:Create(characterName, characterColor, dmgType, dmgAmount, dmgColor)
     end
-    return obj
 end)
 
 -- Merge consecutive damage messages.
 local damageClassName = _DamageMessage:GetClassName()
-Log.Hooks.CombineMessage:RegisterHook(function (combined, msg1, msg2)
-    if msg1.Message:GetClassName() == damageClassName and msg2.Message:GetClassName() == damageClassName then
-        msg1.Message:CombineWith(msg2.Message)
-        combined = true
+Log.Hooks.CombineMessage:Subscribe(function (ev)
+    local prevMsg, newMsg = ev.PreviousMessage.Message, ev.NewMessage.Message
+    if prevMsg:GetClassName() == damageClassName and newMsg:GetClassName() == damageClassName then
+        prevMsg:CombineWith(newMsg)
+        ev.Combined = true
     end
-
-    return combined
 end)

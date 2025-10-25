@@ -59,7 +59,8 @@ end
 ---------------------------------------------
 
 -- Create message objects.
-Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
+Log.Hooks.ParseMessage:Subscribe(function (ev)
+    local rawMsg = ev.RawMessage
     local pattern = Text.FormatLarianTranslatedString(Log.CHARACTER_RECEIVED_ACTION_TSKHANDLE,
         _Reflect.KEYWORD_PATTERN,
         Text.GetTranslatedString(_Reflect.HIT_TSKHANDLE),
@@ -69,14 +70,13 @@ Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
         [[<font color="#(%x%x%x%x%x%x)">(%d+) (.+)]] .. Text.EscapePatternCharacters(Text.GetTranslatedString(_Reflect.REFLECTED_TSKHANDLE)) .. [[</font>]]
     )
     local charColor, charName, dmgColor, dmgAmount, dmgType
-    local params = {message:match(pattern)}
+    local params = {rawMsg:match(pattern)}
     if tonumber(params[2]) then -- In some languages (ex. Spanish) the damage comes before character name.
         charColor, charName, dmgColor, dmgAmount, dmgType = params[4], params[5], params[1], params[2], params[3]
     else
         charColor, charName, dmgColor, dmgAmount, dmgType = table.unpack(params)
     end
     if charColor then
-        obj = _Reflect.Create(charName, charColor, dmgType, dmgAmount, dmgColor)
+        ev.ParsedMessage = _Reflect.Create(charName, charColor, dmgType, dmgAmount, dmgColor)
     end
-    return obj
 end)

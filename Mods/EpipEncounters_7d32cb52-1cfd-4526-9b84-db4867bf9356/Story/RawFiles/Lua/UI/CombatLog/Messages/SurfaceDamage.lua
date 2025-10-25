@@ -57,25 +57,25 @@ end
 ---------------------------------------------
 
 -- Create message objects.
-Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
+Log.Hooks.ParseMessage:Subscribe(function (ev)
+    local rawMsg = ev.RawMessage
     local pattern = Text.FormatLarianTranslatedString(_Surface.SURFACE_DAMAGE_TSKHANDLE,
         _Surface.KEYWORD_PATTERN,
         Text.GetTranslatedString(_Surface.HIT_TSKHANDLE),
         _Surface.DAMAGE_PATTERN
     )
-    local charColor, charName, dmgColor, dmgAmount, dmgType = message:match(pattern)
+    local charColor, charName, dmgColor, dmgAmount, dmgType = rawMsg:match(pattern)
     if charColor then
-        obj = _Surface:Create(charName, charColor, dmgType, dmgAmount, dmgColor)
+        ev.ParsedMessage = _Surface:Create(charName, charColor, dmgType, dmgAmount, dmgColor)
     end
-    return obj
 end)
 
 -- Combine consecutive surface damage messages from the same character.
 local surfaceDamageClassName = _Surface:GetClassName()
-Log.Hooks.CombineMessage:RegisterHook(function (combined, msg1, msg2)
-    if msg1.Message:GetClassName() == surfaceDamageClassName and msg2.Message:GetClassName() == surfaceDamageClassName then
-        msg1.Message:CombineWith(msg2.Message)
-        combined = true
+Log.Hooks.CombineMessage:Subscribe(function (ev)
+    local prevMsg, newMsg = ev.PreviousMessage.Message, ev.NewMessage.Message
+    if prevMsg:GetClassName() == surfaceDamageClassName and newMsg:GetClassName() == surfaceDamageClassName then
+        prevMsg:CombineWith(newMsg)
+        ev.Combined = true
     end
-    return combined
 end)

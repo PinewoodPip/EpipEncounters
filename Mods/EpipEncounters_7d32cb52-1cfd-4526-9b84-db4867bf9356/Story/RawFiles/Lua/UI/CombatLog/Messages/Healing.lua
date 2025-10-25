@@ -73,21 +73,20 @@ end
 
 -- Create message objects.
 -- Both healing and armor restoration become the same object type, Healing.
-Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
+Log.Hooks.ParseMessage:Subscribe(function (ev)
     local healingPattern = Text.FormatLarianTranslatedString(_HealingMessage.REGAINED_TSKHANDLE, _HealingMessage.KEYWORD_PATTERN, _HealingMessage.DAMAGE_PATTERN)
-    local charColor, char, color, amount, damageType = message:match(healingPattern)
+    local charColor, char, color, amount, damageType = ev.RawMessage:match(healingPattern)
     if char then
-        obj = _HealingMessage:Create(char, charColor, damageType, amount, color)
+        ev.ParsedMessage = _HealingMessage:Create(char, charColor, damageType, amount, color)
     end
-    return obj
 end)
 
 -- Merge consecutive healing messages.
 local healingClassName = _HealingMessage:GetClassName()
-Log.Hooks.CombineMessage:RegisterHook(function (combined, msg1, msg2)
-    if msg1.Message:GetClassName() == healingClassName and msg2.Message:GetClassName() == healingClassName then
-        msg1.Message:CombineWith(msg2.Message)
-        combined = true
+Log.Hooks.CombineMessage:Subscribe(function (ev)
+    local prevMsg, newMsg = ev.PreviousMessage.Message, ev.NewMessage.Message
+    if prevMsg:GetClassName() == healingClassName and newMsg:GetClassName() == healingClassName then
+        prevMsg:CombineWith(newMsg)
+        ev.Combined = true
     end
-    return combined
 end)

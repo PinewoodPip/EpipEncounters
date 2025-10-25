@@ -8,8 +8,8 @@ local Log = Client.UI.CombatLog
 ---@class CombatLog.Messages.SourceInfusionLevel : UI.CombatLog.Messages.Scripted
 ---@field Level integer
 local _SourceInfusionLevel = {
-    PATTERN = '<font color="#(%x%x%x%x%x%x)">(.+)</font>: Source Infusion: (%d+)', -- "+" just in case someone mods in SI 10 (Derby mod in 20XX)
-    PATTERN_ALT = '<font color="#(%x%x%x%x%x%x)">(.+)</font>: Source Infusion cleared',
+    PATTERN_LEVEL = '<font color="#(%x%x%x%x%x%x)">(.+)</font>: Source Infusion: (%d+)', -- "+" just in case someone mods in SI 10 (Derby mod in 20XX)
+    PATTERN_CLEARED = '<font color="#(%x%x%x%x%x%x)">(.+)</font>: Source Infusion cleared',
 }
 Log:RegisterClass("UI.CombatLog.Messages.SourceInfusionLevel", _SourceInfusionLevel, {"UI.CombatLog.Messages.Scripted"})
 Log.RegisterMessageHandler(_SourceInfusionLevel)
@@ -55,17 +55,17 @@ end
 ---------------------------------------------
 
 -- Create message objects.
-Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
-    local charColor, charName, level = message:match(_SourceInfusionLevel.PATTERN)
+Log.Hooks.ParseMessage:Subscribe(function (ev)
+    local rawMsg = ev.RawMessage
+    local charColor, charName, level = rawMsg:match(_SourceInfusionLevel.PATTERN_LEVEL)
 
+    -- Check if the source infusion is being cleared instead
     if not charColor then
-        charColor, charName = message:match(_SourceInfusionLevel.PATTERN_ALT)
+        charColor, charName = rawMsg:match(_SourceInfusionLevel.PATTERN_CLEARED)
         level = 0
     end
 
     if charColor then
-        obj = _SourceInfusionLevel:Create(charName, charColor, level)
+        ev.ParsedMessage = _SourceInfusionLevel:Create(charName, charColor, level)
     end
-
-    return obj
 end)

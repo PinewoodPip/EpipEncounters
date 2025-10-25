@@ -50,15 +50,14 @@ end
 ---------------------------------------------
 
 -- Create message objects.
-Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
-    if obj then return obj end -- Do not override any existing messages. Some languages (ex. Polish) use this format for vanilla messages, such as attacks ("<postać> atakuje: ...").
+Log.Hooks.ParseMessage:Subscribe(function (ev)
+    if ev.ParsedMessage then return end -- Do not override any existing messages. Some languages (ex. Polish) use this format for vanilla messages, such as attacks ("<postać> atakuje: ...").
     local pattern = Text.FormatLarianTranslatedString(_ScriptedMessage.MESSAGE_TSKHANDLE,
         _ScriptedMessage.KEYWORD_PATTERN,
         "(.+)"
     )
-    local charColor, charName, text = message:match(pattern)
+    local charColor, charName, text = ev.RawMessage:match(pattern)
     if charColor then
-        obj = _ScriptedMessage:Create(charName, charColor, text)
+        ev.ParsedMessage = _ScriptedMessage:Create(charName, charColor, text)
     end
-    return obj
 end)

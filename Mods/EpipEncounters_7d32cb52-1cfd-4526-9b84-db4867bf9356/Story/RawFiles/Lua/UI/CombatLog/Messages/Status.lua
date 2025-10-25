@@ -80,35 +80,33 @@ end
 ---------------------------------------------
 
 -- Create message objects for applied & removed statuses.
-Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
+Log.Hooks.ParseMessage:Subscribe(function (ev)
     local statusAppliedPattern = Text.FormatLarianTranslatedString(_StatusMessage.STATUS_APPLIED_TSKHANDLE,
         _StatusMessage.KEYWORD_PATTERN,
         _StatusMessage.KEYWORD_PATTERN
     )
-    local charColor, charName, statusColor, statusName = message:match(statusAppliedPattern)
+    local charColor, charName, statusColor, statusName = ev.RawMessage:match(statusAppliedPattern)
     if charColor then
-        obj = _StatusMessage:Create(charName, charColor, statusName, statusColor)
+        ev.ParsedMessage = _StatusMessage:Create(charName, charColor, statusName, statusColor)
     end
-    return obj
 end)
-Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
+Log.Hooks.ParseMessage:Subscribe(function (ev)
     local lostStatusPattern = Text.FormatLarianTranslatedString(_StatusMessage.STATUS_REMOVED_TSKHANDLE,
         _StatusMessage.KEYWORD_PATTERN,
         _StatusMessage.KEYWORD_PATTERN
     )
-    local charColor, charName, statusColor, statusName = message:match(lostStatusPattern)
+    local charColor, charName, statusColor, statusName = ev.RawMessage:match(lostStatusPattern)
     if charColor then
-        obj = _StatusMessage:Create(charName, charColor, statusName, statusColor, false)
+        ev.ParsedMessage = _StatusMessage:Create(charName, charColor, statusName, statusColor, false)
     end
-    return obj
 end)
 
 -- Merge consecutive status messages from the same character.
 local statusClassName = _StatusMessage:GetClassName()
-Log.Hooks.CombineMessage:RegisterHook(function (combined, msg1, msg2)
-    if msg1.Message:GetClassName() == statusClassName and msg2.Message:GetClassName() == statusClassName then
-        msg1.Message:CombineWith(msg2.Message)
-        combined = true
+Log.Hooks.CombineMessage:Subscribe(function (ev)
+    local prevMsg, newMsg = ev.PreviousMessage.Message, ev.NewMessage.Message
+    if prevMsg:GetClassName() == statusClassName and newMsg:GetClassName() == statusClassName then
+        prevMsg:CombineWith(newMsg)
+        ev.Combined = true
     end
-    return combined
 end)

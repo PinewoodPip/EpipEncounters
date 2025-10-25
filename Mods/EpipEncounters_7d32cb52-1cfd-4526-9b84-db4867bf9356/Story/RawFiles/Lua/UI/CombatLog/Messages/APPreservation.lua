@@ -52,13 +52,13 @@ end
 ---------------------------------------------
 
 -- Create message objects.
-Log.Hooks.GetMessageObject:RegisterHook(function (obj, message)
+Log.Hooks.ParseMessage:Subscribe(function (ev)
+    local message = ev.RawMessage
     local pattern = Text.ReplaceLarianPlaceholders(APPreservation.PATTERN, {
         Text.GetTranslatedString(APPreservation.AP_PRESERVED_TSKHANDLE)
     })
     local charName, ap = message:match(pattern)
     if charName then
-        obj = APPreservation:Create(charName, ap)
+        ev.ParsedMessage = APPreservation:Create(charName, ap)
     end
-    return obj
 end)

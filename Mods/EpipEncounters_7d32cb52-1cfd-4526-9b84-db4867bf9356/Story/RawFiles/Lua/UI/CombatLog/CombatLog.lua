@@ -6,12 +6,12 @@
 local CommonStrings = Text.CommonStrings
 
 ---@class CombatLogUI : UI
----@field Messages CombatLogSentMessage[]
+---@field Messages UI.CombatLog.ParsedMessage[]
 ---@field COLORS table<string, string>
 ---@field MAX_MESSAGES integer
 ---@field MAX_MERGING_TIME number Maximum time that can elapse before a message no longer can be merged into, in seconds.
 ---@field MessageTypes table<classname, UI.CombatLog.Message> Message type handlers.
----@field FILTERS table<string, CombatLogFilter>
+---@field FILTERS table<string, UI.CombatLog.Filter>
 ---@field EnabledFilters table<string, boolean>
 local Log = {
     CHARACTER_ACTION_TSKHANDLE = "hddc42b8dg6456g4b7eg98d1gea65bc929fed", -- "[1] [2] [3], for [4]"; multiple message types use this structure; params 1 & 3 tend to be attacker & defender (optional)
@@ -79,18 +79,17 @@ local Log = {
         },
     },
 
-    Hooks = {
-        ---@type CombatLogUI_Hook_GetMessageObject
-        GetMessageObject = {Options = {First = false}},
-        ---@type CombatLogUI_Hook_CombineMessage
-        CombineMessage = {},
-        ---@type CombatLogUI_Hook_MessageCanMerge
-        MessageCanMerge = {},
-    },
     Events = {
-        ---@type CombatLogUI_Event_MessageAdded
-        MessageAdded = {},
+        MessageAdded = {}, ---@type Event<UI.CombatLog.Events.MessageAdded>
     },
+    Hooks = {
+        ParseMessage = {}, ---@type Hook<UI.CombatLog.Hooks.ParseMessage>
+        CombineMessage = {}, ---@type Hook<UI.CombatLog.Hooks.CombineMessage>
+        MessageCanMerge = {}, ---@type Hook<UI.CombatLog.Hooks.MessageCanMerge>
+    },
+
+    USE_LEGACY_EVENTS = false,
+    USE_LEGACY_HOOKS = false,
 
     FILEPATH_OVERRIDES = {
         ["Public/Game/GUI/combatLog.swf"] = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/combatLog.swf",
@@ -101,12 +100,13 @@ local Log = {
 Epip.InitializeUI(Ext.UI.TypeID.combatLog, "CombatLog", Log)
 local TSK = Log.TranslatedStrings
 
----@class CombatLogSentMessage
+---A parsed message present in the UI.
+---@class UI.CombatLog.ParsedMessage
 ---@field Filter integer
 ---@field Message UI.CombatLog.Message
----@field Time integer Monotonic time.
+---@field Time integer Monotonic time at which the message was added.
 
----@class CombatLogFilter
+---@class UI.CombatLog.Filter
 ---@field Name string
 ---@field MessageTypes set<classname> Message types that this filter includes.
 
@@ -114,22 +114,27 @@ local TSK = Log.TranslatedStrings
 -- EVENTS/HOOKS
 ---------------------------------------------
 
----@class CombatLogUI_Hook_GetMessageObject : LegacyHook
----@field RegisterHook fun(self, handler:fun(obj:UI.CombatLog.Message, message:string):UI.CombatLog.Message)
----@field Return fun(self, obj:UI.CombatLog.Message, message:string):UI.CombatLog.Message
+---Fired when a message is added to the log.
+---@class UI.CombatLog.Events.MessageAdded
+---@field Message UI.CombatLog.ParsedMessage
 
----@class CombatLogUI_Event_MessageAdded : Event
----@field RegisterListener fun(self, listener:fun(msg:CombatLogSentMessage))
----@field Fire fun(self, msg:CombatLogSentMessage)
+---@class UI.CombatLog.Hooks.ParseMessage
+---@field ParsedMessage UI.CombatLog.Message? Hookable. Defaults to `nil`.
+---@field RawMessage string The message being sent to the log by the game.
 
----Fired when 2 messages of the same type are attempted to be sent one after another. You're expected to return true if you've edited msg1 to append to its message. If combined is true, msg1 will be re-rendered and msg2 will not be sent to the UI.
----@class CombatLogUI_Hook_CombineMessage : LegacyHook
----@field RegisterHook fun(self, handler:fun(combined:boolean, msg1:CombatLogSentMessage, msg2:CombatLogSentMessage):boolean)
----@field Return fun(self, combined:boolean, msg1:CombatLogSentMessage, msg2:CombatLogSentMessage):boolean
+---Fired when 2 messages of the same type are attempted to be sent one after another.
+---Set `Combined` true to indicate you've edited `Message1` to amend it with the second message's data.
+---If combined is true, `Message1` will be re-rendered and `Message2` will not be sent to the UI.
+---@class UI.CombatLog.Hooks.CombineMessage
+---@field PreviousMessage UI.CombatLog.ParsedMessage The previous message.
+---@field NewMessage UI.CombatLog.ParsedMessage The new message being added. If combined, will not be sent to the UI.
+---@field Combined boolean Hookable. Indicates whether the messages were combined. Defaults to `false`.
 
----@class CombatLogUI_Hook_MessageCanMerge : LegacyHook
----@field RegisterHook fun(self, handler:fun(canMerge:boolean, msg1:CombatLogSentMessage, msg2:CombatLogSentMessage):boolean)
----@field Return fun(self, canMerge:boolean, msg1:CombatLogSentMessage, msg2:CombatLogSentMessage):boolean
+---Fired to determine if two messages can be merged.
+---@class UI.CombatLog.Hooks.MessageCanMerge
+---@field PreviousMessage UI.CombatLog.ParsedMessage The previous message.
+---@field NewMessage UI.CombatLog.ParsedMessage The new message being added.
+---@field CanMerge boolean Hookable. Defaults to `false`.
 
 ---------------------------------------------
 -- METHODS
@@ -185,7 +190,7 @@ function Log.ToggleFilter(filter, state)
     Log.RefreshFilters(filter)
 end
 
----@param filter? CombatLogFilter
+---@param filter? UI.CombatLog.Filter
 function Log.RefreshFilters(filter)
     if Log:Exists() then
         if filter then
@@ -207,7 +212,7 @@ function Log.RefreshFilters(filter)
 end
 
 ---@param id string
----@param filter CombatLogFilter
+---@param filter UI.CombatLog.Filter
 function Log.RegisterFilter(id, filter)
     Log.FILTERS[id] = filter
 
@@ -229,23 +234,34 @@ end
 function Log.AddMessage(msg, filter)
     filter = filter or 0
 
-    ---@type CombatLogSentMessage
+    ---@type UI.CombatLog.ParsedMessage
     local obj = {
         Message = msg,
         Filter = filter,
         Time = Ext.MonotonicTime(),
     }
 
-    ---@type CombatLogSentMessage
+    ---@type UI.CombatLog.ParsedMessage
     local lastMessage = Log.Messages[#Log.Messages]
     local combined = false
 
+    -- Attempt to merge message with the immediate previous one
     if lastMessage then
         local timeElapsed = Ext.MonotonicTime() - lastMessage.Time
         timeElapsed = timeElapsed / 1000
-
-        if lastMessage.Message:GetClassName() == msg:GetClassName() and timeElapsed < Log.MAX_MERGING_TIME and Log.Hooks.MessageCanMerge:Return(false, lastMessage, obj) then
-            combined = Log.Hooks.CombineMessage:Return(false, lastMessage, obj)
+        if lastMessage.Message:GetClassName() == msg:GetClassName() and timeElapsed < Log.MAX_MERGING_TIME then -- Messages must be of the same type and recent
+            local canMerge = Log.Hooks.MessageCanMerge:Throw({
+                PreviousMessage = lastMessage,
+                NewMessage = obj,
+                CanMerge = false,
+            }).CanMerge
+            if canMerge then
+                combined = Log.Hooks.CombineMessage:Throw({
+                    PreviousMessage = lastMessage,
+                    NewMessage = obj,
+                    Combined = false,
+                }).Combined
+            end
         end
     end
 
@@ -270,7 +286,9 @@ function Log.AddMessage(msg, filter)
         end
     end
 
-    Log.Events.MessageAdded:Fire(obj)
+    Log.Events.MessageAdded:Throw({
+        Message = obj,
+    })
 
     -- Log added message, if it doesn't use the fallback type
     if obj.Message:GetClassName() ~= "UI.CombatLog.Messages.Unsupported" then
@@ -282,17 +300,18 @@ end
 ---Converts a vanilla combat log message to its object form.
 ---@return UI.CombatLog.Message
 function Log.GetData(msg)
-    local obj
+    local parsedMsg = Log.Hooks.ParseMessage:Throw({
+        RawMessage = msg,
+        ParsedMessage = nil
+    }).ParsedMessage
 
-    obj = Log.Hooks.GetMessageObject:Return(obj, msg)
-
-    --Fallback to a generic message type.
-    if not obj then
+    -- Fallback to a generic message type.
+    if not parsedMsg then
         local UnsupportedMsg = Log:GetClass("UI.CombatLog.Messages.Unsupported")
-        obj = UnsupportedMsg:Create(msg)
+        parsedMsg = UnsupportedMsg:Create(msg)
     end
 
-    return obj
+    return parsedMsg
 end
 
 function Log.IsMessageTypeFiltered(messageType)
@@ -321,12 +340,10 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
-Log.Hooks.MessageCanMerge:RegisterHook(function (canMerge, msg1, msg2)
-    if msg1.Filter == msg2.Filter then
-        canMerge = msg1.Message:CanMerge(msg2.Message)
+Log.Hooks.MessageCanMerge:Subscribe(function (ev)
+    if ev.PreviousMessage.Filter == ev.NewMessage.Filter then
+        ev.CanMerge = ev.PreviousMessage.Message:CanMerge(ev.NewMessage.Message)
     end
-
-    return canMerge
 end)
 
 -- Force hardcoded filters to always be enabled.
@@ -336,9 +353,7 @@ Log:RegisterInvokeListener("setFilterSelection", function(ev, filter, _)
 end)
 
 Log:RegisterInvokeListener("addTextToFilter", function(ev, filter, text)
-
     if Settings.GetSettingValue("EpipEncounters", "CombatLogImprovements") then
-
         -- The engine sometimes sends these empty messages which confuse the system. Fuck em.
         if text == '<font size="16"></font>' then
             ev:PreventAction()
@@ -439,7 +454,7 @@ end
 -- TEST FILTERS
 ---------------------------------------------
 
----@type CombatLogFilter[]
+---@type UI.CombatLog.Filter[]
 local DefaultFilters = {
     {
         ID = "Actions",
