@@ -516,21 +516,6 @@ local DefaultFilters = {
         }
     },
     {
-        ID = "SourceGeneration",
-        Name = TSK.Filter_SourceGenerationAndSI:GetString(),
-        MessageTypes = {
-            ["UI.CombatLog.Messages.SourceGeneration"] = true,
-            ["UI.CombatLog.Messages.SourceInfusionLevel"] = true,
-        }
-    },
-    {
-        ID = "SystemSpam",
-        Name = TSK.Filter_ReactionCharges:GetString(),
-        MessageTypes = {
-            ["UI.CombatLog.Messages.ReactionCharges"] = true,
-        },
-    },
-    {
         ID = "APPreservation",
         Name = TSK.Filter_APPreservation:GetString(),
         MessageTypes = {
@@ -545,6 +530,27 @@ local DefaultFilters = {
         },
     },
 }
+
+-- Insert EE-specific filters
+if EpicEncounters.IsEnabled() then
+    -- Insert EE filters at the bottom, but before minor ones like AP Preservation
+    local apPreservationIndex, _ = table.getFirst(DefaultFilters, function(_, filter) return filter.ID == "APPreservation" end)
+    table.insert(DefaultFilters, apPreservationIndex, {
+        ID = "SourceGeneration",
+        Name = TSK.Filter_SourceGenerationAndSI:GetString(),
+        MessageTypes = {
+            ["UI.CombatLog.Messages.SourceGeneration"] = true,
+            ["UI.CombatLog.Messages.SourceInfusionLevel"] = true,
+        }
+    })
+    table.insert(DefaultFilters, apPreservationIndex, {
+        ID = "ReactionCharges",
+        Name = TSK.Filter_ReactionCharges:GetString(),
+        MessageTypes = {
+            ["UI.CombatLog.Messages.ReactionCharges"] = true,
+        },
+    })
+end
 
 for _,filter in pairs(DefaultFilters) do
     Log.RegisterFilter(filter.ID, filter)
