@@ -59,11 +59,8 @@ Log.Hooks.ParseMessage:Subscribe(function (ev)
         end
     elseif message:GetClassName() == "UI.CombatLog.Messages.Skill" then
         ---@cast message UI.CombatLog.Messages.Skill
-        if message.Target ~= message.TARGET_TYPES.SUMMON then
-            message.SkillColor = CombatLogTweaks.COLOR_REMAPS[message.SkillColor] or message.SkillColor
-        else
-            message.TargetCharacterColor = CombatLogTweaks.COLOR_REMAPS[message.TargetCharacterColor] or message.TargetCharacterColor
-        end
+        message.SkillColor = CombatLogTweaks.COLOR_REMAPS[message.SkillColor] or message.SkillColor
+        message.TargetCharacterColor = CombatLogTweaks.COLOR_REMAPS[message.TargetCharacterColor] or message.TargetCharacterColor
     end
 
     -- Remap character colors
