@@ -109,11 +109,11 @@ end
 function GroupManager.ResizeGroup(guid)
     local editor = GroupManager.ResizeUI
     local group = GroupManager.GetGroup(guid)
-
     if group then
         group:Resize(editor.RowSpinner:GetValue(), editor.ColumnSpinner:GetValue())
+        GroupManager.SaveData()
     else
-        GroupManager:LogError("Tried to resize group that doesn't exist")
+        GroupManager:__Error("ResizeGroup", "Tried to resize group that doesn't exist")
     end
 end
 

@@ -35,6 +35,12 @@ function HotbarGroup:_AddSlot()
     slot.SlotElement:SetSizeOverride(self.SLOT_SIZE, self.SLOT_SIZE)
     self._Slots[self._SlotsAllocated] = slot
     self._SlotsAllocated = self._SlotsAllocated + 1
+
+    -- Save the group when the slot is edited
+    slot.Events.ObjectDraggedIn:Subscribe(function (_)
+        GroupManager.SaveData()
+    end)
+
     return slot
 end
 
@@ -195,6 +201,7 @@ function HotbarGroup.___Create(id, rows, columns)
     end)
     group:RegisterCallListener("cancelMoveWindow", function (_)
         GameState.Events.Tick:Unsubscribe(dragTickListener)
+        GroupManager.SaveData() -- Save the group's new position
     end)
 
     -- Reposition the group when the hotbar bar changes.

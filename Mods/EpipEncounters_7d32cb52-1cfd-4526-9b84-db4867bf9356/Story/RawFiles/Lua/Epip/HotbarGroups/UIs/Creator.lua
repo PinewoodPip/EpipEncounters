@@ -68,6 +68,7 @@ GameState.Events.ClientReady:Subscribe(function (_)
     GroupManager.CreationUI = Creator
     Creator.ConfirmButton.Events.Pressed:Subscribe(function (_)
         GroupManager.Create(nil, Creator.RowSpinner:GetValue(), Creator.ColumnSpinner:GetValue())
+        GroupManager.SaveData() -- Save the new group immediately
         GroupManager.CreationUI:Hide()
     end)
 
