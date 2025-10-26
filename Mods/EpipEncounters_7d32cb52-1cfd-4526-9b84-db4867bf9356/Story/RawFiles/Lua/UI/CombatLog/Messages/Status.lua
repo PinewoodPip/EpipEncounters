@@ -88,7 +88,7 @@ function _StatusMessage:ToString()
     return msg
 end
 
-function _StatusMessage:CombineWith(msg)
+function _StatusMessage:MergeWith(msg)
     if msg:ImplementsClass("UI.CombatLog.Messages.Status") then
         ---@cast msg UI.CombatLog.Messages.Status
         for _,status in ipairs(msg.Statuses) do

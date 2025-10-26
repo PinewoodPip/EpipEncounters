@@ -62,7 +62,7 @@ end
 
 ---@override
 ---@param msg UI.CombatLog.Messages.Damage
-function _DamageMessage:CombineWith(msg)
+function _DamageMessage:MergeWith(msg)
     local hasType = false
 
     for _,dmg in ipairs(self.Damage) do
