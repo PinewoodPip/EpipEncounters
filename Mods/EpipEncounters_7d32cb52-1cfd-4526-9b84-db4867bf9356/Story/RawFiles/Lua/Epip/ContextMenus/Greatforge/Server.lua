@@ -25,7 +25,7 @@ end)
 -- Show overhead when runes are extracted.
 Ext.Osiris.RegisterListener("PROC_PIP_ShowGreatforgeCostOverhead", 4, "after", function(charGUID, operation, _, cost) -- Third param is currency type.
     if operation == "Extracted runes" then
-        local msg = GreatforgeContextMenu.TranslatedStrings.Overhead_ExtractedRunes.Text:format(cost)
+        local msg = GreatforgeContextMenu.TranslatedStrings.Overhead_ExtractedRunes:Format(cost)
         Osi.CharacterStatusText(charGUID, msg)
     else
         GreatforgeContextMenu:__LogWarning("Unsupported operation from PROC_PIP_ShowGreatforgeCostOverhead: %s", operation)

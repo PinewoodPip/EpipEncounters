@@ -61,7 +61,7 @@ function SourceInfusionTooltips.ProcessTooltip(char, skillID, tooltip)
     for _,req in pairs(SourceInfusion.INFUSION_ABILITY_REQUIREMENTS) do
         if score < req and (Input.IsShiftPressed() or Client.IsPreparingInfusion()) then
             local translatedReqStr = TSK.Pattern_RequiresAbility:Format(req, schoolName)
-            local englishReqStr = TSK.Pattern_RequiresAbility.Text:format(req, englishSchoolName) -- We cannot know if the user is using an EE translation mod; thus we check for both the translated and untranslated patterns.
+            local englishReqStr = TSK.Pattern_RequiresAbility:Format(req, englishSchoolName) -- We cannot know if the user is using an EE translation mod; thus we check for both the translated and untranslated patterns.
             local label = element.Label ---@type string
 
             local startPos, endPos = label:find(translatedReqStr, nil, true)
