@@ -268,9 +268,11 @@ local Vanity = {
         Shield = 7,
     },
 
-    -- Patterns to replace within root template names
-    -- to create a display name.
+    -- Patterns to replace within template names.
+    -- Applied *before* running the default `GetTemplateName` hook.
+    ---@type table<pattern, string>
     ROOT_NAME_REPLACEMENTS = {
+        -- Technical prefixes
         ["EQ_Armor"] = "",
         ["EQ_"] = "",
         ["Elves"] = "Elven",
@@ -281,6 +283,14 @@ local Vanity = {
         ["Clothing_"] = "",
         ["Maj_"] = "",
         ["ARM_UNIQUE_ARX"] = "", -- Fuck this one, screws the pascalcase pattern
+        ["^UNI_"] = "", -- "Unique"
+        ["^RC_"] = "", -- "Reaper's Coast"
+        ["^AMER_UNI_"] = "", -- EE Artifacts.
+        ["^AMER_ORI_"] = "", -- Uniques added by EE Origins.
+        ["^ARM_SETS_"] = "", -- "Armor Set"
+        ["^REF_"] = "", -- Reference models.
+        ["^LOOT_"] = "",
+        ["^S_"] = "", -- No idea what this prefix could stand for. Found on some FTJ items.
 
         -- Actual keywords
         ["Upperbody"] = "Chest",

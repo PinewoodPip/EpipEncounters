@@ -147,7 +147,7 @@ function Transmog.RegisterTemplate(entry)
         local modData = Ext.Mod.GetMod(modFolder)
         local modName = modData and modData.Info.Name or modFolder -- The GetMod() calls fails with the Shared module.
         Vanity.CATEGORIES[modFolder] = {
-            Name = modName,
+            Name = Transmog.MOD_NAME_REMAP[modFolder] or modName, -- Apply remaps for mods without user-friendly names.
             Mod = modFolder,
             Tags = {[modFolder] = true},
             ID = modFolder,
@@ -726,7 +726,7 @@ Transmog.Hooks.GetTemplateName:Subscribe(function(ev)
     local data = ev.TemplateEntry
     local name = data.Name
 
-    -- Miscellaneous prefix removals
+    -- Miscellaneous pattern replacements
     for pattern,replacement in pairs(Vanity.ROOT_NAME_REPLACEMENTS) do
         name = name:gsub(pattern, replacement)
     end

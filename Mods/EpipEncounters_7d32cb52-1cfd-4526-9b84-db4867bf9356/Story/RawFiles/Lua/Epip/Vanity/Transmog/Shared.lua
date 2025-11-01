@@ -33,6 +33,11 @@ local Transmog = {
         ---@diagnostic enable: undefined-field
     },
 
+    -- Maps mod folder names to user-friendly display names.
+    MOD_NAME_REMAP = {
+        ["ArmorSets"] = "Armor Sets",
+    },
+
     favoritedTemplates = {}, ---@type set<GUID.ItemTemplate>
     activeCharacterTemplates = {},
 
