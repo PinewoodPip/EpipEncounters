@@ -373,7 +373,7 @@ local tabs = {
             CreateHeader(CommonStrings.HealthBars),
             {Type = "Setting", Module = "EpipEncounters_Features.EnemyHealthBarExtraInfo", ID = "Mode"},
             {Type = "Setting", Module = "EpipEncounters_Features.EnemyHealthBarExtraInfo", ID = "ResistancesDisplay"},
-            "PreferredTargetDisplay",
+            {Type = "Setting", Module = "EpipEncounters", ID = "PreferredTargetDisplay"},
             {Type = "Setting", Module = "EpipEncounters_FlagsDisplay", ID = "Enabled"},
             {Type = "Setting", Module = "EpipEncounters_TreasureTableDisplay", ID = "Enabled"},
 
