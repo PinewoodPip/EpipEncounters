@@ -27,6 +27,8 @@ local Vanity = {
 
     ---@type table<string,VanityTemplate>
     TEMPLATES = {},
+
+    ---@type table<string, VanityCategory>
     CATEGORIES = {
         Favorites = {
             Name = "Favorites",
@@ -914,78 +916,6 @@ function Vanity.SetPosition(x, y)
     Vanity.Position = {x, y}
 end
 
--- Auto-generate some tags from template name.
-Vanity:RegisterHook("GenerateTemplateTags", function(tags, template, data)
-    template = Ext.Template.GetTemplate(template)
-
-    -- Only auto-tag templates from Shared
-    if data.Mod == "Shared" then
-        local tagCount = 0
-        for pattern,tag in pairs(Vanity.TEMPLATE_NAME_TAGS) do
-            if string.match(template.Name, pattern) then
-                tags[tag] = true
-                tagCount = tagCount + 1
-            end
-        end
-    
-        -- Fallback tag for items with 0 tags
-        if tagCount == 0 and data.Mod == "Shared" then
-            Vanity:DebugLog("Template with no thematic tags generated: " .. template.Name .. " " .. template.Id)
-            -- Ext.Dump(data) -- TODO filter out
-
-            tags = {Other = true}
-        end
-    end
-
-    -- Add race/gender tags for all mods
-    for i,visual in ipairs(data.Visuals) do
-        if visual ~= "" then
-            tags[Vanity.SLOT_TO_RACE_GENDER[i].Race] = true
-            tags[Vanity.SLOT_TO_RACE_GENDER[i].Gender] = true
-        end
-    end
-
-    if data.Mod then
-        tags[data.Mod] = true
-    end
-
-    return tags
-end)
-
--- Remove underscores and replace some common words to create
--- somewhat readable and coherent names for the context menus.
-Vanity:RegisterHook("GenerateTemplateName", function(name, _, data)
-    -- Miscellaneous prefix removals
-    for pattern,replacement in pairs(Vanity.ROOT_NAME_REPLACEMENTS) do
-        name = name:gsub(pattern, replacement)
-    end
-
-    -- Remove underscores
-    name = name:gsub("_", " ")
-
-    -- Remove trailing whitespaces
-    name = name:gsub("^ *", "") -- front
-    name = name:gsub(" *$", "") -- end
-
-    -- "Armor" prefix
-    name = name:gsub("^Armor ", "")
-
-    -- PascalCase handling!!! insane
-    name = name:gsub("(%l)(%u%a*)", "%1 %2")
-    -- Failed attempts!!! hilarious
-    -- name = name:gsub(" ?(%u%l+)(%u%l+) ?", "%1 %2")
-    -- name = name:gsub(" ?(a*)(%ua*) ?", "%1 %2")
-    -- name = name:gsub("( ?)(%u%l+)(%u%l+)( ?)", "%1%2%3%4")
-
-    -- Add a star at the end of items that do not hide any slots - 
-    -- these tend to not work unless used in a specific slot.
-    if data.Slot == "None" then
-        name = name .. "*"
-    end
-
-    return name
-end)
-
 --- Load template data from a file.
 ---@param file string Relative to data dir.
 function Vanity.LoadTemplateData(file)
@@ -1337,11 +1267,6 @@ end)
 ---------------------------------------------
 -- SETUP
 ---------------------------------------------
-
--- Load Shared data.
-Ext.Events.SessionLoaded:Subscribe(function()
-    Vanity.LoadTemplateData("Mods/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/Story/RawFiles/Lua/Epip/ContextMenus/Vanity/Data/Templates_Shared.json")
-end)
 
 function Vanity.Init()
     if Client.IsUsingController() then return end

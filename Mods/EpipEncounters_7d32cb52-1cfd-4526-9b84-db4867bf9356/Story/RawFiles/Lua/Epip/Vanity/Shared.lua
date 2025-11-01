@@ -377,12 +377,11 @@ local TSK = Vanity.TranslatedStrings
 ---@field Slots table<string, boolean>
 
 ---@class VanityTemplate
----@field GUID GUID
----@field Tags table<string, boolean>
 ---@field Name string
----@field Slot string
+---@field GUID GUID
 ---@field Mod GUID
----@field RootName string
+---@field Slot string
+---@field Tags set<string>
 ---@field Visuals GUID[]
 
 ---@class Features.Vanity.SaveData

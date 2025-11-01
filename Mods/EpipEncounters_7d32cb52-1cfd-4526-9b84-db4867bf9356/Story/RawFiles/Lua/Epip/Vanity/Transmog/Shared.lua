@@ -19,6 +19,20 @@ local Transmog = {
     WEAPON_ANIMATION_OVERRIDE_TAG = "Features.Vanity.Transmog.WeaponAnimationOverride.%s",
     WEAPON_ANIMATION_OVERRIDE_TAG_PATTERN = "^Features%.Vanity%.Transmog%.WeaponAnimationOverride%.(.+)$",
 
+    -- Maps body visual masks to the item slot their body parts correspond to.
+    ---@type table<DeactivateVisualSetSlotMask, ItemSlot>
+    EQUIPMENT_MASK_TO_SLOT = {
+        ---@diagnostic disable: undefined-field
+        [Ext.Enums.DeactivateVisualSetSlotMask.DeactivateHead.__Value] = "Helmet",
+        [Ext.Enums.DeactivateVisualSetSlotMask.DeactivateBeard.__Value] = "Helmet",
+        [Ext.Enums.DeactivateVisualSetSlotMask.DeactivateHair.__Value] = "Helmet",
+        [Ext.Enums.DeactivateVisualSetSlotMask.DeactivateTorso.__Value] = "Breast",
+        [Ext.Enums.DeactivateVisualSetSlotMask.DeactivateTrousers.__Value] = "Leggings",
+        [Ext.Enums.DeactivateVisualSetSlotMask.DeactivateBootsVisual.__Value] = "Boots",
+        [Ext.Enums.DeactivateVisualSetSlotMask.DeactivateArms.__Value] = "Gloves",
+        ---@diagnostic enable: undefined-field
+    },
+
     favoritedTemplates = {}, ---@type set<GUID.ItemTemplate>
     activeCharacterTemplates = {},
 
@@ -55,8 +69,13 @@ local Transmog = {
         },
     },
 
+    USE_LEGACY_EVENTS = false,
+    USE_LEGACY_HOOKS = false,
     Events = {},
-    Hooks = {},
+    Hooks = {
+        GetTemplateName = {}, ---@type Hook<Features.Vanity.Hooks.GetTemplateName>
+        GetTemplateTags = {}, ---@type Hook<Features.Vanity.Hooks.GetTemplateTags>
+    },
 }
 -- Excludes NONE.
 ---@type Features.Vanity.Transmog.WeaponAnimationOverride[]
@@ -125,6 +144,18 @@ end
 Epip.RegisterFeature("Vanity_Transmog", Transmog)
 
 ---------------------------------------------
+-- EVENTS/HOOKS
+---------------------------------------------
+
+---@class Features.Vanity.Hooks.GetTemplateName
+---@field TemplateEntry VanityTemplate
+---@field Name string Hookable. Defaults to the root template's Name field.
+
+---@class Features.Vanity.Hooks.GetTemplateTags
+---@field TemplateEntry VanityTemplate
+---@field Tags set<string> Hookable. Defaults to an empty set.
+
+---------------------------------------------
 -- NET MESSAGES
 ---------------------------------------------
 
@@ -157,6 +188,83 @@ Epip.RegisterFeature("Vanity_Transmog", Transmog)
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
+
+---Parses root templates and registers entries for ones valid for use in Vanity.
+---@return table<GUID, VanityTemplate>
+function Transmog.GetValidTemplates()
+    local templates = Ext.Template.GetAllRootTemplates()
+    local validTemplates = {} ---@type table<GUID, VanityTemplate>
+
+    for guid,template in pairs(templates) do
+        if GetExtType(template) ~= "ItemTemplate" then goto continue end
+        ---@cast template ItemTemplate
+
+        local hasVisuals = false
+        local itemSlot = nil ---@type ItemSlot?
+        for _,equipment in ipairs(template.Equipment.VisualResources) do
+            if equipment ~= "" then
+                hasVisuals = true -- TODO weapons
+            end
+        end
+
+        -- Check stats to determine if the template is a weapon
+        if template.Stats ~= "" then
+            local statsObj = Ext.Stats.GetForPip(template.Stats)
+            if statsObj and Stats.GetType(statsObj) == "Weapon" then -- Some templates have invalid IDs in the Stats field, thus this sanity check is necessary.
+                hasVisuals = true
+                itemSlot = "Weapon"
+            end
+        end
+
+        if hasVisuals then
+            ---@type VanityTemplate
+            local entry = {
+                Name = template.Name,
+                GUID = guid,
+                Mod = template.ModFolder,
+                Slot = itemSlot or Transmog.GetTemplateEquipSlot(template),
+                Visuals = table.shallowCopy(template.Equipment.VisualResources), -- Needs to be copied to avoid referencing game structs (since they have restricted lifetime).
+                Tags = {}
+            }
+
+            -- Get name and tags from hooks
+            entry.Name = Transmog.Hooks.GetTemplateName:Throw({
+                TemplateEntry = entry,
+                Name = entry.Name,
+            }).Name
+            entry.Tags = Transmog.Hooks.GetTemplateTags:Throw({
+                TemplateEntry = entry,
+                Tags = {},
+            }).Tags
+
+            validTemplates[template.Id] = entry
+        end
+
+        ::continue::
+    end
+
+    return validTemplates
+end
+
+---Returns the intended equip slot for a template.
+---@param template ItemTemplate
+---@return ItemSlot?
+function Transmog.GetTemplateEquipSlot(template)
+    local equipSlot = nil ---@type ItemSlot?
+
+    -- Deduce intended item slots based on body visuals masked by the template.
+    local slotEnum = template.Equipment.VisualSetSlots
+    for _,enum in pairs(Ext.Enums.DeactivateVisualSetSlotMask) do
+        ---@diagnostic disable: undefined-field
+        if slotEnum & enum.__Value ~= 0 then
+            equipSlot = Transmog.EQUIPMENT_MASK_TO_SLOT[enum.__Value]
+            break
+        end
+        ---@diagnostic enable: undefined-field
+    end
+
+    return equipSlot
+end
 
 ---@param item Item
 ---@return string?

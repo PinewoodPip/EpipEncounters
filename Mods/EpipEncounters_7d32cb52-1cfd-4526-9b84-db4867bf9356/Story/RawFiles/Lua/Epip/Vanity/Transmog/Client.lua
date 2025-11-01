@@ -135,6 +135,30 @@ function Transmog.RequestWeaponAnimationOverride(char, animType)
     })
 end
 
+
+---Registers a template to be usable with Vanity.
+---@param entry VanityTemplate
+function Transmog.RegisterTemplate(entry)
+    Vanity.TEMPLATES[entry.GUID] = entry
+
+    -- Create a category for each non-Shared mod
+    local modFolder = Ext.Template.GetRootTemplate(entry.GUID).ModFolder
+    if not Vanity.CATEGORIES[modFolder] and modFolder ~= "Shared" then -- Do not create a separate category for the Shared module.
+        local modData = Ext.Mod.GetMod(modFolder)
+        local modName = modData and modData.Info.Name or modFolder -- The GetMod() calls fails with the Shared module.
+        Vanity.CATEGORIES[modFolder] = {
+            Name = modName,
+            Mod = modFolder,
+            Tags = {[modFolder] = true},
+            ID = modFolder,
+            RequireAllTags = true, -- Doesn't matter.
+            Slots = {},
+        }
+
+        table.insert(Vanity.CATEGORY_ORDER, modFolder)
+    end
+end
+
 function Transmog.UpdateActiveCharacterTemplates()
     local char = Client.GetCharacter()
 
@@ -243,9 +267,10 @@ end
 
 ---Returns whether a template belongs to a category.
 ---@param templateData VanityTemplate
----@param category VanityCategory | string
+---@param category VanityCategory|string
+---@return boolean
 function Transmog.BelongsToCategory(templateData, category) -- TODO extract default logic onto a hook
-    if type(category) == "string" then
+    if type(category) == "string" then -- String overload.
         category = Vanity.CATEGORIES[category]
     end
 
@@ -690,3 +715,89 @@ Hotbar.RegisterActionHook("EpipVanity", "IsActionEnabled", function(enabled, _, 
     end
     return enabled
 end)
+
+---------------------------------------------
+-- EVENT LISTENERS
+---------------------------------------------
+
+-- Remove underscores and replace some common words to create
+-- somewhat readable and coherent names for the context menus.
+Transmog.Hooks.GetTemplateName:Subscribe(function(ev)
+    local data = ev.TemplateEntry
+    local name = data.Name
+
+    -- Miscellaneous prefix removals
+    for pattern,replacement in pairs(Vanity.ROOT_NAME_REPLACEMENTS) do
+        name = name:gsub(pattern, replacement)
+    end
+
+    -- Remove underscores
+    name = name:gsub("_", " ")
+
+    -- Remove trailing whitespaces
+    name = name:gsub("^ *", "") -- front
+    name = name:gsub(" *$", "") -- end
+
+    -- "Armor" prefix
+    name = name:gsub("^Armor ", "")
+
+    -- PascalCase handling!!! insane
+    name = name:gsub("(%l)(%u%a*)", "%1 %2")
+
+    -- Add a star at the end of items that do not hide any slots - 
+    -- these tend to not work unless used in a specific slot.
+    if data.Slot == "None" then
+        name = name .. "*"
+    end
+
+    ev.Name = name
+end, {StringID = "DefaultImplementation"})
+
+
+-- Auto-generate some tags from template name.
+Transmog.Hooks.GetTemplateTags:Subscribe(function(ev)
+    local tags = ev.Tags
+    local templateEntry = ev.TemplateEntry
+    local template = Ext.Template.GetTemplate(templateEntry.GUID) ---@cast template ItemTemplate
+
+    -- Only auto-tag templates from Shared
+    if templateEntry.Mod == "Shared" then
+        local tagCount = 0
+        for pattern,tag in pairs(Vanity.TEMPLATE_NAME_TAGS) do
+            if string.match(template.Name, pattern) then
+                tags[tag] = true
+                tagCount = tagCount + 1
+            end
+        end
+
+        -- Fallback tag for items with 0 tags
+        if tagCount == 0 and templateEntry.Mod == "Shared" then
+            Transmog:DebugLog("Template with no thematic tags generated: " .. template.Name .. " " .. template.Id)
+            tags = {Other = true}
+        end
+    end
+
+    -- Add race/gender tags for all mods
+    for i,visual in ipairs(templateEntry.Visuals) do
+        if visual ~= "" then
+            tags[Vanity.SLOT_TO_RACE_GENDER[i].Race] = true
+            tags[Vanity.SLOT_TO_RACE_GENDER[i].Gender] = true
+        end
+    end
+
+    if templateEntry.Mod then
+        tags[templateEntry.Mod] = true
+    end
+end, {StringID = "DefineImplementation"})
+
+-- Register templates when the session loads.
+Ext.Events.SessionLoaded:Subscribe(function()
+    local templates = Transmog.GetValidTemplates()
+    for _,entry in pairs(templates) do
+        Transmog.RegisterTemplate(entry)
+    end
+    -- Save report of registered templates for debugging.
+    if Transmog:IsDebug() then
+        IO.SaveFile("Features_Vanity_Transmog_Templates.json", templates)
+    end
+end, {StringID = "Features.Vanity.Transmog.RegisterTemplates"})
