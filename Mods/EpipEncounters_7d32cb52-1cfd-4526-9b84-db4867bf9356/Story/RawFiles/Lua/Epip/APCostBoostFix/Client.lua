@@ -1,6 +1,7 @@
 
 local Hotbar = Client.UI.Hotbar
 local Inventory = Client.UI.PartyInventory
+local ContainerInventory = Client.UI.ContainerInventory
 local ContextMenu = Client.UI.ContextMenu
 local Input = Client.Input
 
@@ -90,6 +91,12 @@ end)
 Inventory:RegisterCallListener("doubleClickItem", function(_, itemHandle)
     local item = Item.Get(itemHandle, true)
 
+    Fix.CheckItemUseAttempt(item)
+end)
+
+-- Handle using items from containers.
+ContainerInventory:RegisterCallListener("doubleClickItem", function (_, itemFlashHandle)
+    local item = Item.Get(itemFlashHandle, true)
     Fix.CheckItemUseAttempt(item)
 end)
 
