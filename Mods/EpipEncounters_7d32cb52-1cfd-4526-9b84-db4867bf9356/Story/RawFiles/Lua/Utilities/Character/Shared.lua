@@ -301,7 +301,11 @@ function Character.GetDisplayName(char)
         ---@cast char EclCharacter
         if char.PlayerCustomData then
             local translatedName = char.PlayerCustomData.NameTranslated.Handle.ReferenceString
-            name = translatedName ~= "" and translatedName or char.PlayerCustomData.OriginName -- Happens with Fane.
+            if translatedName ~= "" then
+                name = translatedName
+            elseif char.PlayerCustomData.OriginName ~= "" then -- Summons have an empty string.
+                name = char.PlayerCustomData.OriginName
+            end
         elseif char.StoryDisplayName and char.StoryDisplayName.Handle.ReferenceString ~= "" then -- Custom name override from CharacterSetCustomName().
             name = char.StoryDisplayName.Handle.ReferenceString -- Could also just use DisplayName in this case, as it becomes overwritten.
         else
