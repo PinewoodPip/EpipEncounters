@@ -243,17 +243,17 @@ function _PNG:ReadChunk()
         parser.ReadChunk(self, chunkSize)
     else
         local chunkData = self:GetChunkData(chunkType)
-
         if not chunkData then
-            Image:Error("ReadChunk", "Unrecognized chunk", chunkType, "at index", toHex(chunkTypeStartIndex - 1))
+            ---@diagnostic disable-next-line: invisible
+            Image:__LogWarning("ImageLib_Decoder_PNG.ReadChunk", "Unrecognized chunk", chunkType, "at index", toHex(chunkTypeStartIndex - 1))
         elseif not chunkData.Essential then
             Image:DebugLog("ReadChunk", "found ancillary chunk with no parsing implemented:", chunkData.Name)
-
-            -- Consume its bytes
-            self:ConsumeBytes(chunkSize)
         else
             Image:Error("ReadChunk", "Chunk parsing not implemented for non-optional chunk", chunkType)
         end
+
+        -- Consume its bytes
+        self:ConsumeBytes(chunkSize)
     end
 
     local _ = self:ConsumeBytes(4) -- Read CRC data (TODO not currently checked)
