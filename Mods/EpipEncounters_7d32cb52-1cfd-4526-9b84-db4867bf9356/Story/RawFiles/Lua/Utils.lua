@@ -42,59 +42,6 @@ function string.concat(strList, separator)
     return newStr
 end
 
-function ParseFlashArray(array, argList, offset)
-    local currentElement = nil
-    local paramsLeft = -1
-    local parsedOptions = {}
-    local hasMultipleElementTypes = #argList > 1
-    local hasNamedParams = argList[1].params ~= nil
-    local elementData = nil
-
-    offset = offset or 0
-
-    for i=offset,#array-1,1 do
-        local ignore = false
-        if (paramsLeft <= 0) then
-            -- Ext.Print("starting element parse")
-            -- Ext.Print("type " .. array[i])
-
-            elementData = nil
-            if hasMultipleElementTypes then
-                elementData = argList[array[i] + 1]
-            else
-                elementData = argList[1]
-            end
-
-            currentElement = {id = elementData.id, name = elementData.name, params = {}}
-            paramsLeft = elementData.paramsCount or #elementData.params
-
-            table.insert(parsedOptions, currentElement)
-
-            if hasMultipleElementTypes then
-                ignore = true -- skip parsing this index for arrays that are multi-element (this index will indicate element type)
-            end
-        end
-        if not ignore then
-            -- Ext.Print("adding element")
-            local param = array[i]
-
-            -- Ext.Dump(currentElement)
-
-            if hasNamedParams then
-                local paramIndex = (elementData.paramsCount or #elementData.params) - paramsLeft + 1
-                local paramName = elementData.params[paramIndex]
-                currentElement.params[paramName] = param
-            else
-                table.insert(currentElement.params, param)
-            end
-
-            paramsLeft = paramsLeft - 1
-        end
-    end
-
-    return parsedOptions
-end
-
 function string.insert(str1, str2, pos)
     return str1:sub(1,pos)..str2..str1:sub(pos+1)
 end

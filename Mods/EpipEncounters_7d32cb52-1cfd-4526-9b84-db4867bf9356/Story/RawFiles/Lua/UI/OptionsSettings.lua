@@ -701,19 +701,6 @@ local function onupdate(ui, method)
     -- 9: setMenuCheckbox
         -- Params: id:number, enabled:bool, state:bool
 
-    local content = ParseFlashArray(root.update_Array, {
-        {id = 0, name = "checkbox", paramsCount = 6},
-        {id = 1, name = "dropdown", paramsCount = 3},
-        {id = 2, name = "dropdownEntry", paramsCount = 2},
-        {id = 3, name = "selectDropdownEntry", paramsCount = 2},
-        {id = 4, name = "slider", paramsCount = 8},
-        {id = 5, name = "button", paramsCount = 5},
-        {id = 6, name = "sectionHeader", paramsCount = 1},
-        {id = 7, name = "tabHeader", paramsCount = 1},
-        {id = 8, name = "setDropdownEnabled", paramsCount = 2},
-        {id = 9, name = "setCheckbox", paramsCount = 3},
-    })
-
     -- if OptionsSettings.IS_DEBUG then
     --     Ext.Dump(content)
     -- end

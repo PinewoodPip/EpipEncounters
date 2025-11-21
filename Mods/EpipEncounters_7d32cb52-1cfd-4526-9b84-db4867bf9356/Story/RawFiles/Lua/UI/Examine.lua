@@ -3,6 +3,8 @@
 -- Hooks for the Examine UI.
 ---------------------------------------------
 
+local Flash = Client.Flash
+local ParseFlashArray, EncodeFlashArray = Flash.ParseArray, Flash.EncodeArray
 local V = Vector.Create
 
 ---@class ExamineUI : UI
@@ -301,7 +303,7 @@ function Examine._ParseEntries()
     local statsArray = root.addStats_array
 
     ---@type ExamineUI_UpdateData_Entry[]
-    local array = Client.Flash.ParseArray(statsArray, Examine._FLASH_STATS_ARRAY_TEMPLATE)
+    local array = ParseFlashArray(statsArray, Examine._FLASH_STATS_ARRAY_TEMPLATE)
 
     local updateData = _ExamineData:Create()
     for _,entry in ipairs(array) do
@@ -324,7 +326,7 @@ function Examine._EncodeEntries(data)
     local statsArray = root.addStats_array
     local newArray = data:Encode()
 
-    Client.Flash.EncodeArray(statsArray, Examine._FLASH_STATS_ARRAY_TEMPLATE, newArray)
+    EncodeFlashArray(statsArray, Examine._FLASH_STATS_ARRAY_TEMPLATE, newArray)
 end
 
 ---------------------------------------------

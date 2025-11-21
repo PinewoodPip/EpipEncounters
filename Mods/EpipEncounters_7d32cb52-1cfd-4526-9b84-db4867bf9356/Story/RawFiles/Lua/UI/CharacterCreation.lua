@@ -3,6 +3,8 @@
 -- The characterCreation UI is used during charater creation as well as respeccing, and only exists during those 2 contexts.
 ---------------------------------------------
 
+local ParseFlashArray = Client.Flash.ParseArray
+
 ---@class CharacterCreationUI : UI
 local CharacterCreation = {
     -- If your mod adds more presets, you should add them here,
@@ -190,8 +192,8 @@ CharacterCreation:RegisterInvokeListener("updateTalents", function (ev)
     local talentsHook = CharacterCreation.Hooks.UpdateTalents:Throw({
         Character = Client.GetCharacter(),
         TalentPoints = points,
-        Talents = Client.Flash.ParseArray(talentsArray, CharacterCreation.ARRAY_ENTRY_TEMPLATES.TALENT_NORMAL, false, nil, 1),
-        RacialTalents = Client.Flash.ParseArray(racialTalentsArray, CharacterCreation.ARRAY_ENTRY_TEMPLATES.TALENT_RACIAL),
+        Talents = ParseFlashArray(talentsArray, CharacterCreation.ARRAY_ENTRY_TEMPLATES.TALENT_NORMAL, false, nil, 1),
+        RacialTalents = ParseFlashArray(racialTalentsArray, CharacterCreation.ARRAY_ENTRY_TEMPLATES.TALENT_RACIAL),
     })
 
     Client.Flash.EncodeArray(talentsArray, CharacterCreation.ARRAY_ENTRY_TEMPLATES.TALENT_NORMAL, talentsHook.Talents, false, nil, 1)
@@ -207,7 +209,7 @@ CharacterCreation:RegisterInvokeListener("updateAbilities", function (ev)
 
     local hook = CharacterCreation.Hooks.UpdateAbilities:Throw({
         Character = Client.GetCharacter(),
-        Abilities = Client.Flash.ParseArray(array, CharacterCreation.ARRAY_ENTRY_TEMPLATES.ABILITY)
+        Abilities = ParseFlashArray(array, CharacterCreation.ARRAY_ENTRY_TEMPLATES.ABILITY)
     })
 
     Client.Flash.EncodeArray(array, CharacterCreation.ARRAY_ENTRY_TEMPLATES.ABILITY, hook.Abilities)

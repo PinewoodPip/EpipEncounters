@@ -4,6 +4,8 @@
 -- The SWF is edited to support a BH display.
 ---------------------------------------------
 
+local Flash = Client.Flash
+local ParseFlashArray, EncodeFlashArray = Flash.ParseArray, Flash.EncodeArray
 local UIOverrideToggles = Epip.GetFeature("Features.UIOverrideToggles")
 local BH = EpicEncounters.BatteredHarried
 
@@ -390,13 +392,13 @@ end)
 -- Hook the updateInfos array.
 PlayerInfo:RegisterInvokeListener("updateInfos", function (ev)
     local array = ev.UI:GetRoot().infoUpdate
-    local data = Client.Flash.ParseArray(array, PlayerInfo.UPDATE_INFOS_FLASH_ARRAY_TEMPLATE, true) ---@type UI.PlayerInfo.Entries.Base[]
+    local data = ParseFlashArray(array, PlayerInfo.UPDATE_INFOS_FLASH_ARRAY_TEMPLATE, true) ---@type UI.PlayerInfo.Entries.Base[]
 
     data = PlayerInfo.Hooks.UpdateInfos:Throw({
         Entries = data,
     }).Entries
 
-    Client.Flash.EncodeArray(array, PlayerInfo.UPDATE_INFOS_FLASH_ARRAY_TEMPLATE, data, true)
+    EncodeFlashArray(array, PlayerInfo.UPDATE_INFOS_FLASH_ARRAY_TEMPLATE, data, true)
 end, "Before")
 
 ---------------------------------------------

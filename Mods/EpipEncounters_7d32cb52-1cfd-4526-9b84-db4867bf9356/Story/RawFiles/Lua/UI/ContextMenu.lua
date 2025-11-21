@@ -15,6 +15,8 @@
 -- fix clicking to close
 -- recenter amount text upon change
 
+local ParseFlashArray = Client.Flash.ParseArray
+
 ---@class ContextMenuUI : UI
 ---@field _LatestHoveredCharacterHandle CharacterHandle
 ---@field _LatestHoveredItemHandle ItemHandle
@@ -883,7 +885,7 @@ end
 -- Parses updateButtons() from vanilla context menu to keep track of vanilla context menu elements.
 ContextMenu:RegisterInvokeListener("updateButtons", function(ev)
     local root = ev.UI:GetRoot()
-    local data = Client.Flash.ParseArray(root.buttonArr, ContextMenu.ARRAY_ENTRY_TEMPLATES.BUTTON) ---@type ContextMenuUI_ArrayEntry_Button[]
+    local data = ParseFlashArray(root.buttonArr, ContextMenu.ARRAY_ENTRY_TEMPLATES.BUTTON) ---@type ContextMenuUI_ArrayEntry_Button[]
 
     ContextMenu.vanillaContextData = data
 end, "Vanilla")

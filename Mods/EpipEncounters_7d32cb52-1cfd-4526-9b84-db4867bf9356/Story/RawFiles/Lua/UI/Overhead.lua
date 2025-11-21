@@ -4,6 +4,9 @@
 -- Epip uses this to fix overhead damage text for restoring armor on undead characters, which does not work in the base game.
 ---------------------------------------------
 
+local Flash = Client.Flash
+local ParseFlashArray, EncodeFlashArray = Flash.ParseArray, Flash.EncodeArray
+
 ---@class OverheadUI : UI
 local Overhead = {
     UI = nil,
@@ -189,20 +192,20 @@ end
 Overhead:RegisterInvokeListener("updateOHs", function (ev)
     local root = ev.UI:GetRoot()
     local array = root.addOH_array
-    local contents = Client.Flash.ParseArray(array, Overhead.FLASH_ADDOH_ARRAY_TEMPLATE, false) ---@type UI.Overhead.OverheadRequest[]
+    local contents = ParseFlashArray(array, Overhead.FLASH_ADDOH_ARRAY_TEMPLATE, false) ---@type UI.Overhead.OverheadRequest[]
 
     contents = Overhead.Hooks.RequestOverheads:Throw({
         Overheads = contents,
     }).Overheads
 
-    Client.Flash.EncodeArray(array, Overhead.FLASH_ADDOH_ARRAY_TEMPLATE, contents)
+    EncodeFlashArray(array, Overhead.FLASH_ADDOH_ARRAY_TEMPLATE, contents)
 
     local selectionArray = root.selectionInfo_array
-    local selections = Client.Flash.ParseArray(selectionArray, Overhead.FLASH_ENTRY_TEMPLATES.SELECTION_INFO)
+    local selections = ParseFlashArray(selectionArray, Overhead.FLASH_ENTRY_TEMPLATES.SELECTION_INFO)
     selections = Overhead.Hooks.UpdateSelections:Throw({
         Selections = selections,
     }).Selections
-    Client.Flash.EncodeArray(selectionArray, Overhead.FLASH_ENTRY_TEMPLATES.SELECTION_INFO, selections)
+    EncodeFlashArray(selectionArray, Overhead.FLASH_ENTRY_TEMPLATES.SELECTION_INFO, selections)
 end, "Before")
 
 Settings.Events.SettingValueChanged:Subscribe(function (ev)

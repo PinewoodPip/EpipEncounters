@@ -1,5 +1,10 @@
 
+---------------------------------------------
+-- APIs for the partyInventory.swf UI.
+---------------------------------------------
+
 local Flash = Client.Flash
+local ParseFlashArray, EncodeFlashArray = Flash.ParseArray, Flash.EncodeArray
 
 ---@class PartyInventoryUI : UI
 local Inv = {
@@ -128,9 +133,9 @@ Inv:RegisterInvokeListener("updateItems", function(_)
     local goldAndWeightArray = root.goldWeightList
 
     ---@type PartyInventoryItemUpdate[]
-    local items = Client.Flash.ParseArray(itemArray, Inv.FLASH_ARRAY_TEMPLATES.UPDATE_ITEMS)
+    local items = ParseFlashArray(itemArray, Inv.FLASH_ARRAY_TEMPLATES.UPDATE_ITEMS)
     ---@type PartyInventoryUI_GoldWeightUpdate[]
-    local godlAndWeight = Client.Flash.ParseArray(goldAndWeightArray, Inv.FLASH_ARRAY_TEMPLATES.GOLD_AND_WEIGHT)
+    local godlAndWeight = ParseFlashArray(goldAndWeightArray, Inv.FLASH_ARRAY_TEMPLATES.GOLD_AND_WEIGHT)
 
     ---@type PartyInventoryUI_Hooks_GetUpdate
     local ev = {
@@ -141,19 +146,19 @@ Inv:RegisterInvokeListener("updateItems", function(_)
     -- TODO prevent action
     Inv.Hooks.GetUpdate:Throw(ev)
 
-    Flash.EncodeArray(itemArray, Inv.FLASH_ARRAY_TEMPLATES.UPDATE_ITEMS, ev.Items)
-    Flash.EncodeArray(goldAndWeightArray, Inv.FLASH_ARRAY_TEMPLATES.GOLD_AND_WEIGHT, ev.GoldAndCarryWeight)
+    EncodeFlashArray(itemArray, Inv.FLASH_ARRAY_TEMPLATES.UPDATE_ITEMS, ev.Items)
+    EncodeFlashArray(goldAndWeightArray, Inv.FLASH_ARRAY_TEMPLATES.GOLD_AND_WEIGHT, ev.GoldAndCarryWeight)
 end)
 
 -- Listen for inventory definitions being updated to hook them.
 Inv:RegisterInvokeListener("updateInventories", function (_)
     local root = Inv:GetRoot()
     local updateArray = root.inventoryUpdateList
-    local entries = Flash.ParseArray(updateArray, Inv.FLASH_ARRAY_TEMPLATES.UPDATE_INVENTORIES) ---@type UI.PartyInventory.FlashEntries.InventoryUpdate[]
+    local entries = ParseFlashArray(updateArray, Inv.FLASH_ARRAY_TEMPLATES.UPDATE_INVENTORIES) ---@type UI.PartyInventory.FlashEntries.InventoryUpdate[]
 
     entries = Inv.Hooks.GetInventoryUpdate:Throw({
         Entries = entries,
     }).Entries
 
-    Flash.EncodeArray(updateArray, Inv.FLASH_ARRAY_TEMPLATES.UPDATE_INVENTORIES, entries)
+    EncodeFlashArray(updateArray, Inv.FLASH_ARRAY_TEMPLATES.UPDATE_INVENTORIES, entries)
 end)

@@ -3,6 +3,8 @@
 -- Hooks for characterSheet.swf.
 ---------------------------------------------
 
+local Flash = Client.Flash
+local ParseFlashArray, EncodeFlashArray = Flash.ParseArray, Flash.EncodeArray
 local UIOverrideToggles = Epip.GetFeature("Features.UIOverrideToggles")
 
 ---@class CharacterSheetUI : UI
@@ -227,13 +229,13 @@ function CharacterSheet._DecodeSecondaryStats(ui)
     local root = ui:GetRoot()
     local arr = root.secStat_array
 
-    return Client.Flash.ParseArray(arr, CharacterSheet.ARRAY_ENTRY_TEMPLATES.SECONDARY_STAT, true, 7)
+    return ParseFlashArray(arr, CharacterSheet.ARRAY_ENTRY_TEMPLATES.SECONDARY_STAT, true, 7)
 end
 
 ---@param ui UIObject
 ---@param stats SecondaryStatBase[]
 function CharacterSheet._EncodeSecondaryStats(ui, stats)
-    Client.Flash.EncodeArray(ui:GetRoot().secStat_array, CharacterSheet.ARRAY_ENTRY_TEMPLATES.SECONDARY_STAT, stats, true, 7)
+    EncodeFlashArray(ui:GetRoot().secStat_array, CharacterSheet.ARRAY_ENTRY_TEMPLATES.SECONDARY_STAT, stats, true, 7)
 end
 
 ---------------------------------------------
@@ -260,7 +262,7 @@ CharacterSheet:RegisterInvokeListener("updateArraySystem", function (ev)
 
     -- Primary stats
     local primaryStatsArray = root.primStat_array
-    local primaryStats = Client.Flash.ParseArray(primaryStatsArray, CharacterSheet.ARRAY_ENTRY_TEMPLATES.PRIMARY_STAT)
+    local primaryStats = ParseFlashArray(primaryStatsArray, CharacterSheet.ARRAY_ENTRY_TEMPLATES.PRIMARY_STAT)
 
     -- Only fire this hook if the engine is re-rendeing stats. It is possible for this array to be empty and the primary stats is cleared by engine and does not support replacing info on existing entries, thus firing this when there is no update can lead to unexpected behaviour if a script is adding a new stat through the hook.
     if primaryStats[1] then
@@ -268,7 +270,7 @@ CharacterSheet:RegisterInvokeListener("updateArraySystem", function (ev)
             Character = char,
             Stats = primaryStats,
         })
-        Client.Flash.EncodeArray(primaryStatsArray, CharacterSheet.ARRAY_ENTRY_TEMPLATES.PRIMARY_STAT, primaryStatsHook.Stats)
+        EncodeFlashArray(primaryStatsArray, CharacterSheet.ARRAY_ENTRY_TEMPLATES.PRIMARY_STAT, primaryStatsHook.Stats)
     end
 
     local secondaryStats = CharacterSheet._DecodeSecondaryStats(ev.UI)
@@ -282,24 +284,24 @@ CharacterSheet:RegisterInvokeListener("updateArraySystem", function (ev)
 
     -- Ability stats
     local abilityStatsArray = root.ability_array
-    local abilityStats = Client.Flash.ParseArray(abilityStatsArray, CharacterSheet.ARRAY_ENTRY_TEMPLATES.ABILITY_STAT)
+    local abilityStats = ParseFlashArray(abilityStatsArray, CharacterSheet.ARRAY_ENTRY_TEMPLATES.ABILITY_STAT)
     if abilityStats[1] then -- Fired only when changes occur, same reasoning as with primary stats.
         local abilityStatsHook = CharacterSheet.Hooks.UpdateAbilityStats:Throw({
             Character = char,
             Stats = abilityStats,
         })
-        Client.Flash.EncodeArray(abilityStatsArray, CharacterSheet.ARRAY_ENTRY_TEMPLATES.ABILITY_STAT, abilityStatsHook.Stats)
+        EncodeFlashArray(abilityStatsArray, CharacterSheet.ARRAY_ENTRY_TEMPLATES.ABILITY_STAT, abilityStatsHook.Stats)
     end
 
     -- Talents
     local talentsArray = root.talent_array
-    local talents = Client.Flash.ParseArray(talentsArray, CharacterSheet.ARRAY_ENTRY_TEMPLATES.TALENT)
+    local talents = ParseFlashArray(talentsArray, CharacterSheet.ARRAY_ENTRY_TEMPLATES.TALENT)
     if talents[1] then -- Fired only when changes occur, same reasoning as with primary stats.
         local talentsHook = CharacterSheet.Hooks.UpdateTalents:Throw({
             Character = char,
             Stats = talents,
         })
-        Client.Flash.EncodeArray(talentsArray, CharacterSheet.ARRAY_ENTRY_TEMPLATES.TALENT, talentsHook.Stats)
+        EncodeFlashArray(talentsArray, CharacterSheet.ARRAY_ENTRY_TEMPLATES.TALENT, talentsHook.Stats)
     end
 end, "Before")
 

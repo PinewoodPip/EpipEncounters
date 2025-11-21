@@ -63,7 +63,7 @@ function Flash.ParseArray(arr, entryTemplate, multipleElementTypes, forcedElemen
         local elementTypeName
         local template = entryTemplate
         local entry = {}
-        local startingIndex = 0
+        local entryStartingIndex = 0 -- Offset for when the entry data starts; used to discard the type discriminator.
         local entryFlashID
 
         if multipleElementTypes then
@@ -71,14 +71,14 @@ function Flash.ParseArray(arr, entryTemplate, multipleElementTypes, forcedElemen
 
             elementTypeName = entryTemplate[typeValue].Name
             template = entryTemplate[typeValue].Template
-            startingIndex = 1
+            entryStartingIndex = 1
             paramCount = #template
 
             entryFlashID = typeValue
         end
 
         for z=1,paramCount,1 do
-            local value = arr[i + z - 1 + startingIndex]
+            local value = arr[i + z - 1 + entryStartingIndex]
 
             local param = template[z]
             local paramName
@@ -99,7 +99,7 @@ function Flash.ParseArray(arr, entryTemplate, multipleElementTypes, forcedElemen
             entry.EntryTypeFlashID = entryFlashID
         end
 
-        i = i + (forcedElementCount or (#template + startingIndex))
+        i = i + (forcedElementCount or (#template + entryStartingIndex))
 
         table.insert(entries, entry)
     end
@@ -190,19 +190,16 @@ end
 ---@param array FlashArray Must be of objects.
 ---@param field string
 ---@param value any
----@return FlashObject
+---@return FlashObject?
 function Flash.GetElementByField(array, field, value)
     local element = nil
-
     for i=0,#array-1,1 do
         local el = array[i]
-
         if el[field] == value then
             element = el
             break
         end
     end
-
     return element
 end
 

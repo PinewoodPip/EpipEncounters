@@ -1,4 +1,10 @@
 
+---------------------------------------------
+-- Extensions and APIs for the hotBar.swf UI.
+---------------------------------------------
+
+local Flash = Client.Flash
+local ParseFlashArray, EncodeFlashArray = Flash.ParseArray, Flash.EncodeArray
 local Input = Client.Input
 
 ---@class HotbarUI : UI
@@ -974,10 +980,10 @@ end)
 Hotbar:RegisterInvokeListener("updateActionSkills", function (ev)
     local array = ev.UI:GetRoot().actionSkillArray
     local hook = Hotbar.Hooks.UpdateEngineActions:Throw({
-        Actions = Client.Flash.ParseArray(array, Hotbar.ARRAY_ENTRY_TEMPLATES.ACTIONS)
+        Actions = ParseFlashArray(array, Hotbar.ARRAY_ENTRY_TEMPLATES.ACTIONS)
     })
 
-    Client.Flash.EncodeArray(array, Hotbar.ARRAY_ENTRY_TEMPLATES.ACTIONS, hook.Actions)
+    EncodeFlashArray(array, Hotbar.ARRAY_ENTRY_TEMPLATES.ACTIONS, hook.Actions)
 
     Hotbar.engineActionsCount = #hook.Actions
 

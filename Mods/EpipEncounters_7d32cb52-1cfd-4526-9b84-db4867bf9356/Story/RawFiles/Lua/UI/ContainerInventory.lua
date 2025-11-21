@@ -1,5 +1,10 @@
 
+---------------------------------------------
+-- APIs for the containerInventory.swf UI.
+---------------------------------------------
+
 local Flash = Client.Flash
+local ParseFlashArray, EncodeFlashArray = Flash.ParseArray, Flash.EncodeArray
 
 ---@class UI.ContainerInventory : UI
 local Inventory = {
@@ -141,13 +146,13 @@ end
 Inventory:RegisterInvokeListener("updateItems", function (ev, _)
     local root = ev.UI:GetRoot()
     local array = root.itemsUpdateList
-    local entries = Flash.ParseArray(array, Inventory.FLASH_ENTRY_TEMPLATES.UPDATE_ITEMS)
+    local entries = ParseFlashArray(array, Inventory.FLASH_ENTRY_TEMPLATES.UPDATE_ITEMS)
 
     entries = Inventory.Hooks.UpdateItems:Throw({
         Entries = entries,
     }).Entries
 
-    Flash.EncodeArray(array, Inventory.FLASH_ENTRY_TEMPLATES.UPDATE_ITEMS, entries)
+    EncodeFlashArray(array, Inventory.FLASH_ENTRY_TEMPLATES.UPDATE_ITEMS, entries)
 end)
 
 -- Forward and intercept drag events.

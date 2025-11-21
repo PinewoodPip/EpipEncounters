@@ -1,4 +1,11 @@
 
+---------------------------------------------
+-- APIs for the saveLoad.swf UI.
+---------------------------------------------
+
+local Flash = Client.Flash
+local ParseFlashArray, EncodeFlashArray = Flash.ParseArray, Flash.EncodeArray
+
 ---@class SaveLoadUI : UI
 local SaveLoad = {
     _PreviousSaves = {}, ---@type UI.SaveLoad.Entries.Save[]
@@ -117,8 +124,8 @@ function SaveLoad.RenderContent(saves, cloudIcons, isFromEngine)
         CloudIcons = cloudIcons,
     })
 
-    Client.Flash.EncodeArray(root.entry_array, SaveLoad.FLASH_ENTRY_TEMPLATES.SAVE, saves)
-    Client.Flash.EncodeArray(root.cloudIcon_array, SaveLoad.FLASH_ENTRY_TEMPLATES.CLOUD_ICON, cloudIcons)
+    EncodeFlashArray(root.entry_array, SaveLoad.FLASH_ENTRY_TEMPLATES.SAVE, saves)
+    EncodeFlashArray(root.cloudIcon_array, SaveLoad.FLASH_ENTRY_TEMPLATES.CLOUD_ICON, cloudIcons)
 
     if not isFromEngine then
         root.removeItems()
@@ -144,11 +151,11 @@ SaveLoad:RegisterInvokeListener("updateArraySystem", function(ev)
     local root = ev.UI:GetRoot()
 
     ---@type UI.SaveLoad.Entries.Save[]
-    local entries = Client.Flash.ParseArray(root.entry_array, SaveLoad.FLASH_ENTRY_TEMPLATES.SAVE)
+    local entries = ParseFlashArray(root.entry_array, SaveLoad.FLASH_ENTRY_TEMPLATES.SAVE)
     SaveLoad._PreviousSaves = entries
 
     ---@type UI.SaveLoad.Entries.CloudIcon[]
-    local cloudIcons = Client.Flash.ParseArray(root.cloudIcon_array, SaveLoad.FLASH_ENTRY_TEMPLATES.CLOUD_ICON)
+    local cloudIcons = ParseFlashArray(root.cloudIcon_array, SaveLoad.FLASH_ENTRY_TEMPLATES.CLOUD_ICON)
     SaveLoad._PreviousCloudIcons = cloudIcons
 
     SaveLoad.RenderContent(entries, cloudIcons, true)

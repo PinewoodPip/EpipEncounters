@@ -1,4 +1,10 @@
 
+---------------------------------------------
+-- APIs for the uiCraft.swf UI.
+---------------------------------------------
+
+local Flash = Client.Flash
+local ParseFlashArray = Flash.ParseArray
 local Set = DataStructures.Get("DataStructures_Set")
 
 ---@class CraftUI : UI
@@ -132,9 +138,8 @@ end
 
 Craft:RegisterInvokeListener("updateArraySystem", function(_)
     local arr = Craft:GetRoot().recipe_array
-    
     ---@type CraftUI_RecipeUpdate[]
-    local recipes = Client.Flash.ParseArray(arr, {
+    local recipes = ParseFlashArray(arr, {
         "GroupID",
         "RecipeID",
         "Name",
@@ -142,7 +147,6 @@ Craft:RegisterInvokeListener("updateArraySystem", function(_)
         "Value",
         "IsNew",
     })
-
     Craft.Events.RecipesUpdated:Throw({
         Recipes = recipes,
     })

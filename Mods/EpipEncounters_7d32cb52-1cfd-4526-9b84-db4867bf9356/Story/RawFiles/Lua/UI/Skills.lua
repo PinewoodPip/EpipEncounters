@@ -1,4 +1,11 @@
 
+---------------------------------------------
+-- APIs for the skills.swf UI.
+---------------------------------------------
+
+local Flash = Client.Flash
+local ParseFlashArray, EncodeFlashArray = Flash.ParseArray, Flash.EncodeArray
+
 ---@class SkillsUI : UI
 local Skills = {
     FLASH_ENTRY_TEMPLATES = {
@@ -87,11 +94,11 @@ Skills:RegisterInvokeListener("updateSkills", function (ev, _) -- Boolean param 
     local root = ev.UI:GetRoot()
     local array = root.skillsUpdateList
     local TEMPLATE = Skills.FLASH_ENTRY_TEMPLATES.SKILL
-    local entries = Client.Flash.ParseArray(array, TEMPLATE)
+    local entries = ParseFlashArray(array, TEMPLATE)
 
     entries = Skills.Hooks.UpdateSkills:Throw({
         Entries = entries,
     }).Entries
 
-    Client.Flash.EncodeArray(array, TEMPLATE, entries)
+    EncodeFlashArray(array, TEMPLATE, entries)
 end)

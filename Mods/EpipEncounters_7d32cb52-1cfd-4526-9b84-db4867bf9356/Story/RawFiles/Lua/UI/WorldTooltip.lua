@@ -1,4 +1,11 @@
 
+---------------------------------------------
+-- APIs for the worldTooltip.swf UI.
+---------------------------------------------
+
+local Flash = Client.Flash
+local ParseFlashArray, EncodeFlashArray = Flash.ParseArray, Flash.EncodeArray
+
 ---@class WorldTooltipUI : UI
 local WorldTooltip = {
     _IgnoreNextClick = false,
@@ -57,14 +64,14 @@ WorldTooltip:RegisterInvokeListener("updateTooltips", function (ev)
         "SortHelper",
         "IsItem",
     }
-    local parsed = Client.Flash.ParseArray(arr, arrayEntryTemplate)
+    local parsed = ParseFlashArray(arr, arrayEntryTemplate)
 
     ---@type WorldTooltipUI_Hook_UpdateContent
     local update = WorldTooltip.Hooks.UpdateContent:Throw({
         Entries = parsed,
     })
 
-    Client.Flash.EncodeArray(arr, arrayEntryTemplate, update.Entries)
+    EncodeFlashArray(arr, arrayEntryTemplate, update.Entries)
 end)
 
 -- Listen for entries being clicked.
