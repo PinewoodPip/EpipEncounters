@@ -112,14 +112,6 @@ local CharacterSheet = {
         "ha62e1eccgc1c2g4452g8d78g65ea010f3d85",
     },
 
-    TranslatedStrings = {
-        Label_KeywordsTab = {
-            Handle = "h1a027d33g636fg4a2dga363gfc9f755c6c93",
-            Text = "Keywords & Misc.",
-            ContextDescription = [[Tooltip for tab with keywords & character stats.]],
-        },
-    },
-
     Events = {
         HelmetToggled = {}, ---@type Event<CharacterSheetUI_Event_HelmetToggled>
         TabChanged = {}, ---@type Event<CharacterSheetUI_Event_TabChanged>
@@ -304,13 +296,3 @@ CharacterSheet:RegisterInvokeListener("updateArraySystem", function (ev)
         EncodeFlashArray(talentsArray, CharacterSheet.ARRAY_ENTRY_TEMPLATES.TALENT, talentsHook.Stats)
     end
 end, "Before")
-
--- Update stats tab translated string to use the Epip localized string.
-GameState.Events.ClientReady:Subscribe(function()
-    local label = CharacterSheet.TranslatedStrings.Label_KeywordsTab:GetString()
-    for _,handle in ipairs(CharacterSheet.CUSTOM_STATS_TAB_TSKHANDLES) do
-        Text.SetTranslatedString(handle, label)
-    end
-end, {EnabledFunctor = function ()
-    return UIOverrideToggles.Settings.EnableCharacterSheetOverride:GetValue() == true and not GameState.IsInGameMasterMode() -- Do not change the label in GM mode, as this tab is used for its original custom stats purpose there instead.
-end})

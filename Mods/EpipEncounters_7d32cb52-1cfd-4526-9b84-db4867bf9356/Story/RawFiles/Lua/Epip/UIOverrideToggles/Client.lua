@@ -34,6 +34,13 @@ local Toggles = {
             Text = [[Enables Epip's changes to the player portraits UI. If disabled, the following features will not be available:<br>- Wrapping status bar<br>- Battered/Harried indicators<br>- Adjusting status bar opacity<br>- Player context menus<br>The "Alternative Status Display" setting is unaffected.]],
             ContextDescription = [[Setting tooltip for "Player Portraits Overrides"]],
         },
+
+        -- Override for the "Custom stats" tab header.
+        Label_KeywordsTab = {
+            Handle = "h1a027d33g636fg4a2dga363gfc9f755c6c93",
+            Text = "Keywords & Misc.",
+            ContextDescription = [[Tooltip for tab with keywords & character stats.]],
+        },
     },
 }
 Epip.RegisterFeature("Features.UIOverrideToggles", Toggles)
@@ -57,3 +64,18 @@ Toggles.Settings.EnablePlayerInfoOverride = Toggles:RegisterSetting("EnablePlaye
     DefaultValue = true,
     RequiresReload = true,
 })
+
+---------------------------------------------
+-- EVENT LISTENERS
+---------------------------------------------
+
+-- Update stats tab translated string to use the Epip localized string.
+GameState.Events.ClientReady:Subscribe(function()
+    local CharacterSheet = Client.UI.CharacterSheet -- Cannot be upvalued, as this feature needs to load before the UI table.
+    local label = Toggles.TranslatedStrings.Label_KeywordsTab:GetString()
+    for _,handle in ipairs(CharacterSheet.CUSTOM_STATS_TAB_TSKHANDLES) do
+        Text.SetTranslatedString(handle, label)
+    end
+end, {EnabledFunctor = function ()
+    return Toggles.Settings.EnableCharacterSheetOverride:GetValue() == true and not GameState.IsInGameMasterMode() -- Do not change the label in GM mode, as this tab is used for its original custom stats purpose there instead.
+end})
