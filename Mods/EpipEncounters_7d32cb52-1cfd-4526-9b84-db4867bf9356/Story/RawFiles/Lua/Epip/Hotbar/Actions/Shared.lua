@@ -126,13 +126,13 @@ end
 local actions = {
     {
         ID = "EPIP_UserRest",
-        Name = Actions.TranslatedStrings.HotbarAction_UserRest:GetString(),
+        NameHandle = Actions.TranslatedStrings.HotbarAction_UserRest.Handle,
         Icon = "hotbar_icon_laureate",
         DefaultIndex = 9,
     },
     {
         ID = "EE_Meditate",
-        Name = CommonStrings.Meditate:GetString(),
+        NameHandle = CommonStrings.Meditate.Handle,
         Icon = "hotbar_icon_nongachatransmute",
         DefaultIndex = 11,
         RequiresEE = true,
@@ -140,7 +140,7 @@ local actions = {
     },
     {
         ID = "EE_SourceInfuse",
-        Name = CommonStrings.SourceInfuse:GetString(),
+        NameHandle = CommonStrings.SourceInfuse.Handle,
         Icon = "hotbar_icon_sp",
         DefaultIndex = 12,
         RequiresEE = true,
@@ -148,7 +148,7 @@ local actions = {
     },
     {
         ID = "EPIP_UsePyramid",
-        Name = Actions.TranslatedStrings.HotbarAction_UsePyramid_Name:GetString(),
+        NameHandle = Actions.TranslatedStrings.HotbarAction_UsePyramid_Name.Handle,
         Icon = "hotbar_icon_bag",
         Cooldown = 1,
     },

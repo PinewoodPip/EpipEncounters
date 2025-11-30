@@ -679,7 +679,10 @@ end
 -- HOTBAR ACTION
 ---------------------------------------------
 
-Hotbar.RegisterAction("EpipVanity", {Name = "Vanity", Icon = Hotbar.ACTION_ICONS.HAT})
+Hotbar.RegisterAction("EpipVanity", {
+    NameHandle = VanityFeature.TranslatedStrings.FeatureName.Handle,
+    Icon = Hotbar.ACTION_ICONS.HAT,
+})
 Hotbar.RegisterActionListener("EpipVanity", "ActionUsed", function(_)
     Vanity.SetSlot("Breast")
     Vanity.Setup(Transmog.Tab)

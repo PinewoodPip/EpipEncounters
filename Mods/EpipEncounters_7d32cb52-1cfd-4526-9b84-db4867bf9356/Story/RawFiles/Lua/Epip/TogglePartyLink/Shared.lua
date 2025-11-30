@@ -17,7 +17,7 @@ Epip.RegisterFeature("Features.PartyLinking", PartyLinking)
 -- Register Hotbar action
 HotbarActions.RegisterAction({
     ID = PartyLinking.HOTBAR_ACTION_ID,
-    Name = PartyLinking.TranslatedStrings.HotbarAction_TogglePartyLink:GetString(),
+    NameHandle = PartyLinking.TranslatedStrings.HotbarAction_TogglePartyLink.Handle,
     Icon = "hotbar_icon_infinity",
     DefaultIndex = 10,
     Cooldown = 1,
