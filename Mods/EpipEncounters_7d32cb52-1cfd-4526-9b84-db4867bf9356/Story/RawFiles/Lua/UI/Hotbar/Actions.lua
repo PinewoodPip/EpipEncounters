@@ -7,6 +7,7 @@ local Hotbar = Client.UI.Hotbar
 ---@class HotbarAction
 ---@field ID string Set automatically by RegisterAction()
 ---@field Name string
+---@field NameHandle TranslatedStringHandle
 ---@field Icon string
 ---@field Type? string Intended for use in events, to render groups of actions in a certain way.
 ---@field InputEventID? integer The vanilla input event for this action. If set, the keybind for it will be shown, rather than the keybind for the action button.
@@ -220,15 +221,13 @@ end
 ---Returns the name for an action.
 ---@param id string Action ID.
 ---@vararg any Additional params passed to hooks.
----@return string Defaults to "Unknown"
+---@return string -- Defaults to "Unknown"
 function Hotbar.GetActionName(id, ...)
     local data = Hotbar.Actions[id]
+    if not data then return "Unknown" end
 
-    if data then
-        return Hotbar.GetActionProperty(id, "GetActionName", data.Name, ...)
-    else
-        return "Unknown"
-    end
+    local name = data.NameHandle and Text.GetTranslatedString(data.NameHandle) or data.Name -- Default to translated name
+    return Hotbar.GetActionProperty(id, "GetActionName", name, ...)
 end
 
 ---Returns the icon for an action.

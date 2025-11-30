@@ -73,6 +73,17 @@ local Hotbar = {
         IsActionHighlighted = false,
     },
 
+    -- Handles for names of vanilla actions.
+    -- These appear to be shared with the corresponding game input events.
+    DEFAULT_ACTION_TSKHANDLES = {
+        PAUSE = "h61289eb4g1c5dg4d1bga085gf1cf8bed9ff3", -- "Pause",
+        INVENTORY = "h5018809fg425fg4cf8ga7f7g1b31be233df7", -- "Toggle Inventory",
+        CRAFT = "h403be020gd1ceg456eg96d2gb392f2ff44b6", -- "Toggle Craft"
+        MAP = "h7b064d66g5d48g4f9dg93c7g020e32c40def", -- "Toggle Map",
+        JOURNAL = "h22b2ff01g3c19g4fd2ga548gc764d184f739", -- "Toggle Journal",
+        SKILLS = "hb02f3bcag8294g48faga185gb80dc875e739", -- "Toggle Skills",
+    },
+
     ACTION_ICONS = {
         ANNOUNCEMENT = "hotbar_icon_announcement",
         ACTION_POINT = "hotbar_icon_ap",

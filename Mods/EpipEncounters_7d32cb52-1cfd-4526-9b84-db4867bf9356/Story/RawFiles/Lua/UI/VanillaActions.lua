@@ -3,12 +3,14 @@
 ---------------------------------------------
 
 local Hotbar = Client.UI.Hotbar
+local VanillaActionTSKHandles = Hotbar.DEFAULT_ACTION_TSKHANDLES
 
 ---@type table<string, HotbarAction>
 local vanillaActions = {
     {
         ID = "Pause",
         Name = "Pause",
+        NameHandle = VanillaActionTSKHandles.PAUSE,
         Type = "VanillaHotbarButton",
         Icon = "hotbar_icon_pause",
         InputEventID = 241,
@@ -17,6 +19,7 @@ local vanillaActions = {
     {
         ID = "Inventory",
         Name = "Inventory",
+        NameHandle = VanillaActionTSKHandles.INVENTORY,
         Type = "VanillaHotbarButton",
         Icon = "hotbar_icon_inventory",
         InputEventID = 246,
@@ -25,6 +28,7 @@ local vanillaActions = {
     {
         ID = "Skills",
         Name = "Skills",
+        NameHandle = VanillaActionTSKHandles.SKILLS,
         Type = "VanillaHotbarButton",
         Icon = "hotbar_icon_skills",
         InputEventID = 251,
@@ -33,6 +37,7 @@ local vanillaActions = {
     {
         ID = "Crafting",
         Name = "Crafting",
+        NameHandle = VanillaActionTSKHandles.CRAFT,
         Type = "VanillaHotbarButton",
         Icon = "hotbar_icon_crafting",
         InputEventID = 247,
@@ -41,6 +46,7 @@ local vanillaActions = {
     {
         ID = "Map",
         Name = "Map",
+        NameHandle = VanillaActionTSKHandles.MAP,
         Type = "VanillaHotbarButton",
         Icon = "hotbar_icon_map",
         InputEventID = 250,
@@ -49,39 +55,45 @@ local vanillaActions = {
     {
         ID = "QuestLog",
         Name = "Quest Log",
+        NameHandle = VanillaActionTSKHandles.JOURNAL,
         Type = "VanillaHotbarButton",
         Icon = "hotbar_icon_journal",
-        InputEventID = 249, 
+        InputEventID = 249,
         VanillaButtonIndex = 5,
     },
     {
         ID = "ShowActions",
         Name = "Show Actions",
+        NameHandle = "h5813c41eg7b8cg4912gb319gf6985be7cdc6", -- "Toggle Actions"
         Icon = "hotbar_icon_clover",
     },
     {
         ID = "CombatLog",
         Name = "Combat Log",
+        NameHandle = "hf7c8b6b6g580bg4bc0g96efg5d9cd1500754", -- "Combat Log"
         Icon = "hotbar_icon_combatlog",
     },
     {
         ID = "Waypoints",
         Name = "Waypoints",
+        NameHandle = "haab876f7ga25cg47efgac2eg484ecadc551c", -- "Show WayPoint Menu"
         Icon = "hotbar_icon_waypoints",
     },
     {
         ID = "Ping",
         Name = "Ping",
+        NameHandle = "hfe7d4028g2faag4431g974ag7cbf0c3ef163", -- "Ping"
         Icon = "hotbar_icon_ping",
     },
     {
         ID = "Chat",
         Name = "Chat",
+        NameHandle = "h9a83cf71g390eg47ccgaf7bgad0719e4a5b8", -- "Toggle Chat"
         Icon = "hotbar_icon_chat",
     },
 }
 
-for i,action in pairs(vanillaActions) do
+for _,action in pairs(vanillaActions) do
     Hotbar.RegisterAction(action.ID, action)
 end
 Hotbar.SetHotkeyAction(11, "ShowActions")
@@ -98,6 +110,7 @@ Hotbar:RegisterInvokeListener("setButtonDisabled", function (_, id, disabled)
     disabledHotbarButtons[id] = disabled or nil
 end)
 
+---@diagnostic disable: unused-local
 Hotbar:RegisterListener("ActionUsed", function(id, char, data)
     if data.ID == "ShowActions" then
         Hotbar:GetRoot().toggleActionSkillHolder()
@@ -150,6 +163,7 @@ end)
 Hotbar.RegisterActionHook("Chat", "IsActionHighlighted", function(highlighted, char, data)
     return Ext.UI.GetByType(Ext.UI.TypeID.chatLog):GetRoot().log_mc.visible
 end)
+---@diagnostic enable: unused-local
 
 Hotbar.SetHotkeyAction(1, "Pause")
 Hotbar.SetHotkeyAction(2, "Inventory")
@@ -224,7 +238,7 @@ local schoolIcons = {
     Source = "hotbar_school_sourcery",
 }
 
-Hotbar.RegisterActionHook("UseArbitraryTemplate", "GetActionName", function(name, char, actionData, buttonIndex)
+Hotbar.RegisterActionHook("UseArbitraryTemplate", "GetActionName", function(name, _, _, buttonIndex)
     if buttonIndex then
         local template = boundItems[buttonIndex]
 
@@ -240,7 +254,7 @@ Hotbar.RegisterActionHook("UseArbitraryTemplate", "GetActionName", function(name
     return name
 end)
 
-Hotbar.RegisterActionHook("UseArbitrarySkill", "GetActionName", function(name, char, actionData, buttonIndex)
+Hotbar.RegisterActionHook("UseArbitrarySkill", "GetActionName", function(name, _, _, buttonIndex)
     if buttonIndex then
         local skill = boundSkills[buttonIndex]
 
@@ -286,7 +300,7 @@ Hotbar:RegisterListener("ActionsSwapped", function(action1, action2)
     boundItems[action2.Index] = item1
 end)
 
-Hotbar.RegisterActionHook("UseArbitrarySkill", "IsActionEnabled", function(enabled, char, data, buttonIndex)
+Hotbar.RegisterActionHook("UseArbitrarySkill", "IsActionEnabled", function(enabled, _, _, buttonIndex)
     enabled = false
 
     if buttonIndex then
@@ -301,7 +315,7 @@ Hotbar.RegisterActionHook("UseArbitrarySkill", "IsActionEnabled", function(enabl
 end)
 
 -- TODO highlight
-Hotbar.RegisterActionHook("UseArbitrarySkill", "GetActionIcon", function(icon, char, data, buttonIndex)
+Hotbar.RegisterActionHook("UseArbitrarySkill", "GetActionIcon", function(icon, _, _, buttonIndex)
     if buttonIndex then
         local skill = boundSkills[buttonIndex]
 
@@ -348,7 +362,7 @@ Hotbar.Events.ContentDraggedToHotkey:Subscribe(function (ev)
     end
 end)
 
-Hotbar.RegisterActionListener("UseArbitrarySkill", "ActionUsed", function(char, data, buttonIndex)
+Hotbar.RegisterActionListener("UseArbitrarySkill", "ActionUsed", function(_, _, buttonIndex)
     if not buttonIndex then return nil end
 
     local skill = boundSkills[buttonIndex]
