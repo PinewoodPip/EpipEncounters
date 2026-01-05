@@ -35,7 +35,7 @@ Generic.RegisterPrefab("GenericUI_Prefab_Status", Status)
 
 ---@param ui GenericUI_Instance
 ---@param id string
----@param parent (GenericUI_Element|string)?
+---@param parent GenericUI_ParentIdentifier?
 ---@param entity EclCharacter|EclItem
 ---@param status EclStatus
 ---@param size Vector2? Defaults to `SIZE`.

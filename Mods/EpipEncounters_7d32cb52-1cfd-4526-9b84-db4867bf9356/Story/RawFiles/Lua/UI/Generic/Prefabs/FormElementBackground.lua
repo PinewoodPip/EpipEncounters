@@ -16,7 +16,7 @@ Generic.RegisterPrefab("GenericUI_Prefab_FormElementBackground", BG)
 
 ---@param ui GenericUI_Instance
 ---@param id string
----@param parent (GenericUI_Element|string)?
+---@param parent GenericUI_ParentIdentifier?
 ---@param size Vector2
 ---@return GenericUI_Prefab_FormElementBackground
 function BG.Create(ui, id, parent, size)

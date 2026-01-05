@@ -24,7 +24,7 @@ Generic.RegisterPrefab("GenericUI_Prefab_TooltipPanel", TooltipPanelPrefab)
 ---@param ui GenericUI_Instance
 ---@param id string
 ---@param size Vector2
----@param parent (GenericUI_Element|string)?
+---@param parent GenericUI_ParentIdentifier?
 ---@param header string
 ---@param headerSize Vector2
 ---@return GenericUI_Prefab_TooltipPanel

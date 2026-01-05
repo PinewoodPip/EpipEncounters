@@ -29,7 +29,7 @@ Generic.RegisterPrefab("GenericUI_Prefab_LabelledSlider", Slider)
 
 ---@param ui GenericUI_Instance
 ---@param id string
----@param parent (GenericUI_Element|string)?
+---@param parent GenericUI_ParentIdentifier?
 ---@param size Vector2
 ---@param label string
 ---@param min number

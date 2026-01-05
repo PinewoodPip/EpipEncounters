@@ -38,7 +38,7 @@ Generic.RegisterPrefab("GenericUI_Prefab_Selector", Selector)
 
 ---@param ui GenericUI_Instance
 ---@param id string
----@param parent (GenericUI_Element|string)?
+---@param parent GenericUI_ParentIdentifier?
 ---@param label string
 ---@param size Vector2? Defaults to `DEFAULT_SIZE`
 ---@param options string[]

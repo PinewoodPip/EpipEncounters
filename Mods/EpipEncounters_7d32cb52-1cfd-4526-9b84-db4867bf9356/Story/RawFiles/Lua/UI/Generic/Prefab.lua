@@ -33,7 +33,7 @@ end
 ---@generic T
 ---@param id string Automatically prefixed.
 ---@param elementType `T`|GenericUI_ElementType
----@param parent (GenericUI_Element|string)?
+---@param parent GenericUI_ParentIdentifier?
 ---@return T
 function Prefab:CreateElement(id, elementType, parent)
     return self.UI:CreateElement(self:PrefixID(id), elementType, parent)

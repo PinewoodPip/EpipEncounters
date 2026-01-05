@@ -25,7 +25,7 @@ Generic.RegisterPrefab("GenericUI_Prefab_FormHorizontalList", Form)
 
 ---@param ui GenericUI_Instance
 ---@param id string
----@param parent (GenericUI_Element|string)?
+---@param parent GenericUI_ParentIdentifier?
 ---@param label string
 ---@param size Vector2
 ---@param labelSize Vector2

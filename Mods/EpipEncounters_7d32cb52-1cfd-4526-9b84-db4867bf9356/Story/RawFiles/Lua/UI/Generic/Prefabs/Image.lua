@@ -28,7 +28,7 @@ Generic.RegisterPrefab("GenericUI.Prefabs.Image", Image)
 ---Creates an Image instance.
 ---@param ui GenericUI_Instance
 ---@param id string
----@param parent (GenericUI_Element|string)?
+---@param parent GenericUI_ParentIdentifier?
 ---@param image ImageLib_Image
 ---@return GenericUI.Prefabs.Image
 function Image.Create(ui, id, parent, image)

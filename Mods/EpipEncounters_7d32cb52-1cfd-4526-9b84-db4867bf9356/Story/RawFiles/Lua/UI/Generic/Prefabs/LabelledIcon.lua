@@ -19,7 +19,7 @@ Generic.RegisterPrefab("GenericUI_Prefab_LabelledIcon", Icon)
 
 ---@param ui GenericUI_Instance
 ---@param id string
----@param parent (GenericUI_Element|string)?
+---@param parent GenericUI_ParentIdentifier?
 ---@param icon string
 ---@param text string
 ---@param iconSize Vector2

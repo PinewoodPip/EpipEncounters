@@ -171,7 +171,7 @@ end
 
 ---@param ui GenericUI_Instance
 ---@param id string
----@param parent (GenericUI_Element|string)?
+---@param parent GenericUI_ParentIdentifier?
 ---@param size Vector2
 ---@return GenericUI_Prefab_FormElement
 function Prefab.Create(ui, id, parent, size)
@@ -184,7 +184,7 @@ end
 
 ---Creates the background and label elements.
 ---@protected
----@param parent (GenericUI_Element|string)?
+---@param parent GenericUI_ParentIdentifier?
 ---@param size Vector2
 function Prefab:__SetupBackground(parent, size)
     local bg = self:CreateElement("Background", "GenericUI_Element_TiledBackground", parent)

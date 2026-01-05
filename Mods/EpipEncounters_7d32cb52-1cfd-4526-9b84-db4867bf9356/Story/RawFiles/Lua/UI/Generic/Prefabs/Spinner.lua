@@ -80,7 +80,7 @@ Spinner.STYLES = {
 ---Creates a Spinner element.
 ---@param ui GenericUI_Instance
 ---@param id string
----@param parent (GenericUI_Element|string)?
+---@param parent GenericUI_ParentIdentifier?
 ---@param label string
 ---@param min number? Defaults to 0.
 ---@param max number? Defaults to math.maxinteger.

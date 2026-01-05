@@ -23,7 +23,7 @@ Generic.RegisterPrefab("Features.PersonalScripts.Prefabs.Entry", Entry)
 
 ---@param ui GenericUI_Instance
 ---@param id string
----@param parent (GenericUI_Element|string)?
+---@param parent GenericUI_ParentIdentifier?
 ---@param scriptConfig Features.PersonalScripts.Script
 ---@param index integer?
 ---@return Features.PersonalScripts.Prefabs.Entry

@@ -34,7 +34,7 @@ Inherit(AnchoredText, TextPrefab)
 ---Creates an AnchoredText.
 ---@param ui GenericUI_Instance
 ---@param id string
----@param parent (GenericUI_Element|string)?
+---@param parent GenericUI_ParentIdentifier?
 ---@param text string
 ---@param alignType GenericUI_Element_Text_Align
 ---@param size Vector2

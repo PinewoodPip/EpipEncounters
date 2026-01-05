@@ -20,7 +20,7 @@ Generic.RegisterPrefab("GenericUI_Prefab_LabelledDropdown", Dropdown)
 
 ---@param ui GenericUI_Instance
 ---@param id string
----@param parent (GenericUI_Element|string)?
+---@param parent GenericUI_ParentIdentifier?
 ---@param label string
 ---@param opts GenericUI_Element_ComboBox_Option[]?
 ---@param size Vector2? Defaults to `DEFAULT_SIZE`

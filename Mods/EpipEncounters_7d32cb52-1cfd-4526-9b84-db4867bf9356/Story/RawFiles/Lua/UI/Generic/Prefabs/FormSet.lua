@@ -36,7 +36,7 @@ Generic.RegisterPrefab("GenericUI_Prefab_FormSet", Prefab)
 
 ---@param ui GenericUI_Instance
 ---@param id string
----@param parent (GenericUI_Element|string)?
+---@param parent GenericUI_ParentIdentifier?
 ---@param label string
 ---@param minimumSize Vector2
 ---@return GenericUI_Prefab_FormSet
