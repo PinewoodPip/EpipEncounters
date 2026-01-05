@@ -28,3 +28,14 @@ Net.RegisterListener(MultiSelect.NETMSG_SEND_TO_HOMESTEAD, function (payload)
     end
     MultiSelect:DebugLog("Sent items to homestead")
 end)
+
+-- Handle requests to drop items.
+Net.RegisterListener(MultiSelect.NETMSG_DROP_ITEMS, function (payload)
+    local char = payload:GetCharacter()
+    local charPos = char.WorldPos
+    for _,netID in ipairs(payload.ItemNetIDs) do
+        local item = Item.Get(netID)
+        Osiris.ItemScatterAt(item.MyGuid, table.unpack(charPos))
+    end
+    MultiSelect:DebugLog("Dropped items")
+end)

@@ -7,6 +7,7 @@
 local MultiSelect = {
     NETMSG_SEND_TO_CONTAINER = "Features.InventoryMultiSelect.NetMsg.SendToContainer",
     NETMSG_SEND_TO_CHARACTER = "Features.InventoryMultiSelect.NetMsg.SendToCharacter",
+    NETMSG_DROP_ITEMS = "Features.InventoryMultiSelect.NetMsg.DropItems",
 
     TranslatedStrings = {
         Setting_Enabled_Name = {
@@ -38,6 +39,11 @@ local MultiSelect = {
             Handle = "h4a828b3egc70fg4ce9g8d81gd46b307b9366",
             Text = "Selects a range of items starting from the first selected item and ending with the hovered one, if 'Multi-Select controls' are enabled and at least one item is selected.",
             ContextDescription = "Keybind description",
+        },
+        Label_DropItems = {
+            Handle = "he240e14bgc6eag4204g8d56g0e3ac32a7e58",
+            Text = "Drop Items",
+            ContextDescription = [[Context menu option]],
         },
     },
     Settings = {},
@@ -72,9 +78,11 @@ Epip.RegisterFeature("InventoryMultiSelect", MultiSelect)
 ---@field ItemNetIDs NetId[]
 ---@field TargetContainerNetID NetId
 
----@class Features.InventoryMultiSelect.NetMsg.SendToCharacter : NetMessage
+---@class Features.InventoryMultiSelect.NetMsg.SendToCharacter : NetLib_Message_Character
 ---@field ItemNetIDs NetId[]
----@field CharacterNetID NetId
+
+---@class Features.InventoryMultiSelect.NetMsg.DropItems : NetLib_Message_Character
+---@field ItemNetIDs NetId[]
 
 ---------------------------------------------
 -- SETTINGS

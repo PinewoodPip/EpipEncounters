@@ -4,6 +4,7 @@ local PartyInventory = Client.UI.PartyInventory
 
 ---@class Features.InventoryMultiSelect
 local MultiSelect = Epip.GetFeature("Features.InventoryMultiSelect")
+local TSK = MultiSelect.TranslatedStrings
 
 MultiSelect.SOUND_SEND_TO_HOMESTEAD = "UI_Game_Inventory_StoreOnLV"
 MultiSelect.SOUND_TOGGLE_WARES = "UI_Game_PartyFormation_PickUp"
@@ -69,13 +70,15 @@ ContextMenu.RegisterMenuHandler("Features.InventoryMultiSelect", function(_)
     }
 
     -- Add "send to character" entries
+    -- Will exclude a single character if all selections come from them.
     local clientChar = Client.GetCharacter()
     local selections = MultiSelect.GetOrderedSelections()
     local excludedCharacterHandle = nil ---@type ComponentHandle?
     for _,selection in ipairs(selections) do
-        if excludedCharacterHandle == nil then
+        ---@cast selection Features.InventoryMultiSelect.Selection.PartyInventory
+        if excludedCharacterHandle == nil then -- Exclude this character if all selections come from them.
             excludedCharacterHandle = selection.OwnerCharacterHandle
-        elseif excludedCharacterHandle ~= selection.OwnerCharacterHandle then
+        elseif excludedCharacterHandle ~= selection.OwnerCharacterHandle then -- If there are selections from multiple characters, don't exclude any characters.
             excludedCharacterHandle = nil
             break
         end
@@ -91,6 +94,13 @@ ContextMenu.RegisterMenuHandler("Features.InventoryMultiSelect", function(_)
     if Client.CanSendToLadyVengeance() then
         table.insert(entries, {id = "Features.InventoryMultiSelect.SendToHomestead", type = "button", text = MultiSelect.TranslatedStrings.ContextMenu_SendToHomestead:GetString()})
     end
+
+    -- Add "drop" entry
+    table.insert(entries, {
+        id = "Vanilla.InventoryMultiSelect.Drop",
+        type = "button",
+        text = TSK.Label_DropItems:GetString(),
+    })
 
     ContextMenu.Setup({
         menu = {
@@ -138,4 +148,14 @@ ContextMenu.RegisterElementListener("Features.InventoryMultiSelect.SendToHomeste
     })
     MultiSelect.ClearSelections()
     ContextMenu:PlaySound(MultiSelect.SOUND_SEND_TO_HOMESTEAD)
+end)
+
+-- Listen for requests to drop items.
+ContextMenu.RegisterElementListener("Vanilla.InventoryMultiSelect.Drop", "buttonPressed", function(_, _)
+    local selections = MultiSelect._SelectionsToNetIDList(MultiSelect.GetOrderedSelections())
+    Net.PostToServer(MultiSelect.NETMSG_DROP_ITEMS, {
+        ItemNetIDs = selections,
+        CharacterNetID = Client.GetCharacter().NetID,
+    })
+    MultiSelect.ClearSelections()
 end)
