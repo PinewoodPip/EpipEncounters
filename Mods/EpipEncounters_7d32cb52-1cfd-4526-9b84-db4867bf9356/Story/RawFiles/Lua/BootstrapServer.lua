@@ -257,6 +257,7 @@ LOAD_ORDER = {
     "Epip/PreferredTargetDisplay/Server.lua",
 
     {ScriptSet = "Epip/ItemTagging"},
+    {ScriptSet = "Epip/ItemRenaming"},
     {ScriptSet = "Epip/ExtraDataConfig", Developer = true,},
     {ScriptSet = "Epip/InfiniteCarryWeight",},
     {ScriptSet = "Epip/Housing", WIP = true,},

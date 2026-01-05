@@ -695,6 +695,7 @@ LOAD_ORDER = {
     "Epip/PreferredTargetDisplay/Client.lua",
 
     {ScriptSet = "Epip/ItemTagging"},
+    {ScriptSet = "Epip/ItemRenaming"},
     {ScriptSet = "Epip/ExtraDataConfig", Developer = true,},
     -- {ScriptSet = "Epip/Housing", WIP = true,},
     -- {Script = "Epip/Housing/Shared_Furniture.lua", WIP = true},
