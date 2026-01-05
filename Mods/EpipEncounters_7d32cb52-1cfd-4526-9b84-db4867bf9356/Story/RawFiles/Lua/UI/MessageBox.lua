@@ -137,7 +137,7 @@ function MessageBox.Open(data)
     for i,button in pairs(data.Buttons) do
         root.addButton(button.ID or i, button.Text, "", "") -- params 3 and 4 are just sounds
     end
-    
+
     root.showWin()
     root.fadeIn()
 
@@ -146,7 +146,9 @@ function MessageBox.Open(data)
     else
         root.setPopupType(1)
     end
-    
+
+    -- Setup input type
+    MessageBox.currentInput = ""
     root.setInputEnabled(type == MessageBox.POPUP_TYPES.INPUT)
 
     root.showPopup(data.Header, data.Message)
