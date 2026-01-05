@@ -35,6 +35,12 @@ GroupManager._HideGroupsRequests = {} ---@type table<string, true>
 ---@field LockPosition boolean
 ---@field SnapToHotbar boolean Whether the group's Y position should snap to the Hotbar UI.
 
+---@class Features.HotbarGroups.Group.SaveData :HotbarGroupState
+---@field SharedContents Features.HotbarGroups.Group.SaveData.Slot[][]
+
+---@class Features.HotbarGroups.Group.SaveData.Slot : GenericUI_Prefab_HotbarSlot_Object
+---@field ItemGUID GUID
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
@@ -157,18 +163,21 @@ function GroupManager.GetGroupState(group)
 
     if GroupManager.SharedGroups[group.GUID] == true then
         state.SharedContents = {}
-
         for i=1,state.Rows,1 do
             local row = {}
-
-            state.SharedContents[i] = row
-
             for z=1,state.Columns,1 do
-                local slot = table.deepCopy(group:GetSlot(i, z).Object) ---@type GenericUI_Prefab_HotbarSlot_Object
-                if slot.ItemHandle then slot.ItemHandle = nil end
-
+                local slotObject = group:GetSlot(i, z).Object
+                local slot = table.deepCopy(slotObject) ---@type Features.HotbarGroups.Group.SaveData.Slot
+                if slot.ItemHandle then -- Serialize items using GUID instead of handles, as the latter are not guaranteed to stay the same across sessions.
+                    local item = slotObject:GetEntity()
+                    slot.Type = "Template" -- Serialize as template for safety; if the specific item cannot be resolved by GUID, the slot will fall back to being a template slot.
+                    slot.TemplateID = item.RootTemplate.Id
+                    slot.ItemGUID = item and item.MyGuid or nil
+                    slot.ItemHandle = nil
+                end
                 table.insert(row, slot)
             end
+            state.SharedContents[i] = row
         end
     end
 
@@ -194,7 +203,7 @@ end
 ---@param path string? Defaults to `SAVE_FILENAME`
 function GroupManager.LoadData(path)
     path = path or GroupManager.SAVE_FILENAME
-    local save = IO.LoadFile(path) ---@type {Groups: table<GUID, HotbarGroupState>, Version:integer}
+    local save = IO.LoadFile(path) ---@type {Groups: table<GUID, Features.HotbarGroups.Group.SaveData>, Version:integer}
 
     if save then
         local groups = save.Groups
@@ -208,7 +217,15 @@ function GroupManager.LoadData(path)
                     for z=1,data.Columns,1 do
                         local slotData = data.SharedContents[i][z]
                         local slot = group:GetSlot(i, z)
-
+                        if slotData.ItemGUID then -- Attempt to deserialize items by GUID, but only if the item matches the template (as a sanity check). Temporary solution until Hotbar Group persistance is moved to modvars.
+                            local item = Item.Get(slotData.ItemGUID)
+                            if item and item.RootTemplate.Id == slotData.TemplateID then
+                                -- Convert the slot to an Item one
+                                slotData.ItemHandle = item.Handle
+                                slotData.ItemGUID = item.MyGuid
+                                slotData.Type = "Item"
+                            end
+                        end
                         slot:SetObject(slotData)
                     end
                 end

@@ -448,7 +448,7 @@ function Slot:_OnElementMouseUp(_)
         else
             local item = Item.Get(data.DragObject)
             if item and self._ValidObjectTypes["Item"] then
-                self:SetTemplate(item.RootTemplate.Id)
+                self:SetItem(item)
                 self.Object.ItemHandle = item.Handle -- For dragging purposes only.
                 objectWasDropped = true
             end
