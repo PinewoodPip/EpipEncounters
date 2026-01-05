@@ -463,10 +463,35 @@ function Tooltip.ShowItemTooltip(item, position)
     ui:ExternalInterfaceCall("showItemTooltip", Ext.UI.HandleToDouble(item.Handle), mouseX, mouseY, 100, 100, -1, "left") -- TODO customize align
 end
 
+---Renders a talent tooltip.
+---@param talentID integer
+---@param pos Vector2D? Position to show the tooltip at. Defaults to mouse position.
+---@param sourceSize Vector2? Size of the element that triggered this tooltip, for positioning purposes. Defaults to `(100, 100)`.
+---@param align "left"|"right"? Defaults to "left".
+function Tooltip.ShowTalentTooltip(talentID, pos, sourceSize, align)
+    sourceSize = sourceSize or Vector.Create(100, 100)
+    align = align or "left"
+    local ui = Tooltip._GetTalentTooltipUI()
+    local posX, posY
+    if pos then
+        posX, posY = pos:unpack()
+    else
+        posX, posY = Client.GetMousePosition()
+    end
+
+    Tooltip._nextCustomTooltip = nil
+    Tooltip._LastCustomTooltipSource = nil
+    Tooltip._LastCustomTooltipEntry = nil
+
+    ui:ExternalInterfaceCall("showTalentTooltip", talentID / 1, posX, posY, sourceSize[1], sourceSize[2], align) -- Talent ID must be a float for the call to work (lol)
+end
+
 function Tooltip.HideTooltip()
     local ui = Tooltip._GetDefaultCustomTooltipUI()
+    local talentTooltipUI = Tooltip._GetTalentTooltipUI()
 
     ui:ExternalInterfaceCall("hideTooltip")
+    talentTooltipUI:ExternalInterfaceCall("hideTooltip")
 
     TooltipUI:GetRoot().removeTooltip()
 
@@ -477,6 +502,12 @@ end
 ---@return UIObject
 function Tooltip._GetDefaultCustomTooltipUI()
     return Ext.UI.GetByType(Ext.UI.TypeID.containerInventory.Pickpocket) -- Exists for both input methods. The default containerInventory's item tooltips use the owner character of items to show compare tooltips, instead of the client character.
+end
+
+---Returns the UI used for displaying talent tooltips.
+---@return UIObject
+function Tooltip._GetTalentTooltipUI()
+    return Client.UI.CharacterSheet:GetUI() or Client.UI.Controller.Examine:GetUI()
 end
 
 ---@param ui UIObject

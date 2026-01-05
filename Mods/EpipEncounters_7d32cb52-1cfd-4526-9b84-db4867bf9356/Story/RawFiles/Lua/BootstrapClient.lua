@@ -595,6 +595,7 @@ LOAD_ORDER = {
     {Script = "Epip/Client/QuickExamine/Widgets/Artifacts.lua", RequiresEE = true},
     "Epip/Client/QuickExamine/Widgets/Skills.lua",
     "Epip/Client/QuickExamine/Widgets/Equipment.lua",
+    "Epip/Client/QuickExamine/Widgets/Talents.lua",
 
     "Epip/Client/GenericUIs/SaveLoadOverlay.lua",
     {

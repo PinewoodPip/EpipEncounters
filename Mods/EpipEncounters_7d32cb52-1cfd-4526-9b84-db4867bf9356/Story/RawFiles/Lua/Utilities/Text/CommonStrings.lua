@@ -958,6 +958,10 @@ Text.CommonStrings.Skills = Text.RegisterTranslatedString({
    Handle = "h14674f13g78c9g49ecgac6dgbf7a95039189",
    Text = "Skills",
 })
+Text.CommonStrings.Talents = Text.RegisterTranslatedString({
+    Handle = "h6d0736c9g574bg488eg8027g731140f8af91",
+    Text = "Talents",
+})
 Text.CommonStrings.Journal = Text.RegisterTranslatedString({
    Handle = "h64beeb05g019ag4a0agb151g974864cc5625",
    Text = "Journal",
