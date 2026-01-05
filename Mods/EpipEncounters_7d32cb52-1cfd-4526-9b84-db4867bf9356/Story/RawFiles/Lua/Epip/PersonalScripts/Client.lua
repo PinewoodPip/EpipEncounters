@@ -124,10 +124,36 @@ SettingsMenu.Events.ButtonPressed:Subscribe(function (ev)
     end
 end)
 MsgBox.RegisterMessageListener(PersonalScripts._MSGBOX_ADD_SCRIPT, MsgBox.Events.InputSubmitted, function(text, id, _)
-    local unprefixedPath = text:gsub("^/", "") .. ".lua" -- The message box requires you to type the path without the extension, as the UI disallows periods by default.
+    local pathWithoutExtension = text:gsub("^/", "")
+    local unprefixedPath = pathWithoutExtension .. ".lua" -- The message box requires you to type the path without the extension, as the UI disallows periods by default.
     local fullPath = PersonalScripts.FOLDER_PATH .. "/" .. unprefixedPath
-    local isPathValid = IO.LoadFile(fullPath, "user", true) ~= nil
-    if isPathValid then
+    local fullPathWithoutExtension = PersonalScripts.FOLDER_PATH .. "/" .. pathWithoutExtension
+    local isFolder = Ext.IO.IsDirectory(fullPathWithoutExtension)
+    local wasValidScript = false
+
+    -- Try to load as a "script set" (Shared.lua, Client.lua & Server.lua scripts)
+    if isFolder then
+        ---@type {Context: ScriptContext, Path: path}[]
+        local files = {
+            {Context = "Shared", Path = pathWithoutExtension .. "/Shared.lua"},
+            {Context = "Client", Path = pathWithoutExtension .. "/Client.lua"},
+            {Context = "Server", Path = pathWithoutExtension .. "/Server.lua"},
+        }
+        for _,file in ipairs(files) do
+            if Ext.IO.IsFile(PersonalScripts.FOLDER_PATH .. "/" .. file.Path) then
+                ---@type Features.PersonalScripts.Script
+                local config = {
+                    Path = file.Path,
+                    ModTable = "EpipEncounters",
+                    Enabled = true,
+                    Context = file.Context,
+                    PathRoot = "user",
+                }
+                PersonalScripts.RegisterScript(config)
+                wasValidScript = true
+            end
+        end
+    elseif Ext.IO.IsFile(fullPath) then -- Load single script
         ---@type Features.PersonalScripts.Script
         local config = {
             Path = unprefixedPath,
@@ -137,7 +163,11 @@ MsgBox.RegisterMessageListener(PersonalScripts._MSGBOX_ADD_SCRIPT, MsgBox.Events
             PathRoot = "user",
         }
         PersonalScripts.RegisterScript(config)
-    else
+        wasValidScript = true
+    end
+
+    -- Show warning if no script was found
+    if not wasValidScript then
         -- Cannot open a message box immediately from another one's handler; will softlock.
         Timer.Start(0.1, function (_)
             MsgBox.Open({

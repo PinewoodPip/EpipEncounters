@@ -35,7 +35,7 @@ local PersonalScripts = {
         },
         MsgBox_AddScript_Body = {
             Handle = "hc9cf6a7age288g4bd7gbfbag75c71c1969ae",
-            Text = "Enter the script's relative path with no extension.",
+            Text = "Enter the script's relative path with no extension, or a folder path containing Shared.lua, Client.lua, and/or Server.lua scripts.",
             ContextDescription = [[Message box for the "Add script" button]],
         },
         MsgBox_AddScript_Button_Shared = {
@@ -55,7 +55,7 @@ local PersonalScripts = {
         },
         MsgBox_InvalidPath_Body = {
             Handle = "h192d069eg0a8eg4a88g92cdg31d84fc06104",
-            Text = "There is no script at %s. Ensure you have placed the script in the correct folder.",
+            Text = "There is no script at %s nor a folder with that name. Ensure you have placed the script(s) in the correct folder.",
             ContextDescription = [[Message box when adding a script with a wrong path. Param is the path the user previously entered.]],
         },
     },
