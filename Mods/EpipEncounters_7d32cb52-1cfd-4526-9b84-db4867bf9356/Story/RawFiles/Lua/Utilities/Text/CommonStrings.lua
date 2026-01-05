@@ -865,6 +865,10 @@ Text.CommonStrings.Skillbooks = Text.RegisterTranslatedString({
    Handle = "h4fc7301egc609g4739g9752g7b0fae2e8c5b",
    Text = "Skillbooks",
 })
+Text.CommonStrings.Runes = Text.RegisterTranslatedString({
+    Handle = "h2bd7eaecg00fag4a26g945dga78b431688e0",
+    Text = "Runes",
+})
 Text.CommonStrings.ItemSlot = Text.RegisterTranslatedString({
    Handle = "h543a5832g1c08g4c3eg9e21g9ee1414c9941",
    Text = "Item Slot",

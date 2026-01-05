@@ -60,6 +60,7 @@ QuickInventory.Settings.ItemCategory = QuickInventory:RegisterSetting("ItemCateg
         {ID = "Equipment", NameHandle = CommonStrings.Equipment.Handle},
         {ID = "Consumables", NameHandle = CommonStrings.Consumables.Handle},
         {ID = "Skillbooks", NameHandle = CommonStrings.Skillbooks.Handle},
+        {ID = "Runes", NameHandle = CommonStrings.Runes.Handle},
         {ID = "Containers", NameHandle = CommonStrings.Containers.Handle},
         {ID = "Miscellaneous", NameHandle = CommonStrings.Miscellaneous.Handle},
     },

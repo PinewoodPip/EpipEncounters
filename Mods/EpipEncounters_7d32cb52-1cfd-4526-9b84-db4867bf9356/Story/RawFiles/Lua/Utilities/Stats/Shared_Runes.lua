@@ -41,6 +41,14 @@ function Stats.GetRuneDefinition(statsID)
     return Stats.Runes[statsID]
 end
 
+---Returns the rune tier of an Object, if any.
+---@param statsID string
+---@return integer? -- `nil` if the Object is not a rune.
+function Stats.GetRuneTier(statsID)
+    local runeDef = Stats.GetRuneDefinition(statsID)
+    return runeDef and Stats.Get("StatsLib_StatsEntry_Object", statsID).RuneLevel or nil
+end
+
 ---@param materialID StatsLib_Rune_Material
 ---@return ItemLib_RuneGroup
 function Stats.GetRuneGroup(materialID)

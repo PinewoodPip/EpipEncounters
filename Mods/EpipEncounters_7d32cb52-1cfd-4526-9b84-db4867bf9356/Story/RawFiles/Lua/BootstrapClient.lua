@@ -774,6 +774,7 @@ LOAD_ORDER = {
             "Epip/QuickInventory/Filters/Equipment.lua",
             "Epip/QuickInventory/Filters/Consumables.lua",
             "Epip/QuickInventory/Filters/Skillbooks.lua",
+            "Epip/QuickInventory/Filters/Runes.lua",
             "Epip/QuickInventory/Filters/Miscellaneous.lua",
             "Epip/QuickInventory/Filters/Containers.lua",
         }
