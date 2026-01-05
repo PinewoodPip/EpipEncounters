@@ -12,6 +12,16 @@ local QuickInventory = Epip.GetFeature("Feature_QuickInventory")
 -- TSKS
 ---------------------------------------------
 
+QuickInventory.TranslatedStrings.Setting_InContainersOnly_Name = QuickInventory:RegisterTranslatedString({
+    Handle = "h92793b1ag76e5g4b94ga417g50e41f56a8c7",
+    Text = [[Only show items in containers]],
+    ContextDescription = [[Filter setting name]],
+})
+QuickInventory.TranslatedStrings.Setting_InContainersOnly_Description = QuickInventory:RegisterTranslatedString({
+    Handle = "hc4ae20b2ga3f9g4393gac8fg591e7e2986e3",
+    Text = [[If enabled, only items within containers will be shown.]],
+    ContextDescription = [[Filter setting tooltip for "Only show items in containers"]],
+})
 QuickInventory.TranslatedStrings.Setting_RecursiveSearch_Name = QuickInventory:RegisterTranslatedString("h3201d71eg90b3g4068gba08ga89e00180089", {
     Text = "Recursive Search",
     ContextDescription = "Option name",
@@ -64,6 +74,13 @@ QuickInventory.Settings.ItemCategory = QuickInventory:RegisterSetting("ItemCateg
         {ID = "Containers", NameHandle = CommonStrings.Containers.Handle},
         {ID = "Miscellaneous", NameHandle = CommonStrings.Miscellaneous.Handle},
     },
+})
+
+QuickInventory.Settings.InContainersOnly = QuickInventory:RegisterSetting("InContainersOnly", {
+    Type = "Boolean",
+    Name = QuickInventory.TranslatedStrings.Setting_InContainersOnly_Name,
+    Description = QuickInventory.TranslatedStrings.Setting_InContainersOnly_Description,
+    DefaultValue = false,
 })
 
 QuickInventory.Settings.RecursiveSearch = QuickInventory:RegisterSetting("RecursiveSearch", {

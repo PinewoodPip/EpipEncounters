@@ -139,8 +139,9 @@ Epip.RegisterFeature("QuickInventory", QuickInventory)
 ---@return EclItem[]
 function QuickInventory.GetItems()
     local char = Client.GetCharacter()
+    local recursiveSearch = QuickInventory:GetSettingValue(QuickInventory.Settings.RecursiveSearch) == true or QuickInventory:GetSettingValue(QuickInventory.Settings.InContainersOnly) == true -- TODO if only InContainersOnly is set, then we should only iterate first depth level
     local allItems = QuickInventory.Hooks.GetPartyItems:Throw({
-        Items = Item.GetItemsInPartyInventory(char, nil, QuickInventory:GetSettingValue(QuickInventory.Settings.RecursiveSearch) == true),
+        Items = Item.GetItemsInPartyInventory(char, nil, recursiveSearch),
     }).Items
     local items = {} ---@type EclItem[]
 
@@ -174,13 +175,25 @@ end
 ---@param tags DataStructures_Set
 function QuickInventory.ItemHasRelevantTag(item, tags)
     local hasTag = false
-
     for tag in tags:Iterator() do
         if item:HasTag(tag) then
             hasTag = true
             break
         end
     end
-
     return hasTag
 end
+
+---------------------------------------------
+-- EVENT LISTENERS
+---------------------------------------------
+
+-- Exclude items outside containers if "InContainersOnly" is enabled.
+QuickInventory.Hooks.GetPartyItems:Subscribe(function (ev)
+    if QuickInventory:GetSettingValue(QuickInventory.Settings.InContainersOnly) == true then
+        ev.Items = table.filter(ev.Items, function (item)
+            local rootInventory = Item.GetInventoryParent(item)
+            return rootInventory and not Entity.IsCharacter(rootInventory)
+        end)
+    end
+end)

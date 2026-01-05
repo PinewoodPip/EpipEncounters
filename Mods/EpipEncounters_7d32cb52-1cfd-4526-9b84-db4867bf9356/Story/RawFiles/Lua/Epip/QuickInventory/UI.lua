@@ -213,6 +213,8 @@ function UI._RenderSettingsPanel()
         ItemCategory = itemCategory,
     })
 
+    -- Render container settings
+    UI.RenderSetting(QuickInventory.Settings.InContainersOnly)
     UI.RenderSetting(QuickInventory.Settings.RecursiveSearch)
 
     UI.SettingsPanelList:SortByChildIndex()
