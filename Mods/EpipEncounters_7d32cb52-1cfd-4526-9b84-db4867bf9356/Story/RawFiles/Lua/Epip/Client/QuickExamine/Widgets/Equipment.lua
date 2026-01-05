@@ -157,17 +157,23 @@ end
 ---@override
 function Widget:RenderGridElements(entity)
     ---@cast entity EclCharacter
+    local slotOrder = table.swap(Equipment.GetSlots())
     local columns = self:GetGridSize()[1]
     local grid = self.Grid
 
+    -- Fetch & order equipped items by enum value
     local items = Character.GetEquippedItems(entity)
-    local orderedItems = {} -- Order items by slot enum value.
+    local itemSlots = {} ---@type table<ItemHandle, ItemSlot>
+    local orderedItems = {} ---@type EclItem[]
     for _,item in pairs(items) do
-        table.insert(orderedItems, item)
+        local slot = Item.GetEquippedSlot(item)
+        itemSlots[item.Handle] = slot
+        if slotOrder[slot] then -- Ignore items in slots that are not shown (ex. Overhead slot)
+            table.insert(orderedItems, item)
+        end
     end
-    local slotOrder = table.swap(Equipment.GetSlots())
     table.sort(orderedItems, function (a, b)
-        local slotA, slotB = Ext.Enums.ItemSlot[Item.GetEquippedSlot(a)], Ext.Enums.ItemSlot[Item.GetEquippedSlot(b)]
+        local slotA, slotB = Ext.Enums.ItemSlot[itemSlots[a.Handle]], Ext.Enums.ItemSlot[itemSlots[b.Handle]]
         return slotOrder[slotA] < slotOrder[slotB]
     end)
     for _,item in ipairs(orderedItems) do

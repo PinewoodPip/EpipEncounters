@@ -451,7 +451,7 @@ QuickExamine.Events.EntityChanged:RegisterListener(function (entity)
             local success, msg = pcall(widget.Render, widget, entity)
 
             if not success then
-                QuickExamine:__Error("Error while rendering widget: " .. msg)
+                QuickExamine:__Error("Error while rendering widget ", widget:GetClassName(), msg)
             end
         end
 
