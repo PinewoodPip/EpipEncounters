@@ -979,6 +979,23 @@ function Item.GetEquippedSlot(item, char)
     return slot and Ext.Enums.ItemSlot[slot].Label
 end
 
+---Returns the skills that are granted by equipping the item.
+---@param item Item
+---@return skill[]
+function Item.GetGrantedSkills(item)
+    if not item.Stats then return EMPTY end
+    local skills = {}
+    for _,stat in ipairs(item.Stats.DynamicStats) do
+        local itemSkills = Text.Split(stat.Skills, ";")
+        for _,skillID in ipairs(itemSkills) do
+            if skillID ~= "" then
+                table.insert(skills, skillID)
+            end
+        end
+    end
+    return skills
+end
+
 --- Count the items in an entity's inventory that match a predicate function.  
 --- Predicate is passed ``Item`` and should return true for items to be counted.
 ---@param entity Entity
@@ -1023,7 +1040,7 @@ end
 ---@return StatItem? --`nil` if no rune is inserted at the index.
 function Item.GetRune(item, index)
     if index < 0 or index > 2 then
-        Item:Error("GetRune", "Cannot fetch runes with out-of-range index: " .. index)
+        Item:__Error("GetRune", "Cannot fetch runes with out-of-range index (0-based): " .. index)
         return
     end
 
