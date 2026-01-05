@@ -13,6 +13,62 @@
                     <attribute id="V2" value="0.0615234" type="6" />
                 </node>
                 <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_CharacterSheet_Accuracy" type="22" />
+                    <attribute id="U1" value="0.000976563" type="6" />
+                    <attribute id="U2" value="0.0615234" type="6" />
+                    <attribute id="V1" value="0.0634766" type="6" />
+                    <attribute id="V2" value="0.124023" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_CharacterSheet_CriticalChance" type="22" />
+                    <attribute id="U1" value="0.0634766" type="6" />
+                    <attribute id="U2" value="0.124023" type="6" />
+                    <attribute id="V1" value="0.0634766" type="6" />
+                    <attribute id="V2" value="0.124023" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_CharacterSheet_Damage" type="22" />
+                    <attribute id="U1" value="0.125977" type="6" />
+                    <attribute id="U2" value="0.186523" type="6" />
+                    <attribute id="V1" value="0.0634766" type="6" />
+                    <attribute id="V2" value="0.124023" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_CharacterSheet_Dodge" type="22" />
+                    <attribute id="U1" value="0.188477" type="6" />
+                    <attribute id="U2" value="0.249023" type="6" />
+                    <attribute id="V1" value="0.0634766" type="6" />
+                    <attribute id="V2" value="0.124023" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_CharacterSheet_Experience" type="22" />
+                    <attribute id="U1" value="0.250977" type="6" />
+                    <attribute id="U2" value="0.311523" type="6" />
+                    <attribute id="V1" value="0.0634766" type="6" />
+                    <attribute id="V2" value="0.124023" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_CharacterSheet_Initiative" type="22" />
+                    <attribute id="U1" value="0.313477" type="6" />
+                    <attribute id="U2" value="0.374023" type="6" />
+                    <attribute id="V1" value="0.0634766" type="6" />
+                    <attribute id="V2" value="0.124023" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_CharacterSheet_Movement" type="22" />
+                    <attribute id="U1" value="0.375977" type="6" />
+                    <attribute id="U2" value="0.436523" type="6" />
+                    <attribute id="V1" value="0.0634766" type="6" />
+                    <attribute id="V2" value="0.124023" type="6" />
+                </node>
+                <node id="IconUV">
+                    <attribute id="MapKey" value="PIP_UI_Icon_CharacterSheet_NextLevel" type="22" />
+                    <attribute id="U1" value="0.438477" type="6" />
+                    <attribute id="U2" value="0.499023" type="6" />
+                    <attribute id="V1" value="0.0634766" type="6" />
+                    <attribute id="V2" value="0.124023" type="6" />
+                </node>
+                <node id="IconUV">
                     <attribute id="MapKey" value="PIP_UI_Icon_CombatLogFilter_Announcements" type="22" />
                     <attribute id="U1" value="0.0634766" type="6" />
                     <attribute id="U2" value="0.124023" type="6" />
