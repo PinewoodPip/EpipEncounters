@@ -101,7 +101,7 @@ end
 ---@field Suffix string Suffix for value display.
 ---@field Prefix string Prefix for value display.
 ---@field Boolean boolean Boolean stats show no value label.
----@field MaxCharges string If specified, this stat will display as "{Value}/{Value of MaxCharges stat}"
+---@field MaxCharges string? ID of the custom stat that should be considered as this stat's "maximum charges" If specified, this stat will display as "{Value}/{Value of MaxCharges stat}"
 ---@field IgnoreForHiding boolean If true, this stat will not be considered as added when determining if a Hidden category should display.
 ---@field Keyword Keyword
 ---@field BoonType KeywordBoonType

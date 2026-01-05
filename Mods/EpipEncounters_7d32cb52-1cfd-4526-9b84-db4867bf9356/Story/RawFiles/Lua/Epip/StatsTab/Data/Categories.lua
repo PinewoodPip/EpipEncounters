@@ -8,7 +8,7 @@ local CATEGORY_HEADER_SIZE = 21
 ---@return string
 local function FormatHeader(template, tsk)
     return Text.Format(template, {
-        Size = CATEGORY_HEADER_SIZE, 
+        Size = CATEGORY_HEADER_SIZE,
         FormatArgs = {
             tsk:GetString(),
         },
