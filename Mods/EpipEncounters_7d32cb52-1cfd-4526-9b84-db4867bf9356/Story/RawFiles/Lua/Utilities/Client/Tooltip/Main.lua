@@ -12,6 +12,7 @@ local Tooltip = {
     _LastCustomTooltipSource = nil, ---@type TooltipLib_TooltipSourceData?
     _LastCustomTooltipEntry = nil, ---@type TooltipLib_CustomFormattedTooltip?
     _PartyInventoryUIInitialized = false,
+    _TalentTooltipUIInitialized = false,
 
     _POSITION_OFFSET = -34,
 
@@ -471,6 +472,7 @@ end
 function Tooltip.ShowTalentTooltip(talentID, pos, sourceSize, align)
     sourceSize = sourceSize or Vector.Create(100, 100)
     align = align or "left"
+    Tooltip._InitializeTalentTooltipUI()
     local ui = Tooltip._GetTalentTooltipUI()
     local posX, posY
     if pos then
@@ -486,6 +488,7 @@ function Tooltip.ShowTalentTooltip(talentID, pos, sourceSize, align)
     ui:ExternalInterfaceCall("showTalentTooltip", talentID / 1, posX, posY, sourceSize[1], sourceSize[2], align) -- Talent ID must be a float for the call to work (lol)
 end
 
+---Hides any current formatted tooltip.
 function Tooltip.HideTooltip()
     local ui = Tooltip._GetDefaultCustomTooltipUI()
     local talentTooltipUI = Tooltip._GetTalentTooltipUI()
@@ -508,6 +511,24 @@ end
 ---@return UIObject
 function Tooltip._GetTalentTooltipUI()
     return Client.UI.CharacterSheet:GetUI() or Client.UI.Controller.Examine:GetUI()
+end
+
+---Initializes the UI responsible for rendering talent tooltips by showing & hiding it.
+---Necessary as the UI calls will not function unless the corresponding UIs have been made visible at least once.
+function Tooltip._InitializeTalentTooltipUI()
+    if Tooltip._TalentTooltipUIInitialized then return end
+    local ui = Tooltip._GetTalentTooltipUI()
+    if not ui then return end -- Can't initailize the UI during load states.
+    local isVisible = ui.OF_Visible
+    if not isVisible then
+        ui:Show()
+        ui:GetRoot().visible = false
+        Timer.StartTickTimer(2, function () -- Showing & hiding in the same tick does not work.
+            ui:GetRoot().visible = true
+            ui:Hide()
+        end)
+    end
+    Tooltip._TalentTooltipUIInitialized = true
 end
 
 ---@param ui UIObject
