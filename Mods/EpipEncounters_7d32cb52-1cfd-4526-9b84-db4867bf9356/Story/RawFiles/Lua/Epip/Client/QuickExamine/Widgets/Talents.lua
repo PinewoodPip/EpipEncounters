@@ -26,8 +26,16 @@ Talents:RegisterClass("Features.QuickExamine.Widgets.Talents.Widget", Widget, {"
 QuickExamine.RegisterWidget(Widget)
 
 ---@override
-function Widget:CanRender(_)
-    return Talents:IsEnabled()
+function Widget:CanRender(entity)
+    if not Entity.IsCharacter(entity) or not Talents:IsEnabled() then return false end
+    ---@cast entity EclCharacter
+    -- Check if the character has any talent
+    for talentType,_ in pairs(TALENTS) do
+        if entity.Stats["TALENT_" .. talentType] then
+            return true
+        end
+    end
+    return false
 end
 
 ---@override
@@ -40,7 +48,7 @@ function Widget:Render(entity)
 
     -- Fetch the character's talents
     local ownedTalents = {} ---@type CharacterLib_Talent[]
-    for talentType, talent in pairs(TALENTS) do
+    for talentType,talent in pairs(TALENTS) do
         if char.Stats["TALENT_" .. talentType] then
             table.insert(ownedTalents, talent)
         end
