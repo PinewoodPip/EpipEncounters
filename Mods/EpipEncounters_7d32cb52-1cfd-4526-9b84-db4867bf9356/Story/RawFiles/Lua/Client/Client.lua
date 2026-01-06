@@ -172,7 +172,7 @@ function Client.IsActiveCombatant()
     if char and char.InCombat then
         local combatID = Combat.GetCombatID(char)
         local combatant = Combat.GetActiveCombatant(combatID)
-        return combatant and combatant == char
+        return combatant and combatant == char or false
     end
     return false
 end
