@@ -258,6 +258,7 @@ LOAD_ORDER = {
 
     {ScriptSet = "Epip/ItemTagging"},
     {ScriptSet = "Epip/ItemRenaming"},
+    {ScriptSet = "Epip/ContainerCustomization"},
     {ScriptSet = "Epip/ExtraDataConfig", Developer = true,},
     {ScriptSet = "Epip/InfiniteCarryWeight",},
     {ScriptSet = "Epip/Housing", WIP = true,},

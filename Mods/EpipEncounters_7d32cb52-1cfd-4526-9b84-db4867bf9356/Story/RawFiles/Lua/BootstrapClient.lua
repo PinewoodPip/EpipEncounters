@@ -697,6 +697,7 @@ LOAD_ORDER = {
 
     {ScriptSet = "Epip/ItemTagging"},
     {ScriptSet = "Epip/ItemRenaming"},
+    {ScriptSet = "Epip/ContainerCustomization"},
     {ScriptSet = "Epip/ExtraDataConfig", Developer = true,},
     -- {ScriptSet = "Epip/Housing", WIP = true,},
     -- {Script = "Epip/Housing/Shared_Furniture.lua", WIP = true},
