@@ -4,7 +4,7 @@ local Generic = Client.UI.Generic
 local TooltipPanelPrefab = Generic.GetPrefab("GenericUI_Prefab_TooltipPanel")
 local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 local CloseButtonPrefab = Generic.GetPrefab("GenericUI_Prefab_CloseButton")
-local LabelledDropdownPrefab = Generic.GetPrefab("GenericUI_Prefab_LabelledDropdown")
+local SettingWidgets = Epip.GetFeature("Features.SettingWidgets")
 local V = Vector.Create
 
 local UI = Generic.Create("EPIP_IconPicker")
@@ -39,7 +39,7 @@ function UI._UpdateIcons()
     local icons = UI.GetIcons(iconType)
 
     grid:ClearElements()
-    
+
     for _,icon in ipairs(icons) do
         local element = grid:AddChild(icon, "GenericUI_Element_IggyIcon")
         element:SetIcon(icon, UI.ICON_SIZE:unpack())
@@ -76,7 +76,7 @@ function UI.GetIcons(iconType)
     table.sort(icons, function (a, b)
         return a > b
     end)
-    
+
     return icons
 end
 
@@ -105,7 +105,8 @@ function UI._Initialize()
         local settingsList = settingsPanel.Background:AddChild("SettingsList", "GenericUI_Element_VerticalList")
         settingsList:SetPositionRelativeToParent("TopLeft", 20, 100)
 
-        UI._RenderComboBoxFromSetting(Picker.Settings.IconType, settingsList, UI.SETTINGS_FORM_ELEMENT_SIZE, function (_)
+        SettingWidgets.RenderSetting(UI, settingsList, Picker.Settings.IconType, UI.SETTINGS_FORM_ELEMENT_SIZE, function (_)
+            if not UI:IsVisible() then return end -- Avoid refreshing the UI multiple times if the setting is changed before it is opened.
             Picker:DebugLog("Icon type changed")
             UI._UpdateIcons()
         end)
@@ -118,35 +119,6 @@ function UI._Initialize()
 
         UI._Initialized = true
     end
-end
-
----Renders a checkbox to the settings panel from a setting.
----TODO extract these kinds of methods into a feature
----@param setting SettingsLib_Setting_Choice
----@param parent string|GenericUI_Element
----@param size Vector2
----@param callback fun(ev:GenericUI_Element_ComboBox_Event_OptionSelected)?
-function UI._RenderComboBoxFromSetting(setting, parent, size, callback)
-    -- Generate combobox options from setting choices.
-    local options = {}
-    for _,choice in ipairs(setting.Choices) do
-        table.insert(options, {
-            ID = choice.ID,
-            Label = choice:GetName(),
-        })
-    end
-
-    local dropdown = LabelledDropdownPrefab.Create(UI, setting.ID, parent, setting:GetName(), options)
-    dropdown:SetSize(size:unpack())
-    dropdown:SelectOption(setting:GetValue())
-
-    -- Set setting value and refresh UI.
-    dropdown.Events.OptionSelected:Subscribe(function (ev)
-        Settings.SetValue(setting.ModTable, setting.ID, ev.Option.ID)
-        if callback then
-            callback(ev)
-        end
-    end)
 end
 
 ---------------------------------------------

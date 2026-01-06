@@ -29,6 +29,16 @@ local Picker = {
             "_TOOL_",
             "_UNI_",
         }),
+        CONTAINERS = Set.Create({
+            "Backpack",
+            "BackPack",
+            "Crate",
+            "Pouch",
+            "Container",
+            "Chest",
+            "Barrel",
+            "Basket",
+        }),
     },
 
     USE_LEGACY_EVENTS = false,
@@ -48,7 +58,7 @@ Epip.RegisterFeature("IconPicker", Picker)
 ---------------------------------------------
 
 ---Default icon types implemented for GetIcons()
----@alias Feature_IconPicker_IconType "Armor"|"Weapon"|"Jewelry"|"Consumables"|"Furniture"|"Miscellaneous"
+---@alias Feature_IconPicker_IconType "Armor"|"Weapon"|"Jewelry"|"Containers"|"Consumables"|"Furniture"|"Miscellaneous"
 
 ---------------------------------------------
 -- EVENTS
@@ -77,6 +87,7 @@ Picker:RegisterSetting("IconType", {
         {ID = "Armor", NameHandle = CommonStrings.Armor.Handle},
         {ID = "Weapon", NameHandle = CommonStrings.Weapon.Handle},
         {ID = "Jewelry", NameHandle = CommonStrings.Jewelry.Handle},
+        {ID = "Containers", NameHandle = CommonStrings.Containers.Handle},
         {ID = "Consumables", NameHandle = CommonStrings.Consumables.Handle},
         {ID = "Furniture", NameHandle = CommonStrings.Furniture.Handle},
         {ID = "Miscellaneous", NameHandle = CommonStrings.Miscellaneous.Handle},
@@ -177,6 +188,18 @@ Picker.Hooks.IsTemplateValid:Subscribe(function (ev)
     elseif ev.RequestedIconType == "Jewelry" then
         if icon:match("Ring_") or icon:match("Amulet") then
             ev.IsValid = true
+        end
+    elseif ev.RequestedIconType == "Containers" then
+        -- Edgecase: we must filter out EE chestplate artifacts
+        if icon:match("AMER_UNI_") then
+            ev.IsValid = false
+        else
+            for pattern in Picker.ICON_NAME_PATTERNS.CONTAINERS:Iterator() do
+                if icon:match(pattern) then
+                    ev.IsValid = true
+                    break
+                end
+            end
         end
     elseif ev.RequestedIconType == "Consumables" then
         if icon:match("CON_") then

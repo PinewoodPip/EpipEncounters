@@ -436,12 +436,6 @@ LOAD_ORDER = {
     -- Utility features
     {
         Scripts = {
-            "Epip/IconPicker/Client.lua",
-            "Epip/IconPicker/UI.lua",
-        },
-    },
-    {
-        Scripts = {
             "Epip/ColorPicker/Client.lua",
             "Epip/ColorPicker/UI.lua",
         },
@@ -454,6 +448,12 @@ LOAD_ORDER = {
         },
     },
     {Script = "Epip/SettingWidgets/Client.lua"},
+    {
+        Scripts = {
+            "Epip/IconPicker/Client.lua",
+            "Epip/IconPicker/UI.lua",
+        },
+    },
     {
         Scripts = {
             "Epip/Assprite/Client.lua",
