@@ -62,7 +62,7 @@ function UpdateCustomStatsForCharacter(charGUID)
         Utilities.Hooks.FireEvent("Epip_StatsTab", "UpdateStat_" .. id, char, data)
     end
 
-    Net.PostToUser(char.UserID, "EPIPENCOUNTERS_RefreshStatsTab")
+    Net.PostToUser(char, "EPIPENCOUNTERS_RefreshStatsTab")
 end
 
 -- Update the tag storing a stat's value for a char.

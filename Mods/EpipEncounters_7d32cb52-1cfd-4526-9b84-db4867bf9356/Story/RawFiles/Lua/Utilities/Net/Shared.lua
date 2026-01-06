@@ -127,6 +127,9 @@ end
 ---@param message T?
 function Net.PostToUser(user, channel, message)
     if GetExtType(user) ~= nil then user = user.ReservedUserID end
+    if Ext.IsClient() and user.ReservedForPlayerId < 0 then -- Use reserved user ID if the character is assigned to a player but not currently controlled.
+        user = user.ReservedForPlayerId
+    end
 
     Ext.Net.PostMessageToUser(user, channel, Utilities.Stringify(message))
 end
