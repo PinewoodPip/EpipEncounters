@@ -114,7 +114,7 @@ local coreLibraries = {
     {ScriptSet = "Utilities/GameState"},
     "Utilities/UserVars.lua",
 
-    {ScriptSet = "Utilities/Combat"},
+    "Utilities/Combat/Shared.lua",
     "Utilities/Texture.lua",
     "Utilities/Profiling.lua",
 
