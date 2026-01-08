@@ -165,8 +165,7 @@ function Widget:RenderGridElements(entity)
     local items = Character.GetEquippedItems(entity)
     local itemSlots = {} ---@type table<ItemHandle, ItemSlot>
     local orderedItems = {} ---@type EclItem[]
-    for _,item in pairs(items) do
-        local slot = Item.GetEquippedSlot(item)
+    for slot,item in pairs(items) do
         itemSlots[item.Handle] = slot
         if slotOrder[slot] then -- Ignore items in slots that are not shown (ex. Overhead slot)
             table.insert(orderedItems, item)
@@ -181,14 +180,16 @@ function Widget:RenderGridElements(entity)
     end
 
     -- Center the second row if not all columns are filled
-    local slotsInSecondRow = #orderedItems - columns
-    local missingSlots = columns - slotsInSecondRow
-    local slots = grid:GetChildren()
-    local slotWidth = slots[1]:GetWidth()
-    for i=columns+1,#orderedItems,1 do
-        local slot = slots[i]
-        local x, y = slot:GetPosition()
-        slot:SetPosition(x + missingSlots * slotWidth / 2, y)
+    if orderedItems[1] then
+        local slotsInSecondRow = #orderedItems - columns
+        local missingSlots = columns - slotsInSecondRow
+        local slots = grid:GetChildren()
+        local slotWidth = slots[1]:GetWidth()
+        for i=columns+1,#orderedItems,1 do -- From 2nd row onwards
+            local slot = slots[i]
+            local x, y = slot:GetPosition()
+            slot:SetPosition(x + missingSlots * slotWidth / 2, y)
+        end
     end
 end
 
