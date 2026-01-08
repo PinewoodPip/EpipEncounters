@@ -119,7 +119,9 @@ end)
 
 -- Forward item equip events.
 Net.RegisterListener("EPIP_CharacterLib_ItemEquipped", function (payload)
-    local char, item = Character.Get(payload.CharacterNetID), Item.Get(payload.ItemNetID)
+    local char = Character.Get(payload.CharacterNetID)
+    if not char.Activated then return end -- Sanity check for characters that were killed right upon spawning, which destroys their invisible items(?)
+    local item = Item.Get(payload.ItemNetID)
     Character._ThrowItemEquippedEvent(char, item)
 end)
 

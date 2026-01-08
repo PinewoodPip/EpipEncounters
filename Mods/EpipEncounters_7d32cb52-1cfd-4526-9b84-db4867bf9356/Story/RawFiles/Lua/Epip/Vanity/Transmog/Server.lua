@@ -275,7 +275,7 @@ end)
 -- Necessary to handle the case of unequipping an item that the engine would've masked -
 -- doing so will not cause the body visuals of that region to be updated otherwise.
 Osiris.RegisterSymbolListener("ItemUnequipped", 2, "after", function (itemGUID, charGUID)
-    if not Osi.ObjectExists(charGUID) then return end
+    if Osi.ObjectExists(charGUID) == 0 or Osi.ObjectExists(itemGUID) == 0 then return end -- Occurs during character creation when dummies are transformed.
     local char = Character.Get(charGUID)
     if char and Character.IsPlayer(char) then
         Vanity.TryRefreshAppearance(char, Item.Get(itemGUID), true)

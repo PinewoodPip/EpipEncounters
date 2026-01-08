@@ -45,6 +45,7 @@ end
 Ext.Events.BeforeStatusApply:Subscribe(function (ev)
     local status = ev.Status ---@type EsvStatus
     local owner = ev.Owner ---@type EsvCharacter|EsvItem
+    local ownerGUID = owner.MyGuid
 
     Character.Events.StatusApplied:Throw({
         Status = status,
@@ -55,6 +56,7 @@ Ext.Events.BeforeStatusApply:Subscribe(function (ev)
     local ownerNetID = owner.NetID
     local statusNetID = status.NetID
     Timer.Start(0.2, function (_) -- Needs a delay. This message would otherwise arrive before the object is created on the client. TODO seek improvements
+        if Osi.ObjectExists(ownerGUID) == 0 then return end -- Do not send message if the entity died in the meantime.
         Net.Broadcast("EPIP_CharacterLib_StatusApplied", {
             OwnerNetID = ownerNetID,
             StatusNetID = statusNetID,
@@ -64,8 +66,9 @@ end, {Priority = -999999999})
 
 -- Forward item equipped events.
 Osiris.RegisterSymbolListener("ItemEquipped", 2, "after", function(itemGUID, charGUID)
+    if Osi.ObjectExists(charGUID) == 0 or Osi.ObjectExists(itemGUID) == 0 then return end -- Occurs during character creation when dummies are transformed.
     local char, item = Character.Get(charGUID), Item.Get(itemGUID)
-    
+
     Character._ThrowItemEquippedEvent(char, item)
 
     Net.Broadcast("EPIP_CharacterLib_ItemEquipped", {

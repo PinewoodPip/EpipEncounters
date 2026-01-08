@@ -68,6 +68,7 @@ end)
 
 -- Auto-identify items moved to inventories.
 Osiris.RegisterSymbolListener("ItemTemplateAddedToCharacter", 3, "after", function(_, itemGUID, _)
+    if Osi.ObjectExists(itemGUID) == 0 then return end -- Occurs during character creation when dummies are transformed.
     local item = Item.Get(itemGUID)
     if item then -- Is frequently nil within character creation.
         AutoIdentify.ProcessItem(item)
