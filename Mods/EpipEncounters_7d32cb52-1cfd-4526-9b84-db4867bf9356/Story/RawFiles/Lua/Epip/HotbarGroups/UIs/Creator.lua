@@ -2,6 +2,7 @@
 local Generic = Client.UI.Generic
 local Spinner = Generic.GetPrefab("GenericUI_Prefab_Spinner")
 local CloseButton = Generic.GetPrefab("GenericUI_Prefab_CloseButton")
+local CharacterCreation = Client.UI.CharacterCreation
 
 local GroupManager = Epip.GetFeature("Features.HotbarGroups") ---@cast GroupManager Features.HotbarGroups.Client
 local TSK = GroupManager.TranslatedStrings
@@ -62,7 +63,11 @@ function GroupManager._CreateEditor(UIName, HeaderText, ButtonText)
     return ui
 end
 
+-- Instantiate creation & editing UIs when client loads.
 GameState.Events.ClientReady:Subscribe(function (_)
+    if CharacterCreation.IsInCharacterCreation() then return end -- Necessary to avoid the UIs being instanced a 2nd time after exiting character creation.
+
+    -- Creation UI
     local Creator = GroupManager._CreateEditor("Creator",
     TSK.CreateGroupHeader:GetString(), TSK.CreateGroupButton:GetString())
     GroupManager.CreationUI = Creator
@@ -72,6 +77,7 @@ GameState.Events.ClientReady:Subscribe(function (_)
         GroupManager.CreationUI:Hide()
     end)
 
+    -- Editor UI
     local Editor = GroupManager._CreateEditor("Editor",
     TSK.ResizeGroupHeader:GetString(), TSK.ResizeGroupButton:GetString())
     GroupManager.ResizeUI = Editor
