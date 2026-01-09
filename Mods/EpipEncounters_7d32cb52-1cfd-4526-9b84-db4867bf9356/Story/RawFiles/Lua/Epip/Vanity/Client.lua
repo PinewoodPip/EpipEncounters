@@ -37,7 +37,9 @@ end
 function Vanity.LoadData(path)
     path = path or Vanity.SAVE_FILENAME
     local save = IO.LoadFile(path)
-    Vanity.Events.SaveDataLoaded:Throw({SaveData = save})
+    if save then
+        Vanity.Events.SaveDataLoaded:Throw({SaveData = save})
+    end
 end
 
 -- Request to transform an item into a template.
