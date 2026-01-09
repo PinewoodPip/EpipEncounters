@@ -165,6 +165,9 @@ Stats = {
         -- Unsure if Sulforology exists here; it is not in Enumerations.xml
     },
 
+    -- Highest RequirementType ID used by vanilla game requirements.
+    MAX_VANILLA_REQUIREMENT_NUM_ID = Ext.Enums.RequirementType.TALENT_MagicCycles.Value,
+
     Enums = {
         ---@enum StatEntry_CastCheckType
         CastCheckType = {
@@ -248,7 +251,7 @@ local WeaponRequirementToFunctor = {
 ---@param char Character
 ---@param statID string
 ---@param isItem boolean
----@param itemSource Item?
+---@param itemSource Item? The item the stat comes from, in case `statID` is a weapon/armor/shield stat.
 ---@return boolean
 function Stats.MeetsRequirements(char, statID, isItem, itemSource)
     local data = Ext.Stats.Get(statID) ---@type StatsLib_StatsEntry_SkillData|StatsLib_StatsEntry_Object
@@ -268,6 +271,8 @@ function Stats.MeetsRequirements(char, statID, isItem, itemSource)
         return false
     end
 
+    -- Sanity check; relevant for skills on the Hotbar that came from now-removed mods,
+    -- as the game does not remove them from the PlayerData skillbar.
     if not data then
         return false
     end
@@ -360,8 +365,19 @@ function Stats.MeetsRequirements(char, statID, isItem, itemSource)
                 end
             end
         end
+    else
+        -- Evaluate extender custom requirements;
+        -- these always fire for skills even if they are granted by an item.
+        for _,req in ipairs(data.Requirements) do
+            if Stats.IsCustomRequirement(req.Requirement) then
+                if not Stats.EvaluateRequirement(stats, req) then
+                    return false
+                end
+            end
+        end
     end
 
+    -- Check item requirements
     if itemSource and itemSource.Stats then
         for _,req in ipairs(itemSource.Stats.Requirements) do
             if not Stats.EvaluateRequirement(stats, req) then
@@ -371,6 +387,13 @@ function Stats.MeetsRequirements(char, statID, isItem, itemSource)
     end
 
     return true
+end
+
+---Returns whether a requirement is a custom Extender requirement.
+---@param requirement RequirementType
+---@return boolean
+function Stats.IsCustomRequirement(requirement)
+    return Ext.Enums.RequirementType[requirement].Value > Stats.MAX_VANILLA_REQUIREMENT_NUM_ID
 end
 
 ---@alias StatsObjectType "ItemColor"|"Boost"|"Armor"|"Weapon"|"SkillData"|"Object"|"Character"|"Data"|"ItemProgressionNames"|"ItemProgressionVisuals"|"Potion"|"Requirements"|"Shield"|"StatusData"|"CraftingStationsItemComboPreviewData"|"DeltaModifier"|"Equipment"|"ItemCombos"|"ItemTypes"|"ObjectCategoriesItemComboPreviewData"|"SkillSet"|"TreasureGroups"|"TreasureTable"|"DeltaMod"
