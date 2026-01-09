@@ -82,10 +82,11 @@ function PartyLinking._Link(requester, players)
 
         if previousPlayer then
             -- Linking requires a timer, as group IDs of characters can change as they are linked.
-            -- 2 ticks is inconsistent.
+            -- A tick timer is unfortunately inconsistent at higher framerates -
+            -- it's possible that the group ID changes require a server ACK.
             local flashHandle = player.characterHandle
             local previousFlashHandle = previousPlayer.characterHandle
-            Timer.StartTickTimer(4 * (i - 1), function (_)
+            Timer.Start(4 * (i - 1) / 40, function (_)
                 local previousCharMC = PlayerInfo.GetPlayerElement(Character.Get(previousFlashHandle, true))
                 PlayerInfo:ExternalInterfaceCall("piAddToGroupUnder", flashHandle, previousCharMC.groupId, previousFlashHandle)
 
