@@ -168,7 +168,15 @@ end)
 -- Broadcast item pick up state being entered.
 Osiris.RegisterSymbolListener("NRD_OnActionStateEnter", 2, "before", function (charGUID, action)
     if action == "PickUp" and Osiris.GetFirstFact("DB_IsPlayer", charGUID) ~= nil then
-        Net.PostToCharacter(charGUID, AnimCancel.NETMSG_ITEM_PICKUP)
+        local char = Character.Get(charGUID)
+        local actionState = Character.GetActionState(char)
+        ---@cast actionState EsvASPickUp
+        local item = Item.Get(actionState.ItemHandle)
+
+        -- Do not trigger Animation Cancelling if the itme is being picked up from a container, as this does not incur an animation.
+        if not Item.IsInInventory(item) then
+            Net.PostToCharacter(charGUID, AnimCancel.NETMSG_ITEM_PICKUP)
+        end
     end
 end)
 
