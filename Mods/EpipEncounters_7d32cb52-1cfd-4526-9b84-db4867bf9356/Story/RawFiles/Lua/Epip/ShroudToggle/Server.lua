@@ -16,6 +16,20 @@ local Shroud = {
     _CurrentState = -1,
 }
 Epip.RegisterFeature("Features.ShroudToggle", Shroud)
+local OrigEnabledFunctor = Shroud:GetEnabledFunctor()
+
+---------------------------------------------
+-- METHODS
+---------------------------------------------
+
+---@override
+function Shroud:GetEnabledFunctor()
+    return function ()
+        ---`ShroudRender()` is known to cause crashes in GM mode,
+        ---thus the feature by default is dummied out there.
+        return OrigEnabledFunctor() and Ext.GetGameMode() ~= "GameMaster"
+    end
+end
 
 ---------------------------------------------
 -- LISTENERS
