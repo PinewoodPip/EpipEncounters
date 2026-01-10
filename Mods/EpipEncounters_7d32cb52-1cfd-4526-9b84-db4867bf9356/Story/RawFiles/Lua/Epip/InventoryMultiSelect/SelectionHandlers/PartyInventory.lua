@@ -173,8 +173,26 @@ MultiSelect.Events.ItemSelectionChanged:Subscribe(function (ev)
     local selection = ev.Selection
     if selection.Type == "PartyInventory" then
         ---@cast selection Features.InventoryMultiSelect.Selection.PartyInventory
-        local cell, _ = MultiSelect._GetItemCell(Item.Get(selection.ItemHandle)) -- Find the cell of the item within the UI
-        MultiSelect.SetSlotHighlight(cell, MultiSelect.PARTYINVENTORY_CELL_SIZE, ev.Selected)
+        local cell, cellIndex, _ = MultiSelect._GetItemCell(Item.Get(selection.ItemHandle)) -- Find the cell of the item within the UI
+        if cell then -- When deselecting, cell might no longer exist if the deselection was caused by the cell being deleted (ex. inventory filters changed)
+            MultiSelect.SetSlotHighlight(cell, MultiSelect.PARTYINVENTORY_CELL_SIZE, ev.Selected)
+        end
+
+        -- Deselect the item if the cell no longer contains it.
+        -- A tick listener is required for this as operations like changing filters
+        -- delete the cells before sending the corresponding UICall.
+        if ev.Selected then
+            local tickListenerID = Text.GenerateGUID()
+            GameState.Events.RunningTick:Subscribe(function (_)
+                local item = Item.Get(selection.ItemHandle)
+                local currentCell, currentCellIndex, _ = MultiSelect._GetItemCell(item)
+                if not currentCell or currentCellIndex ~= cellIndex then
+                    MultiSelect.SetSlotHighlight(cell, MultiSelect.PARTYINVENTORY_CELL_SIZE, false) -- Necessary as the selection might not be pointing to the same cell anymore.
+                    MultiSelect.SetItemSelected(Item.Get(selection.ItemHandle), false)
+                    GameState.Events.RunningTick:Unsubscribe(tickListenerID)
+                end
+            end, {StringID = tickListenerID})
+        end
     end
 end)
 
@@ -219,6 +237,16 @@ PartyInventory:RegisterCallListener("doubleClickItem", function (ev, _)
         ev:PreventAction()
     end
 end)
+
+-- Cancel selections when inventory sorting is applied,
+-- as the cells of the items might change.
+local _TryClearSelections = function (_)
+    if MultiSelect.HasSelection() then
+        MultiSelect.ClearSelections()
+    end
+end
+PartyInventory:RegisterCallListener("autosort", _TryClearSelections)
+PartyInventory:RegisterCallListener("applySortFilters", _TryClearSelections)
 
 -- Sort selections from the party inventory.
 MultiSelect.Hooks.SortSelection:Subscribe(function (ev)
