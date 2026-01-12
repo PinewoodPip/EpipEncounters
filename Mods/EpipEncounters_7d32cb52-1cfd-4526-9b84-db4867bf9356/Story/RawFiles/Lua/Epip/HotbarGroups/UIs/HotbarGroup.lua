@@ -221,7 +221,7 @@ end
 
 ---Updates the position of the hotbar group according to snapping preferences.
 function HotbarGroup:UpdatePosition()
-    if not self._SnapToHotbar then return end -- Do nothing to the position if not snapping to hotbar.
+    if not self._SnapToHotbar or not Client.GetCharacter() then return end -- Do nothing to the position if not snapping to hotbar or if the client has not been assigned a character yet (in which case Hotbar state is unavailable)
 
     -- Calculate hotbar height
     local rows = Hotbar.GetBarCount()
