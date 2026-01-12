@@ -16,6 +16,7 @@
 -- recenter amount text upon change
 
 local ParseFlashArray = Client.Flash.ParseArray
+local CommonStrings = Text.CommonStrings
 
 ---@class ContextMenuUI : UI
 ---@field _LatestHoveredCharacterHandle CharacterHandle
@@ -405,7 +406,7 @@ end
 function ContextMenu.AddElements(ui, menuData)
     ui = ui or ContextMenu.GetActiveUI()
     local menuID = menuData.id
-    for i,data in pairs(menuData.entries) do
+    for _,data in pairs(menuData.entries) do
         local type = data.type
 
         data.menu = menuID
@@ -439,14 +440,19 @@ function ContextMenu.AddElements(ui, menuData)
     end
 end
 
+---Returns the formatted label for an entry,
+---including suffixes for control hints (ex. "Shift+Click")
+---@param elementData unknown TODO
+---@return string
 function ContextMenu.GetText(elementData)
-    -- grey out text
     local text = elementData.text
 
+    -- Add shift+click hint
     if elementData.requireShiftClick then
-        text = text .. " (Shift+Click)"
+        text = text .. string.format(" (%s)", CommonStrings.ShiftClick:GetString())
     end
 
+    -- Grey out text
     if elementData.faded then
         text = "<font color='#59564f'>" .. text .. "</font>"
     end

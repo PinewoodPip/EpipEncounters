@@ -1059,6 +1059,10 @@ Text.CommonStrings.ExamineUI = Text.RegisterTranslatedString({
     Text = "Examine",
     ContextDescription = "As in, the UI."
 })
+Text.CommonStrings.ShiftClick = Text.RegisterTranslatedString({
+    Handle = "h90d55750g725fg4980gb048g03ef18af8079",
+    Text = "Shift+Click",
+})
 
 ---------------------------------------------
 -- EPIC ENCOUNTERS
