@@ -185,6 +185,12 @@ MultiSelect.Events.ItemSelectionChanged:Subscribe(function (ev)
             local tickListenerID = Text.GenerateGUID()
             GameState.Events.RunningTick:Subscribe(function (_)
                 local item = Item.Get(selection.ItemHandle)
+                if not MultiSelect.IsSelected(item) then
+                    GameState.Events.RunningTick:Unsubscribe(tickListenerID)
+                    return
+                end
+
+                -- Unhighlight the cell if the item is no longer in it
                 local currentCell, currentCellIndex, _ = MultiSelect._GetItemCell(item)
                 if not currentCell or currentCellIndex ~= cellIndex then
                     MultiSelect.SetSlotHighlight(cell, MultiSelect.PARTYINVENTORY_CELL_SIZE, false) -- Necessary as the selection might not be pointing to the same cell anymore.
