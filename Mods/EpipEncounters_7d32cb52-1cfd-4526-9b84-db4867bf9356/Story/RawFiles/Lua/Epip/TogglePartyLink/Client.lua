@@ -1,6 +1,7 @@
 
 local PlayerInfo = Client.UI.PlayerInfo
 local HotbarActions = Epip.GetFeature("Feature_HotbarActions")
+local VOLUME_EPSILON = 0.001
 
 ---@class Features.PartyLinking
 local PartyLinking = Epip.GetFeature("Features.PartyLinking")
@@ -8,6 +9,7 @@ PartyLinking.SOUNDS = {
     LINK = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/Assets/Sounds/UI/Larian/UI_Game_Party_Merge.wav",
     UNLINK = "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/Assets/Sounds/UI/Larian/UI_Game_Party_Split.wav"
 }
+PartyLinking._IsLinking = false
 
 ---------------------------------------------
 -- METHODS
@@ -46,8 +48,12 @@ end
 ---@param requester EclCharacter
 ---@param players FlashMovieClip[]
 function PartyLinking._Link(requester, players)
+    if PartyLinking._IsLinking then return end -- Ignore simultaneous requests to avoid re-entry issues.
+
+    -- Fetch characters and current UI volume
     local timerID = "Features.PartyLinking.RestoreUIVolume.Link"
     local previousVolume = Ext.Audio.GetRTPC("HUD", "RTPC_Volume_UI")
+    local wasMuted = previousVolume <= VOLUME_EPSILON -- Whether the user had UI volume muted (not by this feature)
     local characters = {} ---@type EclCharacter[]
     for i,player in ipairs(players) do
         characters[i] = Character.Get(player.characterHandle, true)
@@ -93,8 +99,20 @@ function PartyLinking._Link(requester, players)
                 -- Restore UI volume after the last chain sound effect ends.
                 local timer = Timer.GetTimer(timerID)
                 if timer then timer:Cancel() end
-                Timer.Start(0.8, function (_)
+                Timer.Start(0.7, function (_)
                     Ext.Audio.SetRTPC("HUD", "RTPC_Volume_UI", previousVolume)
+
+                    -- Wait until the sound volume change is applied before marking the linking as finished.
+                    -- Necessary as setting the volume is not synchronous.
+                    if not wasMuted then
+                        GameState.Events.Tick:Subscribe(function (_)
+                            local volume = Ext.Audio.GetRTPC("HUD", "RTPC_Volume_UI")
+                            if not wasMuted and volume > VOLUME_EPSILON then
+                                PartyLinking._IsLinking = false
+                                GameState.Events.Tick:Unsubscribe("Features.PartyLinking.CheckUnmute")
+                            end
+                        end, {StringID = "Features.PartyLinking.CheckUnmute"})
+                    end
                 end, timerID)
             end)
             chainedAnyone = true
@@ -103,6 +121,8 @@ function PartyLinking._Link(requester, players)
     end
 
     if chainedAnyone then
+        PartyLinking._IsLinking = true
+
         -- Play a single instance of the chain sound.
         Ext.Audio.PlayExternalSound("Player1", "EXT_UI", PartyLinking.SOUNDS.LINK, 7)
     else
@@ -115,6 +135,7 @@ end
 ---@param requester EclCharacter
 ---@param players FlashMovieClip[]
 function PartyLinking._Unlink(requester, players)
+    if PartyLinking._IsLinking then return end -- Ignore simultaneous requests.
     local previousVolume = Ext.Audio.GetRTPC("HUD", "RTPC_Volume_UI")
 
     -- Mute UI volume temporarily to prevent the chaining sound from stacking.
