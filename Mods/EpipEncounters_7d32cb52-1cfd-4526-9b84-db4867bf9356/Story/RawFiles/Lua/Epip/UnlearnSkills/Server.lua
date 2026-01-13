@@ -7,7 +7,7 @@ local Unlearn = Epip.GetFeature("UnlearnSkills")
 ---------------------------------------------
 
 ---@param char EsvCharacter
----@param skillID string
+---@param skillID skill
 function Unlearn.UnlearnSkill(char, skillID)
     Osiris.CharacterRemoveSkill(char, skillID)
 end

@@ -19,6 +19,7 @@ local Unlearn = {
         EE_SPECIAL_NEXUS_MEDITATE = 6,
         EE_SPECIAL_SOURCE_INFUSE = 7,
         INNATE = 8,
+        NOT_IN_SKILLMANAGER = 9,
     },
 
     TranslatedStrings = {
@@ -83,6 +84,11 @@ local Unlearn = {
             Text = "%s is an innate skill; it might be unwise to rid myself of it.",
             ContextDescription = "First param is skill name.",
         },
+        CannotUnlearnReason_NotInSkillManager = {
+            Handle = "h3ee0c6bage095g44b1g93a3ga464220f42b7",
+            Text = "I cannot unlearn a skill I do not have.",
+            ContextDescription = [[Warning when trying to unlearn a skill the character doesn't have (failsafe).]],
+        },
     },
 }
 Epip.RegisterFeature("UnlearnSkills", Unlearn)
@@ -92,14 +98,14 @@ Epip.RegisterFeature("UnlearnSkills", Unlearn)
 ---------------------------------------------
 
 ---@class EPIPENCOUNTERS_UnlearnSkill : NetLib_Message_Character
----@field SkillID string
+---@field SkillID skill
 
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
 
 ---@param char Character
----@param skillID string
+---@param skillID skill
 ---@return boolean, Features.UnlearnSkills.CannotUnlearnReason? -- Whether the character can unlearn the skill (in the case of being unable to)
 function Unlearn.CanUnlearn(char, skillID)
     local playerData = char.SkillManager.Skills[skillID]
@@ -111,6 +117,8 @@ function Unlearn.CanUnlearn(char, skillID)
     if not stat then
         reason = REASONS.SKILL_DOESNT_EXIST
         Unlearn:LogError("Tried to unlearn skill that doesn't exist: " .. skillID)
+    elseif not playerData then -- Failsafe; necessary for edgecases when skill tooltips are displayed after the character unlearnt the skill
+        reason = REASONS.NOT_IN_SKILLMANAGER
     elseif playerData.CauseListSize > 0 then -- This and the condition after are already checked for by Character.IsSkillInnate(), but we wanted a different message for them.
         reason = REASONS.GRANTED_BY_EXTERNAL_SOURCE
     elseif playerData.ZeroMemory then
@@ -137,7 +145,7 @@ function Unlearn.CanUnlearn(char, skillID)
     return canUnlearn, reason
 end
 
----@param skillID string
+---@param skillID skill
 ---@return boolean
 function Unlearn.IsSkillBlocked(skillID)
     return Unlearn.BLOCKED_SKILLS[skillID] == true

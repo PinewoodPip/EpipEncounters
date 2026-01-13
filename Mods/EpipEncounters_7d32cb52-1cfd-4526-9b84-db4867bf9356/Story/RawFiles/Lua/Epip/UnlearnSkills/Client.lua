@@ -17,6 +17,7 @@ Unlearn.CANNOT_UNLEARN_REASON_TO_TSK = {
     [REASONS.EE_SPECIAL_NEXUS_MEDITATE] = TSK.CannotUnlearnReason_EE_NexusMeditate,
     [REASONS.EE_SPECIAL_SOURCE_INFUSE] = TSK.CannotUnlearnReason_EE_SourceInfuse,
     [REASONS.INNATE] = TSK.CannotUnlearnReason_Innate,
+    [REASONS.NOT_IN_SKILLMANAGER] = TSK.CannotUnlearnReason_NotInSkillManager,
 }
 
 ---------------------------------------------
@@ -25,7 +26,7 @@ Unlearn.CANNOT_UNLEARN_REASON_TO_TSK = {
 
 ---Force-unlearns a skill, bypassing all checks.
 ---@param char EclCharacter? Defaults to client character.
----@param skillID string
+---@param skillID skill
 function Unlearn.UnlearnSkill(char, skillID)
     char = char or Client.GetCharacter()
 
