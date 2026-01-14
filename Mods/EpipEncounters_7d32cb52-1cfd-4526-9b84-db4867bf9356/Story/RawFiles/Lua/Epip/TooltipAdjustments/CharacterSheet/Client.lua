@@ -24,17 +24,17 @@ local TSK = CharacterSheetTooltips.TranslatedStrings
 ---------------------------------------------
 
 ---Appends labels for weapon damage ranges to a stat tooltip.
----@param tooltip TooltipLib_FormattedTooltip **Will be mutated**.
+---@param tooltip TooltipLib_FormattedTooltip **Will be mutated**. Expected to have a "StatsDescription" or "SkillDescription" element.
 ---@param char EclCharacter
 ---@param slot "Weapon"|"Shield"
 ---@param weapon CDivinityStats_Item
 function CharacterSheetTooltips.AddWeaponDamageRanges(tooltip, char, slot, weapon)
     local weaponDamage = Game.Math.CalculateWeaponScaledDamageRanges(char.Stats, weapon)
-    local damageElement = tooltip:GetFirstElement("StatsDescription")
+    local damageElement = tooltip:GetFirstElement("StatsDescription") or tooltip:GetFirstElement("SkillDescription")
 
     -- Append slot header
     local slotTSK = slot == "Weapon" and CommonStrings.Mainhand or CommonStrings.Offhand
-    damageElement.Label = damageElement.Label .. "\n\n" .. TSK.Label_DamageSource:Format( slotTSK:GetString())
+    damageElement.Label = damageElement.Label .. "\n" .. TSK.Label_DamageSource:Format( slotTSK:GetString())
 
     -- Append damage labels
     for damageType,range in pairs(weaponDamage) do
@@ -45,6 +45,21 @@ function CharacterSheetTooltips.AddWeaponDamageRanges(tooltip, char, slot, weapo
             Color = damageTypeData.Color,
         })
         damageElement.Label = damageElement.Label .. "\n" .. damageLabel
+    end
+end
+
+---Attempts to add labels for weapon damage ranges to a tooltip,
+---for weapon slots that are valid for the character to attack with.
+---@param tooltip TooltipLib_FormattedTooltip
+---@param char EclCharacter
+function CharacterSheetTooltips._TryAddWeaponDamageRanges(tooltip, char)
+    local weapon = char:GetItemObjectBySlot("Weapon")
+    if weapon then
+        CharacterSheetTooltips.AddWeaponDamageRanges(tooltip, char, "Weapon", weapon.Stats)
+    end
+    local offhand = char:GetItemObjectBySlot("Shield")
+    if offhand and Character.CanAttackWithOffhand(char) then
+        CharacterSheetTooltips.AddWeaponDamageRanges(tooltip, char, "Shield", offhand.Stats)
     end
 end
 
@@ -66,14 +81,13 @@ end)
 -- Show breakdown of basic attack damage types in the "Damage" stat tooltip.
 Tooltip.Hooks.RenderStatTooltip:Subscribe(function (ev)
     if ev.StatID ~= Tooltip.STAT_IDS.DAMAGE then return end
-
     local char = Client.GetCharacter()
-    local weapon = char:GetItemObjectBySlot("Weapon")
-    local offhand = char:GetItemObjectBySlot("Shield")
-    if weapon then
-        CharacterSheetTooltips.AddWeaponDamageRanges(ev.Tooltip, char, "Weapon", weapon.Stats)
-    end
-    if offhand and Character.CanAttackWithOffhand(char) then
-        CharacterSheetTooltips.AddWeaponDamageRanges(ev.Tooltip, char, "Shield", offhand.Stats)
-    end
+    CharacterSheetTooltips._TryAddWeaponDamageRanges(ev.Tooltip, char)
+end)
+
+-- Show breakdown of damage types for offhand weapon in the "Basic Attack" action tooltip.
+Tooltip.Hooks.RenderSkillTooltip:Subscribe(function (ev)
+    if ev.SkillID ~= Stats.Actions.ActionAttackGround.ID then return end
+    local char = Client.GetCharacter()
+    CharacterSheetTooltips._TryAddWeaponDamageRanges(ev.Tooltip, char)
 end)
