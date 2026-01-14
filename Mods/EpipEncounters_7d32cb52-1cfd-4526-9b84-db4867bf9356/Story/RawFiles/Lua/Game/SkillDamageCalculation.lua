@@ -28,7 +28,7 @@ function GetSkillDamage(skill, attacker, isFromItem, stealthed, attackerPos, tar
         end
     end
 
-    local damageList = Ext.NewDamageList()
+    local damageList = Ext.Stats.NewDamageList()
 
     if damageMultiplier <= 0 then
         return

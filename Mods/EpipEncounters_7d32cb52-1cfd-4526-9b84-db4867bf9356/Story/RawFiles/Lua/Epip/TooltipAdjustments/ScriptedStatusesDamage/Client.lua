@@ -181,9 +181,7 @@ StatusDamage.Hooks.GetSkill:Subscribe(function (ev)
     if GetExtType(source) == "CDivinityStats_Character" then -- Only do this for statuses applied by characters.
         ---@cast source CDivinityStats_Character
         if source.TALENT_Torturer then
-            print(ev.StatusID)
             ev.SkillID = StatusDamage.EE_TORTURER_SKILL_OVERRIDES[ev.SkillID] or ev.SkillID
-            print(ev.SkillID)
         end
     end
 end, {StringID = "EE.TorturerOverrides", Priority = -9999})

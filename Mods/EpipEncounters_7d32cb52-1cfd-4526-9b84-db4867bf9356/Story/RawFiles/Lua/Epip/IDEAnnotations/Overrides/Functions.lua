@@ -37,6 +37,23 @@ local functions = {
             },
         },
     },
+    ["StatsDamagePairList"] = {
+        ["Merge"] = {
+            Params = {
+                {Name = "other", Type = "StatsDamagePairList"},
+            },
+        },
+        ["CopyFrom"] = {
+            Params = {
+                {Name = "other", Type = "StatsDamagePairList"},
+            },
+        },
+        ["ToTable"] = {
+            ReturnValues = {
+                {Name = "other", Type = "{Amount: integer, DamageType: StatsDamageType}[]"},
+            },
+        },
+    },
     ["Ext_Stats_ItemColor"] = {
         ["GetAll"] = {
             ReturnValues = {
