@@ -481,7 +481,7 @@ function Stats.GetStatusName(status)
     return name or status.StatusId
 end
 
----@param status EclStatus|EsvStatus
+---@param status EclStatus|EsvStatus|{StatusType: StatusType, StatusId: string}
 function Stats.GetStatusIcon(status)
     local stat = Stats.Get("StatsLib_StatsEntry_StatusData", status.StatusId)
     local isInvisible = Stats.HARDCODED_STATUSES_WITHOUT_ICONS:Contains(status.StatusId)
@@ -490,14 +490,13 @@ function Stats.GetStatusIcon(status)
     if not isInvisible then
         if status.StatusType == "CONSUME" then
             ---@cast status EclStatusConsumeBase|EsvStatusConsume
-            icon = status.Icon
+            icon = status.Icon or stat.Icon
         elseif stat then
             icon = stat.Icon
             if icon == "" then -- Fetch potion instead
-                local potion = Stats.Get("Potion", stat.StatsId) ---@type StatsLib_StatsEntry_Potion
+                local potion = Stats.Get("StatsLib_StatsEntry_Potion", stat.StatsId) ---@type StatsLib_StatsEntry_Potion
                 if potion then
                     icon = potion.StatusIcon
-
                     if icon == "" then -- Use RootTemplate icon instead
                         local template = Ext.Template.GetTemplate(potion.RootTemplate) ---@type ItemTemplate
 
