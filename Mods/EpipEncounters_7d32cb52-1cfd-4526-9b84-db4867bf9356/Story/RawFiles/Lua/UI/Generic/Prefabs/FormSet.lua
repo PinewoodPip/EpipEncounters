@@ -2,6 +2,7 @@
 local Generic = Client.UI.Generic
 local EntryPrefab = Generic.GetPrefab("GenericUI_Prefab_FormSetEntry")
 local MessageBox = Client.UI.MessageBox
+local CommonStrings = Text.CommonStrings
 
 ---@class GenericUI_Prefab_FormSet : GenericUI_Prefab_FormElement
 ---@field HorizontalList GenericUI_Element_HorizontalList
@@ -51,7 +52,7 @@ function Prefab.Create(ui, id, parent, label, minimumSize)
 
     local addButton = instance:CreateElement("AddButton", "GenericUI_Element_Button", instance.Background)
     addButton:SetType("Brown")
-    addButton:SetText("Add", 3)
+    addButton:SetText(CommonStrings.Add:GetString(), 3)
     addButton:SetPositionRelativeToParent("TopRight", -15, 15)
     addButton.Events.Pressed:Subscribe(function (_)
         Client.UI.MessageBox.Open({

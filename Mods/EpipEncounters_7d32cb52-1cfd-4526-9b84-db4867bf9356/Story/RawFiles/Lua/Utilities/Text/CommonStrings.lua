@@ -218,6 +218,10 @@ Text.CommonStrings.Never = Text.RegisterTranslatedString({
     Handle = "hdf3c7f54g8619g408fgb6bfgb716b7902125",
     Text = "Never",
 })
+Text.CommonStrings.All = Text.RegisterTranslatedString({
+    Handle = "h914a85edg6909g48a2gad96g0a7b8d9dcbe1",
+    Text = "All",
+})
 Text.CommonStrings.Always = Text.RegisterTranslatedString({
     Handle = "hff7beb36g46fbg40d9gb13cg2f8680af5b06",
     Text = "Always",
@@ -871,6 +875,15 @@ Text.CommonStrings.Consumables = Text.RegisterTranslatedString({
    Handle = "h2fef0484g1ad5g4422gafb7g5a277c035095",
    Text = "Consumables",
 })
+Text.CommonStrings.Ingredients = Text.RegisterTranslatedString({
+    Handle = "h32aa040fg9eecg4437gaa33g8b89393ed91a",
+    Text = "Ingredients",
+    ContextDescription = "As in, crafting ingredients",
+})
+Text.CommonStrings.Magical = Text.RegisterTranslatedString({
+    Handle = "hca66322agafb6g4525g8bcfg694d1565c57e",
+    Text = "Magical",
+})
 Text.CommonStrings.Skillbooks = Text.RegisterTranslatedString({
    Handle = "h4fc7301egc609g4739g9752g7b0fae2e8c5b",
    Text = "Skillbooks",
@@ -1072,6 +1085,54 @@ Text.CommonStrings.ExamineUI = Text.RegisterTranslatedString({
 Text.CommonStrings.ShiftClick = Text.RegisterTranslatedString({
     Handle = "h90d55750g725fg4980gb048g03ef18af8079",
     Text = "Shift+Click",
+})
+Text.CommonStrings.Add = Text.RegisterTranslatedString({
+    Handle = "h15b66875g9270g44d0gb81fgc45670b22652",
+    Text = "Add",
+    ContextDescription = [[As in, "to add" something.]],
+})
+Text.CommonStrings.ShowWhenHoldingShift = Text.RegisterTranslatedString({
+    Handle = "h5ecce569g84c2g466eg923fg262f3b6eb689",
+    Text = "Show when holding Shift",
+    ContextDescription = [["Shift" refers to the keyboard key.]],
+})
+Text.CommonStrings.ShowByDefault = Text.RegisterTranslatedString({
+    Handle = "h86da6b32g7b2cg42a8gb694g8880663dd9e5",
+    Text = "Show by default",
+    ContextDescription = "Used for settings.",
+})
+Text.CommonStrings.Automatic = Text.RegisterTranslatedString({
+    Handle = "hab2af494gdd0dg4a3agacc7g7b2f6ed289c5",
+    Text = "Automatic",
+})
+Text.CommonStrings.Date = Text.RegisterTranslatedString({
+    Handle = "h96cff512g4b2dg49bega13bg9f04dbcd72b3",
+    Text = "Date",
+    ContextDescription = "As in, calendar date.",
+})
+Text.CommonStrings.Alphabetic = Text.RegisterTranslatedString({
+    Handle = "h8b906121g47deg4978g81c2g25c628412cbd",
+    Text = "Alphabetic",
+})
+
+---------------------------------------------
+-- POSITIONING
+---------------------------------------------
+
+Text.CommonStrings.Center = Text.RegisterTranslatedString({
+    Handle = "h1c31b68dgeff1g46fdgae89gf6c08830320a",
+    Text = "Center",
+    ContextDescription = "As in, the center position of something.",
+})
+Text.CommonStrings.MiddleRight = Text.RegisterTranslatedString({
+    Handle = "hdd93bad2g8657g470ag95f3gaa828f7b5537",
+    Text = "Middle Right",
+    ContextDescription = "As in, the middle right position of something.",
+})
+Text.CommonStrings.MiddleLeft = Text.RegisterTranslatedString({
+    Handle = "h09acaf2cg8298g41f4ga78dg16c30e9adf06",
+    Text = "Middle Left",
+    ContextDescription = "As in, the middle left position of something.",
 })
 
 ---------------------------------------------

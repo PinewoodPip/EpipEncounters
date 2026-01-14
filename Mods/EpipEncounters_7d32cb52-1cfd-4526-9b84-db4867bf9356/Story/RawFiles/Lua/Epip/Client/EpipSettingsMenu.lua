@@ -22,6 +22,7 @@ local UIOverrideToggles = Epip.GetFeature("Features.UIOverrideToggles")
 local FastForwardDialogue = Epip.GetFeature("Features.FastForwardDialogue")
 local MinimapToggle = Epip.GetFeature("Feature_MinimapToggle")
 local TurnNotifications = Epip.GetFeature("Features.TurnNotifications")
+local ChatNotificationSound = Epip.GetFeature("ChatNotificationSound")
 local Input = Client.Input
 local CommonStrings = Text.CommonStrings
 
@@ -411,7 +412,7 @@ local tabs = {
 
             -- Chat
             CreateHeader(CommonStrings.Chat),
-            {Module = "Epip_Chat", ID = "Chat_MessageSound"},
+            CreateSettingEntry(ChatNotificationSound.Settings.MessageSound),
             {Module = "Epip_Chat", ID = "Chat_ExitAfterSendingMessage"},
 
             -- Skillbook

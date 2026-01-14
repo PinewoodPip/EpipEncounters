@@ -209,16 +209,6 @@ local EpipSettings = {
             ContextDescription = "Overhead status duration setting tooltip",
         },
 
-        Chat_MessageSound_Name = {
-            Handle = "h3315b640gf25bg45eag8afbgde0e87cba2f5",
-            Text = "Message Sound",
-            ContextDescription = "Chat message sound setting name",
-        },
-        Chat_MessageSound_Description = {
-            Handle = "hce85d2d7g4957g4a29g8962gb4d42f693e1a",
-            Text = "Plays a sound effect when a message is received, so as to make it easier to notice.",
-            ContextDescription = "Chat message sound setting tooltip",
-        },
         Chat_ExitAfterSendingMessage_Name = {
             Handle = "h315ae29bg868cg4eceg8cc6gebc6623df369",
             Text = "Unfocus after sending messages",
@@ -415,6 +405,27 @@ local EpipSettings = {
             Text = "Controls the delay for simple tooltips to appear while hovering over objects in the world.<br><br>Default is 0.5s.",
             ContextDescription = "Simple world tooltip delay setting tooltip",
         },
+        Tooltip_SimpleTooltipDelay_UI_Name = {
+            Handle = "h38fc032eg7ca4g44edg8a59g8e5a0cf09478",
+            Text = "Simple Tooltip Delay (UI)",
+            ContextDescription = [[Setting name]],
+        },
+        Tooltip_SimpleTooltipDelay_UI_Description = {
+            Handle = "ha1cc9034gaa0dg4c0cgab91gef86d36858a8",
+            Text = "Controls the delay for simple tooltips to appear while hovering over UI elements.<br><br>Default is 0.5s.",
+            ContextDescription = [[Setting tooltip for "Simple Tooltip Delay (UI)"]],
+        },
+
+        HotbarHotkeysLayout_Choice_AlwaysOneRow = {
+            Handle = "h62eac265g3077g4bfagb51fgf40933019e5c",
+            Text = "Always One Row",
+            ContextDescription = [[Setting choice for "Hotbar Buttons Area Sizing" setting]],
+        },
+        HotbarHotkeysLayout_Choice_AlwaysTwoRows = {
+            Handle = "h39a3c873g5a70g4abbgaaffgfc496bc17060",
+            Text = "Always Two Rows",
+            ContextDescription = [[Setting choice for "Hotbar Buttons Area Sizing" setting]],
+        },
 
         WorldTooltip_OpenContainers_Name = {
             Handle = "hb733d1c1g7bc7g4fc5ga090ga2f662e9220d",
@@ -558,9 +569,9 @@ local newSettings = {
         DefaultValue = 1,
         ---@type SettingsLib_Setting_Choice_Entry[]
         Choices = {
-            {ID = 1, Name = "Disabled"},
+            {ID = 1, NameHandle = CommonStrings.Disabled.Handle},
             {ID = 2, NameHandle = TSKs.AutoIdentify_Option_WithLoremaster.Handle},
-            {ID = 3, Name = "Always"},
+            {ID = 3, NameHandle = CommonStrings.Always.Handle},
         }
     },
     {
@@ -571,9 +582,9 @@ local newSettings = {
         DefaultValue = 1,
         ---@type SettingsLib_Setting_Choice_Entry[]
         Choices = {
-            {ID = 1, Name = "Center"},
-            {ID = 2, Name = "Middle Right"},
-            {ID = 3, Name = "Middle Left"},
+            {ID = 1, NameHandle = CommonStrings.Center.Handle},
+            {ID = 2, NameHandle = CommonStrings.MiddleRight.Handle},
+            {ID = 3, NameHandle = CommonStrings.MiddleLeft.Handle},
         }
     },
     {
@@ -622,9 +633,9 @@ local newSettings = {
         DefaultValue = 1,
         ---@type SettingsLib_Setting_Choice_Entry[]
         Choices = {
-            {ID = 1, Name = "Disabled"},
-            {ID = 2, Name = "Show when holding shift"},
-            {ID = 3, Name = "Show by default"},
+            {ID = 1, NameHandle = CommonStrings.Disabled.Handle},
+            {ID = 2, NameHandle = CommonStrings.ShowWhenHoldingShift.Handle},
+            {ID = 3, NameHandle = CommonStrings.ShowByDefault.Handle},
         }
     },
     {
@@ -661,9 +672,9 @@ local newSettings = {
         DefaultValue = 1,
         ---@type SettingsLib_Setting_Choice_Entry[]
         Choices = {
-            {ID = 1, Name = "Automatic"},
-            {ID = 2, Name = "Always One Row"},
-            {ID = 3, Name = "Always Two Rows"},
+            {ID = 1, NameHandle = CommonStrings.Automatic.Handle},
+            {ID = 2, NameHandle = TSKs.HotbarHotkeysLayout_Choice_AlwaysOneRow.Handle},
+            {ID = 3, NameHandle = TSKs.HotbarHotkeysLayout_Choice_AlwaysTwoRows.Handle},
         }
     },
     {
@@ -721,21 +732,6 @@ local newSettings = {
     },
 
     -- Chat settings
-    {
-        ID = "Chat_MessageSound",
-        Type = "Choice",
-        ModTable = "Epip_Chat",
-        NameHandle = TSKs.Chat_MessageSound_Name,
-        DescriptionHandle = TSKs.Chat_MessageSound_Description,
-        DefaultValue = 1,
-        ---@type SettingsLib_Setting_Choice_Entry[]
-        Choices = {
-            {ID = 1, Name = "None"},
-            {ID = 2, Name = "Sound 1 (Click)"},
-            {ID = 3, Name = "Sound 2 (High-pitched click)"},
-            {ID = 3, Name = "Sound 3 (Synth)"},
-        },
-    },
     {
         ID = "Chat_ExitAfterSendingMessage",
         Type = "Boolean",
@@ -826,33 +822,6 @@ local newSettings = {
         HideNumbers = false,
         DefaultValue = 1,
     },
-    {
-        ID = "PlayerInfo_EnableSortingFiltering",
-        Type = "Boolean",
-        ModTable = "Epip_PlayerInfo",
-        DeveloperOnly = true,
-        Name = "Enable sorting/filtering",
-        DefaultValue = false,
-        Description = Text.Format("Enables the sorting and filtering systems, allowing the settings below to take effect.<br>%s", {
-            FormatArgs = {
-                Text.Format("Changes to this setting will take effect when the UI is refreshed; for example, when a new status is applied, or when the player portraits are dragged.", {Color = Color.MAGIC_ARMOR})
-            }
-        }),
-    },
-    {
-        ID = "PlayerInfo_SortingFunction",
-        Type = "Choice",
-        ModTable = "Epip_PlayerInfo",
-        DeveloperOnly = true,
-        NameHandle = TSKs.PlayerInfo_SortingFunction_Name,
-        DescriptionHandle = TSKs.PlayerInfo_SortingFunction_Description,
-        DefaultValue = 1,
-        ---@type SettingsLib_Setting_Choice_Entry[]
-        Choices = {
-            {ID = 1, Name = "Descending (important first)"},
-            {ID = 2, Name = "Ascending (important last)"},
-        },
-    },
 
     -- Save/Load settings
     {
@@ -872,8 +841,8 @@ local newSettings = {
         DefaultValue = 1,
         ---@type SettingsLib_Setting_Choice_Entry[]
         Choices = {
-            {ID = 1, Name = "Date"},
-            {ID = 2, Name = "Alphabetic"},
+            {ID = 1, NameHandle = CommonStrings.Date.Handle},
+            {ID = 2, NameHandle = CommonStrings.Alphabetic.Handle},
         },
     },
 
@@ -887,12 +856,12 @@ local newSettings = {
         DefaultValue = 1,
         ---@type SettingsLib_Setting_Choice_Entry[]
         Choices = {
-            {ID = 1, Name = "All"},
-            {ID = 2, Name = "Equipment"},
-            {ID = 3, Name = "Consumables"},
-            {ID = 4, Name = "Magical"},
-            {ID = 5, Name = "Ingredients"},
-            {ID = 6, Name = "Miscellaneous"},
+            {ID = 1, NameHandle = CommonStrings.All.Handle},
+            {ID = 2, NameHandle = CommonStrings.Equipment.Handle},
+            {ID = 3, NameHandle = CommonStrings.Consumables.Handle},
+            {ID = 4, NameHandle = CommonStrings.Magical.Handle},
+            {ID = 5, NameHandle = CommonStrings.Ingredients.Handle},
+            {ID = 6, NameHandle = CommonStrings.Miscellaneous.Handle},
         },
     },
 
@@ -978,8 +947,8 @@ local newSettings = {
         ID = "Tooltip_SimpleTooltipDelay_UI",
         Type = "ClampedNumber",
         ModTable = "Epip_Tooltips",
-        Name = "Simple Tooltip Delay (UI)",
-        Description = "Controls the delay for simple tooltips to appear while hovering over UI elements.<br><br>Default is 0.5s.",
+        NameHandle = TSKs.Tooltip_SimpleTooltipDelay_UI_Name,
+        DescriptionHandle = TSKs.Tooltip_SimpleTooltipDelay_UI_Description,
         Min = 0,
         Max = 4,
         DefaultValue = 0.1, -- TODO figure out why this doesn't seem to work properly. Causes some tooltips to be "missed" and never show up.
