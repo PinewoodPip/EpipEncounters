@@ -1,6 +1,7 @@
 
 local Notification = Client.UI.Notification
 local Input = Client.Input
+local V = Vector.Create
 
 ---@class Features.QuickLoot
 local QuickLoot = Epip.GetFeature("Features.QuickLoot")
@@ -358,17 +359,62 @@ QuickLoot.Hooks.IsGroundItemLootable:Subscribe(function (ev)
 end)
 
 -- Prevent looting containers out of sight.
--- This appears to be perfectly in-sync with the check for whether an item displays a world tooltip.
+-- This is roughly, but not perfectly in-sync with the check for whether an item displays a world tooltip.
 -- TODO also implement for corpses?
 QuickLoot.Hooks.IsContainerLootable:Subscribe(function (ev)
+    if not ev.Lootable then return end
     local item = ev.Container
-    local characterHeight = Client.GetCharacter().Height -- Appears to be the same (1.8m) for all races.
-    local visionFlags = 0
+    local char = Client.GetCharacter()
+    local characterHeight = char.AI.AIBoundsHeight -- Appears to be the same (1.8m) for all races.
+    local visionGrid = Entity.GetLevel().VisionGrid
+    local relevantVisionFlags = 0x1055 -- From ecl::UIWorldTooltip::CheckVisible(); not 100% sure if it corresponds to VisionFlags enum, but it appears to.
+    local canSee = false
     if item.AI then
-        local offsetPos = Vector.Create(ev.Position) + Vector.Create({0, characterHeight, 0})
-        visionFlags = Entity.GetLevel().VisionGrid:RaycastToObject(offsetPos, item.AI, "VisionBlock").__Value
+        local characterEyePos = V(ev.Position) + V({0, characterHeight, 0})
+
+        -- Raycast to object first (covers vast majority of cases)
+        canSee = visionGrid:RaycastToObject(characterEyePos, item.AI, relevantVisionFlags) == 0
+        if canSee then goto End end
+
+        -- Raycast to item center, AABB corners and closest edge to character
+        local characterBodyPos = V(ev.Position) + V(0, characterHeight / 2, 0)
+        local itemPos = V(item.WorldPos)
+        local direction = Vector.GetNormalized(characterEyePos - itemPos)
+        local itemEdge = itemPos + direction * (item.AI.AIBoundsSize * 2)
+        local boundMin = V(item.AI.AIBoundsMin) * 1.2
+        local boundMax = V(item.AI.AIBoundsMax) * 1.2
+        local positionsToRaycast = {
+            item.WorldPos,
+            itemEdge,
+
+            -- Bounding box corners
+            itemPos + V(boundMin),
+            itemPos + V({boundMin[1], boundMin[2], boundMax[3]}),
+            itemPos + V({boundMin[1], boundMax[2], boundMin[3]}),
+            itemPos + V({boundMin[1], boundMax[2], boundMax[3]}),
+            itemPos + V({boundMax[1], boundMin[2], boundMin[3]}),
+            itemPos + V({boundMax[1], boundMin[2], boundMax[3]}),
+            itemPos + V({boundMax[1], boundMax[2], boundMin[3]}),
+            itemPos + V(boundMax),
+        }
+
+        -- For each position, try raycasting from feet, body and eye level
+        for _,pos in ipairs(positionsToRaycast) do
+            -- Eye-level raycast
+            canSee = Entity.GetLevel().VisionGrid:RaycastToPosition(characterEyePos, pos, relevantVisionFlags) == 0
+            if canSee then goto End end
+
+            -- Feet-level raycast
+            canSee = Entity.GetLevel().VisionGrid:RaycastToPosition(ev.Position, pos, relevantVisionFlags) == 0
+            if canSee then goto End end
+
+            -- Body-level raycast
+            canSee = Entity.GetLevel().VisionGrid:RaycastToPosition(characterBodyPos, pos, relevantVisionFlags) == 0
+            if canSee then goto End end
+        end
     end
-    ev.Lootable = ev.Lootable and visionFlags == 0
+    ::End::
+    ev.Lootable = ev.Lootable and canSee
 end, {StringID = "DefaultImplementation.LineOfSight"})
 
 -- Start & stop searches when the action is pressed & released.
