@@ -870,6 +870,14 @@ function Item.IsEquipment(item)
     return type == "Armor" or type == "Weapon" or type == "Shield"
 end
 
+---Returns the weapon type of an item, if any.
+---@param item Item
+---@return WeaponType|"None"
+function Item.GetWeaponType(item)
+    local stat = Ext.GetStat(item.StatsId) ---@type StatsLib_StatsEntry_Weapon|StatsLib_StatsEntry_Shield|StatsLib_StatsEntry_Armor
+    return stat.WeaponType
+end
+
 --- Returns true for dyeable items (equipment, except rings/amulet/belt).
 ---@param item Item
 ---@return boolean

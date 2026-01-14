@@ -589,6 +589,16 @@ Text.CommonStrings.Wand = Text.RegisterTranslatedString({
    Handle = "he0847edfg24f4g4259ga31bg1f665425e26c",
    Text = "Wand",
 })
+Text.CommonStrings.Mainhand = Text.RegisterTranslatedString({
+    Handle = "he34c158cg6a25g471fg8866g8d9b9583d78e",
+    Text = "Mainhand",
+    ContextDescription = "As in, mainhand weapon.",
+})
+Text.CommonStrings.Offhand = Text.RegisterTranslatedString({
+    Handle = "h43aedb3bg299fg4337ga31fg2ed667483f11",
+    Text = "Offhand",
+    ContextDescription = "As in, offhand weapon.",
+})
 
 ---------------------------------------------
 -- ARMOR TYPES

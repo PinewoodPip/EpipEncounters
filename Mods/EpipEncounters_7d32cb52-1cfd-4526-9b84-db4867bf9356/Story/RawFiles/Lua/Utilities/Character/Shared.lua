@@ -435,6 +435,31 @@ function Character.GetEquippedItems(char)
     return items
 end
 
+---Returns whether the character can use their offhand for attacks.
+---Certain combinations (ex. Wand + non-Wand) disallow offhand attacks.
+---@param char Character
+---@return boolean -- Will also be `false` if the character has no offhand weapon equipped.
+function Character.CanAttackWithOffhand(char)
+    local mainHand = char:GetItemObjectBySlot("Weapon")
+    local offhand = char:GetItemObjectBySlot("Shield")
+    if not offhand then return false end
+    local canAttack = true
+
+    -- Cannot attack with shields
+    if Item.IsShield(offhand) then
+        canAttack = false
+    elseif mainHand and offhand then
+        -- If dual-wielding wand + non-wand, the offhand cannot be used for attacks.
+        local mainHandType = Item.GetWeaponType(mainHand)
+        local offhandType = Item.GetWeaponType(offhand)
+        if (mainHandType == "Wand" or offhandType == "Wand") and mainHandType ~= offhandType then
+            canAttack = false
+        end
+    end
+
+    return canAttack
+end
+
 ---@param char Character
 ---@param statName string
 function Character.GetDynamicStat(char, statName)
