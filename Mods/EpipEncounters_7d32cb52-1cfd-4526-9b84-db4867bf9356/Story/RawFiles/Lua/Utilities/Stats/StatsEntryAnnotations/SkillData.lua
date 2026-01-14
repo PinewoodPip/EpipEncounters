@@ -136,7 +136,7 @@
 ---@field GrowTimeout integer
 ---@field SkillBoost string
 ---@field SkillAttributeFlags StatsLib_Enum_AttributeFlags
----@field SkillProperties unknown TODO
+---@field SkillProperties StatProperty[] TODO
 ---@field CleanseStatuses string
 ---@field AoEConditions unknown TODO
 ---@field TargetConditions unknown TODO

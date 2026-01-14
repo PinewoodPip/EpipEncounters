@@ -453,8 +453,7 @@ end
 ---@param status EclStatus|EsvStatus
 function Stats.IsStatusVisible(status)
     local icon = Stats.GetStatusIcon(status)
-
-    return icon and icon ~= "unknown" and icon ~= "" 
+    return icon and icon ~= "unknown" and icon ~= ""
 end
 
 ---Returns the display name of a status.

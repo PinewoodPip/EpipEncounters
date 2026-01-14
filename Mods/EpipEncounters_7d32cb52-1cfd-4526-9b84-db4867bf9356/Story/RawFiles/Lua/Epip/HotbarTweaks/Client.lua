@@ -90,7 +90,7 @@ end
 Hotbar.Hooks.CanAddBar:Subscribe(CanModifyBarCount)
 Hotbar.Hooks.CanRemoveBar:Subscribe(CanModifyBarCount)
 
--- Force-set skills unlearnt skills onto the hotbar, if enabled.
+-- Force-set unlearnt skills onto the hotbar, if the setting is enabled.
 Client.Input.Events.KeyReleased:Subscribe(function (ev)
     if ev.InputID == "left2" and Tweaks:IsEnabled() then
         local draggedSkill = Pointer.GetDraggedSkill()

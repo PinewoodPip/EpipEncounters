@@ -506,7 +506,7 @@ end
 function ContextMenu.AddButton(ui, menuID, elementID, text, greyedOut, legal, data)
     local root = ui:GetRoot()
     local elementData = data
-    
+
     table.insert(ContextMenu.state.menu.entries, elementData)
 
     local numID = ContextMenu.GetNextElementNumID()
@@ -610,8 +610,6 @@ function ContextMenu.AddRemovableEntry(ui, menuID, data)
 end
 
 function ContextMenu.AddSubMenuElement(ui, menuID, elementID, text, subMenuID, data)
-    local root = ui:GetRoot()
-
     -- add it as a button first - TODO specialized type in swf
     ContextMenu.AddButton(ui, menuID, elementID, ContextMenu.GetText(data), false, true, data)
 
@@ -813,14 +811,13 @@ local function OnButtonSelected(ui, method, elementID)
 end
 
 -- Separate event so it does not fire the quantity-related ones.
-local function OnRemovableButtonPressed(ui, method, elementID)
-    local root = ui:GetRoot()
+local function OnRemovableButtonPressed(ui, _, elementID)
     Utilities.Log("ContextMenu", "Removable button pressed: " .. elementID)
 
     local elementData = ContextMenu.GetElementData(elementID)
-    local elementID = ContextMenu.GetEventID(elementData)
+    local eventID = ContextMenu.GetEventID(elementData)
 
-    Utilities.Hooks.FireEvent("PIP_ContextMenu", "removablePressed" .. "_" .. elementID, ContextMenu.GetCurrentEntity(), elementData.params)
+    Utilities.Hooks.FireEvent("PIP_ContextMenu", "removablePressed" .. "_" .. eventID, ContextMenu.GetCurrentEntity(), elementData.params)
 
     ContextMenu.Close(ui) -- TODO support removing elements in flash
 end

@@ -23,7 +23,6 @@ Epip.RegisterFeature("Notifications", Notifs)
 NotificationUI.Hooks.ShowCastingNotification:Subscribe(function (ev)
     if Settings.GetSettingValue("Epip_Notifications", "CastingNotifications") == true then
         local barCount = Hotbar.GetBarCount()
-        
         ev.PositionY = 915 - (barCount) * 65
     else
         ev:Prevent()

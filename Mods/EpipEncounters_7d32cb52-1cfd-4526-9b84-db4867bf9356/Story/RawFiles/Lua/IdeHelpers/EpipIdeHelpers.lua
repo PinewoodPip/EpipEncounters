@@ -8,6 +8,7 @@
 ---@alias GUID string
 ---@alias GUID.Character GUID
 ---@alias GUID.ItemTemplate GUID
+---@alias GUID.Texture GUID
 ---@alias GUID.Mod GUID
 ---@alias PrefixedGUID string
 ---@alias Context "Client"|"Server" -- TODO replace with lowercase
