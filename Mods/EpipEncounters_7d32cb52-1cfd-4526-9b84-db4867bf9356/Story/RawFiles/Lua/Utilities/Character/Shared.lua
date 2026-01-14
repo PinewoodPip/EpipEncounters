@@ -100,6 +100,16 @@ Character = {
         LIZARD = "Lizard",
     },
 
+    -- GUIDs of companions/origins of the vanilla campaign.
+    ORIGINS_COMPANIONS = {
+        SEBILLE = "c8d55eaf-e4eb-466a-8f0d-6a9447b5b24c",
+        LOHSE = "bb932b13-8ebf-4ab4-aac0-83e6924e4295",
+        RED_PRINCE = "a26a1efb-cdc8-4cf3-a7b2-b2f9544add6f",
+        IFAN = "ad9a3327-4456-42a7-9bf4-7ad60cc9e54f",
+        BEAST = "f25ca124-a4d2-427b-af62-df66df41a978",
+        FANE = "02a77f1f-872b-49ca-91ab-32098c443beb",
+    },
+
     ---Death types that cause the character's corpse to be destroyed.
     ---@type table<DeathType, true>
     CORPSELESS_DEATH_TYPES = {
