@@ -206,6 +206,7 @@ local QuickLoot = {
     },
     Hooks = {
         IsContainerLootable = {Context = "Client"}, ---@type Hook<Features.QuickLoot.Hooks.IsContainerLootable>
+        IsCorpseLootable = {Context = "Client"}, ---@type Hook<Features.QuickLoot.Hooks.IsCorpseLootable>
         IsGroundItemLootable = {Context = "Client"}, ---@type Hook<Features.QuickLoot.Hooks.IsGroundItemLootable>
         IsItemFilteredOut = {Context = "Client"}, ---@type Hook<Features.QuickLoot.Hooks.IsItemFilteredOut>
         CanPickupItem = {Context = "Client"}, ---@type Hook<Features.QuickLoot.Hooks.CanPickupItem>
@@ -319,6 +320,12 @@ QuickLoot.Settings.LootingEffect = QuickLoot:RegisterSetting("LootingEffect", {
 
 ---@class Features.QuickLoot.Hooks.IsContainerLootable
 ---@field Container EclItem
+---@field Position vec3 Origin of the request.
+---@field Lootable boolean Hookable. Defaults to `true`.
+
+---Only thrown for corpses that are lootable by engine logic.
+---@class Features.QuickLoot.Hooks.IsCorpseLootable
+---@field Corpse EclCharacter
 ---@field Position vec3 Origin of the request.
 ---@field Lootable boolean Hookable. Defaults to `true`.
 
