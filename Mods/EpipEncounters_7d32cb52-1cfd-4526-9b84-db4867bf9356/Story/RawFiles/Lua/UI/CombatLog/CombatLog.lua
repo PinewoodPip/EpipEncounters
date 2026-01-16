@@ -521,6 +521,7 @@ local DefaultFilters = {
         Name = TSK.Filter_NoDamage:GetString(),
         MessageTypes = {
             ["UI.CombatLog.Messages.NoDamage"] = true,
+            ["UI.CombatLog.Messages.AbsorbedDamage"] = true,
         },
     },
     {
