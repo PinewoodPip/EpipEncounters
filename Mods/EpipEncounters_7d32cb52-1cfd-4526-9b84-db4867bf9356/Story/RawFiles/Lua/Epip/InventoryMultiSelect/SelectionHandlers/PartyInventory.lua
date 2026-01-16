@@ -1,11 +1,13 @@
 
 local PartyInventory = Client.UI.PartyInventory
+local IsMouseWithinMovieClip = Client.Flash.IsMouseWithinElement
 local Input = Client.Input
 local V = Vector.Create
 
 local MultiSelect = Epip.GetFeature("Features.InventoryMultiSelect")
 MultiSelect.PARTYINVENTORY_CELL_SIZE =  V(50, 50)
 MultiSelect._UI_INVISIBLE_LISTENER = "Features.InventoryMultiSelect.IsUIVisible"
+MultiSelect._UI_BUTTON_HOVER_LISTENER = "Features.InventoryMultiSelect.PartyInventory.ButtonHoverListener"
 MultiSelect._CurrentHoveredItemHandle = nil ---@type ComponentHandle?
 
 ---------------------------------------------
@@ -173,31 +175,9 @@ MultiSelect.Events.ItemSelectionChanged:Subscribe(function (ev)
     local selection = ev.Selection
     if selection.Type == "PartyInventory" then
         ---@cast selection Features.InventoryMultiSelect.Selection.PartyInventory
-        local cell, cellIndex, _ = MultiSelect._GetItemCell(Item.Get(selection.ItemHandle)) -- Find the cell of the item within the UI
+        local cell, _, _ = MultiSelect._GetItemCell(Item.Get(selection.ItemHandle)) -- Find the cell of the item within the UI
         if cell then -- When deselecting, cell might no longer exist if the deselection was caused by the cell being deleted (ex. inventory filters changed)
             MultiSelect.SetSlotHighlight(cell, MultiSelect.PARTYINVENTORY_CELL_SIZE, ev.Selected)
-        end
-
-        -- Deselect the item if the cell no longer contains it.
-        -- A tick listener is required for this as operations like changing filters
-        -- delete the cells before sending the corresponding UICall.
-        if ev.Selected then
-            local tickListenerID = Text.GenerateGUID()
-            GameState.Events.RunningTick:Subscribe(function (_)
-                local item = Item.Get(selection.ItemHandle)
-                if not MultiSelect.IsSelected(item) then
-                    GameState.Events.RunningTick:Unsubscribe(tickListenerID)
-                    return
-                end
-
-                -- Unhighlight the cell if the item is no longer in it
-                local currentCell, currentCellIndex, _ = MultiSelect._GetItemCell(item)
-                if not currentCell or currentCellIndex ~= cellIndex then
-                    MultiSelect.SetSlotHighlight(cell, MultiSelect.PARTYINVENTORY_CELL_SIZE, false) -- Necessary as the selection might not be pointing to the same cell anymore.
-                    MultiSelect.SetItemSelected(Item.Get(selection.ItemHandle), false)
-                    GameState.Events.RunningTick:Unsubscribe(tickListenerID)
-                end
-            end, {StringID = tickListenerID})
         end
     end
 end)
@@ -244,7 +224,7 @@ PartyInventory:RegisterCallListener("doubleClickItem", function (ev, _)
     end
 end)
 
--- Cancel selections when inventory sorting is applied,
+-- Cancel selections when inventory sorting is applied or party view is toggled,
 -- as the cells of the items might change.
 local _TryClearSelections = function (_)
     if MultiSelect.HasSelection() then
@@ -253,6 +233,45 @@ local _TryClearSelections = function (_)
 end
 PartyInventory:RegisterCallListener("autosort", _TryClearSelections)
 PartyInventory:RegisterCallListener("applySortFilters", _TryClearSelections)
+PartyInventory:RegisterCallListener("showParty", _TryClearSelections)
+
+-- Deselect items when the auto-sort or filter buttons are clicked.
+-- This unusual flash-level hover listener is necessary as the actionscript clears slots before firing the relevant UICalls,
+-- thus deselecting the cells from the UICall does not work as cell references are no longer valid.
+local hadSelections = false
+local isHoveringOverSortOrFilterButtons = false
+MultiSelect.Events.ItemSelectionChanged:Subscribe(function (_)
+    local hasSelections = MultiSelect.HasSelection()
+    if hasSelections and not hadSelections then
+        -- Poll for buttons being hovered over
+        GameState.Events.RunningTick:Subscribe(function (_)
+            local root = PartyInventory:GetRoot()
+            local invMC = root.inventory_mc
+            local autoSortButton = invMC.autosortBtn_mc
+            local tabButtons = invMC.tabs_mc
+            local sortByButton = invMC.sortByBtn_mc
+            local allFiltersButton = invMC.allBtn_mc
+            isHoveringOverSortOrFilterButtons = (
+                IsMouseWithinMovieClip(autoSortButton) or
+                IsMouseWithinMovieClip(tabButtons) or
+                IsMouseWithinMovieClip(sortByButton) or
+                IsMouseWithinMovieClip(allFiltersButton)
+            )
+        end, {StringID = MultiSelect._UI_BUTTON_HOVER_LISTENER})
+
+        -- Cancel selections when the buttons are pressed.
+        Input.Events.KeyStateChanged:Subscribe(function (ev)
+            if isHoveringOverSortOrFilterButtons and ev.InputID == "left2" and ev.State == "Pressed" then
+                MultiSelect.ClearSelections()
+            end
+        end, {StringID = MultiSelect._UI_BUTTON_HOVER_LISTENER})
+    elseif not hasSelections and hadSelections then
+        isHoveringOverSortOrFilterButtons = false
+        GameState.Events.RunningTick:Unsubscribe(MultiSelect._UI_BUTTON_HOVER_LISTENER)
+        Input.Events.KeyStateChanged:Unsubscribe(MultiSelect._UI_BUTTON_HOVER_LISTENER)
+    end
+    hadSelections = hasSelections
+end)
 
 -- Sort selections from the party inventory.
 MultiSelect.Hooks.SortSelection:Subscribe(function (ev)

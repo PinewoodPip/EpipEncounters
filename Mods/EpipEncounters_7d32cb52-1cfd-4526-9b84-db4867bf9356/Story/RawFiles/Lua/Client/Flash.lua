@@ -231,3 +231,10 @@ function Flash.ListToArray(list, arr)
         arr.length = listLength
     end
 end
+
+---Returns whether the mouse is currently over the MovieClip.
+---@param element FlashMovieClip
+---@return boolean
+function Flash.IsMouseWithinElement(element)
+    return element.mouseX > 0 and element.mouseY > 0 and element.mouseX < element.width and element.mouseY < element.height
+end
