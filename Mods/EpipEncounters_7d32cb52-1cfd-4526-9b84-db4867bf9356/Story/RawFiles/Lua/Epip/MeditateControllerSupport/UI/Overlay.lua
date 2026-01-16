@@ -556,7 +556,7 @@ function UI.IsInGraph()
 end
 
 -- Track page changes.
-Net.RegisterListener("EPIPENCOUNTERS_AMERUI_StateChanged", function (payload)
+Net.RegisterListener("EE.AmerUILib.NetMessages.StateChanged", function (payload)
     if Character.Get(payload.Character) == Client.GetCharacter() then
         local page = Support._CurrentPage
         if payload.Interface and (not page or (page.UI ~= payload.Interface or page.ID ~= payload.Page)) then -- Do nothing if the UI and page hasn't changed (ex. when changing characters)

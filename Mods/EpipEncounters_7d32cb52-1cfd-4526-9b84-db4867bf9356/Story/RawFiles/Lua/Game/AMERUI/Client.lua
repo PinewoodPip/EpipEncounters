@@ -21,14 +21,14 @@ function AMERUI.ClientIsInUI()
     return Client.GetCharacter():GetStatus(Game.Ascension.MEDITATING_STATUS)
 end
 
-Net.RegisterListener("EPIPENCOUNTERS_AMERUI_StateChanged", function(payload)
+Net.RegisterListener("EE.AmerUILib.NetMessages.StateChanged", function(payload)
     local guid = payload.Character
     local char = Character.Get(guid)
 
     if not payload.Interface then
         AMERUI.characterStates[guid] = nil
 
-        Utilities.Log("Client.AMERUI", "Exited UI: " .. guid)
+        AMERUI:DebugLog("Client.AMERUI", "Exited UI: " .. guid)
 
         Utilities.Hooks.FireEvent("AMERUI", "CharacterExitedUI", payload)
     else
@@ -38,7 +38,7 @@ Net.RegisterListener("EPIPENCOUNTERS_AMERUI_StateChanged", function(payload)
             Page = payload.Page,
         }
 
-        Utilities.Log("Client.AMERUI", "Entered UI: " .. guid .. " UI " .. payload.Interface .. " Page " .. payload.Page)
+        AMERUI:DebugLog("Client.AMERUI", "Entered UI: " .. guid .. " UI " .. payload.Interface .. " Page " .. payload.Page)
 
         Utilities.Hooks.FireEvent("AMERUI", "CharacterEnteredUI", payload)
     end
@@ -52,7 +52,3 @@ Net.RegisterListener("EPIPENCOUNTERS_AMERUI_StateChanged", function(payload)
         end
     end
 end)
-
--- Ext.Events.InputEvent:Subscribe(function(event)
---     Ext.Dump(event)
--- end)

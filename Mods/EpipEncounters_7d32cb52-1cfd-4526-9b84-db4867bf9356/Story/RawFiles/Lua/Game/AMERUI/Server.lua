@@ -9,12 +9,12 @@ function AMERUI.UpdateState(char, instance, interface, page)
         Page = page,
     }
 
-    Net.Broadcast("EPIPENCOUNTERS_AMERUI_StateChanged", {Character = char, Interface = interface, Page = page})
+    Net.Broadcast("EE.AmerUILib.NetMessages.StateChanged", {Character = char, Interface = interface, Page = page})
 end
 
 function AMERUI.ClearState(char)
     char = Text.RemoveGUIDPrefix(char)
-    Net.Broadcast("EPIPENCOUNTERS_AMERUI_StateChanged", {Character = char})
+    Net.Broadcast("EE.AmerUILib.NetMessages.StateChanged", {Character = char})
 
     AMERUI.characterStates[char] = nil
 end

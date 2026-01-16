@@ -87,11 +87,7 @@ end
 
 function Utilities._Log(module, type, ...)
     local str = " [" .. module:upper() .. "]"
-    -- str = str .. " " .. message
-
-    if not type then type = "" end
-
-    Ext["Print" .. type](str, ...)
+    Ext["Print" .. (type or "")](str, ...)
 end
 
 function Utilities.LogWarning(module, message)
@@ -106,7 +102,6 @@ local ready = false
 Ext.Events.GameStateChanged:Subscribe(function(event)
     local old = event.FromState
     local new = event.ToState
-    
     if old == "PrepareRunning" and new == "Running" then
         Utilities.Hooks.FireEvent("GameState", "ClientReady")
 

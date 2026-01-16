@@ -294,7 +294,7 @@ function ContextMenu.Setup(data)
     ContextMenu.elements = {}
     ContextMenu.selectedElements = {}
 
-    Utilities.Log("ContextMenu", "Setting up new menu")
+    ContextMenu:DebugLog("Setting up new menu")
 
     ContextMenu.state = {
         subMenus = {},
@@ -496,7 +496,7 @@ function ContextMenu.RequestMenu(x, y, id, ui, requestingElementData, ...)
     if ContextMenu.menuHandlers[id] then
         ContextMenu.menuHandlers[id](ContextMenu.GetCurrentEntity(), requestingElementData, ...)
     else
-        Utilities.LogWarning("ContextMenu", "Context menu " .. id .. " has no handler. Setup context menus with ContextMenu.RegisterMenuHandler(id, callback)")
+        ContextMenu:__LogWarning("Context menu " .. id .. " has no handler. Setup context menus with ContextMenu.RegisterMenuHandler(id, callback)")
     end
 
     -- hook to perform stuff after the normal handling.
@@ -640,7 +640,7 @@ function ContextMenu.CheckRemoveSubMenu(ui, menu, elementID)
     local elementData = ContextMenu.GetElementData(elementID)
 
     if elementData.subMenu then
-        Utilities.Log("ContextMenu", "Removing SubMenu: " .. elementData.subMenu)
+        ContextMenu:DebugLog("Removing SubMenu: " .. elementData.subMenu)
 
         ContextMenu.RemoveSubMenu(ui, elementData.subMenu)
 
@@ -682,14 +682,14 @@ Client.UI.ContextMenu.RegisterElementListener("vanilla_button", "buttonPressed",
     local ui = Ext.UI.GetByType(Ext.UI.TypeID.contextMenu.Object) or Ext.UI.GetByType(Ext.UI.TypeID.contextMenu.Default)
     local root = ui:GetRoot()
 
-    Ext.Print("handled vanilla button: " .. params.actionID)
+    ContextMenu:DebugLog("Handled vanilla button: " .. params.actionID)
 
     ui:ExternalInterfaceCall("buttonPressed", params.ID, params.actionID)
 end)
 
 -- 4th UICall param ("handle") is unused by the game; always 0
 local function OnButtonPressed(ui, _, id, elementID, _, amountTxt)
-    Utilities.Log("ContextMenu", "Button pressed: " .. elementID)
+    ContextMenu:DebugLog("Button pressed: " .. elementID)
 
     local elementData = ContextMenu.GetElementData(elementID)
 
@@ -794,7 +794,7 @@ local function OnButtonSelected(ui, method, elementID)
     -- No events for re-hovering
     if previousSelectedID == elementID then return nil end
 
-    Utilities.Log("ContextMenu", "Button selected: " .. elementID)
+    ContextMenu:DebugLog("Button selected: " .. elementID)
 
     ContextMenu.selectedElements[elementData.menu] = elementData.id
 
@@ -812,7 +812,7 @@ end
 
 -- Separate event so it does not fire the quantity-related ones.
 local function OnRemovableButtonPressed(ui, _, elementID)
-    Utilities.Log("ContextMenu", "Removable button pressed: " .. elementID)
+    ContextMenu:DebugLog("Removable button pressed: " .. elementID)
 
     local elementData = ContextMenu.GetElementData(elementID)
     local eventID = ContextMenu.GetEventID(elementData)
@@ -824,7 +824,7 @@ end
 
 local function OnStatButtonPressed(ui, method, currentAmount, addition, elementID)
     local root = ui:GetRoot()
-    Utilities.Log("ContextMenu", "Stat button pressed: " .. elementID)
+    ContextMenu:DebugLog("Stat button pressed: " .. elementID)
 
     local elementData = ContextMenu.GetElementData(elementID)
 

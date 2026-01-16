@@ -50,9 +50,8 @@ Epip.InitializeUI(Ext.UI.TypeID.statusConsole, "StatusConsole", StatusConsole)
 ---------------------------------------------
 
 function StatusConsole.Toggle(visible, requestID)
-
-    if not requestID then 
-        Utilities.LogWarning("StatusConsole", "Toggle() must be passed a request ID to track when the UI should be turned back on in case of multiple sources hiding it.")
+    if not requestID then
+        StatusConsole:__LogWarning("Toggle() must be passed a request ID to track when the UI should be turned back on in case of multiple sources hiding it.")
         return nil
     end
 

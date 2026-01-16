@@ -80,7 +80,7 @@ Settings.Events.SettingValueChanged:Subscribe(function (ev)
     if setting.ModTable == "EpipEncounters" and setting.ID == "AutoIdentify" then
         AutoIdentify.state = ev.Value
 
-        Utilities.Log("AutoIdentify", "Toggled autoidentify to state " .. AutoIdentify.state)
+        AutoIdentify:DebugLog("Toggled autoidentify to state " .. AutoIdentify.state)
 
         -- Auto-identify all items in the party inventory when the feature is enabled mid-session.
         if AutoIdentify:IsEnabled() then

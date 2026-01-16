@@ -1,5 +1,7 @@
 
+---@class EE.AmerUILib : Library
 Game.AMERUI = {
+    NETMSG_STATE_CHANGED = "EE.AmerUILib.NetMessages.StateChanged",
 
     ---------------------------------------------
     -- INTERNAL VARIABLES - DO NOT SET
@@ -24,7 +26,14 @@ local AMERUI = Game.AMERUI
 
 Epip.InitializeLibrary("AMERUI", AMERUI)
 
+---------------------------------------------
+-- CLASSES
+---------------------------------------------
+
 ---@class AMERUI_CharacterState
 ---@field Instance integer
 ---@field Interface string
 ---@field Page string
+
+---@class EE.AmerUILib.NetMessages.StateChanged : NetLib_Message, AMERUI_CharacterState
+---@field Character GUID.Character
