@@ -52,6 +52,11 @@ local Log = {
             Text = "———— Filters ————",
             ContextDescription = [[Header for the filters section in context menu. Em-dashes are decorative.]],
         },
+        Filter_NoDamage = {
+            Handle = "hda7841f9g592eg4108g8136g0e7ea70d894b",
+            Text = "Absorbed Damage",
+            ContextDescription = [[Filter name for "X took no damage" messages]],
+        },
         Filter_CriticalsAndDodges = {
             Handle = "h6f3a9d1bg8c7eg4b52ga9d3ge7c1f4b2a8d6",
             Text = "Critical Hits & Dodges",
@@ -476,6 +481,13 @@ local DefaultFilters = {
         Name = CommonStrings.SurfaceDamage:GetString(),
         MessageTypes = {
             ["UI.CombatLog.Messages.SurfaceDamage"] = true,
+        },
+    },
+    {
+        ID = "NoDamage",
+        Name = TSK.Filter_NoDamage:GetString(),
+        MessageTypes = {
+            ["UI.CombatLog.Messages.NoDamage"] = true,
         },
     },
     {

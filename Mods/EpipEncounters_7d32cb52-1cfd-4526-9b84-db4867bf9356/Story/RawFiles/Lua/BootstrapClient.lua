@@ -478,6 +478,7 @@ LOAD_ORDER = {
 
             "UI/CombatLog/Messages/Unsupported.lua",
             "UI/CombatLog/Messages/Damage.lua",
+            "UI/CombatLog/Messages/NoDamage.lua",
             "UI/CombatLog/Messages/Healing.lua",
             "UI/CombatLog/Messages/Lifesteal.lua",
             "UI/CombatLog/Messages/Status.lua",
