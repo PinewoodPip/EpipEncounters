@@ -57,6 +57,11 @@ local Log = {
             Text = "Absorbed Damage",
             ContextDescription = [[Filter name for "X took no damage" messages]],
         },
+        Filter_Deaths = {
+            Handle = "hc46f275cg7773g41cbg97b0ge06ca77197e3",
+            Text = "Deaths",
+            ContextDescription = [[Filter name]],
+        },
         Filter_CriticalsAndDodges = {
             Handle = "h6f3a9d1bg8c7eg4b52ga9d3ge7c1f4b2a8d6",
             Text = "Critical Hits & Dodges",
@@ -104,6 +109,27 @@ local Log = {
 }
 Epip.InitializeUI(Ext.UI.TypeID.combatLog, "CombatLog", Log)
 local TSK = Log.TranslatedStrings
+
+local DeathType = Ext.Enums.DeathType
+---@type table<DeathType, TranslatedStringHandle>
+Log.DEATH_REASON_TSKHANDLES = {
+    [DeathType.None] = "h1608a991gc558g4c0ag99cdg55240f1f6d51", -- "[1] dropped dead."
+    [DeathType.Physical] = "h924f74fag09e9g4088ga97ag38801f89a635", -- "[1] was murdered in cold blood."
+    [DeathType.Arrow] = "he5471523g506fg484egbcecgf84479e16379", -- "[1] was torn to shreds."
+    [DeathType.DoT] = "h5bd5b0f7ged55g4aebga49fg30f1eea49433", -- "[1] turned into a pin cushion."
+    [DeathType.Incinerate] = "h79b3f1dfg3939g408agbbbbg6f85b6f13925", -- "[1] succumbed to death."
+    [DeathType.Acid] = "h6eb8c666gb076g4da6gb2d3g530e01021673", -- "[1] turned into charcoal."
+    [DeathType.Electrocution] = "h66fd6a3dgff1dg402ag82c6g8153ac85e3ef", -- "[1] was dissolved."
+    [DeathType.FrozenShatter] = "h771247bdged75g43fcgb374gb38f6108d348", -- "[1] came to a shocking end."
+    [DeathType.PetrifiedShatter] = "h2d495300gf89fg4b84gaaa0gd11668d6e43b", -- "[1] turned into icecubes."
+    [DeathType.Explode] = "h13bdacbfgb6edg436agbf09g989d70928190", -- "[1] turned into dust."
+    [DeathType.Surrender] = "h27818c02g8eacg4e8dgbf55g862c22a6f936", -- "[1] exploded."
+    [DeathType.Hang] = "h776b868dga03eg4782ga705ge71207038d21", -- "[1] surrendered."
+    [DeathType.KnockedDown] = "h14d11713g0be9g411fg95cegceddb6bd6797", -- "[1] was hanged."
+    [DeathType.Lifetime] = "h50cc4dd5gb39dg415ag927fgd596dfa0a668", -- "[1] didn't see it coming."
+    [DeathType.Sulfur] = "hc41f8b2fg9145g4fa8gb50bg6421c0f1cb5d", -- "[1]'s time has come."
+    [DeathType.Sentinel] = "hf8844b4bga8cdg4ecfg8a8dg5ea557466724", -- "[1] succumbed to sulfur."
+}
 
 ---A parsed message present in the UI.
 ---@class UI.CombatLog.ParsedMessage
@@ -484,6 +510,13 @@ local DefaultFilters = {
         },
     },
     {
+        ID = "ReflectedDamage",
+        Name = CommonStrings.ReflectedDamage:GetString(),
+        MessageTypes = {
+            ["UI.CombatLog.Messages.ReflectedDamage"] = true,
+        },
+    },
+    {
         ID = "NoDamage",
         Name = TSK.Filter_NoDamage:GetString(),
         MessageTypes = {
@@ -491,10 +524,10 @@ local DefaultFilters = {
         },
     },
     {
-        ID = "ReflectedDamage",
-        Name = CommonStrings.ReflectedDamage:GetString(),
+        ID = "Deaths",
+        Name = TSK.Filter_Deaths:GetString(),
         MessageTypes = {
-            ["UI.CombatLog.Messages.ReflectedDamage"] = true,
+            ["UI.CombatLog.Messages.Death"] = true,
         },
     },
     {
