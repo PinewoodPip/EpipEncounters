@@ -135,6 +135,15 @@ local Tooltip = {
         TopLeft = 4,
     },
 
+    ---@type table<UI.Examine.Entry.Type, TooltipLib_TooltipType>
+    EXAMINE_TOOLTIP_TYPE_MAP = {
+        [Examine.ENTRY_TYPES.PRIMARY_STAT] = "Stat",
+        [Examine.ENTRY_TYPES.SECONDARY_STAT] = "Ability",
+        -- [Examine.ENTRY_TYPES.TALENT] = "Talent", -- TODO
+        [Examine.ENTRY_TYPES.STATUS] = "Status",
+        -- [Examine.ENTRY_TYPES.IMMUNITY] = nil, -- These do not actually have tooltips by the game.
+    },
+
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
 
@@ -673,6 +682,17 @@ Ext.Events.UICall:Subscribe(function(ev)
             Type = "Ability",
             AbilityID = param1,
             IsFromGame = true,
+        })
+    elseif ev.Function == "showTooltip" and ev.UI:GetTypeId() == Ext.UI.TypeID.examine then -- Examine UI.
+        local tooltipType = param1
+        local statIDOrComponentHandle = param2
+        Tooltip._SetNextTooltipSource({
+            UIType = ev.UI:GetTypeId(),
+            Type = Tooltip.EXAMINE_TOOLTIP_TYPE_MAP[tooltipType] or "Stat",
+            AbilityID = statIDOrComponentHandle,
+            IsFromGame = true,
+            FlashStatusHandle = statIDOrComponentHandle,
+            FlashCharacterHandle = Ext.UI.HandleToDouble(Examine.GetCharacter().Handle),
         })
     end
 end)
