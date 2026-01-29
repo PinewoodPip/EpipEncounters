@@ -104,6 +104,56 @@ ContextMenu.ITEM_ACTIONS = {
 ---@field Disabled boolean
 ---@field Legal boolean
 
+---@class UI.ContextMenu.Menu
+---@field id string
+---@field menu UI.ContextMenu.SubMenu
+
+---@class UI.ContextMenu.SubMenu
+---@field id string
+---@field entries UI.ContextMenu.Entry[]
+
+---@class UI.ContextMenu.Entry
+---@field type UI.ContextMenu.Entry.Type
+---@field selectable boolean
+---@field id string
+---@field menu string
+---@field closeOnButtonPress boolean?
+---@field greyedOut boolean?
+---@field legal boolean?
+---@field text string
+---@field icon string?
+---@field requireShiftClick boolean?
+---@field faded boolean?
+---@field eventIDOverride string? If set, this event ID will be used instead of the entry ID when firing events. Useful for making variations of one action, with different params
+---@field netMsg string?
+---@field params table?
+---@field subMenu string?
+
+---@class UI.ContextMenu.Entry.Button : UI.ContextMenu.Entry
+---@field type "button"
+
+---@class UI.ContextMenu.Entry.Checkbox : UI.ContextMenu.Entry
+---@field type "checkbox"
+---@field checked boolean?
+
+---@class UI.ContextMenu.Entry.Header : UI.ContextMenu.Entry
+---@field type "header"
+
+---@class UI.ContextMenu.Entry.Stat : UI.ContextMenu.Entry
+---@field type "stat"
+---@field min number
+---@field max number
+---@field step number
+
+---@class UI.ContextMenu.Entry.SubMenu : UI.ContextMenu.Entry
+---@field type "subMenu"
+
+---@class UI.ContextMenu.Entry.Removable : UI.ContextMenu.Entry
+---@field type "removable"
+
+---@alias UI.ContextMenu.Instance UIObject
+---@alias UI.ContextMenu.Entry.Type "subMenu"|"button"|"checkbox"|"header"|"stat"|"removable"
+
 ---------------------------------------------
 -- EVENTS/HOOKS
 ---------------------------------------------
@@ -223,7 +273,9 @@ function ContextMenu.SetPosition(ui, x, y)
     ContextMenu.UI:SetPosition(math.floor(uiPos[1]), math.floor(uiPos[2]))
 end
 
--- Adds a single entry to a menu, "main" by default.
+---Adds a single entry to a menu.
+---@param entry UI.ContextMenu.Entry
+---@param menu string? -- Defaults to "main"
 function ContextMenu.AddElement(entry, menu)
     local ui = ContextMenu.GetActiveUI()
     menu = menu or "main"
@@ -234,20 +286,28 @@ function ContextMenu.AddElement(entry, menu)
     })
 end
 
--- Get a numeric id for the next element.
+---Gets the next free numeric id for a new element.
+---@return integer
 function ContextMenu.GetNextElementNumID()
     -- elementsCount is intended to track how many indexes are being used up by vanilla context menu entries.
     return ContextMenu.elementsCount + #ContextMenu.state.menu.entries
 end
 
+---Returns the active context menu UI instance.
+---@return UI.ContextMenu.Instance
 function ContextMenu:GetUI()
     return ContextMenu.GetActiveUI()
 end
 
+---Returns the root flash object of the current context menu UI.
+---@return FlashObject
 function ContextMenu:GetRoot()
     return ContextMenu:GetUI():GetRoot()
 end
 
+---Returns a all submenu flash elements for the given UI instance.
+---@param ui UI.ContextMenu.Instance
+---@return table<string, FlashMovieClip>
 function ContextMenu.GetSubMenus(ui)
     local root = ui:GetRoot()
     local menus = {}
@@ -259,10 +319,15 @@ function ContextMenu.GetSubMenus(ui)
     return menus
 end
 
+---Returns the element data of an entry.
+---@param id string
+---@return UI.ContextMenu.Entry?
 function ContextMenu.GetElementData(id)
     return ContextMenu.elements[id]
 end
 
+---Adds a submenu to the context menu.
+---@param data table
 function ContextMenu.AddSubMenu(data)
 
     local ui = ContextMenu.GetActiveUI()
@@ -282,6 +347,8 @@ function ContextMenu.AddSubMenu(data)
     ContextMenu.SetPosition(ui, ContextMenu.position.x, ContextMenu.position.y)
 end
 
+---Sets up a new context menu.
+---@param data UI.ContextMenu.Menu
 function ContextMenu.Setup(data)
     local root = ContextMenu.Root
 
@@ -324,38 +391,42 @@ function ContextMenu.Open(position)
     ContextMenu.SetPosition(ContextMenu.UI, position[1], position[2])
 end
 
+---Closes the UI.
+---@param ui UI.ContextMenu.Instance? Defaults to current instance.
 function ContextMenu.Close(ui)
     ui = ui or ContextMenu.GetActiveUI()
-
     local root = ui:GetRoot()
     root.close()
-
     ContextMenu.Cleanup(ui)
 end
 
+---Returns whether a context menu is currently open.
+---@return boolean
 function ContextMenu.IsOpen()
     return ContextMenu.GetActiveUI().OF_Visible
 end
 
+---Updates the latest hovered character handle.
 local function UpdateLatestHoveredCharacter()
-    -- Living characters are prioritized.
-    local char = Pointer.GetCurrentCharacter(nil, true)
-
-    -- Do not update the char is a context menu is already open.
+    local char = Pointer.GetCurrentCharacter(nil, true) -- Living characters are prioritized.
+    -- Do not update the char if a context menu is already open.
     if char and not ContextMenu.IsOpen() then
         ContextMenu._LatestHoveredCharacterHandle = char.Handle
         ContextMenu._LatestHoveredItemHandle = nil
     end
 end
+
+---Updates the latest hovered item handle.
 local function UpdateLatestHoveredItem()
     local item = Pointer.GetCurrentItem()
-
     if item and not ContextMenu.IsOpen() then
         ContextMenu._LatestHoveredItemHandle = item.Handle
         ContextMenu._LatestHoveredCharacterHandle = nil
     end
 end
 
+---Cleans up the context menu state.
+---@param ui UI.ContextMenu.Instance
 function ContextMenu.Cleanup(ui)
     ContextMenu.state = {
         subMenus = {},
@@ -383,19 +454,31 @@ function ContextMenu.Cleanup(ui)
     ContextMenu._MaxSize = nil
 end
 
+---Registers a listener for an element event.
+---@param elementID string
+---@param type string
+---@param callback function TODO
 function ContextMenu.RegisterElementListener(elementID, type, callback)
     Utilities.Hooks.RegisterListener("PIP_ContextMenu", type .. "_" .. elementID, callback)
 end
 
--- TODO support multiple??? or fire event?
+---Registers a handler for a context menu.
+---@param id string
+---@param callback function TODO
 function ContextMenu.RegisterMenuHandler(id, callback)
     ContextMenu.menuHandlers[id] = callback
 end
 
+---Registers a handler for vanilla context menu events.
+---@param type string
+---@param callback function TODO
 function ContextMenu.RegisterVanillaMenuHandler(type, callback)
     Utilities.Hooks.RegisterListener("PIP_ContextMenu", "VanillaMenu_" .. type, callback)
 end
 
+---Registers a hook for stat display.
+---@param elementID string
+---@param handler function TODO
 function ContextMenu.RegisterStatDisplayHook(elementID, handler)
     Utilities.Hooks.RegisterHook("PIP_ContextMenu", "statDisplay_" .. elementID, handler)
 end
@@ -403,6 +486,10 @@ end
 ---------------------------------------------
 -- INTERNAL METHODS - DO NOT CALL
 ---------------------------------------------
+
+---Adds multiple elements to a menu.
+---@param ui UI.ContextMenu.Instance?
+---@param menuData UI.ContextMenu.SubMenu
 function ContextMenu.AddElements(ui, menuData)
     ui = ui or ContextMenu.GetActiveUI()
     local menuID = menuData.id
@@ -421,16 +508,21 @@ function ContextMenu.AddElements(ui, menuData)
 
         -- TODO make this use hooks! to allow for custom-defined elements!
         if type == "button" then
-            ContextMenu.AddButton(ui, menuID, data.id, data.text, data.greyedOut, data.legal, data)
+            ContextMenu.AddButton(ui, menuID, data.id, data.greyedOut, data.legal, data)
         elseif type == "checkbox" then
-            ContextMenu.AddCheckbox(ui, menuID, data.id, data.text, data.checked, data.greyedOut, data.legal, data)
+            ---@cast data UI.ContextMenu.Entry.Checkbox
+            ContextMenu.AddCheckbox(ui, menuID, data.id, data.checked, data.greyedOut, data.legal, data)
         elseif type == "header" then
-            ContextMenu.AddHeader(ui, menuID, data.id, data.text, data)
+            ---@cast data UI.ContextMenu.Entry.Header
+            ContextMenu.AddHeader(ui, menuID, data.id, data)
         elseif type == "subMenu" then
-            ContextMenu.AddSubMenuElement(ui, menuID, data.id, data.text, data.subMenu, data)
+            ---@cast data UI.ContextMenu.Entry.SubMenu
+            ContextMenu.AddSubMenuElement(ui, menuID, data.id, data)
         elseif type == "stat" then
+            ---@cast data UI.ContextMenu.Entry.Stat
             ContextMenu.AddStatEntry(ui, menuID, data)
         elseif type == "removable" then
+            ---@cast data UI.ContextMenu.Entry.Removable
             ContextMenu.AddRemovableEntry(ui, menuID, data)
         end
 
@@ -442,7 +534,7 @@ end
 
 ---Returns the formatted label for an entry,
 ---including suffixes for control hints (ex. "Shift+Click")
----@param elementData unknown TODO
+---@param elementData UI.ContextMenu.Entry
 ---@return string
 function ContextMenu.GetText(elementData)
     local text = elementData.text
@@ -460,20 +552,22 @@ function ContextMenu.GetText(elementData)
     return text
 end
 
--- Get the currently-used Context Menu UI instance, defaulting to the custom one if neither is being used.
+---Get the currently-used Context Menu UI instance, defaulting to the custom one if neither is being used.
+---@return UI.ContextMenu.Instance
 function ContextMenu.GetActiveUI()
     local ui = ContextMenu.UI
-
     if not ContextMenu.Root or not ContextMenu.Root.visible then
         ui = Ext.UI.GetByType(Ext.UI.TypeID.contextMenu.Object) or Ext.UI.GetByType(Ext.UI.TypeID.contextMenu.Default)
     end
-
     return ui
 end
 
+---Sets up the icon for a context menu element.
+---@param ui UI.ContextMenu.Instance
+---@param menuID string
+---@param data UI.ContextMenu.Entry
 function ContextMenu.SetupIcon(ui, menuID, data)
     local element = ContextMenu.GetLastElement(ui, menuID)
-
     if data.icon then
         local iconName = "pip_contextmenu_" .. data.id
         element.iggy_icon.name = "iggy_" .. iconName
@@ -484,12 +578,19 @@ function ContextMenu.SetupIcon(ui, menuID, data)
     end
 end
 
+---Requests a context menu to be opened.
+---@param x number? Defaults to current position.
+---@param y number? Defaults to current position.
+---@param id string
+---@param ui UI.ContextMenu.Instance?
+---@param requestingElementData UI.ContextMenu.Entry?
+---@vararg any
 function ContextMenu.RequestMenu(x, y, id, ui, requestingElementData, ...)
     if not ui then ui = ContextMenu.UI end
     ContextMenu._MaxSize = nil
     ContextMenu.SetPosition(ui, x, y)
 
-    -- track submenus
+    -- Track submenus
     if id ~= "main" then
         ContextMenu.state.subMenus[id] = {subMenus = {}}
     end
@@ -499,11 +600,18 @@ function ContextMenu.RequestMenu(x, y, id, ui, requestingElementData, ...)
         ContextMenu:__LogWarning("Context menu " .. id .. " has no handler. Setup context menus with ContextMenu.RegisterMenuHandler(id, callback)")
     end
 
-    -- hook to perform stuff after the normal handling.
+    -- Hook to perform stuff after the normal handling.
     Utilities.Hooks.FireEvent("PIP_ContextMenu", "contextMenuRequested", id)
 end
 
-function ContextMenu.AddButton(ui, menuID, elementID, text, greyedOut, legal, data)
+---Adds a button to the menu.
+---@param ui UI.ContextMenu.Instance
+---@param menuID string
+---@param elementID string
+---@param greyedOut boolean
+---@param legal boolean
+---@param data UI.ContextMenu.Entry
+function ContextMenu.AddButton(ui, menuID, elementID, greyedOut, legal, data)
     local root = ui:GetRoot()
     local elementData = data
 
@@ -520,6 +628,10 @@ function ContextMenu.AddButton(ui, menuID, elementID, text, greyedOut, legal, da
     end
 end
 
+---Returns the menu element for the given menu ID.
+---@param ui UI.ContextMenu.Instance
+---@param menuID string
+---@return FlashMovieClip?
 function ContextMenu.GetMenuElement(ui, menuID)
     local root = ui:GetRoot()
     for i=0,#root.contextMenusList.content_array-1,1 do
@@ -531,37 +643,49 @@ function ContextMenu.GetMenuElement(ui, menuID)
     end
 end
 
-function ContextMenu.AddCheckbox(ui, menuID, elementID, text, checked, greyedOut, legal, data)
+---Adds a checkbox to the menu.
+---@param ui UI.ContextMenu.Instance
+---@param menuID string
+---@param elementID string
+---@param checked boolean?
+---@param greyedOut boolean?
+---@param legal boolean?
+---@param data UI.ContextMenu.Entry.Checkbox
+function ContextMenu.AddCheckbox(ui, menuID, elementID, checked, greyedOut, legal, data)
     local root = ui:GetRoot()
     local elementData = data
-    
+
     table.insert(ContextMenu.state.menu.entries, elementData)
 
     local elementNumID = ContextMenu.GetNextElementNumID()
     root.addCheckbox(menuID, elementNumID, elementID, true, ContextMenu.GetText(data), checked or false, greyedOut or false, legal or true)
 
-    -- local contents = ContextMenu.Root.windowsMenu_mc.list.content_array
-    -- local checkbox = contents[#contents-1]
     local contents = ContextMenu.GetMenuElement(ui, menuID).list.content_array
     local checkbox = contents[#contents-1]
 
-    -- idk why, but a frame-based approach is not working in the swf
+    -- A frame-based approach is not working in the swf - not sure why.
     checkbox.checkbox_mc.x = 0
     checkbox.checkbox_checked_mc.x = 0
-    checkbox.checkbox_mc.y = -2 -- push these a bit up to compensate for arrow sticking out
+    checkbox.checkbox_mc.y = -2 -- Push these a bit up to compensate for arrow sticking out
     checkbox.checkbox_checked_mc.y = -2
     checkbox.text_txt.x = checkbox.text_txt.x + 20
 end
 
--- Incredible technology. The work of a maestro
+---Centers text in a flash element.
+---@param element FlashMovieClip
+---@param offset number?
 local function CenterText(element, offset)
     element.htmlText = '<p align="center">' .. element.htmlText .. '</p>'
     element.x = element.x + (offset or 0)
 end
 
-function ContextMenu.AddHeader(ui, menuID, elementID, text, data)
-    ContextMenu.AddButton(ui, menuID, elementID, text, false, true, data)
-
+---Adds a header to the menu.
+---@param ui UI.ContextMenu.Instance
+---@param menuID string
+---@param elementID string
+---@param data UI.ContextMenu.Entry.Header
+function ContextMenu.AddHeader(ui, menuID, elementID, data)
+    ContextMenu.AddButton(ui, menuID, elementID, false, true, data)
     local element = ContextMenu.GetLastElement(ui, menuID)
     element.selectable = false
     element.disabled = true
@@ -569,6 +693,10 @@ function ContextMenu.AddHeader(ui, menuID, elementID, text, data)
     CenterText(element.text_txt, -5)
 end
 
+---Adds a stat entry to the menu.
+---@param ui UI.ContextMenu.Instance
+---@param menuID string
+---@param data UI.ContextMenu.Entry.Stat
 function ContextMenu.AddStatEntry(ui, menuID, data)
     local root = ui:GetRoot()
 
@@ -599,55 +727,67 @@ function ContextMenu.AddStatEntry(ui, menuID, data)
     element.amount_txt.x = 205 - element.amount_txt.textWidth / 2
 end
 
--- Removable elements function as a button, but also have a sub-button on their right.
+---Adds a removable entry to a menu.
+---Removable elements function as a button, but also have a sub-button on their right.
+---@param ui UI.ContextMenu.Instance
+---@param menuID string
+---@param data UI.ContextMenu.Entry.Removable
 function ContextMenu.AddRemovableEntry(ui, menuID, data)
     ContextMenu.AddStatEntry(ui, menuID, data)
-
     local element = ContextMenu.GetLastElement(ui, menuID)
-
     element.amount_txt.visible = false
     element.plusBtn_mc.visible = false
 end
 
-function ContextMenu.AddSubMenuElement(ui, menuID, elementID, text, subMenuID, data)
-    -- add it as a button first - TODO specialized type in swf
-    ContextMenu.AddButton(ui, menuID, elementID, ContextMenu.GetText(data), false, true, data)
+---Adds a submenu entry to a menu.
+---Submenu entries will open their submenu when selected.
+---@param ui UI.ContextMenu.Instance
+---@param menuID string
+---@param elementID string
+---@param data UI.ContextMenu.Entry.SubMenu
+function ContextMenu.AddSubMenuElement(ui, menuID, elementID, data)
+    -- Add it as a button first - no need for a specialized type in swf
+    ContextMenu.AddButton(ui, menuID, elementID, false, true, data)
 
-    -- redefine the element as submenu-type
+    -- Redefine the element as submenu-type
     local elementData = data
     elementData.type = "subMenu"
 end
 
+---Returns the last added element in a menu.
+---@param ui UI.ContextMenu.Instance
+---@param menuID string
+---@return FlashMovieClip
 function ContextMenu.GetLastElement(ui, menuID)
     local elements = ContextMenu.GetMenuElement(ui, menuID).list.content_array
     return elements[#elements-1]
 end
 
--- Returns either the character bound to the context menu, or the item
+---Returns either the character or item bound to the context menu, if any.
+---@return (EclCharacter|EclItem)?
 function ContextMenu.GetCurrentEntity()
     local entity
-
     if ContextMenu.itemHandle then
         entity = Item.Get(ContextMenu.itemHandle)
     else
         entity = ContextMenu.GetCurrentCharacter(true)
     end
-
     return entity
 end
 
-function ContextMenu.CheckRemoveSubMenu(ui, menu, elementID)
+---Checks if an element has a submenu and hides it if so.
+function ContextMenu.CheckRemoveSubMenu(ui, elementID)
     local elementData = ContextMenu.GetElementData(elementID)
-
     if elementData.subMenu then
         ContextMenu:DebugLog("Removing SubMenu: " .. elementData.subMenu)
-
         ContextMenu.RemoveSubMenu(ui, elementData.subMenu)
-
         ContextMenu.SetPosition(ui)
     end
 end
 
+---Hides a submenu.
+---@param ui UI.ContextMenu.Instance
+---@param menuID string
 function ContextMenu.RemoveSubMenu(ui, menuID)
     local root = ui:GetRoot()
     root.removeSubMenu(menuID)
@@ -664,13 +804,11 @@ function ContextMenu.RemoveSubMenu(ui, menuID)
     ContextMenu:FireEvent("SubMenuRemoved", menuID)
 end
 
+---Returns the event ID for an element, respecting eventIDOverride.
+---@param elementData UI.ContextMenu.Entry
+---@return string|integer
 function ContextMenu.GetEventID(elementData)
-    -- You can set an ID override for events, to have multiple elements fire the same event. Useful for making variations of one action, with different params
-    if elementData.eventIDOverride then
-        return elementData.eventIDOverride
-    end
-
-    return elementData.id
+    return elementData.eventIDOverride or elementData.id
 end
 
 ---------------------------------------------
@@ -678,17 +816,22 @@ end
 ---------------------------------------------
 
 -- Handling redirected vanilla context menus - UNUSED?
-Client.UI.ContextMenu.RegisterElementListener("vanilla_button", "buttonPressed", function(character, params)
+Client.UI.ContextMenu.RegisterElementListener("vanilla_button", "buttonPressed", function(_, params)
     local ui = Ext.UI.GetByType(Ext.UI.TypeID.contextMenu.Object) or Ext.UI.GetByType(Ext.UI.TypeID.contextMenu.Default)
-    local root = ui:GetRoot()
-
     ContextMenu:DebugLog("Handled vanilla button: " .. params.actionID)
-
     ui:ExternalInterfaceCall("buttonPressed", params.ID, params.actionID)
 end)
 
--- 4th UICall param ("handle") is unused by the game; always 0
-local function OnButtonPressed(ui, _, id, elementID, _, amountTxt)
+---Handles button press events.
+---@diagnostic disable: duplicate-doc-param
+---@param ui UI.ContextMenu.Instance
+---@param _ any
+---@param _ any ID.
+---@param elementID string
+---@param _ any
+---@param amountTxt string?
+---@diagnostic enable: duplicate-doc-param
+local function OnButtonPressed(ui, _, _, elementID, _, amountTxt)
     ContextMenu:DebugLog("Button pressed: " .. elementID)
 
     local elementData = ContextMenu.GetElementData(elementID)
@@ -735,6 +878,7 @@ local function OnButtonPressed(ui, _, id, elementID, _, amountTxt)
 
             -- If the element is a checkbox, also send new state
             if elementData.type == "checkbox" then
+                ---@cast elementData UI.ContextMenu.Entry.Checkbox
                 msg.State = not elementData.checked
             end
 
@@ -748,17 +892,19 @@ local function OnButtonPressed(ui, _, id, elementID, _, amountTxt)
 end
 
 -- Listen for vanilla context menu being opened.
-ContextMenu:RegisterCallListener("pipVanillaContextMenuOpened", function (ev)
-    -- Close our instance - we don't support using both at once
+ContextMenu:RegisterCallListener("pipVanillaContextMenuOpened", function (_)
     local vanillaElements = ContextMenu.vanillaContextData
-    local item = Item.Get(ContextMenu.itemHandle) or (ContextMenu._LatestHoveredItemHandle and Item.Get(ContextMenu._LatestHoveredItemHandle))
+    local itemHandle = ContextMenu.itemHandle or ContextMenu._LatestHoveredItemHandle
+    local item = itemHandle and Item.Get(itemHandle) or nil
+
+    -- Close our instance - we don't support using both at once
     ContextMenu.Close(ContextMenu.UI)
 
+    -- Update bookkeeping
     if item then
         ContextMenu.itemHandle = item.Handle
     end
     ContextMenu.position = {x = 0, y = 0}
-
     ContextMenu.elementsCount = #vanillaElements
 
     -- Log unmapped action IDs.
@@ -783,7 +929,11 @@ ContextMenu:RegisterCallListener("pipVanillaContextMenuOpened", function (ev)
     ContextMenu.GetActiveUI():GetRoot().windowsMenu_mc.updateDone(true)
 end, "Vanilla")
 
--- Fired when you hover over an entry
+---Handles button selection (hover) events.
+---@param ui UI.ContextMenu.Instance
+---@param method string
+---@param elementID string
+---@diagnostic disable-next-line: unused-local
 local function OnButtonSelected(ui, method, elementID)
 
     local elementData = ContextMenu.GetElementData(elementID)
@@ -804,13 +954,16 @@ local function OnButtonSelected(ui, method, elementID)
 
     -- Remove submenus of previously selected element
     if previousSelectedID then
-        ContextMenu.CheckRemoveSubMenu(ui, elementData.menu, previousSelectedID)
+        ContextMenu.CheckRemoveSubMenu(ui, previousSelectedID)
     end
 
     Utilities.Hooks.FireEvent("PIP_ContextMenu", "buttonSelected" .. "_" .. elementID)
 end
 
--- Separate event so it does not fire the quantity-related ones.
+---Handles removable button press events.
+---@param ui UI.ContextMenu.Instance
+---@param _ any
+---@param elementID string
 local function OnRemovableButtonPressed(ui, _, elementID)
     ContextMenu:DebugLog("Removable button pressed: " .. elementID)
 
@@ -822,11 +975,17 @@ local function OnRemovableButtonPressed(ui, _, elementID)
     ContextMenu.Close(ui) -- TODO support removing elements in flash
 end
 
+---Handles stat button press events.
+---@param ui UI.ContextMenu.Instance
+---@param method string
+---@param currentAmount number
+---@param addition boolean
+---@param elementID string
 local function OnStatButtonPressed(ui, method, currentAmount, addition, elementID)
     local root = ui:GetRoot()
     ContextMenu:DebugLog("Stat button pressed: " .. elementID)
 
-    local elementData = ContextMenu.GetElementData(elementID)
+    local elementData = ContextMenu.GetElementData(elementID) ---@cast elementData UI.ContextMenu.Entry.Stat
 
     -- TODO cleanup
     if elementData.type == "removable" then
@@ -834,7 +993,7 @@ local function OnStatButtonPressed(ui, method, currentAmount, addition, elementI
         return nil
     end
 
-    local elementID = ContextMenu.GetEventID(elementData)
+    elementID = ContextMenu.GetEventID(elementData)
 
     -- default step is 1
     local amount = elementData.step or 1
@@ -865,6 +1024,14 @@ local function OnStatButtonPressed(ui, method, currentAmount, addition, elementI
     end
 end
 
+---Handles context menu request events.
+---@param ui UI.ContextMenu.Instance
+---@param _ any
+---@param id string
+---@param x number
+---@param y number
+---@param entityHandle number?
+---@vararg any
 local function OnRequestContextMenu(ui, _, id, x, y, entityHandle, ...)
     -- The passed character handle, if any, becomes the associated character with this context menu. Otherwise, we default to client-controlled char.
     if entityHandle then
@@ -893,7 +1060,12 @@ ContextMenu:RegisterInvokeListener("updateButtons", function(ev)
     ContextMenu.vanillaContextData = data
 end, "Vanilla")
 
--- Fetches item from vanilla context menu calls.
+---Fetches item from vanilla context menu calls.
+---@param ui UI.ContextMenu.Instance
+---@param method string
+---@param param3 number
+---@param handle number
+---@diagnostic disable-next-line: unused-local
 local function OnContextMenu(ui, method, param3, handle)
     local item = Ext.GetItem(Ext.UI.DoubleToHandle(handle)) -- inventory uses this param
 
@@ -908,10 +1080,10 @@ Ext.Events.SessionLoaded:Subscribe(function()
     if Client.IsUsingController() then return end
 
     local vanillaUI = Ext.UI.GetByType(Ext.UI.TypeID.contextMenu.Object)
-    
+
     -- Setup our custom instance
     ContextMenu.UI = Ext.UI.Create("pip_contextMenu", "Public/EpipEncounters_7d32cb52-1cfd-4526-9b84-db4867bf9356/GUI/contextMenu.swf", 300)
-    
+
     ContextMenu.Root = ContextMenu.UI:GetRoot()
     ContextMenu.Root.isCustomInstance = true
     ContextMenu.Root.MAX_HEIGHT = ContextMenu.MAX_HEIGHT
@@ -937,7 +1109,7 @@ Ext.Events.SessionLoaded:Subscribe(function()
     Ext.RegisterUICall(vanillaUI, "pipContextMenuClosed", function(ui)
         ContextMenu.Cleanup(ui)
     end)
-    
+
     -- Global call to begin creating a custom context menu
     Ext.RegisterUINameCall("pipRequestContextMenu", OnRequestContextMenu)
 end)
