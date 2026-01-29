@@ -68,7 +68,7 @@ end)
 
 -- Add context menu options to customize container icons & backgrounds.
 ContextMenu.RegisterVanillaMenuHandler("Item", function (item)
-    if Item.IsContainer(item) then
+    if Item.IsContainer(item) and Item.IsInInventory(item) then
         ContextMenu.AddElement({{
             id = "Features.ContainerCustomization.SetIcon",
             type = "button",

@@ -67,7 +67,7 @@ end)
 -- Restrict which items can be renamed.
 Renaming.Hooks.CanRename:Subscribe(function (ev)
     local item = ev.Item
-    local isContainer = Item.IsContainer(item)
+    local isContainer = Item.IsContainer(item) and Item.IsInInventory(item)
     ev.CanRename = isContainer -- Only allow renaming containers for now.
 end)
 
