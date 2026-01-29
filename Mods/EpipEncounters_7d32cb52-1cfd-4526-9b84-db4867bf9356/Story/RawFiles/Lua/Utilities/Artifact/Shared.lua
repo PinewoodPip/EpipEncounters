@@ -1104,5 +1104,3 @@ end
 for _,artifact in pairs(Artifact.ARTIFACTS) do
     Artifact.RegisterArtifact(artifact)
 end
-
-Item.IsArtifact = Artifact.IsArtifact -- For backwards compatibility.

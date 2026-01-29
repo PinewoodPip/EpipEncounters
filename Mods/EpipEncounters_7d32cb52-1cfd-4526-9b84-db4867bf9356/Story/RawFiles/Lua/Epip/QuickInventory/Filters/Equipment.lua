@@ -149,6 +149,7 @@ for k,aliasSet in pairs(QuickInventory.DYNAMIC_STAT_FIELD_ALIASES) do
 end
 
 local CACHED_STAT_FIELDS = nil ---@type table<string, string>
+local IsArtifact = EpicEncounters.IsEnabled() and Artifact.IsArtifact or function() return false end
 
 ---------------------------------------------
 -- SETTINGS
@@ -357,9 +358,9 @@ QuickInventory.Hooks.IsItemVisible:Subscribe(function (ev)
         -- Check rarity setting.
         if raritySetting ~= "Any" then
             if raritySetting == "Unique" then -- Excludes Artifacts.
-                visible = visible and item.Stats.Rarity == "Unique" and not Item.IsArtifact(item)
+                visible = visible and item.Stats.Rarity == "Unique" and not IsArtifact(item)
             elseif raritySetting == "Artifact" then
-                visible = visible and Item.IsArtifact(item)
+                visible = visible and IsArtifact(item)
             else
                 visible = visible and item.Stats.Rarity == raritySetting
             end
@@ -420,10 +421,10 @@ QuickInventory.Hooks.SortItems:Subscribe(function (ev)
         local rarityA, rarityB = ev.ItemA.Stats.Rarity, ev.ItemB.Stats.Rarity
         local scoreA, scoreB
 
-        if Item.IsArtifact(ev.ItemA) then
+        if IsArtifact(ev.ItemA) then
             rarityA = "Artifact"
         end
-        if Item.IsArtifact(ev.ItemB) then
+        if IsArtifact(ev.ItemB) then
             rarityB = "Artifact"
         end
 

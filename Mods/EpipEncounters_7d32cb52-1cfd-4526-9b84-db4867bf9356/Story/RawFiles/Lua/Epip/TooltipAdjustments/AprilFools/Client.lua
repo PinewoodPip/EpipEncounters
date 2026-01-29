@@ -18,18 +18,18 @@ local TSK = AprilFoolsTooltips.TranslatedStrings
 -- EVENT LISTENERS
 ---------------------------------------------
 
+-- Append Gale hint to unique and Artifact items.
 GameState.Events.ClientReady:Subscribe(function (_)
-    if Epip.IsAprilFools() then
-        -- Append Gale hint to unique and Artifact items.
-        Tooltip.Hooks.RenderItemTooltip:Subscribe(function (ev)
-            local item = ev.Item
-            if Item.IsArtifact(item) or Item.IsUnique(item) then
-                ev.Tooltip:InsertElement({
-                    Type = "StatMEMSlot",
-                    Label = TSK.Label_GaleConsumable:GetString(),
-                })
-            end
-        end)
-    end
-end)
+    Tooltip.Hooks.RenderItemTooltip:Subscribe(function (ev)
+        local item = ev.Item
+        if Artifact.IsArtifact(item) or Item.IsUnique(item) then
+            ev.Tooltip:InsertElement({
+                Type = "StatMEMSlot",
+                Label = TSK.Label_GaleConsumable:GetString(),
+            })
+        end
+    end)
+end, {EnabledFunctor = function ()
+    return Epip.IsAprilFools() and EpicEncounters.IsEnabled()
+end})
 
