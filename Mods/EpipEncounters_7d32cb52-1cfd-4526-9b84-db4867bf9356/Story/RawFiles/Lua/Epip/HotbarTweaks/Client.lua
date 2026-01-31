@@ -1,6 +1,7 @@
 
 local Hotbar = Client.UI.Hotbar
 local Notification = Client.UI.Notification
+local Input = Client.Input
 
 ---@class Features.HotbarTweaks
 local Tweaks = Epip.GetFeature("Features.HotbarTweaks")
@@ -126,15 +127,20 @@ end)
 
 -- Redirect slot keybind presses to upper visible bars, if modifier keys are held and the setting is enabled.
 Hotbar.Hooks.GetSlotForIggyEvent:Subscribe(function (ev)
+    if not ev.SlotIndex then return end
+    local slotInputEventID = "UISelectSlot" .. Text.RemoveTrailingZeros(ev.SlotIndex)
+    local binding = Input.GetBinding(slotInputEventID)
+    local isSlotUnbound = not binding
     if Tweaks:GetSettingValue(Tweaks.Settings.SlotKeyboardModifiers) == true then
+        -- Only redirect if the binding does not already use the same modifiers (would conflict)
         local barIndex = nil
-        if Client.Input.IsShiftPressed() then
+        if Client.Input.IsShiftPressed() and (isSlotUnbound or not binding.Shift) then
             barIndex = 2
-        elseif Client.Input.IsCtrlPressed() then
+        elseif Client.Input.IsCtrlPressed() and (isSlotUnbound or not binding.Ctrl) then
             barIndex = 3
-        elseif Client.Input.IsAltPressed() then
+        elseif Client.Input.IsAltPressed() and (isSlotUnbound or not binding.Alt) then
             barIndex = 4
-        elseif Client.Input.IsGUIPressed() then
+        elseif Client.Input.IsGUIPressed() and (isSlotUnbound or not binding.GUI) then
             barIndex = 5
         end
 

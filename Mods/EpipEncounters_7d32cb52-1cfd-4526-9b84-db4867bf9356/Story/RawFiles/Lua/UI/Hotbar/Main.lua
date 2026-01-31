@@ -1091,6 +1091,20 @@ Hotbar:RegisterCallListener("pipRemoveHotbar", function(_)
     Hotbar.Events.BarPlusMinusButtonPressed:Throw({IsPlusButton = false})
 end)
 
+---Returns whether a slot binding is currently active based on pressed inputs.
+---@param slot integer Slot index, 1-based.
+---@return boolean
+function Hotbar.CanUseSlotWithBinding(slot)
+    local inputEventID = "UISelectSlot" .. Text.RemoveTrailingZeros(slot - 1)
+    local binding = Input.GetBinding(inputEventID)
+
+    -- Do not use slots by default if modifier keys are held, as
+    -- they will likely conflict with Input action bindings.
+    -- Only do so if the user specifically bound the input event with modifiers.
+    local canUseSlot = not binding or not Input.BindingHasModifiers(binding) or Input.HasInputEventModifiersPressed(binding)
+    return canUseSlot or not Input.AreModifierKeysPressed()
+end
+
 -- Redirect keyboard hotkeys to point to the expected slot.
 Hotbar:RegisterCallListener("pipSlotKeyAttempted", function(_, index)
     local state = Hotbar.GetState()
@@ -1098,9 +1112,8 @@ Hotbar:RegisterCallListener("pipSlotKeyAttempted", function(_, index)
     local keyIndex = index + 1
     index = index + 1
 
-    -- Do not use slots by default if modifier keys are held, as
-    -- they will likely conflict with Input action bindings. 
-    if not Input.AreModifierKeysPressed() then
+    local canUseSlot = Hotbar.CanUseSlotWithBinding(index)
+    if canUseSlot then
         index = index + (firstBarRow - 1) * Hotbar.GetSlotsPerRow()
     else
         index = nil

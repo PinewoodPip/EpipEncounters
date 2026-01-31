@@ -755,6 +755,13 @@ function Input.HasInputEventModifiersPressed(binding)
     return active
 end
 
+---Returns whether an InputEvent binding uses any modifier keys.
+---@param binding InputLib_InputEventBinding
+---@return boolean
+function Input.BindingHasModifiers(binding)
+    return binding.Shift or binding.Ctrl or binding.Alt or binding.GUI
+end
+
 ---Returns the name for a raw input ID.
 ---@param rawID InputRawType
 ---@param short boolean?
