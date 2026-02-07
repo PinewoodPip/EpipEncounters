@@ -169,9 +169,10 @@ ContextMenu.ITEM_ACTIONS = {
 ---@param force boolean?
 ---@return EclCharacter?
 function ContextMenu.GetCurrentCharacter(force)
+    local charHandle = ContextMenu._LatestHoveredCharacterHandle
     local char = nil
-    if ContextMenu.IsOpen() or force then
-        char = Character.Get(ContextMenu._LatestHoveredCharacterHandle)
+    if charHandle and (ContextMenu.IsOpen() or force) then
+        char = Character.Get(charHandle)
     end
     return char
 end
@@ -1063,17 +1064,26 @@ end, "Vanilla")
 ---Fetches item from vanilla context menu calls.
 ---@param ui UI.ContextMenu.Instance
 ---@param method string
----@param param3 number
----@param handle number
+---@param handle1 number
+---@param handle2 number
 ---@diagnostic disable-next-line: unused-local
-local function OnContextMenu(ui, method, param3, handle)
-    local item = Ext.GetItem(Ext.UI.DoubleToHandle(handle)) -- inventory uses this param
-
-    if item == nil then
-        item = Ext.GetItem(Ext.UI.DoubleToHandle(param3)) -- but other UIs use this one instead
+local function OnContextMenu(ui, method, handle1, handle2)
+    -- PartyInventory uses handle1 param (with handle2 being the character handle),
+    -- whereas other UIs use handle2 for the item instead.
+    local parsedHandle1 = Ext.UI.DoubleToHandle(handle1)
+    local parsedHandle2 = Ext.UI.DoubleToHandle(handle2)
+    local itemHandle = nil ---@type ItemHandle?
+    if Ext.Utils.GetHandleType(parsedHandle1) == "ClientItem" then
+        itemHandle = parsedHandle1
+    elseif Ext.Utils.GetHandleType(parsedHandle2) == "ClientItem" then
+        itemHandle = parsedHandle2
+    else
+        itemHandle = nil -- Right-clicking empty slots in containerInventory causes this UICall to be sent with null handles.
     end
-
-    ContextMenu.itemHandle = item.Handle
+    if itemHandle then
+        local item = Item.Get(itemHandle)
+        ContextMenu.itemHandle = item.Handle
+    end
 end
 
 Ext.Events.SessionLoaded:Subscribe(function()

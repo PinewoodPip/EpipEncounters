@@ -46,7 +46,14 @@ end
 ---@return integer? -- `nil` if the Object is not a rune.
 function Stats.GetRuneTier(statsID)
     local runeDef = Stats.GetRuneDefinition(statsID)
-    return runeDef and Stats.Get("StatsLib_StatsEntry_Object", statsID).RuneLevel or nil
+    local runeTier = nil
+    if runeDef then
+        local statsObj = Ext.Stats.GetForPip(statsID) ---@type StatsLib_StatsEntry_Object
+        if Stats.GetType(statsObj) == "Object" then
+            runeTier = statsObj.RuneLevel
+        end
+    end
+    return runeTier
 end
 
 ---@param materialID StatsLib_Rune_Material
@@ -72,8 +79,7 @@ function Stats._GenerateRuneData()
     local runeGroups = {}
 
     for _,statID in ipairs(stats) do
-        local stat = Stats.Get("Object", statID)
-
+        local stat = Stats.Get("StatsLib_StatsEntry_Object", statID)
         if stat.RuneLevel > 0 then
             local name, size = statID:match("^LOOT_Rune_([^_]+)_([^_]+)$")
             -- local isFramed = false -- TODO
