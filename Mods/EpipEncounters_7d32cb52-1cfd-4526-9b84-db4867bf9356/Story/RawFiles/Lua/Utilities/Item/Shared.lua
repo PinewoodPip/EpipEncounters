@@ -648,14 +648,13 @@ end
 ---@param char EsvCharacter
 function Item.GetTreasureLevel(item, char)
     local template = item.CurrentTemplate
-    local treasureLevel
+    local treasureLevel = -1
     if not template.UsePartyLevelForTreasureLevel then
         treasureLevel = template.TreasureLevel
     else
         local members = Character.GetPartyMembers(char)
-        local maxLevel = -1
         for _,member in ipairs(members) do
-            maxLevel = math.max(member.Stats.Level, maxLevel)
+            treasureLevel = math.max(member.Stats.Level, treasureLevel)
         end
     end
     if treasureLevel < 1 then
