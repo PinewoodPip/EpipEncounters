@@ -505,6 +505,7 @@ end
 
 ---@override
 function UI:Hide()
+    QuickLoot._IsStealSearchActive = false
     Tooltip.HideTooltip()
     if UI._Initialized then
         UI.SettingsPanel:SetVisible(false) -- Make the settings panel default to closed when opening the UI.
