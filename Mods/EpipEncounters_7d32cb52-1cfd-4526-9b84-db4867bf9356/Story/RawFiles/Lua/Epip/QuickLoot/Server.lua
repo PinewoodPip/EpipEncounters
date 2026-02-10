@@ -4,6 +4,9 @@ local AutoIdentify = Epip.GetFeature("Feature_AutoIdentify")
 ---@class Features.QuickLoot
 local QuickLoot = Epip.GetFeature("Features.QuickLoot")
 
+QuickLoot.THEFT_DETECTION_TIMER_ID = "Features.QuickLoot.TheftDetection"
+QuickLoot._PendingTheftCrimes = {} ---@type table<Guid, {CharGuid:Guid, ItemGuid:Guid, OwnerGuid:Guid}>
+
 ---------------------------------------------
 -- METHODS
 ---------------------------------------------
@@ -19,10 +22,35 @@ function QuickLoot.PickUpItem(char, item, addToWares)
         Osiris.CharacterUsedItem(char, item)
     end
 
+    -- Determine original owner before moving the item.
+    -- Falls back to the inventory parent's owner for items inside NPC-owned containers,
+    -- as individual items may not have their own OwnerCharacterHandle set.
+    local originalOwner = Item.GetOwner(item)
+    if not originalOwner then
+        local parent = Item.GetInventoryParent(item)
+        if parent and Entity.IsItem(parent) then
+            originalOwner = Item.GetOwner(parent)
+        end
+    end
+
     -- Loot the item.
     Osiris.ItemToInventory(item, char, item.Amount, 1, 0)
     if addToWares then
         Item.SetMarkedAsWares(item, true)
+    end
+
+    -- Delayed theft detection: the owner notices missing items after 5-15 seconds.
+    -- Mirrors vanilla pickpocket detection behavior.
+    -- ProcObjectTimer on the same object+ID replaces the previous timer, so stealing
+    -- multiple items from one NPC restarts the delay from the last theft.
+    if originalOwner and not Character.IsPlayer(originalOwner) then
+        local delay = math.random(QuickLoot.THEFT_DETECTION_MIN_DELAY, QuickLoot.THEFT_DETECTION_MAX_DELAY)
+        QuickLoot._PendingTheftCrimes[originalOwner.MyGuid] = {
+            CharGuid = char.MyGuid,
+            ItemGuid = item.MyGuid,
+            OwnerGuid = originalOwner.MyGuid,
+        }
+        Osi.ProcObjectTimer(originalOwner.MyGuid, QuickLoot.THEFT_DETECTION_TIMER_ID, delay)
     end
 
     -- Does not appear to work.
@@ -91,4 +119,19 @@ Net.RegisterListener(QuickLoot.NETMSG_GENERATE_TREASURE, function (payload)
     Net.PostToCharacter(payload:GetCharacter(), QuickLoot.NETMSG_TREASURE_GENERATED, {
         GeneratedContainerNetIDs = generatedContainers,
     })
+end)
+
+-- Register the theft crime when the owner's detection timer fires.
+-- Uses "EmptyPocketNoticed" (the vanilla delayed-detection crime type) so the
+-- owner investigates rather than NPCs near the thief reacting instantly.
+Osiris.RegisterSymbolListener("ProcObjectTimerFinished", 2, "after", function(ownerGuid, event)
+    if event == QuickLoot.THEFT_DETECTION_TIMER_ID then
+        local crime = QuickLoot._PendingTheftCrimes[ownerGuid]
+        if crime then
+            QuickLoot._PendingTheftCrimes[ownerGuid] = nil
+            local owner = Character.Get(crime.OwnerGuid)
+            local pos = owner.WorldPos
+            Osi.CharacterRegisterCrimeWithPosition(crime.CharGuid, "EmptyPocketNoticed", crime.ItemGuid, crime.OwnerGuid, pos[1], pos[2], pos[3], 0)
+        end
+    end
 end)
