@@ -273,7 +273,11 @@ function QuickLoot.StartSearch(char, isStealing)
                         Ext.Visual.Get(handle):Delete()
                     end)
                 else -- Highlight target containers each subsequent tick.
-                    Entity.SetHighlight(entityHandle, Entity.HIGHLIGHT_TYPES.SELECTED)
+                    local highlightType = Entity.HIGHLIGHT_TYPES.SELECTED
+                    if QuickLoot._IsStealSearchActive and Entity.IsItem(entity) and not Item.IsLegal(entity) then
+                        highlightType = Entity.HIGHLIGHT_TYPES.ENEMY
+                    end
+                    Entity.SetHighlight(entityHandle, highlightType)
                 end
             end
         end

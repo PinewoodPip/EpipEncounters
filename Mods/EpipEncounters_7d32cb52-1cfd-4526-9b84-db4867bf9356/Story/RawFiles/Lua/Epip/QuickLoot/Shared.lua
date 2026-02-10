@@ -47,6 +47,11 @@ local QuickLoot = {
             Text = "On the ground.",
             ContextDescription = [[Tooltip for source of items laying on the ground]],
         },
+        Label_Steal = {
+            Handle = "h4a3e7b12g8c5fg4d1aga2b4g6f9e01d3c7a8",
+            Text = "Stolen goods.",
+            ContextDescription = [[Tooltip label for items that would be stolen via quick loot]],
+        },
         Label_LootingHint = {
             Handle = "h6b8490dcg409dg47c7gb49bg76989ace163f",
             Text = "Left-click to loot, right-click to loot as wares.",
@@ -66,6 +71,11 @@ local QuickLoot = {
             Handle = "h8fe098cag9221g4fdbgaec2g392e49012d1a",
             Text = "Searching...",
             ContextDescription = [[Notification when starting to search nearby lootables]],
+        },
+        Notification_Stealing = {
+            Handle = "ha7c2e4d1g3b8fg4e2dg91a5g5d6f8b3c2e07",
+            Text = "Stealing...",
+            ContextDescription = [[Notification when starting a steal search]],
         },
         Notification_DidNotLootAll = {
             Handle = "h181532ebg36b3g426bg93e8gcadaeaf5f379",
