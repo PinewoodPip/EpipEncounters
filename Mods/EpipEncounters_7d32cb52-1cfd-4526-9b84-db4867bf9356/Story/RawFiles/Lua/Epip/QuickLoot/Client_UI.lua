@@ -677,3 +677,10 @@ end)
 local function TryHide() UI:TryHide() end
 Client.Events.ActiveCharacterChanged:Subscribe(TryHide)
 QuickLoot.Events.SearchStarted:Subscribe(TryHide)
+
+-- Close the UI when the player enters dialogue (e.g. from a crime accusation or NPC conversation).
+Client.Events.InDialogueStateChanged:Subscribe(function (ev)
+    if ev.InDialogue then
+        UI:TryHide()
+    end
+end, {EnabledFunctor = function () return UI:IsVisible() end})

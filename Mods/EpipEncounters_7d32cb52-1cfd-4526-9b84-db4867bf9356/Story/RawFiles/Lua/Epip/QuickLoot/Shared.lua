@@ -372,3 +372,4 @@ QuickLoot.Settings.LootingEffect = QuickLoot:RegisterSetting("LootingEffect", {
 
 ---@class Features.QuickLoot.NetMsgs.TreasureGenerated : NetLib_Message
 ---@field GeneratedContainerNetIDs table<NetId, integer> Maps container to expected amount of items.
+
