@@ -13,6 +13,7 @@ QuickLoot.SEARCH_EFFECT = "RS3_FX_UI_Target_Circle_01" -- TODO is this the contr
 QuickLoot.CONTAINER_EFFECT = "PIP_FX_PerceptionReveal_OverlayOnly"
 
 QuickLoot._Searches = {} ---@type table<CharacterHandle, Features.QuickLoot.Search>
+QuickLoot._IsStealSearchActive = false
 
 ---@class Features.QuickLoot.Search
 ---@field EffectHandle ComponentHandle
@@ -223,10 +224,12 @@ end
 ---Begins searching for nearby lootables.
 ---Throws if char is already performing a search.
 ---@param char EclCharacter
-function QuickLoot.StartSearch(char)
+---@param isStealing boolean? Defaults to `false`.
+function QuickLoot.StartSearch(char, isStealing)
     if QuickLoot.IsRequesting(char) then
         QuickLoot:__Error("StartSearch", "Character is already searching")
     end
+    QuickLoot._IsStealSearchActive = isStealing or false
 
     -- Play search effect
     local multiVisual = Ext.Visual.CreateOnCharacter(char.WorldPos, char)
@@ -270,7 +273,11 @@ function QuickLoot.StartSearch(char)
                         Ext.Visual.Get(handle):Delete()
                     end)
                 else -- Highlight target containers each subsequent tick.
-                    Entity.SetHighlight(entityHandle, Entity.HIGHLIGHT_TYPES.SELECTED)
+                    local highlightType = Entity.HIGHLIGHT_TYPES.SELECTED
+                    if QuickLoot._IsStealSearchActive and Entity.IsItem(entity) and not Item.IsLegal(entity) then
+                        highlightType = Entity.HIGHLIGHT_TYPES.ENEMY
+                    end
+                    Entity.SetHighlight(entityHandle, highlightType)
                 end
             end
         end
@@ -408,14 +415,18 @@ end
 -- Prevent looting certain containers and items.
 QuickLoot.Hooks.IsContainerLootable:Subscribe(function (ev)
     local item, lootable = ev.Container, ev.Lootable
-    lootable = lootable and Item.IsLegal(item) -- Can't steal with Quick Loot
+    if not QuickLoot._IsStealSearchActive then
+        lootable = lootable and Item.IsLegal(item) -- Can't steal with Quick Loot (unless using steal search)
+    end
     lootable = lootable and not Item.IsLocked(item) -- Can't loot locked containers
     lootable = lootable and item.Activated and not item.Invisible -- Can't loot hidden containers
     ev.Lootable = lootable
 end, {StringID = "DefaultImplementation"})
 QuickLoot.Hooks.IsGroundItemLootable:Subscribe(function (ev)
     local item, lootable = ev.Item, ev.Lootable
-    lootable = lootable and Item.IsLegal(item) -- Can't steal with Quick Loot
+    if not QuickLoot._IsStealSearchActive then
+        lootable = lootable and Item.IsLegal(item) -- Can't steal with Quick Loot (unless using steal search)
+    end
     lootable = lootable and item.Activated and not item.Invisible -- Can't loot hidden treasures
     ev.Lootable = lootable
 end)
@@ -452,8 +463,12 @@ Input.Events.ActionExecuted:Subscribe(function (ev)
         end
 
         if QuickLoot.CanSearch(char) then
-            QuickLoot.StartSearch(char)
-            Notification.ShowWarning(TSK.Notification_Searching:GetString(), 0.5)
+            local isStealing = Character.IsSneaking(char)
+            QuickLoot.StartSearch(char, isStealing)
+            local notificationText = isStealing
+                and TSK.Notification_Stealing:Format({Color = Color.LARIAN.RED})
+                or TSK.Notification_Searching:GetString()
+            Notification.ShowWarning(notificationText, 0.5)
         end
     end
 end)
@@ -466,6 +481,21 @@ Input.Events.ActionReleased:Subscribe(function (ev)
     end
 end)
 
+-- Cancel the search when escape is pressed or right-click is released.
+-- A 100ms grace period on right-click prevents the injected right2 (used to stop movement) from triggering cancel.
+Input.Events.KeyStateChanged:Subscribe(function (ev)
+    local char = Client.GetCharacter()
+    if ev.InputID == "escape" then
+        QuickLoot.CancelSearch(char)
+        ev:Prevent() -- Block pause menu.
+    elseif ev.InputID == "right2" and ev.State == "Released" then
+        local search = QuickLoot.GetSearch(char)
+        if Ext.Utils.MonotonicTime() - search.StartTime > 100 then
+            QuickLoot.CancelSearch(char)
+        end
+    end
+end, {EnabledFunctor = function () local char = Client.GetCharacter(); return char ~= nil and QuickLoot.IsSearching(char) end})
+
 -- Start & stop searches when holding the world tooltips toggle on a controller,
 -- as a temporary solution to Input Actions not being easily usable.
 GameState.Events.GameReady:Subscribe(function (_)
@@ -473,7 +503,7 @@ GameState.Events.GameReady:Subscribe(function (_)
         if Input.IsAcceptingInput() and Input.GetInputEventDefinition(ev.Event.EventId).EventName == "ShowWorldTooltips" and ev.Event.DeviceId == "Unknown" then -- Only do this if the input event is from a controller.
             local char = Client.GetCharacter()
             if ev.Event.Press and QuickLoot.CanSearch(char) and Input.IsKeyPressed("leftshoulder") then -- Require holding the shoulder buttons before the world tooltip toggle to make it less likely for users to use the feature by accident.
-                QuickLoot.StartSearch(char)
+                QuickLoot.StartSearch(char, Character.IsSneaking(char))
             elseif ev.Event.Release and QuickLoot.IsSearching(char) then
                 QuickLoot.StopSearch(char)
             end

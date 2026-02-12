@@ -252,6 +252,23 @@ function UI.IsGroundItem(item)
     return handleMap.GroundItems[item.Handle]
 end
 
+---Returns whether an item in the UI would be stolen when looted.
+---Items from corpses are never considered stolen (dead owner = legal).
+---@param item EclItem Must be in the UI.
+---@return boolean
+function UI._IsItemStolen(item)
+    local handleMap = UI._State.HandleMaps
+    local containerHandle = handleMap.ItemHandleToContainerHandle[item.Handle]
+    if containerHandle then
+        local container = Item.Get(containerHandle)
+        return not Item.IsLegal(container)
+    elseif handleMap.ItemHandleToCorpseHandle[item.Handle] then
+        return false -- Corpse loot is always legal.
+    else
+        return not Item.IsLegal(item) -- Ground item.
+    end
+end
+
 ---Re-fetches items and resets the state.
 ---@param search Features.QuickLoot.Events.SearchCompleted|number Search or radius.
 function UI._UpdateItems(search)
@@ -325,6 +342,10 @@ function UI._RenderItem(item)
     slot:SetUsable(false)
     slot:SetUpdateDelay(-1)
 
+    -- Toggle steal overlay
+    local showStealOverlay = QuickLoot._IsStealSearchActive and UI._IsItemStolen(item)
+    slot._StealOverlay:SetVisible(showStealOverlay)
+
     state.ItemHandleToSlot[item.Handle] = slot
 end
 
@@ -343,9 +364,13 @@ function UI._SetHighlightedItem(selectedItem)
         end
     end
 
-    -- Set new highlight
+    -- Set new highlight; use red (ENEMY) outline for stolen items.
     if sourceEntity then
-        Entity.SetHighlight(sourceEntity.Handle, Entity.HIGHLIGHT_TYPES.SELECTED)
+        local highlightType = Entity.HIGHLIGHT_TYPES.SELECTED
+        if QuickLoot._IsStealSearchActive and selectedItem and UI._IsItemStolen(selectedItem) then
+            highlightType = Entity.HIGHLIGHT_TYPES.ENEMY
+        end
+        Entity.SetHighlight(sourceEntity.Handle, highlightType)
     end
 
     -- Update bookkeeping
@@ -425,6 +450,14 @@ function UI._Initialize()
         slot.Hooks.GetTooltipData:Subscribe(function (ev)
             ev.Position = V(UI:GetPosition()) + V(UI.BACKGROUND_SIZE[1] - 15, 3)
         end)
+        -- Create red overlay for stolen items.
+        local overlay = slot:CreateElement("StealOverlay", "GenericUI_Element_Color", slot.SlotElement)
+        overlay:SetColor(Color.CreateFromHex(Color.LARIAN.RED))
+        overlay:SetSize(HotbarSlot.ICON_SIZE:unpack())
+        overlay:SetPosition(1, 1)
+        overlay:SetAlpha(0.3, true)
+        overlay:SetVisible(false)
+        slot._StealOverlay = overlay
         return slot
     end)
 
@@ -505,6 +538,7 @@ end
 
 ---@override
 function UI:Hide()
+    QuickLoot._IsStealSearchActive = false
     Tooltip.HideTooltip()
     if UI._Initialized then
         UI.SettingsPanel:SetVisible(false) -- Make the settings panel default to closed when opening the UI.
@@ -585,6 +619,12 @@ Tooltip.Hooks.RenderItemTooltip:Subscribe(function (ev)
 
         -- Append source label.
         local labels = {} ---@type string[]
+        -- Add "Steal" indicator for stolen items.
+        if QuickLoot._IsStealSearchActive and UI.IsItemInUI(ev.Item) and UI._IsItemStolen(ev.Item) then
+            table.insert(labels, TSK.Label_Steal:Format({
+                Color = Color.LARIAN.RED,
+            }))
+        end
         if sourceLabel then
             table.insert(labels, sourceLabel)
         end
@@ -637,3 +677,10 @@ end)
 local function TryHide() UI:TryHide() end
 Client.Events.ActiveCharacterChanged:Subscribe(TryHide)
 QuickLoot.Events.SearchStarted:Subscribe(TryHide)
+
+-- Close the UI when the player enters dialogue (e.g. from a crime accusation or NPC conversation).
+Client.Events.InDialogueStateChanged:Subscribe(function (ev)
+    if ev.InDialogue then
+        UI:TryHide()
+    end
+end, {EnabledFunctor = function () return UI:IsVisible() end})
