@@ -373,25 +373,13 @@ function QuickLoot.StopSearch(char)
     local groundItems = QuickLoot.GetGroundItems(char.WorldPos, searchRadius)
     search.EndTime = Ext.Utils.MonotonicTime()
     search.Containers = Entity.EntityListToHandles(containers)
-    -- Stopping the effect is handled via tick listener.
 
     Net.PostToServer(QuickLoot.NETMSG_GENERATE_TREASURE, {
         CharacterNetID = char.NetID,
         ItemNetIDs = Entity.EntityListToNetIDs(containers),
     })
 
-    -- Remove highlights
-    if Ext.Entity.SetHighlight ~= nil then -- This used to be exclusive to the fork.
-        for _,container in ipairs(containers) do
-            Entity.SetHighlight(container, Entity.HIGHLIGHT_TYPES.NONE)
-        end
-        for _,corpse in ipairs(corpses) do
-            Entity.SetHighlight(corpse, Entity.HIGHLIGHT_TYPES.NONE)
-        end
-        for _,item in ipairs(groundItems) do
-            Entity.SetHighlight(item, Entity.HIGHLIGHT_TYPES.NONE)
-        end
-    end
+    QuickLoot._ClearSearchHighlights(containers, corpses, groundItems)
 end
 
 ---Cancels a character's current search.
@@ -401,7 +389,31 @@ function QuickLoot.CancelSearch(char)
     if not search then
         QuickLoot:__Error("StopSearch", "Character is not searching")
     end
+
+    -- Clear highlights
+    local searchRadius = QuickLoot.GetSearchRadius(char)
+    local containers, corpses = QuickLoot.GetContainers(char.WorldPos, searchRadius)
+    local groundItems = QuickLoot.GetGroundItems(char.WorldPos, searchRadius)
+    QuickLoot._ClearSearchHighlights(containers, corpses, groundItems)
+
     QuickLoot._Searches[char.Handle] = nil
+end
+
+---Clears the highlight effects from the given entities.
+---Stopping the overlay effect is handled via tick listener instead.
+---@param containers EclItem[]
+---@param corpses EclCharacter[]
+---@param groundItems EclItem[]
+function QuickLoot._ClearSearchHighlights(containers, corpses, groundItems)
+    for _,container in ipairs(containers) do
+        Entity.SetHighlight(container, Entity.HIGHLIGHT_TYPES.NONE)
+    end
+    for _,corpse in ipairs(corpses) do
+        Entity.SetHighlight(corpse, Entity.HIGHLIGHT_TYPES.NONE)
+    end
+    for _,item in ipairs(groundItems) do
+        Entity.SetHighlight(item, Entity.HIGHLIGHT_TYPES.NONE)
+    end
 end
 
 ---Returns the default search radius based on user settings.
