@@ -85,7 +85,7 @@ local EpipSettingsMenu = {
         },
         Credits_SpecialThanks = {
             Handle = "hf25b230cg35fbg4142g8b49g40c4989cae08",
-            Text = [[Special thanks to Ameranth & Elric, Norbyte, all Cathes (Cathe, Bun, JoienReid), Derpy Moa, Clibanarius, AQUACORAL, Zares, and the entire Epic Encounters community]],
+            Text = [[Special thanks to Ameranth & Elric, Norbyte, all Cathes (Cathe, Bun, JoienReid), Derpy Moa, William Findlay, Clibanarius, AQUACORAL, Zares, and the entire Epic Encounters community]],
             ContextDescription = [[Credits in the "Info" tab]],
         },
         Header_Translations = {
