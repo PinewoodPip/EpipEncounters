@@ -58,6 +58,7 @@ UILayout.RegisterTrackedUI(UI) -- Persist UI position.
 ---@field LowPriorityItemHandles set<ItemHandle> Items to show as greyed out.
 ---@field ItemHandleToSlot table<ItemHandle, GenericUI_Prefab_HotbarSlot>
 ---@field SearchRadius number
+---@field IsStealing boolean
 
 ---Thrown when the "Loot all" functionality is used.
 ---@class Features.QuickLoot.UI.Hooks.GetLootAllItems
@@ -287,6 +288,7 @@ function UI._UpdateItems(search)
         ItemHandleToSlot = {},
         LowPriorityItemHandles = {},
         SearchRadius = radius,
+        IsStealing = UI._State and UI._State.IsStealing or QuickLoot._IsStealSearchActive, -- Keep the steal flag if we're updating items while the UI was already open.
     }
 
     -- Add items and render the list
@@ -539,6 +541,7 @@ end
 ---@override
 function UI:Hide()
     QuickLoot._IsStealSearchActive = false
+    UI._State = nil
     Tooltip.HideTooltip()
     if UI._Initialized then
         UI.SettingsPanel:SetVisible(false) -- Make the settings panel default to closed when opening the UI.
@@ -681,6 +684,13 @@ QuickLoot.Events.SearchStarted:Subscribe(TryHide)
 -- Close the UI when the player enters dialogue (e.g. from a crime accusation or NPC conversation).
 Client.Events.InDialogueStateChanged:Subscribe(function (ev)
     if ev.InDialogue then
+        UI:TryHide()
+    end
+end, {EnabledFunctor = function () return UI:IsVisible() end})
+
+-- Close the UI when the player unsneaks while using the UI in steal mode.
+Client.Events.SneakingStateChanged:Subscribe(function (ev)
+    if not ev.IsSneaking and UI._State.IsStealing then
         UI:TryHide()
     end
 end, {EnabledFunctor = function () return UI:IsVisible() end})

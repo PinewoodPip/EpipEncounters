@@ -4,6 +4,7 @@ Client = {
     UI = {GM = {}, Controller = {}},
     Input = {}, -- See Input.lua
     _IsInDialogue = false,
+    _IsSneaking = false,
 
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
@@ -56,6 +57,7 @@ Client = {
         SkillStateChanged = {}, ---@type Event<ClientLib_Event_SkillStateChanged>
         ViewportChanged = {}, ---@type Event<ClientLib_Event_ViewportChanged>
         InDialogueStateChanged = {}, ---@type Event<{InDialogue:boolean}>
+        SneakingStateChanged = {}, ---@type Event<{IsSneaking:boolean}>
         LocalCoopStarted = {}, ---@type Event<Empty> Will be thrown during session load if reloading while in local co-op.
         LocalCoopEnded = {}, ---@type Event<Empty>
         SelectorModeChanged = {}, ---@type Event<{PlayerIndex:integer, Enabled:boolean}>
@@ -478,6 +480,17 @@ GameState.Events.RunningTick:Subscribe(function (_)
         Client.Events.InDialogueStateChanged:Throw({InDialogue = newState})
     end
 end, {StringID = "ClientLib.InDialogueStateChangedEvent"})
+
+-- Throw events for sneaking state changing.
+GameState.Events.RunningTick:Subscribe(function (_)
+    local char = Client.GetCharacter()
+    local oldState = Client._IsSneaking
+    local newState = char and Character.IsSneaking(char) or false -- The client might've become a spectator with no assigned characters.
+    if oldState ~= newState then
+        Client._IsSneaking = newState
+        Client.Events.SneakingStateChanged:Throw({IsSneaking = newState})
+    end
+end, {StringID = "ClientLib.SneakingStateChangedEvent"})
 
 -- Throw events for entering/exiting splitscreen.
 if Client.IsUsingController() then
