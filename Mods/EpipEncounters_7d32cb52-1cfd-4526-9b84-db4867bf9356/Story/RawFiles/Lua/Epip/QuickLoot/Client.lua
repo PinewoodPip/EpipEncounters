@@ -10,6 +10,7 @@ QuickLoot.EVENTID_TICK_SELECTOR_EFFECT = "Features.QuickLoot.SelectorEffect"
 QuickLoot.EVENTID_TICK_IS_MOVING = "Features.QuickLoot.IsCharacterMoving"
 QuickLoot.SEARCH_RADIUS_PER_SECOND = 5 -- How many meters the selector's radius expands per second.
 QuickLoot.SEARCH_EFFECT = "RS3_FX_UI_Target_Circle_01" -- TODO is this the controller selection area effect, or is it another?
+QuickLoot.STEAL_SEARCH_EFFECT = "PIP_FX_QuickLoot_Search_Steal"
 QuickLoot.CONTAINER_EFFECT = "PIP_FX_PerceptionReveal_OverlayOnly"
 
 QuickLoot._Searches = {} ---@type table<CharacterHandle, Features.QuickLoot.Search>
@@ -234,7 +235,8 @@ function QuickLoot.StartSearch(char, isStealing)
     -- Play search effect
     local multiVisual = Ext.Visual.CreateOnCharacter(char.WorldPos, char)
     local multiVisualHandle = multiVisual.Handle
-    multiVisual:ParseFromStats(QuickLoot.SEARCH_EFFECT)
+    local searchEffect = QuickLoot._IsStealSearchActive and QuickLoot.STEAL_SEARCH_EFFECT or QuickLoot.SEARCH_EFFECT
+    multiVisual:ParseFromStats(searchEffect)
 
     -- Set default effect radius, update it per-tick and play effects on found containers
     local charHandle = char.Handle
