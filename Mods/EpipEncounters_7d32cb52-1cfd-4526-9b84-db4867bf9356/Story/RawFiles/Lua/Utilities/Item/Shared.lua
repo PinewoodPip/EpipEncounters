@@ -1126,24 +1126,22 @@ end
 ---Gets the stats object of the rune inserted at rune index ``index`` on item.
 ---@param item Item
 ---@param index integer **0-based.**
----@return StatItem? --`nil` if no rune is inserted at the index.
+---@return StatsLib_StatsEntry_Object? --`nil` if no rune is inserted at the index.
 function Item.GetRune(item, index)
     if index < 0 or index > 2 then
         Item:__Error("GetRune", "Cannot fetch runes with out-of-range index (0-based): " .. index)
         return
     end
-
     local slottedObject = item.Stats.DynamicStats[index + 3].BoostName
     if slottedObject == "" then
         return nil
     end
-
     return Ext.Stats.Get(slottedObject)
 end
 
 --- Returns a list of runes on the item.
 ---@param item Item
----@return table<number, StatItem> --Empty slots are nil.
+---@return table<number, StatsLib_StatsEntry_Object> --Empty slots are nil.
 function Item.GetRunes(item)
     return {
         [0] = Item.GetRune(item, 0),
