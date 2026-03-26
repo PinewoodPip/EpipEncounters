@@ -677,10 +677,22 @@ Ext.Events.UICall:Subscribe(function(ev)
             IsFromGame = true,
         })
     elseif ev.Function == "showAbilityTooltip" then
+        local isCharacterCreation = ev.UI:GetTypeId() == Ext.UI.TypeID.characterCreation
+        local flashHandle = isCharacterCreation and param1 or Ext.UI.HandleToDouble(Client.GetCharacter().Handle)
+        local abilityID = isCharacterCreation and param2 or param1 -- In Character Creation, the first param is the character handle instead.
         Tooltip._SetNextTooltipSource({
             UIType = ev.UI:GetTypeId(),
             Type = "Ability",
-            AbilityID = param1,
+            AbilityID = abilityID,
+            FlashCharacterHandle = flashHandle,
+            IsFromGame = true,
+        })
+    elseif ev.Function == "showClassEditTooltip" then -- From Character Creation.
+        Tooltip._SetNextTooltipSource({
+            UIType = ev.UI:GetTypeId(),
+            Type = "Ability",
+            AbilityID = param2,
+            FlashCharacterHandle = Ext.UI.HandleToDouble(Client.GetCharacter().Handle),
             IsFromGame = true,
         })
     elseif ev.Function == "showTooltip" and ev.UI:GetTypeId() == Ext.UI.TypeID.examine then -- Examine UI.
