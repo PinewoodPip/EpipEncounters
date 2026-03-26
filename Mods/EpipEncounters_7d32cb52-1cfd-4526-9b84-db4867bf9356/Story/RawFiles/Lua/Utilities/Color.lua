@@ -49,6 +49,15 @@ Color = {
         BROWN = "B97A57",
         GOLD = "C7A758",
     },
+    ---@type table<ItemLib_Rarity, htmlcolor>
+    ITEM_RARITIES = {
+        ["Uncommon"] = "00a900",
+        ["Rare"] = "33ccff",
+        ["Epic"] = "a346e9",
+        ["Legendary"] = "d1007c",
+        ["Divine"] = "ebc808",
+        ["Unique"] = "c7a758",
+    },
     TEAM_PINEWOOD = {
         PIP_PURPLE = "7E72D6",
         LOGO_PURPLE = "5456A5",

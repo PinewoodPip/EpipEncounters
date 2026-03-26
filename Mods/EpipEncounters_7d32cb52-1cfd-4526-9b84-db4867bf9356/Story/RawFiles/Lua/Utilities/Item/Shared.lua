@@ -88,6 +88,19 @@ Item = {
         UNIQUE = "h04685fd1g024ag4641gaed6g0ffb2d0ff103",
     },
 
+    ---Maps rarities to ascending order of rarity.
+    ---@type table<ItemLib_Rarity|"Artifact", integer>
+    RARITY_ORDER_MAP = {
+        ["Common"] = 1,
+        ["Uncommon"] = 2,
+        ["Rare"] = 3,
+        ["Epic"] = 4,
+        ["Legendary"] = 5,
+        ["Divine"] = 6,
+        ["Unique"] = 7,
+        ["Artifact"] = 8,
+    },
+
     -- Commonly-used tags.
     TAGS = {
         POTION_TAGS = Set.Create({
