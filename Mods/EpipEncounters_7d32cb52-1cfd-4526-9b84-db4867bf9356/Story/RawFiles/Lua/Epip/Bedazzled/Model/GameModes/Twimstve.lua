@@ -18,7 +18,7 @@ local Game = {
         EPIPE_CONSUMED = 5,
     },
 
-    _CallistoQueuedGemTypes = {}, ---@type table<Feature_Bedazzled_Board_Gem, string[]> -- Gem types to zap when a Callisto finished being rotated.
+    _CallistoQueuedGemTypes = {}, ---@type table<Feature_Bedazzled_Board_Gem, string[]> -- Gem types to zap when a Callisto is finished being rotated.
 
     Name = Bedazzled:RegisterTranslatedString({
         Handle = "h3a62400bg5fccg488agbc25ge3f4990d857a",

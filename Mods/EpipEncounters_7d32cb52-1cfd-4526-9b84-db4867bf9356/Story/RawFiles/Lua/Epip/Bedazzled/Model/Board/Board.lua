@@ -41,7 +41,7 @@ local _Board = {
         IsInteractable = {}, ---@type Hook<Features.Bedazzled.Board.Hooks.IsInteractable>
         GetGemData = {}, ---@type Hook<Features.Bedazzled.Board.Hooks.GetGemData>
         GetMatchAt = {}, ---@type Hook<Features.Bedazzled.Board.Hooks.GetMatchAt>
-        GemGemSpawnWeight = {}, ---@type Hook<Features.Bedazzled.Board.Hooks.GetGemSpawnWeight>
+        GetGemSpawnWeight = {}, ---@type Hook<Features.Bedazzled.Board.Hooks.GetGemSpawnWeight>
         IsGemInteractable = {}, ---@type Hook<Features.Bedazzled.Board.Hooks.IsGemInteractable>
     },
 }
@@ -315,7 +315,7 @@ function _Board:GetRandomGemDescriptor()
     local chosenGem
 
     for _,gem in pairs(Bedazzled.GetGemDescriptors()) do
-        local gemWeight = self.Hooks.GemGemSpawnWeight:Throw({
+        local gemWeight = self.Hooks.GetGemSpawnWeight:Throw({
             Descriptor = gem,
             Weight = gem.Weight,
         }).Weight

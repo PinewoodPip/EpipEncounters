@@ -94,7 +94,7 @@ function CementMixer:Apply(board)
     self._Board = board
 
     -- Allow Epipes to spawn.
-    board.Hooks.GemGemSpawnWeight:Subscribe(function (ev)
+    board.Hooks.GetGemSpawnWeight:Subscribe(function (ev)
         local gem = ev.Descriptor
         if gem.Type == "Epipe" then
             ev.Weight = self:GetSpawnChanceWeight()
