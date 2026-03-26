@@ -396,6 +396,7 @@ LOAD_ORDER = {
             "UI/Generic/Prefabs/SlicedTexture/Styles.lua",
 
             "UI/Generic/Prefabs/AnchoredText.lua",
+            "UI/Generic/Prefabs/TypewriterText.lua",
 
             "UI/Generic/Prefabs/Containers/PooledContainer.lua",
 
