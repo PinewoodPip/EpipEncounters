@@ -378,6 +378,7 @@ LOAD_ORDER = {
             "UI/Generic/Prefabs/FormSetEntry.lua",
             "UI/Generic/Prefabs/FormSet.lua",
             "UI/Generic/Prefabs/FormTextHolder.lua",
+            "UI/Generic/Prefabs/FormLabel.lua",
             "UI/Generic/Prefabs/Selector.lua",
             "UI/Generic/Prefabs/DraggingArea.lua",
             "UI/Generic/Prefabs/LoadingFlower.lua",
