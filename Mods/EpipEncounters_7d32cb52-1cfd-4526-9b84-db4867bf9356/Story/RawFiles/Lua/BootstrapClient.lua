@@ -752,24 +752,6 @@ LOAD_ORDER = {
     },
     {ScriptSet = "UI/Vanity/Tabs/Shapeshift", WIP = true},
 
-    -- Fishing
-    {
-        WIP = true,
-        ScriptSet = "Epip/Fishing",
-        Scripts = {
-            "Epip/Fishing/Shared_Data.lua",
-
-            "Epip/Fishing/Client_UI.lua",
-            "Epip/Fishing/GameObjects/_GameObject.lua",
-            "Epip/Fishing/GameObjects/Fish.lua",
-            "Epip/Fishing/GameObjects/Bobber.lua",
-
-            "Epip/Fishing/Client_CollectionLogUI.lua",
-
-            "Epip/Fishing/Client_CharacterTask.lua",
-        }
-    },
-
     {
         Scripts = {
             "Epip/QuickInventory/Client.lua",

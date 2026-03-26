@@ -314,15 +314,6 @@ LOAD_ORDER = {
         },
     },
 
-    -- Fishing
-    {
-        WIP = true,
-        ScriptSet = "Epip/Fishing",
-        Scripts = {
-            "Epip/Fishing/Shared_Data.lua",
-        }
-    },
-
     {ScriptSet = "Epip/AnimationCancelling",},
     {ScriptSet = "Epip/FlagsDisplay"},
     {
