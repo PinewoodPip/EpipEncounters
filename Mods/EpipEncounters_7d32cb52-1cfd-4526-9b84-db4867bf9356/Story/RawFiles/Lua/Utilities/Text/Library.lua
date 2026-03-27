@@ -519,6 +519,15 @@ function Text.StripFontTags(str)
     return newStr
 end
 
+---Removes all formatting tags from a string, including "<br>".
+---@param text string
+---@return string
+function Text.StripFormatting(text)
+    text = Text.StripFontTags(text)
+    text = text:gsub("<br>", "")
+    return text
+end
+
 ---Splits up a pascal-case (ex. "PascalCase") string into words.
 ---Will split up consecutive uppercase characters.
 ---@param str string First letter will be automatically capitalized.
@@ -586,6 +595,13 @@ end
 ---@return boolean
 function Text.IsTranslatedStringRegistered(handle)
     return Text._RegisteredTranslatedHandles[handle] ~= nil
+end
+
+---Returns the data for a TSK registered **through the Text library**.
+---@param handle TranslatedStringHandle
+---@return TextLib_TranslatedString
+function Text.GetTranslatedStringData(handle)
+    return Text._RegisteredTranslatedHandles[handle]
 end
 
 ---Returns the string bound to a TranslatedStringHandle, or a key.
