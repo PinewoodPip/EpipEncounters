@@ -26,6 +26,7 @@ UI.CELL_SIZE = V(64, 64)
 UI.BACKGROUND_SIZE = V(900, 1080)
 UI.CELL_BACKGROUND_COLOR = Color.Create(150, 131, 93)
 UI.MINIMUM_SCORE_DIGITS = 9
+UI.SCORE_FLYOVER_SIZE = V(200, 100)
 UI.SCORE_FLYOVER_DURATION = 1
 UI.SCORE_FLYOVER_Y_OFFSET = -40
 UI.SCORE_FLYOVER_TRAVEL_DISTANCE = -50
@@ -69,6 +70,7 @@ UI.Events = {
     NewGameRequested = SubscribableEvent:New("NewGameRequested"), ---@type Event<Empty>
     ClickBoxHovered = SubscribableEvent:New("ClickboxHovered"), ---@type Event<Features.Bedazzled.UI.Game.Events.ClickboxHovered>
     GameForfeited = SubscribableEvent:New("GameForfeited"), ---@type Event<Empty>
+    MatchScoreFlyoverCreated = SubscribableEvent:New("MatchScoreFlyoverCreated"), ---@type Event<Features.Bedazzled.UI.Game.Events.MatchScoreFlyoverCreated>
 }
 
 ---------------------------------------------
@@ -93,6 +95,10 @@ UI.Events = {
 ---@class Features.Bedazzled.UI.Game.Events.ClickboxHovered
 ---@field GridPosition Vector2
 ---@field Clickbox GenericUI_Element
+
+---@class Features.Bedazzled.UI.Game.Events.MatchScoreFlyoverCreated
+---@field Match Feature_Bedazzled_Match
+---@field Flyover GenericUI_Prefab_Text
 
 ---------------------------------------------
 -- GEM PREFAB
@@ -143,7 +149,7 @@ Generic.RegisterPrefab("GenericUI_Prefab_Bedazzled_Gem", GemPrefab)
 
 ---@param ui GenericUI_Instance
 ---@param id string
----@param parent (GenericUI_Element|string)?
+---@param parent GenericUI_ParentIdentifier?
 ---@param gem Feature_Bedazzled_Board_Gem
 ---@return GenericUI_Prefab_Bedazzled_Gem
 function GemPrefab.Create(ui, id, parent, gem)
@@ -691,15 +697,31 @@ function UI.CreateScoreFlyover(match)
         leftmostGem, rightmostGem, topmostGem = fusion.TargetGem, fusion.TargetGem, fusion.TargetGem
     end
 
+
     local left = V(UI.GamePositionToUIPosition(leftmostGem:GetBoardPosition()))
     local right = V(UI.GamePositionToUIPosition(rightmostGem:GetBoardPosition()))
     local _, top = UI.GamePositionToUIPosition(topmostGem:GetBoardPosition())
-    local positionX = left[1] + ((right[1] - left[1]) / 2) - UI.CELL_SIZE[1]/2
-    local position = V(positionX, top + UI.SCORE_FLYOVER_Y_OFFSET)
+    local positionX = left[1] + ((right[1] - left[1]) / 2) - UI.SCORE_FLYOVER_SIZE[1]/2
+    local position = V(positionX, top)
+    local score = match:GetScore()
+    local scoreLabel = score ~= 0 and Text.RemoveTrailingZeros(score) or "" -- Do not display 0 scores; the flyover is still created in case other gamemodes/mods wish to append text to it.
+    local text = UI.CreateFlyover(position, scoreLabel)
 
-    local text = UI.CreateText("MatchScoreFlyoverText", UI.GemContainer, tostring(match:GetScore()), "Center", UI.CELL_SIZE)
-    text:SetPosition(position:unpack())
-    text.Element:Tween({
+    UI.Events.MatchScoreFlyoverCreated:Throw({
+        Match = match,
+        Flyover = text,
+    })
+end
+
+---Creates a flyover text label.
+---@param position Vector2
+---@param text string
+---@return GenericUI_Prefab_Text
+function UI.CreateFlyover(position, text)
+    position = V(position[1], position[2] + UI.SCORE_FLYOVER_Y_OFFSET) -- Apply global offset
+    local textElement = UI.CreateText("FlyoverText", UI.GemContainer, text, "Center", UI.SCORE_FLYOVER_SIZE)
+    textElement:SetPosition(position:unpack())
+    textElement.Element:Tween({
         EventID = "FlyUp",
         Duration = UI.SCORE_FLYOVER_DURATION,
         Function = "Quadratic",
@@ -709,9 +731,10 @@ function UI.CreateScoreFlyover(match)
             alpha = 0,
         },
         OnComplete = function (_)
-            text.Element:Destroy()
+            textElement.Element:Destroy()
         end
     })
+    return textElement
 end
 
 ---Formats a score number, adding commas between groups of 3 digits.
@@ -949,10 +972,9 @@ function UI.OnMatchExecuted(ev)
         UI:PlaySound(UI.SOUNDS.MATCH)
     end
 
-    -- Only create flyovers for matches that affect score.
-    if ev.Match.Score ~= 0 then
-        UI.CreateScoreFlyover(ev.Match)
-    end
+    -- Create flyovers regardless of whether the match affects score.
+    -- This allows gamemodes to insert other text to flyovers even for non-scoring matches.
+    UI.CreateScoreFlyover(ev.Match)
 end
 
 ---Forwards event to request a new game.
