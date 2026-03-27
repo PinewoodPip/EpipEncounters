@@ -497,6 +497,7 @@ end
 ---@param points integer
 function _Board:AddScore(points)
     self.Score = self.Score + points
+    self.Score = math.max(0, self.Score)
 end
 
 ---@param x integer Column index.
