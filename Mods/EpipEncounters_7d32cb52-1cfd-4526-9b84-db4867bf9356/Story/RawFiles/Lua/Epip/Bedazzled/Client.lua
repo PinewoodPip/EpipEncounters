@@ -355,6 +355,8 @@ local Bedazzled = {
 Epip.RegisterFeature("Bedazzled", Bedazzled)
 local TSK = Bedazzled.TranslatedStrings
 
+---@alias Features.Bedazzled.Gem.Type "Bloodstone"|"Jade"|"Sapphire"|"Topaz"|"Onyx"|"Emerald"|"Lapis"|"TigersEye"|"Protean"
+
 ---@type TextLib_TranslatedString[]
 Bedazzled.EXPERIENCE_LEVEL_TITLES = {
     TSK.LevelTitle_Noob,
@@ -513,7 +515,7 @@ end
 ---Creates a new game.
 ---@param game Features.Bedazzled.GameMode
 ---@param modifiers Features.Bedazzled.Board.Modifier[]? Defaults to empty list.
----@return Feature_Bedazzled_Board
+---@return Features.Bedazzled.GameMode
 function Bedazzled.CreateGame(game, modifiers)
     modifiers = modifiers or {}
 

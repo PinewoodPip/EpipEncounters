@@ -25,6 +25,20 @@ local V = Vector.Create
 local _Board = {
     HINT_COOLDOWN = 25, -- In seconds.
 
+    ---@type set<string>
+    RUNE_MODIFIERS = {
+        ["Rune"] = true,
+        ["LargeRune"] = true,
+        ["GiantRune"] = true,
+    },
+    -- Rune modifiers in ascending order of their strength and difficulty of creation.
+    RUNE_MODIFIER_ORDER = {
+        "Rune",
+        "LargeRune",
+        "GiantRune",
+    },
+
+    ---@class Features.Bedazzled.Board.Events
     Events = {
         Updated = {}, ---@type Event<Feature_Bedazzled_Board_Event_Updated>
         GemAdded = {}, ---@type Event<Feature_Bedazzled_Board_Event_GemAdded>
@@ -37,6 +51,7 @@ local _Board = {
         GemDataApplied = {}, ---@type Event<Features.Bedazzled.Board.Events.GemDataApplied>
         HintRequested = {}, ---@type Event<Features.Bedazzled.Board.Events.HintRequested>
     },
+    ---@class Features.Bedazzled.Board.Hooks
     Hooks = {
         IsInteractable = {}, ---@type Hook<Features.Bedazzled.Board.Hooks.IsInteractable>
         GetGemData = {}, ---@type Hook<Features.Bedazzled.Board.Hooks.GetGemData>

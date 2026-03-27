@@ -2,7 +2,7 @@
 local Bedazzled = Epip.GetFeature("Feature_Bedazzled")
 
 ---@class Feature_Bedazzled_Gem
----@field Type string
+---@field Type Features.Bedazzled.Gem.Type
 ---@field Icon string
 ---@field Weight integer Defaults to 1.
 local _Gem = {}

@@ -129,6 +129,11 @@ function _BoardGem:GetBoardPosition()
     return self.X, self.Y
 end
 
+---@return integer, integer
+function _BoardGem:GetGridPosition()
+    return self.X, math.floor(self.Y) + 1
+end
+
 ---@return Feature_Bedazzled_Gem
 function _BoardGem:GetDescriptor()
     return Bedazzled.GetGemDescriptor(self.Type)
