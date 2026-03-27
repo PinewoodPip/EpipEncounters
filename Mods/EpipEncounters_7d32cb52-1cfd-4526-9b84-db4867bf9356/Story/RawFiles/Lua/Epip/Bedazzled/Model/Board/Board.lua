@@ -63,7 +63,8 @@ Bedazzled:RegisterClass("Feature_Bedazzled_Board", _Board)
 
 ---@class Feature_Bedazzled_Board_Event_GameOver
 ---@field Score integer
----@field Reason string
+---@field Result string Title of the game over result.
+---@field Reason string Reason for the game having ended.
 
 ---@class Feature_Bedazzled_Board_Event_GemTransformed
 ---@field Gem Feature_Bedazzled_Gem
@@ -342,8 +343,9 @@ function _Board:GetRandomGemDescriptor()
 end
 
 ---Ends the game and stops the update loop.
----@param reason TextLib_String Description of why the game ended.
-function _Board:EndGame(reason)
+---@param reason TextLib.String Description of why the game ended.
+---@param result TextLib.String? Title of the game over result. Defaults to "Game Over".
+function _Board:EndGame(reason, result)
     if not self._IsRunning then
         self:__Error("EndGame", "Attempted to end a board that is not running")
     end
@@ -353,6 +355,7 @@ function _Board:EndGame(reason)
     self._IsRunning = false
     self.Events.GameOver:Throw({
         Score = finalScore,
+        Result = Text.Resolve(result or Bedazzled.TranslatedStrings.GameOver),
         Reason = Text.Resolve(reason),
     })
 

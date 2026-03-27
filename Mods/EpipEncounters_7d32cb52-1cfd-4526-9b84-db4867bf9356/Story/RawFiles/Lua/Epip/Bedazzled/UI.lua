@@ -604,9 +604,9 @@ function UI.OnGameOver(ev)
     text:SetText(Text.Format("%s\n%s", {
         FormatArgs = {
             {
-                Text = Bedazzled.TranslatedStrings.GameOver:GetString(),
+                Text = ev.Result,
                 Size = 45,
-                Color = Color.CreateFromHex(Color.LARIAN.RED):ToHex(),
+                Color = Color.LARIAN.RED,
             },
             {
                 Text = ev.Reason,
