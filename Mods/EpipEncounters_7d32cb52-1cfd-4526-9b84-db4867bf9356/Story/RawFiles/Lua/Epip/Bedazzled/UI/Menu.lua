@@ -84,6 +84,7 @@ local TSK = {
 
 UI.Events.RenderSettings = SubscribableEvent:New("RenderSettings") ---@type Event<Empty>
 UI.Hooks.GetModifierConfiguration = SubscribableEvent:New("GetModifierConfiguration") ---@type Hook<{Modifier:Features.Bedazzled.Board.Modifier, Config:Features.Bedazzled.Board.Modifier.Configuration?}>
+UI.Hooks.InstantiateGameMode = SubscribableEvent:New("InstantiateGameMode") ---@type Hook<{GameModeClass:Features.Bedazzled.GameMode, Instance:Features.Bedazzled.GameMode?}>
 
 ---------------------------------------------
 -- MODIFIER SETTINGS
@@ -155,7 +156,7 @@ local ModifierSettings = {
 }
 -- Default modifier settings for each gamemode.
 ---@type table<Feature_Bedazzled_GameMode_ID|"Any", table<SettingsLib_Setting, any>>
-local DefaultModifierSettings = {
+UI.DefaultModifierSettings = {
     -- Applied before any gamemode-specific defaults.
     ["Any"] = {
         [ModifierSettings.TimeLimit_Time] = 0,
@@ -249,7 +250,11 @@ function UI.StartGame()
 
     -- Start the game and hide the menu
     local gameClass = Bedazzled:GetClass(UI._GetCurrentGameMode()) ---@cast gameClass Features.Bedazzled.GameMode
-    local game = Bedazzled.CreateGame(gameClass:Create(V(8, 8)), modifiers) -- TODO extract
+    local gameInstance = UI.Hooks.InstantiateGameMode:Throw({
+        GameModeClass = gameClass,
+        Instance = nil,
+    }).Instance or gameClass:Create(V(8, 8)) -- Fallback to default constructor.
+    local game = Bedazzled.CreateGame(gameInstance, modifiers)
     Bedazzled.GameUI.Setup(game)
     UI:Hide()
 end
@@ -257,7 +262,7 @@ end
 ---Resets the modifier settings to the defaults for a gamemode.
 ---@param gamemode Feature_Bedazzled_GameMode_ID
 function UI.ResetSettingsToDefault(gamemode)
-    local defaults = DefaultModifierSettings["Any"]
+    local defaults = UI.DefaultModifierSettings["Any"]
     for setting,value in pairs(defaults) do
         setting.DefaultValue = value
         -- TODO better support for this within SettingWidgets
@@ -268,7 +273,7 @@ function UI.ResetSettingsToDefault(gamemode)
         })
     end
     -- Gamemode-specific defaults
-    defaults = DefaultModifierSettings[gamemode]
+    defaults = UI.DefaultModifierSettings[gamemode]
     for setting,value in pairs(defaults) do
         setting.DefaultValue = value
         Bedazzled:SetSettingValue(setting, value)
