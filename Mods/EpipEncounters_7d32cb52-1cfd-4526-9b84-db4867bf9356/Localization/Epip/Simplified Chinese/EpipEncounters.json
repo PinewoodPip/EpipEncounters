@@ -10,6 +10,10 @@
       "ReferenceText": "Animation Cancelling",
       "TranslatedText": "动作取消"
     },
+    "hb909e1ceg8636g48afg8672g2acc5a1ce44e": {
+      "ReferenceText": "Animation Cancelling allows skill casts to end earlier by interrupting their animations after their effects execute, speeding up combat.",
+      "TranslatedText": "“动画取消”允许技能施放效果生效后中断动画，从而提前结束，加快战斗速度。\n"
+    },
     "ha50d50eag4185g4e10g82fdg19548a304b32": {
       "ReferenceText": "Blacklisted Skills",
       "TranslatedText": "技能黑名单"
@@ -96,7 +100,15 @@
     },
     "h3c77115cga69dg4c67g880bgd314b8072f7c": {
       "ReferenceText": "Camera Angles",
-      "TranslatedText": "摄像机角度"
+      "TranslatedText": "镜头角度"
+    },
+    "he046b554gc9f0g467dg8496g161c51d24b5f": {
+      "ReferenceText": "Combat Camera",
+      "TranslatedText": "战斗镜头"
+    },
+    "h8a409ad5gfe18g4736g9f65gfbb6ce1f8513": {
+      "ReferenceText": "Controller Camera",
+      "TranslatedText": "控制器镜头"
     },
     "hec25a517g9521g47e3g8f74gfa658861a320": {
       "ReferenceText": "Controls the FOV of the camera. Low/high values may cause issues with dynamic shadows.<br>Default is 45.",
@@ -133,6 +145,10 @@
     "hb5f81ce7g26cfg4e30gb9ddg1ccf51f78fcd": {
       "ReferenceText": "Controls the minimum distance the camera can zoom in while using the tactical view.<br>Default is 6.",
       "TranslatedText": "控制在使用战术视角时相机能够拉近（放大）的最小距离。<br>默认值为 6。"
+    },
+    "h3b641590gbf77g4000g83b2gbe2ecedb6219": {
+      "ReferenceText": "Customize the camera's angles, zoom distances and behaviour.",
+      "TranslatedText": "自定义镜头角度、缩放距离和行为。"
     },
     "h265f89a4g9e80g420egb7adgd27aced5697b": {
       "ReferenceText": "Field of View",
@@ -182,6 +198,10 @@
       "ReferenceText": "Preserve zoom level in dialogues",
       "TranslatedText": "在对话中保留缩放级别"
     },
+    "h17e23748gdcb0g4555g817bga83ec3f3176d": {
+      "ReferenceText": "Regular Camera",
+      "TranslatedText": "标准镜头"
+    },
     "h3ddc3759g3f70g4ac5g9401g76ced6258d7a": {
       "ReferenceText": "Reset to defaults",
       "TranslatedText": "恢复默认值"
@@ -189,6 +209,18 @@
     "h24797af2gde0ag48cdgb741gec2049e1c631": {
       "ReferenceText": "Restores the angle settings to default values.",
       "TranslatedText": "视角设置恢复默认值"
+    },
+    "h9dae206fg1544g488agbbcdg173edc63773a": {
+      "ReferenceText": "Tactical Camera",
+      "TranslatedText": "战术镜头"
+    },
+    "hf1a464a4g4d51g4e6fg9af7g484197b1daf0": {
+      "ReferenceText": "Zoomed In Angle",
+      "TranslatedText": "放大角度"
+    },
+    "h7af499c7g872ag4c68gaf53g67561291f807": {
+      "ReferenceText": "Zoomed Out Angle",
+      "TranslatedText": "缩小角度"
     },
     "h1900a04ag7611g4d34g8975g89a0dac84c56": {
       "ReferenceText": "Displays all Epic Encounters Artifacts.",
@@ -245,6 +277,26 @@
     "he415fd76g51bfg4b25g955cg59c3165c73ba": {
       "ReferenceText": "Skillbook",
       "TranslatedText": "技能书"
+    },
+    "h62429127g04c8g406fga3cag4a440c430c2f": {
+      "ReferenceText": "%s has the statuses: %s",
+      "TranslatedText": "%s 获得状态：%s"
+    },
+    "h5fa98726g2c12g453fg80afg6d315b23be7c": {
+      "ReferenceText": "%s no longer has the statuses: %s",
+      "TranslatedText": "%s 失去状态：%s"
+    },
+    "h6f3a9d1bg8c7eg4b52ga9d3ge7c1f4b2a8d6": {
+      "ReferenceText": "Critical Hits & Dodges",
+      "TranslatedText": "暴击与闪避"
+    },
+    "h68096433g8e54g4a81g9894g4be5096d2cdc": {
+      "ReferenceText": "Feature Not Enabled",
+      "TranslatedText": "功能未启用"
+    },
+    "h7a4b9e2fg1d6cg4895ga2f7gd5e3c8b1a4f9": {
+      "ReferenceText": "Generic/Scripted",
+      "TranslatedText": "通用/脚本"
     },
     "h4b557dbeg4eefg4284gba11gef2cf523830f": {
       "ReferenceText": "AP",
@@ -474,6 +526,10 @@
       "ReferenceText": "Dagger",
       "TranslatedText": "匕首"
     },
+    "ha3f8b2c1g4d5eg4a7bgb8c9gf1e2d3c4b5a6": {
+      "ReferenceText": "Damage",
+      "TranslatedText": "伤害"
+    },
     "h4edd0abfgf4b8g4e23gbc9cg8114fe650234": {
       "ReferenceText": "Decrement",
       "TranslatedText": "减少"
@@ -614,6 +670,10 @@
       "ReferenceText": "Ground",
       "TranslatedText": "地面"
     },
+    "h9d1f7a3egc5b2g4e81gb3f6g2a7c4e8d9b1f": {
+      "ReferenceText": "Healing",
+      "TranslatedText": "治愈"
+    },
     "hac470828g9eecg4770g9df8g33c48faa05e6": {
       "ReferenceText": "Health Bars",
       "TranslatedText": "生命值条"
@@ -746,6 +806,10 @@
       "ReferenceText": "Level %d-%d",
       "TranslatedText": "等级 %d-%d"
     },
+    "h4e8c6b2dga9f1g4735g8c2egb4d7f1e3a5c8": {
+      "ReferenceText": "Lifesteal",
+      "TranslatedText": "生命吸取"
+    },
     "hdeeae4bcgd104g4beagbf88g052d13e28756": {
       "ReferenceText": "Load",
       "TranslatedText": "导入"
@@ -834,6 +898,10 @@
       "ReferenceText": "One-handed",
       "TranslatedText": "单手"
     },
+    "h206d69a7g9033g4ba9gb553g806e279da47b": {
+      "ReferenceText": "Orange",
+      "TranslatedText": "橙色"
+    },
     "h3e13ea04gcd9bg4630gabeagbc5f5095f684": {
       "ReferenceText": "Overhaul",
       "TranslatedText": "大修"
@@ -917,6 +985,10 @@
     "h0e272276g80feg4fe8gbc82g620aa85b0cbc": {
       "ReferenceText": "Red",
       "TranslatedText": "红色"
+    },
+    "h5c2d8e4agb7f3g4926g8a1dg3f6e9c2b4d5a": {
+      "ReferenceText": "Reflected Damage",
+      "TranslatedText": "反射伤害"
     },
     "h974c404ag23a3g4926gbf2fg8d4c881e37ea": {
       "ReferenceText": "Remove",
@@ -1158,6 +1230,10 @@
       "ReferenceText": "Wither",
       "TranslatedText": "枯萎"
     },
+    "he37d0176g8178g468cga11fg746dc1937a81": {
+      "ReferenceText": "Yellow",
+      "TranslatedText": "黄色"
+    },
     "hac8aa82cgd83cg4ff7g8d25gc2ada09d8c93": {
       "ReferenceText": "Zoom in",
       "TranslatedText": "放大"
@@ -1350,6 +1426,34 @@
       "ReferenceText": "Crafting UI",
       "TranslatedText": "锻造页面"
     },
+    "hd4768ef1g4729g4cd6gbcdag38396e85cff3": {
+      "ReferenceText": "Customize inventory UIs.",
+      "TranslatedText": "自定义背包UI。"
+    },
+    "h6f4a5e88g9ac4g4d9dg9788g6f16cc3f7a82": {
+      "ReferenceText": "Customize notification messages.",
+      "TranslatedText": "自定义通知消息。"
+    },
+    "h43088c55g78c4g4cadg90ceg15b4b979274f": {
+      "ReferenceText": "Customize the Hotbar and related widgets.",
+      "TranslatedText": "自定义快捷栏和相关小部件。"
+    },
+    "ha407da41gc23dg48d6g84e7gcf7d32870e47": {
+      "ReferenceText": "Customize the player portraits UI on the side of the screen and its status bars.",
+      "TranslatedText": "自定义屏幕左侧的玩家头像以及状态栏。"
+    },
+    "hbe7663beg1066g45bag9dbcg27bdf6d18421": {
+      "ReferenceText": "Customize tooltip behaviours and which items display world tooltips.",
+      "TranslatedText": "自定义提示以及哪些物品显示环境提示。"
+    },
+    "h13bbc4f0g191dg485eg990agd6f5ec58c4d7": {
+      "ReferenceText": "Customize various other UIs and widgets.",
+      "TranslatedText": "自定义其他UI和小部件。"
+    },
+    "h96ed79f6gc2cdg4355g83bcg8bca076dc98c": {
+      "ReferenceText": "Customize various quality of life features unrelated to UIs.",
+      "TranslatedText": "自定义与UI无关的各种生活质量功能。"
+    },
     "hae3e6bddg3af0g4355gb90ag512c668df8a9": {
       "ReferenceText": "Design & programming by PinewoodPip<br>Additional UI art by Elric",
       "TranslatedText": "设计与编程：PinewoodPip <br> 额外的用户界面美术设计：Elric"
@@ -1402,8 +1506,12 @@
       "ReferenceText": "Save/Load UI",
       "TranslatedText": "保存/载入界面"
     },
+    "h3b085ee9g7e53g4d41gb55fg7c035b5a44d1": {
+      "ReferenceText": "Settings specific to Epic Encounters 2.",
+      "TranslatedText": "Epic Encounters 2 的特定设置。"
+    },
     "h98c83d5fgd30dg41f6g825ag14707c6db182": {
-      "ReferenceText": "Simplified Chinese translation by Ainsky",
+      "ReferenceText": "Simplified Chinese translation by Ainsky & HeiMao",
       "TranslatedText": "简体中文翻译: Ainsky"
     },
     "h4a3e28fag3595g4753gb507g4423068aeda8": {
@@ -1441,6 +1549,10 @@
     "had9e68fbgbd66g4141gab13gd1b41046c493": {
       "ReferenceText": "World Item Tooltips",
       "TranslatedText": "环境提示"
+    },
+    "hefa60c94g6371g4fdag8becg8d5be01ab245": {
+      "ReferenceText": "%s Label",
+      "TranslatedText": "%s色标签"
     },
     "hdf91946ag8402g42ecgafc2g4f2a232b81ef": {
       "ReferenceText": "Adds aggro information to the health bar when hovering over enemies: AI preferred/unpreferred/ignored tag, as well as taunt source/target(s).",
@@ -2014,6 +2126,10 @@
       "ReferenceText": "Invalid hex/html color in clipboard.",
       "TranslatedText": "剪贴板中的十六进制 / HTML 颜色无效。"
     },
+    "had871e76g2f2eg46eeg98cegf12bca05d7e3": {
+      "ReferenceText": "Improved Keyword Color Contrast",
+      "TranslatedText": "增强的关键字颜色对比度"
+    },
     "h86148d3fg72feg42b1gacc8g8f1b57d5f975": {
       "ReferenceText": "Highlight empty container slots",
       "TranslatedText": "高亮空容器格子"
@@ -2132,7 +2248,7 @@
     },
     "h06dc2c7eg034ag44a2gb98cga40573eec901": {
       "ReferenceText": "When an ally is hit",
-      "TranslatedText": "当友方角色被被攻击时"
+      "TranslatedText": "当友方角色被攻击时"
     },
     "hb4265152g8d4ag40cbg8fadg6f7b6abd0c77": {
       "ReferenceText": "When an ally with less than 50% Vitality spends Source",
@@ -2266,6 +2382,10 @@
       "ReferenceText": "Rows",
       "TranslatedText": "行"
     },
+    "h37258013g671cg4548g89ebgcd7c144ce710": {
+      "ReferenceText": "Snap to Hotbar",
+      "TranslatedText": "吸附到快捷栏"
+    },
     "h1608e07agf046g4d0dg8298gcfd263df903e": {
       "ReferenceText": "Allow dragging in unlearnt skills",
       "TranslatedText": "允许拖拽未学习的技能"
@@ -2386,12 +2506,16 @@
       "ReferenceText": "Show statuses",
       "TranslatedText": "显示状态来源"
     },
+    "h8b644327gb5dag4a16ga237g8208c5db6f32": {
+      "ReferenceText": "%s<br>Right-click to loot all items as wares.",
+      "TranslatedText": "%s<br>右键搜刮所有物品并标为待售品。"
+    },
     "hdd379f13g9fb6g4195ga02bge51a06d5f44a": {
       "ReferenceText": "Default Radius",
       "TranslatedText": "默认半径"
     },
     "ha9cb323cgaba1g42ddg9710g6b10d180a1cf": {
-      "ReferenceText": "Determines how items filtered-out by other settings are treated.<br>- Hide items: filtered-out items are not shown in the UI.<br>- Grey out items: filtered-out items are shown greyed-out and moved to the end of the list.",
+      "ReferenceText": "Determines how items filtered-out by other settings are treated.<br>- Hide items: filtered-out items are not shown in the UI.<br>- Grey out items: filtered-out items are shown greyed-out and moved to the end of the list.<br><br>Filtered-out items will not be looted when using the \"Loot all\" button.",
       "TranslatedText": "用于确定由其他设置过滤掉的物品将如何处理。<br>物品隐藏：被过滤掉的物品不会在用户界面中显示。<br>物品变灰：被过滤掉的物品会以灰色显示，并移至列表末尾。"
     },
     "h63dc15c7g9d83g495cg9555g0a3d9a468100": {
@@ -2454,6 +2578,10 @@
       "ReferenceText": "In %s.",
       "TranslatedText": "在 %s 里。"
     },
+    "h6b8490dcg409dg47c7gb49bg76989ace163f": {
+      "ReferenceText": "Left-click to loot, right-click to loot as wares.",
+      "TranslatedText": "左键搜刮，右键搜刮并标为待售品。"
+    },
     "h8eb26275gd698g4286gb7a5gaaa099e9aa37": {
       "ReferenceText": "Loot All",
       "TranslatedText": "全部搜刮"
@@ -2487,7 +2615,7 @@
       "TranslatedText": "快速搜刮"
     },
     "h0547ce79g8094g4cb4gb975g81cc0b5c9b6a": {
-      "ReferenceText": "Quick Loot is a feature that allows you to loot nearby containers and corpses from a unified UI. Access it by holding down its \"Search\" keybind.",
+      "ReferenceText": "Quick Loot is a feature that allows you to loot nearby containers and corpses from a unified UI. Access it by holding down its \"Start Search\" keybind.",
       "TranslatedText": "快速搜刮是一项功能，可让你通过统一的用户界面搜刮附近的容器和尸体。按住绑定的按键即可使用该功能。"
     },
     "ha539c465g36e0g4780g9892g58e33578124f": {
@@ -2906,9 +3034,17 @@
       "ReferenceText": "Right-click to open.<br>Ctrl+right-click to offer all items within.",
       "TranslatedText": "右键点击以打开。<br>按住 Ctrl 键并右键点击以全选里面的物品。"
     },
+    "h7fda32ffg167cg43e5gad2dg8672bc83a0ba": {
+      "ReferenceText": "Controls whether toast widgets will be shown by the bottom health bar whenever a new turn begins in combat.",
+      "TranslatedText": "控制每当战斗开始新回合时，底部生命栏是否显示 Toast 小部件。"
+    },
+    "h3793ded0g7ef1g4f73ga0a8g2f2b9bb05727": {
+      "ReferenceText": "Turn Notifications",
+      "TranslatedText": "回合通知"
+    },
     "h4025c1c4g6527g4b6ag8369g49c0b1949dea": {
       "ReferenceText": "If enabled, the positions of the following UIs will be remembered across sessions:<br>- Character Sheet<br>- Party Inventory<br>- Quick Find<br>- Quick Loot",
-      "TranslatedText": "启用后，"
+      "TranslatedText": "如果启用，以下UI的位置将在会话中被记住：<br>-角色表<br>-队伍背包<br>快速查找<br>-快速搜刮"
     },
     "h626e6a30gaf91g438aga001g799e54be1477": {
       "ReferenceText": "Remember panel positions",
@@ -2925,6 +3061,10 @@
     "h36388340g34f3g485fgb871g6391fe5312c6": {
       "ReferenceText": "Enables Epip's changes to the player portraits UI. If disabled, the following features will not be available:<br>- Wrapping status bar<br>- Battered/Harried indicators<br>- Adjusting status bar opacity<br>- Player context menus<br>The \"Alternative Status Display\" setting is unaffected.",
       "TranslatedText": "启用Epip对玩家肖像用户界面的更改。如果禁用此功能，以下功能将不可用：<br>环绕状态栏\n<br>重创/蹂躏指示器<br>调整状态栏透明度<br>玩家状态菜单<br>“替代状态显示” 设置不受此影响。"
+    },
+    "h1a027d33g636fg4a2dga363gfc9f755c6c93": {
+      "ReferenceText": "Keywords & Misc.",
+      "TranslatedText": "标签与杂项"
     },
     "h4978bb6fg7904g44ccg912fgc6ae2897f3d8": {
       "ReferenceText": "Player Portraits Overrides",
@@ -2995,7 +3135,7 @@
       "TranslatedText": "<font color='ebc808' size='30'>铭刻</font>"
     },
     "h3a1fa582g7217g4722gbcc5gc835c482d94a": {
-      "ReferenceText": "Carve a name onto the item to signify the special bond between yourself and it.<br><font color=\"a8a8a8\" size=\"21\" face=\"Averia Serif\">Purely cosmetic.</font>",
+      "ReferenceText": "<p align=\"left\">Carve a name onto the item to signify the special bond between yourself and it. <font color=\"a8a8a8\" size=\"21\" face=\"Averia Serif\">Purely cosmetic.</font></p>",
       "TranslatedText": "在物品上刻上名字, 表显示你和它之间的特殊联系<br><font color=\"a8a8a8\" size=\"21\" face=\"Averia Serif\">只是装饰</font>"
     },
     "h083f5e98g18e2g4708gae54g82b7697923b0": {
@@ -3045,6 +3185,10 @@
     "he0a23e3cgbf9cg4f6eg8aecg454ee29fe9d7": {
       "ReferenceText": "Press a key combination...",
       "TranslatedText": "按一个组合键"
+    },
+    "h4843a923ga322g4e29gacd6g816fe5c8d9d5": {
+      "ReferenceText": "Customize the key bindings for Epip features.",
+      "TranslatedText": "自定义Epip功能的按键绑定。"
     },
     "h7807c88fg2c24g4d2dg8015ga1666bcfa0b1": {
       "ReferenceText": "Dragging %s items",
@@ -3146,6 +3290,10 @@
       "ReferenceText": "There is no script at %s. Ensure you have placed the script in the correct folder.",
       "TranslatedText": "在 % s 位置没有脚本。请确保你已将脚本放置在正确的文件夹中。"
     },
+    "h58d447e9gf7e7g4299gbae7gbc1c9e70adda": {
+      "ReferenceText": "Show Statuses",
+      "TranslatedText": "显示状态"
+    },
     "h11ffdfdbg98d0g41afgb4e4g7242c71f6a2d": {
       "ReferenceText": "Respec",
       "TranslatedText": "角色重置"
@@ -3201,6 +3349,10 @@
     "h939f9996g8c0fg46dbg8d51g5816929f1387": {
       "ReferenceText": "Quick Examine",
       "TranslatedText": "快速调查"
+    },
+    "hbc1b3c20g0846g4f88g8856g59cad7d56b7d": {
+      "ReferenceText": "Quick Examine is a UI that allows you to view additional information about characters. Access it through the \"Quick Examine\" keybind while hovering over a character.",
+      "TranslatedText": "快速调查是一个UI，允许您查看有角色的其他信息。将鼠标悬停在角色上时，通过“快速检查”的按键绑定访问它。"
     },
     "h6cc76e3fg8d5cg466egb96agb780b490d0d5": {
       "ReferenceText": "Save Default Position",

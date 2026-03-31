@@ -622,10 +622,6 @@
       "ReferenceText": "Zoomed Out Angle",
       "TranslatedText": "Угол при отдалении"
     },
-    "h1a027d33g636fg4a2dga363gfc9f755c6c93": {
-      "ReferenceText": "Keywords & Misc.",
-      "TranslatedText": "Прочие характеристики"
-    },
     "h1900a04ag7611g4d34g8975g89a0dac84c56": {
       "ReferenceText": "Displays all Epic Encounters Artifacts.",
       "TranslatedText": "Отображает все Артефакты Epic Encounters"
@@ -680,7 +676,15 @@
     },
     "he415fd76g51bfg4b25g955cg59c3165c73ba": {
       "ReferenceText": "Skillbook",
-      "TranslatedText": "Книга навыков"
+      "TranslatedText": "Книга"
+    },
+    "h62429127g04c8g406fga3cag4a440c430c2f": {
+      "ReferenceText": "%s has the statuses: %s",
+      "TranslatedText": "%s имеет эффекты: %s"
+    },
+    "h5fa98726g2c12g453fg80afg6d315b23be7c": {
+      "ReferenceText": "%s no longer has the statuses: %s",
+      "TranslatedText": "%s больше не имеет эффекты: %s"
     },
     "hbb7f4c8bgf1a1g4b2bg8e6fgc6e2e4e2d3e4": {
       "ReferenceText": "%s reaction charges remaining: %s",
@@ -723,7 +727,7 @@
       "TranslatedText": "Добро пожаловать в журнал боя. Для доступа к фильтрам используйте правый клик."
     },
     "hc3d4397fgb1ffg4cd2g8e3bg52b67ec37424": {
-      "ReferenceText": "You must enable \"Combat Log Improvements\" in the options menu and reload the savefile to use custom filters.",
+      "ReferenceText": "You must enable \"Improved Combat Log\" in the options menu and reload the savefile to use custom filters.",
       "TranslatedText": "Для использования фильтров, необходимо включить \"Улучшенный журнал боя\" в настройках, после перезагрузить сохранение."
     },
     "hf09d887cgd6bbg43e9g9947g7bbbcb4f661f": {
@@ -1564,7 +1568,7 @@
     },
     "h7b9e3a1cg2f4dg4c8egad7bg6e5f4c3b2a19": {
       "ReferenceText": "Surface Damage",
-      "TranslatedText": "Урон от поверхности"
+      "TranslatedText": "Урон от поверхностей"
     },
     "h0f112ed1gcc18g470egaf01ga5cd65d1f22b": {
       "ReferenceText": "Sword",
@@ -2578,6 +2582,14 @@
       "ReferenceText": "Invalid hex/html color in clipboard.",
       "TranslatedText": "Недопустимое значение цвета (hex/html) в буфере обмена."
     },
+    "ha02014dfg8648g443agb83agf6fbe7a05e1c": {
+      "ReferenceText": "If enabled, the colors of low-contrast keywords in Combat Log messages will be adjusted to lighter ones to improve readability.<br>Affects Magic Armor restoration, Geomancer/Necromancer/Summoning skills, and enemy & critical hit colors.",
+      "TranslatedText": "Если включено, цвета следующих параметров будут изменены по контрасту, для улучшения читаемости<br>Восстановление магической брони, способности Геомантии/Некромантии/Призывания и критические попадания."
+    },
+    "had871e76g2f2eg46eeg98cegf12bca05d7e3": {
+      "ReferenceText": "Improved Keyword Color Contrast",
+      "TranslatedText": "Улучшенный контраст цвета"
+    },
     "h86148d3fg72feg42b1gacc8g8f1b57d5f975": {
       "ReferenceText": "Highlight empty container slots",
       "TranslatedText": "Подсвечивать пустые ячейки контейнеров"
@@ -2638,11 +2650,11 @@
       "ReferenceText": "Custom Line 2",
       "TranslatedText": "Строка 2"
     },
-    "hdb9a40e2g4713g40e0g8885gd6e1b75512c3": {
+    "hd1eed9f3g8a0bg4098g9369g0ba5549b947f": {
       "ReferenceText": "Discord Rich Presence",
       "TranslatedText": "Детализированный статус в Discord"
     },
-    "hd1eed9f3g8a0bg4098g9369g0ba5549b947f": {
+    "hdb9a40e2g4713g40e0g8885gd6e1b75512c3": {
       "ReferenceText": "Discord Rich Presence",
       "TranslatedText": "Детализированный статус в Discord"
     },
@@ -2722,11 +2734,11 @@
       "ReferenceText": "%s: Death",
       "TranslatedText": "%s: Death"
     },
-    "h63ae98ebg0fcbg49fbg877dg957622cdf46c": {
+    "h4febc429g2bf4g4307g9a87g358cdeb603ea": {
       "ReferenceText": "%s: Falcon",
       "TranslatedText": "%s: Falcon"
     },
-    "h4febc429g2bf4g4307g9a87g358cdeb603ea": {
+    "h14e4e4e2gbfe2g49ecg8854g6271530bf5be": {
       "ReferenceText": "%s: Falcon",
       "TranslatedText": "%s: Falcon"
     },
@@ -2734,7 +2746,7 @@
       "ReferenceText": "%s: Falcon",
       "TranslatedText": "%s: Falcon"
     },
-    "h14e4e4e2gbfe2g49ecg8854g6271530bf5be": {
+    "h63ae98ebg0fcbg49fbg877dg957622cdf46c": {
       "ReferenceText": "%s: Falcon",
       "TranslatedText": "%s: Falcon"
     },
@@ -2786,11 +2798,11 @@
       "ReferenceText": "%s: Scorpion",
       "TranslatedText": "%s: Scorpion"
     },
-    "hc608e22eg5881g4020ga070g8e820c8ea451": {
+    "h0f95f877gfddfg459eg8113geb4dd8f316a8": {
       "ReferenceText": "%s: Tiger",
       "TranslatedText": "%s: Tiger"
     },
-    "h0f95f877gfddfg459eg8113geb4dd8f316a8": {
+    "hc608e22eg5881g4020ga070g8e820c8ea451": {
       "ReferenceText": "%s: Tiger",
       "TranslatedText": "%s: Tiger"
     },
@@ -3616,11 +3628,11 @@
     },
     "h388c53d5g04b6g4f6cg9a05gdd6c3439f55c": {
       "ReferenceText": "Right-click an equipped item in the character sheet and select \"%s\" to browse items that can go in that slot.",
-      "TranslatedText": "Нажмите правый кнопкой на экипированный предмет в окне персонажа и выберите \"%s\", чтобы осмотреть предметы, которые можно экипировать в данный слот."
+      "TranslatedText": "Нажмите правой кнопкой на экипированный предмет в окне персонажа и выберите \"%s\", чтобы осмотреть предметы, которые можно экипировать в данный слот."
     },
     "h115197c6g73d3g48f6g8f80g6152dacab766": {
       "ReferenceText": "Right-click an equipped item in the character sheet and select \"Vanity\" to access vast appearance customization options.",
-      "TranslatedText": "Нажмите правый кнопкой на экипированный предмет в окне персонажа и выберите \"%s\", чтобы открыть меню, где можно преобразить предмет на ваш вкус."
+      "TranslatedText": "Нажмите правой кнопкой на экипированный предмет в окне персонажа и выберите \"%s\", чтобы открыть меню, где можно преобразить предмет на ваш вкус."
     },
     "hc72f22a1g462cg4932g961eg531e228a8a8c": {
       "ReferenceText": "Right-click containers in your inventory and select \"Dismantle All\" to dismantle all non-unique equipment within.",
@@ -3793,6 +3805,10 @@
     "h36388340g34f3g485fgb871g6391fe5312c6": {
       "ReferenceText": "Enables Epip's changes to the player portraits UI. If disabled, the following features will not be available:<br>- Wrapping status bar<br>- Battered/Harried indicators<br>- Adjusting status bar opacity<br>- Player context menus<br>The \"Alternative Status Display\" setting is unaffected.",
       "TranslatedText": "Если выключено, следующие функции будут недоступны:<br>- Статусы в несколько рядов<br>- Индикаторы Battered/Harried<br>- Настройка непрозрачности статусов<br>- Контекстные меню персонажей."
+    },
+    "h1a027d33g636fg4a2dga363gfc9f755c6c93": {
+      "ReferenceText": "Keywords & Misc.",
+      "TranslatedText": "Прочие характеристики"
     },
     "h4978bb6fg7904g44ccg912fgc6ae2897f3d8": {
       "ReferenceText": "Player Portraits Overrides",
@@ -4474,11 +4490,11 @@
       "ReferenceText": "If enabled, the health bar when you hover over characters and items will show their treasure table (if relevant) as well as the chance of getting an artifact. For characters, this requires holding the Show Sneak Cones key (shift by default)",
       "TranslatedText": "Если включено, при наведении, под панелью здоровья будет показываться вариант добычи (treasure table) с шансом получения артефакта. Для отображения у персонажей требуется зажать Shift."
     },
-    "h7cd46932ga606g4d18g99dcg3545b9770930": {
+    "h57bd9a78g6f13g42d0gb379g1983838f129d": {
       "ReferenceText": "Impossible Quest Reward",
       "TranslatedText": "Квестовая награда (Impossible)"
     },
-    "h57bd9a78g6f13g42d0gb379g1983838f129d": {
+    "h7cd46932ga606g4d18g99dcg3545b9770930": {
       "ReferenceText": "Impossible Quest Reward",
       "TranslatedText": "Квестовая награда (Impossible)"
     },
@@ -4498,11 +4514,11 @@
       "ReferenceText": "Mini Boss",
       "TranslatedText": "Мини Босс"
     },
-    "h68a2c359g6d13g4c26g8cf9g4e50f2e815e6": {
+    "h3a8d17fdg5b5fg4014g87f2g1d110bb7a4f2": {
       "ReferenceText": "Mini Boss",
       "TranslatedText": "Мини Босс"
     },
-    "h3a8d17fdg5b5fg4014g87f2g1d110bb7a4f2": {
+    "h68a2c359g6d13g4c26g8cf9g4e50f2e815e6": {
       "ReferenceText": "Mini Boss",
       "TranslatedText": "Мини Босс"
     },
