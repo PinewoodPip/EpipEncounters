@@ -629,6 +629,8 @@ LOAD_ORDER = {
     "Epip/AprilFools/AnimationCancellingHotkey/Client.lua",
     "Epip/AprilFools/OverheadTextFixes/Client.lua",
     "Epip/AprilFools/TakeYourLeaveInStyle/Client.lua",
+    "Epip/AprilFools/ItemRenames/Client.lua",
+    "Epip/AprilFools/PanelRenames/Client.lua",
     {
         ScriptSet = "Epip/CustomPortraits",
     },
