@@ -631,6 +631,7 @@ LOAD_ORDER = {
     "Epip/AprilFools/TakeYourLeaveInStyle/Client.lua",
     "Epip/AprilFools/ItemRenames/Client.lua",
     "Epip/AprilFools/PanelRenames/Client.lua",
+    "Epip/FestivityNotifications/Client.lua",
     {
         ScriptSet = "Epip/CustomPortraits",
     },
