@@ -434,7 +434,8 @@ function UI._RenderEpipe(data)
 
     -- Create a separate icon so we can layer it over the highlight (looks better)
     local epipeIcon = element:AddChild("EpipeIcon", "GenericUI_Element_IggyIcon")
-    epipeIcon:SetIcon("PIP_LOOT_Epipe", HotbarSlot.ICON_SIZE:unpack())
+    local iconID = Epip.IsAprilFools() and "PIP_VIBE_Epiparty" or "PIP_LOOT_Epipe" -- Apply festive spirit during the Anniversary
+    epipeIcon:SetIcon(iconID, HotbarSlot.ICON_SIZE:unpack())
 
     -- Rescale on click for feedback and play sounds on press/release.
     local timeClicked = 0
