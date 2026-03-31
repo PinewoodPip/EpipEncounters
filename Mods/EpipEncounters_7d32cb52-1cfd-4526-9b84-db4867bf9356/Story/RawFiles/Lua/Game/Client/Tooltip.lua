@@ -1,27 +1,4 @@
 
--- April fools: scrollable tooltips... but sideways
-Ext.Events.InputEvent:Subscribe(function(e)
-    local scrollDirection = 0
-    e = e.Event
-
-    if e.EventId == 233 then
-        scrollDirection = 1
-    elseif e.EventId == 234 then
-        scrollDirection = -1
-    end
-
-    if scrollDirection ~= 0 and Epip.IsAprilFools() then
-        local ui = Ext.UI.GetByPath("Public/Game/GUI/tooltip.swf")
-        local element = ui:GetRoot().tooltip_mc
-
-        if element then
-            local position = ui:GetPosition()
-
-            ui:SetPosition(position[1] + scrollDirection * 30, position[2])
-        end
-    end
-end)
-
 -- Fixes item comparisons passing the wrong EclItem by always fetching Client char rather than getting the UI's character (which doesn't work for all UIs)
 Game.Tooltip.TooltipHooks.GetCompareItem = function(self, ui, item, offHand)
     local owner = Client.GetCharacter() 
