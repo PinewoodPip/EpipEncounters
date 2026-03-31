@@ -1,11 +1,24 @@
 
+local Flash = Client.Flash
+
 ---@class UI.Dialog : UI
 local Dialog = {
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
 
+    FLASH_ENTRY_TEMPLATES = {
+        ANSWER = {
+            "Unknown1",
+            "Label",
+            "Unknown2",
+        },
+    },
+
     Events = {
         AnswersAdded = {}, ---@type Event<Dialog.UI.Events.AnswersAdded>
+    },
+    Hooks = {
+        AddAnswers = {}, ---@type Hook<{Answers: Dialog.UI.KeywordAnswer[]}>
     },
 }
 Epip.InitializeUI(Ext.UI.TypeID.dialog, "Dialog", Dialog)
@@ -16,6 +29,11 @@ Epip.InitializeUI(Ext.UI.TypeID.dialog, "Dialog", Dialog)
 
 ---@class Dialog.UI.Events.AnswersAdded
 ---@field Answers string[]
+
+---@class Dialog.UI.KeywordAnswer
+---@field Unknown1 integer
+---@field Label string
+---@field Unknown2 boolean
 
 ---------------------------------------------
 -- METHODS
@@ -56,6 +74,15 @@ end
 local _AddedAnswers = false
 Dialog:RegisterInvokeListener("updateDialog", function (_)
     local arr = Dialog:GetRoot().addAHArray
+    local answersArr = Dialog:GetRoot().addKWAnswerArray
+
+    -- Throw answers hook
+    local answers = Flash.ParseArray(answersArr, Dialog.FLASH_ENTRY_TEMPLATES.ANSWER)
+    answers = Dialog.Hooks.AddAnswers:Throw({
+        Answers = answers,
+    }).Answers
+    Flash.EncodeArray(answersArr, Dialog.FLASH_ENTRY_TEMPLATES.ANSWER, answers)
+
     _AddedAnswers = #arr > 0 -- Not all updates add answers.
 end, "Before")
 Dialog:RegisterInvokeListener("updateDialog", function (_)
