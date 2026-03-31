@@ -608,6 +608,14 @@ function Character.IsSummon(char)
     return char:HasTag("SUMMON") -- Summon flag does not do what's expected.
 end
 
+---Returns whether char is a summon owned by a player.
+---@param char Character
+---@return boolean
+function Character.IsPlayerSummon(char)
+    local owner = Character.Get(char.OwnerCharacterHandle)
+    return owner and Character.IsSummon(char) and Character.IsPlayer(owner)
+end
+
 ---Returns whether char is sneaking.
 ---@param char Character
 ---@return boolean
