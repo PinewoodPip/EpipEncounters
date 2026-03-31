@@ -8,6 +8,7 @@ local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 local SetPrefab = Generic.GetPrefab("GenericUI_Prefab_FormSet")
 local SelectorPrefab = Generic.GetPrefab("GenericUI_Prefab_Selector")
 local CloseButton = Generic.GetPrefab("GenericUI_Prefab_CloseButton")
+local HotbarSlot = Generic.GetPrefab("GenericUI_Prefab_HotbarSlot")
 local SettingWidgets = Epip.GetFeature("Features.SettingWidgets")
 local Textures = Epip.GetFeature("Feature_GenericUITextures").TEXTURES
 local CommonStrings = Text.CommonStrings
@@ -21,11 +22,20 @@ local Overlay = {
         "ClampedNumber",
         "Choice"
     }),
+    EPIPE_CLICK_MILESTONE_INTERVAL = 100, -- Interval for showing congratulatory messages from clicking the Epipe a lot.
 
     _ALWAYS_USE = true, -- If `false`, the overlay will only be used if a tab contains elements that the original UI does not support.
 
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
+
+    TranslatedStrings = {
+        Notification_EpipeClicksMilestone = {
+            Handle = "h4775df81g8017g414egb49cg6821af6ceb62",
+            Text = "You've petted the Epipe %d times!",
+            ContextDescription = [[Notification after clicking the Epipe in the Info tab many times; param is click count]],
+        },
+    },
 
     Events = {
         RenderEntry = {}, ---@type Event<Feature_SettingsMenuOverlay_Event_RenderEntry>
@@ -54,6 +64,18 @@ UI._RAINBOW_COLORS = {
 }
 UI._RAINBOW_TEXT_CYCLE_TIME = 3.5 -- In seconds.
 Overlay.UI = UI
+
+local OverlaySettings = {
+    -- Settings for tracking Epipe clicks, just for fun.
+    EpipeClicks = Overlay:RegisterSetting("EpipeClicks", {
+        Type = "Number",
+        DefaultValue = 0,
+    }),
+    LongEpipeClicks = Overlay:RegisterSetting("LongEpipeClicks", {
+        Type = "Number",
+        DefaultValue = 0,
+    }),
+}
 
 ---------------------------------------------
 -- STYLES
@@ -151,6 +173,7 @@ end
 
 ---Closes the overlay.
 function Overlay.Close()
+    Overlay:SaveSettings() -- Save overlay-specific settings (ex. Epipe click stats)
     SettingsMenu:GetUI():SetFlag("OF_PlayerModal1", true)
     Client.Tooltip.HideTooltip()
     UI:Hide()
@@ -370,7 +393,7 @@ end
 ---@return GenericUI_Prefab_Text
 function UI._RenderLabel(data)
     local entry = data.Entry ---@cast entry Feature_SettingsMenu_Entry_Label
-    local element = TextPrefab.Create(UI, Text.GenerateGUID(), data.Parent, entry.Label, "Center", UI.DEFAULT_LABEL_SIZE)
+    local element = TextPrefab.Create(UI, entry.ID or Text.GenerateGUID(), data.Parent, entry.Label, "Center", UI.DEFAULT_LABEL_SIZE)
     element:SetSize(UI.DEFAULT_LABEL_SIZE[1], element:GetTextSize()[2]) -- Resize to text height.
 
     return element
@@ -393,6 +416,69 @@ function UI._RenderButton(data)
             Tab = SettingsMenu.GetTab(SettingsMenu.currentTabID),
             ButtonID = entry.ID
         })
+    end)
+
+    return element
+end
+
+---Renders an Epipe entry.
+---The Epipe is a fidget toy with click feedback.
+---@param data Feature_SettingsMenuOverlay_Event_RenderEntry
+---@return GenericUI_Prefab_HotbarSlot
+function UI._RenderEpipe(data)
+    local entry = data.Entry ---@type Feature_SettingsMenu_Entry_Button
+    local element = HotbarSlot.Create(UI, entry.ID, data.Parent)
+
+    element:SetUpdateDelay(-1)
+    element:SetEnabled(true)
+
+    -- Create a separate icon so we can layer it over the highlight (looks better)
+    local epipeIcon = element:AddChild("EpipeIcon", "GenericUI_Element_IggyIcon")
+    epipeIcon:SetIcon("PIP_LOOT_Epipe", HotbarSlot.ICON_SIZE:unpack())
+
+    -- Rescale on click for feedback and play sounds on press/release.
+    local timeClicked = 0
+    local isPressed = false
+    local clicksSetting = OverlaySettings.EpipeClicks
+    local longClicksSetting = OverlaySettings.LongEpipeClicks
+    element.SlotElement.Events.MouseDown:Subscribe(function (_)
+        local icon = epipeIcon
+        local w, h = icon:GetSize():unpack()
+        icon:Move(w * 0.05, h * 0.05)
+        icon:SetScale(V(0.9, 0.9))
+
+        UI:PlaySound("UI_Game_Inventory_Visor_Open")
+
+        -- Track clicks
+        local newClicks = Overlay:GetSettingValue(clicksSetting) + 1
+        Overlay:SetSettingValue(clicksSetting, newClicks)
+        if newClicks % Overlay.EPIPE_CLICK_MILESTONE_INTERVAL == 0 then
+            -- Show congratulatory message with click count
+            local label = Overlay.UI:GetElementByID("Epip.SettingsApplicationWarning") ---@cast label GenericUI_Prefab_Text
+            label:SetText(Overlay.TranslatedStrings.Notification_EpipeClicksMilestone:Format(newClicks))
+        end
+
+        timeClicked = Ext.Utils.MonotonicTime()
+        isPressed = true
+    end)
+    element.SlotElement.Events.MouseUp:Subscribe(function (_)
+        local icon = epipeIcon
+        icon:SetPosition(0, 0)
+        icon:SetScale(V(1, 1))
+
+        -- Play a release sound if the player held down the Epipe
+        if Ext.Utils.MonotonicTime() - timeClicked >= 300 then
+            UI:PlaySound("UI_Game_Inventory_Visor_Close")
+            Overlay:SetSettingValue(longClicksSetting, Overlay:GetSettingValue(longClicksSetting) + 1)
+        end
+    end)
+    element.SlotElement.Events.MouseOut:Subscribe(function (_)
+        if isPressed then
+            local icon = epipeIcon
+            icon:SetPosition(0, 0)
+            icon:SetScale(V(1, 1))
+            isPressed = false
+        end
     end)
 
     return element
@@ -556,6 +642,8 @@ Overlay.Events.RenderEntry:Subscribe(function (ev)
         element = UI._RenderButton(ev)
     elseif entryType == "Category" then
         element = UI._RenderCategory(ev)
+    elseif entryType == "Epipe" then
+        element = UI._RenderEpipe(ev)
     end
 
     if element then

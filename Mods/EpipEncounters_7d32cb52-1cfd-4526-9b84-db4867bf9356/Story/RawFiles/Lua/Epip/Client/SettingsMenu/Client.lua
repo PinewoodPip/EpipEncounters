@@ -70,7 +70,7 @@ local TSK = Menu.TranslatedStrings
 ---------------------------------------------
 
 ---@alias Feature_SettingsMenu_ElementID integer
----@alias Features.SettingsMenu.Entry.Type "Setting"|"Label"|"Button"|"Category"
+---@alias Features.SettingsMenu.Entry.Type "Setting"|"Label"|"Button"|"Category"|"Epipe"
 
 ---@class Feature_SettingsMenu_Tab
 ---@field ID string
@@ -85,6 +85,7 @@ local TSK = Menu.TranslatedStrings
 
 ---@class Feature_SettingsMenu_Entry_Label : Feature_SettingsMenu_Entry
 ---@field Label string
+---@field ID string? If unset, the element will use a random GUID.
 
 ---@class Feature_SettingsMenu_Entry_Setting : Feature_SettingsMenu_Entry
 ---@field Module string

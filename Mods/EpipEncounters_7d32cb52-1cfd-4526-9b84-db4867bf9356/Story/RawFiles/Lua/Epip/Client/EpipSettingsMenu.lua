@@ -235,9 +235,10 @@ end
 
 ---Creates a standard information label.
 ---@param str TextLib.String
+---@param id string?
 ---@return Feature_SettingsMenu_Entry_Label
-local function CreateLabel(str)
-    return {Type = "Label", Label = Text.Format(Text.Resolve(str), {Size = EpipSettingsMenu.LABEL_FONT_SIZE})}
+local function CreateLabel(str, id)
+    return {Type = "Label", Label = Text.Format(Text.Resolve(str), {Size = EpipSettingsMenu.LABEL_FONT_SIZE}), ID = id}
 end
 
 ---Creates an entry for a setting.
@@ -271,7 +272,10 @@ local tabs = {
                 },
             })},
             CreateLabel(TSK.Label_SettingsMenuHint),
-            CreateLabel(TSK.SettingApplicationWarning),
+            CreateLabel(TSK.SettingApplicationWarning, "Epip.SettingsApplicationWarning"),
+
+            -- Epipe mascot!
+            {Type = "Epipe", ID = "Epip.Epipe"},
 
             CreateLegacySettingEntry("EpipLanguage"),
 
