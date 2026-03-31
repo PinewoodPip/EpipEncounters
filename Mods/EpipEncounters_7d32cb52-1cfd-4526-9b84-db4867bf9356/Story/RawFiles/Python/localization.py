@@ -223,7 +223,7 @@ class Module:
             oldBook.save(oldBookPath)
 
 def createSpreadsheet(file_name, existing_sheet_file_name=None, language_sheet:str=None):
-    localization = json.load(open(file_name, "r"))
+    localization = json.load(open(file_name, "r", encoding="utf-8"))
     module = Module(localization["ModTable"])
 
     for handle,data in localization["TranslatedStrings"].items():
@@ -273,7 +273,7 @@ def createTranslationJSON(file_name:str, modTable:str, sheet_name:str, output_fi
         for handle in handles_to_delete:
             del tsks[handle]
 
-    with open(output_filename, "w") as f:
+    with open(output_filename, "w", encoding="utf-8") as f:
         f.write(json.dumps(output, indent=2, ensure_ascii=False))
 
         print("Converted sheet to json")
