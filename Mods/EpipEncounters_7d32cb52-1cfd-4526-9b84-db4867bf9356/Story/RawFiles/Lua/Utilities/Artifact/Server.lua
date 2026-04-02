@@ -13,8 +13,8 @@ local Artifact = Artifact
 function Artifact.IsEquipped(char, artifact)
     local artifactID = artifact
     if type(artifact) == "table" then artifactID = artifact.ID end
-    local _, _, amount = Osiris.DB_AMER_Artifacts_EquippedEffects:Get(char.MyGuid, artifactID, nil)
-
+    local tuples = Osi.DB_AMER_Artifacts_EquippedEffects:Get(char.MyGuid, artifactID, nil)[1]
+    local amount = tuples and tuples[3] or 0
     return amount and amount > 0
 end
 
@@ -22,20 +22,17 @@ end
 ---@param char EsvCharacter
 ---@return ArtifactLib_ArtifactDefinition[]
 function Artifact.GetEquippedPowers(char)
-    local tuples = Osiris.DB_AMER_Artifacts_EquippedEffects:GetTuples(char.MyGuid, nil, nil)
+    local tuples = Osi.DB_AMER_Artifacts_EquippedEffects:Get(char.MyGuid, nil, nil)
     local artifacts = {}
-
     for _,tuple in ipairs(tuples) do
         local artifactID = tuple[2]
         local def = Artifact.GetData(artifactID)
-
         if def then
             table.insert(artifacts, def)
         else
-            Artifact:LogError("Artifact has no definition: " .. artifactID)
+            Artifact:__LogError("GetEquippedPowers", "Artifact has no definition: " .. artifactID)
         end
     end
-
     return artifacts
 end
 
