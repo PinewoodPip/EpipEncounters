@@ -102,7 +102,7 @@ function CombatTurn._GetEntityElement(entity, list)
     for i=0,#list.content_array-1,1 do
         local entry = list.content_array[i]
         local entryEntity = Combat.GetEntityByCombinedID(entry.id) -- IDs within the UI are combined combat IDs.
-        if entryEntity.Handle == entity.Handle then
+        if entryEntity and entryEntity.Handle == entity.Handle then -- The ID can be invalid for a brief moment after exiting combat (presumably before the UI updates)
             return entry
         end
     end
