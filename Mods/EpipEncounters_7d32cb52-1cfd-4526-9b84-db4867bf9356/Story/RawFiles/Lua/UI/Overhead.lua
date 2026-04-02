@@ -230,19 +230,15 @@ Utilities.Hooks.RegisterListener("AMERUI", "CharacterExitedUI", function(data)
     end
 end)
 
-Ext.RegisterUITypeCall(Ext.UI.TypeID.overhead, "pipOverheadAttempt", function(ui, method, handle, str)
-
+Ext.RegisterUITypeCall(Ext.UI.TypeID.overhead, "pipOverheadAttempt", function(_, _, handle, str)
     str = str:gsub(Text.PATTERNS.FONT_SIZE, string.format(Text.TEMPLATES.FONT_SIZE, Overhead.currentDamageOverheadSize))
-
-    local char = Ext.GetCharacter(Ext.UI.DoubleToHandle(handle))
-    if not char then char = Ext.GetItem(Ext.UI.DoubleToHandle(handle)) end
-
-    if not char then return nil end
-
-    Overhead.AddDamage(char, str)
+    local entity = Character.Get(handle, true) or Item.Get(handle, true)
+    if entity then
+        Overhead.AddDamage(entity, str)
+    end
 end)
 
-Ext.RegisterUITypeCall(Ext.UI.TypeID.overhead, "pipOverheadDialogAttempt", function(ui, method, handle, str, duration)
+Ext.RegisterUITypeCall(Ext.UI.TypeID.overhead, "pipOverheadDialogAttempt", function(_, _, handle, str, duration)
 
     str = str:gsub(Text.PATTERNS.FONT_SIZE, string.format(Text.TEMPLATES.FONT_SIZE, Overhead.currentOverheadSize))
 

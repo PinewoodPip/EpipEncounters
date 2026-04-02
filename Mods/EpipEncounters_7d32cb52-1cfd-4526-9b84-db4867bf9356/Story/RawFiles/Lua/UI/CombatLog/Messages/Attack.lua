@@ -44,7 +44,7 @@ function _Attack:Create(charName, charColor, targetName, targetColor, dmgType, d
                 Amount = dmgAmount,
                 Color = dmgColor,
                 Hits = 1,
-                HitTime = Ext.MonotonicTime(),
+                HitTime = Ext.Utils.MonotonicTime(),
             },
         },
     })

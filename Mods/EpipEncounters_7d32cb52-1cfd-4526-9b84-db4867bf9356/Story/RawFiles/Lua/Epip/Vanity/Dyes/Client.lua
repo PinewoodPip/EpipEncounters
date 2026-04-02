@@ -290,22 +290,15 @@ end
 
 function Dyes.UpdateActiveCharacterDyes()
     local char = Client.GetCharacter()
-
     for _,slot in ipairs(Data.Game.SLOTS_WITH_VISUALS) do
-        local item = char:GetItemBySlot(slot)
-
+        local item = char:GetItemObjectBySlot(slot)
         if item then
-            item = Ext.GetItem(item)
             local dye = Dyes.GetCurrentCustomDye(item, false, false)
-
             Dyes.activeCharacterDyes[slot] = dye
         else
             Dyes.activeCharacterDyes[slot] = nil
         end
     end
-
-    -- Dyes:DebugLog("Active character's dyes:")
-    -- Dyes:Dump(Dyes.activeCharacterDyes)
 end
 
 ---------------------------------------------
@@ -423,9 +416,8 @@ Outfits.Hooks.GetOutfitSaveData:Subscribe(function (ev)
     local char, outfit = ev.Character, ev.Data ---@cast outfit Features.Vanity.Dyes.Outfit
     outfit.CustomDyes = {}
     for _,slot in ipairs(Data.Game.SLOTS_WITH_VISUALS) do
-        local item = char:GetItemBySlot(slot)
+        local item = char:GetItemObjectBySlot(slot)
         if item then
-            item = Ext.GetItem(item)
             local dye = Dyes.GetCurrentCustomDye(item, false)
             outfit.CustomDyes[slot] = dye
         end

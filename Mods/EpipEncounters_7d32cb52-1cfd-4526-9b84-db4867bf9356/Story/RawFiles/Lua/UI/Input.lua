@@ -111,7 +111,7 @@ Input:RegisterCallListener("pipInputCaptured", function(ev)
 end)
 
 Input:RegisterCallListener("pipKeyboardTextFieldCharacterAdded", function(ev, key)
-    local time = Ext.MonotonicTime()
+    local time = Ext.Utils.MonotonicTime()
 
     if key ~= Input.lastKeyboardCharacter or time - Input.lastKeyboardCharacterTime > Input.REPEAT_RATE then
         Input:DebugLog("Key pressed: " .. key)
@@ -138,24 +138,24 @@ Ext.Events.InputEvent:Subscribe(function(ev)
     end
 end)
 
-Input:RegisterCallListener("pipBackspacePressed", function(ev)
+Input:RegisterCallListener("pipBackspacePressed", function(_)
     Input:DebugLog("Backspace pressed")
 
     Input.Events.KeyPressed:Fire("backspace")
 end)
 
-Input:RegisterCallListener("pipKeyDown", function(ev, keyCode, shiftKey, ctrlKey, altKey, commandKey)
+Input:RegisterCallListener("pipKeyDown", function(_, keyCode, shiftKey, ctrlKey, altKey, commandKey)
     local keyName = Input.KEY_CODES[keyCode]
 
     Input:DebugLog("Special key pressed. Modifiers:", shiftKey, ctrlKey, altKey, commandKey)
 
     if ctrlKey then
         Input.SpecialKeysPressed.CTRL = ctrlKey
-        Input.ctrlTime = Ext.MonotonicTime()
+        Input.ctrlTime = Ext.Utils.MonotonicTime()
     end
     if altKey then
         Input.SpecialKeysPressed.ALT = altKey
-        Input.altTime = Ext.MonotonicTime()
+        Input.altTime = Ext.Utils.MonotonicTime()
     end
 
     if not keyName then

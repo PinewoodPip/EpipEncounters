@@ -16,7 +16,7 @@ function ItemHasMaxSockets(char, mode)
 
         local itemId = db[1][3]
         local limit = 3
-        local itemData = Ext.GetItem(itemId)
+        local itemData = Item.Get(itemId)
 
         if (itemData.Stats.ItemSlot == "Weapon" and not itemData.Stats.IsTwoHanded) then
             limit = 2

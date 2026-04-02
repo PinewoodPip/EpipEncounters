@@ -144,7 +144,7 @@ end, "After")
 ---@diagnostic disable-next-line: unused-local
 local function OnHealthBarUpdate(uiObj, method, param3, num1, str1, bool1)
     local root = uiObj:GetRoot()
-    local char = Ext.GetCharacter(uiObj:GetPlayerHandle())
+    local char = Character.Get(uiObj:GetPlayerHandle())
 
     root.console_mc.abTxt_mc.htmlText = char.Stats.CurrentArmor .. "/" .. char.Stats.MaxArmor
     root.console_mc.mabTxt_mc.htmlText = char.Stats.CurrentMagicArmor .. "/" .. char.Stats.MaxMagicArmor

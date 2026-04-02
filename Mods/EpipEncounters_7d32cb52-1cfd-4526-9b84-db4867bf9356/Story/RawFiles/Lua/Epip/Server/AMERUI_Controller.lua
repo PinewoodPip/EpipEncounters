@@ -83,7 +83,7 @@ end)
 ---------------------------------------------
 
 Controller.RegisterCommandHandler("AMER_UI_Ascension", "Page_Gateway", "SelectCluster", function(char)
-    local item = Controller.GetItemGUID(char, nil, "PathWheel")
+    local itemGUID = Controller.GetItemGUID(char, nil, "PathWheel")
     local state = Controller.GetState(char)
     local _, _, _, elementName, _, visibleElementsQuery = Osiris.DB_AMER_UI_ElementsOfInstance:Get(state.Instance, "AMER_UI_Ascension", "PathWheel", nil, nil)
 
@@ -95,7 +95,7 @@ Controller.RegisterCommandHandler("AMER_UI_Ascension", "Page_Gateway", "SelectCl
     local _, _, _, vindex, index2, _, _, guid, tuples2 = Osiris.DB_AMER_UI_ElementWheel_Visible(state.Instance, "AMER_UI_Ascension", "PathWheel", nil, index, nil, nil, nil)
     ---@diagnostic enable: unused-local
 
-    item = Ext.GetItem(item)
+    local item = Item.Get(itemGUID)
     guid = item.CurrentTemplate.Name .. "_" .. guid
 
     Osi.CharacterItemEvent(Utilities.GetPrefixedGUID(char), guid, "AMER_UI_Ascension_ClusterChosen")

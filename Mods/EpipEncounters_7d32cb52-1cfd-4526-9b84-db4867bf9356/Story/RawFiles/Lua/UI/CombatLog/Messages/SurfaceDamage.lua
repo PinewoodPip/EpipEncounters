@@ -34,7 +34,7 @@ function _Surface:Create(charName, charColor, dmgType, dmgAmount, dmgColor)
                 Amount = tonumber(dmgAmount),
                 Color = dmgColor,
                 Hits = 1,
-                HitTime = Ext.MonotonicTime(),
+                HitTime = Ext.Utils.MonotonicTime(),
             },
         },
     })

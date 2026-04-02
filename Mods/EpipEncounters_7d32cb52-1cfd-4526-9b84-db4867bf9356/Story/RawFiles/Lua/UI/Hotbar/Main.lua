@@ -5,6 +5,7 @@
 
 local Flash = Client.Flash
 local ParseFlashArray, EncodeFlashArray = Flash.ParseArray, Flash.EncodeArray
+local HandleToDouble = Ext.UI.HandleToDouble
 local Input = Client.Input
 
 ---@class HotbarUI : UI
@@ -1604,7 +1605,7 @@ function Hotbar.RenderSlot(char, canUseHotbar, slotIndex, skillBarSlot)
         if skill then
             cooldown = skill.ActiveCooldown / 6
 
-            handle = Ext.HandleToDouble(skill.OwnerHandle)
+            handle = HandleToDouble(skill.OwnerHandle)
 
             isEnabled = Character.CanUseSkill(char, data.SkillOrStatId)
 
@@ -1614,21 +1615,21 @@ function Hotbar.RenderSlot(char, canUseHotbar, slotIndex, skillBarSlot)
             end
         else -- The skill was removed from the character.
             cooldown = 0
-            handle = Ext.HandleToDouble(char.Handle)
+            handle = HandleToDouble(char.Handle)
             isEnabled = false
             unavailable = Stats.Get("SkillData", data.SkillOrStatId) ~= nil -- Only show warning if the skill exists in the current session
         end
     elseif data.Type == "Item" then
         local item = Item.Get(data.ItemHandle)
         slotType = 2
-        handle = Ext.HandleToDouble(item.Handle)
+        handle = HandleToDouble(item.Handle)
         amount = item.Amount
         isEnabled = Item.CanUse(char, item)
     elseif data.Type == "Action" then
         slotType = 1
         isEnabled = true
         tooltip = data.SkillOrStatId
-        handle = Ext.HandleToDouble(char.Handle)
+        handle = HandleToDouble(char.Handle)
     elseif data.Type == "None" then
         inUse = false
     end

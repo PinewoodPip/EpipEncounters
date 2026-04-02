@@ -34,7 +34,7 @@ function _HealingMessage:Create(charName, charColor, damageType, amount, color)
                 Amount = tonumber(amount),
                 Color = color,
                 Hits = 1,
-                HitTime = Ext.MonotonicTime(),
+                HitTime = Ext.Utils.MonotonicTime(),
             },
         },
     })

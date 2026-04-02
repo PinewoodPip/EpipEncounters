@@ -54,7 +54,7 @@ function _DamageMessage:Create(charName, charColor, damageType, amount, color)
         Amount = amount,
         Color = color,
         Hits = 1,
-        HitTime = Ext.MonotonicTime(),
+        HitTime = Ext.Utils.MonotonicTime(),
     })
 
     return obj

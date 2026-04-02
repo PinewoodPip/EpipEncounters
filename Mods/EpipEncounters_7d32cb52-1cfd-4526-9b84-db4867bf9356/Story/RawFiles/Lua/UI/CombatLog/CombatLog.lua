@@ -269,7 +269,7 @@ function Log.AddMessage(msg, filter)
     local obj = {
         Message = msg,
         Filter = filter,
-        Time = Ext.MonotonicTime(),
+        Time = Ext.Utils.MonotonicTime(),
     }
 
     ---@type UI.CombatLog.ParsedMessage
@@ -278,7 +278,7 @@ function Log.AddMessage(msg, filter)
 
     -- Attempt to merge message with the immediate previous one
     if lastMessage then
-        local timeElapsed = Ext.MonotonicTime() - lastMessage.Time
+        local timeElapsed = Ext.Utils.MonotonicTime() - lastMessage.Time
         timeElapsed = timeElapsed / 1000
         if lastMessage.Message:GetClassName() == msg:GetClassName() and timeElapsed < Log.MAX_MERGING_TIME then -- Messages must be of the same type and recent
             local canMerge = Log.Hooks.MessageCanMerge:Throw({
@@ -303,7 +303,7 @@ function Log.AddMessage(msg, filter)
 
         Log:DebugLog("Appending messages of type " .. lastMessage.Message:GetClassName())
 
-        lastMessage.Time = Ext.MonotonicTime() -- Update time.
+        lastMessage.Time = Ext.Utils.MonotonicTime() -- Update time.
 
         msgElement.text = Log.StringifyMessage(lastMessage.Message)
         msgElement.text_txt.htmlText = msgElement.text

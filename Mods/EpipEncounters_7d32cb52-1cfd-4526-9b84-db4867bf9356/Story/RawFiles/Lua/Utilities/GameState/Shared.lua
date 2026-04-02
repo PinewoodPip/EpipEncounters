@@ -219,7 +219,9 @@ Ext.Events.Tick:Subscribe(function()
     local lastTickTime = GameState.lastTickTime or now
     local deltaTime = now - lastTickTime
 
-    if Ext.GetGameState() == GameState.CLIENT_STATES.RUNNING then
+    -- Throw RunningTick event while the session is unpaused
+    local gameState = Ext.IsClient() and Ext.Client.GetGameState() or Ext.Server.GetGameState()
+    if gameState == GameState.CLIENT_STATES.RUNNING then
 
         GameState.Events.RunningTick:Throw({
             DeltaTime = deltaTime,

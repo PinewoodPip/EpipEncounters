@@ -11,11 +11,9 @@ local Transmog = Epip.GetFeature("Feature_Vanity_Transmog")
 function Vanity.GetTemplateInSlot(char, slot)
     local item = Osi.CharacterGetEquippedItem(char.MyGuid, slot)
     local template = ""
-
     if item then
-        template = Ext.GetItem(item).RootTemplate.Id
+        template = Item.Get(item).RootTemplate.Id
     end
-
     return template
 end
 
@@ -249,8 +247,8 @@ end
 
 -- Listen for transmog requests.
 Net.RegisterListener("EPIPENCOUNTERS_VanityTransmog", function(payload)
-    local char = Ext.GetCharacter(payload.Char)
-    local item = Ext.GetItem(payload.Item)
+    local char = Character.Get(payload.Char)
+    local item = Item.Get(payload.Item)
     local template = payload.NewTemplate
     local keepIcon = payload.KeepIcon == true
 
@@ -258,16 +256,14 @@ Net.RegisterListener("EPIPENCOUNTERS_VanityTransmog", function(payload)
 end)
 
 -- Listen for equip swaps, apply new visuals.
-Ext.Osiris.RegisterListener("ItemEquipped", 2, "after", function(item, char)
+Ext.Osiris.RegisterListener("ItemEquipped", 2, "after", function(itemGUID, char)
     local outfit = Osi.DB_PIP_Vanity_PersistentOutfit:Get(char, nil, nil, nil, nil, nil, nil, nil)[1]
-
     if outfit and not Vanity.ignoreItemEquips then
-        item = Ext.GetItem(item)
-        Vanity:DebugLog("Transmogging equipped item to persistent outfit: " .. item.DisplayName)
-
+        local item = Item.Get(itemGUID)
         local slot = Item.GetItemSlot(item)
 
-        Vanity.TransmogItem(Ext.GetCharacter(char), item, outfit[1 + Vanity.SLOT_TO_DB_INDEX[slot]])
+        Vanity:DebugLog("Transmogging equipped item to persistent outfit: " .. item.DisplayName)
+        Vanity.TransmogItem(Character.Get(char), item, outfit[1 + Vanity.SLOT_TO_DB_INDEX[slot]])
     end
 end)
 

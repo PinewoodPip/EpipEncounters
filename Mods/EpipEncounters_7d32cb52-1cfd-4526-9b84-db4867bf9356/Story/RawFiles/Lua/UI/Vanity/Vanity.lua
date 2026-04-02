@@ -801,14 +801,8 @@ function Vanity.RenderDropdown(id, options, selectedIndex)
 end
 
 function Vanity.GetTemplateInSlot(char, slot)
-    local item = char:GetItemBySlot(slot)
-    local template = ""
-
-    if item then
-        template = Ext.GetItem(item).RootTemplate.Id
-    end
-
-    return template
+    local item = char:GetItemObjectBySlot(slot)
+    return item and item.RootTemplate.Id or ""
 end
 
 function Vanity.RenderEntry(id, text, canCollapse, active, canFavorite, favorited, iggyIcon, canRemove, colors)

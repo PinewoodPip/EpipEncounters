@@ -4,6 +4,8 @@
 -- Available on both contexts; mainly used for client scripting.
 ---------------------------------------------
 
+local MonotonicTime = Ext.Utils.MonotonicTime
+
 ---@class TimerLib : Feature
 Timer = {
     UI = nil,
@@ -219,22 +221,17 @@ end
 
 -- Decrement timer durations.
 Ext.Events.Tick:Subscribe(function()
-    local time = Ext.MonotonicTime()
+    local time = MonotonicTime()
     if not Timer.previousTime then
         Timer.previousTime = time
     else
         local deltaTime = time - Timer.previousTime
-
         for _,timer in ipairs(Timer.activeTimers) do
             if not timer.Paused then
                 if timer:TickDown(deltaTime) then
                     Timer.Events.TimerCompleted:Throw({
                         Timer = timer,
                     })
-
-                    if timer.ID ~= "" then
-                        Timer:DebugLog("Timer finished: " .. timer.ID)
-                    end
                 end
             end
         end
@@ -242,7 +239,6 @@ Ext.Events.Tick:Subscribe(function()
         -- Remove timers once they deplete their repeats
         for i=#Timer.activeTimers,1,-1 do
             local timer = Timer.activeTimers[i]
-
             if timer:IsFinished() then
                 Timer.Remove(timer)
             end
