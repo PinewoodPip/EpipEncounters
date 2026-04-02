@@ -48,7 +48,7 @@ function Stats.GetRuneTier(statsID)
     local runeDef = Stats.GetRuneDefinition(statsID)
     local runeTier = nil
     if runeDef then
-        local statsObj = Ext.Stats.GetForPip(statsID) ---@type StatsLib_StatsEntry_Object
+        local statsObj = Ext.Stats.GetForPip(statsID, false) ---@type StatsLib_StatsEntry_Object
         if Stats.GetType(statsObj) == "Object" then
             runeTier = statsObj.RuneLevel
         end

@@ -214,7 +214,7 @@ function Transmog.GetValidTemplates()
 
         -- Check stats to determine if the template is a weapon
         if template.Stats ~= "" then
-            local statsObj = Ext.Stats.GetForPip(template.Stats)
+            local statsObj = Ext.Stats.GetForPip(template.Stats, false)
             if statsObj and Stats.GetType(statsObj) == "Weapon" then -- Some templates have invalid IDs in the Stats field, thus this sanity check is necessary.
                 hasVisuals = true
                 itemSlot = "Weapon"

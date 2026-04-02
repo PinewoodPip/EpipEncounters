@@ -1316,7 +1316,7 @@ end
 ---@param item Item
 ---@return boolean
 function Item.IsFood(item)
-    local stat = Ext.Stats.GetForPip(item.StatsId) ---@type StatsLib_StatsEntry_Potion
+    local stat = Ext.Stats.GetForPip(item.StatsId, false) ---@type StatsLib_StatsEntry_Potion
     return stat and Stats.GetType(stat) == "Potion" and stat.IsConsumable == "Yes" and stat.IsFood == "Yes"
 end
 
@@ -1324,7 +1324,7 @@ end
 ---@param item Item
 ---@return boolean
 function Item.IsIngredient(item)
-    local stat = Ext.Stats.GetForPip(item.StatsId) ---@type StatsLib_StatsEntry_Potion|StatsLib_StatsEntry_Object
+    local stat = Ext.Stats.GetForPip(item.StatsId, false) ---@type StatsLib_StatsEntry_Potion|StatsLib_StatsEntry_Object
     local statType = Stats.GetType(stat)
     return stat and (statType == "Potion" or statType == "Object") and stat.InventoryTab == "Ingredient"
 end
