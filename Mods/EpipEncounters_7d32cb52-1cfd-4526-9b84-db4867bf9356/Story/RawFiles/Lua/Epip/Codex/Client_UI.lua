@@ -10,6 +10,7 @@ local CloseButtonPrefab = Generic.GetPrefab("GenericUI_Prefab_CloseButton")
 local Textures = Epip.GetFeature("Feature_GenericUITextures").TEXTURES
 local SettingWidgets = Epip.GetFeature("Features.SettingWidgets")
 local Codex = Epip.GetFeature("Feature_Codex")
+local Tooltip = Client.Tooltip
 local Input = Client.Input
 local TSK = Codex.TranslatedStrings
 local V = Vector.Create
@@ -96,6 +97,12 @@ function UI.SetSection(section)
     UI:UpdateIndex()
     UI:_UpdateSection()
     sectionRoot:SetVisible(true)
+end
+
+---@override
+function UI:Hide()
+    Tooltip.HideTooltip() -- Prevent the last tooltip from lingering after the UI is closed
+    Client.UI._BaseUITable.Hide(self)
 end
 
 ---------------------------------------------
