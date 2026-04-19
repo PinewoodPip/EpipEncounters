@@ -9,9 +9,7 @@ Settings = {
     Modules = {}, ---@type table<string, SettingsLib_Module>
     SettingTypes = {}, ---@type table<SettingsLib_SettingType, SettingsLib_Setting>
 
-    unregisteredSettingValues = {}, ---@type table<string, table<string, {Value: any, Deserialize: boolean?}>>
-
-    _unregisteredSettingWarningShown = false,
+    _UnregisteredSettingValues = {}, ---@type table<string, table<string, {Value: any, Deserialize: boolean?}>>
 
     NET_SYNC_CHANNEL = "EPIP_SETTINGS_SYNC",
 
@@ -130,26 +128,23 @@ function _Setting:_Init() end
 ---------------------------------------------
 
 ---Sets a setting's value and fires corresponding events.
+---@see SettingsLib_Event_SettingValueChanged
 ---@param moduleID string
 ---@param settingID string
 ---@param value any
----@param notify boolean? Defaults to `true`.
----@param deserialize boolean? Defaults to `false`.
+---@param notify boolean? Whether to throw the SettingValueChanged event. Defaults to `true`.
+---@param deserialize boolean? Whether the value should be deserialized. Defaults to `false`.
 function Settings.SetValue(moduleID, settingID, value, notify, deserialize)
     local setting = Settings.GetSetting(moduleID, settingID)
     if notify == nil then notify = true end
 
+    -- If the setting is not registered yet, store the value to be applied when it is.
+    -- This is necessary as loading settings can happen before all features and their settings are registered.
     if not setting then
-        if GameState.IsInSession() and not Settings._unregisteredSettingWarningShown then
-            Settings:LogWarning("Tried to set value of an unregistered setting: " .. moduleID .. " " .. settingID .. ". The value will be stored until the setting is registered (this warning is only shown once per session).")
-
-            Settings._unregisteredSettingWarningShown = true
+        if not Settings._UnregisteredSettingValues[moduleID] then
+            Settings._UnregisteredSettingValues[moduleID] = {}
         end
-        if not Settings.unregisteredSettingValues[moduleID] then
-            Settings.unregisteredSettingValues[moduleID] = {}
-        end
-
-        Settings.unregisteredSettingValues[moduleID][settingID] = {Value = value, Deserialize = deserialize}
+        Settings._UnregisteredSettingValues[moduleID][settingID] = {Value = value, Deserialize = deserialize}
     else
         if deserialize then
             value = setting.DeserializeValue(value)
@@ -214,13 +209,11 @@ end
 function Settings.GetSetting(modTable, id)
     local mod = Settings.GetModule(modTable)
     local setting
-
     if mod then
         setting = mod.Settings[id]
     else
-        Settings:LogError("GetSetting(): setting doesn't exist: " .. id)
+        Settings:__LogError("GetSetting", "Setting doesn't exist: " .. id)
     end
-
     return setting
 end
 
@@ -242,8 +235,8 @@ function Settings.GetSettingValue(modTable, id)
             Setting = setting,
             Value = value
         }).Value
-    elseif Settings.unregisteredSettingValues[modTable] then
-        local settingPendingData = Settings.unregisteredSettingValues[modTable][id]
+    elseif Settings._UnregisteredSettingValues[modTable] then
+        local settingPendingData = Settings._UnregisteredSettingValues[modTable][id]
 
         if settingPendingData then
             value = settingPendingData.Value -- TODO error if value has not been deserialized yet
@@ -255,6 +248,9 @@ function Settings.GetSettingValue(modTable, id)
     return value
 end
 
+---Registers a setting type class.
+---@param settingType SettingsLib_SettingType
+---@param baseTable SettingsLib_Setting
 function Settings.RegisterSettingType(settingType, baseTable)
     Settings.SettingTypes[settingType] = baseTable
 end
@@ -263,13 +259,12 @@ end
 ---Any additional data on the table is preserved.
 ---@param data SettingsLib_Setting
 function Settings.RegisterSetting(data)
+    if not data.ID or not data.ModTable then
+        Settings:__Error("RegisterSetting", "Settings must declare ID and ModTable")
+    end
+
     local settingTable = Settings.SettingTypes[data.Type] ---@type SettingsLib_Setting
     local setting = settingTable:Create(data)
-
-    if not data.ID or not data.ModTable then
-        Settings:LogError("Settings must declare ID and ModTable")
-        return nil
-    end
 
     -- Default to client context
     data.Context = data.Context or "Client"
@@ -285,7 +280,7 @@ function Settings.RegisterSetting(data)
     mod.Settings[data.ID] = setting
 
     -- Initialize saved value
-    local unregisteredSettingValues = Settings.unregisteredSettingValues[data.ModTable]
+    local unregisteredSettingValues = Settings._UnregisteredSettingValues[data.ModTable]
     if unregisteredSettingValues and unregisteredSettingValues[data.ID] ~= nil then
         Settings.SetValue(data.ModTable, data.ID, unregisteredSettingValues[data.ID].Value, nil, unregisteredSettingValues[data.ID].Deserialize)
     end
@@ -295,10 +290,8 @@ end
 ---@return table<string, SettingsLib_Module>
 function Settings.GetModules()
     local modules = {}
-
     for id,module in pairs(Settings.Modules) do
         modules[id] = module
     end
-
     return modules
 end
