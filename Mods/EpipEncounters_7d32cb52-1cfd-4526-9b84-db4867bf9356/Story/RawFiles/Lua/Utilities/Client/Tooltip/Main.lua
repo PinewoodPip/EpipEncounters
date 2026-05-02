@@ -665,8 +665,10 @@ Ext.Events.UICall:Subscribe(function(ev)
         Tooltip._SetNextTooltipSource({
             UIType = ev.UI:GetTypeId(),
             Type = "Status",
+            UICall = ev.Function,
             FlashStatusHandle = param2,
             FlashCharacterHandle = param1,
+            FlashParams = {table.unpack(ev.Args)},
             IsFromGame = true,
         })
     elseif ev.Function == "showStatTooltip" then
@@ -700,11 +702,13 @@ Ext.Events.UICall:Subscribe(function(ev)
         local statIDOrComponentHandle = param2
         Tooltip._SetNextTooltipSource({
             UIType = ev.UI:GetTypeId(),
+            UICall = ev.Function,
             Type = Tooltip.EXAMINE_TOOLTIP_TYPE_MAP[tooltipType] or "Stat",
             AbilityID = statIDOrComponentHandle,
             IsFromGame = true,
             FlashStatusHandle = statIDOrComponentHandle,
             FlashCharacterHandle = Ext.UI.HandleToDouble(Examine.GetCharacter().Handle),
+            FlashParams = {table.unpack(ev.Args)},
         })
     end
 end)
