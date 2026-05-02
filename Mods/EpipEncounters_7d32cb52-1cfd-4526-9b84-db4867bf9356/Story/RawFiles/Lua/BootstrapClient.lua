@@ -117,6 +117,7 @@ local coreLibraries = {
         ScriptSet = "Utilities/Character",
         Scripts = {
             "Utilities/Character/Shared_Talents.lua",
+            "Utilities/Character/Shared_Tags.lua",
         },
     },
 
@@ -658,6 +659,7 @@ LOAD_ORDER = {
             "Epip/StatsTab/Shared.lua",
             "Epip/StatsTab/Data/Categories.lua",
             "Epip/StatsTab/Data/Stats.lua",
+            "Epip/StatsTab/Data/Tags.lua",
             "UI/CharacterSheet/StatsTab.lua", -- UI for stats tab - very old tech
             "Epip/StatsTab/Client/Client.lua",
             "Epip/StatsTab/Client/StatGetters.lua",

@@ -118,8 +118,14 @@ local coreLibraries = {
     "Utilities/Texture.lua",
     "Utilities/Profiling.lua",
 
-    {ScriptSet = "Utilities/Character"},
-    "Utilities/Character/Shared_Talents.lua",
+    -- CharacterLib
+    {
+        ScriptSet = "Utilities/Character",
+        Scripts = {
+            "Utilities/Character/Shared_Talents.lua",
+            "Utilities/Character/Shared_Tags.lua",
+        },
+    },
 
     -- ItemLib
     {

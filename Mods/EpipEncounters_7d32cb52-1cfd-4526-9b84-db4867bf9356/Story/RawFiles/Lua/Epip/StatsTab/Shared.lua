@@ -96,11 +96,11 @@ end
 ---@class Feature_CustomStats_Stat : Class, I_Identifiable, I_Describable
 ---@field Name string
 ---@field Description string Fallback description in case a formatted Tooltip isn't set.
----@field Tooltip TooltipData
----@field Footnote string Italic text after description, in new paragraph.
----@field Suffix string Suffix for value display.
----@field Prefix string Prefix for value display.
----@field Boolean boolean Boolean stats show no value label.
+---@field Tooltip TooltipData?
+---@field Footnote string? Italic text after description, in new paragraph.
+---@field Suffix string? Suffix for value display.
+---@field Prefix string? Prefix for value display.
+---@field Boolean boolean? Boolean stats show no value label. Defaults to `false`.
 ---@field MaxCharges string? ID of the custom stat that should be considered as this stat's "maximum charges" If specified, this stat will display as "{Value}/{Value of MaxCharges stat}"
 ---@field IgnoreForHiding boolean If true, this stat will not be considered as added when determining if a Hidden category should display.
 ---@field Keyword Keyword

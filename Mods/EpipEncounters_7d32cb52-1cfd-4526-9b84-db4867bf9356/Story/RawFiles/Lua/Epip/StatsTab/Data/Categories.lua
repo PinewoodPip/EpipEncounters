@@ -17,6 +17,12 @@ end
 
 ---@type table<string, Feature_CustomStats_Category>
 local Categories = {
+    Tags = {
+        Header = FormatHeader("————— %s —————", CommonStrings.Tags),
+        Name = CommonStrings.Tags,
+        Behaviour = "Hidden",
+        Stats = {}, -- Populated dynamically
+    },
     Vitals = {
         Header = FormatHeader("————— %s —————", CommonStrings.Vitals),
         Name = CommonStrings.Vitals,
@@ -47,6 +53,7 @@ local Categories = {
 }
 
 local CategoriesOrder = {
+    "Tags",
     "Vitals",
     "CurrentCombat",
     "Misc",

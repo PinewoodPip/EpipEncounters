@@ -246,6 +246,11 @@ Text.CommonStrings.Statuses = Text.RegisterTranslatedString({
     Handle = "h7187736egcc52g416dga221gc4f17ca41160",
     Text = "Statuses",
 })
+Text.CommonStrings.Tags = Text.RegisterTranslatedString({
+    Handle = "h838a3463g5591g43ebg92eagda16f66495cd",
+    Text = "Tags",
+    ContextDescription = [[As in, character origin tags (ex. "Outlaw", "Noble")]]
+})
 Text.CommonStrings.Reset = Text.RegisterTranslatedString({
     Handle = "h797b8a3ag4b10g4549g8731g7ec3e775b896",
     Text = "Reset",
