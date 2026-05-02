@@ -41,6 +41,11 @@ local Toggles = {
             Text = "Keywords & Misc.",
             ContextDescription = [[Tooltip for tab with keywords & character stats.]],
         },
+        Label_StatsTab = {
+            Handle = "h71cba66dge826g4b2egac1bg77f5e5d9a577",
+            Text = "Stats & Misc.",
+            ContextDescription = [[Tooltip for the keywords & character stats tab, without EE]],
+        },
     },
 }
 Epip.RegisterFeature("Features.UIOverrideToggles", Toggles)
@@ -72,7 +77,8 @@ Toggles.Settings.EnablePlayerInfoOverride = Toggles:RegisterSetting("EnablePlaye
 -- Update stats tab translated string to use the Epip localized string.
 GameState.Events.ClientReady:Subscribe(function()
     local CharacterSheet = Client.UI.CharacterSheet -- Cannot be upvalued, as this feature needs to load before the UI table.
-    local label = Toggles.TranslatedStrings.Label_KeywordsTab:GetString()
+    local tsk = EpicEncounters.IsEnabled() and TSK.Label_KeywordsTab or TSK.Label_StatsTab
+    local label = tsk:GetString()
     for _,handle in ipairs(CharacterSheet.CUSTOM_STATS_TAB_TSKHANDLES) do
         Text.SetTranslatedString(handle, label)
     end
