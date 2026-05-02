@@ -833,6 +833,17 @@ function Input.GetRawInputNumericID(name)
     return Ext.Enums.InputRawType[name].Value
 end
 
+---Returns the string event ID for the input event to use the given hotbar slot.
+---Exists mostly as a hack for the fact that the input event for the 10th slot is `UISelectSlot0` instead of the expected `UISelectSlot10`.
+---@param slotIndex integer
+function Input.GetHotbarSlotEventID(slotIndex)
+    if slotIndex == 10 then
+        return "UISelectSlot0" -- Larian moment
+    else
+        return "UISelectSlot" .. Text.RemoveTrailingZeros(slotIndex)
+    end
+end
+
 ---Returns a list of pressed *keyboard* keys.
 ---@return InputRawType[]
 function Input.GetPressedKeys()

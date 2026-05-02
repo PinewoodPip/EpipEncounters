@@ -1096,7 +1096,7 @@ end)
 ---@param slot integer Slot index, 1-based.
 ---@return boolean
 function Hotbar.CanUseSlotWithBinding(slot)
-    local inputEventID = "UISelectSlot" .. Text.RemoveTrailingZeros(slot - 1)
+    local inputEventID = Input.GetHotbarSlotEventID(slot)
     local binding = Input.GetBinding(inputEventID)
 
     -- Do not use slots by default if modifier keys are held, as

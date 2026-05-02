@@ -128,7 +128,7 @@ end)
 -- Redirect slot keybind presses to upper visible bars, if modifier keys are held and the setting is enabled.
 Hotbar.Hooks.GetSlotForIggyEvent:Subscribe(function (ev)
     if not ev.SlotIndex then return end
-    local slotInputEventID = "UISelectSlot" .. Text.RemoveTrailingZeros(ev.SlotIndex)
+    local slotInputEventID = Input.GetHotbarSlotEventID(ev.SlotIndex)
     local binding = Input.GetBinding(slotInputEventID)
     local isSlotUnbound = not binding
     if Tweaks:GetSettingValue(Tweaks.Settings.SlotKeyboardModifiers) == true then
