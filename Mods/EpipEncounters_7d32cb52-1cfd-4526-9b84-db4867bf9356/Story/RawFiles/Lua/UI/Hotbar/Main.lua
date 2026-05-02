@@ -1058,6 +1058,19 @@ Hotbar:RegisterCallListener("pipUnbindHotbarButton", function (_, index)
     Hotbar.RenderHotkeys()
 end)
 
+-- Set hotkey labels to be left-aligned to prevent overflow when using keybinds that are 2+ characters.
+Hotbar:RegisterInvokeListener("setAllText", function (ev)
+    local hotkeys = ev.UI:GetRoot().hotbar_mc.hotkeys_mc
+    for i=1,12,1 do
+        local button = hotkeys["key" .. i .. "_mc"]
+        button.autoSize = "left"
+    end
+end)
+Hotbar:RegisterInvokeListener("setText", function (ev, slotIndex)
+    local button = ev.UI:GetRoot().hotbar_mc.hotkeys_mc["key" .. Text.RemoveTrailingZeros(slotIndex + 1) .. "_mc"]
+    button.autoSize = "left"
+end)
+
 Net.RegisterListener("EPIPENCOUNTERS_Hotbar_SetLayout", function(payload)
     Hotbar.SetState(Character.Get(payload.CharacterNetID), payload.Layout)
 end)
