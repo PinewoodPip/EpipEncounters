@@ -23,7 +23,7 @@ Tooltip.Hooks.RenderSkillTooltip:Subscribe(function (ev)
             Color = Color.LARIAN.GREEN,
         })
     })
-end)
+end, {EnabledFunctor = Input.IsShiftPressed})
 
 -- Show status IDs and types in status tooltips.
 Tooltip.Hooks.RenderStatusTooltip:Subscribe(function (ev)
@@ -37,7 +37,7 @@ Tooltip.Hooks.RenderStatusTooltip:Subscribe(function (ev)
             Color = Color.LARIAN.GREEN,
         })
     })
-end)
+end, {EnabledFunctor = Input.IsShiftPressed})
 
 -- Show item stat object IDs and tags while shift is held (since this information isn't needed as often).
 Tooltip.Hooks.RenderItemTooltip:Subscribe(function (ev)
