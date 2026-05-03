@@ -210,7 +210,7 @@ function Timer.Remove(timer)
             return node.Options._TimerLib_Entry == timer
         end)
     else
-        Timer:LogError("Failed to remove timer")
+        Timer:__LogError("Failed to remove timer")
         Timer:Dump(timer)
     end
 end

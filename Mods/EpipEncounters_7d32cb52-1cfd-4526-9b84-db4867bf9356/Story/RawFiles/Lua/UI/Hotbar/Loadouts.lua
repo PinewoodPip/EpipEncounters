@@ -41,7 +41,7 @@ function Hotbar.ApplyLoadout(char, loadout, row, replaceUsedSlots)
         Hotbar:DebugLog("Applied loadout: " .. loadout .. ", on row " .. row)
         Hotbar.UpdateSlotTextures()
     else
-        Hotbar:LogError("Loadout does not exist: " .. loadout)
+        Hotbar:__LogError("Loadout does not exist: " .. loadout)
     end
 end
 

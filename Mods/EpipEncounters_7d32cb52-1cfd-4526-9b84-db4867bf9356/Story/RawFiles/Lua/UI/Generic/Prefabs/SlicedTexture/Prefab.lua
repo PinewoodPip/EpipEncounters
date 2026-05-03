@@ -176,7 +176,7 @@ function SlicedTexture:_UpdateTextures()
         center:SetPosition(0, topHeight)
         bottom:SetPosition(0, topHeight + centerHeight)
     else
-        Generic:Error("SlicedTexture:__OnStyleChanged", "Unsupported style type", style.Type)
+        Generic:__Error("SlicedTexture:__OnStyleChanged", "Unsupported style type", style.Type)
     end
 end
 

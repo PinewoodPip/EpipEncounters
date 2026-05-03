@@ -417,7 +417,7 @@ Utilities.Hooks.RegisterListener("GameMenu", "ButtonAdded", function(id, _, _)
     if id == Client.UI.GameMenu.BUTTON_IDS.LOAD or id == Client.UI.GameMenu.BUTTON_IDS.GM_RELOAD_ASSETS then
         if not Client.IS_HOST then -- Only show message and fire event once.
             Client.IS_HOST = true
-            Client:Log("Client is hosting.")
+            Client:__Log("Client is hosting.")
             Client:FireEvent("DeterminedAsHost")
         end
     end

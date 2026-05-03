@@ -179,7 +179,7 @@ QuickExamine:RegisterClass("Features.QuickExamine.Widget", _Widget)
 ---@return GenericUI_Element
 ---@diagnostic disable
 function _Widget:Render(entity)
-    QuickExamine:Error("Widget:Render", "Not implemented for ", self:GetClassName())
+    QuickExamine:__Error("Widget:Render", "Not implemented for ", self:GetClassName())
 end
 
 ---@param entity Feature_QuickExamine_Entity

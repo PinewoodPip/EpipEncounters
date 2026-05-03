@@ -111,7 +111,7 @@ function DBSync.Query(dbName, ...)
     local db = DBSync._Entries[dbName][arity]
 
     if not DBSync._Definitions[dbName][arity] then
-        DBSync:Error("Query", dbName, "with arity", arity, "is not registered for synching.")
+        DBSync:__Error("Query", dbName, "with arity", arity, "is not registered for synching.")
     end
 
     return db and db:Query(...) or {}
@@ -139,7 +139,7 @@ Net.RegisterListener("Feature_DatabaseSync_NetMessage_SyncDatabase", function (p
         local def = DBSync._Definitions[name][arity]
 
         if not def then
-            DBSync:Error("Feature_DatabaseSync_NetMessage_SyncDatabase", "Attemped to sync database that is not registered on the client", name, arity)
+            DBSync:__Error("Feature_DatabaseSync_NetMessage_SyncDatabase", "Attemped to sync database that is not registered on the client", name, arity)
         end
 
         tuples[i] = DBSync._Tuple.Create(t, def)

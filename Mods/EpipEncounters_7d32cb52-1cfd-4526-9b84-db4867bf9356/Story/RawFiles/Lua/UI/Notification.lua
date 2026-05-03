@@ -83,7 +83,7 @@ function Notification.ShowIconNotification(text, icon, subTitle, title, hint, so
     title = title or ""
     hint = hint or ""
 
-    if not icon then Notification:LogError("ShowIconNotification(): no icon provided.") return nil end
+    if not icon then Notification:__LogError("ShowIconNotification(): no icon provided.") return nil end
 
     Notification:GetUI():SetCustomIcon("si", icon, 50, 50)
 

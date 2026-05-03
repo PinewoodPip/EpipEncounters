@@ -555,7 +555,7 @@ end
 function Bedazzled.GetGemStateClass(className)
     local class = Bedazzled._GemStateClasses[className]
     if not class then
-        Bedazzled:Error("GetGemStateClass", "Class is not registered:", className)
+        Bedazzled:__Error("GetGemStateClass", "Class is not registered:", className)
     end
     return class
 end

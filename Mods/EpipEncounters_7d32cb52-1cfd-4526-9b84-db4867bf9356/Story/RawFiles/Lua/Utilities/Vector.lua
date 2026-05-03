@@ -77,7 +77,7 @@ end
 ---@param v2 Vector
 ---@return number
 function Vector.DotProduct(v1, v2)
-    if v1.Arity ~= v2.Arity then Vector:Error("DotProduct", "Vector dimension mismatch") end
+    if v1.Arity ~= v2.Arity then Vector:__Error("DotProduct", "Vector dimension mismatch") end
 
     local value = 0
 
@@ -107,7 +107,7 @@ end
 ---@param v2 Vector
 ---@return Vector
 function Vector.Sum(v1, v2)
-    if v1.Arity ~= v2.Arity then Vector:Error("Sum", "Vector dimension mismatch") end
+    if v1.Arity ~= v2.Arity then Vector:__Error("Sum", "Vector dimension mismatch") end
 
     local v = Vector.Clone(v1)
 
@@ -144,7 +144,7 @@ end
 ---@param v2 Vector
 function Vector.AreEqual(v1, v2)
     if not v1 or not v2 then
-        Vector:Error("Vector:AreEqual", "Parameters must not be nil")
+        Vector:__Error("Vector:AreEqual", "Parameters must not be nil")
     end
     local equal = v1.Arity == v2.Arity
     if equal then

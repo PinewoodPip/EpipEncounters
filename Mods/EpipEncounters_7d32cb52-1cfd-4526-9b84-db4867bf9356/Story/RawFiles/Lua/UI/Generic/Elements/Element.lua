@@ -116,7 +116,7 @@ end
 ---@param element GenericUI_Element
 function _Element:RemoveChild(element)
     if not element:GetParent() == self then
-        Generic:LogWarning("Attempted to remove child from wrong parent. " .. element.ID .. " from wrong parent " .. self.ID)
+        Generic:__LogWarning("Attempted to remove child from wrong parent. " .. element.ID .. " from wrong parent " .. self.ID)
     end
     self.UI:DestroyElement(element)
 end
@@ -285,10 +285,10 @@ end
 ---@param tween GenericUI_ElementTween
 function _Element:Tween(tween)
     if not tween.Function or not tween.Ease then
-        Generic:Error("Element:Tween", "Tweens must define Function and Ease")
+        Generic:__Error("Element:Tween", "Tweens must define Function and Ease")
     end
     if not tween.FinalValues or table.getKeyCount(tween.FinalValues) == 0 then
-        Generic:Error("Element:Tween", "Tweens must define at least one final property value")
+        Generic:__Error("Element:Tween", "Tweens must define at least one final property value")
     end
 
     local mc = self:GetMovieClip()
@@ -423,7 +423,7 @@ function _Element:SetTooltip(tooltipType, tooltip)
             Tooltip.ShowCustomFormattedTooltip(tooltip)
         end, {StringID = "_Tooltip"})
     else
-        Generic:LogError("Element:SetTooltip: unsupported tooltip type " .. tooltipType)
+        Generic:__LogError("Element:SetTooltip: unsupported tooltip type " .. tooltipType)
     end
 
     targetElement.Events.MouseOut:Subscribe(function (_)

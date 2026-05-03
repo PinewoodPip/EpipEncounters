@@ -912,7 +912,7 @@ ContextMenu:RegisterCallListener("pipVanillaContextMenuOpened", function (_)
     if ContextMenu:IsDebug() then
         for _,data in pairs(vanillaElements) do
             if not table.reverseLookup(ContextMenu.VANILLA_ACTIONS, data.ActionID) then
-                ContextMenu:LogWarning("Unmapped action:", data.ActionID, data.Index)
+                ContextMenu:__LogWarning("Unmapped action:", data.ActionID, data.Index)
             end
         end
     end

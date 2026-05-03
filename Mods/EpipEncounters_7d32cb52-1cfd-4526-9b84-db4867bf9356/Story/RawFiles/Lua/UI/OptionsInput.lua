@@ -109,7 +109,7 @@ end
 
 ---@param binding InputLib_Action_KeyCombination
 function Options.SetPotentialBinding(binding)
-    if not Options.IsBindingKey() then Options:LogError("SetPotentialBinding called out of context!!!") return nil end
+    if not Options.IsBindingKey() then Options:__LogError("SetPotentialBinding called out of context!!!") return nil end
 
     Options.potentialBinding = binding
 

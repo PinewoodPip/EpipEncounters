@@ -280,7 +280,7 @@ function Widgets._RenderInputBindingSetting(request)
             UpdateFields()
         end)
     else
-        Widgets:LogWarning("Using InputBinding settings without a target action is not supported!")
+        Widgets:__LogWarning("Using InputBinding settings without a target action is not supported!")
     end
 
     if request.DefaultShownValue ~= nil then

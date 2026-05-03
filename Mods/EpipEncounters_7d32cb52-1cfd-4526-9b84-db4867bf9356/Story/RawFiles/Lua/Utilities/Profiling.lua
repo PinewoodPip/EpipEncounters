@@ -155,7 +155,7 @@ end
 ---@param name string?
 function Profiling.Step(name)
     local session = Profiling.GetCurrentSession()
-    if not session then Profiling:Error("Step", "No session running") end
+    if not session then Profiling:__Error("Step", "No session running") end
     local step = Session.Create({
         ID = name or "Unnamed",
     })
@@ -168,7 +168,7 @@ end
 ---Ends the current profiling session.
 function Profiling.End()
     local session = Profiling.GetCurrentSession()
-    if not session then Profiling:Error("End", "No session running") end
+    if not session then Profiling:__Error("End", "No session running") end
 
     session:End()
     Profiling._SessionStack[#Profiling._SessionStack] = nil

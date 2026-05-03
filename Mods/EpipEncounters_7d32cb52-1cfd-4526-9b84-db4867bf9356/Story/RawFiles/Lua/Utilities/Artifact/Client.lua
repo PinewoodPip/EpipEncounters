@@ -34,7 +34,7 @@ function Artifact.GetEquippedPowers(char)
         if def then
             table.insert(artifacts, def)
         else
-            Artifact:LogWarning("Artifact has no definition: " .. artifactID)
+            Artifact:__LogWarning("Artifact has no definition: " .. artifactID)
         end
     end
 

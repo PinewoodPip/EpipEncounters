@@ -47,7 +47,7 @@ function DataConfig.SetValue(key, value, save)
             end
         end
     else
-        DataConfig:LogError("Invalid key: " .. key)
+        DataConfig:__LogError("Invalid key: " .. key)
     end
 end
 

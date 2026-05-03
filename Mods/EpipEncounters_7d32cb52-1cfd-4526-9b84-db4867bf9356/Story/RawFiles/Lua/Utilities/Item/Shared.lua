@@ -825,7 +825,7 @@ end
 ---@return number
 function Item.GetIdentifyRequirement(item)
     if not item.Stats then
-        Item:Error("GetIdentifyRequirement", "Item has no stats; cannot get identify requirement.")
+        Item:__Error("GetIdentifyRequirement", "Item has no stats; cannot get identify requirement.")
     end
 
     local level = item.Stats.Level

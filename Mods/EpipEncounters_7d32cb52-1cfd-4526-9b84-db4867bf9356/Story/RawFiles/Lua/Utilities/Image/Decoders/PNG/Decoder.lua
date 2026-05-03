@@ -62,7 +62,7 @@ end
 
 function _PNG:DecompressData()
     if not self.CompressedData then
-        Image:Error("PNG.DecompressData", "No compressed data added")
+        Image:__Error("PNG.DecompressData", "No compressed data added")
     end
 
     local data = self.CompressedData
@@ -85,10 +85,10 @@ function _PNG:DecompressData()
         -- channelCount = 4
     else
         if self.ColorType == 6 then
-            Image:Error("DecompressData", "Transparency is not supported")
+            Image:__Error("DecompressData", "Transparency is not supported")
         else
             -- TODO document these
-            Image:Error("DecompressData", "ColorType not supported: ", self.ColorType)
+            Image:__Error("DecompressData", "ColorType not supported: ", self.ColorType)
         end
     end
 
@@ -157,7 +157,7 @@ function _PNG:DecompressData()
             elseif scanlineFiltering == 0 then
                 filteringValue = 0
             else
-                Image:Error("IDAT.ReadChunk", "Unimplemented filtering type", scanlineFiltering)
+                Image:__Error("IDAT.ReadChunk", "Unimplemented filtering type", scanlineFiltering)
             end
 
             -- print("defiltered val", byteX, byteY, currentByte, filteringValue)
@@ -222,7 +222,7 @@ function _PNG:ReadHeader()
     local header = self:ConsumeBytes(8)
 
     if header[2] ~= 0x50 or header[3] ~= 0x4E or header[4] ~= 0x47 then
-        Image:Error("ReadHeader", "File header is not that of a PNG.")
+        Image:__Error("ReadHeader", "File header is not that of a PNG.")
     else
         Image:DebugLog("PNG file header OK.")
     end
@@ -249,7 +249,7 @@ function _PNG:ReadChunk()
         elseif not chunkData.Essential then
             Image:DebugLog("ReadChunk", "found ancillary chunk with no parsing implemented:", chunkData.Name)
         else
-            Image:Error("ReadChunk", "Chunk parsing not implemented for non-optional chunk", chunkType)
+            Image:__Error("ReadChunk", "Chunk parsing not implemented for non-optional chunk", chunkType)
         end
 
         -- Consume its bytes

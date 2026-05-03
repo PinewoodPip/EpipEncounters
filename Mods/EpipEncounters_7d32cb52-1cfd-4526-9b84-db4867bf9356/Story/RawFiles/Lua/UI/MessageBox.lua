@@ -120,7 +120,7 @@ function MessageBox.Open(data)
     local root = MessageBox:GetRoot()
 
     if not data.Header or not data.Message then
-        MessageBox:LogError("Tried to display a message box with no header and/or message")
+        MessageBox:__LogError("Tried to display a message box with no header and/or message")
         return nil
     end
 

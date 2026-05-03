@@ -40,7 +40,7 @@ function Settings.Save(moduleName, fileName)
 
         IO.SaveFile(fileName, save)
     else
-        Settings:LogError("Save(): module not registered: " .. moduleName)
+        Settings:__LogError("Save(): module not registered: " .. moduleName)
     end
 end
 
@@ -63,7 +63,7 @@ function Settings.Load(moduleName, fileName)
             end
         end
     else
-        Settings:LogError("Load(): module not registered: " .. moduleName)
+        Settings:__LogError("Load(): module not registered: " .. moduleName)
     end
 end
 
@@ -113,6 +113,6 @@ Net.RegisterListener(Settings.NET_SYNC_CHANNEL, function (payload)
 
         Settings.SetValue(setting.ModTable, setting.ID, payload.Value, false)
     else
-        Settings:LogError("Tried to sync an unregistered setting: " .. payload.ID)
+        Settings:__LogError("Tried to sync an unregistered setting: " .. payload.ID)
     end
 end)

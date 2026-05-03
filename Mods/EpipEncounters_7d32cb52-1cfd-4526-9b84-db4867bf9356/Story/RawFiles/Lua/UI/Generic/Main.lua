@@ -96,11 +96,11 @@ function Generic.Create(id, config)
         msg = string.format("TRACE %s (%s): %s", elementID, elementType, msg)
 
         if msgType == ui.TRACE_LEVELS.WARNING then
-            ui:LogWarning(msg)
+            ui:__LogWarning(msg)
         elseif msgType == ui.TRACE_LEVELS.ERROR then
-            ui:LogError(msg)
+            ui:__LogError(msg)
         else
-            ui:Log(msg)
+            ui:__Log(msg)
         end
     end)
 
@@ -168,7 +168,7 @@ function Generic.GetInstance(id)
     elseif type(id) == "number" then
         instance = Generic.INSTANCES[id]
     else
-        Generic:Error("GetInstance", "Wrong parameter type", type(id))
+        Generic:__Error("GetInstance", "Wrong parameter type", type(id))
     end
 
     return instance

@@ -282,7 +282,7 @@ function Input._FireActionReleasedEvent()
         Input._CurrentAction = nil
         Input._CurrentActionKeys = nil
     else
-        Input:LogWarning("_FireActionReleasedEvent() fired with no active action")
+        Input:__LogWarning("_FireActionReleasedEvent() fired with no active action")
     end
 end
 

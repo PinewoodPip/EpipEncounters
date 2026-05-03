@@ -39,7 +39,7 @@ function HTML.GetTags(text)
     local startIndex, endIndex, currentTag = text:find(tagStartPattern)
     while startIndex do
         searchLimitCounter = searchLimitCounter + 1
-        if searchLimitCounter > 200 then Text:Error("HTML.GetTags", "Tag search limit reached - possible infinite loop bug?") end
+        if searchLimitCounter > 200 then Text:__Error("HTML.GetTags", "Tag search limit reached - possible infinite loop bug?") end
 
         local matchLength, match, tagEndPattern, endStartIndex, endEndIndex
         local content, openCount, open, close, i
@@ -91,7 +91,7 @@ function HTML.GetTags(text)
                 EndIndex = startIndex + #match,
             })
         else
-            Text:Error("HTML.GetTags", "Failed to find closing tag - HTML invalid or bug?", "Finding tag", currentTag, "in string", text:sub(startIndex))
+            Text:__Error("HTML.GetTags", "Failed to find closing tag - HTML invalid or bug?", "Finding tag", currentTag, "in string", text:sub(startIndex))
         end
         ::Continue::
         startIndex, endIndex, currentTag = text:find(tagStartPattern, startIndex + matchLength)

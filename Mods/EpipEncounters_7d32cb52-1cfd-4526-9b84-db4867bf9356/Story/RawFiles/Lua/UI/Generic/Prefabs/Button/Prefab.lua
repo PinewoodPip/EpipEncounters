@@ -144,7 +144,7 @@ end
 ---@return boolean
 function Button:IsActivated()
     if not self:_IsStateButton() then
-        Generic:Error("Prefab_Button:IsActivated", "Button is not a state button")
+        Generic:__Error("Prefab_Button:IsActivated", "Button is not a state button")
     end
     return self._Activated
 end
@@ -154,7 +154,7 @@ end
 ---@param activated any
 function Button:SetActivated(activated)
     if not self:_IsStateButton() then
-        Generic:Error("Prefab_Button:SetActivated", "Button is not a state button")
+        Generic:__Error("Prefab_Button:SetActivated", "Button is not a state button")
     end
     self._Activated = activated
     self:_UpdateTextures()
@@ -206,7 +206,7 @@ function Button:_UpdateTextures()
         elseif state == "Pressed" then
             texture = style.PressedTexture or style.IdleTexture
         else
-            Generic:Error("Prefab_Button:_UpdateTextures()", "Invalid state", state)
+            Generic:__Error("Prefab_Button:_UpdateTextures()", "Invalid state", state)
         end
     end
 

@@ -129,11 +129,11 @@ function _Instance:CreateElement(id, elementType, parentID)
     if type(parentID) == "table" then parentID = parentID.ID end
 
     if not elementTable then
-        _Instance:Error("CreateElement", "Tried to instantiate an element of unknown type: " .. elementType)
+        _Instance:__Error("CreateElement", "Tried to instantiate an element of unknown type: " .. elementType)
     end
     -- TODO fix lists first
     -- if self:GetElementByID(id) ~= nil then
-    --     _Instance:Error("CreateElement", "Attemped to create an element with an ID already in use:", id)
+    --     _Instance:__Error("CreateElement", "Attemped to create an element with an ID already in use:", id)
     -- end
 
     -- Create element in flash

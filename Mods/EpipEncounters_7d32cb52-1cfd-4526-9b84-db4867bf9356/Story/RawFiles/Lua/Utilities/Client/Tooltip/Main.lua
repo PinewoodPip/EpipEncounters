@@ -289,7 +289,7 @@ function _FormattedTooltip:RemoveElement(element)
     if index then
         table.remove(self.Elements, index)
     else
-        Tooltip:Error("FormattedTooltip:RemoveElement", "Element not found")
+        Tooltip:__Error("FormattedTooltip:RemoveElement", "Element not found")
     end
 end
 
@@ -358,7 +358,7 @@ function Tooltip.ShowFormattedTooltip(ui, tooltipType, tooltip)
         local stageCursorPos = Client.Flash.ScreenSpaceToStretchedStage(cursor)
         root.displaySurfaceText(stageCursorPos:unpack())
     else
-        Tooltip:LogError("ShowFormattedTooltip(): Tooltip type not supported: " .. tooltipType)
+        Tooltip:__LogError("ShowFormattedTooltip(): Tooltip type not supported: " .. tooltipType)
     end
 end
 
@@ -579,7 +579,7 @@ function Tooltip._SendFormattedTooltipHook(ui, tooltipType, data, sourceData)
     if specificEvent then
         specificEvent:Throw(hook)
     else
-        Tooltip:LogWarning("No specific hook defined for tooltip type " .. tooltipType)
+        Tooltip:__LogWarning("No specific hook defined for tooltip type " .. tooltipType)
     end
 
     Tooltip.Hooks.RenderFormattedTooltip:Throw(hook)

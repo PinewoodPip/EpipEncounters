@@ -61,7 +61,7 @@ end
 ---@param binding InputLib_Action_KeyCombination?
 function InputBinder.CompleteRequest(binding)
     if not InputBinder._CurrentRequest then
-        InputBinder:Error("CompleteRequest", "There is no current request.")
+        InputBinder:__Error("CompleteRequest", "There is no current request.")
     end
 
     local actionID = InputBinder._CurrentRequest.ActionID

@@ -40,7 +40,7 @@ function EpicEnemies.GetAppliedEffects(char, visibleOnly)
                     table.insert(effects, effectData)
                 end
             else
-                EpicEnemies:LogError("Found an applied effect with no data registered: " .. effectID)
+                EpicEnemies:__LogError("Found an applied effect with no data registered: " .. effectID)
             end
         end
     end

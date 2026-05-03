@@ -77,7 +77,7 @@ end
 ---@param capture boolean
 ---@param requestID string
 function Input.ToggleEventCapture(event, capture, requestID)
-    if not requestID then Input:LogError("ToggleEventCapture(): A request ID must be passed.") end
+    if not requestID then Input:__LogError("ToggleEventCapture(): A request ID must be passed.") end
     if not capture then capture = nil end
 
     if not Input.CAPTURED_EVENTS[event] then Input.CAPTURED_EVENTS[event] = {} end
@@ -159,7 +159,7 @@ Input:RegisterCallListener("pipKeyDown", function(_, keyCode, shiftKey, ctrlKey,
     end
 
     if not keyName then
-        Input:LogWarning("Special keycode not named: " .. keyCode)
+        Input:__LogWarning("Special keycode not named: " .. keyCode)
     else
         Input.Events.KeyPressed:Fire(keyName)
     end
@@ -177,7 +177,7 @@ end)
 --     print(keyCode)
 
 --     if not keyName then
---         Input:LogWarning("Special keycode not named: " .. keyCode)
+--         Input:__LogWarning("Special keycode not named: " .. keyCode)
 --     else
 --         print("key released", keyName)
 --     end

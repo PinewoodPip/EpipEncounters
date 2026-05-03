@@ -83,7 +83,7 @@ function UI._Initialize()
 
     local action = InputBinder.GetCurrentRequest()
     if not action then
-        InputBinder:Error("UI._Initialized", "Called out of context (no request)")
+        InputBinder:__Error("UI._Initialized", "Called out of context (no request)")
     end
 
     -- Update header

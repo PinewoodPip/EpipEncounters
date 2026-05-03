@@ -318,7 +318,7 @@ function Menu.RenderEntry(entry)
         if setting then
             numID = Menu.RenderSetting(setting)
         else
-            Menu:LogError("Tried to render setting that doesn't exist " .. entry.Module .. " " .. entry.ID)
+            Menu:__LogError("Tried to render setting that doesn't exist " .. entry.Module .. " " .. entry.ID)
         end
     elseif entry.Type == "Category" then
         entry = entry ---@type Feature_SettingsMenu_Entry_Category
@@ -384,7 +384,7 @@ function Menu.SetSettingElementState(elementID, setting, state)
     if setting.Type == "Choice" then
         root.mainMenu_mc.selectMenuDropDownEntry(elementID, state - 1) -- Converting from 1-based to 0-based index
     else
-        Menu:LogError("Setting element state for settings of type " .. setting.Type .. " is not supported!")
+        Menu:__LogError("Setting element state for settings of type " .. setting.Type .. " is not supported!")
     end
 end
 
@@ -406,10 +406,10 @@ function Menu.SetElementState(elementID, state, entry)
         elseif entryType == "Category" then
             root.mainMenu_mc.setSelector(elementID, state - 1, true)
         else
-            Menu:LogError("Setting element state for entries of type " .. entryType .. " is not supported!")
+            Menu:__LogError("Setting element state for entries of type " .. entryType .. " is not supported!")
         end
     else
-        Menu:LogError("Tried to set state of element that doesn't exist")
+        Menu:__LogError("Tried to set state of element that doesn't exist")
     end
 end
 
@@ -684,7 +684,7 @@ UI:RegisterCallListener("buttonPressed", function (_, elementID)
             ButtonID = entry.ID,
         })
     else
-        Menu:LogWarning("A button has been pressed which was not declared with any ID - it will not be usable in scripting.")
+        Menu:__LogWarning("A button has been pressed which was not declared with any ID - it will not be usable in scripting.")
     end
 end)
 
@@ -717,7 +717,7 @@ Menu.Events.RenderSetting:Subscribe(function (ev)
     elseif settingType == "Choice" then
         Menu._RenderComboBox(setting, ev.ElementID)
     else
-        Menu:LogWarning("Unknown setting type: " .. settingType .. " did Pip forgot to re-implement something? If this is a custom setting type, let them know to remove this warning call.")
+        Menu:__LogWarning("Unknown setting type: " .. settingType .. " did Pip forgot to re-implement something? If this is a custom setting type, let them know to remove this warning call.")
     end
 end)
 

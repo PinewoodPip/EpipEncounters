@@ -151,7 +151,7 @@ function EpipStats.AddNodeStat(clusterId, nodeIndex, nodeSubIndex, keyword, keyw
             table.insert(EpipStats.CATEGORIES[category].Stats, statID)
         end
     else
-        EpipStats:LogError("Keyword category missing: " .. category)
+        EpipStats:__LogError("Keyword category missing: " .. category)
     end
 end
 

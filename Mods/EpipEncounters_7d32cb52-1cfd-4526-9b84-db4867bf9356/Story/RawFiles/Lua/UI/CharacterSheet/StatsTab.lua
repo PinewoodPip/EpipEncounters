@@ -129,7 +129,7 @@ function StatsTab.RenderStat(id)
     local char = CharacterSheet.GetCharacter()
     local data = CustomStats.GetStat(id)
     if not data then
-        StatsTab:LogWarning("Attempted to render non-existent stat " .. id)
+        StatsTab:__LogWarning("Attempted to render non-existent stat " .. id)
         return
     end
 
@@ -230,7 +230,7 @@ end
 ---@param stat string
 ---@param handler function
 function StatsTab.RegisterStatValueFormatHook(stat, handler)
-    CustomStats:LogWarning("StatValueFormatHook is deprecated: " .. stat)
+    CustomStats:__LogWarning("StatValueFormatHook is deprecated: " .. stat)
     StatsTab:RegisterHook("FormatStatValue_" .. stat, handler)
 end
 

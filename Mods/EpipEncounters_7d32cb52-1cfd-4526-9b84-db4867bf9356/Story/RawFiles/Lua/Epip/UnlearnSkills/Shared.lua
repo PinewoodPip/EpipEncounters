@@ -116,7 +116,7 @@ function Unlearn.CanUnlearn(char, skillID)
 
     if not stat then
         reason = REASONS.SKILL_DOESNT_EXIST
-        Unlearn:LogError("Tried to unlearn skill that doesn't exist: " .. skillID)
+        Unlearn:__LogError("Tried to unlearn skill that doesn't exist: " .. skillID)
     elseif not playerData then -- Failsafe; necessary for edgecases when skill tooltips are displayed after the character unlearnt the skill
         reason = REASONS.NOT_IN_SKILLMANAGER
     elseif playerData.CauseListSize > 0 then -- This and the condition after are already checked for by Character.IsSkillInnate(), but we wanted a different message for them.

@@ -144,7 +144,7 @@ end
 ---@param char EclCharacter
 function StatusesDisplay.Create(char)
     if StatusesDisplay.Get(char) ~= nil then
-        StatusesDisplay:Error("Create", char.DisplayName, "already has a manager")
+        StatusesDisplay:__Error("Create", char.DisplayName, "already has a manager")
     end
     local class = StatusesDisplay:GetClass("Feature_StatusesDisplay_Manager")
     local instance = class.Create(char)

@@ -136,7 +136,7 @@ function GroupManager.DeleteGroup(group)
 
         GroupManager.Groups[group.GUID] = nil
     else
-        GroupManager:Error("Tried to delete group that doesn't exist")
+        GroupManager:__Error("Tried to delete group that doesn't exist")
     end
 end
 

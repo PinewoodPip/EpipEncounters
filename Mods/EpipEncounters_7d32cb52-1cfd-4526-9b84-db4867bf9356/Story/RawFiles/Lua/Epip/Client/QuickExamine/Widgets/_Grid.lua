@@ -31,7 +31,7 @@ end
 ---@abstract
 ---@diagnostic disable-next-line: unused-local
 function Widget:RenderGridElements(entity)
-    QuickExamine:Error("Widgets.Grid:RenderGridElements", "Not implemented")
+    QuickExamine:__Error("Widgets.Grid:RenderGridElements", "Not implemented")
 end
 
 ---@override

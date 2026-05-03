@@ -78,7 +78,7 @@ function Chat.AddMessage(tab, text)
         tab = Chat.CUSTOM_TABS[tab]
 
         if not tab then 
-            Chat:LogError("Tried to add message to unregistered custom tab " .. tab)
+            Chat:__LogError("Tried to add message to unregistered custom tab " .. tab)
         return nil end
     end
 

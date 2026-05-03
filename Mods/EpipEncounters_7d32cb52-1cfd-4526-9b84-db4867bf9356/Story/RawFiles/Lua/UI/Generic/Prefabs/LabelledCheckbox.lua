@@ -84,7 +84,7 @@ function Checkbox:Render()
         self.Label:SetPositionRelativeToParent("Right", -self.LABEL_SIDE_MARGIN, 0)
         self.Checkbox:SetPositionRelativeToParent("Left")
     else
-        Generic:Error("GenericUI_Prefab_LabelledCheckbox:Render", "Invalid style value")
+        Generic:__Error("GenericUI_Prefab_LabelledCheckbox:Render", "Invalid style value")
     end
 end
 

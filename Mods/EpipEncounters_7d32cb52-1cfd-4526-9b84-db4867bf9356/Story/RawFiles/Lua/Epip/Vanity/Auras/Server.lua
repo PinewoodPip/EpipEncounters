@@ -29,7 +29,7 @@ function Auras.RemoveAura(char, aura)
     local auraID = aura:GetID()
 
     local tuples = Osiris.DB_PIP_Vanity_AppliedAura:GetTuples(char, auraID, nil)
-    if not tuples then Auras:LogError("Tried to remove an aura that is not applied! " .. auraID) return nil end
+    if not tuples then Auras:__LogError("Tried to remove an aura that is not applied! " .. auraID) return nil end
     for _,tuple in ipairs(tuples) do
         local handle = tuple[3]
 

@@ -144,7 +144,7 @@ function DB:GetFieldIndex(fieldName)
     local index
 
     if not fields then
-        Osiris:Error("Database:GetFieldIndex", "Field names are not registered for DB ", self.Name, self.Arity)
+        Osiris:__Error("Database:GetFieldIndex", "Field names are not registered for DB ", self.Name, self.Arity)
     end
 
     -- TODO optimize
@@ -315,7 +315,7 @@ end
 
 -- Calling the table itself does a query (backwards compatibility)
 function _OsirisDatabase:__call(...)
-    Osiris:LogWarning("Calling the table to interface with DBs is deprecated! " .. self.Name)
+    Osiris:__LogWarning("Calling the table to interface with DBs is deprecated! " .. self.Name)
     local paramCount = table.pack(...).n
     local queryResult = Osiris.GetDatabase(self.Name, paramCount):Query(...)
     local first = queryResult[1]
@@ -333,7 +333,7 @@ end
 ---afterwards, a list is returned as well.
 ---@vararg any Query parameters.
 function _OsirisDatabase:Get(...)
-    Osiris:LogWarning("Calling the table to interface with DBs is deprecated! " .. self.Name)
+    Osiris:__LogWarning("Calling the table to interface with DBs is deprecated! " .. self.Name)
     local paramCount = table.pack(...).n
     local queryResult = Osiris.GetDatabase(self.Name, paramCount):Query(...)
     local first = queryResult[1]
@@ -350,7 +350,7 @@ end
 ---Returns a list of tuples matching the query.
 ---@return table<integer, any>[]
 function _OsirisDatabase:GetTuples(...)
-    Osiris:LogWarning("Calling the table to interface with DBs is deprecated! " .. self.Name)
+    Osiris:__LogWarning("Calling the table to interface with DBs is deprecated! " .. self.Name)
     local paramCount = table.pack(...).n
     local queryResult = Osiris.GetDatabase(self.Name, paramCount):Query(...)
 
@@ -360,14 +360,14 @@ end
 ---Delete tuples from the DB.
 ---@vararg any Tuple query to delete.
 function _OsirisDatabase:Delete(...)
-    Osiris:LogWarning("Calling the table to interface with DBs is deprecated! " .. self.Name)
+    Osiris:__LogWarning("Calling the table to interface with DBs is deprecated! " .. self.Name)
     Osi[self.Name]:Delete(Osiris._ParseParameters(...))
 end
 
 ---Set a tuple on the DB.
 ---@vararg any Tuple values
 function _OsirisDatabase:Set(...)
-    Osiris:LogWarning("Calling the table to interface with DBs is deprecated! " .. self.Name)
+    Osiris:__LogWarning("Calling the table to interface with DBs is deprecated! " .. self.Name)
     Osi[self.Name](Osiris._ParseParameters(...))
 end
 

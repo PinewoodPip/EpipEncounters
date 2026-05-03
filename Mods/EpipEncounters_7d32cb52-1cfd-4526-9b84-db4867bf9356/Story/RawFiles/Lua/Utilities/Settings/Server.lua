@@ -72,7 +72,7 @@ Net.RegisterListener(Settings.NET_SYNC_CHANNEL, function (payload)
             end
         end
     else
-        Settings:LogError("Tried to sync an unregistered setting: " .. payload.ID)
+        Settings:__LogError("Tried to sync an unregistered setting: " .. payload.ID)
     end
 end)
 

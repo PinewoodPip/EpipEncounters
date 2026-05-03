@@ -606,7 +606,7 @@ Character.Hooks.CreateEquipmentVisuals:Subscribe(function (ev)
 
                         ev.Request.AttachmentBoneName = bone
                     else
-                        Transmog:LogError("Vanity template data missing for " .. transmoggedTemplateGUID)
+                        Transmog:__LogError("Vanity template data missing for " .. transmoggedTemplateGUID)
                     end
                 end
             else

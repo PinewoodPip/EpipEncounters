@@ -21,7 +21,7 @@ end
 ---@param container EsvItem
 function MassDismantle.DismantleContainerItems(char, container)
     if MassDismantle.IsRunning() then
-        MassDismantle:Error("DismantleContainerItems", "Cannot run multiple mass-dismantles at a time.")
+        MassDismantle:__Error("DismantleContainerItems", "Cannot run multiple mass-dismantles at a time.")
     end
 
     local items = MassDismantle.GetEligibleItems(container) ---@cast items +EntityHandle[] -- We reuse this table to store the handles.
@@ -58,7 +58,7 @@ end
 ---@return Item
 function MassDismantle._PopFromQueue()
     if not MassDismantle.IsRunning() then
-        MassDismantle:Error("_PopFromQueue", "Attempted to pop while not mass-dismantling")
+        MassDismantle:__Error("_PopFromQueue", "Attempted to pop while not mass-dismantling")
     end
 
     return Item.Get(table.remove(MassDismantle._CurrentQueue, 1))
@@ -78,7 +78,7 @@ Net.RegisterListener(MassDismantle.REQUEST_NET_MSG, function(payload)
     if not MassDismantle.IsRunning() then
         MassDismantle.DismantleContainerItems(char, container)
     else
-        MassDismantle:LogWarning("Attempted to mass-dismantle while one is already running")
+        MassDismantle:__LogWarning("Attempted to mass-dismantle while one is already running")
     end
 end)
 

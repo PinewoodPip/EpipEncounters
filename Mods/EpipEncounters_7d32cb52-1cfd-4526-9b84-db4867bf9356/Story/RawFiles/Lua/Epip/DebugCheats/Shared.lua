@@ -121,7 +121,7 @@ function DebugCheats.ExecuteAction(actionID, contextData)
             Net.Broadcast(DebugCheats.NET_MSG_ACTION_EXECUTED, netPayload)
         end
     else
-        DebugCheats:LogWarning("Failed to execute " .. actionID .. " due to lacking context")
+        DebugCheats:__LogWarning("Failed to execute " .. actionID .. " due to lacking context")
     end
 end
 
@@ -145,7 +145,7 @@ end
 function DebugCheats.GetAction(id)
     local action = DebugCheats._Actions[id]
     if not action then
-        DebugCheats:Error("GetAction", "No action with ID", id)
+        DebugCheats:__Error("GetAction", "No action with ID", id)
     end
 
     return action

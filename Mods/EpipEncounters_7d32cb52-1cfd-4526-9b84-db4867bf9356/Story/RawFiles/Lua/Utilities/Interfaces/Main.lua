@@ -28,7 +28,7 @@ end
 ---@return T
 function Interfaces.Get(className)
     local tbl = Interfaces._Interfaces[className]
-    if not tbl then Interfaces:Error("Get", "Unregistered interface", className) end
+    if not tbl then Interfaces:__Error("Get", "Unregistered interface", className) end
 
     return tbl
 end

@@ -21,7 +21,7 @@ Generic:RegisterClass("GenericUI_I_Elementable", Elementable)
 ---@return GenericUI_Element
 function Elementable:GetRootElement()
     ---@diagnostic disable-next-line: missing-return
-    Generic:Error("Elementable:GetRootElement", "Not implemented for", self:GetClassName())
+    Generic:__Error("Elementable:GetRootElement", "Not implemented for", self:GetClassName())
 end
 
 ---Returns whether the root element of the prefab has been destroyed.

@@ -542,7 +542,7 @@ function UI._RenderSetting(data)
     elseif settingType == "String" then
         element = UI._RenderStringSetting(setting, parent)
     else
-        Overlay:LogWarning("Unsupported setting type: " .. settingType)
+        Overlay:__LogWarning("Unsupported setting type: " .. settingType)
     end
 
     if element then

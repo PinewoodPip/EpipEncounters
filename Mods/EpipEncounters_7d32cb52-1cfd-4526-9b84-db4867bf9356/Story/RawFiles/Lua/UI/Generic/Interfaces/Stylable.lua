@@ -40,7 +40,7 @@ function Stylable:GetStyle(id)
     local def = self:GetClassDefinition() ---@cast def GenericUI_I_Stylable
     local style = def._RegisteredStyles[id]
     if not style then
-        Generic:Error("Stylable:GetStyle", "Style not registered", id)
+        Generic:__Error("Stylable:GetStyle", "Style not registered", id)
     end
     return style
 end

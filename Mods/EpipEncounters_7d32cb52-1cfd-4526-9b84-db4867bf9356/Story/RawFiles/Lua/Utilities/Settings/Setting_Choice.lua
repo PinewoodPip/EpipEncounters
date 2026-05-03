@@ -64,7 +64,7 @@ function _Choice:SetValue(value)
         if choice then
             self.Value = choice.ID
         else
-            Settings:Error("Choice:SetValue", "Invalid choice index", value)
+            Settings:__Error("Choice:SetValue", "Invalid choice index", value)
         end
     else
         local isValid = false
@@ -77,7 +77,7 @@ function _Choice:SetValue(value)
         if isValid then
             self.Value = value
         else
-            Settings:LogWarning("Choice:SetValue", "Invalid choice ID for", self.ID, value)
+            Settings:__LogWarning("Choice:SetValue", "Invalid choice ID for", self.ID, value)
         end
     end
 end

@@ -45,7 +45,7 @@ function StatsEditor.Setup(statType, statID)
     local stat = Stats.Get(statType, statID)
 
     if not modifierList then
-        StatsEditor:LogError("Unsupported modifier list: " .. statType)
+        StatsEditor:__LogError("Unsupported modifier list: " .. statType)
         return nil
     end
 

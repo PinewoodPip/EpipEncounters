@@ -37,7 +37,7 @@ function _Request.Create(entity)
     elseif Entity.IsItem(entity) then
         visual = Ext.Visual.CreateOnItem(entity.WorldPos, entity)
     else
-        HoverEffects:Error("Request.Create", "Unsupported entity type", GetExtType(entity))
+        HoverEffects:__Error("Request.Create", "Unsupported entity type", GetExtType(entity))
     end
 
     ---@type Feature_HoverCharacterEffects_Request
@@ -70,7 +70,7 @@ function _Request:Destroy()
     if visual then
         visual:Delete()
     else
-        HoverEffects:Error("Request:Destroy", "Attempted to destroy a request with no visual")
+        HoverEffects:__Error("Request:Destroy", "Attempted to destroy a request with no visual")
     end
 end
 

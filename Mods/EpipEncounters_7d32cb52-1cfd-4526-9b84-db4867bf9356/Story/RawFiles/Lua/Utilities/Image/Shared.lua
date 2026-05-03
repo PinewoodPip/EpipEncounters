@@ -50,7 +50,7 @@ end
 ---@param color RGBColor
 function _Image:AddPixel(color)
     if self._PixelsAdded >= self.Width * self.Height then
-        Image:Error("Image:AddPixel", "All pixels have already been added.")
+        Image:__Error("Image:AddPixel", "All pixels have already been added.")
     end
 
     local row = (self._PixelsAdded // self.Width) + 1

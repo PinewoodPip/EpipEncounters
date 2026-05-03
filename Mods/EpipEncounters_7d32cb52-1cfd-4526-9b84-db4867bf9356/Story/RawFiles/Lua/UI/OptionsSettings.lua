@@ -312,7 +312,7 @@ end
 ---@param id string
 ---@return any Type varies based on element type. Boolean for checkboxes, number for other vanilla elements.
 function OptionsSettings.GetOptionValue(mod, id)
-    -- OptionsSettings:LogWarning("A script is trying to access setting values through OptionsSettings - this is deprecated! Setting: " .. id)
+    -- OptionsSettings:__LogWarning("A script is trying to access setting values through OptionsSettings - this is deprecated! Setting: " .. id)
     local data = OptionsSettings.GetOptionData(id)
     local value = OptionsSettings.OptionValues[id]
     
@@ -509,7 +509,7 @@ function OptionsSettings.RenderOption(elementData, numID)
     -- Register dynamically-created settings
     if not OptionsSettings.GetOptionData(elementData.ID) then
         if not elementData.Mod then
-            OptionsSettings:LogError("Tried to render setting with no bound mod: " .. elementData.ID)
+            OptionsSettings:__LogError("Tried to render setting with no bound mod: " .. elementData.ID)
             return nil
         else
             elementData.Mod = elementData.Mod or OptionsSettings.currentCustomTabs[OptionsSettings.currentTab] -- TODO remove latter case?
@@ -620,7 +620,7 @@ function OptionsSettings.SynchToServer(option, value)
     option = OptionsSettings.GetOptionData(option)
 
     if option and option.ServerOnly and Client.IsHost() then
-        OptionsSettings:Log("Synching setting to server: " .. option.ID .. " value " .. tostring(value))
+        OptionsSettings:__Log("Synching setting to server: " .. option.ID .. " value " .. tostring(value))
         Net.PostToServer("EPIPENCOUNTERS_ServerOptionChanged", {Mod = option.Mod, Setting = option.ID, Value = value})
     end
 end
@@ -907,7 +907,7 @@ local function OnApplyOverrides(_, _)
 
     OptionsSettings.PendingValueChanges = {}
 
-    OptionsSettings:Log("Changes applied.")
+    OptionsSettings:__Log("Changes applied.")
 
     OptionsSettings.SaveSettings()
 end
@@ -967,7 +967,7 @@ Ext.Events.SessionLoading:Subscribe(function()
                         OptionsSettings.SetOptionValue(modID, setting, value)
                     end
                 else
-                    OptionsSettings:LogWarning("Mod has saved settings but is not loaded: " .. modID)
+                    OptionsSettings:__LogWarning("Mod has saved settings but is not loaded: " .. modID)
                 end
             end
         end

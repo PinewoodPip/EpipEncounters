@@ -84,7 +84,7 @@ function Entity.GetRegisteredItems()
         
         items = level.EntityManager.ItemConversionHelpers.RegisteredItems[levelID]
     else
-        Entity:LogWarning("GetRegisteredItems(): level unavailable")
+        Entity:__LogWarning("GetRegisteredItems(): level unavailable")
     end
 
     return items
@@ -118,7 +118,7 @@ function Entity.GetRegisteredCharacters()
         
         characters = level.EntityManager.CharacterConversionHelpers.RegisteredCharacters[levelID]
     else
-        Entity:LogWarning("GetRegisteredCharacters(): level unavailable")
+        Entity:__LogWarning("GetRegisteredCharacters(): level unavailable")
     end
 
     return characters

@@ -69,7 +69,7 @@ Client.Tooltip.Hooks.RenderItemTooltip:Subscribe(function (ev)
                     })
                 })
             else
-                TooltipAdjustments:LogWarning("Unknown damage type " .. boost.Type)
+                TooltipAdjustments:__LogWarning("Unknown damage type " .. boost.Type)
             end
         end
     end

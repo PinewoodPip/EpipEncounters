@@ -107,7 +107,7 @@ function Inv.IsTabFilterActive(tab)
         end
     end
     if not tabMC then
-        Inv:Error("IsTabFilterActive", "Tab not found", tab)
+        Inv:__Error("IsTabFilterActive", "Tab not found", tab)
     end
     return tabMC.isSelected()
 end

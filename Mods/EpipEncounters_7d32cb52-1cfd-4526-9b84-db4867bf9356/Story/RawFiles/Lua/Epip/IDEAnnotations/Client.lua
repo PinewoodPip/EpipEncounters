@@ -170,7 +170,7 @@ function Generator.Generate(filename)
         elseif type.Kind == "Enumeration" then
             Generator._AnnotateEnum(writer, type)
         elseif not Generator.FIELD_TYPES:Contains(type.Kind) then
-            Generator:LogWarning("Unknown type kind", type.Kind)
+            Generator:__LogWarning("Unknown type kind", type.Kind)
         end
     end
 

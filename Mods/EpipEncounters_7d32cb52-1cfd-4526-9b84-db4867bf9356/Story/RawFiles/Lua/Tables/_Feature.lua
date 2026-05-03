@@ -203,7 +203,7 @@ end
 
 function Feature:SaveSettings()
     if Ext.IsServer() then
-        Feature:Error("SaveSettings", "SaveSettings() not implemented on server")
+        Feature:__Error("SaveSettings", "SaveSettings() not implemented on server")
     else
         Settings.Save(self:GetNamespace())
     end

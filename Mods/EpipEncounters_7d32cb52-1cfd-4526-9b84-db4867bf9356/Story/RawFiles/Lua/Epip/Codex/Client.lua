@@ -89,7 +89,7 @@ function Section:RenderSidebar(root) end
 ---Opens the Codex UI.
 function Codex.Open()
     if not Codex.UI then
-        Codex:Error("Open", "UI not set")
+        Codex:__Error("Open", "UI not set")
     end
 
     Codex.UI:Show()
@@ -100,7 +100,7 @@ end
 ---@param section Feature_Codex_Section
 function Codex.RegisterSection(id, section)
     if not OOP.IsClass(section) or not section:ImplementsClass("Feature_Codex_Section") then
-        Codex:Error("RegisterSection", "Passed table does not implement Feature_Codex_Section")
+        Codex:__Error("RegisterSection", "Passed table does not implement Feature_Codex_Section")
     end
     section.ID = id
     Codex._Sections[id] = section

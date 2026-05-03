@@ -23,7 +23,7 @@ local InputActions = {
 function SurfacePainter.RequestPaint(request)
     request = request or SurfacePainter.Hooks.GetSurfaceData:Throw({Request = nil}).Request
     if not request then
-        SurfacePainter:LogWarning("No hooks fulfilled a paint request")
+        SurfacePainter:__LogWarning("No hooks fulfilled a paint request")
         return
     end
 

@@ -30,7 +30,7 @@ function SkillDamageMultipliers.TranslateSkillMultiplier(event)
     elseif #params == 3 then -- Referenced skill
         targetSkill = Stats.GetSkillData(params[2])
     else
-        SkillDamageMultipliers:Error("TranslateSkillMultiplier", "Wrong parameters amount in event")
+        SkillDamageMultipliers:__Error("TranslateSkillMultiplier", "Wrong parameters amount in event")
     end
 
     local isWeaponBased = targetSkill["UseWeaponDamage"] == "Yes"

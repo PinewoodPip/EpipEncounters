@@ -98,7 +98,7 @@ function DebugMenu._RenderFeatures(features)
             state:RunTests()
 
             Timer.Start(state.TEST_CHECK_DELAY, function (_)
-                DebugMenu:Log("Tests finished for " .. featureID)
+                DebugMenu:__Log("Tests finished for " .. featureID)
                 testLabel:SetText(state:GetTestingLabel())
             end)
         end)

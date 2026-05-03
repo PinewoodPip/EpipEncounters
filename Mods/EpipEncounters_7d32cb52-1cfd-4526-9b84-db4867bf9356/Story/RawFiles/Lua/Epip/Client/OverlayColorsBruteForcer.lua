@@ -33,7 +33,7 @@ function OverlayColors.CycleColor()
     colors[OverlayColors._Index] = {OverlayColors.HIGHLIGHT_COLOR:ToFloats()}
 
     -- Log the index of the current color
-    OverlayColors:Log("Current index highlighted: " .. OverlayColors._Index)
+    OverlayColors:__Log("Current index highlighted: " .. OverlayColors._Index)
     
     OverlayColors._Index = OverlayColors._Index + 1
 
@@ -49,7 +49,7 @@ end
 
 -- Starts the brute-forcing from a console command.
 Ext.RegisterConsoleCommand("bruteforceoverlaycolors", function (_, delay, startIndex)
-    OverlayColors:Log("Brute forcing overlay colors...")
+    OverlayColors:__Log("Brute forcing overlay colors...")
 
     OverlayColors._Index = startIndex and tonumber(startIndex) or OverlayColors._Index
 

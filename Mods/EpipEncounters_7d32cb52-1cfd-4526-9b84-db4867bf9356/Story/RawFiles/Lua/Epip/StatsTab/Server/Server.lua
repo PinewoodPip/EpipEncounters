@@ -54,7 +54,7 @@ end
 
 -- Called from Osisirs. Sends events for each stat registered.
 function UpdateCustomStatsForCharacter(charGUID)
-    EpipStats:Log("Updating stats of " .. charGUID)
+    EpipStats:__Log("Updating stats of " .. charGUID)
     local char = Character.Get(charGUID)
 
     for id,data in pairs(EpipStats.STATS) do

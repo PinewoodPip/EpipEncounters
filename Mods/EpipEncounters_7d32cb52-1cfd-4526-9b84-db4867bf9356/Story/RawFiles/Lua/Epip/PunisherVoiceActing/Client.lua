@@ -31,7 +31,7 @@ Overhead.Hooks.RequestOverheads:Subscribe(function (ev)
                 if clip then
                     VA.PlaySound(Character.Get(overhead.CharacterHandle, true).Handle, clip)
                 else
-                    VA:LogWarning("Missing voice acting for status text: " .. label)
+                    VA:__LogWarning("Missing voice acting for status text: " .. label)
                 end
             end
         end

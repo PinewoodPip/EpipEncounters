@@ -419,7 +419,7 @@ function Stats.Get(statType, id)
     elseif statType == "Data" then
         object = Ext.ExtraData[id]
     else
-        Stats:LogError("Attempted to fetch unsupported stat type: " .. statType)
+        Stats:__LogError("Attempted to fetch unsupported stat type: " .. statType)
     end
 
     return object
@@ -439,7 +439,7 @@ function Stats.Update(statType, data, ...)
     elseif statType == "Data" then
         Ext.ExtraData[data] = ...
     else
-        Stats:LogError("Attempted to update unsupported stat type: " .. statType)
+        Stats:__LogError("Attempted to update unsupported stat type: " .. statType)
     end
 end
 
@@ -498,7 +498,7 @@ function Stats.GetStatusIcon(status)
                 if potion then
                     icon = potion.StatusIcon
                     if icon == "" then -- Use RootTemplate icon instead
-                        local template = Ext.Template.GetTemplate(potion.RootTemplate) ---@type ItemTemplate
+                        local template = Ext.Template.GetTemplate(potion.RootTemplate) ---@cast template ItemTemplate
 
                         icon = template and template.Icon or icon
                     end
@@ -510,7 +510,7 @@ function Stats.GetStatusIcon(status)
         icon = icon or Stats.HARDCODED_STATUS_ICONS[status.StatusId]
 
         if not icon and status.StatusId ~= "CONSUME" then
-            Stats:LogWarning("GetStatusIcon(): Could not find icon for " .. status.StatusId)
+            Stats:__LogWarning("GetStatusIcon(): Could not find icon for " .. status.StatusId)
             icon = "unknown"
         end
     end

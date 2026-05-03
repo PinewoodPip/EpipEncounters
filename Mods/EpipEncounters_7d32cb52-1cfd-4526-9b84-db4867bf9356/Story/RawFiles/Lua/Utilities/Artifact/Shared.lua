@@ -1045,7 +1045,7 @@ end
 ---@return ArtifactLib_ArtifactDefinition
 function Artifact.RegisterArtifact(data)
     if not data.ID then
-        Artifact:Error("RegisterArtifact", "Artifact is missing an ID.")
+        Artifact:__Error("RegisterArtifact", "Artifact is missing an ID.")
     end
 
     Inherit(data, _ArtifactDef)

@@ -209,7 +209,7 @@ function _ExamineData:AddEntry(category, entry, index)
     if categoryData then
         table.insert(categoryData.Entries, index, entry)
     else
-        Examine:Error("UpdateData:InsertElement", "Category not found for ExamineData:InsertElement(): " .. category)
+        Examine:__Error("UpdateData:InsertElement", "Category not found for ExamineData:InsertElement(): " .. category)
     end
 end
 

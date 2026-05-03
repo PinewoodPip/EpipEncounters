@@ -33,7 +33,7 @@ function Combat.GetTurnOrder(combatID)
     } 
     local combat = Combat.GetCombat(combatID)
     if not combat then
-        Combat:Error("GetTurnOrder", "No combat found with ID", combatID)
+        Combat:__Error("GetTurnOrder", "No combat found with ID", combatID)
     end
 
     for _,team in ipairs(combat.CurrentRoundTeams) do

@@ -47,7 +47,7 @@ end
 ---@param field string
 function _Payload:_CheckField(funcName, field)
     if not self[field] then
-        Net:Error("Payload:" .. funcName, "Payload", self.Channel, "has no field", field)
+        Net:__Error("Payload:" .. funcName, "Payload", self.Channel, "has no field", field)
     end
 end
 

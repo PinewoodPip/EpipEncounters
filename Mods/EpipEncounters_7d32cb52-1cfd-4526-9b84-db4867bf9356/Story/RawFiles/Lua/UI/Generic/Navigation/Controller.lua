@@ -47,7 +47,7 @@ function Controller:_Initialize(root)
 
     -- Track the navigation controller of a UI with a mix-in
     if self.UI.___NavigationController then
-        Generic:Error("Navigation.Controller:_Initialize", "The UI already has a navigation controller.")
+        Generic:__Error("Navigation.Controller:_Initialize", "The UI already has a navigation controller.")
     end
     self.UI.___NavigationController = self
 end

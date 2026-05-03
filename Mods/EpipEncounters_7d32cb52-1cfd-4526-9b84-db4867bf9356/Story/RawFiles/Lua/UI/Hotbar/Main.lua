@@ -517,7 +517,7 @@ end
 ---@param direction string Direction to shift towards: "left" or "right"
 function Hotbar.ShiftSlots(selectedSlot, direction)
     if type(direction) ~= "string" then
-        Hotbar:LogError("Invalid direction for shift. Must be 'left' or 'right'.")
+        Hotbar:__LogError("Invalid direction for shift. Must be 'left' or 'right'.")
     else
         if direction == "left" then
             direction = -1
@@ -1212,7 +1212,7 @@ function Hotbar.RenderHotkey(i, state)
     local actionData = Hotbar.GetActionData(state.ActionID)
 
     if actionID ~= "" and actionData == nil then
-        Hotbar:Log("Unbinding unregistered action: " .. state.ActionID)
+        Hotbar:__Log("Unbinding unregistered action: " .. state.ActionID)
 
         Hotbar.UnbindActionButton(i)
     else
@@ -1299,8 +1299,8 @@ function Hotbar.RenderHotkeys()
         local success, error = pcall(Hotbar.RenderHotkey, i, state)
 
         if not success then
-            Hotbar:LogError("Error rendering hotkey " .. i .. " " .. state.ActionID)
-            Hotbar:LogError(error)
+            Hotbar:__LogError("Error rendering hotkey " .. i .. " " .. state.ActionID)
+            Hotbar:__LogError(error)
 
             Hotbar.UnbindActionButton(i)
         end

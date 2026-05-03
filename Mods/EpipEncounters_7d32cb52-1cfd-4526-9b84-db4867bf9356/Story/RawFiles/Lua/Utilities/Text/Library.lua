@@ -614,7 +614,7 @@ function Text.GetTranslatedString(handle, fallBack)
     -- TSKs cannot be loaded during LoadModule due to a bug with TSKs that have a handle but do not exist within an lsx.
     -- Doing so causes them to be cleared.
     if GameState.GetState() == "LoadModule" and not Text.IsTranslatedStringRegistered(handle) then
-        Text:LogError("GetTranslatedString", "Reading non-Epip TSKs during module load is not supported!", handle)
+        Text:__LogError("GetTranslatedString", "Reading non-Epip TSKs during module load is not supported!", handle)
         return fallBack
     else
         -- Object overload.
@@ -671,9 +671,9 @@ function Text.RegisterTranslatedString(handle, text)
     end
 
     if Text._RegisteredTranslatedHandles[tsk.Handle] ~= nil then
-        Text:Error("RegisterTranslatedString", "A TSK with the handle", tsk.Handle, "has already been registered.")
+        Text:__Error("RegisterTranslatedString", "A TSK with the handle", tsk.Handle, "has already been registered.")
     elseif tsk.Handle:sub(1, 1) ~= "h" then
-        Text:Error("RegisterTranslatedString", "Handle does not start with h - possibly malformed?")
+        Text:__Error("RegisterTranslatedString", "Handle does not start with h - possibly malformed?")
     end
 
     tsk = _TranslatedString.Create(tsk)
@@ -751,7 +751,7 @@ function Text.GenerateLocalizationTemplate(modTable, existingTemplate)
         outdatedStrings = {}
 
         if existingTemplate.ModTable ~= modTable then
-            Text:Error("GenerateLocalizationTemplate", "Generating a patched template with mismatched mod tables")
+            Text:__Error("GenerateLocalizationTemplate", "Generating a patched template with mismatched mod tables")
         end
 
         for handle,data in pairs(existingTemplate.TranslatedStrings or {}) do

@@ -611,10 +611,10 @@ end
 ---@param newType string
 function _Board:TransformGem(gem, newType)
     if not Bedazzled.GetGemDescriptor(newType) then
-        Bedazzled:Error("Board:TransformGem", "Unregistered type", newType)
+        Bedazzled:__Error("Board:TransformGem", "Unregistered type", newType)
     end
     if not gem then
-        Bedazzled:Error("Board:TransformGem", "Gem cannot be nil")
+        Bedazzled:__Error("Board:TransformGem", "Gem cannot be nil")
     end
     local oldType = gem.Type
 
@@ -666,7 +666,7 @@ function _Board:IsGemMatchableWith(gem, otherGem)
     local matchable = true
 
     if gem == nil or otherGem == nil then
-        Bedazzled:Error("Board:IsGemMatchableWith", "Attempted to compare nil gems")
+        Bedazzled:__Error("Board:IsGemMatchableWith", "Attempted to compare nil gems")
     end
 
     matchable = matchable and gem:IsMatchable() and otherGem:IsMatchable()

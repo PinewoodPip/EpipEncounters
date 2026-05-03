@@ -53,7 +53,7 @@ end
 ---Destroys the prefab instance.
 ---@abstract
 function Prefab:Destroy()
-    Generic:Error("Prefab:Destroy", "Not implemented for this prefab")
+    Generic:__Error("Prefab:Destroy", "Not implemented for this prefab")
 end
 
 ---Called after `_Create()`.

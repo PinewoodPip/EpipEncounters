@@ -50,13 +50,13 @@ function Dyes.AddDye(categoryID, data)
     }})
 
     if not data.ID then
-        Dyes:LogError("Dyes must have an ID field!")
+        Dyes:__LogError("Dyes must have an ID field!")
         return nil
     elseif Dyes.DYE_DATA[data.ID] then
-        Dyes:LogError("Dye already registered: " .. data.ID)
+        Dyes:__LogError("Dye already registered: " .. data.ID)
         return nil
     elseif Dyes.DYE_CATEGORIES[categoryID] == nil then
-        Dyes:LogError("AddDyeCategory() must be called first for " .. categoryID .. " category!")
+        Dyes:__LogError("AddDyeCategory() must be called first for " .. categoryID .. " category!")
         return nil
     end
 

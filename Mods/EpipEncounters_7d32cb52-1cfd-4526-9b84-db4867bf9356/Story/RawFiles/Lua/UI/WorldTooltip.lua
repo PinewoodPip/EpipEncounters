@@ -93,7 +93,7 @@ WorldTooltip:RegisterCallListener("tooltipClicked", function (ev, flashHandle)
     elseif GetExtType(entity) == "ecl::Item" then
         eventFieldName = "Item"
     else
-        WorldTooltip:LogError("Clicked an entry with an unknown entity type")
+        WorldTooltip:__LogError("Clicked an entry with an unknown entity type")
         return
     end
 

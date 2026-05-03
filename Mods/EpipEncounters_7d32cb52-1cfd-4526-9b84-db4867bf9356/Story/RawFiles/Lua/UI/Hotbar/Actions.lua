@@ -25,7 +25,7 @@ local Hotbar = Client.UI.Hotbar
 ---@param data HotbarAction
 function Hotbar.RegisterAction(id, data)
     if Hotbar.Actions[id] ~= nil then
-        Hotbar:LogError("Action already registered: " .. id)
+        Hotbar:__LogError("Action already registered: " .. id)
     else
         data.Type = data.Type or "Normal"
         data.ID = id or data.ID
@@ -49,7 +49,7 @@ function Hotbar.UseAction(id, buttonIndex)
         Hotbar:FireEvent("ActionUsed", id, char, actionData, buttonIndex)
         Hotbar:FireEvent("ActionUsed_" .. id, char, actionData, buttonIndex)
     else
-        Hotbar:LogError("Tried to use an action that is not registered: " .. id)
+        Hotbar:__LogError("Tried to use an action that is not registered: " .. id)
     end
 end
 
@@ -197,7 +197,7 @@ function Hotbar.SetHotkeyAction(index, action)
 
         Hotbar:FireEvent("ActionHotkeySet", index, action) -- TODO refresh
     else
-        Hotbar:LogError("Invalid index for SetHotkeyAction: " .. tostring(index))
+        Hotbar:__LogError("Invalid index for SetHotkeyAction: " .. tostring(index))
     end
 end
 
@@ -297,7 +297,7 @@ end
 ---@param index integer
 function Hotbar.UnbindActionButton(index)
     if index < 1 or index > Hotbar.ACTION_BUTTONS_COUNT then 
-        Hotbar:LogError("Invalid index to UnbindActionButton(); must be between 1 and 12 inclusive.")
+        Hotbar:__LogError("Invalid index to UnbindActionButton(); must be between 1 and 12 inclusive.")
         return nil
     end
 

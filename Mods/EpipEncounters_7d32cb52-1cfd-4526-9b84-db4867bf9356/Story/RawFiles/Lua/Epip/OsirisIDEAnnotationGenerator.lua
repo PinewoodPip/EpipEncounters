@@ -177,7 +177,7 @@ function Generator.GenerateAnnotations(request)
     Generator._CurrentRequest = request
 
     local file = IO.LoadFile(request.HeaderPath, "data", true)
-    if not file then Generator:Error("GenerateAnnotations", "File not found") end
+    if not file then Generator:__Error("GenerateAnnotations", "File not found") end
 
     local lines = Text.Split(file, "\n")
     local annotations = {}

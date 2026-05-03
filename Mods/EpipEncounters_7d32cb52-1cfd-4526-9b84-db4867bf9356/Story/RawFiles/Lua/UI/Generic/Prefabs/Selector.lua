@@ -70,7 +70,7 @@ end
 ---@return GenericUI_Element_VerticalList
 function Selector:GetSubElementContainer(index)
     if index < 1 or index > #self.Options then
-        Generic:Error("Selector:GetSubElementContainer", "Index out of bounds")
+        Generic:__Error("Selector:GetSubElementContainer", "Index out of bounds")
     end
 
     return self.SubElementsLists[index]
@@ -98,7 +98,7 @@ end
 ---@param index integer
 function Selector:SetSelectedOption(index)
     if index < 1 or index > #self.Options then
-        Generic:Error("Selector:SetSelectedOption", "Index out of bounds")
+        Generic:__Error("Selector:SetSelectedOption", "Index out of bounds")
     end
 
     self._CurrentOptionIndex = index

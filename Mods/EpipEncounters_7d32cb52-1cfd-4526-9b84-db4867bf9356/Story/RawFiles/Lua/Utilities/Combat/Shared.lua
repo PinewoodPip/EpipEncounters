@@ -36,7 +36,7 @@ end
 function Combat.GetActiveCombatant(combatID)
     local combat = Combat.GetCombat(combatID)
     if not combat then
-        Combat:Error("GetActiveCombatant", "Combat not found with ID", combatID)
+        Combat:__Error("GetActiveCombatant", "Combat not found with ID", combatID)
     end
     local currentTeam, combatant
 

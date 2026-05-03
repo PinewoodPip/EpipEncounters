@@ -147,7 +147,7 @@ end
 ---Begins multi-dragging.
 function MultiSelect.StartMultiDrag()
     if MultiSelect.IsMultiDragActive() then
-        MultiSelect:Error("StartMultiDrag", "Already multi-dragging")
+        MultiSelect:__Error("StartMultiDrag", "Already multi-dragging")
     end
     MultiSelect:DebugLog("Starting multi-drag")
     MultiSelect.Events.MultiDragStarted:Throw()
@@ -157,7 +157,7 @@ end
 ---Ends multi-dragging.
 function MultiSelect.EndMultiDrag()
     if not MultiSelect.IsMultiDragActive() then
-        MultiSelect:Error("EndMultiDrag", "No multi-drag is active")
+        MultiSelect:__Error("EndMultiDrag", "No multi-drag is active")
     end
 
     -- Throw event. If handled, user code should stop propagation.

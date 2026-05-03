@@ -49,7 +49,7 @@ function SourceInfusionTooltips.ProcessTooltip(char, skillID, tooltip)
 
     local fieldName = Stats.SKILL_ABILITY_TO_STATISTIC[school]
     if not fieldName then
-        SourceInfusionTooltips:LogWarning("Unknown ability", school)
+        SourceInfusionTooltips:__LogWarning("Unknown ability", school)
         return
     end
     local schoolName = Text.GetTranslatedString(Character.ABILITY_TSKHANDLES[fieldName], fieldName)

@@ -60,7 +60,7 @@ function Outfits.ApplyOutfit(char, outfitID)
         end
         Outfits.Events.OutfitApplied:Fire(outfit, char)
     else
-        Vanity:LogError("Outfit does not exist: " .. outfitID)
+        Vanity:__LogError("Outfit does not exist: " .. outfitID)
     end
 end
 

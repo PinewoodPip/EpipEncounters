@@ -131,6 +131,6 @@ CombatTurn:RegisterInvokeListener("updateTurnList", function (ev)
         Client.Flash.EncodeArray(currentRoundArray, CombatTurn.ARRAY_ENTRY_TEMPLATES.TURN, hook.CurrentRoundEntries)
         Client.Flash.EncodeArray(nextRoundArray, CombatTurn.ARRAY_ENTRY_TEMPLATES.TURN, hook.NextRoundEntries)
     else
-        CombatTurn:LogError("Error parsing turn list; an enum is possibly erroneous? " .. currentRoundEntries or nextRoundEntries)
+        CombatTurn:__LogError("Error parsing turn list; an enum is possibly erroneous? " .. currentRoundEntries or nextRoundEntries)
     end
 end)

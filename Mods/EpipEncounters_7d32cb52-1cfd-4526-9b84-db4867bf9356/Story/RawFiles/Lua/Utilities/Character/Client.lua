@@ -42,7 +42,7 @@ function Character.GetPartyMembers(char)
 
         -- If char is not in the client's party, we cannot fetch its members.
         if not hasChar then
-            Character:LogWarning(char.DisplayName .. " is not in the client's party; cannot fetch their party members on the client.")
+            Character:__LogWarning(char.DisplayName .. " is not in the client's party; cannot fetch their party members on the client.")
 
             -- Return the request character anyways.
             members = {char}

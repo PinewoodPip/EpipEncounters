@@ -110,7 +110,7 @@ function Picker.Open(requestID, ui)
         Picker:DebugLog("Opening picker UI")
         ui:Show()
     else
-        Picker:Error("Open", "No picker UI has been set")
+        Picker:__Error("Open", "No picker UI has been set")
     end
 end
 
@@ -153,7 +153,7 @@ end
 ---@param icon icon
 function Picker.PickIcon(icon)
     if not Picker._CurrentRequest then
-        Picker:Error("PickIcon", "Called when no request is active")
+        Picker:__Error("PickIcon", "Called when no request is active")
     end
 
     Picker.Events.IconPicked:Throw({

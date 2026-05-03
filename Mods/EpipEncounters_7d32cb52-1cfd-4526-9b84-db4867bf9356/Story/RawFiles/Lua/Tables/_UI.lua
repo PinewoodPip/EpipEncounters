@@ -76,7 +76,7 @@ function BaseUI:GetUI()
     elseif self.UITypeID then
         return Ext.UI.GetByType(self.UITypeID)
     elseif self.ID then
-        self:LogWarning("Getting UIs by name is deprecated! " .. self.ID)
+        self:__LogWarning("Getting UIs by name is deprecated! " .. self.ID)
         return Ext.UI.GetByName(self.ID)
     end
 end
@@ -132,7 +132,7 @@ function BaseUI:Show()
     if ui then
         ui:Show()
     else
-        self:LogError("Show(): UI does not currently exist!")
+        self:__LogError("Show(): UI does not currently exist!")
     end
 end
 
@@ -207,7 +207,7 @@ function BaseUI:Hide()
     if ui then
         ui:Hide()
     else
-        self:LogError("Hide(): UI does not currently exist!")
+        self:__LogError("Hide(): UI does not currently exist!")
     end
 end
 
