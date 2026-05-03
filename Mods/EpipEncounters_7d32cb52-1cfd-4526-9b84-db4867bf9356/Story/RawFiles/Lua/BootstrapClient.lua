@@ -800,10 +800,8 @@ LOAD_ORDER = {
     -- GM features
     {Script = "Epip/GM/AutomaticRollBonuses/Client.lua", GameModes = GAMEMODE_MASK.GameMaster},
 
-    {Script = "Epip/Compatibility/MajoraFashionSins/Client.lua", RequiredMods = {MODS.MAJORA_FASHION_SINS}},
     {Script = "Epip/Compatibility/PortableRespecMirror/Shared.lua", RequiredMods = {MODS.PORTABLE_RESPEC_MIRROR}},
     {Script = "Epip/Compatibility/RendalNPCArmor/Client.lua", RequiredMods = {MODS.RENDAL_NPC_ARMOR}},
-    {Script = "Epip/Compatibility/VisitorsFromCyseal/Client.lua", RequiredMods = {MODS.VISITORS_FROM_CYSEAL}},
     {Script = "Epip/Compatibility/DerpysArtifactTiers/Client.lua", RequiredMods = {MODS.EE_DERPY_ARTIFACT_TIERS}},
 
     {ScriptSet = "Epip/PunisherVoiceActing", RequiredMods = {MODS.EE_DERPY}},

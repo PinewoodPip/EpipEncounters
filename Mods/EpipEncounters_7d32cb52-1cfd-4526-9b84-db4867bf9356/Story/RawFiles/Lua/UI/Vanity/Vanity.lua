@@ -920,35 +920,6 @@ function Vanity.SetPosition(x, y)
     Vanity.Position = {x, y}
 end
 
---- Load template data from a file.
----@param file string Relative to data dir.
-function Vanity.LoadTemplateData(file)
-    local data = Ext.IO.LoadFile(file, "data")
-    data = Ext.Json.Parse(data)
-
-    for guid,info in pairs(data) do
-        -- Only load templates from mods that are loaded
-        if info.Mod == "Shared" or Mod.IsLoaded(info.Mod) then
-            Vanity.TEMPLATES[guid] = info
-            Vanity.TEMPLATES[guid].GUID = guid
-            Vanity.TEMPLATES[guid].Tags = Vanity:ReturnFromHooks("GenerateTemplateTags", {}, guid, info)
-            Vanity.TEMPLATES[guid].Name = Vanity:ReturnFromHooks("GenerateTemplateName", Vanity.TEMPLATES[guid].RootName, guid, info)
-    
-            -- Create a category for each non-Shared mod
-            if info.Mod ~= "Shared" and not Vanity.CATEGORIES[info.Mod] then
-                Vanity.CATEGORIES[info.Mod] = {
-                    Name = Ext.Mod.GetModInfo(info.Mod).Name,
-                    Mod = info.Mod,
-                    Tags = {[info.Mod] = true},
-                    ID = info.Mod,
-                }
-    
-                table.insert(Vanity.CATEGORY_ORDER, info.Mod)
-            end
-        end
-    end
-end
-
 function Vanity.SnapToCharacterSheet()
     local cSheetPosition = CharacterSheet:GetUI():GetPosition()
     local x = cSheetPosition[1] + 1
