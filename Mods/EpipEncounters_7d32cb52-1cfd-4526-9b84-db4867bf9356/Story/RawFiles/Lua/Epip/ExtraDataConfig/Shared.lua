@@ -42,7 +42,7 @@ function DataConfig.SetValue(key, value, save)
         if save then
             if Ext.IsClient() then
                 Settings.SetValue(DataConfig.SETTINGS_MODULE_ID, key, value)
-            else 
+            else
                 DataConfig.SaveSettings()
             end
         end

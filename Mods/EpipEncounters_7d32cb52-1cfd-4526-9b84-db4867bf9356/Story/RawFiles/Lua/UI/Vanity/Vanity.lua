@@ -655,7 +655,7 @@ function Vanity.RenderButtonPair(id1, text1, enabled1, id2, text2, enabled2)
     local list = menu.list.content_array
 
     menu.addDualButtons(id1, text1, enabled1, id2, text2, enabled2)
-    
+
     local buttonList = list[#list - 1]
     buttonList.EL_SPACING = -2
     buttonList.CENTER_IN_LIST = true
@@ -746,7 +746,7 @@ end
 function Vanity.RenderLabelledColor(id, color, label, showInputField)
     local menu = Vanity.GetMenu()
     if showInputField == nil then showInputField = false end
-    
+
     menu.addLabelledColor(id, color, label, showInputField)
 
     local list = menu.list.content_array
@@ -851,7 +851,7 @@ function Vanity.RenderEntry(id, text, canCollapse, active, canFavorite, favorite
         Vanity.SetupColorIcon(colorList.content_array[0])
         Vanity.SetupColorIcon(colorList.content_array[1])
         Vanity.SetupColorIcon(colorList.content_array[2])
-        
+
         element.setColor(0, colors[1]:ToDecimal())
         element.setColor(1, colors[2]:ToDecimal())
         element.setColor(2, colors[3]:ToDecimal())

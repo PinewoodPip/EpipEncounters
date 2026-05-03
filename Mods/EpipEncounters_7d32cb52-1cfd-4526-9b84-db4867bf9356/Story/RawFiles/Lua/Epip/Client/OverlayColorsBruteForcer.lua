@@ -6,7 +6,7 @@
 -- every X seconds, with their index being logged to the console.
 ---------------------------------------------
 
----@type Feature
+---@class Features.OverlayColorsBruteForcer : Feature
 local OverlayColors = {
     DELAY = 1, -- Default delay, in seconds.
     TIMER_ID = "OverlayColorsBruteForcer",
@@ -34,7 +34,6 @@ function OverlayColors.CycleColor()
 
     -- Log the index of the current color
     OverlayColors:__Log("Current index highlighted: " .. OverlayColors._Index)
-    
     OverlayColors._Index = OverlayColors._Index + 1
 
     -- Loop around the list

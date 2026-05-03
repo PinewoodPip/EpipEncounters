@@ -120,7 +120,8 @@ end
 ---Returns the global position of the mouse in the screen space, in pixel coordinates.
 ---@return integer, integer
 function Client.GetMousePosition()
-    return table.unpack(Ext.UI.GetMouseFlashPos())
+    local pos = Ext.UI.GetMouseFlashPos()
+    return pos[1], pos[2]
 end
 
 ---Returns whether the client character is currently in dialogue.

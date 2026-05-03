@@ -5,6 +5,9 @@
 
 ---@class Features.GreatforgeContextMenu : Feature
 local GreatforgeContextMenu = {
+    NETMSG_DISMANTLE = "Features.GreatforgeContextMenu.NetMsgs.Dismantle",
+    NETMSG_EXTRACT_RUNES = "Features.GreatforgeContextMenu.NetMsgs.ExtractRunes",
+
     TranslatedStrings = {
         Label_ExtractRunes = {
             Handle = "he8b4b102g4280g45c0g9ebag15c97ee8c6a3",
@@ -24,3 +27,11 @@ local GreatforgeContextMenu = {
     },
 }
 Epip.RegisterFeature("Features.GreatforgeContextMenu", GreatforgeContextMenu)
+
+---------------------------------------------
+-- NET MESSAGES
+---------------------------------------------
+
+---@class Features.GreatforgeContextMenu.NetMsgs.Dismantle : NetLib_Message_Character, NetLib_Message_Item
+
+---@class Features.GreatforgeContextMenu.NetMsgs.ExtractRunes : NetLib_Message_Character, NetLib_Message_Item

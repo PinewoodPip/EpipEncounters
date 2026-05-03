@@ -159,11 +159,13 @@ end
 ---@return SettingsLib_Setting
 function Feature:RegisterSetting(id, data)
     data.ID = id
-    data.ModTable = self:GetSettingsModuleID()
+    data.ModTable = self:GetNamespace()
     data.Context = data.Context or Mod.GetCurrentContext()
 
     Settings.RegisterSetting(data)
 
+    -- Settings table is initialized after registration to workaround limitations with LLS that otherwise break autocomplete.
+    ---@diagnostic disable-next-line: undefined-field
     self.Settings[id] = data
 
     return data

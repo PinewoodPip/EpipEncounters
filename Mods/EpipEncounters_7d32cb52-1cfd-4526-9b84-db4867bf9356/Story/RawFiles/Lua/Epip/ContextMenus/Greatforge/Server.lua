@@ -9,17 +9,19 @@ local GreatforgeContextMenu = Epip.GetFeature("Features.GreatforgeContextMenu")
 ---------------------------------------------
 -- DISMANTLE
 ---------------------------------------------
-Net.RegisterListener("EPIPENCOUNTERS_QuickReduce", function(payload)
-    Osi.PROC_PIP_QuickReduce(Ext.GetCharacter(payload.Char).MyGuid, Ext.GetItem(payload.Item).MyGuid)
+Net.RegisterListener(GreatforgeContextMenu.NETMSG_DISMANTLE, function(payload)
+    local char = payload:GetCharacter()
+    local item = payload:GetItem()
+    Osi.PROC_PIP_QuickReduce(char.MyGuid, item.MyGuid)
 end)
 
 ---------------------------------------------
 -- EXTRACT RUNES
 ---------------------------------------------
-Net.RegisterListener("EPIPENCOUNTERS_QuickExtractRunes", function(payload)
-    local char, item = Character.Get(payload.Char), Item.Get(payload.Item)
-
-    Osiris.PROC_PIP_QuickExtractRunes(char, item)
+Net.RegisterListener(GreatforgeContextMenu.NETMSG_EXTRACT_RUNES, function(payload)
+    local char = payload:GetCharacter()
+    local item = payload:GetItem()
+    Osi.PROC_PIP_QuickExtractRunes(char.MyGuid, item.MyGuid)
 end)
 
 -- Show overhead when runes are extracted.
@@ -50,14 +52,3 @@ end
 Utilities.Hooks.RegisterListener("Game", "Loaded", function()
     GreatforgeContextMenu.SendDeltaModsData()
 end)
-
--- Ext.Osiris.RegisterListener("SavegameLoaded", 4, "before", function(major, minor, patch, build)
---     InitializeCustomStats()
---     UpdateEpicStats(false)
--- end)
-
--- -- initialize stats at new game
--- Ext.Osiris.RegisterListener("PROC_AMER_GEN_CCFinished_GameStarted", 0, "after", function()
---     InitializeCustomStats()
---     UpdateEpicStats(false)
--- end)

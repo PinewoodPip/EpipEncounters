@@ -482,10 +482,10 @@ local tabs = {
 
             "PlayerInfoBH",
             "PlayerInfo_StatusHolderOpacity",
-            {Module = StatusesDisplay:GetSettingsModuleID(), ID = StatusesDisplay.Settings.Enabled.ID},
-            {Module = StatusesDisplay:GetSettingsModuleID(), ID = StatusesDisplay.Settings.ShowSourceGeneration.ID},
-            {Module = StatusesDisplay:GetSettingsModuleID(), ID = StatusesDisplay.Settings.ShowBatteredHarried.ID},
-            {Module = StatusesDisplay:GetSettingsModuleID(), ID = StatusesDisplay.Settings.FilteredStatuses.ID},
+            CreateSettingEntry(StatusesDisplay.Settings.Enabled),
+            CreateSettingEntry(StatusesDisplay.Settings.ShowSourceGeneration),
+            CreateSettingEntry(StatusesDisplay.Settings.ShowBatteredHarried),
+            CreateSettingEntry(StatusesDisplay.Settings.FilteredStatuses),
         }
     },
     ["Epip_Inventory"] = {
@@ -506,8 +506,8 @@ local tabs = {
 
             CreateHeader(QuickInventory.TranslatedStrings.Header:GetString()),
             {Type = "Label", Label = Text.Format(QuickInventory.TranslatedStrings.SettingsMenuInfo:GetString(), {Size = 19})},
-            {Module = QuickInventory:GetSettingsModuleID(), ID = QuickInventory.Settings.CloseAfterUsing.ID},
-            {Module = QuickInventory:GetSettingsModuleID(), ID = QuickInventory.Settings.CloseOnClickOutOfBounds.ID},
+            CreateSettingEntry(QuickInventory.Settings.CloseAfterUsing),
+            CreateSettingEntry(QuickInventory.Settings.CloseOnClickOutOfBounds),
 
             CreateHeader(TSK.Section_CraftingUI),
             {Module = CraftingFixes:GetNamespace(), ID = CraftingFixes.Settings.DefaultFilter.ID},

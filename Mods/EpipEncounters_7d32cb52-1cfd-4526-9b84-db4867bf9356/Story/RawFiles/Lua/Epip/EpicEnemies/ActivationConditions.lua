@@ -35,18 +35,17 @@ local EpicEnemies = Epip.Features.EpicEnemies
 ---------------------------------------------
 
 -- TurnStart
-Osiris.RegisterSymbolListener("PROC_AMER_Combat_TurnStarted", 2, "after", function(char, hasActed)
+Osiris.RegisterSymbolListener("PROC_AMER_Combat_TurnStarted", 2, "after", function(char, _)
     if Osi.IsTagged(char, EpicEnemies.INITIALIZED_TAG) == 1 then
         local _, round = Osiris.DB_PIP_CharacterCombatRound:Get(char, nil)
         if round == nil then round = 1 end
-        char = Ext.GetCharacter(char)
 
         EpicEnemies.ActivateEffects(char, "TurnStart", {Round = round})
     end
 end)
 
 -- HealthThreshold
-Osiris.RegisterSymbolListener("PROC_AMER_CharacterReceivedDamage_PhysMagicDefined", 4, "after", function(char, source, physDmg, magicDmg)
+Osiris.RegisterSymbolListener("PROC_AMER_CharacterReceivedDamage_PhysMagicDefined", 4, "after", function(char, _, _, _)
     if Osi.IsTagged(char, EpicEnemies.INITIALIZED_TAG) == 1 then
         local hpFraction = Osi.CharacterGetHitpointsPercentage(char) / 100
         local physArmorFraction = Osi.CharacterGetArmorPercentage(char) / 100
@@ -61,7 +60,7 @@ Osiris.RegisterSymbolListener("PROC_AMER_CharacterReceivedDamage_PhysMagicDefine
 end)
 
 -- BatteredHarried
-Osiris.RegisterSymbolListener("PROC_AMER_BatteredHarried_StacksChanged", 5, "after", function(char, source, stackType, addedStacks, newStacks)
+Osiris.RegisterSymbolListener("PROC_AMER_BatteredHarried_StacksChanged", 5, "after", function(char, _, _, addedStacks, _)
     if addedStacks > 0 and EpicEnemies.IsInitialized(char) then
         local battered, harried, total = Osiris.QRY_AMER_BatteredHarried_GetCurrentStacks(char)
 
@@ -74,7 +73,7 @@ Osiris.RegisterSymbolListener("PROC_AMER_BatteredHarried_StacksChanged", 5, "aft
 end)
 
 -- StatusGained
-Osiris.RegisterSymbolListener("PROC_AMER_GEN_FilteredStatus_Applied", 4, "after", function(char, source, status, turns)
+Osiris.RegisterSymbolListener("PROC_AMER_GEN_FilteredStatus_Applied", 4, "after", function(char, _, status, _)
     if EpicEnemies.IsInitialized(char) then
         EpicEnemies.ActivateEffects(char, "StatusGained", {
             StatusID = status,

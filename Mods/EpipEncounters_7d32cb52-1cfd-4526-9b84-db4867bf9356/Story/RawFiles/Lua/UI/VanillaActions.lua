@@ -334,7 +334,6 @@ Hotbar.RegisterActionHook("UseArbitrarySkill", "GetActionIcon", function(icon, _
             end
         end
     end
-    
     return icon
 end)
 

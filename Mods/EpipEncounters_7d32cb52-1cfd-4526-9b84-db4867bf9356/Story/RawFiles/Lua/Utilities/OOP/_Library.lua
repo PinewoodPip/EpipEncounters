@@ -125,14 +125,14 @@ function Library.Create(modTable, id, data)
     end
 
     -- Create TSK table
+    local localTSKs = library._localTranslatedStringKeys
     local TSKmetatable = {
         __index = function (_, key)
             local obj = library.TranslatedStrings[key]
 
             -- Lookup using local key name instead
             if not obj then
-                local handle = library._localTranslatedStringKeys[key]
-
+                local handle = localTSKs[key]
                 obj = handle and library.TranslatedStrings[handle]
             end
 

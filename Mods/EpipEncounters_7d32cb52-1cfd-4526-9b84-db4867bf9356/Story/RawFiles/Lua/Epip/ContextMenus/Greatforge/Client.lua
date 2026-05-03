@@ -116,11 +116,11 @@ ContextMenu.RegisterVanillaMenuHandler("Item", function(item)
 end)
 
 ContextMenu.RegisterElementListener("epip_Dismantle", "buttonPressed", function(item)
-    Ext.Net.PostMessageToServer("EPIPENCOUNTERS_QuickReduce", Ext.Json.Stringify({Char = Client.GetCharacter().NetID, Item = item.NetID}))
+    Ext.Net.PostMessageToServer(GreatforgeContextMenu.NETMSG_DISMANTLE, Ext.Json.Stringify({Char = Client.GetCharacter().NetID, Item = item.NetID}))
 end)
 
 ContextMenu.RegisterElementListener("epip_ExtractRunes", "buttonPressed", function(item)
-    Ext.Net.PostMessageToServer("EPIPENCOUNTERS_QuickExtractRunes", Ext.Json.Stringify({Char = Client.GetCharacter().NetID, Item = item.NetID}))
+    Ext.Net.PostMessageToServer(GreatforgeContextMenu.NETMSG_EXTRACT_RUNES, Ext.Json.Stringify({Char = Client.GetCharacter().NetID, Item = item.NetID}))
 end)
 
 ContextMenu.RegisterElementListener("epip_RemoveMods_Mod", "buttonPressed", function(item, params)

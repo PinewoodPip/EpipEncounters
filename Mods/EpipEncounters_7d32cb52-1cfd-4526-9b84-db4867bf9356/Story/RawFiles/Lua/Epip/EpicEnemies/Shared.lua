@@ -166,7 +166,7 @@ end
 
 ---@param char Character|GUID
 function EpicEnemies.IsInitialized(char)
-    if type(char) ~= "userdata" then char = Ext.GetCharacter(char) end
+    if type(char) ~= "userdata" then char = Character.Get(char) end
     return char:HasTag(EpicEnemies.INITIALIZED_TAG)
 end
 
