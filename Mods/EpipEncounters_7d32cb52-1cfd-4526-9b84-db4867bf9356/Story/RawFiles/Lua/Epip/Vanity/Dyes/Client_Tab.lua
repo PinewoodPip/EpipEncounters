@@ -248,7 +248,7 @@ Tab:RegisterListener(Vanity.Events.SliderHandleReleased, function (id, value)
 end)
 
 -- Listen for copy buttons.
-Tab:RegisterListener(Vanity.Events.CopyPressed, function(id, text)
+Tab:RegisterListener(Vanity.Events.CopyPressed, function(_, text)
     Client.UI.MessageBox.CopyToClipboard(text)
 end)
 

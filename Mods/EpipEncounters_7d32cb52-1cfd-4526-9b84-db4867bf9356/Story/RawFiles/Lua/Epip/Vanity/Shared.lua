@@ -11,6 +11,9 @@ local ARMOR_SLOTS = {
 local Vanity = {
     Name = "Vanity",
 
+    NETMSG_REFRESH_APPEARANCE = "Features.Vanity.NetMsg.RefreshAppearance",
+    NETMSG_SET_TEMPLATE_OVERRIDE = "Features.Vanity.NetMsg.SetTemplateOverride",
+
     CURRENT_SAVE_VERSION = 4,
     SAVE_FILENAME = "EPIP_VanityOutfits.json",
 
@@ -405,8 +408,14 @@ local TSK = Vanity.TranslatedStrings
 -- NET MESSAGES
 ---------------------------------------------
 
+---@class Features.Vanity.NetMsg.RefreshAppearance : NetLib_Message_Character
+---@field UseAltStatus boolean?
+
 ---@class Features.Vanity.NetMsg.RevertAppearance : NetLib_Message_Character, NetLib_Message_Item
 ---@class Features.Vanity.NetMsg.RefreshVisuals : NetLib_Message_Character
+
+---@class Features.Vanity.NetMsg.SetTemplateOverride
+---@field TemplateOverride GUID.ItemTemplate
 
 ---------------------------------------------
 -- SETTINGS

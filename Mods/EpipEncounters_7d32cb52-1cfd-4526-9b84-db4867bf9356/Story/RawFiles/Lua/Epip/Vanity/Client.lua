@@ -42,9 +42,9 @@ end
 
 -- Request to transform an item into a template.
 function Vanity.TransmogItem(item, newTemplate)
-    Net.PostToServer("EPIPENCOUNTERS_VanityTransmog", {
-        Char = Client.GetCharacter().NetID,
-        Item = item.NetID,
+    Net.PostToServer("Features.Vanity.Transmog.NetMsgs.Transmog", {
+        CharacterNetID = Client.GetCharacter().NetID,
+        ItemNetID = item.NetID,
         NewTemplate = newTemplate,
     })
 end

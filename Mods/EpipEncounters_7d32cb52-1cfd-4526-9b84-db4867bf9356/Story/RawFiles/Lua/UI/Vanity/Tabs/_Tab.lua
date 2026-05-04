@@ -1,4 +1,5 @@
 
+---@class VanityUI
 local Vanity = Client.UI.Vanity
 
 ---@class CharacterSheetCustomTab

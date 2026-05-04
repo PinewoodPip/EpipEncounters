@@ -105,19 +105,19 @@ function Transmog.RevertAppearance(char, item)
 
         Entity.RemoveTagsByPattern(item, Transmog.TRANSMOGGED_TAG_PATTERN)
 
-        Ext.OnNextTick(function()
-            Ext.OnNextTick(function()
-                char, item = Character.Get(charHandle), Item.Get(itemHandle)
-                Net.PostToUser(charUserID, "EPIPENCOUNTERS_Vanity_SetTemplateOverride", {TemplateOverride = originalTemplate})
+        Timer.StartTickTimer(3, function (_)
+            char, item = Character.Get(charHandle), Item.Get(itemHandle)
+            Net.PostToUser(charUserID, Vanity.NETMSG_SET_TEMPLATE_OVERRIDE, {
+                TemplateOverride = originalTemplate
+            })
 
-                Net.Broadcast(Transmog.NET_MSG_ICON_REMOVED, {
-                    ItemNetID = item.NetID,
-                })
+            Net.Broadcast(Transmog.NETMSG_ICON_REMOVED, {
+                ItemNetID = item.NetID,
+            })
 
-                if Item.IsEquipped(char, item) then
-                    Vanity.TryRefreshAppearance(char, item, true)
-                end
-            end)
+            if Item.IsEquipped(char, item) then
+                Vanity.TryRefreshAppearance(char, item, true)
+            end
         end)
     end
     Entity.RemoveTagsByPattern(item, Transmog.KEEP_ICON_PATTERN)
@@ -246,9 +246,9 @@ end
 ---------------------------------------------
 
 -- Listen for transmog requests.
-Net.RegisterListener("EPIPENCOUNTERS_VanityTransmog", function(payload)
-    local char = Character.Get(payload.Char)
-    local item = Item.Get(payload.Item)
+Net.RegisterListener(Transmog.NETMSG_TRANSMOG, function(payload)
+    local char = payload:GetCharacter()
+    local item = payload:GetItem()
     local template = payload.NewTemplate
     local keepIcon = payload.KeepIcon == true
 
@@ -258,7 +258,7 @@ end)
 -- Listen for equip swaps, apply new visuals.
 Ext.Osiris.RegisterListener("ItemEquipped", 2, "after", function(itemGUID, char)
     local outfit = Osi.DB_PIP_Vanity_PersistentOutfit:Get(char, nil, nil, nil, nil, nil, nil, nil)[1]
-    if outfit and not Vanity.ignoreItemEquips then
+    if outfit then
         local item = Item.Get(itemGUID)
         local slot = Item.GetItemSlot(item)
 
@@ -279,9 +279,9 @@ Osiris.RegisterSymbolListener("ItemUnequipped", 2, "after", function (itemGUID, 
 end)
 
 -- Listen for "keep appearance" being toggled for a character's item slot.
-Net.RegisterListener("EPIPENCOUNTERS_Vanity_Transmog_KeepAppearance", function(payload)
-    local char = Ext.GetCharacter(payload.NetID)
-    local tag = "PIP_Vanity_Transmog_KeepAppearance_" .. payload.Slot
+Net.RegisterListener(Transmog.NETMSG_KEEP_APPEARANCE, function(payload)
+    local char = payload:GetCharacter()
+    local tag = Transmog.KEEP_APPEARANCE_TAG_PREFIX .. payload.Slot
 
     if payload.State then
         Osi.SetTag(char.MyGuid, tag)
@@ -291,48 +291,22 @@ Net.RegisterListener("EPIPENCOUNTERS_Vanity_Transmog_KeepAppearance", function(p
 end)
 
 -- Listen for requests to revert item appearance.
-Net.RegisterListener(Transmog.NET_MSG_REVERT_APPEARANCE, function(payload)
+Net.RegisterListener(Transmog.NETMSG_REVERT_APPEARANCE, function(payload)
     local char, item = payload:GetCharacter(), payload:GetItem()
     Transmog.RevertAppearance(char, item)
 end)
 
 -- Listen for requests to set an icon override (separate from transmog).
-Net.RegisterListener(Transmog.NET_MSG_SET_ICON, function(payload)
+Net.RegisterListener(Transmog.NETMSG_SET_ICON, function(payload)
     local char, item = payload:GetCharacter(), payload:GetItem()
 
     Transmog.SetItemIcon(item, payload.Icon)
     Vanity.TryRefreshAppearance(char, item, true)
 end)
 
--- Listen for toggling persistent outfit feature.
-Net.RegisterListener("EPIPENCOUNTERS_VanityPersistOutfit", function(payload)
-    local char = Ext.GetCharacter(payload.ClientCharacterNetID)
-    local enable = payload.State
-
-    local slots = {"Helmet", "Breast", "Gloves", "Leggings", "Boots"}
-    if enable then
-        Vanity.SetPersistentOutfit(char, slots, Vanity.PERSISTENT_OUTFIT_TAG)
-    else
-        Vanity.ClearPersistentOutfit(char, slots, Vanity.PERSISTENT_OUTFIT_TAG)
-    end
-end)
-
--- Toggling persistent outfit feature, for weapons
-Net.RegisterListener("EPIPENCOUNTERS_VanityPersistWeaponry", function(payload)
-    local char = Ext.GetCharacter(payload.ClientCharacterNetID)
-    local enable = payload.State
-
-    local slots = {"Weapon", "Shield"}
-    if enable then
-        Vanity.SetPersistentOutfit(char, slots, Vanity.PERSISTENT_WEAPONRY_TAG)
-    else
-        Vanity.ClearPersistentOutfit(char, slots, Vanity.PERSISTENT_WEAPONRY_TAG)
-    end
-end)
-
 -- Listen for requests to disable elemental damage visual effects.
-Net.RegisterListener("EPIPENCOUNTERS_Vanity_Transmog_ToggleWeaponOverlayEffects", function(payload)
-    local item = Item.Get(payload.ItemNetID)
+Net.RegisterListener(Transmog.NETMSG_TOGGLE_WEAPON_EFFECTS, function(payload)
+    local item = payload:GetItem()
     local hasTag = item:HasTag("DISABLE_WEAPON_EFFECTS")
 
     if hasTag then
@@ -343,9 +317,9 @@ Net.RegisterListener("EPIPENCOUNTERS_Vanity_Transmog_ToggleWeaponOverlayEffects"
 end)
 
 -- Listen for equipment visibility being toggled.
-Net.RegisterListener("EPIPENCOUNTERS_Vanity_Transmog_ToggleVisibility", function (payload)
-    local item = Item.Get(payload.ItemNetID)
-    local char = Character.Get(payload.CharacterNetID)
+Net.RegisterListener(Transmog.NETMSG_TOGGLE_VISIBILITY, function (payload)
+    local item = payload:GetItem()
+    local char = payload:GetCharacter()
 
     if payload.State then
         Osiris.ClearTag(item, "PIP_VANITY_INVISIBLE")
@@ -364,13 +338,6 @@ Net.RegisterListener(Transmog.NETMSG_SET_FORCE_SHOW_HAIR, function (payload)
     Transmog.SetForceShowHair(item, payload.ShowHair)
 end)
 
--- Listen for requests to refresh visuals.
-Net.RegisterListener("EPIPENCOUNTERS_Vanity_RefreshAppearance", function (payload)
-    local char = Character.Get(payload.CharacterNetID)
-
-    Vanity.RefreshAppearance(char, payload.UseAltStatus)
-end)
-
 -- Handle requests to set weapon animation overrides.
 Net.RegisterListener(Transmog.NETMSG_SET_WEAPON_ANIMATION_OVERRIDE, function (payload)
     local char = payload:GetCharacter()
@@ -380,13 +347,8 @@ Net.RegisterListener(Transmog.NETMSG_SET_WEAPON_ANIMATION_OVERRIDE, function (pa
     Osiris.CharacterSetFightMode(char, true, true)
 end)
 
--- TODO better handling - this can break with multiple people equipping stuff at once
-Utilities.Hooks.RegisterListener("ContextMenus_Dyes", "ItemBeingDyed", function(item)
-    Vanity.ignoreItemEquips = true
-end)
-
 -- Create statuses for refreshing visuals.
-Ext.Events.SessionLoaded:Subscribe(function (ev)
+Ext.Events.SessionLoaded:Subscribe(function (_)
     local stat, stat2 = Stats.Get("StatusData", "PIP_Vanity_Refresh"), Stats.Get("StatusData", "PIP_Vanity_Refresh_Alt")
     if not stat then
         stat = Ext.Stats.Create("PIP_Vanity_Refresh", "StatusData")

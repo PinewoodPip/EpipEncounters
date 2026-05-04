@@ -190,14 +190,14 @@ end
 
 ---Request an item to be transmog'd into a template.
 ---@param item EclItem? Defaults to current item based on the selected slot in the UI.
----@param template string
+---@param template GUID.ItemTemplate
 function Transmog.TransmogItem(item, template)
     item = item or Vanity.GetCurrentItem()
 
     if Transmog.CanTransmogItem(item) then
-        Net.PostToServer("EPIPENCOUNTERS_VanityTransmog", {
-            Char = Client.GetCharacter().NetID,
-            Item = item.NetID,
+        Net.PostToServer(Transmog.NETMSG_TRANSMOG, {
+            CharacterNetID = Client.GetCharacter().NetID,
+            ItemNetID = item.NetID,
             NewTemplate = template,
             KeepIcon = Transmog.keepIcon;
         })
@@ -214,7 +214,7 @@ function Transmog.TransmogItem(item, template)
         -- Refresh UI
         if Vanity.currentTab ~= nil then
             -- We track this to update the UI immediately, without needing to wait for server.
-            Vanity.currentItemTemplateOverride = template
+            Vanity.CurrentItemTemplateOverride = template
             Vanity.Refresh()
         end
     end
@@ -225,7 +225,7 @@ end
 ---@param char EclCharacter
 ---@param item EclItem
 function Transmog.RevertAppearance(char, item)
-    Net.PostToServer(Transmog.NET_MSG_REVERT_APPEARANCE, {
+    Net.PostToServer(Transmog.NETMSG_REVERT_APPEARANCE, {
         CharacterNetID = char.NetID,
         ItemNetID = item.NetID,
     })
@@ -247,7 +247,7 @@ function Transmog.SetItemIcon(item, icon)
     local char = Item.GetOwner(item) or Client.GetCharacter()
     item.Icon = icon
 
-    Net.PostToServer(Transmog.NET_MSG_SET_ICON, {CharacterNetID = char.NetID, ItemNetID = item.NetID, Icon = icon})
+    Net.PostToServer(Transmog.NETMSG_SET_ICON, {CharacterNetID = char.NetID, ItemNetID = item.NetID, Icon = icon})
     Vanity.Refresh() -- Necessary for item icon to be immediately reflected, for some reason. TODO investigate?
 end
 
@@ -258,7 +258,7 @@ function Transmog.ToggleVisibility(item, visible)
     item = item or Vanity.GetCurrentItem()
     if visible == nil then visible = item:HasTag(Transmog.INVISIBLE_TAG) end
 
-    Net.PostToServer("EPIPENCOUNTERS_Vanity_Transmog_ToggleVisibility", {
+    Net.PostToServer(Transmog.NETMSG_TOGGLE_VISIBILITY, {
         CharacterNetID = Client.GetCharacter().NetID,
         ItemNetID = item.NetID,
         State = visible,
@@ -482,7 +482,7 @@ Character.Events.ItemEquipped:Subscribe(function (ev)
 end)
 
 -- Listen for icon overrides being removed - since the server does not have the property that handles these, it must be done on client.
-Net.RegisterListener(Transmog.NET_MSG_ICON_REMOVED, function (payload)
+Net.RegisterListener(Transmog.NETMSG_ICON_REMOVED, function (payload)
     local item = Item.Get(payload.ItemNetID)
 
     Transmog:DebugLog("Removing client icon override from", item.DisplayName)

@@ -3,7 +3,7 @@
 local Dyes = {
     NETMSG_REMOVE_DYE = "Features.Vanity.Dyes.NetMsg.Remove",
 
-    Tab = nil,
+    Tab = nil, ---@type Features.Vanity.Dyes.Tab
     CustomDyes = {}, ---@type table<string, VanityDye>
     DyeHistory = {}, ---@type VanityDye[]
     lockColorSlider = false,

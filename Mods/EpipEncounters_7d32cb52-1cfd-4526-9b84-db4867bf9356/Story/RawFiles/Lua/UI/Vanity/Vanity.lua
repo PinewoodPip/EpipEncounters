@@ -17,7 +17,7 @@ local Vanity = {
     TABS = {},
     currentSlot = "Helmet",
     currentTab = nil,
-    currentItemTemplateOverride = nil,
+    CurrentItemTemplateOverride = nil,
     oldContentHeight = 0,
     oldScrollY = 0,
     racialCategories = {},
@@ -466,8 +466,8 @@ function Vanity.SetHeader(text)
     -- header.htmlText = text
 end
 
-Net.RegisterListener("EPIPENCOUNTERS_Vanity_SetTemplateOverride", function(payload)
-    Vanity.currentItemTemplateOverride = payload.TemplateOverride
+Net.RegisterListener(VanityFeature.NETMSG_SET_TEMPLATE_OVERRIDE, function(payload)
+    Vanity.CurrentItemTemplateOverride = payload.TemplateOverride
     Vanity.Refresh()
 end)
 
@@ -494,7 +494,7 @@ end
 function Vanity.RefreshAppearance(useAltStatus)
     local char = Client.GetCharacter()
 
-    Net.PostToServer("EPIPENCOUNTERS_Vanity_RefreshAppearance", {
+    Net.PostToServer(VanityFeature.NETMSG_REFRESH_APPEARANCE, {
         CharacterNetID = char.NetID,
         UseAltStatus = useAltStatus
     })
@@ -943,25 +943,13 @@ function Vanity.IsTemplateEquipped(templateGUID)
     local isEquipped = false
 
     -- Check template override
-    if Vanity.currentItemTemplateOverride then
-        isEquipped = Vanity.currentItemTemplateOverride == templateGUID
+    if Vanity.CurrentItemTemplateOverride then
+        isEquipped = Vanity.CurrentItemTemplateOverride == templateGUID
     else -- Otherwise check real template
         isEquipped = Vanity.GetCurrentItem().RootTemplate.Id == templateGUID
     end
 
     return isEquipped
-end
-
-function hex(val, minLength)
-    minLength = minLength or 0
-    local valStr = string.format("%x", val)
-
-    
-    while string.len(valStr) < minLength do
-        valStr = "0" .. valStr
-    end
-
-    return valStr:upper()
 end
 
 function Vanity.TogglePointsWarning(state)

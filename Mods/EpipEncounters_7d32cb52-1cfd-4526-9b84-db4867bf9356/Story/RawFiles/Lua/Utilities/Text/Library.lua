@@ -856,6 +856,18 @@ function Text.FormatTime(time)
     })
 end
 
+---Converts a number to an uppercase hex string.
+---@param value integer
+---@param frontPadding integer? If set, the hex string will be padded with zeros at the front to meet the specified length.
+---@return string
+function Text.ToHex(value, frontPadding)
+    local hexString = string.format("%x", value):upper()
+    if frontPadding then
+        hexString = Text.AddPadding(hexString, frontPadding, "0", "front")
+    end
+    return hexString
+end
+
 ---------------------------------------------
 -- EVENT LISTENERS
 ---------------------------------------------

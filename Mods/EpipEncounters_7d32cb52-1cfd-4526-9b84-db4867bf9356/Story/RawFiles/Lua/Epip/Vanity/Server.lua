@@ -49,6 +49,12 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
+-- Listen for requests to refresh visuals.
+Net.RegisterListener(Vanity.NETMSG_REFRESH_APPEARANCE, function (payload)
+    local char = payload:GetCharacter()
+    Vanity.RefreshAppearance(char, payload.UseAltStatus)
+end)
+
 -- Revert appearance of items when they are unequipped.
 Osiris.RegisterSymbolListener("ItemUnEquipped", 2, "after", function (itemGUID, charGUID)
     if Osiris.GetFirstFact("DB_IsPlayer", charGUID) and Vanity.Settings.RevertAppearanceOnUnequip:GetValue() == true then

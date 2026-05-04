@@ -28,7 +28,7 @@ function Auras.RemoveAura(char, aura)
     if type(aura) == "string" then aura = Auras.GetAura(aura) end
     local auraID = aura:GetID()
 
-    local tuples = Osiris.DB_PIP_Vanity_AppliedAura:GetTuples(char, auraID, nil)
+    local tuples = Osi.DB_PIP_Vanity_AppliedAura:Get(char.MyGuid, auraID, nil)
     if not tuples then Auras:__LogError("Tried to remove an aura that is not applied! " .. auraID) return nil end
     for _,tuple in ipairs(tuples) do
         local handle = tuple[3]
@@ -61,20 +61,17 @@ end
 -- Listen for requests to apply auras.
 Net.RegisterListener("EPIPENCOUNTERS_Vanity_ApplyAura", function(payload)
     local char = Character.Get(payload.NetID)
-
     Auras.ApplyAura(char, payload.AuraID, payload.BoneID)
 end)
 
 -- Listen for aura removal requests.
 Net.RegisterListener("EPIPENCOUNTERS_Vanity_RemoveAura", function(payload)
     local char = Character.Get(payload.NetID)
-    
     Auras.RemoveAura(char, payload.AuraID)
 end)
 
 -- Listen for requests to remove all auras.
 Net.RegisterListener("EPIPENCOUNTERS_Vanity_RemoveAuras", function(payload)
     local char = Character.Get(payload.NetID)
-
     Auras.RemoveAuras(char)
 end)

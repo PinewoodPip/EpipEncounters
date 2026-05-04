@@ -1,5 +1,6 @@
 
 local Vanity = Epip.GetFeature("Feature_Vanity")
+local ToHex = Text.ToHex
 
 ---@class Feature_Vanity_Dyes
 local Dyes = Epip.GetFeature("Feature_Vanity_Dyes")
@@ -35,17 +36,6 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
-local function hex(val, minLength)
-    minLength = minLength or 0
-    local valStr = string.format("%x", val)
-
-    while string.len(valStr) < minLength do
-        valStr = "0" .. valStr
-    end
-
-    return valStr:upper()
-end
-
 Net.RegisterListener("EPIPENCOUNTERS_DyeItem", function(payload)
     local item = Item.Get(payload.ItemNetID)
     local dye = payload.Dye
@@ -53,7 +43,7 @@ Net.RegisterListener("EPIPENCOUNTERS_DyeItem", function(payload)
     local color1 = dye.Color1
     local color2 = dye.Color2
     local color3 = dye.Color3
-    local tag = string.format("PIP_DYE_%s%s%s_%s%s%s_%s%s%s", hex(color1.Red, 2), hex(color1.Green, 2), hex(color1.Blue, 2), hex(color2.Red, 2), hex(color2.Green, 2), hex(color2.Blue, 2), hex(color3.Red, 2), hex(color3.Green, 2), hex(color3.Blue, 2))
+    local tag = string.format("PIP_DYE_%s%s%s_%s%s%s_%s%s%s", ToHex(color1.Red, 2), ToHex(color1.Green, 2), ToHex(color1.Blue, 2), ToHex(color2.Red, 2), ToHex(color2.Green, 2), ToHex(color2.Blue, 2), ToHex(color3.Red, 2), ToHex(color3.Green, 2), ToHex(color3.Blue, 2))
 
     Dyes:DebugLog("Color tag: " .. tag)
 

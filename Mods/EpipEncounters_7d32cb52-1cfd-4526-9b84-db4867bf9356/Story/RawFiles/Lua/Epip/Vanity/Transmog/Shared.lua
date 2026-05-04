@@ -3,9 +3,13 @@ local CommonStrings = Text.CommonStrings
 
 ---@class Feature_Vanity_Transmog : Feature
 local Transmog = {
-    NET_MSG_ICON_REMOVED = "Feature_Vanity_Transmog_NetMessage_IconOverrideRemoved",
-    NET_MSG_SET_ICON = "Feature_Vanity_Transmog_NetMsg_SetIcon",
-    NET_MSG_REVERT_APPEARANCE = "Features.Vanity.Transmog.NetMsgs.RevertAppearance",
+    NETMSG_TRANSMOG = "Features.Vanity.Transmog.NetMsgs.Transmog",
+    NETMSG_ICON_REMOVED = "Feature_Vanity_Transmog_NetMessage_IconOverrideRemoved",
+    NETMSG_SET_ICON = "Feature_Vanity_Transmog_NetMsg_SetIcon",
+    NETMSG_KEEP_APPEARANCE = "Features.Vanity.Transmog.NetMsgs.KeepAppearance",
+    NETMSG_REVERT_APPEARANCE = "Features.Vanity.Transmog.NetMsgs.RevertAppearance",
+    NETMSG_TOGGLE_WEAPON_EFFECTS = "Features.Vanity.Transmog.NetMsgs.ToggleWeaponOverlayEffects",
+    NETMSG_TOGGLE_VISIBILITY = "Features.Vanity.Transmog.NetMsgs.ToggleVisibility",
     NETMSG_SET_WEAPON_ANIMATION_OVERRIDE = "Features.Vanity.Transmog.SetWeaponAnimationOverride",
     NETMSG_SET_FORCE_SHOW_HAIR = "Features.Vanity.Transmog.SetForceShowHair",
 
@@ -164,12 +168,23 @@ Epip.RegisterFeature("Vanity_Transmog", Transmog)
 -- NET MESSAGES
 ---------------------------------------------
 
+---@class Features.Vanity.Transmog.NetMsgs.Transmog : NetLib_Message_Character, NetLib_Message_Item
+---@field NewTemplate GUID.ItemTemplate
+---@field KeepIcon boolean? Defaults to `false`.
+
 ---@class Feature_Vanity_Transmog_NetMessage_IconOverrideRemoved : NetLib_Message_Item
 
----@class EPIPENCOUNTERS_Vanity_Transmog_ToggleVisibility : NetLib_Message_State, NetLib_Message_Item, NetLib_Message_Character
+---@class Features.Vanity.Transmog.NetMsgs.ToggleVisibility : NetLib_Message_Item, NetLib_Message_Character
+---@field State boolean
 
 ---@class Feature_Vanity_Transmog_NetMsg_SetIcon : NetLib_Message_Item, NetLib_Message_Character
 ---@field Icon icon
+
+---@class Features.Vanity.Transmog.NetMsgs.KeepAppearance : NetLib_Message_Character
+---@field Slot ItemSlot
+---@field State boolean
+
+---@class Features.Vanity.Transmog.NetMsgs.ToggleWeaponOverlayEffects : NetLib_Message_Item
 
 ---@class Features.Vanity.Transmog.NetMsgs.RevertAppearance : NetLib_Message_Character, NetLib_Message_Item
 

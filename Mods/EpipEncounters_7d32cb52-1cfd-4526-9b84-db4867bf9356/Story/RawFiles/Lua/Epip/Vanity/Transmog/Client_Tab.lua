@@ -190,8 +190,8 @@ end)
 
 Tab:RegisterListener(Vanity.Events.CheckboxPressed, function(id, state)
     if id == "Vanity_KeepAppearance" then
-        Net.PostToServer("EPIPENCOUNTERS_Vanity_Transmog_KeepAppearance", {
-            NetID = Client.GetCharacter().NetID,
+        Net.PostToServer(Transmog.NETMSG_KEEP_APPEARANCE, {
+            CharacterNetID = Client.GetCharacter().NetID,
             Slot = Vanity.currentSlot,
             State = state,
         })
@@ -202,7 +202,7 @@ Tab:RegisterListener(Vanity.Events.CheckboxPressed, function(id, state)
     elseif id == "Vanity_MakeInvisible" then
         Transmog.ToggleVisibility()
     elseif id == "Vanity_OverlayEffects" then
-        Net.PostToServer("EPIPENCOUNTERS_Vanity_Transmog_ToggleWeaponOverlayEffects", {
+        Net.PostToServer(Transmog.NETMSG_TOGGLE_WEAPON_EFFECTS, {
             ItemNetID = Vanity.GetCurrentItem().NetID,
         })
 
