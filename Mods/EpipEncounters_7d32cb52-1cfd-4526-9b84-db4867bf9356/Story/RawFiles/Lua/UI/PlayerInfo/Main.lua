@@ -164,6 +164,65 @@ function PlayerInfo.GetCharacters(controlledOnly)
     return chars
 end
 
+---Chains/unchains charA and charB.
+---@param charA EclCharacter
+---@param charB EclCharacter
+function PlayerInfo.ToggleChain(charA, charB)
+    if PlayerInfo.IsChained(charA, charB) then
+        PlayerInfo.UnchainCharacter(charA)
+    else
+        PlayerInfo.ChainCharacters(charA, charB)
+    end
+end
+
+---Links charA to charB's party group, putting their portrait at the end of the group.
+---@param charA EclCharacter
+---@param charB EclCharacter
+function PlayerInfo.ChainCharacters(charA, charB)
+    local charBGroupID = PlayerInfo.GetPartyGroupID(charB)
+    PlayerInfo:ExternalInterfaceCall("piAddToGroupUnder", Ext.UI.HandleToDouble(charA.Handle), charBGroupID, Ext.UI.HandleToDouble(charB.Handle))
+end
+
+---Unlinks a character from their party group, leaving their portrait underneath it.
+---@param char EclCharacter
+function PlayerInfo.UnchainCharacter(char)
+    local groupID = PlayerInfo.GetPartyGroupID(char)
+    PlayerInfo:ExternalInterfaceCall("piDetachUnder", Ext.UI.HandleToDouble(char.Handle), groupID)
+end
+
+---Returns whether charA and charB are in the same party group.
+---@param charA EclCharacter
+---@param charB EclCharacter
+---@return boolean
+function PlayerInfo.IsChained(charA, charB)
+    return PlayerInfo.GetPartyGroupID(charA) == PlayerInfo.GetPartyGroupID(charB)
+end
+
+---Returns the characters of a party group.
+---@param idOrMember integer|EclCharacter
+---@return EclCharacter[]
+function PlayerInfo.GetPartyGroup(idOrMember)
+    local groupID = GetExtType(idOrMember) and PlayerInfo.GetPartyGroupID(idOrMember) or idOrMember -- Character overload.
+    local chars = {} ---@type EclCharacter[]
+    for _,char in ipairs(PlayerInfo.GetCharacters()) do
+        local hadChars = chars[1] ~= nil
+        if PlayerInfo.GetPartyGroupID(char) == groupID then
+            table.insert(chars, char)
+        elseif hadChars then
+            break -- Party groups are contiguous within the character array.
+        end
+    end
+    return chars
+end
+
+---Returns the party group ID of char.
+---@param char EclCharacter
+---@return integer
+function PlayerInfo.GetPartyGroupID(char)
+    local player = PlayerInfo.GetPlayerElement(char)
+    return player.groupId
+end
+
 ---Toggles the visibility of status holders.
 ---@param visible boolean? Defaults to toggling.
 function PlayerInfo.ToggleStatuses(visible)
