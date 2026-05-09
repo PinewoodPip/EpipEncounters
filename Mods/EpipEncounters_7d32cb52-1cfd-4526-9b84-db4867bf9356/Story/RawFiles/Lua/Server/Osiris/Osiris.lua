@@ -420,7 +420,7 @@ local function meta_osiindex(_, key)
         local symbol = {Name = key}
         setmetatable(symbol, _BuiltInOsiSymbol)
 
-        return OOP.GetClass("Library")[key] or symbol 
+        return OOP.GetClass("Library")[key] or symbol
     end
 end
 setmetatable(Osiris, { -- Access is query by default
@@ -432,7 +432,7 @@ setmetatable(Osiris, { -- Access is query by default
 ---@param name string
 ---@param unpack boolean If true, the first tuple found will be unpacked. The last value returned (arity + 1) will be the list of all tuples.
 ---@vararg any Query parameters.
----@return any Unpacked values or list of tuples, based on unpack parameter.
+---@return ... Unpacked values or list of tuples, based on unpack parameter.
 function Osiris.DatabaseQuery(name, unpack, ...)
     local output = {}
     local db = Osi[name]:Get(Osiris._ParseParameters(...))

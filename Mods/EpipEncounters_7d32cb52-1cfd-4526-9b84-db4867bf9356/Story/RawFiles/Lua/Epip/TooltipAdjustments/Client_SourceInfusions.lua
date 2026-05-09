@@ -7,7 +7,7 @@ local SourceInfusion = EpicEncounters.SourceInfusion
 local Tooltip = Client.Tooltip
 local Input = Client.Input
 
----@type Feature
+---@class Features.TooltipAdjustments.SourceInfusions : Feature
 local SourceInfusionTooltips = {
     TranslatedStrings = {
         Pattern_RequiresAbility = {

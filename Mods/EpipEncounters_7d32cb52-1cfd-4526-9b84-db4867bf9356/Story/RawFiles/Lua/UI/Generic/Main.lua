@@ -95,6 +95,7 @@ function Generic.Create(id, config)
     ui:RegisterCallListener("GenericLog", function(_, elementID, elementType, msg, msgType)
         msg = string.format("TRACE %s (%s): %s", elementID, elementType, msg)
 
+        ---@diagnostic disable: invisible
         if msgType == ui.TRACE_LEVELS.WARNING then
             ui:__LogWarning(msg)
         elseif msgType == ui.TRACE_LEVELS.ERROR then
@@ -102,6 +103,7 @@ function Generic.Create(id, config)
         else
             ui:__Log(msg)
         end
+        ---@diagnostic enable: invisible
     end)
 
     if not config.Visible then

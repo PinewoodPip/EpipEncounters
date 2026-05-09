@@ -34,11 +34,8 @@ function MultiSelect._TogglePartyInventorySelection(item, selected)
     if not selected then
         MultiSelect.SetItemSelected(item, false)
     else
-        if not cell then
-            -- This may happen if the item was equipped or moved out by external shenanigans
-            -- MultiSelect:InternalError("SelectItem", "Cell not found for", item.DisplayName)
-            return
-        end
+        -- This may happen if the item was equipped or moved out by external shenanigans
+        if not cell then return end
 
         MultiSelect.SetItemSelected(item, selection)
 

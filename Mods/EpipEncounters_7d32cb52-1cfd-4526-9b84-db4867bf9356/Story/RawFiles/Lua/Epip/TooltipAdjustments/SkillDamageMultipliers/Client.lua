@@ -4,7 +4,7 @@
 -- TODO also apply to other tooltip types?
 ---------------------------------------------
 
----@type Feature
+---@class Features.TooltipAdjustments.SkillDamageMultipliers : Feature
 local SkillDamageMultipliers = {
     TranslatedStrings = {
         Label_WeaponBased = {

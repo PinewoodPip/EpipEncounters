@@ -512,12 +512,12 @@ function UI._UpdateExperienceWidget()
     }))
 
     -- Update XP bar fill
-    local xp = Bedazzled:GetSettingValue(Bedazzled.Settings.Experience)
+    local xp = Bedazzled:GetSettingValue(Bedazzled.Settings.Experience) // 1
     local xpForCurrentLevel = Bedazzled.GetTotalExperienceRequirementForLevel(level)
     local xpForNextLevel = Bedazzled.GetTotalExperienceRequirementForLevel(level + 1)
-    local currentLevelXp = (xp - xpForCurrentLevel)
-    local nextLevelXp = (xpForNextLevel - xpForCurrentLevel)
-    local xpFraction = currentLevelXp / nextLevelXp
+    local currentLevelXp = (xp - xpForCurrentLevel) // 1
+    local nextLevelXp = (xpForNextLevel - xpForCurrentLevel) // 1
+    local xpFraction = currentLevelXp / nextLevelXp //1
     UI.FilledExperienceBar:SetSize(UI.EXPERIENCE_BAR_SIZE[1] * xpFraction, UI.EXPERIENCE_BAR_SIZE[2])
 
     -- Update XP bar label

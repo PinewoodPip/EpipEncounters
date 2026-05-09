@@ -9,7 +9,7 @@ local ContainerInventory = Client.UI.ContainerInventory
 local ContextMenu = Client.UI.ContextMenu
 local Input = Client.Input
 
----@type Feature
+---@class Features.InventoryMultiSelect.ContainerSelections : Feature
 local ContainerSelections = {
     SLOT_SIZE = Vector.Create(64, 64),
 
@@ -166,7 +166,7 @@ MultiSelect.Events.MultiDragEnded:Subscribe(function (ev)
                             nextSlotIndex = nextSlotIndex + 1
                             slot = cells[nextSlotIndex]
                             if nextSlotIndex > 999 then -- TODO check whether we've run out of slots
-                                MultiSelect:InternalError("Events.MultiDragEnded", "Could not find slot within reasonable range")
+                                ContainerSelections:__InternalError("Events.MultiDragEnded", "Could not find slot within reasonable range")
                             end
                         end
 

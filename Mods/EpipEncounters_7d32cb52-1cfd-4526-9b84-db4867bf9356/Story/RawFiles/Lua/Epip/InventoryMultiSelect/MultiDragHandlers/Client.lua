@@ -60,7 +60,7 @@ MultiSelect.Events.MultiDragEnded:Subscribe(function (ev)
                                     nextSlotIndex = nextSlotIndex + 1
                                     slot = inv.content_array[nextSlotIndex]
                                     if nextSlotIndex > 999 then
-                                        MultiSelect:InternalError("Events.MultiDragEnded", "Could not find slot within reasonable range")
+                                        MultiSelect:__InternalError("Events.MultiDragEnded", "Could not find slot within reasonable range")
                                     end
                                 end
 

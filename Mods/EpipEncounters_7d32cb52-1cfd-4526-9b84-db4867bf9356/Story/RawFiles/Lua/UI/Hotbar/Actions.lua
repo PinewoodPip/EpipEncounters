@@ -296,7 +296,7 @@ end
 ---Unbinds a hotkey button by index.
 ---@param index integer
 function Hotbar.UnbindActionButton(index)
-    if index < 1 or index > Hotbar.ACTION_BUTTONS_COUNT then 
+    if index < 1 or index > Hotbar.ACTION_BUTTONS_COUNT then
         Hotbar:__LogError("Invalid index to UnbindActionButton(); must be between 1 and 12 inclusive.")
         return nil
     end
@@ -323,7 +323,7 @@ end)
 Hotbar:RegisterCallListener("pipHotbarStartRearrange", function(_, index, action)
     Hotbar:DebugLog("Now dragging " .. action .. " from index " .. index)
 
-    if action ~= "" and not Hotbar.IsLocked() then 
+    if action ~= "" and not Hotbar.IsLocked() then
         local draggingPreview = Hotbar.GetHotkeysHolder().draggingPreview
 
         draggingPreview.index = index
