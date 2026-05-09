@@ -51,6 +51,7 @@ UI.Events.UpdateMenu = UI:AddSubscribableEvent("UpdateMenu") ---@type Event<{Men
 local MenuTypes = {
     Hotbar = RadialMenus:GetClass("Features.RadialMenus.Menu.Hotbar"),
     Custom = RadialMenus:GetClass("Features.RadialMenus.Menu.Custom"),
+    PartyMembers = RadialMenus:GetClass("Features.RadialMenus.Menu.Party"),
 }
 local Settings = {
     MenuName = RadialMenus:RegisterSetting("MenuCreator.MenuName", {
@@ -66,6 +67,7 @@ local Settings = {
         ---@type SettingsLib_Setting_Choice_Entry[]
         Choices = {
             {ID = MenuTypes.Hotbar:GetClassName(), Name = Text.Resolve(MenuTypes.Hotbar:GetTypeName())},
+            {ID = MenuTypes.PartyMembers:GetClassName(), Name = Text.Resolve(MenuTypes.PartyMembers:GetTypeName())},
             {ID = MenuTypes.Custom:GetClassName(), Name = Text.Resolve(MenuTypes.Custom:GetTypeName())},
         }
     }),
@@ -502,6 +504,8 @@ UI.Hooks.CreateMenu:Subscribe(function (ev)
     elseif menuClass == MenuTypes.Custom:GetClassName() then -- Custom
         local slots = Settings.HotbarSlots:GetValue()
         ev.Menu = MenuTypes.Custom.Create(menuName, slots)
+    elseif menuClass == MenuTypes.PartyMembers:GetClassName() then
+        ev.Menu = MenuTypes.PartyMembers.Create(menuName)
     end
 end, {StringID = "DefaultImplementation"})
 

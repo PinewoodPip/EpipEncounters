@@ -1119,6 +1119,11 @@ Text.CommonStrings.Alphabetic = Text.RegisterTranslatedString({
     Handle = "h8b906121g47deg4978g81c2g25c628412cbd",
     Text = "Alphabetic",
 })
+Text.CommonStrings.PartyMembers = Text.RegisterTranslatedString({
+    Handle = "h2b8070d4g238ag4064g807bg399db846c484",
+    Text = "Party Members",
+    ContextDescription = "As in, the characters in the player party.",
+})
 
 ---------------------------------------------
 -- POSITIONING

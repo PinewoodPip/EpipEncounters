@@ -163,7 +163,7 @@ Epip.RegisterFeature("Features.RadialMenus", RadialMenus)
 -- CLASSES
 ---------------------------------------------
 
----@alias Features.RadialMenus.Slot.Type "Skill"|"Empty"|"InputAction"|"Item"
+---@alias Features.RadialMenus.Slot.Type "Skill"|"Empty"|"InputAction"|"Item"|"PartyMember"
 
 ---@class Features.RadialMenus.Slot
 ---@field Type Features.RadialMenus.Slot.Type
@@ -172,9 +172,12 @@ Epip.RegisterFeature("Features.RadialMenus", RadialMenus)
 
 ---@class Features.RadialMenus.Slot.Skill : Features.RadialMenus.Slot
 ---@field SkillID string
----@
+
 ---@class Features.RadialMenus.Slot.Item : Features.RadialMenus.Slot
 ---@field ItemHandle ItemHandle
+
+---@class Features.RadialMenus.Slot.PartyMember : Features.RadialMenus.Slot
+---@field CharacterHandle CharacterHandle
 
 ---@class Features.RadialMenus.Slot.InputAction : Features.RadialMenus.Slot
 ---@field ActionID string
@@ -195,6 +198,7 @@ Epip.RegisterFeature("Features.RadialMenus", RadialMenus)
 ---@field Slot Features.RadialMenus.Slot
 ---@field Name string Hookable. Defaults to empty string.
 ---@field Icon icon? Hookable. Defaults to `nil`.
+---@field CharacterPortraitHandle CharacterHandle? If set, the character portrait will be used as the slot's icon. Takes precedence over `Icon`.
 
 ---@class Features.RadialMenus.Hooks.IsSlotUsable
 ---@field Slot Features.RadialMenus.Slot
@@ -376,6 +380,9 @@ RadialMenus.Events.SlotUsed:Subscribe(function (ev)
     elseif slot.Type == "InputAction" then
         ---@cast slot Features.RadialMenus.Slot.InputAction
         Client.Input.TryExecuteAction(slot.ActionID)
+    elseif slot.Type == "PartyMember" then
+        ---@cast slot Features.RadialMenus.Slot.PartyMember
+        Client.UI.PlayerInfo.SelectCharacter(slot.CharacterHandle)
     end
 end, {StringID = "DefaultImplementation.Slot.Skill"})
 
@@ -407,6 +414,11 @@ RadialMenus.Hooks.GetSlotData:Subscribe(function (ev)
             ev.Name = Item.GetDisplayName(item)
             ev.Icon = Item.GetIcon(item)
         end
+    elseif slot.Type == "PartyMember" then
+        ---@cast slot Features.RadialMenus.Slot.PartyMember
+        local char = Character.Get(slot.CharacterHandle)
+        ev.Name = Character.GetDisplayName(char)
+        ev.CharacterPortraitHandle = slot.CharacterHandle
     end
 end)
 

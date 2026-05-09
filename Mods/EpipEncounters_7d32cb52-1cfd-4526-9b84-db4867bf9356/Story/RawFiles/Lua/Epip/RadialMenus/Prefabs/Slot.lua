@@ -14,7 +14,9 @@ local RadialMenus = Epip.GetFeature("Features.RadialMenus")
 ---@field _Slot Features.RadialMenus.Slot
 local Slot = {
     ICON_SIZE = V(48, 48),
+    CHARACTER_PORTRAIT_SIZE = V(80, 100),
     HEADER_SIZE = V(150, 150),
+    HEADER_TOP_MARGIN = 10,
 
     ---@type set<Features.RadialMenus.Slot.Type>
     HOTBAR_LIKE_SLOT_TYPES = {
@@ -45,6 +47,7 @@ function Slot.Create(ui, id, parent, slot)
 
     -- Create icon-like element
     local iconElement = nil ---@type GenericUI_Element
+    local iconSize = Slot.ICON_SIZE
     if instance.HOTBAR_LIKE_SLOT_TYPES[slot.Type] then -- Create HotbarSlot if adequate for the slot type
         ---@cast slot Features.RadialMenus.Slot.Skill | Features.RadialMenus.Slot.Item
         local canUseHotbarSlot = slot.Type ~= "Skill" or (not Stats.GetAction(slot.SkillID)) -- HotbarSlot does not support Actions.
@@ -71,7 +74,10 @@ function Slot.Create(ui, id, parent, slot)
     end
     if not iconElement then -- Use iggy icon for other types
         local icon = instance:CreateElement("Icon", "GenericUI_Element_IggyIcon", root)
-        if slotData.Icon then
+        if slotData.CharacterPortraitHandle then
+            iconSize = instance.CHARACTER_PORTRAIT_SIZE
+            icon.UI:GetUI():SetCustomPortraitIcon(icon.ID, slotData.CharacterPortraitHandle, iconSize:unpack()) -- TODO allow greying out?
+        elseif slotData.Icon then
             icon:SetIcon(slotData.Icon, instance.ICON_SIZE:unpack())
         else
             icon:SetVisible(false)
@@ -82,7 +88,7 @@ function Slot.Create(ui, id, parent, slot)
 
     local header = TextPrefab.Create(ui, instance:PrefixID("Header"), root, slotData.Name, "Center", instance.HEADER_SIZE)
     header:FitSize()
-    header:Move(0, iconElement:GetHeight())
+    header:Move(0, iconSize[2] + instance.HEADER_TOP_MARGIN)
     instance.Header = header
 
     -- If the header doesn't fit in one line, resize to minimum height.
@@ -94,7 +100,7 @@ function Slot.Create(ui, id, parent, slot)
     end
 
     -- Center the icon horizontally
-    iconElement:Move(header:GetWidth() / 2 - iconElement:GetWidth() / 2, 0)
+    iconElement:Move(header:GetWidth() / 2 - iconSize[1] / 2, 0)
 
     return instance
 end
