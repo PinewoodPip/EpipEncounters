@@ -1,5 +1,6 @@
 
 local Hotbar = Client.UI.Hotbar
+local PlayerInfo = Client.UI.PlayerInfo
 local Input = Client.Input
 
 ---@class Features.RadialMenus : Feature
@@ -101,7 +102,7 @@ local RadialMenus = {
         },
         Setting_NewMenuType_Description = {
             Handle = "h6545fd7fg9919g4e82gb9c3g598cfbc9e4fa",
-            Text = "Determines the contents of the new menu.<br>- Hotbar: slots are automatically filled with the contents of the character's hotbar.<br>- Custom: slots must be manually configured.",
+            Text = "Determines the contents of the new menu.<br>- Hotbar: slots are automatically filled with the contents of the character's hotbar.<br>- Party Members: slots allow switching between party members and chaining them.<br>- Custom: slots must be manually configured and can hold skills, items or Epip keybinds.",
             ContextDescription = [[Tooltip for "Menu Type" form]],
         },
         Setting_HotbarStartIndex_Name = {
@@ -382,7 +383,16 @@ RadialMenus.Events.SlotUsed:Subscribe(function (ev)
         Client.Input.TryExecuteAction(slot.ActionID)
     elseif slot.Type == "PartyMember" then
         ---@cast slot Features.RadialMenus.Slot.PartyMember
-        Client.UI.PlayerInfo.SelectCharacter(slot.CharacterHandle)
+        if Input.IsShiftPressed() then
+            -- Chain/unchain the character to the active character.
+            local clientChar = Client.GetCharacter()
+            local char = Character.Get(slot.CharacterHandle)
+            if clientChar ~= char then
+                PlayerInfo.ToggleChain(char, clientChar)
+            end
+        else -- Switch active character.
+            PlayerInfo.SelectCharacter(slot.CharacterHandle)
+        end
     end
 end, {StringID = "DefaultImplementation.Slot.Skill"})
 
