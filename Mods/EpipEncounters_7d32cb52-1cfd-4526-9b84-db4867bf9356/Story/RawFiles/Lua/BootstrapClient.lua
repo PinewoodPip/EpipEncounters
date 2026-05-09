@@ -612,8 +612,8 @@ LOAD_ORDER = {
         },
     },
     {
+        ScriptSet = "Epip/RadialMenus",
         Scripts = {
-            "Epip/RadialMenus/Client.lua",
             "Epip/RadialMenus/Prefabs/Slot.lua",
             "Epip/RadialMenus/Prefabs/RadialMenu.lua",
             "Epip/RadialMenus/Menus/_Menu.lua",

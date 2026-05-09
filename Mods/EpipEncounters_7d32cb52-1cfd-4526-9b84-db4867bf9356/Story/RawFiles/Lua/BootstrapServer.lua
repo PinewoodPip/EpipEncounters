@@ -229,6 +229,7 @@ LOAD_ORDER = {
     "Epip/Server/HotbarServer.lua",
     {Script = "Epip/TooltipAdjustments/Server.lua"},
     {ScriptSet = "Epip/WorldTooltipOpenContainers"},
+    {ScriptSet = "Epip/RadialMenus"},
 
     -- Chat Commands
     {
