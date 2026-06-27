@@ -1,0 +1,245 @@
+package
+{
+   import LS_Classes.horizontalList;
+   import flash.display.MovieClip;
+   import flash.external.ExternalInterface;
+   
+   public dynamic class UserPanel extends MovieClip
+   {
+       
+      
+      public var bg_mc:MovieClip;
+      
+      public var slotListHolder_mc:MovieClip;
+      
+      public var userPortrait_mc:UserPortrait;
+      
+      public const diplomacyType_InviteToParty:int = 0;
+      
+      public const diplomacyType_KickFromParty:int = 1;
+      
+      public const diplomacyType_LeaveFromParty:int = 2;
+      
+      public const diplomacyType_MakePeace:int = 3;
+      
+      public const diplomacyType_MakeWar:int = 4;
+      
+      public var rootMovieClip:MovieClip;
+      
+      public var userHandle:int;
+      
+      public var orientation:int;
+      
+      public var characterSlotList:horizontalList;
+      
+      public function UserPanel()
+      {
+         super();
+         addFrameScript(0,this.frame1);
+      }
+      
+      public function onInit(param1:MovieClip, param2:int) : *
+      {
+         this.rootMovieClip = param1;
+         this.userHandle = param2;
+         this.userPortrait_mc.onInit(this.rootMovieClip);
+         this.userPortrait_mc.inviteButton_mc.init(this.onInvitePressed,this);
+         this.userPortrait_mc.kickButton_mc.init(this.onKickPressed,this);
+         this.userPortrait_mc.leaveButton_mc.init(this.onLeavePressed,this);
+         this.userPortrait_mc.peaceButton_mc.init(this.onPeacePressed,this);
+         this.userPortrait_mc.warButton_mc.init(this.onWarPressed,this);
+         this.characterSlotList = new horizontalList();
+         this.characterSlotList.EL_SPACING = 12;
+         this.characterSlotList.m_MaxWidth = -1; // PIP: changed from this.width to disable wrapping
+         this.characterSlotList.m_RowHeight = this.height;
+         this.slotListHolder_mc.addChild(this.characterSlotList);
+         this.clearSlots();
+
+         // PIP: changed from a hardcoded 4 calls
+         for (var i = 0; i < 20; i++)
+         {
+            this.addSlot();
+         }
+      }
+      
+      public function onInvitePressed(param1:Object) : *
+      {
+         var _loc2_:* = param1 as UserPanel;
+         ExternalInterface.call("diplomacy",_loc2_.userHandle,this.diplomacyType_InviteToParty);
+      }
+      
+      public function onKickPressed(param1:Object) : *
+      {
+         var _loc2_:* = param1 as UserPanel;
+         ExternalInterface.call("diplomacy",_loc2_.userHandle,this.diplomacyType_KickFromParty);
+      }
+      
+      public function onLeavePressed(param1:Object) : *
+      {
+         var _loc2_:* = param1 as UserPanel;
+         ExternalInterface.call("diplomacy",_loc2_.userHandle,this.diplomacyType_LeaveFromParty);
+      }
+      
+      public function onPeacePressed(param1:Object) : *
+      {
+         var _loc2_:* = param1 as UserPanel;
+         ExternalInterface.call("diplomacy",_loc2_.userHandle,this.diplomacyType_MakePeace);
+      }
+      
+      public function onWarPressed(param1:Object) : *
+      {
+         var _loc2_:* = param1 as UserPanel;
+         ExternalInterface.call("diplomacy",_loc2_.userHandle,this.diplomacyType_MakeWar);
+      }
+      
+      public function assignCharacterPortrait(param1:CharacterPortrait) : *
+      {
+         var _loc3_:* = undefined;
+         var _loc2_:* = param1.column;
+         if(_loc2_ < this.characterSlotList.length)
+         {
+            _loc3_ = this.characterSlotList.getAt(_loc2_);
+            _loc3_.characterPortrait = param1;
+            _loc3_.addChild(param1);
+            param1.x = 11;
+            param1.y = -29;
+            param1.userHandle = this.userHandle;
+            param1.visible = true;
+         }
+         this.updateCharacterOrientations();
+      }
+      
+      public function unassignCharacterPortrait(param1:CharacterPortrait) : *
+      {
+         var _loc3_:* = undefined;
+         var _loc2_:* = param1.column;
+         if(_loc2_ < this.characterSlotList.length)
+         {
+            _loc3_ = this.characterSlotList.getAt(_loc2_);
+            _loc3_.characterPortrait = null;
+            _loc3_.removeChild(param1);
+            param1.x = int.MAX_VALUE;
+            param1.y = int.MAX_VALUE;
+            param1.userHandle = int.MIN_VALUE;
+            param1.visible = false;
+         }
+      }
+      
+      public function addSlot() : *
+      {
+         var _loc1_:* = new CharacterSlot();
+         this.characterSlotList.addElement(_loc1_);
+      }
+      
+      public function clearSlots() : *
+      {
+         this.characterSlotList.clearElements();
+      }
+      
+      public function setAlignment(param1:int) : *
+      {
+         switch(param1)
+         {
+            case 0:
+               this.userPortrait_mc.setAlignmentNone();
+               break;
+            case 1:
+               this.userPortrait_mc.setAlignmentLocal();
+               break;
+            case 2:
+               this.userPortrait_mc.setAlignmentParty();
+               break;
+            case 3:
+               this.userPortrait_mc.setAlignmentAlly();
+               break;
+            case 4:
+               this.userPortrait_mc.setAlignmentNeutral();
+               break;
+            case 5:
+               this.userPortrait_mc.setAlignmentEnemy();
+         }
+      }
+      
+      public function setTextureId(param1:String) : *
+      {
+         this.userPortrait_mc.iggyImage.name = "iggy_" + param1;
+         this.userPortrait_mc.imageHolder_mc.texture = param1;
+      }
+      
+      public function setIndex(param1:int, param2:int) : *
+      {
+         if(param1 == 0 && param1 == param2 - 1)
+         {
+            this.orientation = 0;
+         }
+         else if(param1 == 0)
+         {
+            this.orientation = 1;
+         }
+         else if(param1 < param2 - 1)
+         {
+            this.orientation = 2;
+         }
+         else if(param1 == param2 - 1)
+         {
+            this.orientation = 3;
+         }
+         this.updatePanelOrientations();
+         this.updateCharacterOrientations();
+      }
+      
+      public function updatePanelOrientations() : *
+      {
+         switch(this.orientation)
+         {
+            case 0:
+            case 1:
+               this.bg_mc.gotoAndStop(1);
+               break;
+            case 2:
+               this.bg_mc.gotoAndStop(2);
+               break;
+            case 3:
+               this.bg_mc.gotoAndStop(3);
+         }
+      }
+      
+      public function updateCharacterOrientations() : *
+      {
+         var _loc1_:int = 0;
+         var _loc3_:* = undefined;
+         var _loc4_:* = undefined;
+         var _loc2_:int = this.characterSlotList.length;
+         _loc1_ = 0;
+         for(; _loc1_ < _loc2_; _loc1_++)
+         {
+            _loc3_ = this.characterSlotList.getAt(_loc1_) as CharacterSlot;
+            if((_loc4_ = _loc3_.characterPortrait) == null)
+            {
+               continue;
+            }
+            switch(this.orientation)
+            {
+               case 0:
+                  _loc4_.setSolo();
+                  continue;
+               case 1:
+                  _loc4_.setTop();
+                  continue;
+               case 2:
+                  _loc4_.setMiddle();
+                  continue;
+               case 3:
+                  _loc4_.setBottom();
+                  continue;
+               default:
+                  continue;
+            }
+         }
+      }
+      
+      function frame1() : *
+      {
+      }
+   }
+}

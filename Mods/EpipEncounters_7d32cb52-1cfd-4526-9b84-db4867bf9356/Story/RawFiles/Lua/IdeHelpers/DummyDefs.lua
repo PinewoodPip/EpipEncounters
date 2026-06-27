@@ -33,6 +33,7 @@ Client.UI.Tooltip = {} ---@type TooltipUI
 Client.UI.Trade = {} ---@type TradeUI
 Client.UI.WorldTooltip = {} ---@type WorldTooltipUI
 Client.UI.CharacterSheet = {} ---@type CharacterSheetUI
+Client.UI.CharacterAssign = {} ---@type UI.CharacterAssign
 Client.UI.CombatLog = {} ---@type CombatLogUI
 Client.UI.Hotbar = {} ---@type HotbarUI
 Client.UI.Vanity = {} ---@type VanityUI
