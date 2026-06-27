@@ -37,8 +37,11 @@ Overlay._Buttons = {} ---@type {LeftButton: GenericUI_Prefab_Button, RightButton
 
 ---Scrolls the character slots.
 ---@param delta integer Slots to move; positive values will scroll to the right.
+---@return boolean -- Whether the slots were scrolled (`false` in case the call was a no-op, ex. when already at the boundaries)
 function Scrolling.Scroll(delta)
     local partyMembers = #Character.GetPartyMembers(Client.GetCharacter())
+    local prevScroll = Scrolling._SlotsScrolled
+
     Scrolling._SlotsScrolled = math.clamp(Scrolling._SlotsScrolled + delta, 0, math.max(partyMembers - 4, 0)) -- Allow scrolling until the right-most character slot is visible.
 
     -- Scroll the character slots
@@ -61,6 +64,8 @@ function Scrolling.Scroll(delta)
     Scrolling.Events.Scrolled:Throw({
         Delta = delta,
     })
+
+    return prevScroll ~= Scrolling._SlotsScrolled
 end
 
 ---Shows the scroll buttons overlay.
@@ -147,7 +152,9 @@ Client.Input.Events.KeyPressed:Subscribe(function (ev)
     local moveDir = Scrolling._ScrollWheelToDir[ev.InputID]
     if not moveDir or not CharacterAssign:Exists() then return end
 
-    Scrolling.Scroll(moveDir)
+    if Scrolling.Scroll(moveDir) then
+        Overlay:PlaySound("UI_Generic_Click")
+    end
 end)
 
 -- Show the overlay when the UI is shown.
