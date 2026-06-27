@@ -79,6 +79,11 @@ function Overlay.Setup()
     local characterAssignUI = CharacterAssign:GetUI()
     local partyMembers = #Character.GetPartyMembers(Client.GetCharacter())
 
+    -- Do not show the overlay if not necessary.
+    if partyMembers <= 4 then
+        return
+    end
+
     Overlay:SetPanelSize(characterAssignUI.SysPanelSize)
     uiObject:ExternalInterfaceCall("setPosition", "center", "screen", "center")
     uiObject.Layer = characterAssignUI.Layer + 1
