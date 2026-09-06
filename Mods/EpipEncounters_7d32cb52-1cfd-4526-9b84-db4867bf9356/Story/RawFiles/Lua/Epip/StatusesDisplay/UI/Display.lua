@@ -193,6 +193,7 @@ function Manager:Update(dtSeconds)
     if playerInfoWidget then -- TODO why is this nil on load?
         local uiObject = self.UI:GetUI()
         local playerInfoUI = PlayerInfo:GetUI()
+        local playerInfoRoot = playerInfoUI:GetRoot()
         local pos = Vector.Create(playerInfoUI:GetPosition())
         local root = self.UI:GetRoot()
 
@@ -201,8 +202,8 @@ function Manager:Update(dtSeconds)
         uiObject:Resize(playerInfoUI.FlashMovieSize[1], playerInfoUI.FlashMovieSize[2], playerInfoUI:GetUIScaleMultiplier())
 
         self.UI:SetPosition(pos)
-        root.x = playerInfoWidget.x + self.FLASH_POSITION[1]
-        root.y = playerInfoWidget.y + self.FLASH_POSITION[2]
+        root.x = playerInfoRoot.x + playerInfoWidget.x + self.FLASH_POSITION[1]
+        root.y = playerInfoRoot.y + playerInfoWidget.y + self.FLASH_POSITION[2]
 
         -- Controller UI needs an offset for unknown reasons.
         if Client.IsUsingController() then

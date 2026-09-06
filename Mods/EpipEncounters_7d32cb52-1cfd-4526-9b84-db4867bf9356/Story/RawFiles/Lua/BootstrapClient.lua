@@ -564,6 +564,7 @@ LOAD_ORDER = {
     "Epip/BookLayerFix/Client.lua",
     "Epip/UserVarsGUIDSyncWorkaround/Client.lua",
     "Epip/CharacterAssignScrolling/Client.lua",
+    "Epip/ScrollablePlayerInfo/Client.lua",
     "Epip/Client/RewardItemComparison.lua",
     {ScriptSet = "Epip/HotbarTweaks"},
     "Epip/CombatLogTweaks/Client.lua",
