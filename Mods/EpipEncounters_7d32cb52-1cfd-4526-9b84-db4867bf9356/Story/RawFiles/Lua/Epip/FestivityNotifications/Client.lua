@@ -34,5 +34,5 @@ GameState.Events.ClientReady:Subscribe(function (_)
         Message = TSK.MsgBox_Anniversary_Body:GetString(),
     })
 end, {EnabledFunctor = function ()
-    return Epip.IsAprilFools()
+    return Epip.IsAprilFools() and (Settings.GetSettingValue("Epip_Developer", "DEBUG_AprilFools") == false)
 end})
