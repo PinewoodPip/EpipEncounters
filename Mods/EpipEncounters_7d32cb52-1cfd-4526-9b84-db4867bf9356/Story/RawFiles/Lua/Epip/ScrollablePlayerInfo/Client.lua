@@ -7,16 +7,25 @@
 local PlayerInfo = Client.UI.PlayerInfo
 local Input = Client.Input
 
----@type Feature
+---@class Features.ScrollablePlayerInfo : Feature
 local Scrolling = {
-    MOUSE_X_THRESHOLD = 600,
+    MOUSE_X_THRESHOLD = 115, -- Area from the left of the screen where scrolling will possible when mouse is within.
+    SCROLL_SENSITIVITY = 100, -- How much the portraits are scrolled with each scroll tick, in flash unit.
+    PLAYERINFO_BOTTOM_MARGIN = -50, -- Screenspace at the bottom to consider non-visible/obstructed, in flash units. Determines how far down portraits must be scrolled for the last one to be considered fully on-screen.
+    WHITELISTED_HOVER_UIS = {}, ---@type set<UIObjectHandle> UIs that can be hovered over without preventing scrolling.
 
     ---@type table<InputRawType, integer>
     _ScrollWheelToDir = {
         ["wheel_ypos"] = 1,
         ["wheel_yneg"] = -1,
     },
-    _PlayerInfoOrigY = nil, ---@type number
+
+    USE_LEGACY_EVENTS = false,
+    USE_LEGACY_HOOKS = false,
+
+    Events = {
+        Scrolled = {}, ---@type Event<{Delta: number}>
+    },
 }
 Epip.RegisterFeature("Features.ScrollablePlayerInfo", Scrolling)
 
@@ -25,21 +34,75 @@ Epip.RegisterFeature("Features.ScrollablePlayerInfo", Scrolling)
 ---------------------------------------------
 
 ---Scrolls the portraits.
----@param delta number Positive values will scroll down.
+---@param delta number Ticks to scroll; positive values will scroll down.
 ---@return boolean -- Whether the portraits were scrolled (`false` in case the call was a no-op, ex. when already at the boundaries)
 function Scrolling.Scroll(delta)
     local root = PlayerInfo:GetRoot()
-    Scrolling._PlayerInfoOrigY = Scrolling._PlayerInfoOrigY or root.y
-    local oldY = root.y
     local container = root.container_mc
-    local containerHeight = container.height - 500 -- Magic constant is to account for hotbar obscuring bottom part of the viewport
+    local oldY = container.y
 
     -- Scroll the portraits
-    local flashViewportHeight = PlayerInfo:GetUI():GetUIScaleMultiplier() * containerHeight -- Determine how much of the portraits container is visible
-    local newY = math.clamp(root.y + delta * 100, containerHeight + -flashViewportHeight, Scrolling._PlayerInfoOrigY)
-    root.y = newY
+    local newY = math.clamp(container.y + delta * Scrolling.SCROLL_SENSITIVITY, -Scrolling._GetScrollHeightRange(), 0)
+    container.y = newY
 
-    return oldY ~= root.y
+    local scrollChanged = oldY ~= container.y
+    if scrollChanged then
+        Scrolling.Events.Scrolled:Throw({
+            Delta = delta,
+        })
+    end
+
+    return scrollChanged
+end
+
+---Returns how far the UI has been scrolled from the top to bottom.
+---@return number -- In range [0, 1], where 1 indicates scrolled to bottom.
+function Scrolling.GetScrollProgress()
+    local root = PlayerInfo:GetRoot()
+    local container = root.container_mc
+    local scrollRange = Scrolling._GetScrollHeightRange()
+    return math.abs(container.y / scrollRange)
+end
+
+---Returns whether the mouse is over the PlayerInfo UI's portraits area,
+---including gaps between unchained portraits.
+function Scrolling.IsMouseWithinScrollArea()
+    -- Note: bounds check is necessary because moving the cursor to be in the gap between unchained
+    -- player portraits will not cause PlayerInfo to become the active UI.
+    -- Additionally, we do not want to scroll when hovering over the statuses display.
+    local xBounds = Scrolling.MOUSE_X_THRESHOLD * PlayerInfo:GetUI():GetUIScaleMultiplier()
+    local uiManager = Ext.UI.GetUIObjectManager()
+    local mouseX, _ = Client.GetMousePosition()
+    local activeUIHandle = uiManager.PlayerStates[1].ActiveUIObjectHandle
+    local isOverDifferentUI = Ext.Utils.IsValidHandle(activeUIHandle) and activeUIHandle ~= PlayerInfo:GetUI():GetHandle()
+    return (not isOverDifferentUI or Scrolling.WHITELISTED_HOVER_UIS[activeUIHandle]) and mouseX < xBounds
+end
+
+---Returns how many scroll wheel ticks are required to fully scroll from one end to the other.
+---@return number -- May have decimals.
+function Scrolling.GetMaxScrollTicks()
+    return Scrolling._GetScrollHeightRange() / Scrolling.SCROLL_SENSITIVITY
+end
+
+---Returns the height of the visible PlayerInfo viewport, in flash units,
+---accounting for bottom screen area possibly being obstructed.
+---Considers UI scaling.
+---@return number -- In flash units.
+function Scrolling._GetPlayerInfoFlashViewport()
+    local uiScale = PlayerInfo:GetUI():GetUIScaleMultiplier()
+    local viewportHeight = Client.GetViewportSize()[2]
+    local flashViewportHeight = viewportHeight / uiScale
+    return flashViewportHeight - Scrolling.PLAYERINFO_BOTTOM_MARGIN
+end
+
+---Returns how much the position of the PlayerInfo container can change as a result of scrolling.
+---@return number -- Absolute value.
+function Scrolling._GetScrollHeightRange()
+    local root = PlayerInfo:GetRoot()
+    local container = root.container_mc
+    local containerHeight = container.height
+    local flashViewportHeight = Scrolling._GetPlayerInfoFlashViewport()
+    return math.max(0, containerHeight - flashViewportHeight)
 end
 
 ---------------------------------------------
@@ -49,17 +112,10 @@ end
 -- Allow scrolling portraits with mouse wheel while hovering over them.
 Input.Events.KeyStateChanged:Subscribe(function (ev)
     local moveDir = Scrolling._ScrollWheelToDir[ev.InputID]
-    if moveDir then
-        -- Note: bounds check is necessary because moving the cursor to be in the gap between unchained
-        -- player portraits will not cause PlayerInfo to become the active UI.
-        local xBounds = 115 * PlayerInfo:GetUI():GetUIScaleMultiplier()
-        local uiManager = Ext.UI.GetUIObjectManager()
-        local mouseX, _ = Client.GetMousePosition()
-        if uiManager.PlayerStates[1].ActiveUIObjectHandle == PlayerInfo:GetUI():GetHandle() and mouseX < xBounds then
-            if Scrolling.Scroll(moveDir) then
-                PlayerInfo:PlaySound("UI_Generic_Click")
-            end
-            ev:Prevent()
+    if moveDir and Scrolling.IsMouseWithinScrollArea() then
+        if Scrolling.Scroll(moveDir) then
+            PlayerInfo:PlaySound("UI_Generic_Click")
         end
+        ev:Prevent()
     end
 end, {EnabledFunctor = Client.IsUsingKeyboardAndMouse}) -- We don't want to run this at all in controller UI, as it doesn't consider the split 2-player layout in splitscreen.

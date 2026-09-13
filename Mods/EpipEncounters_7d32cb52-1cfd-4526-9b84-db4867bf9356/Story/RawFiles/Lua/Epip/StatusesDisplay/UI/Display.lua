@@ -17,7 +17,7 @@ local Manager = {
     UPDATE_INTERVAL = 0.2, -- In seconds.
     MIN_STATUSES_PER_ROW = 6,
     ROWS = 2,
-    FLASH_POSITION = V(112, 2), -- Offset for the root within flash. Used to position the overlay UI properly regardless of resolution.
+    FLASH_POSITION = V(102, 2), -- Offset for the root within flash. Used to position the overlay UI properly regardless of resolution.
 }
 StatusesDisplay:RegisterClass("Feature_StatusesDisplay_Manager", Manager)
 
@@ -193,7 +193,7 @@ function Manager:Update(dtSeconds)
     if playerInfoWidget then -- TODO why is this nil on load?
         local uiObject = self.UI:GetUI()
         local playerInfoUI = PlayerInfo:GetUI()
-        local playerInfoRoot = playerInfoUI:GetRoot()
+        local playerInfoContainer = playerInfoUI:GetRoot().container_mc
         local pos = Vector.Create(playerInfoUI:GetPosition())
         local root = self.UI:GetRoot()
 
@@ -202,8 +202,8 @@ function Manager:Update(dtSeconds)
         uiObject:Resize(playerInfoUI.FlashMovieSize[1], playerInfoUI.FlashMovieSize[2], playerInfoUI:GetUIScaleMultiplier())
 
         self.UI:SetPosition(pos)
-        root.x = playerInfoRoot.x + playerInfoWidget.x + self.FLASH_POSITION[1]
-        root.y = playerInfoRoot.y + playerInfoWidget.y + self.FLASH_POSITION[2]
+        root.x = playerInfoContainer.x + playerInfoWidget.x + self.FLASH_POSITION[1]
+        root.y = playerInfoContainer.y + playerInfoWidget.y + self.FLASH_POSITION[2]
 
         -- Controller UI needs an offset for unknown reasons.
         if Client.IsUsingController() then
