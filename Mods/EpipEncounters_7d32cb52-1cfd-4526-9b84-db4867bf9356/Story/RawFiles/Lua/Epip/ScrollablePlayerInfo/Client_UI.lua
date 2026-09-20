@@ -47,6 +47,7 @@ function Overlay._Initialize()
     if Overlay._Initialized then return end
 
     local root = Overlay:CreateElement("Root", "GenericUI_Element_Empty")
+    local scrollBarBG = root:AddChild("BG", "GenericUI_Element_TiledBackground") -- Initialized later, but needs to be layered before other elements.
 
     local scrollUpButtonRoot = root:AddChild("ScrollButton.Up.Root", "GenericUI_Element_Empty")
     local scrollUpButton = ButtonPrefab.Create(Overlay, "ScrollButton.Up", scrollUpButtonRoot, ButtonPrefab.STYLES.ScrollLeft)
@@ -79,6 +80,11 @@ function Overlay._Initialize()
     end)
     Overlay.ScrollDownButtonRoot = scrollDownButtonRoot
     Overlay.ScrollDownButton = scrollDownButton
+
+    -- Setup background
+    scrollBarBG:SetBackground("Black", scrollBarButton:GetWidth(), Overlay.SCROLLBAR_HEIGHT)
+    scrollBarBG:SetAlpha(0.2)
+    scrollBarBG:Move(2, 10)
 
     -- Register this UI as not preventing scrolling when hovered over
     Scrolling.WHITELISTED_HOVER_UIS[Overlay:GetUI():GetHandle()] = true
