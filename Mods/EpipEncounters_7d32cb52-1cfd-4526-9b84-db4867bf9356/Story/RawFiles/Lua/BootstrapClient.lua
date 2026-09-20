@@ -680,6 +680,7 @@ LOAD_ORDER = {
 
     "Epip/Client/CharacterSheetResistances.lua",
     "Epip/Client/CharacterSheetLevelProgress.lua",
+    "Epip/Client/CharacterSheetPlayerScrolling.lua",
     "Epip/Client/DifficultyToggle.lua",
     -- "Epip/AwesomeSoccer/Client.lua",
     {Script = "Epip/GiftbagLocker/Client.lua"},
