@@ -622,7 +622,6 @@ local tabOrder = {
     tabs.Epip_Developer,
     tabs.EpipEncounters,
     tabs.Epip_Hotbar,
-    tabs["Epip.EpicEncounters"],
     tabs["Features.Vanity"],
     tabs.Epip_QuickExamine,
     tabs["Features.QuickLoot"],
@@ -634,6 +633,9 @@ local tabOrder = {
     tabs.Epip_Other,
     tabs["Epip.MiscellaneousQol"]
 }
+if EpicEncounters.IsEnabled() then -- Only show EE tab if EE is enabled.
+    table.insert(tabOrder, 4, tabs["Epip.EpicEncounters"])
+end
 
 -- GM tab is only visible in the corresponding game mode
 if Ext.GetGameMode() == "GameMaster" then
