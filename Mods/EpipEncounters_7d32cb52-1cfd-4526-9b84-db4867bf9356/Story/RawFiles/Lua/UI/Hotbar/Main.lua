@@ -184,12 +184,13 @@ local Hotbar = {
         StateChanged = {Legacy = false}, ---@type Event<HotbarUI_Event_StateChanged>
     },
     Hooks = {
-        IsBarVisible = {}, ---@type Event<HotbarUI_Hook_IsBarVisible>
-        CanAddBar = {}, ---@type Event<HotbarUI_Hook_CanAddBar>
-        CanRemoveBar = {}, ---@type Event<HotbarUI_Hook_CanRemoveBar>
-        UpdateEngineActions = {}, ---@type Event<HotbarUI_Hook_UpdateEngineActions>
-        GetState = {Legacy = false}, ---@type Event<HotbarUI_Hook_GetState>
-        GetSlotForIggyEvent = {Legacy = false}, ---@type Event<UI.Hotbar.Hooks.GetSlotForIggyEvent>
+        CanUseHotbar = {}, ---@type Hook<{CanUse:boolean}>
+        IsBarVisible = {}, ---@type Hook<HotbarUI_Hook_IsBarVisible>
+        CanAddBar = {}, ---@type Hook<HotbarUI_Hook_CanAddBar>
+        CanRemoveBar = {}, ---@type Hook<HotbarUI_Hook_CanRemoveBar>
+        UpdateEngineActions = {}, ---@type Hook<HotbarUI_Hook_UpdateEngineActions>
+        GetState = {Legacy = false}, ---@type Hook<HotbarUI_Hook_GetState>
+        GetSlotForIggyEvent = {Legacy = false}, ---@type Hook<UI.Hotbar.Hooks.GetSlotForIggyEvent>
     },
 
     FILEPATH_OVERRIDES = {
@@ -457,6 +458,10 @@ function Hotbar.CanUseHotbar()
     if isCasting and Settings.GetSettingValue("Epip_Hotbar", "HotbarCastingGreyOut") == true then
         canUse = false
     end
+
+    canUse = canUse and Hotbar.Hooks.CanUseHotbar:Throw({
+        CanUse = canUse
+    }).CanUse
 
     return canUse
 end
@@ -1121,6 +1126,7 @@ end
 
 -- Redirect keyboard hotkeys to point to the expected slot.
 Hotbar:RegisterCallListener("pipSlotKeyAttempted", function(_, index)
+    if not Hotbar.CanUseHotbar() then return end
     local state = Hotbar.GetState()
     local firstBarRow = state.Bars[1].Row
     local keyIndex = index + 1
