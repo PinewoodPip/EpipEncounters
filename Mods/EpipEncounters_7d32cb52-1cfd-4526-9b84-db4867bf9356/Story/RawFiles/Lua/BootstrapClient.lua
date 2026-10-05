@@ -570,6 +570,12 @@ LOAD_ORDER = {
             "Epip/ScrollablePlayerInfo/Client_UI.lua",
         },
     },
+    {
+        Scripts = {
+            "Epip/ScrollableTradePortraits/Client.lua",
+            "Epip/ScrollableTradePortraits/Client_UI.lua",
+        },
+    },
     "Epip/Client/RewardItemComparison.lua",
     {ScriptSet = "Epip/HotbarTweaks"},
     "Epip/CombatLogTweaks/Client.lua",
