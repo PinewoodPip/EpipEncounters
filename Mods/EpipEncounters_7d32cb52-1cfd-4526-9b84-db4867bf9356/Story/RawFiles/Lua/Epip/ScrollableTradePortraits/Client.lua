@@ -52,15 +52,6 @@ end
 ---Ex. 1 = scrolled one slot to the right (so 1st slot becomes out-of-view)
 ---@param scrollOffset integer
 function Scrolling.SetScroll(scrollOffset)
-    local charactersList = Scrolling.GetPartyMembersList()
-    local charactersArray = charactersList.content_array
-    local portraitsContainer = Scrolling.GetPortraitsContainer()
-    local portraitWidth = charactersArray[0].width
-
-    -- Reposition portraits container
-    local newPos = Scrolling.DEFAULT_PORTRAITS_CONTAINER_X - scrollOffset * (portraitWidth + charactersList.EL_SPACING)
-    portraitsContainer.x = newPos
-
     local delta = scrollOffset - Scrolling._ScrollOffset
     Scrolling._ScrollOffset = scrollOffset
     Scrolling._UpdatePortraits()
@@ -68,6 +59,23 @@ function Scrolling.SetScroll(scrollOffset)
     Scrolling.Events.Scrolled:Throw({
         Delta = delta,
     })
+end
+
+---Scrolls the portraits until char's portrait is visible.
+---@param char EclCharacter
+function Scrolling.ScrollToCharacter(char)
+    local charactersArray = Scrolling.GetPartyMembersList().content_array
+    local flashHandle = Ext.UI.HandleToDouble(char.Handle)
+    for i=0,#charactersArray-1,1 do
+        if charactersArray[i].id == flashHandle then
+            local offset = Scrolling._ScrollOffset
+            if i < offset then -- Portrait is to the left of the visible ones
+                Scrolling.SetScroll(i)
+            elseif i >= offset + Scrolling.VISIBLE_PARTY_MEMBERS then -- Portrait is to the right of the visible ones
+                Scrolling.SetScroll(i - Scrolling.VISIBLE_PARTY_MEMBERS + 1)
+            end
+        end
+    end
 end
 
 ---Returns how many portrait slots have been scrolled.
@@ -115,10 +123,19 @@ end
 function Scrolling._UpdatePortraits()
     local charactersList = Scrolling.GetPartyMembersList()
     local scrollOffset = Scrolling._ScrollOffset
+    local charactersArray = charactersList.content_array
+    local portraitsContainer = Scrolling.GetPortraitsContainer()
+    local portraitWidth = charactersArray[0].width
+
+    -- Show/hide portraits based on whether they are within the visible slots
     for i=0,#charactersList.content_array-1,1 do
         local portrait = charactersList.content_array[i]
         portrait.visible = i >= scrollOffset and i < (scrollOffset + Scrolling.VISIBLE_PARTY_MEMBERS)
     end
+
+    -- Reposition portraits container
+    local newPos = Scrolling.DEFAULT_PORTRAITS_CONTAINER_X - scrollOffset * (portraitWidth + charactersList.EL_SPACING)
+    portraitsContainer.x = newPos
 end
 
 ---------------------------------------------
@@ -136,7 +153,11 @@ Input.Events.KeyStateChanged:Subscribe(function (ev)
     end
 end, {EnabledFunctor = Client.IsUsingKeyboardAndMouse})
 
--- Reset scroll and update visibility when the Trade UI is opened.
+-- Update portrait masking and scroll to bring the active character into view when the UI is opened.
 Trade:RegisterCallListener("setAnchor", function (_, _, _, _)
-    Scrolling.SetScroll(0)
+    Ext.OnNextTick(function ()
+        Scrolling.SetScroll(0) -- Reset to left-most portrait first
+        Scrolling.ScrollToCharacter(Client.GetCharacter())
+        Scrolling._UpdatePortraits()
+    end)
 end)
