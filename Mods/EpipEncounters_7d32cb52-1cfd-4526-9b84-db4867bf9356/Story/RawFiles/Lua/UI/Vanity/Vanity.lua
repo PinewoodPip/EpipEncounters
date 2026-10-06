@@ -665,7 +665,7 @@ end
 
 function Vanity.RenderButton(id, text, enabled)
     local menu = Vanity.GetMenu()
-    enabled = enabled or true -- TODO
+    if enabled == nil then enabled = true end -- TODO disabled button is invisible in swf
 
     menu.addButton(id, text, enabled)
 
@@ -1118,7 +1118,7 @@ ContextMenu.RegisterVanillaMenuHandler("Item", function(item)
     if Item.IsDyeable(item) and Item.IsEquipped(Client.GetCharacter(), item) then
         local selectable = (not Client.IsInCombat()) and (not Game.Character.IsDead(Client.GetCharacter()))
         ContextMenu.AddElement({
-            {id = "epip_OpenVanity", type = "button", text = "Vanity...", selectable = selectable, faded = not selectable},
+            {id = "epip_OpenVanity", type = "button", text = TSK.Label_ContextMenu:GetString(), selectable = selectable, faded = not selectable},
         })
     end
 end)

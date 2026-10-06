@@ -252,7 +252,8 @@ function UI._Setup()
 
     -- Update static elements
     UI.CreateButton:SetLabel(isEditing and CommonStrings.Save or CommonStrings.Create)
-    UI.Header:SetText(Text.Format(UI.MODE_HEADERS[UI._CurrentMode] or "Please update header TSK list", {Size = UI.HEADER_FONT_SIZE}))
+    local headerText = Text.Resolve(UI.MODE_HEADERS[UI._CurrentMode] or "Please update header TSK list")
+    UI.Header:SetText(Text.Format(headerText, {Size = UI.HEADER_FONT_SIZE}))
 
     -- Only menus can be deleted; slots must be set to "empty", or removed by decrementing the amount of slots of the Custom menu.
     UI.DeleteButton:SetVisible(mode == "EditMenu")

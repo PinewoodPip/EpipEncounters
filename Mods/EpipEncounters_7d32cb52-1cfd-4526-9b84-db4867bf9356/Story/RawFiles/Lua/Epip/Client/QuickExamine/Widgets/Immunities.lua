@@ -4,8 +4,17 @@ local Generic = Client.UI.Generic
 local TextPrefab = Generic.GetPrefab("GenericUI_Prefab_Text")
 
 ---@type Feature
-local Immunities = {}
+local Immunities = {
+    TranslatedStrings = {
+        Label_ImmuneTo = {
+            Handle = "hf8b6a329g25ecg4386g9c9cg6b5596b1b016",
+            Text = "Immune to %s",
+            ContextDescription = [[Label for status immunities; param is comma-separated list of immunities]],
+        },
+    }
+}
 Epip.RegisterFeature("Features.QuickExamine.Widgets.Immunities", Immunities)
+local TSK = Immunities.TranslatedStrings
 
 ---------------------------------------------
 -- WIDGET
@@ -38,10 +47,12 @@ function Widget:Render(entity)
         local immunityLabel
         local verticalList = container:AddChild("Resistances_RootContainer", "GenericUI_Element_VerticalList")
 
-        table.sort(immunities) -- Sort by name.
+        -- Sort by name
+        table.sort(immunities)
 
-        immunityLabel = "Immune to " .. Text.Join(immunities, ", ")
-        immunityLabel = Text.Format(immunityLabel, {Size = 13})
+        immunityLabel = TSK.Label_ImmuneTo:Format(Text.Join(immunities, ", "), {
+            Size = 13,
+        })
 
         local element = TextPrefab.Create(QuickExamine.UI, "Resources_Immunities", verticalList, immunityLabel, "Center", Vector.Create(QuickExamine.GetContainerWidth(), 30))
         local textHeight = element:GetTextSize()[2]

@@ -92,17 +92,16 @@ function Tab:Render()
         end
 
         if canTransmog then
+            -- Icon options
             Vanity.RenderCheckbox("Vanity_KeepIcon", TSK.Label_KeepIcon:Format({Color = Color.BLACK}), Transmog.keepIcon, true)
             Vanity.RenderButton("Transmog_SetIcon", TSK.Label_SetIcon:Format({Color = Color.WHITE}), true)
 
             local categories = Transmog.GetCategories(item)
 
-            -- TODO fix disabled button item:HasTag("PIP_Vanity_Transmogged")
-            -- if item:HasTag("PIP_Vanity_Transmogged") or (Vanity.currentItemTemplateOverride and item.RootTemplate.Id ~= Vanity.currentItemTemplateOverride) then
-            -- end
-
+            -- Keep appearance button
             Vanity.RenderCheckbox("Vanity_KeepAppearance", TSK.Label_KeepAppearance:Format({Color = "000000"}), Transmog.ShouldKeepAppearance(item), true)
 
+            -- Revert appearance button
             Vanity.RenderButton("RevertTemplate", TSK.Label_RevertAppearance:GetString(), true)
 
             -- "Force show hair" option for helmets
@@ -110,12 +109,14 @@ function Tab:Render()
                 Vanity.RenderCheckbox("Vanity_ForceShowHair", TSK.Label_ForceShowHair:Format({Color = "000000"}), Transmog.ShouldForceShowHair(item))
             end
 
+            -- Render categories
             for _,data in ipairs(categories) do
                 -- Render category collapse button
                 local categoryID = data.Data.ID
                 local isOpen = Vanity.IsCategoryOpen(categoryID)
                 Vanity.RenderEntry(categoryID, data.Data.Name, true, isOpen)
 
+                -- Render entries for open categories
                 if isOpen then
                     for _,templateData in ipairs(data.Templates) do
                         local icon = nil

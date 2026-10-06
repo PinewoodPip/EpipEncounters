@@ -6,6 +6,7 @@
 
 local CharacterSheet = Client.UI.CharacterSheet
 local EpipStats = Epip.GetFeature("Feature_CustomStats") ---@class Feature_CustomStats
+local TSK = EpipStats.TranslatedStrings
 
 -- Special tooltips for Ascension node stats
 CharacterSheet.StatsTab:RegisterHook("GetStatTooltip", function(tooltip, _, data)
@@ -141,20 +142,9 @@ Ext.Events.SessionLoaded:Subscribe(function()
     -- Define the clickable category headers as stats
     for _,categoryID in pairs(EpipStats.CATEGORIES_ORDER) do
         local category = EpipStats.GetCategory(categoryID)
-
         CharacterSheet.StatsTab.Stats[categoryID] = {
             ID = categoryID,
             Name = category.Header,
-            Tooltip = {
-                {
-                    Type = "StatName",
-                    Label = category.Name,
-                },
-                {
-                    Type = "StatsDescription",
-                    Label = "Click to toggle.",
-                },
-            },
         }
     end
 end)

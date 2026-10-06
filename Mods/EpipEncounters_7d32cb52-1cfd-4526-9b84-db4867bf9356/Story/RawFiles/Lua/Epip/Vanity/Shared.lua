@@ -319,6 +319,11 @@ local Vanity = {
             Text = "Vanity",
             ContextDescription = [[Feature name]],
         },
+        Label_ContextMenu = {
+            Handle = "h8c8ebf25g7ddcg456fg81f0g004bb0a56d83",
+            Text = "Vanity...",
+            ContextDescription = [[Context menu option for items that support Vanity]],
+        },
         SettingsMenu_Description = {
             Handle = "h56a937e0gb868g4e6cg9f1ag634beba6c7b4",
             Text = [[Vanity allows you customize your equipment's appearance with transmog, custom dyes, and more.<br>Access it by right-clicking any equipped item and selecting "Vanity..." from the context menu.]],

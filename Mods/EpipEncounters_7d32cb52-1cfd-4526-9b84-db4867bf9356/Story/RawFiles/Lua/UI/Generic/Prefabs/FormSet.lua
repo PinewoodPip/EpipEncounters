@@ -57,12 +57,12 @@ function Prefab.Create(ui, id, parent, label, minimumSize)
     addButton.Events.Pressed:Subscribe(function (_)
         Client.UI.MessageBox.Open({
             Type = "Input",
-            Header = "Add entry", -- TODO allow customization and localize default text
+            Header = CommonStrings.AddEntry:GetString(), -- TODO allow customization
             Message = "Enter an entry.",
             ID = "Epip_GenericUI_FormSet_AddEntry",
             Buttons = {
-                {ID = 1, Text = "Add"},
-                {ID = 2, Text = "Cancel"},
+                {ID = 1, Text = CommonStrings.Add:GetString()},
+                {ID = 2, Text = CommonStrings.Cancel:GetString()},
             },
             _Prefab = instance,
         })

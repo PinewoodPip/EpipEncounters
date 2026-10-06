@@ -36,6 +36,11 @@ local QuickExamine = {
             Text = [[Quick Examine is a UI that allows you to view additional information about characters. Access it through the "Quick Examine" keybind while hovering over a character.]],
             ContextDescription = [[Description shown in settings menu tab]],
         },
+        Tooltip_LockCharacter = {
+            Handle = "he7627dceg1317g4cf5g9114g5623ccb2c91a",
+            Text = "Lock Character",
+            ContextDescription = [[Tooltip for the lock character button]],
+        },
         SavePosition = {
            Handle = "h6cc76e3fg8d5cg466egb96agb780b490d0d5",
            Text = "Save Default Position",
@@ -99,6 +104,7 @@ local QuickExamine = {
     }
 }
 Epip.RegisterFeature("QuickExamine", QuickExamine)
+local TSK = QuickExamine.TranslatedStrings
 
 ---------------------------------------------
 -- SETTINGS & INPUT ACTIONS
@@ -559,7 +565,7 @@ local function Setup()
         QuickExamine.lockCharacter = ev.Active
         QuickExamine.SaveData()
     end)
-    lockButton.Tooltip = "Lock Character"
+    lockButton.Tooltip = TSK.Tooltip_LockCharacter:GetString()
     UI.LockButton = lockButton
 
     uiObject.Layer = Client.UI.PlayerInfo:GetUI().Layer
@@ -573,10 +579,11 @@ local function Setup()
 end
 
 function QuickExamine:__Setup()
-    local startupDelay = 0.1 -- Required for setPosition to work.
-    QuickExamine.UI = Generic.Create("PIP_QuickExamine")
+    local ui = Generic.Create("PIP_QuickExamine") ---@cast ui Feature_QuickExamine_UI
+    QuickExamine.UI = ui
 
-    Timer.Start(startupDelay, function()
+    -- Delay is required for setPosition to work.
+    Timer.Start(0.1, function()
         Setup()
     end)
 end

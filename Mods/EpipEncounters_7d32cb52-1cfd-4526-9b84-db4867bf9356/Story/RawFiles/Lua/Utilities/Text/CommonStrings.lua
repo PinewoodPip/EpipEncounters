@@ -1096,6 +1096,11 @@ Text.CommonStrings.Add = Text.RegisterTranslatedString({
     Text = "Add",
     ContextDescription = [[As in, "to add" something.]],
 })
+Text.CommonStrings.AddEntry = Text.RegisterTranslatedString({
+    Handle = "h0f3dda4bgba2ag4debg96c4gf98b471a35e4",
+    Text = "Add entry",
+    ContextDescription = [[As in, "to add a journal entry" for example, but should be generalizable]]
+})
 Text.CommonStrings.ShowWhenHoldingShift = Text.RegisterTranslatedString({
     Handle = "h5ecce569g84c2g466eg923fg262f3b6eb689",
     Text = "Show when holding Shift",

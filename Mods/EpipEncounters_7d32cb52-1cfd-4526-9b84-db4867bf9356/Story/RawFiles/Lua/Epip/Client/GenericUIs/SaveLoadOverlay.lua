@@ -3,6 +3,7 @@ local Generic = Client.UI.Generic
 local SearchBarPrefab = Generic.GetPrefab("GenericUI_Prefab_SearchBar")
 local SaveLoad = Client.UI.SaveLoad
 local GameMenu = Client.UI.GameMenu
+local CommonStrings = Text.CommonStrings
 local V = Vector.Create
 
 ---@type Feature|table
@@ -151,8 +152,8 @@ local function SetupUI()
 
     local sorting = panel:AddChild("Sorting", "GenericUI_Element_ComboBox")
     sorting:SetOptions({
-        {ID = "Sort_Date", Label = "Date"},
-        {ID = "Sort_Alphabetic", Label = "Alphabetic"},
+        {ID = "Sort_Date", Label = CommonStrings.Date:GetString()},
+        {ID = "Sort_Alphabetic", Label = CommonStrings.Alphabetic:GetString()},
     })
     sorting:SelectOption(Overlay.GetSortingMode())
     sorting.Events.OptionSelected:Subscribe(function (e)

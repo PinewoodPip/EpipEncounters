@@ -3,33 +3,101 @@
 -- Context menus for the Hotbar.
 ---------------------------------------------
 
----@class HotbarUI
+local ContextMenu = Client.UI.ContextMenu
+local MsgBox = Client.UI.MessageBox
 local Hotbar = Client.UI.Hotbar
+local CommonStrings = Text.CommonStrings
+
+---@class Features.HotbarContextMenus : Feature
+local HotbarContextMenus = {
+    TranslatedStrings = {
+        SavedLoadoutsSubMenu = {
+            Handle = "h44e4ad2fg13e9g4f1aga10cg5fac200f82fd",
+            Text = "Saved Loadouts...",
+            ContextDescription = "Hotbar slot context menu entry opening the loadouts submenu",
+        },
+        CreateGroup = {
+            Handle = "he7bcafb3gaa7dg4b0bga0d9g63dcdcc2aec5",
+            Text = "Create group...",
+            ContextDescription = "Hotbar slot context menu entry",
+        },
+        ShiftSlotsLeft = {
+            Handle = "h528bebc9g5ab4g4e02g9e66ga97cefd7b8d7",
+            Text = "Shift slots to the left",
+            ContextDescription = "Hotbar slot context menu entry",
+        },
+        ShiftSlotsRight = {
+            Handle = "he30cbf0fg3c2eg433cg9750g3ced1cd9da80",
+            Text = "Shift slots to the right",
+            ContextDescription = "Hotbar slot context menu entry",
+        },
+        RemoveUnmemorized = {
+            Handle = "h8b1f7c4bg61e9g49bagb791gf907d40f11d9",
+            Text = "Remove unmemorized spells",
+            ContextDescription = "Hotbar slot context menu entry",
+        },
+        ClearRow = {
+            Handle = "h13f894c2g6856g4630gab09g52860a7bcc53",
+            Text = "Clear row",
+            ContextDescription = "Hotbar slot context menu entry",
+        },
+        LoadoutsHeader = {
+            Handle = "hd5ec1b49g8624g4a2eg8927gb7a5f911348d",
+            Text = "—— Saved Loadouts ——",
+            ContextDescription = "Header of the saved loadouts submenu",
+        },
+        SaveLoadout = {
+            Handle = "h600fe11bg406fg4714g83d3gad0d30616017",
+            Text = "Save Loadout",
+            ContextDescription = "Submenu button and message box header",
+        },
+        ApplyLoadoutHeader = {
+            Handle = "hb6429fe0gcd7bg4453gb7b4g5fae218ca177",
+            Text = "Apply Loadout",
+            ContextDescription = "Message box header",
+        },
+        ApplyLoadoutMessage = {
+            Handle = "h8f894aefgaf17g492eg8294gb16bbd0ac3cc",
+            Text = "Are you sure? This will replace all of this row's skills/items!",
+            ContextDescription = "Message box body when applying a loadout to a non-empty row",
+        },
+        SaveLoadoutMessage = {
+            Handle = "h81739a49g92bfg4507ga6dagfe219c747e1c",
+            Text = "Name this row loadout:",
+            ContextDescription = "Message box body when saving a loadout",
+        },
+    }
+}
+Epip.RegisterFeature("Features.HotbarContextMenus", HotbarContextMenus)
+local TSK = HotbarContextMenus.TranslatedStrings
+
+---------------------------------------------
+-- EVENT LISTENERS
+---------------------------------------------
 
 -- Open context menu upon right-clicking a slot.
-Client.UI.ContextMenu.RegisterMenuHandler("hotbarSlot", function()
+ContextMenu.RegisterMenuHandler("hotbarSlot", function()
     local isRowEmpty = Hotbar.IsRowEmpty(Hotbar.currentLoadoutRow)
 
     local entries = {
-        {id = "hotBarRow_LoadoutsMenu", type = "subMenu", subMenu = "hotBarLoadoutsMenu", text = "Saved Loadouts..."},
+        {id = "hotBarRow_LoadoutsMenu", type = "subMenu", subMenu = "hotBarLoadoutsMenu", text = TSK.SavedLoadoutsSubMenu:GetString()},
 
-        -- TODO hook
-        {id = "hotBarRow_CreateGroup", type = "button", text = "Create group..."},
+        {id = "hotBarRow_CreateGroup", type = "button", text = TSK.CreateGroup:GetString()},
 
-        {id = "hotBarRow_ShiftLeft", type = "button", text = "Shift slots to the left", closeOnButtonPress = false, params = {Direction = "left"}, eventIDOverride = "hotBar_ShiftRow"},
-        {id = "hotBarRow_ShiftRight", type = "button", text = "Shift slots to the right", closeOnButtonPress = false, params = {Direction = "right"}, eventIDOverride = "hotBar_ShiftRow"},
-        {id = "hotBarRow_RemoveUnmemorized", type = "button", text = "Remove unmemorized spells", requireShiftClick = true},
-        {id = "hotBarRow_ClearRow", type = "button", text = "Clear row", requireShiftClick = true, selectable = not isRowEmpty, faded = isRowEmpty},
+        {id = "hotBarRow_ShiftLeft", type = "button", text = TSK.ShiftSlotsLeft:GetString(), closeOnButtonPress = false, params = {Direction = "left"}, eventIDOverride = "hotBar_ShiftRow"},
+        {id = "hotBarRow_ShiftRight", type = "button", text = TSK.ShiftSlotsRight:GetString(), closeOnButtonPress = false, params = {Direction = "right"}, eventIDOverride = "hotBar_ShiftRow"},
+        {id = "hotBarRow_RemoveUnmemorized", type = "button", text = TSK.RemoveUnmemorized:GetString(), requireShiftClick = true},
+        {id = "hotBarRow_ClearRow", type = "button", text = TSK.ClearRow:GetString(), requireShiftClick = true, selectable = not isRowEmpty, faded = isRowEmpty},
     }
 
-    Client.UI.ContextMenu.Setup({
+    ContextMenu.Setup({
         menu = {
             id = "main",
             entries = entries,
         }
     })
 
-    Client.UI.ContextMenu.Open(true)
+    ContextMenu.Open()
 end)
 
 ---------------------------------------------
@@ -37,24 +105,25 @@ end)
 ---------------------------------------------
 
 -- Shift slots.
-Client.UI.ContextMenu.RegisterElementListener("hotBar_ShiftRow", "buttonPressed", function(_, params)
+ContextMenu.RegisterElementListener("hotBar_ShiftRow", "buttonPressed", function(_, params)
     Hotbar.ShiftSlots(Hotbar.contextMenuSlot, params.Direction)
 end)
 
 -- Remove unmemorized skills.
-Client.UI.ContextMenu.RegisterElementListener("hotBarRow_RemoveUnmemorized", "buttonPressed", function(char, _)
+ContextMenu.RegisterElementListener("hotBarRow_RemoveUnmemorized", "buttonPressed", function(char, _)
     Hotbar.ClearRow(char, Hotbar.currentLoadoutRow, function(predicateChar, slot)
         if slot.Type == "Skill" then
             ---@type EclSkill
             local skill = predicateChar.SkillManager.Skills[slot.SkillOrStatId]
             return skill == nil or not skill.IsLearned
         end
+        return false
     end)
     Hotbar.currentLoadoutRow = nil
 end)
 
 -- Clear row.
-Client.UI.ContextMenu.RegisterElementListener("hotBarRow_ClearRow", "buttonPressed", function(char, _)
+ContextMenu.RegisterElementListener("hotBarRow_ClearRow", "buttonPressed", function(char, _)
     Hotbar.ClearRow(char, Hotbar.currentLoadoutRow)
     Hotbar.currentLoadoutRow = nil
 end)
@@ -64,10 +133,10 @@ end)
 ---------------------------------------------
 
 -- Render sub-menu.
-Client.UI.ContextMenu.RegisterMenuHandler("hotBarLoadoutsMenu", function()
+ContextMenu.RegisterMenuHandler("hotBarLoadoutsMenu", function()
     local entries = {
-        {id = "hotBarRow_Header", type = "header", text = "—— Saved Loadouts ——"},
-        {id = "hotBarRow_SaveLoadout", type = "button", text = "Save Loadout"},
+        {id = "hotBarRow_Header", type = "header", text = TSK.LoadoutsHeader:GetString()},
+        {id = "hotBarRow_SaveLoadout", type = "button", text = TSK.SaveLoadout:GetString()},
     }
     local loadoutEntries = {}
 
@@ -94,7 +163,7 @@ Client.UI.ContextMenu.RegisterMenuHandler("hotBarLoadoutsMenu", function()
         table.insert(entries, #entries - 1, entry)
     end
 
-    Client.UI.ContextMenu.AddSubMenu({
+    ContextMenu.AddSubMenu({
         menu = {
             id = "hotBarLoadoutsMenu",
             entries = entries,
@@ -103,33 +172,32 @@ Client.UI.ContextMenu.RegisterMenuHandler("hotBarLoadoutsMenu", function()
 end)
 
 -- Remove a loadout.
-Client.UI.ContextMenu.RegisterElementListener("hotBarLoadLoadout", "removablePressed", function(_, params)
+ContextMenu.RegisterElementListener("hotBarLoadLoadout", "removablePressed", function(_, params)
     Hotbar.Loadouts[params.ID] = nil
     Hotbar.currentLoadoutRow = nil
 end)
 
 -- Apply loadout.
-Client.UI.ContextMenu.RegisterElementListener("hotBarLoadLoadout", "buttonPressed", function(char, params)
+ContextMenu.RegisterElementListener("hotBarLoadLoadout", "buttonPressed", function(char, params)
     -- Apply loadout instantly if the row is empty,
     -- prompt for confirmation otherwise.
     if Hotbar.IsRowEmpty(Hotbar.currentLoadoutRow) then
         Hotbar.ApplyLoadout(char, params.ID, Hotbar.currentLoadoutRow)
     else
-        Client.UI.MessageBox.Open({
+        MsgBox.Open({
             ID = "epip_Hotbar_LoadLoadout",
-            Header = "Apply Loadout",
-            Message = "Are you sure? This will replace all of this row's spells/items!",
+            Header = TSK.ApplyLoadoutHeader:GetString(),
+            Message = TSK.ApplyLoadoutMessage:GetString(),
             Type = "Message",
             LoadoutID = params.ID,
             Buttons = {
-                {Type = 1, Text = "Apply", ID = 1},
-                {Type = 1, Text = "Cancel", ID = 2},
+                {ID = 1, Type = "Yes", Text = CommonStrings.Apply:GetString()},
+                {ID = 2, Type = "No", Text = CommonStrings.Cancel:GetString()},
             }
         })
     end
 end)
-
-Client.UI.MessageBox.RegisterMessageListener("epip_Hotbar_LoadLoadout", Client.UI.MessageBox.Events.ButtonPressed, function(buttonId, data)
+MsgBox.RegisterMessageListener("epip_Hotbar_LoadLoadout", MsgBox.Events.ButtonPressed, function(buttonId, data)
     if buttonId == 1 then
         Hotbar.ApplyLoadout(Client.GetCharacter(), data.LoadoutID,Hotbar.currentLoadoutRow, true)
     end
@@ -137,21 +205,20 @@ Client.UI.MessageBox.RegisterMessageListener("epip_Hotbar_LoadLoadout", Client.U
 end)
 
 -- Save loadout.
-Client.UI.ContextMenu.RegisterElementListener("hotBarRow_SaveLoadout", "buttonPressed", function()
-    Client.UI.MessageBox.Open({
+ContextMenu.RegisterElementListener("hotBarRow_SaveLoadout", "buttonPressed", function()
+    MsgBox.Open({
         ID = "epip_Hotbar_SaveLoadout",
-        Header = "Save Loadout",
-        Message = "Name this row loadout!",
+        Header = TSK.SaveLoadout:GetString(),
+        Message = TSK.SaveLoadoutMessage:GetString(),
         Type = "Input",
         Buttons = {
-            {Type = 1, Text = "Save"},
-            -- {Type = 1, Text = "Save all rows"}
+            {ID = 1, Type = "Yes", Text = CommonStrings.Save:GetString()},
+            {ID = 2, Type = "No", Text = CommonStrings.Cancel:GetString()}
         }
     })
 end)
-
-Client.UI.MessageBox.RegisterMessageListener("epip_Hotbar_SaveLoadout", Client.UI.MessageBox.Events.InputSubmitted, function(text, _, _)
-    -- local saveAllRows = buttonId == 2
-
-    Hotbar.SaveLoadout(Hotbar.currentLoadoutRow, text)
+MsgBox.RegisterMessageListener("epip_Hotbar_SaveLoadout", MsgBox.Events.InputSubmitted, function(text, buttonID, _)
+    if buttonID == 1 then
+        Hotbar.SaveLoadout(Hotbar.currentLoadoutRow, text)
+    end
 end)
