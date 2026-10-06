@@ -1,5 +1,5 @@
 
-local AutoIdentify = Epip.GetFeature("Feature_AutoIdentify")
+local AutoIdentify = Epip.GetFeature("Features.AutoIdentify")
 
 ---@class Features.QuickLoot
 local QuickLoot = Epip.GetFeature("Features.QuickLoot")

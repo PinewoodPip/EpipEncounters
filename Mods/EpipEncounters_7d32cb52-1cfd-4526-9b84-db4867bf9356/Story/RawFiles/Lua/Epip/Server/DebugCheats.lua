@@ -3,7 +3,7 @@
 -- Server implementation for debug cheats.
 ---------------------------------------------
 
-local AutoIdentify = Epip.GetFeature("Feature_AutoIdentify")
+local AutoIdentify = Epip.GetFeature("Features.AutoIdentify")
 
 -- Warp to AMER_Test.
 Net.RegisterListener("EPIPENCOUNTERS_WARPPARTY", function(payload)

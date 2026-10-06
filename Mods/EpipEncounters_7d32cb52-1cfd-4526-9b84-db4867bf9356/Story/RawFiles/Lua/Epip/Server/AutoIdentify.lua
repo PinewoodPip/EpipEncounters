@@ -4,7 +4,7 @@
 -- either always or if the loremaster requirement is met.
 ---------------------------------------------
 
----@class Feature_AutoIdentify : Feature
+---@class Features.AutoIdentify : Feature
 local AutoIdentify = {
     STATES = {
         DISABLED = 1,
@@ -16,14 +16,9 @@ local AutoIdentify = {
 }
 Epip.RegisterFeature("AutoIdentify", AutoIdentify)
 
-function AutoIdentify.SetForceEnable(state)
-    AutoIdentify.forceEnable = state or true
-end
-
-function AutoIdentify.IsEnabled()
-    local state = AutoIdentify.state
-    return (state > AutoIdentify.STATES.DISABLED) or AutoIdentify.forceEnable
-end
+---------------------------------------------
+-- METHODS
+---------------------------------------------
 
 ---Attempts to identify an item.
 ---The item will only be identified if the feature is enabled and the item is eligible.
@@ -31,7 +26,7 @@ end
 ---@return boolean -- Whether the item was identified.
 function AutoIdentify.ProcessItem(item)
     local identified = false
-    if item.Stats and AutoIdentify.IsEnabled() then
+    if item.Stats and AutoIdentify:IsEnabled() then
         if AutoIdentify.CanIdentify(item) then
             Osi.NRD_ItemSetIdentified(item.MyGuid, 1)
             identified = true
@@ -61,6 +56,23 @@ function AutoIdentify.CanIdentify(item)
     return canIdentify
 end
 
+---Sets whether the feature is force-enabled regardless of user settings.
+---@param state boolean? Defaults to `true`.
+function AutoIdentify.SetForceEnable(state)
+    if state == nil then state = true end
+    AutoIdentify.forceEnable = state
+end
+
+---@override
+function AutoIdentify:IsEnabled()
+    local state = AutoIdentify.state
+    return ((state > AutoIdentify.STATES.DISABLED) or AutoIdentify.forceEnable) and _Feature.IsEnabled(self)
+end
+
+---------------------------------------------
+-- EVENT LISTENERS
+---------------------------------------------
+
 -- Auto-identify items on generation.
 Ext.Events.TreasureItemGenerated:Subscribe(function (ev)
     AutoIdentify.ProcessItem(ev.Item)
@@ -75,6 +87,7 @@ Osiris.RegisterSymbolListener("ItemTemplateAddedToCharacter", 3, "after", functi
     end
 end)
 
+-- Sync settings from the host and auto-identify items in party inventory if need be.
 Settings.Events.SettingValueChanged:Subscribe(function (ev)
     local setting = ev.Setting
     if setting.ModTable == "EpipEncounters" and setting.ID == "AutoIdentify" then
