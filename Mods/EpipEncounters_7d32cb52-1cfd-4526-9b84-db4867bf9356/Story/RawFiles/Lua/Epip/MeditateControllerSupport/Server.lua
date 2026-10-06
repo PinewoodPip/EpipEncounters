@@ -154,13 +154,6 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
--- TODO remove
-Osiris.RegisterSymbolListener("CharacterItemEvent", 3, "after", function(char, item, event)
-    if string.find(event, "AMER") then
-        print("CharacterItemEvent", char, item, event)
-    end
-end)
-
 ---Interacts with an element, simulating a click on it (item use).
 ---@param char EsvCharacter
 ---@param collectionID string

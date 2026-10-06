@@ -2,6 +2,7 @@
 -- VANILLA ACTIONS
 ---------------------------------------------
 
+---@class HotbarUI
 local Hotbar = Client.UI.Hotbar
 local VanillaActionTSKHandles = Hotbar.DEFAULT_ACTION_TSKHANDLES
 
@@ -318,18 +319,15 @@ end)
 Hotbar.RegisterActionHook("UseArbitrarySkill", "GetActionIcon", function(icon, _, _, buttonIndex)
     if buttonIndex then
         local skill = boundSkills[buttonIndex]
-
         if skill then
-            local stat = Ext.Stats.Get(skill, nil, false)
-
+            local stat = Stats.GetSkillData(skill)
             if stat then
                 local ability = stat.Ability
                 icon = "hotbar_school_special"
-
                 if schoolIcons[ability] then
                     icon = schoolIcons[ability]
                 else
-                    print("missing ability icon " .. ability)
+                    Hotbar:__LogWarning("Missing ability icon for " .. ability)
                 end
             end
         end
@@ -355,7 +353,7 @@ Hotbar.Events.ContentDraggedToHotkey:Subscribe(function (ev)
             Header = "Error",
             Message = "Only skills and items can be dragged to these buttons at the moment.",
             Buttons = {
-                {Type = 1, Text = "Accept"},
+                {Type = "Normal", Text = "Accept"},
             }
         })
     end

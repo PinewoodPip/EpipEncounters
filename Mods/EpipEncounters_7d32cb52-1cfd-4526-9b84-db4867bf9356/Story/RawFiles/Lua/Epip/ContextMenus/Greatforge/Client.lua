@@ -124,8 +124,6 @@ ContextMenu.RegisterElementListener("epip_ExtractRunes", "buttonPressed", functi
 end)
 
 ContextMenu.RegisterElementListener("epip_RemoveMods_Mod", "buttonPressed", function(item, params)
-    _D(params)
-
     Ext.Net.PostMessageToServer("EPIPENCOUNTERS_QuickGreatforge_RemoveMods", Ext.Json.Stringify({Char = Client.GetCharacter().NetID, Item = item.NetID, Modifier = params.Modifier}))
 end)
 

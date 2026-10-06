@@ -211,7 +211,8 @@ function Overlays._SetupRaidMechanics(modifier)
         Notification.ShowWarning(TSK.Label_GemEnraged_1:GetString(), nil, Overlays.ENRAGE_GEM_SPAWN_SOUND)
 
         -- Ensure the gem element has been created in time
-        Ext.OnNextTick(function ()local element = UI.GetGemElement(ev.Gem)
+        Ext.OnNextTick(function ()
+            local element = UI.GetGemElement(ev.Gem)
             ---@cast element Features.Bedazzled.UI.Game.ModifierOverlays.Gem
             Overlays._UpdateEnrageTimer(ev.Gem, element)
 

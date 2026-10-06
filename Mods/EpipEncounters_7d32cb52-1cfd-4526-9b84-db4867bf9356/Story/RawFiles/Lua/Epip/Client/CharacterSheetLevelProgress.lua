@@ -28,7 +28,6 @@ CharacterSheet.Hooks.UpdateSecondaryStats:Subscribe(function (ev)
     if level < Stats.Get("Data", "LevelCap") then
         for _,stat in ipairs(ev.Stats) do
             stat = stat ---@type SecondaryStat
-    
             if stat.StatID == 37 then
                 stat.ValueLabel = Text.Format("%s (%s%%)", {
                     FormatArgs = {

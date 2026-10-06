@@ -657,7 +657,6 @@ LOAD_ORDER = {
     "Epip/CameraControls/Client.lua",
     "Epip/Client/MinimapToggle.lua",
     {Script = "Epip/Client/ImmersiveMeditation.lua", RequiresEE = true},
-    -- "Epip/Client/ModMenuImprovements.lua",
 
     -- Chat Commands
     {

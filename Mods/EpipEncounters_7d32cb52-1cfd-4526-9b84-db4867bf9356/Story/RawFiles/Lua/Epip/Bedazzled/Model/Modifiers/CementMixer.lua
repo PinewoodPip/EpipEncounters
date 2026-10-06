@@ -127,7 +127,6 @@ function CementMixer:Apply(board)
             if gem.Type == "Epipe" then
                 for _,otherGem in ipairs(board:GetGems()) do
                     ---@cast otherGem Features.Bedazzled.Board.Modifiers.RaidMechanics.Gem
-                    print(otherGem.EnrageTimer)
                     if otherGem.EnrageTimer then
                         -- Force a refresh of the gem for UI purposes.
                         local gemData = board:GetGemData(otherGem)

@@ -335,7 +335,7 @@ function ContextMenu.AddSubMenu(data)
 
     local root = ui:GetRoot()
 
-    Ext.Print("Adding new submenu: " .. data.menu.id)
+    ContextMenu:DebugLog("Adding new submenu: " .. data.menu.id)
 
     root.spawnContextMenu(data.menu.id)
 
@@ -355,7 +355,6 @@ function ContextMenu.Setup(data)
 
     for i=0,#root.contextMenusList.content_array-1,1 do
         local menu = root.contextMenusList.content_array[i]
-        
         menu.list.clearElements()
     end
 
@@ -1031,13 +1030,12 @@ end
 ---@param id string
 ---@param x number
 ---@param y number
----@param entityHandle number?
+---@param flashEntityHandle number?
 ---@vararg any
-local function OnRequestContextMenu(ui, _, id, x, y, entityHandle, ...)
-    -- The passed character handle, if any, becomes the associated character with this context menu. Otherwise, we default to client-controlled char.
-    if entityHandle then
-        entityHandle = Ext.UI.DoubleToHandle(entityHandle)
-
+local function OnRequestContextMenu(ui, _, id, x, y, flashEntityHandle, ...)
+    -- The passed character/item handle, if any, becomes the associated gameobject with this context menu.
+    if flashEntityHandle then
+        local entityHandle = Ext.UI.DoubleToHandle(flashEntityHandle)
         if Character.Get(entityHandle) then
             ContextMenu._LatestHoveredCharacterHandle = entityHandle
         else
