@@ -117,6 +117,7 @@ end
 ---Show a message box.
 ---@param data MessageBoxData
 function MessageBox.Open(data)
+    if MessageBox:IsVisible() then MessageBox:__LogWarning("Open", "Cannot open while another message box is still open") return end
     local root = MessageBox:GetRoot()
 
     if not data.Header or not data.Message then
