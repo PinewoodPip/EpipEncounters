@@ -26,6 +26,21 @@ local Textures = {
             LOADING_SCREEN = T("PIP_UI_Bar_LoadingScreen", {
                 GUID = "7403b92e-0439-4a70-9c35-c7f9bf4fb0ad",
             }),
+            ENEMY_HEALTH_BAR = {
+                FRAMES = {
+                    NORMAL = T("PIP_UI_Bar_EnemyHealthBar", {
+                        GUID = "48c5f1f8-55af-4f07-b50f-63c37cc82746",
+                    }),
+                    BOSS = T("PIP_UI_Bar_EnemyHealthBar_Boss", {
+                        GUID = "4e2fcfda-2e00-46ca-96a7-ffbb4efcde5a",
+                    }),
+                },
+                BARS = {
+                    GREEN = T("PIP_UI_Bar_EnemyHealthBar_Bar_Green", {
+                        GUID = "00f50d4b-7b64-4502-9b1a-8f007a465b6d",
+                    }),
+                },
+            }
         },
         BUTTONS = {
             ADD = {
