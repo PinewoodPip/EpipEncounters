@@ -27,9 +27,7 @@ Net.RegisterListener("EE.AmerUILib.NetMessages.StateChanged", function(payload)
 
     if not payload.Interface then
         AMERUI.characterStates[guid] = nil
-
         AMERUI:DebugLog("Client.AMERUI", "Exited UI: " .. guid)
-
         Utilities.Hooks.FireEvent("AMERUI", "CharacterExitedUI", payload)
     else
         AMERUI.characterStates[guid] = {
@@ -37,14 +35,11 @@ Net.RegisterListener("EE.AmerUILib.NetMessages.StateChanged", function(payload)
             Interface = payload.Interface,
             Page = payload.Page,
         }
-
         AMERUI:DebugLog("Client.AMERUI", "Entered UI: " .. guid .. " UI " .. payload.Interface .. " Page " .. payload.Page)
-
         Utilities.Hooks.FireEvent("AMERUI", "CharacterEnteredUI", payload)
     end
 
-    -- NOTE: BEHAVES WRONGLY WHEN CHANGING CHARS!!!! TODO FIX
-    if char == Client.GetCharacter().MyGuid then
+    if char == Client.GetCharacter() then
         if not payload.Interface then
             Utilities.Hooks.FireEvent("AMERUI", "ClientExitedUIs")
         else
