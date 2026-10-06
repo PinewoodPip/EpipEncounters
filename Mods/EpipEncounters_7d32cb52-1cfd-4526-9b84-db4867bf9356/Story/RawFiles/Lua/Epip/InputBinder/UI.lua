@@ -144,8 +144,8 @@ end
 GameState.Events.ClientReady:Subscribe(function (_)
     Input.Events.KeyPressed:Subscribe(function (ev)
         if UI:IsVisible() and InputBinder.GetCurrentRequest() then -- IsVisible() returns true in main menu as well on first session load for some reason - TODO investigate
+            if Input.IsMouseInput(ev.InputID) and (not Input.ACTION_WHITELISTED_MOUSE_INPUTS[ev.InputID]) then return end
             local dummyBinding = GetPressedKeys()
-            if Input.IsMouseInput(ev.InputID) and (not Input.ACTION_WHITELISTED_MOUSE_INPUTS[ev.InputID] and not ev.InputID == "left2") then return end
             if #dummyBinding.Keys == 0 then return end
             local mapping = Input.StringifyBinding(dummyBinding)
             if mapping == UI._CurrentBinding then return end -- Prevents action spam from pressing excepted keys (ex. mouse) while holding others

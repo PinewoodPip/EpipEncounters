@@ -115,7 +115,7 @@ end
 
 ---@param element GenericUI_Element
 function _Element:RemoveChild(element)
-    if not element:GetParent() == self then
+    if element:GetParent() ~= self then
         Generic:__LogWarning("Attempted to remove child from wrong parent. " .. element.ID .. " from wrong parent " .. self.ID)
     end
     self.UI:DestroyElement(element)

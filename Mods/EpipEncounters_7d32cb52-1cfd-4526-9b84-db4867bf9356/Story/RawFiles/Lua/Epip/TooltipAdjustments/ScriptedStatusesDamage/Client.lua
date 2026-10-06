@@ -113,7 +113,6 @@ end, {EnabledFunctor = StatusDamage:GetEnabledFunctor()})
 
 -- Replace status tooltip damage parameters with the calculated damage of the scripted skill.
 Ext.Events.StatusGetDescriptionParam:Subscribe(function (ev)
-    if not StatusDamage:IsEnabled() then return end
     local status = ev.Status
     local source = ev.StatusSource
     local params = ev.Params
@@ -121,7 +120,7 @@ Ext.Events.StatusGetDescriptionParam:Subscribe(function (ev)
 
     -- Only proceed for Damage parameter for statuses applied by characters.
     if not source or mainParam ~= "Damage" then return end
-    if not GetExtType(source) == "CDivinityStats_Character" then return end
+    if GetExtType(source) ~= "CDivinityStats_Character" then return end
     ---@cast source CDivinityStats_Character
 
     local skillName = StatusDamage.GetSkill(status.StatusName, source)
@@ -173,7 +172,7 @@ Ext.Events.StatusGetDescriptionParam:Subscribe(function (ev)
     end
 
     ev.Description = newString
-end)
+end, {EnabledFunctor = StatusDamage:GetEnabledFunctor()})
 
 -- In EE, override certain skills with alternative ones when the source character has Torturer.
 StatusDamage.Hooks.GetSkill:Subscribe(function (ev)
