@@ -680,7 +680,7 @@ end
 ---Does nothing if the item already had treasure generated.
 ---@param item EsvItem Must be a container.
 ---@param char EsvCharacter
----@return boolean -- `true` if the container did not have treasure generated before.
+---@return boolean -- `true` if the container did not have treasure generated before, regardless of whether this call generated any items.
 function Item.GenerateDefaultTreasure(item, char)
     if item.TreasureGenerated then return false end
     local treasureLevel = Item.GetTreasureLevel(item, char)
@@ -695,6 +695,7 @@ function Item.GenerateDefaultTreasure(item, char)
     -- Apply Lucky Charm
     local luckyCharm = Character.GetHighestPartyAbility(char, "Luck")
     if luckyCharm > 0 then
+        luckyCharm = math.min(luckyCharm, 10) -- The game only supports 10 LC tables.
         local luckyCharmTreasureID = string.format("Luck%d", luckyCharm)
         local previousItemsAmount = #item:GetInventoryItems()
         Osiris.GenerateTreasure(item, luckyCharmTreasureID, treasureLevel, char)
