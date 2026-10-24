@@ -256,23 +256,15 @@ end
 ---Returns whether the UI is flagged as visible.
 ---@return boolean
 function BaseUI:IsVisible()
-    return self:Exists() and self:IsFlagged(self.UI_FLAGS.VISIBLE)
+    local ui = self:GetUI()
+    return ui ~= nil and ui.OF_Visible
 end
 
 ---Returns whether an UI flag is raised.
 ---@param flag UIObjectFlags
 ---@return boolean
 function BaseUI:IsFlagged(flag)
-    local flagged = false
-
-    for _,f in ipairs(self:GetUI().Flags) do
-        if f == flag then
-            flagged = true
-            break
-        end
-    end
-
-    return flagged
+    return self:GetUI().Flags[flag]
 end
 
 ---Returns whether the UI has any of the TextInput flags set.
