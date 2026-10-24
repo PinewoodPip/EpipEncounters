@@ -26,11 +26,29 @@ OOP = {
 ---@field __ClassDefinition Class
 ---@field __LoggingLevel OOPLib.LoggingLevel
 ---@field ___DeprecatedKeyRedirects table<any, Class.DeprecatedKeyRedirect>? `nil` if none are registered.
+---@field ___ParentClassTables Class[]
 local Class = {}
 
 ---@class Class.DeprecatedKeyRedirect
 ---@field WarningMessage string? Warning to log when the redirect is used, in addition to a default "Field X is deprecated" message.
 ---@field Value fun(self:Class):any Will be invoked to get the return value for indexing with the key.
+
+---Returns the cached parent class tables of Class.
+---@param class Class
+---@return Class[]
+local function GetParentClassTables(class)
+    local parents = rawget(class, "___ParentClassTables")
+    if not parents then
+        -- Cache the classes
+        parents = {}
+        ---@diagnostic disable-next-line: invisible
+        for i,className in ipairs(class.__ParentClasses) do
+            parents[i] = OOP.GetClass(className)
+        end
+        rawset(class, "___ParentClassTables", parents)
+    end
+    return parents
+end
 
 ---Creates a new instance of the class.
 ---@protected
@@ -50,7 +68,7 @@ function Class:__Create(data)
             end
 
             -- Check presence in parent classes
-            for _,tbl in ipairs(instance:GetParentClasses()) do
+            for _,tbl in ipairs(GetParentClassTables(instance)) do
                 if tbl[key] ~= nil then
                     return tbl[key]
                 end
