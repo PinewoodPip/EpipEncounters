@@ -257,6 +257,6 @@ Ext.Events.Tick:Subscribe(function()
             end
         end
 
-        Timer.previousTime = time
+        _PreviousTime = time
     end
 end)
