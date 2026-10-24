@@ -30,14 +30,22 @@ function Elementable:IsDestroyed()
     return table.isdestroyed(self:GetRootElement())
 end
 
+local _CachedElementFunctions = {}
+---@diagnostic disable-next-line: invisible
+local elementTable = Generic._Element
 ---Index function will defer to Element **methods**.
 function Elementable.__index(_, key)
-    local elementTable = Generic._Element
     if type(elementTable[key]) == "function" then -- Only return functions.
-        return function(elementable, ...)
-            elementable = elementable ---@type GenericUI_I_Elementable
-            -- Call the Element method on the root element
-            return elementTable[key](elementable:GetRootElement(), ...)
+        if not _CachedElementFunctions[key] then
+            local elementFunction = elementTable[key]
+
+            ---@param elementable GenericUI_I_Elementable
+            ---@param ... any
+            _CachedElementFunctions[key] = function(elementable, ...)
+                -- Call the Element method on the root element
+                return elementFunction(elementable:GetRootElement(), ...)
+            end
         end
+        return _CachedElementFunctions[key]
     end
 end
