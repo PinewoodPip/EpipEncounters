@@ -70,6 +70,7 @@ function table.sortByProperty(tbl, prop, reverse)
 end
 
 ---Returns a new table with the keys and values swapped.
+---**Does not check whether values are unique.**
 ---@param tbl table
 ---@return table
 function table.swap(tbl)

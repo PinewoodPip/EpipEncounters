@@ -17,6 +17,7 @@ Flash.REFERENCE_ASPECT_RATIO = Flash.REFERENCE_RESOLUTION[1] / Flash.REFERENCE_R
 ---@class FlashArrayEntryTemplate
 ---@field Name string
 ---@field Enum table<integer, string>? Converts number parameters to string.
+---@field ___EnumReversed table<string, integer> Cached reverse-lookup table.
 
 ---@class FlashArrayMultiElementEntryTemplate
 ---@field Name string For human/script reference. Does not correspond to internal ID.
@@ -59,12 +60,12 @@ function Flash.ParseArray(arr, entryTemplate, multipleElementTypes, forcedElemen
     startingIndex = startingIndex or 0
 
     local i = startingIndex
-    while i <= #arr-1 do
+    local arrLength = #arr
+    while i <= arrLength-1 do
         local elementTypeName
         local template = entryTemplate
         local entry = {}
         local entryStartingIndex = 0 -- Offset for when the entry data starts; used to discard the type discriminator.
-        local entryFlashID
 
         if multipleElementTypes then
             local typeValue = arr[i]
@@ -74,7 +75,8 @@ function Flash.ParseArray(arr, entryTemplate, multipleElementTypes, forcedElemen
             entryStartingIndex = 1
             paramCount = #template
 
-            entryFlashID = typeValue
+            entry.EntryTypeID = elementTypeName
+            entry.EntryTypeFlashID = typeValue
         end
 
         for z=1,paramCount,1 do
@@ -94,9 +96,6 @@ function Flash.ParseArray(arr, entryTemplate, multipleElementTypes, forcedElemen
             end
 
             entry[paramName] = value
-
-            entry.EntryTypeID = elementTypeName
-            entry.EntryTypeFlashID = entryFlashID
         end
 
         i = i + (forcedElementCount or (#template + entryStartingIndex))
@@ -124,7 +123,7 @@ function Flash.EncodeArray(array, entryTemplate, data, multipleEntryTypes, force
         local paramsAdded = 0
 
         if multipleEntryTypes then
-            local entryFlashID = entry.EntryTypeFlashID 
+            local entryFlashID = entry.EntryTypeFlashID
 
             -- Search within templates. This is used if a hook adds entries but does not define this internal type, instead using the user-friendly string ID.
             if entryFlashID == nil then
@@ -152,10 +151,13 @@ function Flash.EncodeArray(array, entryTemplate, data, multipleEntryTypes, force
                 local paramName = key.Name
 
                 if key.Enum then
-                    local values = key.Enum
                     local stringValue = entry[paramName]
 
-                    value = table.reverseLookup(values, stringValue)
+                    -- Cache reverse lookup table
+                    if not key.___EnumReversed then
+                        key.___EnumReversed = table.swap(key.Enum)
+                    end
+                    value = key.___EnumReversed[stringValue]
                 end
             else
                 value = param
