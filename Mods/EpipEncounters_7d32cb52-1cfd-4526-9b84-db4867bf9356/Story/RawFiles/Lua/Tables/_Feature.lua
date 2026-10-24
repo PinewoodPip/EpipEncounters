@@ -15,7 +15,7 @@
 ---@field MOD_TABLE_ID string
 ---@field DoNotExportTSKs boolean? If `true`, TSKs will not be exported to localization templates.
 ----@field Settings table<string, SettingsLib_Setting>
----@field SupportedGameStates bitfield Defaults to all. See GAME_STATES.
+---@field SupportedGameStates bitfield? If set, the feature will only be considered enabled in the given game states. See `GAME_STATES`.
 ---@field InputActions table<string, InputLib_Action> ID field is auto-initialized from key and prefixed. Only used in Client context.
 ---@field _DisableRequests table<string, true> Table of requests to keep the feature disabled.
 local Feature = {
@@ -33,6 +33,8 @@ local Feature = {
 }
 _Feature = Feature
 OOP.RegisterClass("Feature", Feature, {"Library"})
+
+Feature._AllGameStatesBitfield = Feature.GAME_STATES.RUNNING_SESSION - 1
 
 ---------------------------------------------
 -- METHODS
@@ -55,9 +57,6 @@ function Feature.Create(modTable, id, feature)
 
     feature._DisableRequests = {}
 
-    -- Defaults to all game states.
-    feature.SupportedGameStates = feature.SupportedGameStates or Feature._GetAllSupportedGameStatesBitfield()
-
     -- Initialize settings
     for settingID,setting in pairs(feature.Settings) do
         feature:RegisterSetting(settingID, setting)
@@ -77,25 +76,23 @@ end
 ---@return boolean
 function Feature:IsEnabled()
     local isEnabled = not next(self._DisableRequests)
-
-    if isEnabled and self.SupportedGameStates ~= Feature._GetAllSupportedGameStatesBitfield() then
+    if isEnabled and self.SupportedGameStates and self.SupportedGameStates ~= Feature._AllGameStatesBitfield then
         local featureStates = self.SupportedGameStates
         local STATES = Feature.GAME_STATES
 
         if featureStates & STATES.MAIN_MENU == 0 then
             isEnabled = isEnabled and not GameState.IsInMainMenu()
         end
-        if featureStates & STATES.LOADING == 0 then
+        if isEnabled and featureStates & STATES.LOADING == 0 then
             isEnabled = isEnabled and not GameState.IsLoading()
         end
-        if featureStates & STATES.PAUSED_SESSION == 0 then
+        if isEnabled and featureStates & STATES.PAUSED_SESSION == 0 then
             isEnabled = isEnabled and not GameState.IsPaused()
         end
-        if featureStates & STATES.RUNNING_SESSION == 0 then
+        if isEnabled and featureStates & STATES.RUNNING_SESSION == 0 then
             isEnabled = isEnabled and not GameState.IsInRunningSession()
         end
     end
-
     return isEnabled
 end
 
@@ -135,12 +132,6 @@ end
 ---@see Epip.Events.FeatureInitialization
 ---@virtual
 function Feature:__Initialize() end
-
----Returns the bitfield that supports all game states.
----@return integer
-function Feature._GetAllSupportedGameStatesBitfield()
-    return 2^table.getKeyCount(Feature.GAME_STATES) - 1
-end
 
 ---Returns a string containing the feature's mod table and ID.
 ---Ex. `"MyModTable_MyFeature"`.
