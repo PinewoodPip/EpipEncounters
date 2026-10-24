@@ -1,12 +1,13 @@
 
 local Set = DataStructures.Get("DataStructures_Set")
+local GetGameState = Ext.IsClient() and Ext.Client.GetGameState or Ext.Server.GetGameState
+local MonotonicTime = Ext.Utils.MonotonicTime
+local ThrowEvent = SubscribableEvent.Throw
 
 ---@alias GameState "Unknown"|"Unitialized"|"Init"|"Idle"|"Exit"|"LoadLevel"|"LoadModule"|"LoadGMCampaign"|"LoadSession"|"UnloadLevel"|"UnloadModule"|"UnloadSession"|"Sync"|"Paused"|"Running"|"Save"|"Disconnect"|"GameMasterPause"|"BuildStory"|"ReloadStory"|"Installation"|"InitMenu"|"InitNetwork"|"InitConnection"|"LoadMenu"|"Menu"|"SwapLevel"|"PrepareRunning"|"Running"|"Disconnect"|"Join"|"Save"|"StartLoading"|"StartServer"|"Movie"|"ModReceiving"|"Lobby"|"LoadLoca"
 
 ---@class GameStateLib : Feature
 GameState = {
-    lastTickTime = nil,
-
     ---@type table<GameState, true>
     IN_SESSION_STATES = {
         Running = true,
@@ -214,33 +215,34 @@ Ext.Events.GameStateChanged:Subscribe(function(ev)
 end)
 
 -- Forward tick events.
+-- Since these will be thrown every tick/frame,
+-- we upvalue functions & tables to minimize overhead.
+local _LastTickTime = nil
+local TickEvent = GameState.Events.Tick
+local RunningTickEvent = GameState.Events.RunningTick
+local _TickEventTable = {DeltaTime = nil, Stopped = false} ---@type GameStateLib_Event_Tick|Event_Params
+local _RunningTickEventTable = {DeltaTime = nil, Stopped = false} ---@type GameStateLib_Event_RunningTick|Event_Params
 Ext.Events.Tick:Subscribe(function()
-    local now = Ext.Utils.MonotonicTime()
-    local lastTickTime = GameState.lastTickTime or now
+    local now = MonotonicTime()
+    local lastTickTime = _LastTickTime or now
     local deltaTime = now - lastTickTime
 
     -- Throw RunningTick event while the session is unpaused
-    local gameState = Ext.IsClient() and Ext.Client.GetGameState() or Ext.Server.GetGameState()
-    if gameState == GameState.CLIENT_STATES.RUNNING then
-
-        GameState.Events.RunningTick:Throw({
-            DeltaTime = deltaTime,
-        })
+    if GetGameState() == "Running" then
+        _RunningTickEventTable.DeltaTime = deltaTime
+        _RunningTickEventTable.Stopped = false
+        ThrowEvent(RunningTickEvent, _RunningTickEventTable)
     end
 
-    GameState.Events.Tick:Throw({
-        DeltaTime = deltaTime,
-    })
+    _TickEventTable.DeltaTime = deltaTime
+    _TickEventTable.Stopped = false
+    ThrowEvent(TickEvent, _TickEventTable)
 
-    GameState.lastTickTime = now
+    _LastTickTime = now
 end)
 
--- Also throw GameReady upon reset.
+-- Also throw GameReady and LuaResetted upon reset.
 Ext.Events.ResetCompleted:Subscribe(function()
     GameState.Events.GameReady:Throw()
-end)
-
--- Listen for lua being reset.
-Ext.Events.ResetCompleted:Subscribe(function (_)
     GameState.Events.LuaResetted:Throw({})
 end)
