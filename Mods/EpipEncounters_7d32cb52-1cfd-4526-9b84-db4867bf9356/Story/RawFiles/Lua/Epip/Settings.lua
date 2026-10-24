@@ -780,6 +780,7 @@ local newSettings = {
         Context = "Host",
         NameHandle = TSKs.Developer_SimulateNoEE_Name,
         DescriptionHandle = TSKs.Developer_SimulateNoEE_Description,
+        RequiresReload = true,
         DefaultValue = false,
     },
     {
