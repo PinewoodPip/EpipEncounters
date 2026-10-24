@@ -11,11 +11,8 @@ Timer = {
     UI = nil,
     Root = nil,
 
-    eventHandlers = {},
-
-    ---@type TimerLib_Entry[]
-    activeTimers = {},
-    previousTime = nil,
+    _ActiveTimers = {}, ---@type TimerLib_Entry[]
+    _Timers = {}, ---@type table<string, TimerLib_Entry>
 
     USE_LEGACY_EVENTS = false,
     USE_LEGACY_HOOKS = false,
@@ -42,10 +39,11 @@ Epip.InitializeLibrary("Timer", Timer)
 ---@field DurationLeft number
 ---@field InitialDuration number
 ---@field RepeatCount integer How many times the timer has repeated.
----@field private MaxRepeatCount integer The maximum amount of times the timer can fire. Values below 0 indicate no limit.
+---@field _MaxRepeatCount integer The maximum amount of times the timer can fire. Values below 0 indicate no limit.
+---@field ___Handlers fun(self)[]
 ---@field Paused boolean
 local _TimerEntry = {
-    MaxRepeatCount = 1,
+    _MaxRepeatCount = 1,
     RepeatCount = 0,
     ID = "",
 }
@@ -64,7 +62,7 @@ end
 
 ---@param repeats integer Set to -1 to repeat infinitely.
 function _TimerEntry:SetRepeatCount(repeats)
-    self.MaxRepeatCount = repeats
+    self._MaxRepeatCount = repeats
 end
 
 ---@param deltaTime number
@@ -86,7 +84,7 @@ end
 
 ---@return boolean
 function _TimerEntry:IsFinished()
-    return self.RepeatCount >= self.MaxRepeatCount and self.MaxRepeatCount >= 0
+    return self.RepeatCount >= self._MaxRepeatCount and self._MaxRepeatCount >= 0
 end
 
 ---@param fun fun(ev:TimerLib_Event_TimerCompleted)
@@ -142,13 +140,14 @@ function Timer.Start(id, seconds, handler, timerType)
         ID = id or "",
         InitialDuration = seconds,
         DurationLeft = seconds,
-        MaxRepeatCount = 1,
+        _MaxRepeatCount = 1,
         RepeatCount = 0,
+        ___Handlers = {},
     }
     Inherit(entry, timerTable)
 
     -- Replace the old timer, if any.
-    if id ~= "" then
+    if id and id ~= "" then
         local oldTimer = Timer.GetTimer(id)
         if oldTimer then
             oldTimer:Cancel()
@@ -157,10 +156,18 @@ function Timer.Start(id, seconds, handler, timerType)
 
     -- Auto-subscribe handler
     if handler then
-        entry:Subscribe(handler)
+        ---@diagnostic disable-next-line: invisible
+        entry.___Handlers[1] = handler
     end
 
-    table.insert(Timer.activeTimers, entry)
+    -- Track the timer
+    table.insert(Timer._ActiveTimers, entry)
+    if id then
+        -- Note: it is possible to register multiple timers with the same ID at once.
+        -- They will tick properly through _ActiveTimers, but only the latest one
+        -- will be retrievable by ID.
+        Timer._Timers[id] = entry
+    end
 
     return entry
 end
@@ -175,35 +182,30 @@ function Timer.StartTickTimer(id, ticks, handler)
     return Timer.Start(id, ticks, handler, "Tick") -- wtf lmao what is this diagnostic
 end
 
----Returns the timer with the passed string ID.
+---Returns the **latest-registered** running timer with the passed string ID.
 ---@param stringID string
 ---@return TimerLib_Entry
 function Timer.GetTimer(stringID)
-    local entry
-
-    for _,timer in ipairs(Timer.activeTimers) do
-        if timer.ID == stringID then
-            entry = timer
-            break
-        end
-    end
-
-    return entry
+    return Timer._Timers[stringID]
 end
 
 ---@param timer TimerLib_Entry
 function Timer.Remove(timer)
     local index
 
-    for i,entry in ipairs(Timer.activeTimers) do
+    for i,entry in ipairs(Timer._ActiveTimers) do
         if entry == timer then
             index = i
             break
         end
     end
 
+    if timer.ID then
+        Timer._Timers[timer.ID] = nil -- TODO re-assign to any previous existing timer with the ID?
+    end
+
     if index then
-        table.remove(Timer.activeTimers, index)
+        table.remove(Timer._ActiveTimers, index)
 
         -- Unsubscribe listeners
         Timer.Events.TimerCompleted:RemoveNodes(function(node)
@@ -219,26 +221,37 @@ end
 -- EVENT LISTENERS
 ---------------------------------------------
 
+local _PreviousTime = nil
+
 -- Decrement timer durations.
 Ext.Events.Tick:Subscribe(function()
     local time = MonotonicTime()
-    if not Timer.previousTime then
-        Timer.previousTime = time
+    if not _PreviousTime then
+        _PreviousTime = time
     else
-        local deltaTime = time - Timer.previousTime
-        for _,timer in ipairs(Timer.activeTimers) do
+        local deltaTime = time - _PreviousTime
+        for _,timer in ipairs(Timer._ActiveTimers) do
             if not timer.Paused then
                 if timer:TickDown(deltaTime) then
-                    Timer.Events.TimerCompleted:Throw({
-                        Timer = timer,
-                    })
+                    -- Dispatch handlers
+                    local handlers = timer.___Handlers
+                    for _,handler in ipairs(handlers) do
+                        handler(timer)
+                    end
+
+                    -- Only throw global event if anything is listening to it.
+                    if Timer.Events.TimerCompleted.First then
+                        Timer.Events.TimerCompleted:Throw({
+                            Timer = timer,
+                        })
+                    end
                 end
             end
         end
 
         -- Remove timers once they deplete their repeats
-        for i=#Timer.activeTimers,1,-1 do
-            local timer = Timer.activeTimers[i]
+        for i=#Timer._ActiveTimers,1,-1 do
+            local timer = Timer._ActiveTimers[i]
             if timer:IsFinished() then
                 Timer.Remove(timer)
             end
