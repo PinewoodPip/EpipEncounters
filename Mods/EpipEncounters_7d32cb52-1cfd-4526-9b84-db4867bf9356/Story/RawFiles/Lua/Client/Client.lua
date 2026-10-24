@@ -187,10 +187,15 @@ function Client.IsInCombat()
     return char and Game.Character.IsInCombat(char)
 end
 
+local _IsUsingController = nil -- Fine to cache as the input method can never change in the middle of a session.
 ---Returns whether the client is using a controller.
+---**Not reliable in the title screen game state.**
 ---@return boolean
 function Client.IsUsingController()
-    return Ext.UI.GetByPath("Public/Game/GUI/msgBox_c.swf") ~= nil
+    if _IsUsingController == nil then
+        _IsUsingController = Ext.UI.GetByPath("Public/Game/GUI/msgBox_c.swf") ~= nil
+    end
+    return _IsUsingController
 end
 
 ---Returns whether the client is playing with keyboard and mouse.
